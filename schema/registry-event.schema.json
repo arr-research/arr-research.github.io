@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arr-research.github.io/schema/registry-event.schema.json",
+  "$comment": "SPDX-License-Identifier: CC0-1.0",
+  "title": "ARR append-only registry event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "event_id", "event_type", "occurred_at", "record_id", "version_id", "actor_role", "record_sha256"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "event_id": {"type": "string", "pattern": "^arr:event:[0-9a-f-]{36}$"},
+    "event_type": {"enum": ["published", "corrected", "withdrawn", "access_restricted", "restored", "preservation_mirrored"]},
+    "occurred_at": {"type": "string", "format": "date-time"},
+    "record_id": {"type": "string", "pattern": "^arr:record:[0-9a-f-]{36}$"},
+    "version_id": {"type": "string", "pattern": "^arr:version:[0-9a-f-]{36}$"},
+    "actor_role": {"enum": ["editor", "system", "legal", "preservation_service"]},
+    "previous_status": {"type": ["string", "null"]},
+    "new_status": {"type": ["string", "null"]},
+    "record_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "reason_code": {"type": "string"}
+  }
+}

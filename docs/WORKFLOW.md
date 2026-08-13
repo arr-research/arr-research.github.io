@@ -2,21 +2,21 @@
 
 ## 1. Prepare a candidate
 
-Copy `templates/paper` into:
+Generate the candidate with:
 
-```text
-papers/YYYY/MM/ARR-YYYY-NNNNNN/
+```bash
+python scripts/new_record.py --author "Author Name"
 ```
 
-The public repository should receive only candidates already approved for the acceptance workflow. Earlier drafts belong in a separate private intake repository.
+This creates `papers/YYYY/MM/PP/ARR-YYYY-<16 characters>/`, stable record/version UUIDs, and the correct shard. The public repository receives only candidates already approved for publication. Earlier drafts and all future external submissions belong in a separate private intake system.
 
 ## 2. Complete the research object
 
-Keep the canonical manuscript in `paper.tex` or `paper.md`. Always provide `paper.md` as a machine-readable rendition. Add code, tests and reproducibility files where applicable. Do not commit large generated artifacts.
+Keep the canonical manuscript in `paper.tex` or `paper.md`. Always provide `paper.md` as a machine-readable rendition. Add code, tests and reproducibility files where applicable. Complete `LICENSES.json`, `PROVENANCE.json`, deposit attestations and disclosure fields. Do not commit large generated artifacts.
 
 ## 3. Validate through a pull request
 
-The pull request runs metadata validation and builds the complete catalogue. Editorial sign-off is represented by approval and merge; it must not be delegated silently to an automated score.
+The pull request runs metadata validation and builds the complete catalogue. Editorial sign-off is represented by approval and merge; it must not be delegated silently to an automated score. `not_assessed` remains visible and is never converted into a pass.
 
 ## 4. Publish the version
 
@@ -28,4 +28,4 @@ GitHub Pages rebuilds from the default branch. The paper page links to the exact
 
 ## 6. Correct without erasing history
 
-Copy the accepted record to a new version, update its metadata and sources, and repeat validation. Never move an existing tag or overwrite its manifest.
+Create a new version with the same `record_id` and public `id`, a new `version_id`, an incremented `version`, and `supersedes_version_id`. Repeat validation. Never move an existing tag or overwrite its manifest.

@@ -1,64 +1,94 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
 from __future__ import annotations
 
 import json
+import io
 import tempfile
 import unittest
+import uuid
 from pathlib import Path
+from contextlib import redirect_stdout
+from unittest.mock import patch
 
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
-from arrlib import Paper, validate_paper  # noqa: E402
+from arrlib import CROCKFORD, Paper, crockford_prefix, validate_collection, validate_paper  # noqa: E402
+import new_record  # noqa: E402
+
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 class PaperValidationTests(unittest.TestCase):
     def make_paper(self, root: Path) -> Paper:
-        paper_dir = root / "2026" / "08" / "ARR-2026-000001"
+        paper_dir = root / "2026" / "08" / "0J" / "ARR-2026-0J7S2PFT4V8B9T8N"
         paper_dir.mkdir(parents=True)
         metadata = {
-            "id": "ARR-2026-000001",
+            "schema_version": "1.0",
+            "record_id": "arr:record:123e4567-e89b-42d3-a456-426614174000",
+            "version_id": "arr:version:123e4567-e89b-42d3-a456-426614174001",
+            "id": "ARR-2026-0J7S2PFT4V8B9T8N",
             "version": "v1",
             "title": "A complete and testable research title",
             "abstract": "This abstract is deliberately long enough to state a question, method, result, scope, and limitation.",
             "authors": [{"name": "Test Author"}],
             "date": "2026-08-13",
             "status": "accepted",
-            "license": "CC-BY-4.0",
+            "licenses": {
+                "manuscript": "CC-BY-4.0",
+                "metadata": "CC0-1.0",
+                "code": [{"path": "src/", "spdx": "Apache-2.0"}],
+                "data": [],
+            },
             "source_of_truth": "paper.tex",
+            "deposit": {
+                "depositor_name": "Test Author",
+                "relationship": "author",
+                "deposit_authorized": True,
+                "third_party_material_disclosed": True,
+                "terms_version": "ARR-DEPOSIT-0.1",
+            },
+            "integrity": {"algorithm": "sha256", "manifest": "MANIFEST.sha256"},
             "ai_assistance": {"used": False, "statement": "No AI assistance was used for this test record."},
             "screening": {
                 "protocol": "ARR-SCREEN-1.0",
-                "status": "pass",
-                "completed_at": "2026-08-13",
+                "status": "not_assessed",
                 "critical_objections_unresolved": 0,
                 "human_signoff": True,
-                "evaluators": [
-                    {"provider": "A", "model_id": "model-a", "outcome": "pass", "report": "screening/a.md", "involved_in_creation": False},
-                    {"provider": "B", "model_id": "model-b", "outcome": "pass", "report": "screening/b.md", "involved_in_creation": False},
-                    {"provider": "C", "model_id": "model-c", "outcome": "pass", "report": "screening/c.md", "involved_in_creation": False},
-                ],
+                "evaluators": [],
             },
             "verification": {
-                "protocol": "ARR-SCREEN-1.0",
+                "protocol": "ARR-VERIFY-1.0",
                 "bibliography": "pass",
                 "source_integrity": "pass",
                 "reproducibility": "not_applicable",
                 "lean4": "not_applicable",
             },
         }
+        provenance = {
+            "schema_version": "1.0",
+            "record_id": metadata["record_id"],
+            "version_id": metadata["version_id"],
+            "source_of_truth": metadata["source_of_truth"],
+        }
+        license_record = {
+            "manuscript": {"spdx": "CC-BY-4.0"},
+            "metadata": {"spdx": "CC0-1.0"},
+            "code": [{"path": "src/", "spdx": "Apache-2.0"}],
+            "data": [],
+        }
         for name, content in {
             "metadata.json": json.dumps(metadata),
             "paper.tex": "\\documentclass{article}\\begin{document}Test\\end{document}",
             "paper.md": "# Test",
-            "PROVENANCE.json": "{}",
+            "PROVENANCE.json": json.dumps(provenance),
+            "LICENSES.json": json.dumps(license_record),
             "CITATION.cff": "cff-version: 1.2.0",
         }.items():
             (paper_dir / name).write_text(content, encoding="utf-8")
         (paper_dir / "LICENSES").mkdir()
-        (paper_dir / "screening").mkdir()
-        for filename in ("a.md", "b.md", "c.md"):
-            (paper_dir / "screening" / filename).write_text("screening report", encoding="utf-8")
         return Paper(paper_dir, metadata)
 
     def test_valid_complete_record(self) -> None:
@@ -72,6 +102,70 @@ class PaperValidationTests(unittest.TestCase):
             (paper.path / "paper.md").unlink()
             errors = validate_paper(paper)
             self.assertTrue(any(error.startswith("paper.md:") for error in errors))
+
+    def test_wrong_shard_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            paper = self.make_paper(Path(temporary))
+            wrong_path = paper.path.parents[1] / "ZZ" / paper.path.name
+            wrong_path.parent.mkdir(parents=True)
+            paper.path.rename(wrong_path)
+            errors = validate_paper(Paper(wrong_path, paper.metadata))
+            self.assertIn("path: shard must be 0J", errors)
+
+    def test_screening_pass_requires_three_reports(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            paper = self.make_paper(Path(temporary))
+            paper.metadata["screening"].update({"status": "pass", "completed_at": "2026-08-13"})
+            errors = validate_paper(paper)
+            self.assertTrue(any("three independent evaluators" in error for error in errors))
+
+    def test_duplicate_version_id_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            paper = self.make_paper(Path(temporary))
+            clone = Paper(paper.path, dict(paper.metadata, version="v2"))
+            failures = validate_collection([paper, clone])
+            self.assertTrue(any("duplicate version_id" in error for errors in failures.values() for error in errors))
+
+    def test_public_suffix_uses_crockford_alphabet(self) -> None:
+        suffix = crockford_prefix(uuid.UUID("123e4567-e89b-42d3-a456-426614174000"))
+        self.assertEqual(len(suffix), 16)
+        self.assertTrue(set(suffix) <= set(CROCKFORD))
+
+    def test_new_record_generates_a_valid_sharded_candidate(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            temporary_root = Path(temporary)
+            papers_dir = temporary_root / "papers"
+            with (
+                patch.object(new_record, "ROOT", temporary_root),
+                patch.object(new_record, "PAPERS_DIR", papers_dir),
+                patch.object(new_record, "TEMPLATE_DIR", ROOT / "templates" / "paper"),
+                patch.object(sys, "argv", ["new_record.py", "--date", "2026-08-13", "--author", "Test Author"]),
+            ):
+                with redirect_stdout(io.StringIO()):
+                    self.assertEqual(new_record.main(), 0)
+            metadata_path = next(papers_dir.glob("**/metadata.json"))
+            paper = Paper(metadata_path.parent, json.loads(metadata_path.read_text(encoding="utf-8")))
+            self.assertEqual(validate_paper(paper), [])
+
+
+class RepositoryContractTests(unittest.TestCase):
+    def test_all_json_schemas_parse(self) -> None:
+        schemas = list((ROOT / "schema").glob("*.schema.json"))
+        self.assertGreaterEqual(len(schemas), 3)
+        for path in schemas:
+            with self.subTest(path=path.name):
+                value = json.loads(path.read_text(encoding="utf-8"))
+                self.assertEqual(value["$schema"], "https://json-schema.org/draft/2020-12/schema")
+
+    def test_template_contract_files_parse(self) -> None:
+        for name in ("metadata.json", "PROVENANCE.json", "LICENSES.json"):
+            with self.subTest(path=name):
+                json.loads((ROOT / "templates" / "paper" / name).read_text(encoding="utf-8"))
+
+    def test_platform_license_is_agpl(self) -> None:
+        license_text = (ROOT / "LICENSE").read_text(encoding="utf-8")
+        self.assertIn("GNU AFFERO GENERAL PUBLIC LICENSE", license_text)
+        self.assertIn("Remote Network Interaction", license_text)
 
 
 if __name__ == "__main__":
