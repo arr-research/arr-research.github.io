@@ -22,7 +22,8 @@
     "integrity",
     "ai_assistance",
     "screening",
-    "verification"
+    "verification",
+    "editorial"
   ],
   "properties": {
     "schema_version": {"const": "1.0"},
@@ -65,7 +66,7 @@
         "data": {"type": "array", "items": {"$ref": "#/$defs/licensedPath"}}
       }
     },
-    "source_of_truth": {"enum": ["paper.tex", "paper.md"]},
+    "source_of_truth": {"enum": ["paper.tex", "paper.md", "paper.pdf"]},
     "keywords": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
     "subjects": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
     "doi": {"type": "string"},
@@ -89,7 +90,9 @@
       "required": ["algorithm", "manifest"],
       "properties": {
         "algorithm": {"const": "sha256"},
-        "manifest": {"const": "MANIFEST.sha256"}
+        "manifest": {"const": "MANIFEST.sha256"},
+        "canonical_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "canonical_bytes": {"type": "integer", "minimum": 1}
       }
     },
     "ai_assistance": {
@@ -141,8 +144,32 @@
         "lean4": {"enum": ["L0", "L1", "L2", "L3", "not_assessed", "not_applicable"]},
         "report": {"type": "string"}
       }
+    },
+    "editorial": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decision", "signed_by", "conflicts", "statement"],
+      "properties": {
+        "decision": {"enum": ["founder_pilot", "standard_acceptance", "correction", "withdrawal"]},
+        "signed_by": {"type": "string", "minLength": 2},
+        "conflicts": {"type": "array", "items": {"type": "string", "minLength": 3}, "uniqueItems": true},
+        "statement": {"type": "string", "minLength": 20}
+      }
     }
   },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"source_of_truth": {"const": "paper.pdf"}},
+        "required": ["source_of_truth"]
+      },
+      "then": {
+        "properties": {
+          "integrity": {"required": ["algorithm", "manifest", "canonical_sha256", "canonical_bytes"]}
+        }
+      }
+    }
+  ],
   "$defs": {
     "licensedPath": {
       "type": "object",

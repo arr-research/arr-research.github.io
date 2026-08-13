@@ -42,19 +42,23 @@ def main() -> int:
         for source in iter_package_files(paper.path):
             archive.write(source, source.relative_to(paper.path))
 
+    packaged_pdf: Path | None = None
+    paper_pdf = paper.path / "paper.pdf"
+    if paper_pdf.is_file():
+        packaged_pdf = output / f"{paper.id}-{paper.version}.pdf"
+        shutil.copy2(paper_pdf, packaged_pdf)
+
     manifest_lines: list[str] = []
     for source in iter_package_files(paper.path):
         manifest_lines.append(f"{sha256(source)}  {source.relative_to(paper.path).as_posix()}")
     manifest_lines.append(f"{sha256(bundle)}  {bundle.name}")
+    if packaged_pdf is not None:
+        manifest_lines.append(f"{sha256(packaged_pdf)}  {packaged_pdf.name}")
     manifest = output / "MANIFEST.sha256"
     manifest.write_text("\n".join(manifest_lines) + "\n", encoding="utf-8", newline="\n")
 
     metadata_copy = output / "RECORD.json"
     metadata_copy.write_text(json.dumps(paper.metadata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-
-    paper_pdf = paper.path / "paper.pdf"
-    if paper_pdf.is_file():
-        shutil.copy2(paper_pdf, output / f"{paper.id}-{paper.version}.pdf")
 
     notes = output / "RELEASE_NOTES.md"
     notes.write_text(
@@ -62,7 +66,7 @@ def main() -> int:
         f"ARR record: `{paper.id}`  \n"
         f"Version: `{paper.version}`  \n"
         f"Protocol: `{paper.metadata['verification']['protocol']}`\n\n"
-        "The attached manifest records SHA-256 hashes for every published source file and the complete source bundle.\n",
+        "The attached manifest records SHA-256 hashes for every published source file, the complete source bundle, and the canonical PDF when supplied.\n",
         encoding="utf-8",
         newline="\n",
     )

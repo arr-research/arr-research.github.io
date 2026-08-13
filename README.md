@@ -1,6 +1,6 @@
 # ARR — Archive for Rigorous Research
 
-ARR is a curated, source-first archive for research published with explicit, documented verification evidence.
+ARR is a curated, versioned archive for research published with canonical artifacts, machine-readable renditions, and explicit verification evidence.
 
 This repository is the technical foundation for the archive. It keeps lightweight, inspectable sources in Git and publishes large generated artifacts—PDFs, complete source bundles, datasets, and build logs—as GitHub Release assets.
 

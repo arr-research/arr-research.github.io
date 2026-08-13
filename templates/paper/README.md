@@ -5,8 +5,9 @@ This directory is a template, not a published ARR record.
 Required publication files:
 
 - `metadata.json`
-- `paper.tex` or `paper.md` as the declared source of truth
+- `paper.tex`, `paper.md`, or a hash-identified `paper.pdf` as the declared source of truth
 - a machine-readable `paper.md`
+- `paper.txt` for PDF-origin records
 - `PROVENANCE.json`
 - `CITATION.cff`
 - `LICENSES.json` with machine-readable scope and SPDX identifiers

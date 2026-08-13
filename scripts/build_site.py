@@ -138,13 +138,13 @@ def build_home(papers: list, base: str, canonical_url: str) -> str:
 <section class="hero">
   <div class="eyebrow">Open · Curated · Reproducible</div>
   <h1>Research should arrive with its evidence.</h1>
-  <p class="lede">ARR publishes source-first preprints with explicit, documented verification evidence. Every record keeps its manuscript, code, provenance, version, licenses and checks.</p>
+  <p class="lede">ARR publishes inspectable preprints with machine-readable renditions and explicit verification evidence. Every record keeps its manuscript, code, provenance, version, licenses and checks.</p>
   <div class="hero-actions"><a class="button" href="{base}/papers/">Browse papers</a><a class="text-link" href="{base}/protocol/">Read the protocol →</a></div>
 </section>
 <section class="stats" aria-label="Archive statistics">
   <div><strong>{accepted}</strong><span>public records</span></div>
   <div><strong>{lean_verified}</strong><span>Lean kernel verified</span></div>
-  <div><strong>100%</strong><span>source-first</span></div>
+  <div><strong>100%</strong><span>machine-readable rendition</span></div>
 </section>
 <section class="principles">
   <div><span>01</span><h2>Inspectable by default</h2><p>Manuscripts, metadata and code remain readable as plain files—not trapped behind a PDF or proprietary interface.</p></div>
@@ -154,7 +154,7 @@ def build_home(papers: list, base: str, canonical_url: str) -> str:
 <section class="recent"><div class="section-heading"><div><span>Catalogue</span><h2>Latest accepted research</h2></div><a href="{base}/papers/">View all</a></div>{recent}</section>
 """
     canonical = f"{canonical_url}/" if canonical_url else ""
-    return page_shell(title="ARR — Archive for Rigorous Research", description="A curated, source-first archive of screened research preprints.", content=content, base=base, canonical=canonical)
+    return page_shell(title="ARR — Archive for Rigorous Research", description="A curated, machine-readable archive of research preprints with explicit evidence labels.", content=content, base=base, canonical=canonical)
 
 
 def build_papers_index(papers: list, base: str, canonical_url: str) -> str:
@@ -200,11 +200,12 @@ def build_paper_page(paper, base: str, canonical_url: str, repository: str) -> s
   <div class="download-row">{''.join(links)}</div>
   <section class="abstract"><span>Abstract</span><p>{esc(metadata['abstract'])}</p></section>
   <div class="paper-grid">
-    <section><h2>Verification record</h2><dl class="checks">{verification_rows(metadata)}</dl><p class="protocol-note">Screened under <a href="{base}/protocol/">{esc(metadata['verification']['protocol'])}</a>. ARR screening is not peer review.</p></section>
-    <aside><h2>Record</h2><dl class="record"><div><dt>Manuscript license</dt><dd>{esc(metadata['licenses']['manuscript'])}</dd></div><div><dt>Metadata license</dt><dd>{esc(metadata['licenses']['metadata'])}</dd></div><div><dt>Canonical source</dt><dd>{esc(metadata['source_of_truth'])}</dd></div><div><dt>Stable record</dt><dd>{esc(metadata['record_id'])}</dd></div><div><dt>Version identifier</dt><dd>{esc(metadata['version_id'])}</dd></div><div><dt>AI assistance</dt><dd>{'Declared' if metadata['ai_assistance']['used'] else 'Not used'}</dd></div></dl><ul class="keywords">{keywords}</ul></aside>
+    <section><h2>Verification record</h2><dl class="checks">{verification_rows(metadata)}</dl><p class="protocol-note">Recorded under <a href="{base}/protocol/">{esc(metadata['verification']['protocol'])}</a>. ARR verification and screening are not peer review.</p></section>
+    <aside><h2>Record</h2><dl class="record"><div><dt>Manuscript license</dt><dd>{esc(metadata['licenses']['manuscript'])}</dd></div><div><dt>Metadata license</dt><dd>{esc(metadata['licenses']['metadata'])}</dd></div><div><dt>Canonical source</dt><dd>{esc(metadata['source_of_truth'])}</dd></div><div><dt>Canonical SHA-256</dt><dd><code>{esc(metadata['integrity'].get('canonical_sha256', 'recorded in release manifest'))}</code></dd></div><div><dt>Stable record</dt><dd>{esc(metadata['record_id'])}</dd></div><div><dt>Version identifier</dt><dd>{esc(metadata['version_id'])}</dd></div><div><dt>AI assistance</dt><dd>{'Declared' if metadata['ai_assistance']['used'] else 'Not used'}</dd></div></dl><ul class="keywords">{keywords}</ul></aside>
   </div>
   <section class="disclosure"><h2>AI assistance statement</h2><p>{esc(metadata['ai_assistance']['statement'])}</p></section>
   <section class="screening-record"><h2>Frontier-model screening</h2><p>Status: <strong>{esc(metadata['screening']['status'])}</strong>. Any listed reports correspond to this exact version under {esc(metadata['screening']['protocol'])}; no absent assessment is represented as a pass.</p><ul>{evaluators}</ul></section>
+  <section class="disclosure"><h2>Editorial disclosure</h2><p>{esc(metadata['editorial']['statement'])}</p></section>
 </article>
 """
     canonical = f"{canonical_url}/papers/{metadata['id']}/" if canonical_url else ""
@@ -230,7 +231,7 @@ def build_about(base: str, canonical_url: str) -> str:
     content = """
 <section class="page-intro"><span>About the archive</span><h1>Designed for inspection and independence.</h1><p>ARR is an open, curated archive for research published with the files and evidence needed to understand how each result was produced and checked.</p></section>
 <section class="about-grid">
-  <article><h2>What ARR is</h2><p>A versioned archive of source-first preprints, code, formalizations, data descriptions and explicit verification records.</p></article>
+  <article><h2>What ARR is</h2><p>A versioned archive of canonical manuscripts, machine-readable renditions, code, formalizations, data descriptions and explicit verification records.</p></article>
   <article><h2>What ARR is not</h2><p>ARR is not a journal, a replacement for expert peer review, a ranking of authors or a guarantee that a scientific claim is true.</p></article>
   <article><h2>Governance</h2><p>The prototype begins with a documented editorial process. Founder conflicts, authorship and future independent governance will be disclosed publicly.</p></article>
   <article><h2>Preservation</h2><p>Stable identifiers are independent of GitHub. Versioned releases distribute generated and large files; future object storage and independent preservation mirrors can replace any provider without changing citations.</p></article>
