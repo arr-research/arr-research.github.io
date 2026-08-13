@@ -43,6 +43,7 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0f17">
   <title>{esc(title)}</title>
   <meta name="description" content="{esc(description)}">
   {canonical_tag}
