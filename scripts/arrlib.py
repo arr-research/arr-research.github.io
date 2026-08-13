@@ -6,13 +6,14 @@ import json
 import re
 import uuid
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 from typing import Any, Iterable
 
 
 ROOT = Path(__file__).resolve().parents[1]
 PAPERS_DIR = ROOT / "papers"
+TIMESTAMP_REGISTRY_PATH = ROOT / "registry" / "record-timestamps.json"
 ID_PATTERN = re.compile(r"^ARR-(\d{4})-([0-9A-HJKMNP-TV-Z]{16})$")
 UUID_PATTERN = r"[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}"
 RECORD_ID_PATTERN = re.compile(rf"^arr:record:{UUID_PATTERN}$")
@@ -61,6 +62,68 @@ def discover_papers() -> list[Paper]:
     for metadata_path in sorted(PAPERS_DIR.glob("**/metadata.json")):
         papers.append(Paper(metadata_path.parent, load_json(metadata_path)))
     return papers
+
+
+def parse_exact_timestamp(value: object) -> datetime:
+    if not isinstance(value, str):
+        raise ValueError("timestamp must be a string")
+    parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    if parsed.tzinfo is None or parsed.utcoffset() is None:
+        raise ValueError("timestamp must include an explicit UTC offset")
+    return parsed
+
+
+def load_record_timestamps(path: Path = TIMESTAMP_REGISTRY_PATH) -> dict[tuple[str, str], dict[str, Any]]:
+    registry = load_json(path)
+    if registry.get("schema_version") != "1.0" or not isinstance(registry.get("records"), list):
+        raise ValueError("timestamp registry must contain schema_version 1.0 and a records array")
+    records: dict[tuple[str, str], dict[str, Any]] = {}
+    for index, item in enumerate(registry["records"]):
+        if not isinstance(item, dict):
+            raise ValueError(f"timestamp registry record {index} must be an object")
+        key = (item.get("id"), item.get("version"))
+        if not all(isinstance(value, str) and value for value in key):
+            raise ValueError(f"timestamp registry record {index} requires id and version")
+        if key in records:
+            raise ValueError(f"duplicate timestamp registry entry for {key[0]} {key[1]}")
+        records[key] = item
+    return records
+
+
+def validate_record_timestamps(papers: Iterable[Paper], path: Path = TIMESTAMP_REGISTRY_PATH) -> list[str]:
+    try:
+        records = load_record_timestamps(path)
+    except (OSError, ValueError, json.JSONDecodeError) as error:
+        return [f"registry/record-timestamps.json: {error}"]
+
+    errors: list[str] = []
+    expected = {(paper.id, paper.version) for paper in papers}
+    actual = set(records)
+    for paper_id, version in sorted(expected - actual):
+        errors.append(f"timestamp registry: missing {paper_id} {version}")
+    for paper_id, version in sorted(actual - expected):
+        errors.append(f"timestamp registry: orphaned {paper_id} {version}")
+
+    for key in sorted(expected & actual):
+        item = records[key]
+        prefix = f"timestamp registry {key[0]} {key[1]}"
+        try:
+            deposited = parse_exact_timestamp(item.get("deposit_recorded_at"))
+            published = parse_exact_timestamp(item.get("published_at"))
+            if published < deposited:
+                errors.append(f"{prefix}: published_at precedes deposit_recorded_at")
+        except ValueError as error:
+            errors.append(f"{prefix}: {error}")
+        if item.get("deposit_timestamp_basis") != "first_repository_commit":
+            errors.append(f"{prefix}: deposit timestamp basis must be first_repository_commit")
+        commit = item.get("deposit_commit")
+        if not isinstance(commit, str) or not re.fullmatch(r"[0-9a-f]{40}", commit):
+            errors.append(f"{prefix}: deposit_commit must be a full Git SHA")
+        if item.get("publication_timestamp_basis") != "github_release":
+            errors.append(f"{prefix}: publication timestamp basis must be github_release")
+        if item.get("release_tag") != f"{key[0]}-{key[1]}":
+            errors.append(f"{prefix}: release_tag does not match the record and version")
+    return errors
 
 
 def _required_string(metadata: dict[str, Any], field: str, errors: list[str]) -> None:

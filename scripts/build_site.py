@@ -10,7 +10,14 @@ from collections import defaultdict
 from pathlib import Path
 from urllib.parse import quote
 
-from arrlib import ROOT, discover_papers, validate_collection
+from arrlib import (
+    ROOT,
+    discover_papers,
+    load_record_timestamps,
+    parse_exact_timestamp,
+    validate_collection,
+    validate_record_timestamps,
+)
 
 
 SITE_DIR = ROOT / "site"
@@ -34,6 +41,22 @@ def clean_base_path(value: str) -> str:
 
 def esc(value: object) -> str:
     return html.escape(str(value), quote=True)
+
+
+def exact_time(value: str) -> str:
+    parsed = parse_exact_timestamp(value)
+    offset = parsed.strftime("%z")
+    zone = "UTC" if offset == "+0000" else f"UTC{offset[:3]}:{offset[3:]}"
+    label = f"{parsed:%Y-%m-%d %H:%M:%S} {zone}"
+    return f'<time datetime="{esc(value)}">{esc(label)}</time>'
+
+
+def timestamp_panel(timestamp: dict) -> str:
+    return f"""
+  <section class="timestamp-panel" aria-label="Record timestamps">
+    <div><span>Deposit recorded</span><strong>{exact_time(timestamp['deposit_recorded_at'])}</strong><small>First repository commit · full Git SHA recorded</small></div>
+    <div><span>Published</span><strong>{exact_time(timestamp['published_at'])}</strong><small>GitHub release · tag {esc(timestamp['release_tag'])}</small></div>
+  </section>"""
 
 
 def page_shell(*, title: str, description: str, content: str, base: str, canonical: str = "") -> str:
@@ -66,7 +89,7 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
   <main id="main">{content}</main>
   <footer>
     <p><strong>ARR</strong> is a curated archive with explicit evidence labels. Acceptance is not peer review and is not a guarantee of truth.</p>
-    <p><a href="{base}/catalog.json">Machine-readable catalogue (CC0)</a> · <a href="{base}/catalog/index.json">Partition index</a> · <a href="{base}/protocol/">Verification protocol</a> · <a href="{base}/licensing/">Licensing</a> · <a href="https://github.com/arr-research/arr-research.github.io">Source (AGPL)</a></p>
+    <p><a href="{base}/catalog.json">Machine-readable catalogue (CC0)</a> · <a href="{base}/registry/record-timestamps.json">Exact record timestamps (CC0)</a> · <a href="{base}/catalog/index.json">Partition index</a> · <a href="{base}/protocol/">Verification protocol</a> · <a href="{base}/licensing/">Licensing</a> · <a href="https://github.com/arr-research/arr-research.github.io">Source (AGPL)</a></p>
   </footer>
 </body>
 </html>
@@ -111,7 +134,7 @@ def verification_rows(metadata: dict) -> str:
     return "".join(rows)
 
 
-def paper_card(metadata: dict, base: str) -> str:
+def paper_card(metadata: dict, timestamp: dict, base: str) -> str:
     authors = ", ".join(author["name"] for author in metadata["authors"])
     return f"""
 <article class="paper-card">
@@ -119,14 +142,14 @@ def paper_card(metadata: dict, base: str) -> str:
   <h3><a href="{base}/papers/{quote(metadata['id'])}/">{esc(metadata['title'])}</a></h3>
   <p class="authors">{esc(authors)}</p>
   <p>{esc(metadata['abstract'])}</p>
-  <div class="paper-foot"><span>{esc(metadata['date'])}</span><span>Protocol {esc(metadata['verification']['protocol'])}</span></div>
+  <div class="paper-foot"><span>Published {exact_time(timestamp['published_at'])}</span><span>Protocol {esc(metadata['verification']['protocol'])}</span></div>
 </article>"""
 
 
-def build_home(papers: list, base: str, canonical_url: str) -> str:
+def build_home(papers: list, timestamps: dict, base: str, canonical_url: str) -> str:
     accepted = sum(p.metadata["status"] != "withdrawn" for p in papers)
     lean_verified = sum(p.metadata["verification"]["lean4"] in {"L2", "L3"} for p in papers)
-    recent = "".join(paper_card(p.metadata, base) for p in papers[:6])
+    recent = "".join(paper_card(p.metadata, timestamps[(p.id, p.version)], base) for p in papers[:6])
     if not recent:
         recent = """
 <section class="empty-state">
@@ -157,8 +180,8 @@ def build_home(papers: list, base: str, canonical_url: str) -> str:
     return page_shell(title="ARR — Archive for Rigorous Research", description="A curated, machine-readable archive of research preprints with explicit evidence labels.", content=content, base=base, canonical=canonical)
 
 
-def build_papers_index(papers: list, base: str, canonical_url: str) -> str:
-    cards = "".join(paper_card(p.metadata, base) for p in papers)
+def build_papers_index(papers: list, timestamps: dict, base: str, canonical_url: str) -> str:
+    cards = "".join(paper_card(p.metadata, timestamps[(p.id, p.version)], base) for p in papers)
     if not cards:
         cards = '<section class="empty-state compact"><h2>No accepted papers yet.</h2><p>The public catalogue begins only after the first candidate completes the ARR workflow.</p></section>'
     content = f"""
@@ -169,7 +192,7 @@ def build_papers_index(papers: list, base: str, canonical_url: str) -> str:
     return page_shell(title="Papers — ARR", description="Accepted ARR research papers.", content=content, base=base, canonical=canonical)
 
 
-def build_paper_page(paper, base: str, canonical_url: str, repository: str) -> str:
+def build_paper_page(paper, timestamp: dict, base: str, canonical_url: str, repository: str) -> str:
     metadata = paper.metadata
     authors = ", ".join(author["name"] for author in metadata["authors"])
     relative_path = paper.path.relative_to(ROOT).as_posix()
@@ -197,6 +220,7 @@ def build_paper_page(paper, base: str, canonical_url: str, repository: str) -> s
   <div class="paper-meta">{status_badge(metadata['status'])}<span>{esc(metadata['id'])} · {esc(metadata['version'])} · {esc(metadata['date'])}</span></div>
   <h1>{esc(metadata['title'])}</h1>
   <p class="paper-authors">{esc(authors)}</p>
+  {timestamp_panel(timestamp)}
   <div class="download-row">{''.join(links)}</div>
   <section class="abstract"><span>Abstract</span><p>{esc(metadata['abstract'])}</p></section>
   <div class="paper-grid">
@@ -320,14 +344,18 @@ def main() -> int:
     canonical_url = args.canonical_url.rstrip("/")
     papers = discover_papers()
     failures = validate_collection(papers)
-    if failures:
-        print("Cannot build site: paper validation failed.", file=sys.stderr)
+    timestamp_errors = validate_record_timestamps(papers)
+    if failures or timestamp_errors:
+        print("Cannot build site: record validation failed.", file=sys.stderr)
         for path, errors in failures.items():
             for error in errors:
                 print(f"{path}: {error}", file=sys.stderr)
+        for error in timestamp_errors:
+            print(error, file=sys.stderr)
         return 1
 
-    papers.sort(key=lambda paper: (paper.metadata["date"], paper.id), reverse=True)
+    timestamps = load_record_timestamps()
+    papers.sort(key=lambda paper: (timestamps[(paper.id, paper.version)]["published_at"], paper.id), reverse=True)
     if OUTPUT_DIR.exists():
         shutil.rmtree(OUTPUT_DIR)
     (OUTPUT_DIR / "assets").mkdir(parents=True)
@@ -336,14 +364,20 @@ def main() -> int:
     shutil.copy2(ROOT / "schema" / "paper.schema.json", OUTPUT_DIR / "schema" / "paper.schema.json")
     shutil.copy2(ROOT / "schema" / "submission-receipt.schema.json", OUTPUT_DIR / "schema" / "submission-receipt.schema.json")
     shutil.copy2(ROOT / "schema" / "registry-event.schema.json", OUTPUT_DIR / "schema" / "registry-event.schema.json")
+    shutil.copy2(ROOT / "schema" / "record-timestamps.schema.json", OUTPUT_DIR / "schema" / "record-timestamps.schema.json")
+    (OUTPUT_DIR / "registry").mkdir(parents=True)
+    shutil.copy2(ROOT / "registry" / "record-timestamps.json", OUTPUT_DIR / "registry" / "record-timestamps.json")
 
-    write(OUTPUT_DIR / "index.html", build_home(papers, base, canonical_url))
-    write(OUTPUT_DIR / "papers" / "index.html", build_papers_index(papers, base, canonical_url))
+    write(OUTPUT_DIR / "index.html", build_home(papers, timestamps, base, canonical_url))
+    write(OUTPUT_DIR / "papers" / "index.html", build_papers_index(papers, timestamps, base, canonical_url))
     write(OUTPUT_DIR / "protocol" / "index.html", build_protocol(base, canonical_url))
     write(OUTPUT_DIR / "licensing" / "index.html", build_licensing(base, canonical_url))
     write(OUTPUT_DIR / "about" / "index.html", build_about(base, canonical_url))
     for paper in papers:
-        write(OUTPUT_DIR / "papers" / paper.id / "index.html", build_paper_page(paper, base, canonical_url, args.repository))
+        write(
+            OUTPUT_DIR / "papers" / paper.id / "index.html",
+            build_paper_page(paper, timestamps[(paper.id, paper.version)], base, canonical_url, args.repository),
+        )
 
     write_catalogue_exports(papers)
     write(OUTPUT_DIR / "robots.txt", "User-agent: *\nAllow: /\n" + (f"Sitemap: {canonical_url}/sitemap.xml\n" if canonical_url else ""))

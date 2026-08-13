@@ -3,17 +3,22 @@ from __future__ import annotations
 
 import sys
 
-from arrlib import discover_papers, validate_collection
+from arrlib import discover_papers, validate_collection, validate_record_timestamps
 
 
 def main() -> int:
     papers = discover_papers()
     failures = validate_collection(papers)
-    if failures:
+    timestamp_errors = validate_record_timestamps(papers)
+    if failures or timestamp_errors:
         print("ARR validation failed:")
         for path, errors in failures.items():
             print(f"\n{path}")
             for error in errors:
+                print(f"  - {error}")
+        if timestamp_errors:
+            print("\nregistry/record-timestamps.json")
+            for error in timestamp_errors:
                 print(f"  - {error}")
         return 1
     print(f"ARR validation passed ({len(papers)} published paper(s)).")
