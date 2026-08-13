@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
 from __future__ import annotations
 
 import argparse
@@ -12,7 +13,7 @@ from arrlib import ROOT, discover_papers, iter_package_files, sha256, validate_p
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build immutable release assets for one ARR paper.")
-    parser.add_argument("paper_id", help="ARR identifier, for example ARR-2026-000001")
+    parser.add_argument("paper_id", help="ARR public identifier, for example ARR-2026-01K2M3N4P5Q6R7S8")
     parser.add_argument("--output", default="dist/release", help="Output directory")
     return parser.parse_args()
 
@@ -48,7 +49,7 @@ def main() -> int:
     manifest = output / "MANIFEST.sha256"
     manifest.write_text("\n".join(manifest_lines) + "\n", encoding="utf-8", newline="\n")
 
-    metadata_copy = output / "metadata.json"
+    metadata_copy = output / "RECORD.json"
     metadata_copy.write_text(json.dumps(paper.metadata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     paper_pdf = paper.path / "paper.pdf"

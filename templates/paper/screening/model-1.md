@@ -1,6 +1,7 @@
 # ARR screening report
 
-- Paper: `ARR-2026-000001 v1`
+- Paper: `ARR-2026-01HXNMGQKT9H0SYW v1`
+- Version ID: `arr:version:replace-with-uuid`
 - Paper SHA-256: `replace-me`
 - Protocol: `ARR-SCREEN-1.0`
 - Provider: `replace-me`

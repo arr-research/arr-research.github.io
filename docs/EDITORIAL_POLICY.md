@@ -2,7 +2,7 @@
 
 ## Scope
 
-ARR is a curated archive of source-first research preprints. It is not a journal and publication does not imply peer review.
+ARR is a curated archive of source-first research preprints. It is not a journal and publication does not imply peer review, AI screening, correctness, novelty or importance.
 
 ## Acceptance standard
 
@@ -13,14 +13,17 @@ A record may be accepted only when:
 3. citations and key factual dependencies have been checked under the applicable protocol;
 4. code, data descriptions and formal proofs needed to support the stated result are supplied when applicable;
 5. automated checks succeed;
-6. at least three declared frontier-model evaluators have produced version-specific reports;
-7. no critical editorial objection remains unresolved;
+6. every performed assessment is labelled with its actual outcome and `not_assessed` remains permissible and visible;
+7. an `AI screened: pass` label requires three declared, version-specific evaluator reports and no unresolved critical objection;
 8. a human editor signs off on the exact version;
-9. the final decision is tied to a specific content hash and protocol version.
+9. the final decision is tied to stable record/version identifiers, a SHA-256 manifest and protocol version;
+10. deposit authority, scoped licenses and third-party material disclosures are recorded.
 
 ## Claims ARR makes
 
 ARR may state that a particular check passed. It must not convert that result into a broader claim that the paper is universally true, novel, important or peer reviewed.
+
+ARR does not publish a composite quality score. Independent labels report the evidence actually obtained.
 
 ## Corrections and withdrawals
 
@@ -29,3 +32,7 @@ Published files are not silently replaced. Corrections produce a new version. Wi
 ## Founder conflict
 
 When an editor, founder or operator is also an author, that relationship must be visible on the record. Independent governance and review should be introduced before ARR accepts external submissions or describes its decisions as independent.
+
+## Intake boundary
+
+External submissions remain closed during the founder-owned pilot. When opened, intake will be private, rate-limited, quarantined and separate from the accepted archive. Submission does not create a right to publication, indefinite storage or evaluation.

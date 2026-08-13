@@ -1,8 +1,10 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
 from __future__ import annotations
 
 import hashlib
 import json
 import re
+import uuid
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
@@ -11,12 +13,16 @@ from typing import Any, Iterable
 
 ROOT = Path(__file__).resolve().parents[1]
 PAPERS_DIR = ROOT / "papers"
-ID_PATTERN = re.compile(r"^ARR-(\d{4})-(\d{6})$")
+ID_PATTERN = re.compile(r"^ARR-(\d{4})-([0-9A-HJKMNP-TV-Z]{16})$")
+UUID_PATTERN = r"[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}"
+RECORD_ID_PATTERN = re.compile(rf"^arr:record:{UUID_PATTERN}$")
+VERSION_ID_PATTERN = re.compile(rf"^arr:version:{UUID_PATTERN}$")
 VERSION_PATTERN = re.compile(r"^v[1-9]\d*$")
 ALLOWED_STATUSES = {"accepted", "corrected", "withdrawn"}
 ALLOWED_SOURCE_FILES = {"paper.tex", "paper.md"}
-ALLOWED_CHECKS = {"pass", "partial", "not_applicable"}
-ALLOWED_LEAN_LEVELS = {"L0", "L1", "L2", "L3", "not_applicable"}
+ALLOWED_CHECKS = {"pass", "partial", "not_assessed", "not_applicable"}
+ALLOWED_LEAN_LEVELS = {"L0", "L1", "L2", "L3", "not_assessed", "not_applicable"}
+CROCKFORD = "0123456789ABCDEFGHJKMNPQRSTVWXYZ"
 
 
 @dataclass(frozen=True)
@@ -41,6 +47,15 @@ def load_json(path: Path) -> dict[str, Any]:
     return value
 
 
+def crockford_prefix(value: uuid.UUID, length: int = 16) -> str:
+    number = value.int
+    encoded = []
+    while number:
+        number, remainder = divmod(number, 32)
+        encoded.append(CROCKFORD[remainder])
+    return "".join(reversed(encoded)).rjust(26, "0")[:length]
+
+
 def discover_papers() -> list[Paper]:
     papers: list[Paper] = []
     for metadata_path in sorted(PAPERS_DIR.glob("**/metadata.json")):
@@ -58,21 +73,51 @@ def validate_paper(paper: Paper) -> list[str]:
     metadata = paper.metadata
     errors: list[str] = []
 
-    for field in ("id", "version", "title", "abstract", "date", "status", "license", "source_of_truth"):
+    for field in (
+        "schema_version",
+        "record_id",
+        "version_id",
+        "id",
+        "version",
+        "title",
+        "abstract",
+        "date",
+        "status",
+        "source_of_truth",
+    ):
         _required_string(metadata, field, errors)
+
+    if metadata.get("schema_version") != "1.0":
+        errors.append("schema_version: must be 1.0")
+
+    record_id = metadata.get("record_id")
+    if not isinstance(record_id, str) or not RECORD_ID_PATTERN.match(record_id):
+        errors.append("record_id: must be arr:record:<UUIDv4>")
+
+    version_id = metadata.get("version_id")
+    if not isinstance(version_id, str) or not VERSION_ID_PATTERN.match(version_id):
+        errors.append("version_id: must be arr:version:<UUIDv4>")
 
     paper_id = metadata.get("id", "")
     id_match = ID_PATTERN.match(paper_id) if isinstance(paper_id, str) else None
     if not id_match:
-        errors.append("id: must match ARR-YYYY-NNNNNN")
+        errors.append("id: must match ARR-YYYY-<16 Crockford Base32 characters>")
     else:
         expected_year = id_match.group(1)
-        try:
-            relative_parts = paper.path.relative_to(PAPERS_DIR).parts
-        except ValueError:
-            relative_parts = ()
-        if relative_parts and relative_parts[0] != expected_year:
-            errors.append(f"path: paper year must be {expected_year}")
+        expected_shard = id_match.group(2)[:2]
+        if isinstance(record_id, str) and RECORD_ID_PATTERN.match(record_id):
+            expected_suffix = crockford_prefix(uuid.UUID(record_id.removeprefix("arr:record:")))
+            if id_match.group(2) != expected_suffix:
+                errors.append("id: suffix must be derived from record_id")
+        path_parts = paper.path.parts
+        if len(path_parts) >= 4:
+            actual_year, actual_month, actual_shard, _ = path_parts[-4:]
+            if actual_year != expected_year:
+                errors.append(f"path: paper year must be {expected_year}")
+            if not re.match(r"^(0[1-9]|1[0-2])$", actual_month):
+                errors.append("path: paper month must be 01 through 12")
+            if actual_shard != expected_shard:
+                errors.append(f"path: shard must be {expected_shard}")
 
     version = metadata.get("version")
     if not isinstance(version, str) or not VERSION_PATTERN.match(version):
@@ -80,6 +125,8 @@ def validate_paper(paper: Paper) -> list[str]:
 
     if metadata.get("status") not in ALLOWED_STATUSES:
         errors.append(f"status: must be one of {sorted(ALLOWED_STATUSES)}")
+    if metadata.get("status") == "corrected" and not metadata.get("supersedes_version_id"):
+        errors.append("supersedes_version_id: required for a corrected version")
 
     title = metadata.get("title")
     if isinstance(title, str) and len(title.strip()) < 10:
@@ -92,7 +139,11 @@ def validate_paper(paper: Paper) -> list[str]:
     publication_date = metadata.get("date")
     if isinstance(publication_date, str):
         try:
-            date.fromisoformat(publication_date)
+            parsed_date = date.fromisoformat(publication_date)
+            if id_match and str(parsed_date.year) != id_match.group(1):
+                errors.append("date: year must match public id")
+            if id_match and len(paper.path.parts) >= 4 and paper.path.parts[-3] != f"{parsed_date.month:02d}":
+                errors.append("path: month must match publication date")
         except ValueError:
             errors.append("date: must use YYYY-MM-DD")
 
@@ -113,12 +164,101 @@ def validate_paper(paper: Paper) -> list[str]:
     if not (paper.path / "paper.md").is_file():
         errors.append("paper.md: a machine-readable rendition is required")
 
-    for filename in ("PROVENANCE.json", "CITATION.cff"):
+    for filename in ("PROVENANCE.json", "CITATION.cff", "LICENSES.json"):
         if not (paper.path / filename).is_file():
             errors.append(f"{filename}: required file is missing")
 
     if not (paper.path / "LICENSES").is_dir():
         errors.append("LICENSES: required directory is missing")
+
+    licenses = metadata.get("licenses")
+    if not isinstance(licenses, dict):
+        errors.append("licenses: an object is required")
+    else:
+        if not isinstance(licenses.get("manuscript"), str) or not licenses["manuscript"].strip():
+            errors.append("licenses.manuscript: an SPDX identifier is required")
+        if licenses.get("metadata") != "CC0-1.0":
+            errors.append("licenses.metadata: ARR catalogue metadata must be CC0-1.0")
+        for category in ("code", "data"):
+            entries = licenses.get(category)
+            if not isinstance(entries, list):
+                errors.append(f"licenses.{category}: an array is required")
+            else:
+                for index, entry in enumerate(entries):
+                    if not isinstance(entry, dict):
+                        errors.append(f"licenses.{category}[{index}]: an object is required")
+                        continue
+                    if not isinstance(entry.get("path"), str) or not entry["path"].strip():
+                        errors.append(f"licenses.{category}[{index}].path: required")
+                    if not isinstance(entry.get("spdx"), str) or not entry["spdx"].strip():
+                        errors.append(f"licenses.{category}[{index}].spdx: required")
+
+    licenses_path = paper.path / "LICENSES.json"
+    if licenses_path.is_file():
+        try:
+            license_record = load_json(licenses_path)
+            if isinstance(licenses, dict):
+                for category in ("manuscript", "metadata"):
+                    declared = license_record.get(category)
+                    if not isinstance(declared, dict) or declared.get("spdx") != licenses.get(category):
+                        errors.append(f"LICENSES.json: {category} must match metadata.json")
+                for category in ("code", "data"):
+                    metadata_pairs = {
+                        (item.get("path"), item.get("spdx"))
+                        for item in licenses.get(category, [])
+                        if isinstance(item, dict)
+                    }
+                    record_pairs = {
+                        (item.get("path"), item.get("spdx"))
+                        for item in license_record.get(category, [])
+                        if isinstance(item, dict)
+                    }
+                    if metadata_pairs != record_pairs:
+                        errors.append(f"LICENSES.json: {category} entries must match metadata.json")
+        except (OSError, ValueError, json.JSONDecodeError) as error:
+            errors.append(f"LICENSES.json: invalid JSON ({error})")
+
+    code_suffixes = {".lean", ".py", ".r", ".jl", ".js", ".ts", ".rs", ".c", ".cc", ".cpp", ".h"}
+    code_files = [path for path in (paper.path / "src").glob("**/*") if path.is_file() and path.suffix.lower() in code_suffixes]
+    if code_files and isinstance(licenses, dict) and not licenses.get("code"):
+        errors.append("licenses.code: code files exist but no scoped code license is declared")
+
+    data_dir = paper.path / "data"
+    data_files = [path for path in data_dir.glob("**/*") if path.is_file()] if data_dir.is_dir() else []
+    if data_files and isinstance(licenses, dict) and not licenses.get("data"):
+        errors.append("licenses.data: data files exist but no scoped data license is declared")
+
+    provenance_path = paper.path / "PROVENANCE.json"
+    if provenance_path.is_file():
+        try:
+            provenance = load_json(provenance_path)
+            for field in ("record_id", "version_id", "source_of_truth"):
+                if provenance.get(field) != metadata.get(field):
+                    errors.append(f"PROVENANCE.json: {field} must match metadata.json")
+        except (OSError, ValueError, json.JSONDecodeError) as error:
+            errors.append(f"PROVENANCE.json: invalid JSON ({error})")
+
+    deposit = metadata.get("deposit")
+    if not isinstance(deposit, dict):
+        errors.append("deposit: an object is required")
+    else:
+        if deposit.get("relationship") not in {"author", "rights_holder", "authorized_agent"}:
+            errors.append("deposit.relationship: invalid value")
+        if deposit.get("deposit_authorized") is not True:
+            errors.append("deposit.deposit_authorized: must be true")
+        if not isinstance(deposit.get("third_party_material_disclosed"), bool):
+            errors.append("deposit.third_party_material_disclosed: a boolean is required")
+        if not isinstance(deposit.get("terms_version"), str) or not deposit["terms_version"].strip():
+            errors.append("deposit.terms_version: required")
+
+    integrity = metadata.get("integrity")
+    if not isinstance(integrity, dict):
+        errors.append("integrity: an object is required")
+    else:
+        if integrity.get("algorithm") != "sha256":
+            errors.append("integrity.algorithm: must be sha256")
+        if integrity.get("manifest") != "MANIFEST.sha256":
+            errors.append("integrity.manifest: must be MANIFEST.sha256")
 
     ai = metadata.get("ai_assistance")
     if not isinstance(ai, dict):
@@ -133,16 +273,33 @@ def validate_paper(paper: Paper) -> list[str]:
     if not isinstance(screening, dict):
         errors.append("screening: an object is required")
     else:
-        if screening.get("status") != "pass":
-            errors.append("screening.status: must be pass before publication")
-        if screening.get("critical_objections_unresolved") != 0:
-            errors.append("screening.critical_objections_unresolved: must be zero")
+        screening_status = screening.get("status")
+        if screening_status not in {"not_assessed", "pass", "fail"}:
+            errors.append("screening.status: invalid value")
+        unresolved = screening.get("critical_objections_unresolved")
+        if not isinstance(unresolved, int) or isinstance(unresolved, bool) or unresolved < 0:
+            errors.append("screening.critical_objections_unresolved: must be a non-negative integer")
         if screening.get("human_signoff") is not True:
             errors.append("screening.human_signoff: must be true")
         evaluators = screening.get("evaluators")
-        if not isinstance(evaluators, list) or len(evaluators) < 3:
-            errors.append("screening.evaluators: at least three evaluators are required")
+        if not isinstance(evaluators, list):
+            errors.append("screening.evaluators: an array is required")
         else:
+            if screening_status == "not_assessed" and evaluators:
+                errors.append("screening.evaluators: must be empty when status is not_assessed")
+            if screening_status == "pass":
+                if len(evaluators) < 3:
+                    errors.append("screening.evaluators: three independent evaluators are required for pass")
+                if screening.get("critical_objections_unresolved") != 0:
+                    errors.append("screening.critical_objections_unresolved: must be zero for pass")
+                completed_at = screening.get("completed_at")
+                if not isinstance(completed_at, str):
+                    errors.append("screening.completed_at: required for pass")
+                else:
+                    try:
+                        date.fromisoformat(completed_at)
+                    except ValueError:
+                        errors.append("screening.completed_at: must use YYYY-MM-DD")
             model_ids: set[str] = set()
             for index, evaluator in enumerate(evaluators):
                 if not isinstance(evaluator, dict):
@@ -155,8 +312,10 @@ def validate_paper(paper: Paper) -> list[str]:
                     errors.append(f"screening.evaluators[{index}].model_id: duplicate model")
                 else:
                     model_ids.add(model_id)
-                if evaluator.get("outcome") != "pass":
-                    errors.append(f"screening.evaluators[{index}].outcome: must be pass")
+                if evaluator.get("outcome") not in {"pass", "concerns", "fail"}:
+                    errors.append(f"screening.evaluators[{index}].outcome: invalid value")
+                if screening_status == "pass" and evaluator.get("outcome") != "pass":
+                    errors.append(f"screening.evaluators[{index}].outcome: must be pass for screening pass")
                 report = evaluator.get("report")
                 if not isinstance(report, str) or not (paper.path / report).is_file():
                     errors.append(f"screening.evaluators[{index}].report: referenced report is missing")
@@ -184,15 +343,29 @@ def validate_paper(paper: Paper) -> list[str]:
 
 def validate_collection(papers: Iterable[Paper]) -> dict[str, list[str]]:
     results: dict[str, list[str]] = {}
-    seen: set[tuple[str, str]] = set()
+    seen_versions: set[tuple[str, str]] = set()
+    seen_version_ids: set[str] = set()
+    public_to_record: dict[str, str] = {}
     for paper in papers:
-        key = (paper.id, paper.version)
+        record_id = paper.metadata.get("record_id", "")
+        version_id = paper.metadata.get("version_id", "")
+        key = (record_id, paper.version)
         errors = validate_paper(paper)
-        if key in seen:
-            errors.append("duplicate id and version")
-        seen.add(key)
+        if key in seen_versions:
+            errors.append("duplicate record_id and version")
+        seen_versions.add(key)
+        if version_id in seen_version_ids:
+            errors.append("duplicate version_id")
+        seen_version_ids.add(version_id)
+        previous_record = public_to_record.setdefault(paper.id, record_id)
+        if previous_record != record_id:
+            errors.append("id: public identifier is assigned to multiple record_id values")
         if errors:
-            results[str(paper.path.relative_to(ROOT))] = errors
+            try:
+                display_path = paper.path.relative_to(ROOT)
+            except ValueError:
+                display_path = paper.path
+            results[str(display_path)] = errors
     return results
 
 
