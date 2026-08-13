@@ -1,0 +1,78 @@
+name: Create paper release
+
+on:
+  workflow_dispatch:
+    inputs:
+      paper_id:
+        description: "ARR identifier, e.g. ARR-2026-000001"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ inputs.paper_id }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out accepted source
+        uses: actions/checkout@v6
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Validate all records
+        run: python scripts/validate_papers.py
+      - name: Build PDF from canonical LaTeX when present
+        shell: bash
+        run: |
+          paper_id='${{ inputs.paper_id }}'
+          metadata_path="$(find papers -path "*/$paper_id/metadata.json" -print -quit)"
+          if [[ -z "$metadata_path" ]]; then
+            echo "Paper not found: $paper_id" >&2
+            exit 1
+          fi
+          paper_dir="$(dirname "$metadata_path")"
+          if [[ -f "$paper_dir/paper.tex" ]]; then
+            sudo apt-get update
+            sudo apt-get install -y latexmk texlive-latex-extra texlive-fonts-recommended
+            (
+              cd "$paper_dir"
+              latexmk -pdf -interaction=nonstopmode -halt-on-error paper.tex
+            )
+          fi
+      - name: Build immutable package
+        run: python scripts/package_paper.py "${{ inputs.paper_id }}"
+      - name: Resolve version and release path
+        id: record
+        shell: bash
+        run: |
+          paper_id='${{ inputs.paper_id }}'
+          metadata_path="$(find papers -path "*/$paper_id/metadata.json" -print -quit)"
+          if [[ -z "$metadata_path" ]]; then
+            echo "Paper not found: $paper_id" >&2
+            exit 1
+          fi
+          version="$(python -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["version"])' "$metadata_path")"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "directory=dist/release/$paper_id/$version" >> "$GITHUB_OUTPUT"
+          echo "tag=$paper_id-$version" >> "$GITHUB_OUTPUT"
+      - name: Create GitHub Release and upload heavy assets
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PAPER_ID: ${{ inputs.paper_id }}
+          VERSION: ${{ steps.record.outputs.version }}
+          RELEASE_DIR: ${{ steps.record.outputs.directory }}
+          TAG: ${{ steps.record.outputs.tag }}
+        run: |
+          mapfile -d '' assets < <(find "$RELEASE_DIR" -maxdepth 1 -type f ! -name RELEASE_NOTES.md -print0)
+          gh release create "$TAG" "${assets[@]}" \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "$PAPER_ID $VERSION" \
+            --notes-file "$RELEASE_DIR/RELEASE_NOTES.md"
