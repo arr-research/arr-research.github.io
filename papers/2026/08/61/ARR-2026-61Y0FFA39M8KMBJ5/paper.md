@@ -1,0 +1,811 @@
+# Complete Rank-Two Born-Prediction Rate–Distortion on Gr_C(2,4): All-Field Matrix–Bingham Rigidity and a Unique Coexistence Transition
+
+> Machine-readable rendition extracted from the hash-identified canonical PDF. Mathematical typography may be degraded; cite and verify against `paper.pdf`.
+
+## Page 1
+
+```text
+Complete Rank-Two Born-Prediction
+                      Rate–Distortion
+    on GrC(2, 4): All-Field Matrix–Bingham Rigidity
+         and a Unique Coexistence Transition
+                                           Lluis Eriksson
+                                  Independent Researcher, Sweden
+                                      lluiseriksson@gmail.com
+
+                                          August 13, 2026
+
+
+                                               Abstract
+         We solve a finite-dimensional external-spectrum optimization problem for the complex
+     matrix–Bingham law and use it to determine an unrestricted Shannon rate–distortion
+     function. If P is Haar on GrC (2, 4) and A is traceless Hermitian with fixed Frobenius norm,
+     then Ees tr(AP ) is, for every s > 0, uniquely maximized, up to unitary conjugacy, by the
+     balanced spectrum (R/2, R/2, −R/2, −R/2). The exceptional model GrC (2, 4) ≃ Gr+             6
+                                                                                              2 (R )
+     turns the orbital integral into a positive series whose coefficients share one simplex-vertex
+     maximizer. For the Haar rank-two state source ρP = P/2, conditional least squares places
+     arbitrary reports in the full body {σ : 0 ⪯ σ ⪯ I/2, tr σ = 1}. We obtain its exact classical
+     rate–distortion function for every 0 ≤ D ≤ 1/4. Beyond a scalar dual representation, we
+     prove the complete radial phase diagram: one fold, one positive coexistence contact, no
+     reentrance, and an exact two-piece frontier consisting of one time-sharing segment and
+     one matrix–Bingham branch. The proof reduces the fold derivative to a power series with
+     exactly one negative coefficient followed by strictly positive coefficients. Covariant channels
+     attain the frontier, and the same value is the source-universal worst-state capacity; arbitrary
+     joint n-block memories cost exactly n times the one-letter frontier. The result concerns
+     classical memory for calibrated Born-probability prediction, not quantum rate–distortion,
+     click simulation, or a derivation of Born’s rule.
+
+
+1    Introduction
+Matrix–Bingham distributions are exponential families on Stiefel and Grassmann manifolds
+[1, 2]. Their normalizers are hypergeometric or confluent orbital integrals, with a mature
+computational and asymptotic theory [3–6]. Recent work develops matrix–Bingham information
+geometry for Grassmann-valued latent models but does not optimize the finite-dimensional
+external spectrum [7]. A different literature studies quantization and lossy compression on
+Grassmann manifolds, often through high-rate volume estimates or finite codebooks [8–10].
+Neither normalizer evaluation nor high-rate geometry by itself determines the unrestricted
+Shannon rate–distortion function: the reproduction may lie in the convex hull of the source
+orbit, and the Gibbs converse requires a global optimization over every external spectrum in
+that body.
+    This paper closes that optimization exactly in the smallest balanced rank-greater-than-one
+case, GrC (2, 4). The key is exceptional but elementary after the right coordinates are chosen.
+The classical homogeneous-space identification realizes this complex Grassmannian as the
+complex quadric, equivalently the Grassmannian of oriented real two-planes in six dimensions
+
+                                                   1
+```
+
+---
+
+## Page 2
+
+```text
+[11, 12]. A traceless 4 × 4 Hermitian spectrum becomes three real skew strengths p1 , p2 , p3 ,
+and its Frobenius sphere becomes the simplex constraint p21 + p22 + p23 = R2 . The full partition
+function has a coefficientwise-positive expansion in hk (p21 , p22 , p23 ). The elementary inequality
+hk (z) ≤ ( i zi )k makes the balanced orbit globally optimal for every field, not merely weakly
+          P
+
+or asymptotically.
+    Our contributions are:
+
+    1. an exact positive-series formula for the GrC (2, 4) orbital integral and a unique all-field,
+       fixed-radius balanced-spectrum maximizer;
+
+    2. an elementary closed form for the optimal normalizer and for the centered overlap density;
+
+    3. an exact all-distortion classical RDF allowing arbitrary standard-Borel memories and
+       arbitrary square-integrable reports, with a full converse and achieving covariant channels;
+
+    4. a complete scalar phase theorem—a unique fold and coexistence contact, no radial
+       reentrance, and an exact two-piece RDF—together with the high-fidelity constant;
+
+    5. a source-universal worst-state capacity identity and exact tensorization for arbitrary
+       joint block memories.
+
+The priority claim is deliberately narrow. We do not claim the first Bingham normalizer,
+the first Grassmann quantization result, or the first compact-group RDF. To our knowledge,
+the combination of a global finite-field external-spectrum theorem, a complete radial phase
+classification, and an unrestricted all-distortion RDF in this rank-two setting is new. The sphere
+RDF [13], generic compact-symmetry principles [14], and large-dimensional spherical-integral
+asymptotics [15, 16] are important neighboring results but do not supply the finite-dimensional
+spectral envelope proved here.
+    The relation to the two companion directions is summarized in Table 1; the present result
+is complementary rather than a replacement.
+
+    Direction              Scope of the result
+    Rank one               Exact Rate–Distortion Theory for Complex-Projective Born Prediction
+                           [17]: all dimensions and distortions, including thermodynamic and source-
+                           universal consequences.
+    General Grassmann      A Finite-Dimensional Nonanalytic Spectral Transition and Exact High-
+                           Fidelity Rate–Distortion [18]: arbitrary fixed rank, weak/strong transi-
+                           tion, and an exact high-fidelity interval.
+    This paper             Exact all-field spectrum, complete radial phase diagram, all distortions,
+                           and exact block cost for (d, r) = (4, 2).
+
+       Table 1: Division of scope within the Born-prediction rate–distortion programme.
+
+
+
+2     The exceptional six-dimensional model
+Let W = Λ2 C4 with its standard Hermitian product and a chosen unit complex volume form.
+Let τ be the conjugate-linear Hodge involution induced by these data; equivalently, in a unitary
+oriented basis, τ (w) = ⋆w. On two-forms τ 2 = 1, so its fixed locus WR is Euclidean of real
+dimension six and W = WR ⊕ iWR . A unit decomposable two-form w obeys w ∧ w = 0, which
+is equivalent under the chosen volume form to ⟨w, τ w⟩ = 0. Hence
+                                       w + τw              w − τw
+                                  x=     √    ,       y=     √
+                                           2                i 2
+
+                                                  2
+```
+
+---
+
+## Page 3
+
+```text
+√
+is an oriented orthonormal pair in WR and w = (x + iy)/ 2. Phase multiplication rotates
+(x, y) in its oriented plane. This gives the equivariant identification
+
+                                         GrC (2, 4) ≃ Gr+
+                                                        2 (WR ),
+
+The exterior-square action of SU (4) commutes with τ and restricts to the spin covering
+SU (4) → SO(WR ). The map above is therefore equivariant and bijective after quotienting the
+phase of w. Both spaces are compact homogeneous spaces; uniqueness of invariant probability
+consequently sends Haar Grassmann measure exactly to Haar oriented-plane measure. This
+also fixes the normalization used in every expectation below.
+    For traceless Hermitian A, define
+
+                                   HA (u ∧ v) = Au ∧ v + u ∧ Av.
+
+We take the Hermitian product conjugate-linear in its first entry. Since τ HA τ = −HA , the
+restriction BA = −iHA |WR is real skew-symmetric. Direct substitution yields
+
+                                  tr(AP ) = ⟨w, HA w⟩ = ⟨BA x, y⟩.                                      (1)
+
+If a1 , . . . , a4 are the eigenvalues of A, with sum zero, three canonical skew strengths are
+
+                        p1 = a1 + a2 ,          p2 = a1 + a3 ,                p3 = a1 + a4 .
+
+The inverse Hadamard transform is
+                              1
+        (a1 , a2 , a3 , a4 ) = (p1 + p2 + p3 , p1 − p2 − p3 , −p1 + p2 − p3 , −p1 − p2 + p3 ),          (2)
+                              2
+so
+                                   p21 + p22 + p23 = tr(A2 ) = ∥A∥2F .                                  (3)
+
+
+3    All-field external-spectrum rigidity
+Choose a Haar oriented plane by drawing x uniformly on S 5 and, conditionally, y uniformly
+on S 4 ⊂ x⊥ . In canonical coordinates,
+
+               ∥BA x∥2 = p21 q1 + p22 q2 + p23 q3 ,             (q1 , q2 , q3 ) ∼ Dirichlet(1, 1, 1).
+
+A coordinate Y of the uniform law on S 4 satisfies
+                                                      X        t2k
+                                       EetY =                         ,
+                                                      k≥0
+                                                          4k k!(5/2)k
+
+while                                  X            k       k! hk (z1 , z2 , z3 )
+                                  Eq         zi qi        =                         .
+                                         i
+                                                                     (3)k
+Combining these identities with Equation (1) proves the following formula without a generic-
+eigenvalue assumption.
+
+Lemma 3.1 (positive series). For every traceless Hermitian A and real s,
+                                                          ∞
+                                                          X (s2 /4)k hk (p2 , p2 , p2 )
+                                                                                   1    2   3
+                        Z(s, A) := Ees tr(AP ) =                                                .       (4)
+                                                          k=0
+                                                                         (5/2)k (3)k
+
+The series is absolutely convergent and every coefficient is nonnegative.
+
+                                                          3
+```
+
+---
+
+## Page 4
+
+```text
+2        2        2
+                   √ follows from the confluent HCIZ formula. With X = p1 , Y = p2 , Z = p3
+   The same identity
+and fs (t) = cosh(s t),
+
+                                   24                   X s2m hm (X, Y, Z)
+                      Z(s, A) =       fs [X, Y, Z] = 24                    ,                      (5)
+                                   s4                   m≥0
+                                                             (2m + 4)!
+
+where confluent divided differences are understood by continuity. Equality of Equations (4)
+and (5) is also a useful independent normalization check.
+
+Theorem 3.2 (all-field balanced maximizer). Fix R > 0 and s ̸= 0. Among all traceless
+Hermitian 4 × 4 matrices with ∥A∥F = R,
+
+                                                         12 [2 cosh t − 2 − t2 ]
+             max Z(s, A) = L(sR),           L(t) :=                              ,   L(0) := 1.   (6)
+              A                                                    t4
+The maximizing spectrum is unique up to permutation and is
+
+                                     (R/2, R/2, −R/2, −R/2).
+
+Proof. For nonnegative zi ,
+                                  hk (z1 , z2 , z3 ) ≤ (z1 + z2 + z3 )k ,
+because the complete homogeneous polynomial has monomial coefficients one whereas the
+multinomial coefficients on the right are at least one. For k = 2, equality forces zi zj = 0 for all
+i≠ j. By Equation (3), the allowed triples form the simplex z1 +z2 +z3 = R2 . Every coefficient
+in Equation (4) is nonnegative and the k = 2 coefficient is positive, so equality in the summed
+bound holds exactly at a vertex, up to permutation. The transform Equation (2) maps a
+vertex to the stated balanced spectrum. Summing the vertex series gives Equation (6).
+
+    The coefficients L(t) = 1 + t2 /30 + t4 /1680 + · · · imply
+                                              1                     1
+                                    EX 2 =       ,        EX 4 =       ,                          (7)
+                                              15                    70
+for the centered balanced overlap introduced below. These reproduce the independent Haar
+moment calculation.
+
+
+4    The unrestricted reproduction body
+Let P be Haar on GrC (2, 4) and define the rank-two state source
+
+                    ρP = P/2,        SP = ρP − I/4,              ∥SP ∥2F = R02 = 1/4.
+
+For any standard-Borel memory W and any square-integrable Hermitian report YW , conditional
+least squares gives
+
+           E∥ρP − YW ∥2F = E∥ρP − σW ∥2F + E∥σW − YW ∥2F ,                    σW := E(ρP | W ).   (8)
+
+Thus arbitrary reporters reduce pointwise to posterior density matrices without increasing
+distortion or mutual information. Their range is contained in, and the convex hull of the
+source orbit equals,
+                             C = {σ : 0 ⪯ σ ⪯ I/2, tr σ = 1}.                           (9)
+Indeed, the convex hull of the unitary orbit with spectrum (1/2, 1/2, 0, 0) consists exactly of
+trace-one Hermitian matrices whose eigenvalues lie in [0, 1/2], by the spectral majorization
+
+
+                                                     4
+```
+
+---
+
+## Page 5
+
+```text
+criterion. Every A = σ − I/4 in this body obeys ∥A∥F ≤ 1/2. Conversely, the balanced point
+at each radius 0 ≤ R ≤ 1/2 belongs to the body, since its eigenvalues are 1/4 ± R/2.
+    We study the entirely classical rate–distortion problem
+
+                         R4,2 (D) = inf{I(P ; W ) : E∥ρP − σW ∥2F ≤ D}.                        (10)
+
+The infimum ranges over arbitrary standard-Borel alphabets and kernels. It is not restricted
+to finite memory, deterministic encoders, or Grassmann-valued reports.
+
+
+5    Exact all-distortion rate–distortion function
+Fix a rank-two projector Q and put
+
+                                  T = tr(P Q),           X = T − 1.
+
+The two labeled principal-overlap eigenvalues have symmetric Jacobi density 6(x1 − x2 )2 on the
+square [0, 1]2 (the density is 12(x1 − x2 )2 if one instead restricts to the ordered triangle). This
+is a two-particle complex Jacobi trace statistic; finite Jacobi trace laws and recurrences are
+classical [19]. For T = x1 + x2 , integration along the segment x2 = T − x1 gives, for 0 ≤ T ≤ 1,
+                                            Z T
+                              fT (T ) = 6         (2x1 − T )2 dx1 = 2T 3 ,
+                                             0
+
+and the substitution (x1 , x2 ) 7→ (1 − x1 , 1 − x2 ) gives fT (T ) = 2(2 − T )3 for 1 ≤ T ≤ 2. Thus
+X = T − 1 has the particularly simple centered density
+
+                                  fX (x) = 2(1 − |x|)3 1[−1,1] (x),                            (11)
+
+and hence
+                                           12[2 cosh κ − 2 − κ2 ]
+                             L(κ) = EeκX =                        .                            (12)
+                                                    κ4
+Equivalently M (κ) := EeκT = eκ L(κ) equals
+                                         12 2κ
+                               M (κ) =      {e − (κ2 + 2)eκ + 1}.
+                                         κ4
+    For λ ≥ 0 define
+                            C(λ) = e−λ/4 max exp(−λb2 /4)L(λb/2).                              (13)
+                                            0≤b≤1
+
+Theorem 5.1 (exact unrestricted RDF). For 0 ≤ D ≤ 1/4,
+
+                               R4,2 (D) = sup{−λD − log C(λ)}.                                 (14)
+                                             λ≥0
+
+
+Moreover R4,2 (D) = 0 for D ≥ 1/4 and R4,2 (0) = +∞. The formula includes every coexistence
+face and requires only the scalar maximum in Equation (13) and a scalar Legendre transform.
+Proof. The compact source and reproduction alphabets and continuous bounded distortion
+put this problem in the standard lower-semicontinuous convex setting. For a reproduction σ
+and A = σ − I/4, conditional relative-entropy duality gives
+                                                                               2
+                  D(PP |W =w ∥µ) ≥ −λE[∥SP − A∥2F | w] − log Eµ e−λ∥SP −A∥F .
+
+At fixed ∥A∥F , Theorem 3.2 maximizes the last partition at a balanced A = bSQ , which
+remains in Equation (9). Since ⟨SP , SQ ⟩ = X/4, its value is exactly Equation (13). Averaging
+gives I(P ; W ) ≥ −λD − log C(λ) and proves the converse.
+
+                                                     5
+```
+
+---
+
+## Page 6
+
+```text
+It remains to show that no gap is hidden in this scalar bound. If b > 0 is an active interior
+maximizer of Equation (13), put κ = λb/2 and K = log L. Radial stationarity is
+
+                                               b = K ′ (κ).                                  (15)
+
+For every finite λ > 0, the endpoint b = 1 is not active: under the finite tilted law X < 1 almost
+surely, hence K ′ (λ/2) < 1 and the derivative of the logarithmic objective in Equation (13) is
+
+                                                              λ ′
+                      ∂b {−λb2 /4 + K(λb/2)}             =      [K (λ/2) − 1] < 0.
+                                                   b=1        2
+Moving left strictly increases the objective, so every positive active radius is interior and
+Equation (15) applies. Draw Q Haar and define the reverse covariant channel
+
+                                     dPP |Q           eκ(tr(P Q)−1)
+                                            (P | Q) =               .                        (16)
+                                      dµ                  L(κ)
+
+Covariance makes the source marginal Haar. Stabilizer symmetry and Equation (15) give
+
+                                       E(ρP | Q) = I/4 + bSQ .
+
+Thus the report is the conditional mean and equality holds in both the least-squares projection
+and the entropy inequality. The attained pair is
+
+                                1 − b(κ)2
+                       D(κ) =             ,         R(κ) = κb(κ) − log L(κ).                 (17)
+                                    4
+For b = 0 use the constant report. If multiple radii are active at the same λ, an independently
+revealed flag selecting their covariant channels attains every convex combination of their
+distortions and rates; the flag is independent of the source, so both quantities mix affinely.
+These mixtures attain the subgradient interval of log C(λ). Its right slope at zero corresponds
+to distortion 1/4. The large-field form K(t) = t + log 12 − 4 log t + o(1) forces every active
+b → 1, and hence active distortions tend to zero as λ → ∞. Monotonicity of the subdifferential
+therefore covers [0, 1/4], and Fenchel–Moreau duality proves Equation (14). At D = 0 both
+sides are +∞ in the extended-real sense; at D = 1/4 both vanish.
+
+
+6    Complete radial phase diagram
+The centered radial free energy is
+
+                          ϕλ (b) = −λb2 /4 + K(λb/2),              K = log L.
+
+From Equation (7),
+
+                               1                         1      1 2    1
+                  Var(X) =       ,        cum4 (X) =        −3        =      > 0.            (18)
+                              15                         70     15      1050
+The cumulants prove a jump exists, but the elementary normalizer permits a complete global
+classification. Put
+
+                   A(κ) = 2 cosh κ − 2 − κ2 ,            H(κ) = K ′ (κ) − κK ′′ (κ).
+
+Lemma 6.1 (one-sign-change fold numerator). The function H has exactly one zero κf > 0.
+It is negative on (0, κf ) and positive on (κf , ∞).
+
+
+
+                                                    6
+```
+
+---
+
+## Page 7
+
+```text
+Proof. Since K = log(12A/κ4 ), the sign of H is the sign of
+
+                                                                                         N (κ)
+                N (κ) = κAA′ − κ2 AA′′ + κ2 (A′ )2 − 8A2 ,                     H(κ) =          .   (19)
+                                                                                        κA(κ)2
+
+Writing A = 2
+                P     2j                                         2n gives
+                 j≥2 κ /(2j)! and collecting the coefficient of κ
+
+                                                              n−2
+                                                                       !
+                           X 8Sn                              X     2n
+                                          2n
+                N (κ) =                  κ ,        Sn =               {n − 4 − (2j − n)2 }.       (20)
+                           n≥4
+                                 (2n)!                        j=2
+                                                                    2j
+
+For completeness, apply (1 + x)2n + (1 − x)2n at x = 1 to select the even binomial coefficients.
+Applying (x∂x − n)2 before setting x = 1 yields the centered second moment. Thus, for n ≥ 3,
+                     n                                n
+                                 !                        !
+                     X 2n                2n−1
+                                                      X 2n
+                                     =2         ,                   (2j − n)2 = n22n−2 .
+                     j=0
+                            2j                        j=0
+                                                               2j
+
+Applying these identities to Equation (20) and subtracting the four excluded endpoint terms
+j = 0, 1, n − 1, n evaluates the coefficient explicitly:
+
+                     Sn = 22n−2 (n − 8) + 2(2n4 − 11n3 + 22n2 − 9n + 4).                           (21)
+
+Thus S4 = S5 = 0, S6 = −132, S7 = 0, and Sn > 0 for every n ≥ 8. For the last assertion
+write n = m + 8: the second term in Equation (21) becomes
+
+                           2(2m4 + 53m3 + 526m2 + 2327m + 3900) > 0,
+
+while the first is nonnegative. Consequently N (κ)/κ12 is a negative constant plus a strictly
+increasing power series with positive coefficients and limit +∞. It has exactly one positive
+zero, proving the claim.
+
+Theorem 6.2 (unique coexistence and no radial reentrance). Let b(κ) = K ′ (κ) and λ(κ) =
+2κ/b(κ). Then λ(κ) has one fold, a strict global minimum at κf . There is a unique κc > κf
+satisfying
+                           F (κc ) := 2K(κc ) − κc K ′ (κc ) = 0.                     (22)
+With bc = b(κc ) and λc = λ(κc ), the global maximizers of ϕλ are exactly
+                                          
+                                          {0},
+                                          
+                                                           0 ≤ λ < λc ,
+                                               {0, b },
+                                               c            λ = λc ,
+                                          
+                                          {b(κ)},
+                                          
+                                                            λ > λc ,
+
+where in the last line κ > κc is the unique solution of λ(κ) = λ. In particular, the onset is
+discontinuous, the positive contact is unique, and no later radial exchange or reentrance occurs.
+
+Proof. For κ > 0, b(κ) > 0 and K ′′ (κ) > 0 because they are respectively the mean and the
+nonzero variance under the exponentially tilted law of X. Differentiation gives
+                                                            2H(κ)
+                                                 λ′ (κ) =          .
+                                                             b(κ)2
+By Lemma 6.1, the stationary curve therefore decreases once and then increases forever. It
+starts at λ(0+) = 30 and diverges as κ → ∞. At a positive stationary point, b = K ′ (κ) and
+
+                                         1                                   λH(κ)
+                                 ϕλ (b) = F (κ),              ϕ′′λ (b) = −         .               (23)
+                                         2                                    2b
+
+                                                          7
+```
+
+---
+
+## Page 8
+
+```text
+Moreover F ′ = H. Hence F strictly decreases from F (0) = 0 to its value at the fold and
+then strictly increases. The large-field expansion K(κ) = κ − 4 log κ + log 12 + o(1) gives
+F (κ) → +∞, so Equation (22) has exactly one positive root, lying after the fold.
+    The endpoint b = 1 is never active at finite field by the argument in the proof of Theorem 5.1.
+Below the fold there is no positive stationary maximum. Between the fold and 30, the smaller
+positive stationary point has H < 0 and is a strict local minimum, while the larger has H > 0
+and is the only positive local maximum. Its value relative to b = 0 is F/2, which changes sign
+exactly at κc . Above 30, zero is not a local maximum and the increasing branch supplies the
+unique positive maximum. These observations exhaust the compact interval 0 ≤ b ≤ 1 and
+prove the classification.
+
+    Define
+                                 1 − b2c
+                             Dc =        ,   Rc = κc bc − K(κc ).                             (24)
+                                    4
+The contact identity implies Rc = λc (1/4 − Dc ).
+
+Corollary 6.3 (exact two-piece frontier). The all-distortion RDF has the explicit global
+classification                  
+                                
+                                
+                                 +∞,             D = 0,
+                                
+                                κb(κ) − K(κ), 0 < D < D ,
+                                
+                                                             c
+                     R4,2 (D) =                                                     (25)
+                                
+                                
+                                 λc (1/4 − D),   Dc ≤ D ≤ 1/4,
+                                
+                                0,               D ≥ 1/4,
+                                
+
+where in the curved branch κ > κc is uniquely determined by D = [1 − b(κ)2 ]/4. Thus
+Equation (25) contains exactly one nontrivial linear face and one smooth matrix–Bingham
+branch.
+
+    A lightweight replay gives
+
+                         κf ≈ 4.41571405135, λmin ≈ 29.3847682849,
+                         κc ≈ 5.54105636105,              bc ≈ 0.37536486479,
+                         λc ≈ 29.5235749576,              Dc ≈ 0.21477530457,
+
+and Rc ≈ 1.03995893588 nats. These decimals diagnose the exact theorem; the uniqueness
+and no-reentrance proof uses only Equation (21) and the elementary asymptotics.
+
+
+7    Worst-state capacity and arbitrary joint memories
+The exact source-average frontier also has a source-universal formulation. Let Vn be a kernel
+from P n ∈ GrC (2, 4)n to an arbitrary standard-Borel memory W , equipped with measurable
+        bt (W ) ∈ C. Set
+reports σ
+                                    n
+                                 1X
+                         bn) =
+               dn (P n , σ                    bt ∥2F ,
+                                       ∥ρPt − σ              Cap(Vn ) = sup Iπ (P n ; W ),
+                                 n t=1                                         π
+
+
+where the supremum is over all source laws. Define the minimum universal capacity
+
+                                 Un (D) =           inf            Cap(Vn ).                  (26)
+                                                    Vn :
+                                            supP n E[dn |P n ]≤D
+
+The output may be generated jointly and need not factor, be finite-state, or be causal.
+
+
+
+                                                     8
+```
+
+---
+
+## Page 9
+
+```text
+global radius                                              8
+                  0.6       contact λc
+
+
+
+
+                                                                         4, 2(D) (nats)
+                            spinodal λ = 30
+active radius b
+
+
+
+                                                                                       6
+
+                  0.4
+                                                                                       4
+
+                  0.2
+
+
+
+
+                                                                               rate
+                                                                                       2
+
+
+                  0.0                                                                  0
+                        0       10            20                30                     0.00          0.05     0.10      0.15   0.20   0.25
+                                       dual field λ                                                            distortion D
+
+
+
+Figure 1: Lightweight replay of the exact scalar formulas. Left: the unique active positive
+branch jumps at λc before the local spinodal λ = 30; Theorem 6.2 excludes every additional
+exchange. Right: the exact two-piece frontier, with its unique linear face adjacent to D = 1/4.
+
+
+Theorem 7.1 (exact universal and block frontier). For every n ≥ 1 and D ≥ 0,
+
+                                                               Un (D) = nR4,2 (D).                                                     (27)
+
+Thus arbitrary joint classical memory and worst-source optimization neither improve nor
+penalize the per-letter frontier.
+
+Proof. First take an RDF-achieving one-letter covariant channel from Theorem 5.1 and
+Corollary 6.3; on the linear face include the independently revealed time-sharing flag. Its
+distortion is constant in P by transitivity. If QD denotes its Haar-induced output law,
+covariance also makes
+                                D(VD (· | P )∥QD ) = R4,2 (D)
+constant in P : for a flagged mixture this identity is the weighted sum of the component
+divergences. The information-radius identity then gives, for every input law π,
+                                              Z
+                            Iπ (P ; W ) =         D(VD (· | P )∥QD ) dπ(P ) − D(PW,π ∥QD ) ≤ R4,2 (D).
+
+Haar input attains equality. The product channel VD⊗n has worst-sequence distortion D,
+constant divergence nR4,2 (D) from Q⊗n  D , and Haar-product mutual information nR4,2 (D).
+This proves Un (D) ≤ nR4,2 (D).
+   Conversely, apply any admissible joint Vn to independent Haar P1 , . . . , Pn , and let Dt =
+E∥ρPt − σbt ∥2F . The worst-sequence hypothesis implies n−1 t Dt ≤ D. Independence and the
+                                                           P
+
+chain rule give
+                                                      n
+                                                      X                                    n
+                                                                                           X
+                                 I(P n ; W ) =              I(Pt ; W | P t−1 ) =                 I(Pt ; W, P t−1 )
+                                                      t=1                                  t=1
+                                                       n                                      n
+                                                                                                       !
+                                                      X                                    1X
+                                                  ≥         R4,2 (Dt ) ≥ nR4,2                   Dt         ≥ nR4,2 (D).
+                                                      t=1
+                                                                                           n t=1
+
+In the first inequality, (W, P t−1 ) is an allowed standard-Borel memory and σ
+                                                                             bt (W ) its report;
+the remaining inequalities use convexity and monotonicity of the RDF. Capacity dominates
+the Haar-product mutual information, completing the converse. The endpoint conventions
+follow by limits.
+
+
+                                                                          9
+```
+
+---
+
+## Page 10
+
+```text
+8    High fidelity and Born-probability calibration
+The elementary normalizer gives
+
+                             L(κ) = 12eκ κ−4 {1 + O(e−κ poly(κ))}.
+
+Therefore b = 1 − 4/κ + o(κ−1 ), D = 2/κ − 4/κ2 + o(κ−2 ), and
+
+Corollary 8.1 (sharp high-fidelity constant).
+
+                     R4,2 (D) = 4 log(2/D) − 4 − log 12 + o(1),         D ↓ 0.               (28)
+
+    The pre-log four is half the real dimension of GrC (2, 4), in agreement with general high-
+resolution geometry [8–10]; the all-distortion curve and constant here follow from the exact
+normalizer and unrestricted converse.
+    Finally let Y be an independent Haar rank-one query. The complex projective second
+moment gives, for any traceless Hermitian H,
+
+                                                         ∥H∥2F
+                                    EY [tr(HY )2 ] =           .
+                                                          4·5
+Conditional least squares therefore implies
+                                                         1
+                         E(tr(ρP Y ) − q(W, Y ))2 ≥        E∥ρP − σW ∥2F ,
+                                                        20
+with equality for q(W, Y ) = tr(σW Y ). Thus the exact classical information frontier for
+integrated squared Born-probability error ε2 is
+
+                                R4,2 (20ε2 ) ,        0 ≤ ε2 ≤ 1/80.
+
+Exact weighted complex projective 2-designs may replace the Haar query average without
+changing this identity [20].
+
+
+9    Scope and conclusion
+The balanced GrC (2, 4) geometry turns a difficult matrix external-spectrum problem into
+a coefficientwise simplex extremum. The resulting package is exact at each layer: an all-
+field balanced-spectrum theorem, an elementary overlap normalizer, a complete two-piece
+all-distortion RDF with a unique discontinuous onset and no reentrance, covariant attainment,
+and an exact source-universal n-block cost. The exceptional reduction is specific; it does not
+assert that balanced blocks optimize other ranks and dimensions.
+    The operational statement begins with a stipulated Haar source of quantum states and the
+Born probability field. It quantifies the classical information required to predict that field. It
+does not derive the Born rule, model measurement clicks or state update, establish intrinsic
+randomness, or identify a mechanical particle trajectory.
+
+Reproducibility. The release package places all files under work/tenth_paper/repro/.
+From the workspace root run
+
+python work/tenth_paper/verify_balanced_grassmann_rdf.py \
+  --output work/tenth_paper/repro/balanced_grassmann_verification.json
+python work/tenth_paper/repro/verify_complete_radial_phase.py
+python work/tenth_paper/repro/make_frontier_figure.py
+
+                                                 10
+```
+
+---
+
+## Page 11
+
+```text
+The SHA-256 values at release freeze are, respectively,
+           30bb8c7a8b71253ca0a2c4baf7672ae2ac1ca3c474e76cd4b5a13295a1744304
+           99dd5ad2100f16ddf0cd57fd8f0178ec88635cad27f4e4eb4fe1d4035013f3cd
+           e829eb500604ed8adb367002ec74a4be2d3c7766b797bd2b0233a78967ff9f7c
+           71a0d7a3e0f4aff4376f7a9aa50e630c7a67c298c71a32cbd5aea7d421f4f1b1.
+
+They correspond to the two verifier scripts and their JSON outputs in the same order. The
+package is a versioned workspace snapshot rather than a Git checkout, so the release manifest
+and these content hashes are the immutable identifiers. The analytic proofs of Theorems 3.2,
+5.1, 6.2 and 7.1 do not depend on numerical optimization.
+
+Release retrieval. The frozen companion archive is named Eriksson_Complete_Rank_Two_
+Born_Prediction_RDF_GrC24_v3_source.zip. Its SHA-256 and the canonical PDF hash are
+printed in the submission metadata supplied with the paper. Before ai.viXra assigns a public
+record, no public identifier or placeholder URL is claimed; the archive is available from the
+author. After moderation, the ai.viXra article page is the authoritative public retrieval point,
+and any external mirror must reproduce the printed filename and hashes byte for byte. This
+avoids changing the scientific PDF merely to insert a post-submission URL.
+
+
+References
+ [1] John T. Kent. “The Complex Bingham Distribution and Shape Analysis”. In: Journal of
+     the Royal Statistical Society: Series B 56.2 (1994), pp. 285–299. doi: 10.1111/j.2517-
+     6161.1994.tb01978.x.
+ [2] Muhammad Ali, Junbin Gao, and Michael Antolovich. “Parametric Classification of
+     Bingham Distributions Based on Grassmann Manifolds”. In: IEEE Transactions on
+     Image Processing 28.12 (2019), pp. 5771–5784. doi: 10.1109/TIP.2019.2922100.
+ [3] Alan T. James. “Distributions of Matrix Variates and Latent Roots Derived from Normal
+     Samples”. In: The Annals of Mathematical Statistics 35.2 (1964), pp. 475–501. doi:
+     10.1214/aoms/1177703550.
+ [4] C. Itzykson and J.-B. Zuber. “The Planar Approximation. II”. In: Journal of Mathemat-
+     ical Physics 21.3 (1980), pp. 411–421. doi: 10.1063/1.524438.
+ [5] Armine Bagyan and Donald Richards. “Complete Asymptotic Expansions for the Nor-
+     malizing Constants of High-Dimensional Matrix Bingham and Matrix Langevin Distribu-
+     tions”. In: Symmetry, Integrability and Geometry: Methods and Applications 20 (2024),
+     p. 094. doi: 10.3842/SIGMA.2024.094. arXiv: 2402.08663.
+ [6] Jonathan Leake, Colin McSwiggen, and Nisheeth K. Vishnoi. “Sampling Matrices From
+     Harish-Chandra–Itzykson–Zuber Densities With Applications to Quantum Inference
+     and Differential Privacy”. In: Random Structures & Algorithms 67 (2025), e70030. doi:
+     10.1002/rsa.70030. arXiv: 2011.05417.
+ [7] Lorenzo Cazzella, Søren Hauberg, Georgios Arvanitidis, and Matteo Matteucci. “On
+     the Latent Information Geometry of the Grassmann Manifold”. In: Proceedings of
+     the 29th International Conference on Artificial Intelligence and Statistics. 2026. url:
+     https://openreview.net/forum?id=BhLHFZwMEr.
+ [8] Wei Dai, Youjian Liu, and Brian Rider. “Quantization Bounds on Grassmann Manifolds
+     and Applications to MIMO Communications”. In: IEEE Transactions on Information
+     Theory 54.3 (2008), pp. 1108–1123. doi: 10.1109/TIT.2007.915691. arXiv: cs/0603039.
+
+
+
+                                              11
+```
+
+---
+
+## Page 12
+
+```text
+[9] Renaud-Alexandre Pitaval, Lu Wei, Olav Tirkkonen, and Jukka Corander. “Volume of
+     Metric Balls in High-Dimensional Complex Grassmann Manifolds”. In: IEEE Transactions
+     on Information Theory 62.9 (2016), pp. 5105–5116. doi: 10.1109/TIT.2016.2594289.
+     arXiv: 1508.00256.
+[10] Erwin Riegler, Günther Koliander, and Helmut Bölcskei. “Lossy Compression of General
+     Random Variables”. In: Information and Inference: A Journal of the IMA 12.3 (2023),
+     pp. 1759–1829. doi: 10.1093/imaiai/iaac035. arXiv: 2111.12312.
+[11] Walid Ben Hammouda, Sadok Kallel, and Paolo Salvatore. “The Space of Linear Maps
+     into a Grassmann Manifold”. In: Forum Mathematicum 25.6 (2013), pp. 1181–1215. doi:
+     10.1515/forum-2011-0156. arXiv: 1111.7273.
+[12] Sebastian Klein. “Totally Geodesic Submanifolds of the Complex Quadric”. In: Differ-
+     ential Geometry and its Applications 26.1 (2008), pp. 79–96. doi: 10.1016/j.difgeo.
+     2007.11.004. arXiv: math/0603167.
+[13] Alex Dytso and Martina Cardone. “Uniform Distribution on the (n − 1)-Sphere: Rate–
+     Distortion under Squared Error Distortion”. In: 2024 IEEE International Symposium
+     on Information Theory (ISIT). 2024, pp. 873–878. doi: 10.1109/ISIT57864.2024.
+     10619427. arXiv: 2401.04248.
+[14] Peter Harremoës. “Maximum Entropy on Compact Groups”. In: Entropy 11.2 (2009),
+     pp. 222–237. doi: 10.3390/e11020222. arXiv: 0901.0015.
+[15] Alice Guionnet and Mylène Maïda. “A Fourier View on the R-Transform and Related
+     Asymptotics of Spherical Integrals”. In: Journal of Functional Analysis 222.2 (2005),
+     pp. 435–490. doi: 10.1016/j.jfa.2004.09.015. arXiv: math/0406121.
+[16] Alexei Onatski. “Detection of Weak Signals in High-Dimensional Complex-Valued Data”.
+     In: Random Matrices: Theory and Applications 3.1 (2014), p. 1450001. doi: 10.1142/
+     S2010326314500014. arXiv: 1207.7098.
+[17] Lluis Eriksson. “Exact Rate–Distortion Theory for Complex-Projective Born Predic-
+     tion: Finite-Dimensional Bingham Frontiers, Thermodynamic Coexistence, and Worst-
+     State Capacity”. Unpublished companion manuscript, version 2; frozen PDF SHA-256
+     48bd09c67edf1d1754941d3df211952449cf3f91534637a2ac2eb3f598a0ba15. 2026.
+[18] Lluis Eriksson. “A Finite-Dimensional Nonanalytic Spectral Transition and Exact High-
+     Fidelity Rate–Distortion for Rank-r Born Prediction on Complex Grassmannians”.
+     Unpublished companion manuscript; frozen PDF SHA-256 f103ad4cc580704127d2696c
+     cc18897695f9a7a4553357d9c4b74100621c1e8f. 2026.
+[19] Peter J. Forrester and Santosh Kumar. “Differential Recurrences for the Distribution of
+     the Trace of the β-Jacobi Ensemble”. In: Physica D: Nonlinear Phenomena 434 (2022),
+     p. 133220. doi: 10.1016/j.physd.2022.133220. arXiv: 2011.00787.
+[20] Aidan Roy and A. J. Scott. “Weighted Complex Projective 2-Designs from Bases: Optimal
+     State Determination by Orthogonal Measurements”. In: Journal of Mathematical Physics
+     48.7 (2007), p. 072110. doi: 10.1063/1.2748617. arXiv: quant-ph/0703025.
+
+
+
+
+                                            12
+```
