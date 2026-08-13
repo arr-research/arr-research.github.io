@@ -1,0 +1,1382 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,bm}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{
+  pdftitle={Exact Rate--Distortion Theory for Complex-Projective Born Prediction: Finite-Dimensional Bingham Frontiers, Thermodynamic Coexistence, and Worst-State Capacity},
+  pdfauthor={Lluis Eriksson},
+  pdfsubject={Quantum information theory; exact finite-dimensional and thermodynamic rate--distortion laws for Born-probability prediction},
+  pdfkeywords={Born probability, rate distortion, complex projective space, worst-state channel capacity, Kummer asymptotics, thermodynamic limit}
+}
+\usepackage[backend=biber,style=numeric,sorting=none,maxbibnames=99]{biblatex}
+\addbibresource{references.bib}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\CP}{\mathbb{CP}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Pp}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\cR}{\mathcal{R}}
+\newcommand{\cC}{\mathcal{C}}
+\newcommand{\Tr}{\operatorname{tr}}
+\newcommand{\KL}{D_{\mathrm{KL}}}
+\newcommand{\dd}{\,\mathrm{d}}
+
+\title{\bfseries Exact Rate--Distortion Theory for Complex-Projective Born Prediction:\\
+Finite-Dimensional Bingham Frontiers, Thermodynamic Coexistence, and Worst-State Capacity}
+\author{Lluis Eriksson}
+\date{August 11, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We give a unified exact rate--distortion theory for retaining the complete
+rank-one Born-probability field of a Haar-random pure state in
+$\mathbb{CP}^{d-1}$.  First, a constrained root count, a sharp centered
+power-sum theorem, and Newton's expansion prove an all-degree spectral result:
+at fixed traceless Frobenius norm the projective Laplace transform is maximized
+by a one-positive-spike spectrum.  This reduces the unrestricted Shannon
+rate--distortion function to an exact scalar complex-Bingham envelope in every
+dimension, with covariant channels and independently flagged coexistence
+mixtures attaining every distortion.  For $d\ge3$ directional information
+turns on discontinuously; the qubit curve and the all-dimensional
+high-fidelity constant are explicit.
+
+We then solve the full fixed-normalized-distortion limit $d\to\infty$.  If
+$y_*>2$ solves $y_*-1=2\log y_*$, then the limiting free energy has a unique
+coexistence point with
+$\alpha_*=y_*^2/[2(y_*-1)]=2.455407482\ldots$ and
+$b_*=1-y_*^{-1}=0.715331863\ldots$.  The information cost per dimension is
+\[
+ r_\infty(\delta)=
+ \begin{cases}
+ -\log(1-\sqrt{1-\delta}),&0<\delta\le1-b_*^2,\\
+ \alpha_*(1-\delta),&1-b_*^2\le\delta\le1,
+ \end{cases}
+\]
+and the finite-dimensional onset multiplier obeys
+$\lambda_{c,d}=\alpha_*d-[\alpha_*/(2\log y_*)]\log d+O(1)$.
+
+Finally, a pointwise Hilbert projection converts every measurable scalar
+reporter into a physical density-matrix reporter without increasing risk for
+any pure input.  Hence the exact worst-state channel capacity equals the Haar
+rate--distortion function, arbitrary joint $n$-state memories cost exactly
+$n\cR_d(D)$, and transitivity forces zero rate dispersion with an exponential
+finite-blocklength strong converse.  These results concern reusable calibrated
+probability fields, not click-only simulation, state update, or intrinsic
+randomness.
+\end{abstract}
+
+\section{Introduction}
+
+Let $x\in\CP^{d-1}$ label a pure state
+$\rho_x=|x\rangle\langle x|$.  A classical representation of $x$ is asked
+for the Born probability
+\begin{equation}
+ p_x(y)=\Tr(\rho_x\rho_y)
+ \label{eq:born-field}
+\end{equation}
+of every rank-one query $y$.  The question is not how many outcomes a single
+measurement can generate, but how much classical information is required to
+retain an entire calibrated probability field to prescribed accuracy.
+
+For a Haar source, integrated squared calibration loss reduces exactly to
+squared Frobenius reconstruction of a Haar rank-one projector.  The resulting
+complex-projective Shannon rate--distortion problem has two linked layers.
+At finite $d$, the reproduction alphabet is the full density-matrix body and
+must first be reduced globally to a scalar complex-Bingham envelope.  We prove
+that reduction in all dimensions and show that the first directional phase is
+discontinuous for every $d\ge3$.  At large $d$, the active Bingham field is of
+order $d$, so small-parameter expansions do not apply directly
+\cite{BagyanRichards2023}.  The second layer is the global thermodynamic
+optimization of that exact finite-dimensional envelope.
+
+Large-parameter
+Kummer asymptotics themselves are classical
+\cite{Temme1978Kummer,LopezPagola2010Kummer}; our contribution begins with
+their global radius optimization, convex conjugate, coexistence law, and
+finite-size shift.  A uniform Laplace principle produces the limiting free
+energy with coexistence root $y_*-1=2\log y_*$.  General metric-space and
+complex-Grassmann results provide bounds or high-resolution dimensions, while
+direct complex-projective and Grassmann quantization treats finite codebooks
+or metric-ball asymptotics
+\cite{MondalDuttaHeath2006,DaiLiuRider2008,PitavalEtAl2016,RieglerKolianderBolcskei2023};
+these works do not evaluate the stochastic all-distortion radial envelope.
+The exact real-sphere analysis of Dytso and Cardone is the closest
+symmetry-reduction template, but its Bessel/von-Mises--Fisher partition and
+full-sphere orbit do not reduce to the Beta/Kummer projective orbit
+\cite{DytsoCardone2024}.
+
+The centered-projector map embeds $\CP^{d-1}$ as a proper $U(d)$ orbit of real
+dimension $2d-2$ in the $(d^2-1)$-dimensional traceless-Hermitian space.  Its
+invariant overlap has law $\mathrm{Beta}(1,d-1)$, not the symmetric coordinate
+law of a uniform real sphere.  Thus the real-sphere RDF cannot be imported by
+setting the sphere dimension to $2d-2$; in particular its limiting convex
+geometry has no counterpart of the projective coexistence face.
+
+We also strengthen the operational scope.  We call the resulting
+worst-input channel-capacity frontier ``source-universal'' only in this defined
+sense; it is not a claim of a single finite-block universal code for an
+unknown source distribution.  Compound-source, invariant, and minimax
+rate--distortion theories have a substantial prior literature
+\cite{Sakrison1969,Harremoes2009CompactGroups,MahmoodWagner2022}.  The new
+content here is the pointwise arbitrary-reporter projection and exact
+complex-projective evaluation.  The same argument gives an exact equality for
+arbitrary joint memories.  Finally, the invariant optimal channel has
+constant $D$-tilted information, so general nonasymptotic lossy-source
+converses specialize to a zero-dispersion exponential bound
+\cite{KostinaVerdu2012}.
+
+Our contributions are:
+
+\begin{enumerate}[leftmargin=2em]
+\item an all-degree one-spike projective partition theorem obtained from an
+      exactly identified centered power-sum input, a global constrained root
+      count, parity closure, and Newton's expansion;
+\item the exact unrestricted finite-dimensional RDF, attained by covariant
+      complex-Bingham channels and flagged coexistence mixtures;
+\item a discontinuous finite-dimensional onset for every $d\ge3$, together
+      with the qubit specialization and exact high-fidelity constant;
+\item an exact thermodynamic free energy, a closed limiting RDF at every fixed
+      normalized distortion, and dimension-independent coexistence constants
+      $\alpha_*,b_*,\delta_*$;
+\item convergence of first contact with the finite-size correction
+      $\lambda_{c,d}=\alpha_*d-c_*\log d+O(1)$;
+\item a pointwise projection of arbitrary probability reporters onto physical
+      density reports, valid for Haar and exact projective $2$-design queries;
+\item an exact worst-state channel-capacity equality and its finite-block
+      tensorization; and
+\item zero rate dispersion and an exponential strong converse.
+\end{enumerate}
+
+We do not claim a unique positive branch at every finite $d$, a matching
+third-order coding theorem, or a rank-$r$ Grassmann extension.  The last would
+require a new global matrix-Bingham/HCIZ spectral extremum.
+
+This manuscript supersedes the earlier unpublished drafts entitled
+\emph{Exact Information--Accuracy Frontiers for Born-Probability Prediction:
+Complex-Bingham Rate--Distortion and a Discontinuous Directional-Information
+Onset} and \emph{Thermodynamic Limit of Complex-Projective Born-Prediction
+Rate--Distortion: Exact Coexistence and a Logarithmic Onset Shift}.  Their
+finite-dimensional and thermodynamic results are incorporated here into one
+self-contained article; they are not intended as separate overlapping
+publications.
+
+\section{Finite-dimensional starting point}
+
+Let $X$ be Haar on $\CP^{d-1}$ and set
+\begin{equation}
+ S_X=\rho_X-I/d,
+ \qquad R_{0,d}^2=\|S_X\|_F^2=1-\frac1d.
+ \label{eq:centered-projector}
+\end{equation}
+For a density-matrix reproduction $\widehat\rho$, use distortion
+$\|\rho_X-\widehat\rho\|_F^2$.  Denote the unrestricted classical
+rate--distortion function by
+\begin{equation}
+ \cR_d(D)=\inf I(X;\widehat\rho),
+ \qquad \E\|\rho_X-\widehat\rho\|_F^2\le D.
+ \label{eq:rdf-definition}
+\end{equation}
+The infimum ranges over arbitrary standard-Borel stochastic reproductions.
+
+Let
+\begin{equation}
+ M_d(s)={}_1F_1(1;d;s)
+       =(d-1)\int_0^1e^{st}(1-t)^{d-2}\dd t,
+ \qquad
+ K_d(s)=\log M_d(s)-\frac{s}{d}.
+ \label{eq:MdKd}
+\end{equation}
+The complex-Bingham and complex-Watson families and their normalizers are
+established directional-statistics objects
+\cite{Kent1994ComplexBingham,MardiaDryden1999}.  Here $K_d$ is the cumulant generating function of
+$T_d-1/d$ for $T_d\sim\mathrm{Beta}(1,d-1)$.  Define
+\begin{equation}
+ G_{d,\lambda}(b)=K_d(2\lambda b)
+                  -\lambda R_{0,d}^2b^2,
+ \qquad 0\le b\le1.
+ \label{eq:finite-free-energy}
+\end{equation}
+It is convenient to denote the optimized Gibbs log partition by
+\begin{equation}
+ c_d(\lambda)=-\lambda R_{0,d}^2+\max_{0\le b\le1}G_{d,\lambda}(b).
+ \label{eq:cd-definition}
+\end{equation}
+
+We use the following exact finite-dimensional theorem as the starting point.
+Its nontrivial spectral input is an all-degree Dirichlet partition extremum:
+among traceless Hermitian matrices of fixed Frobenius norm, the projective
+Laplace transform is maximized by one positive eigenvalue and $d-1$ equal
+negative eigenvalues \cite{BrazitikosPandis2025}.
+
+\begin{theorem}[Finite-dimensional projective envelope]
+\label{thm:finite-envelope}
+For $0\le D\le R_{0,d}^2$,
+\begin{equation}
+ \cR_d(D)=\sup_{\lambda\ge0}
+ \left\{\lambda(R_{0,d}^2-D)
+ -\max_{0\le b\le1}G_{d,\lambda}(b)\right\}.
+ \label{eq:finite-envelope}
+\end{equation}
+Every positive active radius is attained by a covariant complex-Bingham
+channel whose posterior mean is
+$I/d+b(\rho_u-I/d)$.  Independent revealed mixtures of active radii attain
+every nonexposed distortion.
+\end{theorem}
+
+Appendix~\ref{app:finite} proves the spectral reduction and the complete Gibbs
+equality mechanism needed by Theorem~\ref{thm:finite-envelope}, including the
+normalization interface to the external centered power-sum theorem.
+
+\section{Finite-dimensional phase structure and endpoint regimes}
+\label{sec:finite-phase}
+
+The exact envelope already implies a qualitative transition that is absent in
+the qubit case.  The active radii are precisely the maximizers of
+$G_{d,\lambda}$.
+
+\begin{theorem}[Discontinuous finite-dimensional onset]
+\label{thm:finite-first-order}
+For every $d\ge3$, there exists
+\begin{equation}
+ 0<\lambda_{c,d}<\lambda_{0,d}:=\frac{d(d+1)}2
+ \label{eq:finite-lambdac}
+\end{equation}
+such that $b=0$ and at least one $b_{c,d}>0$ are global maximizers of
+$G_{d,\lambda_{c,d}}$.  The positive maximizer cannot approach zero at first
+contact.  Consequently the exact frontier has a nontrivial linear face
+adjacent to $(D,R)=(R_{0,d}^2,0)$, and optimal directional information turns
+on discontinuously.
+\end{theorem}
+
+\begin{proof}
+Put $W=T_d-1/d$.  It is centered and lies in an interval of length one.
+Hoeffding's lemma gives $K_d(s)\le s^2/8$ for every real $s$.  Hence,
+uniformly in $b\in[0,1]$,
+\begin{equation}
+ G_{d,\lambda}(b)\le
+ \lambda b^2\left(\frac{\lambda}{2}-R_{0,d}^2\right)<0
+ \qquad\left(b>0,\ 0<\lambda<2R_{0,d}^2\right).
+ \label{eq:small-lambda}
+\end{equation}
+Thus $b=0$ is initially the unique global maximizer and
+$c_d(\lambda)=-\lambda R_{0,d}^2$ on a nonzero interval.
+
+The variance and third centered moment of
+$T_d\sim\operatorname{Beta}(1,d-1)$ are
+\begin{equation}
+ v_d=\frac{d-1}{d^2(d+1)},\qquad
+ \mu_{3,d}=\frac{2(d-1)(d-2)}{d^3(d+1)(d+2)}.
+ \label{eq:finite-cumulants}
+\end{equation}
+Expansion at $b=0$ gives
+\begin{equation}
+ G_{d,\lambda}(b)=
+ \bigl(-\lambda R_{0,d}^2+2\lambda^2v_d\bigr)b^2
+ +\frac43\lambda^3\mu_{3,d}b^3+O(b^4).
+ \label{eq:finite-landau}
+\end{equation}
+The quadratic coefficient vanishes at $\lambda_{0,d}=d(d+1)/2$.  For
+$d\ge3$, $\mu_{3,d}>0$, so a sufficiently small positive $b$ has positive
+gain at $\lambda_{0,d}$, and the same remains true just below it.
+
+Let $\lambda_{c,d}$ be the infimum of multipliers whose global argmax contains
+a positive radius.  Estimate~\eqref{eq:small-lambda} makes it positive, and
+the preceding expansion makes it strictly smaller than $\lambda_{0,d}$.
+Choose positive active radii $b_n$ at
+$\lambda_n\downarrow\lambda_{c,d}$.  Since
+$K_d(s)/s^2\to v_d/2$ as $s\to0$ and
+$\lambda_{c,d}<\lambda_{0,d}$, there exist $\varepsilon,\eta>0$ such that
+$G_{d,\lambda}(b)\le-\eta b^2$ for
+$0<b\le\varepsilon$ and $\lambda$ near $\lambda_{c,d}$.  Thus every $b_n$ is
+at least $\varepsilon$.  Compactness and continuity yield a limiting
+$b_{c,d}\ge\varepsilon$ coexisting globally with $0$.  Finally,
+Danskin's relation~\eqref{eq:appendix-danskin} and an independently revealed
+mixture of the two active channels give the linear face.
+\end{proof}
+
+\begin{remark}
+The theorem proves first contact and its nonzero jump.  It does not assert
+uniqueness of the positive maximizer for every larger multiplier or exclude a
+later branch exchange.  The exact envelope and flagged mixtures already cover
+such possibilities.
+\end{remark}
+
+\begin{figure}[t]
+ \centering
+ \includegraphics[width=\textwidth]{../repro/scalar_envelope.pdf}
+ \caption{Numerical evaluation of the exact finite-dimensional scalar
+ envelope for $d=2,3,4,5$.  Left: $\cR_d(D)$ versus normalized distortion.
+ Right: one selected globally active radius versus scaled multiplier.  The
+ qubit radius emerges continuously, while the higher-dimensional curves show
+ the finite jump proved in Theorem~\ref{thm:finite-first-order}.  The bounded
+ scalar computation is a reproducibility diagnostic, not a proof input.}
+ \label{fig:finite-envelope}
+\end{figure}
+
+For $d=2$, the Bloch representation maps centered projectors to the real unit
+two-sphere up to a factor $1/2$.  The exact result is therefore the $n=3$
+real-sphere theorem of Dytso and Cardone \cite{DytsoCardone2024}.  Put
+$r=\sqrt{1-2D}$ and choose $\eta\ge0$ from
+\begin{equation}
+ r=\coth\eta-\frac1\eta.
+ \label{eq:qubit-langevin}
+\end{equation}
+For $0<D<1/2$, such an $\eta$ exists uniquely and
+\begin{equation}
+ \cR_2(D)=\eta r-\log\frac{\sinh\eta}{\eta}.
+ \label{eq:qubit-rdf}
+\end{equation}
+Moreover $\cR_2(0)=+\infty$ by the limit $\eta\to\infty$, while
+$\cR_2(D)=0$ for $D\ge1/2$.  This is a consistency check and operational
+specialization, not a new real-sphere theorem.
+
+\begin{proposition}[Exact fixed-dimensional high-fidelity asymptotic]
+\label{prop:high-rate}
+For every fixed $d\ge2$,
+\begin{equation}
+ \cR_d(D)=
+ (d-1)\log\frac{2(d-1)}{D}
+ -(d-1)-\log\Gamma(d)+o(1),
+ \qquad D\downarrow0.
+ \label{eq:high-rate}
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Put $m=d-1$.  For integer $d$,
+\begin{equation}
+ M_d(s)=\Gamma(d)s^{-m}
+ \left(e^s-\sum_{j=0}^{m-1}\frac{s^j}{j!}\right).
+ \label{eq:M-integer}
+\end{equation}
+For $s>0$ let
+$\ell_d(s)=\log(1-e^{-s}\sum_{j=0}^{m-1}s^j/j!)\le0$.
+For a traceless Hermitian report $A$, define
+\begin{equation}
+ Q_\lambda(A)=\int
+ \exp\{-\lambda\|S_x-A\|_F^2\}\,d\mu_d(x).
+ \label{eq:high-rate-partition}
+\end{equation}
+For the axial reproduction $A_{b,u}=b(\rho_u-I/d)$,
+\begin{equation}
+ \log Q_\lambda(A_{b,u})=
+ -m\log(2\lambda)+\log\Gamma(d)
+ -\lambda R_{0,d}^2(1-b)^2-m\log b+\ell_d(2\lambda b).
+ \label{eq:high-rate-identity}
+\end{equation}
+Taking $b=1$ gives a lower bound with vanishing error.  For the upper bound,
+$K_d(s)\le R_{0,d}^2s$ for $s\ge0$, so radii $b\le1/2$ are eventually
+excluded because their radial gain is at most
+$-\lambda R_{0,d}^2/4$.  On $b\ge1/2$, use $-\log b\le2(1-b)$ and
+$\ell_d\le0$ to bound the remaining correction by
+\begin{equation}
+ -\lambda R_{0,d}^2(1-b)^2+2m(1-b)
+ \le\frac{m^2}{\lambda R_{0,d}^2}=o(1).
+\end{equation}
+Consequently
+\begin{equation}
+ c_d(\lambda)=-m\log(2\lambda)+\log\Gamma(d)+o(1).
+ \label{eq:cd-high-rate}
+\end{equation}
+Secant inequalities for the convex function $c_d$ imply
+$-\lambda g_\lambda\to m$ for every
+$g_\lambda\in\partial c_d(\lambda)$.  If $\lambda_D$ maximizes the exact
+conjugate, then $-D\in\partial c_d(\lambda_D)$ and
+$\lambda_DD\to m$.  Therefore
+\begin{align}
+ \cR_d(D)
+ &=-\lambda_DD-c_d(\lambda_D)\\
+ &=-m+m\log(2\lambda_D)-\log\Gamma(d)+o(1)\\
+ &=m\log\frac{2m}{D}-m-\log\Gamma(d)+o(1),
+\end{align}
+which proves \eqref{eq:high-rate}.
+\end{proof}
+
+The limits $d\to\infty$ at fixed normalized distortion and
+$D\downarrow0$ at fixed $d$ are distinct.  The following sections resolve the
+first regime; a uniform double-scaling theory remains open.
+
+\section{Uniform projective Laplace principle}
+
+The transition occurs at $\lambda$ of order $d$.  We first isolate the
+corresponding asymptotic partition.
+
+\begin{lemma}[Uniform beta Laplace principle]
+\label{lem:laplace}
+For $y\ge0$, put
+\begin{equation}
+ F_d(y)=\frac1d\log M_d(dy).
+\end{equation}
+Then $F_d\to\Phi$ locally uniformly on $[0,\infty)$, where
+\begin{equation}
+ \Phi(y)=
+ \begin{cases}
+ 0,&0\le y\le1,\\
+ y-1-\log y,&y>1.
+ \end{cases}
+ \label{eq:Phi}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Rewrite the beta integral as
+\begin{equation}
+  M_d(dy)=(d-1)\int_0^1
+  \exp\{dyt+(d-2)\log(1-t)\}\dd t.
+\end{equation}
+For fixed $\varepsilon>0$, the usual compact-interval Laplace bounds apply on
+$[0,1-\varepsilon]$.  On the remaining interval the original factor
+$(1-t)^{d-2}$ supplies exponential control; letting $\varepsilon$ decrease
+after $d\to\infty$ gives the pointwise limit
+\begin{equation}
+ \sup_{0\le t<1}\{yt+\log(1-t)\}.
+\end{equation}
+The maximizer is $t=0$ for $y\le1$ and $t=1-y^{-1}$ for $y>1$, which yields
+\eqref{eq:Phi}.  Moreover,
+\begin{equation}
+ F_d'(y)=\E_{d,y}T_d\in[0,1],
+\end{equation}
+where $\E_{d,y}$ is expectation under exponential tilt $dy$.  Hence the
+family is equi-Lipschitz.  A finite-net argument upgrades pointwise
+convergence to local-uniform convergence because $\Phi$ is continuous.
+\end{proof}
+
+For $\alpha\ge0$, define the normalized optimized gain
+\begin{equation}
+ g_d(\alpha)=\frac1d\max_{0\le b\le1}G_{d,\alpha d}(b).
+ \label{eq:gd}
+\end{equation}
+
+\begin{corollary}[Thermodynamic free-energy convergence]
+\label{cor:gd}
+The functions $g_d$ converge locally uniformly to
+\begin{equation}
+ g(\alpha)=\max_{0\le b\le1}
+ \{\Phi(2\alpha b)-\alpha b^2\}.
+ \label{eq:g-limit}
+\end{equation}
+\end{corollary}
+
+\begin{proof}
+Lemma~\ref{lem:laplace}, $R_{0,d}^2\to1$, and
+$d^{-1}K_d(2\alpha db)=F_d(2\alpha b)-2\alpha b/d$ give uniform convergence
+of the objective on compact $\alpha$ intervals and $b\in[0,1]$.  Taking a
+maximum preserves it.
+\end{proof}
+
+\section{Global coexistence and the dimension-independent constants}
+
+The limiting scalar problem is globally solvable.
+
+\begin{theorem}[Exact limiting phase diagram]
+\label{thm:phase}
+Let $y_*>2$ be the unique nontrivial root of
+\begin{equation}
+ y_*-1=2\log y_*.
+ \label{eq:ystar}
+\end{equation}
+Define
+\begin{equation}
+ \alpha_*=\frac{y_*^2}{2(y_*-1)},
+ \qquad b_*=1-\frac1{y_*}.
+ \label{eq:constants}
+\end{equation}
+Then $g(\alpha)=0$ for $0\le\alpha\le\alpha_*$.  At $\alpha_*$ the global
+maximizers in \eqref{eq:g-limit} are exactly $0$ and $b_*$.  For
+$\alpha>\alpha_*$ the positive global maximizer is unique and equals
+\begin{equation}
+ b_+(\alpha)=1-\frac1{y_+(\alpha)},
+ \qquad
+ y_+(\alpha)=\alpha+\sqrt{\alpha(\alpha-2)}.
+ \label{eq:positive-branch}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Set $y=2\alpha b$.  The optimization becomes
+\begin{equation}
+ \max_{0\le y\le2\alpha}
+ \left\{\Phi(y)-\frac{y^2}{4\alpha}\right\}.
+ \label{eq:y-optimization}
+\end{equation}
+For $y\le1$ the objective is nonpositive and vanishes only at $y=0$.  For
+$y>1$, an interior stationary point obeys
+\begin{equation}
+ 1-\frac1y-\frac{y}{2\alpha}=0,
+ \qquad
+ \alpha=\frac{y^2}{2(y-1)}.
+ \label{eq:stationary}
+\end{equation}
+The two positive stationary points appear at $\alpha=2$; the larger root is
+$y_+(\alpha)$ and is the local maximum.  At any stationary point the gain is
+\begin{equation}
+ \Phi(y)-\frac{y^2}{4\alpha}
+ =\frac{y-1}{2}-\log y.
+ \label{eq:stationary-gain}
+\end{equation}
+The function $y-1-2\log y$ decreases on $(1,2)$, increases on
+$(2,\infty)$, and has exactly the roots $1$ and $y_*$.  Thus the larger
+stationary point first ties the zero-radius solution at $y_*$.  More
+explicitly, for $y>1$,
+\begin{equation}
+ \frac{\dd}{\dd y}\left(\Phi(y)-\frac{y^2}{4\alpha}\right)
+ =-\frac{(y-y_-)(y-y_+)}{2\alpha y}.
+\end{equation}
+For $\alpha<2$ the derivative is strictly negative.  For $\alpha\ge2$,
+$y_-$ is a local minimum and $y_+$ is the only local maximum; the objective
+decreases after $y_+$, so the endpoint $y=2\alpha$ cannot improve it.
+Equation~\eqref{eq:stationary-gain} then decides exactly when that maximum
+beats zero and proves the complete statement.
+\end{proof}
+
+Numerically,
+\begin{equation}
+\begin{split}
+ y_*&=3.512862417252\ldots,\\
+ \alpha_*&=2.455407482284\ldots,\\
+ b_*&=0.715331862959\ldots,\\
+ \delta_*:=1-b_*^2&=0.488300325835\ldots .
+\end{split}
+\label{eq:numerical-constants}
+\end{equation}
+
+\section{Closed thermodynamic information--accuracy frontier}
+
+We normalize distortion by the zero-information value $R_{0,d}^2$.
+
+\begin{theorem}[Thermodynamic Born-prediction frontier]
+\label{thm:thermodynamic-rdf}
+For each fixed $0<\delta\le1$,
+\begin{equation}
+ \lim_{d\to\infty}\frac1d
+ \cR_d(\delta R_{0,d}^2)=r_\infty(\delta),
+ \label{eq:rdf-limit}
+\end{equation}
+where
+\begin{equation}
+ r_\infty(\delta)=
+ \begin{cases}
+ -\log(1-\sqrt{1-\delta}),
+   &0<\delta\le\delta_*,\\[1mm]
+ \alpha_*(1-\delta),
+   &\delta_*\le\delta\le1.
+ \end{cases}
+ \label{eq:rinfty}
+\end{equation}
+The branches agree at $\delta_*$, where
+$r_\infty(\delta_*)=\log y_*$.
+\end{theorem}
+
+\begin{proof}
+Theorem~\ref{thm:finite-envelope}, with $\lambda=\alpha d$, gives
+\begin{equation}
+ \frac1d\cR_d(\delta R_{0,d}^2)
+ =\sup_{\alpha\ge0}
+ \{\alpha R_{0,d}^2(1-\delta)-g_d(\alpha)\}.
+ \label{eq:scaled-dual}
+\end{equation}
+We first justify passage of the supremum to the limit.  Fix $\delta>0$ and
+put $\eta=\delta/8$.  The beta tail is exact:
+$\Pp\{T_d\ge1-\eta\}=\eta^{d-1}$.  Evaluating the partition on this event
+and choosing $b=1$ gives
+\begin{equation}
+ g_d(\alpha)\ge
+ \alpha\left(1-2\eta-\frac1d\right)
+ +\left(1-\frac1d\right)\log\eta.
+\end{equation}
+Consequently, for every $d\ge2$ and $\alpha\ge0$,
+\begin{equation}
+ \alpha R_{0,d}^2(1-\delta)-g_d(\alpha)
+ \le -\frac{\delta}{4}\alpha
+ -\left(1-\frac1d\right)\log\eta.
+ \label{eq:equicoercive}
+\end{equation}
+Thus all maximizing multipliers lie in a common compact interval.  Local
+uniform convergence from Corollary~\ref{cor:gd} now yields
+\begin{equation}
+ r_\infty(\delta)=\sup_{\alpha\ge0}
+ \{\alpha(1-\delta)-g(\alpha)\}.
+ \label{eq:limit-conjugate}
+\end{equation}
+
+The right derivative of $g$ jumps at $\alpha_*$ from $0$ to $b_*^2$.
+Therefore gains $1-\delta\le b_*^2$ lie on the coexistence face and give
+$\alpha_*(1-\delta)$.  If $1-\delta>b_*^2$, envelope differentiation on the
+unique positive branch gives
+\begin{equation}
+ 1-\delta=g'(\alpha)=b_+(\alpha)^2.
+\end{equation}
+Put $b=\sqrt{1-\delta}$ and $y=(1-b)^{-1}$.  Substitution into the conjugate
+is explicit: at a stationary point
+\begin{equation}
+ \alpha b^2-g(\alpha)=2\alpha b^2-\Phi(y)
+ =y-1-\Phi(y)=\log y.
+\end{equation}
+Thus it reduces to $\log y=-\log(1-\sqrt{1-\delta})$.  At coexistence,
+\eqref{eq:ystar} makes this value $\log y_*=\alpha_*b_*^2$.
+\end{proof}
+
+The fixed-$\delta$ order of limits is essential.  The theorem does not assert
+uniformity as $\delta\downarrow0$; the fixed-dimensional high-resolution
+limit is a different asymptotic regime.
+
+\begin{figure}[t]
+ \centering
+ \includegraphics[width=\textwidth]{../repro/thermodynamic_frontier.pdf}
+ \caption{Left: the exact limiting information--accuracy curve and its
+ coexistence point $\delta_*$.  Right: finite-dimensional first-contact
+ multipliers from the exact scalar problem, the leading logarithmic
+ approximation, and the limit $\alpha_*$.  The plotted finite-dimensional
+ values are reproducibility diagnostics, not proof inputs.}
+ \label{fig:thermodynamic}
+\end{figure}
+
+\section{Thermodynamic first contact and its logarithmic finite-size correction}
+
+Retain the first multiplier $\lambda_{c,d}$ at which a positive radius is a
+global maximizer of \eqref{eq:finite-free-energy}, and choose any positive
+active radius $b_{c,d}$ there.
+
+\begin{lemma}[Beta-mgf exclusion bound]
+\label{lem:mgf-bound}
+For $0\le s<d$,
+\begin{equation}
+ K_d(s)\le-\log(1-s/d)-s/d.
+ \label{eq:mgf-bound}
+\end{equation}
+Consequently a minimizing first-contact tilt cannot satisfy $s/d\to0$.
+\end{lemma}
+
+\begin{proof}
+The hypergeometric series and $(d)_k\ge d^k$ give
+\begin{equation}
+ M_d(s)=\sum_{k\ge0}\frac{s^k}{(d)_k}
+ \le\sum_{k\ge0}(s/d)^k=(1-s/d)^{-1}.
+\end{equation}
+After centering, this is \eqref{eq:mgf-bound}.  If $u=s/d\to0$, then the
+right side is $u^2/2+O(u^3)$, so the ratio term is at least
+$(1+o(1))R_{0,d}^2d^2/2$.  On the other hand, evaluating
+\eqref{eq:contact-infimum} at $s=dy_*$ gives $\lambda_{c,d}=O(d)$.
+Therefore a minimizing tilt cannot have $s/d\to0$.
+\end{proof}
+
+\begin{lemma}[Uniform interior Kummer--Laplace expansion]
+\label{lem:uniform-saddle}
+Let $J\Subset(1,\infty)$ be compact.  Uniformly for $y\in J$,
+\begin{equation}
+ M_d(dy)=e^{d\Phi(y)}y\sqrt{2\pi d}\,[1+O_J(d^{-1})],
+ \label{eq:uniform-saddle-prefactor}
+\end{equation}
+and hence
+\begin{equation}
+ \log M_d(dy)=d\Phi(y)+\frac12\log d
+ +\log(y\sqrt{2\pi})+O_J(d^{-1}).
+ \label{eq:uniform-laplace-expansion}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Write
+\begin{equation}
+ M_d(dy)=(d-1)\int_0^1 e^{d f_y(t)}g(t)\dd t,
+ \qquad f_y(t)=yt+\log(1-t),\quad g(t)=(1-t)^{-2}.
+\end{equation}
+The unique maximizer is $t_y=1-y^{-1}$, and as $y$ ranges over $J$ the
+points $t_y$ remain in a fixed compact subinterval of $(0,1)$.  Choose
+$\rho>0$ so that $[t_y-\rho,t_y+\rho]\subset(0,1)$ for every $y\in J$.
+Compactness and strict concavity give a uniform $c_J>0$ such that
+\begin{equation}
+ f_y(t)\le\Phi(y)-c_J
+ \quad\text{whenever }|t-t_y|\ge\rho, y\in J.
+ \label{eq:uniform-laplace-tail}
+\end{equation}
+Thus the exterior integral is exponentially smaller than the main term.
+
+On the interior neighborhood,
+\begin{equation}
+ f_y''(t_y)=-y^2,\qquad f_y'''(t_y)=-2y^3,\qquad
+ f_y^{(4)}(t_y)=-6y^4,\qquad g(t_y)=y^2.
+\end{equation}
+All derivatives of $f_y$ through order five and of $g$ through order three
+are uniformly bounded there.  With $z=\sqrt d\,(t-t_y)$, Taylor's theorem
+through fourth order gives a Gaussian integrand
+$e^{-y^2z^2/2}$ times a factor whose even contribution is
+$1+O_J(d^{-1})(1+|z|^6)$; the order-$d^{-1/2}$ term is odd and integrates to
+zero on the symmetric neighborhood.  On
+$|z|\le d^{1/10}$ the remainder is uniformly dominated by an integrable
+Gaussian times $O_J(d^{-1})(1+|z|^{10})$; on the remainder of the interior
+neighborhood strict concavity gives an exponentially small bound.  Therefore
+\begin{align}
+ M_d(dy)
+ &=(d-1)e^{d\Phi(y)}g(t_y)
+   \sqrt{\frac{2\pi}{d|f_y''(t_y)|}}\,[1+O_J(d^{-1})]\\
+ &=(d-1)e^{d\Phi(y)}y^2
+   \sqrt{\frac{2\pi}{dy^2}}\,[1+O_J(d^{-1})]\\
+ &=e^{d\Phi(y)}y\sqrt{2\pi d}\,[1+O_J(d^{-1})].
+\end{align}
+Taking logarithms proves \eqref{eq:uniform-laplace-expansion}.
+\end{proof}
+
+\begin{theorem}[First-contact asymptotics]
+\label{thm:first-contact}
+As $d\to\infty$,
+\begin{equation}
+ \frac{\lambda_{c,d}}d\to\alpha_*,
+ \qquad b_{c,d}\to b_*.
+ \label{eq:first-contact-limit}
+\end{equation}
+The coexistence distortion and rate satisfy
+\begin{equation}
+ \frac{D_{c,d}}{R_{0,d}^2}\to\delta_*,
+ \qquad \frac{R_{c,d}}d\to\log y_*.
+ \label{eq:contact-rate-distortion}
+\end{equation}
+More sharply,
+\begin{equation}
+ \boxed{\lambda_{c,d}=\alpha_*d-c_*\log d+O(1)},
+ \qquad
+ c_*=\frac{\alpha_*}{2\log y_*}
+    =\frac{y_*^2}{2(y_*-1)^2}.
+ \label{eq:log-correction}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Write $s=2\lambda b$.  Nonnegative radial gain and $b\le1$ are equivalent to
+\begin{equation}
+ \lambda\ge \frac{R_{0,d}^2s^2}{4K_d(s)},
+ \qquad \lambda\ge\frac{s}{2}.
+\end{equation}
+Hence
+\begin{equation}
+ \lambda_{c,d}=\inf_{s>0}
+ \max\left\{\frac{s}{2},
+ \frac{R_{0,d}^2s^2}{4K_d(s)}\right\}.
+ \label{eq:contact-infimum}
+\end{equation}
+Evaluating this expression at $s=dy_*$ and using local-uniform Laplace
+convergence gives $\limsup_d\lambda_{c,d}/d\le\alpha_*$.  This comparison
+will be used below to localize every minimizing sequence.
+For $s=dy$ with $y>1$, Lemma~\ref{lem:laplace} makes the second term divided
+by $d$ converge locally uniformly to
+\begin{equation}
+ A(y)=\frac{y^2}{4\Phi(y)}.
+\end{equation}
+Its unique global minimizer is $y_*$: the equation $A'(y)=0$ is exactly
+\eqref{eq:ystar}, $A(y_*)=\alpha_*$, and $y_*/2<\alpha_*$.  Lemma
+\ref{lem:mgf-bound} excludes $s/d\to0$.  If instead
+$s/d\to y\in(0,1]$, local-uniform Laplace convergence gives
+$K_d(s)/d\to\Phi(y)=0$, so the ratio term in
+\eqref{eq:contact-infimum}, after division by $d$, diverges.  The term $s/2$
+excludes $s/d\to\infty$.  Thus every minimizing sequence lies in a compact
+subset of $(1,\infty)$, where uniform convergence and uniqueness imply
+$s_{c,d}/d\to y_*$ and $\lambda_{c,d}/d\to\alpha_*$.  For all large $d$ the
+second term in \eqref{eq:contact-infimum} is active, so
+\begin{equation}
+ b_{c,d}=\frac{s_{c,d}}{2\lambda_{c,d}}
+ =\frac{2K_d(s_{c,d})}{R_{0,d}^2s_{c,d}}
+ \longrightarrow\frac{2\Phi(y_*)}{y_*}=b_*.
+\end{equation}
+The distortion and rate limits follow from
+$D=R_{0,d}^2(1-b^2)$ and $R=\lambda R_{0,d}^2b^2$ at coexistence.
+
+It remains to refine the multiplier.  Apply
+Lemma~\ref{lem:uniform-saddle} on a compact neighborhood of $y_*$.
+Using $K_d(dy)=\log M_d(dy)-y$ and $R_{0,d}^2=1-d^{-1}$ gives
+\begin{equation}
+ \frac{R_{0,d}^2d^2y^2}{4K_d(dy)}
+ =dA(y)-\frac{A(y)}{2\Phi(y)}\log d+O(1)
+ \label{eq:contact-expansion}
+\end{equation}
+uniformly there.  Put $q(y)=A(y)/(2\Phi(y))$.  On a fixed neighborhood $U$
+of $y_*$ there are constants $c,L,C>0$ such that
+$A(y)\ge A(y_*)+c|y-y_*|^2$, $|q(y)-q(y_*)|\le L|y-y_*|$, and the remainder
+in \eqref{eq:contact-expansion} has absolute value at most $C$.  Thus, with
+$z=y-y_*$, the right side is bounded below by
+\begin{equation}
+ dA(y_*)-q(y_*)\log d+dc z^2-L(\log d)|z|-C.
+\end{equation}
+The variable terms are at least
+$-L^2(\log d)^2/(4cd)=o(1)$.  Evaluation at $y=y_*$ gives the matching upper
+bound up to $O(1)$.  Since the global minimizer has already been shown to
+enter $U$, we obtain
+$\lambda_{c,d}=dA(y_*)-q(y_*)\log d+O(1)$.  Finally
+$A(y_*)=\alpha_*$ and $\Phi(y_*)=\log y_*$ prove
+\eqref{eq:log-correction}.
+\end{proof}
+
+\section{Pointwise physical projection and source universality}
+
+So far the source is Haar.  We now allow every pure input state and charge a
+representation channel by its Shannon capacity over all input priors.
+
+Let $\nu$ be Haar measure on rank-one queries, or a weighted exact complex
+projective $2$-design.  For a scalar report $q\in L^2(\nu)$, define its risk
+against $x$ by
+\begin{equation}
+ \ell_x(q)=\int |q(y)-\Tr(\rho_x\rho_y)|^2\dd\nu(y).
+ \label{eq:pointwise-risk}
+\end{equation}
+
+\begin{theorem}[Pointwise projection to a physical Born reporter]
+\label{thm:pointwise-projection}
+For every $q\in L^2(\nu)$ there exists a density matrix $\sigma(q)$ such that
+\begin{equation}
+ \ell_x\bigl(y\mapsto\Tr(\sigma(q)\rho_y)\bigr)
+ \le\ell_x(q)
+ \label{eq:pointwise-dominance}
+\end{equation}
+simultaneously for every pure $x$.  The map $q\mapsto\sigma(q)$ may be chosen
+Borel measurable.  Moreover,
+\begin{equation}
+ \int|\Tr[(\rho_x-\sigma)\rho_y]|^2\dd\nu(y)
+ =\frac{\|\rho_x-\sigma\|_F^2}{d(d+1)}.
+ \label{eq:design-isometry}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Let
+\begin{equation}
+ \mathcal B=\{y\mapsto\Tr(A\rho_y):A=A^*\}
+ \subset L^2(\nu).
+\end{equation}
+The $2$-design identity makes this a finite-dimensional closed subspace with
+matrix norm
+\begin{equation}
+ \|A\|_*^2=
+ \frac{\Tr(A^2)+(\Tr A)^2}{d(d+1)}.
+ \label{eq:star-norm}
+\end{equation}
+Let $f_A$ be the orthogonal projection of $q$ onto $\mathcal B$.  Because
+$f_{\rho_x}\in\mathcal B$,
+\begin{equation}
+ \|f_{\rho_x}-q\|_2^2
+ =\|f_{\rho_x}-f_A\|_2^2+\|q-f_A\|_2^2.
+\end{equation}
+Next let $\sigma$ be the metric projection of $A$ in the norm
+\eqref{eq:star-norm} onto the compact convex density-matrix body.  Since
+$\rho_x$ belongs to that body, the Hilbert projection inequality gives
+\begin{equation}
+ \|f_{\rho_x}-f_\sigma\|_2
+ \le\|f_{\rho_x}-f_A\|_2.
+\end{equation}
+This proves \eqref{eq:pointwise-dominance}.  Orthogonal projection onto a
+finite-dimensional subspace is continuous in $L^2$, and metric projection
+onto a closed convex set in finite dimension is continuous, establishing the
+measurable choice.  Finally, both matrices in \eqref{eq:design-isometry} have
+trace one, so the trace term in \eqref{eq:star-norm} vanishes.
+\end{proof}
+
+Consider a channel $W$ from pure states to an arbitrary standard-Borel
+classical memory $Z$, followed by jointly measurable probability reports
+$q_Z(y)\in[0,1]$; bounded joint measurability makes
+$z\mapsto q_z$ a Borel $L^2(\nu)$-valued map.  Its worst-state
+Born risk is $\sup_x\E[\ell_x(q_Z)|X=x]$.  Its information cost is its channel
+capacity
+\begin{equation}
+ C(W)=\sup_P I_P(X;Z),
+ \label{eq:channel-capacity}
+\end{equation}
+where the supremum ranges over all pure-state priors.
+For $0\le D\le R_{0,d}^2$, let
+\begin{equation}
+ \mathfrak W_d(D)=\left\{(W,q):
+ \sup_x\E[\ell_x(q_Z)|X=x]\le\frac{D}{d(d+1)}\right\}.
+ \label{eq:uniform-risk-class}
+\end{equation}
+Define the source-universal frontier by
+\begin{equation}
+ \cC_d^{\rm univ}(D)=
+ \inf_{(W,q)\in\mathfrak W_d(D)}\sup_P I_P(X;Z).
+ \label{eq:universal-definition}
+\end{equation}
+
+\begin{theorem}[Exact source-universal minimax capacity]
+\label{thm:minimax}
+For every $0\le D\le R_{0,d}^2$, the minimum channel capacity in
+\eqref{eq:universal-definition} is exactly
+\begin{equation}
+ \boxed{\cC_d^{\rm univ}(D)=\cR_d(D)}.
+ \label{eq:minimax-equality}
+\end{equation}
+The Haar prior is least favorable for an optimal covariant channel.
+\end{theorem}
+
+\begin{proof}
+Theorem~\ref{thm:pointwise-projection} lets us replace every report by a
+density report without increasing any statewise risk or channel capacity.
+Every uniformly feasible channel is therefore feasible under Haar input, so
+\begin{equation}
+ C(W)\ge I_{\rm Haar}(X;Z)\ge\cR_d(D).
+\end{equation}
+
+Conversely, Theorem~\ref{thm:finite-envelope} supplies a covariant
+complex-Bingham channel $W_D$, or an independently flagged mixture of active
+channels on a coexistence face, with constant statewise distortion $D$.
+Let $Q_D$ be its output law under Haar input.  For one active orbit,
+covariance makes the divergence below independent of $x$, and Haar averaging
+identifies its value with the attained mutual information.  On a coexistence
+face, write the revealed-flag channel and output law as
+$W_D=\sum_j a_j\delta_j\otimes W_j$ and
+$Q_D=\sum_j a_j\delta_j\otimes Q_j$.  The flag is independent of $x$, so the
+same conclusion follows from
+$\KL(W_D(\cdot|x)\|Q_D)=\sum_j a_j\KL(W_j(\cdot|x)\|Q_j)$.  Thus
+\begin{equation}
+ \KL(W_D(\cdot|x)\|Q_D)=\cR_d(D)
+ \label{eq:constant-divergence}
+\end{equation}
+independent of $x$.  For every input prior $P$, the classical
+information-radius identity \cite{CsiszarShields2004} gives
+\begin{align}
+ I_P(X;Z)
+ &=\int\KL(W_D(\cdot|x)\|Q_D)\dd P(x)
+   -\KL(PW_D\|Q_D)\\
+ &\le\cR_d(D).
+\end{align}
+Haar input attains equality, proving both capacity and minimax equality for
+$0<D<R_{0,d}^2$.  At $D=R_{0,d}^2$ the constant report has zero capacity.
+At $D=0$, exact reconstruction of the non-atomic projective source has
+infinite capacity, matching $\cR_d(0)=\infty$.
+\end{proof}
+
+This specialization is not a novelty claim for invariant, compound-source, or
+minimax rate--distortion theory itself; such formulations go back at least to
+Sakrison, with compact-group and modern universal-coding developments in
+\cite{Sakrison1969,Harremoes2009CompactGroups,MahmoodWagner2022}.  The result
+here is the exact evaluation of the stated projective worst-state frontier.
+
+\section{Exact finite-block cost and zero dispersion}
+
+For convenience extend $\cR_d(D)$ by zero for $D\ge R_{0,d}^2$; this
+preserves convexity and monotonicity.
+
+Allow an arbitrary joint channel from $n$ pure input states to a shared
+classical memory with a standard-Borel output alphabet and $n$ joint reports,
+each Borel as a map from the memory into $L^2(\nu)$.  Define
+\begin{equation}
+ \cC_{d,n}^{\rm univ}(D)=
+ \inf_{(W_n,q^n)}\sup_{P_{X^n}} I_P(X^n;Z),
+ \label{eq:block-definition}
+\end{equation}
+where the infimum is subject to
+\begin{equation}
+ \sup_{x^n}\E\left[
+ \frac1n\sum_{t=1}^n\ell_{x_t}(q_{t,Z})\,\middle|\,X^n=x^n
+ \right]\le\frac{D}{d(d+1)}.
+ \label{eq:block-risk}
+\end{equation}
+
+\begin{theorem}[Exact arbitrary-joint-memory finite-block law]
+\label{thm:block}
+For every integer $n\ge1$ and $0\le D\le R_{0,d}^2$,
+\begin{equation}
+ \boxed{\cC_{d,n}^{\rm univ}(D)=n\cR_d(D)}.
+ \label{eq:block-equality}
+\end{equation}
+Arbitrary correlations in the representation do not lower the cost; a
+memoryless causal product of covariant complex-Bingham channels attains it.
+\end{theorem}
+
+\begin{proof}
+For the lower bound, choose the iid Haar prior and apply the pointwise
+projection coordinatewise.  If $D_t$ is the marginal mean projector
+distortion, independence and the mutual-information chain rule give
+\begin{equation}
+ I(X^n;Z)-\sum_t I(X_t;Z)
+ =\sum_t I(X_t;X^{t-1}|Z)\ge0.
+\end{equation}
+Data processing and the one-letter converse therefore give
+\begin{equation}
+ I(X^n;Z)\ge\sum_{t=1}^n I(X_t;\widehat\rho_t)
+ \ge\sum_{t=1}^n\cR_d(D_t)
+ \ge n\cR_d\!\left(\frac1n\sum_tD_t\right),
+\end{equation}
+where the last step is convexity.  The worst-sequence constraint implies
+$n^{-1}\sum_tD_t\le D$ under iid Haar input, so monotonicity yields the
+claimed lower bound.  For the upper bound use
+$W_D^{\otimes n}$.  Relative to $Q_D^{\otimes n}$, every input sequence has
+divergence $n\cR_d(D)$ by \eqref{eq:constant-divergence}; the
+information-radius identity upper-bounds capacity by that value, and iid Haar
+input attains it.
+\end{proof}
+
+We next turn from stochastic representations to fixed-length lossy codes.  An
+$(n,M,D,\epsilon)$ code maps an iid Haar source $X^n$ to one of $M$ messages
+and then to physical density reports $\widehat\rho^n$, with
+\begin{equation}
+ \Pp\left\{\frac1n\sum_{t=1}^n
+ \|\rho_{X_t}-\widehat\rho_t\|_F^2>D\right\}\le\epsilon.
+ \label{eq:excess-distortion-event}
+\end{equation}
+
+\begin{theorem}[Zero dispersion and exponential strong converse]
+\label{thm:strong-converse}
+Let $0<D<R_{0,d}^2$ be a differentiability point of $\cR_d$; this includes
+the relative interior of every linear face.  Then the corresponding
+$D$-tilted information is constant:
+\begin{equation}
+ \jmath_X(x,D)=\cR_d(D)
+ \quad\text{for Haar-almost every }x.
+ \label{eq:constant-jmath}
+\end{equation}
+Hence the rate dispersion is zero.  Every fixed-length $n$-state code obeys
+\begin{equation}
+ \boxed{\epsilon\ge
+ \left[1-\exp\{\log M-n\cR_d(D)\}\right]_+.}
+ \label{eq:strong-converse}
+\end{equation}
+In particular, if $\log M\le n(\cR_d(D)-\eta)$, then
+$\epsilon\ge1-e^{-n\eta}$.
+\end{theorem}
+
+\begin{proof}
+Compactness of the source and physical reproduction spaces and continuity of
+the bounded distortion give an attaining invariant KKT reproduction law
+$P^*_{\widehat\rho}$ at every stated $D$.  Set
+$\lambda=-\cR_d'(D)>0$ and define
+\begin{equation}
+ \jmath_X(x,D)=-\lambda D-
+ \log\int e^{-\lambda\|\rho_x-\widehat\rho\|_F^2}
+ \dd P^*_{\widehat\rho}(\widehat\rho).
+ \label{eq:tilted-information-definition}
+\end{equation}
+On a linear face take the invariant mixture of the supporting active physical
+orbit laws.  By transitivity, \eqref{eq:tilted-information-definition} is
+independent of $x$; its Haar mean is $\cR_d(D)$ by dual equality.  This
+proves \eqref{eq:constant-jmath} and zero variance.  Additivity makes the
+$n$-letter tilted information identically $n\cR_d(D)$.  Theorem~7 of Kostina
+and Verd\'u \cite{KostinaVerdu2012} states that, for every $\gamma\ge0$,
+\begin{equation}
+ \epsilon\ge
+ \Pp\{\jmath_{X^n}(X^n,nD)\ge\log M+\gamma\}-e^{-\gamma}.
+\end{equation}
+Taking $\gamma=n\cR_d(D)-\log M$ when positive gives
+\eqref{eq:strong-converse}.
+\end{proof}
+
+Zero dispersion is a symmetry consequence, not a uniquely quantum effect.
+The theorem is a converse; it does not assert a matching constant or
+$\tfrac12\log n$ third-order achievability term.
+
+\section{Causal and finite-query consequences}
+
+Exact weighted complex projective $2$-designs replace Haar query integration
+in Theorem~\ref{thm:pointwise-projection} without changing any constants.
+This makes the probability-field risk finitely witnessable.  Sequential
+extensions require an explicit isotropy condition: a policy that always asks
+one fixed ray tests only one overlap and cannot force full-state information.
+
+\begin{corollary}[History-dependent conditional-design tensorization]
+\label{cor:causal}
+Let $X_1,\ldots,X_n$ be fresh independent Haar preparations.  At time $t$, a
+causal classical encoder produces $Z_t$ from $(X^t,Z^{t-1})$, and the reporter
+may use $Z^t$; any externally randomized menu or seed visible to the reporter
+is included in this transcript.  For every allowed history on which the menu may depend,
+suppose its conditional scoring measure is a weighted exact projective
+$2$-design and the random query draw has no additional access to the fresh
+$X_t$.  Let $\widehat\rho_t(Z^t)$ be the measurable physical projection of
+the current report and define
+\begin{equation}
+ D_t=\E\|\rho_{X_t}-\widehat\rho_t(Z^t)\|_F^2.
+\end{equation}
+Then
+\begin{equation}
+ I(X^n;Z^n)\ge\sum_{t=1}^n\cR_d(D_t)
+ \ge n\cR_d\!\left(\frac1n\sum_tD_t\right).
+ \label{eq:causal-bound}
+\end{equation}
+For the causal factorization
+$W(\dd z^n\Vert x^n)=\prod_tW_t(\dd z_t|z^{t-1},x^t)$, define
+\begin{equation}
+ I(X^n\to Z^n)=\sum_{t=1}^n I(X^t;Z_t|Z^{t-1}).
+\end{equation}
+For this exogenous iid source, Massey's conservation identity
+\cite{Massey1990Directed} gives $I(X^n\to Z^n)=I(X^n;Z^n)$.
+\end{corollary}
+
+\begin{proof}
+Apply the conditional $2$-design projection and the one-letter converse at
+each history.  Independence gives
+\begin{align}
+ I(X^n;Z^n)
+ &=\sum_t I(X_t;Z^n|X^{t-1})\\
+ &\ge\sum_t I(X_t;Z^t|X^{t-1})\\
+ &=\sum_t I(X_t;Z^t,X^{t-1})\\
+ &\ge\sum_t I(X_t;Z^t),
+\end{align}
+and the one-letter bounds plus convexity complete the proof.  Because the
+source law has no feedback dependence on past $Z$, reverse directed
+information vanishes.
+\end{proof}
+
+At fixed $0<\delta<1$, Theorem~\ref{thm:thermodynamic-rdf} also implies a
+classical predictive information cost of
+$d\,r_\infty(\delta)/\log2+o(d)$ bits per state.  A direct $d$-level quantum
+system has logarithmic Hilbert-space size, but this comparison must not be
+misread: a single quantum specimen is not an exact reusable classical
+probability oracle, and remote-state preparation or shared entanglement is a
+different resource model \cite{BennettRemote2001,BennettEtAlRSP2005}.
+
+\section{Operational boundary and open Grassmann frontier}
+
+The theorems concern probability-field calibration.  They do not derive
+Born's rule, simulate state update, certify intrinsic randomness, or exclude
+click-only hidden-variable models.  Indeed, reproducing sampled clicks can
+require far less information than retaining calibrated probabilities for all
+queries.  Channel capacity is an operational asymptotic information resource;
+it is not a literal count of physical memory states in one realization.
+
+The natural mathematical extension replaces a ray by a Haar rank-$r$
+projector.  Axial overlaps then have beta law $\mathrm{Beta}(r,d-r)$, and the
+skewness changes sign under $r\leftrightarrow d-r$.  However, the full
+partition is matrix-Jacobi rather than scalar Dirichlet.  An axial ansatz is
+not a proof: exact rank-$r$ rate--distortion requires showing that a specified
+reconstruction spectrum globally maximizes a matrix-Bingham/HCIZ integral at
+fixed Frobenius norm.  Existing complex-projective and Grassmann quantization
+results, arbitrary-radius metric-ball asymptotics, and general
+rate--distortion bounds do not supply that extremum
+\cite{MondalDuttaHeath2006,DaiLiuRider2008,PitavalEtAl2016,RieglerKolianderBolcskei2023}.
+We therefore leave it as an explicit open problem.
+
+\section{Conclusion}
+
+We have given a self-contained rate--distortion theory for calibrated Born
+prediction on complex projective space.  The all-degree one-spike partition
+theorem reduces the unrestricted finite-dimensional problem to an exact
+scalar complex-Bingham envelope, including flagged mixtures at coexistence.
+It yields a discontinuous directional-information onset for every $d\ge3$,
+the exact qubit specialization, and the sharp fixed-$d$ high-fidelity
+constant.  In the thermodynamic regime, a uniform projective Laplace principle
+gives the closed two-piece frontier, the nontrivial coexistence root
+$y-1=2\log y$, and the finite-size correction
+$\lambda_{c,d}=\alpha_*d-c_*\log d+O(1)$.  Finally, a pointwise
+physical-report projection upgrades Haar-average optimality to exact
+worst-state channel capacity, arbitrary-joint-memory tensorization, zero
+dispersion, and an exponential strong converse.  The resulting theorem
+package connects exact finite-dimensional probability prediction to its
+high-dimensional phase law without identifying calibrated prediction with
+click generation or particle dynamics.
+
+\section*{Data and code availability}
+
+The accompanying archive \path{repro_v1.zip} is supplied as supplementary
+material with this manuscript.  It has the immutable content identifier
+SHA-256
+\begin{center}
+\footnotesize
+\texttt{54a0fd17a2b68bdfc62a188043be104ef533b1b20581789a9992ba912902821e}.
+\end{center}
+From the extracted directory, the exact replay commands are
+\begin{verbatim}
+python verify_frontier.py
+python verify_thermodynamic_limit.py --max-d 100 --output-dir .
+\end{verbatim}
+They evaluate the finite-dimensional scalar envelope, the coexistence root,
+the bounded first-contact problem, and the limiting curve using one process,
+without branch-and-bound or heavy search.  The generated JSON files record
+the environment, grids, residuals, and runtime.  These outputs are diagnostic;
+all headline results are analytic.
+
+\section*{AI assistance and author responsibility}
+
+AI tools assisted with literature search, algebraic stress testing, editing,
+and reproducibility checks.  The author is responsible for the definitions,
+proofs, claims, citations, and final manuscript.
+
+\appendix
+
+\section{Finite-dimensional spectral reduction}
+\label{app:finite}
+
+We give the complete reduction so that every finite-dimensional input used in
+the main text is verifiable within this manuscript.
+
+\begin{proposition}[Brazitikos--Pandis normalized interface]
+\label{prop:bp-interface}
+Let $d\ge2$, let $\gamma_1,\gamma_2,\gamma_3$ be nonnegative integer
+multiplicities with $\gamma_1+\gamma_2+\gamma_3=d$, and let $u,v,w\in\R$
+satisfy
+\begin{equation}
+ \gamma_1u+\gamma_2v+\gamma_3w=0,
+ \qquad
+ \gamma_1u^2+\gamma_2v^2+\gamma_3w^2=1.
+ \label{eq:bp-interface-constraints}
+\end{equation}
+For the grouped vector
+\begin{equation}
+ x=(\underbrace{u,\ldots,u}_{\gamma_1},
+    \underbrace{v,\ldots,v}_{\gamma_2},
+    \underbrace{w,\ldots,w}_{\gamma_3}),
+\end{equation}
+and every positive integer $m$,
+\begin{equation}
+ p_m(x)\le p_m(a^*_1),
+ \qquad
+ a^*_1=\left(\sqrt{\frac{d-1}{d}},
+ -\frac1{\sqrt{d(d-1)}},\ldots,
+ -\frac1{\sqrt{d(d-1)}}\right).
+ \label{eq:bp-interface-bound}
+\end{equation}
+Here zero multiplicities cover the two-value case.  This is precisely
+Proposition 5.5 of Brazitikos and Pandis in their unit-norm normalization
+\cite{BrazitikosPandis2025}.  Homogeneity gives radius $r$ by multiplying the
+right side by $r^m$.
+\end{proposition}
+
+\begin{remark}
+Proposition~\ref{prop:bp-interface} is the only external extremal inequality
+used below.  It asserts the grouped power-sum maximum.  The reduction of an
+arbitrary spectrum to at most three values, the odd-sign closure, the Newton
+step, the projective Laplace theorem, and the rate--distortion application are
+proved here.
+\end{remark}
+
+\begin{lemma}[All-degree centered power sums]
+\label{lem:appendix-powers}
+Let $d\ge3$, $r>0$, and let $a\in\R^d$ satisfy
+$\sum_i a_i=0$ and $\sum_i a_i^2=r^2$.  Put
+\begin{equation}
+ a^*=r\left(\sqrt{\frac{d-1}{d}},
+ -\frac1{\sqrt{d(d-1)}},\ldots,
+ -\frac1{\sqrt{d(d-1)}}\right).
+ \label{eq:appendix-spike}
+\end{equation}
+Then, for every integer $m\ge2$,
+\begin{equation}
+ |p_m(a)|\le p_m(a^*),\qquad p_m(a)=\sum_i a_i^m.
+ \label{eq:appendix-power-bound}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+For $m=2$, the assertion is immediate because
+$p_2(a)=r^2=p_2(a^*)$ is fixed by the norm constraint.  Hence assume $m\ge3$.
+The centered sphere is compact.  Its constraint gradients $\mathbf 1$ and $2a$
+are independent because $a$ is nonzero and centered.  At a constrained global
+maximum or minimum of $p_m$, Lagrange multipliers give
+\begin{equation}
+ mx^{m-1}-2\xi x-\zeta=0
+ \label{eq:appendix-lagrange}
+\end{equation}
+for every coordinate value $x$.  The derivative of this sparse polynomial is
+$m(m-1)x^{m-2}-2\xi$.  It has at most one real zero when $m$ is odd and at
+most two when $m$ is even.  Rolle's theorem therefore leaves at most two,
+respectively three, distinct coordinate values at every global extremum.
+Proposition~\ref{prop:bp-interface}, applied precisely to this grouped
+centered fixed-norm class, places the maximum of $p_m$ at $a^*$.  For odd
+$m$, the map $a\mapsto-a$ converts the
+minimum to minus the maximum; for even $m$, $p_m(a)\ge0$.  This proves
+\eqref{eq:appendix-power-bound}.  The external proposition supplies the
+grouped power-sum extremum, not the all-degree Laplace conclusion below.
+\end{proof}
+
+If $P\sim\mathrm{Dirichlet}(1,\ldots,1)$, then
+\begin{equation}
+ \E\langle a,P\rangle^k
+ =\frac{k!(d-1)!}{(d+k-1)!}h_k(a),
+ \label{eq:dirichlet-hk}
+\end{equation}
+where $h_k$ is the complete homogeneous symmetric polynomial.  Since
+$p_1(a)=0$, Newton's expansion becomes
+\begin{equation}
+ h_k(a)=
+ \sum_{\substack{m_1+2m_2+\cdots+km_k=k\\m_1=0}}
+ \prod_{j=2}^k\frac{p_j(a)^{m_j}}{m_j!j^{m_j}}.
+ \label{eq:appendix-newton}
+\end{equation}
+For $d\ge3$, every $p_j(a^*)$ with $j\ge2$ is positive.  Hence
+\begin{equation}
+ h_k(a)\le |h_k(a)|
+ \le\sum_{\substack{m_1+2m_2+\cdots+km_k=k\\m_1=0}}
+ \prod_{j=2}^k\frac{|p_j(a)|^{m_j}}{m_j!j^{m_j}}
+ \le h_k(a^*).
+ \label{eq:appendix-hk-bound}
+\end{equation}
+Equations~\eqref{eq:dirichlet-hk} and \eqref{eq:appendix-hk-bound}, summed
+termwise in the entire exponential series, prove the axial projective
+partition inequality in every degree.  When $d=2$, the centered fixed-radius
+sphere consists only of the two permutations of
+$(r/\sqrt2,-r/\sqrt2)$, so the result is immediate.
+
+It remains to derive and attain the scalar envelope.  Write a density
+reproduction as $I/d+A$, where $\Tr A=0$ and $\|A\|_F\le R_{0,d}$.  For
+\begin{equation}
+ Q_\lambda(A)=\int
+ e^{-\lambda\|S_x-A\|_F^2}\dd\mu_d(x),
+ \label{eq:appendix-Q}
+\end{equation}
+conditional Gibbs duality, applied to every posterior given $A$, gives
+\begin{equation}
+ I(X;A)\ge-\lambda D-\E\log Q_\lambda(A)
+ \ge-\lambda D-\log\sup_AQ_\lambda(A).
+ \label{eq:appendix-gibbs}
+\end{equation}
+At fixed $\|A\|_F$, diagonalization and the all-degree partition inequality
+replace its spectrum by the valid axial density comparator
+$A=b(\rho_u-I/d)$, $0\le b\le1$.  For this comparator,
+\begin{equation}
+ \log Q_\lambda(A)
+ =-\lambda R_{0,d}^2+K_d(2\lambda b)
+  -\lambda R_{0,d}^2b^2
+ =-\lambda R_{0,d}^2+G_{d,\lambda}(b).
+ \label{eq:appendix-axial-Q}
+\end{equation}
+Maximizing first over $b$ and then over $\lambda$ proves the converse in
+Theorem~\ref{thm:finite-envelope}.
+
+For equality, let $b>0$ be active, put $\kappa=2\lambda b$, and take
+\begin{equation}
+ \frac{\dd P_{X|U=u}}{\dd\mu_d}(x)
+ =\frac{e^{\kappa|\langle x,u\rangle|^2}}{M_d(\kappa)},
+ \qquad U\sim\mu_d.
+ \label{eq:appendix-bingham}
+\end{equation}
+Invariance makes the source marginal Haar.  If
+$m_d(\kappa)=\partial_\kappa\log M_d(\kappa)$, stationarity of the active
+radius is
+\begin{equation}
+ b=\frac{d m_d(\kappa)-1}{d-1}.
+ \label{eq:appendix-self-consistency}
+\end{equation}
+Thus the conditional mean is exactly $(1-b)I/d+b\rho_u$, so the channel is
+its own posterior-mean reproduction.  It attains
+\begin{equation}
+ D_b=R_{0,d}^2(1-b^2),\qquad
+ I_b=\kappa m_d(\kappa)-\log M_d(\kappa)
+ =\lambda(R_{0,d}^2-D_b)-\max_{0\le v\le1}G_{d,\lambda}(v).
+ \label{eq:appendix-branch}
+\end{equation}
+The optimized log partition
+$c_d(\lambda)=-\lambda R_{0,d}^2+\max_bG_{d,\lambda}(b)$ is convex, and
+Danskin's theorem gives
+\begin{equation}
+ -\partial c_d(\lambda)
+ =\operatorname{conv}\{D_b:b\text{ is active at }\lambda\}.
+ \label{eq:appendix-danskin}
+\end{equation}
+Independently flagged mixtures of the corresponding invariant channels attain
+every distortion in this interval.  The independent channel gives
+$D=R_{0,d}^2$, $I=0$; exact reconstruction is obtained as the limiting
+endpoint and has infinite information.  Thus all
+$0\le D\le R_{0,d}^2$ are covered without assuming uniqueness of the
+finite-dimensional radial maximizer.
+
+\printbibliography
+
+\end{document}

@@ -1,0 +1,1513 @@
+# Finite-Sample Spectral-Gap Falsification: Exact Weighted Visibility Minimax, Hidden-Atom LAN, and Honest Dependent Tests
+
+> Machine-readable rendition extracted from the hash-identified canonical PDF. Mathematical typography may be degraded; cite and verify against `paper.pdf`.
+
+## Page 1
+
+```text
+Finite-Sample Spectral-Gap Falsification
+Exact weighted visibility minimax, hidden-atom LAN, and honest dependent
+                                    tests
+
+                                             Lluis Eriksson
+
+                                             August 2026
+
+
+                                                Abstract
+        Finite Euclidean correlation matrices are routinely converted into spectral gaps by
+    generalized eigenvalue, Prony, or Lanczos procedures. We determine a finite-sample boundary
+    for what such data can falsify and what they cannot certify by non-rejection. Let T be a
+    positive self-adjoint contraction and Bn = V ∗ T n V its transfer moments. The block Hankel
+    pencil HN = [Bi+j ], GN = [Bi+j+1 ] gives monotone Ritz lower bounds on the visible transfer
+    edge. Exact rank stabilization is terminal: it makes the Krylov space invariant and recovers
+    the complete visible spectrum from finitely many moments.
+        Away from terminality, an atom of weight w at any x∗ = e−g changes every moment
+    by at most w while forcing mass gap at most g. Taking x∗ < 1 arbitrarily close to one
+    proves non-identifiability even when an exactly degenerate vacuum excitation is forbidden.
+    For Gaussian correlator sketches with nonsingular gapped covariance K0 , the hidden atom
+                           √ after whitening. We compute its exact likelihood ratio and relative
+    produces a rank-one spike
+    entropy. For wn = h/ n the experiment is locally asymptotically normal with information
+                                         −1/2
+                            Ix∗ = 12 {(∥K0  ϕN (x∗ )∥2 − 1)2 + 2N + 1},
+                                                          p
+    giving the sharp local power envelope 1 − Φ(z1−α − h Ix∗ ). In particular,
+                                ⊗n                                √
+                     D(P⊗n            1   2      2
+                         w,x∗ ∥P0 ) ≤ 2 nw ∥Ax∗ ∥F ,     TV ≤ 12 w n∥Ax∗ ∥F ,
+                                                                                              √
+    under an explicit local condition. Thus every level-α test has power at most α + O(w n)
+    against alternatives whose positive gaps can tend to zero.
+        Quantitative visibility restores honest one-sided detection. We solve the relevant popula-
+    tion optimization exactly. If at least mass γ lies past θ + δ, the unique degree-N weighted
+    minimax filter is the normalized Chebyshev polynomial of the fourth kind,
+                                                 WN (2x/θ − 1)
+                                      qN (x) =                 .
+                                                 WN (1 + 2δ/θ)
+
+    Its worst-case localizer is exactly θ(1 − γ)/WN (1 + 2δ/θ)2 − δγ; a two-atom measure attains
+    equality. This gives a necessary-and-sufficient uniform sign threshold within the normalized
+    polynomial-localizer class and strictly improves the usual first-kind stop-band envelope.
+        A simultaneous Wishart–Loewner confidence band yields finite-sample Gaussian level
+    without a known covariance, asymptotic approximation, or sample split. We also prove a
+    distribution-free companion within the bounded-iid model: paired differences remove an
+    unknown mean, Hoeffding calibration gives finite-sample level, and a finite bank of filters
+    may be selected without splitting at only a logarithmic penalty. A second theorem covers
+    strictly stationary bounded β-mixing readouts. Sparse pairing, Berbee coupling, and an
+    explicit lag-covariance correction give nonasymptotic level and power from one dependent
+    trajectory whenever an external mixing envelope is available. The exact weighted margin
+    gives a closed joint depth–sample tradeoff. We do not claim minimax optimality outside the
+    declared fixed-window Gaussian experiment or normalized scalar polynomial-localizer class.
+        These tests falsify an overstated positive gap by detecting visible mass beyond θ. Non-
+    rejection alone is not a positive lower-confidence certificate for the gap. An interacting
+
+
+                                                   1
+```
+
+---
+
+## Page 2
+
+```text
+ANNNI-chain experiment up to 216 states exhibits the visibility issue: a parity-even probe is
+       exactly blind to the lowest odd excitation, whereas a two-channel (X, Z) family supplies a
+       finite witness. Exact rational fixtures, an independent certificate, a Colab pipeline, and a
+       Lean-checked hidden-atom core accompany the proofs.
+
+
+1     The identifiability question
+A spectral gap is a support exclusion, not merely a fitted exponential slope. In a transfer
+formulation, after removing the vacuum, it is the assertion
+
+                                   spec(T ) ⊂ [0, e−m ]        (m > 0),                                (1)
+
+for a positive self-adjoint contraction T . Numerical and lattice calculations generally do not
+access T directly. They access finitely many matrices
+
+                                  Bn = V ∗ T n V,       n = 0, 1, . . . , M,                           (2)
+
+where the columns of V : Cd → K are states created by a chosen family of interpolating operators.
+These are Hausdorff moments of a positive matrix-valued spectral measure. This observation
+underlies generalized eigenvalue methods, Prony-type reconstruction, Rayleigh–Ritz and block
+Lanczos spectroscopy [1, 2, 3, 4, 5].
+   The inverse problem has two logically different targets:
+
+    (i) estimate spectral values that are visible to the chosen probes;
+
+ (ii) certify that no spectral value relevant to the claimed gap has been missed.
+
+The first is an approximation problem. The second is an identifiability problem. A highly
+accurate estimate does not answer the second question if a small spectral component can hide
+below the error floor.
+    The direction of inference is crucial. Throughout, the statistical null is supp ν ⊆ [0, θ].
+Rejection detects visible edge mass beyond θ, thereby falsifying an overstated positive gap and
+giving a lower bound on the visible transfer edge. Non-rejection alone does not exclude hidden
+mass and is not a positive lower-confidence bound on the gap.
+    This paper gives a six-branch answer.
+
+Exact terminal branch. Rank stabilization of a block Hankel matrix is a finite, checkable
+    condition under which the Krylov approximation terminates and the visible spectrum is
+    recovered exactly.
+
+No-go branch. For every positive componentwise error radius and every target g > 0, a
+    spectral atom at e−g < 1 can be hidden inside the data ball. Thus even a known unique
+    vacuum does not permit a uniformly separated positive gap over the unconstrained model
+    class.
+
+Statistical lower branch. For nonsingular Gaussian correlator sketches, the near-critical atom
+     has an exact rank-one-spike likelihood. Its w ≍ n−1/2 local experiment is Gaussian with an
+     explicit information and sharp power curve; below that scale all level tests are asymptotically
+     powerless.
+
+Gaussian visibility branch. A lower bound on the mass of any missed edge component
+    restores a finite falsifier. A fourth-kind weighted-Chebyshev filter solves the population
+    localizer minimax problem exactly and yields an explicit depth and noise margin; a
+    Wishart–Loewner band converts it into an exact-level test and a closed depth–sample
+    tradeoff.
+
+                                                    2
+```
+
+---
+
+## Page 3
+
+```text
+Bounded-readout branch. For iid bounded readouts with unknown mean, paired differences
+    and a one-sided Hoeffding band give a non-Gaussian finite-sample test. A finite filter bank
+    may be searched on the same data with a disclosed multiplicity penalty.
+
+Dependent-readout branch. For a strictly stationary bounded β-mixing trajectory, lagged
+    pairing introduces a controlled covariance bias while separated pair blocks admit a Berbee
+    coupling. This yields an explicit finite-sample test and power bound, including a closed
+    geometric-mixing specialization.
+    The algebraic ingredients are classical: positive moment problems, Krylov termination,
+Chebyshev polynomials, and Gaussian LAN. The claim here is the assembled operational
+boundary—including the distribution-level lower and local-power laws, the exact weighted
+visibility minimax, and auditable finite-sample witnesses—not the invention of Rayleigh–Ritz or
+of the truncated moment problem.
+
+
+2     Matrix moments and the visible spectral edge
+Let K be a complex Hilbert space, let 0 ≤ T ≤ 1 be self-adjoint, and let V : Cd → K be bounded.
+Write ET for the spectral resolution of T and
+                                                   Z 1
+                               ∗
+                    Σ(A) = V ET (A)V,        Bn =      xn dΣ(x) = V ∗ T n V.                (3)
+                                                                     0
+
+The visible cyclic subspace and its edge are
+
+                            KV = span{T j ran V : j ≥ 0},                  ρV = ∥T |KV ∥.      (4)
+
+Only T |KV is identifiable from the moments. If KV ̸= K, a single probe family is blind to the
+orthogonal reducing complement.
+   For N ≥ 0 define block Hankel matrices
+
+                                HN = [Bi+j ]N
+                                            i,j=0 ,               GN = [Bi+j+1 ]N
+                                                                                i,j=0 .        (5)
+
+Given c = (c0 , . . . , cN ) ∈ (Cd )N +1 , set
+                                           N
+                                           X                                   N
+                                                                               X
+                                 WN c =          T j V cj ,         qc (x) =         xj cj .   (6)
+                                           j=0                                 j=0
+
+Then
+
+                                        c∗ HN c = ∥WN c∥2 ,
+                                     c∗ GN c = ⟨WN c, T WN c⟩,
+                                               Z 1
+                              ∗
+                             c (θHN − GN )c =      (θ − x) qc (x)∗ dΣ(x)qc (x).                (7)
+                                                        0
+
+Proposition 2.1 (Ritz/localizer dictionary). Let
+                                                               c∗ GN c
+                                            ρN =         sup    ∗
+                                                                       .                       (8)
+                                                      c∈ker
+                                                       /    HN c HN c
+
+Then ρN is the largest Ritz value of T on KN = ran WN , and
+
+                                    0 ≤ ρN ≤ ρN +1 ≤ ρV ,                 ρN ↑ ρV .            (9)
+
+Moreover, θHN − GN ̸⪰ 0 is a rigorous finite falsifier of ρV ≤ θ, whereas θHN − GN ⪰ 0 at one
+finite N is not in general a certificate of that support bound.
+
+                                                              3
+```
+
+---
+
+## Page 4
+
+```text
+Proof. The first two identities in Eq. (7) identify the generalized Rayleigh quotient with that
+of T on KN . The inclusions KN ⊆ KN +1 give monotonicity. Their union is dense in KV , so
+the variational suprema converge to ∥T |KV ∥. If a localizer has a negative direction, Eq. (7) is
+incompatible with spectral support in [0, θ]. Positivity on polynomials of bounded degree does
+not exclude spectral weight detectable only at larger degree.
+
+    This proposition separates a common ambiguity. A Ritz value is a lower bound on the visible
+transfer edge and hence an upper bound on the visible mass − log ρV . A negative localizer
+falsifies an overstated mass. Neither becomes a full-gap theorem until probe completeness is
+supplied.
+
+
+3    The exact terminal branch
+Finite exact recovery occurs when the moment problem becomes degenerate. This is the
+operator form of flat propagation in truncated moment theory and of exact termination in block
+Lanczos [9, 10, 11, 4].
+Theorem 3.1 (Flat Krylov termination). If
+
+                                     rank HN = rank HN +1 < ∞,                                (10)
+
+then KN = KN +1 , the space KN is invariant under T , and
+
+                                      KV = KN ,        ρV = ρN .                              (11)
+
+The finite generalized pencil (GN , HN ) on the quotient by ker HN recovers the complete visible
+spectrum, with multiplicities in the cyclic representation. If in addition KV = K and T = e−aH
+on the excitation space, the recovered edge certifies the full gap m = −a−1 log ρN (with the usual
+extended-value convention at ρN = 0).
+Proof. Since HN = WN∗ WN , rank HN = dim KN . The nesting KN ⊆ KN +1 and Eq. (10)
+therefore imply equality. But T KN ⊆ KN +1 , hence T KN ⊆ KN . All further Krylov spaces
+equal KN , so their closure is KV = KN . The compressed operator is now the exact restriction
+rather than an approximation, and the quotient pencil represents it in the nonorthogonal Krylov
+coordinates.
+
+Example 3.2 (Exact rational terminal certificate). Take
+                                                                   
+                                                                1 0
+                            T = diag(1/5, 1/2, 4/5),       V = 1 1 .
+                                                                0 1
+
+The tracked exact-arithmetic artifact constructs B0 , . . . , B5 and finds
+
+                            rank H0 = 2,        rank H1 = rank H2 = 3.
+
+On a rational quotient basis the pencil determinant is
+                                      9
+                                 −        (2λ − 1)(5λ − 4)(5λ − 1),                           (12)
+                                     5000
+recovering {1/5, 1/2, 4/5} exactly and hence the visible mass − log(4/5) = log(5/4). No floating-
+point rank decision enters this example.
+   Flatness is powerful but singular. With noisy data, exact rank is destroyed; thresholding
+small singular values introduces a model choice. The next section shows that this is not merely
+a numerical inconvenience.
+
+                                                  4
+```
+
+---
+
+## Page 5
+
+```text
+4    A finite-noise no-go theorem
+The obstruction already appears for a scalar normalized spectral measure. Its matrix analogue
+follows by adding an identity-valued atom.
+
+Theorem 4.1 (Hidden-atom
+             R n         indistinguishability). Let µ be a probability measure on [0, 1] with
+moments mn = x dµ(x). For 0 < w ≤ 1 and x∗ ∈ [0, 1] define
+
+                  µw,x∗ = (1 − w)µ + wδx∗ ,              m(w,x
+                                                          n
+                                                              ∗)
+                                                                 = (1 − w)mn + wxn∗ .          (13)
+
+Then, for every n ≥ 0,
+                               |m(w,x
+                                 n
+                                     ∗)
+                                        − mn | = w|xn∗ − mn | ≤ w.                             (14)
+If x∗ > sup supp µ, then µw,x∗ has transfer edge x∗ and mass gap − log x∗ . In particular x∗ = 1
+gives zero gap.
+    If Σ is an Id -normalized positive matrix measure and Bn = xn dΣ(x), the same conclusion
+                                                               R
+
+holds in operator norm for
+
+                Σw,x∗ = (1 − w)Σ + wId δx∗ ,             Bn(w,x∗ ) = (1 − w)Bn + wxn∗ Id ,     (15)
+                             (w,x∗ )
+because 0 ⪯ Bn ⪯ Id and ∥Bn            − Bn ∥ ≤ w.
+
+Proof. Since 0 ≤ xn ≤ 1 on [0, 1], one has 0 ≤ mn ≤ 1. Equation (14) follows by direct
+subtraction. If x∗ lies above the old support, it is the new support edge. The matrix statement
+is identical after replacing scalar order by Loewner order.
+
+Corollary 4.2 (Near-critical obstruction with no zero mode). Let µ be supported in [0, θ] with
+θ < 1. For every finite moment window, every componentwise radius ε > 0, and every
+
+                                            0 < g < − log θ,                                   (16)
+
+the error ball contains a measure with transfer edge e−g < 1 and strictly positive mass gap exactly
+g. Hence the admissible gaps in every such ball have infimum zero even after excluding an atom
+at one.
+
+Proof. Take x∗ = e−g > θ and 0 < w ≤ min{ε, 1}. Then Theorem 4.1 applies, the new edge is
+x∗ < 1, and its mass gap is − log x∗ = g. Letting g ↓ 0 proves the last statement.
+
+Corollary 4.3 (Algorithm-independent impossibility). No estimator whose only input is a finite
+positive-moment window with a nonzero componentwise error bar can return a uniformly valid
+strictly positive gap lower bound over all positive measures whose nonvacuum transfer edge is
+strictly below one.
+
+    This conclusion applies equally to nonlinear fits, Bayesian reconstructions, GEVP, Prony,
+Lanczos, Padé, semidefinite programs, and machine-learning estimators. It is a property of the
+information set, not of the solver. A denoising projection onto the positive Hankel cone can
+improve consistency and variance [8]; it cannot exclude the hidden measures in Theorems 4.1
+and 4.2 without adding a visibility prior.
+    The theorem is deliberately worst-case. It does not say that small atoms are common or that
+gap estimation is useless. It says that a rigorous positive certificate must disclose what rules
+them out. The near-critical corollary is the physically relevant form when uniqueness of the
+vacuum is already known: the obstruction does not rely on an additional exactly zero-energy
+state.
+
+
+
+
+                                                     5
+```
+
+---
+
+## Page 6
+
+```text
+5    A distribution-level Gaussian lower bound
+Moment closeness alone does not quantify the difficulty of a statistical experiment. We now
+show that the hidden-atom mechanism persists at the level of the complete data law. Fix a
+finite degree N and put
+
+                         ϕN (x) = (1, x, . . . , xN , x1/2 , x3/2 , . . . , xN +1/2 )T .           (17)
+
+For a probability measure µ define
+                        Z 1
+                                                                                    iid
+                  Kµ =      ϕN (x)ϕN (x)T dµ(x),                z1 , . . . , zn ∼ N (0, Kµ ).      (18)
+                             0
+
+This is the finite-dimensional law obtained by applying a real isonormal Gaussian process to the
+vectors T j V and T j+1/2 V . Equivalently one may regard the Euclidean sampling step as half of
+the transfer step. No nonexistent “standard Gaussian vector” in an infinite-dimensional Hilbert
+space is assumed.
+    The two principal covariance blocks in (18) are precisely HN = [mi+j ] and GN = [mi+j+1 ].
+Thus the sketch retains the localizer while providing a concrete finite-sample experiment.
+
+Theorem 5.1 (Near-critical Le Cam bound). Let µ0 be supported in [0, θ] and suppose K0 :=
+Kµ0 ≻ 0. Fix x∗ ∈ (θ, 1], put v∗ := ϕN (x∗ ), and
+
+                  µw,x∗ = (1 − w)µ0 + wδx∗ ,               Kw,x∗ = (1 − w)K0 + wv∗ v∗T ,           (19)
+
+and define
+                                              −1/2                       −1/2
+                                  Ax∗ = K0           (v∗ v∗T − K0 )K0           .                  (20)
+If w∥Ax∗ ∥op ≤ 1/2, then, for P0 = N (0, K0 ) and Pw,x∗ = N (0, Kw,x∗ ),
+
+                                                ⊗n  nw2
+                                      D(P⊗n
+                                         w,x∗ ∥P0 ) ≤   ∥Ax∗ ∥2F ,                                 (21)
+                                                     2√
+                                            ⊗n      w n
+                                  ∥P⊗n
+                                    w,x∗ − P0 ∥TV ≤      ∥Ax∗ ∥F .                                 (22)
+                                                      2
+Consequently every test φ ∈ [0, 1] satisfying E0 φ ≤ α obeys
+                                                    √
+                                                  w n
+                                   Ew,x∗ φ ≤ α +       ∥Ax∗ ∥F .                                   (23)
+                                                    2
+Here µ0 obeys the claimed positive edge bound, whereas µw,x∗ has edge x∗ and mass gap − log x∗ .
+The case x∗ < 1 introduces no exactly zero-energy excitation.
+                                             1/2                   1/2
+Proof. Equation (19) gives Kw,x∗ = K0 (I + wAx∗ )K0 . If t is an eigenvalue of wAx∗ , then
+|t| ≤ 1/2 and t − log(1 + t) ≤ t2 . The Gaussian relative-entropy formula therefore yields
+
+                                          1X                      w2
+                      D(Pw,x∗ ∥P0 ) =       {tj − log(1 + tj )} ≤    ∥Ax∗ ∥2F .
+                                          2                       2
+                                              j
+
+Relative entropy tensorizes, proving (21). Pinsker’s inequality gives (22), and the variational
+definition of total variation gives (23); see, e.g., [20] for these standard testing reductions.
+
+    The preceding inequality has an exact local counterpart. Put dN = 2N + 2 and
+
+                     −1/2                                                1
+             ax = K0        ϕN (x),      βx = ∥ax ∥2 ,          Ix =        (βx − 1)2 + dN − 1 .   (24)
+                                                                         2
+
+
+                                                       6
+```
+
+---
+
+## Page 7
+
+```text
+Theorem 5.2 (Exact hidden-atom likelihood and local power). In the experiment of Theorem 5.1,
+the whitened perturbation is Ax = ax aTx − IdN . Its eigenvalues are βx − 1 once and −1 with
+multiplicity dN − 1. Consequently, with
+
+                              τw = 1 + w(βx − 1),        ρw = 1 − w,                             (25)
+
+the one-sample relative entropy is exactly
+                      1
+     D(Pw,x ∥P0 ) =     [(dN − 1){−w − log(1 − w)} + w(βx − 1) − log{1 + w(βx − 1)}] .           (26)
+                      2
+After whitening and rotating the spike direction, the log likelihood ratio for n observations is
+                     n                             1              1
+               Λn = − {(dN − 1) log ρw + log τw } + (1 − τw−1 )U + (1 − ρ−1
+                                                                         w )V,                   (27)
+                     2                             2              2
+where under the null U ∼ χ2n and V ∼ χ2n(dN −1) are independent. Under the alternative, U/τw
+and V /ρw have those same independent chi-square laws.
+                √
+   For wn = h/ n with fixed h ≥ 0,
+                                 1
+                       Λn = h∆n − h2 Ix + oP0 (1),         ∆n =⇒ N (0, Ix ).                     (28)
+                                 2
+Thus the asymptotic power envelope among level-α tests of this fixed, known path is
+                                                     p 
+                              πx (h) = 1 − Φ z1−α − h Ix ,                                       (29)
+                                                                                              √
+and it is attained by the likelihood-ratio, equivalently local score, test. More generally, wn n → 0
+                                        √                                         √
+gives limiting power at most α; wn n → h ∈ (0, ∞) gives (29); and wn n → ∞, wn → 0,
+admits a consistent score test.
+
+Proof. The rank-one form of Ax gives the stated spectrum, hence the eigenvalues (25) of I + wAx .
+Substitution in the Gaussian entropy formula proves (26). In whitened coordinates, decompose
+each observation into its component parallel to ax and its orthogonal component. The sums
+of their squared norms are the independent chi-square variables in (27); rescaling gives their
+alternative laws.
+    For completeness, the central sequence is
+                                n
+                            1 X T                                 iid
+                      ∆n =  √     {Z Ax Zr − tr Ax },         Zr ∼ N (0, IdN ).
+                           2 n r=1 r
+
+Its variance is tr(A2x )/2 = Ix . A second-order Taylor expansion of (27) and the central limit
+theorem give (28). The Gaussian-shift Neyman–Pearson lemma then gives (29) and the three
+regimes; this is the standard finite-dimensional LAN argument [21].
+
+    The nonsingularity hypothesis is essential: adding an atom can open a new covariance
+direction and then be detectable immediately. It does not weaken the minimax conclusion.
+Measures on 2N + 2 distinct points in (0, θ) make K0 positive definite because, after writing
+    √
+y = x, the reordered features in (17) are the full Vandermonde family 1, y, . . . , y 2N +1 . Moreover
+x 7→ Ax is continuous on every compact subinterval of (θ, 1]. Hence for any xn ↑ 1 and
+wn = o(n−1/2 ), the local condition eventually holds and every level-α test has power at most
+α + o(1) against alternatives with strictly positive gaps − log xn ↓ 0. This is an existential
+minimax obstruction for a fixed feature window and base covariance, not a pointwise or jointly
+uniform rate over all gapped covariances and growing degrees.
+
+
+
+                                                  7
+```
+
+---
+
+## Page 8
+
+```text
+Exact weighted-filter improvement                                                     Hidden-atom LAN power envelope
+                                   100                                                                                 1.0          size α = 0.05
+ worst low-band localizer loss
+
+
+
+
+                                                                                            optimal asymptotic power
+                                 10−2                                                                                  0.8
+                                 10−4                                                                                  0.6
+                                 10−6                                                                                  0.4
+                                 10−8         first kind: θ/TN(yδ)2
+                                              fourth kind: θ/WN(yδ)2                                                   0.2
+                                              uniform-sign threshold
+                                 10−10                                                                                 0.0
+                                         0     1     2 3 4 5 6                    7     8                                    0.0     0.1 0.2 0.3 0.4 0.5               0.6
+                                                      polynomial degree N                                                             local hidden weight h = √ n wn
+
+Figure 1: Two exact boundaries. Left: the fourth-kind weighted-localizer loss θ/WN (yδ )2 lies
+below the former first-kind uniform envelope and crosses the uniform-sign threshold one degree
+earlier in the displayed rational fixture. Right: the fixed-path LAN envelope (29); the local
+                  √
+parameter is h = n w, not the spectral gap − log x.
+
+Corollary 5.3 (Weight, not the vanishing gap, sets the local scale). Let xn = e−gn ↑ 1 with gn ↓ 0
+and keep N, K0 fixed. Then Axn → A1 and Ixn → I1 > 0. The three regimes of Theorem 5.2
+remain valid with Ix replaced by I1 . Hence, on a fixed feature window, an arbitrarily small
+positive gap does not by itself set the testing boundary: the hidden spectral weight is detectable at
+the n−1/2 scale.
+    This local statement is for a specified rank-one path. It is not a scan over an unknown atom
+location, a uniform theorem over ill-conditioned K0 , or a growing-degree minimax result. LAN
+and spiked-covariance power calculations are classical [22]; the contribution here is the exact
+reduction of the hidden spectral atom to this experiment and the resulting separation of gap
+size from visible weight.
+
+
+6                                Visibility restores finite falsification power
+We now add a transparent quantitative visibility datum. Work first with a scalar probability
+measure ν on [0, 1]. Fix a claimed edge 0 < θ < 1, a resolution 0 < δ ≤ 1 − θ, and a visibility
+floor 0 < γ ≤ 1.
+Definition 6.1 (Visibility alternative). The pair (δ, γ) is visible beyond θ if every admissible
+measure whose edge reaches θ + δ satisfies
+                                                                                ν([θ + δ, 1]) ≥ γ.                                                                      (30)
+    The assumption is falsifiable and model-dependent. It can come from a frame bound for an
+operator family, a symmetry-resolved overlap estimate, a source theorem, or an experimentally
+calibrated minimum spectral weight. It cannot be manufactured from the same noisy moments
+without circularity, by Theorem 4.1.
+    Let TN and WN denote the Chebyshev polynomials of the first and fourth kinds [23]. The
+latter is characterized by
+                                                                    sin((N + 12 )t)                                                     sinh((N + 12 )η)
+                                               WN (cos t) =                         ,           WN (cosh η) =                                            .              (31)
+                                                                       sin(t/2)                                                            sinh(η/2)
+Set
+                                                             2δ                       WN (2x/θ − 1)                                                θ
+                                               yδ = 1 +         ,        qN (x) =                   ,                                  eN =               .             (32)
+                                                             θ                          WN (yδ )                                                WN (yδ )2
+
+                                                                                            8
+```
+
+---
+
+## Page 9
+
+```text
+Theorem 6.2 (Exact visibility-conditioned localizer boundary). For every probability measure
+satisfying (30), define
+                                     Z 1
+                              QN =       (θ − x)qN (x)2 dν(x).                          (33)
+                                             0
+Then
+                                        QN ≤ eN (1 − γ) − δγ.                                     (34)
+The right-hand side is the exact supremum over this visibility class. Consequently qN uniformly
+falsifies the claimed support if and only if
+                                                         θ(1 − γ)
+                                          WN (yδ )2 >             .                               (35)
+                                                            δγ
+Within this normalized degree-N polynomial-localizer class the minimal depth is therefore exactly
+                                                                    
+                                                       2    θ(1 − γ)
+                         Nmin = min N ≥ 0 : WN (yδ ) >                 .                     (36)
+                                                               δγ
+Proof. On [θ + δ, 1], qN ≥ 1 because WN is positive and increasing on [1, ∞). On the low band,
+write x = θ(1 + cos t)/2. Equation (31) gives the exact identity
+                             (θ − x)qN (x)2 = eN sin2 ((N + 21 )t) ≤ eN .                         (37)
+If l, s, h are the masses of [0, θ], (θ, θ + δ), and [θ + δ, 1], then the three contributions to QN are
+at most eN l, 0, and −δh. Since h ≥ γ and l ≤ 1 − h, (34) follows.
+     For tj = (2j + 1)π/(2N + 1), j = 0, . . . , N , put xj = θ(1 + cos tj )/2. The two-atom measure
+                                      ν∗,j = (1 − γ)δxj + γδθ+δ                                   (38)
+attains equality in (34) by (37) and qN (θ+δ) = 1. This proves both sharpness and the equivalence
+(35).
+Proposition 6.3 (Weighted polynomial minimax). Among all real polynomials r of degree at
+most N satisfying r(θ + δ) = 1,
+                                                      √
+                                        √               θ
+                              inf max θ − x |r(x)| =          .                     (39)
+                                r 0≤x≤θ              WN (yδ )
+The filter qN attains the infimum and is the unique minimizer.
+Proof. For qN , equality follows from (37). At the N + 1 points xj used above, the weighted
+values alternate between the two extremes. If a normalized competitor had a strictly smaller
+maximum, the sign of qN − r would alternate at these points, giving at least N roots in [0, θ]. It
+also vanishes at θ + δ, which is impossible for a nonzero polynomial of degree at most N . The
+standard non-strict alternation argument gives uniqueness.
+                                                        √      This is the weighted Chebyshev
+alternation theorem specialized to the localizer weight θ − x.
+Corollary 6.4 (Exact visibility minimax over the filter class). Let
+                            PN = {r ∈ R[x] : deg r ≤ N, r(θ + δ) = 1}
+and define the worst-case localizer risk
+                                                             Z
+                         RN (r) =           sup                  (θ − x)r(x)2 dν(x).
+                                    ν probability on [0,1]
+                                        ν([θ+δ,1])≥γ
+
+Then
+                                    inf RN (r) = eN (1 − γ) − δγ,                                 (40)
+                                   r∈PN
+and qN is the unique minimizer. Hence a uniformly negative localizer exists in PN if and only if
+(35) holds.
+
+                                                     9
+```
+
+---
+
+## Page 10
+
+```text
+√
+Proof. For any r ∈ PN , put L(r) = max[0,θ] θ − x|r(x)|. A measure placing mass 1 − γ at a
+maximizer of L(r) and mass γ at θ + δ shows
+
+                                        RN (r) ≥ (1 − γ)L(r)2 − δγ.
+
+By Proposition 6.3, L(r)2 ≥ eN , with equality only for qN . The exact upper bound for qN is
+Theorem 6.2, proving (40) and uniqueness.
+
+    The distinction from ordinary stop-band minimization matters. Writing yδ = cosh η,
+                                            N
+                                            X
+                   WN (cosh η) = 1 + 2            cosh(kη) > TN (cosh η)   (N ≥ 1).                 (41)
+                                            k=1
+
+Thus the exact fourth-kind localizer loss eN is strictly smaller than the former first-kind uniform
+envelope θ/TN (yδ )2 . The theorem does not assert optimality over nonlinear estimators, matrix-
+valued filters, or alternative observation models; it exactly solves the scalar normalized polynomial
+localizer problem generated by a finite moment window.
+Corollary 6.5 (Matrix-valued multichannel witness). Let Σ([0, 1]) = Id and set ν = d−1 tr Σ.
+If ν([θ + δ, 1]) ≥ γ and Eq. (35) holds, then
+
+                                             θHN − GN ̸⪰ 0.                                         (42)
+
+Hence the matrix correlator window contains a finite direction that falsifies the claimed edge.
+Proof. Let a0 , . . . , aN be the coefficients of qN and, for each standard basis vector eℓ ∈ Cd , take
+the block coefficient vector c(ℓ) = (a0 eℓ , . . . , aN eℓ ). Then
+                                   d
+                                 1 X (ℓ) ∗
+                                    (c ) (θHN − GN )c(ℓ) = QN < 0.
+                                 d
+                                  ℓ=1
+
+At least one summand is negative.
+
+    The degree growsponly logarithmically with 1/γ at fixed resolution. For small δ/θ, however,
+arcosh(1 + 2δ/θ) ∼ 2 δ/θ, exposing the expected edge-resolution cost. This is closely related
+to the Chebyshev mechanism in Kaniel–Paige–Saad convergence bounds, but here the output
+is a one-sided moment localizer with an explicit visibility premise, not merely an eigenvalue
+convergence estimate [24, 4].
+
+6.1    Certified moment error
+                 PN           j and suppose measured moments satisfy |m
+Write qN (x) =     j=0 aj x                                           e      k − mk | ≤ ε for 0 ≤ k ≤
+                                    e N by expanding Eq. (33) in those moments.
+2N + 1. Form the measured localizer Q
+Proposition 6.6 (Noise-safe sign test). The deterministic error obeys
+                                                        2
+                                                 N
+                                                 X
+                         e N − QN | ≤ (1 + θ)ε 
+                        |Q                          |aj | =: RN .                                  (43)
+                                                           j=0
+
+Therefore
+                                              e N + RN < 0
+                                              Q                                                     (44)
+is a rigorous noisy-data falsifier of support in [0, θ]. Under the visibility alternative, the sufficient
+worst-case condition
+                                      eN (1 − γ) − δγ + 2RN < 0                                      (45)
+guarantees detection for every admissible error realization.
+
+                                                      10
+```
+
+---
+
+## Page 11
+
+```text
+2 =
+               P2N
+                     bk xk , then QN = θ bk mk −
+                                         P          P
+Proof. If qN     k=0                                  bk mk+1 . Hence the error is at most
+                                                2
+       P                         P       P                                           e N +RN ≤
+(1+θ)ε |bk |. Convolution gives |bk | ≤ ( |aj |) . Under the visibility alternative, Q
+QN + 2RN ≤ eN (1 − γ) − δγ + 2RN , which proves the stated worst-case condition.
+
+    Power-basis coefficients can grow rapidly. Thus increasing N is not monotonically beneficial
+at fixed componentwise precision: spectral localization improves while the rigorous error radius
+may worsen. The tracked certificates therefore evaluate the coefficient norm as well as the
+weighted population loss. Higher precision or a stable recurrence-based error model can extend
+the useful window, but must be declared explicitly.
+
+
+7    An honest finite-sample Wishart test
+The deterministic radius above ignores correlations. Under a declared Gaussian-sketch model,
+the full quadratic dependence can instead be handled exactly. Fix the fourth-kind polynomial
+qN before observing the data and set
+                                    u = qN (T )V,        v = T qN (T )V.                         (46)
+For clarity we state the scalar real case. Applying independent isonormal Gaussian processes gr
+to the finite span of u, v gives
+                     yr = (gr (u), gr (v))T ∼ N (0, K),
+                                   
+                            P X
+                     K=                ,
+                           X R2
+                          Z                    Z                           Z
+                               2                    2
+                     P = qN dν,           X = xqN     dν,         R2 =              2
+                                                                               x 2 qN dν.        (47)
+
+Put S = n−1           T
+              P
+                r yr yr and choose a significance level 0 < αsig < 1. Define
+                    √        p
+                        2+    2 log(2/αsig )
+               η=              √             < 1,    c− = (1 + η)−2 ,      c+ = (1 − η)−2 ,      (48)
+                                 n
+and the simultaneous confidence interval
+                                  C(S) = {Q ∈ S2 : c− S ⪯ Q ⪯ c+ S}.                             (49)
+We reject the claimed edge when no Q ∈ C(S) satisfies
+                                            θQ00 − Q01 ≥ 0.                                      (50)
+Rejection is a lower-confidence statement about the visible transfer edge, equivalently an upper-
+confidence statement about the visible mass. Non-rejection says only that the confidence band
+intersects the support-null constraint; it is not a positive lower-confidence certificate for the gap.
+Theorem 7.1 (Exact level and visibility-to-sample power). The test (50) has type-I error at
+most αsig for every Gaussian covariance generated by a measure supported in [0, θ], including
+singular covariances.
+    Assume now (30). Write
+                                   µN = δγ − eN (1 − γ).                                 (51)
+If µN > 0, define
+                                                    µN
+                                              rN =     .                                         (52)
+                                                   1+θ
+Then the rejection probability is at least 1 − αsig whenever
+                                                      2 √            4
+                                √
+                                      q                   1 + rN + 1
+                        n>        2 + 2 log(2/αsig )            2        .                       (53)
+                                                              rN
+
+                                                    11
+```
+
+---
+
+## Page 12
+
+```text
+Proof. Let Y be an n × 2 standard Gaussian matrix. Writing the data matrix as Y K 1/2 , the
+Gaussian extreme-singular-value bound [19] gives, with probability at least 1 − αsig ,
+
+                                   (1 − η)2 K ⪯ S ⪯ (1 + η)2 K.
+
+Congruence proves the statement even when K is singular. On this event the true K belongs
+to (49); under the support null it also satisfies (50). Rejection is therefore impossible on the
+coverage event, proving the level claim. Filter selection used no data, so no sample split or
+post-selection correction is needed.
+    For power put
+                      Z                                          
+                                     2                  θ    −1/2
+     m = X − θP = (x − θ)qN (x) dν(x), C =                          , w = ∥K 1/2 CK 1/2 ∥∗ .
+                                                      −1/2     0
+
+Let a = K 1/2 e0 and b = K 1/2 e1 . The triangle inequality gives
+                                    abT + baT                p
+                     w ≤ θ∥a∥2 +                    ≤ θP +    P R2 ≤ (1 + θ)P,                  (54)
+                                        2       ∗
+
+where R2 ≤ P follows from 0 ≤ x ≤ 1. Let l, s, h be the masses of [0, θ], (θ, θ + δ), and [θ + δ, 1].
+On [0, θ + δ] one has |qN | ≤ 1: on the low band use |WN (y)| ≤ 2N + 1 < WN (yδ ), and on the
+middle band use monotonicity. On the high band qN ≥ 1. If H denotes the positive contribution
+to m from the high region and L the magnitude of its negative low-region contribution, then
+
+                             m ≥ δh − eN l ≥ µN ,        H ≤ m + eN l.
+
+The filtered norm has the regional bound
+                                         H       m + eN (1 − γ)
+                            P ≤l+s+        ≤1−γ+                .
+                                         δ             δ
+Combining this with (54), the ratio m/w is bounded below by an increasing function of m.
+Substituting m = µN makes the bracket on the right exactly one, and hence m/w ≥ µN /(1+θ) =
+rN .
+     Every Q ∈ C(S) on the same coverage event obeys
+
+                                1−η 2               1+η 2
+                                                       
+                                        K⪯Q⪯                 K.
+                                1+η                 1−η
+
+Consequently tr(CQ) ≤ −m + δ+ (η)w, where δ+ (η) = ((1 + η)/(1 − η))2 − 1. If δ+ (η) < rN ,
+every covariance in the band violates (50). Solving this inequality for η and substituting (48)
+gives (53).
+
+Corollary 7.2 (Closed depth–sample resource frontier). Fix a desired fractional margin 0 < σ < 1
+and choose the least N such that
+                                                     θ(1 − γ)
+                                      WN (yδ )2 ≥             .                                 (55)
+                                                    (1 − σ)δγ
+Then µN ≥ σδγ. The precommitted two-coordinate Wishart test has rejection probability at least
+1 − αsig whenever
+                                         2 √            4
+                     √
+                         q                   1 + rσ + 1              σδγ
+                n>     2 + 2 log(2/αsig )          2
+                                                            ,  rσ =        .              (56)
+                                                 rσ                   1+θ
+Thus filter depth is O(log(1/γ)) at fixed resolution while the displayed Gaussian sample guarantee
+is O(γ −2 ). This is an explicit achievable resource curve, not a joint minimax theorem when N ,
+K0 , or the atom location vary with n.
+
+                                                 12
+```
+
+---
+
+## Page 13
+
+```text
+The dimension 2 in (53) is substantive: a precommitted polynomial compresses every raw
+sketch to the two filtered coordinates before forming the Wishart band. If the polynomial or
+degree is chosen adaptively from the same data, one may instead band the complete (N + 2)-
+dimensional raw feature covariance of (g(V ), g(T V ), . . . , g(T N +1 V )). Its entries contain every
+moment through order 2N + 2, so θHN − GN ⪰ 0 is a linear constraint√                           √ The
+                                                                               on that covariance.
+same coverage argument remains valid without splitting, but 2 in (53) is replaced by N + 2
+and the power condition is witness-specific. The Gaussian, independence, and known-zero-mean
+hypotheses are essential; this is not an exact theorem for raw Markov-chain Monte Carlo averages.
+
+
+8    A distribution-free bounded-readout test
+Gaussianity and known centering are not required if the filtered readouts are independent and
+bounded. The following companion theorem also permits a finite filter bank to be searched on
+the same sample. Let p(1) , . . . , p(M ) be fixed before data collection and, for each j, let the raw
+                         (j)
+two-coordinate readout Ys ∈ R2 have arbitrary unknown mean and covariance
+                                               Z                    Z
+                         Pj Xj
+                  Kj =                               (j) 2
+                                        , Pj = (p ) dν, Xj = x(p(j) )2 dν.                         (57)
+                        Xj Rj
+
+                (1)          (M )
+The vectors (Ys , . . . , Ys ) may be dependent across filters but are iid across s.
+   For a raw coordinate bound B > 0 define the exact range length
+                                         (
+                                       2
+                                          4,                  0 < θ ≤ 21 ,
+                            Lθ (B) = B                                                            (58)
+                                          2(1 + θ) + (2θ)−1 , 21 ≤ θ < 1.
+
+                                                                                  (j)
+Theorem 8.1 (Bounded unknown-mean filter bank). Suppose |Ys,k | ≤ Bj almost surely for all
+j, k ∈ {0, 1}, and s = 1, . . . , 2n. Form paired differences and localizer observations
+                       (j)          (j)                                                  n
+                      Y2r − Y2r−1                       (j)       (j)   (j)             1 X (j)
+            Zr(j) =       √       ,        Wr(j) = θ(Zr,0 )2 − Zr,0 Zr,1 ,    W̄j =        Wr .   (59)
+                            2                                                           n
+                                                                                         r=1
+
+For 0 < α < 1, reject the support claim supp ν ⊆ [0, θ] when, for at least one j,
+                                               r
+                                                 log(M/α)
+                                W̄j + Lθ (Bj )             < 0.                                   (60)
+                                                     2n
+This test has type-I error at most α for every iid law satisfying the stated covariance and bounds,
+without Gaussianity or a known mean.
+    If for some j∗ the visible alternative gives Xj∗ − θPj∗ ≥ µ > 0, then its rejection probability
+is at least 1 − β whenever
+
+                                      Lθ (Bj∗ )2 p           p        2
+                             n>                    log(M/α) +  log(1/β)   .                       (61)
+                                         2µ2
+
+In particular the fourth-kind filter has µ = µN = δγ − eN (1 − γ) whenever this number is positive.
+
+Proof. Pairing removes the unknown mean and preserves covariance:
+
+                                     EZr(j) = 0,     E[Zr(j) (Zr(j) )T ] = Kj .
+
+Consequently
+                                             EWr(j) = θPj − Xj .                                  (62)
+
+
+                                                       13
+```
+
+---
+
+## Page 14
+
+```text
+Under the support null this quantity is nonnegative for every polynomial filter. Since each
+                 (j)                    √
+coordinate of Zr is bounded by Mj = 2Bj , the quadratic function q(a, b) = θa2 − ab on
+[−Mj , Mj ]2 has maximum Mj2 (1 + θ) and minimum
+                                       (
+                                         Mj2 (θ − 1), θ ≤ 12 ,
+                               min q =                                                  (63)
+                                         −Mj2 /(4θ), θ ≥ 12 .
+
+Their difference is exactly (58). Hoeffding’s one-sided inequality [15] and a union bound over
+the M filters prove the level statement; no independence across filters is used.
+    Under the alternative, (62) is at most −µ for j∗ . A second one-sided Hoeffding bound shows
+that failure to reject has probability at most β as soon as the population margin exceeds the
+sum of the α/M and β deviations. Solving that inequality gives (61). The final statement is
+(34) with its sign reversed.
+
+Example 8.2 (Exact rational calibration). Take θ = 1/2, δ = 1/4, γ = 1/5, and N = 2. Then
+T2 (2) = 7 while W2 (2) = 19. The former first-kind uniform loss is 1/98; the exact weighted loss
+is eN = 1/722, and the sharp population margin is
+                                            1   4 1    353
+                                    µN =      −      =      .                                       (64)
+                                            20 5 722   7220
+Indeed the fourth-kind filter already crosses the uniform-sign threshold at N = 1, whereas
+the first-kind envelope requires N = 2. At degree two, Eq. (53) requires n > 265,338.8948,
+hence 265,339 Gaussian sketches at αsig = 0.05. For M = 3, Bj = 1, and α = β = 0.05, one
+has L1/2 (1) = 4 and (61) requires n > 47,169.9371, hence 47,170 paired samples or 94,340
+raw observations. The standard-library certificate reproduces these numbers exactly up to the
+final transcendental evaluation. They are conservative worst-case guarantees, not a claim that
+bounded and Gaussian observations have equal information per raw sample.
+    The theorem is distribution-free only within its declared iid bounded-readout model. It
+does not turn correlated Markov-chain output into independent data. Its gain is orthogonal to
+the Wishart branch: it removes Gaussianity, known centering, and single-filter precommitment,
+while paying a range bound and two raw observations per paired sample.
+
+
+9    A dependence-robust test from one trajectory
+The iid hypothesis can be relaxed without pretending that correlated samples are independent.
+The price is an externally justified mixing envelope, sparse use of the trajectory, and an explicit
+                                    (1)       (M )
+lag-covariance bias. Let Ys = (Ys , . . . , Ys ) be a strictly stationary process on a standard
+Borel space and put Fab = σ(Ys : a ≤ s ≤ b). We use the absolute regularity coefficient
+                                         "                             #
+                                                             t
+                         βmix (q) = sup E     sup     P(A | F−∞ ) − P(A)      .                     (65)
+                                     t         ∞
+                                            A∈Ft+q
+
+With this convention, Berbee’s coupling lemma supplies an independent copy of the future whose
+mismatch probability is at most βmix (q) [17].
+   For q ≥ 1 and r = 1, . . . , n, define
+                                             (j)         (j)
+                                            Ytr +q − Ytr                      (j)       (j)   (j)
+         tr = 1 + 2q(r − 1),      Zr(j) =        √       ,       Wr(j) = θ(Zr,0 )2 − Zr,0 Zr,1 .    (66)
+                                                   2
+                      (j)
+Write W̄j = n−1
+                  P
+                   r Wr   and set
+
+                      εn,q = (n − 1)βmix (q),        bj (q) = 2(1 + θ)Bj2 βmix (q).                 (67)
+
+                                                    14
+```
+
+---
+
+## Page 15
+
+```text
+(j)
+Theorem 9.1 (Bounded stationary β-mixing filter bank). Suppose |Ys,k | ≤ Bj almost surely
+                                                           (j)
+and that the contemporaneous covariance of Ys is the filtered matrix Kj in (57). If εn,q < α,
+reject the support claim supp ν ⊆ [0, θ] when, for at least one j,
+                                                 s                   
+                                                   log M/(α − εn,q )
+                         W̄j + bj (q) + Lθ (Bj )                       < 0.              (68)
+                                                          2n
+This test has type-I error at most α for every strictly stationary law satisfying the stated bounds
+and mixing coefficient.
+    Let 0 < ζ < 1 be a target miss probability. If for some j∗ , Xj∗ − θPj∗ ≥ µ > 0, if
+εn,q < min{α, ζ}, and if µ > 2bj∗ (q), then the rejection probability is at least 1 − ζ whenever
+                                           s                  s             !2
+                             Lθ (Bj∗ )2             M                  1
+                     n>                      log           + log               .                (69)
+                         2(µ − 2bj∗ (q))2        α − εn,q          ζ − εn,q
+
+The test uses 2n retained readouts over a trajectory horizon 1 + (2n − 1)q.
+                                (j)    (j)                                                         (j)
+Proof. Let Γj (q) = Cov(Ytr , Ytr +q ). A one-step Berbee coupling replaces Ytr +q by an indepen-
+dent copy with the same law and mismatch probability at most βmix (q). Therefore every entry
+satisfies
+                                      |Γj (q)ab | ≤ 2Bj2 βmix (q).                           (70)
+Pairing still removes the stationary mean, but now
+
+                                 E[Zr(j) (Zr(j) )T ] = Kj − 12 Γj (q) + Γj (q)T .
+                                                                               
+
+          h             i
+               θ −1/2
+For C =       −1/2 0
+                         , (70) gives
+
+                                             EWr(j) − tr(CKj ) ≤ bj (q).                                 (71)
+
+   The pair blocks Ur = (Ytr , Ytr +q ) are separated by q time steps. Iterating Berbee’s lemma
+constructs independent blocks U1′ , . . . , Un′ , each with the correct pair law, such that
+
+                        P{(U1 , . . . , Un ) ̸= (U1′ , . . . , Un′ )} ≤ (n − 1)βmix (q) = εn,q .         (72)
+
+Under the support null, tr(CKj ) = θPj −Xj ≥ 0, so the coupled statistic has mean at least −bj (q).
+Its range length remains exactly Lθ (Bj ). Hoeffding’s inequality applied to the independent
+coupled blocks, followed by a union bound and (72), proves (68).
+    Under the alternative, the mean is at most −µ + bj∗ (q). The null-safe offset in (68) costs a
+second bj∗ (q), leaving separation µ − 2bj∗ (q). A lower-tail Hoeffding bound with residual error
+budget ζ − εn,q yields (69).
+
+Corollary 9.2 (Geometric absolute regularity). Assume βmix (q) ≤ ce−q/τ . Fix 0 < ε <
+min{α, ζ} and n ≥ 2, and take
+                                                       
+                                                c(n − 1)
+                              qn = max 1, τ log             .                     (73)
+                                                    ε
+Then εn,qn ≤ ε and
+                                                    2(1 + θ)Bj2 ε
+                                        bj (qn ) ≤ b̄j (n) :=     .                            (74)
+                                                       n−1
+Consequently Theorem 9.1 remains valid after replacing εn,qn by ε and bj (qn ) by b̄j (n). Thus a
+known geometric envelope gives a closed, checkable test from one stationary trajectory. Stationary
+geometrically ergodic Markov chains are an important source of geometrically β-mixing processes,
+but the constants must be justified for the chain at hand [18].
+
+                                                          15
+```
+
+---
+
+## Page 16
+
+```text
+Table 1: ANNNI scaling. wX , wZ are squared overlaps with the first excited state. ρb6 is the
+block-Krylov edge from moments through order 13. All rows refute the 35% overstated gap at
+degree one; the X-only family never refutes it through degree six.
+                   L    E1 − E0    ρ = e−.2(E1 −E0 )            wX        wZ         ρ6 − ρ|
+                                                                                    |b
+                                                                −31
+                   6   2.0845863           0.6590755    3.4 10        0.45160      1.9 10−7
+                   8   1.8574804           0.6897017    4.3 10−32     0.39733      3.9 10−6
+                  10   1.7217194           0.7086852    9.8 10−34     0.35390      2.1 10−5
+                  12   1.6335802           0.7212885    2.0 10−32     0.31837      5.7 10−5
+                  14   1.5729200           0.7300925    2.8 10−30     0.28900      8.6 10−5
+                  16   1.5293122           0.7364879    1.2 10−31     0.26437      9.9 10−5
+
+
+Example 9.3 (Dependent rational calibration). Retain the rational margin µ = 353/7220,
+M = 3, Bj = 1, and θ = 1/2 from Eq. (64). Suppose βmix (q) ≤ 2−q and take α = ζ = 0.05,
+ε = 0.01. The conservative specialization of (69) first holds at n = 50,177 paired blocks.
+Equation (73) gives qn = 23, so the test uses 100,354 retained readouts over 2,308,120 chain
+steps. The large horizon is not hidden in an effective-sample-size slogan: it is the explicit cost of
+the certified mixing envelope and worst-case bounded concentration.
+    This section is distribution-free only within the declared stationary, bounded, absolutely
+regular model. It does not estimate βmix from the tested trajectory, does not cover burn-in,
+and does not assert that a generic MCMC chain satisfies the required envelope. Its content is a
+rigorous bridge for chains whose stationarity and mixing rate are established independently.
+
+
+10     Interacting spin-chain test
+Theorems about visibility should be tested in a model where blindness is exact and the transfer
+operator is not inserted by hand. We use the open quantum ANNNI chain
+                                   L−1
+                                   X                    L−2
+                                                        X                    L
+                                                                             X
+                       HL = −J1          Zj Zj+1 − J2         Zj Zj+2 − hx         Xj ,         (75)
+                                   j=1                  j=1                  j=1
+
+at (J1 , J2 , hx ) = (1, 0.37, 2.2). This generic next-nearest-neighbour interacting
+                                                                                 Q    instance is not
+treated through a free-fermion solution. It preserves the global parity P = j Xj . The computed
+ground state is even and the first excited state odd throughout L = 6, 8, . . . , 16.
+    Let |0⟩ be the independently computed ground state and, at the central site, define centered
+probes
+                            |ψX ⟩ = (Xc − ⟨Xc ⟩)|0⟩,    |ψZ ⟩ = (Zc − ⟨Zc ⟩)|0⟩.                 (76)
+Because Xc is parity even, its overlap with the first odd state vanishes exactly. Because Zc is
+odd, it can see that state. With τ = 0.2 we construct only the correlator matrices
+                         Bnab = ⟨ψa |e−nτ (HL −E0 ) |ψb ⟩,       a, b ∈ {X, Z}.                 (77)
+The moment pipeline is then separated from the low-energy diagonalization used as ground
+truth.
+    Figures 2 and 3 show the two distinct outputs. The Ritz value estimates an edge; the negative
+localizer certifies that a proposed smaller edge is impossible for the measured spectral measure.
+The single even probe can look numerically stable while converging to the wrong sector.
+    At L = 16 the Hilbert-space dimension is 65,536. The independent gap is 1.5293121573, the
+true transfer edge is 0.7364879301, and the degree-six block value is 0.7363890221. Its absolute
+error is 9.89 × 10−5 . The first-state weights are wX = 1.17 × 10−31 and wZ = 0.26437. These
+numbers do not prove a thermodynamic mass gap; they validate the visibility mechanism and
+the correlator-only falsifier at nontrivial finite size.
+
+                                                   16
+```
+
+---
+
+## Page 17
+
+```text
+0.7
+
+            largest Ritz transfer eigenvalue   0.6
+
+                                               0.5
+
+                                               0.4
+                                                                                     even X probe
+                                               0.3                                   (X, Z) block probe
+                                                                                     exact visible edge
+                                                                                     false claimed edge
+                                               0.2
+                                                     0   1   2          3        4        5          6
+                                                                 Krylov degree N
+
+Figure 2: Largest Ritz transfer value for L = 12. The even X probe converges to the lowest
+visible even excitation and misses the true edge. The (X, Z) block family converges rapidly to
+the exact edge.
+
+11      Reproducibility and formal boundary
+All computational claims are generated from public, deterministic artifacts:
+      exact rational flat-extension, hidden-atom, and Chebyshev artifacts;
+
+      sub-second standard-library certificates for the near-critical atom, exact fourth-kind
+       weighted minimax, Gaussian likelihood/LAN fixture, filter-first Wishart bound, bounded-
+       readout Hoeffding calibration, and the complete β-mixing lag/coupling/horizon fixture;
+
+      sparse ANNNI construction, independent low-energy benchmark, moment construction,
+       block pencils, and localizers;
+
+      tracked local JSON for L = 6, 8, 10, 12;
+
+      a Colab summary for L = 12, 14, 16, including Python/NumPy/SciPy versions, source
+       commit, and full-result SHA-256;
+
+      scripts that regenerate all four figures.
+Running the tracked verify all.py from the repository root regenerates the exact arti-
+fact and audits every theorem-level invariant quoted from the local and Colab records; its
+README gives the one-line command. The independent certificate under verification/
+statistical_gap_boundary replays the finite-sample and revision fixtures using only the
+Python standard library; its README gives the commands. The public repository is https:
+//github.com/lluiseriksson/aqft-split-inclusion-series. The exact/Krylov/ANNNI
+directory is frozen at commit 25f068c61905adb039f3b46f53ef23f5be9cc507. The archived
+path is verification/finite_window_gap_certificates. The immutable Colab entry point
+is colab annni scale.ipynb.
+    The algebraic core of Theorem 4.1 is separately formalized in Lean 4. The immutable
+provenance is:
+   commit: 1e41144d7a563c12f89f9b2ad34fd90aa52149d8;
+
+                                                                   17
+```
+
+---
+
+## Page 18
+
+```text
+0.08                                      even X probe
+                                                                                    (X, Z) block probe
+
+           smallest eigenvalue of HN GN   0.06
+
+                                          0.04
+
+                                          0.02
+
+                                          0.00
+
+                                                 0   1   2            3         4       5          6
+                                                             localizer degree N
+
+Figure 3: Smallest eigenvalue of the localizer for a gap overstated by 35%. The multichannel
+family gives a negative certificate from degree one; the symmetry-blind X family never does.
+
+
+   source: LeanTransferMatrix/FiniteNoiseBlindness.lean;
+   axiom audit: audit/FiniteNoiseBlindnessAxioms.lean;
+   review record: PR #25.
+The build checks 8,158 targets with no sorry and no project axioms. The reported theorem
+dependencies are exactly {propext, Classical.choice, Quot.sound}.
+    The formalization proves the normalized endpoint hidden-atom mixture, componentwise
+distance bound, preservation of the interval constraints, existence inside every error ball 0 ≤ ε ≤ 1,
+and − log 1 = 0. It does not formalize the near-critical corollary, bounded-readout and β-mixing
+tests, spectral theorem, Chebyshev integral bound, or ANNNI numerics. The exact standard-
+library replay certify statistical boundary.py separately checks the near-critical fixture,
+mixing penalties, and all reported calibrations. These extensions remain paper proofs plus
+reproducible computations, not Lean theorems.
+
+
+12     Relation to prior methods and novelty audit
+This manuscript develops and replaces the unpublished technical draft Noisy Euclidean Cor-
+relators Do Not Certify a Spectral Gap Without Visibility; that draft was not submitted and
+is not intended as a separate paper. The exact terminal branch, endpoint no-go, Chebyshev
+construction, and ANNNI records are retained in revised form. The near-critical theorem,
+distribution-level Le Cam bound, exact hidden-atom likelihood and LAN phase, fourth-kind
+weighted minimax, Wishart visibility-to-sample theorem, and bounded unknown-mean filter-bank
+test are substantive extensions. The present version further adds a stationary β-mixing theorem
+with explicit coupling, bias, power, and trajectory-horizon costs.
+     The companion manuscript Reflection Positivity and Exact Gap Certificates from Forgotten
+Quantum Order [16] constructs a physical reflection-positive transfer operator and gives determin-
+istic Hausdorff certificates. Its Gaussian confidence layer uses the same singular-value/Loewner
+device as Section 7. The present contribution is different: identifiability failure, near-critical and
+Le Cam lower bounds, quantitative visibility, explicit power conversion, and probe design. This
+cross-reference is included to make the shared statistical layer explicit.
+
+
+                                                                18
+```
+
+---
+
+## Page 19
+
+```text
+2.1                                                           10 4
+                        2.0
+
+
+
+
+                                                                                         absolute transfer-edge error
+                        1.9                                                           10 5
+           energy gap
+
+                                                            exact finite-volume gap
+                        1.8                                 N = 6 edge error
+
+                        1.7                                                           10 6
+                        1.6
+
+                              6   8       10           12          14           16
+                                           chain length L
+
+Figure 4: Independent finite-volume energy gap and degree-six transfer-edge error. The L =
+12, 14, 16 run was executed in Colab Pro+ on the fixed source commit recorded in the artifact.
+This is a finite-size validation, not a thermodynamic-gap extrapolation.
+
+
+    Matrix Euclidean correlators as moment data, their relation to Rayleigh–Ritz/Lanczos, and
+rigorous bounds on smeared spectral functions are developed in [5]. The Prony–Ritz equivalence
+class and exact solution of finite-dimensional spectra from sufficient correlation data are analysed
+in [4]; matrix-polynomial combinations of GEVP and Prony appear in [2]. GEVP convergence
+with increasing operator bases is classical in lattice spectroscopy [1], and direct imaginary-time
+gap estimators have been tested in many-body models in [7, 6]. Recursive and flat matrix
+moment problems are studied in [9, 10, 11]; recent work also treats recovery of measures with
+atomic and continuous parts under separation hypotheses [12]. Sparse Hausdorff recovery from
+noisy moments assumes finite support, a minimum atom weight, and spectral separation [13].
+These are complementary structured recovery regimes, not consequences of our visibility premise.
+    Reflection positivity, equations of motion, and KMS constraints have recently been assembled
+into semidefinite bootstrap bounds for continuous Euclidean two-point functions [14]. That
+programme constrains exact admissible correlators; it does not supply a sampling law or a
+simultaneous finite-sample confidence set for a random empirical covariance. Conversely, the
+Wishart–Loewner branch in Section 7 assumes independent Gaussian sketches and does not
+import equations of motion or KMS information. None of these classical or recent ingredients is
+claimed as new in isolation.
+
+
+
+
+                                                19
+```
+
+---
+
+## Page 20
+
+```text
+Table 2: Claim audit. “This paper” means the stated combination and specialization, not
+ownership of the classical ingredients.
+ Item                         Prior status                       Contribution here
+ Matrix moments and block     Established in moment and          Unified notation tied to a
+ Ritz                         lattice spectroscopy               one-sided gap localizer
+ Exact finite recovery        Standard Krylov termination/flat   Checkable terminal criterion
+                              moment phenomenon                  stated directly for visible transfer
+                                                                 gaps and verified by an exact
+                                                                 rational artifact
+ Finite-noise hidden edge     Elementary mixture mechanism;      Algorithm-independent
+                              small-component instability is     arbitrarily small positive-gap
+                              familiar in inverse problems       construction inside every positive
+                                                                 moment error ball, even when an
+                                                                 extra zero mode is forbidden;
+                                                                 endpoint core checked in Lean
+ Gaussian hidden edge         Gaussian relative entropy,         Near-critical covariance family
+                              Pinsker, and Le Cam testing are    with exact rank-one-spike
+                              classical                          likelihood, fixed-window LAN
+                                                                 information and power envelope,
+                                                                 and positive gaps tending to zero;
+                                                                 nonsingularity and fixed-window
+                                                                 gates are stated
+ Quantitative visibility      Minimum weights and separation     One disclosed, model-dependent
+                              assumptions occur in sparse        condition that restores a finite
+                              support recovery                   witness; no claim that it is the
+                                                                 unique or weakest possible
+                                                                 hypothesis
+ Chebyshev filtering          Classical in approximation and     Exact fourth-kind
+                              extremal eigenvalue convergence    weighted-localizer minimax, an
+                                                                 attained worst-case visibility
+                                                                 envelope, a
+                                                                 necessary-and-sufficient uniform
+                                                                 sign threshold within the
+                                                                 normalized scalar polynomial
+                                                                 class, and a componentwise error
+                                                                 radius
+ Wishart confidence           Gaussian singular-value            Exact-level covariance-feasibility
+                              concentration and Loewner bands    test and an explicit
+                              are established tools              visibility-to-margin-to-sample
+                                                                 theorem after two-coordinate
+                                                                 precommitted filtering
+ Bounded-readout confidence   Hoeffding calibration, paired      Distribution-free iid test with
+                              differences, and Bonferroni        unknown mean, exact range
+                              control are classical              constant, explicit power, and
+                                                                 same-sample selection over a
+                                                                 finite filter bank
+ Dependent-readout            Absolute regularity, Berbee        One-trajectory test with an
+ confidence                   coupling, and Hoeffding            explicit lag-covariance bias,
+                              concentration are classical        coupling failure budget, power
+                                                                 inequality, and geometric-mixing
+                                                                 horizon; the mixing envelope is
+                                                                 an external premise
+ Probe blindness              Symmetry selection rules are       Controlled interacting example
+                              standard                           separating a stable wrong-sector
+                                                                 estimate from a multichannel
+                                                                 finite certificate through 216
+                                                                 states
+
+
+                                               20
+```
+
+---
+
+## Page 21
+
+```text
+The main conceptual advance is therefore the assembled boundary theorem: finite noisy
+correlators support rigorous gap falsification, and under disclosed visibility they support finite
+detection, but they do not support an unconditional positive gap certificate. Exact flatness is the
+exceptional terminal regime. The Gaussian branches make both directions operational at finite
+sample size: an exact hidden-atom likelihood and LAN phase for a fixed nonsingular experiment,
+and an exact-level Wishart test with a closed depth–sample resource curve for a precommitted
+filtered experiment. The bounded-readout branch removes Gaussianity and known centering for
+iid data and permits finite-bank selection with a multiplicity penalty. The dependent branch
+gives a rigorous alternative for stationary bounded β-mixing output: it exposes rather than
+hides the price of decorrelation.
+
+
+13     Consequences and limitations
+For lattice mass-gap programmes. A finite correlator analysis can disprove an overstated
+transfer gap by a negative localizer. To prove a positive volume-uniform gap, one still needs
+a volume-uniform totality or visibility theorem for the chosen gauge-invariant operator family,
+controlled errors, and the reconstruction connecting the Euclidean measure to a positive transfer
+operator. The present results do not establish any of those model-dependent inputs for four-
+dimensional Yang–Mills.
+
+For operator design. Adding channels is not merely a variance-reduction strategy. It changes
+the visible cyclic subspace. Symmetry-resolved operator families should be judged by quantitative
+frame or overlap bounds, not only by the apparent stability of their extracted levels.
+
+For noisy moment algorithms. Projection to the positive Hankel cone is useful for restoring
+consistency, but a projected point estimate should not be reported as a support theorem.
+The visibility floor and the propagated sign margin in Eq. (44) are the appropriate certificate
+metadata.
+
+Limitations. The fourth-kind filter solves the weighted mass-versus-localizer problem exactly
+only within normalized degree-N scalar polynomial filters. Its sign condition is necessary and
+sufficient for uniform sign detection in that class, not a necessary identifiability threshold
+for arbitrary estimators. The componentwise error model ignores correlations and can be
+conservative. The Wishart theorem instead uses the full covariance, but requires independent
+exactly Gaussian, known-zero-mean sketches and a filter fixed before seeing the data. The
+bounded-iid theorem removes Gaussianity and known centering and allows a finite bank. The β-
+mixing theorem covers dependent stationary bounded output only when a valid mixing envelope
+is supplied externally; it does not infer that envelope, remove burn-in, or cover arbitrary MCMC
+output. The LAN boundary fixes the feature degree, base covariance, and atom path. It does
+not cover an unknown-location scan or a degree growing with n. When the filter changes
+with γ, the covariance and its conditioning also change, so the achievable depth–sample law
+is not claimed globally minimax. The ANNNI study is finite-volume and uses exact sparse
+propagation rather than Wishart, bounded-readout, or Monte Carlo data. No thermodynamic
+extrapolation is attempted. Data-driven mixing-rate certification, matrix-valued optimal filters,
+interval arithmetic, and formalization of the Chebyshev, Wishart, bounded-readout, and mixing
+theorems remain open extensions.
+
+
+
+
+                                                21
+```
+
+---
+
+## Page 22
+
+```text
+14     Conclusion
+The distinction between estimating a visible level and certifying a spectral gap is structural.
+Block Hankel pencils give monotone visible-edge estimates and finite falsifiers. Exact rank
+stabilization closes the problem at finite depth. With any nonzero error and no visibility premise,
+however, an atom at e−g < 1 with arbitrarily small g > 0 lies inside the data ball; this remains
+true when uniqueness of the vacuum is known. In a nonsingular Gaussian experiment its
+exact likelihood has an n−1/2 local weight boundary and a closed Gaussian power envelope. A
+quantitative visibility floor is one explicit bridge back to a finite theorem: fourth-kind weighted-
+Chebyshev localization produces the exact worst-case signed margin in its polynomial class, and
+a two-coordinate Wishart–Loewner band turns that margin into an exact-level test with a closed
+depth–sample bound. For bounded iid readouts, paired differences and Hoeffding calibration
+provide a non-Gaussian, unknown-mean companion with finite-bank selection. For a stationary
+bounded β-mixing trajectory, sparse pairing and Berbee coupling add a certified dependence
+penalty, lag bias, and elapsed chain horizon. Rejection falsifies an overstated gap; non-rejection
+alone never becomes a positive gap certificate. The interacting spin-chain experiment shows the
+physical meaning of the boundary: a symmetry-blind probe can converge smoothly and still miss
+the gap-controlling state, while a multichannel family supplies an immediate negative witness.
+This is a finite-window falsification theorem, not a thermodynamic or Yang–Mills mass-gap
+proof.
+
+AI assistance disclosure. AI tools assisted with literature discovery, adversarial proof
+checking, symbolic fixture verification, and manuscript editing. All theorem statements, scope
+decisions, computations, and the final text were reviewed by the author, who takes responsibility
+for the claims.
+
+
+References
+ [1] B. Blossier, M. Della Morte, G. von Hippel, T. Mendes, and R. Sommer, “On the generalized
+     eigenvalue method for energies and matrix elements in lattice field theory,” JHEP 04, 094
+     (2009), arXiv:0902.1265.
+
+ [2] G. T. Fleming, “Beyond generalized eigenvalues in lattice quantum field theory” (2023),
+     arXiv:2309.05111.
+
+ [3] M. L. Wagman, “Lanczos, the transfer matrix, and the signal-to-noise problem,” Phys. Rev.
+     Lett. 134, 241901 (2025), arXiv:2406.20009.
+
+ [4] R. Abbott, D. C. Hackett, G. T. Fleming, D. A. Pefkou, and M. L. Wagman, “Filtered
+     Rayleigh–Ritz is all you need” (2025), arXiv:2503.17357.
+
+ [5] R. Abbott, W. I. Jay, and P. R. Oare, “Moment problems and bounds for matrix-valued
+     smeared spectral functions” (2025), arXiv:2508.01377.
+
+ [6] J. M. Leamer, A. B. Magann, G. McCaul, and D. I. Bondar, “Spectral gaps via imaginary
+     time” (2026), arXiv:2303.02124.
+
+ [7] H. Suwa and S. Todo, “Generalized moment method for gap estimation and quantum Monte
+     Carlo level spectroscopy,” Phys. Rev. Lett. 115, 080601 (2015), arXiv:1402.0847.
+
+ [8] Y. Yu, A. F. Kemper, C. Yang, and E. Gull, “Denoising of imaginary time response functions
+     with Hankel projections,” Phys. Rev. Research 6, L032042 (2024), arXiv:2403.12349.
+
+
+
+                                                22
+```
+
+---
+
+## Page 23
+
+```text
+[9] R. Curto, A. Ech-charyfy, K. Idrissi, and E. H. Zerouali, “A recursive approach to the
+     matrix moment problem” (2023), arXiv:2209.01630.
+
+[10] R. E. Curto, L. A. Fialkow, and H. M. Möller, “The extremal truncated moment problem,”
+     arXiv:math/0610882.
+
+[11] C. Mädler and K. Schmüdgen, “On the truncated matricial moment problem. I” (2023),
+     arXiv:2310.00957.
+
+[12] R. Karapetyan, S. Ma, A. Wodecki, and J. Mareček, “On moment-based recovery of measures
+     with atomic and continuous parts” (2026), arXiv:2605.21644.
+
+[13] S. Gordon, B. Mazaheri, L. J. Schulman, and Y. Rabani, “The sparse Hausdorff moment
+     problem, with application to topic models” (2020), arXiv:2007.08101.
+
+[14] M. Cho, B. Gabai, H. W. Lin, J. Yeh, and Z. Zheng, “Bootstrapping Euclidean two-point
+     correlators” (2025), arXiv:2511.08560.
+
+[15] W. Hoeffding, “Probability inequalities for sums of bounded random variables,” J. Amer.
+     Statist. Assoc. 58, 13–30 (1963), doi:10.1080/01621459.1963.10500830.
+
+[16] L. Eriksson, “Reflection positivity and exact gap certificates from forgot-
+     ten quantum order” (2026), companion manuscript, canonical PDF SHA-256
+     d18422c9981769c4c36a7382e6831e200a94bcbb1fab447741ae240536e6b6d2.
+
+[17] H. C. P. Berbee, Random Walks with Stationary Increments and Renewal Theory, Mathemat-
+     ical Centre Tracts 112, Mathematisch Centrum, Amsterdam (1979), ISBN 978-90-6196-182-6,
+     CWI publication 12694.
+
+[18] M. Meitz and P. Saikkonen, “Subgeometric ergodicity and β-mixing,” J. Appl. Probab. 58,
+     594–608 (2021), doi:10.1017/jpr.2020.108, arXiv:1904.07103.
+
+[19] M. Rudelson and R. Vershynin, “Non-asymptotic theory of random matrices: extreme
+     singular values,” in Proceedings of the International Congress of Mathematicians 2010,
+     pp. 1576–1602, arXiv:1003.2990.
+
+[20] A. B. Tsybakov, Introduction to Nonparametric Estimation, Springer, New York (2009).
+
+[21] A. W. van der Vaart, Asymptotic Statistics, Cambridge University Press, Cambridge (1998),
+     doi:10.1017/CBO9780511802256.
+
+[22] A. Onatski, M. J. Moreira, and M. Hallin, “Asymptotic power of sphericity tests for
+     high-dimensional data,” Ann. Statist. 41, 1204–1231 (2013), doi:10.1214/13-AOS1100,
+     arXiv:1306.4867.
+
+[23] J. C. Mason and D. C. Handscomb, Chebyshev Polynomials, Chapman & Hall/CRC, Boca
+     Raton (2003), doi:10.1201/9781420036114.
+
+[24] Y. Saad, “On the rates of convergence of the Lanczos and the block-Lanczos methods,”
+     SIAM J. Numer. Anal. 17, 687–706 (1980).
+
+[25] M. Lüscher, “Construction of a selfadjoint, strictly positive transfer matrix for Euclidean
+     lattice gauge theories,” Commun. Math. Phys. 54, 283–292 (1977).
+
+
+
+
+                                               23
+```
