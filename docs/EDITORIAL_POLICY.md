@@ -2,7 +2,7 @@
 
 ## Scope
 
-ARR is a curated archive of source-first research preprints. It is not a journal and publication does not imply peer review, AI screening, correctness, novelty or importance.
+ARR is a curated archive of research preprints with preserved canonical artifacts and machine-readable renditions. It is not a journal and publication does not imply peer review, AI screening, correctness, novelty or importance.
 
 ## Acceptance standard
 

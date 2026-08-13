@@ -66,6 +66,12 @@ class PaperValidationTests(unittest.TestCase):
                 "reproducibility": "not_applicable",
                 "lean4": "not_applicable",
             },
+            "editorial": {
+                "decision": "standard_acceptance",
+                "signed_by": "Test Editor",
+                "conflicts": [],
+                "statement": "The test editor signed this exact version without a declared conflict.",
+            },
         }
         provenance = {
             "schema_version": "1.0",
@@ -102,6 +108,25 @@ class PaperValidationTests(unittest.TestCase):
             (paper.path / "paper.md").unlink()
             errors = validate_paper(paper)
             self.assertTrue(any(error.startswith("paper.md:") for error in errors))
+
+    def test_pdf_origin_requires_matching_hash_size_and_plain_text(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            paper = self.make_paper(Path(temporary))
+            (paper.path / "paper.tex").unlink()
+            (paper.path / "paper.pdf").write_bytes(b"%PDF-1.4\nARR test\n%%EOF\n")
+            (paper.path / "paper.txt").write_text("ARR test", encoding="utf-8")
+            paper.metadata["source_of_truth"] = "paper.pdf"
+            paper.metadata["integrity"].update(
+                {
+                    "canonical_sha256": "f5ac9f972d6bf70b08e82dfda026fb656f0cddc47f51d4ad93b9fddded2ed8f6",
+                    "canonical_bytes": 24,
+                }
+            )
+            provenance = json.loads((paper.path / "PROVENANCE.json").read_text(encoding="utf-8"))
+            provenance["source_of_truth"] = "paper.pdf"
+            (paper.path / "PROVENANCE.json").write_text(json.dumps(provenance), encoding="utf-8")
+            errors = validate_paper(paper)
+            self.assertTrue(any("canonical_sha256" in error for error in errors))
 
     def test_wrong_shard_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

@@ -12,7 +12,7 @@ This creates `papers/YYYY/MM/PP/ARR-YYYY-<16 characters>/`, stable record/versio
 
 ## 2. Complete the research object
 
-Keep the canonical manuscript in `paper.tex` or `paper.md`. Always provide `paper.md` as a machine-readable rendition. Add code, tests and reproducibility files where applicable. Complete `LICENSES.json`, `PROVENANCE.json`, deposit attestations and disclosure fields. Do not commit large generated artifacts.
+Keep the canonical manuscript in `paper.tex`, `paper.md`, or, for a PDF-origin deposit, `paper.pdf`. Always provide `paper.md` as a machine-readable rendition; PDF-origin deposits also require `paper.txt` plus the canonical byte count and SHA-256. Add code, tests and reproducibility files where applicable. Complete `LICENSES.json`, `PROVENANCE.json`, deposit attestations and disclosure fields. Do not commit large generated artifacts; use immutable release assets once the pilot moves beyond small canonical PDFs.
 
 ## 3. Validate through a pull request
 

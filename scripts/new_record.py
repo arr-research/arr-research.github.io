@@ -45,6 +45,7 @@ def main() -> int:
     )
     metadata["authors"][0]["name"] = args.author
     metadata["deposit"]["depositor_name"] = args.author
+    metadata["editorial"]["signed_by"] = args.author
     metadata_path.write_text(json.dumps(metadata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
 
     provenance_path = destination / "PROVENANCE.json"

@@ -19,7 +19,7 @@ RECORD_ID_PATTERN = re.compile(rf"^arr:record:{UUID_PATTERN}$")
 VERSION_ID_PATTERN = re.compile(rf"^arr:version:{UUID_PATTERN}$")
 VERSION_PATTERN = re.compile(r"^v[1-9]\d*$")
 ALLOWED_STATUSES = {"accepted", "corrected", "withdrawn"}
-ALLOWED_SOURCE_FILES = {"paper.tex", "paper.md"}
+ALLOWED_SOURCE_FILES = {"paper.tex", "paper.md", "paper.pdf"}
 ALLOWED_CHECKS = {"pass", "partial", "not_assessed", "not_applicable"}
 ALLOWED_LEAN_LEVELS = {"L0", "L1", "L2", "L3", "not_assessed", "not_applicable"}
 CROCKFORD = "0123456789ABCDEFGHJKMNPQRSTVWXYZ"
@@ -163,6 +163,8 @@ def validate_paper(paper: Paper) -> list[str]:
 
     if not (paper.path / "paper.md").is_file():
         errors.append("paper.md: a machine-readable rendition is required")
+    if source == "paper.pdf" and not (paper.path / "paper.txt").is_file():
+        errors.append("paper.txt: a plain-text rendition is required for PDF-origin records")
 
     for filename in ("PROVENANCE.json", "CITATION.cff", "LICENSES.json"):
         if not (paper.path / filename).is_file():
@@ -259,6 +261,18 @@ def validate_paper(paper: Paper) -> list[str]:
             errors.append("integrity.algorithm: must be sha256")
         if integrity.get("manifest") != "MANIFEST.sha256":
             errors.append("integrity.manifest: must be MANIFEST.sha256")
+        if source == "paper.pdf":
+            canonical_path = paper.path / "paper.pdf"
+            canonical_hash = integrity.get("canonical_sha256")
+            canonical_bytes = integrity.get("canonical_bytes")
+            if not isinstance(canonical_hash, str) or not re.fullmatch(r"[0-9a-f]{64}", canonical_hash):
+                errors.append("integrity.canonical_sha256: required for PDF-origin records")
+            elif canonical_path.is_file() and sha256(canonical_path) != canonical_hash:
+                errors.append("integrity.canonical_sha256: does not match paper.pdf")
+            if not isinstance(canonical_bytes, int) or isinstance(canonical_bytes, bool) or canonical_bytes < 1:
+                errors.append("integrity.canonical_bytes: required for PDF-origin records")
+            elif canonical_path.is_file() and canonical_path.stat().st_size != canonical_bytes:
+                errors.append("integrity.canonical_bytes: does not match paper.pdf")
 
     ai = metadata.get("ai_assistance")
     if not isinstance(ai, dict):
@@ -333,6 +347,19 @@ def validate_paper(paper: Paper) -> list[str]:
                 errors.append(f"verification.{field}: invalid value")
         if verification.get("lean4") not in ALLOWED_LEAN_LEVELS:
             errors.append("verification.lean4: invalid level")
+
+    editorial = metadata.get("editorial")
+    if not isinstance(editorial, dict):
+        errors.append("editorial: an object is required")
+    else:
+        if editorial.get("decision") not in {"founder_pilot", "standard_acceptance", "correction", "withdrawal"}:
+            errors.append("editorial.decision: invalid value")
+        if not isinstance(editorial.get("signed_by"), str) or not editorial["signed_by"].strip():
+            errors.append("editorial.signed_by: required")
+        if not isinstance(editorial.get("conflicts"), list):
+            errors.append("editorial.conflicts: an array is required")
+        if not isinstance(editorial.get("statement"), str) or len(editorial["statement"].strip()) < 20:
+            errors.append("editorial.statement: a meaningful statement is required")
 
     folder_name = paper.path.name
     if isinstance(paper_id, str) and folder_name != paper_id:
