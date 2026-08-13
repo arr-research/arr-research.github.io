@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arr-research.github.io/schema/record-timestamps.schema.json",
+  "$comment": "SPDX-License-Identifier: CC0-1.0",
+  "title": "ARR public record timestamps",
+  "description": "Verifiable deposit-recording and publication timestamps kept separately from immutable paper-version metadata.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "records"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "records": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "version",
+          "deposit_recorded_at",
+          "deposit_timestamp_basis",
+          "deposit_commit",
+          "published_at",
+          "publication_timestamp_basis",
+          "release_tag"
+        ],
+        "properties": {
+          "id": {"type": "string", "pattern": "^ARR-[0-9]{4}-[0-9A-HJKMNP-TV-Z]{16}$"},
+          "version": {"type": "string", "pattern": "^v[1-9][0-9]*$"},
+          "deposit_recorded_at": {"type": "string", "format": "date-time"},
+          "deposit_timestamp_basis": {"const": "first_repository_commit"},
+          "deposit_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+          "published_at": {"type": "string", "format": "date-time"},
+          "publication_timestamp_basis": {"const": "github_release"},
+          "release_tag": {"type": "string", "minLength": 5}
+        }
+      }
+    }
+  }
+}

@@ -14,7 +14,14 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
-from arrlib import CROCKFORD, Paper, crockford_prefix, validate_collection, validate_paper  # noqa: E402
+from arrlib import (  # noqa: E402
+    CROCKFORD,
+    Paper,
+    crockford_prefix,
+    validate_collection,
+    validate_paper,
+    validate_record_timestamps,
+)
 import new_record  # noqa: E402
 
 
@@ -101,6 +108,29 @@ class PaperValidationTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             paper = self.make_paper(Path(temporary))
             self.assertEqual(validate_paper(paper), [])
+
+    def test_exact_timestamp_registry_requires_offsets_and_matching_release(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            paper = self.make_paper(root)
+            registry_path = root / "record-timestamps.json"
+            entry = {
+                "id": paper.id,
+                "version": paper.version,
+                "deposit_recorded_at": "2026-08-13T10:15:20+02:00",
+                "deposit_timestamp_basis": "first_repository_commit",
+                "deposit_commit": "a" * 40,
+                "published_at": "2026-08-13T10:16:05+02:00",
+                "publication_timestamp_basis": "github_release",
+                "release_tag": f"{paper.id}-{paper.version}",
+            }
+            registry_path.write_text(json.dumps({"schema_version": "1.0", "records": [entry]}), encoding="utf-8")
+            self.assertEqual(validate_record_timestamps([paper], registry_path), [])
+
+            entry["published_at"] = "2026-08-13T10:16:05"
+            registry_path.write_text(json.dumps({"schema_version": "1.0", "records": [entry]}), encoding="utf-8")
+            errors = validate_record_timestamps([paper], registry_path)
+            self.assertTrue(any("explicit UTC offset" in error for error in errors))
 
     def test_missing_machine_readable_paper_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
