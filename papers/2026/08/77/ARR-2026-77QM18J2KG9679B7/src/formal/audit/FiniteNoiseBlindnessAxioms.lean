@@ -1,0 +1,9 @@
+import LeanTransferMatrix.FiniteNoiseBlindness
+
+#print axioms LeanTransferMatrix.hiddenAtomValue_sub
+#print axioms LeanTransferMatrix.abs_hiddenAtomValue_sub_le
+#print axioms LeanTransferMatrix.hiddenAtomValue_zero
+#print axioms LeanTransferMatrix.hiddenAtomValue_nonnegative
+#print axioms LeanTransferMatrix.hiddenAtomValue_atMostOne
+#print axioms LeanTransferMatrix.exists_hiddenAtom_window_in_error_ball
+#print axioms LeanTransferMatrix.hiddenAtom_mass_is_zero
