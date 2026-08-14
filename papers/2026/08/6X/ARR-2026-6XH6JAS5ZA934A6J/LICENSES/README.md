@@ -1,0 +1,1 @@
+The manuscript, bibliography, and vector figure are licensed under CC-BY-4.0. Catalogue metadata and frozen JSON/hash data are CC0-1.0. Supplied Python and PowerShell code is Apache-2.0. No additional third-party files are deposited in this record.
