@@ -1,0 +1,1386 @@
+# Projective Memory and Resonant Bottlenecks in Passive Spectral Routing
+
+> Machine-readable rendition extracted from the hash-identified canonical PDF. Mathematical typography may be degraded; cite and verify against `paper.pdf`.
+
+## Page 1
+
+```text
+Projective Memory and Resonant Bottlenecks in Passive Multiport
+                           Routing:
+ Exact Global Laws, Robust Error Floors, and High-Delay Border
+                            Phases
+                                              Lluis Eriksson
+
+                                             13 August 2026
+
+                                               Abstract
+        At distinct boundary frequencies ζi , let a square rational-inner multiport route one fixed
+     input ray to prescribed output rays Yi . Put H = span(Y1 , . . . , YL ) and let δH be the least
+     degree of a base-point-free projective map R : P1 → P(H) satisfying R(ζi ) = Yi . We prove the
+     global identity
+                                               dmin = δH ,
+     independently of the ambient port count. A scalar Fejér–Riesz factorization followed by a same-
+     state-dimension rectangular lossless completion proves attainability. Conversely, a common
+     realization denominator and the strict inequality dmin < L force every optimal routed column to
+     lie identically in H, where it becomes a projective interpolant. This converts the full line- routing
+     problem into a finite algebraic degree problem and contains the direct-sum, repeated-target,
+     and coplanar laws as strata.
+          For orthogonal target bands we solve line-to-subspace incidence constraints. Full-support
+     Lagrange kernels give every exact degree, while the generic law is a closed codimension formula.
+     Exact memory takes the maximum shifted band cost, whereas border memory takes the
+     minimum; this max–min split can be arbitrarily large.
+          For r = dim H, orthonormal annihilators of the targets define an intrinsic incidence matrix
+     Ad with L(r − 1) rows and r(d + 1) columns. Its minimum modulus gives the calibrated error
+     floor
+                                                     σmin (Ad )
+                                        Ed ≥ p                         ,
+                                                L(d + 1) + σmin (Ad )2
+     stable under operator-norm perturbations. More sharply, Ed = 0 if and only if Ad has a kernel.
+     Hence border memory obeys both a linear rank law and the all-data base-point deletion formula
+                              d∂ = min{d : ker Ad ̸= 0} = min |B| + ∆(B c ) .
+                                                                              
+                                                           B⊆[L]
+
+     The universal dense-routing threshold is ⌊L(r − 1)/r⌋ and is generically sharp. In the planar
+     stratum the zero-error closure is the determinantal locus cut out by the maximal minors of
+     Md , and all border degrees are found by one incremental exact elimination using O(L3 ) field
+     operations.
+         The closure phase has an operational cost. If d∂ ≤ d < dmin , then arbitrarily accurate
+     degree-d routers exist but every such approximating sequence has divergent peak Wigner–Smith
+     delay, ∥ tr Q∥∞ → ∞. Under any finite peak-delay cap the best error is strictly positive and
+     attained. Thus the exact trichotomy is physical as well as algebraic: robust positive-error
+     phase, singular high-delay border phase, and exact finite-delay phase. In the planar stratum
+     we additionally solve degree zero by the smallest Bloch-sphere cap, prove the exact binary
+     occupancy law, classify all four-node tables by multiplicity and cross-ratio, and certify a strict
+     21% one-state error barrier. Exact artifacts and an independent verifier accompany the theorem
+     fixtures. Classical rational interpolation and lossless completion are credited as ingredients; the
+     result claimed here is their global state–error–delay synthesis.
+Keywords: rational inner matrix; projective interpolation; McMillan degree; passive memory;
+border memory; resonant approximation; chordal error; lossless completion; Wigner–Smith delay.
+
+                                                      1
+```
+
+---
+
+## Page 2
+
+```text
+Table 1: Classical interfaces and the paper-specific deductions. The first two columns are not
+claimed as new.
+    Classical interface        What it supplies                   Deduction established here
+    Minimal rational           Rational/projective                Equality of projective degree and passive
+    interpolation [4, 5]       interpolants through finite data   McMillan state count for every one-line
+                                                                  routing table
+    Rectangular lossless       Same-state square para-unitary     Exact lossless compiler attaining the
+    completion [13]            completion                         projective lower bound in the ambient
+                                                                  multiport
+    Base points and            Common-factor and                  Rank/error dichotomy, deletion law,
+    unattainable data          nonattainment mechanisms           determinantal closure, and the exact
+    [14, 15]                                                      versus border max–min split
+    Potapov factors and        Factorization, winding and         Divergent peak delay forced along every
+    group delay [16, 17, 18]   Poisson delay kernels              nonattained zero-error routing sequence
+
+
+1      The global line-routing problem
+Let S be an N × N rational matrix, analytic in D, unitary almost everywhere on T, and regular at
+distinct nodes ζ1 , . . . , ζL ∈ T. Its McMillan degree is the state dimension of a minimal conservative
+realization. Fix an input line X ⊂ CN and target lines Yi ⊂ CN . The routing task is
+
+                                       S(ζi )X = Yi ,       1 ≤ i ≤ L.                                    (1)
+
+Endpoint phases and bases are free. Write dmin for the least McMillan degree among all such S.
+    Put H = span(Y1 , . . . , YL ) and r = dim H. Earlier exact occupancy laws cover direct-sum
+target families and give detector lower bounds on singular arrangements [1]. They do not give an
+equality theory for an arbitrary line table. The point of the present paper is that for one input line
+the missing invariant is the degree of a projective curve through the ordered data. Taking H to be
+the actual target span makes the resulting theorem global, not a fixed-rank special case.
+    Classical scalar, matrix, and tangential rational interpolation and their state-variable realiza-
+tions describe minimal rational functions through finite data [2, 3, 4, 5, 6]. Minimal boundary
+interpolation by scalar unimodular functions and finite Blaschke products is also well developed
+[7, 8, 9]. Subspace Nevanlinna interpolation and boundary matrix all-pass construction provide
+the matrix context [10, 11, 12]. Rectangular lossless realization and same-state square completion
+are likewise classical [13]. Our contribution is not a new rational interpolation algorithm or a new
+completion theorem. It is the global identification of projective interpolation degree with passive
+state count, together with an intrinsic quantitative error operator, the exact border-memory law,
+and the divergent peak-delay theorem for every nonattained border phase. The complete planar
+and four-line classifications then become explicit singular strata of the global result.
+    The rank formula is the computational hinge. Exact memory asks whether a kernel vector
+polynomial is primitive and base-point-free, a nonlinear common- zero condition; border memory
+asks only whether a nonzero kernel vector exists. This separates exact realization from closure by
+one algebraic operation and turns the sign question for Ed into linear algebra.
+
+
+2      Projective degree equals passive memory in every dimension
+A vector polynomial p = (p1 , . . . , pr )T is primitive if its coordinates have no common projective
+zero, including at infinity. It then defines a morphism [p] : P1 → P(H) whose degree is the
+maximum coordinate degree after removal of the common homogeneous factor.
+
+Definition 2.1 (Global projective interpolation degree). Let
+
+                       δH = min{deg R : R : P1 → P(H),        R(ζi ) = Yi (1 ≤ i ≤ L)}.
+
+                                                        2
+```
+
+---
+
+## Page 3
+
+```text
+For a subtable A ⊆ [L] we write δH (A) for the same minimum on A, with δH (∅) = 0.
+
+Lemma 2.2 (Exact-state lossless compiler). Let p = (p1 , . . . , pr )T be a primitive polynomial vector
+of projective degree δ. Then there is an r × r rational-inner matrix Sp and a constant input vector
+u such that Sp u represents [p] and
+
+                   deg pa ≤ δ,      deg h ≤ δ,      degMcM (p/h) = degMcM Sp = δ,
+
+where h is outer and |h|2 = a |pa |2 on T.
+                              P
+
+Proof. The positive Laurent polynomial a |pa |2 has bandwidth at most δ. Scalar Fejér–Riesz
+                                            P
+factorization therefore supplies an outer spectral factor h of degree at most δ, so f = p/h is an inner
+r × 1 column with at most δ states. If f admitted an n-state realization with n < δ, clearing its
+common realization denominator would produce a polynomial projective representative of degree
+at most n, contrary to the minimal projective degree of [p]. Hence degMcM f = δ.
+    The completion interface is used with its convention made explicit. The function f is analytic in
+D and isometric on T; reflect it to the exterior-disk coisometric row f ♯ (z) = f (1/z̄)∗ . The minimal
+realization completion [13, Theorem 2.1(ii)] extends f ♯ to a square para-unitary matrix with the
+same state dimension. Reflection back, followed by constant unitary changes of input and output
+bases, gives Sp without adding states.
+
+Theorem 2.3 (Global projective memory law). For every finite line-routing table at distinct
+boundary nodes,
+                                    dmin = δH .                                         (2)
+The equality is independent of the ambient port number. A minimum-degree projective interpolant
+compiles to a square lossless router of the same degree.
+
+Proof. Vector Lagrange interpolation gives δH ≤ L − 1. Choose a primitive polynomial representa-
+tive p = (p1 , . . . , pr )T of a minimum interpolant, all coordinates padded to degree δH . Lemma 2.2
+compiles it to a square rational-inner router of exactly the same state dimension. An identity block
+embeds it in the ambient port space, proving dmin ≤ δH .
+    Conversely let S be a minimum-degree router, d = degMcM S. The upper bound gives d ≤
+L − 1 < L. For a unit vector x spanning the input line, a stable minimal realization writes the
+routed column as F = Sx = n/χ, where every coordinate of the vector polynomial n and the
+common denominator χ has degree at most d, and χ(ζi ) ̸= 0. If ℓ annihilates H, then ℓn vanishes at
+all L > d nodes, so ℓn ≡ 0. Thus F takes values identically in H. Cancel the common homogeneous
+factor from its r coordinate numerators. The resulting primitive projective map has degree at most
+d and interpolates every Yi . Therefore δH ≤ d.
+
+Corollary 2.4 (Span and direct-sum strata). Every table satisfies δH ≥ r − 1. If the L targets are
+linearly independent, then r = L and dmin = L − 1. For r = 2 the global invariant is the ordinary
+rational-map degree on P1 developed below.
+
+Proof. The image of a degree-d map P1 → P(H) spans projective dimension at most d, because it
+is the linear projection of the degree-d Veronese curve. Hence d ≥ r − 1. For independent targets,
+Lagrange interpolation gives the reverse bound L − 1.
+
+
+3    Block-subspace interpolation and full-support kernels
+The line law admits a nontrivial incidence extension. Let
+
+                               H = H1 ⊕ · · · ⊕ HB ,      dim Hb = rb ,
+
+and partition the nodes into nonempty sets Ib , |Ib | = Lb . At a node i ∈ Ib , prescribe a nonzero
+subspace Yi ⊆ Hb of dimension si . The routed output is still one line, but it may be chosen
+
+                                                   3
+```
+
+---
+
+## Page 4
+
+```text
+freely in P(Yi ). Let ∆(J) be the least degree of a base-point-free vector polynomial satisfying the
+records in J ⊆ [L], and set ∆(∅) = 0. Write ∆ = ∆([L]); equivalently, ∆ is the least degree of a
+base-point-free vector polynomial F satisfying
+
+                                          F (ζi ) ∈ Yi \ {0}.                                      (3)
+
+The proof of Theorem 2.3, with line equality replaced by incidence, gives dmin = ∆.
+    For each block, let ℓb,i be the scalar Lagrange polynomial on the nodes in Ib . If 0 ≤ q ≤ Lb − 1,
+define                                         M
+                                        Tb,q :   Yi −→ Hb ⊗ Cq
+                                             i∈Ib
+                                             P
+by taking the top q coefficient vectors of       i∈Ib ℓb,i (z)ui . Put
+
+                    qb∗ = max{q : ker Tb,q contains (ui )i∈Ib with every ui ̸= 0}.                 (4)
+
+The full-support clause in (4) is essential: an ordinary kernel may silently delete a record.
+
+Lemma 3.1 (Hall–Vandermonde
+                      P          assignment). Fix distinct nodes, r coordinate blocks, row demands
+0 ≤ ci ≤ r, and C = i ci . For polynomials of degree at most e, there is a choice of coordinate
+quotient spaces of dimensions ci whose incidence matrix has rank
+
+                                          min{C, r(e + 1)}.
+
+Consequently maximal rank holds on a Zariski-open dense set of quotient spaces with the same
+dimensions.
+
+Proof. View the ci restrictions at node i as edges from that node to distinct coordinate blocks. If
+C ≤ r(e + 1), seek a 0–1 assignment with row sums ci and column sums at most e + 1. Hall’s
+capacitated condition holds: for a node subset J with |J| ≤ e + 1 its demand is at most r|J|, while
+for |J| > e + 1 it is at most C ≤ r(e + 1). The assigned evaluation rows split into coordinate
+Vandermonde blocks of at most e + 1 rows, so they are linearly independent and the incidence
+matrix has full row rank.
+    If C ≥ r(e + 1), first assign e + 1 rows to every coordinate, using at most ci rows at node i. For
+any set of k coordinates,
+                                  X                kX
+                                     min{ci , k} ≥       ci ≥ k(e + 1),
+                                                   r
+                                 i                        i
+
+which is the dual Hall condition. Fill the remaining row demands arbitrarily. Each coordinate now
+contains an invertible (e + 1) × (e + 1) Vandermonde block, giving full column rank. In either case
+a maximal minor is nonzero for one coordinate configuration. Since that minor is polynomial in
+local Grassmannian coordinates, its nonvanishing locus is Zariski open and dense.
+
+Theorem 3.2 (Exact full-support block law). Every block-subspace table satisfies
+
+                    dmin = ∆ = max{L − Lb + Lb − 1 − qb∗ } = L − 1 − min qb∗ .                     (5)
+                                     b                                      b
+
+
+For fixed dimensions (rb , si ), on a Zariski-open dense set of target subspaces,
+                                                     P
+                                                         i∈Ib (rb − si )
+                                                                        
+                               gen
+                              dmin = max L − Lb +                           .                      (6)
+                                       b                      rb
+
+For one r-dimensional block of line targets this becomes
+                                                         
+                                        gen      L(r − 1)
+                                       dmin =               .                                      (7)
+                                                     r
+
+
+                                                      4
+```
+
+---
+
+## Page 5
+
+```text
+Proof. Write F = (Fb )b . At every node outside Ib , the component Fb must vanish. Hence
+                                                               Y
+                          Fb (z) = Z¬b (z)Gb (z),    Z¬b (z) =   (z − ζi ).
+                                                                   i∈I
+                                                                    / b
+
+On Ib the scalar factor is nonzero. The unique polynomial Gb of degree at most Lb − 1 with chosen
+values ui ∈ Yi is their Lagrange sum. It loses its top q coefficients precisely when (ui ) ∈ ker Tb,q ,
+and it serves every node precisely when all ui are nonzero. At the maximal q it is primitive:
+division by a common scalar factor would preserve the nonzero node values and produce one
+additional vanished leading coefficient. The forced factor has degree L − Lb ; simultaneous service
+of every block takes the maximum shifted degree. The global vector has no base point: its own
+block is nonzero at each record; away from all records every block is nonzero; and at infinity a
+maximum-degree block has nonzero leading vector. This proves (5). A full-support kernel exists
+exactly when no coordinate projection of ker Tb,q is zero, since finitely many proper linear subspaces
+cannot cover a complex vector space.
+    For genericity consider the incidence map at intrinsic degree e,
+                                                          M
+                                 Ab,e : Hb ⊗ C[z]≤e −→        Hb /Yi .
+                                                            i∈Ib
+                                                                   P
+Its generic rank is the smaller of its rb (e + 1) columns and Cb = i (rb − si ) rows by Lemma 3.1.
+The first generic kernel therefore occurs at e = ⌊Cb /rb ⌋. There its dimension is k = rb (e +
+1) − Cb ∈ {1, . . . , rb }, whereas the kernel subspace vanishing at node i has generic dimension
+max{0, k − si } < k. The finite union of these exceptional subspaces is not the whole kernel. The
+first full-support vector is primitive, or division would contradict minimality of e. Adding the
+forced shifts and taking the maximum proves (6); (7) is its one-block line specialization.
+                                                                                            P
+    For a fixed total line-record budget L, nonempty bands of dimensions rb , and R = b rb ,
+optimizing the allocation gives the exact generic design law
+                                                            
+                                                        L−B
+                                       dopt = L − 1 −          .                               (8)
+                                                          R
+It is attained whenever Lb ≥ rb ⌊(L − B)/R⌋ + 1 for every b; residual records may be assigned
+arbitrarily.
+
+
+4    Incidence rank, robust error, and border memory
+Choose for each Yi an orthogonal quotient map Qi : H → H ⊖Yi . On coefficient vectors of H-valued
+polynomials of degree at most d, define the intrinsic incidence matrix
+                                                         L
+                                       Ad c = Qi pc (ζi ) i=1 .                                (9)
+
+Unitary basis changes do not change its singular values. Let Ed be the infimum worst-node chordal
+distance to the prescribed projective subspaces.
+Theorem 4.1 (Rank–error dichotomy and base-point deletion). For every incidence table,
+
+                                          Ed = 0      ker Ad ̸= {0},
+                                                       ⇐⇒                                         (10)
+                          d∂ := min{d : Ed = 0} = min |B0 | + ∆(B0c ) .
+                                                     
+                                                                                                  (11)
+                                                       B0 ⊆[L]
+
+If Ad has full column rank and σd = σmin (Ad ) > 0, then
+                                                σd
+                                      Ed ≥ q               .                                      (12)
+                                            L(d + 1) + σd2
+
+
+                                                   5
+```
+
+---
+
+## Page 6
+
+```text
+If normalized data perturb Ad by operator norm at most η < σd , the same bound holds with σd
+replaced by σd − η.
+    In the block architecture of Theorem 3.2, write
+
+                                     ēb = min{e : ker Ab,e ̸= 0}.
+
+Then
+                                      d∂ = min{L − Lb + ēb },                                    (13)
+                                               b
+
+and generically                                         P
+                                                           i∈Ib (rb − si )
+                                                                            
+                            dgen
+                             ∂ = min        L − Lb +                              .               (14)
+                                  b                            rb
+Thus exact and border memory use, respectively, the maximum and minimum of the shifted block
+costs.
+
+Proof. If a router sequence has errors tending to zero, normalize the coefficients of the projected
+numerator and take a convergent subsequence. Quotient residuals converge to zero, producing a
+nonzero element of ker Ad . Conversely take 0 ̸= p ∈ ker Ad , let B0 be the nodes where all coordinates
+vanish, and remove its scalar gcd. The reduced vector serves B0c and gives |B0 | + ∆(B0c ) ≤ d.
+    For the reverse construction put b = |B0 |, D                    c
+                    c
+                                                    Q = b + ∆(B0 ), choose a primitive minimum
+interpolant R of B0 , and set P0 = gR with g(z) = i∈B0 (z − ζi ). The cases B0 = ∅ and dim H = 1
+are immediate. Otherwise choose a functional λ nonzero on every Yi , i ∈ B0 , representatives
+ai ∈ Yi with λ(ai ) = 1, and their degree-at-most-(b − 1) Lagrange interpolant A0 . Then λ(A0 ) ≡ 1.
+For 0 ̸= v ∈ ker λ, the vector polynomial
+
+                                     A(z) = A0 (z) + g(z)z D−b v
+
+has exact degree D, serves B0 , has no finite base point because λ(A) ≡ 1, and has nonzero leading
+vector at infinity. Thus the projective pencil P0 + tA is not contained in the common-root locus: its
+point at t = ∞ is primitive. Properness of P1 makes the exceptional parameter set algebraic and
+finite. Choose nonzero tn → 0 outside it and also outside the single possible leading-cancellation
+value. The primitive degree-D maps [P0 + tn A] serve B0 exactly and converge to the required
+targets on B0c . Lossless completion proves (10)–(11).
+    For (12), write a routed unit column as n/χ and let c be the coefficients of its projection to H.
+If ϵ is the largest node error, orthogonal projection gives
+                                                                         p
+                        ∥Qi pc (ζi )∥ ≤ |χ(ζi )|ϵ,  ∥pc (ζi )∥ ≥ |χ(ζi )| 1 − ϵ2 .
+                                        √
+Degree-d evaluation on T has norm d + 1. Summing and comparing ∥Ad c∥ ≥ σd ∥c∥ yields (12);
+Weyl’s inequality gives the perturbation statement. Finally, a global block kernel may live in one
+component only, so the first rank loss takes the minimum shifted block cost, proving (13)–(14).
+
+   For two scalar bands with occupancies (2, 4), the shifted costs are (4, 2). Hence dmin = 4 but
+d∂ = 2. This exact fixture prevents the tempting but false assertion that generic exact and border
+memory always coincide.
+
+
+5      The nonattained phase is necessarily high-delay
+For a differentiable lossless boundary response set
+                                             d
+                       QS (θ) = −iS(eiθ )∗      S(eiθ ),     D(S) = ∥ tr QS ∥∞ .
+                                             dθ
+Let Ed,T be the infimum node error among routers with degMcM S ≤ d and D(S) ≤ T .
+
+
+                                                    6
+```
+
+---
+
+## Page 7
+
+```text
+(a) Exact memory versus closure                                                         (b) Projective-span law
+                  12                                                                              15
+                                     high-delay border interval                                             r=2           r=8
+                  10                 exact dmin (maximum)                                                   r=3           independent limit L − 1
+                                     border d∂ (minimum)                                          12        r=4
+
+
+
+
+                                                                           generic exact degree
+McMillan degree
+
+
+
+                  8
+                  6                                                                               8
+                  4
+                                                                                                  4
+                  2
+                  0                                                                               0
+                       1        3             6           9           11                                2       4          8           12           16
+                                    records in band 1, L1                                                             number of records, L
+
+Figure 1: Two consequences of the global laws. (a) For two scalar bands with L = 12, exact
+memory is the maximum forced-zero count while border memory is the minimum; the shaded
+degrees are zero-error but nonattained and therefore high-delay. (b) For one r-dimensional target
+span, generic exact memory is ⌊L(r − 1)/r⌋ and approaches the independent-target limit as r grows.
+Both panels plot theorem values, not fitted numerics.
+
+                           Table 2: Exact rational fixtures independently replayed with the manuscript.
+                       Table                                      d∂       dmin                                        certificate
+                           3
+                       C subspaces of dimensions (2, 1, 2)        1                  1                 rank A0 = 3 = #col, rank A1 = 4 < 6
+                       Planar four-node 3 + 1 collision           1                  3                           full-support loss
+                       C3 targets (2, 1, 2)⊕ two distinct         3                  4                          shifted costs (3, 4)
+                       C2 lines
+                       Two scalar bands, occupancies              2                  4                 rank A1 = 4 = #col, rank A2 = 5 < 6
+                       (2, 4)
+
+
+Theorem 5.1 (Resonant border trichotomy). For every finite incidence table:
+
+            1. if d < d∂ , then Ed > 0, with the explicit floor (12) whenever Ad has full column rank;
+
+            2. if d∂ ≤ d < dmin , then Ed = 0 but Ed,T > 0 for every finite T , and every sequence with errors
+               tending to zero satisfies D(Sn ) → ∞;
+
+            3. if d ≥ dmin , exact routing is attained by a finite-delay router.
+
+For fixed d, T , the constrained minimum defining Ed,T is attained.
+
+Proof. A degree-at-most-d rational inner matrix has a rank-one Blaschke–Potapov factorization
+[16, 13]
+                               Ym
+                                    I + (bαj (z) − 1)vj vj∗ U,
+                                                          
+                       S(z) =                                  m ≤ d,
+                                                      j=1
+
+where U is unitary,
+            Q       bα (z) = (z − α)/(1 − ᾱz), and αj ∈ D. Because the determinant is a constant
+phase times j bαj , Jacobi’s formula makes the trace delay the sum of nonnegative Poisson kernels,
+                                                                        m
+                                                                        X 1 − |αj |2
+                                                          tr QS (θ) =                                           .
+                                                                                            |eiθ − αj |2
+                                                                        j=1
+
+The jth summand peaks at (1 + |αj |)/(1 − |αj |). A finite delay cap therefore confines all zeros to a
+compact subdisk. The directions vj and U also lie in compact spaces. For each m = 0, . . . , d the
+
+                                                                           7
+```
+
+---
+
+## Page 8
+
+```text
+resulting parameter space is compact, and the capped degree-at-most-d class is the finite union of
+their continuous images. Thus the capped family is compact and evaluation at the fixed nodes is
+continuous. Its error minimum is attained.
+    If a capped sequence in the middle phase had errors tending to zero, a convergent subsequence
+would yield an exact router of degree at most d, contradicting d < dmin . Hence every zero-error
+approximating sequence has unbounded D(Sn ); in fact the argument applies to every subsequence,
+so D(Sn ) → ∞. The remaining statements follow from Theorems 2.3 and 4.1.
+
+   Theorem 5.1 turns algebraic nonattainment into an operational statement: a missing state can
+be approached only by a resonance whose peak dimensionless Wigner–Smith delay diverges. It
+does not assert an energy, resonator quality factor, linewidth, loss, or fabrication-cost law.
+
+
+6    The planar stratum and its explicit lossless lift
+Choose a basis of H and identify its lines with P(H) ≃ P1 . A rational map R : P1 → P1 is
+represented by a coprime polynomial pair [p : q], and deg R = max(deg p, deg q). Poles of the affine
+ratio p/q are ordinary points of the projective map, not physical singularities.
+
+Definition 6.1 (Projective interpolation degree). For the ordered data (ζi , Yi ), let
+
+                      δ = min{deg R : R : P1 → P(H), R(ζi ) = Yi for every i}.
+
+Common-denominator lemma. Let S be a rational-inner matrix of McMillan degree at most
+d, and let F = Sx be any routed column. There are a polynomial χ and vector polynomial n such
+that
+                                 n(z)
+                         F (z) =      ,   deg χ ≤ d,     deg nj ≤ d.
+                                 χ(z)
+The denominator can be chosen nonzero at every regular interpolation node. Indeed, take a stable
+minimal realization S(z) = D + zC(I − zA)−1 B of dimension at most d. With χ(z) = det(I − zA),
+the adjugate formula gives the stated degree bounds for every entry of Sx. Stability makes χ
+zero-free on D; more generally, after cancelling any removable common factor, it is nonzero at each
+node where S is regular.
+
+Theorem 6.2 (Exact planar reduction). If all target lines in (1) lie in one two-plane H, then
+
+                                               dmin = δ.                                           (15)
+
+The equality is independent of the ambient dimension and is constructive.
+
+Proof. We first note that δ ≤ L − 1. Apply a projective change of target chart whose point at
+infinity avoids the finite target set, interpolate the resulting affine values by a polynomial of degree
+at most L − 1, and undo the chart.
+    For the upper bound, let [p : q] be a coprime representative of degree δ. For a polynomial r of
+degree at most δ, set
+                                             r♯ (z) = z δ r(1/z̄).
+Because p and q are coprime, they have no common zero; in particular |p|2 + |q|2 > 0 on T. Scalar
+Fejér–Riesz factorization [19] supplies an outer polynomial h, zero-free in D, such that on T
+
+                                           |h|2 = |p|2 + |q|2 .
+
+Equivalently, h♯ h = p♯ p + q ♯ q. Therefore
+
+                                                     p(z) −q ♯ (z)
+                                                                 
+                                              1
+                                    S2 (z) =                                                       (16)
+                                             h(z)     q(z) p♯ (z)
+
+                                                    8
+```
+
+---
+
+## Page 9
+
+```text
+is analytic in D and unitary on T. Its first column represents [p : q], and
+
+                                                det S2 = h♯ /h.
+
+The strict positivity above also gives h(ζi ) ̸= 0 at every routing node. With reversal taken at
+the displayed order δ, the scalar Blaschke product h♯ /h has degree exactly δ; if deg h < δ, the
+missing reversed zeros occur at zero. For a rational-inner matrix the determinant winding equals
+its McMillan degree [16], so degMcM S2 = δ. Constant unitaries align the input line and the basis
+of H, while a block identity embeds S2 into dimension N without adding states. Hence dmin ≤ δ.
+    Conversely, take a minimum-degree interpolant S with degree d. The upper construction
+already gives d ≤ L − 1 < L. A stable conservative realization of S and the common-denominator
+lemma above give every entry of the routed column F = Sx a common denominator of degree at
+most d, nonzero at the boundary nodes; the corresponding numerators have degree at most d. For
+every linear functional ℓ annihilating H, the numerator of ℓF vanishes at all L > d distinct nodes.
+It is therefore zero identically. Thus F (z) ∈ H as a rational identity. In a basis of H, cancel the
+common polynomial factor of the two coordinate numerators of F . The resulting coprime pair has
+degree at most d and interpolates every Yi , so δ ≤ d. This proves (15).
+
+Remark 6.3 (Affine poles are harmless). The datum R(z) = 1/z has an affine pole at zero, but
+the projective pair [1 : z] is regular there. Formula (16) lifts this pair to an analytic inner column.
+Accordingly, pole tests on a chosen affine ratio cannot replace projective coprimality and Fejér–Riesz
+lifting.
+
+
+7     Exact certificates and quantitative approximation barriers
+Write Yi = [ai : bi ] in the chosen basis of H. For d ≥ 0, define the L × 2(d + 1) matrix
+
+                           Md (i, :) = bi , bi ζi , . . . , bi ζid , −ai , −ai ζi , . . . , −ai ζid .
+                                                                                                   
+                                                                                                        (17)
+
+A coefficient vector in ker Md is exactly a polynomial pair (p, q) of degree at most d satisfying
+[p(ζi ) : q(ζi )] = [ai : bi ], provided it has no base point at a node. Multiplying a homogeneous
+target representative by a nonzero scalar rescales one row, while changing the basis of H acts by
+an invertible block change on the coefficient columns. Hence every rank condition below is intrinsic
+to the ordered projective data.
+
+Proposition 7.1 (The planar matrix is the intrinsic incidence operator). For normalized line
+representatives yi = (ai , bi )T , choose the unit annihilator qi = (−bi , ai )T in (9). In the monomial
+coefficient basis, Ad is Md up to a diagonal unitary change of quotient coordinates and an inessential
+row sign. Consequently their ranks and singular values agree. Thus the planar results below are
+coordinate realizations of the global rank–error theory, rather than a second independent reduction.
+
+Proof. The quotient functional qi∗ sends (p(ζi ), q(ζi ))T to −bi p(ζi ) + ai q(ζi ), the negative of row i
+of (17). Changing the phase of qi only multiplies that row by a unit scalar.
+
+Proposition 7.2 (Fail-closed degree certificate). The number δ is the least d for which ker Md
+contains a pair (p, q) generating the unit ideal, equivalently gcd(p, q) = 1. For a nonconstant pair
+this can be certified by Res(p, q) ̸= 0; constant pairs are checked directly. Such a pair is an exact
+upper certificate. Full column rank of Md−1 is an exact lower certificate.
+
+Proof. The unit-ideal condition is precisely projective coprimality. When both polynomials form a
+nonconstant pair, it is equivalent to nonvanishing of the resultant; the constant pairs [c : 0] and
+           ̸ 0, are checked by the unit-ideal condition itself. The claim follows from Definition 6.1
+[0 : c], c =
+and (17). Full column rank excludes every nonzero pair of degree at most d − 1.
+
+
+
+                                                        9
+```
+
+---
+
+## Page 10
+
+```text
+The formulation is deliberately algebraic. A kernel vector alone is not enough: a common factor
+can inflate its displayed degree or introduce a base point. A Bézout identity up + vq = 1 is an
+equivalent independently checkable coprimality certificate.
+   We now normalize (ai , bi ) to unit norm and choose an orthonormal basis of H. For a unit
+vector u and a target line Y = Cy, ∥y∥ = 1, write
+                                                   p
+                                  distch (Cu, Y ) = 1 − |⟨u, y⟩|2
+for complex-projective chordal distance.
+Theorem 7.3 (Quantitative approximate-routing obstruction). Suppose Md has full column rank
+and put σ = σmin (Md ) > 0. Every square rational-inner router S of McMillan degree at most d
+satisfies
+                                                           σ
+                         max distch S(ζi )X, Yi ≥ p                   .                  (18)
+                        1≤i≤L                          L(d + 1) + σ 2
+
+If a perturbed normalized data matrix M      cd obeys ∥M  cd − Md ∥2 ≤ η < σ, the right-hand side
+remains valid with σ replaced by σ − η. Equivalently, the degree-constrained minimax error
+Ed = inf degMcM S≤d maxi distch (S(ζi )X, Yi ) obeys the same lower bound.
+Proof. Choose a unit input vector x and write F = Sx. On T, ∥F ∥ = 1. By the common-
+denominator lemma above, the two coordinates of PH F have the form p/χ, q/χ, with numerator
+degrees at most d. Let c collect their 2(d + 1) coefficients. If c = 0, then F is orthogonal to every
+Yi and the left-hand side of (18) is one, so assume c ̸= 0.
+     Put vi = (p(ζi ), q(ζi )) and ei = distch (CF (ζi ), Yi ). Since vi = χ(ζi )PH F (ζi ) and yi ∈ H, the
+two-dimensional wedge identity gives
+                                                                                  q
+                   |(Md c)i | = | det(yi , vi )| ≤ |χ(ζi )|ei ,   ∥vi ∥ ≥ |χ(ζi )| 1 − e2i .
+                                                                                              √
+        √ of two degree-d polynomials at a unit-modulus node has operator norm d + 1, hence
+Evaluation
+∥vi ∥ ≤ d + 1∥c∥. If ε = maxi ei < 1, these inequalities imply
+                                                  p                   ε
+                                   ∥Md c∥2 ≤ L(d + 1) ∥c∥ √                .
+                                                                    1 − ε2
+The reverse inequality ∥Md c∥2 ≥ σ∥c∥ and cancellation of ∥c∥ give (18); the case ε = 1 is immediate.
+                                       cd ) ≥ σ − η, proving the perturbative claim.
+Finally, Weyl’s inequality gives σmin (M
+Corollary 7.4 (Exact-arithmetic coercivity certificate). Let Gd = Md∗ Md , m = 2(d + 1), and
+                                                m − 1 m−1
+                                                      
+                                 γd = det Gd                 .
+                                                tr Gd
+If Md has full column rank, then σ 2 ≥ γd > 0, so the right-hand side of (18) is at least
+                                        r
+                                                 γd
+                                                         .
+                                           L(d + 1) + γd
+For Gaussian-rational nodes and targets, γd is an exact arithmetic certificate. Any stronger exact
+inequality Gd ⪰ αI replaces γd by α.
+                                                                          Q
+Proof. If 0 < λ1 ≤ · · · ≤ λm are the eigenvalues of Gd , then det Gd = λ1 j>1 λj . By arithmetic–
+geometric mean,
+                                                 m−1 
+                                                            tr Gd m−1
+                                     P
+                                          j>1 λj
+                             Y                                    
+                                λj ≤                  ≤                .
+                                         m−1                m−1
+                             j>1
+
+Thus σ 2 = λ1 ≥ γd . Apply Theorem 7.3.
+   The normalization is essential: without unit homogeneous representatives and an orthonormal
+basis of H, σ changes under coordinate rescaling. The theorem now controls routing error itself,
+rather than only persistence of an exact rank obstruction.
+
+                                                    10
+```
+
+---
+
+## Page 11
+
+```text
+8    The exact zero-memory frontier
+The preceding obstruction is a lower bound for general d. At d = 0, however, the entire minimax
+problem has a closed geometric solution. For a unit target representative yi ∈ H, write
+                                           1
+                              ρi = yi yi∗ = I + ri · σ ,    ri ∈ S2 ,
+                                                      
+                                           2
+where σ is the Pauli triple. Define the smallest-cap radius
+                                      ϕ∗ = min max arccos(r · ri ).                              (19)
+                                            r∈S2      i
+
+The spherical one-center problem and its support algorithms are classical [20]; the point here is
+their exact passive-routing consequence.
+Theorem 8.1 (Exact zero-memory minimax law). For every finite planar line-routing table,
+                                             E0 = sin(ϕ∗ /2) .                                   (20)
+Moreover, an optimizing cap center has a first-order support certificate involving at most three
+active target lines: the origin lies in the convex hull of their tangent projections at the center.
+Consequently E0 is computable by candidate centers generated by one-, two-, and three-target
+supports, together with a global containment check and the usual antipodal degeneracies.
+Proof. Every constant unitary can send X to an arbitrary output line, and every output line
+extends to a constant unitary. It is enough to optimize over output lines in H. Indeed, if a unit
+                / H has PH u ̸= 0, then v = PH u/∥PH u∥ satisfies, for every yi ∈ H,
+output vector u ∈
+                                                    |⟨u, yi ⟩|
+                                     |⟨v, yi ⟩| =              ≥ |⟨u, yi ⟩|.
+                                                    ∥PH u∥
+If PH u = 0, every chordal error is one and any target line is no worse. Thus projection and
+normalization never increase the objective. If the resulting line has Bloch vector r, then
+                                                                                        
+                     2             1 + r · ri                           1
+           |⟨y, yi ⟩| = tr(ρρi ) =            , distch (Cy, Yi ) = sin    arccos(r · ri ) .
+                                       2                                2
+Since the last expression is increasing in the spherical angle, (20) follows from (19).
+    For the support statement, maximize τ (r) = mini r · ri on the sphere and let A be the active
+set at a maximizer r∗ . If zero were outside the convex hull of the tangent projections Pr⊥     ∗
+                                                                                                  ri ,
+i ∈ A, a strictly separating tangent direction would increase every active scalar product to first
+order. The inactive constraints have positive slack, contradicting maximality. Planar Carathéodory
+therefore supplies a balancing subset of at most three active projections. Enumerating those
+support equations and retaining only centers whose caps contain every target gives the stated finite
+computation.
+Corollary 8.2 (Two-target frontier and sharp collision limit). For two distinct target lines with
+Fubini–Study angle α = arccos |⟨y1 , y2 ⟩| ∈ (0, π/2],
+                                             E0 = sin(α/2).
+If t = tan(α/2), then
+                                                                        !2
+                                  t2                  σmin (M0 )                      t2
+                        E02 =          ,                                       =           .
+                                1 + t2                                             1 + 2t2
+                                                p
+                                                 2 + σmin (M0 )2
+Hence the ratio between the singular-value lower bound of Theorem 7.3 and the exact optimum
+tends to one as t ↓ 0.
+Proof. The two Bloch vectors are separated by angle 2α, so their smallest cap is centered at the
+geodesic midpoint and has radius α. This proves the first formula. The two normalized rows of
+M0 have Gram eigenvalues 1 ± |⟨y1 , y2 ⟩|, whence σmin (M0 )2 = 1 − cos α. Substitution and the
+half-angle identity give the displayed rational formulas and their limit.
+
+                                                          11
+```
+
+---
+
+## Page 12
+
+```text
+9     Fiber multiplicity and binary routing
+Projective interpolation makes collisions transparent. If a nonconstant rational map has degree d,
+no fiber contains more than d distinct points. This observation becomes a state lower bound after
+Theorem 6.2.
+
+Proposition 9.1 (Fiber occupancy bound). Suppose at least two distinct target lines are used,
+and let nmax = maxY #{i : Yi = Y }. Then
+
+                                              dmin ≥ nmax .
+
+Proof. A constant projective map cannot hit two targets. For a nonconstant map R = [p : q] of
+degree d, the equation R(z) = Y is a nonzero polynomial equation of degree at most d. It has at
+most d distinct solutions. Apply this to a most occupied target and use Theorem 6.2.
+
+     For exactly two targets, the fiber obstruction is the whole answer.
+
+Theorem 9.2 (Exact binary collision law). If the table uses exactly two distinct target lines with
+occupancies n0 and n∞ , then
+                                    dmin = max(n0 , n∞ ).                                     (21)
+
+Proof. Normalize the two targets to 0 and ∞. Let I0 , I∞ be their node sets. The coprime pair
+                                  Y                       Y
+                          p(z) =     (z − ζi ),  q(z) =      (z − ζi )
+                                      i∈I0                    i∈I∞
+
+has degree max(n0 , n∞ ) and realizes the table. The reverse inequality is Proposition 9.1.
+
+   The binary law is the collision-dominated extreme: the constant-detector bound is sharp. The
+opposite extreme has all targets distinct. Then fiber multiplicity contributes only one, but global
+projective compatibility produces a growing cost.
+
+Table 3: Exact planar mechanisms. The projective reduction converts every entry in the last
+column directly into passive state count.
+     Target pattern                Exact or generic degree    Governing obstruction
+     One target                    0                          constant projective map
+     Two targets, occupancies      exact max; border min      fiber/base-point duality
+     n0 , n∞
+     L distinct, generic           ⌈(L − 1)/2⌉                projective parameter count
+     Exceptional table at          Ed0 = 0, possibly          dense exact-routing locus
+     d0 = ⌈(L − 1)/2⌉              unattained
+     Four distinct, exceptional    1 or 2                     ordered cross-ratio
+     Four targets, pattern 3 + 1   3                          triple fiber
+
+
+
+10      The generic planar law and an unbounded gap
+Lemma 10.1 (Nonempty coprime threshold locus). Fix distinct nodes and put d0 = ⌈(L − 1)/2⌉.
+There is a nonempty Zariski-open set of target data for which Md0 contains a coprime kernel pair.
+This open set meets the locus of pairwise distinct targets.
+
+Proof. Work first in the affine target chart ai /bi = yi and use the witness yi = ζid0 . At this point
+the columns of Md0 are evaluations of monomials with exponents 0, . . . , 2d0 , with exponent d0
+duplicated. Because L ≤ 2d0 + 1, a Vandermonde L × L minor D is nonzero. On the principal
+open set U = {D ≠ 0}, this same pivot solves L coefficients by Gaussian elimination and expresses
+
+
+                                                       12
+```
+
+---
+
+## Page 13
+
+```text
+the remaining coefficients as free parameters with entries in the localization C[y1 , . . . , yL ]D . Hence
+ker Md0 has an algebraic frame on U .
+     At the witness, (z d0 , 1) lies in the kernel. Choose the constant linear combination of the local
+frame that equals this vector there. Multiplying its two polynomial coordinates by a common
+power of D clears every parameter denominator. Their resultant is then a regular function of the
+target data; at the witness it is a nonzero scalar multiple of Res(z d0 , 1) = 1. Its nonvanishing and
+D ̸= 0 therefore define a nonempty Zariski-open coprime locus. The pairwise target inequalities
+also define a nonempty Zariski-open subset of (P1 )L . Their intersection is nonempty because (P1 )L
+is irreducible.
+
+Theorem 10.2 (Generic planar memory). For fixed distinct nodes and L target lines in a two-plane,
+there is a Zariski-open dense set of ordered target data on which
+                                                       
+                                                   L−1
+                                         dmin =           .                                  (22)
+                                                     2
+
+The open set can be intersected with the locus of pairwise distinct targets.
+
+Proof. Put d0 = ⌈(L − 1)/2⌉ = ⌊L/2⌋. For d < d0 , the matrix Md has at most L columns and is
+generically full-column-rank. A concrete rank witness is obtained from affine data ai /bi = ζid0 : an
+equation p(ζi ) = ζid0 q(ζi ) at all nodes would give L roots to a polynomial of degree at most L − 1
+and then force p = q = 0 at degree d0 − 1. Thus the nonvanishing of a maximal minor supplies the
+required nonempty open set.
+    At d = d0 , Md0 has more columns than rows, so it always has nonzero kernel. Lemma 10.1
+supplies a nonempty open locus on which that kernel contains a coprime pair, and the lower-rank
+open condition above can be intersected with it. Apply Theorem 6.2 and Proposition 7.2. The
+scalar threshold itself is classical; the new conclusion here is its exact conversion to passive state
+count.
+
+Definition 10.3 (Border memory). For A ⊆ [L] = {1, . . . , L}, let δ(A) denote the exact projective
+interpolation degree of the subtable indexed by A, with δ(∅) = 0. Define
+
+                                      d∂ := min{d ≥ 0 : Ed = 0}.
+
+Thus d∂ is the first state count at which exact target tables lie in the closure of the degree-bounded
+passive class; it need not be attained.
+
+Theorem 10.4 (Linear rank and base-point deletion law). Every finite planar routing table satisfies
+
+                d∂ = min{d ≥ 0 : ker Md ̸= {0}} = min{d ≥ 0 : rank Md < 2(d + 1)}
+                   = min |B| + δ(B c ) .
+                                                                                                     (23)
+                      B⊆[L]
+
+
+Equivalently, for every d ≥ 0,
+
+                               Ed = 0     ⇐⇒      µd := min ∥Md c∥ = 0.                               (24)
+                                                         ∥c∥=1
+
+
+Consequently the complete sign-and-attainment diagram is
+
+                          d < d∂                  Ed > 0,
+                        d∂ ≤ d < δ Ed = 0 and the infimum is not attained,
+                           d≥δ             Ed = 0 and is attained.
+
+In particular, the distinction between exact and approximate memory is itself an exactly computable
+projective invariant.
+
+                                                    13
+```
+
+---
+
+## Page 14
+
+```text
+Proof. First suppose Ed = 0. Choose degree-at-most-d routers Sn whose worst-node errors tend
+to zero, and fix a unit vector spanning X. Project Sn x orthogonally to H and use the common-
+denominator lemma to write its two coordinates as a polynomial pair (pn , qn ) of degree at most
+d, up to a scalar denominator. For all large n this pair is not identically zero, because its values
+at the routing nodes approach nonzero lines in H. Normalize its coefficient vector and pass to
+a convergent subsequence. The limit is a nonzero pair (p, q) of degree at most d. At each node,
+chordal convergence bounds the determinant of this pair with the normalized target vector by
+the routing error times its evaluation norm. The latter is uniformly bounded after coefficient
+normalization, so the limiting determinant vanishes. Hence its coefficient vector is a nonzero
+element of ker Md .
+    Let B be the set of nodes at which p and q both vanish. Write (p, q) = g(e  p, qe) with the reduced
+pair coprime, and put b = deg g and r = max(deg pe, deg qe). Distinctness of the nodes gives |B| ≤ b,
+while coefficient convergence and projective continuity show that [e p : qe] interpolates every target
+outside B. Therefore
+                           |B| + δ(B c ) ≤ b + r = max(deg p, deg q) ≤ d.
+This proves both that rank deficiency is necessary and that the subset minimum in (23) is no larger
+than d∂ .
+    Conversely fix B, put b = |B|, and choose a coprime pair (p0 , q0 ) of degree r = δ(B c )
+interpolating
+       Q        the complementary subtable. If b = 0, the exact lift already gives Er = 0. If b > 0, let
+g(z) = i∈B (z − ζi ) and first choose a coprime pair (a0 , c0 ) of degree at most b − 1 interpolating
+the data restricted to B; ordinary polynomial interpolation supplies such a pair. Put D = b + r.
+Without changing its values on B, extend it to a coprime pair (a, c) of exact degree D. If c0 =    ̸ 0,
+take c = c0 and a = a0 + λgz r : only finitely many nonzero values of λ can make a vanish at a
+root of c0 . If c0 = 0, coprimality forces a0 to be a nonzero constant, and (a, c) = (a0 , gz r ) works.
+Consider
+                            Pt = (1 − t)gp0 + ta,     Qt = (1 − t)gq0 + tc.
+At every node in B, [Pt : Qt ] = [a : c] for t =  ̸ 0; outside B the values converge to [p0 : q0 ] as
+t → 0. Coprimality with no common projective zero is detected by the homogeneous degree-D
+resultant: it vanishes for a common finite root and also for a common root at infinity [1 : 0]. Since
+(P1 , Q1 ) = (a, c) is coprime and has exact degree D, this resultant is a nonzero polynomial in t.
+Hence a sequence tn → 0, tn ̸= 0, can be chosen away from its finitely many zeros, with every
+(Ptn , Qtn ) coprime. Its degree is at most b + r. Applying the exact same-degree lossless lift proves
+Eb+r = 0, and hence equality with the subset minimum.
+     It remains only to connect an arbitrary deficient Md back to the subset formula. Take a
+nonzero kernel pair (p, q), remove its gcd g, and let B be the interpolation nodes at which both
+coordinates vanish. With b = deg g and reduced degree r, the same argument as above gives
+|B| + δ(B c ) ≤ b + r ≤ d. Conversely, the smoothing construction for any B produces coprime
+approximating pairs of degree |B| + δ(B c ). Thus the first deficient matrix, the subset minimum
+and d∂ coincide. Since the minimum modulus µd vanishes exactly when Md has a nontrivial kernel,
+(24) follows.
+     Finally, Ed = 0 is monotone in d. Zero is attained exactly when an exact router of degree at
+most d exists, which by Theorem 6.2 is equivalent to d ≥ δ. The three regimes follow.
+
+Corollary 10.5 (Incremental exact border certificate). The integer d∂ is obtained by scanning the
+nested sequence
+                                    M0 , M1 , . . . , M⌊L/2⌋
+and stopping at the first loss of full column rank. A single incremental column elimination computes
+all these ranks using O(L3 ) field operations. A nonzero kernel vector at the stopping degree is an
+upper certificate for zero infimum, even when it has base points; full column rank at every preceding
+degree is the lower certificate. Polynomial gcd and subresultant tests are needed for exact memory
+δ, but not for border memory.
+
+
+                                                  14
+```
+
+---
+
+## Page 15
+
+```text
+Proof. For d0 = ⌊L/2⌋, the matrix Md0 has 2(d0 + 1) > L columns and is automatically deficient,
+so the scan terminates. Rank elimination need not restart at each degree: Md+1 appends exactly
+two columns to Md . Maintain a column-echelon basis and reduce each appended length-L column
+against at most L pivots. Each update costs O(L2 ) field operations and at most L + 1 columns are
+processed before termination, for O(L3 ) operations in total. Once dependence appears it persists
+under zero-padding of a kernel vector. The certificate statements are exactly Theorem 10.4. All
+tests are exact over the coefficient field of the data.
+
+Corollary 10.6 (Exact rank–error dichotomy). With normalized homogeneous target representa-
+tives, let µd = min∥c∥=1 ∥Md c∥. Then precisely one of the following holds:
+
+                               µd = 0 : Ed = 0,
+                                                      µd
+                               µd > 0 : Ed ≥ q                     > 0.
+                                                  L(d + 1) + µ2d
+
+                                                                                        cd −Md ∥2 <
+                                                                               cd with ∥M
+Moreover, the positive-error conclusion survives every calibrated perturbation M
+µd , replacing µd by the remaining margin. Thus one matrix supplies both the exact qualitative
+phase and a quantitative, stable error certificate.
+
+Proof. The zero case is (24). In the positive case Md has full column rank, so µd is its usual
+smallest singular value and Theorem 7.3 applies, including its perturbation statement.
+
+Corollary 10.7 (Exact determinantal closure). Fix the distinct nodes and let Rd ⊂ (P1 )L be
+the planar target tables routed exactly by a degree-at-most-d passive network. Then its Euclidean
+closure is
+                                 Rd = {(Yi ) : rank Md < 2(d + 1)}.
+When 2(d + 1) ≤ L, this is the projective determinantal set cut out in local homogeneous charts by
+the maximal minors of Md ; when 2(d + 1) > L, it is the whole target space. The exact-routable
+locus is dense in this set, but may omit its base-point strata.
+
+Proof. By definition, membership in the metric closure of Rd is equivalent to Ed = 0. Theorem 10.4
+identifies this with a nonzero kernel of Md . Maximal-minor vanishing is exactly that rank condition.
+The smoothing construction in the proof of Theorem 10.4 produces coprime degree-at-most-d tables
+converging to every deficient table, proving density rather than only containment.
+
+Corollary 10.8 (Complete binary approximation phase diagram). For two target lines with positive
+occupancies n0 , n∞ ,
+                        d∂ = min(n0 , n∞ ),    dmin = max(n0 , n∞ ).                        (25)
+Thus Ed > 0 below the smaller occupancy, Ed = 0 but is unattained between the two occupancies,
+and exact routing begins at the larger occupancy. For a 1 + (L − 1) split the exact-to-border memory
+ratio is L − 1 and is unbounded.
+
+Proof. Deleting all nodes carrying the less frequent target leaves a constant subtable, so Theo-
+rem 10.4 gives the upper bound d∂ ≤ min(n0 , n∞ ). For the reverse bound, fix B in (23). If the
+reduced interpolant on B c is constant, B must contain every occurrence of the other target and
+therefore |B| is at least the smaller occupancy. If it is nonconstant of degree r, each of its two
+fibers has at most r remaining nodes. Adding the deleted nodes shows |B| + r ≥ max(n0 , n∞ ),
+hence certainly at least the smaller occupancy. Minimizing over B proves the first identity; the
+second is Theorem 9.2, and the phase statement follows from Theorem 10.4.
+
+Theorem 10.9 (Sharp universal closure threshold). Fix distinct nodes and put d0 = ⌈(L − 1)/2⌉.
+For every ordered planar target table,
+                                         Ed0 = 0 .                                        (26)
+
+
+                                                 15
+```
+
+---
+
+## Page 16
+
+```text
+More generally Ed = 0 for every d ≥ d0 . The infimum at d0 is attained if and only if δ ≤ d0 . For
+every d < d0 , by contrast, there is a Euclidean-open dense set of target tables for which Ed > 0.
+Consequently d0 is the sharp state threshold at which degree-bounded passive routers become dense
+in all planar routing data.
+Proof. The matrix Md0 has 2(d0 + 1) > L columns, so it has a nontrivial kernel for every target
+table. The rank law (23) therefore gives Ed0 = 0 directly. Allowing more states cannot increase the
+infimum. If the infimum at d0 is attained with value zero, the attaining router interpolates exactly,
+so Theorem 6.2 gives δ ≤ d0 ; the converse is immediate. Finally, for d < d0 the full-column-rank
+condition on Md is a nonempty Zariski-open condition by the proof of Theorem 10.2. It is Euclidean
+open dense, and Theorem 7.3 supplies a strictly positive error there.
+
+Corollary 10.10 (Exact one-state infimum without a minimizer). For three distinct nodes and
+any planar target table, E1 = 0. If the target multiplicity pattern is 2 + 1, then dmin = 2 and this
+zero infimum is not attained by a one-state router.
+Proof. Here d0 = 1, so Theorem 10.9 gives E1 = 0. The binary collision law gives dmin = 2 for the
+2 + 1 pattern, and the attainment statement follows. For an explicit normalized example, choose
+a projective coordinate on the domain taking the nodes to (0, 1, ∞) and choose limiting targets
+(0, 0, 1) in an orthonormal affine chart of H. For 0 < ε < 1,
+                                                              εz
+                                           Rε (z) =
+                                                          εz + 1 − ε
+                                                                                  √
+is a degree-one Möbius map with values (0, ε, 1) and worst-node chordal error ε/ 1 + ε2 . Its
+determinant ε(1 − ε) is nonzero, so the same-degree lossless lift is valid. The errors tend to
+zero, whereas a nonconstant degree-one map is injective and cannot attain the repeated limiting
+target.
+
+Remark 10.11 (Why rank deficiency is not exact feasibility). At d0 , the matrix Md0 always has
+a nonzero kernel, but exceptional tables may have only kernel pairs with a common factor or a
+base point. Theorem 10.4 shows that such defective pairs are limits of coprime pairs even when
+no coprime pair exists at the limiting data. Thus full column rank in Theorem 7.3 is a structural
+separation condition, not a technical artifact: once it fails at the universal threshold, a positive
+error floor cannot hold for the full degree-bounded class.
+   For distinct lines in a two-plane, the span bound is dim H − 1 = 1. Likewise, the optimized
+constant-detector hierarchy from [1] equals one: the kernel of a nonzero functional on H contains
+at most one of the distinct target lines.
+Corollary 10.12 (Unbounded detector gap). On the generic pairwise-distinct planar locus,
+                                                                
+                                dmin                        L−1
+                                                        =          −→ ∞.
+               max{span bound, constant-detector bound}      2
+Thus the optimized constant-detector hierarchy of [1] cannot approximate the exact passive memory
+within a universal multiplicative factor on this single fixed-rank stratum.
+
+
+11     The complete four-line phase diagram
+For four ordered distinct nodes, write
+                                                          (z1 − z3 )(z2 − z4 )
+                                 [z1 , z2 ; z3 , z4 ] =
+                                                          (z1 − z4 )(z2 − z3 )
+with the usual projective conventions at infinity. The order matters because each frequency is
+paired with a specified target. The projective classification below is classical/elementary; our claim
+is its exact consequence for square passive rational-inner routers.
+
+                                                          16
+```
+
+---
+
+## Page 17
+
+```text
+strict four-node fixture
+
+
+
+
+                                                                                certified lower bound on worst-node error
+                                                                                                                            0.5
+                       14          generic exact = border
+                                   binary exact L − 1                                                                       0.4
+                       12          binary border = 1
+ passive state count
+
+
+
+                       10                                                                                                   0.3
+                        8
+                        6                                                                                                   0.2
+                        4                                                                                                   0.1
+                        2
+                                                                                                                            0.0
+                            3      5       7      9     11 13 15                                                                  0                1              2
+                                number of distinct coplanar target lines L                                                                router degree cap d
+
+Figure 2: Left: generic exact/border memory and the binary 1 + (L − 1) split, whose exact memory
+is L − 1 while its border memory remains one; the shaded exact-to-border gap is unbounded. Right:
+exact certified worst-node chordal-error barriers for the strict four-node fixture. Degree two attains
+zero error, whereas degrees zero and one remain quantitatively separated.
+
+
+Theorem 11.1 (Four-line classification). For four target lines in one two-plane, the exact passive
+memory is
+          
+          
+          
+          0, all four targets coincide,
+          
+          1, all four are distinct and their ordered cross-ratio equals that of the nodes,
+  dmin =                                                                                      (27)
+          
+          
+          3, the target multiplicities are 3 + 1,
+          
+          2, in every remaining case.
+
+Proof. A nonconstant degree-one map is a projective bijection, so it sends the four nodes to four
+distinct targets and preserves their ordered cross-ratio. These conditions are also sufficient by the
+uniqueness of a projective map through three ordered points.
+    If three nodes share a target and the fourth does not, a nonconstant map of degree at most
+two cannot work because every fiber has at most two distinct points. Polynomial interpolation
+gives the universal upper bound three.
+    It remains to show degree at most two in all other nonconstant cases. For four distinct targets
+with mismatched cross-ratio, normalize domain and target triples to (0, ∞, 1), leaving s 7→ t with
+s ̸= t. Then
+                                                        t−s
+                         R(z) = z(az + b),       a=            , b=1−a
+                                                      s(s − 1)
+has degree two and realizes the data. For multiplicities 2 + 2, after choosing a finite chart use
+
+                                                                             (z − z1 )(z − z2 )
+                                                               R(z) = c                         .
+                                                                             (z − z3 )(z − z4 )
+
+For 2 + 1 + 1, normalize the repeated nodes to 0, ∞, the other nodes to 1, s, and the targets to
+                     / {0, 1, s} and set
+∞, ∞, 0, 1. Choose a ∈
+                                                                                                                                             s
+                                        q(z) = z,         p(z) = A(z − 1)(z − a),                                                 A=                  .
+                                                                                                                                       (s − 1)(s − a)
+
+This is a coprime degree-two witness. None of these cases is constant or degree one, completing
+the lower bounds and the classification via Theorem 6.2.
+
+
+
+                                                                                17
+```
+
+---
+
+## Page 18
+
+```text
+Example 11.2 (Strict exact and approximate detector failure). Take
+
+                  (ζ1 , ζ2 , ζ3 , ζ4 ) = (1, i, −1, −i),            (Y1 , Y2 , Y3 , Y4 ) = (0, 1, ∞, 2).
+
+The ordered cross-ratios are 2 and 1/2, respectively. Hence dmin = 2, while both constant lower
+bounds equal one. An exact witness is
+
+                        (z − 1)(3z − i)
+             p(z) = −                   ,                 q(z) = z + 1,         Res(p, q) = −3 − i ̸= 0.
+                               2
+It takes the four requested projective values exactly.
+    There is also a finite approximation gap below degree two. Normalize the four target represen-
+tatives to unit norm. For d = 1, exact arithmetic gives
+                                                                              
+                                   17/10     1 + 3i/10    −9/10       −i/10
+                                1 − 3i/10     17/10       i/10       −9/10 
+                G1 = M1∗ M1 =   −9/10
+                                                                               .
+                                               −i/10      23/10    −1 − 3i/10
+                                    i/10       −9/10    −1 + 3i/10    23/10
+
+The leading principal minors of G1 − 83 I are
+
+                                        53           213       637           213
+                                           ,             ,          ,             ,
+                                        40           320       2560         20480
+all positive. Sylvester’s criterion yields G1 ≻ 83 I, and Theorem 7.3 therefore forces
+                                                                        r
+                                                                            3
+                                max distch (S(ζi )X, Yi ) >                    ≈ 0.2116
+                                   i                                        67
+for√every router with at most one state. Likewise, G0 − I ≻ 0 gives the degree-zero barrier
+1/ 5 ≈ 0.4472. The degree-two witness above attains zero, producing a certified finite-error
+staircase rather than only an exact degree jump.
+
+
+12     Delay price and reproducibility
+For a differentiable lossless boundary response, define the Wigner–Smith matrix
+                                                                      d
+                                         Q(θ) = −iS(eiθ )∗               S(eiθ ).
+                                                                      dθ
+Jacobi’s formula gives tr(S −1 ∂θ S) = ∂θ log det S. Together with Potapov’s factorization and
+winding count, this gives         Z         2π
+                                                 tr Q(θ) dθ = 2π degMcM S
+                                        0
+for finite rational-inner S [17, 18]. Combining it with Theorems 2.3 and 3.2 yields an exact action
+law.
+
+Corollary 12.1 (Optimal integrated delay). For every line-routing table, and every block-subspace
+incidence table,                   Z                 2π
+                                        inf               tr Q(θ) dθ = 2πdmin .
+                                         S       0
+The projective lossless completion attains the infimum.
+
+
+
+
+                                                               18
+```
+
+---
+
+## Page 19
+
+```text
+The computational artifact uses exact arithmetic over Q(i). It checks the strict witness in
+Example 11.2; exact representatives of the constant, cross-ratio-compatible, 2+2, 2+1+1, and 3+1
+strata; the normalized Gram matrices and Sylvester coercivity certificates behind the degree-zero
+and degree-one approximation barriers; the exact two-target zero-memory formulas and their
+sharp-collision ratios at four rational parameters; the explicit nonattained E1 = 0 degeneration
+at four rational values of ε; full-column-rank exclusions below the generic threshold; coprime
+threshold witnesses for every 3 ≤ L ≤ 16; and every nontrivial binary occupancy split through
+L = 16 (119 exact cases). For every 3 ≤ L ≤ 16 it additionally checks the complete binary
+positive-error/nonattainment/exact phase partition and an explicit degree-one degeneration of the
+1 + (L − 1) family, whose exact-to-border ratio is L − 1. For all 119 binary tables it independently
+recomputes full column rank just below d∂ and a nontrivial kernel at d∂ , directly auditing the
+polynomial-time rank formula rather than inferring it from occupancies. The frozen validator
+recomputes the content hash and checks declared coverage, phase degrees, ranks, and bounds. In
+CI the producer is replayed from scratch and its byte-identical JSON is compared with the frozen
+record; this replay is the algebraic check of cross-ratios, witness values, gcds, and resultants. These
+calculations audit examples and certificates; they are not substitutes for the proofs.
+Limitation 12.2 (Exact scope). The global theorem assumes distinct frequency nodes, one input
+line, free endpoint phase, and square finite rational-inner competitors. Repeated nodes require
+confluent jets. The block theorem assumes a literal orthogonal direct sum of bands; overlapping
+target subspaces require a different arrangement law. Fixed endpoint frames, prescribed remaining
+columns, lossy or active architectures, and numerical values of the positive minimax errors
+beyond degree zero are not claimed. The perturbation theorem is only as meaningful as its
+calibrated operator-norm model. The high-delay theorem concerns differentiation with respect
+to the dimensionless phase θ; it is not a theorem about resonator quality factor, stored energy,
+linewidth, or fabrication cost.
+Limitation 12.3 (Priority scope). Minimal scalar, vector, matrix, and tangential rational interpola-
+tion; unattainable points and common factors; generic rational-curve dimension counts; cross-ratios
+and fiber multiplicity; Fejér–Riesz factorization; rectangular lossless realization, all-pass completion,
+and Potapov factorization all predate this work [4, 5, 21, 14, 15, 22, 13]. The Poisson-kernel
+group-delay formula and the divergent peak produced by a Blaschke zero approaching T are
+classical as well. What is claimed here is that the projective border law forces this degeneration
+along every nonattained routing sequence. We do not claim a new interpolation algorithm or
+completion theorem. The claimed contribution is their synthesis for this passive architecture: the
+global conversion into state count (2), the full-support block specialization (5), the rank/error
+and deletion identities (10)–(11), the exact maximum/minimum split between multiband exact
+and border memory, and the resonant trichotomy of Theorem 5.1. The planar cap, binary, and
+cross-ratio results are explicit strata and audit fixtures, not claims of priority for their classical
+projective ingredients.
+
+AI assistance disclosure. AI tools assisted with literature discovery, symbolic fixture generation,
+code review, and language editing. The author selected the claims, checked the proofs and exact
+certificates, and takes responsibility for the content.
+
+Reproducibility record. The accompanying archive contains the manuscript source, the
+planar exact producer and independent validator, a separate rational-arithmetic verifier for the
+block-subspace laws, the frozen JSON objects, and a hash manifest. The archive is tested after
+extraction; the validators do not import each other’s implementation. The source base is commit
+b2a7f3268de19683573325c5a63d4ce0030ed955. The frozen global and planar certificate hashes
+are, respectively, ecfa47a4585bb646716888b93cc0ca4fca6fc2c33c5373786790c6d010af210a
+and 09e3aa7dc2b2a80ce2222bae0a4a85357d0d36d09e257595b992ceb900db5c47. From the
+extracted archive the fail-closed replay is
+
+
+                                                   19
+```
+
+---
+
+## Page 20
+
+```text
+python verification/verify global projective memory.py
+        --check results/global projective memory/certificate.json
+      python verification/verify planar projective memory.py
+
+The archive is distributed beside the PDF as Projective Memory Reproducibility.zip; its
+final SHA-256 is recorded in the companion submission sheet and detached manifest, avoiding a
+self-referential archive hash inside the archive itself.
+
+
+13     Conclusion
+The exact state count of every finite line-routing table is the degree of one projective curve in the
+actual target span. This global identity replaces the former collection of direct-sum and coplanar
+strata by a single invariant. For block-subspace architectures, full-support Lagrange kernels give
+every nongeneric exact degree, while generic codimensions yield a closed design law. The closure
+problem is different: exact memory takes the most expensive band, whereas border memory can
+survive in the cheapest, producing an arbitrarily large separation already for scalar occupancies.
+    The incidence matrix makes this geometry falsifiable. Full column rank gives a calibrated
+positive chordal-error floor; first rank loss gives the exact zero-infimum boundary; base-point
+deletion explains every missing record. Most importantly, zero but unattained error is not free
+approximation. A bounded peak Wigner–Smith delay makes the fixed-degree lossless family
+compact, so the nonattained phase can approach zero only by driving a Potapov zero to the unit
+circle and creating a divergent delay peak. Passive line routing therefore has three operationally
+distinct phases: robust error, singular high-delay approximation, and exact finite-delay realization.
+The explicit planar cap, binary occupancy, and four-node cross-ratio theorems show how the global
+laws resolve the first collision strata without concealing their classical origins.
+
+
+
+
+                                                 20
+```
+
+---
+
+## Page 21
+
+```text
+References                                                        [11] Vladimir Bolotnikov and Harry Dym. On Boundary In-
+                                                                       terpolation for Matrix Valued Schur Functions, volume
+ [1] Lluis Eriksson. Exact memory of finite spectral routing           181 of Memoirs of the American Mathematical Society.
+     tables: The direct-sum occupancy law and its singular             American Mathematical Society, 2006. Memoir no. 856.
+     strata. GitHub release, 2026. https://github.com/llu
+     iseriksson/finite-sample-spectral-certificates/              [12] Agulla Surya Bharath, Devanshu Singh Gaharwar, Kumar
+     releases/tag/v2.8-ai-vixra-submission.                            Appaiah, and Debasattam Pal. Design of discrete-time
+                                                                       matrix all-pass filters using subspace Nevanlinna–Pick
+ [2] Athanasios C. Antoulas and Brian D. O. Anderson. On               interpolation. Signal Processing, 204:108839, 2023.
+     the scalar rational interpolation problem. IMA Journal
+     of Mathematical Control and Information, 3(2–3):61–88,       [13] Daniel Alpay, Palle Jorgensen, and Izchak Lewkowicz.
+     1986.                                                             Characterizations of rectangular (para)-unitary rational
+                                                                       functions. Opuscula Mathematica, 36(6):695–716, 2016.
+ [3] Brian D. O. Anderson and Athanasios C. Antoulas. Ratio-      [14] Christer Glader. Minimal degree rational unimodular
+     nal interpolation and state-variable realizations. Linear         interpolation on the unit circle. Electronic Transactions
+     Algebra and its Applications, 137/138:479–509, 1990.              on Numerical Analysis, 30:88–106, 2008.
+
+ [4] Athanasios C. Antoulas, Joseph A. Ball, Jeongook Kang,       [15] Teresa Cortadellas Benı́tez, Carlos D’Andrea, and Eulàlia
+     and Jan C. Willems. On the solution of the minimal                Montoro. The set of unattainable points for the rational
+     rational interpolation problem. Linear Algebra and its            hermite interpolation problem. Linear Algebra and its
+     Applications, 137/138:511–573, 1990.                              Applications, 538:116–142, 2018.
+
+ [5] M. S. Ravi. Geometric methods in rational interpolation      [16] V. P. Potapov. The multiplicative structure of J-
+     theory. Linear Algebra and its Applications, 258:159–168,         contractive matrix functions. Trudy Moskovskogo Matem-
+     1997.                                                             aticheskogo Obshchestva, 4:125–236, 1955. English trans-
+                                                                       lation in AMS Translations, Series 2, Vol. 15.
+ [6] Teresa Cortadellas Benı́tez, Carlos D’Andrea, and Eulàlia   [17] Eugene P. Wigner. Lower limit for the energy derivative
+     Montoro. Minimal solutions of the rational interpolation          of the scattering phase shift. Physical Review, 98:145–147,
+     problem. Revista de la Unión Matemática Argentina,              1955.
+     61(2):413–429, 2020.
+                                                                  [18] Felix T. Smith. Lifetime matrix in collision theory. Phys-
+ [7] Christer Glader. Rational unimodular interpolation on             ical Review, 118:349–356, 1960.
+     the unit circle. Computational Methods and Function
+     Theory, 6(2):481–492, 2006.                                  [19] Michael A. Dritschel and James Rovnyak. The opera-
+                                                                       tor Fejér–Riesz theorem. In A Glimpse at Hilbert Space
+ [8] Gunter Semmler and Elias Wegert. Boundary interpo-                Operators: Paul R. Halmos in Memoriam, volume 207
+     lation with Blaschke products of minimal degree. Com-             of Operator Theory: Advances and Applications, pages
+     putational Methods and Function Theory, 6(2):493–511,             223–254. Birkhäuser Basel, 2010.
+     2006.
+                                                                  [20] Jens Flemming. A simple linear time algorithm for small-
+                                                                       est enclosing circles on the (hemi)sphere. arXiv preprint
+ [9] Vladimir Bolotnikov. Boundary interpolation by finite             arXiv:2407.19840, 2024.
+     Blaschke products. In Complex Analysis and Dynamical
+     Systems: New Trends and Open Problems, Trends in             [21] Marc Van Barel and Adhemar Bultheel. A new ap-
+     Mathematics, pages 39–65. Birkhäuser/Springer, Cham,             proach to the rational interpolation problem: The vector
+     2018.                                                             case. Journal of Computational and Applied Mathematics,
+                                                                       33:331–346, 1990.
+[10] Paolo Rapisarda and Jan C. Willems. The subspace
+     Nevanlinna interpolation problem and the most powerful       [22] Joseph A. Ball and Jeongook Kim. Stability and McMil-
+     unfalsified model. Systems & Control Letters, 32(5):291–          lan degree for rational matrix interpolants. Linear Algebra
+     300, 1997.                                                        and its Applications, 196:207–232, 1994.
+
+
+
+
+                                                              21
+```
