@@ -1,52 +1,33 @@
-# Paper 11 release QA
+# Unified Paper 12 release QA
 
-## Decision
-
-GO. The hostile proof audit, final theorem delta audit, editorial audit, clean
-build, bounded replays, and all-page visual inspection leave no submission
-blocker in the frozen artifact.
+Status: GO for ARR deposit as the definitive version superseding the all-field draft.
 
 ## Canonical artifact
 
-- `work/eleventh_paper/output/pdf/Eriksson_All_Field_Simple_Bivector_Rigidity_Exact_Plucker_RDF_v2.pdf`
-- SHA-256: `ef6e3fd745ffda790c50fcfa265391fc8ddad9a010e350d3bce2db6c2efa33cf`
-- Size: 372127 bytes
-- Format: PDF 1.5, 10 A4 pages, no encryption, forms, or JavaScript
-- Metadata author: Lluis Eriksson
-- One vector figure
+- Title: Complete Rate--Distortion Phase Diagram of Haar Oriented Two-Planes: One-Change Hypergeometric Coefficients, Unique Coexistence, and No Reentrance
+- Author: Lluis Eriksson
+- PDF: `work/twelfth_paper/output/pdf/Eriksson_Complete_Rate_Distortion_Haar_Oriented_Two_Planes_UNIFIED_v1.pdf`
+- SHA-256: `f8bd2e9ed5f8b166e014dd7b51578adc572dd603b37a82c1fde837b7d89488be`
+- Bytes: `441916`
+- Pages: 16 A4
+- Figures: 1 vector figure
 
-## Build
+## Revision checks passed
 
-The source was built with `pdflatex`, `biber`, `pdflatex`, `pdflatex`. The final log has:
+- The title now leads with the complete phase-diagram result.
+- The title page explicitly states that this version supersedes and absorbs the earlier all-field draft.
+- The parity-window likelihood-ratio step is a standalone proved lemma.
+- The two-derivative Gamma-tail estimate is a standalone proved lemma.
+- The high-fidelity proof now cites Equation (21) with parentheses.
+- The reproducibility section provides one replay command, a release seal, exact archive name, and archive SHA-256.
+- The bounded one-command replay passes 6,783 coefficient signs, 297 exact tail bounds, global-phase identities, contact diagnostics, and figure generation.
+- The manuscript now reports those exact replay counts and the scalar-contact range through `q=120`, so a reader can reconcile the frozen artifact without relying on an unquantified validation claim.
+- `pdflatex`, `biber`, `pdflatex`, `pdflatex` completed successfully.
+- No undefined references/citations, LaTeX/package warnings, or overfull/underfull boxes remain.
+- PDF metadata identifies the final title and author.
+- All 16 pages were rendered with Poppler and visually inspected at 120 dpi; the title page, central theorem, Gamma-tail lemma, replay seal, figure, and references were additionally inspected at full resolution.
+- Canonical output PDF and `PAPER_12_FINAL.pdf` are byte-identical.
 
-- zero undefined citations or references;
-- zero overfull or underfull boxes;
-- zero LaTeX errors or substantive warnings.
+## Scope boundary
 
-The recurring MiKTeX update advisory is external to the document and not a manuscript warning.
-
-## Proof and replay
-
-- Primary-literature audit: no direct collision found for the joined all-field extremum plus unrestricted RDF package.
-- Hostile theorem audit: central theorem and constants passed; requested norm, gradient, Fenchel, and asymptotic repairs were incorporated.
-- The added n=3,4,5 radial theorem has a self-contained coefficient-positive proof.
-- `verify_oriented_plucker_rdf.py --samples 60000`: PASS in 9 seconds.
-- `reproduce_plucker_frontier.py`: PASS in 3.1 seconds.
-- The four replay files are frozen by `REPLAY_MANIFEST.sha256`, whose own
-  SHA-256 is `16be07c5377ecd94b78a9d230341664c832be893394a71c55e2bc0719b89d6f7`.
-- All local work stayed below 30 seconds and used one process.
-
-## Visual QA
-
-All 10 pages were rendered at 120 dpi with Poppler and inspected in two contact sheets, with pages 2 and 9 additionally inspected at full resolution. No clipping, overlap, missing glyphs, broken equations, blank pages, or illegible figure labels were found. Page numbering, section hierarchy, references, and figure placement are clean.
-
-## Scope
-
-The manuscript explicitly distinguishes signed Plucker-coordinate compression from unoriented Grassmann quantization, quantum rate--distortion, Born probabilities, and click simulation. It now includes a table separating the present all-dimensional theorem from the exceptional rank-two complex companion. It attributes classical orbital-integral and orbitope ingredients and scopes novelty to the joined global extremum/RDF result.
-
-The intended archive is **ARR — Archive for Rigorous Research**
-(`https://arr-research.github.io/`), using ARR-SCREEN-1.0 and ARR-VERIFY-1.0.
-The artifact is ready for internal founder-editor ingestion as a new independent
-record. It is not a replacement for the existing companion
-`ARR-2026-61Y0FFA39M8KMBJ5`. No identifier has yet been assigned to this paper,
-and none should be invented before the archive creates the record.
+This is signed Pluecker-coordinate compression, not quantum rate--distortion or Born-probability prediction. The N-letter result is a mutual-information/capacity identity and strong converse, not an exact finite-codebook achievability theorem.

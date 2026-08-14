@@ -1,4 +1,4 @@
-# Verification record for ARR-2026-7H9FAPTBZA897AMJ v1
+# Verification record for ARR-2026-7H9FAPTBZA897AMJ v2
 
 Date: 2026-08-14
 
@@ -6,41 +6,45 @@ Protocol: `ARR-VERIFY-1.0`
 
 ## Source integrity — pass
 
-- The deposited PDF is 372,127 bytes and has SHA-256 `ef6e3fd745ffda790c50fcfa265391fc8ddad9a010e350d3bce2db6c2efa33cf`, matching the supplied values.
-- PDF inspection found 10 A4 pages, no encryption, no forms, and no embedded JavaScript.
-- Visual inspection covered all 10 rendered pages, with pages 2 and 9 additionally inspected at full resolution. The document is complete and legible, including its companion-scope table, vector figure, equations, reproducibility statement, and references.
+- The deposited PDF is 441,916 bytes and has SHA-256 `f8bd2e9ed5f8b166e014dd7b51578adc572dd603b37a82c1fde837b7d89488be`.
+- PDF inspection found 16 A4 pages, one vector figure, no encryption, no forms, and no embedded JavaScript.
+- All 16 rendered pages were visually inspected at 120 dpi. The title page, central coefficient theorem, uniform Gamma-tail lemma, figure/reproducibility section, and bibliography were additionally inspected at full resolution.
+- The LaTeX/Biber build completed with no undefined citations or references, LaTeX/package warnings, or overfull/underfull boxes.
 - `paper.md` and `paper.txt` were extracted mechanically from that exact PDF. They are accessibility and machine-reading renditions, not replacements for the canonical mathematical typography.
-- The supplied source ZIP is 43,243 bytes and has SHA-256 `bfaae0014e12bc60162f364b26c01948ee99241c5ee17a6b4398111dd21f6cde`.
-- The supplied replay manifest has SHA-256 `16be07c5377ecd94b78a9d230341664c832be893394a71c55e2bc0719b89d6f7`.
+- The deposited LaTeX, bibliography, vector figure, replay programs, frozen JSON diagnostics, and replay hash manifest were copied from the frozen author release and independently rehashed during ingestion.
+- Version 2 has a new version identifier and explicitly supersedes version 1 while retaining the same permanent ARR record identifier.
 
 ## Reproducibility — partial
 
-The two declared bounded replay commands completed successfully on the ARR ingestion machine:
+The declared self-contained replay command completed successfully on the ARR ingestion machine:
 
 ```text
-python verify_oriented_plucker_rdf.py --samples 60000
-python reproduce_plucker_frontier.py
+powershell -ExecutionPolicy Bypass -File src/replay/replay_all.ps1
 ```
 
 Observed checks include:
 
-- 18 exact symbolic coefficient cases for dimensions 3 through 20;
-- four deterministic Monte Carlo normalization checks;
-- six covariant-branch diagnostics;
-- byte-for-byte equality of the regenerated `oriented_plucker_rdf_verification.json` with SHA-256 `0189a7b203bdd188c517beb566d6e24e6ac8355e5975ed5d9db208aff6a21fbe`;
-- byte-for-byte equality of the regenerated `plucker_frontier_diagnostics.json` with SHA-256 `f3a46ea8a45362b0ce1040593e716de4b72b8961c6afd4d9c1d306ad3daa4a86`.
+- 6,783 exact rational coefficient-sign checks;
+- 297 exact boundary-tail checks;
+- zero mismatches in the coefficient/binomial-reduction screen;
+- exact tail-ratio and shifted-polynomial identities over the declared finite ranges;
+- scalar coexistence diagnostics through `q=120`;
+- deterministic figure generation; and
+- verification of every artifact listed in `src/replay/REPLAY_ARTIFACTS.sha256`.
 
-This is labelled **partial**, not pass, because both programs explicitly identify themselves as diagnostic replays. The global all-field theorem and rate–distortion claims depend on analytic proofs in the manuscript and are not independently formalized by the programs.
+This is labelled **partial**, not pass, because the programs are bounded diagnostics. The all-dimensional coefficient law, uniqueness, no-reentrance, rate–distortion, and asymptotic claims depend on analytic proofs in the manuscript and are not independently formalized.
 
-## Related record and scope
+## Version and related-record scope
 
-- `ARR-2026-61Y0FFA39M8KMBJ5` is a related complex rank-two companion, not a prior version or the same research object.
-- The present work concerns signed Plucker-coordinate compression, not quantum rate–distortion, Born-probability prediction, or a derivation of Born's rule.
+- Version 2 supersedes `arr:version:26cebded-ef67-454b-9922-75e69fc8b139`, the earlier all-field draft under the same public identifier.
+- `ARR-2026-61Y0FFA39M8KMBJ5` remains a related complex rank-two companion, not a prior version and not the same research object.
+- The present work concerns signed Pluecker-coordinate compression, not quantum rate–distortion, Born-probability prediction, or a derivation of Born's rule.
 
 ## Not assessed / not applicable
 
-- Bibliographic integrity: **not assessed**.
+- Bibliographic integrity under ARR protocol: **not assessed**.
 - Frontier-model screening: **not assessed**.
+- Peer review: **not assessed**.
 - Lean 4: **not applicable**; no Lean formalization or kernel-checkable certificate was supplied.
 
 ## Conflict disclosure
