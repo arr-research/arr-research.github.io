@@ -11,8 +11,8 @@ Spectra, and General-Tester Bounds*.
 - `paper.md` and `paper.txt` are mechanically extracted machine-readable
   renditions. Mathematical typography may be degraded; verify quotations and
   formulae against the PDF.
-- `paper.tex`, `references.bib`, and the two figure files preserve the final
-  manuscript source and artwork.
+- `src/manuscript/` preserves the final LaTeX source, bibliography, and the two
+  figure files without redefining the canonical PDF source of truth.
 - `src/replay/` preserves the exact-arithmetic verifier, figure producer,
   pinned dependencies, supplied manifest, claim ledger, submission sheet, and
   release instructions.
