@@ -120,6 +120,7 @@ class PaperValidationTests(unittest.TestCase):
                 "deposit_recorded_at": "2026-08-13T10:15:20+02:00",
                 "deposit_timestamp_basis": "first_repository_commit",
                 "deposit_commit": "a" * 40,
+                "publication_state": "published",
                 "published_at": "2026-08-13T10:16:05+02:00",
                 "publication_timestamp_basis": "github_release",
                 "release_tag": f"{paper.id}-{paper.version}",
@@ -131,6 +132,17 @@ class PaperValidationTests(unittest.TestCase):
             registry_path.write_text(json.dumps({"schema_version": "1.0", "records": [entry]}), encoding="utf-8")
             errors = validate_record_timestamps([paper], registry_path)
             self.assertTrue(any("explicit UTC offset" in error for error in errors))
+
+            entry = {
+                "id": paper.id,
+                "version": paper.version,
+                "deposit_recorded_at": "2026-08-13T10:15:20+02:00",
+                "deposit_timestamp_basis": "first_repository_commit",
+                "deposit_commit": "a" * 40,
+                "publication_state": "pending",
+            }
+            registry_path.write_text(json.dumps({"schema_version": "1.0", "records": [entry]}), encoding="utf-8")
+            self.assertEqual(validate_record_timestamps([paper], registry_path), [])
 
     def test_missing_machine_readable_paper_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

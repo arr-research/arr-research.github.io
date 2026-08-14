@@ -52,11 +52,19 @@ def exact_time(value: str) -> str:
 
 
 def timestamp_panel(timestamp: dict) -> str:
+    if timestamp["publication_state"] == "pending":
+        publication = "<div><span>Publication</span><strong>Pending release</strong><small>The exact release timestamp will be appended after publication</small></div>"
+    else:
+        publication = f"<div><span>Published</span><strong>{exact_time(timestamp['published_at'])}</strong><small>GitHub release · tag {esc(timestamp['release_tag'])}</small></div>"
     return f"""
   <section class="timestamp-panel" aria-label="Record timestamps">
     <div><span>Deposit recorded</span><strong>{exact_time(timestamp['deposit_recorded_at'])}</strong><small>First repository commit · full Git SHA recorded</small></div>
-    <div><span>Published</span><strong>{exact_time(timestamp['published_at'])}</strong><small>GitHub release · tag {esc(timestamp['release_tag'])}</small></div>
+    {publication}
   </section>"""
+
+
+def chronology_time(timestamp: dict) -> str:
+    return timestamp.get("published_at", timestamp["deposit_recorded_at"])
 
 
 def page_shell(*, title: str, description: str, content: str, base: str, canonical: str = "") -> str:
@@ -136,13 +144,14 @@ def verification_rows(metadata: dict) -> str:
 
 def paper_card(metadata: dict, timestamp: dict, base: str) -> str:
     authors = ", ".join(author["name"] for author in metadata["authors"])
+    chronology_label = "Published" if timestamp["publication_state"] == "published" else "Deposit recorded"
     return f"""
 <article class="paper-card">
   <div class="paper-meta">{status_badge(metadata['status'])}<span>{esc(metadata['id'])} · {esc(metadata['version'])}</span></div>
   <h3><a href="{base}/papers/{quote(metadata['id'])}/">{esc(metadata['title'])}</a></h3>
   <p class="authors">{esc(authors)}</p>
   <p>{esc(metadata['abstract'])}</p>
-  <div class="paper-foot"><span>Published {exact_time(timestamp['published_at'])}</span><span>Protocol {esc(metadata['verification']['protocol'])}</span></div>
+  <div class="paper-foot"><span>{chronology_label} {exact_time(chronology_time(timestamp))}</span><span>Protocol {esc(metadata['verification']['protocol'])}</span></div>
 </article>"""
 
 
@@ -192,7 +201,14 @@ def build_papers_index(papers: list, timestamps: dict, base: str, canonical_url:
     return page_shell(title="Papers — ARR", description="Accepted ARR research papers.", content=content, base=base, canonical=canonical)
 
 
-def build_paper_page(paper, timestamp: dict, base: str, canonical_url: str, repository: str) -> str:
+def build_paper_page(
+    paper,
+    timestamp: dict,
+    incoming_relations: list[dict],
+    base: str,
+    canonical_url: str,
+    repository: str,
+) -> str:
     metadata = paper.metadata
     authors = ", ".join(author["name"] for author in metadata["authors"])
     relative_path = paper.path.relative_to(ROOT).as_posix()
@@ -215,6 +231,16 @@ def build_paper_page(paper, timestamp: dict, base: str, canonical_url: str, repo
         '</span></li>'
         for item in metadata["screening"]["evaluators"]
     )
+    relationships = list(metadata.get("related_records", [])) + incoming_relations
+    related_records = "".join(
+        f'<li><a href="{base}/papers/{quote(item["id"])}/"><strong>{esc(item["id"])}</strong></a><span>{esc(item["relationship"].replace("_", " ").title())} · {esc(item["note"])}</span></li>'
+        for item in relationships
+    )
+    related_section = (
+        f'<section class="related-records"><h2>Related ARR records</h2><ul>{related_records}</ul></section>'
+        if related_records
+        else ""
+    )
     content = f"""
 <article class="paper-page">
   <div class="paper-meta">{status_badge(metadata['status'])}<span>{esc(metadata['id'])} · {esc(metadata['version'])} · {esc(metadata['date'])}</span></div>
@@ -227,6 +253,7 @@ def build_paper_page(paper, timestamp: dict, base: str, canonical_url: str, repo
     <section><h2>Verification record</h2><dl class="checks">{verification_rows(metadata)}</dl><p class="protocol-note">Recorded under <a href="{base}/protocol/">{esc(metadata['verification']['protocol'])}</a>. ARR verification and screening are not peer review.</p></section>
     <aside><h2>Record</h2><dl class="record"><div><dt>Manuscript license</dt><dd>{esc(metadata['licenses']['manuscript'])}</dd></div><div><dt>Metadata license</dt><dd>{esc(metadata['licenses']['metadata'])}</dd></div><div><dt>Canonical source</dt><dd>{esc(metadata['source_of_truth'])}</dd></div><div><dt>Canonical SHA-256</dt><dd><code>{esc(metadata['integrity'].get('canonical_sha256', 'recorded in release manifest'))}</code></dd></div><div><dt>Stable record</dt><dd>{esc(metadata['record_id'])}</dd></div><div><dt>Version identifier</dt><dd>{esc(metadata['version_id'])}</dd></div><div><dt>AI assistance</dt><dd>{'Declared' if metadata['ai_assistance']['used'] else 'Not used'}</dd></div></dl><ul class="keywords">{keywords}</ul></aside>
   </div>
+  {related_section}
   <section class="disclosure"><h2>AI assistance statement</h2><p>{esc(metadata['ai_assistance']['statement'])}</p></section>
   <section class="screening-record"><h2>Frontier-model screening</h2><p>Status: <strong>{esc(metadata['screening']['status'])}</strong>. Any listed reports correspond to this exact version under {esc(metadata['screening']['protocol'])}; no absent assessment is represented as a pass.</p><ul>{evaluators}</ul></section>
   <section class="disclosure"><h2>Editorial disclosure</h2><p>{esc(metadata['editorial']['statement'])}</p></section>
@@ -355,7 +382,17 @@ def main() -> int:
         return 1
 
     timestamps = load_record_timestamps()
-    papers.sort(key=lambda paper: (timestamps[(paper.id, paper.version)]["published_at"], paper.id), reverse=True)
+    papers.sort(key=lambda paper: (chronology_time(timestamps[(paper.id, paper.version)]), paper.id), reverse=True)
+    incoming_relations: dict[str, list[dict]] = defaultdict(list)
+    for source in papers:
+        for relation in source.metadata.get("related_records", []):
+            incoming_relations[relation["id"]].append(
+                {
+                    "id": source.id,
+                    "relationship": "referenced_by",
+                    "note": f"Linked from {source.metadata['title']}.",
+                }
+            )
     if OUTPUT_DIR.exists():
         shutil.rmtree(OUTPUT_DIR)
     (OUTPUT_DIR / "assets").mkdir(parents=True)
@@ -376,7 +413,14 @@ def main() -> int:
     for paper in papers:
         write(
             OUTPUT_DIR / "papers" / paper.id / "index.html",
-            build_paper_page(paper, timestamps[(paper.id, paper.version)], base, canonical_url, args.repository),
+            build_paper_page(
+                paper,
+                timestamps[(paper.id, paper.version)],
+                incoming_relations.get(paper.id, []),
+                base,
+                canonical_url,
+                args.repository,
+            ),
         )
 
     write_catalogue_exports(papers)
