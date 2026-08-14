@@ -1,0 +1,820 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=27mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern,microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools,bm}
+\usepackage{booktabs,array,enumitem}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue!45!black,citecolor=blue!45!black,urlcolor=blue!55!black]{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\usepackage[backend=biber,style=numeric,sorting=nyt,maxbibnames=99]{biblatex}
+\addbibresource{references.bib}
+\AtBeginBibliography{\sloppy}
+\setlength{\emergencystretch}{2em}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\E}{\mathbb E}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Sym}{\operatorname{Sym}}
+\newcommand{\Herm}{\operatorname{Herm}}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\dist}{\operatorname{dist}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\cC}{\mathcal C}
+\newcommand{\cT}{\mathcal T}
+\newcommand{\ip}[2]{\langle #1,#2\rangle}
+\newcommand{\norm}[1]{\lVert #1\rVert}
+
+\hypersetup{
+ pdftitle={Finite-Sample-Valid Tests for Structured Matricial Hausdorff Moments: Joint Gaussian Grams, Strict Half-Time Separation, and Sharp Tangent-Cone Power},
+ pdfauthor={Lluis Eriksson},
+ pdfkeywords={matrix moment problem, Hausdorff moments, Wishart, Loewner confidence set, tangent cone, exact certificate}
+}
+
+\title{\bfseries Finite-Sample-Valid Tests for Structured Matricial Hausdorff Moments\\[3pt]
+\large Joint Gaussian Grams, Strict Half-Time Separation,\\
+and Sharp Tangent-Cone Power}
+\author{Lluis Eriksson}
+\date{August 14, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We give a finite-sample test for whether one joint Gaussian sketch covariance
+is compatible with a positive-semidefinite matrix-valued measure supported on
+a prescribed interval.  The observed vector contains several exponent
+blocks, so its population covariance is one block-Hankel Gram matrix rather
+than a list of unrelated moment estimates.  The classical truncated
+matricial Hausdorff theorem supplies the exact parity-dependent null.
+A single Gaussian singular-value event gives a simultaneous Loewner band for
+the whole covariance; intersecting that band with the structured moment cone
+yields a nonasymptotic level-$\alpha$ semidefinite test without sample
+splitting.
+
+The full joint Gram is strictly more informative than the integer-time
+localizer used in the preceding finite-sample method.  For
+$\nu=(1-w)\delta_0+w\delta_t$, with $0<s<t\le1$ and
+$w<s^2/t^2$, the previous condition $s^2M_0-M_2>0$ holds,
+whereas the half-time condition $sM_1-M_2=wt(s-t)<0$.  We prove that
+the old test has power at most $\alpha$, while the full test has power at
+least $1-\alpha$ above an explicit sample threshold on the same acquisition.
+At a positive-definite covariance on a singular null face, the Wishart
+experiment is locally asymptotically normal.  The constrained likelihood
+ratio converges to squared Gaussian distance from an explicit spectrahedral
+tangent cone, giving its pointwise local power function and a matching
+$n^{-1/2}$ separation boundary.  We give auditable dual semantics and an
+exact rational certificate for the strict fixture.
+
+The moment characterization, Gaussian covariance bounds, and generic
+constrained-likelihood theory are established ingredients.  The contribution
+is their structured joint-sketch integration, the analytic same-data
+separation, and the exact certificate layer.  This work explicitly extends
+ARR record \texttt{ARR-2026-77QM18J2KG9679B7}.
+\end{abstract}
+
+\section{Introduction}
+
+Finite moment tests turn support claims into positive-semidefinite
+constraints, but several shortcuts destroy their meaning.  A single scalar
+localizer does not test the complete truncated moment cone; independently
+estimated moments ignore the cross-covariances in a joint sketch; and a
+negative floating-point eigenvalue is not a certificate.  These distinctions
+are most important on singular faces, precisely where support restrictions
+become informative.
+
+The matrix Hausdorff moment problem on a compact interval is classical.
+Parity-complete block-Hankel characterizations and matrix canonical moments
+are developed in
+\cite{DetteStudden2002,ChoqueRiveroEtAl2006,ChoqueRiveroEtAl2007,FritzscheKirsteinMaedler2019}.
+Moment and localizing matrices are standard in polynomial optimization
+\cite{Lasserre2001,HeltonNie2012}.  We specialize those results without
+discarding the off-diagonal moment information present in the experiment.
+
+The statistical starting point is the previous record \cite{ARRPrior2026}.
+Its integer-time support component retains
+\[
+ [\theta B_{i+j}-B_{i+j+1}]_{i,j=0}^N\succeq0.                    \tag{1.1}
+\]
+Here we put $y=\sqrt{x}$ and retain the half-time covariance blocks already
+acquired.  The whole covariance becomes a block-Hankel matrix of $y$-moments,
+and the correct support localizer uses every polynomial direction on that
+grid.  No extra sample or multiple-testing correction is needed: all
+constraints are optimized inside one simultaneous band.
+
+Our contributions are: an operational joint Gaussian model; a parity-exact
+structured test; an analytic old-versus-full power separation; consistency
+against every fixed covariance alternative; an active-kernel tangent formula
+and Gaussian cone-projection likelihood limit; and exact dual semantics.
+Rejection falsifies compatibility of the visible matrix measure with the
+declared support.  Non-rejection does not prove a physical spectral gap.
+
+\section{Joint Gaussian exponent sketches}
+
+Let $\mathsf T$ be a positive contraction on a real Hilbert space and let
+$\psi_1,\ldots,\psi_c$ be fixed probes.  For $k=0,\ldots,q$, assume
+$\mathsf T^{k/2}\psi_a$ is defined.  Let
+$W=\{W(h):h\in\mathcal H\}$ be an isonormal Gaussian process, so
+$\E W(h)W(k)=\ip{h}{k}$, and set
+\[
+ z_{k,a}=W(\mathsf T^{k/2}\psi_a),\qquad
+ z=(z_{0,1},\ldots,z_{q,c})\in\R^d,\quad d=(q+1)c.                 \tag{2.1}
+\]
+In finite dimension one may realize $W(h)=\ip{g}{h}$ with
+$g\sim N(0,I)$.  If $E_{\mathsf T}$ is the spectral resolution of
+$\mathsf T$, define the real-symmetric matrix measure
+\[
+ \bm\nu_{ab}(B)=\ip{\psi_a}{E_{\mathsf T}(\{\lambda:\sqrt\lambda\in B\})\psi_b}.
+\]
+The vector is jointly Gaussian of known mean zero, and its covariance blocks
+are
+\[
+ \E z_{k,a}z_{\ell,b}
+ =\ip{\psi_a}{\mathsf T^{(k+\ell)/2}\psi_b}
+ =:(M_{k+\ell})_{ab}.                                             \tag{2.2}
+\]
+Consequently
+\[
+ K:=\E zz^\mathsf T=H_q(M):=[M_{i+j}]_{i,j=0}^q.                  \tag{2.3}
+\]
+The spectral theorem gives a positive-semidefinite $c\times c$
+matrix-valued measure $\bm\nu$ on $[0,1]$ with
+\[
+ M_j=\int_0^1 y^j\,d\bm\nu(y).                                    \tag{2.4}
+\]
+The visible support claim is $\supp\bm\nu\subset[0,s]$.
+
+Observe iid copies $z_1,\ldots,z_n$ and form
+\[
+ S=\frac1n\sum_{r=1}^n z_rz_r^\mathsf T.                           \tag{2.5}
+\]
+Sampling noise makes the empirical anti-diagonal blocks unequal.  We do not
+project $S$ onto the Hankel subspace.  Instead, the structured population
+moments remain primal variables and $H_q(M)$ is required to lie in a
+confidence band around $S$.  This preserves coverage independently of any
+projection rule.
+
+\begin{remark}
+The blocks $M_j$ are not independently sampled covariances: they are repeated
+anti-diagonals of one $K$.  The off-diagonal blocks contain the half-time
+moments.  Replacing them by independent moment oracles destroys the same-data
+comparison proved below.
+\end{remark}
+
+\section{The parity-complete matricial cone}
+
+For real-symmetric blocks define
+\[
+\begin{aligned}
+ H_r(M)&=[M_{i+j}]_{i,j=0}^r,&
+ G_r(M)&=[M_{i+j+1}]_{i,j=0}^r,\\
+ L_{r,s}(M)&=[sM_{i+j}-M_{i+j+1}]_{i,j=0}^r,&
+ C_{r,s}(M)&=[sM_{i+j+1}-M_{i+j+2}]_{i,j=0}^r.
+\end{aligned}                                                       \tag{3.1}
+\]
+
+\begin{theorem}[truncated matricial Hausdorff criterion]\label{thm:cone}
+The blocks $M_0,\ldots,M_{2r}$ have a positive matrix-valued representing
+measure on $[0,s]$ if and only if
+\[
+ H_r(M)\succeq0,\qquad C_{r-1,s}(M)\succeq0,                      \tag{3.2}
+\]
+with the second condition absent at $r=0$.  The blocks through $M_{2r+1}$
+have such a measure if and only if
+\[
+ G_r(M)\succeq0,\qquad L_{r,s}(M)\succeq0.                        \tag{3.3}
+\]
+Both statements include rank-deficient sequences.
+\end{theorem}
+
+\begin{proof}
+Necessity follows from vector-polynomial Gram identities.  For
+$p(y)=\sum_{i=0}^ry^iv_i$,
+\[
+ v^*H_r(M)v=\int p(y)^*\,d\bm\nu(y)\,p(y)\ge0,                    \tag{3.4}
+\]
+and the remaining matrices insert $y$, $s-y$, or $y(s-y)$.
+
+For sufficiency, define
+$\mathcal L_M(\sum_jF_jy^j)=\sum_j\tr(F_jM_j)$.  Every real-symmetric matrix
+polynomial nonnegative on $[0,s]$ of degree at most $2r$ factors as
+\[
+ F=A^\mathsf TA+y(s-y)B^\mathsf TB,\qquad \deg A\le r,\quad\deg B\le r-1,          \tag{3.5}\label{eq:evenfactor}
+\]
+and at degree at most $2r+1$ as
+\[
+ F=yA^\mathsf TA+(s-y)B^\mathsf TB,\qquad \deg A,\deg B\le r.                     \tag{3.6}\label{eq:oddfactor}
+\]
+Here $A$ and $B$ may be rectangular matrix polynomials; equivalently, each
+term denotes a finite sum of real-symmetric polynomial squares.
+Thus the displayed LMIs make $\mathcal L_M$ nonnegative on every positive
+matrix polynomial of the declared degree.
+
+The truncated matrix-measure cone is closed.  Bounded $M_0$ bounds total
+scalar mass; positivity bounds the variation of every entry; weak-star
+compactness supplies a matrix-measure limit.  If $M$ lay outside that cone,
+strict separation would produce a positive matrix polynomial with negative
+$\mathcal L_M$ value, contradicting \cref{eq:evenfactor,eq:oddfactor}.
+\end{proof}
+
+The theorem is established literature, not our novelty claim.  Entrywise
+scalar tests are insufficient because independently chosen scalar measures
+need not assemble into one positive matrix measure.
+
+For the acquisition $q=2N+1$, the covariance exposes
+$M_0,\ldots,M_{2q}=M_{4N+2}$.  The exact even null is
+\[
+ K=H_q(M),\qquad C_{q-1,s}(M)\succeq0.                             \tag{3.7}
+\]
+The Loewner band already enforces $K\succeq0$; the new ingredients are the
+anti-diagonal identities and full half-time localizer.
+
+\section{A structured Loewner confidence test}
+
+Let $G$ be a $d\times n$ standard real Gaussian matrix.  On the range of
+$K$, the sample covariance has the congruence representation
+\[
+ S=K^{1/2}\left(\frac1nGG^\mathsf T\right)K^{1/2}.                 \tag{4.1}
+\]
+For $0<\alpha<1$, put
+\[
+ \eta=\frac{\sqrt d+\sqrt{2\log(2/\alpha)}}{\sqrt n},              \tag{4.2}
+\]
+assume $\eta<1$, and define
+\[
+ a=(1+\eta)^{-2},\qquad b=(1-\eta)^{-2}.                           \tag{4.3}
+\]
+The Gaussian singular-value inequality
+\cite{DavidsonSzarek2001,KoltchinskiiLounici2017} yields
+\[
+ \Pr_K\{aS\preceq K\preceq bS\}\ge1-\alpha.                       \tag{4.4}\label{eq:coverage}
+\]
+This is a nonasymptotic valid Gaussian Loewner band.  It is generally
+conservative, so we do not call it an exact-coverage Wishart interval.
+Exact Wishart eigenvalue quantiles may replace $(a,b)$ without changing the
+primal geometry.
+
+Given $S$, solve
+\[
+\begin{array}{ll}
+\text{find}&M_0,\ldots,M_{2q}\in\Sym_c\\[1mm]
+\text{such that}&aS\preceq H_q(M)\preceq bS,\\
+&C_{q-1,s}(M)\succeq0.
+\end{array}                                                        \tag{4.5}
+\]
+Reject exactly when this structured feasibility problem is infeasible.
+Using moment blocks as variables enforces all anti-diagonal equalities by
+construction and makes the adjoint map auditable.
+
+\begin{theorem}[finite-sample validity]\label{thm:level}
+Under the joint Gaussian model,
+\[
+ \sup_{\supp\bm\nu\subset[0,s]}
+ \Pr_{\bm\nu}\{\text{reject}\}\le\alpha.                           \tag{4.6}
+\]
+The optimization may inspect every parity-appropriate constraint and matrix
+witness formed from the acquired truncation $M_0,\ldots,M_{2q}$ adaptively.
+No further multiplicity correction is required.
+\end{theorem}
+
+\begin{proof}
+On the single event \cref{eq:coverage}, the true blocks satisfy the band with
+$H_q(M)=K$.  Under the null, \cref{thm:cone} gives
+$C_{q-1,s}(M)\succeq0$.  The true sequence is feasible, so rejection is
+contained in the complement of the coverage event.
+\end{proof}
+
+\begin{remark}[singular covariance]
+The level argument does not invert $K$ and is valid on singular covariance
+faces.  Implementations should compress to the exact common range implied by
+the band or use facial reduction.  Adding a numerical ridge changes the null.
+\end{remark}
+
+\section{Strict same-data power separation}\label{sec:strict}
+
+Consider the scalar measure
+\[
+ \nu=(1-w)\delta_0+w\delta_t,\qquad
+ 0<s<t\le1,\quad0<w<s^2/t^2.                                     \tag{5.1}\label{eq:twoatom}
+\]
+Its first moments and joint $N=0$ covariance are
+\[
+ M_0=1,\quad M_1=wt,\quad M_2=wt^2,\qquad
+ K=\begin{pmatrix}1&wt\\wt&wt^2\end{pmatrix}\succ0.               \tag{5.2}
+\]
+The preceding integer-time method uses $x=y^2$, $\theta=s^2$, and retains
+\[
+ \theta M_0-M_2=s^2-wt^2>0.                                      \tag{5.3}\label{eq:oldmargin}
+\]
+Its finite-window population null is therefore true despite $t>s$.  The
+complete half-time null contains instead
+\[
+ C_{0,s}=sM_1-M_2=wt(s-t)<0.                                     \tag{5.4}
+\]
+Both tests use the same $K$; the predecessor discards its off-diagonal
+$M_1$.
+
+For a self-contained comparison, define the preceding $N=0$ test on the
+same observed $S$ as follows: accept whenever there is a symmetric
+$Q=\begin{psmallmatrix}B_0&u\\u&B_1\end{psmallmatrix}$ satisfying
+$aS\preceq Q\preceq bS$ and $s^2B_0-B_1\ge0$.  Thus it retains the two
+integer-time diagonal blocks and leaves the half-time cross block $u$
+unconstrained.  On the event \cref{eq:coverage}, the true $Q=K$ is feasible
+for this old test whenever \cref{eq:oldmargin} holds.
+
+\begin{theorem}[strict old-versus-full separation]\label{thm:strict}
+For \cref{eq:twoatom}, the preceding $N=0$ integer-time test has rejection
+probability at most $\alpha$ whenever its level theorem applies.  Define
+\[
+ \gamma=wt(t-s),\qquad
+ A=\begin{pmatrix}0&s/2\\s/2&-1\end{pmatrix},                     \tag{5.5}
+\]
+\[
+ W=\tr|K^{1/2}AK^{1/2}|
+ =\sqrt{\gamma^2+s^2w(1-w)t^2},\qquad r=\gamma/W.                 \tag{5.6}
+\]
+The full structured test has rejection probability at least $1-\alpha$
+whenever
+\[
+ \boxed{
+ n>
+ \bigl(\sqrt2+\sqrt{2\log(2/\alpha)}\bigr)^2
+ \frac{(\sqrt{1+r}+1)^4}{r^2}.}                                   \tag{5.7}\label{eq:threshold}
+\]
+The scalar construction embeds algebraically in every channel dimension by
+tensoring with a known rank-one channel projector.  For the uncompressed
+$c$-channel test, replace $\sqrt2$ in \cref{eq:threshold} by $\sqrt{2c}$.
+If the known common range is first compressed exactly to the rank-two
+covariance range, \cref{eq:threshold} remains valid unchanged.
+\end{theorem}
+
+\begin{proof}
+The old test's population null holds by \cref{eq:oldmargin}; its coverage
+argument bounds rejection by $\alpha$.
+
+For the full test,
+\[
+ \ip{A}{K}=sM_1-M_2=-\gamma.                                      \tag{5.8}
+\]
+Suppose the Gaussian event \cref{eq:coverage} holds and a covariance $Q$
+inside the test band is full-null feasible.  Put
+$\rho=(1+\eta)/(1-\eta)$.  Transitivity of Loewner order gives
+\[
+ \rho^{-2}K\preceq Q\preceq\rho^2K.                              \tag{5.9}\label{eq:relativeband}
+\]
+Let $B=K^{1/2}AK^{1/2}$, $p=\tr B_+$, and $m=\tr B_-$.  Then
+$p+m=W$ and $m-p=\gamma$.  The support function of
+\cref{eq:relativeband} gives
+\[
+ \ip{A}{Q-K}
+ \le(\rho^2-1)p+(1-\rho^{-2})m.                                   \tag{5.10}
+\]
+Substituting $p=(W-\gamma)/2$ and $m=(W+\gamma)/2$ shows that the right
+side is less than $\gamma$ whenever
+\[
+ \eta<\frac{r}{(\sqrt{1+r}+1)^2}.                                 \tag{5.11}\label{eq:etapower}
+\]
+Hence $\ip{A}{Q}<0$.  But for a structured
+$Q=H_1(\widetilde M)$,
+$\ip{A}{Q}=s\widetilde M_1-\widetilde M_2$, which must be
+nonnegative under the full null.  Therefore the primal is infeasible on the
+coverage event.  Solving \cref{eq:etapower} for $n$ with $d=2$ gives
+\cref{eq:threshold}.
+\end{proof}
+
+\subsection{Exact rational fixture}
+
+Take
+\[
+ s=\frac12,\qquad t=\frac34,\qquad w=\frac18.                     \tag{5.12}
+\]
+Then
+\[
+ K=\begin{pmatrix}1&3/32\\3/32&9/128\end{pmatrix},\qquad
+ \det K=\frac{63}{1024}>0,                                        \tag{5.13}
+\]
+\[
+ s^2M_0-M_2=\frac{23}{128}>0,\qquad
+ sM_1-M_2=-\frac3{128}<0,                                        \tag{5.14}
+\]
+and
+\[
+ \gamma=\frac3{128},\qquad W^2=\frac{261}{16384},\qquad
+ r=\frac3{\sqrt{261}}.                                            \tag{5.15}
+\]
+These opposing margins and $W^2$ are verified over exact rationals.
+
+\subsection{Full exponent Grams}
+
+For this paragraph define generalized moments
+$M_\beta=\int_0^1y^\beta\,d\bm\nu(y)$ for every real $\beta\ge0$.
+For any exponents $a_0,\ldots,a_R\ge0$, the support null implies
+\[
+ \mathcal K_s^A=
+ [sM_{a_i+a_j+1}-M_{a_i+a_j+2}]_{i,j=0}^R\succeq0,               \tag{5.16}
+\]
+because this is the Gram matrix of $y^{a_i}$ in
+$L^2(y(s-y)d\nu)$.  Half-integer exponents couple integer and half-time
+data.  Separate-grid constraints are principal submatrices and cannot
+dominate the full joint Gram.  Equation (5.16) is operationally testable only
+when the corresponding exponent blocks have also been acquired; it is not an
+additional constraint available from the integer grid $0,\ldots,q$ alone.
+
+\section{Global separation of fixed alternatives}
+
+Let $\cC_{q,c,s}$ be the closed cone of structured covariances $H_q(M)$
+compatible with a positive matrix measure on $[0,s]$.  For fixed
+$K\notin\cC_{q,c,s}$, set
+\[
+ \delta(K)=\dist_F(K,\cC_{q,c,s})>0.                              \tag{6.1}
+\]
+
+\begin{theorem}[fixed-alternative consistency]\label{thm:fixed}
+For every fixed $K\notin\cC_{q,c,s}$, the rejection probability tends to one.
+Uniformity holds on sets satisfying $\norm K_{\rm op}\le B$ and
+$\dist_F(K,\cC_{q,c,s})\ge\delta_0>0$.  If
+\[
+ (1-u)^2K\preceq S\preceq(1+u)^2K,\qquad u<1,                    \tag{6.2}
+\]
+then every $Q$ in the test band lies in a Frobenius ball about $K$ of radius
+\[
+ \sqrt d\,\Gamma(u,\eta)\norm{K}_{\rm op},                        \tag{6.3}
+\]
+where
+\[
+ \Gamma(u,\eta)=\max\left\{
+ \frac{(1+u)^2}{(1-\eta)^2}-1,\,
+ 1-\frac{(1-u)^2}{(1+\eta)^2}\right\}.                            \tag{6.4}
+\]
+If this radius is less than $\delta(K)$, rejection is forced.
+\end{theorem}
+
+\begin{proof}
+Combining the event with $aS\preceq Q\preceq bS$ gives scalar lower and
+upper Loewner multiples of $K$.  Hence
+$\norm{Q-K}_F\le\sqrt d\,\Gamma\norm{K}_{\rm op}$.  If that ball misses the
+closed null cone, no structured sequence is feasible.  Choose $t_n\to\infty$
+with $t_n/\sqrt n\to0$ and put $u_n=(\sqrt d+t_n)/\sqrt n$.  The corresponding
+Gaussian singular-value event has probability at least $1-2e^{-t_n^2/2}$,
+while $u_n,\eta_n\to0$.  Hence the displayed radius is eventually below the
+fixed positive distance; the same argument is uniform under the two stated
+bounds.
+\end{proof}
+
+\section{Tangent geometry}
+
+Fix $K^0=H_q(M^0)\succ0$ in the null; its localizer may be singular.  Put
+\[
+\mathcal V=(\Sym_c)^{2q+1},\quad
+\mathsf H(M)=H_q(M),\quad
+\mathsf C(M)=C_{q-1,s}(M).                                       \tag{7.1}
+\]
+The map $\mathsf H$ is injective because every moment occurs on an
+anti-diagonal.  Let $U_0$ span $\ker\mathsf C(M^0)$ and define
+\[
+\cT_0=\{\mathsf H(D):D\in\mathcal V,\,
+U_0^*\mathsf C(D)U_0\succeq0\}.                                  \tag{7.2}\label{eq:tangent}
+\]
+
+\begin{theorem}[exact tangent preimage]\label{thm:tangent}
+The Bouligand tangent cone of $\cC_{q,c,s}$ at $K^0$ equals $\cT_0$.
+\end{theorem}
+
+\begin{proof}
+For $C^0\succeq0$,
+\[
+T_{\mathbb S_+}(C^0)=\{E:U_0^*EU_0\succeq0\}.                    \tag{7.3}
+\]
+Necessity follows by differentiating a feasible sequence and compressing to
+$\ker C^0$.  Conversely, choose an interior moment sequence
+$M^{\rm int}$ generated by a positive density on $(0,s)$ times $I_c$.
+Both $\mathsf H(M^{\rm int})$ and $\mathsf C(M^{\rm int})$ are positive
+definite.  Therefore $D^{\rm sl}=M^{\rm int}-M^0$ satisfies
+\[
+U_0^*\mathsf C(D^{\rm sl})U_0\succ0.                              \tag{7.4}
+\]
+Robinson's constraint qualification gives
+\[
+T_{\{M:\mathsf C(M)\succeq0\}}(M^0)
+=\{D:U_0^*\mathsf C(D)U_0\succeq0\}.                              \tag{7.5}
+\]
+The $H_q$ positivity constraint is inactive at $K^0\succ0$.  In fact
+$\mathsf C(M^0)+\mathsf C(D^{\rm sl})=\mathsf C(M^{\rm int})\succ0$, so the
+affine semidefinite constraint satisfies Robinson's condition.
+Applying the injective map $\mathsf H$ proves the claim.
+\end{proof}
+
+If $K^0$ is singular, its PSD constraint is active and the experiment lives
+on a smaller range.  One must add its kernel compression and exact facial
+reduction.  The regular likelihood theorem below is restricted to
+$K^0\succ0$.
+
+\section{Wishart LAN and local asymptotic power}
+
+For real zero-mean Gaussian observations, the Fisher metric is
+\[
+\ip{H}{J}_{I_0}
+=\frac12\tr[(K^0)^{-1}H(K^0)^{-1}J].                              \tag{8.1}
+\]
+Let $I_0^{1/2}$ be a whitening isometry and put
+$\mathcal K_0=I_0^{1/2}\cT_0$.
+
+\begin{theorem}[LAN and cone-projection likelihood]\label{thm:lan}
+Under
+\[
+K_n=K^0+\frac{H}{\sqrt n}+o(n^{-1/2}),                             \tag{8.2}
+\]
+\[
+\log\frac{dP_{K_n}^{\otimes n}}{dP_{K^0}^{\otimes n}}
+=\ip{Z_n}{H}_{I_0}-\frac12\norm{H}_{I_0}^2+o_{P_{K^0}}(1),         \tag{8.3}
+\]
+where $Z_n$ is the Fisher--Riesz representation of the central score: for
+every fixed $J$, $\ip{Z_n}{J}_{I_0}$ is the normalized score in direction
+$J$.  Thus $I_0^{1/2}Z_n\Rightarrow G$, standard Gaussian in $\Sym_d$.
+Twice the log-likelihood ratio between the unrestricted covariance model and
+the structured null obeys
+\[
+\boxed{\Lambda_n\Rightarrow
+\dist^2(G+I_0^{1/2}H,\mathcal K_0).}                               \tag{8.4}\label{eq:conelimit}
+\]
+\end{theorem}
+
+\begin{proof}
+Up to constants,
+\[
+\ell_n(K)=-\frac n2\{\log\det K+\tr(K^{-1}S)\}.                    \tag{8.5}
+\]
+Insert $K=K^0+H/\sqrt n$ and use
+\[
+\begin{aligned}
+\log\det(K^0+E)&=\log\det K^0+\tr((K^0)^{-1}E)
+-\tfrac12\tr[((K^0)^{-1}E)^2]+o(\norm E^2),\\
+(K^0+E)^{-1}&=(K^0)^{-1}-(K^0)^{-1}E(K^0)^{-1}\\
+&\quad +(K^0)^{-1}E(K^0)^{-1}E(K^0)^{-1}+o(\norm E^2).
+\end{aligned}                                                       \tag{8.6}
+\]
+The covariance CLT supplies the Gaussian score and Fisher quadratic term.
+The local unrestricted likelihood is
+$h\mapsto\ip{G+I_0^{1/2}H}{h}-\norm h^2/2$.  By
+\cref{thm:tangent} and linearized Slater, local null sets converge to
+$\mathcal K_0$.  Completing the square after unrestricted and constrained
+maximization gives \cref{eq:conelimit}.
+\end{proof}
+
+For proper complex Gaussian observations the factor $1/2$ in the Fisher
+metric is absent, the covariance is complex Wishart, and $G$ is standard in
+the real Hilbert space $\Herm_d$; all tangent and polar cones are then taken
+in $\Herm_d$.  This is a separate extension, not a change of one scalar factor
+in the real experiment.
+
+Let $c_\alpha(\mathcal K_0)$ be an upper $\alpha$ quantile of
+$\dist^2(G,\mathcal K_0)$.
+
+\begin{corollary}[local size and power]\label{cor:local}
+The cone-likelihood test has asymptotic size at most $\alpha$ for every local
+null sequence.  Its local power against $H$ is
+\[
+\pi_{K^0}(H)=
+\Pr\{\dist^2(G+I_0^{1/2}H,\mathcal K_0)>c_\alpha(\mathcal K_0)\}.  \tag{8.7}\label{eq:localpower}
+\]
+\end{corollary}
+
+\begin{proof}
+Every local null limit $h$ belongs to $\mathcal K_0$.  Since the cone is
+closed under addition,
+\[
+\dist(G+h,\mathcal K_0)\le\dist(G,\mathcal K_0)                   \tag{8.8}
+\]
+pointwise.  The vertex is least favorable.  Randomization at a quantile atom
+gives exact asymptotic size; otherwise the test is conservative.
+\end{proof}
+
+At $H=0$, Moreau decomposition gives
+$\norm{\Pi_{\mathcal K_0^\circ}G}^2$.  For general spectrahedral preimages,
+we retain the description as a Gaussian cone-projection law.
+
+\begin{theorem}[matching $n^{-1/2}$ boundary]\label{thm:minimax}
+At each regular boundary point, for a fixed outward direction
+$V\notin\cT_0$ and a sequence $K_n=K^0+\varepsilon_nV\succ0$ with
+$\varepsilon_n=o(n^{-1/2})$, no level-$\alpha$ test has power above
+$\alpha+o(1)$.  Displacement
+$H/\sqrt n$ has the nontrivial power in \cref{cor:local}; and alternatives
+that remain in a compact positive-definite neighborhood and satisfy
+$\sqrt n\,\dist_{I_0}(K_n,\cC_{q,c,s})\to\infty$ are detected by the
+structured Loewner-feasibility test with probability tending to one.
+\end{theorem}
+
+\begin{proof}
+For an outward $V\notin\cT_0$,
+\[
+D(P_{K^0+\varepsilon V}^{\otimes n}\|P_{K^0}^{\otimes n})
+=\frac{n\varepsilon^2}{2}\norm{V}_{I_0}^2+o(n\varepsilon^2).       \tag{8.9}
+\]
+Pinsker proves the lower bound, \cref{thm:lan} gives the local limit, and
+\cref{thm:fixed} plus covariance concentration gives the upper bound.
+\end{proof}
+
+If $0<\alpha<1/2$, then at a full-dimensional smooth halfspace face
+$\mathcal K_0=\{h:\ip{a}{h}\ge0\}$, $\norm a=1$, with outward
+$\rho=-\ip{a}{I_0^{1/2}H}>0$, the exact local power is
+\[
+\boxed{\pi(\rho)=1-\Phi(z_{1-\alpha}-\rho).}                       \tag{8.10}
+\]
+This is the Neyman--Pearson envelope in the limiting one-dimensional normal
+experiment.  At the atom, including $\alpha\ge1/2$, the critical rule must be
+randomized.  If the Hankel image is a proper subspace of $\Sym_d$, the formula
+applies conditionally inside that structured submodel; the unrestricted test
+also contains the orthogonal equality-constraint component.
+
+\section{Auditable semidefinite dual certificates}\label{sec:dual}
+
+The primal test is useful only if rejection can be checked independently of
+the floating-point solver that found it.  We therefore spell out its ordinary
+semidefinite Farkas dual.  For block matrices $Y=[Y_{ij}]_{i,j=0}^q$ and
+$Z=[Z_{ij}]_{i,j=0}^{q-1}$ define
+\[
+ \begin{aligned}
+ [\mathsf H_q^*Y]_k&=\sum_{i+j=k}Y_{ij},\\
+ [\mathsf C_{q-1,s}^*Z]_k
+ &=s\sum_{i+j+1=k}Z_{ij}-\sum_{i+j+2=k}Z_{ij},
+ \end{aligned}                                                     \tag{9.1}
+\]
+where empty sums are zero and symmetric symmetrization is understood.  These
+are the exact adjoints because
+$\ip{Y}{H_q(M)}=\sum_k\ip{[\mathsf H_q^*Y]_k}{M_k}$, and similarly
+for $\mathsf C$.
+
+\begin{proposition}[checkable rejection certificate]\label{prop:dual}
+If there are positive semidefinite block matrices $Y_A,Y_B,Y_C$ satisfying
+\[
+ \mathsf H_q^*(Y_A-Y_B)+\mathsf C_{q-1,s}^*Y_C=0                 \tag{9.2}\label{eq:dualstationarity}
+\]
+and
+\[
+ -a\ip{Y_A}{S}+b\ip{Y_B}{S}<0,                                  \tag{9.3}\label{eq:dualobjective}
+\]
+then the confidence feasibility problem is infeasible.  Conversely, every
+infeasible instance of this bounded structured-band problem admits a
+certificate of this form.
+\end{proposition}
+
+\begin{proof}
+For any primal-feasible $M$, positivity gives
+\[
+ 0\le \ip{Y_A}{H_q(M)-aS}+\ip{Y_B}{bS-H_q(M)}
+       +\ip{Y_C}{C_{q-1,s}(M)}.                                  \tag{9.4}
+\]
+Stationarity cancels every moment block, leaving exactly the strictly
+negative number in \cref{eq:dualobjective}, a contradiction.  For the
+converse, suppose approximate feasibility had residual tending to zero.  The
+sandwich constraints bound $\mathsf H_q(M)$; injectivity of $\mathsf H_q$ then
+bounds the moment variables.  A convergent subsequence would be exactly
+feasible because the PSD cones are closed, a contradiction.  Thus the affine
+image and product PSD cone have positive distance, and strong separation
+yields the displayed ordinary multipliers.  This compact sandwich argument
+is special to the present bounded band; generic singular semidefinite systems
+may require facial reduction or Ramana's extended dual \cite{Ramana1997}.
+\end{proof}
+
+\subsection{An exact rational dual certificate}
+
+Collapse the band to $a=b=1$ and set $S=K$ from \cref{eq:twoatom} with the
+rational values in \cref{sec:strict}.  Let
+\[
+ D=\begin{pmatrix}0&-1/4\\-1/4&1\end{pmatrix},\quad
+ Y_A=D+I=\begin{pmatrix}1&-1/4\\-1/4&2\end{pmatrix},\quad
+ Y_B=I,\quad Y_C=1.                                               \tag{9.5}
+\]
+Both matrix multipliers are positive definite.  Since $s=1/2$,
+the three moment coefficients of
+$\mathsf H_1^*D+\mathsf C_{0,s}^*1$ are
+\[
+ D_{00}=0,\qquad 2D_{01}+s=0,\qquad D_{11}-1=0.                  \tag{9.6}
+\]
+Thus stationarity holds over the rationals, while
+\[
+ -\ip{Y_A}{K}+\ip{Y_B}{K}=-\ip D K=-\frac3{128}<0.              \tag{9.7}
+\]
+This is a solver-independent certificate that the full constraint rejects
+the population covariance.  Its entries, principal minors, stationarity
+residuals, and objective are replayed exactly by the companion script.
+
+\section{Algorithm and reproducible replay}\label{sec:algorithm}
+
+For exponent depth $q$, channel size $c$, support cutoff $s$, and level
+$\alpha$, the operational procedure is:
+\begin{enumerate}[label=\arabic*.]
+ \item Acquire $n$ independent joint sketch vectors
+ $z_j=(z_{j,0},\ldots,z_{j,q})$ and form
+ $S=n^{-1}\sum_jz_jz_j^\mathsf T$.
+ \item Set $d=(q+1)c$, compute $\eta,a,b$ from
+ \cref{eq:coverage}, and stop as sample-size unresolved if $\eta\ge1$.
+ \item Introduce real-symmetric variables $M_0,\ldots,M_{2q}$ and solve
+ the structured Loewner feasibility problem in Section~4.  Reject if and
+ only if infeasible.
+ \item On rejection, request PSD multipliers from the solver, rationalize or
+ outward-round them, and verify PSD, stationarity, and a strictly negative
+ objective independently.  If a solver fails to recover the guaranteed
+ ordinary certificate numerically, use facial reduction to expose and
+ preserve the relevant face before reconstructing it.
+\end{enumerate}
+
+The data path uses a single sample covariance, hence cross-exponent blocks
+and their sampling correlations are never discarded.  Complexity is that of
+an SDP with $2q+1$ real-symmetric $c\times c$ variables, two PSD constraints of
+order $(q+1)c$, and one of order $qc$.  Anti-diagonal consistency is exact
+because $H_q(M)$ is assembled from shared variables, rather than imposed by
+noisy equality tests.
+
+The lightweight replay file
+\texttt{verify\_matricial\_hausdorff.py} uses exact rational arithmetic for
+the algebraic fixtures and floating-point normal quantiles only for the
+reported Gaussian illustration.  It checks
+the even and odd block criteria on noncommuting positive $2\times2$ atomic
+weights, vector-polynomial identities, Loewner inversion, an intentionally
+corrupted moment witness, the strict two-atom fixture, the dual certificate,
+and a regular smooth-face tangent fixture.  It does not simulate coverage, optimize
+over scientific models, or certify novelty.  A successful run therefore
+certifies the paper's algebraic fixtures, not its empirical scope.
+
+\section{Independent-moment observations as a secondary variant}
+
+Some experiments produce independent covariance estimates
+$\widehat M_k$ rather than one joint exponent vector.  If simultaneous bands
+\[
+ \underline M_k\preceq M_k\preceq\overline M_k,\qquad 0\le k\le m, \tag{11.1}
+\]
+have joint coverage at least $1-\alpha$, intersecting those bands with the
+parity-appropriate LMIs in \cref{thm:cone} gives the same finite-sample level
+argument.  Bonferroni, a joint bootstrap with proved coverage, or exact
+Wishart bounds may construct the simultaneous event.  This variant is useful
+but strictly less informative for the present separation question: estimating
+blocks independently obscures the joint covariance geometry and may fail to
+retain the half-time cross blocks that make \cref{thm:strict} possible.
+
+The joint model is therefore the primary theorem, not an example of the
+independent oracle.  Conversely, joint acquisition does not manufacture
+unobserved moments: with exponents $0,\ldots,q$ it exposes exactly sums
+$0,\ldots,2q$.  Claims about a larger truncated cone require additional
+exponents or assumptions.
+
+\section{Relation to prior work and scope boundaries}\label{sec:scope}
+
+The matricial Hausdorff equivalences themselves are classical
+\cite{DetteStudden2002,ChoqueRiveroEtAl2006,ChoqueRiveroEtAl2007,
+FritzscheKirsteinMaedler2019}; scalar moment and localizing matrices belong to
+the established truncated-moment framework
+\cite{Lasserre2001,HeltonNie2012}.  Gaussian covariance concentration,
+constrained likelihood limits, and exact rational SDP certification likewise
+have substantial precedents
+\cite{DavidsonSzarek2001,KoltchinskiiLounici2017,Chernoff1954,Shapiro1985,Geyer1994,
+PeyrlParrilo2008}.  We do not rename any of those components as new.
+
+This paper explicitly extends the finite-sample spectral support framework
+archived as \texttt{ARR-2026-77QM18J2KG9679B7}
+\cite{ARRPrior2026}.  Its increment is the integrated theorem chain:
+one operational exponent sketch produces the entire block-Hankel covariance;
+the parity-complete matrix cone uses every cross block; a closed rational
+family proves strict same-data power over the preceding integer-time
+localizer; a single Loewner event gives a multiplicity-free conic test; and
+the tangent preimage identifies its sharp $n^{-1/2}$ boundary law.  The
+strictness claim is relative to the precisely stated predecessor constraint,
+not to all conceivable support tests.
+
+Several limitations are structural.
+\begin{itemize}
+ \item Gaussian sketches give the stated finite-sample band.  Sub-Gaussian or
+ dependent data need a separately proved covariance region.
+ \item The cutoff hypothesis concerns existence of a positive matrix measure
+ on $[0,s]$.  It does not identify a unique measure, dynamical generator, or
+ physical microscopic mechanism.
+ \item Finite truncation cannot detect every alternative distribution.  The
+ consistency theorem is against covariances outside the exposed truncated
+ cone, not against alternatives sharing all observed blocks with a null law.
+ \item The LAN theorem assumes a positive-definite covariance and the stated
+ linearized Slater condition.  More singular intersections can have different
+ rates and require stratified facial analysis.
+ \item Ordinary floating-point infeasibility is not a proof.  A preserved dual
+ certificate, preferably rational or interval verified, is required for an
+ auditable individual rejection.
+\end{itemize}
+
+\section{Conclusion}
+
+A joint half-time exponent sketch turns a matrix-valued support question into
+a single structured Wishart problem.  The full block-Hankel covariance and
+its Hausdorff localizer yield finite-sample validity, strict same-data power,
+global fixed-alternative consistency, and an exact Gaussian tangent-cone
+limit.  The rational fixture isolates why the gain occurs: the discarded
+cross moment is negative in the support localizer even while the older
+integer-grid condition is strictly feasible.  The result is thus stronger
+than an additional moment inequality: it gives an operational acquisition,
+a sharp boundary theory, and independently checkable rejection witnesses.
+
+\printbibliography
+\end{document}
