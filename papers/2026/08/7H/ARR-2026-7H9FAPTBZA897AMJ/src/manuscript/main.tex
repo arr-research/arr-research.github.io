@@ -1,0 +1,526 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2.45cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,array}
+\usepackage{graphicx}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\usepackage[backend=biber,style=numeric-comp,sorting=none,maxbibnames=8]{biblatex}
+\addbibresource{references.bib}
+
+\hypersetup{
+ colorlinks=true,
+ linkcolor=blue!45!black,
+ citecolor=blue!45!black,
+ urlcolor=blue!55!black,
+ pdftitle={All-Field Simple-Bivector Rigidity and Exact Shannon Rate-Distortion for Haar Oriented Two-Planes},
+ pdfauthor={Lluis Eriksson},
+ pdfsubject={Information theory, convex geometry, and orbital integrals},
+ pdfkeywords={oriented Grassmannian, Plucker embedding, simple bivector, rate-distortion, orbital integral}
+}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\G}{\mathcal G}
+\newcommand{\K}{\mathcal K}
+\newcommand{\RDF}{\mathcal R}
+\newcommand{\E}{\mathbb E}
+\newcommand{\R}{\mathbb R}
+\newcommand{\ip}[2]{\left\langle #1,#2\right\rangle}
+\DeclareMathOperator{\Gr}{Gr}
+\DeclareMathOperator{\conv}{conv}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\cum}{cum}
+
+\title{\textbf{All-Field Simple-Bivector Rigidity and Exact Shannon Rate--Distortion for Haar Oriented Two-Planes}\\[2mm]
+\large A dimension-uniform Pl\"ucker theorem with discontinuous onset for $n\ge6$}
+\author{Lluis Eriksson\\[-1mm]
+\small Independent Researcher, Sweden\\
+\small \href{mailto:lluiseriksson@gmail.com}{lluiseriksson@gmail.com}}
+\date{August 14, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Let $W=x\wedge y$ be the unit simple bivector of a Haar oriented two-plane in $\R^n$.  We solve the fixed-norm external-field problem for its linear exponential partition in every dimension.  If $B=\sum_j p_j e_{2j-1}\wedge e_{2j}$, then
+\[
+ \E e^{s\ip BW}=
+ \sum_{k\ge0}\frac{(s^2/4)^k h_k(p_1^2,\ldots,p_m^2)}{((n-1)/2)_k(n/2)_k}.
+\]
+Coefficientwise positivity and $h_k(z)\le(\sum z_j)^k$ imply that, at every nonzero field and fixed exterior norm, the unique maximizing orthogonal orbit consists of simple bivectors.  The optimal overlap has the elementary density
+\[
+ f_n(t)=\frac{n-2}{2}(1-|t|)^{n-3},\qquad -1\le t\le1.
+\]
+We then determine the unrestricted classical Shannon rate--distortion function of the Haar Pl\"ucker source under squared ambient loss.  The decoder may use an arbitrary standard-Borel memory and is not restricted to the Grassmann orbit: conditional least squares places its reports in the full Grassmann orbitope, the unit mass-norm ball.  The all-field theorem reduces the exact converse and covariant attainment to one scalar radius.  For $n=3,4,5$ we prove continuous activation, a unique positive branch, and no radial reentrance.  For every $n\ge6$, a positive fourth cumulant instead forces a discontinuous directional-information onset and an adjacent time-sharing face.  We also obtain the exact high-fidelity constant.  The result concerns signed Pl\"ucker-coordinate compression, not quantum rate--distortion or Born-probability prediction.
+\end{abstract}
+
+\section{Introduction}
+
+The oriented Grassmannian $\Gr_2^+(\R^n)$ embeds into the unit sphere of $\Lambda^2\R^n$ by the classical Pl\"ucker map: an oriented orthonormal frame $(x,y)$ is sent to the unit simple bivector $W=x\wedge y$.  This representation retains orientation and makes linear queries of the plane ordinary Euclidean coordinates.  It also exposes a nontrivial distinction between the source orbit and its convex hull.  Posterior means are generally mixed bivectors rather than planes.
+
+Grassmann quantization and chordal distortion have a substantial literature, including finite-codebook, high-rate, and recent covering bounds \cite{DaiLiuRider2008,RieglerKolianderBolcskei2023,RiasatMahdavifar2026}.  Matrix Langevin and Bingham families on Stiefel and projector Grassmann manifolds are likewise classical \cite{Downs1972,KhatriMardia1977,Chikuse2003}.  Those problems do not settle the one considered here.  Our sufficient statistic is linear in the signed Pl\"ucker bivector, and the Shannon decoder is allowed to range over the full convex hull rather than the source orbit.  An exact RDF consequently requires a global external-bivector optimization, not just evaluation of a normalizer along a chosen parameter.
+
+The relevant convex body is the Grassmann orbitope, studied in the general theory of orbitopes and calibrated geometry \cite{SanyalSottileSturmfels2011,BarvinokBlekherman2005}.  General compact-symmetry and Gibbs-duality methods are established \cite{Harremoes2009,Berger1971,Csiszar1974}, and the uniform sphere has an exact modern RDF treatment \cite{DytsoCardone2024}.  The new step here is the dimension-uniform fixed-Euclidean-norm envelope of a singular orthogonal orbital integral, including its equality case, and the unrestricted all-distortion RDF that this envelope enables.  Classical Harish--Chandra machinery provides a wider integral framework \cite{HarishChandra1957,McSwiggen2019}; our proof instead uses a direct conditional-sphere calculation that makes every coefficient positive.
+
+Our main outputs are:
+\begin{enumerate}
+\item an exact all-degree series for the linear Pl\"ucker partition of a Haar oriented two-plane;
+\item a global all-field theorem: simple external bivectors uniquely maximize that partition at fixed exterior norm in every $n\ge3$;
+\item an elementary beta-type overlap density and scalar hypergeometric normalizer;
+\item an exact unrestricted Shannon RDF with reports in the full mass-norm ball, including a standard-Borel converse, covariant attainment, and nonexposed time sharing;
+\item a complete continuous radial phase for $n=3,4,5$, a rigorous discontinuous first activation for every $n\ge6$, and the exact high-fidelity constant.
+\end{enumerate}
+
+The novelty claim is deliberately scoped.  Pl\"ucker coordinates, orthogonal canonical form, orbital integrals, the Grassmann orbitope, mass/comass duality, and generic Gibbs duality are prior structure.  To our knowledge, the fixed-norm all-field simple-bivector extremum with equality and the resulting exact unrestricted all-distortion RDF for $n\ge5$ have not previously been stated.  The cases $n=3$ and $n=4$ are consistency checks: the former is spherical and the latter admits a product-sphere description.
+
+The relation to the rank-two complex companion is exact at the level of the
+source orbit but not at the level of the operational problem.  When $n=6$,
+$\operatorname{Spin}(6)\simeq SU(4)$ identifies $\Gr_2^+(\R^6)$ with
+$\Gr_{\mathbb C}(2,4)$.  The companion studies the normalized projector
+$P/2$, Born-probability loss, and posterior density matrices; the present
+paper studies the signed Pl\"ucker coordinate $W$, ambient bivector loss, and
+the mass-norm ball.  The companion completely classifies its exceptional
+scalar phase and proves source-universal block consequences.  Here the new
+content is the dimension-uniform all-field theorem and RDF, together with the
+sharp continuous/discontinuous boundary at $n=6$.  Thus neither manuscript
+subsumes the other, and no theorem from the companion is used below.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{@{}p{0.20\textwidth}p{0.35\textwidth}p{0.35\textwidth}@{}}
+\toprule
+ & Present paper & Rank-two complex companion \\
+\midrule
+Source & signed $W\in\Gr_2^+(\R^n)$ & state $P/2$, $P\in\Gr_{\mathbb C}(2,4)$ \\
+Reports & mass-norm unit ball & $0\preceq\sigma\preceq I/2$, $\operatorname{tr}\sigma=1$ \\
+Loss & ambient bivector square loss & integrated Born/Frobenius loss \\
+Closure & all $n$; full radial phase for $n\le5$ & exceptional $n=6$ orbit; full radial and block phase \\
+\bottomrule
+\end{tabular}
+\caption{The shared $n=6$ homogeneous orbit and the distinct operational
+questions.}
+\label{tab:companion}
+\end{table}
+
+\section{Geometry, norm, and source model}
+
+Let
+\[
+ \G_n=\Gr_2^+(\R^n)
+ =\{x\wedge y:x,y\in\R^n,\ \ip xy=0,\ \|x\|=\|y\|=1\}
+ \subset\Lambda^2\R^n
+\]
+with normalized Haar probability $\mu$.  We use the exterior inner product for which $e_i\wedge e_j$, $i<j$, is an orthonormal basis.  Hence every $W\in\G_n$ has $\|W\|=1$.
+
+Every $B\in\Lambda^2\R^n$ has an orthogonal canonical form
+\begin{equation}\label{eq:canonical}
+ B=\sum_{j=1}^{m}p_j e_{2j-1}\wedge e_{2j},
+ \qquad m=\lfloor n/2\rfloor,
+ \qquad \|B\|^2=\sum_jp_j^2.
+\end{equation}
+Let $C_B$ be the associated skew matrix, defined by
+$\ip{B}{u\wedge v}=\ip{C_Bu}{v}$.  Our convention gives
+\begin{equation}\label{eq:normfactor}
+ \|C_B\|_F^2=2\|B\|^2.
+\end{equation}
+All fixed-radius statements use the exterior norm in \cref{eq:canonical}; \cref{eq:normfactor} records the otherwise easy-to-miss factor of two.
+
+For real $s$, define
+\begin{equation}\label{eq:partition}
+ Z_n(s,B)=\E_{W\sim\mu}e^{s\ip BW}.
+\end{equation}
+The law is symmetric because both orientations occur, so $Z_n$ is even in $s$ and $B$.
+
+\section{Positive series and all-field rigidity}
+
+Generate $W=x\wedge y$ by drawing $x$ uniformly from $S^{n-1}$ and then $y$ uniformly from the unit sphere in $x^\perp$.  Since $C_Bx\perp x$,
+\[
+ \ip B{x\wedge y}=\ip{C_Bx}{y}
+ \stackrel{d}{=}\|C_Bx\|Y,
+\]
+where $Y$ is a coordinate of the uniform law on $S^{n-2}$.  Its moment-generating series is
+\begin{equation}\label{eq:sphere-mgf}
+ \E e^{tY}=\sum_{k\ge0}\frac{(t^2/4)^k}{k!((n-1)/2)_k}.
+\end{equation}
+
+Put $q_j=x_{2j-1}^2+x_{2j}^2$.  The paired blocks, and for odd $n$ the final unpaired coordinate square, form a Dirichlet vector with paired parameters one and total parameter $n/2$.  The unpaired block has coefficient zero in $\|C_Bx\|^2$.  Hence
+\begin{equation}\label{eq:dirichlet}
+ \E\left(\sum_jp_j^2q_j\right)^k
+ =\frac{k!}{(n/2)_k}h_k(p_1^2,\ldots,p_m^2),
+\end{equation}
+where $h_k$ is the complete homogeneous symmetric polynomial.
+
+\begin{theorem}[positive all-degree orbital series]\label{thm:series}
+For every $n\ge3$, $B\in\Lambda^2\R^n$, and real $s$,
+\begin{equation}\label{eq:series}
+ \boxed{
+ Z_n(s,B)=\sum_{k=0}^{\infty}
+ \frac{(s^2/4)^k h_k(p_1^2,\ldots,p_m^2)}
+ {((n-1)/2)_k(n/2)_k}.}
+\end{equation}
+The series is absolutely convergent and every coefficient is nonnegative.
+\end{theorem}
+
+\begin{proof}
+Substitute \cref{eq:dirichlet} into the conditional expansion \cref{eq:sphere-mgf}.  Absolute convergence follows directly from $|\ip BW|\le\|B\|$ or from the ratio test.
+\end{proof}
+
+For nonnegative $z_1,\ldots,z_m$,
+\begin{equation}\label{eq:hkbound}
+ h_k(z_1,\ldots,z_m)\le(z_1+\cdots+z_m)^k.
+\end{equation}
+Indeed, each monomial coefficient on the left is one and the corresponding multinomial coefficient on the right is at least one.  At $k=2$, equality forces $z_i z_j=0$ for $i\ne j$.
+
+\begin{theorem}[all-field simple-bivector rigidity]\label{thm:allfield}
+Fix $R>0$ and $s\ne0$.  Among all $B\in\Lambda^2\R^n$ with $\|B\|=R$, the partition $Z_n(s,B)$ is uniquely maximized, up to the orthogonal action and sign, by a simple bivector $B=RQ$.  Its value is
+\begin{equation}\label{eq:Ln}
+ L_n(sR):={}_1F_2\!\left(1;\frac{n-1}{2},\frac n2;\frac{(sR)^2}{4}\right).
+\end{equation}
+For $n=3$ every nonzero bivector is simple, so the assertion is uniqueness of the fixed-radius orbit.
+\end{theorem}
+
+\begin{proof}
+Apply \cref{eq:hkbound} coefficientwise to \cref{eq:series}, using $\sum_jp_j^2=R^2$.  Equality of the summed series at nonzero $s$ forces equality in its strictly positive $k=2$ term, hence exactly one $p_j^2$ is nonzero.  This is precisely the canonical form of a simple bivector.  At a simplex vertex $h_k(R^2,0,\ldots)=R^{2k}$, and summing gives \cref{eq:Ln} because $(1)_k/k!=1$.
+\end{proof}
+
+\section{The exact overlap law}
+
+Let $Q$ be a fixed unit simple bivector and $X=\ip WQ$.  The vertex specialization of \cref{eq:series} gives
+\begin{equation}\label{eq:moments}
+ \E X^{2k}=\frac{(2k)!}{4^k((n-1)/2)_k(n/2)_k}
+ =\frac{(2k)!}{(n-1)_{2k}},
+ \qquad \E X^{2k+1}=0.
+\end{equation}
+
+\begin{proposition}[elementary overlap density]\label{prop:density}
+The simple Pl\"ucker overlap has density
+\begin{equation}\label{eq:density}
+ \boxed{f_n(x)=\frac{n-2}{2}(1-|x|)^{n-3}\mathbf1_{[-1,1]}(x).}
+\end{equation}
+Consequently
+\begin{equation}\label{eq:beta-int}
+ L_n(t)=(n-2)\int_0^1\cosh(tx)(1-x)^{n-3}\,dx.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+The density in \cref{eq:density} is normalized and symmetric.  Its even moments are
+\[
+ (n-2)\int_0^1x^{2k}(1-x)^{n-3}\,dx
+ =(n-2)B(2k+1,n-2)=\frac{(2k)!}{(n-1)_{2k}},
+\]
+which agree with \cref{eq:moments}.  Compact support makes the moment problem determinate.  Integrating $e^{tx}$ against the density gives \cref{eq:beta-int}.
+\end{proof}
+
+Thus the optimal normalizer is elementary in every integer dimension: it is an exponential divided by $t^{n-2}$ plus a finite Taylor correction.  In particular, $L_3(t)=\sinh(t)/t$.  For $n\ge4$ the orbit is a proper submanifold of its ambient sphere even though its optimal one-dimensional overlap remains elementary.
+
+The second and fourth moments are
+\begin{equation}\label{eq:lowmoments}
+ \E X^2=\frac{2}{n(n-1)},\qquad
+ \E X^4=\frac{24}{n(n-1)(n+1)(n+2)}.
+\end{equation}
+
+\section{The full reproduction body}
+
+Write a bivector in canonical form $A=\sum_jp_jV_j$, where the $V_j$ are orthogonal unit simple bivectors.  Its mass norm is
+\[
+ \|A\|_{\mathrm{mass}}=\sum_j|p_j|.
+\]
+This is the atomic norm generated by unit simple bivectors; its polar is the comass norm.  In degree two the canonical skew decomposition makes the description explicit.
+
+\begin{proposition}[oriented Grassmann orbitope]\label{prop:orbitope}
+\begin{equation}\label{eq:orbitope}
+ \K_n:=\conv(\G_n)=\{A\in\Lambda^2\R^n:\|A\|_{\mathrm{mass}}\le1\}.
+\end{equation}
+In particular, every simple ray $bQ$, $0\le b\le1$, is feasible.
+\end{proposition}
+
+\begin{proof}
+The mass norm is convex, orthogonally invariant, and equals one on every orbit point, so the convex hull is contained in the displayed ball.  Conversely,
+\[
+ A=\sum_j|p_j|\,\operatorname{sgn}(p_j)V_j
+ +\left(1-\sum_j|p_j|\right)0,
+\]
+and $0=(V+(-V))/2$.  This is a convex combination of oriented unit simple bivectors.
+\end{proof}
+
+Let $U$ be an arbitrary standard-Borel classical memory and let $Y_U$ be any square-integrable $\Lambda^2\R^n$-valued report.  Conditional least squares gives
+\begin{equation}\label{eq:pythagoras}
+ \E\|W-Y_U\|^2
+ =\E\|W-A_U\|^2+\E\|A_U-Y_U\|^2,
+ \qquad A_U=\E(W\mid U)\in\K_n.
+\end{equation}
+The deterministic replacement $U\mapsto A_U$ cannot increase mutual information.  Thus arbitrary reports reduce exactly to the full body \cref{eq:orbitope}, not to orbit-valued quantization.
+
+\section{Exact unrestricted rate--distortion}
+
+Define the Shannon RDF under squared Pl\"ucker loss by
+\begin{equation}\label{eq:rdfdef}
+ \RDF_n(D)=\inf I(W;U),
+ \qquad \E\|W-Y_U\|^2\le D,
+\end{equation}
+where the infimum is over arbitrary standard-Borel memories and square-integrable reports.  The natural interval is $0\le D\le1$: the constant zero report gives distortion one.
+
+Put $K_n=\log L_n$ and
+\begin{equation}\label{eq:C}
+ C_n(\lambda)=e^{-\lambda}
+ \max_{0\le b\le1}\exp\{K_n(2\lambda b)-\lambda b^2\},
+ \qquad \lambda\ge0.
+\end{equation}
+
+\begin{theorem}[exact unrestricted Pl\"ucker RDF]\label{thm:rdf}
+For every $n\ge3$ and $0\le D\le1$,
+\begin{equation}\label{eq:rdf}
+ \boxed{
+ \RDF_n(D)=\sup_{\lambda\ge0}
+ \left\{\lambda(1-D)-
+ \max_{0\le b\le1}[K_n(2\lambda b)-\lambda b^2]\right\}.}
+\end{equation}
+Every exposed positive-radius point is attained by a covariant exponential channel.  Source-independent revealed flags attain all nonexposed points.  The endpoints are $\RDF_n(1)=0$ and $\RDF_n(0)=+\infty$.
+\end{theorem}
+
+\begin{proof}
+For $\lambda\ge0$, conditional Gibbs duality and \cref{eq:pythagoras} give
+\begin{align}
+ I(W;U)
+ &\ge-\lambda D-\log\sup_{A\in\K_n}
+ \E e^{-\lambda\|W-A\|^2}\notag\\
+ &=-\lambda D-\log\sup_{A\in\K_n}
+ e^{-\lambda(1+\|A\|^2)}Z_n(2\lambda,A).\label{eq:gibbs}
+\end{align}
+At fixed Euclidean radius, \cref{thm:allfield} replaces $A$ by a simple $bQ$ without leaving $\K_n$.  Maximizing over $0\le b\le1$ yields \cref{eq:C} and the converse in \cref{eq:rdf}.
+
+Let $b>0$ be active at a finite field and put $\kappa=2\lambda b$.  The endpoint $b=1$ is not active: under the finite tilted law $X<1$ almost surely, so $K_n'(\kappa)<1$ and
+\[
+ \partial_b[K_n(2\lambda b)-\lambda b^2]_{b=1}
+ =2\lambda[K_n'(2\lambda)-1]<0.
+\]
+Every positive active radius is therefore interior and satisfies
+\begin{equation}\label{eq:selfconsistency}
+ b=K_n'(\kappa),\qquad \kappa=2\lambda b.
+\end{equation}
+
+Draw $Q$ Haar on $\G_n$ and specify the reverse channel
+\begin{equation}\label{eq:channel}
+ \frac{dP_\kappa(W\mid Q)}{d\mu(W)}
+ =\frac{e^{\kappa\ip WQ}}{L_n(\kappa)}.
+\end{equation}
+Covariance makes the source marginal Haar.  The tilted mean is the gradient of the analytic partition.  At a simple external bivector, constrained stationarity in \cref{thm:allfield} annihilates every fixed-sphere tangential derivative, so the gradient is radial; this also excludes the apparent additional $*Q$ stabilizer direction in $n=4$.  Hence
+\[
+ \E(W\mid Q)=K_n'(\kappa)Q=bQ.
+\]
+The report is its posterior mean, so equality holds in \cref{eq:pythagoras} and \cref{eq:gibbs}.  The attained pair is
+\begin{equation}\label{eq:parametric}
+ D(\kappa)=1-b(\kappa)^2,\qquad
+ R(\kappa)=\kappa b(\kappa)-K_n(\kappa).
+\end{equation}
+
+If several radii are active at one field, an independently revealed flag mixes their covariant channels.  Every component retains the Haar source marginal; rate and distortion therefore mix affinely.  Danskin's theorem identifies the subdifferential of the dual envelope with the convex hull of these active distortions.  The zero report attains $(1,0)$.  To see the high-field endpoint explicitly, $K_n(t)\le t$ for $t\ge0$.  Thus every $b\le1-\varepsilon$ has radial objective at most $\lambda(2b-b^2)\le\lambda(1-\varepsilon^2)$, whereas the feasible point $b=1$ has value $K_n(2\lambda)-\lambda=\lambda-(n-2)\log(2\lambda)+O(1)$ by \cref{prop:highrate}.  Every active radius therefore tends to one and its distortion tends to zero.  Monotonicity of convex subgradients covers $(0,1)$, and closure supplies both endpoints.  Exact reconstruction of a nonatomic positive-dimensional source requires infinite mutual information, giving $\RDF_n(0)=+\infty$.  Fenchel--Moreau duality proves equality everywhere.
+\end{proof}
+
+\section{Complete radial phase below dimension six}
+
+Let
+\[
+ m_n(\kappa)=K_n'(\kappa),\qquad
+ \lambda_n(\kappa)=\frac{\kappa}{2m_n(\kappa)}.
+\]
+A positive stationary radius satisfies $b=m_n(\kappa)$ and
+$\lambda=\lambda_n(\kappa)$.  Moreover
+\begin{equation}\label{eq:lambdaprime}
+ \lambda_n'(\kappa)=
+ \frac{m_n(\kappa)-\kappa m_n'(\kappa)}{2m_n(\kappa)^2}.
+\end{equation}
+
+\begin{lemma}[low-dimensional radial monotonicity]\label{lem:lowdim}
+For $n=3,4,5$ and every $\kappa>0$,
+\begin{equation}\label{eq:radialmonotone}
+ m_n(\kappa)-\kappa m_n'(\kappa)>0.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+For $n=3$, $L_3(x)=\sinh x/x$.  Multiplying
+\cref{eq:radialmonotone} by the positive factor $L_3(x)^2x^3$ reduces it to
+\[
+ J_3(x)=x^2+x\sinh x\cosh x-2\sinh^2x>0.
+\]
+The coefficients below degree six vanish, and for $r\ge3$ the coefficient of
+$x^{2r}$ is
+\[
+ \frac{2^{2r-2}(2r-4)}{(2r)!}>0.
+\]
+For $n=4$, the identity
+\[
+ L_4(x)=\frac{2(\cosh x-1)}{x^2}
+ =\left[\frac{\sinh(x/2)}{x/2}\right]^2
+\]
+reduces the assertion to the $n=3$ inequality at $x/2$.
+
+For $n=5$, $L_5(x)=6(\sinh x-x)/x^3$.  After multiplication by the positive
+factor $L_5(x)^2x^7/36$, \cref{eq:radialmonotone} becomes
+\[
+\begin{split}
+ J_5(x)={}&x^3\sinh x+x\sinh x\cosh x+11x\sinh x\\
+ &-3x^2\cosh x-3x^2-6\sinh^2x>0.
+\end{split}
+\]
+The coefficients through degree eight vanish.  For $r\ge5$, the coefficient
+of $x^{2r}$ multiplied by $(2r)!$ is
+\[
+ 2^{2r-1}(r-6)+8r(r^2-3r+4).
+\]
+Indeed, substitute the Taylor series for $\sinh x$, $\cosh x$, and
+$\sinh x\cosh x=\tfrac12\sinh(2x)$ into $J_5$.  After collecting the
+$x^{2r}$ terms over the common denominator $(2r)!$, the constant, quadratic,
+quartic, sextic, and octic coefficients cancel identically, while the
+remaining numerator is exactly the displayed expression.  This makes the
+sign argument coefficientwise rather than numerical.
+It equals $48$ at $r=5$; for $r\ge6$ both displayed contributions are
+nonnegative and the polynomial one is positive.
+\end{proof}
+
+\begin{theorem}[complete continuous phase for $n=3,4,5$]\label{thm:lowphase}
+For $n=3,4,5$, directional information activates continuously at
+\[
+ \lambda_0=\frac{n(n-1)}4.
+\]
+For $0\le\lambda\le\lambda_0$, the zero radius is the unique global
+maximizer.  For $\lambda>\lambda_0$, there is exactly one positive global
+maximizer; it tends continuously to zero at the threshold.  There is no
+coexistence, later radial exchange, or reentrance.
+\end{theorem}
+
+\begin{proof}
+By \cref{eq:lambdaprime} and Lemma~\ref{lem:lowdim}, $\lambda_n(\kappa)$ is strictly
+increasing.  The moment expansion and the high-field limit give
+\[
+ \lim_{\kappa\downarrow0}\lambda_n(\kappa)
+ =\frac1{2\Var X}=\frac{n(n-1)}4,
+ \qquad \lambda_n(\kappa)\longrightarrow\infty.
+\]
+There is no positive stationary radius below the threshold and exactly one
+above it.  At $\lambda>\lambda_0$ the zero radius is locally unstable, so the
+unique positive stationary point is the unique global maximum; the endpoint
+$b=1$ was excluded in the proof of \cref{thm:rdf}.  Strict monotonicity gives
+continuous emergence and rules out every later exchange.
+\end{proof}
+
+\section{A dimension-six discontinuity threshold}
+
+Let $N=\binom n2$.  From \cref{eq:lowmoments},
+\begin{equation}\label{eq:cumulant}
+ \cum_4(X)=
+ \frac{12(n^2-5n-2)}
+ {n^2(n-1)^2(n+1)(n+2)}.
+\end{equation}
+It is positive exactly for $n\ge6$.
+
+Define the radial free energy
+\begin{equation}\label{eq:phi}
+ \phi_\lambda(b)=K_n(2\lambda b)-\lambda b^2,
+ \qquad 0\le b\le1.
+\end{equation}
+Since $K_n''(0)=1/N$, the quadratic coefficient at $b=0$ is
+$\lambda(2\lambda/N-1)$.  The zero-radius spinodal is $\lambda_0=N/2$.
+
+\begin{theorem}[discontinuous first directional activation]\label{thm:onset}
+For every $n\ge6$, there is a field $0<\lambda_c<\lambda_0$ at which $b=0$ coexists with at least one positive global maximizer $b_c>0$ of \cref{eq:phi}.  Hence the onset of directional information is discontinuous and the RDF has an exact linear time-sharing face adjacent to $(D,R)=(1,0)$.
+
+The theorem does not assert uniqueness of the positive contact or exclude later radial transitions.
+\end{theorem}
+
+\begin{proof}
+At $\lambda_0$ the quadratic term vanishes.  The quartic term is
+$\cum_4(X)(2\lambda_0)^4b^4/24$, which is positive by \cref{eq:cumulant}; therefore $\max_b\phi_{\lambda_0}(b)>0$.  At small positive field, Hoeffding's lemma for the centered variable $X\in[-1,1]$ gives $K_n(t)\le t^2/2$, and thus
+\[
+ \phi_\lambda(b)\le(2\lambda^2-\lambda)b^2<0
+\]
+for $0<\lambda<1/2$ and $b>0$.  The zero radius is then the unique maximizer.
+
+Let $g(\lambda)=\max_{0\le b\le1}\phi_\lambda(b)$ and let $\lambda_c$ be the infimum of fields where $g$ is positive.  Continuity and compactness give $0<\lambda_c<\lambda_0$ and a zero-value contact.  Positive maximizing radii approaching the contact cannot converge to zero: because $\lambda_c<\lambda_0$, the quadratic coefficient remains uniformly negative near $\lambda_c$, and analyticity makes $\phi_\lambda(b)<0$ uniformly for all sufficiently small $b>0$.  A subsequential contact radius therefore satisfies $b_c>0$.  The two active channels have distortions one and $1-b_c^2$; source-independent flagged mixing produces the stated linear RDF face.
+\end{proof}
+
+Together, \cref{thm:lowphase,thm:onset} establish a sharp dimension-six
+change in the nature of first activation.  For $n\ge6$ we make no claim about
+uniqueness of the positive contact or later radial transitions.
+
+\section{High-fidelity constant}
+
+\begin{proposition}[exact leading asymptotics]\label{prop:highrate}
+Put $q=n-2$.  As $\kappa\to\infty$,
+\begin{equation}\label{eq:Lasymp}
+ L_n(\kappa)=\frac{q!}{2}e^\kappa\kappa^{-q}
+ \left(1+O(e^{-\kappa}\kappa^{q-1})\right).
+\end{equation}
+Consequently, as $D\downarrow0$,
+\begin{equation}\label{eq:Rasymp}
+ \boxed{
+ \RDF_n(D)=q\log\frac{2q}{D}-q-\log\frac{q!}{2}+o(1).}
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Use \cref{eq:beta-int} and retain the endpoint $x=1$:
+\[
+ \frac q2\int_0^1 e^{\kappa x}(1-x)^{q-1}dx
+ =\frac{q!}{2}e^\kappa\kappa^{-q}
+ \left(1-e^{-\kappa}\sum_{j=0}^{q-1}\frac{\kappa^j}{j!}\right).
+\]
+The $e^{-\kappa x}$ half is exponentially smaller after the same scaling, which proves \cref{eq:Lasymp}.  Therefore
+\[
+ K_n(\kappa)=\kappa-q\log\kappa+\log(q!/2)+o(1),
+ \qquad b=K_n'(\kappa)=1-q/\kappa+O(e^{-\kappa}\kappa^{q-1}).
+\]
+Equation~\ref{eq:parametric} gives $D=2q/\kappa+O(\kappa^{-2})$ and
+$R=q\log\kappa-q-\log(q!/2)+o(1)$.  Substitution yields \cref{eq:Rasymp}.
+\end{proof}
+
+The pre-log $q=n-2$ is half the manifold dimension $2(n-2)$, in agreement with high-resolution geometry.  The exact constant comes from the oriented positive-overlap cell; losing the factor $1/2$ would fail the check $L_3(\kappa)\sim e^\kappa/(2\kappa)$.
+
+\section{Diagnostics, special cases, and scope}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/plucker_frontier.pdf}
+\caption{Left: the exact overlap densities from \cref{prop:density}. Right: covariant parametric branches from \cref{eq:parametric}. For $n\ge6$, dots mark numerically replayed coexistence contacts and dashed segments show their rigorously guaranteed time-sharing faces. The plot is diagnostic; the all-field, RDF, and onset statements are analytic.}
+\label{fig:frontier}
+\end{figure}
+
+For $n=3$, Hodge duality identifies unit bivectors with $S^2$, and $L_3=\sinh\kappa/\kappa$ reproduces the sphere.  For $n=4$, $\Gr_2^+(\R^4)\simeq S^2\times S^2$; the constrained-gradient argument in \cref{thm:rdf} is included precisely so that this reducible stabilizer geometry cannot introduce a hidden posterior-mean component.  In $n=6$, the exceptional isomorphism $\operatorname{Spin}(6)\simeq SU(4)$ relates the oriented-plane orbit to $\Gr_{\mathbb C}(2,4)$.  The present theorem explains why the simple skew block appears there and extends that mechanism to every real dimension without relying on the exceptional isomorphism.
+
+The operational object here is a signed Pl\"ucker label.  It can represent an oriented plane or an antisymmetric area coordinate, and squared loss is integrated squared error over an orthonormal basis of linear Pl\"ucker queries.  This is not automatically a quantum-state RDF: a physical ray identifies global sign, and Born probabilities square amplitudes, changing both the sufficient statistic and the loss.  We therefore make no claim about intrinsic randomness, measurement update, click simulation, or a derivation of Born's rule.
+
+\paragraph{Reproducibility.}
+The release includes two bounded scripts.  The first independently checks the exact moments, norm constants, and Monte Carlo normalization.  The second evaluates only the one-dimensional beta integral, records diagnostic contacts, and generates \cref{fig:frontier}.  From the workspace root:
+\begin{verbatim}
+python work/eleventh_paper/verify_oriented_plucker_rdf.py --samples 60000
+python work/eleventh_paper/reproduce_plucker_frontier.py
+\end{verbatim}
+Both are diagnostic replays; no numerical result is used in the analytic proofs.
+The release freezes the two scripts and their two JSON outputs in
+\path{work/eleventh_paper/release/REPLAY_MANIFEST.sha256}.  The manifest
+itself has SHA--256
+\begin{center}
+\small\ttfamily
+16be07c5377ecd94b78a9d230341664c832be893394a71c55e2bc0719b89d6f7.
+\end{center}
+This content address, rather than a mutable working-tree path, identifies the
+replay used for the release.
+
+\section{Conclusion}
+
+The linear Pl\"ucker orbit of an oriented two-plane admits a dimension-uniform rigidity theorem: at fixed exterior norm, every linear exponential moment is globally and uniquely maximized by a simple external bivector.  A positive complete-homogeneous series makes the result elementary and exposes an exact beta overlap law.  Combining that spectral envelope with the full Grassmann orbitope yields the unrestricted all-distortion Shannon RDF, including covariant attainment and nonexposed time sharing.  In dimensions six and above, the fourth cumulant forces a discontinuous first directional activation; at high fidelity the complete constant is explicit.
+
+The remaining radial question is deliberately separated from what is proved.  Dimensions $3,4,5$ are completely classified, but for $n\ge6$ we have not classified every later stationary branch or established no reentrance.  A full high-dimensional radial uniqueness theorem would sharpen the scalar representation, but it is not needed for the exact variational RDF or the discontinuous-onset result proved here.
+
+\printbibliography
+\end{document}
