@@ -1,0 +1,774 @@
+Two-Query Chirality in Tetrahedral Quantum Echoes
+            Exact Parallel Readout, a Nine-Dimensional Query Defect,
+                      and a Certified Adaptive Advantage
+
+                                            Lluis Eriksson
+
+                                             August 2026
+
+
+                                               Abstract
+         Four balanced Pauli kicks along the vertices of a regular tetrahedron, followed by their
+     reverse echo, generate 24 order-labelled qubit unitary channels. All 24 words have the same
+     trace and split into two 12-element orbits of the proper tetrahedral group. One query sees only
+     the common trace: a Bell tester is globally optimal and gives the same performance in the two
+     orbit sectors. We show that two queries recover information that is invisible at one query. The
+     quadratic output decomposes as 1 ⊕ 2 ⊕ 3 ⊕ 3, and two exact chiral energies E± enter the
+     optimum through a scalar clamp. This yields closed formulas for the Bell-square optimum and
+     for the globally optimized parallel strategy. The optimal parallel input is generically not two
+     Bell pairs.
+         At the algebraic pulse point with common half trace q = 1/2, the parallel value is
+                                                         √
+                                                     5 + 15
+                                             Ppar =          .
+                                                        24
+     Every causal two-query protocol has success at most 9/24: fixed trace and fixed Pauli-vector
+     norm remove one direction from the universal ten-dimensional quadratic query space. We give
+     an explicit rational two-comb normalization and an exact weighted-frame identity attaining
+     this cap. Hence                                                      √
+                                     3                               4 − 15
+                           Pcausal = > Ppar ,       Pcausal − Ppar =          .
+                                     8                                   24
+     This is an analytic adaptive advantage for a non-group unitary ensemble, not a numerical SDP
+     observation. A quotient-ring certificate verifies all 24 echo words, the chiral invariants, the
+     parallel formula, and the causal projector identity. A uniform query-norm estimate further
+     proves that the same fixed adaptive tester beats every parallel tester on an explicit open pulse
+     interval around the algebraic point. We make no claim about indefinite causal order or noisy
+     hardware.
+
+
+1    Introduction
+Minimum-error discrimination of unitary channels changes qualitatively when the unknown gate
+may be queried more than once. For a uniformly distributed projective representation of a finite
+group, covariance often makes parallel strategies optimal. Outside the group case, sequential and
+more general architectures can be strictly better [1]. Explicit analytic families exhibiting the
+mechanism remain comparatively scarce: general tester semidefinite programs certify an optimum,
+but usually hide why a particular inter-query memory helps.
+   This paper gives a closed example derived from a concrete pulse architecture. Let four control
+Hamiltonians point to the vertices of a regular tetrahedron. Executing the four kicks in an order
+σ ∈ S4 and closing the path by a reverse echo gives a qubit unitary Wσ . The 24 labels do not
+form a unitary group. They form two compound geometrically uniform orbits under A4 , and every
+word has the same trace. That common trace makes one-query readout blind to the difference
+
+
+                                                    1
+
+
+
+Table 1: Scope of the exact results. “Causal” includes parallel, sequential, and adaptive two-query
+circuits with delayed final measurement.
+    Task                           Result here                       Limitation
+    One query, 12 or 24 labels     Exact global tester optimum       Recalled as baseline
+    Two queries, Bell-square       Exact for every pulse             Bell-square is not globally parallel-
+                                                                     optimal
+    Two queries, parallel          Exact for every pulse             Formula concerns noiseless channels
+    Two queries, causal            Exact at q = 1/2; strict ad-      Rank cap, not full causal optimum,
+                                   vantage on an explicit interval   away from q = 1/2
+    Collision classification       Exact on the fundamental in-      Labels and channels distinguished
+                                   terval
+
+
+between the two orbit geometries. At two queries, third and fourth moments survive and split the
+sectors.
+     The main contributions are as follows.
+1. We derive the complete two-copy representation reduction. Two architecture-specific invariants
+    E+ and E− are explicit rational functions of the pulse parameter. They determine the exact
+    Bell-square optimum by a one-dimensional clamp.
+2. We optimize over every parallel input, including arbitrary ancillas. Symmetry reduces the
+                                weight a, after which the remaining
+    input marginal to a singlet √                                √ optimization is elementary. At
+    q = 1/2 the answer is (5 + 15)/24, attained at a∗ = (5 − 15)/10; two Bell pairs are strictly
+    suboptimal.
+3. We prove an architecture-specific rank cap. Any purified causal two-query protocol is a fixed
+    linear image of Wσ⊗2 , whose span has dimension at most nine rather than the universal ten.
+4. We saturate that cap at q = 1/2. An explicit rational deterministic comb Ξ∗ and two positive
+    orbit weights obey KCK = K. This converts the 24 effective output states into a scalable
+    tight frame and proves the exact causal optimum 3/8.
+5. The separation is not confined to one isolated pulse. A uniform Lipschitz estimate gives an
+    explicit interval on which the same adaptive tester remains better than the globally optimal
+    parallel strategy.
+     The ingredients surrounding the result are classical: group-covariant state discrimination [2, 3,
+4], quantum testers [5, 6], and unitary-design dimension bounds [7, 1]. The new point is their
+exact synthesis for this fixed-trace, two-orbit echo family, including a rational adaptive certificate
+and a strict closed-form parallel-versus-causal separation. The tetrahedral word itself is rederived
+below, so the argument is logically self-contained. The appendices give the full block reduction, a
+six-Kraus realization of the inter-query map, and the collision-elimination and certificate details
+that are easy to obscure in a short presentation.
+
+
+2     The tetrahedral echo family
+Let
+                r1 = (1, 1, 1),   r2 = (1, −1, −1),    r3 = (−1, 1, −1),     r4 = (−1, −1, 1).
+Then ra · ra = 3, ra · rb = −1 for a ̸= b, and
+                                                   P
+                                                      a ra = 0. With the Pauli vector σ, define
+                                                                                         √
+                                                                       √             sin( 3y)
+               Ka (y) = exp[−iyra · σ] = cI − isra · σ,       c = cos( 3y),       s=    √     ,
+                                                                                          3
+
+so c2 + 3s2 = 1. The first entry of an order acts first:
+
+                                  Uσ = Kσ4 Kσ3 Kσ2 Kσ1 ,       Wσ = Uσ Uσ∗R .
+
+
+
+                                                       2
+
+
+
+Equivalently,
+                           Wσ = Kσ4 (y) · · · Kσ1 (y)Kσ4 (−y) · · · Kσ1 (−y).
+Write
+                              Wσ = qσ I − ivσ · σ,               qσ2 + ∥vσ ∥2 = 1.
+
+Proposition 2.1 (Common half trace). For every σ ∈ S4 , qσ = q, where, with z = s2 ,
+                                                                                1
+                         q(z) = 1 − 32z 2 + 128z 3 − 256z 4 ,               0≤z≤ .                   (1)
+                                                                                3
+The even and odd permutations form two free 12-label orbits O+ and O− under left multiplication
+by A4 .
+
+Proof. If a partial product is aI − ib · σ, left multiplication by cI − isr · σ sends
+
+                             (a, b) 7−→ (ca − sr · b, cb + sar + sr × b).
+
+Eight iterations for one representative of either parity give the common scalar
+
+                              (c2 − s2 )(c6 + 13c4 s2 + 35c2 s4 + 79s6 ).
+
+Substituting c2 = 1 − 3s2 gives Equation (1). Proper tetrahedral rotations act as A4 on labels
+and conjugate the corresponding words, so one representative per parity suffices. The verifier
+independently expands all 24 words.
+
+    Set r2 = 1 − q 2 . Irreducibility of the real tetrahedral representation gives for each parity
+                                X                         X
+                                      vσ = 0,                    vσ vσT = 4r2 I3 .                   (2)
+                               σ∈O±                       σ∈O±
+
+These second moments coincide. The two orbits first separate in higher moments.
+   It is useful to replace z by              r
+                                         c      1 − 3z
+                                      t= =             .
+                                         s         z
+The endpoint z = 0 is understood as t → ∞. Define the off-diagonal quadratic energies
+
+                           32768(t − 1)8 (t + 1)2 (t5 − t4 + 8t3 − 8t2 + 15t + 1)2
+                  E+ (t) =                                                         ,                 (3)
+                                                  (t2 + 3)16
+                           32768(t − 1)2 (t + 1)8 (t5 + t4 + 8t3 + 8t2 + 15t − 1)2
+                  E− (t) =                                                         .                 (4)
+                                                  (t2 + 3)16
+
+For a seed vector in the indicated orbit,
+                                        X                             2r4
+                               E± = 2         va2 vb2 ,       D± =        − E± .
+                                        a<b
+                                                                       3
+
+Although Equation (2) makes one-query performance identical, the pair (D± , E± ) remembers the
+orbit.
+
+
+3    One query as a symmetry baseline
+                        √
+Let |Ω⟩ = (|00⟩ + |11⟩)/ 2 and |ψσ ⟩ = (Wσ ⊗ I)|Ω⟩. Vectorization gives
+                                            1
+                              ⟨ψτ |ψσ ⟩ =     Tr(Wτ∗ Wσ ) = q 2 + vτ · vσ .
+                                            2
+
+
+                                                          3
+
+
+
+For either 12-state orbit, or for their 24-state union with label multiplicity, the nonzero spectrum
+of the average state is
+                                                r2    r2    r2
+                                        q2,        ,     ,     .                                  (5)
+                                                 3    3     3
+    Every one-query tester can be symmetrized by A4 . Its input marginal then commutes with
+the irreducible two-dimensional spin lift and is therefore I2 /2. Hence the Bell input loses no
+performance. The Yuen–Kennedy–Lax conditions [8] in 1 ⊕ 3 give
+                                                    p                 2
+                          (N )
+                                             |q| +       3(1 − q 2 )
+                        P1       (q) =                                      ,    N ∈ {12, 24}.       (6)
+                                                         N
+At q = ±1/2 the four eigenvalues in Equation (5) are equal. Thus a 12-label orbit is a tight
+                             (12)
+frame in dimension four and P1 = 1/3; the 24-label value is 1/6. This tightness is a one-query
+statement and does not imply a unitary two-design.
+
+
+4    Two-copy representation and exact Bell-square readout
+For two Bell probes, the normalized output vector is |Wσ ⟩⟩⊗2 /2. The relevant quadratic feature
+space is contained in
+                             Sym2 (1 ⊕ 3) = 1⊕2 ⊕ 1′ ⊕ 1′′ ⊕ 3⊕2 .
+The two invariant coordinates are proportional for every label, leaving one zero direction. The two
+copies of 3 decouple: in coordinates this is the identity v · Q(v) = 3v1 v2 v3 = 0 on either echo orbit.
+
+Proposition 4.1 (Bell-square frame). The average state of the 24 Bell-square outputs has spectrum
+
+                                         0,     m,        λ×2
+                                                           D ,     λ×3
+                                                                    V ,         λ×3
+                                                                                 E ,
+
+where
+                     r4             D+ + D −              2q 2 r2         E+ + E−
+            m = q4 +    ,     λD =              ,   λV =          ,  λE =         .
+                      3                  4                   3               6
+The generic rank is nine. It is never a tight frame on that support.
+
+Proof. The block eigenvalues follow from Schur averaging and the definitions of D± , E± . Tightness
+would in particular require m = λV , or
+
+                                               6(q 2 )2 − 4q 2 + 1 = 0,
+
+whose discriminant is negative.
+
+   The ensemble is compound geometrically uniform, not a single unitary group. Consequently
+the ordinary pretty-good measurement need not be optimal. The state-discrimination dual can
+nevertheless be averaged over A4 . Let
+                                                                                                 !
+                     2r4                      2r4
+                 T =     ,         Ec = clamp     , [min(E+ , E− ), max(E+ , E− )] ,
+                      3                        5
+
+where clamp(x, [u, v]) = min(v, max(u, x)), and put
+                                                                       p            p
+                                 Dc = T − E c ,               H=            2Dc +       3Ec .
+
+Theorem 4.2 (Exact Bell-square optimum). For all z ∈ [0, 1/3],
+
+                                               1 q 4
+                                                             √          2
+                             PBell⊗2 =             q + r4 /3 + 6 |q|r + H .                          (7)
+                                              24
+
+                                                              4
+
+
+
+Proof. Give the + seed constraint dual weight w ∈ [0, 1] and the − seed weight 1 − w. Then
+E(w) = wE+ + (1 − w)E− and D(w) = T − E(w). Minimizing the positive dual blocks and using
+the Schur multiplicities reduces the optimum to
+
+                                   √                                     2
+                          1
+                                         q          q         q                   
+                             max     m + 2D(w) + 6q 2 r2 + 3E(w) .
+                         24 0≤w≤1
+                                      √
+The concave function 2(T − E) + 3E has its unconstrained maximum at E = 3T /5 = 2r4 /5.
+                        p
+
+Projection to the available interval gives Ec . The corresponding covariant seed operators satisfy
+the primal completeness conditions, so the bound is attained. Appendix A gives the complete
+isotypic block table, the reduced dual program, and an explicit attaining primal construction.
+
+
+5    Optimization over every parallel input
+Consider an arbitrary parallel two-query strategy with any retained reference. Averaging it over
+A4 preserves success. The marginal on the two queried qubits commutes with the diagonal spin
+action and therefore has the form
+                                               1−a
+                               ρa = aPsing +       Ptrip ,         0 ≤ a ≤ 1.                 (8)
+                                                3
+Every such marginal can be purified. Define
+
+                                    (4q 2 − 1)2              √            2H
+                               h=               ,       K=       8 |q|r + √ .
+                                          9                                3
+
+Theorem 5.1 (Global parallel optimum). If q 2 = 1, all labels are the same channel and Ppar =
+1/24. Otherwise, for fixed a,
+
+                                        1 q
+                                           
+                                                             √     2
+                           Ppar (a) =        h + (1 − h)a + K 1 − a .
+                                        24
+The optimum over all parallel inputs is
+                                                        !
+                                          K2
+                                    
+                                      1
+                                      1+        ,            hK 2 ≤ (1 − h)2 ,
+                                    
+                                    
+                                    
+                           opt
+                          Ppar = 24      1−h                                                  (9)
+                                     √
+                                 1 ( h + K)2 ,
+                                
+                                                             hK 2 > (1 − h)2 .
+                                
+                                  24
+In the first branch an attaining singlet weight is
+
+                                                       K2
+                                    a∗ = 1 −                        ;
+                                               (1 − h)(K 2 + 1 − h)
+
+in the second branch a∗ = 0.
+
+Proof. In the purification of Equation (8), the scalar block has squared norm h + (1 − h)a. Every
+non-scalar block in Theorem 4.2 scales by 1 −    p a. The same reduced primal-dual calculation
+therefore gives the displayed Ppar (a). Put u = (1 − h)(1 − a). The bracket becomes
+                            p               K                         √
+                               1 − u2 + √       u,          0≤u≤          1 − h.
+                                            1−h
+Maximizing this planar inner product gives the two branches and a∗ . The symmetrization,
+purification, and block rescaling are derived explicitly in Appendix B.
+
+
+
+                                                    5
+
+
+
+Let z∗ be the unique root in (0, 1/3) of q(z) = 1/2:
+                                                  1      √
+        z∗ = 0.167964937759754 . . . ,      y∗ = √ arcsin 3z∗ = 0.455698535295322 . . . .
+                                                   3
+At this point the clamp is interior and Equation (9) simplifies.
+Corollary 5.2 (Non-Bell optimum at the tight one-query point). At q = 1/2,
+                          √                                           √
+                opt   5 + 15                                      5 − 15
+               Ppar =         = 0.369707639425309 . . . ,   a∗ =           .                       (10)
+                         24                                          10
+Thus two Bell pairs are not the optimal parallel input, despite a Bell input being globally optimal
+for one query.
+
+
+6    The nine-dimensional causal cap
+The universal two-query dimension bound for qubit unitaries uses dim Sym2 (C4 ) = 10 [1]. The
+echo family lies on a fixed conjugacy class and loses one dimension.
+Theorem 6.1 (Fixed-trace query defect). For any purified causal protocol using the same unknown
+Wσ twice, the 24 final pure states span a space of dimension at most nine. Therefore
+                                            (2)        9   3
+                                          Pcausal ≤       = .                                      (11)
+                                                       24  8
+Proof. Defer all intermediate measurements and purify every fixed operation. The final vector
+is then a fixed linear image of Wσ ⊗ Wσ . Since Wσ = qI − ivσ · σ with common q and common
+∥vσ ∥2 = r2 , its quadratic coordinates consist of one scalar, three coordinates qva , and six symmetric
+products va vb . The trace relation a va2 = r2 removes one of these ten directions. Thus the
+                                       P
+
+final span has dimension at most 1 + 3 + 5 = 9, independently of the intermediate memory.
+For N equiprobable pure hypotheses supported in dimension d, the dual operator Id /N gives
+P ≤ d/N .
+
+    The bound is stronger than the universal 10/24 cap, but a dimension bound need not be
+attainable. We now exhibit exact attainment.
+
+
+7    An exact adaptive certificate at q = 1/2
+Use the Choi ordering B2 A2 B1 A1 , and let the deterministic two-comb normalization act on
+A2 B1 A1 . In the computational basis define
+                                                                         
+                                   12 0  0 0 0 0 −8 0
+                                  0
+                                     7  0 0 5 0  0 −8
+                                  0  0 20 0 0 0  0  0
+                                                      
+                                                      
+                              1   0  0  0 15 0 0 5  0.
+                         Ξ∗ =                                                                     (12)
+                                  0
+                              54     5  0 0 15 0 0  0
+                                  0  0  0 0 0 20 0  0
+                                 
+                                                       
+                                 −8 0  0 5 0 0   7  0
+                                                      
+
+                                   0 −8 0 0 0 0   0 12
+
+Its spectrum and normalization are
+                              n                           o
+                 spec(Ξ∗ ) = 0×2 , (7/27)×2 , (10/27)×4 ,        TrA2 Ξ∗ = IB1 A1 /2.              (13)
+
+Thus Ξ∗ is a valid deterministic causal normalization with maximally mixed first input. The
+realization theorem for quantum combs then identifies these positive normalization constraints
+
+                                                   6
+
+
+
+with a causally ordered two-slot circuit, with the final measurement postponed to the end [9].
+Appendix C supplies a six-Kraus channel and its Stinespring implementation, making this comb
+realization constructive.
+    Let t∗ > 0 be the unique positive root
+
+                               f (t) = t8 + 12t6 − 10t4 − 20t2 − 239 = 0.                                  (14)
+
+This is exactly the q = 1/2 condition. Put
+
+                        |Jσ(2) ⟩ = |Wσ ⟩⟩⊗2 ,     Kστ = ⟨Jσ(2) |(IB2 ⊗ Ξ∗ )|Jτ(2) ⟩.
+
+All diagonal entries of K equal one. Define the field element
+                           t(27686401t6 + 85868681t4 − 2778560421t2 + 1179263131)
+                δ(t) = −                                                          .
+                                                34125376000
+At t = t∗ set
+                                         3                        3
+                                 c+ =      − δ(t∗ ),       c− =     + δ(t∗ ).                              (15)
+                                         8                        8
+Numerically,
+
+                 c+ = 0.09473473348 . . . ,                       c− = 0.65526526651 . . . .
+
+In particular both weights are strictly positive. Let C = diag(c+ I12 , c− I12 ), with labels ordered
+by parity.
+Lemma 7.1 (Exact scalable-frame identity). At the algebraic point Equation (14),
+
+                                KCK = K,          12(c+ + c− ) = 9.                              (16)
+                                            √
+Proof. Write every pulse as (tI − ira · σ)/ t2 + 3. Each echo entry is then a rational function
+with denominator (t2 + 3)4 . Hence every entry of KCK − K belongs to Q(t) with denominator
+nonzero at t∗ . Reducing the 576 numerators modulo f (t) gives zero. By A4 covariance it is enough
+to check one row representative from each parity orbit. Positivity of c± follows by rational interval
+evaluation on the isolating interval 1.71860 < t∗ < 1.71862. The accompanying verifier performs
+these quotient-ring operations directly; no floating-point SDP is used.
+
+Theorem 7.2 (Exact adaptive advantage). At q = 1/2, the optimal success probability among all
+causally ordered two-query protocols is
+                                                 (2)     3
+                                                Pcausal = .                                                (17)
+                                                         8
+It strictly exceeds the global parallel optimum:
+                                                             √
+                                     (2)       opt   4−           15
+                                    Pcausal − Ppar =                   > 0.                                (18)
+                                                            24
+                                                                                       1/2       (2)
+Proof. Let |ϕσ ⟩ be the normalized effective state obtained by applying I ⊗ Ξ∗               to |Jσ ⟩. Its Gram
+matrix is K. Define
+                                  Mσ = c± |ϕσ ⟩⟨ϕσ |,     σ ∈ O± .
+                                     P
+The identity KCK = K says that σ Mσ is the orthogonal projector onto the span of the effective
+states. Complete it arbitrarily on the unused orthogonal complement. This gives a valid final
+POVM for the deterministic comb Ξ∗ . Its success is
+                                 1 X                   12(c+ + c− )  3
+                                     c± |⟨ϕσ |ϕσ ⟩|2 =              = .
+                                24 σ                       24        8
+
+The upper bound is Theorem 6.1; hence the strategy is optimal. Subtract Equation (10) to obtain
+Equation (18).
+
+                                                       7
+
+
+
+one query                         1/6
+                                                                           √
+    two parallel                                                    (5 +       15)/24
+
+     two causal                                                     3/8
+                                                                                         success probability
+                   0        0.1         0.2              0.3        0.4
+
+Figure 1: Exact values for 24 labelled orders at q = 1/2. The second
+                                                               √     use more than doubles the
+one-query success, and causal memory gives the strict gain (4 − 15)/24 over every parallel input.
+
+
+   The exact point also forces an open interval of adaptive advantage. This is useful because it
+separates the phenomenon from algebraic fine tuning.
+
+Corollary 7.3 (Certified open pulse interval). Let y∗ = 0.455698535295322 . . . be the pulse in
+Equation (10). Keep the comb and final POVM of Theorem 7.2 fixed while varying the 24 echo
+words with y. Then this causal strategy strictly outperforms every parallel two-query strategy
+whenever                              √
+                                   4 − 15
+                       |y − y∗ | <     √ = 4.7742903163 . . . × 10−5 .                     (19)
+                                   1536 3
+Consequently the optimal causal value is strictly larger than the parallel optimum throughout that
+interval.
+                                                                                          √
+Proof. Each √echo is a product of eight factors whose Hermitian generators have norm 3, hence
+∥Wσ′ (y)∥√≤ 8 3. After two queries, the derivative of any normalized purified
+                                                                           √    output has norm at
+most 16 3. Therefore the success probability of any fixed √    tester is 32 3-Lipschitz. Taking the
+supremum preserves the same constant, so Pparopt (y) is also 32 3-Lipschitz. The difference between
+                                                                                           √
+                     √ and the parallel optimum can thus decrease from its value (4 − 15)/24
+the fixed causal strategy
+at speed at most 64 3. The radius in Equation (19) follows.
+
+    This separation does not follow from the standard parallelization results. Those results
+cover binary unitary sequences or covariant estimation when the queried unitaries form a group
+representation [5]; the 24 echo words here form two conjugacy orbits and are not closed under
+multiplication. Non-group ensembles can exhibit a sequential advantage in general [1], but that
+fact supplies neither the value nor a strategy for this family. Equations (12)–(16) provide the
+missing architecture-specific certificate.
+
+
+8      Channel collisions and interpretation
+The discrimination problem is label-valued. At exceptional pulses, distinct labels can implement
+the same SU (2) word, and W and −W define the same physical channel. On the fundamental
+branch 0 ≤ z ≤ 1/3, all exact word collisions occur at four points:
+
+    Pulse point                               SU (2) word classes                 Physical channel classes
+    z=0                                       one class of size 24                one class of size 24
+    z = 1/4                                   six classes of size 4               three classes of size 8
+    64z 3 − 4z − 1 = 0                        twelve classes of size 2            same twelve classes
+    256z 5 − 64z 4 − 16z 3 + 12z 2 − 1 = 0    six pairs and twelve singles        same 18 classes
+    generic z                                 24 singles                          24 singles
+
+The point z∗ used in Theorem 7.2 is generic, so its 24 physical channels are distinct. Appendix D
+proves completeness of the table by resultants, Sturm isolation, and direct projective filtering.
+
+
+                                                     8
+
+
+
+The operational phenomenon can now be stated precisely. A single query depends only on the
+second moments Equation (2), and therefore only on the common scalar q. Two queries expose
+E+ − E− , a higher-order orbit invariant. The causal comb Equation (12) uses the first output
+coherently when preparing the second input; it rescales the two orbit frames just enough to make
+the nine-dimensional query cap attainable. This is not causal nonseparability. It is an advantage
+inside ordinary causally ordered quantum circuits.
+
+
+9    Reproducibility and limitations
+The release contains three independent lightweight checks with deliberately different certification
+levels.
+1. A word audit expands all 24 eight-pulse echoes symbolically over Q[c, s]/(c2 + 3s2 − 1), verifies
+   the common trace, both tetrahedral moments, and the collision resultants; numerical root
+   isolation and tolerant grouping are used as diagnostics for the physical collision classes.
+2. A representation audit checks the two-copy block spectrum, scalar clamp, and parallel fixture at
+   q = 1/2 using NumPy with an explicit tolerance. The all-pulse parallel theorem is established
+   by the analytic block reduction, not by this numerical replay.
+3. A causal audit works in Q[t]/(f ) at q = 1/2. It verifies Equation (13), reconstructs the 24
+   effective states, proves positivity of c± , and reduces every entry of KCK − K to zero. It then
+   checks the exact 3/8 success and the strict algebraic gap.
+Thus the central causal certificate is exact and uses no numerical SDP. The other two scripts are
+transparent corroborating audits, while the universal parallel reduction and collision completeness
+remain mathematical proofs in the text. The dependency file records both SymPy and NumPy.
+    Several limitations are deliberate. We do not optimize indefinite-causal- order processes. We
+do not model pulse noise, finite measurement statistics, or laboratory compilation cost. The
+24 hypotheses are known implementations with an unknown label, not an unknown continuous
+unitary. Finally, the dimension-nine obstruction is architecture-specific: it comes from common
+trace and norm, and is not asserted for arbitrary qubit ensembles.
+
+
+10     Conclusion
+Tetrahedral echo order has a genuinely query-dependent memory. One query compresses the two
+parity orbits to the same 1 ⊕ 3 spectrum. Two queries recover their different quadratic energies,
+make the Bell-square input suboptimal, and admit a complete parallel solution. At the algebraic
+point q = 1/2, a rational causal comb saturates a sharpened nine-dimensional query bound and
+strictly outperforms all parallel architectures. The resulting separation is exact, analytic, and
+certified over all 24 pulse orders. The explicit neighborhood in Corollary 7.3 shows that the
+advantage is robust as a mathematical query phenomenon, even though no laboratory noise model
+is asserted.
+
+
+A     The full two-copy block reduction
+This appendix expands the representation steps used in Theorems 4.1, 4.2 and 5.1. For x =
+(q, −iv) ∈ 1 ⊕ 3, the symmetric square decomposes under A4 as
+
+                            Sym2 (1 ⊕ 3) = 1⊕2 ⊕ 1′ ⊕ 1′′ ⊕ 3V ⊕ 3E .
+                                                    √
+The two invariant coordinates are q 2 and −∥v∥2 / 3. They are proportional for all labels, so
+only one invariant direction is occupied. The first copy of 3 is represented by qv. The second is
+represented by                            √
+                                   Q(v) = 2 (v2 v3 , v3 v1 , v1 v2 ).
+
+
+                                                 9
+
+
+
+A direct recurrence for either parity seed gives v1 v2 v3 = 0; the proper tetrahedral rotations are
+signed coordinate permutations, so the identity holds on each entire orbit. Hence
+                                                √
+                                   ⟨v, Q(v)⟩ = 3 2 v1 v2 v3 = 0,
+
+and Schur averaging cannot couple 3V to 3E . This is the claimed decoupling of the two equivalent
+three-dimensional summands.
+   For a seed in orbit ε ∈ {+, −}, the squared block norms are
+
+                            block            occupied 1      1′ ⊕ 1′′      3V       3E
+                         dimension               1             2            3       3
+                     seed norm squared           m             Dε         2q 2 r2   Eε
+
+where m = q 4 + r4 /3 and Dε + Eε = 2r4 /3. This table immediately yields the spectrum in
+Theorem 4.1.
+    For completeness, the reduced minimum-error SDP can also be solved without suppressing the
+scalar step. Let w ∈ [0, 1] be the multiplier of the + seed constraint and write
+
+                                                                        2r4
+                      E(w) = wE+ + (1 − w)E− ,             D(w) =           − E(w).
+                                                                         3
+On a multiplicity-free block of dimension d, minimizing a√positive scalar dual block that dominates
+a rank-one component of squared norm e contributes de to the trace square root. The Schur-
+complement condition for all four occupied blocks therefore gives
+
+                         1       √
+                                     q       √        q     2                  
+                            max    m + 2D(w) + 6 |q|r + 3E(w) .                                (20)
+                        24 0≤w≤1
+The primal has strictly feasible seeds after adding an arbitrarily small multiple of the identity,
+so finite-dimensional SDP strong duality    applies.√Thus Equation (20) is not merely an upper
+bound. The only variable term is 2(T − E) + 3E with T = 2r4 /3. Its stationary point is
+                                     p
+
+E = 3T /5 = 2r4 /5; projecting it onto the interval with endpoints E+ , E− gives exactly the clamp
+in Theorem 4.2.
+
+
+B     Why one singlet parameter solves every parallel input
+After A4 symmetrization, an arbitrary two-qubit query marginal is
+                                             1−a
+                             ρa = aPsing +       Ptrip ,       0 ≤ a ≤ 1.
+                                              3
+This is exhaustive because the diagonal spin representation is 1 ⊕ 3, with both summands
+irreducible. Every ρa has a purification, so optimizing a includes arbitrary retained references.
+    The singlet is fixed by Wσ ⊗ Wσ . On the triplet, the normalized invariant overlap is the
+spin-one character divided by three,
+
+                                     χ1 (Wσ )   4q 2 − 1
+                            η(q) =            =          ,       h = η(q)2 .
+                                         3          3
+Consequently the occupied scalar block has squared norm h + (1 − h)a, while every non-scalar block
+in Equation (20) is multiplied by 1 − a. Substitution gives, without an ansatz on the reference
+system,
+                                     1 q
+                                        
+                                                            √      2
+                          Ppar (a) =       h + (1 − h)a + K 1 − a .
+                                     24
+
+
+
+                                                  10
+
+
+
+p
+Put u =    (1 − h)(1 − a). The bracket becomes
+                              p              K                            √
+                               1 − u2 + √        u,              0≤u≤         1 − h.
+                                             1−h
+                             √
+It is the inner product of ( 1 − u2 , u) with a fixed vector. The unconstrained maximizer lies
+inside the interval exactly when hK 2 ≤ (1 − h)2 ; otherwise the endpoint a = 0 is optimal. This
+proves both branches and the stated a∗ in Theorem 5.1. At q = 1/2, h = 0 and the displayed
+expressions reduce algebraically to Equation (10).
+
+
+C     A concrete six-Kraus realization of the causal comb
+The positivity and partial-trace equations in Equation (13) already imply physical realizability by
+the comb theorem. Here is an explicit dilation. Identify the stored reference with a copy of A1 ,
+and use the output-major vectorization |L⟩⟩ ∈ A2 ⊗ (B1 A1 ). Then J(Λ) = 2Ξ∗ is the Choi matrix
+of a channel Λ : B1 A1 → A2 . One exact Kraus family is
+                                         !                                             !
+                   1 −4 0 0 −5                                        1 0 −1 0 0
+              L1 =              ,                                L2 =             ,
+                   9 0 0 1 0                                          9 5 0 0 4
+                    √          !                                       √           !
+                   2 15 0 0 1 0                                       2 15 0 0 0 0
+              L3 =                ,                              L4 =                ,
+                     9  0 0 0 0                                         9  0 1 0 0
+                    √           !                                      √              !
+                   2 5 −1 0 0 1                                       2 5 0 −1 0 0
+              L5 =                 ,                             L6 =                   .
+                    9   0 0 1 0                                        9  −1 0 0 1
+
+Direct multiplication gives
+                              6                            6
+                                    L∗µ Lµ = I4 ,
+                              X                            X
+                                                               |Lµ ⟩⟩⟨⟨Lµ | = 2Ξ∗ .
+                              µ=1                          µ=1
+
+Thus a circuit can prepare a Bell purification of the first maximally mixed input, store its reference,
+and after receiving B1 apply the Stinespring isometry
+                                                    6
+                                                    X
+                                           V =            Lµ ⊗ |µ⟩M .
+                                                    µ=1
+
+The A2 output is sent through the second unknown channel and M is retained for the final
+measurement. The orbit-weighted rank-one POVM in the proof of Theorem 7.2 completes this
+explicit sequential circuit. Hence the attainment is not only an abstract feasible comb matrix.
+
+
+D     Collision completeness and replay details
+For each of the 276 unordered label pairs, the word recurrence first computes ∥vσ − vτ ∥2 in
+Q[c, s]/(c2 + 3s2 − 1). After setting z = s2 , reduction by c2 = 1 − 3z leaves an expression
+A(z) + cB(z). If B = 0, its roots are tested directly. Otherwise every physical root must divide
+                                         A(z)2 − (1 − 3z)B(z)2 .
+Factoring these resultants gives 17 distance
+                                       √      types. Sturm isolation on [0, 1/3], followed by
+substitution of the physical branch c = 1 − 3z, removes squared-resultant artifacts and leaves
+exactly the four rows of the collision table. Finally, Wσ = −Wτ is possible only when the
+common scalar q vanishes, which adds only the projective identifications at z = 1/4. This proves
+completeness, rather than merely discovering candidate collision points numerically.
+    The supplementary archive contains the manuscript source, manifest, and three fail-closed
+scripts:
+
+                                                          11
+
+
+
+python verification/verify_coherent_order_echo.py
+python verification/verify_two_use_a4.py
+python verification/verify_two_use_causal_qhalf.py
+
+The first performs symbolic 24-word and 276-pair elimination, followed by numerical root screening
+and tolerant class grouping. The second uses NumPy to check the two-copy spectrum, clamp, and
+parallel fixture at q = 1/2. The third works in the exact field Q[t]/(f ), verifies the Kraus/comb
+normalization, isolates the physical root, and reduces every numerator of KCK − K to zero.
+Accordingly, only the third is advertised as a fully exact machine certificate; the first two are
+reproducible diagnostics supporting the analytic arguments above. None invokes an SDP solver or
+random sample.
+
+
+AI assistance disclosure
+AI tools assisted with symbolic exploration, literature triage, code drafting, and language editing.
+The author selected the claims and assumptions. The central causal identity is replayed exactly;
+the remaining scripts provide symbolic and numerical corroboration at the scopes stated above.
+AI output is not treated as independent evidence.
+
+
+References
+[1] Jessica Bavaresco, Mio Murao, and Marco Túlio Quintino. Unitary channel discrimination
+    beyond group structures: Advantages of sequential and indefinite-causal-order strategies.
+    Journal of Mathematical Physics, 63:042203, 2022.
+
+[2] Yonina C. Eldar and G. David Forney, Jr. On quantum detection and the square-root
+    measurement. IEEE Transactions on Information Theory, 47(3):858–872, 2001.
+
+[3] Yonina C. Eldar, Alexandre Megretski, and George C. Verghese. Optimal detection of symmetric
+    mixed quantum states. IEEE Transactions on Information Theory, 50(6):1198–1207, 2004.
+
+[4] Hari Krovi, Saikat Guha, Zachary Dutton, and Marcus P. da Silva. Optimal measurements for
+    symmetric quantum states with applications to optical communication. Physical Review A,
+    92:062333, 2015.
+
+[5] Giulio Chiribella, Giacomo M. D’Ariano, and Paolo Perinotti. Memory effects in quantum
+    channel discrimination. Physical Review Letters, 101:180501, 2008.
+
+[6] Anna Jenčová and Martin Plávala. Conditions for optimal input states for discrimination of
+    quantum channels. Journal of Mathematical Physics, 57:122203, 2016.
+
+[7] David Gross, Koenraad Audenaert, and Jens Eisert. Evenly distributed unitaries: On the
+    structure of unitary designs. Journal of Mathematical Physics, 48:052104, 2007.
+
+[8] Horace P. Yuen, Robert S. Kennedy, and Melvin Lax. Optimum testing of multiple hypotheses
+    in quantum detection theory. IEEE Transactions on Information Theory, 21(2):125–134, 1975.
+
+[9] Giulio Chiribella, Giacomo M. D’Ariano, and Paolo Perinotti. Theoretical framework for
+    quantum networks. Physical Review A, 80:022339, 2009.
+
+
+
+
+                                                12
