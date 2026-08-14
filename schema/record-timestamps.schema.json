@@ -20,9 +20,7 @@
           "deposit_recorded_at",
           "deposit_timestamp_basis",
           "deposit_commit",
-          "published_at",
-          "publication_timestamp_basis",
-          "release_tag"
+          "publication_state"
         ],
         "properties": {
           "id": {"type": "string", "pattern": "^ARR-[0-9]{4}-[0-9A-HJKMNP-TV-Z]{16}$"},
@@ -30,10 +28,17 @@
           "deposit_recorded_at": {"type": "string", "format": "date-time"},
           "deposit_timestamp_basis": {"const": "first_repository_commit"},
           "deposit_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+          "publication_state": {"enum": ["pending", "published"]},
           "published_at": {"type": "string", "format": "date-time"},
           "publication_timestamp_basis": {"const": "github_release"},
           "release_tag": {"type": "string", "minLength": 5}
-        }
+        },
+        "allOf": [
+          {
+            "if": {"properties": {"publication_state": {"const": "published"}}},
+            "then": {"required": ["published_at", "publication_timestamp_basis", "release_tag"]}
+          }
+        ]
       }
     }
   }

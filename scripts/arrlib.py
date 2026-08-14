@@ -109,20 +109,30 @@ def validate_record_timestamps(papers: Iterable[Paper], path: Path = TIMESTAMP_R
         prefix = f"timestamp registry {key[0]} {key[1]}"
         try:
             deposited = parse_exact_timestamp(item.get("deposit_recorded_at"))
-            published = parse_exact_timestamp(item.get("published_at"))
-            if published < deposited:
-                errors.append(f"{prefix}: published_at precedes deposit_recorded_at")
         except ValueError as error:
             errors.append(f"{prefix}: {error}")
+            deposited = None
         if item.get("deposit_timestamp_basis") != "first_repository_commit":
             errors.append(f"{prefix}: deposit timestamp basis must be first_repository_commit")
         commit = item.get("deposit_commit")
         if not isinstance(commit, str) or not re.fullmatch(r"[0-9a-f]{40}", commit):
             errors.append(f"{prefix}: deposit_commit must be a full Git SHA")
-        if item.get("publication_timestamp_basis") != "github_release":
-            errors.append(f"{prefix}: publication timestamp basis must be github_release")
-        if item.get("release_tag") != f"{key[0]}-{key[1]}":
-            errors.append(f"{prefix}: release_tag does not match the record and version")
+        publication_state = item.get("publication_state")
+        if publication_state not in {"pending", "published"}:
+            errors.append(f"{prefix}: publication_state must be pending or published")
+        elif publication_state == "published":
+            try:
+                published = parse_exact_timestamp(item.get("published_at"))
+                if deposited is not None and published < deposited:
+                    errors.append(f"{prefix}: published_at precedes deposit_recorded_at")
+            except ValueError as error:
+                errors.append(f"{prefix}: {error}")
+            if item.get("publication_timestamp_basis") != "github_release":
+                errors.append(f"{prefix}: publication timestamp basis must be github_release")
+            if item.get("release_tag") != f"{key[0]}-{key[1]}":
+                errors.append(f"{prefix}: release_tag does not match the record and version")
+        elif any(field in item for field in ("published_at", "publication_timestamp_basis", "release_tag")):
+            errors.append(f"{prefix}: pending records cannot claim release publication fields")
     return errors
 
 
@@ -217,6 +227,29 @@ def validate_paper(paper: Paper) -> list[str]:
         for index, author in enumerate(authors):
             if not isinstance(author, dict) or not isinstance(author.get("name"), str) or not author["name"].strip():
                 errors.append(f"authors[{index}].name: a non-empty name is required")
+
+    related_records = metadata.get("related_records", [])
+    if not isinstance(related_records, list):
+        errors.append("related_records: an array is required")
+    else:
+        related_ids: set[str] = set()
+        for index, relation in enumerate(related_records):
+            if not isinstance(relation, dict):
+                errors.append(f"related_records[{index}]: an object is required")
+                continue
+            related_id = relation.get("id")
+            if not isinstance(related_id, str) or not ID_PATTERN.match(related_id):
+                errors.append(f"related_records[{index}].id: invalid ARR identifier")
+            elif related_id == paper_id:
+                errors.append(f"related_records[{index}].id: a record cannot relate to itself")
+            elif related_id in related_ids:
+                errors.append(f"related_records[{index}].id: duplicate related record")
+            else:
+                related_ids.add(related_id)
+            if relation.get("relationship") not in {"related_work", "supplement", "companion", "is_part_of"}:
+                errors.append(f"related_records[{index}].relationship: invalid value")
+            if not isinstance(relation.get("note"), str) or len(relation["note"].strip()) < 10:
+                errors.append(f"related_records[{index}].note: a meaningful note is required")
 
     source = metadata.get("source_of_truth")
     if source not in ALLOWED_SOURCE_FILES:
@@ -432,10 +465,12 @@ def validate_paper(paper: Paper) -> list[str]:
 
 
 def validate_collection(papers: Iterable[Paper]) -> dict[str, list[str]]:
+    papers = list(papers)
     results: dict[str, list[str]] = {}
     seen_versions: set[tuple[str, str]] = set()
     seen_version_ids: set[str] = set()
     public_to_record: dict[str, str] = {}
+    public_ids = {paper.id for paper in papers}
     for paper in papers:
         record_id = paper.metadata.get("record_id", "")
         version_id = paper.metadata.get("version_id", "")
@@ -450,6 +485,9 @@ def validate_collection(papers: Iterable[Paper]) -> dict[str, list[str]]:
         previous_record = public_to_record.setdefault(paper.id, record_id)
         if previous_record != record_id:
             errors.append("id: public identifier is assigned to multiple record_id values")
+        for relation in paper.metadata.get("related_records", []):
+            if isinstance(relation, dict) and relation.get("id") not in public_ids:
+                errors.append(f"related_records: unknown target {relation.get('id')}")
         if errors:
             try:
                 display_path = paper.path.relative_to(ROOT)

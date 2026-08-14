@@ -69,6 +69,11 @@
     "source_of_truth": {"enum": ["paper.tex", "paper.md", "paper.pdf"]},
     "keywords": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
     "subjects": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "related_records": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/relatedRecord"},
+      "uniqueItems": true
+    },
     "doi": {"type": "string"},
     "release_url": {"type": "string", "format": "uri"},
     "supersedes_version_id": {"type": "string"},
@@ -171,6 +176,16 @@
     }
   ],
   "$defs": {
+    "relatedRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "relationship", "note"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^ARR-[0-9]{4}-[0-9A-HJKMNP-TV-Z]{16}$"},
+        "relationship": {"enum": ["related_work", "supplement", "companion", "is_part_of"]},
+        "note": {"type": "string", "minLength": 10}
+      }
+    },
     "licensedPath": {
       "type": "object",
       "additionalProperties": false,
