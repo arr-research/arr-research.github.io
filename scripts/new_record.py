@@ -15,9 +15,15 @@ TEMPLATE_DIR = ROOT / "templates" / "paper"
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Create a sharded ARR paper candidate from the canonical template.")
+    parser = argparse.ArgumentParser(description="Create a sharded ARR research-record candidate from the canonical template.")
     parser.add_argument("--date", default=date.today().isoformat(), help="Deposit date in YYYY-MM-DD form")
     parser.add_argument("--author", default="Author Name", help="Initial depositor/author name")
+    parser.add_argument(
+        "--type",
+        choices=("research-paper", "technical-note"),
+        default="research-paper",
+        help="Public record type (default: research-paper)",
+    )
     return parser.parse_args()
 
 
@@ -37,12 +43,26 @@ def main() -> int:
     metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
     metadata.update(
         {
+            "schema_version": "1.1",
             "record_id": f"arr:record:{record_uuid}",
             "version_id": f"arr:version:{version_uuid}",
             "id": public_id,
             "date": publication_date.isoformat(),
+            "record_type": args.type.replace("-", "_"),
         }
     )
+    if metadata["record_type"] == "technical_note":
+        metadata["title"] = "Replace with the complete technical-note title"
+        metadata["abstract"] = (
+            "Replace this text with a concise summary of the technical contribution, "
+            "method or evidence, result, limitations, and exact intended scope."
+        )
+        metadata["technical_note"] = {
+            "kind": "result",
+            "maturity": "complete_in_scope",
+            "scope_statement": "Replace with the precise contribution and boundary of this technical note.",
+            "limitations": "Replace with the known limitations, exclusions, and unresolved questions.",
+        }
     metadata["authors"][0]["name"] = args.author
     metadata["deposit"]["depositor_name"] = args.author
     metadata["editorial"]["signed_by"] = args.author

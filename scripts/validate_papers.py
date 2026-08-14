@@ -21,7 +21,9 @@ def main() -> int:
             for error in timestamp_errors:
                 print(f"  - {error}")
         return 1
-    print(f"ARR validation passed ({len(papers)} published paper(s)).")
+    paper_count = sum(paper.record_type == "research_paper" for paper in papers)
+    note_count = sum(paper.record_type == "technical_note" for paper in papers)
+    print(f"ARR validation passed ({paper_count} paper(s), {note_count} technical note(s)).")
     return 0
 
 

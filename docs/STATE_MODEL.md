@@ -14,6 +14,13 @@ Terminal alternatives are `declined`, `expired`, `removed`, and `legal_hold`. In
 - `corrected`: a new version that identifies `supersedes_version_id`.
 - `withdrawn`: a persistent tombstone; files are retained unless law or safety requires removal.
 
+## Public record types
+
+- `research_paper`: a paper-scale research contribution.
+- `technical_note`: a concise, explicitly bounded technical contribution. Schema 1.1 requires a note kind, maturity, scope statement and limitations.
+
+Schema 1.0 records predate this distinction and are interpreted as `research_paper`; their published metadata is not rewritten. Type and status are independent: for example, a technical note can be accepted, corrected or withdrawn.
+
 ## Independent evidence labels
 
 Labels report evidence, not a single quality score:

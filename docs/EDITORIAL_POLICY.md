@@ -2,7 +2,14 @@
 
 ## Scope
 
-ARR is a curated archive of research preprints with preserved canonical artifacts and machine-readable renditions. It is not a journal and publication does not imply peer review, AI screening, correctness, novelty or importance.
+ARR is a curated archive of research papers and technical notes with preserved canonical artifacts and machine-readable renditions. It is not a journal and publication does not imply peer review, AI screening, correctness, novelty or importance.
+
+## Publication types
+
+- **Research paper:** a paper-scale scholarly argument with its question, method, principal results, limitations and supporting research object.
+- **Technical note:** a narrower research communication such as a result, proof, formalization, computation, replication, negative result, method, data description, software contribution or protocol. It must state its contribution boundary, maturity and limitations explicitly.
+
+Technical notes are not a lower-integrity channel. They may be shorter or narrower, but the same authorship, rights, source-integrity, provenance, licensing, disclosure and evidence-label rules apply. The record type must remain visible in the catalogue and citation context.
 
 ## Acceptance standard
 
@@ -21,7 +28,9 @@ A record may be accepted only when:
 
 ## Claims ARR makes
 
-ARR may state that a particular check passed. It must not convert that result into a broader claim that the paper is universally true, novel, important or peer reviewed.
+ARR may state that a particular check passed. It must not convert that result into a broader claim that the record is universally true, novel, important or peer reviewed.
+
+A technical note may later be extended into a research paper. Both records remain persistent and are linked with `extends` and `is_extended_by`; the earlier note is not silently overwritten.
 
 ARR does not publish a composite quality score. Independent labels report the evidence actually obtained.
 

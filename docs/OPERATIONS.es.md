@@ -14,7 +14,7 @@
 3. Abrir una propuesta de incorporación.
 4. Resolver los errores y objeciones.
 5. Aprobar e integrar la versión exacta.
-6. Ejecutar la acción **Create paper release**.
+6. Ejecutar la acción **Create ARR record release**.
 7. Confirmar que la página enlaza la release y que los hashes coinciden.
 
 ## Regla esencial

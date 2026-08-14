@@ -23,6 +23,7 @@ from arrlib import (  # noqa: E402
     validate_record_timestamps,
 )
 import new_record  # noqa: E402
+import build_site  # noqa: E402
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -33,11 +34,12 @@ class PaperValidationTests(unittest.TestCase):
         paper_dir = root / "2026" / "08" / "0J" / "ARR-2026-0J7S2PFT4V8B9T8N"
         paper_dir.mkdir(parents=True)
         metadata = {
-            "schema_version": "1.0",
+            "schema_version": "1.1",
             "record_id": "arr:record:123e4567-e89b-42d3-a456-426614174000",
             "version_id": "arr:version:123e4567-e89b-42d3-a456-426614174001",
             "id": "ARR-2026-0J7S2PFT4V8B9T8N",
             "version": "v1",
+            "record_type": "research_paper",
             "title": "A complete and testable research title",
             "abstract": "This abstract is deliberately long enough to state a question, method, result, scope, and limitation.",
             "authors": [{"name": "Test Author"}],
@@ -107,6 +109,29 @@ class PaperValidationTests(unittest.TestCase):
     def test_valid_complete_record(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             paper = self.make_paper(Path(temporary))
+            self.assertEqual(validate_paper(paper), [])
+
+    def test_technical_note_requires_scope_and_limitations(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            paper = self.make_paper(Path(temporary))
+            paper.metadata["record_type"] = "technical_note"
+            paper.metadata["technical_note"] = {
+                "kind": "formalization",
+                "maturity": "complete_in_scope",
+                "scope_statement": "This note formalizes one stated lemma and no broader theorem.",
+                "limitations": "The correspondence with the surrounding manuscript is not independently reviewed.",
+            }
+            self.assertEqual(validate_paper(paper), [])
+            paper.metadata["technical_note"]["limitations"] = "Too short"
+            errors = validate_paper(paper)
+            self.assertTrue(any(error.startswith("technical_note.limitations:") for error in errors))
+
+    def test_legacy_schema_is_an_implicit_research_paper(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            paper = self.make_paper(Path(temporary))
+            paper.metadata["schema_version"] = "1.0"
+            paper.metadata.pop("record_type")
+            self.assertEqual(paper.record_type, "research_paper")
             self.assertEqual(validate_paper(paper), [])
 
     def test_exact_timestamp_registry_requires_offsets_and_matching_release(self) -> None:
@@ -213,6 +238,61 @@ class PaperValidationTests(unittest.TestCase):
             metadata_path = next(papers_dir.glob("**/metadata.json"))
             paper = Paper(metadata_path.parent, json.loads(metadata_path.read_text(encoding="utf-8")))
             self.assertEqual(validate_paper(paper), [])
+            self.assertEqual(paper.record_type, "research_paper")
+
+    def test_new_record_generates_a_technical_note_profile(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            temporary_root = Path(temporary)
+            papers_dir = temporary_root / "papers"
+            with (
+                patch.object(new_record, "ROOT", temporary_root),
+                patch.object(new_record, "PAPERS_DIR", papers_dir),
+                patch.object(new_record, "TEMPLATE_DIR", ROOT / "templates" / "paper"),
+                patch.object(
+                    sys,
+                    "argv",
+                    ["new_record.py", "--date", "2026-08-13", "--author", "Test Author", "--type", "technical-note"],
+                ),
+            ):
+                with redirect_stdout(io.StringIO()):
+                    self.assertEqual(new_record.main(), 0)
+            metadata_path = next(papers_dir.glob("**/metadata.json"))
+            paper = Paper(metadata_path.parent, json.loads(metadata_path.read_text(encoding="utf-8")))
+            self.assertEqual(paper.record_type, "technical_note")
+            self.assertEqual(validate_paper(paper), [])
+
+    def test_technical_note_uses_its_own_public_route_and_scope_panel(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            paper = self.make_paper(root)
+            paper.metadata["record_type"] = "technical_note"
+            paper.metadata["technical_note"] = {
+                "kind": "computational",
+                "maturity": "preliminary",
+                "scope_statement": "This note reports one bounded computational observation and its replay files.",
+                "limitations": "The observation has not been generalized beyond the declared parameter range.",
+            }
+            timestamp = {
+                "deposit_recorded_at": "2026-08-13T10:15:20+02:00",
+                "publication_state": "pending",
+            }
+            timestamps = {(paper.id, paper.version): timestamp}
+            index = build_site.build_notes_index([paper], timestamps, "", "https://example.test")
+            self.assertIn(f'/notes/{paper.id}/', index)
+            self.assertIn("Technical note", index)
+            with patch.object(build_site, "ROOT", root):
+                page = build_site.build_paper_page(
+                    paper,
+                    timestamp,
+                    [],
+                    {paper.id: "notes"},
+                    "",
+                    "https://example.test",
+                    "",
+                )
+            self.assertIn("Technical-note scope", page)
+            self.assertIn("Preliminary", page)
+            self.assertIn(f'https://example.test/notes/{paper.id}/', page)
 
 
 class RepositoryContractTests(unittest.TestCase):

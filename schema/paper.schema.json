@@ -26,7 +26,7 @@
     "editorial"
   ],
   "properties": {
-    "schema_version": {"const": "1.0"},
+    "schema_version": {"enum": ["1.0", "1.1"]},
     "record_id": {
       "type": "string",
       "pattern": "^arr:record:[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
@@ -37,6 +37,7 @@
     },
     "id": {"type": "string", "pattern": "^ARR-[0-9]{4}-[0-9A-HJKMNP-TV-Z]{16}$"},
     "version": {"type": "string", "pattern": "^v[1-9][0-9]*$"},
+    "record_type": {"enum": ["research_paper", "technical_note"]},
     "title": {"type": "string", "minLength": 10, "maxLength": 300},
     "abstract": {"type": "string", "minLength": 50, "maxLength": 5000},
     "authors": {
@@ -55,6 +56,30 @@
     },
     "date": {"type": "string", "format": "date"},
     "status": {"enum": ["accepted", "corrected", "withdrawn"]},
+    "technical_note": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "maturity", "scope_statement", "limitations"],
+      "properties": {
+        "kind": {
+          "enum": [
+            "result",
+            "proof",
+            "formalization",
+            "computational",
+            "replication",
+            "negative_result",
+            "method",
+            "data",
+            "software",
+            "protocol"
+          ]
+        },
+        "maturity": {"enum": ["preliminary", "complete_in_scope"]},
+        "scope_statement": {"type": "string", "minLength": 30, "maxLength": 2000},
+        "limitations": {"type": "string", "minLength": 30, "maxLength": 2000}
+      }
+    },
     "licenses": {
       "type": "object",
       "additionalProperties": false,
@@ -165,6 +190,27 @@
   "allOf": [
     {
       "if": {
+        "properties": {"schema_version": {"const": "1.1"}},
+        "required": ["schema_version"]
+      },
+      "then": {"required": ["record_type"]}
+    },
+    {
+      "if": {
+        "properties": {"record_type": {"const": "technical_note"}},
+        "required": ["record_type"]
+      },
+      "then": {"required": ["technical_note"]}
+    },
+    {
+      "if": {
+        "properties": {"record_type": {"const": "research_paper"}},
+        "required": ["record_type"]
+      },
+      "then": {"not": {"required": ["technical_note"]}}
+    },
+    {
+      "if": {
         "properties": {"source_of_truth": {"const": "paper.pdf"}},
         "required": ["source_of_truth"]
       },
@@ -182,7 +228,7 @@
       "required": ["id", "relationship", "note"],
       "properties": {
         "id": {"type": "string", "pattern": "^ARR-[0-9]{4}-[0-9A-HJKMNP-TV-Z]{16}$"},
-        "relationship": {"enum": ["related_work", "supplement", "companion", "is_part_of"]},
+        "relationship": {"enum": ["related_work", "supplement", "companion", "is_part_of", "extends", "is_extended_by"]},
         "note": {"type": "string", "minLength": 10}
       }
     },
