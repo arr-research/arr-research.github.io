@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
-name: Create paper release
+name: Create ARR record release
 
 on:
   workflow_dispatch:
@@ -34,7 +34,7 @@ jobs:
           paper_id='${{ inputs.paper_id }}'
           metadata_path="$(find papers -path "*/$paper_id/metadata.json" -print -quit)"
           if [[ -z "$metadata_path" ]]; then
-            echo "Paper not found: $paper_id" >&2
+            echo "ARR record not found: $paper_id" >&2
             exit 1
           fi
           paper_dir="$(dirname "$metadata_path")"
@@ -55,7 +55,7 @@ jobs:
           paper_id='${{ inputs.paper_id }}'
           metadata_path="$(find papers -path "*/$paper_id/metadata.json" -print -quit)"
           if [[ -z "$metadata_path" ]]; then
-            echo "Paper not found: $paper_id" >&2
+            echo "ARR record not found: $paper_id" >&2
             exit 1
           fi
           version="$(python -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["version"])' "$metadata_path")"

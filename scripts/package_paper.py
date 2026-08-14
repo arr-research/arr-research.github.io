@@ -12,7 +12,7 @@ from arrlib import ROOT, discover_papers, iter_package_files, sha256, validate_p
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Build immutable release assets for one ARR paper.")
+    parser = argparse.ArgumentParser(description="Build immutable release assets for one ARR research record.")
     parser.add_argument("paper_id", help="ARR public identifier, for example ARR-2026-01K2M3N4P5Q6R7S8")
     parser.add_argument("--output", default="dist/release", help="Output directory")
     return parser.parse_args()
@@ -22,7 +22,7 @@ def main() -> int:
     args = parse_args()
     matches = [paper for paper in discover_papers() if paper.id == args.paper_id]
     if len(matches) != 1:
-        print(f"Expected exactly one paper named {args.paper_id}; found {len(matches)}.", file=sys.stderr)
+        print(f"Expected exactly one record named {args.paper_id}; found {len(matches)}.", file=sys.stderr)
         return 1
 
     paper = matches[0]
@@ -65,6 +65,7 @@ def main() -> int:
         f"# {paper.metadata['title']}\n\n"
         f"ARR record: `{paper.id}`  \n"
         f"Version: `{paper.version}`  \n"
+        f"Record type: `{paper.record_type}`  \n"
         f"Protocol: `{paper.metadata['verification']['protocol']}`\n\n"
         "The attached manifest records SHA-256 hashes for every published source file, the complete source bundle, and the canonical PDF when supplied.\n",
         encoding="utf-8",

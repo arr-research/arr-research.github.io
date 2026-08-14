@@ -20,6 +20,19 @@ RECORD_ID_PATTERN = re.compile(rf"^arr:record:{UUID_PATTERN}$")
 VERSION_ID_PATTERN = re.compile(rf"^arr:version:{UUID_PATTERN}$")
 VERSION_PATTERN = re.compile(r"^v[1-9]\d*$")
 ALLOWED_STATUSES = {"accepted", "corrected", "withdrawn"}
+ALLOWED_RECORD_TYPES = {"research_paper", "technical_note"}
+ALLOWED_NOTE_KINDS = {
+    "result",
+    "proof",
+    "formalization",
+    "computational",
+    "replication",
+    "negative_result",
+    "method",
+    "data",
+    "software",
+    "protocol",
+}
 ALLOWED_SOURCE_FILES = {"paper.tex", "paper.md", "paper.pdf"}
 ALLOWED_CHECKS = {"pass", "partial", "not_assessed", "not_applicable"}
 ALLOWED_LEAN_LEVELS = {"L0", "L1", "L2", "L3", "not_assessed", "not_applicable"}
@@ -38,6 +51,11 @@ class Paper:
     @property
     def version(self) -> str:
         return self.metadata["version"]
+
+    @property
+    def record_type(self) -> str:
+        # Schema 1.0 predates explicit record types and contains papers only.
+        return self.metadata.get("record_type", "research_paper")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -160,8 +178,36 @@ def validate_paper(paper: Paper) -> list[str]:
     ):
         _required_string(metadata, field, errors)
 
-    if metadata.get("schema_version") != "1.0":
-        errors.append("schema_version: must be 1.0")
+    schema_version = metadata.get("schema_version")
+    if schema_version not in {"1.0", "1.1"}:
+        errors.append("schema_version: must be 1.0 or 1.1")
+
+    explicit_record_type = metadata.get("record_type")
+    record_type = explicit_record_type or "research_paper"
+    if schema_version == "1.0" and explicit_record_type is not None:
+        errors.append("record_type: schema 1.0 records must use the legacy implicit research_paper type")
+    if schema_version == "1.1" and explicit_record_type not in ALLOWED_RECORD_TYPES:
+        errors.append(f"record_type: must be one of {sorted(ALLOWED_RECORD_TYPES)}")
+    if record_type not in ALLOWED_RECORD_TYPES:
+        errors.append(f"record_type: must be one of {sorted(ALLOWED_RECORD_TYPES)}")
+
+    note_profile = metadata.get("technical_note")
+    if record_type == "technical_note":
+        if schema_version != "1.1":
+            errors.append("technical_note: technical notes require schema_version 1.1")
+        if not isinstance(note_profile, dict):
+            errors.append("technical_note: an object is required for technical notes")
+        else:
+            if note_profile.get("kind") not in ALLOWED_NOTE_KINDS:
+                errors.append(f"technical_note.kind: must be one of {sorted(ALLOWED_NOTE_KINDS)}")
+            if note_profile.get("maturity") not in {"preliminary", "complete_in_scope"}:
+                errors.append("technical_note.maturity: must be preliminary or complete_in_scope")
+            for field in ("scope_statement", "limitations"):
+                value = note_profile.get(field)
+                if not isinstance(value, str) or len(value.strip()) < 30:
+                    errors.append(f"technical_note.{field}: at least 30 characters are required")
+    elif note_profile is not None:
+        errors.append("technical_note: only technical_note records may declare this object")
 
     record_id = metadata.get("record_id")
     if not isinstance(record_id, str) or not RECORD_ID_PATTERN.match(record_id):
@@ -246,7 +292,7 @@ def validate_paper(paper: Paper) -> list[str]:
                 errors.append(f"related_records[{index}].id: duplicate related record")
             else:
                 related_ids.add(related_id)
-            if relation.get("relationship") not in {"related_work", "supplement", "companion", "is_part_of"}:
+            if relation.get("relationship") not in {"related_work", "supplement", "companion", "is_part_of", "extends", "is_extended_by"}:
                 errors.append(f"related_records[{index}].relationship: invalid value")
             if not isinstance(relation.get("note"), str) or len(relation["note"].strip()) < 10:
                 errors.append(f"related_records[{index}].note: a meaningful note is required")

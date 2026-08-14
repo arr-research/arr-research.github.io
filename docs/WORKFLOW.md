@@ -5,10 +5,13 @@
 Generate the candidate with:
 
 ```bash
-python scripts/new_record.py --author "Author Name"
+python scripts/new_record.py --author "Author Name" --type research-paper
+python scripts/new_record.py --author "Author Name" --type technical-note
 ```
 
-This creates `papers/YYYY/MM/PP/ARR-YYYY-<16 characters>/`, stable record/version UUIDs, and the correct shard. The public repository receives only candidates already approved for publication. Earlier drafts and all future external submissions belong in a separate private intake system.
+This creates `papers/YYYY/MM/PP/ARR-YYYY-<16 characters>/`, stable record/version UUIDs, and the correct shard. The storage path is retained for compatibility, while `record_type` and the public `/papers/` or `/notes/` route determine the publication type. The public repository receives only candidates already approved for publication. Earlier drafts and all future external submissions belong in a separate private intake system.
+
+Research papers use `record_type: research_paper`. Technical notes use `record_type: technical_note` and must additionally declare `kind`, `maturity`, `scope_statement`, and `limitations`. Notes are narrower in scope, not exempt from integrity, provenance, licensing or evidence requirements.
 
 ## 2. Complete the research object
 
@@ -20,11 +23,11 @@ The pull request runs metadata validation and builds the complete catalogue. Edi
 
 ## 4. Publish the version
 
-After merge, run **Create paper release** from GitHub Actions and enter the ARR identifier. The workflow packages the exact source, calculates hashes and uploads generated or heavy files to a versioned GitHub Release.
+After merge, run **Create ARR record release** from GitHub Actions and enter the ARR identifier. The workflow packages the exact source, calculates hashes and uploads generated or heavy files to a versioned GitHub Release.
 
 ## 5. Update the catalogue
 
-GitHub Pages rebuilds from the default branch. The paper page links to the exact release and source directory. When a custom domain is adopted later, only the Pages domain configuration and canonical URL need to change.
+GitHub Pages rebuilds from the default branch. Research papers appear under `/papers/`; technical notes appear under `/notes/`. Every record page links to the exact release and source directory. When a custom domain is adopted later, only the Pages domain configuration and canonical URL need to change.
 
 ## 6. Correct without erasing history
 

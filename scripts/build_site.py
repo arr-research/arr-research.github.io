@@ -89,6 +89,7 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
     </a>
     <nav aria-label="Primary navigation">
       <a href="{base}/papers/">Papers</a>
+      <a href="{base}/notes/">Technical notes</a>
       <a href="{base}/protocol/">Protocol</a>
       <a href="{base}/licensing/">Licensing</a>
       <a href="{base}/about/">About</a>
@@ -96,7 +97,7 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
   </header>
   <main id="main">{content}</main>
   <footer>
-    <p><strong>ARR</strong> is a curated archive with explicit evidence labels. Acceptance is not peer review and is not a guarantee of truth.</p>
+    <p><strong>ARR</strong> is a curated archive of research papers and technical notes with explicit evidence labels. Acceptance is not peer review and is not a guarantee of truth.</p>
     <p><a href="{base}/catalog.json">Machine-readable catalogue (CC0)</a> · <a href="{base}/registry/record-timestamps.json">Exact record timestamps (CC0)</a> · <a href="{base}/catalog/index.json">Partition index</a> · <a href="{base}/protocol/">Verification protocol</a> · <a href="{base}/licensing/">Licensing</a> · <a href="https://github.com/arr-research/arr-research.github.io">Source (AGPL)</a></p>
   </footer>
 </body>
@@ -107,6 +108,24 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
 def status_badge(value: str) -> str:
     labels = {"accepted": "Accepted", "corrected": "Corrected", "withdrawn": "Withdrawn"}
     return f'<span class="badge badge-{esc(value)}">{esc(labels.get(value, value.title()))}</span>'
+
+
+def record_type(metadata: dict) -> str:
+    # Schema 1.0 contains research papers only; 1.1 makes the type explicit.
+    return metadata.get("record_type", "research_paper")
+
+
+def record_type_label(metadata: dict) -> str:
+    return "Technical note" if record_type(metadata) == "technical_note" else "Research paper"
+
+
+def record_route(metadata: dict) -> str:
+    return "notes" if record_type(metadata) == "technical_note" else "papers"
+
+
+def type_badge(metadata: dict) -> str:
+    value = record_type(metadata)
+    return f'<span class="badge badge-{esc(value.replace("_", "-"))}">{esc(record_type_label(metadata))}</span>'
 
 
 def verification_rows(metadata: dict) -> str:
@@ -147,8 +166,8 @@ def paper_card(metadata: dict, timestamp: dict, base: str) -> str:
     chronology_label = "Published" if timestamp["publication_state"] == "published" else "Deposit recorded"
     return f"""
 <article class="paper-card">
-  <div class="paper-meta">{status_badge(metadata['status'])}<span>{esc(metadata['id'])} · {esc(metadata['version'])}</span></div>
-  <h3><a href="{base}/papers/{quote(metadata['id'])}/">{esc(metadata['title'])}</a></h3>
+  <div class="paper-meta">{type_badge(metadata)}{status_badge(metadata['status'])}<span>{esc(metadata['id'])} · {esc(metadata['version'])}</span></div>
+  <h3><a href="{base}/{record_route(metadata)}/{quote(metadata['id'])}/">{esc(metadata['title'])}</a></h3>
   <p class="authors">{esc(authors)}</p>
   <p>{esc(metadata['abstract'])}</p>
   <div class="paper-foot"><span>{chronology_label} {exact_time(chronology_time(timestamp))}</span><span>Protocol {esc(metadata['verification']['protocol'])}</span></div>
@@ -156,26 +175,26 @@ def paper_card(metadata: dict, timestamp: dict, base: str) -> str:
 
 
 def build_home(papers: list, timestamps: dict, base: str, canonical_url: str) -> str:
-    accepted = sum(p.metadata["status"] != "withdrawn" for p in papers)
-    lean_verified = sum(p.metadata["verification"]["lean4"] in {"L2", "L3"} for p in papers)
+    accepted_papers = sum(p.metadata["status"] != "withdrawn" and p.record_type == "research_paper" for p in papers)
+    accepted_notes = sum(p.metadata["status"] != "withdrawn" and p.record_type == "technical_note" for p in papers)
     recent = "".join(paper_card(p.metadata, timestamps[(p.id, p.version)], base) for p in papers[:6])
     if not recent:
         recent = """
 <section class="empty-state">
   <span>Prototype phase</span>
   <h2>The archive is being prepared.</h2>
-  <p>No paper will appear here until its sources, provenance and verification record have completed the ARR acceptance workflow.</p>
+  <p>No research record will appear here until its sources, provenance and verification record have completed the ARR acceptance workflow.</p>
 </section>"""
     content = f"""
 <section class="hero">
   <div class="eyebrow">Open · Curated · Reproducible</div>
   <h1>Research should arrive with its evidence.</h1>
-  <p class="lede">ARR publishes inspectable preprints with machine-readable renditions and explicit verification evidence. Every record keeps its manuscript, code, provenance, version, licenses and checks.</p>
-  <div class="hero-actions"><a class="button" href="{base}/papers/">Browse papers</a><a class="text-link" href="{base}/protocol/">Read the protocol →</a></div>
+  <p class="lede">ARR publishes inspectable research papers and technical notes with machine-readable renditions and explicit verification evidence. Every record keeps its manuscript, code, provenance, version, licenses and checks.</p>
+  <div class="hero-actions"><a class="button" href="{base}/papers/">Browse papers</a><a class="button secondary" href="{base}/notes/">Browse technical notes</a><a class="text-link" href="{base}/protocol/">Read the protocol →</a></div>
 </section>
 <section class="stats" aria-label="Archive statistics">
-  <div><strong>{accepted}</strong><span>public records</span></div>
-  <div><strong>{lean_verified}</strong><span>Lean kernel verified</span></div>
+  <div><strong>{accepted_papers}</strong><span>research papers</span></div>
+  <div><strong>{accepted_notes}</strong><span>technical notes</span></div>
   <div><strong>100%</strong><span>machine-readable rendition</span></div>
 </section>
 <section class="principles">
@@ -183,14 +202,15 @@ def build_home(papers: list, timestamps: dict, base: str, canonical_url: str) ->
   <div><span>02</span><h2>Claims match checks</h2><p>ARR reports pass, partial and not-assessed results exactly as recorded. It does not turn screening into a claim of truth.</p></div>
   <div><span>03</span><h2>History remains visible</h2><p>Published versions are identified by hashes and releases. Corrections create a new record rather than silently rewriting the past.</p></div>
 </section>
-<section class="recent"><div class="section-heading"><div><span>Catalogue</span><h2>Latest accepted research</h2></div><a href="{base}/papers/">View all</a></div>{recent}</section>
+<section class="recent"><div class="section-heading"><div><span>Catalogue</span><h2>Latest accepted research</h2></div><a href="{base}/papers/">View papers</a></div>{recent}</section>
 """
     canonical = f"{canonical_url}/" if canonical_url else ""
     return page_shell(title="ARR — Archive for Rigorous Research", description="A curated, machine-readable archive of research preprints with explicit evidence labels.", content=content, base=base, canonical=canonical)
 
 
 def build_papers_index(papers: list, timestamps: dict, base: str, canonical_url: str) -> str:
-    cards = "".join(paper_card(p.metadata, timestamps[(p.id, p.version)], base) for p in papers)
+    research_papers = [paper for paper in papers if paper.record_type == "research_paper"]
+    cards = "".join(paper_card(p.metadata, timestamps[(p.id, p.version)], base) for p in research_papers)
     if not cards:
         cards = '<section class="empty-state compact"><h2>No accepted papers yet.</h2><p>The public catalogue begins only after the first candidate completes the ARR workflow.</p></section>'
     content = f"""
@@ -201,10 +221,24 @@ def build_papers_index(papers: list, timestamps: dict, base: str, canonical_url:
     return page_shell(title="Papers — ARR", description="Accepted ARR research papers.", content=content, base=base, canonical=canonical)
 
 
+def build_notes_index(papers: list, timestamps: dict, base: str, canonical_url: str) -> str:
+    notes = [paper for paper in papers if paper.record_type == "technical_note"]
+    cards = "".join(paper_card(note.metadata, timestamps[(note.id, note.version)], base) for note in notes)
+    if not cards:
+        cards = '<section class="empty-state compact"><h2>No technical notes yet.</h2><p>This collection begins when the first concise, rigorous and machine-readable technical contribution completes the ARR workflow.</p></section>'
+    content = f"""
+<section class="page-intro"><span>ARR Technical Notes</span><h1>Technical notes</h1><p>Concise research communications with a precise contribution, explicit scope and limitations, machine-readable sources, provenance and evidence-specific verification labels.</p></section>
+<section class="catalogue">{cards}</section>
+"""
+    canonical = f"{canonical_url}/notes/" if canonical_url else ""
+    return page_shell(title="Technical notes — ARR", description="Rigorous, machine-readable ARR technical notes.", content=content, base=base, canonical=canonical)
+
+
 def build_paper_page(
     paper,
     timestamp: dict,
     incoming_relations: list[dict],
+    record_routes: dict[str, str],
     base: str,
     canonical_url: str,
     repository: str,
@@ -233,7 +267,7 @@ def build_paper_page(
     )
     relationships = list(metadata.get("related_records", [])) + incoming_relations
     related_records = "".join(
-        f'<li><a href="{base}/papers/{quote(item["id"])}/"><strong>{esc(item["id"])}</strong></a><span>{esc(item["relationship"].replace("_", " ").title())} · {esc(item["note"])}</span></li>'
+        f'<li><a href="{base}/{record_routes.get(item["id"], "papers")}/{quote(item["id"])}/"><strong>{esc(item["id"])}</strong></a><span>{esc(item["relationship"].replace("_", " ").title())} · {esc(item["note"])}</span></li>'
         for item in relationships
     )
     related_section = (
@@ -241,25 +275,33 @@ def build_paper_page(
         if related_records
         else ""
     )
+    summary_label = "Summary" if paper.record_type == "technical_note" else "Abstract"
+    note_profile = metadata.get("technical_note", {})
+    note_section = ""
+    if paper.record_type == "technical_note":
+        note_section = f"""
+  <section class="note-scope"><h2>Technical-note scope</h2><dl class="record"><div><dt>Kind</dt><dd>{esc(note_profile['kind'].replace('_', ' ').title())}</dd></div><div><dt>Maturity</dt><dd>{esc(note_profile['maturity'].replace('_', ' ').title())}</dd></div></dl><h3>Contribution boundary</h3><p>{esc(note_profile['scope_statement'])}</p><h3>Limitations</h3><p>{esc(note_profile['limitations'])}</p></section>
+"""
     content = f"""
 <article class="paper-page">
-  <div class="paper-meta">{status_badge(metadata['status'])}<span>{esc(metadata['id'])} · {esc(metadata['version'])} · {esc(metadata['date'])}</span></div>
+  <div class="paper-meta">{type_badge(metadata)}{status_badge(metadata['status'])}<span>{esc(metadata['id'])} · {esc(metadata['version'])} · {esc(metadata['date'])}</span></div>
   <h1>{esc(metadata['title'])}</h1>
   <p class="paper-authors">{esc(authors)}</p>
   {timestamp_panel(timestamp)}
   <div class="download-row">{''.join(links)}</div>
-  <section class="abstract"><span>Abstract</span><p>{esc(metadata['abstract'])}</p></section>
+  <section class="abstract"><span>{summary_label}</span><p>{esc(metadata['abstract'])}</p></section>
   <div class="paper-grid">
     <section><h2>Verification record</h2><dl class="checks">{verification_rows(metadata)}</dl><p class="protocol-note">Recorded under <a href="{base}/protocol/">{esc(metadata['verification']['protocol'])}</a>. ARR verification and screening are not peer review.</p></section>
-    <aside><h2>Record</h2><dl class="record"><div><dt>Manuscript license</dt><dd>{esc(metadata['licenses']['manuscript'])}</dd></div><div><dt>Metadata license</dt><dd>{esc(metadata['licenses']['metadata'])}</dd></div><div><dt>Canonical source</dt><dd>{esc(metadata['source_of_truth'])}</dd></div><div><dt>Canonical SHA-256</dt><dd><code>{esc(metadata['integrity'].get('canonical_sha256', 'recorded in release manifest'))}</code></dd></div><div><dt>Stable record</dt><dd>{esc(metadata['record_id'])}</dd></div><div><dt>Version identifier</dt><dd>{esc(metadata['version_id'])}</dd></div><div><dt>AI assistance</dt><dd>{'Declared' if metadata['ai_assistance']['used'] else 'Not used'}</dd></div></dl><ul class="keywords">{keywords}</ul></aside>
+    <aside><h2>Record</h2><dl class="record"><div><dt>Record type</dt><dd>{esc(record_type_label(metadata))}</dd></div><div><dt>Manuscript license</dt><dd>{esc(metadata['licenses']['manuscript'])}</dd></div><div><dt>Metadata license</dt><dd>{esc(metadata['licenses']['metadata'])}</dd></div><div><dt>Canonical source</dt><dd>{esc(metadata['source_of_truth'])}</dd></div><div><dt>Canonical SHA-256</dt><dd><code>{esc(metadata['integrity'].get('canonical_sha256', 'recorded in release manifest'))}</code></dd></div><div><dt>Stable record</dt><dd>{esc(metadata['record_id'])}</dd></div><div><dt>Version identifier</dt><dd>{esc(metadata['version_id'])}</dd></div><div><dt>AI assistance</dt><dd>{'Declared' if metadata['ai_assistance']['used'] else 'Not used'}</dd></div></dl><ul class="keywords">{keywords}</ul></aside>
   </div>
+  {note_section}
   {related_section}
   <section class="disclosure"><h2>AI assistance statement</h2><p>{esc(metadata['ai_assistance']['statement'])}</p></section>
   <section class="screening-record"><h2>Frontier-model screening</h2><p>Status: <strong>{esc(metadata['screening']['status'])}</strong>. Any listed reports correspond to this exact version under {esc(metadata['screening']['protocol'])}; no absent assessment is represented as a pass.</p><ul>{evaluators}</ul></section>
   <section class="disclosure"><h2>Editorial disclosure</h2><p>{esc(metadata['editorial']['statement'])}</p></section>
 </article>
 """
-    canonical = f"{canonical_url}/papers/{metadata['id']}/" if canonical_url else ""
+    canonical = f"{canonical_url}/{record_route(metadata)}/{metadata['id']}/" if canonical_url else ""
     return page_shell(title=f"{metadata['title']} — ARR", description=metadata["abstract"], content=content, base=base, canonical=canonical)
 
 
@@ -267,7 +309,7 @@ def build_protocol(base: str, canonical_url: str) -> str:
     content = f"""
 <section class="page-intro"><span>ARR-SCREEN-1.0</span><h1>A visible standard, not a black box.</h1><p>ARR guarantees that its stated process was applied to the identified version. It does not certify universal truth, novelty or importance.</p></section>
 <section class="protocol-steps">
-  <article><span>Gate 1</span><h2>Complete research object</h2><p>Required sources, metadata, provenance, licenses and stable identifiers must be present and internally consistent.</p></article>
+  <article><span>Gate 1</span><h2>Complete research object</h2><p>Required sources, metadata, provenance, licenses and stable identifiers must be present and internally consistent. Technical notes additionally declare their precise scope, maturity, kind and limitations.</p></article>
   <article><span>Gate 2</span><h2>Technical verification</h2><p>Hashes, generated files, executable code, tests and formal proofs are checked where applicable. Failures remain visible until resolved.</p></article>
   <article><span>Gate 3</span><h2>Evidence-specific assessment</h2><p>Performed checks are reported independently. An AI-screened pass requires at least three declared, version-specific model reports; assessment is not silently inferred when absent.</p></article>
   <article><span>Gate 4</span><h2>Editorial sign-off</h2><p>No unresolved critical objection may be hidden. Acceptance is tied to stable identifiers, the exact SHA-256 manifest and versioned protocols.</p></article>
@@ -282,7 +324,8 @@ def build_about(base: str, canonical_url: str) -> str:
     content = """
 <section class="page-intro"><span>About the archive</span><h1>Designed for inspection and independence.</h1><p>ARR is an open, curated archive for research published with the files and evidence needed to understand how each result was produced and checked.</p></section>
 <section class="about-grid">
-  <article><h2>What ARR is</h2><p>A versioned archive of canonical manuscripts, machine-readable renditions, code, formalizations, data descriptions and explicit verification records.</p></article>
+  <article><h2>What ARR is</h2><p>A versioned archive of research papers and concise technical notes, with canonical manuscripts, machine-readable renditions, code, formalizations, data descriptions and explicit verification records.</p></article>
+  <article><h2>Two publication types</h2><p>Research papers present complete scholarly arguments at paper scale. Technical notes preserve narrower but rigorous results, proofs, formalizations, methods, replications, negative results, software or protocols. A note is different in scope, not exempt from evidence or integrity requirements.</p></article>
   <article><h2>What ARR is not</h2><p>ARR is not a journal, a replacement for expert peer review, a ranking of authors or a guarantee that a scientific claim is true.</p></article>
   <article><h2>Governance</h2><p>The prototype begins with a documented editorial process. Founder conflicts, authorship and future independent governance will be disclosed publicly.</p></article>
   <article><h2>Preservation</h2><p>Stable identifiers are independent of GitHub. Versioned releases distribute generated and large files; future object storage and independent preservation mirrors can replace any provider without changing citations.</p></article>
@@ -314,7 +357,11 @@ def write(path: Path, value: str) -> None:
 
 
 def write_catalogue_exports(papers: list) -> None:
-    catalogue = [paper.metadata for paper in papers]
+    catalogue = []
+    for paper in papers:
+        item = dict(paper.metadata)
+        item.setdefault("record_type", paper.record_type)
+        catalogue.append(item)
     write(OUTPUT_DIR / "catalog.json", json.dumps(catalogue, ensure_ascii=False, indent=2) + "\n")
     write(OUTPUT_DIR / "catalog.ndjson", "".join(json.dumps(item, ensure_ascii=False) + "\n" for item in catalogue))
 
@@ -347,8 +394,8 @@ def write_catalogue_exports(papers: list) -> None:
 def write_sitemaps(papers: list, canonical_url: str) -> None:
     if not canonical_url:
         return
-    urls = [f"{canonical_url}/", f"{canonical_url}/papers/", f"{canonical_url}/protocol/", f"{canonical_url}/licensing/", f"{canonical_url}/about/"]
-    urls.extend(f"{canonical_url}/papers/{paper.id}/" for paper in papers)
+    urls = [f"{canonical_url}/", f"{canonical_url}/papers/", f"{canonical_url}/notes/", f"{canonical_url}/protocol/", f"{canonical_url}/licensing/", f"{canonical_url}/about/"]
+    urls.extend(f"{canonical_url}/{record_route(paper.metadata)}/{paper.id}/" for paper in papers)
     chunks = [urls[index : index + 10_000] for index in range(0, len(urls), 10_000)]
     if len(chunks) == 1:
         sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"  <url><loc>{esc(url)}</loc></url>\n" for url in chunks[0]) + "</urlset>\n"
@@ -383,6 +430,7 @@ def main() -> int:
 
     timestamps = load_record_timestamps()
     papers.sort(key=lambda paper: (chronology_time(timestamps[(paper.id, paper.version)]), paper.id), reverse=True)
+    record_routes = {paper.id: record_route(paper.metadata) for paper in papers}
     incoming_relations: dict[str, list[dict]] = defaultdict(list)
     for source in papers:
         for relation in source.metadata.get("related_records", []):
@@ -407,16 +455,18 @@ def main() -> int:
 
     write(OUTPUT_DIR / "index.html", build_home(papers, timestamps, base, canonical_url))
     write(OUTPUT_DIR / "papers" / "index.html", build_papers_index(papers, timestamps, base, canonical_url))
+    write(OUTPUT_DIR / "notes" / "index.html", build_notes_index(papers, timestamps, base, canonical_url))
     write(OUTPUT_DIR / "protocol" / "index.html", build_protocol(base, canonical_url))
     write(OUTPUT_DIR / "licensing" / "index.html", build_licensing(base, canonical_url))
     write(OUTPUT_DIR / "about" / "index.html", build_about(base, canonical_url))
     for paper in papers:
         write(
-            OUTPUT_DIR / "papers" / paper.id / "index.html",
+            OUTPUT_DIR / record_route(paper.metadata) / paper.id / "index.html",
             build_paper_page(
                 paper,
                 timestamps[(paper.id, paper.version)],
                 incoming_relations.get(paper.id, []),
+                record_routes,
                 base,
                 canonical_url,
                 args.repository,
@@ -427,7 +477,9 @@ def main() -> int:
     write(OUTPUT_DIR / "robots.txt", "User-agent: *\nAllow: /\n" + (f"Sitemap: {canonical_url}/sitemap.xml\n" if canonical_url else ""))
     write_sitemaps(papers, canonical_url)
 
-    print(f"Built ARR site with {len(papers)} paper(s) at {OUTPUT_DIR}")
+    paper_count = sum(paper.record_type == "research_paper" for paper in papers)
+    note_count = sum(paper.record_type == "technical_note" for paper in papers)
+    print(f"Built ARR site with {paper_count} paper(s) and {note_count} technical note(s) at {OUTPUT_DIR}")
     return 0
 
 
