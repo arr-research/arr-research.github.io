@@ -1,0 +1,1010 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=26mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern,microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools,bm}
+\usepackage{booktabs,array,enumitem}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,hypertexnames=false,linkcolor=blue!45!black,citecolor=blue!45!black,urlcolor=blue!55!black]{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\usepackage[backend=biber,style=numeric,sorting=nyt,maxbibnames=99]{biblatex}
+\addbibresource{references.bib}
+\AtBeginBibliography{\sloppy}
+\setlength{\emergencystretch}{2em}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\E}{\mathbb E}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\Gr}{\operatorname{Gr}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\cD}{\mathcal D}
+\newcommand{\cZ}{\mathcal Z}
+\newcommand{\norm}[1]{\lVert#1\rVert}
+
+\hypersetup{
+ pdftitle={Exact Branch Rigidity and Unique Crossing in Grassmann Matrix-Bingham Free Energies},
+ pdfauthor={Lluis Eriksson},
+ pdfkeywords={Grassmannian, matrix Bingham, Jacobi ensemble, Hankel determinant, total positivity, variation diminishing, orbital Laplace transform}
+}
+
+\title{\bfseries Exact Branch Rigidity and Unique Crossing in Grassmann Matrix--Bingham Free Energies\\[3pt]
+\large Finite Certification, All-Field $\Gr_{\C}(3,6)$ and $\Gr_{\C}(4,8)$ Two-Block Order, and a $\Gr_{\C}(2,5)$ Exchange Theorem}
+\author{Lluis Eriksson}
+\date{August 15, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Let $P$ be a Haar-distributed complex Grassmann projector and consider the
+matrix--Bingham normalizer $Z_A(s)=\E\exp\{s\tr(AP)\}$ on the trace-zero,
+Frobenius-unit external sphere.  We determine several exact, complementary
+pieces of its finite-dimensional branch geometry.  On every half
+Grassmannian $\Gr_{\C}(r,2r)$, the balanced rank-$r$ two-block field strictly
+maximizes the normalized two-block moments of degrees $4,6,8$, and $10$.
+The differences factor through the squared multiplicity defect
+$(r-k)^2$ and admit explicit positive-coefficient certificates.  Together
+with a matrix-beta endpoint calculation, this proves balanced dominance at
+both small and large field for every rank and confines any violation of the
+all-field conjecture to an intermediate-field reentrant island.
+
+At $\Gr_{\C}(3,6)$, the first half rank beyond the exceptional
+$\Gr_{\C}(2,4)$ model \cite{ErikssonRankTwo2026}, we close that two-block
+gate for every field.  Andreief's identity reduces the three
+normalizers to elementary Hankel determinants, and an all-degree coefficient
+argument proves strict Laplace order of the balanced $3+3$ spectrum over the
+$1+5$ and $2+4$ spectra.  Combined with an exact Jacobi--Stein Hessian
+identity, the two losing branches have an unstable larger-block split at
+every nonzero field, whereas
+the balanced branch is Morse--Bott stable.  We then prove a fixed-rank finite
+certification theorem: an explicit event inside the uniform Hermitian matrix
+ cube controls every sufficiently high moment, giving a finite sufficient
+ certificate for coefficientwise two-block order, and hence for all-field
+ order, at each fixed rank.  At
+$\Gr_{\C}(4,8)$, exact Hankel arithmetic through degree $268$ plus this
+ analytic tail closes all remaining degrees and closes another half-rank case
+ here.  Away from half rank the geometry changes: on $\Gr_{\C}(2,5)$ the
+one-spike and rank-two canonical branches
+exchange dominance exactly once.  We derive their compactly supported
+piecewise-polynomial densities, certify four density sign changes by Sturm
+arithmetic over $\mathbb Q(\sqrt6)$, and use strict total positivity of the
+Laplace kernel to prove that the crossing is unique and simple.  A second
+exact sign-change argument proves that both positive orientations dominate
+their negative counterparts, closing the complete oriented two-level family.
+
+These results concern the complete canonical two-block family.  We do not
+prove that an arbitrary multi-level external spectrum is globally dominated,
+and therefore do not claim an unrestricted all-distortion rate--distortion
+function.  That boundary is stated as part of the theorem ledger.
+\end{abstract}
+
+\section{Introduction}
+
+For a Haar rank-$r$ projector $P$ on $\C^d$, the orbital Laplace transform
+\begin{equation}
+ Z_A(s)=\E\exp\{s\tr(AP)\},\qquad A=A^*,\quad \tr A=0,
+ \quad \norm A_F=1,                                      \tag{1.1}
+\end{equation}
+is simultaneously a unitary orbital integral, a hypergeometric function of
+matrix argument, and the normalizer of a matrix--Bingham exponential family
+\cite{James1964,Muirhead1982,Kent1994,ItzyksonZuber1980}.  Its evaluation and
+asymptotic analysis are classical problems, including recent complete
+high-dimensional normalizer expansions \cite{BagyanRichards2024}.  The
+extremal problem in the
+external spectrum is more delicate: trace and Frobenius constraints do not
+place the candidate spectra on a majorization chain, so standard Schur
+convexity does not choose a maximizer
+\cite{Sra2016,McSwiggenNovak2022,McSwiggenSahi2026}.
+
+This distinction matters in information theory.  An external-spectrum
+theorem can collapse a Gibbs dual for calibrated Born-probability prediction
+to a scalar optimization, but only after global optimality over \emph{all}
+spectra and posterior-mean feasibility have been established.  Complete
+results are known for the exceptional half rank $\Gr_{\C}(2,4)$ and on a
+high-fidelity segment at arbitrary rank \cite{ErikssonRankTwo2026,
+ErikssonHighFidelity2026}.  The preceding paper in this sequence proved
+all-field local Morse--Bott stability of the balanced half-Grassmann branch,
+as well as exact metastability thresholds for unbalanced two-block branches
+\cite{ErikssonMorseBott2026}.  Local stability, however, cannot compare
+separated values and cannot exclude a first-order exchange.
+
+Here we attack the separated-value problem within the complete canonical
+two-block family.  The unifying tools are finite-dimensional determinantal
+representations and oscillation control.  Schur--Weyl moment identities yield
+positive polynomial certificates through degree ten at every half rank.
+ At $r=3$, the first half rank beyond the exceptional $\Gr_{\C}(2,4)$
+ theorem of \cite{ErikssonRankTwo2026}, matrix-beta compression and
+ Andreief's identity turn the entire Taylor series into three explicit
+ Hankel determinants; a discrete variation argument proves coefficientwise
+ order in every even degree.
+Off half rank, density sign changes become the useful invariant: a Sturm
+certificate and the variation-diminishing property of $e^{sy}$ prove a
+unique canonical exchange on $\Gr_{\C}(2,5)$.
+
+The main results are:
+\begin{enumerate}[label=(\roman*)]
+\item strict balanced two-block moment order in degrees $4,6,8,10$ for every
+      $\Gr_{\C}(r,2r)$, with exact positive-coefficient certificates;
+\item exact small- and large-field balanced barriers at every half rank;
+\item strict all-field, all-degree two-block Laplace order on
+      $\Gr_{\C}(3,6)$;
+\item an all-field local-maximizer classification of its three two-block
+      critical orbits;
+\item a finite exact certificate theorem at every fixed half rank, closed in
+      full on $\Gr_{\C}(4,8)$ by rational Hankel arithmetic and an analytic
+      tail; and
+\item a unique and simple canonical branch crossing on $\Gr_{\C}(2,5)$,
+      proved by exact densities, Sturm theory, and strict total positivity.
+\end{enumerate}
+No numerical optimizer is used in a theorem.  The accompanying scripts replay
+the displayed symbolic identities and exact root counts; the induction and
+oscillation arguments are contained in the paper.
+
+A targeted primary-literature search found no prior theorem giving the
+coefficientwise all-field comparisons across every two-level multiplicity on
+$\Gr_{\C}(3,6)$ or $\Gr_{\C}(4,8)$, nor the complete oriented two-level
+exchange on $\Gr_{\C}(2,5)$.  This is not a claim of exhaustive priority.
+Jacobi trace laws, Hankel representations, matrix--Bingham normalizers, and
+total-positivity theory are established ingredients; novelty is claimed only
+for the normalized cross-multiplicity comparisons, the finite sufficient
+tail architecture, and the exact crossing count.
+
+\section{Canonical two-block fields and matrix-beta compression}
+
+Let $P$ be Haar on $\Gr_{\C}(r,d)$, represented by its rank-$r$ orthogonal
+projector.  For $1\le k\le d-1$, fix a rank-$k$ projector $E_k$.  The
+trace-zero, Frobenius-unit two-block field with positive multiplicity $k$ is
+\begin{equation}
+ A_{d,k}=\sqrt{\frac{d-k}{dk}}E_k
+       -\sqrt{\frac{k}{d(d-k)}}(I-E_k).                     \tag{2.1}
+\end{equation}
+Its statistic is an affine rescaling of the principal overlap
+$T_k=\tr(E_kP)$:
+\begin{equation}
+ \tr(A_{d,k}P)
+ =\sqrt{\frac{d}{k(d-k)}}\left(T_k-\frac{kr}{d}\right).    \tag{2.2}
+\end{equation}
+When $d=2r$, complementation makes this law symmetric.  It is convenient to
+write
+\begin{equation}
+ Y_k=T_k-\frac{k}{2},\qquad
+ X_k=\sqrt{\frac{2r}{k(2r-k)}}Y_k,\qquad
+ Z_{r,k}(s)=\E e^{sX_k}.                                    \tag{2.3}
+\end{equation}
+The common quadratic moment follows from unitary isotropy:
+\begin{equation}
+ \E X_k^2=\frac{r}{2(4r^2-1)},                              \tag{2.4}
+\end{equation}
+independent of $k$.
+
+For $k\le r$, the nonzero eigenvalues of $E_kPE_k$ have the complex
+matrix-beta law $B_k(r,r)$.  Finite Jacobi-trace densities and their
+Fourier--Laplace recurrences are classical \cite{ForresterKumar2022}.  With
+$H_k=2E_kPE_k-I_k$, the eigenvalue density is
+proportional to
+\begin{equation}
+ \prod_{i<j}(x_i-x_j)^2\prod_{i=1}^k(1-x_i^2)^{r-k},
+ \qquad -1<x_i<1.                                         \tag{2.5}
+\end{equation}
+Thus the two-block problem is a dimension-shift comparison between Jacobi
+trace laws.  Equivalently, at $k=r$, $H_r$ is uniform on the Hermitian matrix
+interval $-I<H<I$, and every smaller-$k$ branch is a normalized coordinate
+compression of this matrix-cube law.
+
+\section{All-rank rigidity through degree ten}
+
+Put
+\begin{equation}
+ q=k(2r-k),\qquad q_0=2r-1.                                \tag{3.1}
+\end{equation}
+Then $q_0\le q\le r^2$, and
+\begin{equation}
+ r^2-q=(r-k)^2,\qquad q-q_0=(k-1)(2r-k-1).                 \tag{3.2}
+\end{equation}
+For $m\ge0$, the raw moments of $T_k$ admit the Schur--Weyl expression
+\begin{equation}
+ \E T_k^m=
+ \sum_{\substack{\lambda\vdash m\\ \ell(\lambda)\le\min(k,r)}}
+ f^\lambda s_\lambda(1^k)\frac{(r)_\lambda}{(2r)_\lambda}. \tag{3.3}
+\end{equation}
+Here $f^\lambda=m!/\prod_{u\in\lambda}h(u)$,
+$s_\lambda(1^k)=\prod_{u\in\lambda}(k+c(u))/h(u)$, and
+$(a)_\lambda=\prod_i(a-i+1)_{\lambda_i}$.  Formula (3.3) follows by
+expanding $(\tr E_kP)^m$, applying Schur--Weyl duality, and integrating the
+unitary representation matrix coefficients; it is also the standard
+matrix-beta moment formula \cite{James1964,Muirhead1982}.
+
+Define the balanced gap
+\begin{equation}
+ \Delta_{2m}(r,k)=\E X_r^{2m}-\E X_k^{2m}.                  \tag{3.4}
+\end{equation}
+
+\begin{theorem}[Universal moment order through degree ten]
+\label{thm:moment}
+For every $r\ge2$, every $1\le k<r$, and $m=2,3,4,5$,
+\begin{equation}
+ \Delta_{2m}(r,k)>0.                                      \tag{3.5}
+\end{equation}
+In particular, the balanced multiplicity uniquely maximizes the fourth,
+sixth, eighth, and tenth normalized moments throughout the canonical
+two-block family.
+\end{theorem}
+
+\begin{proof}
+Center (3.3), rescale by (2.3), and collect in the single invariant
+$q=k(2r-k)$.  For degree four one obtains
+\begin{equation}
+ \Delta_4=
+ \frac{3(r^2-q)}
+ {2q(2r-3)(2r-1)(2r+1)(2r+3)}.                             \tag{3.6}
+\end{equation}
+For degree six, set
+\begin{equation}
+\begin{aligned}
+ N_6(r,q)&=(12r^4-27r^2+8)q-32r^4+8r^2,\\
+ D_6&=(2r-5)(2r-3)(2r-1)^2(2r+1)^2\\
+    &\qquad\times(2r+3)(2r+5).
+\end{aligned}                                                       \tag{3.7}
+\end{equation}
+For $r\ge3$,
+\begin{equation}
+ \Delta_6=\frac{15(r^2-q)N_6(r,q)}{4q^2rD_6}.              \tag{3.8}
+\end{equation}
+The coefficient of $q$ is positive, and at $q=q_0$ the resulting polynomial,
+after $r=y+3$, is
+\begin{equation}
+24y^5+316y^4+1578y^3+3653y^2+3736y+1165>0.                 \tag{3.9}
+\end{equation}
+The remaining case is $\Delta_6(2,1)=17/5670$.
+
+For degrees eight and ten one finds
+\begin{align}
+ \Delta_8&=\frac{105(r^2-q)P_8(r,q)}{4q^3r^2D_8},          \tag{3.10}\\
+ \Delta_{10}&=\frac{945(r^2-q)P_{10}(r,q)}
+ {8q^4r^3\cD_{10}},                                       \tag{3.11}
+\end{align}
+where the factors are displayed in \cref{app:polynomials}.  For $r\ge4$,
+substituting $r=y+4$ and $q=2r-1+x$ makes $P_8$ a quadratic in $x$ whose
+three coefficient polynomials have strictly positive coefficients.  For
+$r\ge5$, the substitution $r=y+5$, $q=2r-1+x$ does the same for the four
+coefficients of the cubic $P_{10}$.  The complete integer arrays are given in
+\cref{app:positive}.  Since $x,y\ge0$, both polynomials are positive.
+
+The exceptional exact gaps are
+\begin{align*}
+&\Delta_8(2,1)=\frac2{1215},\quad
+ \Delta_8(3,1)=\frac{967}{3378375},\quad
+ \Delta_8(3,2)=\frac{8111}{69189120},\notag\\
+&\Delta_{10}(2,1)=\frac{74}{81081},\quad
+ \Delta_{10}(3,1)=\frac{202877}{1520268750},\quad
+ \Delta_{10}(3,2)=\frac{17789}{249080832},\notag\\
+&\Delta_{10}(4,1)=\frac{20129}{770461692},\quad
+ \Delta_{10}(4,2)=\frac{2615}{181945764},\quad
+ \Delta_{10}(4,3)=\frac{65701}{14578987500}.
+\end{align*}
+All denominators in their stated rank ranges are positive, while
+$r^2-q=(r-k)^2>0$.  This proves every asserted sign.
+\end{proof}
+
+The fourth-moment gap has an immediate analytic consequence.  Since the
+laws are symmetric and their variances agree, the first nonzero coefficient
+of $Z_{r,r}-Z_{r,k}$ is $\Delta_4s^4/4!$.
+
+\begin{corollary}[Weak-field barrier]
+For every fixed $r\ge2$ and $k<r$, there is $\varepsilon_{r,k}>0$ such that
+\begin{equation}
+ Z_{r,r}(s)>Z_{r,k}(s)\qquad(0<|s|<\varepsilon_{r,k}).      \tag{3.12}
+\end{equation}
+\end{corollary}
+
+\section{The exact high-field barrier}
+
+The upper endpoint of $X_k$ follows directly from the admissible principal
+angles:
+\begin{equation}
+ \rho_k:=\max X_k=\sqrt{\frac{rk}{2(2r-k)}}.                \tag{4.1}
+\end{equation}
+It is strictly increasing in $k$, so $\rho_k<\rho_r=\sqrt{r/2}$ for $k<r$.
+The endpoint exponent can also be computed exactly.
+
+\begin{proposition}[Watson endpoint asymptotic]
+For fixed $r\ge2$ and $1\le k\le r$, there is a constant $C_{r,k}>0$ such
+that
+\begin{equation}
+ Z_{r,k}(s)=C_{r,k}e^{s\rho_k}s^{-kr}\bigl(1+O(s^{-1})\bigr),
+ \qquad s\to+\infty.                                      \tag{4.2}
+\end{equation}
+Consequently, for every $k<r$, $Z_{r,r}(s)>Z_{r,k}(s)$ for all sufficiently
+large $|s|$.
+\end{proposition}
+
+\begin{proof}
+In (2.5), write $x_i=1-y_i$.  At fixed small total deficit
+$\delta=\sum_i y_i$, the Jacobi weight contributes degree $k(r-k)$ and the
+squared Vandermonde contributes degree $k(k-1)$.  Integration over the
+$(k-1)$-simplex therefore gives a scalar trace density proportional to
+$\delta^{kr-1}$ with a strictly positive Selberg-type coefficient.  The
+linear rescaling (2.3) preserves the exponent.  Watson's lemma gives (4.2).
+The strict endpoint inequality makes the exponential factor decisive.
+Symmetry yields the negative-field statement.
+\end{proof}
+
+\begin{corollary}[Reentrant-island obstruction]
+Any failure of balanced two-block Laplace order on a half Grassmannian must
+be confined to a bounded interval separated from zero and infinity.  In
+particular, a competing branch must create at least two additional positive
+zeros of $Z_{r,r}-Z_{r,k}$.
+\end{corollary}
+
+The same endpoint idea can be sharpened from an asymptotic statement to an
+explicit infinite-tail certificate.  Set
+\begin{equation}
+ a_r=1-\frac1{2r},\qquad
+ B_r=\frac{(2r-1)^2(r+1)}{4r^2(r-1)},\qquad
+ C_r=2(4r)^{-r^2}\frac{(r-1)(4r^2-1)}{r+1}.                \tag{4.3}
+\end{equation}
+Let $M_r$ be the least nonnegative integer for which
+\begin{equation}
+ C_rB_r^{M_r}>1.                                           \tag{4.4}
+\end{equation}
+This is an exact rational definition and requires no logarithm.
+
+\begin{theorem}[Finite certification at every fixed half rank]
+\label{thm:finite-cert}
+Fix $r\ge2$.  If
+\begin{equation}
+ \E X_r^{2m}>\E X_k^{2m}
+ \quad(1\le k<r,\ 2\le m<M_r),                            \tag{4.5}
+\end{equation}
+then the same inequalities hold for every $m\ge2$, and consequently
+\begin{equation}
+ Z_{r,r}(s)>Z_{r,k}(s)\qquad(s\ne0,\ 1\le k<r).            \tag{4.6}
+\end{equation}
+Moreover, every sign in the finite hypothesis is exactly decidable by
+rational Hankel-determinant arithmetic.
+\end{theorem}
+
+\begin{proof}
+The common variance is $\sigma_r^2=r/[2(4r^2-1)]$.  The largest unbalanced
+support is attained at $k=r-1$ and has square
+\[
+ \rho_*^2=\frac{r(r-1)}{2(r+1)}.
+\]
+Therefore
+\begin{equation}
+ \E X_k^{2m}\le\sigma_r^2\rho_*^{2m-2}.                   \tag{4.7}
+\end{equation}
+For balanced multiplicity, $X_r=\tr(H)/\sqrt{2r}$ with $H$ uniform on
+$-I<H<I$ in the $r^2$-real-dimensional Hermitian space.  Each event
+$H>a_rI$ and $H<-a_rI$ has probability exactly $(4r)^{-r^2}$: after
+$B=(H+I)/2$, it is a translate of the $1/(4r)$-scaled matrix interval.  On
+their union $|X_r|>a_r\sqrt{r/2}$, whence
+\begin{equation}
+ \E X_r^{2m}\ge2(4r)^{-r^2}\left(a_r^2\frac r2\right)^m. \tag{4.8}
+\end{equation}
+Dividing (4.8) by (4.7) gives
+\begin{equation}
+ \frac{\E X_r^{2m}}{\E X_k^{2m}}\ge C_rB_r^m.              \tag{4.9}
+\end{equation}
+The identity
+\[
+ (2r-1)^2(r+1)-4r^2(r-1)=4r^2-3r+1>0
+\]
+proves $B_r>1$, so (4.4) closes every $m\ge M_r$.  Hypothesis (4.5) closes
+the finite prefix, and the two ranges cover every $m\ge2$.  Symmetry and the
+common variance then prove (4.6) coefficientwise.
+
+Finally, (5.2) in the next section holds at every rank with $a=r-k$.
+Its even entry coefficients are rational beta integrals satisfying a
+first-order rational recurrence.  A finite Leibniz expansion therefore
+decides every sign in (4.5) using integers and reduced rational fractions.
+\end{proof}
+
+The universal cutoffs are conservative: for $r=2,\ldots,10$ they are
+\begin{equation}
+ 12,58,165,360,672,1131,1766,2610,3695.                    \tag{4.10}
+\end{equation}
+The theorem proves termination at each fixed rank, not positivity of the
+finite block uniformly in $r$.
+
+The moment theorem does not by itself exclude such zeros.  The next section
+does exclude them at $r=3$.
+
+\section{All-field two-block rigidity on \texorpdfstring{$\Gr_{\C}(3,6)$}{GrC(3,6)}}
+
+For $k=1,2,3$, put
+\begin{equation}
+ c_k=\sqrt{\frac6{k(6-k)}},\qquad
+ X_k=\frac{c_k}{2}\tr H_k.                                 \tag{5.1}
+\end{equation}
+Define the Hankel determinants
+\begin{equation}
+ D_k^{(a)}(u)=\det\left[
+ \int_{-1}^{1}x^{i+j}(1-x^2)^a e^{ux}\,dx
+ \right]_{i,j=0}^{k-1}.                                   \tag{5.2}
+\end{equation}
+Andreief's identity \cite{Andreief1883,Forrester2010} applied to (2.5)
+gives
+\begin{equation}
+ Z_{3,k}(s)=\frac{D_k^{(3-k)}(sc_k/2)}{D_k^{(3-k)}(0)}.      \tag{5.3}
+\end{equation}
+Differentiating $I_0(u)=2\sinh(u)/u$ yields
+\begin{align}
+D_1^{(2)}(u)
+ &=16\frac{u^2\sinh u-3u\cosh u+3\sinh u}{u^5},
+&D_1^{(2)}(0)&=\frac{16}{15},\notag\\
+D_2^{(1)}(u)
+ &=8\frac{2u^4+2u^2\cosh(2u)+4u^2-6u\sinh(2u)
+             +3\cosh(2u)-3}{u^8},
+&D_2^{(1)}(0)&=\frac{16}{45},\notag\\
+D_3^{(0)}(u)
+ &=-32\frac{u^4\sinh u-2u^3\cosh u+3u^2\sinh u-\sinh^3u}{u^9},
+&D_3^{(0)}(0)&=\frac{32}{135}.                              \tag{5.4}
+\end{align}
+All values at zero are removable limits.
+
+\begin{theorem}[All-field $\Gr_{\C}(3,6)$ two-block rigidity]
+\label{thm:gr36}
+For every real $s$,
+\begin{equation}
+ Z_{3,3}(s)\ge Z_{3,2}(s),\qquad
+ Z_{3,3}(s)\ge Z_{3,1}(s).                                 \tag{5.5}
+\end{equation}
+Both inequalities are strict for $s\ne0$.  Equivalently, the balanced
+$3+3$ spectrum uniquely maximizes the matrix--Bingham normalizer among all
+trace-zero, Frobenius-unit spectra having exactly two levels.
+\end{theorem}
+
+\begin{proof}
+Write $Z_{3,k}(s)=\sum_{m\ge0}b_{k,m}s^{2m}$.  Expansion of (5.4) gives
+\begin{align}
+b_{1,m}&=\frac{15(3/10)^m}
+ {(2m+3)(2m+5)(2m+1)!},                                    \tag{5.6}\\
+b_{2,m}&=\frac{360(3/4)^m}
+ {(m+2)(m+3)(m+4)(2m+3)(2m+5)(2m+1)!},                     \tag{5.7}\\
+b_{3,m}&=\frac{135\{19683\,9^m-p(m)\}}
+ {4\,6^m(2m+9)!},                                         \tag{5.8}
+\end{align}
+where
+\begin{equation}
+ p(m)=64m^4+896m^3+4640m^2+10552m+8931.                    \tag{5.9}
+\end{equation}
+The constant coefficients equal one and the quadratic coefficients all
+equal $3/140$.
+
+Put
+\begin{align*}
+p_1(m)&=9p(m),&
+q_1(m)&=\tfrac18(m+1)(m+2)(m+3)(2m+7)(2m+8)(2m+9),\\
+p_2(m)&=3p(m),&
+q_2(m)&=\tfrac14(m+1)(2m+7)(2m+9).
+\end{align*}
+Common denominators give the exact identities
+\begin{align}
+ \frac{4\,6^m(2m+9)!}{15}(b_{3,m}-b_{1,m})
+ &=177147\,9^m-p_1(m)-256(9/5)^m q_1(m),                   \tag{5.10}\\
+ \frac{4\,6^m(2m+9)!}{45}(b_{3,m}-b_{2,m})
+ &=59049\,9^m-p_2(m)-2048(9/2)^m q_2(m).                  \tag{5.11}
+\end{align}
+For $m=n+2$, direct factorization gives
+\begin{align}
+5q_1(m)-q_1(m+1)
+  &=(n+4)(n+5)(n+6)(2n+13)(2n^2+14n+15),\notag\\
+9p_1(m)-p_1(m+1)
+  &=2304(n+4)(n+5)(n+6)(2n+13),\notag\\
+2q_2(m)-q_2(m+1)
+  &=\tfrac14(2n+13)(2n^2+11n+6),\notag\\
+9p_2(m)-p_2(m+1)
+  &=768(n+4)(n+5)(n+6)(2n+13).                              \tag{5.12}
+\end{align}
+Thus $q_1(m)/5^m$, $p_1(m)/9^m$, $q_2(m)/2^m$, and $p_2(m)/9^m$ decrease
+for $m\ge2$.  Evaluating at $m=2$ gives
+\begin{align}
+9^{-m}\operatorname{RHS}(5.10)
+ &\ge177147-256\frac{2574}{5}-\frac{18929}{3}
+ =\frac{585728}{15}>0,\notag\\
+9^{-m}\operatorname{RHS}(5.11)
+ &\ge59049-2048\frac{429}{16}-\frac{170361}{81}
+ =\frac{18304}{9}>0.                                      \tag{5.13}
+\end{align}
+Therefore $b_{3,m}>b_{1,m},b_{2,m}$ for every $m\ge2$.  Summing the
+coefficient gaps proves (5.5), with strictness away from zero.
+\end{proof}
+
+The theorem compares every two-level multiplicity, not arbitrary spectra
+with three or more eigenvalues.  A full-spectrum maximizer would require a
+separate stationary-spectrum reduction.
+
+\section{All-field instability classification of the \texorpdfstring{$\Gr_{\C}(3,6)$}{GrC(3,6)} branches}
+
+The value theorem can be supplemented by exact local geometry.  Let
+\begin{equation}
+ \widetilde Y_k=\tr(E_kP)-\frac{k}{2},\qquad
+ z_k(u)=\E e^{u\widetilde Y_k},\qquad m=6-k.                 \tag{6.1}
+\end{equation}
+The Jacobi--Stein calculation of \cite{ErikssonMorseBott2026} shows that the
+constrained Hessian eigenvalue on a traceless split of the larger block has
+sign opposite to
+\begin{equation}
+ H_k^-(u)=z_k''(u)+\frac{6(6m-1)}{k}\frac{z_k'(u)}u
+                  -\frac{m^2}{4}z_k(u).                    \tag{6.2}
+\end{equation}
+Its moment-ratio theorem makes the coefficient of $u^{2j}$ strictly negative
+whenever
+\begin{equation}
+ 2j(m-k)>m(k^2-1).                                         \tag{6.3}
+\end{equation}
+
+\begin{corollary}[All-field two-block instability classification]
+\label{cor:morse}
+On $\Gr_{\C}(3,6)$, the $1+5$ and $2+4$ two-block critical orbits have an
+unstable larger-block split for every nonzero field and therefore are not
+local maxima.  The balanced $3+3$ orbit is a strict local maximum modulo
+conjugation for every nonzero field.  Hence it is the unique local maximum
+within the complete two-level stationary class.
+\end{corollary}
+
+\begin{proof}
+For $k=1$, condition (6.3) covers every $j\ge1$ and
+\begin{equation}
+ H_1^-(u)=-\frac{u^2}{42}-\frac{u^4}{3696}-\cdots<0
+ \qquad(u\ne0).                                            \tag{6.4}
+\end{equation}
+For $k=2$, (6.3) covers every $j\ge4$.  The constant and quadratic terms
+vanish, and exact expansion of (5.4) gives
+\begin{equation}
+ [u^4]H_2^-=-\frac1{16170},\qquad
+ [u^6]H_2^-=-\frac1{840840}.                               \tag{6.5}
+\end{equation}
+Thus every nonzero coefficient is negative.  The Hessian sign convention in
+(6.2) supplies a positive constrained-Hessian direction, and hence an
+instability, for both losing strata.  The
+balanced all-field Morse--Bott sign is the half-Grassmann no-spinodal theorem
+of \cite{ErikssonMorseBott2026}.
+\end{proof}
+
+This closes two possible loopholes simultaneously: neither losing branch can
+overtake balanced in value, and neither can restabilize at an intermediate
+field.  It still leaves multi-level stationary spectra outside its scope.
+
+\section{A unique canonical exchange on \texorpdfstring{$\Gr_{\C}(2,5)$}{GrC(2,5)}}
+
+The half-rank symmetry is essential.  Consider
+\begin{equation}
+ A_1=\frac1{\sqrt{20}}\operatorname{diag}(4,-1,-1,-1,-1),
+ \qquad
+ A_2=\frac1{\sqrt{30}}\operatorname{diag}(3,3,-2,-2,-2),   \tag{7.1}
+\end{equation}
+and $Z_k(s)=\E e^{s\tr(A_kP)}$ for $P\sim\Gr_{\C}(2,5)$.
+
+\begin{theorem}[Unique canonical crossing]
+\label{thm:crossing}
+The difference $Z_2(s)-Z_1(s)$ has exactly one positive zero.  The zero is
+simple.  Hence there is a unique $s_\times>0$ such that
+\begin{equation}
+ Z_1(s)>Z_2(s)\quad(0<s<s_\times),\qquad
+ Z_2(s)>Z_1(s)\quad(s>s_\times).                            \tag{7.2}
+\end{equation}
+Moreover, for every $s>0$ each displayed positive orientation strictly
+dominates its negative orientation.  Since multiplicities $4$ and $3$ are,
+up to conjugacy, $-A_1$ and $-A_2$, respectively, (7.2) is the unique
+exchange of the complete oriented two-level family.
+\end{theorem}
+
+\subsection{Exact overlap densities}
+
+Set $Y_k=\sqrt{30}\tr(A_kP)$.  For $A_1$, $q=P_{11}$ has the
+$\operatorname{Beta}(2,3)$ law and
+\begin{equation}
+ Y_1=\frac{\sqrt6}{2}(5q-2),\qquad
+ f_1(y)=\frac{4\sqrt6(\sqrt6y-9)^2(\sqrt6y+6)}{16875},     \tag{7.3}
+\end{equation}
+on $-\sqrt6<y<3\sqrt6/2$.
+
+For $A_2$, let $T=\tr(E_2P)$.  The two principal overlaps have joint density
+$36(x_1-x_2)^2(1-x_1)(1-x_2)$ on $(0,1)^2$ and $Y_2=5T-4$.
+Integration along $x_1+x_2=t$ yields
+\begin{equation}
+ f_2(y)=
+ \begin{cases}
+ \displaystyle\frac{6(y+4)^3(y^2-42y+66)}{78125},&-4<y<1,\\[5pt]
+ \displaystyle\frac{6(6-y)^5}{78125},&1<y<6.
+ \end{cases}                                               \tag{7.4}
+\end{equation}
+Direct integration gives
+\begin{equation}
+ \E Y_1=\E Y_2=0,\qquad
+ \E Y_1^2=\E Y_2^2=\frac32,\qquad
+ \E Y_2^3-\E Y_1^3=\frac{2-3\sqrt6}{14}<0.                \tag{7.5}
+\end{equation}
+
+\subsection{Four sign changes, certified exactly}
+
+Let $h=f_2-f_1$.  Outside the support of $f_1$, $h=f_2>0$.  On the lower
+overlap $(-\sqrt6,1)$,
+\begin{equation}
+ h(y)=\frac6{78125}p_-(y),                                  \tag{7.6}
+\end{equation}
+where
+\begin{align}
+p_-(y)={}&y^5-30y^4-\frac{4510}{9}y^3
++\left(-1160+\frac{2000\sqrt6}{9}\right)y^2\notag\\
+&+980y+4224-1500\sqrt6.                                   \tag{7.7}
+\end{align}
+On $(1,3\sqrt6/2)$,
+\begin{equation}
+ h(y)=-\frac6{78125}p_+(y),                                 \tag{7.8}
+\end{equation}
+where
+\begin{align}
+p_+(y)={}&y^5-30y^4+\frac{4240}{9}y^3
++\left(-2160-\frac{2000\sqrt6}{9}\right)y^2\notag\\
+&+5980y-7776+1500\sqrt6.                                  \tag{7.9}
+\end{align}
+Sturm sequences over $\mathbb Q(\sqrt6)$ prove that $p_-$ has one root in
+each of
+\begin{equation}
+ (-9/4,-11/5),\qquad(-1/2,-9/20),                           \tag{7.10}
+\end{equation}
+and no other root in $(-\sqrt6,1)$; $p_+$ has one root in each of
+\begin{equation}
+ (5/4,13/10),\qquad(3,31/10),                               \tag{7.11}
+\end{equation}
+and no other root in $(1,3\sqrt6/2)$.  Their terminal Sturm remainders are
+nonzero constants, so all four roots are simple.  Exact signs at rational
+probes give
+\begin{equation}
+ \sgn h=+,-,+,-,+.                                         \tag{7.12}
+\end{equation}
+Thus $h$ has exactly four sign changes.
+
+\subsection{Variation diminution}
+
+We use the classical strict total positivity of the kernel $K(s,y)=e^{sy}$
+\cite{Karlin1968,KarlinStudden1966,Pinkus2010}.
+
+\begin{lemma}[Continuous generalized Descartes rule]
+\label{lem:descartes}
+If a nonzero compactly supported signed density $h$ has $m$ sign changes,
+then its bilateral Laplace transform
+\begin{equation}
+ L(s)=\int_{\R}e^{sy}h(y)\,dy                              \tag{7.13}
+\end{equation}
+has at most $m$ real zeros, counted with multiplicity.
+\end{lemma}
+
+\begin{proof}
+Suppose $L$ had zeros $s_i$ of total multiplicity greater than $m$.
+Differentiating (7.13) supplies orthogonality to the corresponding functions
+$y^j e^{s_i y}$.  These functions form an extended complete Chebyshev system
+because the exponential kernel is strictly totally positive.  The standard
+interpolation theorem then constructs a nonzero linear combination with
+simple zeros at the sign-change points of $h$ and the same sign as $h$ on
+every intervening interval.  Its integral against $h$ is strictly positive,
+while the orthogonality makes it zero, a contradiction.
+\end{proof}
+
+\begin{lemma}[Strict orientation dominance]\label{lem:orientation}
+Let $M_j(t)=\E e^{tY_j}$ for the two rescaled statistics in (7.3)--(7.4).
+Then
+\begin{equation*}
+ M_j(t)>M_j(-t)\qquad(t>0,\ j=1,2).
+\end{equation*}
+Consequently the positive multiplicity-$1$ and multiplicity-$2$
+orientations strictly dominate multiplicities $4$ and $3$, respectively, at
+positive field.
+\end{lemma}
+
+\begin{proof}
+Put $g_j(y)=f_j(y)-f_j(-y)$ and
+$O_j(t)=M_j(t)-M_j(-t)=\int e^{ty}g_j(y)\,dy$.
+
+For $0<y<\sqrt6$, direct subtraction in (7.3) gives
+\begin{equation*}
+ g_1(y)=\frac{16y(2y^2-9)}{1875}.
+\end{equation*}
+For $\sqrt6<y<3\sqrt6/2$, the reflected density vanishes and $g_1(y)>0$.
+Since $0<9/2<6$, the positive half-line has exactly one sign change and the
+odd density $g_1$ has the global pattern $-,+,-,+$, hence three sign changes.
+Moreover, $\E Y_1=0$ and $\E Y_1^3=3\sqrt6/14>0$.  Thus $O_1$ has a zero of
+exactly multiplicity three at the origin and is positive immediately to its
+right.  Lemma \ref{lem:descartes} leaves no budget for another real zero, so
+$O_1(t)>0$ for every $t>0$.
+
+For $0<y<1$, (7.4) gives
+\begin{equation*}
+ g_2(y)=\frac{12y(y^4-390y^2+480)}{78125}>0;
+\end{equation*}
+the polynomial in $y^2$ decreases on $[0,1]$ and has endpoint value $91$.
+For $1<y<4$,
+\begin{equation*}
+ g_2(y)=\frac{12p(y)}{78125},\qquad
+ p(y)=30y^4-375y^3+1660y^2-3000y+1776.
+\end{equation*}
+An exact rational Sturm sequence gives exactly two simple roots, one in
+$(23/20,7/6)$ and one in $(11/4,14/5)$, with signs $+,-,+$.  For $4<y<6$,
+the reflected density vanishes and $g_2(y)>0$.  Hence the odd density $g_2$
+has exactly five sign changes.  Since $\E Y_2=0$ and $\E Y_2^3=1/7>0$,
+$O_2$ has a zero of multiplicity three at the origin and is positive just to
+its right.  Lemma \ref{lem:descartes} leaves at most two additional real
+zeros.  Nonzero zeros occur in opposite pairs with equal multiplicity.  A
+simple positive zero would change sign and require a second positive zero to
+return to the positive large-field sign; an even positive zero and its
+negative partner would already consume four multiplicities.  Both
+possibilities exceed the remaining budget.  Therefore $O_2(t)>0$ for every
+$t>0$.
+\end{proof}
+
+\begin{proof}[Proof of \cref{thm:crossing}]
+After the harmless rescaling $s\mapsto s/\sqrt{30}$, the difference
+$Z_2-Z_1$ is the Laplace transform of $h$.  Equations (7.5) show that it has
+a zero of exactly multiplicity three at the origin and is negative
+immediately to the right.  By (7.12) and \cref{lem:descartes}, at most one
+additional real zero remains, counting multiplicity.  The upper support
+endpoint of $Y_2$ is $6$, strictly larger than $3\sqrt6/2$, the endpoint of
+$Y_1$; hence $Z_2-Z_1>0$ for all sufficiently large positive $s$.  A positive
+zero therefore exists.  It consumes the remaining zero budget and must be
+unique and simple.  Lemma \ref{lem:orientation} removes the two negative
+orientations, proving the complete oriented-family statement.
+\end{proof}
+
+The diagnostic value $s_\times\approx4.858579$ is not used in the proof.
+
+\section{A finite exact all-field certificate on \texorpdfstring{$\Gr_{\C}(4,8)$}{GrC(4,8)}}
+
+The fixed-rank theorem becomes a complete all-field result at the next half
+rank.  For $P\sim\Gr_{\C}(4,8)$, let
+\begin{equation}
+ A_k=\sqrt{\frac{8-k}{8k}}E_k
+     -\sqrt{\frac{k}{8(8-k)}}(I-E_k),\qquad
+ Z_k(s)=\E e^{s\tr(A_kP)},\quad 1\le k\le4.                \tag{8.1}
+\end{equation}
+
+\begin{theorem}[Computer-assisted all-field $\Gr_{\C}(4,8)$ two-block
+rigidity]\label{thm:gr48}
+For every real $s$ and $k=1,2,3$,
+\begin{equation}
+ Z_4(s)\ge Z_k(s),                                         \tag{8.2}
+\end{equation}
+with strict inequality for $s\ne0$.  More strongly, after the common
+constant and quadratic coefficients, every even Taylor coefficient of
+$Z_4$ is strictly larger than its counterpart in $Z_k$.
+\end{theorem}
+
+The proof is computer-assisted only on a finite exact-rational block.  Its
+infinite tail is analytic and independent of the replay.
+
+\begin{proof}
+Put $c_k^2=8/[k(8-k)]$.  Matrix-beta compression and Andreief's identity give
+\begin{equation}
+ Z_k(s)=\frac{D_k^{(4-k)}(sc_k/2)}{D_k^{(4-k)}(0)},          \tag{8.3}
+\end{equation}
+with $D$ as in (5.2).  If
+\[
+ J_{a,t}=\int_{-1}^{1}x^{2t}(1-x^2)^a\,dx,
+\]
+then
+\begin{equation}
+ J_{a,0}=\frac{2^{2a+1}(a!)^2}{(2a+1)!},\qquad
+ \frac{J_{a,t+1}}{J_{a,t}}=\frac{2t+1}{2t+2a+3}.           \tag{8.4}
+\end{equation}
+The coefficient of $u^\ell$ in the $(i,j)$ entry of the determinant is zero
+when $\ell+i+j$ is odd and otherwise equals
+\begin{equation}
+ \frac{J_{a,(\ell+i+j)/2}}{\ell!}.                         \tag{8.5}
+\end{equation}
+Leibniz expansion and finite convolution of these rational series prove,
+with no rounding or tolerance,
+\begin{equation}
+ [s^{2m}]Z_4>[s^{2m}]Z_k,\qquad
+ k=1,2,3,\quad 2\le m\le134.                              \tag{8.6}
+\end{equation}
+
+It remains to close the infinite tail.  Every unbalanced branch has
+$|X_k|\le\rho_3=\sqrt{6/5}$ and common variance $2/63$, hence
+\begin{equation}
+ \E X_k^{2m}\le\frac2{63}\left(\frac65\right)^{m-1}.      \tag{8.7}
+\end{equation}
+For $k=4$, $X_4=\tr(H)/\sqrt8$ with $H$ uniform on the
+$16$-dimensional Hermitian matrix interval.  Each event
+$H>(19/20)I$ and $H<-(19/20)I$ has probability $40^{-16}$, and on their
+union $|X_4|>(19/20)\sqrt2$.  Therefore
+\begin{equation}
+ \E X_4^{2m}\ge2\,40^{-16}\left(\frac{361}{200}\right)^m.\tag{8.8}
+\end{equation}
+The ratio of (8.8) to (8.7) is at least
+\begin{equation}
+ \frac{378}{5}\,40^{-16}\left(\frac{361}{240}\right)^m. \tag{8.9}
+\end{equation}
+Exact integer comparison shows that (8.9) exceeds one at $m=134$; its base
+$361/240$ is greater than one, so every $m\ge134$ is covered.  This overlaps
+the exact finite block.  The laws are symmetric, and summing the strict even
+coefficient gaps proves (8.2).
+\end{proof}
+
+\begin{remark}[Audit surface]
+The finite checker expands each determinant through degree $268$ using
+Python \texttt{Fraction}; it uses neither quadrature nor floating-point sign
+tests.  A hostile audit independently checked normalization, truncation,
+the $40^{-16}$ event volume, the cutoff overlap, symmetry, and exhaustion of
+the two-level class.  On the constrained reference machine the replay took
+about $3.1$ seconds and peaked at $13.3$ MiB resident memory.  These resource
+figures document the replay; they are not mathematical assumptions.
+\end{remark}
+
+Theorem \ref{thm:gr48} is the second half-rank case closed here, not a
+uniform-in-rank theorem.  The general result gives coefficientwise dominance
+at every fixed rank a terminating exact sufficient certificate; when that
+certificate passes, it proves all-field order.  A failed coefficient sign
+does not by itself decide the sign of the full Laplace-transform difference,
+and the required finite block grows with $r$.
+
+\section{What the exact branch theorems do and do not prove}
+
+The results separate three distinct levels of control:
+\begin{enumerate}[label=(\alph*)]
+\item \emph{Local orbit stability}: the constrained Hessian near a specified
+      branch, supplied for half rank by \cite{ErikssonMorseBott2026}.
+\item \emph{Canonical branch order}: comparison of all two-level
+      multiplicities.  This is closed here for $\Gr_{\C}(3,6)$ and
+      $\Gr_{\C}(4,8)$, and for the complete oriented two-level family on
+      $\Gr_{\C}(2,5)$.
+\item \emph{Full-spectrum global order}: comparison with every trace-zero,
+      Frobenius-unit spectrum, including three or more distinct eigenvalues.
+      This remains open in every example treated here.
+\end{enumerate}
+
+For $\Gr_{\C}(3,6)$ or $\Gr_{\C}(4,8)$, a hypothetical counterexample to the balanced global
+conjecture must have at least three eigenvalues.  It cannot lie on a
+two-block crossing and cannot arise from a spinodal instability of the
+balanced branch.  For $\Gr_{\C}(2,5)$, the unique canonical exchange rules
+out reentrance between the one-spike and rank-two sources, but a noncanonical
+multi-level branch could still exceed both.
+
+Accordingly, none of the following is claimed:
+\begin{enumerate}[label=(\roman*)]
+\item that every global stationary spectrum has at most two levels;
+\item that the balanced $3+3$ field is globally optimal over the full
+      spectral sphere, or that the balanced $4+4$ field is globally optimal
+      over its full spectral sphere;
+\item that the full-spectrum $\Gr_{\C}(2,5)$ envelope is exhausted by the
+      two displayed positive-orientation branches, or equivalently that no
+      multi-level branch exceeds them; or
+\item an unrestricted all-distortion rate--distortion function derived from
+      either unproved envelope.
+\end{enumerate}
+
+This boundary is not cosmetic.  The fixed-norm candidate spectra are
+typically majorization-incomparable, and the local theory already permits
+metastable unbalanced half-rank branches.  A global theorem needs a new
+stationary-spectrum reduction, a pair-smoothing inequality, or an exact
+certificate covering every multiplicity stratum.
+
+\section{Reproducibility}
+
+Five lightweight exact replay scripts accompany the manuscript, organized
+into four groups.
+\begin{enumerate}[label=(\roman*)]
+\item \texttt{matrix\_cube/verify\_low\_degree\_order.py} reconstructs
+      (3.6)--(3.11), verifies every positive-coefficient array in
+      \cref{app:positive}, and checks 220 independent Schur--Weyl fixtures.
+\item \texttt{verify\_gr36\_two\_block\_laplace.py} reconstructs the Hankel
+      determinants, the coefficient formulas, the discrete factorizations,
+      and the remaining exact Hessian coefficients.
+\item \texttt{finite\_global/verify\_d5r2\_canonical\_crossing.py} derives
+      the two densities symbolically and performs every Sturm count and sign
+      decision in exact $\mathbb Q(\sqrt6)$ arithmetic.
+\item \texttt{matrix\_cube/verify\_finite\_tail\_cutoffs.py} checks the
+      exact universal cutoffs in (4.10), while
+      \texttt{matrix\_cube/verify\_r4\_all\_degree.py} checks the complete
+      rational block (8.6) and the exact tail threshold.
+\end{enumerate}
+The scripts replay finite algebra.  They do not substitute a numerical
+search for an unproved full-spectrum theorem.
+The release package includes every script and its dependency, the one-command
+wrapper \texttt{replay/run\_all\_replays.py}, a persisted exact result ledger,
+an environment-and-command manifest, and \texttt{SHA256SUMS}.  Verification
+is explicitly partial: bibliography screening, independent peer review,
+full-spectrum optimization, and scientific priority are not assessed by the
+replay.
+
+\appendix
+\section{Moment-gap polynomials}\label{app:polynomials}
+
+The degree-eight quantities in (3.10) are
+\begin{align*}
+A_8&=12r^6-111r^4+163r^2-60,\\
+B_8&=-76r^6+163r^4-60r^2,\\
+C_8&=240r^6-60r^4,\\
+P_8(r,q)&=A_8q^2+B_8q+C_8,\\
+D_8&=(2r-7)(2r-5)(2r-3)(2r-1)^2(2r+1)^2\\
+&\qquad\times(2r+3)(2r+5)(2r+7).
+\end{align*}
+For degree ten,
+\begin{align*}
+A_{10}&=80r^{10}-2040r^8+14005r^6-34367r^4+35100r^2-12096,\\
+B_{10}&=-880r^{10}+11800r^8-34367r^6+35100r^4-12096r^2,\\
+C_{10}&=6080r^{10}-28256r^8+35100r^6-12096r^4,\\
+D_{10}^{(0)}&=-21504r^{10}+53760r^8-12096r^6,\\
+P_{10}(r,q)&=A_{10}q^3+B_{10}q^2+C_{10}q+D_{10}^{(0)},\\
+\cD_{10}&=(2r-9)(2r-7)(2r-5)(2r-3)^2(2r-1)^2\\
+&\quad\times(2r+1)^2(2r+3)^2(2r+5)(2r+7)(2r+9).
+\end{align*}
+
+\section{Positive-coefficient certificates}\label{app:positive}
+
+For $P_8(y+4,2(y+4)-1+x)=\sum_{j=0}^2c_{8,j}(y)x^j$, the coefficient
+polynomials are
+\begin{align*}
+c_{8,0}={}&48y^8+1336y^7+15788y^6+102818y^5+400038y^4\\
+&+939548y^3+1272831y^2+874408y+214900,\\
+c_{8,1}={}&48y^7+1244y^6+13284y^5+75025y^4+237852y^3\\
+&+408430y^2+320064y+55448,\\
+c_{8,2}={}&12y^6+288y^5+2769y^4+13584y^3+35587y^2\\
+&+46616y+23284.
+\end{align*}
+For $P_{10}(y+5,2(y+5)-1+x)=\sum_{j=0}^3c_{10,j}(y)x^j$,
+\begin{align*}
+c_{10,0}={}&640y^{13}+37120y^{12}+979040y^{11}+15522336y^{10}
++164732888y^9\\
+&+1232842288y^8+6674149082y^7+26363797506y^6
++75611253136y^5\\
+&+154443659379y^4+216240062046y^3+193546929296y^2\\
+&+96708725184y+19346224491,\\
+c_{10,1}={}&960y^{12}+53120y^{11}+1321200y^{10}+19491680y^9
++189485684y^8\\
+&+1274609832y^7+6058238765y^6+20392541954y^5
++47930087778y^4\\
+&+76137334976y^3+77150587905y^2+45135152502y+12252504972,\\
+c_{10,2}={}&480y^{11}+25280y^{10}+591760y^9+8107120y^8
++71984830y^7\\
+&+432888668y^6+1786158088y^5+4998471151y^4
++9107125370y^3\\
+&+9854406754y^2+5054136464y+430182883,\\
+c_{10,3}={}&80y^{10}+4000y^9+87960y^8+1118400y^7+9086005y^6\\
+&+49140150y^5+178467508y^4+427325160y^3+639926925y^2\\
+&+533261250y+182589154.
+\end{align*}
+Every displayed coefficient is strictly positive.
+
+\section{Exact Sturm ledger for the canonical crossing}
+
+For reproducibility without decimal roots, the theorem-bearing Sturm counts
+are
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Polynomial & Interval & Number of roots\\
+\midrule
+$p_-$ & $(-\sqrt6,1)$ & $2$\\
+$p_-$ & $(-9/4,-11/5)$ & $1$\\
+$p_-$ & $(-1/2,-9/20)$ & $1$\\
+$p_+$ & $(1,3\sqrt6/2)$ & $2$\\
+$p_+$ & $(5/4,13/10)$ & $1$\\
+$p_+$ & $(3,31/10)$ & $1$\\
+$p$ (orientation) & $(1,4)$ & $2$\\
+$p$ (orientation) & $(23/20,7/6)$ & $1$\\
+$p$ (orientation) & $(11/4,14/5)$ & $1$\\
+\bottomrule
+\end{tabular}
+\end{center}
+The exact probe points $-12/5,-2,0,6/5,2,7/2$ produce the density signs
+$+,-,+,+,-,+$; accounting for the support-only positive intervals reduces
+this to the global five-block pattern $+,-,+,-,+$.
+For the rank-two orientation polynomial $p$, rational probes in its three
+root-separated intervals give $+,-,+$.  Together with positivity on
+$(0,1)$ and $(4,6)$ and odd reflection, this gives the five sign changes
+used in Lemma \ref{lem:orientation}.
+
+\printbibliography
+
+\end{document}

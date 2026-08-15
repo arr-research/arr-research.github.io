@@ -1,0 +1,1446 @@
+\documentclass[11pt]{article}
+\ifdefined\pdfinfoomitdate\pdfinfoomitdate=1\fi
+\ifdefined\pdfsuppressptexinfo\pdfsuppressptexinfo=15\fi
+\ifdefined\pdftrailerid\pdftrailerid{}\fi
+\usepackage[a4paper,margin=25mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,bm}
+\usepackage{booktabs,array,microtype}
+\usepackage[hidelinks]{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\hypersetup{
+  pdftitle={Bayesian Matroid-Union Bounds for Quantum List Discrimination and Exact Adaptive-Parallel Phases},
+  pdfauthor={Lluis Eriksson},
+  pdfsubject={Support congestion, process compression, and exact adaptive-parallel phases for quantum list discrimination},
+  pdfkeywords={quantum state exclusion, list discrimination, matroid union, Rado matroid, channel discrimination, adaptive queries}
+}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\newcommand{\C}{\mathbb C}
+\newcommand{\cH}{\mathcal H}
+\newcommand{\cI}{\mathcal I}
+\newcommand{\cK}{\mathcal K}
+\newcommand{\cL}{\mathcal L}
+\newcommand{\cM}{\mathcal M}
+\newcommand{\cP}{\mathcal P}
+\newcommand{\cR}{\mathcal R}
+\newcommand{\ran}{\operatorname{ran}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\conv}{\operatorname{conv}}
+\newcommand{\ket}[1]{\lvert #1\rangle}
+\newcommand{\bra}[1]{\langle #1\rvert}
+\newcommand{\vket}[1]{\lvert #1\rangle\!\rangle}
+\newcommand{\vbra}[1]{\langle\!\langle #1\rvert}
+
+\title{\textbf{Bayesian Matroid-Union Bounds for Quantum List Discrimination}\\
+Support Congestion, Process Compression, and Exact Adaptive--Parallel Phases}
+\author{Lluis Eriksson}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+In quantum list discrimination a measurement returns at most $\ell$ candidate
+labels and succeeds when the true hypothesis belongs to the returned list.
+We derive a hierarchy of upper bounds that retains
+the complete labeled dependence pattern of mixed quantum hypotheses and
+arbitrary priors.  To the support subspaces of the hypotheses we associate
+their Rado independent-transversal matroid $\cR$.  We prove that the vector of
+true-label inclusion probabilities of every $\ell$-list measurement belongs
+to the independence polytope of the $\ell$-fold matroid union
+$\cR^{\vee\ell}$.  Its rank has the closed support-congestion formula
+\[
+ r_\ell(A)=\min_{C\subseteq A}\bigl(|A\setminus C|
+                  +\ell\dim\sum_{i\in C}\ran\rho_i\bigr).
+\]
+Thus the Bayes list success is at most the maximum prior weight of a set
+partitionable into $\ell$ independent support transversals.  The result also
+covers soft lists whose fractional rewards have total budget at most $\ell$
+per outcome.  A prefix formula gives the bound for arbitrary priors and an exact
+rank-saturation audit for equality of any proposed strategy.
+
+For uniform priors the rank formula yields an integer failure certificate
+$\Delta_\ell=\max_C(|C|-\ell d(C))$ and the precise list size at which this
+support obstruction disappears.  Within any process-tester class satisfying
+the stated unnormalised-Choi trace interface, canonical compression transfers
+the hierarchy without adding a causal-order assumption.  We exhibit exact
+attainment families.  Orthogonal classes
+of repeated states attain the arbitrary-prior bound for every $\ell$.
+More geometrically, $m$ equiprobable regular-simplex states have exact
+one-guess optimum $(m-1)/m$ but perfect two-list success: a root-frame POVM
+reports an edge of the simplex and never omits the true vertex.  Finally, an
+exact three-qubit-state example shows that a full union matroid does not imply
+the existence of a perfect-list measurement; its uniform two-list optimum is
+$(2+1/\sqrt3)/3<1$.  The theorem is therefore a
+support obstruction with exact attainments, not a general solution of state
+exclusion.  The proof
+combines standard Rado--Edmonds theory with quantum support inequalities; the
+ingredients themselves are not claimed as new.
+
+The process extension becomes exact for a complete input-dependent family
+whose channels dephase before preparing a classical output.  For $M=2^h$
+equiprobable hypotheses, list size $\ell=2^s$, and $q$ uses, we prove against
+arbitrary entangled parallel inputs and adaptive quantum memories that
+\[
+ P_{\rm par}^{(\ell)}(q)=\min\{1,\ell(q+1)/M\},\qquad
+ P_{\rm ad}^{(\ell)}(q)=\min\{1,\ell2^q/M\}.
+\]
+Thus perfect list identification needs exactly $M/\ell-1$ parallel calls but
+only $\log_2(M/\ell)$ adaptive calls.  The fixed parallel transcripts induce
+partition matroids whose union caps are attained cell by cell.  This is an
+exact list/feedback tradeoff in classical channels embedded quantumly, not a
+claim of quantum or indefinite-causal-order advantage.
+
+For a complete unitary-error ensemble and fixed pure probe, we translate the
+known optimal approximate dense-coding law into the present process-list
+language,
+$P_{\rm guess}=(\Tr\sqrt{\rho_R})^2/D$.  It yields the sharp
+Schmidt-rank cap $r/D$ and, for independent Weyl histories, exact list optima
+for carrier-only serial, unreferenced parallel, and Bell-assisted wirings.
+These channel theorems turn process compression into resource-resolved exact
+statements while retaining explicit boundaries on prior art and scope.
+\end{abstract}
+
+\section{Introduction}
+
+Minimum-error quantum discrimination normally asks a measurement to output
+one label.  A different and useful task permits a set-valued decision: the
+measurement may return a short list, and it succeeds whenever the true label
+is contained in that list.  Taking complements turns this into quantum state
+exclusion or elimination.  That subject has a well-developed semidefinite
+formulation and includes unambiguous, minimum-error, and worst-case
+variants~\cite{bandyopadhyay2014}.  Multi-state elimination has also been
+implemented experimentally~\cite{webb2023}.  We do not claim the operational
+task as new.
+
+The question addressed here is structural.  Suppose the hypotheses are mixed
+and their support subspaces overlap in a complicated labeled pattern.  How
+large can the total probability be that the correct label appears in a list
+of size at most $\ell$?  A total Hilbert-space dimension records only one
+number.  It does not distinguish a dense cluster of dependent, high-prior
+labels from independent, low-prior outliers.  In the one-label problem this
+loss is repaired by a Rado-matroid Bayes bound~\cite{eriksson2026matroid}.
+Here we show that the full list hierarchy is governed not by an ad hoc
+multiple of that bound, but by the successive union powers of the same
+matroid.
+
+The connection is exact at the polyhedral level.  If $s_i$ is the conditional
+probability that label $i$ appears in the reported list, then for each set
+$A$ of labels,
+\[
+  s(A):=\sum_{i\in A}s_i
+  \leq \ell\dim\sum_{i\in A}\ran\rho_i.
+\]
+Combining these support inequalities with $s_i\leq1$ and minimizing over a
+subset produces precisely the rank inequalities of the $\ell$-fold union of
+the Rado matroid.  Edmonds' union theorem and independence-polytope theorem
+then convert the quantum inequality into a maximum-weight independent-set
+bound.  This provides, in one statement, arbitrary priors, every finite list
+budget, mixed supports, and soft fractional rewards.
+
+Three consequences make the hierarchy operational rather than merely
+formal.  First, for equal priors its failure deficit is the integer
+\[
+ \Delta_\ell=\max_{C}\bigl(|C|-\ell d(C)\bigr),
+ \qquad d(C)=\dim\sum_{i\in C}\ran\rho_i.
+\]
+Second, this matroid support obstruction vanishes at the explicit density
+threshold
+\[
+ \max_C\left\lceil\frac{|C|}{d(C)}\right\rceil.
+\]
+Third, canonical inverse-square-root
+compression carries the argument unchanged to quantum-process testers.  A
+fixed tester normalization may describe parallel circuits, adaptive combs,
+or more general process-matrix strategies~\cite{chiribella2009,sedlak2016,bavaresco2022}.
+
+Compression by itself is only a converse and does not compare architectures.
+We therefore solve one input-dependent channel family exactly.  The unknown
+channel measures a query from a binary-prefix alphabet and returns membership
+in the corresponding right-child cylinder.  These cylinders are laminar.
+For a fixed parallel query tuple, their response fibres form a partition
+matroid, so the union bound is attained by reporting the largest-prior labels
+in each fibre.  A flag-genie argument proves that coherent or entangled inputs
+cannot improve this value, while backward induction reduces every adaptive
+quantum strategy to a classical decision tree.  The resulting all-depth phase
+diagram separates the linear growth of parallel transcript cells from the
+doubling supplied by feedback.  Adaptive advantages for channel
+discrimination, including entanglement-breaking examples, are established in
+the literature~\cite{harrow2010,bavaresco2021}; our contribution is not the
+existence of adaptivity, but the closed list-valued law and its exact
+matroid-union realization.
+
+The disappearance threshold of this obstruction is necessary, not sufficient, for perfect list
+discrimination.  Geometry inside the support remains relevant.  We make that
+limitation exact: three pairwise independent qubit states have a free
+two-fold union matroid but cannot be perfectly two-list discriminated because
+their Bloch vectors lie in one strict hemisphere.  Conversely, regular
+simplices attain a striking sharp transition.  Their one-guess optimum loses
+exactly $1/m$, whereas a two-list root-frame measurement succeeds with
+certainty for every $m\geq3$.  The channel sections then go beyond static
+attainment: one family isolates feedback exactly, while complete unitary-error
+ensembles expose how the full Schmidt spectrum and the multitime wiring alter
+the achievable list probability.
+
+The paper is organized as follows.  \Cref{sec:model} defines list and soft
+reward decisions.  \Cref{sec:matroid} reviews only the Rado and union facts
+needed later.  \Cref{sec:main} proves the polytope theorem and the nonuniform
+Bayes formula.  \Cref{sec:process} gives the process-tester extension.
+\Cref{sec:adaptive} derives the exact parallel--adaptive channel phase.
+\Cref{sec:ueb} derives the process-list consequences of the dense-coding
+spectrum law and proves the unitary-history wiring laws.
+\Cref{sec:deficit} derives the congestion deficit and obstruction threshold.
+\Cref{sec:sharp} proves exact attainment families, and
+\Cref{sec:counterexample} proves the insufficiency counterexample.  We close
+with computational certificates, related work, and explicit limitations.
+
+\section{List decisions and soft rewards}\label{sec:model}
+
+Let $E=\{1,\ldots,M\}$ label density operators $\rho_i$ on a
+finite-dimensional Hilbert space $\cK$.  Let $p_i\geq0$ and
+$\sum_i p_i=1$.  Zero priors are allowed.
+
+\begin{definition}[Deterministic list measurement]
+For an integer $1\leq\ell\leq M$, an $\ell$-list measurement is a POVM
+$(M_L)_{L\in\cL}$ indexed by a family
+$\cL\subseteq\{L\subseteq E:|L|\leq\ell\}$.  Outcome $L$ reports the labels
+in $L$.  Its true-label inclusion probabilities and Bayes list success are
+\begin{equation}\label{eq:si}
+ s_i=\sum_{L\ni i}\Tr(M_L\rho_i),\qquad
+ P_{\rm list}=\sum_i p_i s_i.
+\end{equation}
+Empty lists may be omitted without changing any statement.
+\end{definition}
+
+This convention includes ordinary minimum-error discrimination at $\ell=1$.
+At $\ell=M-1$, perfect list success is the usual conclusive exclusion of at
+least one label.  Intermediate values quantify multi-label elimination.
+
+The proof needs only a fractional reward budget, not deterministic membership.
+
+\begin{definition}[Soft-list reward rule]
+Let $(M_a)_a$ be a POVM.  A soft-list reward rule assigns numbers
+$w_{ia}\in[0,1]$ such that for each outcome $a$,
+\begin{equation}\label{eq:soft-budget}
+ \sum_i w_{ia}\leq\ell.
+\end{equation}
+Define
+\begin{equation}\label{eq:soft}
+ s_i=\sum_a w_{ia}\Tr(M_a\rho_i),\qquad
+ P=\sum_i p_i s_i.
+\end{equation}
+\end{definition}
+
+A deterministic list is recovered from $w_{iL}=\bm1_{\{i\in L\}}$.
+Fractional $w_{ia}$ allow randomized postprocessing or partial rewards.  The
+budget \eqref{eq:soft-budget} is strictly more general than requiring at most
+$\ell$ nonzero rewards.  The assumption $w_{ia}\leq1$ is essential for the
+singleton bound $s_i\leq1$.
+
+\begin{lemma}[Lists and exclusion]\label{lem:padding}
+For a nonnegative inclusion reward, an at-most-$\ell$ list may be padded to
+an exactly-$\ell$ list without decreasing success.  Complementing that list
+is therefore equivalent to reporting exactly $k=M-\ell$ excluded labels.
+In particular, perfect at-most-$\ell$ list discrimination is equivalent to
+perfect weak $k$-state exclusion after padding.
+\end{lemma}
+
+\begin{proof}
+For every outcome list $L$ with $|L|<\ell$, add arbitrary labels from
+$E\setminus L$ until its size is $\ell$.  A true label already in $L$ remains
+present, and some previously omitted labels may become successful, so the
+inclusion reward cannot decrease.  The complement of the padded list has
+cardinality $M-\ell$, and the true label lies in the list exactly when it is
+not among the excluded labels.  Complementation is reversible.
+\end{proof}
+
+This elementary dictionary aligns our convention with $k$-state exclusion
+and zero-error list decoding~\cite{stratton2024,dalai2026}.  Stronger exclusion
+notions that require exhaustive elimination of every tuple impose additional
+conditions and are not identified with the present average-reward task
+~\cite{manna2026}.
+
+\section{Rado matroids and their union powers}\label{sec:matroid}
+
+Put $S_i=\ran\rho_i$ and, for $A\subseteq E$, define
+\begin{equation}\label{eq:d}
+ d(A)=\dim\sum_{i\in A}S_i,\qquad d(\varnothing)=0.
+\end{equation}
+
+\begin{definition}[Support Rado matroid]
+The support Rado matroid $\cR$ on $E$ declares $I\subseteq E$ independent
+when vectors $v_i\in S_i$ can be chosen so that $(v_i)_{i\in I}$ is linearly
+independent.
+\end{definition}
+
+Rado's independent-transversal theorem~\cite{rado1942} gives the rank formula
+\begin{equation}\label{eq:rado-rank}
+ r_{\cR}(A)=\min_{C\subseteq A}\bigl(|A\setminus C|+d(C)\bigr).
+\end{equation}
+Equivalently, $I$ is independent iff $|C|\leq d(C)$ for every $C\subseteq I$.
+For rank-one states, $\cR$ is simply the vector matroid of the state vectors.
+
+The union $\cM_1\vee\cM_2$ of two matroids on the same ground set has as
+independent sets the unions $I_1\cup I_2$ with $I_j$ independent in
+$\cM_j$.  Let $\cR^{\vee\ell}$ denote the union of $\ell$ copies of $\cR$.
+Thus $I$ is independent in $\cR^{\vee\ell}$ iff it can be partitioned into
+at most $\ell$ $\cR$-independent sets.  Edmonds' matroid-union theorem
+~\cite{edmonds1965,edmonds1968} states
+\begin{equation}\label{eq:union-standard}
+ r_{\cR^{\vee\ell}}(A)
+ =\min_{B\subseteq A}\bigl(|A\setminus B|+\ell r_{\cR}(B)\bigr).
+\end{equation}
+
+For the present subspace family this formula collapses to one minimization.
+
+\begin{lemma}[Closed union-rank law]\label{lem:union-rank}
+For every $A\subseteq E$,
+\begin{equation}\label{eq:union-rank}
+ r_\ell(A):=r_{\cR^{\vee\ell}}(A)
+ =\min_{C\subseteq A}\bigl(|A\setminus C|+\ell d(C)\bigr).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Insert \eqref{eq:rado-rank} into \eqref{eq:union-standard}.  The resulting
+minimum is over $C\subseteq B\subseteq A$.  Write $B=C\mathbin{\dot\cup}F$.
+Then
+\begin{align*}
+ |A\setminus B|+\ell|B\setminus C|+\ell d(C)
+ &=|A\setminus C|+(\ell-1)|F|+\ell d(C).
+\end{align*}
+For fixed $C$ this is minimized at $F=\varnothing$.  Minimizing over $C$
+proves the claim.  The argument also covers $\ell=1$, when every $F$ gives
+the same value.
+\end{proof}
+
+For a matroid $\cM$ with rank $r$, its independence polytope is
+\begin{equation}\label{eq:polytope}
+ \cP(\cM)=\{x\in\mathbb R_{
+ \geq0}^{E}:x(A)\leq r(A)\text{ for all }A\subseteq E\}.
+\end{equation}
+Edmonds proved that this polytope is the convex hull of incidence vectors of
+independent sets~\cite{edmonds1970}.  Consequently a nonnegative linear
+functional is maximized by the matroid greedy algorithm.
+
+\section{The matroid-union list theorem}\label{sec:main}
+
+\begin{theorem}[Support-congestion law]\label{thm:main}
+For every density ensemble $(p_i,\rho_i)$, every $\ell\geq1$, and every
+soft-list reward rule of budget $\ell$, the vector $s=(s_i)$ in
+\eqref{eq:soft} belongs to $\cP(\cR^{\vee\ell})$.  Equivalently, for all
+$A\subseteq E$,
+\begin{equation}\label{eq:main-subset}
+ \sum_{i\in A}s_i
+ \leq r_\ell(A)
+ =\min_{C\subseteq A}\bigl(|A\setminus C|+\ell d(C)\bigr).
+\end{equation}
+In particular, the statement holds for deterministic $\ell$-list
+measurements.
+\end{theorem}
+
+\begin{proof}
+Let $P_A$ denote the orthogonal projector onto
+$\sum_{i\in A}S_i$.  Since $\rho_i$ is positive with trace one, all its
+eigenvalues lie in $[0,1]$.  Therefore
+\begin{equation}\label{eq:rho-projector}
+ 0\leq\rho_i\leq P_A\qquad(i\in A).
+\end{equation}
+For each outcome $a$, \eqref{eq:rho-projector} and
+\eqref{eq:soft-budget} give
+\[
+ 0\leq\sum_{i\in A}w_{ia}\rho_i
+ \leq\left(\sum_{i\in A}w_{ia}\right)P_A
+ \leq\ell P_A.
+\]
+It follows that
+\begin{align}
+ s(A)
+ &=\sum_a\Tr\!\left(M_a\sum_{i\in A}w_{ia}\rho_i\right)\notag\\
+ &\leq\ell\sum_a\Tr(M_aP_A)
+ =\ell\Tr P_A
+ =\ell d(A).                                      \label{eq:raw-support}
+\end{align}
+Also
+\[
+ 0\leq s_i=\Tr\!\left(\rho_i\sum_a w_{ia}M_a\right)\leq1,
+\]
+because $\sum_a w_{ia}M_a\leq\sum_aM_a=I$.  Hence for arbitrary
+$C\subseteq A$,
+\[
+ s(A)=s(C)+s(A\setminus C)
+ \leq\ell d(C)+|A\setminus C|.
+\]
+Minimizing over $C$ and applying \Cref{lem:union-rank} proves
+\eqref{eq:main-subset}.  Nonnegativity of $s$ and the rank-inequality
+description \eqref{eq:polytope} finish the proof.
+\end{proof}
+
+The raw inequality \eqref{eq:raw-support} alone is not generally a matroid
+rank inequality because it can exceed $|A|$.  The singleton constraints are
+what perform the exact submodular truncation in \eqref{eq:union-rank}.
+
+\begin{corollary}[Arbitrary-prior Bayes cap]\label{cor:bayes}
+Every soft-list rule of budget $\ell$ obeys
+\begin{equation}\label{eq:beta}
+ P\leq\beta_\ell(p,S)
+ :=\max\left\{\sum_{i\in I}p_i:
+ I\in\cI(\cR^{\vee\ell})\right\}.
+\end{equation}
+Thus the cap is the maximum prior mass of a set partitionable into at most
+$\ell$ independent support transversals.
+\end{corollary}
+
+\begin{proof}
+By \Cref{thm:main}, $s\in\cP(\cR^{\vee\ell})$.  The vertices of this
+polytope are incidence vectors of independent sets, so maximizing $p\cdot s$
+over it gives \eqref{eq:beta}.
+\end{proof}
+
+The cap has a useful formula that avoids choosing a maximizing independent
+set explicitly.  Order the labels so that
+$p_{(1)}\geq\cdots\geq p_{(M)}$ and put
+$E_j=\{(1),\ldots,(j)\}$, $E_0=\varnothing$, and $p_{(M+1)}=0$.
+
+\begin{proposition}[Prefix formula and equality audit]\label{prop:prefix}
+One has
+\begin{equation}\label{eq:prefix}
+ \beta_\ell(p,S)=
+ \sum_{j=1}^{M}\bigl(p_{(j)}-p_{(j+1)}\bigr)r_\ell(E_j).
+\end{equation}
+For a fixed soft-list rule with inclusion vector $s$, equality
+$p\cdot s=\beta_\ell$ holds iff
+\begin{equation}\label{eq:prefix-eq}
+ s(E_j)=r_\ell(E_j)
+ \quad\text{whenever }p_{(j)}>p_{(j+1)}.
+\end{equation}
+The condition is independent of how labels are ordered inside a prior tie.
+\end{proposition}
+
+\begin{proof}
+The matroid greedy theorem selects label $(j)$ precisely when
+$r_\ell(E_j)-r_\ell(E_{j-1})=1$.  Summation by parts gives
+\eqref{eq:prefix}.  The same identity for an arbitrary vector is
+\[
+ p\cdot s=\sum_{j=1}^{M}
+ (p_{(j)}-p_{(j+1)})s(E_j).
+\]
+Every coefficient and every deficit
+$r_\ell(E_j)-s(E_j)$ is nonnegative.  Their weighted sum vanishes exactly at
+the strict prior breakpoints, proving \eqref{eq:prefix-eq}.  At a tie the
+coefficient is zero, so rearranging tied labels has no effect.
+\end{proof}
+
+\begin{remark}[Hierarchy]
+The matroids satisfy
+$\cR\preceq\cR^{\vee2}\preceq\cdots$, so
+$\beta_1\leq\beta_2\leq\cdots\leq1$.  The case $\ell=1$ is the previously
+derived one-label Rado bound~\cite{eriksson2026matroid}.  The new content is
+the union hierarchy, its soft-decision meaning, and the exact obstruction threshold and
+attainment results below.
+\end{remark}
+
+\section{General quantum-process testers}\label{sec:process}
+
+We use unnormalised Choi operators throughout this section.  This avoids an
+input-dimension factor in the tester normalization.
+
+Let $J_i\geq0$ be the Choi operators of a finite family of deterministic
+processes.  A tester with list-valued outcomes consists of positive operators
+$T_L$ whose sum $T=\sum_LT_L$ is a valid deterministic tester normalization.
+For every candidate process in the stated tester interface,
+\begin{equation}\label{eq:tester-norm}
+ \Tr(TJ_i)=1,
+\end{equation}
+and the conditional probability of outcome $L$ is $\Tr(T_LJ_i)$.  The
+linear constraints selecting parallel, sequential, or general testers affect
+the admissible set of $T$, but not the following compression.
+
+\begin{lemma}[Canonical compression]\label{lem:compression}
+Let $\cK=\supp T$ and let $T^{-1/2}$ be the Moore--Penrose inverse on
+$\cK$.  Define
+\begin{equation}\label{eq:compression}
+ \rho_i=T^{1/2}J_iT^{1/2},\qquad
+ M_L=T^{-1/2}T_LT^{-1/2}\big|_{\cK}.
+\end{equation}
+Then $(\rho_i)$ are density operators on $\cK$, $(M_L)$ is a POVM on
+$\cK$, and
+\begin{equation}\label{eq:prob-preserve}
+ \Tr(M_L\rho_i)=\Tr(T_LJ_i)
+\end{equation}
+for all $i,L$.
+\end{lemma}
+
+\begin{proof}
+Positivity is immediate and \eqref{eq:tester-norm} gives
+$\Tr\rho_i=1$.  Since $0\leq T_L\leq T$, the support of every $T_L$ is
+contained in $\cK$, and
+\[
+ \sum_LM_L=T^{-1/2}TT^{-1/2}=I_{\cK}.
+\]
+Using the support projection $P_{\cK}=T^{-1/2}T^{1/2}$, cyclicity of trace,
+and $T_L=P_{\cK}T_LP_{\cK}$ gives
+\begin{align*}
+ \Tr(M_L\rho_i)
+ &=\Tr(T^{-1/2}T_LT^{-1/2}T^{1/2}J_iT^{1/2})\\
+ &=\Tr(P_{\cK}T_LP_{\cK}J_i)=\Tr(T_LJ_i).
+\end{align*}
+\end{proof}
+
+\begin{theorem}[Process-list matroid bound]\label{thm:process}
+Fix any admissible tester normalization $T$ satisfying
+\eqref{eq:tester-norm}.  Let
+$S_i^T=\ran(T^{1/2}J_iT^{1/2})$.  Every $\ell$-list tester with this
+normalization obeys \Cref{thm:main,cor:bayes,prop:prefix} for the Rado matroid
+of $(S_i^T)$.
+
+Let $S_i^0=\ran J_i$ and
+$d_0(A)=\dim\sum_{i\in A}S_i^0$.  Then a tester-independent bound is obtained
+by replacing $d_T$ by $d_0$ in \eqref{eq:union-rank}.  In particular, it
+holds after optimizing over all admissible general testers.
+\end{theorem}
+
+\begin{proof}
+The fixed-$T$ statement follows from \Cref{lem:compression,thm:main}.
+Moreover,
+\[
+ \ran(T^{1/2}J_iT^{1/2})\subseteq T^{1/2}\ran J_i,
+\]
+so a common linear map can only decrease the dimension of every support sum:
+$d_T(A)\leq d_0(A)$.  Formula \eqref{eq:union-rank} is monotone in $d$, and
+so are the prefix and maximum-weight bounds.  The resulting cap does not
+depend on $T$ and survives the outer optimization.
+\end{proof}
+
+For rank-one Choi operators $J_i=\vket{U_i}\!\vbra{U_i}$, the oracle matroid
+is the vector matroid of the Choi vectors.  The theorem therefore bounds list
+discrimination of unitary channels by the union powers of their labeled
+linear-dependence matroid.  We make no claim that the tester-independent cap
+is always attainable, or that indefinite causal order is irrelevant to the
+actual optimum.
+
+For clarity, equality in the effective and original-support caps are different
+claims.  For fixed $T$, \Cref{prop:prefix} characterizes equality in the cap
+built from $S_i^T$.  Equality in the coarser cap built from $S_i^0$ additionally
+requires that compression cause no weighted prefix-rank loss.  We never infer
+the latter from saturation of the former.
+
+\subsection{A robust core-and-tail certificate}
+
+Exact support can change discontinuously under a small full-rank perturbation.
+The following secondary result retains a low-rank union-matroid core and pays
+explicitly for the discarded tail.  It extends the one-label robust
+certificate of Ref.~\cite{eriksson2026matroid} to every list budget.
+
+\begin{corollary}[Robust process cores]\label{cor:robust}
+Let $0\leq L_i\leq J_i$ and $R_i=J_i-L_i$.  For a fixed deterministic tester
+normalization $T$, put
+\[
+ \lambda_i=T^{1/2}L_iT^{1/2},\qquad S_i^L=\ran\lambda_i,
+\]
+and form the union-matroid cap $\beta_\ell(T,L,p)$ from the subspaces
+$(S_i^L)$.  Every deterministic $\ell$-list tester with normalization $T$
+obeys
+\begin{equation}\label{eq:robust-fixed}
+ P_{\rm list}\leq
+ \min\left\{1,\ \beta_\ell(T,L,p)+\sum_i p_i\Tr(TR_i)\right\}.
+\end{equation}
+Consequently, for an architecture class $\mathfrak T$ of deterministic
+normalizations,
+\begin{equation}\label{eq:robust-universal}
+ P_{\rm list}^{\mathfrak T}\leq\min\left\{1,
+ \sup_{T\in\mathfrak T}\beta_\ell(T,L,p)
+ +\sum_i p_i\sup_{T\in\mathfrak T}\Tr(TR_i)\right\}.
+\end{equation}
+The first supremum may be replaced by the coarser cap computed from the
+uncompressed core supports $\ran L_i$.
+\end{corollary}
+
+\begin{proof}
+Decompose $s_i=s_i^L+s_i^R$ using $J_i=L_i+R_i$.  The compressed core obeys
+$0\leq\lambda_i\leq\rho_i$, where $\rho_i$ is the density operator from
+\Cref{lem:compression}.  Thus $\lambda_i$ is bounded by the projector onto
+any core support sum containing it.  The proof of \Cref{thm:main} applies to
+the core contributions even though $\Tr\lambda_i$ need not be one, and gives
+$\sum_i p_i s_i^L\leq\beta_\ell(T,L,p)$.
+
+For the tail,
+\[
+ \sum_{L\ni i}T_L\leq\sum_LT_L=T,
+\]
+so positivity gives $s_i^R\leq\Tr(TR_i)$.  Summing with the priors and capping
+a success probability by one proves \eqref{eq:robust-fixed}.  Taking the
+architecture supremum and bounding each tail term separately proves
+\eqref{eq:robust-universal}.  Common congruence can only lower core
+support-sum ranks, proving the final statement.
+\end{proof}
+
+\begin{remark}
+The tail term in \eqref{eq:robust-universal} deliberately contains separate
+suprema.  It does not assert that one tester normalization simultaneously
+maximizes all tails.  For ordinary state discrimination, $T=I$ and the
+penalty reduces to $\sum_i p_i\Tr R_i$.
+\end{remark}
+
+\section{Input-dependent channels and an exact architecture phase}
+\label{sec:adaptive}
+
+The tester theorem above bounds each architecture after its deterministic
+normalization has been chosen.  It does not normally optimize that choice or
+compare architectures.  We now give a channel family for which both tasks
+close exactly, including arbitrary entangled parallel probes and arbitrary
+adaptive quantum memories.
+
+Let $\mathsf X$ and $\mathsf Y$ be finite alphabets.  Hypothesis $i$ specifies
+a deterministic function $f_i:\mathsf X\to\mathsf Y$ and the
+entanglement-breaking channel
+\begin{equation}\label{eq:classical-channel}
+ \Phi_i(\tau)=\sum_{x\in\mathsf X}
+  \bra{x}\tau\ket{x}\,
+  \ket{f_i(x)}\!\bra{f_i(x)}.
+\end{equation}
+The same unknown channel may be called repeatedly.  A parallel strategy uses
+$q$ copies simultaneously and may prepare an arbitrary state entangled across
+the $q$ inputs and a reference.  An adaptive strategy may retain an arbitrary
+quantum memory and choose each later input after the earlier classical
+outputs.  No indefinite-causal-order strategy is included in the comparison.
+
+For a deterministic query tuple $\bm x=(x_1,\ldots,x_q)$, set
+\[
+ c_{\bm x}(i)=(f_i(x_1),\ldots,f_i(x_q)),\qquad
+ C_z(\bm x)=\{i:c_{\bm x}(i)=z\}.
+\]
+If $w=(w_i)_{i\in E}$ is a nonnegative weight vector, write
+\begin{equation}\label{eq:cell-value}
+ B_\ell(\bm x;w)=
+ \sum_z\ \sum_{j=1}^{\min\{\ell,|C_z(\bm x)|\}}
+ w^{\downarrow}_{C_z(\bm x),j},
+\end{equation}
+where $w^{\downarrow}_{C,j}$ is the $j$th largest weight in $C$.
+
+\begin{theorem}[Exact reduction of classical channels]
+\label{thm:classical-reduction}
+For the channels in \eqref{eq:classical-channel} and arbitrary priors $p$,
+the optimum of every $q$-use parallel quantum strategy is
+\begin{equation}\label{eq:parallel-cell}
+ P_{\rm par}^{(\ell)}(q)=
+ \max_{\bm x\in\mathsf X^q}B_\ell(\bm x;p).
+\end{equation}
+The adaptive optimum is the exact Bellman value
+\begin{align}
+ V_0(w)&=\sum_{j=1}^{\min\{\ell,|\supp w|\}}w_j^\downarrow,
+ \label{eq:bellman0}\\
+ V_q(w)&=\max_{x\in\mathsf X}\sum_{y\in\mathsf Y}
+ V_{q-1}\bigl((w_i\mathbf1_{\{f_i(x)=y\}})_i\bigr),
+ \qquad P_{\rm ad}^{(\ell)}(q)=V_q(p).
+ \label{eq:bellman}
+\end{align}
+For fixed $\bm x$, the effective supports form the partition matroid
+\begin{equation}\label{eq:partition-matroid}
+ \bigoplus_z U_{1,|C_z(\bm x)|}.
+\end{equation}
+Its $\ell$-fold union bound is exactly \eqref{eq:cell-value} and is attained
+by reporting the $\ell$ largest-prior labels in each response cell.
+\end{theorem}
+
+\begin{proof}
+For deterministic basis inputs, the output word is the orthogonal classical
+state $\ket{c_{\bm x}(i)}$.  Labels in one cell are identical and different
+cells are perfectly distinguishable.  The cellwise decision just described
+is therefore optimal.  Its support matroid is
+\eqref{eq:partition-matroid}; taking $\ell$ union copies changes every class
+capacity from one to $\min\{\ell,|C_z|\}$, and matroid greedy optimization
+gives \eqref{eq:cell-value}.
+
+For a general parallel input on $\mathsf X^{\otimes q}\otimes R$, each call
+first measures its input in the fixed basis.  Give the decoder a genie flag
+containing the resulting tuple $\bm x$.  Conditional on this flag, the
+reference operator is independent of $i$ and all label dependence lies in
+$c_{\bm x}(i)$.  Revealing a flag cannot lower success, so the original
+strategy is bounded by a convex combination of the values
+$B_\ell(\bm x;p)$ and hence by their maximum.  A deterministic basis tuple
+attains that maximum, proving \eqref{eq:parallel-cell}.
+
+The same flag may be revealed after every call of a sequential strategy.
+Conditional on the complete prior input--output transcript, induction shows
+that the retained quantum state is fixed by the strategy and independent of
+the label inside the surviving response cell.  Thus every quantum strategy
+is bounded by a randomized classical query tree with the same transcript.
+At each node the value is affine in the randomized next query, so an extreme
+deterministic query is optimal.  The terminal reward is the sum of the
+$\ell$ largest surviving weights, and conditioning on the next output gives
+\eqref{eq:bellman0}--\eqref{eq:bellman}.  Conversely, every deterministic
+query tree is an admissible adaptive quantum strategy, so the bound is exact.
+\end{proof}
+
+We now choose a family on which the recursion and the parallel cell problem
+both have closed forms.  Fix $h\geq1$ and label $M=2^h$ channels by the
+binary leaves $u\in\{0,1\}^h$.  The input alphabet consists of all prefixes
+$v$ with $|v|<h$, and
+\begin{equation}\label{eq:prefix-channel}
+ f_u(v)=\mathbf1_{\{v1\text{ is a prefix of }u\}}.
+\end{equation}
+Thus query $v$ asks membership in the right child below $v$.  The queried
+cylinders $A_v=\{u:f_u(v)=1\}$ are laminar: any two are nested or disjoint.
+
+\begin{theorem}[Complete parallel--adaptive list phase]
+\label{thm:laminar-phase}
+Let the channels \eqref{eq:prefix-channel} have uniform priors, let
+$\ell=2^s$ with $0\leq s\leq h$, and let $q\geq0$.  Then
+\begin{equation}\label{eq:architecture-phase}
+ P_{\rm par}^{(\ell)}(q)=
+ \min\left\{1,\frac{\ell(q+1)}{2^h}\right\},\qquad
+ P_{\rm ad}^{(\ell)}(q)=
+ \min\left\{1,\frac{\ell2^q}{2^h}\right\}.
+\end{equation}
+Consequently the exact numbers of calls required for perfect list success are
+\begin{equation}\label{eq:query-thresholds}
+ q_{\rm par}^*=2^{h-s}-1=\frac{M}{\ell}-1,\qquad
+ q_{\rm ad}^*=h-s=\log_2\frac{M}{\ell}.
+\end{equation}
+In particular, one-label identification needs $2^h-1$ parallel calls but
+only $h$ adaptive calls.
+\end{theorem}
+
+\begin{table}[ht]
+\centering
+\caption{Exact resource phase for the laminar channel family, with
+$M=2^h$ and $\ell=2^s$.  ``Cells'' denotes the maximum number of classical
+response cells before saturation.}
+\label{tab:adaptive-phase}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Architecture & cells after $q$ calls & list success & calls for success one\\
+\midrule
+parallel, no feedback & $q+1$ & $\min\{1,\ell(q+1)/M\}$ & $M/\ell-1$\\
+adaptive feed-forward & $2^q$ & $\min\{1,\ell2^q/M\}$ & $\log_2(M/\ell)$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{proof}
+Any $q$ fixed queries select $q$ sets from a laminar family.  Such sets have
+at most $q+1$ nonempty membership cells: insert them in an order compatible
+with inclusion; a new set lies inside one old cell and can split only that
+cell.  For uniform priors, \Cref{thm:classical-reduction} assigns at most
+$\ell/2^h$ success to each cell.  This proves the parallel upper bound.
+
+Put $d=h-s$.  Query the prefixes of lengths below $d$ in breadth-first order.
+Each new right-child cylinder splits one current prefix block into two, and
+until all $2^d-1$ queries have been used every resulting block contains at
+least $2^s=\ell$ leaves.  After $q\leq2^d-1$ queries there are therefore
+exactly $q+1$ cells, each contributing $\ell/2^h$.  At $q=2^d-1$ the cells
+are the $2^d$ length-$d$ prefix blocks, each of size $\ell$; later calls can
+be ignored.  This attains the first formula.
+
+A binary adaptive tree of depth $q$ has at most $2^q$ transcripts, and each
+terminal list covers at most $\ell$ labels.  Hence its uniform success is at
+most the second expression in \eqref{eq:architecture-phase}.  To attain it,
+start at the empty prefix and query the currently certified prefix $v$.
+Output one selects child $v1$, while output zero selects $v0$.  After $q$
+rounds the transcript identifies the first $q$ bits and the surviving cell
+has size $2^{h-q}$.  At $q=d$ this size is $\ell$, proving both the second
+formula and \eqref{eq:query-thresholds}.
+\end{proof}
+
+The depth-two member has four channels with function tables
+\[
+ 000,\qquad010,\qquad100,\qquad101.
+\]
+With two calls, \Cref{thm:laminar-phase} gives
+\begin{equation}\label{eq:feedback-list-tradeoff}
+ P_{\rm par}^{(1)}=\frac34,\qquad
+ P_{\rm par}^{(2)}=1,\qquad
+ P_{\rm ad}^{(1)}=1.
+\end{equation}
+Thus one feedback bit and one extra reported label close the same parallel
+one-guess deficit.  The example is entirely classical after the input
+measurement; it proves neither a quantum-memory advantage nor an
+indefinite-causal-order advantage.  Binary search, membership-query learning,
+and adaptive channel advantages are classical or established mechanisms
+\cite{angluin1988,harrow2010}.  The result here is the exact list-valued phase
+against the full parallel and adaptive quantum strategy classes specified
+above, together with its attained union-matroid interpretation.
+
+\section{Entanglement spectra and multitime unitary histories}
+\label{sec:ueb}
+
+The preceding family isolates feedback but is classical after dephasing.  We
+next give an input-sensitive quantum family in which the complete Schmidt
+spectrum, rather than only support rank, determines the optimum.  The result
+also separates three precisely delimited multitime wirings.
+
+Let $\dim A=D$ and let $(U_g)_{g=1}^{D^2}$ be a complete unitary error basis,
+so
+\begin{equation}\label{eq:ueb}
+ \Tr(U_g^*U_{g'})=D\delta_{gg'}.
+\end{equation}
+For a pure probe $\psi\in A\otimes R$, put
+$\rho_R=\Tr_A\ket{\psi}\!\bra{\psi}$ and
+$\psi_g=(U_g\otimes I)\psi$.
+
+\begin{theorem}[Dense-coding spectrum law in process form]
+\label{thm:ueb-spectrum}
+For uniform discrimination of the $D^2$ channels
+$\Phi_g=\operatorname{Ad}_{U_g}$ with the fixed probe $\psi$,
+\begin{equation}\label{eq:ueb-success}
+ P_{\rm guess}(\psi)=\frac{(\Tr\sqrt{\rho_R})^2}{D}.
+\end{equation}
+Consequently, among probes of Schmidt rank at most $r\leq D$,
+\begin{equation}\label{eq:schmidt-rank-cap}
+ \max_{\operatorname{SR}(\psi)\leq r}P_{\rm guess}(\psi)=\frac rD,
+\end{equation}
+with equality exactly for a flat nonzero Schmidt spectrum.  Every
+$\ell$-list measurement for the same fixed probe satisfies
+\begin{equation}\label{eq:ueb-list-cap}
+ P_{\rm list}^{(\ell)}(\psi)\leq
+ \min\left\{1,\frac{\ell(\Tr\sqrt{\rho_R})^2}{D}\right\}.
+\end{equation}
+\end{theorem}
+
+The one-guess identity \eqref{eq:ueb-success}, including optimality for an
+arbitrary pure entangled resource, is the approximate dense-coding result of
+Feng, Duan, and Ji~\cite{feng2006}.  We include the short frame/dual proof to
+fix conventions and to make the list and multitime consequences below
+self-contained; we do not claim the identity itself as new.
+
+\begin{proof}
+Hilbert--Schmidt completeness gives the depolarizing identity
+\[
+ \sum_gU_g XU_g^*=D\Tr(X)I_A.
+\]
+Therefore, on $A\otimes\supp\rho_R$,
+\begin{equation}\label{eq:ueb-frame}
+ S:=\sum_g\ket{\psi_g}\!\bra{\psi_g}
+   =D I_A\otimes\rho_R.
+\end{equation}
+The square-root measurement
+$M_g=S^{-1/2}\ket{\psi_g}\!\bra{\psi_g}S^{-1/2}$ sums to the identity on
+this support.  Moreover
+\[
+ c:=\bra{\psi_g}S^{-1/2}\ket{\psi_g}
+   =\frac{\Tr\sqrt{\rho_R}}{\sqrt D}
+\]
+is independent of $g$, so its success is $c^2$.
+
+For the dual minimum-error SDP, set
+$Y=(c/D^2)S^{1/2}$.  The rank-one domination criterion gives
+$Y\succeq\ket{\psi_g}\!\bra{\psi_g}/D^2$, because
+\[
+ \bra{\psi_g}(cS^{1/2})^{-1}\ket{\psi_g}=1.
+\]
+Also $\Tr Y=(\Tr\sqrt{\rho_R})^2/D$, proving optimality.  If the nonzero
+Schmidt coefficients are $\lambda_1,\ldots,\lambda_r$, Cauchy--Schwarz gives
+$(\sum_j\sqrt{\lambda_j})^2\leq r$, with equality exactly when they are
+all $1/r$.
+
+Finally, for a list POVM $(M_L)$ define
+$N_g=\ell^{-1}\sum_{L\ni g}M_L$.  Then
+$\sum_gN_g\preceq I$; completing this sub-POVM to a one-label POVM shows
+$P_{\rm guess}\geq P_{\rm list}^{(\ell)}/\ell$.  Combining with
+\eqref{eq:ueb-success} and the trivial cap one proves
+\eqref{eq:ueb-list-cap}.
+\end{proof}
+
+The formula is stable under independent time slots.  A tensor product of
+complete unitary error bases is a complete basis on dimension
+$D=\prod_td_t$, so \Cref{thm:ueb-spectrum} already allows inputs entangled
+across different times.  In particular, without a retained reference every
+pure parallel input has success $1/D$, whereas a global Schmidt-rank budget
+$r$ gives exact optimum $\min\{r,D\}/D$.
+
+For a list-valued wiring comparison, let each of $n$ time slots carry an
+independent uniformly labeled Weyl operator $X^{a_t}Z^{b_t}$ on $\C^d$.
+There are $M=d^{2n}$ history hypotheses.  We compare:
+\begin{itemize}
+ \item $\mathrm{SER}_0$: one $d$-dimensional carrier is reused, with known
+       interleaving unitaries but no side memory, intermediate measurement,
+       or retained transcript;
+ \item $\mathrm{PAR}_0$: $n$ fresh inputs are used in parallel and may be
+       entangled with each other, but no reference is retained;
+ \item $\mathrm{PAR}_{\rm Bell}$: every input has a retained
+       $d$-dimensional Bell reference.
+\end{itemize}
+
+\begin{theorem}[Exact multitime wiring trichotomy]
+\label{thm:weyl-wiring}
+For the uniform Weyl histories above,
+\begin{equation}\label{eq:weyl-trichotomy}
+ \begin{aligned}
+ P_{\mathrm{SER}_0}^{(\ell)}
+   &=\min\{1,\ell/d^{2n-1}\},\\
+ P_{\mathrm{PAR}_0}^{(\ell)}
+   &=\min\{1,\ell/d^n\},\\
+ P_{\mathrm{PAR}_{\rm Bell}}^{(\ell)}&=1.
+ \end{aligned}
+\end{equation}
+Before saturation, fresh parallel inputs improve on a carrier-only serial
+wiring by the exact factor $d^{n-1}$.
+\end{theorem}
+
+\begin{table}[ht]
+\centering
+\caption{Exact list values for $M=d^{2n}$ independent Weyl histories.  The
+resource restrictions are part of the architecture definitions preceding
+\Cref{thm:weyl-wiring}.}
+\label{tab:weyl-wiring}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+Architecture & terminal support dimension & optimal list success\\
+\midrule
+$\mathrm{SER}_0$ & $d$ & $\min\{1,\ell/d^{2n-1}\}$\\
+$\mathrm{PAR}_0$ & $d^n$ & $\min\{1,\ell/d^n\}$\\
+$\mathrm{PAR}_{\rm Bell}$ & $d^{2n}$ orthogonal labels & $1$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{proof}
+A uniform ensemble of $M$ pure states in dimension $q_0$ obeys
+$P_{\rm list}^{(\ell)}\leq\min\{1,\ell q_0/M\}$ by
+\Cref{thm:main}.  Every $\mathrm{SER}_0$ output occupies only the terminal
+$d$-dimensional carrier.  With no interleaving, Weyl multiplication produces
+the net label
+$(A,B)=(\sum_ta_t,\sum_tb_t)$ modulo $d$; input $\ket0$ and a computational
+measurement reveal $A$.  Each value leaves exactly $d^{2n-1}$ histories, so
+reporting any $\ell$ of them attains the first formula.
+
+Every $\mathrm{PAR}_0$ output occupies dimension $d^n$, even when its inputs
+are entangled across slots.  The product input $\ket0^{\otimes n}$ reveals
+the full shift vector $(a_1,\ldots,a_n)$ and leaves exactly $d^n$ phase
+histories, attaining the second formula.  Local Bell inputs turn the Weyl
+outputs into an orthonormal product Bell basis and prove the third.
+\end{proof}
+
+The support-rank upper bound in \eqref{eq:ueb-list-cap} need not be attained
+for an intermediate entanglement spectrum.  For example, take $D=4$ and the
+rank-two probe $(\ket{00}+\ket{11})/\sqrt2$ for the $16$ Weyl channels.  The
+outputs split into four orthogonal shift sectors, each containing the phase
+states
+\[
+ \phi_b=(\ket0+\mathrm{i}^b\ket1)/\sqrt2,
+ \qquad b=0,1,2,3.
+\]
+Adjacent-pair reward operators have largest eigenvalue $1+1/\sqrt2$ and
+their top eigenvectors form a tight frame; the covariant dual is
+$(1+1/\sqrt2)I/4$.  Pinching over the shift sectors therefore proves the exact
+fixed-probe value
+\begin{equation}\label{eq:rank-two-list}
+ P_{\rm list}^{(2)}=\frac{2+\sqrt2}{4}<1,
+\end{equation}
+although the coarse right-hand side of \eqref{eq:ueb-list-cap} equals one.
+This is a fixed-probe statement, not a resource-optimized impossibility
+theorem.
+
+Unitary-error bases, dense coding, group-covariant discrimination, and
+parallel treatment of independent unitary channels are established
+subjects~\cite{feng2006,sacchi2005,wu2006,chiribella2008,zhuang2020,bavaresco2022}.
+We claim neither those ingredients, the one-guess spectrum formula, nor the
+dimension bound as new.  The contribution of this section is narrower: the
+list-cap embedding, the exact multitime wiring trichotomy, and the explicit
+intermediate-spectrum failure of the coarse list cap.
+
+\section{Uniform congestion, deficits, and obstruction thresholds}\label{sec:deficit}
+
+For equal priors, \Cref{cor:bayes} depends only on the rank of the full ground
+set.
+
+\begin{corollary}[Exact support deficit]\label{cor:deficit}
+For $p_i=1/M$,
+\begin{equation}\label{eq:deficit}
+ P_{\rm list}\leq\frac{r_\ell(E)}{M}
+ =1-\frac{\Delta_\ell}{M},\qquad
+ \Delta_\ell=\max_{C\subseteq E}\bigl(|C|-\ell d(C)\bigr).
+\end{equation}
+The maximum includes $C=\varnothing$, so $\Delta_\ell\geq0$.
+\end{corollary}
+
+\begin{proof}
+Taking $A=E$ in \eqref{eq:union-rank},
+\[
+ r_\ell(E)=\min_C(M-|C|+\ell d(C))
+ =M-\max_C(|C|-\ell d(C)).
+\]
+Divide by $M$.
+\end{proof}
+
+The integer $\Delta_\ell$ counts the rank deficit of the union matroid, not a
+continuous geometric error.  It gives a fail-closed certificate: if any
+label cluster has more than $\ell$ labels per available support dimension,
+uniform perfect-list discrimination is impossible.
+
+\begin{corollary}[Disappearance threshold of the matroid obstruction]\label{cor:threshold}
+The support bound permits $P_{\rm list}=1$ exactly when
+\begin{equation}\label{eq:hall-ell}
+ |C|\leq\ell d(C)\qquad\text{for all }C\subseteq E.
+\end{equation}
+The smallest list budget for which this happens is
+\begin{equation}\label{eq:ell-support}
+ \ell_{\rm supp}
+ =\max_{\varnothing\ne C\subseteq E}
+   \left\lceil\frac{|C|}{d(C)}\right\rceil.
+\end{equation}
+Equivalently, $E$ can then be partitioned into $\ell_{\rm supp}$ independent
+sets of the support Rado matroid.
+\end{corollary}
+
+\begin{proof}
+The cap equals one iff $r_\ell(E)=M$, equivalently iff
+$\Delta_\ell=0$.  This is exactly \eqref{eq:hall-ell}; minimizing the integer
+$\ell$ gives \eqref{eq:ell-support}.  The final statement is Edmonds'
+matroid-partition criterion applied to $\cR$, or directly the condition that
+$E$ be independent in $\cR^{\vee\ell}$.
+\end{proof}
+
+The adjective ``support'' in $\ell_{\rm supp}$ is essential.  It is a lower
+bound on the list budget required for perfect physical success, but equality
+need not hold; \Cref{sec:counterexample} gives an exact failure.
+
+It is also not the strongest known feasibility obstruction.  The projector
+test for conclusive $k$-state exclusion of Stratton, Hsieh, and
+Skrzypczyk~\cite{stratton2024}, applied after \Cref{lem:padding} and then to
+each restricted label set $C$, requires
+\begin{equation}\label{eq:projector-test}
+ \sum_{i\in C}\Pi_i\leq\ell P_C,
+\end{equation}
+where $\Pi_i$ projects onto $S_i$ and $P_C$ onto
+$\sum_{i\in C}S_i$.  For pure states, taking the trace recovers
+$|C|\leq\ell d(C)$.  For mixed states, and even geometrically for pure states,
+the operator inequality can be strictly stronger.  Thus
+\eqref{eq:ell-support} is precisely the disappearance threshold of the
+\emph{matroid} obstruction, not a new feasibility characterization.
+
+\begin{proposition}[Strict improvement over total dimension]\label{prop:strict-flat}
+Let five distinct pure states lie in a common two-dimensional subspace and
+let a sixth pure state span an orthogonal line.  Give the five coplanar labels
+prior $a=19/100$ each and the orthogonal label prior $b=5/100$.  For list
+budget $\ell=2$, the total-dimension relaxation is one, whereas the
+matroid-union cap is
+\begin{equation}\label{eq:strict-flat}
+ \beta_2=4a+b=\frac{81}{100}.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Choose, for example,
+$\phi_j=(e_0+j e_1)/\sqrt{1+j^2}$ for $j=0,\ldots,4$, and
+$\phi_5=e_2$.  The vector matroid is
+$U_{2,5}\oplus U_{1,1}$.  Its two-fold union is
+$U_{4,5}\oplus U_{1,1}$, so a maximum-weight independent set retains four
+coplanar labels and the coloop, proving \eqref{eq:strict-flat}.  The total
+dimension is $D=3$ and $\ell D=6=M$; hence the relaxation that keeps only
+$D$ and the singleton bounds gives one.  No attainability claim is made for
+the value $81/100$.
+\end{proof}
+
+\section{Sharp families}\label{sec:sharp}
+
+We first show that the arbitrary-prior theorem is exactly attainable for a
+complete family of partition matroids.
+
+\begin{proposition}[Orthogonal parallel classes]\label{prop:parallel}
+Let $(e_a)_{a=1}^q$ be orthonormal.  Partition $E$ into nonempty classes
+$E_a$, and set $\rho_i=\ket{e_a}\!\bra{e_a}$ for $i\in E_a$.  For every
+prior and list budget $\ell$,
+\begin{equation}\label{eq:parallel-opt}
+ P_{\rm list}^{\rm opt}
+ =\sum_{a=1}^q\ 
+   \sum_{i\in\operatorname{Top}_{\min(\ell,|E_a|)}(E_a)}p_i.
+\end{equation}
+This equals the matroid-union cap.
+\end{proposition}
+
+\begin{proof}
+The support matroid is the partition matroid with capacity one in each class;
+its $\ell$-fold union has capacity $\ell$ in each class.  The
+maximum-weight independent set therefore selects the $\min(\ell,|E_a|)$
+largest priors in each class, proving the upper bound.  Measure the orthogonal
+projectors $\ket{e_a}\!\bra{e_a}$ and, on outcome $a$, report precisely those
+top-prior labels.  This attains \eqref{eq:parallel-opt}.
+\end{proof}
+
+Repeated states make \Cref{prop:parallel} combinatorially transparent.  The
+next family uses only distinct, pairwise nonorthogonal pure states.
+
+\subsection{The regular-simplex transition}
+
+Let $m\geq3$ and let unit vectors
+$\phi_1,\ldots,\phi_m\in\C^{m-1}$ satisfy
+\begin{equation}\label{eq:simplex}
+ \langle\phi_i,\phi_j\rangle=-\frac1{m-1}\quad(i\ne j).
+\end{equation}
+Their Gram matrix has one zero eigenvalue and eigenvalue $m/(m-1)$ with
+multiplicity $m-1$.  Consequently
+\begin{equation}\label{eq:simplex-frame}
+ \sum_{i=1}^m\phi_i=0,\qquad
+ \sum_{i=1}^m\ket{\phi_i}\!\bra{\phi_i}
+ =\frac{m}{m-1}I.
+\end{equation}
+Every proper subset is linearly independent, so their vector matroid is the
+uniform matroid $U_{m-1,m}$.
+
+\begin{theorem}[Exact one-to-two-list jump]\label{thm:simplex}
+For the equiprobable regular-simplex ensemble,
+\begin{equation}\label{eq:simplex-opt}
+ P_{\rm opt}^{(1)}=\frac{m-1}{m},\qquad
+ P_{\rm opt}^{(2)}=1.
+\end{equation}
+An optimal one-guess POVM is
+\begin{equation}\label{eq:one-povm}
+ N_i=\frac{m-1}{m}\ket{\phi_i}\!\bra{\phi_i}.
+\end{equation}
+An optimal two-list POVM is indexed by unordered pairs $i<j$:
+\begin{equation}\label{eq:edge-povm}
+ \psi_{ij}=\frac{\phi_i-\phi_j}{\sqrt{2m/(m-1)}},\qquad
+ M_{ij}=\frac2m\ket{\psi_{ij}}\!\bra{\psi_{ij}},
+\end{equation}
+and outcome $(i,j)$ reports $\{i,j\}$.
+\end{theorem}
+
+\begin{proof}
+For one guess, the matroid cap is
+$r_1(E)/m=(m-1)/m$.  Equations
+\eqref{eq:simplex-frame} and \eqref{eq:one-povm} show that $(N_i)$ is a POVM,
+and its conditional correct probability is $(m-1)/m$ for every label.  Hence
+the cap is attained.
+
+For two guesses, first note that
+\begin{equation}\label{eq:root-sum}
+ \sum_{i<j}\ket{\phi_i-\phi_j}\!\bra{\phi_i-\phi_j}
+ =m\sum_i\ket{\phi_i}\!\bra{\phi_i}
+   -\ket{\sum_i\phi_i}\!\bra{\sum_i\phi_i}
+ =\frac{m^2}{m-1}I.
+\end{equation}
+Since $\|\phi_i-\phi_j\|^2=2m/(m-1)$, substituting
+\eqref{eq:edge-povm} into \eqref{eq:root-sum} gives
+$\sum_{i<j}M_{ij}=I$.
+
+If $k\notin\{i,j\}$, then \eqref{eq:simplex} gives
+\[
+ \langle\phi_i-\phi_j,\phi_k\rangle=0.
+\]
+Thus an outcome whose reported pair omits $k$ has zero probability on state
+$\phi_k$.  Every possible outcome contains the true label, and the two-list
+success is one.  No probability can exceed one, completing the proof.
+\end{proof}
+
+The pair differences in \eqref{eq:edge-povm} form the normalized root frame of
+type $A_{m-1}$.  For $m=3$, the construction is the usual trine exclusion
+measurement.  Antidistinguishability and conclusive exclusion are established
+subjects~\cite{bandyopadhyay2014}; novelty is not claimed for that isolated
+fact.  Its role here is to prove exact attainment of the first nontrivial
+union step for an all-distinct family of arbitrary size.
+
+\section{A full union matroid is not sufficient}\label{sec:counterexample}
+
+The condition $r_\ell(E)=M$ says that the support inequalities alone do not
+forbid perfect list success.  It does not construct a POVM.  The following
+exact example prevents the combinatorial theorem from being misread as a
+geometric characterization.
+
+\begin{proposition}[Hemisphere obstruction]\label{prop:counterexample}
+Consider the three pure qubit states
+\begin{equation}\label{eq:counter-states}
+ \phi_1=\begin{pmatrix}1\\0\end{pmatrix},\qquad
+ \phi_2=\frac1{\sqrt5}\begin{pmatrix}2\\1\end{pmatrix},\qquad
+ \phi_3=\frac1{\sqrt5}\begin{pmatrix}2\\i\end{pmatrix}.
+\end{equation}
+Their support matroid is $U_{2,3}$, so
+$r_{\cR^{\vee2}}(E)=3$ and the two-list support cap equals one.  Nevertheless
+no perfect two-list measurement exists.  For uniform priors its exact optimum
+is
+\begin{equation}\label{eq:counter-opt}
+ P_{\rm list}^{\rm opt}=\frac{2+1/\sqrt3}{3}<1.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+The squared pairwise overlaps are
+\begin{equation}\label{eq:counter-overlaps}
+ |\langle\phi_1,\phi_2\rangle|^2=\frac45,
+ \quad |\langle\phi_1,\phi_3\rangle|^2=\frac45,
+ \quad |\langle\phi_2,\phi_3\rangle|^2=\frac{17}{25}.
+\end{equation}
+Every pair is therefore linearly independent.  The matroid is $U_{2,3}$,
+whose two-fold union is the free matroid on three labels.
+
+Suppose a perfect two-list measurement existed.  Every outcome list omits at
+least one of the three labels.  Assign each outcome to one omitted label and
+sum the corresponding POVM effects, obtaining effects $F_1,F_2,F_3$ with
+$\sum_iF_i=I$.  Perfect inclusion implies that every outcome omitting $i$
+has zero probability on $\phi_i$, so
+\begin{equation}\label{eq:antidist}
+ F_i\phi_i=0.
+\end{equation}
+Thus $(F_i)$ would antidistinguish the three states.
+
+Let $n_i\in\mathbb R^3$ be their Bloch vectors.  A positive qubit operator
+annihilating $\phi_i$ has the form
+$F_i=a_i\ket{\phi_i^\perp}\!\bra{\phi_i^\perp}$ with $a_i\geq0$.
+Completeness requires
+\begin{equation}\label{eq:bloch-complete}
+ \sum_i a_i=2,\qquad \sum_i a_i n_i=0.
+\end{equation}
+For \eqref{eq:counter-states}, the $z$ coordinates of the Bloch vectors are
+\begin{equation}\label{eq:zpositive}
+ (n_1)_z=1,\qquad(n_2)_z=(n_3)_z=\frac35.
+\end{equation}
+They lie in a strict open hemisphere.  The second equation in
+\eqref{eq:bloch-complete} cannot hold with nonnegative $a_i$ whose sum is
+two.  This contradicts \eqref{eq:antidist} and proves nonperfectness.
+
+It remains to prove the exact value \eqref{eq:counter-opt}.  For three labels,
+minimum list failure equals minimum exclusion error.  An exclusion POVM
+$(F_i)$ yields the list $E\setminus\{i\}$ on outcome $i$.  Conversely, from
+any two-list POVM assign each outcome to one label omitted by its list; the
+resulting exclusion error is no larger than the original list failure.
+Taking infima in the two directions proves equality.
+
+The uniform exclusion SDP and its dual are
+\begin{equation}\label{eq:exclusion-sdp}
+ e_*=\min_{F_i\geq0,\ \sum_iF_i=I}
+ \frac13\sum_i\Tr(F_i\rho_i)
+ =\max_{Y\leq\rho_i/3}\Tr Y.
+\end{equation}
+Put
+\[
+ u=\left(\frac13,\frac13,\frac23\right),\qquad
+ R=\frac1{\sqrt3}.
+\]
+The Bloch vectors are
+\[
+ n_1=(0,0,1),\quad n_2=(4/5,0,3/5),\quad
+ n_3=(0,4/5,3/5),
+\]
+and satisfy $|u-n_i|=R$ and $u\cdot n_i=2/3$.  The dual operator
+\begin{equation}\label{eq:dual-Y}
+ Y=\frac16\bigl[(1-R)I+u\cdot\sigma\bigr]
+\end{equation}
+is feasible because
+\[
+ \frac13\rho_i-Y
+ =\frac16\bigl[R I+(n_i-u)\cdot\sigma\bigr]\geq0.
+\]
+Its trace is $(1-R)/3$.
+
+For primal attainment, define
+\[
+ m_i=\frac{u-n_i}{R},\qquad
+ (w_1,w_2,w_3)=\left(\frac13,\frac56,\frac56\right),
+ \qquad F_i=\frac{w_i}{2}(I+m_i\cdot\sigma).
+\]
+Here $|m_i|=1$, $\sum_iw_i=2$, and
+$\sum_iw_in_i=2u$, hence $\sum_iF_i=I$.  Moreover
+$m_i\cdot n_i=-R$, and therefore
+\[
+ \frac13\sum_i\Tr(F_i\rho_i)
+ =\frac13\sum_i\frac{w_i}{2}(1-R)
+ =\frac{1-R}{3}.
+\]
+Primal and dual values coincide.  Thus
+$e_*=(1-1/\sqrt3)/3$ and $P_{\rm list}^{\rm opt}=1-e_*$, proving
+\eqref{eq:counter-opt}.
+\end{proof}
+
+The example also shows why perturbing a degenerate support arrangement can
+change attainability without changing the matroid.  Support ranks are
+piecewise constant; antidistinguishability is controlled by a convex
+geometric condition inside that rank stratum.
+
+\section{Computation and exact certificates}\label{sec:computation}
+
+For a represented subspace family, the cap is finite and combinatorial.  One
+may evaluate $d(C)$ by exact matrix rank and use
+\eqref{eq:union-rank} directly for small $M$.  For larger instances, standard
+matroid-union and submodular-minimization algorithms apply; no quantum SDP is
+needed to certify the cap.  Cunningham gives improved algorithms for matroid
+partition and intersection~\cite{cunningham1986}.  This computational
+observation concerns the upper bound, not construction of an optimal POVM.
+
+The accompanying verifiers use the Python standard library and exact rational
+or algebraic arithmetic.  They perform the following fail-closed checks:
+
+\begin{enumerate}
+ \item exhaustive comparison of \eqref{eq:union-rank} with a brute-force
+       coloring definition on 240 small subspace instances;
+ \item all subset inequalities for an exact list-measurement fixture;
+ \item the one-guess and edge-root POVMs for regular simplices
+       $m=3,\ldots,8$ through rational Gram identities;
+ \item exhaustive laminar-channel phase values for $70$ small
+       $(h,s,q)$ instances, including the partition-matroid cell formula;
+ \item complete-unitary-basis frame spectra, Schmidt-rank caps, Weyl wiring
+       values, and the rank-two fixed-probe list certificate;
+ \item the exact overlaps, free union matroid, strict-hemisphere obstruction,
+       and primal--dual optimum of \Cref{prop:counterexample};
+ \item the strict-flat value $81/100$ versus the total-dimension value one;
+ \item monotonicity of support-sum ranks under a common process compression.
+\end{enumerate}
+
+The finite tests are not a proof of the general theorem.  They guard the rank
+formula, normalizations, and fixtures against transcription and convention
+errors.  The general proofs are
+\Cref{lem:union-rank,thm:main,thm:process,thm:classical-reduction} and
+\Cref{thm:laminar-phase,thm:ueb-spectrum,thm:weyl-wiring}.
+
+\section{Related work and priority boundary}\label{sec:related}
+
+Quantum minimum-error discrimination is classically formulated through the
+Holevo--Yuen--Kennedy--Lax optimality conditions~\cite{holevo1973,yuen1975}
+and is reviewed in standard texts and surveys~\cite{helstrom1976,barnett2009}.
+State exclusion reverses the decision: an outcome rules out one or more
+hypotheses.  Bandyopadhyay et al. give an SDP, optimality conditions, and
+variants including unambiguous and worst-case exclusion
+~\cite{bandyopadhyay2014}.  Experimental elimination of multiple states is
+demonstrated by Webb et al.~\cite{webb2023}.  Stratton, Hsieh, and Skrzypczyk
+derive projector and rank conditions for weak and strong $k$-state exclusion
+~\cite{stratton2024}.  Johnston, Russo, and Sikora characterize pure-state
+antidistinguishability through Gram-matrix incoherence and give tight overlap
+bounds~\cite{johnston2025}.  Recent work studies group-generated exclusion
+~\cite{yao2026}, global-versus-LOCC higher-order exclusion~\cite{manna2026},
+and zero-error list decoding of classical--quantum channels, including the
+trine at list size two~\cite{dalai2026}.  By \Cref{lem:padding}, our list
+success is the complementary set-valued formulation with $k=M-\ell$.
+Therefore neither list decoding, the simplex/trine measurement, state
+exclusion, nor the nonsufficiency of rank conditions is presented as new.
+
+Rado's theorem on independent representatives is classical
+~\cite{rado1942}.  Edmonds established the minimum-partition criterion and
+matroid union~\cite{edmonds1965,edmonds1968}, as well as the rank-inequality
+description of matroid polyhedra~\cite{edmonds1970}.  Our use of these results
+is direct and fully credited.  The potentially new point is narrower: the
+all-subset Bayesian inequality that places the entire inclusion-probability
+vector in an exact union-matroid polytope, together with arbitrary priors,
+soft rewards, the robust core-tail version, and canonical process-tester
+compression.
+
+Quantum testers and combs provide a common language for discrimination of
+multi-time processes~\cite{chiribella2009}.  Canonical inverse-square-root
+normalization is standard~\cite{sedlak2016}; general and indefinite-order
+strategies have been compared in concrete unitary discrimination problems
+~\cite{bavaresco2021,bavaresco2022}, and restricted tester classes have a
+general convex formulation~\cite{nakahira2021}.  Entanglement-breaking
+channels can already exhibit finite-query adaptive advantages
+~\cite{harrow2010}; asymptotic comparisons obey different laws
+~\cite{salek2022}.  \Cref{lem:compression} recalls the normalization only to
+make the list theorem convention-safe.  The input-dependent application does
+not claim adaptivity, binary search, or membership queries as new.  Its
+specific contribution is the exact all-depth list phase and the proof that
+arbitrary quantum parallel probes and memories reduce to the stated cell and
+decision-tree optimizations for this family.
+
+Complete unitary-error bases, dense coding, and symmetric operation
+discrimination are likewise established
+~\cite{feng2006,sacchi2005,wu2006,zhuang2020}.  In particular, Feng, Duan,
+and Ji already derive and attain the approximate dense-coding success law
+that becomes \eqref{eq:ueb-success} in our notation.
+Independent unitary histories admit strong parallel reductions
+~\cite{chiribella2008}.  Accordingly, \Cref{thm:ueb-spectrum,thm:weyl-wiring}
+do not claim the twirl, dense-coding protocol, spectrum formula, or
+support-dimension converse as new.  The narrower addition is the
+process-list translation, its Schmidt-rank equality audit, the list-wiring
+trichotomy, and the explicit intermediate-rank failure of the coarse list
+cap.
+
+The one-label Rado-matroid support bound was developed separately in
+Ref.~\cite{eriksson2026matroid}.  The present paper cites that work rather than
+repackaging it.  Its distinct contribution is the operational list hierarchy,
+the closed union-rank law, soft rewards, obstruction threshold, exact
+attainment/insufficiency pair, and the two architecture-sensitive channel
+theorems above.  Targeted searches did not locate this combined theorem
+package.  Absence from a search is not proof of priority; no claim of being
+first is made.
+
+\section{Limitations and conclusions}\label{sec:limitations}
+
+Several boundaries are essential.
+
+First, the theorem is an upper bound.  The inclusion vector belongs to a
+matroid polytope, but not every point of that polytope is generated by a POVM.
+\Cref{prop:counterexample} shows that even a free union matroid need not permit
+perfect list discrimination.
+
+Second, the theorem uses exact support.  An arbitrarily small full-rank noise
+component can enlarge every support and weaken the raw cap discontinuously.
+\Cref{cor:robust} mitigates this with chosen positive cores and an explicit
+tail penalty, but it does not canonically choose those cores or guarantee that
+the resulting certificate improves an SDP bound.
+
+Third, the tester-independent process cap uses the uncompressed Choi support.
+A fixed tester normalization can lower the Rado-union rank and give a stronger
+certificate.  Conversely, the cap does not determine which causal
+architecture attains the actual optimum.  The exact architecture formulas
+proved here rely on either complete dephasing with a common input measurement
+or a complete unitary-error frame; they do not extend automatically to noisy,
+incomplete, or nonuniform channel families.
+
+Fourth, the adaptive channel comparison excludes indefinite causal order,
+coherent phase-oracle access, inverse calls, and controlled bypass.  The
+$\mathrm{SER}_0$ wiring excludes side memory, intermediate measurements, and
+retained transcripts.  These resource definitions are part of the theorems,
+not incidental implementation details.
+
+Fifth, the soft-list extension assumes rewards in $[0,1]$ and total reward
+budget at most $\ell$ for each outcome.  General cost matrices with negative
+entries or larger column sums are outside the theorem.
+
+Within these limits, the result gives a closed answer to a precise question:
+what can support dependence alone certify about quantum list decisions?  The
+answer is the independence polytope of a matroid union.  It yields arbitrary
+prior bounds, an integer congestion deficit, an exact obstruction-disappearance
+threshold, and a process-tester version under the stated Choi interface.  The simplex and hemisphere
+examples show both sides of the boundary: the cap can be exactly attained by
+an all-distinct nonorthogonal family, but support combinatorics alone cannot
+replace quantum geometry.  The channel theorems then identify two settings in
+which architecture optimization does close exactly: feedback doubles the
+number of resolved laminar cells at every call, while complete unitary frames
+convert the Schmidt spectrum and wiring dimension into exact success laws.
+
+\section*{Data and code availability}
+
+The accompanying source package contains the \LaTeX{} manuscript, bibliography,
+claim ledger, priority audit, research memo, and four standard-library Python
+verifiers.  They perform exact rational or algebraic checks and require no
+network access or external data.
+
+\section*{AI-assistance disclosure}
+
+The author used AI assistance for literature triage, algebraic cross-checks,
+code generation, and editorial revision.  The mathematical claims,
+conventions, and final responsibility remain with the author.
+
+\bibliographystyle{unsrt}
+\bibliography{references}
+
+\appendix
+\section{A direct derivation for deterministic lists}
+
+For completeness, specialize \Cref{thm:main} to a deterministic list POVM.
+For $A\subseteq E$,
+\begin{align*}
+ s(A)
+ &=\sum_{i\in A}\sum_{L\ni i}\Tr(M_L\rho_i)\\
+ &=\sum_L\Tr\!\left(M_L\sum_{i\in A\cap L}\rho_i\right)\\
+ &\leq\sum_L |A\cap L|\Tr(M_LP_A)\\
+ &\leq\ell\Tr\!\left(P_A\sum_LM_L\right)
+ =\ell d(A).
+\end{align*}
+For $C\subseteq A$, split $A=C\mathbin{\dot\cup}(A\setminus C)$ and use
+$s_i\leq1$ on the second part.  This gives
+\[
+ s(A)\leq\ell d(C)+|A\setminus C|.
+\]
+The minimization over $C$ is not an optional relaxation: by
+\Cref{lem:union-rank}, it is exactly the rank of $\cR^{\vee\ell}$.
+
+\end{document}
