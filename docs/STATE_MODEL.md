@@ -14,6 +14,8 @@ Terminal alternatives are `declined`, `expired`, `removed`, and `legal_hold`. In
 - `corrected`: a new version that identifies `supersedes_version_id`.
 - `withdrawn`: a persistent tombstone; files are retained unless law or safety requires removal.
 
+Version numbers are monotonic integers: `v1`, `v2`, `v3`, and so on. The public ARR identifier and `record_id` remain stable; every version has a new `version_id`, an explicit predecessor and an immutable release. A `minor` revision records a bounded correction or addition, while a `major` revision changes substantial claims, arguments, methods, data or conclusions within the same evolving work. A genuinely independent work receives a new ARR identifier. The size label describes change scope, not quality.
+
 ## Public record types
 
 - `research_paper`: a paper-scale research contribution.

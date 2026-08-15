@@ -23,10 +23,18 @@ python scripts/new_record.py --author "Author Name" --type research-paper
 python scripts/new_record.py --author "Author Name" --type technical-note
 ```
 
+Create the next version of an existing record without changing its ARR identifier:
+
+```bash
+python scripts/new_version.py ARR-2026-XXXXXXXXXXXXXXXX --change-size minor --summary "Corrects notation and expands the reproducibility instructions."
+python scripts/new_version.py ARR-2026-XXXXXXXXXXXXXXXX --change-size major --summary "Replaces the main argument and adds new principal results."
+```
+
 ## Repository layout
 
 ```text
 papers/                 Accepted record sources, grouped by year and month (legacy path name)
+papers/.../versions/vN/ Immutable source snapshots for later versions
 templates/paper/        Shared template for new paper and technical-note candidates
 schema/                 Machine-readable metadata contract
 scripts/                Validation, packaging and site generation
