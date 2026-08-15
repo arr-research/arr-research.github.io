@@ -40,7 +40,12 @@ jobs:
           paper_dir="$(dirname "$metadata_path")"
           if [[ -f "$paper_dir/paper.tex" ]]; then
             sudo apt-get update
-            sudo apt-get install -y latexmk texlive-latex-extra texlive-fonts-recommended
+            sudo apt-get install -y \
+              biber \
+              latexmk \
+              texlive-bibtex-extra \
+              texlive-fonts-recommended \
+              texlive-latex-extra
             (
               cd "$paper_dir"
               latexmk -pdf -interaction=nonstopmode -halt-on-error paper.tex
