@@ -28,7 +28,7 @@ jobs:
           python-version: "3.13"
       - name: Validate all records
         run: python scripts/validate_papers.py
-      - name: Build PDF from canonical LaTeX when present
+      - name: Build PDF when LaTeX is the canonical source
         shell: bash
         run: |
           paper_id='${{ inputs.paper_id }}'
@@ -38,7 +38,12 @@ jobs:
             exit 1
           fi
           paper_dir="$(dirname "$metadata_path")"
-          if [[ -f "$paper_dir/paper.tex" ]]; then
+          source_of_truth="$(python -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["source_of_truth"])' "$metadata_path")"
+          if [[ "$source_of_truth" == "paper.tex" ]]; then
+            if [[ ! -f "$paper_dir/paper.tex" ]]; then
+              echo "Canonical LaTeX source is missing: $paper_dir/paper.tex" >&2
+              exit 1
+            fi
             sudo apt-get update
             sudo apt-get install -y \
               biber \
@@ -50,6 +55,8 @@ jobs:
               cd "$paper_dir"
               latexmk -pdf -interaction=nonstopmode -halt-on-error paper.tex
             )
+          else
+            echo "Preserving canonical source byte-for-byte: $source_of_truth"
           fi
       - name: Build immutable package
         run: python scripts/package_paper.py "${{ inputs.paper_id }}"
