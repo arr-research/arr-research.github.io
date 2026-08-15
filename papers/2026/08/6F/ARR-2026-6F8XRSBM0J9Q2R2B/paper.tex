@@ -1,0 +1,735 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=27mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern,microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools,bm}
+\usepackage{booktabs,array,enumitem,float}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue!45!black,citecolor=blue!45!black,urlcolor=blue!55!black]{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\usepackage[backend=biber,style=numeric,sorting=nyt,maxbibnames=99]{biblatex}
+\addbibresource{references.bib}
+\AtBeginBibliography{\sloppy}
+\setlength{\emergencystretch}{2em}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\E}{\mathbb E}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+\newcommand{\Hh}{\mathbb H}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\Herm}{\operatorname{Herm}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\Gr}{\operatorname{Gr}}
+\newcommand{\cO}{\mathcal O}
+\newcommand{\cL}{\mathcal L}
+\newcommand{\ip}[2]{\langle #1,#2\rangle}
+\newcommand{\norm}[1]{\lVert #1\rVert}
+
+\hypersetup{
+ pdftitle={All-Field Morse--Bott Stability at Critical Homogeneous Orbits: Half-Grassmann No-Spinodal Rigidity and Exact Jacobi Metastability},
+ pdfauthor={Lluis Eriksson},
+ pdfkeywords={positive-definite kernel, homogeneous orbit, Morse--Bott, Grassmannian, matrix Bingham, Jacobi ensemble, metastability}
+}
+
+\title{\bfseries All-Field Morse--Bott Stability at Critical Homogeneous Orbits\\[3pt]
+\large Half-Grassmann No-Spinodal Rigidity and Exact Jacobi Metastability}
+\author{Lluis Eriksson}
+\date{August 15, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Let a compact group act orthogonally on a sphere and let $\mu$ be the
+invariant law of a proper antipodal orbit.  We study the orbital potential
+$U_t(a)=\int\exp(t\langle a,u\rangle)\,d\mu(u)$.  At a point of the source
+orbit, every spherical-harmonic coefficient of the orbit average is a
+squared norm.  Combining this positivity with the strictly positive
+Gegenbauer--Bessel coefficients of the exponential kernel gives an exact
+negative spherical-Laplacian identity at every field $t>0$.  Provided the
+source orbit is critical---automatically so when the normal isotropy
+representation has no fixed vector---irreducibility, or a transitive symmetry
+of its irreducible normal blocks, upgrades this trace identity to strict
+Morse--Bott maximality for every field.  We give an explicit torus-orbit
+counterexample showing why the criticality hypothesis cannot be omitted.
+
+Applied to the centered projector embeddings of the real, complex, and
+quaternionic half-Grassmannians, the theorem proves all-field local rigidity
+of the balanced matrix--Bingham branch and excludes any radial spinodal.  In
+the complex case we go further.  For every two-block external spectrum we
+derive exact constrained-Hessian eigenvalues from the reversible Jacobi
+generator.  Their low-field factors show a sharp metastability threshold:
+unbalanced strata with positive multiplicity $k>2r/3$ are genuine local
+maxima at weak field, whereas those with $k\le 2r/3$ have an unstable block
+split.  A Stein inequality proves the required Hessian sign in all
+sufficiently high Taylor degrees and leaves an explicit finite low-degree
+gate.  Thus a global competing phase, if it exists, must arise by nonlocal
+coexistence rather than loss of stability of the balanced branch.  We do not
+claim global spectral optimality or the resulting all-distortion
+rate--distortion function.
+\end{abstract}
+
+\section{Introduction}
+
+Matrix--Bingham normalizers on Grassmannians are orbital Laplace transforms
+and hypergeometric functions of matrix argument.  Their evaluation,
+asymptotics, and information geometry are well developed
+\cite{James1964,Muirhead1982,Kent1994,BagyanRichards2024,CazzellaEtAl2026}.
+A different problem asks which external spectrum maximizes such a normalizer
+under trace and Frobenius constraints.  The constraints do not define a
+majorization chain, so standard Schur or orbital-integral monotonicity does
+not decide the question \cite{ItzyksonZuber1980,Sra2016,McSwiggenSahi2026}.
+
+The rank-two case $\Gr_{\C}(2,4)$ admits an exact all-field solution
+\cite{ErikssonRankTwo2026}; arbitrary rank has previously been controlled at
+high field, yielding an exact high-fidelity rate--distortion segment
+\cite{ErikssonHighFidelity2026}.  The missing finite-field issue is global:
+can an intermediate external spectrum overtake the balanced two-block field?
+This paper does not resolve that global ordering.  It instead closes its
+local part at every field and proves that a seemingly natural saddle-based
+shortcut is false.
+
+The first observation is representation-free.  Classical Schoenberg and
+Gangolli theory characterizes positive-definite zonal kernels by nonnegative
+harmonic coefficients \cite{Schoenberg1942,Gangolli1967}.  If the center of
+the orbital potential lies on the same orbit as the integration measure, the
+orbital harmonic coefficient is itself a squared mean harmonic.  The
+spherical Laplacian is consequently strictly negative.  Under an explicit
+criticality condition and a normal-isotropy hypothesis this trace sign becomes
+a complete normal-Hessian sign, giving an all-field Morse--Bott theorem.  We
+also exhibit a proper antipodal orbit for which irreducibility alone does not
+force criticality.
+
+Group-invariant kernel energies on compact homogeneous manifolds have also
+been used for quadrature and discrepancy \cite{DamelinEtAl2009}.  Those
+results optimize an energy over measures or point sets on the homogeneous
+space.  Our variable is instead an ambient external direction on a fixed
+Frobenius sphere, and the conclusion is a transverse Hessian theorem at the
+embedded source orbit.
+
+For half-Grassmannians this proves that the balanced field never becomes
+spinodally unstable over $\R$, $\C$, or $\Hh$.  In the complex case a second,
+independent Jacobi calculation classifies weak-field block splitting at every
+two-level spectrum.  It reveals locally stable unbalanced branches near the
+balanced multiplicity.  Hence local Hessians cannot eliminate all
+competitors: a complete global proof must compare separated values or prove
+a stronger Laplace order.
+
+Our contributions are:
+\begin{enumerate}[label=(\roman*)]
+\item a positive-mode spherical-Laplacian identity, a necessary criticality
+guard, and an all-field Morse--Bott criterion for homogeneous orbital
+potentials;
+\item strict balanced local rigidity for the real, complex, and quaternionic
+half-Grassmann matrix--Bingham models;
+\item exact Jacobi--Stein identities and exact constrained-Hessian operators
+for every complex two-block multiplicity stratum;
+\item the sharp weak-field metastability threshold $k=2r/3$, including its
+degenerate sixth-moment boundary; and
+\item a coefficient-tail theorem that reduces one global sign problem to
+finitely many exact moments at each fixed $(r,k)$.
+\end{enumerate}
+The addition theorem, matrix-beta law, and Jacobi ensemble are established
+ingredients.  Novelty is claimed only for the joined all-field stability and
+metastability conclusions, not for those classical tools.
+
+\section{Orbital harmonic positivity}
+
+Let $N\ge3$, let $G$ be a compact group acting orthogonally on $\R^N$, let
+$\cO=Gv\subset S^{N-1}$ be an orbit, and let $\mu$ be its invariant
+probability measure.  Write $\lambda=(N-2)/2$ and let
+\[
+ K_\ell(x,y)=\frac{C_\ell^\lambda(\ip{x}{y})}
+ {C_\ell^\lambda(1)}                                      \tag{2.1}
+\]
+be the normalized degree-$\ell$ spherical-harmonic reproducing kernel.
+The circle $N=2$ has the analogous Fourier/Chebyshev formulation, but it is
+not needed in any application below and is excluded from the stated
+Gegenbauer normalization.
+For an orthonormal real harmonic basis $\{Y_{\ell j}\}_j$, the addition
+theorem gives
+\[
+ K_\ell(x,y)=c_{N,\ell}\sum_jY_{\ell j}(x)Y_{\ell j}(y),
+ \qquad c_{N,\ell}>0.                                     \tag{2.2}
+\]
+
+\begin{lemma}[Squared orbital coefficient]\label{lem:square}
+For every $\ell\ge0$ and every $v\in\cO$,
+\[
+ q_\ell:=\int_\cO K_\ell(u,v)\,d\mu(u)
+ =c_{N,\ell}\sum_j\left|\int_\cO Y_{\ell j}(u)\,d\mu(u)\right|^2
+ \ge0.                                                     \tag{2.3}
+\]
+If $\cO$ is antipodal, then $q_\ell=0$ for odd $\ell$.
+\end{lemma}
+
+\begin{proof}
+Invariance makes the first integral independent of the selected $v\in\cO$.
+Averaging it once more over $v$ and using (2.2) gives the squared-norm
+formula.  Antipodality annihilates every odd harmonic average.
+\end{proof}
+
+The evaluation point belonging to the source orbit is essential.  Away from
+the orbit the corresponding coefficient is an inner product of two harmonic
+vectors and need not be nonnegative.
+
+Let an analytic zonal kernel have the expansion
+\[
+ \Phi(x)=\sum_{\ell\ge0}a_\ell
+ \frac{C_\ell^\lambda(x)}{C_\ell^\lambda(1)},\qquad a_\ell\ge0,              \tag{2.4}
+\]
+with locally uniform convergence after two derivatives, and define
+\[
+ U_\Phi(a)=\int_\cO\Phi(\ip{a}{u})\,d\mu(u),\qquad a\in S^{N-1}.             \tag{2.5}
+\]
+
+\begin{proposition}[Negative orbital Laplacian]\label{prop:lap}
+At every $v\in\cO$,
+\[
+ \Delta_{S^{N-1}}U_\Phi(v)
+ =-\sum_{\ell\ge1}\ell(\ell+N-2)a_\ell q_\ell\le0.        \tag{2.6}
+\]
+The inequality is strict if $a_\ell q_\ell>0$ for at least one
+$\ell\ge1$.
+\end{proposition}
+
+\begin{proof}
+Integrate (2.4), apply \cref{lem:square}, and use
+$\Delta K_\ell=-\ell(\ell+N-2)K_\ell$ in the first argument.
+\end{proof}
+
+For $\Phi_t(x)=e^{tx}$ all Gegenbauer coefficients are strictly positive for
+$t>0$.  If $\cO$ is a proper orbit, its invariant measure is not uniform on
+the ambient sphere.  Since spherical harmonics determine finite measures on
+the compact sphere, some nonconstant $q_\ell$ is positive.  Thus
+\cref{prop:lap} is strict for every $t>0$.
+
+\section{A critical all-field Morse--Bott theorem}
+
+The potential is $G$-invariant, hence constant along $\cO$, but constancy on
+the orbit does not by itself make an orbit point critical: a normal gradient
+can remain.  The following elementary guard isolates the missing condition.
+
+\begin{lemma}[Criticality guard]\label{lem:critical}
+For every $v\in\cO$, the spherical gradient satisfies
+\[
+ \nabla_S U_\Phi(v)\in (N_v\cO)^{G_v}.                       \tag{3.1}
+\]
+Consequently $(N_v\cO)^{G_v}=\{0\}$ implies that the whole orbit is critical.
+At a critical orbit, the spherical Hessian annihilates $T_v\cO$, including
+all mixed tangent--normal entries.
+\end{lemma}
+
+\begin{proof}
+Invariance makes the gradient orthogonal to the orbit and fixed by the
+stabilizer, proving (3.1).  For an infinitesimal orbit field $X^\#$ one has
+$dU_\Phi(X^\#)=0$.  Covariantly differentiating this identity in an arbitrary
+spherical direction $Z$ gives
+\[
+ \operatorname{Hess}_S U_\Phi(Z,X^\#)
+ +dU_\Phi(\nabla_ZX^\#)=0.
+\]
+The second term vanishes at a critical point.  Orbit homogeneity transports
+criticality and the Hessian-kernel conclusion from $v$ to every point of
+$\cO$.
+\end{proof}
+
+\begin{theorem}[Critical homogeneous orbital Morse--Bott stability]\label{thm:mb}
+Assume that $\cO\subset S^{N-1}$ is proper and antipodal, that $v$ is a
+critical point of $U_\Phi$---for example,
+$(N_v\cO)^{G_v}=\{0\}$---and that either
+\begin{enumerate}[label=(\alph*)]
+\item the real $G_v$-representation on $N_v\cO$ is irreducible; or
+\item it is a direct sum of pairwise inequivalent irreducibles and a symmetry
+of the sphere fixing $v$ and preserving $U_{\Phi}$ permutes the summands
+transitively.
+\end{enumerate}
+If $\Phi$ satisfies (2.4) with $a_\ell>0$ for every $\ell$, then
+$\cO$ is a nondegenerate Morse--Bott manifold of strict local maxima of
+$U_\Phi$.  In particular this holds for $\Phi_t(x)=e^{tx}$ at every $t>0$.
+\end{theorem}
+
+\begin{proof}
+By \cref{lem:critical}, the tangent and mixed Hessian entries vanish.  Schur's
+lemma makes the self-adjoint Hessian scalar on every indicated irreducible
+normal summand; the extra symmetry makes those scalars equal in case (b).
+Thus the spherical Laplacian is the dimension of the normal space times their
+common scalar.  It is strictly negative by
+\cref{prop:lap}; hence the normal Hessian is negative definite.  Its kernel
+is exactly $T_v\cO$, and the Morse--Bott lemma gives transverse strict local
+maximality.
+\end{proof}
+
+\begin{remark}[Why criticality is essential]\label{rem:torus}
+Let $G=SO(2)\times SO(2)$ act on $\R^2\oplus\R^2$ and take
+$v=(ae_1,be_1)$ with $a^2+b^2=1$ and $a\ne b$.  The proper antipodal orbit
+$aS^1\times bS^1\subset S^3$ has a one-dimensional, hence irreducible,
+spherical normal representation, but that representation is trivial.  For
+$A(\theta)=(\cos\theta\,e_1,\sin\theta\,e_1)$,
+\[
+ U_t(A(\theta))=I_0(ta\cos\theta)I_0(tb\sin\theta),
+\]
+and at $\cos\theta_0=a$, $\sin\theta_0=b$,
+\[
+ \left.\frac d{d\theta}\log U_t(A(\theta))\right|_{\theta_0}
+ =tab\!\left[\frac{I_1(tb^2)}{I_0(tb^2)}-
+               \frac{I_1(ta^2)}{I_0(ta^2)}\right].          \tag{3.2}
+\]
+Its small-field expansion is
+$\tfrac12t^2ab(b^2-a^2)+O(t^4)$, so the source point is not critical for all
+sufficiently small $t>0$.  This example satisfies the original irreducibility
+condition but violates the fixed-vector guard in \cref{lem:critical}.
+\end{remark}
+
+\begin{corollary}[Uniform tubular exclusion]\label{cor:tube}
+Assume $(N_v\cO)^{G_v}=\{0\}$ and either normal-isotropy condition of
+\cref{thm:mb}.  For every compact $[t_0,t_1]\subset(0,\infty)$ there is a tubular
+neighborhood $\mathcal T$ of $\cO$ such that
+\[
+ U_t(a)<U_t(v),\qquad
+ a\in\mathcal T\setminus\cO,\quad v\in\cO,\quad t\in[t_0,t_1].           \tag{3.3}
+\]
+\end{corollary}
+
+\begin{proof}
+The smallest magnitude normal-Hessian eigenvalue is continuous on the
+compact set $\cO\times[t_0,t_1]$ and is bounded away from zero.  A uniform
+Taylor remainder and compactness give the claimed tube.
+\end{proof}
+
+\section{Half-Grassmann no-spinodal rigidity}
+
+Let $\mathbb F\in\{\R,\C,\Hh\}$, let $P$ be a Haar rank-$r$ orthogonal
+projector on $\mathbb F^{2r}$, and set
+\[
+ S_P=P-\frac12I,\qquad \rho^2=\norm{S_P}_F^2=\frac r2,\qquad
+ u_P=S_P/\rho.                                               \tag{4.1}
+\]
+The orbit $\cO_{\mathbb F}=\{u_P\}$ is antipodal because $I-P$ has the same
+law.  Its real ambient dimensions are
+\[
+ N_{\R}=r(2r+1)-1,\qquad N_{\C}=4r^2-1,\qquad
+ N_{\Hh}=8r^2-2r-1.                                         \tag{4.2}
+\]
+At
+\[
+ v_\star=\frac{\operatorname{diag}(I_r,-I_r)}{\sqrt{2r}},                  \tag{4.3}
+\]
+the off-diagonal block is tangent to the conjugacy orbit.  The spherical
+normal space is the direct sum of the two block-diagonal traceless
+self-adjoint modules.  Each is irreducible under its stabilizer factor; block
+exchange together with antipodality makes their Hessian scalars equal.  More
+explicitly, if $W$ swaps the two $r$-blocks, then
+$A\mapsto-WAW^*$ fixes $v_\star$, exchanges the normal modules, and preserves
+the potential because $\mu$ is both conjugation-invariant and antipodal.
+Moreover, a vector fixed by the block stabilizer is scalar on each block;
+membership in either traceless normal module forces both scalars to vanish.
+Hence $(N_{v_\star}\cO_{\mathbb F})^{G_{v_\star}}=\{0\}$ over
+$\mathbb F=\R,\C,\Hh$, and \cref{lem:critical} proves criticality rather than
+assuming it.
+
+\begin{theorem}[Balanced no-spinodal theorem]\label{thm:grass}
+For every $r\ge2$, every $\mathbb F\in\{\R,\C,\Hh\}$, and every $t>0$, the
+balanced field orbit (4.3) is a strict constrained local maximizer of
+\[
+ A\longmapsto \E\exp\!\bigl(t\rho\ip{A}{u_P}\bigr),
+ \qquad \tr A=0,\quad\norm A_F=1.                           \tag{4.4}
+\]
+Its constrained-Hessian kernel consists exactly of conjugacy-orbit
+directions.  Thus the balanced branch has no finite-field radial spinodal.
+\end{theorem}
+
+\begin{proof}
+The fixed-vector calculation above supplies the criticality hypothesis.
+Apply \cref{thm:mb} to the normal decomposition and the block-exchange
+symmetry.
+\end{proof}
+
+For the complex case let
+\[
+ z_r(t)=\E e^{t\rho\ip{v_\star}{u_P}}.
+\]
+The Gegenbauer--Bessel expansion gives the useful scalar certificate
+\[
+ \boxed{G_r(t):=z_r''(t)+(4r^2-2)\frac{z_r'(t)}t-\frac r2z_r(t)>0.}          \tag{4.5}
+\]
+Indeed the radial Bessel equation yields
+\[
+ G_r(t)=\sum_{\ell\ge1}\frac{\ell(\ell+4r^2-3)}{t^2}
+ a_{\ell}(t)q_\ell>0.                                      \tag{4.6}
+\]
+Equivalently, the spherical Laplacian at $v_\star$ equals $-t^2G_r(t)$;
+the common normal-Hessian eigenvalue is
+\[
+ -\frac{t^2G_r(t)}{2(r^2-1)}.                               \tag{4.7}
+\]
+
+\section{Complex two-block strata}
+
+We now specialize to $P\sim\Gr_{\C}(r,2r)$.  Put $n=2r$, fix
+$1\le k<r$, set $m=n-k$, and let $E_k$ project onto a fixed $k$-plane.
+Define
+\[
+ T=\tr(E_kP),\qquad Y=T-\frac k2,\qquad z_{r,k}(u)=\E e^{uY}.               \tag{5.1}
+\]
+The $k\times k$ compression $B=E_kPE_k$ has the complex matrix-beta density
+\[
+ c_{r,k}\det(B)^{r-k}\det(I-B)^{r-k}\mathbf1_{0<B<I}\,dB,                \tag{5.2}
+\]
+and its eigenvalues form a Jacobi unitary ensemble
+\cite{James1964,Muirhead1982,DumitriuEdelman2002}.  The Frobenius-unit
+two-block field is
+\[
+ A_k=c_k\left(E_k-\frac{k}{n}I\right),\qquad
+ c_k=\sqrt{\frac{n}{km}},\qquad \tr(A_kP)=c_kY.             \tag{5.3}
+\]
+If the physical field strength is $s$, write $u=sc_k$.
+
+\begin{lemma}[Two-block criticality]\label{lem:twoblock-critical}
+For every $s>0$, the conjugacy orbit of $A_k$ is a critical manifold of
+\[
+ F_s(A)=\log\E e^{s\tr(AP)}
+ \quad\text{on}\quad \{A=A^*: \tr A=0,\ \norm A_F=1\}.
+\]
+\end{lemma}
+
+\begin{proof}
+Under the posterior tilted by $A_k$, the mean $M_s=\E_{A_k}P$ commutes with
+the stabilizer $U(k)\times U(m)$.  Hence
+$M_s=aE_k+b(I-E_k)$ for scalars $a,b$.  Since $\tr M_s=r$, its traceless part
+is proportional to the unique traceless block-scalar direction
+$E_k-(k/n)I$, and therefore to $A_k$.  The trace-zero ambient gradient of
+$F_s$ is $s(M_s-\tfrac12I)$, so it is radial on the Frobenius sphere at
+$A_k$.  Every constrained first variation consequently vanishes.  Unitary
+invariance transports criticality along the full conjugacy orbit.
+\end{proof}
+
+For the eigenvalues $x_1,\ldots,x_k$ of $B$, set
+\[
+ S=\sum_{i=1}^k x_i(1-x_i).                                 \tag{5.4}
+\]
+The reversible complex-Jacobi generator is
+\[
+ \cL f=\sum_i x_i(1-x_i)\partial_{ii}f+
+ \sum_i b_i(x)\partial_if,                                  \tag{5.5}
+\]
+where
+\[
+ b_i=(r-k+1)(1-2x_i)+2x_i(1-x_i)
+ \sum_{j\ne i}\frac1{x_i-x_j}.                              \tag{5.6}
+\]
+
+\begin{lemma}[Jacobi--Stein closure]\label{lem:stein}
+With $\Gamma$ the carré du champ of (5.5),
+\[
+ \cL Y=-2rY,\qquad \Gamma(Y,Y)=S,\qquad
+ \cL S=\frac{km}{2}+2Y^2-4rS.                               \tag{5.7}
+\]
+Under the tilted law $d\mu_u=e^{uY}d\mu/z_{r,k}(u)$,
+\[
+ 2r\,\delta(u)=u\E_uS,\qquad
+ 2r\E_uY^2=\E_uS+u\E_u(YS),\qquad \delta=(\log z_{r,k})'. \tag{5.8}
+\]
+\end{lemma}
+
+\begin{proof}
+The first two identities follow directly from (5.5).  For the third,
+pair the singular interaction terms for $(i,j)$ before simplifying.  The
+divided differences of $x(1-x)(1-2x)=x-3x^2+2x^3$ reduce to $T$,
+$\sum x_i^2$, and $T^2$; centering cancels every linear term and gives
+(5.7).  Reversibility gives
+$\E[\cL f\,e^{uY}]=-u\E[\Gamma(f,Y)e^{uY}]$.  Taking $f=Y$ and then
+$f=Y^2/2$ gives (5.8).
+\end{proof}
+
+\section{Exact constrained Hessians}
+
+Let $q(u)=\E_uY^2=z''/z$.  For $k\ge2$, unitary invariance shows that a
+Frobenius-unit traceless split within the positive $k$-block has posterior
+variance
+\[
+ \alpha_+=\frac{k/4-2r\delta/u-q/k}{k^2-1},                  \tag{6.1}
+\]
+while a unit split within the negative $m$-block has variance
+\[
+ \alpha_-=\frac{m/4-2r\delta/u-q/m}{m^2-1}.                  \tag{6.2}
+\]
+For example, (6.1) follows from
+\[
+ \E_u\left[\tr B^2-\frac{T^2}{k}\right]
+ =\frac k4-\E_uS-\frac{q}{k},                               \tag{6.3}
+\]
+and (6.2) follows by applying the same invariant covariance formula to
+the complementary block spectrum
+$(1-x_1,\ldots,1-x_k,1^{r-k},0^{r-k})$.
+
+Along a unit tangent geodesic on the Frobenius sphere, the Hessian of the log
+partition divided by $s^2$ is posterior variance minus the spherical
+Lagrange multiplier.  This is a constrained Hessian because
+\cref{lem:twoblock-critical} supplies the required first-order stationarity:
+\[
+ \ell_{r,k}(u)=\frac{\E_u\tr(A_kP)}s=\frac{n\delta(u)}{kmu}.                 \tag{6.4}
+\]
+Define
+\[
+\begin{aligned}
+ H_{r,k}^{+}(u)&=z''+\frac{n(nk-1)}m\frac{z'}u-\frac{k^2}{4}z,\\
+ H_{r,k}^{-}(u)&=z''+\frac{n(nm-1)}k\frac{z'}u-\frac{m^2}{4}z.
+\end{aligned}                                                \tag{6.5}
+\]
+
+\begin{theorem}[Two-block Hessian operators]\label{thm:hess}
+For every $u>0$, the negative-block identity below holds; when $k\ge2$ the
+positive-block identity holds as well:
+\[
+ \boxed{
+ \alpha_+-\ell_{r,k}=-\frac{H_{r,k}^{+}}{k(k^2-1)z},\qquad
+ \alpha_--\ell_{r,k}=-\frac{H_{r,k}^{-}}{m(m^2-1)z}.}       \tag{6.6}
+\]
+For $k=1$ the positive block has no traceless splitting module, so its first
+displayed quotient is omitted.  Thus all existing fundamental spectral
+splitting signs are reduced exactly to scalar differential inequalities for
+one Jacobi trace transform.
+\end{theorem}
+
+\begin{proof}
+Substitute (5.8), (6.1), and (6.2) into
+(6.4); collect terms using $q=z''/z$ and $\delta=z'/z$.
+\end{proof}
+
+\section{A sharp metastability threshold}
+
+The centered law of $Y$ is symmetric.  Its second and fourth moments are
+\[
+ \mu_2=\frac{km}{4(n^2-1)},\qquad
+ \mu_4=\frac{3km(km-2)}
+ {16(n-3)(n-1)(n+1)(n+3)}.                                  \tag{7.1}
+\]
+These follow either from the matrix-beta Schur expansion or from the standard
+complex projector moments.  Substitution into (6.5) gives the actual
+Taylor coefficients
+\[
+ [u^2]H_{r,k}^{+}
+ =\frac{k(4r-3k)(k^2-1)}
+ {16(2r-3)(2r-1)(2r+1)(2r+3)}\ge0,                          \tag{7.2}
+\]
+with equality only at $k=1$, where that splitting module is absent,
+and
+\[
+ [u^2]H_{r,k}^{-}
+ =-\frac{(2r-3k)m(m^2-1)}
+ {16(2r-3)(2r-1)(2r+1)(2r+3)}.                              \tag{7.3}
+\]
+When $3k=2r$, (7.3) vanishes.  The exact sixth moment then gives
+\[
+ [u^4]H_{r,2r/3}^{-}
+ =-\frac{4r^2(4r-3)(4r+3)}
+ {5832(2r-5)(2r-1)^2(2r+1)^2(2r+5)}<0.                     \tag{7.4}
+\]
+
+\begin{theorem}[Weak-field metastability classification]\label{thm:meta}
+For sufficiently small nonzero field:
+\begin{enumerate}[label=(\roman*)]
+\item if $k<2r/3$, the larger block has an unstable traceless split;
+\item if $k=2r/3$, the same instability begins at order $u^4$; and
+\item if $2r/3<k<r$, both block-splitting Hessian eigenvalues are negative,
+so the unbalanced two-block orbit is a genuine local maximum modulo its
+conjugacy orbit.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Use \cref{thm:hess} and the signs in (7.2)--(7.4).  The remaining
+off-diagonal directions are conjugacy-orbit zero modes; the two block
+modules exhaust the normal spectral directions.
+\end{proof}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+Multiplicity range & Weak-field normal type & All-/high-field information \\
+\midrule
+$1\le k<2r/3$ & saddle & larger-block split already unstable \\
+$k=2r/3$ & saddle at order $u^4$ & quadratic coefficient vanishes \\
+$2r/3<k<r$ & metastable local maximum & larger block unstable at high field \\
+$k=r$ & strict local maximum & stable for every $u>0$ by \cref{thm:grass} \\
+\bottomrule
+\end{tabular}
+\caption{Exact local classification of the fundamental complex two-block
+strata.  ``Metastable'' is a local geometric statement, not a claim of
+global phase activity.}
+\label{tab:stability}
+\end{table}
+
+This theorem rules out the shortcut ``every unbalanced two-block stationary
+orbit is a saddle.''  Near-balanced multiplicities are metastable at weak
+field.  At high field, however,
+\[
+ \frac{z''}{z}\longrightarrow\frac{k^2}{4},\qquad
+ \frac{z'}{uz}\longrightarrow0,
+\]
+and hence $H_{r,k}^{-}/z\to(k^2-m^2)/4<0$.  Each such metastable branch
+eventually becomes unstable.  This says nothing by itself about which branch
+has the largest value.
+
+\section{A rigorous coefficient-tail reduction}
+
+Let $\mu_j=\E Y^j$.  Coefficientwise negativity of $H_{r,k}^{-}$ is
+equivalent to
+\[
+ \frac{\mu_{2j+2}}{\mu_{2j}}
+ <\frac{m^2}{4}\frac{2j+1}{2j+1+n(nm-1)/k}.                 \tag{8.1}
+\]
+
+\begin{proposition}[Stein moment-ratio bound]\label{prop:tail}
+For every $j\ge0$,
+\[
+ \frac{\mu_{2j+2}}{\mu_{2j}}
+ \le\frac{k^2}{4}\frac{2j+1}{2j+1+2rk}.                    \tag{8.2}
+\]
+Consequently (8.1) holds whenever
+\[
+ 2j(m-k)>m(k^2-1).                                          \tag{8.3}
+\]
+\end{proposition}
+
+\begin{proof}
+The pointwise inequality
+\[
+ S=\sum_i x_i(1-x_i)\le\frac k4-\frac{Y^2}{k}               \tag{8.4}
+\]
+follows from Cauchy--Schwarz after writing $x_i=1/2+y_i$.
+Reversibility and $\cL Y=-2rY$ give
+\[
+ 2r\E Y^{2j+2}=(2j+1)\E(Y^{2j}S).
+\]
+Insert (8.4), rearrange, and obtain (8.2).  Direct algebra shows
+that its right-hand side is strictly smaller than the right-hand side of
+(8.1) precisely under (8.3).
+\end{proof}
+
+For every fixed $(r,k)$ this proves the entire sufficiently high-degree tail
+of the larger-block Hessian operator.  The remaining number of low degrees
+is finite, but it is not uniform as $k\uparrow r$.  Finite numerical screens
+therefore do not constitute an all-rank proof.
+
+\section{Phase implications and scope}
+
+The balanced branch is a strict local maximum at every field by
+\cref{thm:grass}.  Hence any hypothetical competitor that overtakes it must
+be separated from the balanced orbit.  It cannot emerge continuously through
+a vanishing balanced Hessian.  On a compact field interval,
+\cref{cor:tube} removes a uniform tube around the balanced orbit from any
+global search.
+
+The metastability theorem adds a complementary warning.  Several unbalanced
+two-block strata are also local maxima at weak field, so no argument based
+only on stationary-point Hessians can establish the global envelope.  A
+global theorem must instead supply at least one of:
+\begin{enumerate}[label=(\alph*)]
+\item an all-field Laplace order between external spectra;
+\item a value comparison for every two-block multiplicity plus a theorem
+reducing global maximizers to two blocks; or
+\item a nonlocal positivity or total-positivity certificate for the Jacobi
+Hankel determinants.
+\end{enumerate}
+The trace transform in (5.1) is connected to differential recurrences
+for the Jacobi ensemble \cite{ForresterKumar2022}; those recurrences do not,
+by themselves, provide the needed fixed-Frobenius ordering.
+
+The paper proves local orbital geometry and exact metastability.  It does
+\emph{not} prove global maximization by the balanced field, a complete
+finite-field phase diagram, or an all-distortion Shannon rate--distortion
+function.  It also does not interpret local maxima as physical thermodynamic
+states unless a separate model supplies such an interpretation.
+
+\section{Reproducibility}
+
+The accompanying lightweight replay uses exact rational arithmetic and
+symbolic factorization to verify (7.1)--(7.4), the algebraic
+equivalence in (8.3), and the ambient dimensions in (4.2).  It
+also evaluates the noncritical torus counterexample in \cref{rem:torus} and
+checks the positive Bessel-mode formula on a bounded grid.  The replay
+is evidence against transcription errors, not a computer-assisted proof of
+the harmonic or Jacobi theorems; all logical steps used above are given in
+the text.
+
+\section{Conclusion}
+
+Positive-definite orbital potentials have a rigid Laplacian identity at their
+source orbit: their nonconstant harmonic content enters with one sign.  At a
+critical source orbit, an isotropy condition upgrades that trace identity to
+a complete all-field Morse--Bott maximum theorem; without criticality this is
+false, as the explicit torus orbit shows.  For half-Grassmann
+matrix--Bingham models the normal fixed-vector space vanishes, so the repaired
+criterion applies and
+excludes a balanced spinodal over all three classical division algebras.
+The exact Jacobi reduction then exposes a less obvious structure in the
+complex problem: near-balanced unbalanced spectra are weak-field metastable,
+while more asymmetric spectra are saddles.  These results sharply constrain
+any unresolved intermediate phase while preserving the central global gate
+rather than hiding it behind finite moments or numerical evidence.
+
+\appendix
+\section{Taylor normalization at the degenerate threshold}
+
+For completeness, with $z(u)=\sum_{j\ge0}\mu_{2j}u^{2j}/(2j)!$, an operator
+$H=z''+Az'/u-cz$ has
+\[
+ [u^2]H=\frac12\left[\mu_4\left(1+\frac A3\right)-c\mu_2\right],\qquad
+ [u^4]H=\frac1{24}\left[\mu_6\left(1+\frac A5\right)-c\mu_4\right].       \tag{A.1}
+\]
+At $k=2r/3$, $m=4r/3$,
+\[
+ \mu_4=\frac{r^2}{27(2r-1)(2r+1)},                          \tag{A.2}
+\]
+and the Schur expansion of the complex matrix-beta law gives
+\[
+ \mu_6=\frac{10r^2(4r^4-27r^2+9)}
+ {243(2r-5)(2r-1)^2(2r+1)^2(2r+5)}.                         \tag{A.3}
+\]
+Substitution of $A=n(nm-1)/k$ and $c=m^2/4$ in (A.1) yields
+(7.4).  The factorials in (A.1) are included explicitly because
+omitting them leaves the signs unchanged but doubles the quadratic
+coefficient and multiplies the quartic coefficient by $24$.
+
+\section{Algebra behind the Jacobi closure}
+
+We record the drift calculation in \cref{lem:stein}.  Write
+$p_1=T=\sum_i x_i$ and $p_2=\sum_i x_i^2$, so $S=p_1-p_2$.  Pairwise
+symmetrization of the interaction term gives
+\[
+ 4\sum_{i<j}\frac{x_i^2(1-x_i)-x_j^2(1-x_j)}{x_i-x_j}
+ =4(k-1)T-(4k-6)p_2-2T^2.                                  \tag{B.1}
+\]
+Adding the one-particle drift and diffusion terms yields
+\[
+ \cL p_1=kr-2rT,
+ \qquad
+ \cL p_2=(2r+2k)T-4rp_2-2T^2.                              \tag{B.2}
+\]
+Therefore
+\[
+ \cL S=kr-2kT+2T^2-4rS
+ =\frac{k(2r-k)}2+2\left(T-\frac k2\right)^2-4rS,           \tag{B.3}
+\]
+which is (5.7).  The matrix-beta moment identity used in the replay is
+\[
+ \E s_\lambda(B)=s_\lambda(1^k)
+ \frac{[r]_\lambda}{[2r]_\lambda},                         \tag{B.4}
+\]
+with the complex generalized rising factorial
+$[a]_\lambda=\prod_i(a-i+1)_{\lambda_i}$.  Expanding
+$(\tr B)^j=\sum_{\lambda\vdash j}f^\lambda s_\lambda(B)$ and centering gives
+(7.1), (A.2), and (A.3) by exact rational simplification.
+
+\printbibliography
+\end{document}
