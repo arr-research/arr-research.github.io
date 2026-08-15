@@ -1,0 +1,6 @@
+import Lean2dYangMills.SU2ClassTransferGap
+
+#print axioms Lean2dYangMills.three_quarters_le_su2ClassCasimir
+#print axioms Lean2dYangMills.su2ClassTransferMultiplier_le_fundamental
+#print axioms Lean2dYangMills.su2ClassTransferMultiplier_bound_sharp
+#print axioms Lean2dYangMills.su2ClassTransferGap_pos
