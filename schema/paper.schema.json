@@ -26,7 +26,7 @@
     "editorial"
   ],
   "properties": {
-    "schema_version": {"enum": ["1.0", "1.1"]},
+    "schema_version": {"enum": ["1.0", "1.1", "1.2"]},
     "record_id": {
       "type": "string",
       "pattern": "^arr:record:[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
@@ -102,6 +102,15 @@
     "doi": {"type": "string"},
     "release_url": {"type": "string", "format": "uri"},
     "supersedes_version_id": {"type": "string"},
+    "revision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["change_size", "summary"],
+      "properties": {
+        "change_size": {"enum": ["minor", "major"]},
+        "summary": {"type": "string", "minLength": 20, "maxLength": 2000}
+      }
+    },
     "deposit": {
       "type": "object",
       "additionalProperties": false,
@@ -190,10 +199,17 @@
   "allOf": [
     {
       "if": {
-        "properties": {"schema_version": {"const": "1.1"}},
+        "properties": {"schema_version": {"enum": ["1.1", "1.2"]}},
         "required": ["schema_version"]
       },
       "then": {"required": ["record_type"]}
+    },
+    {
+      "if": {
+        "properties": {"schema_version": {"const": "1.2"}, "version": {"pattern": "^v([2-9]|[1-9][0-9]+)$"}},
+        "required": ["schema_version", "version"]
+      },
+      "then": {"required": ["supersedes_version_id", "revision"]}
     },
     {
       "if": {

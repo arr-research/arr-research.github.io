@@ -18,11 +18,16 @@ from arrlib import (  # noqa: E402
     CROCKFORD,
     Paper,
     crockford_prefix,
+    group_paper_versions,
+    iter_package_files,
+    select_paper,
     validate_collection,
     validate_paper,
     validate_record_timestamps,
 )
 import new_record  # noqa: E402
+import new_version  # noqa: E402
+import arrlib  # noqa: E402
 import build_site  # noqa: E402
 
 
@@ -261,6 +266,69 @@ class PaperValidationTests(unittest.TestCase):
             self.assertEqual(paper.record_type, "technical_note")
             self.assertEqual(validate_paper(paper), [])
 
+    def test_new_version_preserves_identity_and_creates_version_directory(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            temporary_root = Path(temporary)
+            first = self.make_paper(temporary_root)
+            with (
+                patch.object(arrlib, "PAPERS_DIR", temporary_root),
+                patch.object(new_version, "PAPERS_DIR", temporary_root),
+                patch.object(new_version, "ROOT", temporary_root),
+                patch.object(
+                    sys,
+                    "argv",
+                    [
+                        "new_version.py",
+                        first.id,
+                        "--date",
+                        "2026-08-14",
+                        "--change-size",
+                        "minor",
+                        "--summary",
+                        "Corrects notation and expands the replay instructions.",
+                    ],
+                ),
+            ):
+                with redirect_stdout(io.StringIO()):
+                    self.assertEqual(new_version.main(), 0)
+
+            metadata_path = first.path / "versions" / "v2" / "metadata.json"
+            second = Paper(metadata_path.parent, json.loads(metadata_path.read_text(encoding="utf-8")))
+            self.assertEqual(second.id, first.id)
+            self.assertEqual(second.metadata["record_id"], first.metadata["record_id"])
+            self.assertNotEqual(second.metadata["version_id"], first.metadata["version_id"])
+            self.assertEqual(second.metadata["supersedes_version_id"], first.metadata["version_id"])
+            self.assertEqual(second.metadata["revision"]["change_size"], "minor")
+            self.assertEqual(second.path, first.path / "versions" / "v2")
+            self.assertEqual(validate_collection([first, second]), {})
+            self.assertIs(select_paper([first, second], first.id), second)
+            self.assertEqual([item.version for item in group_paper_versions([second, first])[first.id]], ["v1", "v2"])
+            self.assertFalse(any("versions" in path.relative_to(first.path).parts for path in iter_package_files(first.path)))
+
+    def test_timestamp_registry_may_retain_release_only_older_versions(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            paper = self.make_paper(root)
+            paper.metadata["version"] = "v2"
+            entries = []
+            for number in (1, 2):
+                entries.append(
+                    {
+                        "id": paper.id,
+                        "version": f"v{number}",
+                        "deposit_recorded_at": f"2026-08-1{number}T10:15:20+02:00",
+                        "deposit_timestamp_basis": "first_repository_commit",
+                        "deposit_commit": str(number) * 40,
+                        "publication_state": "published",
+                        "published_at": f"2026-08-1{number}T10:16:05+02:00",
+                        "publication_timestamp_basis": "github_release",
+                        "release_tag": f"{paper.id}-v{number}",
+                    }
+                )
+            registry_path = root / "record-timestamps.json"
+            registry_path.write_text(json.dumps({"schema_version": "1.0", "records": entries}), encoding="utf-8")
+            self.assertEqual(validate_record_timestamps([paper], registry_path), [])
+
     def test_technical_note_uses_its_own_public_route_and_scope_panel(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -286,6 +354,10 @@ class PaperValidationTests(unittest.TestCase):
                     timestamp,
                     [],
                     {paper.id: "notes"},
+                    [dict(timestamp, id=paper.id, version=paper.version)],
+                    {paper.version: paper},
+                    paper.version,
+                    False,
                     "",
                     "https://example.test",
                     "",

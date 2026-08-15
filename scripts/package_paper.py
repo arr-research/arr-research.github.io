@@ -8,24 +8,24 @@ import sys
 import zipfile
 from pathlib import Path
 
-from arrlib import ROOT, discover_papers, iter_package_files, sha256, validate_paper
+from arrlib import ROOT, discover_papers, iter_package_files, select_paper, sha256, validate_paper
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build immutable release assets for one ARR research record.")
     parser.add_argument("paper_id", help="ARR public identifier, for example ARR-2026-01K2M3N4P5Q6R7S8")
+    parser.add_argument("--version", default="", help="Version to package; defaults to the latest")
     parser.add_argument("--output", default="dist/release", help="Output directory")
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
-    matches = [paper for paper in discover_papers() if paper.id == args.paper_id]
-    if len(matches) != 1:
-        print(f"Expected exactly one record named {args.paper_id}; found {len(matches)}.", file=sys.stderr)
+    try:
+        paper = select_paper(discover_papers(), args.paper_id, args.version or None)
+    except ValueError as error:
+        print(error, file=sys.stderr)
         return 1
-
-    paper = matches[0]
     errors = validate_paper(paper)
     if errors:
         for error in errors:

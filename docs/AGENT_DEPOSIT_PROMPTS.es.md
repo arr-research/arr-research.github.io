@@ -2,6 +2,24 @@
 
 Estos prompts autorizan preparar, validar e integrar un registro en ARR. Sustituye los campos entre corchetes y adjunta las rutas reales. No autorices al agente a inventar resultados, evaluaciones, licencias, relaciones ni marcas temporales.
 
+## Nueva versión de un registro existente
+
+```text
+Publica este material como la siguiente versión del registro ARR `[ARR-ID]`; no crees un identificador nuevo.
+
+- Material revisado: [RUTA]
+- Tamaño del cambio: [minor o major]
+- Resumen preciso de cambios: [RESUMEN]
+
+Usa exclusivamente `python scripts/new_version.py [ARR-ID] --change-size [minor|major] --summary "[RESUMEN]"`. Confirma cuál es la última versión y genera exactamente la siguiente (`v2`, `v3`, etc.). Conserva `id`, `record_id`, tipo y autoría; crea un `version_id` nuevo y enlaza `supersedes_version_id` con la versión inmediatamente anterior.
+
+Comprueba que sigue siendo el mismo trabajo en evolución. Si plantea una investigación independiente o cambia de identidad científica, detente: debe recibir un ARR-ID nuevo y enlazarse como trabajo relacionado, no ocultarse como revisión major.
+
+Sustituye en el candidato los archivos revisados, conserva formatos puros, recalcula hash, tamaño y páginas, actualiza procedencia, cita, licencias, uso de IA y declaración editorial. Las evaluaciones son específicas de versión: vuelve a ejecutar sólo las comprobaciones reales y deja `not_assessed` donde no se repitan.
+
+Valida, prueba y revisa el sitio. Publica mediante PR, release inmutable `[ARR-ID]-vN` y Pages. Añade sin borrar las horas exactas de depósito y publicación de la nueva versión. Comprueba la página estable, `/versions/vN/`, el historial completo, la release y el hash descargado. No muevas etiquetas ni reemplaces activos de versiones anteriores.
+```
+
 ## Research paper
 
 ```text

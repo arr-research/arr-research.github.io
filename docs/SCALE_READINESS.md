@@ -16,6 +16,7 @@ The public catalogue is a projection of accepted registry events. It is not the 
 - `version_id` identifies one immutable version.
 - `id` is a human-facing `ARR-YYYY-<16 Crockford Base32 characters>` identifier.
 - Git paths are sharded as `papers/YYYY/MM/PP/ARR-...`, where `PP` is the first two characters of the suffix.
+- Later Git-backed versions are stored at `papers/YYYY/MM/PP/ARR-.../versions/vN/`; the initial root layout remains valid for backward compatibility.
 - Future object storage uses `records/YYYY/PP/<record_id>/versions/<version_id>/...`.
 - SHA-256 manifests bind each release to its exact files.
 

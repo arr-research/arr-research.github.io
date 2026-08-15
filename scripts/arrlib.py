@@ -57,6 +57,18 @@ class Paper:
         # Schema 1.0 predates explicit record types and contains papers only.
         return self.metadata.get("record_type", "research_paper")
 
+    @property
+    def version_number(self) -> int:
+        match = VERSION_PATTERN.fullmatch(self.version)
+        return int(self.version[1:]) if match else 0
+
+    @property
+    def record_root(self) -> Path | None:
+        for candidate in (self.path, *self.path.parents):
+            if candidate.name == self.id:
+                return candidate
+        return None
+
 
 def load_json(path: Path) -> dict[str, Any]:
     with path.open("r", encoding="utf-8") as handle:
@@ -80,6 +92,25 @@ def discover_papers() -> list[Paper]:
     for metadata_path in sorted(PAPERS_DIR.glob("**/metadata.json")):
         papers.append(Paper(metadata_path.parent, load_json(metadata_path)))
     return papers
+
+
+def select_paper(papers: Iterable[Paper], paper_id: str, version: str | None = None) -> Paper:
+    matches = [paper for paper in papers if paper.id == paper_id and (version is None or paper.version == version)]
+    if not matches:
+        requested = f" {version}" if version else ""
+        raise ValueError(f"ARR record {paper_id}{requested} was not found")
+    if version is not None and len(matches) != 1:
+        raise ValueError(f"ARR record {paper_id} {version} is ambiguous")
+    return max(matches, key=lambda paper: paper.version_number)
+
+
+def group_paper_versions(papers: Iterable[Paper]) -> dict[str, list[Paper]]:
+    groups: dict[str, list[Paper]] = {}
+    for paper in papers:
+        groups.setdefault(paper.id, []).append(paper)
+    for versions in groups.values():
+        versions.sort(key=lambda paper: paper.version_number)
+    return groups
 
 
 def parse_exact_timestamp(value: object) -> datetime:
@@ -109,6 +140,7 @@ def load_record_timestamps(path: Path = TIMESTAMP_REGISTRY_PATH) -> dict[tuple[s
 
 
 def validate_record_timestamps(papers: Iterable[Paper], path: Path = TIMESTAMP_REGISTRY_PATH) -> list[str]:
+    papers = list(papers)
     try:
         records = load_record_timestamps(path)
     except (OSError, ValueError, json.JSONDecodeError) as error:
@@ -119,10 +151,16 @@ def validate_record_timestamps(papers: Iterable[Paper], path: Path = TIMESTAMP_R
     actual = set(records)
     for paper_id, version in sorted(expected - actual):
         errors.append(f"timestamp registry: missing {paper_id} {version}")
+    maximum_versions: dict[str, int] = {}
+    for paper in papers:
+        maximum_versions[paper.id] = max(maximum_versions.get(paper.id, 0), paper.version_number)
     for paper_id, version in sorted(actual - expected):
-        errors.append(f"timestamp registry: orphaned {paper_id} {version}")
+        match = VERSION_PATTERN.fullmatch(version)
+        historical_number = int(version[1:]) if match else 0
+        if paper_id not in maximum_versions or historical_number < 1 or historical_number >= maximum_versions[paper_id]:
+            errors.append(f"timestamp registry: orphaned {paper_id} {version}")
 
-    for key in sorted(expected & actual):
+    for key in sorted(actual):
         item = records[key]
         prefix = f"timestamp registry {key[0]} {key[1]}"
         try:
@@ -179,22 +217,22 @@ def validate_paper(paper: Paper) -> list[str]:
         _required_string(metadata, field, errors)
 
     schema_version = metadata.get("schema_version")
-    if schema_version not in {"1.0", "1.1"}:
-        errors.append("schema_version: must be 1.0 or 1.1")
+    if schema_version not in {"1.0", "1.1", "1.2"}:
+        errors.append("schema_version: must be 1.0, 1.1 or 1.2")
 
     explicit_record_type = metadata.get("record_type")
     record_type = explicit_record_type or "research_paper"
     if schema_version == "1.0" and explicit_record_type is not None:
         errors.append("record_type: schema 1.0 records must use the legacy implicit research_paper type")
-    if schema_version == "1.1" and explicit_record_type not in ALLOWED_RECORD_TYPES:
+    if schema_version in {"1.1", "1.2"} and explicit_record_type not in ALLOWED_RECORD_TYPES:
         errors.append(f"record_type: must be one of {sorted(ALLOWED_RECORD_TYPES)}")
     if record_type not in ALLOWED_RECORD_TYPES:
         errors.append(f"record_type: must be one of {sorted(ALLOWED_RECORD_TYPES)}")
 
     note_profile = metadata.get("technical_note")
     if record_type == "technical_note":
-        if schema_version != "1.1":
-            errors.append("technical_note: technical notes require schema_version 1.1")
+        if schema_version not in {"1.1", "1.2"}:
+            errors.append("technical_note: technical notes require schema_version 1.1 or 1.2")
         if not isinstance(note_profile, dict):
             errors.append("technical_note: an object is required for technical notes")
         else:
@@ -228,19 +266,42 @@ def validate_paper(paper: Paper) -> list[str]:
             expected_suffix = crockford_prefix(uuid.UUID(record_id.removeprefix("arr:record:")))
             if id_match.group(2) != expected_suffix:
                 errors.append("id: suffix must be derived from record_id")
-        path_parts = paper.path.parts
-        if len(path_parts) >= 4:
-            actual_year, actual_month, actual_shard, _ = path_parts[-4:]
+        record_root = paper.record_root
+        if record_root is None:
+            errors.append(f"path: no ancestor directory is named {paper_id}")
+        elif len(record_root.parts) >= 4:
+            actual_year, actual_month, actual_shard, actual_id = record_root.parts[-4:]
             if actual_year != expected_year:
                 errors.append(f"path: paper year must be {expected_year}")
             if not re.match(r"^(0[1-9]|1[0-2])$", actual_month):
                 errors.append("path: paper month must be 01 through 12")
             if actual_shard != expected_shard:
                 errors.append(f"path: shard must be {expected_shard}")
+            if actual_id != paper_id:
+                errors.append(f"path: record directory must be named {paper_id}")
 
     version = metadata.get("version")
     if not isinstance(version, str) or not VERSION_PATTERN.match(version):
         errors.append("version: must match v1, v2, ...")
+    elif paper.record_root is not None and paper.path != paper.record_root:
+        expected_version_path = paper.record_root / "versions" / version
+        if paper.path != expected_version_path:
+            errors.append(f"path: version {version} must be stored at versions/{version}")
+
+    revision = metadata.get("revision")
+    if schema_version == "1.2" and isinstance(version, str) and VERSION_PATTERN.match(version) and int(version[1:]) > 1:
+        if not isinstance(metadata.get("supersedes_version_id"), str):
+            errors.append("supersedes_version_id: required for version 2 and later")
+        if not isinstance(revision, dict):
+            errors.append("revision: an object is required for version 2 and later")
+        else:
+            if revision.get("change_size") not in {"minor", "major"}:
+                errors.append("revision.change_size: must be minor or major")
+            summary = revision.get("summary")
+            if not isinstance(summary, str) or len(summary.strip()) < 20:
+                errors.append("revision.summary: at least 20 characters are required")
+    elif revision is not None and not isinstance(revision, dict):
+        errors.append("revision: must be an object")
 
     if metadata.get("status") not in ALLOWED_STATUSES:
         errors.append(f"status: must be one of {sorted(ALLOWED_STATUSES)}")
@@ -261,7 +322,7 @@ def validate_paper(paper: Paper) -> list[str]:
             parsed_date = date.fromisoformat(publication_date)
             if id_match and str(parsed_date.year) != id_match.group(1):
                 errors.append("date: year must match public id")
-            if id_match and len(paper.path.parts) >= 4 and paper.path.parts[-3] != f"{parsed_date.month:02d}":
+            if id_match and paper.record_root is not None and paper.record_root.parts[-3] != f"{parsed_date.month:02d}":
                 errors.append("path: month must match publication date")
         except ValueError:
             errors.append("date: must use YYYY-MM-DD")
@@ -503,10 +564,6 @@ def validate_paper(paper: Paper) -> list[str]:
         if not isinstance(editorial.get("statement"), str) or len(editorial["statement"].strip()) < 20:
             errors.append("editorial.statement: a meaningful statement is required")
 
-    folder_name = paper.path.name
-    if isinstance(paper_id, str) and folder_name != paper_id:
-        errors.append(f"path: directory must be named {paper_id}")
-
     return errors
 
 
@@ -540,6 +597,29 @@ def validate_collection(papers: Iterable[Paper]) -> dict[str, list[str]]:
             except ValueError:
                 display_path = paper.path
             results[str(display_path)] = errors
+
+    for paper_id, versions in group_paper_versions(papers).items():
+        record_ids = {paper.metadata.get("record_id") for paper in versions}
+        record_types = {paper.record_type for paper in versions}
+        if len(record_ids) > 1 or len(record_types) > 1:
+            target = versions[-1]
+            key = str(target.path.relative_to(ROOT)) if target.path.is_relative_to(ROOT) else str(target.path)
+            if len(record_ids) > 1:
+                results.setdefault(key, []).append("versions: all versions must share one record_id")
+            if len(record_types) > 1:
+                results.setdefault(key, []).append("versions: record_type cannot change between versions")
+        numbers = [paper.version_number for paper in versions]
+        if numbers and numbers != list(range(numbers[0], numbers[-1] + 1)):
+            target = versions[-1]
+            key = str(target.path.relative_to(ROOT)) if target.path.is_relative_to(ROOT) else str(target.path)
+            results.setdefault(key, []).append(f"versions: source versions for {paper_id} must be consecutive")
+        for previous, current in zip(versions, versions[1:]):
+            expected_previous = previous.metadata.get("version_id")
+            if current.metadata.get("supersedes_version_id") != expected_previous:
+                key = str(current.path.relative_to(ROOT)) if current.path.is_relative_to(ROOT) else str(current.path)
+                results.setdefault(key, []).append(
+                    f"supersedes_version_id: {current.version} must reference {previous.version}"
+                )
     return results
 
 
@@ -552,7 +632,9 @@ def sha256(path: Path) -> str:
 
 
 def iter_package_files(path: Path) -> Iterable[Path]:
-    ignored_parts = {".git", ".lake", "__pycache__"}
+    # A root-held legacy version may contain later snapshots beneath versions/;
+    # those must never leak into the immutable package for the selected version.
+    ignored_parts = {".git", ".lake", "__pycache__", "versions"}
     generated_suffixes = {".aux", ".bbl", ".blg", ".fdb_latexmk", ".fls", ".log", ".out", ".pdf", ".toc"}
     for candidate in sorted(path.rglob("*")):
         if (

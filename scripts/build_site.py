@@ -13,6 +13,7 @@ from urllib.parse import quote
 from arrlib import (
     ROOT,
     discover_papers,
+    group_paper_versions,
     load_record_timestamps,
     parse_exact_timestamp,
     validate_collection,
@@ -200,7 +201,7 @@ def build_home(papers: list, timestamps: dict, base: str, canonical_url: str) ->
 <section class="principles">
   <div><span>01</span><h2>Inspectable by default</h2><p>Manuscripts, metadata and code remain readable as plain files—not trapped behind a PDF or proprietary interface.</p></div>
   <div><span>02</span><h2>Claims match checks</h2><p>ARR reports pass, partial and not-assessed results exactly as recorded. It does not turn screening into a claim of truth.</p></div>
-  <div><span>03</span><h2>History remains visible</h2><p>Published versions are identified by hashes and releases. Corrections create a new record rather than silently rewriting the past.</p></div>
+  <div><span>03</span><h2>History remains visible</h2><p>Published versions are identified by hashes and releases. Corrections create a new immutable version rather than silently rewriting the past.</p></div>
 </section>
 <section class="recent"><div class="section-heading"><div><span>Catalogue</span><h2>Latest accepted research</h2></div><a href="{base}/papers/">View papers</a></div>{recent}</section>
 """
@@ -239,6 +240,10 @@ def build_paper_page(
     timestamp: dict,
     incoming_relations: list[dict],
     record_routes: dict[str, str],
+    version_timestamps: list[dict],
+    source_versions: dict[str, object],
+    latest_version: str,
+    permanent_version_page: bool,
     base: str,
     canonical_url: str,
     repository: str,
@@ -275,6 +280,48 @@ def build_paper_page(
         if related_records
         else ""
     )
+    route = record_route(metadata)
+    root_url = f"{base}/{route}/{quote(metadata['id'])}/"
+    history_items = []
+    for entry in sorted(version_timestamps, key=lambda item: int(item["version"][1:]), reverse=True):
+        version = entry["version"]
+        source_available = version in source_versions
+        if version == latest_version:
+            target = root_url
+        elif source_available:
+            target = f"{root_url}versions/{quote(version)}/"
+        elif entry.get("publication_state") == "published" and repository:
+            target = f"https://github.com/{repository}/releases/tag/{quote(entry['release_tag'])}"
+        else:
+            target = ""
+        label = f'<a href="{esc(target)}"><strong>{esc(version)}</strong></a>' if target else f"<strong>{esc(version)}</strong>"
+        source_note = "source snapshot available" if source_available else "release archive"
+        source_record = source_versions.get(version)
+        revision = source_record.metadata.get("revision") if source_record is not None else None
+        if isinstance(revision, dict):
+            source_note = f"{revision['change_size']} revision · {source_note}"
+        current = " · viewing" if version == metadata["version"] else ""
+        history_items.append(
+            f'<li>{label}<span>{exact_time(chronology_time(entry))} · {esc(source_note + current)}</span></li>'
+        )
+    version_history = (
+        '<section class="version-history"><h2>Version history</h2><p>The ARR identifier remains stable. Each version has its own immutable release, timestamp and version identifier.</p><ul>'
+        + "".join(history_items)
+        + "</ul></section>"
+    )
+    revision = metadata.get("revision")
+    revision_section = ""
+    if isinstance(revision, dict):
+        revision_section = (
+            f'<section class="revision-note"><h2>Revision statement</h2><p><strong>{esc(revision["change_size"].title())} revision.</strong> {esc(revision["summary"])}</p></section>'
+        )
+    version_notice = ""
+    if permanent_version_page:
+        latest_link = f'<a href="{root_url}">{esc(latest_version)}</a>'
+        version_notice = (
+            f'<aside class="version-notice">Permanent snapshot for <strong>{esc(metadata["version"])}</strong>. '
+            f'The current record page points to {latest_link}.</aside>'
+        )
     summary_label = "Summary" if paper.record_type == "technical_note" else "Abstract"
     note_profile = metadata.get("technical_note", {})
     note_section = ""
@@ -284,6 +331,7 @@ def build_paper_page(
 """
     content = f"""
 <article class="paper-page">
+  {version_notice}
   <div class="paper-meta">{type_badge(metadata)}{status_badge(metadata['status'])}<span>{esc(metadata['id'])} · {esc(metadata['version'])} · {esc(metadata['date'])}</span></div>
   <h1>{esc(metadata['title'])}</h1>
   <p class="paper-authors">{esc(authors)}</p>
@@ -294,6 +342,8 @@ def build_paper_page(
     <section><h2>Verification record</h2><dl class="checks">{verification_rows(metadata)}</dl><p class="protocol-note">Recorded under <a href="{base}/protocol/">{esc(metadata['verification']['protocol'])}</a>. ARR verification and screening are not peer review.</p></section>
     <aside><h2>Record</h2><dl class="record"><div><dt>Record type</dt><dd>{esc(record_type_label(metadata))}</dd></div><div><dt>Manuscript license</dt><dd>{esc(metadata['licenses']['manuscript'])}</dd></div><div><dt>Metadata license</dt><dd>{esc(metadata['licenses']['metadata'])}</dd></div><div><dt>Canonical source</dt><dd>{esc(metadata['source_of_truth'])}</dd></div><div><dt>Canonical SHA-256</dt><dd><code>{esc(metadata['integrity'].get('canonical_sha256', 'recorded in release manifest'))}</code></dd></div><div><dt>Stable record</dt><dd>{esc(metadata['record_id'])}</dd></div><div><dt>Version identifier</dt><dd>{esc(metadata['version_id'])}</dd></div><div><dt>AI assistance</dt><dd>{'Declared' if metadata['ai_assistance']['used'] else 'Not used'}</dd></div></dl><ul class="keywords">{keywords}</ul></aside>
   </div>
+  {revision_section}
+  {version_history}
   {note_section}
   {related_section}
   <section class="disclosure"><h2>AI assistance statement</h2><p>{esc(metadata['ai_assistance']['statement'])}</p></section>
@@ -301,7 +351,11 @@ def build_paper_page(
   <section class="disclosure"><h2>Editorial disclosure</h2><p>{esc(metadata['editorial']['statement'])}</p></section>
 </article>
 """
-    canonical = f"{canonical_url}/{record_route(metadata)}/{metadata['id']}/" if canonical_url else ""
+    if canonical_url:
+        root_canonical = f"{canonical_url}/{route}/{metadata['id']}/"
+        canonical = f"{root_canonical}versions/{metadata['version']}/" if permanent_version_page else root_canonical
+    else:
+        canonical = ""
     return page_shell(title=f"{metadata['title']} — ARR", description=metadata["abstract"], content=content, base=base, canonical=canonical)
 
 
@@ -356,11 +410,25 @@ def write(path: Path, value: str) -> None:
     path.write_text(value, encoding="utf-8", newline="\n")
 
 
-def write_catalogue_exports(papers: list) -> None:
+def write_catalogue_exports(papers: list, groups: dict, timestamps: dict) -> None:
     catalogue = []
     for paper in papers:
         item = dict(paper.metadata)
         item.setdefault("record_type", paper.record_type)
+        source_versions = {version.version for version in groups[paper.id]}
+        history = [entry for (paper_id, _), entry in timestamps.items() if paper_id == paper.id]
+        history.sort(key=lambda entry: int(entry["version"][1:]))
+        item["latest_version"] = paper.version
+        item["version_count"] = len(history)
+        item["versions"] = [
+            {
+                "version": entry["version"],
+                "publication_state": entry["publication_state"],
+                "release_tag": entry.get("release_tag"),
+                "source_snapshot_available": entry["version"] in source_versions,
+            }
+            for entry in history
+        ]
         catalogue.append(item)
     write(OUTPUT_DIR / "catalog.json", json.dumps(catalogue, ensure_ascii=False, indent=2) + "\n")
     write(OUTPUT_DIR / "catalog.ndjson", "".join(json.dumps(item, ensure_ascii=False) + "\n" for item in catalogue))
@@ -382,6 +450,7 @@ def write_catalogue_exports(papers: list) -> None:
                 "schema_version": "1.0",
                 "license": "CC0-1.0",
                 "records": len(catalogue),
+                "versions": sum(item["version_count"] for item in catalogue),
                 "partitions": partition_index,
             },
             ensure_ascii=False,
@@ -391,11 +460,17 @@ def write_catalogue_exports(papers: list) -> None:
     )
 
 
-def write_sitemaps(papers: list, canonical_url: str) -> None:
+def write_sitemaps(papers: list, groups: dict, canonical_url: str) -> None:
     if not canonical_url:
         return
     urls = [f"{canonical_url}/", f"{canonical_url}/papers/", f"{canonical_url}/notes/", f"{canonical_url}/protocol/", f"{canonical_url}/licensing/", f"{canonical_url}/about/"]
     urls.extend(f"{canonical_url}/{record_route(paper.metadata)}/{paper.id}/" for paper in papers)
+    for paper in papers:
+        route = record_route(paper.metadata)
+        urls.extend(
+            f"{canonical_url}/{route}/{paper.id}/versions/{version.version}/"
+            for version in groups[paper.id]
+        )
     chunks = [urls[index : index + 10_000] for index in range(0, len(urls), 10_000)]
     if len(chunks) == 1:
         sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"  <url><loc>{esc(url)}</loc></url>\n" for url in chunks[0]) + "</urlset>\n"
@@ -416,9 +491,9 @@ def main() -> int:
     args = parse_args()
     base = clean_base_path(args.base_path)
     canonical_url = args.canonical_url.rstrip("/")
-    papers = discover_papers()
-    failures = validate_collection(papers)
-    timestamp_errors = validate_record_timestamps(papers)
+    all_versions = discover_papers()
+    failures = validate_collection(all_versions)
+    timestamp_errors = validate_record_timestamps(all_versions)
     if failures or timestamp_errors:
         print("Cannot build site: record validation failed.", file=sys.stderr)
         for path, errors in failures.items():
@@ -429,6 +504,8 @@ def main() -> int:
         return 1
 
     timestamps = load_record_timestamps()
+    groups = group_paper_versions(all_versions)
+    papers = [versions[-1] for versions in groups.values()]
     papers.sort(key=lambda paper: (chronology_time(timestamps[(paper.id, paper.version)]), paper.id), reverse=True)
     record_routes = {paper.id: record_route(paper.metadata) for paper in papers}
     incoming_relations: dict[str, list[dict]] = defaultdict(list)
@@ -460,6 +537,8 @@ def main() -> int:
     write(OUTPUT_DIR / "licensing" / "index.html", build_licensing(base, canonical_url))
     write(OUTPUT_DIR / "about" / "index.html", build_about(base, canonical_url))
     for paper in papers:
+        version_timestamps = [entry for (paper_id, _), entry in timestamps.items() if paper_id == paper.id]
+        source_versions = {version.version: version for version in groups[paper.id]}
         write(
             OUTPUT_DIR / record_route(paper.metadata) / paper.id / "index.html",
             build_paper_page(
@@ -467,19 +546,43 @@ def main() -> int:
                 timestamps[(paper.id, paper.version)],
                 incoming_relations.get(paper.id, []),
                 record_routes,
+                version_timestamps,
+                source_versions,
+                paper.version,
+                False,
                 base,
                 canonical_url,
                 args.repository,
             ),
         )
+        for version in groups[paper.id]:
+            write(
+                OUTPUT_DIR / record_route(paper.metadata) / paper.id / "versions" / version.version / "index.html",
+                build_paper_page(
+                    version,
+                    timestamps[(version.id, version.version)],
+                    incoming_relations.get(paper.id, []),
+                    record_routes,
+                    version_timestamps,
+                    source_versions,
+                    paper.version,
+                    True,
+                    base,
+                    canonical_url,
+                    args.repository,
+                ),
+            )
 
-    write_catalogue_exports(papers)
+    write_catalogue_exports(papers, groups, timestamps)
     write(OUTPUT_DIR / "robots.txt", "User-agent: *\nAllow: /\n" + (f"Sitemap: {canonical_url}/sitemap.xml\n" if canonical_url else ""))
-    write_sitemaps(papers, canonical_url)
+    write_sitemaps(papers, groups, canonical_url)
 
     paper_count = sum(paper.record_type == "research_paper" for paper in papers)
     note_count = sum(paper.record_type == "technical_note" for paper in papers)
-    print(f"Built ARR site with {paper_count} paper(s) and {note_count} technical note(s) at {OUTPUT_DIR}")
+    print(
+        f"Built ARR site with {paper_count} paper(s), {note_count} technical note(s), "
+        f"and {len(timestamps)} published/pending version(s) at {OUTPUT_DIR}"
+    )
     return 0
 
 

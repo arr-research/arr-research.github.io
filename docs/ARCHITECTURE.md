@@ -33,6 +33,8 @@ Each accepted version receives a tag named `{ARR-ID}-{version}` and a GitHub Rel
 
 Release URLs remain version-specific. A correction creates a new version and tag.
 
+The first source snapshot remains at the record root for backward compatibility. Later source-backed versions are stored under `versions/vN/`. The stable public record URL resolves to the latest version, while `/versions/vN/` pages and `{ARR-ID}-vN` releases remain permanent. Older release-only versions may appear in the history even when their Git snapshot predates this layout.
+
 ### GitHub Pages
 
 The static site contains only HTML, CSS, JSON and NDJSON catalogue files. Paper pages link to Git sources and Release assets rather than copying heavy files into the website deployment.

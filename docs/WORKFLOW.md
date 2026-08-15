@@ -31,4 +31,18 @@ GitHub Pages rebuilds from the default branch. Research papers appear under `/pa
 
 ## 6. Correct without erasing history
 
-Create a new version with the same `record_id` and public `id`, a new `version_id`, an incremented `version`, and `supersedes_version_id`. Repeat validation. Never move an existing tag or overwrite its manifest.
+Create the next version with:
+
+```bash
+python scripts/new_version.py ARR-2026-XXXXXXXXXXXXXXXX \
+  --change-size minor \
+  --summary "Corrects notation and adds a missing reproducibility detail."
+```
+
+Use `minor` for corrections, clarifications, metadata repairs and bounded additions that do not replace the central contribution. Use `major` when principal claims, proofs, methods, datasets or conclusions change substantially. Both may produce `v2`, `v3`, and later versions; ARR deliberately does not use decimal versions.
+
+A major revision must still be recognizably the same evolving work. A different research question or an independent contribution receives a new ARR identifier and a `related_work`, `companion` or `extends` relation instead of being hidden as a new version.
+
+The generator retains the public `id` and `record_id`, creates a new `version_id`, increments `version`, records `supersedes_version_id`, resets version-specific assessments and writes the candidate under `versions/vN/`. Replace or edit the copied research object, recalculate integrity fields and rerun every claimed check. Then repeat PR validation, release and exact-timestamp recording for that version.
+
+The stable page `/papers/{ARR-ID}/` or `/notes/{ARR-ID}/` always displays the latest version. Every source-backed version also has `/versions/vN/`, and every published version has an immutable `{ARR-ID}-vN` release. Never move an existing tag, overwrite a release asset or delete an earlier timestamp entry.

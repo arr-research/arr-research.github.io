@@ -8,12 +8,17 @@ on:
         description: "ARR public identifier, e.g. ARR-2026-01K2M3N4P5Q6R7S8"
         required: true
         type: string
+      version:
+        description: "Exact version, e.g. v2; leave blank to publish the latest"
+        required: false
+        default: ""
+        type: string
 
 permissions:
   contents: write
 
 concurrency:
-  group: release-${{ inputs.paper_id }}
+  group: release-${{ inputs.paper_id }}-${{ inputs.version || 'latest' }}
   cancel-in-progress: false
 
 jobs:
@@ -32,12 +37,9 @@ jobs:
         shell: bash
         run: |
           paper_id='${{ inputs.paper_id }}'
-          metadata_path="$(find papers -path "*/$paper_id/metadata.json" -print -quit)"
-          if [[ -z "$metadata_path" ]]; then
-            echo "ARR record not found: $paper_id" >&2
-            exit 1
-          fi
-          paper_dir="$(dirname "$metadata_path")"
+          requested_version='${{ inputs.version }}'
+          paper_dir="$(python scripts/resolve_record.py "$paper_id" --version "$requested_version" --field path)"
+          metadata_path="$paper_dir/metadata.json"
           source_of_truth="$(python -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["source_of_truth"])' "$metadata_path")"
           if [[ "$source_of_truth" == "paper.tex" ]]; then
             if [[ ! -f "$paper_dir/paper.tex" ]]; then
@@ -59,18 +61,14 @@ jobs:
             echo "Preserving canonical source byte-for-byte: $source_of_truth"
           fi
       - name: Build immutable package
-        run: python scripts/package_paper.py "${{ inputs.paper_id }}"
+        run: python scripts/package_paper.py "${{ inputs.paper_id }}" --version "${{ inputs.version }}"
       - name: Resolve version and release path
         id: record
         shell: bash
         run: |
           paper_id='${{ inputs.paper_id }}'
-          metadata_path="$(find papers -path "*/$paper_id/metadata.json" -print -quit)"
-          if [[ -z "$metadata_path" ]]; then
-            echo "ARR record not found: $paper_id" >&2
-            exit 1
-          fi
-          version="$(python -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["version"])' "$metadata_path")"
+          requested_version='${{ inputs.version }}'
+          version="$(python scripts/resolve_record.py "$paper_id" --version "$requested_version" --field version)"
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "directory=dist/release/$paper_id/$version" >> "$GITHUB_OUTPUT"
           echo "tag=$paper_id-$version" >> "$GITHUB_OUTPUT"
