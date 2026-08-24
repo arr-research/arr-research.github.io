@@ -1,0 +1,510 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=27mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem,xcolor}
+\usepackage[colorlinks=true,linkcolor=blue!55!black,citecolor=blue!55!black,urlcolor=blue!55!black]{hyperref}
+\hypersetup{
+ pdftitle={Mixed-Jet Rank Floors for Point-Span Higher Osculating Absorption},
+ pdfauthor={Lluis Eriksson},
+ pdfsubject={Algebraic geometry; osculating spaces; jets; interpolation},
+ pdfkeywords={osculating spaces, jet ampleness, fat points, tangent absorption}
+}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\theoremstyle{plain}
+\newcommand{\PP}{\mathbf P}
+\newcommand{\kk}{\mathbf k}
+\newcommand{\cO}{\mathcal O}
+\newcommand{\Span}{\operatorname{Span}}
+\newcommand{\Osc}{\operatorname{Osc}}
+
+\title{Mixed-Jet Rank Floors for Point-Span\\Higher Osculating Absorption}
+\author{Lluis Eriksson\\\small Independent researcher}
+\date{August 24, 2026\quad (version 0.2)}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Let $X$ be a smooth projective integral $d$-fold over an algebraically
+closed field, let $H$ be very ample, and use the complete embedding defined
+by $H^m$.  Fix $1\leq s\leq m$.  A nonempty finite reduced set
+$Z\subset X$ is point-span $s$-osculating-absorbing if the span $S_Z$ of
+its value evaluations contains the affine osculating space of order $s$ at
+every support.  Write
+\[
+ m+1=q(s+1)+r,\qquad 0\leq r\leq s,
+\]
+and put
+\[
+ B_{d,s}(m)=q\binom{d+s}{d}
+ +\begin{cases}0,&r=0,\\ \binom{d+r-1}{d},&r>0.\end{cases}
+\]
+We prove in arbitrary characteristic that
+\[
+ \dim S_Z,\ |Z|\geq B_{d,s}(m).
+\]
+The proof is scheme-theoretic.  Products of point separators isolate
+arbitrary mixed jets of total weight at most $m+1$, and discrete convexity
+selects full order-$s$ blocks plus one residual block.  The resulting
+heterogeneous rank certificate also applies to arbitrary jet-ample
+polarizations.  For $s=1$ the formula recovers the earlier growing first-jet
+bound.  Equality holds in every characteristic on rational normal curves,
+for every $s$, and on $\PP^d$ in the top-order regime $s=m$.  No implication
+from tangent absorption to the higher-order hypothesis is used or claimed.
+No classification or exhaustive priority claim is made.
+\end{abstract}
+
+\section{Statement and scope}
+
+Let $\kk$ be algebraically closed, let $X$ be smooth, projective, integral,
+and of dimension $d\geq1$, and let $H$ be very ample.  Write
+\[
+ \varphi_m:X\longrightarrow\PP(H^0(X,H^m)^*)
+\]
+for the complete embedding.  For a nonempty finite reduced set $Z\subset X$,
+set
+\[
+ S_Z=\operatorname{Im}\!\left(
+ H^0(Z,H^m|_Z)^*\longrightarrow H^0(X,H^m)^*\right).
+\]
+Equivalently, $S_Z$ is the span of the evaluation lines at the supports;
+this formulation makes no choice of fiber trivializations.
+For $p\in X$ and $a\geq0$, put
+\[
+ (a+1)p=\operatorname{Spec}(\cO_{X,p}/\mathfrak m_p^{a+1}),\qquad
+ \lambda_d(a)=\binom{d+a}{d},
+\]
+and set $\lambda_d(-1)=0$.
+
+The order-$a$ principal-parts evaluation is
+\[
+ j^a_p:H^0(X,H^m)\longrightarrow
+ H^0\!\left((a+1)p,H^m|_{(a+1)p}\right).
+\]
+We define the affine order-$a$ osculating space intrinsically by
+\[
+ \widehat\Osc^a_p(H^m)=\operatorname{Im}((j^a_p)^*)
+ \subset H^0(X,H^m)^*.
+\]
+This convention uses no ordinary derivatives or factorials.
+
+\medskip
+
+\begin{definition}
+Fix $1\leq s\leq m$.  The set $Z$ is
+\emph{point-span $s$-osculating-absorbing} for $H^m$ if
+\[
+ \widehat\Osc^s_p(H^m)\subseteq S_Z\qquad(p\in Z).
+\]
+\end{definition}
+
+Write uniquely
+\[
+ m+1=q(s+1)+r,\qquad q\geq1,\quad 0\leq r\leq s,
+\]
+and define
+\begin{equation}\label{eq:B}
+ B_{d,s}(m)=q\lambda_d(s)+\lambda_d(r-1).
+\end{equation}
+
+\begin{theorem}[Universal mixed-jet floor]\label{thm:main}
+Over an algebraically closed field of arbitrary characteristic, every
+nonempty finite reduced point-span $s$-osculating-absorbing set for the
+complete $H^m$-embedding satisfies
+\[
+ \dim S_Z\geq B_{d,s}(m),\qquad |Z|\geq B_{d,s}(m).
+\]
+\end{theorem}
+
+\begin{corollary}[First-order specialization]\label{cor:first}
+For $s=1$,
+\[
+ B_{d,1}(m)=
+ \left\lfloor\frac{m+1}{2}\right\rfloor(d+1)
+ +\begin{cases}1,&m\text{ even},\\0,&m\text{ odd}.\end{cases}
+\]
+Thus the formula recovers the growing first-jet bound of
+\cite{ErikssonARR2026}.
+\end{corollary}
+
+For fixed $d,s$,
+\[
+ B_{d,s}(m)=\frac{1}{s+1}\binom{d+s}{d}m+O_{d,s}(1).
+\]
+For $d\geq2$ the leading coefficient strictly increases with $s$, because
+\[
+ \frac{\binom{d+s+1}{d}/(s+2)}
+ {\binom{d+s}{d}/(s+1)}
+ =\frac{d+s+1}{s+2}>1.
+\]
+The hierarchy is therefore asymptotically stronger under the correspondingly
+stronger osculating hypothesis.
+
+\section{The annihilator criterion}
+
+Let $(s+1)Z=\coprod_{p\in Z}(s+1)p$.  Finite-scheme duality gives
+\[
+ S_Z^\perp=H^0(X,\mathcal I_Z\otimes H^m)
+\]
+and
+\[
+ \left(\sum_{p\in Z}\widehat\Osc^s_p(H^m)\right)^\perp
+ =H^0(X,\mathcal I_{(s+1)Z}\otimes H^m).
+\]
+
+\begin{lemma}[Higher-order kernel criterion]\label{lem:kernel}
+The set $Z$ is point-span $s$-osculating-absorbing if and only if
+\[
+ H^0(X,\mathcal I_Z\otimes H^m)
+ =H^0(X,\mathcal I_{(s+1)Z}\otimes H^m).
+\]
+\end{lemma}
+
+\begin{proof}
+The inclusion from right to left always holds because
+$\mathcal I_{(s+1)Z}\subseteq\mathcal I_Z$.  Absorption is equivalent to
+\[
+ \sum_{p\in Z}\widehat\Osc^s_p(H^m)\subseteq S_Z.
+\]
+Taking annihilators reverses this inclusion and supplies the converse
+inclusion between the displayed spaces of sections.
+\end{proof}
+
+The principal-parts filtration gives
+$\widehat\Osc^a_p(H^m)\subseteq\widehat\Osc^s_p(H^m)$ for $a\leq s$.
+Thus order-$s$ absorption contains every lower-order jet block.  The converse
+is not asserted.
+
+\section{Mixed-jet interpolation}
+
+\begin{lemma}[Full jets from powers]\label{lem:single}
+If $p\in X$ and $0\leq a\leq k$, then
+\[
+ H^0(X,H^k)\longrightarrow
+ H^0\!\left((a+1)p,H^k|_{(a+1)p}\right)
+\]
+is surjective.  Hence
+$\dim\widehat\Osc^a_p(H^k)=\lambda_d(a)$.
+\end{lemma}
+
+\begin{proof}
+Choose $u_0\in H^0(X,H)$ nonzero at $p$.  Very ampleness and smoothness give
+$u_1,\ldots,u_d$, vanishing at $p$, such that $x_i=u_i/u_0$ form a regular
+system of parameters.  For every multi-index $\alpha$ with $|\alpha|\leq a$,
+\[
+ u_0^{k-|\alpha|}u_1^{\alpha_1}\cdots u_d^{\alpha_d}
+\]
+has local representative $x^\alpha$ after trivializing by $u_0^k$.
+These monomials form a basis modulo $\mathfrak m_p^{a+1}$.  No
+differentiation is used.
+\end{proof}
+
+\begin{lemma}[Mixed-jet interpolation]\label{lem:mixed}
+Let $t\geq1$, let $p_1,\ldots,p_t$ be distinct points, let $a_i\geq0$, and put
+\[
+ K=\sum_{i=1}^t(a_i+1)-1.
+\]
+Then restriction is surjective:
+\[
+ H^0(X,H^K)\longrightarrow
+ \bigoplus_{i=1}^t
+ H^0\!\left((a_i+1)p_i,H^K|_{(a_i+1)p_i}\right).
+\]
+The same holds for $H^k$ in every degree $k\geq K$.
+\end{lemma}
+
+\begin{proof}
+For each $i\ne j$, choose
+$\ell_{ij}\in H^0(X,H)$ with
+$\ell_{ij}(p_j)=0$ and $\ell_{ij}(p_i)\ne0$, and set
+\[
+ P_i=\prod_{j\ne i}\ell_{ij}^{a_j+1}.
+\]
+It is a unit at $p_i$ and vanishes to the prescribed order at every other
+support.  Lemma~\ref{lem:single} realizes arbitrary order-$a_i$ data using
+$H^{a_i}$.  Multiplication by the unit $P_i$ is an automorphism of the
+truncated local algebra, so degree-$K$ sections realize arbitrary data at
+$p_i$ and zero data elsewhere.  Sum over $i$.
+
+For $k>K$, multiply by a section of $H^{k-K}$ nonzero at every support.
+It exists because $\kk$ is infinite and a finite union of proper linear
+subspaces cannot exhaust the section space.
+\end{proof}
+
+Over the complex numbers this is also the line-bundle specialization of
+\cite[Proposition~2.3]{BDRS1999}.  The direct proof records the exact
+specialization and is characteristic-free.  The interpolation statement itself
+is not claimed as new; the point here is its rank consequence under the
+absorption constraint and the ensuing optimization.
+
+\section{Convex packing and the rank proof}
+
+The interpolation lemma first gives a heterogeneous certificate, before
+optimization.
+
+\begin{proposition}[Mixed-block rank certificate]\label{prop:certificate}
+Under the hypotheses of Theorem~\ref{thm:main}, choose $t\geq1$ distinct supports
+$p_1,\ldots,p_t\in Z$ and orders $0\leq a_i\leq s$.  If
+\[
+ \sum_{i=1}^t(a_i+1)\leq m+1,
+\]
+then
+\[
+ \dim S_Z\geq\sum_{i=1}^t\lambda_d(a_i).
+\]
+\end{proposition}
+
+\begin{proof}
+Put $K=\sum_i(a_i+1)-1\leq m$.  Lemma~\ref{lem:mixed}, followed by degree
+raising when $K<m$, says that the selected infinitesimal neighborhoods impose
+independent conditions on $H^m$.  Dually, their osculating blocks form a direct
+sum of dimension $\sum_i\lambda_d(a_i)$.  Each block lies in $S_Z$ because
+$a_i\leq s$ and $Z$ is order-$s$ absorbing.
+\end{proof}
+
+\begin{lemma}[Discrete convex packing]\label{lem:packing}
+If $1\leq w_i\leq s+1$ and $\sum_iw_i\leq m+1$, then
+\[
+ \sum_i\binom{d+w_i-1}{d}\leq B_{d,s}(m).
+\]
+Equality is attained by $q$ weights $s+1$ and, if $r>0$, one weight $r$.
+\end{lemma}
+
+\begin{proof}
+Put $f(0)=0$ and $f(w)=\binom{d+w-1}{d}$ for $w\geq1$.  Its forward differences
+\[
+ f(w+1)-f(w)=\binom{d+w-1}{d-1}
+\]
+are nondecreasing for $w\geq1$, while $f(1)-f(0)=1$.  Moving one unit from a
+smaller block to a larger block below the cap $s+1$ does not decrease the
+total; a weight-one block disappears when it loses its unit.  Repetition packs
+the budget into full blocks and at most one residual block.  If the original total
+weight is smaller than $m+1$, first enlarge a nonfull block or append a
+weight-one block; either operation strictly increases the objective.  Thus an
+optimum uses the whole budget, and the packed pattern gives \eqref{eq:B}.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Put $n=|Z|$.  If $r=0$ and $q=1$, nonemptiness gives $n\geq1=q$.  Now
+suppose $r=0$, $q\geq2$, and $n\leq q-1$.  Then $n\geq1$, and the union of the full
+order-$s$ neighborhoods at all supports is independent in degree
+\[
+ (s+1)n-1\leq(s+1)(q-1)-1<m
+\]
+by Lemma~\ref{lem:mixed}, and remains so after raising degree to $m$.
+Its dual has dimension $n\lambda_d(s)$ and lies in $S_Z$ by absorption.
+This contradicts $\dim S_Z\leq n$, since $\lambda_d(s)>1$.  Hence $n\geq q$.
+
+If $r>0$ and $n\leq q$, the same contradiction applies because
+\[
+ (s+1)n-1\leq q(s+1)-1=m-r<m.
+\]
+Thus $n\geq q+1$.
+
+Choose $q$ supports with full order-$s$ blocks and, if $r>0$, one further
+support with an order-$(r-1)$ block.  Their mixed interpolation degree is
+\[
+ q(s+1)+r-1=m.
+\]
+Their independent dual spaces lie in $S_Z$ and have total dimension
+$B_{d,s}(m)$.  Therefore $\dim S_Z\geq B_{d,s}(m)$, and
+$|Z|\geq\dim S_Z$ because $S_Z$ is generated by $|Z|$ value lines.
+\end{proof}
+
+The certificate and packing argument do not intrinsically require a tensor
+power.  The following form records the more general input precisely.
+
+\begin{corollary}[Jet-ample polarization]\label{cor:jetample}
+Let $L$ be an $M$-jet ample line bundle on $X$, meaning that for every set of
+distinct points $p_i$ and positive integers $b_i$ with
+$\sum_i b_i=M+1$, the restriction map
+\[
+ H^0(X,L)\longrightarrow
+ \bigoplus_i H^0\!\left(b_i p_i,L|_{b_i p_i}\right)
+\]
+is surjective.  Fix $1\leq s\leq M$, write
+$M+1=Q(s+1)+R$ with $0\leq R\leq s$, and define $S_Z$ and the osculating
+spaces using $L$ in place of $H^m$.  If a nonempty finite reduced set $Z$ is
+point-span $s$-osculating-absorbing, then
+\[
+ \dim S_Z,\ |Z|\geq
+ Q\binom{d+s}{d}+\binom{d+R-1}{d},
+\]
+where the last summand is interpreted as zero when $R=0$.
+Over the complex numbers, repeated application of
+\cite[Proposition~2.3]{BDRS1999} gives this conclusion with $M=\ell a$ for
+$L=A^{\ell}$ whenever $A$ is $a$-jet ample and $1\leq s\leq\ell a$.
+Here $a\geq1$ and $\ell\geq1$ are integers.
+\end{corollary}
+
+\begin{proof}
+The stated jet-ampleness also gives surjectivity when $\sum_i b_i<M+1$:
+add one point outside the selected finite set with the missing positive
+weight, and then project away its jet target.  Such a point exists because
+$d\geq1$ and the algebraically closed field is infinite.  Thus every selected
+collection with $b_i=a_i+1\leq s+1$ and total weight at most $M+1$ is
+independent.  The support-threshold proof above applies verbatim with $M$ in
+place of $m$, including the separate case $Q=1,R=0$.  Selecting $Q$ full
+blocks and, when $R>0$, one residual block gives the displayed rank.  The
+last assertion is the tensor-product theorem cited above, iterated $\ell-1$
+times.
+\end{proof}
+
+\begin{proof}[Proof of Corollary~\ref{cor:first}]
+Divide $m+1$ by two.  An odd $m$ has no residual block; an even $m$ has one
+residual simple value.  Substitution in \eqref{eq:B} gives the formula.
+\end{proof}
+
+\section{Sharpness on the rational normal curve}
+
+\begin{theorem}[Exact curve minimum]\label{thm:curve}
+Let $X=\PP^1$, $H=\cO_{\PP^1}(1)$, and $1\leq s\leq m$.  The minimum size
+and minimum span dimension of a point-span $s$-osculating-absorbing set for
+the complete $m$th Veronese embedding are both $m+1$.
+\end{theorem}
+
+\begin{proof}
+Since $\lambda_1(a)=a+1$, Theorem~\ref{thm:main} gives
+$B_{1,s}(m)=q(s+1)+r=m+1$.
+
+Conversely, choose any $m+1$ distinct points $Z\subset\PP^1$.  A nonzero
+binary form of degree $m$ cannot vanish at all of them, so evaluation
+\[
+ H^0(\PP^1,\cO(m))\longrightarrow H^0(Z,\cO_Z(m))
+\]
+is an isomorphism.  Hence $S_Z=H^0(\PP^1,\cO(m))^*$, which contains every
+osculating space, and $\dim S_Z=|Z|=m+1$.
+\end{proof}
+
+There is a second exact regime in every dimension.
+
+\begin{theorem}[Exact top-order minimum]\label{thm:top-order}
+Let $X=\PP^d$, $H=\cO_{\PP^d}(1)$, and $s=m\geq1$.  The minimum size and
+minimum span dimension of a point-span $m$-osculating-absorbing set are both
+\(\binom{d+m}{d}\), over every algebraically closed field.
+\end{theorem}
+
+\begin{proof}
+Theorem~\ref{thm:main} gives the lower bound because $q=1$, $r=0$, and
+\(B_{d,m}(m)=\lambda_d(m)=\binom{d+m}{d}\).  Conversely, the evaluation
+lines of all closed points of $\PP^d$ span
+\(H^0(\PP^d,\cO(m))^*\): their annihilator would otherwise contain a
+nonzero homogeneous form vanishing identically on $\PP^d$.  Select a basis
+of evaluation lines and let $Z$ be its supports.  Then
+\(|Z|=\dim S_Z=\binom{d+m}{d}\) and $S_Z$ is the whole dual space, so it
+contains every order-$m$ osculating space.
+\end{proof}
+
+The exact replay uses rational Vandermonde matrices for
+$(m,s)=(3,1),(5,2),(8,3),(10,5)$.  It also exhaustively checks 250 finite
+convex-packing cases and two simplex-lattice fixtures in the top-order regime.
+These computations certify only the displayed finite fixtures and integer
+identities, not the universal theorem or priority.
+
+\section{Context and limitations}
+
+Jet ampleness encodes simultaneous interpolation on fat points.  A
+tensor-product generation result over the complex numbers appears in
+\cite{BDRS1999}.  Higher osculating spaces and fundamental forms are
+formulated through principal-parts sheaves over algebraically closed fields
+in \cite{MallavibarrenaPiene2024}; that is the intrinsic language used here.
+
+Osculating spaces, higher Gauss maps, and secant varieties have a substantial
+literature \cite{BallicoEtAl2004,BallicoFontanari2004,BernardiEtAl2009}.
+The Veronese literature in particular relates osculating secant defectivity
+to Hilbert functions of fat points.  These works provide context; this
+selective comparison does not establish priority for the value-span
+absorption floor \eqref{eq:B}.
+
+The authorial note B215 contains the order-two mixed interpolation pattern
+\cite{ErikssonB215}.  It is an antecedent, not independent validation.  The
+present argument removes its unrelated conditional framework, states the
+arbitrary-order absorption hypothesis, works in arbitrary characteristic,
+optimizes the closed formula, and proves curve sharpness.
+
+The limitations are material.
+\begin{itemize}
+\item The higher-order absorption hypothesis is explicit.  No implication
+from first-order tangent absorption to second- or higher-order absorption is
+asserted or used.
+\item The restriction $s\leq m$ ensures the full local rank in
+Lemma~\ref{lem:single}.  No formula for $s>m$ is asserted.
+\item Completeness of the $H^m$ system is used because all separator products
+must be available.  Arbitrary subsystems are outside the theorem.
+\item Equality is settled for the numerical minimum in dimension one and for
+$s=m$ on projective space.  No equality classification in the remaining
+higher-dimensional regimes is claimed; in particular, no nontrivial sharpness
+example is supplied here for $d\geq2$ and $s<m$.
+\item The literature search is selective, the replay is not a proof checker,
+and no independent human peer review has yet been performed.
+\end{itemize}
+
+\section{Conclusion}
+
+Once the higher-order hypothesis is stated explicitly, point-span
+osculating absorption has a uniform characteristic-free rank consequence.
+Very ampleness isolates mixed fat-point blocks of total weight at most
+$m+1$, and convex packing gives the explicit floor $B_{d,s}(m)$.  The same
+certificate yields a bound for arbitrary jet-ample polarizations.  The
+first-order result is recovered exactly, while the full hierarchy is sharp on
+rational normal curves and the top-order endpoint is sharp on projective
+space in every dimension.  Equality away from these regimes and the geometry
+of special higher Gauss fibers remain open.
+
+{\small
+\begin{thebibliography}{99}
+\bibitem{BallicoEtAl2004}
+E.~Ballico, C.~Bocci, E.~Carlini, and C.~Fontanari,
+\emph{Osculating spaces to secant varieties},
+arXiv:math/0406322 (2004).
+\url{https://arxiv.org/abs/math/0406322}
+
+\bibitem{BallicoFontanari2004}
+E.~Ballico and C.~Fontanari,
+\emph{On the osculatory behaviour of higher dimensional projective
+varieties}, arXiv:math/0406319 (2004).
+\url{https://arxiv.org/abs/math/0406319}
+
+\bibitem{BDRS1999}
+M.~C.~Beltrametti, S.~Di Rocco, and A.~J.~Sommese,
+\emph{On generation of jets for vector bundles},
+Rev. Mat. Complut. \textbf{12} (1999), 27--45.
+\url{https://doi.org/10.5209/rev_REMA.1999.v12.n1.17182}
+
+\bibitem{BernardiEtAl2009}
+A.~Bernardi, M.~V.~Catalisano, A.~Gimigliano, and M.~Id\`a,
+\emph{Secant varieties to osculating varieties of Veronese embeddings of
+$\PP^n$}, J. Algebra \textbf{321} (2009), 982--1004.
+\url{https://doi.org/10.1016/j.jalgebra.2008.10.020}
+
+\bibitem{ErikssonARR2026}
+L.~Eriksson,
+\emph{Characteristic-Free Bounds and Sharp Gauss-Fiber Examples for
+Point-Span Tangent Absorption},
+ARR-2026-19BXX42GM38K6VZ3, v1 (2026).
+\url{https://arr-research.github.io/papers/ARR-2026-19BXX42GM38K6VZ3/}
+
+\bibitem{ErikssonB215}
+L.~Eriksson,
+\emph{B215---Simultaneous second-jet interpolation raises the floor},
+public working note (2026),
+\href{https://github.com/lluiseriksson/hodge-conjecture-research-front/blob/main/proofs/B215-simultaneous-second-jet-interpolation-floor.md}{repository record B215}.
+
+\bibitem{MallavibarrenaPiene2024}
+R.~Mallavibarrena and R.~Piene,
+\emph{On fundamental forms and osculating bundles},
+Rend. Istit. Mat. Univ. Trieste \textbf{56} (2024), Art.~9, 21 pp.
+\url{https://doi.org/10.13137/2464-8728/36877}
+\end{thebibliography}
+}
+
+\end{document}
