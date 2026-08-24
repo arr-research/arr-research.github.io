@@ -1,0 +1,602 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{
+  pdftitle={Euler-Reduced Tjurina Floors for Osculating-Absorbing Gauss Fibres},
+  pdfauthor={Lluis Eriksson}
+}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\numberwithin{equation}{section}
+
+\newcommand{\kk}{\mathbb C}
+\newcommand{\PP}{\mathbb P}
+\newcommand{\cO}{\mathcal O}
+\newcommand{\cI}{\mathcal I}
+\newcommand{\m}{\mathfrak m}
+\newcommand{\Osc}{\operatorname{Osc}}
+\newcommand{\length}{\operatorname{length}}
+\newcommand{\ord}{\operatorname{ord}}
+
+\title{Euler-Reduced Tjurina Floors for\\
+Osculating-Absorbing Gauss Fibres}
+\author{Lluis Eriksson\\\small Independent researcher}
+\date{August 25, 2026\quad (working version 0.1)}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Let \(h\in\m^{s+1}\subset\kk[[x_1,\ldots,x_d]]\) have a finite
+Tjurina algebra.  Euler cancellation replaces \(h\), without changing its
+Tjurina ideal, by a generator of order at least \(s+2\).  Counting coefficient
+jets after this replacement gives the self-contained bound
+\[
+ \tau(h)\ge E_{d,s}:=\max_{K\ge0}
+ \left\{
+ \binom{d+K}{d}
+ -d\binom{d+K-s}{d}
+ -\binom{d+K-s-2}{d}
+ \right\},
+\]
+with out-of-range binomial coefficients interpreted as zero.  For plane
+germs the maximum is explicit:
+\[
+ E_{2,s}=\left\lfloor\frac{3s^2+4s-3}{4}\right\rfloor.
+\]
+This is exact, as follows from classical ordinary multiple-point families.
+
+We apply the count to scheme-theoretic Gauss fibres.  If the complete
+\(\cO_X(m)\) point span of the reduced fibre of a smooth hypersurface
+absorbs order \(s\), then every tangent-section germ belongs to
+\(\m^{s+1}\).  Consequently
+\[
+ \length(\Gamma_\eta)\ge
+ E_{d,s}|Z|\ge E_{d,s}\binom{d+m}{d}.
+\]
+For surfaces, a prescribed-jet construction realizes equality in the last
+bound at the explicit sufficient degree
+\(D\ge(s^2+2)\binom{m+2}{2}+1\).  Thus the plane Gauss-fibre floor is sharp
+under the stated absorption and extremal-support conditions.  The local
+count is elementary and may be folklore; priority is claimed only for the
+specific proved synthesis and application, not for every ingredient.
+\end{abstract}
+
+\section{Introduction and scope}
+
+For an isolated hypersurface germ \(h\), the Tjurina number
+\[
+ \tau(h)=\dim_\kk
+ \frac{\kk[[x_1,\ldots,x_d]]}
+ {(h,\partial_1h,\ldots,\partial_dh)}
+\]
+measures the length of its Tjurina algebra.  If
+\(h\in\m^{s+1}\), the immediate containment
+\((h,\partial h)\subseteq\m^s\) gives only
+\(\tau(h)\ge\binom{d+s-1}{d}\).  The purpose of this note is to record a
+stronger finite-jet count and use it to settle the corresponding sharp
+floor for point-span absorbed Gauss fibres in dimension two.
+
+The key observation is small but consequential.  In characteristic zero,
+the Euler combination removes the degree-\((s+1)\) part of \(h\) while leaving
+the Tjurina ideal unchanged.  A truncated coefficient count then remembers
+that the ideal has \(d\) generators of order at least \(s\) and one further
+generator of order at least \(s+2\).  Optimizing the truncation produces
+the number \(E_{d,s}\) above.
+
+In the plane, \(E_{2,s}\) agrees with the classical sharp minimum in the
+ordinary multiplicity-\((s+1)\) equisingularity class computed through the
+work of Brian\c{c}on--Granger--Maisonobe~\cite{BGM1988}; explicit attaining
+families are also discussed by Canino--Gimigliano--Id\`a
+\cite{CaninoEtAl2025,CaninoEtAlArxiv}.  Their results supply sharp examples;
+the elementary argument below supplies the lower bound for arbitrary
+isolated plane germs of the prescribed order.  We state this scope
+explicitly and make no claim that the abstract generator count was absent
+from all earlier commutative-algebra literature.
+
+The geometric application continues the scheme-theoretic Gauss-fibre
+framework of~\cite{ErikssonGauss2026}.  That paper identifies the local
+Gauss-fibre algebra with the Tjurina algebra and proves the earlier
+fat-point floor.  The exact reduced-support bound used here is from
+\cite{ErikssonDual2026,ErikssonTangent2026}.  We restate the needed
+definitions and arguments so that the new numerical step is transparent.
+
+Everything is over \(\kk=\mathbb C\).  In particular, division by \(s+1\)
+in the Euler reduction is legitimate.  We do not assert the same theorem in
+positive characteristic.
+
+\section{The Euler-reduced local bound}
+
+We use the convention
+\[
+ \binom nd=0\qquad\text{if }n<d.
+\]
+For integers \(d,s\ge1\) and \(K\ge0\), set
+\begin{equation}
+ E_{d,s}(K)=
+ \binom{d+K}{d}
+ -d\binom{d+K-s}{d}
+ -\binom{d+K-s-2}{d},
+\end{equation}
+and \(E_{d,s}=\max_{K\ge0}E_{d,s}(K)\).
+
+\begin{lemma}[Euler-reduced generator]\label{lem:euler}
+Let \(R=\kk[[x_1,\ldots,x_d]]\), let
+\(\m=(x_1,\ldots,x_d)\), and let \(h\in\m^{s+1}\).  Then
+\[
+ r=h-\frac1{s+1}\sum_{i=1}^d x_i\partial_i h
+ \in\m^{s+2}
+\]
+and
+\[
+ (h,\partial_1h,\ldots,\partial_dh)
+ =(r,\partial_1h,\ldots,\partial_dh).
+\]
+\end{lemma}
+
+\begin{proof}
+Writing \(h=\sum_{q\ge s+1}h_q\) with \(h_q\) homogeneous of degree \(q\),
+Euler's identity gives
+\[
+ r=\sum_{q\ge s+2}\left(1-\frac{q}{s+1}\right)h_q,
+\]
+so \(r\in\m^{s+2}\).  Both ideal containments in (2.2) follow directly
+from the displayed definition of \(r\).
+\end{proof}
+
+\begin{theorem}[Truncated-generator Tjurina floor]\label{thm:localfloor}
+Let \(h\in\m^{s+1}\subset R=\kk[[x_1,\ldots,x_d]]\), and assume that
+\(R/(h,\partial h)\) has finite length.  Then
+\[
+ \tau(h)\ge E_{d,s}.
+\]
+In particular,
+\[
+ \tau(h)\ge\binom{d+s}{d}-d.
+\]
+For \(d,s\ge2\), (2.4) strictly improves
+\(\binom{d+s-1}{d}\).
+\end{theorem}
+
+\begin{proof}
+Fix \(K\ge0\) and write \(A_K=R/\m^{K+1}\).  Its dimension is
+\(\binom{d+K}{d}\).  By Lemma~\ref{lem:euler}, the Tjurina ideal is
+generated by \(d\) elements \(\partial_i h\in\m^s\) and one element
+\(r\in\m^{s+2}\).
+
+In \(A_K\), the multiples of a fixed element of order at least \(s\) are
+spanned by coefficients of degree at most \(K-s\), a space of dimension
+\(\binom{d+K-s}{d}\).  Similarly, the multiples of \(r\) are spanned by a
+space of dimension at most \(\binom{d+K-s-2}{d}\).  We only need an upper
+bound on the sum of these images; possible syzygies can make it smaller,
+never larger.  Hence
+\[
+ \dim_\kk A_K/(h,\partial h)A_K\ge E_{d,s}(K).
+\]
+The Tjurina algebra surjects onto this truncated quotient, proving the
+inequality for every \(K\), and therefore (2.3).
+
+For large \(K\), the degree-\(d\) leading coefficient of \(E_{d,s}(K)\) is
+negative, so the maximum is finite.  Taking \(K=s\) gives (2.4).  Its gain
+over the fat-point count is
+\[
+ \binom{d+s-1}{d-1}-d>0
+\]
+when \(d,s\ge2\).
+\end{proof}
+
+\begin{remark}
+The proof uses only generator orders after the Euler cancellation.  It does
+not require a Milnor-number inequality, weighted homogeneity, or an
+assumption on the tangent cone.  The finite-colength hypothesis is needed
+only so that \(\tau(h)\) is finite.
+\end{remark}
+
+For context, without the lower-order correction caused by Euler reduction,
+the same argument would subtract
+\(\binom{d+K-s-1}{d}\) instead of the last term in (2.1).  The extra order
+is essential for the exact plane answer.
+
+\begin{proposition}[Asymptotic form]\label{prop:asymptotic}
+For fixed \(d\ge2\), as \(s\to\infty\),
+\[
+ E_{d,s}=c_d^{\mathrm{gen}}s^d+O_d(s^{d-1}),
+ \qquad
+ c_d^{\mathrm{gen}}=
+ \frac{d+1}{d!\left((d+1)^{1/(d-1)}-1\right)^{d-1}}.
+\]
+\end{proposition}
+
+\begin{proof}
+For \(K<s\),
+\[
+ E_{d,s}(K)=\binom{d+K}{d}
+ \leq \frac{s^d}{d!}+O_d(s^{d-1}).
+\]
+For \(K=s+\alpha s\), division of (2.1) by \(s^d\) gives, uniformly for
+\(\alpha\) in a bounded interval, the limiting function
+\[
+ \phi_d(\alpha)=\frac{(1+\alpha)^d-(d+1)\alpha^d}{d!},
+ \qquad \alpha\ge0.
+\]
+Its derivative at zero is positive, so its maximum is strictly greater
+than \(1/d!\).  Thus the range \(K<s\) is not maximizing for all sufficiently
+large \(s\).  If \(K/s\to\infty\), the normalized expression is eventually
+negative, whereas \(K=s\) gives a positive multiple of \(s^d\); hence every
+maximizing sequence has \(K=O_d(s)\).  Uniform binomial expansion on the
+remaining bounded range gives the upper estimate by maximizing
+\(\phi_d\).  Conversely, choosing the nearest integer to
+\(s(1+\alpha_d)\) gives the matching lower estimate, where the unique
+maximizer is
+\[
+ \alpha_d=\left((d+1)^{1/(d-1)}-1\right)^{-1}.
+\]
+Substitution and integer rounding give (2.5), with an error of order
+\(s^{d-1}\).
+\end{proof}
+
+\section{The exact plane floor}
+
+\begin{theorem}[Universal plane bound]\label{thm:plane}
+Let \(h\in\kk[[x,y]]\) define an isolated plane curve singularity and
+assume \(h\in\m^{s+1}\).  Then
+\begin{equation}
+ \tau(h)\ge
+ \left\lfloor\frac{3s^2+4s-3}{4}\right\rfloor.
+\end{equation}
+The bound is sharp for every \(s\ge1\).
+\end{theorem}
+
+\begin{proof}
+For \(K<s\), (2.1) is \(\binom{K+2}{2}\).  For \(K=s+t\), \(t\ge0\), it is
+\[
+ E_{2,s}(s+t)
+ =\frac{s^2+2st-2t^2+3s-2t-2}{2}.
+\]
+The concave quadratic is maximized at the integer or integers nearest
+\((s-1)/2\).  Comparing with the range \(K<s\) yields
+\[
+ E_{2,s}=\left\lfloor\frac{3s^2+4s-3}{4}\right\rfloor,
+\]
+so Theorem~\ref{thm:localfloor} proves (3.1).
+
+Set \(a=s+1\).  If \(a=2k\), take
+\[
+ h=x^{2k}+y^{2k}+x^{k+1}y^k;
+\]
+if \(a=2k+1\), take
+\[
+ h=x^{2k+1}+y^{2k+1}+x^{k+1}y^{k+1}.
+\]
+These are ordinary multiplicity-\(a\) germs.  The classical computation
+\cite{BGM1988,CaninoEtAlArxiv} gives respectively
+\[
+ \tau=3k^2-k-1,
+ \qquad
+ \tau=3k^2+2k-1,
+\]
+which is exactly the right-hand side of (3.1).  The case \(s=1\) is also
+included, with \(\tau=1\).
+\end{proof}
+
+\medskip
+\begin{remark}[Literature boundary]
+Writing \(a=s+1\), the number in (3.1) is
+\[
+ \left\lfloor\frac{3a^2-2a-4}{4}\right\rfloor.
+\]
+It is already classical as the minimum in the ordinary multiplicity-\(a\)
+class.  The role of the families above is therefore sharpness, not novelty.
+The lower bound here is obtained for arbitrary isolated plane germs by the
+Euler-reduced coefficient count.  We use conservative attribution because
+the elementary local estimate may admit formulations elsewhere.
+\end{remark}
+
+\section{Osculating absorption and Gauss fibres}
+
+Let \(X^d\subset\PP^{d+1}_\kk\) be a smooth non-linear hypersurface and
+let
+\[
+ \gamma_X:X\longrightarrow X^\vee
+\]
+be its Gauss morphism.  For a tangent hyperplane
+\(\eta=[W]\in X^\vee\), let \(\Gamma_\eta\) be the scheme-theoretic fibre
+and \(Z=(\Gamma_\eta)_{\mathrm{red}}\).  Fix \(m\ge1\), put
+\(H=\cO_X(1)\), and define
+\[
+ S_Z=\operatorname{Im}\left(
+ H^0(Z,H^m|_Z)^*\longrightarrow H^0(X,H^m)^*\right).
+\]
+The affine order-\(s\) osculating block is
+\[
+ \widehat\Osc^s_p(H^m)=\operatorname{Im}\left(
+ H^0((s+1)p,H^m|_{(s+1)p})^*
+ \longrightarrow H^0(X,H^m)^*\right).
+\]
+
+\begin{definition}
+For \(1\le s\le m\), the fibre support \(Z\) is
+\emph{point-span \(s\)-osculating-absorbing} if
+\[
+ \widehat\Osc^s_p(H^m)\subseteq S_Z
+ \qquad(p\in Z).
+\]
+\end{definition}
+
+We use two established facts from
+\cite{ErikssonGauss2026,ErikssonDual2026}.  First, if \(h_p\) is a local
+equation of the tangent section \(X\cap W\) at \(p\), then
+\begin{equation}
+ \widehat{\cO}_{\Gamma_\eta,p}
+ \cong\kk[[z_1,\ldots,z_d]]/(h_p,\partial h_p).
+\end{equation}
+Second, point-span order-\(s\) absorption implies
+\begin{equation}
+ h_p\in\m_p^{s+1}\quad(p\in Z),
+ \qquad |Z|\ge N_{d,m}:=\binom{d+m}{d}.
+\end{equation}
+For completeness, the first assertion in (4.2) follows by multiplying a
+linear equation of \(W\) by a section of \(H^{m-1}\) that is a unit at \(p\),
+and then reversing the osculating-span containment under annihilators.
+
+\begin{theorem}[Euler-reduced Gauss-fibre floor]\label{thm:gauss}
+Assume that \(Z\) is point-span \(s\)-osculating-absorbing in the complete
+\(H^m\) embedding, where \(1\le s\le m\).  Then
+\begin{equation}
+ \length(\Gamma_\eta)
+ \ge E_{d,s}|Z|
+ \ge E_{d,s}\binom{d+m}{d}.
+\end{equation}
+For \(d=2\), this becomes
+\begin{equation}
+ \length(\Gamma_\eta)\ge
+ \left\lfloor\frac{3s^2+4s-3}{4}\right\rfloor
+ \binom{m+2}{2}.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Equations (4.1)--(4.2) and Theorem~\ref{thm:localfloor} give
+\(\length(\Gamma_\eta)=\sum_{p\in Z}\tau(h_p)\ge E_{d,s}|Z|\).
+The support floor in (4.2) proves the second inequality.  Formula (4.4)
+follows from Theorem~\ref{thm:plane}.
+\end{proof}
+
+Already \(K=s\) in the local theorem replaces the former factor
+\(\binom{d+s-1}{d}\) by \(\binom{d+s}{d}-d\).  Thus (4.3) is strictly
+stronger than the earlier fat-point floor whenever \(d,s\ge2\).
+
+\section{Sharp global realization for surfaces}
+
+We now show that (4.4) is an exact geometric floor at a conservative degree.
+The interpolation architecture follows~\cite{ErikssonGauss2026}; the new
+choice is to prescribe the sharp germs from Theorem~\ref{thm:plane}.
+
+\begin{theorem}[Sharp absorbed surface fibres]\label{thm:realization}
+Let \(m,s\) be integers with \(1\le s\le m\), put
+\[
+ N=\binom{m+2}{2},
+ \qquad T_s=\left\lfloor\frac{3s^2+4s-3}{4}\right\rfloor,
+\]
+and suppose
+\begin{equation}
+ D\ge(s^2+2)N+1.
+\end{equation}
+Then there exist a smooth integral surface
+\(X\subset\PP^3\) of degree \(D\), a plane \(W\), and
+\(\eta=[W]\in X^\vee\) such that:
+\begin{enumerate}
+\item \(Z=(\gamma_X^{-1}(\eta))_{\mathrm{red}}\) consists of exactly \(N\)
+      points;
+\item \(\dim S_Z=N<h^0(X,H^m)\), and \(Z\) is point-span
+      \(s\)-osculating-absorbing;
+\item every local tangent-section germ has multiplicity \(s+1\) and
+      Tjurina number \(T_s\);
+\item
+\[
+ \length(\Gamma_\eta)=T_sN.
+\]
+\end{enumerate}
+Consequently the bound (4.4) is sharp.  The degree threshold (5.1) is
+sufficient and is not asserted to be minimal.
+\end{theorem}
+
+\begin{proof}
+Choose \(N\) distinct points \(Z\subset W\cong\PP^2\) for which evaluation
+is an isomorphism
+\begin{equation}
+ H^0(W,\cO_W(m))\xrightarrow{\sim}H^0(Z,\cO_Z(m)).
+\end{equation}
+Such a set exists by choosing a basis among point-evaluation functionals.
+
+At every point prescribe the germ from Theorem~\ref{thm:plane} with the
+appropriate parity of \(s+1\).  It has Milnor number \(s^2\), because it is
+an ordinary multiplicity-\((s+1)\) plane singularity, and it has Tjurina
+number \(T_s\).  An isolated hypersurface germ is contact
+\((\tau+1)\)-determined~\cite[Corollary~2.24]{GLS2007}.  It is therefore
+enough to prescribe jets through order
+\[
+ a=s^2+1.
+\]
+
+For distinct points \(p_1,\ldots,p_N\) and nonnegative jet orders \(a_i\),
+the elementary separator product gives surjectivity
+\[
+ H^0(\PP^2,\cO(k))\longrightarrow
+ \bigoplus_i\cO_{\PP^2,p_i}/\m_{p_i}^{a_i+1}
+\]
+whenever \(k\ge\sum_i(a_i+1)-1\): multiply an order-\(a_i\) local
+interpolant by
+\(\prod_{j\ne i}\ell_{ij}^{a_j+1}\), where \(\ell_{ij}\) vanishes at
+\(p_j\) and is nonzero at \(p_i\).  Hence a degree-\(D\) plane equation
+with all prescribed \(a\)-jets exists under (5.1).
+
+Let \(f_*\) be one such equation and
+\[
+ V=H^0(W,\cI_{(a+1)Z}(D)),
+ \qquad \mathcal A=f_*+V.
+\]
+For \(u\in W\setminus Z\), the product
+\[
+ A_u=\prod_{p\in Z}\ell_{p,u}^{a+1}
+\]
+has degree \((a+1)N=(s^2+2)N\), vanishes to the required orders at \(Z\),
+and is a unit at \(u\).  Since (5.1) leaves at least one further degree,
+\(V\) generates first jets at \(u\).  The incidence of members singular at
+some \(u\in W\setminus Z\) has fibre codimension \(3>2=\dim W\).
+Consequently the closure of its image in \(\mathcal A\) is proper.  Thus a
+general \(f\in\mathcal A\) is smooth away from \(Z\), and finite contact
+determinacy gives exactly the prescribed germs at \(Z\).
+
+Embed \(W=V(y)\) in \(\PP^3\), lift \(f\) independently of \(y\), and put
+\[
+ F_G=f+yG,
+ \qquad G\in H^0(\PP^3,\cO(D-1)).
+\]
+A general \(G\), chosen nonzero at every point of \(Z\), makes
+\(X=V(F_G)\) smooth: on \(W\setminus Z\) this follows from the choice of
+\(f\); at \(Z\), \(dF_G=G(p)\,dy\); and off \(W\) the first-jet incidence
+has fibre codimension \(4>3=\dim\PP^3\), so the closure of its image in the
+space of \(G\)'s is proper.  The smooth hypersurface is connected and hence
+integral.
+
+The section \(X\cap W=V(f)\) has singular locus exactly \(Z\).  A point of
+\(X\) maps to \([W]\) precisely when it lies on \(W\) and is singular on
+that section, so the reduced Gauss fibre is exactly \(Z\).  Locally on \(X\),
+\(y=-f/G\), which is contact equivalent to the prescribed germ.
+
+Because (5.1) implies \(D>m\), restriction identifies degree-\(m\) ambient
+forms with \(H^0(X,H^m)\).  If such a form vanishes on \(Z\), (5.2) says its
+restriction to \(W\) is zero, hence it is divisible by \(y\).  Since
+\(y|_X\) has order \(s+1\) at every support, the reverse-annihilator argument
+gives point-span order-\(s\) absorption.  Equation (5.2) also gives
+\(\dim S_Z=N\), and this span is proper because
+\(h^0(X,H^m)=\binom{m+3}{3}>N\).  Finally, (4.1) and the prescribed
+Tjurina numbers yield \(\length(\Gamma_\eta)=T_sN\).
+\end{proof}
+
+\medskip
+\section{Comparisons, reproducibility, and limitations}
+
+Liu proved \(\mu/\tau\le d\) for isolated hypersurface singularities
+\cite{Liu2018}; together with \(\mu\ge s^d\), this gives
+\(\tau\ge\lceil s^d/d\rceil\).  For plane curves, Almir\'on proved the
+strict inequality \(\mu/\tau<4/3\)~\cite{Almiron2022}.  These are important
+comparisons, but they are not used in the proof of
+Theorem~\ref{thm:localfloor}.  The plane bound (3.1) retains an additional
+linear term that the ratio estimate alone does not recover.
+
+A recent preprint of Ma--Zuo~\cite{MaZuo2026} announces sharper universal
+dimension-dependent asymptotic ratios in several dimensions.  We do not
+use that preprint, and we do not treat it as externally consolidated.  The
+present estimate is instead a direct, finite-jet generator count and gives
+an exact geometric answer in dimension two.
+
+The accompanying replays use exact integer combinatorics, exact
+\(\mathbb Q\)-Gröbner bases, and sparse modular linear algebra.  They check
+the optimized formula for
+\(1\le d\le8\), \(1\le s\le20\), verify strict improvement over the former
+fat-point floor on that grid, and evaluate local quotient fixtures over two
+large prime fields.  For the sharp plane family, exact Gröbner bases over
+\(\mathbb Q\) verify \(1\le s\le12\).  These computations certify only the
+displayed fixtures; the proofs above establish the general statements.
+
+There are three deliberate limitations.  First, the exact global
+realization is proved only for surfaces; the higher-dimensional floor
+need not be sharp.  Second, the degree in (5.1) is a transparent separator
+bound, not an optimized interpolation threshold.  Third, no
+positive-characteristic version is claimed because Euler reduction divides
+by \(s+1\).
+
+\section{Conclusion}
+
+Euler cancellation exposes one further vanishing order in the Tjurina
+ideal.  Optimized after truncation, that single order raises the local and
+global Gauss-fibre floors substantially.  In the plane it yields the exact
+value
+\[
+ \left\lfloor\frac{3s^2+4s-3}{4}\right\rfloor
+\]
+per support, and prescribed jets realize equality simultaneously at the
+smallest support allowed by point-span absorption.  The higher-dimensional
+quantity \(E_{d,s}\), its possible sharpness, and lower degree realizations
+remain open.
+
+\begin{thebibliography}{99}
+
+\bibitem{Almiron2022}
+P.~Almir\'on,
+\emph{On the quotient of Milnor and Tjurina numbers for two-dimensional
+isolated hypersurface singularities},
+Math. Nachr. \textbf{295} (2022), 1254--1263.
+\href{https://doi.org/10.1002/mana.202100371}{doi:10.1002/mana.202100371}.
+
+\bibitem{BGM1988}
+J.~Brian\c{c}on, M.~Granger, and P.~Maisonobe,
+\emph{Le nombre de modules du germe de courbe plane \(x^a+y^b=0\)},
+Math. Ann. \textbf{279} (1988), 535--551.
+\href{https://doi.org/10.1007/BF01456286}{doi:10.1007/BF01456286}.
+
+\bibitem{CaninoEtAl2025}
+S.~Canino, A.~Gimigliano, and M.~Id\`a,
+\emph{On the Jacobian scheme of a plane curve},
+Comm. Algebra \textbf{53} (2025), 582--592.
+\href{https://doi.org/10.1080/00927872.2024.2384056}
+{doi:10.1080/00927872.2024.2384056}.
+
+\bibitem{CaninoEtAlArxiv}
+S.~Canino, A.~Gimigliano, and M.~Id\`a,
+\emph{On the Jacobian scheme of a plane curve}, arXiv:2302.07042v2 (2024),
+especially Section~5.
+\url{https://arxiv.org/abs/2302.07042}.
+
+\bibitem{ErikssonGauss2026}
+L.~Eriksson,
+\emph{Fat Gauss Fibres and Tjurina--Milnor Defects Forced by Osculating
+Absorption}, ARR-2026-2MZWECWVEN97ARVQ, v1 (2026).
+\url{https://arr-research.github.io/papers/ARR-2026-2MZWECWVEN97ARVQ/}.
+
+\bibitem{ErikssonDual2026}
+L.~Eriksson,
+\emph{Exact multiplicity floors for dual singularities from absorbing Gauss
+fibres}, ARR-2026-0WAPCGQHNC82S8VJ, v1 (2026).
+\url{https://arr-research.github.io/papers/ARR-2026-0WAPCGQHNC82S8VJ/}.
+
+\bibitem{ErikssonTangent2026}
+L.~Eriksson,
+\emph{The exact rank floor for point-span tangent absorption in arbitrary
+characteristic}, ARR-2026-2MHNZRRJP49Y9SWP, v3 (2026).
+\url{https://arr-research.github.io/papers/ARR-2026-2MHNZRRJP49Y9SWP/versions/v3/}.
+
+\bibitem{GLS2007}
+G.-M.~Greuel, C.~Lossen, and E.~Shustin,
+\emph{Introduction to Singularities and Deformations},
+Springer Monographs in Mathematics, Springer, 2007.
+\href{https://doi.org/10.1007/3-540-28419-2}{doi:10.1007/3-540-28419-2}.
+
+\bibitem{Liu2018}
+Y.~Liu,
+\emph{Milnor and Tjurina numbers for a hypersurface germ with isolated
+singularity},
+C. R. Math. Acad. Sci. Paris \textbf{356} (2018), 963--966.
+\href{https://doi.org/10.1016/j.crma.2018.07.004}
+{doi:10.1016/j.crma.2018.07.004}.
+
+\bibitem{MaZuo2026}
+X.~Ma and Y.~Zuo,
+\emph{On the quotient of Milnor and Tjurina numbers},
+arXiv:2604.17757v1 (2026).
+\url{https://arxiv.org/abs/2604.17757}.
+
+\end{thebibliography}
+
+\end{document}
