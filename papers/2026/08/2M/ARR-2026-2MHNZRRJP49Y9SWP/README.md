@@ -14,10 +14,11 @@ Fattening, and Common-Tangent Extremizers*.
   that PDF. Mathematical typography may be degraded; verify against the
   canonical source and PDF.
 - `src/repro/` preserves exact-arithmetic Python replays, deterministic JSON
-  results, the clean final LaTeX log, build instructions, release notes, and
-  the separate Codex audit summary.
-- `metadata.json`, `PROVENANCE.json`, `LICENSES.json`, `CITATION.cff`,
-  `MANIFEST.sha256`, and `VERIFICATION.md` describe this exact version.
+  results, build instructions, release notes, and the separate Codex audit
+  summary. The clean final LaTeX log is preserved in the release bundle.
+- `metadata.json`, `PROVENANCE.json`, `LICENSES.json`, `CITATION.cff`, and
+  `VERIFICATION.md` describe this exact version. ARR generates
+  `MANIFEST.sha256` for the immutable release bundle.
 
 ## Evidence labels
 

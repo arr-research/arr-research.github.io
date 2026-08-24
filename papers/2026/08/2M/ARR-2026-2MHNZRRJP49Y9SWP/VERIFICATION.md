@@ -15,8 +15,9 @@ Protocol: `ARR-VERIFY-1.0`
 - All 9 pages were rendered to PNG and visually inspected for cropping,
   overlap, missing glyphs, unreadable mathematics, and broken layout.
 - `paper.md` and `paper.txt` were mechanically extracted from this exact PDF.
-- The historical root log was excluded; only the clean
-  `src/repro/exact_floor_v06.log` is preserved.
+- The historical root log was excluded. The clean final log was inspected and
+  is preserved in the immutable release bundle rather than the Git source
+  tree.
 
 ## Exact replay — pass
 
