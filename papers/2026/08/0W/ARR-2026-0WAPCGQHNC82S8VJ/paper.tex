@@ -1,0 +1,650 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{
+  pdftitle={Exact Multiplicity Floors for Dual Singularities from Absorbing Gauss Fibres},
+  pdfauthor={Lluis Eriksson}
+}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\kk}{\mathbb C}
+\newcommand{\PP}{\mathbb P}
+\newcommand{\cO}{\mathcal O}
+\newcommand{\cI}{\mathcal I}
+\newcommand{\m}{\mathfrak m}
+\newcommand{\Osc}{\operatorname{Osc}}
+\newcommand{\mult}{\operatorname{mult}}
+\newcommand{\Sing}{\operatorname{Sing}}
+\newcommand{\Span}{\operatorname{Span}}
+
+\title{Exact Multiplicity Floors for Dual Singularities\\
+from Absorbing Gauss Fibres}
+\author{Lluis Eriksson\\\small Independent researcher}
+\date{August 24, 2026\quad (version 1.0)}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Let $X^d\subset\PP^{d+1}_{\mathbb C}$ be a smooth hypersurface, let
+$\gamma_X:X\to X^\vee$ be its Gauss map, and let $Z$ be the reduced fibre
+over a tangent hyperplane $W$.  In the complete $\cO_X(m)$ embedding, assume
+that the span of $Z$ contains the order-$s$ osculating space at every support,
+where $1\leq s\leq m$.  We prove the sharp dual-multiplicity floor
+\[
+ \mult_W(X^\vee)\geq s^d|Z|
+ \geq s^d\binom{d+m}{d}.
+\]
+The first inequality is local and forced by absorption: the equation of $W$
+restricts to order at least $s+1$ at every point of the fibre.  Each isolated
+singularity of $X\cap W$ therefore has Milnor number at least $s^d$, while
+the classical multiplicity--Milnor formula of Dimca, subsequently extended
+by Parusi\'nski, identifies the multiplicity of the dual with the sum of
+these Milnor numbers.  The number of analytic branches of
+$X^\vee$ at $W$ is $|Z|$, so it has the same binomial lower floor.  When
+$m\geq2s+1$, we also show that the rank-sensitive term from the predecessor
+paper supplies no stricter inequality here, because a Gauss fibre lies in one
+hyperplane.
+
+The uniform bounds are attained simultaneously.  For every $(d,m,s)$ we construct a
+smooth integral hypersurface with exactly
+$\binom{d+m}{d}$ points in one Gauss fibre; their point span is proper and
+order-$s$ absorbing, and the corresponding hyperplane section has an ordinary
+isolated singularity of multiplicity $s+1$ at each point and no others.  The
+dual point has exactly that many branches, affine tangent-cone cycle
+$s^d\sum_{p\in Z}[T_{[W]}(p^\perp)]$, and multiplicity
+$s^d\binom{d+m}{d}$.  For $s=1$ its tangent cone is a reduced arrangement of
+distinct hyperplanes.  The construction is explicit only up to nonempty open
+choices; no minimal hypersurface degree, analytic classification, or
+exhaustive priority claim is made.
+\end{abstract}
+
+\section{Statement and scope}
+
+Let $X^d\subset\PP^{d+1}_{\kk}$ be a smooth hypersurface of degree $D\geq2$,
+let $H=\cO_X(1)$, and let
+\[
+ \gamma_X:X\longrightarrow (\PP^{d+1})^\vee
+\]
+be the Gauss morphism.  Its image is the dual hypersurface $X^\vee$.
+For $\eta\in X^\vee$, write $W_\eta\subset\PP^{d+1}$ for the corresponding
+hyperplane and
+\[
+ Z_\eta=\bigl(\gamma_X^{-1}(\eta)\bigr)_{\mathrm{red}}.
+\]
+
+Fix $m\geq1$.  For a nonempty finite reduced $Z\subset X$, let
+\[
+ S_Z=\operatorname{Im}\!\left(
+ H^0(Z,H^m|_Z)^*\longrightarrow H^0(X,H^m)^*\right).
+\]
+For $p\in X$ and $a\geq0$, principal-parts evaluation gives the affine
+osculating block
+\[
+ \widehat\Osc^a_p(H^m)=\operatorname{Im}\!\left(
+ H^0((a+1)p,H^m|_{(a+1)p})^*\longrightarrow H^0(X,H^m)^*\right).
+\]
+
+\begin{definition}
+For $1\leq s\leq m$, the set $Z$ is
+\emph{point-span $s$-osculating-absorbing} if
+\[
+ \widehat\Osc^s_p(H^m)\subseteq S_Z\qquad(p\in Z).
+\]
+\end{definition}
+
+Put
+\[
+ N_{d,m}=\binom{d+m}{d}.
+\]
+
+\begin{theorem}[Sharp dual-multiplicity floor]\label{thm:floor}
+Let $\eta\in X^\vee$ and $Z=Z_\eta$.  If $Z$ is point-span
+$s$-osculating-absorbing for the complete $H^m$ embedding, then:
+\begin{enumerate}
+\item $X^\vee$ has exactly $|Z|$ analytic branches at $\eta$ and
+\[
+ |Z|\geq N_{d,m};
+\]
+\item for every $p\in Z$, the germ of $X\cap W_\eta$ has multiplicity at
+least $s+1$ and Milnor number $\mu_p\geq s^d$;
+\item
+\[
+ \mult_\eta(X^\vee)=\sum_{p\in Z}\mu_p
+ \geq s^d|Z|\geq s^dN_{d,m};
+\]
+\item as a cycle in $T_\eta((\PP^{d+1})^\vee)$, the affine tangent cone is
+\[
+ C_\eta(X^\vee)=\sum_{p\in Z}\mu_p[T_\eta(p^\perp)].
+\]
+\end{enumerate}
+\end{theorem}
+
+\begin{theorem}[Simultaneous sharpness]\label{thm:sharpness}
+For every $d,m\geq1$, every $1\leq s\leq m$, and every
+\[
+ D\geq(s+2)N_{d,m}+1,
+\]
+there exist a smooth integral degree-$D$ hypersurface
+$X^d\subset\PP^{d+1}$, a hyperplane $W$, and
+$Z=(\gamma_X^{-1}([W]))_{\mathrm{red}}$ such that
+\[
+ |Z|=\dim S_Z=N_{d,m}<h^0(X,H^m),
+\]
+$Z$ is point-span $s$-osculating-absorbing, and $X\cap W$ has precisely the
+points of $Z$ as singularities.  At every $p\in Z$ the section singularity is
+ordinary of multiplicity $s+1$, so
+\[
+ \mu_p=s^d,\qquad
+ \mult_{[W]}(X^\vee)=s^dN_{d,m},
+\]
+and
+\[
+ C_{[W]}(X^\vee)=s^d\sum_{p\in Z}[T_{[W]}(p^\perp)].
+\]
+In particular, every inequality in Theorem~\ref{thm:floor} is sharp.  When
+$s=1$, the $N_{d,m}$ branches are smooth and
+the tangent cone is the reduced union of the distinct hyperplanes $p^\perp$.
+\end{theorem}
+
+The multiplicity identity used here is classical
+\cite{Dimca1986,Parusinski1991}; Dimca--Ilardi use the same bridge to study
+nodal hyperplane sections and normal-crossing points of duals
+\cite{DimcaIlardi2024}.  Accordingly, the factor $s^d$ is presented as an
+explicit local consequence of that classical theory, not as a new general
+principle about dual multiplicities.  The contribution isolated here is the
+combination with point-span absorption: the resulting sharp binomial floor
+and the exact dual geometry of equality
+examples with proper point span.  This comparison is selective, not a
+priority certification.
+
+\section{Gauss fibres and branches}
+
+\begin{lemma}[Normalization by the Gauss map]\label{lem:normalization}
+The Gauss morphism $\gamma_X:X\to X^\vee$ is finite and birational.  Hence it
+is the normalization of $X^\vee$, and the number of analytic branches of
+$X^\vee$ at $\eta$ equals $|Z_\eta|$.
+\end{lemma}
+
+\begin{proof}
+If $F$ defines $X$, its first partial derivatives have no common zero on $X$
+because $X$ is smooth.  They define $\gamma_X$ and give
+\[
+ \gamma_X^*\cO_{X^\vee}(1)=\cO_X(D-1),
+\]
+which is ample.  A positive-dimensional fibre would make this line bundle
+trivial on a positive-dimensional complete subvariety, contradicting
+ampleness.  Thus $\gamma_X$ is finite.  Projective biduality identifies the
+unique tangency point over a general smooth point of $X^\vee$, so the map is
+birational.  Since $X$ is smooth and therefore normal, it is the
+normalization.  Complex algebraic local rings are excellent, normalization
+commutes with completion, and each completed local ring above $\eta$ is a
+power-series domain.  The normalization fibre therefore indexes the analytic
+branches.
+\end{proof}
+
+The equality
+\[
+ \Sing(X\cap W_\eta)=Z_\eta
+\]
+holds set-theoretically: a point of the hyperplane section is singular exactly
+when $W_\eta$ is tangent to $X$ there.  Lemma~\ref{lem:normalization} makes
+this set finite, so all section singularities are isolated.
+
+\section{Absorption forces high contact}
+
+\begin{lemma}[Local annihilator consequence]\label{lem:annihilator}
+If $Z$ is point-span $s$-osculating-absorbing and
+$a\in H^0(X,\cI_Z\otimes H^m)$, then
+\[
+ a_p\in\m_{X,p}^{s+1}H^m_p\qquad(p\in Z).
+\]
+\end{lemma}
+
+\begin{proof}
+The annihilator of $S_Z$ is $H^0(X,\cI_Z\otimes H^m)$.  The annihilator of
+$\widehat\Osc^s_p(H^m)$ consists of sections whose germ vanishes modulo
+$\m_{X,p}^{s+1}$.  The inclusion
+$\widehat\Osc^s_p(H^m)\subseteq S_Z$ reverses under annihilators and gives the
+claim.
+\end{proof}
+
+\begin{proposition}[Contact along an absorbing Gauss fibre]
+\label{prop:contact}
+Let $\ell_\eta$ be a linear equation for $W_\eta$.  Under the hypotheses of
+Theorem~\ref{thm:floor},
+\[
+ (\ell_\eta|_X)_p\in\m_{X,p}^{s+1}H_p
+ \qquad(p\in Z).
+\]
+\end{proposition}
+
+\begin{proof}
+Every point of $Z$ lies in $W_\eta$.  Fix $p\in Z$ and choose
+$g_p\in H^0(X,H^{m-1})$ nonzero at $p$, taking $g_p=1$ when $m=1$.
+The section $\ell_\eta g_p$ of $H^m$ vanishes at every support of $Z$.
+Lemma~\ref{lem:annihilator} puts its germ in $\m_{X,p}^{s+1}H^m_p$.
+The germ of $g_p$ is a unit, so division gives the displayed contact.
+\end{proof}
+
+This step explains why the factor $s^d$ in Theorem~\ref{thm:floor} is not an
+extra geometric hypothesis.  It is forced by the combination of a common
+tangent hyperplane and order-$s$ absorption.
+
+\section{Milnor numbers and the dual multiplicity}
+
+\begin{lemma}[Milnor floor from order]\label{lem:milnor}
+Let $R=\mathbb C\{x_1,\ldots,x_d\}$ with maximal ideal $\m$, and let
+$f\in\m^{s+1}$ have an isolated critical point at the origin.  Then
+\[
+ \mu(f)=\dim_{\mathbb C}R/
+ \left(\frac{\partial f}{\partial x_1},\ldots,
+ \frac{\partial f}{\partial x_d}\right)\geq s^d.
+\]
+Equality holds if the initial homogeneous form $f_{s+1}$ defines a smooth
+hypersurface in $\PP^{d-1}$ (with the empty hypersurface convention for
+$d=1$).
+\end{lemma}
+
+\begin{proof}
+Let $J$ be the Jacobian ideal.  Isolatedness makes $J$ $\m$-primary.  It is
+generated by a system of parameters in the regular local ring $R$, so
+$\mu(f)=\operatorname{length}(R/J)=e(J)$.  Since $J\subseteq\m^s$,
+monotonicity of Hilbert--Samuel multiplicity gives
+\[
+ e(J)\geq e(\m^s)=s^d.
+\]
+If $f_{s+1}$ is smooth projectively, its $d$ partial derivatives are a
+homogeneous regular sequence of degree $s$.  The associated-graded
+intersection has length $s^d$, so the local Jacobian colength is $s^d$.
+\end{proof}
+
+Dimca's multiplicity formula \cite{Dimca1986} says that for a smooth complex
+hypersurface and a hyperplane section with isolated singularities,
+\begin{equation}\label{eq:dimca}
+ \mult_\eta(X^\vee)=\sum_{p\in\Sing(X\cap W_\eta)}\mu_p.
+\end{equation}
+The refined tangent-cone statement
+\cite[Proposition~11.24]{Dimca1987} is
+\begin{equation}\label{eq:tangent-cone}
+ C_\eta(X^\vee)=\sum_p\mu_p[T_\eta(p^\perp)].
+\end{equation}
+Here $p^\perp$ is the hyperplane through $\eta$ in the dual projective space
+corresponding, under biduality, to $p$; the displayed component is its linear
+tangent space at $\eta$.  Equivalently, projectivizing gives the cycle
+$\sum_p\mu_p[\PP(T_\eta(p^\perp))]$ in the projectivized ambient tangent
+space.
+
+For completeness, the branch contribution can also be read directly from
+the Gauss map.  Choose analytic coordinates at $p$ in which $X$ is the graph
+\[
+ x_{d+1}=h(z_1,\ldots,z_d),\qquad h\in\m^{s+1},
+\]
+and $W_\eta=(x_{d+1}=0)$.  Work in the analytic local rings
+$A=\cO^{\mathrm{an}}_{X^\vee,\eta}$ and
+$R=\cO^{\mathrm{an}}_{X,p}\cong\mathbb C\{z_1,\ldots,z_d\}$, and put
+$I=\m_\eta R$.  The local expression for the Gauss map gives, up to signs,
+\begin{equation}\label{eq:gauss-ideal}
+ I=\left(
+ h_1,\ldots,h_d,\ h-\sum_{i=1}^d z_i h_i
+ \right),\qquad h_i=\frac{\partial h}{\partial z_i}.
+\end{equation}
+Thus, for $J=(h_1,\ldots,h_d)$,
+\[
+ J\subseteq I\subseteq\m^s.
+\]
+When the initial form $h_{s+1}$ is projectively smooth, $J$ is a parameter
+ideal with $e(J)=s^d$.  Monotonicity and $e(\m^s)=s^d$ then give
+\[
+ s^d=e(J)\geq e(I)\geq e(\m^s)=s^d,
+\]
+so the contribution of that normalization branch is exactly $s^d$.
+The finite-extension associativity formula for Hilbert--Samuel multiplicity
+recovers the sum over the points above $\eta$; see
+\cite[Chapter~VIII, \S10, Corollary~1]{ZariskiSamuelII}.  Analytification and
+completion preserve the multiplicities in question.  This is a local recovery
+of the classical multiplicity--Milnor formula in this ordinary case, included
+to make the equality mechanism in the examples explicit.
+
+\begin{proof}[Proof of Theorem~\ref{thm:floor}]
+Lemma~\ref{lem:normalization} gives the branch count.  Order-$s$ absorption
+contains tangent absorption, so the exact point-span tangent floor
+\cite[Theorem~1.1]{ErikssonTangent2026} gives
+\[
+ |Z|\geq N_{d,m}.
+\]
+Proposition~\ref{prop:contact} says that a local equation of the hyperplane
+section belongs to $\m_{X,p}^{s+1}$.  The critical point is isolated, hence
+Lemma~\ref{lem:milnor} gives $\mu_p\geq s^d$.  Equations
+\eqref{eq:dimca} and \eqref{eq:tangent-cone} give all remaining assertions.
+
+\end{proof}
+
+\begin{remark}[Why the earlier rank term gives no refinement here]
+Suppose $m\geq2s+1$.  Because $Z\subset W_\eta$, the equation of $W_\eta$
+lies in the kernel of linear evaluation, so
+\[
+ r_1(Z):=\operatorname{rk}\bigl(H^0(X,H)\to H^0(Z,H|_Z)\bigr)\leq d+1.
+\]
+The quotient
+\[
+ \frac{\binom{d+2s+1}{d}}{\binom{d+s}{d}}
+ =\prod_{j=1}^d\frac{2s+1+j}{s+j}
+\]
+is nondecreasing in $s\geq1$ term by term.  At $s=1$ it equals
+$(d+3)(d+2)/6\geq d+1$.  Hence
+\[
+ \binom{d+m}{d}\geq(d+1)\binom{d+s}{d}
+ \geq r_1(Z)\binom{d+s}{d}.
+\]
+Thus the rank-sensitive maximum in
+\cite[Theorem~1.3]{ErikssonOsculating2026} specializes exactly to
+$N_{d,m}$ for a Gauss fibre; presenting it as a stronger bound here would be
+misleading.
+\end{remark}
+
+\section{Interpolation with prescribed ordinary jets}
+
+We now adapt the proper-span construction of
+\cite{ErikssonOsculating2026}; its antecedent for ordinary double points is
+the author's public proof note \cite{ErikssonB219}.  The interpolation and
+extension architecture $F=f+yG$ is therefore not claimed as new here.  The
+added points are the prescribed ordinary initial forms, the exact Gauss-fibre
+identity, and the resulting branch and dual-multiplicity calculation.
+
+Let $W\cong\PP^d$ and
+choose $N=N_{d,m}$ distinct points $Z\subset W$ such that
+\begin{equation}\label{eq:unisolvent}
+ H^0(W,\cO_W(m))\xrightarrow{\sim}H^0(Z,\cO_Z(m)).
+\end{equation}
+Such sets exist because the evaluation lines of all points span the dual of
+$H^0(W,\cO_W(m))$; select a basis.  Very ampleness separates the supports.
+
+\begin{lemma}[Simultaneous jets from separators]\label{lem:jets}
+Let $p_1,\ldots,p_t$ be distinct points of $\PP^d$ and let $a_i\geq0$.
+Restriction to the disjoint fat points is surjective in every degree
+\[
+ k\geq\sum_{i=1}^t(a_i+1)-1:
+\]
+\[
+ H^0(\PP^d,\cO(k))\longrightarrow
+ \bigoplus_{i=1}^t
+ H^0\bigl(\cO(k)\otimes\cO_{\PP^d,p_i}/\m_{p_i}^{a_i+1}\bigr).
+\]
+\end{lemma}
+
+\begin{proof}
+For $i\ne j$, choose a linear form $\ell_{ij}$ vanishing at $p_j$ and
+nonzero at $p_i$.  The product
+\[
+ P_i=\prod_{j\ne i}\ell_{ij}^{a_j+1}
+\]
+kills every other target and is a unit at $p_i$.  Degree-$a_i$ forms realize
+all order-$a_i$ jets at $p_i$.  Their products with $P_i$ have common degree
+$\sum_j(a_j+1)-1$ and isolate arbitrary data at $p_i$.  Summing over $i$
+proves surjectivity in that degree.  Multiplication by a form nonzero at all
+supports raises the degree.
+\end{proof}
+
+For every $p\in Z$, choose a homogeneous form
+\[
+ q_p\in\operatorname{Sym}^{s+1}(\m_{W,p}/\m_{W,p}^2)
+\]
+whose projective zero locus in $\PP(T_pW)$ is smooth.  Put
+\[
+ E=(s+2)N,
+\]
+and fix $D\geq E+1$.  Lemma~\ref{lem:jets} supplies
+$f_0\in H^0(W,\cO_W(D))$ whose class at every $p$ is $q_p$ modulo
+$\m_{W,p}^{s+2}$ and whose lower terms vanish.  Let
+\[
+ V=H^0(W,\cI_{(s+2)Z}(D)),\qquad \mathcal A=f_0+V.
+\]
+
+\begin{proposition}[A section with exactly the prescribed singularities]
+\label{prop:section}
+There is $f\in\mathcal A$ such that $V(f)\subset W$ is smooth away from $Z$.
+At every $p\in Z$ it has an ordinary isolated hypersurface singularity of
+multiplicity $s+1$ and Milnor number $s^d$.
+\end{proposition}
+
+\begin{proof}
+Fix $q\in W\setminus Z$.  For every $p\in Z$, choose a hyperplane
+$\ell_{p,q}$ through $p$ and not through $q$, and set
+\[
+ A_q=\prod_{p\in Z}\ell_{p,q}^{s+2}.
+\]
+It has degree $E$, belongs to the ideal of $(s+2)Z$, and is a unit on the
+first neighbourhood $2q$.  Since $D-E\geq1$, multiplication by $A_q$ proves
+that
+\[
+ V\longrightarrow H^0(2q,\cO_{2q}(D))
+\]
+is surjective.  Therefore the affine condition $j_q^1f=0$ has codimension
+$d+1$ in $\mathcal A$.  Its incidence over the $d$-dimensional base
+$W\setminus Z$ has dimension at most $\dim\mathcal A-1$.  Choose $f$ outside
+the closure of its image.  The fixed jets $q_p$ give the asserted ordinary
+singularities, and Lemma~\ref{lem:milnor} gives $\mu_p=s^d$.
+\end{proof}
+
+\section{Smooth hypersurfaces and exact Gauss fibres}
+
+Embed $W=V(y)$ as a hyperplane in $\PP^{d+1}$ and lift $f$ independently of
+$y$.  Put
+\[
+ U=H^0(\PP^{d+1},\cO(D-1)),\qquad F_G=f+yG\quad(G\in U).
+\]
+
+\begin{proposition}[Smooth extension]\label{prop:extension}
+There is $G\in U$, nonzero at every point of $Z$, such that
+$X=V(F_G)$ is a smooth integral hypersurface.  Moreover
+\[
+ \Sing(X\cap W)=Z,
+ \qquad
+ (\gamma_X^{-1}([W]))_{\mathrm{red}}=Z.
+\]
+\end{proposition}
+
+\begin{proof}
+On $y\ne0$, multiplication by $y$ is a unit on first neighbourhoods and
+$\cO(D-1)$ generates first jets.  For fixed $q$ in that $(d+1)$-dimensional
+open set, the affine condition $j_q^1(f+yG)=0$ has codimension $d+2$ in $U$.
+The corresponding incidence has dimension at most $\dim U-1$, so the closure
+of its image is proper.  Avoid it together with the finitely many hyperplanes
+$G(p)=0$.
+
+The resulting $X$ is smooth on $y\ne0$.  At a point of $W\setminus Z$ lying
+on $X$, the tangential first jet of $f$ is nonzero by
+Proposition~\ref{prop:section}.  At $p\in Z$, the normal first jet is
+$G(p)\ne0$.  Thus $X$ is smooth everywhere.  The hypersurface sequence and
+$H^1(\PP^{d+1},\cO(-D))=0$ give $H^0(X,\cO_X)=\mathbb C$, so $X$ is
+connected; a smooth connected scheme is integral.
+
+The hyperplane section is $V(f)$, hence has singular locus exactly $Z$.
+A point of $X\cap W$ belongs to the Gauss fibre over $[W]$ precisely when the
+section is singular there.  A point outside $W$ cannot have $W$ as tangent
+hyperplane because a tangent hyperplane contains its point.  This proves the
+exact fibre identity.
+\end{proof}
+
+At $p\in Z$, the local equation on $X$ is
+\[
+ y=-f/G\in\m_{X,p}^{s+1},
+\]
+and its initial form is the nonzero scalar multiple $-q_p/G(p)$.  Thus
+$X\cap W$ has precisely the ordinary singularities already prescribed.
+
+\begin{proof}[Proof of Theorem~\ref{thm:sharpness}]
+Use Proposition~\ref{prop:extension}.  Since $D>m$, restriction is an
+isomorphism
+\[
+ H^0(\PP^{d+1},\cO(m))\xrightarrow{\sim}H^0(X,\cO_X(m)).
+\]
+Let a section on $X$ vanish on $Z$ and let $Q$ be its ambient lift.  By
+\eqref{eq:unisolvent}, $Q|_W=0$, so $Q=yR$.  Since
+$y\in\m_{X,p}^{s+1}$ at every support, $Q$ vanishes on $(s+1)Z$.  The reverse
+kernel inclusion is automatic, hence the annihilator criterion proves
+order-$s$ absorption.  Unisolvence gives
+\[
+ |Z|=\dim S_Z=N.
+\]
+The ambient degree-$m$ space has dimension $\binom{d+m+1}{d+1}>N$, so the
+point span is proper.
+
+The exact Gauss fibre is Proposition~\ref{prop:extension}; the section
+singularities have Milnor number $s^d$.  Dimca's formulas
+\eqref{eq:dimca}--\eqref{eq:tangent-cone} give the stated dual multiplicity
+and tangent-cone cycle.  When $s=1$, each section singularity is $A_1$, the
+Gauss map is immersive at its support, and the corresponding dual branch is
+smooth.  The tangent hyperplanes $p^\perp$ are distinct because the supports
+are distinct.
+\end{proof}
+
+\section{Context, reproducibility, and limitations}
+
+The identity $\mult_W(X^\vee)=\sum\mu_p$ and its tangent-cone refinement are
+not new; they are attributed respectively to Dimca
+\cite{Dimca1986} and \cite[Proposition~11.24]{Dimca1987}, with broader
+multiplicity results due to Parusi\'nski \cite{Parusinski1991}, and belong to
+the classical projective-duality and discriminant framework
+\cite{Kleiman1986,GKZ1994}.  Dimca--Ilardi prove that a generic smooth
+hypersurface in $\PP^n$, $n\geq3$, has a dual normal-crossing point of
+multiplicity $n$, arising from $n$ nodes in a hyperplane section
+\cite{DimcaIlardi2024}.  They also emphasize the classical fact that isolated
+singularity hyperplane sections can be extended to smooth hypersurfaces.
+The present construction uses that freedom subject to the additional
+unisolvence and absorption constraints.
+
+The normalizing role of the Gauss map and the earlier large-fibre construction
+also occur in the author's public notes \cite{ErikssonB218,ErikssonB219}.
+Those notes do not state the branch count or dual multiplicity computed here;
+they are nevertheless direct authorial antecedents rather than independent
+validation.  The exact tangent floor is invoked from
+\cite{ErikssonTangent2026}; the higher-block estimate and the underlying
+proper-span construction are invoked from \cite{ErikssonOsculating2026}, to
+which the exact reduced Gauss-fibre and dual-singularity calculations are
+added here.  These are papers by the same author and are not independent
+external validation.
+
+The accompanying replay
+\texttt{repro/verify\_dual\_multiplicity.py} checks finite monomial Jacobian
+quotients, 105 binomial/multiplicity cases, 100 rank-collapse cases, and
+selected simplex evaluation matrices using integer and rational arithmetic.
+The byte-stable runner is
+\texttt{repro/run\_all\_replays.py}.  These scripts do not mechanize the
+incidence arguments, projective duality, Dimca's formula, or literature
+priority.
+
+The limitations are material.
+\begin{itemize}
+\item The dual-singularity theorem is over $\mathbb C$.  No positive-
+characteristic Milnor, inseparable Gauss-map, or wild-ramification extension
+is asserted.
+\item The support is the complete reduced Gauss fibre, not an arbitrary
+subset.  Its scheme-theoretic fibre can be nonreduced and is not classified.
+\item The degree $D\geq(s+2)N_{d,m}+1$ is a transparent sufficient threshold,
+not a minimality result.
+\item For $s=1$ the tangent cone is a reduced arrangement of distinct
+hyperplanes.  It is not called a simple normal-crossing divisor when the
+number of branches exceeds the ambient dimension.
+\item No analytic classification of the dual branches, equality
+classification, exhaustive priority review, human peer review, or formal
+verification is claimed.
+\end{itemize}
+
+\section{Conclusion}
+
+Osculating absorption in a Gauss fibre forces more than many coincident
+tangent points.  It forces the common tangent hyperplane to have order
+$s+1$ contact at every support, converting the exact point-span rank floor
+into the sharp dual-singularity floor
+\[
+ \mult_W(X^\vee)\geq s^d\binom{d+m}{d}.
+\]
+The previously developed prescribed-jet construction realizes equality while
+keeping the point span proper and the reduced Gauss fibre exact; the new use
+made of it here is the dual-singularity calculation.  The result ties finite
+reduced span rank,
+osculating contact, Milnor numbers, normalization branches, and dual
+multiplicity in one sharp construction.  Minimal ambient degree and the
+geometry of equality configurations remain open.
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{Dimca1986}
+A.~Dimca,
+\emph{Milnor numbers and multiplicities of dual varieties},
+Rev. Roumaine Math. Pures Appl. \textbf{31} (1986), no.~6, 535--538.
+
+\bibitem{Dimca1987}
+A.~Dimca,
+\emph{Topics on Real and Complex Singularities},
+Advanced Lectures in Mathematics, Friedr. Vieweg \& Sohn, Braunschweig, 1987.
+
+\bibitem{DimcaIlardi2024}
+A.~Dimca and G.~Ilardi,
+\emph{On the duals of smooth projective complex hypersurfaces},
+Publ. Mat. \textbf{68} (2024), 431--438.
+\url{https://doi.org/10.5565/PUBLMAT6822404}
+
+\bibitem{Parusinski1991}
+A.~Parusi\'nski,
+\emph{Multiplicity of the dual variety},
+Bull. London Math. Soc. \textbf{23} (1991), no.~5, 429--436.
+\url{https://doi.org/10.1112/blms/23.5.429}
+
+\bibitem{ErikssonTangent2026}
+L.~Eriksson,
+\emph{The exact rank floor for point-span tangent absorption in arbitrary
+characteristic}, ARR-2026-2MHNZRRJP49Y9SWP, v3 (2026).
+\url{https://arr-research.github.io/papers/ARR-2026-2MHNZRRJP49Y9SWP/versions/v3/}
+
+\bibitem{ErikssonOsculating2026}
+L.~Eriksson,
+\emph{Exact floors and proper-span extremizers for higher osculating
+absorption}, ARR-2026-66Q8M61AA196T8BC, v2 (2026).
+\url{https://arr-research.github.io/papers/ARR-2026-66Q8M61AA196T8BC/versions/v2/}
+
+\bibitem{ErikssonB218}
+L.~Eriksson,
+\emph{The ordinary Gauss map is finite birational}, proof note B218 (2026).
+\url{https://github.com/lluiseriksson/hodge-conjecture-research-front/blob/main/proofs/B218-gauss-map-finite-birational.md}
+
+\bibitem{ErikssonB219}
+L.~Eriksson,
+\emph{Special Gauss fibers can be arbitrarily large}, proof note B219 (2026).
+\url{https://github.com/lluiseriksson/hodge-conjecture-research-front/blob/main/proofs/B219-arbitrarily-large-special-gauss-fibers.md}
+
+\bibitem{GKZ1994}
+I.~M.~Gelfand, M.~M.~Kapranov, and A.~V.~Zelevinsky,
+\emph{Discriminants, Resultants, and Multidimensional Determinants},
+Birkh\"auser, Boston, 1994.
+
+\bibitem{Kleiman1986}
+S.~L.~Kleiman,
+\emph{Tangency and duality}, in
+\emph{Proceedings of the 1984 Vancouver Conference in Algebraic Geometry},
+CMS Conf. Proc. \textbf{6}, Amer. Math. Soc., 1986, 163--225.
+
+\bibitem{ZariskiSamuelII}
+O.~Zariski and P.~Samuel,
+\emph{Commutative Algebra, Volume II},
+Graduate Texts in Mathematics 29, Springer, 1975.
+\url{https://doi.org/10.1007/978-3-662-29244-0}
+
+\end{thebibliography}
+}
+
+\end{document}
