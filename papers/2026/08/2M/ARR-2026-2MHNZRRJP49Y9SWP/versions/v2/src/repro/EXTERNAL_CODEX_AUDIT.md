@@ -1,7 +1,8 @@
 # Independent Codex referee report
 
-Date: 2026-08-24  
-Manuscript: working version 0.7  
+Date: 2026-08-24
+
+Manuscript: working version 0.7
 Status: independent model review; not human peer review
 
 ## Verdict
