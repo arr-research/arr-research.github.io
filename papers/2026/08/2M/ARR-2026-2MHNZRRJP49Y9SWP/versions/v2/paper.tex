@@ -1,0 +1,750 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=26mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue!55!black,citecolor=blue!55!black,urlcolor=blue!55!black]{hyperref}
+\hypersetup{pdftitle={The Exact Rank Floor for Point-Span Tangent Absorption in Arbitrary Characteristic},pdfauthor={Lluis Eriksson},pdfsubject={Algebraic geometry; fat points; finite projection; tangent spaces},pdfkeywords={fat points, symbolic square, Frobenius, finite projection, tangent absorption, interpolation}}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{definition}[theorem]{Definition}
+\newcommand{\PP}{\mathbf P}
+\newcommand{\CC}{\mathbf C}
+\newcommand{\kk}{\mathbf k}
+\newcommand{\NN}{\mathbf N}
+\newcommand{\cI}{\mathcal I}
+\newcommand{\cO}{\mathcal O}
+\newcommand{\Span}{\operatorname{Span}}
+\newcommand{\rk}{\operatorname{rk}}
+\newcommand{\Gr}{\operatorname{Gr}}
+\newcommand{\BZ}{B_d(m)}
+
+\title{The Exact Rank Floor for Point-Span Tangent Absorption\\
+in Arbitrary Characteristic}
+\author{Lluis Eriksson\\\small Independent researcher}
+\date{August 24, 2026\quad (working version 0.7)}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Let $X$ be a smooth projective integral variety of dimension $d\geq1$ over an
+algebraically closed field of arbitrary characteristic, let $L$ be very ample,
+and let $m\geq1$.  For a nonempty finite reduced set
+$Z\subset X$, suppose that in the complete $L^m$-embedding the vector span of
+the points of $Z$ contains the affine embedded tangent space at every point of
+$Z$.  Equivalently,
+\[
+ H^0(X,\cI_Z\otimes L^m)=H^0(X,\cI_{2Z}\otimes L^m).
+\]
+We prove the exact codimension-free lower bound
+\[
+ \rk\bigl(H^0(X,L^m)\to H^0(Z,L^m|_Z)\bigr)
+ \geq\binom{d+m}{d},\qquad |Z|\geq\binom{d+m}{d}.
+\]
+The proof projects the original $L$-embedding finitely onto $\PP^d$, injective
+on $Z$ and with isomorphic tangent maps there.  Tangent absorption says that
+degree-$m$ equations of the projected points survive first fattening.  Over a
+perfect field, the inequality
+$\alpha(I_Y^{(2)})\geq\alpha(I_Y)+1$ follows by minimal degree: a nonzero
+partial derivative lowers the degree, while vanishing of all partials in
+characteristic $p$ makes the form a $p$th power, and radicality lowers the
+degree again.  The binomial floor is sharp for every pair $(d,m)$ over
+$\CC$, including with a proper point span: simplex-lattice interpolation
+points are placed in a hyperplane tangent to a smooth hypersurface at every
+support.  We also prove
+downward propagation to every $L^k$, $k\leq m$, and combine the exact floor
+with independent first-jet blocks and a Gauss-fibre alternative.  The
+ingredients are classical.  The contribution is their combination into an
+exact absorption theorem in arbitrary characteristic; no novelty is claimed
+for the derivative/$p$th-root fattening argument itself.
+\end{abstract}
+
+\section{Introduction}
+
+Let $\kk$ be an algebraically closed field, let $X^d$ be a smooth projective
+integral $\kk$-variety, and let $L$ be a very ample line bundle.  The complete
+linear system embeds
+\[
+ \phi_L:X\hookrightarrow\PP\bigl(H^0(X,L)^*\bigr).
+\]
+For a finite reduced set $Z\subset X$, write
+\[
+ S_Z(m):=\Span_{\kk}\{\operatorname{ev}_p:p\in Z\}
+          \subset H^0(X,L^m)^*,
+ \qquad h_Z(m):=\dim_{\kk}S_Z(m).
+\]
+In the complete $L^m$-embedding, the affine tangent space at $p$ is the dual
+of the first-jet quotient $H^0(2p,L^m|_{2p})$.  We study the rigid incidence
+\begin{equation}\label{eq:absorption-intro}
+ \widehat T_{\phi_{L^m}(p)}\phi_{L^m}(X)\subseteq S_Z(m)
+ \qquad(p\in Z),
+\end{equation}
+called \emph{point-span tangent absorption}.  It is stronger than an ordinary
+Terracini defect: the span of the reduced evaluations already contains all
+first-order information at the same supports.
+
+\begin{theorem}[Exact universal floor]\label{thm:exact-floor}
+Let $\kk$ be algebraically closed of arbitrary characteristic.  Let $X$ be a
+smooth projective integral $\kk$-variety of dimension $d\geq1$, let $L$ be
+very ample, let $m\geq1$, and let $Z\subset X$ be a nonempty finite reduced
+set.  If $Z$ is point-span tangent-absorbing for the complete system $L^m$,
+then
+\begin{equation}\label{eq:exact-floor}
+ h_Z(m)\geq \BZ:=\binom{d+m}{d},
+ \qquad |Z|\geq \BZ.
+\end{equation}
+\end{theorem}
+
+There is no dependence on the degree, codimension, equations, projective
+normality, or Gauss-map degeneracy of the original embedding.  The statement
+also includes $m=1$ and $m=2$, where a previous squared-hyperplane argument
+did not apply.
+
+The proof has two structural steps.  First choose a finite projection
+$\pi:X\to\PP^d$ which is injective on $Z$ and whose tangent map is an
+isomorphism at every point of $Z$.
+If $Y=\pi(Z)$ and a degree-$m$ form $F$ vanishes on $Y$, its pullback vanishes
+on $Z$.  Absorption makes the pullback vanish to second order.  The cotangent
+isomorphisms transfer this back to $F$, giving
+$(I_Y)_m=(I_Y^{(2)})_m$.  Second, a nonzero form of least degree in the radical
+ideal $I_Y$ cannot vanish doubly along $Y$.  In characteristic zero a nonzero
+partial derivative lowers the degree.  In characteristic $p$, either the same
+happens or every partial vanishes, in which case perfection gives $F=G^p$ and
+radicality puts the lower-degree form $G$ in $I_Y$.  Consequently
+$\alpha(I_Y^{(2)})\geq\alpha(I_Y)+1$ in every characteristic, and the displayed
+equality forces $(I_Y)_m=0$.  The $\binom{d+m}{d}$ degree-$m$ forms on $\PP^d$
+then evaluate independently on $Y$.
+
+The floor is not merely an ambient saturation bound.
+
+\begin{theorem}[Proper-span equality in every dimension and degree]
+\label{thm:sharpness}
+For every $d,m\geq1$ there exist over $\CC$ a smooth integral hypersurface
+$X^d\subset\PP^{d+1}$, a nonempty reduced set $Z\subset X$, and
+$L=\cO_X(1)$ such that
+\[
+ |Z|=h_Z(m)=\binom{d+m}{d},\qquad
+ h^0(X,L^m)=\binom{d+m+1}{d+1}>h_Z(m),
+\]
+and $Z$ is point-span tangent-absorbing for $L^m$.  Moreover, every
+projective tangent space $T_pX$, $p\in Z$, may be the same hyperplane.
+\end{theorem}
+
+Thus neither floor can be raised, even after excluding configurations whose
+point span is the entire $L^m$-ambient space.  The equality construction uses
+the $\binom{d+m}{d}$ lattice points
+\[
+ [1:\alpha_1:\cdots:\alpha_d:0],\qquad
+ \alpha\in\NN^d,\quad |\alpha|\leq m,
+\]
+which are unisolvent for polynomials of total degree at most $m$.  A general
+high-degree hypersurface with prescribed common tangent hyperplane at these
+points is smooth.  On it, the normal coordinate belongs to the square of
+every corresponding maximal ideal, converting each degree-$m$ equation of
+$Z$ into a double equation.
+
+For $m\geq3$ the exact theorem combines with a rank-sensitive first-jet
+argument.  Put
+\[
+ r_1(Z):=\rk\bigl(H^0(X,L)\to H^0(Z,L|_Z)\bigr)
+\]
+and let $g_L(Z)$ be the largest number of points of $Z$ in one fibre of the
+Gauss map of the $L$-embedding.  We obtain
+\begin{equation}\label{eq:combined-intro}
+ h_Z(m),|Z|\geq
+ \max\left\{\binom{d+m}{d},(d+1)r_1(Z)\right\}.
+\end{equation}
+Absorption at degree $m$ descends to degree one.  Hence $r_1(Z)\geq d+1$;
+if equality holds, every original tangent space along $Z$ is one fixed
+$d$-plane.  If $g_L(Z)<\binom{d+m}{d}$, then
+\begin{equation}\label{eq:gauss-intro}
+ h_Z(m),|Z|\geq
+ \max\left\{\binom{d+m}{d},(d+1)(d+2)\right\}.
+\end{equation}
+
+\paragraph{Relation to prior work.}
+The inequality $\alpha(I^{(2)})\geq\alpha(I)+1$ for finite reduced points is
+standard in the study of fattening and symbolic powers.  Bocci--Chiantini
+\cite[Remark~2.2]{BocciChiantini2011} give explicitly, for planar point sets
+over an algebraically closed field of arbitrary characteristic, the same
+derivative/$p$th-root dichotomy used below; that argument is independent of
+the projective dimension.  See also Bauer--Szemberg
+\cite[Lemma~2.4]{BauerSzemberg2014} for the
+arbitrary-projective-space differential inequality in their setting.  The
+Zariski--Nagata description of symbolic powers by differential operators over
+perfect fields is surveyed by Dao--De Stefani--Grifo--Huneke--N\'u\~nez-
+Betancourt \cite[Proposition~2.14 and Exercise~2.15]{DaoEtAl2018}; its
+mixed-characteristic extension is developed by De Stefani--Grifo--Jeffries
+\cite{DeStefaniGrifoJeffries2020}.  Our degree-two proof is included to make
+the positive-characteristic input explicit and self-contained.  Finite general
+projections and Bertini theorems with prescribed base schemes are classical;
+compare Altman--Kleiman \cite{AltmanKleiman1979} and the analogous adapted-
+projection construction over finite fields in Wang \cite[Lemma~A.7]{Wang2022}.
+Terracini loci and strong
+tangential base loci concern adjacent, but weaker, incidences
+\cite{BallicoChiantini2021,BallicoBrambillaSantarsiero2026}.  Jet-ampleness
+provides a broader language for infinitesimal interpolation
+\cite{BeltramettiDiRoccoSommese1999}.
+
+The novelty claim is deliberately narrow: an adapted finite projection and
+the standard fattening inequality are combined to obtain the exact
+codimension-free rank floor in arbitrary characteristic, and smooth
+proper-span extremizers are given over $\CC$ for every $(d,m)$.  No novelty is
+claimed for those ingredients separately or for the positive-characteristic
+fattening argument.  The bibliographic search is not a priority certification,
+and no peer review is claimed.
+
+\section{Ranks, double points, and absorption}\label{sec:setup}
+
+At a smooth point $p\in X$, write $2p$ for the first infinitesimal
+neighbourhood defined by $\mathfrak m_p^2$; it has length $d+1$.  For a
+finite reduced set $Z$, put $2Z=\coprod_{p\in Z}2p$.  Since $L^m$ is very
+ample, restriction to $2p$ is surjective, and its dual is the affine tangent
+space to the cone over the $L^m$-embedding.
+
+\begin{definition}
+A nonempty finite reduced set $Z\subset X$ is \emph{point-span
+tangent-absorbing for $L^m$} if \eqref{eq:absorption-intro} holds for every
+$p\in Z$.
+\end{definition}
+
+\begin{lemma}[Kernel criterion]\label{lem:kernel}
+The following are equivalent:
+\begin{enumerate}[label=(\roman*)]
+\item $Z$ is point-span tangent-absorbing for $L^m$;
+\item $H^0(X,\cI_Z\otimes L^m)=H^0(X,\cI_{2Z}\otimes L^m)$;
+\item restriction to $Z$ and to $2Z$ has the same rank.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+The annihilator of $S_Z(m)$ is the kernel of restriction to $Z$.  The
+annihilator of the span of all affine tangent spaces at the supports is the
+kernel of restriction to $2Z$.  The point span is contained in the tangent
+span, so equality of spans, annihilators, and ranks are equivalent.
+\end{proof}
+
+\begin{lemma}[Downward propagation]\label{lem:downward}
+If $Z$ is tangent-absorbing for $L^m$, then it is tangent-absorbing for $L^k$
+for every $1\leq k\leq m$.
+\end{lemma}
+
+\begin{proof}
+Fix $s\in H^0(X,\cI_Z\otimes L^k)$ and $p\in Z$.  Since $L^{m-k}$ is
+globally generated, choose $t_p\in H^0(X,L^{m-k})$ with $t_p(p)\neq0$; for
+$k=m$, take $t_p=1$.  Then $st_p$ vanishes on $Z$, so absorption at degree
+$m$ makes it vanish on $2Z$.  In the local ring at $p$, $t_p$ is a unit;
+hence $s\in\mathfrak m_p^2L^k_p$.  Repeating for every $p$ gives equality of
+the kernels at degree $k$, and Lemma~\ref{lem:kernel} applies.
+\end{proof}
+
+\section{The fattening gap over perfect fields}\label{sec:fattening}
+
+For a nonempty finite reduced $Y\subset\PP^d$, let $I_Y$ be its homogeneous
+radical ideal and $I_Y^{(2)}=\bigcap_{q\in Y}\mathfrak m_q^2$.  For a
+nonzero homogeneous ideal $J$, let $\alpha(J)$ be its least nonzero degree.
+
+\begin{lemma}[Fattening gap]\label{lem:fattening-gap}
+Let $\kk$ be a perfect field and let $Y\subset\PP^d_{\kk}$ be a nonempty
+finite reduced set of $\kk$-rational points.  Then
+\begin{equation}\label{eq:alpha-gap}
+ \alpha(I_Y^{(2)})\geq\alpha(I_Y)+1.
+\end{equation}
+Consequently, if $(I_Y)_m=(I_Y^{(2)})_m$ for some $m\geq1$, then
+$(I_Y)_m=0$.
+\end{lemma}
+
+\begin{proof}
+Put $a=\alpha(I_Y)\geq1$.  If $0\neq F\in(I_Y^{(2)})_a$, every first partial
+derivative of $F$ vanishes on $Y$ and hence belongs to the radical ideal
+$I_Y$.  If some partial derivative is nonzero, it lies in $(I_Y)_{a-1}$,
+contradicting the definition of $a$.
+
+It remains to consider characteristic $p>0$ when all first partials vanish.
+Every exponent occurring in $F$ is then divisible by $p$.  Since $\kk$ is
+perfect, the coefficients have $p$th roots, so $F=G^p$ for a nonzero
+homogeneous form $G$ of degree $a/p<a$.  Radicality of $I_Y$ and
+$F\in I_Y$ give $G\in I_Y$, again contradicting minimality.  This proves
+\eqref{eq:alpha-gap} in every characteristic.
+
+For the consequence, suppose $(I_Y)_m\neq0$ and choose
+$0\neq F\in(I_Y)_a$ with $a=\alpha(I_Y)\leq m$.  For each $q\in Y$, choose
+a degree-$(m-a)$ form $H_q$ with $H_q(q)\neq0$.  Then
+$H_qF\in(I_Y)_m=(I_Y^{(2)})_m\subset\mathfrak m_q^2$.  Since $H_q$ is a
+local unit at $q$, $F\in\mathfrak m_q^2$.  Thus $F\in I_Y^{(2)}$, contrary
+to \eqref{eq:alpha-gap} in degree $a$.
+\end{proof}
+
+\section{Finite projections adapted to a finite set}\label{sec:projection}
+
+Replacing the ambient space of the $L$-embedding by the linear span of $X$
+does not change $L$ or any evaluation rank.
+
+\begin{lemma}[Adapted finite projection]\label{lem:projection}
+Let $X^d\subset\PP^M$ be smooth, nondegenerate, projective, and integral,
+$d\geq1$, and let $Z\subset X$ be finite and reduced.  There is a linear
+projection $\pi_\Lambda:X\to\PP^d$ which is finite, injective on $Z$, has
+$d\pi_p:T_pX\xrightarrow{\sim}T_{\pi(p)}\PP^d$ for every $p\in Z$, and satisfies
+$\pi_\Lambda^*\cO_{\PP^d}(1)=\cO_X(1)$.  If $M=d$, take the identity after
+identifying $X=\PP^d$.
+\end{lemma}
+
+\begin{proof}
+If $M=d$, a closed integral $d$-fold in $\PP^d$ is all of $\PP^d$.
+Assume $M>d$.  Choose a general
+$\Lambda\cong\PP^{M-d-1}$ disjoint from $X$, from the finitely many
+projective tangent spaces $T_pX$ for $p\in Z$, and from the finitely many
+secant lines $\overline{pq}$ for distinct $p,q\in Z$.  Each avoidance
+condition is a nonempty open condition on the Grassmannian.  Their finite
+intersection is nonempty because the Grassmannian is irreducible.
+
+Projection from $\Lambda$ is a morphism on $X$.  A fibre is the intersection
+of $X$ with a linear $\PP^{M-d}$ containing $\Lambda$ as a hyperplane.  A
+positive-dimensional projective closed subset of that $\PP^{M-d}$ meets
+every hyperplane, so such a fibre would meet $\Lambda$, contradicting
+$X\cap\Lambda=\varnothing$.  The morphism is therefore quasi-finite and
+projective, hence finite.  Avoiding $T_pX$ makes $d\pi_p$ injective, thus an
+isomorphism.  Equivalently, the induced cotangent map is an isomorphism; this
+is the only local property used below.  Avoiding secants makes $\pi|_Z$
+injective.  The pullback identity follows
+from the linear system defining the projection.
+\end{proof}
+
+\section{Proof of the exact floor}\label{sec:exact-proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:exact-floor}]
+Embed $X$ by $L$, apply Lemma~\ref{lem:projection}, and put $Y=\pi(Z)$.
+The map $Z\to Y$ is a bijection.  If $F\in(I_Y)_m$, then
+$s=\pi^*F\in H^0(X,L^m)$ vanishes on $Z$.  Absorption makes $s$ vanish on
+$2Z$.  At $p\in Z$, with $q=\pi(p)$,
+\[
+ d(s)_p=d(F)_q\circ d\pi_p.
+\]
+The left side is zero and $d\pi_p$ is an isomorphism, so $d(F)_q=0$.
+Therefore $F\in\mathfrak m_q^2$ for all $q\in Y$ and
+$(I_Y)_m=(I_Y^{(2)})_m$.  Lemma~\ref{lem:fattening-gap} gives
+$(I_Y)_m=0$.
+
+Evaluation on $Y$ is consequently injective on
+$H^0(\PP^d,\cO(m))$, of dimension $\binom{d+m}{d}$.  Pulling this subspace
+back to $H^0(X,L^m)$ and using $Z\simeq Y$ proves
+$h_Z(m)\geq\binom{d+m}{d}$.  Since $S_Z(m)$ is spanned by $|Z|$ evaluation
+vectors, $|Z|\geq h_Z(m)$.
+\end{proof}
+
+\begin{corollary}[Projective form]
+Under the hypotheses of Theorem~\ref{thm:exact-floor},
+$\dim\Span_{\PP}\phi_{L^m}(Z)\geq\binom{d+m}{d}-1$.
+\end{corollary}
+
+\begin{corollary}[No low-cardinality extreme defect]
+If $|Z|<\binom{d+m}{d}$, thickening $Z$ to $2Z$ strictly increases the rank
+of restriction in $L^m$.
+\end{corollary}
+
+\begin{remark}
+Perfection and radicality are the inputs used by this positive-characteristic
+proof.  The theorem is stated over an algebraically closed field, hence over a
+perfect field, and the finite support is reduced.  No analogous conclusion is
+asserted here for imperfect ground fields or nonreduced supports.
+\end{remark}
+
+\section{Simplex-lattice unisolvence}\label{sec:unisolvence}
+
+Here $\NN=\{0,1,2,\ldots\}$.
+
+Fix $d,m\geq1$ and set
+\[
+ A_{d,m}:=\{\alpha=(\alpha_1,\ldots,\alpha_d)\in\NN^d:|\alpha|\leq m\},
+ \qquad |A_{d,m}|=\binom{d+m}{d}=\BZ.
+\]
+For $\alpha\in A_{d,m}$, let
+$p_\alpha=[1:\alpha_1:\cdots:\alpha_d]\in\PP^d$.
+
+\begin{lemma}[Simplex-lattice interpolation]\label{lem:unisolvent}
+Evaluation at the points $p_\alpha$, $\alpha\in A_{d,m}$, is an isomorphism
+\[
+ H^0(\PP^d,\cO_{\PP^d}(m))\xrightarrow{\ \sim\ }\CC^{A_{d,m}}.
+\]
+\end{lemma}
+
+\begin{proof}
+On the chart $x_0=1$, consider the falling-factorial polynomials
+\[
+ N_\beta(t_1,\ldots,t_d):=\prod_{i=1}^d\binom{t_i}{\beta_i},
+ \qquad \beta\in A_{d,m}.
+\]
+They form a basis of the polynomials of total degree at most $m$, since each
+has leading monomial $\prod_i t_i^{\beta_i}/\beta_i!$.  Order $A_{d,m}$ by a
+linear extension of the coordinatewise partial order.  Then
+$N_\beta(\alpha)=0$ unless $\beta_i\leq\alpha_i$ for every $i$, while
+$N_\alpha(\alpha)=1$.  The evaluation matrix is triangular with diagonal
+one.  Homogenization proves the assertion.
+\end{proof}
+
+This is a concrete multivariate Newton interpolation set.  The proof is
+included so the equality construction does not depend on numerical
+conditioning or genericity; related lattice constructions appear in
+\cite{ChungYao1977,LeePhillips1991}.
+
+\section{Smooth common-tangent extremizers}\label{sec:extremizers}
+
+Throughout this section the ground field is $\CC$.
+
+Let $W=V(y)\cong\PP^d$ be a hyperplane in $\PP^{d+1}$ with coordinates
+$[x_0:\cdots:x_d:y]$.  Regard the simplex-lattice set
+\[
+ Z=\{[1:\alpha_1:\cdots:\alpha_d:0]:\alpha\in A_{d,m}\}\subset W.
+\]
+Write $2Z_W$ for the union of first neighbourhoods inside $W$.
+
+\begin{proposition}[Smooth prescribed-tangent hypersurface]
+\label{prop:bertini}
+Put $r=|Z|=\BZ$.  For every $n\geq2r+1$, there is a smooth integral
+degree-$n$ hypersurface $X\subset\PP^{d+1}$ containing $Z$ such that
+$T_pX=W$ for every $p\in Z$.
+\end{proposition}
+
+\begin{proof}
+Consider forms
+\begin{equation}\label{eq:F-family}
+ F(x,y)=f(x_0,\ldots,x_d)+yG(x_0,\ldots,x_d,y),
+\end{equation}
+where $f\in H^0(W,\cI_{2Z_W}(n))$ and
+$G\in H^0(\PP^{d+1},\cO(n-1))$.
+
+The set-theoretic support of this linear system's base scheme is exactly
+$Z$; no assertion about its scheme structure is needed.  Outside $W$, the
+term $yG$ is base-point-free.  If $q\in W\setminus Z$, for each $p\in Z$ choose a
+hyperplane $\ell_p\subset W$ through $p$ but not through $q$.  Then
+$\prod_{p\in Z}\ell_p^2$ has degree $2r$, vanishes doubly at $Z$, and is
+nonzero at $q$; multiply it by a degree-$(n-2r)$ form nonzero at $q$.
+
+Thus the restricted linear system on the smooth open set
+$\PP^{d+1}\setminus Z$ is base-point-free.  The characteristic-zero smooth
+Bertini theorem gives smoothness for a general member on that open set.  At
+$p\in Z$, all tangential derivatives of $f$ vanish, whereas the normal
+derivative of $F$ is $G(p)$.  The finitely many conditions $G(p)\neq0$ define
+a nonempty open set.  Hence a general member is smooth at $Z$ and has tangent
+hyperplane $W$ there.  It is integral: if a projective hypersurface of
+positive dimension were reducible, two positive-degree components would
+meet, and their union would be singular along the intersection.  Bertini
+with a prescribed base scheme is
+standard; see Altman--Kleiman \cite{AltmanKleiman1979}.
+\end{proof}
+
+The numerical threshold is a transparent sufficient bound; no minimality in
+$n$ is claimed.
+
+\begin{proof}[Proof of Theorem~\ref{thm:sharpness}]
+Take $Z\subset W$ as above and choose $X=V(F)$ from
+Proposition~\ref{prop:bertini}, with $n\geq2\BZ+1$.  Since $n>m$ and
+$d+1\geq2$, the hypersurface sequence
+\[
+0\longrightarrow\cO_{\PP^{d+1}}(m-n)
+\longrightarrow\cO_{\PP^{d+1}}(m)
+\longrightarrow\cO_X(m)\longrightarrow0
+\]
+together with $H^0(\cO(m-n))=0$ and
+$H^1(\PP^{d+1},\cO(m-n))=0$ gives
+\begin{equation}\label{eq:restriction-iso}
+ H^0(\PP^{d+1},\cO(m))\xrightarrow{\ \sim\ }H^0(X,\cO_X(m)).
+\end{equation}
+
+Let a degree-$m$ form $Q(x,y)$ vanish on $Z$.  Its restriction $Q(x,0)$ to
+$W$ vanishes at the unisolvent set of Lemma~\ref{lem:unisolvent}, hence is
+zero.  Thus $Q=yR$ for a degree-$(m-1)$ form $R$.
+
+Fix $p\in Z$.  Locally, \eqref{eq:F-family} reads $f+yG=0$, where
+$f\in\mathfrak m_{W,p}^2$ and $G(p)\neq0$.  Thus $G$ is a unit and, in
+$\cO_{X,p}$,
+\[
+ y=-f/G\in\mathfrak m_{X,p}^2.
+\]
+Therefore $Q=yR$ vanishes on $2p$.  This holds for every $p$, proving
+\[
+ H^0(X,\cI_Z\otimes\cO_X(m))
+ =H^0(X,\cI_{2Z}\otimes\cO_X(m)).
+\]
+The set is absorbing by Lemma~\ref{lem:kernel}.
+
+Lemma~\ref{lem:unisolvent} shows that the evaluations have rank
+$|Z|=\BZ$.  Equation \eqref{eq:restriction-iso} gives
+$h^0(X,\cO_X(m))=\binom{d+m+1}{d+1}>\BZ$, so the point span is proper.  The
+common-tangent assertion is part of Proposition~\ref{prop:bertini}.
+\end{proof}
+
+\begin{remark}
+The equality family explains why no improvement follows merely from
+excluding ambient point spans.  Any stronger theorem needs geometric input
+that rules out, controls, or classifies high-contact common-tangent sets.
+\end{remark}
+
+\section{Rank-sensitive jet blocks and Gauss fibres}\label{sec:rank-sensitive}
+
+Return to an arbitrary smooth $X$ and very ample $L$, and put
+$r_1(Z)=h_Z(1)$.  The following extension is useful for $m\geq3$.
+
+\begin{lemma}[Squared-hyperplane extension]\label{lem:block-extension}
+Let $m\geq3$.  Suppose $p_1,\ldots,p_s\in X$ have independent first
+neighbourhoods for $L^m$.  If the $L$-evaluation at $x\in X$ is not in the
+span of the evaluations at the $p_i$, then
+$2p_1\cup\cdots\cup2p_s\cup2x$ also imposes independent conditions on
+$H^0(X,L^m)$.
+\end{lemma}
+
+\begin{proof}
+In the $L$-embedding choose $e\in H^0(X,L)$ vanishing at every $p_i$ but not
+at $x$.  The section $e^2$ vanishes on the old double points and is a unit on
+$2x$.  Since $L^{m-2}$ is very ample, restriction to $2x$ is surjective.
+Thus $e^2H^0(X,L^{m-2})$ realizes arbitrary first-jet data at $x$ while
+vanishing on the old union.  Correcting residual data at $x$ proves the claim.
+\end{proof}
+
+\begin{proposition}[Rank-sensitive floor]\label{prop:rank-sensitive}
+If $m\geq3$ and $Z$ is tangent-absorbing for $L^m$, then
+\[
+ h_Z(m),|Z|\geq
+ \max\left\{\binom{d+m}{d},(d+1)r_1(Z)\right\}.
+\]
+\end{proposition}
+
+\begin{proof}
+Choose $r_1(Z)$ points whose degree-one evaluations form a basis, ordered so
+that each new evaluation escapes the preceding span.  A single double point
+imposes $d+1$ independent conditions.  Repeated application of
+Lemma~\ref{lem:block-extension} makes the $r_1(Z)$ double points independent
+in $L^m$.  By absorption, their $(d+1)r_1(Z)$-dimensional dual first-jet span
+lies in $S_Z(m)$.  Combine this with Theorem~\ref{thm:exact-floor} and
+$|Z|\geq h_Z(m)$.
+\end{proof}
+
+Let
+\[
+ \gamma_L:X\longrightarrow\Gr(d+1,H^0(X,L)^*)
+\]
+be the Gauss map of the $L$-embedding and define
+\[
+ g_L(Z):=\max_{W\in\Gr(d+1,H^0(X,L)^*)}
+ |Z\cap\gamma_L^{-1}(W)|.
+\]
+
+\begin{proposition}[Degree-one alternative]\label{prop:degree-one}
+Under Theorem~\ref{thm:exact-floor}, $r_1(Z)\geq d+1$.  If
+$r_1(Z)=d+1$, the degree-one evaluation span is the affine tangent space at
+every point of $Z$; all of $Z$ lies in one fibre of $\gamma_L$ and in its
+projective tangent $d$-plane.
+\end{proposition}
+
+\begin{proof}
+By Lemma~\ref{lem:downward}, $Z$ is absorbing for $L$.  Its degree-one
+evaluation span contains a $(d+1)$-dimensional affine tangent space.  If its
+dimension is exactly $d+1$, every such tangent space along $Z$ is a subspace
+of the same dimension inside it, hence equals it.  Evaluation representatives
+also lie in their own affine tangent spaces.
+\end{proof}
+
+\begin{corollary}[Gauss-fibre refinement]\label{cor:gauss}
+Let $m\geq3$.  If $Z$ is absorbing for $L^m$ and
+$g_L(Z)<\binom{d+m}{d}$, then
+\[
+ h_Z(m),|Z|\geq
+ \max\left\{\binom{d+m}{d},(d+1)(d+2)\right\}.
+\]
+\end{corollary}
+
+\begin{proof}
+If $r_1(Z)=d+1$, Proposition~\ref{prop:degree-one} puts all $Z$ in one Gauss
+fibre, while Theorem~\ref{thm:exact-floor} gives
+$|Z|\geq\binom{d+m}{d}$, a contradiction.  Hence $r_1(Z)\geq d+2$, and
+Proposition~\ref{prop:rank-sensitive} applies.
+\end{proof}
+
+For a smooth quadric, the Gauss map is injective on geometric points, so the
+corollary applies automatically.  Indeed, if two points have the same polar
+hyperplane, after rescaling their difference lies in the radical of the polar
+bilinear form.  If that difference were nonzero, the quadratic identity and
+the fact that both points lie on the quadric would make it a singular point of
+the quadric.  This also covers characteristic two, where the Gauss map may be
+inseparable and ``polarity'' alone would be imprecise.  When the binomial term
+already dominates $(d+1)(d+2)$, the exact theorem is stronger.
+
+\section{Comparison with adjacent interpolation loci}\label{sec:comparison}
+
+\begin{center}
+\begin{tabular}{p{0.25\textwidth}p{0.64\textwidth}}
+\toprule
+Object & Incidence condition \\
+\midrule
+Terracini locus & The union $2Z$ fails to impose the expected independent
+conditions; the tangent span is defective. \\
+Strong tangential base locus & A span generated by selected tangent spaces
+contains another point or tangent space. \\
+Point-span tangent absorption & The span of reduced evaluations already
+contains the tangent space at every support; point rank equals double-point
+rank. \\
+Equality family here & One hyperplane is tangent at an unisolvent set and its
+normal coordinate is second order in each local ring, giving exact binomial
+rank with proper point span. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Absorption implies an extreme Terracini defect unless the point span is
+ambient, but ordinary Terracini defect does not imply absorption.  Nor can
+one generally delete a support and reinterpret absorption as a strong-base-
+locus condition: its evaluation direction may be needed to express its own
+tangent space.  Theorem~\ref{thm:exact-floor} bypasses those classification
+problems by transporting the incidence to points in $\PP^d$ and using initial
+degree.
+
+\section{Exact computational witnesses}\label{sec:replay}
+
+The accompanying replay
+\texttt{repro/verify\_exact\_projection\_floor.py} uses exact rational
+arithmetic to construct simplex-lattice evaluation matrices for a grid of
+$(d,m)$.  It verifies rank $\binom{d+m}{d}$ and checks a falsification
+boundary: deleting one node leaves a nonzero degree-$m$ equation, while
+adjoining first-jet rows increases the value rank.
+
+The replay
+\texttt{repro/verify\_common\_tangent\_extremizer.py} checks explicit local
+fixtures of the family $F=f+yG$.  It verifies unisolvence, prescribed normal
+gradients at the supports, the local second-order identity for $y$, and
+equality of value and double-point ranks.  These are exact finite fixtures.
+They do not replace Bertini, certify every member, prove the universal
+theorem, establish priority, or constitute formal verification.
+
+The positive-characteristic replay
+\texttt{repro/verify\_perfect\_field\_fattening.py} works by exact Gaussian
+elimination modulo $p$.  It exhausts every nonempty reduced support in
+$\PP^1(\mathbf F_2)$, $\PP^1(\mathbf F_3)$, and
+$\PP^2(\mathbf F_2)$ through explicit stated degree cutoffs.  For each
+support it checks the initial-degree gap and, degree by degree, that equality
+of the value and first-neighbourhood kernels occurs only when the value kernel
+is zero.  Separate fixtures exhibit the all-partials-zero case $F=G^p$ and
+the lower-degree radical root $G$.  Its exhaustiveness is confined to these
+finite spaces and degree ranges.
+
+A counterexample to the main theorem would be a smooth $d$-fold over an
+algebraically closed field, a very ample $L$, and a nonempty reduced absorbing $Z$ with
+$h_Z(m)<\binom{d+m}{d}$.  After an adapted projection it would either violate
+the transferred equality $(I_Y)_m=(I_Y^{(2)})_m$ or the perfect-field
+fattening gap.
+
+\section{Scope, limitations, and provenance}\label{sec:scope}
+
+\begin{itemize}[leftmargin=*]
+\item The exact floor is proved over an algebraically closed field of arbitrary
+characteristic.  The proof of the fattening gap uses perfection; no descent to
+imperfect fields is claimed.
+\item $X$ is smooth, projective, integral, and pure-dimensional, and $Z$ is
+nonempty, finite, and reduced.  Nonreduced supports, singular ambient schemes,
+and mixed dimensions need different local statements.
+\item The proper-span sharpness construction is retained over $\CC$ and proves
+existence for a sufficient hypersurface degree.  It neither supplies a
+positive-characteristic Bertini realization, classifies equality, nor
+minimizes that degree.
+\item The Gauss-fibre result is a secondary refinement for $m\geq3$.  It does
+not classify Gauss fibres, contact loci, Terracini loci, or strong base loci.
+\item The work proves no statement about a Millennium Prize Problem.  The
+0--10 research-impact scores used during drafting are editorial heuristics,
+not mathematical claims.
+\item Literature searches covered the cited fat-point, projection, Bertini,
+interpolation, Terracini, jet-ampleness, and Gauss-map sources.  They are not
+exhaustive MathSciNet/zbMATH review or specialist peer review.
+\item The replay scripts are finite diagnostic witnesses.  No Lean
+certification, independent reproduction, or external validation is claimed.
+\end{itemize}
+
+The extension of the exact absorption theorem from characteristic zero to
+arbitrary characteristic applies the standard Frobenius--radical alternative
+in the minimal-degree fattening lemma.  The proper-span complex extremizers
+and secondary block refinements are retained.
+OpenAI Codex assisted with proof discovery and auditing, literature triage,
+replay code, and drafting.  The named author is responsible for the claims
+and any public submission.  No external human peer review or priority
+certification is claimed.
+
+\small
+\begin{thebibliography}{99}
+
+\bibitem{AltmanKleiman1979}
+A.~B.~Altman and S.~L.~Kleiman,
+\emph{Bertini theorems for hypersurface sections containing a subscheme},
+Comm. Algebra 7 (1979), no.~8, 775--790.
+\url{https://doi.org/10.1080/00927877908822375}
+
+\bibitem{BallicoBrambillaSantarsiero2026}
+E.~Ballico, M.~C.~Brambilla, and P.~Santarsiero,
+\emph{On the strong base locus of a projective variety},
+arXiv:2603.15103 (2026).
+\url{https://arxiv.org/abs/2603.15103}
+
+\bibitem{BallicoChiantini2021}
+E.~Ballico and L.~Chiantini,
+\emph{On the Terracini locus of projective varieties},
+Milan J. Math. 89 (2021), 1--17.
+\url{https://doi.org/10.1007/s00032-020-00324-5}
+
+\bibitem{BauerSzemberg2014}
+T.~Bauer and T.~Szemberg,
+\emph{The effect of points fattening in dimension three},
+arXiv:1308.4983 (2014).
+\url{https://arxiv.org/abs/1308.4983}
+
+\bibitem{BeltramettiDiRoccoSommese1999}
+M.~C.~Beltrametti, S.~Di Rocco, and A.~J.~Sommese,
+\emph{On generation of jets for vector bundles},
+Rev. Mat. Complut. 12 (1999), no.~1, 27--45.
+\url{https://doi.org/10.5209/rev_REMA.1999.v12.n1.17182}
+
+\bibitem{BocciChiantini2011}
+C.~Bocci and L.~Chiantini,
+\emph{The effect of points fattening on postulation},
+J. Pure Appl. Algebra 215 (2011), no.~1, 89--98.
+\url{https://doi.org/10.1016/j.jpaa.2010.04.010}
+
+\bibitem{ChungYao1977}
+K.~C.~Chung and T.~H.~Yao,
+\emph{On lattices admitting unique Lagrange interpolations},
+SIAM J. Numer. Anal. 14 (1977), no.~4, 735--743.
+\url{https://doi.org/10.1137/0714050}
+
+\bibitem{DeStefaniGrifoJeffries2020}
+A.~De Stefani, E.~Grifo, and J.~Jeffries,
+\emph{A Zariski--Nagata theorem for smooth $\mathbf Z$-algebras},
+J. Reine Angew. Math. 761 (2020), 123--140.
+\url{https://doi.org/10.1515/crelle-2018-0012}
+
+\bibitem{DaoEtAl2018}
+H.~Dao, A.~De Stefani, E.~Grifo, C.~Huneke, and L.~N\'u\~nez-Betancourt,
+\emph{Symbolic powers of ideals}, in \emph{Singularities and Foliations:
+Geometry, Topology and Applications}, Springer Proc. Math. Stat. 222 (2018),
+387--432.
+\url{https://doi.org/10.1007/978-3-319-73639-6_13}
+
+\bibitem{LeePhillips1991}
+S.~L.~Lee and G.~M.~Phillips,
+\emph{Construction of lattices for Lagrange interpolation in projective space},
+Constr. Approx. 7 (1991), no.~3, 283--297.
+\url{https://doi.org/10.1007/BF01888158}
+
+\bibitem{Wang2022}
+X.~Wang,
+\emph{On the Bertini regularity theorem for arithmetic varieties},
+J. Ec. polytech. Math. 9 (2022), 601--670; see Lemma~A.7.
+\url{https://doi.org/10.5802/jep.191}
+
+\end{thebibliography}
+
+\end{document}
