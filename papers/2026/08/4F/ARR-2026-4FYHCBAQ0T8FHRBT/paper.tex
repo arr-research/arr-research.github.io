@@ -1,0 +1,659 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage{microtype}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{definition}[theorem]{Definition}
+
+\newcommand{\kk}{\mathbf C}
+\newcommand{\PP}{\mathbf P}
+\newcommand{\m}{\mathfrak m}
+\newcommand{\cO}{\mathcal O}
+\newcommand{\length}{\operatorname{length}}
+\newcommand{\Osc}{\operatorname{Osc}}
+\newcommand{\gr}{\operatorname{gr}}
+
+\hypersetup{
+  pdftitle={Prescribed Tjurina Algebras and Complete Spectra in Osculating-Absorbing Gauss Fibres},
+  pdfauthor={Lluis Eriksson}
+}
+
+\title{Prescribed Tjurina Algebras and Complete Spectra\\
+in Osculating-Absorbing Gauss Fibres}
+\author{Lluis Eriksson}
+\date{August 25, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We prove a simultaneous realization theorem for point-span
+osculating-absorbing Gauss fibres in every dimension.  Given the smallest
+permitted support and any list of isolated tangent-section germs of order
+at least \(s+1\), a smooth hypersurface of every degree
+\[
+ D\ge1+\sum_i(\tau_i+2)
+\]
+can be chosen whose fibre has exactly the prescribed completed Tjurina
+algebras.  Its length and dual multiplicity are respectively
+\(\sum_i\tau_i\) and \(\sum_i\mu_i\).  For surfaces, the classical complete spectrum
+of ordinary plane multiple points then realizes every integer fibre length
+between
+\[
+ \binom{m+2}{2}\left\lfloor\frac{3s^2+4s-3}{4}\right\rfloor
+ \quad\text{and}\quad
+ \binom{m+2}{2}s^2,
+\]
+while the dual multiplicity stays fixed.
+
+We also give a short strong-Lefschetz construction of extremal
+three-variable Tjurina algebras.  The explicit ordinary germs
+\[
+ x^{s+1}+y^{s+1}+z^{s+1}+(x+y+z)^{s+2}
+\]
+attain the value \(s(s+2)(2s-1)/3\), classically computed by Wahl as the
+minimum for positive-weight deformations of the Fermat cone.  Our proof
+combines an Euler-reduced universal lower bound with an initial-ideal
+comparison and Stanley's theorem for
+\(\mathbf C[x,y,z]/(x^s,y^s,z^s)\).  This yields sharp absorbed
+threefold fibres at minimal reduced support.  All statements are over
+\(\mathbf C\); the degree thresholds are sufficient and not claimed
+minimal.
+\end{abstract}
+
+\section{Introduction}
+
+For an isolated hypersurface germ
+\(h\in\mathbf C[[x_1,\ldots,x_d]]\), its Tjurina and Milnor numbers are
+\[
+ \tau(h)=\dim_{\mathbf C}\frac{\mathbf C[[x_1,\ldots,x_d]]}
+ {(h,\partial_1h,\ldots,\partial_dh)},
+ \qquad
+ \mu(h)=\dim_{\mathbf C}\frac{\mathbf C[[x_1,\ldots,x_d]]}
+ {(\partial_1h,\ldots,\partial_dh)}.
+\]
+Fixing the order of \(h\) leaves a nontrivial minimization problem for
+\(\tau\).  A recent finite-jet argument gives a universal family of lower
+bounds and determines the exact plane minimum
+\cite{ErikssonEuler2026}.  In three variables its specialization is
+\[
+ \tau(h)\ge \frac{s(s+2)(2s-1)}3,
+\]
+which is sharp.  For \(s\ge3\), the same value was already computed by
+Wahl as the minimum on positive-weight deformations of the degree-\(s+1\)
+Fermat cone \cite[Example~4.7]{Wahl1985}; see also
+\cite[Example~4.6]{Almiron2022}.  We supply a short proof for the single
+uniform extremizer obtained by adding the \((s+2)\)-nd power of a
+Lefschetz linear form.  This is an explicit realization and a bridge to the
+global application, not a priority claim for the numerical minimum.
+
+The main purpose is geometric.  For a smooth hypersurface
+\(X^d\subset\PP^{d+1}\), the completed local algebra of a Gauss fibre at a
+point is the Tjurina algebra of the corresponding tangent-section germ
+\cite{ErikssonGauss2026}.  Point-span order-\(s\) osculating absorption in
+the complete \(m\)-uple embedding forces both order at least \(s+1\) and at
+least \(\binom{d+m}{d}\) reduced support points
+\cite{ErikssonOsculating2026,ErikssonEuler2026}.  Combining the universal
+floor with the explicit Lefschetz realization gives a sharp
+dimension-three fibre endpoint.
+
+For surfaces, the endpoint was already known.  We strengthen it in a
+different direction.  Classical work on ordinary plane singularities says
+that every integral Tjurina number between the sharp minimum and the Milnor
+number occurs \cite{BGM1988,CaninoEtAl2025,CaninoEtAlArxiv}.  We prove that
+arbitrary finite lists of these germs can be installed simultaneously on an
+extremal absorbed Gauss fibre.  Hence the entire integer interval of fibre
+lengths occurs while the multiplicity of the dual hypersurface is fixed.
+
+No exhaustive priority assertion is intended.  The local plane spectrum,
+Wahl's three-variable minimum, and the strong Lefschetz input are
+established results.  The content here is the prescribed-list realization
+under the absorption constraint, its complete global spectrum consequence,
+and the direct Lefschetz extremizer used for the threefold endpoint.
+
+\section{The Euler-reduced lower bound in three variables}
+
+We use the convention \(\binom ab=0\) for \(a<b\), including negative
+upper indices.
+
+\begin{lemma}[Euler reduction]\label{lem:euler}
+Let \(R=\mathbf C[[x_1,\ldots,x_d]]\) and
+\(h\in\m^{s+1}\).  Put
+\[
+ r=h-\frac1{s+1}\sum_{i=1}^d x_i\partial_i h.
+\]
+Then \(r\in\m^{s+2}\) and
+\[
+ (h,\partial_1h,\ldots,\partial_dh)
+ =(r,\partial_1h,\ldots,\partial_dh).
+\]
+\end{lemma}
+
+\begin{proof}
+Euler's identity cancels the homogeneous component of degree \(s+1\).
+The equality of ideals follows directly from the displayed definition of
+\(r\).  Notice that the derivative generators are not replaced by the
+derivatives of \(r\).
+\end{proof}
+
+\begin{theorem}[Exact three-variable floor]\label{thm:local3}
+Let \(s\ge1\), and let \(h\in\mathbf C[[x,y,z]]\) have an isolated critical
+point and order at least \(s+1\).  Then
+\begin{equation}\label{eq:threefloor}
+ \tau(h)\ge T^{(3)}_s:=\frac{s(s+2)(2s-1)}3.
+\end{equation}
+This is the best possible bound for every \(s\).
+\end{theorem}
+
+\begin{remark}[Historical scope]\label{rem:wahl}
+For \(s\ge3\), Wahl computed the same sharp number in his study of
+positive-weight deformations of
+\(x^{s+1}+y^{s+1}+z^{s+1}\)
+\cite[Example~4.7]{Wahl1985}; Almir\'on records the formula explicitly in
+\cite[Example~4.6]{Almiron2022}.  The lower-bound proof below applies to
+every isolated germ of order at least \(s+1\).  Proposition~\ref{prop:equality}
+then gives a particularly uniform one-term extremizer.  We do not claim
+priority for the numerical minimum or for the abstract existence of
+extremal positive-weight deformations.
+\end{remark}
+
+\begin{proof}[Proof of the lower bound]
+Work in \(R/\m^{2s}\), whose dimension is \(\binom{2s+2}{3}\).
+By Lemma~\ref{lem:euler}, the Tjurina ideal has three generators of order at
+least \(s\) and one generator of order at least \(s+2\).  Their images are
+therefore spanned by at most
+\[
+ 3\binom{s+2}{3}+\binom{s}{3}
+\]
+coefficient multiples.  Rank is at most the dimension of the source, so
+\[
+ \tau(h)\ge
+ \binom{2s+2}{3}-3\binom{s+2}{3}-\binom{s}{3}
+ =\frac{s(s+2)(2s-1)}3.
+\]
+The Tjurina algebra surjects onto this truncated quotient.  This proves the
+claim, including \(s=1,2\) under the binomial convention.
+\end{proof}
+
+\section{A strong-Lefschetz extremizer}
+
+Put \(\ell=x+y+z\) and
+\begin{equation}\label{eq:extremizer}
+ f_s=x^{s+1}+y^{s+1}+z^{s+1}+\ell^{s+2}.
+\end{equation}
+Its initial form is Fermat and defines a smooth plane curve.  Thus \(f_s\)
+is an ordinary isolated hypersurface singularity of multiplicity \(s+1\),
+and \(\mu(f_s)=s^3\).
+
+\begin{lemma}[Lefschetz quotient]\label{lem:lefschetz}
+For \(s\ge1\), let
+\[
+ A_s=\mathbf C[x,y,z]/(x^s,y^s,z^s).
+\]
+Then
+\[
+ \dim_{\mathbf C} A_s/(\ell^{s+2})
+ =\frac{s(s+2)(2s-1)}3.
+\]
+\end{lemma}
+
+\begin{proof}
+For \(s=1\), the assertion is immediate from \(A_1=\mathbf C\), so assume
+\(s\ge2\).
+The linear form \(\ell=x+y+z\) is a strong Lefschetz element of the
+monomial complete intersection \(A_s\)
+\cite{Stanley1980,PhuongTran2023}.  If \(H_j=\dim_{\mathbf C}(A_s)_j\),
+multiplication by \(\ell^{s+2}\) from degree \(j-s-2\) to degree \(j\)
+has maximal rank.  Therefore
+\[
+ \dim\bigl(A_s/(\ell^{s+2})\bigr)_j
+ =\max\{H_j-H_{j-s-2},0\}.
+\]
+The Hilbert function of \(A_s\) is symmetric and unimodal with socle degree
+\(3(s-1)\).  Its positive difference
+\(H_j-H_{j-s-2}\) occurs precisely for \(0\le j\le2s-1\), and the
+difference is nonpositive thereafter (eventually both terms vanish).
+Equivalently, the midpoint between \(j\) and \(j-s-2\) crosses the symmetry
+centre between \(2s-1\) and \(2s\).  Summing the positive part through degree
+\(2s-1\), using
+\(\sum H_jt^j=(1-t^s)^3/(1-t)^3\), gives
+\[
+ \sum_{j=0}^{2s-1}(H_j-H_{j-s-2})
+ =\binom{2s+2}{3}-3\binom{s+2}{3}-\binom{s}{3}
+ =\frac{s(s+2)(2s-1)}3.
+\]
+\end{proof}
+
+\begin{proposition}[Equality family]\label{prop:equality}
+For every \(s\ge1\), the germ \(f_s\) in \eqref{eq:extremizer} satisfies
+\[
+ \mu(f_s)=s^3,
+ \qquad
+ \tau(f_s)=\frac{s(s+2)(2s-1)}3.
+\]
+\end{proposition}
+
+\begin{proof}
+Euler reduction applied to \eqref{eq:extremizer} gives
+\[
+ f_s-\frac1{s+1}(x\partial_xf_s+y\partial_yf_s+z\partial_zf_s)
+ =-\frac1{s+1}\ell^{s+2}.
+\]
+Hence \(\ell^{s+2}\) belongs to the Tjurina ideal \(I_s\).  The lowest
+homogeneous forms of its three derivative generators are nonzero multiples
+of \(x^s,y^s,z^s\).  Thus the \(\m\)-adic initial ideal satisfies
+\[
+ \operatorname{in}_{\m}(I_s)
+ \supseteq (x^s,y^s,z^s,\ell^{s+2}).
+\]
+Here \(\operatorname{in}_{\m}(I_s)\) denotes the ideal generated by the
+lowest nonzero homogeneous forms of all elements of \(I_s\).  Length is
+preserved on passage to the associated graded algebra, so
+Lemma~\ref{lem:lefschetz} yields
+\[
+ \tau(f_s)\le\dim_{\mathbf C}A_s/(\ell^{s+2})=T^{(3)}_s.
+\]
+The reverse inequality is Theorem~\ref{thm:local3}.  Finally, the ordinary
+leading form gives \(\mu(f_s)=s^3\).
+\end{proof}
+
+The containment of initial ideals, rather than an asserted equality, is
+important.  It supplies only the upper bound needed to meet the universal
+lower bound.
+
+\section{Absorbed Gauss fibres}
+
+Let \(X^d\subset\PP^{d+1}_{\mathbf C}\) be a smooth non-linear hypersurface,
+let \(\gamma_X:X\to X^\vee\) be its Gauss morphism, and fix a tangent
+hyperplane \(\eta=[W]\).  Write \(\Gamma_\eta\) for the scheme-theoretic
+fibre and \(Z=(\Gamma_\eta)_{\mathrm{red}}\).  Let \(H=\cO_X(1)\) and
+\[
+ S_Z=\operatorname{Im}\left(
+ H^0(Z,H^m|_Z)^*\longrightarrow H^0(X,H^m)^*\right).
+\]
+The support is \emph{point-span order-\(s\) osculating-absorbing} if
+\[
+ \widehat\Osc^s_p(H^m)\subseteq S_Z
+ \qquad(p\in Z).
+\]
+
+We recall two inputs, with their scopes.  First, if \(h_p\) is a local
+equation of \(X\cap W\) at \(p\), then
+\begin{equation}\label{eq:fibrealgebra}
+ \widehat{\cO}_{\Gamma_\eta,p}
+ \cong\mathbf C[[z_1,\ldots,z_d]]/(h_p,\partial h_p).
+\end{equation}
+Second, absorption in the complete \(m\)-uple embedding, with
+\(1\le s\le m\), implies
+\begin{equation}\label{eq:support}
+ h_p\in\m_p^{s+1},
+ \qquad
+ |Z|\ge N_{d,m}:=\binom{d+m}{d}.
+\end{equation}
+These facts are proved in
+\cite{ErikssonGauss2026,ErikssonOsculating2026,ErikssonEuler2026}; they are
+not reproved as new results here.
+
+\begin{corollary}[Sharp numerical floor in dimension three]\label{cor:gauss3}
+Suppose \(d=3\) and \(Z\) is point-span order-\(s\)
+osculating-absorbing in the complete \(H^m\) embedding, where
+\(1\le s\le m\).  Then
+\[
+ \length(\Gamma_\eta)
+ \ge \frac{s(s+2)(2s-1)}3\,|Z|
+ \ge \frac{s(s+2)(2s-1)}3\binom{m+3}{3}.
+\]
+Both factors can be attained simultaneously at sufficiently large ambient
+degree, as proved in Theorem~\ref{thm:global3} below.
+\end{corollary}
+
+\begin{proof}
+Sum Theorem~\ref{thm:local3} over \eqref{eq:fibrealgebra}, then apply
+\eqref{eq:support}.
+\end{proof}
+
+\section{Simultaneous realization}
+
+The following theorem isolates the interpolation argument used for both
+geometric consequences.
+
+General deformation-theoretic realization results for prescribed
+singularities have a substantial literature, including
+\cite{GreuelKarras1989}.  The theorem below uses an elementary
+high-degree separator construction because it must retain the common
+tangent hyperplane, unisolvent support, and absorption constraint.
+Its separator--Bertini architecture already appears for two ordinary local
+types in \cite{ErikssonGauss2026}; here we record the heterogeneous
+finite-determinacy version and do not claim a new general method for
+prescribed singularities.
+
+\begin{theorem}[Prescribed Tjurina algebras on an extremal fibre]
+\label{thm:prescribe}
+Let \(d\ge1\), \(1\le s\le m\), and
+\(N=\binom{d+m}{d}\).  Choose \(N\) isolated convergent hypersurface germs
+\[
+ g_i\in\mathbf C\{z_1,\ldots,z_d\},
+ \qquad \operatorname{ord}(g_i)\ge s+1,
+\]
+and put
+\[
+ E=\sum_{i=1}^N(\tau(g_i)+2).
+\]
+If
+\begin{equation}\label{eq:degree}
+ D\ge E+1,
+\end{equation}
+then there exist a smooth integral hypersurface
+\(X\subset\PP^{d+1}\) of degree \(D\), a hyperplane \(W\), and a tangent
+hyperplane point \(\eta=[W]\in X^\vee\) such that:
+\begin{enumerate}[label=(\roman*)]
+\item \(Z=(\gamma_X^{-1}(\eta))_{\mathrm{red}}\) consists of exactly \(N\)
+points and \(\dim S_Z=N<h^0(X,H^m)\);
+\item \(Z\) is point-span order-\(s\) osculating-absorbing;
+\item the tangent-section germ at the \(i\)-th point is contact equivalent
+to \(g_i\), hence
+\[
+ \widehat{\cO}_{\Gamma_\eta,p_i}
+ \cong\mathbf C[[z_1,\ldots,z_d]]/(g_i,\partial g_i);
+\]
+\item
+\[
+ \length(\Gamma_\eta)=\sum_{i=1}^N\tau(g_i),
+ \qquad
+ \operatorname{mult}_{\eta}(X^\vee)=\sum_{i=1}^N\mu(g_i).
+\]
+\end{enumerate}
+The degree bound \eqref{eq:degree} is sufficient and is not asserted to be
+minimal.
+\end{theorem}
+
+\begin{proof}
+Choose \(N\) points \(Z\subset W\cong\PP^d\) for which degree-\(m\)
+evaluation is an isomorphism.  One explicit choice in an affine chart is
+the simplex lattice
+\[
+ [1:i_1:\cdots:i_d],
+ \qquad i_j\in\mathbf Z_{\ge0},\quad \sum_j i_j\le m;
+\]
+multivariate Newton interpolation proves unisolvence.
+
+Put \(a_i=\tau(g_i)+1\).  Isolated hypersurface germs are contact
+\((\tau+1)\)-determined \cite[Corollary~2.24]{GLS2007}; prescribing the
+\(a_i\)-jet therefore fixes the contact class of \(g_i\).  The elementary
+separator product makes
+\[
+ H^0(\PP^d,\cO(D))\longrightarrow
+ \bigoplus_{i=1}^N\cO_{\PP^d,p_i}/\m_{p_i}^{a_i+1}
+\]
+surjective once
+\[
+ D\ge\sum_i(a_i+1)-1=E-1.
+\]
+Indeed, an \(a_i\)-jet at \(p_i\) can be multiplied by
+\(\prod_{j\ne i}\ell_{ij}^{a_j+1}\), where \(\ell_{ij}\) vanishes at
+\(p_j\) and is a unit at \(p_i\).  The stronger bound
+\eqref{eq:degree} leaves one degree after the product
+\[
+ P_u=\prod_{i=1}^N\ell_{i,u}^{a_i+1},
+ \qquad \deg P_u=E,
+\]
+so the affine system with the prescribed jets generates first jets at
+every \(u\in W\setminus Z\).
+
+A member singular at a specified \(u\in W\setminus Z\) imposes \(d+1\)
+linear conditions, while \(\dim W=d\).  Hence a general degree-\(D\)
+equation \(f\) on \(W\) is smooth away from \(Z\) and has exactly the chosen
+contact types at \(Z\).
+
+Embed \(W=V(y)\) in \(\PP^{d+1}\) and set
+\[
+ F_G=f+yG,
+ \qquad G\in H^0(\PP^{d+1},\cO(D-1)).
+\]
+Choose \(G\) general and nonzero at \(Z\).  Then \(X=V(F_G)\) is smooth: at
+\(Z\) its normal derivative is \(G(p)\ne0\); on \(W\setminus Z\) this
+follows from \(df\ne0\); and off \(W\) the singular-point incidence has
+fibre codimension \(d+2>\dim\PP^{d+1}=d+1\).  The smooth hypersurface is
+connected and therefore integral.  Locally on \(X\), \(y=-f/G\), so the
+tangent-section germs are contact equivalent to the prescribed germs.
+
+The singular locus of \(X\cap W\) is exactly \(Z\), hence the reduced Gauss
+fibre over \([W]\) is exactly \(Z\).  Each \(\tau(g_i)\ge1\), while
+\(N=\binom{d+m}{d}\ge m+1\); hence \(D\ge E+1>m\), and degree-\(m\) ambient
+forms identify with \(H^0(X,H^m)\).  A form vanishing on \(Z\) restricts to
+zero on \(W\) by unisolvence, and is consequently divisible by \(y\).
+Along \(X\), \(y=-f/G\) has order at least \(s+1\) at every support point.  The
+reverse-annihilator criterion gives order-\(s\) absorption, while evaluation
+gives \(\dim S_Z=N\).  Properness follows from
+\(h^0(X,H^m)=\binom{d+m+1}{d+1}>N\).
+
+Finally, \eqref{eq:fibrealgebra} gives the length formula.  The dual
+multiplicity formula is the sum of the local Milnor numbers; see
+\cite{Parusinski1991} for the classical dual-multiplicity result and
+\cite{ErikssonGauss2026,ErikssonDual2026} for its use in this fibre
+setting.
+\end{proof}
+
+\section{Complete surface spectra and sharp threefold fibres}
+
+Set
+\[
+ T^{(2)}_s=\left\lfloor\frac{3s^2+4s-3}{4}\right\rfloor.
+\]
+An ordinary plane germ of multiplicity \(s+1\) has Milnor number \(s^2\),
+and its Tjurina number assumes every integer from \(T^{(2)}_s\) through
+\(s^2\) \cite[Theorem~5.1]{CaninoEtAlArxiv}; that theorem in turn attributes
+the spectrum to the classical sources recorded there.  We use this local
+result rather than claiming it.
+
+\begin{theorem}[Complete absorbed surface spectrum]\label{thm:spectrum2}
+Let \(1\le s\le m\), put \(N=\binom{m+2}{2}\), and assume
+\[
+ D\ge(s^2+2)N+1.
+\]
+For every integer \(L\) satisfying
+\[
+ NT^{(2)}_s\le L\le Ns^2,
+\]
+there exist a smooth integral surface \(X\subset\PP^3\) of degree \(D\)
+and a point-span order-\(s\) osculating-absorbing Gauss fibre with
+\[
+ |Z|=N,
+ \qquad \length(\Gamma_\eta)=L,
+ \qquad \operatorname{mult}_{\eta}(X^\vee)=Ns^2.
+\]
+More strongly, Theorem~\ref{thm:prescribe} realizes any specified list
+of \(N\) ordinary plane germs of multiplicity \(s+1\), including their
+completed Tjurina algebras.
+\end{theorem}
+
+\begin{proof}
+Write \(L-NT^{(2)}_s=r_1+\cdots+r_N\) with
+\(0\le r_i\le s^2-T^{(2)}_s\).  Such a decomposition exists by a greedy
+choice.  For each \(i\), choose an ordinary plane germ with Tjurina number
+\(T^{(2)}_s+r_i\), using the cited complete local spectrum, and apply
+Theorem~\ref{thm:prescribe} with \(d=2\).
+\end{proof}
+
+\begin{theorem}[Sharp absorbed threefold fibres]\label{thm:global3}
+Let \(1\le s\le m\), put
+\[
+ N=\binom{m+3}{3},
+ \qquad T^{(3)}_s=\frac{s(s+2)(2s-1)}3,
+\]
+and assume
+\[
+ D\ge\bigl(T^{(3)}_s+2\bigr)N+1.
+\]
+Then there exist a smooth integral threefold
+\(X\subset\PP^4\) of degree \(D\) and a point-span order-\(s\)
+osculating-absorbing Gauss fibre such that
+\[
+ |Z|=N,
+ \qquad
+ \length(\Gamma_\eta)=T^{(3)}_sN,
+ \qquad
+ \operatorname{mult}_{\eta}(X^\vee)=s^3N.
+\]
+Thus Corollary~\ref{cor:gauss3} is sharp simultaneously in local length and
+reduced support size.
+\end{theorem}
+
+\begin{proof}
+Apply Theorem~\ref{thm:prescribe} with \(d=3\) and all prescribed
+germs equal to \(f_s\).  Proposition~\ref{prop:equality} supplies their
+Tjurina and Milnor numbers.
+\end{proof}
+
+\section{Scope, reproducibility, and open directions}
+
+The argument is over \(\mathbf C\).  Euler division by \(s+1\), contact
+determinacy, the stated Gauss-fibre inputs, and strong Lefschetz are used in
+that setting.  No positive-characteristic extension is asserted.
+
+The replay accompanying the paper has three deliberately separated layers.
+Exact binomial arithmetic checks the formula and maximizing truncation for
+\(1\le s\le50\).  Exact rational matrix ranks check the relevant Lefschetz
+maps for \(1\le s\le8\).  Sparse quotient computations over two large prime
+fields directly check the displayed germ for \(2\le s\le7\).  These finite
+fixtures test the implementation and examples; they do not prove the
+universal theorems.
+
+The paper identifies the Euler-reduced floor with Wahl's sharp value in
+three variables and realizes it by the displayed Lefschetz family; no
+analogous assertion is made in four or more variables.  Classification of
+all equality germs is also open.
+For higher dimensions a recent, non-refereed preprint gives stronger
+asymptotic ratio estimates and Fermat-deformation families
+\cite{MaZuo2026}; it is not used here.
+The global degree thresholds come from transparent separator products and
+are probably far from optimal.  The surface spectrum fixes only numerical
+length and dual multiplicity unless the stronger prescribed-list statement
+is invoked; different Tjurina algebras of the same length need not be
+isomorphic.
+
+\section{Conclusion}
+
+The prescribed-list theorem turns local Tjurina data into exact absorbed
+Gauss fibres at minimal reduced support.  In the plane case it upgrades
+endpoint sharpness to the full integer spectrum at fixed dual multiplicity.
+In three variables, Euler reduction and strong Lefschetz give a direct
+uniform representative of Wahl's sharp value and hence an exact global
+endpoint for threefold hypersurfaces.  Equality classification,
+higher-variable sharpness, and optimal ambient degrees remain distinct
+problems.
+
+\begin{thebibliography}{99}
+
+\bibitem{Almiron2022}
+P.~Almir\'on,
+\emph{On the quotient of Milnor and Tjurina numbers for two-dimensional
+isolated hypersurface singularities},
+Math. Nachr. \textbf{295} (2022), 1254--1263.
+\href{https://doi.org/10.1002/mana.202100371}
+{doi:10.1002/mana.202100371}.
+
+\bibitem{BGM1988}
+J.~Brian\c{c}on, M.~Granger, and P.~Maisonobe,
+\emph{Le nombre de modules du germe de courbe plane \(x^a+y^b=0\)},
+Math. Ann. \textbf{279} (1988), 535--551.
+\href{https://doi.org/10.1007/BF01456286}{doi:10.1007/BF01456286}.
+
+\bibitem{CaninoEtAl2025}
+S.~Canino, A.~Gimigliano, and M.~Id\`a,
+\emph{On the Jacobian scheme of a plane curve},
+Comm. Algebra \textbf{53} (2025), 582--592.
+\href{https://doi.org/10.1080/00927872.2024.2384056}
+{doi:10.1080/00927872.2024.2384056}.
+
+\bibitem{CaninoEtAlArxiv}
+S.~Canino, A.~Gimigliano, and M.~Id\`a,
+\emph{On the Jacobian scheme of a plane curve}, arXiv:2302.07042v2 (2024),
+especially Theorem~5.1 and Remark~5.8.
+\url{https://arxiv.org/abs/2302.07042}.
+
+\bibitem{ErikssonGauss2026}
+L.~Eriksson,
+\emph{Fat Gauss Fibres and Tjurina--Milnor Defects Forced by Osculating
+Absorption}, ARR-2026-2MZWECWVEN97ARVQ, v1 (2026).
+\url{https://arr-research.github.io/papers/ARR-2026-2MZWECWVEN97ARVQ/}.
+
+\bibitem{ErikssonDual2026}
+L.~Eriksson,
+\emph{Exact multiplicity floors for dual singularities from absorbing Gauss
+fibres}, ARR-2026-0WAPCGQHNC82S8VJ, v1 (2026).
+\url{https://arr-research.github.io/papers/ARR-2026-0WAPCGQHNC82S8VJ/}.
+
+\bibitem{ErikssonOsculating2026}
+L.~Eriksson,
+\emph{Exact Higher-Osculating Rank Floors over Arbitrary Fields},
+ARR-2026-66Q8M61AA196T8BC, v2 (2026).
+\url{https://arr-research.github.io/papers/ARR-2026-66Q8M61AA196T8BC/versions/v2/}.
+
+\bibitem{ErikssonEuler2026}
+L.~Eriksson,
+\emph{Euler-Reduced Tjurina Floors for Osculating-Absorbing Gauss Fibres},
+ARR-2026-5XEX8EX0629R997Y, v2 (2026).
+\url{https://arr-research.github.io/papers/ARR-2026-5XEX8EX0629R997Y/versions/v2/}.
+
+\bibitem{GLS2007}
+G.-M.~Greuel, C.~Lossen, and E.~Shustin,
+\emph{Introduction to Singularities and Deformations},
+Springer Monographs in Mathematics, Springer, 2007.
+\href{https://doi.org/10.1007/3-540-28419-2}{doi:10.1007/3-540-28419-2}.
+
+\bibitem{GreuelKarras1989}
+G.-M.~Greuel and U.~Karras,
+\emph{Families of varieties with prescribed singularities},
+Compos. Math. \textbf{69} (1989), 83--110.
+\url{https://www.numdam.org/item/CM_1989__69_1_83_0/}.
+
+\bibitem{MaZuo2026}
+X.~Ma and Y.~Zuo,
+\emph{The quotient of Milnor number by Tjurina number of hypersurface
+singularities in arbitrary characteristic},
+arXiv:2604.17757v1 (2026), non-refereed preprint.
+\url{https://arxiv.org/abs/2604.17757}.
+
+\bibitem{Parusinski1991}
+A.~Parusi\'nski,
+\emph{Multiplicity of the dual variety},
+Bull. Lond. Math. Soc. \textbf{23} (1991), 429--436.
+\href{https://doi.org/10.1112/blms/23.5.429}
+{doi:10.1112/blms/23.5.429}.
+
+\bibitem{PhuongTran2023}
+H.~V.~N.~Phuong and Q.~H.~Tran,
+\emph{A new proof of Stanley's theorem on the strong Lefschetz property},
+Colloq. Math. \textbf{173} (2023), 1--8.
+\href{https://doi.org/10.4064/cm8987-11-2022}
+{doi:10.4064/cm8987-11-2022}.
+
+\bibitem{Stanley1980}
+R.~P.~Stanley,
+\emph{Weyl groups, the hard Lefschetz theorem, and the Sperner property},
+SIAM J. Algebraic Discrete Methods \textbf{1} (1980), 168--184.
+\href{https://doi.org/10.1137/0601021}{doi:10.1137/0601021}.
+
+\bibitem{Wahl1985}
+J.~M.~Wahl,
+\emph{A characterization of quasi-homogeneous Gorenstein surface
+singularities},
+Compos. Math. \textbf{55} (1985), 269--288, especially Example~4.7.
+\url{https://www.numdam.org/item/CM_1985__55_3_269_0/}.
+
+\end{thebibliography}
+
+\end{document}
