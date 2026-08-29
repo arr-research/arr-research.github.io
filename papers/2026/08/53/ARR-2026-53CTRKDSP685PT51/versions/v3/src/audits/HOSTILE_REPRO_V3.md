@@ -6,11 +6,9 @@ Restricción respetada: no se editó `main.tex`.
 
 ## Veredicto
 
-**PASS técnico para el candidato de publicación.** No encontré un fallo en los replays, las constantes \(C_p\), el lower bound de complejidad, la extensión uniforme de corona, las referencias internas ni la frontera de claims sobre estimación.
+**PASS LOCAL FINAL para el candidato de publicación.** No encontré un fallo pendiente en los replays, las constantes \(C_p\), el lower bound de complejidad, la extensión uniforme de corona, las referencias internas, las figuras ni la frontera de claims sobre estimación.
 
-**HOLD obligatorio post-publicación:** a la hora de esta auditoría, la URL ARR citada sirve aún la versión v2. Después de publicar v3 hay que comprobar que la página estable muestra v3, el título nuevo, el SHA-256 canónico del PDF efectivamente publicado y los assets de fuente/replay/auditoría. Ésta es una condición de secuencia externa, no un defecto matemático del candidato local.
-
-Hay una observación editorial menor no bloqueante: el panel de probabilidad de slab recorta la curva exacta a \(10^{-8}\) sin identificar explícitamente ese suelo gráfico.
+La verificación de la URL ARR se ejecutará necesariamente después de publicar v3: a la hora de esta auditoría, la página estable sirve todavía v2. Ese control posterior comprueba el despliegue, pero ya no queda un blocker local.
 
 ## 1. Entorno y ejecución independiente
 
@@ -51,7 +49,7 @@ Los hashes fueron idénticos antes y después:
 |---|---|
 | `figures/saturation_law.pdf` | `093d683fcc2b2a344255920ce0055641f694a91e37f767a9c580bd2bf0aadb97` |
 | `repro/saturation_certificate.json` | `b40a9bb318b48206fc0c5c9fc592c7b699d48a26b9b12b4ecc4805cf6215b9d1` |
-| `figures/finite_sample_resolution.pdf` | `358eecd0dd8e75568c4916c594b056df7232db610a5e6b49f48ef67af7c3d0fa` |
+| `figures/finite_sample_resolution.pdf` | `b95dd92231aa7a9ca67fca0fcfa0293f4d4f627882a1afdfb3ec1d7efb3675a4` |
 | `repro/finite_sample_resolution.json` | `4bd3e130d11670c3a51d51ff0a4d962078ae415e95f4e90260e23da9293f9def` |
 
 Coinciden con los cuatro valores declarados en `repro/README.md`.
@@ -78,7 +76,8 @@ se ejecutaron tres pases desde `src/`, seguidos de un cuarto pase de control. Re
 - 22 páginas;
 - cero warnings LaTeX, referencias indefinidas, labels duplicados, `Overfull` o `Underfull`;
 - el hash del cuarto pase coincidió con el del tercero;
-- hash local al cierre auditado: `c66007bd4c9bcda8a8a8b04bfb724ab4f25a760554152e0d0c08aa3ace1f8ba0`.
+- SHA-256 del fuente final auditado: `ab0d431ecb8e7cf8dfa87b7e71ed79308ceaa64dd1c2c1aeef3bfbfc6d929a93`;
+- hash local del PDF al cierre auditado: `4a6d9fc2b36b9ef1efdf30373175ce49bf412543e30acd944501f150791aef45`.
 
 Este hash es una evidencia del toolchain local, no una promesa de identidad binaria entre distribuciones TeX no fijadas. Para una reclamación fuerte de byte-reproducibilidad pública conviene registrar también la versión de LuaTeX/MiKTeX y el SHA del PDF de release.
 
@@ -245,7 +244,7 @@ El certificado principal tiene schema `single-sigmoid-geometry-certificate-v3`. 
 
 Se renderizaron visualmente las 22 páginas del PDF y las dos figuras en resolución ampliada. No se observaron textos cortados, solapes, glifos rotos ni tablas fuera de margen. Las figuras son legibles e incorporan las muestras, repeticiones, ejes y distinción mediana/percentil 90 declaradas.
 
-### Hallazgo menor: suelo no declarado de la curva exacta
+### Close-out del suelo gráfico
 
 En `finite_sample_phase_diagram.py`, la curva exacta se dibuja como
 
@@ -253,15 +252,22 @@ En `finite_sample_phase_diagram.py`, la curva exacta se dibuja como
 np.maximum(exact, 1e-8)
 ```
 
-pero la leyenda sólo dice `exact Gaussian probability`. Los valores exactos del certificado para \(n=144,288,576,1152\) son aproximadamente
+y conserva deliberadamente un suelo de visualización. Los valores exactos del certificado para \(n=144,288,576,1152\) son aproximadamente
 
 ```text
 1.3193e-9, 1.7406e-18, 3.0296e-36, 9.1782e-72,
 ```
 
-mientras que la gráfica muestra un plateau en \(10^{-8}\). El certificado es correcto y los puntos de frecuencia cero sí están identificados como plotting limit; falta identificar el clipping de la curva exacta. Recomendación no bloqueante: etiquetar `exact probability (clipped at 1e-8)` o ampliar el eje.
+mientras que la gráfica muestra un plateau en \(10^{-8}\). El fix actual:
 
-**Resultado visual/certificados: PASS con observación menor.**
+- etiqueta la curva `exact probability (display floor 10^{-8})`;
+- declara en el caption que el clipping ocurre sólo en el plot;
+- declara que el JSON mantiene valores no truncados;
+- evita atribuir la escala \(n/(rd)\) como óptima a los paneles de eigenvalor y ángulo, que se describen correctamente como diagnósticos.
+
+Se regeneró la figura y se obtuvo exactamente `b95dd92231aa7a9ca67fca0fcfa0293f4d4f627882a1afdfb3ec1d7efb3675a4`; el JSON permaneció byte-idéntico con SHA `4bd3e130d11670c3a51d51ff0a4d962078ae415e95f4e90260e23da9293f9def`. La inspección visual ampliada confirma que la nueva leyenda es legible.
+
+**Resultado visual/certificados: PASS sin hallazgos pendientes.**
 
 ## 8. Verificación ARR post-publicación
 
@@ -280,7 +286,7 @@ Eso es esperable antes de publicar, pero significa que las frases en presente so
 4. que el release incluya fuente, `requirements.txt`, los cuatro scripts, los dos JSON, las dos figuras, README, auditorías y manifest;
 5. que los cuatro hashes declarados sigan coincidiendo al descargar y repetir.
 
-Hasta completar esa verificación, el estado es **PASS técnico / HOLD de publicación**. Si los cinco puntos pasan, el veredicto final se convierte en **PASS integral** sin requerir un nuevo cambio matemático.
+El estado local es **PASS FINAL**. Los cinco puntos anteriores son el control de integridad del despliegue posterior, no una razón para retener el candidato local.
 
 ## Resumen de close-outs
 
@@ -295,7 +301,7 @@ Hasta completar esa verificación, el estado es **PASS técnico / HOLD de public
 | metadata PDF interna | PASS |
 | frontera oracle/estimator | PASS |
 | fix README `cd src` | PASS |
-| figuras/certificados | PASS, observación menor |
-| registro ARR v3 | HOLD hasta publicación |
+| figuras/certificados | PASS |
+| registro ARR v3 | control post-publicación |
 
-**Decisión operativa:** el candidato local puede publicarse. No declarar cierre reproducible integral hasta ejecutar la verificación ARR post-publicación.
+**Decisión operativa: PASS LOCAL FINAL.** El candidato puede publicarse. Tras el release sólo resta confirmar que ARR sirve exactamente estos artefactos y metadatos.
