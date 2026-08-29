@@ -1,0 +1,1474 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=27mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\E}{\mathbb E}
+\newcommand{\R}{\mathbb R}
+\newcommand{\I}{\mathrm I}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\sech}{\operatorname{sech}}
+\hypersetup{
+ pdftitle={The Schwarzian Bridge in a Single Sigmoid Neuron: Sharp Empirical Complexity and Global Spherical Saturation},
+ pdfauthor={Lluis Eriksson},
+ pdfkeywords={single neuron, sigmoid, Loewner matrix, matrix monotonicity, Fisher information, saturation}
+}
+
+\title{\bfseries The Schwarzian Bridge in a Single Sigmoid Neuron\\
+\large Sharp Empirical Complexity and Global Spherical Saturation}
+\author{Lluis Eriksson\\Independent Researcher\\\texttt{lluiseriksson@gmail.com}}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+A sigmoid is increasing on scalars, yet its bend controls two different geometries.  The classical Schwarzian
+criterion implies that a negative-Schwarzian activation is not matrix-monotone of order two.  We give a closed
+logistic formula showing every distinct two-point L\"owner determinant to be negative, a dimension-minimal
+$2\times2$ positive-semidefinite perturbation witness certified with interval arithmetic, and the corresponding
+classical serial-chain consequence.
+
+Our central link is that the same local invariant determines the leading quadratic onset coefficient of saturation
+anisotropy.  At a centered inflection of an increasing activation $g$, for a sensitivity $h_p=(g')^p$ and
+isotropic spherically symmetric input $X$,
+\[
+ \kappa_{p,X}(r)=1-q_Xp\,Sg(0)r^2+O(r^4),\qquad
+ q_X=\frac{\E\lVert X\rVert^4}{d(d+2)}.
+\]
+The Gaussian coefficient is the special case $q_X=1$.  The adjacent-point L\"owner determinant is
+$g'(0)^2Sg(0)\delta^2/6+O(\delta^3)$.  Negative Schwarzian therefore simultaneously gives local
+noncommutative order failure and positive initial radial--tangential anisotropy.  We turn the equality of limits
+into a finite-scale inequality with explicit constants determined by derivative suprema and input moments.
+
+For isotropic Gaussian inputs in dimension $d\ge2$, population curvature at a teacher of norm $r$ has one radial
+eigenvalue and $d-1$ equal tangential eigenvalues.  For any nonnegative sensitivity profile $h$ with finite defining expectations, these
+eigenvalues are exactly
+\[
+ \alpha_h(r)=\E h(rZ),\qquad \beta_h(r)=\E[Z^2h(rZ)],\qquad Z\sim N(0,1),
+\]
+and, if its zeroth and second Lebesgue moments are finite and positive,
+\[
+ \alpha_h(r)\sim \frac{\varphi(0)m_0}{r},\qquad
+ \beta_h(r)\sim \frac{\varphi(0)m_2}{r^3}.
+\]
+Thus saturation suppresses magnitude information by two additional powers: the radial--tangential ratio obeys
+$\alpha_h(r)/\beta_h(r)\sim(m_0/m_2)r^2$.  For every real $p>0$ and
+$h_p=\sigma'^p$, we prove strict monotonicity and the unified identities
+\[
+ m_0(p)=\frac{\Gamma(p)^2}{\Gamma(2p)},\qquad
+ \kappa_p(r)\sim\frac{r^2}{2\psi_1(p)},\qquad
+ \kappa_p(r)=1+\frac p2r^2-\frac p8r^4+\frac{p(p+1)}{16}r^6+O(r^8).
+\]
+For $n$ samples we prove an explicit two-sided relative L\"owner bound for the weighted empirical Gram matrix.
+A conditional-Gaussian lower bound shows that its sample complexity is sharply
+\[
+ \Theta_p\!\left(\frac{r[d+\log(1/\delta)]}{\varepsilon^2}\right).
+\]
+The factor $rd$ is intrinsic: a tangential off-diagonal column has $d-2$ coordinates and normalized variance of
+order $r/n$.  We also give a uniform full-dyadic-shell extension and concrete sufficient constants
+$C_1=22929$ and $C_2=294162$.
+
+The quadratic saturation law is global beyond Gaussian inputs.  If $X=RU$ is isotropic spherical,
+$\E R^{-1}<\infty$, then
+\[
+ \kappa_h(r)\sim Q_R\frac{m_0}{m_2}r^2,\qquad
+ Q_R=\frac{\E R}{(d-1)\E R^{-1}}.
+\]
+Gaussian, fixed-sphere and isotropic Student inputs give respectively $Q_R=1$, $d/(d-1)$ and
+$(\nu-2)/(\nu-1)$.  For radii regularly varying at zero, we prove that the inverse-radius condition is sharp
+through a three-regime phase transition,
+and give an isotropic Rademacher counterexample.  These claims refine, but do not replace, prior one-sided and
+bilateral Hessian results and recent labeled-estimation theory.  Deterministic replays, a fixed-seed finite-sample
+phase diagram and an immutable public source record accompany the proofs.
+\end{abstract}
+
+\paragraph{Keywords.} single neuron; sigmoid; matrix monotonicity; L\"owner order; Schwarzian derivative;
+Fisher information; spherical design; weighted sample covariance; finite-sample concentration.
+
+\section{Question, result, and claim boundary}
+
+The scalar logistic curve is
+\[
+ \sigma(s)=\frac1{1+e^{-s}},\qquad
+ \sigma'(s)=\frac1{4}\sech^2(s/2).
+\]
+It is strictly increasing, so larger scalar scores produce larger outputs.  We first ask whether this order survives
+spectral functional calculus on noncommuting matrices.  It does not, at the smallest possible matrix size and on
+every interval.  We then return to the ordinary teacher neuron $\sigma(w_\star^\top X)$ with
+$X\sim N(0,I_d)$.  There, a perturbation perpendicular to $w_\star$ rotates the separating hyperplane, while a
+parallel perturbation changes its confidence scale and must be detected through samples near the transition layer.
+Our goal is to compute both failures exactly.
+
+The main contributions are:
+\begin{enumerate}[leftmargin=2em]
+ \item a closed logistic specialization of the classical negative-Schwarzian obstruction, proving directly that
+ every nontrivial two-point L\"owner matrix is indefinite;
+ \item a dimension-minimal $2\times2$ witness $A\preceq B$ but $\sigma(A)\npreceq\sigma(B)$, with
+ outward-rounded eigenvalue certification, and a L\"owner-order reformulation of the known serial-composition
+ consequence;
+ \item a spherical-input Schwarzian bridge equating the local order defect with the leading
+ radial--tangential anisotropy, including its exact fourth-moment multiplier $q_X$;
+ \item an explicit finite-scale bridge bounding the discrepancy between the normalized L\"owner determinant
+ and anisotropy at nonzero $(\delta,r)$;
+ \item a profile-generic two-eigenvalue refinement under Gaussian design, with finite-$r$ brackets and, for
+ every $p>0$, closed moments, strict ratio monotonicity and exact endpoint laws for $h_p=\sigma'^p$;
+ \item a two-sided relative concentration theorem for the empirical sensitivity matrix, with a matching
+ $r[d+\log(1/\delta)]/\varepsilon^2$ lower bound for bilateral relative Loewner loss, explicit constants for
+ $p=1,2$, and a uniform full-dyadic-shell extension;
+ \item an exact global spherical saturation theorem with the radius factor $Q_R$, an elliptical whitening
+ corollary, and a sharp inverse-radius phase transition for radii regularly varying at zero; and
+ \item exact local consequences for stationary fixed-step optimization and estimation, plus a one-command replay
+ of the identities,
+ interval witness, inequalities, and figure.
+\end{enumerate}
+
+The matrix-order theorem concerns spectral functional calculus $\sigma(A)$, not entrywise activation of a vector.
+The radial theorem is not a claim about deep networks, global optimization, implicit bias, or arbitrary inputs.  Its
+local coefficient and its large-saturation law extend from Gaussian to spherical inputs under different, stated
+moment hypotheses.  The
+two questions meet at a precise boundary: scalar monotonicity controls neither noncommuting PSD perturbations nor
+the conditioning of parameter directions.
+
+\section{A sigmoid is not an order-preserving operator}
+
+For Hermitian matrices, $A\preceq B$ means that $B-A$ is positive semidefinite.  A scalar function $f$ is
+\emph{matrix-monotone of order two} on an interval $J$ if $f(A)\preceq f(B)$ for every pair of $2\times2$
+Hermitian matrices with spectra in $J$ and $A\preceq B$, where $f(A)$ is defined by spectral functional calculus.
+If $A$ and $B$ commute, scalar monotonicity is sufficient because they are simultaneously diagonalizable.  The
+question is what happens without commutativity.
+
+For distinct $x,y\in J$, define the two-point L\"owner matrix
+\begin{equation}
+ L_f(x,y)=
+ \begin{pmatrix}
+  f'(x)&\dfrac{f(x)-f(y)}{x-y}\\[5pt]
+  \dfrac{f(x)-f(y)}{x-y}&f'(y)
+ \end{pmatrix}.
+ \label{eq:loewnermatrix}
+\end{equation}
+The fixed-order L\"owner criterion says that matrix monotonicity of order two requires
+$L_f(x,y)\succeq0$ for every pair \cite{hiai2010,heinavaara2019}.  The equivalent local criterion
+$Sf\ge0$ for increasing smooth functions is classical \cite[Lemma 10]{kozlovski2008}; the result below is an
+explicit logistic specialization, not a new qualitative matrix-monotonicity criterion.
+
+Cook, Hammerlindl and Tucker define
+\[
+ \chi_f(x,y)=f'(x)f'(y)
+ \left(\frac{x-y}{f(x)-f(y)}\right)^2
+\]
+and study the class $\chi_f\le1$, including sigmoid activations and serial compositions \cite{cook2023}.  If
+$D_f(x,y)=(f(x)-f(y))/(x-y)$, then
+\begin{equation}
+ \det L_f(x,y)=D_f(x,y)^2\,[\chi_f(x,y)-1].
+ \label{eq:coexpanding}
+\end{equation}
+Thus their two-point inequality is algebraically the nonpositive L\"owner-determinant inequality.  Our contribution
+in this subsection is the strict closed logistic identity and the certified matrix witness, not the underlying
+Schwarzian/composition mechanism.
+
+\begin{theorem}[closed logistic two-point determinant]
+\label{thm:loewner}
+Let
+\[
+ s_{\alpha,b}(x)=\frac1{1+e^{-\alpha(x-b)}},\qquad \alpha>0.
+\]
+For every $x\ne y$, the L\"owner matrix $L_{s_{\alpha,b}}(x,y)$ has negative determinant.  Consequently the
+logistic activation is not matrix-monotone of order two on any nondegenerate interval.
+\end{theorem}
+
+\begin{proof}
+Put $u=e^{\alpha(x-b)}$, $v=e^{\alpha(y-b)}$, and $r=v/u=e^{\alpha(y-x)}$.  Direct cancellation gives the exact
+identity
+\begin{equation}
+ \det L_{s_{\alpha,b}}(x,y)
+ =\frac{\alpha^2u^2}{(1+u)^2(1+v)^2}
+ \left[r-\frac{(r-1)^2}{(\log r)^2}\right].
+ \label{eq:loewnerdet}
+\end{equation}
+For $r\ne1$, write $t=\log r$.  Strict convexity of $\sinh$ on $(0,\infty)$ gives
+\[
+ |r-1|=2e^{t/2}|\sinh(t/2)|>e^{t/2}|t|=\sqrt r\,|\log r|.
+\]
+The bracket in \eqref{eq:loewnerdet} is therefore strictly negative.  Every nondegenerate interval contains a
+distinct pair, so the L\"owner criterion completes the proof.
+\end{proof}
+
+This is stronger than finding one bad scale: changing the slope $\alpha$, shifting the bias $b$, or restricting the
+score range never removes the obstruction.  It also identifies the precise failure.  The diagonal entries in
+\eqref{eq:loewnermatrix} are positive, but the divided difference is too large for their geometric mean.
+
+\begin{proposition}[dimension-minimal explicit PSD witness]
+\label{prop:witness}
+For the standard logistic sigmoid, let
+\begin{equation}
+ A=\begin{pmatrix}-1/2&0\\0&1/2\end{pmatrix},\qquad
+ B=A+\frac1{100}\begin{pmatrix}1&1\\1&1\end{pmatrix}.
+ \label{eq:witness}
+\end{equation}
+Then $A\preceq B$ but $\sigma(A)\npreceq\sigma(B)$.  At 256-bit outward-rounded Arb precision,
+\begin{align}
+ \operatorname{spec}(B)&\subset[-0.4901000,-0.4900999]\cup[0.5100999,0.5101000],\\
+ \operatorname{spec}(\sigma(B)-\sigma(A))
+ &\subset[-9.9150,-9.9147]\,10^{-5}\ \cup\ [0.0047990,0.0047992],\label{eq:witnessspec}\\
+ \det(\sigma(B)-\sigma(A))&\in[-4.7583,-4.7581]\,10^{-7}.
+\end{align}
+\end{proposition}
+
+\begin{proof}
+$B-A$ has eigenvalues $0$ and $1/50$.  If $a=1/2$, $\varepsilon=1/100$, and
+$d=(a^2+\varepsilon^2)^{1/2}$, then $B$ has eigenvalues $\lambda_\pm=\varepsilon\pm d$ and
+\[
+ \sigma(B)=mI+n(B-\varepsilon I),\quad
+ m=\frac{\sigma(\lambda_+)+\sigma(\lambda_-)}2,\quad
+ n=\frac{\sigma(\lambda_+)-\sigma(\lambda_-)}{2d}.
+\]
+Substitution reduces the three enclosures to scalar exponential and square-root balls.  The replay evaluates them
+with directed Arb rounding; the negative eigenvalue in \eqref{eq:witnessspec} proves the claim.
+\end{proof}
+
+The witness is illustrative, while Theorem~\ref{thm:loewner} is the proof for every interval.  The derivative form
+also explains why an indefinite L\"owner matrix produces witnesses: for diagonal
+$A=\diag(x,y)$, the Fr\'echet derivative in the all-ones PSD direction is precisely the Schur product with
+$L_f(x,y)$.
+
+\subsection{Serial depth does not repair the order}
+
+For a $C^3$ function with nonzero derivative, its Schwarzian is
+\begin{equation}
+ Sf=\frac{f'''}{f'}-\frac32\left(\frac{f''}{f'}\right)^2.
+ \label{eq:schwarzian}
+\end{equation}
+The logistic sigmoid and a scaled hyperbolic tangent satisfy
+\begin{equation}
+ S s_{\alpha,b}=-\frac{\alpha^2}{2},\qquad
+ S\tanh(\alpha x+\beta)=-2\alpha^2.
+ \label{eq:schwarzianvalues}
+\end{equation}
+
+\begin{corollary}[serial spectral reformulation]
+\label{thm:serial}
+Let $F$ be a finite scalar composition of positive-slope affine maps and at least one increasing logistic or
+hyperbolic-tangent activation.  Then $SF<0$ everywhere, and $F$ is not matrix-monotone of order two on any
+nondegenerate interval.
+\end{corollary}
+
+\begin{proof}
+The composition identity
+\begin{equation}
+ S(f\circ g)=(Sf\circ g)(g')^2+Sg
+ \label{eq:schwarzchain}
+\end{equation}
+and \eqref{eq:schwarzianvalues} give $SF<0$, since positive affine maps have zero Schwarzian and all derivatives in
+the chain are positive.  For $h\to0$, Taylor expansion of the two-point determinant gives
+\begin{equation}
+ \det L_F(x,x+h)=\frac{F'(x)^2}{6}\,SF(x)\,h^2+O(h^3).
+ \label{eq:localschwarz}
+\end{equation}
+It is negative for all sufficiently small nonzero $h$.  Every interval contains such a pair.
+\end{proof}
+
+The corollary restates, in spectral L\"owner order, the serial closure proved in the nowhere-coexpanding framework
+\cite{cook2023}.  It is deliberately about \emph{serial scalar chains}.  It does not cover sums of neurons, skip
+connections, multivariate architectures, or entrywise coordinate order.  Its content is that composing more of the
+same S-shaped bend cannot turn the resulting scalar function into a PSD-order-preserving spectral activation.
+
+\section{Two models, one sensitivity matrix}
+
+Write $r=\lVert w_\star\rVert$ and $u=w_\star/r$ when $r>0$.  We use two standard observation models.
+
+\paragraph{Squared-output regression.}
+For the realizable population loss
+\begin{equation}
+ \mathcal L_{\rm sq}(w)=\frac12\E\bigl[\sigma(w^\top X)-\sigma(w_\star^\top X)\bigr]^2,
+ \label{eq:squareloss}
+\end{equation}
+the residual vanishes at $w_\star$, so its Hessian is the Gauss--Newton matrix
+\begin{equation}
+ H_{\rm sq}(w_\star)=\E\bigl[\sigma'(w_\star^\top X)^2XX^\top\bigr].
+ \label{eq:squarehess}
+\end{equation}
+The same matrix, divided by a known output-noise variance $\tau^2$, is the Fisher information of
+$Y=\sigma(w_\star^\top X)+\varepsilon$, $\varepsilon\sim N(0,\tau^2)$.
+
+\paragraph{Bernoulli logistic neuron.}
+If $Y\mid X\sim\mathrm{Bernoulli}(\sigma(w_\star^\top X))$, the expected negative-log-likelihood Hessian and the
+Fisher information coincide:
+\begin{equation}
+ H_{\rm B}(w_\star)=\E\bigl[\sigma'(w_\star^\top X)XX^\top\bigr].
+ \label{eq:bernhess}
+\end{equation}
+
+Both are instances of the sensitivity matrix
+\begin{equation}
+ H_h(r,u):=\E\bigl[h(r u^\top X)XX^\top\bigr], \qquad h\ge0.
+ \label{eq:profilematrix}
+\end{equation}
+The power of the reduction below is that no high-dimensional integration remains.
+
+Amari, Karakida and Oizumi already derived the exact one-unit Gaussian Fisher decomposition for
+$h=\phi'^2$, including the radial--tangential split and the bias block \cite{amari2019}.  We do not claim that
+decomposition or the squared-output branch as new.
+For the Bernoulli profile $h=\sigma'$, Chen and Mazumdar recently identified the same radial and orthogonal
+Hessian functions and proved their $r^{-3}$ and $r^{-1}$ orders in a finite-sample analysis of logistic regression
+\cite{chen2026gd}.  Their follow-up proves the minimax norm-estimation rate $\Theta(\sqrt{r^3/n})$
+\cite{chen2026minimax}.  We do not claim those exponents or the Bernoulli optimization penalty as new.  The
+purpose of the next sections is to isolate the profile-generic mechanism, give finite-radius brackets and exact
+logistic constants, prove strict monotonicity of both eigenvalue ratios, and connect their small-$r$ coefficients to
+the Schwarzian order defect.
+
+\section{Universal Gaussian saturation theorem}
+
+Let $\varphi(z)=(2\pi)^{-1/2}e^{-z^2/2}$ and define the even sensitivity moments
+\[
+ m_j(h):=\int_{\R} t^j h(t)\,dt\quad(j=0,2,4),
+\]
+whenever finite.  Evenness of $h$ is not needed for the spectral reduction or leading asymptotics, but it holds in
+our sigmoid applications and makes the interpretation symmetric.
+
+\begin{theorem}[exact spectrum and finite-$r$ brackets]
+\label{thm:universal}
+Let $d\ge2$, $X\sim N(0,I_d)$, $r>0$, $u\in S^{d-1}$, and let $h:\R\to[0,\infty)$ be measurable with
+$\E[(1+Z^2)h(rZ)]<\infty$.  Then
+\begin{equation}
+ H_h(r,u)=\alpha_h(r)(I-uu^\top)+\beta_h(r)uu^\top,
+ \label{eq:decomp}
+\end{equation}
+where
+\begin{equation}
+ \alpha_h(r)=\E h(rZ),\qquad \beta_h(r)=\E[Z^2h(rZ)],\qquad Z\sim N(0,1).
+ \label{eq:alphabeta}
+\end{equation}
+If $m_0,m_2<\infty$ and are positive, then
+\begin{equation}
+ \alpha_h(r)\sim\frac{\varphi(0)m_0}{r},\qquad
+ \beta_h(r)\sim\frac{\varphi(0)m_2}{r^3},\qquad
+ \kappa_h(r):=\frac{\alpha_h(r)}{\beta_h(r)}\sim\frac{m_0}{m_2}r^2.
+ \label{eq:univasymp}
+\end{equation}
+If $m_0,m_2,m_4<\infty$, the following nonasymptotic brackets hold for every $r>0$:
+\begin{align}
+ \frac{\varphi(0)}r\left(m_0-\frac{m_2}{2r^2}\right)
+ &\le \alpha_h(r)\le \frac{\varphi(0)m_0}{r},\label{eq:alphabounds}\\
+ \frac{\varphi(0)}{r^3}\left(m_2-\frac{m_4}{2r^2}\right)
+ &\le \beta_h(r)\le \frac{\varphi(0)m_2}{r^3}.
+ \label{eq:betabounds}
+\end{align}
+Negative lower endpoints are interpreted as valid but uninformative bounds.
+\end{theorem}
+
+\begin{proof}
+Decompose $X=Zu+Y$, where $Z\sim N(0,1)$, $Y\sim N(0,I-uu^\top)$, and $Z,Y$ are independent.
+The mixed terms vanish and $\E YY^\top=I-uu^\top$, giving \eqref{eq:decomp}--\eqref{eq:alphabeta}.
+Changing variables $t=rz$ gives the exact one-dimensional formulae
+\begin{equation}
+ \alpha_h(r)=\frac{\varphi(0)}r\int_\R h(t)e^{-t^2/(2r^2)}dt,
+ \quad
+ \beta_h(r)=\frac{\varphi(0)}{r^3}\int_\R t^2h(t)e^{-t^2/(2r^2)}dt.
+ \label{eq:scaledintegrals}
+\end{equation}
+Dominated convergence proves \eqref{eq:univasymp}.  Finally,
+$1-x\le e^{-x}\le1$ for $x\ge0$ inserted into \eqref{eq:scaledintegrals} proves
+\eqref{eq:alphabounds}--\eqref{eq:betabounds}.
+\end{proof}
+
+\section{Global saturation beyond Gaussian design}
+\label{sec:global-spherical}
+
+The Gaussian density at the transition hyperplane is not the essential constant.  Let $X=RU$ be spherically
+symmetric, where $U$ is uniform on $S^{d-1}$ and independent of the radius $R$.  Isotropy is exactly
+$\E R^2=d$.  Write
+\[
+ c_d=\frac{\Gamma(d/2)}{\sqrt\pi\,\Gamma((d-1)/2)},\qquad
+ Q_R=\frac{\E R}{(d-1)\E R^{-1}}.
+\]
+
+\begin{theorem}[exact global spherical saturation]
+\label{thm:globalspherical}
+Let $d\ge2$, $R>0$ almost surely, $\E R^2=d$ and $\E R^{-1}<\infty$.  Let $h\ge0$ have
+$0<m_0,m_2<\infty$.  For $d=2$, additionally assume $h(t)\le Ce^{-a|t|}$; no additional condition is needed
+when $d\ge3$.  Then
+\begin{align}
+ \alpha_{h,X}(r)&\sim \frac{c_d\E R}{d-1}\frac{m_0}{r},&
+ \beta_{h,X}(r)&\sim c_d\E R^{-1}\frac{m_2}{r^3},\label{eq:sphericalasymp}\\
+ \kappa_{h,X}(r)&\sim Q_R\frac{m_0}{m_2}r^2.\label{eq:sphericalkappa}
+\end{align}
+For $h_p=\sigma'^p$ and every $p>0$,
+\begin{equation}
+ \kappa_{p,X}(r)\sim\frac{Q_R}{2\psi_1(p)}r^2.
+ \label{eq:sphericallogistic}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Put $T=u^\top U$.  Its density is
+$c_d(1-t^2)^{(d-3)/2}{\bf1}_{(-1,1)}(t)$, and conditional on $T=t$ every unit transverse coordinate has second
+moment $(1-t^2)/(d-1)$.  Changing variables $s=rRT$ gives the exact identities
+\begin{align}
+ r\alpha_{h,X}(r)
+ &=\frac{c_d}{d-1}\E\!\left[R\!\int_{|s|<rR}\!h(s)
+ \left(1-\frac{s^2}{r^2R^2}\right)^{(d-1)/2}ds\right],\label{eq:sphericalexacta}\\
+ r^3\beta_{h,X}(r)
+ &=c_d\E\!\left[R^{-1}\!\int_{|s|<rR}\!s^2h(s)
+ \left(1-\frac{s^2}{r^2R^2}\right)^{(d-3)/2}ds\right].\label{eq:sphericalexactb}
+\end{align}
+The first integrand is dominated by $Rm_0$.  For $d\ge3$ the second is dominated by $R^{-1}m_2$.
+For $d=2$, splitting its inner integral at $|s|=rR/2$ gives a uniform bound from exponential localization;
+the boundary contribution is bounded by a constant times $(rR)^3e^{-arR/2}$.  Dominated convergence proves
+\eqref{eq:sphericalasymp}.  The ratio and the identity $m_0(p)/m_2(p)=1/[2\psi_1(p)]$ prove the rest.
+\end{proof}
+
+The factor $Q_R$ is the conditional transverse variance on the transition hyperplane.  It is distribution
+sensitive and satisfies $0<Q_R\le d/(d-1)$.  Three closed examples are
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+isotropic spherical law & radius & $Q_R$\\
+\midrule
+$N(0,I_d)$ & $\chi_d$ & $1$\\
+uniform on $\sqrt dS^{d-1}$ & $\sqrt d$ & $d/(d-1)$\\
+isotropic Student $t_\nu$, $\nu>2$ & $\sqrt{\nu-2}\,\chi_d/\chi_\nu$ & $(\nu-2)/(\nu-1)$\\
+\bottomrule
+\end{tabular}
+\end{center}
+The last line follows from the adjacent chi-moment identities.  If $X=AS$ with $A$ invertible and $S$ isotropic
+spherical, then exactly
+\[
+ H_{h,X}(w)=A H_{h,S}(\lVert A^\top w\rVert,A^\top w/\lVert A^\top w\rVert)A^\top.
+\]
+Thus the theorem transfers to elliptical inputs after whitening; in Euclidean coordinates it is a generalized
+eigenvalue statement relative to $AA^\top$, not generally a literal radial--tangential eigendecomposition.
+
+\begin{proposition}[sharp boundary and failure of isotropy alone]
+\label{prop:radialphase}
+Suppose the spherical radius has density $f_R(\rho)\sim c\rho^{a-1}$ as $\rho\downarrow0$, with its tail chosen
+so that $\E R^2=d$, and let $h\ge0$ be exponentially localized with $m_0,m_2>0$.  Then the tangential eigenvalue
+remains of order $r^{-1}$, whereas
+\[
+ \beta_{h,X}(r)\asymp
+ \begin{cases}
+ r^{-(a+2)},&0<a<1,\\
+ r^{-3}\log r,&a=1,\\
+ r^{-3},&a>1.
+ \end{cases}
+\]
+Consequently $\kappa$ has order $r^{a+1}$, $r^2/\log r$, or $r^2$, respectively.  Moreover, covariance
+isotropy without spherical or transition-density structure is insufficient: for independent Rademacher
+coordinates, $u=e_1$ and even $h$, one has $H_h(r,u)=h(r)I_d$ and hence $\kappa=1$.
+\end{proposition}
+
+\begin{proof}
+Insert $\rho=q/r$ in the radius integral behind \eqref{eq:sphericalexactb}.  For $a<1$ the resulting positive
+constant is
+\[
+ c_dc\int_0^\infty q^{a+1}\!\int_{-1}^1
+ t^2h(qt)(1-t^2)^{(d-3)/2}\,dt\,dq,
+\]
+which is finite because its large-$q$ integrand is asymptotic to $m_2q^{a-2}$.  At $a=1$ this integral diverges
+logarithmically; at $a>1$, $\E R^{-1}<\infty$ and Theorem~\ref{thm:globalspherical} applies.  The tangential claim
+follows from \eqref{eq:sphericalexacta}.  For Rademacher input, $X_1^2=1$, all mixed expectations vanish by
+sign symmetry, and $h(rX_1)=h(r)$.
+\end{proof}
+
+The radius--direction representation is classical \cite{cambanis1981}; non-Gaussian reference exponents also
+appear in regular-design logistic theory \cite{chardon2024}.  The contribution here is the exact $Q_R$ constant,
+its all-$p$ logistic specialization, and the sharp inverse-radius boundary within the stated regularly varying
+class, not the spherical representation or the
+first occurrence of non-Gaussian $r^{-1}$/$r^{-3}$ scales.
+
+\section{Spherical and finite-scale Schwarzian bridges}
+
+The matrix-order and saturation calculations meet exactly at an inflection point.  Gaussian independence makes the
+full saturation curve one-dimensional, but it is not responsible for the local bridge: rotational symmetry and
+suitable moments suffice.  The fourth moment identifies the coefficient below; the stated sixth moment controls
+its $O(r^4)$ remainder.
+
+\begin{theorem}[spherical local order--anisotropy bridge]
+\label{thm:bridge}
+Let $d\ge2$ and let $X\in\R^d$ be isotropic and spherically symmetric with
+$\E\lVert X\rVert^6<\infty$.  Let $g\in C^5(\R)$ satisfy $g'>0$ and $g''(0)=0$.
+For $p>0$, suppose $h_p=(g')^p$ has bounded fourth derivative.  For $u\in S^{d-1}$ put
+$Z=u^\top X$ and
+\[
+ H_{p,X}(r,u)=\E[h_p(rZ)XX^\top]
+ =\alpha_{p,X}(r)(I-uu^\top)+\beta_{p,X}(r)uu^\top ,
+ \qquad \kappa_{p,X}=\frac{\alpha_{p,X}}{\beta_{p,X}}.
+\]
+Then, with
+\[
+ q_X:=\frac{\E\lVert X\rVert^4}{d(d+2)},
+\]
+one has
+\begin{equation}
+ \lim_{r\downarrow0}\frac{\kappa_{p,X}(r)-1}{r^2}
+ =-q_Xp\,Sg(0)
+ =-\frac{6q_Xp}{g'(0)^2}
+   \lim_{\delta\to0}\frac{\det L_g(0,\delta)}{\delta^2}.
+ \label{eq:bridge}
+\end{equation}
+In particular, $Sg(0)<0$ makes $L_g(0,\delta)$ indefinite and
+$\kappa_{p,X}(r)>1$ at all sufficiently small nonzero scales.  Standard Gaussian input has $q_X=1$.
+\end{theorem}
+
+\begin{proof}
+Rotations fixing $u$ force the displayed two-eigenspace form, with
+\[
+ \beta_{p,X}(r)=\E[Z^2h_p(rZ)],\qquad
+ \alpha_{p,X}(r)=\frac1{d-1}
+ \E[(\lVert X\rVert^2-Z^2)h_p(rZ)].
+\]
+Choose a unit $v\perp u$.  Spherical symmetry and isotropy give
+\[
+ \E Z^4=3q_X,\qquad \E[Z^2(v^\top X)^2]=q_X.
+\]
+Taylor's formula, cancellation of odd terms under $X\stackrel d=-X$, and the sixth-moment assumption therefore give
+\[
+ \alpha_{p,X}(r)=h_p(0)+\frac{q_Xh_p''(0)}2r^2+O(r^4),\qquad
+ \beta_{p,X}(r)=h_p(0)+\frac{3q_Xh_p''(0)}2r^2+O(r^4).
+\]
+Taking the ratio yields
+$\kappa_{p,X}(r)=1-q_Xh_p''(0)r^2/h_p(0)+O(r^4)$.
+Since $\log h_p=p\log g'$ and $g''(0)=0$,
+\[
+ \frac{h_p''(0)}{h_p(0)}=p\frac{g'''(0)}{g'(0)}=pSg(0).
+\]
+The adjacent-point expansion \eqref{eq:localschwarz} gives the remaining equality.
+\end{proof}
+
+The equality of limits has a computable finite-scale version.  The constants below are deliberately explicit rather
+than optimized.
+
+\begin{theorem}[explicit finite-scale bridge]
+\label{thm:finitebridge}
+Under Gaussian input, retain the hypotheses of Theorem~\ref{thm:bridge} and write
+\[
+ a=h_p(0),\quad b=h_p''(0),\quad M_4=\lVert h_p^{(4)}\rVert_\infty.
+\]
+Choose $r_0>0$ so that
+\begin{equation}
+ \frac{3|b|}{2}r_0^2+\frac{5M_4}{8}r_0^4\le\frac a2,
+ \label{eq:r0condition}
+\end{equation}
+and set
+\[
+ C_h=\frac{3M_4}{2a}+3\left(\frac ba\right)^2
+       +\frac{5|b|M_4}{4a^2}r_0^2.
+\]
+For a chosen $\delta_0>0$, put
+\[
+ A=g'(0),\ c=g'''(0),\ d_4=g^{(4)}(0),\
+ M_5=\sup_{|x|\le\delta_0}|g^{(5)}(x)|,
+\]
+\[
+ K=\frac{|c|}{6}+\frac{|d_4|\delta_0}{24}
+      +\frac{M_5\delta_0^2}{120},\qquad
+ D_g=\frac{|Ad_4|}{12}+\frac{7AM_5\delta_0}{120}+\delta_0K^2.
+\]
+Then for $0<r\le r_0$ and $0<|\delta|\le\delta_0$,
+\begin{align}
+ \left|\kappa_p(r)-1+pSg(0)r^2\right|&\le C_hr^4,
+ \label{eq:quantkappa}\\
+ \left|\det L_g(0,\delta)-\frac{A^2Sg(0)}6\delta^2\right|
+ &\le D_g|\delta|^3,
+ \label{eq:quantloewner}\\
+ \left|\frac{\kappa_p(r)-1}{r^2}
+ +\frac{6p}{A^2}\frac{\det L_g(0,\delta)}{\delta^2}\right|
+ &\le C_hr^2+\frac{6pD_g}{A^2}|\delta|.
+ \label{eq:directfinitebridge}
+\end{align}
+Thus the order defect predicts anisotropy at finite, independently chosen scales with a certified error bar.
+\end{theorem}
+
+\begin{proof}
+Gaussian Taylor remainders give
+\[
+ \alpha_p=a+\frac b2r^2+R_\alpha,\quad |R_\alpha|\le\frac{M_4}{8}r^4,
+ \qquad
+ \beta_p=a+\frac{3b}{2}r^2+R_\beta,\quad |R_\beta|\le\frac{5M_4}{8}r^4.
+\]
+Condition \eqref{eq:r0condition} makes $\beta_p\ge a/2$.  Subtracting
+$1-(b/a)r^2$ before dividing by $\beta_p$ yields
+\[
+ \left|\kappa_p-1+\frac ba r^2\right|
+ \le\left[
+ \frac{3M_4}{2a}+3\left(\frac ba\right)^2
+ +\frac{5|b|M_4}{4a^2}r_0^2\right]r^4,
+\]
+which is \eqref{eq:quantkappa} because $b/a=pSg(0)$.
+
+Taylor expansion at zero gives
+\[
+ g'(\delta)=A+\frac c2\delta^2+\frac{d_4}{6}\delta^3+R_1,\quad
+ \frac{g(\delta)-g(0)}\delta
+ =A+\frac c6\delta^2+\frac{d_4}{24}\delta^3+R_2,
+\]
+where $|R_1|\le M_5|\delta|^4/24$ and
+$|R_2|\le M_5|\delta|^4/120$.  Writing the determinant as
+$A(g'(\delta)-A)-2A(V-A)-(V-A)^2$, with
+$V=(g(\delta)-g(0))/\delta$, gives \eqref{eq:quantloewner} with the displayed $D_g$.
+Finally, divide \eqref{eq:quantkappa} by $r^2$, divide
+\eqref{eq:quantloewner} by $\delta^2$, multiply the latter by $6p/A^2$, and use the triangle inequality.
+\end{proof}
+
+For the standard logistic sigmoid, $S\sigma=-1/2$.  Theorem~\ref{thm:bridge} therefore predicts the exact initial
+coefficient $p/2$ for every $h_p=\sigma'^p$, recovered globally below.  Equation
+\eqref{eq:directfinitebridge} strengthens the conceptual coefficient match into a falsifiable finite-scale
+comparison.
+
+For a general $h$, $\kappa_h=\alpha_h/\beta_h$ in \eqref{eq:univasymp} is an anisotropy ratio; it is the spectral
+condition number only after the eigenvalue ordering is known.  The two powers are geometric.  At large $r$, only a
+score slab of width $O(r^{-1})$ remains unsaturated, producing
+$\alpha\asymp r^{-1}$.  A radial perturbation carries an additional factor $Z^2=O(r^{-2})$ inside that slab,
+producing $\beta\asymp r^{-3}$.  Both modes are supported by the near-boundary slab; the radial mode is weaker
+because it carries the additional $Z^2$ factor.
+
+\section{All-power logistic saturation laws}
+
+For every real $p>0$ set $h_p(t)=\sigma'(t)^p$.  The cases $p=1$ and $p=2$ are Bernoulli Fisher and
+squared-output curvature, respectively, but the analytic law is not restricted to those observation models.  The
+Gamma transform below is classical generalized-logistic distribution theory \cite[eqs.~(2.3)--(2.5)]{ojo2004};
+our use of it is geometric.
+
+\begin{lemma}[closed sensitivity moments for every $p>0$]
+\label{lem:moments}
+Let $\psi_j$ denote the polygamma function of order $j$.  Then
+\begin{equation}
+ \widehat h_p(k):=\int_\R e^{ikt}h_p(t)\,dt
+ =\frac{\Gamma(p+ik)\Gamma(p-ik)}{\Gamma(2p)},
+ \label{eq:fourier}
+\end{equation}
+and
+\begin{equation}
+ m_0(p)=\frac{\Gamma(p)^2}{\Gamma(2p)},\qquad
+ m_2(p)=2\psi_1(p)m_0(p),\qquad
+ m_4(p)=\bigl(12\psi_1(p)^2+2\psi_3(p)\bigr)m_0(p).
+ \label{eq:allpmoments}
+\end{equation}
+In particular,
+\begin{center}
+\begin{tabular}{c@{\qquad}ccc}
+\toprule
+profile & $m_0$ & $m_2$ & $m_4$\\
+\midrule
+$h_1=\sigma'$ & $1$ & $\pi^2/3$ & $7\pi^4/15$\\[2pt]
+$h_2=\sigma'^2$ & $1/6$ & $(\pi^2-6)/18$ & $7\pi^4/90-2\pi^2/3$\\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{lemma}
+
+\begin{proof}
+With $x=e^t$,
+\[
+ h_p(t)=\frac{x^p}{(1+x)^{2p}},\qquad
+ \widehat h_p(k)=\int_0^\infty\frac{x^{p+ik-1}}{(1+x)^{2p}}\,dx
+ =B(p+ik,p-ik),
+\]
+which proves \eqref{eq:fourier}.  Since $h_p(t)=O(e^{-p|t|})$, all polynomial moments are finite and
+differentiation under the Fourier integral is justified.  Differentiating its logarithm at zero gives
+$(\log\widehat h_p)''(0)=-2\psi_1(p)$ and
+$(\log\widehat h_p)^{(4)}(0)=2\psi_3(p)$.  Since
+$m_2=-\widehat h_p''(0)$ and $m_4=\widehat h_p^{(4)}(0)$,
+\eqref{eq:allpmoments} follows.  The table uses the standard integer polygamma values.
+\end{proof}
+
+\begin{theorem}[strict all-power logistic anisotropy]
+\label{thm:monotone}
+For every $p>0$, $\kappa_p(0)=1$, $\kappa_p(r)>1$ for $r>0$, and $\kappa_p$ is strictly increasing on
+$(0,\infty)$.  At the two endpoints,
+\begin{equation}
+ \kappa_p(r)=1+\frac p2r^2-\frac p8r^4+\frac{p(p+1)}{16}r^6+O(r^8)
+ \quad(r\downarrow0),
+ \label{eq:smallallp}
+\end{equation}
+and
+\begin{equation}
+ \kappa_p(r)=\frac{r^2}{2\psi_1(p)}
+ +1+\frac{\psi_3(p)}{4\psi_1(p)^2}+O(r^{-2})
+ \quad(r\to\infty).
+ \label{eq:logisticconstants}
+\end{equation}
+Thus $\kappa_1(r)\sim3r^2/\pi^2$ and
+$\kappa_2(r)\sim3r^2/(\pi^2-6)$.
+\end{theorem}
+
+\begin{proof}
+Normalize the density $q_{p,r}(z)\propto h_p(rz)\varphi(z)$.  Then
+$\beta_p(r)/\alpha_p(r)=\E_{q_{p,r}}Z^2$.  If $r_2>r_1$, the derivative on $z>0$ of the log likelihood ratio is
+\[
+ \frac d{dz}\log\frac{h_p(r_2z)}{h_p(r_1z)}
+ =-p\bigl[r_2\tanh(r_2z/2)-r_1\tanh(r_1z/2)\bigr]<0.
+\]
+Thus the distribution of $|Z|$ under $q_{p,r}$ decreases strictly in monotone-likelihood-ratio order as $r$
+increases, and its strictly increasing statistic $Z^2$ has decreasing expectation.  Hence $\alpha_p/\beta_p$
+increases strictly.  At $r=0$ isotropy gives one.  Lemma~\ref{lem:moments} inserted into
+Theorem~\ref{thm:universal}, with one further term in
+$e^{-t^2/(2r^2)}$, gives the large-$r$ statement.  More explicitly, $m_6(p)<\infty$ by the exponential tail,
+and Taylor remainder bounds for $e^{-x}$ give
+\[
+ \alpha_p(r)=\frac{\varphi(0)}r\left(m_0-\frac{m_2}{2r^2}
+ +\frac{m_4}{8r^4}+O(r^{-6})\right),\qquad
+ \beta_p(r)=\frac{\varphi(0)}{r^3}\left(m_2-\frac{m_4}{2r^2}
+ +O(r^{-4})\right).
+\]
+Their ratio yields \eqref{eq:logisticconstants}.  Finally,
+\[
+ h_p(t)=4^{-p}\left[1-\frac p4t^2+\frac{p(1+3p)}{96}t^4
+ -\frac{p(15p^2+15p+4)}{5760}t^6+O(t^8)\right].
+\]
+For each fixed $p>0$, every derivative of $h_p$ is bounded.  Taylor's theorem therefore bounds the displayed
+remainder globally by $\lVert h_p^{(8)}\rVert_\infty |t|^8/8!$; after setting $t=rZ$, this is integrable in both
+$\alpha_p$ and $\beta_p$ because the Gaussian has a finite tenth moment.  Inserting the Gaussian moments through
+$\E Z^8=105$ in the coefficients and taking the ratio gives \eqref{eq:smallallp}.
+\end{proof}
+
+Figure~\ref{fig:saturation} shows the two statistically canonical members of the all-power family.  The solid and
+dashed curves are direct Gaussian integrals; the dotted curves are the asymptotic constants in
+\eqref{eq:logisticconstants}.
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=\textwidth]{../figures/saturation_law.pdf}
+ \caption{Exact curvature/information eigenvalues and their ratio.  Saturation leaves $d-1$ tangential directions
+ at order $r^{-1}$ but pushes the radial direction to order $r^{-3}$.  The quadratic condition-number law is not a
+ fitted exponent; it follows from Theorem~\ref{thm:universal}.}
+ \label{fig:saturation}
+\end{figure}
+
+The cancellation of every $p^2$ contribution in the fourth-order ratio coefficient is worth noting: the full
+all-power family has the correction $-pr^4/8$, followed by the first nonlinear-in-$p$ term
+$p(p+1)r^6/16$.
+
+\section{Finite-sample resolution of the weighted Gram matrix}
+\label{sec:finite}
+
+The population eigenvalues alone do not say when a sample resolves the radial mode.  We now answer that question
+for the fixed-oracle matrix
+\[
+ \widehat H_{h,n}(r,u)=\frac1n\sum_{i=1}^n h(ru^\top X_i)X_iX_i^\top,
+ \qquad X_i\stackrel{\rm iid}{\sim}N(0,I_d).
+\]
+Prior self-concordant analyses already give bilateral constant-factor empirical-Hessian sandwiches, including a
+uniform result for Gaussian logistic regression \cite[Eq.~(92)]{ostrovskii2021}; fixed-point standardized-Hessian
+concentration is also available under generic matrix-Bernstein conditions \cite{fisher2023}.  Chardon, Lerasle and
+Mourtada prove a uniform one-sided lower bound for the empirical Bernoulli Hessian ($p=1$) under the sufficient
+condition $n\gtrsim r(d+t)$ \cite[Theorem 6]{chardon2024}.  We do not claim the first bilateral concentration or
+the first finite-sample lower bound.  The result below instead gives tunable two-sided relative error for a fixed
+teacher, applies to a general bounded profile and hence every $p>0$, separates radial, tangential and cross errors,
+and returns an eigenspace angle.
+
+Put $m=d-1$, $Z=u^\top X$, $Y=X-Zu$, and $W=h(rZ)$.  Define
+\[
+ \alpha=\E W,\quad \beta=\E[WZ^2],\quad
+ \gamma_j=\E[W^2Z^{2j}]\quad(j=0,1,2),
+\]
+and the envelopes
+\[
+ H=\lVert h\rVert_\infty,\qquad
+ K_1=\sup_z z^2h(rz)^2,\qquad K_2=\sup_z z^2h(rz).
+\]
+
+\begin{theorem}[explicit relative empirical spectrum]
+\label{thm:empirical}
+Assume $0\le h\le H$, $K_1,K_2<\infty$, and $\alpha,\beta>0$.  Let
+$0<\delta<1$ and set
+\[
+ t=\log(12/\delta),\qquad u_0=m\log9+t,
+\]
+\[
+ S_0^+=n\gamma_0+\sqrt{2nH^2\gamma_0t}+\frac{H^2t}{3},\qquad
+ S_1^+=n\gamma_1+\sqrt{2nK_1\gamma_1t}+\frac{K_1t}{3},
+\]
+\begin{align}
+ e_T&=\sqrt{\frac{2\gamma_0t}{n}}+\frac{Ht}{3n}
+ +\frac4n\bigl(\sqrt{S_0^+u_0}+Hu_0\bigr),\label{eq:et}\\
+ e_R&=\sqrt{\frac{2\gamma_2t}{n}}+\frac{K_2t}{3n},\qquad
+ q_n=\frac{\sqrt{S_1^+}}n\bigl(\sqrt m+\sqrt{2t}\bigr).\label{eq:erq}
+\end{align}
+Then, with probability at least $1-\delta$, in the radial--tangential basis
+\[
+ \widehat H_{h,n}=\begin{pmatrix}C&b_n\\b_n^\top&c_n\end{pmatrix}
+\]
+satisfies simultaneously
+\begin{equation}
+ \lVert C-\alpha I_m\rVert_{\rm op}\le e_T,\qquad
+ |c_n-\beta|\le e_R,\qquad \lVert b_n\rVert_2\le q_n.
+ \label{eq:blockevent}
+\end{equation}
+Consequently, for
+\begin{equation}
+ \varepsilon_n:=\max\left\{\frac{e_T}{\alpha},\frac{e_R}{\beta}\right\}
+ +\frac{q_n}{\sqrt{\alpha\beta}},
+ \label{eq:epsn}
+\end{equation}
+one has the two-sided relative L\"owner bound
+\begin{equation}
+ (1-\varepsilon_n)H_h(r,u)\preceq\widehat H_{h,n}(r,u)
+ \preceq(1+\varepsilon_n)H_h(r,u).
+ \label{eq:relativegram}
+\end{equation}
+If $G:=\alpha-\beta-e_T-e_R>0$, the empirical matrix has a unique eigenvalue
+$\widehat\beta$ below the tangential block spectrum, and its unit eigenvector $\widehat u$ obeys
+\begin{equation}
+ \tan\angle(\widehat u,u)\le\frac{q_n}{G},\qquad
+ |\widehat\beta-\beta|\le e_R+\frac{q_n^2}{G}.
+ \label{eq:angle}
+\end{equation}
+Every other ordered eigenvalue differs from $\alpha$ by at most
+$\max\{e_T,e_R\}+q_n$.
+\end{theorem}
+
+\begin{proof}
+Write
+\[
+ C=\frac1n\sum_iW_iY_iY_i^\top,\qquad
+ b_n=\frac1n\sum_iW_iZ_iY_i,\qquad
+ c_n=\frac1n\sum_iW_iZ_i^2.
+\]
+Scalar Bernstein controls $\overline W-\alpha$ and, one-sidedly,
+$\sum_iW_i^2\le S_0^+$.  Conditional on the weights, for a fixed unit $v$,
+\[
+ v^\top\sum_iW_i(Y_iY_i^\top-I_m)v=\sum_iW_i(G_i^2-1),
+ \qquad G_i\stackrel{\rm iid}{\sim}N(0,1).
+\]
+The exact Gaussian moment-generating function gives
+\[
+ \left|\sum_iW_i(G_i^2-1)\right|
+ \le2\sqrt{u_0\sum_iW_i^2}+2Hu_0
+\]
+outside conditional probability $2e^{-u_0}$.  A $1/4$-net of $S^{m-1}$ has at most $9^m$ points and
+$\lVert A\rVert_{\rm op}\le2\max_{v\ {\rm in\ net}}|v^\top Av|$, proving the first bound in
+\eqref{eq:blockevent}.  Bernstein applied to $W_iZ_i^2\in[0,K_2]$ proves the radial bound.
+
+Conditionally on the $Z_i$,
+\[
+ b_n\sim N\!\left(0,\frac{\sum_iW_i^2Z_i^2}{n^2}I_m\right).
+\]
+A second one-sided Bernstein bound gives $\sum_iW_i^2Z_i^2\le S_1^+$, and the Gaussian norm tail proves the
+cross bound.  The listed failures total less than $9e^{-t}<\delta$.
+
+Conjugating $\widehat H_{h,n}-H_h$ by
+$H_h^{-1/2}=\operatorname{diag}(\alpha^{-1/2}I_m,\beta^{-1/2})$ shows that its norm is at most
+\eqref{eq:epsn}; this is equivalent to \eqref{eq:relativegram}.  If $G>0$, then
+$c_n<\lambda_{\min}(C)$.  Interlacing leaves one eigenvalue below $C$.
+The eigenvector equation and the Schur complement give respectively
+$\tan\angle(\widehat u,u)\le q_n/G$ and
+$0\le c_n-\widehat\beta\le q_n^2/G$.  Weyl's inequality gives the remaining assertion.
+\end{proof}
+
+For $h_p=\sigma'^p$, all quantities in Theorem~\ref{thm:empirical} are one-dimensional and computable.
+The elementary bound $\sigma'(s)\le e^{-|s|}$ gives, for every $p>0$,
+\begin{equation}
+ H=4^{-p},\quad K_1\le\frac{e^{-2}}{p^2r^2},\quad
+ K_2\le\frac{4e^{-2}}{p^2r^2},
+ \label{eq:envelopes}
+\end{equation}
+and, with $\varphi(0)=(2\pi)^{-1/2}$,
+\begin{equation}
+ \gamma_0\le\frac{\varphi(0)}{pr},\qquad
+ \gamma_1\le\frac{\varphi(0)}{2p^3r^3},\qquad
+ \gamma_2\le\frac{3\varphi(0)}{2p^5r^5}.
+ \label{eq:gammabounds}
+\end{equation}
+Indeed, after $s=rZ$, use $h_p(s)^2\le e^{-2p|s|}$ and
+$\int_\R |s|^je^{-2p|s|}ds=2j!/(2p)^{j+1}$ for $j=0,2,4$.
+
+\begin{corollary}[effective sample size for every logistic power]
+\label{cor:effective}
+Let
+\[
+ R_p^2=\max\left\{\frac{3m_2(p)}{m_0(p)},\frac{m_4(p)}{m_2(p)}\right\}.
+\]
+For $r\ge R_p$, $0<\varepsilon\le1/2$ and $0<\delta<1$, the explicit condition
+$\varepsilon_n\le\varepsilon$ in \eqref{eq:epsn}, with
+\eqref{eq:envelopes}--\eqref{eq:gammabounds} substituted, guarantees
+\eqref{eq:relativegram}.  In particular, for each fixed $p>0$ there are finite computable constants $C_p,C'_p$
+such that
+\begin{equation}
+ n\ge C_p\,\frac{r\,[d+\log(12/\delta)]}{\varepsilon^2}
+ \label{eq:samplesufficient}
+\end{equation}
+is sufficient and, after increasing $C_p$ if necessary,
+$e_T+e_R\le(\alpha-\beta)/2$.  Hence $G\ge(\alpha-\beta)/2$ and, on the same event,
+\[
+ \sin\angle(\widehat u,u)
+ \le C'_p\!\left(\sqrt{\frac{d+\log(1/\delta)}{nr}}
+ +\frac{\sqrt{[d+\log(1/\delta)]\log(1/\delta)}}{n}\right).
+\]
+Thus the effective number of transition-layer observations is $n/r$: relative resolution of a population
+eigenvalue of order $r^{-3}$ does not itself require $r^3$ samples.
+\end{corollary}
+
+\begin{proof}
+The brackets in Theorem~\ref{thm:universal} and the definition of $R_p$ give
+\[
+ \alpha\ge\frac{\varphi(0)m_0(p)}{2r},\qquad
+ \beta\ge\frac{\varphi(0)m_2(p)}{2r^3},\qquad
+ \alpha-\beta\ge\frac{\varphi(0)m_0(p)}{2r}.
+\]
+Insert these and \eqref{eq:envelopes}--\eqref{eq:gammabounds} in
+\eqref{eq:et}--\eqref{eq:epsn}.  Each relative block term is bounded by a $p$-dependent constant times
+$\sqrt{r[d+\log(12/\delta)]/n}+r[d+\log(12/\delta)]/n$.
+The cross term has the same first order.  Increasing a finite constant $C_p$ makes their sum at most
+$\varepsilon$ and also makes $e_T+e_R\le(\alpha-\beta)/2$.  Thus
+$G\ge(\alpha-\beta)/2\ge\varphi(0)m_0(p)/(4r)$, and substitution of $q_n$ into
+\eqref{eq:angle} gives the displayed bound with a finite computable $C'_p$.
+\end{proof}
+
+For the two statistical powers, the conservative majorant used in this proof gives fully numerical choices:
+\begin{center}
+\begin{tabular}{cccc}
+\toprule
+$p$ & $R_p$ & $C_p$ in \eqref{eq:samplesufficient} & $C'_p$ in the angle bound\\
+\midrule
+$1$ & $3.717183$ & $22929$ & $22.479249$\\
+$2$ & $2.153017$ & $294162$ & $52.368963$\\
+\bottomrule
+\end{tabular}
+\end{center}
+These are sufficient, not optimized, constants.  The explicit-constants replay prints every intermediate
+coefficient and checks that the resulting quadratic majorant is at most $\varepsilon$ for
+$0<\varepsilon\le1/2$.
+
+We next prove that the product scale in \eqref{eq:samplesufficient} is intrinsic for the stated bilateral loss.
+Choose any finite $a_p>0$ satisfying
+\[
+ \int_{|s|>a_p}s^2h_p(s)\,ds\le\frac{m_2(p)}{16}.
+\]
+For
+$r\ge\max\{\sqrt{m_4(p)/m_2(p)},\,4\varphi(0)a_p\}$, the empty-transition-slab event and Markov's inequality give
+\begin{equation}
+ \Pr\!\left\{\lambda_{\min}(\widehat H_{p,n})<\frac{\beta_p(r)}2\right\}
+ \ge\frac12\exp\!\left(-\frac{4\varphi(0)a_pn}{r}\right).
+ \label{eq:lower}
+\end{equation}
+Hence failure probability at most $\delta<1/2$ requires
+\begin{equation}
+ n\ge\frac{r}{4\varphi(0)a_p}\log\frac1{2\delta}.
+ \label{eq:lowern}
+\end{equation}
+To verify \eqref{eq:lower}, condition on no $|Z_i|\le a_p/r$.  This event has probability at least the exponential
+shown; the conditional mean radial entry is at most $\beta_p/4$, so with conditional probability at least $1/2$
+that entry, and therefore the smallest eigenvalue, is below $\beta_p/2$.
+
+\begin{theorem}[matching lower complexity for bilateral relative Loewner loss]
+\label{thm:matchinglower}
+Fix $p>0$.  There are finite constants $\widetilde R_p,c_p,\delta_p>0$ such that, for $r\ge\widetilde R_p$,
+$d\ge3$, $0<\varepsilon\le1/2$ and $0<\delta\le\delta_p$, the implication
+\begin{equation}
+ \Pr\{(1-\varepsilon)H_p\preceq\widehat H_{p,n}\preceq(1+\varepsilon)H_p\}\ge1-\delta
+ \quad\Longrightarrow\quad
+ n\ge c_p\frac{r[d+\log(1/\delta)]}{\varepsilon^2}
+ \label{eq:matchinglower}
+\end{equation}
+holds.  At constant confidence the dimension term has the explicit sufficient obstruction
+\begin{equation}
+ n<\frac{m_0(2p)}{16\varphi(0)m_0(p)^2}\,
+ \frac{r(d-2)}{\varepsilon^2}
+ \quad\Longrightarrow\quad
+ \Pr\{\text{relative Loewner failure}\}\ge\frac1{1152},
+ \label{eq:explicitlower}
+\end{equation}
+provided $n\gamma_0\ge H^2$ and the finite-radius moment brackets hold.  The displayed coefficient equals
+$1/[96\varphi(0)]$ for $p=1$ and $9/[560\varphi(0)]$ for $p=2$.
+\end{theorem}
+
+\begin{proof}
+Restrict the relative inequality to the $m=d-1$ dimensional tangential block
+$C=n^{-1}\sum_iW_iY_iY_i^\top$.  Put $\gamma_0=\E W^2$ and $S_0=\sum_iW_i^2$.  Since $W\le H$,
+Paley--Zygmund gives
+\[
+ \Pr\{S_0\ge n\gamma_0/2\}\ge1/8\qquad(n\gamma_0\ge H^2).
+\]
+Conditional on the weights, $T_0=\sum_iW_i^2Y_{i1}^2$ has second moment at most $3S_0^2$, so
+$\Pr\{T_0\ge S_0/2\mid W\}\ge1/12$.  Conditional on $(W,Y_1)$, the remaining $d-2$ entries of the first
+off-diagonal column of $C$ are Gaussian with common variance $T_0/n^2$.  A final Paley--Zygmund bound gives
+$\Pr\{\chi^2_{d-2}\ge(d-2)/2\}\ge1/12$.  Hence, with probability at least $1/1152$,
+\[
+ \lVert C/\alpha-I_m\rVert_{\rm op}
+ \ge\sqrt{\frac{(d-2)\gamma_0}{8n\alpha^2}}.
+\]
+The scaled integrals give
+\[
+ \frac{\gamma_0}{\alpha^2}\ge
+ \frac{m_0(2p)}{2\varphi(0)m_0(p)^2}r,
+\]
+which proves \eqref{eq:explicitlower}.  If $n\gamma_0<H^2$, then $n=O_p(r)$ and the slab bound
+\eqref{eq:lower} supplies a fixed failure probability after decreasing $\delta_p$.
+
+For the confidence term, normalize $A=W/\alpha$ and put
+$T=n^{-1}\sum_iA_i^2Y_{i1}^2$.  Its mean is
+$\rho=\E W^2/\alpha^2\asymp_pr$, and
+\[
+ \frac{\E T^2}{\rho^2}
+ \le1+\frac{3\E W^4}{n(\E W^2)^2}
+ \le1+C_p\frac rn
+\]
+by the same finite-radius moment brackets.  Thus, when $n\ge a_pr$,
+$\Pr\{T\ge\rho/2\}\ge q_p>0$ by Paley--Zygmund; when $n<a_pr$, the slab event supplies the required fixed
+failure probability after fixing $\delta_p$.  Conditional on $T$, one off-diagonal entry is
+$N(0,T/n)$.  The elementary lower Gaussian tail
+$2\Phi(-x)\ge c_0e^{-x^2}$ yields a failure probability at least
+$c'_p\exp(-2n\varepsilon^2/\rho)$.  Therefore failure at most $\delta$ requires
+$n\gtrsim_pr\varepsilon^{-2}\log(1/\delta)$.  Combining this with the dimension bound by
+$\max\{a,b\}\ge(a+b)/2$ proves \eqref{eq:matchinglower}.
+\end{proof}
+
+The theorem is about the fixed-oracle weighted Gram matrix, not a minimax estimator.  Nor should it be exported
+unchanged to weaker targets.  Direct scalar Bernstein gives an $O_p(r/\varepsilon^2)$ radial-entry upper bound at
+constant confidence; the empty-slab argument gives only the fixed-accuracy $\Omega_p(r)$ obstruction recorded
+above.  We do not prove a matching lower threshold for the ordinary bottom eigenspace; the sufficient angle event
+above remains $O_p(rd)$ at constant accuracy.
+
+\subsection{Uniform all-power sensitivity on a full dyadic shell}
+
+The pointwise theorem admits a proof-complete full-dyadic-shell extension at the price of an elementary covering
+logarithm.
+For $G_p(w)=\E[h_p(w^\top X)XX^\top]$ and its empirical analogue $\widehat G_{p,n}(w)$, set
+\[
+ B_{n,\delta}=\sqrt d+\sqrt{2\log(2n/\delta)},\quad
+ \mu_{3,d}=[d(d+2)]^{3/4},\quad L_p=p4^{-p},
+\]
+\[
+ b_p=\frac{\varphi(0)m_2(p)}{16},\quad
+ A_{p,n,\delta}=L_p(B_{n,\delta}^3+\mu_{3,d}),\quad
+ \eta=\min\left\{R,\frac{\varepsilon b_p}{32A_{p,n,\delta}R^3}\right\},\quad
+ N=\left(1+\frac{4R}{\eta}\right)^d.
+\]
+
+\begin{theorem}[uniform relative sensitivity on a full dyadic shell]
+\label{thm:uniformshell}
+Fix $p>0$, $R\ge R_p$, $0<\varepsilon\le1/2$, and $0<\delta<1/2$.  If
+\begin{equation}
+ n\ge128C_p\frac{R}{\varepsilon^2}
+ \left[d+\log\left(\frac{24N}{\delta}\right)\right],
+ \label{eq:uniformn}
+\end{equation}
+then, with probability at least $1-\delta$, simultaneously for every $w$ with
+$R\le\lVert w\rVert\le2R$,
+\begin{equation}
+ (1-\varepsilon)G_p(w)\preceq\widehat G_{p,n}(w)
+ \preceq(1+\varepsilon)G_p(w).
+ \label{eq:uniformgram}
+\end{equation}
+The computable condition is implicit in $n$ only through $B_{n,\delta}$; no optimality is claimed for its covering
+logarithm.
+\end{theorem}
+
+\begin{proof}
+Since $\lVert h_p'\rVert_\infty\le L_p$,
+\[
+ \lVert h_p(w^\top x)xx^\top-h_p(v^\top x)xx^\top\rVert_{\rm op}
+ \le L_p\lVert w-v\rVert\lVert x\rVert^3.
+\]
+With probability at least $1-\delta/2$, all sampled Gaussian norms are at most $B_{n,\delta}$.  On this event
+$D_n=\widehat G_{p,n}-G_p$ is $A_{p,n,\delta}$-Lipschitz in operator norm.  Cover the shell by an $\eta$-net of
+size at most $N$ and apply Corollary~\ref{cor:effective} at every net point with error $\varepsilon/8$ and failure
+$\delta/(2N)$; \eqref{eq:uniformn} is exactly a conservative sufficient condition.  On the shell,
+$\lambda_{\min}G_p(w)\ge b_pR^{-3}$.  Moving from a net point to $w$ therefore changes both $D_n$ and $G_p$ by
+at most $(\varepsilon/32)\lambda_{\min}G_p(w)$.  For every $x$,
+\[
+ |x^\top D_n(w)x|
+ \le\left[\frac\varepsilon8(1+\varepsilon/32)+\frac\varepsilon{32}\right]x^\top G_p(w)x
+ \le\varepsilon x^\top G_p(w)x,
+\]
+which is \eqref{eq:uniformgram}.  The two failure probabilities total at most $\delta$.
+\end{proof}
+
+For $p=1$, $\widehat G_{1,n}(w)$ is exactly the logistic-likelihood Hessian and is label-free.  For $p\ne1$ it is
+a sensitivity Gram, not that likelihood Hessian.  Earlier work proves uniform local constant-factor sandwiches and
+an optimal-scale one-sided $p=1$ lower bound \cite{ostrovskii2021,chardon2024}; the narrower addition here is a
+full dyadic shell, all $p>0$, and tunable bilateral precision.  It is not by itself an estimator theorem.
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=\textwidth]{../figures/finite_sample_resolution.pdf}
+ \caption{Fixed-seed diagnostic at $d=12$, $r=6$, with 320 repetitions per sample size.  Solid curves are medians
+ and dashed curves are 90th percentiles.  The first three panels display tangential relative error, ordinary
+ smallest-eigenvalue relative error, and radial eigenspace angle.  The fourth compares the exact empty-slab
+ probability with its simulated frequency; exact values below $10^{-8}$ are clipped only in the plot and remain
+ untruncated in the JSON certificate.  The normalization $n/(rd)$ is the sharp scale for full bilateral
+ relative Loewner loss; the ordinary eigenvalue and angle panels are diagnostics and make no claim that this is
+ their optimal threshold.}
+ \label{fig:finite}
+\end{figure}
+
+\section{What the law costs}
+
+\subsection{Stationary fixed-step gradient descent}
+
+For either logistic profile, assume $d\ge2$ and that one constant scalar step size $\eta$ is reused at every
+iteration.  At the teacher, the
+Jacobian of one gradient-descent step is $I-\eta H_h$.  Its radial eigenvalue is
+$1-\eta\beta$ and its tangential eigenvalue is $1-\eta\alpha$.  The best scalar step for this local quadratic model is
+\begin{equation}
+ \eta_\star=\frac{2}{\alpha+\beta},\qquad
+ \rho_\star=\frac{\alpha-\beta}{\alpha+\beta}=\frac{\kappa-1}{\kappa+1}.
+ \label{eq:optrate}
+\end{equation}
+Consequently $-\log\rho_\star\sim2/\kappa$.  For worst-case local error with components allowed in both
+eigenspaces, the e-folding iteration count
+$T_{\rm e}:=(-\log\rho_\star)^{-1}$ therefore has the exact leading scaling
+\begin{equation}
+ T_{{\rm e},\rm sq}\sim\frac{3}{2(\pi^2-6)}r^2,\qquad
+ T_{{\rm e},\rm B}\sim\frac3{2\pi^2}r^2
+ \label{eq:iterationtax}
+\end{equation}
+for the optimally tuned stationary scalar-step linearization.  This is not a global iteration bound or an
+algorithm-independent obstruction: away from the teacher the Hessian contains residual terms, and nonstationary
+polynomial methods can exploit the two-point spectrum.  Indeed, the scalar schedule
+$\eta_1=1/\alpha$, $\eta_2=1/\beta$ makes
+$(I-\eta_2H)(I-\eta_1H)=0$ in this exact local quadratic.  Natural-gradient or matrix-preconditioned updates can
+also remove the local condition number by acting differently on the two eigenspaces.
+
+\subsection{Estimation}
+
+For $n$ independent Gaussian-output observations with known variance $\tau^2$, the Fisher information is
+$nH_{h_2}/\tau^2$.  The Cram\'er--Rao inequality gives, along any unit tangential vector $v\perp u$ and the radial
+vector $u$,
+\begin{equation}
+ \operatorname{Var}(v^\top\widehat w)\ge\frac{\tau^2}{n\alpha_2(r)},\qquad
+ \operatorname{Var}(u^\top\widehat w)\ge\frac{\tau^2}{n\beta_2(r)}.
+ \label{eq:crgauss}
+\end{equation}
+The ratio of the displayed radial lower bound to the tangential lower bound is $\kappa_2(r)$.  Hence tangential
+variance is bounded below at order $r/n$, while radial variance is bounded below at order
+$r^3/n$.  The analogous Bernoulli bounds replace $h_2$ by $h_1$.  The same quadratic ratio therefore appears in
+these coordinatewise information lower bounds and in stationary fixed-step descent, although the latter can be
+removed by a nonstationary schedule.
+
+\section{Bias and universality}
+
+A conventional neuron includes a bias $b$.  At $b=0$ the augmented parameter $(w,b)$ has Fisher/Hessian block
+\[
+ \E\!\left[h(rZ)
+ \begin{pmatrix}XX^\top&X\\X^\top&1\end{pmatrix}\right].
+\]
+For even $h$, the radial--bias cross term $\E[Zh(rZ)]$ vanishes.  The bias eigenvalue equals $\alpha_h(r)$, so
+the spectrum contains one radial eigenvalue $\beta_h$ and $d$ tangential/bias eigenvalues $\alpha_h$.  A nonzero
+bias preserves the $(d-1)$ tangential eigenspace but replaces the radial and bias coordinates by the explicit
+$2\times2$ block
+\begin{equation}
+ \begin{pmatrix}
+  \E[Z^2h(rZ+b)] & \E[Zh(rZ+b)]\\
+  \E[Zh(rZ+b)] & \E[h(rZ+b)]
+ \end{pmatrix}.
+ \label{eq:biasblock}
+\end{equation}
+The centered theorem is therefore not an artifact of omitting the bias; it is the diagonal point of a fully explicit
+two-coordinate extension.
+
+The exponent two is broader than the logistic curve.  Theorem~\ref{thm:universal} shows that any localized
+sensitivity profile with finite positive $m_0$ and $m_2$ has the same $r^2$ anisotropy, with only the constant
+$m_0/m_2$ depending on the activation and observation model.  Profiles with heavy sensitivity tails or vanishing
+second moment fall outside this universality class and can have different laws.
+
+
+
+\section{Relation to prior work}
+
+Table~\ref{tab:priority} states the claim boundary before the detailed discussion.
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.27\textwidth}
+                >{\raggedright\arraybackslash}p{0.29\textwidth}
+                >{\raggedright\arraybackslash}p{0.34\textwidth}}
+\toprule
+Prior result & Result here & Exact difference \\
+\midrule
+Fixed-order L\"owner/Schwarzian criterion and serial closure
+\cite{kozlovski2008,cook2023}
+& closed logistic determinant and certified $2\times2$ witness
+& explicit specialization and certificate; not a new criterion or closure law \\[3pt]
+One-unit Gaussian Fisher split for $\phi'^2$ \cite{amari2019}
+& spherical local bridge and Gaussian all-$p$ laws
+& new coefficient cross-identification and extensions; not a new one-unit decomposition \\[3pt]
+Bernoulli exponents and finite-sample logistic Hessian bounds
+\cite{chen2026gd,ostrovskii2021,chardon2024,fisher2023}
+& pointwise and shell-uniform relative Gram bounds, plus matching pointwise complexity
+& tunable precision and all powers; not the first bilateral, uniform, or one-sided Hessian bound \\[3pt]
+Classical spherical representation \cite{cambanis1981} and regular-design reference exponents \cite{chardon2024}
+& exact $Q_R$ constants and inverse-radius phase transition
+& exact-constant and regularly-varying-boundary refinement; not a new spherical representation or first
+non-Gaussian exponent \\[3pt]
+Generalized-logistic transforms and cumulants \cite{ojo2004,lee2025}
+& Gamma/polygamma moments inside neuronal anisotropy
+& transform is classical; the unified anisotropy, endpoint laws and monotonicity are the contribution \\[3pt]
+Lam's historical v2 Fisher--Schwarzian construction \cite{lam2026v2}
+& L\"owner--anisotropy coefficient identity
+& different objects and coefficient; no claim to the first general Fisher--Schwarzian connection \\
+\bottomrule
+\end{tabular}
+\caption{Result-by-result priority boundary.}
+\label{tab:priority}
+\end{table}
+
+L\"owner matrices characterize fixed-order matrix monotonicity; modern treatments include Hiai--Sano and
+Hein\"avaara \cite{hiai2010,heinavaara2019}.  Kozlovski and Sands prove the relevant classical equivalence between
+$Sf\ge0$ and order-two matrix monotonicity and record the Schwarzian composition law
+\cite{kozlovski2008}.  Hence the qualitative logistic obstruction and its serial-chain extension are classical
+consequences; negative Schwarzian also implies the all-pair determinant sign through strict convexity of
+$(f')^{-1/2}$.  Cook, Hammerlindl and Tucker develop the algebraically equivalent nowhere-coexpanding inequality,
+prove serial closure, and explicitly discuss sigmoid activations and one-dimensional neural compositions
+\cite{cook2023}.  Neural papers have proposed analytic
+quantum activations and trainable matrix activations \cite{maronese2022,liu2021}, but their objectives are circuit
+implementation or matrix-valued parameterization, not preservation of PSD order by the spectral logistic function.
+In the primary sources we located, we did not find the closed logistic identity \eqref{eq:loewnerdet}, the explicit
+certified witness, or the coefficient identity \eqref{eq:bridge} linking the L\"owner defect to Gaussian
+radial--tangential anisotropy.  This is a bounded novelty statement, not a claim that no earlier source can exist.
+
+Learning one neuron is already a nontrivial optimization problem.  Yehudai and Shamir study when gradient methods
+learn a single neuron under broad activations and input distributions, including positive and negative results
+\cite{yehudai2020}.  Diakonikolas et al. treat monotone neurons with adversarial label noise and obtain polynomial
+learners for logistic activations under log-concave inputs \cite{diakonikolas2022}.  Wu extends learnability results to
+nonmonotone activations \cite{wu2022}, and Vardi et al. show that adding a bias qualitatively changes the ReLU
+landscape \cite{vardi2021}.  Recent single-index work analyzes SGD under anisotropic Gaussian inputs
+\cite{braun2025}.  Under Gaussian logistic regression, Hsu and Mazumdar study the signal-dependent difficulty of
+direction and temperature estimation \cite{hsu2024}.  Chen and Mazumdar identify the Bernoulli radial and
+tangential Hessian functions, prove their $r^{-3}$ and $r^{-1}$ orders and show tangential curvature exceeds radial
+curvature for every nonzero signal \cite{chen2026gd}; they subsequently prove a minimax norm-estimation rate of
+order $\sqrt{r^3/n}$ \cite{chen2026minimax}.  Ostrovskii and Bach prove a uniform bilateral constant-factor
+empirical-Hessian sandwich for Gaussian logistic regression \cite[Eq.~(92)]{ostrovskii2021}, while Fisher et al.
+give a generic fixed-point standardized-Hessian concentration framework \cite{fisher2023}.  Chardon, Lerasle and
+Mourtada prove, for $p=1$, a uniform one-sided empirical Hessian lower bound under the sufficient condition
+$n\gtrsim r(d+t)$ \cite[Theorem 6]{chardon2024}.  We therefore do not claim the Bernoulli exponents, the $p=1$
+ordering, the effective transition-slab scale, the first bilateral Hessian concentration, or the first finite-sample
+lower bound.  Our empirical contribution is the explicit pointwise $(1\pm\varepsilon)$ approximation
+\eqref{eq:relativegram} for all $p>0$, its matching bilateral lower complexity, and the full-dyadic-shell extension
+\eqref{eq:uniformgram}.  The latter pays a conservative covering logarithm and is not asserted to improve the
+optimal local one-sided rate.  Recent work already constructs minimax labeled estimators, including a split-sample
+direction/norm scheme with bias correction \cite{chen2026minimax}; our oracle Gram theorem is not an estimator.
+
+Fisher geometry and natural gradient are classical \cite{amari1998}.  Karakida et al. study broad Fisher spectral
+statistics for random deep networks \cite{karakida2019}; Amari, Karakida and Oizumi also give the direct one-unit
+Gaussian $\phi'^2$ decomposition and bias coupling used here \cite{amari2019}.  Our radial contribution is
+therefore not the two-eigenspace reduction.  It is the profile-generic moment theorem, nonasymptotic brackets,
+closed all-power logistic constants, strict global monotonicity, and their connection through \eqref{eq:bridge} to
+the L\"owner order defect.  The generalized-logistic Gamma transform and its polygamma cumulants in
+Lemma~\ref{lem:moments} are classical \cite{ojo2004,lee2025}; the claim is their neural-geometric use, ratio
+monotonicity and endpoint package, not discovery of the distributional identity.
+Lam's v2 preprint connected Schwarzian curvature with Fisher--Rao geometry on manifolds of densities
+\cite{lam2026v2}.  The current v3 explicitly corrects and supersedes v1--v2 and removes that architecture
+\cite{lam2026v3}.  Neither version contains the one-neuron radial--tangential coefficient or its equality with the
+two-point L\"owner defect.  We cite v2 only as a dated historical adjacency; its $L^p$ parameter is unrelated to
+the sensitivity exponent in $h_p=\sigma'^p$.
+
+\section{Reproducibility and hostile checks}
+
+The supplied script \texttt{repro/verify\_saturation\_law.py} performs the following independent checks:
+\begin{enumerate}[leftmargin=2em]
+ \item it spot-checks \eqref{eq:loewnerdet} at separated scales and constructs Proposition~\ref{prop:witness} with
+ 256-bit directed Arb balls;
+ \item it checks the spherical fourth-moment coefficient for Gaussian and fixed-radius spherical inputs;
+ \item it compares numerical quadrature of $m_0,m_2,m_4$ with the Gamma/polygamma formula for several
+ noninteger and integer $p$;
+ \item it checks the small-$r$ jet through $r^6$ and the refined large-$r$ expansion;
+ \item it evaluates $\alpha,\beta$ directly over a logarithmic radius grid and checks positivity and grid
+ monotonicity for $p=1,2$;
+ \item it checks \eqref{eq:quantkappa}--\eqref{eq:directfinitebridge} at declared finite scales;
+ \item for three declared fixed random seeds it evaluates the empirical radial, tangential and cross blocks and
+ verifies that those realized errors lie inside \eqref{eq:blockevent};
+ \item it checks both sides of \eqref{eq:alphabounds}--\eqref{eq:betabounds} at declared finite radii;
+ \item a second replay evaluates the explicit $C_1,C_2$ majorants and lower-bound constants; and
+ \item a fixed-seed replay regenerates Figure~\ref{fig:finite} and its JSON certificate, while the main replay
+ regenerates Figure~\ref{fig:saturation} and its certificate.
+\end{enumerate}
+The numerical monotonicity and finite-radius checks are performed on declared grids; the universal statements are
+proved analytically above.  The replay uses Python, python-flint, NumPy, SciPy, and Matplotlib.  It is diagnostic
+rather than a substitute for
+the analytic proofs, which reduce to the L\"owner determinant identity, the Schwarzian chain rule, Gaussian
+orthogonal decomposition, Bernstein/net bounds, an elementary exponential bound, and closed Fourier moments.
+The stable record, versioned source archives, audit reports and manifests are public at
+\url{https://arr-research.github.io/papers/ARR-2026-53CTRKDSP685PT51/}.
+
+\section{Limitations and next theorem}
+
+The L\"owner theorem concerns spectral matrix functions, not entrywise vector activations; it does not say that a
+standard feedforward neuron reverses coordinatewise order.  The empirical results assume Gaussian input.  The
+local Schwarzian coefficient needs fourth moments, whereas the global spherical law needs transition-layer
+regularity and $\E R^{-1}<\infty$; covariance isotropy alone is insufficient by Proposition~\ref{prop:radialphase}.
+Elliptical laws can be whitened, but radial/tangential directions then use the covariance metric.
+
+The sharp complexity statement is pointwise for a fixed teacher and bilateral relative Loewner loss.  The dyadic-shell
+theorem is uniform but pays a covering logarithm.  Neither is an estimator guarantee using labels or a minimax
+parameter lower bound.  A weaker target can have a different threshold: the radial scalar needs no dimension
+ factor in its upper bound, while no matching lower threshold is proved here for the bottom eigenspace.  Proving
+such an eigenspace lower bound, or
+removing the shell covering logarithm, is the strongest proof-complete successor direction.  The optimization
+result remains local, and the Cram\'er--Rao statement concerns regular unbiased estimation.
+
+\section*{AI assistance disclosure}
+AI tools assisted with public-literature and repository triage, proof stress testing, numerical replay, drafting, and
+PDF production.  The author remains responsible for the mathematical claims and any remaining errors.
+
+\begin{thebibliography}{99}
+\let\oldbibitem\bibitem
+\renewcommand{\bibitem}{\par\oldbibitem}
+\setlength{\itemsep}{1pt}
+\small
+\bibitem{hiai2010}
+F.~Hiai and T.~Sano,
+\emph{L\"owner matrices of matrix convex and monotone functions},
+Journal of the Mathematical Society of Japan 64(2) (2012), 343--364.
+\url{https://arxiv.org/abs/1007.2478}
+
+\bibitem{heinavaara2019}
+O.~Hein\"avaara,
+\emph{Characterizing matrix monotonicity of fixed order on general sets},
+preprint (2019).
+\url{https://arxiv.org/abs/1906.06155}
+
+\bibitem{kozlovski2008}
+O.~Kozlovski and D.~Sands,
+\emph{Higher order Schwarzian derivatives in interval dynamics},
+Fundamenta Mathematicae 206 (2009), 217--239.
+\url{https://arxiv.org/abs/0812.2646}
+
+\bibitem{cook2023}
+A.~Cook, A.~Hammerlindl and W.~Tucker,
+\emph{Nowhere coexpanding functions},
+Chaos 33 (2023), 123105.
+\url{https://arxiv.org/abs/2303.12814}
+
+\bibitem{maronese2022}
+M.~Maronese, C.~Destri and E.~Prati,
+\emph{Quantum activation functions for quantum neural networks},
+Quantum Information Processing 21 (2022), 128.
+\url{https://arxiv.org/abs/2201.03700}
+
+\bibitem{liu2021}
+Z.~Liu, S.~Cao, Y.~Li and L.~Zikatanov,
+\emph{Neural networks with trainable matrix activation functions},
+Journal of Machine Learning for Modeling and Computing 6(2) (2025), 1--11.
+\url{https://arxiv.org/abs/2109.09948}
+
+\bibitem{cambanis1981}
+S.~Cambanis, S.~Huang and G.~Simons,
+\emph{On the theory of elliptically contoured distributions},
+Journal of Multivariate Analysis 11(3) (1981), 368--385.
+\url{https://doi.org/10.1016/0047-259X(81)90082-8}
+
+\bibitem{yehudai2020}
+G.~Yehudai and O.~Shamir,
+\emph{Learning a Single Neuron with Gradient Methods},
+Proceedings of Machine Learning Research 125 (2020), 3756--3786.
+\url{https://proceedings.mlr.press/v125/yehudai20a.html}
+
+\bibitem{diakonikolas2022}
+I.~Diakonikolas, V.~Kontonis, C.~Tzamos and N.~Zarifis,
+\emph{Learning a Single Neuron with Adversarial Label Noise via Gradient Descent},
+Proceedings of Machine Learning Research 178 (2022), 4313--4361.
+\url{https://proceedings.mlr.press/v178/diakonikolas22c.html}
+
+\bibitem{wu2022}
+L.~Wu,
+\emph{Learning a Single Neuron for Non-monotonic Activation Functions},
+Proceedings of Machine Learning Research 151 (2022), 4178--4197.
+\url{https://proceedings.mlr.press/v151/wu22c.html}
+
+\bibitem{vardi2021}
+G.~Vardi, G.~Yehudai and O.~Shamir,
+\emph{Learning a Single Neuron with Bias Using Gradient Descent},
+Advances in Neural Information Processing Systems 34 (2021), 28690--28700.
+\url{https://arxiv.org/abs/2106.01101}
+
+\bibitem{braun2025}
+G.~Braun, M.~H.~Quang and M.~Imaizumi,
+\emph{Learning a Single Index Model from Anisotropic Data with Vanilla Stochastic Gradient Descent},
+Proceedings of Machine Learning Research 258 (2025), 1216--1224.
+\url{https://proceedings.mlr.press/v258/braun25a.html}
+
+\bibitem{hsu2024}
+D.~Hsu and A.~Mazumdar,
+\emph{On the Sample Complexity of Parameter Estimation in Logistic Regression with Normal Design},
+Proceedings of Machine Learning Research 247 (2024), 2418--2437.
+\url{https://proceedings.mlr.press/v247/hsu24a.html}
+
+\bibitem{chen2026gd}
+J.~Chen and A.~Mazumdar,
+\emph{Finite-Sample Performance of Gradient Descent in Logistic Regression with Gaussian Design},
+arXiv:2606.21683 (2026).
+\url{https://arxiv.org/abs/2606.21683}
+
+\bibitem{chen2026minimax}
+J.~Chen and A.~Mazumdar,
+\emph{Minimax Optimal Estimator and Improved Error Rate for the MLE in Logistic Regression with Gaussian Design},
+arXiv:2608.17260 (2026).
+\url{https://arxiv.org/abs/2608.17260}
+
+\bibitem{chardon2024}
+H.~Chardon, M.~Lerasle and J.~Mourtada,
+\emph{Finite-sample performance of the maximum likelihood estimator in logistic regression},
+arXiv:2411.02137v3 (first posted 2024; v3 2026).
+\url{https://arxiv.org/abs/2411.02137v3}
+
+\bibitem{ostrovskii2021}
+D.~M.~Ostrovskii and F.~Bach,
+\emph{Finite-sample analysis of M-estimators using self-concordance},
+Electronic Journal of Statistics 15(1) (2021), 326--391.
+\url{https://doi.org/10.1214/20-EJS1780}
+
+\bibitem{fisher2023}
+J.~Fisher, L.~Liu, K.~Pillutla, Y.~Choi and Z.~Harchaoui,
+\emph{Influence Diagnostics under Self-concordance},
+Proceedings of Machine Learning Research 206 (2023), 10028--10076.
+\url{https://proceedings.mlr.press/v206/fisher23a.html}
+
+\bibitem{amari1998}
+S.-i.~Amari,
+\emph{Natural Gradient Works Efficiently in Learning},
+Neural Computation 10 (1998), 251--276.
+\url{https://doi.org/10.1162/089976698300017746}
+
+\bibitem{karakida2019}
+R.~Karakida, S.~Akaho and S.-i.~Amari,
+\emph{Universal Statistics of Fisher Information in Deep Neural Networks: Mean Field Approach},
+Proceedings of Machine Learning Research 89 (2019), 1032--1041.
+\url{https://proceedings.mlr.press/v89/karakida19a.html}
+
+\bibitem{amari2019}
+S.-i.~Amari, R.~Karakida and M.~Oizumi,
+\emph{Fisher Information and Natural Gradient Learning in Random Deep Networks},
+Proceedings of Machine Learning Research 89 (2019), 694--702.
+\url{https://proceedings.mlr.press/v89/amari19a.html}
+
+\bibitem{lee2025}
+C.~J.~Lee, A.~Zito, H.~Sang and D.~B.~Dunson,
+\emph{Logistic-beta processes for dependent random probabilities with beta marginals},
+Bayesian Analysis 20(4) (2025), 1345--1369.
+\url{https://doi.org/10.1214/25-BA1541}
+
+\bibitem{ojo2004}
+M.~O.~Ojo and A.~K.~Olapade,
+\emph{On a Six-Parameter Generalized Logistic Distribution},
+Kragujevac Journal of Mathematics 26 (2004), 31--38.
+\url{https://imi.pmf.kg.ac.rs/kjm/pub/12616736649184_5.pdf}
+
+\bibitem{lam2026v2}
+H.~P.~G.~Lam,
+\emph{Real Bers embedding on the line: Fisher--Rao linearization, Schwarzian curvature, and scattering coordinates},
+arXiv:2602.07373v2 (2026).
+\url{https://arxiv.org/abs/2602.07373v2}
+
+\bibitem{lam2026v3}
+H.~P.~G.~Lam,
+\emph{Zero-energy scattering and the real Bers image on the line},
+arXiv:2602.07373v3 (2026), correcting and superseding v1--v2.
+\url{https://arxiv.org/abs/2602.07373v3}
+\end{thebibliography}
+
+\end{document}
