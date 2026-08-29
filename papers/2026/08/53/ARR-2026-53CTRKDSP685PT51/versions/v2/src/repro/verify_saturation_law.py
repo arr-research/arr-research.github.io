@@ -528,7 +528,7 @@ def main() -> None:
             "bernoulli": 3.0 / (pi * pi),
         },
     }
-    CERTIFICATE.write_text(json.dumps(cert, indent=2) + "\n", encoding="utf-8")
+    CERTIFICATE.write_text(json.dumps(cert, indent=2) + "\n", encoding="utf-8", newline="\n")
     print(
         "PASS: Loewner/Arb witness; spherical and quantitative bridge grids; "
         "all-p moment/endpoint test points; p=1,2 anisotropy grids; three "

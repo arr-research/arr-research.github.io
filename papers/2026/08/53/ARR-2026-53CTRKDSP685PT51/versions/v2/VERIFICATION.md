@@ -25,7 +25,7 @@ It reported:
 ```text
 PASS: Loewner/Arb witness; spherical and quantitative bridge grids; all-p moment/endpoint test points; p=1,2 anisotropy grids; three fixed-seed empirical block realizations; and finite-r brackets
 figure_sha256=093d683fcc2b2a344255920ce0055641f694a91e37f767a9c580bd2bf0aadb97
-certificate_sha256=a5442d5840a08ed1394e21f8f4d82f7947ba35ba7bd6cc5e9cf00d4df0c3618a
+certificate_sha256=b40a9bb318b48206fc0c5c9fc592c7b699d48a26b9b12b4ecc4805cf6215b9d1
 ```
 
 The figure and JSON hashes were stable across repeated runs. Arb at 256-bit precision certified the explicit indefinite matrix difference. The replay checks only declared points, grids, and three fixed empirical realizations; it does not calibrate theorem probabilities or replace the analytic all-p, concentration, angle, or lower-bound proofs.
