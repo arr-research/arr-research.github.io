@@ -19,7 +19,6 @@ addresses may appear in the operator's PayPal transaction record. They are used 
 payment administration, fraud handling, accounting and legal obligations and are
 not added to an ARR mailing list or public donor ranking.
 
-Questions, refund requests and conflicts should be sent to
-`lluiseriksson@gmail.com` with subject `ARR support`. A refund is considered against
-the payment record and applicable PayPal rules; it cannot change any editorial
-decision.
+Questions, refund requests and conflicts should use ARR's operator contact channel
+with subject `ARR support`. A refund is considered against the payment record and
+applicable PayPal rules; it cannot change any editorial decision.
