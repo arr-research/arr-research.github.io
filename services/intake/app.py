@@ -17,7 +17,6 @@ import subprocess  # nosec B404
 import time
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from urllib.parse import urlsplit
 
 import click
 from flask import (
@@ -227,7 +226,7 @@ def login_required(view):
     @functools.wraps(view)
     def wrapped(**kwargs):
         if g.user is None:
-            return redirect(url_for("login", next=request.path))
+            return redirect(url_for("login"))
         return view(**kwargs)
 
     return wrapped
@@ -257,13 +256,6 @@ def require_csrf() -> None:
     expected = session.get("csrf_token", "")
     if not expected or not hmac.compare_digest(supplied, expected):
         abort(400, "Invalid form token")
-
-
-def safe_next(value: str | None) -> str:
-    if not value:
-        return url_for("dashboard")
-    parts = urlsplit(value)
-    return value if not parts.scheme and not parts.netloc and value.startswith("/") else url_for("dashboard")
 
 
 def rate_subject() -> str:
@@ -377,7 +369,7 @@ def register_routes(app: Flask) -> None:
                 session["user_id"] = user["id"]
                 session.permanent = True
                 audit("login")
-                return redirect(safe_next(request.args.get("next")))
+                return redirect(url_for("dashboard"))
         return render_template("login.html")
 
     @app.post("/logout")

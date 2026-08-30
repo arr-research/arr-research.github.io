@@ -95,10 +95,11 @@ class IntakeTests(unittest.TestCase):
         )
         self.assertEqual(bad.status_code, 200)
         good = self.client.post(
-            "/login",
+            "/login?next=https://attacker.example/steal",
             data={"csrf_token": csrf, "email": "operator@example.org", "password": "operator-password-123", "totp": totp("JBSWY3DPEHPK3PXP")},
         )
         self.assertEqual(good.status_code, 302)
+        self.assertEqual(good.headers["Location"], "/")
 
     def test_upload_stays_private_and_requires_manual_acceptance(self) -> None:
         submission_id = self.upload()
