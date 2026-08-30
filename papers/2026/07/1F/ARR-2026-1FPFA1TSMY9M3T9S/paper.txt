@@ -1,0 +1,903 @@
+--- Page 1 ---
+
+ai.viXra:2607.0023 - version 2 supersession/correction note
+notice page 1
+ SUPERSEDED BY AI.VIXRA:2607.0089V1 FOR THE TERMINAL GLOBAL-SIGN
+ CLAIM; INDEPENDENT REPLAY PENDING
+ Ratio Monotonicity for a Killed von Mises Bridge: Exact Bridge
+Structure, Certified Negative Results, a Single-Bessel Reduction, and
+ a Two-Scale Closure Map for a Surface Expansion in
+ Two-Dimensional Lattice Gauge Theory
+ Lluis Eriksson
+Version 2 - supersession and correction note
+Purpose of this replacement
+This replacement preserves public version 1 and records the later terminal-claim paper without overstating its audit
+status. Version 1 proves positivity of F_B, the ratio sign for 0 < beta <= 3, exact bridge and single-Bessel reductions,
+certified negative results, asymptotic structure and a two-scale closure map; pages 11-13 leave the global sign as a
+quantified conjecture.
+ai.viXra:2607.0089v1 claims the global ratio-monotonicity theorem using exact identities and outward-rounded interval
+certificates. It supersedes this record for that terminal claim, but the independent replay of every exact-to-Arb handoff
+and interval regime remains pending in the present audit.
+Citation rule
+Cite this record for the exact reductions, certified negative results and beta <= 3 theorem. Cite ai.viXra:2607.0089v1 for
+the claimed global closure, while retaining the explicit independent-replay-pending qualification until that audit is
+complete.
+Status boundary
+SUPERSEDED FOR THE TERMINAL CLAIM does not convert a pending hybrid certificate into an independently
+verified theorem. The successor is the later claim source; its global certificate remains REVIEW-PENDING here.
+The exact claim map and provenance record continue on notice page 2. The historical public manuscript then follows unchanged.
+
+
+--- Page 2 ---
+
+ai.viXra:2607.0023 - version 2 supersession/correction note
+notice page 2
+ CORRECTION AND CLAIM MAP
+Results retained from the historical paper
+- The two proofs of F_B > 0 and the certified E' < 0 result for 0 < beta <= 3.
+- The killed von Mises bridge identity, single-Bessel reductions and exact saddle-deficit structure.
+- The certified negative coupling results, asymptotic coefficients and two-scale closure map as labelled in version 1.
+Claims superseded or narrowed
+- Pages 11-13 are no longer the terminal location of the global ratio-monotonicity programme.
+- The quantified conjecture is superseded as a claim target by the later paper's stated global theorem.
+- No independent-replay PASS is inferred from the successor's printed certificates or green transcripts.
+What the successor adds
+- A full proof partition for the claimed global sign across analytic and interval-certified regimes.
+- Outward-rounded interval certificates and replay/production transcripts for the remaining parameter ranges.
+- A terminal global ratio-monotonicity claim that was conjectural in version 1 of this record.
+Evidence classification
+Version 1 combines exact identities, certified finite regimes, numerical verification and an explicit conjectural endpoint.
+The successor reports a hybrid analytic/machine-certified theorem, but independent replay of its interval coverage and
+exact-to-numeric interfaces is still required.
+Provenance
+Notice pages 1-2 are new. The following 13 pages reproduce public version 1 with identical rendered content. Frozen
+copies of version 1 and the 33-page successor are included in the package.
+
+
+--- Page 3 ---
+
+Ratio Monotonicity for a Killed von Mises Bridge:
+exact bridge structure, certified negative results, a single-Bessel reduction, and a
+two-scale closure map for a surface expansion in two-dimensional lattice gauge theory
+Lluis Eriksson
+July 2026
+Abstract
+For 𝛽 >0 let 𝐼𝑚 = 𝐼𝑚(𝛽) denote modified Bessel functions of the first kind, and set
+𝑎𝑚 = 𝐼2
+𝑚 [(𝑚−1)𝐼2
+𝑚−1 + (𝑚+ 1)𝐼2
+𝑚+1], 𝑏𝑚 = 𝑚𝐼4
+𝑚, 𝐹𝐴(𝑡) = ∑︀
+𝑚≥1 𝑎𝑚 sin(𝑚𝑡), 𝐹𝐵(𝑡) =∑︀
+𝑚≥1 𝑏𝑚 sin(𝑚𝑡), and𝐸 = 𝐹𝐴/(2𝐹𝐵). The global ratio-monotonicity problem for the surface
+expansion of a two-dimensional𝑆𝑈(2) lattice gauge observable is: (i)𝐹𝐵 >0 on (0,𝜋), and
+(ii) 𝐸′ < 0 on (0,𝜋), for every 𝛽 >0. We prove (i) twice, and prove (ii) for0 < 𝛽≤3
+via an exact pair-identity skeleton plus an archived interval certificate executed by two
+independent interval-arithmetic implementations. The structural core is exact: 𝐸 is, as
+an algebraic identity, the mean ofcos 𝜓 under the midpoint law of a four-step killed von
+Mises bridge; the generating kernels reduce, via the Neumann addition theorem, to two-
+dimensional integrals of asingle Bessel function whose saddle deficit is an exact sum of two
+squares; and exact saddle cancellations yield the coefficients of the (verified) closed second-
+order law𝐸 = cos(𝑡/2)(1 −𝑐(𝑡)/𝛽) + 𝑂(𝛽−2), 𝑐(𝑡) = (4 cos2(𝑡/4) −1)/(2 cos(𝑡/4) cos(𝑡/2)).
+Three certified negative results (interval arithmetic, two implementations, nested enclosures)
+kill every monotone full-path coupling, with an exact mechanism at threshold𝛽|cos 𝑡|= 3/2.
+For the remaining range we give a two-scale closure map with a verified candidate threshold
+𝛽0 = 15 and the complete 𝜋-endpoint package for the cubic coefficient 𝑐3. Every claim
+is labelled exact / certified / verified; the machine-checked lemmas are Lean 4/Mathlib,
+machine-checked modulo classical Bessel inputs carried as named hypotheses.
+1 Introduction
+This paper consolidates the resolution status of a two-part positivity problem that arises as the
+last analytic gap in a surface (character) expansion for two-dimensional𝑆𝑈(2) lattice gauge
+theory [5, 6, 7]. The problem is stated entirely in terms of modified Bessel functions and
+trigonometric series, and we treat it as such; no claim of physical consequence beyond the stated
+expansion is made, and importance is not inherited by thematic proximity.
+Throughout, 𝛽 >0, 𝐼𝑚 = 𝐼𝑚(𝛽), and
+𝑎𝑚 = 𝐼2
+𝑚
+[︀
+(𝑚−1)𝐼2
+𝑚−1 + (𝑚+ 1)𝐼2
+𝑚+1
+]︀
+, 𝑏 𝑚 = 𝑚𝐼4
+𝑚, 𝑚 ≥1. (1)
+Both sequences decay super-exponentially, so
+𝐹𝐴(𝑡) =
+∑︁
+𝑚≥1
+𝑎𝑚sin(𝑚𝑡), 𝐹 𝐵(𝑡) =
+∑︁
+𝑚≥1
+𝑏𝑚sin(𝑚𝑡), 𝐸 (𝑡) = 𝐹𝐴(𝑡)
+2𝐹𝐵(𝑡), (2)
+are real-analytic onR, and the Wronskian𝑊 = 2(𝐹′
+𝐴𝐹𝐵−𝐹𝐴𝐹′
+𝐵) satisfies 𝑊 = 4𝐹2
+𝐵 (𝐸)′wherever
+𝐹𝐵 ̸= 0 [7].
+1
+
+--- Page 4 ---
+
+Conjecture 1(global ratio monotonicity). For every𝛽 >0: (i) 𝐹𝐵 >0 on (0,𝜋); (ii) 𝐸′<0
+on (0,𝜋).
+Part (i) is proved below (twice). Part (ii) is proved for 0 < 𝛽 ≤ 3 (Theorem 7; exact
+skeleton plus the archived certificatecertify_thmB.py and its Arb twin), is supported by an
+exact structural reduction and a verified truth map for𝛽 ≥15, and is otherwise open; Section 8
+states the precise two-scale closure map. The conjecture was born inside this programme (it
+is the global form of an𝜀-window positivity required by the surface expansion); no external
+pedigree is claimed.
+Convention 2 (tricotomy). Every assertion below carries one of three labels.Exact: a proved
+identity or inequality.Certified: a numerical statement enclosed in interval arithmetic with out-
+ward rounding, nested re-computation at higher precision, and (for the load-bearing negatives) a
+second independent implementation in Arb.Verified: high-precision numerics with stated grids
+and precision policies, not a proof. No verified statement is used as a hypothesis of an exact
+one.
+2 The spectral framework
+Convention 3 (normalizations). On (0,𝜋) define the kernel, entry law, and smoothing operator
+𝑞1(𝑢,𝑣) = 2 𝑒𝛽cos 𝑢cos 𝑣sinh(𝛽sin 𝑢sin 𝑣) = 4
+∑︁
+𝑚≥1
+𝐼𝑚sin(𝑚𝑢) sin(𝑚𝑣), (3)
+𝑠1(𝑢) = 𝛽
+2 sin 𝑢𝑒𝛽cos 𝑢 =
+∑︁
+𝑚≥1
+𝑚𝐼𝑚sin(𝑚𝑢), (4)
+(𝑄𝑓)(𝑣) = 1
+2𝜋
+∫︁ 𝜋
+0
+𝑞1(𝑣,𝑢)𝑓(𝑢) 𝑑𝑢, (5)
+so that𝑄sin(𝑚·) = 𝐼𝑚sin(𝑚·). Both closed forms are classical consequences of the generating
+function 𝑒𝛽cos 𝜃 = 𝐼0 + 2 ∑︀
+𝑚≥1 𝐼𝑚cos(𝑚𝜃); (4) follows by differentiation. All ten verification
+artifacts in the repository use exactly these normalizations.
+Since 𝑞1 > 0 on (0,𝜋)2 and 𝑠1 > 0 on (0,𝜋), the walk with step kernel𝑞1 killed on {0,𝜋}
+is well defined;𝐻(𝜓) = 𝛽sin(𝜓/2)𝐼1(2𝛽cos(𝜓/2)) and 𝐾2(𝜙) = 𝐼0(2𝛽cos(𝜙/2)) appear below.
+Note 𝐹𝐵 = 𝑄3𝑠1 and, by the sine orthogonality computation of Lemma 10,𝐹𝐴 is the companion
+cosine-weighted integral.
+3 Theorem A: positivity of 𝐹𝐵
+Theorem 4(exact). 𝐹𝐵(𝑡) >0 for all 𝑡∈(0,𝜋) and all 𝛽 >0.
+First proof (kernel positivity).𝐹𝐵 = 𝑄3𝑠1 by (5) and𝑏𝑚 = 𝑚𝐼4
+𝑚. Each application of 𝑄 inte-
+grates a positive function against the strictly positive kernel (3);𝑠1 >0 on (0,𝜋). Hence𝐹𝐵 >0
+pointwise.
+Second proof (symmetric-decreasing convolution).With𝐾2(𝜙) = 𝐼0(2𝛽cos(𝜙/2)) and𝑃4 = 𝐾2*
+𝐾2 (circle convolution; Section 6),𝐹𝐵 = −1
+2 𝑃′
+4. The function𝐾2 is even andstrictly decreasing
+in |𝜙|on [0,𝜋] (𝐼0 strictly increasing,cos(𝜙/2) strictly decreasing). By the layer-cake representa-
+tion,𝐾2 =
+∫︀∞
+0 1𝐴𝜆 𝑑𝜆with𝐴𝜆 centeredarcswhosehalf-lengths 𝑎(𝜆) fill(0,𝜋) continuously(strict
+2
+
+--- Page 5 ---
+
+decrease). For centered arcs,(1𝐴*1𝐵)(𝑡) = |𝐴∩(𝑡+𝐵)|is even and nonincreasing in|𝑡|on [0,𝜋],
+and strictly decreasing on||𝑎−𝑏|,min(𝑎+ 𝑏,2𝜋−𝑎−𝑏)|. Hence𝑃4(𝑡) =
+∫︀∫︀
+|𝐴𝜆∩(𝑡+ 𝐴𝜇)|𝑑𝜆𝑑𝜇
+is even, nonincreasing on[0,𝜋], and strictly decreasing on(0,𝜋) because for every𝑡 ∈(0,𝜋) a
+positive measure of pairs(𝜆,𝜇) has |𝑎(𝜆)−𝑎(𝜇)|<𝑡< min(𝑎+𝑏,2𝜋−𝑎−𝑏) (the half-lengths fill
+(0,𝜋)). At the derivative level: each overlap𝑡↦→|𝐴𝜆∩(𝑡+ 𝐴𝜇)|is Lipschitz with a.e. derivative
+−1 in the strict regime and0 otherwise (on[0,𝜋]); since𝑃4 is analytic, dominated convergence
+gives 𝑃′
+4(𝑡) =
+∫︀∫︀
+𝜕𝑡|𝐴𝜆∩(𝑡+ 𝐴𝜇)|𝑑𝜆𝑑𝜇 ≤−𝜇{(𝜆,𝜇) : strict at𝑡}<0 pointwise on(0,𝜋). Thus
+𝐹𝐵 = −1
+2 𝑃′
+4 >0 on (0,𝜋).
+4 Theorem B: ratio monotonicity for0 <𝛽 ≤3
+Lemma 5(exact; Wronskian identity). For real arrays with∑︀𝑚(|𝑎𝑚|+ |𝑏𝑚|) <∞,
+𝑊 := 2(𝐹′
+𝐴𝐹𝐵 −𝐹𝐴𝐹′
+𝐵) =
+∑︁
+1≤𝑚<𝑛
+𝑐𝑚𝑛𝑇𝑚𝑛(𝑡), 𝑐 𝑚𝑛 = 𝑎𝑚𝑏𝑛 −𝑎𝑛𝑏𝑚, (6)
+where 𝑇𝑚𝑛(𝑡) = (𝑚−𝑛) sin((𝑚+ 𝑛)𝑡) + (𝑚+ 𝑛) sin((𝑛−𝑚)𝑡).
+Proof. Product-to-sum: 𝑇𝑚𝑛 = 2[𝑚cos(𝑚𝑡) sin(𝑛𝑡) −𝑛sin(𝑚𝑡) cos(𝑛𝑡)] =: 2 𝐺(𝑚,𝑛), antisym-
+metric with 𝐺(𝑛,𝑛) = 0 ; since 𝑐𝑚𝑛 is antisymmetric, ∑︀
+𝑚<𝑛𝑐𝑚𝑛2𝐺 = 2 ∑︀
+𝑚,𝑛𝑎𝑚𝑏𝑛𝐺(𝑚,𝑛) =
+2[𝐹′
+𝐴𝐹𝐵 −𝐹𝐴𝐹′
+𝐵] (first recorded in [7]).
+The coefficient input is the weighted Turán-type lemma (Appendix A, self-contained):𝜙𝑚 =
+𝑎𝑚/𝑏𝑚 is strictly increasing in𝑚≥1 for every𝛽 >0, henceevery minor is negative: 𝑐𝑚𝑛 <0
+for 𝑚<𝑛 (exact).
+Lemma 6(exact; the pair identities and bounds). For 𝑡∈(0,𝜋), with𝑝= 𝑛−𝑚, 𝑞= 𝑛+ 𝑚:
+(a) 𝑇12 = 4 sin3 𝑡; 𝑇13 = 16 sin3 𝑡 cos 𝑡; 𝑇24 = 8 sin3(2𝑡), so |𝑇13|≤ 16 sin3 𝑡 and |𝑇24|≤
+64 sin3 𝑡.
+(b) 𝑇𝑚,𝑚+1 ≥0 for every𝑚≥1.
+(c) |𝑇𝑚𝑛|≤ 𝜋3
+48 𝑝𝑞(𝑞2 + 𝑝2) sin3 𝑡 for all 𝑚<𝑛 .
+Proof. (a) 3 sin𝑢−sin 3𝑢 = 4 sin3 𝑢 gives 𝑇12 (at 𝑢 = 𝑡) and 𝑇24 (at 𝑢 = 2𝑡); 𝑇13 = 4 sin 2𝑡−
+2 sin 4𝑡 = 4 sin 2𝑡(1 −cos 2𝑡) = 16 sin3 𝑡cos 𝑡. (b) 𝑇𝑚,𝑚+1 = (2𝑚+ 1) sin𝑡−sin((2𝑚+ 1)𝑡) ≥0
+since |sin(𝑞𝑡)|≤ 𝑞sin 𝑡 on (0,𝜋) (induction on 𝑞). (c) 𝑇𝑚𝑛 and its first two derivatives vanish
+at 𝑡 = 0 and 𝑡 = 𝜋 (the parities of𝑚±𝑛 agree), and |𝑇′′′
+𝑚𝑛|≤ 𝑝𝑞3 + 𝑞𝑝3 = 𝑝𝑞(𝑞2 + 𝑝2); hence
+|𝑇𝑚𝑛(𝑡)|≤ 𝑝𝑞(𝑞2+𝑝2)
+6 min(𝑡,𝜋 −𝑡)3, andsin 𝑡≥2
+𝜋 min(𝑡,𝜋 −𝑡) gives the claim.
+Theorem 7 (exact modulo the certified computation certify_thmB.py). For 0 < 𝛽 ≤ 3:
+𝑊 <0 on (0,𝜋), hence𝐸′<0 on (0,𝜋).
+Proof. Drop the adjacent pairs𝑚≥2 (each contributes𝑐𝑚,𝑚+1𝑇𝑚,𝑚+1 ≤0 by Lemma 6(b) and
+𝑐< 0); keep𝑇12, 𝑇13, 𝑇24 exactly and majorize every other pair by Lemma 6(c). Pointwise in𝑡,
+𝑊(𝑡)
+sin3 𝑡 ≤ Crit(𝛽) := −4|𝑐12|+ 16|𝑐13|+ 64|𝑐24|+ 𝜋3
+48
+∑︁
+𝑝≥2
+(𝑚,𝑛)̸=(1,3),(2,4)
+𝑝𝑞(𝑞2 + 𝑝2) |𝑐𝑚𝑛|.
+3
+
+--- Page 6 ---
+
+The certificatecertify_thmB.py (Section 9) enclosesCrit in interval arithmetic over adaptive
+𝛽-boxes covering [1/20,3] (𝐼𝑚 increasing in 𝛽 gives rigorous boxes; cutoff 𝑀 = 60 with the
+tail itself computed in intervals and closed by a derived, per-box-asserted geometric ratio) and
+certifies Crit <0 on all of[1/20,3]; the script then re-certifiesevery box at precision+70 before
+reporting success (the box count is invocation- and implementation-dependent; the independent
+Arb implementationcertify_thmB_arb.py certifies the same coverage with86 boxes and a full
+stability pass, transcript archived). For0 <𝛽 ≤1/20, Lemma 8 applies.
+Lemma 8(exact; small𝛽). For 0 <𝛽 ≤1/20: Crit(𝛽) <0.
+Proof. Write 𝜅 = 𝛽/2 ≤1/40, 𝐿𝑚 = 𝜅𝑚/𝑚!, 𝑈𝑚 = 𝑒*𝐿𝑚 with 𝑒* = 𝑒𝛽2/4 ≤𝑒1/1600 < 1.001;
+then 𝐿𝑚 ≤𝐼𝑚 ≤𝑈𝑚 (positive series). Leading minor: 𝑎2𝑏1 ≥(𝐼2
+1 𝐼2
+2 )(𝐼4
+1 ) ≥𝐿6
+1𝐿2
+2 = 𝜅10/4 and
+𝑎1𝑏2 = (2𝐼2
+1 𝐼2
+2 )(2𝐼4
+2 ) ≤4𝑈2
+1 𝑈6
+2 = (𝑒*)8𝜅14/16, so
+|𝑐12| ≥𝜅10
+4
+(︁
+1 −(𝑒*)8𝜅4
+4
+)︁
+≥ 𝜅10
+4 (1 −10−6).
+The three visible positive terms:𝑎3 ≤𝐼2
+3 ·(2𝐼2
+2 + 4𝐼2
+4 ) ≤(𝑒*)4𝜅10/24 ·(1 + 10−4) and 𝑏1 ≤(𝑒*)4𝜅4
+give 16|𝑐13|≤ 16(𝑎3𝑏1 + 𝑎1𝑏3) ≤0.70 𝜅14; 64|𝑐24|≤ 64(𝑎4𝑏2 + 𝑎2𝑏4) ≤10−3𝜅14 (both products
+have 𝜅-degree ≥22); the largest remaining weighted pair is(1,4): 𝜋3
+48 ·510 ·(𝑎4𝑏1 + 𝑎1𝑏4) ≤
+0.2 𝜅18 ≤10−6𝜅14. All other pairs(those with 𝑠 := 𝑚+ 𝑛 ≥6, 𝑝 ≥2): using 𝑎𝑛𝑏𝑚 + 𝑎𝑚𝑏𝑛 ≤
+2𝑚𝑛(𝑒*)8𝜅4𝑠−2[((𝑚−1)!𝑚!)−2𝑛!−4 + ((𝑛−1)!𝑛!)−2𝑚!−4] ≤𝑠2(𝑒*)8𝜅4𝑠−2 (the factorial bracket
+is ≤2 and 2𝑚𝑛≤𝑠2/2), 𝑝𝑞(𝑞2 + 𝑝2) ≤2𝑠4, and at most𝑠 pairs per level,
+𝜋3
+48
+∑︁
+𝑠≥6
+(level 𝑠) ≤𝜋3
+48(𝑒*)8 ∑︁
+𝑠≥6
+2𝑠7𝜅4𝑠−2 ≤0.66 𝜅22 ·67 ∑︁
+𝑗≥0
+[︀
+(7/6)7𝜅4]︀𝑗 ≤3.7 ×105 𝜅22 ≤10−7𝜅14,
+where the level ratio𝑠 ↦→𝑠+ 1 is at most(7/6)7𝜅4 < 10−5 < 1
+2 (so the geometric closure is
+valid), and𝜅8 ≤40−8 absorbs the constant. Collecting:
+Crit ≤−𝜅10(1 −10−6) + 0.71 𝜅14 = −𝜅10(︀
+1 −10−6 −0.71 𝜅4)︀
+<0,
+since 𝜅4 ≤40−4 < 4 ·10−7. (All numbered constants above are crude upper counts; each step
+loses factors, none gains.)
+Remark 9 (verified; the sharp family and saturation). The sharper per-pair bound |𝑇𝑚𝑛| ≤
+𝑝𝑞(𝑞2−𝑝2)
+6 sin3 𝑡 and the adjacent floor𝑇𝑚,𝑚+1 ≥2𝑚sin3 𝑡 (note the sign: the floor is alower
+bound on a positive quantity) are verified far beyond the range used (𝑞 ≤151; 13 pairs to
+(10,30), max ratio 1.0) and would extend Theorem 7 to𝛽 ≈3.5; their per-pair certification
+is a scheduled upgrade. Beyond that the decomposition issaturated: with the exact far block
+(cancellation included) the criterion fails at𝛽 = 6 by+2.2×1014 while the true𝑊/sin3 𝑡remains
+negative (−6.9 ×1012) — a verified adversarial finding about the method, and the reason the
+large-𝛽 closure uses different machinery (Sections 6–8).
+5 The bridge structure of 𝐸 (exact)
+Let 𝑘= 𝑞1∘𝑞1 denote the two-step kernel,𝑘(𝜓,𝑡) = 4 ∑︀
+𝑚≥1 𝐼2
+𝑚sin(𝑚𝜓) sin(𝑚𝑡), and define
+𝜔𝑡( 𝑑𝜓) ∝ (𝑄𝑠1)(𝜓) 𝑘(𝜓,𝑡) 𝑑𝜓 on (0,𝜋), (7)
+the law of the time-2 position (midpoint) of the four-step bridge entering from0 with law 𝑠1
+and conditioned to end at𝑡.
+4
+
+--- Page 7 ---
+
+Lemma 10 (exact).
+∫︁ 𝜋
+0
+(𝑄𝑠1) 𝑘(·,𝑡) 𝑑𝜓 = 2 𝜋𝐹𝐵(𝑡) and
+∫︁ 𝜋
+0
+cos 𝜓(𝑄𝑠1) 𝑘(·,𝑡) 𝑑𝜓 = 𝜋𝐹𝐴(𝑡).
+Hence, as an identity,
+𝐸(𝑡) = E𝜔𝑡[cos 𝜓] = 𝐹𝐴(𝑡)
+2𝐹𝐵(𝑡).
+Proof. (𝑄𝑠1)(𝜓) = ∑︀𝑚𝐼2
+𝑚sin(𝑚𝜓). By sine orthogonality the first integral picks the diagonal,
+giving 2𝜋∑︀𝑚𝐼4
+𝑚sin(𝑚𝑡). In the second,cos 𝜓 sin(𝑚𝜓) sin(𝑛𝜓) integrates to𝜋
+4 (𝛿𝑛,𝑚+1 +𝛿𝑛,𝑚−1),
+which produces exactly the weights(𝑛−1)𝐼2
+𝑛−1 + (𝑛+ 1)𝐼2
+𝑛+1 of 𝑎𝑛.
+Lemma 11(exact; entry law). 𝜕𝑡𝑘(0+,𝜓) = 2𝐻(𝜓), where𝐻(𝜓) = 𝛽sin(𝜓/2) 𝐼1(2𝛽cos(𝜓/2)).
+Proof. Differentiate in𝜓 the squared Graf identity𝐼2
+0 + 2∑︀
+𝑚≥1 𝐼2
+𝑚cos(𝑚𝜓) = 𝐼0(2𝛽cos(𝜓/2))
+[4, §10.23(ii)] and compare with𝜕𝑡𝑘(0+,𝜓) = 4 ∑︀𝑚𝐼2
+𝑚sin(𝑚𝜓).
+Proposition 12 (certified negative; no monotone full-path coupling). At 𝛽 = 20 the time-3
+marginal𝜌𝑡(𝑢) ∝(𝑄2𝑠1)(𝑢) 𝑞1(𝑢,𝑡) is not stochastically monotone in𝑡: with𝑎= 4802
+104 , 𝑡1 = 29621
+104 ,
+𝑡2 = 30070
+104 , the tail masses satisfy𝑇(𝑡2,𝑎) <𝑇 (𝑡1,𝑎), with certified enclosure
+𝑇(𝑡2,𝑎) −𝑇(𝑡1,𝑎) ∈[−2.5299150980081786690028107,
+−2.5299150980081786690028074] ×10−10.
+Consequently no monotone coupling of full bridge paths exists at𝛽 = 20. The certificate uses
+exact termwise tails (𝐽(𝑚,𝑛,𝑎 ) =
+∫︀𝜋
+𝑎 sin 𝑚𝑢sin 𝑛𝑢𝑑𝑢 in closed form: no quadrature error),
+positive-series Bessel enclosures with geometric tails, explicit truncation bounds, nested passes
+(𝑀,prec) = (120,350) ⊂(140,500), and two independent interval implementations (mpmath.iv;
+Arb viapython-flint).
+Proposition 13 (certified negatives; the weight–kernel matrix). At 𝛽 = 20 , for every entry
+weight 𝑄𝑘−1𝑠1 (𝑘= 1,2,3,4) the marginal one𝑞1-step from the moving endpoint fails stochastic
+monotonicity, with certified witnesses sharing (𝑡1,𝑡2) = (3 , 61/20): 𝑘 = 1 (two-step bridge
+midpoint, the minimal counterexample),𝑎= 9/10, margin≈−1.34 ×10−2; 𝑘 = 2, 𝑎= 3/4, ≈
+−1.80×10−6; 𝑘= 4, 𝑎= 3/10, ≈−4.75×10−13 (𝑘= 3 is Proposition 12). Two smoothing steps
+repair all tested weights (verified); one never does. The statement is relative to the natural weight
+family: 𝑘2 possesses its own total-positivity corner (𝛽 ≳ 8) reachable by two-atom adversarial
+weights.
+Lemma 14 (exact; the 3/2 mechanism). lim
+𝑢↓0
+𝜕𝑢𝜕𝑡log 𝑞1(𝑢,𝑡)
+𝛽sin 𝑡𝑢 = 1 + 2𝛽
+3 cos 𝑡. For 𝑡 > 𝜋/2 the
+corner sign change of𝜕𝑢𝜕𝑡log 𝑞1 occurs exactly when𝛽|cos 𝑡|> 3/2 — the same threshold as
+the 𝑇𝑃2 failure of𝑞1.
+Proof. 𝜕𝑡log 𝑞1 = −𝛽sin 𝑡cos 𝑢+ 𝛽cos 𝑡sin 𝑢coth(𝛽sin 𝑡sin 𝑢) (direct differentiation of (3)); ex-
+pand coth 𝑧= 𝑧−1 +𝑧/3+ 𝑂(𝑧3) and differentiate in𝑢; the stated limit is a one-line computation
+(symbolic residual zero).
+Remark 15 (verified; the mechanism reading). The identification of this local defect asthe engine
+of Propositions 12–13 — sine-type entry weights, vanishing linearly at0 with mass on both sides
+of the non-monotone region, flip the covarianceCov𝜌𝑡(1𝑢≥𝑎,𝜕𝑡log 𝑞1), while the flat weight does
+not — is supported by the full weight–kernel matrix and the𝛽-scan of the violations (onset at
+𝛽 ≳ 12, consistent with the threshold), but is a verified reading, not a theorem.
+5
+
+--- Page 8 ---
+
+6 The single-Bessel reduction and the master formula
+Lemma 16(exact; Neumann product formulas). For𝑥,𝑦 ≥0, with𝑤=
+√︀
+𝑥2 + 𝑦2 + 2𝑥𝑦cos 𝛼,
+𝐼0(𝑥)𝐼0(𝑦) = 1
+2𝜋
+∫︁ 2𝜋
+0
+𝐼0(𝑤) 𝑑𝛼, 𝐼 0(𝑥)𝐼1(𝑦) = 1
+2𝜋
+∫︁ 2𝜋
+0
+𝐼1(𝑤) 𝑦+ 𝑥cos 𝛼
+𝑤 𝑑𝛼.
+Proof. The first is the integrated Graf/Neumann addition theorem [4, §10.23(ii)]; the second is
+its 𝜕𝑦-derivative.
+Remark 17 (signs). Both formulas extend to all real𝑥,𝑦, as used below (on[−𝜋,𝜋]2 one has
+𝑐1 = cos(𝜙/2) ≥0 but 𝑐2 may be negative):𝑤(𝑥,−𝑦,𝛼) = 𝑤(𝑥,𝑦,𝜋 −𝛼), and the substitution
+𝛼↦→𝜋−𝛼over a full period maps the first identity to itself (both sides even in𝑦) and the second
+to its negative on both sides simultaneously (𝐼1 odd; (−𝑦+ 𝑥cos(𝜋−𝛼)) = −(𝑦+ 𝑥cos 𝛼)).
+With 𝐾2(𝜙) = 𝐼0(2𝛽cos(𝜙/2)) = ∑︀
+𝑚∈Z 𝐼2
+𝑚𝑒𝑖𝑚𝜙 and 𝑃4 = 𝐾2 *𝐾2 (circle convolution),
+𝑃4 = ∑︀
+𝑚𝐼4
+𝑚𝑒𝑖𝑚𝑡 and 𝐹𝐵 = −1
+2 𝑃′
+4. Applying Lemma 16 to both convolution factors:
+Lemma 18(exact; master representation). Let 𝑠= 𝜙−𝑡/2, 𝑐1 = cos(𝜙/2), 𝑐2 = cos((𝑡−𝜙)/2),
+𝑃 = sin2(𝑠/2), 𝑄= sin2(𝛼/2), and
+𝑅2 = 𝑐2
+1 + 𝑐2
+2 + 2𝑐1𝑐2 cos 𝛼= 4
+[︀
+cos2(𝑡/4) (1−𝑃 −𝑄) + 𝑃𝑄
+]︀
+. (8)
+Then
+𝐹𝐵(𝑡) = 𝛽sin(𝑡/2)
+8𝜋2
+∫︁∫︁
+[−𝜋,𝜋]2
+𝐼1(2𝛽𝑅)
+𝑅
+[︀
+cos2(𝑠/2) −sin2(𝛼/2)
+]︀
+𝑑𝑠𝑑𝛼, (9)
+and, under the common positive kernel𝐾 = 𝐼1(2𝛽𝑅)/𝑅,
+𝐸(𝑡) =
+⟨︀
+cos(𝑡/2) cos 2𝑠+ cos𝛼[cos(𝑡/2) cos𝑠−sin2 𝑠]
+⟩︀
+⟨︀
+cos 𝑠+ cos𝛼
+⟩︀ , (10)
+where ⟨·⟩denotes the 𝐾𝑑𝑠𝑑𝛼 -integral over[−𝜋,𝜋]2. The prefactor collapse behind (9) is the
+sum-to-product symmetrization1
+2 [sin(𝑡−𝜙
+2 )(𝑐2+𝑐1 cos 𝛼)+(𝜙↔𝑡−𝜙)] = 1
+2 sin(𝑡/2)(cos 𝑠+cos 𝛼),
+and cos 𝑠+ cos𝛼= 2[cos2(𝑠/2) −sin2(𝛼/2)].
+Proof. (i) The squared Graf identity gives𝐾2(𝜙) = ∑︀
+𝑚𝐼2
+𝑚𝑒𝑖𝑚𝜙; convolution multiplies Fourier
+coefficients, so 𝑃4 = ∑︀
+𝑚𝐼4
+𝑚𝑒𝑖𝑚𝜙 and, termwise (super-exponential decay), 𝐹𝐵 = −1
+2 𝑃′
+4. (ii)
+Insert Lemma 16 (first formula) with𝑥= 2𝛽𝑐1, 𝑦= 2𝛽𝑐2 into 𝑃4(𝑡) = 1
+2𝜋
+∫︀
+𝐾2(𝜙)𝐾2(𝑡−𝜙) 𝑑𝜙:
+a two-dimensional integral of𝐼0(2𝛽𝑅) with 𝑅 as in (8); the(𝑃,𝑄) form of 𝑅2 is product-to-
+sum. (iii) Differentiate under the integral (smooth integrand, compact domain):𝜕𝑡𝐼0(2𝛽𝑅) =
+𝐼1(2𝛽𝑅)·2𝛽𝜕𝑡𝑅and2𝑅𝜕𝑡𝑅= 2(𝑐2+𝑐1 cos 𝛼) 𝜕𝑡𝑐2 with𝜕𝑡𝑐2 = −1
+2 sin((𝑡−𝜙)/2). (iv)Symmetrize
+over 𝜙↔𝑡−𝜙 (𝑅 invariant): withsin(𝑥/2) cos(𝑥/2) = 1
+2 sin 𝑥 and the angle-addition formula,
+1
+2
+[︀
+sin(𝑡−𝜙
+2 )(𝑐2 + 𝑐1 cos 𝛼) + sin(𝜙
+2 )(𝑐1 + 𝑐2 cos 𝛼)
+]︀
+= 1
+4 [sin(𝑡−𝜙) + sin𝜙] + 1
+2 sin( 𝑡
+2 ) cos𝛼
+= 1
+2 sin( 𝑡
+2 )(cos 𝑠+ cos𝛼),
+using sin(𝑡−𝜙) + sin 𝜙 = 2 sin( 𝑡/2) cos𝑠 and sin(𝑡−𝜙
+2 )𝑐1 + sin( 𝜙
+2 )𝑐2 = sin( 𝑡/2). Collecting
+constants yields (9). The same substitution in the companion representation of𝐹𝐴 (Lemma 10
+with Lemma 16, second formula) and cancellation of the common factor𝛽sin(𝑡/2) yields (10).
+As an end-to-end check, (9) and (10) match the quartic series with ratio1.000000000000 at
+𝑡∈{0.4,1.1,2.3,2.9}, 𝛽 = 4.
+6
+
+--- Page 9 ---
+
+Lemma 19 (exact; geometry of the(𝑃,𝑄) square, 0 < 𝑡 < 𝜋). On [0,1]2: the main saddle is
+(0,0) with 𝑅= 2 cos(𝑡/4); the secondary saddle is(1,1) with 𝑅= 2 sin(𝑡/4) and gap2(cos(𝑡/4)−
+sin(𝑡/4)) >0 degenerating only at𝑡= 𝜋; the zero set{𝑅= 0}consists of exactly the two corners
+(1,0) and (0,1), and at both of themboth brackets of(9) and (10) vanish, so the singular points
+of 𝐾 are switched off (the extension𝐼1(𝑧)/𝑧 →1
+2 makes 𝐾 continuous with value𝛽). At 𝑡= 0
+the zero set degenerates to the edges𝑃 = 1, 𝑄= 1. The saddle deficit is the exact sum of two
+squares
+4 cos2(𝑡/4)−𝑅2 = 4 cos2(𝑡/4) sin2(𝑠/2)+4 𝑐1𝑐2 sin2(𝛼/2), 𝑐 1𝑐2 = cos2(𝑡/4)−sin2(𝑠/2), (11)
+with sign region𝑐1𝑐2 ≥0 ⇐⇒ |𝑠|≤ 𝜋−𝑡/2.
+Proof. (8) and (11) are product-to-sum computations (symbolic zeros).𝑅2 ≥(|𝑐1|−|𝑐2|)2 with
+equality forcing|𝑐1|= |𝑐2|(i.e. 𝑠= 0 or 𝑠= ±𝜋) andcos 𝛼= ∓sign(𝑐1𝑐2), which lands exactly on
+(𝑃,𝑄) ∈{(0,1),(1,0)}. Bracket vanishing at both points is direct substitution. The Jacobian of
+(𝑠,𝛼) ↦→(𝑃,𝑄) carries the arcsine weight𝑑𝑠𝑑𝛼 = 𝑑𝑃𝑑𝑄/
+√︀
+𝑃(1 −𝑃)𝑄(1 −𝑄) (per quadrant),
+singular at all four corners; near the main saddle one therefore works in(𝑠,𝛼), and in(𝑃,𝑄)
+only for the global geometry.
+Lemma 20(exact; saddle cancellations). Write 𝑁,𝐷 for numerator and denominator brackets
+of (10), 𝐶 = cos(𝑡/2), 𝑐0 = cos(𝑡/4). At the saddle(𝑠,𝛼) = (0,0):
+𝑁
+𝐷
+⃒⃒⃒
+(0,0)
+= 𝐶, 𝑁 𝛼𝛼 −𝐶𝐷𝛼𝛼 = 0, 𝑁 𝑠𝑠 −𝐶𝐷𝑠𝑠 = −4𝐶−2,
+and for𝑁𝑡 = −1
+2 sin(𝑡/2)[cos 2𝑠+ cos𝛼cos 𝑠]:
+𝑁𝑡,𝛼𝛼 −𝑚𝐷𝛼𝛼 = 0 ( 𝑚= −1
+2 sin(𝑡/2)), 𝑁 𝑡,𝑠𝑠 −𝑚𝐷𝑠𝑠 = 2 sin(𝑡/2).
+Also exact: 2𝐶+ 1 = 4𝑐2
+0 −1 and 𝐶𝑐(𝑡) = 2𝑐0 −1/(2𝑐0) for 𝑐(𝑡) = (4𝑐2
+0 −1)/(2𝑐0𝐶).
+Proposition 21(verified; thesecond-orderlaws). The frozen-kernel expansion built on Lemma 20
+(with ⟨𝑠2⟩= 1/(𝛽𝑐0) + 𝑂(𝛽−2) from (11)) predicts
+𝐸 = 𝐶
+(︁
+1 −𝑐(𝑡)
+𝛽
+)︁
++ 𝑂(𝛽−2), 𝐸 ′= −1
+2 sin(𝑡/2) + sin(𝑡/4)(4𝑐2
+0 + 1)
+8𝛽𝑐2
+0
++ 𝑂(𝛽−2). (12)
+The coefficient identities are exact (Lemma 20); thelaws with remainderare verified, not yet
+certified: measured remainders are≈0.15/𝛽2 with true convergence at fixed𝑡 (e.g. 𝛽2-scaled
+residues0.1776/0.1767/0.1762 at 𝑡= 1, 𝛽 = 30/60/120), and𝛽(𝐸′+1
+2 sin(𝑡/2)) →sin(𝑡/4)(4𝑐2
+0+
+1)/(8𝑐2
+0) at 𝑡= 1,2. The remainder control is exactly what the closure map owes. Note the1/𝛽
+correction to𝐸′ is positive: it opposes the target inequality and must be beaten, not used. The
+𝛼-cancellations imply every kernel correction multiplies a vanishing fluctuation and enters at
+𝑂(𝛽−2) only.
+Remark 22 (exact decomposition of𝐸′). With the normalized positive measure𝑑𝜇∝𝐾𝑑𝑠𝑑𝛼 ,
+𝐸′= ⟨𝑁𝑡⟩/⟨𝐷⟩+⟨(𝑁−𝐸𝐷) 𝜕𝑡log 𝐾⟩/⟨𝐷⟩, 𝐷𝑡 = 0, and the regular form𝜕𝑡log 𝐾 = 4𝑐𝑐′(1−𝑃−
+𝑄) [𝑧𝐼0(𝑧)/𝐼1(𝑧)−2]/𝑅2, 𝑧= 2𝛽𝑅, extends continuously by4𝛽2𝑐𝑐′(1−𝑃−𝑄) at 𝑅= 0. Verified
+split at (𝛽,𝑡) = (5 ,1.3): −0.238212 −0.024552 = −0.262764 = the finite difference exactly.
+Bounds for𝐸′are taken from this exact quotient — never by differentiating an estimate of𝐸.
+7
+
+--- Page 10 ---
+
+7 The 𝜋-endpoint package
+Lemma 23(exact; telescoping). With 𝑎𝑚 as in (1):
+𝐴∞:=
+∑︁
+𝑚≥1
+(−1)𝑚+1𝑚𝑎𝑚 = 0,
+∑︁
+𝑚≥1
+(−1)𝑚+1𝑚3𝑎𝑚 = −
+∑︁
+𝑚≥1
+(−1)𝑚+1𝑚(𝑚+1)(2𝑚+1) 𝐼2
+𝑚𝐼2
+𝑚+1.
+Hence 𝐹𝐴(𝜋−𝜀) = 𝑐3 𝜀3 + 𝑂(𝜀5) with
+𝑐3 = 1
+6
+∑︁
+𝑚≥1
+(−1)𝑚+1𝑚(𝑚+ 1)(2𝑚+ 1)𝐼2
+𝑚𝐼2
+𝑚+1. (13)
+Proof. Split 𝑚𝑟𝑎𝑚 = 𝑚𝑟(𝑚−1)𝐼2
+𝑚−1𝐼2
+𝑚 + 𝑚𝑟(𝑚+ 1)𝐼2
+𝑚𝐼2
+𝑚+1 and shift𝑚→𝑚+ 1 in the first
+sum: for 𝑟 = 1 the two weights cancel (𝑚(𝑚+ 1) −𝑚(𝑚+ 1) = 0); for𝑟 = 3 they combine to
+𝑚(𝑚+ 1)[𝑚2 −(𝑚+ 1)2] = −𝑚(𝑚+ 1)(2𝑚+ 1). Absolute convergence justifies the reindexing;
+sin(𝑚(𝜋−𝜀)) = (−1)𝑚+1 sin(𝑚𝜀) expands the sine.
+Lemma 24(exact; integralformandparity) . Let𝑔(𝑢) = 1
+2 𝐼1(2𝛽cos 𝑢) = ∑︀
+𝑚≥0 𝐼𝑚𝐼𝑚+1 cos((2𝑚+
+1)𝑢) (addition theorem). Then
+𝑐3 = 𝑆3 −𝑆1
+24 , 𝑆 1 = 2
+𝜋
+∫︁ 𝜋
+0
+𝑔(𝜋
+2 −𝑢) 𝑔′(𝑢) 𝑑𝑢, 𝑆 3 = 2
+𝜋
+∫︁ 𝜋
+0
+𝑔′(𝜋
+2 −𝑢)
+(︀
+−𝑔′′(𝑢)
+)︀
+𝑑𝑢.
+Moreover𝑔(−𝑢) = 𝑔(𝑢) and 𝑔(𝜋−𝑢) = −𝑔(𝑢) (parity of𝐼1), hence𝑔′(𝜋−𝑢) = 𝑔′(𝑢), 𝑔′′(𝜋−𝑢) =
+−𝑔′′(𝑢), andboth integrands are invariant under𝑢↦→𝜋−𝑢: the two halves[0,𝜋/2] and [𝜋/2,𝜋]
+contribute exactly equally, and one may integrate a half range and double. In particular no
+cancellation between the two phase maxima𝑢 = 𝜋/4 and 𝑢 = 3𝜋/4 is possible — exactly, not
+asymptotically.
+Proof. The expansion of𝑔is the Graf addition theorem with unit shift. Quarter turn:cos((2𝑚+
+1)(𝜋
+2 −𝑢)) = ( −1)𝑚sin((2𝑚+ 1)𝑢), so 𝑔(𝜋
+2 −𝑢) = ∑︀
+𝑚(−1)𝑚𝐼𝑚𝐼𝑚+1 sin((2𝑚+ 1)𝑢) while
+𝑔′(𝑢) = −∑︀
+𝑘(2𝑘+ 1)𝐼𝑘𝐼𝑘+1 sin((2𝑘+ 1)𝑢) and 𝑔′′(𝑢) = −∑︀
+𝑘(2𝑘+ 1)2𝐼𝑘𝐼𝑘+1 cos((2𝑘+ 1)𝑢),
+whence 𝑔′(𝜋
+2 −𝑢) = −∑︀
+𝑘(−1)𝑘(2𝑘+ 1)𝐼𝑘𝐼𝑘+1 cos((2𝑘+ 1)𝑢). Orthogonality of{sin((2𝑚+ 1)𝑢)}
+and {cos((2𝑚+ 1)𝑢)}on [0,𝜋] (norm 𝜋/2) gives 𝑆1 = −∑︀
+𝑚(−1)𝑚(2𝑚+ 1)(𝐼𝑚𝐼𝑚+1)2 and
+𝑆3 = −∑︀
+𝑚(−1)𝑚(2𝑚+ 1)3(𝐼𝑚𝐼𝑚+1)2, so
+𝑆3 −𝑆1
+24 =
+∑︁
+𝑚≥0
+(−1)𝑚+1 (2𝑚+ 1)3 −(2𝑚+ 1)
+24 (𝐼𝑚𝐼𝑚+1)2
+= 1
+6
+∑︁
+𝑚≥1
+(−1)𝑚+1𝑚(𝑚+ 1)(2𝑚+ 1)𝐼2
+𝑚𝐼2
+𝑚+1 = 𝑐3,
+using (2𝑚+1)3 −(2𝑚+1) = 4𝑚(𝑚+1)(2𝑚+1) and the vanishing of the𝑚= 0 term. The parity
+claims follow from𝐼1(−𝑧) = −𝐼1(𝑧) applied to𝑔(𝜋−𝑢) = 1
+2 𝐼1(−2𝛽cos 𝑢), and by differentiating
+the two symmetry relations.
+Proposition 25 (verified; prefactor law). 𝑐3 > 0 for 𝛽 ∈{1,5,20,40,80,120}at cancellation-
+adjusted precision(the alternating sum cancels at scale𝑒−(4−2
+√
+2)𝛽; evaluations usedps ≥0.6𝛽+
+50), and
+𝑐3 ∼ 𝐴𝛽3/2𝑒2
+√
+2𝛽, 𝐴 = 1
+24 ·21/4𝜋3/2 = 0.0062922 ...,
+8
+
+--- Page 11 ---
+
+with measured ratios0.0058646, 0.0060049, 0.0060996, 0.0061475 at𝛽 = 40,60,90,120 and𝑂(1/𝛽)
+gaps. The certified large-𝛽 branch (pending) must produce the signed prefactor with an ex-
+plicit 𝐵: 𝐼half ≥ 𝐴
+2 𝛽3/2𝑒2
+√
+2𝛽(1 −𝐵/𝛽) −𝑇(𝛽), 𝑐3 = 2 𝐼half, read 𝛽*, and close [15,𝐵fin],
+𝐵fin = max{𝛽*,10𝐶}, by intervals.
+8 The closure map and the candidate threshold
+Proposition 26 (verified truth map; all statements on the stated finite grids). Let 𝑔(𝑡,𝛽) =
+𝐸′+ 1
+4 sin(𝑡/2). At 𝛽 = 15, 𝑔 <0 at every point of a13-point grid spanning[0.05,𝜋 −0.09]
+(independently reproduced on a much finer mesh at110 digits), with thinnest margin−0.00573
+at 𝑡 = 0 .05 (on the seal window[0.05,𝜋 −0.10]) and −0.00216 at 𝜋−0.09; the crossing sits
+at 𝜋−𝑡* = 0.0890502225. At 𝛽 = 12 the truth itself fails at𝜋−0.10 (𝑔 = +0.025); crossings
+scale as the mirror window:𝜋−𝑡*= 0.1155, 0.0891, 0.0644 at 𝛽 = 12,15,20, matching
+√
+2/𝛽.
+A sweep𝛽 = 15 ... 60 keeps the maximum at𝑡 = 0.05, drifting to−0.0061: strong uniformity
+evidence, not proof.
+Conjecture 27 (quantified closure; the seal). Part (ii) of Conjecture 1 holds with the two-
+scale decomposition: (a) 0 < 𝛽≤3 by Theorem 7;(b) 𝛽 ∈[3,15] by certified evaluation(the
+holonomic structure of Section 9 makes the compact cheap); (c) 𝛽 ≥15 by three uniform blocks:
+left edge (0,0.05] (𝑒2 > 0, proved by the Chebyshev-sum corollary of the Turán lemma, plus a
+remainder radius0.05); bulk[0.05,𝜋−0.10] (enclosure of⟨𝑠2⟩and of the covariance of Remark 22,
+with the five prototype-to-certificate conversions); right edge withmoving boundary: assembly
+to 𝜋−𝐶/𝛽, then the quadratic regime of𝑐3 on [𝜋−𝐶/𝛽,𝜋] with 𝐶mirror ≤𝐶 ≤𝐶quad (a fixed
+quadratic window is provably impossible: 𝜅 ≈0.11𝛽 grows while 𝐸(𝜋 −0.10) stays bounded;
+retention 𝐸/𝜅𝑑2 at 𝑑 = 2/𝛽 is 0.896,0.892,0.890 at 𝛽 = 20,40,80 — the validity radius scales
+as 1/𝛽). The named constants still owed: 𝐵, 𝛽*, 𝐶quad, 𝐶mirror, and the remainder function
+𝑇(𝛽).
+The first-order competition is not the obstacle: the two-term law (12) requires only𝛽 >
+(1 + 1/(4𝑐2
+0))/𝑐0 ≤3
+√
+2/2 ≈2.121; everything above that is rigor slack. The candidate𝛽0 = 15
+is near truth-optimal for its edge window (Proposition 26), not padded.
+9 Verification, certificates, and reproducibility
+All numerical artifacts live in the repository
+https://github.com/lluiseriksson/THE-ERIKSSON-PROGRAMME
+(directories scripts/, docs/); the immutable commit hash for the version audited with this
+manuscript is recorded in the repository’s hash registry (docs/SURFACE-CLOSURE-NOTES.md)
+and in the arXiv comment field on submission. Each certificate embeds its pinned statement
+and self-verifies on every execution.
+Certificates (interval arithmetic, outward rounding, nested or stability passes).
+certify_time3_negative.py and its Arb twin (Proposition 12);certify_bridge_matrix.py
+and twin (Proposition 13);certify_thmB.py (Theorem 7: adaptive𝛽-boxes covering[1/20,3];
+tails computed in intervals and closed at the level ofcomplete shells: each pair maps into the
+next shell with term ratio𝑟 derived from the termwise-exact𝐼𝑛+1(𝑥) ≤𝑥𝐼𝑛(𝑥)/(2(𝑛+ 1)), and
+9
+
+--- Page 12 ---
+
+the one new pair per shell is bounded by a double index shift, giving shell ratio2𝑟, asserted
+< 1
+2 per box before the geometric closure; a built-in full stability pass at precision+70; the
+Arb twin certify_thmB_arb.py independently certifies the full coverage — 86 boxes, both
+passes, transcript archived; thempmath.iv canonical transcript is committed on completion of
+its run, as recorded in the repository hash registry). Bessel enclosures use the positive series
+with an exact-integer stopping rule and geometric tails; floats appear only in loop-termination
+heuristics. Nested enclosures prevent silent numerical or truncation degradation; statement
+auditing and the independent Arb implementation guard against common-mode errors.
+Verified computations.The master-formula and reduction identities (ratios1.0 to 12 digits);
+the truth map of Proposition 26 (dps80, confirmed independently at110 digits); the𝑐3 ladder
+(Proposition 25); the term-split coefficients of (12) at𝛽 = 60,120,240.
+Precision policies(each traceable to a caught artifact):dps ≥2.2𝛽+ 40 for any evaluation
+with 𝑡 ≥2, 𝛽 >30 (mirror cancellation); dps ≥0.6𝛽+ 50 for 𝑐3-type alternating sums; series
+cutoffs scale with the maximal argument, and scaled-asymptotic evaluation of𝑒−𝑧𝐼𝑛(𝑧) is the
+default for𝑧 >35; every measured coefficient carries a𝛽-scaling sanity check; whatever can be
+computed from a positive integral representation is.
+Audit trail. Fifteen numerical or formulation artifacts (“ghosts”) were caught during fabri-
+cation and writing by the three-way review protocol; Appendix B tabulates them. We consider
+the table part of the result: it is the reproducibility record that makes the certificates credible.
+Machine-checked lemmas. The unit-step and Turán-type coefficient inequalities behind
+Theorem 7 are formalized in Lean 4/Mathlib ( PhiMonotone.lean, FHBesselAmos.lean,
+WronskianIdentity.lean; axiom oracle [propext, Classical.choice, Quot.sound], no
+sorry). Mathlib has no Bessel functions: what is machine-checked is the ordered-field im-
+plication, with the analytic inputs (three-term recurrence [4, 10.29.1]; the Amos-type bound of
+[1, 2, 3], cited verbatim, shift𝜈 →𝜈+1 as in Appendix A) carried as named hypotheses. Correct
+claim everywhere:machine-checked modulo classical Bessel inputs carried as named hypotheses.
+Acknowledgements and provenance
+The conjecture, the bridge reading, the reduction, and all certificates were produced inside an
+audit-first programme in which three independent reviewing voices verify every claim before
+acceptance; scores, objections, and the complete ghost ledger are archived with the repository
+history. Nothing in this paper rests on trust in any single computation: every load-bearing
+negative has two witnesses, and every identity marked exact has a symbolic-zero transcript.
+A The weighted Turán-type lemma, self-contained
+Theorem 28(exact). For every𝑥> 0 and every real𝑚≥1, with𝜙𝑚 = 𝑎𝑚/𝑏𝑚 built from(1)
+at argument𝑥: 𝜙𝑚 <𝜙𝑚+1. Equivalently, with𝜌𝜇 = 𝐼𝜇+1/𝐼𝜇,
+1
+𝑚
+(︁𝑚−1
+𝜌2
+𝑚−1
++ (𝑚+ 1)𝜌2
+𝑚
+)︁
+< 1
+𝑚+ 1
+(︁𝑚
+𝜌2𝑚
++ (𝑚+ 2)𝜌2
+𝑚+1
+)︁
+.
+Proof. Two classical inputs, valid for all real orders: the three-term recurrence𝜌−1
+𝑚−1 = 𝜌𝑚 +
+2𝑚/𝑥, 𝜌𝑚+1 = 𝜌−1
+𝑚 −2(𝑚+ 1)/𝑥 [4, 10.29.1], and the Amos-type bound
+𝜌𝑚(𝑥) <𝑈𝑚(𝑥) := 𝑥
+𝑎+
+√
+𝑎2 + 𝑥2 , 𝑎 = 𝑚+ 1
+2 ,
+10
+
+--- Page 13 ---
+
+proved best of its form for all real orders≥0 by Segura [2]; we use [3, Thm. 2], which bounds
+𝐼𝜈(𝑥)/𝐼𝜈−1(𝑥) for 𝜈 ≥1
+2 by𝑥/
+(︀
+𝜈−1
+2 +
+√︁
+(𝜈+ 1
+2 )2 + 𝑥2 )︀
+; setting𝜈 = 𝑚+1 bounds 𝜌𝑚 = 𝐼𝑚+1/𝐼𝑚
+by 𝑥/
+(︀
+𝑚+ 1
+2 +
+√︁
+(𝑚+ 3
+2 )2 + 𝑥2 )︀
+≤𝑥/
+(︀
+𝑎+
+√
+𝑎2 + 𝑥2 )︀
+with 𝑎= 𝑚+ 1
+2 , which is the displayed
+bound (the last step uses
+√︁
+(𝑚+ 3
+2 )2 + 𝑥2 ≥
+√
+𝑎2 + 𝑥2). Substitute the recurrences, write
+𝑢 = 𝜌𝑚 ∈(0,1), 𝑐 = 1/𝑥, 𝑆 = 𝑢+ 1/𝑢, 𝑃 = 1/𝑢−𝑢; clearing the positive denominators, the
+claim becomesΔ𝑚 >0 where theexact factorization
+Δ𝑚
+2𝑚(𝑚+ 1) = (𝑆−3𝑐)
+(︀
+𝑃 −(2𝑚+ 1)𝑐
+)︀
++ (2𝑚+ 1)𝑐2
+holds as an algebraic identity (expand and collect; the coefficients of𝑢±2 are ±2𝑚(𝑚+ 1),
+the linear-in-𝑐 terms are −4𝑚(𝑚+ 1)𝑐[(𝑚−1)𝑢+ (𝑚+ 2)/𝑢], and (𝑚−1)𝑢+ (𝑚+ 2)/𝑢 =
+1
+2 [(2𝑚+ 1)𝑆+ 3𝑃], 1/𝑢2 −𝑢2 = 𝑃𝑆). The second factor is positive because𝑈𝑚 is the positive
+root of1/𝑤−𝑤= (2𝑚+ 1)/𝑥(the calibration1/𝑈𝑚−𝑈𝑚 = 2𝑎/𝑥) and𝑤↦→1/𝑤−𝑤 is strictly
+decreasing, so𝜌𝑚 <𝑈𝑚 gives 𝑃 >(2𝑚+ 1)𝑐. The first factor is positive because
+√
+𝑎2 + 𝑥2 >𝑎
+gives 𝑈𝑚 <𝑥/(2𝑎), so𝑢<𝑥/ (2𝑚+1) ≤𝑥/3 and 𝑆 >1/𝑢> (2𝑚+1)/𝑥≥3𝑐. The third term is
+positive. Strictness is strict throughout. (This is the proof of [6], reproduced so that Theorem 7
+is self-contained; the ordered-field implication is machine-checked inPhiMonotone.lean, modulo
+the two classical inputs carried as named hypotheses.)
+B Audit table (the ghost ledger)
+Each row: what was wrong, how it was caught, and the rule it produced. All entries are
+documented with transcripts indocs/SURFACE-CLOSURE-NOTES.md.
+11
+
+--- Page 14 ---
+
+# artifact catch / rule produced
+1 random 𝑇𝑃2 scan missed adver-
+sarial corners
+targeted corner search; adversarial grids manda-
+tory
+2 verification cell with unbound
+parameter
+explicit binding rule for inline prints
+3 near- 𝜋 scan at low precision,
+false violation
+precision ruledps ≥2.2𝛽+ 40 for 𝑡≥2, 𝛽 >30
+4 stale-PDF claim misattributed
+between voices
+provenance ledger: attribute to exact source
+5 float64 CDF increments ±11
+(impossible)
+positive-representation preference
+6 𝑡=2, 𝛽=240 residue 0.363 vs
+0.317
+boundary 𝑡≥2 included in the dps rule
+7 𝐼1 series truncated at 60 terms,
+𝑧≤480
+cutoffs scale with argument; scaled asymptotics
+for 𝑧 >35; 𝛽-scaling checks
+8 𝑐3 sign flip at𝛽 = 120 (cancella-
+tion)
+alternating-sum ruledps ≥0.6𝛽+ 50
+9 𝑅= 0 corner misplaced at(1,1) complete critical-point census required in prose
+too
+10 one-saddle prefactor off by ex-
+actly 2
+census rule; the factor2 later proved an exact par-
+ity
+11 𝐼1 lower bound dropped the neg-
+ative tail
+sign audits are a separate mandatory pass
+12 fixed quadratic window at 𝜋 was
+provably false
+interrogate obligations before attempting them
+13 Thm. A second proof: rearrange-
+ment misquoted
+layer-cake arc proof substituted (this revision)
+14 Lemmasignerror: floorstatedas
+upper bound
+corrected; per-pair statements now carry signs ex-
+plicitly
+15 “exact” labels on verified in-
+equalities
+tricotomy re-audit of every label (this revision)
+References
+[1] D. E. Amos,Computation of modified Bessel functions and their ratios, Math. Comp.28
+(1974), 239–251.
+[2] J. Segura,Bounds for ratios of modified Bessel functions and associated Turán-type inequal-
+ities, J. Math. Anal. Appl.374 (2011), 516–528.
+[3] D. Ruiz-Antolín, J. Segura,A new type of sharp bounds for ratios of modified Bessel func-
+tions, J. Math. Anal. Appl.443 (2016), 1232–1246.
+[4] NIST Digital Library of Mathematical Functions,https://dlmf.nist.gov.
+[5] L. Eriksson, Recurrence–Amos proof of the unit-step order-monotonicity of (log 𝐼𝜈)′,
+ai.viXra:2607.0020 (2026).
+[6] L. Eriksson,A weighted Turán-type monotonicity lemma for modified Bessel functions via
+the calibrated Amos bound, ai.viXra:2607.0017 (2026).
+12
+
+--- Page 15 ---
+
+[7] L. Eriksson,A Wronskian identity for antisymmetrized sine sums, ai.viXra (2026), number
+pending.
+[8] L. Eriksson,Parity barriers for decoupling inequalities, ai.viXra:2607.0018 (2026).
+[9] G. N. Watson,A Treatise on the Theory of Bessel Functions, 2nd ed., Cambridge Univ.
+Press, 1944.
+[10] S. Karlin, J. McGregor,Coincidence probabilities, Pacific J. Math.9 (1959), 1141–1164.
+[11] K. V. Mardia, P. E. Jupp,Directional Statistics, Wiley, 2000.
+[12] S. Dharmadhikari, K. Joag-Dev, Unimodality, Convexity, and Applications, Academic
+Press, 1988.
+13

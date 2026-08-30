@@ -1,0 +1,18 @@
+# RG-Cauchy Summability for Blocked Observables in 4d Lattice Yang-Mills Theory via Balaban's Renormalization Group — a Conditional Summability Theorem
+
+**Author:** Lluis Eriksson  
+**Original archive:** [ai.vixra:2602.0073](https://www.ai.vixra.org/abs/2602.0073)  
+**First submitted:** 2026-02-14T09:06:13+00:00 (source displays no timezone)  
+**Latest declared source version:** v2  
+**ARR mirror:** [v2 PDF](https://github.com/arr-research/arr-research.github.io/releases/download/AIVIXRA-LATEST-2026-08-30/ai-vixra-2602.0073-v2.pdf)
+
+> Historical import; not assessed under the ARR frontier-model hostile-audit gate.
+
+## Abstract
+
+We prove, conditionally on an explicit hypothesis ledger, that expectations of blocked, bounded Lipschitz observables at a fixed physical scale l > 0 form an absolutely summable telescoping sequence along a Balaban-matched renormalization trajectory in 4d SU(N_c) lattice Yang-Mills theory with a_k = a_0 2^(-k); in particular the continuum-limit state omega(O) = lim_k exists on the blocked class A^block_l. The architecture is unchanged from v1: (i) an exact RG identity (law of iterated expectations — which resolves at the structural level the "on/off-vs-k->k+1" gap flagged in the sibling audits: the one-step comparison here genuinely is a scale comparison); (ii) pushforward stability for blocked observables from approximate centering and Gaussian control of fast modes; (iii) measure comparison by Duhamel interpolation with influence control. Version 2 repairs the single broken brick: v1's Lemma 7.1 asserted the covariance bound for the Efron-Stein seminorm for arbitrary measures while proving the Doob martingale identity; per the sibling audits (2602.0070/0072 v2, same two-spin counterexample) the ES bound is false for non-product nu and the two seminorms are incomparable, so converting the ES-form input (B6) into the Doob-form covariance control requires the decoupling hypothesis (H-DEC/AT) (Dobrushin-type, verified on exact Gibbs chains at weak coupling). The main theorem is restated with the full ledger: Assumption 3.6 (blocking contraction, (H-LIP)), Assumption 5.1 with (B6) as the CONDITIONAL Efron-Stein closure of 2602.0072 v2 and with sum_k sqrt(tau_k) < infinity in (B3) tied to the profile condition (H-theta) of 2602.0069 v2 — sharpened here by a new finding (F-SQRT): the square root halves the effective amplitude, so at the representative polylog floor (theta_0 = 1.1, A_0 = 1) the sum is formally convergent but its crossover lies beyond j ~ e^1668, i.e. practically divergent; (B3) realistically requires power-law-strength p_0, and (H-P0) rejoins the ledger unless the amplitude is large — plus (H-DEC/AT) and trajectory matching. Under this ledger, the one-step error is O(4^(-k)) + O(sqrt(tau_k)), absolutely summable, and Assumption 3.5 of 2602.0063 v3 — the RG-Cauchy hypothesis (H-CAUCHY), whose naive bridge is not summable (F-SUM) — HOLDS FOR THE BLOCKED CLASS: the cleanest conditional delivery of (H-CAUCHY) in the series. v1's cross-reference "Assumption 4.1 of [18]" is corrected to Assumption 3.5, and the companion references are updated from their withdrawn "unconditional" titles to the audited versions. All mechanical steps (exact RG identity, Lipschitz iteration, pushforward stability in a Gaussian toy, telescoping arithmetic, and both counterexample adjudications at the Lemma 7.1 junction) are machine-verified in a companion suite.
+
+## Source version history
+
+- [v1](https://www.ai.vixra.org/pdf/2602.0073v1.pdf) — 2026-02-14T09:06:13+00:00
+- [v2](https://www.ai.vixra.org/pdf/2602.0073v2.pdf) — 2026-07-06T22:43:46+00:00

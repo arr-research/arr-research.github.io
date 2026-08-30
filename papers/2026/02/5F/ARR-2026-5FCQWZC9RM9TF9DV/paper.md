@@ -1,0 +1,18 @@
+# The Balaban—Dimock Structural Package: Derivation of Polymer Representation, Oscillation Bounds, and Large-Field Suppression for Lattice Yang—Mills Theory from Primary Sources
+
+**Author:** Lluis Eriksson  
+**Original archive:** [ai.vixra:2602.0069](https://www.ai.vixra.org/abs/2602.0069)  
+**First submitted:** 2026-02-14T20:48:17+00:00 (source displays no timezone)  
+**Latest declared source version:** v2  
+**ARR mirror:** [v2 PDF](https://github.com/arr-research/arr-research.github.io/releases/download/AIVIXRA-LATEST-2026-08-30/ai-vixra-2602.0069-v2.pdf)
+
+> Historical import; not assessed under the ARR frontier-model hostile-audit gate.
+
+## Abstract
+
+We provide a self-contained, equation-level traceability derivation of the three structural hypotheses — polymer representation (A1), per-link oscillation bounds with irrelevance factor (A2), and large-field suppression (B5) — that were assumed in the companions "Doob Influence Bounds for Polymer Remainders in 4D Lattice Yang-Mills Renormalization" and "RG-Cauchy Master Framework". All results are traced to precise equations in the primary sources: T. Balaban (Commun. Math. Phys., 1984-1989) and the expository trilogy of J. Dimock (2011-2014). The translation from Balaban's analytic norms on gauge-covariant function spaces to the per-link oscillation language of the probabilistic framework is made explicit. Version 2 corrects the status of the discharge: it is TRACEABLE AND CONDITIONAL, not unconditional. (i) The small factor of Theorem 8.4 (= Eq. (1.89) of Balaban, Large field renormalization II) carries the constant 2/(1+beta_LF); whether beta_LF is O(1) or a large reference coupling is precisely the dichotomy adjudicated against the audited series (2602.0052/0056/0057 v2), where the large reading trivializes the factor (e^(-c p0) ~ 0.95) and forces hypothesis (H-P0); the dichotomy is now stated as an explicit open interface question (Remark 8.7). (ii) The summability claim (M3) of the RG-Cauchy interface was justified in v1 by "super-polynomial decay from asymptotic freedom"; with the profile p0(g) = A0 (log g^-2)^theta0 the decay in the scale index j (distance to the infrared end) is e^(-A0 (ln j)^theta0): sub-polynomial for theta0 < 1 (sum diverges), j^(-A0) at theta0 = 1 (converges iff A0 > 1), and super-polynomial only for theta0 > 1. (M3) is therefore conditional on the explicit profile condition theta0 > 1 (Remark 12.1; hypothesis (H-theta)). (iii) The irrelevance factor (L^k eta)^(4+alpha) is geometric in the distance to the ultraviolet cutoff, not in the infrared direction; the direction-of-limit bookkeeping for (M1) is made explicit (Remark 10.4) and remains hypothesis-level until the Doob companion is audited. What is machine-verified in the companion suite: the abelian RG operator algebra (Lemma 2.2 mechanics), propagator decay and the random-walk expansion, exponential sum control, lattice-animal counting (Lemma C.1; the illustrative d=4, n=3 count of v1 is corrected from 86 to 84), and the oscillation-analyticity bridge with its Cauchy constants and exact factor-2 saturation. Together with the (unaudited) Doob companion, this package provides a CONDITIONAL discharge of the UV structural inputs at finite volume; the finite-volume, ultraviolet character of the package is what shields it from the infrared volume window of the audited chain (2602.0041 v3, 2602.0051-0057 v2, 2602.0063 v3, now cited).
+
+## Source version history
+
+- [v1](https://www.ai.vixra.org/pdf/2602.0069v1.pdf) — 2026-02-14T20:48:17+00:00
+- [v2](https://www.ai.vixra.org/pdf/2602.0069v2.pdf) — 2026-07-06T21:58:43+00:00

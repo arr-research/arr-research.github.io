@@ -1,0 +1,273 @@
+--- Page 1 ---
+
+A Weighted Turán-Type Monotonicity Lemma for Modified
+Bessel Functions via the Calibrated Amos Bound, with an
+Application to the Ordering of a Surface Expansion in
+Two-Dimensional Lattice Gauge Theory
+Lluis Eriksson
+July 2026
+Abstract
+For 𝑥> 0 and real𝑚≥1 define, with𝐼𝜇 the modified Bessel function of the first kind,
+𝜙𝑚(𝑥) = (𝑚−1) 𝐼𝑚−1(𝑥)2 + (𝑚+ 1)𝐼𝑚+1(𝑥)2
+𝑚𝐼𝑚(𝑥)2 .
+We prove that𝜙𝑚(𝑥) <𝜙𝑚+1(𝑥) for every𝑥> 0 and every real𝑚≥1 — a weighted Turán-
+type monotonicity statement we have not found in the literature, although every ingredient
+of the proof is classical. The proof is fully elementary and uses exactly the arsenal of the
+companion note on unit-step order-monotonicity: the three-term recurrence and the Amos-
+type bound 𝜌𝑚 < 𝑥/(𝑎+
+√
+𝑎2 + 𝑥2), 𝑎 = 𝑚+ 1
+2 , for 𝜌𝑚 = 𝐼𝑚+1/𝐼𝑚. The engine is a new
+exact factorization: with𝑢= 𝜌𝑚(𝑥), 𝑐= 1/𝑥, 𝑆 = 𝑢+ 1/𝑢, 𝑃 = 1/𝑢−𝑢,
+1
+2
+(︀
+𝜙𝑚+1 −𝜙𝑚
+)︀
+= ( 𝑆−3𝑐)
+(︀
+𝑃 −(2𝑚+ 1)𝑐
+)︀
++ (2 𝑚+ 1)𝑐2,
+an algebraic identity once𝜌𝑚−1 and 𝜌𝑚+1 are eliminated by the recurrence. The second
+factor is positive by the calibrated Amos bound — it is precisely the unit-step inequality of
+the companion note — and the first because the same bound forces𝑢<𝑥/ (2𝑚+ 1) ≤𝑥/3.
+As an application we obtain the strict ordering𝑐𝑚𝑛 <0 (𝑚<𝑛 ) of the2 ×2 determinants
+of the coefficient arrays of a𝜋-local surface expansion arising in an audit-first programme
+on two-dimensional 𝑆𝑈(2) lattice gauge theory; this is the structural half of a positivity
+problem whose remaining half — an alternating-parity dominance with near-perfect mirror
+cancellation — we state precisely and leave open. The full chain of lemmas is machine-
+checked in Lean 4/Mathlib (no sorry; standard axiom oracle), with the analytic inputs
+carried as named hypotheses, and independently audited numerically at high precision.
+1 Statement
+Throughout, 𝑥> 0, 𝐼𝜇 is the modified Bessel function of the first kind, all values𝐼𝜇(𝑥) for 𝜇≥0
+are positive, and𝜌𝜇(𝑥) = 𝐼𝜇+1(𝑥)/𝐼𝜇(𝑥) ∈(0,1).
+Theorem 1 (weighted Turán-type unit-step monotonicity). For every 𝑥 >0 and every real
+𝑚≥1,
+𝜙𝑚(𝑥) = (𝑚−1) 𝐼𝑚−1(𝑥)2 + (𝑚+ 1)𝐼𝑚+1(𝑥)2
+𝑚𝐼𝑚(𝑥)2 < 𝜙𝑚+1(𝑥), (1)
+1
+
+--- Page 2 ---
+
+strictly. Equivalently, in terms of the consecutive ratios𝜌𝜇 = 𝐼𝜇+1/𝐼𝜇:
+1
+𝑚
+(︁𝑚−1
+𝜌2
+𝑚−1
++ (𝑚+ 1)𝜌2
+𝑚
+)︁
+< 1
+𝑚+ 1
+(︁𝑚
+𝜌2𝑚
++ (𝑚+ 2)𝜌2
+𝑚+1
+)︁
+.
+The weights(𝑚−1,𝑚,𝑚 +1) are not decorative: they arise from a specific surface expansion
+(Section 3), and — as the proof shows — they are precisely the weights for which the difference
+factorizes exactly over the classical Amos bound [1, 2, 3]. We have not found (1) stated in
+the Turán-type literature for modified Bessel functions [4, 5, 6], though it sits squarely in its
+tradition: for fixed𝑥, log-concavity of𝜇↦→𝐼𝜇(𝑥) (the classical Turán inequality [4, 5]) controls
+the first-order behaviour of the ratio sequence, while (1) is a statement about aweighted second-
+order combination.
+2 The proof
+We use two classical facts, valid for all real orders ([7, 10.29.1]): the three-term recurrence, in
+the two forms
+1
+𝜌𝑚−1
+= 𝜌𝑚 + 2𝑚
+𝑥 , 𝜌 𝑚+1 = 1
+𝜌𝑚
+−2(𝑚+ 1)
+𝑥 , (2)
+and the Amos-type upper bound (Amos [1]; proved best of its form and valid for all real orders
+≥0 by Segura [2, 3]):
+𝜌𝑚(𝑥) < 𝑈𝑚(𝑥) := 𝑥
+𝑎+ 𝑠, 𝑎 = 𝑚+ 1
+2 , 𝑠 =
+√︀
+𝑎2 + 𝑥2. (3)
+Step 1: elimination
+Write 𝑢= 𝜌𝑚(𝑥) ∈(0,1) and 𝑐= 1/𝑥. Substituting (2) into the𝜌-form of (1) and clearing the
+positive denominators𝑚,𝑚 + 1, the claim𝜙𝑚+1 −𝜙𝑚 >0 becomes Δ𝑚 >0 where
+Δ𝑚 = 𝑚2
+𝑢2 −(𝑚2 −1)
+(︁
+𝑢+ 2𝑚𝑐
+)︁2
++ 𝑚(𝑚+ 2)
+(︁1
+𝑢 −2(𝑚+ 1)𝑐
+)︁2
+−(𝑚+ 1)2𝑢2.
+Step 2: the exact factorization
+Lemma 2. With 𝑆 = 𝑢+ 1/𝑢 and 𝑃 = 1/𝑢−𝑢,
+1
+2
+(︀
+𝜙𝑚+1 −𝜙𝑚
+)︀
+= Δ𝑚
+2𝑚(𝑚+ 1) = ( 𝑆−3𝑐)
+(︀
+𝑃 −(2𝑚+ 1)𝑐
+)︀
++ (2 𝑚+ 1)𝑐2.
+Proof. Expanding Δ𝑚 and collecting, the coefficients of1/𝑢2 and 𝑢2 are ±2𝑚(𝑚+1), the linear-
+in-𝑐terms are−4𝑚(𝑚+1)𝑐[(𝑚−1)𝑢+(𝑚+2)/𝑢], and the𝑐2 terms sum to8𝑚(𝑚+1)(2𝑚+1)𝑐2;
+dividing by2𝑚(𝑚+ 1),
+Δ𝑚
+2𝑚(𝑚+ 1) =
+(︁ 1
+𝑢2 −𝑢2
+)︁
+−2
+𝑥
+(︁
+(𝑚−1)𝑢+ 𝑚+ 2
+𝑢
+)︁
++ 4(2𝑚+ 1)
+𝑥2 .
+Now (𝑚−1)𝑢+ (𝑚+ 2)/𝑢= 1
+2 [(2𝑚+ 1)𝑆+ 3𝑃] and 1/𝑢2 −𝑢2 = 𝑃𝑆, so the right side equals
+𝑃𝑆 −𝑐(2𝑚+ 1)𝑆−3𝑐𝑃 + 4(2𝑚+ 1)𝑐2 = (𝑆−3𝑐)(𝑃 −(2𝑚+ 1)𝑐) + (2𝑚+ 1)𝑐2.
+2
+
+--- Page 3 ---
+
+Step 3: positivity of both terms
+The second factor is strictly positive: 𝑃 −(2𝑚 + 1)𝑐 > 0 is exactly the unit-step order-
+monotonicity inequality 1/𝜌𝑚 −𝜌𝑚 > (2𝑚+ 1)/𝑥 of the companion note [8], which follows
+from (3) by the exact calibration1/𝑈𝑚 −𝑈𝑚 = (2𝑎)/𝑥 = (2𝑚+ 1)/𝑥 together with the strict
+decrease of𝑡↦→1/𝑡−𝑡 on (0,∞).
+The first factor is strictly positive: since 𝑠 > 𝑎in (3), 𝑈𝑚 < 𝑥/(2𝑎) = 𝑥/(2𝑚+ 1), so
+𝑢<𝑥/ (2𝑚+ 1) ≤𝑥/3 for 𝑚≥1, hence𝑆 >1/𝑢> (2𝑚+ 1)/𝑥≥3/𝑥= 3𝑐.
+The third term(2𝑚+ 1)𝑐2 is positive. This proves Theorem 1.
+Remark 3 (the calibration, for the third time). The bound 𝑈𝑚 of (3) is the positive root of
+1/𝑡−𝑡= (2𝑚+1)/𝑥: it is the extremal function of the threshold that appears in the factorization.
+In the companion note [8] this exact calibration was the engine of the unit-step monotonicity of
+(log 𝐼𝜈)′and was shown to beequivalent to the Amos bound; here the same calibrated threshold
+reappears, multiplied against a second factor whose positivity is again a consequence of the
+same bound. Within the audit programme from which these notes emerge, this is the third
+lock opened by the same key, which suggests the calibration identity, rather than any particular
+inequality, is the structural invariant of this family of problems.
+3 Application: ordering of the 𝜋-local surface expansion
+The following objects arise in an audit-first research programme on the two-dimensional𝑆𝑈(2)
+lattice gauge theory with Wilson action (Griffiths-II positivity on2-complexes; see the pro-
+gramme records [9] for context). For 𝛽 > 0 let 𝑟𝑘 = 𝐼𝑘+1(𝛽)/𝐼1(𝛽), 𝑘 ≥0, and define the
+coefficient arrays (𝑘≥1)
+𝐴𝑘 = 𝑟2
+𝑘−1
+∑︁
+𝑗∈{𝑘−2,𝑘},𝑗 ≥0
+(𝑗+ 1)𝑟2
+𝑗, 𝐵 𝑘 = 𝑘𝑟4
+𝑘−1.
+A direct computation shows𝐴𝑘/𝐵𝑘 = 𝜙𝑘(𝛽) for every 𝑘 ≥1 — including 𝑘 = 1 , where the
+boundary truncation of the sum (the𝑗 = −1 term is absent) is annihilated by the weight(𝑘−1)
+in 𝜙𝑘, so no separate edge case is needed.
+Corollary 4(determinant ordering). For all𝛽 >0 and all integers1 ≤𝑚<𝑛 ,
+𝑐𝑚𝑛 = 𝐴𝑚𝐵𝑛 −𝐴𝑛𝐵𝑚 = 𝐵𝑚𝐵𝑛
+(︀
+𝜙𝑚(𝛽) −𝜙𝑛(𝛽)
+)︀
+< 0.
+Proof. 𝐵𝑘 >0, and𝜙𝑚 <𝜙𝑛 by Theorem 1 iterated over unit steps from𝑚 to 𝑛.
+Open problem5 (what remains open, stated honestly). The positivity lemma that Corollary 4
+serves is: for𝑡= 𝜋−𝜀, 𝜀∈(0,0.4], and all𝛽 >0 (the application requires only a finite window
+of couplings; the numerics below support the full range),
+𝑊(𝑡) =
+∑︁
+1≤𝑚<𝑛
+𝑐𝑚𝑛
+[︀
+(𝑚−𝑛) sin((𝑚+ 𝑛)𝑡) + (𝑚+ 𝑛) sin((𝑛−𝑚)𝑡)
+]︀
+< 0.
+Writing𝑝= 𝑛−𝑚, 𝑞= 𝑛+ 𝑚, the substitution𝑡= 𝜋−𝜀gives theexact identity, valid for every
+pair,
+𝑊 =
+∑︁
+𝑚<𝑛
+|𝑐𝑚𝑛|(−1)𝑚+𝑛[︀
+𝑞sin(𝑝𝜀) −𝑝sin(𝑞𝜀)
+]︀
+,
+3
+
+--- Page 4 ---
+
+where Corollary 4 supplied𝑐𝑚𝑛 = −|𝑐𝑚𝑛|. For the pairs with 𝑞𝜀 ≤𝜋 the bracket is strictly
+positive (decrease ofsin(𝑦)/𝑦 on (0,𝜋]); for𝑞𝜀>𝜋 it is not sign-definite, so the sum is a signed-
+weight competition in which — numerically — the odd-parity classes prevail at every(𝛽,𝜀)
+tested. The claim 𝑊 < 0 is thus an alternating-parity dominance over the bracket weights,
+exact in the rewriting and open in the dominance. High-precision numerics (mpmath, up to100
+significant digits) show the two parity classes cancel to relative accuracy≈𝑒−𝑐𝛽 with 𝑐≈2.03–
+2.17 — e.g. true totals 𝑊 ≈−2.9 ·10−8 at 𝛽 = 8 , −5.0 ·10−29 at 𝛽 = 32 , −5.1 ·10−95 at
+𝛽 = 100 (always negative) — so any proof must be structural rather than estimate-based, and
+any numerical exploration below working precision≳ 2.2𝛽+ 20 digits sees pure rounding noise.
+We record the phenomenology and the reduction here and makeno claim: the problem is open.
+4 Machine verification
+The full chain of Section 2 is machine-checked in Lean 4/Mathlib (filePhiMonotone.lean ac-
+companying this note; checked withlake env lean against Lean4.30.0-rc2, Mathlib commit
+cd3b69b): amos_calibration’ (the exact calibration),amos_small (𝑢<𝑥/ (2𝑚+ 1) from (3)),
+phi_unit_step (Lemma 2 plus positivity), andphi_step_of_recurrences (Theorem 1 with
+the recurrences (2) and the bound (3) entering as the named hypotheseshrec1, hrec2, hAmos).
+The axiom oracle returns Lean’s three standard axioms for all four theorems:
+’amos_calibration’’ depends on axioms:
+[propext, Classical.choice, Quot.sound]
+’amos_small’ depends on axioms:
+[propext, Classical.choice, Quot.sound]
+’phi_unit_step’ depends on axioms:
+[propext, Classical.choice, Quot.sound]
+’phi_step_of_recurrences’ depends on axioms:
+[propext, Classical.choice, Quot.sound]
+(exit code 0; no sorry, no admit). As in the companion note, what is machine-checked is
+the ordered-field implication [recurrences+ Amos bound⇒monotonicity]; the analytic inputs
+themselves are classical and cited.
+5 Numerical audit
+The factorization of Lemma 2 was verified symbolically (sympy: residual0). The reduction𝜙𝑘 =
+𝐴𝑘/𝐵𝑘 (including the𝑘= 1 edge), the identityΔ𝑚 = 𝑚(𝑚+1)(𝜙𝑚+1−𝜙𝑚), and the positivity of
+both factors were verified in mpmath at40 significant digits on𝛽 ∈{0.3,2,8,32,100,1000}, 𝑚≤
+11; the unit-step increase of𝜙𝑚 for real 𝑚 was checked on𝑚∈{1,1.3,2,2.71,5.5,9,14.25,40},
+𝑥∈{0.2,1,3.7,15,80,400}(minimal margin7.5·10−5 at 𝑥= 400, 𝑚= 1); and the strict increase
+of the integer sequence was verified for𝑘 ≤200 at 𝛽 ∈{2,8,32,100}. Scripts and sources are
+archived in the programme repository:
+https://github.com/lluiseriksson/THE-ERIKSSON-PROGRAMME/tree/main/surface-theorem
+Acknowledgements
+This note is part of an audit-first research programme whose records, Lean sources and numeri-
+cal suites are public athttps://github.com/lluiseriksson/THE-ERIKSSON-PROGRAMME. The
+4
+
+--- Page 5 ---
+
+statement is presented as a lemma with an application and an open problem, in that order;
+nothing here is claimed about the open problem beyond its precise reduction, and nothing is
+claimed about four-dimensional gauge theory.
+References
+[1] D. E. Amos, Computation of modified Bessel functions and their ratios, Math. Comp.28 (1974),
+239–251.
+[2] J. Segura,Bounds for ratios of modified Bessel functions and associated Turán-type inequalities, J.
+Math. Anal. Appl.374 (2011), 516–528.
+[3] D. Ruiz-Antolín and J. Segura,A new type of sharp bounds for ratios of modified Bessel functions,
+J. Math. Anal. Appl.443 (2016), 1232–1246; arXiv:1606.02008.
+[4] V. R. Thiruvenkatachar and T. S. Nanjundiah,Inequalities concerning Bessel functions and orthog-
+onal polynomials, Proc. Indian Acad. Sci. Sect. A33 (1951), 373–384.
+[5] Á. Baricz, On Turán type inequalities for modified Bessel functions, Proc. Amer. Math. Soc.141
+(2013), 523–532; arXiv:1010.3346.
+[6] Á. Baricz and T. K. Pogány,Bounds for Turánians of modified Bessel functions, Expo. Math.33
+(2015), 223–251; arXiv:1202.4853.
+[7] F. W. J. Olver et al.,NIST Digital Library of Mathematical Functions, §10.29,https://dlmf.nist.
+gov/10.29.
+[8] L. Eriksson,An elementary recurrence–Amos proof of the unit-step order-monotonicity of(log 𝐼𝜈)′,
+with a Feynman–Hellmann application to two-dimensional lattice gauge theory, July 2026;https:
+//github.com/lluiseriksson/THE-ERIKSSON-PROGRAMME/tree/main/papers/bessel-amos-fh .
+[9] L. Eriksson,THE MASTER MAP: an audit-first navigation guide to the conditional construction of
+4D 𝑆𝑈(𝑁) Yang–Mills with mass gap, ai.viXra:2602.0096, and the programme repositoryhttps:
+//github.com/lluiseriksson/THE-ERIKSSON-PROGRAMME.
+5

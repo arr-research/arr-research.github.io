@@ -1,0 +1,293 @@
+--- Page 1 ---
+
+Machine-Checked Extended Gauge Invariance at an
+SU(2)Crossing: Four-Edge Wilson Holonomy,
+Haar-Preserving Quotient Coordinates, and
+Reduction to the Ward Chart
+Lluis Eriksson
+2 August 2026
+Abstract
+We formalize extended gauge invariance at a simple four-edgeSU(2)crossing and connect
+the geometric edge chart to the two-coordinate chart used by a machine-checked crossing
+Ward identity. OnSU(2)4 we define the two opposite-edge right actions from the abstract
+Makeenko–Migdal theorem, prove that they are commuting product-Haar-preserving actions,
+and show that their common parameter composes to ordinary vertex gauge invariance. The
+four-edge Wilson word
+tr2(a−1
+3 βa2a−1
+4 αa1)
+is proved invariant under both half-actions: one transformation cancels inside the word, while
+the other becomes conjugation inside the normalized trace. We construct the explicit quotient
+r(a) = (a2a−1
+4 ,a1a−1
+3 ), a canonical section, and prove a universal factorization theorem for
+every extended-gauge-invariant complex function, including uniqueness of the descended
+function. The complete map from the cyclic four-edge chart to physical and gauge coordinates
+is proved to preserve literal four-fold Haar measure in one public endpoint. Finally, the
+four-edge Wilson word is identified exactly with the prior two-coordinate crossing word
+evaluated onr( a). The Lean producer has 56 public declarations in 488 physical lines; all
+36 theorems depend only onpropext, Classical.choice, andQuot.sound, with no local
+proof escape. No heat-kernel area derivative or full Makeenko–Migdal equation is claimed.
+1 Result and claim boundary
+At a simple crossing, Driver–Hall–Kemp isolate a symmetry stronger than ordinary gauge
+invariance. If the four distinct outgoing edge variables area1,a2,a3,a4 in cyclic order, a function
+fhas extended gauge invariance when, for everyxin the structure group,
+f(a1,a2,a3,a4) =f(a 1x,a2,a3x,a4) =f(a 1,a2x,a3,a4x).(1)
+This is Definition 2.4 of [3]. It is the symmetry used in the abstract Makeenko–Migdal equation
+to convert the alternating four-face area variation into one mixed edge generator. Ordinary
+vertex gauge invariance, which multiplies all four outgoing variables by the samex, is weaker.
+The present paper machine-checks the finite-dimensional geometry behind(1) for the funda-
+mental SU(2)Wilson word and proves the quotient structure that it induces. Table 1 states the
+precise boundary.
+This is a new sequel, not a replacement for the preceding crossing Ward, Haar integration-
+by-parts, or trace–skein papers. Its contribution is the missing local four-edge symmetry and
+quotient interface. It does not infer an area derivative from that symmetry.
+1
+
+--- Page 2 ---
+
+Table 1: Claim ledger. “Checked” means compiled in the new Lean producer.
+Statement Status Role
+Odd and even half-gauge actions on four outgoing edges Checked Primary-source definition
+Action laws, commutation, and ordinary vertex action Checked Symmetry algebra
+Product-Haar preservation of both half-actions Checked Measure compatibility
+Extended gauge invariance of the four-edge Wilson word Checked Geometric observable
+Explicit quotient, section, canonical representative Checked Orbit coordinates
+Existence and uniqueness of factorization of every
+invariant function
+Checked Quotient theorem
+Full cyclic-chart physical/gauge map preserves four-fold
+Haar
+Checked Gauge-volume separation
+Exact reduction to the two-coordinate Ward word Checked Interface to prior theorem
+Embedding an arbitrary planar cellulation into this local
+chart
+Open Combinatorial geometry
+Weak four-face heat-density identity withκ= 2Open Analytic Makeenko–Migdal input
+Full Makeenko–Migdal area equation Open Requires the two open rows
+2 The four-edge actions
+Write a local configuration asa= (a1,a2,a3,a4) ∈SU (2)4. We use zero-based indices in Lean
+and one-based indices in the paper. Define
+Ox(a) = (a1x,a2,a3x,a4),(2)
+Ex(a) = (a1,a2x,a3,a4x),(3)
+Vx(a) = (a1x,a2x,a3x,a4x).(4)
+The producer realizes these maps as right multiplication in the product groupSU(2)4 by( x,1,x, 1),
+(1,x,1,x), and(x,x,x,x)respectively.
+Theorem 2.1(Half-action algebra).For allx,y∈SU(2)anda∈SU(2) 4,
+O1(a) =a,O y(Ox(a)) =O xy(a),
+E1(a) =a,E y(Ex(a)) =E xy(a),
+Ox(Ey(a)) =E y(Ox(a)),V x(a) =E x(Ox(a)).
+Consequently, extended gauge invariance implies ordinary vertex gauge invariance.
+The proof is coordinatewise group algebra. The last conclusion is not installed as a field of
+the definition: Lean derives it by two applications of the two half-invariance hypotheses.
+Letµ ⊗4
+H be normalized product Haar measure.
+Theorem 2.2(Haar preservation).EachO x andE x preservesµ⊗4
+H .
+This follows from right invariance of Haar on the concrete product group; the proof term
+uses Mathlib’s measure-preserving right translation theorem. Thus the symmetries in(1) are
+compatible with the actual integration measure used by the finite-edge Ward theorem.
+3 The Wilson word has extended gauge invariance
+Fix α,β∈SU (2), representing the portions of the two loop strands away from the four local
+outgoing edges. In the order-reversing parallel-transport convention of [3], define
+Wα,β(a) = tr2(a−1
+3 βa2a−1
+4 αa1),tr 2(M) = 1
+2 Tr(M).(5)
+This is the concreteSU(2)specialization of the primary-source wordtr(a−1
+3 βa2a−1
+4 αa1).
+2
+
+--- Page 3 ---
+
+Theorem 3.1(Four-edge Wilson invariance).For alla∈SU(2) 4 andx∈SU(2),
+Wα,β(Oxa) =Wα,β(a) =Wα,β(Exa).
+HenceWα,β has extended gauge invariance.
+The two equalities have distinct mechanisms. For the odd action,
+(a3x)−1βa2a−1
+4 α(a1x)
+=x−1(a−1
+3 βa2a−1
+4 αa1)x,
+so invariance is cyclicity of the normalized trace. For the even action, the adjacent factorsx and
+x−1 cancel:
+a−1
+3 β(a2x)(a4x)−1αa1 =a−1
+3 βa2a−1
+4 αa1.
+Lean verifies both identities in the concrete matrix subgroup. It separately proves normalized-
+trace conjugation invariance and two-factor cyclicity, so neither cancellation is hidden behind an
+assumed “Wilson invariance” axiom.
+4 Explicit quotient and universal factorization
+The two invariant relative coordinates are
+r(a) =
+(
+a2a−1
+4 , a1a−1
+3
+)
+∈SU(2) 2.(6)
+They are unchanged under both half-actions. Define the section
+s(u,v) = (v,u,1,1)(7)
+and the canonical representative
+c(a) = (a1a−1
+3 ,a2a−1
+4 ,1,1) =s(r(a)).(8)
+Theorem 4.1(Constructive quotient chart).The mapsr: SU(2)4 →SU (2)2 and s: SU(2)2 →
+SU(2)4 satisfy
+r◦s= id SU(2)2 .
+Moreover,
+Ea−1
+4
+(
+Oa−1
+3
+(a)
+)
+=c(a).
+Iff: SU(2) 4 →Chas extended gauge invariance and ¯f(u) =f(s(u)), then
+f(a) =f(c(a)) = ¯f(r(a))(9)
+for everya∈SU(2) 4. Moreover, ifg: SU(2) 2 →Csatisfiesf=g◦r, theng= ¯f.
+Equation (9) is the universal factorization statement of the paper: it applies to every complex-
+valued extended-gauge-invariant function, not only the Wilson word, and the public uniqueness
+theorem follows by evaluating a proposed factorization on the sections. The proof supplies the
+actual group elements that move a configuration to its canonical representative.
+3
+
+--- Page 4 ---
+
+SU(2)4
+four outgoing edges
+c(a)
+two gauge entries= 1
+SU(2)2
+relative coordinates
+two certified
+half-actions r
+r
+s
+Figure 1: The explicit orbit reduction. Extended-gauge-invariant functions factor through the
+lower-dimensional chart; no quotient type is postulated.
+5 Haar-preserving physical/gauge coordinates
+Regroup the four variables into the opposite pairs
+((a2,a4),(a1,a3))∈(SU(2)×SU(2)) 2.
+The simultaneous pair gauge fix is
+Φ((p0,g0),(p1,g1)) = ((p0g−1
+0 ,g0),(p1g−1
+1 ,g1)).(10)
+Its first entries are precisely the two components of(6); the second entries retain the gauge
+coordinates. Writing
+Ψ(a) = Φ((a2,a4),(a1,a3)) = ((a2a−1
+4 ,a4),(a1a−1
+3 ,a3)),
+the formal statement starts directly from the original cyclic function typeFin 4 -> SU2; the
+regrouping is itself implemented as a measurable equivalence and is not left implicit.
+Theorem 5.1(Four-fold Haar-preserving split).The mapΨ : SU(2)4 →(SU(2) ×SU (2))2 sends
+µ⊗4
+H to(µ H ⊗µH)⊗(µ H ⊗µH). Its two physical outputs equalr(a).
+The proof composes the product-Haar-preserving coordinate permutation with the product
+of two instances of the Haar shear(p,g) ↦→(pg−1,g). This matters analytically: the quotient
+variables are not merely orbit labels; they arise from a measure-preserving change of variables
+that retains the discarded gauge volume as two independent Haar coordinates.
+6 Exact interface to the two-edge Ward chart
+The preceding crossing Ward artifact uses
+W(2)
+A,B(U) = tr2
+(
+(AU1)(BU2)
+)
+, U∈SU(2) 2.(11)
+The connection to the four-edge geometry is now a theorem.
+Theorem 6.1(Four-edge to two-edge reduction).For everya∈SU(2) 4,
+Wα,β(a) =W(2)
+β,α(r(a)).(12)
+Indeed, cyclicity movesa−1
+3 from the beginning of (5) to the end, giving
+tr2
+(
+β(a2a−1
+4 )α(a1a−1
+3 )
+)
+,
+which is exactly(11). Thus the word differentiated and closed in the earlier Ward theorem is
+not an unrelated two-variable ansatz: it is the explicit quotient of the primary four-edge Wilson
+holonomy.
+Figure 2 records what this closes and what remains open.
+4
+
+--- Page 5 ---
+
+four-edge word
+extended gauge invariant
+Haar quotient
+to two coordinates
+finite-edge Ward
+and trace closure
+arbitrary embedded
+cellulation chart
+open
+weak four-face
+heat identity
+open
+Figure 2: Compiled interfaces (solid) and remaining inputs (dashed). This paper closes the local
+four-edge symmetry and quotient, not the area equation.
+7 Lean architecture and audit
+The new producer isLean2dYangMills/SU2CrossingExtendedGauge.lean. It contains 56 public
+declarations: two abbreviations, seventeen definitions, one proposition structure, and 36 theorems.
+Table 2 maps the headline statements to exact declaration names.
+Table 2: Headline paper–Lean map.
+Paper statement Lean declaration
+Extended gauge invariance predicateSU2CrossingExtendedGaugeInvariant
+Half-action Haar preservation, Theorem 2.2measurePreserving_su2CrossingOdd/EvenAction
+Action algebra, Theorem 2.1su2CrossingOddAction_mul,su2CrossingOddAction_evenAction_commute
+Ordinary invariance from extended
+invariance
+SU2CrossingExtendedGaugeInvariant.vertex
+Four-edge Wilson invariance, Theorem 3.1su2FourEdgeCrossingWilsonWord_extendedGaugeInvariant
+Canonical orbit representativesu2Crossing_toCanonical
+Universal factorization, Theorem 4.1SU2CrossingExtendedGaugeInvariant.factor_through_reduced,
+SU2CrossingExtendedGaugeInvariant.descended_unique
+Haar-preserving split, Theorem 5.1su2CrossingFullGaugeFix_measurePreserving
+Four-edge/two-edge bridge, Theorem 6.1su2FourEdgeCrossingWilsonWord_eq_twoEdgeWord
+The environment is Lean4.29.0-rc6, pinned to Mathlib commit
+07642720480157414db592fa85b626dafb71355b.
+The dedicated audit module prints the axiom dependencies of all 36 theorems. Every theorem
+has precisely the standard dependency set
+{propext,Classical.choice,Quot.sound}.
+The verification wrapper builds the producer, compiles the audit, scans both new modules for
+local proof escapes, checks the exact public-declaration count, and records immutable hashes.
+The release archive excludes.lake,.olean, and.ileanobjects.
+8 Conclusion
+The local geometry preceding theSU(2)crossing Ward identity is now machine checked. The
+primary four-edge symmetry is implemented as two commuting Haar-preserving actions; the
+fundamental Wilson holonomy is proved invariant under both; every invariant function factors
+through an explicit two-coordinate quotient with a unique descended function; and the complete
+cyclic-chart physical/gauge split preserves four-fold Haar measure. The quotient Wilson word is
+exactly the two-coordinate word used by the compiled Pauli-generator Ward theorem.
+Two boundaries remain. First, an arbitrary embedded planar cellulation must be shown to
+supply the ordered four distinct outgoing edges and the word decomposition assumed by the
+local chart. Second, the concrete heat-kernel density must satisfy the weak alternating four-area
+5
+
+--- Page 6 ---
+
+identity, in the program normalization withκ = 2. Neither statement is a theorem of this
+paper. The result is therefore a rigorous geometric and measure-theoretic interface, not a full
+Makeenko–Migdal area equation.
+References
+[1] Y. M. Makeenko and A. A. Migdal, Exact equation for the loop average in multicolor QCD,
+Physics Letters B88(1979), 135–137.
+[2] T. Lévy, The master field on the plane,Astérisque388(2017), arXiv:1112.2452.
+[3] B. K. Driver, B. C. Hall, and T. Kemp, Three proofs of the Makeenko–Migdal equation
+for Yang–Mills theory on the plane,Communications in Mathematical Physics351(2017),
+741–774; arXiv:1601.06283.
+[4] B. K. Driver, F. Gabriel, B. C. Hall, and T. Kemp, The Makeenko–Migdal equation for
+Yang–Mills theory on compact surfaces,Communications in Mathematical Physics352
+(2017), 967–978; arXiv:1602.03905.
+[5] L. de Moura and S. Ullrich, The Lean 4 theorem prover and programming language, in
+Automated Deduction – CADE 28, LNCS 12699, Springer (2021), 625–635.
+[6] The Mathlib Community, The Lean mathematical library, inProceedings of CPP 2020,
+ACM (2020), 367–381.
+6

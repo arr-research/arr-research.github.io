@@ -1,0 +1,135 @@
+--- Page 1 ---
+
+THE MASTER MAP — Audit Experiments Report
+Mechanical Audit Experiments and Reproducibility Appendix for the 2602-Series
+Programme on 4DSU(N) Yang–Mills
+— v3: test claims aligned with the audited ledger; three test defects corrected — *
+Lluis Eriksson
+Independent Researcher
+lluiseriksson@gmail.com
+February 2026 (v1–v2); July 2026 (v3)
+Abstract
+This is the experiment-first audit report for the 2602-series programme: a runnable mechan-
+ical suite (repository ym-audit) with declared pass/fail criteria, a 2D Yang–Mills benchmark,
+gauge/infrastructure/UV-flow proxy layers, and a reproducibility manifest. Version 3 aligns
+the report with the fully audited programme and corrects three defects in the harness itself.
+Scope statement (sharpened):the 29 tests adjudicate exact identities, toy models, and group-
+theoretic facts; they cross-validate the per-paper suites of THE-ERIKSSON-PROGRAMME
+(verification/2602-*, 15 papers, independent implementations agreeing where they overlap,
+e.g. the triangular-lock dimension counts); they do not discharge any entry of the programme
+ledger — a 29/29 run leaves the hypothesis set {(H1), (H2)+ βLF, (H3), (H2 ′), (H-LOC),
+L6.2-import, (H-R β), (H-P0 ′), structural+window, λ ̸= 0-traceable, . . . } exactly as it was.
+Corrections: the d = 4 harmonic coefficient is 1 /2 (harness had 3 /2, a dropped-term bug; the
+paper chain had 3 /5, the d = 3 value — three-way inconsistency now settled and machine-
+adjudicated); the non-triviality test is rescoped (Haar kurtosis ̸= 3 is a single-link fact —
+exactly 2 for SU (2) — present even at strong coupling; what it verifies is C4(N) > 0); the
+super-polynomial large-field test is restated under the audited log-power profile. The 2D YM
+benchmark (transfer-matrix gap ∆ = g2N/2 to 10 −14) and the dependency DAG survive;
+“Papers 86–90” are pinned to 2602.0088 v3 / 0087 v3 / 0092 v2 / 0091 v2 / 0096 v2.
+* Version 3. Audited replacement of v2 within the programme-wide verification pass (2602.0041 v3, 0051–
+0057 v2, 0063 v3, 0069–0077 v2, 0087 v3, 0088 v3, 0089 v2, 0091 v2, 0092 v2, 0096 v2). Principal changes:
+(i) F-LAP (bug in the harness): test ANISO.h aniso.Harmonicity reported harmonic coefficient 3 /2 in d = 4;
+the correct value is 1 /2 (∆(Σ x4) = 12Σ x2, ∆((Σ x2)2) = (4 d + 8)Σx2; 3 /2 arises exactly from dropping the 4 d
+term). This settles a three-way inconsistency in the programme (3 /5 in 2602.0096 v1 [the d = 3 value], 3 /2 in
+this report’s v2, 1 /2 correct per 2602.0087 v3). (ii) F-KURT (mis-scoped test): P86.Thm8.7.NonTriviality S4c
+measured Haar kurtosis of |tr U| — a single-link group fact (exactly 2 for SU (2): Catalan moments), true even
+at strong coupling, carrying no information about the interacting Sc
+4; rescoped as a C4(N) > 0 verification; non-
+triviality itself is conditional (2602.0088 v3, Thm 8.7). (iii) F-SUPERPOLY: P90.Lem6.4.Superpoly verified
+e−c/g2
+≤ gm under the inflated power-law profile struck by 2602.0096 v2; rescoped to the audited log-power (H2′)(m)
+trichotomy. (iv) F-STALE: “Papers 86–90” pinned to identifiers and audited versions; the “load-bearing claims”
+lists carry their conditional statuses; the abstract’s “mechanically verifying the load-bearing theorems” is corrected
+to “mechanically verifying their exact/toy/group-theoretic content” —no test discharges any ledger hypothesis. The
+framework itself (Def. 1, Rmk 3 “passing ̸= proof”, § 10.2, the 2D YM benchmark, the reproducibility manifest)
+survives audit and is cross-validated against the per-paper suites of THE-ERIKSSON-PROGRAMME. Meta-suite:
+verification/2602-0117/, 6/6 PASS.
+1
+
+--- Page 2 ---
+
+1 Role and scope
+Two verification layers now exist and are cross-linked: (A) the per-paper deterministic suites
+of THE-ERIKSSON-PROGRAMME ( verification/2602-XXXX/, one per audited paper, exit-
+0 conventions); (B) this report’s programme-wide harness ( ym-audit: 29 tests, results.json,
+provenance manifest). Where they overlap they must agree; v3 records one disagreement found
+and fixed (F-LAP) and two scope corrections (F-KURT, F-SUPERPOLY). The definitions (Def. 1:
+audit experiment; Rmk 3: “passing does not constitute proof”), the threat model T-EXP1–10,
+and § 10.2 (“what a reviewer should not conclude”) of v2 were already correct and are retained
+verbatim.
+2 Paper map (F-STALE corrected)
+P86 = ai.viXra:2602.0088v3 (clustering/mass gap — conditional; OS0/2/3 unconditional). P87 =
+2602.0087 v3 (Symanzik/anisotropy — windowed/conditional). P88 = 2602.0092 v2 (OS1 Ward
+— conditional). P89 = 2602.0091 v2 (KP block — source-mapped). P90 = 2602.0096 v2 (Master
+Map — audited-ledger edition). The v2 tables of “load-bearing claims” are re-read accordingly:
+each claim carries the loads of its audited version; the dependency DAG of v2 § 7.6 is correct as a
+graph and now carries statuses on its arrows.
+3 Corrections to the harness
+3.1 F-LAP: the harmonic coefficient
+∆(Σµx4
+µ) = 12 Σx2; ∆((Σx2)2) = (4d+8) Σx2. Harmonicity of Σx4 −c (Σx2)2 forces c = 12/(4d+
+8) = 3/(d + 2): c(4) = 1
+2 , c(3) = 3
+5 . The harness value 3 /2 solves 12 − 8c = 0, i.e. it drops the 4 d
+term. The three-way inconsistency (3 /5 / 3/2 / 1/2) is adjudicated exactly [meta-suite check 1];
+the fix is applied in ym-audit.
+3.2 F-KURT: what the non-triviality test measures
+For a single Haar link,⟨|tr U|2k⟩ are Catalan numbers for SU (2): m2 = 1, m4 = 2, kurtosis exactly
+2 [check 2] — matching v2’s Monte Carlo (1 .9948). This holds at any coupling including g = ∞
+(single-site strong coupling), so kurtosis ̸= 3 cannot distinguish the interacting continuum theory
+from anything. What the test does verify is the group-theoretic positivity C4(N) > 0 entering
+the tree-level lower bound of 2602.0088 v3, Thm 8.7 — a real but small input; the theorem itself
+is conditional on the KP block. Test renamed P86.Thm8.7.C4N positivity.
+3.3 F-SUPERPOLY: the large-field profile
+v2’s test verifiede−c/g2
+≤ gm — correct arithmetic for a hypothesis (power-lawp0) that 2602.0096 v2
+struck as appearing in no source. Under the audited profile p0 = (A0 log ¯g−2)p∗ the correct state-
+ment is the (H2 ′)(m) trichotomy with thresholds A0 ≥ m/2 at p∗ = 1 and onsets for p∗ > 1
+[check 3]. Test rescoped accordingly.
+2
+
+--- Page 3 ---
+
+4 What survives (and is cross-validated)
+The 2D YM benchmark: λj = e−g2C2(j)/2, ∆ = g2
+2 (C2(1) −C2(0)) = g2 = g2N/2 for SU (2), repli-
+cated to machine precision, plus clustering slope = ∆ [check 4]. The KP margin and δ arithmetic
+of the core-chain table (v2 § 7.7: δ = 0.021, margin 2.262, −10%: 1 .412) is independently recom-
+puted and confirmed [check 5]. The triangular-lock test agrees with 2602.0096 v2’s independent
+implementation (dim of W4-invariant bilinear forms; quotient 0 at d = 4). Telescoping, coupling
+recursion, UV scale sums, η2 log vanishing, Ricci N/4, discretisation slopes: all double-covered by
+layer (A) suites.
+5 Scope table (corrected § 10)
+What 29/29 establishes: the harness runs; the exact/toy/group content of the audited chain is
+mechanically consistent across two independent implementations; the framework recovers a solved
+model exactly. What it does not establish: any entry of the ledger; any uniformity in volume
+beyond the toys; any part of the Clay problem. The ledger before and after a 29/29 run isidentical
+[check 6]. This is not a weakness of the harness — it is what mechanical audit is; v2’s own Rmk 3
+said so, and v3 makes the abstract say it too.
+Note added in v3
+Findings F-LAP (harness bug, 3 /2 → 1/2; three-way inconsistency settled), F-KURT (test
+rescoped to C4(N) > 0), F-SUPERPOLY (profile aligned with (H2 ′)), F-STALE (paper map
+pinned to audited versions; abstract’s “verifying the load-bearing theorems” corrected). Retained
+verbatim: Def. 1, Rmk 3, threat model T-EXP1–10,§ 10.2, 2D YM benchmark, gauge/infrastructure/
+UV-flow layers, reproducibility protocol and manifest. Repository fixes mirrored in ym-audit;
+meta-suite verify 2602 0117.py in THE-ERIKSSON-PROGRAMME, 6 deterministic checks,
+exit 0 iff 6/6.
+References
+[1] L. Eriksson, ai.viXra:2602.0088 v3.
+[2] L. Eriksson, ai.viXra:2602.0087 v3.
+[3] L. Eriksson, ai.viXra:2602.0092 v2.
+[4] L. Eriksson, ai.viXra:2602.0091 v2.
+[5] L. Eriksson, ai.viXra:2602.0096 v2.
+[6] L. Eriksson, ai.viXra:2602.0069 v2.
+[7] github.com/lluiseriksson/ym-audit (programme-wide harness) and
+github.com/lluiseriksson/THE-ERIKSSON-PROGRAMME, verification/ (per-paper suites).
+[8] R. Koteck´ y, D. Preiss, Comm. Math. Phys. 103 (1986) 491.
+[9] K. Osterwalder, R. Schrader, Comm. Math. Phys. 42 (1975) 281.
+[10] K. Osterwalder, E. Seiler, Ann. Phys. 110 (1978) 440.
+3
+
+--- Page 4 ---
+
+[11] A. Jaffe, E. Witten, Clay Math. Inst., 2006.
+[12] M. L¨ uscher, JHEP 2010:08, 071.
+4

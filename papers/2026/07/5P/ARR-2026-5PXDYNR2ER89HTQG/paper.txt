@@ -1,0 +1,401 @@
+--- Page 1 ---
+
+An Elementary Recurrence–Amos Proof of the Unit-Step
+Order-Monotonicity of(log 𝐼𝜈)′, with a Feynman–Hellmann
+Application to Two-Dimensional Lattice Gauge Theory
+Lluis Eriksson
+July 2026
+Abstract
+Let 𝐼𝜈 denote the modified Bessel function of the first kind and, for𝑥 >0, let𝜌𝜈(𝑥) =
+𝐼𝜈+1(𝑥)/𝐼𝜈(𝑥). We give a four-step, fully elementary proof of the sharp difference inequality
+0 < 𝜌𝜈(𝑥) −𝜌𝜈+1(𝑥) < 1
+𝑥, 𝑥> 0, 𝜈≥0,
+whoseright-handinequalityisexactlythestrictincreaseofthelogarithmicderivative (log 𝐼𝜈)′(𝑥)
+under the unit shift𝜈 ↦→𝜈 + 1; consequently 𝜈 ↦→(log 𝐼𝜈)′(𝑥) is strictly increasing along
+every unit-spaced grid𝜈0 + N, 𝜈0 ≥0 — in particular on the integer and half-integer or-
+ders that arise in the application below. The stronger statement that(log 𝐼𝜈)′(𝑥) increases
+in the continuous order 𝜈 is known — it is Lemma 10 of Freitas and Laugesen [7], proved
+there through the Mittag–Leffler expansion of𝑥𝐼′
+𝜈/𝐼𝜈 over Bessel zeros — and we make no
+elementary claim about fractional steps. The interest of the proof given here is that it uses
+no information about Bessel zeros: it combines the three-term recurrence with the classical
+Amos-type upper bound 𝜌𝜈 < 𝑥/
+(︀
+𝑎+
+√
+𝑎2 + 𝑥2)︀
+, 𝑎 = 𝜈 + 1
+2 [1, 3], and rests on the ob-
+servation that this bound isexactly calibrated for the problem: writing 𝑈 for the bound,
+1/𝑈 −𝑈 = 2𝑎/𝑥 is an algebraic identity, and(2𝜈+ 1)/𝑥 is precisely the threshold the unit
+step requires. In fact the unit-step monotonicity and the Amos bound are equivalent. As
+an application we record the following consequence in two-dimensional lattice gauge theory:
+for the Wilson action, every mass gap between character sectors of the 2D transfer operator
+— for𝑈(1) and 𝑆𝑈(2) alike, where only integer-spaced Bessel orders occur — is a strictly
+decreasing function of the bare coupling𝛽, by the Feynman–Hellmann identity. The alge-
+braic core of the proof (the calibration lemma and the unit-step chain) is machine-checked
+in Lean 4/Mathlib — nosorry, axiom oracle exactly Lean’s three standard axioms — and
+we report an independent high-precision numerical audit of every inequality used.
+1 Introduction
+The ratios 𝜌𝜈(𝑥) = 𝐼𝜈+1(𝑥)/𝐼𝜈(𝑥) of modified Bessel functions of consecutive orders appear
+throughout applied analysis, probability and statistical physics, and a substantial literature is
+devoted to bounding them by algebraic functions of𝜈 and 𝑥[1, 2, 3, 4, 5, 6]. This note concerns
+the behaviour under order shifts of the logarithmic derivative
+𝜕
+𝜕𝑥 log 𝐼𝜈(𝑥) = 𝐼′
+𝜈(𝑥)
+𝐼𝜈(𝑥).
+1
+
+--- Page 2 ---
+
+Theorem 1(unit-step order-monotonicity). For every𝑥> 0 and every real𝜈 ≥0,
+𝐼′
+𝜈+1(𝑥)
+𝐼𝜈+1(𝑥) −𝐼′
+𝜈(𝑥)
+𝐼𝜈(𝑥) = 1
+𝑥 −
+(︀
+𝜌𝜈(𝑥) −𝜌𝜈+1(𝑥)
+)︀
+> 0. (1)
+Equivalently, the sharp two-sided bound
+0 < 𝜌𝜈(𝑥) −𝜌𝜈+1(𝑥) < 1
+𝑥 (2)
+holds. The two sides have different provenance: the left inequality is the classical Turán-type
+inequality [8], which we import; the elementary content of this note is theright inequality, i.e.
+the unit-step monotonicity(1). Consequently, for every𝜈0 ≥0 the map𝑘↦→𝐼′
+𝜈0+𝑘(𝑥)/𝐼𝜈0+𝑘(𝑥)
+is strictly increasing on 𝑘 ∈ N; in particular 𝜈 ↦→ 𝐼′
+𝜈(𝑥)/𝐼𝜈(𝑥) is strictly increasing on the
+nonnegative integers and on the positive half-odd-integers.
+Remark 2 (scope, and relation to the known continuous statement). The stronger statement —
+𝜈 ↦→𝐼′
+𝜈(𝑥)/𝐼𝜈(𝑥) strictly increasing in thecontinuous order on[0,∞) — is Lemma 10 of Freitas
+and Laugesen [7], established as a technical ingredient in the spectral geometry of the Robin
+Laplacian via the infinite-product (Mittag–Leffler) expansion𝑥𝐼′
+𝜈/𝐼𝜈 = 𝜈+2 ∑︀
+𝑚≥1 𝑥2/(𝑥2+𝑗2
+𝜈,𝑚)
+andtheincreaseoftheBesselzeros 𝑗𝜈,𝑚 in𝜈. WeemphasizethatTheorem1does not recoverthis:
+unit-step increase along every grid does not imply increase between grids, and the fractional-step
+inequality 𝜌𝜇 −𝜌𝜈 < (𝜈−𝜇)/𝑥, 0 < 𝜈−𝜇 <1, does not follow from our method. Indeed it is
+asymptoticallysaturated— 𝜌𝜈(𝑥) = 1−(2𝜈+1)/(2𝑥)+𝑂(𝑥−2), so𝜌𝜇−𝜌𝜈 = (𝜈−𝜇)/𝑥+𝑂(𝑥−2) —
+which rules out any proof by splitting the difference across the first-order Amos-type upper/lower
+pair: already at order 1/𝑥 the split bound overshoots by1/(2𝑥). Closing the fractional step
+elementarily would need two-sided bounds sharp to𝑂(𝑥−2) uniformly in 𝜈, e.g. those of [5,
+Thm. 5], at the price of the four-line character of the present proof; we do not pursue it. For the
+application in Section 3 the grid statement is exactly what is needed, since only integer-spaced
+orders occur.
+The purpose of this note is threefold.
+First, the proof of Theorem 1 is completely elementary — four steps, using only the three-
+term recurrence, the derivative identity, and one classical Amos-type bound. No properties of
+Bessel zeros, no integral representations, and no Sturm theory are needed. The engine is a
+curious exact calibration (Lemma 3): the classical upper bound
+𝜌𝜈(𝑥) < 𝑈𝜈(𝑥) := 𝑥
+𝑎+
+√
+𝑎2 + 𝑥2 , 𝑎 = 𝜈+ 1
+2 ,
+which goes back to Amos [1] and was proved best of its form by Segura [3, 5], satisfies the
+algebraic identity
+1
+𝑈𝜈(𝑥) −𝑈𝜈(𝑥) = 2𝑎
+𝑥 = 2𝜈+ 1
+𝑥 ,
+and (2𝜈 + 1)/𝑥 is exactly the threshold at which the unit step closes. The bound is, in this
+precise sense, machined for the lock; in fact the two statements are equivalent (Remark 4).
+Second, the proof yields the upper bound of (2) directly in quantitative form, with an explicit
+strict margin at every(𝜈,𝑥) inherited from the strict Amos margin𝑈𝜈−𝜌𝜈 >0; the lower bound
+(positivity of the difference) is not reproved here but imported from the Turán literature [8].
+2
+
+--- Page 3 ---
+
+Third, we record a consequence in two-dimensional lattice gauge theory (we are not aware
+of an explicit statement in the literature, though it may well be folklore): by the Feynman–
+Hellmann identity — exact here, because the 2D transfer operator is diagonal in a𝛽-independent
+character basis — the grid case of Theorem 1 is precisely the strict decrease in the bare coupling
+𝛽 of every mass gap between character sectors, for the𝑈(1) and 𝑆𝑈(2) Wilson actions simul-
+taneously (Section 3). We emphasize the modest scope: this is a statement about the exactly
+soluble two-dimensional theory; nothing here is claimed about four-dimensional gauge theory.
+Section 4 presents the machine-checked Lean 4/Mathlib verification of the algebraic core (no
+sorry; standard axioms only). Section 5 reports an independent numerical audit.
+2 The elementary proof
+Throughout, 𝑥 >0, 𝜈 ≥0, 𝐼𝜈 is the modified Bessel function of the first kind, all values𝐼𝜈(𝑥)
+are strictly positive, and𝜌𝜈(𝑥) =𝐼𝜈+1(𝑥)/𝐼𝜈(𝑥) ∈(0,1). We use two classical facts, valid for all
+real orders (see [11, 10.29.1–10.29.2]):
+𝐼𝜈−1(𝑥) −𝐼𝜈+1(𝑥) =2𝜈
+𝑥 𝐼𝜈(𝑥), (3)
+𝐼′
+𝜈(𝑥) =1
+2
+(︀
+𝐼𝜈−1(𝑥) +𝐼𝜈+1(𝑥)
+)︀
+. (4)
+Step 1: a closed form for the logarithmic derivative
+Dividing (4) by𝐼𝜈 and using (3) in the form𝐼𝜈−1/𝐼𝜈 = 𝜌𝜈 + 2𝜈/𝑥:
+𝐼′
+𝜈(𝑥)
+𝐼𝜈(𝑥) = 1
+2
+(︂𝐼𝜈−1
+𝐼𝜈
++ 𝐼𝜈+1
+𝐼𝜈
+)︂
+= 1
+2
+(︂
+𝜌𝜈 + 2𝜈
+𝑥 + 𝜌𝜈
+)︂
+= 𝜌𝜈(𝑥) +𝜈
+𝑥. (5)
+Step 2: reduction to a ratio inequality
+By (5), for the unit step𝜈 →𝜈+ 1,
+𝐼′
+𝜈+1
+𝐼𝜈+1
+−𝐼′
+𝜈
+𝐼𝜈
+= 𝜌𝜈+1 −𝜌𝜈 + 1
+𝑥,
+which is (1). Writing the recurrence (3) at order𝜈+1 as 𝜌𝜈+1 = 1/𝜌𝜈−2(𝜈+1)/𝑥, the inequality
+𝜌𝜈 −𝜌𝜈+1 <1/𝑥 is equivalent to
+1
+𝜌𝜈(𝑥) −𝜌𝜈(𝑥) > 2𝜈+ 1
+𝑥 . (6)
+Step 3: the Amos-type bound
+We use the classical upper bound (Amos [1]; proved best of its form and valid for all𝜈 ≥0 by
+Segura [5, Thm. 2], after the index shift𝜈 ↦→𝜈+ 1):
+𝜌𝜈(𝑥) < 𝑈𝜈(𝑥) := 𝑥
+𝑎+ 𝑠, 𝑎 = 𝜈+ 1
+2 , 𝑠 =
+√︀
+𝑎2 + 𝑥2. (7)
+3
+
+--- Page 4 ---
+
+Step 4: the exact calibration
+Lemma 3(calibration). Let 𝑎,𝑥> 0 and 𝑠=
+√
+𝑎2 + 𝑥2, 𝑈 = 𝑥/(𝑎+ 𝑠). Then
+1
+𝑈 −𝑈 = 2𝑎
+𝑥 ,
+and for every𝑡 with 0 <𝑡<𝑈 ,
+1
+𝑡 −𝑡 > 2𝑎
+𝑥 .
+Proof. Since (𝑠−𝑎)(𝑠+ 𝑎) =𝑠2 −𝑎2 = 𝑥2, we have𝑈 = 𝑥/(𝑎+ 𝑠) = (𝑠−𝑎)/𝑥, hence
+1
+𝑈 −𝑈 = 𝑎+ 𝑠
+𝑥 −𝑠−𝑎
+𝑥 = 2𝑎
+𝑥 .
+The map𝑡↦→1/𝑡−𝑡is strictly decreasing on(0,∞), so𝑡<𝑈 gives1/𝑡−𝑡> 1/𝑈−𝑈 = 2𝑎/𝑥.
+Applying Lemma 3 with𝑡= 𝜌𝜈(𝑥) <𝑈𝜈(𝑥) and 𝑎= 𝜈+ 1
+2 yields (6) strictly, hence (1) and
+(2); the grid statements follow by summing the strict unit-step increments.
+Remark 4 (equivalence with the Amos bound). The chain of Step 2 consists of equivalences:
+since 𝑡 ↦→1/𝑡−𝑡 is a strictly decreasing bijection of(0,∞) onto R, and 𝑈𝜈 is precisely the
+positive root of1/𝑡−𝑡 = (2𝜈+ 1)/𝑥 (Lemma 3), the inequality (6) isequivalent to 𝜌𝜈 < 𝑈𝜈.
+Therefore: the unit-step order-monotonicity(1) is equivalent to the classical Amos upper bound
+(7). Any of the many proofs of the latter [1, 3, 4, 5] yields the former, and conversely the
+continuous monotonicity of Freitas–Laugesen [7] yields, in particular, a Bessel-zero proof of the
+Amos bound. The bound𝑈𝜈 is also recognizable as the𝑏0-type bound of [3]: the positive root
+of the Riccati-derived quadratic𝑡2 + 2𝜈+1
+𝑥 𝑡−1 = 0.
+3 Application: bare-coupling monotonicity of all 2D sector gaps
+Consider lattice gauge theory on a two-dimensional rectangular lattice with Wilson action and
+compact structure group𝐺, at bare coupling𝛽 >0. We fix notation carefully, separating the
+three objects involved.
+(a) Character coefficients.The one-plaquette Boltzmann weight expands as (see, e.g., [12,
+13])
+𝑒𝛽Re 𝜒𝑓 (𝑈) =
+∑︁
+𝑟
+𝑑𝑟𝑐𝑟(𝛽) 𝜒𝑟(𝑈), 𝑐 𝑟(𝛽) = 1
+𝑑𝑟
+∫︁
+𝐺
+𝜒𝑟(𝑈) 𝑒𝛽Re 𝜒𝑓 (𝑈) 𝑑𝑈,
+the sum over irreducible representations𝑟of 𝐺, 𝑑𝑟 = 𝜒𝑟(𝑒). For the two classical cases (𝑛∈Z≥0,
+𝑗 ∈1
+2 Z≥0; verified independently to 30 digits in the audit of Section 5):
+𝐺= 𝑈(1) : 𝑐𝑛(𝛽) =𝐼𝑛(𝛽), 𝐺 = 𝑆𝑈(2) : 𝑐𝑗(𝛽) =𝐼2𝑗+1(2𝛽)
+𝛽 ,
+the 𝑆𝑈(2) formula being the statement that the Haar class integral equals
+∫︀
+𝐺𝜒𝑗(𝑈) 𝑒𝛽𝜒𝑓 (𝑈) 𝑑𝑈 =
+(2𝑗+ 1)𝐼2𝑗+1(2𝛽)/𝛽, i.e. 𝑑𝑗 𝑐𝑗(𝛽) with 𝑑𝑗 = 2𝑗+ 1(all 𝑆𝑈(2) characters are real, soRe 𝜒𝑓 =
+𝜒𝑓 = 2 cos𝜃).
+(b) Transfer eigenvalues.In two dimensions, gauge fixing reduces the theory to a product of
+independent plaquette weights, and the transfer operator (one lattice row, temporal gauge) is
+diagonal in the character basis{𝜒𝑟}— the standard exact solubility of 2D lattice gauge theory
+4
+
+--- Page 5 ---
+
+[12, 9]; see [10] for a textbook treatment of the character expansion — a basis independent
+of 𝛽 — with eigenvalue in sector𝑟 proportional to 𝑐𝑟(𝛽), the proportionality constant being a
+sector-independent normalization. Ratios of transfer eigenvalues between sectors are therefore
+exactly 𝑐𝑟(𝛽)/𝑐𝑟′ (𝛽), with every normalization convention cancelling.
+(c) Sector gaps. For two sectors with𝑐𝑟(𝛽) > 𝑐𝑟′ (𝛽) > 0 (in both models the coefficient is
+strictly decreasing in the sector label, so “heavier” sectors have smaller coefficients), the mass
+gap of sector𝑟′relative to𝑟 is
+𝑚𝑟,𝑟′ (𝛽) = log 𝑐𝑟(𝛽)
+𝑐𝑟′ (𝛽) > 0,
+e.g. for𝑈(1) the fundamental string tension is𝑚0,1 = log(𝐼0/𝐼1) and the𝑣87 bracket instance
+is 𝑚1,2 = log(𝐼1/𝐼2). Because the eigenbasis is𝛽-independent, 𝑑
+𝑑𝛽𝑚𝑟,𝑟′ acts on the eigenvalues
+alone — the Feynman–Hellmann identity in its exact, diagonal form; no perturbation theory is
+involved.
+Corollary 5. For 2D Wilson lattice gauge theory:
+(i) 𝐺= 𝑈(1): for all integers0 ≤𝑛<𝑛 ′,
+𝑑
+𝑑𝛽 𝑚𝑛,𝑛′ (𝛽) = 𝑑
+𝑑𝛽 log 𝐼𝑛(𝛽)
+𝐼𝑛′ (𝛽) =
+(︀
+𝜌𝑛 −𝜌𝑛′
+)︀
+(𝛽) −𝑛′−𝑛
+𝛽 < 0.
+Every sector gap — in particular the string tensionlog(𝐼0/𝐼1) and the bracket instance
+log(𝐼1/𝐼2) — is strictly decreasing in𝛽.
+(ii) 𝐺= 𝑆𝑈(2): for all0 ≤𝑗 <𝑗′ in 1
+2 Z,
+𝑑
+𝑑𝛽 𝑚𝑗,𝑗′ (𝛽) = 2
+[︁(︀
+log 𝐼2𝑗+1
+)︀′(2𝛽) −
+(︀
+log 𝐼2𝑗′+1
+)︀′(2𝛽)
+]︁
+< 0,
+the 1/𝛽 prefactors cancelling in the ratio𝑐𝑗/𝑐𝑗′ = 𝐼2𝑗+1(2𝛽)/𝐼2𝑗′+1(2𝛽), which is free of
+representation-dimension factors.
+In both cases the orders involved are integer-spaced —𝑛′−𝑛∈N in (i),(2𝑗′+ 1)−(2𝑗+ 1) =
+2(𝑗′−𝑗) ∈ N in (ii) — so the grid case of Theorem 1 applies directly, with no appeal to
+continuous-order monotonicity.
+Proof. (i) By (5), 𝑑
+𝑑𝛽 log(𝐼𝑛/𝐼𝑛′ ) = (𝜌𝑛 + 𝑛/𝛽) −(𝜌𝑛′ + 𝑛′/𝛽) = (𝜌𝑛 −𝜌𝑛′ ) −(𝑛′−𝑛)/𝛽, and
+iterating (2) over the𝑛′−𝑛 unit steps gives𝜌𝑛 −𝜌𝑛′ < (𝑛′−𝑛)/𝛽 strictly. (ii) Identical, at
+argument 𝑥= 2𝛽 and orders2𝑗+ 1<2𝑗′+ 1; the chain rule contributes the factor2.
+Remark 6 (scope). Corollary 5 is a statement about the exactly soluble two-dimensional theory.
+The analogous monotonicity𝑚′(𝛽) ≤0 for the four-dimensional mass gap on a weak-to-strong
+coupling corridor is an open problem (universally expected in lattice physics, covered by no
+theorem); the present corollary is the exact 2D instance of that bracket and nothing more. In
+the terminology of the audit-first programme to which this note belongs, the 2D instance is
+signed; the 4D bracket remains a named hypothesis.
+5
+
+--- Page 6 ---
+
+4 The machine-checked algebraic core
+The proof was deliberately arranged so that its arithmetic core is formalizable without any
+Bessel analysis, and this has been carried out: the calibration lemma and the unit-step chain
+are proved in Lean 4/Mathlib, with no sorry and no project axioms. The verification file
+FHBesselAmos.lean accompanies this note in the repository and was checked withlake env
+lean against Lean4.30.0-rc2, Mathlib commitcd3b69b. The axiom oracle returns, for each
+of the three theorems, exactly Lean’s three standard axioms:
+’amos_calibration’ depends on axioms:
+[propext, Classical.choice, Quot.sound]
+’unit_step_of_recurrence_and_amos’ depends on axioms:
+[propext, Classical.choice, Quot.sound]
+’logderiv_unit_step_increase’ depends on axioms:
+[propext, Classical.choice, Quot.sound]
+The proved signatures, verbatim:
+theorem amos_calibration (a b t : Real)
+(ha : 0 < a) (hb : 0 < b) (ht : 0 < t)
+(hU : t < b / (a + Real.sqrt (a ^ 2 + b ^ 2))) :
+2 * a / b < 1 / t - t
+theorem unit_step_of_recurrence_and_amos
+(x nu I0 I1 I2 : Real) (hx : 0 < x) (hnu : 0 <= nu)
+(hI0 : 0 < I0) (hI1 : 0 < I1)
+(hrec : I0 - I2 = 2 * (nu + 1) / x * I1)
+(hamos : I1 / I0 <
+x / ((nu + 1/2) + Real.sqrt ((nu + 1/2) ^ 2 + x ^ 2))) :
+I1 / I0 - I2 / I1 < 1 / x
+together with a third theorem,logderiv_unit_step_increase, expressing the conclusion in
+the closed form of Step 1:(𝜌𝜈+1 + (𝜈+ 1)/𝑥) −(𝜌𝜈 + 𝜈/𝑥) >0. Positivity ofI2 turned out not
+to be needed and is not assumed.
+Honest scope of the formalization.What is machine-checked is the ordered-field implication
+[three-term recurrence + Amos bound ⇒unit step], with the two analytic inputs entering as
+the named hypotheseshrec and hamos; these are the classical facts (3) and (7) [11, 1, 3, 5], to
+be discharged inside Lean if and when a modified-Bessel library exists in Mathlib. The file is
+archived both alongside this note and in thelean-transfer-matrix satellite of the programme
+(https://github.com/lluiseriksson/lean-transfer-matrix).
+5 Numerical audit
+All inequalities were checked independently at 50 decimal digits (mpmath), on the grid𝛽 ∈
+{10−2,..., 104}(16 values, geometrically spread),𝜈 ∈{0,1,..., 29}∪{50,100,500}: the closed
+form (5) holds to1.4 ·10−18 (central finite difference at step10−20); the Amos margin𝑈𝜈 −
+𝜌𝜈 is strictly positive throughout, with minimum2.5 ·10−9 attained at (𝛽,𝜈) = (104,0) (the
+bound is asymptotically sharp, as it must be, being extremal of its form); the quantitative
+6
+
+--- Page 7 ---
+
+slack 1/𝛽−(𝜌𝜈 −𝜌𝜈+1) is strictly positive throughout, with minimum1.5 ·10−8 at (104,1); and
+𝑚(𝛽) = log(𝐼1/𝐼2) has 𝑚′(𝛽) <0 at every grid point, ranging from−1.96 at 𝛽 = 1
+2 to −1.9·10−5
+at 𝛽 = 278. The 𝑆𝑈(2) Haar class integral
+∫︀
+𝐺𝜒𝑗 𝑒𝛽𝜒𝑓 𝑑𝑈 = 2
+𝜋
+∫︀𝜋
+0 sin 𝜃 sin((2𝑗+ 1)𝜃) 𝑒2𝛽cos 𝜃𝑑𝜃
+was verified to equal(2𝑗 + 1)𝐼2𝑗+1(2𝛽)/𝛽 to 30 digits at𝑗 ∈{0,1,2}, 𝛽 ∈{0.7,2}— hence
+𝑐𝑗 = 𝐼2𝑗+1(2𝛽)/𝛽 after dividing by𝑑𝑗 = 2𝑗+ 1. The verification script and the sources of this
+note are archived in the programme repository:
+https:
+//github.com/lluiseriksson/THE-ERIKSSON-PROGRAMME/tree/main/papers/bessel-amos-fh
+Acknowledgements
+This note is part of an audit-first research programme whose records, Lean sources and nu-
+merical suites are public athttps://github.com/lluiseriksson/THE-ERIKSSON-PROGRAMME
+(machine-checked core) and the satellite repositories linked there. The author thanks the
+adversarial-audit process itself, which located [7] and thereby corrected the novelty claim of
+an earlier draft — what is new here is the proof route, the quantitative unit-step form and
+the application, not continuous order-monotonicity — and a referee report on that draft, which
+correctly insisted that the elementary argument closes the unit-step statement only; the present
+version claims exactly that.
+References
+[1] D. E. Amos,Computation of modified Bessel functions and their ratios, Math. Comp.28
+(1974), 239–251.
+[2] I. Nåsell, Rational bounds for ratios of modified Bessel functions, SIAM J. Math. Anal.9
+(1978), 1–11.
+[3] J. Segura,Bounds for ratios of modified Bessel functions and associated Turán-type inequal-
+ities, J. Math. Anal. Appl.374 (2011), 516–528.
+[4] K. Hornik and B. Grün,Amos-type bounds for modified Bessel function ratios, J. Math.
+Anal. Appl.408 (2013), 91–101.
+[5] D. Ruiz-Antolín and J. Segura,A new type of sharp bounds for ratios of modified Bessel
+functions, J. Math. Anal. Appl.443 (2016), 1232–1246; arXiv:1606.02008.
+[6] J. Segura,Simple bounds with best possible accuracy for ratios of modified Bessel functions,
+J. Math. Anal. Appl.526 (2023), 127211; arXiv:2207.02713.
+[7] P. Freitas and R. S. Laugesen, From Neumann to Steklov and beyond, via Robin: the
+Weinberger way, arXiv:1810.07461; Lemma 10.
+[8] Á. Baricz,On Turán type inequalities for modified Bessel functions, Proc. Amer. Math. Soc.
+141 (2013), 523–532; arXiv:1010.3346.
+[9] D. J. Gross and E. Witten,Possible third-order phase transition in the large-𝑁 lattice gauge
+theory, Phys. Rev. D21 (1980), 446–453.
+7
+
+--- Page 8 ---
+
+[10] I. Montvay and G. Münster, Quantum Fields on a Lattice, Cambridge Monographs on
+Mathematical Physics, Cambridge University Press, 1994.
+[11] F. W. J. Olver et al.,NIST Digital Library of Mathematical Functions, §10.29, https:
+//dlmf.nist.gov/10.29.
+[12] A. A. Migdal, Recursion equations in gauge field theories, Sov. Phys. JETP 42 (1975),
+413–418.
+[13] J.-M. Drouffe and J.-B. Zuber, Strong coupling and mean field methods in lattice gauge
+theories, Phys. Rep.102 (1983), 1–119.
+8

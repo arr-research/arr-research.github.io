@@ -1,0 +1,635 @@
+--- Page 1 ---
+
+Maintenance Is Not Restoration - Working Paper
+1
+ Maintenance Is Not Restoration
+Endpoint No-Go Theorems, Exact SSH Resource Horizons, and Quantum
+Rapid-Replacement Equality
+ Working paper - major revision, 12 July 2026
+ Lluis Eriksson - Independent Researcher
+Abstract
+Lower bounds based on the instantaneous free-energy loss of a target state are often interpreted as lower bounds on the power
+required to maintain that state. We show that this interpretation depends decisively on the control task. If maintenance only
+requires exact restoration at periodically sampled endpoints and the intervention period is unrestricted, the infimal average
+power can vanish even when the target has strictly positive instantaneous entropy production. A full-rank dephasing qubit
+gives an exact energy-conserving SWAP counterexample. We repair the formulation by separating endpoint restoration,
+bounded-latency maintenance, and continuous holding.
+For continuous-time finite Markov chains we adopt the established trajectory-relative-entropy holding cost and review the
+known reversible optimizer and Dirichlet-form representation. Our first composition result is then an exact geometric
+additivity theorem for suppressible and persistent generators sharing a detailed-balance reference. A two-state counterexample
+shows that this hypothesis is essential: channels with incompatible equilibria can cancel at a finite membrane width. A
+dual-rail pair of odd fermionic SSH chains supplies the microscopic layer: exact edge modes, a uniform bulk gap, and an
+explicitly filtered number-conserving Davies coupling produce two-sided holding-cost bounds without an assumed
+rate-inheritance bridge. The logical basis has fixed particle number and parity, so arbitrary logical coherence is physical under
+fermionic superselection. Finally, under a fully axiomatized resource-cell ledger, fresh target-state cells and
+energy-conserving SWAPs saturate the fixed-period free-energy bound; the correctly ordered rapid-control limit closes the
+SSH theorem for coherent logical targets. The fresh-copy construction is related to earlier collision-model stabilization work
+and is not claimed as a work-only controller. The remaining frontier is autonomous work-only control without preloaded
+target copies.
+1. Three inequivalent control tasks
+Let (T_t)_{t>=0} be an uncontrolled Markov semigroup and let rho_* be a target state.
+
+Endpoint restoration with period `tau`: the controlled state equals rho_* at times n tau, with no constraint between
+endpoints.
+
+Bounded-latency maintenance: endpoint restoration is required and every waiting interval is at most tau_max.
+
+Continuous holding: the controlled dynamics keeps the target invariant, or keeps the state inside a prescribed corridor at all
+times.
+Only the third task literally holds a state continuously. The first can spend almost all of each cycle far from the target.
+Work must be recorded by an additive ledger A(t) or by a thermodynamic limit of fresh work cells. A fixed
+finite-dimensional battery has bounded free energy, so the expression
+limsup_{t->infinity} [F_W(0)-F_W(t)]/t
+is zero and cannot represent sustained nonzero power.
+1.1 Relation to prior work and novelty boundary
+The KL-rate minimization under a stationary-distribution constraint, its large-deviation interpretation, and explicit
+reversible/two-state optimizers are established results, particularly in Pavlichin, Quek, and Weissman. Theorem 5.1 below is
+included for self-contained composition and is not claimed as new.
+Fresh-copy collision models also precede this work. Vacanti, Elouard, and Auffeves distinguish restoring from stabilizing
+maps, use target-state copies and SWAPs, and prove that stationary resource states plus energy-conserving interactions cannot
+stabilize energy-basis coherence. They then price the extra external work required when energy conservation of the interaction
+is relaxed. Our Theorem 11.2 instead allows coherent, nonstationary resource cells with the same Hamiltonian as the system;
+
+
+--- Page 2 ---
+
+Maintenance Is Not Restoration - Working Paper
+2
+the SWAP is energy conserving, but the cells themselves supply time-translation asymmetry. This is a different resource
+theory, not a contradiction or replacement of their result.
+The claims specific to the present paper are:
+
+the zero-power degeneracy of endpoint-only maintenance when the intervention period is optimized without a
+latency/corridor constraint;
+
+the corrected order fixed-period optimization -> rapid-control limit and the associated additive resource
+ledger;
+
+the common-reference composition rule interpreted as a geometric floor/ceiling theorem, together with the
+incompatible-equilibrium cancellation counterexample;
+
+the fixed-parity dual-rail SSH microscopic closure with width-uniform gap, exact remote transition weight, and a spectrally
+filtered logical Davies generator;
+
+the end-to-end composition of that microscopic model with both classical KL holding and the explicitly scoped quantum
+resource-cell protocol.
+2. Endpoint restoration has a zero-power degeneracy
+Theorem 2.1 - Infrequent-restoration degeneracy
+Let rho_t=T_t(rho_*). Suppose that for every t>0 there exists an admissible exact reset R_t: rho_t -> rho_* whose
+work cost W(t) satisfies
+sup_{t>0} W(t) < infinity.
+If the endpoint-restoration task allows arbitrary periods, then its infimal average power is zero.
+Proof
+Use the reset R_tau once every period tau. Its average power is W(tau)/tau. Hence
+0 <= P_endpoint^* <= inf_{tau>0} W(tau)/tau = 0,
+because W(tau) is uniformly bounded. QED.
+Corollary 2.2 - What the free-energy inequality actually proves
+If every reset satisfies
+W(tau) >= F(rho_*)-F(T_tau rho_*),
+then for a fixed period
+P_tau >= [F(rho_*)-F(T_tau rho_*)]/tau.
+Consequently,
+liminf_{tau down to 0} P_tau >= -d/dt F(T_t rho_*)|_{t=0}.
+The instantaneous entropy-production rate is therefore a rapid-control bound. It is not a lower bound on the infimum over
+unrestricted periods.
+3. Exact dephasing-qubit counterexample
+Take a degenerate qubit Hamiltonian H=0, temperature T, and the faithful target
+rho_c = [[1/2,c],[c,1/2]], with 0<c<1/2.
+Under pure dephasing, c(t)=c exp(-Gamma t). Prepare a fresh, identical work cell in rho_c. Since both Hamiltonians
+vanish, SWAP is energy conserving. Swapping the system and cell after time tau restores the system exactly and leaves the
+cell in rho_{c exp(-Gamma tau)}. Its free-energy loss is
+W(tau)=k_B T [D(rho_c||I/2)-D(rho_{c exp(-Gamma tau)}||I/2)].
+Thus
+
+
+--- Page 3 ---
+
+Maintenance Is Not Restoration - Working Paper
+3
+P_swap(tau)=W(tau)/tau -> 0
+as tau->infinity. In contrast, the instantaneous rate is
+k_B T sigma(rho_c) = k_B T Gamma c log[(1/2+c)/(1/2-c)] > 0.
+The counterexample does not contradict a continuous-holding theorem. It shows that endpoint restoration and continuous
+maintenance cannot share the same power definition.
+4. Continuous holding of a Markov distribution
+Let Q=(q_ij) be an irreducible continuous-time Markov generator on a finite state space. Let mu be a faithful target
+distribution. A controlled generator P=(p_ij) holds mu when mu P=0.
+We use the trajectory-relative-entropy rate
+K_mu(P||Q) = sum_i mu_i sum_{j != i} [p_ij log(p_ij/q_ij)-p_ij+q_ij].
+This is the standard continuous-time KL control cost and is a thermodynamic lower bound in the stochastic-control
+realization.
+Define
+C_Q(mu)=inf{K_mu(P||Q): mu P=0}.
+5. Known reversible optimizer, reviewed for composition
+This section records the continuous-time reversible result used later. It is a specialization of the minimum-holding-cost theory
+of Pavlichin, Quek, and Weissman and of the reversible Donsker-Varadhan formula.
+Theorem 5.1 - Reversible holding-cost formula (known input)
+Assume that Q is reversible with respect to a faithful distribution pi:
+pi_i q_ij = pi_j q_ji.
+Set
+h_i=sqrt(mu_i/pi_i).
+Then the unique optimal off-diagonal controlled rates are
+p_ij^* = q_ij h_j/h_i,
+and
+C_Q(mu) = (1/2) sum_{i,j} pi_i q_ij (h_i-h_j)^2.
+In particular, C_Q(mu)=0 if and only if h is constant on every communicating component of Q.
+Proof
+First, detailed balance implies
+mu_i p_ij^* = mu_j p_ji^*.
+Therefore mu P^*=0.
+The objective is strictly convex in all positive off-diagonal rates, and the stationarity constraints are linear. Introduce Lagrange
+multipliers lambda_i. The stationarity equation for p_ij is
+log(p_ij/q_ij)+lambda_j-lambda_i=0.
+Choosing lambda_i=-log h_i gives p_ij=q_ij h_j/h_i, so the feasible candidate satisfies the necessary and sufficient
+convex optimality conditions.
+At this candidate the logarithmic contributions cancel in reversible pairs because the controlled stationary flows are
+symmetric. The remaining terms are
+sum_i mu_i sum_{j != i}(q_ij-p_ij^*),
+which expand, using mu_i=pi_i h_i^2 and detailed balance, to
+
+
+--- Page 4 ---
+
+Maintenance Is Not Restoration - Working Paper
+4
+(1/2) sum_{i,j} pi_i q_ij(h_i-h_j)^2.
+The zero-cost characterization follows from the sum-of-squares representation. QED.
+6. Exact geometric resource-horizon theorem
+Let Q describe a leakage mechanism suppressed by membrane width ell, let R describe a persistent channel, and assume both
+are reversible with respect to the same faithful reference distribution pi. Define
+L_ell = a_ell Q + g R, with a_ell>=0 and g>=0.
+Theorem 6.1 - Exact additivity and achievability
+For every faithful target mu,
+C_{L_ell}(mu) = a_ell C_Q(mu) + g C_R(mu).
+The infimum is attained by
+p_ij^*(ell) = [a_ell q_ij + g r_ij] h_j/h_i.
+Proof
+The sum L_ell remains reversible with respect to pi. Apply Theorem 5.1. Its Dirichlet form is linear in the generator, giving
+the equality. The displayed Doob controller is the optimizer supplied by that theorem. QED.
+Corollary 6.2 - Bidirectional membrane scaling
+If
+c_- exp(-m ell) <= a_ell <= c_+ exp(-m ell),
+then
+g C_R(mu)+c_- C_Q(mu) exp(-m ell)
+<= C_{L_ell}(mu) <=
+g C_R(mu)+c_+ C_Q(mu) exp(-m ell).
+Hence:
+
+If g=0, the optimal achievable holding cost decays exponentially.
+
+If g>0 and C_R(mu)>0, the exact resource floor is g C_R(mu).
+
+If C_R(mu)=0, the persistent channel lies in the target's fixed-point sector and creates no floor.
+No separate achievability assumption is required.
+7. Why a channel witness is insufficient
+The common-reference hypothesis is essential. Consider two states with target mu=(alpha,1-alpha) and rates
+q_12(ell)=a_ell u+g r,
+q_21(ell)=a_ell v+g s.
+Direct minimization gives
+C_ell(mu)=[sqrt(alpha q_12(ell))-sqrt((1-alpha)q_21(ell))]^2.
+The cost vanishes whenever
+a_ell[alpha u-(1-alpha)v] + g[alpha r-(1-alpha)s]=0.
+If the two brackets have opposite signs, a finite cancellation width exists. Thus two individually dissipative mechanisms may
+jointly make the target stationary. A persistent local witness does not imply a uniform family-wide floor. What matters is the
+fixed-point structure of the combined generator.
+For the concrete values
+
+
+--- Page 5 ---
+
+Maintenance Is Not Restoration - Working Paper
+5
+alpha=0.7, (u,v)=(4,1), (r,s)=(0.2,3), g=1,
+the cancellation occurs at a_ell=0.304, where the exact cost is zero, while the asymptotic persistent-channel cost is
+approximately 0.330070426.
+8. Microscopic closure with a fixed-parity dual-rail SSH membrane
+We now derive the geometric attenuation factor without using an unphysical coherence between even and odd fermion parity.
+Take two identical odd SSH rails r=0,1, each with sites
+A_{r,0},...,A_{r,ell} and B_{r,0},...,B_{r,ell-1},
+and canonical anticommutation relations across the combined fermionic Fock space. Let
+H_ell=sum_{r=0,1}{Delta_r N_r+sum_{j=0}^{ell-1}[t_1 a_{r,j}^dagger b_{r,j}+t_2 a_{r,j+1}^dagger
+b_{r,j}+h.c.]},
+where 0<t_1<t_2, zeta=t_1/t_2<1, each Delta_r>t_1+t_2, and delta=Delta_1-Delta_0>0. The logical code is the
+one-particle, no-bulk sector
+H_log=span{|0_L>,|1_L>},
+|0_L>=f_{0,0}^dagger|vac>, |1_L>=f_{0,1}^dagger|vac>.
+Both codewords have total particle number one and odd total parity. Therefore every density matrix on H_log, including
+off-diagonal coherence, commutes with total parity and is an admissible fermionic state. This fixed-parity encoding is
+essential: the discarded single-mode encoding span{|vac>,f_0^dagger|vac>} would allow forbidden even-odd
+coherences.
+Proposition 8.1 - Exact logical modes and uniform bulk gap
+Each rail has an exact eigenmode at energy Delta_r,
+f_{0,r}^dagger=sum_{j=0}^{ell} psi_j a_{r,j}^dagger,
+with
+psi_j=N_ell(-zeta)^j,
+N_ell^2=(1-zeta^2)/(1-zeta^{2ell+2}).
+All other single-particle energies on rail r differ from Delta_r by at least t_2-t_1, uniformly in ell.
+Proof
+At energy Delta_r, the equations on the B_{r,j} sites reduce to
+t_1 psi_j+t_2 psi_{j+1}=0,
+which gives the displayed geometric mode. Normalizing the finite geometric series gives N_ell.
+Writing either rail's chiral hopping matrix in block form, its nonzero singular values are the square roots of the eigenvalues of
+the ell x ell tridiagonal matrix with diagonal t_1^2+t_2^2 and off-diagonal t_1t_2. They are
+s_k^2=t_1^2+t_2^2+2t_1t_2 cos[k pi/(ell+1)],
+for k=1,...,ell. Hence s_k>t_2-t_1. QED.
+Corollary 8.2 - Exact dual-rail boundary attenuation
+The single-rail zero-mode weights are
+w_near(ell)=(1-zeta^2)/(1-zeta^{2ell+2}),
+w_far(ell)=(1-zeta^2)zeta^{2ell}/(1-zeta^{2ell+2}).
+A local transfer between the two rails has logical matrix element conj(psi_x)psi_x=w_x, so its Davies transition weight is
+v_x(ell)=w_x(ell)^2.
+Consequently,
+(1-zeta^2)^2 <= v_near(ell) <= 1,
+
+
+--- Page 6 ---
+
+Maintenance Is Not Restoration - Working Paper
+6
+(1-zeta^2)^2 zeta^{4ell} <= v_far(ell) <= zeta^{4ell}.
+Thus fixed-parity dual-rail encoding preserves explicit volume-independent two-sided bounds, with exponent 4ell rather
+than the single-mode exponent 2ell.
+9. Number-conserving Davies reduction to the logical process
+At corresponding boundary sites x of the two rails, define the even, number-conserving transfer operator
+S_x=a_{1,x}^dagger a_{0,x}
+and couple it to an independent thermal reservoir through
+V_x=lambda(S_x tensor B_x^dagger+S_x^dagger tensor B_x).
+The reservoir field B_x may be bosonic and is even under fermion parity. Since S_x is a product of two odd fermionic fields,
+V_x commutes with total fermion parity; moreover [S_x,N_0+N_1]=0. The interaction therefore never leaves the
+fixed-number, fixed-parity superselection sector by particle exchange.
+In the normal-mode basis, the component acting inside the code is
+P_log S_x P_log=conj(psi_x)psi_x |1_L><0_L|.
+Transfers from a logical zero mode to a bulk mode have frequencies delta+/-s_k, separated from the logical splitting delta
+by more than t_2-t_1. Choose 0<delta_f<(t_2-t_1)/2 and assume the bath correlation spectrum vanishes at every
+zero-mode-to-bulk Bohr frequency while remaining positive in the KMS-related windows around +/-delta. Bulk-to-bulk
+terms that happen to share those windows annihilate the no-bulk code sector. Thus every retained Fourier component
+A_omega obeys (1-P_log)A_omega P_log=0, and the same holds for its adjoint; this is the standard reducing-subspace
+condition for the dissipator. The Davies restriction to H_log therefore has only the jump operators |1_L><0_L| and
+|0_L><1_L|; the Lamb shift is diagonal on the code.
+Let gamma_+ and gamma_- be the logical excitation and relaxation coefficients, satisfying
+gamma_+/gamma_-=exp(-beta delta).
+There is no missing chemical-potential term. The microscopic transfer conserves total fermion number, and both codewords
+have N=1; hence a common grand-canonical reference exp[-beta(H-mu N)] gives the same ratio because
+N_{|1_L>}-N_{|0_L>}=0 and the mu contribution cancels. Equivalently one may set mu=0 and use the canonical bath
+throughout.
+Proposition 9.1 - Exact inherited dual-rail rates
+On the logical basis {|0_L>,|1_L>}, a bath coupled at x induces
+q_{0->1}=v_x gamma_+,
+q_{1->0}=v_x gamma_-,
+where v_x=w_x^2.
+Proof
+The logical transition matrix element of S_x is conj(psi_x)psi_x=w_x. Davies rates are the bath coefficient times its
+squared modulus, namely v_x=w_x^2. The uniform zero-to-bulk frequency separation and filter assumption make H_log
+invariant. Both jumps exchange the occupied rail while preserving total number and parity. QED.
+9.1 Order of limits and scope of exactness
+Fix t_1,t_2,Delta_0,Delta_1, the bath spectra, and a finite ell. The Davies generator is obtained in the standard
+weak-coupling limit lambda->0 with rescaled time t/lambda^2. The uniform zero-to-bulk gap permits the same filter width
+delta_f for every ell. The theorem is exact for the restricted family of Davies generators. We do not claim that the
+microscopic weak-coupling convergence estimate is uniform in ell, nor do we interchange ell->infinity with
+lambda->0.
+The filtered generator need not be primitive on the full Fock space because other number and bulk sectors can be dynamically
+disconnected. Every subsequent SSH claim is made on the invariant code H_log; there, positive gamma_+ and gamma_- give a
+primitive two-level Davies process with Gibbs ratio exp(-beta delta).
+
+
+--- Page 7 ---
+
+Maintenance Is Not Restoration - Working Paper
+7
+9.2 Imperfect filters and residual floors
+The exact theorem assumes zero bath weight at every unwanted Bohr frequency. In this subsection and in Section 10, L_ell
+denotes the dissipative Davies generator in the interaction picture with respect to the bare logical Hamiltonian. Two distinct
+imperfections should be separated.
+First, suppose the effective logical generator acquires an additional KMS-symmetric component epsilon_ell R sharing the
+logical Gibbs state:
+L_ell^imp=L_ell^ideal+epsilon_ell R.
+The reversible/rapid-control formulas are generator-linear, so the holding cost or fast resource-cell power gains the exact
+nonnegative term epsilon_ell C_R or k_B T epsilon_ell sigma_R(rho). If epsilon_ell>=epsilon_0>0,
+imperfect filtering creates an additional resource floor; if epsilon_ell->0, it contributes a controlled correction.
+Second, genuine spectral weight at bulk frequencies breaks exact invariance of H_log. Write the unwanted GKLS part as
+E_tail=sum_j gamma_j D[L_j], nu_tail=sum_j gamma_j ||L_j||^2.
+Since ||D[L_j](X)||_1<=2||L_j||^2||X||_1, Duhamel's formula gives, for finite times,
+||exp[t(L_ideal+E_tail)]-exp(t L_ideal)||_{1->1}<=2 nu_tail t+O((nu_tail t)^2).
+For a faithful full-Fock target, the corresponding entropy-production correction obeys
+|sigma_tail(rho)|<=2 nu_tail ||log rho-log gamma||_infinity.
+For the strict dual-rail target with the bulk exactly in vacuum, this logarithmic bound is singular because the full-Fock state is
+not faithful. In that case the trace-norm leakage estimate remains valid, but a power theorem requires either a faithful bulk
+regularization or an enlarged maintenance task. Thus raw bulk-frequency tails are not silently identified with a logical floor.
+If far and near channels have nonnegative strengths eta_far and eta_near, share the same temperature and, when used, the
+same chemical potential, and are otherwise identical, their logical generator is
+Q_ell=s_ell Q_0,
+s_ell=eta_far v_far(ell)+eta_near v_near(ell),
+where Q_0 has rates gamma_+,gamma_-.
+10. End-to-end SSH maintenance-horizon theorem
+Let alpha be the target probability of logical rail |1_L> and define
+c(alpha)=[sqrt((1-alpha)gamma_+)-sqrt(alpha gamma_-)]^2.
+This vanishes exactly when the target equals the thermal logical occupation.
+Theorem 10.1 - Microscopic geometry-to-holding-cost equality
+For the spectrally filtered fixed-parity dual-rail SSH code, the minimum continuous KL-control cost holding the logical
+populations is
+C_ell(alpha)=s_ell c(alpha).
+The optimum is attained by the explicit controlled logical rates
+p^*_{0->1}=s_ell sqrt[alpha gamma_+ gamma_-/(1-alpha)],
+p^*_{1->0}=s_ell sqrt[(1-alpha)gamma_+ gamma_-/alpha].
+Moreover,
+c(alpha)[eta_near(1-zeta^2)^2+eta_far(1-zeta^2)^2 zeta^{4ell}]
+<= C_ell(alpha) <=
+c(alpha)[eta_near+eta_far zeta^{4ell}].
+
+
+--- Page 8 ---
+
+Maintenance Is Not Restoration - Working Paper
+8
+Proof
+Proposition 9.1 reduces the filtered logical sector exactly to the reversible two-state process s_ell Q_0. The reversible
+holding-cost formula is homogeneous in the generator, giving C_ell=s_ell c(alpha) and the displayed Doob rates. The
+two-sided bounds follow from Corollary 8.2. QED.
+Consequences
+
+Achievable isolation: if eta_near=0, the optimum has matching upper and lower exponential scaling
+Theta(zeta^{4ell}).
+
+Persistent horizon: if eta_near>0 and c(alpha)>0, then
+C_ell(alpha)>=eta_near(1-zeta^2)^2 c(alpha)>0
+for every membrane width.
+
+Fixed-point exception: if the target is thermal, c(alpha)=0; neither channel creates a holding cost.
+
+Uniform secular validity: the spectral-filter window can be chosen independently of ell because the bulk gap is bounded
+below by t_2-t_1.
+Multiplying C_ell by k_B T gives the optimal power in the trajectory-KL control convention. This is an exact operational
+statement for that control model; it is not asserted to equal the battery-assisted thermal-operation power of every
+implementation.
+The theorem closes, in a single specified model,
+fixed-parity membrane code -> boundary transfer weight -> Davies rates -> optimal controller ->
+two-sided holding cost.
+Figure 1. Left: exact fixed-parity dual-rail SSH costs with zeta=0.72 and transfer weights v_x=w_x^2; blue uses
+eta_far=1 and eta_near=0, while orange uses eta_far=0.77 and eta_near=0.23. The dashed line is the rigorous
+floor 0.23(1-zeta^2)^2. Right: incompatible-equilibrium cancellation for alpha=0.7, (u,v)=(4,1), (r_rate,s)=(0.2,3),
+g=1, and a_ell=exp(-m ell), with m=-log(0.304)/6, placing the zero at ell=6.
+11. Quantum rapid-replacement equality
+The classical KL controller is not the only available achievability mechanism. A fully quantum equality follows once the
+maintenance protocol and its resource ledger are specified precisely.
+Fix a faithful quantum target rho, system Hamiltonian H, and uncontrolled thermal semigroup T_t=exp(tL) with stationary
+Gibbs state gamma. For a fixed period tau, let a cycle consist of free evolution rho -> rho_tau=T_tau(rho) followed by
+an admissible operation restoring rho.
+For subsystem i, write the absolute nonequilibrium free energy as F_i(omega)=Tr(H_i omega)-k_B T S(omega) and its
+excess above equilibrium as
+F_i^ex(omega)=F_i(omega)-F_i(gamma_i)=k_B T D(omega||gamma_i).
+
+
+--- Page 9 ---
+
+Maintenance Is Not Restoration - Working Paper
+9
+Only free-energy differences enter the resource ledger. When a common chemical potential is included, replace H_i by
+H_i-mu N_i and require the allowed unitary to conserve both total energy and total particle number.
+Operational axioms for the resource-cell model
+
+Fresh product inputs. Cycle n begins with the system marginal rho_tau, a fresh bath in its Gibbs state, and fresh resource
+systems in a product state uncorrelated with the system and all earlier cycles.
+
+Allowed operation. The restoring operation is induced by a unitary commuting with the sum of the fixed system, bath, and
+resource Hamiltonians, followed by discarding the bath and outgoing resources. No time-dependent Hamiltonian or
+unrecorded work source is allowed.
+
+Endpoint condition. The final system marginal is exactly rho. Outgoing system-resource correlations are permitted but
+discarded; no memory is carried between cycles.
+
+Ledger. The cost of a cycle is the sum of the decreases F(omega_in)-F(omega_out) of every nonthermal resource
+marginal. Bath athermality and final correlations are treated as discarded waste and are not credited back to the controller.
+Any catalyst must be returned exactly and uncorrelated at the end of the cycle; otherwise it is included among the consumed
+resources.
+
+Asymptotic power. For N cycles, A_N is the additive ledger and P_tau=limsup_{N->infinity}A_N/(N tau). The
+optimum P_tau^* is the infimum over protocols obeying these axioms.
+This model deliberately allows nonstationary coherent resource cells. Their time-translation asymmetry is a consumed
+resource even though the scalar ledger records only their nonequilibrium free-energy decrease. Optimality below is therefore
+relative to this declared scalar ledger, not to the full preorder of asymmetry resources.
+Lemma 11.1 - Multipartite free-energy ledger
+Let the final state of system, bath, and resource cells be Omega_f and let
+Gamma_tot=gamma_S tensor gamma_B tensor_j gamma_{R_j}.
+For any multipartite state,
+D(Omega_f||Gamma_tot)=sum_i D(Omega_{f,i}||gamma_i)+I_tot(Omega_f),
+where
+I_tot(Omega_f)=sum_i S(Omega_{f,i})-S(Omega_f)>=0.
+If the initial state is the product rho_tau tensor gamma_B tensor_j omega_j, the global unitary commutes with the total
+Hamiltonian, and the final system marginal is rho, then
+sum_j [F(omega_j)-F(Omega_{f,R_j})]
+=F_S(rho)-F_S(rho_tau)+F_B^ex(Omega_{f,B})+k_B T I_tot(Omega_f)
+>=F_S(rho)-F_S(rho_tau).
+Here F_B^ex(Omega_{f,B})=F_B(Omega_{f,B})-F_B(gamma_B)=k_B T D(Omega_{f,B}||gamma_B)>=0; it is the
+bath's excess free energy, not its absolute free energy.
+Proof
+Expand the relative entropy against the product Gibbs reference, add and subtract the marginal entropies, and identify I_tot.
+The initial multi-information and bath relative entropy vanish. Energy conservation implies that the global Gibbs reference
+commutes with the unitary, so global relative entropy is invariant. Equating the initial and final decompositions and
+multiplying by k_B T gives the identity. QED.
+Theorem 11.2 - Exact fixed-period resource-cell power
+Within the operational class above, assume that the controller may use a fresh cell with Hamiltonian H_W=H prepared in rho,
+and may apply the system-cell SWAP. Then the optimal period-tau resource-cell power is
+P_tau^*(rho,L)=[F(rho)-F(T_tau rho)]/tau
+=(k_B T/tau)[D(rho||gamma)-D(T_tau rho||gamma)].
+
+
+--- Page 10 ---
+
+Maintenance Is Not Restoration - Working Paper
+10
+Proof
+Every restoring cycle maps rho_tau back to rho. Lemma 11.1 shows that its resource ledger decreases by at least
+F(rho)-F(rho_tau). Summing independent cycles gives the same lower bound on P_tau.
+For the reverse inequality, take an identical fresh cell in state rho and SWAP it with the system. Since the two Hamiltonians
+are identical, SWAP commutes with H_S+H_W. The system is restored exactly and the cell changes from rho to rho_tau,
+consuming exactly F(rho)-F(rho_tau). Thus the lower bound is attained. QED.
+For the fermionic dual-rail application, SWAP means the canonical graded, second-quantized permutation of corresponding
+system and cell modes. It is an even, number-conserving fermionic unitary and can be synthesized from even bilinear mode
+permutations and number-phase corrections. Because the system and cell each remain in an odd-parity one-particle code,
+graded SWAP differs from the ordinary tensor-factor SWAP only by the constant sign (-1)^(1*1)=-1, a global phase with
+no physical effect.
+This construction is close in spirit to the target-copy SWAP stabilization studied by Vacanti, Elouard, and Auffeves. Their
+resource system is initially stationary with respect to its own engineered Hamiltonian and the mismatch with the system
+Hamiltonian produces an external work cost. Here the cell Hamiltonian equals H, so SWAP conserves energy, but a coherent
+rho makes the cell nonstationary and explicitly imports asymmetry. The operational resources are therefore different.
+Corollary 11.3 - Exact fast-maintenance power
+Define rapid maintenance by taking the fixed-period optimum before the limit:
+P_fast^*(rho,L)=lim_{tau down to 0}P_tau^*(rho,L).
+Then
+P_fast^*(rho,L)=k_B T sigma_L(rho),
+where
+sigma_L(rho)=-d/dt D(exp(tL)rho||gamma)|_{t=0}.
+The maximum deviation from the target during a cycle also tends to zero with tau, so this limit realizes continuous corridor
+maintenance. The order of operations is essential: optimize at fixed tau, then take tau->0; do not take an infimum over
+unrestricted periods.
+The theorem is noncommutative: rho need not commute with H. In that case the fresh cells supply time-translation asymmetry
+as well as free energy. The equality is therefore a statement about resource-cell consumption under the stated ledger, not a
+claim that ordinary incoherent mechanical work can prepare coherent cells at the same cost.
+Theorem 11.4 - Fixed-parity quantum SSH maintenance horizon
+Let the physical Schrödinger-picture generator on the spectrally filtered dual-rail code be
+G_ell(rho)=-i[H_log^bare+s_ell H_LS, rho]+s_ell D_0(rho),
+where H_LS commutes with the bare logical Hamiltonian H_log^bare, D_0 is the unit-strength primitive Davies dissipator,
+and s_ell=eta_far v_far+eta_near v_near. Equivalently, in the interaction picture of H_log^bare,
+tilde L_ell=s_ell L_0, L_0(rho)=-i[H_LS,rho]+D_0(rho).
+Restrict this dynamics to
+H_log=span{f_{0,0}^dagger|vac>,f_{0,1}^dagger|vac>}.
+Let rho be any faithful density matrix on this code, including a state with coherence between the two rails. Both basis states
+have N=1 and odd parity, so rho is a physical fermionic state under parity superselection. Then
+P_fast^*(rho,G_ell)=k_B T s_ell sigma_{D_0}(rho).
+Consequently,
+k_B T sigma_{D_0}(rho)[eta_near(1-zeta^2)^2+eta_far(1-zeta^2)^2 zeta^{4ell}]
+<= P_fast^*(rho,G_ell) <=
+k_B T sigma_{D_0}(rho)[eta_near+eta_far zeta^{4ell}].
+If D_0 is primitive, sigma_{D_0}(rho)>0 for every nonthermal target. Thus the theorem gives achievable
+Theta(zeta^{4ell}) isolation when eta_near=0 and an achievable, strictly positive resource horizon when eta_near>0,
+
+
+--- Page 11 ---
+
+Maintenance Is Not Restoration - Working Paper
+11
+for physical coherent as well as diagonal logical targets. No parity reference frame is assumed or consumed.
+Proof
+Proposition 9.1 gives the interaction-picture factorization tilde L_ell=s_ell L_0. The logical Gibbs state gamma_log
+commutes with both H_log^bare and the diagonal Lamb shift. For any Hamiltonian K commuting with gamma_log, cyclicity
+of the trace and [rho,log rho]=0 give
+-Tr{-i[K,rho](log rho-log gamma_log)}=0.
+Hence the unattenuated bare Hamiltonian and the Lamb shift make no contribution to the relative-entropy derivative, and
+sigma_{G_ell}(rho)=s_ell sigma_{D_0}(rho).
+Corollary 11.3 gives the power equality, while Corollary 8.2 bounds v_far and v_near. Primitivity makes the dissipative
+entropy production strictly positive away from the logical Gibbs state. Because the code projector lies wholly in the N=1,
+odd-parity sector and both the free evolution and fermionic SWAP preserve that sector, the protocol never invokes an
+inadmissible even-odd coherence. QED.
+12. Uniform families and the remaining quantum frontier
+For a family indexed by volume N, Theorem 6.1 is algebraically uniform. Nontrivial uniform constants require target families
+satisfying
+0<s_- <= C_{Q_N}(mu_N) <= s_+ < infinity
+and, in the floor regime,
+C_{R_N}(mu_N) >= r_->0.
+The general many-body quantum target is now precise. Beyond the exactly closed logical-qubit replacement model, one needs
+a Davies or KMS-symmetric theory in which:
+
+the holding cost is operationally defined by a cumulative work ledger;
+
+the target is invariant under a physically restricted autonomous controlled Lindbladian;
+
+a quantum Doob transform or another controller attains the optimum without consuming preloaded target copies;
+
+the optimal cost is a generator-linear KMS Dirichlet functional, at least on a typed family;
+
+a membrane model supplies two-sided, volume-uniform bounds on a_ell.
+The classical theorem shows exactly where a quantum result can fail: noncommutativity, coherence resources not priced by
+free energy alone, incompatible fixed-point states, and a loss of additivity of the optimal control functional.
+13. Status and limitations
+Proved in this draft:
+
+endpoint-restoration degeneracy under uniformly bounded reset cost;
+
+an exact dephasing-qubit SWAP witness;
+
+a self-contained proof of the reversible finite-chain optimizer and Dirichlet formula (known input, not a novelty claim);
+
+exact additivity, two-sided scaling, and controller achievability;
+
+a two-state cancellation counterexample outside the common-reference class.
+Not yet proved:
+
+conversion of KL rate into hardware work without the stochastic-control realization;
+
+volume-uniform lower bounds for a nontrivial interacting target family.
+
+uniform-in-ell error estimates for the prelimit microscopic weak-coupling approximation;
+
+autonomous coherent maintenance using only stationary batteries and ordinary work.
+
+
+--- Page 12 ---
+
+Maintenance Is Not Restoration - Working Paper
+12
+Additional results proved by the microscopic closure:
+
+exact odd-chain SSH modes and a bulk gap uniform in membrane width;
+
+a fixed-number, fixed-parity dual-rail code supporting physical logical coherence;
+
+two-sided exponential bounds on the remote boundary transfer weight;
+
+an exact filtered, number-conserving Davies reduction to the logical birth-death process;
+
+a constructed optimal controller and a persistent-floor/cheap-isolation dichotomy with no interface hypothesis.
+
+an exact quantum fixed-period and rapid-maintenance equality using energy-conserving SWAPs with fresh resource cells;
+
+an end-to-end coherent fixed-parity logical-qubit SSH theorem with explicit upper and lower power bounds.
+The autonomous Lindbladian-control problem remains open. The resource-cell theorem does maintain noncommuting targets,
+but it prices a stream of preloaded target copies and should not be conflated with ordinary work-only control.
+Appendix A. Reproducibility and numerical scope
+The numerical suite is diagnostic, not a substitute for the analytic proofs.
+
+Endpoint witness: H=0, coherence c=0.3, and dephasing rate Gamma=1. The periodic SWAP power approaches the
+instantaneous rate as tau->0 and falls to 0.00463 of that rate at tau=100.
+
+Reversible additivity: 100 complete reversible generators of dimensions 2 through 8 were generated from random
+symmetric conductances and random faithful pi,mu. The worst stationarity residual was 3.7e-15; the worst additivity and
+KL/Dirichlet discrepancies were 1.8e-15.
+
+SSH closure: t_1=0.37, t_2=1, and widths ell=1,...,40 on each rail. The largest zero-mode residual was 2.9e-17,
+the largest boundary-weight discrepancy 1.4e-17, the smallest gap margin above t_2-t_1 was 1.7e-3, the factorization
+error was 1.1e-17, and the largest revised-bound residual was 5.2e-18.
+
+Coherent logical target: amplitude-damping coefficients gamma_+=0.4, gamma_-=1.2 and dual-rail target
+rho=[[0.65,0.18+0.07i],[0.18-0.07i,0.35]] in the basis {|10>,|01>}. The largest direct Hamiltonian
+contribution to the relative-entropy derivative was 3.5e-18. At tau=1e-6, the worst rapid-limit discrepancy over
+ell=1,...,30 was 8.1e-9; the revised SSH bounds had no violation.
+
+Ledger, parity, and tails: 100 random tripartite zero-Hamiltonian tests reproduced Lemma 11.1 with worst residual
+1.7e-15; the Jordan-Wigner dual-rail transfer commuted exactly with total number and parity, the embedded coherent state
+lay exactly in the N=1 parity sector, the dual-rail dissipator had zero code leakage, and 1000 random dissipator tests
+produced no violation of the 2||L||^2 trace-norm bound.
+All tolerances, parameters, and formulas used in Figure 1 are stated above so the plots can be reconstructed independently.
+
+
+--- Page 13 ---
+
+Maintenance Is Not Restoration - Working Paper
+13
+References
+
+J. M. Horowitz, K. Zhou, and J. L. England, Minimum energetic cost to maintain a target nonequilibrium state,
+arXiv:1703.04722 (2017).
+
+D. S. Pavlichin, Y. Quek, and T. Weissman, Minimum Power to Maintain a Nonequilibrium Distribution of a Markov
+Chain, arXiv:1907.01582 (2019).
+
+J. Fuchs, S. Goldt, and U. Seifert, Stochastic thermodynamics of resetting, arXiv:1603.01141 (2016).
+
+E. Todorov, Linearly-solvable Markov decision problems, Advances in Neural Information Processing Systems 19 (2007).
+
+M. Zaimi et al., Detecting topological edge states with the dynamics of a qubit, arXiv:1910.09926 (2019).
+
+S. Cusumano and G. De Chiara, Structured quantum collision models: generating coherence with thermal resources,
+arXiv:2307.07463 (2023).
+
+F. Carollo, J. P. Garrahan, I. Lesanovsky, and C. Perez-Espigares, Making rare events typical in Markovian open quantum
+systems, arXiv:1711.10951 (2017).
+
+E. A. Carlen and J. Maas, Gradient flow and entropy inequalities for quantum Markov semigroups with detailed balance,
+arXiv:1609.01254 (2016).
+
+G. Vacanti, C. Elouard, and A. Auffeves, The work cost of keeping states with coherences out of thermal equilibrium,
+arXiv:1503.01974 (2015).
+
+J. M. Horowitz and K. Jacobs, The Energy Cost of Controlling Mesoscopic Quantum Systems, arXiv:1509.00914 (2015).
+
+E. B. Davies, Markovian master equations, Commun. Math. Phys. 39, 91-110 (1974).
+
+H. Spohn, Entropy production for quantum dynamical semigroups, J. Math. Phys. 19, 1227-1230 (1978).
+
+W. P. Su, J. R. Schrieffer, and A. J. Heeger, Solitons in polyacetylene, Phys. Rev. Lett. 42, 1698-1701 (1979).
+
+S. Szalay, Z. Zimboras, M. Mate, G. Barcza, C. Schilling, and O. Legeza, Fermionic systems for quantum information
+people, arXiv:2006.03087 (2020).
+
+N. T. Vidal, M. L. Bera, A. Riera, M. Lewenstein, and M. N. Bera, Quantum Operations in an Information Theory for
+Fermions, Phys. Rev. A 104, 032411 (2021), arXiv:2102.09074.

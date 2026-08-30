@@ -1,0 +1,2607 @@
+--- Page 1 ---
+
+Global Ratio Monotonicity for a Killed von Mises Bridge
+Lluis Eriksson
+July 2026
+Abstract
+For𝛽 >0let𝐼 𝑚 =𝐼 𝑚(𝛽)denote modified Bessel functions of the first kind, and set
+𝑎𝑚 =𝐼 2
+𝑚 [(𝑚−1)𝐼 2
+𝑚−1 + (𝑚+ 1)𝐼 2
+𝑚+1],𝑏 𝑚 =𝑚𝐼 4
+𝑚,𝐹𝐴(𝑡) = ∑︀
+𝑚≥1 𝑎𝑚 sin(𝑚𝑡),𝐹𝐵(𝑡) =∑︀
+𝑚≥1 𝑏𝑚 sin(𝑚𝑡), and𝐸=𝐹 𝐴/(2𝐹𝐵). The global ratio-monotonicity problem for the sur-
+face expansion of a two-dimensional𝑆𝑈(2)lattice gauge observable is: (i)𝐹𝐵 >0on(0,𝜋),
+and (ii)𝐸 ′ <0on(0,𝜋), for every𝛽 >0. Both statements are proved. Positivity of
+𝐹𝐵 has two exact proofs. Ratio monotonicity is reduced to exact algebraic identities and
+outward-rounded interval certificates: small and compact𝛽are handled by pair identities
+and interval Taylor models;20≤𝛽≤1000/9by a direct Wronskian cover; and𝛽≥1000/9
+has three certified moving-edge𝜆-lanes. The remaining𝜆≥3lane is closed by the exact
+identity𝐸′/(−sin(𝑡/2)/2) =𝒬+𝑋 full, where𝒬>19/20, an exact main–mirror–rest decom-
+position, and a division-free covariance certificate proving𝑋main >−1/20on two adjacent
+rectangles that cover the full angular interval. The exact near and far relay margins are
+positive. All load-bearing production and independent replay transcripts are checked for
+exact rational coverage, dependency hashes, strict outward-rounded decision endpoints, and
+byte equality. The structural core is exact:𝐸is, as an algebraic identity, the mean ofcos𝜓
+under the midpoint law of a four-step killed von Mises bridge; the generating kernels reduce,
+via the Neumann addition theorem, to two-dimensional integrals of asingleBessel function
+whose saddle deficit is an exact sum of two squares; and exact saddle cancellations yield
+the coefficients of the (verified) closed second-order law𝐸= cos(𝑡/2)(1−𝑐(𝑡)/𝛽) +𝑂(𝛽−2),
+𝑐(𝑡) = (4 cos2(𝑡/4)−1)/(2 cos(𝑡/4) cos(𝑡/2)). Three certified negative results (interval arith-
+metic, two implementations, nested enclosures) kill every monotone full-path coupling, with
+an exact mechanism at threshold𝛽|cos𝑡|= 3/2. At the𝜋-endpoint we also give exact
+identities for the cubic coefficient𝑐3 (telescoped alternating form, integral form, parity) to-
+gether with its verified prefactor law. Every claim is labelled exact / certified / verified;
+the machine-checked lemmas are Lean 4/Mathlib, machine-checked modulo classical Bessel
+inputs carried as named hypotheses.
+1 Introduction
+This paper consolidates the resolution status of a two-part positivity problem that arises as the
+last analytic gap in a surface (character) expansion for two-dimensional𝑆𝑈(2)lattice gauge
+theory [5, 6, 7]. The problem is stated entirely in terms of modified Bessel functions and
+trigonometric series, and we treat it as such; no claim of physical consequence beyond the stated
+expansion is made, and importance is not inherited by thematic proximity.
+This Wilson/von Mises problem is distinct from the exact heat-kernel theory. The latter now
+has a machine-checked two-dimensional𝑆𝑈(2)construction through Weyl integration, character
+convolution and Migdal subdivision, culminating in the exact simple-loop area law [9]. That
+1
+
+--- Page 2 ---
+
+result neither supplies nor requires the present ratio monotonicity: the plaquette weights, coef-
+ficient families and target inequality here are different. We cite it to fix the boundary between
+an exactly solved heat-kernel model and the Wilson-action surface ordering studied below, not
+to transfer a theorem by thematic proximity.
+Throughout,𝛽 >0,𝐼 𝑚 =𝐼𝑚(𝛽), and
+𝑎𝑚 =𝐼 2
+𝑚
+[︀
+(𝑚−1)𝐼 2
+𝑚−1 + (𝑚+ 1)𝐼2
+𝑚+1
+]︀
+, 𝑏 𝑚 =𝑚𝐼 4
+𝑚, 𝑚≥1.(1)
+Both sequences decay super-exponentially, so
+𝐹𝐴(𝑡) =
+∑︁
+𝑚≥1
+𝑎𝑚sin(𝑚𝑡), 𝐹 𝐵(𝑡) =
+∑︁
+𝑚≥1
+𝑏𝑚sin(𝑚𝑡), 𝐸(𝑡) = 𝐹𝐴(𝑡)
+2𝐹𝐵(𝑡),(2)
+are real-analytic onR, and the Wronskian𝑊= 2(𝐹′
+𝐴𝐹𝐵−𝐹𝐴𝐹′
+𝐵)satisfies𝑊= 4𝐹 2
+𝐵 (𝐸)′wherever
+𝐹𝐵 ̸= 0[7].
+The global statement is Theorem 2. Its positivity part is proved below twice. Its mono-
+tonicity part combines the exact skeleton of Theorem 40 with independently archived interval
+certificates and the terminal relay of Section 9. The question was born inside this programme
+as the global form of an𝜀-window positivity required by the surface expansion; no external
+pedigree is claimed.
+Convention1 (tricotomy).Every assertion below carries one of three labels.Exact: a proved
+identityorinequality.Certified: anumericalstatementrigorouslyenclosedbyintervalarithmetic
+with outward rounding, together with complete analytic bounds for domains and truncations.
+Production/replay equality and independent implementations aresoftware audits, recorded sep-
+arately with their declared coverage. The certified negativescertify_time3_negativeand
+certify_bridge_matrixcarry afull twin audit(nested re-computation plus a complete inde-
+pendent Arb implementation, both transcripts archived); forcertify_thmBhas two completed
+independent implementations, with the mpmath transcript (53 adaptive boxes, stability pass)
+and the Arb transcript (86 boxes, stability pass) both archived. Every load-bearing finite- and
+high-𝛽union has a hash-bound production/replay audit.Verified: high-precision numerics with
+stated grids and precision policies, not a proof. No verified statement is used as a hypothesis of
+an exact one.
+2 The theorem and the relay
+Theorem 2(the Surface Theorem).For every𝛽 >0:(i)𝐹 𝐵 >0on(0,𝜋), and(ii)𝐸 ′<0on
+(0,𝜋).
+Part (i) is Theorem 37. The following table records the closed relay for part (ii). Every
+certified row is an outward-rounded interval certificate with an executable coverage validator.
+2
+
+--- Page 3 ---
+
+range method artifact transcript state
+(0, 1
+20 ]small-𝛽lemma Lem. 41 — complete
+[ 1
+20 ,3], all𝑡pair skeletoncertify_thmBArb + mpmath complete
+[3,6],𝑡∈[0.6,𝜋− 1.5
+𝛽 ]series intervalscertify_bulk_arbArb complete
+[6,15],𝑡∈[0.6,𝜋− 1.5
+𝛽 ]bivariate Taylor se-
+ries
+certify_bulk_beta_taylorArb complete
+[15,20],𝑡∈[0.6,𝜋− 1.5
+𝛽 ]bivariate Taylor ex-
+tension
+certify_bulk_beta_taylorArb complete
+𝑡∈(0,0.6],3≤𝛽≤20𝑊/𝑡 3 + Taylor
+splice
+certify_left_edgeArb complete
+3≤𝛽≤20,𝑡∈
+[𝜋−1.5
+𝛽 ,𝜋)
+endpoint quotient
++ Taylor splice
+right-edge unionArb complete
+[20,1000/9], all𝑡finite Wronskian
+union
+finite role auditArb + replay complete
+𝛽≥1000/9,0< 𝜆≤
+3/2
+finite/half-line G5 two G5 unions Arb + replay complete
+𝛽≥1000/9,3/2≤𝜆≤
+2
+ratio G5G5 lambda2Arb + replay complete
+𝛽≥1000/9,2≤𝜆≤3ratio-side4 G5G5 lambda3Arb + replay complete
+𝛽≥1000/9,𝜆≥3weak-main three-
+block relay
+Prop. 29 Arb + replay complete
+The compact and high-𝛽rows are owned by their canonical Arb transcripts and executable
+coverage validators, with adaptive partitions and all script/output hashes recorded in the ac-
+companying run manifests.
+For the finite row the logical relay is direct. With𝑊= 2(𝐹′
+𝐴𝐹𝐵−𝐹𝐴𝐹′
+𝐵)and𝐸=𝐹 𝐴/(2𝐹𝐵),
+exact differentiation gives
+𝑊= 4𝐹 2
+𝐵𝐸′.
+Thealgebraauditverify_surface_finite_w_sign_relay.pyalsochecks𝑊 𝐽 =𝑠2𝑊under
+the common positive scale used by the finite certificates. The three adjacent witnesses cover
+0< 𝑡≤3/5,3/5≤𝑡≤𝜋−3/(2𝛽), and𝜋−3/(2𝛽)≤𝑡 < 𝜋for the full closed interval
+20≤𝛽≤1000/9. Their union validator checks strict negativity, exact rational adjacency,
+dependency hashes, and production/replay equality.
+For the half-line put𝛿= 1/𝛽and𝜆=𝛽(𝜋−𝑡). The three G5 lanes meet at𝜆= 3/2and
+2, and the last meets the analytic interior lane at𝜆= 3; the first G5 lane itself meets its finite
+and half-line archives at𝛿= 1/125(𝛽= 125). The remaining lane𝜆≥3is Proposition 29.
+Its near/far covariance rectangles and the three G5 lanes meet in closed overlaps, so the global
+relay has no seam gap. The moving-boundary constant is always written𝐶win = 3/2; the bare
+letter𝐶below meanscos(𝑡/2).
+Remark3 (supersession of the𝑒4 route).An earlier plan closed the block𝑡∈(0,0.6],𝛽≥3by an
+𝑒4-coefficient lemma with a fixed radius; it is superseded, not silently deleted. A feasibility check
+showed the sinc criterion below dominating with ratios from15up to10 80 across𝛽∈[3,15]
+for𝑡≤0.3(verified, design-grade), while the apparent infeasibility of(0,0.6]belonged to the
+cancellation of the series tool, which the exp-factored integrator does not suffer. The compact
+row is now closed directly through𝛽= 20, and the weak-main covariance certificate covers the
+remaining high-𝛽interior. On the finite interval between them the registered route is the exact
+common scaling𝐽 𝑚 =𝑒 −𝛽𝐼𝑚, which multiplies𝑊/𝑡3 by𝑒 −8𝛽 >0before interval evaluation.
+The sinc lemma below remains an exact structural result and an independent diagnostic, but
+no longer carries the terminal left-edge load. The𝑒4 lemma is retired.
+3
+
+--- Page 4 ---
+
+Lemma 4(exact; sinc positivity).Let1≤𝑚<𝑛and𝑇 𝑚𝑛(𝑡) = (𝑚−𝑛) sin((𝑚+𝑛)𝑡) + (𝑚+
+𝑛) sin((𝑛−𝑚)𝑡)as in Section4. Then𝑇 𝑚𝑛(𝑡)>0for0<𝑡≤𝜋/(𝑚+𝑛).
+Proof.Write𝑠=𝑚+𝑛,𝑝=𝑛−𝑚≥1, so𝑇 𝑚𝑛(𝑡) =𝑠sin(𝑝𝑡)−𝑝sin(𝑠𝑡). Sincesin(𝑥)/𝑥
+is strictly decreasing on(0,𝜋]and0< 𝑝𝑡 < 𝑠𝑡≤𝜋, we getsin(𝑝𝑡)/(𝑝𝑡)>sin(𝑠𝑡)/(𝑠𝑡), i.e.
+𝑠𝑡sin(𝑝𝑡)>𝑝𝑡sin(𝑠𝑡); dividing by𝑡>0gives𝑠sin(𝑝𝑡)>𝑝sin(𝑠𝑡).
+Lemma 5(relay criterion for𝛽∈[6,15]).Let⟨𝑓⟩=
+∫︀∫︀
+[−𝜋,𝜋]2 𝐾𝑓𝑑𝑠𝑑𝛼with𝐾=𝐼 1(2𝛽𝑅)/𝑅>
+0, and let ¯𝐸be any rational constant. Then𝐸′<0at(𝑡,𝛽)if and only if⟨𝐷⟩>0and
+𝑊𝑐 :=⟨𝑁𝑡⟩⟨𝐷⟩+⟨(𝑁− ¯𝐸𝐷)𝜕𝑡log𝐾⟩⟨𝐷⟩−
+(︀
+⟨𝑁⟩− ¯𝐸⟨𝐷⟩
+)︀
+⟨𝐷𝜕𝑡log𝐾⟩<0
+(the ¯𝐸-terms cancel identically). The certificate encloses the five integrals by exp-factored inter-
+val cells:𝑧= 2𝛽𝑅is linearized at the exact rational cell center with interval-gradient remainder;
+the linear exponential integrates exactly; and the two scaled Bessel factors are𝐴(𝑧) =𝑒−𝑧𝐼1(𝑧)/𝑧
+— strictly decreasing, since(log𝐴)′=𝐼0/𝐼1 −1−2/𝑧 <0follows from the classical lower bound
+at𝜈= 0(Amos [1]; [2], Thm. 1) and
+√
+1 +𝑧2 ≤𝑧+ 1— enclosed by pure endpoint evaluation,
+and𝐵(𝑧) =𝑒 −𝑧𝐻𝐵(𝑧), where
+𝐻𝐵(𝑧) := 𝐼0(𝑧)−2𝐼 1(𝑧)/𝑧
+𝑧2 = 𝐼2(𝑧)
+𝑧2 , 𝐻 𝐵(0) = 1
+8
+(the second equality is the recurrence [4, 10.29.1] at𝜈= 1; positive-coefficient entire series;
+the subscript distinguishes it from the entry-law kernel𝐻(𝜓)), enclosed unconditionally by
+[𝑒−𝑧hi𝐻𝐵(𝑧lo),𝑒−𝑧lo𝐻𝐵(𝑧hi)]; the identity𝐾𝜕 𝑡log𝐾= 32𝛽 3𝑐𝑐′(1−𝑃−𝑄)𝐻 𝐵(𝑧),𝑐= cos(𝑡/4),
+removes𝐼1(𝑧)/𝑧from the covariance integrands exactly. The(𝑡,𝛽)-box layer is Proposition 30.
+The independent global[6,15]coverage is Proposition 32.
+Lemma 6(exact; the𝑆-free relative criterion).Let𝑆= sin(𝑡/2),𝐸=⟨𝑁⟩/⟨𝐷⟩, and suppose
+⟨𝐷⟩>0. Then for all𝑡∈(0,𝜋)and𝛽 >0,
+𝐸′(𝑡,𝛽)
+−1
+2 𝑆 =
+⟨︀
+cos 2𝑠+ cos𝛼cos𝑠
+⟩︀
++ 8𝛽3∫︀∫︀
+(𝑁−𝐸𝐷)(1−𝑃−𝑄)𝐻 𝐵(𝑧)𝑑𝑠𝑑𝛼
+⟨𝐷⟩ ,
+and consequently
+𝐸′<−1
+4 𝑆⇐⇒ 𝒞:=
+⟨︀
+cos 2𝑠+ cos𝛼cos𝑠
+⟩︀
++ 8𝛽3
+∫︁∫︁
+(𝑁−𝐸𝐷)(1−𝑃−𝑄)𝐻 𝐵 −1
+2 ⟨𝐷⟩>0.
+Proof.Since𝐷 𝑡 = 0,𝐸 ′ =
+[︀
+⟨𝑁𝑡⟩+
+∫︀∫︀
+(𝑁−𝐸𝐷)𝜕 𝑡𝐾
+]︀
+/⟨𝐷⟩. The first term factors𝑆exactly:
+𝑁𝑡 =−𝑆
+2 (cos 2𝑠+cos𝛼cos𝑠). So does the second:𝜕𝑡𝐾=𝐾𝜕 𝑡log𝐾= 32𝛽 3𝑐𝑐′(1−𝑃−𝑄)𝐻 𝐵(𝑧)
+with𝑐= cos(𝑡/4), and𝑐𝑐 ′ = cos(𝑡/4)·
+(︀
+−1
+4 sin(𝑡/4)
+)︀
+=− 𝑆
+8 by the double angle, so𝜕𝑡𝐾=
+−4𝛽3𝑆(1−𝑃−𝑄)𝐻 𝐵. Dividing by− 1
+2 𝑆cancels𝑆identically and yields the display. For
+the equivalence: the denominator−1
+2 𝑆is negative on(0,𝜋), so𝐸 ′ <−1
+4 𝑆is thelowerbound
+𝐸′/(−1
+2 𝑆)> 1
+2 , i.e.𝒞>0.
+Corollary 7(exact; the bilinear quotient-free form).WithΦ := cos 2𝑠+ cos𝛼cos𝑠(the letter
+𝐴stays reserved for the scaled Bessel factor𝑒 −𝑧𝐼1(𝑧)/𝑧),𝐽 𝑁 :=
+∫︀∫︀
+𝑁(1−𝑃−𝑄)𝐻 𝐵𝑑𝑠𝑑𝛼,
+𝐽𝐷 :=
+∫︀∫︀
+𝐷(1−𝑃−𝑄)𝐻 𝐵𝑑𝑠𝑑𝛼, and⟨𝐷⟩>0,
+𝐸′<−1
+4 sin(𝑡/2)⇐⇒ ̂︀𝒞:=⟨𝐷⟩⟨Φ⟩+ 8𝛽 3(︀
+⟨𝐷⟩𝐽𝑁 −⟨𝑁⟩𝐽 𝐷
+)︀
+−1
+2 ⟨𝐷⟩2 >0.
+4
+
+--- Page 5 ---
+
+Proof.Multiply𝒞of Lemma 6 by⟨𝐷⟩>0and substitute𝐸=⟨𝑁⟩/⟨𝐷⟩: the quotient disappears
+by bilinearity, and the inequality direction is preserved. ̂︀𝒞is a bilinear combination of five
+integrals with no quotient anywhere; it is the assembly’s sole target.
+Remark8 (why ̂︀𝒞is the assembly’s object).In ̂︀𝒞the variable𝑡enters only through𝑐= cos(𝑡/4)∈
+(
+√
+2
+2 ,1): no kinematically forced vanishing factor and no singularity anywhere in the relay range
+— the common linear zero of margin and correction at𝑡→0has been cancelled identically.
+The endpoint degeneracy is thus removed structurally; uniform positivity still requires explicit
+uniform estimates, which are the assembly’s content. The first-order calibration constant is
+𝑎(𝑡) =
+[︀1
+2 + 1
+8𝑐2
+]︀
+/𝑐≤ 3
+√
+2
+4 ≈1.061(supremum at𝑐=
+√
+2/2), so the first-order threshold
+is2 sup𝑎≈2.12; the target of the analytic relay is ̂︀𝒞>0uniformly for𝛽≥𝛽 0 with the
+remainder included. At the calibration point(𝑡,𝛽) = (1.5,8)the measured value is𝒞/⟨𝐷⟩≈
+0.417(verified), against the threshold0. The built-in unit test: the1/𝛽expansion of𝒞/⟨𝐷⟩+ 1
+2
+must reproduce1−𝑎(𝑡)/𝛽; the audited quantity is𝛽·(deviation from first order), which must
+converge (an𝑂(𝛽−2)remainder halves the𝛽-scaleddeviation when𝛽doubles, and divides the
+unscaled deviation by four).
+Lemma 9(exact; far-region pointwise and kernel bounds).(a)min 𝑠,𝛼Φ =− 9
+8 exactly: with
+𝑢=|cos𝑠|the minimum of2𝑢 2 −𝑢−1on[0,1]is attained at𝑢= 1
+4 and equals−9
+8 .(b)|𝐷|≤2
+and, by Corollary 44(|𝐸|<1),|𝑁−𝐸𝐷|≤|𝑁|+|𝐷|≤(2|𝐶|+ 1) + 2≤5and|1−𝑃−𝑄|≤1.
+(c)On the deficit region{(𝑠,𝛼) : 2𝑐−𝑅≥Δ 0}one has𝑧= 2𝛽𝑅≤𝑧 𝑠 −2𝛽Δ 0 with𝑧 𝑠 = 4𝛽𝑐,
+and since𝐴(𝑧) =𝑒 −𝑧𝐼1(𝑧)/𝑧is strictly decreasing with𝐴(0 +) = 1
+2 ,
+𝐾= 2𝛽𝑒 𝑧𝐴(𝑧)≤𝛽𝑒 𝑧𝑠 𝑒−2𝛽Δ0 on the region.
+The far-region contributions of all five integrals of Corollary 7 are then bounded by the two tail
+families of Lemma 10 below.
+Proof.(a)cos𝛼cos𝑠≥ −|cos𝑠|with equality attainable, andcos 2𝑠= 2𝑢 2 −1; minimiz-
+ing𝑔(𝑢) = 2𝑢 2 −𝑢−1gives𝑔( 1
+4 ) =− 9
+8 . (b) Triangle inequalities;|𝑁| ≤ |𝐶||cos 2𝑠|+
+|cos𝛼|(|𝐶cos𝑠|+ sin 2 𝑠)≤2|𝐶|+ 1. (c)𝑅≤2𝑐−Δ 0 gives𝑧≤𝑧 𝑠 −2𝛽Δ 0; write𝐾=
+𝐼1(𝑧)/𝑅= 2𝛽𝐼 1(𝑧)/𝑧= 2𝛽𝑒 𝑧𝐴(𝑧)and use the monotonicity of𝐴(Section on the two scaled
+functions) with𝐴(𝑧)≤𝐴(0 +) = 1
+2 uniformly.
+Lemma 10(exact; the two tail families).0< 𝐻 𝐵(𝑧)≤ 1
+4 𝐼1(𝑧)/𝑧= 1
+4 𝑒𝑧𝐴(𝑧)≤ 1
+8 𝑒𝑧 (term by
+term: the coefficient of(𝑧/2)2𝑘 in𝐻 𝐵 is 1
+4
+1
+(𝑘+2)𝑘! (𝑘+1)! ≤ 1
+8𝑘! (𝑘+1)! , the coefficient in1
+4 𝐼1(𝑧)/𝑧
+being 1
+8𝑘! (𝑘+1)! ). Consequently, writing𝛿𝑋for the far-region part of an integral𝑋over{2𝑐−𝑅≥
+Δ0},
+|𝛿⟨𝑓⟩|≤4𝜋 2 |𝑓|∞𝛽𝑒𝑧𝑠−2𝛽Δ0,|𝛿𝐽 𝑓|≤ 𝜋2
+2 |𝑓(1−𝑃−𝑄)| ∞𝑒𝑧𝑠−2𝛽Δ0,
+for the three𝐾-integrals and the two𝐻𝐵-integrals respectively; on the same region𝑧≤𝑧𝑠−2𝛽Δ0
+also bounds𝑒𝑧 in𝐻 𝐵 ≤1
+8 𝑒𝑧.
+Proposition 11(exact; RegionIIIpropagation).Let ̂︀𝒞near denote ̂︀𝒞with every integral restricted
+to{2𝑐−𝑅<Δ 0}. Then for everyΔ0 ∈(0,2𝑐)and𝛽≥1,
+⃒⃒̂︀𝒞− ̂︀𝒞near
+⃒⃒ ≤576𝜋 4𝛽4 𝑒2𝑧𝑠 𝑒−2𝛽Δ0.
+5
+
+--- Page 6 ---
+
+Proof.Global masses:
+∫︀∫︀
+𝐾≤4𝜋 2𝛽𝑒𝑧𝑠 =:𝑀and
+∫︀∫︀
+𝐻𝐵 ≤𝜋2
+2 𝑒𝑧𝑠 =:𝑀𝐻 (the pointwise bounds
+𝐾≤𝛽𝑒 𝑧𝑠,𝐻 𝐵 ≤ 1
+8 𝑒𝑧𝑠 hold on all of[−𝜋,𝜋] 2 since𝑧≤𝑧 𝑠). With the pointwise constants of
+Lemma 9 (|Φ|∞ ≤2,|𝐷| ∞ ≤2,|𝑁| ∞ ≤3,|𝑁(1−𝑃−𝑄)| ∞ ≤3,|𝐷(1−𝑃−𝑄)| ∞ ≤2),
+Lemma 10 gives|𝛿⟨𝐷⟩|,|𝛿⟨Φ⟩|≤2𝑎,|𝛿⟨𝑁⟩|≤3𝑎,|𝛿𝐽 𝑁|≤3𝑏,|𝛿𝐽 𝐷|≤2𝑏, where𝑎:=𝑀𝑒 −2𝛽Δ0,
+𝑏:=𝑀 𝐻𝑒−2𝛽Δ0 (note4𝜋 2𝛽𝑒𝑧𝑠−2𝛽Δ0 =𝑎and 𝜋2
+2 𝑒𝑧𝑠−2𝛽Δ0 =𝑏). For any product,|𝑋𝑌−𝑋 n𝑌n|≤
+|𝛿𝑋||𝑌| max +|𝑋|max|𝛿𝑌|with|⟨𝑓⟩|≤|𝑓| ∞𝑀,|𝐽 𝑓|≤|𝑓(1−𝑃−𝑄)| ∞𝑀𝐻. Summing:⟨𝐷⟩⟨Φ⟩
+contributes≤8𝑎𝑀;⟨𝐷⟩𝐽 𝑁 and⟨𝑁⟩𝐽 𝐷 contribute≤12𝑀𝑀 𝐻𝑒−2𝛽Δ0 each (using𝑎𝑀𝐻 =𝑏𝑀=
+𝑀𝑀𝐻𝑒−2𝛽Δ0); 1
+2 ⟨𝐷⟩2 contributes≤4𝑎𝑀. Total:12𝑎𝑀+ 192𝛽 3𝑀𝑀𝐻𝑒−2𝛽Δ0 =
+(︀
+192𝜋4𝛽2 +
+384𝜋4𝛽4)︀
+𝑒2𝑧𝑠𝑒−2𝛽Δ0 ≤576𝜋4𝛽4𝑒2𝑧𝑠𝑒−2𝛽Δ0 for𝛽≥1.
+Remark12 (the choice ofΔ0 belongs to the assembly).With these deliberately crude (but fully
+named) constants, at𝛽= 15the bound forcesΔ 0 ≈1.2rather than the design value0.3: the
+natural saddle-mass scale is⟨𝐷⟩≍𝑒 𝑧𝑠𝛽−3/2 (saddle height≍𝑒 𝑧𝑠𝛽−1/2 times a two-dimensional
+Gaussian area≍𝛽 −1), so⟨𝐷⟩2 ≍𝑒 2𝑧𝑠𝛽−3 and the comparison quotient carries𝛽7𝑒−2𝛽Δ0, con-
+suming≈34of exponent at𝛽= 15. By Lemma 18 (𝑚 * ≥1
+2 ),Δ 0 = 1.2suffices with margin
+(Corollary 13). The enlargement changes no leading bound, subject to the forthcoming geo-
+metric shell estimate: the shell technique that will bound Region II is insensitive to its outer
+edge — the telescoping sum over deficit shells is controlled by the kernel mass beyond theinner
+radiusΔ 1 (up to its geometric closing factor, part of that estimate). SinceΔ0 <2𝑐is free, the
+constant hunt stays honest.
+Corollary 13(Region III numeric tooth).By Lemma 18(𝑚 * ≥ 1
+2 ), for𝛽≥15and𝑡∈
+(0,𝜋−𝐶 win/𝛽], withΔ 0 = 1.2,
+⃒⃒̂︀𝒞− ̂︀𝒞near
+⃒⃒
+⟨𝐷⟩2 ≤ 576𝜋4
+𝑚2*
+𝛽7𝑒−2.4𝛽 ≤2304𝜋 4 𝛽7𝑒−2.4𝛽,
+and the right side is decreasing in𝛽on[15,∞)( 𝑑
+𝑑𝛽 log(𝛽7𝑒−2.4𝛽) = 7
+𝛽 −2.4<0for𝛽≥15), with
+value≤8.9×10 −3 at𝛽= 15: a single evaluation certifies the whole half-line.(An earlier draft
+hypothesized𝑚0 = 1, consistent with every measurement but not reached by the proven floor; it
+is superseded by Lemma 18, not falsified — constant four times uglier, foundation harder.)
+Convention14 (cited constants travel with their normalization).All double integrals in this sec-
+tion are over[−𝜋,𝜋] 2 with no normalization:⟨𝑓⟩:=
+∫︀∫︀
+𝐾𝑓𝑑𝑠𝑑𝛼. Every numerically measured
+constant quoted in this manuscript travels with its triplet (normalization,𝑡,𝛽); the saddle-mass
+lemma is stated as an explicit function𝑚0(𝑐), never as a loose scalar, since the saddle prefactor
+carries a𝑐-dependence and measurements confirm it (𝑚0 ≈1.492at(𝑡,𝛽) = (1.5,15),2.110
+at(2.5,15),1.353at(1.0,40)under this convention). The one historical discrepancy isclosed
+exactly: via𝐹𝐵 = 𝛽sin(𝑡/2)
+16𝜋2 ⟨𝐷⟩, i.e.⟨𝐷⟩= 16𝜋 2𝐹𝐵/(𝛽sin(𝑡/2)), the𝐹𝐵-series reproduces all three
+readings; an earlier report of1.05was the(2.5,15)value computed with the bracket𝐷/2in
+place of𝐷— a factor of exactly2, identified, not a numerical uncertainty. Uniform floors are
+written𝑚 *:= inf𝑐∈[
+√
+2/2,1] 𝑚0(𝑐).
+Lemma 15(exact; analytic lower bound for𝐼1).For𝑧≥2,𝐼 1(𝑧)≥ 𝑒𝑧
+√
+2𝜋𝑧
+(︀
+1− 1
+2𝑧
+)︀
+−3
+2 ; conse-
+quently𝐼 1(𝑧)≥ 𝑒𝑧
+√
+2𝜋𝑧
+(︀
+1− 0.6
+𝑧
+)︀
+for𝑧≥10.
+Proof.From𝐼 1(𝑧) = 1
+𝜋
+∫︀𝜋
+0 𝑒𝑧cos𝜃 cos𝜃𝑑𝜃and𝑢= sin(𝜃/2),𝐼 1(𝑧) = 2𝑒𝑧
+𝜋
+∫︀1
+0 𝑒−2𝑧𝑢2 1−2𝑢2
+√
+1−𝑢2 𝑑𝑢. On
+[0, 1√
+2 ]drop 1√
+1−𝑢2 ≥1(there1−2𝑢 2 ≥0) and complete the Gaussian:
+∫︀∞
+0 𝑒−2𝑧𝑢2
+(1−2𝑢2)𝑑𝑢=
+6
+
+--- Page 7 ---
+
+1
+2
+√︁
+𝜋
+2𝑧
+(︀
+1− 1
+2𝑧
+)︀
+, at the cost of the Gaussian residue, derived by𝑢2 = 1
+2 +𝑣(so2𝑢 2 −1 = 2𝑣,
+𝑑𝑢≤𝑑𝑣/
+√
+2):
+∫︀∞
+1/
+√
+2 𝑒−2𝑧𝑢2
+(2𝑢2 −1)𝑑𝑢≤
+√
+2𝑒−𝑧∫︀∞
+0 𝑣𝑒−2𝑧𝑣𝑑𝑣= 𝑒−𝑧
+2
+√
+2𝑧2 ≤ 3
+𝑧𝑒−𝑧. On[ 1√
+2 ,1],
+|1−2𝑢 2| ≤1and𝑒 −2𝑧𝑢2
+≤𝑒 −𝑧 give at most 𝜋
+4 𝑒−𝑧. Multiplying by 2𝑒𝑧
+𝜋 : the main term is
+𝑒𝑧
+√
+2𝜋𝑧(1− 1
+2𝑧), the two tails contribute at most1
+2 + 6
+𝜋𝑧 ≤3
+2 for𝑧≥2. For the corollary: at𝑧≥10,
+𝑒𝑧
+√
+2𝜋𝑧 ·0.1
+𝑧 ≥ 𝑒10
+√
+20𝜋 · 1
+100 ≈27.8≥ 3
+2 , and the left side increases in𝑧.
+Lemma 16(exact; global upper companion for𝐼1).For every𝑧 >0,𝐼 1(𝑧)≤𝑒 𝑧/
+√
+2𝜋𝑧.
+Proof.IntherepresentationofLemma15,𝐼 1(𝑧) = 2𝑒𝑧
+𝜋
+∫︀1
+0 𝑒−2𝑧𝑢2 1−2𝑢2
+√
+1−𝑢2 𝑑𝑢, theintegrandis≤0on
+[ 1√
+2 ,1]; on[0, 1√
+2 ]one has 1−2𝑢2
+√
+1−𝑢2 ≤1: squaring is legitimate there (1−2𝑢2 ≥0) and reduces the
+claim to𝑢2(4𝑢2 −3)≤0, true for𝑢 2 ≤3
+4 . Hence𝐼1(𝑧)≤ 2𝑒𝑧
+𝜋
+∫︀∞
+0 𝑒−2𝑧𝑢2
+𝑑𝑢= 2𝑒𝑧
+𝜋 ·1
+2
+√︁
+𝜋
+2𝑧 = 𝑒𝑧
+√
+2𝜋𝑧.
+(The companions of Lemma 22 sharpen this for𝑧≥20; the point of the global form is the range
+𝑧 <20, which the rest bound of Lemma 18 genuinely visits.)
+Lemma 17(exact; the area lemma).For0≤𝑢<1,
+Area
+{︀
+(𝑠,𝛼)∈[−𝜋,𝜋] 2 :𝑃+𝑄≤𝑢
+}︀
+≤ 4𝜋𝑢√1−𝑢 ,
+and the same bound holds for the mirror set{˜𝑃+ ˜𝑄≤𝑢}, ˜𝑃:= 1−𝑃, ˜𝑄:= 1−𝑄. Consequently,
+for𝑐 2 ≥1
+2 (so𝑤≥𝑔:=𝑃+𝑄−2𝑃𝑄),
+Area{𝑤≤𝑣} ≤ ¯𝐴(𝑣) := min
+(︁ 16𝜋𝑣√1−2𝑣
+⃒⃒⃒
+𝑣<1
+2
+,4𝜋 3𝑣
+)︁
+,
+with ¯𝐴nondecreasing(a minimum of two increasing branches; they cross at𝑣𝑐 = 1
+2 (1−16/𝜋4) =
+0.41787...).
+Proof.On[0,𝜋] 2 the substitution𝑑𝑃=
+√︀
+𝑃(1−𝑃)𝑑𝑠gives
+Area[0,𝜋]2{𝑃+𝑄≤𝑢}=
+∫︁∫︁
+𝑃+𝑄≤𝑢
+𝑑𝑃𝑑𝑄√︀
+𝑃𝑄(1−𝑃)(1−𝑄) ≤ 1√1−𝑢
+∫︁∫︁
+𝑃+𝑄≤𝑢
+𝑑𝑃𝑑𝑄√𝑃𝑄 = 𝜋𝑢√1−𝑢
+((1−𝑃)(1−𝑄)≥1−𝑢on the region; the last integral is𝑢times the exact Beta integral
+Γ(1
+2 )2/Γ(2) =𝜋); the full square is four copies, and the mirror set is the image under(𝑠,𝛼)↦→
+(𝜋−𝑠,𝜋−𝛼). For the deficit sublevels:𝑔is invariant under the mirror substitution and
+𝑔≥ 1
+2 (𝑃+𝑄)where𝑃+𝑄≤1, so{𝑔≤𝑣}⊂{𝑃+𝑄≤2𝑣}∪{ ˜𝑃+ ˜𝑄≤2𝑣}and the first
+branch follows; globally𝑃≥(𝑠/𝜋) 2 (concavity ofsin) puts each component inside a region of
+area2𝜋 3𝑣.
+Lemma 18(chains exact, floor certified; the signed minoration: uniform saddle mass).Define
+𝑚(𝛽,𝑐) :=𝛽 3/2𝑒−4𝛽𝑐⟨𝐷⟩and the window-uniform mass𝑚 *:= inf{𝑚(𝛽,𝑐) :𝛽≥15, 𝑡∈(0,𝜋−
+𝐶win/𝛽]}. For every𝛽≥15and𝑡∈(0,𝜋−𝐶 win/𝛽],
+𝑚(𝛽,𝑐)≥𝑚 low(𝛽,𝑐) :=𝑇 1 −𝑇𝐺 −𝑇𝑀 −𝑇𝑅 ≥ 1
+2 ,
+with the four explicit pieces displayed in the proof; in particular𝑚* ≥1
+2 , and every statement
+of this manuscript carried on the candidate floor𝑚* ≥1
+2 is unconditional from here on. The
+window is not cosmetic: at𝑡=𝜋one has𝑐=𝑠 4, the involution of Remark 19 becomes a
+symmetry of𝐾, and⟨𝐷⟩= 0identically.
+7
+
+--- Page 8 ---
+
+Remark19 (the sign gap, exposed by the involution).A restricted-domain bound
+∫︀
+𝐵𝐾𝐷≥(...)
+on a rectangle𝐵around the saddle cannot by itself minorize⟨𝐷⟩=
+∫︀∫︀
+𝐾𝐷, because𝐷changes
+sign on the torus: under the exact involution𝑇(𝑠,𝛼) = (𝜋−𝑠,𝜋−𝛼)one has𝐷∘𝑇=−𝐷and
+𝐾𝑐∘𝑇=𝐾 𝑠4 with𝑠4 = sin(𝑡/4), so the mirror ball contributes
+∫︀
+𝑇(𝐵) 𝐾𝑐𝐷=−
+∫︀
+𝐵𝐾𝑠4𝐷<0— a
+negative part the restricted-domain argument omitted. The owed repair is thesigned minoration
+⟨𝐷⟩≥𝐿 main(𝑐)−𝑈mirror(𝑠4)−𝑈rest, where the mirror term carries the exact relative suppression
+𝑒−4𝛽(𝑐−𝑠4) ≤𝑒 −4𝐶win/𝜋 ≈0.148at the moving boundary (via𝑐−𝑠 4 =
+√
+2 sin 𝜋−𝑡
+4 ≥𝜋−𝑡
+𝜋 from
+sin𝑦≥ 2
+√
+2
+𝜋 𝑦on[0, 𝜋
+4 ]) — order one, not negligible; note also𝑠4 ∈(0,
+√
+2
+2 )fallsoutsidethe main
+range, so the mirror-ball upper bound needs its own (upper) chain — supplied by step (iii) of
+the proof of Lemma 18. The measured𝑚0 ∈[1.35,2.11]now calibrates the lemma’s floor (slack
+2.2–4.2×: a floor, not an asymptote).
+Proof of Lemma 18.Split the torus into the main rectangle𝐵= [−𝑟,𝑟] 2,𝑟= 6
+5 , the mirror
+rectangle𝐵′={|𝑠|≥𝜋−𝑟,|𝛼|≥𝜋−𝑟}, and the rest. On𝐵the identity𝐾𝐷= 2𝐾−2𝐾(𝑃+𝑄)
+is exact (𝐷= 2(1−𝑃−𝑄)); off𝐵we pay|𝐷|≤2:
+⟨𝐷⟩ ≥2
+∫︁
+𝐵
+𝐾−2
+∫︁
+𝐵
+𝐾(𝑃+𝑄)−2
+∫︁
+𝐵′
+𝐾−2
+∫︁
+rest
+𝐾.
+On𝐵,𝑤≤𝑃+𝑄≤2 sin 2 𝑟
+2 =𝑤max = 0.6377, so𝑧=𝑧 𝑠
+√1−𝑤≥0.6019𝑧 𝑠 ≥25.5.
+(i) The main mass, from below.By the lower companion of Lemma 22; the frozen-prefactor
+monotonicity (𝑥−3/2(1−𝑎/𝑥−𝑏/𝑥 2)decreases on𝑥∈[0.6,1]for𝑎≤ 3
+160 ,𝑏≤ 0.6
+400 ); mini-lemma
+(a) (𝑧≤𝑧 𝑠, so the bracket freezes at𝑧𝑠); the root from below√1−𝑤≥1− 𝑤
+2 −𝑤2
+4 (valid to
+𝑤= 2(
+√
+2−1)); the factorization𝑤 2 ≤(𝑃+𝑄) 2 ≤2(𝑃 2 +𝑄2)with𝑃≤𝑠 2/4, which splits the
+quartic penalty per variable;𝑒−𝑥 ≥1−𝑥;erfc(𝑥)≤𝑒 −𝑥2
+; and exact Gaussian moments:
+2𝛽3/2𝑒−𝑧𝑠
+∫︁
+𝐵
+𝐾≥𝑇 1 :=
+√
+2𝜋
+2 𝑐−5/2
+(︁
+1− 3
+8𝑧𝑠
+−0.6
+𝑧2𝑠
+)︁(︁
+1−𝑒 −18𝛽𝑐/25 − 3
+8𝛽𝑐
+)︁2
+.
+(ii) The𝐾(𝑃+𝑄)correction, from above.With the upper companion; the exact prefactor
+identity𝑧 −3/2 =𝑧 −3/2
+𝑠 (1−𝑤) −3/4;𝑒 𝑧−𝑧𝑠 ≤𝑒 −2𝛽𝑐𝑤; the convexity-endpoint absorption(1−
+𝑤)−3/4𝑒−𝛽1𝑐1𝑤/10 ≤1.089on[0,𝑤 max](𝛽 1𝑐1 = 15/
+√
+2); the rate floor𝑤≥0.6811 (𝑃+𝑄)on𝐵
+(𝑐2 ≥1
+2 ); the concavity floor𝑃≥0.2214𝑠 2 on|𝑠|≤𝑟; and the exact Gamma moment:
+2𝛽3/2𝑒−𝑧𝑠
+∫︁
+𝐵
+𝐾(𝑃+𝑄)≤𝑇 𝐺 := 𝛽
+2
+√
+2𝜋𝑐3/2 · 1.089 (𝜋/4)
+(0.2214·1.9·0.6811𝛽𝑐) 2 ≤ 2.0784
+𝛽𝑐7/2 .
+(iii) The mirror, from above.The chart identity1−𝑤= (𝑠 4/𝑐)2(1−𝑤 ′),𝑤 ′ =𝑃 ′+𝑄′−
+𝑃′𝑄′/𝑠2
+4,𝑃 ′= cos2(𝑠/2), is exact, so on𝐵′one has𝑧=𝑧 𝑠(𝑠4)
+√
+1−𝑤 ′,𝑧 𝑠(𝑠4) = 4𝛽𝑠4, with the
+exact relative suppression𝑒−4𝛽𝛿4. Three zones. For𝑠4 ≥0.58(where𝑤 ′≥0on𝐵 ′ needs only
+𝑠4 ≥sin(0.6)/
+√
+2 = 0.3993, and𝑧≥20.9at the worst corner) the machinery of (ii) transplants
+verbatim to the chart:
+2𝛽3/2𝑒−𝑧𝑠
+∫︁
+𝐵′
+𝐾≤𝑇 𝑀 := 𝛽
+2
+√
+2𝜋𝑠3/2
+4
+· 1.230𝜋
+0.2214·1.9
+(︀
+1− 𝑤max
+4𝑠2
+4
+)︀
+𝛽𝑠4
+𝑒−4𝛽𝛿4.
+For𝑠4 ∈[0.40,0.58):𝑧≤𝑧 𝑠(𝑠4)on𝐵 ′ and𝐾= 2𝛽𝐴(𝑧)𝑒 𝑧 ≤𝛽𝑒 𝑧𝑠(𝑠4) give𝑇 𝑀 = 8𝑟2𝛽5/2𝑒−4𝛽𝛿4
+with𝛿 4 ≥0.2346— dead. For𝑠 4 <0.40:𝑅 2 ≤4𝑐 2 sin4(0.6) + 4𝑠2
+4 on𝐵 ′ gives𝑇 𝑀 =
+8𝑟2𝛽5/2𝑒−4𝛽Δfar,Δ far ≥0.4211— dead.
+8
+
+--- Page 9 ---
+
+(iv) The rest, from above.Outside𝐵∪𝐵 ′ the case analysis on𝑔=𝑃+𝑄−2𝑃𝑄gives
+the floor𝑤≥sin 2(0.6)>0.318. The kernel majorant𝐾≤2𝛽𝑒 𝑧/(
+√
+2𝜋𝑧3/2)is witnessed on
+allof𝑧 >0by Lemma 16 (the layers below reach𝑧≈13.4at the window corner, outside
+the companions’ range). With Lemma 17 sharpened by the disk𝑠2 +𝛼2 ≤4 sin 2(0.6)(it lies
+inside𝐵with𝑃+𝑄≤sin 2(0.6)≤𝑣, so its area4𝜋sin 2(0.6)≥4.006is never rest-mass:
+¯𝐴𝑟 := ¯𝐴−4.006), the Abel-corrected layer sum on the fixed grid𝑣0 = 0.318,𝛿𝑣= 0.02,𝑉= 0.9,
+with𝜙(𝑣) = (1−𝑣) −3/4𝑒−2𝛽𝑐𝑣 (decreasing there for𝛽𝑐≥3.75):
+𝑇𝑅 := 𝛽
+2
+√
+2𝜋𝑐3/2
+[︁
+𝜙(𝑣0) ¯𝐴𝑟(𝑣1) +
+∑︁
+𝑘≥1
+𝜙(𝑣𝑘)
+(︀¯𝐴𝑟(𝑣𝑘+1)− ¯𝐴𝑟(𝑣𝑘)
+)︀]︁
++ 2(2𝜋)2𝛽5/2𝑒−(1−
+√
+0.1)𝑧𝑠.
+The bottom-mass term is not optional — the first layer’s mass may be all of¯𝐴𝑟(𝑣1); the shard
+covers{𝑤>0.9}via𝑧≤𝑧 𝑠
+√
+0.1and𝐾≤𝛽𝑒 𝑧.
+(v) The floor.Every piece of𝑚low is monotone in𝛽at fixed𝑡in the favorable direction (the
+𝑇1 brackets increase;𝑇𝐺 ∼𝛽 −1; the zone-𝐿mirror is a𝛽-free coefficient times𝑒−4𝛽𝛿4; the crude
+zones and the shard are𝛽5/2𝑒−𝛽·const with constants far above the5/(2𝛽)threshold; each layer
+term𝛽𝜙(𝑣𝑘)decreases for𝛽≥1/(2𝑐𝑣 0)), so the infimum sits on𝛽min(𝑡) = max(15,𝐶win/(𝜋−𝑡)),
+and the resulting one-dimensional floor iscertifiedby interval arithmetic (python-flint arb, 120
+bits; transcriptcascade1_floor_arb_transcript.txt, committed): 800 intervals plus a stub
+on𝑡∈(0,𝜋−0.1]at𝛽= 15, worst enclosure lower bound1.03611; 60 overlapping hull boxes
+along the moving boundary, worst0.811835; and the deep tail𝜋−𝑡≤10−3 by hand-monotone re-
+ductions, enclosure[2.20442,2.21398]— all> 1
+2 , ball-and-boolean. Design calibration (verified,
+bearing no load):𝑚true/𝑚low = 1.10–1.95across seven bench cells with every chain piece dom-
+inating its true counterpart, and the bench’s independent𝑚true(1.5,15) = 1.4918reproduces
+the1.492of Convention 14. The chain constants of (i)–(iv) are exact consequences of the
+named lemmas; the elementary links are design-checked incascade1_signed_minoration.py
+(committed with transcript; five independent audit rounds on the fabrication, their transcripts
+committed).
+Lemma 20(exact; two global mini-lemmas for Step 0).(a)If𝑐 2 ≥1
+2 (the whole relay range)
+then𝑅≤2𝑐, i.e.𝑧≤𝑧 𝑠, on all of[−𝜋,𝜋] 2: indeed4𝑐2 −𝑅2 = 4𝑐2(𝑃+𝑄)−4𝑃𝑄≥8𝑐 2√𝑃𝑄−
+4𝑃𝑄= 4 √𝑃𝑄(2𝑐2 −√𝑃𝑄)≥0since √𝑃𝑄≤1≤2𝑐 2.(b)The fluctuation𝐹:=𝑁−𝐶𝐷
+satisfies the global pointwise bound|𝐹|≤12𝑃: fromcos 2𝑠−cos𝑠=−2 sin(3𝑠/2) sin(𝑠/2)and
+1−cos𝑠= 2 sin 2(𝑠/2),
+𝐹=−2𝐶sin(3𝑠/2) sin(𝑠/2)−cos𝛼
+[︀
+2𝐶sin 2(𝑠/2) + sin2 𝑠
+]︀
+,
+and|sin(3𝑠/2)|≤3|sin(𝑠/2)|,sin 2 𝑠= 4𝑃(1−𝑃)≤4𝑃,|𝐶|≤1give|𝐹|≤6𝑃+ (2𝑃+ 4𝑃) =
+12𝑃.
+Remark21 (certified; Step 0 of the assembly: the𝐸-window).Lemma 20 makes the first assem-
+bly step a single moment estimate:|𝐸−𝐶|=|⟨𝐹⟩|/⟨𝐷⟩≤12⟨𝑃⟩ 𝐾/⟨𝐷⟩, with no case split (the
+𝐹-bound is global, and (a) orients every kernel bound in one direction on the whole torus). The
+moment bound iscertified, in the additive-mirror form the truth demands (the mirror mass sits
+at𝑃≈1and contributes𝑂(𝑒 −4𝛽𝛿4) =𝑂(1)on the moving boundary, so no purely multiplicative
+window constant can exist near𝑡=𝜋): for𝛽≥15,𝑡∈(0,𝜋−𝐶 win/𝛽],
+⟨𝑃⟩𝐾
+⟨𝐷⟩ ≤ 1 +𝜀𝑏
+4𝛽𝑐 + 3𝑒 −2𝛽𝛿4, 𝜀 𝑏 =
+⎧
+⎨
+⎩
+4.0, 𝑡≤2.89,
+8.8, 𝑡>2.89,
+9
+
+--- Page 10 ---
+
+whence|𝐸−𝐶| ≤ 3
+𝛽𝑐(1 +𝜀 𝑏) + 36𝑒−2𝛽𝛿4. The constants ride Lemma 18’s chains (⟨𝑃⟩ ≤
+1
+2
+∫︀
+𝐵𝐾(𝑃+𝑄)plus the mirror and rest masses,⟨𝐷⟩≥𝑚 low) and were certified by the same
+interval sweep (transcriptcascade2_step0_eps_transcript.txt, committed; the certificate’s
+bulk zone extends to the binary64 value2.8999999999999999112, and2.89is stated so the claim
+stays strictly inside it). Against the exact first-order𝜅(𝑐) = (4𝑐2 −1)/(2𝑐)≤ 3
+2 the bulk constant
+carries a factor≈10of slack — fat, said plainly; its clients are bounded, not flattered: the×2-
+class𝜇 𝐹 input for the mirror clause rides the extracted leading coefficients, not this window.
+The eight-cell calibration table (𝛽|𝐸−𝐶|↗𝜅(𝑐)from below) is the step’s unit test.
+Lemma 22(exact; two-term two-sided Bessel companions).For𝑧≥20,
+𝐼1(𝑧) = 𝑒𝑧
+√
+2𝜋𝑧
+(︁
+1− 3
+8𝑧 +𝜀1(𝑧)
+)︁
+, 𝐼 0(𝑧) = 𝑒𝑧
+√
+2𝜋𝑧
+(︁
+1 + 1
+8𝑧 +𝜀0(𝑧)
+)︁
+,
+with|𝜀 1(𝑧)|≤0.6/𝑧 2 and|𝜀 0(𝑧)|≤0.4/𝑧 2; and, one order deeper by the same chain,
+𝐼1(𝑧) = 𝑒𝑧
+√
+2𝜋𝑧
+(︁
+1− 3
+8𝑧 − 15
+128𝑧2 +𝜀(3)
+1 (𝑧)
+)︁
+, 𝐼 0(𝑧) = 𝑒𝑧
+√
+2𝜋𝑧
+(︁
+1 + 1
+8𝑧 + 9
+128𝑧2 +𝜀(3)
+0 (𝑧)
+)︁
+,
+with|𝜀 (3)
+1 (𝑧)|≤1.02/𝑧 3 and|𝜀 (3)
+0 (𝑧)|≤0.84/𝑧 3.
+Proof.Both start from the representations in the proof of Lemma 15: with𝑢= sin(𝜃/2),
+𝐼1(𝑧) = 2𝑒𝑧
+𝜋
+∫︁ 1
+0
+𝑒−2𝑧𝑢2 1−2𝑢 2
+√
+1−𝑢 2 𝑑𝑢, 𝐼 0(𝑧) = 2𝑒𝑧
+𝜋
+∫︁ 1
+0
+𝑒−2𝑧𝑢2
+√
+1−𝑢 2 𝑑𝑢.
+On[0, 1√
+2 ]expand the algebraic factor one order past Lemma 15: 1√
+1−𝑢2 = 1 + 𝑢2
+2 +𝑅2(𝑢)with
+the Lagrange form𝑅2 = 3
+8 𝑢4(1−𝜉) −5/2,𝜉∈(0,𝑢 2), so0≤𝑅 2 ≤ 3
+8 25/2𝑢4 ≤2.13𝑢 4 there.
+The completed Gaussian moments are exact,
+∫︀∞
+0 𝑢2𝑘𝑒−2𝑧𝑢2
+𝑑𝑢= (2𝑘−1)!!
+2(4𝑧)𝑘
+√︁
+𝜋
+2𝑧, and produce the
+displayed polynomial parts: for𝐼1,(1−2𝑢 2)(1+ 𝑢2
+2 ) = 1−3
+2 𝑢2−𝑢4 gives1− 3
+8𝑧− 3
+16𝑧2 ; for𝐼0,1+ 𝑢2
+2
+gives1+ 1
+8𝑧. Four error sources, each explicit: (i) the𝑅2 term, at most3
+8 25/2· 3
+16𝑧2 = 0.398
+𝑧2 relative
+to the𝑘= 0moment (for𝐼 1 multiplied further by|1−2𝑢 2|≤1); (ii) the exact−𝑢 4 moment of
+𝐼1,− 3
+16𝑧2 , absorbed into𝜀1 with its sign; (iii) the Gaussian completion residues, bounded as in
+Lemma 15 by3
+𝑧𝑒−𝑧-scale terms; (iv) the segment[ 1√
+2 ,1], bounded by
+√
+2𝑒−𝑧 for𝐼 0 ( 1√
+1−𝑢2 ≤
+√
+2√
+2(1−𝑢) , integrable) and by𝜋
+4 𝑒−𝑧 for𝐼 1. At𝑧≥20the exponential sources (iii)–(iv) are below
+10−3/𝑧2 against the prefactor𝑒𝑧/
+√
+2𝜋𝑧; collecting,|𝜀 1|≤
+(︀
+0.398 + 0.188 + 10−3)︀
+/𝑧2 ≤0.6/𝑧 2
+and|𝜀0|≤
+(︀
+0.398 + 10−3)︀
+/𝑧2 ≤0.4/𝑧2. Both truncations carry the correct next-order signatures
+(−15
+128 𝑧−2 for𝜈= 1,+ 9
+128 𝑧−2 for𝜈= 0; measuredsup𝑧 2|𝜀1|= 0.1227,sup𝑧 2|𝜀0|= 0.0743): the
+inked constants are the derived chain’s, the measurements are calibration only. For the three-
+term forms, one more order of the same expansion: 1√
+1−𝑢2 = 1 + 𝑢2
+2 + 3
+8 𝑢4 +𝑅3(𝑢)with𝑅 3 =
+5
+16 𝑢6(1−𝜉)−7/2 ≤ 5
+16 27/2𝑢6 ≤3.54𝑢 6 on[0, 1√
+2 ]; for𝐼1,(1−2𝑢2)(1+𝑢2
+2 +3
+8 𝑢4) = 1−3
+2 𝑢2−5
+8 𝑢4−3
+4 𝑢6
+gives1− 3
+8𝑧 − 15
+128𝑧2 − 45
+256𝑧3 ; the𝑅3 term contributes at most3.54· 15
+64𝑧3 ≤0.83/𝑧 3, the exact
+−45
+256 𝑧−3 term0.176/𝑧 3 with its sign, the exponential sources10−2/𝑧3:|𝜀 (3)
+1 |≤1.02/𝑧 3. For𝐼0,
+1 +𝑢2
+2 + 3
+8 𝑢4 gives1 + 1
+8𝑧 + 9
+128𝑧2 and|𝜀(3)
+0 |≤(0.83 + 0.01)/𝑧3 ≤0.84/𝑧3. (Calibration: measured
+𝑧3|𝜀(3)
+1 |≤0.111,𝑧 3|𝜀(3)
+0 |≤0.080on[20,112]— factor9of chain headroom; bench transcript
+committed.)
+10
+
+--- Page 11 ---
+
+Lemma 23(exact analytic; certified constants).For𝑧≥20, put𝐴(𝑧) =𝑒 −𝑧𝐼1(𝑧)/𝑧and
+𝐵(𝑧) =𝑒 −𝑧𝐼2(𝑧)/𝑧2. Then
+𝐴(𝑧) = 𝑧−3/2
+√
+2𝜋
+(︂
+1− 3
+8𝑧 − 15
+128𝑧2 − 105
+1024𝑧3 − 4725
+32768𝑧4 +𝜀𝐴(𝑧)
+)︂
+,
+𝐵(𝑧) = 𝑧−5/2
+√
+2𝜋
+(︂
+1− 15
+8𝑧 + 105
+128𝑧2 + 315
+1024𝑧3 + 10395
+32768𝑧4 +𝜀𝐵(𝑧)
+)︂
+,
+where
+|𝜀𝐴(𝑧)|≤ 0.635
+𝑧5 ,|𝜀 𝐵(𝑧)|≤ 2.427
+𝑧5 .
+Consequently ⃒⃒⃒⃒𝑧𝐵(𝑧)
+𝐴(𝑧) −
+(︂
+1− 3
+2𝑧 + 3
+8𝑧2 + 3
+8𝑧3 + 63
+128𝑧4
+)︂⃒⃒⃒⃒≤3.181
+𝑧5 .
+Proof.The standard positive integral representation, followed by𝑢=𝑧(1−𝑥), gives
+𝐴(𝑧) =
+√
+2
+𝜋𝑧3/2
+∫︁ 2𝑧
+0
+𝑒−𝑢𝑢1/2
+(︂
+1− 𝑢
+2𝑧
+)︂1/2
+𝑑𝑢,
+𝐵(𝑧) = 23/2
+3𝜋𝑧5/2
+∫︁ 2𝑧
+0
+𝑒−𝑢𝑢3/2
+(︂
+1− 𝑢
+2𝑧
+)︂3/2
+𝑑𝑢.
+Split at𝑢=𝑧. On the first part, if𝑐 𝑘 = (−1) 𝑘(︀𝛼
+𝑘
+)︀
+and𝛼∈ { 1
+2 ,3
+2 }, the absolute ratio of
+consecutive omitted binomial terms is below1/2; hence the degree-four remainder is at most
+2|𝑐5|(𝑢/(2𝑧))5. Complete the retained moments to infinity. The resulting error, with𝑝=𝛼, is
+bounded by
+2|𝑐5|Γ(𝑝+ 6)
+(2𝑧)5 + Γ(𝑝+ 1,𝑧) +
+4∑︁
+𝑘=0
+|𝑐𝑘|Γ(𝑝+𝑘+ 1,𝑧)
+(2𝑧)𝑘 .
+FinallyΓ(𝑎,𝑧)≤𝑒 −𝑧𝑧𝑎/(𝑧−𝑎+ 1)for𝑧 >𝑎−1: after𝑢=𝑧+𝑣, use(1 +𝑣/𝑧) 𝑎−1 ≤𝑒(𝑎−1)𝑣/𝑧.
+After multiplication by𝑧5, each exponential term is decreasing for𝑧≥20, so outward-rounded
+evaluation at𝑧= 20gives respectively0.634032and2.426710; the displayed decimals round
+upward. Formal division of the two degree-four polynomials gives1,−3/2,3/8,3/8,63/128.
+Writing𝑃𝐵 −𝑃𝐴𝑄4 =𝑧 −5𝑅(1/𝑧), interval evaluation on0≤1/𝑧≤1/20, together with𝑃 𝐴 −
+0.635𝑧−5 >0, gives3.180121for the quotient remainder, again rounded upward. All rational
+coefficients, monotonicity checks, and outward-rounded endpoint evaluations are reproduced by
+surface_bessel_integral_remainder.py.
+Corollary 24(exact; the measure ratio).Define𝑟(𝑧) := 𝐼2(𝑧)
+𝑧𝐼1(𝑧) , so that𝐻𝐵(𝑧) =𝑟(𝑧) 𝐼1(𝑧)
+𝑧 =
+𝑟(𝑧) 𝐾
+2𝛽 pointwise. Then for𝑧≥20,
+𝑟(𝑧) = 1
+𝑧 − 3
+2𝑧2 +𝜂(𝑧),|𝜂(𝑧)|≤ 1.23
+𝑧3 ;
+and, from the three-term companions,
+𝜂(𝑧) = 3
+8𝑧3 +𝜂(4)(𝑧),|𝜂 (4)(𝑧)|≤ 2.5
+𝑧4 .
+11
+
+--- Page 12 ---
+
+Moreover the convergent fifth-order companion is
+𝑟(𝑧) = 1
+𝑧 − 3
+2𝑧2 + 3
+8𝑧3 + 3
+8𝑧4 + 63
+128𝑧5 +𝜂(6)(𝑧),|𝜂 (6)(𝑧)|≤ 3.181
+𝑧6 .
+If𝑧=𝑧 𝑠
+√1−𝑤,𝑧 𝑠 ≥40, and0≤𝑤≤ 1
+2 , then, with(𝑞0,...,𝑞 4) = (1,−3
+2 ,3
+8 ,3
+8 , 63
+128 ),
+𝑟(𝑧)−𝑟(𝑧 𝑠) =
+4∑︁
+𝑛=0
+𝑞𝑛
+𝑧𝑛+1𝑠
+(︁
+(1−𝑤) −(𝑛+1)/2 −1
+)︁
++𝜂Δ,|𝜂 Δ|≤ 28.622
+𝑧6𝑠
+.
+Proof.𝑟= 1
+𝑧
+𝐼0
+𝐼1
+− 2
+𝑧2 by𝐼 2 =𝐼 0 −2𝐼1/𝑧[4, 10.29.1]. By Lemma 22, with𝑎= 1
+8𝑧 +𝜀0 and
+𝑏=− 3
+8𝑧 +𝜀1, 𝐼0
+𝐼1
+−1 = 𝑎−𝑏
+1+𝑏, and1 +𝑏≥1− 3
+160 −0.6
+400 ≥0.9797at𝑧≥20; hence 𝐼0
+𝐼1
+= 1 + 1
+2𝑧 +𝜂2
+with
+|𝜂2|=
+⃒⃒⃒
+(𝜀0 −𝜀1)− 1
+2𝑧 𝑏
+1 +𝑏
+⃒⃒⃒≤
+1.0
+𝑧2 + 3
+16𝑧2 + 0.3
+𝑧3
+0.9797 ≤1.23
+𝑧2 ,
+and𝑟= 1
+𝑧
+(︀
+1+ 1
+2𝑧+𝜂2
+)︀
+−2
+𝑧2 = 1
+𝑧− 3
+2𝑧2 + 𝜂2
+𝑧 . For the refined form, divide the three-term companions:
+𝐼0
+𝐼1
+= 1+ 1
+2𝑧+ 3
+8𝑧2 +𝜂′
+3 with|𝜂′
+3|≤
+(︀
+1.02+0.84+0.2
+)︀
+/(0.97𝑧3)≤2.13/𝑧 3 (the0.2collects the cubic
+cross-products of the two-term coefficients), whence𝜂= 3
+8𝑧3 + 𝜂′
+3
+𝑧 and|𝜂 (4)|≤2.13/𝑧 4 ≤2.5/𝑧4.
+(Calibration: measuredsup 𝑧∈[20,112] 𝑧3|𝜂|= 0.395and𝑧 3𝜂→ 3
+8 = 0.375exactly as derived;
+measured𝑧 4|𝜂(4)|≤0.41— factor6of chain headroom.) The last display is Lemma 23, since
+𝑟=𝐵/𝐴. For the deficit form, apply its remainder at𝑧and𝑧𝑠:𝑧 −6 =𝑧−6
+𝑠 (1−𝑤) −3 ≤8𝑧−6
+𝑠 , so
+their sum is at most9(3.180121)𝑧−6
+𝑠 <28.622𝑧 −6
+𝑠 , using the outward-rounded constant before
+its coarser three-decimal display; the five polynomial terms subtract exactly as displayed.
+Lemma 25(conditional historical saddle extraction; not used in Theorem 2).Let𝑇(𝑐) :=
+4𝑐2 −1
+8𝑐3 (=
+[︀1
+2 − 1
+8𝑐2
+]︀
+/𝑐 >0on the relay range)and𝑠 4 := sin(𝑡/4),𝛿 4 :=𝑐−𝑠 4 =
+√
+2 sin 𝜋−𝑡
+4 .
+Assume(H tail)(the𝛽 −4-tail hypothesis, stated in step(iv)(e)below). Then for𝛽≥𝛽 1 = 15and
+𝑡∈(0,𝜋−𝐶 win/𝛽],
+⃒⃒⃒4𝛽3 (𝜇𝐷𝜈𝑁 −𝜇𝑁𝜈𝐷)
+𝜇2
+𝐷
+−𝑇(𝑐)
+𝛽
+⃒⃒⃒ ≤ 𝑅1(𝑐)
+𝛽2 +𝑀(𝑐,𝛽),
+where𝜇𝑓 =
+∫︀∫︀
+𝐾𝑓,𝜈 𝑓 =
+∫︀∫︀
+𝐷𝐻𝐵𝑓(Convention 14),𝑀is the explicit mirror bound of step(v)
+below, and
+𝑅1(𝑐) =|𝑟2(𝑐)|+ 2 Θ3(𝑐)
+𝛽1
+, 𝑟 2(𝑐) = −8𝑐4 + 15𝑐2 −4
+32𝑐6 ,
+withΘ 3 the explicit𝛽 −3-bucket constant of step(iv): oneΘ 3/𝛽1 absorbs the extracted-chain
+remainder𝜌 3, the other is exactly the budget(Htail)grants the unextracted tail — the two are
+additive and are counted separately(accounting repaired after external review; a joint bound
+|𝜌3|+|𝜏|≤Θ 3/(𝛽1𝛽2), which would restore the sharp𝑅1, is the𝛽−4-bucket work that will also
+discharge(H tail)).
+Proof. First line (the half-angle identity, cited).With𝐶= 2𝑐 2 −1(the half-angle law), the
+fluctuation𝐹=𝑁−𝐶𝐷of Lemma 20(b) vanishes at the saddle𝑠=𝛼= 0:𝑁(0,0) = 2𝐶=
+𝐶𝐷(0,0). The bilinear form is invariant under𝑁↦→𝑁−𝑎𝐷for constant𝑎, so𝑁is replaced
+by𝐹throughout; every leading-order product then dies at the saddle, and the first surviving
+order carries the lemma.
+12
+
+--- Page 13 ---
+
+(0) Single measure.By Corollary 24,𝜈 𝑓 = 1
+2𝛽⟨𝐷𝑓𝑟(𝑧)⟩. Freezing𝑟 𝑠 :=𝑟(𝑧 𝑠)and writing
+Δ𝑟:=𝑟(𝑧)−𝑟 𝑠 splits
+4𝛽3(𝜇𝐷𝜈𝐹 −𝜇𝐹𝜈𝐷)
+𝜇2
+𝐷
+= 2𝛽2𝑟𝑠
+[︀
+⟨𝐷⟩⟨𝐷𝐹⟩−⟨𝐹⟩⟨𝐷 2⟩
+]︀
+⟨𝐷⟩2
+⏟  ⏞  
+𝑋1
++ 2𝛽2[︀
+⟨𝐷⟩⟨𝐷𝐹Δ𝑟⟩−⟨𝐹⟩⟨𝐷 2 Δ𝑟⟩
+]︀
+⟨𝐷⟩2
+⏟  ⏞  
+𝑋2
+,
+five moments of polynomial weights and one deficit weight, all under the single measure𝐾.
+(i) The deficit chart.𝑅2 = 4𝑐2(1−𝑤)with𝑤:=𝑃+𝑄−𝑃𝑄/𝑐 2 exactly, so𝑧=𝑧 𝑠
+√1−𝑤; on
+the relay range0≤𝑤≤1(Lemma 20(a)), and on the saddle ball{𝑤≤ 1
+2 }every kernel prefactor
+is a(1−𝑤)-power with two-sided binomial bounds (the bilateral root floor: for0≤𝑤≤ 1
+2 ,
+1− 𝑤
+2 −𝑤2
+4 ≤√1−𝑤≤1− 𝑤
+2 , and the−3
+4 ,− 1
+2 ,−1powers likewise, each with its Lagrange
+constant at𝑤= 1
+2 ).
+(ii) Saddle chart and extraction.With𝑠=𝜎/ √𝛽,𝛼=𝜏/ √𝛽, the exponent𝑧−𝑧 𝑠 +
+𝑐
+2 (𝜎2 +𝜏 2)hasidentically vanishingconstant term (the Gaussian𝑒 −𝑐𝜌2/2 is exact at leading
+order), and each of the five moments expands in1/𝛽with polynomial-Gaussian coefficients
+whose remainder constants come from three named sources only: Lemma 22 (kernel correction
+and𝜀1), Corollary 24 (𝑟𝑠 and𝜂), and the root floor of (i). The Gaussian moments are exact. The
+assembled coefficients were extracted symbolically and machine-verified twice with independent
+truncationdepths(scriptsderive_page_pass2.pyandtheaudit’sindependentrebuild, archived
+with transcripts; the extraction is protected not by a blanket truncation ceiling but by the
+asserted structural zeros— the exponent’s vanishing constant term, Gaussian parity, the bracket
+zerosatorders𝛽 0 and𝛽−1/2 —togetherwiththestructuralminima𝐹=𝑂(𝛽 −1),Δ𝑟=𝑂(𝛽 −2)):
+𝛽𝑋1 −→2𝑇(𝑐), 𝛽𝑋 2 −→ −𝑇(𝑐)symbolically,
+with next coefficients𝑟2,1(𝑐) = −44𝑐4+29𝑐2−6
+32𝑐6 ,𝑟 2,2(𝑐) = 18𝑐4−7𝑐2+1
+16𝑐6 , and the sum telescopes to
+4𝛽3(𝜇𝐷𝜈𝑁 −𝜇𝑁𝜈𝐷)
+𝜇2
+𝐷
+= 𝑇(𝑐)
+𝛽 + 𝑟2(𝑐)
+𝛽2 +𝜌3, 𝑟 2 =𝑟2,1 +𝑟2,2,
+on the saddle ball, with𝜌3 collected in (iv).
+(iii) Why the split is not cosmetic.𝑋 1 carries the frozen ratio: its bracket is the pure
+covariance whose leading cancellation is the identity of the first line — no absolute-value route
+survives it (the measured×500loss of the crude covariance bound).𝑋2 carries the ratio variation
+in the deficit weightΔ𝑟, two-sidedly controlled by the root floor. The two targets2𝑇and−𝑇
+were pre-registered as intermediate judges with closed forms and verified independentlybefore
+this page was written; their integer proportion is the fingerprint of the single carrier.
+(iv) The remainder𝜌3, by named source — every term of order𝛽−3.(a)𝜀 1 enters every
+𝐾-moment through the common factor1− 3
+8𝑧 +𝜀1; itsconstantpart𝜀 1(𝑧𝑠)cancels exactly in
+both quotients (numerators and denominators are homogeneous of degree two in the moments),
+so only its variation over the ball survives — and the variation now has itswitness: with
+𝑔1 :=𝑧2𝜀1 =− 15
+128 +𝑧2𝜀(3)
+1 (three-term companion),
+|𝜀1(𝑧)−𝜀 1(𝑧𝑠)|≤ |𝑔1(𝑧)−𝑔 1(𝑧𝑠)|
+𝑧2 +|𝑔1(𝑧𝑠)|
+⃒⃒⃒1
+𝑧2 − 1
+𝑧2𝑠
+⃒⃒⃒≤4.94
+𝑧3𝑠
++ 0.34𝑤
+𝑧2𝑠
+on{𝑤≤ 1
+2 }(|𝑔 1 + 15
+128 |≤1.02/𝑧,(1−𝑤) −1 −1≤2𝑤,1/𝑧 2 ≤2/𝑧 2
+𝑠): a𝛽 −3 perturbation of
+𝛽𝑋with constant≤0.5/𝑐 3 (both pieces). (b) the frozen tail𝜂(𝑧𝑠)is a relative perturbation
+13
+
+--- Page 14 ---
+
+|𝜂𝑠|𝑧𝑠 ≤1.23/𝑧 2
+𝑠 of𝑟 𝑠, hence perturbs𝛽𝑋1 ≈2𝑇by at most 0.154𝑇(𝑐)
+𝑐2 𝛽−2 on𝛽𝑋, i.e. at𝛽 −3 on
+the normalized object. (c) the deficit tail, witnessed by the refined ratio of Corollary 24:
+Δ𝜂= 3
+8𝑧3𝑠
+[︀
+(1−𝑤) −3/2 −1
+]︀
++ Δ𝜂(4),|Δ𝜂|≤ 1.37𝑤
+𝑧3𝑠
++ 12.5
+𝑧4𝑠
+((1−𝑤) −3/2−1≤3.66𝑤and(1−𝑤) −2 ≤4on[0, 1
+2 ]): at most0.95𝑇(𝑐)
+𝑐2 𝛽−2 on𝛽𝑋2, the two pieces
+at the Gaussian𝑤-moment and absolutely. The stronger convergent companion of Corollary 24
+now replaces the unexpanded part of this particular source by the explicit𝑧−4
+𝑠 and𝑧 −5
+𝑠 terms
+plus28.622𝑧 −6
+𝑠 ; the older display is retained as a valid coarse client bound. This removes no
+other exponent, geometry, or completion tail from(Htail). (d) the ball’s Gaussian tails and the
+ring and far regions are the two templated families of Lemma 10, exponentially below every
+polynomial source. (e) the saddle chain’s own next polynomial coefficient, extracted by the
+same machinery one order deeper (with the kernel’s next companion order−15
+128 𝑧−2 carried; the
+𝛽0 and𝛽 −1 coefficients are unchanged by it — re-verified):
+𝑟3(𝑐) = −12𝑐6 −485𝑐4 + 796𝑐2 −224
+1024𝑐9 ,
+whose judge-cell values+0.0844,+0.1762,+0.3264,+0.5601independently match the audit’s
+measured Richardson drifts (0.112,0.177, —,0.572at the three audited𝑡’s). The independent
+regular-coordinate engine now carries one further exact order:
+𝑟4(𝑐) = 28𝑐8 + 41𝑐6 −1464𝑐4 + 1856𝑐2 −500
+1024𝑐12 ,
+the coefficient of𝛿3 in𝑌. One further manifested symbolic order gives
+𝑟5(𝑐) = 12940𝑐10 + 16077𝑐8 + 173288𝑐6 −1300912𝑐4 + 1358400𝑐2 −346112
+262144𝑐15 ,
+the coefficient of𝛿4. A coefficientwise exact-series engine, after reproducing this𝑟5, gives one
+more manifested head,
+𝑟6(𝑐) = 8148𝑐12 + 17095𝑐10 + 10768𝑐8 + 634576𝑐6 −2557408𝑐4 + 2283296𝑐2 −549376
+131072𝑐18 ,
+the coefficient of𝛿5. The𝑟4 run reproduces𝑇,𝑟 2,𝑟3 before asserting this identity; its transcript
+and executed blob are owned by the manifested validatorsurface_remainder_delta0_fourth_
+coefficient; the next run and validator independently own𝑟5, whilesurface_remainder_
+delta0_sixth_coefficientowns𝑟 6 together with the hash of its coefficientwise dependency.
+These extra heads do not alter the registeredΘ3 below and, without a uniform𝛿6 remainder,
+carry no relay load. Collecting,
+Θ3(𝑐) =|𝑟 3(𝑐)|+ 1.10𝑇(𝑐)
+𝑐2 + 0.5
+𝑐3 + 0.05,
+and𝑅 1 =|𝑟 2|+ 2Θ 3/𝛽1 evaluates on the four judge cells (𝑐= 0.99,0.93,0.87,0.81) to0.244,
+0.322,0.426,0.557— still inside the pre-registered acceptance band[residual,3×residual]at
+every cell (residuals0.101–0.292, bands[0.101,0.303],[0.144,0.432],[0.200,0.599],[0.292,0.876]),
+while𝑟 2 alone reproduces the measured residual table:+0.1001,+0.1444,+0.1996,+0.2653.
+14
+
+--- Page 15 ---
+
+One debt, declared and carried as the hypothesis the statement assumes: writing𝜏(𝛽,𝑐)for the
+𝛽−4-and-beyond chain tail (not separately extracted; it depends on𝑐through the same chains),
+the display holdsunconditionallywith𝑅 1/𝛽2 replaced by𝑅1/𝛽2 +|𝜏(𝛽,𝑐)|, and the statement’s
+assumption is exactly
+(Htail):|𝜏(𝛽,𝑐)| ≤ Θ3(𝑐)
+𝛽1 𝛽2 for𝛽≥𝛽 1, 𝑡∈(0,𝜋−𝐶 win/𝛽]
+— i.e. the tail is absorbed by the sameΘ3 headroom its Lagrange forms ride. No inference from
+the direct K2 certificate to this separately defined tail is made. The superseded sharp chain
+instead used the joint carrier of the superseded sharp Target 27 directly.
+(v) The mirror clause.Under the involution of Remark 19,𝑇(𝑠,𝛼) = (𝜋−𝑠,𝜋−𝛼):𝐷∘𝑇=
+−𝐷,𝑁∘𝑇=𝐶(2𝑥 2 −1) +𝑦(𝐶𝑥+ 1−𝑥 2)(its own object: only the−1 +𝑥 2 block flips sign),
+|𝐹∘𝑇|≤5, and𝑅 2(·;𝑐)∘𝑇=𝑅 2(·;𝑠4)exactly: every mirror-region moment is a saddle-chart
+moment at parameter𝑠4, with exact relative suppression𝑒−4𝛽𝛿4. Moreover
+𝐶= 2𝑐 2 −1 = (𝑐−𝑠 4)(𝑐+𝑠 4) =𝛿4 (𝑐+𝑠 4)
+— the half-angle key once more — so the mirror terms carrying𝐶are uniformly tamed by
+sup𝑥>0 𝑥𝑒−4𝑥 = 1
+4𝑒. For𝑠 4 ≥1
+2 (𝑡≥ 2𝜋
+3 ; this zone contains the stress cell) the𝑠4-saddle mass
+obeys the derived Gaussian upper boundΛ(𝑠4)𝛽−3/2𝑒4𝛽𝑠4 withΛ(𝑠 4) = 1.34𝑠 −5/2
+4 (the chain
+constant1.08/𝑞(𝑠 4)with𝑞= 1− 0.0492
+𝑠2
+4
+evaluated at the zone edge𝑠4 = 1
+2 ; at the stress cell the
+local value is1.21) [chain:𝐾≤2𝛽𝑒 𝑧/
+(︀√
+2𝜋𝑧3/2)︀
+for𝑧≥20from Lemma 22;𝑧≥𝑧 𝑠(𝑠4)/
+√
+2≥21
+on the ball at𝛽≥15by the root floor;𝑒 𝑧−𝑧𝑠(𝑠4) ≤𝑒−2𝛽𝑠4 ˜𝑤with˜𝑤≥(1− 0.0492
+𝑠2
+4
+)(𝑃′+𝑄′)and
+𝑃′ ≥0.2458𝑠 ′2 on the ball — bench: dominates the verified-quadrature mirror-ball mass by
+×2.7at the stress cell], and the Gaussian𝜌 ′2-moment ratio is≤4.7/(𝛽𝑠 4). With the corner
+expansion|𝐹∘𝑇−4𝐶|≤6𝜌 ′2 (Hessian sup),𝑟(𝑧(·;𝑠 4))≤
+√
+2/(4𝛽𝑠4)on the ball, and the main-
+side bounds𝜈 𝐷 ≤0.715𝜇 𝐷/(𝛽2𝑐),|𝜈 𝐹|≤12.09𝜇 𝐷/(𝛽3𝑐2),|𝜇 𝐹|≤34.2𝜇 𝐷/(𝛽𝑐)(all from the
+⟨𝑃⟩-chain𝑃≤1.11𝑤on the ball,𝐷≥1.8there, and Lemma 10 off it), the four cross terms
+and the second-order term assemble to thefully derivedbound
+𝑀(𝑐,𝛽) = Λ(𝑠4)
+𝑚*
+[︁(︀4
+√
+2
+𝑠4
++11.44
+𝑐
+)︀
+(𝑐+𝑠4)𝛽𝛿4 + 39.9
+𝑠2
+4
++ 96.7
+𝑐2 + 96.7
+𝑐𝑠4
++ 80.7
+𝑐𝑠4
+]︁
+𝑒−4𝛽𝛿4
++ 10
+√
+2
+𝑠4
+(︁Λ(𝑠4)
+𝑚*
+)︁2
+𝛽𝑒−8𝛽𝛿4
+for𝑠 4 ≥1
+2 , while for𝑠4 < 1
+2 (where𝛿 4 ≥0.366) the crude global bounds𝐾≤𝛽𝑒 𝑧(·;𝑠4) (𝐴≤ 1
+2 )
+and𝐻 𝐵 ≤𝐾/(8𝛽)(Lemma 10) give𝑀≤ 92
+𝑚2*
+𝛽9/2𝑒−4𝛽𝛿4 ≤2.1×10 −2, decreasing on𝛽≥15.
+Throughout,𝑚 *≥1
+2 is Lemma 18 (the signed minoration, discharged):𝑀is unconditional, as
+is Corollary 13.
+Remark26 (status and tricotomy of the extraction).The closed forms2𝑇,−𝑇,𝑟 2,1,𝑟 2,2,𝑟 3,
+𝑟4,𝑟 5, and𝑟 6 areexact(symbolic extraction with proved-zero asserts, machine-verified twice
+at independent truncation depths; trust basesympy, thederive_holonomicprecedent). These
+head coefficients now have a third, structurally different derivation. On the regular coordinate
+𝛿= 1/𝛽, write𝑃= sin 2(𝜎
+√
+𝛿/2)/𝛿andrationalize( √1−𝑤−1)/𝛿=−(𝑤/𝛿)/(1+ √1−𝑤)before
+expanding. The resulting pointwise carrier is analytic at𝛿= 0; exact two-dimensional Gaussian
+moments first prove the bilinear constant term zero and then give, successively,𝑌(0,𝑡) =𝑇(𝑐),
+15
+
+--- Page 16 ---
+
+𝜕𝛿𝑌(0,𝑡) =𝑟 2(𝑐), the𝛿2 coefficient𝑟3(𝑐), the𝛿3 coefficient𝑟4(𝑐), the𝛿4 coefficient𝑟5(𝑐), and the
+𝛿5 coefficient𝑟 6(𝑐). The independent executable derivations aresurface_remainder_delta0_
+first_coefficient.pyandsurface_remainder_delta0_fourth_coefficient.py, followed
+by the manifested fifth- and sixth-coefficient derivators; they use the convergent companions of
+Lemma 23, not the older formal𝜀engine. This agreement strengthens the exact head; it does
+not provide a separate uniform bound for the historical split tail. The remainder constants of
+(iv)–(v) areexactconsequences of Lemmas 22, 24 (including the three-term witnesses for the
+variation constants) and the root floor;𝑀’s normalization by the saddle-mass floor is Lemma 18
+(unconditional); the𝛽−4 chain tail is the explicit hypothesis(Htail)of step (iv)(e). This historical
+split-tail lemma carries no load in Theorem 2; the superseded sharp Target 27 used the assembled
+joint remainder, whereas the theorem uses the weak-main covariance route and the finite row is
+certified directly. An optional sharpening of the already unconditional mirror bound is likewise
+omitted because it carries no relay load. The residual table, the stress-cell pieces, and the
+independent Richardson verification (targets hit to relative10−6 at three𝑡’s, drift-halving ratios
+≈2.00) areverifiednumerics, quoted as calibration of the pre-registered judges, bearing no load
+in the bound.
+Target 27(superseded sharp K2 research statement).Let𝛿= 1/𝛽,𝑐= cos(𝑡/4),𝐹=𝑁−𝐶𝐷,
+and, on the principal saddle square, put
+𝑋main := 4𝛽3(𝜇𝐷𝜈𝐹 −𝜇𝐹𝜈𝐷)
+𝜇2
+𝐷
+, 𝑌:=𝛽𝑋 main,
+where𝜇𝑓 =
+∫︀∫︀
+𝐾𝑓and𝜈 𝑓 =
+∫︀∫︀
+𝐷𝐻𝐵𝑓. On the certified K2 union,
+⃒⃒𝑌(𝛿,𝑡)−𝑇(𝑐)−𝑟 2(𝑐)𝛿
+⃒⃒≤Θ 3(𝑐)𝛿2.
+Moreover𝑋main >0whenever0<𝛿≤9/1000and𝜆= (𝜋−𝑡)/𝛿≥3.
+Remark28 (superseded sharp K2 certificate chain).The archived sharp-positive chain is not
+evidence for the displayed target. Its endpoint assembler and full-moment error propagators
+applied the exact leading ratio𝐻0/𝐾0 = 1/(8 cos(𝑡/4))twice. The affected values and uniform
+charges therefore had the wrong normalization even though their internal production/replay
+bookkeeping agreed. Those transcripts are superseded and no numerical margin from them is
+quoted here.
+K4 and the S1”’/S2”’ weighted-remainder judges belong only to a possible future proof of
+this stronger research statement. They remain unresolved and carry no load in Theorem 2,
+which instead uses the division-free weak-main certificate below.
+Proposition 29(certified terminal high-𝛽relay).For every𝛽≥1000/9and every𝑡∈(0,𝜋)
+one has𝐸′(𝑡,𝛽)<0.
+Proof.Put𝛿= 1/𝛽and𝜆=𝛽(𝜋−𝑡), and write𝐸 𝑡 =𝜕 𝑡𝐸=𝐸 ′. If0< 𝜆≤3, Lemma 61
+reduces the sign to the positivity of its cancellation-free five-family quotient. Three adjacent
+certified𝜆-lanes cover
+[0,3/2],[3/2,2],[2,3].
+The first lane is the union of a 375-cell finite archive on1/125≤𝛿≤9/1000and a 600-cell half-
+linearchiveon0≤𝛿≤1/125; thenexttwolanescontain225and450cells. Eachvalidatorchecks
+the exact rational union, strict positivity of the denominator family and quotient, dependency
+16
+
+--- Page 17 ---
+
+hashes, and an independent byte-identical replay. Since𝜆 >0for𝑡 < 𝜋,−𝐸 𝑡/𝜆 >0implies
+𝐸𝑡 <0.
+Suppose now that𝜆≥3. Set
+Φ = cos 2𝑠+ cos𝛼cos𝑠, 𝐽 𝑁 =
+∫︁∫︁
+𝑁(1−𝑃−𝑄)𝐻 𝐵, 𝐽 𝐷 =
+∫︁∫︁
+𝐷(1−𝑃−𝑄)𝐻 𝐵,
+and
+𝒬:= ⟨Φ⟩
+⟨𝐷⟩, 𝑋 full := 8𝛽3(︀
+⟨𝐷⟩𝐽𝑁 −⟨𝑁⟩𝐽 𝐷
+)︀
+⟨𝐷⟩2 .
+Lemma 6 gives the exact identity
+𝐸′
+−1
+2 sin(𝑡/2) =𝒬+𝑋 full.(3)
+The signed-mass lemma makes every displayed denominator strictly positive. A complete high-𝛽
+certificate proves
+𝒬> 19
+20 on𝛽≥1000/9,0<𝑡≤𝜋− 3
+2𝛽.
+For the bilinear term split the torus into the principal square𝐵, its involutive mirror𝐵′,
+and the rest𝑅. For a measurable set𝑈write
+𝜇ℎ(𝑈) :=
+∫︁∫︁
+𝑈
+𝐾ℎ, 𝜈 ℎ(𝑈) :=
+∫︁∫︁
+𝑈
+𝐷𝐻𝐵ℎ, 𝜅:= 4𝛽 3,
+and define the block moments
+(𝑎,𝑓,𝑢,𝑤) = (𝜇 𝐷,𝜇𝐹,𝜈𝐷,𝜈𝐹)(𝐵),
+(𝑏,𝑔,𝑣,𝑥) = (𝜇 𝐷,𝜇𝐹,𝜈𝐷,𝜈𝐹)(𝐵′),
+(𝑒,𝑘,𝑦,𝑧) = (𝜇 𝐷,𝜇𝐹,𝜈𝐷,𝜈𝐹)(𝑅).
+Thus𝑑1 =𝑎+𝑏,𝑑=𝑑 1 +𝑒,𝜌=−𝑏/𝑎, and
+𝐶mirror := 𝜅
+𝑑1
+(︂
+𝑥− 𝑓
+𝑎𝑣
+)︂
++ 𝜅(𝑢+𝑣)
+𝑑2
+1
+(︂𝑏𝑓
+𝑎 −𝑔
+)︂
+,
+𝐶rest := 𝜅
+𝑑
+(︂
+𝑧− 𝑓+𝑔
+𝑑1
+𝑦
+)︂
++ 𝜅(𝑢+𝑣+𝑦)
+𝑑2
+(︂𝑒(𝑓+𝑔)
+𝑑1
+−𝑘
+)︂
+.
+These definitions make the exact two-stage assembly
+𝑋1 = 𝑋main
+1−𝜌 +𝐶mirror, 𝑋 full = 𝑑1
+𝑑 𝑋1 +𝐶rest = 𝑎
+𝑑𝑋main + 𝑑1
+𝑑 𝐶mirror +𝐶rest,
+where indeed𝑑1 =𝑎(1−𝜌). Equivalently, ifPis the probability measure on𝐵with density
+𝐾𝐷/𝑎, the division-free centred identity is
+𝑋main = 4𝛽3 CovP
+(︂𝐹
+𝐷,𝐻𝐵
+𝐾 𝐷
+)︂
+.
+is evaluated without dividing interval balls by a parameter interval. Two adjacent 576-row Arb
+production/replay pairs certify
+𝑋main >− 1
+20
+17
+
+--- Page 18 ---
+
+on
+[0,9/1000]×[0,21/10]and[0,9/1000]×[21/10,31415927/10 7].
+Every row prints and validates explicit outward lower endpoints for the positive denominator
+and for𝑋 main; production and replay are byte-identical. Since𝜋 <31415927/10 7, the two
+rectangles cover all physical0<𝑡<𝜋.
+It remains only to propagate this weak premise. Put𝑝= sin(𝑡/4). On the common-variable
+lane𝑝≥101/200, the certified bounds
+0≤𝜌< 7
+200,|𝐶 mirror|< 43
+50,|𝐶 rest|< 1
+100000,0< 𝑑1
+𝑑 <1 + 10 −15
+and the exact assembly give
+𝒬+𝑋 full > 368403499999991201
+9650000000000000000 >0.
+On the fixed-gap lane𝑝≤101/200, the mirror changes𝑋 main by less than10−30 and the rest
+by less than1/100000, so
+𝒬+𝑋 full > 19
+20 − 1
+20 −10 −30 − 1
+100000 > 899
+1000 >0.
+The𝑝lanes meet at101/200. The weak-main rectangles overlap at𝑡= 21/10, and the four𝜆
+lanes meet at3/2,2, and3. Thus there is no domain gap. Because−sin(𝑡/2)/2<0on(0,𝜋),
+(3) yields𝐸′ <0. The executable compositionaudit_surface_g2_weak_terminal_cover.py
+reruns all identities, input validators, and seams.
+The adaptive grid counts and the smallest printed adaptive lower endpoint are execution
+diagnostics of the first-passing-grid rule; they are not used as analytic margins.
+Proposition 30(certified local box).For every(𝑡,𝛽)∈[1.5,1.51]×[8,8.05]one has⟨𝐷⟩>0
+and𝑊 𝑐 <0; hence, by Lemma 5,𝐸′(𝑡,𝛽)<0on this box.
+Certificate.Ball-arithmetic machine certificate (python-flint 0.9.0 / Arb). The executed script is
+identifiedbySHA-256prefix1d888e99andisarchivedbyte-exactintherepository, togetherwith
+the self-contained transcript (both file names carry the hash; the transcript’s provenance header
+recordsthefullhash, libraryversions, andstageparameters). Threestages, onetranscript.Point
+(1.5,8):1,951,141cells,𝑊 𝑐/⟨𝐷⟩2 ⊂[−0.4546,−0.1752].Stability(precision120,Δ𝑧≤0.12):
+2,500,336cells, ratio⊂[−0.4304,−0.1978], nested inside the point enclosure.Box: union of nine
+parametric sub-boxes (Δ𝛽≤0.02,Δ𝑡≤0.005), each with strictly negative𝑊 𝑐 enclosure and
+⟨𝐷⟩>0(worst𝑊 𝑐 upper end≤−2.8×10 21),22,986,387cells in total,7558s. All comparisons
+are strict ball comparisons; the displayed intervals are outward-rounded supersets of the printed
+enclosures. This proposition validates the exp-factored mechanism and calibrates its coverage
+design. The full row is closed independently by Proposition 32.
+Proposition 31(certified; compact left edge).For every3≤𝛽≤20and0<𝑡≤0.6, one has
+𝑊(𝑡,𝛽)<0.
+Certificate.The odd function𝑊has an exact zero of order at least three at𝑡= 0. The
+Arb programcertify_left_edge_beta_taylor_arb.pytherefore encloses the analytic quo-
+tient𝑊/𝑡 3 on[0,0.2]by mixed Taylor derivatives at zero; it bounds the order-13 beta remain-
+der through𝜕 3
+𝑡𝜕13
+𝛽 𝑊, so no interval containing zero is ever divided. On[0.2,0.6]it splices
+18
+
+--- Page 19 ---
+
+to the ordinary bivariate-Taylor certificate. The exhaustive 140-bit run covers 170 contiguous
+beta boxes, 170 normalized boxes and 883 regular boxes, with no beta-step reduction. The
+transcript records script hash1ea85d53...19d6ddcand commit643c62d6...; its manifest is
+left-edge-beta-taylor-20260712T093905Z.jsonand its validator checks the two box counts,
+every beta adjacency, the splice configuration, and the terminal verdict.
+Proposition 32(certified; compact relay on[6,15]).For every6≤𝛽≤15and0.6≤𝑡≤
+𝜋−1.5/𝛽, one has𝑊(𝑡,𝛽)<0.
+Certificate.The outward-rounded Arb programcertify_bulk_beta_taylor_arb.pypartitions
+[6,15]into 90 contiguous rational intervals of width0.1. On each interval it expands𝑊
+at the exact rational midpoint to order 12 in𝛽and order 9 in𝑡. Central mixed deriva-
+tives are obtained from𝐼 (𝑞)
+𝑛 = 2 −𝑞∑︀𝑞
+𝑗=0
+(︀𝑞
+𝑗
+)︀
+𝐼𝑛−𝑞+2𝑗, with𝐼 −𝑛 =𝐼 𝑛; Lagrange remainders
+are bounded absolutely at the upper𝛽endpoint. The positive coefficient tails use𝐼 𝑛+1/𝐼𝑛 <
+𝑥/(2(𝑛+ 1))and𝐼 𝑛−1/𝐼𝑛 =𝐼𝑛+1/𝐼𝑛+ 2𝑛/𝑥, giving a common geometric tail and the derivative
+majorant[4(1 + 2(𝑚+ 1)/𝛽 lo)]𝑞. The moving upper edge is covered from outside using the
+rational upper bound3.1415927> 𝜋. The run at 130-bit precision certifies 3,222𝑡-boxes,
+with no reduced𝛽step, and terminatesCERTIFIED. Its transcript records script SHA–256
+f69cfaad...f97b9aa, Git commite60cac9e..., Python 3.12.6 and python-flint 0.9.0. The
+manifestbulk-beta-taylor-20260712T064219Z.jsonowns the transcript; an executable val-
+idator checks all 90 adjacencies, the total box count, the terminal verdict, and equality of the
+executed script with the recorded commit blob. This proposition concerns the compact bulk
+row only: it does not certify the separate moving-edge constant𝐶win = 1.5.
+Proposition 33(certified; compact extension to𝛽= 20).For every15≤𝛽≤20and0.6≤
+𝑡≤𝜋−1.5/𝛽, one has𝑊(𝑡,𝛽)<0.
+Certificate.The same bivariate-Taylor Arb machine and tail contracts as in Proposition 32 cover
+89contiguous𝛽-boxesand 4,736strict𝑡-boxes. Theinitialwidth0.1isreduced once, at𝛽= 16.1,
+to0.05; the transcript records that refinement and the executable validator checks the resulting
+mixed-width adjacency through𝛽= 20. The run uses 130-bit Arb arithmetic, script hash
+f69cfaad...f97b9aa, and commit668ed6ac.... Its manifest isbulk-beta-taylor-15-20-
+20260712T080953Z.json.
+Remark34 (what certifies, and what audits).The mathematical certificate for each sub-box is
+itssinglerigorous Arb enclosure: outward-rounded ball arithmetic makes one honest enclosure
+a proof of the strict inequalities, per sub-box. The precision-120stability stage (with its nesting
+inside the point enclosure) and theplannedpre-registered sampledmpmath.ivreproduction are
+implementation audits: they test the software that produced the enclosures, not the inequalities
+themselves, and they are declared as such in the relay table. This fixes the convention for the
+[6,15]coverage: one certificate-grade Arb enclosure per sub-box; stability and sampling audit
+the pipeline.
+Lemma 35(safe square roots in the archived run).In the archived script (SHA-2561d888e99),
+the square-root guard clamps a negative lower endpoint to0and, when theupperendpoint ball
+straddles0, returns the dyadic upper bound28−𝑝/2 at working precision𝑝≥90. This bound is
+valid throughout the run. Indeed, the guarded inputs are true squares:𝑅2 = 4[𝑐2
+0(1−𝑃−𝑄)+𝑃𝑄]
+with𝑐 2
+0 ≤1,𝑃,𝑄∈[0,1], and𝑧 2 = 4𝛽2𝑅2 with𝛽≤15, so|𝑅 2| ≤16,|𝑧 2| ≤14400; the
+correspondingballsare built by at most twelve correctly rounded operations on factors of unit
+19
+
+--- Page 20 ---
+
+size, hence|𝑅2
+ball|<16.01and|𝑧 2
+ball|<14401<2 14 (magnitude means|mid|+ rad). The upper-
+endpoint ball𝑢= mid + radinvolves two exact arf-to-ball conversions and one correctly rounded
+addition, sorad(𝑢)≤ulp(2 14) = 215−𝑝. If𝑢straddles0then|mid(𝑢)|≤rad(𝑢), hence the true
+upper endpoint is at most2 rad(𝑢)≤2 16−𝑝 and its square root is at most28−𝑝/2 — exactly the
+coded constant. (In the definitive script the branch is replaced byabs_upper(), an automatic
+outer bound with no ad-hoc constant; the present lemma covers the archived run.)
+The two scaled functions
+The certificate’s precision rests on three one-line facts.(a)𝐴(𝑧) =𝑒 −𝑧𝐼1(𝑧)/𝑧is strictly de-
+creasing on(0,∞): by the classical lower bound𝐼 𝜈+1(𝑧)/𝐼𝜈(𝑧)≥𝑧/
+(︀
+𝜈+ 1 +
+√︀
+(𝜈+ 1) 2 +𝑧2)︀
+,
+valid for𝑧 >0and𝜈≥0(Amos [1]; both members of the classical two-sided pair are proved
+in [2], Theorem 1), taken at𝜈= 0, together with
+√
+1 +𝑧2 ≤𝑧+ 1(square both sides),
+𝐼1/𝐼0 > 𝑧/(𝑧+ 2), which is exactly(log𝐴) ′ =𝐼 0/𝐼1 −1−2/𝑧 <0; hence𝐴is enclosed
+over any𝑧-interval by its two endpoint values.(b)The kernel–score product collapses alge-
+braically,𝐾𝜕 𝑡log𝐾= 32𝛽 3 cos(𝑡/4)(cos(𝑡/4))′(1−𝑃−𝑄)𝐻 𝐵(𝑧)(the factor𝐼 1(𝑧)/𝑧cancels
+between𝐾and the denominator of the regular score), so the covariance integrands involve only
+𝐵(𝑧) =𝑒 −𝑧𝐻𝐵(𝑧).(c)𝐵is enclosedunconditionallyby[𝑒 −𝑧hi𝐻𝐵(𝑧lo), 𝑒−𝑧lo𝐻𝐵(𝑧hi)], since𝑒−𝑧
+decreases and𝐻𝐵 (a positive-coefficient entire series) increases; after centering, the𝐵-terms are
+subdominant and this crude-but-safe bound suffices. Together with the exact linear-exponential
+cell integrals, every source of exponential interval growth is either integrated analytically or
+carried by a monotone one-dimensional profile — the certificate is structure, not brute force.
+3 The spectral framework
+Convention36 (normalizations).On(0,𝜋)define the kernel, entry law, and smoothing operator
+𝑞1(𝑢,𝑣) = 2𝑒 𝛽cos𝑢cos𝑣 sinh(𝛽sin𝑢sin𝑣) = 4
+∑︁
+𝑚≥1
+𝐼𝑚sin(𝑚𝑢) sin(𝑚𝑣),(4)
+𝑠1(𝑢) = 𝛽
+2 sin𝑢𝑒 𝛽cos𝑢 =
+∑︁
+𝑚≥1
+𝑚𝐼𝑚sin(𝑚𝑢),(5)
+(𝑄𝑓)(𝑣) = 1
+2𝜋
+∫︁ 𝜋
+0
+𝑞1(𝑣,𝑢)𝑓(𝑢)𝑑𝑢,(6)
+so that𝑄sin(𝑚·) =𝐼 𝑚sin(𝑚·). Both closed forms are classical consequences of the generating
+function𝑒 𝛽cos𝜃 =𝐼 0 + 2 ∑︀
+𝑚≥1 𝐼𝑚cos(𝑚𝜃); (5) follows by differentiation. All ten verification
+artifacts in the repository use exactly these normalizations.
+Since𝑞 1 >0on(0,𝜋) 2 and𝑠 1 >0on(0,𝜋), the walk with step kernel𝑞 1 killed on{0,𝜋}
+is well defined;𝐻(𝜓) =𝛽sin(𝜓/2)𝐼 1(2𝛽cos(𝜓/2))and𝐾 2(𝜙) =𝐼 0(2𝛽cos(𝜙/2))appear below.
+Note𝐹𝐵 =𝑄3𝑠1 and, by the sine orthogonality computation of Lemma 43,𝐹𝐴 is the companion
+cosine-weighted integral.
+4 Theorem A: positivity of𝐹𝐵
+Theorem 37(exact).𝐹 𝐵(𝑡)>0for all𝑡∈(0,𝜋)and all𝛽 >0.
+20
+
+--- Page 21 ---
+
+First proof (kernel positivity).𝐹𝐵 =𝑄 3𝑠1 by (6) and𝑏𝑚 =𝑚𝐼 4
+𝑚. Each application of𝑄inte-
+grates a positive function against the strictly positive kernel (4);𝑠1 >0on(0,𝜋). Hence𝐹 𝐵 >0
+pointwise.
+Second proof (symmetric-decreasing convolution).With𝐾2(𝜙) =𝐼0(2𝛽cos(𝜙/2))and𝑃 4 =𝐾2*
+𝐾2 (circle convolution; Section 7),𝐹𝐵 =−1
+2 𝑃′
+4. The function𝐾2 is even andstrictly decreasing
+in|𝜙|on[0,𝜋](𝐼 0 strictly increasing,cos(𝜙/2)strictly decreasing). By the layer-cake representa-
+tion,𝐾2 =
+∫︀∞
+0 1𝐴𝜆 𝑑𝜆with𝐴 𝜆 centeredarcswhosehalf-lengths𝑎(𝜆)fill(0,𝜋)continuously(strict
+decrease). For centered arcs,(1𝐴*1𝐵)(𝑡) =|𝐴∩(𝑡+𝐵)|is even and nonincreasing in|𝑡|on[0,𝜋],
+andstrictlydecreasing on||𝑎−𝑏|,min(𝑎+𝑏,2𝜋−𝑎−𝑏)|. Hence𝑃 4(𝑡) =
+∫︀∫︀
+|𝐴𝜆∩(𝑡+𝐴 𝜇)|𝑑𝜆𝑑𝜇
+is even, nonincreasing on[0,𝜋], and strictly decreasing on(0,𝜋)because for every𝑡∈(0,𝜋)a
+positive measure of pairs(𝜆,𝜇)has|𝑎(𝜆)−𝑎(𝜇)|<𝑡<min(𝑎+𝑏,2𝜋−𝑎−𝑏)(the half-lengths fill
+(0,𝜋)). At the derivative level: each overlap𝑡↦→|𝐴𝜆∩(𝑡+𝐴 𝜇)|is Lipschitz with a.e. derivative
+−1in the strict regime and0otherwise (on[0,𝜋]); since𝑃 4 is analytic, dominated convergence
+gives𝑃 ′
+4(𝑡) =
+∫︀∫︀
+𝜕𝑡|𝐴𝜆∩(𝑡+𝐴 𝜇)|𝑑𝜆𝑑𝜇≤−𝜇{(𝜆,𝜇) :strict at𝑡}<0pointwise on(0,𝜋). Thus
+𝐹𝐵 =−1
+2 𝑃′
+4 >0on(0,𝜋).
+5 Theorem B: ratio monotonicity for0<𝛽≤3
+Lemma 38(exact; Wronskian identity).For real arrays with∑︀𝑚(|𝑎𝑚|+|𝑏 𝑚|)<∞,
+𝑊:= 2(𝐹 ′
+𝐴𝐹𝐵 −𝐹𝐴𝐹′
+𝐵) =
+∑︁
+1≤𝑚<𝑛
+𝑐𝑚𝑛𝑇𝑚𝑛(𝑡), 𝑐 𝑚𝑛 =𝑎𝑚𝑏𝑛 −𝑎𝑛𝑏𝑚,(7)
+where𝑇𝑚𝑛(𝑡) = (𝑚−𝑛) sin((𝑚+𝑛)𝑡) + (𝑚+𝑛) sin((𝑛−𝑚)𝑡).
+Proof.Product-to-sum:𝑇 𝑚𝑛 = 2[𝑚cos(𝑚𝑡) sin(𝑛𝑡)−𝑛sin(𝑚𝑡) cos(𝑛𝑡)] =: 2𝐺(𝑚,𝑛), antisym-
+metric with𝐺(𝑛,𝑛) = 0; since𝑐 𝑚𝑛 is antisymmetric, ∑︀
+𝑚<𝑛𝑐𝑚𝑛2𝐺= 2 ∑︀
+𝑚,𝑛𝑎𝑚𝑏𝑛𝐺(𝑚,𝑛) =
+2[𝐹′
+𝐴𝐹𝐵 −𝐹𝐴𝐹′
+𝐵](first recorded in [7]).
+The coefficient input is the weighted Turán-type lemma (Appendix A, self-contained):𝜙𝑚 =
+𝑎𝑚/𝑏𝑚 is strictly increasing in𝑚≥1for every𝛽 >0, henceevery minor is negative:𝑐 𝑚𝑛 <0
+for𝑚<𝑛(exact).
+Lemma 39(exact; the pair identities and bounds).For𝑡∈(0,𝜋), with𝑝=𝑛−𝑚,𝑞=𝑛+𝑚:
+(a)𝑇 12 = 4 sin3 𝑡;𝑇 13 = 16 sin3 𝑡cos𝑡;𝑇 24 = 8 sin3(2𝑡), so|𝑇 13|≤16 sin 3 𝑡and|𝑇 24|≤
+64 sin3 𝑡.
+(b)𝑇 𝑚,𝑚+1 ≥0for every𝑚≥1.
+(c)|𝑇 𝑚𝑛|≤ 𝜋3
+48 𝑝𝑞(𝑞2 +𝑝2) sin3 𝑡for all𝑚<𝑛.
+Proof.(a)3 sin𝑢−sin 3𝑢= 4 sin 3 𝑢gives𝑇 12 (at𝑢=𝑡) and𝑇 24 (at𝑢= 2𝑡);𝑇 13 = 4 sin 2𝑡−
+2 sin 4𝑡= 4 sin 2𝑡(1−cos 2𝑡) = 16 sin 3 𝑡cos𝑡. (b)𝑇 𝑚,𝑚+1 = (2𝑚+ 1) sin𝑡−sin((2𝑚+ 1)𝑡)≥0
+since|sin(𝑞𝑡)|≤𝑞sin𝑡on(0,𝜋)(induction on𝑞). (c)𝑇 𝑚𝑛 and its first two derivatives vanish
+at𝑡= 0and𝑡=𝜋(the parities of𝑚±𝑛agree), and|𝑇 ′′′
+𝑚𝑛|≤𝑝𝑞 3 +𝑞𝑝3 =𝑝𝑞(𝑞 2 +𝑝2); hence
+|𝑇𝑚𝑛(𝑡)|≤ 𝑝𝑞(𝑞2+𝑝2)
+6 min(𝑡,𝜋−𝑡) 3, andsin𝑡≥ 2
+𝜋 min(𝑡,𝜋−𝑡)gives the claim.
+21
+
+--- Page 22 ---
+
+Theorem 40(exact modulo the certified computationcertify_thmB.py).For0< 𝛽≤3:
+𝑊 <0on(0,𝜋), hence𝐸 ′<0on(0,𝜋).
+Proof.Drop the adjacent pairs𝑚≥2(each contributes𝑐 𝑚,𝑚+1𝑇𝑚,𝑚+1 ≤0by Lemma 39(b)
+and𝑐<0); keep𝑇 12,𝑇13,𝑇24 exactly and majorize every other pair by Lemma 39(c). Pointwise
+in𝑡,
+𝑊(𝑡)
+sin3 𝑡 ≤Crit(𝛽) :=−4|𝑐 12|+ 16|𝑐13|+ 64|𝑐24|+ 𝜋3
+48
+∑︁
+𝑝≥2
+(𝑚,𝑛)̸=(1,3),(2,4)
+𝑝𝑞(𝑞2 +𝑝2)|𝑐𝑚𝑛|.
+The certificatecertify_thmB.py(Section 10) enclosesCritin interval arithmetic over adaptive
+𝛽-boxes covering[1/20,3](𝐼 𝑚 increasing in𝛽gives rigorous boxes; cutoff𝑀= 60with the
+tail itself computed in intervals and closed by a derived, per-box-asserted geometric ratio) and
+certifiesCrit<0on all of[1/20,3]; the script then re-certifieseverybox at precision+70before
+reporting success (the box count is invocation- and implementation-dependent; the independent
+Arb implementationcertify_thmB_arb.pycertifies the same coverage with86boxes and a full
+stability pass, transcript archived). For0<𝛽≤1/20, Lemma 41 applies.
+Lemma 41(exact; small𝛽).For0<𝛽≤1/20:Crit(𝛽)<0.
+Proof.Write𝜅=𝛽/2≤1/40,𝐿 𝑚 =𝜅 𝑚/𝑚!,𝑈 𝑚 =𝑒 *𝐿𝑚 with𝑒 * =𝑒 𝛽2/4 ≤𝑒 1/1600 <1.001;
+then𝐿 𝑚 ≤𝐼 𝑚 ≤𝑈 𝑚 (positive series).Leading minor:𝑎 2𝑏1 ≥(𝐼 2
+1 𝐼2
+2 )(𝐼4
+1 )≥𝐿 6
+1𝐿2
+2 =𝜅 10/4and
+𝑎1𝑏2 = (2𝐼2
+1 𝐼2
+2 )(2𝐼4
+2 )≤4𝑈 2
+1 𝑈6
+2 = (𝑒*)8𝜅14/16, so
+|𝑐12| ≥𝜅10
+4
+(︁
+1− (𝑒*)8𝜅4
+4
+)︁
+≥ 𝜅10
+4 (1−10 −6).
+The three visible positive terms:𝑎3 ≤𝐼 2
+3 ·(2𝐼2
+2 + 4𝐼2
+4 )≤(𝑒 *)4𝜅10/24·(1 + 10−4)and𝑏 1 ≤(𝑒*)4𝜅4
+give16|𝑐 13|≤16(𝑎 3𝑏1 +𝑎1𝑏3)≤0.70𝜅 14;64|𝑐 24|≤64(𝑎 4𝑏2 +𝑎2𝑏4)≤10 −3𝜅14 (both products
+have𝜅-degree≥22); the largest remaining weighted pair is(1,4): 𝜋3
+48 ·510·(𝑎 4𝑏1 +𝑎1𝑏4)≤
+0.2𝜅18 ≤10 −6𝜅14.All other pairs(those with𝑠:=𝑚+𝑛≥6,𝑝≥2): using𝑎 𝑛𝑏𝑚 +𝑎𝑚𝑏𝑛 ≤
+2𝑚𝑛(𝑒*)8𝜅4𝑠−2[((𝑚−1)!𝑚!) −2𝑛!−4 + ((𝑛−1)!𝑛!) −2𝑚!−4]≤𝑠 2(𝑒*)8𝜅4𝑠−2 (the factorial bracket
+is≤2and2𝑚𝑛≤𝑠 2/2),𝑝𝑞(𝑞 2 +𝑝2)≤2𝑠 4, and at most𝑠pairs per level,
+𝜋3
+48
+∑︁
+𝑠≥6
+(level𝑠)≤ 𝜋3
+48(𝑒*)8 ∑︁
+𝑠≥6
+2𝑠7𝜅4𝑠−2 ≤0.66𝜅 22 ·6 7 ∑︁
+𝑗≥0
+[︀
+(7/6)7𝜅4]︀𝑗 ≤3.7×10 5 𝜅22 ≤10 −7𝜅14,
+where the level ratio𝑠↦→𝑠+ 1is at most(7/6) 7𝜅4 <10 −5 < 1
+2 (so the geometric closure is
+valid), and𝜅8 ≤40 −8 absorbs the constant. Collecting:
+Crit≤−𝜅 10(1−10 −6) + 0.71𝜅14 =−𝜅10(︀
+1−10 −6 −0.71𝜅 4)︀
+<0,
+since𝜅 4 ≤40 −4 <4·10 −7. (All numbered constants above are crude upper counts; each step
+loses factors, none gains.)
+Remark42 (verified; the sharp family and saturation).The sharper per-pair bound|𝑇 𝑚𝑛|≤
+𝑝𝑞(𝑞2−𝑝2)
+6 sin3 𝑡and the adjacent floor𝑇 𝑚,𝑚+1 ≥2𝑚sin 3 𝑡(note the sign: the floor is alower
+bound on a positive quantity) are verified far beyond the range used (𝑞≤151;13pairs to
+(10,30), max ratio1.0) and would extend Theorem 40 to𝛽≈3.5; their per-pair certification
+22
+
+--- Page 23 ---
+
+is a scheduled upgrade. Beyond that the decomposition issaturated: with the exact far block
+(cancellation included) the criterion fails at𝛽= 6by+2.2×1014 while the true𝑊/sin3 𝑡remains
+negative (−6.9×10 12) — a verified adversarial finding about the method, and the reason the
+large-𝛽closure uses different machinery (Sections 7–9).
+6 The bridge structure of𝐸(exact)
+Let𝑘=𝑞 1∘𝑞1 denote the two-step kernel,𝑘(𝜓,𝑡) = 4 ∑︀
+𝑚≥1 𝐼2
+𝑚sin(𝑚𝜓) sin(𝑚𝑡), and define
+𝜔𝑡(𝑑𝜓)∝(𝑄𝑠 1)(𝜓)𝑘(𝜓,𝑡)𝑑𝜓on(0,𝜋),(8)
+the law of the time-2position (midpoint) of the four-step bridge entering from0with law𝑠1
+and conditioned to end at𝑡.
+Lemma 43(exact).
+∫︁ 𝜋
+0
+(𝑄𝑠1)𝑘(·,𝑡)𝑑𝜓= 2𝜋𝐹 𝐵(𝑡)and
+∫︁ 𝜋
+0
+cos𝜓(𝑄𝑠 1)𝑘(·,𝑡)𝑑𝜓=𝜋𝐹 𝐴(𝑡).
+Hence, as an identity,
+𝐸(𝑡) =E 𝜔𝑡[cos𝜓] = 𝐹𝐴(𝑡)
+2𝐹𝐵(𝑡).
+Proof.(𝑄𝑠 1)(𝜓) = ∑︀𝑚𝐼2
+𝑚sin(𝑚𝜓). By sine orthogonality the first integral picks the diagonal,
+giving2𝜋 ∑︀𝑚𝐼4
+𝑚sin(𝑚𝑡). In the second,cos𝜓sin(𝑚𝜓) sin(𝑛𝜓)integrates to 𝜋
+4 (𝛿𝑛,𝑚+1 +𝛿𝑛,𝑚−1),
+which produces exactly the weights(𝑛−1)𝐼2
+𝑛−1 + (𝑛+ 1)𝐼2
+𝑛+1 of𝑎 𝑛.
+Corollary 44(exact;|𝐸|<1).For all𝑡∈(0,𝜋)and𝛽 >0,|𝐸(𝑡,𝛽)|<1. Indeed𝑞 1(𝑢,𝑣) =
+2𝑒𝛽cos𝑢cos𝑣 sinh(𝛽sin𝑢sin𝑣)>0on(0,𝜋) 2 and𝑠 1 >0, so(𝑄𝑠 1)>0and𝑘=𝑞 1 ∘𝑞1 >0on
+(0,𝜋); hence𝜔 𝑡 in(8)is a genuine probability measure and𝐸=E 𝜔𝑡[cos𝜓]∈(−1,1).
+Lemma 45(exact; entry law).𝜕𝑡𝑘(0+,𝜓) = 2𝐻(𝜓), where𝐻(𝜓) =𝛽sin(𝜓/2)𝐼 1(2𝛽cos(𝜓/2)).
+Proof.Differentiate in𝜓the squared Graf identity𝐼 2
+0 + 2∑︀
+𝑚≥1 𝐼2
+𝑚cos(𝑚𝜓) =𝐼 0(2𝛽cos(𝜓/2))
+[4, §10.23(ii)] and compare with𝜕𝑡𝑘(0+,𝜓) = 4 ∑︀𝑚𝐼2
+𝑚sin(𝑚𝜓).
+Proposition 46(certified negative; no monotone full-path coupling).At𝛽= 20the time-3
+marginal𝜌𝑡(𝑢)∝(𝑄 2𝑠1)(𝑢)𝑞1(𝑢,𝑡)is not stochastically monotone in𝑡: with𝑎= 4802
+104 ,𝑡1 = 29621
+104 ,
+𝑡2 = 30070
+104 , the tail masses satisfy𝑇(𝑡2,𝑎)<𝑇(𝑡 1,𝑎), with certified enclosure
+𝑇(𝑡2,𝑎)−𝑇(𝑡 1,𝑎)∈[−2.5299150980081786690028107,
+−2.5299150980081786690028074]×10 −10.
+Consequently no monotone coupling of full bridge paths exists at𝛽= 20. The certificate uses
+exact termwise tails (𝐽(𝑚,𝑛,𝑎) =
+∫︀𝜋
+𝑎 sin𝑚𝑢sin𝑛𝑢𝑑𝑢in closed form: no quadrature error),
+positive-series Bessel enclosures with geometric tails, explicit truncation bounds, nested passes
+(𝑀,prec) = (120,350)⊂(140,500), and two independent interval implementations (mpmath.iv;
+Arb viapython-flint).
+Proposition 47(certified negatives; the weight–kernel matrix).At𝛽= 20, for every entry
+weight𝑄 𝑘−1𝑠1 (𝑘= 1,2,3,4) the marginal one𝑞 1-step from the moving endpoint fails stochastic
+monotonicity, with certified witnesses sharing(𝑡 1,𝑡2) = (3,61/20):𝑘= 1(two-step bridge
+midpoint, the minimal counterexample),𝑎= 9/10, margin≈−1.34×10 −2;𝑘= 2,𝑎= 3/4,≈
+23
+
+--- Page 24 ---
+
+−1.80×10 −6;𝑘= 4,𝑎= 3/10,≈−4.75×10 −13 (𝑘= 3is Proposition 46). Two smoothing steps
+repair all tested weights (verified); one never does. The statement is relative to the natural weight
+family:𝑘 2 possesses its own total-positivity corner (𝛽≳8) reachable by two-atom adversarial
+weights.
+Lemma 48(exact; the3/2mechanism).lim
+𝑢↓0
+𝜕𝑢𝜕𝑡log𝑞1(𝑢,𝑡)
+𝛽sin𝑡𝑢 = 1 + 2𝛽
+3 cos𝑡.For𝑡 > 𝜋/2the
+corner sign change of𝜕𝑢𝜕𝑡log𝑞1 occurs exactly when𝛽|cos𝑡|>3/2— the same threshold as
+the𝑇𝑃 2 failure of𝑞1.
+Proof.𝜕 𝑡log𝑞1 =−𝛽sin𝑡cos𝑢+𝛽cos𝑡sin𝑢coth(𝛽sin𝑡sin𝑢)(direct differentiation of (4)); ex-
+pandcoth𝑧=𝑧 −1 +𝑧/3+𝑂(𝑧 3)and differentiate in𝑢; the stated limit is a one-line computation
+(symbolic residual zero).
+Remark49 (verified; the mechanism reading).The identification of this local defect astheengine
+of Propositions 46–47 — sine-type entry weights, vanishing linearly at0with mass on both sides
+of the non-monotone region, flip the covarianceCov𝜌𝑡(1𝑢≥𝑎,𝜕𝑡log𝑞1), while the flat weight does
+not — is supported by the full weight–kernel matrix and the𝛽-scan of the violations (onset at
+𝛽≳12, consistent with the threshold), but is a verified reading, not a theorem.
+7 The single-Bessel reduction and the master formula
+Lemma 50(exact; Neumann product formulas).For𝑥,𝑦≥0, with𝑤=
+√︀
+𝑥2 +𝑦2 + 2𝑥𝑦cos𝛼,
+𝐼0(𝑥)𝐼0(𝑦) = 1
+2𝜋
+∫︁ 2𝜋
+0
+𝐼0(𝑤)𝑑𝛼, 𝐼 0(𝑥)𝐼1(𝑦) = 1
+2𝜋
+∫︁ 2𝜋
+0
+𝐼1(𝑤) 𝑦+𝑥cos𝛼
+𝑤 𝑑𝛼.
+Proof.The first is the integrated Graf/Neumann addition theorem [4, §10.23(ii)]; the second is
+its𝜕 𝑦-derivative.
+Remark51 (signs).Both formulas extend to all real𝑥,𝑦, as used below (on[−𝜋,𝜋] 2 one has
+𝑐1 = cos(𝜙/2)≥0but𝑐 2 may be negative):𝑤(𝑥,−𝑦,𝛼) =𝑤(𝑥,𝑦,𝜋−𝛼), and the substitution
+𝛼↦→𝜋−𝛼over a full period maps the first identity to itself (both sides even in𝑦) and the second
+to its negative on both sides simultaneously (𝐼1 odd;(−𝑦+𝑥cos(𝜋−𝛼)) =−(𝑦+𝑥cos𝛼)).
+With𝐾 2(𝜙) =𝐼 0(2𝛽cos(𝜙/2)) = ∑︀
+𝑚∈Z 𝐼2
+𝑚𝑒𝑖𝑚𝜙 and𝑃 4 =𝐾 2 *𝐾2 (circle convolution),
+𝑃4 = ∑︀
+𝑚𝐼4
+𝑚𝑒𝑖𝑚𝑡 and𝐹𝐵 =−1
+2 𝑃′
+4. Applying Lemma 50 to both convolution factors:
+Lemma 52(exact; master representation).Let𝑠=𝜙−𝑡/2,𝑐 1 = cos(𝜙/2),𝑐2 = cos((𝑡−𝜙)/2),
+𝑃= sin 2(𝑠/2),𝑄= sin 2(𝛼/2), and
+𝑅2 =𝑐2
+1 +𝑐2
+2 + 2𝑐1𝑐2 cos𝛼= 4
+[︀
+cos2(𝑡/4) (1−𝑃−𝑄) +𝑃𝑄
+]︀
+.(9)
+Then
+𝐹𝐵(𝑡) = 𝛽sin(𝑡/2)
+8𝜋2
+∫︁∫︁
+[−𝜋,𝜋]2
+𝐼1(2𝛽𝑅)
+𝑅
+[︀
+cos2(𝑠/2)−sin 2(𝛼/2)
+]︀
+𝑑𝑠𝑑𝛼,(10)
+and, under the common positive kernel𝐾=𝐼1(2𝛽𝑅)/𝑅,
+𝐸(𝑡) =
+⟨︀
+cos(𝑡/2) cos 2𝑠+ cos𝛼[cos(𝑡/2) cos𝑠−sin 2 𝑠]
+⟩︀
+⟨︀
+cos𝑠+ cos𝛼
+⟩︀ ,(11)
+24
+
+--- Page 25 ---
+
+where⟨·⟩denotes the𝐾𝑑𝑠𝑑𝛼-integral over[−𝜋,𝜋] 2. The prefactor collapse behind(10)is the
+sum-to-product symmetrization1
+2 [sin(𝑡−𝜙
+2 )(𝑐2+𝑐1 cos𝛼)+(𝜙↔𝑡−𝜙)] = 1
+2 sin(𝑡/2)(cos𝑠+cos𝛼),
+andcos𝑠+ cos𝛼= 2[cos 2(𝑠/2)−sin 2(𝛼/2)].
+Proof.(i) The squared Graf identity gives𝐾2(𝜙) = ∑︀
+𝑚𝐼2
+𝑚𝑒𝑖𝑚𝜙; convolution multiplies Fourier
+coefficients, so𝑃 4 = ∑︀
+𝑚𝐼4
+𝑚𝑒𝑖𝑚𝜙 and, termwise (super-exponential decay),𝐹𝐵 =− 1
+2 𝑃′
+4. (ii)
+Insert Lemma 50 (first formula) with𝑥= 2𝛽𝑐1,𝑦= 2𝛽𝑐 2 into𝑃4(𝑡) = 1
+2𝜋
+∫︀
+𝐾2(𝜙)𝐾2(𝑡−𝜙)𝑑𝜙:
+a two-dimensional integral of𝐼0(2𝛽𝑅)with𝑅as in (9); the(𝑃,𝑄)form of𝑅 2 is product-to-
+sum. (iii) Differentiate under the integral (smooth integrand, compact domain):𝜕𝑡𝐼0(2𝛽𝑅) =
+𝐼1(2𝛽𝑅)·2𝛽𝜕 𝑡𝑅and2𝑅𝜕 𝑡𝑅= 2(𝑐2+𝑐1 cos𝛼)𝜕 𝑡𝑐2 with𝜕𝑡𝑐2 =−1
+2 sin((𝑡−𝜙)/2). (iv)Symmetrize
+over𝜙↔𝑡−𝜙(𝑅invariant): withsin(𝑥/2) cos(𝑥/2) = 1
+2 sin𝑥and the angle-addition formula,
+1
+2
+[︀
+sin(𝑡−𝜙
+2 )(𝑐2 +𝑐1 cos𝛼) + sin( 𝜙
+2 )(𝑐1 +𝑐2 cos𝛼)
+]︀
+= 1
+4 [sin(𝑡−𝜙) + sin𝜙] + 1
+2 sin( 𝑡
+2 ) cos𝛼
+= 1
+2 sin( 𝑡
+2 )(cos𝑠+ cos𝛼),
+usingsin(𝑡−𝜙) + sin𝜙= 2 sin(𝑡/2) cos𝑠andsin( 𝑡−𝜙
+2 )𝑐1 + sin( 𝜙
+2 )𝑐2 = sin(𝑡/2). Collecting
+constants yields (10). The same substitution in the companion representation of𝐹𝐴 (Lemma 43
+with Lemma 50, second formula) and cancellation of the common factor𝛽sin(𝑡/2)yields (11).
+As an end-to-end check, (10) and (11) match the quartic series with ratio1.000000000000at
+𝑡∈{0.4,1.1,2.3,2.9},𝛽= 4.
+Lemma 53(exact; geometry of the(𝑃,𝑄)square,0< 𝑡 < 𝜋).On[0,1] 2: the main saddle is
+(0,0)with𝑅= 2 cos(𝑡/4); the secondary saddle is(1,1)with𝑅= 2 sin(𝑡/4)and gap2(cos(𝑡/4)−
+sin(𝑡/4))>0degenerating only at𝑡=𝜋; the zero set{𝑅= 0}consists of exactly the two corners
+(1,0)and(0,1), and at both of thembothbrackets of(10)and(11)vanish, so the singular
+points of𝐾are switched off (the extension𝐼1(𝑧)/𝑧→ 1
+2 makes𝐾continuous with value𝛽). At
+𝑡= 0the zero set degenerates to the edges𝑃= 1,𝑄= 1. The saddle deficit is the exact sum of
+two squares
+4 cos2(𝑡/4)−𝑅2 = 4 cos2(𝑡/4) sin2(𝑠/2)+4𝑐1𝑐2 sin2(𝛼/2), 𝑐 1𝑐2 = cos2(𝑡/4)−sin 2(𝑠/2),(12)
+with sign region𝑐1𝑐2 ≥0⇐⇒ |𝑠|≤𝜋−𝑡/2.
+Proof.(9) and (12) are product-to-sum computations (symbolic zeros).𝑅2 ≥(|𝑐1|−|𝑐 2|)2 with
+equality forcing|𝑐1|=|𝑐 2|(i.e.𝑠= 0or𝑠=±𝜋) andcos𝛼=∓sign(𝑐 1𝑐2), which lands exactly on
+(𝑃,𝑄)∈{(0,1),(1,0)}. Bracket vanishing at both points is direct substitution. The Jacobian of
+(𝑠,𝛼)↦→(𝑃,𝑄)carries the arcsine weight𝑑𝑠𝑑𝛼=𝑑𝑃𝑑𝑄/
+√︀
+𝑃(1−𝑃)𝑄(1−𝑄)(per quadrant),
+singular at all four corners; near the main saddle one therefore works in(𝑠,𝛼), and in(𝑃,𝑄)
+only for the global geometry.
+Lemma 54(exact; saddle cancellations).Write𝑁,𝐷for numerator and denominator brackets
+of(11),𝐶= cos(𝑡/2),𝑐 0 = cos(𝑡/4). At the saddle(𝑠,𝛼) = (0,0):
+𝑁
+𝐷
+⃒⃒⃒
+(0,0)
+=𝐶, 𝑁 𝛼𝛼 −𝐶𝐷 𝛼𝛼 = 0, 𝑁 𝑠𝑠 −𝐶𝐷 𝑠𝑠 =−4𝐶−2,
+and for𝑁𝑡 =−1
+2 sin(𝑡/2)[cos 2𝑠+ cos𝛼cos𝑠]:
+𝑁𝑡,𝛼𝛼 −𝑚𝐷 𝛼𝛼 = 0 (𝑚=− 1
+2 sin(𝑡/2)), 𝑁 𝑡,𝑠𝑠 −𝑚𝐷 𝑠𝑠 = 2 sin(𝑡/2).
+Also exact:2𝐶+ 1 = 4𝑐 2
+0 −1and𝐶𝑐(𝑡) = 2𝑐 0 −1/(2𝑐0)for𝑐(𝑡) = (4𝑐 2
+0 −1)/(2𝑐0𝐶).
+25
+
+--- Page 26 ---
+
+Proposition 55(verified second-order laws).The frozen-kernel expansion built on Lemma 54
+(with⟨𝑠 2⟩= 1/(𝛽𝑐 0) +𝑂(𝛽−2)from(12)) predicts
+𝐸=𝐶
+(︁
+1− 𝑐(𝑡)
+𝛽
+)︁
++𝑂(𝛽−2), 𝐸 ′=−1
+2 sin(𝑡/2) + sin(𝑡/4)(4𝑐2
+0 + 1)
+8𝛽𝑐2
+0
++𝑂(𝛽−2).(13)
+The coefficient identities are exact (Lemma 54); thelaws with remainderare verified, not yet
+certified: measured remainders are≈0.15/𝛽 2 with true convergence at fixed𝑡(e.g.𝛽 2-scaled
+residues0.1776/0.1767/0.1762at𝑡= 1,𝛽= 30/60/120), and𝛽(𝐸 ′+1
+2 sin(𝑡/2))→sin(𝑡/4)(4𝑐 2
+0+
+1)/(8𝑐2
+0)at𝑡= 1,2. The remainder control is exactly what the closure map owes. Note the1/𝛽
+correction to𝐸′ ispositive: it opposes the target inequality and must be beaten, not used. The
+𝛼-cancellations imply every kernel correction multiplies a vanishing fluctuation and enters at
+𝑂(𝛽−2)only.
+Remark56 (exact decomposition of𝐸 ′).With the normalized positive measure𝑑𝜇∝𝐾𝑑𝑠𝑑𝛼,
+𝐸′=⟨𝑁𝑡⟩/⟨𝐷⟩+⟨(𝑁−𝐸𝐷)𝜕 𝑡log𝐾⟩/⟨𝐷⟩,𝐷 𝑡 = 0, and the regular form𝜕𝑡log𝐾= 4𝑐𝑐 ′(1−𝑃−
+𝑄) [𝑧𝐼0(𝑧)/𝐼1(𝑧)−2]/𝑅2,𝑧= 2𝛽𝑅, extends continuously by4𝛽2𝑐𝑐′(1−𝑃−𝑄)at𝑅= 0. Verified
+split at(𝛽,𝑡) = (5,1.3):−0.238212−0.024552 =−0.262764 =the finite difference exactly.
+Bounds for𝐸′are taken from this exact quotient — never by differentiating an estimate of𝐸.
+8 The𝜋-endpoint package
+Lemma 57(exact; telescoping).With𝑎 𝑚 as in(1):
+𝐴∞:=
+∑︁
+𝑚≥1
+(−1)𝑚+1𝑚𝑎𝑚 = 0,
+∑︁
+𝑚≥1
+(−1)𝑚+1𝑚3𝑎𝑚 =−
+∑︁
+𝑚≥1
+(−1)𝑚+1𝑚(𝑚+ 1)(2𝑚+ 1)𝐼 2
+𝑚𝐼2
+𝑚+1.
+Hence𝐹𝐴(𝜋−𝜀) =𝑐 3 𝜀3 +𝑂(𝜀5)with
+𝑐3 = 1
+6
+∑︁
+𝑚≥1
+(−1)𝑚+1𝑚(𝑚+ 1)(2𝑚+ 1)𝐼 2
+𝑚𝐼2
+𝑚+1.(14)
+Proof.Split𝑚 𝑟𝑎𝑚 =𝑚𝑟(𝑚−1)𝐼 2
+𝑚−1𝐼2
+𝑚 +𝑚𝑟(𝑚+ 1)𝐼2
+𝑚𝐼2
+𝑚+1 and shift𝑚→𝑚+ 1in the first
+sum: for𝑟= 1the two weights cancel (𝑚(𝑚+ 1)−𝑚(𝑚+ 1) = 0); for𝑟= 3they combine to
+𝑚(𝑚+ 1)[𝑚2 −(𝑚+ 1) 2] =−𝑚(𝑚+ 1)(2𝑚+ 1). Absolute convergence justifies the reindexing;
+sin(𝑚(𝜋−𝜀)) = (−1) 𝑚+1 sin(𝑚𝜀)expands the sine.
+Lemma 58(exact integral form).Let𝑔(𝑢) = 1
+2 𝐼1(2𝛽cos𝑢) = ∑︀
+𝑚≥0 𝐼𝑚𝐼𝑚+1 cos((2𝑚+ 1)𝑢)
+(addition theorem). Then
+𝑐3 = 𝑆3 −𝑆1
+24 , 𝑆 1 = 2
+𝜋
+∫︁ 𝜋
+0
+𝑔( 𝜋
+2 −𝑢)𝑔 ′(𝑢)𝑑𝑢, 𝑆 3 = 2
+𝜋
+∫︁ 𝜋
+0
+𝑔′(𝜋
+2 −𝑢)
+(︀
+−𝑔′′(𝑢)
+)︀
+𝑑𝑢.
+Moreover𝑔(−𝑢) =𝑔(𝑢)and𝑔(𝜋−𝑢) =−𝑔(𝑢)(parity of𝐼 1), hence𝑔′(𝜋−𝑢) =𝑔 ′(𝑢),𝑔 ′′(𝜋−𝑢) =
+−𝑔′′(𝑢), andbothintegrands are invariant under𝑢↦→𝜋−𝑢: the two halves[0,𝜋/2]and[𝜋/2,𝜋]
+contribute exactly equally, and one may integrate a half range and double. In particular no
+cancellation between the two phase maxima𝑢=𝜋/4and𝑢= 3𝜋/4is possible — exactly, not
+asymptotically.
+26
+
+--- Page 27 ---
+
+Proof.The expansion of𝑔is the Graf addition theorem with unit shift. Quarter turn:cos((2𝑚+
+1)(𝜋
+2 −𝑢)) = (−1) 𝑚sin((2𝑚+ 1)𝑢), so𝑔( 𝜋
+2 −𝑢) = ∑︀
+𝑚(−1)𝑚𝐼𝑚𝐼𝑚+1 sin((2𝑚+ 1)𝑢)while
+𝑔′(𝑢) =− ∑︀
+𝑘(2𝑘+ 1)𝐼𝑘𝐼𝑘+1 sin((2𝑘+ 1)𝑢)and𝑔 ′′(𝑢) =− ∑︀
+𝑘(2𝑘+ 1) 2𝐼𝑘𝐼𝑘+1 cos((2𝑘+ 1)𝑢),
+whence𝑔 ′(𝜋
+2 −𝑢) =− ∑︀
+𝑘(−1)𝑘(2𝑘+ 1)𝐼𝑘𝐼𝑘+1 cos((2𝑘+ 1)𝑢). Orthogonality of{sin((2𝑚+ 1)𝑢)}
+and{cos((2𝑚+ 1)𝑢)}on[0,𝜋](norm𝜋/2) gives𝑆 1 =− ∑︀
+𝑚(−1)𝑚(2𝑚+ 1)(𝐼 𝑚𝐼𝑚+1)2 and
+𝑆3 =−∑︀
+𝑚(−1)𝑚(2𝑚+ 1) 3(𝐼𝑚𝐼𝑚+1)2, so
+𝑆3 −𝑆1
+24 =
+∑︁
+𝑚≥0
+(−1)𝑚+1 (2𝑚+ 1) 3 −(2𝑚+ 1)
+24 (𝐼𝑚𝐼𝑚+1)2
+= 1
+6
+∑︁
+𝑚≥1
+(−1)𝑚+1𝑚(𝑚+ 1)(2𝑚+ 1)𝐼 2
+𝑚𝐼2
+𝑚+1 =𝑐3,
+using(2𝑚+1) 3 −(2𝑚+1) = 4𝑚(𝑚+1)(2𝑚+1)and the vanishing of the𝑚= 0term. The parity
+claims follow from𝐼1(−𝑧) =−𝐼1(𝑧)applied to𝑔(𝜋−𝑢) = 1
+2 𝐼1(−2𝛽cos𝑢), and by differentiating
+the two symmetry relations.
+Lemma 59(exact; shifted right-edge correlation).Putℎ 𝑛 =𝐼𝑛(𝛽)𝐼𝑛+1(𝛽)and
+𝑆(𝑥) = 2
+𝜋
+∫︁ 𝜋
+0
+𝑔( 𝜋
+2 −𝑢)𝑔(𝑢−𝑥)𝑑𝑢, 𝑔(𝑢) = 1
+2 𝐼1(2𝛽cos𝑢).
+Then
+𝑆(𝑥) =
+∑︁
+𝑛≥0
+(−1)𝑛ℎ2
+𝑛sin((2𝑛+ 1)𝑥)
+and, for𝑑∈[0,𝜋],
+𝐹𝐴(𝜋−𝑑) = sin( 𝑑
+2 )𝑆′(𝑑
+2 )−cos( 𝑑
+2 )𝑆( 𝑑
+2 ).(15)
+If𝑝 𝑚 =𝐼𝑚(𝛽)2 and𝑅(𝑑) = ∑︀
+𝑚≥1(−1)𝑚𝑝2
+𝑚cos(𝑚𝑑), then also𝐹𝐵(𝜋−𝑑) =𝑅 ′(𝑑).
+Proof.Odd-frequency orthogonality, together withcos((2𝑛+1)(𝜋/2−𝑢)) = (−1)𝑛sin((2𝑛+1)𝑢),
+diagonalizes the integral defining𝑆. Next𝑎 𝑚 = (𝑚−1)ℎ 2
+𝑚−1 + (𝑚+ 1)ℎ2
+𝑚 gives, without a
+boundary term,
+𝐹𝐴(𝜋−𝑑) =
+∑︁
+𝑛≥0
+(−1)𝑛ℎ2
+𝑛{𝑛sin((𝑛+ 1)𝑑)−(𝑛+ 1) sin(𝑛𝑑)}.
+For𝑘= 2𝑛+ 1and𝑥=𝑑/2, the expression in braces is𝑘sin𝑥cos(𝑘𝑥)−cos𝑥sin(𝑘𝑥), which
+proves (15). The formula for𝐹𝐵 follows by direct differentiation. Super-exponential Bessel decay
+justifies every exchange.
+Lemma 60(exact; cancellation-free right-edge target).Put𝑑=𝜋−𝑡,𝑥=𝑑/2,𝑦=𝑥 2, and
+write𝑆(𝑥) =𝑥𝑈(𝑦)and𝑅(2𝑥) =𝑉(𝑦). Define the entire elementary functions
+𝑠(𝑦) = sin𝑥
+𝑥 , 𝑗(𝑦) = sin𝑥−𝑥cos𝑥
+𝑥3 ,
+with their removable values at𝑦= 0, and set
+𝑎=𝑗𝑈+ 2𝑠𝑈 𝑦, 𝑏=𝑉 𝑦.
+27
+
+--- Page 28 ---
+
+Then
+𝐹𝐴(𝜋−2𝑥) =𝑥 3𝑎(𝑦), 𝐹 𝐵(𝜋−2𝑥) =𝑥𝑏(𝑦), 𝐸(𝜋−2𝑥,𝛽) = 𝑥2𝑎(𝑦)
+2𝑏(𝑦) .
+Consequently, for𝜆= 2𝛽𝑥,
+−𝐸𝑡
+𝜆 = 𝛿
+4
+𝑃(𝑦)
+𝑏(𝑦)2 , 𝑃=𝑎𝑏+𝑦(𝑎 𝑦𝑏−𝑎𝑏 𝑦), 𝛿=𝛽 −1.(16)
+In particular the forced cubic and linear endpoint zeros have been removed before interval eval-
+uation.
+Proof.Equation (15) gives𝐹 𝐴 = sin𝑥𝑆 ′−cos𝑥𝑆=𝑥 3(𝑗𝑈+ 2𝑠𝑈 𝑦), while𝐹𝐵 =𝑅 ′(2𝑥) =
+1
+2
+𝑑
+𝑑𝑥𝑉(𝑥2) =𝑥𝑉 𝑦. Differentiate the resulting quotient with respect to𝑥, use𝐸𝑡 =−𝐸𝑥/2, and
+collect the quotient numerator. This gives (16) identically.
+Lemma 61(exact; five-family saddle normalization).Let𝜌=𝑒 −2
+√
+2𝛽 and define
+̂︀𝑈0 =𝜌𝛽 1/2𝑈, ̂︀𝑈1 =𝜌𝛽 −3/2𝑈𝑦, ̂︀𝑈2 =𝜌𝛽 −7/2𝑈𝑦𝑦,
+̂︀𝐵0 =𝜌𝛽 −1/2𝑏, ̂︀𝐵1 =𝜌𝛽 −5/2𝑏𝑦.
+If
+̂︀𝐴0 =𝑗𝛿 2 ̂︀𝑈0 + 2𝑠̂︀𝑈1,
+̂︀𝐴1 =𝑗𝑦𝛿4 ̂︀𝑈0 + (𝑗+ 2𝑠𝑦)𝛿2 ̂︀𝑈1 + 2𝑠̂︀𝑈2,
+̂︀𝑃= ̂︀𝐴0 ̂︀𝐵0 + 𝜆2
+4 ( ̂︀𝐴1 ̂︀𝐵0 −̂︀𝐴0 ̂︀𝐵1),
+then the target has the scale-free form
+−𝐸𝑡
+𝜆 =
+̂︀𝑃
+4 ̂︀𝐵2
+0
+.(17)
+The only non-elementary inputs in this formula are the five displayed families.
+Proof.Since𝑦=𝜆 2𝛿2/4, substitution of the five definitions into𝑎,𝑎𝑦,𝑏,𝑏 𝑦 gives ̂︀𝐴0 =𝜌𝛽 −3/2𝑎,
+̂︀𝐴1 =𝜌𝛽 −7/2𝑎𝑦, and ̂︀𝑃=𝜌 2𝛽−2𝑃. Also𝑏=𝜌 −1𝛽1/2 ̂︀𝐵0. All exponential and polynomial factors
+therefore cancel in (16), proving (17).
+Remark62 (zero-face algebra and remaining analytic passage).The extracted main and mirror
+coefficients assemble to the unique candidate
+𝑄0(𝜆) = 𝜆
+2 coth
+(︂ 𝜆√
+2
+)︂
+− 1√
+2, 𝐻 0(𝜆) = 𝑄′
+0(𝜆)
+𝜆 = sinh𝑧cosh𝑧−𝑧
+2𝜆sinh 2 𝑧 , 𝑧= 𝜆√
+2.
+Exact coefficient comparison shows that𝐻0 is decreasing and𝐻 0 >1/5on[0,3/2]: after a
+positive factor, its derivative has coefficients8𝑛2 −6𝑛−(9 𝑛−1)/4, zero for𝑛= 1,2and negative
+for𝑛≥3. This closes the algebra and sign of the candidate face. Promotion to the actual𝛿= 0
+face, and hence the moving-edge row, still requires the uniform two-saddle enclosure of the five
+families in Lemma 61; no limiting interchange is asserted here.
+28
+
+--- Page 29 ---
+
+Proposition 63(exact; half-line sign of the cubic coefficient).For every𝛽≥125, the coefficient
+𝑐3 in(14)is strictly positive.
+Proof.Write𝑓(𝑥) =𝐼 1(𝑥)/2,𝑦= 2𝛽sin𝑢,𝑧= 2𝛽cos𝑢. Exact parity in Lemma 58 gives
+𝑐3 = 1
+6𝜋
+∫︁ 𝜋/2
+0
+𝐽(𝑢,𝛽)𝑑𝑢, 𝐽=−𝑧 2𝑓′(𝑦)𝑓′(𝑧) +𝑧𝑦2𝑓′(𝑦)𝑓′′(𝑧) +𝑦𝑓(𝑦)𝑓 ′(𝑧).
+Setℓ(𝑥) =𝑓 ′(𝑥)/𝑓(𝑥). The modified-Bessel equation and𝑦2 +𝑧2 = 4𝛽2 yield the regular identity
+𝐽
+𝑓(𝑦)𝑓(𝑧)𝛽 3 = 8 sin2 𝑢cos𝑢ℓ(𝑦) +𝛽 −2
+(︃
+2 sin2 𝑢
+cos𝑢 ℓ(𝑦) + 2 sin𝑢ℓ(𝑧)
+)︃
+−4𝛽−1ℓ(𝑦)ℓ(𝑧).
+On[𝜋/8,3𝜋/8]one has𝑦,𝑧 >375/4. The Amos lower bound at order one and strict order
+monotonicity give97/100< ℓ(𝑦),ℓ(𝑧)<51/50. Since sine and cosine exceed3/8, the last
+display is larger than
+27
+64
+97
+100 − 4
+125
+(︂51
+50
+)︂2
+> 3
+8.
+On𝐼= [3𝜋/16,5𝜋/16], the lower companion of Lemma 15, together with
+√
+2>707/500and
+cos(𝜋/16)>49/50, therefore gives
+∫︁
+𝐼
+𝐽 𝑑𝑢> 3
+1024
+(︂622
+625
+)︂2
+𝛽2𝑒277𝛽/100.
+For the exterior𝑋= [0,𝜋/8]∪[3𝜋/8,𝜋/2], the integral representation gives𝐼 𝑛(𝑥)≤𝑒 𝑥, hence
+𝑓,𝑓 ′,𝑓′′≤𝑒𝑥/2. Sincesin𝑢+ cos𝑢<131/100there,
+∫︁
+𝑋
+|𝐽|𝑑𝑢< 7𝜋
+8 𝛽3𝑒131𝛽/50.
+The intervening part is nonnegative and may be dropped. Using𝜋 <22/7, the exterior-to-inner
+ratio is less than948𝛽𝑒−3𝛽/20. It decreases for𝛽≥125, and at the endpoint it is less than
+one because𝑒75/4 > 𝑒18 >18 7/7!>948·125. Thus the full integral is positive. The rational
+constant audit is executable inverify_surface_right_edge_c3_halfline.py.
+Proposition 64(verified; prefactor law).𝑐 3 >0for𝛽∈{1,5,20,40,80,120}at cancellation-
+adjusted precision(the alternating sum cancels at scale𝑒−(4−2
+√
+2)𝛽; evaluations usedps≥0.6𝛽+
+50), and
+𝑐3 ∼𝐴𝛽 3/2𝑒2
+√
+2𝛽, 𝐴= 1
+24·2 1/4𝜋3/2 = 0.0062922...,
+with measured convergence
+𝛽 40 60 90 120
+ratio 0.0058646 0.0060049 0.0060996 0.0061475
+and𝑂(1/𝛽)gaps. The sign on the entire half-line𝛽≥125is now exact by Proposition 63; the
+displayed sharp prefactor and its measured convergence are not used to promote that sign. The
+uniform moving-edge theorem is supplied independently by the certified five-family quotient, not
+inferred from another pointwise or asymptotic sign check for𝑐3.
+29
+
+--- Page 30 ---
+
+9 Terminal closure
+Proposition 65(verified truth map; all statements on the stated finite grids).Let𝑔(𝑡,𝛽) =
+𝐸′+ 1
+4 sin(𝑡/2). At𝛽= 15,𝑔 <0at every point of a13-point grid spanning[0.05,𝜋−0.09]
+(independently reproduced on a much finer mesh at110digits), with thinnest margin−0.00573
+at𝑡= 0.05(on the seal window[0.05,𝜋−0.10]) and−0.00216at𝜋−0.09; the crossing sits
+at𝜋−𝑡 * = 0.0890502225. At𝛽= 12the truth itself fails at𝜋−0.10(𝑔= +0.025); crossings
+scale as the mirror window:𝜋−𝑡 *= 0.1155,0.0891,0.0644at𝛽= 12,15,20, matching
+√
+2/𝛽.
+A sweep𝛽= 15...60keeps the maximum at𝑡= 0.05, drifting to−0.0061: strong uniformity
+evidence, not proof.
+Completion of Theorem 2.Theorem 37 proves𝐹𝐵 >0. Lemma 41 and Theorem 40 prove𝐸′<0
+for0<𝛽≤3. The compact Arb and bivariate-Taylor unions, together with their left- and right-
+edge splices, cover3≤𝛽≤20. The finite-role Wronskian audit covers20≤𝛽≤1000/9for all
+0< 𝑡 < 𝜋. Finally Proposition 29 covers𝛽≥1000/9. The endpoints𝛽= 3,20,1000/9belong
+to adjacent closed certificates, so their union covers every𝛽 >0with no seam gap. This proves
+part (ii).
+The truth map in Proposition 65 and the second-order law (13) are retained as non-load-
+bearing diagnostics of the geometry. The theorem uses the certified partition above rather than
+an asymptotic extrapolation.
+10 Verification, certificates, and reproducibility
+All numerical artifacts live in the repository
+https://github.com/lluiseriksson/THE-ERIKSSON-PROGRAMME
+(directoriesscripts/,docs/); the immutable commit hash for the version audited with this
+manuscript is recorded in the repository’s hash registry (docs/SURFACE-CLOSURE-NOTES.md)
+and in the arXiv comment field on submission. Each certificate embeds its pinned statement
+and self-verifies on every execution.
+Certificates (interval arithmetic, outward rounding, nested or stability passes).
+certify_time3_negative.pyand its Arb twin (Proposition 46);certify_bridge_matrix.py
+and twin (Proposition 47);certify_thmB.py(Theorem 40: adaptive𝛽-boxes covering[1/20,3];
+tails computed in intervals and closed at the level ofcomplete shells: each pair maps into the
+next shell with term ratio𝑟derived from the termwise-exact𝐼𝑛+1(𝑥)≤𝑥𝐼 𝑛(𝑥)/(2(𝑛+ 1)), and
+the one new pair per shell is bounded by a double index shift, giving shell ratio2𝑟, asserted
+< 1
+2 per box before the geometric closure; a built-in full stability pass at precision+70; the
+Arb twincertify_thmB_arb.pyindependently certifies the full coverage —86boxes, both
+passes, transcript archived; thempmath.ivcanonical transcript independently certifies the
+same interval with53boxes and both passes (its source hash and runtime versions are recorded
+in the transcript). Bessel enclosures use the positive series with an exact-integer stopping
+rule and geometric tails; floats appear only in loop-termination heuristics. Nested enclosures
+prevent silent numerical or truncation degradation; statement auditing and the independent
+Arb implementation guard against common-mode errors.
+Verified computations.The master-formula and reduction identities (ratios1.0to12digits);
+the truth map of Proposition 65 (dps80, confirmed independently at110digits); the𝑐3 ladder
+(Proposition 64); the term-split coefficients of (13) at𝛽= 60,120,240.
+30
+
+--- Page 31 ---
+
+Precision policies(each traceable to a caught artifact):dps≥2.2𝛽+ 40for any evaluation
+with𝑡≥2,𝛽 >30(mirror cancellation);dps≥0.6𝛽+ 50for𝑐 3-type alternating sums; series
+cutoffs scale with the maximal argument, and scaled-asymptotic evaluation of𝑒−𝑧𝐼𝑛(𝑧)is the
+default for𝑧 >35; every measured coefficient carries a𝛽-scaling sanity check; whatever can be
+computed from a positive integral representation is.
+Audit trail.Fifteen numerical or formulation artifacts (“ghosts”) were caught during fabri-
+cation and writing by the three-way review protocol; Appendix B tabulates them. We consider
+the table part of the result: it is the reproducibility record that makes the certificates credible.
+Machine-checked lemmas.The unit-step and Turán-type coefficient inequalities behind
+Theorem 40 are formalized in Lean 4/Mathlib (PhiMonotone.lean,FHBesselAmos.lean,
+WronskianIdentity.lean; axiom oracle[propext, Classical.choice, Quot.sound], no
+sorry). Mathlib has no Bessel functions: what is machine-checked is the ordered-field im-
+plication, with the analytic inputs (three-term recurrence [4, 10.29.1]; the Amos-type bound of
+[1, 2, 3], cited verbatim, shift𝜈→𝜈+1as in Appendix A) carried as named hypotheses. Correct
+claim everywhere:machine-checked modulo classical Bessel inputs carried as named hypotheses.
+Acknowledgements and provenance
+The theorem, the bridge reading, the reduction, and all certificates were produced inside an
+audit-first programme in which three independent reviewing voices challenge the load-bearing
+chain before release; scores, objections, and the complete ghost ledger are archived with the
+repository history. No terminal numerical conclusion rests on a single run: its production archive
+has an independent replay, and every identity marked exact has a symbolic-zero transcript.
+A The weighted Turán-type lemma, self-contained
+Theorem 66(exact).For every𝑥>0and every real𝑚≥1, with𝜙 𝑚 =𝑎𝑚/𝑏𝑚 built from(1)
+at argument𝑥:𝜙 𝑚 <𝜙𝑚+1. Equivalently, with𝜌𝜇 =𝐼𝜇+1/𝐼𝜇,
+1
+𝑚
+(︁𝑚−1
+𝜌2
+𝑚−1
++ (𝑚+ 1)𝜌2
+𝑚
+)︁
+< 1
+𝑚+ 1
+(︁𝑚
+𝜌2𝑚
++ (𝑚+ 2)𝜌2
+𝑚+1
+)︁
+.
+Proof.Two classical inputs, valid for all real orders: the three-term recurrence𝜌−1
+𝑚−1 =𝜌 𝑚 +
+2𝑚/𝑥,𝜌 𝑚+1 =𝜌−1
+𝑚 −2(𝑚+ 1)/𝑥[4, 10.29.1], and the Amos-type bound
+𝜌𝑚(𝑥)<𝑈 𝑚(𝑥) := 𝑥
+𝑎+
+√
+𝑎2 +𝑥2 , 𝑎=𝑚+ 1
+2 ,
+proved best of its form for all real orders≥0by Segura [2]; we use [3, Thm. 2], which bounds
+𝐼𝜈(𝑥)/𝐼𝜈−1(𝑥)for𝜈≥ 1
+2 by𝑥/
+(︀
+𝜈−1
+2 +
+√︁
+(𝜈+ 1
+2 )2 +𝑥2 )︀
+; setting𝜈=𝑚+1bounds𝜌 𝑚 =𝐼𝑚+1/𝐼𝑚
+by𝑥/
+(︀
+𝑚+ 1
+2 +
+√︁
+(𝑚+ 3
+2 )2 +𝑥2 )︀
+≤𝑥/
+(︀
+𝑎+
+√
+𝑎2 +𝑥2 )︀
+with𝑎=𝑚+ 1
+2 , which is the displayed
+bound (the last step uses
+√︁
+(𝑚+ 3
+2 )2 +𝑥2 ≥
+√
+𝑎2 +𝑥2). Substitute the recurrences, write
+𝑢=𝜌 𝑚 ∈(0,1),𝑐= 1/𝑥,𝑆=𝑢+ 1/𝑢,𝑃= 1/𝑢−𝑢; clearing the positive denominators, the
+claim becomesΔ 𝑚 >0where theexact factorization
+Δ𝑚
+2𝑚(𝑚+ 1) = (𝑆−3𝑐)
+(︀
+𝑃−(2𝑚+ 1)𝑐
+)︀
++ (2𝑚+ 1)𝑐2
+31
+
+--- Page 32 ---
+
+holds as an algebraic identity (expand and collect; the coefficients of𝑢±2 are±2𝑚(𝑚+ 1),
+the linear-in-𝑐terms are−4𝑚(𝑚+ 1)𝑐[(𝑚−1)𝑢+ (𝑚+ 2)/𝑢], and(𝑚−1)𝑢+ (𝑚+ 2)/𝑢=
+1
+2 [(2𝑚+ 1)𝑆+ 3𝑃],1/𝑢 2 −𝑢2 =𝑃𝑆). The second factor is positive because𝑈𝑚 is the positive
+root of1/𝑤−𝑤= (2𝑚+ 1)/𝑥(the calibration1/𝑈 𝑚−𝑈𝑚 = 2𝑎/𝑥) and𝑤↦→1/𝑤−𝑤is strictly
+decreasing, so𝜌𝑚 <𝑈𝑚 gives𝑃 >(2𝑚+ 1)𝑐. The first factor is positive because
+√
+𝑎2 +𝑥2 >𝑎
+gives𝑈𝑚 <𝑥/(2𝑎), so𝑢<𝑥/(2𝑚+1)≤𝑥/3and𝑆 >1/𝑢>(2𝑚+1)/𝑥≥3𝑐. The third term is
+positive. Strictness is strict throughout. (This is the proof of [6], reproduced so that Theorem 40
+is self-contained; the ordered-field implication is machine-checked inPhiMonotone.lean, modulo
+the two classical inputs carried as named hypotheses.)
+B Audit table (the ghost ledger)
+Each row: what was wrong, how it was caught, and the rule it produced. All entries are
+documented with transcripts indocs/SURFACE-CLOSURE-NOTES.md.
+# artifact catch / rule produced
+1 random𝑇𝑃 2 scan missed adver-
+sarial corners
+targeted corner search; adversarial grids manda-
+tory
+2 verification cell with unbound
+parameter
+explicit binding rule for inline prints
+3 near-𝜋scan at low precision,
+false violation
+precision ruledps≥2.2𝛽+ 40for𝑡≥2,𝛽 >30
+4 stale-PDF claim misattributed
+between voices
+provenance ledger: attribute to exact source
+5 float64 CDF increments±11
+(impossible)
+positive-representation preference
+6𝑡=2,𝛽=240residue0.363vs
+0.317
+boundary𝑡≥2included in the dps rule
+7𝐼 1 series truncated at60terms,
+𝑧≤480
+cutoffs scale with argument; scaled asymptotics
+for𝑧 >35;𝛽-scaling checks
+8𝑐 3 sign flip at𝛽= 120(cancella-
+tion)
+alternating-sum ruledps≥0.6𝛽+ 50
+9𝑅= 0corner misplaced at(1,1)complete critical-point census required in prose
+too
+10 one-saddle prefactor off by ex-
+actly2
+census rule; the factor2later proved an exact par-
+ity
+11𝐼 1 lower bound dropped the neg-
+ative tail
+sign audits are a separate mandatory pass
+12 fixed quadratic window at𝜋was
+provably false
+interrogate obligations before attempting them
+13 Thm. A second proof: rearrange-
+ment misquoted
+layer-cake arc proof substituted (this revision)
+14 Lemmasignerror: floorstatedas
+upper bound
+corrected; per-pair statements now carry signs ex-
+plicitly
+15 “exact” labels on verified in-
+equalities
+tricotomy re-audit of every label (this revision)
+32
+
+--- Page 33 ---
+
+References
+[1] D. E. Amos,Computation of modified Bessel functions and their ratios, Math. Comp.28
+(1974), 239–251.
+[2] J. Segura,Bounds for ratios of modified Bessel functions and associated Turán-type inequal-
+ities, J. Math. Anal. Appl.374(2011), 516–528.
+[3] D. Ruiz-Antolín, J. Segura,A new type of sharp bounds for ratios of modified Bessel func-
+tions, J. Math. Anal. Appl.443(2016), 1232–1246.
+[4] NIST Digital Library of Mathematical Functions,https://dlmf.nist.gov.
+[5] L. Eriksson,Recurrence–Amos proof of the unit-step order-monotonicity of(log𝐼 𝜈)′,
+ai.viXra:2607.0020 (2026).
+[6] L. Eriksson,A weighted Turán-type monotonicity lemma for modified Bessel functions via
+the calibrated Amos bound, ai.viXra:2607.0017 (2026).
+[7] L. Eriksson,A Wronskian identity for antisymmetrized sine sums, companion manuscript
+and Lean 4 verification in the repositorypapers/wronskian-reduction(2026).
+[8] L. Eriksson,Parity barriers for decoupling inequalities, ai.viXra:2607.0018 (2026).
+[9] L. Eriksson,Exact two-dimensional𝑆𝑈(2)Yang–Mills in Lean: Weyl integra-
+tion, heat-kernel convolution, Migdal invariance, and the exact simple-loop area law,
+ai.viXra:2607.0035 (2026).
+[10] G. N. Watson,A Treatise on the Theory of Bessel Functions, 2nd ed., Cambridge Univ.
+Press, 1944.
+[11] S. Karlin, J. McGregor,Coincidence probabilities, Pacific J. Math.9(1959), 1141–1164.
+[12] K. V. Mardia, P. E. Jupp,Directional Statistics, Wiley, 2000.
+[13] S. Dharmadhikari, K. Joag-Dev,Unimodality, Convexity, and Applications, Academic
+Press, 1988.
+33

@@ -1,0 +1,235 @@
+--- Page 1 ---
+
+The V acuum W as Never Absent:
+A Machine-Checked Perron Theorem for Strictly Positive Kernels,
+and the Coupled-Slice V acuum at Every Spatial Extent
+existence by compactness, without invoking a fixed-point theorem in the pinned
+mathlib revision
+Lluis Eriksson
+Abstract
+T wo companion papers established, for a Z2 lattice gauge slice with a spatial coupling,
+that the elementary route to the vacuum stops [ 1] and that the natural replacement — the
+Hilbert projective metric — is blind to the coupling and degenerates in the volume [ 2]. Both
+had to work around the same absence: the pinned mathlib carries no Perron–F robenius
+theorem. The first paper could therefore only say the vacuum had become unavailable; the
+second had to build its domination bound from scratch, and could exhibit the vacuum in
+closed form only at two sites.
+This paper discharges that dependency . F or a strictly positive kernel on a finite nonempty
+type we prove, in Lean 4 with mathlib: a strictly positive eigenvector exists; its eigenvalue
+is strictly positive; any two strictly positive eigenvectors are proportional and share their
+eigenvalue; and every real eigenvector for that eigenvalue is a scalar multiple of it. T ogether
+with the domination theorem of [ 2] this gives the Perron statement the lane needs: the
+eigenvalue is the spectral radius.
+The existence proof does not use a fixed-point theorem, because the pinned mathlib
+revision contains none. It maximises r over the compact set of pairs (r, x) with x in the
+simplex and rx ≤ Ax; maximality forces equality , since a strict inequality anywhere would
+let one further application of A produce an admissible pair with a larger r. The bound that
+keeps the set compact is obtained by summing the constraint: r = r ∑ x ≤ ∑(Ax).
+The application is the point. At every spatial extent, and for every strictly positive
+weight on the source configuration — the class that contains the coupled kernel of [ 1] — the
+vacuum exists, is unique up to scale, and carries the spectral radius. The obstruction of the
+first paper was never an absence; it was an unavailability , and it was an unavailability of one
+route rather than of the object.
+No spectral gap is proved here, uniform in the volume or otherwise, and none
+is claimed. Nothing in this paper is a claim about SU(N), the continuum limit, or the
+Y ang–Mills mass gap.
+1 Introduction
+1.1 A dependency that bit twice
+[1] proved that switching on a coupling inside a slice destroys the constancy of the row sums, so
+the uniform vector stops being fixed and the elementary construction of the vacuum halts. It
+1
+
+--- Page 2 ---
+
+phrased the conclusion carefully: the vacuum becomes a Perron vector that row-sum normali-
+sation no longer supplies. It did not claim the vacuum was gone — but it could not produce it
+either.
+[2] then showed the natural replacement fails for two independent reasons, and wrote the
+vacuum down at L = 2 in closed form. T o identify its eigenvalue as the spectral radius it had
+to prove a domination bound from first principles, for the same reason: no Perron–F robenius in
+the library .
+A dependency that forces a detour twice is not bad luck. This paper removes it.
+1.2 What is proved
+Throughout, ι is a finite nonempty type and A : ι × ι → R is strictly positive, Aij > 0. V ectors
+are functions ι → R and (Ax)i = ∑
+j Aijxj.
+• Existence. There are v and λ with vi > 0 for all i, λ > 0, and Av = λv.
+• Uniqueness up to scale. If v, w are strictly positive eigenvectors with eigenvalues λ, µ,
+then λ = µ and w = cv for some c > 0.
+• Geometric simplicity . Every real eigenvector for λ is a scalar multiple of v.
+• Spectral radius. Every eigenvalue, real or complex, is dominated in modulus by λ [2].
+The application. F or every spatial extentL and every strictly positive w on configurations, the
+kernel Kw(σ, τ) = w(σ)K(σ, τ) — with K the decoupled kernel of [ 1] — has all four properties.
+The coupled kernel of that paper is the case of a single spatial bond, and a bond around the
+slice is another.
+1.3 What is deliberately not claimed
+1. No spectral gap. Nothing here bounds the subdominant eigenvalue, at any L, in any
+region of parameters. That is a different problem and this paper does not touch it. In
+particular nothing here contradicts, or improves on, the obstructions of [ 2].
+2. Algebraic simplicity is not proved. The eigenspace is shown to be one-dimensional;
+that the eigenvalue is a simple root of the characteristic polynomial is not formalised.
+3. Strict positivity is assumed, not irreducibility . The Perron–F robenius theory of
+merely irreducible nonnegative kernels, and the periodicity theory , are outside this devel-
+opment.
+4. Still Z2, one variable per site, in the application.
+5. Nothing about SU(N), the continuum limit, or the Clay problem [6]. No reduction
+is claimed and none is known to the author.
+2
+
+--- Page 3 ---
+
+2 One comparison, used three times
+Lemma 2.1 (Positivity of the image) . If z ≥ 0 and zj0 > 0 for some j0, then (Az)i > 0 for
+every i.
+apply_pos_of_nonneg.
+Lemma 2.2 (The vanishing comparison) . If z ≥ 0, Az = λz and zi0 = 0 for some i0, then
+z = 0 .
+Proof. Otherwise z is positive somewhere, so (Az)i0 > 0 by Lemma 2.1; but (Az)i0 = λzi0 =
+0.
+eq_zero_of_nonneg_of_eigen_of_zero. This single lemma carries both uniqueness state-
+ments: in each case one subtracts the largest multiple of one eigenvector that still fits under the
+other, which produces a nonnegative eigenvector with a zero entry .
+Lemma 2.3 (Positivity of the eigenvalue). If v > 0 and Av = λv then λ > 0.
+eigenvalue_pos.
+3 Uniqueness and geometric simplicity
+Theorem 3.1 (Geometric simplicity) . If v > 0 with Av = λv, then every w with Aw = λw
+satisfies w = cv for some c ∈ R.
+Proof. Let c = min i wi/vi, attained at i0. Then z = w − cv ≥ 0 by the choice of c, zi0 = 0 , and
+Az = λz by linearity . Lemma 2.2 gives z = 0 .
+eigenvector_eq_smul_of_pos.
+Theorem 3.2 (Uniqueness up to scale). Two strictly positive eigenvectors have the same eigen-
+value, and are positive multiples of one another.
+Proof. Both eigenvalues are positive by Lemma 2.3, and each dominates the other in modulus
+by the domination theorem of [2], so they are equal; then Theorem 3.1 applies, and the constant
+is positive because both vectors are.
+pos_eigenvector_unique.
+4 Existence, by compactness
+The pinned mathlib revision has no Brouwer fixed-point theorem, so existence is obtained
+without one. That is a statement about this revision, not about the library in perpetuity .
+Definition 4.1. ∆ = {x : ι → R | x ≥ 0, ∑
+i xi = 1 }.
+simplexSet, compact by isCompact_simplexSet: it is a closed subset of [0, 1]ι, and xi ≤∑
+j xj = 1 puts it there.
+Lemma 4.2 (Summing the constraint bounds the multiplier) . If x ∈ ∆ and rx ≤ Ax then
+r ≤ R := ∑
+i β, where β is the largest entry of A.
+3
+
+--- Page 4 ---
+
+Proof. Sum the constraint over i: the left side is r ∑
+i xi = r, and the right side is ∑
+i(Ax)i ≤∑
+i β ∑
+j xj = R.
+exists_pos_eigenvector contains this step. It is what makes the constraint set compact
+without any estimate on how small the entries of x can be — the usual device of restricting to
+a thickened simplex is not needed.
+Theorem 4.3 (Existence). A strictly positive kernel has a strictly positive eigenvector, with
+strictly positive eigenvalue.
+Proof. Let K = {(r, x) ∈ [0, R] × ∆ | rx ≤ Ax}. It is nonempty (take r = 0 and x a vertex)
+and compact (a closed constraint on a product of compacta), so r attains a maximum on it, at
+(λ, v) say .
+Since v ∈ ∆ it is nonnegative and not zero, so Av > 0 entrywise by Lemma 2.1. Suppose
+Av ̸= λv. Then z = Av − λv ≥ 0 is nonzero, so Az > 0 entrywise, i.e. A(Av) > λ Av
+entrywise. Put y = Av/ ∑
+i(Av)i ∈ ∆; by homogeneity Ay > λy entrywise, and y > 0,
+so ε = min i
+(
+(Ay)i − λyi
+)
+/yi > 0 satisfies (λ + ε)y ≤ Ay. By Lemma 4.2, λ + ε ≤ R, so
+(λ + ε, y) ∈ K — contradicting maximality . Hence Av = λv, and then λvi = ( Av)i > 0 forces
+λ > 0 and v > 0.
+exists_pos_eigenvector.
+Remark 4.4 (Why the maximiser is automatically positive) . The simplex admits points with
+zero entries, and nothing in the definition of K excludes them. They are excluded a posteriori :
+once Av = λv is known, vi = ( Av)i/λ > 0. Restricting the search to strictly positive vectors in
+advance would have cost a compactness argument that this order of steps avoids.
+5 The vacuum at every spatial extent
+Definition 5.1. F or a weightw on configurations, Kw(σ, τ) = w(σ)K(σ, τ) with K the decou-
+pled kernel of [ 1].
+sourceWeightedKernelL, strictly positive when w is: sourceWeightedKernelL_pos.
+Theorem 5.2 (The vacuum, at every L). F or every L, every β, and every strictly positive w,
+the kernel Kw has a strictly positive eigenvector with strictly positive eigenvalue; it is unique up
+to positive scale; and its eigenvalue dominates every eigenvalue, real or complex.
+vacuum_exists_of_sourceWeight, vacuum_unique_of_sourceWeight, vacuum_
+spectral_radius_of_sourceWeight. F or the concrete slice with a bond around the
+ring, spatialWeightRing and coupled_ring_vacuum_exists.
+Theorem 5.3 (The normalised vacuum: T Ω = Ω again). Let T = λ−1Kw. Then at every L
+there is Ω with Ω > 0, ∑
+σ Ω(σ) = 1 , and T Ω = Ω .
+normalizedKernel, normalizedKernel_fixes_eigenvector, normalized_vacuum_of_
+sourceWeight, and for the ring slice coupled_ring_normalized_vacuum.
+4
+
+--- Page 5 ---
+
+Remark 5.4 (The equation that failed, holding again). This is worth stating separately because
+of which equation it is. The companion chain obtained the vacuum from T Ω = Ω for the
+uniform Ω, and [ 1] proved exactly that statement false as soon as a spatial coupling is present.
+Theorem 5.3 restores the same equation — for the Perron Ω instead of the uniform one, at every
+extent. The normalisation ∑ Ω = 1 is free: the existence proof already produces its vector inside
+the simplex.
+Remark 5.5 (What this settles about the first paper) . [1] proved that the elementary route
+stops producing the vacuum, and was careful to claim no more: it did not assert the vacuum
+was absent, and it said a positive kernel on a finite set has a Perron vector. That sentence was
+prose there, cited from the classical theory. Here it is a theorem, and it applies to exactly the
+kernels that paper studied, at every L. So the obstruction is now located precisely: not in the
+object, and not in the model, but in the route.
+Remark 5.6 (And what it does not settle) . Nothing in this paper produces a spectral gap. The
+obstructions of [ 2] are untouched: the projective metric is stil l blind to the coupling and stil l
+degenerates in the volume, and knowing that the vacuum exists does not repair either failure.
+Having the first object of the chain back is a precondition for the analytic work, not a substitute
+for it.
+6 F ormalisation notes
+The order of the steps did the work. The compactness argument is run on the plain sim-
+plex, which contains points with zero entries, and strict positivity of the maximiser is recovered
+afterwards from the eigen-equation. Attempting the reverse — searching only among strictly
+positive vectors — requires a thickened simplex and an invariance estimate; the version here
+needs neither.
+Summing the constraint replaced an estimate. The bound keeping the constraint set
+compact is r = r ∑
+i xi ≤ ∑
+i(Ax)i, obtained by summing the very inequality that defines the
+set. A first design bounded r through the smallest entry of a thickened simplex and needed
+the ratio of the extreme entries of A; summing removed that entire layer, together with two
+auxiliary constants.
+One lemma, both uniqueness statements. Lemma 2.2 is used for geometric simplicity
+and, through it, for uniqueness up to scale. In both cases the input is produced the same way:
+subtract the largest multiple that still fits underneath, and read the resulting zero entry .
+A dependency discharged rather than routed around. The two companion develop-
+ments each paid for the absence of Perron–F robenius in a different currency — a weaker state-
+ment in one case, a bespoke proof in the other. Building the theorem once cost less than the
+second detour did.
+7 Reproducibility
+All artifacts are at source checkpoint 08a9050201287a31d20fc4339cc5c6c64b1391fb on branch
+main of https://github.com/lluiseriksson/THE-ERIKSSON-PROGRAMME . Every link was re-
+5
+
+--- Page 6 ---
+
+solved against that commit, and checked to point at an actual declaration line, before compila-
+tion.
+Quantity V alue
+F ull core build 8427 jobs, success
+Oracle commands 2564
+with axiom dependencies 2541
+axiom-free 23
+Distinct axioms across all outputs propext, Quot.sound, Classical.choice
+Occurrences of sorryAx 0
+Project axioms 0
+Errors 0
+V erdicts are in docs/VERIFICATION-LEDGER.md. The oracle script is oracle_check.lean.
+References
+[1] L. Eriksson, Where the Elementary Reconstruction Stops: Spatial Coupling Breaks the Uni-
+form V acuum, Machine-Checked, viXra, 2026.
+[2] L. Eriksson, Blind to the Coupling: a Second Machine-Checked Obstruction at Spatial Extent,
+viXra, 2026.
+[3] E. Seneta, Non-negative Matrices and Markov Chains , 2nd ed., Springer, 2006.
+[4] L. de Moura and S. Ullrich, The Lean 4 theorem prover and programming language, CADE-
+28, Lecture Notes in Computer Science 12699 (2021), 625–635.
+[5] The mathlib Community ,The Lean mathematical library, CPP 2020, 367–381.
+[6] A. Jaffe and E. Witten, Quantum Y ang–Mil ls theory, Clay Mathematics Institute Millennium
+Prize Problem description, 2000.
+6

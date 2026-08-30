@@ -1,0 +1,632 @@
+--- Page 1 ---
+
+The Reconstructed Theory Has One Mass:
+a Mac hine-Chec k ed V olume-Uniform Sp ectral Gap
+with Exact Iden tication Against the Gibbs Sums
+Lluís Eriksson *
+2026-08-05
+Abstract
+F or the spatialZ 2 (Ising-slice) system in the Dobrushin windo w2 tanh|β|+ 2 tanh|γ| ≤
+α <1, w e mac hine-c hec k in Lean 4 an end-to-end c hain: (i) the Osterw alderSc hrader
+(site-form) reconstruction of the transfer op erator is unitarily conjugate  b y the explicit√wb oundary dressing  to the symmetrised Dobrushin k ernel; (ii) theunnormalise d
+Gibbs sums themselvesare exact matrix elemen ts of the reconstructed op erator's p o w ers,
+gibbsPathSumw β N A B=λN ⟨ ˆTN QA, QB⟩and the partition function is the same shap e at
+the dressed constan t  iden tities, not b ounds; and (iii) there isonemassm >0suc h that for
+everyspatial exten tLthe pro jected op erator norm is at moste −m and ev erymixe dconnected
+correlator of the reconstructed op erator ob eys
+⟨u, ˆT nv⟩ − ⟨Ω, u⟩⟨Ω, v⟩
+ ≤ ∥u∥∥v∥(e−m)n,
+the zero-time case included; (iv) the connected t w o-p oin t function of thenormalise dGibbs
+measure ob eys|⟨A(X 0)B(XN )⟩ − ⟨A(X0)⟩⟨B(XN )⟩| ≤C(A, B)(e−m)N withCindep enden t
+of the time depth, the division licensed b y a denominator o or uniform inNthat the p os-
+itiv e cone supplies and the sp ectrum do es not (it con trols only the ev en p o w ers); (v) the
+N→ ∞limit state exists,isthe v acuum state of the reconstructed op erator, and do es not
+dep end on the strictly p ositiv e observ able terminating the c hain; and (vi) the reconstructed
+op eratorisa rev ersible Mark o v c hain  sto c hastic and in detailed balance forπ= Ω 2,
+b oth pro v ed  and in that stationary state the connected correlator of b ounded observ ables
+ob eys|E π[f PN g]−E π[f]Eπ[g]| ≤Kf Kg (e−m)N with the quan tier order∃m∀L:no fac-
+tor dep ending on the sp atial extent. So the rate is uniform in the v olume throughout, and
+in the stationary state so is the constan t; the end-of-c hain state of (v) k eeps a b oundary-
+dep enden t one, and w e k eep the t w o apart. The windo w is non-empt y at an in teracting p oin t
+(β=γ= 1/10,α= 1/2), mac hine-c hec k ed, so none of these conditionals is v acuous. All
+quan tiers liv e in the Lean statemen ts; the prose here copies the k ernel's cut. T o situate
+the claim in the 2026 landscap e of mac hine-c hec k ed constructiv e eld theory: the abstract
+construction (reection-p ositiv e data→ph ysical Hilb ert space→self-adjoin t con tractiv e
+transfer op erator) has b een mac hine-c hec k ed, sorry-free, in the Harv ard formalization pro-
+gramme,with the sp e ctr al gap c arrie d as an undischar ge d hyp othesis(GappedTransfer); the
+Osterw alderSc hrader axioms ha v e b een mac hine-c hec k ed for the free eld; and measure-
+side Dobrushin clustering has b een mac hine-c hec k ed for lattice Y angMills. What w e add,
+and what to our kno wledge no mac hine-c hec k ed artefact y et con tains, is the com bination
+{concrete in teracting mo del, gappr ove drather than h yp othesised, uniform in the spatial
+* With mac hine-c hec k ed artefacts pro duced on the programme's Colab plane; to olc hain
+leanprover/lean4:v4.29.0-rc6, Mathlib pinned to0764272048.... Rep ository: THE-ERIKSSON-
+PR OGRAMME, branc hd3-closure, mo dule anc hor commit7230b97b286775781728952d71720902b6e78073;
+v erication anc hor813658de4a1ac5f4365611c444ebf1785ed679cc(fresh clone, A ddendum 637).
+1
+
+--- Page 2 ---
+
+v olume} on the reconstructed op erator,identie d exactly against the r aw Gibbs sums i.e.
+a concrete disc harge of exactly the h yp othesis shap e the abstract framew orks carry . W e do
+not claim Wigh tman reconstruction, a con tin uum limit,SU(N), or an y progress on the Cla y
+problem.
+1 In tro duction and landscap e
+The Osterw alderSc hrader route builds a ph ysical theory out of Euclidean data: a reection-
+p ositiv e form giv es a Hilb ert space, and comp osition with the time shift giv es a self-adjoin t
+transfer op erator. F or a lattice slice system the construction is elemen tary  the con ten t is
+nev er the construction but thesp e ctrum: a sp ectral gap at ev ery xed spatial exten tLis classical
+(P erronF rob enius; in this programme it is the earliercoupled_gap_all_eigenvalues), and it
+degenerates asL→ ∞unless something uniform surviv es. What a thermo dynamic limit can
+actually consume isonem >0v alid for ev eryLat once.
+That uniform input exists in this rep ository: the Dobrushin corollarydobrushin_ising_uniform_gap
+pro duces, inside the windo w2 tanh|β|+ 2 tanh|γ| ≤α <1, a singlem >0b ounding the pro-
+jected transfer op erator of the tilted k ernel at ev ery exten t. This pap er's con tribution is the
+identic ation, and then thenormalisation. First (Section 3): the op erator that b ound go v erns
+is unitarily , b y the explicit √wb oundary dressing, with no sp ectral-transp ort theory  the
+transfer op erator forced on the reconstructed (site-form) theory . Second (Section 5): theunnor-
+malise d Gibbs sums themselvesare exact matrix elemen ts of that op erator's p o w ers λ N times
+an inner pro duct, an iden tit y v alid at ev ery realβand ev ery p ositiv e w eigh t, with the windo w
+en tering only when the gap is in v ok ed. Third (Sections 813): dividing b y the partition func-
+tion needs a denominator that do es not degrade, and the p ositiv e cone supplies one where the
+sp ectrum cannot, whic h turns the op erator gap in to deca y of theme asur e'sconnected correlator
+and in to an innite-time limit state that forgets its b oundary . F ourth (Section 10): read in the
+normalisation the op erator itself pro vides  the rev ersible Mark o v c hain it is  the constan t
+loses its dep endence on the exten t as w ell.
+The analytic con ten t is delib erately c heap: the same witnesses as D-6, no new estimate, no
+wider windo w. Cheapness is the honest y of the claim  the uniformit y is real b ecause it is D-6's,
+and what the reconstruction con tributes is comm uting squares, exact iden tities, and the righ t
+normalisation, all mac hine-c hec k ed.
+1.1 Mac hine-c hec k ed prior w ork, cited b efore a referee do es
+The follo wing table is load-b earing and its ro ws w ere collected b y a four-mo dalit y searc h on
+2026-08-04 (evidence:docs/OS-R-PRIORITY-COLLATION.mdin the rep ository; the four ra w agen t
+rep orts are app ended there v erbatim).
+2
+
+--- Page 3 ---
+
+Artefact What is mac hine-c hec k ed What is not
+mrdouglasny/
+reflection-positivity
+(sorry-free∼2026-06)
+RP data→Hilb ert space
+(completion/quotien t)→self-
+adjoin t con tractionT; the dic-
+tionary⟨[f], T n[g]⟩=
+R
+f(g◦
+τn ◦θ)dµ; trace form ulas; sus-
+ceptibilit y b oundsfr oma gap
+the gap itself: carried as the
+GappedTransferhyp oth-
+esis(GroundGap.lean);
+no spatial-v olume-uniform
+statemen t; concrete in-
+stance is nite-lattice RP
+only
+OSforGFF
+(arXiv:2603.15770)
+all v e GJ/OS axioms for the
+d=4Gaussian free eld, 0 sor-
+ries
+reconstruction (listed as
+next milestone); an y in ter-
+acting mo del
+xiyin137/OSreconstructionWigh tman-side GNS lane of the
+full OS↔Wigh tman theorem
+the theorem: 53 sorries +
+12 axioms at last README
+snapshot
+mrdouglasny/lgt(com-
+plete 2026-05-04)
+Chatterjee-st yle Dobrushin
+uniqueness for lattice YM,
+U(n), with exp onen tial clus-
+tering whose constan ts dep end
+only on(n, d, β)
+an op erator gap; an y recon-
+struction; the statemen t is
+p er-v olume on the measure
+side
+pphi2transfer-matrix sp ectral ma-
+c hinery forφ 4
+2
+rests on 2729 pro ject ax-
+ioms
+This pap er the √w-dressing unitary;
+the transp orted v olume-
+uniform gap; theexact
+iden titiesgibbsPathSum =
+λN ⟨ ˆTN QA, QB⟩and
+ZN =λ N ⟨ ˆTN Q1, Q1⟩;
+v olume-uniformmixe dclus-
+tering with the zero-time
+case; the p ositiv e-cone de-
+nominator o or, diagonal and
+o-diagonal, uniform inN; the
+normalised Gibbs connected
+correlator; the innite-time
+limit state, iden tied as the
+v acuum and indep enden t
+of the p ositiv e terminating
+observ able; and the recon-
+structed op erator read as a
+rev ersible Mark o v c hain, whose
+stationary-state clustering has
+b othrate and constan t free
+of the exten t (nal anc hor:
+core 8481, oracle 3055, 0 sorry ,
+fresh-clone v eried)
+Wigh tman axioms; con tin-
+uum limit;SU(N); Cla y;
+theL→ ∞stateit-
+self the constan ts are
+exten t-free, the limit is
+not constructed (no inclu-
+sion maps, no compatibil-
+it y b et w eenπ L andπ L+1);
+b oundary indep endence b e-
+y ond strictly p ositiv e time-
+terminations
+There is a co ordinated, activ e programme (Douglas et al., Harv ard CMSA) whose declared
+3
+
+--- Page 4 ---
+
+liv e fron ts are the OS reconstruction theorem,P(φ) 2, and YM mass gap at strong coupling, and
+whose framew ork carries the sp ectral gap as an undisc harged h yp othesis. The endp oin t b elo w
+is a concrete disc harge of that h yp othesisshap e(dieren t framew ork, same mathematical hole),
+whic h is wh y the comparison table ab o v e is prin ted in full b efore an y claim w ording.
+2 The t w o geometries and the forced op erator
+Ev erything in this section is prior w ork of the rep ository , cited b y mo dule (the public trace
+of this lane is the ai.viXra2607.009xcluster); no new mathematics app ears here. The slice
+system carries t w o pairings on complex b oundary v ectors: thesiteform, whic h w eighs b y1/w
+(siteForm, mo duleSpatialReconstruction), and theb ondform carrying the decoupled k ernel
+spatialKernelβ(bondForm). The transfer op erator isfor c e d:T=D wKis the unique op erator
+withsite(u, T v) = bond(u, v)(transferOp_unique), self-adjoin t for the site form at ev eryβ
+(transferOp_selfAdjoint) and p ositiv e forβ≥0; reection p ositivit y of the underlying mea-
+sure is the lane's earlier b ond/site pair (mo dulesSpatialReflection,SpatialOS). On the mea-
+sure side, the same rep ository carries the Gibbs bridge (mo duleSpatialGibbs): the unnormalised
+t w o-p oin t path sumgibbsPathSumand partition functiongibbsPartitionof the coupled slice
+system, with the in-tree op erator bridgegibbsPathSum_eq_iterate(the path sum as anN-fold
+k ernel iterate against dressed observ ables,dressw A= √w A). On the Dobrushin side it carries
+symWeighted= √wK√w(mo dulePerronGap), its normalisationtiltKernel= symWeighted/λ
+(mo duleDobrushinTilt), the Euclidean pac k agingopOf,vacOf,vacuumTransfer_opOf(mo dule
+DobrushinTransport), and the corollarydobrushin_ising_uniform_gap(mo duleDobrushinCorollary).
+The seam fact this pap er dep ends on  onespatialKerneldeclaration serving b oth geometries
+ is enforced b y the elab orator in the mo dule of Section 3.
+2.1 The OS pro v enance: reection p ositivit y , collapse, n ull space, ph ysical
+quotien t
+The op erator of Section 2 is not an ansatz; its Osterw alderSc hrader pro v enance is mac hine-
+c hec k ed in the same tree, and w e presen t it here b ecause the reconstruction claim of this pap er
+rests on it. All items b elo w are green, in-tree prior w ork of the lane (mo dulesSpatialReflection,
+SpatialOS,SpatialReconstruction); nothing in this subsection is new.
+R ee ction p ositivity over the me asur e.The b ond OS pairing of t w o half-c hain observ ables
+is literally a sum o v er whole Gibbs paths osPairingBond_eq_gibbsSum, through the
+splitting equiv alencebondEquivand the w eigh t iden tit ygibbsWeight_joinBond and it
+is nonnegativ e on the diagonal forβ≥0(osPairingBond_nonneg; the restriction is sharp:
+gibbsPathSum_neg_of_neg_betaexhibits negativit y atβ <0).
+The c ol lapse and its nul l sp ac e.Half-c hain observ ables collapse linearly on to b oundary v ec-
+tors (collapseL, surjectiv e b ycollapseL_surjective), and the n ull space of the reected
+site form isexactlythe k ernel of the collapse:F∈ker(collapseL)⇐⇒osPairingSiteF= 0
+(mem_ker_collapseL_iff). The quotien t is b y something iden tied, not b y an abstract
+n ull space that happ ens to b e there.
+The physic al quotient.The quotien t of half-c hain observ ables b y that k ernelisthe b oundary
+space, as a bundled linear equiv alence (physicalEquiv, viaquotKerEquivOfSurjective).
+4
+
+--- Page 5 ---
+
+The op er ator's pr ovenanc e.The transfer op erator's matrix elemen t b et w een t w o collapsed
+half-c hain observ ables is the reected t w o-p oin t sum of the Gibbs measure o v er whole
+paths, one slice further apart osPairing_transfer_gibbsSum, stated for t w o observ-
+ables, not one. T ogether with forcing (transferOp_unique), self-adjoin tness at ev eryβ
+(transferOp_selfAdjoint) and p ositivit y forβ≥0(transferOp_nonneg), this is the OS
+construction of the op erator whose sp ectrum Sections 47 con trol.
+A t nite exten t the site form withw >0is denite, so on b oundary v ectors no further
+quotien t in terv enes; the quotien t con ten t liv es one lev el up, on half-c hain observ ables, where it
+is thephysicalEquivab o v e. This is the honest division of lab our b et w een construction and
+sp ectrum in this mo del.
+3 The dressing unitary
+All statemen ts of this and the follo wing sections liv e in one mo dule (YangMills/OS/OSReconstructionUniform.lean,
+sha256d9919e256ae59ac9...27bac149,20,428b ytes, ten-pass ladder on the plane, nalELAB_EXIT
+0). W riteQu:= √w ufor the b oundary dressing of a real Euclidean v ector (qEmbed; it coincides
+with the measure side'sdress, complexied qEmbed_eq_dressis denitional); the site form
+w eighs b y1/w.
+Theorem 3.1(A1,siteForm_qEmbed).F orw >0and r e alu, v:siteFormw(Qu) (Qv) =P
+σ uσvσ. Per site the c anc el lation is elementary: √wu· √wv·(1/w) =uv.
+Theorem 3.2(A2,transferOp_qEmbed).T(Qu) =Q
+ 
+act (symWeightedw β)u
+
+p ointwise: the
+for c e d tr ansfer op er ator on a dr esse d ve ctor is the dr essing of the symmetrise d kernel's action.
+Theorem 3.3(A3,transferOp_iterate_qEmbed).T [n](Qu) =Q
+ 
+(actS) [n]u
+
+ the shap e the
+in-tr e e me asur e bridgegibbsPathSum_eq_iteratec onsumes.
+T ogether with A1, the dressing is a unitary b et w een the Euclideanℓ 2 pairing and the site
+form at ev ery nite exten t (the site form withw >0is denite, so no quotien t in terv enes  this
+is the elemen tary , nite-v olume case of the OS construction, and w e sa y so plainly).
+4 The transp orted v olume-uniform gap
+Theorem 4.1(os_reconstruction_uniform_gap).L etβ, γ∈Rand0< α <1with2 tanh|β|+
+2 tanh|γ| ≤α. Ther e ism >0such that for everyLther e ar eλ >0andΩ>0with the xe d-
+p oint e quation P
+τ tiltKernel (sliceWγ L)β λ σ τΩτ = Ωσ, the pr oje cte d b ound∥projectedTransfer (opOf (tiltKernel. . .)) (vacOf Ω)∥ ≤
+e−m, and the A2 identity atw:= sliceWγ L.
+The pro of is anobtainondobrushin_ising_uniform_gapfollo w ed b y A2:the same wit-
+nesses, no new analytic con ten t  whic h is precisely the p oin t. The uniformit y is real b ecause
+it is D-6's; the reconstruction con tributes the iden tication, not a new estimate.
+5 Exact iden tication against the Gibbs sums
+The bridge from the ra w measure to the op erator is a c hain ofidentities no b ound app ears
+un til the gap is in v ok ed, and none of the statemen ts b elo w needs the windo w: they hold at ev ery
+realβ, ev eryλ̸= 0, ev ery p ositiv e w eigh t.
+5
+
+--- Page 6 ---
+
+Lemma 5.1(B0b,act_symWeighted_eq_smul_act_tilt).actS u=λ·act (tilt)uforλ̸=
+0, and iter ating (act_symWeighted_iterate_eq_smul_tilt, via the sc alar tr ansp ort lemmas
+act_smul_fun,act_iterate_smul_fun):(actS) [N] u=λ N ·(act tilt)[N] u.
+Lemma 5.2(B0a,act_iterate_eq_opOf_pow).(actM) [n]u= (opOfM) n(toLpu)p ointwise,
+for any kernel matrixM.
+Theorem 5.3(B1,gibbsPathSum_eq_inner_pow).F orw >0,β∈R,λ̸= 0,N∈Nand r e al
+observablesA, B:
+gibbsPathSumw β N A B=λN 
+(opOf (tiltKernelw β λ))N (QA), QB
+
+,
+an exact identity: the unnormalise d Gibbs two-p oint sumisλ N times a matrix element of the
+r e c onstructe d op er ator's p owers, taken b etwe en dr esse d observables.
+Theorem 5.4(B2,gibbsPartition_eq_inner_pow).Under the same hyp otheses, the p artition
+function is the same shap e at the dr esse d c onstant:gibbsPartitionw β N=λ N ⟨ ˆTN (Q1), Q1⟩.
+Remark 5.5.Dividing B1 by B2 c anc elsλ N , so thenormalisedtwo-p oint function e quals
+⟨ ˆTN QA, QB⟩/⟨ˆTN Q1, Q1⟩ plain arithmetic fr om the two identities, r e c or de d her e as pr ose.
+The quantitative six-termconnectedb ound is a the or em of the same mo dule, in division-fr e e
+form: Se ction 8. W e print the b oundary b etwe en identity and estimate exactly wher e the kernel
+puts it.
+6 Mixed clustering on a generic Hilb ert space
+The clustering mac hinery is stated for an arbitrary real Hilb ert spaceH(asectionwith
+[NormedAddCommGroup H] [InnerProductSpaceRH] [CompleteSpace H]), so the three lem-
+mas b elo w are reusable against an y transfer op erator pac k aged as aVacuumTransfer in par-
+ticular they are exactly the consumer shap e of theGappedTransferh yp othesis of the abstract
+framew orks in Section 1.1.
+Lemma 6.1(norm_sub_inner_smul_le).F or∥Ω∥= 1:∥v− ⟨Ω, v⟩Ω∥ ≤ ∥v∥(Pythagor as;
+r emoving the vacuum c omp onent do es not gr ow the norm).
+Lemma 6.2(pow_apply_norm_le).∥S nv∥ ≤rn∥v∥whenever∥S∥ ≤r,r≥0.
+Theorem 6.3(mixed_connCorr_bound).L etTb e aVacuumTransferwith vacuumΩ, and sup-
+p ose∥projectedTransferTΩ∥ ≤rwithr≥0. Then for al lu, v∈Hand al ln∈Nincluding
+n= 0: ⟨u, Tnv⟩ − ⟨Ω, u⟩⟨Ω, v⟩
+ ≤ ∥u∥∥v∥rn.
+Then= 0c ase is the Pythagor as lemma;n≥1go es thr ough the in-tr e eprojected_pow_succ.
+This strictly extends the lane's earlier diagonal clustering (os_reconstruction_uniform_clustering,
+u=v, constan t∥v∥ 2), whic h remains in the mo dule: t w odier entobserv ables, and the time-zero
+correlator is b ounded to o  the zero-time case is where a naiv e geometric-series argumen t is
+silen t, and it is carried b y the pro jection geometry instead.
+6
+
+--- Page 7 ---
+
+7 The endp oin t
+Theorem 7.1(os_reconstruction_measure_uniform).L etβ, γ∈Rand0< α <1with
+2 tanh|β|+ 2 tanh|γ| ≤α. Ther e isonem >0such that forev erysp atial extentLther e ar e
+λ >0andΩ>0with:
+(i) the xe d-p oint e quation fortiltKernel (sliceWγ L)β λatΩ;
+(ii)exact iden tication: for everyNand al l r e al observablesA, B,gibbsPathSum (sliceWγ L)β N A B=
+λN ⟨ ˆTN (QA), QB⟩with ˆT= opOf (tiltKernel. . .);
+(iii)v olume-uniform mixed deca y: for al lu, vin the slic e Hilb ert sp ac e and al ln≥0,
+⟨u, ˆT nv⟩−
+⟨vacOf Ω, u⟩⟨vacOf Ω, v⟩
+ ≤ ∥u∥∥v∥(e−m)n.
+The witnesses of (i)(iii) aredobrushin_ising_uniform_gap's, consumed v erbatim; the
+pac k aging isvacuumTransfer_opOf+tiltKernel_symm; (ii) is B1 atw= sliceWγ L(whose
+p ositivit y is the in-treesliceW_pos); (iii) is Theoremmixed_connCorr_boundatr=e −m. One
+theorem, three clauses, no new constan t: the mass that clause (iii) exhibits is the mass D-6
+pro v ed, no w measured against the ra w Gibbs sums through the exact iden tit y of clause (ii).
+8 The division-safe six-term connected b ound
+The one step the previous v ersion named op en is no w a theorem, in t w o la y ers. The generic la y er
+liv es in the same arbitrary-Hilb ert-space section as the mixed b ound:
+Theorem 8.1(six_term_connected_bound).L etTb e aVacuumTransferwith vacuumΩ, let
+0≤r≤1with∥projectedTransferTΩ∥ ≤r, and writeF(u, v) :=⟨u, T N v⟩. Then for al l
+qA, qB, q1 and al lN:
+F(q1, q1)F(q A, qB)−F(q A, q1)F(q 1, qB)
+ ≤6∥q A∥∥q B∥∥q 1∥2 rN .
+The pro of is a ring iden tit y inE-terms (E(u, v) :=F(u, v)−⟨Ω, u⟩⟨Ω, v⟩): the pure pro duct
+terms cancelexactly, six terms surviv e, eac h carrying at least oneEfactor b ounded b y Theo-
+remmixed_connCorr_bound, and the t w oE·Eterms sp end one factor throughr N ≤1. The
+constan t6is the honest coun t of surviving terms, not an optimised one.
+The mo del la y er consumes it at the dressed observ ables,in r aw Gibbs terms:
+Theorem 8.2(os_reconstruction_connected_uniform).L etβ, γ∈Rand0< α <1with
+2 tanh|β|+ 2 tanh|γ| ≤α. Ther e isonem >0such that forev erysp atial extentLther e ar e
+λ >0,Ω>0with the xe d-p oint e quation, and for every time depthNand al l r e al observables
+A, B:
+ZN SN (A, B)−SN (A,1)S N (1, B)
+ ≤λ 2N  
+6∥QA∥∥QB∥∥Q1∥ 2
+(e−m)N ,
+wher eS N = gibbsPathSum,Z N = gibbsPartition, andQ·= toLp(dress·).
+This is the normalised b ound m ultiplied through b y the p ositiv e scale ofZ 2
+N . T o divide it
+one needs a lo w er b ound for⟨ ˆTN Q1, Q1⟩that do es not degrade withN, and that is the con ten t
+of the next section.
+7
+
+--- Page 8 ---
+
+9 The p ositiv e cone: a denominator o or uniform inN
+A sp ectral argumen t giv es the o or only along the ev en p o w ers: writingQ1=⟨Ω, Q1⟩Ω+q ⊥ one
+has⟨ ˆTN Q1, Q1⟩=⟨Ω, Q1⟩2 +⟨S N q⊥, q⊥⟩withSthe pro jected op erator, and the correction
+is sign-con trolled only forNev en (S 2k is p ositiv e semidenite;S 2k+1 is not). The obstruction
+is an artefact of the metho d, not of the ob ject: the k ernel here is en trywisep ositive, so the
+order-theoretic route closes at ev eryN.
+Lemma 9.1(tiltKernel_pos).F orw >0andλ >0,tiltKernelw β λis entrywise p ositive 
+atev eryr e alβ, sinc espatialKernelis a pr o duct of p ositive b ond factors (spatialKernel_pos).
+The vacuum is p ositive to o (vacOf_pos).
+Lemma 9.2(cone propagation,opOf_pow_ge_smul_fix).L etMb e entrywise nonne gative with
+opOfMΩ = Ω. IfcΩ≤ventrywise thencΩ≤T nventrywise, for everyn. (Induction onn;
+the step is P
+τ Mστ (cΩ τ )≤ P
+τ Mστ (Tnv)τ and the xe d-p oint e quation. No p arity, no sp e ctr al
+input.)
+Theorem 9.3(the o or,inner_pow_floor).L etMb e entrywise nonne gative,Ωthe normalise d
+p ositive xe d ve ctor,ventrywise p ositive. Then ther e isf >0withf≤ ⟨T nv, v⟩forev eryn.
+Explicitlyf=c 2∥Ω∥2 wher ec= min σ(vσ/Ωσ)>0is the in-tr e e nite minimumminWeight.
+Theorem 9.4(os_reconstruction_normalised_clustering).In the window ther e isonem >
+0such that forev erysp atial extentL: the p artition function is p ositive at every depth, and ther e
+is a c onstantC(A, B) dep ending on the observables and onL, butnoton the time depthN
+ with
+SN (A, B)
+ZN
+− SN (A,1)
+ZN
+SN (1, B)
+ZN
+ ≤C(A, B) (e−m)N , C(A, B) = 6∥QA∥∥QB∥∥Q1∥ 2
+f2 .
+The three quotien ts are the exp ectations of the normalised Gibbs measure:S N (A, B)/ZN =
+⟨A(X0)B(XN )⟩,S N (A,1)/ZN =⟨A(X 0)⟩andS N (1, B)/ZN =⟨B(X N )⟩. So the statemen t is
+that the connected t w o-p oin t functionof the me asur edeca ys at the v olume-uniform rate, with
+a time-indep enden t prefactor. This is the step the earlier v ersion of this man uscript named as
+op en; it is no w a theorem, and the honest residue is stated in Section 14:Cstill dep ends onL.
+10 Constan ts uniform in the exten t: the ground-state c hain
+TheL-dep endence of the constan t in thestationary-stateb ound is an artefact ofnormalisation,
+not a prop ert y of the ob ject, and w e remo v e it here rather than list it as a limitation. The scop e
+of that claim should b e stated b efore it is made, b ecause it is not the whole of Sections 913:
+what loses its exten t is the constan t in the stationary stateπ= Ω 2 constructed b elo w. The end-
+of-c hain b ound of Section 13 k eeps a constan t dep ending on the exten tandon the terminating
+observ able, and it is not repaired here  that state is a dieren t ob ject, and Remark 10.5 sa ys
+exactly ho w.
+The dressed observ ables carry an unnormalised partition function in their Euclidean norm:
+∥Q1∥2 = P
+σ wσ, whic h gro ws with the exten t. An y b ound written in those norms therefore has
+an exten t-dep enden t prefactorhowever sharp the op er ator estimate is. The righ t normalisation
+is the one the op erator itself pro vides.
+8
+
+--- Page 9 ---
+
+Theorem 10.1(the reconstructed dynamics is a rev ersible Mark o v c hain).W riteP(σ, τ) :=
+tiltKernel(σ, τ) Ωτ /Ωσ (groundKernel; the Do obh-tr ansform by the p ositive Perr on ve ctor).
+ThenPis entrywise nonne gative (groundKernel_nonneg), sto chastic  P
+τ P(σ, τ) = 1, by
+the xe d-p oint e quation (groundKernel_row_sum)  and r eversible for the gr ound-state me asur e
+πσ := Ω 2
+σ:π σP(σ, τ) =π τ P(τ, σ)(groundKernel_reversible). Mor e overπis a pr ob ability
+me asur e, P
+σ Ω2
+σ = 1(sum_vacOf_sq), b e c ause the vacuum is a unit ve ctor.
+Lemma 10.2(the in tert wining,opOf_dressVacand its iterate).L et(Uf) σ := Ω σfσ. Then
+ˆT(Uf) =U(P f), henc e ˆT N (Uf) =U(P N f): the r e c onstructe d op er atoristhe Markov step,
+c onjugate d by the vacuum. The normalisation ofΩc anc els b etwe en the two ends.
+Lemma 10.3(norm_dressVac_le).If|f σ| ≤Kfor al lσthen∥Uf∥ ≤K.This is where the
+exten t disapp ears:∥Uf∥ 2 = P
+σ Ω2
+σf2
+σ ≤K 2 P
+σ Ω2
+σ =K 2, and the last step is an e quality
+pr e cisely b e c auseΩis a unit ve ctor  no p artition function survives.
+Theorem 10.4(os_reconstruction_ground_state_clustering).In the window ther e isone
+m >0such that forev erysp atial extentL, and for al l observablesf, gwith|f| ≤K f ,|g| ≤K g
+p ointwise, and everyN:
+Eπ
+
+f·P N g
+
+−E π[f]E π[g]
+ ≤K f Kg (e−m)N .
+The quan tier order is∃m∀L∀f, g, N: the constan t isK f Kg, supplied b y the observ ables
+alone, andnothing in the b ound dep ends on the sp atial extent. This is the same gap as b efore 
+mis still D-6's  read in the normalisation that do es not sm uggle a partition function in to the
+constan t. In particular, for observ ables b ounded b y1the connected correlator is at moste −mN ,
+uniformly in the v olume.
+Remark 10.5.The two states in this p ap er ar e dier ent obje cts and we ke ep them ap art. The
+state of Se ction 13 is theN→ ∞limit at theendof a chain terminate d byB; its density against
+ΩisQ1, and its appr o ach c onstant is b oundary-dep endent. The stateπ= Ω 2 of this se ction
+is the stationary state of the chain  the mar ginal in themiddleof a doubly innite chain 
+and it is the one in which the c onstant is absolute. Both ar e le gitimate; only the se c ond gives an
+L-uniform b ound, and saying which is which is the p oint.
+11 Non-v acuit y , and the summed form
+Ev ery theorem ab o v e is conditional on the Dobrushin windo w. A conditional theorem whose
+h yp othesis cannot b e satised sa ys nothing, so the windo w's non-emptiness is mac hine-c hec k ed
+here rather than assumed  and at aninter actingp oin t, not at the free one.
+Lemma 11.1(tanh_tenth_le).tanh(1/10)≤1/9. No de cimal arithmetic is use d: the identity
+tanhx= 1−2/(e 2x + 1)r e duc es the claim toe 1/5 ≤5/4, and that fol lows fr om1 +x≤e x at
+x=−1/5to gether withe 1/5e−1/5 = 1.
+Theorem 11.2(window_nonempty_interacting).Ther e ar eβ, γ̸= 0andαwith0< α <1
+and2 tanh|β|+ 2 tanh|γ| ≤α namelyβ=γ= 1/10,α= 1/2, sinc e4/9≤1/2.
+So the h yp othesis of ev ery theorem in this pap er is satisable with b oth couplings switc hed
+on, and none of the conditionals is v acuous. W e emphasise what this do es and do es not sa y:
+9
+
+--- Page 10 ---
+
+it mak es the statemen ts non-empt y , and it sa ys nothing ab out ho w large the windo w is. The
+windo w is sucien t, not optimal.
+Finally , the exten t-free b ound of Section 10 is put in the form a thermo dynamic-limit argu-
+men t actually consumes.
+Theorem 11.3(summed_clustering_of_uniform_bound).If|c N | ≤Kf Kg rN for al lN, with
+r=e −m <1, then for every cut-oM
+X
+N<M
+|cN | ≤ Kf Kg
+1−e −m .
+Applied to the ground-state correlator this b ounds the summed connected correlation  a
+susceptibilit y  b y a quan tit y indep enden t of the cut-oandof the spatial exten t. The summed
+form exists only b ecause the constan t of Section 10 carries no exten t; with anL-dep enden t
+prefactor the sum w ould still con v erge for eac hLbut w ould carry thatLin to ev ery consumer.
+12 Repro duction
+All n um b ers b elo w are read from committed run artefacts; predictions w ere committedb efor e
+their measuremen ts (the programme's standing discipline  the ledger records nine consecutiv e
+exact coun t predictions for this lane b efore this pap er's t w o).
+Stage OS-R-1 (measured, ledger A ddenda 616619)
+Quan tit y Predicted Measured
+core jobs, un wired 8480 (ledger baseline) 8480
+core jobs, wired8480 + 18481
+oracle rep orts, wired3010 + 73017
+sorryAxo ccurrences 0 0
+endp oin t axiom sets standard triple exactly[propext, Classical.choice, Quot.sound]
+F resh-clone witness at anc hor8127e5b52d75116b19c172ea022e12c1cab0f8c2: judges110/110
+in normal and-O; core 8481; oracle 3017; mo dule sha256 bit-iden tical (A ddendum 619; run cell
+scripts/osr1_pass7_freshclone.py).
+Stage OS-R-2 (predictions A ddendum 621, committed b efore the run; mea-
+suremen ts A ddendum 622)
+10
+
+--- Page 11 ---
+
+Quan tit y Predicted (committed rst) Measured
+core jobs 8481 exact (le grew, no mo dule added) 8481
+oracle rep orts3017 + 9 = 3026exact 3026
+sorryAxo ccurrences 0 0
+new endp oin t axiom sets standard triple exactly[propext, Classical.choice, Quot.sound]×9
+six-term stage (pr e dictions A ddendum 623, c ommitte d b efor e the run; me asur e d A ddendum 624):
+core jobs 8481 exact (le grew again) 8481
+oracle rep orts3026 + 2 = 3028exact 3028
+sorryAxo ccurrences 0 0
+new endp oin t axiom sets standard triple exactly the triple×2
+fresh-clone repro duction bit-iden tical mo dule, same coun ts judges110/110b oth mo des; 8481; 3028; 0; mo dule3b3598eb...bit-iden tical (A ddendum 625)
+p ositive-c one stage (pr e dictions A ddendum 626, c ommitte d b efor e the run; me asur e d A ddendum 627):
+core jobs 8481 exact (le grew a third time) 8481
+oracle rep orts3028 + 7 = 3035exact 3035
+sorryAxo ccurrences 0 0
+new endp oin t axiom sets standard triple exactly the triple×7
+fresh-clone repro duction bit-iden tical mo dule, same coun ts judges110/110b oth mo des; 8481; 3035; 0; mo dule2f2f4cf9...bit-iden tical (A ddendum 628)
+limit-state stage (pr e dictions A ddendum 629, c ommitte d b efor e the run; me asur e d A ddendum 630):
+core jobs 8481 exact (le grew a fourth time) 8481
+oracle rep orts3035 + 5 = 3040exact 3040
+sorryAxo ccurrences 0 0
+new endp oin t axiom sets standard triple exactly the triple×5
+fresh-clone repro duction bit-iden tical mo dule, same coun ts judges110/110b oth mo des; 8481; 3040; 0; mo duleec19ffa7...bit-iden tical (A ddendum 631)
+non-vacuity stage (pr e dictions A ddendum 635, c ommitte d b efor e the run):
+core jobs 8481 exact (imp ort set unc hanged) 8481
+oracle rep orts3050 + 5 = 3055exact 3055
+sorryAxo ccurrences 0 0
+fresh-clone repro duction bit-iden tical mo dule, same coun ts judges110/110b oth mo des; 8481; 3055; 0; mo duleb60120d3...bit-iden tical (A ddendum 637)
+gr ound-state stage (pr e dictions A ddendum 632, c ommitte d b efor e the run; me asur e d A ddendum 633):
+core jobs 8481 exact (le grew a fth time) 8481
+oracle rep orts3040 + 10 = 3050exact 3050
+sorryAxo ccurrences 0 0
+new endp oin t axiom sets standard triple exactly the triple×10
+fresh-clone repro duction bit-iden tical mo dule, same coun ts judges110/110b oth mo des; 8481; 3050; 0; mo duledac8e3f5...bit-iden tical (A ddendum 634)
+The core coun t is the ten th consecutiv e exact coun t prediction of this lane; the six-term, cone,
+limit-state and ground-state stages made it fourteen: the mo dule le grew from12,347to20,428
+to32,533to43,213to54,745to65,975b ytes across the v e stages and the job total nev er mo v ed.
+Mo dule:YangMills/OS/OSReconstructionUniform.lean, nal sha256b60120d38d0632d7088b34ddeec8ba004f81cb473751347a8cda67c0421efb43
+(70,976b ytes), bank ed at commit7230b97b2(ground-state stage:dac8e3f5...,65,975B at
+5812678bb; limit-state stage:ec19ffa7...,54,745B at6ff9074b3; cone stage:2f2f4cf9...,
+43,213B at6ef9aee03; six-term stage:3b3598eb...,32,533B atb47dda50e; measure stage:
+d9919e25...,20,428B at3b0dfa9e8) after the plane prin tedELAB_EXIT 0on b yte-iden tical
+source (the cell prin ts size and sha256 b efore elab orating; b oth matc hed the lo cal le b efore bank-
+ing). P ass history: passes 15 (OS-R-1, A ddenda 614616), passes 810 (OS-R-2, A ddendum
+621: the inner-pro duct notation trap at this Mathlib pin, then a singlenlinarithorien tation
+failure in the Pythagoras lemma, then green). The wiring unit with the registered predictions is
+11
+
+--- Page 12 ---
+
+committed asscripts/osr2_pass11_wiring.pyb efor eits run, at commit520e177a7.
+13 The innite-time limit state
+The o-diagonal o or costs one line more than the diagonal one and buys a gen uine state-
+theoretic statemen t. Fix a strictly p ositiv e b oundary observ ableBand terminate the c hain with
+it: the one-p oin t exp ectation ofAat the near end is⟨A⟩ N,B :=S N (A, B)/SN (1, B), a quan tit y
+that dep ends on the c hain lengthNand on the b oundary conditionB.
+Lemma 13.1(o-diagonal o or,inner_pow_floor_offdiag).F orMentrywise nonne gative
+with p ositive xe d ve ctorΩandu, ventrywise p ositive ther e isf >0withf≤ ⟨T nu, v⟩for every
+n namelyf=c⟨Ω, v⟩withcthe c one c onstant ofu.
+Theorem 13.2(inner_ratio_approx, generic Hilb ert space).WithTaVacuumTransfer,
+∥projectedTransfer∥ ≤r, andd≤ ⟨q 1, TN qB⟩,d >0,⟨Ω, q 1⟩>0:
+⟨qA, TN qB⟩
+⟨q1, TN qB⟩ − ⟨Ω, qA⟩
+⟨Ω, q1⟩
+ ≤ 2∥qA∥∥qB∥∥q1∥
+d⟨Ω, q1⟩ rN .
+Theorem 13.3(os_reconstruction_vacuum_state_limit).In the window ther e isonem >
+0such that forev erysp atial extent, every observableAand every strictly p ositive b oundary
+observableB, ther e is a c onstantC(indep endent ofN) with
+⟨A⟩N,B − ⟨Ω, QA⟩
+⟨Ω, Q1⟩
+ ≤C(e −m)N .
+Three readings sit in that one inequalit y .(i) The limit exists, and is approac hed exp onen tially
+at the v olume-uniform rate.(ii) The limit is the vacuum state: the righ t-hand expression is the
+P erron v ector's exp ectation, so theN→ ∞state of the nite-exten t c hain is the ground state of
+the reconstructed transfer op erator.(iii) The limit do es not dep end on the b oundary c ondition:
+Bapp ears on the left andnoton the righ t, so an y t w o strictly p ositiv e terminations giv e the same
+limit  b oundary condition indep endence, in the time direction, at xed spatial exten t. None
+of the three is a v ailable without the o or: ev ery one of them is a statemen t ab out a quotien t,
+and the quotien t's denominator is exactly what a sp ectral argumen t fails to con trol at o ddN.
+14 What is not claimed
+The claims ab o v e are nite-exten t and time-directional, and the gap b et w een them and the
+ob jects a constructiv e eld theorist w ould w an t is w orth naming item b y item rather than lea ving
+to inference.
+A n innite-volume tr ansfer op er ator.Not here. Ev ery op erator in this pap er acts on
+the nite-dimensional slice space at a xed exten tL; no inductiv e limit of the spaces is
+constructed.
+A thermo dynamic state.Only in thetimedirection: Section 13 pro duces theN→ ∞limit
+state at xedLand iden ties it. TheL→ ∞limit isnotconstructed: there is no inductiv e
+limit of the slice spaces, no compatibilit y b et w een the ground states of dieren t exten ts,
+12
+
+--- Page 13 ---
+
+and no state on an innite spatial lattice. What Section 10 do es supply is the missing
+uniformity in the c onstant: in the stationary stateπ= Ω 2 the connected correlator is
+b ounded b yK f Kge−mN with no exten t-dep enden t factor, so the nite-Lb ounds no longer
+degrade asLgro ws. That is a necessary condition for a spatial thermo dynamic limit; it is
+not the limit itself, and w e do not presen t it as one. (The end-of-c hain state of Section 13
+k eeps its b oundary-dep enden t constan t; the t w o states are dieren t ob jects.)
+Gener al b oundary-c ondition indep endenc e.Only for strictly p ositiv e terminations of the
+c hain in the time direction (Section 13). Nothing is pro v ed ab out spatial b oundary con-
+ditions, ab out non-p ositiv e or signed terminations, or ab out indep endence in the innite-
+v olume limit.
+A c ontinuum limit.Nothing. The lattice spacing nev er app ears.
+A Wightman the ory.Nothing: no analytic con tin uation, no OS→Wigh tman reconstruction,
+no relativistic sp ectrum condition. The reconstruction here is the elemen tary nite-v olume
+site-form construction (the quotien t con ten t liv es on half-c hain observ ables, Section 2.1),
+and the theorems are ab out itssp e ctrum and its exact r elation to the Gibbs sums, not ab out
+the construction b eing dicult.
+A c onse quenc e for Y angMil ls.None. The mo del is theZ 2 Ising slice, not a gauge theory;
+imp ortance is not inherited b y thematic pro ximit y , and only a pro v ed reduction w ould
+transfer it. This programme's o wn audit of its Y angMills c hain records that the c hain dies
+at the bridge, and nothing in this pap er repairs it.
+Finally , the windo w is the Dobrushin windo w, and it is sucien t, not optimal; outside it the
+programme's o wn kill-test (rep ository , A ddendum 610) sho ws the standard-cone Birkho route
+is pro jectiv ely blind to the site w eigh t, whic h is wh y no claim b ey ond the windo w app ears here.
+References
+[1] M. R. Douglas, S. Hobac k, C. Mei, Y. Nissim,F ormalization of QFT, arXiv:2603.15770
+(2026). Rep ositories:mrdouglasny/OSforGFF,mrdouglasny/reflection-positivity,
+mrdouglasny/lgt,mrdouglasny/pphi2;xiyin137/OSreconstruction.
+[2] K. Osterw alder, R. Sc hrader,Axioms for Euclide an Gr e en 's functionsI, I I, Comm. Math.
+Ph ys.31(1973),42(1975).
+[3] J. Glimm, A. Jae,Quantum Physics: A F unctional Inte gr al Point of View, 2nd ed., Springer
+(1987).
+[4] R. L. Dobrushin,The description of a r andom eld by me ans of c onditional pr ob abilities and
+c onditions of its r e gularity, Theory Probab. Appl.13(1968).
+[5] L. Eriksson,F r om the Gibbs W eight to the Sp e ctr al Gap: A Complete Machine-Che cke d
+OsterwalderSeiler Chain for theZ 2 L attic e Gauge Chain, ai.viXra:2607.0078 (2026)  the
+zero-extension, explicitly non-v olume-uniform predecessor of this pap er.
+[6] L. Eriksson,the dobrushin-matrix p ap er of the same r ep ository
+(papers/dobrushin-matrix/), source ofdobrushin_ising_uniform_gap(D-6, ledger
+A ddendum 603).
+13

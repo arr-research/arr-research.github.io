@@ -1,0 +1,17 @@
+# A Mechanized, Non-Circular Renormalization-Group Interface for Wilson Lattice Gauge Correlators
+
+**Author:** Lluis Eriksson  
+**Original archive:** [ai.vixra:2607.0043](https://www.ai.vixra.org/abs/2607.0043)  
+**First submitted:** 2026-07-14T05:39:24+00:00 (source displays no timezone)  
+**Latest declared source version:** v1  
+**ARR mirror:** [v1 PDF](https://github.com/arr-research/arr-research.github.io/releases/download/AIVIXRA-LATEST-2026-08-30/ai-vixra-2607.0043-v1.pdf)
+
+> Historical import; not assessed under the ARR frontier-model hostile-audit gate.
+
+## Abstract
+
+For SU(N_c) Wilson lattice gauge theory on d-dimensional periodic tori (d >= 2), we present a machine-checked (Lean 4, pinned Mathlib) renormalization-group interface for two-plaquette truncated correlators, in which every structural ingredient is a theorem rather than a postulate: the scale transformation is a concrete decimation map, defined once -- measurable, local, and gauge-covariant -- and its induced pushforward preserves probability; the effective measures are its literal iterated pushforwards of the Wilson Gibbs measure; the multiscale decomposition of the correlator is proved by telescoping, never carried as data; the terminal scale of the decomposition is a fixed index kTerm(n) = n with typed range 1 <= kTerm(n) <= n, which excludes, in the type, the circular depth-zero layer in which an infrared clause would hypothesize the bound being sought; the conditional decay conclusion is stated in the physical distance 2^n u with a single constant pair (C, m) quantified before every torus base and depth; and the terminal observable is operationally support-certified: the infrared object consumed by the interface equals a base-measure integral of an explicitly composed pullback observable whose dependence is contained in a transported support set, for which the separation lower bound 2^n(2u) - (2^n + 1), strictly positive on the whole interface window, is proved. The design is deliberately adversarial: four natural naive formulations are presented together with the explicit countermodels that defeat them -- scalar relabeling of known decay, sink flows on measures, clamped scales and per-volume constants, and depth-zero circularity -- and with the typed repairs that exclude each. The central hypothesis, PhysicalTerminalScaleWilsonGate, is an open proposition: no witness is provided, and the infrared/ultraviolet bounds it demands of the actual Wilson measure are exactly the open analytic mathematics (Balaban-type single-scale estimates). The final theorem is conditional: a witness of the gate yields |Cov(2^n u)| <= C e^{-m 2^n u} with one pair (C, m), m > 0, for every base M_0 >= 4 and every depth n >= 1. No mass-gap claim, no claim of gate satisfiability, and no thermodynamic or continuum limit is made or implied.
+
+## Source version history
+
+- [v1](https://www.ai.vixra.org/pdf/2607.0043v1.pdf) — 2026-07-14T05:39:24+00:00

@@ -1,0 +1,271 @@
+--- Page 1 ---
+
+Finite-Dimensional Davies Interface Lemmas and TFIM Witness
+Tests
+for Separation-Dependent Decoherence Rate Envelopes
+Version 2
+Lluis Eriksson
+Independent Researcher
+lluiseriksson@gmail.com
+January 2026 (v1); July 2026 (v2)
+Abstract
+We develop a finite-dimensional technical core for relating separation to effective decoherence-
+rate envelopes in Davies-type open-system dynamics. We work with energy pinching ∆ and
+quantify coherence by C(ρ) = S(ρ∥∆[ρ]). We import a maintenance inequality Pextra(ρ) ≥
+kBT ˙Closs(ρ) – in the corrected operational sense of its source (paired strategies against effi-
+cient/free baselines, 2512.0061 v2) – as an external input. On the operator side we prove: (i) an
+exact ω = 0 Dirichlet identity yielding a witness-based lower bound on instantaneous decay en-
+velopes, (ii) a Bohr-channel Dirichlet decomposition for a single-channel Davies generator under
+quantum detailed balance – corrected in v2: the v1 form 1
+2
+P
+ω γ(ω)∥[S(ω), O]∥2
+2,σ is false as an
+identity (numerical deviations of order 20%); the exact form isP
+ω γ(ω)eβω/2 ℜ⟨S(ω)O, [S(ω), O]⟩σ,
+which reduces to (i) at ω = 0 and is nonnegative pairwise in ±ω – and (iii) envelope suppres-
+sion lemmata under infrared exclusion and quasi-local spectral tails, reproved in v2 : the v1
+proofs used a KMS submultiplicativity step that is false in general (a one-qubit counterexam-
+ple saturates the corrected constant); the corrected constants carry c2
+σ = (λmax/λmin)1/2 and
+supω γ(ω)eβω/2, and the e−2ϵ/ξ exponent survives via a new positivity-pinning argument: for
+S = Snear + δ Stail and far-supported O, detailed balance at every δ forces Eδ(O) = δ2Etail(O)
+exactly. Consequently Lemma 4.13’s v1 claim of a λmin(σ)-free prefactor is downgraded to
+a quadratically improved dependence. On the state side we give an asymptotic linearization
+on Bohr-block perturbations with fixed diagonal, yielding a direction-dependent effective de-
+cay rate. Finite-size TFIM witness diagnostics are provided, and every corrected statement is
+verified to machine precision by the shipped suite.
+Summary of results and assumptions (updated in v2).Imported: the maintenance in-
+equality (Theorem 2.1) from [1]. Proved here (finite dimension): Lemma 4.1, Lemma 4.5 (new),
+Lemma 4.3 (corrected), Lemma 4.6 (new), Proposition 4.4, Lemmas 4.7–4.8 (corrected constants),
+Proposition 6.1 and Corollary 6.2. Finite-size numerics: Section 5. No thermodynamic-limit claims.
+All identities and counterexamples are verified in verification/2601-0023/ (Section 7).
+1 Scope, positioning, and non-claims
+This manuscript is finite-dimensional and makes no thermodynamic-limit claims unless stated. It
+does not propose modified dynamics, collapse mechanisms, Born-rule derivations, or ontological
+1
+
+--- Page 2 ---
+
+resolutions of the measurement problem. For theorem-level frameworks relating correlation decay
+and log-Sobolev inequalities see [4, 5]; our aim is an operator/state interface around Davies Dirich-
+let forms and a witness floor, with reproducible finite-size diagnostics. Series context (added in v2):
+this note is the theory core behind the TFIM witness diagnostics of 2601.0022 [6] (whose ED parame-
+ters are the ones declared in Appendix A here), and feeds theω = 0-floor block 2512.0064/2512.0070
+[7, 8] and the entropic interface 2601.0020 [9].
+2 Finite-dimensional operational core
+Let HS = P
+n EnΠn, σ := e−βHS / Tr(e−βHS ), ∆[ ρ] := P
+n ΠnρΠn, and C(ρ) := S(ρ∥∆[ρ]) with
+Umegaki relative entropy. If HS is degenerate, ∆ is energy-block pinching and S(0) below is block-
+diagonal on degenerate subspaces (the numerics group energies within 10 −10). The uncontrolled
+evolution is a GKLS semigroup with L(σ) = 0; ˙Closs(ρ) := − d
+dtC(ρt)|t=0. Battery-assisted thermal
+operations define Pextra(ρ) := inf [P(s) − P(sdiag)] over paired strategies maintaining ρ resp. ∆[ρ].
+Theorem 2.1 (Imported maintenance inequality [1]) . If Ctrl(ρ) ̸= ∅ and Ctrl(∆[ρ]) ̸= ∅, then
+Pextra(ρ) ≥ kBT ˙Closs(ρ), with Pextra understood in the corrected operational sense of 2512.0061 v2
+(paired strategies against efficient/free baselines; the v1 “assumption-free” variant of that source
+was vacuous and is not used here).
+3 Davies generators, KMS Dirichlet form, and a separation enve-
+lope
+Fix S = S† and a Davies generator in the weak-coupling–secular limit, with Bohr components
+S(ω) := P
+Em−En=ω ΠmSΠn, S(ω)† = S(−ω), and KMS ratesγ(−ω) = e−βωγ(ω). Define ⟨A, B⟩σ :=
+Tr(σ1/2A†σ1/2B), Eσ(O) := −ℜ⟨O, L†(O)⟩σ, far regions Ω ϵ := {j : d(j, Ω0) ≥ ϵ} with observable
+subspace Aϵ, and κ(ϵ) := supO∈Aϵ Eσ(O)/∥O∥2
+2,σ.
+Remark 3.1 (Modular relations). Since (S(ω))mn ̸= 0 only if Em−En = ω: σsS(ω)σ−s = e−sβωS(ω)
+for all s, and S(ω)†S(ω) commutes with σ. These two facts drive all corrected identities below.
+4 Interface lemmas
+4.1 The ω = 0channel yields a witness floor
+Lemma 4.1(Exact ω = 0 Dirichlet identity). Assume [S(0), HS] = 0 and γ(0) > 0. For the ω = 0
+Davies channel L†
+0(O) = γ(0)(S(0)OS(0) − 1
+2{S(0)2, O}), one has E(0)
+σ (O) = γ(0)
+2 ∥[S(0), O]∥2
+2,σ for
+all O.
+Proof. As in v1: with L := S(0), [ L, σ1/2] = 0 makes left/right multiplication by L KMS-self-
+adjoint; expanding ⟨[L, O], [L, O]⟩σ gives the identity. (Verified to 4 × 10−16 in the suite.)
+4.2 Bohr-channel Dirichlet decomposition (corrected in v2)
+Remark 4.2 (The v1 decomposition is false as an identity). v1 asserted Eσ(O) = 1
+2
+P
+ω γ(ω)∥[S(ω), O]∥2
+2,σ,
+citing the divergence-form representation of [5]. That representation involves modular-deformed
+derivations, not plain commutators; the plain-commutator form is exact only at ω = 0. On a
+TFIM N = 4 single-channel Davies model the suite finds relative deviations up to 0 .22 between Eσ
+and the v1 right-hand side.
+2
+
+--- Page 3 ---
+
+Lemma 4.3 (Bohr-channel Dirichlet decomposition, corrected) . Under quantum detailed balance
+and the single-channel Davies form, for Hermitian O,
+Eσ(O) =
+X
+ω
+γ(ω) eβω/2 ℜ
+
+S(ω)O, [S(ω), O]
+
+σ.
+Each pair {+ω, −ω} of summands is jointly nonnegative (each such pair, with its KMS rates, is
+itself a detailed-balanced generator), and the ω = 0 summand equals E(0)
+σ (O) of Lemma 4.1.
+Proof. Per channel, using Remark 3.1:⟨O, S(ω)†OS(ω)⟩σ = eβω/2⟨S(ω)O, OS(ω)⟩σ and ⟨O, S(ω)†S(ω)O⟩σ =
+ℜ⟨O, OS(ω)†S(ω)⟩σ = eβω/2∥S(ω)O∥2
+2,σ (move σ1/2 through S(ω)†, use [S†S, σ] = 0 and cyclicity).
+Substituting into−ℜ⟨O, L†
+ω(O)⟩σ gives theω summand γ(ω)eβω/2[∥S(ω)O∥2
+2,σ−ℜ⟨S(ω)O, OS(ω)⟩σ].
+Pairwise nonnegativity follows since the {±ω} sub-generator is KMS-symmetric with stationary σ,
+hence has nonnegative Dirichlet form. At ω = 0, ∥OS(0)∥2,σ = ∥S(0)O∥2,σ (adjoint invariance of
+the KMS norm), and the summand equals γ(0)
+2 ∥[S(0), O]∥2
+2,σ. All statements are verified to machine
+precision in the suite (2 × 10−16).
+4.3 Witness floor
+Proposition 4.4 (Witness lower bound at fixed separation) . In the setting of Lemma 4.3, fix
+ϵ0 ≥ 1. If there is Oϵ0 ∈ Aϵ0 with ∥[S(0), Oϵ0 ]∥2
+2,σ/∥Oϵ0 ∥2
+2,σ ≥ cϵ0 > 0, then κ(ϵ0) ≥ γ(0)
+2 cϵ0 .
+Proof. By Lemma 4.3, Eσ ≥ its ω = 0 summand (the remaining ±ω pairs are jointly nonnegative),
+which equals E(0)
+σ ; apply Lemma 4.1. (Note the v1 proof used termwise nonnegativity of the –
+incorrect – commutator decomposition; pairwise nonnegativity suffices.)
+4.4 KMS multiplication bound (new in v2)
+Lemma 4.5(KMS multiplication bound and sharpness). For all X, O: ∥XO∥2,σ ≤ ∥σ1/4Xσ−1/4∥∞∥O∥2,σ ≤
+cσ∥X∥∞∥O∥2,σ, and likewise for OX, with cσ := (λmax(σ)/λmin(σ))1/4. The naive bound ∥XO∥2,σ ≤
+∥X∥∞∥O∥2,σ, used implicitly in v1’s Lemmas 4.12–4.13, is false: for one qubit with gap ∆, X = σx
+and O = |1⟩⟨0| give ∥XO∥2,σ/∥O∥2,σ = eβ∆/4, which saturates cσ.
+Proof. ∥A∥2,σ = ∥σ1/4Aσ1/4∥2, so ∥XO∥2,σ = ∥(σ1/4Xσ−1/4)(σ1/4Oσ1/4)∥2 ≤ ∥σ1/4Xσ−1/4∥∞∥O∥2,σ,
+and ∥σ1/4Xσ−1/4∥∞ ≤ λ1/4
+maxλ−1/4
+min ∥X∥∞. The one-qubit computation is direct. (300 random draws
+in the suite: no violations of the corrected bound.)
+4.5 Envelope suppression (reproved in v2)
+Definitions of IR exclusion at ω∗, tensor lattice, support, tail map tail ϵ(X) := X − E<ϵ(X), and
+the norm comparison ∥X∥2
+2 ≤ λmin(σ)−1∥X∥2
+2,σ are as in v1 (that lemma is correct).
+Lemma 4.6 (Positivity pinning (new in v2)) . Let O be supported on Ωϵ and decompose each
+coupling as S = Snear + Stail with Snear := E<ϵ(S). For δ ∈ R let Eδ denote the Dirichlet form of
+the Davies generator built from Snear + δStail (same HS, same rates). Then
+Eδ(O) = δ2 Etail(O) exactly,
+where Etail is the Dirichlet form built from Stail alone.
+3
+
+--- Page 4 ---
+
+Proof. Each δ yields a detailed-balanced Davies generator with stationary σ, so δ 7→ Eδ(O) ≥ 0
+for all real δ. The dissipator is exactly quadratic in the coupling, so Eδ(O) = a + bδ + cδ2 with
+a = Enear(O) = 0 (near jumps commute with far O) and c = Etail(O). Nonnegativity of a quadratic
+vanishing at δ = 0 forces b = 0. (Verified exactly over four decades of δ in the suite.)
+Lemma 4.7(Envelope suppression from KMS tails; corrected constant) . Assume IR exclusion at
+ω∗ > 0 and ∥tailϵ(S(ω))∥2,σ ≤ A(1 + ϵ)pe−ϵ/ξ for |ω| ≥ω∗, with ˜γsup := sup|ω|≥ω∗ γ(ω)eβω/2 < ∞.
+Then for fixed (N, β),
+κ(ϵ) ≤ C(1 + ϵ)2pe−2ϵ/ξ, C := 2 |Ω≥ω∗ | ˜γsup c2
+σ λmin(σ)−1A2.
+Lemma 4.8 (Envelope suppression from operator-norm tails; corrected) . With the tail hypoth-
+esis in operator norm, ∥tailϵ(S(ω))∥∞ ≤ A(1 + ϵ)pe−ϵ/ξ, the same bound holds with C∞ :=
+2 |Ω≥ω∗ | ˜γsup c2
+σ A2.
+Proof of Lemmas 4.7–4.8. By Lemma 4.6 (applied with δ = 1), Eσ(O) = Etail(O) for far-supported
+O. By Lemma 4.3 applied to the tail generator and Cauchy–Schwarz, each channel contributes at
+most γ(ω)eβω/2 ∥T(ω)O∥2,σ ∥[T(ω), O]∥2,σ ≤ 2c2
+σ∥T(ω)∥2
+∞∥O∥2
+2,σ γ(ω)eβω/2 with T(ω) := tailϵ(S(ω))
+(Lemma 4.5 twice). Sum over Ω ≥ω∗ and insert the tail hypothesis; for Lemma 4.7 convert ∥T∥∞ ≤
+∥T∥2 ≤ λ−1/2
+min ∥T∥2,σ.
+Remark 4.9 (Corrected trade-off; v1’s Remark 4.14 revised) . v1 claimed Lemma 4.8’s prefac-
+tor is independent of λmin(σ). With the corrected multiplication bound this is no longer true:
+c2
+σ = (λmax/λmin)1/2 ≤ λ−1/2
+min . The honest comparison is: KMS-tail version ∼ λ−3/2
+min (worst case),
+operator-tail version ∼ λ−1/2
+min – a quadratic improvement, not λmin-freeness. Both versions also
+replace sup γ by sup γ(ω)eβω/2, reflecting the corrected decomposition. The e−2ϵ/ξ exponent of v1
+is confirmed: by Lemma 4.6 the cross (near ×tail) terms vanish identically, which v1 had implicitly
+and incorrectly justified via the plain-commutator decomposition.
+5 TFIM witness diagnostics (finite size)
+TFIM with open boundaries, HS = −J Pσx
+i σx
+i+1 − h Pσz
+i , h > J; coupling site j0 = ⌊N/2⌋, S =
+σz
+j0 ; witness ratio R(ϵ; O) := ∥[S(0), O]∥2
+2,σ/∥O∥2
+2,σ optimized over single-site Paulis at k = j0 ± ϵ.
+By Proposition 4.4, κ(ϵ) ≥ γ(0)
+2 Ropt(ϵ) – unaffected by the v2 corrections, since only the ω = 0
+channel enters.
+6 State-side linearization (finite dimension)
+Definitions (BKM inner product, Bohr-block subspace XΩ) and the quadratic expansion S(τ +
+ϵX∥τ) = ϵ2
+2 ⟨X, X⟩BKM,τ + O(ϵ3) are as in v1.
+Proposition 6.1(Asymptotic interface on a Bohr block). Let τ ≻ 0 be diagonal in the energy basis,
+L(τ) = 0 , L(XΩ) ⊆ XΩ, X ∈ XΩ traceless, ρ(ϵ) := τ + ϵX. Then C(ρ(ϵ)) = ϵ2
+2 ⟨X, X⟩BKM,τ +
+O(ϵ3), ˙Closs(ρ(ϵ)) = −ϵ2ℜ⟨X, L(X)⟩BKM,τ + O(ϵ3), and ˙Closs/C = Γeff(X) + O(ϵ) with Γeff(X) :=
+−2ℜ⟨X, L(X)⟩BKM/⟨X, X⟩BKM.
+Corollary 6.2 (Eigenmode case) . If additionally L(X) = −Γ
+2 X, then Γeff(X) = Γ and ˙Closs =
+Γ C(ρ(ϵ)) + O(ϵ3).
+4
+
+--- Page 5 ---
+
+Figure 1: TFIM witness sweep at J = 1.0, h = 1.5: Ropt(ϵ) for N ∈ {6, 8, 10, 12}, β ∈ {0.5, 1.0}.
+Exact diagonalization with energy-block pinching.
+7 Verification suite (added in v2)
+verification/2601-0023/verify 2601 0023.py verifies: Lemma 4.1 and the corrected Lemma 4.3
+to machine precision on a TFIM N = 4 Davies model; the falsity of the v1 decomposition (devia-
+tions up to 0.22); pairwise ±ω positivity (0 violations); the one-qubit counterexample of Lemma 4.5
+(ratio = eβ∆/4 exactly) and the corrected bound (0/300 violations); and the pinning identity of
+Lemma 4.6 exactly over four decades of δ. An optional flag --with-tfim runs the N = 10 witness
+at the declared parameters (J = 1, h = 1.5, S = σz
+j0 ), for comparison with the companion 2601.0022
+[6], whose v1 ED used these parameters.
+Note added in v2
+Three corrections, all verified in the suite; the witness mechanism and all ω = 0 statements of
+v1 stand unchanged. (1) Lemma 4.3 (Bohr decomposition): the v1 plain-commutator identity is
+false in general (deviations ∼ 20%); the exact form is Lemma 4.3, which reduces to the ω = 0
+identity and is pairwise nonnegative – the witness bound (Proposition 4.4) survives with a repaired
+proof. (2) Lemmas 4.12–4.13 (suppression): the v1 proofs used the false KMS submultiplicativity
+∥XO∥2,σ ≤ ∥X∥∞∥O∥2,σ (Lemma 4.5 gives the counterexample and the corrected cσ bound);
+the corrected constants carry c2
+σ and sup γ(ω)eβω/2, and v1’s “no λ−1
+min” claim is downgraded per
+Remark 4.9. The e−2ϵ/ξ exponent is confirmed by the new positivity-pinning Lemma 4.6, which
+replaces the incorrect route through the v1 decomposition. (3) Series cross-references added; the
+appendix script is relocated to verification/2601-0023/ in the series repository (the inline listing
+of v1 is superseded).
+A Reproducibility
+The TFIM figures were generated with tfim witness ropt all.py --J 1.0 --h 1.5 --eps max
+5 --sweep N 6 8 10 12 --sweep beta 0.5 1.0 --single N 12 --single beta 1.0. In v2 the
+script and the full verification suite live in verification/2601-0023/ of the series repository; the
+inline listing of v1 is superseded.
+5
+
+--- Page 6 ---
+
+Figure 2: Single instance: N = 12, β = 1.0.
+References
+[1] L. Eriksson, The Conditional Maintenance Work Theorem, ai.viXra:2512.0061 (2025; v2 2026).
+[2] E. B. Davies, Commun. Math. Phys. 39 (1974) 91–110.
+[3] H.-P. Breuer and F. Petruccione, The Theory of Open Quantum Systems , Oxford University
+Press (2002).
+[4] A. Capel, C. Rouz´ e, D. Stilck Fran¸ ca, arXiv:2009.11817.
+[5] E. A. Carlen and J. Maas, J. Stat. Phys. 178 (2020) 319–378.
+[6] L. Eriksson, ai.viXra:2601.0022 (2026; v2 2026).
+[7] L. Eriksson, ai.viXra:2512.0064 (2025; v2 2026).
+[8] L. Eriksson, ai.viXra:2512.0070 (2025; v2 2026).
+[9] L. Eriksson, ai.viXra:2601.0020 (2026; v2 2026).
+6

@@ -1,0 +1,713 @@
+--- Page 1 ---
+
+Conditional Continuum Limit of 4d SU (Nc) Yang–Mills Theory
+via Two-Layer Architecture, RG–Cauchy Uniqueness, and
+Step-Scaling Confinement*
+Lluis Eriksson
+Independent Researcher
+lluiseriksson@gmail.com
+February 2026 (v3: July 2026)
+Abstract
+Building on the lattice results of Papers [E26I]–[E26IX] — which, per the series audit (all
+companions now at v2/v3), are windowed and conditional rather than unconditional — we give
+a conditional construction of a scaling-limit state for pure SU (Nc) lattice Yang–Mills theory
+in four Euclidean dimensions, along dyadic lattice spacings ak = a02−k. The construction
+proceeds via a two-layer architecture. Layer 1 (Local fields): for bounded gauge-invariant local
+observables, expectations converge — without extracting subsequences — to a unique limit;
+precompactness is trivial (|⟨O⟩a,L| ≤1), and uniqueness follows from a multiscale RG–Cauchy
+estimate (Assumption 3.5), the single hard analytic input of this layer: as already recorded in
+v2 (Remark 3.6, Appendix B), the naive asymptotic-freedom rateg2
+k ∼ c/k is not summable, so
+summability is a genuine hypothesis, not a consequence of the chain. Layer 2 (Confinement):
+the physical string tensionσphys > 0 is established through step-scaling of Creutz ratios at fixed
+physical loop size, conditionally on Assumptions 4.4, 4.7 and 4.9. The limiting state inherits
+Osterwalder–Schrader positivity and admits Hilbert-space reconstruction; the mass gap is
+conditional on a uniform physical transfer-matrix gap (Assumption A.2) and strong continuity
+(Assumption 5.5). Version 3 retags the input layer to the audited chain: the uniform-LSI inputs
+are conditional on (H-P0)+(H-YGZ)+(H-SFI)+(H-ABS), the DLR-LSI/mass-gap route on (H-
+DOB-blk), and all lattice statements hold in the volume window Lvol ≤ eC/g2+O(1). A new
+window-compatibility lemma (Lemma 1.4) shows this window is not an obstruction to the
+continuum limit: along the 2-loop trajectory the required lattice size L/ak = 2kL/a0 satisfies
+ln(L/ak) ≈ 0.69 k while the audited window allows ln Llat ≤ 32.3/g2
+k ≈ 3.12 k — a margin
+factor ≈ 4.5 at the series’ representative arithmetic. Assumption A.2 is now cross-referenced
+to its conditional lattice supplier (2602.0054 v2: transfer-matrix gap under (H-DOB-blk)+(H-
+P0), in kernel form). All quantitative claims, and exact validations of both layers in a solvable
+d = 2 toy, are adjudicated in a companion numerical suite.
+* Version 3. Versions 1–2 described their lattice inputs as “unconditional lattice closure inputs [E26IX]” and
+stated that “Papers [E26I]–[E26IX] established” the uniform functional inequalities. Following the quantitative
+audit of the input chain (ai.viXra:2602.0041 v3, 2602.0051–0057 all v2), those descriptions are corrected: the
+lattice layer is windowed and conditional on the open hypothesis set (H-P0), (H-YGZ), (H-DOB-blk), (H-SFI),
+(H-ABS), and the flow window/(H-XOVER). v3 also adds a window-compatibility lemma (Lemma 1.4) showing
+that the dyadic continuum trajectory stays inside the audited volume window with a quantified margin, fixes a
+labeling inconsistency (Theorem 1.2(iv) cited “Theorems 4.4, 4.7, 4.9”, which are Assumptions), and updates the
+companion references to their audited versions. See the Note added in v3 (Section 9).
+1
+
+--- Page 2 ---
+
+Contents
+1 Introduction 2
+1.1 The problem . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 2
+1.2 The two-layer architecture . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 2
+1.3 Main results . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 2
+1.4 Scope and limitations . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+1.5 The lattice input layer and window compatibility (new in v3) . . . . . . . . . . . . 3
+2 Observable spaces and renormalization conditions 4
+2.1 The lattice theory . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+2.2 Smeared curvature observables . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+2.3 Local observable algebra at fixed physical scale . . . . . . . . . . . . . . . . . . . . 4
+2.4 Renormalization trajectory . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5
+3 Layer 1: Existence and uniqueness of local fields 5
+3.1 Tightness . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5
+3.2 RG–Cauchy estimate . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5
+3.3 Uniqueness of local Schwinger functions . . . . . . . . . . . . . . . . . . . . . . . . 6
+4 Layer 2: Step-scaling confinement 6
+4.1 Wilson loops and Creutz ratios at fixed physical scale . . . . . . . . . . . . . . . . 6
+5 Reflection positivity and reconstruction (bounded observables) 8
+5.1 OS-Positivity . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8
+5.2 Euclidean covariance: SO(4) rotational invariance . . . . . . . . . . . . . . . . . . . 8
+5.3 Translation invariance and cluster property . . . . . . . . . . . . . . . . . . . . . . 8
+5.4 Reconstruction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8
+6 Mass gap 9
+6.1 Uniform exponential clustering . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 9
+6.2 From clustering to mass gap . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 9
+7 Nontriviality 9
+8 Discussion 9
+8.1 Honest assessment of the logical structure . . . . . . . . . . . . . . . . . . . . . . . 9
+8.2 What this paper does not do . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 10
+8.3 Comparison with previous work . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 10
+9 Note added in v3 10
+A Transfer matrix and uniform clustering 11
+A.1 Setup . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 11
+A.2 Mass gap: transfer-matrix spectral gap . . . . . . . . . . . . . . . . . . . . . . . . . 11
+2
+
+--- Page 3 ---
+
+B Bridge lemma: mapping Assumption 3.5 to [E26VIII]–[E26IX] 12
+B.1 The one-step difference . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12
+B.2 Bounding each contribution . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12
+B.3 Summability over scales . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12
+C Notational concordance with [E26IX] and the audited chain 13
+1 Introduction
+1.1 The problem
+The construction of a rigorous four-dimensional quantum field theory with non-abelian gauge
+group, and the proof of its mass gap, is a Clay Millennium Problem [9]. Lattice gauge theory
+provides a non-perturbative, gauge-invariant regularization; removing the cutoff (a → 0) requires
+(1) uniform functional inequalities independent of the volume, (2) a compactness–uniqueness
+argument for the limiting state, and (3) preservation of OS positivity, confinement and the mass
+gap.
+Correction (v3). v1–v2 stated that “Papers [E26I]–[E26IX] established item (1) on the
+lattice.” Per the audit of the chain (2602.0041 v3, 2602.0051–0057 v2), item (1) is established
+conditionally and in a volume window : the uniform LSI is windowed ( Lvol ≤ eC/g2+O(1)) and
+conditional on (H-P0)+(H-YGZ)+(H-SFI)+ (H-ABS); the DLR route to the transfer gap ad-
+ditionally consumes (H-DOB-blk). The present paper carries out items (2) and (3) given that
+conditional input layer; its own assumptions (3.5, 4.4, 4.7, 4.9, 5.5, A.2) come on top and are
+stated explicitly.
+1.2 The two-layer architecture
+Standard compactness arguments face a dual obstruction in gauge theories: the connection fields
+are gauge-variant, and the natural gauge-invariant observables (Wilson loops) are nonlocal. We
+resolve this through a bipartite structure. Layer 1 : bounded gauge-invariant local observables
+(Definition 2.4); trivial precompactness of expectations; uniqueness by a quantitative RG–Cauchy
+estimate under successive RG steps, guaranteeing convergence without subsequences. Layer 2 :
+Creutz ratios on Wilson loops with lattice dimensions I(a) = ⌊R/a⌋, J(a) = ⌊T/a⌋, so that
+physical size is fixed as a → 0, yielding σphys > 0 conditionally.
+Remark 1.1 (What is not used for uniqueness) . We do not use the string tension to determine
+the theory. Uniqueness follows entirely from the RG–Cauchy estimate (Layer 1); confinement is
+an output of the construction, not an input to uniqueness.
+1.3 Main results
+Theorem 1.2 (Main theorem (conditional); v3: inputs retagged). Let G = SU (Nc), d = 4. Fix a
+physical scale ℓ0 > 0 and tune β(a) = 2Nc/g(a)2 along a weak-coupling trajectory consistent with
+2-loop asymptotic freedom. Then, under the assumptions listed below and given the conditional,
+windowed lattice input layer of § 1.5:
+(i) Existence and uniqueness (dyadic) (Assumption 3.5). For every bounded gauge-invariant
+local observable O ∈ Aℓ and fixed physical side length L >0, ⟨O⟩ak,L converges as k → ∞
+3
+
+--- Page 4 ---
+
+along ak = a0/2k to a unique limit. Unbounded observables (smeared curvature monomials)
+are deferred.
+(ii) Reflection positivity and reconstruction. The limiting state on bounded observables inherits
+reflection positivity and admits a Hilbert-space reconstruction (Section 5).
+(iii) Mass gap (Assumptions A.2 and 5.5). For each fixed physical spatial size L ≥ L∗, the
+reconstructed HL satisfies inf(spec(HL) \ {0}) ≥ m0 > 0, with m0 independent of L.
+(iv) Confinement (conditional; Theorem 4.11). Under Assumptions 4.4, 4.7 and 4.9 (v1–v2
+miscited these as “Theorems”; corrected) , σphys > 0.
+(v) Nontriviality (conditional on confinement). The theory is not a generalized free field.
+The key assumptions are: Assumption 3.5 (summable RG–Cauchy), Assumption A.2 (uniform
+transfer-matrix gap), Assumption 5.5 (strong continuity), Assumption 4.9 (uniform Creutz-ratio
+positivity), and Assumption 4.7 (well-defined Creutz ratios). Their status, and the status of the
+lattice input layer, is discussed in Section 8.
+1.4 Scope and limitations
+This paper is conditional and works exclusively with bounded local gauge-invariant observables.
+We do not construct renormalized local fields as operator-valued distributions, and we do not
+verify the full OS axiom set for distribution-valued Schwinger functions.
+Remark 1.3 (Order of limits) . The dyadic continuum limit ak → 0 is taken at fixed physical
+volume (a four-torus of side L). The OS reconstruction yields H = HL at that fixed L. Infinite-
+volume statements require an additional thermodynamic-limit input L → ∞, not proved here and
+treated as conditional whenever invoked.
+1.5 The lattice input layer and window compatibility (new in v3)
+Hypothesis (Imported open hypotheses (audited chain)) . The lattice inputs consumed by this
+paper carry, per their v2/v3 replacements: (H-P0) (power-law large-field penalty; 2602.0052 v2),
+(H-YGZ) (fiber LSI constant not degraded by Holley–Stroock; 2602.0053 v2), (H-SFI) (slow-field
+interface; 2602.0056 v2), (H-ABS) (strong-form absorption; 2602.0057 v2), (H-DOB-blk) (block
+Dobrushin condition, consumed by the DLR →transfer-gap route; 2602.0053/0054 v2), and the
+flow window Lvol ≤ eC/g2+O(1) with crossover hypothesis (H-XOVER) (2602.0051 v2). None is
+proved in the series. Every appeal to “[E26I]–[E26IX]” below is to be read with this load.
+Lemma 1.4 (Window compatibility of the dyadic trajectory; new in v3). Along the 2-loop trajec-
+tory (5), the lattice size required at stepk is L/ak = 2kL/a0, i.e. ln(L/ak) = k ln 2+ln(L/a0), while
+the audited volume window of the input chain allows ln Llat ≤ cw/g2
+k with cw ≈ 32.3 (2602.0051 v2
+arithmetic) and g−2
+k = g−2
+0 + 2b0k ln 2. Since
+cw · 2b0 ln 2 ≈ 32.3 × 0.0966 ≈ 3.12 > ln 2 ≈ 0.693,
+the window bound grows ≈ 4.5 times faster than the requirement: the dyadic continuum trajectory
+remains inside the audited window for all k, with margin ratio → cw ·2b0 ≈ 4.5 (companion suite,
+check 1). The window is therefore not an obstruction to the continuum limit; it is inherited as a
+condition on the constants (cw, b0) only.
+4
+
+--- Page 5 ---
+
+2 Observable spaces and renormalization conditions
+2.1 The lattice theory
+On the four-torus Λ a,L = a(Z/(L/a)Z)4 of physical volume L4, the Wilson action is
+Sβ(U) = β
+X
+p∈P(Λa,L)
+
+1 − 1
+Nc Re TrUp
+
+, β = 2Nc
+g2 , (1)
+with measure dµβ,a,L = Z−1e−Sβ
+Q
+e dUe, dUe normalized Haar on G = SU (Nc).
+2.2 Smeared curvature observables
+Definition 2.1 (Lattice curvature). For a plaquette p in the (µν)-plane at site x,
+F(a)
+µν (x) := 1
+a2
+ 
+Up(x) − Up(x)†traceless ∈ su(Nc). (2)
+Definition 2.2 (Smeared curvature monomial). For φ1, . . . , φn ∈ S(R4; R),
+Oa[φ1, . . . , φn] :=
+nY
+i=1
+
+a4 X
+x∈Λa,L
+φi(x) trF(a)
+µiνi(x)2
+
+. (3)
+Definition 2.3 (Lattice Schwinger functions (formal; not constructed here)) .
+G(a)
+n (φ1, . . . , φn) :=
+
+Oa[φ1, . . . , φn]
+
+µβ(a),a,L
+. (4)
+Since Oa is unbounded (∥F(a)∥∞ ∼ a−2), no convergence is claimed for G(a)
+n in this paper.
+2.3 Local observable algebra at fixed physical scale
+Definition 2.4 (Bounded local gauge-invariant observables) . Fix ℓ > 0. Aℓ is the class of
+gauge-invariant lattice observables that (a) are bounded measurable functions of finitely many
+links with ∥O∥∞ ≤ 1; (b) are supported in physical regions of diameter ≤ ℓ; (c) are stable under
+normalized products and convex combinations. Typical elements: 1
+Nc Re TrUp, traces of closed
+paths of diameter ≤ ℓ, and smooth bounded functions thereof.
+Remark 2.5 (Why bounded observables). ∥F(a)∥∞ ∼ a−2; uniform moment bounds for curvature
+monomials would require vacuum subtraction and wave-function renormalization. Restricting to
+∥O∥∞ ≤ 1 gives uniform control without subtractions.
+Remark 2.6 (Two classes of observables) . The G(a)
+n involve unbounded fields; Aℓ restricts to
+bounded observables with automatic uniform control (see Remark 2.7).
+Remark 2.7 (Relation to smeared curvature observables). Layer 1 applies in two modes: bounded
+mode (convergence from Assumption 3.5 alone) and unbounded mode (requires additive and mul-
+tiplicative renormalization; deferred, no claims here).
+5
+
+--- Page 6 ---
+
+2.4 Renormalization trajectory
+The bare coupling is tuned as
+β(a) = 2Nc
+g(a)2 , g (a)−2 = 2b0 ln(a0/a) + O(ln ln(a0/a)), (5)
+b0 = 11Nc/(48π2), with a0 chosen so that g(a0) = g0 ≤ γ0.
+Definition 2.8 (Master threshold, recalled from [E26IX]) . γ0 > 0 is the largest value sat-
+isfying conditions (T1)–(T5) of [E26IX, Definition 4.11]. (v3) Per [E26IX]’s v2 replacement
+(2602.0051 v2), the simultaneous validity so ensured is windowed and carries the imported hy-
+potheses of § 1.5; by Lemma 1.4 the window itself is compatible with the dyadic trajectory.
+3 Layer 1: Existence and uniqueness of local fields
+3.1 Tightness
+Proposition 3.1 (Tightness for bounded observables). Fix L >0. For every O ∈ Aℓ, |⟨O⟩a,L| ≤1
+for all a ∈ (0, a0] with L/a ∈ N; more generally
+⟨O1 ··· On⟩a,L
+ ≤
+nY
+i=1
+∥Oi∥∞. (6)
+Remark 3.2 (Curvature monomials are not covered) . ∥Oa[φ]∥∞ diverges as a → 0; uniform
+moment bounds would require renormalization, not carried out here.
+Corollary 3.3 (Tightness and subsequential convergence). For O ∈ Aℓ the family {⟨O⟩a,L}a lies
+in [−1, 1], hence is trivially precompact. For the random-field upgrade, define
+Φa(φ) := a4 X
+x∈Λa,L
+φ(x) 1
+6
+X
+1≤µ<ν≤4
+1
+Nc Re TrUpµν(x); (7)
+|Φa(φ)| ≤L4∥φ∥∞ deterministically, and Mitoma’s theorem [11] gives tightness of the laws in
+S′(R4).
+Remark 3.4 (Mitoma requires random variables). Mitoma’s theorem concerns laws of S′-valued
+random variables; it cannot be applied to deterministic expectation families. Method 1 (trivial
+precompactness) suffices for this paper.
+3.2 RG–Cauchy estimate
+Assumption 3.5 (RG–Cauchy along the trajectory) . Along a 7→ β(a) there exists ε : (0, a0] →
+(0, ∞) with ε(a) ↓ 0 and P
+k ε(a02−k) < ∞, such that for every L >0, ℓ >0, O ∈ Aℓ,
+⟨O⟩a,L − ⟨O⟩a/2,L
+ ≤ ε(a), a ∈ (0, a0], L/a ∈ N. (8)
+Remark 3.6 (Summability is genuinely stronger than the naive AF estimate). A naive asymptotic-
+freedom estimate gives one-step changes ≲ g2
+k ∼ c/k: not summable. Assumption 3.5 postulates
+an improved, summable control; 2-loop asymptotic freedom does not by itself imply it. (v3) Ad-
+judicated numerically: the partial sums P
+k≤N g2
+k grow like (2b0 ln 2)−1 ln N without bound (suite
+check 2), while both sufficient rates of Remark 3.7 are summable. In the exact d = 2 toy the
+true one-step changes decay geometrically (∼ 4−k; suite check 3), illustrating what a correct
+mechanism must deliver in d = 4.
+6
+
+--- Page 7 ---
+
+Remark 3.7 (Examples of summable rates; status) . Sufficient: ε(a) ≤ C(a/ℓ)η (η > 0), or
+ε(a) ≤ C/[ln(a0/a)]1+δ (δ >0). We do not derive such a rate; Assumption 3.5 is the single hard
+analytic input of Layer 1 (see Appendix B).
+3.3 Uniqueness of local Schwinger functions
+Proposition 3.8 (Dyadic convergence of local expectations) . Under Assumption 3.5, for each
+O ∈ Aℓ the dyadic limit
+lim
+k→∞
+⟨O⟩ak,L, a k := a0/2k, (9)
+exists: for m > n, telescoping gives
+⟨O⟩am,L − ⟨O⟩an,L
+ ≤
+m−1X
+k=n
+ε(ak) − − − →
+n→∞
+0. (10)
+Theorem 3.9 (Existence and uniqueness of continuum local expectations (dyadic)) . Assume
+Assumption 3.5. Then for every L >0, ℓ >0, O ∈ Aℓ,
+ωL(O) := lim
+k→∞
+⟨O⟩ak,L (11)
+exists and is independent of subsequences of {ak}. (Convergence along general a → 0 would require
+a Cauchy estimate for non-halving steps, not provided by Assumption 3.5.)
+Remark 3.10 (A natural C∗-completion). Each Aℓ carries the L∞ norm; the completion ofS
+ℓ Aℓ gives a quasi-local C∗-algebra on which
+ωL(O) = lim
+k
+⟨O⟩ak,L (12)
+defines a state (positivity and normalization pass to the limit).
+Remark 3.11 (Extension to smeared curvature monomials) . Deferred; their L∞ norms diverge
+as a−2n.
+4 Layer 2: Step-scaling confinement
+4.1 Wilson loops and Creutz ratios at fixed physical scale
+Definition 4.1 (Wilson loops in lattice and physical units) . For I, J∈ N,
+Wa(I, J) :=
+D
+1
+Nc Re Tr
+Y
+e∈∂(I×J)
+Ue
+E
+a,L
+, (13)
+and at fixed physical size R × T,
+Wa(R, T) := Wa
+ 
+⌊R/a⌋, ⌊T/a⌋
+
+. (14)
+Remark 4.2 (Resolution of the fixed- I, Jerror). A previous draft incorrectly held I, Jfixed as
+a → 0 (shrinking physical loops). All Layer-2 statements use fixed physical R, T.
+7
+
+--- Page 8 ---
+
+Definition 4.3 (Creutz ratio (finite and infinite volume)) .
+χ(a)
+L (R, T) := −ln Wa(R, T) Wa(R − a, T− a)
+Wa(R − a, T) Wa(R, T− a)
+.
+a2. (15)
+Assumption 4.4 (Thermodynamic limit for Creutz ratios (conditional)) . For each a along the
+trajectory and each fixed R, T, the limit
+χ(a)
+∞ (R, T) := lim
+L→∞
+χ(a)
+L (R, T) (16)
+exists, and the dyadic limit limk χ(ak)
+∞ (R, T) exists.
+Definition 4.5 (Physical string tension (infinite volume; conditional)). Assume Assumption 4.4.
+Set
+χ∞(R, T) := lim
+k→∞
+χ(ak)
+∞ (R, T), (17)
+σphys := lim inf
+R,T→∞
+R/T fixed
+χ∞(R, T). (18)
+Proposition 4.6 (Existence of the infinite-volume dyadic Creutz-ratio limit) . Assume Assump-
+tions 4.4 and 4.7. Then χ∞(R, T) exists for each fixed R, T >0.
+Assumption 4.7 (Creutz ratio well-defined in the thermodynamic limit (conditional)) . The
+Wilson-loop expectations entering (15) are strictly positive in the thermodynamic limit (nonvan-
+ishing denominators).
+Remark 4.8 (Mass gap does not imply confinement) . Exponential clustering implies perimeter-
+law decay for large loops but does not by itself produce an area law; confinement requires the
+independent input Assumption 4.9.
+Assumption 4.9 (Uniform positive string tension input via Creutz ratios (infinite volume)) .
+Assume Assumption 4.4. There exist σ0 > 0 and R∗, T∗ > 0 such that for all sufficiently small a
+along the trajectory and all R ≥ R∗, T ≥ T∗,
+χ(a)
+∞ (R, T) ≥ σ0. (19)
+Remark 4.10 (Status of Assumption 4.9). A uniform infrared positivity input. In strong coupling,
+area law and positivity of Creutz ratios are classical [15]; in weak coupling the input is supported
+by Monte Carlo and large- Nc evidence but remains open. (v3) In the exact d = 2 toy the input
+holds with σ0 = σphys exactly (suite check 4).
+Theorem 4.11 (Confinement (conditional)). Assume Assumptions 4.4, 4.9 and 4.7. Then
+σphys > 0 : (20)
+by Proposition 4.6 the continuum Creutz ratio exists; by Assumption 4.9 and the dyadic limit,
+σphys = lim inf
+R,T→∞
+R/T fixed
+χ∞(R, T) ≥ σ0 > 0. (21)
+8
+
+--- Page 9 ---
+
+5 Reflection positivity and reconstruction (bounded observables)
+5.1 OS-Positivity
+Lemma 5.1 (Osterwalder–Schrader positivity). For each a >0 the lattice Yang–Mills measure
+satisfies reflection positivity with respect to any lattice hyperplane [14]:
+
+(ΘA)∗A
+
+µβ(a),a,L
+≥ 0 (22)
+for functionals A supported in {x0 > 0}. If expectations converge along dyadic scales (Theo-
+rem 3.9), the limiting state inherits reflection positivity: for O ∈ Aℓ supported in {x0 > δ},
+(ΘO)∗O is again a bounded gauge-invariant observable and ωL((ΘO)∗O) = limk⟨(ΘO)∗O⟩ak,L ≥ 0;
+general finite families pass to the limit the same way.
+Remark 5.2 (Subtlety for unbounded observables). For smeared curvature monomials, OS posi-
+tivity of the limit would first require convergence of renormalized Schwinger functions; not treated
+here.
+5.2 Euclidean covariance: SO(4) rotational invariance
+Proposition 5.3 (SO(4) invariance (conditional)) . The lattice action is hypercubic-invariant;
+SO(4)-breaking operators in the effective action have engineering dimension ≥ 6, hence are sup-
+pressed by O(a2). At the level of Aℓ, hypercubic symmetry is exact at each a and inherited by the
+dyadic limit; full SO(4) covariance concerns renormalized Schwinger functions and is deferred.
+Remark 5.4 (Precise citation needed). Excluding relevant SO(4)-breaking mixing uses the clas-
+sification of gauge-invariant operators under the hypercubic group [17] and the multiscale control
+of Papers [E26VIII]–[E26IX]. (v3) The latter is windowed/conditional per § 1.5.
+5.3 Translation invariance and cluster property
+In finite volume, torus translation invariance is inherited by the dyadic limit. Writing ω :=
+limL→∞ ωL (conditional thermodynamic limit), the cluster property
+ω(O1τRO2) − − − − →
+|R|→∞
+ω(O1) ω(O2) (23)
+is conditional, following from exponential clustering (Lemma 6.1) under Assumption A.2.
+5.4 Reconstruction
+Assumption 5.5 (Strong continuity of Euclidean time translations) . The semigroup (TL(t))t≥0
+induced on the reconstructed Hilbert space is strongly continuous.
+Corollary 5.6 (Hilbert-space reconstruction). Assume ωL is translation invariant and reflection
+positive (Lemma 5.1). With A+ the subalgebra supported in {x0 > 0} and
+⟨A, B⟩RP := ωL
+ 
+(ΘA)∗B
+
+, (24)
+quotienting nulls and completing yields a separable HL with cyclic ΩL; time translations induce
+a contraction semigroup; and under Assumption 5.5 there is a self-adjoint HL ≥ 0 with TL(t) =
+e−tHL, HLΩL = 0 [12,13,8].
+Remark 5.7 (Dependence of H on the observable algebra). HL depends on the input algebra; it
+may be a proper subspace of the space from a curvature-field reconstruction. Theorem 6.2 bounds
+the gap of HL on this space.
+9
+
+--- Page 10 ---
+
+6 Mass gap
+6.1 Uniform exponential clustering
+Lemma 6.1 (Uniform exponential clustering). Under Assumption A.2 there exists m0 > 0 such
+that for all L ≥ L∗, all a ∈ (0, a0] (L/a ∈ N), and all O1, O2 ∈ Aℓ at physical separation d:
+⟨O1O2⟩a,L − ⟨O1⟩a,L⟨O2⟩a,L
+ ≤ CO1,O2 e−m0d. (25)
+(Details in Appendix A.)
+6.2 From clustering to mass gap
+Theorem 6.2 (Mass gap (conditional)). Assume Assumptions 3.5, A.2 and 5.5. Then for every
+fixed L ≥ L∗,
+inf
+ 
+spec(HL) \ {0}
+
+≥ m0 > 0, (26)
+with m0 independent of L: the lattice clustering bound passes to the limit,
+ωL(O1O2) − ωL(O1)ωL(O2)
+ ≤ Ce−m0d, (27)
+and for A ∈ A+ with ωL(A) = 0,
+⟨[A], TL(t)[A]⟩
+ ≤ CAe−m0t, (28)
+so the spectral measure of [A] is supported in [m0, ∞) by the Laplace-transform argument (suite
+check 6 verifies this mechanism exactly on a finite transfer matrix).
+7 Nontriviality
+Theorem 7.1 (Nontriviality (conditional)). Under the hypotheses of Theorem 4.11 and the area-
+law input,
+σphys > 0 (29)
+implies the continuum theory is not a generalized free field: a Gaussian (generalized free) state
+cannot produce area-law decay of Wilson loops at all scales, since its truncated correlators factorize
+and yield perimeter-law behavior for large loops.
+8 Discussion
+8.1 Honest assessment of the logical structure
+Result Mechanism Status (v3)
+Existence of continuum exp. telescoping + RG–Cauchy cond. Assumption 3.5
+Tightness / compactness |⟨O⟩| ≤1; Mitoma proved (bounded obs.)
+OS-positivity lattice RP + convergence proved (Lemma 5.1)
+SO(4) invariance O(a2) breaking cond. (deferred Gn)
+Mass gap transfer gap + OS cond. A.2 + 5.5
+σphys > 0 Creutz step-scaling cond. 4.4 + 4.7 + 4.9
+Nontriviality area vs. perimeter cond. on confinement
+Lattice input layer chain 0041–0057 windowed; (H-P0)(H-YGZ)
+(H-SFI)(H-ABS)(H-DOB-blk)
+Window compatibility Lemma 1.4 verified (margin 4.5×)
+10
+
+--- Page 11 ---
+
+Assumption 3.5 is mappable to the multiscale outputs of [E26VIII]–[E26IX] only at the non-
+summable O(g2
+k) level (Appendix B); upgrading to a summable rate is the single hardest analytical
+step of Layer 1.
+8.2 What this paper does not do
+(1) We do not prove the RG–Cauchy estimate from first principles (naive AF rates are not
+summable: Remark 3.6). (2) The transfer-matrix gap (Assumption A.2) is postulated; the LSI
+chain controls a Glauber-dynamics gap, a different operator (Remark A.1); its conditional lattice
+supplier is 2602.0054 v2 (see Remark A.8). (3) The Creutz positivity input (Assumption 4.9) is
+postulated. (4) The thermodynamic limit L → ∞is not proved. (5) We work exclusively with
+bounded local observables. (v3) (6) The lattice input layer itself is windowed and conditional
+(§ 1.5); this paper does not discharge any of the six open hypotheses.
+8.3 Comparison with previous work
+The two-layer separation (bounded-observable uniqueness vs. physical string tension) avoids both
+the gauge-variance obstruction and the Wilson-loop renormalization problem at the price of con-
+ditionality; cf. [8,14,15] for the classical lattice inputs used.
+9 Note added in v3
+Versions 1–2 described the lattice inputs as unconditional. Following the audit of the chain
+(2602.0041 v3; 2602.0051–0057 v2), v3 records:
+ The phrase “unconditional lattice closure inputs [E26IX]” (abstract) and the sentence “Pa-
+pers [E26I]–[E26IX] established item (1)” ( § 1.1) are corrected: the lattice layer is windowed
+(Lvol ≤ eC/g2+O(1)) and conditional on (H-P0), (H-YGZ), (H-SFI), (H-ABS), and — for the
+DLR→transfer route — (H-DOB-blk) ( § 1.5).
+ New Lemma 1.4: the dyadic continuum trajectory is compatible with the audited window,
+with margin cw · 2b0 ≈ 4.5 (suite check 1). The window constrains constants, not the
+construction.
+ Assumption A.2 is cross-referenced to its conditional lattice supplier: 2602.0054 v2 proves a
+transfer-matrix gap conditionally on (H-DOB-blk)+(H-P0), in the window, with correlation
+identities in kernel/symmetrized form (its Remark 2.8); this paper’s Appendix A uses only
+the spectral gap, which that correction leaves unchanged (Remark A.8).
+ Labeling fix: Theorem 1.2(iv) cited “Theorems 4.4, 4.7 and 4.9”; these are Assumptions 4.4,
+4.7, 4.9. Corrected here.
+ Reference hygiene: [22] cited 2602.0055 under its withdrawn v1 title (“Unconditional uniform
+LSI. . . ”); [24] cited 2602.0053 as “. . . and unconditional mass gap”; [20] cited 2602.0057 under
+a pre-2602 title. All companion references now carry their audited titles and versions. The
+Remark 3.6/B.1 non-summability discussion of v2 — which anticipated the audit spirit —
+is retained verbatim and now validated numerically (suite check 2).
+11
+
+--- Page 12 ---
+
+ What is validated end-to-end in the exact d = 2 toy (suite checks 3–7): the full Layer-1
+mechanism (dyadic Cauchy with geometric rate, unique limit independent of the anchor a0),
+the full Layer-2 pipeline (Creutz ratios → σphys exactly, area law exact), lattice RP via
+PSD Gram matrices, and the clustering →spectral-gap Laplace mechanism on finite transfer
+matrices.
+All numerical adjudications are reproduced by the deterministic companion suiteverify 2602 0063.py
+(7 checks) athttps://github.com/lluiseriksson/THE-ERIKSSON-PROGRAMME, directory verification/2602-0063/.
+A Transfer matrix and uniform clustering
+A.1 Setup
+Λa,L = a(Z/NaZ)3 × a(Z/MaZ); the transfer matrix bTa acts on L2(µβ(a),Σa) over a spatial slice
+Σa; we write
+bTa = e−aHa (spectral definition on gauge-invariant states).
+A.2 Mass gap: transfer-matrix spectral gap
+Remark A.1 (LSI vs. transfer-matrix gap) . The LSI of [E26VII, E26IX] controls the spectral
+gap of a Glauber-type dynamics — a different operator from bTa. An LSI bound does not imply a
+transfer-matrix gap bound; hence the separate assumption.
+Assumption A.2 (Uniform physical transfer-matrix gap along the trajectory). There exist m0 >
+0, L∗ > 0 such that for every L ≥ L∗ and all sufficiently small a (L/a ∈ N), the two largest
+eigenvalues λ0 > λ1 ≥ 0 of bTa on gauge-invariant states satisfy
+mphys(a, L) := −1
+a ln
+λ1(a, L)
+λ0(a, L)
+
+≥ m0. (30)
+At fixed finite L a gap exists by compactness; the content is uniformity as L → ∞and a → 0.
+Lemma A.3 (Uniform exponential clustering from the transfer gap) . Under Assumption A.2,
+for all L ≥ L∗, a ∈ (0, a0], and O1, O2 ∈ Aℓ separated by Euclidean-time distance d,
+⟨O1O2⟩a,L − ⟨O1⟩a,L⟨O2⟩a,L
+ ≤ Ce−m0d, (31)
+by the spectral expansion of time-separated connected correlators in eigenvalues of bTa; general
+Euclidean separations use a chessboard estimate [8]. In physical units,
+e−∆a(L)τ = e−(∆a(L)/a)d = e−mphys(a,L)d, (32)
+mphys(a, L) = ∆a(L)/a, ∆a(L) = −ln(λ1/λ0). (33)
+Remark A.4 (Finite-volume gap and the role of Assumption A.2). At fixed (a, L), bTa is compact
+and positivity-improving, hence gapped [14,8]; the assumption is the uniform lower bound along
+the trajectory.
+Remark A.5 (No circularity). The mass gap and confinement are logically independent, each
+conditional on its own input (Assumptions A.2 and 4.9).
+12
+
+--- Page 13 ---
+
+Remark A.6 (LSI concentration vs. spatial clustering vs. transfer gap) . The DLR-LSI constant
+controls a Markov-generator gap and Herbst concentration; neither is a statement about Euclidean-
+time decay. Assumption A.2 is an independent input.
+Remark A.7 (Heuristic: mphys vs. σphys (not used)). mphys ≥ c√σphys on the lattice [15] moti-
+vates but is not used in any proof.
+Remark A.8 (Conditional lattice supplier of Assumption A.2; new in v3) . The companion
+2602.0054 v2 establishes precisely a transfer-matrix spectral gap for the Wilson theory, win-
+dowed and conditional on (H-DOB-blk)+(H-P0) , with the correlation identities stated in ker-
+nel/symmetrized form (F-TN, its Remark 2.8). The present appendix consumes only the spec-
+tral gap ∆a(L), which is invariant under that normalization correction (similarity of D−1K and
+D−1/2KD−1/2). Assumption A.2 is therefore not free- floating: it is the L → ∞, a → 0 uniformity
+upgrade of a conditionally established lattice result.
+B Bridge lemma: mapping Assumption 3.5 to [E26VIII]–[E26IX]
+B.1 The one-step difference
+In Balaban’s framework the effective action after k steps is
+Seff
+k = βkA(Uk) + Sloc,irr
+k +
+X
+X
+R(k)(X) +
+X
+X
+B(k)(X), (34)
+and the one-step change of a local expectation collects the running coupling shift, the polymer-
+activity change, and the boundary-term change.
+B.2 Bounding each contribution
+Running coupling: by [E26IX, Theorem 4.3] (= 2602.0051 v2; the UV direction a → a/2 has
+the correct sign here: g−2
+k+1 − g−2
+k = 2 b0 ln 2 + O(g2
+k)), the shift contributes COg2
+k. Polymer
+activities (IC4) and boundary terms (IC5) contribute COe−c p0(gk) each. (v3) IC4/IC5 are out-
+puts of the audited chain and are themselves conditional on (B1)–(B4)/(H-P0) and windowed
+(2602.0055/0056 v2); the bridge inherits that load.
+B.3 Summability over scales
+The total one-step change is
+⟨O⟩ak,L − ⟨O⟩ak+1,L
+ ≤ COg2
+k + e−c′p0(gk) ≤ C′
+Og2
+k, (35)
+and since g−2
+k = g−2
+0 +2b0k ln 2+O(1), P
+k≤N g2
+k ∼ (2b0 ln 2)−1 ln N → ∞: the bridge bound is not
+summable (suite check 2 reproduces the logarithmic growth, and shows the e−c′p0 term cannot
+rescue it: p0(gk) grows only logarithmically in k). This is the content of Remarks 3.6 and B.1.
+Remark B.1 (Logarithmic divergence of the naive bridge bound) . In d = 4 along dyadic scales,
+the naive bound (35) diverges logarithmically upon summation. It therefore does not imply an
+RG–Cauchy estimate of the form postulated in Assumption 3.5.
+Remark B.2 (Strengthening to power law) . To obtain ε(a) ≤ C(a/ℓ)η one must exploit can-
+cellations (e.g. large-field penalties with power-law p0, i.e. (H-P0), or contour-improved one-step
+maps) rather than the perturbative g2
+k bound. This upgrade is the missing analytic step; we defer
+it.
+13
+
+--- Page 14 ---
+
+C Notational concordance with [E26IX] and the audited chain
+This paper Chain Meaning
+β(a), g(a) β, g0 bare couplings
+γ0 γ0 master threshold (windowed per 0051 v2)
+α∗, αDLR id. LSI / DLR-LSI constants (conditional)
+∆TM(a, L) 0054 v2 transfer gap (kernel form; (H-DOB-blk)+(H-P0))
+mphys = ∆TM/a — physical mass gap
+σphys — physical string tension
+ωL — continuum limiting state at fixed L
+open set § 1.5 (H-P0)(H-YGZ)(H-DOB-blk)(H-SFI)(H-ABS), window
+References
+[1] T. Balaban, Averaging operations for lattice gauge theories , Comm. Math. Phys. 98 (1985),
+17–51.
+[2] T. Balaban, Renormalization group approach to lattice gauge field theories. I , Comm. Math.
+Phys. 109 (1987), 249–301.
+[3] T. Balaban, Large field renormalization. I , Comm. Math. Phys. 116 (1988), 215–254.
+[4] T. Balaban, Large field renormalization. II , Comm. Math. Phys. 119 (1988), 243–285.
+[5] T. Balaban, Large field renormalization. I. The basic step of the R operation , Comm. Math.
+Phys. 122 (1989), 175–202.
+[6] T. Balaban, Large field renormalization. II. Localization, exponentiation, and bounds for the
+R operation, Comm. Math. Phys. 122 (1989), 355–392.
+[7] D. Bakry, I. Gentil, M. Ledoux, Analysis and Geometry of Markov Diffusion Operators ,
+Springer, 2014.
+[8] J. Glimm, A. Jaffe, Quantum Physics, 2nd ed., Springer, 1987.
+[9] A. Jaffe, E. Witten, Quantum Yang–Mills theory, Clay Millennium Prize Problems, 2000.
+[10] M. L¨ uscher, P. Weisz,String excitation energies in SU(N) gauge theories , JHEP 07 (2004),
+014.
+[11] I. Mitoma, Tightness of probabilities on C([0, 1]; S′) and D([0, 1]; S′), Ann. Probab. 11 (1983),
+989–999.
+[12] K. Osterwalder, R. Schrader, Axioms for Euclidean Green’s functions , Comm. Math. Phys.
+31 (1973), 83–112.
+[13] K. Osterwalder, R. Schrader, Axioms for Euclidean Green’s functions. II, Comm. Math. Phys.
+42 (1975), 281–305.
+[14] K. Osterwalder, E. Seiler, Gauge field theories on a lattice, Ann. Physics 110 (1978), 440–471.
+[15] E. Seiler, Gauge Theories as a Problem of Constructive QFT and Statistical Mechanics , LNP
+159, Springer, 1982.
+14
+
+--- Page 15 ---
+
+[16] D. Stroock, B. Zegarlinski, The logarithmic Sobolev inequality for continuous spin systems
+on a lattice , J. Funct. Anal. 104 (1992), 299–326.
+[17] P. Weisz, Continuum limit improved lattice action for pure Yang–Mills theory (I), Nucl. Phys.
+B 212 (1983), 1–17.
+[18] L. Eriksson, Uniform log-Sobolev inequality for lattice Yang–Mills via multiscale renormal-
+ization and entropy telescoping , ai.viXra:2602.0041 (v3), 2026. [E26I]
+[19] L. Eriksson, Synthetic Ricci curvature and conditional log-Sobolev inequalities for lattice gauge
+theories on the orbit space , ai.viXra:2602.0046, 2026. [E26II]
+[20] L. Eriksson, Integrated cross-scale derivative bounds for Wilson lattice gauge theory: closing
+the log-Sobolev gap — a conditional and windowed closure , ai.viXra:2602.0057 (v2), 2026.
+[E26III] (v1–v2 of the present paper cited this entry under a pre-2602 title; corrected.)
+[21] L. Eriksson, Large-field suppression for lattice gauge theories: from Balaban’s renormal-
+ization group to conditional concentration — a conditional and windowed verification ,
+ai.viXra:2602.0056 (v2), 2026. [E26IV]
+[22] L. Eriksson, Residual derivative bounds and windowed uniform log-Sobolev inequality for
+SU (Nc) lattice Yang–Mills at weak coupling, ai.viXra:2602.0055 (v2), 2026. [E26V] (formerly
+cited under the withdrawn v1 title “Unconditional uniform LSI. . . ”.)
+[23] L. Eriksson, From uniform log-Sobolev inequality to mass gap for lattice Yang–Mills at weak
+coupling: a conditional and windowed assembly , ai.viXra:2602.0054 (v2), 2026. [E26VI]
+[24] L. Eriksson, DLR-uniform log-Sobolev inequality for lattice Yang–Mills: a conditional and
+windowed reduction, ai.viXra:2602.0053 (v2), 2026. [E26VII] (formerly cited as “. . . and un-
+conditional mass gap”; corrected.)
+[25] L. Eriksson, Interface lemmas for the multiscale proof of the lattice Yang–Mills mass gap ,
+ai.viXra:2602.0052 (v2), 2026. [E26VIII]
+[26] L. Eriksson, [Series erratum and windowed multiscale flow] , ai.viXra:2602.0051 (v2), 2026.
+[E26IX] Master threshold, corrected AF flow, window k∗(β), (H-XOVER).
+15
