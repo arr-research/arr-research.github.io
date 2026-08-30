@@ -673,6 +673,7 @@ def main() -> int:
     (OUTPUT_DIR / "assets").mkdir(parents=True)
     (OUTPUT_DIR / "schema").mkdir(parents=True)
     shutil.copy2(SITE_DIR / "style.css", OUTPUT_DIR / "assets" / "style.css")
+    shutil.copy2(SITE_DIR / "indexnow-key.txt", OUTPUT_DIR / "indexnow-key.txt")
     shutil.copy2(ROOT / "schema" / "paper.schema.json", OUTPUT_DIR / "schema" / "paper.schema.json")
     shutil.copy2(ROOT / "schema" / "submission-receipt.schema.json", OUTPUT_DIR / "schema" / "submission-receipt.schema.json")
     shutil.copy2(ROOT / "schema" / "registry-event.schema.json", OUTPUT_DIR / "schema" / "registry-event.schema.json")
