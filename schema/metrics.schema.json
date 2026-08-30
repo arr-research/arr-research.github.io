@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arr-research.github.io/schema/metrics.schema.json",
+  "$comment": "SPDX-License-Identifier: CC0-1.0",
+  "title": "ARR public activity metrics snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "generated_at", "downloads", "views", "papers"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "downloads": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider", "definition", "source_url"],
+      "properties": {
+        "provider": {"const": "GitHub Releases"},
+        "definition": {"type": "string"},
+        "source_url": {"type": "string", "pattern": "^https://api.github.com/"}
+      }
+    },
+    "views": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["available", "definition"],
+      "properties": {
+        "available": {"type": "boolean"},
+        "definition": {"type": "string"},
+        "provider": {"type": "string"},
+        "window_start": {"type": ["string", "null"], "format": "date-time"},
+        "window_end": {"type": ["string", "null"], "format": "date-time"}
+      }
+    },
+    "papers": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["pdf_downloads", "page_views", "unique_visitors"],
+        "properties": {
+          "pdf_downloads": {"type": "integer", "minimum": 0},
+          "page_views": {"type": ["integer", "null"], "minimum": 0},
+          "unique_visitors": {"type": ["integer", "null"], "minimum": 0}
+        }
+      }
+    }
+  }
+}

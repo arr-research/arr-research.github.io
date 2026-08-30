@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arr-research.github.io/schema/authors.schema.json",
+  "$comment": "SPDX-License-Identifier: CC0-1.0",
+  "title": "ARR author registry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "authors"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "authors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "aliases", "affiliation", "bio", "links"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+          "name": {"type": "string", "minLength": 2, "maxLength": 200},
+          "aliases": {"type": "array", "items": {"type": "string", "minLength": 2}, "uniqueItems": true},
+          "orcid": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9X]$"},
+          "affiliation": {"type": "string", "maxLength": 300},
+          "bio": {"type": "string", "minLength": 20, "maxLength": 2000},
+          "links": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["label", "url"],
+              "properties": {
+                "label": {"type": "string", "minLength": 2, "maxLength": 100},
+                "url": {"type": "string", "pattern": "^https://"}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -60,6 +60,18 @@ are intentionally published worldwide through ARR, GitHub and mirrors. The publi
 nature and practical irreversibility of third-party copies will be shown again
 before final publication. Optional AI transfer is off by default.
 
+## Public-site activity measurement
+
+ARR currently sets no analytics cookies and runs no per-page visitor analytics.
+The public site displays cumulative download counters reported by GitHub for each
+canonical PDF release asset. ARR receives an aggregate integer through GitHub's
+public release API, not a reader identity or per-reader download history.
+
+Page views and unique visitors are shown as **not measured**. ARR will not enable
+or publish page-view analytics until the provider, purpose, data fields, retention,
+lawful basis, processor terms and any transfer safeguards have been reviewed and
+this notice has been updated before collection begins.
+
 ## Retention
 
 The binding schedule is in [`RETENTION_SCHEDULE.md`](RETENTION_SCHEDULE.md).

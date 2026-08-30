@@ -53,3 +53,8 @@ ARR separates private intake, the public metadata registry, and immutable artifa
 The private intake service is in [`services/intake/`](services/intake/). ARR does not currently charge for submission, assessment, publication or withdrawal under [`ARR-DEPOSIT-1.1`](docs/DEPOSIT_TERMS.md); any future fee would apply only after advance notice and new terms. The operator is Lluis Eriksson, founder, registry operator, responsible editor and GDPR controller. See [privacy](docs/PRIVACY_NOTICE.md), [complaints/contact](docs/LEGAL_AND_COMPLAINTS.md), [retention](docs/RETENTION_SCHEDULE.md), [governance](docs/GOVERNANCE.md) and the [production launch gate](docs/INTAKE_OPERATIONS.md).
 
 Platform software is `AGPL-3.0-or-later`; ARR-authored documentation is `CC-BY-4.0`; public catalogue metadata is `CC0-1.0`; deposited papers, code and data declare their own scoped licenses.
+
+Public author profiles use stable identities from `registry/authors.json`. Paper and
+author activity rankings are generated from reproducible provider snapshots under
+[`ARR-METRICS-1.0`](docs/METRICS_POLICY.md); missing page-view measurement is never
+represented as zero or simulated activity.
