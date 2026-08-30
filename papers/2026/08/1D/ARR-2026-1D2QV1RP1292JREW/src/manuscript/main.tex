@@ -1,0 +1,648 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=0.88in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools,bm}
+\usepackage{booktabs,array}
+\usepackage{seqsplit}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue!48!black,citecolor=blue!48!black,urlcolor=blue!62!black]{hyperref}
+\usepackage{enumitem}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\spec}{\operatorname{spec}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\1}{\mathbf 1}
+\newcommand{\norm}[1]{\left\lVert #1\right\rVert}
+\newcommand{\HS}{\mathrm{HS}}
+\newcommand{\ka}{\kappa_d}
+\newcommand{\PP}{\mathcal P}
+\allowdisplaybreaks
+
+\title{\textbf{Sharp Rank-Adaptive Bounds for Inverse Self-Commutators}\\[1.5mm]
+\large Every dimension, exact sign-cut leakage, and complete extremizers}
+\author{Lluis Eriksson}
+\date{30 August 2026}
+\hypersetup{
+ pdftitle={Sharp Rank-Adaptive Bounds for Inverse Self-Commutators},
+ pdfauthor={Lluis Eriksson},
+ pdfsubject={Sharp rank-adaptive Hilbert-Schmidt cost bounds for prescribed Hermitian commutators},
+ pdfkeywords={self-commutator, inverse commutator, Hilbert-Schmidt norm, Horn inequalities, weighted shift, trace norm}
+}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Let $F=F^*\in M_d(\mathbb C)$ be nonzero and traceless, and define the inverse Hermitian-commutator cost
+\[
+ \kappa_d(F)=\inf\{\norm H_{\HS}\norm K_{\HS}:H=H^*,\ K=K^*,\ -i[H,K]=F\}.
+\]
+Writing $\rho=\rank F$ and $\PP(F)=\norm F_1/2=\Tr F_+$, we prove the dimension-free, rank-adaptive sharp bounds
+\[
+ \boxed{\qquad \PP(F)\le \kappa_d(F)\le \frac{\rho}{2}\PP(F).\qquad}
+\]
+The lower equality holds exactly when the nonzero spectrum of $F$ is centrally symmetric.  The upper equality holds exactly when, up to positive scaling and sign, the nonzero spectrum is
+\[
+ (\rho-1,-1,\ldots,-1).
+\]
+Thus the worst normalized inverse cost at fixed rank is precisely $\rho/2$, including for targets embedded with arbitrary zero padding; both extrema are attained.
+
+The lower endpoint has an exact geometric refinement.  If $Q=\1_{(0,\infty)}(F)$ is the positive spectral projection, then
+\[
+ \kappa_d(F)-\PP(F)
+ =\frac12\min_{CC^*-C^*C=2F}
+ \bigl(\norm{(\1-Q)C}_{\HS}^2+\norm{CQ}_{\HS}^2\bigr).
+\]
+Hence the entire trace-norm tax is the least wrong-way Hilbert--Schmidt leakage across the sign cut of the prescribed target.  The upper bound follows from an averaged family of finite weighted shifts.  Sharpness at the upper endpoint follows from only $\rho-1$ explicit Horn--Littlewood--Richardson inequalities, valid in every ambient dimension.  The subset-to-partition convention and the resulting Littlewood--Richardson coefficients are written out explicitly, so the certificate is independent of a fixed-dimensional Horn enumeration.  A dependency-free exact-arithmetic replay accompanies the manuscript.  No closed formula is claimed for a general interior spectrum.
+\end{abstract}
+
+\section{The inverse problem and the result}
+
+Every trace-zero complex matrix is a commutator, and every finite-dimensional traceless Hermitian matrix is a self-commutator \cite{albert1957,thompson1958,fan1980}.  Existence alone leaves a metric inverse question: for a prescribed target, what is the least Hilbert--Schmidt resource of Hermitian factors that generate it?  We use the unnormalized norm
+\[
+ \norm X_{\HS}^2=\Tr(X^*X)
+\]
+and study
+\begin{equation}
+ \kappa_d(F):=\inf\{\norm H_{\HS}\norm K_{\HS}:H=H^*,\ K=K^*,\ -i[H,K]=F\}.
+ \label{eq:kappa}
+\end{equation}
+The target is always assumed Hermitian and traceless.  Set
+\begin{equation}
+ \PP(F):=\Tr F_+=\frac12\norm F_1,
+ \qquad \rho(F):=\rank F.
+ \label{eq:P-rho}
+\end{equation}
+For a nonzero traceless target, $\rho(F)\ge2$.
+
+The nearby norm literature mainly treats the forward problem, bounding a commutator in terms of its factors \cite{fong1986,bottcher2005,bottcher2008,cheng2010,gil2017}, or treats mixed operator--Hilbert--Schmidt costs for an arbitrary trace-zero matrix \cite{johnson2013,angel2015}.  Other self-commutator work concerns approximation or comparison with the generating operator rather than the prescribed-target minimum studied here \cite{maher2006,filonov2011,zhang2026}.  Weiss studied the inverse HS--HS problem with \emph{arbitrary}, generally non-Hermitian, factors \cite{weiss1980}.  This is a genuinely different optimization: for
+\[
+ F_4=\diag(-1,1/3,1/3,1/3),
+\]
+Weiss's unrestricted minimum product is $4/3$ (equivalently, after balancing, each factor has norm $\sqrt{4/3}$), whereas Theorem~\ref{thm:main} gives the Hermitian-factor cost $\kappa_4(F_4)=2$.  Thus neither result subsumes the other by a change of notation.
+
+Fan and Fong's compact self-commutator theorem uses arrangements with nonnegative partial sums to establish existence \cite{fan1980}.  Belti\c{t}\u{a}, Patnaik, and Weiss survey that setting, record the finite weighted-shift construction, and discuss the same one-spike energy comparison \cite{beltita2014}.  Those antecedents supply constructions and historical context, but not the minimum in \eqref{eq:kappa}, its rank-adaptive upper constant, or either equality classification proved here.
+
+Exact formulas in dimensions three, four, and five can be obtained by solving specialized Horn linear programs \cite{eriksson2026qutrit,eriksson2026four,eriksson2026five}.  Their chamber geometry grows with dimension.  The present result takes a different direction: it determines the two extremal faces and the exact worst-target constant in every dimension without enumerating the Horn cone.
+
+\begin{theorem}[Rank-adaptive trace tax and complete extremizers]
+\label{thm:main}
+Let $0\ne F=F^*\in M_d(\mathbb C)$ satisfy $\Tr F=0$, and put $\rho=\rank F$.  Then
+\begin{equation}
+ \boxed{\quad
+ \PP(F)\le \kappa_d(F)\le\frac{\rho}{2}\PP(F).
+ \quad}
+ \label{eq:main}
+\end{equation}
+Moreover:
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+ \item $\kappa_d(F)=\PP(F)$ if and only if, including multiplicities, the nonzero spectrum is
+ \begin{equation}
+  (a_1,\ldots,a_m,-a_m,\ldots,-a_1),
+  \qquad a_1\ge\cdots\ge a_m>0.
+  \label{eq:lower-equality}
+ \end{equation}
+ In particular, lower equality forces $\rho=2m$.
+ \item $\kappa_d(F)=\rho\PP(F)/2$ if and only if, up to multiplication by a positive scalar and replacement of $F$ by $-F$, the nonzero spectrum is
+ \begin{equation}
+  (\rho-1,-1,\ldots,-1).
+  \label{eq:upper-equality}
+ \end{equation}
+ Zero eigenvalues may occur with arbitrary multiplicity.
+\end{enumerate}
+\end{theorem}
+
+Two immediate consequences make the sharpness precise.
+
+\begin{corollary}[Worst target at fixed rank and dimension]
+\label{cor:sup}
+For $2\le r\le d$,
+\[
+ \sup_{\substack{F=F^*\ne0,\ \Tr F=0\\ \rank F=r}}
+ \frac{\kappa_d(F)}{\PP(F)}=\frac r2.
+\]
+Consequently the unrestricted supremum in $M_d(\mathbb C)$ is $d/2$.
+\end{corollary}
+
+\begin{remark}[No dimension salami]
+Theorem~\ref{thm:main} is not an extrapolation of a five-level max formula.  It is an arbitrary-dimensional extremal theorem, is adaptive to the support rank rather than the ambient dimension, and uses no enumeration of fixed-$d$ Horn facets.  The five-level result supplies one specialization of \eqref{eq:main}, while retaining separate information about the full interior chamber function.
+\end{remark}
+
+\section{One matrix and the exact sign-cut leakage identity}
+
+The first step replaces two Hermitian factors by one unrestricted matrix.
+
+\begin{lemma}[Balanced self-commutator reduction]
+\label{lem:balance}
+For every traceless Hermitian $F$,
+\begin{equation}
+ \kappa_d(F)=\frac12\min\{\norm C_{\HS}^2:CC^*-C^*C=2F\}.
+ \label{eq:selfcost}
+\end{equation}
+The minimum is attained.
+\end{lemma}
+
+\begin{proof}
+Given feasible Hermitian $H,K$, rescale them as $H\mapsto tH$ and $K\mapsto t^{-1}K$.  Their commutator and norm product are unchanged, and $t$ may be chosen so that the two Hilbert--Schmidt norms agree.  For $C=H+iK$, direct calculation gives
+\[
+ CC^*-C^*C=-2i[H,K]=2F,
+ \qquad \norm C_{\HS}^2=\norm H_{\HS}^2+\norm K_{\HS}^2
+ =2\norm H_{\HS}\norm K_{\HS}.
+\]
+This proves that the right side of \eqref{eq:selfcost} is at most $\kappa_d(F)$.
+
+Conversely, write a feasible $C$ as $C=X+iY$ with $X=X^*$ and $Y=Y^*$.  Then $-i[X,Y]=F$ and
+\[
+ \norm X_{\HS}\norm Y_{\HS}
+ \le\frac12\bigl(\norm X_{\HS}^2+\norm Y_{\HS}^2\bigr)
+ =\frac12\norm C_{\HS}^2.
+\]
+Thus the reverse inequality holds.  Feasibility follows, for example, from the weighted-shift construction in Section~\ref{sec:upper}.  The constraint is closed, and every norm sublevel set is compact in finite dimension, so the minimum is attained.
+\end{proof}
+
+The cost above the trace-norm floor has an exact interpretation.  It is useful both for the equality proof and for applications in which the positive spectral subspace defines a desired output sector.
+
+\begin{theorem}[Exact sign-cut leakage formula]
+\label{thm:leakage}
+Let $Q=\1_{(0,\infty)}(F)$ be the positive spectral projection of a traceless Hermitian $F$.  Then
+\begin{equation}
+ \boxed{\quad
+ \kappa_d(F)-\PP(F)=\frac12
+ \min_{CC^*-C^*C=2F}
+ \left(\norm{(\1-Q)C}_{\HS}^2+\norm{CQ}_{\HS}^2\right).
+ \quad}
+ \label{eq:leakage}
+\end{equation}
+The minimizers in \eqref{eq:leakage} are exactly the cost minimizers in \eqref{eq:selfcost}.
+\end{theorem}
+
+\begin{proof}
+Fix a feasible $C$ and put $R=CC^*$ and $S=C^*C$.  Since $R-S=2F$ and $Q$ is the positive spectral projection of $F$,
+\[
+ 2\PP(F)=\Tr(2F)_+=\Tr Q(R-S).
+\]
+Also $\Tr R=\Tr S=\norm C_{\HS}^2$.  Therefore
+\begin{align}
+ \frac12\norm C_{\HS}^2-\PP(F)
+ &=\frac12\left(\Tr R-\Tr Q(R-S)\right)\nonumber\\
+ &=\frac12\left(\Tr((\1-Q)R)+\Tr(QS)\right)\nonumber\\
+ &=\frac12\left(\norm{(\1-Q)C}_{\HS}^2+\norm{CQ}_{\HS}^2\right).
+ \label{eq:pointwise-leakage}
+\end{align}
+This identity holds pointwise on the feasible set.  Minimizing and using Lemma~\ref{lem:balance} proves the result.
+\end{proof}
+
+\begin{corollary}[Quantitative near-pairing]
+\label{cor:stability}
+If $\kappa_d(F)\le(1+\varepsilon)\PP(F)$, there is an optimal factor $C$ with
+\[
+ \norm{(\1-Q)C}_{\HS}^2+\norm{CQ}_{\HS}^2
+ \le2\varepsilon\PP(F).
+\]
+Thus a small relative trace tax quantitatively forces an almost one-way factor across the sign cut.
+\end{corollary}
+
+\section{The lower endpoint: central spectral symmetry}
+
+The lower bound and its equality classification now follow without Horn theory.
+
+\begin{proposition}[Trace floor and equality]
+\label{prop:lower}
+For every nonzero traceless Hermitian $F$, $\kappa_d(F)\ge\PP(F)$.  Equality holds exactly for the spectra in \eqref{eq:lower-equality}.
+\end{proposition}
+
+\begin{proof}
+The lower bound is immediate from the nonnegative right side of \eqref{eq:leakage}.  Suppose equality holds and choose an optimal $C$.  The two nonnegative terms in \eqref{eq:leakage} vanish, so
+\[
+ (\1-Q)C=0,\qquad CQ=0.
+\]
+Thus $R=CC^*$ is supported in $Q$ and $S=C^*C$ is supported in $\1-Q$.  On $\ker F$, however, $R-S=2F=0$ while $R=0$, so $S=0$ there as well.  Hence $R$ and $S$ are supported on the positive and negative spectral subspaces respectively, and in particular $RS=0$.  They have the same nonzero eigenvalues, namely the squared singular values of $C$.  Since $2F=R-S$, the positive and negative nonzero eigenvalues of $F$ occur in equal pairs.  This gives \eqref{eq:lower-equality}.
+
+Conversely, suppose $F$ has an orthonormal eigenbasis $e_1,\ldots,e_m,f_1,\ldots,f_m$ on its support, with
+\[
+ Fe_j=a_je_j,\qquad Ff_j=-a_jf_j.
+\]
+Define
+\begin{equation}
+ C=\sum_{j=1}^m\sqrt{2a_j}\,|e_j\rangle\langle f_j|.
+ \label{eq:paired-constructor}
+\end{equation}
+Then $(CC^*-C^*C)/2=F$ and
+\[
+ \frac12\norm C_{\HS}^2=\sum_{j=1}^m a_j=\PP(F).
+\]
+Lemma~\ref{lem:balance} proves equality.
+\end{proof}
+
+\begin{remark}
+The equality face is spectral, not entrywise: $F$ need not be presented in paired block form.  Unitary covariance transports \eqref{eq:paired-constructor} to any matrix with the same spectrum.
+\end{remark}
+
+\section{A rank-adaptive weighted-shift upper bound}
+\label{sec:upper}
+
+Let the positive eigenvalues of $F$ be $a_1,\ldots,a_m>0$, and write the negative eigenvalues as $-b_1,\ldots,-b_n<0$.  Tracelessness gives
+\begin{equation}
+ \sum_{j=1}^m a_j=\sum_{k=1}^n b_k=\PP(F)=:P,
+ \qquad m+n=\rho.
+ \label{eq:masses}
+\end{equation}
+Zero eigenvalues play no role in the construction and will be placed last.
+
+\begin{lemma}[Excursion shift]
+\label{lem:shift}
+Let $\mu_1,\ldots,\mu_d$ be an ordering of the eigenvalues of $F$ whose partial sums
+\[
+ s_k=\sum_{j=1}^k\mu_j
+\]
+are nonnegative.  In the corresponding eigenbasis, define
+\begin{equation}
+ Ce_{k+1}=\sqrt{2s_k}\,e_k\quad(1\le k<d),
+ \qquad Ce_1=0.
+ \label{eq:shift}
+\end{equation}
+Then
+\[
+ \frac12(CC^*-C^*C)=\diag(\mu_1,\ldots,\mu_d),
+ \qquad \frac12\norm C_{\HS}^2=\sum_{k=1}^{d-1}s_k.
+\]
+\end{lemma}
+
+\begin{proof}
+The diagonal entries of $(CC^*-C^*C)/2$ are
+\[
+ s_1,\ s_2-s_1,\ldots,\ s_{d-1}-s_{d-2},\ -s_{d-1},
+\]
+which are $\mu_1,\ldots,\mu_d$ because the total sum is zero.  The norm identity follows by summing the squared shift weights.
+\end{proof}
+
+Put all positive eigenvalues first, all negative eigenvalues next, and all zeros last.  Every partial sum is nonnegative, independently of the orders chosen inside the positive and negative blocks.  Let $A(\pi,\sigma)$ be the cost in Lemma~\ref{lem:shift} for permutations $\pi\in S_m$ and $\sigma\in S_n$.
+
+\begin{lemma}[Exact permutation average]
+\label{lem:average}
+The block-order shift costs have average
+\begin{equation}
+ \frac1{m!n!}\sum_{\pi\in S_m}\sum_{\sigma\in S_n}A(\pi,\sigma)
+ =\frac{m+n}{2}P=\frac\rho2P.
+ \label{eq:average}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+The zero tail has zero partial sums, so compute with the first $\rho=m+n$ positions.  An entry at position $j$ has coefficient $\rho-j$ in $\sum_{k=1}^{\rho-1}s_k$.  Averaging over the positive block, each $a_i$ has mean coefficient
+\[
+ \rho-\frac{m+1}{2}.
+\]
+Each negative magnitude $b_j$ has mean coefficient
+\[
+ \frac{n-1}{2}.
+\]
+Using \eqref{eq:masses}, the averaged cost is
+\[
+ P\left(\rho-\frac{m+1}{2}-\frac{n-1}{2}\right)=\frac\rho2P.
+\]
+\end{proof}
+
+At least one block order has cost no larger than the average.  Lemmas~\ref{lem:balance}, \ref{lem:shift}, and \ref{lem:average} prove
+\begin{equation}
+ \kappa_d(F)\le\frac\rho2\PP(F).
+ \label{eq:upper}
+\end{equation}
+This argument is rank-adaptive because zero eigenvalues contribute neither mass nor steps to the excursion.
+
+\section{Necessity at the upper endpoint}
+
+The averaging proof carries enough rigidity to classify every possible upper extremizer.
+
+\begin{proposition}[Flat sign blocks and a single spike]
+\label{prop:necessity}
+If $0\ne F$ and $\kappa_d(F)=\rho\PP(F)/2$, then one of $F_+$ and $F_-$ has rank one, and the nonzero eigenvalues on the other sign are all equal.  Equivalently, the nonzero spectrum has the form \eqref{eq:upper-equality}, up to scale and sign.
+\end{proposition}
+
+\begin{proof}
+Every block-order shift is feasible, hence
+\[
+ \kappa_d(F)\le A(\pi,\sigma)
+\]
+for all $\pi,\sigma$.  If $\kappa_d(F)=\rho P/2$, equality with the average \eqref{eq:average} forces every $A(\pi,\sigma)$ to equal $\rho P/2$.
+
+Suppose two positive eigenvalues $a$ and $a'$ occupy block positions $u<v$.  Interchanging only these entries changes the weighted sum of partial sums by
+\[
+ (v-u)(a-a').
+\]
+Since all block orders have the same cost, $a=a'$.  Thus all positive eigenvalues are equal.  The same transposition argument shows that all negative magnitudes are equal.  The spectrum is therefore
+\begin{equation}
+ \left(\underbrace{P/m,\ldots,P/m}_{m},
+ -\underbrace{P/n,\ldots,P/n}_{n}\right),
+ \label{eq:flat-blocks}
+\end{equation}
+apart from zeros.
+
+Assume now that $m,n\ge2$.  Start with all $m$ positive entries followed by all $n$ negative entries.  Swap the last positive entry and the first negative entry.  Just after the swapped negative entry, the partial sum is
+\[
+ P\left(1-\frac1m-\frac1n\right)\ge0,
+\]
+and after the following positive entry the path rejoins the original partial-sum path.  Thus the swapped order remains feasible.  Its cost is smaller than the block-order cost by
+\[
+ P\left(\frac1m+\frac1n\right)>0,
+\]
+contradicting upper equality.  Hence $\min\{m,n\}=1$, which gives \eqref{eq:upper-equality}.
+\end{proof}
+
+The only remaining issue is sufficiency: a one-spike target might conceivably admit a coherent non-shift factor below the displayed weighted-shift cost.  A short universal Horn certificate rules this out.
+
+\section{A universal Horn certificate for the one-spike family}
+\label{sec:Horn}
+
+We use only a special elementary face of the classical Horn--Littlewood--Richardson theorem \cite{horn1962,klyachko1998,knutson1999,fulton2000}.  If Hermitian matrices with decreasing spectra $\alpha,\beta$ have sum with decreasing spectrum $\gamma$, then every Horn triple $(I,J,K)$ of equal-size subsets satisfies
+\begin{equation}
+ \sum_{k\in K}\gamma_k\le
+ \sum_{i\in I}\alpha_i+\sum_{j\in J}\beta_j.
+ \label{eq:Horn}
+\end{equation}
+For completeness, fix the convention that an increasing $\ell$-subset
+\[
+ A=\{a_1<\cdots<a_\ell\}\subseteq\{1,\ldots,d\}
+ \quad\text{corresponds to}\quad
+ \pi(A)=(a_\ell-\ell,a_{\ell-1}-(\ell-1),\ldots,a_1-1).
+\]
+Thus the initial subset $I=\{1,\ldots,\ell\}$ corresponds to the zero partition.  Consequently
+\begin{equation}
+ I_\ell=\{1,\ldots,\ell\},\qquad
+ J_\ell=K_\ell=\{1,d-\ell+2,\ldots,d\}
+ \label{eq:triples}
+\end{equation}
+is a Horn triple: $J_\ell=K_\ell$ literally, and the unit property of the zero partition gives
+\[
+ c^{\pi(K_\ell)}_{\pi(I_\ell),\pi(J_\ell)}
+ =c^{\pi(J_\ell)}_{0,\pi(J_\ell)}=1.
+\]
+This verifies the convention-sensitive part of the certificate directly for every $d$ and $\ell$ used below.
+
+\begin{lemma}[Removing a common singular floor]
+\label{lem:floor}
+At a minimizer in \eqref{eq:selfcost}, the least squared singular value of $C$ is zero.
+\end{lemma}
+
+\begin{proof}
+Put $S=C^*C$ and use the polar decomposition $C=U S^{1/2}$.  If the least eigenvalue of $S$ were $t>0$, then $U$ would be unitary and
+\[
+ C'=U(S-t\1)^{1/2}
+\]
+would satisfy
+\[
+ C'C'^*=CC^*-t\1,\qquad C'^*C'=C^*C-t\1.
+\]
+The self-commutator would be unchanged while $\norm{C'}_{\HS}^2=\norm C_{\HS}^2-dt$, contradicting minimality.
+\end{proof}
+
+\begin{proposition}[Sharp one-spike lower certificate]
+\label{prop:spike}
+Let the nonzero spectrum of $F$ be
+\[
+ \left(P,-\frac{P}{\rho-1},\ldots,-\frac{P}{\rho-1}\right),
+ \qquad P>0,
+\]
+with any number of zeros between the positive and negative levels.  Then
+\[
+ \kappa_d(F)=\frac\rho2P.
+\]
+\end{proposition}
+
+\begin{proof}
+Choose an optimal $C$, and let
+\[
+ p_1\ge\cdots\ge p_d=0
+\]
+be the decreasing squared singular values, using Lemma~\ref{lem:floor}.  The spectra of $CC^*$ and $-C^*C$ are
+\[
+ \alpha=(p_1,\ldots,p_{d-1},0),
+ \qquad \beta=(0,-p_{d-1},\ldots,-p_1).
+\]
+Apply \eqref{eq:Horn} to the triple \eqref{eq:triples} for each Horn subset size
+\[
+ 1\le\ell\le\rho-1.
+\]
+The right side telescopes exactly:
+\[
+ \sum_{i\in I_\ell}\alpha_i+\sum_{j\in J_\ell}\beta_j
+ =(p_1+\cdots+p_\ell)-(p_1+\cdots+p_{\ell-1})=p_\ell.
+\]
+The set $K_\ell$ selects the positive spike and the lowest $\ell-1$ negative eigenvalues of $2F$.  Therefore
+\begin{equation}
+ p_\ell\ge 2P\left(1-\frac{\ell-1}{\rho-1}\right)
+ =\frac{2P(\rho-\ell)}{\rho-1}.
+ \label{eq:pell}
+\end{equation}
+Summing \eqref{eq:pell} gives
+\[
+ \norm C_{\HS}^2=\sum_{j=1}^{d-1}p_j
+ \ge\sum_{\ell=1}^{\rho-1}p_\ell
+ \ge\frac{2P}{\rho-1}\sum_{q=1}^{\rho-1}q
+ =\rho P.
+\]
+Lemma~\ref{lem:balance} yields $\kappa_d(F)\ge\rho P/2$.  The weighted-shift upper bound \eqref{eq:upper} gives equality.
+\end{proof}
+
+Propositions~\ref{prop:lower}, \ref{prop:necessity}, and \ref{prop:spike} complete the proof of Theorem~\ref{thm:main}.  Corollary~\ref{cor:sup} follows by choosing a zero-padded one-spike spectrum at every rank.
+
+\section{What the theorem adds}
+
+Table~\ref{tab:structure} separates the classical ingredients from the new conclusions.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.29\textwidth}>{\raggedright\arraybackslash}p{0.61\textwidth}}
+\toprule
+Input & Role in this paper \\
+\midrule
+Trace-zero/self-commutator existence & Guarantees the inverse problem is feasible; not claimed as new. \\
+Weighted shifts and positive partial sums & Supply a family of explicit feasible factors; the exact permutation average and rank-adaptive optimization are the new use. \\
+Horn--Littlewood--Richardson inequalities & Classical spectral-sum theorem; only the $\rho-1$ triples \eqref{eq:triples} are used to certify the sharp endpoint. \\
+Finite-dimensional trace variationality & Underlies the trace floor; the pointwise identity \eqref{eq:pointwise-leakage} identifies its complete defect. \\
+\midrule
+New theorem package & Sharp rank constant $\rho/2$; both equality classifications; exact sign-cut leakage formula; zero-padded endpoint certificates at every rank. \\
+\bottomrule
+\end{tabular}
+\caption{Novelty boundary and proof architecture.}
+\label{tab:structure}
+\end{table}
+
+The result also clarifies the relation between low-dimensional exact formulas and arbitrary dimension.  A fixed-dimensional formula resolves the complete polyhedral interior of the inverse cost.  Theorem~\ref{thm:main} instead resolves the global trace floor, the worst normalized target, and both equality loci uniformly over all dimensions.  Neither statement contains the other.
+
+\section{Reproducibility, scope, and limitations}
+
+The analytic proof is contained in the manuscript.  The accompanying replay script uses only the Python standard library and exact rational arithmetic to check:
+\begin{enumerate}[leftmargin=*]
+ \item the weighted-shift commutator identity in the free coefficient module;
+ \item the exact block-permutation average on rational examples;
+ \item the adjacent-swap strict deficit for every two-sided flat multiplicity through a configurable dimension;
+ \item the zero-padded one-spike shift cost and the summed Horn lower certificate at every rank through a configurable dimension.
+\end{enumerate}
+These computations audit algebra and indexing; they are not substitutes for the arbitrary-dimensional proofs.
+
+The exact release is preserved under ARR record
+\href{https://arr-research.github.io/papers/ARR-2026-1D2QV1RP1292JREW/}{ARR-2026-1D2QV1RP1292JREW}.
+Its standard-library replay is \texttt{src/repro/verify\_extremal\_tax.py}, with
+SHA-256
+\texttt{\seqsplit{e0570dbd13215e84f0449e200f1f4c6e32a1351cf8e7359da31e51a411a3cd2a}};
+the release also preserves the exact JSON output and reproduction instructions.
+
+The theorem is finite-dimensional and uses the unnormalized Hilbert--Schmidt norm.  It does not address infinite factors, unbounded canonical commutation relations, operator-norm minimization, graph-local or gate-local factors, fixed control algebras, or laboratory time and energy.  The Horn theorem is a classical imported result, not formalized in the replay; the manuscript does make the convention-sensitive Littlewood--Richardson coefficient in its special certificate explicit.  No entrywise optimal constructor is claimed for a general interior spectrum; the shift supplies the sharp universal upper bound, while the exact interior cost remains a richer Horn optimization.
+
+The exact upper equality classification is qualitative.  A natural open problem is to determine a sharp modulus of stability: for fixed rank $\rho$, quantify how close the normalized nonzero spectrum must be, up to sign, to the one-spike ray when $\kappa_d(F)/\PP(F)$ lies within $\varepsilon$ of $\rho/2$.  No such upper-endpoint stability estimate is claimed here.
+
+\paragraph{Literature-search boundary.}
+The searches conducted for this project found self-commutator existence and compactness criteria, forward Frobenius inequalities, mixed operator--HS commutator bounds, and spectral-sum theory, but no prescribed-target inverse HS--HS theorem with the rank-adaptive constant and both equality classifications.  This supports the stated novelty boundary but is not a claim of exhaustive bibliographic priority.
+
+\paragraph{AI assistance.}
+The author directed the research program, selected the theorem, reviewed the mathematical claims, and accepts responsibility for the manuscript.  OpenAI Codex assisted with repository review, candidate comparison, algebraic exploration, literature triage, exact-arithmetic replay, typesetting, and drafting.  AI assistance does not replace the explicit proofs or the author's responsibility for correctness.
+
+\begin{thebibliography}{99}
+\footnotesize
+
+\bibitem{albert1957}
+A. A. Albert and B. Muckenhoupt,
+``On matrices of trace zero,''
+\emph{Michigan Math. J.} \textbf{4} (1957), 1--3.
+\href{https://doi.org/10.1307/mmj/1028990168}{doi:10.1307/mmj/1028990168}.
+
+\bibitem{thompson1958}
+R. C. Thompson,
+``On matrix commutators,''
+\emph{J. Washington Acad. Sci.} \textbf{48} (1958), 306--307.
+
+\bibitem{horn1962}
+A. Horn,
+``Eigenvalues of sums of Hermitian matrices,''
+\emph{Pacific J. Math.} \textbf{12} (1962), 225--241.
+\href{https://doi.org/10.2140/pjm.1962.12.225}{doi:10.2140/pjm.1962.12.225}.
+
+\bibitem{fan1980}
+P. Fan and C.-K. Fong,
+``Which operators are the self-commutators of compact operators?,''
+\emph{Proc. Amer. Math. Soc.} \textbf{80} (1980), 58--60.
+\href{https://doi.org/10.1090/S0002-9939-1980-0574508-X}{doi:10.1090/S0002-9939-1980-0574508-X}.
+
+\bibitem{klyachko1998}
+A. A. Klyachko,
+``Stable bundles, representation theory and Hermitian operators,''
+\emph{Selecta Math. (N.S.)} \textbf{4} (1998), 419--445.
+\href{https://doi.org/10.1007/s000290050037}{doi:10.1007/s000290050037}.
+
+\bibitem{knutson1999}
+A. Knutson and T. Tao,
+``The honeycomb model of $GL_n(\mathbb C)$ tensor products I: proof of the saturation conjecture,''
+\emph{J. Amer. Math. Soc.} \textbf{12} (1999), 1055--1090.
+\href{https://doi.org/10.1090/S0894-0347-99-00299-4}{doi:10.1090/S0894-0347-99-00299-4}.
+
+\bibitem{fulton2000}
+W. Fulton,
+``Eigenvalues, invariant factors, highest weights, and Schubert calculus,''
+\emph{Bull. Amer. Math. Soc.} \textbf{37} (2000), 209--249.
+\href{https://doi.org/10.1090/S0273-0979-00-00865-X}{doi:10.1090/S0273-0979-00-00865-X}.
+
+\bibitem{fong1986}
+C.-K. Fong,
+``Norm estimates related to self-commutators,''
+\emph{Linear Algebra Appl.} \textbf{74} (1986), 151--156.
+\href{https://doi.org/10.1016/0024-3795(86)90118-7}{doi:10.1016/0024-3795(86)90118-7}.
+
+\bibitem{maher2006}
+P. Maher,
+``Self-commutator approximants,''
+\emph{Proc. Amer. Math. Soc.} \textbf{134} (2006), 157--165.
+\href{https://doi.org/10.1090/S0002-9939-05-07871-8}{doi:10.1090/S0002-9939-05-07871-8}.
+
+\bibitem{filonov2011}
+N. Filonov and Y. Safarov,
+``On the relation between an operator and its self-commutator,''
+\emph{J. Funct. Anal.} \textbf{260} (2011), 2902--2932.
+\href{https://doi.org/10.1016/j.jfa.2011.02.011}{doi:10.1016/j.jfa.2011.02.011}.
+
+\bibitem{bottcher2005}
+A. B\"ottcher and D. Wenzel,
+``How big can the commutator of two matrices be and how big is it typically?,''
+\emph{Linear Algebra Appl.} \textbf{403} (2005), 216--228.
+\href{https://doi.org/10.1016/j.laa.2005.02.012}{doi:10.1016/j.laa.2005.02.012}.
+
+\bibitem{bottcher2008}
+A. B\"ottcher and D. Wenzel,
+``The Frobenius norm and the commutator,''
+\emph{Linear Algebra Appl.} \textbf{429} (2008), 1864--1885.
+\href{https://doi.org/10.1016/j.laa.2008.05.020}{doi:10.1016/j.laa.2008.05.020}.
+
+\bibitem{cheng2010}
+C.-M. Cheng, S.-W. Vong, and D. Wenzel,
+``Commutators with maximal Frobenius norm,''
+\emph{Linear Algebra Appl.} \textbf{432} (2010), 292--306.
+\href{https://doi.org/10.1016/j.laa.2009.08.008}{doi:10.1016/j.laa.2009.08.008}.
+
+\bibitem{johnson2013}
+W. B. Johnson, N. Ozawa, and G. Schechtman,
+``A quantitative version of the commutator theorem for zero trace matrices,''
+\emph{Proc. Natl. Acad. Sci. USA} \textbf{110} (2013), 19251--19255.
+\href{https://doi.org/10.1073/pnas.1202411109}{doi:10.1073/pnas.1202411109}.
+
+\bibitem{weiss1980}
+G. Weiss,
+``Commutators of Hilbert--Schmidt operators II,''
+\emph{Integral Equations Operator Theory} \textbf{3} (1980), 574--600.
+\href{https://doi.org/10.1007/BF01702316}{doi:10.1007/BF01702316}.
+
+\bibitem{beltita2014}
+D. Belti\c{t}\u{a}, S. Patnaik, and G. Weiss,
+``$B(H)$-commutators: a historical survey II and recent advances on commutators of compact operators,''
+in \emph{The Varied Landscape of Operator Theory}, Theta Series in Advanced Mathematics, vol.~17,
+Theta, Bucharest, 2014, pp.~57--75.
+\href{https://arxiv.org/abs/1303.4844}{arXiv:1303.4844}.
+
+\bibitem{angel2015}
+O. Angel and G. Schechtman,
+``The Hilbert--Schmidt version of the commutator theorem for zero trace matrices,''
+\emph{Bull. London Math. Soc.} \textbf{47} (2015), 715--719.
+\href{https://doi.org/10.1112/blms/bdv045}{doi:10.1112/blms/bdv045}.
+
+\bibitem{gil2017}
+M. Gil',
+``A sharp bound for the Frobenius norm of self-commutators of matrices,''
+\emph{Linear Multilinear Algebra} \textbf{65} (2017), 2333--2339.
+\href{https://doi.org/10.1080/03081087.2016.1273875}{doi:10.1080/03081087.2016.1273875}.
+
+\bibitem{zhang2026}
+T. Zhang,
+``On a conjecture of $\lambda$-Aluthge transforms and Hilbert--Schmidt self-commutators,''
+arXiv:2603.04655 (2026).
+\href{https://arxiv.org/abs/2603.04655}{arXiv:2603.04655}.
+
+\bibitem{eriksson2026qutrit}
+L. Eriksson,
+``Sharp costs and exact semigroups from forgotten quantum order: qutrit extremality, tetrahedral depolarization, and echo-critical clock laws,''
+ARR research paper \href{https://arr-research.github.io/papers/ARR-2026-1PT4297HNX9T4RBD/}{ARR-2026-1PT4297HNX9T4RBD} (2026).
+
+\bibitem{eriksson2026four}
+L. Eriksson,
+``The exact four-level inverse commutator cost: Horn--Littlewood--Richardson facets, rank transitions, and sharp loop synthesis,''
+ARR research paper \href{https://arr-research.github.io/papers/ARR-2026-3M1EEG1T689ADSMW/}{ARR-2026-3M1EEG1T689ADSMW} (2026); \href{https://ai.vixra.org/abs/2608.0031}{ai.viXra:2608.0031}.
+
+\bibitem{eriksson2026five}
+L. Eriksson,
+``The exact five-level inverse commutator cost,''
+ARR research paper \href{https://arr-research.github.io/papers/ARR-2026-37B8R0QTA894GTFF/}{ARR-2026-37B8R0QTA894GTFF} (2026); \href{https://ai.vixra.org/abs/2608.0049}{ai.viXra:2608.0049}.
+
+\end{thebibliography}
+
+\end{document}
