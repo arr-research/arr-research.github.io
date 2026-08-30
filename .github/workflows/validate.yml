@@ -19,6 +19,12 @@ jobs:
         uses: actions/setup-python@v7
         with:
           python-version: "3.13"
+      - name: Install intake dependencies
+        run: python -m pip install --disable-pip-version-check -r services/intake/requirements.txt
+      - name: Run repository and private-intake tests
+        env:
+          ARR_SESSION_SECRET: ci-only-secret-ci-only-secret-ci-only-secret-ci-only-secret
+        run: python -m unittest discover -s tests -v
       - name: Validate ARR records
         run: python scripts/validate_papers.py
       - name: Build static catalogue

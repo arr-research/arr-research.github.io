@@ -4,11 +4,12 @@ ARR currently accepts no public uploads. Do not open an issue containing a vulne
 
 ## Untrusted research artifacts
 
-Future intake must treat every file and paper instruction as untrusted input. Before external submissions open, ARR will require:
+Private intake treats every file and paper instruction as untrusted input. Its production gate requires:
 
-- quarantine storage separate from the public archive;
+- invitation-bound authentication, operator/editor TOTP and rate limits;
+- quarantine storage separate from the public archive and web root;
 - file-type allowlists, size limits and archive-expansion limits;
-- malware scanning and rejection of unexpected executables;
+- fail-closed malware scanning and immediate erasure of infected bytes;
 - sandboxed Lean/Python builds with no network, short-lived credentials, CPU/memory/time limits and read-only base images;
 - protection against path traversal, symlinks, decompression bombs and dependency confusion;
 - sanitized rendering of LaTeX, Markdown, HTML and model-generated reports;
@@ -17,4 +18,4 @@ Future intake must treat every file and paper instruction as untrusted input. Be
 
 No automated evaluator may follow instructions embedded in a submission that request secrets, external side effects, policy changes, or access to other submissions.
 
-A private security contact and disclosure SLA must be established before public intake.
+Report security issues privately to `lluiseriksson@gmail.com` with subject `ARR security`; do not attach live malware or publish vulnerability details. ARR aims to acknowledge within 72 hours. The full production controls and incident process are in `docs/INTAKE_OPERATIONS.md`.

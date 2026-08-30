@@ -1,4 +1,4 @@
-# ARR editorial policy — prototype
+# ARR editorial policy — invitation pilot
 
 ## Scope
 
@@ -40,8 +40,8 @@ Published files are not silently replaced. Corrections produce a new version. Wi
 
 ## Founder conflict
 
-When an editor, founder or operator is also an author, that relationship must be visible on the record. Independent governance and review should be introduced before ARR accepts external submissions or describes its decisions as independent.
+When an editor, founder or operator is also an author or directly conflicted, that relationship is visible and his acceptance is provisional. A named, unconflicted independent editor must sign the exact version before publication. Editors cannot decide their own submissions, and appeals do not return to the sole original decision-maker. The binding controls are in [`GOVERNANCE.md`](GOVERNANCE.md).
 
 ## Intake boundary
 
-External submissions remain closed during the founder-owned pilot. When opened, intake will be private, rate-limited, quarantined and separate from the accepted archive. Submission does not create a right to publication, indefinite storage or evaluation.
+Expressions of interest are open without attachments. Manuscript intake is free, private, invitation-only, rate-limited, quarantined and separate from the accepted archive. Live invitations may be issued only after the production launch checklist is signed. Submission does not create a right to publication, indefinite storage or evaluation, and no automated system makes the editorial decision.

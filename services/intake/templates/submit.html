@@ -1,0 +1,11 @@
+{% extends 'base.html' %}{% block title %}Submit — ARR intake{% endblock %}{% block content %}
+<h1>Upload to private quarantine</h1><p>PDF only, maximum 25 MiB. No code, archives, executables or special-category personal data.</p>
+<form class="card" method="post" enctype="multipart/form-data"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<label>Title <input name="title" maxlength="500" required></label><label>All authors <input name="authors" maxlength="1000" required></label>
+<label>Abstract <textarea name="abstract" minlength="80" maxlength="5000" rows="8" required></textarea></label><label>Canonical manuscript <input type="file" name="manuscript" accept="application/pdf,.pdf" required></label>
+<label><input type="checkbox" name="authority" required> I am an author, rights holder or authorized agent and the disclosures are accurate.</label>
+<label><input type="checkbox" name="terms" required> I accept <a href="https://arr-research.github.io/terms/" target="_blank" rel="noreferrer">{{ terms }}</a>.</label>
+<label><input type="checkbox" name="privacy" required> I have read <a href="https://arr-research.github.io/privacy/" target="_blank" rel="noreferrer">{{ privacy }}</a>.</label>
+<label><input type="checkbox" name="operator_conflict"> An author has a personal, financial, supervisory or close collaborative relationship with the ARR operator/editor.</label>
+<label><input type="checkbox" name="ai_review_opt_in"> Optional: I authorize ARR to ask a named external AI provider to assess this private manuscript. No transfer occurs merely by checking this box; ARR must identify the provider and reconfirm before transfer.</label>
+<button>Place PDF in quarantine</button></form>{% endblock %}
