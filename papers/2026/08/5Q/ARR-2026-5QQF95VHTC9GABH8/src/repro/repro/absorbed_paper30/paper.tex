@@ -1,0 +1,476 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,array}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue!55!black,citecolor=blue!55!black,urlcolor=blue!55!black]{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\HS}{\mathrm{HS}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\one}{\mathbf 1}
+
+\hypersetup{
+ pdftitle={An Exact Rank--Norm Phase Diagram for Three-Level Self-Commutator Targets},
+ pdfauthor={Lluis Eriksson},
+ pdfsubject={A complete Horn phase diagram for minimum-norm inverse self-commutators in a dimension-eight spectral cone},
+ pdfkeywords={self-commutator, Horn inequalities, inverse commutator, optimal rank, phase diagram, inertia}
+}
+
+\title{An Exact Rank--Norm Phase Diagram for\\
+Three-Level Self-Commutator Targets}
+\author{Lluis Eriksson}
+\date{24 August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+For a traceless Hermitian matrix $F$, let
+\[
+ \kappa_d(F)=\frac12\min\{\|C\|_{\HS}^2:CC^*-C^*C=2F\}.
+\]
+We determine this inverse self-commutator cost, the cost under rank at most
+four, and the minimum rank on the optimal face for the entire dimension-eight
+spectral cone
+\[
+ \lambda(b,c)=(4c-3b,b,b,b,-c,-c,-c,-c),\qquad 0\le b\le c.
+\]
+The unrestricted value has two chambers,
+\[
+ \kappa_8=\begin{cases}10c-7b,&0\le b\le c/2,\\
+                         9c-5b,&c/2\le b\le c,
+          \end{cases}
+\]
+whereas the rank-four value is $10c-6b$ throughout.  Hence the exact rank
+penalty is the tent function $\min\{b,c-b\}$.  Every interior target has
+inertia $(4,4)$ but requires rank five at minimum norm; rank four returns only
+on the boundary rays.  The relative rank-four tax is at most $14/13$, with
+ equality exactly at $b=c/2$.  Sparse Horn duals certify all three affine
+pieces.  We also give a genuinely two-valued dimension-nine target with
+spectrum $(5,5,5,5,-4,-4,-4,-4,-4)$: its unrestricted cost is $29$ and first
+occurs at rank six, whereas the rank-five cost is $30$.  Thus three spectral
+levels are not necessary for the rank gap.  Dependency-free exact replays
+verify all $8{,}759$ dimension-eight and $39{,}724$ dimension-nine constraints.
+This gives a complete positive-dimensional phase diagram, not a continuity
+consequence from one example.  We do not claim that dimension eight is the
+smallest dimension where incompatibility occurs.
+\end{abstract}
+
+\section{Introduction}
+
+Every finite-dimensional trace-zero matrix is a commutator
+\cite{albert1957,thompson1958}.  For Hermitian targets, representing the
+matrix as one self-commutator imposes a more rigid inverse problem: among all
+$C$ with $CC^*-C^*C=2F$, how small can $\|C\|_{\HS}$ be, and what rank is
+needed to attain that minimum?  This is distinct from forward Frobenius
+commutator bounds \cite{bottcher2005,bottcher2008} and from unrestricted or
+infinite-dimensional commutator questions \cite{weiss1980,fan1980}.
+
+There is an elementary tension.  Inertia forces every implementing factor to
+have rank at least $\max\{n_+(F),n_-(F)\}$, while the norm optimum is governed
+by the Horn polytope for a difference of two isospectral positive matrices.
+The two demands agree in exact solutions through dimensions three, four and
+five \cite{erikssonQutrit,erikssonFour,erikssonFive}, and also on certain
+dimension-free one-spike strata.  They need not agree in general: an isolated
+dimension-eight calculation first revealed a rank-five optimum above a
+balanced inertia bound of four.  An isolated point, however, does not reveal
+the chamber geometry, the transition mechanism, or the sharp size of the
+penalty.
+
+This paper replaces that point calculation by a complete cone theorem.  The
+family $\lambda(b,c)$ is two-dimensional before scaling and one-dimensional
+projectively.  The proof is finite and transparent: explicit
+squared-singular-value spectra give the upper bounds, sparse dual combinations
+give the lower bounds, and exact endpoint verification proves every Horn
+inequality over each chamber.  As a separate robustness theorem, a two-valued
+target in dimension nine has unrestricted optimum rank six although inertia
+forces only rank five.
+
+We do not claim Horn feasibility, the inertia obstruction, self-commutator
+existence, the earlier compatible cases, or dimensional minimality as new.
+The contribution is the exhaustive parametric phase diagram, its exact
+rank--norm tradeoff, and the two-valued separation.  The phase has three
+notable features:
+\begin{enumerate}[leftmargin=2em]
+ \item two unrestricted Horn chambers separated at $b=c/2$;
+ \item a single affine rank-four branch, separated from the optimum at every
+ interior point by $\min\{b,c-b\}$; and
+ \item a sharp relative tax $14/13$ at the chamber wall.
+\end{enumerate}
+
+\section{Inverse cost and Horn reduction}
+
+Let $F=F^*\in M_d(\mathbb C)$ be traceless and set
+\begin{equation}
+ \kappa_d(F)=\frac12\min\{\|C\|_{\HS}^2:CC^*-C^*C=2F\}.
+ \label{eq:kappa}
+\end{equation}
+Finite-dimensional self-commutator existence follows, for example, from a
+weighted shift after a zero-sum ordering of the eigenvalues
+\cite{fan1980,beltita2014}.  Write
+\[
+ r_0(F)=\max\{n_+(F),n_-(F)\},\qquad
+ r_*(F)=\min\{\rank C:C\text{ attains \eqref{eq:kappa}}\}.
+\]
+
+\begin{lemma}[inertia obstruction]\label{lem:inertia}
+Every feasible $C$ satisfies $\rank C\ge r_0(F)$.
+\end{lemma}
+
+\begin{proof}
+Put $P=CC^*$ and $Q=C^*C$.  The quadratic form of $P-Q=2F$ is
+nonpositive on $\ker P$, so its positive inertia is at most $\rank P$.
+Likewise its negative inertia is at most $\rank Q$.  Both ranks equal
+$\rank C$.
+\end{proof}
+
+We recall the spectral linear program used below.
+
+\begin{proposition}[Horn formulation]\label{prop:horn}
+Let $\lambda_1\ge\cdots\ge\lambda_d$ be the eigenvalues of $F$.  For
+$p_1\ge\cdots\ge p_{d-1}\ge0$, set
+\[
+ \alpha(p)=(p_1,\ldots,p_{d-1},0),\quad
+ \beta(p)=(0,-p_{d-1},\ldots,-p_1),\quad \gamma=2\lambda.
+\]
+Then
+\begin{equation}
+ \kappa_d(F)=\frac12\min\left\{\sum_{j=1}^{d-1}p_j:
+ (\alpha(p),\beta(p),\gamma)\text{ satisfies every Horn inequality}\right\}.
+ \label{eq:hornlp}
+\end{equation}
+The least cost among factors of rank at most $r$ is obtained by adding
+$p_{r+1}=\cdots=p_{d-1}=0$.
+\end{proposition}
+
+\begin{proof}
+For a feasible factor, $P=CC^*$ and $Q=C^*C$ are positive semidefinite,
+isospectral, and $P+(-Q)=2F$.  At a minimum their smallest common eigenvalue
+is zero: if it were $s>0$, the polar decomposition would permit subtracting
+$s\one$ from the common positive spectrum while preserving $P-Q$ and reducing
+the trace.  Horn's theorem \cite{horn1962,klyachko1998,knutson1999,fulton2000}
+then yields \eqref{eq:hornlp}.
+
+Conversely, Horn feasibility supplies positive $P,Q$ with the displayed
+isospectral data and $P-Q=2F$.  If $Q=U^*PU$, then $C=P^{1/2}U$ satisfies
+$CC^*=P$ and $C^*C=Q$.  Its rank is the number of positive $p_j$.
+\end{proof}
+
+For $(I,J,K)\in T_r^8$ we use the convention
+\begin{equation}
+ \sum_{i\in I}\alpha_i+\sum_{j\in J}\beta_j
+ \ge \sum_{k\in K}\gamma_k.
+ \label{eq:horn}
+\end{equation}
+The recursive $T$-sets are those in Fulton's exposition \cite{fulton2000}.
+
+\section{The complete three-level phase diagram}
+
+For $0\le b\le c$, define $F_{b,c}$ to be any Hermitian matrix with ordered
+trace-zero spectrum
+\begin{equation}
+ \lambda(b,c)=(4c-3b,b,b,b,-c,-c,-c,-c).
+ \label{eq:family}
+\end{equation}
+The case $c=0$ is the zero target, so statements about rank below assume
+$c>0$.  The interior $0<b<c$ has inertia $(4,4)$.
+
+\begin{theorem}[exact rank--norm phase diagram]\label{thm:phase}
+For every $c>0$ and $0\le b\le c$,
+\begin{equation}
+ \kappa_8(F_{b,c})=
+ \begin{cases}
+  10c-7b,&0\le b\le c/2,\\
+  9c-5b,&c/2\le b\le c.
+ \end{cases}
+ \label{eq:globalvalue}
+\end{equation}
+The minimum cost under $\rank C\le4$ is
+\begin{equation}
+ \kappa_8^{(\le4)}(F_{b,c})=10c-6b.
+ \label{eq:facevalue}
+\end{equation}
+Consequently
+\begin{equation}
+ \kappa_8^{(\le4)}-\kappa_8=\min\{b,c-b\}.
+ \label{eq:tent}
+\end{equation}
+For $0<b<c$, the minimum rank on the global optimal face is exactly five.
+At $b=0$ and $b=c$, a rank-four minimizer exists.
+\end{theorem}
+
+The three primal branches are
+\begin{align}
+ p^{L}&=(8c-6b,6c-6b,4c-4b,2c,2b,0,0),
+ &&0\le b\le c/2, \label{eq:plow}\\
+ p^{H}&=(8c-6b,4c-2b,2c,2c,2c-2b,0,0),
+ &&c/2\le b\le c, \label{eq:phigh}\\
+ p^{4}&=(8c-6b,6c-4b,4c-2b,2c,0,0,0),
+ &&0\le b\le c. \label{eq:pface}
+\end{align}
+Their half-traces are respectively $10c-7b$, $9c-5b$, and $10c-6b$.
+
+\subsection{Sparse lower certificates}
+
+The following tables list only the specialized inequalities needed for the
+dual proofs.  Their Horn triples are checked recursively by the exact replay.
+Write $[8]=\{1,\ldots,8\}$.
+
+\begin{table}[H]
+\centering
+\scriptsize
+\caption{Global dual on $0\le b\le c/2$.  Multipliers are shown explicitly.}
+\label{tab:lowdual}
+\begin{tabular}{@{}c p{6.2cm} c c@{}}
+\toprule
+weight & $(I;J;K)$ or elementary row & inequality & RHS\\
+\midrule
+$1/2$ & $(\{1\};\{1\};\{1\})$ & $p_1\ge8c-6b$ & $8c-6b$\\
+$1/2$ & $(\{1,2\};\{1,8\};\{1,8\})$ & $p_2\ge6c-6b$ & $6c-6b$\\
+$1/2$ & $(\{1,2,3,5,6,7\};\{1,2,3,5,7,8\};\{1,3,4,6,7,8\})$
+& $p_3-p_4+p_5\ge2c-2b$ & $2c-2b$\\
+$1$ & $([8]\!\setminus\!\{8\};[8]\!\setminus\!\{5\};[8]\!\setminus\!\{5\})$
+& $p_4\ge2c$ & $2c$\\
+$1/2,1$ & $p_6-p_7\ge0$, $p_7\ge0$ & positivity completion & $0$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\small
+\caption{Global dual on $c/2\le b\le c$.  The multipliers are
+$1/2,1/2,1/2,1,1$.}
+\label{tab:highdual}
+\begin{tabular}{@{}c p{6.1cm} c@{}}
+\toprule
+$r$ & $(I;J;K)$ or elementary row & specialized inequality\\
+\midrule
+1 & $(\{1\};\{1\};\{1\})$ & $p_1\ge8c-6b$\\
+4 & $(\{1,2,5,6\};\{1,2,5,8\};\{1,4,7,8\})$
+& $p_2-p_4+p_5+p_6-p_7\ge4c-4b$\\
+7 & $([8]\!\setminus\!\{8\};[8]\!\setminus\!\{6\};[8]\!\setminus\!\{6\})$
+& $p_3\ge2c$\\
+7 & $([8]\!\setminus\!\{8\};[8]\!\setminus\!\{5\};[8]\!\setminus\!\{5\})$
+& $p_4\ge2c$\\
+-- & $p_7\ge0$ & positivity\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\small
+\caption{Rank-four dual on the face $p_5=p_6=p_7=0$.  Every multiplier is
+$1/2$.}
+\label{tab:facedual}
+\begin{tabular}{@{}c p{6.1cm} c@{}}
+\toprule
+$r$ & $(I;J;K)$ & specialized face inequality\\
+\midrule
+1 & $(\{1\};\{1\};\{1\})$ & $p_1\ge8c-6b$\\
+3 & $(\{1,2,5\};\{1,2,8\};\{1,4,8\})$ & $p_2\ge6c-4b$\\
+5 & $(\{1,2,3,5,6\};\{1,2,3,7,8\};\{1,3,4,7,8\})$ & $p_3\ge4c-2b$\\
+7 & $([8]\!\setminus\!\{8\};[8]\!\setminus\!\{5\};[8]\!\setminus\!\{5\})$ & $p_4\ge2c$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{proof}[Proof of Theorem~\ref{thm:phase}]
+The entries in \eqref{eq:plow}, \eqref{eq:phigh}, and \eqref{eq:pface}
+are nonnegative and weakly decreasing on their stated cones.  Exact Horn
+feasibility is proved in Section~\ref{sec:replay}; Proposition~\ref{prop:horn}
+therefore gives all three upper bounds.
+
+For the first chamber, the weighted sum in Table~\ref{tab:lowdual} has left
+side $\frac12\sum_{j=1}^7p_j$ and right side
+\[
+ \tfrac12(8c-6b)+\tfrac12(6c-6b)+\tfrac12(2c-2b)+2c
+ =10c-7b.
+\]
+For the second chamber, Table~\ref{tab:highdual} gives
+\[
+ \tfrac12(8c-6b)+\tfrac12(4c-4b)+\tfrac12(2c)+2c
+ =9c-5b.
+\]
+Thus the two global primals are optimal.
+
+On $p_5=p_6=p_7=0$, half the sum of the four rows in
+Table~\ref{tab:facedual} gives
+\[
+ \frac12\sum_{j=1}^4p_j\ge
+ \tfrac12\{(8c-6b)+(6c-4b)+(4c-2b)+2c\}=10c-6b.
+\]
+The feasible vector \eqref{eq:pface} attains this bound.  Subtracting the two
+global branches yields \eqref{eq:tent}.
+
+For $0<b<c$, the gap is positive, so no rank-four factor lies on the global
+optimal face.  Both global primals have exactly five positive entries there,
+which proves $r_*=5$.  At $b=0$, \eqref{eq:plow} has rank four; at $b=c$,
+\eqref{eq:phigh} has rank four.
+\end{proof}
+
+\section{Sharp tax and transition geometry}
+
+\begin{corollary}[sharp relative rank-four tax]\label{cor:tax}
+On the cone \eqref{eq:family},
+\[
+ 1\le \frac{\kappa_8^{(\le4)}}{\kappa_8}\le\frac{14}{13}.
+\]
+The upper bound is attained exactly on the ray $b=c/2$.  The additive penalty
+is at most $c/2$, with equality on the same ray.
+\end{corollary}
+
+\begin{proof}
+After setting $t=b/c$, the ratio is
+\[
+ \frac{10-6t}{10-7t}\quad(0\le t\le1/2),\qquad
+ \frac{10-6t}{9-5t}\quad(1/2\le t\le1).
+\]
+The first is strictly increasing and the second strictly decreasing.  Their
+common value at $t=1/2$ is $14/13$.  Equation~\eqref{eq:tent} gives the
+additive statement.
+\end{proof}
+
+The chamber wall is not where rank compatibility returns.  Both global
+branches meet continuously at
+\[
+ p^L=p^H=(5c,3c,2c,2c,c,0,0),
+\]
+which still has rank five.  Instead, $b=c/2$ is where the identity of the
+active Horn lower certificate switches and the rank penalty is largest.  Rank
+four returns only on the two boundary rays, where the fifth singular square
+vanishes.  The isolated spectrum $(11,3,3,3,-5,-5,-5,-5)$ corresponds to
+$(b,c)=(3,5)$ and lies in the second chamber; Theorem~\ref{thm:phase} gives
+$\kappa_8=30$, rank-four value $32$, and gap $2$ immediately.
+
+\section{A two-valued separation in dimension nine}
+
+The interior of the dimension-eight cone has three spectral levels.  The next
+result shows that this multiplicity is not the mechanism behind the rank gap.
+
+\begin{theorem}[two-valued rank gap]\label{thm:two-valued}
+Let $G=G^*\in M_9(\mathbb C)$ have spectrum
+\[
+ (5,5,5,5,-4,-4,-4,-4,-4).
+\]
+Then $G$ has inertia $(4,5)$,
+\[
+ \kappa_9(G)=29,\qquad \kappa_9^{(\le5)}(G)=30,
+\]
+and the minimum rank on the unrestricted optimal face is six.
+\end{theorem}
+
+\begin{proof}
+For the unrestricted problem and the rank-five face, respectively, use the
+feasible squared-singular-value spectra
+\[
+ p=(16,12,10,10,8,2,0,0),\qquad
+ p^{5}=(16,14,12,10,8,0,0,0).
+\]
+Their half-traces are $29$ and $30$.  Exact feasibility against all Horn,
+order, and nonnegativity rows is part of the replay in
+Section~\ref{sec:replay}.
+
+For completeness, an unrestricted lower certificate uses weights
+$1/2,1,1/2,1/2,1/2,1$ on the following five Horn triples and $p_8\ge0$:
+\begin{align*}
+ &(1;\{3\};\{1\};\{3\}),\quad
+ (1;\{4\};\{1\};\{4\}),\\
+ &(4;\{2,3,6,7\};\{1,2,6,7\};\{3,4,8,9\}),\\
+ &(7;\{1,2,3,4,6,7,8\};\{1,2,3,4,6,7,8\};
+       \{1,2,3,4,7,8,9\}),\\
+ &(8;\{1,2,3,4,5,6,7,8\};\{1,2,3,4,6,7,8,9\};
+       \{1,2,3,4,6,7,8,9\}).
+\end{align*}
+Their weighted sum is the full objective and has right side $29$.
+On $p_6=p_7=p_8=0$, weights $1/2,1/2,1/2,1/2,3/2$ on
+\begin{align*}
+ &(1;\{4\};\{1\};\{4\}),\\
+ &(4;\{3,4,6,7\};\{1,2,5,6\};\{3,4,8,9\}),\\
+ &(6;\{2,3,4,6,7,8\};\{1,2,3,5,6,7\};\{2,3,4,7,8,9\}),\\
+ &(7;\{1,2,3,4,6,7,8\};\{1,2,3,4,6,7,8\};
+       \{1,2,3,4,7,8,9\}),\\
+ &(8;\{1,2,3,4,5,6,7,8\};\{1,2,3,4,6,7,8,9\};
+       \{1,2,3,4,6,7,8,9\})
+\end{align*}
+give the rank-five objective on that face and right side $30$.  Thus both
+values are optimal.  Inertia gives the lower rank bound five.  The strict
+rank-five gap rules out ranks at most five at the unrestricted optimum, while
+the first displayed feasible vector has six positive entries.  Hence the
+minimum optimal rank is six.
+\end{proof}
+
+\section{Exact replay and coverage}\label{sec:replay}
+
+The dependency-free verifier regenerates Horn's recursive $T$-sets in
+dimensions eight and nine.  In dimension eight, the counts by rank are
+\[
+ (36,462,2120,3516,2120,462,36),
+\]
+for $8{,}752$ Horn triples.  Six order rows and one nonnegativity row give
+$8{,}759$ constraints.
+
+Each right-hand side is affine in $t=b/c$, and each proposed primal vector is
+affine on its chamber.  Hence every residual is affine.  Feasibility on
+$[0,1/2]$ follows by checking $t=0$ and $t=1/2$; feasibility on $[1/2,1]$
+follows from $t=1/2$ and $t=1$.  The rank-four branch is checked at $t=0$ and
+$t=1$.  These endpoint checks are exact rational calculations, so they cover
+the entire closed intervals rather than a grid.  The replay also verifies all
+dual coefficient identities and their affine right-hand sides.
+
+A second dimension-eight verifier independently enumerates nonzero
+Littlewood--Richardson tableaux and checks the same parametric endpoints.  The
+runner compares the family, chamber endpoints, Horn counts, primal branches,
+dual values, rank statements and exact formulas.  No floating-point solver is
+part of the proof artifact.  For Theorem~\ref{thm:two-valued}, the primary
+replay regenerates
+\[
+ (45,792,5317,13704,13704,5317,792,45)
+\]
+Horn triples by rank: $39{,}716$ Horn rows and $39{,}724$ rows after order and
+nonnegativity constraints.  It checks both primals and both dual identities in
+exact rational arithmetic.
+
+The replay certifies the finite Horn implications conditional on the classical
+Horn theorem and Proposition~\ref{prop:horn}.  It does not constitute a formal
+proof-assistant certification, a proof that dimension eight is minimal, a
+classification of all dimension-eight spectra, priority adjudication, or peer
+review.  The norm is the unnormalized Hilbert--Schmidt norm, matrices are
+finite and complex, and the theorems concern only the displayed cone and
+two-valued target.
+
+\section{Conclusion}
+
+Norm optimality and inertia-minimal rank separate on an entire explicit cone,
+not merely at an exceptional target.  The global inverse cost changes Horn
+facet at $b=c/2$, while the rank-four cost remains affine; their difference is
+the tent function $\min\{b,c-b\}$.  This makes both the incompatibility and its
+sharp size transparent.  The next structural problem is to determine whether
+dimension eight is the first possible failure and to classify the larger Horn
+chambers containing this cone.  The dimension-nine theorem separately shows
+that repeated three-level structure is not necessary for the phenomenon.
+
+\section*{Author and AI disclosure}
+
+Lluis Eriksson directed the research, selected the claims, and accepts
+responsibility for the manuscript.  OpenAI Codex assisted with conjecture
+falsification, parametric Horn exploration, exact-certificate generation,
+literature triage, adversarial proof checking, typesetting, and drafting.  No
+external peer review or formal proof certification is claimed.
+
+\AtBeginEnvironment{thebibliography}{\footnotesize\setlength{\itemsep}{0.2em}}
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}
