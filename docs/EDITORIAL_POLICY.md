@@ -44,4 +44,4 @@ When an editor, founder or operator is also an author or directly conflicted, th
 
 ## Intake boundary
 
-Expressions of interest are open without attachments. Manuscript intake is free, private, invitation-only, rate-limited, quarantined and separate from the accepted archive. Live invitations may be issued only after the production launch checklist is signed. Submission does not create a right to publication, indefinite storage or evaluation, and no automated system makes the editorial decision.
+Expressions of interest are open without attachments and currently carry no ARR fee. Manuscript intake is private, invitation-only, rate-limited, quarantined and separate from the accepted archive. Any future fee requires advance notice and new terms and cannot purchase an editorial outcome. Live invitations may be issued only after the production launch checklist is signed. Submission does not create a right to publication, indefinite storage or evaluation, and no automated system makes the editorial decision.

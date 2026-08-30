@@ -35,7 +35,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 from werkzeug.security import check_password_hash, generate_password_hash
 
 
-TERMS_VERSION = "ARR-DEPOSIT-1.0"
+TERMS_VERSION = "ARR-DEPOSIT-1.1"
 PRIVACY_VERSION = "ARR-PRIVACY-1.0"
 MAX_PDF_BYTES = 25 * 1024 * 1024
 ALLOWED_STATES = {

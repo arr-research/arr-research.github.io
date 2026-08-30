@@ -1,7 +1,7 @@
 # ARR privacy notice — ARR-PRIVACY-1.0
 
 **Effective:** 2026-08-30  
-**Service state:** free, invitation-only pilot; general public intake is not open.
+**Service state:** currently fee-free, invitation-only pilot; general public intake is not open.
 
 ## Controller and contact
 

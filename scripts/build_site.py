@@ -482,7 +482,7 @@ def build_about(base: str, canonical_url: str) -> str:
   <article><h2>What ARR is not</h2><p>ARR is not a journal, a replacement for expert peer review, a ranking of authors or a guarantee that a scientific claim is true.</p></article>
   <article><h2>Governance</h2><p>Lluis Eriksson is founder, registry operator, responsible editor and data controller. Every decision is human. His conflicted or author-owned work requires a disclosed independent editor before publication.</p></article>
   <article><h2>Preservation</h2><p>Stable identifiers are independent of GitHub. Versioned releases distribute generated and large files; future object storage and independent preservation mirrors can replace any provider without changing citations.</p></article>
-  <article><h2>Submissions</h2><p>ARR is free. Expressions of interest are open without attachments; manuscript uploads are private, invitation-only and cannot begin until the production launch checklist is signed. GitHub and ordinary email are never manuscript channels.</p></article>
+  <article><h2>Submissions</h2><p>ARR does not currently charge a submission or publication fee. Expressions of interest are open without attachments; manuscript uploads are private, invitation-only and cannot begin until the production launch checklist is signed. GitHub and ordinary email are never manuscript channels.</p></article>
 </section>
 """
     canonical = f"{canonical_url}/about/" if canonical_url else ""
@@ -510,7 +510,7 @@ def policy_source(filename: str) -> str:
 
 def build_submit(base: str, canonical_url: str) -> str:
     content = f"""
-<section class="page-intro"><span>Free · invitation-only pilot</span><h1>Every paper enters privately and every decision is manual.</h1><p>ARR charges EUR 0.00 for submission, assessment, publication and withdrawal. Uploading never publishes a manuscript.</p></section>
+<section class="page-intro"><span>Currently no fee · invitation-only pilot</span><h1>Every paper enters privately and every decision is manual.</h1><p>ARR does not currently charge for submission, assessment, publication or withdrawal. Fees may be introduced for future submissions only after advance notice and updated terms. Uploading never publishes a manuscript.</p></section>
 <section class="about-grid">
   <article><h2>1. Request an invitation</h2><p>Email <a href="mailto:lluiseriksson@gmail.com?subject=ARR%20invitation">lluiseriksson@gmail.com</a> with subject <code>ARR invitation</code>. Include only your name, email, field and provisional title. <strong>Do not attach a manuscript or abstract.</strong></p></article>
   <article><h2>2. Private quarantine</h2><p>After the production gate is complete, selected applicants receive a one-use, email-bound link. The PDF is authenticated, rate-limited, size/type checked, quarantined and unavailable to editors unless an approved malware scanner reports it clean.</p></article>
@@ -540,17 +540,17 @@ def build_privacy(base: str, canonical_url: str) -> str:
 
 def build_terms(base: str, canonical_url: str) -> str:
     content = f"""
-<section class="page-intro"><span>ARR-DEPOSIT-1.0 · effective 2026-08-30</span><h1>Free deposit does not buy or guarantee acceptance.</h1><p>Submission, assessment, publication and withdrawal cost EUR 0.00. The operator is Lluis Eriksson in Stockholm, Sweden.</p></section>
+<section class="page-intro"><span>ARR-DEPOSIT-1.1 · effective 2026-08-30</span><h1>There is currently no ARR deposit fee.</h1><p>ARR does not currently charge for submission, assessment, publication or withdrawal. A future fee may apply only after advance notice and new terms, never retroactively or in exchange for acceptance. The operator is Lluis Eriksson in Stockholm, Sweden.</p></section>
 <section class="about-grid">
   <article><h2>Authority and scope</h2><p>Adult depositors must be an author, rights holder or authorized agent and accurately disclose rights, authorship, AI assistance, interests, third-party material, provenance and licenses. The pilot accepts one PDF up to 25 MiB.</p></article>
   <article><h2>Private first</h2><p>An upload enters quarantine and carries no public license. ARR may decline, request changes, restrict or remove material. Submission creates no entitlement to a timetable, publication, preservation or endorsement.</p></article>
   <article><h2>Publication rights</h2><p>Copyright remains with its owner. A final accepted version receives explicit scoped licenses before public release. Public copies and open licenses may be irreversible; withdrawal cannot recall third-party copies.</p></article>
   <article><h2>Appeal and conflict</h2><p>A decline or restriction may be appealed once within 30 days. A conflicted founder approval is provisional and an unconflicted independent editor must sign before publication.</p></article>
 </section>
-<section class="callout"><h2>Complete binding terms</h2><p><a href="{policy_source('DEPOSIT_TERMS.md')}">Read ARR-DEPOSIT-1.0 in full</a>. Email and GitHub issues are not deposit channels.</p></section>
+<section class="callout"><h2>Complete binding terms</h2><p><a href="{policy_source('DEPOSIT_TERMS.md')}">Read ARR-DEPOSIT-1.1 in full</a>. Email and GitHub issues are not deposit channels.</p></section>
 """
     canonical = f"{canonical_url}/terms/" if canonical_url else ""
-    return page_shell(title="Deposit terms — ARR", description="ARR-DEPOSIT-1.0 terms for free invitation-only deposits.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Deposit terms — ARR", description="ARR-DEPOSIT-1.1 terms for the currently fee-free invitation-only pilot.", content=content, base=base, canonical=canonical)
 
 
 def build_governance(base: str, canonical_url: str) -> str:
