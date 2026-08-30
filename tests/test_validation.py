@@ -460,6 +460,11 @@ class PaperValidationTests(unittest.TestCase):
         self.assertNotIn("Request an invitation", page)
         self.assertNotIn("mailto:lluiseriksson@gmail.com?subject=ARR%20invitation", page)
 
+    def test_support_page_does_not_display_operator_email(self) -> None:
+        page = build_site.build_support("", "https://arr.example")
+        self.assertNotIn("Payment and refund questions:", page)
+        self.assertNotIn('class="support-contact"', page)
+
     def test_submit_ranking_pages_are_ordered_and_limited_to_fifty(self) -> None:
         papers = []
         metrics = {"views": {"available": False}, "papers": {}}
