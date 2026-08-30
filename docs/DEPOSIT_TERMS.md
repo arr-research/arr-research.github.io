@@ -1,9 +1,15 @@
-# ARR deposit terms — ARR-DEPOSIT-1.0
+# ARR deposit terms — ARR-DEPOSIT-1.1
 
 **Effective:** 2026-08-30  
 **Operator:** Lluis Eriksson, Stockholm, Sweden — lluiseriksson@gmail.com  
-**Price:** EUR 0.00. Submission, assessment, publication and withdrawal carry no
-ARR fee in this version.
+**Current fee:** EUR 0.00. ARR does not currently charge for submission,
+assessment, publication or withdrawal. This may change for future submissions only
+after advance publication of new terms and clear notice before submission. No fee
+will be imposed retroactively on a submission governed by this version, and a
+future fee will never purchase acceptance, priority or a favourable decision.
+
+This version replaces `ARR-DEPOSIT-1.0` before any production upload invitation
+was issued.
 
 These terms govern ARR's invitation-only deposit pilot. They are accepted when a
 depositor ticks the versioned agreement and uploads a manuscript. Email and GitHub

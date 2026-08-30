@@ -6,7 +6,7 @@ This repository is the technical foundation for the archive. It keeps lightweigh
 
 ## Current status
 
-ARR operates a public archive and is building a **free, invitation-only intake pilot**. Expressions of interest are accepted without attachments; live upload invitations remain gated by the signed production checklist. No record is considered published merely because it appears in a branch, pull request or private intake. A research paper or technical note becomes an ARR publication only after a human acceptance workflow completes and a versioned release is created.
+ARR operates a public archive and is building a **currently fee-free, invitation-only intake pilot**. Expressions of interest are accepted without attachments; live upload invitations remain gated by the signed production checklist. No record is considered published merely because it appears in a branch, pull request or private intake. A research paper or technical note becomes an ARR publication only after a human acceptance workflow completes and a versioned release is created.
 
 ## Local checks
 
@@ -50,6 +50,6 @@ Copy-ready agent instructions are in [docs/AGENT_DEPOSIT_PROMPTS.es.md](docs/AGE
 
 ARR separates private intake, the public metadata registry, and immutable artifact storage so that GitHub can be replaced or complemented without changing record identifiers. See [capacity and migration](docs/SCALE_READINESS.md), [state and evidence labels](docs/STATE_MODEL.md), and the [licensing policy](LICENSE_POLICY.md).
 
-The private intake service is in [`services/intake/`](services/intake/). Submission, assessment, publication and withdrawal cost EUR 0.00 under [`ARR-DEPOSIT-1.0`](docs/DEPOSIT_TERMS.md). The operator is Lluis Eriksson, founder, registry operator, responsible editor and GDPR controller. See [privacy](docs/PRIVACY_NOTICE.md), [complaints/contact](docs/LEGAL_AND_COMPLAINTS.md), [retention](docs/RETENTION_SCHEDULE.md), [governance](docs/GOVERNANCE.md) and the [production launch gate](docs/INTAKE_OPERATIONS.md).
+The private intake service is in [`services/intake/`](services/intake/). ARR does not currently charge for submission, assessment, publication or withdrawal under [`ARR-DEPOSIT-1.1`](docs/DEPOSIT_TERMS.md); any future fee would apply only after advance notice and new terms. The operator is Lluis Eriksson, founder, registry operator, responsible editor and GDPR controller. See [privacy](docs/PRIVACY_NOTICE.md), [complaints/contact](docs/LEGAL_AND_COMPLAINTS.md), [retention](docs/RETENTION_SCHEDULE.md), [governance](docs/GOVERNANCE.md) and the [production launch gate](docs/INTAKE_OPERATIONS.md).
 
 Platform software is `AGPL-3.0-or-later`; ARR-authored documentation is `CC-BY-4.0`; public catalogue metadata is `CC0-1.0`; deposited papers, code and data declare their own scoped licenses.
