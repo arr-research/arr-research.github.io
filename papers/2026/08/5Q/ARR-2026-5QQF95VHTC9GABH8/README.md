@@ -4,7 +4,7 @@ Canonical research paper: `paper.pdf`. Canonical manuscript source:
 `paper.tex`.
 
 This record preserves the exact PDF, LaTeX and BibTeX sources, machine-readable
-text renditions, and the complete 88-file reproducibility tree. The latter
+text renditions, and the complete 89-file reproducibility tree. The latter
 contains canonical and independent exact Horn/polyhedral checks, frozen JSON
 certificates, symbolic hive coarse-graining checks, an independent dictionary
 implementation, and the vendored optional `cddlib` route with upstream license

@@ -51,7 +51,10 @@ python run_scientific_replay.py --with-wsl-route
 ```
 
 It is independent corroboration for nonsingular strata; the canonical
-`pycddlib` verifier is the route covering singular strata.
+`pycddlib` verifier is the route covering singular strata.  Its imported
+projection helper, `math/explore_low_dimension_projection.py`, is included in
+the standalone archive even though the helper's command-line discovery mode is
+not itself a proof certificate.
 
 ## Consolidation and absorption
 

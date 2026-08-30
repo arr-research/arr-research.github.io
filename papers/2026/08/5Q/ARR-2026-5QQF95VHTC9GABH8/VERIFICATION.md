@@ -18,7 +18,7 @@ Protocol: `ARR-VERIFY-1.0`
 
 ## Exact scientific replay — pass within declared scope
 
-The complete standalone command passed against the frozen 88-file tree:
+The complete standalone command passed against the frozen 89-file tree:
 
 ```text
 python -m pip install -r src/repro/requirements.txt
@@ -33,10 +33,15 @@ hive primal-dual certificates, and two independently implemented symbolic
 coarse-grid transfers. The default replay finished with `PASS: complete
 standalone Paper 32 scientific replay`.
 
+The optional WSL/GMP full-rank route was also executed from a clean extracted
+tree after its imported projection helper was added to the archive. It passed
+all six critical chambers in dimensions four through seven, with exact facet
+validity and projection round trips.
+
 The release ZIP was rebuilt twice from the frozen tree. Both copies had
-SHA-256 `b3cbe79f237cbfd36d6dde1f7ed48896156576920d0cd629583dabb560c72e43`.
+SHA-256 `0ce0e5ad14a991f8a7d90ebad938d62f53760bd4fb1affd24cec3109b8ca987f`.
 Its manifest has SHA-256
-`7e5c660e1aef4953c8f0f669940c899d6d06b6d8f6d7d5757edd31b98ce92872`.
+`061e6d07d5e0db550b87b6ff78675debaafc4a7026d1740a9652c6c5a9e5f491`.
 
 ## Proof and literature boundary
 

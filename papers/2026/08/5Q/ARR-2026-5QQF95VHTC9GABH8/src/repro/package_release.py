@@ -73,6 +73,7 @@ def source_entries() -> dict[str, Path]:
         "math/verify_zero_padding_fixture.py",
         "math/audit_d_le_7_equalities.py",
         "math/verify_low_dimension_minimality_exact.py",
+        "math/explore_low_dimension_projection.py",
         "math/results/d_le_7_epigraph_certificate.json",
         "math/MATH_AUDIT.md",
         "math/MANUSCRIPT_MATH_AUDIT.md",
