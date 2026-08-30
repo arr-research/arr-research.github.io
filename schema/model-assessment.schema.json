@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arr-research.github.io/schema/model-assessment.schema.json",
+  "title": "ARR public frontier-model assessment",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "assessment_id", "paper_id", "version", "version_id", "canonical_sha256",
+    "provider", "model_id", "assessed_at", "prompt_version", "independence",
+    "recommendation", "millennium_score", "overall_stars", "criteria",
+    "summary", "strengths", "weaknesses", "potential_errors",
+    "strong_novelty_candidates", "unresolved_material_objections",
+    "source_response_sha256"
+  ],
+  "properties": {
+    "assessment_id": {"type": "string", "pattern": "^arr:assessment:[0-9a-f-]{36}$"},
+    "paper_id": {"type": "string", "pattern": "^ARR-[0-9]{4}-[0-9A-HJKMNP-TV-Z]{16}$"},
+    "version": {"type": "string", "pattern": "^v[1-9][0-9]*$"},
+    "version_id": {"type": "string", "pattern": "^arr:version:[0-9a-f-]{36}$"},
+    "canonical_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "provider": {"type": "string", "minLength": 2, "maxLength": 100},
+    "model_id": {"type": "string", "minLength": 2, "maxLength": 160},
+    "assessed_at": {"type": "string", "format": "date-time"},
+    "prompt_version": {"const": "ARR-ASSESS-1.0"},
+    "independence": {"enum": ["not_involved_in_manuscript", "involved_in_manuscript", "unknown"]},
+    "recommendation": {"enum": ["accept", "minor_revision", "major_revision", "reject"]},
+    "millennium_score": {"type": "number", "minimum": 0, "maximum": 10, "multipleOf": 0.01},
+    "overall_stars": {"type": "integer", "minimum": 1, "maximum": 10},
+    "criteria": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["correctness_confidence", "rigor", "novelty", "significance", "reproducibility"],
+      "properties": {
+        "correctness_confidence": {"$ref": "#/$defs/criterion"},
+        "rigor": {"$ref": "#/$defs/criterion"},
+        "novelty": {"$ref": "#/$defs/criterion"},
+        "significance": {"$ref": "#/$defs/criterion"},
+        "reproducibility": {"$ref": "#/$defs/criterion"}
+      }
+    },
+    "summary": {"type": "string", "minLength": 40, "maxLength": 1600},
+    "strengths": {"$ref": "#/$defs/findings"},
+    "weaknesses": {"$ref": "#/$defs/findings"},
+    "potential_errors": {"$ref": "#/$defs/findings"},
+    "strong_novelty_candidates": {"$ref": "#/$defs/findings"},
+    "unresolved_material_objections": {"$ref": "#/$defs/findings"},
+    "source_response_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "$defs": {
+    "criterion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stars", "basis"],
+      "properties": {
+        "stars": {"type": "integer", "minimum": 1, "maximum": 5},
+        "basis": {"type": "string", "minLength": 15, "maxLength": 600}
+      }
+    },
+    "findings": {
+      "type": "array",
+      "maxItems": 12,
+      "items": {"type": "string", "minLength": 8, "maxLength": 800}
+    }
+  }
+}

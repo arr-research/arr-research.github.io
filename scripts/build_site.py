@@ -20,6 +20,16 @@ from arrlib import (
     validate_collection,
     validate_record_timestamps,
 )
+from assessmentlib import (
+    CRITERIA,
+    aggregate_assessments,
+    assessments_for,
+    load_assessment_registry,
+    load_highlight_registry,
+    tier_label,
+    validate_highlights,
+    validate_registry,
+)
 
 
 SITE_DIR = ROOT / "site"
@@ -181,16 +191,17 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
       <a href="{base}/notes/">Technical notes</a>
       <a href="{base}/authors/">Authors</a>
       <a href="{base}/rankings/">Activity</a>
+      <a href="{base}/assessments/">Assessments</a>
       <a href="{base}/protocol/">Protocol</a>
       <a href="{base}/submit/">Submit</a>
-      <a href="{base}/licensing/">Licensing</a>
       <a href="{base}/about/">About</a>
+      <a href="{base}/support/">Support</a>
     </nav>
   </header>
   <main id="main">{content}</main>
   <footer>
     <p><strong>ARR</strong> is a curated archive of research papers and technical notes with explicit evidence labels. Acceptance is not peer review and is not a guarantee of truth.</p>
-    <p><a href="{base}/catalog.json">Machine-readable catalogue (CC0)</a> · <a href="{base}/authors/index.json">Author registry (CC0)</a> · <a href="{base}/metrics.json">Activity snapshot (CC0)</a> · <a href="{base}/registry/record-timestamps.json">Exact record timestamps (CC0)</a> · <a href="{base}/protocol/">Verification protocol</a> · <a href="{base}/privacy/">Privacy</a> · <a href="{base}/terms/">Deposit terms</a> · <a href="{base}/contact/">Contact and complaints</a> · <a href="https://github.com/arr-research/arr-research.github.io">Source (AGPL)</a></p>
+    <p><a href="{base}/catalog.json">Machine-readable catalogue (CC0)</a> · <a href="{base}/registry/model-assessments.json">Model assessments</a> · <a href="{base}/authors/index.json">Author registry (CC0)</a> · <a href="{base}/metrics.json">Activity snapshot (CC0)</a> · <a href="{base}/registry/record-timestamps.json">Exact record timestamps (CC0)</a> · <a href="{base}/protocol/">Verification protocol</a> · <a href="{base}/licensing/">Licensing</a> · <a href="{base}/privacy/">Privacy</a> · <a href="{base}/terms/">Deposit terms</a> · <a href="{base}/contact/">Contact and complaints</a> · <a href="https://github.com/arr-research/arr-research.github.io">Source (AGPL)</a></p>
   </footer>
 </body>
 </html>
@@ -218,6 +229,26 @@ def record_route(metadata: dict) -> str:
 def type_badge(metadata: dict) -> str:
     value = record_type(metadata)
     return f'<span class="badge badge-{esc(value.replace("_", "-"))}">{esc(record_type_label(metadata))}</span>'
+
+
+def star_row(stars: int, maximum: int = 10) -> str:
+    return (
+        f'<span class="stars" aria-label="{stars} of {maximum} stars">'
+        + '<span aria-hidden="true">'
+        + "★" * stars
+        + "☆" * (maximum - stars)
+        + "</span></span>"
+    )
+
+
+def assessment_badge(paper, assessments: list[dict], href: str = "#model-assessments") -> str:
+    aggregate = aggregate_assessments(assessments_for(assessments, paper))
+    if aggregate is None:
+        return '<span class="assessment-unrated">Not yet rated</span>'
+    return (
+        f'<a class="assessment-compact" href="{esc(href)}">{star_row(aggregate["stars"])}'
+        f'<span>{aggregate["score"]:.2f} · {esc(aggregate["tier"])} · n={aggregate["count"]}</span></a>'
+    )
 
 
 def release_asset_url(release_url: str, filename: str) -> str:
@@ -534,6 +565,59 @@ def build_rankings(profiles: list[dict], by_author: dict[str, list], papers: lis
     return page_shell(title="Activity rankings — ARR", description="Reproducible ARR paper and author activity rankings.", content=content, base=base, canonical=canonical)
 
 
+def findings_block(title: str, findings: list[str]) -> str:
+    if not findings:
+        return f'<section><h4>{esc(title)}</h4><p class="assessment-none">None reported.</p></section>'
+    return f'<section><h4>{esc(title)}</h4><ul>{"".join(f"<li>{esc(item)}</li>" for item in findings)}</ul></section>'
+
+
+def paper_assessment_section(paper, assessments: list[dict], highlight: dict | None, base: str) -> str:
+    items = assessments_for(assessments, paper)
+    aggregate = aggregate_assessments(items)
+    if aggregate is None:
+        summary = '<div class="assessment-summary unrated"><strong>Not yet rated</strong><p>No eligible independent ARR-ASSESS-1.0 report is published for this exact version. Missing evidence is not scored as zero.</p></div>'
+    else:
+        summary = f"""
+<div class="assessment-summary">
+  <div>{star_row(aggregate['stars'])}<strong>{aggregate['score']:.2f} / 10.00</strong><span>{esc(aggregate['tier'])}</span></div>
+  <dl><div><dt>Eligible reports</dt><dd>{aggregate['count']}</dd></div><div><dt>Range</dt><dd>{aggregate['minimum']:.2f}–{aggregate['maximum']:.2f}</dd></div><div><dt>Method</dt><dd>median · exact version only</dd></div></dl>
+</div>"""
+    highlight_html = ""
+    if highlight:
+        strengths = "".join(f"<li>{esc(item)}</li>" for item in highlight["strengths"])
+        caveats = "".join(f"<li>{esc(item)}</li>" for item in highlight["caveats"])
+        highlight_html = f"""
+<aside class="editorial-highlight"><span>Signed editorial highlight</span><h3>{esc(highlight['headline'])}</h3><p>{esc(highlight['why_it_matters'])}</p><div><section><h4>Strengths</h4><ul>{strengths}</ul></section><section><h4>Caveats</h4><ul>{caveats or '<li>None recorded.</li>'}</ul></section></div><small>{esc(highlight['signed_by'])} · {exact_time(highlight['updated_at'])}</small></aside>"""
+    reports = []
+    criterion_labels = {
+        "correctness_confidence": "Correctness confidence",
+        "rigor": "Rigor",
+        "novelty": "Novelty",
+        "significance": "Significance",
+        "reproducibility": "Reproducibility",
+    }
+    for item in items:
+        criteria = "".join(
+            f'<div><dt>{esc(criterion_labels[name])}</dt><dd>{star_row(item["criteria"][name]["stars"], 5)}<small>{esc(item["criteria"][name]["basis"])}</small></dd></div>'
+            for name in CRITERIA
+        )
+        independence = item["independence"].replace("_", " ")
+        material = item["unresolved_material_objections"]
+        report_tone = "material" if material else "clear"
+        reports.append(f"""
+<details class="model-report {report_tone}">
+  <summary><span><strong>{esc(item['provider'])} · {esc(item['model_id'])}</strong><small>{exact_time(item['assessed_at'])} · {esc(independence)}</small></span><span>{star_row(item['overall_stars'])}<strong>{float(item['millennium_score']):.2f}</strong></span></summary>
+  <div class="report-body"><p class="report-recommendation">Recommendation: <strong>{esc(item['recommendation'].replace('_', ' ').title())}</strong> · Material objections: <strong>{len(material)}</strong></p><p>{esc(item['summary'])}</p><dl class="criterion-grid">{criteria}</dl><div class="findings-grid">{findings_block('Strengths', item['strengths'])}{findings_block('Weaknesses', item['weaknesses'])}{findings_block('Potential errors', item['potential_errors'])}{findings_block('Strong novelty candidates', item['strong_novelty_candidates'])}{findings_block('Unresolved material objections', material)}</div><p class="assessment-provenance">{esc(item['assessment_id'])} · prompt {esc(item['prompt_version'])} · response SHA-256 <code>{esc(item['source_response_sha256'])}</code> · canonical PDF SHA-256 <code>{esc(item['canonical_sha256'])}</code></p></div>
+</details>""")
+    history = "".join(reports) if reports else '<p class="assessment-empty">No model reports are published for this version.</p>'
+    return f"""
+<section class="model-assessments" id="model-assessments">
+  <header><div><span>Longitudinal frontier-model record</span><h2>Independent model assessments</h2></div><a href="{base}/assessments/#scale">Read the scale and limits</a></header>
+  {summary}{highlight_html}<div class="model-report-list">{history}</div>
+  <p class="protocol-note">A model assessment is not peer review or a correctness certificate. ARR preserves disagreement, exact-version provenance and later reassessments.</p>
+</section>"""
+
+
 def build_paper_page(
     paper,
     timestamp: dict,
@@ -548,6 +632,8 @@ def build_paper_page(
     repository: str,
     author_lookup: dict[str, dict] | None = None,
     metrics: dict | None = None,
+    assessments: list[dict] | None = None,
+    highlight: dict | None = None,
 ) -> str:
     metadata = paper.metadata
     authors = (
@@ -556,6 +642,7 @@ def build_paper_page(
         else esc(", ".join(author["name"] for author in metadata["authors"]))
     )
     activity = paper_activity(metadata["id"], metrics or {"papers": {}})
+    assessments = assessments or []
     relative_path = paper.path.relative_to(ROOT).as_posix()
     tag = f"{metadata['id']}-{metadata['version']}"
     release_url = metadata.get("release_url")
@@ -648,6 +735,7 @@ def build_paper_page(
   <p class="paper-authors">{authors}</p>
   {timestamp_panel(timestamp)}
   <section class="activity-panel" aria-label="Public activity"><div><span>Canonical PDF downloads</span><strong>{metric_number(activity['pdf_downloads'])}</strong><small>Cumulative GitHub release asset count</small></div><div><span>Page views</span><strong>{metric_number(activity['page_views'])}</strong><small>{esc((metrics or {}).get('views', {}).get('definition', 'No privacy-reviewed page-view source is connected.'))}</small></div><a href="{base}/rankings/#method">Definitions and rankings →</a></section>
+  <div class="paper-assessment-badge">{assessment_badge(paper, assessments)}</div>
   <div class="download-row">{''.join(links)}</div>
   <section class="abstract"><span>{summary_label}</span><p>{esc(metadata['abstract'])}</p></section>
   <div class="paper-grid">
@@ -660,6 +748,7 @@ def build_paper_page(
   {related_section}
   <section class="disclosure"><h2>AI assistance statement</h2><p>{esc(metadata['ai_assistance']['statement'])}</p></section>
   <section class="screening-record"><h2>Frontier-model screening</h2><p>Status: <strong>{esc(metadata['screening']['status'])}</strong>. Any listed reports correspond to this exact version under {esc(metadata['screening']['protocol'])}; no absent assessment is represented as a pass.</p><ul>{evaluators}</ul></section>
+  {paper_assessment_section(paper, assessments, highlight, base)}
   <section class="disclosure"><h2>Editorial disclosure</h2><p>{esc(metadata['editorial']['statement'])}</p></section>
 </article>
 """
@@ -684,13 +773,59 @@ def build_protocol(base: str, canonical_url: str) -> str:
 <section class="protocol-steps">
   <article><span>Gate 1</span><h2>Complete research object</h2><p>Required sources, metadata, provenance, licenses and stable identifiers must be present and internally consistent. Technical notes additionally declare their precise scope, maturity, kind and limitations.</p></article>
   <article><span>Gate 2</span><h2>Technical verification</h2><p>Hashes, generated files, executable code, tests and formal proofs are checked where applicable. Failures remain visible until resolved.</p></article>
-  <article><span>Gate 3</span><h2>Evidence-specific assessment</h2><p>Performed checks are reported independently. An AI-screened pass requires at least three declared, version-specific model reports; assessment is not silently inferred when absent.</p></article>
-  <article><span>Gate 4</span><h2>Editorial sign-off</h2><p>No unresolved critical objection may be hidden. Acceptance is tied to stable identifiers, the exact SHA-256 manifest and versioned protocols.</p></article>
+  <article><span>Gate 3</span><h2>Hostile frontier-model screening</h2><p>New admissions require at least three distinct, version-locked frontier-model reports. Any non-accept recommendation or unresolved material objection blocks acceptance until correction or a signed human adjudication.</p></article>
+  <article><span>Gate 4</span><h2>Human editorial sign-off</h2><p>Models do not decide publication. The editor inspects every objection, signs the exact version and ties the decision to stable identifiers, the SHA-256 manifest and versioned protocols.</p></article>
 </section>
 <section class="callout"><h2>Lean 4 verification levels</h2><p><strong>L0</strong> source supplied · <strong>L1</strong> clean build · <strong>L2</strong> kernel-checked, no unfinished proofs, axioms audited · <strong>L3</strong> correspondence between formalization and manuscript independently reviewed.</p></section>
 """
     canonical = f"{canonical_url}/protocol/" if canonical_url else ""
     return page_shell(title="Screening protocol — ARR", description="The documented ARR screening and verification protocol.", content=content, base=base, canonical=canonical)
+
+
+def build_assessments(papers: list, assessments: list[dict], highlights: list[dict], base: str, canonical_url: str, author_lookup: dict[str, dict]) -> str:
+    ranked = []
+    for paper in papers:
+        aggregate = aggregate_assessments(assessments_for(assessments, paper))
+        if aggregate is not None:
+            ranked.append((paper, aggregate))
+    ranked.sort(key=lambda item: (-item[1]["score"], -item[1]["count"], item[0].metadata["title"].casefold()))
+    rows = []
+    for rank, (paper, aggregate) in enumerate(ranked, start=1):
+        authors = author_links(paper.metadata, author_lookup, base)
+        rows.append(f"""
+<li class="assessment-rank-row"><span class="rank-number">{rank:02d}</span><div><span class="rank-record">{esc(paper.id)} · {esc(paper.version)}</span><h3><a href="{base}/{record_route(paper.metadata)}/{quote(paper.id)}/#model-assessments">{esc(paper.metadata['title'])}</a></h3><p>{authors}</p></div><div class="assessment-rank-score">{star_row(aggregate['stars'])}<strong>{aggregate['score']:.2f}</strong><span>{esc(aggregate['tier'])} · n={aggregate['count']} · {aggregate['minimum']:.2f}–{aggregate['maximum']:.2f}</span></div></li>""")
+    if not rows:
+        rows.append('<li class="assessment-rank-empty"><strong>No scientific ranking yet.</strong><p>ARR has not published an eligible independent assessment for any current paper version. Existing records remain “Not yet rated”; missing reports are never converted to zero.</p></li>')
+    labels = [tier_label(number) for number in range(1, 11)]
+    scale_rows = "".join(
+        f'<tr><td>{number}</td><td>{star_row(number)}</td><td>{esc(label)}</td><td>{esc("Publication floor" if number == 3 else "Very good is deliberately above the publication floor" if number == 5 else "Unconditional recognized Millennium Problem solution after extraordinary verification" if number == 10 else "")}</td></tr>'
+        for number, label in enumerate(labels, start=1)
+    )
+    highlight_count = len(highlights)
+    content = f"""
+<section class="assessment-index">
+  <header><div><span>ARR-ASSESS-1.0 · exact-version evidence</span><h1>Model assessment ranking</h1></div><a class="policy-link" href="https://github.com/arr-research/arr-research.github.io/blob/main/docs/MODEL_ASSESSMENT_POLICY.md">Full policy</a></header>
+  <p class="assessment-lead">Frontier models are used as hostile scientific screeners. An unresolved material objection blocks a new admission until correction or signed human adjudication. A model report is not peer review or proof; every score names the model, artifact, version and date.</p>
+  <div class="assessment-index-meta"><span>{len(ranked)} rated current versions</span><span>{sum(1 for paper in papers if aggregate_assessments(assessments_for(assessments, paper)) is None)} not yet rated</span><span>{len(assessments)} preserved reports</span><span>{highlight_count} signed highlights</span></div>
+  <div class="assessment-rank-head"><span>Rank</span><span>Paper</span><span>Median assessment</span></div>
+  <ol class="assessment-ranking">{''.join(rows)}</ol>
+  <section class="scale-panel" id="scale"><header><span>High-ceiling research scale</span><h2>Five is very good, not a failing grade.</h2></header><p>The 0.00–10.00 Millennium scale is not a school percentage or a probability of correctness. Three stars is the acceptable publication floor. Ten is the top comparison anchor and cannot be established by a model alone.</p><div class="table-scroll"><table><thead><tr><th>Stars</th><th>Display</th><th>Meaning</th><th>Anchor</th></tr></thead><tbody>{scale_rows}</tbody></table></div></section>
+  <section class="criteria-panel"><h2>Criterion profile</h2><p>Each report also supplies one to five stars, with a written basis, for correctness confidence, rigor, novelty, significance and reproducibility. These diagnostic ratings are shown separately and are not silently averaged into the headline score.</p><p>Only assessments marked independent of manuscript creation enter the median. ARR shows the count and range, never pools different paper versions and preserves later reassessments so future systems can be compared with earlier ones.</p><p><a href="{base}/registry/model-assessments.json">Download the versioned machine-readable assessment registry</a> · <a href="{base}/schema/model-assessment.schema.json">JSON Schema</a></p></section>
+</section>"""
+    canonical = f"{canonical_url}/assessments/" if canonical_url else ""
+    return page_shell(title="Model assessments — ARR", description="Version-locked longitudinal frontier-model assessments and the ARR scientific ranking.", content=content, base=base, canonical=canonical)
+
+
+def build_support(base: str, canonical_url: str) -> str:
+    paypal_script = '<script defer src="https://www.paypalobjects.com/donate/sdk/donate-sdk.js" charset="UTF-8"></script>'
+    content = f"""
+<section class="support-page">
+  <header><span>Voluntary support · no editorial influence</span><h1>Support the ARR registry</h1><p>ARR currently charges EUR 0.00 for submission, assessment, publication and withdrawal. Voluntary support helps maintain infrastructure, preservation and the operator's registry work.</p></header>
+  <div class="support-grid"><section><h2>Independence is non-negotiable</h2><p>A donation cannot accelerate review, buy acceptance, affect a model score, ranking or editorial highlight, or alter an appeal. It is not a publication fee and ARR makes no tax-deductibility representation.</p><p>PayPal processes the payment under its own terms and privacy notice and may charge transaction fees. The PayPal component loads only on this page.</p><p><a href="https://github.com/arr-research/arr-research.github.io/blob/main/docs/DONATIONS_POLICY.md">Read ARR-SUPPORT-1.0</a></p></section><aside><h2>Donate with PayPal</h2><div id="paypal-donate-button-container"><noscript>JavaScript is required to load PayPal's official donation control.</noscript></div><p class="support-contact">Payment and refund questions: <a href="mailto:lluiseriksson@gmail.com?subject=ARR%20support">lluiseriksson@gmail.com</a></p></aside></div>
+</section>
+<script>window.addEventListener('DOMContentLoaded',function(){{if(window.PayPal&&PayPal.Donation){{PayPal.Donation.Button({{env:'production',business:'lluiseriksson@gmail.com',image:{{src:'https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif',title:'Support ARR with PayPal',alt:'Donate to ARR with PayPal'}}}}).render('#paypal-donate-button-container');}}}});</script>"""
+    canonical = f"{canonical_url}/support/" if canonical_url else ""
+    return page_shell(title="Support ARR", description="Voluntary support for ARR with no influence on editorial decisions or rankings.", content=content, base=base, canonical=canonical, head_extra=paypal_script)
 
 
 def build_about(base: str, canonical_url: str) -> str:
@@ -699,10 +834,11 @@ def build_about(base: str, canonical_url: str) -> str:
 <section class="about-grid">
   <article><h2>What ARR is</h2><p>A versioned archive of research papers and concise technical notes, with canonical manuscripts, machine-readable renditions, code, formalizations, data descriptions and explicit verification records.</p></article>
   <article><h2>Two publication types</h2><p>Research papers present complete scholarly arguments at paper scale. Technical notes preserve narrower but rigorous results, proofs, formalizations, methods, replications, negative results, software or protocols. A note is different in scope, not exempt from evidence or integrity requirements.</p></article>
-  <article><h2>What ARR is not</h2><p>ARR is not a journal, a replacement for expert peer review, a ranking of scientific quality or a guarantee that a scientific claim is true. Public activity tables report use signals only.</p></article>
+  <article><h2>What ARR is not</h2><p>ARR is not a journal, a replacement for expert peer review or a guarantee that a scientific claim is true. Activity rankings measure use; the separate scientific ranking reports version-locked model opinions with their provenance and limits.</p></article>
   <article><h2>Governance</h2><p>Lluis Eriksson is founder, registry operator, responsible editor and data controller. Every decision is human. His conflicted or author-owned work requires a disclosed independent editor before publication.</p></article>
   <article><h2>Preservation</h2><p>Stable identifiers are independent of GitHub. Versioned releases distribute generated and large files; future object storage and independent preservation mirrors can replace any provider without changing citations.</p></article>
-  <article><h2>Submissions</h2><p>ARR does not currently charge a submission or publication fee. Authors use one direct private form without requesting an invitation. Manuscripts enter a separate quarantine service; GitHub and ordinary email are never manuscript channels.</p></article>
+  <article><h2>Submissions</h2><p>ARR does not currently charge for submission, assessment, publication or withdrawal. Authors use one direct private form without requesting an invitation. Manuscripts enter a separate quarantine service; GitHub and ordinary email are never manuscript channels.</p></article>
+  <article><h2>Frontier-model record</h2><p>New admissions require hostile, exact-version model screening before the human decision. Published assessments remain comparable over time: model, date, score, strengths, weaknesses, possible errors and novelty candidates are preserved rather than overwritten.</p></article>
 </section>
 """
     canonical = f"{canonical_url}/about/" if canonical_url else ""
@@ -754,8 +890,10 @@ def build_submit(
     metrics: dict | None = None,
     author_lookup: dict[str, dict] | None = None,
     page_number: int = 1,
+    assessments: list[dict] | None = None,
 ) -> str:
     metrics = metrics or {"views": {"available": False}, "papers": {}}
+    assessments = assessments or []
     ranked, metric_key, metric_label = ranked_submit_papers(papers or [], metrics)
     page_size = 50
     page_count = max(1, (len(ranked) + page_size - 1) // page_size)
@@ -791,7 +929,7 @@ def build_submit(
         rows.append(f"""
 <li class="ranked-paper">
   <span class="rank-number">{rank:02d}</span>
-  <div class="rank-paper-main"><span class="rank-record">{esc(record_details)}</span><h3><a href="{base}/{record_route(paper.metadata)}/{quote(paper.id)}/">{esc(paper.metadata['title'])}</a></h3><p>{authors}{keywords_html}</p></div>
+  <div class="rank-paper-main"><span class="rank-record">{esc(record_details)}</span><h3><a href="{base}/{record_route(paper.metadata)}/{quote(paper.id)}/">{esc(paper.metadata['title'])}</a></h3><p>{authors}{keywords_html}</p><div class="rank-assessment">{assessment_badge(paper, assessments, f'{base}/{record_route(paper.metadata)}/{quote(paper.id)}/#model-assessments')}</div></div>
   <div class="rank-metric"><strong>{value:,}</strong><span>{esc(metric_label)}</span></div>
 </li>""")
     if not rows:
@@ -829,33 +967,35 @@ def build_submit(
 
 def build_privacy(base: str, canonical_url: str) -> str:
     content = f"""
-<section class="page-intro"><span>ARR-PRIVACY-1.1 · effective 2026-08-30</span><h1>Privacy is separated from publication.</h1><p>The controller is Lluis Eriksson, a natural person in Stockholm, Sweden, acting as founder, registry operator and responsible editor. Contact: <a href="mailto:lluiseriksson@gmail.com?subject=ARR%20privacy">lluiseriksson@gmail.com</a>. No DPO is designated.</p></section>
+<section class="page-intro"><span>ARR-PRIVACY-1.2 · effective 2026-08-30</span><h1>Privacy is separated from publication.</h1><p>The controller is Lluis Eriksson, a natural person in Stockholm, Sweden, acting as founder, registry operator and responsible editor. Contact: <a href="mailto:lluiseriksson@gmail.com?subject=ARR%20privacy">lluiseriksson@gmail.com</a>. No DPO is designated.</p></section>
 <section class="about-grid">
   <article><h2>Private data</h2><p>ARR processes the adult depositor's name and email, submission metadata and PDF, declarations, decisions, correspondence and pseudonymized security events to administer the deposit agreement and protect the service. Direct submission requires no author account.</p></article>
-  <article><h2>No automated editorial decision</h2><p>Format and malware controls may keep a file quarantined. Acceptance or rejection is human. Private manuscripts are never sent to an AI provider by default; a named-provider notice and reconfirmed optional consent are required first.</p></article>
+  <article><h2>Frontier-model screening</h2><p>Acceptance remains human, but the disclosed pre-publication protocol requires version-locked external frontier-model reports. The form records transfer authorization; ARR records provider, model, time and response hash and uses appropriate confidentiality and transfer controls.</p></article>
   <article><h2>Retention</h2><p>Malware bytes are erased immediately, withdrawn PDFs after 7 days, declined PDFs after 30 days, and accepted private copies 30 days after verified public release. A minimal decision record is retained for three years, subject to narrowly reviewed legal hold.</p></article>
   <article><h2>Public-site measurement</h2><p>ARR currently runs no per-page visitor analytics and sets no analytics cookies. Displayed PDF-download totals come from public GitHub release-asset counters and do not identify readers to ARR. The notice will be updated before any page-view provider is enabled.</p></article>
   <article><h2>Your rights</h2><p>Applicable rights include access, correction, erasure, restriction, portability and objection. You can complain to Sweden's IMY or another competent EEA authority. Requests receive proportionate identity verification.</p></article>
+  <article><h2>Voluntary support</h2><p>PayPal loads only on the support page. If you donate, PayPal provides transaction data to the operator for payment, refund, fraud, accounting and legal administration. Donors are not profiled, ranked or given editorial influence.</p></article>
 </section>
-<section class="callout"><h2>Complete binding notice</h2><p><a href="{policy_source('PRIVACY_NOTICE.md')}">Read ARR-PRIVACY-1.1 in full</a>. The accepted version is recorded with each deposit.</p></section>
+<section class="callout"><h2>Complete binding notice</h2><p><a href="{policy_source('PRIVACY_NOTICE.md')}">Read ARR-PRIVACY-1.2 in full</a>. The accepted version is recorded with each deposit.</p></section>
 """
     canonical = f"{canonical_url}/privacy/" if canonical_url else ""
-    return page_shell(title="Privacy — ARR", description="ARR-PRIVACY-1.1 privacy notice for direct private manuscript intake.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Privacy — ARR", description="ARR-PRIVACY-1.2 privacy notice for direct private manuscript intake.", content=content, base=base, canonical=canonical)
 
 
 def build_terms(base: str, canonical_url: str) -> str:
     content = f"""
-<section class="page-intro"><span>ARR-DEPOSIT-1.2 · effective 2026-08-30</span><h1>There is currently no ARR deposit fee.</h1><p>ARR does not currently charge for submission, assessment, publication or withdrawal. A future fee may apply only after advance notice and new terms, never retroactively or in exchange for acceptance. The operator is Lluis Eriksson in Stockholm, Sweden.</p></section>
+<section class="page-intro"><span>ARR-DEPOSIT-1.3 · effective 2026-08-30</span><h1>There is currently no ARR deposit fee.</h1><p>ARR does not currently charge for submission, assessment, publication or withdrawal. A future fee may apply only after advance notice and new terms, never retroactively or in exchange for acceptance. The operator is Lluis Eriksson in Stockholm, Sweden.</p></section>
 <section class="about-grid">
   <article><h2>Authority and scope</h2><p>Adult depositors must be an author, rights holder or authorized agent and accurately disclose rights, authorship, AI assistance, interests, third-party material, provenance and licenses. The pilot accepts one PDF up to 25 MiB.</p></article>
   <article><h2>Private first</h2><p>An upload enters quarantine and carries no public license. ARR may decline, request changes, restrict or remove material. Submission creates no entitlement to a timetable, publication, preservation or endorsement.</p></article>
+  <article><h2>Model gate</h2><p>Acceptance requires three distinct frontier-model reports tied to the exact private PDF. A non-accept recommendation or unresolved material objection blocks acceptance. The human editor makes and signs the final decision.</p></article>
   <article><h2>Publication rights</h2><p>Copyright remains with its owner. A final accepted version receives explicit scoped licenses before public release. Public copies and open licenses may be irreversible; withdrawal cannot recall third-party copies.</p></article>
   <article><h2>Appeal and conflict</h2><p>A decline or restriction may be appealed once within 30 days. A conflicted founder approval is provisional and an unconflicted independent editor must sign before publication.</p></article>
 </section>
-<section class="callout"><h2>Complete binding terms</h2><p><a href="{policy_source('DEPOSIT_TERMS.md')}">Read ARR-DEPOSIT-1.2 in full</a>. Only the private form is a deposit channel; email and GitHub issues are not.</p></section>
+<section class="callout"><h2>Complete binding terms</h2><p><a href="{policy_source('DEPOSIT_TERMS.md')}">Read ARR-DEPOSIT-1.3 in full</a>. Only the private form is a deposit channel; email and GitHub issues are not.</p></section>
 """
     canonical = f"{canonical_url}/terms/" if canonical_url else ""
-    return page_shell(title="Deposit terms — ARR", description="ARR-DEPOSIT-1.2 terms for the currently fee-free direct private-submission pilot.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Deposit terms — ARR", description="ARR-DEPOSIT-1.3 terms for the currently fee-free direct private-submission pilot.", content=content, base=base, canonical=canonical)
 
 
 def build_governance(base: str, canonical_url: str) -> str:
@@ -943,10 +1083,12 @@ def write_sitemaps(papers: list, groups: dict, profiles: list[dict], canonical_u
         (f"{canonical_url}/notes/", latest_date),
         (f"{canonical_url}/authors/", latest_date),
         (f"{canonical_url}/rankings/", latest_date),
+        (f"{canonical_url}/assessments/", latest_date),
         (f"{canonical_url}/protocol/", latest_date),
         (f"{canonical_url}/submit/", latest_date),
         (f"{canonical_url}/licensing/", latest_date),
         (f"{canonical_url}/about/", latest_date),
+        (f"{canonical_url}/support/", latest_date),
         (f"{canonical_url}/privacy/", latest_date),
         (f"{canonical_url}/terms/", latest_date),
         (f"{canonical_url}/governance/", latest_date),
@@ -995,6 +1137,7 @@ def write_llm_guides(papers: list, canonical_url: str) -> None:
         f"- [Partition index]({canonical_url}/catalog/index.json)",
         f"- [Sitemap]({canonical_url}/sitemap.xml)",
         f"- [Verification protocol]({canonical_url}/protocol/)",
+        f"- [Model assessments]({canonical_url}/registry/model-assessments.json)",
         "",
         "## Current records",
         "",
@@ -1045,9 +1188,21 @@ def main() -> int:
     try:
         profiles, author_lookup = load_authors(papers)
         metrics = load_metrics(args.metrics_file)
+        assessment_registry = load_assessment_registry()
+        highlight_registry = load_highlight_registry()
     except (OSError, ValueError, json.JSONDecodeError) as error:
         print(f"Cannot build site: {error}", file=sys.stderr)
         return 1
+    assessment_errors = validate_registry(assessment_registry, all_versions)
+    highlight_errors = validate_highlights(highlight_registry, all_versions)
+    if assessment_errors or highlight_errors:
+        print("Cannot build site: assessment registry validation failed.", file=sys.stderr)
+        for error in assessment_errors + highlight_errors:
+            print(error, file=sys.stderr)
+        return 1
+    assessments = assessment_registry["assessments"]
+    highlights = highlight_registry["highlights"]
+    highlight_lookup = {(item["paper_id"], item["version"]): item for item in highlights}
     by_author = papers_by_author(profiles, papers)
     record_routes = {paper.id: record_route(paper.metadata) for paper in papers}
     incoming_relations: dict[str, list[dict]] = defaultdict(list)
@@ -1072,14 +1227,19 @@ def main() -> int:
     shutil.copy2(ROOT / "schema" / "record-timestamps.schema.json", OUTPUT_DIR / "schema" / "record-timestamps.schema.json")
     shutil.copy2(ROOT / "schema" / "authors.schema.json", OUTPUT_DIR / "schema" / "authors.schema.json")
     shutil.copy2(ROOT / "schema" / "metrics.schema.json", OUTPUT_DIR / "schema" / "metrics.schema.json")
+    shutil.copy2(ROOT / "schema" / "model-assessment.schema.json", OUTPUT_DIR / "schema" / "model-assessment.schema.json")
+    shutil.copy2(ROOT / "schema" / "editorial-highlight.schema.json", OUTPUT_DIR / "schema" / "editorial-highlight.schema.json")
     (OUTPUT_DIR / "registry").mkdir(parents=True)
     shutil.copy2(ROOT / "registry" / "record-timestamps.json", OUTPUT_DIR / "registry" / "record-timestamps.json")
+    shutil.copy2(ROOT / "registry" / "model-assessments.json", OUTPUT_DIR / "registry" / "model-assessments.json")
+    shutil.copy2(ROOT / "registry" / "editorial-highlights.json", OUTPUT_DIR / "registry" / "editorial-highlights.json")
 
     write(OUTPUT_DIR / "index.html", build_home(papers, timestamps, base, canonical_url, author_lookup, metrics, len(profiles)))
     write(OUTPUT_DIR / "papers" / "index.html", build_papers_index(papers, timestamps, base, canonical_url, author_lookup, metrics))
     write(OUTPUT_DIR / "notes" / "index.html", build_notes_index(papers, timestamps, base, canonical_url, author_lookup, metrics))
     write(OUTPUT_DIR / "authors" / "index.html", build_authors_index(profiles, by_author, metrics, base, canonical_url))
     write(OUTPUT_DIR / "rankings" / "index.html", build_rankings(profiles, by_author, papers, metrics, base, canonical_url))
+    write(OUTPUT_DIR / "assessments" / "index.html", build_assessments(papers, assessments, highlights, base, canonical_url, author_lookup))
     for profile in profiles:
         write(OUTPUT_DIR / "authors" / profile["id"] / "index.html", build_author_page(profile, by_author[profile["id"]], timestamps, metrics, author_lookup, base, canonical_url))
     write(OUTPUT_DIR / "protocol" / "index.html", build_protocol(base, canonical_url))
@@ -1096,10 +1256,12 @@ def main() -> int:
                 metrics,
                 author_lookup,
                 page_number,
+                assessments,
             ),
         )
     write(OUTPUT_DIR / "licensing" / "index.html", build_licensing(base, canonical_url))
     write(OUTPUT_DIR / "about" / "index.html", build_about(base, canonical_url))
+    write(OUTPUT_DIR / "support" / "index.html", build_support(base, canonical_url))
     write(OUTPUT_DIR / "privacy" / "index.html", build_privacy(base, canonical_url))
     write(OUTPUT_DIR / "terms" / "index.html", build_terms(base, canonical_url))
     write(OUTPUT_DIR / "governance" / "index.html", build_governance(base, canonical_url))
@@ -1123,6 +1285,8 @@ def main() -> int:
                 args.repository,
                 author_lookup,
                 metrics,
+                assessments,
+                highlight_lookup.get((paper.id, paper.version)),
             ),
         )
         for version in groups[paper.id]:
@@ -1142,6 +1306,8 @@ def main() -> int:
                     args.repository,
                     author_lookup,
                     metrics,
+                    assessments,
+                    highlight_lookup.get((version.id, version.version)),
                 ),
             )
 
