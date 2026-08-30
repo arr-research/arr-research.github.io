@@ -1,0 +1,1858 @@
+The Schwarzian Bridge in a Single Sigmoid Neuron
+       Oracle Gram Resolution and Spherical Saturation Phases
+
+                                      Lluis Eriksson
+                                  Independent Researcher
+                                lluiseriksson@gmail.com
+
+                                            August 2026
+
+
+                                                Abstract
+      A sigmoid is increasing on scalars, yet its bend controls two different geometries.
+  The classical Schwarzian criterion implies that a negative-Schwarzian activation is not
+  matrix-monotone of order two. We give a closed logistic formula showing every distinct two-
+  point Löwner determinant to be negative, a dimension-minimal 2 × 2 positive-semidefinite
+  perturbation witness certified with interval arithmetic, and the corresponding classical
+  serial-chain consequence.
+      Our central link is that the same local invariant determines the leading quadratic onset
+  coefficient of saturation anisotropy. At a centered inflection of an increasing activation g,
+  for a sensitivity hp = (g 0 )p and isotropic spherically symmetric input X,
+
+                                                                           EkXk4
+                    κp,X (r) = 1 − qX p Sg(0)r2 + O(r4 ),           qX =            .
+                                                                           d(d + 2)
+  The Gaussian coefficient is the special case qX = 1. The adjacent-point Löwner determinant
+  is g 0 (0)2 Sg(0)δ 2 /6 + O(δ 3 ). Negative Schwarzian therefore simultaneously gives local
+  noncommutative order failure and positive initial radial–tangential anisotropy. We turn
+  the equality of limits into a finite-scale inequality with explicit constants determined by
+  derivative suprema and input moments.
+      For isotropic Gaussian inputs in dimension d ≥ 2, population curvature at a teacher
+  of norm r has one radial eigenvalue and d − 1 equal tangential eigenvalues. For any
+  nonnegative sensitivity profile h with finite defining expectations, these eigenvalues are
+  exactly
+                    αh (r) = Eh(rZ),       βh (r) = E[Z 2 h(rZ)],  Z ∼ N (0, 1),
+  and, if its zeroth and second Lebesgue moments are finite and positive,
+                                        ϕ(0)m0                     ϕ(0)m2
+                            αh (r) ∼           ,        βh (r) ∼          .
+                                           r                         r3
+  Thus saturation suppresses magnitude information by two additional powers: the radial–
+  tangential ratio obeys αh (r)/βh (r) ∼ (m0 /m2 )r2 . For every real p > 0 and hp = σ 0p , we
+  prove strict monotonicity and the unified identities
+              Γ(p)2                   r2                       p    p     p(p + 1) 6
+   m0 (p) =         ,    κp (r) ∼           ,      κp (r) = 1 + r2 − r4 +         r + O(r8 ).
+              Γ(2p)                 2ψ1 (p)                    2    8        16
+  For n samples we prove an explicit two-sided relative Löwner bound for the fixed-teacher
+  oracle weighted Gram matrix. A conditional-Gaussian lower bound shows that the sample
+  complexity of this specific loss is sharply
+                                                          
+                                           r[d + log(1/δ)]
+                                      Θp                     .
+                                                  ε2
+  The factor rd is intrinsic: a tangential off-diagonal column has d − 2 coordinates and
+  normalized variance of order r/n. We also give a uniform full-dyadic-shell extension and
+
+                                                    1
+
+
+
+concrete sufficient constants C1 = 22929 and C2 = 294162. The weaker bottom-eigenspace
+        target has a different extreme-saturation law: its empirical projector converges to the
+        normal of the d − 1 samples nearest the transition hyperplane, with exact angle distribution
+        tan θ∞ = kζk/|G|, matching Θ(d3/2 /ε) complexity at fixed nondegenerate confidence, and
+                d
+
+        matching 1/δ dependence in the theorem’s stated confidence range.
+           The quadratic saturation law extends beyond Gaussian inputs. If X = RU is isotropic
+        spherical, ER−1 < ∞, then
+                                             m0 2                      ER
+                               κh (r) ∼ QR      r ,       QR =                .
+                                             m2                   (d − 1)ER−1
+        Gaussian, fixed-sphere and isotropic Student inputs give respectively QR = 1, d/(d − 1)
+        and (ν − 2)/(ν − 1). For radii with density fR (ρ) ∼ cρa−1 at zero, we prove exact leading
+        constants in all three phases: r−(a+2) for 0 < a < 1, r−3 log r at a = 1, and r−3 for a > 1.
+        An autonomous Abelian kernel lemma handles the critical boundary, and deterministic
+        quadrature exhibits all three phases. We also give an isotropic Rademacher counterexample.
+        These claims refine, but do not replace, prior one-sided and bilateral Hessian results and
+        recent labeled-estimation theory. Deterministic replays, a fixed-seed finite-sample phase
+        diagram and an immutable public source record accompany the proofs.
+
+Keywords. single neuron; sigmoid; matrix monotonicity; Löwner order; Schwarzian deriva-
+tive; Fisher information; spherical design; weighted sample covariance; finite-sample concentra-
+tion.
+
+
+1     Question, result, and claim boundary
+The scalar logistic curve is
+                                          1                       1
+                              σ(s) =           ,      σ 0 (s) =     sech2 (s/2).
+                                       1 + e−s                    4
+It is strictly increasing, so larger scalar scores produce larger outputs. We first ask whether
+this order survives spectral functional calculus on noncommuting matrices. It does not, at the
+smallest possible matrix size and on every interval. We then return to the ordinary teacher
+neuron σ(w?> X) with X ∼ N (0, Id ). There, a perturbation perpendicular to w? rotates the
+separating hyperplane, while a parallel perturbation changes its confidence scale and must
+be detected through samples near the transition layer. Our goal is to compute both failures
+exactly.
+    The main contributions are:
+    1. a closed logistic specialization of the classical negative-Schwarzian obstruction, proving
+       directly that every nontrivial two-point Löwner matrix is indefinite;
+
+    2. a dimension-minimal 2 × 2 witness A  B but σ(A)  σ(B), with outward-rounded
+       eigenvalue certification, and a Löwner-order reformulation of the known serial-composition
+       consequence;
+
+    3. a spherical-input Schwarzian bridge equating the local order defect with the leading
+       radial–tangential anisotropy, including its exact fourth-moment multiplier qX ;
+
+    4. an explicit finite-scale bridge bounding the discrepancy between the normalized Löwner
+       determinant and anisotropy at nonzero (δ, r);
+
+    5. a profile-generic two-eigenvalue refinement under Gaussian design, with finite-r brackets
+       and, for every p > 0, closed moments, strict ratio monotonicity and exact endpoint laws
+       for hp = σ 0p ;
+
+                                                      2
+
+
+
+6. a two-sided relative concentration theorem for the fixed-teacher oracle sensitivity matrix,
+       with a matching r[d + log(1/δ)]/ε2 lower bound for bilateral relative Loewner loss, explicit
+       constants for p = 1, 2, an autonomous high-confidence lower-tail lemma, and a uniform
+       full-dyadic-shell extension;
+
+    7. a spectral-lexicography theorem for the weaker bottom-eigenspace target, including an
+       exact limiting angle law, matching Θ(d3/2 /ε) complexity at fixed nondegenerate confidence,
+       and an explicit high-confidence range in the iterated extreme-saturation experiment;
+
+    8. a spherical saturation theorem with exact asymptotic radius factor QR , an elliptical
+       whitening corollary, and exact constants and a critical logarithmic law for radii regularly
+       varying at zero; and
+
+    9. exact local consequences for stationary fixed-step optimization and estimation, plus a
+       documented replay sequence of the identities, interval witness, inequalities, and figure.
+
+    The matrix-order theorem concerns spectral functional calculus σ(A), not entrywise activa-
+tion of a vector. The radial theorem is not a claim about deep networks, global optimization,
+implicit bias, or arbitrary inputs. Its local coefficient and its large-saturation law extend
+from Gaussian to spherical inputs under different, stated moment hypotheses. The two ques-
+tions meet at a precise boundary: scalar monotonicity controls neither noncommuting PSD
+perturbations nor the conditioning of parameter directions.
+
+
+2      A sigmoid is not an order-preserving operator
+For Hermitian matrices, A  B means that B − A is positive semidefinite. A scalar function
+f is matrix-monotone of order two on an interval J if f (A)  f (B) for every pair of 2 × 2
+Hermitian matrices with spectra in J and A  B, where f (A) is defined by spectral functional
+calculus. If A and B commute, scalar monotonicity is sufficient because they are simultaneously
+diagonalizable. The question is what happens without commutativity.
+    For distinct x, y ∈ J, define the two-point Löwner matrix
+                                                       f (x) − f (y)
+                                                                    
+                                             f 0 (x)
+                           Lf (x, y) =  f (x) − f (y)     x−y                              (1)
+                                                                     .
+                                                                    
+                                                           f 0 (y)
+                                             x−y
+The fixed-order Löwner criterion says that matrix monotonicity of order two requires Lf (x, y) 
+0 for every pair [1, 2]. The equivalent local criterion Sf ≥ 0 for increasing smooth functions
+is classical [3, Lemma 10]; the result below is an explicit logistic specialization, not a new
+qualitative matrix-monotonicity criterion.
+    Cook, Hammerlindl and Tucker define
+                                                                   2
+                                          0    0          x−y
+                             χf (x, y) = f (x)f (y)
+                                                      f (x) − f (y)
+
+and study the class χf ≤ 1, including sigmoid activations and serial compositions [4]. If
+Df (x, y) = (f (x) − f (y))/(x − y), then
+
+                              det Lf (x, y) = Df (x, y)2 [χf (x, y) − 1].                      (2)
+
+Thus their two-point inequality is algebraically the nonpositive Löwner-determinant inequality.
+Our contribution in this subsection is the strict closed logistic identity and the certified matrix
+witness, not the underlying Schwarzian/composition mechanism.
+
+                                                  3
+
+
+
+Theorem 2.1 (closed logistic two-point determinant). Let
+                                                  1
+                                sα,b (x) =                  ,            α > 0.
+                                             1 + e−α(x−b)
+For every x 6= y, the Löwner matrix Lsα,b (x, y) has negative determinant. Consequently the
+logistic activation is not matrix-monotone of order two on any nondegenerate interval.
+
+Proof. Put u = eα(x−b) , v = eα(y−b) , and r = v/u = eα(y−x) . Direct cancellation gives the
+exact identity
+                                              α2 u2            (r − 1)2
+                                                                       
+                    det Lsα,b (x, y) =                      r−            .               (3)
+                                        (1 + u)2 (1 + v)2      (log r)2
+For r 6= 1, write t = log r. Strict convexity of sinh on (0, ∞) gives
+                                                                  √
+                         |r − 1| = 2et/2 | sinh(t/2)| > et/2 |t| = r | log r|.
+
+The bracket in (3) is therefore strictly negative. Every nondegenerate interval contains a
+distinct pair, so the Löwner criterion completes the proof.
+
+    This is stronger than finding one bad scale: changing the slope α, shifting the bias b,
+or restricting the score range never removes the obstruction. It also identifies the precise
+failure. The diagonal entries in (1) are positive, but the divided difference is too large for their
+geometric mean.
+
+Proposition 2.2 (dimension-minimal explicit PSD witness). For the standard logistic sigmoid,
+let                                                           
+                           −1/2 0                      1    1 1
+                    A=                 ,     B =A+                 .                     (4)
+                            0    1/2                  100 1 1
+Then A  B but σ(A)  σ(B). At 256-bit outward-rounded Arb precision,
+
+                       spec(B) ⊂ [−0.4901000, −0.4900999] ∪ [0.5100999, 0.5101000],                   (5)
+           spec(σ(B) − σ(A)) ⊂ [−9.9150, −9.9147] 10−5 ∪ [0.0047990, 0.0047992],                      (6)
+            det(σ(B) − σ(A)) ∈ [−4.7583, −4.7581] 10            −7
+                                                                     .                                (7)
+
+Proof. B − A has eigenvalues 0 and 1/50. If a = 1/2, ε = 1/100, and d = (a2 + ε2 )1/2 , then B
+has eigenvalues λ± = ε ± d and
+
+                                                 σ(λ+ ) + σ(λ− )                  σ(λ+ ) − σ(λ− )
+           σ(B) = mI + n(B − εI),         m=                     ,           n=                   .
+                                                        2                               2d
+Substitution reduces the three enclosures to scalar exponential and square-root balls. The
+replay evaluates them with directed Arb rounding; the negative eigenvalue in (6) proves the
+claim.
+
+   The witness is illustrative, while Theorem 2.1 is the proof for every interval. The derivative
+form also explains why an indefinite Löwner matrix produces witnesses: for diagonal A =
+diag(x, y), the Fréchet derivative in the all-ones PSD direction is precisely the Schur product
+with Lf (x, y).
+
+
+
+
+                                                   4
+
+
+
+2.1   Serial depth does not repair the order
+For a C 3 function with nonzero derivative, its Schwarzian is
+                                                                   2
+                                             f 000 3        f 00
+                                                        
+                                      Sf =        −                     .                    (8)
+                                             f0     2       f0
+
+The logistic sigmoid and a scaled hyperbolic tangent satisfy
+
+                                      α2
+                          Ssα,b = −      ,     S tanh(αx + β) = −2α2 .                       (9)
+                                      2
+Corollary 2.3 (serial spectral reformulation). Let F be a finite scalar composition of positive-
+slope affine maps and at least one increasing logistic or hyperbolic-tangent activation. Then
+SF < 0 everywhere, and F is not matrix-monotone of order two on any nondegenerate interval.
+
+Proof. The composition identity
+
+                                 S(f ◦ g) = (Sf ◦ g)(g 0 )2 + Sg                            (10)
+
+and (9) give SF < 0, since positive affine maps have zero Schwarzian and all derivatives in the
+chain are positive. For h → 0, Taylor expansion of the two-point determinant gives
+
+                                               F 0 (x)2
+                         det LF (x, x + h) =            SF (x) h2 + O(h3 ).                 (11)
+                                                   6
+It is negative for all sufficiently small nonzero h. Every interval contains such a pair.
+
+    The corollary restates, in spectral Löwner order, the serial closure proved in the nowhere-
+coexpanding framework [4]. It is deliberately about serial scalar chains. It does not cover
+sums of neurons, skip connections, multivariate architectures, or entrywise coordinate order.
+Its content is that composing more of the same S-shaped bend cannot turn the resulting scalar
+function into a PSD-order-preserving spectral activation.
+
+
+3     Two models, one sensitivity matrix
+Write r = kw? k and u = w? /r when r > 0. We use two standard observation models.
+
+Squared-output regression.        For the realizable population loss
+                                      1 
+                                                                                            (12)
+                                                           2
+                             Lsq (w) = E σ(w> X) − σ(w?> X) ,
+                                      2
+the residual vanishes at w? , so its Hessian is the Gauss–Newton matrix
+
+                                 Hsq (w? ) = E σ 0 (w?> X)2 XX > .                          (13)
+                                                               
+
+
+The same matrix, divided by a known output-noise variance τ 2 , is the Fisher information of
+Y = σ(w?> X) + ε, ε ∼ N (0, τ 2 ).
+
+
+
+
+                                                 5
+
+
+
+Bernoulli logistic neuron. If Y | X ∼ Bernoulli(σ(w?> X)), the expected negative-log-
+likelihood Hessian and the Fisher information coincide:
+                               HB (w? ) = E σ 0 (w?> X)XX > .                   (14)
+                                                          
+
+    Both are instances of the sensitivity matrix
+                          Hh (r, u) := E h(ru> X)XX > ,                                       (15)
+                                                    
+                                                                   h ≥ 0.
+The power of the reduction below is that no high-dimensional integration remains.
+    Amari, Karakida and Oizumi already derived the exact one-unit Gaussian Fisher decompo-
+sition for h = φ02 , including the radial–tangential split and the bias block [24]. We do not claim
+that decomposition or the squared-output branch as new. For the Bernoulli profile h = σ 0 ,
+Chen and Mazumdar recently identified the same radial and orthogonal Hessian functions and
+proved their r−3 and r−1 orders in a finite-sample analysis  p of logistic regression [15]. Their
+follow-up proves the minimax norm-estimation rate Θ( r3 /n) [16]. We do not claim those
+exponents or the Bernoulli optimization penalty as new. The purpose of the next sections is to
+isolate the profile-generic mechanism, give finite-radius brackets and exact logistic constants,
+prove strict monotonicity of both eigenvalue ratios, and connect their small-r coefficients to
+the Schwarzian order defect.
+
+
+4    Universal Gaussian saturation theorem
+Let ϕ(z) = (2π)−1/2 e−z /2 and define the even sensitivity moments
+                          2
+
+                                       Z
+                             mj (h) :=    tj h(t) dt (j = 0, 2, 4),
+                                            R
+whenever finite. Evenness of h is not needed for the spectral reduction or leading asymptotics,
+but it holds in our sigmoid applications and makes the interpretation symmetric.
+Theorem 4.1 (exact spectrum and finite-r brackets). Let d ≥ 2, X ∼ N (0, Id ), r > 0,
+u ∈ S d−1 , and let h : R → [0, ∞) be measurable with E[(1 + Z 2 )h(rZ)] < ∞. Then
+                              Hh (r, u) = αh (r)(I − uu> ) + βh (r)uu> ,                      (16)
+where
+                 αh (r) = Eh(rZ),         βh (r) = E[Z 2 h(rZ)],     Z ∼ N (0, 1).            (17)
+If m0 , m2 < ∞ and are positive, then
+                        ϕ(0)m0                   ϕ(0)m2                  αh (r)   m0 2
+             αh (r) ∼          ,      βh (r) ∼          ,    κh (r) :=          ∼    r .      (18)
+                           r                       r3                    βh (r)   m2
+If m0 , m2 , m4 < ∞, the following nonasymptotic brackets hold for every r > 0:
+                             ϕ(0)       m2             ϕ(0)m0
+                                    m0 − 2 ≤ αh (r) ≤            ,                            (19)
+                               r         2r                  r
+                             ϕ(0)       m4             ϕ(0)m2
+                                3
+                                    m2 −    2
+                                              ≤ βh (r) ≤         .                            (20)
+                              r          2r                 r3
+Negative lower endpoints are interpreted as valid but uninformative bounds.
+Proof. Decompose X = Zu + Y , where Z ∼ N (0, 1), Y ∼ N (0, I − uu> ), and Z, Y are
+independent. The mixed terms vanish and EY Y > = I − uu> , giving (16)–(17). Changing
+variables t = rz gives the exact one-dimensional formulae
+                           Z                                    Z
+                      ϕ(0)                                 ϕ(0)
+                                   −t2 /(2r2 )
+                                                                                         (21)
+                                                                             2    2
+             αh (r) =         h(t)e            dt, βh (r) = 3      t2 h(t)e−t /(2r ) dt.
+                       r    R                               r    R
+Dominated convergence proves (18). Finally, 1 − x ≤ e−x ≤ 1 for x ≥ 0 inserted into (21)
+proves (19)–(20).
+
+                                                   6
+
+
+
+5    Spherical saturation beyond Gaussian design
+The Gaussian density at the transition hyperplane is not the essential constant. Let X = RU
+be spherically symmetric, where U is uniform on S d−1 and independent of the radius R.
+Isotropy is exactly ER2 = d. Write
+                                    Γ(d/2)                              ER
+                        cd = √                  ,       QR =                   .
+                                 π Γ((d − 1)/2)                    (d − 1)ER−1
+Theorem 5.1 (spherical saturation with exact asymptotic constants). Let d ≥ 2, R > 0
+almost surely, ER2 = d and ER−1 < ∞. Let h ≥ 0 have 0 < m0 , m2 < ∞. For d = 2,
+additionally assume h(t) ≤ Ce−a|t| ; no additional condition is needed when d ≥ 3. Then
+                             cd ER m0                                              m2
+                 αh,X (r) ∼            ,                     βh,X (r) ∼ cd ER−1       ,        (22)
+                             d−1 r                                                 r3
+                                 m0 2
+                  κh,X (r) ∼ QR     r .                                                        (23)
+                                 m2
+For hp = σ 0p and every p > 0,
+                                                      QR 2
+                                       κp,X (r) ∼            r .                               (24)
+                                                     2ψ1 (p)
+Proof. Put T = u> U . Its density is cd (1 − t2 )(d−3)/2 1(−1,1) (t), and conditional on T = t every
+unit transverse coordinate has second moment (1 − t2 )/(d − 1). Changing variables s = rRT
+gives the exact identities
+                                      " Z                             (d−1)/2 #
+                                                                s2
+                                                       
+                                 cd
+                   rαh,X (r) =       E R           h(s) 1 − 2 2               ds ,              (25)
+                               d−1          |s|<rR            r R
+                                   "                                  (d−3)/2 #
+                                                                  s2
+                                         Z              
+                   3
+                  r βh,X (r) = cd E R −1          2
+                                                 s h(s) 1 − 2 2                ds .             (26)
+                                          |s|<rR               r R
+
+The first integrand is dominated by Rm0 . For d ≥ 3 the second is dominated by R−1 m2 .
+For d = 2, splitting its inner integral at |s| = rR/2 gives a uniform bound from exponential
+localization; the boundary contribution is bounded by a constant times (rR)3 e−arR/2 . Domi-
+nated convergence proves (22). The ratio and the identity m0 (p)/m2 (p) = 1/[2ψ1 (p)] prove
+the rest.
+
+    The factor QR is the conditional transverse variance on the transition hyperplane. It is
+distribution sensitive and satisfies 0 < QR ≤ d/(d − 1). Three closed examples are
+
+                 isotropic spherical law                radius               QR
+                 N (0, Id )  √                           χd
+                                                         √                    1
+                 uniform on dS d−1                  √      d              d/(d − 1)
+                 isotropic Student tν , ν > 2         ν − 2 χd /χν     (ν − 2)/(ν − 1)
+The last line follows from the adjacent chi-moment identities. If X = AS with A invertible
+and S isotropic spherical, then exactly
+                         Hh,X (w) = AHh,S (kA> wk, A> w/kA> wk)A> .
+Thus the theorem transfers to elliptical inputs after whitening; in Euclidean coordinates it is
+a generalized eigenvalue statement relative to AA> , not generally a literal radial–tangential
+eigendecomposition.
+    We now make the inverse-radius boundary exact. The following elementary Abelian lemma
+is the only transition calculus needed. It is stated separately so that the critical logarithm and
+its coefficient can be checked without appealing to an unnamed regular-variation theorem.
+
+                                                    7
+
+
+
+Lemma 5.2 (spherical
+                R 2 transition kernel). Let d ≥ 2, let h : R → [0, ∞) be bounded, and
+suppose 0 < m2 = R s h(s) ds < ∞. For q > 0 define
+                                    Z 1
+                         Jd,h (q) =     t2 h(qt)(1 − t2 )(d−3)/2 dt.
+                                         −1
+
+When d = 2, additionally assume h(s) ≤ Ce−λ|s| ; no extra condition is needed for d ≥ 3. Then
+                                          Z x
+                      3
+                     q Jd,h (q) −→ m2 ,         q 2 Jd,h (q) dq ∼ m2 log x.               (27)
+                                                  0
+
+For every 0 < a < 1, writing Ma+1 (h) = R |s|a+1 h(s) ds, one moreover has
+                                           R
+
+                  Z ∞                                    
+                                       1    1−a d−1
+                        a+1
+                      q Jd,h (q) dq = B           ,         Ma+1 (h) < ∞.                      (28)
+                   0                   2      2       2
+Proof. For d ≥ 3, the change s = qt gives
+                                      Z q              (d−3)/2
+                                                    s2
+                                                
+                          3                2
+                         q Jd,h (q) =     s h(s) 1 − 2          ds.
+                                       −q           q
+
+The integrand is bounded by s2 h(s) and converges pointwise to it, proving the first limit by
+dominated convergence. For d = 2, split the last integral at |s| = q/2. Dominated convergence
+applies on the inner part, while the outer part is O(q 3 e−λq/2 ) after returning to the t variable.
+The same split gives J2,h (q) = O(q −3 ). Hence in every dimension q 2 Jd,h (q) = m2 /q + o(q −1 ),
+whose logarithmic integral proves the second limit. For (28), Tonelli’s theorem and s = q|t|
+give
+                    Z ∞                              Z 1
+                          a+1
+                         q Jd,h (q) dq = Ma+1 (h)        t−a (1 − t2 )(d−3)/2 dt
+                     0                                0
+                                                              
+                                           1    1−a d−1
+                                         = B           ,         Ma+1 (h).
+                                           2       2      2
+Boundedness of h controls the origin, while Ma+1 (h) < ∞ follows from a + 1 < 2 and the
+assumed second moment. This also proves finiteness directly.
+
+Theorem 5.3 (exact three-phase inverse-radius boundary). Let d ≥ 2, X = RU be isotropic
+spherical, and let the positive radius have a density satisfying
+
+                      fR (ρ) = cρa−1 (1 + o(1))       (ρ ↓ 0),   c > 0, a > 0,                 (29)
+
+and ER2 = d. Let h : R → [0, ∞) be bounded with 0 < m0 , m2 < ∞; when d = 2, additionally
+assume exponential localization as in Lemma 5.2. Put
+                                                         
+                cd ER                    cd c     1−a d−1
+       Ad,h,R =       m0 ,      Da,d,h =      B      ,      Ma+1 (h) (0 < a < 1).
+                d−1                       2        2   2
+No assumption on the density away from zero is imposed beyond the displayed isotropic second
+moment. Then
+                                   αh,X (r) ∼ Ad,h,R r−1 ,                               (30)
+and the radial eigenvalue has the exact three-phase law
+                                     
+                                     
+                                      Da,d,h r−(a+2) , 0 < a < 1,
+                                     
+                                     
+                          βh,X (r) ∼ cd c m2 r−3 log r, a = 1,                                 (31)
+                                     
+                                     
+                                       cd ER−1 m2 r−3 , a > 1.
+                                     
+                                     
+
+
+                                                  8
+
+
+
+Consequently                       
+                                   
+                                   (Ad,h,R /Da,d,h )ra+1 , 0 < a < 1,
+                                   
+                                                  r2
+                                   
+                                    ER m0
+                                   
+                         κh,X (r) ∼ (d − 1)cm2 log r ,      a = 1,                             (32)
+                                   
+                                                  m0 2
+                                   
+                                   
+                                         ER
+                                   
+                                             −1
+                                                       r , a > 1.
+                                     (d − 1)ER m2
+Thus ER−1 < ∞ is exactly the quadratic-phase boundary inside the class (29).
+
+Proof. The identity (25) is dominated by Rm0 . Since ER < ∞ follows from isotropy, dominated
+convergence proves (30) for every a > 0.
+   For the radial direction, direct conditioning on R = ρ and then putting q = rρ gives
+
+                                       cd ∞
+                                          Z
+                             βh,X (r) = 3      fR (q/r)q 2 Jd,h (q) dq.                 (33)
+                                       r 0
+
+Fix η > 0 small enough that (29) supplies fR (ρ) ≤ Cρa−1 on (0, η). The contribution of R ≥ η
+obeys, directly from (26),
+                                                                                          (34)
+                                       (R≥η)
+                                   r3 βh,X (r) ≤ Cd,h /η.
+For d ≥ 3 one may take Cd,h = cd m2 . For d = 2, the split in Lemma 5.2 proves that q 3 J2,h (q)
+is uniformly bounded; hence one may take
+
+                                     C2,h = cd sup q 3 J2,h (q)
+                                                   q>0
+
+directly.
+    Suppose first that 0 < a < 1. On q < ηr, the integrand of ra+2 β/cd converges pointwise
+to cq a+1 Jd,h (q) and is bounded by Cq a+1 Jd,h (q). Lemma 5.2 makes this majorant integrable.
+Dominated convergence and (34), whose scaled contribution is O(ra−1 ), yield
+                                             Z ∞
+                           a+2
+                          r βh,X (r) −→ cd c       q a+1 Jd,h (q) dq = Da,d,h .
+                                               0
+
+    At a = 1, for every  > 0 one may decrease η so that c −  ≤ fR (ρ)     R ηr ≤2 c +  on (0, η).
+Therefore the small-radius part in (33) is squeezed between c ±  times 0 q Jd,h (q) dq. The
+second limit in (27) and the O(1) tail bound (34), followed by  ↓ 0, prove r3 β/(log r) → cd cm2 .
+    Finally, a > 1 makes ER−1 < ∞: local integrability follows from ρ−1 fR (ρ)  ρa−2 , and
+the part above any fixed radius is automatic. Theorem 5.1 proves the last line. Dividing (30)
+by (31) proves (32).
+
+   For a concrete isotropic family in every phase, let
+                                                     p
+                        Q ∼ Gamma(a, 1),       R = d/[a(a + 1)] Q.
+
+Then ER2 = d and c = {Γ(a)[d/(a(a + 1))]a/2 }−1 . Figure 1 evaluates the defining integrals for
+a ∈ {1/2, 1, 2} and normalizes by the constants in (31); it is a diagnostic of all three limits,
+not evidence used by the proof.
+
+
+
+
+                                                   9
+
+
+
+Three inverse-radius phases (d = 3, h = σ )           0
+
+
+
+
+                                             1.0
+     β(r) divided by its exact leading law
+
+                                             0.9
+
+                                             0.8
+
+                                             0.7
+
+                                             0.6
+
+                                             0.5                                                       a   = 0.5 (subcritical)   a= 2 (integrable)
+                                                                                                       a   = 1 (critical)        asymptotic limit
+                                                   101                  102                103                           104                105
+                                                                                      teacher norm r
+
+Figure 1: Exact spherical phase normalizations for d = 3, h = σ 0 , and isotropic Gamma radii.
+Every curve tends to one under its theorem-specific normalization; the slow approach, especially
+in the critical a = 1 regime, is part of the predicted asymptotics. Values are deterministic
+adaptive quadrature.
+
+    Covariance isotropy alone still does not force any phase law. For independent Rademacher
+coordinates, u = e1 and even h, one has Hh (r, u) = h(r)Id and hence κ = 1: here X12 = 1, all
+mixed expectations vanish by sign symmetry, and h(rX1 ) = h(r).
+    The radius–direction representation is classical [7]; non-Gaussian reference exponents also
+appear in regular-design logistic theory [17]. The contribution here is the exact QR constant, its
+all-p logistic specialization, and the sharp inverse-radius boundary within the stated regularly
+varying class, not the spherical representation or the first occurrence of non-Gaussian r−1 /r−3
+scales.
+
+
+6    Spherical and finite-scale Schwarzian bridges
+The matrix-order and saturation calculations meet exactly at an inflection point. Gaussian
+independence makes the full saturation curve one-dimensional, but it is not responsible for the
+local bridge: rotational symmetry and suitable moments suffice. The fourth moment identifies
+the coefficient below; the stated sixth moment controls its O(r4 ) remainder.
+Theorem 6.1 (spherical local order–anisotropy bridge). Let d ≥ 2 and let X ∈ Rd be isotropic
+and spherically symmetric with EkXk6 < ∞. Let g ∈ C 5 (R) satisfy g 0 > 0 and g 00 (0) = 0. For
+p > 0, suppose hp = (g 0 )p has bounded fourth derivative. For u ∈ S d−1 put Z = u> X and
+                                                                                                                                            αp,X
+             Hp,X (r, u) = E[hp (rZ)XX > ] = αp,X (r)(I − uu> ) + βp,X (r)uu> ,                                                  κp,X =          .
+                                                                                                                                            βp,X
+Then, with
+                                                                                         EkXk4
+                                                                                qX :=            ,
+                                                                                        d(d + 2)
+one has
+                                                               κp,X (r) − 1                  6qX p     det Lg (0, δ)
+                                                         lim          2
+                                                                            = −qX p Sg(0) = − 0 2 lim                .                               (35)
+                                                         r↓0        r                        g (0) δ→0      δ2
+
+                                                                                        10
+
+
+
+In particular, Sg(0) < 0 makes Lg (0, δ) indefinite and κp,X (r) > 1 at all sufficiently small
+nonzero scales. Standard Gaussian input has qX = 1.
+Proof. Rotations fixing u force the displayed two-eigenspace form, with
+                                                                1
+             βp,X (r) = E[Z 2 hp (rZ)],          αp,X (r) =        E[(kXk2 − Z 2 )hp (rZ)].
+                                                               d−1
+Choose a unit v ⊥ u. Spherical symmetry and isotropy give
+
+                                EZ 4 = 3qX ,          E[Z 2 (v > X)2 ] = qX .
+
+Taylor’s formula, cancellation of odd terms under X = −X, and the sixth-moment assumption
+                                                                d
+
+therefore give
+                           qX h00p (0) 2                                          3qX h00p (0) 2
+     αp,X (r) = hp (0) +              r + O(r4 ),           βp,X (r) = hp (0) +               r + O(r4 ).
+                               2                                                      2
+Taking the ratio yields κp,X (r) = 1 − qX h00p (0)r2 /hp (0) + O(r4 ). Since log hp = p log g 0 and
+g 00 (0) = 0,
+                                  h00p (0)   g 000 (0)
+                                           =p 0        = pSg(0).
+                                  hp (0)      g (0)
+The adjacent-point expansion (11) gives the remaining equality.
+
+    The equality of limits has a computable finite-scale version. The constants below are
+deliberately explicit rather than optimized.
+Theorem 6.2 (explicit finite-scale bridge). Under Gaussian input, retain the hypotheses of
+Theorem 6.1 and write
+
+                              a = hp (0),      b = h00p (0),   M4 = kh(4)
+                                                                      p k∞ .
+
+Choose r0 > 0 so that
+                                          3|b| 2 5M4 4 a
+                                              r +   r ≤ ,                                                   (36)
+                                           2 0    8 0  2
+and set                                                2
+                                      3M4              b     5|b|M4 2
+                                 Ch =     +3               +       r .
+                                       2a              a       4a2 0
+For a chosen δ0 > 0, put
+
+                   A = g 0 (0), c = g 000 (0), d4 = g (4) (0), M5 = sup |g (5) (x)|,
+                                                                         |x|≤δ0
+
+                    |c| |d4 |δ0 M5 δ02                          |Ad4 | 7AM5 δ0
+                K=     +        +      ,                Dg =          +        + δ0 K 2 .
+                     6     24      120                           12      120
+Then for 0 < r ≤ r0 and 0 < |δ| ≤ δ0 ,
+
+                                 κp (r) − 1 + pSg(0)r2 ≤ Ch r4 ,                                            (37)
+                                               A2 Sg(0)
+                             det Lg (0, δ) −         δ 2 ≤ Dg |δ|3 ,                                        (38)
+                                              6
+                           κp (r) − 1  6p det Lg (0, δ)              6pDg
+                                 2
+                                      + 2        2
+                                                         ≤ Ch r 2 +       |δ|.                              (39)
+                               r       A       δ                      A2
+Thus the order defect predicts anisotropy at finite, independently chosen scales with a certified
+error bar.
+
+                                                       11
+
+
+
+Proof. Gaussian Taylor remainders give
+               b                          M4 4                    3b 2                      5M4 4
+       αp = a + r2 + Rα ,       |Rα | ≤     r ,        βp = a +     r + Rβ ,      |Rβ | ≤      r .
+               2                          8                       2                          8
+Condition (36) makes βp ≥ a/2. Subtracting 1 − (b/a)r2 before dividing by βp yields
+                                    "           2              #
+                             b 2      3M4        b      5|b|M4 2 4
+                    κp − 1 + r ≤           +3        +         r r ,
+                             a         2a        a        4a2 0
+
+which is (37) because b/a = pSg(0).
+   Taylor expansion at zero gives
+
+                            c     d4              g(δ) − g(0)      c     d4
+               g 0 (δ) = A + δ 2 + δ 3 + R1 ,                 = A + δ 2 + δ 3 + R2 ,
+                            2     6                    δ           6     24
+where |R1 | ≤ M5 |δ|4 /24 and |R2 | ≤ M5 |δ|4 /120. Writing the determinant as A(g 0 (δ) − A) −
+2A(V − A) − (V − A)2 , with V = (g(δ) − g(0))/δ, gives (38) with the displayed Dg . Finally,
+divide (37) by r2 , divide (38) by δ 2 , multiply the latter by 6p/A2 , and use the triangle
+inequality.
+
+    For the standard logistic sigmoid, Sσ = −1/2. Theorem 6.1 therefore predicts the exact
+initial coefficient p/2 for every hp = σ 0p , recovered globally below. Equation (39) strengthens
+the conceptual coefficient match into a falsifiable finite-scale comparison.
+    For a general h, κh = αh /βh in (18) is an anisotropy ratio; it is the spectral condition
+number only after the eigenvalue ordering is known. The two powers are geometric. At large
+r, only a score slab of width O(r−1 ) remains unsaturated, producing α  r−1 . A radial
+perturbation carries an additional factor Z 2 = O(r−2 ) inside that slab, producing β  r−3 .
+Both modes are supported by the near-boundary slab; the radial mode is weaker because it
+carries the additional Z 2 factor.
+
+
+7     All-power logistic saturation laws
+For every real p > 0 set hp (t) = σ 0 (t)p . The cases p = 1 and p = 2 are Bernoulli Fisher
+and squared-output curvature, respectively, but the analytic law is not restricted to those
+observation models. The Gamma transform below is classical generalized-logistic distribution
+theory [26, eqs. (2.3)–(2.5)]; our use of it is geometric.
+
+Lemma 7.1 (closed sensitivity moments for every p > 0). Let ψj denote the polygamma
+function of order j. Then
+
+                                                     Γ(p + ik)Γ(p − ik)
+                                 Z
+                       hp (k) :=
+                       b            eikt hp (t) dt =                    ,        (40)
+                                  R                        Γ(2p)
+and
+               Γ(p)2
+                                                         m4 (p) = 12ψ1 (p)2 + 2ψ3 (p) m0 (p).        (41)
+                                                                                     
+    m0 (p) =         ,    m2 (p) = 2ψ1 (p)m0 (p),
+               Γ(2p)
+In particular,
+
+                          profile     m0          m2                 m4
+                         h1 = σ 0      1         π 2 /3            7π 4 /15
+                         h2 = σ 02    1/6    (π 2 − 6)/18    7π 4 /90 − 2π 2 /3
+
+                                                  12
+
+
+
+Proof. With x = et ,
+                                                     Z ∞
+                             xp                             xp+ik−1
+                 hp (t) =           ,     hp (k) =
+                                          b                          dx = B(p + ik, p − ik),
+                          (1 + x)2p                  0     (1 + x)2p
+
+which proves (40). Since hp (t) = O(e−p|t| ), all polynomial moments are finite and differentiation
+under the Fourier integral is justified. Differentiating its logarithm at zero gives (log b
+                                                                                          hp )00 (0) =
+                  hp )(4) (0) = 2ψ3 (p). Since m2 = −b
+−2ψ1 (p) and (log b                                                       hp (0), (41) follows. The
+                                                        h00p (0) and m4 = b
+                                                                            (4)
+
+table uses the standard integer polygamma values.
+
+Theorem 7.2 (strict all-power logistic anisotropy). For every p > 0, κp (0) = 1, κp (r) > 1 for
+r > 0, and κp is strictly increasing on (0, ∞). At the two endpoints,
+
+                                     p    p     p(p + 1) 6
+                         κp (r) = 1 + r2 − r4 +         r + O(r8 )            (r ↓ 0),                    (42)
+                                     2    8        16
+and
+                                       r2         ψ3 (p)
+                          κp (r) =           +1+          + O(r−2 )        (r → ∞).                       (43)
+                                     2ψ1 (p)     4ψ1 (p)2
+Thus κ1 (r) ∼ 3r2 /π 2 and κ2 (r) ∼ 3r2 /(π 2 − 6).
+
+Proof. Normalize the density qp,r (z) ∝ hp (rz)ϕ(z). Then βp (r)/αp (r) = Eqp,r Z 2 . If r2 > r1 ,
+the derivative on z > 0 of the log likelihood ratio is
+
+                      d      hp (r2 z)                                      
+                         log           = −p r2 tanh(r2 z/2) − r1 tanh(r1 z/2) < 0.
+                      dz     hp (r1 z)
+
+Thus the distribution of |Z| under qp,r decreases strictly in monotone-likelihood-ratio order as
+r increases, and its strictly increasing statistic Z 2 has decreasing expectation. Hence αp /βp
+increases strictly. At r = 0 isotropy gives one. Lemma 7.1 inserted into Theorem 4.1, with
+one further term in e−t /(2r ) , gives the large-r statement. More explicitly, m6 (p) < ∞ by the
+                        2    2
+
+
+exponential tail, and Taylor remainder bounds for e−x give
+
+                 ϕ(0)      m2  m4                                      ϕ(0)        m4            
+      αp (r) =          m0 − 2 + 4 + O(r−6 ) ,                βp (r) =          m 2 −     + O(r −4
+                                                                                                   )  .
+                  r         2r  8r                                        r3          2r2
+Their ratio yields (43). Finally,
+
+                               p 2 p(1 + 3p) 4 p(15p2 + 15p + 4) 6
+                                                                        
+                        −p                                             8
+             hp (t) = 4     1− t +          t −                 t + O(t ) .
+                               4       96            5760
+
+For each fixed p > 0, every derivative of hp is bounded. Taylor’s theorem therefore bounds the
+displayed remainder globally by khp k∞ |t|8 /8!; after setting t = rZ, this is integrable in both
+                                    (8)
+
+αp and βp because the Gaussian has a finite tenth moment. Inserting the Gaussian moments
+through EZ 8 = 105 in the coefficients and taking the ratio gives (42).
+
+    Figure 2 shows the two statistically canonical members of the all-power family. The solid
+and dashed curves are direct Gaussian integrals; the dotted curves are the asymptotic constants
+in (43).
+
+
+
+
+                                                      13
+
+
+
+One tangential law, one radial bottleneck                                             Profile-generic large-r anisotropy: κ ≍ r2
+                                                                                                                            103
+                                                                                                                                  square loss: h = σ 2
+                                                                                                                                                    0
+
+
+
+
+                                     10−1                                                                                         Bernoulli Fisher: h = σ
+curvature / information eigenvalue
+
+                                                                                                                                                            0
+
+
+
+
+                                     10−2                                                                                   102
+
+
+
+
+                                                                                                       anisotropy κ = α/β
+                                     10−3
+                                                                                                                            101
+                                     10−4
+                                            square loss: h = σ 2, tangential
+                                                              0
+
+
+
+
+                                     10−5   square loss: h = σ 2, radial
+                                                              0
+                                                                                                                            100
+                                            Bernoulli Fisher: h = σ , tangential
+                                                                   0
+
+
+
+
+                                            Bernoulli Fisher: h = σ , radial
+                                                                   0
+
+
+
+
+                                                   10−1                  100               101                                         10−1                 100               101
+                                                            teacher weight norm r = ‖w ⋆ ‖                                                     teacher weight norm r = ‖w ⋆ ‖
+
+
+Figure 2: Exact curvature/information eigenvalues and their ratio. Saturation leaves d − 1
+tangential directions at order r−1 but pushes the radial direction to order r−3 . The quadratic
+condition-number law is not a fitted exponent; it follows from Theorem 4.1.
+
+    The cancellation of every p2 contribution in the fourth-order ratio coefficient is worth
+noting: the full all-power family has the correction −pr4 /8, followed by the first nonlinear-in-p
+term p(p + 1)r6 /16.
+
+
+8                                      Finite-sample resolution of the weighted Gram matrix
+The population eigenvalues alone do not say when a sample resolves the radial mode. We now
+answer that question for the fixed-oracle matrix
+                                                                                        n
+                                                                  b h,n (r, u) = 1                                                            iid
+                                                                                        X
+                                                                  H                           h(ru> Xi )Xi Xi> ,                       Xi ∼ N (0, Id ).
+                                                                                 n
+                                                                                        i=1
+
+Prior self-concordant analyses already give bilateral constant-factor empirical-Hessian sand-
+wiches, including a uniform result for Gaussian logistic regression [18, Eq. (92)]; fixed-point
+standardized-Hessian concentration is also available under generic matrix-Bernstein conditions
+[21]. Chardon, Lerasle and Mourtada prove a uniform one-sided lower bound for the empirical
+Bernoulli Hessian (p = 1) under the sufficient condition n & r(d + t) [17, Theorem 6]. We do
+not claim the first bilateral concentration or the first finite-sample lower bound. The result
+below instead gives tunable two-sided relative error for a fixed teacher, applies to a general
+bounded profile and hence every p > 0, separates radial, tangential and cross errors, and
+returns an eigenspace angle.
+    Put m = d − 1, Z = u> X, Y = X − Zu, and W = h(rZ). Define
+
+                                                                  α = EW,          β = E[W Z 2 ],     γj = E[W 2 Z 2j ]                        (j = 0, 1, 2),
+
+and the envelopes
+
+                                                             H = khk∞ ,                K1 = sup z 2 h(rz)2 ,                        K2 = sup z 2 h(rz).
+                                                                                                 z                                                  z
+
+Theorem 8.1 (explicit relative empirical spectrum). Assume 0 ≤ h ≤ H, K1 , K2 < ∞, and
+α, β > 0. Let 0 < δ < 1 and set
+
+                                                                                   t = log(12/δ),              u0 = m log 9 + t,
+
+
+                                                                                                      14
+
+
+
+p             H 2t                               p            K1 t
+               S0+ = nγ0 +    2nH 2 γ0 t +      ,               S1+ = nγ1 +    2nK1 γ1 t +      ,
+                                            3                                               3
+                                r
+                                    2γ0 t Ht 4
+                                                           q
+                                                             S0+ u0 + Hu0 ,                             (44)
+                                                                          
+                         eT =            +    +
+                                     n     3n   n
+                                                                  q
+                                                                    S1+ √   √ 
+                                r
+                                    2γ2 t K2 t
+                         eR =            +     ,           qn =          m + 2t .                       (45)
+                                     n     3n                       n
+Then, with probability at least 1 − δ, in the radial–tangential basis
+                                                       
+                                                  C bn
+                                        Hh,n = >
+                                        b
+                                                  bn cn
+
+satisfies simultaneously
+
+                    kC − αIm kop ≤ eT ,              |cn − β| ≤ eR ,          kbn k2 ≤ qn .             (46)
+
+Consequently, for                                                
+                                                       eT eR            qn
+                                     εn := max           ,            +√ ,                              (47)
+                                                       α β               αβ
+one has the two-sided relative Löwner bound
+
+                         (1 − εn )Hh (r, u)  H
+                                              b h,n (r, u)  (1 + εn )Hh (r, u).                        (48)
+
+If G := α − β − eT − eR > 0, the empirical matrix has a unique eigenvalue βb below the tangential
+block spectrum, and its unit eigenvector ub obeys
+
+                                              qn                                  qn2
+                                   u, u) ≤
+                             tan ∠(b             ,              |βb − β| ≤ eR +       .                 (49)
+                                              G                                   G
+Every other ordered eigenvalue differs from α by at most max{eT , eR } + qn .
+
+Proof. Write
+                    1X                               1X                                   1X
+               C=      Wi Yi Yi> ,          bn =        W i Z i Yi ,          cn =           Wi Zi2 .
+                    n                                n                                    n
+                         i                                  i                                i
+
+Scalar Bernstein controls W − α and, one-sidedly, i Wi2 ≤ S0+ . Conditional on the weights,
+                                                 P
+for a fixed unit v,
+                                                                 iid
+                    X                      X
+                 v>   Wi (Yi Yi> − Im )v =   Wi (G2i − 1),   Gi ∼ N (0, 1).
+                     i                                 i
+
+The exact Gaussian moment-generating function gives
+
+                              X                       s X
+                                    Wi (G2i − 1)   ≤ 2 u0 Wi2 + 2Hu0
+                                i                                     i
+
+
+outside conditional probability 2e−u0 . A 1/4-net of S m−1 has at most 9m points and kAkop ≤
+2 maxv in net |v > Av|, proving the first bound in (46). Bernstein applied to Wi Zi2 ∈ [0, K2 ]
+proves the radial bound.
+   Conditionally on the Zi ,                P        2 2   
+                                                 i Wi Zi
+                                   bn ∼ N 0,              Im .
+                                                   n2
+
+                                                           15
+
+
+
+A second one-sided Bernstein bound gives i Wi2 Zi2 ≤ S1+ , and the Gaussian norm tail proves
+                                           P
+the cross bound. The listed failures total less than 9e−t < δ.
+    Conjugating H b h,n − Hh by H −1/2 = diag(α−1/2 Im , β −1/2 ) shows that its norm is at
+                                   h
+most (47); this is equivalent to (48). If G > 0, then cn < λmin (C). Interlacing leaves one
+eigenvalue below C. The eigenvector equation and the Schur complement give respectively
+      u, u) ≤ qn /G and 0 ≤ cn −βb ≤ qn2 /G. Weyl’s inequality gives the remaining assertion.
+tan ∠(b
+
+   For hp = σ 0p , all quantities in Theorem 8.1 are one-dimensional and computable. The
+elementary bound σ 0 (s) ≤ e−|s| gives, for every p > 0,
+                                                    e−2              4e−2
+                              H = 4−p ,      K1 ≤         ,   K2 ≤          ,                  (50)
+                                                    p2 r2            p2 r 2
+
+and, with ϕ(0) = (2π)−1/2 ,
+                                 ϕ(0)          ϕ(0)               3ϕ(0)
+                          γ0 ≤        ,      γ1 ≤ 3 3
+                                                      ,    γ2 ≤ 5 5 .                          (51)
+                                  pr           2p r               2p r
+
+Indeed, after s = rZ, use hp (s)2 ≤ e−2p|s| and R |s|j e−2p|s| ds = 2j!/(2p)j+1 for j = 0, 2, 4.
+                                                R
+
+Corollary 8.2 (effective sample size for every logistic power). Let
+                                                          
+                                2           3m2 (p) m4 (p)
+                              Rp = max             ,         .
+                                             m0 (p) m2 (p)
+For r ≥ Rp , 0 < ε ≤ 1/2 and 0 < δ < 1, the explicit condition εn ≤ ε in (47), with (50)–(51)
+substituted, guarantees (48). In particular, for each fixed p > 0 there are finite computable
+constants Cp , Cp0 such that
+                                             r [d + log(12/δ)]
+                                     n ≥ Cp                                               (52)
+                                                     ε2
+is sufficient and, after increasing Cp if necessary, eT + eR ≤ (α − β)/2. Hence G ≥ (α − β)/2
+and, on the same event,
+                                    r                  p                         !
+                                 0    d + log(1/δ)       [d + log(1/δ)] log(1/δ)
+                sin ∠(bu, u) ≤ Cp                   +                              .
+                                           nr                      n
+
+Thus the effective number of transition-layer observations is n/r: relative resolution of a
+population eigenvalue of order r−3 does not itself require r3 samples.
+Proof. The brackets in Theorem 4.1 and the definition of Rp give
+                     ϕ(0)m0 (p)                ϕ(0)m2 (p)                       ϕ(0)m0 (p)
+                α≥              ,         β≥              ,      α−β ≥                     .
+                         2r                       2r3                               2r
+Insert these andp(50)–(51) in (44)–(47). Each relative block term is bounded by a p-dependent
+constant times r[d + log(12/δ)]/n+r[d+log(12/δ)]/n. The cross term has the same first order.
+Increasing a finite constant Cp makes their sum at most ε and also makes eT + eR ≤ (α − β)/2.
+Thus G ≥ (α − β)/2 ≥ ϕ(0)m0 (p)/(4r), and substitution of qn into (49) gives the displayed
+bound with a finite computable Cp0 .
+
+   For the two statistical powers, the conservative majorant used in this proof gives fully
+numerical choices:
+                      p       Rp          Cp in (52)     Cp0 in the angle bound
+                      1   3.717183          22929              22.479249
+                      2   2.153017         294162              52.368963
+
+                                                    16
+
+
+
+These are sufficient, not optimized, constants. The explicit-constants replay prints every
+intermediate coefficient and checks that the resulting quadratic majorant is at most ε for
+0 < ε ≤ 1/2.
+    We next prove that the product scale in (52) is intrinsic for the stated bilateral loss. Choose
+any finite ap > 0 satisfying      Z
+                                                          m2 (p)
+                                           s2 hp (s) ds ≤        .
+                                    |s|>ap                 16
+
+For r ≥ max{ m4 (p)/m2 (p), 4ϕ(0)ap }, the empty-transition-slab event and Markov’s inequal-
+              p
+
+ity give                                                              
+                                b p,n ) < βp (r) ≥ 1 exp − 4ϕ(0)ap n .
+                       Pr λmin (H                                                              (53)
+                                             2          2           r
+Hence failure probability at most δ < 1/2 requires
+                                              r       1
+                                      n≥           log .                                      (54)
+                                           4ϕ(0)ap    2δ
+
+To verify (53), condition on no |Zi | ≤ ap /r. This event has probability at least the exponential
+shown; the conditional mean radial entry is at most βp /4, so with conditional probability at
+least 1/2 that entry, and therefore the smallest eigenvalue, is below βp /2.
+    The high-confidence half of the matching lower bound is an exact consequence of the next
+lemma. Stating it autonomously exposes every constant and removes any dependence on an
+implicit moderate-deviation argument.
+
+Lemma 8.3 (explicit Gaussian-product lower tail). Let Ai ≥ 0 be iid with 0 < ρ = EA2i < ∞
+                  ∞. Let Yi , Yi0 be independent standard Gaussians, independent of the Ai ,
+and χ = EA4i /ρ2 <P
+and put Dn = n −1
+                    i=1 Ai Yi Yi . For every ε > 0,
+                    n           0
+
+
+                                                             2nε2
+                                                                 
+                                                3
+                       Pr{|Dn | > ε} ≥                 exp −        .                  (55)
+                                          40(1 + 3χ/n)        ρ
+
+In particular, if n ≥ 3χ, the leading constant is at least 3/80.
+
+Proof. Set T = n−1 i A2i Yi2 . Direct expansion gives
+                     P
+
+                                                         
+                                     2    2       1 3χ
+                    ET = ρ,       ET = ρ 1 − +               ≤ ρ2 (1 + 3χ/n).
+                                                  n     n
+
+Paley–Zygmund therefore gives Pr{T ≥ ρ/2} ≥ [4(1 + 3χ/n)]−1 . Conditional on (Ai , Yi )i≤n ,
+Dn ∼ N (0, T /n). The elementary bound
+                                             3 −x2
+                                 2Φ(−x) ≥       e ,       x ≥ 0,                              (56)
+                                             10
+then proves (55). For completeness, on 0 ≤ x ≤ 1 use 2Φ(−x) ≥ 2Φ(−1) > 3/10; on x ≥ 1 use
+the Mills bound Φ(−x) ≥ ϕ(x)x/(1 + x2 ), whose ratio to e−x is increasing from a value larger
+                                                           2
+
+
+than 3/10.
+
+Theorem 8.4 (matching lower complexity for bilateral relative Loewner loss). Fix p > 0.
+There are finite constants R                                     ep , d ≥ 3, 0 < ε ≤ 1/2 and
+                             ep , cp , δp > 0 such that, for r ≥ R
+0 < δ ≤ δp , the implication
+
+                                                                            r[d + log(1/δ)]
+          Pr{(1 − ε)Hp  H
+                         b p,n  (1 + ε)Hp } ≥ 1 − δ      =⇒       n ≥ cp                     (57)
+                                                                                   ε2
+
+
+                                                17
+
+
+
+holds. At constant confidence the dimension term has the explicit sufficient obstruction
+
+                 m0 (2p)     r(d − 2)                                                     1
+         n<                2
+                                           =⇒       Pr{relative Loewner failure} ≥           ,   (58)
+              16ϕ(0)m0 (p)      ε2                                                      1152
+
+provided nγ0 ≥ H 2 and the finite-radius moment brackets hold. The displayed coefficient equals
+1/[96ϕ(0)] for p = 1 and 9/[560ϕ(0)] for p = 2.
+    The confidence constants can be made fully explicit. Define
+
+                     m0 (2p)                      4m0 (4p)                  1
+            Lp =                ,       Kp =                 ,        δphc = e−12ϕ(0)ap Kp .     (59)
+                   2ϕ(0)m0 (p)2                 ϕ(0)m0 (2p)2                2
+
+                ep to ensure r2 ≥ m2 (2p)/m0 (2p), success necessarily implies the following
+After enlarging R
+bound whenever 0 < δ < min{3/80, δphc }:
+
+                                               Lp r       3
+                                         n≥        2
+                                                     log     .                                   (60)
+                                               2 ε       80δ
+
+                                          P m = d − 1 dimensional tangential block C =
+    P Restrict the relative inequality to the
+Proof.
+n−1 i Wi Yi Yi> . Put γ0 = EW 2 and S0 = i Wi2 . Since W ≤ H, Paley–Zygmund gives
+
+                           Pr{S0 ≥ nγ0 /2} ≥ 1/8       (nγ0 ≥ H 2 ).
+
+Conditional on the weights, T0 = i Wi2 Yi12 has second moment at most 3S02 , so Pr{T0 ≥
+                                    P
+S0 /2 | W } ≥ 1/12. Conditional on (W, Y1 ), the remaining d − 2 entries of the first off-diagonal
+column of C are Gaussian with common variance T0 /n2 . A final Paley–Zygmund bound gives
+Pr{χ2d−2 ≥ (d − 2)/2} ≥ 1/12. Hence, with probability at least 1/1152,
+                                                        r
+                                                            (d − 2)γ0
+                                    kC/α − Im kop ≥                   .
+                                                              8nα2
+The scaled integrals give
+                                        γ0      m0 (2p)
+                                          2
+                                            ≥              r,
+                                        α     2ϕ(0)m0 (p)2
+which proves (58). If nγ0 < H 2 , then n = Op (r) and the slab bound (53) supplies a fixed
+failure probability after decreasing δp .
+    For the confidence term, take A = W/α in Lemma 8.3. The finite-radius brackets give
+
+                                 EW 2                        EW 4
+                            ρ=        ≥ Lp r,        χ=              ≤ Kp r.                     (61)
+                                  α2                        (EW 2 )2
+
+Indeed, use α ≤ ϕ(0)m0 (p)/r, EW 2 ≥ ϕ(0)m0 (2p)/(2r), and EW 4 ≤ ϕ(0)m0 (4p)/r. If
+n < 3Kp r, the slab bound (53) gives failure at least δphc . Thus success for δ < δphc forces
+n ≥ 3Kp r, and the last sentence of Lemma 8.3 gives failure at least
+
+                                               2nε2
+                                                   
+                                       3
+                                         exp −        .
+                                      80       Lp r
+
+This proves (60). Combining it with the dimension bound by max{a, b} ≥ (a + b)/2 proves
+(57) with explicit admissible ranges.
+
+   For reproducibility, choosing ap by equality in the defining tail condition gives the following
+numerical constants. The tiny δphc values reflect deliberately crude slab and fourth-moment
+bounds; they are proof ranges, not estimates of practical behavior.
+
+                                                   18
+
+
+
+p           ap             Lp               Kp               δphc
+                      1     6.255617           0.208886       2.578246       1.4661 × 10−34
+                      2     3.517898           0.322281       3.817398       6.0017 × 10−29
+
+     The theorem is about the fixed-oracle weighted Gram matrix, not a minimax estimator.
+Nor should it be exported unchanged to weaker targets. Direct scalar Bernstein gives an
+Op (r/ε2 ) radial-entry upper bound at constant confidence; the empty-slab argument gives
+only the fixed-accuracy Ωp (r) obstruction recorded above. The ordinary bottom eigenspace
+behaves differently: in the iterated extreme-saturation limit it is governed by sample order
+statistics rather than relative Gram resolution.
+     The algebraic flag mechanism below is an instance of classical scaled-SVD asymptotics
+[8]. The contribution here is its logistic ordering by distance to the transition hyperplane, the
+resulting bottom projector, and the exact stochastic angle law and complexity.
+
+Theorem 8.5 (spectral lexicography and exact limiting angle law). Fix p > 0, d ≥ 2, n ≥ d,
+and u ∈ S d−1 . Let Xi ∼ N (0, Id ), Zi = u> Xi , and
+                          iid
+
+
+                                                      n
+                                          br = 1
+                                                      X
+                                          H                 σ 0 (rZi )p Xi Xi> .
+                                               n
+                                                      i=1
+
+Let π be the almost surely unique permutation for which |Zπ(1) | < · · · < |Zπ(n) |, and put
+Vk = span{Xπ(1) , . . . , Xπ(k) }. Almost surely, for every k < d and all sufficiently large r, a gap
+separates the top k eigenvalues. If Er,k denotes that cluster’s projector, then
+
+                                kEr,k − PVk kop −→ 0,               k = 1, . . . , d − 1.          (62)
+
+For all sufficiently large r, the bottom eigenvalue is simple almost surely. Denoting its rank-one
+projector by Pbrbot , one has convergence in operator norm,
+
+                                 kPbrbot − P∞ kop −→ 0,                P∞ := PV ⊥ .                (63)
+                                                                                   d−1
+
+
+   Write m = d − 1, let A(j) = |Zπ(j) |, and let ζ = (Zπ(1) , . . . , Zπ(m) )> . If θ∞ is the acute
+angle between the range of P∞ and u, then the following identity is exact:
+
+                                       kζk
+                                                                         G independent of ζ.       (64)
+                                 d
+                    tan θ∞ =               ,      G ∼ N (0, 1),
+                                       |G|
+
+Let c+ =    2/π and c− = 2ϕ(1) = c+ e−1/2 . For m ≥ 2,
+           p
+
+                                  (                 )
+                                             m3/2      1
+                               Pr kζk ≥ √             ≥ .                                          (65)
+                                            6 2c+ n    2
+
+If n ≥ 4m/c− , then                      (                    )
+                                                4m3/2
+                                       Pr kζk ≤                   ≥ 1 − e−9m/8 .                   (66)
+                                                 c− n
+
+Let θr be the acute angle between the range of Pbrbot and u. For d ≥ 3 it follows that, for
+0 < ε ≤ 1/2 and 0 < δ < c− /2,
+
+                                                                              e−1/2 (d − 1)3/2
+                   lim Pr{sin θr ≤ ε} ≥ 1 − δ                  =⇒       n≥      √              .   (67)
+                   r→∞                                                        24 2      εδ
+
+
+                                                            19
+
+
+
+Conversely, if δ ≥ 2e−9m/8 , n ≥ 4m/c− , and
+                                                  m3/2
+                                            n ≥ 8e1/2  ,                                (68)
+                                                    εδ
+then the limiting success probability is at least 1 − δ. Thus the limiting sample complexity
+has matching order Θ(m3/2 /(εδ)) in the displayed confidence range, and Θ(d3/2 /ε) at fixed
+confidence.
+Proof. Order the samples as xj = Xπ(j) and the weights as wj (r) = σ 0 (rZπ(j) )p . Since
+
+                                                       e−|s|
+                                        σ 0 (s) =                 ,
+                                                    (1 + e−|s| )2
+one has wk (r)/wj (r) → 0 exponentially whenever j < k. Let Br have columns            wj (r)xj , so
+                                                                                      p
+b r = n−1 Br Br> . Cauchy–Binet on the kth exterior power gives
+H
+                 k
+                                           !
+                ^             X Y
+                   Hb r = n−k        wi (r) (xi ∧ · · · ∧ xi )(xi ∧ · · · ∧ xi )> .
+                                                         1            k   1       k
+                              |I|=k   i∈I
+
+After division by kj=1 wj (r), only I = {1, . . . , k} survives. Its wedge is nonzero almost surely.
+                   Q
+The top projector of the exterior power therefore converges to its rank-one span. Because its
+top eigenvector is the wedge of the top k eigenvectors of H  b r , this proves (62); taking orthogonal
+complements at k = d − 1 proves (63).
+     Rotate so u = ed and write X = (Y, Z). Let Y∗ be the m × m matrix whose rows are
+                               > , j ≤ m. Selection depends only on the Z , so Y is an iid
+the tangential coordinates Yπ(j)                                                      i     ∗
+standard Gaussian matrix independent of ζ. A normal to the selected span is proportional to
+(−Y∗−1 ζ, 1), hence tan θ∞ = kY∗−1 ζk. Conditional on ζ, rotate row space so that ζ becomes
+kζke1 . If v is a unit normal to rows 2, . . . , m of the rotated Gaussian matrix and a1 is its
+first row, then Y∗−1 ζ has norm kζk/|a>1 v|. Conditional on the remaining rows, a1 v ∼ N (0, 1),
+                                                                                         >
+
+proving (64).
+     It remains to bound the first m half-normal order statistics. Their distribution function
+F (t) = 2Φ(t) − 1 satisfies
+                       F (t) ≤ c+ t (t ≥ 0),          F (t) ≥ c− t (0 ≤ t ≤ 1).                  (69)
+For k = bm/2c and t = k/(2c+ n), the count Nt = #{i : |Zi | ≤ t} has mean at most k/2.
+Markov’s inequality gives Pr{A(k) > t} ≥ 1/2. Since k ≥ m/3 and at least m/2 of the first m
+order statistics exceed A(k) , this proves (65). For the other direction take t = 4m/(c− n) ≤ 1.
+Now ENt ≥ 4m, and a Chernoff bound gives Pr{Nt < m} ≤ e−9m/8 . On the complement,
+       √
+kζk ≤ mA(m) ≤ 4m3/2 /(c− n), proving (66).
+    Finally, Pr{|G| ≤ x} ≥ c− min{x, 1} and Pr{|G| ≤ x} ≤ c+ x. Combining the first
+inequality with (65) yields, for every τ > 0,
+                                                      (             )
+                                               c−         m3/2
+                          Pr{tan θ∞ > τ } ≥       min √           ,1 .
+                                                2       6 2c+ nτ
+                                    √
+Since sin θ ≤ ε implies tan θ ≤ ε/ 1 − ε2 ≤ 2ε, this proves (67). For the upper bound, with
+probability at least 1 − q − e−9m/8 ,
+                                                      4c+ m3/2
+                                        tan θ∞ ≤               .
+                                                      c− q n
+Set q = δ/2 and use c+ /c− = e1/2 to obtain (68). Almost-sure projector convergence and
+continuity of the limiting angle law justify the displayed probability limit.
+
+                                                    20
+
+
+
+Order-statistic angle law (d = 6)                                         Spectral lexicography (d = 5, n = 30)
+                                                      median                             100
+                                                      90th percentile
+                                                      reference n−1
+                    100
+ limiting sin θ∞
+
+
+
+
+                                                                        ‖Pbot
+                                                                        ̂
+                                                                          r   − P∞‖op
+                                                                                        10−1
+
+
+                   10−1                                                                              median
+                                                                                                     90th percentile
+                           101                           102                                   100                             101
+                                     sample size n                                                                     teacher norm r
+
+Figure 3: Fixed-seed diagnostics for Theorem 8.5. Left: the limiting angular loss follows the
+predicted n−1 scale at fixed dimension (the theorem gives matching m3/2 /(εδ) complexity
+in its stated confidence range). Right: finite-r bottom projectors approach the sample-wise
+lexicographic limit; the proof, not this simulation, establishes convergence.
+
+    The order of limits in Theorem 8.5 is essential: d, n, p, ε, δ are fixed while r → ∞, and
+only then is the family of limit experiments compared across n, d. The order-statistic bounds
+are uniform under their stated conditions, but (63) has no rate uniform in a joint sequence
+n = n(r) or d = d(r). Such a theorem would need simultaneous control of adjacent half-normal
+spacings and the conditioning of Y∗ . In particular, an Ω(rd) angular necessity cannot hold
+uniformly through extreme saturation; it remains the scale of the sufficient relative-Gram
+event, not of the weaker limiting projector target.
+
+8.1                  Uniform all-power sensitivity on a full dyadic shell
+The pointwise theorem admits a proof-complete full-dyadic-shell extension at the price of an
+elementary covering logarithm. For Gp (w) = E[hp (w> X)XX > ] and its empirical analogue
+b p,n (w), set
+G
+                     √
+               Bn,δ = d + 2 log(2n/δ), µ3,d = [d(d + 2)]3/4 , Lp = p4−p ,
+                           p
+
+
+                                                                                                                                         4R d
+                                                                                                                                         
+     ϕ(0)m2 (p)                                3                                      εbp
+bp =            ,                Ap,n,δ = Lp (Bn,δ +µ3,d ),             η = min R,                                            ,   N = 1+      .
+         16                                                                        32Ap,n,δ R3                                            η
+Theorem 8.6 (uniform relative sensitivity on a full dyadic shell). Fix p > 0, R ≥ Rp ,
+0 < ε ≤ 1/2, and 0 < δ < 1/2. If
+                                                     
+                                      R            24N
+                             n ≥ 128Cp 2 d + log          ,                      (70)
+                                      ε             δ
+then, with probability at least 1 − δ, simultaneously for every w with R ≤ kwk ≤ 2R,
+
+                                          (1 − ε)Gp (w)  G
+                                                          b p,n (w)  (1 + ε)Gp (w).                                                         (71)
+
+The computable condition is implicit in n only through Bn,δ ; no optimality is claimed for its
+covering logarithm.
+Proof. Since kh0p k∞ ≤ Lp ,
+
+                                   khp (w> x)xx> − hp (v > x)xx> kop ≤ Lp kw − vkkxk3 .
+
+                                                                        21
+
+
+
+With probability at least 1 − δ/2, all sampled Gaussian norms are at most Bn,δ . On this event
+Dn = G b p,n − Gp is Ap,n,δ -Lipschitz in operator norm. Cover the shell by an η-net of size at
+most N and apply Corollary 8.2 at every net point with error ε/8 and failure δ/(2N ); (70) is
+exactly a conservative sufficient condition. On the shell, λmin Gp (w) ≥ bp R−3 . Moving from a
+net point to w therefore changes both Dn and Gp by at most (ε/32)λmin Gp (w). For every x,
+                                  hε               εi >
+                 |x> Dn (w)x| ≤ (1 + ε/32) +          x Gp (w)x ≤ εx> Gp (w)x,
+                                   8              32
+which is (71). The two failure probabilities total at most δ.
+
+    For p = 1, G b 1,n (w) is exactly the logistic-likelihood Hessian and is label-free. For p 6= 1 it
+is a sensitivity Gram, not that likelihood Hessian. Earlier work proves uniform local constant-
+factor sandwiches and an optimal-scale one-sided p = 1 lower bound [18, 17]; the narrower
+addition here is a full dyadic shell, all p > 0, and tunable bilateral precision. It is not by itself
+an estimator theorem.
+
+                                                                            Finite-sample resolution (d = 12, r = 6, 320 repetitions)
+                                             6 × 100                                   solid: median
+                                                                                                                   relative smallest-eigenvalue error    100
+                                                                                       dashed: 90th percentile
+relative tangential operator error
+
+
+
+
+                                             4 × 100                                               p=1
+                                             3 × 100                                               p=2
+
+                                             2 × 100
+
+                                                              100                                                                                       10−1
+                                     6 × 10−1
+                                     4 × 10−1
+                                     3 × 10−1
+                                                                       100                           101                                                                  100                            101
+                                                                    normalized sample size n/(rd)                                                                      normalized sample size n/(rd)
+                                                              100                                                                                       10−1
+                                                                                                                 probability no sample has |rZ| ≤ 1
+
+
+
+
+                                                                                                                                                        10−2
+                             radial eigenspace error sin θ
+
+
+
+
+                                                                                                                                                        10−3
+                                                                                                                                                        10−4                 exact probability (display floor 10−8)
+                                                                                                                                                                             fixed-seed frequency
+                                                                                                                                                        10−5                 zero events (plotting limit)
+                                                             10−1
+                                                                                                                                                        10−6
+                                                                                                                                                        10−7
+                                                                                                                                                        10−8
+                                                                       100                           101                                                       0   2   4     6      8     10 12          14     16
+                                                                    normalized sample size n/(rd)                                                                      normalized sample size n/(rd)
+
+
+Figure 4: Fixed-seed diagnostic at d = 12, r = 6, with 320 repetitions per sample size. Solid
+curves are medians and dashed curves are 90th percentiles. The first three panels display
+tangential relative error, ordinary smallest-eigenvalue relative error, and radial eigenspace
+angle. The fourth compares the exact empty-slab probability with its simulated frequency;
+exact values below 10−8 are clipped only in the plot and remain untruncated in the JSON
+certificate. The normalization n/(rd) is the sharp scale for full bilateral relative Loewner loss;
+the ordinary eigenvalue and angle panels are diagnostics and make no claim that this is their
+optimal threshold.
+
+
+
+
+                                                                                                             22
+
+
+
+9     What the law costs
+9.1   Stationary fixed-step gradient descent
+For either logistic profile, assume d ≥ 2 and that one constant scalar step size η is reused at
+every iteration. At the teacher, the Jacobian of one gradient-descent step is I − ηHh . Its radial
+eigenvalue is 1 − ηβ and its tangential eigenvalue is 1 − ηα. The best scalar step for this local
+quadratic model is
+                                     2              α−β      κ−1
+                              η? =       ,    ρ? =         =       .                          (72)
+                                   α+β              α+β      κ+1
+Consequently − log ρ? ∼ 2/κ. For worst-case local error with components allowed in both
+eigenspaces, the e-folding iteration count Te := (− log ρ? )−1 therefore has the exact leading
+scaling
+                                         3                    3
+                            Te,sq ∼            r2 ,  Te,B ∼ 2 r2                          (73)
+                                    2(π 2 − 6)               2π
+for the optimally tuned stationary scalar-step linearization. This is not a global iteration
+bound or an algorithm-independent obstruction: away from the teacher the Hessian contains
+residual terms, and nonstationary polynomial methods can exploit the two-point spectrum.
+Indeed, the scalar schedule η1 = 1/α, η2 = 1/β makes (I − η2 H)(I − η1 H) = 0 in this exact
+local quadratic. Natural-gradient or matrix-preconditioned updates can also remove the local
+condition number by acting differently on the two eigenspaces.
+
+9.2   Estimation
+For n independent Gaussian-output observations with known variance τ 2 , the Fisher informa-
+tion is nHh2 /τ 2 . The Cramér–Rao inequality gives, along any unit tangential vector v ⊥ u
+and the radial vector u,
+                                        τ2                            τ2
+                        Var(v > w)
+                                b ≥           ,        Var(u> w)
+                                                              b ≥           .                (74)
+                                      nα2 (r)                       nβ2 (r)
+The ratio of the displayed radial lower bound to the tangential lower bound is κ2 (r). Hence
+tangential variance is bounded below at order r/n, while radial variance is bounded below
+at order r3 /n. The analogous Bernoulli bounds replace h2 by h1 . The same quadratic ratio
+therefore appears in these coordinatewise information lower bounds and in stationary fixed-step
+descent, although the latter can be removed by a nonstationary schedule.
+
+
+10    Bias and universality
+A conventional neuron includes a bias b. At b = 0 the augmented parameter (w, b) has
+Fisher/Hessian block
+                                          XX > X
+                                                
+                               E h(rZ)               .
+                                           X>   1
+For even h, the radial–bias cross term E[Zh(rZ)] vanishes. The bias eigenvalue equals αh (r),
+so the spectrum contains one radial eigenvalue βh and d tangential/bias eigenvalues αh . A
+nonzero bias preserves the (d − 1) tangential eigenspace but replaces the radial and bias
+coordinates by the explicit 2 × 2 block
+                               E[Z 2 h(rZ + b)] E[Zh(rZ + b)]
+                                                             
+                                                                .                       (75)
+                               E[Zh(rZ + b)]     E[h(rZ + b)]
+The centered theorem is therefore not an artifact of omitting the bias; it is the diagonal point
+of a fully explicit two-coordinate extension.
+
+                                                  23
+
+
+
+The exponent two is broader than the logistic curve. Theorem 4.1 shows that any localized
+sensitivity profile with finite positive m0 and m2 has the same r2 anisotropy, with only the
+constant m0 /m2 depending on the activation and observation model. Profiles with heavy
+sensitivity tails or vanishing second moment fall outside this universality class and can have
+different laws.
+
+
+11    Relation to prior work
+Table 1 states the claim boundary before the detailed discussion.
+
+  Prior result                   Result here                     Exact difference
+  Fixed-order                    closed logistic determinant     explicit specialization and
+  Löwner/Schwarzian              and certified 2 × 2 witness     certificate; not a new criterion or
+  criterion and serial closure                                   closure law
+  [3, 4]
+  One-unit Gaussian Fisher       spherical local bridge and      coefficient cross-identification and
+  split for φ02 [24]             Gaussian all-p laws             extensions; not a new one-unit
+                                                                 decomposition
+  Bernoulli exponents and        pointwise and shell-uniform     tunable precision and all powers;
+  finite-sample logistic         relative Gram bounds, plus      not the first bilateral, uniform, or
+  Hessian bounds                 matching pointwise              one-sided Hessian bound
+  [15, 18, 17, 21]               complexity
+  Scaled-SVD flags [8] and       spectral lexicography and       flag mechanism is classical; logistic
+  Gaussian logistic              exact extreme-saturation        sample ordering, angle law and
+  direction/Hessian theory       angle law                       complexity are the refinement; not
+  [14, 17, 15, 16]                                               labeled direction estimation or a
+                                                                 joint finite-r rate
+  Classical spherical            exact QR constants and three    leading constants and critical
+  representation [7] and         inverse-radius phases           logarithm; not a new spherical
+  regular-design reference                                       representation or first
+  exponents [17]                                                 non-Gaussian exponent
+  Generalized-logistic           Gamma/polygamma                 transform is classical; the unified
+  transforms and cumulants       moments inside neuronal         anisotropy, endpoint laws and
+  [26, 25]                       anisotropy                      monotonicity are the contribution
+  Lam’s historical v2            Löwner–anisotropy coefficient   different objects and coefficient; no
+  Fisher–Schwarzian              identity                        claim to the first general
+  construction [27]                                              Fisher–Schwarzian connection
+
+                           Table 1: Result-by-result priority boundary.
+
+    Löwner matrices characterize fixed-order matrix monotonicity; modern treatments include
+Hiai–Sano and Heinävaara [1, 2]. Kozlovski and Sands prove the relevant classical equivalence
+between Sf ≥ 0 and order-two matrix monotonicity and record the Schwarzian composition
+law [3]. Hence the qualitative logistic obstruction and its serial-chain extension are classical
+consequences; negative Schwarzian also implies the all-pair determinant sign through strict
+convexity of (f 0 )−1/2 . Cook, Hammerlindl and Tucker develop the algebraically equivalent
+nowhere-coexpanding inequality, prove serial closure, and explicitly discuss sigmoid activations
+and one-dimensional neural compositions [4]. Neural papers have proposed analytic quantum
+activations and trainable matrix activations [5, 6], but their objectives are circuit implementa-
+tion or matrix-valued parameterization, not preservation of PSD order by the spectral logistic
+function. In the primary sources we located, we did not find the closed logistic identity (3), the
+explicit certified witness, or the coefficient identity (35) linking the Löwner defect to Gaussian
+radial–tangential anisotropy. This is a bounded novelty statement, not a claim that no earlier
+
+
+                                                  24
+
+
+
+source can exist.
+    Learning one neuron is already a nontrivial optimization problem. Yehudai and Shamir
+study when gradient methods learn a single neuron under broad activations and input dis-
+tributions, including positive and negative results [9]. Diakonikolas et al. treat monotone
+neurons with adversarial label noise and obtain polynomial learners for logistic activations
+under log-concave inputs [10]. Wu extends learnability results to nonmonotone activations [11],
+and Vardi et al. show that adding a bias qualitatively changes the ReLU landscape [12]. Recent
+single-index work analyzes SGD under anisotropic Gaussian inputs [13]. Under Gaussian
+logistic regression, Hsu and Mazumdar study the signal-dependent difficulty of direction and
+temperature estimation [14]. Chen and Mazumdar identify the Bernoulli radial and tangential
+Hessian functions, prove their r−3 and r−1 orders and show tangential curvature exceeds radial
+                p nonzero signal [15]; they subsequently prove a minimax norm-estimation
+curvature for every
+rate of order r3 /n [16]. Ostrovskii and Bach prove a uniform bilateral constant-factor
+empirical-Hessian sandwich for Gaussian logistic regression [18, Eq. (92)], while Fisher et
+al. give a generic fixed-point standardized-Hessian concentration framework [21]. Chardon,
+Lerasle and Mourtada prove, for p = 1, a uniform one-sided empirical Hessian lower bound
+under the sufficient condition n & r(d + t) [17, Theorem 6]. We therefore do not claim the
+Bernoulli exponents, the p = 1 ordering, the effective transition-slab scale, the first bilateral
+Hessian concentration, or the first finite-sample lower bound. Our empirical contribution is
+the explicit pointwise (1 ± ε) approximation (48) for all p > 0, its matching bilateral lower
+complexity, the full-dyadic-shell extension (71), and the distinct extreme-saturation projector
+law (64). The shell theorem pays a conservative covering logarithm and is not asserted to
+improve the optimal local one-sided rate; the projector theorem is iterated-limit rather than
+uniform finite-r. Stewart’s scaled-SVD analysis already supplies the underlying deterministic
+flag mechanism [8]. In the primary sources searched through August 30, 2026, we did not locate
+the logistic nearest-hyperplane projector, its exact angle law, or the resulting order-statistic
+complexity. This is a bounded search statement, not a guarantee of priority. Recent work
+already constructs minimax labeled estimators, including a split-sample direction/norm scheme
+with bias correction [16]; our oracle Gram theorem is not an estimator.
+    Fisher geometry and natural gradient are classical [22]. Karakida et al. study broad Fisher
+spectral statistics for random deep networks [23]; Amari, Karakida and Oizumi also give
+the direct one-unit Gaussian φ02 decomposition and bias coupling used here [24]. Our radial
+contribution is therefore not the two-eigenspace reduction. It is the profile-generic moment
+theorem, nonasymptotic brackets, closed all-power logistic constants, strict global monotonicity,
+and their connection through (35) to the Löwner order defect. The generalized-logistic Gamma
+transform and its polygamma cumulants in Lemma 7.1 are classical [26, 25]; the claim is
+their neural-geometric use, ratio monotonicity and endpoint package, not discovery of the
+distributional identity. Lam’s v2 preprint connected Schwarzian curvature with Fisher–Rao
+geometry on manifolds of densities [27]. The current v3 explicitly corrects and supersedes v1–v2
+and removes that architecture [28]. Neither version contains the one-neuron radial–tangential
+coefficient or its equality with the two-point Löwner defect. We cite v2 only as a dated
+historical adjacency; its Lp parameter is unrelated to the sensitivity exponent in hp = σ 0p .
+
+
+12    Reproducibility and hostile checks
+The documented sequence in repro/README.md runs the original and v3 checks together with
+three new scripts:
+               radial_phase_transition.py, spectral_lexicography.py,
+                              verify_v4_additions.py.
+Together they perform the following independent checks:
+
+                                               25
+
+
+
+1. it spot-checks (3) at separated scales and constructs Proposition 2.2 with 256-bit directed
+    Arb balls;
+
+ 2. it checks the spherical fourth-moment coefficient for Gaussian and fixed-radius spherical
+    inputs;
+
+ 3. it compares numerical quadrature of m0 , m2 , m4 with the Gamma/polygamma formula
+    for several noninteger and integer p;
+
+ 4. it checks the small-r jet through r6 and the refined large-r expansion;
+
+ 5. it evaluates α, β directly over a logarithmic radius grid and checks positivity and grid
+    monotonicity for p = 1, 2;
+
+ 6. it checks (37)–(39) at declared finite scales;
+
+ 7. for three declared fixed random seeds it evaluates the empirical radial, tangential and
+    cross blocks and verifies that those realized errors lie inside (46);
+
+ 8. it checks both sides of (19)–(20) at declared finite radii;
+
+ 9. a second replay evaluates the explicit C1 , C2 majorants and lower-bound constants; and
+
+10. a fixed-seed replay regenerates Figure 4 and its JSON certificate, while the main replay
+    regenerates Figure 2 and its certificate;
+
+11. deterministic adaptive quadrature regenerates Figure 1 and checks all three exact phase
+    constants for isotropic Gamma radii; and
+
+12. a fixed-seed eigenspace replay regenerates Figure 3, while a separate check validates the
+    explicit Lp , Kp confidence constants and the sample-wise normal-vector identity.
+
+The numerical monotonicity and finite-radius checks are performed on declared grids; the
+universal statements are proved analytically above. The replay uses Python, python-flint,
+NumPy, SciPy, and Matplotlib. It is diagnostic rather than a substitute for the analytic
+proofs, which reduce to the Löwner determinant identity, the Schwarzian chain rule, Gaussian
+orthogonal decomposition, Bernstein/net bounds, an Abelian kernel lemma, exterior powers,
+elementary order statistics, an explicit Gaussian lower tail, and closed Fourier moments. The
+stable record, versioned source archives, audit reports and manifests are public at https:
+//arr-research.github.io/papers/ARR-2026-53CTRKDSP685PT51/.
+
+
+13    Limitations and next theorem
+The Löwner theorem concerns spectral matrix functions, not entrywise vector activations; it
+does not say that a standard feedforward neuron reverses coordinatewise order. The empirical
+results assume Gaussian input. The local Schwarzian coefficient needs fourth moments, whereas
+the spherical asymptotic law needs transition-layer regularity; ER−1 < ∞ is needed precisely
+for its quadratic phase, with the other phases covered by Theorem 5.3. Covariance isotropy
+alone is insufficient by the Rademacher example following it. Elliptical laws can be whitened,
+but radial/tangential directions then use the covariance metric.
+    The sharp Gram complexity statement is pointwise for a fixed teacher and bilateral relative
+Loewner loss. The bottom-eigenspace result solves a different, iterated limit: it does not
+provide a finite-r rate uniform along n = n(r) or d = d(r). Closing that joint regime is the
+strongest next spectral problem. The dyadic-shell theorem is uniform but its Euclidean-net
+logarithm is not quantitatively sharp. Already in d = 2 the tangential forms resemble a marked
+
+                                               26
+
+
+
+angular
+  √     kernel process of bandwidth 1/R; classical sup-norm kernel laws therefore suggest that
+a log R penalty is intrinsic [19, 20]. We do not prove the corresponding marked-process lower
+bound. A model-specific matching shell lower bound and a chaining upper bound remain open.
+None of these oracle results is an estimator guarantee using labels or a minimax parameter
+lower bound. The optimization result remains local, and the Cramér–Rao statement concerns
+regular unbiased estimation.
+
+
+AI assistance disclosure
+AI tools assisted with public-literature and repository triage, proof stress testing, numerical
+replay, drafting, and PDF production. The author remains responsible for the mathematical
+claims and any remaining errors.
+
+
+References
+ [1] F. Hiai and T. Sano, Löwner matrices of matrix convex and monotone functions, Journal of the
+     Mathematical Society of Japan 64(2) (2012), 343–364. https://arxiv.org/abs/1007.2478
+ [2] O. Heinävaara, Characterizing matrix monotonicity of fixed order on general sets, preprint (2019).
+     https://arxiv.org/abs/1906.06155
+ [3] O. Kozlovski and D. Sands, Higher order Schwarzian derivatives in interval dynamics, Fundamenta
+     Mathematicae 206 (2009), 217–239. https://arxiv.org/abs/0812.2646
+ [4] A. Cook, A. Hammerlindl and W. Tucker, Nowhere coexpanding functions, Chaos 33 (2023),
+     123105. https://arxiv.org/abs/2303.12814
+ [5] M. Maronese, C. Destri and E. Prati, Quantum activation functions for quantum neural networks,
+     Quantum Information Processing 21 (2022), 128. https://arxiv.org/abs/2201.03700
+ [6] Z. Liu, S. Cao, Y. Li and L. Zikatanov, Neural networks with trainable matrix activation functions,
+     Journal of Machine Learning for Modeling and Computing 6(2) (2025), 1–11. https://arxiv.
+     org/abs/2109.09948
+ [7] S. Cambanis, S. Huang and G. Simons, On the theory of elliptically contoured distributions, Jour-
+     nal of Multivariate Analysis 11(3) (1981), 368–385. https://doi.org/10.1016/0047-259X(81)
+     90082-8
+ [8] G. W. Stewart, On the asymptotic behavior of scaled singular value and QR decompo-
+     sitions, Mathematics of Computation 43(168) (1984), 483–489. https://doi.org/10.1090/
+     S0025-5718-1984-0758196-7
+ [9] G. Yehudai and O. Shamir, Learning a Single Neuron with Gradient Methods, Proceedings of
+     Machine Learning Research 125 (2020), 3756–3786. https://proceedings.mlr.press/v125/
+     yehudai20a.html
+[10] I. Diakonikolas, V. Kontonis, C. Tzamos and N. Zarifis, Learning a Single Neuron with Adversarial
+     Label Noise via Gradient Descent, Proceedings of Machine Learning Research 178 (2022), 4313–4361.
+     https://proceedings.mlr.press/v178/diakonikolas22c.html
+[11] L. Wu, Learning a Single Neuron for Non-monotonic Activation Functions, Proceedings of Machine
+     Learning Research 151 (2022), 4178–4197. https://proceedings.mlr.press/v151/wu22c.html
+[12] G. Vardi, G. Yehudai and O. Shamir, Learning a Single Neuron with Bias Using Gradient
+     Descent, Advances in Neural Information Processing Systems 34 (2021), 28690–28700. https:
+     //arxiv.org/abs/2106.01101
+[13] G. Braun, M. H. Quang and M. Imaizumi, Learning a Single Index Model from Anisotropic Data
+     with Vanilla Stochastic Gradient Descent, Proceedings of Machine Learning Research 258 (2025),
+     1216–1224. https://proceedings.mlr.press/v258/braun25a.html
+
+
+
+                                                  27
+
+
+
+[14] D. Hsu and A. Mazumdar, On the Sample Complexity of Parameter Estimation in Logistic
+     Regression with Normal Design, Proceedings of Machine Learning Research 247 (2024), 2418–2437.
+     https://proceedings.mlr.press/v247/hsu24a.html
+[15] J. Chen and A. Mazumdar, Finite-Sample Performance of Gradient Descent in Logistic Regression
+     with Gaussian Design, arXiv:2606.21683 (2026). https://arxiv.org/abs/2606.21683
+[16] J. Chen and A. Mazumdar, Minimax Optimal Estimator and Improved Error Rate for the MLE
+     in Logistic Regression with Gaussian Design, arXiv:2608.17260 (2026). https://arxiv.org/abs/
+     2608.17260
+[17] H. Chardon, M. Lerasle and J. Mourtada, Finite-sample performance of the maximum likelihood
+     estimator in logistic regression, arXiv:2411.02137v3 (first posted 2024; v3 2026). https://arxiv.
+     org/abs/2411.02137v3
+[18] D. M. Ostrovskii and F. Bach, Finite-sample analysis of M-estimators using self-concordance,
+     Electronic Journal of Statistics 15(1) (2021), 326–391. https://doi.org/10.1214/20-EJS1780
+[19] P. J. Bickel and M. Rosenblatt, On some global measures of the deviations of density function esti-
+     mates, Annals of Statistics 1(6) (1973), 1071–1095. https://doi.org/10.1214/aos/1176342558
+[20] E. Giné, V. Koltchinskii and L. Sakhanenko, Kernel density estimators: convergence in distribution
+     for weighted sup-norms, Probability Theory and Related Fields 130 (2004), 167–198. https:
+     //doi.org/10.1007/s00440-003-0314-z
+[21] J. Fisher, L. Liu, K. Pillutla, Y. Choi and Z. Harchaoui, Influence Diagnostics under Self-
+     concordance, Proceedings of Machine Learning Research 206 (2023), 10028–10076. https://
+     proceedings.mlr.press/v206/fisher23a.html
+[22] S.-i. Amari, Natural Gradient Works Efficiently in Learning, Neural Computation 10 (1998),
+     251–276. https://doi.org/10.1162/089976698300017746
+[23] R. Karakida, S. Akaho and S.-i. Amari, Universal Statistics of Fisher Information in Deep Neural
+     Networks: Mean Field Approach, Proceedings of Machine Learning Research 89 (2019), 1032–1041.
+     https://proceedings.mlr.press/v89/karakida19a.html
+[24] S.-i. Amari, R. Karakida and M. Oizumi, Fisher Information and Natural Gradient Learning
+     in Random Deep Networks, Proceedings of Machine Learning Research 89 (2019), 694–702.
+     https://proceedings.mlr.press/v89/amari19a.html
+[25] C. J. Lee, A. Zito, H. Sang and D. B. Dunson, Logistic-beta processes for dependent random
+     probabilities with beta marginals, Bayesian Analysis 20(4) (2025), 1345–1369. https://doi.org/
+     10.1214/25-BA1541
+[26] M. O. Ojo and A. K. Olapade, On a Six-Parameter Generalized Logistic Distribution,
+     Kragujevac Journal of Mathematics 26 (2004), 31–38. https://imi.pmf.kg.ac.rs/kjm/pub/
+     12616736649184_5.pdf
+[27] H. P. G. Lam, Real Bers embedding on the line: Fisher–Rao linearization, Schwarzian curvature,
+     and scattering coordinates, arXiv:2602.07373v2 (2026). https://arxiv.org/abs/2602.07373v2
+[28] H. P. G. Lam, Zero-energy scattering and the real Bers image on the line, arXiv:2602.07373v3
+     (2026), correcting and superseding v1–v2. https://arxiv.org/abs/2602.07373v3
+
+
+
+
+                                                  28
