@@ -1,9 +1,9 @@
 # Version-locked frontier-model screening
 
 - Protocol: `ARR-ASSESS-1.0`
-- Assessment: `arr:assessment:a051cc1d-373e-4d75-9b0a-52f8b21b93ce`
+- Assessment: `arr:assessment:6baeaf57-ec50-44d9-9e02-01ef772b2f95`
 - Model: `OpenAI gpt-5.6-sol`
-- Assessed at: `2026-08-30T17:40:00.0530557+02:00`
+- Assessed at: `2026-08-30T17:59:11.0693013+02:00`
 - Version: `arr:version:9995fadc-8487-446c-b368-15ad54297648`
 - Canonical SHA-256: `106e6011a9506b6f64ac04fdc6d991e11bae7db3b4bf7c76cad33825e2190337`
 - Recommendation: **minor revision**
