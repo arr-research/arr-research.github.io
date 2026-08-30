@@ -1,6 +1,8 @@
 # ARR — Archive for Rigorous Research
 
-ARR is a curated, versioned archive for research papers and technical notes published with canonical artifacts, machine-readable renditions, and explicit verification evidence.
+ARR is the hostile-audit research registry: new admissions must survive at least three distinct frontier-model referees working on the exact hashed manuscript, with zero unresolved material objections and a final human decision. It publishes the model identities, findings and disagreement alongside canonical artifacts, machine-readable renditions and explicit verification evidence.
+
+Passing that gate is meaningful positive evidence that a paper deserves serious attention. It is not a guarantee of truth, a proof certificate or a replacement for qualified domain-expert peer review; ARR makes the hard filter inspectable instead of asking readers to trust a label.
 
 This repository is the technical foundation for the archive. It keeps lightweight, inspectable sources in Git and publishes large generated artifacts—PDFs, complete source bundles, datasets, and build logs—as GitHub Release assets.
 

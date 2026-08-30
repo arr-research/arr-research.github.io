@@ -200,7 +200,7 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
   </header>
   <main id="main">{content}</main>
   <footer>
-    <p><strong>ARR</strong> is a curated archive of research papers and technical notes with explicit evidence labels. Acceptance is not peer review and is not a guarantee of truth.</p>
+    <p><strong>ARR</strong> is the hostile-audit research registry: new admissions face multiple version-locked frontier-model referees and human sign-off. Passing is strong, inspectable evidence—not a guarantee of truth or peer review.</p>
     <p><a href="{base}/catalog.json">Machine-readable catalogue (CC0)</a> · <a href="{base}/registry/model-assessments.json">Model assessments</a> · <a href="{base}/authors/index.json">Author registry (CC0)</a> · <a href="{base}/metrics.json">Activity snapshot (CC0)</a> · <a href="{base}/registry/record-timestamps.json">Exact record timestamps (CC0)</a> · <a href="{base}/protocol/">Verification protocol</a> · <a href="{base}/licensing/">Licensing</a> · <a href="{base}/privacy/">Privacy</a> · <a href="{base}/terms/">Deposit terms</a> · <a href="{base}/contact/">Contact and complaints</a> · <a href="https://github.com/arr-research/arr-research.github.io">Source (AGPL)</a></p>
   </footer>
 </body>
@@ -407,11 +407,12 @@ def build_home(papers: list, timestamps: dict, base: str, canonical_url: str, au
 </section>"""
     content = f"""
 <section class="hero">
-  <div class="eyebrow">Open · Curated · Reproducible</div>
-  <h1>Research should arrive with its evidence.</h1>
-  <p class="lede">ARR publishes inspectable research papers and technical notes with machine-readable renditions and explicit verification evidence. Every record keeps its manuscript, code, provenance, version, licenses and checks.</p>
-  <div class="hero-actions"><a class="button" href="{base}/papers/">Browse papers</a><a class="button secondary" href="{base}/notes/">Browse technical notes</a><a class="text-link" href="{base}/protocol/">Read the protocol →</a></div>
+  <div class="eyebrow">Hostile audit · Frontier models · Human decision</div>
+  <h1>Research should survive hostile audit.</h1>
+  <p class="lede">ARR is not a file dump. New admissions are attacked by at least three distinct frontier-model referees on the exact hashed version: counterexamples, hidden assumptions, proof gaps and novelty claims are tested before a human signs the decision.</p>
+  <div class="hero-actions"><a class="button" href="{base}/assessments/">Explore assessments</a><a class="button secondary" href="{base}/papers/">Browse papers</a><a class="text-link" href="{base}/protocol/">Read the hard gate →</a></div>
 </section>
+<section class="frontier-gate" aria-label="ARR admission standard"><strong>ARR admission gate</strong><span>≥3 distinct frontier models</span><span>exact PDF + SHA-256</span><span>0 unresolved material objections</span><span>human sign-off</span></section>
 <section class="stats" aria-label="Archive statistics">
   <div><strong>{accepted_papers}</strong><span>research papers</span></div>
   <div><strong>{accepted_notes}</strong><span>technical notes</span></div>
@@ -420,13 +421,13 @@ def build_home(papers: list, timestamps: dict, base: str, canonical_url: str, au
 </section>
 <section class="principles">
   <div><span>01</span><h2>Inspectable by default</h2><p>Manuscripts, metadata and code remain readable as plain files—not trapped behind a PDF or proprietary interface.</p></div>
-  <div><span>02</span><h2>Claims match checks</h2><p>ARR reports pass, partial and not-assessed results exactly as recorded. It does not turn screening into a claim of truth.</p></div>
+  <div><span>02</span><h2>Survival is evidence</h2><p>A paper that clears the new gate has survived a deliberately hostile, reproducible test by leading frontier models. ARR publishes the reports and disagreement instead of asking readers to trust the badge.</p></div>
   <div><span>03</span><h2>History remains visible</h2><p>Published versions are identified by hashes and releases. Corrections create a new immutable version rather than silently rewriting the past.</p></div>
 </section>
 <section class="recent"><div class="section-heading"><div><span>Catalogue</span><h2>Latest accepted research</h2></div><a href="{base}/papers/">View papers</a></div>{recent}</section>
 """
     canonical = f"{canonical_url}/" if canonical_url else ""
-    return page_shell(title="ARR — Archive for Rigorous Research", description="A curated, machine-readable archive of research preprints with explicit evidence labels.", content=content, base=base, canonical=canonical)
+    return page_shell(title="ARR — Hostile frontier-model audit for research", description="Research papers subjected to version-locked hostile audits by multiple frontier models, with public evidence and human editorial sign-off.", content=content, base=base, canonical=canonical)
 
 
 def build_papers_index(papers: list, timestamps: dict, base: str, canonical_url: str, author_lookup: dict[str, dict] | None = None, metrics: dict | None = None) -> str:
@@ -435,7 +436,7 @@ def build_papers_index(papers: list, timestamps: dict, base: str, canonical_url:
     if not cards:
         cards = '<section class="empty-state compact"><h2>No accepted papers yet.</h2><p>The public catalogue begins only after the first candidate completes the ARR workflow.</p></section>'
     content = f"""
-<section class="page-intro"><span>Public catalogue</span><h1>Accepted papers</h1><p>Each record corresponds to an explicit version and provides machine-readable sources, provenance and verification status.</p></section>
+<section class="page-intro"><span>Public catalogue</span><h1>Accepted papers</h1><p>Each record identifies the exact version, evidence and screening status. New admissions must survive the three-model hostile-audit gate; legacy records remain visibly unrated or not assessed rather than receiving a false badge.</p></section>
 <section class="catalogue">{cards}</section>
 """
     canonical = f"{canonical_url}/papers/" if canonical_url else ""
@@ -805,7 +806,8 @@ def build_assessments(papers: list, assessments: list[dict], highlights: list[di
     content = f"""
 <section class="assessment-index">
   <header><div><span>ARR-ASSESS-1.0 · exact-version evidence</span><h1>Model assessment ranking</h1></div><a class="policy-link" href="https://github.com/arr-research/arr-research.github.io/blob/main/docs/MODEL_ASSESSMENT_POLICY.md">Full policy</a></header>
-  <p class="assessment-lead">Frontier models are used as hostile scientific screeners. An unresolved material objection blocks a new admission until correction or signed human adjudication. A model report is not peer review or proof; every score names the model, artifact, version and date.</p>
+  <p class="assessment-lead"><strong>ARR asks the strongest available frontier models to attack a paper, not merely summarize it.</strong> They search for counterexamples, hidden assumptions, proof gaps, unsupported novelty and reproducibility failures on the exact hashed version. Three distinct reports and zero unresolved material objections are required for a new admission; every score names the model, artifact, version and date.</p>
+  <p class="assessment-boundary">Passing this unusually hard filter is meaningful positive evidence that a paper deserves serious attention. It is not infallibility: models can share blind spots, and a score cannot replace domain-expert review, formal proof or later correction.</p>
   <div class="assessment-index-meta"><span>{len(ranked)} rated current versions</span><span>{sum(1 for paper in papers if aggregate_assessments(assessments_for(assessments, paper)) is None)} not yet rated</span><span>{len(assessments)} preserved reports</span><span>{highlight_count} signed highlights</span></div>
   <div class="assessment-rank-head"><span>Rank</span><span>Paper</span><span>Median assessment</span></div>
   <ol class="assessment-ranking">{''.join(rows)}</ol>
@@ -830,15 +832,15 @@ def build_support(base: str, canonical_url: str) -> str:
 
 def build_about(base: str, canonical_url: str) -> str:
     content = """
-<section class="page-intro"><span>About the archive</span><h1>Designed for inspection and independence.</h1><p>ARR is an open, curated archive for research published with the files and evidence needed to understand how each result was produced and checked.</p></section>
+<section class="page-intro"><span>About the archive</span><h1>The hostile-audit research registry.</h1><p>ARR exists because uploading a PDF proves almost nothing. It distinguishes work that has survived disclosed frontier-model attacks on an exact version from work that has merely been posted online.</p></section>
 <section class="about-grid">
-  <article><h2>What ARR is</h2><p>A versioned archive of research papers and concise technical notes, with canonical manuscripts, machine-readable renditions, code, formalizations, data descriptions and explicit verification records.</p></article>
+  <article><h2>What ARR is</h2><p>A versioned registry where new research must survive multiple hostile frontier-model referees and a human decision. Canonical manuscripts, prompts, model identities, findings, code, provenance and verification records remain inspectable.</p></article>
   <article><h2>Two publication types</h2><p>Research papers present complete scholarly arguments at paper scale. Technical notes preserve narrower but rigorous results, proofs, formalizations, methods, replications, negative results, software or protocols. A note is different in scope, not exempt from evidence or integrity requirements.</p></article>
   <article><h2>What ARR is not</h2><p>ARR is not a journal, a replacement for expert peer review or a guarantee that a scientific claim is true. Activity rankings measure use; the separate scientific ranking reports version-locked model opinions with their provenance and limits.</p></article>
   <article><h2>Governance</h2><p>Lluis Eriksson is founder, registry operator, responsible editor and data controller. Every decision is human. His conflicted or author-owned work requires a disclosed independent editor before publication.</p></article>
   <article><h2>Preservation</h2><p>Stable identifiers are independent of GitHub. Versioned releases distribute generated and large files; future object storage and independent preservation mirrors can replace any provider without changing citations.</p></article>
   <article><h2>Submissions</h2><p>ARR does not currently charge for submission, assessment, publication or withdrawal. Authors use one direct private form without requesting an invitation. Manuscripts enter a separate quarantine service; GitHub and ordinary email are never manuscript channels.</p></article>
-  <article><h2>Frontier-model record</h2><p>New admissions require hostile, exact-version model screening before the human decision. Published assessments remain comparable over time: model, date, score, strengths, weaknesses, possible errors and novelty candidates are preserved rather than overwritten.</p></article>
+  <article><h2>Frontier expertise</h2><p>ARR deliberately uses the strongest available frontier models as tireless adversarial referees. Published assessments remain comparable over time: model, date, score, strengths, weaknesses, possible errors and novelty candidates are preserved rather than overwritten.</p></article>
 </section>
 """
     canonical = f"{canonical_url}/about/" if canonical_url else ""
@@ -952,6 +954,7 @@ def build_submit(
     content = f"""
 <section class="ranked-feed submit-index">
   <header><div><span>ARR public catalogue · activity order</span><h1>Paper index</h1></div><div class="submit-tools">{direct_action}<a href="{base}/terms/">Terms</a><a href="{base}/privacy/">Privacy</a></div></header>
+  <div class="compact-gate"><strong>New-admission gate</strong><span>≥3 frontier models</span><span>exact-version hostile audit</span><span>0 unresolved material objections</span><span>human decision</span><a href="{base}/assessments/">evidence and scores →</a></div>
   <div class="index-meta"><p>{esc(rank_explanation)}</p><span>Records {start + 1 if ranked else 0}–{min(start + page_size, len(ranked))} / {len(ranked)}</span></div>
   <div class="rank-columns" aria-hidden="true"><span>Rank</span><span>Record</span><span>Activity</span></div>
   <ol class="ranked-list" start="{start + 1}">{''.join(rows)}</ol>
