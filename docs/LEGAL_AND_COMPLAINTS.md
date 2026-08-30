@@ -13,7 +13,7 @@ presented as a registered company; “VD/CEO” is not used.
 - No manuscript attachments or sensitive evidence by ordinary email. Ask for a
   secure case channel first.
 
-Use a clear subject: `ARR invitation`, `ARR appeal`, `ARR privacy`, `ARR copyright`,
+Use a clear subject: `ARR submission`, `ARR appeal`, `ARR privacy`, `ARR copyright`,
 `ARR illegal-content notice`, or `ARR security`. ARR assigns a case identifier.
 
 ## Editorial appeal
@@ -46,6 +46,6 @@ to the Swedish Authority for Privacy Protection (IMY):
 
 ## Service-address limitation
 
-This electronic contact is usable for the invitation pilot. ARR must obtain and
+This electronic contact is usable for the direct-submission pilot. ARR must obtain and
 publish a stable service/postal address and obtain Swedish legal review before it
 opens unrestricted public accounts or describes the service as fully compliant.

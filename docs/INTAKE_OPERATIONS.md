@@ -2,13 +2,13 @@
 
 ## Launch gate
 
-The invitation pilot may receive real manuscripts only after every item is signed
+The direct-submission pilot may receive real manuscripts only after every item is signed
 and dated by the operator:
 
 - [ ] Swedish/EU counsel reviewed terms, privacy, DSA/e-commerce classification,
   complaints and the intended hosting arrangement.
 - [ ] A stable service/postal address is published without exposing a home address.
-- [ ] Every infrastructure/email/backup/scanning processor, DPA, location,
+- [ ] Every infrastructure/SMTP-email/backup/scanning processor, DPA, location,
   subprocessor and transfer safeguard is recorded in `PROCESSING_RECORD.md`.
 - [ ] The intake instance directory and backups are encrypted, private and outside
   the public Git checkout; restore and erasure have been tested.
@@ -22,20 +22,30 @@ and dated by the operator:
   are scheduled; failed jobs alert the operator.
 - [ ] A breach tabletop verifies containment, evidence, risk assessment and the
   conditional 72-hour IMY process.
-- [ ] An end-to-end dummy case proves invitation, upload, clean/infected paths,
-  manual accept/decline, conflict escalation, appeal and deletion.
+- [ ] The public receiver uses a bot trap plus IP and normalized-email limits; abuse
+  monitoring and an emergency shutdown procedure are tested.
+- [ ] The host uses `/readyz` for readiness and refuses traffic while HTTPS origin,
+  secure cookies, the scanner or SMTP operator notice is missing.
+- [ ] An end-to-end dummy case proves direct upload, operator email notification
+  without an attachment, clean/infected paths, manual accept/decline, conflict
+  escalation, appeal and deletion.
 
-Until every item is complete, the public site may invite **expressions of interest
-without attachments** but must not issue live upload credentials.
+Until every item is complete, the public site must keep the direct-submit button
+disabled. It must not solicit invitations or accept manuscript email attachments.
+After sign-off and a successful `/readyz`, set the repository variable
+`ARR_INTAKE_URL` to the receiver's HTTPS origin and redeploy Pages.
 
 ## Per-case procedure
 
-1. Receive only name, email, field and title in the invitation request. Reject email
-   attachments and ask the sender to delete/resend safely.
-2. Create one email-bound, single-use invitation expiring in 7 days.
-3. The author creates an account, accepts the versioned notices and uploads a PDF.
-4. The service stores random bytes outside the web root and scans. No editor can
+1. The adult depositor opens the HTTPS form directly, provides contact/metadata,
+   accepts the versioned terms/privacy notice and uploads one PDF. No account or
+   invitation is required.
+2. The service enforces CSRF, bot-trap, per-IP and per-email limits before accepting
+   the manuscript.
+3. The service stores random bytes outside the web root and scans. No editor can
    download until status is `clean`; scan errors stay in quarantine.
+4. Email the operator only the case identifier, title, scanner state and protected
+   editor URL. Never attach the PDF or abstract. SMTP failure is audited and alerted.
 5. Verify identity/authority, scope, rights, disclosures, conflicts and minimum
    completeness before substantive assessment.
 6. Review the exact SHA-256 version. External AI gets nothing unless the recorded

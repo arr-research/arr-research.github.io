@@ -1,4 +1,4 @@
-# ARR deposit terms — ARR-DEPOSIT-1.1
+# ARR deposit terms — ARR-DEPOSIT-1.2
 
 **Effective:** 2026-08-30  
 **Operator:** Lluis Eriksson, Stockholm, Sweden — lluiseriksson@gmail.com  
@@ -8,19 +8,20 @@ after advance publication of new terms and clear notice before submission. No fe
 will be imposed retroactively on a submission governed by this version, and a
 future fee will never purchase acceptance, priority or a favourable decision.
 
-This version replaces `ARR-DEPOSIT-1.0` before any production upload invitation
-was issued.
+This version replaces `ARR-DEPOSIT-1.1` before direct public submission was
+activated.
 
-These terms govern ARR's invitation-only deposit pilot. They are accepted when a
-depositor ticks the versioned agreement and uploads a manuscript. Email and GitHub
+These terms govern ARR's direct private-submission pilot. No invitation or author
+account is required. They are accepted when a depositor ticks the versioned
+agreement and uploads a manuscript through the private form. Email and GitHub
 issues are not deposit channels.
 
 The agreement language is English. Before upload, the form lets the depositor
 review and correct every field, links a storable copy of these terms, and identifies
-the steps as account creation, upload to quarantine, security/eligibility checks,
-human assessment, decision and—only if finally accepted—a separate publication
-release. ARR archives the accepted terms/privacy version and immediately shows an
-electronic case receipt in the private dashboard.
+the steps as direct upload to quarantine, security/eligibility checks, human
+assessment, decision and—only if finally accepted—a separate publication release.
+ARR archives the accepted terms/privacy version and immediately shows an electronic
+case identifier. Editorial responses use the depositor's submitted email address.
 
 ## 1. Eligibility and authority
 
@@ -45,6 +46,9 @@ restrict access but never accept a paper. ARR may decline, request changes,
 quarantine, remove or refer a submission for legal/security review. Every editorial
 acceptance is a recorded human decision. Submission creates no guarantee of review
 time, publication, correctness, novelty, importance, preservation or endorsement.
+The operator receives an email notice containing limited case metadata and a
+protected editor link; the PDF and abstract are not email attachments or message
+content.
 
 ## 4. Editorial decision and conflicts
 
@@ -71,7 +75,7 @@ tombstone; ARR cannot recall third-party copies.
 
 ## 6. Privacy and optional AI review
 
-Processing follows `ARR-PRIVACY-1.0`. Private submissions are not placed in the
+Processing follows `ARR-PRIVACY-1.1`. Private submissions are not placed in the
 public repository. External AI assessment is off by default and is not required
 for eligibility. A checked preference alone does not transfer the paper: ARR must
 name the provider and reconfirm the depositor's optional consent first. Consent may

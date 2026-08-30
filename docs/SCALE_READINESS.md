@@ -44,4 +44,4 @@ Thresholds are review points, not promises. ARR migrates before a provider hard 
 
 ## What remains intentionally unbuilt
 
-ARR does not yet run an account system, public upload form, payment flow, comments, social scores, automated quality score, or untrusted-code execution service. Building these before real load would create legal and security exposure without improving the first publications.
+ARR's direct private-upload service is implemented but remains closed until its production gate and external host are complete. ARR does not run author accounts, payments, comments, social scores, automated quality scores or untrusted-code execution. New features must not weaken quarantine or human editorial control.

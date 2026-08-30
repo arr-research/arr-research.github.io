@@ -62,12 +62,17 @@ class IntakeTests(unittest.TestCase):
         return token
 
     def upload(self, *, conflict: bool = False) -> str:
-        token = self.login_session("author@example.org")
+        self.client.get("/submit")
+        with self.client.session_transaction() as session:
+            token = session["csrf_token"]
         data = {
             "csrf_token": token,
+            "display_name": "Direct Author",
+            "email": "direct-author@example.org",
             "title": "A rigorous test manuscript",
             "authors": "Author Example",
             "abstract": "A" * 120,
+            "adult": "on",
             "terms": "on",
             "privacy": "on",
             "authority": "on",
@@ -82,8 +87,12 @@ class IntakeTests(unittest.TestCase):
             row = get_db().execute("SELECT * FROM submissions ORDER BY created_at DESC LIMIT 1").fetchone()
             self.assertEqual(row["scan_status"], "clean")
             self.assertEqual(row["status"], "eligible")
-            self.assertEqual(row["terms_version"], "ARR-DEPOSIT-1.1")
+            self.assertEqual(row["terms_version"], "ARR-DEPOSIT-1.2")
+            self.assertEqual(row["privacy_version"], "ARR-PRIVACY-1.1")
             self.assertTrue((Path(self.app.config["QUARANTINE"]) / row["stored_name"]).exists())
+            submitter = get_db().execute("SELECT * FROM users WHERE id=?", (row["user_id"],)).fetchone()
+            self.assertEqual(submitter["email"], "direct-author@example.org")
+            self.assertEqual(submitter["active"], 0)
             return row["id"]
 
     def test_editor_login_requires_valid_totp(self) -> None:
@@ -101,6 +110,33 @@ class IntakeTests(unittest.TestCase):
         )
         self.assertEqual(good.status_code, 302)
         self.assertEqual(good.headers["Location"], "/")
+
+    def test_direct_form_requires_no_invitation_or_author_login(self) -> None:
+        response = self.client.get("/submit")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"No invitation or account is required", response.data)
+        self.assertNotIn(b"password", response.data.lower())
+
+    def test_readiness_fails_closed_without_scanner_and_smtp(self) -> None:
+        with patch("services.intake.app.shutil.which", return_value=None):
+            response = self.client.get("/readyz")
+        self.assertEqual(response.status_code, 503)
+        self.assertFalse(response.json["ready"])
+        self.assertFalse(response.json["checks"]["malware_scanner"])
+        self.assertFalse(response.json["checks"]["operator_email_notification"])
+
+    def test_bot_trap_discards_payload_without_creating_a_case(self) -> None:
+        self.client.get("/submit")
+        with self.client.session_transaction() as session:
+            token = session["csrf_token"]
+        response = self.client.post(
+            "/submit",
+            data={"csrf_token": token, "website": "https://spam.example", "email": "bot@example.org"},
+        )
+        self.assertEqual(response.status_code, 302)
+        with self.app.app_context():
+            count = get_db().execute("SELECT COUNT(*) FROM submissions").fetchone()[0]
+        self.assertEqual(count, 0)
 
     def test_upload_stays_private_and_requires_manual_acceptance(self) -> None:
         submission_id = self.upload()
@@ -140,15 +176,20 @@ class IntakeTests(unittest.TestCase):
             self.assertEqual(status, "accepted_for_publication")
 
     def test_missing_scanner_fails_closed(self) -> None:
-        token = self.login_session("author@example.org")
+        self.client.get("/submit")
+        with self.client.session_transaction() as session:
+            token = session["csrf_token"]
         with patch("services.intake.app.shutil.which", return_value=None):
             response = self.client.post(
                 "/submit",
                 data={
                     "csrf_token": token,
+                    "display_name": "Scanner Author",
+                    "email": "scanner-author@example.org",
                     "title": "Scanner failure test",
                     "authors": "Author Example",
                     "abstract": "B" * 120,
+                    "adult": "on",
                     "terms": "on",
                     "privacy": "on",
                     "authority": "on",
@@ -166,6 +207,45 @@ class IntakeTests(unittest.TestCase):
             data={"csrf_token": token, "action": "accept", "reason": "should-not-pass"},
         )
         self.assertEqual(blocked.status_code, 409)
+
+    def test_operator_email_has_protected_link_and_no_manuscript(self) -> None:
+        sent = []
+
+        class FakeSMTP:
+            def __init__(self, *_args, **_kwargs):
+                pass
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *_args):
+                return False
+
+            def starttls(self, **_kwargs):
+                return None
+
+            def login(self, *_args):
+                return None
+
+            def send_message(self, message):
+                sent.append(message)
+
+        self.app.config.update(
+            SMTP_HOST="smtp.example.org",
+            SMTP_FROM="arr@example.org",
+            SMTP_USERNAME="arr-user",
+            SMTP_PASSWORD="secret",
+            PUBLIC_ORIGIN="https://intake.example.org",
+        )
+        with patch("services.intake.app.smtplib.SMTP", FakeSMTP):
+            submission_id = self.upload()
+
+        self.assertEqual(len(sent), 1)
+        body = sent[0].get_content()
+        self.assertIn(f"https://intake.example.org/admin/submission/{submission_id}", body)
+        self.assertNotIn("A" * 80, body)
+        self.assertNotIn("%PDF", body)
+        self.assertNotIn("attachment", str(sent[0].get_content_disposition()))
 
     def test_declined_pdf_is_erased_on_schedule(self) -> None:
         submission_id = self.upload()

@@ -1,11 +1,15 @@
 {% extends 'base.html' %}{% block title %}Submit — ARR intake{% endblock %}{% block content %}
-<h1>Upload to private quarantine</h1><p>PDF only, maximum 25 MiB. No code, archives, executables or special-category personal data.</p>
+<h1>Submit directly to private quarantine</h1><p>No invitation or account is required. PDF only, maximum 25 MiB. The manuscript is not emailed or published; the operator receives an email notice with a protected case link.</p>
 <form class="card" method="post" enctype="multipart/form-data"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-<label>Title <input name="title" maxlength="500" required></label><label>All authors <input name="authors" maxlength="1000" required></label>
-<label>Abstract <textarea name="abstract" minlength="80" maxlength="5000" rows="8" required></textarea></label><label>Canonical manuscript <input type="file" name="manuscript" accept="application/pdf,.pdf" required></label>
+<label>Your name <input name="display_name" value="{{ request.form.get('display_name','') }}" maxlength="200" autocomplete="name" required></label>
+<label>Your email <input type="email" name="email" value="{{ request.form.get('email','') }}" maxlength="254" autocomplete="email" required><span class="meta">Used for this private case and the editorial response.</span></label>
+<label class="trap" aria-hidden="true">Website <input name="website" tabindex="-1" autocomplete="off"></label>
+<label>Title <input name="title" value="{{ request.form.get('title','') }}" maxlength="500" required></label><label>All authors <input name="authors" value="{{ request.form.get('authors','') }}" maxlength="1000" required></label>
+<label>Abstract <textarea name="abstract" minlength="80" maxlength="5000" rows="8" required>{{ request.form.get('abstract','') }}</textarea></label><label>Canonical manuscript <input type="file" name="manuscript" accept="application/pdf,.pdf" required></label>
+<label><input type="checkbox" name="adult" required> I am at least 18 years old.</label>
 <label><input type="checkbox" name="authority" required> I am an author, rights holder or authorized agent and the disclosures are accurate.</label>
 <label><input type="checkbox" name="terms" required> I accept <a href="https://arr-research.github.io/terms/" target="_blank" rel="noreferrer">{{ terms }}</a>.</label>
 <label><input type="checkbox" name="privacy" required> I have read <a href="https://arr-research.github.io/privacy/" target="_blank" rel="noreferrer">{{ privacy }}</a>.</label>
 <label><input type="checkbox" name="operator_conflict"> An author has a personal, financial, supervisory or close collaborative relationship with the ARR operator/editor.</label>
 <label><input type="checkbox" name="ai_review_opt_in"> Optional: I authorize ARR to ask a named external AI provider to assess this private manuscript. No transfer occurs merely by checking this box; ARR must identify the provider and reconfirm before transfer.</label>
-<button>Place PDF in quarantine</button></form>{% endblock %}
+<button>Submit privately</button><p class="meta">Submitting creates a private case only. Publication always requires a later human decision and a separate public release.</p></form>{% endblock %}
