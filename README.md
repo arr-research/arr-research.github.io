@@ -1,6 +1,6 @@
 # ARR — Archive for Rigorous Research
 
-ARR is the hostile-audit research registry: new admissions must survive at least three distinct frontier-model referees working on the exact hashed manuscript, with zero unresolved material objections and a final human decision. It publishes the model identities, findings and disagreement alongside canonical artifacts, machine-readable renditions and explicit verification evidence.
+ARR is the hostile-audit research registry: new admissions must survive an operator-selected frontier-model audit of the exact hashed manuscript, with zero unresolved material objections and a final human decision. ARR promises no fixed provider, model, report count or reasoning tier; it publishes exactly which models were used, their findings and any disagreement alongside canonical artifacts, machine-readable renditions and explicit verification evidence.
 
 Passing that gate is meaningful positive evidence that a paper deserves serious attention. It is not a guarantee of truth, a proof certificate or a replacement for qualified domain-expert peer review; ARR makes the hard filter inspectable instead of asking readers to trust a label.
 
@@ -52,7 +52,7 @@ Copy-ready agent instructions are in [docs/AGENT_DEPOSIT_PROMPTS.es.md](docs/AGE
 
 ARR separates private intake, the public metadata registry, and immutable artifact storage so that GitHub can be replaced or complemented without changing record identifiers. See [capacity and migration](docs/SCALE_READINESS.md), [state and evidence labels](docs/STATE_MODEL.md), and the [licensing policy](LICENSE_POLICY.md).
 
-The private intake service is in [`services/intake/`](services/intake/). ARR does not currently charge for submission, assessment, publication or withdrawal under [`ARR-DEPOSIT-1.3`](docs/DEPOSIT_TERMS.md); any future fee would apply only after advance notice and new terms. New admissions require the version-locked frontier-model gate in [`ARR-ASSESS-1.0`](docs/MODEL_ASSESSMENT_POLICY.md), while legacy records remain honestly labelled `not_assessed`. The operator is Lluis Eriksson, founder, registry operator, responsible editor and GDPR controller. See [privacy](docs/PRIVACY_NOTICE.md), [complaints/contact](docs/LEGAL_AND_COMPLAINTS.md), [retention](docs/RETENTION_SCHEDULE.md), [governance](docs/GOVERNANCE.md) and the [production launch gate](docs/INTAKE_OPERATIONS.md).
+The private intake service is in [`services/intake/`](services/intake/). ARR does not currently charge for submission, assessment, publication or withdrawal under [`ARR-DEPOSIT-1.4`](docs/DEPOSIT_TERMS.md); any future fee would apply only after advance notice and new terms. New admissions require the version-locked frontier-model gate in [`ARR-ASSESS-1.0`](docs/MODEL_ASSESSMENT_POLICY.md), while legacy records remain honestly labelled `not_assessed`. The operator is Lluis Eriksson, founder, registry operator, responsible editor and GDPR controller. See [privacy](docs/PRIVACY_NOTICE.md), [complaints/contact](docs/LEGAL_AND_COMPLAINTS.md), [retention](docs/RETENTION_SCHEDULE.md), [governance](docs/GOVERNANCE.md) and the [production launch gate](docs/INTAKE_OPERATIONS.md).
 
 Platform software is `AGPL-3.0-or-later`; ARR-authored documentation is `CC-BY-4.0`; public catalogue metadata is `CC0-1.0`; deposited papers, code and data declare their own scoped licenses.
 

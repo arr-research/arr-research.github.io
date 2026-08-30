@@ -1,4 +1,4 @@
-# ARR deposit terms — ARR-DEPOSIT-1.3
+# ARR deposit terms — ARR-DEPOSIT-1.4
 
 **Effective:** 2026-08-30  
 **Operator:** Lluis Eriksson, Stockholm, Sweden — lluiseriksson@gmail.com  
@@ -8,7 +8,7 @@ after advance publication of new terms and clear notice before submission. No fe
 will be imposed retroactively on a submission governed by this version, and a
 future fee will never purchase acceptance, priority or a favourable decision.
 
-This version replaces `ARR-DEPOSIT-1.2` before direct public submission was
+This version replaces `ARR-DEPOSIT-1.3` before direct public submission was
 activated.
 
 These terms govern ARR's direct private-submission pilot. No invitation or author
@@ -50,13 +50,16 @@ The operator receives an email notice containing limited case metadata and a
 protected editor link; the PDF and abstract are not email attachments or message
 content.
 
-Before acceptance, ARR submits the exact clean manuscript to at least three distinct
-operator-selected frontier models using the version-locked ARR prompt. The form
-discloses and records authorization for that limited transfer. Each response is
-tied to the manuscript hash and inspected by the human editor. Any unresolved
-material objection or non-accept recommendation blocks acceptance; ARR must request
-changes or decline unless a signed human adjudication explains why the objection
-does not apply. No model makes the final decision.
+Before acceptance, ARR submits the exact clean manuscript to an operator-selected
+frontier-model audit set using the version-locked ARR prompt. The selection may
+change between submissions and assessment rounds according to availability,
+capability, quota and subject fit. ARR promises no fixed provider, model, report
+count or reasoning tier. The form discloses and records authorization for the
+limited transfer. Every response obtained in the declared round is tied to the
+manuscript hash and inspected by the human editor. Any unresolved material
+objection or non-accept recommendation blocks acceptance; ARR must request changes
+or decline unless a signed human adjudication explains why the objection does not
+apply. No model makes the final decision.
 
 ## 4. Editorial decision and conflicts
 

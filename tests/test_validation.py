@@ -247,12 +247,12 @@ class PaperValidationTests(unittest.TestCase):
             errors = validate_paper(Paper(wrong_path, paper.metadata))
             self.assertIn("path: shard must be 0J", errors)
 
-    def test_screening_pass_requires_three_reports(self) -> None:
+    def test_screening_pass_requires_a_declared_report(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             paper = self.make_paper(Path(temporary))
             paper.metadata["screening"].update({"status": "pass", "completed_at": "2026-08-13"})
             errors = validate_paper(paper)
-            self.assertTrue(any("three independent evaluators" in error for error in errors))
+            self.assertTrue(any("a declared evaluator report" in error for error in errors))
 
     def test_duplicate_version_id_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

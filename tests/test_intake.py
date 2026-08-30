@@ -89,7 +89,7 @@ class IntakeTests(unittest.TestCase):
             row = get_db().execute("SELECT * FROM submissions ORDER BY created_at DESC LIMIT 1").fetchone()
             self.assertEqual(row["scan_status"], "clean")
             self.assertEqual(row["status"], "eligible")
-            self.assertEqual(row["terms_version"], "ARR-DEPOSIT-1.3")
+            self.assertEqual(row["terms_version"], "ARR-DEPOSIT-1.4")
             self.assertEqual(row["privacy_version"], "ARR-PRIVACY-1.2")
             self.assertTrue((Path(self.app.config["QUARANTINE"]) / row["stored_name"]).exists())
             submitter = get_db().execute("SELECT * FROM users WHERE id=?", (row["user_id"],)).fetchone()
@@ -167,11 +167,19 @@ class IntakeTests(unittest.TestCase):
             count = get_db().execute("SELECT COUNT(*) FROM submissions").fetchone()[0]
         self.assertEqual(count, 0)
 
+    def test_acceptance_requires_a_recorded_frontier_audit(self) -> None:
+        submission_id = self.upload()
+        token = self.login_session("operator@example.org")
+        response = self.client.post(
+            f"/admin/submission/{submission_id}/decision",
+            data={"csrf_token": token, "action": "accept", "reason": "missing-audit"},
+        )
+        self.assertEqual(response.status_code, 409)
+
     def test_upload_stays_private_and_requires_manual_acceptance(self) -> None:
         submission_id = self.upload()
         token = self.login_session("operator@example.org")
-        for number in range(1, 4):
-            self.add_model_review(submission_id, number)
+        self.add_model_review(submission_id, 1)
         token = self.login_session("operator@example.org")
         response = self.client.post(
             f"/admin/submission/{submission_id}/decision",
@@ -191,8 +199,7 @@ class IntakeTests(unittest.TestCase):
     def test_founder_conflict_requires_independent_editor(self) -> None:
         submission_id = self.upload(conflict=True)
         token = self.login_session("operator@example.org")
-        for number in range(1, 4):
-            self.add_model_review(submission_id, number)
+        self.add_model_review(submission_id, 1)
         token = self.login_session("operator@example.org")
         self.client.post(
             f"/admin/submission/{submission_id}/decision",
@@ -212,9 +219,7 @@ class IntakeTests(unittest.TestCase):
 
     def test_material_model_objection_blocks_acceptance(self) -> None:
         submission_id = self.upload()
-        self.add_model_review(submission_id, 1)
-        self.add_model_review(submission_id, 2)
-        self.add_model_review(submission_id, 3, recommendation="reject", material=True)
+        self.add_model_review(submission_id, 1, recommendation="reject", material=True)
         token = self.login_session("operator@example.org")
         response = self.client.post(
             f"/admin/submission/{submission_id}/decision",

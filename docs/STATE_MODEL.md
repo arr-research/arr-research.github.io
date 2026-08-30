@@ -33,7 +33,7 @@ Schema 1.0 records predate this distinction and are interpreted as `research_pap
 Labels report evidence, not a single quality score:
 
 - **Source integrity:** required for every public record.
-- **AI screened:** only when at least three declared, version-specific evaluator reports passed with no unresolved critical objection.
+- **AI screened:** only when the declared, version-specific frontier-model audit record passed with no unresolved critical objection. The label promises no fixed provider, model, report count or reasoning tier.
 - **Computationally reproduced:** only when the declared commands ran successfully in a pinned environment.
 - **Lean L0–L3:** reports source supplied, build status, kernel/axiom audit, and manuscript correspondence at increasing levels.
 - **Human reviewed:** only when the scope and reviewer role are disclosed.

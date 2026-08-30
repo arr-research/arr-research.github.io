@@ -15,10 +15,12 @@ still evidence about one model's inspection, not peer review, a proof certificat
 a priority ruling, an endorsement, or a substitute for qualified human and formal
 verification.
 
-For new admissions under this protocol, at least three distinct, version-locked
-frontier-model reports are required. An unresolved material objection blocks
-acceptance: the editor must request a corrected version or decline the submission.
-The human editor decides whether an objection is material and records that decision.
+For each new admission, the operator declares a version-locked frontier-model audit
+set suited to the available services, quota and subject. ARR promises no fixed
+provider, model, report count or reasoning tier. Every valid result obtained in the
+declared round is retained. An unresolved material objection blocks acceptance: the
+editor must request a corrected version or decline the submission. The human editor
+decides whether an objection is material and records that decision.
 For already published work, a later material objection triggers the correction,
 withdrawal or documented-no-change procedure; it is never silently deleted.
 
@@ -30,9 +32,11 @@ or an assessment of a different version.
 
 1. Generate the locked prompt with
    `python scripts/prepare_model_assessment.py ARR-ID --version vN`.
-2. In a fresh model conversation, attach the canonical PDF and paste the generated
-   prompt. The operator chooses the provider privately; the published result must
-   disclose the exact provider and public model identifier.
+2. Before the round, select the frontier service or services available and suitable
+   for the case. In each fresh conversation, attach the canonical PDF and paste the
+   generated prompt. The selection may remain private while the round is running,
+   but every published result must disclose the exact provider and public model
+   identifier.
 3. Copy the model's single JSON response. Validate it without publication using
    `python scripts/record_model_assessment.py --clipboard`.
 4. Inspect the response, resolve obvious transcription or identifier errors by
