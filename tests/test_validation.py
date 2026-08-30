@@ -464,6 +464,9 @@ class PaperValidationTests(unittest.TestCase):
         page = build_site.build_support("", "https://arr.example")
         self.assertNotIn("Payment and refund questions:", page)
         self.assertNotIn('class="support-contact"', page)
+        self.assertIn("ARR does not currently accept donations", page)
+        self.assertIn("PayPal donations — not yet active", page)
+        self.assertIn("paypal-donate-button-container", page)
 
     def test_submit_ranking_pages_are_ordered_and_limited_to_fifty(self) -> None:
         papers = []
