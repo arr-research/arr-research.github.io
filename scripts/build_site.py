@@ -68,7 +68,7 @@ def chronology_time(timestamp: dict) -> str:
     return timestamp.get("published_at", timestamp["deposit_recorded_at"])
 
 
-def page_shell(*, title: str, description: str, content: str, base: str, canonical: str = "") -> str:
+def page_shell(*, title: str, description: str, content: str, base: str, canonical: str = "", head_extra: str = "") -> str:
     canonical_tag = f'<link rel="canonical" href="{esc(canonical)}">' if canonical else ""
     return f"""<!doctype html>
 <html lang="en">
@@ -79,6 +79,7 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
   <title>{esc(title)}</title>
   <meta name="description" content="{esc(description)}">
   {canonical_tag}
+  {head_extra}
   <link rel="stylesheet" href="{base}/assets/style.css">
 </head>
 <body>
@@ -127,6 +128,91 @@ def record_route(metadata: dict) -> str:
 def type_badge(metadata: dict) -> str:
     value = record_type(metadata)
     return f'<span class="badge badge-{esc(value.replace("_", "-"))}">{esc(record_type_label(metadata))}</span>'
+
+
+def release_asset_url(release_url: str, filename: str) -> str:
+    marker = "/releases/tag/"
+    if marker not in release_url:
+        return ""
+    prefix, tag = release_url.split(marker, 1)
+    return f"{prefix}/releases/download/{tag}/{quote(filename)}"
+
+
+def scholarly_head(metadata: dict, *, canonical: str, release_url: str = "", pdf_url: str = "") -> str:
+    """Emit discovery metadata for scholarly crawlers and general web/AI search."""
+    authors = [author["name"] for author in metadata["authors"]]
+    keywords = metadata.get("keywords", [])
+    meta: list[tuple[str, object]] = [
+        ("citation_title", metadata["title"]),
+        *[("citation_author", author) for author in authors],
+        ("citation_publication_date", metadata["date"]),
+        ("citation_online_date", metadata["date"]),
+        ("citation_abstract_html_url", canonical),
+        ("citation_technical_report_institution", "ARR — Archive for Rigorous Research"),
+        ("citation_technical_report_number", f"{metadata['id']} {metadata['version']}"),
+        ("citation_language", "en"),
+        ("DC.title", metadata["title"]),
+        *[("DC.creator", author) for author in authors],
+        ("DC.date", metadata["date"]),
+        ("DC.identifier", canonical),
+        ("DC.type", "Text"),
+        ("DC.language", "en"),
+        ("DC.rights", metadata["licenses"]["manuscript"]),
+        ("DCTERMS.abstract", metadata["abstract"]),
+    ]
+    if keywords:
+        meta.append(("citation_keywords", "; ".join(keywords)))
+        meta.append(("DC.subject", "; ".join(keywords)))
+    if pdf_url:
+        meta.append(("citation_pdf_url", pdf_url))
+    meta_tags = "\n  ".join(f'<meta name="{esc(name)}" content="{esc(value)}">' for name, value in meta)
+
+    article_type = "TechArticle" if record_type(metadata) == "technical_note" else "ScholarlyArticle"
+    structured: dict[str, object] = {
+        "@context": "https://schema.org",
+        "@type": article_type,
+        "headline": metadata["title"],
+        "name": metadata["title"],
+        "description": metadata["abstract"],
+        "abstract": metadata["abstract"],
+        "author": [{"@type": "Person", "name": author} for author in authors],
+        "datePublished": metadata["date"],
+        "dateModified": metadata["date"],
+        "inLanguage": "en",
+        "keywords": keywords,
+        "identifier": [metadata["id"], metadata["record_id"], metadata["version_id"]],
+        "url": canonical,
+        "version": metadata["version"],
+        "isAccessibleForFree": True,
+        "license": "https://creativecommons.org/licenses/by/4.0/",
+        "publisher": {
+            "@type": "Organization",
+            "name": "ARR — Archive for Rigorous Research",
+            "url": "https://arr-research.github.io/",
+        },
+    }
+    if release_url:
+        structured["sameAs"] = release_url
+    if pdf_url:
+        structured["encoding"] = {
+            "@type": "MediaObject",
+            "contentUrl": pdf_url,
+            "encodingFormat": "application/pdf",
+        }
+    structured_json = json.dumps(structured, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+    social_tags = "\n  ".join(
+        [
+            '<meta property="og:type" content="article">',
+            f'<meta property="og:title" content="{esc(metadata["title"])}">',
+            f'<meta property="og:description" content="{esc(metadata["abstract"])}">',
+            f'<meta property="og:url" content="{esc(canonical)}">',
+            f'<meta property="article:published_time" content="{esc(metadata["date"])}">',
+            '<meta name="twitter:card" content="summary">',
+            f'<meta name="twitter:title" content="{esc(metadata["title"])}">',
+            f'<meta name="twitter:description" content="{esc(metadata["abstract"])}">',
+        ]
+    )
+    return f'{meta_tags}\n  {social_tags}\n  <script type="application/ld+json">{structured_json}</script>'
 
 
 def verification_rows(metadata: dict) -> str:
@@ -256,9 +342,14 @@ def build_paper_page(
     if not release_url and repository:
         release_url = f"https://github.com/{repository}/releases/tag/{tag}"
     source_url = f"https://github.com/{repository}/tree/main/{relative_path}" if repository else ""
+    pdf_url = ""
+    if release_url and (paper.path / "paper.pdf").is_file():
+        pdf_url = release_asset_url(release_url, f"{tag}.pdf")
     links = []
+    if pdf_url:
+        links.append(f'<a class="button" href="{esc(pdf_url)}">Download canonical PDF</a>')
     if release_url:
-        links.append(f'<a class="button" href="{esc(release_url)}">Download release assets</a>')
+        links.append(f'<a class="button secondary" href="{esc(release_url)}">Download release assets</a>')
     if source_url:
         links.append(f'<a class="button secondary" href="{esc(source_url)}">Browse plain sources</a>')
     if metadata.get("doi"):
@@ -356,7 +447,14 @@ def build_paper_page(
         canonical = f"{root_canonical}versions/{metadata['version']}/" if permanent_version_page else root_canonical
     else:
         canonical = ""
-    return page_shell(title=f"{metadata['title']} — ARR", description=metadata["abstract"], content=content, base=base, canonical=canonical)
+    return page_shell(
+        title=f"{metadata['title']} — ARR",
+        description=metadata["abstract"],
+        content=content,
+        base=base,
+        canonical=canonical,
+        head_extra=scholarly_head(metadata, canonical=canonical, release_url=release_url or "", pdf_url=pdf_url),
+    )
 
 
 def build_protocol(base: str, canonical_url: str) -> str:
@@ -463,28 +561,80 @@ def write_catalogue_exports(papers: list, groups: dict, timestamps: dict) -> Non
 def write_sitemaps(papers: list, groups: dict, canonical_url: str) -> None:
     if not canonical_url:
         return
-    urls = [f"{canonical_url}/", f"{canonical_url}/papers/", f"{canonical_url}/notes/", f"{canonical_url}/protocol/", f"{canonical_url}/licensing/", f"{canonical_url}/about/"]
-    urls.extend(f"{canonical_url}/{record_route(paper.metadata)}/{paper.id}/" for paper in papers)
+    latest_date = max(paper.metadata["date"] for paper in papers)
+    urls = [
+        (f"{canonical_url}/", latest_date),
+        (f"{canonical_url}/papers/", latest_date),
+        (f"{canonical_url}/notes/", latest_date),
+        (f"{canonical_url}/protocol/", latest_date),
+        (f"{canonical_url}/licensing/", latest_date),
+        (f"{canonical_url}/about/", latest_date),
+    ]
+    urls.extend((f"{canonical_url}/{record_route(paper.metadata)}/{paper.id}/", paper.metadata["date"]) for paper in papers)
     for paper in papers:
         route = record_route(paper.metadata)
         urls.extend(
-            f"{canonical_url}/{route}/{paper.id}/versions/{version.version}/"
+            (f"{canonical_url}/{route}/{paper.id}/versions/{version.version}/", version.metadata["date"])
             for version in groups[paper.id]
         )
     chunks = [urls[index : index + 10_000] for index in range(0, len(urls), 10_000)]
     if len(chunks) == 1:
-        sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"  <url><loc>{esc(url)}</loc></url>\n" for url in chunks[0]) + "</urlset>\n"
+        sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"  <url><loc>{esc(url)}</loc><lastmod>{esc(date)}</lastmod></url>\n" for url, date in chunks[0]) + "</urlset>\n"
         write(OUTPUT_DIR / "sitemap.xml", sitemap)
         return
 
     sitemap_links = []
     for number, chunk in enumerate(chunks, start=1):
         filename = f"sitemaps/sitemap-{number:05d}.xml"
-        sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"  <url><loc>{esc(url)}</loc></url>\n" for url in chunk) + "</urlset>\n"
+        sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"  <url><loc>{esc(url)}</loc><lastmod>{esc(date)}</lastmod></url>\n" for url, date in chunk) + "</urlset>\n"
         write(OUTPUT_DIR / filename, sitemap)
         sitemap_links.append(f"  <sitemap><loc>{esc(canonical_url + '/' + filename)}</loc></sitemap>\n")
     index = '<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(sitemap_links) + "</sitemapindex>\n"
     write(OUTPUT_DIR / "sitemap.xml", index)
+
+
+def write_llm_guides(papers: list, canonical_url: str) -> None:
+    if not canonical_url:
+        return
+    intro = [
+        "# ARR — Archive for Rigorous Research",
+        "",
+        "> Public, versioned research records with explicit provenance, integrity hashes, licensing, evidence labels, and machine-readable renditions.",
+        "",
+        "ARR pages and metadata may be crawled, indexed, quoted, and linked subject to each record's declared licenses. Acceptance is not peer review and is not a guarantee of truth.",
+        "",
+        "## Machine-readable resources",
+        "",
+        f"- [Catalogue JSON]({canonical_url}/catalog.json)",
+        f"- [Catalogue NDJSON]({canonical_url}/catalog.ndjson)",
+        f"- [Partition index]({canonical_url}/catalog/index.json)",
+        f"- [Sitemap]({canonical_url}/sitemap.xml)",
+        f"- [Verification protocol]({canonical_url}/protocol/)",
+        "",
+        "## Current records",
+        "",
+    ]
+    records = [
+        f"- [{paper.metadata['title']}]({canonical_url}/{record_route(paper.metadata)}/{paper.id}/) — {paper.id} {paper.version}"
+        for paper in papers
+    ]
+    write(OUTPUT_DIR / "llms.txt", "\n".join(intro + records) + "\n")
+
+    full = intro.copy()
+    for paper in papers:
+        full.extend(
+            [
+                f"### {paper.metadata['title']}",
+                "",
+                f"- Identifier: {paper.id} {paper.version}",
+                f"- Authors: {', '.join(author['name'] for author in paper.metadata['authors'])}",
+                f"- Date: {paper.metadata['date']}",
+                f"- URL: {canonical_url}/{record_route(paper.metadata)}/{paper.id}/",
+                f"- Abstract: {paper.metadata['abstract']}",
+                "",
+            ]
+        )
+    write(OUTPUT_DIR / "llms-full.txt", "\n".join(full) + "\n")
 
 
 def main() -> int:
@@ -574,8 +724,13 @@ def main() -> int:
             )
 
     write_catalogue_exports(papers, groups, timestamps)
-    write(OUTPUT_DIR / "robots.txt", "User-agent: *\nAllow: /\n" + (f"Sitemap: {canonical_url}/sitemap.xml\n" if canonical_url else ""))
+    write(
+        OUTPUT_DIR / "robots.txt",
+        "User-agent: OAI-SearchBot\nAllow: /\n\nUser-agent: *\nAllow: /\n"
+        + (f"Sitemap: {canonical_url}/sitemap.xml\n" if canonical_url else ""),
+    )
     write_sitemaps(papers, groups, canonical_url)
+    write_llm_guides(papers, canonical_url)
 
     paper_count = sum(paper.record_type == "research_paper" for paper in papers)
     note_count = sum(paper.record_type == "technical_note" for paper in papers)

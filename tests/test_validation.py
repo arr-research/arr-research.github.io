@@ -116,6 +116,22 @@ class PaperValidationTests(unittest.TestCase):
             paper = self.make_paper(Path(temporary))
             self.assertEqual(validate_paper(paper), [])
 
+    def test_scholarly_discovery_metadata_is_complete(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            paper = self.make_paper(Path(temporary))
+            canonical = f"https://arr-research.github.io/papers/{paper.id}/"
+            release = f"https://github.com/arr-research/arr-research.github.io/releases/tag/{paper.id}-{paper.version}"
+            pdf = f"https://github.com/arr-research/arr-research.github.io/releases/download/{paper.id}-{paper.version}/{paper.id}-{paper.version}.pdf"
+            head = build_site.scholarly_head(paper.metadata, canonical=canonical, release_url=release, pdf_url=pdf)
+            self.assertIn('name="citation_title"', head)
+            self.assertIn('name="citation_author"', head)
+            self.assertIn('name="citation_pdf_url"', head)
+            self.assertIn('name="DC.identifier"', head)
+            self.assertIn('property="og:type" content="article"', head)
+            self.assertIn('type="application/ld+json"', head)
+            self.assertIn('"@type":"ScholarlyArticle"', head)
+            self.assertIn('"contentUrl":', head)
+
     def test_technical_note_requires_scope_and_limitations(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             paper = self.make_paper(Path(temporary))
