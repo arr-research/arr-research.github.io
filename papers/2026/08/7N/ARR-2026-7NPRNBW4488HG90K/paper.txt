@@ -1,0 +1,531 @@
+One-Spike Inverse Self-Commutators and Exact
+         Three-versus-Four-Kick Curvature Synthesis
+                 Singular rigidity, sharp stability, and a universal switching gain
+
+                                                  Lluis Eriksson
+
+                                               30 August 2026
+
+
+                                                     Abstract
+        For a traceless Hermitian matrix F ∈ Md (C), let
+
+                      κd (F ) = min{∥H∥HS ∥K∥HS : H = H ∗ , K = K ∗ , −i[H, K] = F }.
+
+     We solve this inverse problem on the complete spectral cone having      Pone positive eigenvalue. If the
+     nonzero spectrum is (P, −b1 , . . . , −bn ) with b1 ≥ · · · ≥ bn > 0 and j bj = P , then
+                                                                n
+                                                                X
+                                                  κd (F ) =           jbj .
+                                                                j=1
+                                                                                  Pn
+     Every balanced optimum has the same nonzero squared singular values 2 j=ℓ bj , 1 ≤ ℓ ≤ n, and
+     hence rank n, independently of ambient zero padding. The deficit from the fixed-mass maximum
+     is one half of the pairwise dispersion of the bj and is sharply equivalent to their ℓ1 distance from
+     uniformity.
+         We then solve two fixed-target matrix-polygon problems in every finite dimension. For a balanced
+     m-kick loop x1 + · · · + xm = 0, define
+                                           iX                                 X
+                                  Hgeo =      [xk , xj ],             S2 =        ∥xj ∥HS ,
+                                           2                                  j
+                                            k>j
+
+
+     and let Am (F ) be the infimum of S22 subject to Hgeo = F . For every nonzero traceless Hermitian
+     target,                                √
+                                A3 (F ) = 12 3 κd (F ),   A4 (F ) = 16 κd (F ).
+     The three-kick identity consolidates the author’s earlier low-dimensional cases, while the four-kick
+     identity extends the previously known sign-paired equality face to every target. Thus a fourth √kick
+     lowers the exact optimal√squared perimeter by the target- and dimension-independent factor 4/(3 3),
+     a reduction of 1 − 4/(3 3) ≈ 23.02%. The four-kick lower bound uses an exact Gram-determinant
+     argument; a tempting stronger parallelogram inequality is false and is not used. Exact-arithmetic
+     replays and an independent implementation accompany the manuscript.
+
+
+1    Question, answer, and scope
+Finite-dimensional self-commutator existence is classical [1, 21, 15]. It does not determine the least
+Hilbert–Schmidt resource of Hermitian factors generating a prescribed target. We study that inverse
+metric problem and its consequence for balanced matrix loops. Throughout,
+
+                                              ∥X∥2HS = Tr(X ∗ X)
+
+
+                                                            1
+
+
+
+is unnormalized, F = F ∗ is traceless, and scalar parts of Hermitian factors are removed because they
+do not affect commutators.
+    The surrounding literature contains forward Frobenius commutator inequalities [3, 4, 8], unrestricted-
+factor inverse problems [22], and the weighted-shift constructions used in self-commutator existence
+theory [15, 2]. The present optimization keeps both factors Hermitian. Its one-spike answer is
+extracted from a small universal family of Horn inequalities rather than from a dimension-by-dimension
+enumeration.
+    The loop problem is motivated by second-order product formulas and geometric terms in controlled
+or Zeno dynamics [5, 7]. Polygonal isoperimetry itself is classical [18]; our fixed-target quantity retains
+the complete matrix F , not merely one norm of it. Building on the author’s earlier dimension-three,
+dimension-four, and dimension-five inverse formulas and loop corollaries [13, 10, 9], on earlier balanced-
+kick mechanisms [12], and on an earlier sign-paired matrix-polygon equality face [11], the scoped package
+is:
+
+ (i) an exact all-dimensional formula on the one-positive or one-negative spectral cone;
+
+ (ii) rigidity of the singular spectrum and rank of every balanced optimum;
+
+(iii) a sharp ℓ1 stability theorem at the uniform one-spike ray;
+
+(iv) a dimension-free consolidation of the triangular law and an all-target four-kick law extending the
+     sign-paired case, including a strict universal switching gain.
+
+We do not claim novelty for the earlier low-dimensional slices, weighted-shift self-commutator construc-
+tions, Horn feasibility, group-commutator loops, or general Gini/mean-deviation inequalities. We do not
+claim a closed formula for κd when both sign multiplicities exceed one, a classification of all optimizing
+matrices, an infinite-dimensional result, or a general exact formula for five or more kicks. Priority is
+stated conservatively: the Horn and weighted-shift machinery is standard, and the accompanying search
+is not a proof of novelty.
+
+
+2    Balanced self-commutators
+Definition 2.1. For traceless Hermitian F ∈ Md (C) set
+
+                   κd (F ) = inf{∥H∥HS ∥K∥HS : H = H ∗ , K = K ∗ , −i[H, K] = F }.                     (1)
+
+Lemma 2.2 (one-matrix reduction). For every traceless Hermitian F ,
+                                          1
+                              κd (F ) =     min{∥C∥2HS : CC ∗ − C ∗ C = 2F }.                          (2)
+                                          2
+The minimum is attained. Moreover, an optimal Hermitian pair may be chosen so that
+                                                                      q
+                            ⟨H, K⟩HS = 0,         ∥H∥HS = ∥K∥HS =         κd (F ).                     (3)
+
+Proof. If F = 0, both minima are zero, attained by H = K = C = 0, and the final assertion is
+immediate. Hence assume F ≠ 0. If −i[H, K] = F , reciprocal scaling of H, K preserves the commutator
+and their norm product, and can make their norms equal. For C = H + iK,
+
+                    CC ∗ − C ∗ C = −2i[H, K] = 2F,         ∥C∥2HS = ∥H∥2HS + ∥K∥2HS .
+
+Conversely, the Hermitian real and imaginary parts X, Y of any feasible C obey −i[X, Y ] = F and
+∥X∥HS ∥Y ∥HS ≤ ∥C∥2HS /2. This proves (2). For general feasibility, order an eigenbasis with all
+
+                                                      2
+
+
+
+positive eigenvalues first, then zeros, then negative eigenvalues. Every partial sum sj of this ordering
+                                                                                  p
+is nonnegative and the final sum is zero. The finite weighted shift Cej+1 = 2sj ej then satisfies
+(CC ∗ − C ∗ C)/2 = F . Finite-dimensional compactness gives attainment.
+    Take a minimizing Hermitian pair and balance its nonzero norms. Replacing K by
+
+                                                              ⟨H, K⟩HS
+                                                     K−                H
+                                                               ∥H∥2HS
+
+preserves the commutator. Unless the inner product vanishes, it strictly reduces the product after
+rebalancing, contradicting optimality. This gives (3).
+
+   The Horn description of spectra of sums of Hermitian matrices [17, 19, 20, 16] applies to CC ∗ +
+(−C ∗ C) = 2F . We only need a nested family for which the Littlewood–Richardson coefficient is visibly
+one.
+
+
+3     The complete one-spike cone
+Assume that F has one positive eigenvalue. Suppressing arbitrary zero padding, write its nonzero
+spectrum as
+                                                                                          n
+                                                                                          X
+                          (P, −b1 , . . . , −bn ),       b1 ≥ · · · ≥ bn > 0,                   bj = P.            (4)
+                                                                                          j=1
+
+The order in (4) is adapted to the constructor; the decreasing spectral order is (P, 0, . . . , 0, −bn , . . . , −b1 ).
+
+Theorem 3.1 (exact cost and optimizer rigidity). For (4),
+
+                                                                        n
+                                                                        X
+                                                      κd (F ) =               jbj .                                (5)
+                                                                        j=1
+
+
+If C = H + iK comes from any balanced optimal pair, then the nonzero squared singular values of C, in
+decreasing order, are
+                                                      n
+                                                      X
+                                             pℓ = 2          bj ,         1 ≤ ℓ ≤ n.                               (6)
+                                                       j=ℓ
+
+Consequently every such C has rank exactly n. The same statements hold, with the same singular data,
+when the negative spectral subspace has rank one.
+
+Proof. Let d = n + 1 + z, where z is the zero multiplicity, and let p1 ≥ · · · ≥ pd ≥ 0 be the eigenvalues
+of CC ∗ for a minimizer in (2). If pd = t > 0, write the polar decomposition C = U S 1/2 with S = C ∗ C;
+invertibility makes U unitary. Then C ′ = U (S − t1)1/2 satisfies
+
+                                   C ′ C ′∗ = CC ∗ − t1,                 C ′∗ C ′ = C ∗ C − t1.
+
+It preserves the self-commutator and strictly reduces the norm. Hence pd = 0 at an optimum. The
+decreasing spectra in Horn’s sum problem are
+
+                     α = (p1 , . . . , pd−1 , 0),    β = (0, −pd−1 , . . . , −p1 ),        γ = 2 spec(F ).
+
+    For 1 ≤ ℓ ≤ n, take
+
+                              Iℓ = {1, . . . , ℓ},       Jℓ = Kℓ = {1, d − ℓ + 2, . . . , d}.
+
+
+                                                                    3
+
+
+
+λ(K )
+These are valid Horn triples: the partition associated with Iℓ is zero and therefore c0,λ(Jℓ ℓ ) = 1. The
+corresponding inequality telescopes to
+                                                          
+                                                   ℓ−1
+                                                   X                 n
+                                                                     X
+                                    pℓ ≥ 2 P −           bj  = 2         bj .                       (7)
+                                                   j=1               j=ℓ
+
+It follows that
+                                        d        n X n        n
+                                     1X         X            X
+                                           pr ≥         bj =     jbj .
+                                     2 r=1      ℓ=1 j=ℓ      j=1
+
+    For attainment, use an eigenbasis ordered as in (4), put tℓ = nj=ℓ bj , and define the weighted shift
+                                                                           P
+
+                      √
+             Ceℓ+1 = 2tℓ eℓ (1 ≤ ℓ ≤ n),        C = 0 on the zero-padded complement.                  (8)
+Direct multiplication gives (CC ∗ − C ∗ C)/2 = F and ∥C∥2HS /2 = ℓ tℓ = j jbj . Thus the lower bound
+                                                                           P        P
+
+is exact. At any optimum, equality of the sum forces equality in every nonnegative inequality (7), while
+all remaining pr vanish. This proves (6) and the rank claim. Replacing F by −F replaces C by C ∗ .
+
+Remark 3.2 (what rigidity does not say). The theorem fixes the singular spectrum and rank of every
+balanced optimum; it does not assert that every optimum is entrywise a weighted shift. Unitary and
+phase freedoms, and possibly further equality geometry, remain.
+
+
+4      Sharp stability at the uniform ray
+For fixed P and n, the general rank-adaptive upper endpoint is ((n + 1)/2)P . On the one-spike cone its
+deficit has an elementary dispersion form. Comparisons between empirical Gini mean difference and
+mean absolute deviation are known [6]; the theorem below records the exact constants and equality
+families in this ordered, nonnegative, fixed-mass spectral normalization.
+Theorem 4.1 (Gini identity and sharp trace-distance stability). Let u = P/n and
+                                                                     n
+                                   n+1                               X
+                              D=       P − κd (F ),            L=           |bj − u|.
+                                    2                                j=1
+
+Then
+                                               1 X
+                                        D=              (bi − bj ).                                   (9)
+                                               2 1≤i<j≤n
+
+For n ≥ 2,
+                                          n      n−1
+                                            L≤D≤     L.                                              (10)
+                                          4       2
+Both constants are optimal. In particular, the uniform opposite-sign block b1 = · · · = bn = P/n is the
+unique fixed-mass maximizer of κd .
+Proof. Substitution of (5) gives
+                                                n
+                                             1X
+                                       D=         (n + 1 − 2j)bj ,
+                                             2 j=1
+which is (9). Put yj = bj − u and let k be the last index with yk ≥ 0. The total positive and negative
+deviation masses both equal L/2. Keeping only the cross pairs in the nonnegative ordered sum gives
+                                               X                     n
+                                      2D ≥           (yi − yj ) =      L,
+                                             i≤k<j
+                                                                     2
+
+                                                      4
+
+
+
+which is the lower bound. Equality holds for every two-level deviation profile: the yi are constant on
+i ≤ k and on i > k.
+    For the upper bound, the coefficients wj = (n + 1 − 2j)/2 satisfy |wj | ≤ (n − 1)/2, and hence
+                                             X                 n−1X
+                                       D=         wj y j ≤          |yj |.
+                                              j
+                                                                2 j
+
+Equality is obtained when only y1 and yn are nonzero and opposite. Finally D = 0 exactly when every
+pairwise difference vanishes.
+
+    The exact formula also orders the entire cone without solving any further optimization problem.
+Recall that a decreasing vector b majorizes a decreasing vector c of the same mass if kj=1 bj ≥ kj=1 cj
+                                                                                     P         P
+
+for every k < n.
+
+Corollary 4.2 (strict Schur concavity on the one-spike cone). Let b, c ∈ (0, ∞)n be decreasing and have
+the same sum P , and let Fb , Fc be one-spike targets with opposite-sign blocks b, c. If b majorizes c, then
+
+                                              κd (Fb ) ≤ κd (Fc ).
+
+Equality holds if and only if b = c. Thus making the opposite-sign spectral mass more unequal strictly
+lowers the inverse cost, while the uniform block is its unique fixed-mass maximum.
+                      Pk
+Proof. Writing Bk =      j=1 bj and using Theorem 3.1,
+
+                                                  n
+                                                  X                   n−1
+                                                                      X
+                                     κd (Fb ) =         jbj = nP −          Bk .
+                                                  j=1                 k=1
+
+The corresponding identity for c and the defining prefix inequalities give the result. Equality of the
+costs forces equality of every prefix, hence b = c.
+
+
+5     Exact finite-switch curvature synthesis
+                                                  P
+Let x1 , . . . , xm be Hermitian matrices with     j xj = 0 and define
+
+                                                                            m
+                                       iX                                   X
+                            Hgeo (x) =       [xk , xj ],         S2 (x) =          ∥xj ∥HS .           (11)
+                                       2 k>j                                j=1
+
+For a traceless Hermitian target F , set
+                                                         X
+                            Am (F ) = inf{S2 (x)2 :            xj = 0, Hgeo (x) = F }.                 (12)
+                                                           j
+
+Scalar components can be deleted from every edge without changing the target and while weakly
+decreasing S2 , so the definition is already gauge-minimal.
+
+5.1   Three kicks
+Theorem 5.1 (exact triangular action). For every finite-dimensional traceless Hermitian F ,
+                                                       √
+                                           A3 (F ) = 12 3 κd (F ).                                     (13)
+
+
+
+                                                           5
+
+
+
+̸ 0. Balance gives x3 = −x1 − x2 and
+Proof. The zero target is attained by the zero loop, so assume F =
+F = −i[x1 , x2 ]/2. In the real Hilbert space of Hermitian matrices, remove from x2 its projection onto
+x1 . The commutator is unchanged, so
+                                          1
+                                              q
+                             κd (F ) ≤            ∥x1 ∥2HS ∥x2 ∥2HS − ⟨x1 , x2 ⟩2HS =: ∆.
+                                          2
+Here ∆ is the Euclidean area of the√ triangle with edge vectors x1 , x2 , x3 . The sharp triangular
+isoperimetric inequality gives S22 ≥ 12 √3 ∆, proving the lower bound.
+    Choose H, K as in (3), put α = 2/ 4 3, and set
+                                                      √     !
+                                               1        3
+                     x1 = αH,        x2 = α − H +         K ,     x3 = −x1 − x2 .
+                                               2       2
+
+                                                                              2     2
+                           p
+  √ three norms equal α κd (F ) and direct calculation gives Hgeo = F . Thus S2 = 9α κd (F ) =
+The
+12 3 κd (F ).
+
+5.2     Four kicks and the Gram correction
+Theorem 5.2 (exact quadrilateral action). For every finite-dimensional traceless Hermitian F ,
+
+                                                   A4 (F ) = 16 κd (F ).                                 (14)
+
+                                                                 ̸ 0. For any balanced four-tuple, put
+Proof. The zero target is attained by the zero loop, so assume F =
+
+                                      D1 = x1 + x2 ,              D2 = x2 + x3 .
+
+A direct expansion gives the diagonal identity
+                                                          i
+                                                  Hgeo = − [D1 , D2 ].                                   (15)
+                                                          2
+Write                                                                                        p
+                a = ∥D1 ∥2HS ,       b = ∥D2 ∥2HS ,             c = ⟨D1 , D2 ⟩HS ,      q=   ab − c2 .
+Shearing D2 by its component parallel to D1 leaves the commutator unchanged, so (15) implies
+                                                                 q
+                                                        κd (F ) ≤ .                                      (16)
+                                                                 2
+Balance also gives D1 + D2 = x2 − x4 and D1 − D2 = x1 − x3 . Therefore
+
+                                  S2 ≥ ∥D1 + D2 ∥HS + ∥D1 − D2 ∥HS ,
+                                                           q
+                                  S22 ≥ 2(a + b) + 2           (a − b)2 + 4(ab − c2 )
+                                      ≥ 8q ≥ 16κd (F ).                                                  (17)
+                                                    p
+The penultimate step uses a + b ≥ 2q and (a − b)2 + 4q 2 ≥ 2q.                      √
+   For√ attainment, choose the orthogonal equal-norm optimum H, K from (3), set D1 = 2H,
+D2 = 2K, and take
+                             D1 − D 2                   D1 + D2
+                      x1 =            ,       x2 =              ,     x3 = −x1 ,     x4 = −x2 .          (18)
+                                2                          2
+                                 κd (F ), Hgeo = F , and S22 = 16κd (F ).
+                             p
+Then every edge has norm
+
+                                                             6
+
+
+
+Remark 5.3 (why the determinant is necessary). It is false in general that (∥D1 + D2 ∥ + ∥D1 − D2 ∥)2
+is at least 4(∥D1 ∥2 + ∥D2 ∥2 ); nearly parallel diagonals give counterexamples. The invariant controlled
+by the commutator is the Gram area q, and (17) is the valid sharp inequality.
+
+Corollary 5.4 (universal three-versus-four switching gain). For every nonzero traceless Hermitian
+target in every finite dimension,
+                                           A4 (F )   4
+                                                   = √ < 1.                                    (19)
+                                           A3 (F )  3 3
+                                                                               √
+Equivalently, the fourth kick reduces the optimum squared perimeter by 1 − 4/(3 3) ≈ 23.02%. On the
+one-spike cone this becomes
+                                         √ Xn                              n
+                                                                           X
+                             A3 (F ) = 12 3   jbj ,         A4 (F ) = 16         jbj .
+                                             j=1                           j=1
+
+The displayed optimal square uses four equal-norm edges and an internal factor of rank n.
+
+
+6    Relation to earlier records and development provenance
+The dimension-three, dimension-four, and dimension-five inverse-cost papers already contain the
+corresponding fixed-dimensional formulas and triangular loop identities [13, 10, 9]. The operational-
+curvature paper already uses balanced three- and four-kick commutator loops [12], and the matrix-
+isoperimetry paper establishes the exact four-edge value on the sign-paired spectral face [11]. Accordingly,
+Theorem 5.1 is an all-dimensional consolidation, while the new scope of Theorem 5.2 is its extension
+from that equality face to arbitrary traceless Hermitian targets.
+    An earlier local, unpublished development package titled One-Spike Inverse Self-Commutators
+in Every Dimension contains the one-spike formula, rigidity, and stability lemmas from which this
+consolidated paper was developed. Its hashes and chronology are preserved in the accompanying priority
+audit. A prepared submission sheet is not treated as evidence of public disclosure. Public searches of
+the author’s ARR archive, repositories, and release assets through 30 August 2026 did not locate that
+exact manuscript; this negative evidence is not an exhaustive priority guarantee.
+    The complementary paper Sharp Rank-Adaptive Bounds for Inverse Self-Commutators is now public
+as ARR-2026-1D2QV1RP1292JREW [14]. It proves the general rank-adaptive bounds, the uniform
+one-spike endpoint, both equality classifications, and the exact sign-cut leakage identity. It does not
+contain the arbitrary one-spike formula, every-optimizer singular rigidity, the sharp stability theorem, or
+the all-target kick laws proved here. The present paper should therefore be read as an exact interior-cone
+and synthesis companion, not as a replacement for that general extremal theorem.
+
+
+7    Examples and boundary of the formula
+                                                                          √
+Qubit.    For spectrum (P, −P ), κ2 (F ) = P and the formulas give A3 = 12 3P and A4 = 16P .
+
+A zero-padded repeated spectrum.            For nonzero spectrum (6, −3, −2, −1) in any d ≥ 4,
+
+                        κd = 3 + 2 · 2 + 3 · 1 = 10,       spec>0 (CC ∗ ) = (12, 6, 2).
+                                                                              √
+Thus every balanced optimum has rank three, while the exact loop costs are 120 3 and 160.
+
+
+
+
+                                                       7
+
+
+
+Why one-spike is a real restriction. For F = diag(5, 1, −3, −3), a direct four-level Horn certificate
+gives κ4 (F ) ≥ λ1 − λ3 = 8. Equality is attained by
+                                 √            √                                     1
+             C = E12 + 3E14 +        3E23 +       3E43 ,       CC ∗ − C ∗ C = 2F,     ∥C∥2HS = 8.
+                                                                                    2
+Collapsing the two positive levels into a fictitious spike would instead produce 3 + 2 · 3 = 9. Hence (5)
+is not an unrestricted spectral formula. The universal loop laws remain valid because they retain κd (F )
+rather than replacing it by the one-spike expression.
+
+
+8    Reproducibility, limitations, and conclusion
+The reproduction package contains two independent exact-arithmetic routes. One checks tail identities,
+stability bounds and equality families over rational compositions. The other checks the weighted-shift
+and matrix-loop identities directly, includes nearly parallel diagonals that falsify the discarded inequality,
+and verifies the corrected Gram chain. These programs test algebraic consequences and fixtures; they
+do not certify Horn’s theorem or replace the displayed arbitrary-dimensional proofs.
+    The result is finite-dimensional and uses distinct roles for three notions: factor product κd , loop
+perimeter S2 , and squared perimeter Am . No claim is made about quadratic edge energy, operator-norm
+action, open paths, coincident-time limits, or higher Magnus orders. The priority audit found classical
+mechanisms close to both halves of the paper and exact self-overlap in low-dimensional slices. Novelty
+therefore remains a scoped literature-search conclusion rather than a mathematical theorem.
+    The main structural point is that a difficult inverse matrix invariant can be read operationally.
+On an entire high-rank spectral cone it is an explicit ordered moment of the negative eigenvalues and
+rigidifies all optimal singular data. Without any spectral restriction, it is exactly the resource converted
+by the optimal triangle and square. The resulting fourth-switch gain is universal, and the inverse cost is
+strictly Schur-concave on the one-spike simplex, even though it is not known in closed form on general
+sign patterns.
+
+
+Author and AI disclosure
+Lluis Eriksson directed the research, selected the claims, and accepts responsibility for the manuscript.
+OpenAI Codex assisted with algebraic exploration, literature triage, adversarial proof checking, exact
+replay, typesetting, and drafting. No external peer review or formal proof certification is claimed.
+
+
+References
+ [1] A. A. Albert and Benjamin Muckenhoupt. On matrices of trace zero. Michigan Mathematical Journal,
+     4(1):1–3, 1957.
+ [2] Daniel Beltiţă, Sasmita Patnaik, and Gary Weiss. B(H)-commutators: A historical survey II and recent
+     advances on commutators of compact operators. In The Varied Landscape of Operator Theory, volume 17 of
+     Theta Series in Advanced Mathematics, pages 57–75. Theta, Bucharest, 2014.
+ [3] Albrecht Böttcher and David Wenzel. How big can the commutator of two matrices be and how big is it
+     typically? Linear Algebra and its Applications, 403:216–228, 2005.
+ [4] Albrecht Böttcher and David Wenzel. The frobenius norm and the commutator. Linear Algebra and its
+     Applications, 429(8–9):1864–1885, 2008.
+ [5] Daniel Burgarth, Paolo Facchi, Vittorio Giovannetti, Hiromichi Nakazato, Saverio Pascazio, and Kazuya
+     Yuasa. Non-abelian phases from quantum zeno dynamics. Physical Review A, 88:042107, 2013.
+
+
+
+                                                           8
+
+
+
+[6] Pietro Cerone and Sever S. Dragomir. Bounds for the Gini mean difference of an empirical distribution.
+     Applied Mathematics Letters, 19(3):283–293, 2006.
+ [7] Yu-An Chen, Andrew M. Childs, Mohammad Hafezi, Zhang Jiang, Hwanmun Kim, and Yijia Xu. Efficient
+     product formulas for commutators and applications to quantum simulation. Physical Review Research,
+     4:013191, 2022.
+ [8] Che-Man Cheng, Seak-Weng Vong, and David Wenzel. Commutators with maximal frobenius norm. Linear
+     Algebra and its Applications, 432:292–306, 2010.
+ [9] Lluis Eriksson. The exact five-level inverse commutator cost: Twelve Horn chambers, optimal rank, and the
+     sharp 5/2 resource tax. ARR—Archive for Rigorous Research, ARR-2026-37B8R0QTA894GTFF, 2026.
+[10] Lluis Eriksson. The exact four-level inverse commutator cost: Horn–Littlewood–Richardson facets, rank tran-
+     sitions, and sharp loop synthesis. ARR—Archive for Rigorous Research, ARR-2026-3M1EEG1T689ADSMW,
+     2026.
+[11] Lluis Eriksson. Matrix isoperimetry and diffusion from forgotten order in block–Zeno dynamics. ARR—
+     Archive for Rigorous Research, ARR-2026-2JJFS9HNTT87DAGC, 2026.
+[12] Lluis Eriksson. Operational curvature of the heisenberg cut: Exact diamond readout, a discrete stokes law,
+     and sharp action bounds for dissipative Zeno holonomy. ARR—Archive for Rigorous Research, ARR-2026-
+     0FF03PQCTD89KBTM, 2026.
+[13] Lluis Eriksson. Sharp costs and exact semigroups from forgotten quantum order. ARR—Archive for Rigorous
+     Research, ARR-2026-1PT4297HNX9T4RBD, 2026.
+[14] Lluis Eriksson. Sharp rank-adaptive bounds for inverse self-commutators. ARR—Archive for Rigorous
+     Research, ARR-2026-1D2QV1RP1292JREW, 2026.
+[15] Peng Fan and Che-Kao Fong. Which operators are the self-commutators of compact operators? Proceedings
+     of the American Mathematical Society, 80:58–60, 1980.
+[16] William Fulton. Eigenvalues, invariant factors, highest weights, and Schubert calculus. Bulletin of the
+     American Mathematical Society, 37(3):209–249, 2000.
+[17] Alfred Horn. Eigenvalues of sums of hermitian matrices. Pacific Journal of Mathematics, 12(1):225–241,
+     1962.
+[18] Emanuel Indrei and Levon Nurbekyan. On the stability of the polygonal isoperimetric inequality. Advances
+     in Mathematics, 276:62–86, 2015.
+[19] Alexander A. Klyachko. Stable bundles, representation theory and hermitian operators. Selecta Mathematica,
+     4:419–445, 1998.
+[20] Allen Knutson and Terence Tao. The honeycomb model of GLn (C) tensor products I: Proof of the saturation
+     conjecture. Journal of the American Mathematical Society, 12(4):1055–1090, 1999.
+[21] Robert C. Thompson. On matrix commutators. Journal of the Washington Academy of Sciences, 48:306–307,
+     1958.
+[22] Gary Weiss. Commutators of hilbert–schmidt operators. II. Integral Equations and Operator Theory,
+     3:574–600, 1980.
+
+
+
+
+                                                       9

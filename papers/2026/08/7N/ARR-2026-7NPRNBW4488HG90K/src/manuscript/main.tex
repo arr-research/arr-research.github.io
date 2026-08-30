@@ -1,0 +1,610 @@
+\documentclass[11pt]{article}
+\usepackage[letterpaper,margin=0.88in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools,bm}
+\usepackage{booktabs,array}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue!48!black,citecolor=blue!48!black,urlcolor=blue!62!black]{hyperref}
+\usepackage{enumitem}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\spec}{\operatorname{spec}}
+\newcommand{\1}{\mathbf 1}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\HS}{\mathrm{HS}}
+\newcommand{\ka}{\kappa_d}
+\newcommand{\Am}{\mathcal A_m}
+\allowdisplaybreaks
+
+\title{\textbf{One-Spike Inverse Self-Commutators and Exact\\Three-versus-Four-Kick Curvature Synthesis}\\[1.5mm]
+\large Singular rigidity, sharp stability, and a universal switching gain}
+\author{Lluis Eriksson}
+\date{30 August 2026}
+\hypersetup{
+ pdftitle={One-Spike Inverse Self-Commutators and Exact Three-versus-Four-Kick Curvature Synthesis},
+ pdfauthor={Lluis Eriksson},
+ pdfsubject={Exact inverse self-commutator costs and finite-switch matrix curvature synthesis},
+ pdfkeywords={self-commutator, inverse commutator, Horn inequalities, Hilbert-Schmidt norm, matrix polygon, curvature synthesis}
+}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+For a traceless Hermitian matrix $F\in M_d(\mathbb C)$, let
+\[
+ \kappa_d(F)=\min\{\norm H_{\HS}\norm K_{\HS}:H=H^*,\ K=K^*,\ -i[H,K]=F\}.
+\]
+We solve this inverse problem on the complete spectral cone having one
+positive eigenvalue.  If the nonzero spectrum is
+$(P,-b_1,\ldots,-b_n)$ with $b_1\ge\cdots\ge b_n>0$ and
+$\sum_jb_j=P$, then
+\[
+ \kappa_d(F)=\sum_{j=1}^n j b_j.
+\]
+Every balanced optimum has the same nonzero squared singular values
+$2\sum_{j=\ell}^n b_j$, $1\le\ell\le n$, and hence rank $n$, independently
+of ambient zero padding.  The deficit from the fixed-mass maximum is one half
+of the pairwise dispersion of the $b_j$ and is sharply equivalent to their
+$\ell^1$ distance from uniformity.
+
+We then solve two fixed-target matrix-polygon problems in every finite
+dimension.  For a balanced $m$-kick loop $x_1+\cdots+x_m=0$, define
+\[
+ H_{\rm geo}=\frac i2\sum_{k>j}[x_k,x_j],\qquad
+ S_2=\sum_j\norm{x_j}_{\HS},
+\]
+and let $\mathcal A_m(F)$ be the infimum of $S_2^2$ subject to
+$H_{\rm geo}=F$.  For every nonzero traceless Hermitian target,
+\[
+ \mathcal A_3(F)=12\sqrt3\,\kappa_d(F),\qquad
+ \mathcal A_4(F)=16\,\kappa_d(F).
+\]
+The three-kick identity consolidates the author's earlier low-dimensional
+cases, while the four-kick identity extends the previously known sign-paired
+equality face to every target.  Thus a fourth kick lowers the exact optimal
+squared perimeter by the target- and dimension-independent factor
+$4/(3\sqrt3)$, a reduction of $1-4/(3\sqrt3)\approx23.02\%$.  The four-kick lower
+bound uses an exact Gram-determinant argument; a tempting stronger
+parallelogram inequality is false and is not used.  Exact-arithmetic replays
+and an independent implementation accompany the manuscript.
+\end{abstract}
+
+\section{Question, answer, and scope}
+
+Finite-dimensional self-commutator existence is classical
+\cite{albert1957,thompson1958,fan1980}.  It does not determine the least
+Hilbert--Schmidt resource of Hermitian factors generating a prescribed
+target.  We study that inverse metric problem and its consequence for
+balanced matrix loops.  Throughout,
+\[
+ \norm X_{\HS}^2=\Tr(X^*X)
+\]
+is unnormalized, $F=F^*$ is traceless, and scalar parts of Hermitian factors
+are removed because they do not affect commutators.
+
+The surrounding literature contains forward Frobenius commutator
+inequalities \cite{bottcher2005,bottcher2008,cheng2010}, unrestricted-factor
+inverse problems \cite{weiss1980}, and the weighted-shift constructions used
+in self-commutator existence theory \cite{fan1980,beltita2014}.  The present
+optimization keeps both factors Hermitian.  Its one-spike answer is extracted
+from a small universal family of Horn inequalities rather than from a
+dimension-by-dimension enumeration.
+
+The loop problem is motivated by second-order product formulas and geometric
+terms in controlled or Zeno dynamics \cite{burgarth2013,chen2022}.  Polygonal
+isoperimetry itself is classical \cite{indrei2015}; our fixed-target quantity
+retains the complete matrix $F$, not merely one norm of it.  Building on the
+author's earlier dimension-three, dimension-four, and dimension-five inverse
+formulas and loop corollaries \cite{erikssonQutrit,erikssonFour,erikssonFive},
+on earlier balanced-kick mechanisms \cite{erikssonOperational}, and on an
+earlier sign-paired matrix-polygon equality face
+\cite{erikssonIsoperimetry}, the scoped package is:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+ \item an exact all-dimensional formula on the one-positive or one-negative
+ spectral cone;
+ \item rigidity of the singular spectrum and rank of every balanced optimum;
+ \item a sharp $\ell^1$ stability theorem at the uniform one-spike ray;
+ \item a dimension-free consolidation of the triangular law and an all-target
+ four-kick law extending the sign-paired case, including a strict universal
+ switching gain.
+\end{enumerate}
+We do not claim novelty for the earlier low-dimensional slices, weighted-shift
+self-commutator constructions, Horn feasibility, group-commutator loops, or
+general Gini/mean-deviation inequalities.  We do not claim a closed formula for $\kappa_d$ when both sign multiplicities
+exceed one, a classification of all optimizing matrices, an
+infinite-dimensional result, or a general exact formula for five or more
+kicks.  Priority is stated conservatively: the Horn and weighted-shift
+machinery is standard, and the accompanying search is not a proof of novelty.
+
+\section{Balanced self-commutators}
+
+\begin{definition}
+For traceless Hermitian $F\in M_d(\mathbb C)$ set
+\begin{equation}
+ \kappa_d(F)=\inf\{\norm H_{\HS}\norm K_{\HS}:H=H^*,\ K=K^*,\ -i[H,K]=F\}.
+ \label{eq:kappa}
+\end{equation}
+\end{definition}
+
+\begin{lemma}[one-matrix reduction]
+\label{lem:one-matrix}
+For every traceless Hermitian $F$,
+\begin{equation}
+ \kappa_d(F)=\frac12\min\{\norm C_{\HS}^2:CC^*-C^*C=2F\}.
+ \label{eq:one-matrix}
+\end{equation}
+The minimum is attained.  Moreover, an optimal Hermitian pair may be chosen
+so that
+\begin{equation}
+ \langle H,K\rangle_{\HS}=0,
+ \qquad \norm H_{\HS}=\norm K_{\HS}=\sqrt{\kappa_d(F)}.
+ \label{eq:orthogonal-optimum}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+If $F=0$, both minima are zero, attained by $H=K=C=0$, and the final
+assertion is immediate.  Hence assume $F\ne0$.
+If $-i[H,K]=F$, reciprocal scaling of $H,K$ preserves the commutator and
+their norm product, and can make their norms equal.  For $C=H+iK$,
+\[
+ CC^*-C^*C=-2i[H,K]=2F,
+ \qquad
+ \norm C_{\HS}^2=\norm H_{\HS}^2+\norm K_{\HS}^2.
+\]
+Conversely, the Hermitian real and imaginary parts $X,Y$ of any feasible
+$C$ obey $-i[X,Y]=F$ and
+$\norm X_{\HS}\norm Y_{\HS}\le\norm C_{\HS}^2/2$.  This proves
+\eqref{eq:one-matrix}.  For general feasibility, order an eigenbasis with all
+positive eigenvalues first, then zeros, then negative eigenvalues.  Every
+partial sum $s_j$ of this ordering is nonnegative and the final sum is zero.
+The finite weighted shift $Ce_{j+1}=\sqrt{2s_j}\,e_j$ then satisfies
+$(CC^*-C^*C)/2=F$.  Finite-dimensional compactness gives attainment.
+
+Take a minimizing Hermitian pair and balance its nonzero norms.  Replacing
+$K$ by
+\[
+ K-\frac{\langle H,K\rangle_{\HS}}{\norm H_{\HS}^2}H
+\]
+preserves the commutator.  Unless the inner product vanishes, it strictly
+reduces the product after rebalancing, contradicting optimality.  This gives
+\eqref{eq:orthogonal-optimum}.
+\end{proof}
+
+The Horn description of spectra of sums of Hermitian matrices
+\cite{horn1962,klyachko1998,knutson1999,fulton2000} applies to
+$CC^*+(-C^*C)=2F$.  We only need a nested family for which the
+Littlewood--Richardson coefficient is visibly one.
+
+\section{The complete one-spike cone}
+
+Assume that $F$ has one positive eigenvalue.  Suppressing arbitrary zero
+padding, write its nonzero spectrum as
+\begin{equation}
+ (P,-b_1,\ldots,-b_n),
+ \qquad b_1\ge\cdots\ge b_n>0,
+ \qquad \sum_{j=1}^n b_j=P.
+ \label{eq:one-spike-spectrum}
+\end{equation}
+The order in \eqref{eq:one-spike-spectrum} is adapted to the constructor; the
+decreasing spectral order is $(P,0,\ldots,0,-b_n,\ldots,-b_1)$.
+
+\begin{theorem}[exact cost and optimizer rigidity]
+\label{thm:one-spike}
+For \eqref{eq:one-spike-spectrum},
+\begin{equation}
+ \boxed{\quad \kappa_d(F)=\sum_{j=1}^n j b_j.\quad}
+ \label{eq:one-spike-cost}
+\end{equation}
+If $C=H+iK$ comes from any balanced optimal pair, then the nonzero squared
+singular values of $C$, in decreasing order, are
+\begin{equation}
+ p_\ell=2\sum_{j=\ell}^n b_j,
+ \qquad 1\le\ell\le n.
+ \label{eq:rigid-spectrum}
+\end{equation}
+Consequently every such $C$ has rank exactly $n$.  The same statements hold,
+with the same singular data, when the negative spectral subspace has rank one.
+\end{theorem}
+
+\begin{proof}
+Let $d=n+1+z$, where $z$ is the zero multiplicity, and let
+$p_1\ge\cdots\ge p_d\ge0$ be the eigenvalues of $CC^*$ for a minimizer in
+\eqref{eq:one-matrix}.  If $p_d=t>0$, write the polar decomposition
+$C=US^{1/2}$ with $S=C^*C$; invertibility makes $U$ unitary.  Then
+$C'=U(S-t\1)^{1/2}$ satisfies
+\[
+ C'C'^*=CC^*-t\1,\qquad C'^*C'=C^*C-t\1.
+\]
+It preserves the self-commutator and strictly reduces the norm.  Hence
+$p_d=0$ at an optimum.  The decreasing spectra in Horn's sum problem are
+\[
+ \alpha=(p_1,\ldots,p_{d-1},0),\quad
+ \beta=(0,-p_{d-1},\ldots,-p_1),\quad
+ \gamma=2\spec(F).
+\]
+
+For $1\le\ell\le n$, take
+\[
+ I_\ell=\{1,\ldots,\ell\},\qquad
+ J_\ell=K_\ell=\{1,d-\ell+2,\ldots,d\}.
+\]
+These are valid Horn triples: the partition associated with $I_\ell$ is
+zero and therefore
+$c_{0,\lambda(J_\ell)}^{\lambda(K_\ell)}=1$.  The corresponding inequality
+telescopes to
+\begin{equation}
+ p_\ell\ge 2\left(P-\sum_{j=1}^{\ell-1}b_j\right)
+ =2\sum_{j=\ell}^n b_j.
+ \label{eq:horn-tails}
+\end{equation}
+It follows that
+\[
+ \frac12\sum_{r=1}^d p_r
+ \ge\sum_{\ell=1}^n\sum_{j=\ell}^n b_j
+ =\sum_{j=1}^n j b_j.
+\]
+
+For attainment, use an eigenbasis ordered as in
+\eqref{eq:one-spike-spectrum}, put
+$t_\ell=\sum_{j=\ell}^n b_j$, and define the weighted shift
+\begin{equation}
+ Ce_{\ell+1}=\sqrt{2t_\ell}\,e_\ell
+ \quad(1\le\ell\le n),
+ \qquad C=0\quad\hbox{on the zero-padded complement}.
+ \label{eq:weighted-shift}
+\end{equation}
+Direct multiplication gives
+$(CC^*-C^*C)/2=F$ and
+$\norm C_{\HS}^2/2=\sum_\ell t_\ell=\sum_j j b_j$.
+Thus the lower bound is exact.  At any optimum, equality of the sum forces
+equality in every nonnegative inequality \eqref{eq:horn-tails}, while all
+remaining $p_r$ vanish.  This proves \eqref{eq:rigid-spectrum} and the rank
+claim.  Replacing $F$ by $-F$ replaces $C$ by $C^*$.
+\end{proof}
+
+\begin{remark}[what rigidity does not say]
+The theorem fixes the singular spectrum and rank of every balanced optimum;
+it does not assert that every optimum is entrywise a weighted shift.  Unitary
+and phase freedoms, and possibly further equality geometry, remain.
+\end{remark}
+
+\section{Sharp stability at the uniform ray}
+
+For fixed $P$ and $n$, the general rank-adaptive upper endpoint is
+$((n+1)/2)P$.  On the one-spike cone its deficit has an elementary dispersion
+form.  Comparisons between empirical Gini mean difference and mean absolute
+deviation are known \cite{cerone2006}; the theorem below records the exact
+constants and equality families in this ordered, nonnegative, fixed-mass
+spectral normalization.
+
+\begin{theorem}[Gini identity and sharp trace-distance stability]
+\label{thm:stability}
+Let $u=P/n$ and
+\[
+ D=\frac{n+1}{2}P-\kappa_d(F),
+ \qquad L=\sum_{j=1}^n|b_j-u|.
+\]
+Then
+\begin{equation}
+ \boxed{\quad
+ D=\frac12\sum_{1\le i<j\le n}(b_i-b_j).
+ \quad}
+ \label{eq:gini}
+\end{equation}
+For $n\ge2$,
+\begin{equation}
+ \boxed{\quad \frac n4L\le D\le\frac{n-1}{2}L.\quad}
+ \label{eq:stability}
+\end{equation}
+Both constants are optimal.  In particular, the uniform opposite-sign block
+$b_1=\cdots=b_n=P/n$ is the unique fixed-mass maximizer of $\kappa_d$.
+\end{theorem}
+
+\begin{proof}
+Substitution of \eqref{eq:one-spike-cost} gives
+\[
+ D=\frac12\sum_{j=1}^n(n+1-2j)b_j,
+\]
+which is \eqref{eq:gini}.  Put $y_j=b_j-u$ and let $k$ be the last index with
+$y_k\ge0$.  The total positive and negative deviation masses both equal
+$L/2$.  Keeping only the cross pairs in the nonnegative ordered sum gives
+\[
+ 2D\ge\sum_{i\le k<j}(y_i-y_j)=\frac n2L,
+\]
+which is the lower bound.  Equality holds for every two-level deviation
+profile: the $y_i$ are constant on $i\le k$ and on $i>k$.
+
+For the upper bound, the coefficients
+$w_j=(n+1-2j)/2$ satisfy $|w_j|\le(n-1)/2$, and hence
+\[
+ D=\sum_jw_jy_j\le\frac{n-1}{2}\sum_j|y_j|.
+\]
+Equality is obtained when only $y_1$ and $y_n$ are nonzero and opposite.
+Finally $D=0$ exactly when every pairwise difference vanishes.
+\end{proof}
+
+The exact formula also orders the entire cone without solving any further
+optimization problem.  Recall that a decreasing vector $b$ majorizes a
+decreasing vector $c$ of the same mass if
+$\sum_{j=1}^k b_j\ge\sum_{j=1}^k c_j$ for every $k<n$.
+
+\begin{corollary}[strict Schur concavity on the one-spike cone]
+\label{cor:majorization}
+Let $b,c\in(0,\infty)^n$ be decreasing and have the same sum $P$, and let
+$F_b,F_c$ be one-spike targets with opposite-sign blocks $b,c$.  If $b$
+majorizes $c$, then
+\[
+ \kappa_d(F_b)\le \kappa_d(F_c).
+\]
+Equality holds if and only if $b=c$.  Thus making the opposite-sign spectral
+mass more unequal strictly lowers the inverse cost, while the uniform block
+is its unique fixed-mass maximum.
+\end{corollary}
+
+\begin{proof}
+Writing $B_k=\sum_{j=1}^k b_j$ and using Theorem~\ref{thm:one-spike},
+\[
+ \kappa_d(F_b)=\sum_{j=1}^n j b_j
+ =nP-\sum_{k=1}^{n-1}B_k.
+\]
+The corresponding identity for $c$ and the defining prefix inequalities give
+the result.  Equality of the costs forces equality of every prefix, hence
+$b=c$.
+\end{proof}
+
+\section{Exact finite-switch curvature synthesis}
+
+Let $x_1,\ldots,x_m$ be Hermitian matrices with $\sum_jx_j=0$ and define
+\begin{equation}
+ H_{\rm geo}(x)=\frac i2\sum_{k>j}[x_k,x_j],
+ \qquad S_2(x)=\sum_{j=1}^m\norm{x_j}_{\HS}.
+ \label{eq:loop}
+\end{equation}
+For a traceless Hermitian target $F$, set
+\begin{equation}
+ \mathcal A_m(F)=\inf\{S_2(x)^2:\sum_jx_j=0,\ H_{\rm geo}(x)=F\}.
+ \label{eq:action}
+\end{equation}
+Scalar components can be deleted from every edge without changing the target
+and while weakly decreasing $S_2$, so the definition is already
+gauge-minimal.
+
+\subsection{Three kicks}
+
+\begin{theorem}[exact triangular action]
+\label{thm:three}
+For every finite-dimensional traceless Hermitian $F$,
+\begin{equation}
+ \boxed{\quad \mathcal A_3(F)=12\sqrt3\,\kappa_d(F).\quad}
+ \label{eq:three}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+The zero target is attained by the zero loop, so assume $F\ne0$.  Balance gives $x_3=-x_1-x_2$ and
+$F=-i[x_1,x_2]/2$.  In the real Hilbert space of Hermitian matrices, remove
+from $x_2$ its projection onto $x_1$.  The commutator is unchanged, so
+\[
+ \kappa_d(F)\le\frac12
+ \sqrt{\norm{x_1}_{\HS}^2\norm{x_2}_{\HS}^2
+       -\langle x_1,x_2\rangle_{\HS}^2}=:\Delta.
+\]
+Here $\Delta$ is the Euclidean area of the triangle with edge vectors
+$x_1,x_2,x_3$.  The sharp triangular isoperimetric inequality gives
+$S_2^2\ge12\sqrt3\,\Delta$, proving the lower bound.
+
+Choose $H,K$ as in \eqref{eq:orthogonal-optimum}, put
+$\alpha=2/\sqrt[4]{3}$, and set
+\[
+ x_1=\alpha H,\qquad
+ x_2=\alpha\left(-\frac12H+\frac{\sqrt3}{2}K\right),\qquad
+ x_3=-x_1-x_2.
+\]
+The three norms equal $\alpha\sqrt{\kappa_d(F)}$ and direct calculation gives
+$H_{\rm geo}=F$.  Thus
+$S_2^2=9\alpha^2\kappa_d(F)=12\sqrt3\,\kappa_d(F)$.
+\end{proof}
+
+\subsection{Four kicks and the Gram correction}
+
+\begin{theorem}[exact quadrilateral action]
+\label{thm:four}
+For every finite-dimensional traceless Hermitian $F$,
+\begin{equation}
+ \boxed{\quad \mathcal A_4(F)=16\,\kappa_d(F).\quad}
+ \label{eq:four}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+The zero target is attained by the zero loop, so assume $F\ne0$.  For any balanced four-tuple, put
+\[
+ D_1=x_1+x_2,\qquad D_2=x_2+x_3.
+\]
+A direct expansion gives the diagonal identity
+\begin{equation}
+ H_{\rm geo}=-\frac i2[D_1,D_2].
+ \label{eq:diagonal-identity}
+\end{equation}
+Write
+\[
+ a=\norm{D_1}_{\HS}^2,\qquad
+ b=\norm{D_2}_{\HS}^2,\qquad
+ c=\langle D_1,D_2\rangle_{\HS},\qquad
+ q=\sqrt{ab-c^2}.
+\]
+Shearing $D_2$ by its component parallel to $D_1$ leaves the commutator
+unchanged, so \eqref{eq:diagonal-identity} implies
+\begin{equation}
+ \kappa_d(F)\le\frac q2.
+ \label{eq:gram-kappa}
+\end{equation}
+Balance also gives
+$D_1+D_2=x_2-x_4$ and $D_1-D_2=x_1-x_3$.  Therefore
+\begin{align}
+ S_2&\ge\norm{D_1+D_2}_{\HS}+\norm{D_1-D_2}_{\HS},\nonumber\\
+ S_2^2&\ge
+ 2(a+b)+2\sqrt{(a-b)^2+4(ab-c^2)}\nonumber\\
+ &\ge 8q\ge16\kappa_d(F).
+ \label{eq:gram-chain}
+\end{align}
+The penultimate step uses $a+b\ge2q$ and
+$\sqrt{(a-b)^2+4q^2}\ge2q$.
+
+For attainment, choose the orthogonal equal-norm optimum $H,K$ from
+\eqref{eq:orthogonal-optimum}, set $D_1=\sqrt2H$, $D_2=\sqrt2K$, and take
+\begin{equation}
+ x_1=\frac{D_1-D_2}{2},\quad
+ x_2=\frac{D_1+D_2}{2},\quad
+ x_3=-x_1,\quad x_4=-x_2.
+ \label{eq:square-constructor}
+\end{equation}
+Then every edge has norm $\sqrt{\kappa_d(F)}$,
+$H_{\rm geo}=F$, and $S_2^2=16\kappa_d(F)$.
+\end{proof}
+
+\begin{remark}[why the determinant is necessary]
+It is false in general that
+$(\norm{D_1+D_2}+\norm{D_1-D_2})^2$ is at least
+$4(\norm{D_1}^2+\norm{D_2}^2)$; nearly parallel diagonals give
+counterexamples.  The invariant controlled by the commutator is the Gram
+area $q$, and \eqref{eq:gram-chain} is the valid sharp inequality.
+\end{remark}
+
+\begin{corollary}[universal three-versus-four switching gain]
+\label{cor:gain}
+For every nonzero traceless Hermitian target in every finite dimension,
+\begin{equation}
+ \boxed{\quad
+ \frac{\mathcal A_4(F)}{\mathcal A_3(F)}
+ =\frac{4}{3\sqrt3}<1.
+ \quad}
+ \label{eq:gain}
+\end{equation}
+Equivalently, the fourth kick reduces the optimum squared perimeter by
+$1-4/(3\sqrt3)\approx23.02\%$.
+On the one-spike cone this becomes
+\[
+ \mathcal A_3(F)=12\sqrt3\sum_{j=1}^n j b_j,
+ \qquad
+ \mathcal A_4(F)=16\sum_{j=1}^n j b_j.
+\]
+The displayed optimal square uses four equal-norm edges and an internal factor
+of rank $n$.
+\end{corollary}
+
+\section{Relation to earlier records and development provenance}
+
+The dimension-three, dimension-four, and dimension-five inverse-cost papers
+already contain the corresponding fixed-dimensional formulas and triangular
+loop identities \cite{erikssonQutrit,erikssonFour,erikssonFive}.  The
+operational-curvature paper already uses balanced three- and four-kick
+commutator loops \cite{erikssonOperational}, and the matrix-isoperimetry paper
+establishes the exact four-edge value on the sign-paired spectral face
+\cite{erikssonIsoperimetry}.  Accordingly, Theorem~\ref{thm:three} is an
+all-dimensional consolidation, while the new scope of Theorem~\ref{thm:four}
+is its extension from that equality face to arbitrary traceless Hermitian
+targets.
+
+An earlier local, unpublished development package titled \emph{One-Spike
+Inverse Self-Commutators in Every Dimension} contains the one-spike formula,
+rigidity, and stability lemmas from which this consolidated paper was
+developed.  Its hashes and chronology are preserved in the accompanying
+priority audit.  A prepared submission sheet is not treated as evidence of
+public disclosure.  Public searches of the author's ARR archive,
+repositories, and release assets through 30 August 2026 did not locate that exact
+manuscript; this negative evidence is not an exhaustive priority guarantee.
+
+The complementary paper \emph{Sharp Rank-Adaptive Bounds for Inverse
+Self-Commutators} is now public as ARR-2026-1D2QV1RP1292JREW
+\cite{erikssonRankAdaptive}.  It proves the general rank-adaptive bounds, the
+uniform one-spike endpoint, both equality classifications, and the exact
+sign-cut leakage identity.  It does not contain the arbitrary one-spike
+formula, every-optimizer singular rigidity, the sharp stability theorem, or
+the all-target kick laws proved here.  The present paper should therefore be
+read as an exact interior-cone and synthesis companion, not as a replacement
+for that general extremal theorem.
+
+\section{Examples and boundary of the formula}
+
+\paragraph{Qubit.}
+For spectrum $(P,-P)$, $\kappa_2(F)=P$ and the formulas give
+$\mathcal A_3=12\sqrt3P$ and $\mathcal A_4=16P$.
+
+\paragraph{A zero-padded repeated spectrum.}
+For nonzero spectrum $(6,-3,-2,-1)$ in any $d\ge4$,
+\[
+ \kappa_d=3+2\cdot2+3\cdot1=10,
+ \qquad \spec_{>0}(CC^*)=(12,6,2).
+\]
+Thus every balanced optimum has rank three, while the exact loop costs are
+$120\sqrt3$ and $160$.
+
+\paragraph{Why one-spike is a real restriction.}
+For $F=\diag(5,1,-3,-3)$, a direct four-level Horn certificate gives
+$\kappa_4(F)\ge\lambda_1-\lambda_3=8$.  Equality is attained by
+\[
+ C=E_{12}+3E_{14}+\sqrt3E_{23}+\sqrt3E_{43},
+ \qquad CC^*-C^*C=2F,
+ \qquad \frac12\norm C_{\HS}^2=8.
+\]
+Collapsing the two positive levels into a fictitious spike would instead
+produce $3+2\cdot3=9$.  Hence \eqref{eq:one-spike-cost} is not an unrestricted
+spectral formula.  The universal loop laws remain valid because they retain
+$\kappa_d(F)$ rather than replacing it by the one-spike expression.
+
+\section{Reproducibility, limitations, and conclusion}
+
+The reproduction package contains two independent exact-arithmetic routes.
+One checks tail identities, stability bounds and equality families over
+rational compositions.  The other checks the weighted-shift and matrix-loop
+identities directly, includes nearly parallel diagonals that falsify the
+discarded inequality, and verifies the corrected Gram chain.  These programs
+test algebraic consequences and fixtures; they do not certify Horn's theorem
+or replace the displayed arbitrary-dimensional proofs.
+
+The result is finite-dimensional and uses distinct roles for three notions:
+factor product $\kappa_d$, loop perimeter $S_2$, and squared perimeter
+$\mathcal A_m$.  No claim is made about quadratic edge energy, operator-norm
+action, open paths, coincident-time limits, or higher Magnus orders.  The
+priority audit found classical mechanisms close to both halves of the paper
+and exact self-overlap in low-dimensional slices.  Novelty therefore remains
+a scoped literature-search conclusion rather than a mathematical theorem.
+
+The main structural point is that a difficult inverse matrix invariant can be
+read operationally.  On an entire high-rank spectral cone it is an explicit
+ordered moment of the negative eigenvalues and rigidifies all optimal
+singular data.  Without any spectral restriction, it is exactly the resource
+converted by the optimal triangle and square.  The resulting fourth-switch
+gain is universal, and the inverse cost is strictly Schur-concave on the
+one-spike simplex, even though it is not known in closed form on general sign
+patterns.
+
+\section*{Author and AI disclosure}
+
+Lluis Eriksson directed the research, selected the claims, and accepts
+responsibility for the manuscript.  OpenAI Codex assisted with algebraic
+exploration, literature triage, adversarial proof checking, exact replay,
+typesetting, and drafting.  No external peer review or formal proof
+certification is claimed.
+
+\small
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}
