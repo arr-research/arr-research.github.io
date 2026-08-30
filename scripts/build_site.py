@@ -509,8 +509,10 @@ def build_author_page(profile: dict, author_papers: list, timestamps: dict, metr
     )
     content = f"""
 <article class="author-page">
-  <header class="author-header"><span>ARR author profile</span><h1>{esc(profile['name'])}</h1><p class="affiliation">{esc(profile.get('affiliation', ''))}</p><p>{esc(profile.get('bio', ''))}</p><div class="profile-links">{links}</div></header>
-  <section class="profile-stats" aria-label="Author activity"><div><strong>{totals['papers']}</strong><span>ARR records</span></div><div><strong>{metric_number(totals['pdf_downloads'])}</strong><span>PDF downloads</span></div><div><strong>{metric_number(totals['page_views'])}</strong><span>page views</span></div></section>
+  <div class="author-overview">
+    <header class="author-header"><span>ARR author profile</span><h1>{esc(profile['name'])}</h1><p class="affiliation">{esc(profile.get('affiliation', ''))}</p><p>{esc(profile.get('bio', ''))}</p><div class="profile-links">{links}</div></header>
+    <section class="profile-stats" aria-label="Author activity"><div><strong>{totals['papers']}</strong><span>ARR records</span></div><div><strong>{metric_number(totals['pdf_downloads'])}</strong><span>PDF downloads</span></div><div><strong>{metric_number(totals['page_views'])}</strong><span>page views</span></div></section>
+  </div>
   <div class="section-heading"><div><span>Publications</span><h2>All ARR records</h2></div><a href="{base}/rankings/">Activity rankings</a></div>
   <section class="catalogue">{cards}</section>
 </article>
