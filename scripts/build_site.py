@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import html
 import json
 import shutil
@@ -155,6 +156,7 @@ def chronology_time(timestamp: dict) -> str:
 
 def page_shell(*, title: str, description: str, content: str, base: str, canonical: str = "", head_extra: str = "") -> str:
     canonical_tag = f'<link rel="canonical" href="{esc(canonical)}">' if canonical else ""
+    style_version = hashlib.sha256((SITE_DIR / "style.css").read_bytes()).hexdigest()[:12]
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -165,7 +167,7 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
   <meta name="description" content="{esc(description)}">
   {canonical_tag}
   {head_extra}
-  <link rel="stylesheet" href="{base}/assets/style.css">
+  <link rel="stylesheet" href="{base}/assets/style.css?v={style_version}">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -762,14 +764,9 @@ def build_submit(
     start = (page_number - 1) * page_size
     page_papers = ranked[start : start + page_size]
     direct_action = (
-        f'<a class="button" href="{esc(intake_url.rstrip("/") + "/submit")}">Submit a paper privately</a>'
+        f'<a class="intake-link" href="{esc(intake_url.rstrip("/") + "/submit")}">Submit privately</a>'
         if intake_url
-        else '<span class="button disabled" aria-disabled="true">Private intake opening soon</span>'
-    )
-    status = (
-        "The receiver is online. Uploading creates a private case; it never publishes the manuscript."
-        if intake_url
-        else "The secure receiver is being activated. No invitation is needed; please do not email manuscripts."
+        else '<span class="intake-state">Private submission: opening soon</span>'
     )
     rows = []
     for rank, paper in enumerate(page_papers, start=start + 1):
@@ -815,14 +812,9 @@ def build_submit(
         else "Page views are not yet measured, so this reproducible ranking uses canonical PDF downloads. Activity is not a scientific-quality score."
     )
     content = f"""
-<section class="submit-hero">
-  <div class="submit-intro"><span>ARR private intake</span><h1>Submit to ARR</h1><p>Direct private deposit · EUR 0 currently · PDF ≤ 25 MiB · human editorial decision.</p></div>
-  <div class="submit-action"><div>{direct_action}<a class="text-link" href="{base}/terms/">Terms</a><a class="text-link" href="{base}/privacy/">Privacy</a></div><p class="submit-status">{esc(status)}</p></div>
-  <aside aria-label="Submission guarantees"><div><strong>Private</strong><span>until accepted</span></div><div><strong>Quarantined</strong><span>malware checked</span></div><div><strong>Manual</strong><span>human decision</span></div><div><strong>Versioned</strong><span>separate release</span></div></aside>
-</section>
-<section class="ranked-feed">
-  <header><div><span>Public catalogue · activity order</span><h2>Paper index</h2></div><div class="rank-page">Records {start + 1 if ranked else 0}–{min(start + page_size, len(ranked))} / {len(ranked)}</div></header>
-  <p class="rank-note">{esc(rank_explanation)}</p>
+<section class="ranked-feed submit-index">
+  <header><div><span>ARR public catalogue · activity order</span><h1>Paper index</h1></div><div class="submit-tools">{direct_action}<a href="{base}/terms/">Terms</a><a href="{base}/privacy/">Privacy</a></div></header>
+  <div class="index-meta"><p>{esc(rank_explanation)}</p><span>Records {start + 1 if ranked else 0}–{min(start + page_size, len(ranked))} / {len(ranked)}</span></div>
   <div class="rank-columns" aria-hidden="true"><span>Rank</span><span>Record</span><span>Activity</span></div>
   <ol class="ranked-list" start="{start + 1}">{''.join(rows)}</ol>
   <nav class="pagination" aria-label="Paper ranking pages">{previous_link}<span>Page {page_number} of {page_count}</span>{next_link}</nav>
