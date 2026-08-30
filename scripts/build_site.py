@@ -389,13 +389,14 @@ def paper_card(
     activity = paper_activity(metadata["id"], metrics or {"papers": {}})
     archival = metadata.get("archival_source")
     chronology_label = "First submitted to ai.vixra" if archival else ("Published" if timestamp["publication_state"] == "published" else "Deposit recorded")
+    activity_label = "Mirror downloads not measured" if archival else download_label(activity["pdf_downloads"])
     return f"""
 <article class="paper-card">
   <div class="paper-meta">{type_badge(metadata)}{status_badge(metadata['status'])}<span>{esc(metadata['id'])} · {esc(metadata['version'])}</span></div>
   <h3><a href="{base}/{record_route(metadata)}/{quote(metadata['id'])}/">{esc(metadata['title'])}</a></h3>
   <p class="authors">{authors}</p>
   <p>{esc(metadata['abstract'])}</p>
-  <div class="paper-foot"><span>{chronology_label} {exact_time(paper_chronology(metadata, timestamp))}</span><span>{download_label(activity['pdf_downloads'])}</span><span>Protocol {esc(metadata['verification']['protocol'])}</span></div>
+  <div class="paper-foot"><span>{chronology_label} {exact_time(paper_chronology(metadata, timestamp))}</span><span>{activity_label}</span><span>Protocol {esc(metadata['verification']['protocol'])}</span></div>
 </article>"""
 
 
@@ -755,6 +756,19 @@ def build_paper_page(
             '<aside class="version-notice historical"><strong>Historical import · not assessed.</strong> '
             'This author-authorized record preserves an earlier ai.vixra deposit. File integrity passed; scientific correctness, novelty and bibliography did not undergo the current ARR hostile-audit gate.</aside>'
         )
+        record_timestamp_panel = f"""
+  <section class="timestamp-panel" aria-label="Historical archive timestamps">
+    <div><span>Original deposit</span><strong>{exact_time(archival['first_submitted_at'])}</strong><small>ai.vixra first-submission history · source omits timezone</small></div>
+    <div><span>Historical mirror</span><strong>{esc(archival['mirrored_version'])}</strong><small>Author-authorized ARR bulk release · SHA-256 recorded</small></div>
+  </section>"""
+        activity_heading = "Mirrored PDF downloads"
+        activity_value = "Not measured"
+        activity_note = "Bulk historical-release assets are not yet included in ARR's per-record download snapshot."
+    else:
+        record_timestamp_panel = timestamp_panel(timestamp)
+        activity_heading = "Canonical PDF downloads"
+        activity_value = metric_number(activity["pdf_downloads"])
+        activity_note = "Cumulative GitHub release asset count"
     revision = metadata.get("revision")
     revision_section = ""
     if isinstance(revision, dict):
@@ -782,8 +796,8 @@ def build_paper_page(
   <div class="paper-meta">{type_badge(metadata)}{status_badge(metadata['status'])}<span>{esc(metadata['id'])} · {esc(metadata['version'])} · {esc(metadata['date'])}</span></div>
   <h1>{esc(metadata['title'])}</h1>
   <p class="paper-authors">{authors}</p>
-  {timestamp_panel(timestamp)}
-  <section class="activity-panel" aria-label="Public activity"><div><span>Canonical PDF downloads</span><strong>{metric_number(activity['pdf_downloads'])}</strong><small>Cumulative GitHub release asset count</small></div><div><span>Page views</span><strong>{metric_number(activity['page_views'])}</strong><small>{esc((metrics or {}).get('views', {}).get('definition', 'No privacy-reviewed page-view source is connected.'))}</small></div><a href="{base}/rankings/#method">Definitions and rankings →</a></section>
+  {record_timestamp_panel}
+  <section class="activity-panel" aria-label="Public activity"><div><span>{activity_heading}</span><strong>{activity_value}</strong><small>{activity_note}</small></div><div><span>Page views</span><strong>{metric_number(activity['page_views'])}</strong><small>{esc((metrics or {}).get('views', {}).get('definition', 'No privacy-reviewed page-view source is connected.'))}</small></div><a href="{base}/rankings/#method">Definitions and rankings →</a></section>
   <div class="paper-assessment-badge">{assessment_badge(paper, assessments)}</div>
   <div class="download-row">{''.join(links)}</div>
   <section class="abstract"><span>{summary_label}</span><p>{esc(metadata['abstract'])}</p></section>
