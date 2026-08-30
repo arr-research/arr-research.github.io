@@ -583,6 +583,14 @@ def validate_paper(paper: Paper) -> list[str]:
                     errors.append(f"screening.evaluators[{index}].model_id: duplicate model")
                 else:
                     model_ids.add(model_id)
+                reasoning_effort = evaluator.get("reasoning_effort")
+                if reasoning_effort is not None and reasoning_effort not in {"none", "minimal", "low", "medium", "high", "xhigh", "max", "ultra"}:
+                    errors.append(f"screening.evaluators[{index}].reasoning_effort: invalid value")
+                runtime_provenance = evaluator.get("runtime_provenance")
+                if runtime_provenance is not None and (
+                    not isinstance(runtime_provenance, str) or not (paper.path / runtime_provenance).is_file()
+                ):
+                    errors.append(f"screening.evaluators[{index}].runtime_provenance: referenced record is missing")
                 if evaluator.get("outcome") not in {"pass", "concerns", "fail"}:
                     errors.append(f"screening.evaluators[{index}].outcome: invalid value")
                 if screening_status == "pass" and evaluator.get("outcome") != "pass":

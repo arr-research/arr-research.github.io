@@ -20,6 +20,18 @@
     "canonical_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "provider": {"type": "string", "minLength": 2, "maxLength": 100},
     "model_id": {"type": "string", "minLength": 2, "maxLength": 160},
+    "runtime_provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider", "model_id", "reasoning_effort", "basis", "evidence_sha256"],
+      "properties": {
+        "provider": {"type": "string", "minLength": 2, "maxLength": 100},
+        "model_id": {"type": "string", "minLength": 2, "maxLength": 160},
+        "reasoning_effort": {"enum": ["none", "minimal", "low", "medium", "high", "xhigh", "max", "ultra"]},
+        "basis": {"enum": ["platform_runtime_metadata", "author_verified_ui", "operator_verified_ui"]},
+        "evidence_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
     "assessed_at": {"type": "string", "format": "date-time"},
     "prompt_version": {"const": "ARR-ASSESS-1.0"},
     "independence": {"enum": ["not_involved_in_manuscript", "involved_in_manuscript", "unknown"]},

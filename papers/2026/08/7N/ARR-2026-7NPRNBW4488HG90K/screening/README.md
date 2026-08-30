@@ -1,9 +1,13 @@
 # Screening reports
 
 The exact v1 PDF was assessed under `ARR-ASSESS-1.0` by OpenAI
-`gpt-5.5`, which was not involved in the manuscript. The locked report is
+`gpt-5.6-sol` at reasoning effort `high`, which was not involved in the manuscript. The locked report is
 `final-assessment.json`; it recommends minor revision, assigns 4.10 on ARR's
 Millennium-anchored scale, and reports no unresolved material objection.
+
+The model-authored JSON self-reported `gpt-5.5`. ARR preserves that source response
+unchanged, including its existing response hash. The independently evidenced runtime
+identity is recorded in `runtime-provenance.json` and controls the public label.
 
 ARR does not require private chain-of-thought. It requires a concise, auditable decision report and the evidence needed to understand unresolved limitations.
 

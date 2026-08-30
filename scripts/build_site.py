@@ -622,6 +622,21 @@ def paper_assessment_section(paper, assessments: list[dict], highlight: dict | N
         "reproducibility": "Reproducibility",
     }
     for item in items:
+        runtime = item.get("runtime_provenance", {})
+        display_provider = runtime.get("provider", item["provider"])
+        display_model = runtime.get("model_id", item["model_id"])
+        reasoning_effort = runtime.get("reasoning_effort")
+        model_label = f"{display_provider} · {display_model}"
+        if reasoning_effort:
+            model_label += f" · {reasoning_effort.title()}"
+        runtime_note = ""
+        if runtime:
+            runtime_note = (
+                f" · runtime identity: {esc(display_provider)} {esc(display_model)}"
+                f" · reasoning effort: {esc(reasoning_effort)}"
+                f" · basis: {esc(runtime['basis'].replace('_', ' '))}"
+                f" · evidence SHA-256 <code>{esc(runtime['evidence_sha256'])}</code>"
+            )
         criteria = "".join(
             f'<div><dt>{esc(criterion_labels[name])}</dt><dd>{star_row(item["criteria"][name]["stars"], 5)}<small>{esc(item["criteria"][name]["basis"])}</small></dd></div>'
             for name in CRITERIA
@@ -631,8 +646,8 @@ def paper_assessment_section(paper, assessments: list[dict], highlight: dict | N
         report_tone = "material" if material else "clear"
         reports.append(f"""
 <details class="model-report {report_tone}">
-  <summary><span><strong>{esc(item['provider'])} · {esc(item['model_id'])}</strong><small>{exact_time(item['assessed_at'])} · {esc(independence)}</small></span><span>{star_row(item['overall_stars'])}<strong>{float(item['millennium_score']):.2f}</strong></span></summary>
-  <div class="report-body"><p class="report-recommendation">Recommendation: <strong>{esc(item['recommendation'].replace('_', ' ').title())}</strong> · Material objections: <strong>{len(material)}</strong></p><p>{esc(item['summary'])}</p><dl class="criterion-grid">{criteria}</dl><div class="findings-grid">{findings_block('Strengths', item['strengths'])}{findings_block('Weaknesses', item['weaknesses'])}{findings_block('Potential errors', item['potential_errors'])}{findings_block('Strong novelty candidates', item['strong_novelty_candidates'])}{findings_block('Unresolved material objections', material)}</div><p class="assessment-provenance">{esc(item['assessment_id'])} · prompt {esc(item['prompt_version'])} · response SHA-256 <code>{esc(item['source_response_sha256'])}</code> · canonical PDF SHA-256 <code>{esc(item['canonical_sha256'])}</code></p></div>
+  <summary><span><strong>{esc(model_label)}</strong><small>{exact_time(item['assessed_at'])} · {esc(independence)}</small></span><span>{star_row(item['overall_stars'])}<strong>{float(item['millennium_score']):.2f}</strong></span></summary>
+  <div class="report-body"><p class="report-recommendation">Recommendation: <strong>{esc(item['recommendation'].replace('_', ' ').title())}</strong> · Material objections: <strong>{len(material)}</strong></p><p>{esc(item['summary'])}</p><dl class="criterion-grid">{criteria}</dl><div class="findings-grid">{findings_block('Strengths', item['strengths'])}{findings_block('Weaknesses', item['weaknesses'])}{findings_block('Potential errors', item['potential_errors'])}{findings_block('Strong novelty candidates', item['strong_novelty_candidates'])}{findings_block('Unresolved material objections', material)}</div><p class="assessment-provenance">{esc(item['assessment_id'])} · prompt {esc(item['prompt_version'])}{runtime_note} · response SHA-256 <code>{esc(item['source_response_sha256'])}</code> · canonical PDF SHA-256 <code>{esc(item['canonical_sha256'])}</code></p></div>
 </details>""")
     history = "".join(reports) if reports else '<p class="assessment-empty">No model reports are published for this version.</p>'
     return f"""
@@ -693,7 +708,9 @@ def build_paper_page(
         links.append(f'<a class="text-link" href="https://doi.org/{esc(metadata["doi"])}">DOI {esc(metadata["doi"])}</a>')
     keywords = "".join(f"<li>{esc(keyword)}</li>" for keyword in metadata.get("keywords", []))
     evaluators = "".join(
-        f'<li><strong>{esc(item["model_id"])}</strong><span>{esc(item["provider"])} · pass' +
+        f'<li><strong>{esc(item["model_id"])}</strong><span>{esc(item["provider"])}' +
+        (f' · reasoning effort {esc(item["reasoning_effort"])}' if item.get("reasoning_effort") else '') +
+        ' · pass' +
         (' · creation conflict declared' if item.get("involved_in_creation") else '') +
         '</span></li>'
         for item in metadata["screening"]["evaluators"]

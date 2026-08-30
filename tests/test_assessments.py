@@ -57,6 +57,43 @@ class AssessmentTests(unittest.TestCase):
         assessment["summary"] = "This altered summary is long enough to pass length validation but no longer matches the source response digest."
         self.assertTrue(any("source_response_sha256" in error for error in validate_assessment(assessment, self.all_versions)))
 
+    def test_evidenced_runtime_provenance_preserves_source_hash(self) -> None:
+        assessment = self.response()
+        assessment["runtime_provenance"] = {
+            "provider": "OpenAI",
+            "model_id": "gpt-5.6-sol",
+            "reasoning_effort": "high",
+            "basis": "author_verified_ui",
+            "evidence_sha256": "a" * 64,
+        }
+        self.assertEqual(validate_assessment(assessment, self.all_versions), [])
+
+    def test_invalid_runtime_reasoning_effort_is_rejected(self) -> None:
+        assessment = self.response()
+        assessment["runtime_provenance"] = {
+            "provider": "OpenAI",
+            "model_id": "gpt-5.6-sol",
+            "reasoning_effort": "very-high",
+            "basis": "author_verified_ui",
+            "evidence_sha256": "a" * 64,
+        }
+        self.assertTrue(any("runtime_provenance.reasoning_effort" in error for error in validate_assessment(assessment, self.all_versions)))
+
+    def test_public_report_prefers_evidenced_runtime_identity(self) -> None:
+        assessment = self.response()
+        assessment["model_id"] = "incorrect-self-report"
+        assessment["runtime_provenance"] = {
+            "provider": "OpenAI",
+            "model_id": "gpt-5.6-sol",
+            "reasoning_effort": "high",
+            "basis": "author_verified_ui",
+            "evidence_sha256": "a" * 64,
+        }
+        page = build_site.paper_assessment_section(self.paper, [assessment], None, "")
+        self.assertIn("OpenAI · gpt-5.6-sol · High", page)
+        self.assertNotIn("incorrect-self-report</strong>", page)
+        self.assertIn("reasoning effort: high", page)
+
     def test_material_objection_cannot_recommend_accept(self) -> None:
         errors = validate_assessment(self.response(material=True), self.all_versions)
         self.assertTrue(any("unresolved material objections" in error for error in errors))
