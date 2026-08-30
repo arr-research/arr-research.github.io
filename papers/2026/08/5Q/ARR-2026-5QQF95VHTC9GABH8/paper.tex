@@ -1,0 +1,720 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue!55!black,citecolor=blue!55!black,urlcolor=blue!55!black]{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\HS}{\mathrm{HS}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\proj}{\operatorname{proj}}
+\newcommand{\one}{\mathbf 1}
+
+\hypersetup{
+ pdftitle={Sharp Onset and Unbounded Growth of Norm-Optimal Self-Commutator Rank},
+ pdfauthor={Lluis Eriksson},
+ pdfsubject={An exact low-dimensional classification and rank-norm phase transitions for inverse finite self-commutators},
+ pdfkeywords={self-commutator, Horn inequalities, inverse commutator, optimal rank, inertia, polyhedral projection}
+}
+
+\title{Sharp Onset and Unbounded Growth of\\
+Norm-Optimal Self-Commutator Rank}
+\author{Lluis Eriksson}
+\date{30 August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+For a traceless Hermitian matrix $F\in M_d(\mathbb C)$, define
+\[
+ \kappa_d(F)=\frac12\min\{\|C\|_{\HS}^2:CC^*-C^*C=2F\}
+\]
+and let $r_*(F)$ be the least rank among its minimizers.  Inertia gives the
+universal lower bound $r_0(F)=\max\{n_+(F),n_-(F)\}$.  We prove the exact
+low-dimensional classification
+\[
+ r_*(F)=r_0(F)\qquad(d\le7),
+\]
+including every singular spectrum.  The bound fails sharply in dimension
+eight.  For the entire explicit two-ray cone
+\[
+ \lambda(b,c)=(4c-3b,b,b,b,-c,-c,-c,-c),\qquad0\le b\le c,
+\]
+we determine the unrestricted and rank-four costs: their difference is
+$\min\{b,c-b\}$, and every interior point has $r_*=5>4=r_0$.  In particular,
+the integer spectrum $(5,1,1,1,-2,-2,-2,-2)$ has unrestricted cost $13$ and
+rank-four cost $14$.  Thus eight is the least dimension in which
+Hilbert--Schmidt norm optimality can force factor rank strictly above inertia.
+The proof is an exact computer-assisted Horn-polyhedral argument.  Thirty-three
+sign--zero strata through dimension seven yield $813$ exact face rays and
+$272$ projected facets; every facet has a rational nonnegative Farkas
+certificate on the unrestricted cone.  A separate exact replay verifies the
+dimension-eight phase and a two-valued dimension-nine witness.  No floating
+point output is used as a proof object.  Finally, for the target $G_t$ with
+spectrum $(5^{12t},-4^{15t})$ in dimension $27t$, we prove
+\[
+ \kappa_{27t}(G_t)=87t,
+ \qquad 17t+1\le r_*(G_t)\le18t.
+\]
+Since $r_0(G_t)=15t$, the additive excess is at least $2t+1$ and is therefore
+unbounded.  The amplification is symbolic: a coarse-grid restriction of any
+fine hive transfers a frozen order-$27$ rank-$17$ lower certificate to every
+$t$ by telescoping elementary rhombi.
+\end{abstract}
+
+\section{Introduction}
+
+Finite-dimensional trace-zero matrices are commutators \cite{albert1957}, but prescribing a
+Hermitian target as one self-commutator is a more structured inverse problem.
+We ask not only for
+\[
+ CC^*-C^*C=2F,
+\]
+but for a factor $C$ of minimum Hilbert--Schmidt norm and, within that optimal
+face, minimum rank.  This differs from forward Frobenius commutator bounds and
+from infinite-dimensional compact-operator questions
+\cite{fan1980,weiss1980,beltita2014,bottcher2005}.
+
+The closest adjacent results address different optimization variables.
+Norm estimates, approximation by self-commutators, and Hilbert--Schmidt
+commutator representations control existence or the size of a forward
+commutator \cite{fong1986,maher2006,filonov2011,angel2015}; recent work on
+Aluthge transforms and finite-rank Toeplitz self-commutators is likewise
+forward or structural \cite{zhang2026,abhinand2026}.  None of these sources
+asks for the least factor rank inside the minimum-norm face of a prescribed
+finite Hermitian self-commutator.  This comparison is based on a bounded
+search and is not an absolute priority claim.
+
+The elementary inertia obstruction and norm optimality pull in different
+directions.  If $P=CC^*$ and $Q=C^*C$, then $P$ and $Q$ are isospectral
+positive matrices, while $P-Q=2F$.  Inertia only sees the dimensions of their
+ranges; norm optimality sees the full Horn polytope for a difference of two
+isospectral positive matrices.  Earlier exact calculations in dimensions
+three through five found compatibility between the two requirements
+\cite{erikssonQutrit,erikssonFour,erikssonFive}, but finite examples cannot
+establish a dimension threshold.
+
+This paper gives that threshold.  Its first result is universal: every
+traceless Hermitian target through dimension seven has a norm-optimal factor
+at the inertia rank.  Singular spectra are not inferred by padding a smaller
+problem.  Extra ambient zero directions can in principle lower the norm, so
+every triple $(n_+,n_-,n_0)$ is certified in its original dimension.  Its
+second result is sharpness: the entire explicit two-ray dimension-eight cone has a positive
+rank penalty at every interior point.  We include the entire displayed-cone theorem and
+a two-valued dimension-nine check here so that the threshold statement is
+standalone and does not split one result across companion papers.
+The third result is qualitative growth: a coarse-grid theorem for hives
+amplifies one exact order-$27$ face certificate into targets whose minimum
+optimal rank exceeds inertia by an arbitrarily large amount.
+
+\paragraph{Development history and consolidation.}
+Two public ARR records now provide the immediate norm-optimization
+background.  \emph{Sharp Rank-Adaptive Bounds for Inverse Self-Commutators}
+gives universal cost bounds and their equality spectra
+\cite{erikssonRankAdaptive}; \emph{One-Spike Inverse Self-Commutators and
+Exact Three-versus-Four-Kick Curvature Synthesis} gives the exact one-spike
+cone and optimizer singular rigidity \cite{erikssonOneSpike}.  Neither
+contains the rank-compatibility threshold or the unbounded-excess theorem
+proved here.
+
+Four local, unpublished development packages contain the remaining
+chronology.  \emph{Minimum-Norm Self-Commutators Can Require Rank Above the
+Inertia Bound} supplies one interior dimension-eight witness, while \emph{An
+Exact Rank--Norm Phase Diagram for Three-Level Self-Commutator Targets}
+replaces that point by the full displayed parametric family and adds the
+dimension-nine witness.  The present manuscript absorbs and supersedes the
+latter two local drafts rather than treating them as separate publications,
+and adds the universal all-stratum theorem through dimension seven.  That
+integrated threshold version was prepared locally as \emph{The Sharp
+Dimension Threshold for Norm-Optimal Self-Commutator Rank}.  The present
+manuscript absorbs and supersedes it by adding the coarse-grid amplification
+theorem and unbounded rank excess.  Prepared local release or submission
+material is not public disclosure.
+
+The universal part is finite but not hand-enumerative.  We write the inverse
+problem as a rational polyhedral epigraph, project its inertia-rank face, and
+prove that every projected facet is already valid on the unrestricted
+epigraph.  Exact GMP H/V conversion and exact rational Farkas identities are
+the proof objects.  Floating linear programming is used only to propose
+sparse supports, which are discarded unless rational reconstruction verifies
+them coefficient by coefficient.
+
+\section{Horn reduction and the rank face}
+
+Let $F=F^*\in M_d(\mathbb C)$ be traceless, with ordered eigenvalues
+$\lambda_1\ge\cdots\ge\lambda_d$.  Set
+\begin{equation}
+ \kappa_d(F)=\frac12\min\{\|C\|_{\HS}^2:CC^*-C^*C=2F\},
+ \qquad
+ r_*(F)=\min\{\rank C:C\text{ attains }\kappa_d(F)\}.
+ \label{eq:def}
+\end{equation}
+Finite-dimensional self-commutator existence follows, for example, from a
+zero-sum ordering construction \cite{fan1980,beltita2014}.
+
+\begin{lemma}[inertia obstruction]\label{lem:inertia}
+Every feasible $C$ satisfies
+\[
+ \rank C\ge r_0(F):=\max\{n_+(F),n_-(F)\}.
+\]
+\end{lemma}
+
+\begin{proof}
+The quadratic form of $CC^*-C^*C$ is nonpositive on $\ker(CC^*)$, hence its
+positive inertia is at most $\rank C$.  Applying the same argument after
+interchanging $C$ and $C^*$ bounds the negative inertia.
+\end{proof}
+
+For $p_1\ge\cdots\ge p_{d-1}\ge0$, put
+\[
+ \alpha(p)=(p_1,\ldots,p_{d-1},0),\qquad
+ \beta(p)=(0,-p_{d-1},\ldots,-p_1),\qquad \gamma=2\lambda.
+\]
+
+\begin{proposition}[Horn linear program]\label{prop:horn}
+The inverse cost is
+\begin{equation}
+ \kappa_d(F)=\frac12\min\left\{\sum_{j=1}^{d-1}p_j:
+ (\alpha(p),\beta(p),\gamma)\text{ satisfies all Horn inequalities}\right\}.
+ \label{eq:hornlp}
+\end{equation}
+The least cost under $\rank C\le r$ is obtained by adding
+$p_{r+1}=\cdots=p_{d-1}=0$.
+\end{proposition}
+
+\begin{proof}
+For a feasible $C$, the matrices $P=CC^*$ and $Q=C^*C$ are positive,
+isospectral, and satisfy $P+(-Q)=2F$.  At a minimum their least common
+eigenvalue is zero: subtracting a positive scalar from both spectra preserves
+$P-Q$ and reduces the trace.  Horn's theorem
+\cite{horn1962,klyachko1998,knutson1999,fulton2000} gives
+\eqref{eq:hornlp}.  Conversely, Horn feasibility supplies positive
+isospectral $P,Q$ with $P-Q=2F$.  If $Q=U^*PU$, then $C=P^{1/2}U$ has the
+required self-commutator, norm, and rank.
+\end{proof}
+
+For $(I,J,K)\in T_s^d$ our convention is
+\begin{equation}
+ \sum_{i\in I}\alpha_i+\sum_{j\in J}\beta_j
+ \ge \sum_{k\in K}\gamma_k.
+ \label{eq:horn}
+\end{equation}
+The recursive $T$-sets are those in Fulton's exposition \cite{fulton2000}.
+
+\section{The universal theorem through dimension seven}
+
+\begin{theorem}[sharp low-dimensional compatibility]\label{thm:threshold}
+For every traceless Hermitian $F\in M_d(\mathbb C)$ with $d\le7$,
+\begin{equation}
+ r_*(F)=\max\{n_+(F),n_-(F)\}.
+ \label{eq:compatibility}
+\end{equation}
+This includes singular targets and the zero matrix.
+\end{theorem}
+
+We describe the finite exact certificate behind the theorem.  Use adjacent
+spectral gaps $g_i=\lambda_i-\lambda_{i+1}\ge0$.  Trace zero gives
+\begin{equation}
+ \lambda_k=\sum_{i=1}^{d-1}\left(\mathbf 1_{i\ge k}-\frac{i}{d}\right)g_i.
+ \label{eq:gaps}
+\end{equation}
+Fix a sign--zero stratum $(a,b,z)$ with $a,b\ge1$, $z\ge0$, and
+$a+b+z=d$.  Here $a=n_+$, $b=n_-$, and $z=n_0$.  In gap coordinates the
+prescribed zero eigenvalues are imposed as rational linear equalities, each
+written as two opposite inequalities.  The two sign edges are imposed by
+$\lambda_a\ge0$ and $-\lambda_{a+z+1}\ge0$.
+
+Let $r=\max\{a,b\}$.  Define $\mathcal E_{d,a,b}$ to be the homogeneous Horn
+epigraph in variables $(g,p,t)$: it contains the gap inequalities, every row
+\eqref{eq:horn}, the order and positivity rows for $p$, the stratum rows, and
+\[
+ t-\frac12\sum_{j=1}^{d-1}p_j\ge0.
+\]
+Let $\mathcal E^{(r)}_{d,a,b}$ be its coordinate face
+$p_{r+1}=\cdots=p_{d-1}=0$.  Write $\pi(g,p,t)=(g,t)$.
+
+\begin{proposition}[exact epigraph equality]\label{prop:projection}
+For every $3\le d\le7$ and every sign--zero stratum,
+\begin{equation}
+ \pi(\mathcal E_{d,a,b})=\pi(\mathcal E^{(r)}_{d,a,b}),
+ \qquad r=\max\{a,b\}.
+ \label{eq:projection}
+\end{equation}
+\end{proposition}
+
+\begin{proof}[Finite exact proof]
+The inclusion from right to left is immediate because the rank face is a
+coordinate face of the unrestricted cone.  Sign reflection $F\mapsto-F$,
+implemented by $C\mapsto C^*$, preserves cost and rank, so it suffices to
+enumerate $a\le b$.
+
+For every remaining stratum, exact rational double-description conversion
+produces the generator representation of $\mathcal E^{(r)}_{d,a,b}$ and,
+after deleting the $p$ coordinates, the facet representation of its
+projection.  For each projected facet $h(g,t)\ge0$, the certificate contains
+nonnegative rational weights $y$ such that
+\begin{equation}
+ h(g,t)=y^T A_{d,a,b}(g,p,t),
+ \label{eq:farkas}
+\end{equation}
+where $A_{d,a,b}(g,p,t)\ge0$ is the complete unrestricted Horn system.
+Thus every unrestricted point satisfies every exact facet of the projected
+rank face, proving the reverse inclusion.  All H/V rows and all identities
+\eqref{eq:farkas} are checked over rational arithmetic.  Table~\ref{tab:cert}
+records the complete enumeration; the certificate file contains the facets,
+row labels, multipliers, and hashes.
+\end{proof}
+
+\begin{table}[t]
+\centering
+\caption{Exact certificate census for Proposition~\ref{prop:projection}.}
+\label{tab:cert}
+\begin{tabular}{@{}rrrrr@{}}
+\toprule
+$d$ & strata up to reflection & projected facets & face rays & maximum full rows\\
+\midrule
+3 & 2  & 6   & 9   & 17\\
+4 & 4  & 18  & 28  & 39\\
+5 & 6  & 37  & 69  & 103\\
+6 & 9  & 77  & 189 & 310\\
+7 & 12 & 134 & 518 & 1063\\
+\midrule
+total & 33 & 272 & 813 & --\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{proof}[Proof of Theorem~\ref{thm:threshold}]
+The zero matrix is immediate, and $d\le2$ is elementary.  Otherwise fix the
+actual stratum of $F$.  Equality \eqref{eq:projection} says that the minimum
+epigraph height for its spectrum is attained on the rank-$r_0(F)$ face.
+Proposition~\ref{prop:horn} gives a self-commutator factor of rank at most
+$r_0(F)$.  Lemma~\ref{lem:inertia} gives the reverse inequality.
+\end{proof}
+
+\begin{remark}[why singular strata are explicit]
+Solving the restriction of $F$ to its support and padding the factor by zero
+only gives an upper bound in the original dimension.  A larger ambient space
+may have a lower unrestricted Horn optimum.  The $z>0$ rows in the certificate
+therefore close a genuine logical gap; they are not bookkeeping duplicates.
+Indeed, the dimension-seven spectrum
+\[
+ \tfrac17(25,18,18,-10,-17,-17,-17)
+\]
+has cost $74/7$, while padding by one zero and reordering lowers the
+dimension-eight unrestricted cost to $73/7$.  The rank-four face of the padded
+problem remains at $74/7$, so ambient zero padding changes both the optimum
+and the optimal rank.
+\end{remark}
+
+\section{Sharpness on an explicit dimension-eight cone}
+
+For $c>0$ and $0\le b\le c$, let $F_{b,c}$ have spectrum
+\begin{equation}
+\lambda(b,c)=(4c-3b,b,b,b,-c,-c,-c,-c).
+\label{eq:family}
+\end{equation}
+This family is two-dimensional before positive scaling and one-dimensional
+projectively.  No classification of all dimension-eight spectra is claimed.
+
+\begin{theorem}[exact rank--norm phase]\label{thm:phase}
+For every $0\le b\le c$,
+\begin{equation}
+ \kappa_8(F_{b,c})=
+ \begin{cases}
+  10c-7b,&0\le b\le c/2,\\
+  9c-5b,&c/2\le b\le c,
+ \end{cases}
+ \qquad
+ \kappa_8^{(\le4)}(F_{b,c})=10c-6b.
+ \label{eq:phase}
+\end{equation}
+Consequently the rank-four penalty is $\min\{b,c-b\}$.  For $0<b<c$,
+$r_*(F_{b,c})=5$ although $r_0(F_{b,c})=4$; at the two boundary rays a
+rank-four minimizer exists.
+\end{theorem}
+
+The three exact primal branches are
+\begin{align}
+ p^L&=(8c-6b,6c-6b,4c-4b,2c,2b,0,0),&&0\le b\le c/2,\label{eq:pL}\\
+ p^H&=(8c-6b,4c-2b,2c,2c,2c-2b,0,0),&&c/2\le b\le c,\label{eq:pH}\\
+ p^4&=(8c-6b,6c-4b,4c-2b,2c,0,0,0),&&0\le b\le c.\label{eq:p4}
+\end{align}
+Their half-traces give the three values in \eqref{eq:phase}.  Exact endpoint
+evaluation of every affine Horn residual proves feasibility throughout each
+chamber.  Sparse nonnegative Horn combinations produce respectively the
+objective rows $\frac12(1,\ldots,1)$ and
+$\frac12(1,1,1,1)$ with right sides $10c-7b$, $9c-5b$, and $10c-6b$.
+The replay records every named triple and verifies the identities exactly.
+This proves optimality and the rank statements.
+
+\begin{corollary}[integer sharpness witness]\label{cor:witness}
+If $F$ has spectrum
+\[
+ (5,1,1,1,-2,-2,-2,-2),
+\]
+then $r_0(F)=4$, $\kappa_8(F)=13$, and
+$\kappa_8^{(\le4)}(F)=14$.  The minimum optimal rank is five.
+\end{corollary}
+
+\begin{proof}
+Use $(b,c)=(1,2)$ in Theorem~\ref{thm:phase}.  Exact feasible spectra are
+$(10,6,4,4,2,0,0)$ at rank five and $(10,8,6,4,0,0,0)$ at rank four.
+\end{proof}
+
+\begin{corollary}[sharp dimension threshold]
+Dimension eight is the least dimension in which Hilbert--Schmidt
+norm-optimality can force the rank of a self-commutator factor strictly above
+the inertia lower bound.
+\end{corollary}
+
+\begin{proof}
+Theorem~\ref{thm:threshold} excludes every target through dimension seven;
+Corollary~\ref{cor:witness} supplies a dimension-eight target.
+\end{proof}
+
+Within this explicit cone, the relative rank-four tax is sharp:
+\[
+ \frac{\kappa_8^{(\le4)}}{\kappa_8}\le\frac{14}{13},
+\]
+with equality precisely at $b=c/2$.  Thus the threshold is not inferred from
+an isolated point: it persists along the entire displayed projective segment.
+
+\section{A two-valued dimension-nine check}
+
+Three spectral levels are not necessary for the separation.
+This proposition is auxiliary to the amplification argument; it is not used
+to prove the sharp dimension-eight threshold.
+
+\begin{proposition}[two-valued target]\label{prop:d9}
+Let $G\in M_9(\mathbb C)$ have spectrum $(5^4,-4^5)$.  Then
+\[
+ \kappa_9(G)=29,\qquad \kappa_9^{(\le5)}(G)=30,
+ \qquad r_0(G)=5,\qquad r_*(G)=6.
+\]
+\end{proposition}
+
+Exact feasible squared-singular-value spectra are
+\[
+ (16,12,10,10,8,2,0,0)\quad\text{and}\quad
+ (16,14,12,10,8,0,0,0),
+\]
+with costs $29$ and $30$.  Sparse duals supported on six and five named Horn
+or elementary rows give the matching lower bounds.  The canonical replay
+checks all $39{,}716$ Horn rows and the eight order/positivity rows.
+
+\section{Hive coarse-graining}
+
+We use triangular hive vertices $h(i,\ell)$, $0\le i\le\ell\le N$.  For
+$1\le i\le\ell<N$, write the three elementary rhombus slacks as
+\begin{align*}
+ R_1(i,\ell)&=h(i,\ell+1)+h(i-1,\ell)-h(i-1,\ell+1)-h(i,\ell),\\
+ R_2(i,\ell)&=h(i,\ell+1)+h(i,\ell)-h(i+1,\ell+1)-h(i-1,\ell),\\
+ R_3(i,\ell)&=h(i,\ell)+h(i-1,\ell)-h(i,\ell+1)-h(i-1,\ell-1).
+\end{align*}
+A hive has all these quantities nonnegative \cite{knutson1999,ktw2004}.
+
+\begin{lemma}[coarse-grid restriction]\label{lem:coarse}
+Let $n,t$ be positive integers, put $N=nt$, and let $h$ be an order-$N$
+hive.  Then
+\[
+ H(I,L):=h(tI,tL),\qquad0\le I\le L\le n,
+\]
+is an order-$n$ hive.  Its boundary increments are the sums of consecutive
+blocks of $t$ boundary increments of $h$.
+\end{lemma}
+
+\begin{proof}
+Every coarse rhombus is a telescoping nonnegative sum of fine rhombi.  With
+$1\le I\le L<n$, the identities are
+\begin{align*}
+ R_1^H(I,L)
+ &=\sum_{a=t(I-1)+1}^{tI}\sum_{q=0}^{t-1}R_1^h(a,tL+q),\\
+ R_2^H(I,L)
+ &=\sum_{a=t(I-1)+1}^{tI}\sum_{q=0}^{t-1}R_2^h(a+q,tL+q),\\
+ R_3^H(I,L)
+ &=\sum_{a=1}^{t}\sum_{q=0}^{t-1}
+ R_3^h(t(I-1)+a,t(L-1)+a+q).
+\end{align*}
+They follow by telescoping directional edge differences across the relevant
+$t$-by-$t$ parallelogram.  All summands lie in the triangular index range,
+including when $I=L$.  Sampling each boundary at multiples of $t$ gives the
+asserted block sums.
+\end{proof}
+
+For a fine squared-singular-value spectrum
+$p_1\ge\cdots\ge p_N=0$, set
+\begin{equation}
+ P_s=\sum_{q=(s-1)t+1}^{st}p_q,\qquad1\le s\le n.
+ \label{eq:blocksum}
+\end{equation}
+Then $P_1\ge\cdots\ge P_n\ge0$, the two coarse isospectral boundaries are
+$P$ and $-P$ in reverse order, and
+\[
+ \frac12\sum_{s=1}^nP_s=\frac12\sum_{i=1}^Np_i.
+\]
+If $\rank p\le rt$, then $P_{r+1}=\cdots=P_n=0$, so the coarse point lies on
+the literal rank-$r$ face.  Without a rank cap, $P_n$ may be positive.  Put
+$Q_s=P_s-P_n$ and replace the coarse hive by
+\[
+ H'(I,L)=H(I,L)+P_n(I-L).
+\]
+The added function is affine, so every rhombus slack is unchanged; its two
+isospectral boundaries become $Q$ and $-Q$ in reverse order, while the target
+boundary is unchanged.  Now $Q_n=0$, and the normalized coarse cost is lower
+than the fine cost by $nP_n/2$.  This normalization is essential in the
+unrestricted lower bound.
+
+Uniform puzzle inflation validates individually block-expanded Horn rows
+\cite[Lemma~8]{ktw2004}, but does not by itself synthesize a global rank-face
+objective.  Lemma~\ref{lem:coarse} instead transfers an already certified
+whole face bound from a coarse problem to every refined problem.
+
+\section{Unbounded rank excess}
+
+For $k\ge1$, let $F_k\in M_{9k}(\mathbb C)$ have spectrum
+\begin{equation}
+ (5^{4k},-4^{5k}),
+ \label{eq:amplified-family}
+\end{equation}
+where exponents denote multiplicities.
+
+\begin{proposition}[exact endpoint costs]\label{prop:allk-cost}
+For every $k\ge1$,
+\[
+ \kappa_{9k}(F_k)=29k,
+ \qquad \kappa_{9k}^{(\le5k)}(F_k)=30k.
+\]
+\end{proposition}
+
+\begin{proof}
+Direct sums of the two primals in Proposition~\ref{prop:d9} give the upper
+bounds.  For the reverse bounds, coarse-grain any order-$9k$ feasible hive in
+blocks of length $k$.  Lemma~\ref{lem:coarse} gives an order-nine hive with
+target boundary $k(10^4,-8^5)$.  On the rank-$5k$ face it lies literally on
+the rank-five face.  Without the rank cap, put $Q_s=P_s-P_9$ as above; the
+normalized coarse cost is the fine cost minus $9P_9/2$.  Homogeneity of the
+two exact dimension-nine lower certificates gives $30k$ and $29k$,
+respectively.
+\end{proof}
+
+The finite seed needed for rank amplification is stronger than the
+dimension-nine check.
+
+\begin{proposition}[exact order-$27$ seed]\label{prop:seed27}
+For $F_3\in M_{27}(\mathbb C)$,
+\[
+ \kappa_{27}^{(\le15)}(F_3)=90,\qquad
+ \kappa_{27}^{(\le16)}(F_3)=89,\qquad
+ \kappa_{27}^{(\le17)}(F_3)=88,\qquad
+ \kappa_{27}(F_3)=87.
+\]
+\end{proposition}
+
+The upper values are sorted direct sums of the two dimension-nine primals.
+The lower rank-$16$ and rank-$17$ values are certified by frozen rational
+order-$27$ hive primals and duals.  The rank-$15$ and unrestricted endpoints
+also follow from Proposition~\ref{prop:allk-cost}.  A dependency-free verifier
+reconstructs every boundary, all three rhombus families, order rows, fixed
+rank coordinates, stationarity, and objective identity over
+\texttt{Fraction}.
+
+\begin{theorem}[unbounded additive excess]\label{thm:unbounded}
+For every integer $t\ge1$, let $G_t=F_{3t}$.  Then
+\begin{align}
+ \kappa_{27t}(G_t)&=87t, &
+ \kappa_{27t}^{(\le15t)}(G_t)&=90t,\nonumber\\
+ \kappa_{27t}^{(\le16t)}(G_t)&=89t, &
+ \kappa_{27t}^{(\le17t)}(G_t)&=88t.
+ \label{eq:unbounded}
+\end{align}
+Consequently
+\[
+ 17t+1\le r_*(G_t)\le18t,
+ \qquad r_0(G_t)=15t,
+ \qquad r_*(G_t)-r_0(G_t)\ge2t+1.
+\]
+In particular, the excess of minimum optimal rank above inertia is unbounded.
+\end{theorem}
+
+\begin{proof}
+Coarse-grain an order-$27t$ hive in blocks of length $t$.  If its fine rank
+is at most $(15+s)t$, $s\in\{0,1,2\}$, then \eqref{eq:blocksum} lies on the
+order-$27$ rank-$(15+s)$ face, its target is $t$ times that of $F_3$, and its
+half-trace cost is unchanged.  Proposition~\ref{prop:seed27} and homogeneity
+give the three restricted lower bounds in \eqref{eq:unbounded}; the
+unrestricted lower bound is Proposition~\ref{prop:allk-cost} with $k=3t$.
+Direct sums with,
+respectively, $0,t,2t,3t$ rank-six branches among $3t$ dimension-nine blocks
+attain all four values.  Thus every norm minimizer has rank at least $17t+1$,
+while the all-full direct sum has rank $18t$.  The inertia statement follows
+from the multiplicities $12t$ and $15t$.
+\end{proof}
+
+The theorem deliberately does not claim $r_*(G_t)=18t$, nor the conjectural
+complete curve $\kappa_{9k}^{(\le5k+j)}(F_k)=30k-j$ for arbitrary $k,j$.
+
+\section{Reproducibility and proof boundary}\label{sec:repro}
+
+The proof package separates discovery from certification.
+
+\begin{table}[t]
+\centering
+\caption{Claim-to-certificate audit map.  ``Independent'' means a separately
+implemented route or data model, not peer review.}
+\label{tab:audit-map}
+\scriptsize
+\begin{tabular}{@{}p{.20\linewidth}p{.35\linewidth}p{.35\linewidth}@{}}
+\toprule
+Claim & Canonical proof object & Independent check \\
+\midrule
+$d\le7$ compatibility & 33 exact projected epigraph certificates; 272 H rows; rational Farkas multipliers & linearity-preserving audit of both orientations for 46 equalities and all 813 face generators \\
+dimension-eight onset & complete affine Horn primals and sparse duals on both chambers & dependency-free 8,752-row integer-witness replay and separate direct-LR family replay \\
+dimension-nine seed & exact rank-five/rank-six primals and matching Horn duals & independent recursive-Horn enumeration of all 39,716 Horn rows \\
+unbounded excess & order-27 rank-face hive dual plus symbolic coarse-grid lemma & exact Fraction replay of all rhombi and a separate boundary/objective dictionary implementation \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Every route regenerates its Horn or hive rows from the stated convention,
+checks boundary and ordering equations, verifies primal feasibility, and
+checks the dual or Farkas identity coefficient by coefficient.  The
+canonical projected certificate and the equality audit intentionally use
+different representations of linearity; the latter retains
+\texttt{cdd.gmp}'s linearity set instead of trusting the serialized
+orientation.  The order-$27$ checker similarly validates the frozen seed,
+whereas the coarse-grid programs validate the parameter-uniform symbolic
+transfer.  Thus the infinite theorem does not follow from agreement at a
+finite list of dimensions.
+
+\begin{enumerate}[leftmargin=2em]
+ \item \texttt{verify\_d\_le\_7\_epigraph.py} is the canonical threshold
+ verifier.  It recursively regenerates Horn triples, enumerates all $33$
+ sign--zero strata, uses exact \texttt{cdd.gmp} H/V conversion, and checks all
+ discarded-row incidences and all reconstructed Farkas identities over
+ rational arithmetic for the serialized orientation of each row.  Its frozen
+ JSON contains $272$ projected H rows.
+ \item \texttt{audit\_d\_le\_7\_equalities.py} independently preserves
+ \texttt{cdd.gmp}'s linearity set and verifies both exact Farkas orientations
+ for all $46$ projected equalities, alongside the $813$ face generators.
+ \item \texttt{verify\_low\_dimension\_minimality\_exact.py} is an independent
+ full-rank route with a different spectral parameterization and the standalone
+ GMP \texttt{lcdd} executable.  It is deliberately labelled nonsingular and
+ is not used to infer the zero strata.
+ \item \texttt{verify\_rank\_gap\_frontier.py} verifies the entire displayed
+ dimension-eight phase and Proposition~\ref{prop:d9} using a dependency-free
+ recursive Horn implementation and sparse rational duals.
+ \item \texttt{verify\_d8\_sharpness.py} is a smaller dependency-free replay
+ of Corollary~\ref{cor:witness}; it checks $8{,}752$ Horn rows, seven
+ order/positivity rows, both primals, and both dual coefficient identities.
+ \item \texttt{verify\_zero\_padding\_fixture.py} verifies the three primal
+ spectra and matching sparse rational duals behind the singular-padding
+ warning above.
+ \item \texttt{verify\_exact\_hive\_duals.py} replays the frozen order-$18$
+ rank-$11$ and order-$27$ rank-$16,17$ hive certificates using only Python's
+ exact \texttt{Fraction} arithmetic.  It checks boundary data, all rhombus
+ families, rank-face equalities, primal and dual feasibility, stationarity,
+ and exact objective identities.
+ \item \path{verify_hive_coarse_graining.py} exhaustively expands the
+ three symbolic telescoping identities of Lemma~\ref{lem:coarse} for a broad
+ finite index range, while \path{verify_block_inflation_endpoints.py}
+ checks the endpoint scaling, block ranks, and direct-sum costs in
+ Propositions~\ref{prop:allk-cost} and~\ref{prop:seed27}.
+ \item \texttt{verify\_coarse\_graining\_theorem.py} is an independent
+ dependency-free dictionary replay of the boundary normalization, order rows,
+ objective comparison, rank-$17t$ corollary, and the finite inputs used in
+ Theorem~\ref{thm:unbounded}.
+\end{enumerate}
+
+The exact threshold certificate has SHA-256
+\begin{center}
+\small\texttt{0103a643644977400052a68738102a7633d6371db8717383ddefa687da8a18a0}.
+\end{center}
+The canonical script has SHA-256
+\begin{center}
+\small\texttt{e5009d579933af66283de296ac8aa46b8f0b35bae1e43dd300768ef625129bd6}.
+\end{center}
+The equality-audit script has SHA-256
+\begin{center}
+\small\texttt{0362a3dae16a027b87b3e39c360dfa657f42fd686401c2340d46013bd7bfb95e}.
+\end{center}
+The full phase, integer-witness, and zero-padding replay scripts have,
+respectively, SHA-256 hashes
+\begin{center}
+\scriptsize\ttfamily
+00bdbbfd8adbf3aff8f847ae3574241fc7bed887573c8fa6142bb242cf874be7\par
+979605969b0c6df628d619b8255ba9f8ab2bef5f4f63d790d2ca4b48e1a2fa9c\par
+6c8a804a3b7b8d77acac9d7e000dd48857858b7c616c11565b06efc38075fa2d
+\end{center}
+The frozen hive-dual JSON, its exact verifier, and the symbolic coarse-grid
+verifier have, respectively, SHA-256 hashes
+\begin{center}
+\scriptsize\ttfamily
+c6b3588a2415db067f7ff34f7e23592ac9d85f3e10399dd0f8838fc244352b69\par
+e353f0f65d7edc2b3274ba2842263747fe5a5728f65c0e1ff4cf05407fde09e2\par
+e3bfc7df692c021b600bd85fa1b8604b5f12b7bc4995e1dee4e0b1ea8c6fef89
+\end{center}
+The all-$k$ endpoint checker and the independent standalone theorem replay
+have SHA-256 hashes
+\begin{center}
+\scriptsize\ttfamily
+f7c66a937e100e293ee68794606036afc09e6eb4e603e1a275bfb9f8d3978d80\par
+b1ea0d5dad40b56d217cbbe32054110a63267ec7be0e862af964b17cf0cda91f
+\end{center}
+The GMP double-description method is implemented by \texttt{cddlib}
+\cite{fukuda1996,cddlib}.  Numerical redundancy detection and HiGHS supports
+are hints only: a proposed reduction is retained only after every original
+row is nonnegative on every exact generator, and a proposed Farkas support is
+retained only after exact nonnegative reconstruction.
+
+The accompanying release archive contains the manuscript source,
+bibliography, all canonical and independent verifiers, frozen exact JSON
+objects, environment pins, and a sorted SHA-256 manifest.  A single command,
+\texttt{python run\_scientific\_replay.py}, executes the complete default
+audit.  The permanent record is
+\url{https://arr-research.github.io/papers/ARR-2026-5QQF95VHTC9GABH8/}; its
+immutable release is the canonical artifact locator.  No private development
+tree is required.
+
+The low-dimensional threshold and the order-$27$ seed are computer-assisted
+finite proofs; the amplification step is symbolic.  The result does not
+classify all optimizer matrices, determine the exact value of $r_*(G_t)$,
+give the complete rank--cost curve for arbitrary $F_k$, or claim that the
+displayed families are extremal among all higher-dimensional targets.
+Independent peer review has not been performed.  A refreshed bounded search,
+including the adjacent 1986--2026 literature cited above, found no exact
+antecedent for the universal $d\le7$ statement, the sharp onset, or the
+unbounded optimal-rank excess.  Absence from that search is not proof of
+novelty.
+
+\section{Conclusion}
+
+The inertia lower bound is exactly compatible with Hilbert--Schmidt
+optimality through dimension seven and fails in dimension eight.  The result
+requires both halves: an exhaustive exact treatment of all low-dimensional
+sign--zero strata and a strict dimension-eight phase.  The Horn epigraph
+turns the universal side into finitely checkable projection equalities, while
+the explicit dimension-eight primals and sparse duals show that the first
+failure persists along the entire displayed projective segment.  The exact
+order-$27$ seed and coarse-grid theorem then show that the additive excess
+$r_*(F)-r_0(F)$ is unbounded.  Determining the exact optimal rank along this
+amplified family, and the complete intermediate rank--cost curve, remains
+open.
+
+\bibliographystyle{plain}
+\begingroup
+\footnotesize
+\raggedright
+\bibliography{references}
+\endgroup
+\end{document}
