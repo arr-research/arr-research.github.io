@@ -4,6 +4,8 @@ name: Publish ARR catalogue
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: "17 */6 * * *"
   workflow_dispatch:
 
 permissions:
@@ -29,6 +31,13 @@ jobs:
         run: python scripts/validate_papers.py
       - name: Configure Pages
         uses: actions/configure-pages@v6
+      - name: Snapshot public activity
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          python scripts/sync_metrics.py
+          --repository "$GITHUB_REPOSITORY"
+          --output "$RUNNER_TEMP/arr-metrics.json"
       - name: Build catalogue
         shell: bash
         run: |
@@ -44,7 +53,8 @@ jobs:
           python scripts/build_site.py \
             --base-path "$base_path" \
             --canonical-url "$canonical_url" \
-            --repository "$GITHUB_REPOSITORY"
+            --repository "$GITHUB_REPOSITORY" \
+            --metrics-file "$RUNNER_TEMP/arr-metrics.json"
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5
         with:
