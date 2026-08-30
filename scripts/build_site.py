@@ -744,13 +744,10 @@ def build_paper_page(
             f'<li><a href="{esc(item["pdf_url"])}"><strong>{esc(item["version"])}</strong></a><span>{exact_time(item["submitted_at"])} · original ai.vixra file</span></li>'
             for item in reversed(archival["versions"])
         )
-        anomaly = ""
-        if not archival["source_file_available"]:
-            anomaly = f'<p class="source-anomaly"><strong>Source anomaly:</strong> ai.vixra declares {esc(archival["latest_declared_version"])} but its PDF was unavailable at import; ARR currently mirrors {esc(archival["mirrored_version"])}.</p>'
         source_history = (
             '<section class="version-history"><h2>Original ai.vixra version history</h2>'
             '<p>Dates below are the source submission timestamps. ai.vixra omits a timezone; ARR preserves the displayed values and uses the normalized offset only for deterministic ordering.</p>'
-            + anomaly + f'<ul>{source_items}</ul></section>'
+            + f'<ul>{source_items}</ul></section>'
         )
         archival_notice = (
             '<aside class="version-notice historical"><strong>Historical import · not assessed.</strong> '

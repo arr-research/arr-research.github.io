@@ -359,8 +359,6 @@ def validate_paper(paper: Paper) -> list[str]:
                     parse_exact_timestamp(archival.get(field))
                 except ValueError as error:
                     errors.append(f"archival_source.{field}: {error}")
-            if not isinstance(archival.get("source_file_available"), bool):
-                errors.append("archival_source.source_file_available: a boolean is required")
     elif archival is not None:
         errors.append("archival_source: only archived records may declare an archival source")
 

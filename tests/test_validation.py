@@ -256,7 +256,6 @@ class PaperValidationTests(unittest.TestCase):
                         "mirrored_version": "v2",
                         "mirror_pdf_url": "https://github.com/arr-research/arr-research.github.io/releases/download/archive/paper.pdf",
                         "mirror_release_url": "https://github.com/arr-research/arr-research.github.io/releases/tag/archive",
-                        "source_file_available": True,
                         "versions": [
                             {"version": "v1", "submitted_at": "2026-08-11T12:20:40+00:00", "pdf_url": "https://www.ai.vixra.org/pdf/2608.0049v1.pdf"},
                             {"version": "v2", "submitted_at": "2026-08-12T12:20:40+00:00", "pdf_url": "https://www.ai.vixra.org/pdf/2608.0049v2.pdf"},
