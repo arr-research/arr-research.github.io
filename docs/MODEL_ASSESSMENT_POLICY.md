@@ -6,10 +6,14 @@
 
 ## Purpose and boundary
 
-ARR uses frontier models as adversarial screening tools and longitudinal scientific
-commentators. A model report is evidence about one model's inspection of one exact
-artifact. It is not peer review, a proof certificate, a priority ruling, an
-endorsement, or a substitute for qualified human and formal verification.
+ARR's defining function is hostile audit by the strongest available frontier
+models. They are instructed to attack, rather than merely summarize, each exact
+artifact: seek counterexamples, hidden assumptions, proof gaps, unsupported novelty
+and reproducibility failures. A paper that survives the gate has passed a materially
+harder, more transparent filter than unreviewed repository upload. A model report is
+still evidence about one model's inspection, not peer review, a proof certificate,
+a priority ruling, an endorsement, or a substitute for qualified human and formal
+verification.
 
 For new admissions under this protocol, at least three distinct, version-locked
 frontier-model reports are required. An unresolved material objection blocks
