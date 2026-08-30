@@ -1,0 +1,248 @@
+--- Page 1 ---
+
+From Static Recoverability to Maintenance Power:
+A Typed Pipeline withω = 0 Obstructions
+Version 2
+Lluis Eriksson
+Independent Researcher
+lluiseriksson@gmail.com
+January 2026 (v1); July 2026 (v2)
+Abstract
+We study when geometric separation in gapped quantum systems yields a genuine reduction
+in thermodynamic resources required to maintain coherence against uncontrolled open-system
+dynamics. Our analysis separates three layers. First, in a regularized Gaussian split regime
+motivated by algebraic QFT, we state an explicit static reconstruction bound: collar suppression
+of vacuum cross-correlations enables approximate state recovery via a conditional-reattachment
+covariance rule with fidelity error controlled by a cross-block recovery norm. Second, we show
+why static recoverability does not automatically imply suppression of dynamical decay rates:
+fixed-point structure and Bohr-zero ( ω = 0) channels can generate obstructions invisible to
+static clustering alone. We formalize this using an exact ω = 0 Dirichlet identity and implement
+finite-size commutator-witness diagnostics in the transverse-field Ising chain, finding no evidence
+of a size-independent ω = 0 floor in that benchmark regime for tested sizes. Third, we give an
+autocontained finite-dimensional core linking coherence loss to incremental maintenance power
+under an explicit battery-assisted thermal-operations model with paired strategies, and we state
+a typed rate-inheritance hypothesis identifying precisely what additional dynamical input is
+required to propagate collar suppression into power suppression. We conclude with a Type III
+blueprint. v2 corrects two points and adds verification: (i) the recovery rule of the static layer
+is conditional reattachment – not the Petz map for correlated Gaussian references (aligned with
+2601.0007 v2 and 2512.0060 v2), with an explicit admissibility hypothesis; (ii) the v1 work-cost
+bookkeeping (its Eq. (25)) carried a sign error – the work cost is the battery free-energy decrease
+– which made v1’s one-step work lemma false as printed (random energy-conserving unitaries
+violate it in 57/100 draws) while its own proof chain and everything downstream hold verbatim
+with the corrected sign; this is the same error class repaired in 2512.0061 v2. v2 further adds a
+GNS/KMS convention bridge to the companion witness papers, series positioning, an updated
+status of the rate-inheritance hypothesis, and a verification suite.
+1 Introduction
+Geometric separation in gapped many-body systems suppresses static correlations, motivating the
+expectation that thick buffers reduce cross-region influence. A distinct operational question is
+dynamical: even if a global state is recoverable from local data, what resources are required to keep
+a target state stable under uncontrolled open-system dynamics? This paper isolates a frequent
+logical pitfall: static locality controls an amplitude, whereas maintenance cost is governed by rates.
+Our contribution is a typed pipeline separating static recoverability from dynamic rate control,
+1
+
+--- Page 2 ---
+
+identifying the unique missing hinge (rate inheritance on a family), and clarifying the role of
+ω = 0/fixed-point obstructions.
+Series positioning (added in v2). This note is the integrative closure of the 2601 block: the
+static layer instantiates 2601.0007 [12] (finite-mode core of 2512.0060 [6]); theω = 0 obstruction and
+witnesses develop 2601.0022/0023 [14, 15]; the maintenance bound is the paired-strategy theorem of
+2512.0061 v2 [7], reproved here self-contained; the typed rate-inheritance hypothesis is the family-
+level version of the hinge formulated in 2512.0072 [10], stress-tested in 2512.0070 [9], proved in the
+quasi-free class in 2512.0064 [8], and reduced to a Dirichlet comparison in 2601.0020 [13]; the Type
+III blueprint points at 2512.0101 [11].
+2 Setup: conditional expectations, coherence functionals, and op-
+erational families
+Let H be finite-dimensional, HS with spectral projectors {Πn}, β := 1/(kBT), σ := e−βHS / Tr(e−βHS ),
+and Tt = etL∗ an uncontrolled GKLS semigroup with L∗[σ] = 0.
+Definition 2.1 (Coherence relative to a conditional expectation) . For a σ-preserving conditional
+expectation E with predual E∗, CE(ρ) := S(ρ ∥E∗[ρ]). Instance 1 (law-grade): energy pinching
+∆[A] = P
+n ΠnAΠn. Instance 2 (static, geometric): a vacuum-preserving split expectation Esplit in
+a split configuration O1 ⋐ O2 of collar width r.
+Loss rate: ˙CE,loss(ρ) := − d
+dtCE(Ttρ)|t=0; local rate rE(ρ) := ˙CE,loss(ρ)/CE(ρ) for CE(ρ) > 0;
+typed envelopes r↓
+E(r) := inf ρ∈Fr rE(ρ) and r↑
+E(r) := sup ρ∈Fr rE(ρ) on an operational family Fr
+of locally prepared states ( ρ = ΛA(σ), Λ A with Stinespring dilation localized in A) with energy
+budget, optional coherence budget, and fixed-point exclusion ∥ρ − Efix,∗[ρ]∥1 ≥ δfix, where Efix,∗ is
+the ergodic mean of Tt.
+3 Static layer: quantitative recoverability from collar suppression
+(Gaussian split regime; terminology corrected in v2)
+With centered quasi-free covariances Γ, Γ0 in block form, vacuum correlation factorηvac := ∥A−1/2
+0 X0B−1/2
+0 ∥op
+and perturbation δX := ∥A−1/2
+0 (X − X0)B−1/2
+0 ∥op, the conditional-reattachment covariance rule is
+˜A = A, ˜X = AA−1
+0 X0, ˜B = B0 + XT
+0 A−1
+0 (A − A0)A−1
+0 X0, ∆(12) := X − ˜X.
+Remark 3.1 (Terminology corrected in v2) . v1 called this rule “Petz recovery in block form.” Per
+2601.0007 v2 [12] (aligned with the repaired Proposition 2.14 of 2512.0060 v2 [6]), the rule is
+conditional reattachment: it agrees with the Petz output only for factorized references ( X0 = 0);
+for correlated references the Petz map does not preserve the input marginal. All uses below are of
+the explicit covariance rule on its admissible domain ( ˜Γ + i
+2Ω ⪰ 0).
+Theorem 3.2 (Gaussian clustering–recovery bridge (static; imported)) . Under quasi-free regular-
+ity, coercivity of A relative to A0, cross-correlation control, ∥K∥op ≤ 1/2, and admissibility of ˜Γ,
+the reattached state ˜ω satisfies 1 − F(ω, ˜ω) ≤ C(ϵ, ηvac, δ) ∥∆(12)∥2
+HS, with prefactor controlled by
+ϵ and the correlation denominator 1 − ϵ−1(ηvac + δ)2. See [12] for the proved quantitative version
+(quadratic+quartic, with certified constants).
+Remark 3.3 (Static only) . Theorem 3.2 is a static reconstruction guarantee; it implies nothing
+about dynamical rates.
+2
+
+--- Page 3 ---
+
+4 The ω = 0obstruction and witness diagnostics
+With S(0) := P
+n ΠnSΠn and an ω = 0 Davies channelL0(O) = γ(0)(S(0)OS(0)−1
+2{S(0)2, O}), we
+use the σ-weighted (GNS) inner product ⟨A, B⟩σ := Tr(A†σB), matching the numerical diagnostics
+(for Pauli strings ∥O∥2
+2,σ = 1).
+Lemma 4.1 (Exact ω = 0 Dirichlet identity (GNS)). If [S(0), σ] = 0, then E(0)
+σ (O) = γ(0)
+2 ∥[S(0), O]∥2
+2,σ
+for all O.
+Remark 4.2 (Convention bridge (added in v2)) . The companions 2601.0022/0023 [14, 15] state
+the same identity in the KMS inner product Tr( σ1/2A†σ1/2B); the proof only uses [ S(0), σ] = 0
+and holds in both. The optimized witness values differ numerically between conventions (suite
+benchmark, TFIM N = 8: ratio GNS/KMS ≈ 1.15 at ϵ = 1, 1 .24 at ϵ = 2), so cross-paper
+comparisons of Ropt must fix the convention. This paper’s numbers are GNS throughout.
+Witness families: R(k)
+opt(ϵ; N) := max O ∥[S(0), O]∥2
+2,σ/∥O∥2
+2,σ over one-site and two-site Pauli
+families at distance ϵ, certifying κ(k)
+wit = γ(0)
+2 R(k)
+opt within the family.
+Remark 4.3 (Consistency with the companions (added in v2)) . Figure 1 shows Ropt decreasing
+with N at fixed ϵ: no evidence of a size-independent ω = 0 floor in this benchmark. This refines
+– and does not contradict – 2601.0022/0023, which certify a strictly positive floor mechanism at
+fixed N: the mechanism is real (and switches off for couplings with vanishing ω = 0 component,
+per the 0022 v2 null case), while its N-dependence in this benchmark suggests it need not survive
+the thermodynamic limit for this coupling family. The suite reproduces the decreasing trend ( N ∈
+{6, 8, 10}, ϵ ∈ {1, 2}).
+Figure 1: Optimized ω = 0 commutator witnesses in the TFIM ( J = 1, h = 1.5, β = 1). Solid:
+one-site family; dashed: adjacent two-site family. Both decrease with N at fixed ϵ for N ≤ 12.
+3
+
+--- Page 4 ---
+
+5 Thermodynamic control model and the power bound (sign cor-
+rected in v2)
+Battery-assisted thermal operations: Φ SW (·) = TrB[U(· ⊗γB)U†] with [ U, HS + HB + HW ] = 0;
+battery free energy Fβ(ωW ) := kBT S(ωW ∥γW ).
+Definition 5.1 (Work cost; sign corrected in v2) . For a battery process ωW 7→ ω′
+W , the work
+expenditure is
+W := Fβ(ωW ) − Fβ(ω′
+W ),
+the battery free-energy decrease. (v1’s Eq. (25) defined W with the opposite sign, which renders its
+one-step lemma false as printed: the suite exhibits violations in 57/100 random energy-conserving
+unitaries, while the corrected sign yields 0/100. This is the same error class as the work-sign bug
+repaired in 2512.0061 v2 [7].)
+Instantaneous maintenance and paired incremental power Pextra(ρ) are defined as in v1 (paired
+strategies maintaining ρ and ∆[ρ] with the same bath model and initial battery state; one never
+subtracts unrelated infima).
+Lemma 5.2 (One-step work lower bound, corrected sign) . For ΦSW as above mapping ρ ⊗ ωW to
+a state with marginals ρ′, ω′
+W : W ≥ FS
+β (ρ′) − FS
+β (ρ), with FS
+β (ρ) := kBT S(ρ∥σ) + const.
+Proof. Energy conservation gives UΓU† = Γ for Γ = σ ⊗ γB ⊗ γW . Monotonicity of relative
+entropy under Tr B U(·)U† plus the chain rule with I(S:W) ≥ 0 yield S(ρ∥σ) + S(ωW ∥γW ) ≥
+S(ρ′∥σ)+S(ω′
+W ∥γW ), i.e. total nonequilibrium free energy does not increase. Rearranged: Fβ(ωW )−
+Fβ(ω′
+W ) ≥ FS
+β (ρ′)−FS
+β (ρ), which is the claim with the corrected sign convention. (v1 derived exactly
+this display – its Eq. (36) – and then transcribed it with the inverted work sign.)
+Assumption 5.3 (Energy covariance of the drift) . ∆[Tt(ρ)] = Tt(∆[ρ]) (holds for Davies/secular
+generators; verified in the suite).
+Theorem 5.4 (Incremental maintenance power lower bound (paired strategies)). Under the main-
+tenance model, Definition 5.1, and Assumption 5.3, if paired strategies exist for ρ and ∆[ρ], then
+Pextra(ρ) ≥ kBT ˙C∆,loss(ρ).
+Proof. Verbatim as in v1 with W of Definition 5.1: apply Lemma 5.2 to both maintenance steps,
+subtract the paired inequalities, use the pinching Pythagoras identity S(ρ∥σ) = S(ρ∥∆[ρ]) +
+S(∆[ρ]∥σ) and Assumption 5.3, divide by δt and pass to the limit.
+6 Main results: finite-dimensional core and Type III blueprint
+Corollary 6.1 (Typed family lower bound) . For ρ ∈ Fr with C∆(ρ) > 0, with Pextra the paired
+incremental power of Theorem 5.4: Pextra(ρ) ≥ kBT r∆(ρ) C∆(ρ) ≥ kBT r↓
+∆(r) C∆(ρ).
+Hypothesis 6.2 (Typed rate inheritance on Fr; status updated in v2) . On Fr, r↓
+∆(r) > 0 with a
+collar-dependent envelope (e.g. r↓
+∆(r) ≳ e−αr up to polynomial prefactors), and fixed-point/ ω = 0
+mechanisms do not induce a collar-independent floor in the relevant regime. Status in the series:
+proved exactly in the quasi-free local-sink class [8]; failure scenario realized within the secular Davies
+class [9] (with the nonlocality caveat there); reduced to an explicit bulk–collar Dirichlet comparison
+in [13]; the ω = 0 no-floor input is supported in the TFIM benchmark by Remark 4.3 at tested sizes.
+4
+
+--- Page 5 ---
+
+Corollary 6.3 (Collar-dependent power suppression (conditional)). Assuming Hypothesis 6.2 and
+C∆ ≥ C0 > 0 on Fr, the paired incremental power satisfies infρ∈Fr Pextra(ρ) ≳ kBT r↓
+∆(r) C0.
+Conjecture 6.4 (Typed pipeline in AQFT (blueprint)) . As in v1: with a split inclusion of collar
+width r, static residue CEsplit (ω) := SAraki(ω∥ω ◦ Esplit), a physically specified dissipative dynamics
+and a well-posed maintenance notion, a Type III analogue of Hypothesis 6.2 yields, for the paired
+incremental power, Pextra(ω) ≳ kBT r↓
+∆(r) CEsplit (ω) on a typed fast-sector family. The CMI route
+to the static side is 2512.0101 [11].
+7 Verification suite (added in v2)
+verification/2601-0031/verify 2601 0031.py: (1) the ω = 0 identity in the GNS convention
+(machine precision); (2) the GNS/KMS bridge of Remark 4.2; (3) the decreasing-with- N witness
+trend ( N ∈ {6, 8, 10}, both ϵ); (4) the pinching Pythagoras identity (exact); (5) the work-sign
+refutation/repair of Definition 5.1 (57/100 violations with v1’s sign; 0/100 corrected) on random
+energy-conserving unitaries over S ⊗ B ⊗ W; (6) Assumption 5.3 for a secular Davies generator
+(exact). The Figure 1 script of v1’s appendix is relocated to the same directory.
+8 Conclusion
+Geometry buys recoverability (Theorem 3.2); it does not buy efficiency freely: maintenance is
+governed by rate envelopes vulnerable to fixed-point and ω = 0 obstructions that static clustering
+cannot rule out. The missing dynamical hinge is explicit (Hypothesis 6.2, with its series status),
+and the witness diagnostics delineate when “isolation implies stability” becomes thermodynamically
+valid.
+Note added in v2
+Two corrections, both verified in the suite, plus positioning. (1) Terminology/admissibility (static
+layer): “Petz” → conditional reattachment per 2601.0007 v2 and 2512.0060 v2 (Remark 3.1),
+with the admissibility hypothesis stated. (2) Work-sign error: v1’s Eq. (25) inverted the work-
+cost sign, making its one-step lemma false as printed; the corrected bookkeeping (Definition 5.1)
+restores it, and Theorem 5.4 holds verbatim – v1’s own proof chain (its Eq. (36)) already estab-
+lished the corrected display. Same error class as 2512.0061 v1 (repaired in its v2). (3) Additions:
+GNS/KMS convention bridge (Remark 4.2); consistency remark with the fixed- N floor mecha-
+nism of 2601.0022/0023 (Remark 4.3); series citations (v1 cited no companion); updated status of
+Hypothesis 6.2; verification suite; appendix script relocated.
+References
+[1] E. B. Davies, Commun. Math. Phys. 39 (1974) 91–110.
+[2] H. Spohn, J. Math. Phys. 19 (1978) 1227–1230.
+[3] D. Petz, Commun. Math. Phys. 105 (1986) 123–131.
+[4] L. Banchi, S. L. Braunstein, S. Pirandola, Phys. Rev. Lett. 115 (2015) 260501.
+5
+
+--- Page 6 ---
+
+[5] O. Fawzi, R. Renner, Commun. Math. Phys. 340 (2015) 575–611.
+[6] L. Eriksson, ai.viXra:2512.0060 (2025; v2 2026).
+[7] L. Eriksson, ai.viXra:2512.0061 (2025; v2 2026).
+[8] L. Eriksson, ai.viXra:2512.0064 (2025; v2 2026).
+[9] L. Eriksson, ai.viXra:2512.0070 (2025; v2 2026).
+[10] L. Eriksson, ai.viXra:2512.0072 (2025; v2 2026).
+[11] L. Eriksson, ai.viXra:2512.0101 (2025; v2 2026).
+[12] L. Eriksson, ai.viXra:2601.0007 (2026; v2 2026).
+[13] L. Eriksson, ai.viXra:2601.0020 (2026; v2 2026).
+[14] L. Eriksson, ai.viXra:2601.0022 (2026; v2 2026); 2601.0023 (2026; v2 2026).
+[15] L. Eriksson, ai.viXra:2601.0023 (2026; v2 2026).
+6

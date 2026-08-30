@@ -1,0 +1,816 @@
+--- Page 1 ---
+
+Sharp Costs and Exact Semigroups
+from Forgotten Quantum Order
+Qutrit extremality, tetrahedral depolarization, and echo–critical clock laws
+Lluis Eriksson
+10 August 2026
+Abstract
+A balanced sequence of short Hamiltonian kicks has zero first-order drift but retains an
+order-dependent commutator holonomy. We close two synthesis and implementation gaps in
+this mechanism. First, for every traceless qutrit targetF with eigenvaluesλ1 ≥λ2 ≥λ3, we
+solve the inverse Hermitian-commutator problem exactly:
+inf
+−i[A,B]=F
+∥A∥2 ∥B∥2 = max{λ1 −λ2,λ2 −λ3}= ∥F∥1
+2 +|λ2|.
+Consequently the minimum gauge-invariant Hilbert–Schmidt action of a balanced three-kick
+realization is
+S2
+2,min = 6
+√
+3
+(
+∥F∥1 + 2|λ2|
+)
+.
+The middle eigenvalue is therefore an exact, previously missing cost variable; it produces a tax
+between1and3 /2over the trace-norm bound. Explicit weighted shifts and equilateral matrix
+triangles attain the formula.
+Second, among exactly four equal-norm balanced qubit kicks, the forgotten-order curvature
+gap satisfies the sharp law
+gap(−Q)≤S 4/108,
+with equality only for a regular tetrahedron. Its24orders generate precisely the six geometric
+generators {±4X,±4Y,±4Z}, each four times. The finite effective-holonomy twirl is exactly
+depolarizingandanexplicitinverse-cosineschedulerealizesanyisotropicunitalqubitdepolarizing
+semigroup at every finite step count, with zero ensemble-channel discretization error.
+Finally, we derive the diffusion limit from complete physical words rather than assumed
+effective holonomies. A reversal-symmetric distribution of echoed, pinched words obeys
+Φy =E+ 4y 4QE+O ⋄(y6),
+so y = (t/4n)1/4 givesΦ n
+y →e tQE at rate O(n−1/2). Off-block pulses of size y1+β exhibit
+a sharp clock trichotomy: irrelevant forβ >1, additive atβ = 1, and Zeno-projective for
+0 <β <1. The complete implementation requires serial actionΘ(n3/4). Exact symbolic and
+deterministic numerical certificates accompany the manuscript.
+1 Question, answer, and novelty boundary
+Repeated measurements can confine dynamics to a Zeno algebra rather than freeze it [2, 3, 4]. In
+the preceding work [1], a balanced retained loop
+m∑
+j=1
+hj ∈Z(A)(1)
+was shown to generate the geometric Hamiltonian
+Hσ =−i
+2
+∑
+s>r
+[hσs,hσr],(2)
+1
+
+--- Page 2 ---
+
+while a uniformly forgotten order generates the frame Laplacian
+Q=− 1
+24
+∑
+j<k
+ad2
+Cjk, C jk =i[hj,hk].(3)
+That paper proved sharp dimension-free operator-action laws, but its Hilbert–Schmidt lower bound
+was attained only when the nonzero target spectrum was sign-paired. It also began directly from
+the effective holonomye−i
+√
+t/nHσ when deriving the forgotten-order semigroup. The present paper
+closes precisely these two gaps.
+The first answer is an exact qutrit synthesis theorem. Trace norm alone is insufficient away
+from sign-paired spectra; the missing invariant is the magnitude of the middle eigenvalue. The
+second answer is an exact extremal architecture. A regular tetrahedron uniquely maximizes the
+curvature gap at fixed equal kick norm, and its entire finite twirl can be calibrated to a target
+semigroup. The third answer returns to the laboratory word: order/reverse echoes remove the
+coherent second-order branch before averaging, leaving fourth-order diffusion with a quantitative
+diamond-norm error. When the kicks have shrinking off-block components, the fourth-order clock
+exposes a critical exponentβ= 1.
+Trace-zero matrices are commutators in great generality [5]; norm bounds for commutators
+and their extremizers form an extensive subject [7, 6]. The classical literature also characterizes
+self-commutators of compact operators [8]. These nearby problems must be distinguished from
+(6): Weiss minimizes over unrestricted complex commutator factors for special diagonal targets,
+whereas here both factors are Hermitian, equivalently one minimizes a single self-commutator factor
+as in (9). Commutator product formulas, randomized product formulas, Magnus parity, Pauli
+semigroups, and strong-coupling Zeno limits are likewise established tools [9, 10, 11, 12, 13]. We
+do not claim any one of those tools in isolation. After a targeted search, we have not found in
+the cited literature formula(7) for an arbitrary traceless Hermitian3×3target, the associated
+triangular action, the sharp action-gap classification and finite-step calibration derived from this
+balanced permutation-curvature architecture, or the complete-word/off-block theorem chain tied to
+forgotten order. This is a scoped literature statement, not a claim of exhaustive priority.
+Relation to the eight-paper source chain
+This is a new ninth manuscript, not a replacement for any source paper. The two initial filter papers
+concern irreducible passive-network suppression and noncommuting calibration filters. The next
+six manuscripts—Operational Transport of the Heisenberg Cut,Noncommuting Record Projections
+Erase Classical Information,Block-Record Projections Generate Quantum Diffusion,Balanced Block
+Measurements Generate Dissipative Quantum Holonomy,Operational Curvature of the Heisenberg
+Cut, andMatrix Isoperimetry and Diffusion from Forgotten Order—progressively isolate record
+loss, pinched-word holonomy, operational readout, action bounds, and permutation covariance.
+Only the last of these supplies equations(2)–(3). None states the qutrit exact cost, the tetrahedral
+equality theorem, the finite-step calibration, or the physical echo-critical limit proved here.
+2 Setup and resource conventions
+Let
+H=
+r⨁
+a=1
+Ha,A=
+r⨁
+a=1
+B(Ha),E(X) =
+∑
+a
+PaXPa.
+The pinchingEis a completely positive trace-preserving projection. Retained kicks satisfyhj =
+h∗
+j ∈A. Since central terms are invisible to commutators and conjugation onA, equation (1)
+permits the gauge∑
+j hj = 0blockwise.
+ForX=X ∗in ad-dimensional block define
+∥X∥2 = (TrX2)1/2,dist 2(X,R1) = min
+c∈R
+∥X−c1∥ 2 .
+2
+
+--- Page 3 ---
+
+For a balanced three-kick loop, its gauge-invariant Hilbert–Schmidt action is
+S2 =
+3∑
+j=1
+dist2(hj,R1).(4)
+For qubit vectorshj =vj ·σwe use the operator action
+S=
+∑
+j
+∥hj∥∞=
+∑
+j
+|vj|.(5)
+The distinct norms in(4) and (5) are deliberate: the qutrit theorem solves a target-sensitive
+Hilbert-space synthesis problem, whereas the qubit theorem maximizes a mixing gap at fixed pulse
+amplitude.
+All channel norms below are diamond norms. If a pinching occurs after every kick, it is included
+as a physical operation but assigned no Hamiltonian action. This ideal-measurement convention is
+explicit; finite detector duration and energetic measurement cost are outside the model.
+3 The exact qutrit inverse-commutator norm
+For tracelessF=F ∗∈M3(C)define
+κ(F) = inf{∥A∥2 ∥B∥2 :A=A ∗, B=B ∗,−i[A,B] =F}.(6)
+The value is unitary invariant.
+Theorem 3.1(Exact qutrit commutator cost).Let λ1 ≥λ2 ≥λ3 be the eigenvalues of a traceless
+qutrit targetF. Then
+κ(F) = max{λ1 −λ2,λ2 −λ3}= ∥F∥1
+2 +|λ2|. (7)
+Proof.PutC=A+iB. Direct calculation gives
+CC∗−C∗C=−2i[A,B] = 2F,∥C∥ 2
+2 =∥A∥2
+2 +∥B∥2
+2 .(8)
+The rescaling( A,B) ↦→(sA,s−1B)preserves F and minimizes the last expression at2∥A∥2 ∥B∥2.
+Hence
+2κ(F) = inf
+CC∗−C∗C=2F
+∥C∥2
+2 .(9)
+Let the squared singular values ofC be p1 ≥p2 ≥p3 ≥0, and subtractp31from both CC∗
+and C∗C. The two resulting positive matricesD,E have the same spectrum(q1,q2,0), where
+qj =pj −p3, and
+D−E= 2F.
+Write the eigenvalues ofD−Easµ 1 ≥µ2 ≥µ3. Weyl’s inequalities give
+µ1 ≤q1, µ 2 ≥−q2, µ 2 ≤q2, µ 3 ≥−q1.
+Therefore both adjacent gaps of2F are at mostq1 + q2, which is at mostp1 + p2 + p3 = ∥C∥2
+2.
+Equation (9) yields the lower bound in (7).
+For attainment diagonalizeF. Ifλ2 ≤0, set
+C=
+√
+2λ1 |1⟩⟨3|+
+√
+−2λ2 |3⟩⟨2|.(10)
+Then(CC ∗−C∗C)/2 =Fand
+∥C∥2
+2 = 2(λ1 −λ2).
+3
+
+--- Page 4 ---
+
+Ifλ 2 ≥0, take instead
+C=
+√
+2λ2 |2⟩⟨1|+
+√
+−2λ3 |1⟩⟨3|,(11)
+whose squared norm is2(λ2 −λ3). These are the larger adjacent gaps in their respective sign
+branches. Finally, tracelessness implies∥F∥1 /2 = λ1 when λ2 ≤0and ∥F∥1 /2 = −λ3 when λ2 ≥0,
+proving the second equality.
+Remark3.2.The proof is genuinely three-dimensional. It reduces the lower bound to the two
+adjacent spectral gaps of a difference of isospectral positive matrices of rank at most two. It does
+not assert an analogous closed formula in arbitrary dimension.
+4 Sharp balanced three-kick action
+Theorem 4.1(Exact qutrit triangular action).Among balanced three-kick qutrit loops with
+geometric HamiltonianHgeo =F,
+infS2
+2 = 12
+√
+3κ(F) = 6
+√
+3
+(
+∥F∥1 + 2|λ2|
+)
+. (12)
+The infimum is attained by an equilateral matrix triangle.
+Proof. Remove scalar parts and write the three sides asx1,x2,x3 in the real Hilbert space of
+traceless Hermitian matrices, withx1 +x2 +x3 = 0. For the listed orientation,
+F= i
+2[x1,x2].(13)
+Let x⊥
+2 be the component ofx2 orthogonal tox1. Since the removed component commutes withx1,
+equation (13) and definition (6) imply
+κ(F)≤ 1
+2 ∥x1∥2
+x⊥
+2
+
+2
+= ∆,
+where∆is the Euclidean area of the Hilbert-space triangle. The sharp triangular isoperimetric
+inequality gives
+∆≤ S2
+2
+12
+√
+3,
+with equality only for an equilateral triangle in its spanning plane. This proves the lower bound.
+For the upper bound take an optimalC = A+ iB from (10) or (11). Both weighted shifts
+satisfyTrC 2 = 0. Its real and imaginary parts therefore obey
+∥A∥2
+2 =∥B∥2
+2 = 1
+2 ∥C∥2
+2 =κ(F),⟨A,B⟩ HS = 0.
+With
+α=
+√
+4√
+3,
+the sides
+x1 =αA,
+x2 =α
+(
+−1
+2A−
+√
+3
+2 B
+)
+,
+x3 =α
+(
+−1
+2A+
+√
+3
+2 B
+)
+(14)
+are balanced, equilateral, and satisfyHgeo = F after choosing the displayed orientation. Their
+perimeter squared is12
+√
+3κ(F).
+4
+
+--- Page 5 ---
+
+Relative to the trace-norm lower bound from the preceding arbitrary-rank theory, the exact
+qutrit multiplier is
+τ(F) = ∥F∥1 + 2|λ2|
+∥F∥1
+= 1 + 2|λ2|
+∥F∥1
+∈[1,3/2].(15)
+It equals one precisely for the sign-paired spectrum(a,0,−a). It reaches3/2for(2 a,−a,−a )or
+(a,a,−2a). For example,F = diag(2,−1,−1)has S2
+2,min = 36
+√
+3. Thus the earlier trace-norm law
+was a sharp universal lower bound, but not a complete target cost.
+5 The regular tetrahedron uniquely maximizes forgotten-order
+mixing
+Let hj = vj·σ , j = 1,..., 4, where|vj|= r> 0and ∑
+j vj = 0. The generator(3) acts on the Bloch
+vector as a real negative semidefinite matrix. Define the mixing gap as the smallest eigenvalue of
+−Qon traceless observables.
+Lemma 5.1(Cauchy–Binet frame identity).IfM= ∑4
+j=1 vjvT
+j , then
+∑
+j<k
+(vj ×vk)(vj ×vk)T = cofM.(16)
+Proof. Both sides transform covariantly under rotations. In a basis diagonalizingM, the diagonal
+entries are the sums of squared2 ×2minors of the complementary coordinate pairs, and the
+off-diagonal entries are their polarized Cauchy–Binet sums. These are exactly the entries of the
+cofactor matrix.
+Theorem 5.2(Sharp tetrahedral gap).For four equal-norm balanced qubit kicks,
+gap(−Q)≤ 64r4
+27 = S4
+108. (17)
+Equality holds if and only if the fourvj are the vertices of a regular tetrahedron centered at the
+origin, up to an orthogonal transformation.
+Proof. Since Cjk = −2(vj ×vk) ·σ , equations (3) and (16) give the positive Bloch dissipation
+matrix
+G=−Q
+⏐⏐
+Bloch = 2
+3 [Tr(cofM)I3 −cofM].(18)
+Letµ 1 ≥µ2 ≥µ3 ≥0be the eigenvalues ofM. Then
+gap(G) = 2
+3µ3(µ1 +µ2).(19)
+Their sum is4r2. Sinceµ3 ≤4r2/3andx(4r 2 −x)is increasing on this interval,
+µ3(µ1 +µ2)≤ 32r4
+9 ,
+which proves (17). Equality forcesµ1 =µ2 =µ3 = 4r2/3.
+Conversely,M = (4r2/3)I3 together with balance and equal norms determines the Gram matrix
+of the four vectors:
+(vj ·vk)j,k = 4r2
+3
+(
+I4 −1
+411T
+)
+.
+Hencev j ·vk =−r2/3forj̸=k, exactly the regular tetrahedral condition.
+This is a global equality theorem within the class of exactly four equal-norm balanced qubit kicks,
+not only a certificate for one symmetric example. It also explains why isotropic forgotten-order
+diffusion appears at the tetrahedron: the optimal second-moment matrix is forced to be scalar. The
+orthogonal equality class includes reflections; only itsSO(3)subgroup is implemented by unitary
+conjugation.
+5
+
+--- Page 6 ---
+
+6 An exact finite-step depolarizing semigroup
+Choose the unnormalized tetrahedral kicks
+h1 =X+Y+Z, h 2 =X−Y−Z, h 3 =−X+Y−Z, h 4 =−X−Y+Z.(20)
+Herer=
+√
+3,S= 4
+√
+3, and Theorem 5.2 gives gap64/3.
+Proposition 6.1(Exact geometric-generator orbit).As σ ranges overS4, the geometric Hamilto-
+nians(2)are
+Hσ ∈{±4X,±4Y,±4Z},(21)
+each with multiplicity four.
+Proof. Substitution of (20) into (2) gives the following exhaustive partition ofS4 (we suppress
+commas inside an order):
+4X1324,2413,3241,4132
+−4X1423,2314,3142,4231
+4Y1432,2143,3214,4321
+−4Y1234,2341,3412,4123
+4Z1243,2431,3124,4312
+−4Z1342,2134,3421,4213.
+Hence each displayed value occurs four times; reversal pairs opposite rows. The ancillary exact
+enumeration independently checks the table.
+The proposition turns the asymptotic frame statement into a finite identity. Define
+Tu = 1
+24
+∑
+σ∈S4
+Ad
+(
+e−i√uHσ
+)
+.(22)
+Theorem 6.2(Exactly calibrated isotropic qubit depolarization).The channel (22) fixes the
+identity and multiplies every Pauli observable by
+η(u) = 1 + 2 cos(8√u)
+3 .(23)
+Equivalently,
+Tu(ρ) =η(u)ρ+ [1−η(u)] Tr(ρ)I/2.(24)
+For any Bloch decay rateγ≥0, timet≥0, and integern≥1, set
+un(γ,t) = 1
+64 arccos2
+(
+3e−γt/n −1
+2
+)
+.(25)
+where arccos denotes its principal branch, selecting the smallest nonnegative pulse, with0≤un <
+π2/144. Then
+T,n
+un(I) =I,T ,n
+un(P) =e −γtP(P=X,Y,Z).(26)
+Thus the target isotropic unital qubit depolarizing semigroup is realized exactly at every finiten.
+The calibrated stepun depends onn; exactness concerns the ensemble-averaged effective-holonomy
+channel, not an individual random trajectory or the complete physical word.
+Proof. Conjugation bye∓i4√uX fixes X and rotates theYZ plane through angle±8√u. Averaging
+both signs removes the sine terms. Averaging the three axes gives(23). Equation (25) is the exact
+inverse relationη(un) =e−γt/n, so multiplication overnsteps proves (26).
+The word “exact” here concerns the effective holonomy twirl. The next section asks the harder
+question: what happens when each holonomy must itself arise from the underlying short kicks and
+pinchings?
+6
+
+--- Page 7 ---
+
+7 Diffusion from complete echoed physical words
+For a retained kick define
+Tj,y =E◦Ad(e −iyhj)◦E, W σ,y =Tσm,y ◦···◦T σ1,y.(27)
+Letσ R = (σm,...,σ 1)and form the relative echo
+Rσ,y =Wσ,y ◦W ∗
+σR,y.(28)
+The adjoint is implemented physically by reversing the order and the signs of the kicks; no inverse
+of a dissipative pinching is assumed. Each macro-step contains2m kicks and intervening pinchings.
+Letµbe a probability law on orders satisfying
+µ(σ) =µ(σ R).(29)
+DefineΦ µ
+y = ∑
+σµ(σ)Rσ,y and
+Qµ =−1
+2
+∑
+σ
+µ(σ) ad2
+Hσ .(30)
+For the uniform law, permutation covariance givesQµ =Qfrom (3).
+Lemma 7.1(Reversal removes the cubic logarithm).After subtracting the central balanceB =∑
+j hj, the unitary word has Magnus expansion
+logUσ(y) =−iyB+y 2Ω2,σ +y3Ω3,σ +O(y4),
+where reversal changes the sign ofΩ2 but notΩ 3. Consequently
+log(Uσ(y)UσR(y)∗) =−2iy2Hσ +O(y4).(31)
+Proof. Time reversal changes the sign of the even Magnus terms and preserves the odd ones
+[11]. The first term−iyB is central and therefore contributes neither to commutators nor to the
+Baker–Campbell–Hausdorff corrections. Subtracting the reversed logarithm cancels bothB and
+the cubic term, while the second term doubles. Equation (2) fixes the normalization.
+Theorem 7.2(Complete-word forgotten-order limit).Let
+S=
+∑
+j
+dist(hj,Z(A))(32)
+in operator norm, and choose norm-minimizing central representatives. Their sum remains central
+by balance, which is all the reversal argument requires. Under(29),
+Φµ
+y =E+ 4y 4QµE+R y,∥R y∥⋄≤(4S)6
+720 |y|6. (33)
+Withy n(t) = (t/4n)1/4 andg µ =∥Qµ∥⋄,
+(Φµ
+yn(t))n −etQµE
+
+⋄
+≤32
+45
+S6t3/2
+√n + g2
+µt2
+2n egµt/n. (34)
+The convergence is uniform fortin compact intervals.
+7
+
+--- Page 8 ---
+
+Proof. Within A, RσR,y = R∗
+σ,y = R−1
+σ,y. Equation (29) pairs every branch with its inverse. By
+Lemma 7.1, write its logarithm as
+Kσ(y) =−2iy 2 adHσ +O(y4).
+Thus
+eKσ(y) +e−Kσ(y)
+2 =I−2y 4 ad2
+Hσ +O⋄(y6).
+There is no fifth-order term: the echo logarithm has no cubic term and the inverse pair is a
+hyperbolic cosine. Averaging gives4y4Qµ.
+The sum of the diamond norms of the2mchannel generators is at most4S. The sixth derivative
+of their product is therefore bounded by(4S)6, and Taylor’s theorem yields the remainder in(33).
+Finally compare each step withetQµ/n. Contractivity of both channels and the exponential Taylor
+remainder give
+n∥Ryn∥⋄= 32
+45
+S6t3/2
+√n ,
+and
+n
+etQµ/n −I−tQ µ/n
+
+⋄
+≤g2
+µt2
+2n egµt/n.
+Telescoping proves (34).
+No polarity bit is needed in Theorem 7.2. Balance and reversal symmetry already remove the
+fifth order. If the order law is not reversal symmetric, a second-order coherent mean generally
+survives and accumulates as√n on the fourth-order clock. A fresh random polarity can restore
+centering, but reversal symmetry is the cleaner hypothesis for retained words.
+For (20), Theorem 7.2 gives the primitive limit
+X,Y,Z↦−→e−64t/3(X,Y,Z).(35)
+Unlike Theorem 6.2, this is an approximation by complete physical words; its certified rate is
+O(n−1/2).
+8 Off-block perturbations and the critical clock
+Now perturb each retained Hamiltonian by an off-block termvj = v∗
+j with E(vj) = 0. In each
+physical kick use
+η
+(
+yhj +y1+βvj
+)
+, η∈{−1,+1}, β >0,(36)
+with a fresh uniform polarityηper macro-step. Here polarity is retained because pinching makes
+the reduced word nonunitary and reversal alone need not cancel every odd mixed term. Define the
+positive leakage form onAby
+L=
+∑
+j
+Ead 2
+vj E
+⏐⏐
+A,⟨X,LX⟩ HS =
+∑
+j
+∥[vj,X]∥2
+2 .(37)
+Theorem 8.1(Echo-critical expansion).Let ˆΦ(β)
+y be the uniform average of the pinched echoes
+over orders and polarities. Then
+ˆΦ(β)
+y =E+ 4y 4QE−y 2+2βLE+R (β)
+y . (38)
+WritingV= ∑
+j ∥vj∥∞ andz= 4(Sy+Vy 1+β), a conservative explicit remainder is
+R(β)
+y
+
+⋄
+≤64S 2V2y4+2β + 128
+3 SV3y4+3β
++ 32
+3 V4y4+4β + ezz6
+720 .(39)
+8
+
+--- Page 9 ---
+
+Proof. Expand the2 m-kick channel product. A single off-block insertion maps a retained operator
+into an off-block sector and is killed by the terminal pinching. Two insertions in the same second-
+order leakage excursion give−y2+2βL. Four retained insertions give4y4Qby Theorem 7.2. Polarity
+cancels every odd total pulse degree. The remaining terms below total degree six require at least
+two off-block insertions. Their fourth-degree multinomial bounds are, respectively,
+(
+4
+2
+)
+(4S)2(4V) 2
+4! = 64S2V2,
+(
+4
+1
+)
+(4S)(4V) 3
+4! = 128
+3 SV3, (4V) 4
+4! = 32
+3 V4.
+Restoring the corresponding powers ofy gives the first three terms of(39). The derivative estimate
+with total generator normz/|y|bounds the tail. In three or more blocks, theSV3 term cannot be
+discarded because three off-block excursions can close a block cycle.
+Sety=y n(t) = (t/4n)1/4 and
+an(t) =nyn(t)2+2β = 2−(1+β)t(1+β)/2n(1−β)/2.(40)
+Equation (39) and telescoping imply
+(
+ˆΦ(β)
+yn(t)
+)n
+=etQ−an(t)LE+O ⋄
+(
+n−min{β/2,1/2}
+)
+.(41)
+The singular branch below uses the following finite-dimensional estimate. It records both the
+suppressed excursions and the nonuniform initial layer rather than appealing only to a formal Zeno
+limit.
+Lemma 8.2(Quantitative compression at strong coupling).LetB = B∗≤0and L= L∗≥0act
+on a finite-dimensional Hilbert space. LetPproject ontokerL, and suppose
+L
+⏐⏐
+(kerL) ⊥ ≥λI, λ>0.
+Then forb>0ands≥0,
+es(B−bL) −esPBP P
+≤e−bλs + 2∥B∥+s∥B∥ 2
+bλ .(42)
+Consequently the convergence toesPBP P is uniform fors∈ [δ,T], while ats= 0it is nonuniform
+wheneverP̸=I.
+Proof. Write a solution ofu′ = ( B−bL )u as u = ( x,y)in PH⊕ (I−P )H, and denote the
+corresponding blocks ofB by Bij. Since B≤ 0, the full evolution and the diagonal semigroups
+generated byB00 andB 11 −bL1 are contractions, with
+es(B11−bL1)
+≤e−bλs.
+Duhamel’s formula therefore gives
+∥y(s)∥≤e −bλs∥y(0)∥+ ∥B10∥
+bλ ∥u(0)∥,
+and, after inserting this estimate into thexequation,
+x(s)−e sB00 x(0)
+≤∥B01∥
+bλ ∥y(0)∥+ s∥B01∥∥B10∥
+bλ ∥u(0)∥.
+Adding the two components and using∥Bij∥≤∥B∥ proves (42). The last assertion follows because
+the left side ats= 0is∥I−P∥.
+9
+
+--- Page 10 ---
+
+Theorem 8.3(Clock trichotomy).LetPbe the Hilbert–Schmidt projection onto
+kerL=A∩
+⋂
+j
+{vj}′.(43)
+Then the complete physical words have the limits
+β >1 :e tQE,
+β= 1 :e t(Q−L/4)E,
+0<β <1 :e tPQP PE, t>0.
+(44)
+The last convergence is uniform ont∈ [δ,T]for δ >0, but not att= 0unless P = I. For0 <β <1
+the initial layer has the explicit profile
+tn(τ) = 4τn−(1−β)/(1+β) ,
+(
+ˆΦ(β)
+yn(tn(τ))
+)n
+−→e−τ(1+β)/2LE(45)
+for every fixedτ≥0.
+Proof. For β >1, an(t) →0; forβ = 1, an(t) = t/4. This proves the first two branches using(41).
+Suppose0<β <1and put
+bn(t) = an(t)
+t = 2−(1+β)t(β−1)/2n(1−β)/2, t>0.
+Apply Lemma 8.2 withB = Q, L = L, b = bn(t), and s = t. On every[ δ,T], bn(t)diverges
+uniformly, so (42) gives
+sup
+δ≤t≤T
+etQ−an(t)L−etPQP P
+−→0.
+All norms on this finite-dimensional channel space are equivalent, and the remainder in(41) is
+uniform on compactt-intervals. This proves the stated diamond-norm convergence.
+Finally, direct substitution oftn(τ)into (40) gives an(tn(τ)) = τ(1+β)/2, whiletn(τ)Q→ 0. The
+remainders in(39) also vanish after multiplication byn, proving(45). Thus the layer interpolates
+fromIonAatτ= 0toPasτ→∞; its width isΘ(n −(1−β)/(1+β) ).
+At the critical clock, self-adjoint negativity yields the exact fixed algebra
+Fix(Q−L/4) =A∩
+⋂
+j<k
+{Cjk}′∩
+⋂
+j
+{vj}′. (46)
+Indeed, the Dirichlet form is
+−⟨X,(Q−L/4)X⟩ HS = 1
+24
+∑
+j<k
+∥[Cjk,X]∥2
+2 + 1
+4
+∑
+j
+∥[vj,X]∥2
+2 .(47)
+9 Then 3/4 complete-word clock barrier
+The effective holonomy in Theorem 6.2 is conditioned at scale√u∼n −1/2. Its synthesis from a
+balanced physical loop uses the shorter pulse scaley∼n −1/4 because holonomy is second order,
+and diffusion is then fourth order. This distinction changes the resource law.
+Proposition 9.1(Serial action of the physical echo).Each macro-step contains two copies of
+every retained kick. Atyn(t) = (t/4n)1/4, the total retained serial action is
+An = 2nyn(t)S=
+√
+2St 1/4n3/4. (48)
+If the total laboratory time isTand the kick amplitude is bounded byΛ, then
+ΛT≥
+√
+2St 1/4n3/4.(49)
+10
+
+--- Page 11 ---
+
+The n3/4 exponent is not a generic Zeno speed limit. It is the bookkeeping cost of this specific
+complete-word architecture: second-order balanced holonomy, order/reverse echo, and fourth-
+order accumulation. It is stronger than the√n amplitude barrier for maintaining a conditioned
+second-order holonomy, but it does not exclude alternative hardware that implements the effective
+Hamiltonians directly.
+10 Certificates and reproducibility
+The symbolic certificate uses exact arithmetic for four independent checks:
+(i) both qutrit weighted-shift branches in (10)–(11);
+(ii) the representative equilateral loop forF= diag(2,−1,−1)and action36
+√
+3;
+(iii) all24tetrahedral holonomies, the64 /3frame gap, and physical-echo coefficients through
+degree five, including exact vanishing of degrees1,2,3,5without polarity;
+(iv) a two-block critical architecture with retained kicksdiag(hj,hj)and one off-block swap
+v1 = 4
+(0I
+I0
+)
+, whose restricted critical spectrum is
+{0,−16,−64/3,−112/3}with multiplicities(1,1,3,3).(50)
+The simple zero in (50) certifies a primitive critical semigroup in the retained algebra.
+The deterministic numerical suite adds256random qutrit targets,4096balanced equal-norm
+qubit quadrilaterals, exact finite-twirl and schedule comparisons, diamond-norm convergence of
+complete physical echoes, and all three off-block clock regimes. The qutrit target residual is below
+1.3 ×10−15, the largest sampled qubit gap remains below64/27, the finite schedule agrees to
+2.3×10 −14, and the fitted complete-word diamond slope is−0.462, consistent with the predicted
+−1/2asymptotic law.
+11
+
+--- Page 12 ---
+
+−1.0 −0.5 0.0 0.5 1.0
+middle eigenvalue λ2
+1.0
+1.1
+1.2
+1.3
+1.4
+1.5cost / trace-norm bound
+Qutrit middle-eigenvalue tax
+0.0 0.2 0.4 0.6 0.8 1.0
+empirical quantile
+0.0
+0.5
+1.0
+1.5
+2.0curvature gap
+4,096 balanced unit quadrilaterals
+sharp 64/27
+101 102
+macro-steps n
+10−2
+2 × 10−2
+3 × 10−2
+4 × 10−2
+diamond distance
+Complete echoed physical words
+diamond error
+n−1/2
+101 102
+macro-steps n
+10−2
+10−1
+operator-norm error
+Off-block clock trichotomy
+β = 0.5
+β = 1
+β = 1.5
+Figure 1: Certified regimes. Top left: the exact qutrit middle-eigenvalue tax(15). Top right:
+4096random balanced unit quadrilaterals below the sharp tetrahedral gap64/27. Bottom left:
+complete physical echoes converge in diamond distance with the predictedn−1/2 scale. Bottom
+right: operator-norm convergence in the three off-block clock regimes.
+All reported numbers are regenerated from source by one command. The archive contains the
+manuscript source, exact and numerical scripts, machine-readable JSON outputs, dependency pins,
+a claim ledger, and SHA-256 manifests. Numerical evidence is not used in place of the analytic
+proofs.
+11 Scope, limitations, and conclusion
+The theorem chain is finite-dimensional and uses ideal fixed-block pinchings. Fresh order random-
+ization is required at each macro-step. Equation(34) needs both central balance and reversal
+symmetry; without them a lower-order coherent term can survive. The polarity in the off-block
+theorem is not cosmetic, because reduced pinched words need not be invertible. For0<β <1, the
+correct limit isetPQP P, notetQP unless P commutes withQ. The exact finite schedule applies
+to the effective tetrahedral twirl, whereas the physical-word construction retains itsO(n−1/2)
+approximation andn3/4 action cost. We make no claim about infinite-dimensional unbounded
+generators, detector energetics, or optimality over all possible control architectures.
+Within that scope, the paper provides three closures. The qutrit target cost is no longer
+controlled only by trace norm: the middle eigenvalue has an exact operational price. The tetrahedron
+is no longer merely a convenient primitive example: it is the unique equal-norm maximizer, and its
+finite twirl admits exact semigroup calibration. Finally, forgotten-order diffusion is no longer only
+an effective-holonomy statement: it emerges from complete echoed words with a diamond-norm
+rate, a critical leakage exponent, and a transparent physical clock bill.
+12
+
+--- Page 13 ---
+
+AI-assistance disclosure
+The author used OpenAI Codex for literature organization, symbolic and numerical code generation,
+algebraic cross-checks, manuscript drafting, and layout verification. The author directed the
+research programme, selected the claims, and remains responsible for every theorem, proof, citation,
+computation, and submission decision. Exact certificates and deterministic replay files are supplied
+so that the AI-assisted parts can be independently audited.
+References
+[1] L. Eriksson, “Matrix Isoperimetry and Diffusion from Forgotten Order in Block–Zeno Dynam-
+ics,” submitted manuscript (2026).
+[2] B. Misra and E. C. G. Sudarshan, “The Zeno’s paradox in quantum theory,”J. Math. Phys.
+18, 756–763 (1977). doi:10.1063/1.523304.
+[3] P. Facchi and S. Pascazio, “Quantum Zeno dynamics: mathematical and physical aspects,”J.
+Phys. A41, 493001 (2008). doi:10.1088/1751-8113/41/49/493001.
+[4] D. Burgarth, P. Facchi, V. Giovannetti, H. Nakazato, S. Pascazio, and K. Yuasa,
+“Non-Abelian phases from quantum Zeno dynamics,”Phys. Rev. A88, 042107 (2013).
+doi:10.1103/PhysRevA.88.042107.
+[5] A. A. Albert and B. Muckenhoupt, “On matrices of trace zero,”Michigan Math. J.4, 1–3
+(1957). doi:10.1307/mmj/1028990168.
+[6] A. Böttcher and D. Wenzel, “The Frobenius norm and the commutator,”Linear Algebra Appl.
+429, 1864–1885 (2008). doi:10.1016/j.laa.2008.05.020.
+[7] G. Weiss, “Commutators of Hilbert–Schmidt operators II,”Integral Equations Operator Theory
+3, 574–600 (1980). doi:10.1007/BF01702316.
+[8] P. Fan and C.-K. Fong, “Which operators are the self-commutators of compact operators?,”
+Proc. Amer. Math. Soc.80, 58–60 (1980). doi:10.1090/S0002-9939-1980-0574508-X.
+[9] Y.-A. Chen, A. M. Childs, M. Hafezi, Z. Jiang, H. Kim, and Y. Xu, “Efficient product formulas
+for commutators and applications to quantum simulation,”Phys. Rev. Research4, 013191
+(2022). doi:10.1103/PhysRevResearch.4.013191.
+[10] C.-F. Chen, H.-Y. Huang, R. Kueng, and J. A. Tropp, “Concentration for random product
+formulas,”PRX Quantum2, 040305 (2021). doi:10.1103/PRXQuantum.2.040305.
+[11] S. Blanes, F. Casas, J. A. Oteo, and J. Ros, “The Magnus expansion and some of its
+applications,”Phys. Rep.470, 151–238 (2009). doi:10.1016/j.physrep.2008.11.001.
+[12] Z. Puchała, Ł. Rudnicki, and K. Życzkowski, “Pauli semigroups and unistochastic quantum
+channels,”Phys. Lett. A383, 2376–2381 (2019). doi:10.1016/j.physleta.2019.04.057.
+[13] S. Becker, N. Datta, and R. Salzmann, “Quantum Zeno effect in open quantum systems,”Ann.
+Henri Poincaré22, 3795–3840 (2021). doi:10.1007/s00023-021-01075-8.
+[14] I. A. Luchnikov and S. N. Filippov, “Quantum evolution in the stroboscopic limit of repeated
+measurements,”Phys. Rev. A95, 022113 (2017). doi:10.1103/PhysRevA.95.022113.
+[15] J. Watrous, “Semidefinite programs for completely bounded norms,”Theory Comput.5,
+217–238 (2009). doi:10.4086/toc.2009.v005a011.
+13

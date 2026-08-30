@@ -1,0 +1,18 @@
+# From Uniform Log-Sobolev Inequality to Mass Gap for Lattice Yang—Mills at Weak Coupling: a Conditional and Windowed Assembly
+
+**Author:** Lluis Eriksson  
+**Original archive:** [ai.vixra:2602.0054](https://www.ai.vixra.org/abs/2602.0054)  
+**First submitted:** 2026-02-12T19:10:34+00:00 (source displays no timezone)  
+**Latest declared source version:** v2  
+**ARR mirror:** [v2 PDF](https://github.com/arr-research/arr-research.github.io/releases/download/AIVIXRA-LATEST-2026-08-30/ai-vixra-2602.0054-v2.pdf)
+
+> Historical import; not assessed under the ARR frontier-model hostile-audit gate.
+
+## Abstract
+
+This paper assembles the route from the uniform log-Sobolev inequality (LSI) on periodic tori to a transfer-matrix spectral gap for SU(N_c) lattice Yang-Mills in d >= 3 at weak coupling: periodic LSI + boundary-uniform RG outputs => DLR-LSI => Stroock-Zegarlinski mixing => exponential clustering => (reflection positivity) => Delta_phys > 0. Version 2 corrects the logical status of this assembly after a quantitative audit (companion numerical suite; Appendix A). (i) v1 claimed the route "bypasses any explicit Dobrushin contraction estimate". This is withdrawn: the DLR-LSI input (Theorem 5.1) invokes the multiscale fiber assembly of [2], whose inter-block step IS a Dobrushin-type condition — made explicit as (H-DOB-blk) in ai.viXra:2602.0053(v2), the detailed companion treatment which v1 did not cite. v1's supporting claim in the proof of Theorem 5.1, that the fiber oscillation is "O(1) regardless of beta", is also withdrawn: the conditional fast potential obeys osc = 2 beta n_plaq + C_poly, LINEAR in beta (2602.0053(v2), Lemma 3.2; reproduced numerically here). (ii) The quantitative absorption in Proposition 4.7 inherits hypothesis (H-P0) of ai.viXra:2602.0052(v2), and the corrected asymptotic-freedom flow restricts all statements to the volume window L <= e^(C/g^2+O(1)): Theorem 1.1 is restated as windowed and conditional on (H-DOB-blk)+(H-P0). (iii) The erratum for [2] in Sec. 10 is corrected: v1's items (a) and (c) ("Assumption 6.3 is removed", "Theorem 1.1(ii) of [2] is now unconditional") are withdrawn — the assumption is REDUCED, not removed; item (b) (withdrawal of Lemma 6.4 of [2] due to the volume factor (MR^n_max)^d) was correct and stands. (iv) A new technical finding (Remark 2.8): the row-normalized transfer operator T-hat of Definition 2.2 satisfies the correlation identities (12)/(29) exactly only when its normalizer D(sigma) = int K(sigma,sigma') d sigma' is constant (true in the d=2 toy, false for d >= 3 where the spatial factor e^((beta/2)S(sigma)) survives); the correct identities hold in kernel form (with K, or the symmetrized D^(-1/2) K D^(-1/2)). Since D^(-1)K and D^(-1/2)KD^(-1/2) are similar, the spectrum — hence Delta_phys — is unaffected; adjudicated numerically (spectra equal to 10^(-16); the T-hat-form of (29) deviates from the exact path integral by 0.30 in a d=3 toy). What survives and is validated end-to-end in exact toys: the slab splitting (Definition 2.1), self-adjointness and detailed balance (Lemma 2.3), the spectral clustering-to-gap step (Proposition 2.4), Osterwalder-Seiler reflection positivity including the Peter-Weyl positive-definiteness of Re tr(UV^(-1)) (Theorem 2.6), and the gauge-invariance lemmas of Sec. 8. The contribution is retagged: a correct and verifiable transfer-matrix back end for the program, whose front end (DLR-LSI) is conditional and windowed.
+
+## Source version history
+
+- [v1](https://www.ai.vixra.org/pdf/2602.0054v1.pdf) — 2026-02-12T19:10:34+00:00
+- [v2](https://www.ai.vixra.org/pdf/2602.0054v2.pdf) — 2026-07-06T11:08:38+00:00

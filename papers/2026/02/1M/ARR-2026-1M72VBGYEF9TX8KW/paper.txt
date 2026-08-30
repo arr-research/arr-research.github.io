@@ -1,0 +1,733 @@
+--- Page 1 ---
+
+Residual Derivative Bounds and Windowed Uniform Log-Sobolev
+Inequality forSU (Nc) Lattice Yang–Mills at Weak Coupling*
+Lluis Eriksson
+Independent Researcher
+lluiseriksson@gmail.com
+February 2026 (v1); July 2026 (v2)
+Abstract
+We prove residual derivative bounds for the polymer expansion of Balaban’s multiscale
+decomposition of the Wilson lattice gauge measure for SU (Nc) in dimension d ≥ 3, and we
+assemble them, together with the companion series, into a uniform log-Sobolev inequality. Ver-
+sion 2 corrects the status of this assembly after a quantitative audit. (i) The core mechanism of
+the paper — locality of polymer functionals, Cauchy estimates on Balaban’s analytic domains,
+and a volume-independent counting bound for connected polymers containing a fixed link —
+survives intact and is validated numerically; it yields a pointwise derivative bound on the
+polymer residual with constants independent of the lattice volume, conditionally on Balaban’s
+small-field inputs (B1)–(B4) . (ii) However, the final step of v1’s Theorem 3.5, the inequality
+k ≤ CRG(1 +βk), relied on the inverted-sign running-coupling flow of the series erratum; with
+the correct asymptotic-freedom flow the reduced coupling βk decreases along the cascade, the
+small-field condition gk ≤ γ0 is available only for k ≤ k∗(β), and the derivative bound holds in
+the windowed form Cres(1 +β) for Lvol ≤ eC/g2+O(1). (iii) The assembly of the main theorem
+inherits two hypotheses identified in the audits of 2602.0052 v2 and 2602.0053 v2: the large-
+field absorption step requires a power-law penalty exponent — hypothesis (H-P0) — since
+with the stated polylog floor the suppression factor trivializes ( e−csfp0(γ0) ≈ 0.95 at γ0 = 0.1)
+and the absorption inequality fails at every scale (excess ≥ 104.6); and any quantitative use
+of the conditional fiber LSI via Holley–Stroock carries the penalty e−2βnplaq — hypothesis
+(H-YGZ) (log 10 αblk ≈ −5559 at γ0 = 0.1, nplaq = 64). (iv) Version 1’s Corollary 1.2 and
+Remark 5.1 claimed that the Dobrushin-type Assumption 6.3 of Paper I is “no longer needed”
+via the DLR route of the companion [6]; the v2 audit of that companion shows the route
+reduces Assumption 6.3 to an unverified block condition (H-DOB-blk) whose printed bound
+cij ≤ tanh(βn∂/2) trivializes at weak coupling. Accordingly, v1’s closing claim is replaced:
+the uniform LSI of Theorem 1.1 is windowed and conditional on (H-P0) and (H-YGZ) , and
+the mass gap of Corollary 1.2 is additionally conditional on (H-DOB-blk). All quantitative
+claims are adjudicated in a companion numerical suite (9 deterministic checks).
+Contents
+1 Introduction 2
+* Version 2. Version 1 of this paper carried the title “Unconditional uniform log-Sobolev inequality forSU(Nc)
+lattice Yang–Mills at weak coupling” and claimed an unconditional, volume-uniform result. After the quantitative
+audit of the companion series (ai.viXra:2602.0032/0033/0051/0052/0053, all v2), that claim is withdrawn and
+replaced by the windowed, conditional statement proved here. See the Note added in v2 (Section 6).
+1
+
+--- Page 2 ---
+
+1.1 Main result . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 2
+1.2 The audit hypotheses . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 2
+1.3 The residual derivative hypothesis and its role . . . . . . . . . . . . . . . . . . . . . 3
+1.4 Logical structure . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+1.5 Organization . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+2 Setup and conventions 4
+2.1 Lattice, gauge group, and Wilson measure . . . . . . . . . . . . . . . . . . . . . . . 4
+2.2 Multiscale decomposition and filtration . . . . . . . . . . . . . . . . . . . . . . . . . 4
+2.3 Polymer activities and boundary terms . . . . . . . . . . . . . . . . . . . . . . . . . 5
+2.4 Re-statement of Hypothesis 3.2 and its windowed variant . . . . . . . . . . . . . . 6
+3 Polymer locality and the residual derivative bound 6
+3.1 Locality of directional derivatives . . . . . . . . . . . . . . . . . . . . . . . . . . . . 6
+3.2 Single-polymer derivative bounds . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7
+3.3 Polymer counting . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7
+3.4 The residual derivative bound (corrected) . . . . . . . . . . . . . . . . . . . . . . . 8
+4 Assembly: the main theorem, with hypothesis flags 9
+4.1 Chain of implications (annotated) . . . . . . . . . . . . . . . . . . . . . . . . . . . 9
+4.2 Proof of Theorem 1.1 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 10
+5 Discussion 10
+5.1 What is proved . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 10
+5.2 Mass gap . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 11
+5.3 What remains for the Clay Millennium Problem . . . . . . . . . . . . . . . . . . . 11
+6 Note added in v2 12
+A The corrected flow and the window 13
+1 Introduction
+1.1 Main result
+The central result of this paper and the companion series [1, 2, 3, 4] is the following. Relative to
+version 1, the statement is now windowed (volume restricted by the running-coupling horizon)
+and conditional on the two audit hypotheses recalled in Section 1.2.
+Theorem 1.1 (Windowed conditional uniform LSI) . Fix d ≥ 3, G = SU (Nc), and an RG block
+size LRG ≥ 2. Assume the audit hypotheses (H-P0) and (H-YGZ) of Section 1.2. There exist
+βwc < ∞ and C = C(d, Nc, LRG, γ0) such that for all β ≥ βwc and all finite periodic lattices
+Λ = (Z/LvolZ)d inside the volume window
+Lvol ≤ eC/g2+O(1), equivalently nmax = ⌊logLRG Lvol⌋ ≤ k∗(β),
+the Wilson lattice gauge measure µβ satisfies
+Entµβ (f2) ≤ 2
+α∗
+Z
+A
+|∇f|2 dµβ (1)
+2
+
+--- Page 3 ---
+
+for all gauge-invariant Lipschitz f : A →R, with α∗ > 0 depending only on d, Nc, LRG, γ0, and
+independent of Lvol within the window.
+Corollary 1.2 (Windowed conditional mass gap) . Under the hypotheses of Theorem 1.1 and
+additionally (H-DOB-blk) , the transfer matrix of the Wilson lattice gauge theory has a spectral
+gap ∆phys > 0 uniformly in Lvol within the window. (Version 1 asserted that this is “proved
+unconditionally in [6]”; the v2 audit of [6] (= ai.viXra:2602.0053 v2) shows that the DLR–LSI
+route reduces, but does not remove, the Dobrushin-type input; see Remark 5.1. )
+1.2 The audit hypotheses
+Version 2 makes explicit the three hypotheses inherited from the series audit; none of them is
+proved in this paper or its companions.
+(H-P0) Power-law penalty. There exist c1 > 0 and s > 0, independent of the scale
+and of Lvol, such that the large-field penalty exponent of [4] satisfies p0(g) ≥ c1 g−s on
+the small-field window. The polylog floor p0(g) ≥ c0|log g|1+ε0 actually established in the
+companions is quantitatively insufficient for the absorption step of Section 4, Step 2: with
+csf = 2/(1 +β0) the suppression factor is ≥ 0.95 at γ0 = 0.1 and the absorption inequality
+fails at every sampled scale, with excess growing from 104.6 (k = 1) to 1023.2 (k = 32).
+Identified in 2602.0052 v2.
+(H-YGZ) Fiber constant without Holley–Stroock collapse. The conditional fast-
+field measures µk(· | Gk+1) satisfy a log-Sobolev inequality with constant αfiber bounded
+below polynomially in gk (not exponentially in β). The available route (Bakry– ´Emery
+for the Haar/orbit part [2], then Holley–Stroock for the conditional Wilson interaction)
+yields only αblk ≥ (Nc/4)e−2βnplaq, i.e. log10 αblk ≈ −5559 at γ0 = 0.1, nplaq = 64, which
+destroys every quantitative step downstream. Identified in 2602.0053 v2.
+(H-DOB-blk) Block Dobrushin condition. The block influence coefficients of the
+DLR route of [6] satisfy δ = supi
+P
+j cij < 1 at weak coupling. The printed worst-case
+bound cij ≤ tanh(βn∂/2) gives δ <1 only for β ≲ 3.5 × 10−3 (d = 3, 43 blocks) — the
+opposite of the regime β ≥ βwc ≫ 1; an averaged or transport-based criterion is required.
+Identified in 2602.0053 v2.
+In addition, thewindow is not a hypothesis but a proved constraint: with the correct asymptotic-
+freedom flow (Appendix A), the small-field condition gk ≤ γ0 underlying Balaban’s inputs (B1)–
+(B4) holds only for k ≤ k∗(β) with k∗(β) = 2Nc
+cflow
+ 
+g−2 − γ−2
+0
+
+∼ C/g2, whence Lvol ≤ eC/g2+O(1).
+Removing the window would require the strong crossover input (H-XOVER) of ai.viXra:2602.0051 v2.
+1.3 The residual derivative hypothesis and its role
+The proof of Theorem 1.1 rests on a chain of four companion papers, each contributing a specific
+analytic or geometric input. The chain is:
+(i) Paper I [1] establishes the uniform LSI assuming a cross-scale derivative bound (Assump-
+tion 5.4 of [1]).
+3
+
+--- Page 4 ---
+
+(ii) Paper II [2] proves a synthetic Ricci curvature bound Ric B ≥ Nc/4 on the orbit space.
+(v2 status: the Ricci bound is unconditional and numerically verified in the series suite; its
+conversion into a conditional fiber LSI with a usable constant inherits (H-YGZ), see Step 1
+of Section 4.)
+(iii) Paper III [3] replaces Assumption 5.4 of [1] by two explicit inputs: Hypothesis 3.2 (point-
+wise derivative bound on the polymer residual) and Hypothesis 4.2 (large-field conditional
+suppression). (v2 status: the absorption step combining the two inputs inherits (H-P0) and
+the flow correction F1.)
+(iv) Paper IV [4] verifies Hypothesis 4.2 for d ≥ 3 using Balaban’s T-operation. (v2 status: per the
+series notice of 2602.0052 v2, the suppression is effective only under (H-P0); the verification
+is of the form of Hypothesis 4.2, with a polylog p0 that is too weak for the assembly.)
+The contribution of the present paper is the derivative bound: v1 claimed it verified Hypothe-
+sis 3.2 of [3] exactly as stated; v2 shows that what is actually proved is the windowed variant of
+Section 2.4, with the bare coupling β replacing the running βk in the final estimate.
+1.4 Logical structure
+The corrected logical chain is:
+Paper II (Ricci)| {z }
++ (H-YGZ)
++ Paper IV (Hyp 4.2)| {z }
++ (H-P0)
++ This paper (Hyp 3.2 w)| {z }
+windowed
+Paper III
+− − − − − − − →Ass. 5.4 of [1]
+Paper I
+− − − − − − →(1).
+All arrows are valid within the volume window and conditionally on (H-P0), (H-YGZ) . Version 1’s
+sentence “All arrows are unconditional once Hypothesis 3.2 is verified” is withdrawn.
+1.5 Organization
+Section 2 recalls the multiscale decomposition with the corrected coupling convention, defines
+the polymer residual, and re-states Hypothesis 3.2 together with its windowed variant. Section 3
+contains the three technical lemmas (locality, single-polymer derivative bounds, polymer counting)
+— these survive v1 unchanged — and the corrected proof of the derivative bound (Theorem 3.5).
+Section 4 assembles the chain, now with explicit hypothesis flags at each step. Section 5 updates
+the series table and the discussion of the mass gap and the Clay problem. Section 6 is the Note
+added in v2. Appendix A records the corrected flow arithmetic and the window.
+2 Setup and conventions
+2.1 Lattice, gauge group, and Wilson measure
+Let Λ = (Z/LvolZ)d be a finite periodic lattice with d ≥ 3. Denote by E(Λ) the set of positively
+oriented edges (links). The gauge group is G = SU (Nc), and the configuration space is A =
+G|E(Λ)|, equipped with the product Haar measure. The Wilson lattice gauge measure at inverse
+coupling β >0 is
+dµβ(U) = 1
+Zβ
+exp
+h
+−β
+X
+p∈P(Λ)
+
+1 − 1
+Nc Re trUp
+i Y
+e∈E(Λ)
+dUe, (2)
+where the sum is over plaquettes p, Up is the ordered product of link variables around p, and dUe
+is the normalized Haar measure on G.
+4
+
+--- Page 5 ---
+
+Coupling convention (corrected in v2). In (2), β is the coefficient of the Wilson action; in
+the physics normalization βphys = 2Nc/g2. We use the reduced inverse coupling βk := g−2
+k , so that
+βphys,k = 2Ncβk and βphys,0 = β. Version 1 printed the running-coupling formula as 2 Ncβk = β +
+2b0k ln LRG+O(1/β), i.e. with βk increasing along the cascade (gk → 0 in the infrared). This is the
+inverted-sign flow of the series erratum (flag F1, corrected in ai.viXra:2602.0032/0033/0051 v2).
+The correct one-loop asymptotic-freedom flow in this convention is
+2Ncβk = β − 2b0 k ln LRG + O(1/β), b 0 = 11Nc
+48π2 ,
+so that gk grows along the cascade and the small-field condition gk ≤ γ0 holds precisely for
+k ≤ k∗(β); see Appendix A. All bounds below are of the form C(1 + β)q; switching between
+reduced and physics normalizations only changes C by a factor depending on ( Nc, q).
+2.2 Multiscale decomposition and filtration
+We use the multiscale RG decomposition of [1], based on Balaban’s block-spin construction [7–16].
+Fix an RG block size LRG ≥ 2. At each scale k = 0, 1, . . . , nmax, we have:
+ A block lattice Λ k = (Z/(Lvol/Lk
+RG)Z)d.
+ A σ-algebra Gk encoding the “slow” (block) field at scale k, with G0 ⊃ G1 ⊃ ··· ⊃ Gnmax.
+ A space of “fast” directions Ek: left-invariant vector fields on A that are Gk-measurable but
+orthogonal to Gk+1.
+The number of RG steps is nmax = ⌊logLRG Lvol⌋. Correction to v1: v1 asserted that all constants
+depend on nmax only through the running coupling gk, “which is controlled by the RG flow and
+is independent of Lvol”. With the correct flow this control is available only while gk ≤ γ0, i.e.
+for k ≤ k∗(β); the constants of Section 3 are volume-independent, but the applicability of the
+construction requires nmax ≤ k∗(β), which is the volume window of Theorem 1.1.
+2.3 Polymer activities and boundary terms
+After k steps of Balaban’s RG, the effective action contains a polymer expansion: the conditional
+fast potential at scale k decomposes as
+Vk(U | Gk+1) = Sk,Wilson(U) + Sk,res(U | Gk+1), (3)
+where Sk,Wilson is the Wilson plaquette action at the running coupling gk, and the residual is
+Sk,res(U | Gk+1) =
+X
+X
+R(k)(X; U, Gk+1) +
+X
+X
+B(k)(X; U, Gk+1). (4)
+Here R(k)(X) are polymer activities indexed by connected polymers X (unions of scale-k blocks),
+and B(k)(X) are boundary terms arising from the block-spin integration.
+Key properties (from Balaban’s construction, as recorded in [1], § 2.4). In v2 these are stated
+explicitly as small-field inputs, available at scale k only under gj ≤ γ0 for all j ≤ k, hence only
+inside the window:
+(B1) Locality: Each R(k)(X) and B(k)(X) depends only on gauge field variables {Ue} with e
+in the dependence neighborhood N(X) ⊂ Λ, which has diameter ≤ C0 Lk
+RG diamk(X) for a
+constant C0 = C0(d).
+5
+
+--- Page 6 ---
+
+(B2) Analyticity: Both R(k)(X) and B(k)(X) are analytic in the fast-field variables on the
+complexified tube eUc
+k(X, ˜α0, ˆα1) of [16]. The analyticity radius ˆα1 > 0 depends on γ0 but is
+uniform in k and Lvol (cf. [16] and the inductive scheme of [14]).
+(B3) Exponential decay of activities: For all U in the analyticity domain,
+|R(k)(X)| ≤ CR e−κ dk(X), (5)
+where dk(X) := |X| is the number of scale- k blocks in X, κ > 0 is a universal decay
+constant, and CR ≡ CR(γ0) (cf. [16], eq. (1.65); [1], Proposition 2.8).
+(B4) Boundary term bound: On Balaban’s analytic domain,
+|B(k)(X)| ≤ CB
+kX
+j=1
+|Γ0
+j ∩ X| e−κ dk(X), (6)
+and in particular, using |Γ0
+j ∩ X| ≤CΓ|X|, |B(k)(X)| ≤C′
+B k |X|e−κdk(X), with CB, C′
+B
+depending on γ0 (cf. [1], § 2.4; compare [16], eq. (1.69)).
+2.4 Re-statement of Hypothesis 3.2 and its windowed variant
+For the reader’s convenience, we re-state the hypothesis targeted by this paper.
+Hypothesis 2.1 (Hypothesis 3.2 of [3]) . There exist q ≥ 0 and Cres > 0, depending on d, Nc,
+LRG and the RG scheme, but not on Lvol, such that for every scale k and every unit fast direction
+v ∈ Ek supported on a single link,
+sup
+U∈A
+v Sk,res(U | Gk+1)
+ ≤ Cres(1 + βk)q, β k := g−2
+k . (7)
+v2 status. Hypothesis 2.1 as printed is not verified in this paper: v1’s proof of the final step
+used the inverted flow (see the proof of Theorem 3.5). What is verified is the windowed variant:
+(Hyp 3.2w) Windowed residual derivative bound. There exist q ≥ 0 and Cres =
+Cres(d, Nc, LRG, γ0) such that for every scalek ≤ k∗(β) and every unit fast directionv ∈ Ek
+supported on a single link, supU |vSk,res(U | Gk+1)| ≤Cres(1+β)q with β the bare coupling.
+Verified in Theorem 3.5 with q = 1, conditionally on (B1)–(B4).
+Since βk ≤ β/(2Nc) · 2Nc = β (reduced units, correct flow), the windowed bound is weaker
+than (7) exactly where v1’s version was stronger; Section 4, Step 2, records what this costs in the
+assembly.
+3 Polymer locality and the residual derivative bound
+This section contains the three lemmas at the core of the paper. Lemmas 3.1, 3.2 and 3.4 are
+unchanged from v1: they are correct as stated, and their mechanics are validated in the companion
+suite (checks 1–4). Only Theorem 3.5 is restated, since its v1 proof used the inverted flow in the
+final step.
+6
+
+--- Page 7 ---
+
+3.1 Locality of directional derivatives
+Lemma 3.1 (Locality). Let v ∈ Ek be a unit fast direction supported on a single link b ∈ E(Λ).
+Let F(X) be a polymer functional depending only on gauge field variables {Ue : e ∈ N(X)}. Then
+vF (X) = 0 unless b ∈ N(X). (8)
+Consequently,
+v Sk,res =
+X
+X: b∈N(X)
+vR(k)(X) +
+X
+X: b∈N(X)
+vB(k)(X). (9)
+Proof. By definition, v is a left-invariant vector field on A acting by differentiation in the fiber
+direction of the single link b. If F(X) does not depend on Ub (i.e. b /∈ N(X)), then vF (X) = 0.
+Equation (9) follows by applying this observation to each term in the decomposition (4).
+We write {X ∋ b} := {X : b ∈ N(X)}.
+3.2 Single-polymer derivative bounds
+Lemma 3.2 (Single-polymer derivative bounds). Assume the Balaban inputs (B1)–(B4) hold at
+scale k with weak-coupling parameter γ0. Let v ∈ Ek be a unit fast direction supported on a single
+link b. Then for every connected polymer X with b ∈ N(X):
+sup
+U∈A
+|vR(k)(X)| ≤ CR
+ˆα1
+e−κ dk(X), (10)
+sup
+U∈A
+|vB(k)(X)| ≤ C′
+B k |X|
+ˆα1
+e−κ dk(X). (11)
+Here ˆα1 > 0 is Balaban’s uniform analyticity radius from (B2) (depending on γ0 but uniform in
+k and Lvol), and the constants are as in (B3)–(B4).
+Proof. Polymer activities. By (B2), R(k)(X) is analytic in the fast-field variable Ub on a complex
+disc of radius ˆα1 > 0 around each point Ub ∈ G. By the one-variable Cauchy estimate on this
+disc and the sup-norm bound (5),
+|vR(k)(X)| =
+ ∂
+∂t
+
+t=0
+R(k)(X; etvbUb, . . .)
+ ≤
+sup|z|≤ˆα1 |R(k)|
+ˆα1
+≤ CR
+ˆα1
+e−κdk(X).
+Boundary terms. By (B2), B(k)(X) is analytic on the same tube, with the sup-norm bound (6);
+Cauchy’s estimate in Ub gives (11). In both cases the constants CR, C′
+B, ˆα1, κ depend only on
+d, Nc, LRG, γ0, not on Lvol.
+Remark 3.3 (On the analyticity of boundary terms) . The analyticity of B(k)(X) in the fast-field
+variables, with the same radius ˆα1 as for R(k)(X), is part of the inductive output of Balaban’s
+construction ([14], Proposition 4.2, and the inductive analyticity hypotheses of [16]); in [1], § 2.4,
+it is recorded as “the boundary terms B(k)(X) are analytic on the domain eUc
+k(X, ˜α0, ˆα1)”. v2
+note: these are precisely the small-field inputs; outside the window they are not available, which
+is one of the two places the window enters (the other being the final step of Theorem 3.5).
+7
+
+--- Page 8 ---
+
+3.3 Polymer counting
+Lemma 3.4 (Polymer counting, uniform in volume) . Fix a link b at scale k and let N be the
+dependence-neighborhood map from (B1). There exists Cd ≥ 1, depending only on d, such that
+#
+
+X : X connected, b ∈ N(X), dk(X) = n
+	
+≤ C n
+d for all n ≥ 1. (12)
+In particular, for any κ >log Cd,
+X
+X∋b
+e−κdk(X) ≤
+∞X
+n=1
+Cn
+d e−κn = Cde−κ
+1 − Cde−κ < ∞, (13)
+and this bound is independent of Lvol.
+Proof. A connected polymer X at scale k is a connected union of scale- k blocks. The condition
+b ∈ N(X) constrains X to lie within distance C0Lk
+RG of b (by (B1)). The number of connected
+subsets of the block lattice Λ k containing a fixed block and having n blocks is at most (2 d)2n
+by a standard lattice-animal bound (cf. [1], Lemma 5.6). Since the link b is adjacent to at
+most O(1) blocks (a constant depending only on d and C0), the total count satisfies (12) with
+Cd = O((2d)2). Crucially, this bound involves only the local combinatorics of the block lattice
+and does not depend on Lvol. (Suite check 3 enumerates the counts exactly for d = 2 , n ≤ 6
+and d = 3, n ≤ 4 on two torus sizes each: the counts 1, 4, 18, 76, 315, 1296 and 1, 6, 45, 344 match
+n·OEIS A001168/A001931, satisfy (12), and are identical across volumes.)
+3.4 The residual derivative bound (corrected)
+Theorem 3.5 (Windowed residual derivative bound) . Fix d ≥ 3, G = SU (Nc), LRG ≥ 2, and
+a small-field threshold γ0 > 0. Let β ≥ βwc and let k ≤ k∗(β), so that the correct flow gives
+gj ≤ γ0 for all j ≤ k and Balaban’s construction with inputs (B1)–(B4) applies. Then there
+exists Cres < ∞, depending only on (d, Nc, LRG, γ0), such that for every unit fast direction v ∈ Ek
+supported on a single link b, and Gk+1-a.e. slow-field configuration,
+sup
+U∈A
+v Sk,res(U | Gk+1)
+ ≤ Cres (1 + β), (14)
+with β the bare coupling. In particular, the windowed variant (Hyp 3.2w) holds with q = 1.
+Proof. By Lemma 3.1, only polymers X with b ∈ N(X) contribute:
+sup
+U
+|vSk,res| ≤
+X
+X∋b
+sup
+U
+|vR(k)(X)| +
+X
+X∋b
+sup
+U
+|vB(k)(X)|.
+By Lemma 3.2 and Lemma 3.4, the first sum is bounded by
+X
+X∋b
+CR
+ˆα1
+e−κdk(X) ≤ CR
+ˆα1
+· Cde−κ
+1 − Cde−κ =: A1,
+and, using (11) with dk(X) = |X|, the second by
+X
+X∋b
+C′
+B k |X|
+ˆα1
+e−κdk(X) ≤ C′
+B k
+ˆα1
+X
+n≥1
+n Cn
+d e−κn =: A2 · k,
+8
+
+--- Page 9 ---
+
+the series converging for κ >log Cd +1, say. The constants A1, A2 depend only on (d, Nc, LRG, γ0)
+— v2 correction: v1’s statement omitted the γ0-dependence, which enters through CR, C′
+B, ˆα1 —
+and not on Lvol.
+Final step (corrected). v1 concluded by invoking the printed flow 2 Ncβk = β + 2b0k ln LRG +
+O(1/β) to get k ≤ CRG(1 + βk). This inequality is an artifact of the inverted sign: under the
+correct asymptotic-freedom flow, βk decreases in k, and the ratio k/(1 + βk) is unbounded along
+the cascade (suite check 6: it grows past the window and the small-field hypothesis is lost at
+k > k∗). What the correct flow does give, inside the window, is
+k ≤ k∗(β) ≤ 2Nc
+cflow
+g−2 ≤ C′
+RG (1 + β), C ′
+RG = C′
+RG(Nc, LRG),
+by Appendix A (numerically, k∗/(1 + βred,0) ≤ 2Nc/cflow ≈ 62.1 for Nc = 3, LRG = 2, uniformly
+in g). Therefore
+sup
+U
+|vSk,res| ≤ A1 + A2k ≤ Cres(1 + β), C res := A1 + A2C′
+RG,
+which is (14).
+Remark 3.6 (What is and is not volume-uniform) . The three ingredients of this section have
+different statuses. Locality (Lemma 3.1) and counting (Lemma 3.4) are exact, dimension-general,
+and genuinely volume-independent: they hold for all Lvol with no window (suite checks 1, 3).
+The Cauchy step (Lemma 3.2) is standard, but its inputs (B2)–(B4) are small-field outputs of
+Balaban’s induction, available only while gk ≤ γ0. The final step of Theorem 3.5 is where the flow
+enters: with the correct sign, the bound is in terms of the bare (1 + β) and requires k ≤ k∗(β),
+i.e. Lvol ≤ eC/g2+O(1). Thus the honest summary is: the derivative-bound mechanism is a sound
+interface reduction to (B1)–(B4), volume-uniform inside the window; it is not an unconditional
+verification of Hypothesis 2.1 as printed.
+4 Assembly: the main theorem, with hypothesis flags
+4.1 Chain of implications (annotated)
+We trace the chain leading to Theorem 1.1, flagging at each step the audit hypotheses it consumes.
+Step 1. Conditional fiber LSI (Paper II) — flag (H-YGZ). By [2], Theorem 1.1, the orbit space
+B = A/G satisfies Ric B ≥ Nc/4 (unconditional; verified numerically in the series suite,
+2602.0046). v1 asserted that Bakry–´Emery “applied fiber by fiber” yieldsαfiber ≥ Nc/4. This
+ignores the conditional Wilson interaction on the fiber: perturbing the Haar/orbit reference
+measure by the conditional potential requires Holley–Stroock and multiplies the constant by
+e−2 osc with osc ≤ 2βnplaq, i.e. αblk ≥ (Nc/4)e−2βnplaq (suite check 8: log 10 αblk ≈ −5559
+at γ0 = 0.1, nplaq = 64). A fiber constant that is usable downstream is exactly hypothesis
+(H-P0)’s sibling (H-YGZ), per the 2602.0053 v2 audit.
+Step 2. Integrated cross-scale bounds (Paper III) — flags (H-P0) and F1. Paper III controls the
+cross-scale interaction terms by the fiber constant and the two inputs. v1 asserted that in
+the large-field region the product
+M2
+k · µk(Zk(B) | Gk+1) ≤ C2
+res(1 + βk)2q · Cblk exp(−c p0(gk))
+9
+
+--- Page 10 ---
+
+“converges to zero as gk → 0, since p0(gk) → ∞”. Both clauses fail: (a) gk → 0 along the
+cascade is again the inverted flow; with the correct flow gk grows and p0(gk) decreases; (b)
+even at fixed scale, with the polylog floor and csf = 2 /(1 + β0) the suppression factor is
+≈ 0.95 at γ0 = 0.1 and the absorption against L−(d−1)k
+RG fails at every sampled scale with
+excess 104.6–1023.2 (suite check 7; reprise of 2602.0052 v2). With the windowed bound of
+Theorem 3.5, (1 + βk)2q is moreover replaced by (1 + β)2q. The step therefore stands only
+under (H-P0).
+Step 3. Large-field suppression (Paper IV) — flag (H-P0). Paper IV verifies the form of Hypoth-
+esis 4.2 of [3] for d ≥ 3: µk(Zk(B) | Gk+1) ≤ Cblk exp(−c p0(gk)) with volume-uniform con-
+stants. Per the series notice of 2602.0052 v2, the established p0 is polylog; the suppression
+is quantitatively effective only under (H-P0).
+Step 4. Residual derivative bound (this paper) — windowed. Theorem 3.5 verifies the windowed
+variant (Hyp 3.2 w): sup U |vSk,res| ≤Cres(1 + β) for k ≤ k∗(β), constants independent of
+Lvol.
+Step 5. Closure: Assumption 5.4 of Paper I. With Steps 1–4 as amended, the integrated cross-scale
+bounds of [3] hold within the window and under (H-P0), (H-YGZ) ; these bounds are the
+content of Assumption 5.4 of [1].
+Step 6. Uniform LSI (Paper I). By [1], Theorem 1.1 (conditional on Assumption 5.4): entropy
+telescoping over the nmax ≤ k∗(β) scales, the defective-to-tight argument (Rothaus lemma
++ uniform Poincar´ e), yield (1) withα∗ as stated.
+4.2 Proof of Theorem 1.1
+Proof of Theorem 1.1. Assume (H-P0) and (H-YGZ), and let Lvol ≤ eC/g2+O(1) so that nmax ≤
+k∗(β). By Steps 1–6: Theorem 3.5 (this paper) supplies the windowed derivative input; [4] supplies
+the suppression input, effective under (H-P0); [2] plus (H-YGZ) supplies the fiber constant. By
+[3], Theorem 1.1, Assumption 5.4 of [1] holds on the window; by [1], Theorem 1.1, the log-Sobolev
+inequality (1) holds with α∗ > 0 independent of Lvol within the window.
+Remark 4.1 (Why the shifted essential supremum suffices). In Step 2, the bound on the large-field
+contribution involves the conditional expectation E[1Zk |vV<k|2 | Gk+1], which factorizes via the
+tower property:
+E
+
+A · E[1Zk |vV<k|2 | Gk+1]
+
+≤
+
+ess sup
+Gk+1
+E[1Zk |vV<k|2 | Gk+1]
+
+· E[A]
+for any non-negative Gk+1-measurable A (suite check 5). This structural step is standard and
+survives v1 unchanged; what v2 changes is the size of the two factors (Steps 1–3 above), not the
+factorization.
+Remark 4.2 (The case d = 2). The derivative bound (Theorem 3.5) is valid for all d ≥ 2, since the
+polymer locality argument is dimension-independent. However, the verification of Hypothesis 4.2
+in Paper IV uses properties of the T-operation established only for d ≥ 3. In d = 2, a uniform
+LSI for the full Wilson measure remains open even in windowed conditional form; partial results
+for toy models are discussed in [3], § 7.
+10
+
+--- Page 11 ---
+
+Remark 4.3 (Inherited hypotheses: summary) . For citation purposes: every use of this pa-
+per’s Theorem 1.1 consumes (H-P0) (Steps 2–3), (H-YGZ) (Step 1), and the volume window
+(Step 4 and nmax ≤ k∗); Corollary 1.2 additionally consumes (H-DOB-blk). None of these
+is proved in the series. Any downstream paper citing v1’s unconditional statement must be
+read as conditional/windowed accordingly; this includes the “unconditional mass gap” chain
+2602.0053/0054/0055, of which 0053 has been rectified (v2), the present paper is 0055 v2, and
+2602.0054 has likewise been rectified (v2) [20]: the retagging of the chain is complete.
+5 Discussion
+5.1 What is proved
+Table 1 updates v1’s summary with the post-audit statuses.
+Paper Result v1 status v2 (post-audit) status Restriction
+I [1] Uniform LSI ⇒ gap Cond. Ass. 5.4, 6.3 unchanged; F1 flow corrected d ≥ 2
+II [2] Ric B ≥ Nc/4 Unconditional Ricci unconditional; fiber LSI use → (H-YGZ) d ≥ 2
+III [3] Cross-scale bounds Cond. Hyps. 3.2, 4.2 + (H-P0), windowed (F1) d ≥ 2
+IV [4] Hyp. 4.2 “Unconditional” form verified; effective only under (H-P0) d ≥ 3
+V (this) Hyp. 3.2 “Unconditional” windowed variant, cond. (B1)–(B4) d ≥ 2
+Combined Uniform LSI (Thm. 1.1) “Unconditional” windowed, cond. (H-P0)+(H-YGZ) d ≥ 3
+Mass gap (Cor. 1.2) contradictory in v1 + (H-DOB-blk) d ≥ 3
+Table 1: Summary of the paper series, v1 vs. v2 statuses. The restriction column indicates the
+minimal dimension. The combined result requires d ≥ 3 because Paper IV does.
+5.2 Mass gap
+Proof of Corollary 1.2. The log-Sobolev inequality (1) implies a Poincar´ e inequality with the same
+constant: Varµβ (f) ≤ α−1
+∗
+R
+|∇f|2dµβ for all gauge-invariant f. Two routes to a transfer-matrix
+gap are on record: (a) [1], Theorem 6.1, which consumes the Dobrushin-type Assumption 6.3
+of [1]; (b) the DLR–LSI extension and Stroock–Zegarlinski route of [6], assembled in detail in
+the companion [20] (v2: conditional and windowed). The v2 audit of [6] (ai.viXra:2602.0053 v2)
+shows that route (b) does not eliminate the Dobrushin input: it reduces Assumption 6.3 to the
+block-level condition (H-DOB-blk), which remains unverified, and whose printed worst-case bound
+trivializes at weak coupling (suite check 9). Under (H-DOB-blk), either route yields ∆ phys > 0
+uniformly in Lvol within the window.
+Remark 5.1 (Status of Assumption 6.3 — v1’s contradiction resolved) . Version 1 contained three
+mutually incompatible statements: Corollary 1.2 (“proved unconditionally in [6]”), Remark 5.1
+(“Assumption 6.3 is no longer needed”), and § 5.3 (mass gap “pending Assumption 6.3”, its verifi-
+cation listed as remaining step (i)). v2 resolves the contradiction in favor of § 5.3, as sharpened by
+the audit: the DLR route reduces Assumption 6.3 to (H-DOB-blk) — a genuine improvement of
+localization, from a global transfer-matrix condition to a block condition — but does not remove
+it. The printed bound cij ≤ tanh(βn∂/2) gives δ <1 only for β ≲ 3.5×10−3 in the representative
+d = 3 geometry, the opposite of the weak-coupling regime; no worst-case oscillation criterion can
+close this, and an averaged or transport-based criterion is the identified route forward.
+11
+
+--- Page 12 ---
+
+Remark 5.2 (Chain notice — updated) . The companion 2602.0054 has now been audited and
+replaced (v2) [20]: its v1 unconditional assembly is withdrawn in favor of a conditional and
+windowed one (inheriting (H-DOB-blk) and (H-P0), inside the same volume window), the claimed
+“bypass” of the Dobrushin input is retracted, and its transfer-operator correlation identities are
+corrected to kernel/symmetrized form (its Remark 2.8; spectrum, hence ∆ phys, unaffected). The
+present paper does not use the row-normalized transfer operator or the trace identities, so it
+inherits nothing from that correction. With 2602.0051–0055 all at v2, the citation-hygiene part
+of the series notice of 2602.0052 v2 is discharged; the notice remains in force only through the
+open hypotheses (H-P0), (H-YGZ), (H-DOB-blk) and the window/(H-XOVER).
+5.3 What remains for the Clay Millennium Problem
+The Clay problem [17] requires the construction of a continuum SU (Nc) Yang–Mills theory on R4
+satisfying the Wightman (or Osterwalder–Schrader) axioms, together with a strictly positive mass
+gap. The present series establishes, for d ≥ 3 at weak coupling, and now explicitly conditionally :
+(a) A windowed, volume-uniform log-Sobolev inequality on the lattice, conditional on (H-P0)
+and (H-YGZ) (Theorem 1.1).
+(b) A windowed mass gap on the lattice, additionally conditional on (H-DOB-blk) (Corol-
+lary 1.2).
+The remaining steps are correspondingly longer than v1’s list:
+(i) Proof of (H-P0): a power-law lower bound on the large-field penalty exponent (the polylog
+floor is insufficient by suite check 7).
+(ii) Proof of (H-YGZ): a fiber LSI constant not degraded by Holley–Stroock (insufficient by
+∼ 5559 orders, suite check 8).
+(iii) Proof of (H-DOB-blk) by an averaged/transport criterion (worst-case criteria provably triv-
+ialize, suite check 9).
+(iv) Removal of the volume window, requiring the crossover input (H-XOVER) of 2602.0051 v2,
+i.e. control of the flow beyond the perturbative regime.
+(v) Continuum limit a → 0 preserving the gap; Osterwalder–Schrader axioms; and the extension
+to d = 4 with its additional UV renormalization issues.
+We emphasize that the present work does not claim to solve the Clay problem, and — correcting
+v1 — does not claim an unconditional lattice LSI either. It provides a sound, windowed interface
+reduction of the derivative input to Balaban’s small-field theory, and an exact accounting of the
+hypotheses that remain.
+6 Note added in v2
+Version 1 of this paper claimed the unconditional verification of Hypothesis 3.2 of [3] and, jointly
+with the companions, an unconditional volume-uniform LSI and (via [6]) an unconditional mass
+gap. Following the quantitative audit of the series (ai.viXra:2602.0032/0033/0051/0052/0053, all
+v2), those claims are withdrawn and replaced as follows.
+12
+
+--- Page 13 ---
+
+ The final step of v1’s Theorem 3.5 ( k ≤ CRG(1 + βk)) used the inverted-sign flow (flag F1).
+Corrected: windowed bound Cres(1 + β) for k ≤ k∗(β), Lvol ≤ eC/g2+O(1) (Theorem 3.5,
+Appendix A).
+ v1’s Theorem 3.5 stated constants “depending only on ( d, Nc, LRG)”; the proof produces
+A1, A2 depending on γ0 through CR, C′
+B, ˆα1. Corrected throughout.
+ Step 2 of the assembly inherits (H-P0) and Step 1 inherits (H-YGZ) (flags F2, F3 of
+2602.0052 v2/0053 v2); Step 3’s citation of Paper IV as unconditional is downgraded to
+form-level.
+ v1’s Corollary 1.2 / Remark 5.1 / § 5.3 were mutually contradictory on the status of Assump-
+tion 6.3 of [1]; resolved: conditional on (H-DOB-blk) (Remark 5.1).
+ v1’s reference [5] was a self-citation of the paper itself; removed.
+ The interface mechanism of Section 3 (locality + Cauchy + counting) survives unchanged
+and is validated in the companion suite (checks 1–5): this remains the paper’s contribution.
+ Added in this replacement: the companion 2602.0054 has since been audited and replaced
+(v2) [20]; Remarks 4.3 and 5.2 record the completed retagging of the chain, and reference [6]
+is corrected (v1 had listed 2602.0053 under the title of 2602.0054).
+All numerical adjudications above are reproduced by the deterministic suiteverify 2602 0055.py
+(9 checks, ∼2 s) at https://github.com/lluiseriksson/THE-ERIKSSON-PROGRAMME, directory
+verification/2602-0055/.
+A The corrected flow and the window
+In reduced units βk = g−2
+k , the one-loop asymptotic-freedom flow reads
+2Ncβk = 2 Ncβ0 − cflow k + O(1/β), c flow = 2b0 ln LRG, b 0 = 11Nc
+48π2 ,
+with 2Ncβ0 = β (the bare Wilson coefficient). Thus gk increases with k: coarse lattices are more
+strongly coupled, as they must be. The small-field condition gk ≤ γ0, required by the inputs
+(B1)–(B4) at every scale j ≤ k, holds precisely for
+k ≤ k∗(β) :=
+jβ − 2Ncγ−2
+0
+cflow
+k
+≤ 2Nc
+cflow
+g−2,
+so that k∗ ≤ C′
+RG(1 + βred,0) with C′
+RG = 2 Nc/cflow depending only on ( Nc, LRG) ( ≈ 62.1 for
+Nc = 3, LRG = 2). Since nmax = ⌊logLRG Lvol⌋ scales must fit inside the window, the volume
+constraint is
+log Lvol ≤ k∗(β) lnLRG = C
+g2 + O(1),
+numerically log Lvol ≤ 32.3/g2 at Nc = 3, LRG = 2, γ0 = 0 .1, g = 0 .05 (suite check 6), i.e.
+Lvol ≲ 218,639: the window is astronomically large at weak coupling — the limitation is conceptual
+(the statement “for all finite Lvol” is not proved), not practical. By contrast, the printed v1 flow
+(+ sign) made βk grow, whence v1’s k ≤ CRG(1 +βk); under the correct flow that inequality fails
+beyond the window ( k/(1 + βk) grows without bound as βk falls, and the small-field regime is
+lost), which is the precise point where v1’s unconditional volume-uniformity broke.
+13
+
+--- Page 14 ---
+
+References
+[1] L. Eriksson-Torres, Uniform log-Sobolev inequality for lattice Yang–Mills via multiscale renor-
+malization and entropy telescoping , viXra:2504.0129v2, 2025.
+[2] L. Eriksson-Torres, Synthetic Ricci curvature and conditional log-Sobolev inequalities for lat-
+tice gauge theories on the orbit space , viXra:2505.0043, 2025.
+[3] L. Eriksson-Torres, Integrated cross-scale derivative bounds for lattice Yang–Mills via small-
+field/large-field decomposition, viXra:2505.0139, 2025.
+[4] L. Eriksson-Torres, Large-field conditional suppression for Wilson lattice gauge theories via
+Balaban’s T-operation, viXra:2506.0022, 2025.
+[5] [Removed in v2: v1’s reference [5] was a self-citation of the present paper.]
+[6] L. Eriksson, DLR-uniform log-Sobolev inequality for lattice Yang–Mills: a conditional and
+windowed reduction, ai.viXra:2602.0053 (v2), 2026. (v1 of the present paper listed this entry
+under the title of the companion 2602.0054; corrected.)
+[7] T. Balaban, (Higgs)2,3 quantum fields in a finite volume. I. A lower bound , Comm. Math.
+Phys. 85 (1982), 603–626.
+[8] T. Balaban, (Higgs)2,3 quantum fields in a finite volume. II. An upper bound , Comm. Math.
+Phys. 86 (1983), 555–594.
+[9] T. Balaban, Propagators and renormalization transformations for lattice gauge theories. I ,
+Comm. Math. Phys. 95 (1984), 17–40.
+[10] T. Balaban, Propagators and renormalization transformations for lattice gauge theories. II ,
+Comm. Math. Phys. 96 (1984), 223–250.
+[11] T. Balaban, Averaging operations for lattice gauge theories , Comm. Math. Phys. 98 (1985),
+17–51.
+[12] T. Balaban, Spaces of regular gauge field configurations on a lattice and gauge fixing condi-
+tions, Comm. Math. Phys. 99 (1985), 75–102.
+[13] T. Balaban, Renormalization group approach to lattice gauge field theories. I , Comm. Math.
+Phys. 109 (1987), 249–301.
+[14] T. Balaban, Convergent renormalization expansions for lattice gauge theories , Comm. Math.
+Phys. 119 (1988), 243–285.
+[15] T. Balaban, Large field renormalization. I. The basic step of the R operation , Comm. Math.
+Phys. 122 (1989), 175–202.
+[16] T. Balaban, Large field renormalization. II. Localization, exponentiation, and bounds for the
+R operation, Comm. Math. Phys. 122 (1989), 355–392.
+[17] A. Jaffe and E. Witten, Quantum Yang–Mills theory , in The Millennium Prize Problems,
+Clay Math. Inst., Cambridge, MA, 2006, pp. 129–152.
+14
+
+--- Page 15 ---
+
+[18] L. Eriksson, [Series erratum and windowed multiscale flow] , ai.viXra:2602.0051 (v2), 2026.
+Defines the window k∗(β), Lvol ≤ eC/g2+O(1), and the crossover hypothesis (H-XOVER).
+[19] L. Eriksson, Interface lemmas for the multiscale proof of the lattice Yang–Mills mass gap ,
+ai.viXra:2602.0052 (v2), 2026. Identifies (H-P0) and (H-YGZ) and issues the series notice
+inherited here.
+[20] L. Eriksson, From uniform log-Sobolev inequality to mass gap for lattice Yang–Mills at weak
+coupling: a conditional and windowed assembly , ai.viXra:2602.0054 (v2), 2026. Conditional
+transfer-matrix back end of the chain; inherits (H-DOB-blk)+(H-P0), corrects the transfer-
+operator identities to kernel/symmetrized form.
+15

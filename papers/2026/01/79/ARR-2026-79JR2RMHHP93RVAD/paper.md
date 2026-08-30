@@ -1,0 +1,18 @@
+# Finite-Dimensional Davies Interface Lemmas and TFIM Witness Tests for Separation-Dependent Decoherence Rate Envelopes
+
+**Author:** Lluis Eriksson  
+**Original archive:** [ai.vixra:2601.0023](https://www.ai.vixra.org/abs/2601.0023)  
+**First submitted:** 2026-01-08T22:07:05+00:00 (source displays no timezone)  
+**Latest declared source version:** v2  
+**ARR mirror:** [v2 PDF](https://github.com/arr-research/arr-research.github.io/releases/download/AIVIXRA-LATEST-2026-08-30/ai-vixra-2601.0023-v2.pdf)
+
+> Historical import; not assessed under the ARR frontier-model hostile-audit gate.
+
+## Abstract
+
+We develop a finite-dimensional technical core for relating separation to effective decoherence-rate envelopes in Davies-type open-system dynamics. We work with energy pinching Delta and quantify coherence by C(rho) = S(rho||Delta[rho]). We import a maintenance inequality P_extra(rho) >= k_B T dC_loss(rho) -- in the corrected operational sense of its source (paired strategies against efficient/free baselines, 2512.0061 v2) -- as an external input. On the operator side we prove: (i) an exact omega = 0 Dirichlet identity yielding a witness-based lower bound on instantaneous decay envelopes, (ii) a Bohr-channel Dirichlet decomposition for a single-channel Davies generator under quantum detailed balance -- corrected in v2: the v1 form (1/2) sum_w gamma(w) ||[S(w),O]||^2 is false as an identity (numerical deviations of order 20%); the exact form is sum_w gamma(w) e^(beta w/2) Re , which reduces to (i) at omega = 0 and is nonnegative pairwise in +-omega -- and (iii) envelope suppression lemmata under infrared exclusion and quasi-local spectral tails, reproved in v2: the v1 proofs used a KMS submultiplicativity step that is false in general (a one-qubit counterexample saturates the corrected constant); the corrected constants carry c_sigma^2 = (lambda_max/lambda_min)^(1/2) and sup_w gamma(w)e^(beta w/2), and the e^(-2 eps/xi) exponent survives via a new positivity-pinning argument: for S = S_near + delta S_tail and far-supported O, detailed balance at every delta forces E_delta(O) = delta^2 E_tail(O) exactly. Consequently Lemma 4.13's v1 claim of a lambda_min-free prefactor is downgraded to a quadratically improved dependence. On the state side we give an asymptotic linearization on Bohr-block perturbations with fixed diagonal, yielding a direction-dependent effective decay rate. Finite-size TFIM witness diagnostics are provided, and every corrected statement is verified to machine precision by the shipped suite.
+
+## Source version history
+
+- [v1](https://www.ai.vixra.org/pdf/2601.0023v1.pdf) — 2026-01-08T22:07:05+00:00
+- [v2](https://www.ai.vixra.org/pdf/2601.0023v2.pdf) — 2026-07-05T11:58:08+00:00

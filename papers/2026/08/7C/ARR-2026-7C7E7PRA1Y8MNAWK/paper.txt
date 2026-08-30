@@ -1,0 +1,444 @@
+--- Page 1 ---
+
+Machine-Checked Finite-SU(2)Trace-Skein Closure
+for Makeenko–Migdal Crossing Terms
+From Normalized Pauli Contraction to All-Order Single-Trace Resolution
+Lluis Eriksson
+1 August 2026
+Abstract
+Finite-rank Makeenko–Migdal equations generate products of Wilson traces at self-
+intersections. For SU(2), this apparent multitrace obstruction closes exactly on single
+traces, but the statement is normalization-sensitive: the traceless Lie algebra contributes
+a finite-rank correction that disappears forU(2)and must not be dropped. We give
+a Lean 4/Mathlib formalization of the complete group-algebraic closure mechanism on
+Mathlib’s concrete special unitary matrix group. With normalized traceτ(A) = Tr(A)/2
+and normalized anti-Hermitian Pauli directionsXj = iσj /2, the kernel checks the Casimir
+identity ∑
+j X2
+j =−3I/4, the Fierz identity
+3∑
+j=1
+Xj BXj =−τ(B)I+ 1
+4 B,
+the induced crossing contraction, and the rank-two skein identity
+τ(g)τ(h) = 1
+2
+(
+τ(gh) +τ(gh −1)
+)
+.
+Consequently the finite-SU(2)crossing term τ(g)τ(h) −1
+4 τ(gh)is the linear combination
+1
+4 τ(gh) + 1
+2 τ(gh−1). We then formalize a universal local interface with four cyclically
+ordered branch holonomies, an independent orientation on each branch, the two opposite-
+strand words, and precisely the two direct/reversed reconnections. Its corrected crossing
+term closes on those two reconnections for every branch assignment and orientation
+choice. A recursive theorem also extends the reduction to products of arbitrarily many
+fundamental traces. The identities are classical; the contribution is a concrete, kernel-
+checked normalization bridge from Pauli contraction to the single-trace closure used in
+finite-rank loop equations. We do not claim a formal derivation of the Yang–Mills area
+derivative, planar loop geometry, or the full Makeenko–Migdal equation.
+1 Introduction
+The Makeenko–Migdal equation replaces a local variation of a Wilson loop at a crossing by a
+contraction of the two strands created by cutting the loop. Rigorous two-dimensional versions
+were proved on the plane and on compact surfaces by Driver, Hall, Kemp, and Gabriel, building
+on work of Lévy and others [3, 4, 2]. At finite rank, the contraction generally produces a
+product of traces rather than a closed equation for one Wilson trace. The large-N limit
+removes this obstruction only after a separate factorization argument.
+Rank two is different. The Cayley–Hamilton identity for determinant-one2×2matrices
+turns a product of two fundamental traces into two single traces. Kazakov and Zheng exploit
+precisely this fact to obtain linear finite-SU(2)lattice and continuum loop equations [5]. The
+reduction is elementary, but three convention choices interact:
+1
+
+--- Page 2 ---
+
+1. normalized versus unnormalized trace;
+2.U(2)versusSU(2)Lie algebra contraction;
+3. the scale of the invariant inner product, hence the fundamental Casimir and heat-kernel
+time.
+The purpose of this paper is to make that interface exact and machine checked. The key
+finite-rank term is1/4. It is theN−2 correction left after removing the centralu(1)direction
+fromu(2). Dropping it silently turns theSU(2)equation into theU(2)equation.
+1.1 Central result
+Letτ(A) = Tr(A)/2and let
+X1 = i
+2
+(
+0 1
+1 0
+)
+, X 2 = 1
+2
+(
+0 1
+−1 0
+)
+, X 3 = i
+2
+(
+1 0
+0−1
+)
+.
+For arbitraryA,B∈M 2(C), the formalized contraction theorem is
+3∑
+j=1
+τ(AXjBXj) =−τ(A)τ(B) + 1
+4τ(AB).(1)
+Forg,h∈SU(2), the formalized skein theorem is
+τ(g)τ(h) = 1
+2τ(gh) + 1
+2τ(gh−1).(2)
+Combining them yields a linear single-trace expression for the negative of(1), which is the
+algebraic right-hand side delivered by the local Makeenko–Migdal integration-by-parts step.
+Section 4 upgrades this binary identity to a quantified four-branch oriented crossing interface.
+1.2 Claim boundary
+Table 1 is part of the theorem statement, not a disclaimer to be read after it.
+Claim Status Evidence or boundary
+Concrete normalized Pauli matrices
+and−3I/4Casimir
+kernel checkedsu2Pauli_casimir
+Rank-two Fierz and crossing
+contraction
+kernel checkedsu2Pauli_fierz,
+su2PauliCrossingContraction_eq
+SU(2)trace-skein identity kernel checkedsu2_matrix_trace_skein,
+su2_fundamentalWilson_skein
+Finite-SU(2)corrected crossing
+closure
+kernel checkedsu2_makeenkoMigdal_crossingTerm_closed
+Four oriented branches and both
+local reconnections
+kernel checkedsu2_fourBranchCrossing_term_closed
+All-order multitrace-to-single-trace
+recursion
+kernel checkedsu2WilsonProductExpansion_eq
+Yang–Mills area-derivative identity not claimed requires heat-equation differentiation and integration
+by parts
+Geometric certification of an
+embedded transverse crossing
+not claimed the four-branch datum is algebraic, not an
+embedding object
+Table 1: Claim ledger. “Kernel checked” refers to the pinned Lean artifact and the audit
+described in Section 7.
+2
+
+--- Page 3 ---
+
+2 Conventions and the finite-rank correction
+We work in M2(C)with normalized trace τ(I) = 1. The three matrices X1,X2,X3 are
+anti-Hermitian and traceless. With invariant inner product
+⟨X,Y⟩= 2 Re Tr(X ∗Y),
+they are the standard normalized Pauli directions. Their quadratic Casimir in the defining
+representation is
+X2
+1 +X2
+2 +X2
+3 =−3
+4I.(3)
+The same value appears asn(n+ 2)/4 = 3 /4at irreducible label n = 1in the heat-kernel
+convention of the preceding exact two-dimensional formalization [8].
+Foru(2)with the central direction included, the corresponding magic formula is
+∑
+X
+XBX=−τ(B)I.
+Passing to the traceless algebra removes the central basis vector and leaves
+3∑
+j=1
+XjBXj =−τ(B)I+ 1
+4B.(4)
+Thus the distinction betweenU(2)and SU(2)is not cosmetic. It creates the term that later
+appears as−1
+4 W(L)in the finite-rank crossing equation.
+Theorem 2.1(Kernel-checked Pauli contraction).For all A,B∈M 2(C), equations(3), (4),
+and(1)hold.
+Proof. Equation (4) is a four-entry matrix identity. Multiplying it on the left byA, applying
+τ, and using cyclicity and linearity gives(1). The Lean proof does not invoke representation
+theory or a prepackaged Casimir theorem: it expands the concrete matrices, reduces the four
+entries, usesi2 =−1, and normalizes the resulting polynomial identities inC.
+The main declaration is deliberately stronger in one direction than required:A and B are
+arbitrary complex matrices. Special unitarity is needed only for the skein step.
+3 The rank-two trace skein
+For a2×2matrixhwith determinant one, Cayley–Hamilton gives
+h+h −1 = Tr(h)I.
+Multiplication bygand application of the trace yield
+Tr(gh) + Tr(gh−1) = Tr(g) Tr(h).(5)
+Dividing by four gives(2). The factor1/2on its right-hand side is forced by normalized trace;
+it disappears if one writes the same identity with the unnormalized trace, as in much of the
+physics literature.
+Theorem 3.1(Kernel-checkedSU(2)skein).For allg,h∈SU(2), equation(2)holds inC.
+3
+
+--- Page 4 ---
+
+Proof. Mathlib representsSU(2)as the special unitary subgroup of complex2×2matrices.
+The formal proof expands both matrix traces into their four entries, uses the special-unitary
+entry relations
+h11 = h00, h 10 =−h01,
+and cancels the off-diagonal terms. This route avoids importing an abstract trace-algebra
+package and tests the exact coercions and inverse convention used by the downstream formal-
+ization.
+τ(g)τ(h)
+=
+1
+2 τ(gh)
++
+1
+2 τ(gh−1)
+Figure 1: Algebraic skein resolution. The drawing is mnemonic; the formal input consists only
+of two group elements and contains no planar embedding.
+4 Single-crossing closure
+Define the normalized fundamental Wilson function
+W(g) :=τ(g), g∈SU(2).
+The negative Pauli contraction in (1) is
+W(g)W(h)− 1
+4W(gh).(6)
+The first term is the cut-loop product familiar from Makeenko–Migdal; the second is the
+finite-SU(2)correction.
+Theorem 4.1(Finite-SU(2)crossing closure).For allg,h∈SU(2),
+W(g)W(h)− 1
+4W(gh) = 1
+4W(gh) + 1
+2W(gh−1).(7)
+Equivalently,
+3∑
+j=1
+τ(gXjhXj) =−1
+4W(gh)− 1
+2W(gh−1).
+Proof. Substitute Theorem 3.1 into(6) and collect coefficients. The second formula is Theo-
+rem 2.1 with the sign reversed.
+Equation (7) is the exact reason the fundamentalSU(2)loop equation is linear at finite
+rank. No probabilistic factorization is used. Since the identity holds pointwise in(g,h), any
+linear expectation or integral may be applied after the reduction, provided the group-valued
+loop words are measurable and integrable.
+Remark4.2 (Generator conventions).An area-derivative equation may carry an overall factor
+depending on whether the heat semigroup is generated by∆,∆ /2, or a coupling-scaled
+operator. The relative coefficients in(7) are fixed by normalized trace and the Pauli convention
+above. This paper formalizes those relative coefficients, not an unstated choice of Yang–Mills
+time.
+4
+
+--- Page 5 ---
+
+4.1 Four oriented branches and two reconnections
+The binary variables(g,h)can hide the local word bookkeeping. We therefore formalize it
+explicitly. Let
+C= (u 0,u1,u2,u3;ϵ0,ϵ1,ϵ2,ϵ3), u j ∈SU(2), ϵ j ∈{+1,−1},
+be four cyclically ordered branch holonomies after transport to the crossing base point. Write
+Hj = uj for ϵj = +1and Hj = u−1
+j for ϵj = −1. Opposite positions form the two cut strand
+words
+gC =H0H2, h C =H1H3.
+The two local reconnections are then
+r+(C) =g ChC, r −(C) =g Ch−1
+C .
+Thus path reversal is represented by group inversion and concatenation by group multiplication,
+with no convention left implicit.
+Theorem 4.3(Four-branch oriented closure).For every assignment of the four branch
+holonomies and all sixteen orientation choices,
+W(gC)W(hC)− 1
+4W(r+(C)) = 1
+4W(r+(C)) + 1
+2W(r−(C)).(8)
+The Pauli-contracted word closes on the same two reconnections with coefficients−1/4and
+−1/2.
+Proof. The Lean structure stores all four group elements and four orientations. Reduction of
+the orientation map producesgC and hC; then Theorem 4.1 applies uniformly. The contracted
+statement follows from Theorem 2.1. No case split over the sixteen orientations is needed
+because inversion is internal to the definitions.
+This is the promised closure theorem rather than a list of low-order examples. It consumes
+certified local holonomies; it does not claim that a planar embedding, by itself, has already
+produced or certified those inputs.
+5 All-order single-trace resolution
+The two-factor skein relation iterates. Define recursively, forg,h1,...,h m ∈SU(2),
+R(g;∅) =W(g),
+R(g;h1,h2,...,h m) = 1
+2
+(
+R(gh1;h2,...,h m) +R(gh−1
+1 ;h2,...,h m)
+)
+.
+Every leaf of this recursion contains one trace of one group word. There are2m leaves before
+identical words are collected.
+Theorem 5.1(All-order trace closure).For everym≥0andg,h 1,...,h m ∈SU(2),
+R(g;h1,...,h m) =W(g)
+m∏
+r=1
+W(hr).(9)
+Proof. Induct on m. The empty case is the definition. In the successor case, apply the
+induction hypothesis to both branches and factor out the common tail product. The remaining
+bracket is exactly the two-factor identity (2).
+The Lean theorem quantifies over aList SU2 and generalizes the accumulated word during
+induction. It therefore proves one reusable theorem, not a family of separately expanded
+low-order examples.
+5
+
+--- Page 6 ---
+
+6 Formalization architecture
+The new module isLean2dYangMills/SU2TraceSkein.lean. It extends the concrete matrix
+and character layer of the exact two-dimensional project; it does not depend on the cellulation,
+gauge-fixing, or heat-kernel integration modules. This low dependency position is intentional:
+the trace closure is a group-algebraic consumer that should be reusable by several future
+analytic routes.
+The principal definitions are:
+defsu2NormalizedMatrixTrace
+(A : Matrix (Fin 2) (Fin 2) Complex) : Complex :=
+Matrix.trace A / 2
+defsu2PauliCrossingContraction
+(A B : Matrix (Fin 2) (Fin 2) Complex) : Complex :=
+su2NormalizedMatrixTrace (A * su2PauliX * B * su2PauliX) +
+su2NormalizedMatrixTrace (A * su2PauliY * B * su2PauliY) +
+su2NormalizedMatrixTrace (A * su2PauliZ * B * su2PauliZ)
+The matrix-trace definition is shown with its exact compiled identifiers; the group observable
+Wis not applied to arbitrary matrices. The compiled crossing endpoint is:
+theoremsu2_makeenkoMigdal_crossingTerm_closed (g h : SU2) :
+su2FundamentalWilson g * su2FundamentalWilson h -
+(1 / 4 : Complex) * su2FundamentalWilson (g * h) =
+(1 / 4 : Complex) * su2FundamentalWilson (g * h) +
+(1 / 2 : Complex) * su2FundamentalWilson (g * h^-1)
+The all-order endpoint is:
+theoremsu2WilsonProductExpansion_eq (g : SU2) (hs : List SU2) :
+su2WilsonProductExpansion g hs =
+su2FundamentalWilson g *
+(hs.map su2FundamentalWilson).prod
+The local crossing interface is a separate compiled layer:
+structure SU2FourBranchCrossingwhere
+branch0 branch1 branch2 branch3 : SU2
+orientation0 orientation1 : SU2BranchOrientation
+orientation2 orientation3 : SU2BranchOrientation
+theoremsu2_fourBranchCrossing_term_closed
+(crossing : SU2FourBranchCrossing) :
+crossing.correctedCrossingTerm =
+(1 / 4 : Complex) *
+su2FundamentalWilson crossing.directResolution +
+(1 / 2 : Complex) *
+su2FundamentalWilson crossing.reverseResolution
+6.1 Dependency separation
+The module proves no theorem whose premise is named “Makeenko–Migdal”. This is a feature.
+If a later file formalizes the local heat-equation integration by parts, it can import this module
+and obtain theSU(2)closure without re-proving matrix algebra. Conversely, the present
+theorems remain valid for any probability law, lattice action, or deterministic assignment of
+group elements.
+6
+
+--- Page 7 ---
+
+7 Audit and reproducibility
+The artifact pins Lean v4.29.0-rc6 and Mathlib commit 07642720480157414db592fa
+85b626dafb71355b . Verification requires an explicit module build, followed by an oracle
+query for the headline declarations. The companion review package includes the source
+module, an audit module, the exact build transcript, a theorem manifest, and SHA-256 hashes.
+Its source archive islean-su2-trace-skein-makeenko-migdal-source.zip , SHA-256
+387D69A029D4718EEDB5AE5203C06540594066EA349820EF14376A86B6150F44.
+The minimum independent check is:
+lake env lean Lean2dYangMills/SU2TraceSkein.lean
+lake env lean Lean2dYangMills/AuditSU2TraceSkein.lean
+The audit prints the axioms of the eleven headline declarations. The expected trust boundary
+is the standard one for this project: Lean’s kernel, the pinned toolchain, Mathlib, and the
+integrity of the cited source snapshot. A clean kernel check does not establish novelty and is
+not a substitute for peer review.
+Availability boundary.No permanent public source URL is claimed in this version. The
+only authorized publication route currently accepts the manuscript PDF but not a sup-
+plementary ZIP. Consequently an independent source audit requires receiving the exact
+content-addressed companion archive named above. A local filesystem path is not evidence of
+public availability, and the paper does not represent it as one.
+8 Relation to prior work
+Makeenko and Migdal introduced loop equations in the large-colour setting [1]. Rigorous planar
+and compact-surface area equations were later obtained in a finite-dimensional heat-kernel
+formulation [3, 4, 2]. Those works contain results far more general than the matrix algebra
+proved here, including the analytic integration-by-parts step that this paper explicitly does
+not claim.
+Kazakov and Zheng state the determinant-one rank-two identityTr(U) Tr(V) = Tr(UV ) +
+Tr(UV †)and use it to close finite-SU(2)lattice and continuum loop equations on single traces
+[5]. Thus the mathematical linearity is not new. The delta of the present work is:
+•a kernel-checked derivation on the concrete MathlibSU(2)type;
+•simultaneous verification of the Pauli/Casimir and trace-skein normalizations;
+•explicit isolation of the1/4special-unitary correction;
+• a quantified four-branch interface with independent orientations and both local reconnec-
+tions;
+•an all-order recursive closure theorem rather than only the binary trace identity;
+•a reusable interface to the earlier formalized heat-kernel model.
+A targeted search on 1 August 2026 across GitHub, Mathlib, the Lean community index,
+and the sources cited above did not locate an existing Lean formalization of this exact
+Pauli-to-skein chain. This is a search report, not a categorical priority claim.
+7
+
+--- Page 8 ---
+
+9 Limitations and next producer
+The current artifact now defines the complete algebraic target of local crossing geometry: four
+oriented branch holonomies, opposite-strand words, and both reconnections. It does not define
+an embedded planar graph, a regular loop, a certified transverse crossing, face areas, or the
+alternating derivative
+∂t1 −∂t2 +∂t3 −∂t4 .
+It does not prove that differentiating a Yang–Mills expectation gives the negative Pauli contrac-
+tion. It also does not construct a continuum holonomy field or treat arbitrary representations.
+The next producer is therefore sharply specified: formalize the local abstract Makeenko–
+Migdal theorem for four adjacent heat kernels, with extended gauge invariance and all generator
+conventions explicit. Once that producer yields the contraction in(1), Theorem 4.1 closes its
+SU(2)fundamental-trace output immediately through Theorem 4.3. A separate geometric
+layer must still prove that the transported paths of an embedded transverse crossing instantiate
+the four-branch structure with the required cyclic order.
+This separation also provides a kill criterion. If the analytic local theorem cannot be
+formalized without importing hypotheses equivalent to its conclusion, the present paper remains
+valid as a group-algebraic result, but no future manuscript should advertise a machine-checked
+Makeenko–Migdal area equation.
+10 Conclusion
+The finite-SU(2)loop equation is linear for an exact algebraic reason. The traceless Pauli
+contraction contributes a1/4correction, and the determinant-one trace skein converts the
+remaining product of traces into two single traces. Lean checks this chain on concrete complex
+matrices, packages all four oriented local branches and both reconnections in a universal closure
+theorem, and extends the binary relation to products of arbitrary finite length. The result is a
+small but load-bearing bridge: it neither assumes nor overstates the analytic Makeenko–Migdal
+theorem, yet it removes the complete finite-rank multitrace obstruction once that theorem is
+available.
+A Theorem-to-artifact map
+Paper statement Lean declaration
+Equation (3)su2Pauli_casimir
+Equation (4)su2Pauli_fierz
+Equation (1)su2PauliCrossingContraction_eq
+Equation (5)su2_matrix_trace_skein
+Theorem 3.1su2_fundamentalWilson_skein
+Theorem 4.1su2_makeenkoMigdal_crossingTerm_closed
+Equivalent contracted formsu2PauliCrossingContraction_eq_closedResolutions
+Theorem 4.3su2_fourBranchCrossing_term_closed
+Four-branch skein formsu2_fourBranchCrossing_trace_skein
+Four-branch contracted formsu2_fourBranchCrossing_pauliContraction_closed
+Theorem 5.1su2WilsonProductExpansion_eq
+Table 2: Exact correspondence between the mathematical claims and compiled declarations.
+8
+
+--- Page 9 ---
+
+B Migration note
+This is a new companion paper, not a replacement for ai.viXra:2607.0039. That paper proves
+the exact heat-kernel evaluation for certified finite disk cellulations with a simple retained
+exterior boundary. The present work adds a different independently citable theorem: finite-
+SU(2)trace closure at a crossing. It reuses the concreteSU(2)matrix layer but does not
+duplicate the conditioned-edge theorem, the gauge-fixing construction, or the exact simple-loop
+area law. The two papers should cite each other asymmetrically: the present paper cites
+2607.0039 as its formal substrate, while a future version of the substrate may list this module
+as the beginning of the intersecting-loop frontier.
+References
+[1] Y. M. Makeenko and A. A. Migdal,Exact equation for the loop average in multicolor QCD, Phys. Lett. B
+88(1979), 135–137, doi:10.1016/0370-2693(79)90131-X.
+[2] T. Lévy,The master field on the plane, Astérisque388(2017), 1–201.
+[3] B. K. Driver, B. C. Hall, and T. Kemp,Three proofs of the Makeenko–Migdal equation for Yang–Mills
+theory on the plane, Commun. Math. Phys.351(2017), 741–774, arXiv:1601.06283.
+[4] B. K. Driver, F. Gabriel, B. C. Hall, and T. Kemp,The Makeenko–Migdal equation for Yang–Mills theory
+on compact surfaces, Commun. Math. Phys.352(2017), 967–978, arXiv:1602.03905.
+[5] V. Kazakov and Z. Zheng,Bootstrap for finiteN lattice Yang–Mills theory, J. High Energy Phys.2025, 99
+(2025), doi:10.1007/JHEP03(2025)099, arXiv:2404.16925.
+[6] L. de Moura and S. Ullrich,The Lean 4 theorem prover and programming language, CADE-28, Lecture
+Notes in Computer Science12699(2021), 625–635.
+[7] The Mathlib Community,The Lean mathematical library, CPP 2020, 367–381.
+[8] L. Eriksson,A machine-checked exact evaluation of the two-dimensionalSU(2)heat-kernel lattice model
+on certified finite combinatorial disk cellulations, ai.viXra:2607.0039, replacement v2 submitted 1 August
+2026, ai.viXra:2607.0039.
+9

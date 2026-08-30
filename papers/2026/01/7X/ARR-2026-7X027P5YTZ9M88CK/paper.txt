@@ -1,0 +1,219 @@
+--- Page 1 ---
+
+Program A: Semi-Innite Conditional Mutual Information in the
+1D TFIM (iMPS)
+Lluis Eriksson
+Indep enden t Researc her
+lluiseriksson@gmail.com
+Jan uary 2026 (v1); July 2026 (v2)
+Abstract
+W e study an information-theoretic notion of lo calit yappro ximate quan tum Mark o v b eha vior
+via the conditional m utual information (CMI) I(A : C | B(w)) in a semi-innite geometry of the
+1D transv erse-eld Ising mo del (TFIM). Using innite matrix pro duct states (iMPS), w e com-
+pute I(A : C | B(w)) as a function of the collar width w separating t w o semi-innite regions. In
+a represen tativ e gapp ed p oin t ( h = 1.5), w e observ e clean exp onen tial deca y and a rapid plateau
+of the lo cal eectiv e-length estimator, yielding an early-deca y length ξ(early)
+rec comparable to the
+iMPS transfer-matrix correlation length ξcorr. Near criticalit y ( h = 1.005), the lo cal estima-
+tor increases throughout the accessible range, indicating a pre-asymptotic regime; w e therefore
+rep ort a xed-windo w eectiv e length and a windo w-sensitivit y range as a systematic uncer-
+tain t y . All generated assets used here (t w o JSONL data streams, the gure, and the LaT eX
+table snipp et) are included in the Ov erleaf pro ject. v2 (no v1 numb er is change d): App endix A
+is repaired (in v1 the data-source lenames w ere t yp eset in math mo de and the near-critical
+en try w as missing en tirely); T able 1 is re-t yp eset (collided columns in v1); the Colab scripts of
+App endix B are shipp ed as runnable les in the series rep ository rather than as listings; series
+p ositioning is added  this pap er is a n umerical instan tiation of the A-CMI h yp othesis of the
+con tract note ai.viXra:2601.0066 in a semi-innite 1D geometry; and an indep endent v erica-
+tion suite (free fermions via JordanWigner, no tensor net w orks) repro duces the gapp ed p oin t
+of T able 1 exactly ( ξ(early)
+rec = 1.149 on the main windo w, windo w sensitivit y [1.149, 1.158], b oth
+matc hing v1 digit for digit), v eries the op erational iden tit y Eq. (3) to 10−11, and repro duces the
+rising near-critical ξlocal(w); a T eNPy cross-c hec k repro duces the free-fermion I(w) p oin t wise to
+5 × 10−5 relativ e.
+1 In tro duction and motiv ation
+A quan titativ e notion of lo calit y in man y-b o dy quan tum states is appr oximate quantum Markov
+structur e , commonly diagnosed via the conditional m utual information (CMI) I(A : C | B). Small
+CMI implies the existence of a reco v ery c hannel acting on B that appro ximately reconstructs cor-
+relations b et w een A and C (reco v erabilit y viewp oin t), making I(A : C | B) a sharp to ol to test
+ho w a buer region B shields distan t regions. This p ersp ectiv e has b een dev elop ed in quan tum
+information theory and connects naturally to ph ysical exp ectations suc h as exp onen tial clustering
+in gapp ed phases and area-la w en tanglemen t [1, 2, 3, 4, 5].
+Goal (Program A). W e p erform a con trolled iMPS computation of the semi-innite CMI
+I(A : C | B(w)) in the 1D transv erse-eld Ising mo del (TFIM), where A and C are semi-innite
+and B is a con tiguous collar of width w. W e compare an early-deca y length extracted from I(A :
+1
+
+--- Page 2 ---
+
+C | B(w)) to the iMPS transfer-matrix correlation length in a gapp ed regime, and w e do cumen t
+pre-asymptotic b eha vior near criticalit y when wmax ≪ ξcorr.
+2 Mo del and n umerical setup
+W e study the TFIM Hamiltonian
+H = −J
+X
+i
+σz
+i σz
+i+1 − h
+X
+i
+σx
+i , (1)
+with J = 1. Ground states are computed in the thermo dynamic limit using T eNPy iMPS with a
+t w o-site unit cell. W e rep ort the eectiv e b ond dimension χeff after canonicalization.
+Con v en tion note. All results rep orted here follo w T eNPy's TFIM implemen tation with J = 1
+and transv erse eld parameter g = h in the co de; the unit of length is one lattice site, and the unit
+cell con tains t w o sites. W e dene ξcorr as the iMPS transfer-matrix correlation length returned b y
+T eNPy's correlation_length2() (in lattice-site units).
+3 Observ able: semi-innite CMI
+W e consider a con tiguous tripartition A B C where A and C are semi-innite and B is a collar of
+width w. W e ev aluate
+I(A : C | B(w)) =S(AB) +S(BC) − S(B) − S(ABC). (2)
+Op erationally , in the semi-innite geometry considered here ( A and C semi-innite, B nite of
+width w) and for a globally pure state, the CMI can b e ev aluated via the nite iden tit y
+I(A : C | B(w)) = 2Scut − S(B(w)), (3)
+where Scut is the en tanglemen t en trop y across a single cut separating a semi-innite half-c hain from
+its complemen t, and S(B(w)) is the v on Neumann en trop y of the nite blo c k B. With a t w o-site
+unit cell, w e a v erage o v er the t w o inequiv alen t cut p ositions (as done in the App endix scripts).
+Equation (3) follo ws from global purit y and the en trop y iden tities S(AB) =S(C), S(BC) =S(A),
+and S(ABC) = 0, yielding a nite cancellation in the semi-innite geometry with nite B(w).
+W e also dene a lo cal eectiv e-length estimator
+ξlocal(w) :=
+
+log I(A : C | B(w))(w) − log I(A : C | B(w))(w + 1)
+−1. (4)
+A plateau in ξlocal(w) indicates an appro ximately exp onen tial tail.
+4 Results
+Figure 1 sho ws I(A : C | B(w))(w) and ξlocal(w) for the gapp ed and near-critical runs included in
+this Ov erleaf pro ject. Dashed lines sho w exp onen tial ts on the xed windo w w ∈ [6, 11].
+2
+
+--- Page 3 ---
+
+Figure 1: CMI deca y and lo cal eectiv e length. Left: I(A : C | B(w))(w) on a semi-log scale.
+Righ t: ξlocal(w).
+T able 1: Program A summary (semi-innite geometry). ξ(early)
+rec is extracted from an exp onen-
+tial t to I(A : C | B(w)) on a xed windo w (main c hoice: (6, 11)). Windo w sensitivit y is rep orted
+across [(6, 11), (6, 12), (7, 12)]. χeff is the eectiv e b ond dimension after canonicalization. ξcorr is the
+iMPS transfer-matrix correlation length. (Re-t yp eset in v2; v1's table had collided columns.)
+Regime h χ eff ξcorr ξ(early)
+rec
+Gapp ed 1.500 13 1.120 1.149
+Near-critical (from256 →512) 1.005 110 87.774 20.485
+Windo w sensitivit y . Gapp ed: ξ(early)
+rec ∈ [1.149, 1.158]. Near-critical: ξ(early)
+rec ∈ [20.485, 22.017].
+5 Discussion
+Wh y ξ(early)
+rec ≈ ξcorr in the gapp ed regime is meaningful. In a gapp ed 1D phase, connected
+correlations deca y exp onen tially with distance, and the iMPS transfer matrix enco des this via a nite
+correlation length ξcorr. The observ ation that I(A : C | B(w)) deca ys appro ximately exp onen tially
+and yields an early-deca y scale comparable to ξcorr supp orts the picture that the same transfer-
+matrix gap go v erning t w o-p oin t clustering also con trols the onset of appro ximate Mark o v structure
+under a nite buer.
+Wh y the near-critical regime do es not reac h the asymptotic tail. Near criticalit y the
+correlation length gro ws rapidly , and our accessible collar widths satisfy wmax ≪ ξcorr. In this pre-
+asymptotic windo w, the lo cal estimator ξlocal(w) increases with w rather than plateauing, indicating
+that an eectiv e length extracted from a short windo w should b e in terpreted as a scale c haracterizing
+the accessible range, not the true asymptotic deca y length.
+Systematic eects. W e rep ort windo w sensitivit y of ξ(early)
+rec as a minimal systematic uncer-
+tain t y . A more complete error budget w ould additionally include nite- χ eects (iMPS truncation),
+whic h can b e prob ed b y rep eating the pip eline at m ultiple χmax and examining con v ergence of
+I(A : C | B(w)) at xed w as χmax → ∞.
+3
+
+--- Page 4 ---
+
+Series p ositioning (v2). Within the series this pap er is a n umerical instan tiation of the
+A-CMI h yp othesis  the single falsiable input of the closed reco v erabilit y lane of the con tract
+note ai.viXra:2601.0066 (v2)  in a semi-innite 1D geometry: the gapp ed ro w of T able 1 exhibits
+exactly the I ≤ Ke−αw b eha vior that A-CMI p ostulates, with the constan ts measured rather than
+assumed, while the near-critical ro w do cumen ts ho w A-CMI degrades as ξcorr exits the accessible
+windo w. The rising ξlocal(w) under a short windo w is the same functional-form indistinguishabilit y
+phenomenon do cumen ted for nite-size pip elines in ai.viXra:2601.0040 (v2), and the collar-CMI
+metho dology connects to ai.viXra:2601.0050 (nite collar geometries and their saturation structure),
+ai.viXra:2601.0038 (nite-size deff pip elines), and the T yp e I I I in terface ai.viXra:2601.0065 (where
+split-regularized CMI deca y is the corresp onding assumption). The v2 v erication suite adds what
+none of these had: a tensor-net w ork-free cross-c hec k of the en tire pip eline (free fermions via Jordan
+Wigner on an op en c hain of L = 400 sites), whic h repro duces the gapp ed ξ(early)
+rec and its windo w-
+sensitivit y range digit for digit.
+6 Conclusions and outlo ok
+W e computed semi-innite conditional m utual information I(A : C | B(w)) in the TFIM using
+iMPS and observ ed: (i) clean exp onen tial deca y and a rapid ξlocal(w) plateau in a gapp ed p oin t,
+with ξ(early)
+rec comparable to ξcorr; and (ii) a strongly running ξlocal(w) near criticalit y consisten t
+with wmax ≪ ξcorr. Immediate extensions are (a) con v ergence studies in χ and (b) broader mo del
+co v erage to test univ ersalit y of the relation b et w een reco v erabilit y length scales and transfer-matrix
+correlation lengths.
+7 Repro ducibilit y
+This Ov erleaf pro ject is p opulated b y uploading four generated les: the gure moneyplot_CMI_xilocal.png ,
+the table snipp et summary.tex , and t w o JSONL streams con taining the p oin ts for I(A : C | B(w)).
+T o regenerate these assets, run the Colab build scripts (shipp ed as les, App endix B) and upload
+the resulting zip (or the four les) to the ro ot of the Ov erleaf pro ject. v2: an indep enden t v eri-
+cation suite ( verification/2601-0099/verify_2601_0099.py in the series rep ository) repro duces
+the gapp ed p oin t and the iden tit y Eq. (3) without tensor net w orks, and cross-c hec ks T eNPy against
+it; see the Note added b elo w.
+Note added in v2
+No v1 n um b er, t windo w, or conclusion is c hanged. v2: (1) repairs App endix A, whose v1 render-
+ing t yp eset the data-source lenames in math mo de (subscript soup) and dropp ed the near-critical
+en try en tirely; (2) re-t yp esets T able 1, whose v1 rendering collided the χeff and ξcorr columns
+(110.00087.774); (3) ships the v e Colab scripts of App endix B as runnable, syn tax-c hec k ed les
+in the series rep ository instead of t yp eset listings; (4) adds series p ositioning (v1 cited no companion
+pap ers): this pap er instan tiates the A-CMI h yp othesis of ai.viXra:2601.0066; (5) adds an indep en-
+den t v erication suite: a JordanWigner free-fermion computation on an op en c hain ( L = 400;
+engine v alidated against exact diagonalization of the spin c hain at L = 8to 10−13) repro duces the
+gapp ed ξ(early)
+rec = 1.149 on the main windo w (6, 11) and the windo w-sensitivit y range [1.149, 1.158]
+ b oth iden tical to v1's T able 1 digit for digit b y a metho d with no tensor net w orks  v eries
+Eq. (3) against the direct en trop y com bination to 10−11, and repro duces the rising near-critical
+4
+
+--- Page 5 ---
+
+ξlocal(w) ( 5.7 → 24.2 across the accessible range); a T eNPy iMPS run ( χ = 16suces; χeff = 13in
+v1) then agrees with the free-fermion I(w) p oin t wise to 5×10−5 relativ e for w ≤ 8. The χ = 128/512
+pro duction n um b ers of T able 1 remain sourced from the v1 c hec kp oin ts and Colab scripts.
+A Data sources used in this pro ject
+(Repaired in v2; v1 t yp eset these lenames in math mo de and omitted the second en try .)
+ Gapp ed JSONL: cmi_h1p5_chi128_semiinf_STREAM.jsonl
+ Near-critical JSONL: cmi_from256_h1p005_chi512_semiinf_STREAM.jsonl
+B Colab scripts to regenerate the four uploaded les
+v1 em b edded the v e Colab scripts as t yp eset listings; v2 ships them as runnable, syn tax-c hec k ed
+les in the series rep ository under verification/2601-0099/colab/ , transcrib ed v erbatim from
+v1's App endix B (the v1 PDF remains the t yp eset source):
+ 00_env_and_install.py  pinned T eNPy install ( v1.1.0 ) and en vironmen t freeze;
+ 01_dmrg_ground_states.py  iDMR G c hec kp oin ts: gapp ed h=1.5 ( χ=128), near-critical
+h=1.005 ( χ=256 → 512 ramp);
+ 02_cmi_jsonl.py  semi-innite CMI streams via Eq. (3), a v eraged o v er the t w o unit-cell
+cuts;
+ 03_figure_and_summary.py  money plot and LaT eX table snipp et with the xed t win-
+do ws;
+ 04_package_and_manifest.py  ro ot-clean zip of the four Ov erleaf assets with SHA256
+manifest.
+The scripts assume Go ogle Driv e moun ted at /content/drive with PROJECT_DIR set to the
+w orking folder.
+References
+[1] O. F a wzi and R. Renner, Quantum c onditional mutual information and appr oximate Markov
+chains , Comm un. Math. Ph ys. 340 , 575611 (2015).
+[2] F. G. S. L. Brandão, A. W. Harro w, J. Opp enheim, and S. Strelc h uk, Quantum c onditional
+mutual information, r e c onstructe d states, and state r e distribution , Ph ys. Rev. Lett. 115 , 050501
+(2015).
+[3] D. Sutter, O. F a wzi, and R. Renner, Universal r e c overy map for appr oximate Markov chains ,
+arXiv:1504.07251 (2015).
+[4] D. Sutter, M. Berta, and M. T omamic hel, Multivariate tr ac e ine qualities , Comm un. Math. Ph ys.
+352 , 3758 (2017).
+5
+
+--- Page 6 ---
+
+[5] F. G. S. L. Brandão and M. Horo dec ki, Exp onential de c ay of c orr elations implies ar e a law ,
+Comm un. Math. Ph ys. 333 , 761798 (2015).
+[6] L. Eriksson, ai.viXra:2601.0066 (2026; v2 2026).
+[7] L. Eriksson, ai.viXra:2601.0065 (2026; v2 2026).
+[8] L. Eriksson, ai.viXra:2601.0050 (2026; v2 2026).
+[9] L. Eriksson, ai.viXra:2601.0040 (2026; v2 2026).
+[10] L. Eriksson, ai.viXra:2601.0038 (2026; v2 2026).
+6

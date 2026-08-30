@@ -1,0 +1,543 @@
+--- Page 1 ---
+
+Quantitative Recovery Bounds from Vacuum Clustering in
+Finite-Mode Gaussian States
+(A Regularized CCR Blueprint Motivated by Split Inclusions)
+Version 2
+Lluis Eriksson
+Independent Researcher
+lluiseriksson@gmail.com
+January 2026 (v1); July 2026 (v2)
+Abstract
+We prove a quantitative clustering–recovery bound for centered quasi-free (Gaussian) states
+in a finite-mode bosonic CCR (Weyl) setting. Motivated by split inclusions in algebraic quan-
+tum field theory, we work in a regularized framework where Gaussian states are parametrized
+by finite covariance matrices and a recovery map admits an explicit covariance block formula.
+Using a perturbative Gaussian fidelity input and explicit coercivity bounds for inverse covari-
+ances, we control the recovery error in terms of a vacuum cross-correlation factor, a cross-
+correlation perturbation parameter, and a recovery-error matrix norm ∥∆Γ∥HS with an explicit
+quadratic+quartic structure. In a distinguished class (Family A, X = X0), this reduces to
+a bound in terms of the cross-block error ∥∆(12)∥HS. We include ancillary numerical sanity
+checks verifying the perturbative regime, a collar-envelope decay model, a dimension sweep
+n1 = n2 ∈ {1, 2, 3}, and phase-diagram checks of the perturbative domain. v2 adds: a collar-
+suppressed recovery corollary making the “clustering suppresses recovery error” mechanism a
+single displayed inequality; an upgraded discussion of the fidelity constants (the local coeffi-
+cient 1/8 is shown numerically to be a directional benchmark, not a uniform bound, and an
+empirical constant is certified on the sampled domain); an independent verification suite in pure
+NumPy/SciPy implementing the Banchi–Braunstein–Pirandola fidelity formula with closed-form
+anchors (no external Gaussian-optics dependency), with all proved inequalities tested on ran-
+dom draws (zero violations); positioning remarks relative to the companion notes 2512.0060 and
+2512.0101; and, aligning with 2512.0060 v2, corrected Petz-identification language (the recov-
+ery rule is conditional reattachment, with Petz agreement only in the factorized case) plus an
+explicit admissibility hypothesis for the recovered covariance.
+Contents
+1 Scope, positioning, and standing regularization 1
+2 Finite-mode CCR Gaussian framework 2
+2.1 Quadrature ordering and symplectic form . . . . . . . . . . . . . . . . . . . . . . . . 2
+2.2 Finite symplectic space and Weyl algebra . . . . . . . . . . . . . . . . . . . . . . . . 2
+2.3 Quasi-free states and covariance matrices . . . . . . . . . . . . . . . . . . . . . . . . 2
+2.4 Bipartition and block form . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+1
+
+--- Page 2 ---
+
+3 Gaussian recovery in block form 3
+4 Clustering input: vacuum cross-correlation and perturbations 4
+5 Gaussian fidelity control (perturbative regime) 4
+6 Main theorem: clustering–recovery bridge (Route 1) 4
+7 Ancillary numerical sanity-checks 6
+7.1 Representative figures . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 6
+8 Independent verification suite (added in v2) 7
+9 Conjectural outlook (Type III / non-Gaussian) 7
+A Appendix: conditional reattachment covariance rule (rewritten in v2) 9
+B Appendix: extended figures 9
+C Appendix: verification interface (updated in v2) 9
+1 Scope, positioning, and standing regularization
+Remark 1.1 (Scope note). All results are proved in a finite-mode bosonic CCR setting (regularized
+Weyl algebra on a finite-dimensional symplectic space). The Type III AQFT setting is used only
+as motivation; continuum statements are formulated as conjectural directions.
+Remark 1.2 (Positioning). In finite-mode continuous-variable quantum information, closed formulas
+for Gaussian fidelity and many norm inequalities are standard. The contribution of this note is an
+“interface block” that (i) packages vacuum clustering into a cross-correlation parameter ηvac, (ii)
+propagates perturbations through a Gaussian recovery map in covariance block form, and (iii) yields
+a quantitative recovery bound with explicit dependence on coercivity and correlation parameters.
+Remark 1.3 (Relation to the companion notes (added in v2)). This note is the rigorous finite-mode
+core of the Gaussian clustering–recovery program of ai.viXra:2512.0060 [9]: there, the reattach-
+ment/Petz reconstruction is developed for lattice vacua with Bessel/Combes–Thomas collar sup-
+pression, and the repaired Proposition 2.14 (v2) restricts the Petz identification to a conditional
+reattachment with a no-steering admissibility hypothesis. Here, by contrast, everything is finite-
+mode and unconditional up to one explicit hypothesis (admissibility of the recovered covariance,
+Remark 3.3): the recovery rule is Definition 3.1 taken as an explicit covariance-level reattach-
+ment map – not identified with the general Petz map (Remark 3.2), in the same spirit as 0060
+v2’s repaired Proposition 2.14. The non-Gaussian extension of the same bridge is conjectured via
+conditional mutual information in ai.viXra:2512.0101 [10]; Conjecture 9.1 below is the Type III
+counterpart. The three notes are complementary layers of one program: lattice-Gaussian (0060),
+finite-mode rigorous core (this note), non-Gaussian/CMI (0101).
+2
+
+--- Page 3 ---
+
+Table 1: Parameter dictionary (reading aid).
+Symbol Meaning Where used
+ϵ coercivity margin for A relative to A0 Theorem 6.8
+ηvac reference cross-correlation factor Definition 4.1
+δ cross-correlation perturbation parameter Definition 4.2
+κ ϵ −1/2(ηvac + δ) Theorem 6.8
+Φ prefactor (1 − κ)−1 min(ϵc1, c2)−1 Theorem 6.8
+∆Γ covariance recovery error Γ − ˜Γ Theorem 6.8
+∆(12) cross-block error X − ˜X Definition 6.2
+2 Finite-mode CCR Gaussian framework
+2.1 Quadrature ordering and symplectic form
+Remark 2.1 (Ordering convention). Throughout, we use the standard continuous-variable ordering
+(x1, . . . , xN , p1, . . . , pN ), so that
+Ω =
+ 0 I
+−I 0
+
+.
+2.2 Finite symplectic space and Weyl algebra
+Let S ≃ R2N be a real symplectic vector space with symplectic form Ω. The finite-mode Weyl
+algebra is generated by Weyl operators W(z), z ∈ S, satisfying W(z)W(z′) = e− i
+2 Ω(z,z′)W(z + z′).
+2.3 Quasi-free states and covariance matrices
+Definition 2.2 (Covariance and uncertainty condition). A centered quasi-free state is specified by
+a real symmetric covariance matrix Γ ∈ R2N×2N satisfying Γ + i
+2Ω ⪰ 0.
+Assumption 2.3 (Uniform positivity in the regularized regime) . All covariance blocks under con-
+sideration are strictly positive and bounded. In particular, for the reference covariance blocks defined
+below, there exist c1, c2 > 0 such that A0 ⪰ c11 and B0 ⪰ c21.
+Remark 2.4 (Norm conventions). For a real matrix M, ∥M∥HS :=
+p
+Tr(MT M) and ∥M∥op denotes
+the operator norm (largest singular value).
+Definition 2.5 (Uhlmann fidelity) . For density operators ρ, σon the same finite-dimensional
+Hilbert space, define F(ρ, σ) := ∥√ρ√σ∥2
+1. We write F(ω1, ω2) for the fidelity of the corresponding
+density operators.
+Remark 2.6 (Covariance convention and numerical fidelity (updated in v2)). We use the convention
+that physical covariances satisfy Γ + iℏ
+2 Ω ⪰ 0 and work with ℏ = 1. In v1 all numerical fidelities
+were evaluated withthewalrus.quantum.fidelity (hbar=1.0). In v2 the verification suite instead
+implements the closed Banchi–Braunstein–Pirandola formula [3] directly in NumPy/SciPy (no ex-
+ternal Gaussian-optics dependency) and certifies the implementation against exact closed-form an-
+chors: single-mode pairs via the Marian–Marian formula [6], pure-state overlaps (F(vac, S(r)vac) =
+1/ cosh r), the correlated two-mode squeezed vacuum ( F(vac⊗2, TMSV(r)) = 1 / cosh2 r), multi-
+plicativity, and symplectic invariance; all anchors agree to 10−10. When thewalrus is installed the
+suite runs an optional cross-check.
+3
+
+--- Page 4 ---
+
+2.4 Bipartition and block form
+Fix a bipartition S = S1 ⊕ S2 with dimensions 2n1 and 2n2. Write
+Γ =
+ A X
+XT B
+
+, Γ0 =
+A0 X0
+XT
+0 B0
+
+.
+3 Gaussian recovery in block form
+Definition 3.1 (Gaussian recovery map (covariance-level)). Given a centered reference covariance
+Γ0 and a centered input covariance Γ as above, define the recovered covariance ˜Γ by
+˜A = A, ˜X = AA−1
+0 X0, ˜B = B0 + XT
+0 A−1
+0 (A − A0)A−1
+0 X0.
+Remark 3.2 (Relation to Petz recovery; corrected in v2) . Definition 3.1 is the covariance-level
+conditional reattachment rule used in this paper. It coincides with the Petz output in the factorized-
+reference case X0 = 0, and may approximate the Gaussian Petz output in strongly mixed, weak-
+correlation regimes, but it is not the Petz recovery map for general correlated Gaussian references:
+for correlated references the Petz map does not preserve the input marginal, and for a pure reference
+it returns the reference for every input (the failure mode identified and repaired in 2512.0060 v2
+[9]). The main results below use Definition 3.1 only as an explicit covariance-level reconstruction
+rule; see Appendix A.
+Remark 3.3 (Admissibility convention (added in v2)) . Throughout, Definition 3.1 is used only on
+inputs for which the recovered matrix is a valid covariance, ˜Γ + i
+2Ω ⪰ 0; equivalently, the recon-
+struction is a covariance-level rule on its admissible domain. This is the finite-mode counterpart
+of the admissibility/no-steering hypothesis of 2512.0060 v2 [9]. The verification suite checks this
+condition on every draw (Section 8).
+4 Clustering input: vacuum cross-correlation and perturbations
+Definition 4.1 (Vacuum cross-correlation factor). ηvac := ∥A−1/2
+0 X0B−1/2
+0 ∥op.
+Definition 4.2 (Cross-correlation perturbation parameter). δ := ∥A−1/2
+0 (X − X0)B−1/2
+0 ∥op.
+Remark 4.3 (Bessel-type collar envelope (motivational interface)) . In massive relativistic settings,
+equal-time correlators admit envelopes controlled by modified Bessel functions Kν(mr) with large-
+mr asymptotics Kν(mr) ∼
+p
+π/(2mr) e−mr. In our finite-mode posture, r is a collar parame-
+ter controlling the magnitude of X0, and our sanity checks use the model envelope ∥X0(r)∥op ∝
+(mr)pKν(mr).
+5 Gaussian fidelity control (perturbative regime)
+Lemma 5.1 (Perturbative Gaussian fidelity bound (imported, constants on a compact set)) . Let
+ω1, ω2 be centered Gaussian states with covariances Γ1 ≻ 0 and Γ2. Define K := Γ −1/2
+1 (Γ1 −
+Γ2)Γ−1/2
+1 . Assume ∥K∥op ≤ 1
+2. Then there exist constants C2, C4 > 0, depending only on the fixed
+finite-mode regularization (in particular on the total mode number N) and on coercivity bounds of
+the form Γ1 ⪰ c 1, such that
+1 − F(ω1, ω2) ≤ C2∥K∥2
+HS + C4∥K∥4
+HS.
+4
+
+--- Page 5 ---
+
+In particular, there exists C > 0 with the same dependence such that if ∥K∥HS ≤ 1 then 1 −
+F(ω1, ω2) ≤ C∥K∥2
+HS.
+Remark 5.2 (Reference and empirical constants (upgraded in v2)) . Closed formulas for the fidelity
+of Gaussian states and perturbative expansions are standard; see [3, 4, 5]. Lemma 5.1 is used as
+a local perturbative input; we do not optimize constants. v2 adds two quantitative facts from the
+verification suite (Section 8). First, the local Taylor coefficient 1 /8 suggested by expansions of
+the closed fidelity formula is a directional benchmark, not a uniform bound : across 450 random
+Family-A draws (n1 = n2 ∈ {1, 2, 3}), the ratio (1 − F)/
+ 1
+8∥K∥2
+HS
+
+reaches 1.142 – and the worst
+case occurs at ∥K∥HS ≈ 2 × 10−3, i.e. in the local regime, so the excess is directional rather than
+higher-order. Second, on the sampled compact domain the suite certifies the empirical constant
+Cemp
+2 ≈ 0.143, i.e. 1 − F ≤ Cemp
+2 ∥K∥2
+HS across all draws, consistent with (and instantiating) the
+existence claim of Lemma 5.1.
+6 Main theorem: clustering–recovery bridge (Route 1)
+Definition 6.1 (Partial local excitation) . We say ω is a partial local excitation (relative to the
+bipartition) if B = B0.
+Definition 6.2 (Recovery cross-block error). With ˜X as in Definition 3.1, define ∆(12) := X− ˜X =
+X − AA−1
+0 X0.
+Lemma 6.3 (From relative perturbation to a uniform lower bound). If ∥A−1/2
+0 (A−A0)A−1/2
+0 ∥op ≤
+1 − ϵ with ϵ ∈ (0, 1), then A ⪰ ϵA0.
+Proof. Let E := A−1/2
+0 (A −A0)A−1/2
+0 . The hypothesis implies E ⪰ −(1 −ϵ)1, hence A = A1/2
+0 (1 +
+E)A1/2
+0 ⪰ ϵA0.
+Lemma 6.4 (Block structure of the recovery covariance error). Assume B = B0 and ˜Γ is given by
+Definition 3.1. Then ∆Γ := Γ − ˜Γ has block form
+∆Γ =
+ 0 ∆ (12)
+(∆(12))T ∆(22)
+
+, ∆(22) = B0 − ˜B = −XT
+0 A−1
+0 (A − A0)A−1
+0 X0.
+In particular, ∥∆Γ∥2
+HS = 2∥∆(12)∥2
+HS + ∥∆(22)∥2
+HS, and ∥∆(22)∥HS ≤ ∥A − A0∥HS∥A−1
+0 X0∥2
+op.
+Proof. The block form is immediate from ˜A = A and B = B0. For the estimate, use ∥UV W∥HS ≤
+∥U∥op∥V ∥HS∥W∥op with U = XT
+0 A−1
+0 , V = A − A0, W = A−1
+0 X0.
+Proposition 6.5 (Coercivity bound for ∥Γ−1∥op with no hidden constants) . Let B0 ≻ 0 and
+Γ =
+ A X
+XT B0
+
+with A ≻ 0. Define ηω := ∥A−1/2XB−1/2
+0 ∥op. If ηω < 1, then
+Γ ⪰ (1 − ηω)
+A 0
+0 B0
+
+, hence ∥Γ−1∥op ≤ 1
+(1 − ηω) min(λmin(A), λmin(B0)).
+In particular, if A ⪰ ϵA0, A0 ⪰ c11 and B0 ⪰ c21, then ∥Γ−1∥op ≤
+
+(1 − ηω) min(ϵc1, c2)
+−1.
+5
+
+--- Page 6 ---
+
+Proof. Let u ∈ R2n1 , v ∈ R2n2 and set a := A1/2u, b := B1/2
+0 v. Then
+u
+v
+T
+Γ
+u
+v
+
+= ∥a∥2
+2 + 2aT  
+A−1/2XB−1/2
+0
+
+b + ∥b∥2
+2.
+By Cauchy–Schwarz, 2aT (A−1/2XB−1/2
+0 )b ≥ −2ηω∥a∥2∥b∥2 ≥ −ηω(∥a∥2
+2 + ∥b∥2
+2), which proves the
+Loewner bound; taking minimal eigenvalues yields the inverse-norm bound.
+Proposition 6.6 (Bounding ηω by ηvac + δ). Assume A ⪰ ϵA0 with ϵ ∈ (0, 1). Then ηω ≤
+ϵ−1/2∥A−1/2
+0 XB−1/2
+0 ∥op ≤ ϵ−1/2(ηvac + δ).
+Proof. Since A ⪰ ϵA0, ∥A−1/2A1/2
+0 ∥op ≤ ϵ−1/2; submultiplicativity and the triangle inequality for
+X = X0 + (X − X0) finish the proof.
+Proposition 6.7 (A simple sufficient condition for the perturbative regime). If ∥Γ−1∥op∥∆Γ∥HS ≤
+1
+2, then ∥K∥op ≤ 1
+2 and Lemma 5.1 applies.
+Proof. ∥K∥op = ∥Γ−1/2∆Γ Γ−1/2∥op ≤ ∥Γ−1∥op∥∆Γ∥op ≤ ∥Γ−1∥op∥∆Γ∥HS.
+Theorem 6.8 (Clustering–recovery bridge (finite-mode Gaussian; Route 1, quadratic+quartic)) .
+Let ω0 be a centered reference Gaussian state with covariance Γ0 and blocks (A0, X0, B0) satisfying
+Assumption 2.3. Let ω be a centered Gaussian state with covariance Γ and blocks (A, X, B) such
+that ω is a partial local excitation (Definition 6.1), i.e. B = B0. Assume there exists ϵ ∈ (0, 1)
+such that ∥A−1/2
+0 (A − A0)A−1/2
+0 ∥op ≤ 1 − ϵ, and define κ := ϵ−1/2(ηvac + δ). Assume κ <1. Let
+˜ω be the recovered centered Gaussian state with covariance ˜Γ given by Definition 3.1. Assume in
+addition that the recovered covariance ˜Γ is physical, ˜Γ+ i
+2Ω ⪰ 0 (Remark 3.3), and that ∥K∥op ≤ 1
+2,
+where K := Γ−1/2(Γ − ˜Γ)Γ−1/2 (for instance, it suffices that Proposition 6.7 holds). Then, with
+∆Γ := Γ − ˜Γ,
+1 − F(ω, ˜ω) ≤ C2 Φ2∥∆Γ∥2
+HS + C4 Φ4∥∆Γ∥4
+HS, Φ := 1
+(1 − κ) min(ϵc1, c2),
+where C2, C4 > 0 are the constants from Lemma 5.1.
+Proof. By submultiplicativity and ∥M∥op ≤ ∥M∥HS, ∥K∥HS ≤ ∥Γ−1∥op∥∆Γ∥HS. By Lemma 6.3,
+A ⪰ ϵA0, and Proposition 6.6 yields ηω ≤ κ <1. Therefore Proposition 6.5 gives ∥Γ−1∥op ≤ Φ.
+Insert into Lemma 5.1.
+Remark 6.9 (Coarsenings of the correlation denominator) . For κ ∈ [0, 1), 1 −κ2 = (1 −κ)(1 +κ) ≤
+2(1 −κ), hence (1 −κ)−m ≤ 2m(1 −κ2)−m for m = 1, 2, 4; prefactors may equivalently be rewritten
+in terms of (1 −κ2) at the cost of numerical constants. We keep the explicit (1 −κ) form matching
+Proposition 6.5.
+Corollary 6.10 (Purely quadratic regime). Under the hypotheses of Theorem 6.8, if additionally
+∥K∥HS ≤ 1, then 1 − F(ω, ˜ω) ≤ C Φ2∥∆Γ∥2
+HS, with C from Lemma 5.1 and Φ as in Theorem 6.8.
+Corollary 6.11 (Reduction to ∥∆(12)∥HS in the Family A case) . Assume the hypotheses of The-
+orem 6.8 and, in addition, X = X0. Then one may take C∆ :=
+q
+2 + ∥XT
+0 A−1
+0 ∥2op so that
+∥∆Γ∥HS ≤ C∆∥∆(12)∥HS.
+6
+
+--- Page 7 ---
+
+Proof. If X = X0, then ∆ (12) = X0 − AA−1
+0 X0 = −(A − A0)A−1
+0 X0. Lemma 6.4 gives ∆ (22) =
+XT
+0 A−1
+0 ∆(12), hence ∥∆(22)∥HS ≤ ∥XT
+0 A−1
+0 ∥op∥∆(12)∥HS; substitute into ∥∆Γ∥2
+HS = 2∥∆(12)∥2
+HS +
+∥∆(22)∥2
+HS.
+Corollary 6.12 (Collar-suppressed recovery (added in v2)). Assume the hypotheses of Theorem 6.8
+with X = X0 (Family A, so δ = 0) and ∥K∥HS ≤ 1. Then
+1 − F(ω, ˜ω) ≤ C Φ2 C2
+∆ ∥A − A0∥2
+HS
+A−1
+0 X0
+2
+op
+with C from Lemma 5.1, Φ from Theorem 6.8 and C∆ from Corollary 6.11. In particular, under
+a collar envelope ∥X0(r)∥op ∝ (mr)pKν(mr), the right-hand side inherits the squared envelope
+e−2mr (up to the polynomial factor) at fixed perturbation strength ∥A − A0∥HS: vacuum clustering
+suppresses the recovery error quadratically in the correlator envelope.
+Proof. ∆(12) = −(A−A0)A−1
+0 X0 gives ∥∆(12)∥HS ≤ ∥A−A0∥HS∥A−1
+0 X0∥op; combine with Corollar-
+ies 6.10 and 6.11. For the envelope statement, ∥A−1
+0 X0∥op ≤ ∥A−1
+0 ∥op∥X0∥op ≤ c−1
+1 ∥X0(r)∥op.
+7 Ancillary numerical sanity-checks
+Remark 7.1 (Reproducibility and physicality checks). The numerical experiments check physicality
+of both Γ and ˜Γ by verifying λmin(Γ + i
+2Ω) ≥ −τ and λmin(˜Γ + i
+2Ω) ≥ −τ for a fixed tolerance
+τ >0.
+Remark 7.2 (Numerical constants versus theoretical constants (updated in v2)) . Lemma 5.1 is
+stated with constants on a compact set. In the numerical plots we additionally compare against
+sharper coefficients such as 1
+8 and 1
+48 suggested by local Taylor expansions of closed Gaussian fidelity
+formulas; per Remark 5.2, v2 quantifies their status: 1
+8 is a directional benchmark exceeded by up
+to 14% in worst-case directions, and the certified empirical constant on the sampled domain is
+Cemp
+2 ≈ 0.143.
+7.1 Representative figures
+For readability, we keep the base sanity check figures in the main text and move extended sweeps
+to Appendix B.
+8 Independent verification suite (added in v2)
+The repository ships verification/2601-0007/verify 2601 0007.py, a pure NumPy/SciPy suite
+with no Gaussian-optics dependency:
+(i) Certified fidelity kernel. The Banchi–Braunstein–Pirandola closed formula [3] is implemented
+directly (ℏ = 1 convention of Remark 2.6) and certified against exact anchors – the single-mode
+Marian–Marian formula [6], pure-state overlaps 1/ cosh r, the two-mode squeezed vacuum 1/ cosh2 r
+(a correlated multimode case), multiplicativity on products, and symplectic invariance – all to 10−10.
+(ii) Inequality suite. On 450 random Family-A draws (n1 = n2 ∈ {1, 2, 3}, 150 each, physicality
+enforced), the suite verifies with zero violations: physicality of the recovered covariance ˜Γ+ i
+2Ω ⪰ 0
+on every draw (Remark 3.3); the exact block identity and HS decomposition of Lemma 6.4 (machine
+precision); the coercivity inequality of Proposition 6.5; the bound of Proposition 6.6; Corollary 6.11
+with its explicit C∆; the norm chain ∥K∥HS ≤ ∥Γ−1∥op∥∆Γ∥HS ≤ Φ∥∆Γ∥HS; and the collar-
+suppressed bound of Corollary 6.12.
+7
+
+--- Page 8 ---
+
+Figure 1: Base sanity check ( n1 = n2 = 2): ηvac(r) and ∥∆(12)∥HS versus r under a Bessel-type
+envelope.
+(iii) Constants. The suite certifies Cemp
+2 ≈ 0.143 on the sampled domain and locates the
+worst-case direction (ratio 1.142 against the 1
+8 benchmark at ∥K∥HS ≈ 2 × 10−3; see Remark 5.2).
+(iv) Collar sweep. Under the Bessel envelope of Remark 4.1 with r ∈ [2, 8], both 1 − F (from
+3.9 × 10−6 to 5.9 × 10−12) and the Corollary 6.12 bound (from 1 .4 × 10−5 to 1.9 × 10−11) decay
+monotonically, with the bound dominating pointwise.
+9 Conjectural outlook (Type III / non-Gaussian)
+Conjecture 9.1 (Type III clustering–recovery blueprint). Let ω0 be the vacuum state of a massive
+AQFT satisfying a split inclusion for O1 ⋐ O2. For suitable classes of states ω that are vacuum-like
+outside O2 and have finite Araki relative entropy, the Petz recovery associated with theω0-preserving
+conditional expectation onto a canonical split factor yields an estimate of the form 1 − F(ω, ˜ω) ≤
+C C(O1, O2)γ, where C(O1, O2) is a clustering coefficient controlled by collar width and the mass
+gap.
+Remark 9.2 (Type III roadmap) . The transition to the Type III setting likely requires noncommu-
+tative Lp methods (e.g. Haagerup spaces) to express quantitative analogues of density operators
+and fidelity-type functionals. In this picture, covariance-block control in the finite-mode Gaussian
+setting is expected to be replaced by bounds on relative modular operators associated with the split
+factor and the ω0-preserving conditional expectation. The CMI-based route to the same bridge is
+developed in [10].
+Note added in v2
+No theorem of v1 required correction: all v1 bounds, proofs and figures are unchanged. v2 does
+correct the non-load-bearing Petz identification language of v1 (Remark 3.2, Appendix A): the
+covariance rule of Definition 3.1 is conditional reattachment, not the general Petz map for correlated
+8
+
+--- Page 9 ---
+
+Figure 2: Base sanity check ( n1 = n2 = 2): 1 − F(ω, ˜ω) versus a perturbative Gaussian fidelity
+benchmark.
+references – aligning this note with the repaired Proposition 2.14 of 2512.0060 v2. The theorem now
+also states explicitly the admissibility hypothesis ˜Γ+ i
+2Ω ⪰ 0 (Remark 3.3), previously only enforced
+in the numerics. v2 further adds: (1) Corollary 6.12 (collar-suppressed recovery), packaging the
+main mechanism into one displayed inequality with squared-envelope decay; (2) Remark 5.2: the 1
+8
+Taylor coefficient is a directional benchmark exceeded by up to 14% in worst-case directions even
+as ∥K∥ →0; an empirical constant Cemp
+2 ≈ 0.143 is certified on the sampled domain, instantiating
+Lemma 5.1; (3) Section 8: an independent pure-NumPy verification suite (BBP fidelity kernel
+certified to 10 −10 against closed-form anchors, including a correlated two-mode case; 450 draws,
+zero violations of any proved inequality; collar sweep), removing the thewalrus dependency of the
+v1 appendix script (kept as optional cross-check); (4) Remark 1.3: positioning relative to 2512.0060
+and 2512.0101 (lattice-Gaussian / finite-mode core / non-Gaussian CMI); (5) references added: [6],
+series companions.
+A Appendix: conditional reattachment covariance rule (rewritten
+in v2)
+The v1 version of this appendix presented a “Petz identification sketch” arguing that Definition 3.1
+matches the Petz map by requiring that the map (i) fixes the subsystem-1 marginal and (ii) recovers
+the reference exactly. That heuristic is false in general: conditions (i)–(ii) characterize the condi-
+tional reattachment rule, not the Petz map, which for correlated references does not satisfy (i), and
+for pure references collapses to the reference on all inputs (2512.0060 v2 [9]). What survives is the
+following: Definition 3.1 is the unique covariance-level map that is affine in A, fixes the subsystem-1
+marginal ( ˜A = A), and is exact on the reference (Γ = Γ0 ⇒ ˜Γ = Γ0); it agrees with the Petz output
+when X0 = 0 (factorized reference), and its relation to the Gaussian Petz map beyond that case is
+an approximation question in strongly mixed regimes (route: Lami–Das–Wilde), not an identity.
+All results of this paper use only the reattachment rule on its admissible domain (Remark 3.3).
+9
+
+--- Page 10 ---
+
+B Appendix: extended figures
+Figure 3: Base sanity check (n1 = n2 = 2): 1 −F versus a proxy of the RHS scaling in Theorem 6.8.
+Figure 4: N1 (Family B): engineered perturbation δ(r) inherits the collar envelope and decays with
+r, alongside ηvac(r).
+C Appendix: verification interface (updated in v2)
+The v1 appendix carried a minimal runnable script depending on thewalrus==0.22.0. In v2 it
+is superseded by the full suite verification/2601-0007/ in the series repository, consisting of
+gauss fid.py (certified pure-NumPy BBP fidelity, Remark 2.6) and verify 2601 0007.py (Sec-
+tion 8); thewalrus, when installed, is used only as an optional cross-check. The recovery map and
+10
+
+--- Page 11 ---
+
+Figure 5: N1: fidelity-benchmark comparison for the Family B construction.
+Figure 6: N2: ηvac(r) and ∥∆(12)∥HS for n1 = n2 ∈ {1, 2, 3}.
+all parameter definitions follow this paper’s equations verbatim; the suite exits nonzero if any check
+fails.
+References
+[1] D. Petz, Sufficient subalgebras and the relative entropy of states of a von Neumann algebra ,
+Commun. Math. Phys. 105 (1986) 123–131.
+[2] O. Fawzi and R. Renner, Quantum conditional mutual information and approximate Markov
+chains, Commun. Math. Phys. 340 (2015) 575–611.
+[3] L. Banchi, S. L. Braunstein, and S. Pirandola, Quantum fidelity for arbitrary Gaussian states ,
+Phys. Rev. Lett. 115 (2015) 260501.
+[4] C. Weedbrook et al., Gaussian quantum information , Rev. Mod. Phys. 84 (2012) 621–669.
+[5] A. Serafini, Quantum Continuous Variables, CRC Press (2017).
+11
+
+--- Page 12 ---
+
+[6] P. Marian and T. A. Marian, Uhlmann fidelity between two-mode Gaussian states , Phys. Rev.
+A 86 (2012) 022340.
+[7] NIST Digital Library of Mathematical Functions, Bessel Functions, https://dlmf.nist.gov/
+10.
+[8] N. Killoran et al., The Walrus (software), https://github.com/XanaduAI/thewalrus.
+[9] L. Eriksson, Clustering, Recovery, and Locality in AQFT , ai.viXra:2512.0060 (2025; v2 2026).
+[10] L. Eriksson, Beyond Gaussianity: Extending the Clustering–Recovery Bridge ,
+ai.viXra:2512.0101 (2025; v2 2026).
+12
+
+--- Page 13 ---
+
+Figure 7: N2: fidelity-benchmark comparison across n1 = n2 ∈ {1, 2, 3}.
+13
+
+--- Page 14 ---
+
+Figure 8: N2: 1 − F versus the theorem RHS proxy across n1 = n2 ∈ {1, 2, 3}.
+14
+
+--- Page 15 ---
+
+Figure 9: N3 (fixed r = 2): heatmap of ∥K∥op in a deep perturbative region.
+Figure 10: N3 (fixed r = 2): validity region for physicality and ∥K∥op ≤ 1
+2.
+15
+
+--- Page 16 ---
+
+Figure 11: N3’ (fixed r = 2): phase diagram of ∥K∥op versus scale X0 and dX strength; contour
+indicates ∥K∥op = 1
+2.
+Figure 12: N3’ (fixed r = 2): validity region where the state remains physical and satisfies ∥K∥op ≤
+1
+2.
+16

@@ -1,0 +1,371 @@
+--- Page 1 ---
+
+Machine-Checked CMP116 Fluctuation Reduction:
+Physical Constraint Coordinates and the Interacting-Hessian
+Frontier
+Lluis Eriksson*
+July 2026
+Abstract
+We give a machine-checked reduction of the finite-dimensional fluctuation integral in
+Ba laban’s CMP116 large-field analysis. Starting from the physical block constraint Q,
+the formal development constructs a sparse right inverse E and the constraint-elimination
+operator C = I−EQ . It proves QE = I, QC = 0, C2 = C, the exact sparse norm
+∥EB∥ = Md−1∥B∥, and the volume-independent bound ∥C∥ ≤1 + Md−1 for d≥ 3. An
+exact physical/CMP116 isometry transports C to finite Gaussian coordinates without norm
+loss. The same development constructs the physical localization projector PZ0 , evaluates
+the complex quadratic Gaussian, localizes its determinant to rank |I(Z0)|, performs the
+outer Gaussian integration, and absorbs both costs into an explicit exp(c|Z 0|) factor.
+Two corrections exposed by formalization are central. First, the useful domination
+occurs after Gaussian integration rather than through an unavailable pointwise supremum
+in the fluctuation field. Second, the localized quadratic matrix is A = −α5PZ0 . In the
+exactly identified trivial-background sector the terminal Lean theorem inserts the concrete
+C, the flat Hessian, the complement localization, and the covariance root directly into the
+printed source Γk = CT ∆k(CPZc
+0 )(C(k))1/2 and returns an explicit Cauchy bound with
+no ambient-volume factor. CMP116, however, requires the base Hessian at a generally
+nontrivial small background ¯U. We do not construct D2SWilson( ¯U) or the random-walk
+estimate (2.16), and therefore do not prove the physical domination, (2.26), hraw, hRpoly,
+a continuum limit, or a mass gap. The contribution is an auditable reduction that closes
+the constraint and Gaussian layers and identifies the first genuinely missing interacting
+construction.
+1 Introduction
+Rigorous renormalization-group analyses of lattice gauge theory separate small- and large-field
+regions, integrate finite-dimensional fluctuation fields, and reorganize the result into polymer
+activities. Ba laban’s series [1, 2, 3, 4] and Dimock’s exposition [5, 6, 7] provide the mathematical
+source for the present formalization. The specific target is the fluctuation-integral step around
+equations (2.14), (2.20)–(2.26) of the CMP116 large-field analysis.
+The purpose of the development is not to replace an analytic estimate by an interface
+bearing the same estimate as a hidden hypothesis. Instead, it asks which parts of the source
+argument are finite, algebraic, geometric, or measure-theoretic and can therefore be closed
+independently, and which part is the genuine remaining Yang–Mills estimate.
+* This manuscript and parts of the formal development were produced with AI assistance under the repository’s
+audit protocol. Every result labelledmachine-checkedis a Lean 4 theorem against a pinned Mathlib. Repository:
+https://github.com/lluiseriksson/THE-ERIKSSON-PROGRAMME.
+1
+
+--- Page 2 ---
+
+The machine-checked chain established here is
+(D, P)7−→Z0 7−→PZ0
+Q7−→E7−→C=I−EQ7−→C matrix
+(Cmatrix,∆ flat, Rmatrix)7−→Γ flat 7−→localized Gaussian cost7−→Cauchy term bound.
+(1)
+Here D denotes the family of large-field components, P the selected large-field bonds, Z0
+their least admissible localization region, Rmatrix is the finite matrix of the physical covariance
+root, while Cmatrix is the transported constraint elimination. The terminal theorem in the flat
+sector leaves the physical domination as its substantive input; all source-norm, determinant,
+cardinality, and outer Gaussian costs are produced internally from explicit operator bounds.
+This separation is useful even before those estimates are proved. It prevents three common
+sources of ambiguity: choosing the localization projector by hand, placing an impossible
+supremum before a Gaussian integration, and using the wrong sign in the shifted quadratic
+form.
+2 Finite physical localization
+Let Z0 be a finite family of coarse blocks. A physical site belongs to the interior when the
+site and all its forward and backward nearest neighbours belong to the union of blocks. A
+positively oriented physical bond is interior when both endpoints are interior. This two-endpoint
+convention is important: a one-endpoint convention does not represent the source boundary
+condition faithfully.
+The development constructs a least region
+Z0 = LocalizationCore(D, P)
+that contains the geometric seed induced byDand makes everye∈Pinterior. It proves the
+universal property
+LocalizationCore(D, P)⊆W⇐⇒Wcontains the seed and everye∈Pis interior toW.
+(2)
+The principal Lean endpoints are cmp116LocalizationCore subset iff admissible and
+cmp116LocalizationCore admissible.
+The physical-to-scalar dictionary contains an equivalence
+coordEquiv : (q, a)≃(e, b)
+between CMP116 scalar coordinates and physical bond/Lie coordinates. It defines the canonical
+finite carrier
+I(Z0) ={qa: bond(coordEquiv(qa)) is interior toZ 0}.(3)
+The projector PZ0 is the diagonal matrix with entries 1 on I(Z0) and 0 elsewhere. The following
+theorem is machine-checked.
+Theorem 2.1(Physical localization projector).For every scalar fieldxand coordinateqa,
+(PZ0 x)qa =
+(
+xqa, qa∈I(Z 0),
+0, qa /∈I(Z 0), xT PZ0 x=
+X
+qa∈I(Z0)
+x2
+qa.
+If Z0 is admissible for( D, P), then for every e∈P and every Lie coordinate a,
+coordEquiv−1(e, a)∈I(Z 0). The same holds for the least regionLocalizationCore(D, P).
+This is formalized in BalabanCMP116Eq223PhysicalLocalizationProjector.lean. In
+particular, the shifted Hessian below no longer accepts an arbitrary user-supplied set of
+coordinates.
+2
+
+--- Page 3 ---
+
+3 Physical constraint elimination
+Let Q be the flat block constraint from fine one-cochains to coarse one-cochains. For every
+coarse bond the formalization chooses one distinguished fine pivot bond and defines a sparse
+insertionEsupported on those pivots. The normalization is fixed so that
+QE=I.(4)
+The physical elimination operator is then
+C=I−EQ.(5)
+This is the padded square realization of the rectangular free-coordinate map: on the full fine
+space it is the projection onto kerQ, while on inputs vanishing at the pivot bonds it parametrizes
+the constrained field by the remaining bonds. The distinction matters; no Gaussian Jacobian
+statement is inferred merely from the padded realization.
+Theorem 3.1(Constraint elimination and uniform norm).The operatorsE, Q, Csatisfy
+QE=I, QC= 0, Cx=x(Qx= 0), C 2 =C.
+Every nonpivot coordinate is preserved, and each pivot coordinate is changed by exactly the
+coarse constraint value. Moreover
+∥EB∥=M d−1∥B∥,∥C∥ ≤1 +M d−1 (d≥3),(6)
+independently of the periodic volumeN ′.
+The first equality in (6) follows from the disjoint support of the pivot insertion. The second
+combines it with the certified contraction of Q and the triangle inequality in C = I−EQ . The
+exact isometric physical/CMP116 dictionary definesC matrix and proves
+∥Cmatrix∥=∥C∥,coordinates(C matrixx) =C(coordinates(x)).(7)
+Thus the strongest flat-sector endpoint receives neither an arbitrary matrix C, nor a constant
+Cnorm, nor a proof bounding it.
+4 Exact Gaussian calculus and physical covariance
+Let γ denote the standard Gaussian probability measure on a finite real coordinate space. For
+a real symmetric matrix A with I + A >0 and a complex source c, the formal development
+proves Z
+exp
+
+−1
+2xT Ax+c T x
+
+dγ(x) = 1p
+det(I+A)
+exp
+1
+2cT (I+A) −1c
+
+.(8)
+The source pairing is bilinear, not Hermitian: there is no complex conjugation on c. The
+proof proceeds through the one-dimensional integral, finite products, orthogonal invariance,
+spectral diagonalization, determinant reconstruction, and the inverse quadratic form. Coupled
+two-stage integrals and their Schur complement are also formalized.
+For a real covariance-root matrix R, the pushforward measure R∗γ is a positive probability
+measure. Substitutingx=Ruin (8) gives the majorant
+M2.24(R, A, c) = det(I+RT AR)−1/2 exp
+1
+2 Re
+
+cT (I+R T AR)−1c
+
+.(9)
+3
+
+--- Page 4 ---
+
+The equality between the norm of the complex Gaussian integral and M2.24 is machine-checked.
+So is the domination principle
+|f(u)| ≤e−uT Au/2+rT u a.e. =⇒
+
+Z
+f d(R∗γ)
+ ≤M 2.24(R, A, r).(10)
+The matrix part of this majorant is also quantitatively closed. Put q = α5∥R∥2
+2→2 < 1, let
+S = I(Z0), and take A = −α5PS. A rectangular Sylvester identity moves the determinant to
+the localized coordinate subtype and yields
+(1−q) |S| ≤det(I−α 5RT PSR).(11)
+The exponent is the physical localized rank, not the dimension of the ambient Gaussian space.
+The inverse source form is bounded spectrally, while the remaining outer Gaussian moment is
+evaluated exactly:
+Z
+exp
+ 
+β
+X
+i∈S
+x2
+i
+!
+dγ(x) =
+ 
+1−2β
+−|S|/2,2β <1.(12)
+Finally, the explicit geometric estimate
+|S| ≤ |Z0|Mdd(N2
+c −1) (13)
+absorbs both (11) and (12) into
+localized determinant cost×outer moment≤exp[(c det +c G)|Z0|],(14)
+where both rates are explicit logarithmic expressions in the corresponding small parameters.
+There is no hidden factor depending on the total volume.
+The physical covariance certificate supplies an operator C, a root C1/2, self-adjointness,
+positivity, the exact identity (C1/2)2 = C, and localization/norm bounds. The scalar dictionary
+is proved to be an exactL 2 isometry. Therefore its matrix realizationR matrix satisfies
+∥Rmatrix∥2→2 =∥C 1/2∥2→2,∥R matrix∥,2
+2→2 =∥C∥ 2→2.(15)
+There is no dimension-dependent condition number in this transport.
+5 Two corrections forced by formalization
+5.1 Integrate before taking the norm
+A tempting interface asks for a pointwise bound
+|innerIntegrand(X, B)| ≤Muniformly inB.
+For the source bilinear factor exp(−⟨B, ΓX⟩) this is generally false: along a direction of B with
+the appropriate sign, the real part of the exponent grows. Such a hypothesis would make a
+downstream theorem formally true but physically unusable.
+The repaired interface integrates against the conditioned Gaussian first:
+
+Z
+innerIntegrand(X, B), dµσ,τ (B)
+ ≤M inner.(16)
+Equation (10), followed by the exact evaluation (9), produces this bound while retaining the
+Gaussian damping and completing the square. The outer integration is then controlled by its
+probability measure and the outer weight.
+4
+
+--- Page 5 ---
+
+5.2 The localized quadratic matrix has negative sign
+The localized source factor contains
+exp
+α5
+2 ∥PZ0 B∥2
+
+.
+In the convention of (8), this corresponds to
+A=−α 5PZ0 ,(17)
+not to a positive-semidefiniteA. Hence the actual positivity obligation is
+I−α 5RT
+matrixPZ0 Rmatrix >0.(18)
+By (15), the source condition
+0≤α 5, α 5 covNormBound< 1
+2,∥C∥ 2→2 ≤covNormBound,(19)
+implies (18). The corresponding Lean endpoint is
+posDef physicalRootMatrix of
+alpha5 covariance half small
+physicalZ0.
+Its canonical-core specialization takes only (D, P) as localization data.
+6 The main reduction theorem
+Let G denote the finite CMP116 data for the contour variables, weights, cutoffs, field evaluation,
+and interaction exponent. In the exactly identified trivial-background sector define
+∆flat =K 0 +aQ ∗Q,(20)
+Γflat =C T
+matrix∆flat(CmatrixPZc
+0 )Rmatrix.(21)
+The finite-range kernel and bond-ball count give the volume-independent bound
+∥∆flat∥2→2 ≤
+ 
+(4d)2 + 4 +|a|M 2 
+2(3M+ 1)
+dd.(22)
+Since coordinate transport is isometric and ∥CPZc
+0 ∥2→2 ≤ ∥C∥2→2, equations (6) and (22)
+produce an explicit squared source rate for (21). The only substantive functional premise left
+in the strongest endpoint is the physical Gaussian domination
+|innerIntegrandG(b)| ≤exp
+α5
+2 bT PZ0 b+⟨Γ flatPZ0 x, b⟩
+
+(Dom) (23)
+for (Rmatrix)∗γ-almost everybon the Cauchy contours.
+Theorem 6.1(Physical-constraint Gaussian reduction, flat sector).Assume d≥ 3, a physical
+localized covariance-root certificate, the smallness conditions needed for the two Gaussian
+moments, positive Cauchy radii, a nonnegative uniform outer-weight bound Mout, and (23).
+Then the literal finite equation-(2.14) term satisfies
+∥termG(Y0, P;ψ, ϕ)∥ ≤CauchyRate∆(CauchyRateY (Mout exp(ctot|Z0|))),(24)
+where ctot is the explicit total Gaussian cardinality rate formed from M, d, Nc, α5, the covariance-
+root norm, the bound1+ Md−1 for C, and the right-hand side of (22). No arbitrary C, C-norm
+certificate, Hessian matrix, Hessian-norm certificate, ambient determinant dimension, uniform-
+in-xsource bound, or free Gaussian-majorant premise occurs in the endpoint.
+5
+
+--- Page 6 ---
+
+The Lean endpoint is
+norm_term_le_cauchyRate_of_physicalConstraintGamma _flatDelta_expCard
+inBalabanCMP116Eq214PhysicalConstraintC.lean.
+Remark 6.2(What the theorem does not say).Theorem 6.1 is a reduction theorem. It
+does not prove the concrete interacting-background kernel hypotheses used to obtain (23),
+the random-walk estimate (2.16), the subsequent termwise factorization of equation (2.26),
+or hRpoly. Consequently it implies neither a lattice mass gap nor a continuum Yang–Mills
+construction.
+7 Formal architecture and audit
+Table 1 maps the mathematical chain to the principal modules. All entries abbreviate filenames
+with prefixBalabanCMP116and suffix.lean.
+Layer Lean module
+Physical incidence and least Z0 Eq214Interior,Eq214LocalizationCore
+Cutoff and Cauchy extractionEq23Cutoff,Eq214Cauchy
+Exact Gaussian identitiesQuadraticGaussianMatrix,CorrelatedGaussian
+Domination and (2.24)Eq223GaussianDomination , Eq224GaussianBound,
+Eq224DeterminantBound,Eq224SourceBound
+Physical root and norm trans-
+port
+Eq223PhysicalRootNormBridge
+PhysicalP Z0 Eq223PhysicalLocalizationProjector
+Constraint right inverse and
+C=I−EQ
+CMP96ConstraintRightInverse,
+CMP96ConstraintElimination
+Uniform norm and CMP116
+transport ofC
+CMP96ConstraintNorm,Eq214PhysicalConstraintC
+Localized determinant, outer
+moment
+Eq224LocalizedDeterminant, Eq225OuterGaussianMoment,
+Eq226GaussianCardinality
+Physical source and flat Hessian Eq214GammaComplement,Eq214FlatDeltaBound
+Terminal reductionEq214PhysicalConstraintC
+Table 1: Principal theorem-to-artifact map.
+The repository pins Lean and Mathlib. The root build after the physical constraint
+checkpoint completes 8,467 jobs. The 32 new mathematical endpoints across the construction,
+norm, and terminal-consumption checkpoints were audited separately; each prints onlypropext,
+Classical.choice, and Quot.sound. The added modules contain no sorry, admit, local
+axiom,unsafe, oropaquedeclaration.
+The reproducible checkpoint is maintained on the repository branch
+codex/hrpoly-b3-card-tilt, pull request #28. The immutable release tag is
+hrpoly-cmp116-main-reduction-v0.3-2026-07-16. The exact commands are
+lake exe cache get
+lake build YangMillsCore
+lake env lean oracle_check.lean
+8 Remaining analytic frontier
+The formalization localizes the remaining difficulty rather than reducing its mathematical
+importance. CMP116 does not identify the contour Hessian with the flat operator (20). Its
+6
+
+--- Page 7 ---
+
+base point is ( σ(Z), U, J) = (0, ¯U, 0), where ¯U is a generally nontrivial small background. The
+differences in the quadratic forms, covariance, and mixed source produce R1, R2, R3. The
+required estimate has the schematic form
+|Ri(b, b′)| ≤
+h
+c0e−δ0M/3 +c 1(α0 +α 1)
+i
+e−δ0d(b,b′)/2.(25)
+The repository contains consumers of such a bound, but no load-bearing construction of the
+second variation of the nonabelian Wilson action at ¯U and no random-walk expansion proving
+(25).
+Thus the remaining route is
+SWilson −→D2SWilson( ¯U)−→random-walk expansion−→(2.16)
+−→hdom −→(2.26)−→h raw −→KP.
+The determinant, inverse-source, cardinality, constraint-coordinate, and flat source-norm
+analyses are already internal. Introducing (2.16) as a renamed hypothesis would not close this
+frontier; the next valuable endpoint must derive it from the physical Wilson Hessian.
+9 Conclusion
+The formal development closes the finite geometry, physical constraint elimination, coordinate
+transport, Gaussian evaluation, determinant localization, outer integration, sign, and positivity
+steps between CMP116 localization data and an explicit polymer-volume Cauchy bound. It
+also records why three superficially convenient formulations are wrong: bounding the bilinear
+inner factor pointwise before Gaussian integration, assigning a positive sign to the localized
+quadratic matrix, and replacing the small interacting background by the trivial background.
+The terminal theorem is both useful and deliberately incomplete: it exposes, without wrappers,
+the physical Wilson-Hessian and random-walk estimates that still carry the analytic content of
+(2.16), equation (2.26), andhRpoly.
+References
+[1] T. Ba laban,Renormalization group approach to lattice gauge field theories. I. Generation of
+effective actions in a small field approximation and a coupling constant renormalization in four
+dimensions, Comm. Math. Phys.109(1987), 249–301. doi:10.1007/BF01215223.
+[2] T. Ba laban,Renormalization group approach to lattice gauge field theories. II. Cluster expansions,
+Comm. Math. Phys.116(1988), 1–22. doi:10.1007/BF01239022.
+[3] T. Ba laban,Convergent renormalization expansions for lattice gauge theories, Comm. Math. Phys.
+119(1988), 243–285. doi:10.1007/BF01217741.
+[4] T. Ba laban,Large field renormalization. II. Localization, exponentiation, and bounds for the R
+operation, Comm. Math. Phys.122(1989), 355–392. doi:10.1007/BF01238433.
+[5] J. Dimock,The renormalization group according to Balaban. I. Small fields, Rev. Math. Phys.25
+(2013), 1330010. doi:10.1142/S0129055X13300100; arXiv:1108.1335.
+[6] J. Dimock,The renormalization group according to Balaban. II. Large fields, J. Math. Phys.54
+(2013), 092301. doi:10.1063/1.4821275; arXiv:1212.5562.
+[7] J. Dimock,The renormalization group according to Balaban. III. Convergence, Ann. Henri Poincar´ e
+15(2014), 2133–2175. doi:10.1007/s00023-013-0303-3.
+[8] The mathlib Community,The Lean mathematical library, Proc. CPP 2020, ACM, 2020, 367–381.
+doi:10.1145/3372885.3373824.
+7

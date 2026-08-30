@@ -1,0 +1,240 @@
+--- Page 1 ---
+
+Conditional Mutual Information and P etz Reco v ery
+in a Z2 Lattice Gauge Ground State
+Lluis Eriksson
+Indep enden t Researc her
+lluiseriksson@gmail.com
+Jan uary 2026 (v1); July 2026 (v2)
+Abstract
+W e study appro ximate quan tum Mark o v structure in a Z2 lattice gauge ground state using
+the conditional m utual information (CMI) I(A : C | B(w)) and the p erformance of P etz reco v ery
+across a family of tripartitions (A, B(w), C) parameterized b y a buer width w. W e consider
+a 2 × 4 plaquette lattice with op en b oundaries and qubits on links, restricted to a gauge-
+in v arian t (Gauss-la w) ph ysical sector, at coupling g = 1 .0. F or eac h w w e compute reduced
+densit y matrices, the en tropies en tering the CMI, and a P etz-reco v ered state σABC = (idA ⊗
+RPetz
+B→BC )(ρAB), rep orting delit y F(ρABC , σABC ) via the reco v ery error Erec(w) = −log F.
+The Ov erleaf pro ject includes the plot, a formatted table, ra w CSV outputs, and a hash-based
+manifest; the app endix t yp esets ra w artifacts. W e also rep ort n umerical cross-c hec ks (dense
+vs. lo w-rank metho d agreemen t and trace stabilit y) to supp ort v alidit y . v2 (no v1 numb er is
+change d): the star-op erator denition is corrected  with the Hamiltonian con v en tion used
+here (single-link Z terms), the Gauss stars m ust b e Gs = Q
+ℓ∈star(s) Zℓ; v1's prin ted QXℓ
+an ticomm utes with the Zℓ terms of H (the co de used the consisten t con v en tion: an indep enden t
+reconstruction from the manifest alone repro duces the CSV ground energy to 7 × 10−15 and
+ev ery CMI of T able 1 to mac hine precision); t w o in terpretiv e remarks are added  the CMI
+rise at w = 2 trac ks the shrinking traced-out complemen t ( |D| : 8 → 2 → 0), so the prole is
+not a shielding-deca y curv e, and the w = 2 ≈ w = 3 plateau is the buer-saturation iden tit y
+of the companion 2601.0050 (v2); the apparen t P etz-o v er-CMI excess at w = 1 ( Erec > I) is
+sho wn to b e the δ = 10−6 regularization o or  regenerating with δ = 10−12 restores Erec ≤ I
+at ev ery w in the regenerated dataset; and a v erication suite replicates the full pip eline from
+the manifest data alone.
+1 In tro duction
+The conditional m utual information (CMI) quan ties residual correlations b et w een A and C con-
+ditioned on B:
+I(A : C | B) = S(ρAB) + S(ρBC ) − S(ρB) − S(ρABC ),
+where S(ρ) = −tr(ρ log ρ). Small CMI is c haracteristic of (appro ximate) quan tum Mark o v c hains
+and is closely tied to the p ossibilit y of reconstructing ρABC from ρAB b y a reco v ery c hannel acting
+only on B. A canonical candidate is the P etz map; more generally , sev eral reco v ery constructions
+yield quan titativ e links b et w een CMI and ac hiev able reconstruction delit y [1, 2, 3].
+Lattice gauge mo dels pro vide a concrete setting to test these ideas under gauge constrain ts. In
+this short repro ducible note w e compute CMI and P etz reco v ery across a con trolled buer geometry
+in a Z2 gauge mo del, and pro vide all n umerical artifacts for v erication.
+1
+
+--- Page 2 ---
+
+2 Mo del and gauge-in v arian t sector
+W e place qubits on links ℓ of a square lattice with op en b oundary conditions. Let Xℓ and Zℓ denote
+P auli op erators on link ℓ. W e use the Hamiltonian con v en tion implemen ted in the accompan ying
+co de:
+H(g) = −g
+X
+ℓ
+Zℓ − 1
+g
+X
+p
+Xp, X p =
+Y
+ℓ∈∂p
+Xℓ,
+where p runs o v er plaquettes and ∂p denotes the b oundary links of plaquette p. W e w ork at g = 1.0
+on a 2 × 4 plaquette lattice.
+Gauge in v ariance is enforced b y restricting to the ph ysical (Gauss-la w) subspace generated b y
+star op erators
+Gs =
+Y
+ℓ∈star(s)
+Zℓ, G sψ = ψ for all v ertices s.
+In this con v en tion one has [H(g), Gs] = 0 for all v ertices s, so the dynamics preserv es the Gs = +1
+sector. W e compute the ground state ψ0 in this ph ysical sector and set ρ = ψ0ψ†
+0.
+v2 correction (star op erators). v1 prin ted the stars as Q
+ℓ∈star(s) Xℓ. With the single-link
+Zℓ terms of H(g) ab o v e this is inconsisten t: eac h Zℓ shares exactly one link with the t w o stars at
+its endp oin ts and therefore antic ommutes with them, so [H, Gs] ̸= 0 as prin ted. The consisten t
+c hoice for this Hamiltonian con v en tion  and the one actually realized in the n umerical pip eline 
+is Gs = QZℓ as displa y ed ab o v e; the Gs = +1 sector is then the cycle space generated b y plaquette
+ips, of dimension 2Np = 256, matc hing dim_phys in the manifest. (Equiv alen tly , one ma y sw ap
+X ↔ Z ev erywhere, reco v ering the standard K ogut con v en tion; the t w o readings are related b y a
+global Hadamard.) The v2 v erication suite conrms that this reconstruction repro duces the CSV
+ground energy E0 = −22.997180401986128 to 7×10−15 and ev ery en try of T able 1 (see Note added).
+3 Regions A, B(w), C and buer construction
+Subsystems are dened as subsets of links; reduced states are obtained b y tracing out complemen t
+links. W e x disjoin t link sets A and C (terminals) and dene a separating w all W b et w een them,
+c hosen as a brute-force minim um v ertex cut in the v ertex-adjacency graph used b y the pip eline.
+The pip eline uses t w o link-adjacency graphs: vertex-adjac ency (links adjacen t if they share a
+v ertex), used to construct and v erify a separating w all W; and plaquette-adjac ency (links adjacen t
+if they b elong to a common plaquette), used to gro w the buer.
+Let d□(ℓ, W) b e the graph distance from link ℓ to the w all W in the plaquette-adjacency graph.
+F or in teger w ≥ 0 w e dene the buer region
+B(w) = {ℓ : d□(ℓ, W) ≤ w} \(A ∪ C),
+ensuring A, B(w), and C are disjoin t b y construction. The exact link indexing and the sets for eac h
+w are recorded in repro_manifest.json and z2_petz_results.csv .
+4 Metho ds: CMI and P etz reco v ery
+F or eac h w w e form reduced densit y matrices ρAB, ρBC , ρB, and ρABC b y partial traces, and compute
+en tropies from eigen v alues using a small eigen v alue cuto to a v oid n umerical log(0) instabilities (the
+cuto v alue is recorded in the manifest). The implemen tation is h ybrid: w e use dense linear algebra
+2
+
+--- Page 3 ---
+
+when |ABC| is small, and a lo w-rank (LR+OB) pip eline for larger buers; b oth metho ds are cross-
+c hec k ed in the o v erlap regime. W e ev aluate P etz reco v ery only for instances where the constructed
+w all separates A and C (recorded as SEP in the CSV).
+T o quan tify lo cal reconstructibilit y w e apply the P etz reco v ery map:
+RPetz
+B→BC (X) = ρ1/2
+BC ρ−1/2
+B X ρ−1/2
+B ρ1/2
+BC .
+Numerically , w e stabilize the in v erse square ro ot b y a xed regularization ρ−1/2
+B ≈ (ρB + δI)−1/2,
+δ = 10 −6, as recorded in the manifest (parameter DELTA_PETZ ). The reco v ered state is σABC =
+(idA ⊗ RPetz
+B→BC )(ρAB), and w e explicitly renormalize σABC ← σABC /tr(σABC ) b efore computing
+delit y . W e additionally symmetrize σABC ← (σABC + σ†
+ABC )/2 to suppress tin y non-Hermitian
+n umerical noise. W e v erify σABC ⪰ 0 up to n umerical tolerance b efore ev aluating the Uhlmann
+delit y
+F(ρABC , σABC ) =
+
+tr
+q√ρABC σABC
+√ρABC
+2
+and the reco v ery error Erec(w) = −log F (natural logarithm, nats).
+5 Results
+Figure 1 sho ws I(A : C | B(w)) together with Erec(w). The CSV records whether eac h p oin t w as
+computed using the dense metho d or the LR+OB metho d (eld petz_method ). T able 1 rep orts
+the n umerical v alues, including 1 − F. The main qualitativ e observ ation in this instance is that
+P etz reco v ery remains high-delit y (with reco v ery error of order 10−5) o v er the tested buer widths
+w ∈ {0, 1, 2, 3}, consisten t with an appro ximately Mark o vian structure for this geometry at g = 1.0.
+Figure 1: Z2 mo del on a 2 × 4 plaquette lattice at g = 1 .0. Conditional m utual information
+I(A : C | B(w)) and P etz reco v ery error Erec(w) = −log F v ersus buer width w.
+3
+
+--- Page 4 ---
+
+T able 1: Z2 mo del on a 2×4 plaquette lattice at g = 1.0. Region sizes and v alues of I(A : C | B(w))
+and 1 − F.
+w |A| |B| I(A : C | B) 1 − F
+0 4 3 1.627985e-07 8.898586e-09
+1 4 6 1.659899e-07 2.422318e-07
+2 4 12 5.782748e-05 2.589104e-05
+3 4 14 5.782759e-05 2.588882e-05
+In terpretiv e remarks (v2). T w o features of T able 1 deserv e explicit framing. (i) The pr ole
+is not a shielding-de c ay curve. With A and C xed and B(w) gro wing, the traced-out complemen t
+D shrinks ( |D| = 11 , 8, 2, 0 for w = 0 ..3); the ×350 CMI rise at w = 2 coincides exactly with
+|D| dropping from 8 to 2 links. This is the complemen t-shrink age confound do cumen ted for nite-
+size pip elines in the companions 2601.0038 and 2601.0040 (v2): w sim ultaneously c hanges the
+buer and the discarded en vironmen t, so monotone deca y in w should not b e exp ected, and small
+CMI at small w partly reects a large traced-out region. (ii) The w = 2 ≈ w = 3 plate au is
+satur ation. A t w = 3 the buer is the full complemen t of A ∪ C and the global state is pure;
+the near-equalit y I(w=2) ≃ I(w=3) (relativ e dierence 2 × 10−6) is the buer-saturation iden tit y
+pro v ed in the companion 2601.0050 (v2). (iii) The w = 1 Petz-over-CMI exc ess is a δ o or. In
+T able 1, Erec(1) = 2 .42 × 10−7 > I(1) = 1 .66 × 10−7, n umerically ab o v e the CMI scale (F a wzi
+Renner guaran tees Erec ≤ I for some reco v ery c hannel, not for the explicit regularized P etz map
+p oin t wise, so this is a diagnostic, not a violation). Regenerating the dataset with δ = 10−12 giv es
+Erec(1) = 2.3 × 10−8 ≤ I(1), and Erec ≤ I at ev ery w in the regenerated dataset: the excess is the
+δ = 10−6 regularization o or, not a prop ert y of the P etz map here.
+6 V alidation c hec ks
+W e include ligh t w eigh t n umerical c hec ks to supp ort repro ducibilit y:
+ Metho d cross-c hec k. A t the smallest buer width where b oth implemen tations are feasible,
+dense ev aluation v ersus the LR+OB pip eline agrees at the lev el |∆Erec| ≈5.394 × 10−8, and
+the trace agreemen t satises |∆tr| ≈5.6 × 10−16 (see CSV for the corresp onding ro ws).
+ T race stabilit y . The reco v ered state remains close to normalized; for example w e observ e
+tr(σ) ≈ 0.9999855 in the rep orted run (see CSV).
+7 Scop e and outlo ok
+This pap er rep orts one system size ( 2×4) and one coupling ( g = 1.0). Immediate extensions include
+scanning g across regimes, nite-size scaling, and comparing P etz reco v ery to alternativ e reco v ery
+maps and precision con trols. Within the series, the coupling sw eeps and connemen t diagnostics
+of 2601.0044, 2601.0047 and 2601.0051 (all v2) are the natural con tin uation; the xed-terminal
+geometry here complemen ts their collar-deca y geometries.
+8 Repro ducibilit y artifacts
+This Ov erleaf pro ject exp ects the follo wing les in the pro ject ro ot: fig_z2_petz_recovery.png ,
+tab_z2_petz_data.tex , z2_petz_results.csv , repro_manifest.json . The manifest records run
+4
+
+--- Page 5 ---
+
+metadata (mo del and n umerical parameters, cutos) together with le hashes to enable in tegrit y
+c hec ks of the artifacts. v2: the v erication suite ( verification/2601-0111/verify_2601_0111.py
+in the series rep ository) reconstructs the en tire pip eline from the manifest elds alone ( A_patch ,
+C_patch , wall , W_LIST , DELTA_PETZ ) and replicates T able 1; see the Note added.
+Note added in v2
+No v1 n um b er is c hanged; the CSV, manifest, table and gure stand. v2: (1) corrects the star-
+op erator denition ( Gs = QZℓ; v1's prin ted QXℓ an ticomm utes with the Zℓ terms of H, so
+[H, Gs] ̸= 0 as prin ted  a t yp o, since the pip eline used the consisten t con v en tion); (2) adds
+the in terpretiv e remarks ab o v e: complemen t-shrink age confound (the CMI rise at w = 2 trac ks
+|D| : 8 → 2), buer saturation at w = 3 (2601.0050 v2), and the δ-o or diagnosis of the w = 1
+P etz-o v er-CMI excess ( δ = 10−12 restores Erec ≤ I at ev ery w in the regenerated dataset); (3) adds
+series p ositioning (v1 cited no companion pap ers); (4) adds a v erication suite that reconstructs
+the lattice, the v1 link indexing, the buers ( |B(w)| = 3, 6, 12, 14 repro duced exactly), the cycle-
+space Gauss sector ( dim = 256), the ground state ( E0 matc hed to 7×10−15), all four CMI v alues to
+mac hine precision ( < 10−13), and 1−F to 10−6 relativ e on the LR+OB ro ws of T able 1 ( w = 1, 2, 3);
+at w = 0 (v1's dense ro w) the suite's lo w-rank metho d diers from v1's dense v alue b y 1.2 × 10−8,
+within the 5.4 × 10−8 dense-vs-LR+OB metho d spread that v1 itself rep orts; the recomputed tr(σ)
+v alues matc h the CSV to all prin ted digits.
+References
+[1] D. P etz, Sucient sub algebr as and the r elative entr opy of states of a von Neumann algebr a ,
+Comm un. Math. Ph ys. 105 (1986) 123131.
+[2] O. F a wzi and R. Renner, Quantum c onditional mutual information and appr oximate Markov
+chains , Comm un. Math. Ph ys. 340 (2015) 575611.
+[3] D. Sutter, M. Berta, and M. T omamic hel, Multivariate tr ac e ine qualities , Comm un. Math. Ph ys.
+352 (2017) 3758.
+[4] F. J. W egner, Duality in gener alize d Ising mo dels and phase tr ansitions without lo c al or der
+p ar ameters , J. Math. Ph ys. 12 (1971) 2259.
+[5] J. B. K ogut, A n intr o duction to lattic e gauge the ory and spin systems , Rev. Mo d. Ph ys. 51
+(1979) 659.
+[6] A. Y. Kitaev, F ault-toler ant quantum c omputation by anyons , Ann. Ph ys. 303 (2003) 230.
+[7] L. Eriksson, ai.viXra:2601.0050 (2026; v2 2026).
+[8] L. Eriksson, ai.viXra:2601.0038 (2026; v2 2026).
+[9] L. Eriksson, ai.viXra:2601.0040 (2026; v2 2026).
+[10] L. Eriksson, ai.viXra:2601.0044 (2026; v2 2026).
+[11] L. Eriksson, ai.viXra:2601.0047 (2026; v2 2026).
+[12] L. Eriksson, ai.viXra:2601.0051 (2026; v2 2026).
+5
+
+--- Page 6 ---
+
+A Repro ducibilit y app endix
+A.1 Ra w data (CSV): z2_petz_results.csv
+Nx,Ny,g,E0_phys,w,nA,nB,nC,sep,nABC,CMI,Erec,F,1-F,tr_sigma,wall_size,petz_method
+2,4,1.0,-22.997180401986128,0,4,3,4,SEP,11,1.6279854714307262e-07,8.898585574692225e
+-09,0.9999999911014144,8.898585646122115e-09,0.9999960024027247,3,[DENSE]
+2,4,1.0,-22.997180401986128,1,4,6,4,SEP,14,1.6598989827087962e-07,2.4223181230346393e
+-07,0.9999997577682169,2.4223178307636317e-07,0.9999853324155468,3,[LR+OB rABC=256 rB=32]
+2,4,1.0,-22.997180401986128,2,4,12,4,SEP,20,5.782748071088417e-05,2.5891375884829603e
+-05,0.9999741089592938,2.5891040706160773e-05,0.9999855315493759,3,[LR+OB rABC=4 rB=48]
+2,4,1.0,-22.997180401986128,3,4,14,4,SEP,22,5.782758913397412e-05,2.58891519139754e
+-05,0.9999741111832071,2.5888816792885017e-05,0.9999855315493761,3,[LR+OB rABC=1 rB=48]
+A.2 Manifest (hashes + metadata): repro_manifest.json
+Key elds (full le in the rep ository): A_patch = [0 , 2, 10, 11]; C_patch = [6 , 8, 19, 20]; wall =
+[13, 14, 15] ( wall_size = 3 ); W_LIST = [0 , 1, 2, 3]; DELTA_PETZ = 10 −6; DENSE_MAX_NABC = 12 ;
+Nlinks = 22, Np = 8, Nv = 15, dim_phys = 256; SHA256 hashes of fig_z2_petz_recovery.png
+( 17d33a18... ), tab_z2_petz_data.tex ( d07e016d... ), z2_petz_results.csv ( 710f9a48... ).
+6

@@ -1,0 +1,303 @@
+--- Page 1 ---
+
+Influence Bounds for Polymer Remainders in Balaban’s
+Renormalization Group: an Unconditional Efron–Stein Bound
+and a Conditional (B6) Closure for the RG–Cauchy Programme
+in 4D Lattice Yang–Mills*
+Lluis Eriksson
+Independent Researcher
+lluiseriksson@gmail.com
+February 2026 (v2: July 2026)
+Abstract
+We study the influence estimate — Assumption (B6) — required by the RG–Cauchy
+summability framework for blocked observables in four-dimensional SU (Nc) lattice Yang–
+Mills theory, measured by the Efron–Stein seminorm σν(f)2 = P
+e Eν[Varνe(f)]. In the
+small-field regime of Balaban’s multiscale effective action, under (A1) a polymer representa-
+tion, (A2) a per-link oscillation bound with irrelevance factor 2 −2k, and (A3) lattice-animal
+counting — all imported from the traceability companion 2602.0069 v2 (conditional) — we
+prove the unconditional seminorm bound sup t∈[0,1] σνk,t (V irr
+k ) ≤ C independent of the RG
+scale k: the single-link conditional variance obeys Var νe(f) ≤ 1
+4 osce(f)2 for every measure
+(Lemma 3.2 — conditioning on all other links freezes them, so no influence leaks; this is the
+sound half, in exact duality with the sibling paper 2602.0070, whose per-link lemma failed but
+whose covariance identity was exact). Version 2 corrects the unsound half: v1’s covariance
+bound |Covν(f, h)| ≤σν(f)σν(h) (its Eq. (18)) is false for non-product ν — Example 3.5:
+perfectly correlated spins give σν(X2) = 0 < 1 = Var ν(X2) — because Efron–Stein ten-
+sorisation is an independence theorem, and the interpolating Gibbs measures νk,t couple
+links. Restoring the Duhamel application requires approximate tensorisation of variance
+(H-AT): Varν(f) ≤ CAT
+P
+e Eν[Varνe(f)] uniformly along the interpolation — a Dobrushin-
+uniqueness-type condition, the same family as the sibling’s (H-DEC) and the chain’s (H-
+DOB-blk), verified here on exact Gibbs chains at weak coupling and violated without it.
+There is also a seminorm-interface gap (Remark 3.7): the companion Duhamel lemma is
+proved for the Doob seminorm, and σDoob is not dominated by the Efron–Stein seminorm
+* Version 2. Version 1 was titled “. . . Closing Assumption (B6). . . ” and asserted (Remark 3.1) that the
+covariance bound |Covν(f, h)| ≤σν(f)σν(h) for the Efron–Stein seminorm “holds for any measure ν . . . by the
+tensorisation structure of conditional variances.” That assertion is false for non-product measures: tensorisation
+of the variance is an independence theorem (Efron–Stein [23] assumes independent components), and the two-
+spin counterexample of the sibling audit (2602.0070 v2) applies verbatim — σν(X2) = 0 while Varν(X2) = 1 for
+perfectly correlated spins (Example 3.5). v2 separates what survives (the unconditional bound supt σνk,t (V irr
+k ) ≤
+C, Theorem 1.3, whose proof uses only the everywhere-valid Lemma 3.2 plus combinatorics) from what becomes
+conditional (the use of that bound in the Duhamel step, which requires approximate tensorisation (H-AT), and
+the seminorm interface with the companion’s Doob lemma, Remark 3.7). The prize roadmap prose is toned down,
+the broken reference in v1’s Remark 5.2 is fixed, and the audited chain and sibling papers (2602.0069/0070 v2,
+2602.0063 v3) are cited. See the Note added in v2 (Section 6).
+1
+
+--- Page 2 ---
+
+for non-product ν (same counterexample). Conclusion: (B6) as consumed by the RG–Cauchy
+argument is closed conditionally on (H-AT) (or (H-DEC)); the unconditional content of this
+paper is the Efron–Stein seminorm bound and its scale-uniform M · 2−4k = 4(L/a0)4 can-
+cellation. All claims, including both counterexample adjudications and the weak-coupling
+validation of (H-AT), are machine-verified in a companion suite.
+Contents
+1 Strategic roadmap and main statement 2
+1.1 Context: (B6) in the UV block . . . . . . . . . . . . . . . . . . . . . . . . . . . . 2
+1.2 Main statement . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 2
+2 Setup and imported hypotheses 3
+3 Influence toolkit: conditional variance and oscillation 3
+4 Proof of Theorem 1.3 4
+5 Interface with the RG–Cauchy telescoping argument 4
+6 Note added in v2 5
+A Reflection positivity feasibility (parallel track) 5
+B Constants bookkeeping 6
+1 Strategic roadmap and main statement
+1.1 Context: (B6) in the UV block
+The RG–Cauchy programme constructs a continuum limit by proving the pushed-forward lattice
+measures Cauchy on blocked observables, via the Duhamel interpolation
+Eνk,1[f] − Eνk,0[f]
+ ≤
+Z 1
+0
+σνk,t (f) σνk,t (V irr
+k ) dt. (1)
+(v2) The validity of (1) with the Efron–Stein seminorm is exactly what Example 3.5 puts in
+question for non-product ν; see § 5.
+Remark 1.1 (What this paper does and does not do; v2 update). Proved here, unconditionally:
+the seminorm bound σνk,t (V irr
+k ) ≤ C (Theorem 1.3). Conditional (new in v2): its use in (1),
+via (H-AT) or the sibling’s (H-DEC). Not addressed: (A1)–(A3) (imported from 2602.0069 v2,
+themselves conditional), LSI/mixing, thermodynamic limit, OS/RP, mass gap. The v1 “prize
+roadmap” table is retained only as an organizational sketch; all its “unconditional” annotations
+are withdrawn in favor of the audited-chain hypothesis ledger (2602.0041 v3, 0051–0057 v2,
+0063 v3, 0069/0070 v2).
+2
+
+--- Page 3 ---
+
+1.2 Main statement
+Definition 1.2 (Efron–Stein influence seminorm). For ν on GΛ1
+k and f ∈ L2(ν), with Varνe(f)
+the conditional variance of f in the link e given all other links,
+σν(f)2 :=
+X
+e∈Λ1
+k
+Eν
+
+Varνe(f)
+
+. (2)
+Theorem 1.3 (Uniform Efron–Stein influence bound — unconditional). Let Λk = (akZ/LZ)4,
+ak = a02−k. Under (A1)–(A3) with κ >log Canim, for every k ≥ 0, every t ∈ [0, 1], and indeed
+every probability measure ν on GΛ1
+k :
+σν(V irr
+k )2 ≤ 1
+4 M (2−2kS∗)2 = ( L/a0)4S2
+∗, (3)
+with S∗ = Cosc
+P
+n Cn
+animnpe−κn and M = 4(L/a0)424k. (v2) This statement survives v1 verbatim
+— its proof uses only Lemma 3.2 (valid for all ν) and combinatorics. What v1 overclaimed is
+the consequence drawn from it; see § 5.
+Remark 1.4 (Scale stability: the 2 4k cancellation). |Λ1
+k| ·2−4k = 4(L/a0)4 independent of k:
+the fundamental cancellation making the bound scale-uniform (suite check 5).
+Remark 1.5 (Dependence on L). C depends on the fixed physical box L; the thermodynamic
+limit is outside the scope, as in v1.
+2 Setup and imported hypotheses
+Wilson action on Λk, gauge group SU (Nc), small-field effective action with irrelevant remainder
+V irr
+k ; interpolated measures νk,t ∝ e−Hk,0−tV irr
+k dµ⊗.
+Assumption A 1 (Polymer representation). V irr
+k = P
+X∈Pk Kk(X; U|X), activities local in X.
+(v2) Imported from 2602.0069 v2 (traceable, conditional).
+Assumption A 2 (Per-link oscillation bound). osce(Kk(X)) ≤ Cosc2−2k|X|p
+ke−κ|X|k for e ∈ X.
+(v2) Imported from 2602.0069 v2; carries the βLF dichotomy for its large-field part.
+Assumption A 3 (Lattice-animal counting). |{X : e ∈ X, |X|k = n}| ≤Cn
+anim, Canim = (2d)3
+(enumeration-verified; the sharper (2d)2n also holds).
+Remark 2.1 (Origin of the 2 −2k factor). The d − dop = 4 − 6 = −2 irrelevance gap at fixed
+physical volume; the sound (ultraviolet) direction per 2602.0069 v2, Remark 10.4.
+Remark 2.2 (Standard choice of Canim). Spanning-tree walks give (2d)2n walks, hence Canim =
+(2d)3 is safe (not sharp).
+Remark 2.3 (Logical structure). The paper proves the implication (A1)–(A3) ⇒ (3). (v2) It
+does not prove (A1)–(A3), and (3) alone does not feed (1) without (H-AT).
+3
+
+--- Page 4 ---
+
+3 Influence toolkit: conditional variance and oscillation
+Remark 3.1 (What is measure-free and what is not — v2 rewrite of v1’s Remark 3.1) . v1
+claimed the covariance bound |Covν(f, h)| ≤σν(f)σν(h) “holds for any measure ν . . . by the
+tensorisation structure of conditional variances.” This is withdrawn: tensorisation of variance,
+Varν ≤ P
+e Eν[Varνe], is the Efron–Stein independence theorem [23]; for coupled links it fails
+(Example 3.5). What is measure-free is the single-link Lemma 3.2 below — and only that.
+Lemma 3.2 (Variance–oscillation inequality — valid for every ν). For any ν, f ∈ L∞, e ∈ Λ1
+k:
+Varνe(f) ≤ 1
+4 osce(f)2 ν-a.s. (4)
+Fix all links except e: the conditional law of Ue is a probability measure on G, and Ue 7→ f has
+range ≤ osce(f); a variable supported in an interval of length ∆ has variance ≤ ∆2/4 (sharp for
+endpoint Bernoulli). Unlike the Doob increments of the sibling paper, nothing leaks here: all
+other links are frozen, not integrated. (Suite check 1, including Bernoulli saturation.)
+Remark 3.3. The right-hand side of (4) depends only on the pointwise oscillation — this
+survives v1 and is why Theorem 1.3 is robust along the interpolation.
+Lemma 3.4 (Subadditivity of oscillation). osce(P
+m fm) ≤ P
+m osce(fm); with (A1), osce(V irr
+k ) ≤P
+X∋e osce(Kk(X)).
+Example 3.5 (The tensorisation failure — same counterexample as 2602.0070 v2, dual role) .
+X1, X2 ∈ {±1} perfectly correlated,f = X2. Conditional variances: given X2 frozen, varying X1
+does not change f (Varνe1 (f) = 0); given X1 frozen, X2 = X1 is deterministic (Varνe2 (f) = 0).
+Hence σν(f) = 0 while Varν(f) = 1 : both the Efron–Stein inequality Var ≤ PE[Vare] and
+v1’s covariance bound (18) (take h = f) fail. Note the duality with the sibling paper: there
+σDoob(f) = 1 exceeded the oscillation bound; here σES(f) = 0 undershoots the variance. The
+same two-point measure adjudicates both papers. (Suite check 2; on exact Ising chains the ratio
+Var/ PE[Vare] grows with the coupling, check 3.)
+Remark 3.6 (Approximate tensorisation (H-AT); new in v2) . (H-AT): there is CAT < ∞,
+uniform in k and t ∈ [0, 1], with
+Varνk,t (f) ≤ CAT
+X
+e
+Eνk,t
+
+Varνe(f)
+
+for all f ∈ L2. (5)
+Under (H-AT), the covariance bound holds with constantCAT: |Covν(f, h)| ≤Varν(f)1/2 Varν(h)1/2 ≤
+CAT σν(f)σν(h), and the Duhamel application (1) is restored. Approximate tensorisation of
+variance is known to hold under Dobrushin-uniqueness-type conditions; for the weakly coupled
+small-field νk,t it is plausible but unproven — the same open decoupling frontier as the sibling’s
+(H-DEC) and the chain’s (H-DOB-blk). The suite verifies (5) on exact Gibbs chains at weak
+coupling (CAT ≈ 1.3 at J = 0.15) and measures its blow-up at strong coupling (check 3).
+Remark 3.7 (Seminorm interface with the companion Duhamel lemma; new in v2) . The com-
+panion’s Duhamel covariance lemma (2602.0070 v2, Lemma 3.2 there) is an exact identity for
+the Doob seminorm σDoob. For non-product ν, σDoob is not dominated by the Efron–Stein semi-
+norm (Example 3.5: σDoob(X2) = 1 , σES(X2) = 0 ), so plugging Theorem 1.3 into that lemma
+requires either (H-AT) (this paper) or the conditional-oscillation route with (H-DEC) (sibling).
+4
+
+--- Page 5 ---
+
+The two hypotheses are near-equivalent expressions of the same decoupling requirement; v2 of
+both papers states this jointly: the only open probabilistic input of the UV block is Dobrushin-
+type decoupling of the interpolating measures. (Suite check 4: no domination, either direction,
+for coupled ν.)
+4 Proof of Theorem 1.3
+By Lemma 3.2 and Lemma 3.4, for every ν:
+Eν[Varνe(V irr
+k )] ≤ 1
+4
+X
+X∋e
+osce(Kk(X))
+2
+≤ 1
+4 (2−2kS∗)2, (6)
+using (A2)–(A3); note the square applies after the polymer sum, so the convergence condition
+is κ > log Canim (not 2 κ; v1’s Remark B.1 was correct, suite check 5). Summing over the
+M = 4(L/a0)424k links gives (3). □
+5 Interface with the RG–Cauchy telescoping argument
+Theorem 5.1 (Conditional (B6) closure; v2 restatement of v1’s Theorem 5.1) . Assume (A1)–
+(A3), κ >log Canim, and (H-AT). Then the Duhamel bound (1) applies with supt σνk,t (V irr
+k ) ≤ C,
+and for blocked observables with the companion contraction input (H-LIP),δk ≲ Lip(F)(a0/ℓ)24−k:
+geometrically summable — the (H-CAUCHY) candidate rate of 2602.0063 v3 (Rmk 3.7, η = 2).
+(v1 claimed this unconditionally, “making the RG–Cauchy convergence unconditional given A1–
+A3”; withdrawn — the missing input is (H-AT)/(H-DEC).)
+Remark 5.2 (What remains; v1’s broken reference fixed) . (v1’s Remark 5.2 printed “given ??
+A1–A3”.) To complete: (i) prove (H-AT) (or (H-DEC)) for νk,t at weak coupling, uniformly
+in t, k; (ii) discharge (A1)–(A3) beyond traceability (2602.0069 v2: βLF dichotomy, (H- θ));
+(iii) audit the Master framework’s (H-LIP) and on/off-vs- k→k+1 identification; (iv) OS/RP,
+thermodynamic limit, mass gap (2602.0063 v3 layer).
+Remark 5.3 (Independence from OS/RP). As in v1: OS positivity is not used in the UV block.
+Remark 5.4 (Modular separation from Balaban’s estimates). As in v1: the influence argument
+is verifiable independently of the polymer-norm machinery — indeed the companion suite does
+so.
+Remark 5.5 (The “no LSI or mixing” claim; v2 rewrite of v1’s Remark 5.5). v1: “the oscillation-
+based proof avoids any log-Sobolev inequality or mixing condition.” Corrected: that is true of
+Theorem 1.3 (the seminorm bound), and false of the (B6) application — (1) needs (H-AT), a
+mixing-type (Dobrushin) condition. The probabilistic content of the UV block cannot be made
+mixing-free; it can be reduced to a single, clean decoupling hypothesis. That reduction is the
+honest contribution of this paper and its sibling.
+6 Note added in v2
+Version 1 claimed to close (B6) unconditionally, resting on a covariance bound asserted “for any
+measure by tensorisation.” Following the series audit:
+5
+
+--- Page 6 ---
+
+ F-ES. v1’s Eq. (18) is false for non-productν: Example 3.5 (σES = 0 < 1 = Var; the Efron–
+Stein inequality is an independence theorem). On exact Ising chains the tensorisation ratio
+Var/ PE[Vare] exceeds 1 at any J >0 and grows with J. [Suite checks 2–3]
+ What survives. Lemma 3.2 (for every ν, with exact Bernoulli saturation), Theorem 1.3
+(unconditional seminorm bound), the M2−4k cancellation, and v1’s Remark B.1 (κ, not 2κ
+— verified). [Checks 1, 5]
+ F-IFACE.The Efron–Stein seminorm does not dominate the Doob seminorm of the com-
+panion’s Duhamel lemma for coupled ν; the plug-in of v1’s § 5.1 needs (H-AT) or (H-DEC).
+[Check 4]
+ (H-AT) introduced; verified at weak coupling ( CAT ≈ 1.3 at J = 0.15 on exact chains),
+blow-up measured at strong coupling. Theorem 5.1 restates the (B6) closure condition-
+ally. Joint statement with 2602.0070 v2: the UV block’s only open probabilistic input is
+Dobrushin-type decoupling of the interpolating measures. [Checks 3–4, 6]
+ Hygiene: v1’s “??” reference fixed; the $ 1M prize-roadmap prose toned down; references
+updated (audited chain 2602.0041 v3, 0051–0057 v2, 0063 v3; siblings 0069/0070 v2; Paper
+12a = 2602.0069).
+Suite: verify 2602 0072.py (6 checks) athttps://github.com/lluiseriksson/THE-ERIKSSON-PROGRAMME,
+directory verification/2602-0072/.
+A Reflection positivity feasibility (parallel track)
+As in v1: RP compatibility of the blocking is a parallel track, not consumed here; cf. 2602.0063 v3,
+Section 5, for the audited treatment of RP inheritance.
+B Constants bookkeeping
+Master table as in v1, with the v2 status column: Cosc, κ, p from (A2) [0069 v2, conditional];
+Canim = (2 d)3 [verified]; convergence condition κ > log Canim [verified sharp]; CAT [(H-AT),
+open]. (v1’s Remark B.1, noting that the squared-after-sum structure requires κ rather than
+2κ, is correct and now machine-verified: suite check 5.) What Paper 12a (= 2602.0069) must
+still discharge: the βLF dichotomy and (H-θ), per its v2.
+References
+[1] L. Eriksson, Doob influence bounds for polymer remainders in 4D lattice Yang–Mills renor-
+malization — a corrected and conditional influence bound , ai.viXra:2602.0070 (v2), 2026.
+[The Duhamel companion; its v1 Lemma 3.4 was refuted by the same counterexample used
+here.]
+[2] T. Ba laban, Comm. Math. Phys. 95 (1984) 17–40; 96 (1984) 223–250; 98 (1985) 17–51; 99
+(1985) 75–102, 389–434; 102 (1985) 277–309; 109 (1987) 249–301; 116 (1988) 1–22; 119
+(1988) 243–285; 122 (1989) 175–202, 355–392.
+6
+
+--- Page 7 ---
+
+[3] J. Dimock, arXiv:1108.1335; arXiv:1212.5562; arXiv:1304.0705.
+[4] L. Eriksson, The Ba laban–Dimock structural package . . . — a traceability and conditional-
+discharge package, ai.viXra:2602.0069 (v2), 2026. [= “Paper 12a”; supplier of (A1)–(A3).]
+[5] L. Eriksson, Conditional continuum limit of 4d SU (Nc) Yang–Mills theory . . . ,
+ai.viXra:2602.0063 (v3), 2026. [(H-CAUCHY) = its Assumption 3.5; F-SUM.]
+[6] L. Eriksson, ai.viXra:2602.0041 (v3), 2026; and the audited chain ai.viXra:2602.0051–0057
+(v2), 2026 [(H-P0), (H-YGZ), (H-SFI), (H-ABS), (H-DOB-blk), window].
+[7] B. Efron, C. Stein, The jackknife estimate of variance , Ann. Statist. 9 (1981), 586–596.
+[Independence is assumed there — the point of Example 3.5.]
+[8] S. Boucheron, G. Lugosi, P. Massart, Concentration Inequalities, Oxford UP, 2013. [Efron–
+Stein under independence; approximate tensorisation literature.]
+7

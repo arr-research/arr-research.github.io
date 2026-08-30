@@ -1,0 +1,161 @@
+--- Page 1 ---
+
+Parity Barriers for Decoupling Inequalities:
+why no comparison functional of bounded marginal order can certify uniform decoupling
+Lluis Eriksson
+July 2026 — v4
+Abstract
+For every𝑟 ≥1, the uniform measure on the even-parity subset of{±1}𝑟+1 is 𝑟-wise
+independent, yet the last coordinate has unit variance while being an a.s. function of the
+others. This example is classical — parity-check codes are the standard construction of
+𝑘-wise independent distributions in the pseudorandomness literature [1, 2, 3, 4] — and we
+claim no novelty for it. What we record here is a consequence we have found useful and have
+not seen isolated as a statement: any “comparison functional” whose value depends only
+on marginal data of order≤𝑟, with constants uniform over finite measures, takes identical
+values on the parity measure and on the uniform product measure, and is therefore consistent
+with perfect decoupling on a measure where decoupling fails maximally. Hence no inequality
+built from bounded-order functionals whose right-hand side recognises perfect decoupling
+(a certification condition we make explicit) can certify uniform decoupling principles —
+Dobrushin-type mixing, approximate tensorisation with measure-free constants, covariance
+decay — on any class of measures containing the parity family. The case𝑟= 1 recovers, and
+explains structurally, the failure of raw-oscillation/Doob and Efron–Stein-type steps found
+repeatedlyinanadversarialauditofaconstructiveYang–Millsprogramme: thoseinequalities
+lie in the order-1 class, and no repair within bounded-order data can succeed, because the
+barrier recurs at every order. Statements (a) and (b) are machine-checked in Lean 4/Mathlib
+parametrically in 𝑟 (no sorry; standard axioms only), and the abstract certifying-barrier
+schema — order-𝑟 equality of the right-hand side on the pair, certification, and separation
+jointlyexcludeanyuniformconstant—isformalizedaswell( certifying_barrier_schema);
+finite decide instances for𝑟≤4 and exact rational arithmetic for𝑟≤6 serve as independent
+audits, and the general proof is a one-line character computation, included for completeness.
+1 The classical example, and what is taken from it
+Fix 𝑟 ≥1 and 𝑛= 𝑟+ 1. Let 𝑢𝑛 be the uniform measure on{±1}𝑛 and let𝜋𝑛 be the uniform
+measure on the even-parity set{𝑥∈{±1}𝑛 : ∏︀
+𝑖𝑥𝑖 = 1}. Two facts:
+(a) every subset of at most𝑟coordinates of𝜋𝑛 is distributed exactly as under𝑢𝑛 (𝜋𝑛 is 𝑟-wise
+independent);
+(b) 𝑓(𝑥) = 𝑥𝑛 satisfies Var𝜋𝑛(𝑓) = 1 and 𝑓 = ∏︀
+𝑖≤𝑟𝑥𝑖 𝜋𝑛-almost surely.
+Both are classical. The support of𝜋𝑛 is the parity-check code; distributions supported on
+codesofdualdistance >𝑘 are𝑘-wiseindependent, andtheparityexampleisthestandardwitness
+that (𝑛−1)-wise independence does not imply independence [1, 2, 3, 4]. For completeness,
+the Fourier proof: 𝑑𝜋𝑛/𝑑𝑢𝑛 = 1 + 𝜒[𝑛] where 𝜒𝑆(𝑥) = ∏︀
+𝑖∈𝑆𝑥𝑖; for 1 ≤ |𝑆| ≤𝑟, character
+1
+
+--- Page 2 ---
+
+orthogonality givesE𝜋𝑛[𝜒𝑆] = E𝑢𝑛[𝜒𝑆] + E𝑢𝑛[𝜒[𝑛]∖𝑆] = 0, which is (a); (b) holds because𝑥𝑛 =∏︀
+𝑖≤𝑟𝑥𝑖 on the support and the one-dimensional marginal of𝑥𝑛 is uniform by (a).
+The purpose of this note is thebarrier that (a)+(b) impose on a specific family of inequalities
+that arise in constructive quantum field theory, which we now formalise.
+2 The barrier
+Definition 1 (comparison functional of order 𝑟). Let ℳ𝑛 be the finite probability measures
+on ∏︀𝑛
+𝑖=1 𝐸𝑖 (finite alphabets 𝐸𝑖). A functional Φ𝑏(𝜇,𝑓) at site 𝑏 has order 𝑟 if it depends on
+(𝜇,𝑓) only through the joint marginals of𝜇 of order ≤𝑟 together with the single-site data of
+𝑓 at 𝑏 (oscillation, conditional variance given order-≤𝑟 marginal information). An order-𝑟
+comparison inequalityis a bound of the form𝒟(𝜇,𝑓) ≤𝑐∑︀
+𝑏Φ𝑏(𝜇,𝑓) with 𝑐 uniform overℳ𝑛,
+where 𝒟is a decoupling functional (variance defect, covariance, martingale increment). We call
+the inequalitycertifying if the right-hand side recognises perfect decoupling:
+∑︁
+𝑏
+Φ𝑏(𝑢,𝑓) = 0 whenever 𝑢 is a product measure and𝑓 depends on a single coordinate.
+(1)
+All influence- and cross-oscillation-type functionals in the applications we know of (Dobrushin
+row entries, Doob cross increments, covariance-decorated variants) satisfy(1); a functional vio-
+lating it (e.g. the Efron–Stein single-site variance proxy, whose sum stays positive under product
+measures) yields true but non-certifying bounds — its right-hand side can never force a decou-
+pling conclusion.
+Theorem 1(parity barrier). Fix 𝑟 ≥1. No certifying order-𝑟 comparison inequality holds on
+any class of measures containing{𝜋𝑟+1}∪{𝑢𝑟+1}for a decoupling functional𝒟that separates
+them (i.e.𝒟(𝑢𝑟+1,𝑓) = 0 and 𝒟(𝜋𝑟+1,𝑓) >0 for 𝑓(𝑥) = 𝑥𝑟+1). In particular no bounded-order
+data can certify Dobrushin-type mixing, approximate tensorisation with measure-independent
+constants, or covariance decay on such a class.
+Proof. Take 𝑓(𝑥) = 𝑥𝑟+1. By (a), every order-𝑟 functional takes identical values on(𝜋𝑟+1,𝑓)
+and (𝑢𝑟+1,𝑓): ∑︀
+𝑏Φ𝑏(𝜋𝑟+1,𝑓) = ∑︀
+𝑏Φ𝑏(𝑢𝑟+1,𝑓). Under 𝑢𝑟+1 the coordinate 𝑓 is indepen-
+dent of the others and 𝑓 depends on a single coordinate, so the certification condition (1)
+gives ∑︀
+𝑏Φ𝑏(𝑢𝑟+1,𝑓) = 0 . If the comparison inequality held on the class, then𝒟(𝜋𝑟+1,𝑓) ≤
+𝑐∑︀
+𝑏Φ𝑏(𝜋𝑟+1,𝑓) = 𝑐·0 = 0, contradicting separation: e.g. for𝒟= Var(𝑓) −∑︀
+𝑏EVar𝑏(𝑓 |rest)
+one has𝒟(𝑢𝑟+1,𝑓) = 0 but 𝒟(𝜋𝑟+1,𝑓) = 1 by (b).
+The construction generalises to arbitrary finite abelian alphabets (take density1 + Re𝜒 for
+any full-support character𝜒: the same barrier at order𝑛−1), and vector-valued observables
+change nothing (apply the theorem coordinatewise).
+Corollary 1(the audit failures, explained). The raw-oscillation/Doob increment bound and the
+Efron–Stein covariance step — found, and refuted by the𝑟= 1 case, in four papers of the 2602-
+series adversarial audit of a constructive Yang–Mills programme [7] — are order-1 comparison
+inequalities of certifying type (their right-hand sides are built from cross-site influence data
+vanishing under product measures); the “XOR” counterexample used there is the𝑟= 2 barrier.
+No repair that stays within bounded-order data — including correlation-decorated variants using
+pair moments — can succeed: the barrier recurs at every order.
+2
+
+--- Page 3 ---
+
+Remark 1 (sharpness: what the barrier doesnot forbid). Inequalities whose constants consume
+the conditional structure of the measure (Dobrushin interdependence coefficients, log-Sobolev
+constants of the true single-site conditionals) are of unbounded order in the sense of Definition 1,
+and are untouched: indeed the classical positive results (Dobrushin uniqueness⇒tensorisa-
+tion with constant(1 −𝛿)−1 [5]) are of exactly this type. The moral is a division of labour:
+bounded-order data canfalsify decoupling, never certify it; certification must consume condi-
+tional information. We believe this is the precise structural reason why the decoupling step
+is the irreducible analytic core of constructive Yang–Mills programmes, and why it cannot be
+bypassed by moment or oscillation bookkeeping of any fixed order.
+3 Machine verification
+Statements(a)and(b)arefiniteforeach 𝑟andhencedecidablebyexhaustivecomputation. They
+are kernel-checked in Lean 4/Mathlib viadecide for 𝑟 = 1 ,2,3,4 (file ParityBarrier.lean
+accompanying this note: theoremsparity_kwise_r1–r4 for the vanishing of all character sums
+of nonempty support and order≤𝑟 over the parity set,parity_support_r1–r4 for the support
+identity, and mean-zero statements giving the unit variance), and independently verified in exact
+rational arithmetic for𝑟≤6 (script verify_parity.py). The Lean file was checked withlake
+env lean against Lean4.30.0-rc2, Mathlib commitcd3b69b; the axiom oracle returns Lean’s
+three standard axioms for every theorem in the file, e.g.
+’parity_kwise_r4’ depends on axioms:
+[propext, Classical.choice, Quot.sound]
+’parity_support_r4’ depends on axioms:
+[propext, Classical.choice, Quot.sound]
+’parity_mean_zero_r4’ depends on axioms:
+[propext, Classical.choice, Quot.sound]
+(exitcode0). Moreoverthe parametric-in-𝑟statementisformalizedinthesamefile: sum_chi_eq_zero
+(the full-space character sum vanishes for every nonempty support, every𝑛, by the flip invo-
+lution), parity_kwise (statement (a) in Fourier form forall 𝑛 and all nonempty proper 𝑆,
+via 2 ∑︀
+𝜋𝜒𝑆 = ∑︀
+𝑥𝜒𝑆 + ∑︀
+𝑥𝜒[𝑛]∖𝑆 = 0) andparity_support (statement (b) for all𝑛) — each
+with the same standard-axiom oracle and nosorry. The finite decide instances are retained
+as independent kernel checks of the parametric theorems. Finally, the barrier schema itself is
+formalized abstractly (certifying_barrier_schema): from the three hypotheses [Φ order-𝑟 on
+the pair, i.e.Φ(𝜋) = Φ(𝑢)] + [certification, Φ(𝑢) = 0] + [separation, 𝒟(𝜋) >0], no uniform con-
+stant exists; for the parity pair the first hypothesis is exactly whatparity_kwise discharges.
+The bridge from concrete influence functionals to the order-𝑟 hypothesis remains, deliberately,
+a natural-language step (Definition 1).
+Acknowledgements
+This note is part of an audit-first research programme whose records, Lean sources and nu-
+merical suites are public athttps://github.com/lluiseriksson/THE-ERIKSSON-PROGRAMME.
+The parity example itself is classical and no priority is claimed for it; the debt to the𝑘-wise
+independence literature is recorded in the references.
+3
+
+--- Page 4 ---
+
+References
+[1] A. Joffe, On a set of almost deterministic𝑘-independent random variables, Ann. Probab.2 (1974),
+161–162.
+[2] N. Alon, L. Babai and A. Itai, A fast and simple randomized parallel algorithm for the maximal
+independent set problem, J. Algorithms7 (1986), 567–583.
+[3] N. Alon, O. Goldreich and Y. Mansour,Almost 𝑘-wise independence versus 𝑘-wise independence,
+Inform. Process. Lett.88 (2003), 107–110.
+[4] N. Alon and J. H. Spencer,The Probabilistic Method, 4th ed., Wiley, 2016.
+[5] R.L.Dobrushin, The description of a random field by means of conditional probabilities and conditions
+of its regularity, Theory Probab. Appl.13 (1968), 197–224.
+[6] B. Efron and C. Stein,The jackknife estimate of variance, Ann. Statist.9 (1981), 586–596.
+[7] L. Eriksson,THE MASTER MAP: an audit-first navigation guide to the conditional construction of
+4D 𝑆𝑈(𝑁) Yang–Mills with mass gap, ai.viXra:2602.0096, and the audited 2602-series; repository
+https://github.com/lluiseriksson/THE-ERIKSSON-PROGRAMME.
+4

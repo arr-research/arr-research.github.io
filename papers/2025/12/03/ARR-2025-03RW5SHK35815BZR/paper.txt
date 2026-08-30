@@ -1,0 +1,1057 @@
+--- Page 1 ---
+
+ai.viXra:2512.0073 - version 2 supersession/correction note
+notice page 1
+ SUPERSEDED BY AI.VIXRA:2601.0023V2
+ Finite-Dimensional Davies Interface Lemmas and TFIM Witness
+ Tests for the Heisenberg Cut as a Resource Boundary
+ Lluis Eriksson
+Version 2 - supersession and correction note
+Purpose of this replacement
+This replacement preserves public version 1 and adds an explicit correction and supersession record. The general
+Davies-channel Bohr decomposition, suppression proof route, constants, envelope interfaces and inline listing must
+not be used from version 1 without the corrections in ai.viXra:2601.0023v2.
+The exact omega=0 statements and witness mechanism of version 1 stand unchanged. Proposition 4.4 survives
+with a repaired proof. The historical paper is not erased; the successor controls the corrected general
+decomposition, suppression hypotheses and constants.
+Citation rule
+For the corrected general Bohr decomposition, proof of Proposition 4.4, suppression constants and TFIM
+implementation, cite ai.viXra:2601.0023v2. The exact omega=0 statements may still be cited from version 1
+together with this notice.
+Status boundary
+SUPERSEDED does not mean that every sentence of version 1 is false. It means that load-bearing technical
+statements were corrected in the named successor and version 1 is no longer the authoritative mathematical source
+for them.
+The exact claim map and provenance record continue on notice page 2. The historical public manuscript then follows unchanged.
+
+
+--- Page 2 ---
+
+ai.viXra:2512.0073 - version 2 supersession/correction note
+notice page 2
+ CORRECTION AND CLAIM MAP
+Results retained from the historical paper
+- The exact omega=0 identity and all omega=0 statements of version 1 stand unchanged.
+- The witness mechanism and the conclusion of Proposition 4.4 survive; the successor repairs the proof using the
+exact general decomposition.
+- The finite TFIM exact-diagonalization witness protocol remains historical numerical evidence under the corrected
+implementation conventions.
+Claims superseded or narrowed
+- Lemma 4.3's printed plain-commutator Bohr decomposition is false in general; this does not invalidate its omega=0
+reduction.
+- The proofs of Lemmas 4.12-4.13 use a false KMS submultiplicativity bound; their constants, inheritance route and
+claim of avoiding an inverse-smallest-eigenvalue factor are superseded.
+- The inline appendix/listing and any numerical conclusions depending on the superseded normalization are not
+authoritative.
+What the successor adds
+- An exact general Bohr decomposition that reduces to the unchanged omega=0 identity and is pairwise
+nonnegative.
+- A repaired proof of Proposition 4.4 plus corrected c_sigma-dependent suppression constants, hypotheses and
+pinning identity.
+- A verification suite for the decomposition, counterexample, corrected bounds and TFIM witness.
+Evidence classification
+The omega=0 identity and surviving witness conclusion are exact finite-dimensional statements. The successor
+verifies the corrected general decomposition and finite TFIM tests; no general lower envelope follows without its
+assumptions.
+Provenance
+Notice pages 1-2 are new. The following 22 pages reproduce public version 1 with identical rendered content.
+Frozen copies of both public v1 and the public successor v2 are included in the audited package.
+
+
+--- Page 3 ---
+
+Finite-Dimensional Davies Interface Lemmas and TFIM Witness
+Tests
+for the Heisenberg Cut as a Resource Boundary
+Lluis Eriksson
+December 2025
+Status of claims (read first)
+•Imported result.The maintenance inequalityP extra(ρ)≥k BT ˙Closs(ρ) is imported from
+the published preprint [2].
+•Proved here (finite-dimensional).The exactω= 0 Dirichlet identity (Lemma 1), the
+Bohr-block Dirichlet decomposition (Lemma 2), and the witness lower bound (Proposi-
+tion 1).
+•Sufficient conditional bound.The envelope suppression lemma (Lemma 3) is a finite-
+dimensional sufficient statement under explicit hypotheses (IR exclusion + quasi-local spec-
+tral tails).
+•Numerics.TFIM results are exact diagonalization and stability-checked finite-size diag-
+nostics (hereN≤12); no thermodynamic-limit uniformity is claimed.
+Abstract
+We present a finite-dimensional technical core for interpreting the quantum–classical
+boundary as a control-resource limitation: a state is operationally “classical” (relative to a
+chosen conditional expectation) whenever sustaining coherence is infeasible under a finite
+available power budget.
+Using battery-assisted thermal operations at temperatureTand energy pinching ∆,
+we quantify coherence byC(ρ) =S(ρ∥∆[ρ]) and define its instantaneous loss rate ˙Closs(ρ)
+under uncontrolled Markovian dynamics. An imported maintenance inequality yields the
+operational boundP extra(ρ)≥k BT ˙Closs(ρ).
+We isolate the dynamical hinge required for geometric scaling claims: the relation be-
+tween geometric separation and effective decoherence rates. In Davies generators we give
+two interface lemmas: a negative lemma showing that an activeω= 0 channel yields a
+witness-based lower bound via a KMS commutator withS(0), and a positive sufficient
+lemma yielding envelope suppression under explicit infrared exclusion plus a quasi-local
+spectral tail hypothesis.
+Finally, we provide TFIM exact-diagonalization witness protocols computing ratiosR(ϵ)
+and optimized local witnessesR opt(ϵ), including scaling tests withϵ=ϵ(N) and temperature
+sweeps overβ. We also report direct state-side interface micro-tests on weak-coherence
+families, confirming plateau behavior of ˙Closs/Cand controlledω= 0 scaling inγ(0) andβ,
+with stability checks in the Euler step size and PSD clipping threshold.
+1
+
+--- Page 4 ---
+
+Contents
+1 Scope and non-claims 3
+2 Finite-dimensional operational core 3
+2.1 Thermal state, energy pinching, and coherence . . . . . . . . . . . . . . . . . . . 3
+2.2 Uncontrolled Markovian dynamics and coherence-loss rate . . . . . . . . . . . . . 4
+2.3 Control model and extra power . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+2.4 Core maintenance inequality (imported) . . . . . . . . . . . . . . . . . . . . . . . 4
+3 Davies generators, KMS Dirichlet form, and an effective envelope 4
+3.1 Bohr components . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+3.2 KMS inner product and Dirichlet form . . . . . . . . . . . . . . . . . . . . . . . . 4
+3.3 Separation and variational envelope . . . . . . . . . . . . . . . . . . . . . . . . . 5
+3.4 A concrete tail map on spin chains (Pauli-string conditional expectation) . . . . 5
+4 Interface lemmas: rate floors and conditional envelope suppression 5
+4.1 Negative lemma: theω= 0 channel yields a witness lower bound . . . . . . . . . 5
+4.2 Bohr-block decomposition of the KMS Dirichlet form . . . . . . . . . . . . . . . . 6
+4.3 Positive lemma: envelope suppression under IR exclusion and quasi-local spectral
+tails . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7
+5 TFIM witness computations (exact diagonalization) 8
+5.1 Model . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8
+5.2 Witness ratios . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8
+5.3 Fixedϵresults (atβ= 1) . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8
+5.4 Scaling tests withϵ=ϵ(N) (atβ= 1) . . . . . . . . . . . . . . . . . . . . . . . . 8
+5.5 Temperature sweep tests overβ. . . . . . . . . . . . . . . . . . . . . . . . . . . . 8
+6 State-side interface micro-tests: weak-coherence families andω= 0scaling 10
+7 State–observable interface (explicit hypothesis) 12
+8 Operational consequence (conditional, well-typed) 13
+9 Conclusion 13
+A Numerical stability checks: time step and PSD clipping 13
+B Imported maintenance inequality: precise pointer map 13
+C Reproducibility: Colab-friendly scripts (included inline) 14
+C.1 Low-RAM interface micro-test script (Davies blocks; optionalω= 0; pair selection) 14
+C.2ω= 0-only fixed-pair sweep script (minimal, for theβtable) . . . . . . . . . . . . 19
+2
+
+--- Page 5 ---
+
+1 Scope and non-claims
+This work does not propose modified quantum dynamics, collapse mechanisms, derivations of the
+Born rule, or ontological resolutions of the measurement problem. The claims are operational:
+they concern minimal control resources required to maintain coherence against uncontrolled
+open-system dynamics under an explicit thermodynamic bookkeeping model.
+Remark 1(Figures).This manuscript expects several figure files (e.g.scaling Ropt N over 4.png,
+interface ratio vs C.png) to be present in ‘figures/‘ (or the working directory). If they are
+missing, compilation will fail.
+Table 1: Program Map: logical structure of the coherence-maintenance series.
+ID Role Key Contribution
+Foundational Preprints (Published)
+P1Geometric Foundation AQFT static clustering bounds and Petz re-
+covery.
+P2Thermodynamic Law Maintenance inequality:P extra(ρ)≥
+kBT ˙Closs(ρ).
+P3Synthesis/Outlook Operational cut framing and interface dis-
+cussion.
+Core Technical Paper (This Work)
+P7 Finite-Dimensional
+Core
+Davies interface lemmas, TFIM wit-
+nesses, and reproducible micro-tests.
+Companion Notes (to be posted separately)
+P4Hypothesis Framing RIP: weak vs. strong forms, plausibility
+routes, and falsification criteria.
+P6Stress Tests Operatorialκ(ϵ) tests andω= 0-floor mech-
+anisms.
+P5Logical Closure Separation of proved results vs. conditional
+interfaces vs. open dynamical gaps.
+2 Finite-dimensional operational core
+2.1 Thermal state, energy pinching, and coherence
+Let the system Hamiltonian be
+HS =
+X
+n
+EnΠn,
+and define at temperatureTthe thermal state
+γS := e−βHS
+Tr(e−βHS ), β= 1
+kBT .
+Define energy pinching
+∆[ρ] :=
+X
+n
+ΠnρΠn,
+and relative-entropy coherence (nats)
+C(ρ) :=S(ρ∥∆[ρ]), S(ρ∥σ) := Tr[ρ(logρ−logσ)].
+3
+
+--- Page 6 ---
+
+2.2 Uncontrolled Markovian dynamics and coherence-loss rate
+Letρ t =e tL(ρ) be a Markovian semigroup with a thermal stationary stateL(γ S) = 0. Define
+the instantaneous coherence-loss rate
+˙Closs(ρ) :=− d
+dtC(ρt)
+
+t=0
+.
+2.3 Control model and extra power
+We assume the control primitive of battery-assisted thermal operations at temperatureT, and
+define incremental (extra) powerP extra as an infimum over pairs of strategies maintainingρand
+maintaining ∆[ρ], respectively.
+2.4 Core maintenance inequality (imported)
+Theorem 1(Extra-power coherence maintenance bound (imported)).Assume strategies exist
+that maintainρand that maintain∆[ρ]under battery-assisted thermal operations at temperature
+T. Then
+Pextra(ρ)≥k BT ˙Closs(ρ).
+Corollary 1(No-go from a uniform loss floor).FixC 0 >0and a nonempty target family
+FC0 ⊂ {ρ:C(ρ)≥C 0}. If there exists
+g(C0) := inf
+ρ∈FC0
+˙Closs(ρ)>0,
+then any controller maintaining anyρ∈ F C0 requiresP extra(ρ)≥k BT g(C0). IfP max <
+kBT g(C0), sustained maintenance is operationally impossible onF C0 .
+3 Davies generators, KMS Dirichlet form, and an effective en-
+velope
+3.1 Bohr components
+Consider a Davies generator derived in the weak-coupling–secular limit with a single system
+coupling operatorS=S †. Define Bohr components
+S(ω) :=
+X
+Em−En=ω
+ΠmSΠn, S=
+X
+ω
+S(ω), S(ω) † =S(−ω).
+Bath rates satisfy the KMS relation
+γ(−ω) =e −βωγ(ω).
+3.2 KMS inner product and Dirichlet form
+Define the KMS (GNS) inner product
+⟨A, B⟩σ := Tr
+
+σ1/2A†σ1/2B
+
+,∥A∥ 2
+2,σ :=⟨A, A⟩σ,
+withσ=γ S. For the Heisenberg-picture generatorL †, define the Dirichlet form
+Eσ(O) :=−Re⟨O,L †(O)⟩σ.
+4
+
+--- Page 7 ---
+
+3.3 Separation and variational envelope
+Fix a coupling region (e.g. a sitej 0) and letA ϵ denote operators supported at distance at least
+ϵfrom that region. Define the operatorial envelope
+κ(ϵ) := sup
+O∈Aϵ, O̸=0
+Eσ(O)
+∥O∥2
+2,σ
+.
+3.4 A concrete tail map on spin chains (Pauli-string conditional expectation)
+In lattice spin systems we use a canonical “tail” map built from the Pauli-string expansion. Let
+Λ be the set of lattice sites and letA(Ω) denote the local operator algebra on region Ω⊂Λ.
+Fix a coupling region Ω 0 (e.g. Ω0 ={j 0}). Forϵ≥1 define the far region
+Ωϵ :={j∈Λ :d(j,Ω 0)≥ϵ}.
+LetA <ϵ :=A(Λ\Ω ϵ) be the algebra supported within distance< ϵof the coupling region.
+Define thePauli-string conditional expectationE <ϵ :A(Λ)→ A<ϵ as the orthogonal pro-
+jection (with respect to the normalized Hilbert–Schmidt inner product) onto the span of Pauli
+strings supported in Λ\Ω ϵ. Equivalently, writing any operator as a Pauli expansionX=P
+P xP Pwith Pauli stringsP,
+E<ϵ[X] :=
+X
+P: supp(P)⊆Λ\Ω ϵ
+xP P.
+We then define the tail at separationϵby
+tailϵ(X) :=X−E <ϵ[X].
+Remark 2.We defineE <ϵ as a normalized Hilbert–Schmidt projection for concreteness and
+computational convenience. Since the system is finite-dimensional,∥ · ∥ 2,σ and the Hilbert–
+Schmidt norm are equivalent; thus any exponential tail bound in one induces an exponential tail
+bound in the other up to multiplicative constants depending onσ.
+These constants may depend on(N, β)in finite-size tests. Alternatively, one may define
+E<ϵ as the orthogonal projection with respect to⟨·,·⟩ σ to align norms more tightly.
+4 Interface lemmas: rate floors and conditional envelope sup-
+pression
+4.1 Negative lemma: theω= 0channel yields a witness lower bound
+Define theω= 0 Bohr component
+S(0) :=
+X
+n
+ΠnSΠn.
+Assumeγ(0)>0 (e.g. after infrared regularization in an Ohmic model).
+Lemma 1(Exactω= 0 Dirichlet identity).If theω= 0Davies channel is
+L†
+0(O) =γ(0)
+
+S(0)OS(0)− 1
+2{S(0)2, O}
+
+,
+then for allO,
+E(0)
+σ (O) :=−Re⟨O,L †
+0(O)⟩σ = γ(0)
+2 ∥[S(0), O]∥2
+2,σ.
+5
+
+--- Page 8 ---
+
+Proof.Letσ=γ S and setS 0 :=S(0). SinceS 0 is diagonal in the energy eigenbasis, we have
+[S0, HS] = 0 and hence [S 0, σ] = 0, i.e.σ1/2S0 =S 0σ1/2.
+Write
+L†
+0(O) =γ(0)
+
+S0OS0 − 1
+2{S2
+0, O}
+
+.
+Using⟨A, B⟩σ = Tr(σ 1/2A†σ1/2B) and [S 0, σ1/2] = 0, one expands both⟨O,L †
+0(O)⟩σ and
+∥[S0, O]∥2
+2,σ and matches terms, obtaining
+−Re⟨O,L †
+0(O)⟩σ = γ(0)
+2 ∥[S0, O]∥2
+2,σ.
+Proposition 1(Fixed-separation witness lower bound (sufficient)).Fixϵ 0 ≥1. If there exists
+cϵ0 >0and an operatorO ϵ0 ∈ Aϵ0 such that
+∥[S(0), Oϵ0 ]∥2
+2,σ
+∥Oϵ0 ∥2
+2,σ
+≥c ϵ0 ,
+then
+κ(ϵ0)≥ γ(0)
+2 cϵ0 .
+4.2 Bohr-block decomposition of the KMS Dirichlet form
+Lemma 2(Bohr-block decomposition of the KMS Dirichlet form (single-channel Davies)).
+Assume a single Hermitian coupling operatorS=S † and a Davies generator in the Heisenberg
+picture of the form
+L†(O) =
+X
+ω
+γ(ω)
+
+S(ω)†OS(ω)− 1
+2{S(ω)†S(ω), O}
+
+, S(ω) † =S(−ω),
+with rates satisfying the KMS relationγ(−ω) =e −βωγ(ω)and reference stateσ=γ S. Let
+⟨A, B⟩σ := Tr
+
+σ1/2A†σ1/2B
+
+,E σ(O) :=−Re⟨O,L †(O)⟩σ.
+Then
+Eσ(O) = 1
+2
+X
+ω
+γ(ω)∥[S(ω), O]∥2
+2,σ.
+Proof.Fixωand setL:=S(ω) andγ:=γ(ω). Define
+L†
+ω(O) :=γ
+
+L†OL− 1
+2{L†L, O}
+
+.
+Sinceσ=γ S ∝e −βHS andLhas Bohr frequencyω, the intertwining relations hold:
+σ1/2L=e −βω/2Lσ1/2, σ 1/2L† =e +βω/2L†σ1/2.
+Using these relations and cyclicity of trace, one rewrites−Re⟨O,L †
+ω(O)⟩σ as γ
+2 ∥[L, O]∥2
+2,σ. Sum-
+ming overωgives the claim.
+6
+
+--- Page 9 ---
+
+4.3 Positive lemma: envelope suppression under IR exclusion and quasi-local
+spectral tails
+Definition 1(Infrared exclusion).We say the coupling satisfies IR exclusion at scaleω ∗ >0
+ifS(ω) = 0for all|ω|< ω ∗ (or alternativelyγ(ω) = 0on that band).
+Lemma 3(Envelope suppression under IR exclusion and quasi-local spectral tails (sufficient)).
+Assume IR exclusion and suppose there existA >0,ξ >0, andp≥0such that for all|ω| ≥ω ∗,
+∥tailϵ(S(ω))∥2,σ ≤A(1 +ϵ) pe−ϵ/ξ,
+andsup |ω|≥ω∗ γ(ω)<∞. Then there existsC >0such that
+κ(ϵ)≤C(1 +ϵ) 2pe−2ϵ/ξ.
+Proof (sketch).By Lemma 2,
+Eσ(O) = 1
+2
+X
+ω
+γ(ω)∥[S(ω), O]∥2
+2,σ.
+By IR exclusion, only|ω| ≥ω∗ contribute. ForO∈ Aϵ, write
+S(ω) =E <ϵ[S(ω)] + tailϵ(S(ω)).
+SinceE <ϵ[S(ω)] is supported within distance< ϵwhileOis supported at distance at leastϵ,
+[E<ϵ[S(ω)], O] = 0,⇒[S(ω), O] = [tail ϵ(S(ω)), O].
+Then
+∥[A, O]∥2,σ ≤ ∥AO∥2,σ +∥OA∥ 2,σ ≤2∥A∥ ∞ ∥O∥2,σ,
+and hence
+∥[S(ω), O]∥2
+2,σ
+∥O∥2
+2,σ
+≤4∥tail ϵ(S(ω))∥2
+∞.
+Using∥X∥ ∞ ≤ ∥X∥2 ≤λ min(σ)−1/2∥X∥2,σ yields
+∥tailϵ(S(ω))∥2
+∞ ≤ 1
+λmin(σ) ∥tailϵ(S(ω))∥2
+2,σ.
+Combining the bounded-rate assumption with the tail hypothesis gives the stated envelope for
+κ(ϵ) after taking the supremum overO∈ Aϵ.
+Remark 3(Finite-size scaling of the prefactor).The constantCcontains a factorλ min(σ)−1
+arising from norm comparisons and may grow with(N, β)sinceσ=γ S ∝e −βHS . Accordingly,
+Lemma 3 is stated as a sufficient finite-dimensional bound at fixed(N, β)and is not claimed to
+be uniform in any thermodynamic limit.
+7
+
+--- Page 10 ---
+
+5 TFIM witness computations (exact diagonalization)
+5.1 Model
+We consider the transverse-field Ising model onNspins with open boundary conditions:
+HS =−J
+N−1X
+i=1
+σx
+i σx
+i+1 −h
+NX
+i=1
+σz
+i , h > J.
+We choose a coupling sitej 0 =⌊N/2⌋and takeS=σ z
+j0 . We consider thermal statesσ=γ S at
+inverse temperaturesβ∈ {0.5,1,2}.
+5.2 Witness ratios
+For a distant sitek=j 0 ±ϵdefine
+R(ϵ;O) := ∥[S(0), O]∥2
+2,σ
+∥O∥2
+2,σ
+,
+and define the optimized local witness ratio
+Ropt(ϵ) := max
+O∈span{σx
+k,σy
+k,σz
+k}
+R(ϵ;O).
+By Lemma 1,
+κ(ϵ)≥ γ(0)
+2 Ropt(ϵ).
+5.3 Fixedϵresults (atβ= 1)
+ForJ= 1,h= 1.5,β= 1:
+N R opt(1)R opt(2)R opt(3)
+8 0.134648 0.0885503 0.0684289
+10 0.0999406 0.0696450 0.0550748
+12 0.0793451 0.0574518 0.0464596
+Table 2: Optimized local KMS commutator witnessR opt(ϵ) for TFIM withS=σ z
+j0 , center
+coupling,β= 1,h= 1.5,J= 1.
+5.4 Scaling tests withϵ=ϵ(N)(atβ= 1)
+We computedR opt(ϵ(N)) for four rules:
+ϵ(N)∈
+N
+4
+
+,
+N
+3
+
+, ϵmax(N),3
+
+, ϵ max(N) = min(j0, N−1−j 0).
+5.5 Temperature sweep tests overβ
+We sweptβ∈ {0.5,1,2}for the sameϵ(N) rules andN∈ {8,10,12}.
+8
+
+--- Page 11 ---
+
+RuleN= 8N= 10N= 12
+⌊N/4⌋0.0885503 (ϵ= 2) 0.0696450 (ϵ= 2) 0.0464596 (ϵ= 3)
+⌊N/3⌋0.0885503 (ϵ= 2) 0.0550748 (ϵ= 3) 0.0396591 (ϵ= 4)
+ϵmax(N) 0.0684289 (ϵ= 3) 0.0461050 (ϵ= 4) 0.0330550 (ϵ= 5)
+3 (fixed) 0.0684289 (ϵ= 3) 0.0550748 (ϵ= 3) 0.0464596 (ϵ= 3)
+Table 3: Scaling test valuesR opt(ϵ(N)) for TFIM withS=σ z
+j0 ,β= 1,h= 1.5,J= 1.
+(a)ϵ=⌊N/4⌋
+ (b)ϵ=⌊N/3⌋
+(c)ϵ=ϵ max(N)
+ (d)ϵ= 3
+Figure 1: Scaling plots ofR opt(ϵ(N)) under fourϵ(N) rules (atβ= 1).
+(a) Scaling test: rule=fixed 3,ϵ(N) shown in la-
+bels.
+(b) Scaling test: rule=ϵ max(N),ϵ(N) shown in la-
+bels.
+Figure 2: Scaling tests whereϵ(N) is printed on each data point.
+9
+
+--- Page 12 ---
+
+(a)ϵ=⌊N/4⌋
+ (b)ϵ=⌊N/3⌋
+(c)ϵ=ϵ max(N)
+ (d)ϵ= 3
+Figure 3: Optimized witnessR opt(ϵ(N);β) versusNfor multipleβvalues.
+6 State-side interface micro-tests: weak-coherence families and
+ω= 0scaling
+The witness computations above are observable-side tests based on the exactω= 0 Dirichlet
+identity. To directly probe the state-side quantity appearing in the maintenance inequality, we
+also test the interface numerically on explicit weak-coherence families.
+Weak-coherence family.Fix an energy eigenbasis{n}ofH S, thermal weightsp n ∝e −βEn,
+and a pair (m, n) withm̸=n. Define in the energy basis
+ρE(α) := diag(p) +α √pmpn (m n+n m),
+and setρ(α) =V ρ E(α)V † whereVdiagonalizesH S. For smallα, this is positive and satisfies
+∆[ρ(α)] = diag(p) by construction. We evaluateC(ρ) =S(ρ∥∆[ρ]) and approximate
+˙Closs(ρ)≈ −C(ρt)−C(ρ)
+t , ρ t ≈Π(ρ+tL(ρ)),
+where Π denotes numerical projection to a valid density matrix (Hermitian, PSD with eigenvalue
+clipping, trace one). We report the empirical ratio
+r(ρ) :=
+˙Closs(ρ)
+C(ρ) .
+Observed plateau (truncated Davies blocks).ForN= 6,J= 1,h= 1.5,β= 1,
+couplingS=σ z
+j0 at the center site, and a transition-selected pair optimized for a nonzero Bohr
+block, we observed thatr(ρ) is approximately constant across several decades ofC(ρ) (excluding
+ultra-smallCwhere PSD projection dominates), with a plateau around
+r(ρ)≈0.157–0.158
+10
+
+--- Page 13 ---
+
+for the{±ω}truncation, and a slightly larger plateau
+r(ρ)≈0.160–0.161
+when an additionalω= 0 channel withγ(0) = 0.2 is included.
+(a) Linearity check: ˙Closs(ρ) versusC(ρ).
+ (b) Ratior(ρ) = ˙Closs(ρ)/C(ρ) versusC(ρ).
+Figure 4: State-side interface micro-test (Euler step with PSD projection). Ultra-smallC(ρ)
+points can be affected by eigenvalue clipping; the plateau region is stable.
+ω= 0-only regime: linear scaling inγ(0).To isolate the commutator-squared mechanism
+of the negative lemma, we ran anω= 0-only truncation and chose (m, n) to maximize|s m −
+sn|√pmpn wheres k :=kSkin the energy basis. Withβ= 1 and numerical prescription
+γ(0) =γ 0/β, the measured plateau ratior(α= 0.15) scales linearly withγ(0):
+γ0 γ(0) =γ 0/β r(α= 0.15)r/γ(0)
+0.05 0.05 0.0101957 0.2039
+0.10 0.10 0.0203914 0.2039
+0.40 0.40 0.0815656 0.2039
+Table 4: TFIMω= 0-only micro-test (N= 6,J= 1,h= 1.5,β= 1). The empirical ratio
+r= ˙Closs/Cscales linearly inγ(0) =γ 0/β.
+Fixed-pair temperature scaling:r(β)∝1/βat fixedγ 0.To avoid conflating temperature
+dependence with changes in the coherence sector, we fixed (m, n) = (0,1) and keptγ 0 = 0.10
+fixed (soγ(0) =γ 0/β). The measured plateau satisfiesr(β)≈k/β:
+β γ(0) =γ 0/β(γ 0 = 0.10)r(α= 0.15)β r(α= 0.15)
+0.5 0.20 0.004317824675 0.002158912338
+1.0 0.10 0.002158560224 0.002158560224
+2.0 0.05 0.001078731632 0.002157463263
+4.0 0.025 0.000538771757 0.002155087026
+Table 5: Fixed-pairω= 0-only temperature sweep (N= 6,J= 1,h= 1.5, (m, n) = (0,1),
+γ0 = 0.10). The near-constancy ofβrconfirmsr(β)∝1/βat fixedγ 0.
+11
+
+--- Page 14 ---
+
+7 State–observable interface (explicit hypothesis)
+The maintenance inequality bounds power in terms of the state functional ˙Closs(ρ), whereas
+κ(ϵ) is defined via a supremum over observables inAϵ. To avoid a quantifier mismatch, we state
+the necessary bridge as an explicit hypothesis.
+Definition 2(Weak-coherence regime on a family).A family of statesF ϵ lies in the weak-
+coherence regime if there existsδ ϵ >0such thatC(ρ)≤δ ϵ for allρ∈ Fϵ.
+Definition 3(Population non-extremality on a family).A familyF ϵ is population-nonextremal
+if there existsp min >0such that for allρ∈ F ϵ,
+∆[ρ]≥p min1.
+Remark 4.This assumption rules out diagonals arbitrarily close to the boundary of the simplex,
+ensuring uniform local expansions of relative entropy around∆[ρ]and preventing degenerate
+small-denominator effects in weak-coherence estimates.
+Definition 4(Effective coherence sector).Fix a setΩof Bohr frequencies. We sayρhas
+coherence supported inΩif all its off-diagonal matrix elements in the energy basis lie in frequency
+blocksω∈Ω.
+Definition 5(Sector rate lower bound).For a Davies generator, letΓ(ω)denote the Kos-
+sakowski rate matrix in the Bohr blockω. In the single-channel case,Γ(ω)is a scalar and we
+identifyλ min(Γ(ω)) = Γ(ω). Define
+ΓΩ := min
+ω∈Ω
+λmin(Γ(ω)).
+Hypothesis 1(State–observable interface (lower proportionality on a family)).Fixϵand a
+target familyF ϵ. Assume:
+1.F ϵ lies in a weak-coherence regime;
+2.F ϵ is population-nonextremal;
+3. allρ∈ F ϵ have coherence supported in a fixed sector setΩ;
+4. the Davies generator is validated in the regime of interest.
+Then there existsη ϵ →0as the coherence scaleδ ϵ →0such that for allρ∈ F ϵ,
+˙Closs(ρ)≥(1−η ϵ) ΓΩ C(ρ).
+Remark 5.This interface is falsifiable: one can numerically test whether ˙Closs(ρ)/C(ρ)is
+bounded below on the specified family.
+12
+
+--- Page 15 ---
+
+8 Operational consequence (conditional, well-typed)
+Combining Theorem 1 with Hypothesis 1 yields, forρ∈ F ϵ,
+Pextra(ρ)≥k BT ˙Closs(ρ)≥k BT(1−η ϵ) ΓΩ C(ρ).
+In particular, ifC(ρ)≥C 0 onF ϵ, then
+Pextra(ρ)≥k BT(1−η ϵ) ΓΩ C0.
+9 Conclusion
+We separated a proven finite-dimensional thermodynamic maintenance bound from conditional
+dynamical interface claims. In Davies dynamics, an exactω= 0 identity yields operational
+witness-based lower bounds. In TFIM witness computations,Ropt(ϵ) is robust and non-negligible
+at fixed separations, while decreasing asϵscales withNover the tested sizes.
+We emphasize that the TFIM numerics (N≤12) are presented as finite-size witness diag-
+nostics, not as definitive thermodynamic-limit scaling evidence.
+A Numerical stability checks: time step and PSD clipping
+We estimate ˙Closs(ρ) via a forward Euler stepρ t ≈Π(ρ+tL(ρ)) with PSD projection Π (eigen-
+value clipping) and a finite-difference quotient.
+dt r(last sample)
+1e−4 0.1613363453
+5e−5 0.1613377388
+1e−5 0.1613385899
+Table 6: Sensitivity of the plateau ratior= ˙Closs/Cto the Euler step sizedt(interface micro-
+test).
+psd clipr(last sample)
+1e−12 0.1613377388
+1e−14 0.1613377388
+1e−16 0.1613377388
+Table 7: Sensitivity of the plateau ratior= ˙Closs/Cto the PSD projection threshold (interface
+micro-test).
+B Imported maintenance inequality: precise pointer map
+The main maintenance inequality used in this manuscript is
+Pextra(ρ;L, T)≥k BT ˙Closs(ρ), ˙Closs(ρ) :=− d
+dtS(ρt∥∆[ρt])
+
+t=0
+, ρ t =e tL(ρ).
+A complete finite-dimensional proof is given in the published preprint [2].
+13
+
+--- Page 16 ---
+
+C Reproducibility: Colab-friendly scripts (included inline)
+This appendix includes scripts used to generate the state-side interface micro-tests (including
+figures) and theω= 0 fixed-pairβsweep.
+C.1 Low-RAM interface micro-test script (Davies blocks; optionalω= 0;
+pair selection)
+# file: test_interface_hypothesis_tfim_lowram.py
+import argparse
+import numpy as np
+import scipy.linalg as la
+import matplotlib.pyplot as plt
+def parse_args():
+ap = argparse.ArgumentParser()
+ap.add_argument("--N", type=int, default=6)
+ap.add_argument("--J", type=float, default=1.0)
+ap.add_argument("--h", type=float, default=1.5)
+ap.add_argument("--beta", type=float, default=1.0)
+ap.add_argument("--Sop", type=str, default="Z", choices=["X", "Y", "Z"])
+ap.add_argument("--center", action="store_true")
+ap.add_argument("--j0", type=int, default=None)
+ap.add_argument("--dt", type=float, default=5e-5)
+ap.add_argument("--nsamples", type=int, default=25)
+ap.add_argument("--alpha_max", type=float, default=0.15)
+ap.add_argument("--bin_tol", type=float, default=1e-10)
+ap.add_argument("--gamma0", type=float, default=0.2)
+ap.add_argument("--s", type=float, default=1.0)
+ap.add_argument("--use_omega0", action="store_true")
+ap.add_argument("--only_omega0", action="store_true")
+ap.add_argument("--only_pm_omega", action="store_true")
+ap.add_argument("--pair_mode", type=str, default="pmomega", choices=["pmomega", "
+omega0"])
+ap.add_argument("--psd_clip", type=float, default=1e-14)
+ap.add_argument("--seed", type=int, default=0)
+ap.add_argument("--save_prefix", type=str, default="interface")
+ap.add_argument("--no_plots", action="store_true")
+args, unknown = ap.parse_known_args()
+if unknown:
+print(f"Ignoring unknown args: {unknown}")
+if args.only_omega0 and args.only_pm_omega:
+raise ValueError("Choose at most one of --only_omega0 or --only_pm_omega.")
+if args.only_omega0 and (not args.use_omega0):
+raise ValueError("--only_omega0 requires --use_omega0.")
+if not args.center and args.j0 is None:
+args.center = True
+14
+
+--- Page 17 ---
+
+return args
+def paulis():
+I = np.array([[1, 0], [0, 1]], dtype=complex)
+X = np.array([[0, 1], [1, 0]], dtype=complex)
+Y = np.array([[0, -1j], [1j, 0]], dtype=complex)
+Z = np.array([[1, 0], [0, -1]], dtype=complex)
+return I, X, Y, Z
+def kron_all(ops):
+out = ops[0]
+for op in ops[1:]:
+out = np.kron(out, op)
+return out
+def local_pauli(N, site, which):
+I, X, Y, Z = paulis()
+P = {"I": I, "X": X, "Y": Y, "Z": Z}[which.upper()]
+ops = [I] * N
+ops[site] = P
+return kron_all(ops)
+def two_site_xx(N, i):
+I, X, Y, Z = paulis()
+ops = [I] * N
+ops[i] = X
+ops[i + 1] = X
+return kron_all(ops)
+def tfim_hamiltonian(N, J, h):
+dim = 2**N
+H = np.zeros((dim, dim), dtype=complex)
+for i in range(N - 1):
+H += -J * two_site_xx(N, i)
+for i in range(N):
+H += -h * local_pauli(N, i, "Z")
+return (H + H.conj().T) / 2
+def thermal_probs(E, beta):
+Emin = np.min(E.real)
+w = np.exp(-beta * (E.real - Emin))
+return w / np.sum(w)
+def gamma_model(omega, beta, gamma0=0.2, s=1.0):
+if omega > 0:
+denom = 1.0 - np.exp(-beta * omega)
+denom = denom if denom > 1e-15 else 1e-15
+return float(gamma0 * (omega**s) / denom)
+if omega < 0:
+op = abs(omega)
+return float(np.exp(-beta * op) * gamma_model(op, beta, gamma0=gamma0, s=s))
+15
+
+--- Page 18 ---
+
+return 0.0
+def project_to_density(rho, eps=1e-14):
+rho = 0.5 * (rho + rho.conj().T)
+evals, evecs = la.eigh(rho)
+evals = np.maximum(evals.real, eps)
+rho_psd = (evecs * evals) @ evecs.conj().T
+rho_psd = 0.5 * (rho_psd + rho_psd.conj().T)
+rho_psd = rho_psd / np.trace(rho_psd)
+return rho_psd
+def rel_entropy(rho, sigma):
+rho = 0.5 * (rho + rho.conj().T)
+sigma = 0.5 * (sigma + sigma.conj().T)
+log_rho = la.logm(rho)
+log_sig = la.logm(sigma)
+return float(np.trace(rho @ (log_rho - log_sig)).real)
+def lindblad_L_of_rho(rho, L_ops, rates):
+out = np.zeros_like(rho)
+for Lk, rk in zip(L_ops, rates):
+if rk == 0:
+continue
+LdL = Lk.conj().T @ Lk
+out += rk * (Lk @ rho @ Lk.conj().T - 0.5 * (LdL @ rho + rho @ LdL))
+return out
+def build_Somega_bin(S_E, E, omega_target, bin_tol):
+d = S_E.shape[0]
+Sbin = np.zeros((d, d), dtype=complex)
+for m in range(d):
+for n in range(d):
+omega = float((E[m] - E[n]).real)
+if abs(omega - omega_target) <= bin_tol:
+Sbin[m, n] = S_E[m, n]
+return Sbin
+def choose_pair_pmomega(S_E, p, E, bin_tol):
+d = S_E.shape[0]
+best = (-1.0, None)
+for m in range(d):
+for n in range(d):
+if m == n:
+continue
+omega = float((E[m] - E[n]).real)
+if omega <= bin_tol:
+continue
+score = float(abs(S_E[m, n]) * np.sqrt(p[m] * p[n]))
+if score > best[0]:
+best = (score, (m, n, omega))
+if best[1] is None:
+raise RuntimeError("Could not find a positive-frequency pair.")
+return best[1]
+16
+
+--- Page 19 ---
+
+def choose_pair_omega0(S_E, p, E, bin_tol):
+d = S_E.shape[0]
+sdiag = np.diag(S_E).real
+best = (-1.0, None)
+for m in range(d):
+for n in range(d):
+if m == n:
+continue
+omega = float((E[m] - E[n]).real)
+if abs(omega) <= bin_tol:
+continue
+score = float(abs(sdiag[m] - sdiag[n]) * np.sqrt(p[m] * p[n]))
+if score > best[0]:
+best = (score, (m, n, abs(omega)))
+if best[1] is None:
+raise RuntimeError("Could not find a pair for omega0 mode.")
+return best[1]
+def make_rho_E(p, m, n, alpha):
+rho_E = np.diag(p.astype(complex))
+amp = alpha * np.sqrt(p[m] * p[n])
+rho_E[m, n] += amp
+rho_E[n, m] += amp
+return rho_E
+def main():
+args = parse_args()
+np.random.seed(args.seed)
+N, J, h, beta = args.N, args.J, args.h, args.beta
+j0 = args.j0 if args.j0 is not None else (N // 2 if args.center else 0)
+H = tfim_hamiltonian(N, J, h)
+E, V = la.eigh(H)
+Vdag = V.conj().T
+p = thermal_probs(E, beta)
+S = local_pauli(N, j0, args.Sop)
+S_E = Vdag @ S @ V
+if args.pair_mode == "pmomega":
+m, n, omega = choose_pair_pmomega(S_E, p, E, args.bin_tol)
+print("Pair mode: pmomega")
+else:
+m, n, omega = choose_pair_omega0(S_E, p, E, args.bin_tol)
+print("Pair mode: omega0")
+print(f"Selected pair (m,n)=({m},{n}), omega≈{omega:.12g}")
+Somega_E = build_Somega_bin(S_E, E, omega, args.bin_tol)
+Sminus_E = Somega_E.conj().T
+Somega = V @ Somega_E @ Vdag
+Sminus = V @ Sminus_E @ Vdag
+17
+
+--- Page 20 ---
+
+g_plus = gamma_model(omega, beta, gamma0=args.gamma0, s=args.s)
+g_minus = gamma_model(-omega, beta, gamma0=args.gamma0, s=args.s)
+omega0_ops, omega0_rates = [], []
+pm_ops, pm_rates = [Somega, Sminus], [g_plus, g_minus]
+if args.use_omega0:
+S0_E = np.diag(np.diag(S_E))
+S0 = V @ S0_E @ Vdag
+gamma0_val = float(args.gamma0 / beta)
+omega0_ops, omega0_rates = [S0], [gamma0_val]
+print(f"Included omega=0 channel with gamma(0)=gamma0/beta={gamma0_val:.6g}")
+if args.only_omega0:
+L_ops, rates = omega0_ops, omega0_rates
+print("Mode: ONLY omega=0")
+elif args.only_pm_omega:
+L_ops, rates = pm_ops, pm_rates
+print("Mode: ONLY±omega")
+else:
+L_ops, rates = omega0_ops + pm_ops, omega0_rates + pm_rates
+print("Mode: omega=0 (if enabled) PLUS±omega")
+alphas = np.linspace(1e-4, args.alpha_max, args.nsamples)
+dt = args.dt
+Cs, dCs, ratios = [], [], []
+for alpha in alphas:
+rho_E = make_rho_E(p, m, n, alpha)
+rho = project_to_density(V @ rho_E @ Vdag, eps=args.psd_clip)
+rho_E_chk = Vdag @ rho @ V
+Delta_rho = project_to_density(V @ np.diag(np.diag(rho_E_chk)) @ Vdag, eps=args
+.psd_clip)
+C = rel_entropy(rho, Delta_rho)
+Lrho = lindblad_L_of_rho(rho, L_ops, rates)
+rho_t = project_to_density(rho + dt * Lrho, eps=args.psd_clip)
+rho_t_E = Vdag @ rho_t @ V
+Delta_rho_t = project_to_density(V @ np.diag(np.diag(rho_t_E)) @ Vdag, eps=args
+.psd_clip)
+C_t = rel_entropy(rho_t, Delta_rho_t)
+dotC_loss = -(C_t - C) / dt
+Cs.append(C)
+dCs.append(dotC_loss)
+ratios.append(dotC_loss / C if C > 0 else np.nan)
+Cs = np.array(Cs, dtype=float)
+dCs = np.array(dCs, dtype=float)
+ratios = np.array(ratios, dtype=float)
+alpha_last = float(alphas[-1])
+r_last = float(ratios[-1])
+C_last = float(Cs[-1])
+18
+
+--- Page 21 ---
+
+print(f"RESULT alpha_last={alpha_last:.12g} C_last={C_last:.12g} r_last={r_last
+:.12g}")
+if not args.no_plots:
+prefix = args.save_prefix
+plt.figure(figsize=(6.5, 4.2))
+plt.plot(Cs, ratios, marker="o", linewidth=1.2)
+plt.grid(True, alpha=0.3)
+plt.xlabel("Coherence$C(\\rho)=S(\\rho\\|\\Delta[\\rho])$")
+plt.ylabel("Ratio$\\dot C_{\\mathrm{loss}}(\\rho)/C(\\rho)$")
+plt.title("Interface test (low-RAM Euler step)")
+plt.tight_layout()
+plt.savefig(f"{prefix}_ratio_vs_C.png", dpi=200)
+plt.figure(figsize=(6.5, 4.2))
+plt.plot(Cs, dCs, marker="o", linewidth=1.2)
+plt.grid(True, alpha=0.3)
+plt.xlabel("$C(\\rho)$")
+plt.ylabel("$\\dot C_{\\mathrm{loss}}(\\rho)$")
+plt.title("Interface test: linearity check (low-RAM Euler)")
+plt.tight_layout()
+plt.savefig(f"{prefix}_dotC_vs_C.png", dpi=200)
+print(f"Saved -> {prefix}_ratio_vs_C.png")
+print(f"Saved -> {prefix}_dotC_vs_C.png")
+if __name__ == "__main__":
+main()
+C.2ω= 0-only fixed-pair sweep script (minimal, for theβtable)
+# file: tfim_omega0_fixedpair.py
+import argparse
+import numpy as np
+import scipy.linalg as la
+def parse_args():
+ap = argparse.ArgumentParser()
+ap.add_argument("--N", type=int, default=6)
+ap.add_argument("--J", type=float, default=1.0)
+ap.add_argument("--h", type=float, default=1.5)
+ap.add_argument("--beta", type=float, default=1.0)
+ap.add_argument("--Sop", type=str, default="Z", choices=["X", "Y", "Z"])
+ap.add_argument("--center", action="store_true")
+ap.add_argument("--j0", type=int, default=None)
+ap.add_argument("--m", type=int, required=True)
+ap.add_argument("--n", type=int, required=True)
+ap.add_argument("--gamma0", type=float, default=0.10, help="Implements gamma(0)=
+gamma0/beta")
+ap.add_argument("--dt", type=float, default=5e-5)
+ap.add_argument("--alpha_max", type=float, default=0.15)
+ap.add_argument("--nsamples", type=int, default=25)
+19
+
+--- Page 22 ---
+
+ap.add_argument("--psd_clip", type=float, default=1e-14)
+ap.add_argument("--seed", type=int, default=0)
+return ap.parse_args()
+def paulis():
+I = np.array([[1, 0], [0, 1]], dtype=complex)
+X = np.array([[0, 1], [1, 0]], dtype=complex)
+Y = np.array([[0, -1j], [1j, 0]], dtype=complex)
+Z = np.array([[1, 0], [0, -1]], dtype=complex)
+return I, X, Y, Z
+def kron_all(ops):
+out = ops[0]
+for op in ops[1:]:
+out = np.kron(out, op)
+return out
+def local_pauli(N, site, which):
+I, X, Y, Z = paulis()
+P = {"X": X, "Y": Y, "Z": Z}[which.upper()]
+ops = [I] * N
+ops[site] = P
+return kron_all(ops)
+def two_site_xx(N, i):
+I, X, Y, Z = paulis()
+ops = [I] * N
+ops[i] = X
+ops[i + 1] = X
+return kron_all(ops)
+def tfim_hamiltonian(N, J, h):
+dim = 2**N
+H = np.zeros((dim, dim), dtype=complex)
+for i in range(N - 1):
+H += -J * two_site_xx(N, i)
+for i in range(N):
+H += -h * local_pauli(N, i, "Z")
+return (H + H.conj().T) / 2
+def thermal_probs(E, beta):
+Emin = np.min(E.real)
+w = np.exp(-beta * (E.real - Emin))
+return w / np.sum(w)
+def project_to_density(rho, eps=1e-14):
+rho = 0.5 * (rho + rho.conj().T)
+evals, evecs = la.eigh(rho)
+evals = np.maximum(evals.real, eps)
+rho_psd = (evecs * evals) @ evecs.conj().T
+rho_psd = 0.5 * (rho_psd + rho_psd.conj().T)
+20
+
+--- Page 23 ---
+
+rho_psd = rho_psd / np.trace(rho_psd)
+return rho_psd
+def rel_entropy(rho, sigma):
+rho = 0.5 * (rho + rho.conj().T)
+sigma = 0.5 * (sigma + sigma.conj().T)
+return float(np.trace(rho @ (la.logm(rho) - la.logm(sigma))).real)
+def lindblad_omega0_L(rho, S0, gamma0_val):
+S0sq = S0 @ S0
+return gamma0_val * (S0 @ rho @ S0 - 0.5 * (S0sq @ rho + rho @ S0sq))
+def main():
+args = parse_args()
+np.random.seed(args.seed)
+N, J, h, beta = args.N, args.J, args.h, args.beta
+j0 = args.j0 if args.j0 is not None else (N // 2 if args.center else 0)
+H = tfim_hamiltonian(N, J, h)
+E, V = la.eigh(H)
+Vdag = V.conj().T
+p = thermal_probs(E, beta)
+S = local_pauli(N, j0, args.Sop)
+S_E = Vdag @ S @ V
+S0_E = np.diag(np.diag(S_E))
+S0 = V @ S0_E @ Vdag
+m, n = args.m, args.n
+omega = abs(float((E[m] - E[n]).real))
+smsn = abs((S_E[m, m] - S_E[n, n]).real)
+gamma0_val = float(args.gamma0 / beta)
+print(f"Fixed pair (m,n)=({m},{n}), omega≈{omega:.12g}")
+print(f"beta={beta}, gamma0={args.gamma0}, gamma(0)=gamma0/beta={gamma0_val}")
+print(f"p_m={p[m]:.6g}, p_n={p[n]:.6g}, |s_m-s_n|={smsn:.6g}")
+alphas = np.linspace(1e-4, args.alpha_max, args.nsamples)
+dt = args.dt
+diag_E = np.diag(p.astype(complex))
+print("\nalpha C(rho) dotC_loss dotC_loss/C")
+last_ratio = None
+for alpha in alphas:
+rho_E = diag_E.copy()
+amp = alpha * np.sqrt(p[m] * p[n])
+rho_E[m, n] += amp
+rho_E[n, m] += amp
+rho = project_to_density(V @ rho_E @ Vdag, eps=args.psd_clip)
+rho_E_chk = Vdag @ rho @ V
+21
+
+--- Page 24 ---
+
+Delta_rho_E = np.diag(np.diag(rho_E_chk))
+Delta_rho = project_to_density(V @ Delta_rho_E @ Vdag, eps=args.psd_clip)
+C = rel_entropy(rho, Delta_rho)
+rho_t = project_to_density(
+rho + dt * lindblad_omega0_L(rho, S0, gamma0_val),
+eps=args.psd_clip
+)
+rho_t_E = Vdag @ rho_t @ V
+Delta_rho_t_E = np.diag(np.diag(rho_t_E))
+Delta_rho_t = project_to_density(V @ Delta_rho_t_E @ Vdag, eps=args.psd_clip)
+C_t = rel_entropy(rho_t, Delta_rho_t)
+dotC_loss = -(C_t - C) / dt
+ratio = dotC_loss / C if C > 0 else float("nan")
+last_ratio = ratio
+print(f"{alpha: .6f} {C: .6e} {dotC_loss: .6e} {ratio: .6g}")
+print(f"\nRESULT r(alpha={args.alpha_max}) = {last_ratio}")
+if __name__ == "__main__":
+main()
+References
+[1] L. Eriksson,Clustering, Recovery, and Locality in Algebraic Quantum Field Theory:
+Quantitative Bounds via Split Inclusions and Modular Theory, ai.viXra:2512.0060 (2025).
+https://ai.vixra.org/abs/2512.0060
+[2] L. Eriksson,The Conditional Maintenance Work Theorem: Operational Power Lower
+Bounds from Energy Pinching and a Split-Inclusion Blueprint for Type III AQFT,
+ai.viXra:2512.0061 (2025).https://ai.vixra.org/abs/2512.0061
+[3] L. Eriksson,The Heisenberg Cut as a Resource Boundary: An Operational Outlook from
+Coherence Maintenance Costs, ai.viXra:2512.0064 (2025).https://ai.vixra.org/abs/
+2512.0064
+[4] E. B. Davies,Markovian master equations, Commun. Math. Phys.39(1974), 91–110.
+[5] H. Spohn,Entropy production for quantum dynamical semigroups, J. Math. Phys.19
+(1978), 1227–1230.
+[6] H.-P. Breuer and F. Petruccione,The Theory of Open Quantum Systems, Oxford University
+Press (2002).
+22

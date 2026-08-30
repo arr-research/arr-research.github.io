@@ -19,7 +19,7 @@ UUID_PATTERN = r"[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]
 RECORD_ID_PATTERN = re.compile(rf"^arr:record:{UUID_PATTERN}$")
 VERSION_ID_PATTERN = re.compile(rf"^arr:version:{UUID_PATTERN}$")
 VERSION_PATTERN = re.compile(r"^v[1-9]\d*$")
-ALLOWED_STATUSES = {"accepted", "corrected", "withdrawn"}
+ALLOWED_STATUSES = {"accepted", "corrected", "withdrawn", "archived"}
 ALLOWED_RECORD_TYPES = {"research_paper", "technical_note"}
 ALLOWED_NOTE_KINDS = {
     "result",
@@ -33,7 +33,7 @@ ALLOWED_NOTE_KINDS = {
     "software",
     "protocol",
 }
-ALLOWED_SOURCE_FILES = {"paper.tex", "paper.md", "paper.pdf"}
+ALLOWED_SOURCE_FILES = {"paper.tex", "paper.md", "paper.pdf", "external_pdf"}
 ALLOWED_CHECKS = {"pass", "partial", "not_assessed", "not_applicable"}
 ALLOWED_LEAN_LEVELS = {"L0", "L1", "L2", "L3", "not_assessed", "not_applicable"}
 CROCKFORD = "0123456789ABCDEFGHJKMNPQRSTVWXYZ"
@@ -217,14 +217,14 @@ def validate_paper(paper: Paper) -> list[str]:
         _required_string(metadata, field, errors)
 
     schema_version = metadata.get("schema_version")
-    if schema_version not in {"1.0", "1.1", "1.2"}:
-        errors.append("schema_version: must be 1.0, 1.1 or 1.2")
+    if schema_version not in {"1.0", "1.1", "1.2", "1.3"}:
+        errors.append("schema_version: must be 1.0, 1.1, 1.2 or 1.3")
 
     explicit_record_type = metadata.get("record_type")
     record_type = explicit_record_type or "research_paper"
     if schema_version == "1.0" and explicit_record_type is not None:
         errors.append("record_type: schema 1.0 records must use the legacy implicit research_paper type")
-    if schema_version in {"1.1", "1.2"} and explicit_record_type not in ALLOWED_RECORD_TYPES:
+    if schema_version in {"1.1", "1.2", "1.3"} and explicit_record_type not in ALLOWED_RECORD_TYPES:
         errors.append(f"record_type: must be one of {sorted(ALLOWED_RECORD_TYPES)}")
     if record_type not in ALLOWED_RECORD_TYPES:
         errors.append(f"record_type: must be one of {sorted(ALLOWED_RECORD_TYPES)}")
@@ -308,6 +308,62 @@ def validate_paper(paper: Paper) -> list[str]:
     if metadata.get("status") == "corrected" and not metadata.get("supersedes_version_id"):
         errors.append("supersedes_version_id: required for a corrected version")
 
+    archival = metadata.get("archival_source")
+    if metadata.get("status") == "archived":
+        if schema_version != "1.3":
+            errors.append("status: archived records require schema_version 1.3")
+        if not isinstance(archival, dict):
+            errors.append("archival_source: required for archived records")
+        else:
+            identifier = archival.get("identifier")
+            if archival.get("archive") != "ai.vixra":
+                errors.append("archival_source.archive: must be ai.vixra")
+            if not isinstance(identifier, str) or not re.fullmatch(r"\d{4}\.\d{4}", identifier):
+                errors.append("archival_source.identifier: invalid ai.vixra identifier")
+            for field in ("abstract_url", "mirror_pdf_url", "mirror_release_url"):
+                value = archival.get(field)
+                if not isinstance(value, str) or not value.startswith("https://"):
+                    errors.append(f"archival_source.{field}: an HTTPS URL is required")
+            versions = archival.get("versions")
+            if not isinstance(versions, list) or not versions:
+                errors.append("archival_source.versions: a non-empty history is required")
+            else:
+                version_numbers: list[int] = []
+                for index, source_version in enumerate(versions):
+                    if not isinstance(source_version, dict):
+                        errors.append(f"archival_source.versions[{index}]: an object is required")
+                        continue
+                    label = source_version.get("version")
+                    match = VERSION_PATTERN.fullmatch(label) if isinstance(label, str) else None
+                    if not match:
+                        errors.append(f"archival_source.versions[{index}].version: invalid value")
+                    else:
+                        version_numbers.append(int(label[1:]))
+                    try:
+                        parse_exact_timestamp(source_version.get("submitted_at"))
+                    except ValueError as error:
+                        errors.append(f"archival_source.versions[{index}].submitted_at: {error}")
+                    pdf_url = source_version.get("pdf_url")
+                    if not isinstance(pdf_url, str) or not pdf_url.startswith("https://"):
+                        errors.append(f"archival_source.versions[{index}].pdf_url: an HTTPS URL is required")
+                if version_numbers != sorted(set(version_numbers)):
+                    errors.append("archival_source.versions: versions must be unique and ascending")
+                if versions[0].get("submitted_at") != archival.get("first_submitted_at"):
+                    errors.append("archival_source.first_submitted_at: must equal the first version timestamp")
+                if versions[-1].get("version") != archival.get("latest_declared_version"):
+                    errors.append("archival_source.latest_declared_version: must equal the final declared version")
+                if versions[-1].get("submitted_at") != archival.get("latest_submitted_at"):
+                    errors.append("archival_source.latest_submitted_at: must equal the final version timestamp")
+            for field in ("first_submitted_at", "latest_submitted_at"):
+                try:
+                    parse_exact_timestamp(archival.get(field))
+                except ValueError as error:
+                    errors.append(f"archival_source.{field}: {error}")
+            if not isinstance(archival.get("source_file_available"), bool):
+                errors.append("archival_source.source_file_available: a boolean is required")
+    elif archival is not None:
+        errors.append("archival_source: only archived records may declare an archival source")
+
     title = metadata.get("title")
     if isinstance(title, str) and len(title.strip()) < 10:
         errors.append("title: must contain at least 10 characters")
@@ -361,12 +417,12 @@ def validate_paper(paper: Paper) -> list[str]:
     source = metadata.get("source_of_truth")
     if source not in ALLOWED_SOURCE_FILES:
         errors.append(f"source_of_truth: must be one of {sorted(ALLOWED_SOURCE_FILES)}")
-    elif not (paper.path / source).is_file():
+    elif source != "external_pdf" and not (paper.path / source).is_file():
         errors.append(f"source_of_truth: {source} is missing")
 
     if not (paper.path / "paper.md").is_file():
         errors.append("paper.md: a machine-readable rendition is required")
-    if source == "paper.pdf" and not (paper.path / "paper.txt").is_file():
+    if source in {"paper.pdf", "external_pdf"} and not (paper.path / "paper.txt").is_file():
         errors.append("paper.txt: a plain-text rendition is required for PDF-origin records")
 
     for filename in ("PROVENANCE.json", "CITATION.cff", "LICENSES.json"):
@@ -464,17 +520,17 @@ def validate_paper(paper: Paper) -> list[str]:
             errors.append("integrity.algorithm: must be sha256")
         if integrity.get("manifest") != "MANIFEST.sha256":
             errors.append("integrity.manifest: must be MANIFEST.sha256")
-        if source == "paper.pdf":
+        if source == "paper.pdf" or metadata.get("status") == "archived":
             canonical_path = paper.path / "paper.pdf"
             canonical_hash = integrity.get("canonical_sha256")
             canonical_bytes = integrity.get("canonical_bytes")
             if not isinstance(canonical_hash, str) or not re.fullmatch(r"[0-9a-f]{64}", canonical_hash):
                 errors.append("integrity.canonical_sha256: required for PDF-origin records")
-            elif canonical_path.is_file() and sha256(canonical_path) != canonical_hash:
+            elif source == "paper.pdf" and canonical_path.is_file() and sha256(canonical_path) != canonical_hash:
                 errors.append("integrity.canonical_sha256: does not match paper.pdf")
             if not isinstance(canonical_bytes, int) or isinstance(canonical_bytes, bool) or canonical_bytes < 1:
                 errors.append("integrity.canonical_bytes: required for PDF-origin records")
-            elif canonical_path.is_file() and canonical_path.stat().st_size != canonical_bytes:
+            elif source == "paper.pdf" and canonical_path.is_file() and canonical_path.stat().st_size != canonical_bytes:
                 errors.append("integrity.canonical_bytes: does not match paper.pdf")
 
     ai = metadata.get("ai_assistance")
@@ -555,7 +611,7 @@ def validate_paper(paper: Paper) -> list[str]:
     if not isinstance(editorial, dict):
         errors.append("editorial: an object is required")
     else:
-        if editorial.get("decision") not in {"founder_pilot", "standard_acceptance", "correction", "withdrawal"}:
+        if editorial.get("decision") not in {"founder_pilot", "standard_acceptance", "correction", "withdrawal", "historical_import"}:
             errors.append("editorial.decision: invalid value")
         if not isinstance(editorial.get("signed_by"), str) or not editorial["signed_by"].strip():
             errors.append("editorial.signed_by: required")
@@ -563,6 +619,11 @@ def validate_paper(paper: Paper) -> list[str]:
             errors.append("editorial.conflicts: an array is required")
         if not isinstance(editorial.get("statement"), str) or len(editorial["statement"].strip()) < 20:
             errors.append("editorial.statement: a meaningful statement is required")
+        if metadata.get("status") == "archived" and editorial.get("decision") != "historical_import":
+            errors.append("editorial.decision: archived records require historical_import")
+
+    if metadata.get("status") == "archived" and isinstance(screening, dict) and screening.get("status") != "not_assessed":
+        errors.append("screening.status: historical imports must remain not_assessed until a new ARR version is audited")
 
     return errors
 

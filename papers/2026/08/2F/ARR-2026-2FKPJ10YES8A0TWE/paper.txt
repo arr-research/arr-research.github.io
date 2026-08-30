@@ -1,0 +1,383 @@
+--- Page 1 ---
+
+Machine-Checked Haar Integration by Parts on Finite
+SU(2)Edge Spaces: Pauli Flows and Two-Generator
+Transfer
+Lluis Eriksson
+2 August 2026
+Abstract
+We formalize the finite-dimensional integration-by-parts mechanism used in local proofs of the
+Makeenko–Migdal equation. For a measure-preserving real flowTt on a finite measure space, Lean
+verifies differentiation under the integral from an explicit locally uniform integrable majorant and
+proves
+∫
+Dfdµ= 0. A bounded dominated product interface then yields
+∫
+(Df)gdµ=−
+∫
+f(Dg) dµ,
+and two successive applications transfer a mixed pair of generators from a density to an observable
+with positive sign. These results are instantiated on normalized Haar probability measure of concrete
+SU(2)and on every finite productSU(2)E, for left and right multiplication of one selected edge. To
+fix the representation normalization, we construct three explicit trigonometric curves inSU(2)and
+prove entrywise that their tangents at the identity areiσ1/2,iσ2/2,iσ3/2. The producer contains
+30 public definitions, structures, and theorems in 519 physical lines; its audit contains no local
+sorry, admit, oraxiom, and the headline results depend only onpropext, Classical.choice, and
+Quot.sound. This closes the Haar integration-by-parts layer. It does not claim the full four-area
+Makeenko–Migdal identity: the remaining formal inputs are the heat-density directional identity,
+extended gauge invariance at a crossing, and their geometric assembly.
+1 Result and claim boundary
+Rigorous local proofs of the planar Makeenko–Migdal equation reduce the loop equation to finite-
+dimensional operations on edge holonomies. In the edge-variable proof of Driver, Hall, and Kemp, an
+alternating derivative in the four adjacent face areas is first converted into a mixed invariant gradient, and
+Haar integration by parts moves the relevant derivatives from the Yang–Mills density to the observable
+[1]. Their compact-surface extension uses the same local right-multiplication conventionai ↦→aiesX [2].
+This paper isolates and machine-checks the analytic transfer layer. It starts above the level of a
+particular heat kernel: the central theorem applies to any genuinely measure-preserving flow for which
+differentiation is justified by a supplied majorant. It then descends to the concrete normalized Haar
+measure of Mathlib’s matrix groupSU(2)and to arbitrary finite edge sets. Table 1 records the exact
+boundary.
+The central result can be stated without reference to a formalization:
+On a finiteSU(2)edge space with normalized product Haar measure, any right- or left-invariant
+edge generator satisfying the explicit dominated flow interface is skew-symmetric for the bilinear
+integral pairingB(f,g) =
+∫
+fg dµ; two ordered generators can therefore be transferred from
+the density to the observable with positive sign.
+No invariance of an integral is postulated. Measure preservation is proved for the concrete translations,
+and the equality of integrals is derived from the pushforward theorem.
+2 A dominated measure-preserving flow theorem
+Let( A,µ)be a measurable space with finite measure and letT : R×A→A . WriteTt(x) =T(t,x). We
+do not require a global flow lawTs+t =Ts ◦Tt; the argument needs only
+(Tt)∗µ=µ(t∈R), T 0 = id.(1)
+1
+
+--- Page 2 ---
+
+Table 1: Claim ledger. “Checked” means compiled in the accompanying Lean artifact; open rows are not
+introduced as hypotheses of a claimed loop equation.
+Statement Status Role
+Zero integral of a dominated generator along a
+measure-preserving flow
+Checked Abstract analytic producer
+Product-rule Haar integration by parts Checked One-derivative transfer
+Positive-sign transfer of two ordered generators Checked Mixed-gradient interface
+Left/right single-edge flows onSU(2)E preserve product
+Haar measure
+Checked Edge-variable specialization
+Three identity-based curves tangent toiσa/2Checked Normalization certificate
+Alternating four-area derivative equals a density mixed
+derivative
+Open Heat-density local identity
+Extended gauge invariance at a certified crossing Open Crossing-specific cancellation
+Complete Makeenko–Migdal equation Open Requires the two preceding rows
+Forf,D : A→C , assume thatf is integrable,D is almost everywhere strongly measurable, and there
+existε>0and an integrableb:A→Rsuch that for everyxand|t|<ε,
+d
+ds
+⏐⏐⏐⏐
+s=t
+f(Tsx) =D(Ttx),(2)
+∥D(Ttx)∥≤b(x).(3)
+Theorem 2.1(Generator integral vanishes).Under(1)–(3),
+∫
+A
+D(x) dµ(x) = 0.(4)
+Proof. Set F(t,x) =f(Ttx)and F′(t,x) =D(Ttx). The hypotheses of the dominated local differentiation
+theorem for Bochner integrals follow from (2) and (3). Thus
+d
+dt
+⏐⏐⏐⏐
+t=0
+∫
+A
+F(t,x) dµ(x) =
+∫
+A
+D(x) dµ(x).
+On the other hand, pushforward invariance gives
+∫
+A
+f(Ttx) dµ(x) =
+∫
+A
+f(x) d((Tt)∗µ)(x) =
+∫
+A
+f(x) dµ(x).
+The left side is constant int, so its derivative is zero. Lean verifies both derivatives and identifies them
+using uniqueness of the derivative.
+The formal theorem is stronger than an “invariant integral” interface: its input is aMeasurePreserving
+map, and the invariant integral is an internal consequence. It also makes the analytic burden visible. A
+merely pointwise derivative is not enough; the majorant in (3) is part of the theorem’s public data.
+3 Product-rule integration by parts
+For reusable applications, the artifact packages the assumptions for two functions in a structure
+D(µ,T;f,g,Df,Dg).
+It contains a common positive radius, four nonnegative constant bounds, almost-everywhere strong
+measurability of f,g,Df,Dg , local uniform norm bounds alongTt, and the two pointwise derivative
+identities. Constant bounds suffice because the measure is finite; in the concrete applications it is a
+probability measure.
+Theorem 3.1(Dominated integration by parts).Assume(1)andD(µ,T;f,g,Df,Dg). Then
+∫
+A
+Df(x)g(x) dµ(x) =−
+∫
+A
+f(x)Dg(x) dµ(x).(5)
+2
+
+--- Page 3 ---
+
+Proof. Apply Theorem 2.1 toh= fg. The product rule givesDh= (Df)g+ f(Dg). The four constant
+bounds inDproduce the integrable majorant
+C=B DfBg +BfBDg.
+The same data separately prove integrability of(Df)g and f(Dg), so the Bochner integral splits over the
+sum. Rearranging the resulting zero-sum identity gives (5).
+The ordering in (5) is retained even though the scalar codomain isC; this makes the interface
+compatible with later noncommutative extensions. Equation(5) is a skew-symmetry statement for the
+bilinear pairingB(f,g) =
+∫
+fgdµ, not a claim about adjointness for the Hermitian pairing
+∫
+fgdµ.
+3.1 Two ordered generators
+Let T(1),T(2) be two measure-preserving flows. Name the derivatives of a densityρ by D2ρ,D1D2ρ, and
+those of an observablefbyD 1f,D2D1f. No commutation theorem is assumed between the flows.
+Theorem 3.2(Two-generator transfer).If the dominated pair interfaces needed for the two indicated
+applications of Theorem 3.1 hold, then
+∫
+A
+(D1D2ρ)fdµ=
+∫
+A
+ρ(D2D1f) dµ.(6)
+Proof.The first integration by parts gives
+∫
+(D1D2ρ)f=−
+∫
+(D2ρ)(D1f).
+The second gives ∫
+(D2ρ)(D1f) =−
+∫
+ρ(D2D1f).
+The signs cancel. The formal statement namesD1D2ρ and D2D1f separately, so it cannot silently use
+commutativity of mixed derivatives.
+This two-step theorem is the exact sign pattern used when a mixed derivative is transferred from a
+Yang–Mills density to a crossing observable.
+4 FiniteSU(2)edge configurations
+Let Ebe a finite type of oriented edge coordinates and equipSU(2)E with normalized product Haar
+measureµ E
+H. For an edgee∈Eandh∈SU(2), define the single-edge multiplier
+me,h(j) =
+{
+h, j=e,
+1, j̸=e. (7)
+Given a curveγ:R→SU(2), define
+Le,γ(t,U) =me,γ(t)U,(8)
+Re,γ(t,U) =Um e,γ(t).(9)
+Multiplication is pointwise onSU(2)E.
+Theorem 4.1(Single-edge Haar invariance).For every finiteE, everye∈E , every curveγ, and every
+t∈R, both maps in(8)–(9)preserveµ E
+H. Ifγ(0) = 1, both maps att= 0are the identity.
+Proof. The finite product of compact groups is a compact group, and its normalized Haar probability
+measure is invariant under left and right multiplication. Apply those library theorems to the concrete
+group elementme,γ(t). The identity statement follows coordinatewise from (7).
+Combining Theorems 3.1, 3.2, and 4.1 gives compiled left- and right-generator integration by parts on
+every finite edge space, plus the concrete right-right two-generator transfer
+∫
+SU(2)E
+(D1D2ρ)(U)f(U) dµE
+H(U) =
+∫
+SU(2)E
+ρ(U)(D2D1f)(U) dµE
+H(U).(10)
+The right convention matches the invariant derivatives used in the compact surface formulation of
+Driver–Gabriel–Hall–Kemp [2].
+3
+
+--- Page 4 ---
+
+5 Pauli normalization certificates
+An abstract curve would leave the normalization of the Lie algebra generator external. The artifact
+therefore constructs three explicit curves. Putc(t) =cos(t/2)and s(t) =sin(t/2). In the fundamental
+representation,
+γX(t) =
+(c(t)is(t)
+is(t)c(t)
+)
+, X= iσ1
+2 =
+(0i/2
+i/2 0
+)
+,(11)
+γY(t) =
+(
+c(t)s(t)
+−s(t)c(t)
+)
+, Y= iσ2
+2 =
+(
+0 1/2
+−1/2 0
+)
+,(12)
+γZ(t) =
+(c(t) +is(t) 0
+0c(t)−is(t)
+)
+, Z= iσ3
+2 =
+(i/2 0
+0−i/2
+)
+.(13)
+Theorem 5.1(Certified Pauli tangents).Each γa(t)lies in concrete SU(2), satisfiesγa(0) = 1, and for
+alli,j∈{0,1},
+d
+dt
+⏐⏐⏐⏐
+t=0
+(γa(t))ij = (Aa)ij,(A X,AY,AZ) = (X,Y,Z).(14)
+Proof. Each curve is built through the previously checked equivalence betweenSU(2)and the unit sphere
+in C2. The identitycos2(t/2) +sin2(t/2) = 1discharges membership in the sphere. Lean then expands
+the four matrix entries, performs all twelve scalar derivative calculations, and verifies the conjugation
+signs in the lower row. In particular, the factor1/2is proved rather than inferred from notation.
+The same Pauli matrices were used in the companion trace–skein artifact, where their quadratic
+Casimir and Fierz contraction were checked. Theorem 5.1 now proves that those matrices are the actual
+infinitesimal generators of concrete Haar-preserving edge flows.
+6 How this enters the local loop equation
+For a crossing with four adjacent faces, the local Makeenko–Migdal operator is the alternating area
+derivative
+∂t1 −∂t2 +∂t3 −∂t4 .(15)
+Driver–Hall–Kemp prove that, under extended gauge invariance, applying(15) to the local Yang–Mills
+integral yields the negative of a mixed invariant-gradient integral [1, Theorem 2.6]. Their local proof
+then uses Haar integration by parts to move derivatives from the density to the observable. The certified
+dependency chain is shown in Figure 1.
+four-face heat-density
+directional identity
+open
+finite-edge Haar IBP
+and double transfer
+this paper
+Pauli/Fierz
+trace–skein closure
+checked companion
+extended gauge
+invariance
+from certified crossing
+open
+Figure 1: The present result closes the analytic transfer layer but does not collapse the open producers on
+its left into a claimed theorem.
+Theorem 3.2 exactly certifies the two minus signs contributed by the two integrations by parts.
+Theorem 5.1 fixes the invariant directions that subsequently enter the Fierz contraction. What remains is
+not “integration by parts” in disguise: one must still prove that the alternating area derivative of the
+concrete four-face density is the named mixed generator and that extended gauge invariance combines the
+incident edges with the required signs. Neither statement is assumed here.
+4
+
+--- Page 5 ---
+
+7 Formal architecture and audit
+The new artifact consists of one 519-line producer and one 44-line audit module. The producer exposes 30
+top-level declarations: one structure, 11 definitions, and 18 theorems. Table 2 lists the headline map.
+Table 2: Paper statements and exact Lean declarations.
+Paper statement Lean declaration
+Theorem 2.1integral_generator_eq_zero_of_measurePreserving_flow
+Dominated pair interfaceDominatedFlowPair
+Theorem 3.1integral_generator_mul_eq_neg_integral_mul_generator
+Theorem 3.2integral_two_generators_transfer
+Theorem 4.1measurePreserving_su2EdgeLeftFlow,
+measurePreserving_su2EdgeRightFlow
+Equation (10)integral_su2Edge_two_rightGenerators_transfer
+Theorem 5.1hasDerivAt_su2PauliXCurve_entry,...Y...,...Z...
+The public shape of the central declarations is:
+theorem integral_generator_mul_eq_neg_integral_mul_generator
+{mu : Measure Alpha} [IsFiniteMeasure mu]
+(T : Real -> Alpha -> Alpha)
+(hT : forall t, MeasurePreserving (T t) mu mu)
+(hT_zero : forall x, T 0 x = x)
+(f g Df Dg : Alpha -> Complex)
+(P : DominatedFlowPair mu T f g Df Dg) :
+(integral fun x => Df x * g x) =
+-(integral fun x => f x * Dg x)
+theorem integral_two_generators_transfer ... :
+(integral fun x => D1D2rho x * f x) =
+integral fun x => rho x * D2D1f x
+The displayed code shortens measure annotations and binders only for print; the audit transcript records
+the complete elaborated types.
+The axiom audit prints, for all headline results,
+depends on axioms: [propext, Classical.choice, Quot.sound]
+These are standard logical dependencies inherited from Mathlib. A separate placeholder scan covers both
+new modules and rejects any occurrence ofsorry,admit, oraxiom.
+8 Prior art and formalization delta
+Finite-dimensional integration by parts on compact groups is classical. The novel mathematical identity is
+not claimed here. Driver, Hall, and Kemp give three rigorous local proofs of the planar Makeenko–Migdal
+equation and state the mixed-gradient formula under extended gauge invariance [1]. Driver, Gabriel, Hall,
+and Kemp extend the local equation to compact surfaces and explicitly formulate invariant derivatives
+through right multiplication of edge variables [2]. Driver’s functional-integral account also emphasizes
+that the previous rigorous proofs are finite-dimensional integration-by-parts arguments [3]. Recent work
+studies passage from discrete loop equations to the continuum [4].
+The exact formalization delta is the simultaneous presence of:
+1. differentiation of an invariant integral derived fromMeasurePreserving, not supplied as an equality
+field;
+2. an explicit locally uniform integrable majorant for the generator;
+3. a reusable bounded product interface and proved integrability of both terms in the product rule;
+4. ordered two-generator transfer without assuming commutation;
+5. concrete left and right translations on arbitrary finiteSU(2)edge products; and
+6. concreteSU(2)curves with all three Pauli tangents checked entrywise.
+5
+
+--- Page 6 ---
+
+Mathlib supplies the measure theory, Bochner integration, compact-group Haar measure, and differentiation
+infrastructure. We do not make a priority claim for proof assistants; an exhaustive cross-prover survey
+would be needed for that.
+9 Limitations and migration note
+Limitations.The theorem uses explicit bounded dominated-flow data. It does not yet derive those
+bounds automatically from smoothness and compactness, nor does it build a general Lie derivative or
+Laplace–Beltrami operator. The Pauli curves are certified entrywise at zero; the artifact does not need or
+claim a global matrix-exponential theorem. Most importantly, it does not prove the heat-density identity
+that turns(15) into the appropriate mixed edge derivative, nor the extended gauge invariance arising from
+a crossing. Consequently this paper must not be cited as a complete formal proof of the Makeenko–Migdal
+equation.
+Migration note.This is a new sequel, not a replacement. The previously submitted positive-area
+evolution paper remains the analytic source for differentiating the infinite class heat kernel. The trace–
+skein paper remains the algebraic source for the Pauli/Fierz contraction. The present paper supplies the
+integration-by-parts bridge between those layers. Until public ai.viXra identifiers are assigned, the two
+companions should be described as submitted manuscripts, not published records.
+10 Conclusion
+The finite-edge Haar transfer mechanism needed by local loop equations is now machine checked. Measure
+preservation plus a dominated derivative gives a zero integrated generator; the product rule gives skew-
+symmetry for the bilinear integral pairing; a second application transfers two ordered derivatives with
+positive sign. The result holds on every finite product of concreteSU(2)Haar spaces, on either side of a
+selected edge, and the three Pauli normalizations are certified by explicit group-valued curves.
+This closes a genuine missing layer without overstating the endpoint. The remaining route to a complete
+formal local Makeenko–Migdal equation is now sharply localized: connect the alternating four-area heat
+derivative to the mixed edge generator, prove the required extended gauge invariance from crossing
+geometry, and compose those producers with the present transfer and the existing trace–skein closure.
+A Reproduction protocol
+The exact source archive pins Leanv4.29.0-rc6and Mathlib commit
+07642720480157414db592fa85b626dafb71355b.
+From the archive root:
+lake update
+lake exe cache get
+lake build Lean2dYangMills.SU2HaarIntegrationByParts
+lake env lean Lean2dYangMills/AuditSU2HaarIntegrationByParts.lean
+The supplied wrapperverify-su2-haar-ibp.ps1 performs both compilations, the two-file placeholder
+scan, and the exact public-declaration count. The release manifest records SHA-256 values for the
+manuscript, source, archive, audit transcript, and verification script. The authorized publication route
+accepts only the PDF; the source archive is therefore a direct-review artifact and is not represented as
+public until a separate public route exists.
+References
+[1] B. K. Driver, B. C. Hall, and T. Kemp,Three proofs of the Makeenko–Migdal equation for Yang–Mills theory on the
+plane, Communications in Mathematical Physics 351 (2017), 741–774; arXiv:1601.06283.
+[2] B. K. Driver, F. Gabriel, B. C. Hall, and T. Kemp,The Makeenko–Migdal equation for Yang–Mills theory on compact
+surfaces, Communications in Mathematical Physics 352 (2017), 967–978; arXiv:1602.03905.
+[3] B. K. Driver,A Functional Integral Approaches to the Makeenko–Migdal Equations, arXiv:1709.04041 (2017; rev.
+2019).
+[4] H. Shen, S. A. Smith, and R. Zhu,Makeenko–Migdal equations for 2D Yang–Mills: from lattice to continuum,
+arXiv:2412.15422 (2024).
+6

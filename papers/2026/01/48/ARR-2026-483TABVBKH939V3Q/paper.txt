@@ -1,0 +1,221 @@
+--- Page 1 ---
+
+Operational Influence Proxies in a TFIM Surrogate:
+Non-Monotonicity and a Controlled ω = 0 Witness Floor
+Mechanism
+Version 2
+Lluis Eriksson
+Independent Researcher
+lluiseriksson@gmail.com
+January 2026 (v1); July 2026 (v2)
+Abstract
+We study spatial influence detection in a transverse-field Ising chain (TFIM) subjected to lo-
+calized Markovian noise. Using an operational one-site trace-distance influence proxy computed
+from TEBD combined with Monte Carlo wavefunction (MCWF) sampling, we test whether
+remote dissipation produces an identifiable nonzero asymptotic influence offset (a “floor”) as
+a function of separation ϵ. Uncertainties are estimated by trajectory bootstrap and model se-
+lection is performed between exponential decay and exponential-plus-offset forms using both
+BIC and the finite-sample corrected criterion AICc. In the TFIM surrogate regimes explored,
+we find no robustly identifiable floor for both dephasing and amplitude-damping channels; in-
+stead, the influence proxy is non-monotone in separation, consistent with coherent finite-size
+structure superimposed on average attenuation. To demonstrate that floors can exist as a con-
+trolled mechanism independent of fragile spatial fits, we present a Davies/witness stress test:
+for nonzero zero-frequency bath weight γ(0) > 0, a commutator witness yields a strictly positive
+lower bound on an effective decay envelope. Exact-diagonalization calculations show this lower
+bound is robust to enlarging the observable support and to variations in inverse temperature.
+v2 adds: a synthetic-injection power analysis showing that over the sampled one-octave window
+ϵ ∈ [16, 32] with n = 5 points, a constant floor is nearly degenerate with a slow exponential
+– AICc essentially never detects a floor and even BIC requires D0 ∼ 30σ – so “no identifiable
+floor” is in part a design limitation, now stated as such; a fully declared exact-diagonalization
+benchmark for the witness (v1 did not record its ED parameters), regenerable from scratch by
+the shipped suite; a null case showing the witness switches off (κmin ∼ 10−29) for couplings with
+vanishing ω = 0 component; an invariant-subspace caveat for the envelope interpretation; and
+series cross-references.
+1 Introduction
+Locality constraints in quantum lattice systems limit how quickly and how strongly perturbations
+influence distant degrees of freedom [1]. Operational influence detection often relies on reduced-
+state or local-observable proxies rather than direct access to a full many-body channel. A recurring
+question is whether such proxies exhibit a nonzero asymptotic offset (a “floor”) in separation ϵ, or
+whether they decay without a detectable offset.
+This paper has two goals. First, we evaluate a TFIM numerical surrogate using a one-site
+trace-distance influence proxy under localized Markovian noise, and we test for an identifiable floor
+1
+
+--- Page 2 ---
+
+using statistically controlled model selection. Second, we provide a controlled stress test in which
+a floor mechanism exists in a precise sense: as a witness-based lower bound in a Davies-type ω = 0
+sector with γ(0) > 0 [2, 3, 4]. The contrast clarifies a key message: the existence and detectability
+of floors depends on both the chosen operational proxy and on low-frequency bath structure.
+Series context (added in v2).This note is the numerical companion of the ω = 0-floor block of
+the coherence-maintenance series: the windowed-proxy withdrawal and exact local-sink suppression
+of 2512.0064 v2 [7] (the non-monotonicity found here is the same phenomenon that motivated that
+withdrawal), the Davies-class ceiling/floor envelopes of 2512.0070 v2 [8], and the entropic interface
+2601.0020 [9], whose Appendix C reproduces Figures 1 and 4 below as illustrations. The proxy-
+discipline lesson (power analysis before interpreting nulls) follows 2512.0105-style methodology [10].
+2 TFIM surrogate: model, proxy, and inference pipeline
+2.1 Hamiltonian
+We consider a TFIM chain of length N with open boundary conditions and Hamiltonian
+H = −J
+N−1X
+i=1
+XiXi+1 − h
+NX
+i=1
+Zi.
+(Equivalent to the ZZ–X convention by a global basis rotation.)
+2.2 Noise channels and geometry
+We study localized Markovian noise applied on a set of sites separated from a probe site S by a
+distance ϵ: dephasing (jump operators ∝ Z) and amplitude damping (jump operators ∝ σ− =
+(X − iY )/2). For each separation ϵ, noise acts on a small region N(ϵ) at distance ϵ from S.
+2.3 Operational influence proxy
+For each ϵ, we compare (i) a noisy evolution with dissipation at N(ϵ) to (ii) a clean unitary
+evolution under H. With ¯ρnoisy
+S (t) the trajectory-averaged reduced state at the probe andρuni
+S (t) the
+unitary reference (independent of ϵ), define the instantaneous trace-distance influence Dtr(t; ϵ) :=
+1
+2 ∥¯ρnoisy
+S (t)−ρuni
+S (t)∥1 and windowed aggregates DA
+tr(ϵ), A ∈ {max, mean, rms}, over post–light-cone
+windows t0(ϵ) = αϵ/v, t1 = t0 + τ.
+2.4 Uncertainty estimation and model selection
+Uncertainties are bootstrap 16–84% intervals over trajectories. We compare Mexp : D(ϵ) = Ae−aϵ
+and Mfloor : D(ϵ) = D0 +Ae−aϵ (A, D0 ≥ 0) by weighted least squares with a log-spaced grid overa,
+summarized by ∆BIC and ∆AICc with BIC = χ2 + k log n, AICc = χ2 + 2k + 2k(k + 1)/(n −k −1)
+[5, 6]. For the tail-only fits below ( n = 5), the AICc correction contributes ≈ 18 additional units
+to the offset model ( k = 3 vs k = 2), so ∆AICc ≈ 20 indicates insufficient support for an extra
+parameter at small n, not strong physical evidence against D0.
+2
+
+--- Page 3 ---
+
+2.5 Power of the no-floor conclusion (added in v2)
+A null is informative only relative to what the design could detect. The suite (Section 5) injects
+known floors D0 into synthetic data with the sampled design ( n = 5, ϵ ∈ {16, 20, 24, 28, 32},
+matched noise) and runs the identical pipeline. Result: AICc essentially never selects the floor
+model (it requires ∆ χ2 > 20), and even BIC reaches 80% detection only near D0 ∼ 30σ. The
+mechanism is a design degeneracy: over a one-octave window, a slow exponential ( a → 0) mimics
+a constant offset, so the criteria cannot separate them regardless of sample size. Consequently, the
+correct reading of Section 3 is: no floor is identifiable and the design could not have identified any
+floor smaller than the in-window signal itself; identifying subdominant floors requires a wider ϵ
+aspect ratio, amplitude constraints, or channel-specific nulls. This sharpens, rather than weakens,
+the contrast with the certified witness mechanism of Section 4.
+3 TFIM surrogate results
+3.1 Dephasing deep tail ( N = 80, post–LC)
+For dephasing at N = 80, ϵ ∈ {16, 20, 24, 28, 32}: DA
+tr(ϵ) is non-monotone (a bump appears),
+indicating coherent finite-size structure superimposed on average attenuation. Model selection
+yields no supported/identifiable floor for all aggregators: ∆BIC ≈ 1.5–1.6, ∆AICc ≈ 20 – i.e.
+χ2 improvement ≈ 0 (pure penalty), consistent with no floor signal within the power limits of
+Section 2.5.
+3.2 Amplitude damping corroboration ( N = 24)
+At N = 24, ϵ ∈ {2, 4, 6, 8, 10}: non-monotone dependence, no-floor model favored across aggregators
+(∆BIC ≈ 1.6, ∆AICc ≈ 20), same power caveat.
+Figure 1: TFIM dephasing tail ( N = 80): windowed influence proxy with bootstrap 16–84%
+intervals. Model selection supports the no-floor model for A ∈ {max, mean, rms}; see Section 2.5
+for what this does and does not imply.
+3
+
+--- Page 4 ---
+
+Figure 2: Influence proxy under amplitude damping ( N = 24); error bars are bootstrap 16–84%
+intervals. Non-monotone in ϵ.
+Figure 3: Processed influence summary for the amplitude-damping check ( N = 24).
+Data availability (added in v2).Trajectory-level TEBD/MCWF data are not shipped with
+this version; the figures are unchanged from v1. The witness computations of Section 4, by contrast,
+are fully regenerable from scratch by the verification suite.
+4 Davies/witness stress test: controlled ω = 0floor mechanism
+4.1 Scope
+We use a controlled ω = 0-channel witness (Dirichlet-form identity) as a stress test; we do not
+reconstruct the full Davies generator. This is a certified lower-bound mechanism statement, not
+a claim about the full ϵ-dependence of physical decoherence rates in the TFIM surrogate. (Added
+in v2) Moreover, as an instantaneous Dirichlet-ratio bound it controls decay of observables in the
+witness sector only under the usual invariant-subspace extension (cf. the Gr¨ onwall step in 2601.0020
+[9]); we use the term “envelope” in that conditional sense.
+4
+
+--- Page 5 ---
+
+4.2 Definitions: S(0) and Aϵ
+With {Πn} the spectral projectors of H, define S(0) := P
+n ΠnSΠn (energy-block-diagonal part of
+the system–bath coupling S); S(0) is generally nonlocal in real space. Aϵ is the span of traceless
+Pauli strings on a block of length L starting at site k = j0 + ϵ (open chain), j0 = ⌊N/2⌋.
+4.3 Witness lower bound
+With σ a reference Gibbs/KMS state and ⟨A, B⟩σ := Tr(σ1/2A†σ1/2B),
+κ(ϵ) ≥ κmin(ϵ) := γ(0)
+2 Ropt(ϵ), R opt(ϵ) := max
+O∈Aϵ
+∥[S(0), O]∥2
+2,σ
+∥O∥2
+2,σ
+,
+so any Ropt(ϵ) > 0 certifies κmin(ϵ) > 0 whenever γ(0) > 0.
+4.4 Exact diagonalization: declared benchmark (revised in v2)
+v1 reported ED ranges at N = 10 without recording the parameters ( J, h, S), which made exact
+reproduction impossible. v2 fixes a fully declared benchmark, regenerated from scratch by the
+suite: N = 10, J = 1, h = 1.05, S = Z at the center site, γ(0) = 0.1, ϵ ∈ {1, 2, 3}, β ∈ {0.5, 1, 2},
+blocks L ∈ {1, 2}. The witness-based lower bound ranges
+κmin ∈ [1.79 × 10−3, 5.72 × 10−3] (L = 1), κ min ∈ [4.31 × 10−3, 6.82 × 10−3] (L = 2) :
+strictly positive throughout, increasing with observable support, robust in β – the same qualitative
+structure as v1’s figures (v1’s magnitudes are same-order; its exact parameters were not preserved).
+Null case (added in v2):for S = X at the center site the ω = 0 component essentially vanishes and
+the suite finds κmin ∼ 10−29: the floor mechanism switches off for couplings with no zero-frequency
+diagonal part, sharpening the message that low-frequency bath structure – not locality alone –
+controls floor existence.
+Figure 4: Davies/witness ED ( N = 10, v1 figure): witness lower bound κmin(ϵ) = γ(0)
+2 Ropt(ϵ),
+γ(0) = 0.1, for L = 1, 2 and β ∈ {0.5, 1, 2}. See Section 4.4 for the v2 declared benchmark.
+5 Verification suite (added in v2)
+verification/2601-0022/verify 2601 0022.py (pure NumPy/SciPy,∼70 s): Part A regenerates
+the declared witness benchmark of Section 4.4 from scratch (ED, KMS inner products, generalized
+5
+
+--- Page 6 ---
+
+eigenproblem over Pauli blocks) together with the S = X null case; Part B runs the synthetic floor-
+injection power analysis of Section 2.5 (60 repetitions per injected level, identical fitting pipeline).
+Reference output ships alongside.
+6 Discussion and conclusions
+The TFIM surrogate results show that, for this operational one-site trace-distance proxy in the
+explored regimes, an offset parameter D0 is not supported/identifiable under either dephasing or
+amplitude damping – with the v2 power analysis quantifying exactly how strong a floor would
+have had to be for the design to see it, and identifying the slow-exponential/floor degeneracy of
+narrow ϵ windows as the limiting factor. The observed non-monotonicity in ϵ indicates coher-
+ent finite-size structure that limits the interpretability of strictly monotone envelope fits – the
+same phenomenon behind the windowed-proxy withdrawal of 2512.0064 v2 [7]. In contrast, the
+Davies/witness stress test demonstrates an explicit, certified and now exactly reproducible floor
+mechanism when γ(0) > 0, which switches off when the coupling lacks a zero-frequency compo-
+nent. Floors are not universal across operational proxies; low-frequency bath structure and the
+observable family determine whether a floor exists, and the sampling design determines whether it
+could even be detected.
+Note added in v2
+No v1 result is retracted: the no-floor model selection, the non-monotonicity, and the positive
+witness mechanism all stand. v2 adds what a careful referee would demand: (1) the power analysis
+of Section 2.5 (the no-floor null is design-limited: AICc cannot detect floors at n = 5; BIC needs
+D0 ∼ 30σ due to the slow-exponential degeneracy); (2) a fully declared, from-scratch reproducible
+ED benchmark for the witness (v1’s ED parameters were not recorded), with same-order agreement
+and identical qualitative structure; (3) the S = X null case ( κmin ∼ 10−29); (4) the invariant-
+subspace caveat on “envelope”; (5) series cross-references and the data-availability statement; (6)
+Figure 3 caption cleaned.
+References
+[1] E. H. Lieb and D. W. Robinson, Commun. Math. Phys. 28 (1972) 251–257.
+[2] E. B. Davies, Commun. Math. Phys. 39 (1974) 91–110.
+[3] H.-P. Breuer and F. Petruccione, The Theory of Open Quantum Systems, Oxford University
+Press (2002).
+[4] H. Spohn, J. Math. Phys. 19 (1978) 1227–1230.
+[5] K. P. Burnham and D. R. Anderson, Model Selection and Multimodel Inference, 2nd ed.,
+Springer (2002).
+[6] C. M. Hurvich and C.-L. Tsai, Biometrika 76 (1989) 297–307.
+[7] L. Eriksson, ai.viXra:2512.0064 (2025; v2 2026).
+[8] L. Eriksson, ai.viXra:2512.0070 (2025; v2 2026).
+6
+
+--- Page 7 ---
+
+[9] L. Eriksson, ai.viXra:2601.0020 (2026; v2 2026).
+[10] L. Eriksson, ai.viXra:2512.0105 (2025; v2 2026).
+7

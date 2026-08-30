@@ -1,0 +1,363 @@
+--- Page 1 ---
+
+Machine-checked local Gibbs thermodynamic limit
+1
+ A Machine-Checked Thermodynamic Limit for
+ Local Lattice Gauge Gibbs States
+ Lluis Eriksson
+ THE ERIKSSON PROGRAMME - Lean 4 artifact, branch codex/thermodynamic-limit-kp, verified source checkpoint
+ 0be45284
+Abstract.
+We formalize in Lean 4 the thermodynamic limit of bounded local Gibbs expectations for a periodic lattice
+gauge model in a uniform Kotecky-Preiss regime. The proof treats the complete finite-volume sequence:
+an exact one-volume marked expansion cancels the extensive far gas algebraically, common-window
+terms are transported exactly, and the remaining boundary contribution is bounded by the existing
+volume-uniform pinned cluster tail connectedLattice_pinned_tail_volumeUniform. The
+resulting explicit Cauchy modulus tends to zero, so completeness constructs an infinite-volume positive
+normalized real local state. On the intrinsic integer-coordinate local-observable algebra, the state carries
+a genuine additive action of Z^d and is invariant under every integer translation, including inverses. For
+SU(2), Haar probability measure, and the physical Wilson plaquette energy Re tr(U), the hypotheses are
+discharged throughout the explicit punctured intervals 0 < |beta| <= 10^-5 in d=2 and 0 < |beta| <= 10^-6
+in the physical lattice dimension d=4. We also construct a genuine centered free-boundary exhaustion and
+prove that its complete cofinal sequence converges to the same state as periodic boundary conditions.
+Finally, the normalized finite-volume two-plaquette truncated-correlation bound passes unchanged to the
+state under explicit eventual realization and separation hypotheses. We do not claim arbitrary boundary
+conditions, a C*-algebraic state, a continuum limit, Osterwalder-Schrader reconstruction, or progress on
+the continuum Yang-Mills mass-gap problem.
+1. Introduction
+Cluster expansions are a standard route from finite-volume polymer representations to analytic and probabilistic
+control in regimes of small activities. The Kotecky-Preiss criterion gives a particularly useful volume-uniform
+convergence mechanism for abstract polymer models [1]. For lattice gauge systems, however, a
+thermodynamic-limit argument must still connect the abstract cluster estimates to genuine normalized Gibbs
+expectations. This connection is delicate because the numerator and partition function are both extensive; neither
+is expected to converge separately.
+The underlying strong-coupling existence and clustering statement is classical; in particular, it belongs to the
+lattice gauge theory framework of Osterwalder and Seiler [2]. The contribution claimed here is not a new analytic
+thermodynamic-limit theorem, but a mechanically checked derivation from the finite Gibbs integral through every
+marked-expansion, cancellation, tail, and completeness bridge, together with an explicit proof that the packaged
+KP hypotheses are inhabited.
+The formal development studied here closes that connection for local observables. Its central design rule is to
+cancel the far gas exactly before applying estimates. The proof then compares two finite volumes through a
+common non-wrapping window. Clusters that remain inside the window agree term by term, including their Ursell
+coefficients and activity monomials. Clusters that leave it are support-pinned boundary tails, and are controlled
+uniformly in volume.
+The output is not an abstract compactness statement. It is a Cauchy theorem for the complete sequence of genuine
+Gibbs expectations, followed by a definition of the limit using completeness. This distinction is essential: a
+convergent subsequence would not establish a unique thermodynamic state or boundary-condition comparison.
+
+
+--- Page 2 ---
+
+Machine-checked local Gibbs thermodynamic limit
+2
+2. Formal-design lessons
+The main formal contribution is not the invention of a new cluster expansion, but the choice of interfaces that
+make every analytic bridge auditable. Several mathematically plausible shortcuts were rejected because they could
+support a formally correct endpoint while leaving the intended Gibbs statement unproved. This section records
+the four design decisions that most strongly shaped the development. They are reusable beyond this model
+because each concerns the boundary between an abstract convergence theorem and the concrete object that is
+supposed to converge.
+2.1. Rejecting a free bulk hypothesis
+A tempting interface is to assume that the normalized expectation has already been decomposed into a
+volume-independent bulk term plus a small boundary correction. Such a theorem can be useful after the
+decomposition has been proved, but it cannot itself establish the thermodynamic limit of the genuine Gibbs
+integral. If the bulk term is an unconstrained argument, the caller may instantiate it without any connection to the
+numerator or the partition function. The resulting Cauchy theorem is then conditional on exactly the identity that
+carries the mathematical content.
+The accepted interface therefore starts from localGibbsExpectation and proves a literal one-volume
+identity. The Boltzmann product is expanded into plaquette subsets, connected components disjoint from the
+insertion are factorized as the ordinary gas, and the unique sector touching the finite support is retained as a
+marked activity. Only after this exact factorization is the common far gas cancelled between numerator and
+denominator. Thus the later error term is not postulated: it is the restriction difference left by an algebraic
+equality. A terminal theorem is accepted only if its conclusion names the genuine Gibbs expectation and its
+hypotheses contain no free bulk or cancellation oracle.
+2.2. Local coordinate charts instead of global volume embeddings
+Comparing torus sizes N and M might suggest constructing a global map between their edge sets or
+gauge-configuration spaces. There is no canonical such map compatible with periodic wraparound: a coordinate
+that is local in one torus can cross a seam in another, and a global configuration map would impose choices
+irrelevant to a local observable. Building a universal-cover theory for entire configurations would also mix the
+finite product measure with geometry that is needed only on a bounded window.
+Instead, an observable stores a finite coordinate chart independent of the ambient volume. A comparison chooses
+one non-wrapping window large enough for the support and for every cluster below the current size cutoff.
+Plaquettes, polymer activities, incompatibility, Ursell coefficients, and the marked integral are transported exactly
+inside that window; no map between complete gauge configurations is required. The residual terms are precisely
+clusters that leave the chart, so the geometric failure of transport becomes the event controlled by the pinned tail.
+The same principle resolves inverse translations. Natural-number coordinates support positive shifts but do not
+form a translation group with a volume-independent guard. The final observable type uses coordinates in Z^d and
+realizes them periodically by integer remainders. A finite lower shift places any given observable in the old
+natural-coordinate chart, and the two realizations agree literally beyond an explicit bound. This is an eventual
+chart comparison, not a volume-dependent simulation of a negative shift by N-1 positive steps.
+2.3. Keeping the rooted multiplicity
+At cluster order n, an Ursell tuple has n+1 polymer coordinates. The boundary event says that some coordinate
+meets the marked region and some coordinate leaves the common window. Existing KP tails are rooted at
+coordinate zero. Reindexing an arbitrary witness to zero therefore introduces a factor n+1. Choosing the first
+witness does not remove the factor in general: once the mark is forgotten, as many as n+1 marked tuples can map
+to the same unmarked tuple. Without an additional uniqueness theorem for the touching polymer, the multiplicity
+is intrinsic.
+The development exposes this combinatorial derivative rather than hiding it in a coarse constant. The factorial
+normalization obeys (n+1)/(n+1)! = 1/n!, and the remaining cardinality cost is absorbed by one unit of activity tilt.
+Consequently the honest hypothesis is the KP criterion at t+epsilon+1, not merely at t+epsilon. This stronger field
+propagates through the boundary theorem and is visible in the non-vacuity calculation. Recording the factor at the
+reindexing site prevents a downstream estimate from appearing stronger than the combinatorics justify.
+
+
+--- Page 3 ---
+
+Machine-checked local Gibbs thermodynamic limit
+3
+2.4. Treating non-vacuity as part of the API
+A packaged KP theorem may be internally consistent while having no proved interacting instance. In particular,
+beta=0 annihilates every Mayer activity and yields only the free product measure. It is a useful normalization
+check, but it does not demonstrate that the simultaneous radius, smallness, tilted, and marked-radius hypotheses
+can hold away from the trivial point. Declaring the abstract structure inhabited only at beta=0 would therefore
+make the advertised strong-coupling result mathematically empty.
+For this reason the abstract regime and its physical constructor are separate audited endpoints. The constructor
+proves measurability, an explicit activity majorant, all tilted inequalities, and nonconstancy of the Wilson energy
+on punctured rational intervals. The d=2 and d=4 witnesses use conservative constants because their role is
+logical: they certify an open interacting range, not an optimized strong-coupling threshold. This separation also
+makes future constant improvements local; they can replace the constructor without changing the
+thermodynamic-limit proof.
+2.5. A typed chain of evidence
+The proof is deliberately not packaged as one theorem with a large record of opaque hypotheses. It is a chain of
+certificates whose codomain is the next layer's input. Equalities are established in the finite combinatorial layers;
+inequalities enter only when the terms that cross the common window have been isolated. Completeness is used
+only after a numerical Cauchy modulus has been produced. This ordering makes it impossible to replace a missing
+algebraic bridge by a later analytic estimate.
+Interface
+Exported certificate
+Downstream role
+Gibbs integral / polymer gas
+Exact marked one-volume expansion
+Cancels the far gas without a bulk oracle
+Two torus volumes
+Common-window equality of local terms
+Identifies every contribution below the cutoff
+Cluster leaves the window
+Rooted tail at t+epsilon+1
+Gives a bound uniform in both volumes
+Uniform numerical bound
+Explicit Cauchy modulus tending to zero
+Constructs the complete-sequence limit
+Signed local coordinates
+Literal Z^d action and eventual chart equality
+Transfers finite covariance, including inverses
+Centered seam deletion
+Gas restriction plus inclusion-exclusion
+Compares periodic with the proved free
+exhaustion
+Finite correlation estimate
+Eventual realization and separation bridge
+Passes the quantitative bound to the state
+This layering is also a debugging protocol. If a proposed endpoint mentions a new hypothesis that already states
+the next row's certificate, the bridge has been skipped. If a reindexing changes the summation domain, its
+multiplicity must appear before a norm bound is taken. If a cross-volume equality depends on a global
+configuration map, the window interface has leaked. These checks forced two early prototypes to be replaced even
+though their conditional endpoints elaborated.
+The organization keeps claim scope in the types as well. The free boundary object is one concrete restriction, not a
+parameter ranging over unspecified boundary conditions. The infinite functional is bundled with linearity, order, a
+unit, and the Z^d action, but not with a C*-norm that has not been constructed. The correlation consumer asks for
+eventual plaquette realization and separation rather than silently assigning a distance to every abstract
+observable. The final paper ledger is therefore derived from available interfaces, not from the informal theorem
+one might hope to state.
+Interface discipline.
+Every terminal conclusion is connected to the genuine finite Gibbs integral by exact equalities before
+estimates are applied; every multiplicity introduced by rooting is charged explicitly; every cross-volume
+comparison is local to a common chart; and the abstract uniform KP package is accompanied by a nonzero
+physical instance.
+
+
+--- Page 4 ---
+
+Machine-checked local Gibbs thermodynamic limit
+4
+3. Finite-volume setting
+Fix a dimension d, a measurable group G with measurable multiplication and inversion, a probability measure mu
+on G, a bounded measurable plaquette energy pe, and a real coupling beta. At torus extent N, a gauge configuration
+assigns an element of G to each positively oriented edge. The Wilson action is the sum of pe evaluated on oriented
+plaquette holonomies, and the Gibbs measure is the normalized tilt of the product gauge measure.
+A compatible local observable records a finite support with coordinates independent of the ambient volume, a
+measurable bounded kernel, and a minimum admissible volume. Its realization in each sufficiently large torus
+reads exactly those edge coordinates. The finite Gibbs expectation E_n(O) is the genuine normalized integral of
+that realization at extent n+1.
+Finite local substrate.
+For every compatible local observable O, its realization is measurable and bounded; E_n is positive and
+normalized. Addition, multiplication, and real scalar multiplication are realized exactly at jointly admissible
+volumes.
+4. Exact marked expansion and cancellation
+Expanding each plaquette Boltzmann factor into 1 plus its Mayer activity gives a finite sum over plaquette subsets.
+For a local insertion O, components disjoint from the observable support factor as the ordinary polymer gas.
+Components touching the support form a marked activity. Mayer-Ursell inversion is then applied at one fixed
+volume.
+E_n(O)
+  = sum_{marked S0} markedIntegral_n(O,S0)
+      * exp( clusterSum(P_n restricted to far(S0))
+             - clusterSum(P_n) ).
+This identity is exact. The extensive contribution has already cancelled between numerator and partition function.
+No estimate of the full partition function, and no free bulk hypothesis, appears in the thermodynamic comparison.
+5. Uniform pinned boundary control
+For a fixed marked set, the remaining exponent is a restriction difference. It is reindexed as a series of Ursell tuples
+that meet the marked region and leave the common window. Pinning an arbitrary tuple coordinate at position zero
+costs its cardinality n+1. The formal development records this factor explicitly and absorbs it by the
+unit-cardinality tilt t+epsilon+1; it is not silently discarded.
+Rooted boundary tail.
+The local correction tail is summable uniformly in the torus volume. Its proof invokes
+connectedLattice_pinned_tail_volumeUniform literally, after the exact rooted reindexing and the
+honest unit tilt.
+The outer marked-set sum is controlled separately by decomposing a marked plaquette set into connected
+components. Each component is charged to the finite observable support, and a volume-uniform lattice animal
+bound resums the possibilities. Combining the outer tail with the normalization-correction tail yields the explicit
+error
+Delta_O(q)
+  = 2 * markedOuterTailBound_O(q)
+    + markedSmallLayerCauchyBound_O(q,q),
+Delta_O(q) -> 0 as q -> infinity.
+
+
+--- Page 5 ---
+
+Machine-checked local Gibbs thermodynamic limit
+5
+6. Whole-sequence thermodynamic state
+Complete-sequence Cauchy theorem.
+Under a packaged uniform local KP regime, the sequence n |-> E_n(O) is Cauchy for every compatible local
+observable O. For each tolerance, the proof selects one cutoff q with Delta_O(q) below that tolerance and one
+explicit volume threshold above which every pair of volumes is bounded by Delta_O(q).
+Completeness of the complex numbers supplies the limit. Since every finite expectation is real, the limit is real.
+Exact finite-volume algebra, positivity, normalization, and translation covariance pass to the limit by uniqueness of
+limits.
+To obtain an honest translation group rather than a semigroup of positive shifts, we introduce local observables
+whose edge coordinates lie in Z^d. Periodic realization uses integer remainders and is defined at every volume. A
+canonical finite lower shift moves each observable into the existing natural-coordinate chart; beyond its explicit
+coordinate bound the two realizations agree literally. This eventual equality transfers the complete-sequence
+Cauchy theorem and its cofinal uniqueness without introducing a subsequence or a compactness argument.
+Infinite local Gibbs state.
+The constructed functional omega_infinity is real linear, positive, and normalized on the ordered
+integer-coordinate local-observable space with unit. For every z in Z^d it satisfies omega_infinity(z +
+O)=omega_infinity(O). The acting object is an additive group, so inverse translations are part of the same
+literal action rather than volume-dependent positive words.
+The domain has an observable product, but no C*-norm or C*-completion is constructed here. Accordingly the
+result is described as a positive normalized local state, not as a C*-algebraic state.
+7. Genuine free boundary and uniqueness at the proved scope
+The periodic torus is cut along a centered seam. Plaquettes crossing that seam receive zero activity; the resulting
+polymer gas is proved literally equal to a restriction of the periodic gas. The observable is centered so that its
+support lies in the interior rather than on the cut.
+Inclusion-exclusion cancels all clusters except those that meet both the local marked support and the deleted
+seam. Short clusters cannot do so once the common window fits. Long clusters are bounded by the same
+support-pinned tail. At a common volume,
+| E_n^periodic(O) - E_n^free(centered O) |
+  <= 2 * markedOuterTailBound_O(q)
+     + markedSmallLayerCauchyBound_O(q,q).
+Define the free volume index by the explicit threshold plus q. These indices are cofinal, so the periodic expectations
+along them converge to omega_infinity(O). The displayed difference tends to zero by squeezing. Therefore the
+complete explicitly indexed free sequence converges to the same value.
+Periodic versus centered free boundary.
+The full cofinal sequence of genuine centered free-box expectations converges to the same infinite value as
+periodic boundary conditions. This is the boundary independence formalized here; no type or theorem for
+arbitrary boundary conditions is asserted.
+8. Truncated correlations
+For local observables O and P, define the finite truncated correlation as E_n(OP)-E_n(O)E_n(P). The complete
+finite-volume sequence converges to the analogous expression in omega_infinity. Hence every eventual
+volume-uniform finite bound passes unchanged to the limit.
+The formalization additionally bridges the existing normalized two-plaquette theorem to this local-observable
+definition. If, in all sufficiently large volumes, O and P realize a bounded measurable holonomy observable f at
+
+
+--- Page 6 ---
+
+Machine-checked local Gibbs thermodynamic limit
+6
+distinct plaquettes p_n and q_n with touching distance at least 2k, the finite normalized estimate gives
+| omega_infinity(OP) - omega_infinity(O) omega_infinity(P) |
+  <= C(d,B,beta,s,t,epsilon) * exp(-epsilon*k).
+The eventual realization and separation data remain explicit hypotheses of this bridge. The theorem does not claim
+that every pair of abstract local observables is a separated two-plaquette pair.
+9. Explicit non-vacuous SU(2) intervals
+A conditional KP theorem can be mathematically empty if its hypotheses are never instantiated, and the point
+beta=0 would describe only the free product measure. The development therefore constructs a concrete nonzero
+interval. For d=2 and SU(2), the physical plaquette energy Re tr(U) is measurable, bounded by 2, and formally
+proved nonconstant.
+The parameters t=epsilon=eta=1/100 are fixed. On |beta|<=10^-5, the activity is bounded using the quadratic
+exponential remainder:
+exp(2*|beta|) - 1 <= 2.1*|beta|.
+Elementary rational upper bounds on the remaining exponentials then discharge the radius, smallness, unit-tilt,
+and marked-radius fields of the uniform regime. These constants are deliberately unoptimized: the certified radii
+below are far smaller than the order-one strong-coupling domains customarily obtained by analytic treatments.
+They certify non-vacuity of this formal package, not a competitive estimate of the strong-coupling boundary.
+Concrete two-dimensional strong-coupling regime.
+For every real beta with 0<|beta|<=10^-5, the d=2 SU(2) Wilson theory has the constructed infinite local
+Gibbs state. Positivity, normalization, full Z^d-translation invariance, and periodic-versus-centered-free
+convergence are therefore non-vacuous physical statements on an interval.
+The same rational proof is instantiated separately in the physical lattice dimension d=4. Here the animal constant
+grows from (16*2+1)^2=1089 to (16*4+1)^2=4225 and the smallness prefactor from 32 to 64. A deliberately
+conservative exponential majorant then discharges all five fields on 0<|beta|<=10^-6.
+Concrete four-dimensional lattice regime.
+For every real beta with 0<|beta|<=10^-6, the d=4 SU(2) Wilson lattice theory has the constructed infinite
+local Gibbs state, with the same positivity, normalization, full Z^d-translation invariance, and
+periodic-versus-centered-free convergence conclusions. This is a four-dimensional lattice statement, not a
+continuum limit.
+10. Formal verification record
+Endpoint
+Role
+connectedLattice_pinned_tail_volumeUniform
+Banked volume-uniform rooted KP tail
+cauchySeq_localGibbsExpectation_kpUniform
+Complete-sequence Cauchy theorem
+infiniteLocalGibbsState
+Positive normalized local state
+integerLocalGibbsExpectation_vadd
+Exact finite invariance for every z in Z^d
+integerInfiniteLocalGibbsState
+Positive normalized state with the full translation action
+su2InfiniteLocalGibbsStateOnPuncturedInterval
+Physical nonzero interval
+su2D4InfiniteLocalGibbsStateOnPuncturedInterval
+Physical d=4 lattice interval
+norm_localGibbsExpectation_sub_freeBoundary_le_kpUniform
+Same-volume periodic/free bound
+tendsto_freeBoundaryThermodynamicExpectation
+Complete free sequence has the same limit
+abs_infiniteLocalGibbsTruncatedCorrelation_le_twoPlaquette
+Finite normalized bound passes to the state
+
+
+--- Page 7 ---
+
+Machine-checked local Gibbs thermodynamic limit
+7
+Direct focal elaboration of all terminal modules and direct elaboration of the root YangMillsCore.lean
+terminated with exit code 0 under Lean 4.29.0-rc6. Twenty headline #print axioms checks reported exactly
+[propext, Classical.choice, Quot.sound].
+All nine dependency HEADs matched the manifest. After supplying a process-local safe.directory setting for the
+ownership-mismatched checkout, the fixed-toolchain canonical root build completed with empty stderr and the
+literal final line Build completed successfully (8460 jobs). No dependency was deleted or updated
+and no global Git configuration was changed.
+11. Scope and open directions
+Proved here
+Not proved here
+Complete periodic expectation sequence is Cauchy
+Continuum or lattice-spacing limit
+Positive normalized real local state
+C*-completion or C*-state
+Genuine Z^d action, including inverse translations
+Finite-cutoff covariance of the centered free exhaustion under every
+z
+Periodic and one genuine centered free exhaustion
+Arbitrary boundary conditions
+Two-plaquette bound passes under explicit geometry
+Geometry-free clustering for arbitrary local observables
+d=2 and d=4 SU(2) lattice instances
+Four-dimensional continuum Yang-Mills or OS reconstruction
+The next mathematical extensions are to instantiate the eventual separated-plaquette geometry for explicit signed
+translated observables, and formulate additional physical boundary conditions as concrete polymer restrictions.
+These are separate theorems; none is required for the whole-sequence periodic and centered-free limits
+established above.
+References
+[1] R. Kotecky and D. Preiss, Cluster expansion for abstract polymer models, Communications in Mathematical Physics 103 (1986),
+ 491-498. doi:10.1007/BF01211762.
+[2] K. Osterwalder and E. Seiler, Gauge field theories on a lattice, Annals of Physics 110 (1978), 440-471.
+ doi:10.1016/0003-4916(78)90039-8.
+[3] L. de Moura and S. Ullrich, The Lean 4 Theorem Prover and Programming Language, CADE 28, LNCS 12699 (2021), 625-635.
+ doi:10.1007/978-3-030-79876-5_37.
+[4] The mathlib Community, The Lean mathematical library, CPP 2020, 367-381. doi:10.1145/3372885.3373824.
+ 
+[5] L. Eriksson, THE ERIKSSON PROGRAMME, Lean 4 artifact and verification ledger, repository.
