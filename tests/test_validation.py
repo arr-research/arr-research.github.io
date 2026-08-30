@@ -238,6 +238,54 @@ class PaperValidationTests(unittest.TestCase):
             errors = validate_paper(paper)
             self.assertTrue(any("canonical_sha256" in error for error in errors))
 
+    def test_historical_import_requires_provenance_and_remains_unassessed(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            paper = self.make_paper(Path(temporary))
+            paper.metadata.update(
+                {
+                    "schema_version": "1.3",
+                    "status": "archived",
+                    "source_of_truth": "external_pdf",
+                    "archival_source": {
+                        "archive": "ai.vixra",
+                        "identifier": "2608.0049",
+                        "abstract_url": "https://www.ai.vixra.org/abs/2608.0049",
+                        "first_submitted_at": "2026-08-11T12:20:40+00:00",
+                        "latest_declared_version": "v2",
+                        "latest_submitted_at": "2026-08-12T12:20:40+00:00",
+                        "mirrored_version": "v2",
+                        "mirror_pdf_url": "https://github.com/arr-research/arr-research.github.io/releases/download/archive/paper.pdf",
+                        "mirror_release_url": "https://github.com/arr-research/arr-research.github.io/releases/tag/archive",
+                        "source_file_available": True,
+                        "versions": [
+                            {"version": "v1", "submitted_at": "2026-08-11T12:20:40+00:00", "pdf_url": "https://www.ai.vixra.org/pdf/2608.0049v1.pdf"},
+                            {"version": "v2", "submitted_at": "2026-08-12T12:20:40+00:00", "pdf_url": "https://www.ai.vixra.org/pdf/2608.0049v2.pdf"},
+                        ],
+                    },
+                }
+            )
+            paper.metadata["integrity"].update({"canonical_sha256": "a" * 64, "canonical_bytes": 123})
+            paper.metadata["editorial"].update({"decision": "historical_import"})
+            (paper.path / "paper.txt").write_text("External PDF text", encoding="utf-8")
+            provenance = json.loads((paper.path / "PROVENANCE.json").read_text(encoding="utf-8"))
+            provenance["source_of_truth"] = "external_pdf"
+            (paper.path / "PROVENANCE.json").write_text(json.dumps(provenance), encoding="utf-8")
+            self.assertEqual(validate_paper(paper), [])
+            paper.metadata["screening"]["status"] = "pass"
+            errors = validate_paper(paper)
+            self.assertTrue(any("historical imports must remain not_assessed" in error for error in errors))
+
+    def test_historical_card_uses_original_submission_chronology(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            paper = self.make_paper(Path(temporary))
+            paper.metadata["status"] = "archived"
+            paper.metadata["archival_source"] = {"first_submitted_at": "2025-12-23T10:38:28+00:00"}
+            timestamp = {"deposit_recorded_at": "2026-08-30T10:00:00+00:00", "publication_state": "pending"}
+            card = build_site.paper_card(paper.metadata, timestamp, "")
+            self.assertIn("Historical import", card)
+            self.assertIn("First submitted to ai.vixra", card)
+            self.assertIn("2025-12-23 10:38:28 UTC", card)
+
     def test_wrong_shard_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             paper = self.make_paper(Path(temporary))

@@ -164,6 +164,11 @@ def chronology_time(timestamp: dict) -> str:
     return timestamp.get("published_at", timestamp["deposit_recorded_at"])
 
 
+def paper_chronology(metadata: dict, timestamp: dict) -> str:
+    archival = metadata.get("archival_source")
+    return archival["first_submitted_at"] if isinstance(archival, dict) else chronology_time(timestamp)
+
+
 def page_shell(*, title: str, description: str, content: str, base: str, canonical: str = "", head_extra: str = "") -> str:
     canonical_tag = f'<link rel="canonical" href="{esc(canonical)}">' if canonical else ""
     style_version = hashlib.sha256((SITE_DIR / "style.css").read_bytes()).hexdigest()[:12]
@@ -209,7 +214,7 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
 
 
 def status_badge(value: str) -> str:
-    labels = {"accepted": "Accepted", "corrected": "Corrected", "withdrawn": "Withdrawn"}
+    labels = {"accepted": "Accepted", "corrected": "Corrected", "withdrawn": "Withdrawn", "archived": "Historical import"}
     return f'<span class="badge badge-{esc(value)}">{esc(labels.get(value, value.title()))}</span>'
 
 
@@ -305,7 +310,7 @@ def scholarly_head(metadata: dict, *, canonical: str, release_url: str = "", pdf
         "url": canonical,
         "version": metadata["version"],
         "isAccessibleForFree": True,
-        "license": "https://creativecommons.org/licenses/by/4.0/",
+        "license": metadata["licenses"]["manuscript"],
         "publisher": {
             "@type": "Organization",
             "name": "ARR — Archive for Rigorous Research",
@@ -382,19 +387,21 @@ def paper_card(
         else esc(", ".join(author["name"] for author in metadata["authors"]))
     )
     activity = paper_activity(metadata["id"], metrics or {"papers": {}})
-    chronology_label = "Published" if timestamp["publication_state"] == "published" else "Deposit recorded"
+    archival = metadata.get("archival_source")
+    chronology_label = "First submitted to ai.vixra" if archival else ("Published" if timestamp["publication_state"] == "published" else "Deposit recorded")
     return f"""
 <article class="paper-card">
   <div class="paper-meta">{type_badge(metadata)}{status_badge(metadata['status'])}<span>{esc(metadata['id'])} · {esc(metadata['version'])}</span></div>
   <h3><a href="{base}/{record_route(metadata)}/{quote(metadata['id'])}/">{esc(metadata['title'])}</a></h3>
   <p class="authors">{authors}</p>
   <p>{esc(metadata['abstract'])}</p>
-  <div class="paper-foot"><span>{chronology_label} {exact_time(chronology_time(timestamp))}</span><span>{download_label(activity['pdf_downloads'])}</span><span>Protocol {esc(metadata['verification']['protocol'])}</span></div>
+  <div class="paper-foot"><span>{chronology_label} {exact_time(paper_chronology(metadata, timestamp))}</span><span>{download_label(activity['pdf_downloads'])}</span><span>Protocol {esc(metadata['verification']['protocol'])}</span></div>
 </article>"""
 
 
 def build_home(papers: list, timestamps: dict, base: str, canonical_url: str, author_lookup: dict[str, dict] | None = None, metrics: dict | None = None, author_count: int = 0) -> str:
-    accepted_papers = sum(p.metadata["status"] != "withdrawn" and p.record_type == "research_paper" for p in papers)
+    accepted_papers = sum(p.metadata["status"] in {"accepted", "corrected"} and p.record_type == "research_paper" for p in papers)
+    archived_papers = sum(p.metadata["status"] == "archived" and p.record_type == "research_paper" for p in papers)
     accepted_notes = sum(p.metadata["status"] != "withdrawn" and p.record_type == "technical_note" for p in papers)
     recent = "".join(paper_card(p.metadata, timestamps[(p.id, p.version)], base, author_lookup, metrics) for p in papers[:6])
     downloads = sum(paper_activity(p.id, metrics or {"papers": {}})["pdf_downloads"] for p in papers)
@@ -415,6 +422,7 @@ def build_home(papers: list, timestamps: dict, base: str, canonical_url: str, au
 <section class="frontier-gate" aria-label="ARR admission standard"><strong>ARR admission gate</strong><span>operator-selected frontier audit</span><span>exact PDF + SHA-256</span><span>0 unresolved material objections</span><span>human sign-off</span></section>
 <section class="stats" aria-label="Archive statistics">
   <div><strong>{accepted_papers}</strong><span>research papers</span></div>
+  <div><strong>{archived_papers}</strong><span>historical imports</span></div>
   <div><strong>{accepted_notes}</strong><span>technical notes</span></div>
   <div><strong>{author_count}</strong><span>author profiles</span></div>
   <div><strong>{downloads:,}</strong><span>canonical PDF downloads</span></div>
@@ -430,17 +438,30 @@ def build_home(papers: list, timestamps: dict, base: str, canonical_url: str, au
     return page_shell(title="ARR — Hostile frontier-model audit for research", description="Research papers subjected to a disclosed version-locked frontier-model audit selected for each assessment round, with public evidence and human editorial sign-off.", content=content, base=base, canonical=canonical)
 
 
-def build_papers_index(papers: list, timestamps: dict, base: str, canonical_url: str, author_lookup: dict[str, dict] | None = None, metrics: dict | None = None) -> str:
+def build_papers_index(papers: list, timestamps: dict, base: str, canonical_url: str, author_lookup: dict[str, dict] | None = None, metrics: dict | None = None, page: int = 1, page_size: int = 50) -> str:
     research_papers = [paper for paper in papers if paper.record_type == "research_paper"]
-    cards = "".join(paper_card(p.metadata, timestamps[(p.id, p.version)], base, author_lookup, metrics) for p in research_papers)
+    page_count = max(1, (len(research_papers) + page_size - 1) // page_size)
+    start = (page - 1) * page_size
+    selected = research_papers[start:start + page_size]
+    cards = "".join(paper_card(p.metadata, timestamps[(p.id, p.version)], base, author_lookup, metrics) for p in selected)
     if not cards:
         cards = '<section class="empty-state compact"><h2>No accepted papers yet.</h2><p>The public catalogue begins only after the first candidate completes the ARR workflow.</p></section>'
+    previous_url = f"{base}/papers/" if page == 2 else f"{base}/papers/page/{page - 1}/"
+    next_url = f"{base}/papers/page/{page + 1}/"
+    pagination = '<nav class="pagination" aria-label="Catalogue pages">'
+    pagination += f'<a href="{previous_url}">← Previous 50</a>' if page > 1 else '<span>← Previous 50</span>'
+    pagination += f'<strong>Page {page} of {page_count} · {len(research_papers)} records</strong>'
+    pagination += f'<a href="{next_url}">Next 50 →</a>' if page < page_count else '<span>Next 50 →</span>'
+    pagination += '</nav>'
     content = f"""
-<section class="page-intro"><span>Public catalogue</span><h1>Accepted papers</h1><p>Each record identifies the exact version, evidence and screening status. New admissions must survive the disclosed frontier-model hostile-audit gate selected for their assessment round; legacy records remain visibly unrated or not assessed rather than receiving a false badge.</p></section>
+<section class="page-intro"><span>Public catalogue</span><h1>Research papers</h1><p>Exactly 50 records per full page, ordered by the real publication chronology. Current ARR admissions and author-authorized historical imports are visibly distinct; historical imports have not passed ARR's frontier-model gate.</p></section>
+{pagination}
 <section class="catalogue">{cards}</section>
+{pagination}
 """
-    canonical = f"{canonical_url}/papers/" if canonical_url else ""
-    return page_shell(title="Papers — ARR", description="Accepted ARR research papers.", content=content, base=base, canonical=canonical)
+    canonical_suffix = "papers/" if page == 1 else f"papers/page/{page}/"
+    canonical = f"{canonical_url}/{canonical_suffix}" if canonical_url else ""
+    return page_shell(title=f"Papers — page {page} — ARR", description="ARR research catalogue and clearly labelled historical imports.", content=content, base=base, canonical=canonical)
 
 
 def build_notes_index(papers: list, timestamps: dict, base: str, canonical_url: str, author_lookup: dict[str, dict] | None = None, metrics: dict | None = None) -> str:
@@ -649,15 +670,20 @@ def build_paper_page(
     relative_path = paper.path.relative_to(ROOT).as_posix()
     tag = f"{metadata['id']}-{metadata['version']}"
     release_url = metadata.get("release_url")
-    if not release_url and repository:
+    archival = metadata.get("archival_source")
+    if isinstance(archival, dict):
+        release_url = archival["mirror_release_url"]
+    elif not release_url and repository and timestamp.get("publication_state") == "published":
         release_url = f"https://github.com/{repository}/releases/tag/{tag}"
     source_url = f"https://github.com/{repository}/tree/main/{relative_path}" if repository else ""
     pdf_url = ""
-    if release_url and (paper.path / "paper.pdf").is_file():
+    if isinstance(archival, dict):
+        pdf_url = archival["mirror_pdf_url"]
+    elif release_url and (paper.path / "paper.pdf").is_file():
         pdf_url = release_asset_url(release_url, f"{tag}.pdf")
     links = []
     if pdf_url:
-        links.append(f'<a class="button" href="{esc(pdf_url)}">Download canonical PDF</a>')
+        links.append(f'<a class="button" href="{esc(pdf_url)}">Download {"mirrored" if archival else "canonical"} PDF</a>')
     if release_url:
         links.append(f'<a class="button secondary" href="{esc(release_url)}">Download release assets</a>')
     if source_url:
@@ -710,6 +736,25 @@ def build_paper_page(
         + "".join(history_items)
         + "</ul></section>"
     )
+    source_history = ""
+    archival_notice = ""
+    if isinstance(archival, dict):
+        source_items = "".join(
+            f'<li><a href="{esc(item["pdf_url"])}"><strong>{esc(item["version"])}</strong></a><span>{exact_time(item["submitted_at"])} · original ai.vixra file</span></li>'
+            for item in reversed(archival["versions"])
+        )
+        anomaly = ""
+        if not archival["source_file_available"]:
+            anomaly = f'<p class="source-anomaly"><strong>Source anomaly:</strong> ai.vixra declares {esc(archival["latest_declared_version"])} but its PDF was unavailable at import; ARR currently mirrors {esc(archival["mirrored_version"])}.</p>'
+        source_history = (
+            '<section class="version-history"><h2>Original ai.vixra version history</h2>'
+            '<p>Dates below are the source submission timestamps. ai.vixra omits a timezone; ARR preserves the displayed values and uses the normalized offset only for deterministic ordering.</p>'
+            + anomaly + f'<ul>{source_items}</ul></section>'
+        )
+        archival_notice = (
+            '<aside class="version-notice historical"><strong>Historical import · not assessed.</strong> '
+            'This author-authorized record preserves an earlier ai.vixra deposit. File integrity passed; scientific correctness, novelty and bibliography did not undergo the current ARR hostile-audit gate.</aside>'
+        )
     revision = metadata.get("revision")
     revision_section = ""
     if isinstance(revision, dict):
@@ -733,6 +778,7 @@ def build_paper_page(
     content = f"""
 <article class="paper-page">
   {version_notice}
+  {archival_notice}
   <div class="paper-meta">{type_badge(metadata)}{status_badge(metadata['status'])}<span>{esc(metadata['id'])} · {esc(metadata['version'])} · {esc(metadata['date'])}</span></div>
   <h1>{esc(metadata['title'])}</h1>
   <p class="paper-authors">{authors}</p>
@@ -747,6 +793,7 @@ def build_paper_page(
   </div>
   {revision_section}
   {version_history}
+  {source_history}
   {note_section}
   {related_section}
   <section class="disclosure"><h2>AI assistance statement</h2><p>{esc(metadata['ai_assistance']['statement'])}</p></section>
@@ -1189,7 +1236,7 @@ def main() -> int:
     timestamps = load_record_timestamps()
     groups = group_paper_versions(all_versions)
     papers = [versions[-1] for versions in groups.values()]
-    papers.sort(key=lambda paper: (chronology_time(timestamps[(paper.id, paper.version)]), paper.id), reverse=True)
+    papers.sort(key=lambda paper: (paper_chronology(paper.metadata, timestamps[(paper.id, paper.version)]), paper.id), reverse=True)
     try:
         profiles, author_lookup = load_authors(papers)
         metrics = load_metrics(args.metrics_file)
@@ -1240,7 +1287,11 @@ def main() -> int:
     shutil.copy2(ROOT / "registry" / "editorial-highlights.json", OUTPUT_DIR / "registry" / "editorial-highlights.json")
 
     write(OUTPUT_DIR / "index.html", build_home(papers, timestamps, base, canonical_url, author_lookup, metrics, len(profiles)))
-    write(OUTPUT_DIR / "papers" / "index.html", build_papers_index(papers, timestamps, base, canonical_url, author_lookup, metrics))
+    research_count = sum(paper.record_type == "research_paper" for paper in papers)
+    paper_page_count = max(1, (research_count + 49) // 50)
+    for page_number in range(1, paper_page_count + 1):
+        destination = OUTPUT_DIR / "papers" / "index.html" if page_number == 1 else OUTPUT_DIR / "papers" / "page" / str(page_number) / "index.html"
+        write(destination, build_papers_index(papers, timestamps, base, canonical_url, author_lookup, metrics, page=page_number))
     write(OUTPUT_DIR / "notes" / "index.html", build_notes_index(papers, timestamps, base, canonical_url, author_lookup, metrics))
     write(OUTPUT_DIR / "authors" / "index.html", build_authors_index(profiles, by_author, metrics, base, canonical_url))
     write(OUTPUT_DIR / "rankings" / "index.html", build_rankings(profiles, by_author, papers, metrics, base, canonical_url))
