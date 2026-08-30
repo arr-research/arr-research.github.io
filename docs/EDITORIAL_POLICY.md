@@ -2,7 +2,7 @@
 
 ## Scope
 
-ARR is a curated archive of research papers and technical notes with preserved canonical artifacts and machine-readable renditions. It is not a journal and publication does not imply peer review, AI screening, correctness, novelty or importance.
+ARR is a curated archive of research papers and technical notes with preserved canonical artifacts and machine-readable renditions. It is not a journal, and publication does not imply peer review, correctness, novelty or importance. When ARR publishes a frontier-model assessment, that report describes only the identified model's inspection of the exact identified version.
 
 ## Publication types
 
@@ -20,11 +20,12 @@ A record may be accepted only when:
 3. citations and key factual dependencies have been checked under the applicable protocol;
 4. code, data descriptions and formal proofs needed to support the stated result are supplied when applicable;
 5. automated checks succeed;
-6. every performed assessment is labelled with its actual outcome and `not_assessed` remains permissible and visible;
-7. an `AI screened: pass` label requires three declared, version-specific evaluator reports and no unresolved critical objection;
-8. a human editor signs off on the exact version;
-9. the final decision is tied to stable record/version identifiers, a SHA-256 manifest and protocol version;
-10. deposit authority, scoped licenses and third-party material disclosures are recorded.
+6. every performed assessment is labelled with its actual outcome and legacy `not_assessed` records remain visible rather than being retrospectively scored;
+7. new admissions under ARR-ASSESS-1.0 require declared, version-specific frontier-model screening, and any unresolved material objection blocks acceptance pending correction or a signed human adjudication;
+8. an `AI screened: pass` label requires three declared, version-specific evaluator reports and no unresolved critical objection;
+9. a human editor signs off on the exact version;
+10. the final decision is tied to stable record/version identifiers, a SHA-256 manifest and protocol version;
+11. deposit authority, scoped licenses and third-party material disclosures are recorded.
 
 ## Claims ARR makes
 
@@ -32,7 +33,7 @@ ARR may state that a particular check passed. It must not convert that result in
 
 A technical note may later be extended into a research paper. Both records remain persistent and are linked with `extends` and `is_extended_by`; the earlier note is not silently overwritten.
 
-ARR does not publish a composite quality score. Independent labels report the evidence actually obtained.
+ARR may publish the model-derived Millennium score and star profile defined in [`MODEL_ASSESSMENT_POLICY.md`](MODEL_ASSESSMENT_POLICY.md). It always exposes the component reports, count, range, version and limitations; it does not turn an aggregate into a correctness certificate.
 
 ## Corrections and withdrawals
 

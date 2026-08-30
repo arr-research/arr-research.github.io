@@ -1,4 +1,4 @@
-# ARR deposit terms — ARR-DEPOSIT-1.2
+# ARR deposit terms — ARR-DEPOSIT-1.3
 
 **Effective:** 2026-08-30  
 **Operator:** Lluis Eriksson, Stockholm, Sweden — lluiseriksson@gmail.com  
@@ -8,7 +8,7 @@ after advance publication of new terms and clear notice before submission. No fe
 will be imposed retroactively on a submission governed by this version, and a
 future fee will never purchase acceptance, priority or a favourable decision.
 
-This version replaces `ARR-DEPOSIT-1.1` before direct public submission was
+This version replaces `ARR-DEPOSIT-1.2` before direct public submission was
 activated.
 
 These terms govern ARR's direct private-submission pilot. No invitation or author
@@ -50,6 +50,14 @@ The operator receives an email notice containing limited case metadata and a
 protected editor link; the PDF and abstract are not email attachments or message
 content.
 
+Before acceptance, ARR submits the exact clean manuscript to at least three distinct
+operator-selected frontier models using the version-locked ARR prompt. The form
+discloses and records authorization for that limited transfer. Each response is
+tied to the manuscript hash and inspected by the human editor. Any unresolved
+material objection or non-accept recommendation blocks acceptance; ARR must request
+changes or decline unless a signed human adjudication explains why the objection
+does not apply. No model makes the final decision.
+
 ## 4. Editorial decision and conflicts
 
 The operator normally signs accept/decline decisions one by one and gives a concise
@@ -73,13 +81,14 @@ Open licenses and copies already lawfully distributed may be irrevocable. A late
 withdrawal removes ARR's current endorsement and normally leaves a proportionate
 tombstone; ARR cannot recall third-party copies.
 
-## 6. Privacy and optional AI review
+## 6. Privacy and frontier-model review
 
-Processing follows `ARR-PRIVACY-1.1`. Private submissions are not placed in the
-public repository. External AI assessment is off by default and is not required
-for eligibility. A checked preference alone does not transfer the paper: ARR must
-name the provider and reconfirm the depositor's optional consent first. Consent may
-be withdrawn before transfer.
+Processing follows `ARR-PRIVACY-1.2`. Private submissions are not placed in the
+public repository. Completing the disclosed frontier-model screening is required
+for acceptance. The depositor may withdraw before a transfer not yet made, but ARR
+then cannot complete the acceptance protocol. Providers may use the manuscript only
+for the assessment purpose under the selected service controls; ARR records the
+provider/model and does not publish a rejected private manuscript or its review.
 
 ## 7. Retention, withdrawal and legal hold
 

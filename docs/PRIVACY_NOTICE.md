@@ -1,4 +1,4 @@
-# ARR privacy notice — ARR-PRIVACY-1.1
+# ARR privacy notice — ARR-PRIVACY-1.2
 
 **Effective:** 2026-08-30  
 **Service state:** currently fee-free direct private-submission pilot; the receiver
@@ -20,7 +20,7 @@ details must be added before general public intake opens.
 - direct-deposit contact data: adult depositor's name and email address, submission
   and notification timestamps;
 - submission data: title, author list, abstract, manuscript PDF, filename, size,
-  cryptographic hash, rights/disclosure attestations, optional AI-review choice,
+  cryptographic hash, rights/disclosure attestations, frontier-model review authorization,
   conflict declaration and correspondence;
 - editorial data: case identifier, checks, editor identity, decision, reasons,
   appeal and legal-hold information;
@@ -43,7 +43,7 @@ protected by passwords and TOTP.
 | Protect the form and editor accounts, quarantine files, prevent abuse, investigate integrity issues and keep a proportionate audit trail | ARR's and users' legitimate interests in a secure, accountable scholarly service (Article 6(1)(f)) |
 | Respond to binding authority requests and applicable record obligations | legal obligation where one applies (Article 6(1)(c)) |
 | Publish an accepted manuscript, its authorship, provenance and licenses worldwide | performance of the deposit agreement (Article 6(1)(b)); public distribution also follows the depositor's chosen license |
-| Send a private manuscript to a named external AI evaluator | separate, optional and withdrawable consent (Article 6(1)(a)); no transfer occurs until ARR identifies the provider and reconfirms the choice |
+| Send a private manuscript to operator-selected external frontier-model evaluators solely for the disclosed pre-publication screening | steps requested before and performance of the deposit agreement (Article 6(1)(b)); the form makes clear that screening is required for acceptance and records the authorization |
 
 ARR makes no solely automated acceptance or rejection decision and does not
 profile authors. Malware and format checks can block access to a file, but a human
@@ -61,7 +61,12 @@ Private manuscripts are not stored in the public GitHub repository. If accepted,
 the disclosed author information, scholarly metadata and licensed research object
 are intentionally published worldwide through ARR, GitHub and mirrors. The public
 nature and practical irreversibility of third-party copies will be shown again
-before final publication. Optional AI transfer is off by default.
+before final publication. Frontier-model providers receive the exact manuscript and
+case hash only for the disclosed assessment purpose. The operator records provider,
+model identifier, time and response hash. Provider terms, confidentiality controls
+and international-transfer safeguards must be reviewed before use; ARR selects a
+no-training or enterprise-confidentiality control where the service offers one.
+Rejected-case reports remain private and follow the case retention schedule.
 
 ## Public-site activity measurement
 
@@ -89,8 +94,10 @@ least every 90 days.
 
 Subject to the GDPR and applicable exceptions, you may request access,
 rectification, erasure, restriction, portability, or object to legitimate-interest
-processing. You may withdraw optional AI consent before transfer without affecting
-earlier lawful processing. Email the controller; identity may be verified
+processing. You may withdraw the submission and prevent a model transfer not yet
+made; because frontier-model screening is an acceptance condition, ARR cannot
+complete acceptance after that withdrawal. Earlier lawful processing is unaffected.
+Email the controller; identity may be verified
 proportionately. ARR aims to acknowledge requests within 7 days and responds
 within the statutory period.
 
@@ -114,3 +121,12 @@ GDPR requires it. Security reports use the private instructions in `SECURITY.md`
 The accepted privacy version is recorded with every submission. Material changes
 do not apply retroactively without notice and, where necessary, renewed agreement.
 Earlier versions remain in repository history.
+
+## Voluntary support
+
+PayPal loads only when a visitor opens ARR's dedicated support page. If the visitor
+chooses to donate, PayPal acts under its own terms and privacy notice and provides
+the operator with transaction data such as donor name, email, amount, currency and
+transaction identifier. ARR uses those data only for payment administration,
+fraud/refund handling, accounting and legal obligations. Donors are not added to a
+mailing list or public ranking, and donations cannot influence editorial decisions.

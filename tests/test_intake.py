@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import io
+import json
 import os
 import tempfile
 import unittest
@@ -12,7 +13,7 @@ os.environ.setdefault("ARR_SESSION_SECRET", "test-import-secret-" * 4)
 
 from werkzeug.security import generate_password_hash
 
-from services.intake.app import create_app, get_db, init_db, iso, now, totp
+from services.intake.app import create_app, get_db, init_db, iso, model_review_template, now, totp
 
 
 class IntakeTests(unittest.TestCase):
@@ -76,6 +77,7 @@ class IntakeTests(unittest.TestCase):
             "terms": "on",
             "privacy": "on",
             "authority": "on",
+            "ai_review_opt_in": "on",
             "manuscript": (io.BytesIO(b"%PDF-1.7\nminimal test bytes"), "paper.pdf"),
         }
         if conflict:
@@ -87,13 +89,40 @@ class IntakeTests(unittest.TestCase):
             row = get_db().execute("SELECT * FROM submissions ORDER BY created_at DESC LIMIT 1").fetchone()
             self.assertEqual(row["scan_status"], "clean")
             self.assertEqual(row["status"], "eligible")
-            self.assertEqual(row["terms_version"], "ARR-DEPOSIT-1.2")
-            self.assertEqual(row["privacy_version"], "ARR-PRIVACY-1.1")
+            self.assertEqual(row["terms_version"], "ARR-DEPOSIT-1.3")
+            self.assertEqual(row["privacy_version"], "ARR-PRIVACY-1.2")
             self.assertTrue((Path(self.app.config["QUARANTINE"]) / row["stored_name"]).exists())
             submitter = get_db().execute("SELECT * FROM users WHERE id=?", (row["user_id"],)).fetchone()
             self.assertEqual(submitter["email"], "direct-author@example.org")
             self.assertEqual(submitter["active"], 0)
             return row["id"]
+
+    def add_model_review(self, submission_id: str, number: int, *, recommendation: str = "accept", material: bool = False) -> None:
+        with self.app.app_context():
+            row = get_db().execute("SELECT * FROM submissions WHERE id=?", (submission_id,)).fetchone()
+            value = model_review_template(row)
+        value.update(
+            {
+                "provider": f"Provider {number}",
+                "model_id": f"frontier-model-{number}",
+                "assessed_at": f"2026-08-30T12:0{number}:00+00:00",
+                "recommendation": recommendation,
+                "millennium_score": 4.0 if recommendation == "accept" else 2.0,
+                "overall_stars": 4 if recommendation == "accept" else 2,
+                "summary": "This exact manuscript was inspected adversarially and the structured recommendation records the resulting evidence.",
+                "strengths": ["The principal statement is precise and independently inspectable."],
+                "weaknesses": ["The exposition could make one dependency more explicit."],
+                "unresolved_material_objections": ["A main lemma appears unsupported by the stated assumptions."] if material else [],
+            }
+        )
+        for criterion in value["criteria"].values():
+            criterion["basis"] = "The exact manuscript supplies enough claim-linked evidence for this criterion."
+        token = self.login_session("operator@example.org")
+        response = self.client.post(
+            f"/admin/submission/{submission_id}/model-review",
+            data={"csrf_token": token, "response_json": json.dumps(value)},
+        )
+        self.assertEqual(response.status_code, 302)
 
     def test_editor_login_requires_valid_totp(self) -> None:
         self.client.get("/login")
@@ -141,6 +170,9 @@ class IntakeTests(unittest.TestCase):
     def test_upload_stays_private_and_requires_manual_acceptance(self) -> None:
         submission_id = self.upload()
         token = self.login_session("operator@example.org")
+        for number in range(1, 4):
+            self.add_model_review(submission_id, number)
+        token = self.login_session("operator@example.org")
         response = self.client.post(
             f"/admin/submission/{submission_id}/decision",
             data={"csrf_token": token, "action": "accept", "reason": "scope-and-integrity-complete", "note": "Human review complete."},
@@ -159,6 +191,9 @@ class IntakeTests(unittest.TestCase):
     def test_founder_conflict_requires_independent_editor(self) -> None:
         submission_id = self.upload(conflict=True)
         token = self.login_session("operator@example.org")
+        for number in range(1, 4):
+            self.add_model_review(submission_id, number)
+        token = self.login_session("operator@example.org")
         self.client.post(
             f"/admin/submission/{submission_id}/decision",
             data={"csrf_token": token, "action": "accept", "reason": "operator-provisional", "note": "Conflict disclosed."},
@@ -174,6 +209,21 @@ class IntakeTests(unittest.TestCase):
         with self.app.app_context():
             status = get_db().execute("SELECT status FROM submissions WHERE id=?", (submission_id,)).fetchone()[0]
             self.assertEqual(status, "accepted_for_publication")
+
+    def test_material_model_objection_blocks_acceptance(self) -> None:
+        submission_id = self.upload()
+        self.add_model_review(submission_id, 1)
+        self.add_model_review(submission_id, 2)
+        self.add_model_review(submission_id, 3, recommendation="reject", material=True)
+        token = self.login_session("operator@example.org")
+        response = self.client.post(
+            f"/admin/submission/{submission_id}/decision",
+            data={"csrf_token": token, "action": "accept", "reason": "attempted-acceptance"},
+        )
+        self.assertEqual(response.status_code, 409)
+        with self.app.app_context():
+            row = get_db().execute("SELECT status FROM submissions WHERE id=?", (submission_id,)).fetchone()
+            self.assertEqual(row["status"], "eligible")
 
     def test_missing_scanner_fails_closed(self) -> None:
         self.client.get("/submit")
@@ -193,6 +243,7 @@ class IntakeTests(unittest.TestCase):
                     "terms": "on",
                     "privacy": "on",
                     "authority": "on",
+                    "ai_review_opt_in": "on",
                     "manuscript": (io.BytesIO(b"%PDF-1.7\nscanner failure"), "paper.pdf"),
                 },
                 content_type="multipart/form-data",
@@ -249,6 +300,7 @@ class IntakeTests(unittest.TestCase):
 
     def test_declined_pdf_is_erased_on_schedule(self) -> None:
         submission_id = self.upload()
+        self.add_model_review(submission_id, 1)
         token = self.login_session("operator@example.org")
         self.client.post(
             f"/admin/submission/{submission_id}/decision",
@@ -264,8 +316,10 @@ class IntakeTests(unittest.TestCase):
         self.assertEqual(result.exit_code, 0, result.output)
         self.assertFalse(path.exists())
         with self.app.app_context():
-            row = get_db().execute("SELECT * FROM submissions WHERE id=?", (submission_id,)).fetchone()
+            db = get_db()
+            row = db.execute("SELECT * FROM submissions WHERE id=?", (submission_id,)).fetchone()
             self.assertEqual(row["abstract"], "[deleted under retention policy]")
+            self.assertEqual(db.execute("SELECT COUNT(*) FROM model_reviews WHERE submission_id=?", (submission_id,)).fetchone()[0], 0)
 
     def test_legal_hold_pauses_and_restores_retention_state(self) -> None:
         submission_id = self.upload()
