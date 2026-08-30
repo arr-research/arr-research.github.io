@@ -6,7 +6,7 @@ ARR separates private intake, the lightweight public registry projection, and po
 
 ### Private intake
 
-Untrusted submissions must never arrive through pull requests to the accepted archive. Future intake uses separate authentication, rate limits, quarantine storage, retention deadlines, malware checks and sandboxed validation. Rejected or expired intake data can be deleted without altering the public record.
+Untrusted submissions must never arrive through pull requests to the accepted archive. The invitation-only service in `services/intake/` uses separate authentication, editor TOTP, persistent rate limits, non-public quarantine storage, retention deadlines and fail-closed malware checks. Rejected or expired intake data can be deleted without altering the public record. The service cannot write to `papers/` or create releases.
 
 ### Git history
 

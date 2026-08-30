@@ -1,0 +1,9 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}ARR private intake{% endblock %}</title>
+<style>
+body{font:16px/1.5 system-ui;max-width:960px;margin:auto;padding:2rem;background:#0b0f17;color:#eef2f7}a{color:#8bd5ff}nav{display:flex;gap:1rem;align-items:center}nav form{margin-left:auto}main{margin-top:2rem}article,form.card{background:#151c28;border:1px solid #2b3748;border-radius:10px;padding:1rem;margin:1rem 0}label{display:block;margin:.8rem 0}input,textarea,select,button{font:inherit}input,textarea,select{box-sizing:border-box;width:100%;padding:.6rem;background:#0b0f17;color:#eef2f7;border:1px solid #53647a;border-radius:5px}input[type=checkbox]{width:auto}button{padding:.6rem 1rem}.flash{padding:.8rem;border-left:4px solid #8bd5ff;background:#172332}.error{border-color:#ff7b72}.warning{border-color:#d29922}.meta{color:#aab6c5;font-size:.9rem}.status{font-weight:700}.danger{border-color:#ff7b72}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:.6rem;border-bottom:1px solid #2b3748}
+</style></head><body>
+<nav><a href="{{ url_for('dashboard') }}"><strong>ARR private intake</strong></a>{% if g.user %}<span>{{ g.user['display_name'] }} · {{ g.user['role'] }}</span><form method="post" action="{{ url_for('logout') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button>Sign out</button></form>{% endif %}</nav>
+<main>{% for category,message in get_flashed_messages(with_categories=true) %}<p class="flash {{ category }}">{{ message }}</p>{% endfor %}{% block content %}{% endblock %}</main>
+</body></html>

@@ -16,6 +16,6 @@ Files may be removed or access-restricted for credible copyright claims, unlawfu
 
 ## Request handling
 
-Every request will receive a case identifier, timestamp, evidence log, decision, and notification where lawful. Counter-notice or appeal procedures will be defined before external submissions open. Emergency security reports follow `SECURITY.md`.
+Every request receives a case identifier, timestamp, evidence log, decision, reasons and notification where lawful. The notice, counter-notice and appeal procedure is in [`LEGAL_AND_COMPLAINTS.md`](LEGAL_AND_COMPLAINTS.md). Emergency security reports follow `SECURITY.md`.
 
-This prototype does not yet advertise a legal notice address. External intake remains closed until one exists.
+The responsible operator is Lluis Eriksson in Stockholm, Sweden, reachable at `lluiseriksson@gmail.com`. A stable postal service address and legal review remain mandatory before unrestricted public intake.

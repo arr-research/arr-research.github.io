@@ -93,6 +93,7 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
       <a href="{base}/papers/">Papers</a>
       <a href="{base}/notes/">Technical notes</a>
       <a href="{base}/protocol/">Protocol</a>
+      <a href="{base}/submit/">Submit</a>
       <a href="{base}/licensing/">Licensing</a>
       <a href="{base}/about/">About</a>
     </nav>
@@ -100,7 +101,7 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
   <main id="main">{content}</main>
   <footer>
     <p><strong>ARR</strong> is a curated archive of research papers and technical notes with explicit evidence labels. Acceptance is not peer review and is not a guarantee of truth.</p>
-    <p><a href="{base}/catalog.json">Machine-readable catalogue (CC0)</a> · <a href="{base}/registry/record-timestamps.json">Exact record timestamps (CC0)</a> · <a href="{base}/catalog/index.json">Partition index</a> · <a href="{base}/protocol/">Verification protocol</a> · <a href="{base}/licensing/">Licensing</a> · <a href="https://github.com/arr-research/arr-research.github.io">Source (AGPL)</a></p>
+    <p><a href="{base}/catalog.json">Machine-readable catalogue (CC0)</a> · <a href="{base}/registry/record-timestamps.json">Exact record timestamps (CC0)</a> · <a href="{base}/catalog/index.json">Partition index</a> · <a href="{base}/protocol/">Verification protocol</a> · <a href="{base}/privacy/">Privacy</a> · <a href="{base}/terms/">Deposit terms</a> · <a href="{base}/contact/">Contact and complaints</a> · <a href="https://github.com/arr-research/arr-research.github.io">Source (AGPL)</a></p>
   </footer>
 </body>
 </html>
@@ -479,9 +480,9 @@ def build_about(base: str, canonical_url: str) -> str:
   <article><h2>What ARR is</h2><p>A versioned archive of research papers and concise technical notes, with canonical manuscripts, machine-readable renditions, code, formalizations, data descriptions and explicit verification records.</p></article>
   <article><h2>Two publication types</h2><p>Research papers present complete scholarly arguments at paper scale. Technical notes preserve narrower but rigorous results, proofs, formalizations, methods, replications, negative results, software or protocols. A note is different in scope, not exempt from evidence or integrity requirements.</p></article>
   <article><h2>What ARR is not</h2><p>ARR is not a journal, a replacement for expert peer review, a ranking of authors or a guarantee that a scientific claim is true.</p></article>
-  <article><h2>Governance</h2><p>The prototype begins with a documented editorial process. Founder conflicts, authorship and future independent governance will be disclosed publicly.</p></article>
+  <article><h2>Governance</h2><p>Lluis Eriksson is founder, registry operator, responsible editor and data controller. Every decision is human. His conflicted or author-owned work requires a disclosed independent editor before publication.</p></article>
   <article><h2>Preservation</h2><p>Stable identifiers are independent of GitHub. Versioned releases distribute generated and large files; future object storage and independent preservation mirrors can replace any provider without changing citations.</p></article>
-  <article><h2>Submissions</h2><p>External submissions are currently closed. GitHub issues and pull requests are not manuscript submission channels; ARR will announce intake only after privacy, security, moderation and deposit controls are operational.</p></article>
+  <article><h2>Submissions</h2><p>ARR is free. Expressions of interest are open without attachments; manuscript uploads are private, invitation-only and cannot begin until the production launch checklist is signed. GitHub and ordinary email are never manuscript channels.</p></article>
 </section>
 """
     canonical = f"{canonical_url}/about/" if canonical_url else ""
@@ -501,6 +502,75 @@ def build_licensing(base: str, canonical_url: str) -> str:
 """
     canonical = f"{canonical_url}/licensing/" if canonical_url else ""
     return page_shell(title="Licensing — ARR", description="Licensing scopes for ARR software, metadata, documentation and deposited research.", content=content, base=base, canonical=canonical)
+
+
+def policy_source(filename: str) -> str:
+    return f"https://github.com/arr-research/arr-research.github.io/blob/main/docs/{filename}"
+
+
+def build_submit(base: str, canonical_url: str) -> str:
+    content = f"""
+<section class="page-intro"><span>Free · invitation-only pilot</span><h1>Every paper enters privately and every decision is manual.</h1><p>ARR charges EUR 0.00 for submission, assessment, publication and withdrawal. Uploading never publishes a manuscript.</p></section>
+<section class="about-grid">
+  <article><h2>1. Request an invitation</h2><p>Email <a href="mailto:lluiseriksson@gmail.com?subject=ARR%20invitation">lluiseriksson@gmail.com</a> with subject <code>ARR invitation</code>. Include only your name, email, field and provisional title. <strong>Do not attach a manuscript or abstract.</strong></p></article>
+  <article><h2>2. Private quarantine</h2><p>After the production gate is complete, selected applicants receive a one-use, email-bound link. The PDF is authenticated, rate-limited, size/type checked, quarantined and unavailable to editors unless an approved malware scanner reports it clean.</p></article>
+  <article><h2>3. Human decision</h2><p>Lluis Eriksson reviews ordinary cases one by one and records accept, decline or changes requested with a concise basis. No algorithm publishes or rejects a paper. A founder conflict requires an independent editor.</p></article>
+  <article><h2>Current boundary</h2><p>Expressions of interest are open. Live upload credentials are not issued until legal review, a stable service address, named processors, HTTPS, ClamAV, backups, retention jobs and incident testing have been signed off. This protects authors from a premature opening.</p></article>
+</section>
+<section class="callout"><h2>Read before requesting access</h2><p><a href="{base}/terms/">Deposit terms</a> · <a href="{base}/privacy/">Privacy</a> · <a href="{base}/governance/">Governance</a> · <a href="{base}/contact/">Complaints and legal notices</a></p></section>
+"""
+    canonical = f"{canonical_url}/submit/" if canonical_url else ""
+    return page_shell(title="Submit — ARR", description="Free invitation-only manuscript intake with private quarantine and manual editorial decisions.", content=content, base=base, canonical=canonical)
+
+
+def build_privacy(base: str, canonical_url: str) -> str:
+    content = f"""
+<section class="page-intro"><span>ARR-PRIVACY-1.0 · effective 2026-08-30</span><h1>Privacy is separated from publication.</h1><p>The controller is Lluis Eriksson, a natural person in Stockholm, Sweden, acting as founder, registry operator and responsible editor. Contact: <a href="mailto:lluiseriksson@gmail.com?subject=ARR%20privacy">lluiseriksson@gmail.com</a>. No DPO is designated.</p></section>
+<section class="about-grid">
+  <article><h2>Private data</h2><p>ARR processes invitation/account details, submission metadata and PDF, declarations, decisions, correspondence and pseudonymized security events to administer the deposit agreement and protect the service. Accounts are restricted to adults in the pilot.</p></article>
+  <article><h2>No automated editorial decision</h2><p>Format and malware controls may keep a file quarantined. Acceptance or rejection is human. Private manuscripts are never sent to an AI provider by default; a named-provider notice and reconfirmed optional consent are required first.</p></article>
+  <article><h2>Retention</h2><p>Malware bytes are erased immediately, withdrawn PDFs after 7 days, declined PDFs after 30 days, and accepted private copies 30 days after verified public release. A minimal decision record is retained for three years, subject to narrowly reviewed legal hold.</p></article>
+  <article><h2>Your rights</h2><p>Applicable rights include access, correction, erasure, restriction, portability and objection. You can complain to Sweden's IMY or another competent EEA authority. Requests receive proportionate identity verification.</p></article>
+</section>
+<section class="callout"><h2>Complete binding notice</h2><p><a href="{policy_source('PRIVACY_NOTICE.md')}">Read ARR-PRIVACY-1.0 in full</a>. The accepted version is recorded with each deposit.</p></section>
+"""
+    canonical = f"{canonical_url}/privacy/" if canonical_url else ""
+    return page_shell(title="Privacy — ARR", description="ARR-PRIVACY-1.0 privacy notice for private manuscript intake.", content=content, base=base, canonical=canonical)
+
+
+def build_terms(base: str, canonical_url: str) -> str:
+    content = f"""
+<section class="page-intro"><span>ARR-DEPOSIT-1.0 · effective 2026-08-30</span><h1>Free deposit does not buy or guarantee acceptance.</h1><p>Submission, assessment, publication and withdrawal cost EUR 0.00. The operator is Lluis Eriksson in Stockholm, Sweden.</p></section>
+<section class="about-grid">
+  <article><h2>Authority and scope</h2><p>Adult depositors must be an author, rights holder or authorized agent and accurately disclose rights, authorship, AI assistance, interests, third-party material, provenance and licenses. The pilot accepts one PDF up to 25 MiB.</p></article>
+  <article><h2>Private first</h2><p>An upload enters quarantine and carries no public license. ARR may decline, request changes, restrict or remove material. Submission creates no entitlement to a timetable, publication, preservation or endorsement.</p></article>
+  <article><h2>Publication rights</h2><p>Copyright remains with its owner. A final accepted version receives explicit scoped licenses before public release. Public copies and open licenses may be irreversible; withdrawal cannot recall third-party copies.</p></article>
+  <article><h2>Appeal and conflict</h2><p>A decline or restriction may be appealed once within 30 days. A conflicted founder approval is provisional and an unconflicted independent editor must sign before publication.</p></article>
+</section>
+<section class="callout"><h2>Complete binding terms</h2><p><a href="{policy_source('DEPOSIT_TERMS.md')}">Read ARR-DEPOSIT-1.0 in full</a>. Email and GitHub issues are not deposit channels.</p></section>
+"""
+    canonical = f"{canonical_url}/terms/" if canonical_url else ""
+    return page_shell(title="Deposit terms — ARR", description="ARR-DEPOSIT-1.0 terms for free invitation-only deposits.", content=content, base=base, canonical=canonical)
+
+
+def build_governance(base: str, canonical_url: str) -> str:
+    content = f"""
+<section class="page-intro"><span>Human gate · disclosed conflicts</span><h1>The founder cannot be his own final editor.</h1><p>Lluis Eriksson is founder, registry operator, responsible editor and data controller. ARR does not use the company title VD/CEO while no such legal office exists.</p></section>
+<section class="about-grid"><article><h2>Ordinary external case</h2><p>The operator records the exact version, checks and reason, then manually chooses accept, decline or changes requested. Acceptance still requires a separate public-release workflow.</p></article><article><h2>Founder or editor conflict</h2><p>Authorship, recent collaboration, supervision, close relationships, financial interests or disputes trigger recusal. An operator accept becomes provisional until a named independent editor signs.</p></article><article><h2>Appeal</h2><p>The original decision-maker cannot be the sole appeal reviewer. An unavailable independent reviewer means the case remains private or is declined without implying low quality.</p></article><article><h2>Transparency</h2><p>Public records disclose relevant founder relationships. Once the pilot has activity, ARR will report aggregate decisions, appeals, conflicts and reversals without exposing private submissions.</p></article></section>
+<section class="callout"><h2>Full governance rules</h2><p><a href="{policy_source('GOVERNANCE.md')}">Read the version-controlled policy</a>.</p></section>
+"""
+    canonical = f"{canonical_url}/governance/" if canonical_url else ""
+    return page_shell(title="Governance — ARR", description="ARR governance, manual editorial gate and founder conflict controls.", content=content, base=base, canonical=canonical)
+
+
+def build_contact(base: str, canonical_url: str) -> str:
+    content = f"""
+<section class="page-intro"><span>Responsible operator and redress</span><h1>One accountable human contact.</h1><p>ARR is a non-commercial project operated by Lluis Eriksson, a natural person in Stockholm, Sweden: founder, registry operator, responsible editor and GDPR data controller.</p></section>
+<section class="about-grid"><article><h2>Contact</h2><p><a href="mailto:lluiseriksson@gmail.com">lluiseriksson@gmail.com</a>. Use subject <code>ARR invitation</code>, <code>ARR appeal</code>, <code>ARR privacy</code>, <code>ARR copyright</code>, <code>ARR illegal-content notice</code> or <code>ARR security</code>. Never email manuscript attachments or live malware.</p></article><article><h2>Appeal</h2><p>Appeal once within 30 days with the case, challenged decision, alleged error and remedy. ARR aims to acknowledge within 7 days and decide within 30 days through someone other than the sole original decision-maker.</p></article><article><h2>Rights/illegality notice</h2><p>Identify yourself, the exact URL/version or case, the material and legal basis, supporting facts and requested action. ARR records the case, may restrict urgently, gives reasons and permits a substantiated counter-notice.</p></article><article><h2>Privacy regulator</h2><p>You may complain to the <a href="https://www.imy.se/en/individuals/forms-and-e-services/file-a-gdpr-complaint/">Swedish Authority for Privacy Protection (IMY)</a> or another competent EEA authority.</p></article></section>
+<section class="callout"><h2>Complete procedure</h2><p><a href="{policy_source('LEGAL_AND_COMPLAINTS.md')}">Read legal contact, notices and complaints in full</a>. A stable postal service address remains a launch condition for unrestricted public intake.</p></section>
+"""
+    canonical = f"{canonical_url}/contact/" if canonical_url else ""
+    return page_shell(title="Contact and complaints — ARR", description="ARR operator, legal contact, editorial appeal and notice procedure.", content=content, base=base, canonical=canonical)
 
 
 def write(path: Path, value: str) -> None:
@@ -567,8 +637,13 @@ def write_sitemaps(papers: list, groups: dict, canonical_url: str) -> None:
         (f"{canonical_url}/papers/", latest_date),
         (f"{canonical_url}/notes/", latest_date),
         (f"{canonical_url}/protocol/", latest_date),
+        (f"{canonical_url}/submit/", latest_date),
         (f"{canonical_url}/licensing/", latest_date),
         (f"{canonical_url}/about/", latest_date),
+        (f"{canonical_url}/privacy/", latest_date),
+        (f"{canonical_url}/terms/", latest_date),
+        (f"{canonical_url}/governance/", latest_date),
+        (f"{canonical_url}/contact/", latest_date),
     ]
     urls.extend((f"{canonical_url}/{record_route(paper.metadata)}/{paper.id}/", paper.metadata["date"]) for paper in papers)
     for paper in papers:
@@ -685,8 +760,13 @@ def main() -> int:
     write(OUTPUT_DIR / "papers" / "index.html", build_papers_index(papers, timestamps, base, canonical_url))
     write(OUTPUT_DIR / "notes" / "index.html", build_notes_index(papers, timestamps, base, canonical_url))
     write(OUTPUT_DIR / "protocol" / "index.html", build_protocol(base, canonical_url))
+    write(OUTPUT_DIR / "submit" / "index.html", build_submit(base, canonical_url))
     write(OUTPUT_DIR / "licensing" / "index.html", build_licensing(base, canonical_url))
     write(OUTPUT_DIR / "about" / "index.html", build_about(base, canonical_url))
+    write(OUTPUT_DIR / "privacy" / "index.html", build_privacy(base, canonical_url))
+    write(OUTPUT_DIR / "terms" / "index.html", build_terms(base, canonical_url))
+    write(OUTPUT_DIR / "governance" / "index.html", build_governance(base, canonical_url))
+    write(OUTPUT_DIR / "contact" / "index.html", build_contact(base, canonical_url))
     for paper in papers:
         version_timestamps = [entry for (paper_id, _), entry in timestamps.items() if paper_id == paper.id]
         source_versions = {version.version: version for version in groups[paper.id]}

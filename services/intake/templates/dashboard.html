@@ -1,0 +1,4 @@
+{% extends 'base.html' %}{% block title %}My submissions — ARR intake{% endblock %}{% block content %}
+<h1>My private submissions</h1><p><a href="{{ url_for('submit') }}">Start a submission</a>. Uploading does not publish the work.</p>
+{% for s in submissions %}<article><h2>{{ s['title'] }}</h2><p class="status">{{ s['status']|replace('_',' ') }}</p><p class="meta">{{ s['id'] }} · scanner: {{ s['scan_status'] }} · received {{ s['created_at'] }}</p>{% if s['status'] not in ('accepted_for_publication','withdrawn','removed') %}<form method="post" action="{{ url_for('withdraw',submission_id=s['id']) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button>Withdraw and schedule deletion</button></form>{% endif %}</article>{% else %}<p>No submissions.</p>{% endfor %}
+{% endblock %}
