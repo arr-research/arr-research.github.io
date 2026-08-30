@@ -29,6 +29,7 @@ import new_record  # noqa: E402
 import new_version  # noqa: E402
 import arrlib  # noqa: E402
 import build_site  # noqa: E402
+import submit_indexnow  # noqa: E402
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -131,6 +132,26 @@ class PaperValidationTests(unittest.TestCase):
             self.assertIn('type="application/ld+json"', head)
             self.assertIn('"@type":"ScholarlyArticle"', head)
             self.assertIn('"contentUrl":', head)
+
+    def test_indexnow_payload_is_host_scoped(self) -> None:
+        urls = [
+            "https://arr-research.github.io/",
+            "https://arr-research.github.io/papers/ARR-2026-0J7S2PFT4V8B9T8N/",
+        ]
+        payload = submit_indexnow.make_payload(
+            "https://arr-research.github.io/",
+            "0123456789abcdef0123456789abcdef",
+            urls,
+        )
+        self.assertEqual(payload["host"], "arr-research.github.io")
+        self.assertEqual(payload["urlList"], urls)
+        self.assertEqual(payload["keyLocation"], "https://arr-research.github.io/indexnow-key.txt")
+        with self.assertRaises(ValueError):
+            submit_indexnow.make_payload(
+                "https://arr-research.github.io/",
+                "0123456789abcdef0123456789abcdef",
+                urls + ["https://example.com/foreign"],
+            )
 
     def test_technical_note_requires_scope_and_limitations(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
