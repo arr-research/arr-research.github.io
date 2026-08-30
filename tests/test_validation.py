@@ -8,6 +8,7 @@ import unittest
 import uuid
 from pathlib import Path
 from contextlib import redirect_stdout
+from types import SimpleNamespace
 from unittest.mock import patch
 
 import sys
@@ -406,9 +407,74 @@ class PaperValidationTests(unittest.TestCase):
     def test_public_submit_page_links_directly_to_private_receiver(self) -> None:
         page = build_site.build_submit("", "https://arr.example", "https://intake.example")
         self.assertIn('href="https://intake.example/submit"', page)
-        self.assertIn("No account, invitation or email attachment is required", page)
+        self.assertIn("No invitation, no author account and no email attachment", page)
         self.assertNotIn("Request an invitation", page)
         self.assertNotIn("mailto:lluiseriksson@gmail.com?subject=ARR%20invitation", page)
+
+    def test_submit_ranking_pages_are_ordered_and_limited_to_fifty(self) -> None:
+        papers = []
+        metrics = {"views": {"available": False}, "papers": {}}
+        for number in range(1, 52):
+            paper_id = f"ARR-2026-{number:016X}"
+            papers.append(
+                SimpleNamespace(
+                    id=paper_id,
+                    version="v1",
+                    record_type="research_paper",
+                    metadata={
+                        "id": paper_id,
+                        "version": "v1",
+                        "title": f"Ranked paper {number:02d}",
+                        "authors": [{"name": "Test Author"}],
+                    },
+                )
+            )
+            metrics["papers"][paper_id] = {
+                "pdf_downloads": number,
+                "page_views": None,
+                "unique_visitors": None,
+            }
+
+        first = build_site.build_submit("", "https://arr.example", "", papers, metrics, None, 1)
+        second = build_site.build_submit("", "https://arr.example", "", papers, metrics, None, 2)
+
+        self.assertEqual(first.count('class="ranked-paper"'), 50)
+        self.assertIn("Ranked paper 51", first)
+        self.assertNotIn("Ranked paper 01", first)
+        self.assertIn('href="/submit/page/2/"', first)
+        self.assertEqual(second.count('class="ranked-paper"'), 1)
+        self.assertIn("Ranked paper 01", second)
+        self.assertIn('href="/submit/"', second)
+
+    def test_submit_ranking_prefers_page_views_when_available(self) -> None:
+        def ranked_paper(suffix: str, title: str):
+            paper_id = f"ARR-2026-{suffix}"
+            return SimpleNamespace(
+                id=paper_id,
+                version="v1",
+                record_type="research_paper",
+                metadata={
+                    "id": paper_id,
+                    "version": "v1",
+                    "title": title,
+                    "authors": [{"name": "Test Author"}],
+                },
+            )
+
+        download_leader = ranked_paper("0000000000000001", "Download leader")
+        view_leader = ranked_paper("0000000000000002", "View leader")
+        metrics = {
+            "views": {"available": True},
+            "papers": {
+                download_leader.id: {"pdf_downloads": 100, "page_views": 2, "unique_visitors": 2},
+                view_leader.id: {"pdf_downloads": 1, "page_views": 50, "unique_visitors": 30},
+            },
+        }
+
+        page = build_site.build_submit("", "https://arr.example", "", [download_leader, view_leader], metrics)
+
+        self.assertLess(page.index("View leader"), page.index("Download leader"))
+        self.assertIn("50</strong><span>page views", page)
 
 
 class RepositoryContractTests(unittest.TestCase):

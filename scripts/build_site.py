@@ -726,29 +726,100 @@ def policy_source(filename: str) -> str:
     return f"https://github.com/arr-research/arr-research.github.io/blob/main/docs/{filename}"
 
 
-def build_submit(base: str, canonical_url: str, intake_url: str = "") -> str:
-    direct_action = (
-        f'<a class="button" href="{esc(intake_url.rstrip("/") + "/submit")}">Open private submission form</a>'
-        if intake_url
-        else '<span class="button disabled" aria-disabled="true">Private receiver not yet online</span>'
+def submit_page_url(base: str, page_number: int) -> str:
+    return f"{base}/submit/" if page_number == 1 else f"{base}/submit/page/{page_number}/"
+
+
+def ranked_submit_papers(papers: list, metrics: dict) -> tuple[list, str, str]:
+    research = [paper for paper in papers if paper.record_type == "research_paper"]
+    use_views = bool(metrics.get("views", {}).get("available"))
+    metric_key = "page_views" if use_views else "pdf_downloads"
+    metric_label = "page views" if use_views else "PDF downloads"
+    research.sort(
+        key=lambda paper: (
+            -(paper_activity(paper.id, metrics).get(metric_key) or 0),
+            paper.metadata["title"].casefold(),
+        )
     )
-    availability = (
-        "The private receiver is online. The PDF goes to quarantined storage and the operator receives an email notice containing a protected case link, never the manuscript as an attachment."
+    return research, metric_key, metric_label
+
+
+def build_submit(
+    base: str,
+    canonical_url: str,
+    intake_url: str = "",
+    papers: list | None = None,
+    metrics: dict | None = None,
+    author_lookup: dict[str, dict] | None = None,
+    page_number: int = 1,
+) -> str:
+    metrics = metrics or {"views": {"available": False}, "papers": {}}
+    ranked, metric_key, metric_label = ranked_submit_papers(papers or [], metrics)
+    page_size = 50
+    page_count = max(1, (len(ranked) + page_size - 1) // page_size)
+    if page_number < 1 or page_number > page_count:
+        raise ValueError(f"Submit ranking page {page_number} is outside 1..{page_count}")
+    start = (page_number - 1) * page_size
+    page_papers = ranked[start : start + page_size]
+    direct_action = (
+        f'<a class="button" href="{esc(intake_url.rstrip("/") + "/submit")}">Submit a paper privately</a>'
         if intake_url
-        else "No invitation is required, but the private receiver is not yet online. ARR will enable this button only after its HTTPS host, malware scanner, SMTP notice and retention jobs pass the production gate. Do not send the manuscript by email."
+        else '<span class="button disabled" aria-disabled="true">Private intake opening soon</span>'
+    )
+    status = (
+        "The receiver is online. Uploading creates a private case; it never publishes the manuscript."
+        if intake_url
+        else "The secure receiver is being activated. No invitation is needed; please do not email manuscripts."
+    )
+    rows = []
+    for rank, paper in enumerate(page_papers, start=start + 1):
+        activity = paper_activity(paper.id, metrics)
+        value = activity.get(metric_key) or 0
+        authors = (
+            author_links(paper.metadata, author_lookup, base)
+            if author_lookup
+            else esc(", ".join(author["name"] for author in paper.metadata["authors"]))
+        )
+        rows.append(f"""
+<li class="ranked-paper">
+  <span class="rank-number">{rank:02d}</span>
+  <div class="rank-paper-main"><span>{esc(paper.id)} · {esc(paper.version)}</span><h3><a href="{base}/{record_route(paper.metadata)}/{quote(paper.id)}/">{esc(paper.metadata['title'])}</a></h3><p>{authors}</p></div>
+  <div class="rank-metric"><strong>{value:,}</strong><span>{esc(metric_label)}</span></div>
+</li>""")
+    if not rows:
+        rows.append('<li class="ranked-paper empty"><div class="rank-paper-main"><h3>No accepted papers yet.</h3></div></li>')
+    previous_link = (
+        f'<a class="pager-link" rel="prev" href="{submit_page_url(base, page_number - 1)}">← Previous 50</a>'
+        if page_number > 1
+        else '<span></span>'
+    )
+    next_link = (
+        f'<a class="pager-link next" rel="next" href="{submit_page_url(base, page_number + 1)}">Next 50 →</a>'
+        if page_number < page_count
+        else '<span></span>'
+    )
+    rank_explanation = (
+        "Ordered by measured page views. Activity is not a scientific-quality score."
+        if metric_key == "page_views"
+        else "Page views are not yet measured, so this reproducible ranking uses canonical PDF downloads. Activity is not a scientific-quality score."
     )
     content = f"""
-<section class="page-intro"><span>Currently no fee · direct private submission</span><h1>Submit without requesting an invitation.</h1><p>ARR does not currently charge for submission, assessment, publication or withdrawal. Fees may be introduced for future submissions only after advance notice and updated terms. Uploading never publishes a manuscript.</p><div class="hero-actions">{direct_action}</div><p>{esc(availability)}</p></section>
-<section class="about-grid">
-  <article><h2>1. Complete one form</h2><p>Enter your contact details, title, authors, abstract, declarations and one canonical PDF up to 25 MiB. No account, invitation or email attachment is required.</p></article>
-  <article><h2>2. Private quarantine</h2><p>The PDF is rate-limited, size/type checked, stored under a random private name and unavailable to editors unless an approved malware scanner reports it clean.</p></article>
-  <article><h2>3. Private notification</h2><p>Lluis Eriksson receives an email containing the case identifier, scanner status and a protected editor link. The email never contains the PDF or abstract. The submission itself remains outside the public repository.</p></article>
-  <article><h2>4. Human decision</h2><p>Lluis reviews ordinary cases one by one and records accept, decline or changes requested with a concise basis. No upload or algorithm publishes a paper. A founder conflict requires an independent editor.</p></article>
+<section class="submit-hero">
+  <div><span>Direct private submission · currently EUR 0</span><h1>Research in. Evidence out.</h1><p>One private form, quarantined PDF storage and a human decision. No invitation, no author account and no email attachment.</p><div class="hero-actions">{direct_action}<a class="text-link" href="{base}/terms/">Terms & privacy →</a></div><p class="submit-status">{esc(status)}</p></div>
+  <aside aria-label="Submission guarantees"><div><strong>Private</strong><span>until accepted</span></div><div><strong>Manual</strong><span>editorial decision</span></div><div><strong>Versioned</strong><span>public release</span></div></aside>
 </section>
-<section class="callout"><h2>Read before requesting access</h2><p><a href="{base}/terms/">Deposit terms</a> · <a href="{base}/privacy/">Privacy</a> · <a href="{base}/governance/">Governance</a> · <a href="{base}/contact/">Complaints and legal notices</a></p></section>
+<section class="ranked-feed">
+  <header><div><span>ARR activity ranking</span><h2>Most-read papers</h2></div><div class="rank-page">{start + 1 if ranked else 0}–{min(start + page_size, len(ranked))} of {len(ranked)}</div></header>
+  <p class="rank-note">{esc(rank_explanation)}</p>
+  <ol class="ranked-list" start="{start + 1}">{''.join(rows)}</ol>
+  <nav class="pagination" aria-label="Paper ranking pages">{previous_link}<span>Page {page_number} of {page_count}</span>{next_link}</nav>
+</section>
 """
-    canonical = f"{canonical_url}/submit/" if canonical_url else ""
-    return page_shell(title="Submit — ARR", description="Currently fee-free direct manuscript submission into private quarantine with manual editorial decisions.", content=content, base=base, canonical=canonical)
+    canonical = (
+        f"{canonical_url}/submit/" if page_number == 1 else f"{canonical_url}/submit/page/{page_number}/"
+    ) if canonical_url else ""
+    title = "Submit and most-read papers — ARR" if page_number == 1 else f"Most-read papers, page {page_number} — ARR"
+    return page_shell(title=title, description="Direct private submission and the paginated ARR paper activity ranking.", content=content, base=base, canonical=canonical)
 
 
 def build_privacy(base: str, canonical_url: str) -> str:
@@ -877,6 +948,8 @@ def write_sitemaps(papers: list, groups: dict, profiles: list[dict], canonical_u
         (f"{canonical_url}/contact/", latest_date),
     ]
     urls.extend((f"{canonical_url}/authors/{profile['id']}/", latest_date) for profile in profiles)
+    submit_page_count = max(1, (sum(paper.record_type == "research_paper" for paper in papers) + 49) // 50)
+    urls.extend((f"{canonical_url}/submit/page/{page}/", latest_date) for page in range(2, submit_page_count + 1))
     urls.extend((f"{canonical_url}/{record_route(paper.metadata)}/{paper.id}/", paper.metadata["date"]) for paper in papers)
     for paper in papers:
         route = record_route(paper.metadata)
@@ -1005,7 +1078,21 @@ def main() -> int:
     for profile in profiles:
         write(OUTPUT_DIR / "authors" / profile["id"] / "index.html", build_author_page(profile, by_author[profile["id"]], timestamps, metrics, author_lookup, base, canonical_url))
     write(OUTPUT_DIR / "protocol" / "index.html", build_protocol(base, canonical_url))
-    write(OUTPUT_DIR / "submit" / "index.html", build_submit(base, canonical_url, args.intake_url))
+    submit_page_count = max(1, (sum(paper.record_type == "research_paper" for paper in papers) + 49) // 50)
+    for page_number in range(1, submit_page_count + 1):
+        target = OUTPUT_DIR / "submit" / "index.html" if page_number == 1 else OUTPUT_DIR / "submit" / "page" / str(page_number) / "index.html"
+        write(
+            target,
+            build_submit(
+                base,
+                canonical_url,
+                args.intake_url,
+                papers,
+                metrics,
+                author_lookup,
+                page_number,
+            ),
+        )
     write(OUTPUT_DIR / "licensing" / "index.html", build_licensing(base, canonical_url))
     write(OUTPUT_DIR / "about" / "index.html", build_about(base, canonical_url))
     write(OUTPUT_DIR / "privacy" / "index.html", build_privacy(base, canonical_url))
