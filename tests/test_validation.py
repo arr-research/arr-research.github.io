@@ -407,7 +407,8 @@ class PaperValidationTests(unittest.TestCase):
     def test_public_submit_page_links_directly_to_private_receiver(self) -> None:
         page = build_site.build_submit("", "https://arr.example", "https://intake.example")
         self.assertIn('href="https://intake.example/submit"', page)
-        self.assertIn("No invitation, no author account and no email attachment", page)
+        self.assertIn("Direct private deposit", page)
+        self.assertIn("human editorial decision", page)
         self.assertNotIn("Request an invitation", page)
         self.assertNotIn("mailto:lluiseriksson@gmail.com?subject=ARR%20invitation", page)
 

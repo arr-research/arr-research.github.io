@@ -780,10 +780,21 @@ def build_submit(
             if author_lookup
             else esc(", ".join(author["name"] for author in paper.metadata["authors"]))
         )
+        record_details = " · ".join(
+            item
+            for item in (
+                paper.id,
+                paper.version,
+                paper.metadata.get("date", ""),
+            )
+            if item
+        )
+        keywords = " · ".join(paper.metadata.get("keywords", [])[:3])
+        keywords_html = f'<span class="rank-keywords">{esc(keywords)}</span>' if keywords else ""
         rows.append(f"""
 <li class="ranked-paper">
   <span class="rank-number">{rank:02d}</span>
-  <div class="rank-paper-main"><span>{esc(paper.id)} · {esc(paper.version)}</span><h3><a href="{base}/{record_route(paper.metadata)}/{quote(paper.id)}/">{esc(paper.metadata['title'])}</a></h3><p>{authors}</p></div>
+  <div class="rank-paper-main"><span class="rank-record">{esc(record_details)}</span><h3><a href="{base}/{record_route(paper.metadata)}/{quote(paper.id)}/">{esc(paper.metadata['title'])}</a></h3><p>{authors}{keywords_html}</p></div>
   <div class="rank-metric"><strong>{value:,}</strong><span>{esc(metric_label)}</span></div>
 </li>""")
     if not rows:
@@ -805,12 +816,14 @@ def build_submit(
     )
     content = f"""
 <section class="submit-hero">
-  <div><span>Direct private submission · currently EUR 0</span><h1>Research in. Evidence out.</h1><p>One private form, quarantined PDF storage and a human decision. No invitation, no author account and no email attachment.</p><div class="hero-actions">{direct_action}<a class="text-link" href="{base}/terms/">Terms & privacy →</a></div><p class="submit-status">{esc(status)}</p></div>
-  <aside aria-label="Submission guarantees"><div><strong>Private</strong><span>until accepted</span></div><div><strong>Manual</strong><span>editorial decision</span></div><div><strong>Versioned</strong><span>public release</span></div></aside>
+  <div class="submit-intro"><span>ARR private intake</span><h1>Submit to ARR</h1><p>Direct private deposit · EUR 0 currently · PDF ≤ 25 MiB · human editorial decision.</p></div>
+  <div class="submit-action"><div>{direct_action}<a class="text-link" href="{base}/terms/">Terms</a><a class="text-link" href="{base}/privacy/">Privacy</a></div><p class="submit-status">{esc(status)}</p></div>
+  <aside aria-label="Submission guarantees"><div><strong>Private</strong><span>until accepted</span></div><div><strong>Quarantined</strong><span>malware checked</span></div><div><strong>Manual</strong><span>human decision</span></div><div><strong>Versioned</strong><span>separate release</span></div></aside>
 </section>
 <section class="ranked-feed">
-  <header><div><span>ARR activity ranking</span><h2>Most-read papers</h2></div><div class="rank-page">{start + 1 if ranked else 0}–{min(start + page_size, len(ranked))} of {len(ranked)}</div></header>
+  <header><div><span>Public catalogue · activity order</span><h2>Paper index</h2></div><div class="rank-page">Records {start + 1 if ranked else 0}–{min(start + page_size, len(ranked))} / {len(ranked)}</div></header>
   <p class="rank-note">{esc(rank_explanation)}</p>
+  <div class="rank-columns" aria-hidden="true"><span>Rank</span><span>Record</span><span>Activity</span></div>
   <ol class="ranked-list" start="{start + 1}">{''.join(rows)}</ol>
   <nav class="pagination" aria-label="Paper ranking pages">{previous_link}<span>Page {page_number} of {page_count}</span>{next_link}</nav>
 </section>
