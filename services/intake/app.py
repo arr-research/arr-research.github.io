@@ -39,7 +39,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 from werkzeug.security import check_password_hash, generate_password_hash
 
 
-TERMS_VERSION = "ARR-DEPOSIT-1.3"
+TERMS_VERSION = "ARR-DEPOSIT-1.4"
 PRIVACY_VERSION = "ARR-PRIVACY-1.2"
 FRONTIER_PROMPT_VERSION = "ARR-INTAKE-ASSESS-1.0"
 MAX_PDF_BYTES = 25 * 1024 * 1024
@@ -774,11 +774,10 @@ def register_routes(app: Flask) -> None:
                 "SELECT provider,model_id,recommendation,unresolved_material_objections FROM model_reviews WHERE submission_id=?",
                 (submission_id,),
             ).fetchall()
-            distinct_models = {(review["provider"].casefold(), review["model_id"].casefold()) for review in reviews}
             if not row["ai_review_opt_in"]:
                 abort(409, "Frontier-model transfer authorization is required before acceptance")
-            if len(reviews) < 3 or len(distinct_models) < 3:
-                abort(409, "Three distinct version-locked frontier-model reports are required before acceptance")
+            if not reviews:
+                abort(409, "A declared version-locked frontier-model audit record is required before acceptance")
             if any(review["recommendation"] != "accept" or review["unresolved_material_objections"] for review in reviews):
                 abort(409, "A non-accept recommendation or unresolved material objection blocks acceptance")
         if action == "accept" and row["operator_conflict"] and g.user["role"] != "independent_editor":

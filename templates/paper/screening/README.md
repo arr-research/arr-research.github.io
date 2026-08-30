@@ -4,4 +4,4 @@ When screening is performed, store one structured Markdown or JSON report for ea
 
 ARR does not require private chain-of-thought. It requires a concise, auditable decision report and the evidence needed to understand unresolved limitations.
 
-New releases are fail-closed: `scripts/package_paper.py` refuses to create release assets until this exact version records a screening pass, three distinct evaluator reports and zero unresolved critical objections. Use `scripts/prepare_model_assessment.py ARR-ID --version vN` for the score-bearing public assessment prompt; preserve every valid response obtained, not only favourable ones.
+New releases are fail-closed: `scripts/package_paper.py` refuses to create release assets until this exact version records a declared frontier-model screening pass and zero unresolved critical objections. ARR promises no fixed provider, model, report count or reasoning tier. Use `scripts/prepare_model_assessment.py ARR-ID --version vN` for the score-bearing public assessment prompt; preserve every valid response obtained in the declared round, not only favourable ones.

@@ -30,8 +30,8 @@ def main() -> int:
     screening = paper.metadata.get("screening", {})
     if screening.get("status") != "pass" or screening.get("critical_objections_unresolved") != 0:
         errors.append("release gate: frontier-model screening must pass with zero unresolved critical objections")
-    if len(screening.get("evaluators", [])) < 3:
-        errors.append("release gate: three version-specific frontier-model evaluator reports are required")
+    if not screening.get("evaluators"):
+        errors.append("release gate: a declared version-specific frontier-model audit record is required")
     if errors:
         for error in errors:
             print(f"- {error}", file=sys.stderr)

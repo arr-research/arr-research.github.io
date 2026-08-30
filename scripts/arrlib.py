@@ -505,8 +505,8 @@ def validate_paper(paper: Paper) -> list[str]:
             if screening_status == "not_assessed" and evaluators:
                 errors.append("screening.evaluators: must be empty when status is not_assessed")
             if screening_status == "pass":
-                if len(evaluators) < 3:
-                    errors.append("screening.evaluators: three independent evaluators are required for pass")
+                if not evaluators:
+                    errors.append("screening.evaluators: a declared evaluator report is required for pass")
                 if screening.get("critical_objections_unresolved") != 0:
                     errors.append("screening.critical_objections_unresolved: must be zero for pass")
                 completed_at = screening.get("completed_at")
