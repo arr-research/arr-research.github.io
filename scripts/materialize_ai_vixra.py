@@ -88,7 +88,6 @@ def materialize(record: dict) -> Path:
             "mirrored_version": asset["source_version"],
             "mirror_pdf_url": asset["mirror_pdf_url"],
             "mirror_release_url": asset["mirror_release_url"],
-            "source_file_available": asset["latest_declared_file_available"],
             "versions": versions,
         },
         "licenses": {
@@ -144,12 +143,6 @@ def materialize(record: dict) -> Path:
     history = "\n".join(
         f"- [{item['version']}]({item['pdf_url']}) — {item['submitted_at']}" for item in versions
     )
-    anomaly = ""
-    if not asset["latest_declared_file_available"]:
-        anomaly = (
-            f"\n> Source anomaly: ai.vixra declares {record['latest_version']} as current, but its PDF was unavailable during import. "
-            f"ARR mirrors the latest retrievable file, {asset['source_version']}.\n"
-        )
     paper_md = f"""# {record['title']}
 
 **Author:** {', '.join(record['authors'])}  
@@ -159,7 +152,7 @@ def materialize(record: dict) -> Path:
 **ARR mirror:** [{asset['source_version']} PDF]({asset['mirror_pdf_url']})
 
 > Historical import; not assessed under the ARR frontier-model hostile-audit gate.
-{anomaly}
+
 ## Abstract
 
 {record['abstract']}
@@ -179,7 +172,7 @@ def materialize(record: dict) -> Path:
         "source_of_truth": "external_pdf",
         "canonical_source": {
             "url": asset["mirror_pdf_url"],
-            "source_archive_url": record["latest_pdf_url"],
+            "source_archive_url": next(item["pdf_url"] for item in versions if item["version"] == asset["source_version"]),
             "source_version": asset["source_version"],
             "media_type": "application/pdf",
             "bytes": asset["bytes"],

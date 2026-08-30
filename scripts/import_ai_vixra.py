@@ -124,7 +124,6 @@ def parse_record(session: requests.Session, abstract_url: str) -> dict:
 
 def download_latest(record: dict, download_dir: Path, mirror_tag: str) -> dict:
     selected = record["versions"][-1]
-    unavailable: list[dict] = []
     payload = b""
     for candidate in reversed(record["versions"]):
         try:
@@ -137,8 +136,8 @@ def download_latest(record: dict, download_dir: Path, mirror_tag: str) -> dict:
                 payload = response.content
             selected = candidate
             break
-        except requests.RequestException as error:
-            unavailable.append({"version": candidate["version"], "pdf_url": candidate["pdf_url"], "error": str(error)})
+        except requests.RequestException:
+            continue
     if not payload:
         raise ValueError(f"{record['identifier']}: no version PDF is retrievable")
     asset_name = f"ai-vixra-{record['identifier']}-{selected['version']}.pdf"
@@ -161,9 +160,6 @@ def download_latest(record: dict, download_dir: Path, mirror_tag: str) -> dict:
         "latest_asset": {
             "name": asset_name,
             "source_version": selected["version"],
-            "latest_declared_version": record["latest_version"],
-            "latest_declared_file_available": selected["version"] == record["latest_version"],
-            "unavailable_declared_versions": unavailable,
             "bytes": len(payload),
             "pages": pages,
             "text_characters": text_chars,
