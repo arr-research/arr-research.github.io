@@ -21,6 +21,8 @@ PROMPT_VERSION = "ARR-ASSESS-1.0"
 CRITERIA = ("correctness_confidence", "rigor", "novelty", "significance", "reproducibility")
 RECOMMENDATIONS = {"accept", "minor_revision", "major_revision", "reject"}
 INDEPENDENCE = {"not_involved_in_manuscript", "involved_in_manuscript", "unknown"}
+REASONING_EFFORTS = {"none", "minimal", "low", "medium", "high", "xhigh", "max", "ultra"}
+RUNTIME_PROVENANCE_BASES = {"platform_runtime_metadata", "author_verified_ui", "operator_verified_ui"}
 ASSESSMENT_ID = re.compile(r"^arr:assessment:[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$")
 
 
@@ -84,7 +86,8 @@ def validate_assessment(value: object, papers: Iterable[Paper]) -> list[str]:
         "criteria", "summary", "strengths", "weaknesses", "potential_errors", "strong_novelty_candidates",
         "unresolved_material_objections", "source_response_sha256",
     }
-    unknown = set(value) - required
+    optional = {"runtime_provenance"}
+    unknown = set(value) - required - optional
     missing = required - set(value)
     if unknown:
         errors.append(f"assessment: unknown fields: {', '.join(sorted(unknown))}")
@@ -106,6 +109,21 @@ def validate_assessment(value: object, papers: Iterable[Paper]) -> list[str]:
     for field, maximum in (("provider", 100), ("model_id", 160)):
         if not isinstance(value[field], str) or not 2 <= len(value[field].strip()) <= maximum:
             errors.append(f"{field}: invalid length")
+    runtime = value.get("runtime_provenance")
+    if runtime is not None:
+        runtime_fields = {"provider", "model_id", "reasoning_effort", "basis", "evidence_sha256"}
+        if not isinstance(runtime, dict) or set(runtime) != runtime_fields:
+            errors.append("runtime_provenance: must contain exactly provider, model_id, reasoning_effort, basis, and evidence_sha256")
+        else:
+            for field, maximum in (("provider", 100), ("model_id", 160)):
+                if not isinstance(runtime[field], str) or not 2 <= len(runtime[field].strip()) <= maximum:
+                    errors.append(f"runtime_provenance.{field}: invalid length")
+            if runtime["reasoning_effort"] not in REASONING_EFFORTS:
+                errors.append("runtime_provenance.reasoning_effort: invalid value")
+            if runtime["basis"] not in RUNTIME_PROVENANCE_BASES:
+                errors.append("runtime_provenance.basis: invalid value")
+            if not isinstance(runtime["evidence_sha256"], str) or not re.fullmatch(r"[0-9a-f]{64}", runtime["evidence_sha256"]):
+                errors.append("runtime_provenance.evidence_sha256: must be a lowercase SHA-256 digest")
     try:
         parse_exact_timestamp(value["assessed_at"])
     except (TypeError, ValueError):
@@ -153,7 +171,10 @@ def validate_assessment(value: object, papers: Iterable[Paper]) -> list[str]:
     if not isinstance(value["source_response_sha256"], str) or not re.fullmatch(r"[0-9a-f]{64}", value["source_response_sha256"]):
         errors.append("source_response_sha256: must be a lowercase SHA-256 digest")
     else:
-        original_response = {key: item for key, item in value.items() if key not in {"assessment_id", "source_response_sha256"}}
+        original_response = {
+            key: item for key, item in value.items()
+            if key not in {"assessment_id", "source_response_sha256", "runtime_provenance"}
+        }
         if source_hash(original_response) != value["source_response_sha256"]:
             errors.append("source_response_sha256: does not match the structured model response")
     return errors
@@ -162,7 +183,7 @@ def validate_assessment(value: object, papers: Iterable[Paper]) -> list[str]:
 def normalize_model_response(value: object) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise ValueError("Expected one JSON object")
-    forbidden = {"assessment_id", "source_response_sha256"} & set(value)
+    forbidden = {"assessment_id", "source_response_sha256", "runtime_provenance"} & set(value)
     if forbidden:
         raise ValueError("The model response must not set operator-controlled fields: " + ", ".join(sorted(forbidden)))
     normalized = dict(value)

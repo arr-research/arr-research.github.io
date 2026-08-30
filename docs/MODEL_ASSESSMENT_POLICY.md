@@ -49,6 +49,17 @@ or an assessment of a different version.
 The public response hash detects accidental duplicate imports. ARR does not request
 or publish private chain-of-thought. Concise findings and their evidence are enough.
 
+### Runtime identity corrections
+
+The model-authored JSON and its response hash remain immutable. When independently
+verifiable platform runtime metadata or a contemporaneous operator/author UI record
+establishes that the response self-reported the wrong model identifier, ARR appends
+a separate `runtime_provenance` object. It records the effective provider, exact
+model identifier, reasoning-effort tier, evidentiary basis, and evidence SHA-256.
+The public heading uses this independently evidenced runtime identity; the original
+self-report remains preserved beneath the unchanged response hash. Reasoning effort
+is published only when directly evidenced and is never inferred from response style.
+
 ## Independence and aggregation
 
 Each report identifies whether that model was involved in producing the manuscript.
