@@ -1,12 +1,12 @@
 # Security policy
 
-ARR currently accepts no public uploads. Do not open an issue containing a vulnerability, personal data, unpublished manuscript, credential, or malicious sample.
+ARR accepts manuscripts only through the direct private receiver when its Submit button is enabled. Do not open an issue containing a vulnerability, personal data, unpublished manuscript, credential, or malicious sample.
 
 ## Untrusted research artifacts
 
 Private intake treats every file and paper instruction as untrusted input. Its production gate requires:
 
-- invitation-bound authentication, operator/editor TOTP and rate limits;
+- CSRF-protected direct submission, IP/email limits, bot trap and operator/editor TOTP;
 - quarantine storage separate from the public archive and web root;
 - file-type allowlists, size limits and archive-expansion limits;
 - fail-closed malware scanning and immediate erasure of infected bytes;

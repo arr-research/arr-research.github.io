@@ -403,6 +403,13 @@ class PaperValidationTests(unittest.TestCase):
             self.assertIn("Preliminary", page)
             self.assertIn(f'https://example.test/notes/{paper.id}/', page)
 
+    def test_public_submit_page_links_directly_to_private_receiver(self) -> None:
+        page = build_site.build_submit("", "https://arr.example", "https://intake.example")
+        self.assertIn('href="https://intake.example/submit"', page)
+        self.assertIn("No account, invitation or email attachment is required", page)
+        self.assertNotIn("Request an invitation", page)
+        self.assertNotIn("mailto:lluiseriksson@gmail.com?subject=ARR%20invitation", page)
+
 
 class RepositoryContractTests(unittest.TestCase):
     def test_all_json_schemas_parse(self) -> None:

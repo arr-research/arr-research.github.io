@@ -1,7 +1,8 @@
-# ARR privacy notice — ARR-PRIVACY-1.0
+# ARR privacy notice — ARR-PRIVACY-1.1
 
 **Effective:** 2026-08-30  
-**Service state:** currently fee-free, invitation-only pilot; general public intake is not open.
+**Service state:** currently fee-free direct private-submission pilot; the receiver
+opens only after the production launch gate is signed.
 
 ## Controller and contact
 
@@ -16,8 +17,8 @@ details must be added before general public intake opens.
 
 ## What ARR collects
 
-- invitation and account data: name, email address, password hash, account role,
-  account timestamps and invitation state;
+- direct-deposit contact data: adult depositor's name and email address, submission
+  and notification timestamps;
 - submission data: title, author list, abstract, manuscript PDF, filename, size,
   cryptographic hash, rights/disclosure attestations, optional AI-review choice,
   conflict declaration and correspondence;
@@ -30,14 +31,16 @@ details must be added before general public intake opens.
 Do not submit special-category personal data, government identifiers, financial
 credentials, medical records, confidential peer-review material, export-controlled
 material or third-party personal data that is not necessary and lawful to publish.
-ARR accepts accounts only from people aged 18 or older during the pilot.
+ARR accepts deposits only from people aged 18 or older during the pilot. Authors do
+not create an intake account; operator and independent-editor accounts remain
+protected by passwords and TOTP.
 
 ## Purposes and lawful bases
 
 | Purpose | GDPR basis |
 | --- | --- |
-| Create an invited account, receive a deposit, communicate, assess it and administer withdrawal | steps requested before and performance of the deposit agreement (Article 6(1)(b)) |
-| Protect accounts, quarantine files, prevent abuse, investigate integrity issues and keep a proportionate audit trail | ARR's and users' legitimate interests in a secure, accountable scholarly service (Article 6(1)(f)) |
+| Receive a direct private deposit, communicate, assess it and administer withdrawal | steps requested before and performance of the deposit agreement (Article 6(1)(b)) |
+| Protect the form and editor accounts, quarantine files, prevent abuse, investigate integrity issues and keep a proportionate audit trail | ARR's and users' legitimate interests in a secure, accountable scholarly service (Article 6(1)(f)) |
 | Respond to binding authority requests and applicable record obligations | legal obligation where one applies (Article 6(1)(c)) |
 | Publish an accepted manuscript, its authorship, provenance and licenses worldwide | performance of the deposit agreement (Article 6(1)(b)); public distribution also follows the depositor's chosen license |
 | Send a private manuscript to a named external AI evaluator | separate, optional and withdrawable consent (Article 6(1)(a)); no transfer occurs until ARR identifies the provider and reconfirms the choice |
@@ -50,9 +53,9 @@ handles the editorial outcome and any challenge to an automated security result.
 
 Private intake data is available only to the operator and a specifically appointed
 independent editor where a conflict requires one. Infrastructure, encrypted backup,
-email and security providers may process the minimum data needed under written
+operator-notification email and security providers may process the minimum data needed under written
 instructions and appropriate contractual safeguards. The production processor
-register must identify them before live invitations are issued.
+register must identify them before direct submission is activated.
 
 Private manuscripts are not stored in the public GitHub repository. If accepted,
 the disclosed author information, scholarly metadata and licensed research object
@@ -97,8 +100,8 @@ competent EEA supervisory authority. IMY's complaint service is at
 
 ## Security and incidents
 
-ARR uses invitation-bound accounts, password hashing, editor TOTP, secure cookies,
-CSRF protection, rate limits, non-public random filenames, strict PDF limits,
+ARR uses a direct CSRF-protected form, editor password/TOTP, secure cookies,
+IP/email rate limits, a bot trap, non-public random filenames, strict PDF limits,
 malware quarantine, fail-closed scanning, role separation, an audit log and timed
 erasure. Email must not contain manuscript attachments or sensitive material.
 

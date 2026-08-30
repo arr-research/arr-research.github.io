@@ -11,11 +11,15 @@ import os
 import secrets
 import shutil
 import sqlite3
+import smtplib
+import ssl
 # Scanner commands are fixed by the operator, use shell=False and never include an
 # uploaded filename. See the guarded call in scan_file.
 import subprocess  # nosec B404
 import time
 from datetime import UTC, datetime, timedelta
+from email.message import EmailMessage
+from email.utils import parseaddr
 from pathlib import Path
 
 import click
@@ -35,8 +39,8 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 from werkzeug.security import check_password_hash, generate_password_hash
 
 
-TERMS_VERSION = "ARR-DEPOSIT-1.1"
-PRIVACY_VERSION = "ARR-PRIVACY-1.0"
+TERMS_VERSION = "ARR-DEPOSIT-1.2"
+PRIVACY_VERSION = "ARR-PRIVACY-1.1"
 MAX_PDF_BYTES = 25 * 1024 * 1024
 ALLOWED_STATES = {
     "quarantined",
@@ -62,15 +66,6 @@ CREATE TABLE IF NOT EXISTS users (
   role TEXT NOT NULL CHECK(role IN ('depositor','operator','independent_editor')),
   totp_secret TEXT,
   active INTEGER NOT NULL DEFAULT 1,
-  created_at TEXT NOT NULL
-);
-CREATE TABLE IF NOT EXISTS invitations (
-  id INTEGER PRIMARY KEY,
-  email TEXT NOT NULL COLLATE NOCASE,
-  token_hash TEXT NOT NULL UNIQUE,
-  expires_at TEXT NOT NULL,
-  used_at TEXT,
-  created_by INTEGER NOT NULL REFERENCES users(id),
   created_at TEXT NOT NULL
 );
 CREATE TABLE IF NOT EXISTS submissions (
@@ -143,6 +138,13 @@ def create_app(test_config: dict | None = None) -> Flask:
         OPERATOR_EMAIL=os.environ.get("ARR_OPERATOR_EMAIL", "lluiseriksson@gmail.com").lower(),
         PUBLIC_ORIGIN=os.environ.get("ARR_INTAKE_ORIGIN", "http://127.0.0.1:5000").rstrip("/"),
         SCANNER=os.environ.get("ARR_SCANNER", ""),
+        SMTP_HOST=os.environ.get("ARR_SMTP_HOST", ""),
+        SMTP_PORT=int(os.environ.get("ARR_SMTP_PORT", "587")),
+        SMTP_USERNAME=os.environ.get("ARR_SMTP_USERNAME", ""),
+        SMTP_PASSWORD=os.environ.get("ARR_SMTP_PASSWORD", ""),
+        SMTP_FROM=os.environ.get("ARR_SMTP_FROM", ""),
+        SMTP_SSL=os.environ.get("ARR_SMTP_SSL", "0") == "1",
+        SMTP_STARTTLS=os.environ.get("ARR_SMTP_STARTTLS", "1") == "1",
         TESTING=False,
     )
     if test_config:
@@ -258,16 +260,16 @@ def require_csrf() -> None:
         abort(400, "Invalid form token")
 
 
-def rate_subject() -> str:
-    raw = request.remote_addr or "unknown"
+def rate_subject(raw: str | None = None) -> str:
+    raw = raw if raw is not None else (request.remote_addr or "unknown")
     key = str(current_app_config("SECRET_KEY")).encode()
     return hmac.new(key, raw.encode(), hashlib.sha256).hexdigest()
 
 
-def enforce_rate(bucket: str, maximum: int, window_seconds: int) -> None:
+def enforce_rate(bucket: str, maximum: int, window_seconds: int, raw_subject: str | None = None) -> None:
     db = get_db()
     cutoff = int(time.time()) - window_seconds
-    subject = rate_subject()
+    subject = rate_subject(raw_subject)
     db.execute("DELETE FROM rate_events WHERE occurred_at < ?", (cutoff - 86400,))
     count = db.execute(
         "SELECT COUNT(*) FROM rate_events WHERE bucket=? AND subject_hash=? AND occurred_at>=?",
@@ -302,7 +304,9 @@ def verify_totp(secret: str, candidate: str) -> bool:
 def scanner_command(path: Path) -> list[str] | None:
     configured = current_app_config("SCANNER")
     if configured:
-        return [configured, str(path)]
+        configured_path = Path(configured)
+        executable = str(configured_path) if configured_path.is_absolute() and configured_path.is_file() else shutil.which(configured)
+        return [executable, str(path)] if executable else None
     if shutil.which("clamdscan"):
         return ["clamdscan", "--fdpass", "--no-summary", str(path)]
     if shutil.which("clamscan"):
@@ -344,13 +348,88 @@ def scan_submission(row: sqlite3.Row) -> tuple[str, str]:
     return status, detail
 
 
+def valid_email(value: str) -> bool:
+    parsed_name, parsed_address = parseaddr(value)
+    return not parsed_name and parsed_address == value and 3 <= len(value) <= 254 and "@" in value
+
+
+def find_or_create_submitter(email: str, display_name: str) -> sqlite3.Row:
+    db = get_db()
+    user = db.execute("SELECT * FROM users WHERE email=?", (email,)).fetchone()
+    if user:
+        return user
+    try:
+        db.execute(
+            "INSERT INTO users(email,display_name,password_hash,role,active,created_at) VALUES(?,?,?,?,0,?)",
+            (email, display_name[:200], generate_password_hash(secrets.token_urlsafe(48)), "depositor", iso()),
+        )
+        db.commit()
+    except sqlite3.IntegrityError:
+        db.rollback()
+    return db.execute("SELECT * FROM users WHERE email=?", (email,)).fetchone()
+
+
+def notify_operator(submission_id: str, title: str, submitter_email: str, scan_status: str) -> bool:
+    host = str(current_app_config("SMTP_HOST"))
+    sender = str(current_app_config("SMTP_FROM"))
+    if not host or not sender:
+        audit("operator_notification_skipped", submission_id, reason="smtp_not_configured")
+        return False
+    message = EmailMessage()
+    safe_title = title.replace("\r", " ").replace("\n", " ")
+    message["Subject"] = f"[ARR private submission] {submission_id}: {safe_title[:120]}"
+    message["From"] = sender
+    message["To"] = current_app_config("OPERATOR_EMAIL")
+    message["Reply-To"] = submitter_email
+    message.set_content(
+        "A new manuscript was submitted to ARR's private quarantine.\n\n"
+        f"Case: {submission_id}\n"
+        f"Title: {title}\n"
+        f"Scanner status: {scan_status}\n"
+        f"Review after signing in: {current_app_config('PUBLIC_ORIGIN')}/admin/submission/{submission_id}\n\n"
+        "The manuscript is not attached to this email and has not been published."
+    )
+    try:
+        if current_app_config("SMTP_SSL"):
+            client = smtplib.SMTP_SSL(host, current_app_config("SMTP_PORT"), timeout=15, context=ssl.create_default_context())
+        else:
+            client = smtplib.SMTP(host, current_app_config("SMTP_PORT"), timeout=15)
+        with client:
+            if current_app_config("SMTP_STARTTLS") and not current_app_config("SMTP_SSL"):
+                client.starttls(context=ssl.create_default_context())
+            username = str(current_app_config("SMTP_USERNAME"))
+            if username:
+                client.login(username, str(current_app_config("SMTP_PASSWORD")))
+            client.send_message(message)
+    except (OSError, smtplib.SMTPException):
+        audit("operator_notification_failed", submission_id, reason="smtp_delivery_error")
+        return False
+    audit("operator_notification_sent", submission_id, recipient="operator")
+    return True
+
+
 def register_routes(app: Flask) -> None:
     app.jinja_env.globals["csrf_token"] = csrf_token
 
     @app.get("/healthz")
     def healthz():
         get_db().execute("SELECT 1").fetchone()
-        return {"status": "ok", "intake": "invitation-only"}
+        return {
+            "status": "ok",
+            "intake": "direct-private-submission",
+            "operator_email_notification": bool(current_app_config("SMTP_HOST") and current_app_config("SMTP_FROM")),
+        }
+
+    @app.get("/readyz")
+    def readyz():
+        checks = {
+            "database": bool(get_db().execute("SELECT 1").fetchone()),
+            "https_origin": str(current_app_config("PUBLIC_ORIGIN")).startswith("https://"),
+            "secure_cookie": bool(current_app_config("SESSION_COOKIE_SECURE")),
+            "malware_scanner": scanner_command(Path(current_app_config("QUARANTINE")) / "readiness-probe.pdf") is not None,
+            "operator_email_notification": bool(current_app_config("SMTP_HOST") and current_app_config("SMTP_FROM")),
+        }
+        return ({"ready": all(checks.values()), "checks": checks}, 200 if all(checks.values()) else 503)
 
     @app.route("/login", methods=("GET", "POST"))
     def login():
@@ -380,40 +459,6 @@ def register_routes(app: Flask) -> None:
         session.clear()
         return redirect(url_for("login"))
 
-    @app.route("/register/<token>", methods=("GET", "POST"))
-    def register(token: str):
-        enforce_rate("register", 20, 60 * 60)
-        token_hash = hashlib.sha256(token.encode()).hexdigest()
-        invite = get_db().execute(
-            "SELECT * FROM invitations WHERE token_hash=? AND used_at IS NULL AND expires_at>?",
-            (token_hash, iso()),
-        ).fetchone()
-        if not invite:
-            abort(404)
-        if request.method == "POST":
-            require_csrf()
-            password = request.form.get("password", "")
-            name = request.form.get("display_name", "").strip()
-            if len(name) < 2 or len(password) < 12 or not request.form.get("adult"):
-                flash("Name, age confirmation and a password of at least 12 characters are required.", "error")
-            else:
-                db = get_db()
-                try:
-                    cursor = db.execute(
-                        "INSERT INTO users(email,display_name,password_hash,role,created_at) VALUES(?,?,?,?,?)",
-                        (invite["email"], name[:200], generate_password_hash(password), "depositor", iso()),
-                    )
-                    db.execute("UPDATE invitations SET used_at=? WHERE id=?", (iso(), invite["id"]))
-                    db.commit()
-                except sqlite3.IntegrityError:
-                    flash("An account already exists for this address.", "error")
-                else:
-                    session.clear()
-                    session["user_id"] = cursor.lastrowid
-                    audit("account_registered")
-                    return redirect(url_for("dashboard"))
-        return render_template("register.html", invite=invite)
-
     @app.get("/")
     @login_required
     def dashboard():
@@ -426,21 +471,24 @@ def register_routes(app: Flask) -> None:
         return render_template("dashboard.html", submissions=rows)
 
     @app.route("/submit", methods=("GET", "POST"))
-    @login_required
     def submit():
-        if g.user["role"] != "depositor":
-            abort(403)
         if request.method == "POST":
             require_csrf()
             enforce_rate("submit", 3, 24 * 60 * 60)
+            if request.form.get("website"):
+                flash("Submission received for processing.", "success")
+                return redirect(url_for("submit"))
             upload = request.files.get("manuscript")
+            display_name = request.form.get("display_name", "").strip()
+            email = request.form.get("email", "").strip().lower()
             title = request.form.get("title", "").strip()
             authors = request.form.get("authors", "").strip()
             abstract = request.form.get("abstract", "").strip()
-            agreed = request.form.get("terms") and request.form.get("privacy") and request.form.get("authority")
-            if not upload or not title or not authors or len(abstract) < 80 or not agreed:
+            agreed = all(request.form.get(field) for field in ("adult", "terms", "privacy", "authority"))
+            if not upload or len(display_name) < 2 or not valid_email(email) or not title or not authors or len(abstract) < 80 or not agreed:
                 flash("Complete all fields and attestations.", "error")
                 return render_template("submit.html", terms=TERMS_VERSION, privacy=PRIVACY_VERSION)
+            enforce_rate("submit-email", 3, 24 * 60 * 60, email)
             original = Path(upload.filename or "manuscript.pdf").name[:200]
             submission_id = "SUB-" + secrets.token_hex(8).upper()
             stored = secrets.token_hex(24) + ".pdf"
@@ -467,7 +515,8 @@ def register_routes(app: Flask) -> None:
                     digest.update(chunk)
             if os.name != "nt":
                 os.chmod(target, 0o600)
-            conflict = int(g.user["email"].lower() == current_app_config("OPERATOR_EMAIL") or bool(request.form.get("operator_conflict")))
+            submitter = find_or_create_submitter(email, display_name)
+            conflict = int(email == current_app_config("OPERATOR_EMAIL") or bool(request.form.get("operator_conflict")))
             db = get_db()
             db.execute(
                 """INSERT INTO submissions(
@@ -477,7 +526,7 @@ def register_routes(app: Flask) -> None:
                    VALUES(?,?,?,?,?,?,?,?,?,'pending','Awaiting approved scanner.','quarantined',?,?,?,?,?,?)""",
                 (
                     submission_id,
-                    g.user["id"],
+                    submitter["id"],
                     title[:500],
                     authors[:1000],
                     abstract[:5000],
@@ -497,11 +546,12 @@ def register_routes(app: Flask) -> None:
             audit("submission_received", submission_id, sha256=digest.hexdigest(), size_bytes=size)
             row = db.execute("SELECT * FROM submissions WHERE id=?", (submission_id,)).fetchone()
             scan_file_status, _ = scan_submission(row)
+            notify_operator(submission_id, title, email, scan_file_status)
             flash(
-                "Submission received and scanned clean." if scan_file_status == "clean" else "Submission received but remains unavailable in quarantine.",
+                f"Private submission {submission_id} received. Keep this case identifier. Uploading has not published the manuscript.",
                 "success" if scan_file_status == "clean" else "warning",
             )
-            return redirect(url_for("dashboard"))
+            return redirect(url_for("submit"))
         return render_template("submit.html", terms=TERMS_VERSION, privacy=PRIVACY_VERSION)
 
     @app.get("/admin/submission/<submission_id>")
@@ -631,21 +681,6 @@ def register_commands(app: Flask) -> None:
         db.commit()
         click.echo(f"Independent editor created. Deliver this TOTP secret securely: {secret}")
 
-    @app.cli.command("invite")
-    @click.argument("email")
-    @click.option("--days", type=click.IntRange(1, 14), default=7)
-    def invite(email: str, days: int):
-        operator = get_db().execute("SELECT * FROM users WHERE role='operator' AND active=1 ORDER BY id LIMIT 1").fetchone()
-        if not operator:
-            raise click.ClickException("Create the operator first")
-        token = secrets.token_urlsafe(32)
-        get_db().execute(
-            "INSERT INTO invitations(email,token_hash,expires_at,created_by,created_at) VALUES(?,?,?,?,?)",
-            (email.strip().lower(), hashlib.sha256(token.encode()).hexdigest(), iso(now() + timedelta(days=days)), operator["id"], iso()),
-        )
-        get_db().commit()
-        click.echo(f"{current_app_config('PUBLIC_ORIGIN')}/register/{token}")
-
     @app.cli.command("scan-pending")
     def scan_pending():
         rows = get_db().execute("SELECT * FROM submissions WHERE scan_status IN ('pending','error')").fetchall()
@@ -732,8 +767,6 @@ def register_commands(app: Flask) -> None:
             click.echo(f"{row['id']}: manuscript erased")
         cutoff = int(time.time()) - 90 * 86400
         db.execute("DELETE FROM rate_events WHERE occurred_at<?", (cutoff,))
-        invitation_cutoff = iso(now() - timedelta(days=30))
-        db.execute("DELETE FROM invitations WHERE expires_at<?", (invitation_cutoff,))
         audit_cutoff = iso(now() - timedelta(days=365))
         db.execute(
             "DELETE FROM audit_log WHERE occurred_at<? AND event NOT IN ('editorial_decision','retention_erasure','public_release_verified')",
@@ -741,14 +774,15 @@ def register_commands(app: Flask) -> None:
         )
         account_cutoff = iso(now() - timedelta(days=180))
         inactive = db.execute(
-            """SELECT u.id FROM users u WHERE u.role='depositor' AND u.active=1 AND u.created_at<?
+            """SELECT u.id FROM users u WHERE u.role='depositor' AND u.created_at<?
+               AND u.email NOT LIKE 'erased-user-%@invalid.local'
                AND NOT EXISTS(SELECT 1 FROM submissions s WHERE s.user_id=u.id AND
-                 (s.updated_at>=? OR s.status NOT IN ('declined','withdrawn','removed','accepted_for_publication')))""",
+               (s.updated_at>=? OR s.status NOT IN ('declined','withdrawn','removed','accepted_for_publication')))""",
             (account_cutoff, account_cutoff),
         ).fetchall()
         for user in inactive:
             db.execute(
-                "UPDATE users SET email=?,display_name='[erased account]',password_hash=?,active=0 WHERE id=?",
+                "UPDATE users SET email=?,display_name='[erased contact]',password_hash=?,active=0 WHERE id=?",
                 (f"erased-user-{user['id']}@invalid.local", generate_password_hash(secrets.token_urlsafe(32)), user["id"]),
             )
         db.commit()

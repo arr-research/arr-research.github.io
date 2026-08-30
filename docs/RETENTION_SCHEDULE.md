@@ -5,7 +5,6 @@ hold is skipped and the hold is reviewed at least every 90 days.
 
 | Data | Trigger | Erasure or review |
 | --- | --- | --- |
-| Unused invitation token | expiry | token unusable immediately; row erased after 30 days |
 | Pseudonymized rate-limit events | collection | erased after 90 days |
 | Authentication/security audit | event | reviewed and erased or aggregated after 12 months, unless an incident needs it |
 | Infected uploaded bytes | scanner detection | immediately |
@@ -15,7 +14,7 @@ hold is skipped and the hold is reviewed at least every 90 days.
 | Superseded private revision | replacement received | 30 days |
 | Accepted private working copy | verified immutable public release | 30 days |
 | Minimal case/decision record | terminal decision | 3 years, then erase or irreversibly aggregate |
-| Account profile | last case closed and no active submission | review after 180 days; erase unless the user retains it knowingly |
+| Depositor contact row | last case closed and no active submission | review after 180 days; erase or pseudonymize unless still required for the case |
 | Public accepted record | publication | preserved long-term under the deposit license; corrections/withdrawals use versioning/tombstones |
 
 “Minimal case/decision record” means case identifier, work title, submitter identity
@@ -24,5 +23,5 @@ dates, decision/reason code, conflict handling and erasure evidence. It excludes
 rejected manuscript bytes and detailed abstract after their deadline.
 
 The commands `mark-published` and `retention-sweep` start and enforce private-copy,
-invitation, rate-event and inactive-account deadlines. Production scheduling and
+rate-event and inactive contact/editor-account deadlines. Production scheduling and
 annual retention review are mandatory operator controls in `INTAKE_OPERATIONS.md`.
