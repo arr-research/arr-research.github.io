@@ -17,6 +17,11 @@ For each ARR identifier, the displayed count is the sum of GitHub's public
 The accepted asset name is exactly `{ARR-ID}-vN.pdf`; source archives and other
 assets are excluded. Draft releases are excluded.
 
+Direct reads of the same-directory PDFs served by ARR's GitHub Pages site are
+not measured by these counters. The counters cover GitHub Release downloads only;
+they must not be described as total PDF readership. Cold mirror-cache downloads
+can increment GitHub's counters; cached copies are reused on subsequent builds.
+
 The counter is cumulative, not unique, and may include repeat downloads, automated
 clients, mirrors or bots. GitHub supplies an aggregate counter and ARR cannot audit
 or identify individual downloaders from it. A paper with several authors contributes
