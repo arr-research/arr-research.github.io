@@ -123,7 +123,7 @@ class PaperValidationTests(unittest.TestCase):
             paper = self.make_paper(Path(temporary))
             canonical = f"https://arr-research.github.io/papers/{paper.id}/"
             release = f"https://github.com/arr-research/arr-research.github.io/releases/tag/{paper.id}-{paper.version}"
-            pdf = f"https://github.com/arr-research/arr-research.github.io/releases/download/{paper.id}-{paper.version}/{paper.id}-{paper.version}.pdf"
+            pdf = f"{canonical}{paper.id}-{paper.version}.pdf"
             head = build_site.scholarly_head(paper.metadata, canonical=canonical, release_url=release, pdf_url=pdf)
             self.assertIn('name="citation_title"', head)
             self.assertIn('name="citation_author"', head)

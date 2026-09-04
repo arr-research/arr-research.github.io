@@ -38,8 +38,17 @@ jobs:
           python scripts/sync_metrics.py
           --repository "$GITHUB_REPOSITORY"
           --output "$RUNNER_TEMP/arr-metrics.json"
+      - name: Restore verified historical PDFs
+        uses: actions/cache@v5
+        with:
+          path: work/pdf-cache
+          key: arr-pdfs-v1-${{ hashFiles('papers/**/metadata.json') }}
+          restore-keys: arr-pdfs-v1-
       - name: Build catalogue
         shell: bash
+        env:
+          ARR_GOOGLE_SITE_VERIFICATION: ${{ vars.ARR_GOOGLE_SITE_VERIFICATION }}
+          ARR_INTAKE_URL: ${{ vars.ARR_INTAKE_URL }}
         run: |
           repo_name="${GITHUB_REPOSITORY#*/}"
           owner_name="${GITHUB_REPOSITORY%/*}"
@@ -55,7 +64,10 @@ jobs:
             --canonical-url "$canonical_url" \
             --repository "$GITHUB_REPOSITORY" \
             --metrics-file "$RUNNER_TEMP/arr-metrics.json" \
-            --intake-url "${{ vars.ARR_INTAKE_URL }}"
+            --intake-url "$ARR_INTAKE_URL" \
+            --google-site-verification "$ARR_GOOGLE_SITE_VERIFICATION" \
+            --fetch-remote-pdfs
+          python scripts/check_site_indexing.py --canonical-url "$canonical_url"
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5
         with:

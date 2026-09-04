@@ -28,4 +28,9 @@ jobs:
       - name: Validate ARR records
         run: python scripts/validate_papers.py
       - name: Build static catalogue
-        run: python scripts/build_site.py --base-path "/preview" --repository "$GITHUB_REPOSITORY"
+        run: >-
+          python scripts/build_site.py --base-path "/preview"
+          --canonical-url "https://example.test/preview"
+          --repository "$GITHUB_REPOSITORY"
+      - name: Check scholarly discovery links
+        run: python scripts/check_site_indexing.py --canonical-url "https://example.test/preview"

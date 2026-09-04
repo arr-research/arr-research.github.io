@@ -18,6 +18,10 @@ python scripts/build_site.py
 python -m http.server 8000 --directory _site
 ```
 
+Production builds also serve PDFs alongside each abstract for scholarly crawlers.
+See [search indexing and Search Console setup](docs/SEARCH_INDEXING.md) for the
+complete build check, PDF integrity rules, and DOI metadata workflow.
+
 Create a concurrent-safe candidate identifier and sharded directory with:
 
 ```bash
