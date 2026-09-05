@@ -1,0 +1,644 @@
+--- original/quantum_dyadic_trinomials.md
++++ final/quantum_weyl_trinomials.md
+@@ -1,12 +1,14 @@
+-# Three-term Weyl rank rigidity in prime-power dimension, and its failure under positive summation
+-
+-Lluis Eriksson — research draft, 5 September 2026. Exact finite replay completed. Internal mathematical review is tracked in a separate report; no external refereeing or priority certification is claimed.
++# Three-term Weyl operators: central multiplicities, rank laws, and exact list decoding
++
++Lluis Eriksson — 5 September 2026.
+ 
+ ## Results and scope
+ 
+-Write $X|j\rangle=|j+1\bmod d\rangle$, $Z|j\rangle=e^{2\pi i j/d}|j\rangle$, and $W_{a,b}=X^aZ^b$. Weyl sparsity counts nonzero coefficients in this single cyclic basis indexed by $\mathbb Z_d^2$. The family is not a tensor product of prime-dimensional Pauli bases.
+-
+-The main algebraic result classifies every possible rank of a nonzero matrix with at most three Weyl coefficients when $d=p^k$ is a prime power. For $p=2$, the proper coranks are exactly
++Write $X|j\rangle=|j+1\bmod d\rangle$, $Z|j\rangle=e^{2\pi i j/d}|j\rangle$, and $W_{a,b}=X^aZ^b$. Weyl sparsity $s_W$ counts nonzero coefficients in this single cyclic basis indexed by $\mathbb Z_d^2$. A phased Weyl is a Weyl operator multiplied by a scalar of modulus one. All results refer to this fixed cyclic representation; a tensor product of prime-dimensional Pauli bases is a different setting.
++
++For any dimension $d$, a trinomial $cI+aU+bV$ reduces to central sectors determined by $U^q,V^q$, where $q$ is the order of their scalar commutator. If $u,v$ are the two labels and $h=|\langle qu,qv\rangle|$, every sector contains $m=d/(qh)$ equivalent cyclic blocks. Each singular sector contributes nullity exactly $m$. When $abc\ne0$, there are at most two singular sectors, giving the universal bound $2m$. An example in dimension 36 attains this bound with $m=3$.
++
++For a noncommuting pair in prime-power dimension, $m=1$. This yields a complete classification of the ranks of nonzero matrices with at most three Weyl coefficients when $d=p^k$. For $p=2$, the proper coranks are exactly
+ 
+ \[
+                          1,2,4,\ldots,2^{k-1}.                 \tag{A}
+@@ -18,9 +20,9 @@
+           \{p^j,2p^j:0\le j<k\}.                              \tag{B}
+ \]
+ 
+-The proof identifies the entire singularity condition for a noncommuting relative support: each central block has dimension equal to the commutator order, at most two such blocks can be singular, and each singular block contributes exactly one kernel dimension. In particular, every genuinely noncommuting Weyl trinomial in prime-power dimension has nullity at most two. The constant two is attained. The dimension hypothesis matters: $2^{1/4}I+X^3+Z^3$ in dimension 12 is noncommuting and has nullity three.
+-
+-The operational application concerns one use of all $d^2$ channels $\operatorname{Ad}(W_{a,b})$, pure entangled probes, arbitrary final POVMs, and **exact** Schmidt rank. Let $\mathcal F_3(d)$ be the reduced density matrices permitting a perfect output list of size at most three. For every $d=2^k$, $k\ge3$,
++The scalar determinant test and the common multiplicity are explicit, including commuting supports and arbitrary composite dimensions. The rank lists (A)–(B) use the additional prime-power arithmetic. No global list of attainable ranks over all composite supports is claimed.
++
++The operational application concerns one use of all $d^2$ channels $\operatorname{Ad}(W_{a,b})$, pure entangled probes, arbitrary final positive operator-valued measurements (POVMs), and **exact** Schmidt rank. A perfect list decoder reports a set containing the true channel label with probability one. Let $\mathcal F_3(d)$ be the reduced density matrices permitting lists of size at most three, and let $\ell_{\min}^{\rm exact}(d,r)$ minimize the list size over probes of Schmidt rank exactly $r$. For every $d=2^k$, $k\ge3$,
+ 
+ \[
+  \{\rho\in\mathcal F_3(d):\operatorname{rank}\rho<3d/4\}
+@@ -42,7 +44,7 @@
+                          \{8,12,13,14,15,16\}.                \tag{E}
+ \]
+ 
+-The dimension-eight value $\ell_{\min}^{\rm exact}(8,5)=4$, its thirty half-rank states, and the two-label corank divisibility theorem were established in the preceding research cycles. They are antecedents, not new claims of this draft. The extensions here are the prime-power algebraic classification, the all-dyadic half-rank stratum, the positive-sum counterexample and the new exact three-label family.
++Every proof needed for these statements is included below. Section 10 distinguishes the standard representation and factorization tools from their rank and decoding applications here. Earlier internal versions and their separate screening reports are recorded in the companion revision notes.
+ 
+ ## 1. Two elementary ingredients
+ 
+@@ -64,71 +66,103 @@
+ 
+ has at most two ordered pairs $(s,t)$. Indeed, $s$ must lie on the unit circle and on $|c+as|=|b|$. The second circle has nonzero center $-c/a$, so the two circles are distinct and meet at most twice. Each $s$ determines $t$.
+ 
+-## 2. Prime-power central blocks
+-
+-**Lemma 1.** Let $d=p^k$. Let $u,v\in\mathbb Z_d^2$ be Weyl labels whose commutator has order $q=p^\ell>1$. Then
+-
+-\[
+-                     |\langle qu,qv\rangle|=d/q.             \tag{2}
+-\]
+-
+-**Proof.** Let $s$ be the minimum of the four coordinate valuations of $u,v$, with $v_p(0)=k$. At least one of $u/p^s,v/p^s$ is primitive. Swap the labels if needed. An invertible determinant-one coordinate change over $\mathbb Z_d$ puts
+-
+-\[
+-                   u=(p^s,0),\qquad v=(c,e),\qquad p^s\mid c,e.
+-\]
+-
+-This coordinate change is used only for label arithmetic; no implementation by a Clifford unitary is required. To construct it, complete the primitive vector $u/p^s$ to a determinant-one matrix using a Bezout identity modulo $d$.
+-
+-The determinant has valuation $k-\ell<k$, so $v_p(e)=k-\ell-s$. In particular $\ell+2s\le k$. The two generators in (2) become
+-
+-\[
+-                 (p^{\ell+s},0),\qquad (p^\ell c,p^\ell e).
+-\]
+-
+-The first coordinate of the second generator is an integer multiple of the first generator. Subtracting that multiple leaves $(0,p^\ell e)$, whose nonzero coordinate has valuation $k-s$, interpreted as zero modulo $d$ if $s=0$. The two axis orders are $p^{k-\ell-s}$ and $p^s$. Their product is $p^{k-\ell}=d/q$. QED.
+-
+-**Theorem 2 (exact noncommuting block rule).** In prime-power dimension, let $U,V$ be phased Weyl operators with $UV=\zeta VU$, where $\zeta$ has order $q>1$. Let
+-
+-\[
+-                         D=I+aU+bV,\qquad ab\ne0.
+-\]
+-
+-The distinct joint eigenvalue pairs $(s,t)$ of $(U^q,V^q)$ number $d/q$. Each joint eigenspace has dimension $q$. On the corresponding block,
+-
+-\[
+-                \det D=1-(-1)^q(a^q s+b^q t).                 \tag{3}
+-\]
+-
+-Every singular block has nullity one. Hence
++## 2. A universal central reduction
++
++Let $U,V$ be phased Weyl operators in the fixed cyclic dimension-$d$ representation, with distinct nonidentity labels $u,v$. Write $UV=\zeta VU$, let $q$ be the order of $\zeta$, and put
++
++\[
++ H=\langle u,v\rangle,\qquad R=\langle qu,qv\rangle,
++ \qquad h=|R|.                                                \tag{2}
++\]
++
++Here $q=1$ is allowed. For arbitrary $d$, the equal sector multiplicity is
++
++\[
++                   m=\frac{d}{qh}=\frac{dq}{|H|}.              \tag{2a}
++\]
++
++**Lemma 1 (central sectors and their multiplicity).** The subgroup $R$ is the radical of the commutator pairing on $H$: its labels commute with every label in $H$. One has $|H|=q^2h$. The joint eigenvalue pairs $(s,t)$ of $(U^q,V^q)$ number exactly $h$, and each joint space $E_{s,t}$ has dimension $d/h=qm$. In particular $m$ in (2a) is a positive integer. On each such space the pair $U,V$ is the orthogonal direct sum of $m$ equivalent $q$-dimensional cyclic pairs.
++
++**Proof.** A label $au+bv$ commutes with both $u,v$ if and only if $q$ divides both $a,b$. This proves the assertion about $R$. If $au+bv=0$ as a label, taking its determinant with $u$ and $v$ again shows $q\mid a,b$. Therefore the relation lattice of the map $\mathbb Z^2\longrightarrow H$ is contained in $q\mathbb Z^2$. The quotient $H/qH$ has order $q^2$, and $qH=R$, proving $|H|=q^2h$.
++
++The operators $U^q,V^q$ are central and have labels generating $R$. Character multiplicity from Section 1 gives $h$ distinct joint spaces, all of dimension $d/h$. Their eigenvalue pairs are distinct because the two powers generate this label group after phases are removed.
++
++Fix $E_{s,t}$ and an eigenvalue $\lambda$ of $U$ on it. The maps $V^j$, $0\le j<q$, send its eigenspace bijectively to the eigenspaces with eigenvalues $\lambda\zeta^j$. These are all the possible eigenvalues because $U^q=sI$. They are distinct, so all have the same dimension $m$ and exhaust $E_{s,t}$. Choose an orthonormal basis $e_1,\ldots,e_m$ in the first eigenspace. For each $e_l$, the vectors $e_l,Ve_l,\ldots,V^{q-1}e_l$ span an invariant $q$-space. The wraparound map is $V^qe_l=t e_l$, so these $m$ spaces carry identical cyclic matrices. Orthogonality follows from unitarity and the different $U$ eigenspaces. If $q=1$, both operators are scalar on the sector and the same statement means $m$ identical one-dimensional pairs. QED.
++
++**Theorem 2 (universal trinomial rank rule).** Let
++
++\[
++                         D=cI+aU+bV,\qquad ab\ne0.
++\]
++
++No primality assumption on $d$ is needed, and $c=0$ is allowed in the exact formula. On a central sector $E_{s,t}$,
++
++\[
++ \det(D|_{E_{s,t}})
++       =\big[c^q-(-1)^q(a^q s+b^q t)\big]^m.                 \tag{3}
++\]
++
++The sector contributes nullity $m$ if the bracket vanishes and contributes zero otherwise. Consequently
+ 
+ \[
+  \dim\ker D
+-   =|\{(s,t):a^q s+b^q t=(-1)^q\}|\le2.                    \tag{4}
+-\]
+-
+-**Proof.** The powers $U^q,V^q$ commute with both $U,V$. Their labels generate the subgroup in Lemma 1. Character multiplicity therefore gives exactly $d/q$ joint spaces, each of dimension $q$. Different joint characters give different pairs $(s,t)$, since the two powers generate the central label group after phases have been removed.
+-
+-Fix one block. If $\lambda$ is an eigenvalue of $U$, applying $V$ successively gives the $q$ different eigenvalues $\lambda,\zeta\lambda,\ldots,\zeta^{q-1}\lambda$. Their eigenspaces exhaust this $q$-dimensional block, so each is one-dimensional. In this eigenbasis $U$ is diagonal and $V$ is a cyclic weighted shift; the product of its $q$ nonzero shift weights is $t$.
+-
+-The determinant of the diagonal matrix $I+aU$ plus this shift has only the all-diagonal term and the full-cycle term. Since $\lambda^q=s$, it equals
+-
+-\[
+- \prod_{j=0}^{q-1}(1+a\lambda\zeta^j)+(-1)^{q-1}b^q t
+-   =1-(-a\lambda)^q+(-1)^{q-1}b^q t,
+-\]
+-
+-which is (3). The equations $Dx=0$ determine successive components from any one by dividing only by $b$ and the nonzero shift weights. Thus a block kernel has dimension at most one, even if one of the diagonal entries vanishes. The determinant criterion then gives nullity exactly one on a singular block. Finally, apply the circle bound (1) with coefficients $a^q,b^q$ and nonzero constant $-(-1)^q$. QED.
+-
+-The determinant identity is the elementary cyclic-block form of the familiar root-of-unity quantum-binomial phenomenon. The proof above includes the signs for both odd and even commutator order rather than importing an odd-order convention.
+-
+-**Sharpness.** In dimension 8 set $U=X$, $V=X^2Z^4$, choose nonzero square roots $a^2=1-i$, $b^2=i$, and take $D=I+aU+bV$. These operators anticommute, $U^2=X^2$, and $V^2=X^4$. Writing $s\in\{1,i,-1,-i\}$ for an eigenvalue of $X^2$, the block condition is
+-
+-\[
+-                   (1-i)s+i s^2=1.
+-\]
+-
+-Its roots are exactly $1,i$. Thus $D$ has nullity two, proving that the uniform constant in (4) cannot be improved. For prime dimension $d=p$, there is only one block for every noncommuting pair, and the sharper bound is one.
++   =m\,|\{(s,t):a^q s+b^q t=(-1)^q c^q\}|.                 \tag{4}
++\]
++
++Equivalently, the rank problem reduces to commuting central powers:
++
++\[
++ \dim\ker D=\frac1q\dim\ker
++       \big[c^qI-(-1)^q(a^qU^q+b^qV^q)\big].                \tag{4a}
++\]
++
++If all three coefficients are nonzero, then
++
++\[
++                  \dim\ker D\le m\min(2,h)\le2m.             \tag{4b}
++\]
++
++**Proof.** By Lemma 1 it suffices to calculate one cyclic $q$-dimensional copy. In the $U$ eigenbasis, $V$ is a cyclic weighted shift, and its $q$ nonzero weights have product $t$. For $q>1$, the determinant of $cI+aU+bV$ has exactly the diagonal and full-cycle permutation terms. They give
++
++\[
++ \prod_{j=0}^{q-1}(c+a\lambda\zeta^j)+(-1)^{q-1}b^q t
++   =c^q-(-a\lambda)^q+(-1)^{q-1}b^q t.
++\]
++
++Since $\lambda^q=s$, this is the bracket in (3). A kernel recurrence divides only by $b$ and the nonzero shift weights. Thus a cyclic copy has nullity at most one, including when some diagonal entries vanish or $c=0$. The determinant condition makes its nullity exactly one when singular. Repeating the copy $m$ times proves (3)–(4). For $q=1$ the bracket is $c+as+bt$ and each copy is one-dimensional, giving the same conclusion directly.
++
++The central matrix in (4a) is scalar on each sector and has nullity $qm$ there precisely under the same condition. This proves (4a). When $abc\ne0$, the circle bound of Section 1 applies to $a^q s+b^q t-(-1)^q c^q=0$. It permits at most two of the $h$ distinct unit-modulus pairs, proving (4b). QED.
++
++The cyclic normal form, scalar central characters and root-of-unity determinant identity are standard Weyl-pair representation machinery. For example, the repeated-eigenvalue cyclic form appears in Farenick, Ojo and Plosker, Lemma 2.2, [primary text](https://arxiv.org/pdf/2101.00129). The statement here evaluates that machinery for a trinomial in the fixed cyclic Weyl basis, identifies its common multiplicity from the label subgroup, and combines it with the circle count. It is not a claim of a new classification of Weyl-pair representations.
++
++**Degenerate central configurations.** If either $U^q$ or $V^q$ is scalar, at most one joint pair can solve (4) when $abc\ne0$, so the bound improves to $m$. The same improvement holds when $R$ has exponent dividing two. After rephasing, its eigenvalue pairs form a subgroup of the four sign corners. Two distinct zeros differing in one sign force $a=0$ or $b=0$; zeros differing in both signs force $c=0$. This covers $h=1$, $h=2$, and the noncyclic order-four center. A cyclic order-four center can have two zeros.
++
++The nonzero constant is essential only for the two-sector bound, not for (3)–(4a). Section 4 exhibits a binomial with six singular sectors. One- and two-term operators are treated separately in the rank classification below.
++
++The equal multiplicity $m$ uses the trace orthogonality of the fixed cyclic Weyl basis. For arbitrary unitaries satisfying $UV=\zeta VU$, central sectors can have different multiplicities. The per-sector cyclic calculation still applies, but the single common value in (2a) is not asserted in that broader setting.
++
++**Arithmetic evaluation.** If $\delta=u_1v_2-u_2v_1$ for any integer lifts and $g=\gcd(d,\delta)$, then
++
++\[
++ q=d/g,\qquad
++ m=\gcd(g,u_1,u_2,v_1,v_2,\delta/g).                           \tag{4c}
++\]
++
++For this optional evaluation, the lattice generated by $u,v,(d,0),(0,d)$ has index
++
++\[
++ G=\gcd(d^2,du_1,du_2,dv_1,dv_2,\delta),\qquad |H|=d^2/G.
++\]
++
++The index is the standard gcd of the maximal minors of a rank-two integer generating matrix. Substituting in (2a) gives $m=G/g$. Since $\delta/g$ is coprime to $q$, canceling the common $q$ factors gives (4c). The formula is independent of the chosen lifts. The block proof above does not depend on this lattice-index evaluation. In particular, collective primitivity $\gcd(d,u_1,u_2,v_1,v_2)=1$ suffices for $m=1$ in any dimension, although it is not necessary.
++
++**Corollary 2.1 (prime-power case).** If $d=p^k$ and $q>1$, then $m=1$ and $h=d/q$. Thus every noncommuting genuine Weyl trinomial in prime-power dimension has nullity at most two. In prime dimension it has at most one, since $h=1$.
++
++**Proof.** Write $q=p^\ell>1$. Then the determinant valuation is $k-\ell<k$, so $\delta/g$ is not divisible by $p$. Formula (4c) gives $m=1$.
++
++An alternative proof avoids the lattice-index formula. Let $s$ be the minimum coordinate valuation across $u,v$. After swapping labels if necessary, a determinant-one coordinate change puts $u=(p^s,0)$ and $v=(c,e)$ with $p^s\mid c,e$. Such a change follows from a Bezout identity for the primitive vector $u/p^s$; it is used only for label arithmetic and needs no Clifford implementation. The determinant valuation gives $v_p(e)=k-\ell-s$ and $\ell+2s\le k$. The generators $qu,qv$ reduce to the two axes $(p^{\ell+s},0)$ and $(0,p^\ell e)$ after subtracting an integer multiple of the first. Their orders multiply to $p^{k-\ell}=d/q$. Hence $h=d/q$ and $m=1$. The second axis has order one when $s=0$. QED.
++
++The constant two is attained in dimension eight: take $U=X$, $V=X^2Z^4$, $c=1$, $a^2=1-i$, $b^2=i$. These operators anticommute, and the central condition is $(1-i)s+is^2=1$ for the four eigenvalues of $X^2$. Exactly $s=1,i$ solve it. Section 4 gives a composite example with two singular sectors of multiplicity three, attaining the full bound $2m$.
+ 
+ ## 3. Complete individual rank classification
+ 
+@@ -141,7 +175,7 @@
+ 
+ **Proof.** Right-multiply by the adjoint of one support Weyl and scale a nonzero coefficient to one. This preserves rank and range, and preserves $CC^*$ up to a positive scalar. A one-term matrix is invertible. A two-term matrix is $I+aU$. If the relative label of $U$ has order $m$, its eigenvalues are a phase times the $m$-th roots of unity, each of multiplicity $d/m$. Thus its nonzero corank, when singular, is $d/m$, a power of $p$.
+ 
+-A genuine trinomial is $I+aU+bV$, with distinct nonidentity labels and $ab\ne0$. If the relative Weyls do not commute, Theorem 2 gives corank one or two when singular. For $d=2$, its one block gives corank at most one. All these possibilities are included in (5).
++A genuine trinomial is $I+aU+bV$, with distinct nonidentity labels and $ab\ne0$. If the relative Weyls do not commute, Corollary 2.1 gives corank one or two when singular. For $d=2$, its one block gives corank at most one. All these possibilities are included in (5).
+ 
+ If the relative Weyls commute, let their label group have order $h$. The group order is a power of $p$ dividing $d$, and distinct joint characters have distinct pairs of eigenvalues of $U,V$. The circle bound gives either one or two zero characters. Their common multiplicity is $d/h$. Hence the corank is $d/h$ or $2d/h$. When $p=2$, the presence of three distinct support labels forces $h\ge4$; both possibilities are powers of two strictly below $d$. When $p$ is odd, they have the form in (5).
+ 
+@@ -155,9 +189,9 @@
+ 
+ This is a rank classification, not a complete classification of the kernels or coefficients at each rank. In the dyadic case it says that allowing one individual third Weyl coefficient does not create any new rank beyond those already attained by binomials. That conclusion must not be transferred to a positive sum of several sparse squares; Section 7 gives a counterexample.
+ 
+-## 4. The dimension hypothesis cannot be removed
+-
+-**Proposition 4.** In cyclic dimension 12,
++## 4. Composite multiplicities and a necessary coefficient hypothesis
++
++**Proposition 4.** The factor $m$ in Theorem 2 cannot be discarded. In cyclic dimension 12,
+ 
+ \[
+                     C=2^{1/4}I+X^3+Z^3                       \tag{6}
+@@ -167,7 +201,27 @@
+ 
+ **Proof.** Put $U=X^3,V=Z^3$. Then $UV=iVU$ and $U^4=V^4=I$. Each eigenvalue of $U$ has multiplicity three. Choose a basis of its eigenvalue-one space and apply $V,V^2,V^3$; this decomposes the twelve-dimensional representation into three identical four-dimensional cyclic blocks. On each block, the determinant of $cI+U+V$ is $c^4-2$. For $c=2^{1/4}$ it vanishes, and the invertible-shift recurrence gives a one-dimensional kernel in each block. Hence the total nullity is three. QED.
+ 
+-Here $q=4$ but $\langle qu,qv\rangle$ is trivial, whereas $d/q=3$. This is the precise failure of the prime-power arithmetic step. The replay also computes rank nine directly over the exact number field $\mathbb Q(i,2^{1/4})$.
++Here $q=4$, $h=1$, and $m=3$. Thus (6) is a one-sector instance of the universal formula; prime-power noncommuting multiplicity one does not extend to all dimensions. The replay also computes its rank directly over $\mathbb Q(i,2^{1/4})$.
++
++The full two-sector bound is attained with multiplicity greater than one. In dimension 36 take
++
++\[
++ U=X^3,\qquad V=iX^{-3}Z^{18},\qquad D=I+U+V.               \tag{6a}
++\]
++
++These Weyls anticommute. Write $S=X^6$, which has order six. Then $U^2=S$, $V^2=S^{-1}$, $q=2$, $h=6$, and $m=3$. The sector condition is $s+s^{-1}=1$. Exactly the two primitive sixth roots of unity solve it, so
++
++\[
++                   \dim\ker D=6=2m,\qquad \operatorname{rank}D=30. \tag{6b}
++\]
++
++Finally, the hypothesis $c\ne0$ is indispensable for the two-sector bound. In dimension 12, set $U=X$, $V=XZ^6$, and $D=U+V$. Here $q=2$, $h=6$, and $m=1$, while
++
++\[
++               D=X(I+Z^6),\qquad \dim\ker D=6>2m.           \tag{6c}
++\]
++
++Indeed $Z^6$ is an involution with both eigenvalues of multiplicity six. Also $V^2=-U^2$, so all six central sectors satisfy the exact condition (4), as required. These examples distinguish the universal exact rank formula, its genuine-trinomial bound, and the stronger prime-power specialization.
+ 
+ ## 5. Thirty half-rank squares in every dyadic dimension
+ 
+@@ -189,7 +243,7 @@
+ 
+ **Proof.** A singular binomial of rank below $3d/4$ must have relative label order two; larger orders give rank at least $3d/4$. Such a binomial is proportional, up to a right unitary, to $I\pm J$ for a phased involution $J$. Its square is proportional to the corresponding half-rank projector.
+ 
+-For a genuine trinomial, a noncommuting relative support has rank at least $d-2\ge3d/4$, by Theorem 2. For commuting support, a group of order at least eight also gives rank at least $3d/4$, by the two-zero-character bound. Thus the group has order four and exactly two characters are zeros.
++For a genuine trinomial, a noncommuting relative support has rank at least $d-2\ge3d/4$, by Corollary 2.1. For commuting support, a group of order at least eight also gives rank at least $3d/4$, by the two-zero-character bound. Thus the group has order four and exactly two characters are zeros.
+ 
+ If this group is $C_2\times C_2$, absorb phases and write the four values as $1+a\epsilon+b\delta$, with $\epsilon,\delta\in\{\pm1\}$. Two zeros differing in just one sign force $a=0$ or $b=0$; two differing in both signs force the identity coefficient to vanish upon addition. Both are impossible. The group is therefore cyclic of order four.
+ 
+@@ -287,7 +341,7 @@
+   \frac{2}{d}\;(d/16\text{ times}).                           \tag{12}
+ \]
+ 
+-For the lower bound, recall the preceding-cycle two-label theorem: a proper exact rank $r$ permits two labels if and only if $d-r\mid d$. Its necessary direction follows directly from (8): every singular binomial square is a positive multiple of $(I-T)(I-T)^*$, where the phased Weyl $T$ fixes the common kernel pointwise. All such $T$'s commute because a nonzero common fixed vector forbids a nontrivial scalar commutator. The common kernel is the fixed space of their finite label group $H$. Character averaging gives its dimension $d/|H|$, proving the divisibility. Here $d-r=3d/16$ does not divide $d$, so two labels are impossible. QED.
++For the lower bound, a proper exact rank $r$ permits two labels if and only if $d-r\mid d$. Here is a proof valid in any cyclic dimension. In a two-sparse factorization (8), positivity forces every nonzero factor to be singular. Normalize a binomial on the right to $\alpha(I-T)$; singularity forces the relative coefficient to have modulus one, so $T$ is a phased Weyl. The common kernel of the positive squares is the intersection of the fixed spaces of these $T$'s. Since it is nonzero, a common fixed vector forces their scalar commutators to be trivial and forbids nonidentity scalar elements in their generated group. Thus they form an honest commuting representation of a finite label group $H$. Character averaging gives common-kernel dimension $d/|H|$, proving $d-r\mid d$. Conversely, if $n=d-r$ divides $d$, the binomial $I-Z^n$ has kernel dimension $n$; its normalized square supplies a rank-$r$ state by (8). In the present case $d-r=3d/16$ does not divide $d$, so two labels are impossible. QED.
+ 
+ This construction is the decisive counterexample to extending (A) to positive sums. Each individual $C_j$ has rank $d/2$, yet their positive sum has corank $3d/16$, which is not a power of two. It also separates an exact-rank optimization from the rank-budget optimization, which may use a single sparse factor.
+ 
+@@ -315,44 +369,48 @@
+ 
+ The four coefficients are nonzero. Indeed the two middle elementary symmetric sums are $1+\omega+\omega^2=(1+1/\sqrt2)(1+i)$ and $\omega+\omega^2+\omega^3=i(1+\sqrt2)$. Exactly three of the eight eigenspaces of $T$, each of dimension $d/8$, are killed. Thus $\operatorname{rank}C=5d/8$. Normalize $\rho=CC^*/\operatorname{Tr}(CC^*)$ and use (8). Its exact normalization is $\operatorname{Tr}(CC^*)=4d(2+\sqrt2)$. QED.
+ 
+-The case $d=8$ reproduces the preceding cycle. The new statement supplies every $d\ge16$ in this dyadic family and follows from the general low-rank obstruction rather than a dimension-specific enumeration.
++The same construction and low-rank obstruction apply uniformly from dimension eight onward.
+ 
+ ## 9. Exact replay, rejected generalizations and limits
+ 
+-Run from the workspace root:
++Place the two supplied Python files in the same directory and run:
+ 
+ ```text
+-python work/cycle3/quantum/quantum_dyadic_verify.py
++python quantum_weyl_verify.py
+ ```
+ 
+-The bounded replay takes about seven seconds after interpreter startup on this workspace. It produces `quantum_dyadic_certificate.json` beside the script and records the source SHA-256. It uses integer arithmetic, Gaussian rationals, cyclotomic integer rings, and one explicit algebraic number field. No floating-point rank threshold is used.
++The bounded replay takes about nine seconds after interpreter startup in the recorded environment. It produces `quantum_weyl_certificate.json` beside the script and records the source and companion-checker SHA-256 hashes. It uses integer arithmetic, Gaussian rationals, cyclotomic integer rings, and exact algebraic number fields. No floating-point rank threshold is used. The companion `composite_matrix_checks.py` also runs separately and produces `composite_matrix_certificate.json`.
+ 
+ The certificate checks:
+ 
+-* all 1,948,590 noncommuting ordered label pairs in dimensions $2,3,4,5,7,8,9,16,25,27,32$, verifying (2) by exact lattice-index arithmetic; for dimensions at most eight it separately enumerates the central label group;
+-* the formal cyclic determinant product for commutator orders $2,3,4,5,7,8,9,16,25,27,32,64$ in integer cyclotomic arithmetic;
++* all 714,096 ordered pairs of distinct nonzero labels in dimensions two through twenty, including commuting pairs, checking $|H|=q^2h$, integrality of $m$, formula (4c), and the collectively primitive multiplicity-one implication;
++* all 1,948,590 noncommuting ordered label pairs in dimensions $2,3,4,5,7,8,9,16,25,27,32$, verifying the prime-power central-group formula by exact lattice-index arithmetic; for dimensions at most eight it separately enumerates the central label group;
++* the formal cyclic determinant product for nineteen commutator orders, including even composite orders $6,10,12,18,20,24,36$, in integer cyclotomic arithmetic;
+ * all 54 labelled sparse-square factorizations, all 30 distinct projectors, and all 435 distinct projector pairs in dimensions eight and sixteen;
+ * the rank $13d/16$ construction by direct exact matrices for $d=16,32$, including all sixteen character projectors, their ranks, the complete spectrum and trace normalization;
+ * the four-term rank $5d/8$ construction for $d=8,16,32,64$, including the exact nonzero coefficients and zero positions;
+-* the dimension-twelve noncommuting counterexample by a direct exact matrix-rank calculation.
++* seven direct exact composite-dimension matrix cases covering $q=1$, one scalar central power, the exponent-two center, two singular sectors, multiplicity three, and the zero-constant negative control. These cases enumerate label groups by closure and compare the rank of the original matrix with the commuting central polynomial in (4a). The resulting $(d,\operatorname{rank}D)$ pairs are $(12,9),(12,9),(24,21),(12,10),(36,30),(12,6),(12,6)$.
+ 
+ The finite checks do not quantify over arbitrary coefficients or prove statements for untested dimensions. Those quantifiers are supplied by Sections 1–8. The determinant formula avoids division by possibly zero diagonal entries; this is essential in the singular cases.
+ 
+-Two tempting generalizations were rejected by explicit examples during this cycle. The first, a dimension-free noncommuting nullity bound of two, fails at dimension twelve. The second, a power-of-two corank law for all positive sums of three-sparse squares in dyadic dimension, fails at dimension sixteen. Neither rejected claim is used elsewhere.
+-
+-No classification of all higher-rank three-list states for arbitrary dyadic dimension is asserted. In particular, (C) controls ranks strictly below $3d/4$; it does not describe the remaining convex set. No quantitative approximate-decoding error gap, mixed-probe theorem, multiuse theorem, or general composite-dimension classification is asserted. Exact-rank feasibility alone does not imply a uniform approximate error gap, as established in the first cycle.
++The composite checker uses a separate computational method and does not import the main verifier. Both were written by the constructing agent; computational separation is not represented as a separate human or agent review. A prior version received separate internal mathematical screening. Its report and the scope of any subsequent screening are recorded outside the article, so that the evidence is tied to the precise source version.
++
++Three broader claims are refuted by the exhibited examples: a multiplicity-free noncommuting nullity bound of two in arbitrary dimension, a two-sector bound when the constant coefficient vanishes, and a power-of-two corank law for all positive sums of three-sparse squares in dyadic dimension. The correct general statement is the central rank formula (4).
++
++No classification of all higher-rank three-list states for arbitrary dyadic dimension is asserted. In particular, (C) controls ranks strictly below $3d/4$; it does not describe the remaining convex set. Nor is a global list of attainable individual ranks for all composite supports derived from the universal central formula. Approximate decoding, mixed probes, and multiple channel uses are outside the scope of the present exact pure-probe results.
+ 
+ ## 10. Antecedents and contribution map
+ 
+-| Result or tool | Antecedent inspected | Contribution in this draft |
++| Result or tool | Antecedent inspected | Application in this article |
+ |---|---|---|
+-| Perfect list decoding and sparse positive factorizations | Johnston, Lovitz, Russo and Sikora, *The complexity of perfect quantum state classification*, Lemma 9 and Corollary 11, [primary full text](https://arxiv.org/html/2510.20789v1) | Equation (8) repeats the preceding cycle's Weyl-covariant normalization. No new general factor-width equivalence is claimed. |
+-| Equal character multiplicity and stabilizer dimension | Gheorghiu, *Standard Form of Qudit Stabilizer Groups*, Theorem 1, [primary PDF](https://arxiv.org/pdf/1101.1519) | The trace proof is standard. Lemma 1 evaluates the particular two-generator central subgroup in prime-power cyclic dimension. |
++| Perfect list decoding and sparse positive factorizations | Johnston, Lovitz, Russo and Sikora, *The complexity of perfect quantum state classification*, Lemma 9 and Corollary 11, [primary full text](https://arxiv.org/html/2510.20789v1) | Equation (8) gives the Weyl-covariant normalization. No new general factor-width equivalence is claimed. |
++| Equal character multiplicity and stabilizer dimension | Gheorghiu, *Standard Form of Qudit Stabilizer Groups*, Theorem 1, [primary PDF](https://arxiv.org/pdf/1101.1519) | The trace proof is standard. Lemma 1 evaluates the two-generator central subgroup in the fixed cyclic Weyl representation for arbitrary dimension. |
++| Repeated cyclic blocks for Weyl pairs | Farenick, Ojo and Plosker, *Universality of Weyl Unitaries*, Lemmas 2.1–2.2, [primary PDF](https://arxiv.org/pdf/2101.00129) | The cyclic normal form is standard. Theorem 2 applies it to rank, with the explicit common multiplicity $d/(qh)$ and the two-circle count; no new representation classification is claimed. |
+ | Root-of-unity cyclic representations | Kim, *Finite dimensional quantum Teichmüller space from the quantum torus at root of unity*, Section 2.1, Propositions 2.5–2.6, [primary PDF](https://arxiv.org/pdf/1703.05513) | Cyclic blocks and central characters are prior machinery. The paper uses odd root order. Our even/odd block signs and multiplicity calculation are proved directly; no even-order theorem is inferred from its odd-order convention. |
+ | Quantum-binomial center phenomenon | Fock and Goncharov, *Cluster ensembles, quantization and the dilogarithm*, Section 3.1.1, [primary PDF](https://smf.emath.fr/download/pdf/43892) | Background for the familiar root-of-unity mechanism. The short determinant proof supplies precisely the identity needed here. No claim is made to invent quantum-binomial identities or quantum-torus representations. |
+-| Exact two-label rank classification | Eriksson research cycle 1, `outputs/research/quantum_lists.md` | The corank divisibility criterion is an imported result, with its necessary direction recalled in Section 7. |
+-| Dimension-eight rank-five obstruction and thirty states | Eriksson research cycle 2, `outputs/cycle2/quantum/quantum_rank5_theorem.md`, with its separate review | The $d=8$ endpoint is prior within this programme. The all-prime-power individual rank law, all-dyadic stratum and $13d/16$ three-list family go beyond it. |
+-
+-Primary-source searches in this cycle targeted Weyl trinomial rank/nullity, finite Weyl rank uncertainty, finite Gabor three-vector dependence, and root-of-unity quantum-torus representations. The searches located the background machinery above but did not locate the specific prime-power rank list (5), all-dyadic thirty-state stratum, or exact $13d/16$ list value. That is a limited search result, not an exhaustive priority determination. Real-line HRT/Gabor results concern different spaces and quantifiers and were not imported. The companion `quantum_sources.md` records the reading scope and limitations.
++
++Primary-source searches targeted Weyl trinomial rank/nullity, finite Weyl rank uncertainty, finite Gabor three-vector dependence, and root-of-unity quantum-torus representations, including central multiplicities. They located the background machinery above but did not locate the specific prime-power rank list (5), all-dyadic thirty-state stratum, or exact $13d/16$ list value. This bounded negative search does not establish priority. Real-line HRT/Gabor results concern different spaces and quantifiers and were not imported. The companion `quantum_sources.md` records the reading scope and limitations.
++
++The two-label divisibility criterion and the dimension-eight endpoint of the thirty-state and four-label results appeared in earlier internal notes by the same author. Their proofs are included here for self-containment. The contribution developed in this article is the explicit universal rank reduction and its prime-power classification, together with the all-dyadic stratum and the $13d/16$ positive-sum family. Standard representation-theoretic ingredients remain credited to their antecedents.
+ 
+ Lluis Eriksson directed the research programme. OpenAI Codex assisted with conjecture screening, proof development, exact computation, source comparison and drafting. The constructing agent's derivations and exact checks are distinguished from the separate internal review.
+--- original/quantum_dyadic_verify.py
++++ final/quantum_weyl_verify.py
+@@ -1,6 +1,7 @@
+-"""Exact finite replay for quantum_dyadic_trinomials.md.
+-
+-All mathematical decisions use integers or Q(i).  The manuscript, rather than
++"""Exact finite replay for quantum_weyl_trinomials.md.
++
++All mathematical decisions use exact integers, cyclotomic rings or algebraic
++number fields. The manuscript, rather than
+ these finite samples, quantifies over arbitrary dimensions and coefficients.
+ Run from any directory; the certificate is written beside this source.
+ """
+@@ -10,9 +11,11 @@
+ from pathlib import Path
+ import hashlib
+ import json
++import platform
+ import time
+ 
+ import sympy as sp
++from composite_matrix_checks import run_checks as composite_checks
+ 
+ 
+ def subgroup_size(d, u, v):
+@@ -57,6 +60,34 @@
+     return records
+ 
+ 
++def universal_arithmetic():
++    """All distinct relative supports through d=20, including q=1."""
++    records = []
++    for d in range(2,21):
++        labels = [x for x in product(range(d),repeat=2) if x != (0,0)]
++        classes = Counter()
++        primitive = 0
++        for u,v in product(labels,repeat=2):
++            if u == v:
++                continue
++            delta = u[0]*v[1]-u[1]*v[0]
++            g = gcd(d,delta)
++            q = d//g
++            H = subgroup_size(d,u,v)
++            h = subgroup_size(d,tuple(q*x % d for x in u),tuple(q*x % d for x in v))
++            assert H == q*q*h and d % (q*h) == 0
++            m = d//(q*h)
++            assert m == gcd(g,*u,*v,delta//g)
++            if gcd(d,*u,*v) == 1:
++                assert m == 1
++                primitive += 1
++            classes[f'q={q}; h={h}; m={m}'] += 1
++        records.append({'d':d,'ordered_distinct_nonzero_support_pairs':sum(classes.values()),
++                        'collectively_primitive_pairs':primitive,'classes':dict(classes)})
++    print('universal arithmetic supports',sum(x['ordered_distinct_nonzero_support_pairs'] for x in records),flush=True)
++    return records
++
++
+ class Cyclotomic:
+     """Integer arithmetic in Z[z]/Phi_q(z)."""
+     def __init__(self, q):
+@@ -107,7 +138,7 @@
+ 
+ def cyclotomic_determinants():
+     records = []
+-    for q in (2, 3, 4, 5, 7, 8, 9, 16, 25, 27, 32, 64):
++    for q in (2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 16, 18, 20, 24, 25, 27, 32, 36, 64):
+         ring = Cyclotomic(q)
+         coeff = [ring.one]
+         # Exact formal identity product_j (1+t*z^j) = 1-(-t)^q.
+@@ -272,7 +303,9 @@
+ 
+ def main():
+     start = time.monotonic()
+-    result = {"arithmetic": "integers, Gaussian rationals, integer cyclotomic rings",
++    result = {"arithmetic": "integers, Gaussian rationals, integer cyclotomic rings, exact algebraic number fields",
++              "status":"PASS",
++              "universal_label_arithmetic":universal_arithmetic(),
+               "central_arithmetic": central_arithmetic(),
+               "formal_cyclic_block_determinants": cyclotomic_determinants(),
+               "half_rank_projectors": [projector_family(8), projector_family(16)],
+@@ -280,11 +313,16 @@
+               "rank_five_eighths": rank_five_eighths(),
+               "non_prime_power_counterexample": composite_counterexample(),
+               "noncommuting_bound_sharpness": sharpness_scalar_check(),
++              "separate_composite_matrix_checks":composite_checks(),
+               "analytic_quantifiers": "All dimensions and arbitrary coefficients are proved in the manuscript, not by these finite tests.",
+-              "independent_review_status": "not performed by this constructing agent"}
++              "review_scope": "This replay is not independent agent review. Version-specific review reports are separate from this computational certificate.",
++              "python_version":platform.python_version(),
++              "sympy_version":sp.__version__}
+     result["elapsed_seconds"] = time.monotonic()-start
+     result["script_sha256"] = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+-    dest = Path(__file__).with_name("quantum_dyadic_certificate.json")
++    result["companion_sha256"] = hashlib.sha256(Path(__file__).with_name('composite_matrix_checks.py').read_bytes()).hexdigest()
++    result["manuscript_sha256"] = hashlib.sha256(Path(__file__).with_name('quantum_weyl_trinomials.md').read_bytes()).hexdigest()
++    dest = Path(__file__).with_name("quantum_weyl_certificate.json")
+     dest.write_text(json.dumps(result, indent=2)+"\n", encoding="utf-8")
+     print("PASS", dest, "seconds", result["elapsed_seconds"], flush=True)
+ 
+--- original/quantum_sources.md
++++ final/quantum_sources.md
+@@ -1,22 +1,24 @@
+-# Quantum cycle 3: primary-source comparison and research boundary
++# Quantum final revision: primary-source comparison and research boundary
+ 
+-5 September 2026. This is a focused literature check for the new prime-power rank question, not a repeat of the full corpus audit and not an exhaustive priority search.
++5 September 2026. This is a focused literature check for the prime-power rank question and the final universal central-multiplicity extension. It is not a repeat of the full corpus audit or an exhaustive priority search. The original cycle-3 source and review remain unchanged.
+ 
+ The preceding results were read before selecting a new problem: the complete cycle-2 rank-five manuscript, its separate internal review, the exact replay source and source notes, and the cycle-1 Weyl list and Bayes manuscripts. Thus rank 6 or 7 in dimension 8 was deliberately excluded as a research target: the general two-label theorem already settles both. Re-proving the dimension-eight thirty-state classification alone would also add no result to this programme.
+ 
+-The chosen question was whether the dimension-eight trinomial obstruction reflects a prime-power rank law. The decisive arithmetic experiment checked central-label orders for every noncommuting pair in eleven small prime-power dimensions. The analytic proof then handled arbitrary coefficients. Two tempting larger claims were tested and rejected: an unrestricted composite-dimension nullity bound, and a power-of-two corank law for positive sums. Their exact counterexamples are in the manuscript and verifier.
++The original question was whether the dimension-eight trinomial obstruction reflects a prime-power rank law. The final revision identifies the exact arithmetic obstruction outside prime powers: a central sector has a common cyclic multiplicity m=d/(qh), with q the commutator order and h the central label-group order. The rank formula holds universally, while the genuine-trinomial nullity bound becomes 2m. This is a concrete application of classical cyclic representation machinery, not a new representation classification. A dimension-36 example attains 2m=6, and a zero-constant example proves that the coefficient hypothesis is necessary. The prime-power rank classification and operational applications remain unchanged.
+ 
+ ## Primary reading in this cycle
+ 
+ 1. **Johnston–Lovitz–Russo–Sikora, arXiv:2510.20789v1.** [Primary full text](https://arxiv.org/html/2510.20789v1). Rechecked Section 2.1, including Lemma 9 and Corollary 11. These supply the established learning-width/factor-width framework. Our operational sparse-square reduction is the previously derived Weyl specialization and normalization; it is not a new general equivalence.
+ 
+-2. **Gheorghiu, arXiv:1101.1519.** [Primary PDF](https://arxiv.org/pdf/1101.1519). Rechecked Section III, Theorem 1 and its group-average proof, PDF pages 3–4. The dimension/order identity and character projectors are credited as standard. The new arithmetic step is the evaluation of the specific subgroup generated by the two commutator-order powers in cyclic prime-power dimension.
++2. **Gheorghiu, arXiv:1101.1519.** [Primary PDF](https://arxiv.org/pdf/1101.1519). Rechecked Section III, Theorem 1 and its group-average proof, PDF pages 3–4. The dimension/order identity and character projectors are credited as standard. The present arithmetic evaluates the particular subgroup generated by the two commutator-order powers in the fixed cyclic Weyl representation, now in arbitrary dimension.
+ 
+ 3. **Hyun Kyu Kim, arXiv:1703.05513.** [Primary PDF](https://arxiv.org/pdf/1703.05513), with [publisher version](https://doi.org/10.1016/j.jpaa.2018.08.011). Read Section 2.1 through Proposition 2.6 and its short irreducibility proof, with the adjacent phase conventions. It describes classical cyclic quantum-torus representations and attributes the classification to earlier work. Its working convention has odd root order. The present manuscript therefore proves its even-order determinant and multiplicity statements directly, rather than applying an odd-order theorem to powers of two. A direct HTML route returned 404; the PDF route succeeded.
+ 
+ 4. **Fock–Goncharov, Annales ENS 42 (2009).** [Primary PDF](https://smf.emath.fr/download/pdf/43892). Read the title/bibliographic page and Section 3.1.1, PDF page 39, together with the root-order hypotheses surrounding Theorem 3.11. This is background for the standard root-of-unity center/quantum-binomial mechanism. The relevant cyclic determinant identity is proved in full in our draft. The source's additional cluster/Frobenius conclusions are not imported.
+ 
+-The draft's general rank theorem has no unreproduced external proof step: character multiplicity, the label-group arithmetic, the cyclic block determinant and the circle argument are proved there. The source comparisons identify shared machinery; they do not establish external priority of the final theorem.
++5. **Farenick, Ojo and Plosker, Universality of Weyl Unitaries, arXiv:2101.00129v1.** [Primary PDF](https://arxiv.org/pdf/2101.00129). Read the abstract and Section 2, particularly Lemmas 2.1–2.2 and the cyclic normal-form proof. Equal-dimensional eigenspaces and repeated cyclic blocks are direct classical antecedents of Lemma 1. Their use here is not described as a new representation-theoretic result. The article proves the common multiplicity within the fixed cyclic Weyl representation by trace orthogonality and label arithmetic, then derives a scalar rank test and a two-circle bound.
++
++The article's general rank theorem has no unreproduced external proof step: character multiplicity, the label-group arithmetic, the cyclic block determinant and the circle argument are proved there. The optional gcd-of-maximal-minors evaluation is a standard integer-lattice identity; neither the universal block theorem nor its independent valuation proof of the prime-power corollary depends on it. The source comparisons identify shared machinery; they do not establish external priority of the final theorem.
+ 
+ ## Search record and rejected overlaps
+ 
+@@ -29,10 +31,12 @@
+ * `"trinomial" "quantum torus" rank`
+ * `"finite Gabor" "three" "linear dependence"`
+ * `"Weyl" "nullity"`
++* `finite Weyl pair root of unity representation multiplicities central powers unitary matrices`
++* `site:arxiv.org finite Heisenberg group degenerate commutator irreducible representation dimension`
+ 
+ The last broad searches returned many unrelated Weyl-curvature, Weyl-group and real-line HRT items. They were not proof dependencies. In particular, a real-line finite-cardinality Gabor statement is not a theorem about the rank of a sparse cyclic matrix, and a generic full-spark finite Gabor theorem has different coefficient and window quantifiers. No conclusion about the validity of those unrelated papers is made here.
+ 
+-The inspected primary sources did not state the exact prime-power corank list, the all-dyadic thirty-state low-rank stratum, or the exact list value at rank 13d/16. This is only a bounded negative search. Before an external submission, a wider search should examine equivalent statements in finite twisted-group-algebra rank, sparse finite Weyl transforms, and covariant factor-width cones.
++The inspected primary sources did not state the exact prime-power corank list, the all-dyadic thirty-state low-rank stratum, or the exact list value at rank 13d/16. This is only a bounded negative search. Equivalent statements in finite twisted-group-algebra rank, sparse finite Weyl transforms, and covariant factor-width cones could affect the eventual priority assessment. The universal cyclic machinery itself has explicit antecedents and is not presented as newly discovered representation theory.
+ 
+ ## Contribution ledger
+ 
+@@ -40,11 +44,11 @@
+ |---|---|
+ | Weyl sparse-square/POVM equivalence, two-label corank divisibility and Bayes fidelity formula | Established in cycle 1; imported with credit. |
+ | Exact list value four at (8,5), thirty rank-four states and their dimension-eight incidence | Established and separately reviewed in cycle 2; not claimed new here. |
+-| Noncommuting central block rule in every prime-power cyclic dimension | New analytic result of cycle 3, with known representation machinery made explicit. |
++| Central block rank rule in every cyclic dimension | Final revision: exact common multiplicity m=d/(qh), determinant/rank formula, degeneracy conditions, and sharp composite example. Uses classical representation machinery. |
+ | Complete individual rank list at Weyl sparsity at most three for every prime power | New theorem of cycle 3. |
+ | Exactly thirty feasible flat half-rank states below 3d/4 for every dyadic d at least eight | New all-dimension extension; dimension eight is the prior endpoint. |
+ | Exact list value three at rank 13d/16 and full three-list feasible-rank set in dimension sixteen | New operational result and positive-sum counterexample. |
+ | Exact list value four at rank 5d/8 | New for dyadic d at least sixteen; d=8 is prior. |
+-| Noncommuting nullity-three counterexample in dimension twelve | New boundary example of this cycle; disproves an overbroad generalization, not an inspected published claim. |
++| Composite multiplicity examples | The old dimension-twelve example is explained by m=3. The new dimension-36 example attains the corrected 2m bound. A dimension-twelve zero-constant example has six singular sectors and disproves omitting c nonzero from that bound. No inspected published claim is being refuted. |
+ 
+-Separate internal review has not been performed by the constructing agent. Its own derivations and exact checks are not labeled independent review.
++The cycle-3 prime-power edition received separate internal mathematical review. Its original source hash and report are preserved in the earlier output directory. That report does not automatically cover the new universal theorem. The final package tracks any updated screening separately. The constructing agent's derivations and two exact computational routes are not labeled independent agent review.
+--- /dev/null
++++ final/composite_matrix_checks.py
+@@ -0,0 +1,111 @@
++"""Method-independent exact checks for the universal central-block formula.
++
++Written by the constructing agent; this is a separate computational route, not
++a claim of independent agent review. It does not import quantum_weyl_verify.
++Groups are enumerated by closure, and ranks use direct exact matrices.
++"""
++from collections import deque
++from itertools import product
++from math import gcd
++from pathlib import Path
++import hashlib
++import json
++import sympy as s
++
++
++def closure(d, generators):
++    seen, pending = {(0, 0)}, deque([(0, 0)])
++    while pending:
++        x, y = pending.popleft()
++        for a, b in generators:
++            z = ((x+a) % d, (y+b) % d)
++            if z not in seen:
++                seen.add(z)
++                pending.append(z)
++    return seen
++
++
++def gaussian_weyl(d, label):
++    a, b = label
++    assert d % 4 == 0 and b % (d//4) == 0
++    matrix = s.zeros(d)
++    for col in range(d):
++        matrix[(col+a) % d, col] = s.I**((b//(d//4)*col) % 4)
++    return matrix
++
++
++def direct_case(name, d, u, v, c, a=s.Integer(1), b=s.Integer(1),
++                uphase=s.Integer(1), vphase=s.Integer(1), expected_nullity=None,
++                expected_h=None, expected_m=None):
++    U, V = uphase*gaussian_weyl(d, u), vphase*gaussian_weyl(d, v)
++    q = d//gcd(d, u[0]*v[1]-u[1]*v[0])
++    H = closure(d, (u, v))
++    R = closure(d, (tuple(q*x % d for x in u), tuple(q*x % d for x in v)))
++    h = len(R)
++    assert len(H) == q*q*h and d % (q*h) == 0
++    m = d//(q*h)
++    assert expected_h is None or h == expected_h
++    assert expected_m is None or m == expected_m
++    D = c*s.eye(d)+a*U+b*V
++    power_test = c**q*s.eye(d)-(-1)**q*(a**q*U**q+b**q*V**q)
++    power_test = power_test.applyfunc(s.simplify)
++    nullity = d-D.to_DM(extension=True).rank()
++    central_nullity = d-power_test.to_DM(extension=True).rank()
++    assert expected_nullity is None or nullity == expected_nullity
++    assert central_nullity == q*nullity
++    assert nullity % m == 0
++    singular_sectors = nullity//m
++    assert central_nullity == q*m*singular_sectors
++    if c != 0:
++        assert nullity <= min(2, h)*m
++    return {'name':name, 'd':d, 'u':u, 'v':v, 'c':str(c), 'a':str(a), 'b':str(b),
++            'u_phase':str(uphase), 'v_phase':str(vphase), 'q':q,
++            'H_order_by_closure':len(H), 'h_by_closure':h, 'm':m,
++            'direct_exact_rank':d-nullity, 'direct_exact_nullity':nullity,
++            'central_polynomial_nullity':central_nullity,
++            'singular_sector_count_from_two_exact_ranks':singular_sectors,
++            'two_sector_bound_applicable':c != 0, 'rank_field':str(D.to_DM(extension=True).domain)}
++
++
++def run_checks():
++    cases = [
++        direct_case('one_sector_three_copies',12,(3,0),(0,3),s.root(2,4),
++                    expected_nullity=3,expected_h=1,expected_m=3),
++        direct_case('two_central_characters_only_one_singular',12,(3,0),(0,6),s.sqrt(2),
++                    expected_nullity=3,expected_h=2,expected_m=3),
++        direct_case('elementary_two_group_only_one_singular',24,(6,0),(0,6),s.sqrt(2),
++                    expected_nullity=3,expected_h=4,expected_m=3),
++        direct_case('two_singular_sectors_multiplicity_one',12,(1,0),(-1,6),s.Integer(1),
++                    vphase=s.I,expected_nullity=2,expected_h=6,expected_m=1),
++        direct_case('two_singular_sectors_multiplicity_three',36,(3,0),(-3,18),s.Integer(1),
++                    vphase=s.I,expected_nullity=6,expected_h=6,expected_m=3),
++        direct_case('commuting_two_roots',12,(0,3),(0,6),s.I,a=-(1+s.I),
++                    expected_nullity=6,expected_h=4,expected_m=3),
++        direct_case('zero_constant_negative_control',12,(1,0),(1,6),s.Integer(0),
++                    expected_nullity=6,expected_h=6,expected_m=1),
++    ]
++    assert cases[-1]['direct_exact_nullity'] > 2*cases[-1]['m']
++    # Independent algebraic root count for the two-sixth-root fixtures.
++    z=s.Symbol('z')
++    field=s.QQ.alg_field_from_poly(s.Poly(s.cyclotomic_poly(6,z)),alias='zeta6')
++    root=field.unit
++    sixth_root_zeros=[j for j in range(6) if field.one-root**j-root**((-j)%6)==field.zero]
++    assert sixth_root_zeros==[1,5]
++    # Degenerate centers: distinct sign corners cannot yield two zeros when
++    # all three coefficients are nonzero. These fixture values hit one corner.
++    elementary_zero_pairs=[(i,j) for i,j in product((1,-1),repeat=2) if i+j==2]
++    assert elementary_zero_pairs==[(1,1)]
++    return {'arithmetic':'direct SymPy exact number fields and direct group closure',
++            'cases':cases,'sixth_root_zero_exponents':sixth_root_zeros,
++            'elementary_two_group_zero_pairs':elementary_zero_pairs,
++            'zero_constant_exceeds_two_m_as_required':True,
++            'checker_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
++            'independence_scope':'No import of the main verifier; a separate method by the same constructing agent, not a new independent review.'}
++
++
++if __name__=='__main__':
++    result=run_checks()
++    path=Path(__file__).with_name('composite_matrix_certificate.json')
++    path.write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
++    print(json.dumps({'status':'PASS','cases':len(result['cases']),
++                      'ranks':[(x['d'],x['direct_exact_rank']) for x in result['cases']]}))
+--- /dev/null
++++ final/README.md
+@@ -0,0 +1,17 @@
++# Reproducing the quantum article
++
++The article source is `quantum_weyl_trinomials.md`. Keep it beside `quantum_weyl_verify.py` and `composite_matrix_checks.py`.
++
++Run `python quantum_weyl_verify.py` to regenerate the full exact finite certificate, or `python composite_matrix_checks.py` to run the direct composite-dimension checks separately. SymPy is the only dependency outside the Python standard library. The recorded Python and SymPy versions appear in `quantum_weyl_certificate.json`.
++
++The full run checks 714,096 arbitrary-dimension label pairs, 1,948,590 prime-power noncommuting pairs, nineteen formal cyclic determinant products, the dyadic projector and positive-sum constructions, and seven direct composite-dimension matrices. It takes approximately nine seconds in the recorded environment. All rank and feasibility decisions are exact. Runtime measurements are descriptive and need not reproduce byte for byte.
++
++The direct composite checker uses group closure and exact matrices without importing the main verifier. It was written by the same constructing agent. It is a separate computational method, not a separate agent review.
++
++`revision_notes.md` identifies the preserved earlier edition, changes and review scope. `revision.diff` compares the earlier manuscript and verifier with this edition. `quantum_sources.md` records the bounded primary-source comparison. `checkpoint.json` records the source and evidence hashes and preservation checks.
++
++The final universal delta and its thirteen-page PDF passed separate internal screening by another agent. `quantum_final_independent_review.md` and its JSON identify the exact reviewed hashes and limits. Its separate mathematical checker is `quantum_composite_review_checks.py`; run `python quantum_composite_review_checks.py --source-dir .` to reproduce it. The optional `--pdf PATH` argument also checks PDF markers and requires pypdf. This internal screening assigns no ARR score and is distinct from any subsequent external or user-commissioned evaluation.
++
++`source_manifest.json` lists the portable package files and hashes. Python bytecode caches are excluded from that manifest.
++
++The package does not require the earlier research workspace to run the verifier or follow the article proofs. No external publication action is performed by these files.
+--- /dev/null
++++ final/requirements.txt
+@@ -0,0 +1 @@
++sympy==1.14.0

@@ -1,0 +1,1 @@
+Manuscript: CC-BY-4.0. Catalogue metadata: CC0-1.0. Author-supplied Python code: Apache-2.0. Author-generated certificates: CC0-1.0. External references remain under their own licenses; no third-party article full text is relicensed here.
