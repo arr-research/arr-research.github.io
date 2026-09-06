@@ -6,6 +6,21 @@ non-public quarantine, fails closed when malware scanning is unavailable, emails
 the operator a protected case link without attaching the manuscript, and records
 human decisions. It never publishes a submission or writes to `papers/`.
 
+After storing an upload, the receiver redirects to a session-protected receipt
+with the assigned `SUB-...` registration number, received timestamp, manuscript
+hash, current state and a downloadable text receipt. The number proves receipt,
+not approval or publication; it is not the final identifier of a published paper.
+The receipt displays the shared destination from `site/donations.json`, an optional
+PayPal link and a copyable registration reference. No paper data is automatically
+sent to PayPal. Payment notes have no effect on editorial decisions.
+
+`/receipt` and `/receipt/download` work only in the submitting browser session.
+The number is never used as an access credential. Both routes, the form and editor
+pages carry `no-store` and `noindex` responses. Authors should download the receipt
+before the browser session ends; a later upload replaces that session's displayed
+receipt. Safety-rejected files get a rejection explanation rather than a donation
+invitation.
+
 The service is suitable for a controlled pilot after the production checklist in
 [`docs/INTAKE_OPERATIONS.md`](../../docs/INTAKE_OPERATIONS.md) has been signed.
 It is not permission to open general public intake.

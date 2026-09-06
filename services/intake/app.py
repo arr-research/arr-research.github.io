@@ -6,6 +6,7 @@ import functools
 import getpass
 import hashlib
 import hmac
+import io
 import json
 import os
 import secrets
@@ -37,6 +38,8 @@ from flask import (
 )
 from werkzeug.middleware.proxy_fix import ProxyFix
 from werkzeug.security import check_password_hash, generate_password_hash
+
+from scripts.donationlib import load_donation_url
 
 
 TERMS_VERSION = "ARR-DEPOSIT-1.4"
@@ -262,6 +265,7 @@ def create_app(test_config: dict | None = None) -> Flask:
         SMTP_FROM=os.environ.get("ARR_SMTP_FROM", ""),
         SMTP_SSL=os.environ.get("ARR_SMTP_SSL", "0") == "1",
         SMTP_STARTTLS=os.environ.get("ARR_SMTP_STARTTLS", "1") == "1",
+        DONATIONS_CONFIG=str(Path(__file__).resolve().parents[2] / "site" / "donations.json"),
         TESTING=False,
     )
     if test_config:
@@ -285,6 +289,7 @@ def create_app(test_config: dict | None = None) -> Flask:
     @app.after_request
     def security_headers(response):
         response.headers["Cache-Control"] = "no-store"
+        response.headers["X-Robots-Tag"] = "noindex, nofollow, noarchive"
         response.headers["Content-Security-Policy"] = (
             "default-src 'self'; img-src 'self'; style-src 'self' 'unsafe-inline'; "
             "form-action 'self'; frame-ancestors 'none'; base-uri 'none'"
@@ -528,6 +533,10 @@ def notify_operator(submission_id: str, title: str, submitter_email: str, scan_s
 def register_routes(app: Flask) -> None:
     app.jinja_env.globals["csrf_token"] = csrf_token
 
+    @app.get("/robots.txt")
+    def robots():
+        return app.response_class("User-agent: *\nDisallow: /\n", mimetype="text/plain")
+
     @app.get("/healthz")
     def healthz():
         get_db().execute("SELECT 1").fetchone()
@@ -664,12 +673,50 @@ def register_routes(app: Flask) -> None:
             row = db.execute("SELECT * FROM submissions WHERE id=?", (submission_id,)).fetchone()
             scan_file_status, _ = scan_submission(row)
             notify_operator(submission_id, title, email, scan_file_status)
-            flash(
-                f"Private submission {submission_id} received. Keep this case identifier. Uploading has not published the manuscript.",
-                "success" if scan_file_status == "clean" else "warning",
-            )
-            return redirect(url_for("submit"))
+            # The registration number is a reference, never a credential. The
+            # receipt is available only in the browser session that uploaded it.
+            session["receipt_submission_id"] = submission_id
+            return redirect(url_for("receipt"))
         return render_template("submit.html", terms=TERMS_VERSION, privacy=PRIVACY_VERSION)
+
+    def receipt_row():
+        submission_id = session.get("receipt_submission_id")
+        if not submission_id:
+            abort(404)
+        row = get_db().execute("SELECT * FROM submissions WHERE id=?", (submission_id,)).fetchone()
+        if row is None:
+            abort(404)
+        return row
+
+    @app.get("/receipt")
+    def receipt():
+        row = receipt_row()
+        donation_url = load_donation_url(Path(current_app_config("DONATIONS_CONFIG")))
+        return render_template("receipt.html", submission=row, donation_url=donation_url)
+
+    @app.get("/receipt/download")
+    def download_receipt():
+        row = receipt_row()
+        body = (
+            "AIRR.SCIENCE — private submission receipt\n\n"
+            f"Registration number: {row['id']}\n"
+            f"Received at (UTC): {row['created_at']}\n"
+            f"Paper title: {row['title']}\n"
+            f"Manuscript SHA-256: {row['sha256']}\n"
+            f"Bytes received: {row['size_bytes']}\n"
+            f"Current state: {row['status']}\n"
+            f"Safety checks: {row['scan_status']}\n\n"
+            "Registration confirms receipt only, not approval or publication.\n"
+            "The manuscript remains private while AIRR considers its eligibility and approval.\n"
+            "If safety checks reject a file, a replacement must be submitted.\n"
+            "This is a submission reference, not the final identifier of a published paper.\n\n"
+            f"Optional donation note: AIRR submission {row['id']}\n"
+            "Donating is optional and does not affect approval, review speed, scores or ranking.\n"
+            "A donation reference cannot open the private submission or receipt.\n"
+            "Contact: lluiseriksson@gmail.com\n"
+        )
+        return send_file(io.BytesIO(body.encode("utf-8")), mimetype="text/plain",
+                         as_attachment=True, download_name=f"{row['id']}-receipt.txt", conditional=False)
 
     @app.get("/admin/submission/<submission_id>")
     @editor_required
