@@ -13,9 +13,17 @@ no paid web-hosting service or nameserver transfer is needed.
    in GitHub, and keep this record permanently.
 2. In the **repository** Settings > Pages, set the custom domain to
    `airr.science` before pointing the domain's web records at GitHub.
-3. Replace only Porkbun's parking records at the apex and `www` with the records
+3. Replace only Porkbun's parking records at the apex and wildcard with the records
    below. Preserve unrelated TXT, mail, and other service records. Do not add
    wildcard records. Save the previous DNS values before changing them.
+
+Porkbun supports an apex `ALIAS` (CNAME flattening). The deployment uses
+`ALIAS @ -> arr-research.github.io` and `CNAME www -> arr-research.github.io`,
+plus the permanent verification TXT. Change the default wildcard parking record
+to the explicit `www` hostname. Do not keep the parking wildcard.
+
+If a provider does not support ALIAS, use the following A/AAAA records instead
+of the apex ALIAS, with the same `www` CNAME:
 
 | Type | Host | Value |
 | --- | --- | --- |
