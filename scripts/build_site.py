@@ -196,9 +196,10 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
-    <a class="brand" href="{base}/">
-      <span class="brand-mark" aria-hidden="true">A</span>
-      <span><strong>ARR</strong><small>Archive for Rigorous Research</small></span>
+    <a class="brand" href="{base}/" aria-label="ARR — Archive for Rigorous Research, home">
+      <svg class="brand-logo" viewBox="224 288 1090 446" width="244" height="100" aria-hidden="true" focusable="false">
+        <image href="{base}/assets/arr-logo.png" width="1536" height="1024"/>
+      </svg>
     </a>
     <nav aria-label="Primary navigation">
       <a href="{base}/papers/">Papers</a>
@@ -1322,6 +1323,7 @@ def main() -> int:
     (OUTPUT_DIR / "assets").mkdir(parents=True)
     (OUTPUT_DIR / "schema").mkdir(parents=True)
     shutil.copy2(SITE_DIR / "style.css", OUTPUT_DIR / "assets" / "style.css")
+    shutil.copy2(SITE_DIR / "arr-logo.png", OUTPUT_DIR / "assets" / "arr-logo.png")
     for icon in ("favicon.ico", "favicon.svg", "favicon-96x96.png", "apple-touch-icon.png"):
         shutil.copy2(SITE_DIR / icon, OUTPUT_DIR / icon)
     shutil.copy2(SITE_DIR / "indexnow-key.txt", OUTPUT_DIR / "indexnow-key.txt")
