@@ -143,6 +143,21 @@ class IndexingTests(unittest.TestCase):
             page = check_site_indexing.Page(self.render(local=local, canonical=canonical))
             self.assertNotIn("citation_pdf_url", page.meta)
 
+    def test_publisher_and_paper_metadata_follow_the_configured_site_root(self):
+        for site_root in ("https://airr.science", "https://example.test/preview", ""):
+            with self.subTest(site_root=site_root):
+                text = self.render(canonical=site_root)
+                page = check_site_indexing.Page(text)
+                structured = json.loads(text.split('<script type="application/ld+json">')[1].split("</script>")[0])
+                if site_root:
+                    expected = f"{site_root}/papers/{self.paper.id}/"
+                    self.assertEqual(page.canonical, expected)
+                    self.assertEqual(structured["url"], expected)
+                    self.assertEqual(structured["publisher"]["url"], f"{site_root}/")
+                    self.assertTrue(page.meta["citation_pdf_url"][0].startswith(expected))
+                else:
+                    self.assertNotIn("url", structured["publisher"])
+
     def test_doi_and_special_characters_are_preserved(self):
         self.paper.metadata["doi"] = "10.1234/example"
         self.paper.metadata["title"] = 'A < B & "C"'
