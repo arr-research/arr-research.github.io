@@ -54,6 +54,7 @@ jobs:
           ARR_GOOGLE_SITE_VERIFICATION: |-
             ${{ vars.ARR_GOOGLE_SITE_VERIFICATION }}
             ${{ vars.ARR_GOOGLE_SITE_VERIFICATION_AIRR }}
+          AIRR_BING_SITE_VERIFICATION: ${{ vars.AIRR_BING_SITE_VERIFICATION }}
           ARR_INTAKE_URL: ${{ vars.ARR_INTAKE_URL }}
           PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
           PAGES_BASE_URL: ${{ steps.pages.outputs.base_url }}
@@ -71,6 +72,7 @@ jobs:
             --metrics-file "$RUNNER_TEMP/arr-metrics.json" \
             --intake-url "$ARR_INTAKE_URL" \
             --google-site-verification "$ARR_GOOGLE_SITE_VERIFICATION" \
+            --bing-site-verification "$AIRR_BING_SITE_VERIFICATION" \
             --fetch-remote-pdfs
           python scripts/check_site_indexing.py --canonical-url "$canonical_url"
       - name: Upload Pages artifact

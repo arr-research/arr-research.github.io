@@ -53,6 +53,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--fetch-remote-pdfs", action="store_true", help="Fetch and verify historical Release PDFs for a complete production build")
     parser.add_argument("--pdf-cache-dir", type=Path, default=ROOT / "work" / "pdf-cache", help="SHA-256 keyed cache for historical PDFs")
     parser.add_argument("--google-site-verification", default="", help="Search Console HTML verification tokens, one content value per line")
+    parser.add_argument("--bing-site-verification", default="", help="Bing Webmaster Tools HTML verification content value")
     return parser.parse_args()
 
 
@@ -479,7 +480,7 @@ def paper_card(
 </article>"""
 
 
-def build_home(papers: list, timestamps: dict, base: str, canonical_url: str, author_lookup: dict[str, dict] | None = None, metrics: dict | None = None, author_count: int = 0, google_site_verification: str = "") -> str:
+def build_home(papers: list, timestamps: dict, base: str, canonical_url: str, author_lookup: dict[str, dict] | None = None, metrics: dict | None = None, author_count: int = 0, google_site_verification: str = "", bing_site_verification: str = "") -> str:
     accepted_papers = sum(p.metadata["status"] in {"accepted", "corrected"} and p.record_type == "research_paper" for p in papers)
     archived_papers = sum(p.metadata["status"] == "archived" and p.record_type == "research_paper" for p in papers)
     accepted_notes = sum(p.metadata["status"] != "withdrawn" and p.record_type == "technical_note" for p in papers)
@@ -518,6 +519,8 @@ def build_home(papers: list, timestamps: dict, base: str, canonical_url: str, au
     canonical = f"{canonical_url}/" if canonical_url else ""
     tokens = dict.fromkeys(token.strip() for token in google_site_verification.splitlines() if token.strip())
     verification = "\n  ".join(f'<meta name="google-site-verification" content="{esc(token)}">' for token in tokens)
+    if bing_site_verification.strip():
+        verification += f'\n  <meta name="msvalidate.01" content="{esc(bing_site_verification.strip())}">'
     identity = ""
     if canonical:
         website = {"@context": "https://schema.org", "@type": "WebSite", "@id": f"{canonical}#website", "name": SITE_NAME, "alternateName": ["AIRR", SITE_FULL_NAME, "airr.science"], "url": canonical}
@@ -1451,7 +1454,7 @@ def main() -> int:
         local_pdfs.add((version.id, version.version))
     print(f"Prepared same-directory PDFs for {len(local_pdfs)} version(s).")
 
-    write(OUTPUT_DIR / "index.html", build_home(papers, timestamps, base, canonical_url, author_lookup, metrics, len(profiles), args.google_site_verification))
+    write(OUTPUT_DIR / "index.html", build_home(papers, timestamps, base, canonical_url, author_lookup, metrics, len(profiles), args.google_site_verification, args.bing_site_verification))
     research_count = sum(paper.record_type == "research_paper" for paper in papers)
     paper_page_count = max(1, (research_count + 49) // 50)
     for page_number in range(1, paper_page_count + 1):
