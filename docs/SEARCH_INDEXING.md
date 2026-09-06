@@ -84,6 +84,21 @@ Verification, sitemap submission and index requests must be confirmed in the
 operator's Search Console session. A successful build or a DOI does not establish
 that these account-level steps happened or that Google indexed the pages.
 
+## Bing Webmaster Tools
+
+1. Sign in to [Bing Webmaster Tools](https://www.bing.com/webmasters/) and add
+   `https://airr.science/`. Choose **HTML Meta Tag** verification.
+2. Copy the issued `msvalidate.01` content value into the GitHub Actions repository
+   variable **AIRR_BING_SITE_VERIFICATION**. This is a public ownership token,
+   not an account credential. The Pages workflow passes it to the build, which
+   emits the escaped tag in the homepage head alongside Google's existing tags.
+3. Publish the catalogue, confirm the tag in the live HTML, then click **Verify**
+   in Bing. Keep the variable and tag after successful verification.
+4. Submit `https://airr.science/sitemap.xml` and inspect the homepage with
+   **URL Inspection**. Record the actual indexed/crawled status separately from
+   sitemap acceptance and IndexNow notifications. HTTP 200 from IndexNow confirms
+   receipt of a submission; it does not prove Bing has indexed the URLs.
+
 ## Search-result name
 
 The homepage declares a `WebSite` with preferred name `AIRR.SCIENCE`, alternate
