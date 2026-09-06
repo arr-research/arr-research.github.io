@@ -187,6 +187,10 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
   <meta name="description" content="{esc(description)}">
   {canonical_tag}
   {head_extra}
+  <link rel="icon" href="{base}/favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="icon" type="image/png" href="{base}/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/svg+xml" href="{base}/favicon.svg" sizes="any">
+  <link rel="apple-touch-icon" href="{base}/apple-touch-icon.png" sizes="180x180">
   <link rel="stylesheet" href="{base}/assets/style.css?v={style_version}">
 </head>
 <body>
@@ -1320,6 +1324,8 @@ def main() -> int:
     (OUTPUT_DIR / "assets").mkdir(parents=True)
     (OUTPUT_DIR / "schema").mkdir(parents=True)
     shutil.copy2(SITE_DIR / "style.css", OUTPUT_DIR / "assets" / "style.css")
+    for icon in ("favicon.ico", "favicon.svg", "favicon-96x96.png", "apple-touch-icon.png"):
+        shutil.copy2(SITE_DIR / icon, OUTPUT_DIR / icon)
     shutil.copy2(SITE_DIR / "indexnow-key.txt", OUTPUT_DIR / "indexnow-key.txt")
     shutil.copy2(ROOT / "schema" / "paper.schema.json", OUTPUT_DIR / "schema" / "paper.schema.json")
     shutil.copy2(ROOT / "schema" / "submission-receipt.schema.json", OUTPUT_DIR / "schema" / "submission-receipt.schema.json")
