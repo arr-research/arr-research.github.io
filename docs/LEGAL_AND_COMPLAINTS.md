@@ -2,9 +2,9 @@
 
 ## Responsible operator
 
-**Archive for Rigorous Research (ARR)** is currently a non-commercial project
+**Archive for Independent & Rigorous Research (AIRR)** is currently a non-commercial project
 operated by **Lluis Eriksson**, a natural person in Stockholm, Sweden. His roles are
-founder, registry operator, responsible editor and GDPR data controller. ARR is not
+founder, registry operator, responsible editor and GDPR data controller. AIRR is not
 presented as a registered company; “VD/CEO” is not used.
 
 - General, deposit, privacy, editorial appeal and legal notices:
@@ -13,22 +13,22 @@ presented as a registered company; “VD/CEO” is not used.
 - No manuscript attachments or sensitive evidence by ordinary email. Ask for a
   secure case channel first.
 
-Use a clear subject: `ARR submission`, `ARR appeal`, `ARR privacy`, `ARR copyright`,
-`ARR illegal-content notice`, or `ARR security`. ARR assigns a case identifier.
+Use a clear subject: `AIRR submission`, `AIRR appeal`, `AIRR privacy`, `AIRR copyright`,
+`AIRR illegal-content notice`, or `AIRR security`. AIRR assigns a case identifier.
 
 ## Editorial appeal
 
 A depositor may appeal a decline or restriction once within 30 days. Identify the
 private case, the challenged decision, the specific error and the requested remedy.
 The original decision-maker may correct an obvious administrative error but may not
-be the sole appeal reviewer. ARR acknowledges within 7 days and aims to decide
+be the sole appeal reviewer. AIRR acknowledges within 7 days and aims to decide
 within 30 days. A conflict requires an independent reviewer.
 
 ## Copyright, privacy and illegal-content notice
 
-A notice should identify the notifier and contact, the exact ARR URL/version or
+A notice should identify the notifier and contact, the exact AIRR URL/version or
 private case, the material and legal/right basis, supporting facts, requested
-action, and a good-faith accuracy statement. ARR may ask for identity or authority
+action, and a good-faith accuracy statement. AIRR may ask for identity or authority
 evidence proportionate to the request. It will acknowledge receipt, preserve an
 evidence log, restrict urgently where credible harm requires it, notify the affected
 depositor where lawful, and give reasons for the decision. Knowingly abusive notices
@@ -46,6 +46,6 @@ to the Swedish Authority for Privacy Protection (IMY):
 
 ## Service-address limitation
 
-This electronic contact is usable for the direct-submission pilot. ARR must obtain and
+This electronic contact is usable for the direct-submission pilot. AIRR must obtain and
 publish a stable service/postal address and obtain Swedish legal review before it
 opens unrestricted public accounts or describes the service as fully compliant.

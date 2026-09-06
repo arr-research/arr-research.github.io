@@ -98,9 +98,9 @@ def select_paper(papers: Iterable[Paper], paper_id: str, version: str | None = N
     matches = [paper for paper in papers if paper.id == paper_id and (version is None or paper.version == version)]
     if not matches:
         requested = f" {version}" if version else ""
-        raise ValueError(f"ARR record {paper_id}{requested} was not found")
+        raise ValueError(f"AIRR record {paper_id}{requested} was not found")
     if version is not None and len(matches) != 1:
-        raise ValueError(f"ARR record {paper_id} {version} is ambiguous")
+        raise ValueError(f"AIRR record {paper_id} {version} is ambiguous")
     return max(matches, key=lambda paper: paper.version_number)
 
 
@@ -400,7 +400,7 @@ def validate_paper(paper: Paper) -> list[str]:
                 continue
             related_id = relation.get("id")
             if not isinstance(related_id, str) or not ID_PATTERN.match(related_id):
-                errors.append(f"related_records[{index}].id: invalid ARR identifier")
+                errors.append(f"related_records[{index}].id: invalid AIRR identifier")
             elif related_id == paper_id:
                 errors.append(f"related_records[{index}].id: a record cannot relate to itself")
             elif related_id in related_ids:
@@ -437,7 +437,7 @@ def validate_paper(paper: Paper) -> list[str]:
         if not isinstance(licenses.get("manuscript"), str) or not licenses["manuscript"].strip():
             errors.append("licenses.manuscript: an SPDX identifier is required")
         if licenses.get("metadata") != "CC0-1.0":
-            errors.append("licenses.metadata: ARR catalogue metadata must be CC0-1.0")
+            errors.append("licenses.metadata: AIRR catalogue metadata must be CC0-1.0")
         for category in ("code", "data"):
             entries = licenses.get(category)
             if not isinstance(entries, list):
@@ -629,7 +629,7 @@ def validate_paper(paper: Paper) -> list[str]:
             errors.append("editorial.decision: archived records require historical_import")
 
     if metadata.get("status") == "archived" and isinstance(screening, dict) and screening.get("status") != "not_assessed":
-        errors.append("screening.status: historical imports must remain not_assessed until a new ARR version is audited")
+        errors.append("screening.status: historical imports must remain not_assessed until a new AIRR version is audited")
 
     return errors
 

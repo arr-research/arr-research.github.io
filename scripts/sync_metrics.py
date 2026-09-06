@@ -15,13 +15,13 @@ TAG_PATTERN = re.compile(r"^(ARR-[0-9]{4}-[0-9A-HJKMNP-TV-Z]{16})-(v[1-9][0-9]*)
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Build a reproducible ARR activity-metrics snapshot.")
+    parser = argparse.ArgumentParser(description="Build a reproducible AIRR activity-metrics snapshot.")
     parser.add_argument("--repository", required=True, help="GitHub OWNER/REPOSITORY")
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument(
         "--views-file",
         type=Path,
-        help="Optional privacy-reviewed page-view export using the documented ARR interchange format.",
+        help="Optional privacy-reviewed page-view export using the documented AIRR interchange format.",
     )
     return parser.parse_args()
 
@@ -57,7 +57,7 @@ def load_views(path: Path | None) -> tuple[dict, dict[str, dict[str, int | None]
         return (
             {
                 "available": False,
-                "definition": "Page views are not measured until ARR connects a privacy-reviewed, no-cookie analytics source.",
+                "definition": "Page views are not measured until AIRR connects a privacy-reviewed, no-cookie analytics source.",
                 "provider": "",
                 "window_start": None,
                 "window_end": None,
@@ -70,7 +70,7 @@ def load_views(path: Path | None) -> tuple[dict, dict[str, dict[str, int | None]
         raise ValueError("views file must contain provider, window_start, window_end and papers")
     papers = value["papers"]
     if not isinstance(papers, dict):
-        raise ValueError("views papers must be an object keyed by ARR id")
+        raise ValueError("views papers must be an object keyed by AIRR id")
     normalized: dict[str, dict[str, int | None]] = {}
     for paper_id, metrics in papers.items():
         if not isinstance(metrics, dict):
@@ -142,7 +142,7 @@ def main() -> int:
     snapshot = build_snapshot(args.repository, releases, args.views_file)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(snapshot, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
-    print(f"Wrote metrics for {len(snapshot['papers'])} ARR record(s) to {args.output}")
+    print(f"Wrote metrics for {len(snapshot['papers'])} AIRR record(s) to {args.output}")
     return 0
 
 

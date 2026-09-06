@@ -37,7 +37,7 @@ of the apex ALIAS, with the same `www` CNAME:
 | AAAA | @ | 2606:50c0:8003::153 |
 | CNAME | www | arr-research.github.io |
 
-4. Run **Publish ARR catalogue**. The build gets `base_url` and `base_path`
+4. Run **Publish AIRR catalogue**. The build gets `base_url` and `base_path`
    from `actions/configure-pages`, rather than inferring them from the repository
    name. All discovery URLs use HTTPS. This repository deploys through Actions,
    so a source `CNAME` file is neither required nor used by GitHub Pages.
@@ -56,7 +56,7 @@ of the apex ALIAS, with the same `www` CNAME:
 
 If a rollback is necessary, first restore the saved Porkbun web records while
 the custom domain is still assigned in GitHub. Then remove the repository's
-custom domain and run **Publish ARR catalogue** again. Its configured URL will
+custom domain and run **Publish AIRR catalogue** again. Its configured URL will
 return to `https://arr-research.github.io/`. Keep the organization verification
 TXT record. Do not leave DNS pointing at GitHub after removing its domain claim.
 Domain settings and DNS changes do not modify the immutable papers or their IDs.

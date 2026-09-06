@@ -1,6 +1,6 @@
 # Capacity and migration plan
 
-ARR is designed to grow without changing public identifiers or rewriting accepted records. Capacity is added only when measured load justifies it.
+AIRR is designed to grow without changing public identifiers or rewriting accepted records. Capacity is added only when measured load justifies it.
 
 ## Three planes
 
@@ -29,7 +29,7 @@ The public catalogue is a projection of accepted registry events. It is not the 
 | Public service | 10,000–100,000 | PostgreSQL registry, object storage, queue workers and CDN | Sustained intake, search or storage needs exceed one service |
 | Large scale | 100,000+ | Horizontally partitioned intake, dedicated search, multiple storage/preservation providers | Measured latency, cost or resilience targets require it |
 
-Thresholds are review points, not promises. ARR migrates before a provider hard limit is reached.
+Thresholds are review points, not promises. AIRR migrates before a provider hard limit is reached.
 
 ## Required invariants
 
@@ -44,4 +44,4 @@ Thresholds are review points, not promises. ARR migrates before a provider hard 
 
 ## What remains intentionally unbuilt
 
-ARR's direct private-upload service is implemented but remains closed until its production gate and external host are complete. ARR does not run author accounts, payments, comments, social scores, automated quality scores or untrusted-code execution. New features must not weaken quarantine or human editorial control.
+AIRR's direct private-upload service is implemented but remains closed until its production gate and external host are complete. AIRR does not run author accounts, payments, comments, social scores, automated quality scores or untrusted-code execution. New features must not weaken quarantine or human editorial control.

@@ -1,6 +1,6 @@
-# ARR state and evidence model
+# AIRR state and evidence model
 
-Submission state and public record status are deliberately separate. A submission is not an ARR publication.
+Submission state and public record status are deliberately separate. A submission is not an AIRR publication.
 
 ## Private intake states
 
@@ -19,7 +19,7 @@ Terminal alternatives are `declined`, `expired`, `removed`, and `legal_hold`. In
 - `corrected`: a new version that identifies `supersedes_version_id`.
 - `withdrawn`: a persistent tombstone; files are retained unless law or safety requires removal.
 
-Version numbers are monotonic integers: `v1`, `v2`, `v3`, and so on. The public ARR identifier and `record_id` remain stable; every version has a new `version_id`, an explicit predecessor and an immutable release. A `minor` revision records a bounded correction or addition, while a `major` revision changes substantial claims, arguments, methods, data or conclusions within the same evolving work. A genuinely independent work receives a new ARR identifier. The size label describes change scope, not quality.
+Version numbers are monotonic integers: `v1`, `v2`, `v3`, and so on. The public AIRR identifier and `record_id` remain stable; every version has a new `version_id`, an explicit predecessor and an immutable release. A `minor` revision records a bounded correction or addition, while a `major` revision changes substantial claims, arguments, methods, data or conclusions within the same evolving work. A genuinely independent work receives a new AIRR identifier. The size label describes change scope, not quality.
 
 ## Public record types
 
@@ -38,6 +38,6 @@ Labels report evidence, not a single quality score:
 - **Lean L0–L3:** reports source supplied, build status, kernel/axiom audit, and manuscript correspondence at increasing levels.
 - **Human reviewed:** only when the scope and reviewer role are disclosed.
 
-`not_assessed` is a valid and visible result. It must never be rendered as failure or pass. ARR acceptance does not imply truth, novelty, importance, peer review, or correctness beyond the checks explicitly recorded.
+`not_assessed` is a valid and visible result. It must never be rendered as failure or pass. AIRR acceptance does not imply truth, novelty, importance, peer review, or correctness beyond the checks explicitly recorded.
 
-State transitions will become append-only registry events when ARR leaves the Git pilot. The metadata schema already uses stable record and version identifiers so that migration does not alter public citations.
+State transitions will become append-only registry events when AIRR leaves the Git pilot. The metadata schema already uses stable record and version identifiers so that migration does not alter public citations.

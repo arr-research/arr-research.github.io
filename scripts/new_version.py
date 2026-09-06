@@ -13,8 +13,8 @@ from arrlib import PAPERS_DIR, ROOT, discover_papers, select_paper
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Create the next immutable-version candidate for an ARR record.")
-    parser.add_argument("paper_id", help="Existing ARR public identifier")
+    parser = argparse.ArgumentParser(description="Create the next immutable-version candidate for an AIRR record.")
+    parser.add_argument("paper_id", help="Existing AIRR public identifier")
     parser.add_argument("--date", default=date.today().isoformat(), help="Version date in YYYY-MM-DD form")
     parser.add_argument("--change-size", choices=("minor", "major"), required=True)
     parser.add_argument("--summary", required=True, help="Meaningful summary of the revision")

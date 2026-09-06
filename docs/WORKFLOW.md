@@ -23,7 +23,7 @@ The pull request runs metadata validation and builds the complete catalogue. Edi
 
 ## 4. Publish the version
 
-After merge, run **Create ARR record release** from GitHub Actions and enter the ARR identifier. The workflow packages the exact source, calculates hashes and uploads generated or heavy files to a versioned GitHub Release.
+After merge, run **Create AIRR record release** from GitHub Actions and enter the AIRR identifier. The workflow packages the exact source, calculates hashes and uploads generated or heavy files to a versioned GitHub Release.
 
 ## 5. Update the catalogue
 
@@ -39,9 +39,9 @@ python scripts/new_version.py ARR-2026-XXXXXXXXXXXXXXXX \
   --summary "Corrects notation and adds a missing reproducibility detail."
 ```
 
-Use `minor` for corrections, clarifications, metadata repairs and bounded additions that do not replace the central contribution. Use `major` when principal claims, proofs, methods, datasets or conclusions change substantially. Both may produce `v2`, `v3`, and later versions; ARR deliberately does not use decimal versions.
+Use `minor` for corrections, clarifications, metadata repairs and bounded additions that do not replace the central contribution. Use `major` when principal claims, proofs, methods, datasets or conclusions change substantially. Both may produce `v2`, `v3`, and later versions; AIRR deliberately does not use decimal versions.
 
-A major revision must still be recognizably the same evolving work. A different research question or an independent contribution receives a new ARR identifier and a `related_work`, `companion` or `extends` relation instead of being hidden as a new version.
+A major revision must still be recognizably the same evolving work. A different research question or an independent contribution receives a new AIRR identifier and a `related_work`, `companion` or `extends` relation instead of being hidden as a new version.
 
 The generator retains the public `id` and `record_id`, creates a new `version_id`, increments `version`, records `supersedes_version_id`, resets version-specific assessments and writes the candidate under `versions/vN/`. Replace or edit the copied research object, recalculate integrity fields and rerun every claimed check. Then repeat PR validation, release and exact-timestamp recording for that version.
 

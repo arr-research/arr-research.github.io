@@ -1,4 +1,4 @@
-# ARR screening report
+# AIRR screening report
 
 - Paper: `ARR-2026-01HXNMGQKT9H0SYW v1`
 - Version ID: `arr:version:replace-with-uuid`

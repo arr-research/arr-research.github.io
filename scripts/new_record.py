@@ -15,7 +15,7 @@ TEMPLATE_DIR = ROOT / "templates" / "paper"
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Create a sharded ARR research-record candidate from the canonical template.")
+    parser = argparse.ArgumentParser(description="Create a sharded AIRR research-record candidate from the canonical template.")
     parser.add_argument("--date", default=date.today().isoformat(), help="Deposit date in YYYY-MM-DD form")
     parser.add_argument("--author", default="Author Name", help="Initial depositor/author name")
     parser.add_argument(

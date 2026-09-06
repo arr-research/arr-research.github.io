@@ -1,8 +1,8 @@
-# ARR architecture
+# AIRR architecture
 
 ## Purpose
 
-ARR separates private intake, the lightweight public registry projection, and potentially heavy research artifacts.
+AIRR separates private intake, the lightweight public registry projection, and potentially heavy research artifacts.
 
 ### Private intake
 

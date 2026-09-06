@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""Materialize author-authorized ai.vixra history as visibly unassessed ARR archive records."""
+"""Materialize author-authorized ai.vixra history as visibly unassessed AIRR archive records."""
 from __future__ import annotations
 
 import argparse
@@ -114,7 +114,7 @@ def materialize(record: dict) -> Path:
         },
         "ai_assistance": {
             "used": True,
-            "statement": "Historical import from ai.vixra, an AI-assisted e-print archive. ARR has not normalized or independently verified the original manuscript's model-use disclosure; the author remains responsible for its contents.",
+            "statement": "Historical import from ai.vixra, an AI-assisted e-print archive. AIRR has not normalized or independently verified the original manuscript's model-use disclosure; the author remains responsible for its contents.",
         },
         "screening": {
             "protocol": "ARR-SCREEN-1.0",
@@ -135,7 +135,7 @@ def materialize(record: dict) -> Path:
             "decision": "historical_import",
             "signed_by": "Lluis Eriksson",
             "conflicts": ["author_is_founder_editor"],
-            "statement": "Author-authorized historical import. ARR verified file retrieval and integrity only; it did not perform the current hostile frontier-model admission audit, peer review, novelty review, or correctness certification.",
+            "statement": "Author-authorized historical import. AIRR verified file retrieval and integrity only; it did not perform the current hostile frontier-model admission audit, peer review, novelty review, or correctness certification.",
         },
     }
     dump_json(target / "metadata.json", metadata)
@@ -149,9 +149,9 @@ def materialize(record: dict) -> Path:
 **Original archive:** [ai.vixra:{record['identifier']}]({record['abstract_url']})  
 **First submitted:** {record['first_submitted_at']} (source displays no timezone)  
 **Latest declared source version:** {record['latest_version']}  
-**ARR mirror:** [{asset['source_version']} PDF]({asset['mirror_pdf_url']})
+**AIRR mirror:** [{asset['source_version']} PDF]({asset['mirror_pdf_url']})
 
-> Historical import; not assessed under the ARR frontier-model hostile-audit gate.
+> Historical import; not assessed under the AIRR frontier-model hostile-audit gate.
 
 ## Abstract
 
@@ -180,20 +180,20 @@ def materialize(record: dict) -> Path:
             "sha256": asset["sha256"],
         },
         "version_history": versions,
-        "tools": ["ARR ai.vixra archival importer", "pypdf structural and text extraction", "SHA-256"],
+        "tools": ["AIRR ai.vixra archival importer", "pypdf structural and text extraction", "SHA-256"],
         "verification_notes": "Author-authorized historical import. File readability and SHA-256 integrity verified; scientific claims were not assessed.",
     }
     dump_json(target / "PROVENANCE.json", provenance)
 
     licenses = {
-        "manuscript": {"spdx": "LicenseRef-Author-Retained", "notice": "Author-retained rights; ARR mirror authorized by the author."},
+        "manuscript": {"spdx": "LicenseRef-Author-Retained", "notice": "Author-retained rights; AIRR mirror authorized by the author."},
         "metadata": {"spdx": "CC0-1.0", "url": "https://creativecommons.org/publicdomain/zero/1.0/"},
         "code": [],
         "data": [],
     }
     dump_json(target / "LICENSES.json", licenses)
     (target / "LICENSES" / "MANUSCRIPT.md").write_text(
-        "# Manuscript rights\n\nCopyright retained by Lluis Eriksson. The author authorized ARR to preserve and serve this historical mirror. No additional public reuse license is inferred.\n",
+        "# Manuscript rights\n\nCopyright retained by Lluis Eriksson. The author authorized AIRR to preserve and serve this historical mirror. No additional public reuse license is inferred.\n",
         encoding="utf-8",
     )
     (target / "VERIFICATION.md").write_text(
@@ -213,7 +213,7 @@ url: {cff_quote(record['abstract_url'])}
 """
     (target / "CITATION.cff").write_text(cff, encoding="utf-8")
     (target / "README.md").write_text(
-        f"# {identity['id']}\n\nHistorical mirror of ai.vixra:{record['identifier']}. See `metadata.json` for exact provenance and source-version history. This import is not an ARR assessment.\n",
+        f"# {identity['id']}\n\nHistorical mirror of ai.vixra:{record['identifier']}. See `metadata.json` for exact provenance and source-version history. This import is not an AIRR assessment.\n",
         encoding="utf-8",
     )
     manifest_files = [

@@ -1,4 +1,4 @@
-# ARR governance and conflict controls
+# AIRR governance and conflict controls
 
 ## Roles
 
@@ -10,7 +10,7 @@
 - **Depositor/author:** supplies the work and disclosures; has no access to another
   submission and cannot alter the public registry.
 
-“VD/CEO” is reserved for a duly formed entity with that office. ARR currently uses
+“VD/CEO” is reserved for a duly formed entity with that office. AIRR currently uses
 the accurate natural-person roles above.
 
 ## Non-delegable manual gate

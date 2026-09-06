@@ -458,13 +458,13 @@ class PaperValidationTests(unittest.TestCase):
         self.assertIn("Submit privately", page)
         self.assertNotIn('class="submit-hero"', page)
         self.assertNotIn("Request an invitation", page)
-        self.assertNotIn("mailto:lluiseriksson@gmail.com?subject=ARR%20invitation", page)
+        self.assertNotIn("mailto:lluiseriksson@gmail.com?subject=AIRR%20invitation", page)
 
     def test_inactive_support_page_has_no_payment_controls(self) -> None:
         page = build_site.build_support("", "https://arr.example")
         self.assertNotIn("Payment and refund questions:", page)
         self.assertNotIn('class="support-contact"', page)
-        self.assertIn("ARR does not currently accept donations", page)
+        self.assertIn("AIRR does not currently accept donations", page)
         self.assertIn("Donations are not available yet", page)
         self.assertNotIn("paypal-donate-button-container", page)
         self.assertNotIn("paypalobjects.com", page)
