@@ -80,8 +80,11 @@ The shared page header links to ARR's gold A and three-node mark on black in SVG
 multi-size ICO (16, 32 and 48 pixels), and a 180-pixel Apple touch icon. The build
 copies these assets from `site/` to the public root and respects `--base-path`.
 The SVG is a self-contained wrapper around a PNG rendition of the mark.
-The header displays the operator-supplied full logo (`site/arr-logo.png`), with
-its blank margins excluded by the display viewport and an accessible home-link label.
+The header displays the approved transparent AIRR.SCIENCE logo (`site/airr-logo.png`),
+with the subtitle "Archive for Independent & Rigorous Research" and an accessible
+home-link label. The compact 1859-by-336 PNG is shown at its natural aspect ratio
+and scales to fit narrow screens. The previous `assets/arr-logo.png` URL remains
+available for cached pages.
 Keep their URLs stable. The 96-pixel PNG provides a square raster image above
 Google's recommended 48-pixel size, and `robots.txt` permits image crawling.
 
