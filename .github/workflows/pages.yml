@@ -20,6 +20,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      canonical_url: ${{ steps.catalogue.outputs.canonical_url }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
@@ -46,6 +48,7 @@ jobs:
           key: arr-pdfs-v1-${{ hashFiles('papers/**/metadata.json') }}
           restore-keys: arr-pdfs-v1-
       - name: Build catalogue
+        id: catalogue
         shell: bash
         env:
           ARR_GOOGLE_SITE_VERIFICATION: ${{ vars.ARR_GOOGLE_SITE_VERIFICATION }}
@@ -58,6 +61,7 @@ jobs:
           test -n "$canonical_url"
           # Keep discovery URLs on HTTPS while a new domain certificate is issued.
           canonical_url="${canonical_url/#http:/https:}"
+          echo "canonical_url=$canonical_url" >> "$GITHUB_OUTPUT"
           python scripts/build_site.py \
             --base-path "$base_path" \
             --canonical-url "$canonical_url" \
@@ -89,7 +93,9 @@ jobs:
         with:
           python-version: "3.13"
       - name: Notify participating search engines
+        env:
+          SITE_ROOT: ${{ needs.build.outputs.canonical_url }}
         run: >-
           python scripts/submit_indexnow.py
-          --site-root "${{ steps.deployment.outputs.page_url }}"
+          --site-root "$SITE_ROOT"
           --key-file site/indexnow-key.txt
