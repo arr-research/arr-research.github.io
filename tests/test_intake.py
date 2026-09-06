@@ -182,13 +182,13 @@ class IntakeTests(unittest.TestCase):
         self.assertIn(f"AIRR submission {submission_id}".encode(), response.data)
         self.assertIn(b"does not affect", self.client.get("/submit").data)
         self.assertIn(b"cannot affect approval, review speed, scores or ranking", response.data)
-        self.assertIn(b'https://www.paypal.com/donate/?business=lluiseriksson%40gmail.com', response.data)
+        self.assertIn(b'https://www.paypal.com/donate/?hosted_button_id=BCYAHWZCKGF5Q', response.data)
         self.assertNotIn(b"paypalobjects", response.data)
         self.assertNotIn(b"donate/sdk", response.data)
-        self.assertNotIn(b"hosted_button_id=", response.data)
+        self.assertNotIn(b"business=", response.data)
         self.assertIn(b"Sharing it with PayPal is your choice", response.data)
         # The only registration reference is displayed for optional manual copy.
-        self.assertNotIn(f"business=lluiseriksson%40gmail.com&".encode(), response.data)
+        self.assertNotIn(b"hosted_button_id=BCYAHWZCKGF5Q&", response.data)
 
     def test_receipt_escapes_manuscript_title_and_hides_donation_when_disabled(self) -> None:
         submission_id = self.upload()
