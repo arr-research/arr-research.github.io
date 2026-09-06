@@ -19,11 +19,14 @@ The complete registry abstract is visible immediately after the title and author
 
 ```bash
 python scripts/validate_papers.py
-python scripts/build_site.py --canonical-url https://arr-research.github.io --repository arr-research/arr-research.github.io --fetch-remote-pdfs
-python scripts/check_site_indexing.py --canonical-url https://arr-research.github.io
+python scripts/build_site.py --canonical-url https://airr.science --repository arr-research/arr-research.github.io --fetch-remote-pdfs
+python scripts/check_site_indexing.py --canonical-url https://airr.science
 python -m unittest discover -s tests -v
 ```
 
+The production Pages workflow reads its public URL and path from GitHub Pages,
+so custom domains are reflected in canonical links, publisher structured data,
+PDF citations, the sitemap and robots.txt. See [custom-domain operations](CUSTOM_DOMAIN.md).
 The production Pages workflow enables remote PDF fetching. Local PDFs are copied
 from their exact source snapshots. Historical public Release assets are downloaded
 into `work/pdf-cache/` by recorded SHA-256 and checked for their PDF header, hash,
@@ -53,7 +56,8 @@ a Google Search Console or Google Scholar submission.
 
 1. Open [Search Console](https://search.google.com/search-console/) using the
    operator's Google account. Add the **URL-prefix** property
-   `https://arr-research.github.io/`.
+   `https://airr.science/`. Keep the existing `https://arr-research.github.io/`
+   property to monitor the old URLs during migration.
 2. Choose the HTML tag verification method. Copy only the `content` value of
    Google's `google-site-verification` meta tag into the GitHub Actions repository
    variable **ARR_GOOGLE_SITE_VERIFICATION**. It is a public verification token,
@@ -61,7 +65,7 @@ a Google Search Console or Google Scholar submission.
 3. Run **Publish ARR catalogue**. Its build writes the escaped verification tag
    to the homepage. Confirm the tag is present in the deployed HTML source, then
    click **Verify** in Search Console. Keep the variable after verification.
-4. Submit `https://arr-research.github.io/sitemap.xml` using the Sitemaps report.
+4. Submit `https://airr.science/sitemap.xml` using the Sitemaps report.
 5. Inspect several current and permanent-version URLs. Record Google's reported
    canonical, last crawl, fetch result, indexing status, and exclusion reason.
    Use the live URL test and request indexing for representative corrected pages.

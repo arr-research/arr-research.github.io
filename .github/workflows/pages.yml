@@ -30,6 +30,7 @@ jobs:
       - name: Validate records
         run: python scripts/validate_papers.py
       - name: Configure Pages
+        id: pages
         uses: actions/configure-pages@v6
       - name: Snapshot public activity
         env:
@@ -49,16 +50,14 @@ jobs:
         env:
           ARR_GOOGLE_SITE_VERIFICATION: ${{ vars.ARR_GOOGLE_SITE_VERIFICATION }}
           ARR_INTAKE_URL: ${{ vars.ARR_INTAKE_URL }}
+          PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          PAGES_BASE_URL: ${{ steps.pages.outputs.base_url }}
         run: |
-          repo_name="${GITHUB_REPOSITORY#*/}"
-          owner_name="${GITHUB_REPOSITORY%/*}"
-          if [[ "$repo_name" == "$owner_name.github.io" ]]; then
-            base_path=""
-            canonical_url="https://$owner_name.github.io"
-          else
-            base_path="/$repo_name"
-            canonical_url="https://$owner_name.github.io/$repo_name"
-          fi
+          base_path="$PAGES_BASE_PATH"
+          canonical_url="${PAGES_BASE_URL%/}"
+          test -n "$canonical_url"
+          # Keep discovery URLs on HTTPS while a new domain certificate is issued.
+          canonical_url="${canonical_url/#http:/https:}"
           python scripts/build_site.py \
             --base-path "$base_path" \
             --canonical-url "$canonical_url" \

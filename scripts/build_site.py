@@ -325,7 +325,7 @@ def release_asset_url(release_url: str, filename: str) -> str:
     return f"{prefix}/releases/download/{tag}/{quote(filename)}"
 
 
-def scholarly_head(metadata: dict, *, canonical: str, release_url: str = "", pdf_url: str = "", online_date: str = "") -> str:
+def scholarly_head(metadata: dict, *, canonical: str, release_url: str = "", pdf_url: str = "", online_date: str = "", site_root: str = "") -> str:
     """Emit discovery metadata for scholarly crawlers and general web/AI search."""
     authors = [author["name"] for author in metadata["authors"]]
     keywords = metadata.get("keywords", [])
@@ -379,9 +379,10 @@ def scholarly_head(metadata: dict, *, canonical: str, release_url: str = "", pdf
         "publisher": {
             "@type": "Organization",
             "name": "ARR — Archive for Rigorous Research",
-            "url": "https://arr-research.github.io/",
         },
     }
+    if site_root:
+        structured["publisher"]["url"] = f"{site_root.rstrip('/')}/"
     if release_url:
         structured["sameAs"] = release_url
     if metadata.get("doi"):
@@ -914,7 +915,7 @@ def build_paper_page(
         content=content,
         base=base,
         canonical=canonical,
-        head_extra=scholarly_head(metadata, canonical=canonical, release_url=release_url or "", pdf_url=citation_pdf_url, online_date=timestamp.get("published_at", "")),
+        head_extra=scholarly_head(metadata, canonical=canonical, release_url=release_url or "", pdf_url=citation_pdf_url, online_date=timestamp.get("published_at", ""), site_root=canonical_url),
     )
 
 
