@@ -196,10 +196,8 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
-    <a class="brand" href="{base}/" aria-label="ARR — Archive for Rigorous Research, home">
-      <svg class="brand-logo" viewBox="224 288 1090 446" width="244" height="100" aria-hidden="true" focusable="false">
-        <image href="{base}/assets/arr-logo.png" width="1536" height="1024"/>
-      </svg>
+    <a class="brand" href="{base}/" aria-label="AIRR.SCIENCE — Archive for Independent &amp; Rigorous Research, home">
+      <img class="brand-logo" src="{base}/assets/airr-logo.png" width="1859" height="336" alt="">
     </a>
     <nav aria-label="Primary navigation">
       <a href="{base}/papers/">Papers</a>
@@ -1384,6 +1382,7 @@ def main() -> int:
     write(OUTPUT_DIR / "assets" / "search-index.json", search_data)
     write(OUTPUT_DIR / "search" / "index.html", build_search(base, canonical_url, search_version))
     shutil.copy2(SITE_DIR / "arr-logo.png", OUTPUT_DIR / "assets" / "arr-logo.png")
+    shutil.copy2(SITE_DIR / "airr-logo.png", OUTPUT_DIR / "assets" / "airr-logo.png")
     for icon in ("favicon.ico", "favicon.svg", "favicon-96x96.png", "apple-touch-icon.png"):
         shutil.copy2(SITE_DIR / icon, OUTPUT_DIR / icon)
     shutil.copy2(SITE_DIR / "indexnow-key.txt", OUTPUT_DIR / "indexnow-key.txt")
