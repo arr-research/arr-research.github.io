@@ -1,6 +1,6 @@
-# ARR research-record package
+# AIRR research-record package
 
-This directory is a template, not a published ARR record.
+This directory is a template, not a published AIRR record.
 
 Required publication files:
 
@@ -18,4 +18,4 @@ Optional reproducibility material belongs under `src/`, `tests/`, `data/`, and `
 
 Do not invent an identifier by hand. Run `python scripts/new_record.py --author "Name" --type research-paper` or `--type technical-note`; the generator creates a concurrent-safe record UUID, version UUID, public ID, and sharded path. Technical notes must complete the generated `technical_note` profile before publication.
 
-For `v2`, `v3`, and later, do not copy this template and do not create a new ARR identifier. Run `python scripts/new_version.py ARR-... --change-size minor|major --summary "..."` so the predecessor link, new version UUID, assessment reset and `versions/vN/` path are generated consistently.
+For `v2`, `v3`, and later, do not copy this template and do not create a new AIRR identifier. Run `python scripts/new_version.py ARR-... --change-size minor|major --summary "..."` so the predecessor link, new version UUID, assessment reset and `versions/vN/` path are generated consistently.

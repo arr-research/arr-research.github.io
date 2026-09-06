@@ -12,8 +12,8 @@ from arrlib import ROOT, discover_papers, iter_package_files, select_paper, sha2
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Build immutable release assets for one ARR research record.")
-    parser.add_argument("paper_id", help="ARR public identifier, for example ARR-2026-01K2M3N4P5Q6R7S8")
+    parser = argparse.ArgumentParser(description="Build immutable release assets for one AIRR research record.")
+    parser.add_argument("paper_id", help="AIRR public identifier, for example ARR-2026-01K2M3N4P5Q6R7S8")
     parser.add_argument("--version", default="", help="Version to package; defaults to the latest")
     parser.add_argument("--output", default="dist/release", help="Output directory")
     return parser.parse_args()
@@ -68,7 +68,7 @@ def main() -> int:
     notes = output / "RELEASE_NOTES.md"
     notes.write_text(
         f"# {paper.metadata['title']}\n\n"
-        f"ARR record: `{paper.id}`  \n"
+        f"AIRR record: `{paper.id}`  \n"
         f"Version: `{paper.version}`  \n"
         f"Record type: `{paper.record_type}`  \n"
         f"Protocol: `{paper.metadata['verification']['protocol']}`\n\n"

@@ -8,9 +8,9 @@ from pathlib import Path
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Create machine-readable ARR renditions from a canonical PDF.")
+    parser = argparse.ArgumentParser(description="Create machine-readable AIRR renditions from a canonical PDF.")
     parser.add_argument("pdf", type=Path)
-    parser.add_argument("output", type=Path, help="ARR paper directory")
+    parser.add_argument("output", type=Path, help="AIRR paper directory")
     parser.add_argument("--title", required=True)
     parser.add_argument("--pdftotext", default="pdftotext", help="pdftotext executable")
     return parser.parse_args()

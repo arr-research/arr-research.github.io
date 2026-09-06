@@ -11,7 +11,7 @@ def main() -> int:
     failures = validate_collection(papers)
     timestamp_errors = validate_record_timestamps(papers)
     if failures or timestamp_errors:
-        print("ARR validation failed:")
+        print("AIRR validation failed:")
         for path, errors in failures.items():
             print(f"\n{path}")
             for error in errors:
@@ -23,7 +23,7 @@ def main() -> int:
         return 1
     paper_count = sum(paper.record_type == "research_paper" for paper in papers)
     note_count = sum(paper.record_type == "technical_note" for paper in papers)
-    print(f"ARR validation passed ({paper_count} paper(s), {note_count} technical note(s)).")
+    print(f"AIRR validation passed ({paper_count} paper(s), {note_count} technical note(s)).")
     return 0
 
 

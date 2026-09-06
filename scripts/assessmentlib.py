@@ -95,7 +95,7 @@ def validate_assessment(value: object, papers: Iterable[Paper]) -> list[str]:
         errors.append(f"assessment: missing fields: {', '.join(sorted(missing))}")
         return errors
     if not isinstance(value["assessment_id"], str) or not ASSESSMENT_ID.fullmatch(value["assessment_id"]):
-        errors.append("assessment_id: must be an ARR UUIDv4 assessment identifier")
+        errors.append("assessment_id: must be an AIRR UUIDv4 assessment identifier")
     try:
         paper = select_paper(papers, value["paper_id"], value["version"])
     except (KeyError, ValueError) as exc:
@@ -103,7 +103,7 @@ def validate_assessment(value: object, papers: Iterable[Paper]) -> list[str]:
         paper = None
     if paper is not None:
         if value["version_id"] != paper.metadata.get("version_id"):
-            errors.append("version_id: does not match the selected ARR version")
+            errors.append("version_id: does not match the selected AIRR version")
         if value["canonical_sha256"] != paper.metadata.get("integrity", {}).get("canonical_sha256"):
             errors.append("canonical_sha256: does not match the selected canonical artifact")
     for field, maximum in (("provider", 100), ("model_id", 160)):

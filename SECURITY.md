@@ -1,6 +1,6 @@
 # Security policy
 
-ARR accepts manuscripts only through the direct private receiver when its Submit button is enabled. Do not open an issue containing a vulnerability, personal data, unpublished manuscript, credential, or malicious sample.
+AIRR accepts manuscripts only through the direct private receiver when its Submit button is enabled. Do not open an issue containing a vulnerability, personal data, unpublished manuscript, credential, or malicious sample.
 
 ## Untrusted research artifacts
 
@@ -18,4 +18,4 @@ Private intake treats every file and paper instruction as untrusted input. Its p
 
 No automated evaluator may follow instructions embedded in a submission that request secrets, external side effects, policy changes, or access to other submissions.
 
-Report security issues privately to `lluiseriksson@gmail.com` with subject `ARR security`; do not attach live malware or publish vulnerability details. ARR aims to acknowledge within 72 hours. The full production controls and incident process are in `docs/INTAKE_OPERATIONS.md`.
+Report security issues privately to `lluiseriksson@gmail.com` with subject `AIRR security`; do not attach live malware or publish vulnerability details. AIRR aims to acknowledge within 72 hours. The full production controls and incident process are in `docs/INTAKE_OPERATIONS.md`.

@@ -1,6 +1,6 @@
 # Corrections, withdrawals and takedown
 
-ARR preserves the scholarly record while responding to law, safety, privacy, and integrity concerns.
+AIRR preserves the scholarly record while responding to law, safety, privacy, and integrity concerns.
 
 ## Normal correction
 
@@ -8,7 +8,7 @@ A substantive correction creates a new immutable version and records `supersedes
 
 ## Withdrawal
 
-A withdrawn record normally retains a tombstone containing the identifier, title, authors, version history, date, and a proportionate reason. ARR removes endorsement and prominent download links but preserves the audit trail when lawful and safe.
+A withdrawn record normally retains a tombstone containing the identifier, title, authors, version history, date, and a proportionate reason. AIRR removes endorsement and prominent download links but preserves the audit trail when lawful and safe.
 
 ## Restricted removal
 

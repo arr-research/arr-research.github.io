@@ -1,4 +1,4 @@
-# ARR frontier-model assessment policy — ARR-ASSESS-1.0
+# AIRR frontier-model assessment policy — ARR-ASSESS-1.0
 
 **Effective:** 2026-08-30  
 **Operator:** Lluis Eriksson  
@@ -6,7 +6,7 @@
 
 ## Purpose and boundary
 
-ARR's defining function is hostile audit by the strongest available frontier
+AIRR's defining function is hostile audit by the strongest available frontier
 models. They are instructed to attack, rather than merely summarize, each exact
 artifact: seek counterexamples, hidden assumptions, proof gaps, unsupported novelty
 and reproducibility failures. A paper that survives the gate has passed a materially
@@ -16,7 +16,7 @@ a priority ruling, an endorsement, or a substitute for qualified human and forma
 verification.
 
 For each new admission, the operator declares a version-locked frontier-model audit
-set suited to the available services, quota and subject. ARR promises no fixed
+set suited to the available services, quota and subject. AIRR promises no fixed
 provider, model, report count or reasoning tier. Every valid result obtained in the
 declared round is retained. An unresolved material objection blocks acceptance: the
 editor must request a corrected version or decline the submission. The human editor
@@ -24,8 +24,8 @@ decides whether an objection is material and records that decision.
 For already published work, a later material objection triggers the correction,
 withdrawal or documented-no-change procedure; it is never silently deleted.
 
-Legacy ARR records explicitly labelled `not_assessed` remain so until a real,
-version-locked report is imported. ARR never backfills a score from memory, a title,
+Legacy AIRR records explicitly labelled `not_assessed` remain so until a real,
+version-locked report is imported. AIRR never backfills a score from memory, a title,
 or an assessment of a different version.
 
 ## Administrator workflow
@@ -46,14 +46,14 @@ or an assessment of a different version.
    `python scripts/record_model_assessment.py --clipboard --publish`, review the Git
    diff, run the repository tests and publish through the protected release flow.
 
-The public response hash detects accidental duplicate imports. ARR does not request
+The public response hash detects accidental duplicate imports. AIRR does not request
 or publish private chain-of-thought. Concise findings and their evidence are enough.
 
 ### Runtime identity corrections
 
 The model-authored JSON and its response hash remain immutable. When independently
 verifiable platform runtime metadata or a contemporaneous operator/author UI record
-establishes that the response self-reported the wrong model identifier, ARR appends
+establishes that the response self-reported the wrong model identifier, AIRR appends
 a separate `runtime_provenance` object. It records the effective provider, exact
 model identifier, reasoning-effort tier, evidentiary basis, and evidence SHA-256.
 The public heading uses this independently evidenced runtime identity; the original
@@ -64,7 +64,7 @@ is published only when directly evidenced and is never inferred from response st
 
 Each report identifies whether that model was involved in producing the manuscript.
 All reports remain visible, but only reports marked `not_involved_in_manuscript`
-enter the headline aggregate. ARR reports the median, range and number of eligible
+enter the headline aggregate. AIRR reports the median, range and number of eligible
 reports; it never hides dispersion behind a lone average. Assessments of different
 versions are never pooled. Multiple outputs from closely related models are not
 described as statistically independent merely because their product names differ.
@@ -93,7 +93,7 @@ one star for a completed assessment.
 |---:|---|---|
 | 1 | Critical concerns | Main claims require fundamental re-examination. |
 | 2 | Substantial revision needed | There is research value, but major issues remain. |
-| 3 | Acceptable | Substantive, inspectable work at the ARR publication floor. |
+| 3 | Acceptable | Substantive, inspectable work at the AIRR publication floor. |
 | 4 | Strong | A clear and technically serious contribution. |
 | 5 | Very good | A notably good paper; this is not a mediocre or failing grade. |
 | 6 | Excellent | Deep, convincing work with broad technical strength. |
@@ -103,7 +103,7 @@ one star for a completed assessment.
 | 10 | Millennium-resolution benchmark | Reserved for an unconditional solution of a recognized Millennium Prize Problem surviving extraordinary independent verification. |
 
 A single model may use 10.00 only as the top anchor defined above. Its output cannot
-by itself establish that the benchmark has been met. ARR must display the underlying
+by itself establish that the benchmark has been met. AIRR must display the underlying
 reports and any human or formal verification rather than turning the number into a
 truth claim.
 
@@ -136,7 +136,7 @@ future systems can compare how evaluations changed over time.
 ## Error and appeal procedure
 
 Authors may challenge a report by identifying the exact assessment, claim and
-evidence. The original model output remains preserved. ARR may append an author
+evidence. The original model output remains preserved. AIRR may append an author
 response, a new independent assessment, or an editorial adjudication; substantive
 changes to the paper require a new version. The editor cannot characterize a
 model-detected issue as resolved without a public, concise basis.

@@ -7,7 +7,7 @@ from arrlib import ROOT, discover_papers, select_paper
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Resolve an ARR record version to its source directory.")
+    parser = argparse.ArgumentParser(description="Resolve an AIRR record version to its source directory.")
     parser.add_argument("paper_id")
     parser.add_argument("--version", default="")
     parser.add_argument("--field", choices=("path", "version"), default="path")

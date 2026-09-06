@@ -1,14 +1,14 @@
-# ARR — Archive for Rigorous Research
+# AIRR — Archive for Independent & Rigorous Research
 
-ARR is the hostile-audit research registry: new admissions must survive an operator-selected frontier-model audit of the exact hashed manuscript, with zero unresolved material objections and a final human decision. ARR promises no fixed provider, model, report count or reasoning tier; it publishes exactly which models were used, their findings and any disagreement alongside canonical artifacts, machine-readable renditions and explicit verification evidence.
+AIRR is the hostile-audit research registry: new admissions must survive an operator-selected frontier-model audit of the exact hashed manuscript, with zero unresolved material objections and a final human decision. AIRR promises no fixed provider, model, report count or reasoning tier; it publishes exactly which models were used, their findings and any disagreement alongside canonical artifacts, machine-readable renditions and explicit verification evidence.
 
-Passing that gate is meaningful positive evidence that a paper deserves serious attention. It is not a guarantee of truth, a proof certificate or a replacement for qualified domain-expert peer review; ARR makes the hard filter inspectable instead of asking readers to trust a label.
+Passing that gate is meaningful positive evidence that a paper deserves serious attention. It is not a guarantee of truth, a proof certificate or a replacement for qualified domain-expert peer review; AIRR makes the hard filter inspectable instead of asking readers to trust a label.
 
 This repository is the technical foundation for the archive. It keeps lightweight, inspectable sources in Git and publishes large generated artifacts—PDFs, complete source bundles, datasets, and build logs—as GitHub Release assets.
 
 ## Current status
 
-ARR operates a public archive and is building a **currently fee-free direct private-submission pilot**. Authors will use one form without an invitation or account; activation remains gated by the signed production checklist. The manuscript enters private quarantine and email carries only an operator notice, never the PDF. No record is considered published merely because it appears in a branch, pull request or private intake. A research paper or technical note becomes an ARR publication only after a human acceptance workflow completes and a versioned release is created.
+AIRR operates a public archive and is building a **currently fee-free direct private-submission pilot**. Authors will use one form without an invitation or account; activation remains gated by the signed production checklist. The manuscript enters private quarantine and email carries only an operator notice, never the PDF. No record is considered published merely because it appears in a branch, pull request or private intake. A research paper or technical note becomes an AIRR publication only after a human acceptance workflow completes and a versioned release is created.
 
 ## Local checks
 
@@ -29,7 +29,7 @@ python scripts/new_record.py --author "Author Name" --type research-paper
 python scripts/new_record.py --author "Author Name" --type technical-note
 ```
 
-Create the next version of an existing record without changing its ARR identifier:
+Create the next version of an existing record without changing its AIRR identifier:
 
 ```bash
 python scripts/new_version.py ARR-2026-XXXXXXXXXXXXXXXX --change-size minor --summary "Corrects notation and expands the reproducibility instructions."
@@ -54,11 +54,11 @@ Copy-ready agent instructions are in [docs/AGENT_DEPOSIT_PROMPTS.es.md](docs/AGE
 
 ## Scale and licensing
 
-ARR separates private intake, the public metadata registry, and immutable artifact storage so that GitHub can be replaced or complemented without changing record identifiers. See [capacity and migration](docs/SCALE_READINESS.md), [state and evidence labels](docs/STATE_MODEL.md), and the [licensing policy](LICENSE_POLICY.md).
+AIRR separates private intake, the public metadata registry, and immutable artifact storage so that GitHub can be replaced or complemented without changing record identifiers. See [capacity and migration](docs/SCALE_READINESS.md), [state and evidence labels](docs/STATE_MODEL.md), and the [licensing policy](LICENSE_POLICY.md).
 
-The private intake service is in [`services/intake/`](services/intake/). ARR does not currently charge for submission, assessment, publication or withdrawal under [`ARR-DEPOSIT-1.4`](docs/DEPOSIT_TERMS.md); any future fee would apply only after advance notice and new terms. New admissions require the version-locked frontier-model gate in [`ARR-ASSESS-1.0`](docs/MODEL_ASSESSMENT_POLICY.md), while legacy records remain honestly labelled `not_assessed`. The operator is Lluis Eriksson, founder, registry operator, responsible editor and GDPR controller. See [privacy](docs/PRIVACY_NOTICE.md), [complaints/contact](docs/LEGAL_AND_COMPLAINTS.md), [retention](docs/RETENTION_SCHEDULE.md), [governance](docs/GOVERNANCE.md) and the [production launch gate](docs/INTAKE_OPERATIONS.md).
+The private intake service is in [`services/intake/`](services/intake/). AIRR does not currently charge for submission, assessment, publication or withdrawal under [`ARR-DEPOSIT-1.4`](docs/DEPOSIT_TERMS.md); any future fee would apply only after advance notice and new terms. New admissions require the version-locked frontier-model gate in [`ARR-ASSESS-1.0`](docs/MODEL_ASSESSMENT_POLICY.md), while legacy records remain honestly labelled `not_assessed`. The operator is Lluis Eriksson, founder, registry operator, responsible editor and GDPR controller. See [privacy](docs/PRIVACY_NOTICE.md), [complaints/contact](docs/LEGAL_AND_COMPLAINTS.md), [retention](docs/RETENTION_SCHEDULE.md), [governance](docs/GOVERNANCE.md) and the [production launch gate](docs/INTAKE_OPERATIONS.md).
 
-Platform software is `AGPL-3.0-or-later`; ARR-authored documentation is `CC-BY-4.0`; public catalogue metadata is `CC0-1.0`; deposited papers, code and data declare their own scoped licenses.
+Platform software is `AGPL-3.0-or-later`; AIRR-authored documentation is `CC-BY-4.0`; public catalogue metadata is `CC0-1.0`; deposited papers, code and data declare their own scoped licenses.
 
 Public author profiles use stable identities from `registry/authors.json`. Paper and
 author activity rankings are generated from reproducible provider snapshots under

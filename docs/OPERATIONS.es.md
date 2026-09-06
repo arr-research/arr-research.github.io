@@ -1,4 +1,4 @@
-# Operación cotidiana de ARR
+# Operación cotidiana de AIRR
 
 ## Dónde se guarda cada cosa
 
@@ -9,17 +9,17 @@
 
 ## Publicar un trabajo aceptado
 
-1. Asignar un identificador ARR.
+1. Asignar un identificador AIRR.
 2. Completar la plantilla del paper.
 3. Abrir una propuesta de incorporación.
 4. Resolver los errores y objeciones.
 5. Aprobar e integrar la versión exacta.
-6. Ejecutar la acción **Create ARR record release**.
+6. Ejecutar la acción **Create AIRR record release**.
 7. Confirmar que la página enlaza la release y que los hashes coinciden.
 
 ## Regla esencial
 
-La web nunca debe alojar directamente el corpus pesado. Si ARR cambia de dominio, el material continúa disponible en las releases de GitHub y sólo se actualizan los enlaces del catálogo.
+La web nunca debe alojar directamente el corpus pesado. Si AIRR cambia de dominio, el material continúa disponible en las releases de GitHub y sólo se actualizan los enlaces del catálogo.
 
 ## Capacidad
 

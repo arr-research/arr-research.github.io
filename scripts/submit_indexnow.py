@@ -18,7 +18,7 @@ USER_AGENT = "ARR-IndexNow/1.0 (+https://arr-research.github.io/)"
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Submit the deployed ARR sitemap to IndexNow.")
+    parser = argparse.ArgumentParser(description="Submit the deployed AIRR sitemap to IndexNow.")
     parser.add_argument("--site-root", required=True, help="Canonical site root, for example https://arr-research.github.io/")
     parser.add_argument("--key-file", required=True, type=Path, help="UTF-8 IndexNow key file")
     parser.add_argument("--endpoint", default=INDEXNOW_ENDPOINT, help="IndexNow endpoint")
@@ -112,7 +112,7 @@ def main() -> int:
     if status not in {200, 202}:
         print(f"Unexpected IndexNow response: HTTP {status}", file=sys.stderr)
         return 1
-    print(f"IndexNow accepted {len(urls)} ARR URL(s): HTTP {status}")
+    print(f"IndexNow accepted {len(urls)} AIRR URL(s): HTTP {status}")
     return 0
 
 

@@ -44,7 +44,7 @@ SITE_FULL_NAME = "Archive for Independent & Rigorous Research"
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Build the static ARR catalogue.")
+    parser = argparse.ArgumentParser(description="Build the static AIRR catalogue.")
     parser.add_argument("--base-path", default="", help="URL prefix, e.g. /arr-archive for GitHub project Pages")
     parser.add_argument("--canonical-url", default="", help="Public site root used in canonical links and sitemap")
     parser.add_argument("--repository", default="", help="GitHub OWNER/REPOSITORY")
@@ -65,6 +65,12 @@ def clean_base_path(value: str) -> str:
 
 def esc(value: object) -> str:
     return html.escape(str(value), quote=True)
+
+
+def disclosure_text(value: str) -> str:
+    # Display the current archive name without rewriting preserved deposits or
+    # altering identifiers. Abstracts and referee reports remain verbatim.
+    return esc(re.sub(r"\bARR\b(?![-_])", "AIRR", value))
 
 
 def exact_time(value: str) -> str:
@@ -120,7 +126,7 @@ def load_metrics(path: Path | None) -> dict:
             },
             "views": {
                 "available": False,
-                "definition": "Page views are not measured until ARR connects a privacy-reviewed, no-cookie analytics source.",
+                "definition": "Page views are not measured until AIRR connects a privacy-reviewed, no-cookie analytics source.",
                 "provider": "",
                 "window_start": None,
                 "window_end": None,
@@ -129,7 +135,7 @@ def load_metrics(path: Path | None) -> dict:
         }
     value = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(value, dict) or value.get("schema_version") != "1.0" or not isinstance(value.get("papers"), dict):
-        raise ValueError("Invalid ARR metrics snapshot")
+        raise ValueError("Invalid AIRR metrics snapshot")
     return value
 
 
@@ -231,7 +237,7 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
 def search_form(base: str) -> str:
     return f"""<form class="paper-search" role="search" action="{base}/search/" method="get">
   <label for="paper-query">Search papers</label>
-  <div class="search-controls"><input id="paper-query" name="q" type="search" maxlength="300" placeholder="Title, topic, author or ARR ID — e.g. SU(2)" aria-describedby="search-help"><button class="button" type="submit">Search</button></div>
+  <div class="search-controls"><input id="paper-query" name="q" type="search" maxlength="300" placeholder="Title, topic, author or paper ID — e.g. SU(2)" aria-describedby="search-help"><button class="button" type="submit">Search</button></div>
   <p id="search-help">Search all titles, abstracts, keywords and authors. Results are ordered by relevance.</p>
 </form>"""
 
@@ -263,14 +269,14 @@ def build_search(base: str, canonical_url: str, index_version: str) -> str:
 <section class="search-page" data-paper-search data-index-url="{base}/assets/search-index.json?v={index_version}">
   <header><span class="eyebrow">Public catalogue</span><h1>Find a paper</h1></header>
   {search_form(base)}
-  <p class="search-status" role="status" aria-live="polite" aria-atomic="true">Enter a topic, title, author or ARR identifier.</p>
+  <p class="search-status" role="status" aria-live="polite" aria-atomic="true">Enter a topic, title, author or paper identifier.</p>
   <noscript><p>Enable JavaScript to search, or <a href="{base}/papers/">browse the complete paper catalogue</a>.</p></noscript>
   <ol class="search-results" aria-label="Papers by relevance"></ol>
   <button class="button secondary search-more" type="button" hidden>Show more papers</button>
 </section>"""
     return page_shell(
         title="Search papers — AIRR.SCIENCE",
-        description="Search the full ARR catalogue by title, abstract, topic, author or identifier, ordered by relevance.",
+        description="Search the full AIRR catalogue by title, abstract, topic, author or identifier, ordered by relevance.",
         content=content,
         base=base,
         canonical=f"{canonical_url}/search/" if canonical_url else "",
@@ -484,7 +490,7 @@ def build_home(papers: list, timestamps: dict, base: str, canonical_url: str, au
 <section class="empty-state">
   <span>Prototype phase</span>
   <h2>The archive is being prepared.</h2>
-  <p>No research record will appear here until its sources, provenance and verification record have completed the ARR acceptance workflow.</p>
+  <p>No research record will appear here until its sources, provenance and verification record have completed the AIRR acceptance workflow.</p>
 </section>"""
     content = f"""
 <section class="hero">
@@ -504,7 +510,7 @@ def build_home(papers: list, timestamps: dict, base: str, canonical_url: str, au
 </section>
 <section class="principles">
   <div><span>01</span><h2>Inspectable by default</h2><p>Manuscripts, metadata and code remain readable as plain files—not trapped behind a PDF or proprietary interface.</p></div>
-  <div><span>02</span><h2>Survival is evidence</h2><p>A paper that clears the new gate has survived a deliberately hostile, reproducible test by leading frontier models. ARR publishes the reports and disagreement instead of asking readers to trust the badge.</p></div>
+  <div><span>02</span><h2>Survival is evidence</h2><p>A paper that clears the new gate has survived a deliberately hostile, reproducible test by leading frontier models. AIRR publishes the reports and disagreement instead of asking readers to trust the badge.</p></div>
   <div><span>03</span><h2>History remains visible</h2><p>Published versions are identified by hashes and releases. Corrections create a new immutable version rather than silently rewriting the past.</p></div>
 </section>
 <section class="recent"><div class="section-heading"><div><span>Catalogue</span><h2>Latest accepted research</h2></div><a href="{base}/papers/">View papers</a></div>{recent}</section>
@@ -527,7 +533,7 @@ def build_papers_index(papers: list, timestamps: dict, base: str, canonical_url:
     selected = research_papers[start:start + page_size]
     cards = "".join(paper_card(p.metadata, timestamps[(p.id, p.version)], base, author_lookup, metrics) for p in selected)
     if not cards:
-        cards = '<section class="empty-state compact"><h2>No accepted papers yet.</h2><p>The public catalogue begins only after the first candidate completes the ARR workflow.</p></section>'
+        cards = '<section class="empty-state compact"><h2>No accepted papers yet.</h2><p>The public catalogue begins only after the first candidate completes the AIRR workflow.</p></section>'
     previous_url = f"{base}/papers/" if page == 2 else f"{base}/papers/page/{page - 1}/"
     next_url = f"{base}/papers/page/{page + 1}/"
     pagination = '<nav class="pagination" aria-label="Catalogue pages">'
@@ -536,27 +542,27 @@ def build_papers_index(papers: list, timestamps: dict, base: str, canonical_url:
     pagination += f'<a href="{next_url}">Next 50 →</a>' if page < page_count else '<span>Next 50 →</span>'
     pagination += '</nav>'
     content = f"""
-<section class="page-intro"><span>Public catalogue</span><h1>Research papers</h1><p>Exactly 50 records per full page, ordered by the real publication chronology. Current ARR admissions and author-authorized historical imports are visibly distinct; historical imports have not passed ARR's frontier-model gate.</p>{search_form(base)}</section>
+<section class="page-intro"><span>Public catalogue</span><h1>Research papers</h1><p>Exactly 50 records per full page, ordered by the real publication chronology. Current AIRR admissions and author-authorized historical imports are visibly distinct; historical imports have not passed AIRR's frontier-model gate.</p>{search_form(base)}</section>
 {pagination}
 <section class="catalogue">{cards}</section>
 {pagination}
 """
     canonical_suffix = "papers/" if page == 1 else f"papers/page/{page}/"
     canonical = f"{canonical_url}/{canonical_suffix}" if canonical_url else ""
-    return page_shell(title=f"Papers — page {page} — AIRR.SCIENCE", description="ARR research catalogue and clearly labelled historical imports.", content=content, base=base, canonical=canonical)
+    return page_shell(title=f"Papers — page {page} — AIRR.SCIENCE", description="AIRR research catalogue and clearly labelled historical imports.", content=content, base=base, canonical=canonical)
 
 
 def build_notes_index(papers: list, timestamps: dict, base: str, canonical_url: str, author_lookup: dict[str, dict] | None = None, metrics: dict | None = None) -> str:
     notes = [paper for paper in papers if paper.record_type == "technical_note"]
     cards = "".join(paper_card(note.metadata, timestamps[(note.id, note.version)], base, author_lookup, metrics) for note in notes)
     if not cards:
-        cards = '<section class="empty-state compact"><h2>No technical notes yet.</h2><p>This collection begins when the first concise, rigorous and machine-readable technical contribution completes the ARR workflow.</p></section>'
+        cards = '<section class="empty-state compact"><h2>No technical notes yet.</h2><p>This collection begins when the first concise, rigorous and machine-readable technical contribution completes the AIRR workflow.</p></section>'
     content = f"""
-<section class="page-intro"><span>ARR Technical Notes</span><h1>Technical notes</h1><p>Concise research communications with a precise contribution, explicit scope and limitations, machine-readable sources, provenance and evidence-specific verification labels.</p></section>
+<section class="page-intro"><span>AIRR Technical Notes</span><h1>Technical notes</h1><p>Concise research communications with a precise contribution, explicit scope and limitations, machine-readable sources, provenance and evidence-specific verification labels.</p></section>
 <section class="catalogue">{cards}</section>
 """
     canonical = f"{canonical_url}/notes/" if canonical_url else ""
-    return page_shell(title="Technical notes — AIRR.SCIENCE", description="Rigorous, machine-readable ARR technical notes.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Technical notes — AIRR.SCIENCE", description="Rigorous, machine-readable AIRR technical notes.", content=content, base=base, canonical=canonical)
 
 
 def papers_by_author(profiles: list[dict], papers: list) -> dict[str, list]:
@@ -590,14 +596,14 @@ def build_authors_index(profiles: list[dict], by_author: dict[str, list], metric
   <span>{esc(profile.get('affiliation', ''))}</span>
   <h2><a href="{base}/authors/{quote(profile['id'])}/">{esc(profile['name'])}</a></h2>
   <p>{esc(profile.get('bio', ''))}</p>
-  <dl><div><dt>ARR records</dt><dd>{totals['papers']}</dd></div><div><dt>PDF downloads</dt><dd>{metric_number(totals['pdf_downloads'])}</dd></div><div><dt>Page views</dt><dd>{metric_number(totals['page_views'])}</dd></div></dl>
+  <dl><div><dt>AIRR records</dt><dd>{totals['papers']}</dd></div><div><dt>PDF downloads</dt><dd>{metric_number(totals['pdf_downloads'])}</dd></div><div><dt>Page views</dt><dd>{metric_number(totals['page_views'])}</dd></div></dl>
 </article>""")
     content = f"""
-<section class="page-intro"><span>Public author registry</span><h1>Authors and their ARR records.</h1><p>Each stable profile gathers every ARR paper attributed to that author. Activity counts are descriptive, reproducible and never presented as scientific quality.</p></section>
+<section class="page-intro"><span>Public author registry</span><h1>Authors and their AIRR records.</h1><p>Each stable profile gathers every AIRR paper attributed to that author. Activity counts are descriptive, reproducible and never presented as scientific quality.</p></section>
 <section class="author-grid">{''.join(cards)}</section>
 """
     canonical = f"{canonical_url}/authors/" if canonical_url else ""
-    return page_shell(title="Authors — AIRR.SCIENCE", description="Stable ARR author profiles and their public research records.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Authors — AIRR.SCIENCE", description="Stable AIRR author profiles and their public research records.", content=content, base=base, canonical=canonical)
 
 
 def build_author_page(profile: dict, author_papers: list, timestamps: dict, metrics: dict, author_lookup: dict[str, dict], base: str, canonical_url: str) -> str:
@@ -613,17 +619,17 @@ def build_author_page(profile: dict, author_papers: list, timestamps: dict, metr
     content = f"""
 <article class="author-page">
   <div class="author-overview">
-    <header class="author-header"><span>ARR author profile</span><h1>{esc(profile['name'])}</h1><p class="affiliation">{esc(profile.get('affiliation', ''))}</p><p>{esc(profile.get('bio', ''))}</p><div class="profile-links">{links}</div></header>
-    <section class="profile-stats" aria-label="Author activity"><div><strong>{totals['papers']}</strong><span>ARR records</span></div><div><strong>{metric_number(totals['pdf_downloads'])}</strong><span>PDF downloads</span></div><div><strong>{metric_number(totals['page_views'])}</strong><span>page views</span></div></section>
+    <header class="author-header"><span>AIRR author profile</span><h1>{esc(profile['name'])}</h1><p class="affiliation">{esc(profile.get('affiliation', ''))}</p><p>{esc(profile.get('bio', ''))}</p><div class="profile-links">{links}</div></header>
+    <section class="profile-stats" aria-label="Author activity"><div><strong>{totals['papers']}</strong><span>AIRR records</span></div><div><strong>{metric_number(totals['pdf_downloads'])}</strong><span>PDF downloads</span></div><div><strong>{metric_number(totals['page_views'])}</strong><span>page views</span></div></section>
   </div>
-  <div class="section-heading"><div><span>Publications</span><h2>All ARR records</h2></div><a href="{base}/rankings/">Activity rankings</a></div>
+  <div class="section-heading"><div><span>Publications</span><h2>All AIRR records</h2></div><a href="{base}/rankings/">Activity rankings</a></div>
   <section class="catalogue">{cards}</section>
 </article>
 """
     canonical = f"{canonical_url}/authors/{profile['id']}/" if canonical_url else ""
     same_as = [item["url"] for item in profile.get("links", [])]
     structured = json.dumps({"@context": "https://schema.org", "@type": "Person", "name": profile["name"], "url": canonical, "affiliation": profile.get("affiliation", ""), "sameAs": same_as}, ensure_ascii=False).replace("</", "<\\/")
-    return page_shell(title=f"{profile['name']} — AIRR.SCIENCE author", description=profile.get("bio", "ARR author profile."), content=content, base=base, canonical=canonical, head_extra=f'<script type="application/ld+json">{structured}</script>')
+    return page_shell(title=f"{profile['name']} — AIRR.SCIENCE author", description=profile.get("bio", "AIRR author profile."), content=content, base=base, canonical=canonical, head_extra=f'<script type="application/ld+json">{structured}</script>')
 
 
 def ranking_rows(items: list[tuple[str, str, int]], base: str) -> str:
@@ -656,7 +662,7 @@ def build_rankings(profiles: list[dict], by_author: dict[str, list], papers: lis
 <h3>Papers by page views</h3><div class="table-scroll"><table><thead><tr><th>Rank</th><th>Paper</th><th>Views</th></tr></thead><tbody>{ranking_rows(paper_views, base)}</tbody></table></div>
 <h3>Authors by page views</h3><div class="table-scroll"><table><thead><tr><th>Rank</th><th>Author</th><th>Views</th></tr></thead><tbody>{ranking_rows(author_views, base)}</tbody></table></div>"""
     else:
-        view_notice = '<aside class="metric-note"><strong>Page views are not currently measured.</strong><p>ARR will not display or rank invented visits. This section activates only after a privacy-reviewed source is connected and documented.</p></aside>'
+        view_notice = '<aside class="metric-note"><strong>Page views are not currently measured.</strong><p>AIRR will not display or rank invented visits. This section activates only after a privacy-reviewed source is connected and documented.</p></aside>'
     generated = metrics.get("generated_at") or "No deployment snapshot supplied"
     content = f"""
 <section class="page-intro"><span>Transparent activity</span><h1>Paper and author rankings.</h1><p>These tables report public use signals, not correctness, novelty, importance or editorial preference. Ties are ordered alphabetically.</p></section>
@@ -664,11 +670,11 @@ def build_rankings(profiles: list[dict], by_author: dict[str, list], papers: lis
   <article><h2>Papers by canonical PDF downloads</h2><div class="table-scroll"><table><thead><tr><th>Rank</th><th>Paper</th><th>Downloads</th></tr></thead><tbody>{ranking_rows(paper_downloads, base)}</tbody></table></div></article>
   <article><h2>Authors by canonical PDF downloads</h2><div class="table-scroll"><table><thead><tr><th>Rank</th><th>Author</th><th>Downloads</th></tr></thead><tbody>{ranking_rows(author_downloads, base)}</tbody></table></div></article>
   <article><h2>Page views</h2>{view_notice}</article>
-  <article id="method"><h2>Method and limits</h2><p>PDF downloads are the cumulative GitHub <code>download_count</code> for each canonical PDF asset across all published versions. Direct reads of PDFs served by ARR are not measured by these counters. They are not unique and may include repeat downloads, automation or bots. In an author total, a multi-author paper is attributed in full to every listed author. Counts are a snapshot generated at <code>{esc(generated)}</code>.</p><p><a href="{base}/metrics.json">Download the metrics snapshot</a> · <a href="https://github.com/arr-research/arr-research.github.io/blob/main/docs/METRICS_POLICY.md">Read the complete metrics policy</a></p></article>
+  <article id="method"><h2>Method and limits</h2><p>PDF downloads are the cumulative GitHub <code>download_count</code> for each canonical PDF asset across all published versions. Direct reads of PDFs served by AIRR are not measured by these counters. They are not unique and may include repeat downloads, automation or bots. In an author total, a multi-author paper is attributed in full to every listed author. Counts are a snapshot generated at <code>{esc(generated)}</code>.</p><p><a href="{base}/metrics.json">Download the metrics snapshot</a> · <a href="https://github.com/arr-research/arr-research.github.io/blob/main/docs/METRICS_POLICY.md">Read the complete metrics policy</a></p></article>
 </section>
 """
     canonical = f"{canonical_url}/rankings/" if canonical_url else ""
-    return page_shell(title="Activity rankings — AIRR.SCIENCE", description="Reproducible ARR paper and author activity rankings.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Activity rankings — AIRR.SCIENCE", description="Reproducible AIRR paper and author activity rankings.", content=content, base=base, canonical=canonical)
 
 
 def findings_block(title: str, findings: list[str]) -> str:
@@ -735,7 +741,7 @@ def paper_assessment_section(paper, assessments: list[dict], highlight: dict | N
 <section class="model-assessments" id="model-assessments">
   <header><div><span>Longitudinal frontier-model record</span><h2>Independent model assessments</h2></div><a href="{base}/assessments/#scale">Read the scale and limits</a></header>
   {summary}{highlight_html}<div class="model-report-list">{history}</div>
-  <p class="protocol-note">A model assessment is not peer review or a correctness certificate. ARR preserves disagreement, exact-version provenance and later reassessments.</p>
+  <p class="protocol-note">A model assessment is not peer review or a correctness certificate. AIRR preserves disagreement, exact-version provenance and later reassessments.</p>
 </section>"""
 
 
@@ -811,7 +817,7 @@ def build_paper_page(
         for item in relationships
     )
     related_section = (
-        f'<section class="related-records"><h2>Related ARR records</h2><ul>{related_records}</ul></section>'
+        f'<section class="related-records"><h2>Related AIRR records</h2><ul>{related_records}</ul></section>'
         if related_records
         else ""
     )
@@ -840,7 +846,7 @@ def build_paper_page(
             f'<li>{label}<span>{exact_time(chronology_time(entry))} · {esc(source_note + current)}</span></li>'
         )
     version_history = (
-        '<section class="version-history"><h2>Version history</h2><p>The ARR identifier remains stable. Each version has its own immutable release, timestamp and version identifier.</p><ul>'
+        '<section class="version-history"><h2>Version history</h2><p>The paper identifier remains stable. Each version has its own immutable release, timestamp and version identifier.</p><ul>'
         + "".join(history_items)
         + "</ul></section>"
     )
@@ -853,26 +859,26 @@ def build_paper_page(
         )
         source_history = (
             '<section class="version-history"><h2>Original ai.vixra version history</h2>'
-            '<p>Dates below are the source submission timestamps. ai.vixra omits a timezone; ARR preserves the displayed values and uses the normalized offset only for deterministic ordering.</p>'
+            '<p>Dates below are the source submission timestamps. ai.vixra omits a timezone; AIRR preserves the displayed values and uses the normalized offset only for deterministic ordering.</p>'
             + f'<ul>{source_items}</ul></section>'
         )
         archival_notice = (
             '<aside class="version-notice historical"><strong>Historical import · not assessed.</strong> '
-            'This author-authorized record preserves an earlier ai.vixra deposit. File integrity passed; scientific correctness, novelty and bibliography did not undergo the current ARR hostile-audit gate.</aside>'
+            'This author-authorized record preserves an earlier ai.vixra deposit. File integrity passed; scientific correctness, novelty and bibliography did not undergo the current AIRR hostile-audit gate.</aside>'
         )
         record_timestamp_panel = f"""
   <section class="timestamp-panel" aria-label="Historical archive timestamps">
     <div><span>Original deposit</span><strong>{exact_time(archival['first_submitted_at'])}</strong><small>ai.vixra first-submission history · source omits timezone</small></div>
-    <div><span>Historical mirror</span><strong>{esc(archival['mirrored_version'])}</strong><small>Author-authorized ARR bulk release · SHA-256 recorded</small></div>
+    <div><span>Historical mirror</span><strong>{esc(archival['mirrored_version'])}</strong><small>Author-authorized AIRR bulk release · SHA-256 recorded</small></div>
   </section>"""
         activity_heading = "Mirrored PDF downloads"
         activity_value = "Not measured"
-        activity_note = "Bulk historical-release assets are not yet included in ARR's per-record download snapshot."
+        activity_note = "Bulk historical-release assets are not yet included in AIRR's per-record download snapshot."
     else:
         record_timestamp_panel = timestamp_panel(timestamp)
         activity_heading = "Canonical PDF downloads"
         activity_value = metric_number(activity["pdf_downloads"])
-        activity_note = "GitHub release downloads only; direct ARR PDF reads are not measured"
+        activity_note = "GitHub release downloads only; direct AIRR PDF reads are not measured"
     revision = metadata.get("revision")
     revision_section = ""
     if isinstance(revision, dict):
@@ -906,7 +912,7 @@ def build_paper_page(
   <section class="activity-panel" aria-label="Public activity"><div><span>{activity_heading}</span><strong>{activity_value}</strong><small>{activity_note}</small></div><div><span>Page views</span><strong>{metric_number(activity['page_views'])}</strong><small>{esc((metrics or {}).get('views', {}).get('definition', 'No privacy-reviewed page-view source is connected.'))}</small></div><a href="{base}/rankings/#method">Definitions and rankings →</a></section>
   <div class="paper-assessment-badge">{assessment_badge(paper, assessments)}</div>
   <div class="paper-grid">
-    <section><h2>Verification record</h2><dl class="checks">{verification_rows(metadata)}</dl><p class="protocol-note">Recorded under <a href="{base}/protocol/">{esc(metadata['verification']['protocol'])}</a>. ARR verification and screening are not peer review.</p></section>
+    <section><h2>Verification record</h2><dl class="checks">{verification_rows(metadata)}</dl><p class="protocol-note">Recorded under <a href="{base}/protocol/">{esc(metadata['verification']['protocol'])}</a>. AIRR verification and screening are not peer review.</p></section>
     <aside><h2>Record</h2><dl class="record"><div><dt>Record type</dt><dd>{esc(record_type_label(metadata))}</dd></div><div><dt>Manuscript license</dt><dd>{esc(metadata['licenses']['manuscript'])}</dd></div><div><dt>Metadata license</dt><dd>{esc(metadata['licenses']['metadata'])}</dd></div><div><dt>Canonical source</dt><dd>{esc(metadata['source_of_truth'])}</dd></div><div><dt>Canonical SHA-256</dt><dd><code>{esc(metadata['integrity'].get('canonical_sha256', 'recorded in release manifest'))}</code></dd></div><div><dt>Stable record</dt><dd>{esc(metadata['record_id'])}</dd></div><div><dt>Version identifier</dt><dd>{esc(metadata['version_id'])}</dd></div><div><dt>AI assistance</dt><dd>{'Declared' if metadata['ai_assistance']['used'] else 'Not used'}</dd></div></dl><ul class="keywords">{keywords}</ul></aside>
   </div>
   {revision_section}
@@ -914,10 +920,10 @@ def build_paper_page(
   {source_history}
   {note_section}
   {related_section}
-  <section class="disclosure"><h2>AI assistance statement</h2><p>{esc(metadata['ai_assistance']['statement'])}</p></section>
+  <section class="disclosure"><h2>AI assistance statement</h2><p>{disclosure_text(metadata['ai_assistance']['statement'])}</p></section>
   <section class="screening-record"><h2>Frontier-model screening</h2><p>Status: <strong>{esc(metadata['screening']['status'])}</strong>. Any listed reports correspond to this exact version under {esc(metadata['screening']['protocol'])}; no absent assessment is represented as a pass.</p><ul>{evaluators}</ul></section>
   {paper_assessment_section(paper, assessments, highlight, base)}
-  <section class="disclosure"><h2>Editorial disclosure</h2><p>{esc(metadata['editorial']['statement'])}</p></section>
+  <section class="disclosure"><h2>Editorial disclosure</h2><p>{disclosure_text(metadata['editorial']['statement'])}</p></section>
 </article>
 """
     return page_shell(
@@ -932,17 +938,17 @@ def build_paper_page(
 
 def build_protocol(base: str, canonical_url: str) -> str:
     content = f"""
-<section class="page-intro"><span>ARR-SCREEN-1.0</span><h1>A visible standard, not a black box.</h1><p>ARR guarantees that its stated process was applied to the identified version. It does not certify universal truth, novelty or importance.</p></section>
+<section class="page-intro"><span>ARR-SCREEN-1.0</span><h1>A visible standard, not a black box.</h1><p>AIRR guarantees that its stated process was applied to the identified version. It does not certify universal truth, novelty or importance.</p></section>
 <section class="protocol-steps">
   <article><span>Gate 1</span><h2>Complete research object</h2><p>Required sources, metadata, provenance, licenses and stable identifiers must be present and internally consistent. Technical notes additionally declare their precise scope, maturity, kind and limitations.</p></article>
   <article><span>Gate 2</span><h2>Technical verification</h2><p>Hashes, generated files, executable code, tests and formal proofs are checked where applicable. Failures remain visible until resolved.</p></article>
-  <article><span>Gate 3</span><h2>Hostile frontier-model screening</h2><p>For each new admission, the operator selects a version-locked frontier-model audit set according to availability, capability, quota and subject fit. ARR promises no fixed provider, model, report count or reasoning tier. Any non-accept recommendation or unresolved material objection blocks acceptance until correction or a signed human adjudication.</p></article>
+  <article><span>Gate 3</span><h2>Hostile frontier-model screening</h2><p>For each new admission, the operator selects a version-locked frontier-model audit set according to availability, capability, quota and subject fit. AIRR promises no fixed provider, model, report count or reasoning tier. Any non-accept recommendation or unresolved material objection blocks acceptance until correction or a signed human adjudication.</p></article>
   <article><span>Gate 4</span><h2>Human editorial sign-off</h2><p>Models do not decide publication. The editor inspects every objection, signs the exact version and ties the decision to stable identifiers, the SHA-256 manifest and versioned protocols.</p></article>
 </section>
 <section class="callout"><h2>Lean 4 verification levels</h2><p><strong>L0</strong> source supplied · <strong>L1</strong> clean build · <strong>L2</strong> kernel-checked, no unfinished proofs, axioms audited · <strong>L3</strong> correspondence between formalization and manuscript independently reviewed.</p></section>
 """
     canonical = f"{canonical_url}/protocol/" if canonical_url else ""
-    return page_shell(title="Screening protocol — AIRR.SCIENCE", description="The documented ARR screening and verification protocol.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Screening protocol — AIRR.SCIENCE", description="The documented AIRR screening and verification protocol.", content=content, base=base, canonical=canonical)
 
 
 def build_assessments(papers: list, assessments: list[dict], highlights: list[dict], base: str, canonical_url: str, author_lookup: dict[str, dict]) -> str:
@@ -958,7 +964,7 @@ def build_assessments(papers: list, assessments: list[dict], highlights: list[di
         rows.append(f"""
 <li class="assessment-rank-row"><span class="rank-number">{rank:02d}</span><div><span class="rank-record">{esc(paper.id)} · {esc(paper.version)}</span><h3><a href="{base}/{record_route(paper.metadata)}/{quote(paper.id)}/#model-assessments">{esc(paper.metadata['title'])}</a></h3><p>{authors}</p></div><div class="assessment-rank-score">{star_row(aggregate['stars'])}<strong>{aggregate['score']:.2f}</strong><span>{esc(aggregate['tier'])} · n={aggregate['count']} · {aggregate['minimum']:.2f}–{aggregate['maximum']:.2f}</span></div></li>""")
     if not rows:
-        rows.append('<li class="assessment-rank-empty"><strong>No scientific ranking yet.</strong><p>ARR has not published an eligible independent assessment for any current paper version. Existing records remain “Not yet rated”; missing reports are never converted to zero.</p></li>')
+        rows.append('<li class="assessment-rank-empty"><strong>No scientific ranking yet.</strong><p>AIRR has not published an eligible independent assessment for any current paper version. Existing records remain “Not yet rated”; missing reports are never converted to zero.</p></li>')
     labels = [tier_label(number) for number in range(1, 11)]
     scale_rows = "".join(
         f'<tr><td>{number}</td><td>{star_row(number)}</td><td>{esc(label)}</td><td>{esc("Publication floor" if number == 3 else "Very good is deliberately above the publication floor" if number == 5 else "Unconditional recognized Millennium Problem solution after extraordinary verification" if number == 10 else "")}</td></tr>'
@@ -968,16 +974,16 @@ def build_assessments(papers: list, assessments: list[dict], highlights: list[di
     content = f"""
 <section class="assessment-index">
   <header><div><span>ARR-ASSESS-1.0 · exact-version evidence</span><h1>Model assessment ranking</h1></div><a class="policy-link" href="https://github.com/arr-research/arr-research.github.io/blob/main/docs/MODEL_ASSESSMENT_POLICY.md">Full policy</a></header>
-  <p class="assessment-lead"><strong>ARR asks the strongest suitable frontier models available for each assessment round to attack a paper, not merely summarize it.</strong> They search for counterexamples, hidden assumptions, proof gaps, unsupported novelty and reproducibility failures on the exact hashed version. ARR promises no fixed provider, model, report count or reasoning tier; every published score names the model, artifact, version and date, and unresolved material objections block admission.</p>
+  <p class="assessment-lead"><strong>AIRR asks the strongest suitable frontier models available for each assessment round to attack a paper, not merely summarize it.</strong> They search for counterexamples, hidden assumptions, proof gaps, unsupported novelty and reproducibility failures on the exact hashed version. AIRR promises no fixed provider, model, report count or reasoning tier; every published score names the model, artifact, version and date, and unresolved material objections block admission.</p>
   <p class="assessment-boundary">Passing this unusually hard filter is meaningful positive evidence that a paper deserves serious attention. It is not infallibility: models can share blind spots, and a score cannot replace domain-expert review, formal proof or later correction.</p>
   <div class="assessment-index-meta"><span>{len(ranked)} rated current versions</span><span>{sum(1 for paper in papers if aggregate_assessments(assessments_for(assessments, paper)) is None)} not yet rated</span><span>{len(assessments)} preserved reports</span><span>{highlight_count} signed highlights</span></div>
   <div class="assessment-rank-head"><span>Rank</span><span>Paper</span><span>Median assessment</span></div>
   <ol class="assessment-ranking">{''.join(rows)}</ol>
   <section class="scale-panel" id="scale"><header><span>High-ceiling research scale</span><h2>Five is very good, not a failing grade.</h2></header><p>The 0.00–10.00 Millennium scale is not a school percentage or a probability of correctness. Three stars is the acceptable publication floor. Ten is the top comparison anchor and cannot be established by a model alone.</p><div class="table-scroll"><table><thead><tr><th>Stars</th><th>Display</th><th>Meaning</th><th>Anchor</th></tr></thead><tbody>{scale_rows}</tbody></table></div></section>
-  <section class="criteria-panel"><h2>Criterion profile</h2><p>Each report also supplies one to five stars, with a written basis, for correctness confidence, rigor, novelty, significance and reproducibility. These diagnostic ratings are shown separately and are not silently averaged into the headline score.</p><p>Only assessments marked independent of manuscript creation enter the median. ARR shows the count and range, never pools different paper versions and preserves later reassessments so future systems can be compared with earlier ones.</p><p><a href="{base}/registry/model-assessments.json">Download the versioned machine-readable assessment registry</a> · <a href="{base}/schema/model-assessment.schema.json">JSON Schema</a></p></section>
+  <section class="criteria-panel"><h2>Criterion profile</h2><p>Each report also supplies one to five stars, with a written basis, for correctness confidence, rigor, novelty, significance and reproducibility. These diagnostic ratings are shown separately and are not silently averaged into the headline score.</p><p>Only assessments marked independent of manuscript creation enter the median. AIRR shows the count and range, never pools different paper versions and preserves later reassessments so future systems can be compared with earlier ones.</p><p><a href="{base}/registry/model-assessments.json">Download the versioned machine-readable assessment registry</a> · <a href="{base}/schema/model-assessment.schema.json">JSON Schema</a></p></section>
 </section>"""
     canonical = f"{canonical_url}/assessments/" if canonical_url else ""
-    return page_shell(title="Model assessments — AIRR.SCIENCE", description="Version-locked longitudinal frontier-model assessments and the ARR scientific ranking.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Model assessments — AIRR.SCIENCE", description="Version-locked longitudinal frontier-model assessments and the AIRR scientific ranking.", content=content, base=base, canonical=canonical)
 
 
 def load_donation_url() -> str:
@@ -998,7 +1004,7 @@ def build_support(base: str, canonical_url: str, donation_url: str = "") -> str:
     else:
         content = """
 <section class="support-page">
-  <header><span>Voluntary support · not yet active</span><h1>Support AIRR</h1><p>ARR does not currently accept donations. We are preparing a way to support the archive.</p></header>
+  <header><span>Voluntary support · not yet active</span><h1>Support AIRR</h1><p>AIRR does not currently accept donations. We are preparing a way to support the archive.</p></header>
   <div class="support-grid"><section><h2>Research stays independent</h2><p>Submission, assessment, publication and withdrawal are currently free. Any future contribution will be voluntary and cannot influence editorial decisions or rankings.</p></section><aside><h2>Donations are not available yet</h2><p>Thank you for wanting to support AIRR. The payment link will appear here when setup is complete.</p></aside></div>
 </section>"""
     canonical = f"{canonical_url}/support/" if canonical_url else ""
@@ -1007,15 +1013,15 @@ def build_support(base: str, canonical_url: str, donation_url: str = "") -> str:
 
 def build_about(base: str, canonical_url: str) -> str:
     content = """
-<section class="page-intro"><span>About the archive</span><h1>The hostile-audit research registry.</h1><p>ARR exists because uploading a PDF proves almost nothing. It distinguishes work that has survived disclosed frontier-model attacks on an exact version from work that has merely been posted online.</p></section>
+<section class="page-intro"><span>About the archive</span><h1>The hostile-audit research registry.</h1><p>AIRR exists because uploading a PDF proves almost nothing. It distinguishes work that has survived disclosed frontier-model attacks on an exact version from work that has merely been posted online.</p></section>
 <section class="about-grid">
-  <article><h2>What AIRR is</h2><p>AIRR.SCIENCE is the Archive for Independent &amp; Rigorous Research, previously named ARR. It is a versioned registry where new research must survive a disclosed hostile frontier-model audit selected for that assessment round and a human decision. Canonical manuscripts, prompts, model identities, findings, code, provenance and verification records remain inspectable. Existing ARR paper identifiers and preserved versions remain unchanged.</p></article>
+  <article><h2>What AIRR is</h2><p>AIRR.SCIENCE is the Archive for Independent &amp; Rigorous Research. It is a versioned registry where new research must survive a disclosed hostile frontier-model audit selected for that assessment round and a human decision. Canonical manuscripts, prompts, model identities, findings, code, provenance and verification records remain inspectable. Existing paper identifiers and preserved versions remain unchanged.</p></article>
   <article><h2>Two publication types</h2><p>Research papers present complete scholarly arguments at paper scale. Technical notes preserve narrower but rigorous results, proofs, formalizations, methods, replications, negative results, software or protocols. A note is different in scope, not exempt from evidence or integrity requirements.</p></article>
-  <article><h2>What ARR is not</h2><p>ARR is not a journal, a replacement for expert peer review or a guarantee that a scientific claim is true. Activity rankings measure use; the separate scientific ranking reports version-locked model opinions with their provenance and limits.</p></article>
+  <article><h2>What AIRR is not</h2><p>AIRR is not a journal, a replacement for expert peer review or a guarantee that a scientific claim is true. Activity rankings measure use; the separate scientific ranking reports version-locked model opinions with their provenance and limits.</p></article>
   <article><h2>Governance</h2><p>Lluis Eriksson is founder, registry operator, responsible editor and data controller. Every decision is human. His conflicted or author-owned work requires a disclosed independent editor before publication.</p></article>
   <article><h2>Preservation</h2><p>Stable identifiers are independent of GitHub. Versioned releases distribute generated and large files; future object storage and independent preservation mirrors can replace any provider without changing citations.</p></article>
-  <article><h2>Submissions</h2><p>ARR does not currently charge for submission, assessment, publication or withdrawal. Authors use one direct private form without requesting an invitation. Manuscripts enter a separate quarantine service; GitHub and ordinary email are never manuscript channels.</p></article>
-  <article><h2>Frontier expertise</h2><p>ARR deliberately uses the strongest available frontier models as tireless adversarial referees. Published assessments remain comparable over time: model, date, score, strengths, weaknesses, possible errors and novelty candidates are preserved rather than overwritten.</p></article>
+  <article><h2>Submissions</h2><p>AIRR does not currently charge for submission, assessment, publication or withdrawal. Authors use one direct private form without requesting an invitation. Manuscripts enter a separate quarantine service; GitHub and ordinary email are never manuscript channels.</p></article>
+  <article><h2>Frontier expertise</h2><p>AIRR deliberately uses the strongest available frontier models as tireless adversarial referees. Published assessments remain comparable over time: model, date, score, strengths, weaknesses, possible errors and novelty candidates are preserved rather than overwritten.</p></article>
 </section>
 """
     canonical = f"{canonical_url}/about/" if canonical_url else ""
@@ -1024,17 +1030,17 @@ def build_about(base: str, canonical_url: str) -> str:
 
 def build_licensing(base: str, canonical_url: str) -> str:
     content = """
-<section class="page-intro"><span>Open by scope</span><h1>Licenses follow the material.</h1><p>ARR does not apply one ambiguous license to software, papers, metadata and data. Every scope is declared explicitly and deposited records retain their own licensing information.</p></section>
+<section class="page-intro"><span>Open by scope</span><h1>Licenses follow the material.</h1><p>AIRR does not apply one ambiguous license to software, papers, metadata and data. Every scope is declared explicitly and deposited records retain their own licensing information.</p></section>
 <section class="about-grid">
   <article><h2>Platform software</h2><p><strong>AGPL-3.0-or-later.</strong> Modified network deployments must offer their corresponding source under the license terms.</p></article>
   <article><h2>Catalogue and schemas</h2><p><strong>CC0-1.0.</strong> Public metadata and machine contracts can be indexed, mirrored and implemented without permission friction.</p></article>
-  <article><h2>ARR documentation</h2><p><strong>CC-BY-4.0.</strong> Policies, protocols and templates may be reused with attribution unless a file says otherwise.</p></article>
+  <article><h2>AIRR documentation</h2><p><strong>CC-BY-4.0.</strong> Policies, protocols and templates may be reused with attribution unless a file says otherwise.</p></article>
   <article><h2>Deposited research</h2><p>Each record declares separate manuscript, code and data licenses in <code>LICENSES.json</code>. Depositors retain copyright unless expressly transferred.</p></article>
-  <article><h2>Name and endorsement</h2><p>Open licenses do not grant trademark rights or permission to imply that ARR endorses a modified archive, paper or service.</p></article>
+  <article><h2>Name and endorsement</h2><p>Open licenses do not grant trademark rights or permission to imply that AIRR endorses a modified archive, paper or service.</p></article>
 </section>
 """
     canonical = f"{canonical_url}/licensing/" if canonical_url else ""
-    return page_shell(title="Licensing — AIRR.SCIENCE", description="Licensing scopes for ARR software, metadata, documentation and deposited research.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Licensing — AIRR.SCIENCE", description="Licensing scopes for AIRR software, metadata, documentation and deposited research.", content=content, base=base, canonical=canonical)
 
 
 def policy_source(filename: str) -> str:
@@ -1128,7 +1134,7 @@ def build_submit(
     )
     content = f"""
 <section class="ranked-feed submit-index">
-  <header><div><span>ARR public catalogue · activity order</span><h1>Paper index</h1></div><div class="submit-tools">{direct_action}<a href="{base}/terms/">Terms</a><a href="{base}/privacy/">Privacy</a></div></header>
+  <header><div><span>AIRR public catalogue · activity order</span><h1>Paper index</h1></div><div class="submit-tools">{direct_action}<a href="{base}/terms/">Terms</a><a href="{base}/privacy/">Privacy</a></div></header>
   {search_form(base)}
   <div class="compact-gate"><strong>New-admission gate</strong><span>operator-selected frontier audit</span><span>exact-version evidence</span><span>0 unresolved material objections</span><span>human decision</span><a href="{base}/assessments/">evidence and scores →</a></div>
   <div class="index-meta"><p>{esc(rank_explanation)}</p><span>Records {start + 1 if ranked else 0}–{min(start + page_size, len(ranked))} / {len(ranked)}</span></div>
@@ -1141,17 +1147,17 @@ def build_submit(
         f"{canonical_url}/submit/" if page_number == 1 else f"{canonical_url}/submit/page/{page_number}/"
     ) if canonical_url else ""
     title = "Submit and most-read papers — AIRR.SCIENCE" if page_number == 1 else f"Most-read papers, page {page_number} — AIRR.SCIENCE"
-    return page_shell(title=title, description="Direct private submission and the paginated ARR paper activity ranking.", content=content, base=base, canonical=canonical)
+    return page_shell(title=title, description="Direct private submission and the paginated AIRR paper activity ranking.", content=content, base=base, canonical=canonical)
 
 
 def build_privacy(base: str, canonical_url: str) -> str:
     content = f"""
-<section class="page-intro"><span>ARR-PRIVACY-1.2 · effective 2026-08-30</span><h1>Privacy is separated from publication.</h1><p>The controller is Lluis Eriksson, a natural person in Stockholm, Sweden, acting as founder, registry operator and responsible editor. Contact: <a href="mailto:lluiseriksson@gmail.com?subject=ARR%20privacy">lluiseriksson@gmail.com</a>. No DPO is designated.</p></section>
+<section class="page-intro"><span>ARR-PRIVACY-1.2 · effective 2026-08-30</span><h1>Privacy is separated from publication.</h1><p>The controller is Lluis Eriksson, a natural person in Stockholm, Sweden, acting as founder, registry operator and responsible editor. Contact: <a href="mailto:lluiseriksson@gmail.com?subject=AIRR%20privacy">lluiseriksson@gmail.com</a>. No DPO is designated.</p></section>
 <section class="about-grid">
-  <article><h2>Private data</h2><p>ARR processes the adult depositor's name and email, submission metadata and PDF, declarations, decisions, correspondence and pseudonymized security events to administer the deposit agreement and protect the service. Direct submission requires no author account.</p></article>
-  <article><h2>Frontier-model screening</h2><p>Acceptance remains human, but the disclosed pre-publication protocol requires version-locked external frontier-model reports. The form records transfer authorization; ARR records provider, model, time and response hash and uses appropriate confidentiality and transfer controls.</p></article>
+  <article><h2>Private data</h2><p>AIRR processes the adult depositor's name and email, submission metadata and PDF, declarations, decisions, correspondence and pseudonymized security events to administer the deposit agreement and protect the service. Direct submission requires no author account.</p></article>
+  <article><h2>Frontier-model screening</h2><p>Acceptance remains human, but the disclosed pre-publication protocol requires version-locked external frontier-model reports. The form records transfer authorization; AIRR records provider, model, time and response hash and uses appropriate confidentiality and transfer controls.</p></article>
   <article><h2>Retention</h2><p>Malware bytes are erased immediately, withdrawn PDFs after 7 days, declined PDFs after 30 days, and accepted private copies 30 days after verified public release. A minimal decision record is retained for three years, subject to narrowly reviewed legal hold.</p></article>
-  <article><h2>Public-site measurement</h2><p>ARR currently runs no per-page visitor analytics and sets no analytics cookies. Displayed PDF-download totals come from public GitHub release-asset counters and do not identify readers to ARR. The notice will be updated before any page-view provider is enabled.</p></article>
+  <article><h2>Public-site measurement</h2><p>AIRR currently runs no per-page visitor analytics and sets no analytics cookies. Displayed PDF-download totals come from public GitHub release-asset counters and do not identify readers to AIRR. The notice will be updated before any page-view provider is enabled.</p></article>
   <article><h2>Your rights</h2><p>Applicable rights include access, correction, erasure, restriction, portability and objection. You can complain to Sweden's IMY or another competent EEA authority. Requests receive proportionate identity verification.</p></article>
   <article><h2>Voluntary support</h2><p>The support page links to PayPal when donations are available. AIRR loads no PayPal widgets or tracking scripts. If you choose to pay on PayPal, it provides the operator with transaction details for payment, refund, fraud, accounting and legal administration. You may optionally identify the paper your support relates to using its published ID or your submission receipt's registration reference. The reference gives no private access and is not sent to PayPal automatically. Donor information is used for support administration, not published or used for mailing lists, ranking or editorial decisions. The donation notice was updated on 2026-09-06.</p></article>
 </section>
@@ -1163,11 +1169,11 @@ def build_privacy(base: str, canonical_url: str) -> str:
 
 def build_terms(base: str, canonical_url: str) -> str:
     content = f"""
-<section class="page-intro"><span>ARR-DEPOSIT-1.4 · effective 2026-08-30</span><h1>There is currently no ARR deposit fee.</h1><p>ARR does not currently charge for submission, assessment, publication or withdrawal. A future fee may apply only after advance notice and new terms, never retroactively or in exchange for acceptance. The operator is Lluis Eriksson in Stockholm, Sweden.</p></section>
+<section class="page-intro"><span>ARR-DEPOSIT-1.4 · effective 2026-08-30</span><h1>There is currently no AIRR deposit fee.</h1><p>AIRR does not currently charge for submission, assessment, publication or withdrawal. A future fee may apply only after advance notice and new terms, never retroactively or in exchange for acceptance. The operator is Lluis Eriksson in Stockholm, Sweden.</p></section>
 <section class="about-grid">
   <article><h2>Authority and scope</h2><p>Adult depositors must be an author, rights holder or authorized agent and accurately disclose rights, authorship, AI assistance, interests, third-party material, provenance and licenses. The pilot accepts one PDF up to 25 MiB.</p></article>
-  <article><h2>Private first</h2><p>An upload enters quarantine and carries no public license. ARR may decline, request changes, restrict or remove material. Submission creates no entitlement to a timetable, publication, preservation or endorsement.</p></article>
-  <article><h2>Model gate</h2><p>Acceptance requires the operator-selected frontier-model audit record tied to the exact private PDF. Selection may vary with availability, quota, capability and subject fit; ARR promises no fixed provider, model, report count or reasoning tier. A non-accept recommendation or unresolved material objection blocks acceptance. The human editor makes and signs the final decision.</p></article>
+  <article><h2>Private first</h2><p>An upload enters quarantine and carries no public license. AIRR may decline, request changes, restrict or remove material. Submission creates no entitlement to a timetable, publication, preservation or endorsement.</p></article>
+  <article><h2>Model gate</h2><p>Acceptance requires the operator-selected frontier-model audit record tied to the exact private PDF. Selection may vary with availability, quota, capability and subject fit; AIRR promises no fixed provider, model, report count or reasoning tier. A non-accept recommendation or unresolved material objection blocks acceptance. The human editor makes and signs the final decision.</p></article>
   <article><h2>Publication rights</h2><p>Copyright remains with its owner. A final accepted version receives explicit scoped licenses before public release. Public copies and open licenses may be irreversible; withdrawal cannot recall third-party copies.</p></article>
   <article><h2>Appeal and conflict</h2><p>A decline or restriction may be appealed once within 30 days. A conflicted founder approval is provisional and an unconflicted independent editor must sign before publication.</p></article>
 </section>
@@ -1179,22 +1185,22 @@ def build_terms(base: str, canonical_url: str) -> str:
 
 def build_governance(base: str, canonical_url: str) -> str:
     content = f"""
-<section class="page-intro"><span>Human gate · disclosed conflicts</span><h1>The founder cannot be his own final editor.</h1><p>Lluis Eriksson is founder, registry operator, responsible editor and data controller. ARR does not use the company title VD/CEO while no such legal office exists.</p></section>
-<section class="about-grid"><article><h2>Ordinary external case</h2><p>The operator records the exact version, checks and reason, then manually chooses accept, decline or changes requested. Acceptance still requires a separate public-release workflow.</p></article><article><h2>Founder or editor conflict</h2><p>Authorship, recent collaboration, supervision, close relationships, financial interests or disputes trigger recusal. An operator accept becomes provisional until a named independent editor signs.</p></article><article><h2>Appeal</h2><p>The original decision-maker cannot be the sole appeal reviewer. An unavailable independent reviewer means the case remains private or is declined without implying low quality.</p></article><article><h2>Transparency</h2><p>Public records disclose relevant founder relationships. Once the pilot has activity, ARR will report aggregate decisions, appeals, conflicts and reversals without exposing private submissions.</p></article></section>
+<section class="page-intro"><span>Human gate · disclosed conflicts</span><h1>The founder cannot be his own final editor.</h1><p>Lluis Eriksson is founder, registry operator, responsible editor and data controller. AIRR does not use the company title VD/CEO while no such legal office exists.</p></section>
+<section class="about-grid"><article><h2>Ordinary external case</h2><p>The operator records the exact version, checks and reason, then manually chooses accept, decline or changes requested. Acceptance still requires a separate public-release workflow.</p></article><article><h2>Founder or editor conflict</h2><p>Authorship, recent collaboration, supervision, close relationships, financial interests or disputes trigger recusal. An operator accept becomes provisional until a named independent editor signs.</p></article><article><h2>Appeal</h2><p>The original decision-maker cannot be the sole appeal reviewer. An unavailable independent reviewer means the case remains private or is declined without implying low quality.</p></article><article><h2>Transparency</h2><p>Public records disclose relevant founder relationships. Once the pilot has activity, AIRR will report aggregate decisions, appeals, conflicts and reversals without exposing private submissions.</p></article></section>
 <section class="callout"><h2>Full governance rules</h2><p><a href="{policy_source('GOVERNANCE.md')}">Read the version-controlled policy</a>.</p></section>
 """
     canonical = f"{canonical_url}/governance/" if canonical_url else ""
-    return page_shell(title="Governance — AIRR.SCIENCE", description="ARR governance, manual editorial gate and founder conflict controls.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Governance — AIRR.SCIENCE", description="AIRR governance, manual editorial gate and founder conflict controls.", content=content, base=base, canonical=canonical)
 
 
 def build_contact(base: str, canonical_url: str) -> str:
     content = f"""
-<section class="page-intro"><span>Responsible operator and redress</span><h1>One accountable human contact.</h1><p>ARR is a non-commercial project operated by Lluis Eriksson, a natural person in Stockholm, Sweden: founder, registry operator, responsible editor and GDPR data controller.</p></section>
-<section class="about-grid"><article><h2>Contact</h2><p><a href="mailto:lluiseriksson@gmail.com">lluiseriksson@gmail.com</a>. Use subject <code>ARR submission</code>, <code>ARR appeal</code>, <code>ARR privacy</code>, <code>ARR copyright</code>, <code>ARR illegal-content notice</code> or <code>ARR security</code>. Manuscripts belong only in the private form; never attach them to email.</p></article><article><h2>Appeal</h2><p>Appeal once within 30 days with the case, challenged decision, alleged error and remedy. ARR aims to acknowledge within 7 days and decide within 30 days through someone other than the sole original decision-maker.</p></article><article><h2>Rights/illegality notice</h2><p>Identify yourself, the exact URL/version or case, the material and legal basis, supporting facts and requested action. ARR records the case, may restrict urgently, gives reasons and permits a substantiated counter-notice.</p></article><article><h2>Privacy regulator</h2><p>You may complain to the <a href="https://www.imy.se/en/individuals/forms-and-e-services/file-a-gdpr-complaint/">Swedish Authority for Privacy Protection (IMY)</a> or another competent EEA authority.</p></article></section>
+<section class="page-intro"><span>Responsible operator and redress</span><h1>One accountable human contact.</h1><p>AIRR is a non-commercial project operated by Lluis Eriksson, a natural person in Stockholm, Sweden: founder, registry operator, responsible editor and GDPR data controller.</p></section>
+<section class="about-grid"><article><h2>Contact</h2><p><a href="mailto:lluiseriksson@gmail.com">lluiseriksson@gmail.com</a>. Use subject <code>AIRR submission</code>, <code>AIRR appeal</code>, <code>AIRR privacy</code>, <code>AIRR copyright</code>, <code>AIRR illegal-content notice</code> or <code>AIRR security</code>. Manuscripts belong only in the private form; never attach them to email.</p></article><article><h2>Appeal</h2><p>Appeal once within 30 days with the case, challenged decision, alleged error and remedy. AIRR aims to acknowledge within 7 days and decide within 30 days through someone other than the sole original decision-maker.</p></article><article><h2>Rights/illegality notice</h2><p>Identify yourself, the exact URL/version or case, the material and legal basis, supporting facts and requested action. AIRR records the case, may restrict urgently, gives reasons and permits a substantiated counter-notice.</p></article><article><h2>Privacy regulator</h2><p>You may complain to the <a href="https://www.imy.se/en/individuals/forms-and-e-services/file-a-gdpr-complaint/">Swedish Authority for Privacy Protection (IMY)</a> or another competent EEA authority.</p></article></section>
 <section class="callout"><h2>Complete procedure</h2><p><a href="{policy_source('LEGAL_AND_COMPLAINTS.md')}">Read legal contact, notices and complaints in full</a>. A stable postal service address remains a launch condition for unrestricted public intake.</p></section>
 """
     canonical = f"{canonical_url}/contact/" if canonical_url else ""
-    return page_shell(title="Contact and complaints — AIRR.SCIENCE", description="ARR operator, legal contact, editorial appeal and notice procedure.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Contact and complaints — AIRR.SCIENCE", description="AIRR operator, legal contact, editorial appeal and notice procedure.", content=content, base=base, canonical=canonical)
 
 
 def write(path: Path, value: str) -> None:
@@ -1310,7 +1316,7 @@ def write_llm_guides(papers: list, canonical_url: str) -> None:
         "",
         "> Public, versioned research records with explicit provenance, integrity hashes, licensing, evidence labels, and machine-readable renditions.",
         "",
-        "AIRR.SCIENCE pages and metadata may be crawled, indexed, quoted, and linked subject to each record's declared licenses. Existing ARR paper IDs and versions remain stable. Acceptance is not peer review and is not a guarantee of truth.",
+        "AIRR.SCIENCE pages and metadata may be crawled, indexed, quoted, and linked subject to each record's declared licenses. Existing paper IDs and versions remain stable. Acceptance is not peer review and is not a guarantee of truth.",
         "",
         "## Machine-readable resources",
         "",
@@ -1543,7 +1549,7 @@ def main() -> int:
     paper_count = sum(paper.record_type == "research_paper" for paper in papers)
     note_count = sum(paper.record_type == "technical_note" for paper in papers)
     print(
-        f"Built ARR site with {paper_count} paper(s), {note_count} technical note(s), "
+        f"Built AIRR site with {paper_count} paper(s), {note_count} technical note(s), "
         f"and {len(timestamps)} published/pending version(s) at {OUTPUT_DIR}"
     )
     return 0

@@ -68,7 +68,7 @@ a Google Search Console or Google Scholar submission.
    values, one per line, and the homepage emits separate escaped tags so old
    ownership verification is preserved. These are public verification tokens,
    not Google passwords or access tokens. Do not invent values.
-3. Run **Publish ARR catalogue**. Its build writes the escaped verification tag
+3. Run **Publish AIRR catalogue**. Its build writes the escaped verification tag
    to the homepage. Confirm the tag is present in the deployed HTML source, then
    click **Verify** in Search Console. Keep the variable after verification.
 4. Submit `https://airr.science/sitemap.xml` using the Sitemaps report.
@@ -100,7 +100,7 @@ and [domain-migration guidance](https://developers.google.com/search/docs/crawli
 
 ## Site icon
 
-The shared page header links to ARR's gold A and three-node mark on black in SVG, 96-pixel PNG,
+The shared page header links to AIRR's gold A and three-node mark on black in SVG, 96-pixel PNG,
 multi-size ICO (16, 32 and 48 pixels), and a 180-pixel Apple touch icon. The build
 copies these assets from `site/` to the public root and respects `--base-path`.
 The SVG is a self-contained wrapper around a PNG rendition of the mark.
@@ -126,19 +126,19 @@ registry metadata. Preserving the full registry abstract in HTML does not itself
 prove that its text matches the manuscript. The PDF should contain searchable
 text, the title and authors on its first page, and a References/Bibliography
 section. Scholar documents a 5 MB limit. Do not rewrite immutable manuscripts or
-their hashes just to alter search metadata; use ARR's correction/version workflow
+their hashes just to alter search metadata; use AIRR's correction/version workflow
 when bibliographic or manuscript changes are needed.
 
-The metadata field `date` remains the cited publication date. For an actual ARR
+The metadata field `date` remains the cited publication date. For an actual AIRR
 release, `citation_online_date` uses the release timestamp instead of falsely
-repeating the manuscript date. Historical source dates and ARR version identifiers
+repeating the manuscript date. Historical source dates and AIRR version identifiers
 retain their existing provenance.
 
-For Zenodo, first identify the selected ARR IDs and exact versions. Make one
-record per work with its PDF and verification certificates, cite the ARR page,
+For Zenodo, first identify the selected AIRR IDs and exact versions. Make one
+record per work with its PDF and verification certificates, cite the AIRR page,
 preserve authorship and licensing, and reuse an existing DOI when the publication
 already has one. After a DOI is actually assigned, put its bare value (such as
-`10.5281/zenodo.RECORD_NUMBER`) in that version's metadata `doi` field. ARR emits a
+`10.5281/zenodo.RECORD_NUMBER`) in that version's metadata `doi` field. AIRR emits a
 visible DOI link, `citation_doi`, a Dublin Core identifier and a JSON-LD identifier.
 Neither a DOI nor a deposit is created by this site build. arXiv submissions remain
 a separate author-account workflow.

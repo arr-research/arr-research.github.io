@@ -179,7 +179,7 @@
     more.hidden = true;
     root.removeAttribute("aria-busy");
     if (!queryTokens(query).length) {
-      status.textContent = "Enter a topic, title, author or ARR identifier.";
+      status.textContent = "Enter a topic, title, author or paper identifier.";
       return;
     }
     status.textContent = "Searching the complete catalogue…";

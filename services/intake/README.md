@@ -1,6 +1,6 @@
-# ARR private intake service
+# AIRR private intake service
 
-This service is the direct private-submission boundary in front of the public ARR
+This service is the direct private-submission boundary in front of the public AIRR
 repository. Authors need no invitation or account. It accepts PDF manuscripts into
 non-public quarantine, fails closed when malware scanning is unavailable, emails
 the operator a protected case link without attaching the manuscript, and records
