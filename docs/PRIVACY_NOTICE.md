@@ -124,8 +124,10 @@ Earlier versions remain in repository history.
 
 ## Voluntary support
 
-PayPal loads only when a visitor opens ARR's dedicated support page. If the visitor
-chooses to donate, PayPal acts under its own terms and privacy notice and provides
+Donations are currently inactive, and ARR does not load PayPal components. If
+donations are activated later, any PayPal component will be limited to the
+dedicated support page. When a visitor chooses to donate, PayPal acts under its own
+terms and privacy notice and provides
 the operator with transaction data such as donor name, email, amount, currency and
 transaction identifier. ARR uses those data only for payment administration,
 fraud/refund handling, accounting and legal obligations. Donors are not added to a

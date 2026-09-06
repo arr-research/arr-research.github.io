@@ -916,15 +916,13 @@ def build_assessments(papers: list, assessments: list[dict], highlights: list[di
 
 
 def build_support(base: str, canonical_url: str) -> str:
-    paypal_script = '<script defer src="https://www.paypalobjects.com/donate/sdk/donate-sdk.js" charset="UTF-8"></script>'
-    content = f"""
+    content = """
 <section class="support-page">
-  <header><span>Voluntary support · not yet active</span><h1>Support the ARR registry</h1><p>ARR does not currently accept donations. The PayPal button is retained for future activation once the registry begins receiving external submissions.</p></header>
-  <div class="support-grid"><section><h2>Independence is non-negotiable</h2><p>ARR currently charges EUR 0.00 for submission, assessment, publication and withdrawal. If donations are activated later, they cannot accelerate review, buy acceptance, affect a model score, ranking or editorial highlight, or alter an appeal. A donation is not a publication fee and ARR makes no tax-deductibility representation.</p><p>PayPal will process any future payment under its own terms and privacy notice and may charge transaction fees. The PayPal component loads only on this page.</p><p><a href="https://github.com/arr-research/arr-research.github.io/blob/main/docs/DONATIONS_POLICY.md">Read ARR-SUPPORT-1.0</a></p></section><aside><h2>PayPal donations — not yet active</h2><p>Please do not attempt a payment yet.</p><div id="paypal-donate-button-container"><noscript>JavaScript is required to load PayPal's official donation control.</noscript></div></aside></div>
-</section>
-<script>window.addEventListener('DOMContentLoaded',function(){{if(window.PayPal&&PayPal.Donation){{PayPal.Donation.Button({{env:'production',business:'lluiseriksson@gmail.com',image:{{src:'https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif',title:'Support ARR with PayPal',alt:'Donate to ARR with PayPal'}}}}).render('#paypal-donate-button-container');}}}});</script>"""
+  <header><span>Voluntary support · not yet active</span><h1>Support the ARR registry</h1><p>ARR does not currently accept donations. We are preparing a way to support the archive.</p></header>
+  <div class="support-grid"><section><h2>Independence is non-negotiable</h2><p>ARR currently charges EUR 0.00 for submission, assessment, publication and withdrawal. If donations are activated later, they cannot accelerate review, buy acceptance, affect a model score, ranking or editorial highlight, or alter an appeal. A donation is not a publication fee and ARR makes no tax-deductibility representation.</p><p>Any future PayPal payment will be processed under PayPal's own terms and privacy notice and may incur transaction fees.</p><p><a href="https://github.com/arr-research/arr-research.github.io/blob/main/docs/DONATIONS_POLICY.md">Read ARR-SUPPORT-1.0</a></p></section><aside><h2>Donations are not available yet</h2><p>Thank you for wanting to support ARR. Donations will open here when payment setup is complete and the registry begins receiving external submissions.</p></aside></div>
+</section>"""
     canonical = f"{canonical_url}/support/" if canonical_url else ""
-    return page_shell(title="Support ARR", description="Voluntary support for ARR with no influence on editorial decisions or rankings.", content=content, base=base, canonical=canonical, head_extra=paypal_script)
+    return page_shell(title="Support ARR", description="Voluntary support for ARR with no influence on editorial decisions or rankings.", content=content, base=base, canonical=canonical)
 
 
 def build_about(base: str, canonical_url: str) -> str:
@@ -1074,7 +1072,7 @@ def build_privacy(base: str, canonical_url: str) -> str:
   <article><h2>Retention</h2><p>Malware bytes are erased immediately, withdrawn PDFs after 7 days, declined PDFs after 30 days, and accepted private copies 30 days after verified public release. A minimal decision record is retained for three years, subject to narrowly reviewed legal hold.</p></article>
   <article><h2>Public-site measurement</h2><p>ARR currently runs no per-page visitor analytics and sets no analytics cookies. Displayed PDF-download totals come from public GitHub release-asset counters and do not identify readers to ARR. The notice will be updated before any page-view provider is enabled.</p></article>
   <article><h2>Your rights</h2><p>Applicable rights include access, correction, erasure, restriction, portability and objection. You can complain to Sweden's IMY or another competent EEA authority. Requests receive proportionate identity verification.</p></article>
-  <article><h2>Voluntary support</h2><p>PayPal loads only on the support page. If you donate, PayPal provides transaction data to the operator for payment, refund, fraud, accounting and legal administration. Donors are not profiled, ranked or given editorial influence.</p></article>
+  <article><h2>Voluntary support</h2><p>Donations are currently inactive, and ARR does not load PayPal components. If donations are activated later, PayPal will provide transaction data to the operator for payment, refund, fraud, accounting and legal administration. Donors are not profiled, ranked or given editorial influence.</p></article>
 </section>
 <section class="callout"><h2>Complete binding notice</h2><p><a href="{policy_source('PRIVACY_NOTICE.md')}">Read ARR-PRIVACY-1.2 in full</a>. The accepted version is recorded with each deposit.</p></section>
 """

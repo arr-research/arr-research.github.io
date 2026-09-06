@@ -460,13 +460,17 @@ class PaperValidationTests(unittest.TestCase):
         self.assertNotIn("Request an invitation", page)
         self.assertNotIn("mailto:lluiseriksson@gmail.com?subject=ARR%20invitation", page)
 
-    def test_support_page_does_not_display_operator_email(self) -> None:
+    def test_inactive_support_page_has_no_payment_controls(self) -> None:
         page = build_site.build_support("", "https://arr.example")
         self.assertNotIn("Payment and refund questions:", page)
         self.assertNotIn('class="support-contact"', page)
         self.assertIn("ARR does not currently accept donations", page)
-        self.assertIn("PayPal donations — not yet active", page)
-        self.assertIn("paypal-donate-button-container", page)
+        self.assertIn("Donations are not available yet", page)
+        self.assertNotIn("paypal-donate-button-container", page)
+        self.assertNotIn("paypalobjects.com", page)
+        self.assertNotIn("paypal.com/donate", page)
+        self.assertNotIn("PayPal.Donation", page)
+        self.assertNotIn("lluiseriksson@gmail.com", page)
 
     def test_submit_ranking_pages_are_ordered_and_limited_to_fifty(self) -> None:
         papers = []

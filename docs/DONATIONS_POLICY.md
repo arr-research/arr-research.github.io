@@ -3,9 +3,10 @@
 **Effective:** 2026-08-30
 
 ARR currently charges EUR 0.00 for submission, assessment, publication and
-withdrawal. ARR does not currently accept donations. The PayPal button is retained
-on the dedicated support page for future activation once the registry begins
-receiving external submissions; visitors should not attempt a payment yet.
+withdrawal. ARR does not currently accept donations. Payment controls remain
+disabled until the operator has verified the receiving account and payment link
+and the registry begins receiving external submissions. The support page displays
+the inactive state without loading a payment component or offering a payment link.
 
 If voluntary support is activated later, a donation:
 
@@ -16,8 +17,8 @@ If voluntary support is activated later, a donation:
 - does not create ownership, editorial control or a tax-deductibility representation.
 
 PayPal will process any future payment on its own service and apply its own terms,
-privacy notice and transaction fees. ARR does not embed PayPal on ordinary catalogue
-pages; the PayPal component loads only on the dedicated support page. Donor names
+privacy notice and transaction fees. ARR currently loads no PayPal component on
+any page. If enabled later, it will be limited to the support page. Donor names
 and email addresses may appear in the operator's PayPal transaction record. They
 will be used for payment administration, fraud handling, accounting and legal
 obligations and will not be added to an ARR mailing list or public donor ranking.
