@@ -5,6 +5,7 @@ import argparse
 import hashlib
 import html
 import json
+import re
 import shutil
 import sys
 from collections import defaultdict
@@ -967,14 +968,42 @@ def build_assessments(papers: list, assessments: list[dict], highlights: list[di
     return page_shell(title="Model assessments — ARR", description="Version-locked longitudinal frontier-model assessments and the ARR scientific ranking.", content=content, base=base, canonical=canonical)
 
 
-def build_support(base: str, canonical_url: str) -> str:
-    content = """
+def load_donation_url() -> str:
+    config = json.loads((SITE_DIR / "donations.json").read_text(encoding="utf-8"))
+    button_id = config.get("paypal_hosted_button_id", "")
+    business = config.get("paypal_business", "")
+    if button_id == "" and business == "":
+        return ""
+    if button_id == "":
+        if not isinstance(business, str) or not re.fullmatch(r"[A-Za-z0-9._+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}", business):
+            raise ValueError("Donations require a verified PayPal recipient email")
+        return f"https://www.paypal.com/donate/?business={quote(business, safe='')}"
+    if business != "":
+        raise ValueError("Configure only one PayPal donation destination")
+    if not isinstance(button_id, str) or not re.fullmatch(r"[A-Z0-9]{13}", button_id):
+        raise ValueError("Donations require a verified PayPal hosted button ID, not a management URL")
+    return f"https://www.paypal.com/donate/?hosted_button_id={button_id}"
+
+
+def build_support(base: str, canonical_url: str, donation_url: str = "") -> str:
+    if donation_url:
+        content = f"""
 <section class="support-page">
-  <header><span>Voluntary support · not yet active</span><h1>Support the ARR registry</h1><p>ARR does not currently accept donations. We are preparing a way to support the archive.</p></header>
-  <div class="support-grid"><section><h2>Independence is non-negotiable</h2><p>ARR currently charges EUR 0.00 for submission, assessment, publication and withdrawal. If donations are activated later, they cannot accelerate review, buy acceptance, affect a model score, ranking or editorial highlight, or alter an appeal. A donation is not a publication fee and ARR makes no tax-deductibility representation.</p><p>Any future PayPal payment will be processed under PayPal's own terms and privacy notice and may incur transaction fees.</p><p><a href="https://github.com/arr-research/arr-research.github.io/blob/main/docs/DONATIONS_POLICY.md">Read ARR-SUPPORT-1.0</a></p></section><aside><h2>Donations are not available yet</h2><p>Thank you for wanting to support ARR. Donations will open here when payment setup is complete and the registry begins receiving external submissions.</p></aside></div>
+  <header><span>Voluntary support</span><h1>Support AIRR</h1><p>Help keep rigorous research open and accessible. Your contribution supports the archive's operation, preservation and research-assessment costs.</p></header>
+  <div class="support-grid">
+    <section><h2>Research stays independent</h2><p>Submission, assessment, publication and withdrawal are currently free. Supporting AIRR is entirely optional. A contribution cannot buy acceptance, accelerate review, affect a model score, ranking or editorial highlight, or alter an appeal.</p><p>A donation is not a publication fee. AIRR makes no representation that your contribution is tax-deductible.</p><p><a href="{policy_source('DONATIONS_POLICY.md')}">Read the voluntary-support policy</a></p></section>
+    <aside><h2>Contribute with PayPal</h2><p>The recipient is <strong>Lluis Eriksson</strong>, AIRR's individual operator in Sweden. PayPal currently displays <strong class="support-contact">lluiseriksson@gmail.com</strong>.</p><p><a class="button" href="{esc(donation_url)}" rel="external noreferrer" referrerpolicy="no-referrer">Donate with PayPal</a></p><p>You will continue to PayPal, where you can check the recipient, amount and any recurring-payment option before paying. PayPal applies its own terms, privacy notice and fees.</p><p>No PayPal widget or tracking script loads on AIRR.</p></aside>
+  </div>
+  <section class="support-details"><h2>Optional reference and payment questions</h2><p>If PayPal offers a note field, you may include a public paper ID as an optional reference. It is only for payment enquiries and gives no editorial benefit. Do not include unpublished manuscripts, private submission references or sensitive information.</p><p class="support-contact">For payment or refund questions, contact <a href="mailto:lluiseriksson@gmail.com?subject=AIRR%20support">lluiseriksson@gmail.com</a> with the PayPal transaction reference. Donor details are not published or added to a mailing list. <a href="{base}/privacy/">Privacy notice</a>.</p></section>
+</section>"""
+    else:
+        content = """
+<section class="support-page">
+  <header><span>Voluntary support · not yet active</span><h1>Support AIRR</h1><p>ARR does not currently accept donations. We are preparing a way to support the archive.</p></header>
+  <div class="support-grid"><section><h2>Research stays independent</h2><p>Submission, assessment, publication and withdrawal are currently free. Any future contribution will be voluntary and cannot influence editorial decisions or rankings.</p></section><aside><h2>Donations are not available yet</h2><p>Thank you for wanting to support AIRR. The payment link will appear here when setup is complete.</p></aside></div>
 </section>"""
     canonical = f"{canonical_url}/support/" if canonical_url else ""
-    return page_shell(title="Support ARR", description="Voluntary support for ARR with no influence on editorial decisions or rankings.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Support AIRR", description="Voluntary support for AIRR with no influence on editorial decisions or rankings.", content=content, base=base, canonical=canonical)
 
 
 def build_about(base: str, canonical_url: str) -> str:
@@ -1125,7 +1154,7 @@ def build_privacy(base: str, canonical_url: str) -> str:
   <article><h2>Retention</h2><p>Malware bytes are erased immediately, withdrawn PDFs after 7 days, declined PDFs after 30 days, and accepted private copies 30 days after verified public release. A minimal decision record is retained for three years, subject to narrowly reviewed legal hold.</p></article>
   <article><h2>Public-site measurement</h2><p>ARR currently runs no per-page visitor analytics and sets no analytics cookies. Displayed PDF-download totals come from public GitHub release-asset counters and do not identify readers to ARR. The notice will be updated before any page-view provider is enabled.</p></article>
   <article><h2>Your rights</h2><p>Applicable rights include access, correction, erasure, restriction, portability and objection. You can complain to Sweden's IMY or another competent EEA authority. Requests receive proportionate identity verification.</p></article>
-  <article><h2>Voluntary support</h2><p>Donations are currently inactive, and ARR does not load PayPal components. If donations are activated later, PayPal will provide transaction data to the operator for payment, refund, fraud, accounting and legal administration. Donors are not profiled, ranked or given editorial influence.</p></article>
+  <article><h2>Voluntary support</h2><p>The support page links to PayPal when donations are available. AIRR loads no PayPal widgets or tracking scripts. If you choose to pay on PayPal, it provides the operator with transaction details for payment, refund, fraud, accounting and legal administration. An optional public-paper reference is used only for payment enquiries. Donor information is not published or used for mailing lists, ranking or editorial decisions. The donation notice was updated on 2026-09-06.</p></article>
 </section>
 <section class="callout"><h2>Complete binding notice</h2><p><a href="{policy_source('PRIVACY_NOTICE.md')}">Read ARR-PRIVACY-1.2 in full</a>. The accepted version is recorded with each deposit.</p></section>
 """
@@ -1448,7 +1477,7 @@ def main() -> int:
         )
     write(OUTPUT_DIR / "licensing" / "index.html", build_licensing(base, canonical_url))
     write(OUTPUT_DIR / "about" / "index.html", build_about(base, canonical_url))
-    write(OUTPUT_DIR / "support" / "index.html", build_support(base, canonical_url))
+    write(OUTPUT_DIR / "support" / "index.html", build_support(base, canonical_url, load_donation_url()))
     write(OUTPUT_DIR / "privacy" / "index.html", build_privacy(base, canonical_url))
     write(OUTPUT_DIR / "terms" / "index.html", build_terms(base, canonical_url))
     write(OUTPUT_DIR / "governance" / "index.html", build_governance(base, canonical_url))

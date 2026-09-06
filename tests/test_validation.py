@@ -472,6 +472,48 @@ class PaperValidationTests(unittest.TestCase):
         self.assertNotIn("PayPal.Donation", page)
         self.assertNotIn("lluiseriksson@gmail.com", page)
 
+    def test_donation_configuration_rejects_management_links_and_invalid_ids(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            site = Path(temporary)
+            with patch.object(build_site, "SITE_DIR", site):
+                for invalid in ("https://www.paypal.com/donate/buttons", "user@example.test", "TEST12345678\"", None):
+                    with self.subTest(value=invalid):
+                        (site / "donations.json").write_text(json.dumps({"paypal_hosted_button_id": invalid}), encoding="utf-8")
+                        with self.assertRaises(ValueError):
+                            build_site.load_donation_url()
+
+    def test_donation_configuration_can_be_disabled_or_use_hosted_checkout(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            site = Path(temporary)
+            with patch.object(build_site, "SITE_DIR", site):
+                for button_id, expected in (("", ""), ("TEST123456789", "https://www.paypal.com/donate/?hosted_button_id=TEST123456789")):
+                    (site / "donations.json").write_text(json.dumps({"paypal_hosted_button_id": button_id}), encoding="utf-8")
+                    self.assertEqual(build_site.load_donation_url(), expected)
+
+    def test_active_support_discloses_recipient_and_only_links_to_paypal(self) -> None:
+        url = "https://www.paypal.com/donate/?hosted_button_id=TEST123456789"
+        page = build_site.build_support("/preview", "https://arr.example/preview", url)
+        self.assertIn(f'href="{url}"', page)
+        self.assertIn('referrerpolicy="no-referrer"', page)
+        self.assertIn("Lluis Eriksson", page)
+        self.assertIn("entirely optional", page)
+        self.assertIn('href="/preview/privacy/"', page)
+        self.assertNotIn("Donations are not available yet", page)
+        self.assertNotIn("<script", page)
+        self.assertNotIn("<iframe", page)
+        self.assertNotIn("paypalobjects.com", page)
+
+    def test_donation_email_is_encoded_and_ambiguous_destinations_fail(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            site = Path(temporary)
+            with patch.object(build_site, "SITE_DIR", site):
+                (site / "donations.json").write_text(json.dumps({"paypal_business": "donor+archive@example.test"}), encoding="utf-8")
+                self.assertEqual(build_site.load_donation_url(), "https://www.paypal.com/donate/?business=donor%2Barchive%40example.test")
+                for invalid in ({"paypal_business": "https://www.paypal.com/donate/buttons"}, {"paypal_business": "operator@example.test", "paypal_hosted_button_id": "TEST123456789"}):
+                    (site / "donations.json").write_text(json.dumps(invalid), encoding="utf-8")
+                    with self.assertRaises(ValueError):
+                        build_site.load_donation_url()
+
     def test_submit_ranking_pages_are_ordered_and_limited_to_fifty(self) -> None:
         papers = []
         metrics = {"views": {"available": False}, "papers": {}}

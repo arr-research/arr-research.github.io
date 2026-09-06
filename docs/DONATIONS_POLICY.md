@@ -1,14 +1,13 @@
-# ARR voluntary-support policy — ARR-SUPPORT-1.0
+# AIRR voluntary-support policy — ARR-SUPPORT-1.1
 
-**Effective:** 2026-08-30
+**Effective:** 2026-09-06
 
-ARR currently charges EUR 0.00 for submission, assessment, publication and
-withdrawal. ARR does not currently accept donations. Payment controls remain
-disabled until the operator has verified the receiving account and payment link
-and the registry begins receiving external submissions. The support page displays
-the inactive state without loading a payment component or offering a payment link.
+AIRR currently charges nothing for submission, assessment, publication and
+withdrawal. Voluntary support helps fund operation, preservation and
+research-assessment costs. The support page offers a payment link only when the
+operator has checked the public PayPal donation page and its recipient.
 
-If voluntary support is activated later, a donation:
+A contribution:
 
 - is not a submission or publication fee;
 - does not accelerate review or buy access;
@@ -16,13 +15,43 @@ If voluntary support is activated later, a donation:
   correction decisions; and
 - does not create ownership, editorial control or a tax-deductibility representation.
 
-PayPal will process any future payment on its own service and apply its own terms,
-privacy notice and transaction fees. ARR currently loads no PayPal component on
-any page. If enabled later, it will be limited to the support page. Donor names
-and email addresses may appear in the operator's PayPal transaction record. They
-will be used for payment administration, fraud handling, accounting and legal
-obligations and will not be added to an ARR mailing list or public donor ranking.
+The recipient is **Lluis Eriksson**, AIRR's individual operator in Sweden.
+This payment destination is not represented as a separate registered charity,
+association or company. Any change of legal recipient requires a new payment
+destination and an updated notice.
 
-Questions, refund requests and conflicts should use ARR's operator contact channel
-with subject `ARR support`. A refund is considered against the payment record and
+PayPal processes payments on its own service, under its own terms, privacy notice
+and transaction fees. Visitors should check the recipient, amount and frequency
+on PayPal before paying. AIRR uses a normal external link and loads no PayPal
+widget or tracking script. AIRR does not collect card details or infer payment
+success from a return URL.
+
+PayPal provides transaction data such as donor name, email, amount, currency,
+transaction identifier and any note. These are used for payment administration,
+fraud handling, refunds, accounting and legal obligations. Donors are not added
+to a mailing list or public donor ranking. If a note field is offered, donors may
+include a public paper ID only as an optional reference for payment enquiries;
+private case identifiers, manuscripts and sensitive information should not be
+included. References are not used for editorial decisions or linked to assessment
+or ranking data.
+
+Questions, refund requests and conflicts should use the operator contact channel
+with subject `AIRR support` and the PayPal transaction reference. A refund is considered against the payment record and
 applicable PayPal rules; it cannot change any editorial decision.
+
+## Payment-link configuration
+
+`site/donations.json` contains either a public `paypal_business` recipient email or
+a public `paypal_hosted_button_id`, never credentials. The build constructs an
+HTTPS link to PayPal's public donation page. Both fields empty leave payments
+unavailable. Invalid or conflicting values fail the build; the PayPal management
+URL is not a donation link. Before enabling or changing the destination, check the
+public checkout recipient and confirm that no unavailable-donations error is
+shown. Update the displayed recipient details at the same time.
+
+On 2026-09-06, the public email-based checkout displayed the operator's email,
+an amount field, one-time/monthly options and PayPal/card payment controls. This
+was a checkout inspection, not a completed payment test. The separate hosted
+button's settings were not changed.
+
+Previous versions remain in repository history.

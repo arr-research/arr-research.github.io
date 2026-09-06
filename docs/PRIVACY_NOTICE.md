@@ -122,13 +122,17 @@ The accepted privacy version is recorded with every submission. Material changes
 do not apply retroactively without notice and, where necessary, renewed agreement.
 Earlier versions remain in repository history.
 
-## Voluntary support
+## Voluntary support — notice updated 2026-09-06
 
-Donations are currently inactive, and ARR does not load PayPal components. If
-donations are activated later, any PayPal component will be limited to the
-dedicated support page. When a visitor chooses to donate, PayPal acts under its own
-terms and privacy notice and provides
+The support page links to PayPal when donations are available. AIRR loads no
+PayPal widget or tracking script. When a visitor chooses to donate on PayPal,
+PayPal acts under its own terms and privacy notice and provides
 the operator with transaction data such as donor name, email, amount, currency and
-transaction identifier. ARR uses those data only for payment administration,
-fraud/refund handling, accounting and legal obligations. Donors are not added to a
-mailing list or public ranking, and donations cannot influence editorial decisions.
+transaction identifier and any note. The recipient remains Lluis Eriksson, acting
+as AIRR's individual operator in Sweden. AIRR uses those data only for payment
+administration, fraud/refund handling, accounting and legal obligations. An optional
+public-paper reference is used only to answer payment enquiries; private submission
+identifiers and sensitive information should not be included. Donor information is
+not published or added to a mailing list or public ranking, and donations cannot
+influence editorial decisions. The contribution is separate from any deposit and
+does not alter an existing submission agreement.
