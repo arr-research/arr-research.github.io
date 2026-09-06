@@ -1,0 +1,1 @@
+Manuscript: CC-BY-4.0. Public metadata and author-generated numerical certificates: CC0-1.0. Author-supplied code: Apache-2.0. Internal review reports: CC-BY-4.0. Third-party papers are cited, not relicensed or redistributed.
