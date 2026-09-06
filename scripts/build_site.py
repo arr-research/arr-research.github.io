@@ -203,6 +203,7 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
     </a>
     <nav aria-label="Primary navigation">
       <a href="{base}/papers/">Papers</a>
+      <a href="{base}/search/">Search</a>
       <a href="{base}/notes/">Technical notes</a>
       <a href="{base}/authors/">Authors</a>
       <a href="{base}/rankings/">Activity</a>
@@ -221,6 +222,56 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
 </body>
 </html>
 """
+
+
+def search_form(base: str) -> str:
+    return f"""<form class="paper-search" role="search" action="{base}/search/" method="get">
+  <label for="paper-query">Search papers</label>
+  <div class="search-controls"><input id="paper-query" name="q" type="search" maxlength="300" placeholder="Title, topic, author or ARR ID — e.g. SU(2)" aria-describedby="search-help"><button class="button" type="submit">Search</button></div>
+  <p id="search-help">Search all titles, abstracts, keywords and authors. Results are ordered by relevance.</p>
+</form>"""
+
+
+def search_records(papers: list, base: str) -> list[dict]:
+    # The caller supplies one current version per public record. Keep this export
+    # small and separate from the full catalogue's provenance and version history.
+    return [
+        {
+            "id": paper.id,
+            "version": paper.version,
+            "title": paper.metadata["title"],
+            "abstract": paper.metadata["abstract"],
+            "authors": [author["name"] for author in paper.metadata["authors"]],
+            "keywords": paper.metadata.get("keywords", []),
+            "subjects": paper.metadata.get("subjects", []),
+            "status": paper.metadata["status"],
+            "record_type": paper.record_type,
+            "date": paper.metadata["date"],
+            "url": f"{base}/{record_route(paper.metadata)}/{quote(paper.id)}/",
+        }
+        for paper in papers
+    ]
+
+
+def build_search(base: str, canonical_url: str, index_version: str) -> str:
+    script_version = hashlib.sha256((SITE_DIR / "search.js").read_bytes()).hexdigest()[:12]
+    content = f"""
+<section class="search-page" data-paper-search data-index-url="{base}/assets/search-index.json?v={index_version}">
+  <header><span class="eyebrow">Public catalogue</span><h1>Find a paper</h1></header>
+  {search_form(base)}
+  <p class="search-status" role="status" aria-live="polite" aria-atomic="true">Enter a topic, title, author or ARR identifier.</p>
+  <noscript><p>Enable JavaScript to search, or <a href="{base}/papers/">browse the complete paper catalogue</a>.</p></noscript>
+  <ol class="search-results" aria-label="Papers by relevance"></ol>
+  <button class="button secondary search-more" type="button" hidden>Show more papers</button>
+</section>"""
+    return page_shell(
+        title="Search papers — ARR",
+        description="Search the full ARR catalogue by title, abstract, topic, author or identifier, ordered by relevance.",
+        content=content,
+        base=base,
+        canonical=f"{canonical_url}/search/" if canonical_url else "",
+        head_extra=f'<script src="{base}/assets/search.js?v={script_version}" defer></script>',
+    )
 
 
 def status_badge(value: str) -> str:
@@ -435,6 +486,7 @@ def build_home(papers: list, timestamps: dict, base: str, canonical_url: str, au
   <h1>Research should survive hostile audit.</h1>
   <p class="lede">ARR is not a file dump. New admissions face the strongest suitable frontier-model audit the operator can assemble for that assessment round on the exact hashed version: counterexamples, hidden assumptions, proof gaps and novelty claims are tested before a human signs the decision. Providers, models and report counts may change; the public record says exactly what was used.</p>
   <div class="hero-actions"><a class="button" href="{base}/assessments/">Explore assessments</a><a class="button secondary" href="{base}/papers/">Browse papers</a><a class="text-link" href="{base}/protocol/">Read the hard gate →</a></div>
+  {search_form(base)}
 </section>
 <section class="frontier-gate" aria-label="ARR admission standard"><strong>ARR admission gate</strong><span>operator-selected frontier audit</span><span>exact PDF + SHA-256</span><span>0 unresolved material objections</span><span>human sign-off</span></section>
 <section class="stats" aria-label="Archive statistics">
@@ -472,7 +524,7 @@ def build_papers_index(papers: list, timestamps: dict, base: str, canonical_url:
     pagination += f'<a href="{next_url}">Next 50 →</a>' if page < page_count else '<span>Next 50 →</span>'
     pagination += '</nav>'
     content = f"""
-<section class="page-intro"><span>Public catalogue</span><h1>Research papers</h1><p>Exactly 50 records per full page, ordered by the real publication chronology. Current ARR admissions and author-authorized historical imports are visibly distinct; historical imports have not passed ARR's frontier-model gate.</p></section>
+<section class="page-intro"><span>Public catalogue</span><h1>Research papers</h1><p>Exactly 50 records per full page, ordered by the real publication chronology. Current ARR admissions and author-authorized historical imports are visibly distinct; historical imports have not passed ARR's frontier-model gate.</p>{search_form(base)}</section>
 {pagination}
 <section class="catalogue">{cards}</section>
 {pagination}
@@ -1050,6 +1102,7 @@ def build_submit(
     content = f"""
 <section class="ranked-feed submit-index">
   <header><div><span>ARR public catalogue · activity order</span><h1>Paper index</h1></div><div class="submit-tools">{direct_action}<a href="{base}/terms/">Terms</a><a href="{base}/privacy/">Privacy</a></div></header>
+  {search_form(base)}
   <div class="compact-gate"><strong>New-admission gate</strong><span>operator-selected frontier audit</span><span>exact-version evidence</span><span>0 unresolved material objections</span><span>human decision</span><a href="{base}/assessments/">evidence and scores →</a></div>
   <div class="index-meta"><p>{esc(rank_explanation)}</p><span>Records {start + 1 if ranked else 0}–{min(start + page_size, len(ranked))} / {len(ranked)}</span></div>
   <div class="rank-columns" aria-hidden="true"><span>Rank</span><span>Record</span><span>Activity</span></div>
@@ -1179,6 +1232,7 @@ def write_sitemaps(papers: list, groups: dict, profiles: list[dict], canonical_u
     urls = [
         (f"{canonical_url}/", latest_date),
         (f"{canonical_url}/papers/", latest_date),
+        (f"{canonical_url}/search/", latest_date),
         (f"{canonical_url}/notes/", latest_date),
         (f"{canonical_url}/authors/", latest_date),
         (f"{canonical_url}/rankings/", latest_date),
@@ -1323,6 +1377,11 @@ def main() -> int:
     (OUTPUT_DIR / "assets").mkdir(parents=True)
     (OUTPUT_DIR / "schema").mkdir(parents=True)
     shutil.copy2(SITE_DIR / "style.css", OUTPUT_DIR / "assets" / "style.css")
+    shutil.copy2(SITE_DIR / "search.js", OUTPUT_DIR / "assets" / "search.js")
+    search_data = json.dumps(search_records(papers, base), ensure_ascii=False, separators=(",", ":")) + "\n"
+    search_version = hashlib.sha256(search_data.encode("utf-8")).hexdigest()[:12]
+    write(OUTPUT_DIR / "assets" / "search-index.json", search_data)
+    write(OUTPUT_DIR / "search" / "index.html", build_search(base, canonical_url, search_version))
     shutil.copy2(SITE_DIR / "arr-logo.png", OUTPUT_DIR / "assets" / "arr-logo.png")
     for icon in ("favicon.ico", "favicon.svg", "favicon-96x96.png", "apple-touch-icon.png"):
         shutil.copy2(SITE_DIR / icon, OUTPUT_DIR / icon)

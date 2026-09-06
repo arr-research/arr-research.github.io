@@ -12,6 +12,7 @@ Before opening a pull request:
 
 ```bash
 python -m unittest discover -s tests -v
+node --test tests/search.test.cjs
 python scripts/validate_papers.py
 python scripts/build_site.py
 ```
