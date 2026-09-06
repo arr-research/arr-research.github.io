@@ -70,6 +70,20 @@ Verification, sitemap submission and index requests must be confirmed in the
 operator's Search Console session. A successful build or a DOI does not establish
 that these account-level steps happened or that Google indexed the pages.
 
+## Site icon
+
+The shared page header links to ARR's white A on blue in SVG, 96-pixel PNG,
+multi-size ICO (16, 32 and 48 pixels), and a 180-pixel Apple touch icon. The build
+copies these assets from `site/` to the public root and respects `--base-path`.
+Keep their URLs stable. The 96-pixel PNG provides a square raster image above
+Google's recommended 48-pixel size, and `robots.txt` permits image crawling.
+
+After deployment, confirm that the homepage links and icon files return HTTP 200.
+The operator can request a homepage recrawl in Search Console. Google may take
+days to weeks to process the icon and does not guarantee its display; IndexNow
+does not request a Google recrawl. See
+[Google's favicon guidance](https://developers.google.com/search/docs/appearance/favicon-in-search).
+
 ## Bibliographic checks and external archives
 
 Before a deposit or correction, compare the **entire author-written abstract**,
