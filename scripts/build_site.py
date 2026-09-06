@@ -38,6 +38,8 @@ from assessmentlib import (
 SITE_DIR = ROOT / "site"
 OUTPUT_DIR = ROOT / "_site"
 AUTHORS_FILE = ROOT / "registry" / "authors.json"
+SITE_NAME = "AIRR.SCIENCE"
+SITE_FULL_NAME = "Archive for Independent & Rigorous Research"
 
 
 def parse_args() -> argparse.Namespace:
@@ -49,7 +51,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--intake-url", default="", help="Deployed private intake origin; empty keeps direct uploads closed")
     parser.add_argument("--fetch-remote-pdfs", action="store_true", help="Fetch and verify historical Release PDFs for a complete production build")
     parser.add_argument("--pdf-cache-dir", type=Path, default=ROOT / "work" / "pdf-cache", help="SHA-256 keyed cache for historical PDFs")
-    parser.add_argument("--google-site-verification", default="", help="Search Console HTML verification token (content value only)")
+    parser.add_argument("--google-site-verification", default="", help="Search Console HTML verification tokens, one content value per line")
     return parser.parse_args()
 
 
@@ -186,6 +188,8 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
   <meta name="theme-color" content="#0b0f17">
   <title>{esc(title)}</title>
   <meta name="description" content="{esc(description)}">
+  <meta name="application-name" content="{SITE_NAME}">
+  <meta property="og:site_name" content="{SITE_NAME}">
   {canonical_tag}
   {head_extra}
   <link rel="icon" href="{base}/favicon.ico" sizes="16x16 32x32 48x48">
@@ -215,7 +219,7 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
   </header>
   <main id="main">{content}</main>
   <footer>
-    <p><strong>ARR</strong> is the hostile-audit research registry: new admissions face an operator-selected, version-locked frontier-model audit and human sign-off. ARR promises no fixed model or report count. Passing is strong, inspectable evidence—not a guarantee of truth or peer review.</p>
+    <p><strong>AIRR.SCIENCE</strong> is the hostile-audit research registry: new admissions face an operator-selected, version-locked frontier-model audit and human sign-off. AIRR promises no fixed model or report count. Passing is strong, inspectable evidence—not a guarantee of truth or peer review.</p>
     <p><a href="{base}/catalog.json">Machine-readable catalogue (CC0)</a> · <a href="{base}/registry/model-assessments.json">Model assessments</a> · <a href="{base}/authors/index.json">Author registry (CC0)</a> · <a href="{base}/metrics.json">Activity snapshot (CC0)</a> · <a href="{base}/registry/record-timestamps.json">Exact record timestamps (CC0)</a> · <a href="{base}/protocol/">Verification protocol</a> · <a href="{base}/licensing/">Licensing</a> · <a href="{base}/privacy/">Privacy</a> · <a href="{base}/terms/">Deposit terms</a> · <a href="{base}/contact/">Contact and complaints</a> · <a href="https://github.com/arr-research/arr-research.github.io">Source (AGPL)</a></p>
   </footer>
 </body>
@@ -264,7 +268,7 @@ def build_search(base: str, canonical_url: str, index_version: str) -> str:
   <button class="button secondary search-more" type="button" hidden>Show more papers</button>
 </section>"""
     return page_shell(
-        title="Search papers — ARR",
+        title="Search papers — AIRR.SCIENCE",
         description="Search the full ARR catalogue by title, abstract, topic, author or identifier, ordered by relevance.",
         content=content,
         base=base,
@@ -333,7 +337,7 @@ def scholarly_head(metadata: dict, *, canonical: str, release_url: str = "", pdf
         *[("citation_author", author) for author in authors],
         ("citation_publication_date", metadata["date"].replace("-", "/")),
         ("citation_abstract_html_url", canonical),
-        ("citation_technical_report_institution", "ARR — Archive for Rigorous Research"),
+        ("citation_technical_report_institution", f"{SITE_NAME} — {SITE_FULL_NAME}"),
         ("citation_technical_report_number", f"{metadata['id']} {metadata['version']}"),
         ("citation_language", "en"),
         ("DC.title", metadata["title"]),
@@ -377,7 +381,8 @@ def scholarly_head(metadata: dict, *, canonical: str, release_url: str = "", pdf
         "license": metadata["licenses"]["manuscript"],
         "publisher": {
             "@type": "Organization",
-            "name": "ARR — Archive for Rigorous Research",
+            "name": SITE_NAME,
+            "alternateName": SITE_FULL_NAME,
         },
     }
     if site_root:
@@ -484,11 +489,11 @@ def build_home(papers: list, timestamps: dict, base: str, canonical_url: str, au
 <section class="hero">
   <div class="eyebrow">Hostile audit · Frontier models · Human decision</div>
   <h1>Research should survive hostile audit.</h1>
-  <p class="lede">ARR is not a file dump. New admissions face the strongest suitable frontier-model audit the operator can assemble for that assessment round on the exact hashed version: counterexamples, hidden assumptions, proof gaps and novelty claims are tested before a human signs the decision. Providers, models and report counts may change; the public record says exactly what was used.</p>
+  <p class="lede">AIRR.SCIENCE is the Archive for Independent &amp; Rigorous Research. New admissions face the strongest suitable frontier-model audit the operator can assemble for that assessment round on the exact hashed version: counterexamples, hidden assumptions, proof gaps and novelty claims are tested before a human signs the decision. Providers, models and report counts may change; the public record says exactly what was used.</p>
   <div class="hero-actions"><a class="button" href="{base}/assessments/">Explore assessments</a><a class="button secondary" href="{base}/papers/">Browse papers</a><a class="text-link" href="{base}/protocol/">Read the hard gate →</a></div>
   {search_form(base)}
 </section>
-<section class="frontier-gate" aria-label="ARR admission standard"><strong>ARR admission gate</strong><span>operator-selected frontier audit</span><span>exact PDF + SHA-256</span><span>0 unresolved material objections</span><span>human sign-off</span></section>
+<section class="frontier-gate" aria-label="AIRR admission standard"><strong>AIRR admission gate</strong><span>operator-selected frontier audit</span><span>exact PDF + SHA-256</span><span>0 unresolved material objections</span><span>human sign-off</span></section>
 <section class="stats" aria-label="Archive statistics">
   <div><strong>{accepted_papers}</strong><span>research papers</span></div>
   <div><strong>{archived_papers}</strong><span>historical imports</span></div>
@@ -504,8 +509,14 @@ def build_home(papers: list, timestamps: dict, base: str, canonical_url: str, au
 <section class="recent"><div class="section-heading"><div><span>Catalogue</span><h2>Latest accepted research</h2></div><a href="{base}/papers/">View papers</a></div>{recent}</section>
 """
     canonical = f"{canonical_url}/" if canonical_url else ""
-    verification = f'<meta name="google-site-verification" content="{esc(google_site_verification)}">' if google_site_verification else ""
-    return page_shell(title="ARR — Hostile frontier-model audit for research", description="Research papers subjected to a disclosed version-locked frontier-model audit selected for each assessment round, with public evidence and human editorial sign-off.", content=content, base=base, canonical=canonical, head_extra=verification)
+    tokens = dict.fromkeys(token.strip() for token in google_site_verification.splitlines() if token.strip())
+    verification = "\n  ".join(f'<meta name="google-site-verification" content="{esc(token)}">' for token in tokens)
+    identity = ""
+    if canonical:
+        website = {"@context": "https://schema.org", "@type": "WebSite", "@id": f"{canonical}#website", "name": SITE_NAME, "alternateName": ["AIRR", SITE_FULL_NAME, "airr.science"], "url": canonical}
+        structured = json.dumps(website, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+        identity = f'<meta property="og:type" content="website">\n  <meta property="og:title" content="{SITE_NAME} — {esc(SITE_FULL_NAME)}">\n  <meta property="og:url" content="{esc(canonical)}">\n  <script type="application/ld+json">{structured}</script>'
+    return page_shell(title=f"{SITE_NAME} — {SITE_FULL_NAME}", description="Independent research with a disclosed version-locked frontier-model audit, public evidence and human editorial sign-off. Free access to papers and their preserved versions.", content=content, base=base, canonical=canonical, head_extra=verification + "\n  " + identity)
 
 
 def build_papers_index(papers: list, timestamps: dict, base: str, canonical_url: str, author_lookup: dict[str, dict] | None = None, metrics: dict | None = None, page: int = 1, page_size: int = 50) -> str:
@@ -531,7 +542,7 @@ def build_papers_index(papers: list, timestamps: dict, base: str, canonical_url:
 """
     canonical_suffix = "papers/" if page == 1 else f"papers/page/{page}/"
     canonical = f"{canonical_url}/{canonical_suffix}" if canonical_url else ""
-    return page_shell(title=f"Papers — page {page} — ARR", description="ARR research catalogue and clearly labelled historical imports.", content=content, base=base, canonical=canonical)
+    return page_shell(title=f"Papers — page {page} — AIRR.SCIENCE", description="ARR research catalogue and clearly labelled historical imports.", content=content, base=base, canonical=canonical)
 
 
 def build_notes_index(papers: list, timestamps: dict, base: str, canonical_url: str, author_lookup: dict[str, dict] | None = None, metrics: dict | None = None) -> str:
@@ -544,7 +555,7 @@ def build_notes_index(papers: list, timestamps: dict, base: str, canonical_url: 
 <section class="catalogue">{cards}</section>
 """
     canonical = f"{canonical_url}/notes/" if canonical_url else ""
-    return page_shell(title="Technical notes — ARR", description="Rigorous, machine-readable ARR technical notes.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Technical notes — AIRR.SCIENCE", description="Rigorous, machine-readable ARR technical notes.", content=content, base=base, canonical=canonical)
 
 
 def papers_by_author(profiles: list[dict], papers: list) -> dict[str, list]:
@@ -585,7 +596,7 @@ def build_authors_index(profiles: list[dict], by_author: dict[str, list], metric
 <section class="author-grid">{''.join(cards)}</section>
 """
     canonical = f"{canonical_url}/authors/" if canonical_url else ""
-    return page_shell(title="Authors — ARR", description="Stable ARR author profiles and their public research records.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Authors — AIRR.SCIENCE", description="Stable ARR author profiles and their public research records.", content=content, base=base, canonical=canonical)
 
 
 def build_author_page(profile: dict, author_papers: list, timestamps: dict, metrics: dict, author_lookup: dict[str, dict], base: str, canonical_url: str) -> str:
@@ -611,7 +622,7 @@ def build_author_page(profile: dict, author_papers: list, timestamps: dict, metr
     canonical = f"{canonical_url}/authors/{profile['id']}/" if canonical_url else ""
     same_as = [item["url"] for item in profile.get("links", [])]
     structured = json.dumps({"@context": "https://schema.org", "@type": "Person", "name": profile["name"], "url": canonical, "affiliation": profile.get("affiliation", ""), "sameAs": same_as}, ensure_ascii=False).replace("</", "<\\/")
-    return page_shell(title=f"{profile['name']} — ARR author", description=profile.get("bio", "ARR author profile."), content=content, base=base, canonical=canonical, head_extra=f'<script type="application/ld+json">{structured}</script>')
+    return page_shell(title=f"{profile['name']} — AIRR.SCIENCE author", description=profile.get("bio", "ARR author profile."), content=content, base=base, canonical=canonical, head_extra=f'<script type="application/ld+json">{structured}</script>')
 
 
 def ranking_rows(items: list[tuple[str, str, int]], base: str) -> str:
@@ -656,7 +667,7 @@ def build_rankings(profiles: list[dict], by_author: dict[str, list], papers: lis
 </section>
 """
     canonical = f"{canonical_url}/rankings/" if canonical_url else ""
-    return page_shell(title="Activity rankings — ARR", description="Reproducible ARR paper and author activity rankings.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Activity rankings — AIRR.SCIENCE", description="Reproducible ARR paper and author activity rankings.", content=content, base=base, canonical=canonical)
 
 
 def findings_block(title: str, findings: list[str]) -> str:
@@ -909,7 +920,7 @@ def build_paper_page(
 </article>
 """
     return page_shell(
-        title=f"{metadata['title']} — ARR",
+        title=f"{metadata['title']} — AIRR.SCIENCE",
         description=metadata["abstract"],
         content=content,
         base=base,
@@ -930,7 +941,7 @@ def build_protocol(base: str, canonical_url: str) -> str:
 <section class="callout"><h2>Lean 4 verification levels</h2><p><strong>L0</strong> source supplied · <strong>L1</strong> clean build · <strong>L2</strong> kernel-checked, no unfinished proofs, axioms audited · <strong>L3</strong> correspondence between formalization and manuscript independently reviewed.</p></section>
 """
     canonical = f"{canonical_url}/protocol/" if canonical_url else ""
-    return page_shell(title="Screening protocol — ARR", description="The documented ARR screening and verification protocol.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Screening protocol — AIRR.SCIENCE", description="The documented ARR screening and verification protocol.", content=content, base=base, canonical=canonical)
 
 
 def build_assessments(papers: list, assessments: list[dict], highlights: list[dict], base: str, canonical_url: str, author_lookup: dict[str, dict]) -> str:
@@ -965,7 +976,7 @@ def build_assessments(papers: list, assessments: list[dict], highlights: list[di
   <section class="criteria-panel"><h2>Criterion profile</h2><p>Each report also supplies one to five stars, with a written basis, for correctness confidence, rigor, novelty, significance and reproducibility. These diagnostic ratings are shown separately and are not silently averaged into the headline score.</p><p>Only assessments marked independent of manuscript creation enter the median. ARR shows the count and range, never pools different paper versions and preserves later reassessments so future systems can be compared with earlier ones.</p><p><a href="{base}/registry/model-assessments.json">Download the versioned machine-readable assessment registry</a> · <a href="{base}/schema/model-assessment.schema.json">JSON Schema</a></p></section>
 </section>"""
     canonical = f"{canonical_url}/assessments/" if canonical_url else ""
-    return page_shell(title="Model assessments — ARR", description="Version-locked longitudinal frontier-model assessments and the ARR scientific ranking.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Model assessments — AIRR.SCIENCE", description="Version-locked longitudinal frontier-model assessments and the ARR scientific ranking.", content=content, base=base, canonical=canonical)
 
 
 def load_donation_url() -> str:
@@ -1010,7 +1021,7 @@ def build_about(base: str, canonical_url: str) -> str:
     content = """
 <section class="page-intro"><span>About the archive</span><h1>The hostile-audit research registry.</h1><p>ARR exists because uploading a PDF proves almost nothing. It distinguishes work that has survived disclosed frontier-model attacks on an exact version from work that has merely been posted online.</p></section>
 <section class="about-grid">
-  <article><h2>What ARR is</h2><p>A versioned registry where new research must survive a disclosed hostile frontier-model audit selected for that assessment round and a human decision. Canonical manuscripts, prompts, model identities, findings, code, provenance and verification records remain inspectable.</p></article>
+  <article><h2>What AIRR is</h2><p>AIRR.SCIENCE is the Archive for Independent &amp; Rigorous Research, previously named ARR. It is a versioned registry where new research must survive a disclosed hostile frontier-model audit selected for that assessment round and a human decision. Canonical manuscripts, prompts, model identities, findings, code, provenance and verification records remain inspectable. Existing ARR paper identifiers and preserved versions remain unchanged.</p></article>
   <article><h2>Two publication types</h2><p>Research papers present complete scholarly arguments at paper scale. Technical notes preserve narrower but rigorous results, proofs, formalizations, methods, replications, negative results, software or protocols. A note is different in scope, not exempt from evidence or integrity requirements.</p></article>
   <article><h2>What ARR is not</h2><p>ARR is not a journal, a replacement for expert peer review or a guarantee that a scientific claim is true. Activity rankings measure use; the separate scientific ranking reports version-locked model opinions with their provenance and limits.</p></article>
   <article><h2>Governance</h2><p>Lluis Eriksson is founder, registry operator, responsible editor and data controller. Every decision is human. His conflicted or author-owned work requires a disclosed independent editor before publication.</p></article>
@@ -1020,7 +1031,7 @@ def build_about(base: str, canonical_url: str) -> str:
 </section>
 """
     canonical = f"{canonical_url}/about/" if canonical_url else ""
-    return page_shell(title="About — ARR", description="About the Archive for Rigorous Research.", content=content, base=base, canonical=canonical)
+    return page_shell(title="About — AIRR.SCIENCE", description="About AIRR.SCIENCE, the Archive for Independent & Rigorous Research.", content=content, base=base, canonical=canonical)
 
 
 def build_licensing(base: str, canonical_url: str) -> str:
@@ -1035,7 +1046,7 @@ def build_licensing(base: str, canonical_url: str) -> str:
 </section>
 """
     canonical = f"{canonical_url}/licensing/" if canonical_url else ""
-    return page_shell(title="Licensing — ARR", description="Licensing scopes for ARR software, metadata, documentation and deposited research.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Licensing — AIRR.SCIENCE", description="Licensing scopes for ARR software, metadata, documentation and deposited research.", content=content, base=base, canonical=canonical)
 
 
 def policy_source(filename: str) -> str:
@@ -1141,7 +1152,7 @@ def build_submit(
     canonical = (
         f"{canonical_url}/submit/" if page_number == 1 else f"{canonical_url}/submit/page/{page_number}/"
     ) if canonical_url else ""
-    title = "Submit and most-read papers — ARR" if page_number == 1 else f"Most-read papers, page {page_number} — ARR"
+    title = "Submit and most-read papers — AIRR.SCIENCE" if page_number == 1 else f"Most-read papers, page {page_number} — AIRR.SCIENCE"
     return page_shell(title=title, description="Direct private submission and the paginated ARR paper activity ranking.", content=content, base=base, canonical=canonical)
 
 
@@ -1159,7 +1170,7 @@ def build_privacy(base: str, canonical_url: str) -> str:
 <section class="callout"><h2>Complete binding notice</h2><p><a href="{policy_source('PRIVACY_NOTICE.md')}">Read ARR-PRIVACY-1.2 in full</a>. The accepted version is recorded with each deposit.</p></section>
 """
     canonical = f"{canonical_url}/privacy/" if canonical_url else ""
-    return page_shell(title="Privacy — ARR", description="ARR-PRIVACY-1.2 privacy notice for direct private manuscript intake.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Privacy — AIRR.SCIENCE", description="ARR-PRIVACY-1.2 privacy notice for direct private manuscript intake.", content=content, base=base, canonical=canonical)
 
 
 def build_terms(base: str, canonical_url: str) -> str:
@@ -1175,7 +1186,7 @@ def build_terms(base: str, canonical_url: str) -> str:
 <section class="callout"><h2>Complete binding terms</h2><p><a href="{policy_source('DEPOSIT_TERMS.md')}">Read ARR-DEPOSIT-1.4 in full</a>. Only the private form is a deposit channel; email and GitHub issues are not.</p></section>
 """
     canonical = f"{canonical_url}/terms/" if canonical_url else ""
-    return page_shell(title="Deposit terms — ARR", description="ARR-DEPOSIT-1.4 terms for the currently fee-free direct private-submission pilot.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Deposit terms — AIRR.SCIENCE", description="ARR-DEPOSIT-1.4 terms for the currently fee-free direct private-submission pilot.", content=content, base=base, canonical=canonical)
 
 
 def build_governance(base: str, canonical_url: str) -> str:
@@ -1185,7 +1196,7 @@ def build_governance(base: str, canonical_url: str) -> str:
 <section class="callout"><h2>Full governance rules</h2><p><a href="{policy_source('GOVERNANCE.md')}">Read the version-controlled policy</a>.</p></section>
 """
     canonical = f"{canonical_url}/governance/" if canonical_url else ""
-    return page_shell(title="Governance — ARR", description="ARR governance, manual editorial gate and founder conflict controls.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Governance — AIRR.SCIENCE", description="ARR governance, manual editorial gate and founder conflict controls.", content=content, base=base, canonical=canonical)
 
 
 def build_contact(base: str, canonical_url: str) -> str:
@@ -1195,7 +1206,7 @@ def build_contact(base: str, canonical_url: str) -> str:
 <section class="callout"><h2>Complete procedure</h2><p><a href="{policy_source('LEGAL_AND_COMPLAINTS.md')}">Read legal contact, notices and complaints in full</a>. A stable postal service address remains a launch condition for unrestricted public intake.</p></section>
 """
     canonical = f"{canonical_url}/contact/" if canonical_url else ""
-    return page_shell(title="Contact and complaints — ARR", description="ARR operator, legal contact, editorial appeal and notice procedure.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Contact and complaints — AIRR.SCIENCE", description="ARR operator, legal contact, editorial appeal and notice procedure.", content=content, base=base, canonical=canonical)
 
 
 def write(path: Path, value: str) -> None:
@@ -1307,11 +1318,11 @@ def write_llm_guides(papers: list, canonical_url: str) -> None:
     if not canonical_url:
         return
     intro = [
-        "# ARR — Archive for Rigorous Research",
+        f"# {SITE_NAME} — {SITE_FULL_NAME}",
         "",
         "> Public, versioned research records with explicit provenance, integrity hashes, licensing, evidence labels, and machine-readable renditions.",
         "",
-        "ARR pages and metadata may be crawled, indexed, quoted, and linked subject to each record's declared licenses. Acceptance is not peer review and is not a guarantee of truth.",
+        "AIRR.SCIENCE pages and metadata may be crawled, indexed, quoted, and linked subject to each record's declared licenses. Existing ARR paper IDs and versions remain stable. Acceptance is not peer review and is not a guarantee of truth.",
         "",
         "## Machine-readable resources",
         "",

@@ -1,6 +1,9 @@
-# ARR search discovery
+# AIRR.SCIENCE search discovery
 
-ARR remains the primary catalogue. GitHub Releases retain the immutable artifacts;
+AIRR.SCIENCE (Archive for Independent & Rigorous Research) is the primary catalogue.
+The archive previously used the name ARR and `arr-research.github.io`. Existing
+ARR record identifiers, hashes, manuscript titles and versions remain unchanged.
+GitHub Releases retain the immutable artifacts;
 the Pages build also serves exact PDF copies alongside the current abstract and
 each available version abstract, for example:
 
@@ -60,19 +63,40 @@ a Google Search Console or Google Scholar submission.
    property to monitor the old URLs during migration.
 2. Choose the HTML tag verification method. Copy only the `content` value of
    Google's `google-site-verification` meta tag into the GitHub Actions repository
-   variable **ARR_GOOGLE_SITE_VERIFICATION**. It is a public verification token,
-   not a Google password or access token. Do not invent a value.
+   variable **ARR_GOOGLE_SITE_VERIFICATION_AIRR**. Keep the previous
+   **ARR_GOOGLE_SITE_VERIFICATION** variable intact. The workflow passes both
+   values, one per line, and the homepage emits separate escaped tags so old
+   ownership verification is preserved. These are public verification tokens,
+   not Google passwords or access tokens. Do not invent values.
 3. Run **Publish ARR catalogue**. Its build writes the escaped verification tag
    to the homepage. Confirm the tag is present in the deployed HTML source, then
    click **Verify** in Search Console. Keep the variable after verification.
 4. Submit `https://airr.science/sitemap.xml` using the Sitemaps report.
-5. Inspect several current and permanent-version URLs. Record Google's reported
+5. Open the old property's Settings > Change of address, choose the verified
+   `https://airr.science/` property, run Google's checks and submit the move.
+   Keep the old property and the path-preserving permanent redirects; do not use
+   URL removals to perform a migration. Record the actual confirmation separately.
+6. Inspect several current and permanent-version URLs. Record Google's reported
    canonical, last crawl, fetch result, indexing status, and exclusion reason.
    Use the live URL test and request indexing for representative corrected pages.
 
 Verification, sitemap submission and index requests must be confirmed in the
 operator's Search Console session. A successful build or a DOI does not establish
 that these account-level steps happened or that Google indexed the pages.
+
+## Search-result name
+
+The homepage declares a `WebSite` with preferred name `AIRR.SCIENCE`, alternate
+names `AIRR`, the expanded archive name and `airr.science`, and the configured
+canonical root. Open Graph site name, page titles, the visible homepage, publisher
+metadata and the LLM guides use the new identity. No legal registration status
+is implied by the public archive name.
+
+Google chooses the displayed name and must recrawl the site after a change.
+Verification and sitemap acceptance do not guarantee indexing, a chosen display
+name or an immediate replacement of old search results. See Google's
+[site-name guidance](https://developers.google.com/search/docs/appearance/site-names)
+and [domain-migration guidance](https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes).
 
 ## Site icon
 
