@@ -72,9 +72,12 @@ that these account-level steps happened or that Google indexed the pages.
 
 ## Site icon
 
-The shared page header links to ARR's white A on blue in SVG, 96-pixel PNG,
+The shared page header links to ARR's gold A and three-node mark on black in SVG, 96-pixel PNG,
 multi-size ICO (16, 32 and 48 pixels), and a 180-pixel Apple touch icon. The build
 copies these assets from `site/` to the public root and respects `--base-path`.
+The SVG is a self-contained wrapper around a PNG rendition of the mark.
+The header displays the operator-supplied full logo (`site/arr-logo.png`), with
+its blank margins excluded by the display viewport and an accessible home-link label.
 Keep their URLs stable. The 96-pixel PNG provides a square raster image above
 Google's recommended 48-pixel size, and `robots.txt` permits image crawling.
 
