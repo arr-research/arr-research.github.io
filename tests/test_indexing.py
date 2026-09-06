@@ -149,6 +149,8 @@ class IndexingTests(unittest.TestCase):
                 text = self.render(canonical=site_root)
                 page = check_site_indexing.Page(text)
                 structured = json.loads(text.split('<script type="application/ld+json">')[1].split("</script>")[0])
+                self.assertEqual(structured["publisher"]["name"], "AIRR.SCIENCE")
+                self.assertIn(self.paper.id, structured["identifier"])
                 if site_root:
                     expected = f"{site_root}/papers/{self.paper.id}/"
                     self.assertEqual(page.canonical, expected)
@@ -177,6 +179,29 @@ class IndexingTests(unittest.TestCase):
             text = build_site.build_home([self.paper], timestamps, "/preview", SITE, google_site_verification=token)
             page = check_site_indexing.Page(text)
             self.assertEqual(page.meta.get("google-site-verification"), [token] if token else None)
+
+    def test_new_domain_verification_preserves_the_previous_token(self):
+        timestamps = {(self.paper.id, self.paper.version): self.timestamp}
+        text = build_site.build_home([self.paper], timestamps, "", "https://airr.science", google_site_verification="old-domain-token\nnew-domain-token\nold-domain-token\n")
+        page = check_site_indexing.Page(text)
+        self.assertEqual(page.meta["google-site-verification"], ["old-domain-token", "new-domain-token"])
+
+    def test_homepage_site_name_matches_visible_brand_and_canonical_root(self):
+        timestamps = {(self.paper.id, self.paper.version): self.timestamp}
+        for root in ("https://airr.science", SITE, ""):
+            with self.subTest(root=root):
+                text = build_site.build_home([self.paper], timestamps, "", root)
+                self.assertIn('<meta property="og:site_name" content="AIRR.SCIENCE">', text)
+                self.assertIn("AIRR.SCIENCE is the Archive for Independent &amp; Rigorous Research", text)
+                if root:
+                    structured = json.loads(text.split('<script type="application/ld+json">')[1].split("</script>")[0])
+                    self.assertEqual(structured["@type"], "WebSite")
+                    self.assertEqual(structured["name"], "AIRR.SCIENCE")
+                    self.assertIn("AIRR", structured["alternateName"])
+                    self.assertEqual(structured["url"], f"{root}/")
+                    self.assertEqual(structured["@id"], f"{root}/#website")
+                else:
+                    self.assertNotIn('"@type":"WebSite"', text)
 
     def test_site_checker_rejects_missing_and_cross_directory_pdfs(self):
         root = self.root / "site"
