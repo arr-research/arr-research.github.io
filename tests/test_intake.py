@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import io
+import hashlib
 import json
 import os
 import tempfile
@@ -145,6 +146,86 @@ class IntakeTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(b"No invitation or account is required", response.data)
         self.assertNotIn(b"password", response.data.lower())
+
+    def test_receipt_confirms_persisted_bytes_and_pending_approval(self) -> None:
+        submission_id = self.upload()
+        receipt = self.client.get("/receipt")
+        self.assertEqual(receipt.status_code, 200)
+        self.assertIn(submission_id.encode(), receipt.data)
+        self.assertIn(b"Pending approval", receipt.data)
+        self.assertIn(b"does not mean", receipt.data)
+        self.assertIn(b"Download your receipt", receipt.data)
+        self.assertEqual(receipt.headers["Cache-Control"], "no-store")
+        self.assertIn("noindex", receipt.headers["X-Robots-Tag"])
+        saved = self.client.get("/receipt/download")
+        self.assertEqual(saved.status_code, 200)
+        self.assertIn("attachment", saved.headers["Content-Disposition"])
+        self.assertIn(submission_id.encode(), saved.data)
+        expected_hash = hashlib.sha256(b"%PDF-1.7\nminimal test bytes").hexdigest()
+        self.assertIn(expected_hash.encode(), saved.data)
+        self.assertIn(b"not approval or publication", saved.data)
+        with self.app.app_context():
+            row = get_db().execute("SELECT status,public_release_url FROM submissions WHERE id=?", (submission_id,)).fetchone()
+            self.assertEqual(row["status"], "eligible")
+            self.assertIsNone(row["public_release_url"])
+
+    def test_receipt_number_does_not_authorize_another_browser(self) -> None:
+        submission_id = self.upload()
+        other = self.app.test_client()
+        for path in ("/receipt", "/receipt/download", f"/receipt?submission_id={submission_id}"):
+            self.assertEqual(other.get(path).status_code, 404)
+        self.assertEqual(other.get(f"/admin/submission/{submission_id}/file").status_code, 302)
+
+    def test_receipt_donation_is_optional_and_does_not_send_paper_data(self) -> None:
+        submission_id = self.upload()
+        response = self.client.get("/receipt")
+        self.assertIn(f"AIRR submission {submission_id}".encode(), response.data)
+        self.assertIn(b"does not affect", self.client.get("/submit").data)
+        self.assertIn(b"cannot affect approval, review speed, scores or ranking", response.data)
+        self.assertIn(b'https://www.paypal.com/donate/?business=lluiseriksson%40gmail.com', response.data)
+        self.assertNotIn(b"paypalobjects", response.data)
+        self.assertNotIn(b"donate/sdk", response.data)
+        self.assertNotIn(b"hosted_button_id=", response.data)
+        self.assertIn(b"Sharing it with PayPal is your choice", response.data)
+        # The only registration reference is displayed for optional manual copy.
+        self.assertNotIn(f"business=lluiseriksson%40gmail.com&".encode(), response.data)
+
+    def test_receipt_escapes_manuscript_title_and_hides_donation_when_disabled(self) -> None:
+        submission_id = self.upload()
+        with self.app.app_context():
+            db = get_db()
+            db.execute("UPDATE submissions SET title=? WHERE id=?", ('<script>alert("bad")</script>', submission_id))
+            db.commit()
+        donation_config = Path(self.temp.name) / "donations.json"
+        donation_config.write_text('{"paypal_business":"","paypal_hosted_button_id":""}', encoding="utf-8")
+        self.app.config["DONATIONS_CONFIG"] = str(donation_config)
+        response = self.client.get("/receipt")
+        self.assertIn(b"&lt;script&gt;", response.data)
+        self.assertNotIn(b'<script>alert', response.data)
+        self.assertNotIn(b"Donate with PayPal", response.data)
+
+    def test_receipt_keeps_security_rejection_distinct_from_editorial_review(self) -> None:
+        submission_id = self.upload()
+        with self.app.app_context():
+            db = get_db()
+            row = db.execute("SELECT * FROM submissions WHERE id=?", (submission_id,)).fetchone()
+            (Path(self.app.config["QUARANTINE"]) / row["stored_name"]).unlink()
+            db.execute("UPDATE submissions SET scan_status='infected',status='removed' WHERE id=?", (submission_id,))
+            db.commit()
+        response = self.client.get("/receipt")
+        self.assertIn(b"File rejected by safety checks", response.data)
+        self.assertNotIn(b"Pending approval", response.data)
+        self.assertNotIn(b"Donate with PayPal", response.data)
+
+    def test_receipt_shows_a_later_recorded_editorial_decision(self) -> None:
+        submission_id = self.upload()
+        with self.app.app_context():
+            db = get_db()
+            db.execute("UPDATE submissions SET status='changes_requested' WHERE id=?", (submission_id,))
+            db.commit()
+        response = self.client.get("/receipt")
+        self.assertIn(b"Changes requested", response.data)
+        self.assertNotIn(b"Pending approval", response.data)
 
     def test_readiness_fails_closed_without_scanner_and_smtp(self) -> None:
         with patch("services.intake.app.shutil.which", return_value=None):

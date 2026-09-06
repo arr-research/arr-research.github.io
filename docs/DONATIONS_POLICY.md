@@ -1,4 +1,4 @@
-# AIRR voluntary-support policy — ARR-SUPPORT-1.1
+# AIRR voluntary-support policy — ARR-SUPPORT-1.2
 
 **Effective:** 2026-09-06
 
@@ -29,11 +29,23 @@ success from a return URL.
 PayPal provides transaction data such as donor name, email, amount, currency,
 transaction identifier and any note. These are used for payment administration,
 fraud handling, refunds, accounting and legal obligations. Donors are not added
-to a mailing list or public donor ranking. If a note field is offered, donors may
-include a public paper ID only as an optional reference for payment enquiries;
-private case identifiers, manuscripts and sensitive information should not be
-included. References are not used for editorial decisions or linked to assessment
-or ranking data.
+to a mailing list or public donor ranking. A donor may optionally identify the
+paper their support relates to, using a published paper ID or the registration
+reference displayed on their private-submission receipt. A registration reference
+is not a password and does not grant access to the manuscript, receipt or editor
+dashboard. Never include a manuscript, private access link or sensitive information.
+References are used only for support and payment administration, not editorial
+decisions or assessment/ranking data.
+
+After successful private intake, the browser receipt offers the same verified
+PayPal link and a copyable note, `AIRR submission SUB-...`. This does not send the
+registration number, title, abstract or PDF to PayPal automatically. The donor
+chooses whether to paste the reference into PayPal's optional note. If PayPal does
+not offer a note field, the donor may send the payment transaction reference and
+paper registration number to the operator's support contact afterwards. The site
+does not mark a donation as completed or automatically match payments to papers.
+Receipt references and payment records must remain separate from scientific
+assessment, ordering and admission decisions.
 
 Questions, refund requests and conflicts should use the operator contact channel
 with subject `AIRR support` and the PayPal transaction reference. A refund is considered against the payment record and

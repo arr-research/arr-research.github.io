@@ -44,6 +44,12 @@ After sign-off and a successful `/readyz`, set the repository variable
    the manuscript.
 3. The service stores random bytes outside the web root and scans. No editor can
    download until status is `clean`; scan errors stay in quarantine.
+   The depositor then sees a browser-session receipt with their assigned `SUB-...`
+   registration number, timestamp, fingerprint and downloadable text. It explicitly
+   distinguishes pending approval from registration. The optional PayPal reference
+   is a non-secret registration number, not a manuscript access credential; it may
+   be copied by the donor for support administration only. No donation is required
+   and no donation fields enter the editorial data or ranking.
 4. Email the operator only the case identifier, title, scanner state and protected
    editor URL. Never attach the PDF or abstract. SMTP failure is audited and alerted.
 5. Verify identity/authority, scope, rights, disclosures, conflicts and minimum

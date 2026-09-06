@@ -13,6 +13,7 @@ from pathlib import Path
 from urllib.parse import quote
 
 from site_pdfs import published_pdf
+from donationlib import load_donation_url as load_verified_donation_url
 
 from arrlib import (
     ROOT,
@@ -980,20 +981,7 @@ def build_assessments(papers: list, assessments: list[dict], highlights: list[di
 
 
 def load_donation_url() -> str:
-    config = json.loads((SITE_DIR / "donations.json").read_text(encoding="utf-8"))
-    button_id = config.get("paypal_hosted_button_id", "")
-    business = config.get("paypal_business", "")
-    if button_id == "" and business == "":
-        return ""
-    if button_id == "":
-        if not isinstance(business, str) or not re.fullmatch(r"[A-Za-z0-9._+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}", business):
-            raise ValueError("Donations require a verified PayPal recipient email")
-        return f"https://www.paypal.com/donate/?business={quote(business, safe='')}"
-    if business != "":
-        raise ValueError("Configure only one PayPal donation destination")
-    if not isinstance(button_id, str) or not re.fullmatch(r"[A-Z0-9]{13}", button_id):
-        raise ValueError("Donations require a verified PayPal hosted button ID, not a management URL")
-    return f"https://www.paypal.com/donate/?hosted_button_id={button_id}"
+    return load_verified_donation_url(SITE_DIR / "donations.json")
 
 
 def build_support(base: str, canonical_url: str, donation_url: str = "") -> str:
@@ -1005,7 +993,7 @@ def build_support(base: str, canonical_url: str, donation_url: str = "") -> str:
     <section><h2>Research stays independent</h2><p>Submission, assessment, publication and withdrawal are currently free. Supporting AIRR is entirely optional. A contribution cannot buy acceptance, accelerate review, affect a model score, ranking or editorial highlight, or alter an appeal.</p><p>A donation is not a publication fee. AIRR makes no representation that your contribution is tax-deductible.</p><p><a href="{policy_source('DONATIONS_POLICY.md')}">Read the voluntary-support policy</a></p></section>
     <aside><h2>Contribute with PayPal</h2><p>The recipient is <strong>Lluis Eriksson</strong>, AIRR's individual operator in Sweden. PayPal currently displays <strong class="support-contact">lluiseriksson@gmail.com</strong>.</p><p><a class="button" href="{esc(donation_url)}" rel="external noreferrer" referrerpolicy="no-referrer">Donate with PayPal</a></p><p>You will continue to PayPal, where you can check the recipient, amount and any recurring-payment option before paying. PayPal applies its own terms, privacy notice and fees.</p><p>No PayPal widget or tracking script loads on AIRR.</p></aside>
   </div>
-  <section class="support-details"><h2>Optional reference and payment questions</h2><p>If PayPal offers a note field, you may include a public paper ID as an optional reference. It is only for payment enquiries and gives no editorial benefit. Do not include unpublished manuscripts, private submission references or sensitive information.</p><p class="support-contact">For payment or refund questions, contact <a href="mailto:lluiseriksson@gmail.com?subject=AIRR%20support">lluiseriksson@gmail.com</a> with the PayPal transaction reference. Donor details are not published or added to a mailing list. <a href="{base}/privacy/">Privacy notice</a>.</p></section>
+  <section class="support-details"><h2>Optional paper reference and payment questions</h2><p>If you donate, you may use PayPal's optional note to identify the paper your support relates to: a published paper ID, or the registration reference displayed on your submission receipt. This reference gives no access to private files and no editorial benefit. AIRR does not send it to PayPal automatically. Do not include unpublished manuscripts, private access links or sensitive information.</p><p class="support-contact">If no note field is available, or for payment/refund questions, contact <a href="mailto:lluiseriksson@gmail.com?subject=AIRR%20support">lluiseriksson@gmail.com</a> with the PayPal transaction reference and, optionally, the paper reference. Donor details are used for support administration, not published or added to a mailing list. <a href="{base}/privacy/">Privacy notice</a>.</p></section>
 </section>"""
     else:
         content = """
@@ -1165,7 +1153,7 @@ def build_privacy(base: str, canonical_url: str) -> str:
   <article><h2>Retention</h2><p>Malware bytes are erased immediately, withdrawn PDFs after 7 days, declined PDFs after 30 days, and accepted private copies 30 days after verified public release. A minimal decision record is retained for three years, subject to narrowly reviewed legal hold.</p></article>
   <article><h2>Public-site measurement</h2><p>ARR currently runs no per-page visitor analytics and sets no analytics cookies. Displayed PDF-download totals come from public GitHub release-asset counters and do not identify readers to ARR. The notice will be updated before any page-view provider is enabled.</p></article>
   <article><h2>Your rights</h2><p>Applicable rights include access, correction, erasure, restriction, portability and objection. You can complain to Sweden's IMY or another competent EEA authority. Requests receive proportionate identity verification.</p></article>
-  <article><h2>Voluntary support</h2><p>The support page links to PayPal when donations are available. AIRR loads no PayPal widgets or tracking scripts. If you choose to pay on PayPal, it provides the operator with transaction details for payment, refund, fraud, accounting and legal administration. An optional public-paper reference is used only for payment enquiries. Donor information is not published or used for mailing lists, ranking or editorial decisions. The donation notice was updated on 2026-09-06.</p></article>
+  <article><h2>Voluntary support</h2><p>The support page links to PayPal when donations are available. AIRR loads no PayPal widgets or tracking scripts. If you choose to pay on PayPal, it provides the operator with transaction details for payment, refund, fraud, accounting and legal administration. You may optionally identify the paper your support relates to using its published ID or your submission receipt's registration reference. The reference gives no private access and is not sent to PayPal automatically. Donor information is used for support administration, not published or used for mailing lists, ranking or editorial decisions. The donation notice was updated on 2026-09-06.</p></article>
 </section>
 <section class="callout"><h2>Complete binding notice</h2><p><a href="{policy_source('PRIVACY_NOTICE.md')}">Read ARR-PRIVACY-1.2 in full</a>. The accepted version is recorded with each deposit.</p></section>
 """

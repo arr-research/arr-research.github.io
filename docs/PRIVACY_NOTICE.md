@@ -130,9 +130,13 @@ PayPal acts under its own terms and privacy notice and provides
 the operator with transaction data such as donor name, email, amount, currency and
 transaction identifier and any note. The recipient remains Lluis Eriksson, acting
 as AIRR's individual operator in Sweden. AIRR uses those data only for payment
-administration, fraud/refund handling, accounting and legal obligations. An optional
-public-paper reference is used only to answer payment enquiries; private submission
-identifiers and sensitive information should not be included. Donor information is
+administration, fraud/refund handling, accounting and legal obligations. The donor
+may optionally identify a published paper or use the registration reference shown
+on their submission receipt to explain which paper their support relates to.
+The reference gives no access to private data and is used only for support/payment
+administration. AIRR does not transmit it to PayPal automatically; the donor chooses
+whether to include it in a payment note. Manuscripts, access links and sensitive
+information must not be included. Donor information is
 not published or added to a mailing list or public ranking, and donations cannot
 influence editorial decisions. The contribution is separate from any deposit and
 does not alter an existing submission agreement.
