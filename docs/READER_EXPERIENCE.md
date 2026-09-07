@@ -31,6 +31,8 @@ The compact home page places the introduction beside search on desktop and stack
 
 The search page supports subject, record status, publication year and relevance/date/title sorting. Empty queries browse the catalogue. Filters are reflected in the URL and restored by browser navigation. An obsolete subject/year returns no matches rather than silently dropping the filter. Existing scientific-notation matching is retained, including distinctions between SU(2) and SU(3). The original chronological HTML catalogue remains available without JavaScript.
 
+Paper lists share a full-width row layout across home, catalogue, subjects, author profiles and search. Titles and summaries use the available row width. Record identity and date share a wrapping header; authors and the version-specific citation link share a byline. Wide-screen summaries use two lines and smaller screens use three; complete abstracts remain on each paper page. The manuscript-reading column keeps its separate readable width.
+
 ## Validation and scope
 
 `python -m unittest discover -s tests -v` and `node --test tests/search.test.cjs` cover exact-version citations, original dates, special characters, RIS injection, withdrawn/historical status, subject grouping, scientific relevance and intersecting filters. Build with the production canonical URL and run `scripts/check_site_indexing.py` to verify scholarly metadata, sitemaps and same-directory PDFs.
@@ -42,3 +44,5 @@ This feature does not register DOIs, certify Google Scholar inclusion, change pa
 The starting main commit is `32f507861c3843f5b8403ff16b80a44c448070f7`. Revert the reader-experience change through a new commit/PR, preserving later deposits and operational changes. Do not reset or force-push main. Once citation URLs are in use, retain those routes and exports even if the visual design is reverted.
 
 For the subsequent compact-homepage adjustment alone, the baseline is `cee7b0bb9d7c9489a8a47d70683e89d21b588baa`. Revert only that adjustment's commit; all citation and reading features remain available.
+
+The full-width paper-list adjustment starts from `b8ecb838c8a46ff1cd49b50abc051d85b5cf07fb` and can be reverted separately from the compact homepage.
