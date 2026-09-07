@@ -566,13 +566,19 @@ def build_home(papers: list, timestamps: dict, base: str, canonical_url: str, au
   <p>No research record will appear here until its sources, provenance and verification record have completed the AIRR acceptance workflow.</p>
 </section>"""
     content = f"""
-<section class="hero">
-  <div class="eyebrow">Discover · Read · Cite</div>
-  <h1>Independent research.<br>Inspectable evidence.</h1>
-  <p class="lede">AIRR.SCIENCE is the Archive for Independent &amp; Rigorous Research. Read, explore and cite open research in mathematics, physics and beyond. New admissions undergo a disclosed frontier-model audit and a human decision; historical imports are labelled separately.</p>
-  {search_form(base)}
-  <div class="hero-actions"><a class="text-link" href="{base}/papers/">Latest papers →</a><a class="text-link" href="{base}/subjects/">Browse subjects →</a><a class="text-link" href="{base}/assessments/">Explore assessments →</a></div>
+<section class="hero home-hero">
+  <div class="home-intro">
+    <div class="eyebrow">Discover · Read · Cite</div>
+    <h1>Independent research.<br>Inspectable evidence.</h1>
+    <p class="lede">AIRR.SCIENCE is the Archive for Independent &amp; Rigorous Research. Open papers in mathematics, physics and beyond.</p>
+  </div>
+  <div class="home-discovery">
+    {search_form(base)}
+    <div class="hero-actions"><a class="text-link" href="{base}/papers/">Latest papers →</a><a class="text-link" href="{base}/assessments/">Explore assessments →</a></div>
+  </div>
 </section>
+<nav class="home-subjects" aria-label="Research subjects"><span class="eyebrow">Subjects</span><div class="subject-strip">{subject_links(papers, base, 6)}</div><a class="home-all-subjects" href="{base}/subjects/">All subjects →</a></nav>
+<section class="recent"><div class="section-heading"><div><span>Catalogue</span><h2>Latest research</h2></div><a href="{base}/papers/">View papers</a></div><p class="home-admission-note">New admissions require a disclosed model audit and human sign-off. Historical imports are labelled separately. <a href="{base}/protocol/">Admission policy</a></p>{recent}</section>
 <section class="frontier-gate" aria-label="AIRR admission standard"><strong>AIRR admission gate</strong><span>operator-selected frontier audit</span><span>exact PDF + SHA-256</span><span>0 unresolved material objections</span><span>human sign-off</span></section>
 <section class="stats" aria-label="Archive statistics">
   <div><strong>{accepted_papers}</strong><span>admitted papers</span></div>
@@ -581,8 +587,6 @@ def build_home(papers: list, timestamps: dict, base: str, canonical_url: str, au
   <div><strong>{author_count}</strong><span>author profiles</span></div>
   <div><strong>{downloads:,}</strong><span>canonical PDF downloads</span></div>
 </section>
-<section class="home-subjects"><div class="section-heading"><div><span>Explore</span><h2>Research by subject</h2></div><a href="{base}/subjects/">All subjects →</a></div><div class="subject-strip">{subject_links(papers, base, 6)}</div></section>
-<section class="recent"><div class="section-heading"><div><span>Catalogue</span><h2>Latest research</h2></div><a href="{base}/papers/">View papers</a></div>{recent}</section>
 <section class="principles">
   <div><span>01</span><h2>Inspectable by default</h2><p>Manuscripts, metadata and code remain readable as plain files—not trapped behind a PDF or proprietary interface.</p></div>
   <div><span>02</span><h2>Survival is evidence</h2><p>A paper that clears the new gate has survived a deliberately hostile, reproducible test by leading frontier models. AIRR publishes the reports and disagreement instead of asking readers to trust the badge.</p></div>
