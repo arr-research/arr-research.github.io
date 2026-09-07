@@ -1,0 +1,316 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "AIRR private agent submissions",
+    "version": "1.0.0",
+    "description": "Email-confirmed adult delegation; five PDFs over seven days. No editorial, payment, external-review or publication rights. Documentation does not open the receiver. See https://airr.science/agents/."
+  },
+  "servers": [
+    {
+      "url": "https://submit.airr.science"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "agentBearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "ManuscriptMetadata": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "authors": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 1000
+          },
+          "abstract": {
+            "type": "string",
+            "minLength": 80,
+            "maxLength": 5000
+          },
+          "primary_subject": {
+            "type": "string"
+          },
+          "secondary_subjects": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "specific_topic": {
+            "type": "string"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "ai_disclosure": {
+            "type": "string",
+            "minLength": 20,
+            "maxLength": 2000
+          },
+          "operator_conflict": {
+            "type": "boolean"
+          },
+          "rights_confirmed": {
+            "const": true
+          }
+        },
+        "required": [
+          "title",
+          "authors",
+          "abstract",
+          "primary_subject",
+          "secondary_subjects",
+          "specific_topic",
+          "sha256",
+          "ai_disclosure",
+          "operator_conflict",
+          "rights_confirmed"
+        ]
+      }
+    }
+  },
+  "paths": {
+    "/api/v1/agent-requests": {
+      "post": {
+        "operationId": "requestAgentDelegation",
+        "summary": "Start a request without sending email or a PDF",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "agent_name",
+                  "agent_version",
+                  "purpose"
+                ],
+                "properties": {
+                  "agent_name": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 100
+                  },
+                  "agent_version": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160
+                  },
+                  "purpose": {
+                    "type": "string",
+                    "minLength": 20,
+                    "maxLength": 600
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "One-time agent_token, authorization_url, request_id, state and expires_at. Give the URL to a responsible adult; email confirmation is mandatory."
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Invalid bearer token"
+          },
+          "403": {
+            "description": "Delegation not authorized"
+          },
+          "409": {
+            "description": "Conflicting retry or state"
+          },
+          "413": {
+            "description": "Size limit"
+          },
+          "429": {
+            "description": "Rate limited; obey Retry-After"
+          },
+          "503": {
+            "description": "Intake closed or temporarily unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/agent-authorization": {
+      "get": {
+        "operationId": "checkAgentDelegation",
+        "security": [
+          {
+            "agentBearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "State, expiry, remaining uploads, scope and intake_open. Poll no more than once per minute."
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Invalid bearer token"
+          },
+          "403": {
+            "description": "Delegation not authorized"
+          },
+          "409": {
+            "description": "Conflicting retry or state"
+          },
+          "413": {
+            "description": "Size limit"
+          },
+          "429": {
+            "description": "Rate limited; obey Retry-After"
+          },
+          "503": {
+            "description": "Intake closed or temporarily unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/submissions": {
+      "post": {
+        "operationId": "submitPrivateManuscript",
+        "security": [
+          {
+            "agentBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9._:-]{8,80}$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "metadata",
+                  "manuscript"
+                ],
+                "properties": {
+                  "metadata": {
+                    "type": "string",
+                    "description": "JSON string conforming to ManuscriptMetadata, at most 16000 characters",
+                    "contentMediaType": "application/json",
+                    "contentSchema": {
+                      "$ref": "#/components/schemas/ManuscriptMetadata"
+                    }
+                  },
+                  "manuscript": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "One PDF at most 25 MiB; its SHA-256 must equal metadata.sha256"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Private receipt: registration_number, received_at, sha256, size_bytes, status, scan_status, published:false and optional donation information. Location identifies the receipt."
+          },
+          "200": {
+            "description": "Existing receipt for an idempotent retry with matching metadata and PDF hash."
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Invalid bearer token"
+          },
+          "403": {
+            "description": "Delegation not authorized"
+          },
+          "409": {
+            "description": "Conflicting retry or state"
+          },
+          "413": {
+            "description": "Size limit"
+          },
+          "429": {
+            "description": "Rate limited; obey Retry-After"
+          },
+          "503": {
+            "description": "Intake closed or temporarily unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/submissions/{case_id}": {
+      "get": {
+        "operationId": "readOwnSubmissionReceipt",
+        "security": [
+          {
+            "agentBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^SUB-[A-F0-9]{16}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Receipt of a case deposited with this same active delegation; no PDF or private access links."
+          },
+          "404": {
+            "description": "No case accessible under this delegation."
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Invalid bearer token"
+          },
+          "403": {
+            "description": "Delegation not authorized"
+          },
+          "409": {
+            "description": "Conflicting retry or state"
+          },
+          "413": {
+            "description": "Size limit"
+          },
+          "429": {
+            "description": "Rate limited; obey Retry-After"
+          },
+          "503": {
+            "description": "Intake closed or temporarily unavailable"
+          }
+        }
+      }
+    }
+  }
+}

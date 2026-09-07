@@ -568,6 +568,7 @@ def install(app, a):
         manifest = {'submission_id': row['id'], 'revision': row['revision_number'], 'sha256': row['sha256'],
                     'title': row['title'], 'authors': row['authors'], 'abstract': row['abstract'],
                     'classification': json.loads(row['classification_json']), 'license': permission['license'],
+                    'submission_channel': row['submission_channel'], 'agent_provenance': json.loads(row['agent_provenance_json']),
                     'decision_reason': row['decision_reason'], 'decided_at': row['decided_at'],
                     'conflict_disclosed': bool(row['operator_conflict']),
                     'editor': db.execute('SELECT display_name FROM users WHERE id=?', (row['decision_by'],)).fetchone()[0],

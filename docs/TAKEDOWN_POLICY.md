@@ -18,4 +18,4 @@ Files may be removed or access-restricted for credible copyright claims, unlawfu
 
 Every request receives a case identifier, timestamp, evidence log, decision, reasons and notification where lawful. The notice, counter-notice and appeal procedure is in [`LEGAL_AND_COMPLAINTS.md`](LEGAL_AND_COMPLAINTS.md). Emergency security reports follow `SECURITY.md`.
 
-The responsible operator is Lluis Eriksson in Stockholm, Sweden, reachable at `lluiseriksson@gmail.com`. A stable postal service address and legal review remain mandatory before unrestricted public intake.
+The responsible operator is Lluis Eriksson in Sweden, reachable at `lluiseriksson@gmail.com`. A stable postal service address and legal review remain mandatory before unrestricted public intake.

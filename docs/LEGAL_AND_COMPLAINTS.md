@@ -3,7 +3,7 @@
 ## Responsible operator
 
 **Archive for Independent & Rigorous Research (AIRR)** is currently a non-commercial project
-operated by **Lluis Eriksson**, a natural person in Stockholm, Sweden. His roles are
+operated by **Lluis Eriksson**, a natural person in Sweden. His roles are
 founder, registry operator, responsible editor and GDPR data controller. AIRR is not
 presented as a registered company; “VD/CEO” is not used.
 

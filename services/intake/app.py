@@ -15,6 +15,7 @@ import sqlite3
 import smtplib
 import ssl
 import sys
+import tempfile
 # Scanner commands are fixed by the operator, use shell=False and never include an
 # uploaded filename. See the guarded call in scan_file.
 import subprocess  # nosec B404
@@ -27,6 +28,7 @@ from pathlib import Path
 import click
 from flask import (
     Flask,
+    Request,
     abort,
     flash,
     g,
@@ -44,8 +46,8 @@ from scripts.donationlib import load_donation_url
 from scripts.subjectlib import classification_options, classification_text, public_vocabulary, validate_classification
 
 
-TERMS_VERSION = "ARR-DEPOSIT-1.5"
-PRIVACY_VERSION = "ARR-PRIVACY-1.3"
+TERMS_VERSION = "ARR-DEPOSIT-1.6"
+PRIVACY_VERSION = "ARR-PRIVACY-1.4"
 FRONTIER_PROMPT_VERSION = "ARR-INTAKE-ASSESS-1.0"
 MAX_PDF_BYTES = 25 * 1024 * 1024
 ALLOWED_STATES = {
@@ -248,14 +250,25 @@ def validate_model_review(value: object, row: sqlite3.Row) -> list[str]:
     return errors
 
 
+class PrivateUploadRequest(Request):
+    def _get_file_stream(self, total_content_length, content_type, filename=None, content_length=None):
+        # Multipart parsing can spill to disk before the receiving view runs.
+        # Keep those bytes on the same private encrypted volume as quarantine.
+        return tempfile.SpooledTemporaryFile(max_size=512_000, mode='w+b',
+            dir=current_app_config('QUARANTINE'), prefix='.upload-')
+
+
 def create_app(test_config: dict | None = None) -> Flask:
     app = Flask(__name__, instance_relative_config=True)
+    app.request_class = PrivateUploadRequest
     default_instance = Path(os.environ.get("ARR_INTAKE_INSTANCE", app.instance_path)).resolve()
     app.config.from_mapping(
         SECRET_KEY=os.environ.get("ARR_SESSION_SECRET"),
         DATABASE=str(default_instance / "intake.sqlite3"),
         QUARANTINE=str(default_instance / "quarantine"),
         MAX_CONTENT_LENGTH=MAX_PDF_BYTES + 64 * 1024,
+        MAX_FORM_MEMORY_SIZE=256 * 1024,
+        MAX_FORM_PARTS=32,
         SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_SAMESITE="Strict",
         SESSION_COOKIE_SECURE=os.environ.get("ARR_COOKIE_SECURE", "1") != "0",
@@ -296,6 +309,8 @@ def create_app(test_config: dict | None = None) -> Flask:
     register_commands(app)
     from services.intake.workflow import install
     install(app, sys.modules[__name__])
+    from services.intake.agents import install as install_agents
+    install_agents(app, sys.modules[__name__])
 
     @app.after_request
     def security_headers(response):
@@ -346,6 +361,8 @@ def init_db() -> None:
 
     from services.intake.workflow import migrate
     migrate(db)
+    from services.intake.agents import migrate as migrate_agents
+    migrate_agents(db)
 
 
 def audit(event: str, submission_id: str | None = None, **detail) -> None:
@@ -688,66 +705,17 @@ def register_routes(app: Flask) -> None:
                 flash("Complete all fields and attestations.", "error")
                 return render_template("submit.html", terms=TERMS_VERSION, privacy=PRIVACY_VERSION)
             enforce_rate("submit-email", 3, 24 * 60 * 60, email)
-            original = Path(upload.filename or "manuscript.pdf").name[:200]
-            submission_id = "SUB-" + secrets.token_hex(8).upper()
-            stored = secrets.token_hex(24) + ".pdf"
-            target = Path(current_app_config("QUARANTINE")) / stored
-            digest = hashlib.sha256()
-            size = 0
-            with target.open("xb") as handle:
-                first = upload.stream.read(5)
-                if first != b"%PDF-":
-                    handle.close()
-                    target.unlink(missing_ok=True)
-                    flash("Only a genuine PDF beginning with the PDF signature is accepted.", "error")
-                    return render_template("submit.html", terms=TERMS_VERSION, privacy=PRIVACY_VERSION)
-                handle.write(first)
-                digest.update(first)
-                size += len(first)
-                while chunk := upload.stream.read(1024 * 1024):
-                    size += len(chunk)
-                    if size > MAX_PDF_BYTES:
-                        handle.close()
-                        target.unlink(missing_ok=True)
-                        abort(413)
-                    handle.write(chunk)
-                    digest.update(chunk)
-            if os.name != "nt":
-                os.chmod(target, 0o600)
-            submitter = find_or_create_submitter(email, display_name)
-            conflict = int(email == current_app_config("OPERATOR_EMAIL") or bool(request.form.get("operator_conflict")))
-            db = get_db()
-            db.execute(
-                """INSERT INTO submissions(
-                   id,user_id,title,authors,abstract,original_filename,stored_name,sha256,size_bytes,
-                   scan_status,scan_detail,status,operator_conflict,ai_review_opt_in,terms_version,
-                   privacy_version,created_at,updated_at,classification_json)
-                   VALUES(?,?,?,?,?,?,?,?,?,'pending','Awaiting approved scanner.','quarantined',?,?,?,?,?,?,?)""",
-                (
-                    submission_id,
-                    submitter["id"],
-                    title[:500],
-                    authors[:1000],
-                    abstract[:5000],
-                    original,
-                    stored,
-                    digest.hexdigest(),
-                    size,
-                    conflict,
-                    int(bool(request.form.get("ai_review_opt_in"))),
-                    TERMS_VERSION,
-                    PRIVACY_VERSION,
-                    iso(),
-                    iso(),
-                    json.dumps(classification, ensure_ascii=False),
-                ),
-            )
-            db.commit()
-            audit("submission_received", submission_id, sha256=digest.hexdigest(), size_bytes=size)
-            row = db.execute("SELECT * FROM submissions WHERE id=?", (submission_id,)).fetchone()
-            scan_file_status, _ = scan_submission(row)
-            notify_operator(submission_id, title, email, scan_file_status)
-            app.extensions['editorial']['received'](submission_id)
+            from services.intake.storage import receive
+            try:
+                row = receive(app, sys.modules[__name__], upload, {
+                    'display_name': display_name, 'email': email, 'title': title,
+                    'authors': authors, 'abstract': abstract, 'classification': classification,
+                    'operator_conflict': bool(request.form.get('operator_conflict')),
+                })
+            except ValueError as error:
+                flash(str(error), 'error')
+                return render_template('submit.html', terms=TERMS_VERSION, privacy=PRIVACY_VERSION), 400
+            submission_id = row['id']
             # The registration number is a reference, never a credential. The
             # receipt is available only in the browser session that uploaded it.
             session["receipt_submission_id"] = submission_id
@@ -1064,9 +1032,10 @@ def register_commands(app: Flask) -> None:
             db.execute("DELETE FROM assessment_plans WHERE submission_id=?", (row["id"],))
             db.execute("DELETE FROM correspondence WHERE submission_id=?", (row["id"],))
             db.execute("DELETE FROM mail_outbox WHERE submission_id=?", (row["id"],))
+            db.execute("DELETE FROM agent_submissions WHERE submission_id=?", (row["id"],))
             db.execute(
                 """UPDATE submissions SET original_filename='[deleted]',stored_name='deleted-'||id,
-                   abstract='[deleted under retention policy]',classification_json='{}',updated_at=?,delete_after=NULL WHERE id=?""",
+                   abstract='[deleted under retention policy]',classification_json='{}',agent_provenance_json='{}',updated_at=?,delete_after=NULL WHERE id=?""",
                 (iso(), row["id"]),
             )
             db.execute(
@@ -1095,6 +1064,8 @@ def register_commands(app: Flask) -> None:
                 (f"erased-user-{user['id']}@invalid.local", generate_password_hash(secrets.token_urlsafe(32)), user["id"]),
             )
         db.commit()
+        from services.intake.agents import sweep
+        sweep(sys.modules[__name__])
 
 
 app = create_app()

@@ -1,0 +1,7 @@
+{% extends 'base.html' %}{% block title %}Agent permission — AIRR.SCIENCE{% endblock %}{% block content %}
+<p class="eyebrow">Confirm or revoke</p><h1>Agent submission permission</h1>
+<section class="card"><h2>{{ grant['agent_name'] }}</h2><p>Declared version: {{ grant['agent_version'] }}</p><p class="preserve-lines">{{ grant['purpose'] }}</p><p>Responsible person: {{ grant['responsible_name'] }} · {{ grant['email'] }}</p><p>State: <strong>{{ grant['state'] }}</strong></p></section>
+{% if grant['state'] == 'awaiting_email' %}<p>Confirm only if you requested this delegation. The agent will be able to submit at most five private PDFs over seven days. Confirmation does not authorize publication or transmission to assessment providers.</p><form method="post" class="card"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button name="action" value="approve">Confirm permission</button> <button name="action" value="revoke">Reject request</button></form>
+{% elif grant['state'] == 'approved' %}<p>The agent can now submit within this permission. Deposits used: {{ grant['uses'] }} of 5. Expires: {{ grant['expires_at'] }}.</p><p>Keep this email link to revoke the agent's access. Revocation does not withdraw papers already received; use their private case links for that.</p><form method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button name="action" value="revoke">Revoke agent access</button></form>
+{% else %}<p>The agent is no longer authorized to use this delegation.</p>{% endif %}
+{% endblock %}

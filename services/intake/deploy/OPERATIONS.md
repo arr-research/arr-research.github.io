@@ -116,3 +116,23 @@ The launch-approval example has every check false. Neither an installation nor a
 passing unit suite creates a legal review, postal contact, independent editor,
 restore-key handoff or offsite schedule. Evidence and the operator's signature
 must be real before setting the public switch and GitHub intake URL.
+
+
+## Deploying agent intake
+
+Run `flask --app services.intake.app init-db` as the intake service user with its
+protected environment after switching the source and before restarting workers.
+The migration adds delegation tables and provenance columns without replacing
+accounts, TOTP secrets, recovery codes or existing case IDs. Stop maintenance and
+mail workers during the migration, keep a consistent encrypted rollback snapshot,
+and verify SQLite integrity and the operator count before resuming.
+
+Multipart uploads now spool under the configured quarantine directory, including
+before the receiving view runs. A private per-service `/tmp` alone would not keep
+large incoming PDF fragments on the encrypted volume. Maintain the encrypted
+mount requirement and the private filesystem permissions on the whole instance.
+
+The new API and browser form share PDF persistence, malware scanning and editorial
+notification. A deployed API does not open intake: it enforces the existing signed
+launch approval. Confirm the human form, authorization request and upload all
+return 503 before the operator completes that approval.

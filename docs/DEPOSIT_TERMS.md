@@ -1,22 +1,38 @@
-# AIRR deposit terms — ARR-DEPOSIT-1.5
+# AIRR deposit terms — ARR-DEPOSIT-1.6
 
 **Effective:** 2026-09-07
 **Brand wording updated:** 2026-09-06; see [identity and continuity](BRAND_IDENTITY.md).
 
-**Operator:** Lluis Eriksson, Stockholm, Sweden — lluiseriksson@gmail.com  
+**Operator:** Lluis Eriksson, Sweden — lluiseriksson@gmail.com
+
 **Current fee:** EUR 0.00. AIRR does not currently charge for submission,
 assessment, publication or withdrawal. This may change for future submissions only
 after advance publication of new terms and clear notice before submission. No fee
 will be imposed retroactively on a submission governed by this version, and a
 future fee will never purchase acceptance, priority or a favourable decision.
 
-This version replaces `ARR-DEPOSIT-1.4` before direct public submission was
+This version replaces `ARR-DEPOSIT-1.5` before direct public submission was
 activated.
 
 These terms govern AIRR's direct private-submission pilot. No invitation or author
 account is required. They are accepted when a depositor ticks the versioned
 agreement and uploads a manuscript through the private form. Email and GitHub
 issues are not deposit channels.
+
+The authorized-agent API is another private deposit channel. A responsible adult
+confirms a limited delegation through their email before the agent can upload.
+The delegation covers at most five PDFs over seven days, subject to daily limits,
+and can be revoked through the confirmation email. The person may act for an
+organization but must have authority to make the deposit and accept these terms.
+Declared model or agent identity is not proof of authorship or rights. The
+responsible person is accountable for the agent's deposits and disclosures.
+
+Delegation covers receiving manuscripts and retrieving their registration
+receipts only. It does not authorize payments, assessment-provider transfers,
+editorial decisions or public publication. Those permissions are obtained through
+their separate workflows. Revocation does not withdraw already received papers.
+No agent may impersonate a person or confirm on someone's behalf without their
+permission. The [API guide](AGENT_SUBMISSIONS.md) describes the technical limits.
 
 The agreement language is English. Before upload, the form lets the depositor
 review and correct every field, links a storable copy of these terms, and identifies
@@ -91,7 +107,7 @@ tombstone; AIRR cannot recall third-party copies.
 
 ## 6. Privacy and frontier-model review
 
-Processing follows `ARR-PRIVACY-1.3`. Private submissions are not placed in the
+Processing follows `ARR-PRIVACY-1.4`. Private submissions are not placed in the
 public repository. Completing the disclosed frontier-model screening is required
 for acceptance. The depositor may withdraw before a transfer not yet made, but AIRR
 then cannot complete the acceptance protocol. Providers may use the manuscript only
