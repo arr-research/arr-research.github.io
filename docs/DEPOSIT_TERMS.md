@@ -1,6 +1,6 @@
-# AIRR deposit terms — ARR-DEPOSIT-1.4
+# AIRR deposit terms — ARR-DEPOSIT-1.5
 
-**Effective:** 2026-08-30  
+**Effective:** 2026-09-07
 **Brand wording updated:** 2026-09-06; see [identity and continuity](BRAND_IDENTITY.md).
 
 **Operator:** Lluis Eriksson, Stockholm, Sweden — lluiseriksson@gmail.com  
@@ -10,7 +10,7 @@ after advance publication of new terms and clear notice before submission. No fe
 will be imposed retroactively on a submission governed by this version, and a
 future fee will never purchase acceptance, priority or a favourable decision.
 
-This version replaces `ARR-DEPOSIT-1.3` before direct public submission was
+This version replaces `ARR-DEPOSIT-1.4` before direct public submission was
 activated.
 
 These terms govern AIRR's direct private-submission pilot. No invitation or author
@@ -56,8 +56,11 @@ Before acceptance, AIRR submits the exact clean manuscript to an operator-select
 frontier-model audit set using the version-locked AIRR prompt. The selection may
 change between submissions and assessment rounds according to availability,
 capability, quota and subject fit. AIRR promises no fixed provider, model, report
-count or reasoning tier. The form discloses and records authorization for the
-limited transfer. Every response obtained in the declared round is tied to the
+count or reasoning tier. The upload form acknowledges that screening is required. Before any transfer,
+AIRR presents the named providers/models and service-specific confidentiality,
+retention and international-transfer safeguards in the private case. The depositor
+must separately confirm that plan for the exact manuscript. The initial checkbox
+alone does not authorize a transfer. Every response obtained in the declared round is tied to the
 manuscript hash and inspected by the human editor. Any unresolved material
 objection or non-accept recommendation blocks acceptance; AIRR must request changes
 or decline unless a signed human adjudication explains why the objection does not
@@ -88,7 +91,7 @@ tombstone; AIRR cannot recall third-party copies.
 
 ## 6. Privacy and frontier-model review
 
-Processing follows `ARR-PRIVACY-1.2`. Private submissions are not placed in the
+Processing follows `ARR-PRIVACY-1.3`. Private submissions are not placed in the
 public repository. Completing the disclosed frontier-model screening is required
 for acceptance. The depositor may withdraw before a transfer not yet made, but AIRR
 then cannot complete the acceptance protocol. Providers may use the manuscript only

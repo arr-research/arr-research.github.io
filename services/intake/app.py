@@ -14,6 +14,7 @@ import shutil
 import sqlite3
 import smtplib
 import ssl
+import sys
 # Scanner commands are fixed by the operator, use shell=False and never include an
 # uploaded filename. See the guarded call in scan_file.
 import subprocess  # nosec B404
@@ -43,8 +44,8 @@ from scripts.donationlib import load_donation_url
 from scripts.subjectlib import classification_options, classification_text, public_vocabulary, validate_classification
 
 
-TERMS_VERSION = "ARR-DEPOSIT-1.4"
-PRIVACY_VERSION = "ARR-PRIVACY-1.2"
+TERMS_VERSION = "ARR-DEPOSIT-1.5"
+PRIVACY_VERSION = "ARR-PRIVACY-1.3"
 FRONTIER_PROMPT_VERSION = "ARR-INTAKE-ASSESS-1.0"
 MAX_PDF_BYTES = 25 * 1024 * 1024
 ALLOWED_STATES = {
@@ -58,6 +59,8 @@ ALLOWED_STATES = {
     "withdrawn",
     "removed",
     "legal_hold",
+    "superseded",
+    "appeal_pending",
 }
 
 
@@ -268,10 +271,14 @@ def create_app(test_config: dict | None = None) -> Flask:
         SMTP_SSL=os.environ.get("ARR_SMTP_SSL", "0") == "1",
         SMTP_STARTTLS=os.environ.get("ARR_SMTP_STARTTLS", "1") == "1",
         DONATIONS_CONFIG=str(Path(__file__).resolve().parents[2] / "site" / "donations.json"),
+        INTAKE_OPEN=os.environ.get("ARR_INTAKE_OPEN", "0") == "1",
+        LAUNCH_APPROVAL_FILE=os.environ.get("ARR_LAUNCH_APPROVAL_FILE", "/etc/airr-intake/launch-approval.json"),
         TESTING=False,
     )
     if test_config:
         app.config.update(test_config)
+        if test_config.get("TESTING") and "INTAKE_OPEN" not in test_config:
+            app.config["INTAKE_OPEN"] = True
     if not app.config["SECRET_KEY"]:
         raise RuntimeError("ARR_SESSION_SECRET must be a persistent random value")
 
@@ -287,6 +294,8 @@ def create_app(test_config: dict | None = None) -> Flask:
     app.before_request(load_user)
     register_routes(app)
     register_commands(app)
+    from services.intake.workflow import install
+    install(app, sys.modules[__name__])
 
     @app.after_request
     def security_headers(response):
@@ -334,6 +343,9 @@ def init_db() -> None:
     if "classification_json" not in columns:
         db.execute("ALTER TABLE submissions ADD COLUMN classification_json TEXT NOT NULL DEFAULT '{}'")
     db.commit()
+
+    from services.intake.workflow import migrate
+    migrate(db)
 
 
 def audit(event: str, submission_id: str | None = None, **detail) -> None:
@@ -459,6 +471,8 @@ def scan_file(path: Path) -> tuple[str, str]:
 
 
 def scan_submission(row: sqlite3.Row) -> tuple[str, str]:
+    if row['status'] not in {'quarantined', 'eligible'}:
+        return row['scan_status'], row['scan_detail']
     path = Path(current_app_config("QUARANTINE")) / row["stored_name"]
     status, detail = scan_file(path)
     db = get_db()
@@ -475,7 +489,28 @@ def scan_submission(row: sqlite3.Row) -> tuple[str, str]:
     return status, detail
 
 
+def scanner_is_ready() -> bool:
+    command = scanner_command(Path(current_app_config('QUARANTINE')) / 'readiness-probe.pdf')
+    if not command:
+        return False
+    if Path(command[0]).name in {'clamdscan', 'clamdscan.exe'}:
+        try:
+            probe = subprocess.run([command[0], '--ping=1'], capture_output=True, timeout=4, check=False)  # nosec B603
+            return probe.returncode == 0
+        except (OSError, subprocess.TimeoutExpired):
+            return False
+    # Standalone scanners need a real harmless probe, not just an executable check.
+    probe_path = Path(current_app_config('QUARANTINE')) / ('.readiness-' + secrets.token_hex(12))
+    try:
+        probe_path.write_bytes(b'AIRR harmless scanner readiness check\n')
+        return scan_file(probe_path)[0] == 'clean'
+    finally:
+        probe_path.unlink(missing_ok=True)
+
+
 def valid_email(value: str) -> bool:
+    if any(c in value for c in '\r\n\x00'):
+        return False
     parsed_name, parsed_address = parseaddr(value)
     return not parsed_name and parsed_address == value and 3 <= len(value) <= 254 and "@" in value
 
@@ -516,6 +551,17 @@ def notify_operator(submission_id: str, title: str, submitter_email: str, scan_s
         f"Review after signing in: {current_app_config('PUBLIC_ORIGIN')}/admin/submission/{submission_id}\n\n"
         "The manuscript is not attached to this email and has not been published."
     )
+    if not send_mail(message):
+        audit("operator_notification_failed", submission_id, reason="smtp_delivery_error")
+        return False
+    audit("operator_notification_sent", submission_id, recipient="operator")
+    return True
+
+
+def send_mail(message: EmailMessage) -> bool:
+    host = str(current_app_config("SMTP_HOST"))
+    if not host:
+        return False
     try:
         if current_app_config("SMTP_SSL"):
             client = smtplib.SMTP_SSL(host, current_app_config("SMTP_PORT"), timeout=15, context=ssl.create_default_context())
@@ -529,9 +575,7 @@ def notify_operator(submission_id: str, title: str, submitter_email: str, scan_s
                 client.login(username, str(current_app_config("SMTP_PASSWORD")))
             client.send_message(message)
     except (OSError, smtplib.SMTPException):
-        audit("operator_notification_failed", submission_id, reason="smtp_delivery_error")
         return False
-    audit("operator_notification_sent", submission_id, recipient="operator")
     return True
 
 
@@ -557,7 +601,7 @@ def register_routes(app: Flask) -> None:
             "database": bool(get_db().execute("SELECT 1").fetchone()),
             "https_origin": str(current_app_config("PUBLIC_ORIGIN")).startswith("https://"),
             "secure_cookie": bool(current_app_config("SESSION_COOKIE_SECURE")),
-            "malware_scanner": scanner_command(Path(current_app_config("QUARANTINE")) / "readiness-probe.pdf") is not None,
+            "malware_scanner": scanner_is_ready(),
             "operator_email_notification": bool(current_app_config("SMTP_HOST") and current_app_config("SMTP_FROM")),
         }
         return ({"ready": all(checks.values()), "checks": checks}, 200 if all(checks.values()) else 503)
@@ -594,9 +638,12 @@ def register_routes(app: Flask) -> None:
     @login_required
     def dashboard():
         if g.user["role"] in {"operator", "independent_editor"}:
-            rows = get_db().execute(
-                "SELECT s.*,u.email,u.display_name FROM submissions s JOIN users u ON u.id=s.user_id ORDER BY s.created_at DESC"
-            ).fetchall()
+            query = "SELECT s.*,u.email,u.display_name FROM submissions s JOIN users u ON u.id=s.user_id"
+            parameters = ()
+            if g.user['role'] == 'independent_editor':
+                query += ' WHERE EXISTS(SELECT 1 FROM case_editors c WHERE c.submission_id=s.id AND c.user_id=?)'
+                parameters = (g.user['id'],)
+            rows = get_db().execute(query + ' ORDER BY s.created_at DESC', parameters).fetchall()
             return render_template("admin.html", submissions=rows)
         rows = get_db().execute("SELECT * FROM submissions WHERE user_id=? ORDER BY created_at DESC", (g.user["id"],)).fetchall()
         return render_template("dashboard.html", submissions=rows)
@@ -618,6 +665,8 @@ def register_routes(app: Flask) -> None:
         if request.method == "POST":
             require_csrf()
             enforce_rate("submit", 3, 24 * 60 * 60)
+            if shutil.disk_usage(current_app_config('QUARANTINE')).free < MAX_PDF_BYTES * 4:
+                abort(503, 'Private storage is temporarily full. Please try again later; no manuscript was registered.')
             if request.form.get("website"):
                 flash("Submission received for processing.", "success")
                 return redirect(url_for("submit"))
@@ -698,6 +747,7 @@ def register_routes(app: Flask) -> None:
             row = db.execute("SELECT * FROM submissions WHERE id=?", (submission_id,)).fetchone()
             scan_file_status, _ = scan_submission(row)
             notify_operator(submission_id, title, email, scan_file_status)
+            app.extensions['editorial']['received'](submission_id)
             # The registration number is a reference, never a credential. The
             # receipt is available only in the browser session that uploaded it.
             session["receipt_submission_id"] = submission_id
@@ -844,15 +894,15 @@ def register_routes(app: Flask) -> None:
             abort(409, "A quarantined or unscanned file cannot be accepted")
         if action == "accept":
             reviews = get_db().execute(
-                "SELECT provider,model_id,recommendation,unresolved_material_objections FROM model_reviews WHERE submission_id=?",
+                "SELECT id,provider,model_id,recommendation,unresolved_material_objections FROM model_reviews WHERE submission_id=?",
                 (submission_id,),
             ).fetchall()
             if not row["ai_review_opt_in"]:
                 abort(409, "Frontier-model transfer authorization is required before acceptance")
             if not reviews:
                 abort(409, "A declared version-locked frontier-model audit record is required before acceptance")
-            if any(review["recommendation"] != "accept" or review["unresolved_material_objections"] for review in reviews):
-                abort(409, "A non-accept recommendation or unresolved material objection blocks acceptance")
+            if not app.extensions['editorial']['can_accept'](row, reviews):
+                abort(409, "Complete the authorized round and resolve every blocking report with a signed, evidenced adjudication")
         if action == "accept" and row["operator_conflict"] and g.user["role"] != "independent_editor":
             new_status = "awaiting_independent_decision"
         elif action == "accept":
@@ -870,6 +920,7 @@ def register_routes(app: Flask) -> None:
         )
         db.commit()
         audit("editorial_decision", submission_id, action=action, resulting_status=new_status, reason=reason)
+        app.extensions['editorial']['decided'](submission_id)
         flash(f"Decision recorded: {new_status.replace('_', ' ')}.", "success")
         return redirect(url_for("submission_detail", submission_id=submission_id))
 
@@ -900,6 +951,8 @@ def register_commands(app: Flask) -> None:
     @click.option("--email", prompt=True, default="lluiseriksson@gmail.com")
     @click.option("--name", prompt=True, default="Lluis Eriksson")
     def create_operator(email: str, name: str):
+        if get_db().execute('SELECT 1 FROM users WHERE email=?', (email.strip().lower(),)).fetchone():
+            raise click.ClickException('Account exists. Existing credentials cannot be replaced by this command.')
         password = getpass.getpass("Password (minimum 12 characters): ")
         if len(password) < 12:
             raise click.ClickException("Password is too short")
@@ -907,9 +960,7 @@ def register_commands(app: Flask) -> None:
         db = get_db()
         db.execute(
             """INSERT INTO users(email,display_name,password_hash,role,totp_secret,created_at)
-               VALUES(?,?,?,?,?,?) ON CONFLICT(email) DO UPDATE SET
-               display_name=excluded.display_name,password_hash=excluded.password_hash,
-               role='operator',totp_secret=excluded.totp_secret,active=1""",
+               VALUES(?,?,?,?,?,?)""",
             (email.strip().lower(), name.strip(), generate_password_hash(password), "operator", secret, iso()),
         )
         db.commit()
@@ -933,7 +984,7 @@ def register_commands(app: Flask) -> None:
 
     @app.cli.command("scan-pending")
     def scan_pending():
-        rows = get_db().execute("SELECT * FROM submissions WHERE scan_status IN ('pending','error')").fetchall()
+        rows = get_db().execute("SELECT * FROM submissions WHERE scan_status IN ('pending','error') AND status='quarantined'").fetchall()
         for row in rows:
             status, _ = scan_submission(row)
             click.echo(f"{row['id']}: {status}")
@@ -948,6 +999,9 @@ def register_commands(app: Flask) -> None:
         row = get_db().execute("SELECT * FROM submissions WHERE id=?", (submission_id,)).fetchone()
         if not row or row["status"] != "accepted_for_publication":
             raise click.ClickException("Only a finally accepted submission can be marked published")
+        permission = get_db().execute('SELECT * FROM publication_permissions WHERE submission_id=?', (submission_id,)).fetchone()
+        if not permission or permission['manuscript_sha256'] != row['sha256']:
+            raise click.ClickException('Exact-version public distribution permission has not been recorded')
         get_db().execute(
             """UPDATE submissions SET public_release_url=?,public_released_at=?,updated_at=?,
                delete_after=? WHERE id=?""",
@@ -1006,6 +1060,10 @@ def register_commands(app: Flask) -> None:
         for row in rows:
             (Path(current_app_config("QUARANTINE")) / row["stored_name"]).unlink(missing_ok=True)
             db.execute("DELETE FROM model_reviews WHERE submission_id=?", (row["id"],))
+            db.execute("DELETE FROM access_links WHERE submission_id=?", (row["id"],))
+            db.execute("DELETE FROM assessment_plans WHERE submission_id=?", (row["id"],))
+            db.execute("DELETE FROM correspondence WHERE submission_id=?", (row["id"],))
+            db.execute("DELETE FROM mail_outbox WHERE submission_id=?", (row["id"],))
             db.execute(
                 """UPDATE submissions SET original_filename='[deleted]',stored_name='deleted-'||id,
                    abstract='[deleted under retention policy]',classification_json='{}',updated_at=?,delete_after=NULL WHERE id=?""",

@@ -1286,7 +1286,7 @@ def build_submit(
 
 def build_privacy(base: str, canonical_url: str) -> str:
     content = f"""
-<section class="page-intro"><span>ARR-PRIVACY-1.2 · effective 2026-08-30</span><h1>Privacy is separated from publication.</h1><p>The controller is Lluis Eriksson, a natural person in Stockholm, Sweden, acting as founder, registry operator and responsible editor. Contact: <a href="mailto:lluiseriksson@gmail.com?subject=AIRR%20privacy">lluiseriksson@gmail.com</a>. No DPO is designated.</p></section>
+<section class="page-intro"><span>ARR-PRIVACY-1.3 · effective 2026-09-07</span><h1>Privacy is separated from publication.</h1><p>The controller is Lluis Eriksson, a natural person in Stockholm, Sweden, acting as founder, registry operator and responsible editor. Contact: <a href="mailto:lluiseriksson@gmail.com?subject=AIRR%20privacy">lluiseriksson@gmail.com</a>. No DPO is designated.</p></section>
 <section class="about-grid">
   <article><h2>Private data</h2><p>AIRR processes the adult depositor's name and email, submission metadata and PDF, declarations, decisions, correspondence and pseudonymized security events to administer the deposit agreement and protect the service. Direct submission requires no author account.</p></article>
   <article><h2>Frontier-model screening</h2><p>Acceptance remains human, but the disclosed pre-publication protocol requires version-locked external frontier-model reports. The form records transfer authorization; AIRR records provider, model, time and response hash and uses appropriate confidentiality and transfer controls.</p></article>
@@ -1295,15 +1295,15 @@ def build_privacy(base: str, canonical_url: str) -> str:
   <article><h2>Your rights</h2><p>Applicable rights include access, correction, erasure, restriction, portability and objection. You can complain to Sweden's IMY or another competent EEA authority. Requests receive proportionate identity verification.</p></article>
   <article><h2>Voluntary support</h2><p>The support page links to PayPal when donations are available. AIRR loads no PayPal widgets or tracking scripts. If you choose to pay on PayPal, it provides the operator with transaction details for payment, refund, fraud, accounting and legal administration. You may optionally identify the paper your support relates to using its published ID or your submission receipt's registration reference. The reference gives no private access and is not sent to PayPal automatically. Donor information is used for support administration, not published or used for mailing lists, ranking or editorial decisions. The donation notice was updated on 2026-09-06.</p></article>
 </section>
-<section class="callout"><h2>Complete binding notice</h2><p><a href="{policy_source('PRIVACY_NOTICE.md')}">Read ARR-PRIVACY-1.2 in full</a>. The accepted version is recorded with each deposit.</p></section>
+<section class="callout"><h2>Complete binding notice</h2><p><a href="{policy_source('PRIVACY_NOTICE.md')}">Read ARR-PRIVACY-1.3 in full</a>. The accepted version is recorded with each deposit.</p></section>
 """
     canonical = f"{canonical_url}/privacy/" if canonical_url else ""
-    return page_shell(title="Privacy — AIRR.SCIENCE", description="ARR-PRIVACY-1.2 privacy notice for direct private manuscript intake.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Privacy — AIRR.SCIENCE", description="ARR-PRIVACY-1.3 privacy notice for direct private manuscript intake.", content=content, base=base, canonical=canonical)
 
 
 def build_terms(base: str, canonical_url: str) -> str:
     content = f"""
-<section class="page-intro"><span>ARR-DEPOSIT-1.4 · effective 2026-08-30</span><h1>There is currently no AIRR deposit fee.</h1><p>AIRR does not currently charge for submission, assessment, publication or withdrawal. A future fee may apply only after advance notice and new terms, never retroactively or in exchange for acceptance. The operator is Lluis Eriksson in Stockholm, Sweden.</p></section>
+<section class="page-intro"><span>ARR-DEPOSIT-1.5 · effective 2026-09-07</span><h1>There is currently no AIRR deposit fee.</h1><p>AIRR does not currently charge for submission, assessment, publication or withdrawal. A future fee may apply only after advance notice and new terms, never retroactively or in exchange for acceptance. The operator is Lluis Eriksson in Stockholm, Sweden.</p></section>
 <section class="about-grid">
   <article><h2>Authority and scope</h2><p>Adult depositors must be an author, rights holder or authorized agent and accurately disclose rights, authorship, AI assistance, interests, third-party material, provenance and licenses. The pilot accepts one PDF up to 25 MiB.</p></article>
   <article><h2>Private first</h2><p>An upload enters quarantine and carries no public license. AIRR may decline, request changes, restrict or remove material. Submission creates no entitlement to a timetable, publication, preservation or endorsement.</p></article>
@@ -1311,10 +1311,10 @@ def build_terms(base: str, canonical_url: str) -> str:
   <article><h2>Publication rights</h2><p>Copyright remains with its owner. A final accepted version receives explicit scoped licenses before public release. Public copies and open licenses may be irreversible; withdrawal cannot recall third-party copies.</p></article>
   <article><h2>Appeal and conflict</h2><p>A decline or restriction may be appealed once within 30 days. A conflicted founder approval is provisional and an unconflicted independent editor must sign before publication.</p></article>
 </section>
-<section class="callout"><h2>Complete binding terms</h2><p><a href="{policy_source('DEPOSIT_TERMS.md')}">Read ARR-DEPOSIT-1.4 in full</a>. Only the private form is a deposit channel; email and GitHub issues are not.</p></section>
+<section class="callout"><h2>Complete binding terms</h2><p><a href="{policy_source('DEPOSIT_TERMS.md')}">Read ARR-DEPOSIT-1.5 in full</a>. Only the private form is a deposit channel; email and GitHub issues are not.</p></section>
 """
     canonical = f"{canonical_url}/terms/" if canonical_url else ""
-    return page_shell(title="Deposit terms — AIRR.SCIENCE", description="ARR-DEPOSIT-1.4 terms for the currently fee-free direct private-submission pilot.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Deposit terms — AIRR.SCIENCE", description="ARR-DEPOSIT-1.5 terms for the currently fee-free direct private-submission pilot.", content=content, base=base, canonical=canonical)
 
 
 def build_governance(base: str, canonical_url: str) -> str:

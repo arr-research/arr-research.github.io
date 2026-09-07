@@ -54,8 +54,9 @@ After sign-off and a successful `/readyz`, set the repository variable
    editor URL. Never attach the PDF or abstract. SMTP failure is audited and alerted.
 5. Verify identity/authority, scope, rights, disclosures, conflicts and minimum
    completeness before substantive assessment.
-6. Review the exact SHA-256 version. External AI gets nothing unless the recorded
-   optional choice is reconfirmed after the provider-specific notice.
+6. Review the exact SHA-256 version. External AI gets nothing until the depositor separately confirms the declared
+   provider-specific notice in their private case. The initial screening
+   acknowledgment is not transfer authorization.
 7. Lluis records accept, decline or changes requested. A conflict routes acceptance
    to the independent editor. No decision publishes automatically.
 8. Notify the depositor, explain the appeal window, then allow the separate public

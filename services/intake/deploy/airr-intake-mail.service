@@ -1,0 +1,22 @@
+[Unit]
+Description=AIRR queued transactional notices
+After=airr-intake.service network-online.target
+ConditionPathIsMountPoint=/srv/airr-private
+
+[Service]
+Type=oneshot
+User=airr-intake
+Group=airr-intake
+WorkingDirectory=/opt/airr-intake/current
+EnvironmentFile=/etc/airr-intake/intake.env
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/opt/airr-intake/venv/bin/flask --app services.intake.app send-pending-mail
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/srv/airr-private/instance
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+CapabilityBoundingSet=

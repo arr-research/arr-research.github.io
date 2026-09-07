@@ -81,3 +81,42 @@ After the receiver is deployed and `/readyz` passes, set the GitHub Actions
 repository variable `ARR_INTAKE_URL` to its HTTPS origin. The next Pages deployment
 will turn the disabled control at `/submit/` into a direct link to the private form.
 Do not set the variable before the production checklist is signed.
+
+## Editorial workflow and controlled opening
+
+`ARR_INTAKE_OPEN` defaults to `0`. HTTPS/editor setup can operate while public
+upload remains closed. Opening requires both `ARR_INTAKE_OPEN=1` and a signed
+`ARR_LAUNCH_APPROVAL_FILE` (default `/etc/airr-intake/launch-approval.json`) covering
+the launch checklist, plus active operator and independent-editor TOTP accounts.
+The example file contains no approvals. `flask launch-status` reports this gate.
+
+Authors receive a queued transactional receipt with a single-use link, valid for
+seven days. A POST consumes the token and opens an eight-hour session; email link
+scanners do not consume it by fetching the URL. Links are stored as hashes, except
+for the pending message body in the encrypted instance. Never enable URL/access
+logging at the proxy. `send-pending-mail` sends queued messages; uncertain SMTP
+results require investigation, not automatic retry. The minute mail timer does
+not send anything until an application action queues a message.
+
+Editors declare the exact providers/models and their service-specific notice
+before recording reports. The author separately confirms the plan. After the
+first report the declared set cannot be changed. Each required model must have a
+report before acceptance. A signed, evidenced adjudication may explain an
+inapplicable blocking report without altering its score or original response.
+Conflicted adjudications and final decisions require an independent editor.
+
+After a changes request, the author may upload a corrected PDF using their private
+case session. The original and reports remain separate; the correction has its
+own ID, parent link, revision number and hash, and needs a new authorized audit.
+An appeal pauses deletion and can be resolved only by an independent editor other
+than the original decision-maker. Public distribution permission is a separate
+author action on the accepted exact version. The release handoff exports approved
+scholarly metadata/reports/adjudications without author email or access links; it
+does not commit to GitHub or publish a record.
+
+Use `invite-editor EMAIL --name NAME --role operator|independent_editor` for a
+24-hour setup link. Give it directly to the intended person. They choose their
+own password, prove possession of their authenticator, and save eight one-use
+recovery codes. Do not open the setup page on their behalf or copy its secrets.
+The command cannot replace active credentials. `workflow-sweep` expires setup and
+access links and erases delivered email bodies after seven days.
