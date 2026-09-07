@@ -24,6 +24,10 @@ and checksum in `/var/backups/airr` are not an independent backup until transfer
 and verified in another failure domain. A failed or incomplete snapshot is not a
 successful backup. Keep scheduled offsite transfer, retention, alerts and recovery
 key custody in the signed deployment evidence, not merely in this guide.
+Local snapshots expire after seven days, only after a new snapshot succeeds;
+configure the same bounded lifecycle at the offsite destination. Reapply erasure
+schedules and known requests before reopening a restored instance. Deployment
+rollback copies must also be removed after their documented rollback window.
 
 For recovery: verify the encrypted archive checksum, decrypt using the offline
 identity into an encrypted staging volume, safely extract with `filter='data'`,
@@ -39,6 +43,12 @@ logs before issuing another case link. Daily maintenance scans quarantined cases
 applies case retention and expires links. Monitor timer failures and stale backups
 and test an alert before opening. External server-down monitoring is separate
 from an on-host timer.
+`monitor.py` checks the services, actual scanner readiness, uncertain email and
+local snapshot age. Run it without `--notify` first; notification mode reports
+only changed failures to the operator, without author data. The separate GitHub
+scheduled workflow checks the public archive and HTTPS login from outside Netcup;
+its schedule is best effort and GitHub failure-notification preferences must be
+verified by the operator. Neither check proves that an offsite transfer succeeded.
 
 The launch-approval example has every check false. Neither an installation nor a
 passing unit suite creates a legal review, postal contact, independent editor,

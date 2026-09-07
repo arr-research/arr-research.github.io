@@ -103,6 +103,8 @@ class IntakeTests(unittest.TestCase):
             submitter = get_db().execute("SELECT * FROM users WHERE id=?", (row["user_id"],)).fetchone()
             self.assertEqual(submitter["email"], "direct-author@example.org")
             self.assertEqual(submitter["active"], 0)
+            get_db().execute('INSERT INTO case_editors VALUES(?,?,?,?)', (row['id'], self.user_id('independent@example.org'), self.user_id('operator@example.org'), iso()))
+            get_db().commit()
             return row["id"]
 
     def add_model_review(self, submission_id: str, number: int, *, recommendation: str = "accept", material: bool = False) -> None:

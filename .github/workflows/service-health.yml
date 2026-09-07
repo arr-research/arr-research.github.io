@@ -1,0 +1,35 @@
+name: Monitor AIRR public services
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '13,43 * * * *'
+
+permissions:
+  contents: read
+
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Verify archive and protected editor entry point
+        shell: bash
+        run: |
+          set -euo pipefail
+          for url in https://airr.science/ https://submit.airr.science/login; do
+            code=$(curl --silent --show-error --location --output /dev/null --write-out '%{http_code}' \
+              --connect-timeout 15 --max-time 45 --retry 2 --retry-all-errors "$url")
+            test "$code" = 200 || { echo "Service check failed: $url returned $code"; exit 1; }
+          done
+      - name: Verify public intake only after its launch variable is configured
+        if: ${{ vars.ARR_INTAKE_URL != '' }}
+        env:
+          INTAKE_URL: ${{ vars.ARR_INTAKE_URL }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$INTAKE_URL" = 'https://submit.airr.science'
+          code=$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' \
+            --connect-timeout 15 --max-time 45 --retry 2 --retry-all-errors "$INTAKE_URL/submit")
+          test "$code" = 200 || { echo "Private intake entry point returned $code"; exit 1; }

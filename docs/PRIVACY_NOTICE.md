@@ -91,6 +91,12 @@ A minimal decision/audit record is retained for three years. A documented legal
 hold pauses deletion only for the material and time necessary and is reviewed at
 least every 90 days.
 
+Encrypted disaster-recovery snapshots expire within seven days. Deleted working
+data may therefore remain in an inaccessible encrypted snapshot for up to seven
+additional days. Snapshots are not used for ordinary editorial access; after a
+restore, erasure schedules and recorded withdrawal/erasure requests must be
+reapplied before the service reopens.
+
 ## Your rights
 
 Subject to the GDPR and applicable exceptions, you may request access,

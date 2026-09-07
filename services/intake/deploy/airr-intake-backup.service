@@ -1,0 +1,15 @@
+[Unit]
+Description=AIRR encrypted local snapshot (offsite transfer configured separately)
+ConditionPathIsMountPoint=/srv/airr-private
+After=airr-intake.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /opt/airr-intake/current/services/intake/deploy/backup.py
+UMask=0077
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+NoNewPrivileges=true
+ProtectHome=true
+PrivateTmp=true

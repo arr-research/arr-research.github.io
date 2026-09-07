@@ -36,6 +36,20 @@ class WorkflowTests(fixtures.IntakeTests):
         self.assertEqual(self.client.post('/submit').status_code, 503)
         self.assertEqual(self.client.get('/login').status_code, 200)
 
+    def test_independent_editor_cannot_browse_unassigned_private_cases(self):
+        case_id = self.upload()
+        with self.app.app_context():
+            get_db().execute('DELETE FROM case_editors WHERE submission_id=?', (case_id,))
+            get_db().commit()
+        self.login_session('independent@example.org')
+        self.assertNotIn(case_id.encode(), self.client.get('/').data)
+        self.assertEqual(self.client.get(f'/admin/submission/{case_id}').status_code, 404)
+        self.assertEqual(self.client.get(f'/admin/submission/{case_id}/file').status_code, 404)
+        token = self.login_session('operator@example.org')
+        self.assertEqual(self.client.post(f'/admin/submission/{case_id}/assign-editor', data={'csrf_token': token, 'editor_id': self.user_id('independent@example.org'), 'unconflicted': 'on'}).status_code, 302)
+        self.login_session('independent@example.org')
+        self.assertEqual(self.client.get(f'/admin/submission/{case_id}').status_code, 200)
+
     def test_private_email_link_is_single_use_and_get_does_not_consume(self):
         case_id = self.upload()
         with self.app.app_context():

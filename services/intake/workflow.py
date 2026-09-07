@@ -17,6 +17,11 @@ from flask import abort, flash, g, redirect, render_template, request, session, 
 from werkzeug.security import generate_password_hash
 
 SCHEMA = """
+CREATE TABLE IF NOT EXISTS case_editors (
+ submission_id TEXT NOT NULL REFERENCES submissions(id), user_id INTEGER NOT NULL REFERENCES users(id),
+ assigned_by INTEGER NOT NULL REFERENCES users(id), assigned_at TEXT NOT NULL,
+ PRIMARY KEY(submission_id,user_id)
+);
 CREATE TABLE IF NOT EXISTS access_links (
  token_hash TEXT PRIMARY KEY, submission_id TEXT NOT NULL REFERENCES submissions(id),
  expires_at TEXT NOT NULL, used_at TEXT
@@ -145,6 +150,10 @@ def install(app, a):
 
     @app.before_request
     def protect_workflow():
+        if request.path.startswith('/admin/') and request.view_args and request.view_args.get('submission_id') and getattr(g, 'user', None) and g.user['role'] == 'independent_editor':
+            assigned = a.get_db().execute('SELECT 1 FROM case_editors WHERE submission_id=? AND user_id=?', (request.view_args['submission_id'], g.user['id'])).fetchone()
+            if not assigned:
+                abort(404)
         if request.endpoint == 'submit':
             parent_id = request.values.get('revision_of')
             if parent_id:
@@ -220,6 +229,8 @@ def install(app, a):
         def details(case_id):
             db = a.get_db()
             return dict(plan=current_plan(case_id),
+                        available_editors=db.execute("SELECT id,display_name FROM users WHERE role='independent_editor' AND active=1").fetchall() if g.user and g.user['role']=='operator' else [],
+                        assigned_editors=db.execute('SELECT u.display_name FROM case_editors c JOIN users u ON u.id=c.user_id WHERE c.submission_id=?', (case_id,)).fetchall(),
                         reports=db.execute('SELECT * FROM model_reviews WHERE submission_id=? ORDER BY id', (case_id,)).fetchall(),
                         messages=db.execute('SELECT * FROM correspondence WHERE submission_id=? ORDER BY id', (case_id,)).fetchall(),
                         mail=db.execute('SELECT id,state,created_at,sent_at,subject FROM mail_outbox WHERE submission_id=? ORDER BY id', (case_id,)).fetchall(),
@@ -228,6 +239,21 @@ def install(app, a):
                         permission=db.execute('SELECT * FROM publication_permissions WHERE submission_id=?', (case_id,)).fetchone(),
                         children=db.execute('SELECT id,revision_number,status FROM submissions WHERE parent_id=?', (case_id,)).fetchall())
         return {'workflow_details': details}
+
+    @app.post('/admin/submission/<submission_id>/assign-editor')
+    @a.editor_required
+    def assign_editor(submission_id):
+        a.require_csrf()
+        row = case(submission_id)
+        if g.user['role'] != 'operator':
+            abort(403)
+        editor = a.get_db().execute("SELECT * FROM users WHERE id=? AND role='independent_editor' AND active=1", (request.form.get('editor_id'),)).fetchone()
+        if not editor or editor['id'] == row['user_id'] or not request.form.get('unconflicted'):
+            abort(400, 'Appoint an active, unconflicted editor other than the depositor.')
+        a.get_db().execute('INSERT OR IGNORE INTO case_editors VALUES(?,?,?,?)', (submission_id, editor['id'], g.user['id'], a.iso()))
+        a.get_db().commit()
+        a.audit('independent_editor_assigned', submission_id, editor_id=editor['id'])
+        return redirect(url_for('submission_detail', submission_id=submission_id))
 
     @app.post('/admin/submission/<submission_id>/plan')
     @a.editor_required

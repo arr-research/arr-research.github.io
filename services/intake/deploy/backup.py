@@ -13,7 +13,7 @@ import sqlite3
 import subprocess
 import tarfile
 import tempfile
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 ROOT = Path('/srv/airr-private')
 DEST = Path('/var/backups/airr')
@@ -79,6 +79,17 @@ def main():
     with output.open('rb') as handle:
         checksum = hashlib.file_digest(handle, 'sha256').hexdigest()
     output.with_suffix(output.suffix + '.sha256').write_text(checksum + '  ' + output.name + '\n')
+    cutoff = datetime.now(timezone.utc) - timedelta(days=7)
+    for old in DEST.glob('airr-*.tar.gz.age'):
+        if old == output or old.is_symlink() or not old.is_file():
+            continue
+        try:
+            created = datetime.strptime(old.name, 'airr-%Y%m%dT%H%M%SZ.tar.gz.age').replace(tzinfo=timezone.utc)
+        except ValueError:
+            continue
+        if created < cutoff:
+            old.unlink()
+            old.with_suffix(old.suffix + '.sha256').unlink(missing_ok=True)
     print(json.dumps({'snapshot': str(output), 'sha256': checksum, 'verified_manuscripts': len(manifest['files'])}))
 
 

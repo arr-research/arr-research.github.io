@@ -638,9 +638,12 @@ def register_routes(app: Flask) -> None:
     @login_required
     def dashboard():
         if g.user["role"] in {"operator", "independent_editor"}:
-            rows = get_db().execute(
-                "SELECT s.*,u.email,u.display_name FROM submissions s JOIN users u ON u.id=s.user_id ORDER BY s.created_at DESC"
-            ).fetchall()
+            query = "SELECT s.*,u.email,u.display_name FROM submissions s JOIN users u ON u.id=s.user_id"
+            parameters = ()
+            if g.user['role'] == 'independent_editor':
+                query += ' WHERE EXISTS(SELECT 1 FROM case_editors c WHERE c.submission_id=s.id AND c.user_id=?)'
+                parameters = (g.user['id'],)
+            rows = get_db().execute(query + ' ORDER BY s.created_at DESC', parameters).fetchall()
             return render_template("admin.html", submissions=rows)
         rows = get_db().execute("SELECT * FROM submissions WHERE user_id=? ORDER BY created_at DESC", (g.user["id"],)).fetchall()
         return render_template("dashboard.html", submissions=rows)
