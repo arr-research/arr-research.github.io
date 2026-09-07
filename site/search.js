@@ -99,8 +99,24 @@
     return (best ? "… " : "") + selected.slice(0, limit) + (selected.length > limit ? "…" : "");
   }
 
+  function filterResults(index, query, filters = {}) {
+    let hits = query.trim() ? search(index, query) : index.map(entry => ({ record: entry.record, score: 0, matchedFields: [] }));
+    hits = hits.filter(({ record }) =>
+      (!filters.subject || (record.subjects || []).some(subject => normalize(subject) === normalize(filters.subject))) &&
+      (!filters.status || record.status === filters.status) &&
+      (!filters.year || String(record.date || "").slice(0, 4) === filters.year));
+    const sort = filters.sort === "relevance" || !filters.sort ? (query.trim() ? "relevance" : "newest") : filters.sort;
+    const byTitle = (a, b) => a.record.title.localeCompare(b.record.title, "en") || a.record.id.localeCompare(b.record.id);
+    if (sort === "newest" || sort === "oldest") hits.sort((a, b) => {
+      const dates = String(a.record.date || "").localeCompare(String(b.record.date || ""));
+      return (sort === "newest" ? -dates : dates) || byTitle(a, b);
+    });
+    if (sort === "title") hits.sort(byTitle);
+    return hits;
+  }
+
   // Export the same implementation for deterministic, dependency-free tests.
-  if (typeof module !== "undefined" && module.exports) module.exports = { normalize, queryTokens, makeIndex, search, excerpt };
+  if (typeof module !== "undefined" && module.exports) module.exports = { normalize, queryTokens, makeIndex, search, excerpt, filterResults };
   if (typeof document === "undefined") return;
   const root = document.querySelector("[data-paper-search]");
   if (!root) return;
@@ -114,6 +130,7 @@
   let results = [];
   let shown = 0;
   let activeQuery = "";
+  let activeFilters = {};
   let timer;
 
   function element(tag, className, text) {
@@ -144,12 +161,20 @@
         element("p", "search-excerpt", excerpt(record.abstract, activeQuery)));
       const topics = [...new Set([...record.keywords, ...record.subjects])];
       if (topics.length) item.append(element("div", "search-topics", topics.slice(0, 6).join(" · ")));
+      const cite = element("a", "search-cite", "Cite this version");
+      if (link.href && /^v[1-9]\d*$/.test(record.version)) {
+        cite.href = new URL(`versions/${record.version}/#cite`, target).href;
+      }
+      item.append(cite);
       fragment.append(item);
     }
     list.append(fragment);
     shown = end;
     more.hidden = shown >= results.length;
-    status.textContent = `${results.length} ${results.length === 1 ? "paper" : "papers"} for “${activeQuery}” · By relevance · Showing ${shown}`;
+    const labelsBySort = { relevance: activeQuery ? "By relevance" : "Newest first", newest: "Newest first", oldest: "Oldest first", title: "Title A–Z" };
+    const scope = activeQuery ? ` for “${activeQuery}”` : " in the catalogue";
+    const filtered = [activeFilters.subject, activeFilters.status, activeFilters.year].filter(Boolean).length;
+    status.textContent = `${results.length} ${results.length === 1 ? "record" : "records"}${scope} · ${labelsBySort[activeFilters.sort]}${filtered ? " · Filters applied" : ""} · Showing ${shown}`;
     return start;
   }
 
@@ -178,19 +203,17 @@
     shown = 0;
     more.hidden = true;
     root.removeAttribute("aria-busy");
-    if (!queryTokens(query).length) {
-      status.textContent = "Enter a topic, title, author or paper identifier.";
-      return;
-    }
+    const filters = Object.fromEntries(["subject", "status", "year", "sort"].map(name => [name, form.elements[name].value]));
     status.textContent = "Searching the complete catalogue…";
     root.setAttribute("aria-busy", "true");
     try {
       const index = await loadIndex();
       if (request !== requestNumber) return;
       activeQuery = query;
-      results = search(index, query);
+      activeFilters = filters;
+      results = filterResults(index, query, filters);
       if (!results.length) {
-        status.textContent = `No papers found for “${query}”. Try fewer words, another topic or an author name.`;
+        status.textContent = `No records match${query ? ` “${query}”` : " these filters"}. Try fewer words or clear the filters.`;
       } else { appendResults(); }
     } catch (_) {
       if (request === requestNumber) status.textContent = "The catalogue could not be loaded. Please press Search to try again, or browse Papers above.";
@@ -203,6 +226,11 @@
     const url = new URL(location.href);
     const query = input.value.trim().slice(0, 300);
     if (query) url.searchParams.set("q", query); else url.searchParams.delete("q");
+    ["subject", "status", "year", "sort"].forEach(name => {
+      const value = form.elements[name].value;
+      if (value && !(name === "sort" && value === "relevance")) url.searchParams.set(name, value);
+      else url.searchParams.delete(name);
+    });
     if (url.href !== location.href) history[push ? "pushState" : "replaceState"](null, "", url);
   }
 
@@ -218,6 +246,18 @@
     requestNumber++;
     timer = setTimeout(() => { updateURL(false); runSearch(); }, 180);
   });
+  root.querySelectorAll("select").forEach(select => select.addEventListener("change", () => {
+    clearTimeout(timer);
+    updateURL(true);
+    runSearch();
+  }));
+  root.querySelector("[data-reset-filters]").addEventListener("click", () => {
+    clearTimeout(timer);
+    ["subject", "status", "year"].forEach(name => { form.elements[name].value = ""; });
+    form.elements.sort.value = "relevance";
+    updateURL(true);
+    runSearch();
+  });
   more.addEventListener("click", () => {
     const firstNew = appendResults();
     list.children[firstNew]?.querySelector("h2 a")?.focus();
@@ -225,6 +265,19 @@
   function restoreQuery() {
     clearTimeout(timer);
     input.value = (new URL(location.href).searchParams.get("q") || "").slice(0, 300);
+    const params = new URL(location.href).searchParams;
+    ["subject", "status", "year", "sort"].forEach(name => {
+      const select = form.elements[name];
+      const value = (params.get(name) || (name === "sort" ? "relevance" : "")).slice(0, 160);
+      // An obsolete subject/year must yield zero matches, not silently broaden a saved search.
+      if (value && (name === "subject" || name === "year") && ![...select.options].some(option => option.value === value)) {
+        const option = element("option", "", value);
+        option.value = value;
+        select.append(option);
+      }
+      select.value = value;
+      if (select.selectedIndex < 0) select.value = name === "sort" ? "relevance" : "";
+    });
     runSearch();
   }
   window.addEventListener("popstate", restoreQuery);

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const { normalize, makeIndex, search, excerpt } = require('../site/search.js');
+const { normalize, makeIndex, search, excerpt, filterResults } = require('../site/search.js');
 
 function record(id, title, rest = {}) {
   return { id, title, abstract: '', keywords: [], subjects: [], authors: [], ...rest };
@@ -83,4 +83,26 @@ test('the whole index is searched, including records beyond the first page', () 
   const many = Array.from({ length: 170 }, (_, i) => record(`paper-${i}`, 'Unrelated topic'));
   many[169] = record('last', 'A finite SU(2) Ward identity');
   assert.equal(search(makeIndex(many), 'SU(2)')[0].record.id, 'last');
+});
+
+test('subject, status and year intersect without changing scientific relevance', () => {
+  const index = makeIndex([
+    record('title', 'Exact SU(2) result', { subjects: ['Mathematical Physics'], status: 'accepted', date: '2026-02-01' }),
+    record('abstract', 'A quantum result', { abstract: 'SU(2)', subjects: ['Mathematical physics'], status: 'archived', date: '2025-06-01' }),
+    record('su3', 'Exact SU(3) result', { subjects: ['Mathematical Physics'], status: 'accepted', date: '2026-09-01' }),
+  ]);
+  assert.deepEqual(filterResults(index, 'SU(2)', { subject: 'mathematical physics', sort: 'relevance' }).map(x => x.record.id), ['title', 'abstract']);
+  assert.deepEqual(filterResults(index, 'SU(2)', { status: 'archived', year: '2025' }).map(x => x.record.id), ['abstract']);
+  assert.deepEqual(filterResults(index, 'SU(2)', { status: 'accepted', year: '2025' }), []);
+  assert.deepEqual(filterResults(index, '', { subject: 'unknown subject' }), []);
+});
+
+test('browsing without a query supports stable date and title sorting', () => {
+  const index = makeIndex([
+    record('old', 'Zulu', { date: '2025-01-01' }),
+    record('new', 'Alpha', { date: '2026-01-01' }),
+  ]);
+  assert.deepEqual(filterResults(index, '', { sort: 'relevance' }).map(x => x.record.id), ['new', 'old']);
+  assert.deepEqual(filterResults(index, '', { sort: 'oldest' }).map(x => x.record.id), ['old', 'new']);
+  assert.deepEqual(filterResults(index, '', { sort: 'title' }).map(x => x.record.id), ['new', 'old']);
 });
