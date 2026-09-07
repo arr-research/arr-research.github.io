@@ -2,11 +2,12 @@
 import io
 import json
 import re
+import qrcode
 from unittest.mock import patch
 
 import test_intake as fixtures
 from services.intake.app import get_db, iso, model_review_template, totp
-from services.intake.workflow import digest
+from services.intake.workflow import authenticator_uri, digest
 
 
 class WorkflowTests(fixtures.IntakeTests):
@@ -176,6 +177,24 @@ class WorkflowTests(fixtures.IntakeTests):
         self.assertEqual(page.status_code, 200)
         with self.app.app_context():
             secret = get_db().execute('SELECT totp_secret FROM enrollments').fetchone()[0]
+        qr_path = path + '/qr.svg'
+        self.assertIn(qr_path.encode(), page.data)
+        with patch('services.intake.workflow.qrcode.make', wraps=qrcode.make) as encoder:
+            qr = self.client.get(qr_path)
+        self.assertEqual(qr.status_code, 200)
+        self.assertEqual(qr.mimetype, 'image/svg+xml')
+        self.assertEqual(qr.headers['Cache-Control'], 'no-store')
+        self.assertIn(b'<svg', qr.data)
+        self.assertIn(b'<path', qr.data)
+        self.assertIn(b'fill="white"', qr.data)
+        self.assertEqual(encoder.call_args.args[0], authenticator_uri('new-editor@example.org', secret))
+        other = self.app.test_client()
+        self.assertEqual(other.get(qr_path).status_code, 404)
+        self.assertEqual(other.get(path).status_code, 409)
+        self.assertEqual(other.get(qr_path).status_code, 404)
+        self.assertEqual(self.client.get(path).status_code, 200)
+        with self.app.app_context():
+            self.assertEqual(get_db().execute('SELECT totp_secret FROM enrollments').fetchone()[0], secret)
         with self.client.session_transaction() as state:
             token = state['csrf_token']
             self.assertNotIn(secret, str(dict(state)))
@@ -184,6 +203,7 @@ class WorkflowTests(fixtures.IntakeTests):
         self.assertEqual(result.status_code, 200)
         self.assertIn(b'Your account is ready', result.data)
         self.assertEqual(self.client.get(path).status_code, 404)
+        self.assertEqual(self.client.get(qr_path).status_code, 404)
         again = self.app.test_cli_runner().invoke(args=['invite-editor', 'new-editor@example.org', '--name', 'Bad replacement', '--role', 'operator'])
         self.assertNotEqual(again.exit_code, 0)
         self.assertNotIn('setup/', again.output)

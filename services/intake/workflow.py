@@ -13,7 +13,9 @@ from pathlib import Path
 from urllib.parse import quote
 
 import click
-from flask import abort, flash, g, redirect, render_template, request, session, url_for
+import qrcode
+from qrcode.image.svg import SvgPathFillImage
+from flask import Response, abort, flash, g, redirect, render_template, request, session, url_for
 from werkzeug.security import generate_password_hash
 
 SCHEMA = """
@@ -71,6 +73,10 @@ CREATE TABLE IF NOT EXISTS recovery_codes (
 
 def digest(value):
     return hashlib.sha256(value.encode()).hexdigest()
+
+
+def authenticator_uri(email, secret):
+    return 'otpauth://totp/' + quote('AIRR:' + email) + '?secret=' + secret + '&issuer=AIRR'
 
 
 def migrate(db):
@@ -509,8 +515,24 @@ def install(app, a):
                 session.clear()
                 a.audit('editor_enrolled')
                 return render_template('recovery-codes.html', codes=codes)
-        uri = 'otpauth://totp/' + quote('AIRR:' + invite['email']) + '?secret=' + pending['totp_secret'] + '&issuer=AIRR'
-        return render_template('editor-setup.html', invite=invite, secret=pending['totp_secret'], otp_uri=uri)
+        uri = authenticator_uri(invite['email'], pending['totp_secret'])
+        return render_template('editor-setup.html', invite=invite, secret=pending['totp_secret'], otp_uri=uri, setup_token=token)
+
+    @app.get('/editor/setup/<token>/qr.svg')
+    def editor_setup_qr(token):
+        # A link alone cannot retrieve the shared secret: setup is bound to its browser.
+        binding = session.get('enrollment_session')
+        if not binding:
+            abort(404)
+        pending = a.get_db().execute('''SELECT e.totp_secret,e.session_hash,i.email
+            FROM enrollments e JOIN editor_invites i ON i.token_hash=e.token_hash
+            WHERE i.token_hash=? AND i.used_at IS NULL AND i.expires_at>?''',
+            (digest(token), a.iso())).fetchone()
+        if not pending or not secrets.compare_digest(pending['session_hash'], digest(binding)):
+            abort(404)
+        uri = authenticator_uri(pending['email'], pending['totp_secret'])
+        svg = qrcode.make(uri, image_factory=SvgPathFillImage, border=4).to_string()
+        return Response(svg, mimetype='image/svg+xml')
 
     @app.post('/login/recovery')
     def recovery_login():
