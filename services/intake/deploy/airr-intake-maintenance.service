@@ -1,0 +1,29 @@
+[Unit]
+Description=AIRR quarantine scan and retention sweep
+After=airr-intake.service clamav-daemon.service
+
+[Service]
+Type=oneshot
+User=airr-intake
+Group=airr-intake
+SupplementaryGroups=clamav
+WorkingDirectory=/opt/airr-intake/current
+EnvironmentFile=/etc/airr-intake/intake.env
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStartPre=/usr/bin/clamdscan --ping=1
+ExecStart=/opt/airr-intake/venv/bin/flask --app services.intake.app scan-pending
+ExecStart=/opt/airr-intake/venv/bin/flask --app services.intake.app retention-sweep
+UMask=0077
+StateDirectory=airr-intake
+StateDirectoryMode=0700
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+CapabilityBoundingSet=
