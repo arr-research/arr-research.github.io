@@ -1319,7 +1319,12 @@ def build_terms(base: str, canonical_url: str) -> str:
 
 def build_governance(base: str, canonical_url: str) -> str:
     content = f"""
-<section class="page-intro"><span>Human gate · disclosed conflicts</span><h1>The founder cannot be his own final editor.</h1><p>Lluis Eriksson is founder, registry operator, responsible editor and data controller. AIRR does not use the company title VD/CEO while no such legal office exists.</p></section>
+<section class="page-intro"><span>Human gate · disclosed conflicts</span><h1>The founder cannot be his own final editor.</h1>
+  <div class="operator-profile">
+    <img class="operator-portrait" src="{base}/assets/lluis-eriksson.jpg" alt="Lluis Eriksson" width="320" height="320" decoding="async">
+    <div><p>Lluis Eriksson is founder, registry operator, responsible editor and data controller. AIRR does not use the company title VD/CEO while no such legal office exists.</p><a class="operator-profile-link" href="https://github.com/lluiseriksson">Lluis Eriksson on GitHub <span aria-hidden="true">↗</span></a></div>
+  </div>
+</section>
 <section class="about-grid"><article><h2>Ordinary external case</h2><p>The operator records the exact version, checks and reason, then manually chooses accept, decline or changes requested. Acceptance still requires a separate public-release workflow.</p></article><article><h2>Founder or editor conflict</h2><p>Authorship, recent collaboration, supervision, close relationships, financial interests or disputes trigger recusal. An operator accept becomes provisional until a named independent editor signs.</p></article><article><h2>Appeal</h2><p>The original decision-maker cannot be the sole appeal reviewer. An unavailable independent reviewer means the case remains private or is declined without implying low quality.</p></article><article><h2>Transparency</h2><p>Public records disclose relevant founder relationships. Once the pilot has activity, AIRR will report aggregate decisions, appeals, conflicts and reversals without exposing private submissions.</p></article></section>
 <section class="callout"><h2>Full governance rules</h2><p><a href="{policy_source('GOVERNANCE.md')}">Read the version-controlled policy</a>.</p></section>
 """
@@ -1329,7 +1334,12 @@ def build_governance(base: str, canonical_url: str) -> str:
 
 def build_contact(base: str, canonical_url: str) -> str:
     content = f"""
-<section class="page-intro"><span>Responsible operator and redress</span><h1>One accountable human contact.</h1><p>AIRR is a non-commercial project operated by Lluis Eriksson, a natural person in Stockholm, Sweden: founder, registry operator, responsible editor and GDPR data controller.</p></section>
+<section class="page-intro"><span>Responsible operator and redress</span><h1>One accountable human contact.</h1>
+  <div class="operator-profile operator-profile-compact">
+    <img class="operator-portrait" src="{base}/assets/lluis-eriksson.jpg" alt="Lluis Eriksson" width="320" height="320" decoding="async">
+    <div><p>AIRR is a non-commercial project operated by Lluis Eriksson, a natural person in Stockholm, Sweden: founder, registry operator, responsible editor and GDPR data controller.</p><a class="operator-profile-link" href="https://github.com/lluiseriksson">Lluis Eriksson on GitHub <span aria-hidden="true">↗</span></a></div>
+  </div>
+</section>
 <section class="about-grid"><article><h2>Contact</h2><p><a href="mailto:lluiseriksson@gmail.com">lluiseriksson@gmail.com</a>. Use subject <code>AIRR submission</code>, <code>AIRR appeal</code>, <code>AIRR privacy</code>, <code>AIRR copyright</code>, <code>AIRR illegal-content notice</code> or <code>AIRR security</code>. Manuscripts belong only in the private form; never attach them to email.</p></article><article><h2>Appeal</h2><p>Appeal once within 30 days with the case, challenged decision, alleged error and remedy. AIRR aims to acknowledge within 7 days and decide within 30 days through someone other than the sole original decision-maker.</p></article><article><h2>Rights/illegality notice</h2><p>Identify yourself, the exact URL/version or case, the material and legal basis, supporting facts and requested action. AIRR records the case, may restrict urgently, gives reasons and permits a substantiated counter-notice.</p></article><article><h2>Privacy regulator</h2><p>You may complain to the <a href="https://www.imy.se/en/individuals/forms-and-e-services/file-a-gdpr-complaint/">Swedish Authority for Privacy Protection (IMY)</a> or another competent EEA authority.</p></article></section>
 <section class="callout"><h2>Complete procedure</h2><p><a href="{policy_source('LEGAL_AND_COMPLAINTS.md')}">Read legal contact, notices and complaints in full</a>. A stable postal service address remains a launch condition for unrestricted public intake.</p></section>
 """
@@ -1551,7 +1561,7 @@ def main() -> int:
     shutil.copy2(SITE_DIR / "style.css", OUTPUT_DIR / "assets" / "style.css")
     shutil.copy2(SITE_DIR / "search.js", OUTPUT_DIR / "assets" / "search.js")
     shutil.copy2(SITE_DIR / "reader.js", OUTPUT_DIR / "assets" / "reader.js")
-    for asset in ("subjects.js", "subject-selection.js"):
+    for asset in ("subjects.js", "subject-selection.js", "lluis-eriksson.jpg"):
         shutil.copy2(SITE_DIR / asset, OUTPUT_DIR / "assets" / asset)
     write(OUTPUT_DIR / "assets" / "subjects.json", json.dumps(public_vocabulary(papers), ensure_ascii=False, separators=(",", ":")) + "\n")
     search_data = json.dumps(search_records(papers, base), ensure_ascii=False, separators=(",", ":")) + "\n"
