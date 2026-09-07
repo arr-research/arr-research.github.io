@@ -150,22 +150,25 @@
       const item = element("li", "paper-card");
       const meta = element("div", "paper-meta");
       meta.append(element("span", "badge badge-" + record.status, labels[record.status] || record.status));
-      meta.append(element("span", "", record.id + " · " + record.version + " · " + record.date));
+      meta.append(element("span", "", record.id + " · " + record.version));
+      const header = element("div", "paper-card-header");
+      header.append(meta, element("span", "paper-date", record.date));
       const title = element("h2", "search-result-title");
       const link = element("a", "", record.title);
       const target = new URL(record.url, location.origin);
       // Public metadata is text, never HTML; result links stay on this archive.
       if (target.origin === location.origin && /^https?:$/.test(target.protocol)) link.href = target.href;
       title.append(link);
-      item.append(meta, title, element("p", "authors", record.authors.join(", ")),
-        element("p", "search-excerpt", excerpt(record.abstract, activeQuery)));
-      const topics = [...new Set([...record.keywords, ...record.subjects])];
-      if (topics.length) item.append(element("div", "search-topics", topics.slice(0, 6).join(" · ")));
-      const cite = element("a", "search-cite", "Cite this version");
+      const cite = element("a", "paper-card-cite", "Cite this version");
       if (link.href && /^v[1-9]\d*$/.test(record.version)) {
         cite.href = new URL(`versions/${record.version}/#cite`, target).href;
       }
-      item.append(cite);
+      const byline = element("div", "paper-byline");
+      byline.append(element("p", "authors", record.authors.join(", ")), cite);
+      item.append(header, title, byline,
+        element("p", "paper-summary search-excerpt", excerpt(record.abstract, activeQuery)));
+      const topics = [...new Set([...record.keywords, ...record.subjects])];
+      if (topics.length) item.append(element("div", "search-topics", topics.slice(0, 6).join(" · ")));
       fragment.append(item);
     }
     list.append(fragment);

@@ -544,11 +544,10 @@ def paper_card(
     chronology_label = "First submitted to ai.vixra" if archival else ("Published" if timestamp["publication_state"] == "published" else "Deposit recorded")
     return f"""
 <article class="paper-card">
-  <div class="paper-meta">{type_badge(metadata)}{status_badge(metadata['status'])}<span>{esc(metadata['id'])} · {esc(metadata['version'])}</span></div>
+  <div class="paper-card-header"><div class="paper-meta">{type_badge(metadata)}{status_badge(metadata['status'])}<span>{esc(metadata['id'])} · {esc(metadata['version'])}</span></div><span class="paper-date">{chronology_label} {exact_time(paper_chronology(metadata, timestamp))}</span></div>
   <h3><a href="{base}/{record_route(metadata)}/{quote(metadata['id'])}/">{esc(metadata['title'])}</a></h3>
-  <p class="authors">{authors}</p>
-  <p>{esc(metadata['abstract'])}</p>
-  <div class="paper-foot"><span>{chronology_label} {exact_time(paper_chronology(metadata, timestamp))}</span><a href="{base}{version_path(metadata)}#cite">Cite this version</a></div>
+  <div class="paper-byline"><p class="authors">{authors}</p><a class="paper-card-cite" href="{base}{version_path(metadata)}#cite">Cite this version</a></div>
+  <p class="paper-summary">{esc(metadata['abstract'])}</p>
 </article>"""
 
 
