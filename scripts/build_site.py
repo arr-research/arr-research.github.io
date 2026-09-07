@@ -1266,7 +1266,7 @@ def build_submit(
     )
     content = f"""
 <section class="ranked-feed submit-index">
-  <header><div><span>AIRR public catalogue · activity order</span><h1>Paper index</h1></div><div class="submit-tools">{direct_action}<a href="{base}/subjects/">Choose a subject</a><a href="{base}/terms/">Terms</a><a href="{base}/privacy/">Privacy</a></div></header>
+  <header><div><span>AIRR public catalogue · activity order</span><h1>Paper index</h1></div><div class="submit-tools">{direct_action}<a href="{base}/agents/">Submit with an agent</a><a href="{base}/subjects/">Choose a subject</a><a href="{base}/terms/">Terms</a><a href="{base}/privacy/">Privacy</a></div></header>
   <p class="subject-selection" data-selected-subject data-intake-url="{esc(intake_url)}" data-vocabulary-url="{base}/assets/subjects.json" hidden></p>
   <script src="{base}/assets/subject-selection.js" defer></script>
   {search_form(base)}
@@ -1284,26 +1284,43 @@ def build_submit(
     return page_shell(title=title, description="Direct private submission and the paginated AIRR paper activity ranking.", content=content, base=base, canonical=canonical)
 
 
+def build_agents(base: str, canonical_url: str, intake_url: str = '') -> str:
+    state = ('<p class="callout">Private submissions are open. '
+             '<a href="' + esc(intake_url.rstrip('/') + '/agents') + '">Start with the receiver guide</a>.</p>') if intake_url else (
+             '<p class="callout">The guide is available while private intake is being prepared. Authorization requests and uploads remain closed until opening is confirmed.</p>')
+    content = f'''
+<section class="page-intro"><span>Humans and authorized agents</span><h1>Submit with your research agent.</h1><p>A responsible person confirms permission once; the agent can then submit within that permission. Every manuscript remains private pending human review.</p></section>
+{state}
+<section class="about-grid"><article><h2>1. Request permission</h2><p>The agent requests a delegation through the API and gives its authorization link to the responsible adult. No PDF or email is sent by that initial request.</p></article>
+<article><h2>2. Confirm by email</h2><p>The person reviews the scope, provides their contact details and confirms through their email. Permission covers five PDFs over seven days and can be revoked.</p></article>
+<article><h2>3. Receive a registration</h2><p>Each PDF receives a SUB reference, timestamp and integrity hash. Safe retries recover the same receipt. Registration does not mean acceptance or publication.</p></article>
+<article><h2>4. Keep editorial control separate</h2><p>The responsible person receives case correspondence. External assessment and public release require separate confirmation. An agent cannot approve a paper, publish it or make a payment using this permission.</p></article></section>
+<section class="callout"><h2>Can a model initiate this on its own?</h2><p>It can start an authorization request and ask a responsible person to take it on. It must stop before PDF upload until someone with authority confirms. A declared model name does not establish rights or verified authorship.</p></section>
+<section><h2>For developers and LLMs</h2><p><a href="{base}/agent-submissions.openapi.json">OpenAPI contract</a> · <a href="{base}/agent-submissions.md">Complete plain-text guide</a> · <a href="{base}/submit/">Human submission</a></p><p>Use the HTTPS receiver at <code>submit.airr.science</code>. Request a delegation with <code>POST /api/v1/agent-requests</code>, then use its bearer token for <code>POST /api/v1/submissions</code>. The complete guide defines metadata, checksums, subjects, rate limits and idempotent retries. Never put a token in a public URL or manuscript.</p></section>
+'''
+    return page_shell(title='Agent submissions — AIRR.SCIENCE',description='Responsible, email-confirmed private submission for research agents and LLMs.',content=content,base=base,canonical=f'{canonical_url}/agents/' if canonical_url else '')
+
+
 def build_privacy(base: str, canonical_url: str) -> str:
     content = f"""
-<section class="page-intro"><span>ARR-PRIVACY-1.3 · effective 2026-09-07</span><h1>Privacy is separated from publication.</h1><p>The controller is Lluis Eriksson, a natural person in Stockholm, Sweden, acting as founder, registry operator and responsible editor. Contact: <a href="mailto:lluiseriksson@gmail.com?subject=AIRR%20privacy">lluiseriksson@gmail.com</a>. No DPO is designated.</p></section>
+<section class="page-intro"><span>ARR-PRIVACY-1.4 · effective 2026-09-07</span><h1>Privacy is separated from publication.</h1><p>The controller is Lluis Eriksson, a natural person in Sweden, acting as founder, registry operator and responsible editor. Contact: <a href="mailto:lluiseriksson@gmail.com?subject=AIRR%20privacy">lluiseriksson@gmail.com</a>. No DPO is designated.</p></section>
 <section class="about-grid">
-  <article><h2>Private data</h2><p>AIRR processes the adult depositor's name and email, submission metadata and PDF, declarations, decisions, correspondence and pseudonymized security events to administer the deposit agreement and protect the service. Direct submission requires no author account.</p></article>
-  <article><h2>Frontier-model screening</h2><p>Acceptance remains human, but the disclosed pre-publication protocol requires version-locked external frontier-model reports. The form records transfer authorization; AIRR records provider, model, time and response hash and uses appropriate confidentiality and transfer controls.</p></article>
+  <article><h2>Private data</h2><p>Agent delegation additionally records the responsible person’s email confirmation, declared agent identity, scope, expiry and revocation. AIRR processes the adult depositor's name and email, submission metadata and PDF, declarations, decisions, correspondence and pseudonymized security events to administer the deposit agreement and protect the service. Direct submission requires no author account.</p></article>
+  <article><h2>Frontier-model screening</h2><p>Acceptance remains human, but the disclosed pre-publication protocol requires version-locked external frontier-model reports. The form acknowledges screening; the responsible person separately confirms the named providers and safeguards before any transfer. AIRR records provider, model, time and response hash.</p></article>
   <article><h2>Retention</h2><p>Malware bytes are erased immediately, withdrawn PDFs after 7 days, declined PDFs after 30 days, and accepted private copies 30 days after verified public release. A minimal decision record is retained for three years, subject to narrowly reviewed legal hold.</p></article>
   <article><h2>Public-site measurement</h2><p>AIRR currently runs no per-page visitor analytics and sets no analytics cookies. Displayed PDF-download totals come from public GitHub release-asset counters and do not identify readers to AIRR. The notice will be updated before any page-view provider is enabled.</p></article>
   <article><h2>Your rights</h2><p>Applicable rights include access, correction, erasure, restriction, portability and objection. You can complain to Sweden's IMY or another competent EEA authority. Requests receive proportionate identity verification.</p></article>
   <article><h2>Voluntary support</h2><p>The support page links to PayPal when donations are available. AIRR loads no PayPal widgets or tracking scripts. If you choose to pay on PayPal, it provides the operator with transaction details for payment, refund, fraud, accounting and legal administration. You may optionally identify the paper your support relates to using its published ID or your submission receipt's registration reference. The reference gives no private access and is not sent to PayPal automatically. Donor information is used for support administration, not published or used for mailing lists, ranking or editorial decisions. The donation notice was updated on 2026-09-06.</p></article>
 </section>
-<section class="callout"><h2>Complete binding notice</h2><p><a href="{policy_source('PRIVACY_NOTICE.md')}">Read ARR-PRIVACY-1.3 in full</a>. The accepted version is recorded with each deposit.</p></section>
+<section class="callout"><h2>Complete binding notice</h2><p><a href="{policy_source('PRIVACY_NOTICE.md')}">Read ARR-PRIVACY-1.4 in full</a>. The accepted version is recorded with each deposit.</p></section>
 """
     canonical = f"{canonical_url}/privacy/" if canonical_url else ""
-    return page_shell(title="Privacy — AIRR.SCIENCE", description="ARR-PRIVACY-1.3 privacy notice for direct private manuscript intake.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Privacy — AIRR.SCIENCE", description="ARR-PRIVACY-1.4 privacy notice for direct private manuscript intake.", content=content, base=base, canonical=canonical)
 
 
 def build_terms(base: str, canonical_url: str) -> str:
     content = f"""
-<section class="page-intro"><span>ARR-DEPOSIT-1.5 · effective 2026-09-07</span><h1>There is currently no AIRR deposit fee.</h1><p>AIRR does not currently charge for submission, assessment, publication or withdrawal. A future fee may apply only after advance notice and new terms, never retroactively or in exchange for acceptance. The operator is Lluis Eriksson in Stockholm, Sweden.</p></section>
+<section class="page-intro"><span>ARR-DEPOSIT-1.6 · effective 2026-09-07</span><h1>There is currently no AIRR deposit fee.</h1><p>AIRR does not currently charge for submission, assessment, publication or withdrawal. A future fee may apply only after advance notice and new terms, never retroactively or in exchange for acceptance. The operator is Lluis Eriksson in Sweden.</p></section>
 <section class="about-grid">
   <article><h2>Authority and scope</h2><p>Adult depositors must be an author, rights holder or authorized agent and accurately disclose rights, authorship, AI assistance, interests, third-party material, provenance and licenses. The pilot accepts one PDF up to 25 MiB.</p></article>
   <article><h2>Private first</h2><p>An upload enters quarantine and carries no public license. AIRR may decline, request changes, restrict or remove material. Submission creates no entitlement to a timetable, publication, preservation or endorsement.</p></article>
@@ -1311,10 +1328,10 @@ def build_terms(base: str, canonical_url: str) -> str:
   <article><h2>Publication rights</h2><p>Copyright remains with its owner. A final accepted version receives explicit scoped licenses before public release. Public copies and open licenses may be irreversible; withdrawal cannot recall third-party copies.</p></article>
   <article><h2>Appeal and conflict</h2><p>A decline or restriction may be appealed once within 30 days. A conflicted founder approval is provisional and an unconflicted independent editor must sign before publication.</p></article>
 </section>
-<section class="callout"><h2>Complete binding terms</h2><p><a href="{policy_source('DEPOSIT_TERMS.md')}">Read ARR-DEPOSIT-1.5 in full</a>. Only the private form is a deposit channel; email and GitHub issues are not.</p></section>
+<section class="callout"><h2>Complete binding terms</h2><p><a href="{policy_source('DEPOSIT_TERMS.md')}">Read ARR-DEPOSIT-1.6 in full</a>. Only the private form is a deposit channel; email and GitHub issues are not.</p></section>
 """
     canonical = f"{canonical_url}/terms/" if canonical_url else ""
-    return page_shell(title="Deposit terms — AIRR.SCIENCE", description="ARR-DEPOSIT-1.5 terms for the currently fee-free direct private-submission pilot.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Deposit terms — AIRR.SCIENCE", description="ARR-DEPOSIT-1.6 terms for the currently fee-free direct private-submission pilot.", content=content, base=base, canonical=canonical)
 
 
 def build_governance(base: str, canonical_url: str) -> str:
@@ -1337,7 +1354,7 @@ def build_contact(base: str, canonical_url: str) -> str:
 <section class="page-intro"><span>Responsible operator and redress</span><h1>One accountable human contact.</h1>
   <div class="operator-profile operator-profile-compact">
     <img class="operator-portrait" src="{base}/assets/lluis-eriksson.jpg" alt="Lluis Eriksson" width="320" height="320" decoding="async">
-    <div><p>AIRR is a non-commercial project operated by Lluis Eriksson, a natural person in Stockholm, Sweden: founder, registry operator, responsible editor and GDPR data controller.</p><a class="operator-profile-link" href="https://github.com/lluiseriksson">Lluis Eriksson on GitHub <span aria-hidden="true">↗</span></a></div>
+    <div><p>AIRR is a non-commercial project operated by Lluis Eriksson, a natural person in Sweden: founder, registry operator, responsible editor and GDPR data controller.</p><a class="operator-profile-link" href="https://github.com/lluiseriksson">Lluis Eriksson on GitHub <span aria-hidden="true">↗</span></a></div>
   </div>
 </section>
 <section class="about-grid"><article><h2>Contact</h2><p><a href="mailto:lluiseriksson@gmail.com">lluiseriksson@gmail.com</a>. Use subject <code>AIRR submission</code>, <code>AIRR appeal</code>, <code>AIRR privacy</code>, <code>AIRR copyright</code>, <code>AIRR illegal-content notice</code> or <code>AIRR security</code>. Manuscripts belong only in the private form; never attach them to email.</p></article><article><h2>Appeal</h2><p>Appeal once within 30 days with the case, challenged decision, alleged error and remedy. AIRR aims to acknowledge within 7 days and decide within 30 days through someone other than the sole original decision-maker.</p></article><article><h2>Rights/illegality notice</h2><p>Identify yourself, the exact URL/version or case, the material and legal basis, supporting facts and requested action. AIRR records the case, may restrict urgently, gives reasons and permits a substantiated counter-notice.</p></article><article><h2>Privacy regulator</h2><p>You may complain to the <a href="https://www.imy.se/en/individuals/forms-and-e-services/file-a-gdpr-complaint/">Swedish Authority for Privacy Protection (IMY)</a> or another competent EEA authority.</p></article></section>
@@ -1417,6 +1434,7 @@ def write_sitemaps(papers: list, groups: dict, profiles: list[dict], canonical_u
         (f"{canonical_url}/assessments/", latest_date),
         (f"{canonical_url}/protocol/", latest_date),
         (f"{canonical_url}/submit/", latest_date),
+        (f"{canonical_url}/agents/", latest_date),
         (f"{canonical_url}/licensing/", latest_date),
         (f"{canonical_url}/about/", latest_date),
         (f"{canonical_url}/support/", latest_date),
@@ -1475,6 +1493,10 @@ def write_llm_guides(papers: list, canonical_url: str) -> None:
         f"- [Sitemap]({canonical_url}/sitemap.xml)",
         f"- [Verification protocol]({canonical_url}/protocol/)",
         f"- [Model assessments]({canonical_url}/registry/model-assessments.json)",
+        f"- [Agent submission guide]({canonical_url}/agents/)",
+        f"- [Agent API contract]({canonical_url}/agent-submissions.openapi.json)",
+        f"- [Complete agent instructions]({canonical_url}/agent-submissions.md)",
+        "An agent may request a delegation, but must obtain the responsible adult's email-confirmed authorization before uploading a PDF. Documentation is not evidence that intake is open. No agent can accept or publish research through the submission API.",
         "",
         "## Current records",
         "",
@@ -1642,6 +1664,9 @@ def main() -> int:
         )
     write(OUTPUT_DIR / "licensing" / "index.html", build_licensing(base, canonical_url))
     write(OUTPUT_DIR / "about" / "index.html", build_about(base, canonical_url))
+    write(OUTPUT_DIR / "agents" / "index.html", build_agents(base, canonical_url, args.intake_url))
+    write(OUTPUT_DIR / "agent-submissions.openapi.json", (SITE_DIR / "agent-submissions.openapi.json").read_text(encoding='utf-8'))
+    write(OUTPUT_DIR / "agent-submissions.md", (ROOT / "docs" / "AGENT_SUBMISSIONS.md").read_text(encoding='utf-8'))
     write(OUTPUT_DIR / "support" / "index.html", build_support(base, canonical_url, load_donation_url()))
     write(OUTPUT_DIR / "privacy" / "index.html", build_privacy(base, canonical_url))
     write(OUTPUT_DIR / "terms" / "index.html", build_terms(base, canonical_url))

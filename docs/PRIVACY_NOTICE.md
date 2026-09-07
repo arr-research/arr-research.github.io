@@ -1,4 +1,4 @@
-# AIRR privacy notice — ARR-PRIVACY-1.3
+# AIRR privacy notice — ARR-PRIVACY-1.4
 
 **Effective:** 2026-09-07
 **Brand wording updated:** 2026-09-06; see [identity and continuity](BRAND_IDENTITY.md).
@@ -8,7 +8,7 @@ opens only after the production launch gate is signed.
 
 ## Controller and contact
 
-The data controller is **Lluis Eriksson**, a natural person in Stockholm, Sweden,
+The data controller is **Lluis Eriksson**, a natural person in Sweden,
 acting as founder, registry operator and responsible editor of the Archive for Independent & Rigorous Research (AIRR). Contact: **lluiseriksson@gmail.com** with the subject
 `AIRR privacy`. No data protection officer has been designated.
 
@@ -20,6 +20,10 @@ details must be added before general public intake opens.
 
 - direct-deposit contact data: adult depositor's name and email address, submission
   and notification timestamps;
+- agent delegation data: declared agent name/version and purpose, responsible
+  adult's name/email, confirmation and revocation times, scope, expiry, token
+  hashes, usage count and retry identifiers. Secret confirmation links go only
+  to the supplied email; agent tokens do not provide editorial access;
 - submission data: title, author list, abstract, manuscript PDF, filename, size,
   cryptographic hash, rights/disclosure attestations, frontier-model review authorization,
   conflict declaration and correspondence;
@@ -35,6 +39,15 @@ material or third-party personal data that is not necessary and lawful to publis
 AIRR accepts deposits only from people aged 18 or older during the pilot. Authors receive single-use private case links by email; these expire after seven days and open an eight-hour browser session. They do
 not create an intake account; operator and independent-editor accounts remain
 protected by passwords and TOTP.
+
+An agent can request a delegation without sending a PDF or an email. Its
+responsible person supplies the contact details and confirms through email before
+the delegation may upload. Pending requests expire within 24 hours and daily
+maintenance removes them and their confirmation messages. Expired unused grants
+are removed after 30 days; grant records tied to deposits follow case retention.
+Email confirmation establishes access to the email channel, not verified legal
+identity or copyright. Declared agent provenance can accompany a paper only under
+the separate public-release permission.
 
 ## Purposes and lawful bases
 
@@ -57,6 +70,16 @@ independent editor where a conflict requires one. Infrastructure, encrypted back
 operator-notification email and security providers may process the minimum data needed under written
 instructions and appropriate contractual safeguards. The production processor
 register must identify them before direct submission is activated.
+
+The configured private receiver uses Netcup (VPS in Vienna, Austria), Brevo for
+transactional email, and Backblaze B2 EU Central (Amsterdam) for client-encrypted
+offsite copies. ClamAV runs locally and does not receive manuscripts as an
+external service. GitHub Pages hosts the public archive, not private submissions.
+Email is routed to the responsible person's chosen provider and the operator's
+inbox; this may involve international delivery. Provider group locations and
+subprocessors are distinct from the selected storage region. The operator's
+[processing record](PROCESSING_RECORD.md) identifies contractual references and
+limits of the current verification.
 
 Private manuscripts are not stored in the public GitHub repository. If accepted,
 the disclosed author information, scholarly metadata and licensed research object

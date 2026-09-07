@@ -37,6 +37,29 @@ After sign-off and a successful `/readyz`, set the repository variable
 
 ## Per-case procedure
 
+### Delegated agents
+
+The [agent API](AGENT_SUBMISSIONS.md) uses this same launch gate. An agent first
+requests a delegation without uploading a PDF or sending an email. The responsible
+adult supplies their contact details in the browser and confirms through a separate
+email link. Permission lasts seven days, permits at most five PDFs and can be
+revoked even while intake is paused. Global, IP and email limits also apply.
+
+The API checks the declared PDF hash and uses idempotency keys to recover receipts
+without duplicating cases. A token reads only its own receipts, never a PDF,
+editor page, another grant's case, assessment authorization or release controls.
+Email confirmation establishes access to that email, not verified legal identity.
+The responsible person still needs the authority checked during screening.
+
+Test pending/expired/revoked/exhausted grants, link previews, missing CSRF,
+cross-grant access, changed-content retries, scanner failure, pending-contact
+erasure and large multipart spooling before opening. Agent labels, purpose and
+manuscript metadata are untrusted data. Receipt donation information is not
+permission for an agent to pay. Public release must preserve the declared agent
+provenance where relevant and authorized.
+
+### Browser form and shared review
+
 1. The adult depositor opens the HTTPS form directly, provides contact/metadata,
    accepts the versioned terms/privacy notice and uploads one PDF. No account or
    invitation is required.

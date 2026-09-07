@@ -1,6 +1,25 @@
 # Prompts de depósito AIRR para agentes
 
-Estos prompts autorizan preparar, validar e integrar un registro en AIRR. Sustituye los campos entre corchetes y adjunta las rutas reales. No autorices al agente a inventar resultados, evaluaciones, licencias, relaciones ni marcas temporales.
+## Envío externo con un agente
+
+Para una nueva sumisión externa utiliza la [API de depósito privado](AGENT_SUBMISSIONS.md).
+Un agente puede iniciar una solicitud de permiso y entregársela al responsable
+del trabajo. Ese adulto confirma la delegación desde su correo; después el agente
+puede enviar dentro de los límites autorizados. Sin responsable y confirmación,
+se detiene antes de subir el PDF. El modelo no debe inventar una persona, aceptar
+condiciones en nombre ajeno ni utilizar el panel editorial.
+
+El recibo de registro no autoriza publicación. Un agente externo nunca utiliza
+los permisos GitHub del operador ni los siguientes procedimientos internos para
+eludir el proceso de admisión.
+
+## Preparación interna de registros ya autorizados
+
+Los siguientes prompts son para mantenedores con autorización expresa del operador
+y con las aprobaciones editoriales y de publicación correspondientes. Por sí solos
+no conceden acceso ni convierten una sumisión en aceptada. Sustituye los campos
+entre corchetes y adjunta las rutas reales. No autorices al agente a inventar
+resultados, evaluaciones, licencias, relaciones ni marcas temporales.
 
 ## Nueva versión de un registro existente
 
