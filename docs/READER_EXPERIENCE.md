@@ -27,6 +27,8 @@ Versions, verification, model assessments and disclosures have direct anchors. O
 
 The home page prioritizes search, subject browsing and recent records. Subjects have static, paginated HTML pages (50 records per page) and sitemap entries. Case and whitespace variants share a group; this is not a curated scientific taxonomy. Other aliases require editorial review. Subject URLs use a readable stem plus a deterministic short hash to avoid collisions.
 
+The compact home page places the introduction beside search on desktop and stacks them on mobile. Subject links use a compact row that wraps on desktop and scrolls horizontally on mobile; the latest papers precede archive statistics and the detailed admission strip. A short admission explanation remains beside the catalogue. This layout keeps the existing search form, paper records and discovery metadata.
+
 The search page supports subject, record status, publication year and relevance/date/title sorting. Empty queries browse the catalogue. Filters are reflected in the URL and restored by browser navigation. An obsolete subject/year returns no matches rather than silently dropping the filter. Existing scientific-notation matching is retained, including distinctions between SU(2) and SU(3). The original chronological HTML catalogue remains available without JavaScript.
 
 ## Validation and scope
@@ -38,3 +40,5 @@ This feature does not register DOIs, certify Google Scholar inclusion, change pa
 ## Rollback
 
 The starting main commit is `32f507861c3843f5b8403ff16b80a44c448070f7`. Revert the reader-experience change through a new commit/PR, preserving later deposits and operational changes. Do not reset or force-push main. Once citation URLs are in use, retain those routes and exports even if the visual design is reverted.
+
+For the subsequent compact-homepage adjustment alone, the baseline is `cee7b0bb9d7c9489a8a47d70683e89d21b588baa`. Revert only that adjustment's commit; all citation and reading features remain available.
