@@ -1,0 +1,20 @@
+[Unit]
+Description=AIRR encrypted offsite copy and download verification
+ConditionPathIsMountPoint=/srv/airr-private
+ConditionPathExists=/etc/airr-intake/offsite.json
+Wants=network-online.target
+After=network-online.target airr-intake-backup.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /opt/airr-intake/current/services/intake/deploy/offsite.py
+TimeoutStartSec=25min
+UMask=0077
+Nice=10
+NoNewPrivileges=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/airr-offsite
+StateDirectory=airr-offsite
+StateDirectoryMode=0700
+PrivateTmp=true
