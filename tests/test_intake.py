@@ -63,7 +63,7 @@ class IntakeTests(unittest.TestCase):
             session["csrf_token"] = token
         return token
 
-    def upload(self, *, conflict: bool = False) -> str:
+    def upload(self, *, conflict: bool = False, fields: dict | None = None, expected_status: int = 302) -> str:
         self.client.get("/submit")
         with self.client.session_transaction() as session:
             token = session["csrf_token"]
@@ -74,6 +74,7 @@ class IntakeTests(unittest.TestCase):
             "title": "A rigorous test manuscript",
             "authors": "Author Example",
             "abstract": "A" * 120,
+            "primary_subject": "airr-quantum-information",
             "adult": "on",
             "terms": "on",
             "privacy": "on",
@@ -83,9 +84,15 @@ class IntakeTests(unittest.TestCase):
         }
         if conflict:
             data["operator_conflict"] = "on"
+        data.update(fields or {})
         with patch("services.intake.app.scan_file", return_value=("clean", "Approved scanner reported clean.")):
             response = self.client.post("/submit", data=data, content_type="multipart/form-data")
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, expected_status)
+        if expected_status != 302:
+            with self.app.app_context():
+                self.assertEqual(get_db().execute("SELECT COUNT(*) FROM submissions").fetchone()[0], 0)
+            self.assertEqual(list(Path(self.app.config["QUARANTINE"]).glob("*.pdf")), [])
+            return ""
         with self.app.app_context():
             row = get_db().execute("SELECT * FROM submissions ORDER BY created_at DESC LIMIT 1").fetchone()
             self.assertEqual(row["scan_status"], "clean")
@@ -124,6 +131,57 @@ class IntakeTests(unittest.TestCase):
             data={"csrf_token": token, "response_json": json.dumps(value)},
         )
         self.assertEqual(response.status_code, 302)
+
+    def test_subjects_are_saved_on_receipt_and_editor_page(self):
+        submission_id = self.upload(fields={
+            "secondary_subject": ["airr-number-theory", "airr-ai-agents-and-multi-agent-systems"],
+            "specific_topic": "<script>not markup</script>",
+        })
+        with self.app.app_context():
+            row = get_db().execute("SELECT * FROM submissions WHERE id=?", (submission_id,)).fetchone()
+            saved = json.loads(row["classification_json"])
+            self.assertEqual(saved["primary"]["label"], "Quantum information")
+            self.assertEqual(len(saved["secondary"]), 2)
+        receipt = self.client.get("/receipt")
+        self.assertIn(b"Number theory", receipt.data)
+        self.assertIn(b"&lt;script&gt;not markup", receipt.data)
+        self.assertIn(b"Quantum information", self.client.get("/receipt/download").data)
+        self.login_session("operator@example.org")
+        detail = self.client.get(f"/admin/submission/{submission_id}")
+        self.assertIn(b"AI agents and multi-agent systems", detail.data)
+        self.assertNotIn(b"<script>not markup</script>", detail.data)
+
+    def test_forged_subject_does_not_store_a_case_or_file(self):
+        self.upload(fields={"primary_subject": "not-a-subject"}, expected_status=400)
+
+    def test_duplicate_subject_does_not_store_a_case(self):
+        self.upload(fields={"secondary_subject": ["airr-quantum-information"]}, expected_status=400)
+
+    def test_form_preserves_valid_selection_after_error_and_query_prefill(self):
+        selected = "airr-number-theory"
+        page = self.client.get("/submit?subject=" + selected)
+        self.assertIn(f'value="{selected}" selected'.encode(), page.data)
+        self.client.get("/submit")
+        with self.client.session_transaction() as session:
+            token = session["csrf_token"]
+        page = self.client.post("/submit", data={"csrf_token": token, "primary_subject": selected,
+            "secondary_subject": ["airr-quantum-information"], "title": "Still here"})
+        self.assertIn(f'value="{selected}" selected'.encode(), page.data)
+        self.assertIn(b'value="airr-quantum-information" selected', page.data)
+        self.assertIn(b'Still here', page.data)
+
+    def test_old_database_migration_is_idempotent_and_keeps_cases(self):
+        submission_id = self.upload()
+        with self.app.app_context():
+            db = get_db()
+            db.execute("ALTER TABLE submissions DROP COLUMN classification_json")
+            db.commit()
+            init_db()
+            init_db()
+            row = db.execute("SELECT * FROM submissions WHERE id=?", (submission_id,)).fetchone()
+            self.assertEqual(row["title"], "A rigorous test manuscript")
+            self.assertEqual(row["classification_json"], "{}")
+        self.assertIn(b"earlier submission", self.client.get("/receipt").data)
 
     def test_editor_login_requires_valid_totp(self) -> None:
         self.client.get("/login")
@@ -325,6 +383,7 @@ class IntakeTests(unittest.TestCase):
                     "title": "Scanner failure test",
                     "authors": "Author Example",
                     "abstract": "B" * 120,
+                    "primary_subject": "airr-quantum-information",
                     "adult": "on",
                     "terms": "on",
                     "privacy": "on",
@@ -405,6 +464,7 @@ class IntakeTests(unittest.TestCase):
             db = get_db()
             row = db.execute("SELECT * FROM submissions WHERE id=?", (submission_id,)).fetchone()
             self.assertEqual(row["abstract"], "[deleted under retention policy]")
+            self.assertEqual(row["classification_json"], "{}")
             self.assertEqual(db.execute("SELECT COUNT(*) FROM model_reviews WHERE submission_id=?", (submission_id,)).fetchone()[0], 0)
 
     def test_legal_hold_pauses_and_restores_retention_state(self) -> None:

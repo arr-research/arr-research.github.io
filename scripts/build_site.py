@@ -16,6 +16,7 @@ from urllib.parse import quote
 from site_pdfs import published_pdf
 from donationlib import load_donation_url as load_verified_donation_url
 from citationlib import citation_exports, version_path
+from subjectlib import vocabulary, public_vocabulary, subject_counts, record_subject_ids
 
 from arrlib import (
     ROOT,
@@ -260,6 +261,7 @@ def search_records(papers: list, base: str) -> list[dict]:
             "authors": [author["name"] for author in paper.metadata["authors"]],
             "keywords": paper.metadata.get("keywords", []),
             "subjects": paper.metadata.get("subjects", []),
+            "subject_ids": record_subject_ids(paper.metadata),
             "status": paper.metadata["status"],
             "record_type": paper.record_type,
             "date": paper.metadata["date"],
@@ -272,7 +274,10 @@ def search_records(papers: list, base: str) -> list[dict]:
 def build_search(base: str, canonical_url: str, index_version: str, papers: list | None = None) -> str:
     script_version = hashlib.sha256((SITE_DIR / "search.js").read_bytes()).hexdigest()[:12]
     subjects = subject_groups(papers or [])
-    subject_options = ''.join(f'<option value="{esc(group["key"])}">{esc(group["label"])} ({len(group["papers"])})</option>' for group in subjects)
+    counts = subject_counts(papers or [])
+    classified = sorted((t for t in vocabulary()["terms"] if counts[t["id"]]), key=lambda t: t["path"])
+    subject_options = '<optgroup label="Research fields (including subfields)">' + ''.join(f'<option value="{esc(t["id"])}">{esc(t["label"])} ({counts[t["id"]]})</option>' for t in classified) + '</optgroup>'
+    subject_options += '<optgroup label="Original deposited labels">' + ''.join(f'<option value="{esc(group["key"])}">{esc(group["label"])} ({len(group["papers"])})</option>' for group in subjects) + '</optgroup>'
     years = sorted({paper.metadata['date'][:4] for paper in papers or []}, reverse=True)
     year_options = ''.join(f'<option>{esc(year)}</option>' for year in years)
     filters = f'''<div class="search-filters">
@@ -356,9 +361,36 @@ def subject_links(papers: list, base: str, limit: int | None = None) -> str:
 
 
 def build_subjects(papers: list, base: str, canonical_url: str) -> str:
-    content = f'''<section class="page-intro"><span>Explore the archive</span><h1>Browse by subject</h1><p>Follow a research area to its papers, newest first. A paper can appear in more than one subject.</p></section>
-    <section class="subject-directory" aria-label="Research subjects">{subject_links(papers, base)}</section>'''
-    return page_shell(title="Research subjects — AIRR.SCIENCE", description="Browse AIRR research by subject, from quantum physics to mathematics and information theory.", content=content, base=base, canonical=f"{canonical_url}/subjects/" if canonical_url else "")
+    data = vocabulary()
+    counts = subject_counts(papers)
+
+    def actions(term):
+        ident = quote(term['id'])
+        count = counts[term['id']]
+        browse = f'<a href="{base}/search/?subject={ident}">{count} paper{"s" if count != 1 else ""} →</a>' if count else '<span class="subject-empty">No papers yet</span>'
+        return f'<span class="subject-actions">{browse}<a href="{base}/submit/?subject={ident}" aria-label="Submission information for {esc(term["label"])}">Use subject</a></span>'
+
+    def branch(ident):
+        term = data['by_id'][ident]
+        label = esc(term['label'])
+        if not term['children']:
+            return f'<div class="subject-leaf"><span>{label}</span>{actions(term)}</div>'
+        children = ''.join(branch(child) for child in term['children'])
+        return f'<details class="subject-branch"><summary><span>{label}</span><small>{len(term["children"])} areas · {counts[ident]} paper{"s" if counts[ident] != 1 else ""}</small></summary><div class="subject-branch-body">{actions(term)}{children}</div></details>'
+
+    roots = ''.join(branch(t['id']) for t in data['roots'])
+    families = ''.join(f'<option value="{t["id"]}">{esc(t["label"])}</option>' for t in data['roots'])
+    version = hashlib.sha256((SITE_DIR / 'subjects.js').read_bytes()).hexdigest()[:12]
+    data_version = hashlib.sha256(json.dumps(public_vocabulary(papers), sort_keys=True).encode()).hexdigest()[:12]
+    content = f'''<section class="page-intro subject-intro"><span>Explore the archive</span><h1>Find your research field</h1><p>Explore {len(data['terms']):,} research fields, including areas with no papers yet. Find a subject for your next submission.</p></section>
+    <section class="subject-browser" data-subject-browser data-base="{base}" data-vocabulary-url="{base}/assets/subjects.json?v={data_version}" aria-label="Research subjects">
+      <div class="subject-filters" hidden><label>Find a field<input type="search" maxlength="160" data-subject-query placeholder="e.g. biology, AI agents, economics, historia"></label><label>Research family<select data-subject-family><option value="">All families</option>{families}</select></label><label class="subject-published"><input type="checkbox" data-subject-published> With papers only</label></div>
+      <p class="subject-result-status" role="status" aria-live="polite"></p>
+      <div class="subject-tree">{roots}</div><div class="subject-matches" hidden></div><button type="button" class="button secondary" data-subject-more hidden>Show more fields</button>
+      <noscript><p>Expand a research family to browse every field. Search is available with JavaScript enabled.</p></noscript>
+    </section>
+    <section class="subject-guidance"><h2>More than one field, or a new one?</h2><p>Choose the closest main subject and up to two additional subjects for an interdisciplinary paper. You can also describe a specific or emerging topic. A listed subject does not guarantee admission or reviewer availability. <a href="{base}/submit/">Submission information →</a></p><details><summary>Classification sources and counting</summary><p>Based on <a href="https://op.europa.eu/en/web/eu-vocabularies/euroscivoc">EuroSciVoc</a>, published by the Publications Office of the European Union, with AIRR additions for mathematical specialities, AI agents and emerging work. This directory uses a reviewed EuroSciVoc {esc(data['source_version'])} snapshot, adapted under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>; it is not an EU endorsement. <a href="{base}/assets/subjects.json">Download the vocabulary</a>.</p><p>Counts use current public versions, including labelled historical imports. Parent fields include their subfields; each paper is counted once per field. Counts across fields cannot be added together. Existing subject labels and permanent links are preserved; unrecognised future labels remain accessible through the deposited-label search filter.</p></details></section>'''
+    return page_shell(title="Research subjects — AIRR.SCIENCE", description="Find research fields across all disciplines, including subjects available for future submissions, and browse the AIRR catalogue.", content=content, base=base, canonical=f"{canonical_url}/subjects/" if canonical_url else "", head_extra=f'<script src="{base}/assets/subjects.js?v={version}" defer></script>')
 
 
 def build_subject_page(group: dict, timestamps: dict, base: str, canonical_url: str, author_lookup: dict, metrics: dict, page: int = 1) -> str:
@@ -1234,7 +1266,9 @@ def build_submit(
     )
     content = f"""
 <section class="ranked-feed submit-index">
-  <header><div><span>AIRR public catalogue · activity order</span><h1>Paper index</h1></div><div class="submit-tools">{direct_action}<a href="{base}/terms/">Terms</a><a href="{base}/privacy/">Privacy</a></div></header>
+  <header><div><span>AIRR public catalogue · activity order</span><h1>Paper index</h1></div><div class="submit-tools">{direct_action}<a href="{base}/subjects/">Choose a subject</a><a href="{base}/terms/">Terms</a><a href="{base}/privacy/">Privacy</a></div></header>
+  <p class="subject-selection" data-selected-subject data-intake-url="{esc(intake_url)}" data-vocabulary-url="{base}/assets/subjects.json" hidden></p>
+  <script src="{base}/assets/subject-selection.js" defer></script>
   {search_form(base)}
   <div class="compact-gate"><strong>New-admission gate</strong><span>operator-selected frontier audit</span><span>exact-version evidence</span><span>0 unresolved material objections</span><span>human decision</span><a href="{base}/assessments/">evidence and scores →</a></div>
   <div class="index-meta"><p>{esc(rank_explanation)}</p><span>Records {start + 1 if ranked else 0}–{min(start + page_size, len(ranked))} / {len(ranked)}</span></div>
@@ -1517,6 +1551,9 @@ def main() -> int:
     shutil.copy2(SITE_DIR / "style.css", OUTPUT_DIR / "assets" / "style.css")
     shutil.copy2(SITE_DIR / "search.js", OUTPUT_DIR / "assets" / "search.js")
     shutil.copy2(SITE_DIR / "reader.js", OUTPUT_DIR / "assets" / "reader.js")
+    for asset in ("subjects.js", "subject-selection.js"):
+        shutil.copy2(SITE_DIR / asset, OUTPUT_DIR / "assets" / asset)
+    write(OUTPUT_DIR / "assets" / "subjects.json", json.dumps(public_vocabulary(papers), ensure_ascii=False, separators=(",", ":")) + "\n")
     search_data = json.dumps(search_records(papers, base), ensure_ascii=False, separators=(",", ":")) + "\n"
     search_version = hashlib.sha256(search_data.encode("utf-8")).hexdigest()[:12]
     write(OUTPUT_DIR / "assets" / "search-index.json", search_data)

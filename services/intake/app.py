@@ -40,6 +40,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from scripts.donationlib import load_donation_url
+from scripts.subjectlib import classification_options, classification_text, public_vocabulary, validate_classification
 
 
 TERMS_VERSION = "ARR-DEPOSIT-1.4"
@@ -78,6 +79,7 @@ CREATE TABLE IF NOT EXISTS submissions (
   title TEXT NOT NULL,
   authors TEXT NOT NULL,
   abstract TEXT NOT NULL,
+  classification_json TEXT NOT NULL DEFAULT '{}',
   original_filename TEXT NOT NULL,
   stored_name TEXT NOT NULL UNIQUE,
   sha256 TEXT NOT NULL,
@@ -328,6 +330,9 @@ def close_db(_error=None) -> None:
 def init_db() -> None:
     db = get_db()
     db.executescript(SCHEMA)
+    columns = {row[1] for row in db.execute("PRAGMA table_info(submissions)")}
+    if "classification_json" not in columns:
+        db.execute("ALTER TABLE submissions ADD COLUMN classification_json TEXT NOT NULL DEFAULT '{}'")
     db.commit()
 
 
@@ -596,6 +601,18 @@ def register_routes(app: Flask) -> None:
         rows = get_db().execute("SELECT * FROM submissions WHERE user_id=? ORDER BY created_at DESC", (g.user["id"],)).fetchall()
         return render_template("dashboard.html", submissions=rows)
 
+    @app.context_processor
+    def subject_context():
+        return {"subject_options": classification_options, "classification_text": classification_text}
+
+    @app.get("/subject-catalogue.json")
+    def subject_catalogue():
+        return public_vocabulary()
+
+    @app.get("/subject-search.js")
+    def subject_search_script():
+        return send_file(Path(__file__).resolve().parents[2] / "site" / "subjects.js", mimetype="text/javascript")
+
     @app.route("/submit", methods=("GET", "POST"))
     def submit():
         if request.method == "POST":
@@ -610,6 +627,13 @@ def register_routes(app: Flask) -> None:
             title = request.form.get("title", "").strip()
             authors = request.form.get("authors", "").strip()
             abstract = request.form.get("abstract", "").strip()
+            try:
+                classification = validate_classification(
+                    request.form.get("primary_subject", ""), request.form.getlist("secondary_subject"),
+                    request.form.get("specific_topic", "").strip())
+            except ValueError as error:
+                flash(str(error), "error")
+                return render_template("submit.html", terms=TERMS_VERSION, privacy=PRIVACY_VERSION), 400
             agreed = all(request.form.get(field) for field in ("adult", "terms", "privacy", "authority", "ai_review_opt_in"))
             if not upload or len(display_name) < 2 or not valid_email(email) or not title or not authors or len(abstract) < 80 or not agreed:
                 flash("Complete all fields and attestations.", "error")
@@ -648,8 +672,8 @@ def register_routes(app: Flask) -> None:
                 """INSERT INTO submissions(
                    id,user_id,title,authors,abstract,original_filename,stored_name,sha256,size_bytes,
                    scan_status,scan_detail,status,operator_conflict,ai_review_opt_in,terms_version,
-                   privacy_version,created_at,updated_at)
-                   VALUES(?,?,?,?,?,?,?,?,?,'pending','Awaiting approved scanner.','quarantined',?,?,?,?,?,?)""",
+                   privacy_version,created_at,updated_at,classification_json)
+                   VALUES(?,?,?,?,?,?,?,?,?,'pending','Awaiting approved scanner.','quarantined',?,?,?,?,?,?,?)""",
                 (
                     submission_id,
                     submitter["id"],
@@ -666,6 +690,7 @@ def register_routes(app: Flask) -> None:
                     PRIVACY_VERSION,
                     iso(),
                     iso(),
+                    json.dumps(classification, ensure_ascii=False),
                 ),
             )
             db.commit()
@@ -702,6 +727,7 @@ def register_routes(app: Flask) -> None:
             f"Registration number: {row['id']}\n"
             f"Received at (UTC): {row['created_at']}\n"
             f"Paper title: {row['title']}\n"
+            f"Subjects: {classification_text(row['classification_json'])}\n"
             f"Manuscript SHA-256: {row['sha256']}\n"
             f"Bytes received: {row['size_bytes']}\n"
             f"Current state: {row['status']}\n"
@@ -982,7 +1008,7 @@ def register_commands(app: Flask) -> None:
             db.execute("DELETE FROM model_reviews WHERE submission_id=?", (row["id"],))
             db.execute(
                 """UPDATE submissions SET original_filename='[deleted]',stored_name='deleted-'||id,
-                   abstract='[deleted under retention policy]',updated_at=?,delete_after=NULL WHERE id=?""",
+                   abstract='[deleted under retention policy]',classification_json='{}',updated_at=?,delete_after=NULL WHERE id=?""",
                 (iso(), row["id"]),
             )
             db.execute(

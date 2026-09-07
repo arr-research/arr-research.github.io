@@ -5,6 +5,7 @@
 <label>Your email <input type="email" name="email" value="{{ request.form.get('email','') }}" maxlength="254" autocomplete="email" required><span class="meta">Used for this private case and the editorial response.</span></label>
 <label class="trap" aria-hidden="true">Website <input name="website" tabindex="-1" autocomplete="off"></label>
 <label>Title <input name="title" value="{{ request.form.get('title','') }}" maxlength="500" required></label><label>All authors <input name="authors" value="{{ request.form.get('authors','') }}" maxlength="1000" required></label>
+{% include 'subject-fields.html' %}
 <label>Abstract <textarea name="abstract" minlength="80" maxlength="5000" rows="8" required>{{ request.form.get('abstract','') }}</textarea></label><label>Canonical manuscript <input type="file" name="manuscript" accept="application/pdf,.pdf" required></label>
 <label><input type="checkbox" name="adult" required> I am at least 18 years old.</label>
 <label><input type="checkbox" name="authority" required> I am an author, rights holder or authorized agent and the disclosures are accurate.</label>
@@ -12,4 +13,5 @@
 <label><input type="checkbox" name="privacy" required> I have read <a href="https://airr.science/privacy/" target="_blank" rel="noreferrer">{{ privacy }}</a>.</label>
 <label><input type="checkbox" name="operator_conflict"> An author has a personal, financial, supervisory or close collaborative relationship with the AIRR operator/editor.</label>
 <label><input type="checkbox" name="ai_review_opt_in" required> I authorize AIRR to transfer this exact private manuscript to operator-selected frontier-model providers solely for confidential scientific assessment. The provider/model and response hash will be recorded; published assessments identify the model. I understand that completing this screening is required for acceptance.</label>
-<button>Submit privately</button><p class="meta">Submission and assessment are free. The receipt offers an optional donation link; donating does not affect approval, review speed, scores or ranking.</p></form>{% endblock %}
+<button>Submit privately</button><p class="meta">Submission and assessment are free. The receipt offers an optional donation link; donating does not affect approval, review speed, scores or ranking.</p></form>
+<script src="{{ url_for('subject_search_script') }}" defer></script><script src="{{ url_for('static',filename='subject-picker.js') }}" defer></script>{% endblock %}
