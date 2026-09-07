@@ -24,7 +24,11 @@ def main():
     if checks['encrypted_volume_mounted']:
         database = Path('/srv/airr-private/instance/intake.sqlite3')
         with sqlite3.connect('file:' + str(database) + '?mode=ro', uri=True) as db:
-            checks['mail_delivery_state'] = db.execute("SELECT COUNT(*) FROM mail_outbox WHERE state IN ('uncertain','sending')").fetchone()[0] == 0
+            checks['mail_delivery_state'] = db.execute("SELECT COUNT(*) FROM mail_outbox WHERE state='uncertain' OR (state='sending' AND datetime(created_at)<datetime('now','-5 minutes'))").fetchone()[0] == 0
+        space = os.statvfs('/srv/airr-private')
+        checks['private_storage_space'] = space.f_bavail * space.f_frsize > 128 * 1024**2
+        system_space = os.statvfs('/')
+        checks['system_storage_space'] = system_space.f_bavail * system_space.f_frsize > 1024**3
         latest = sorted(Path('/var/backups/airr').glob('airr-*.tar.gz.age'))
         checks['local_encrypted_backup_recent'] = bool(latest) and datetime.now(timezone.utc).timestamp() - latest[-1].stat().st_mtime < 30 * 3600
     status = {'checked_at': datetime.now(timezone.utc).isoformat(), 'checks': checks, 'ok': all(checks.values())}

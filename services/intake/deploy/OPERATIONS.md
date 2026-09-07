@@ -24,8 +24,9 @@ and checksum in `/var/backups/airr` are not an independent backup until transfer
 and verified in another failure domain. A failed or incomplete snapshot is not a
 successful backup. Keep scheduled offsite transfer, retention, alerts and recovery
 key custody in the signed deployment evidence, not merely in this guide.
-Local snapshots expire after seven days, only after a new snapshot succeeds;
-configure the same bounded lifecycle at the offsite destination. Reapply erasure
+The latest three local snapshots are kept, none older than seven days, and cleanup
+only follows a successful new snapshot. Configure an at-most-seven-day lifecycle
+at the offsite destination. Reapply erasure
 schedules and known requests before reopening a restored instance. Deployment
 rollback copies must also be removed after their documented rollback window.
 

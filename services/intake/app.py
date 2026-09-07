@@ -665,6 +665,8 @@ def register_routes(app: Flask) -> None:
         if request.method == "POST":
             require_csrf()
             enforce_rate("submit", 3, 24 * 60 * 60)
+            if shutil.disk_usage(current_app_config('QUARANTINE')).free < MAX_PDF_BYTES * 4:
+                abort(503, 'Private storage is temporarily full. Please try again later; no manuscript was registered.')
             if request.form.get("website"):
                 flash("Submission received for processing.", "success")
                 return redirect(url_for("submit"))

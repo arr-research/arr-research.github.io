@@ -51,7 +51,9 @@ def main():
                     continue
                 raise RuntimeError('A referenced manuscript disappeared; retry after the retention job finishes.')
             destination = stage / 'instance' / 'quarantine' / stored
-            shutil.copyfile(path, destination)
+            # Manuscript files are immutable. A hard link pins the exact inode
+            # across retention deletion without doubling private-volume usage.
+            os.link(path, destination)
             with destination.open('rb') as handle:
                 actual = hashlib.file_digest(handle, 'sha256').hexdigest()
             if actual != expected:
@@ -80,14 +82,16 @@ def main():
         checksum = hashlib.file_digest(handle, 'sha256').hexdigest()
     output.with_suffix(output.suffix + '.sha256').write_text(checksum + '  ' + output.name + '\n')
     cutoff = datetime.now(timezone.utc) - timedelta(days=7)
-    for old in DEST.glob('airr-*.tar.gz.age'):
+    snapshots = sorted(DEST.glob('airr-*.tar.gz.age'))
+    keep = set(snapshots[-3:])
+    for old in snapshots:
         if old == output or old.is_symlink() or not old.is_file():
             continue
         try:
             created = datetime.strptime(old.name, 'airr-%Y%m%dT%H%M%SZ.tar.gz.age').replace(tzinfo=timezone.utc)
         except ValueError:
             continue
-        if created < cutoff:
+        if created < cutoff or old not in keep:
             old.unlink()
             old.with_suffix(old.suffix + '.sha256').unlink(missing_ok=True)
     print(json.dumps({'snapshot': str(output), 'sha256': checksum, 'verified_manuscripts': len(manifest['files'])}))
