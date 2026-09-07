@@ -97,8 +97,8 @@ class IntakeTests(unittest.TestCase):
             row = get_db().execute("SELECT * FROM submissions ORDER BY created_at DESC LIMIT 1").fetchone()
             self.assertEqual(row["scan_status"], "clean")
             self.assertEqual(row["status"], "eligible")
-            self.assertEqual(row["terms_version"], "ARR-DEPOSIT-1.4")
-            self.assertEqual(row["privacy_version"], "ARR-PRIVACY-1.2")
+            self.assertEqual(row["terms_version"], "ARR-DEPOSIT-1.5")
+            self.assertEqual(row["privacy_version"], "ARR-PRIVACY-1.3")
             self.assertTrue((Path(self.app.config["QUARANTINE"]) / row["stored_name"]).exists())
             submitter = get_db().execute("SELECT * FROM users WHERE id=?", (row["user_id"],)).fetchone()
             self.assertEqual(submitter["email"], "direct-author@example.org")
@@ -109,6 +109,11 @@ class IntakeTests(unittest.TestCase):
         with self.app.app_context():
             row = get_db().execute("SELECT * FROM submissions WHERE id=?", (submission_id,)).fetchone()
             value = model_review_template(row)
+            # Fixture: the named plan was authorized before this report was made.
+            get_db().execute('INSERT INTO assessment_plans(submission_id,manuscript_sha256,providers_json,notice,created_by,created_at,authorized_at) VALUES(?,?,?,?,?,?,?)',
+                             (submission_id, row['sha256'], json.dumps([{'provider': f'Provider {number}', 'model_id': f'frontier-model-{number}'}]),
+                              'Test fixture: author confirmed the provider-specific confidentiality notice before any transfer.', self.user_id('operator@example.org'), iso(), iso()))
+            get_db().commit()
         value.update(
             {
                 "provider": f"Provider {number}",

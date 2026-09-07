@@ -1,6 +1,6 @@
-# AIRR privacy notice — ARR-PRIVACY-1.2
+# AIRR privacy notice — ARR-PRIVACY-1.3
 
-**Effective:** 2026-08-30  
+**Effective:** 2026-09-07
 **Brand wording updated:** 2026-09-06; see [identity and continuity](BRAND_IDENTITY.md).
 
 **Service state:** currently fee-free direct private-submission pilot; the receiver
@@ -32,7 +32,7 @@ details must be added before general public intake opens.
 Do not submit special-category personal data, government identifiers, financial
 credentials, medical records, confidential peer-review material, export-controlled
 material or third-party personal data that is not necessary and lawful to publish.
-AIRR accepts deposits only from people aged 18 or older during the pilot. Authors do
+AIRR accepts deposits only from people aged 18 or older during the pilot. Authors receive single-use private case links by email; these expire after seven days and open an eight-hour browser session. They do
 not create an intake account; operator and independent-editor accounts remain
 protected by passwords and TOTP.
 
@@ -44,7 +44,7 @@ protected by passwords and TOTP.
 | Protect the form and editor accounts, quarantine files, prevent abuse, investigate integrity issues and keep a proportionate audit trail | AIRR's and users' legitimate interests in a secure, accountable scholarly service (Article 6(1)(f)) |
 | Respond to binding authority requests and applicable record obligations | legal obligation where one applies (Article 6(1)(c)) |
 | Publish an accepted manuscript, its authorship, provenance and licenses worldwide | performance of the deposit agreement (Article 6(1)(b)); public distribution also follows the depositor's chosen license |
-| Send a private manuscript to operator-selected external frontier-model evaluators solely for the disclosed pre-publication screening | steps requested before and performance of the deposit agreement (Article 6(1)(b)); the form makes clear that screening is required for acceptance and records the authorization |
+| Send a private manuscript to operator-selected external frontier-model evaluators solely for the disclosed pre-publication screening | steps requested before and performance of the deposit agreement (Article 6(1)(b)); the upload form acknowledges the screening requirement; a separate recorded confirmation of the named-provider notice authorizes the exact transfer |
 
 AIRR makes no solely automated acceptance or rejection decision and does not
 profile authors. Malware and format checks can block access to a file, but a human
@@ -63,7 +63,7 @@ the disclosed author information, scholarly metadata and licensed research objec
 are intentionally published worldwide through AIRR, GitHub and mirrors. The public
 nature and practical irreversibility of third-party copies will be shown again
 before final publication. Frontier-model providers receive the exact manuscript and
-case hash only for the disclosed assessment purpose. The operator records provider,
+case hash only for the disclosed assessment purpose. Before transfer, the depositor separately confirms a notice identifying the providers/models, confidentiality controls, retention and transfer safeguards. The operator records that confirmation, provider,
 model identifier, time and response hash. Provider terms, confidentiality controls
 and international-transfer safeguards must be reviewed before use; AIRR selects a
 no-training or enterprise-confidentiality control where the service offers one.

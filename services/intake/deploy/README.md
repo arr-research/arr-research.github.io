@@ -54,12 +54,17 @@ leave files quarantined. Use synthetic metadata and a separate disposable test
 database for submission tests; do not create public paper records or send mail
 to real recipients as part of these tests.
 
-Before any public reverse proxy is enabled, complete the operating runbook in
+Before manuscript upload is enabled, complete the operating runbook in
 [`docs/INTAKE_OPERATIONS.md`](../../../docs/INTAKE_OPERATIONS.md), including
 encrypted storage/backups and restore, operator authentication, email delivery,
 TLS, readiness enforcement and end-to-end verification. Plain local file
 permissions alone do **not** provide encryption at rest. Do not set
 `ARR_INTAKE_URL` during this private installation stage.
+
+HTTPS may expose only the closed-intake page and protected editor setup/login
+while that checklist is pending. The application defaults to `ARR_INTAKE_OPEN=0`
+and also requires the signed launch-approval record. See [OPERATIONS.md](OPERATIONS.md)
+for the encrypted volume, proxy and backup layout used by the deployed receiver.
 
 For an update, back up the private instance, verify the next archive, prepare a
 new release directory, stop the service, switch `current`, run `init-db` and

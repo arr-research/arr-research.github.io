@@ -1,0 +1,9 @@
+{% extends 'base.html' %}{% block content %}<p class="eyebrow">Personal editor access</p><h1>Set up your AIRR account</h1>
+<p>{{ invite['name'] }} · {{ invite['email'] }} · {{ invite['role']|replace('_',' ') }}</p>
+<form method="post" class="card"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<label>Choose your password <input type="password" name="password" minlength="14" autocomplete="new-password" required></label>
+<label>Repeat password <input type="password" name="confirm_password" minlength="14" autocomplete="new-password" required></label>
+<h2>Add AIRR to your authenticator</h2><p>In your authenticator app, add a time-based account using this setup key. Keep the key private.</p>
+<p class="fingerprint">{{ secret }}</p><p><a href="{{ otp_uri }}">Open an installed authenticator</a></p>
+<label>Six-digit code from your authenticator <input name="totp" inputmode="numeric" maxlength="6" autocomplete="one-time-code" required></label>
+<button>Create my editor account</button></form>{% endblock %}
