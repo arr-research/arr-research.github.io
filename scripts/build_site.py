@@ -8,12 +8,14 @@ import json
 import re
 import shutil
 import sys
-from collections import defaultdict
+from collections import Counter, defaultdict
+import unicodedata
 from pathlib import Path
 from urllib.parse import quote
 
 from site_pdfs import published_pdf
 from donationlib import load_donation_url as load_verified_donation_url
+from citationlib import citation_exports, version_path
 
 from arrlib import (
     ROOT,
@@ -210,19 +212,21 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
     <a class="brand" href="{base}/" aria-label="AIRR.SCIENCE — Archive for Independent &amp; Rigorous Research, home">
-      <img class="brand-logo" src="{base}/assets/airr-logo.png" width="1859" height="336" alt="">
+      <img class="brand-logo" src="{base}/assets/airr-logo.png" width="1859" height="336" alt="AIRR.SCIENCE">
     </a>
     <nav aria-label="Primary navigation">
       <a href="{base}/papers/">Papers</a>
       <a href="{base}/search/">Search</a>
-      <a href="{base}/notes/">Technical notes</a>
+      <a href="{base}/subjects/">Subjects</a>
       <a href="{base}/authors/">Authors</a>
-      <a href="{base}/rankings/">Activity</a>
       <a href="{base}/assessments/">Assessments</a>
-      <a href="{base}/protocol/">Protocol</a>
-      <a href="{base}/submit/">Submit</a>
-      <a href="{base}/about/">About</a>
-      <a href="{base}/support/">Support</a>
+      <a class="nav-submit" href="{base}/submit/">Submit</a>
+      <details class="nav-more"><summary>About &amp; more</summary><div>
+        <a href="{base}/about/">About AIRR</a><a href="{base}/protocol/">Review protocol</a>
+        <a href="{base}/governance/">Governance</a><a href="{base}/notes/">Technical notes</a>
+        <a href="{base}/rankings/">Activity</a><a href="{base}/support/">Support AIRR</a>
+        <a href="{base}/contact/">Contact</a>
+      </div></details>
     </nav>
   </header>
   <main id="main">{content}</main>
@@ -235,11 +239,12 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
 """
 
 
-def search_form(base: str) -> str:
+def search_form(base: str, filters: str = "") -> str:
     return f"""<form class="paper-search" role="search" action="{base}/search/" method="get">
   <label for="paper-query">Search papers</label>
   <div class="search-controls"><input id="paper-query" name="q" type="search" maxlength="300" placeholder="Title, topic, author or paper ID — e.g. SU(2)" aria-describedby="search-help"><button class="button" type="submit">Search</button></div>
-  <p id="search-help">Search all titles, abstracts, keywords and authors. Results are ordered by relevance.</p>
+  <p id="search-help">Search titles, abstracts, keywords and authors. Try SU(2), Weyl operators or an author name.</p>
+  {filters}
 </form>"""
 
 
@@ -264,15 +269,26 @@ def search_records(papers: list, base: str) -> list[dict]:
     ]
 
 
-def build_search(base: str, canonical_url: str, index_version: str) -> str:
+def build_search(base: str, canonical_url: str, index_version: str, papers: list | None = None) -> str:
     script_version = hashlib.sha256((SITE_DIR / "search.js").read_bytes()).hexdigest()[:12]
+    subjects = subject_groups(papers or [])
+    subject_options = ''.join(f'<option value="{esc(group["key"])}">{esc(group["label"])} ({len(group["papers"])})</option>' for group in subjects)
+    years = sorted({paper.metadata['date'][:4] for paper in papers or []}, reverse=True)
+    year_options = ''.join(f'<option>{esc(year)}</option>' for year in years)
+    filters = f'''<div class="search-filters">
+      <label>Subject<select name="subject"><option value="">All subjects</option>{subject_options}</select></label>
+      <label>Record status<select name="status"><option value="">All records</option><option value="accepted">Accepted</option><option value="corrected">Corrected</option><option value="archived">Historical imports</option><option value="withdrawn">Withdrawn</option></select></label>
+      <label>Year<select name="year"><option value="">All years</option>{year_options}</select></label>
+      <label>Sort by<select name="sort"><option value="relevance">Relevance</option><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="title">Title A–Z</option></select></label>
+      <button class="filter-reset" type="button" data-reset-filters>Clear filters</button>
+    </div>'''
     content = f"""
 <section class="search-page" data-paper-search data-index-url="{base}/assets/search-index.json?v={index_version}">
   <header><span class="eyebrow">Public catalogue</span><h1>Find a paper</h1></header>
-  {search_form(base)}
-  <p class="search-status" role="status" aria-live="polite" aria-atomic="true">Enter a topic, title, author or paper identifier.</p>
+  {search_form(base, filters)}
+  <p class="search-status" role="status" aria-live="polite" aria-atomic="true">Loading the public catalogue…</p>
   <noscript><p>Enable JavaScript to search, or <a href="{base}/papers/">browse the complete paper catalogue</a>.</p></noscript>
-  <ol class="search-results" aria-label="Papers by relevance"></ol>
+  <ol class="search-results" aria-label="Search results"></ol>
   <button class="button secondary search-more" type="button" hidden>Show more papers</button>
 </section>"""
     return page_shell(
@@ -301,6 +317,64 @@ def record_type_label(metadata: dict) -> str:
 
 def record_route(metadata: dict) -> str:
     return "notes" if record_type(metadata) == "technical_note" else "papers"
+
+
+def subject_key(value: str) -> str:
+    return " ".join(unicodedata.normalize("NFKC", value).casefold().split())
+
+
+def subject_slug(value: str) -> str:
+    key = subject_key(value)
+    stem = re.sub(r"[^a-z0-9]+", "-", unicodedata.normalize("NFKD", key).encode("ascii", "ignore").decode()).strip("-")
+    return f"{stem[:70] or 'subject'}-{hashlib.sha256(key.encode()).hexdigest()[:8]}"
+
+
+def subject_groups(papers: list) -> list[dict]:
+    groups: dict[str, dict] = {}
+    for paper in papers:
+        seen = set()
+        for label in paper.metadata.get("subjects", []):
+            key = subject_key(label)
+            if not key:
+                continue
+            group = groups.setdefault(key, {"key": key, "labels": Counter(), "papers": []})
+            group["labels"][label] += 1
+            if key not in seen:
+                group["papers"].append(paper)
+                seen.add(key)
+    for group in groups.values():
+        group["label"] = sorted(group["labels"], key=lambda label: (-group["labels"][label], label))[0]
+        group["slug"] = subject_slug(group["key"])
+    return sorted(groups.values(), key=lambda group: group["key"])
+
+
+def subject_links(papers: list, base: str, limit: int | None = None) -> str:
+    groups = subject_groups(papers)
+    if limit:
+        groups = sorted(groups, key=lambda group: (-len(group["papers"]), group["key"]))[:limit]
+    return ''.join(f'<a class="subject-link" href="{base}/subjects/{group["slug"]}/"><span>{esc(group["label"])}</span><strong>{len(group["papers"])}</strong></a>' for group in groups)
+
+
+def build_subjects(papers: list, base: str, canonical_url: str) -> str:
+    content = f'''<section class="page-intro"><span>Explore the archive</span><h1>Browse by subject</h1><p>Follow a research area to its papers, newest first. A paper can appear in more than one subject.</p></section>
+    <section class="subject-directory" aria-label="Research subjects">{subject_links(papers, base)}</section>'''
+    return page_shell(title="Research subjects — AIRR.SCIENCE", description="Browse AIRR research by subject, from quantum physics to mathematics and information theory.", content=content, base=base, canonical=f"{canonical_url}/subjects/" if canonical_url else "")
+
+
+def build_subject_page(group: dict, timestamps: dict, base: str, canonical_url: str, author_lookup: dict, metrics: dict, page: int = 1) -> str:
+    papers = group["papers"]
+    count = max(1, (len(papers) + 49) // 50)
+    root = f'{base}/subjects/{group["slug"]}/'
+    cards = ''.join(paper_card(p.metadata, timestamps[(p.id, p.version)], base, author_lookup, metrics) for p in papers[(page-1)*50:page*50])
+    previous = root if page == 2 else f'{root}page/{page-1}/'
+    pager = '<nav class="pagination" aria-label="Subject pages">'
+    pager += f'<a href="{previous}">← Previous</a>' if page > 1 else '<span>← Previous</span>'
+    pager += f'<strong>Page {page} of {count} · {len(papers)} records</strong>'
+    pager += f'<a href="{root}page/{page+1}/">Next →</a>' if page < count else '<span>Next →</span>'
+    pager += '</nav>'
+    content = f'''<section class="page-intro"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="{base}/subjects/">Subjects</a><span aria-hidden="true">/</span><span>{esc(group['label'])}</span></nav><h1>{esc(group['label'])}</h1><p>{len(papers)} records · Newest first · Historical imports are labelled separately.</p><a class="text-link" href="{base}/search/?subject={quote(group['key'])}">Search within this subject →</a></section>{pager}<section class="catalogue">{cards}</section>{pager}'''
+    suffix = f'/subjects/{group["slug"]}/' + (f'page/{page}/' if page > 1 else '')
+    return page_shell(title=f"{group['label']} — page {page} — AIRR.SCIENCE", description=f"Research in {group['label']} on AIRR.SCIENCE, with abstracts, PDFs and version-specific citations.", content=content, base=base, canonical=canonical_url + suffix if canonical_url else "")
 
 
 def type_badge(metadata: dict) -> str:
@@ -466,17 +540,15 @@ def paper_card(
         if author_lookup
         else esc(", ".join(author["name"] for author in metadata["authors"]))
     )
-    activity = paper_activity(metadata["id"], metrics or {"papers": {}})
     archival = metadata.get("archival_source")
     chronology_label = "First submitted to ai.vixra" if archival else ("Published" if timestamp["publication_state"] == "published" else "Deposit recorded")
-    activity_label = "Mirror downloads not measured" if archival else download_label(activity["pdf_downloads"])
     return f"""
 <article class="paper-card">
   <div class="paper-meta">{type_badge(metadata)}{status_badge(metadata['status'])}<span>{esc(metadata['id'])} · {esc(metadata['version'])}</span></div>
   <h3><a href="{base}/{record_route(metadata)}/{quote(metadata['id'])}/">{esc(metadata['title'])}</a></h3>
   <p class="authors">{authors}</p>
   <p>{esc(metadata['abstract'])}</p>
-  <div class="paper-foot"><span>{chronology_label} {exact_time(paper_chronology(metadata, timestamp))}</span><span>{activity_label}</span><span>Protocol {esc(metadata['verification']['protocol'])}</span></div>
+  <div class="paper-foot"><span>{chronology_label} {exact_time(paper_chronology(metadata, timestamp))}</span><a href="{base}{version_path(metadata)}#cite">Cite this version</a></div>
 </article>"""
 
 
@@ -495,26 +567,27 @@ def build_home(papers: list, timestamps: dict, base: str, canonical_url: str, au
 </section>"""
     content = f"""
 <section class="hero">
-  <div class="eyebrow">Hostile audit · Frontier models · Human decision</div>
-  <h1>Research should survive hostile audit.</h1>
-  <p class="lede">AIRR.SCIENCE is the Archive for Independent &amp; Rigorous Research. New admissions face the strongest suitable frontier-model audit the operator can assemble for that assessment round on the exact hashed version: counterexamples, hidden assumptions, proof gaps and novelty claims are tested before a human signs the decision. Providers, models and report counts may change; the public record says exactly what was used.</p>
-  <div class="hero-actions"><a class="button" href="{base}/assessments/">Explore assessments</a><a class="button secondary" href="{base}/papers/">Browse papers</a><a class="text-link" href="{base}/protocol/">Read the hard gate →</a></div>
+  <div class="eyebrow">Discover · Read · Cite</div>
+  <h1>Independent research.<br>Inspectable evidence.</h1>
+  <p class="lede">AIRR.SCIENCE is the Archive for Independent &amp; Rigorous Research. Read, explore and cite open research in mathematics, physics and beyond. New admissions undergo a disclosed frontier-model audit and a human decision; historical imports are labelled separately.</p>
   {search_form(base)}
+  <div class="hero-actions"><a class="text-link" href="{base}/papers/">Latest papers →</a><a class="text-link" href="{base}/subjects/">Browse subjects →</a><a class="text-link" href="{base}/assessments/">Explore assessments →</a></div>
 </section>
 <section class="frontier-gate" aria-label="AIRR admission standard"><strong>AIRR admission gate</strong><span>operator-selected frontier audit</span><span>exact PDF + SHA-256</span><span>0 unresolved material objections</span><span>human sign-off</span></section>
 <section class="stats" aria-label="Archive statistics">
-  <div><strong>{accepted_papers}</strong><span>research papers</span></div>
+  <div><strong>{accepted_papers}</strong><span>admitted papers</span></div>
   <div><strong>{archived_papers}</strong><span>historical imports</span></div>
   <div><strong>{accepted_notes}</strong><span>technical notes</span></div>
   <div><strong>{author_count}</strong><span>author profiles</span></div>
   <div><strong>{downloads:,}</strong><span>canonical PDF downloads</span></div>
 </section>
+<section class="home-subjects"><div class="section-heading"><div><span>Explore</span><h2>Research by subject</h2></div><a href="{base}/subjects/">All subjects →</a></div><div class="subject-strip">{subject_links(papers, base, 6)}</div></section>
+<section class="recent"><div class="section-heading"><div><span>Catalogue</span><h2>Latest research</h2></div><a href="{base}/papers/">View papers</a></div>{recent}</section>
 <section class="principles">
   <div><span>01</span><h2>Inspectable by default</h2><p>Manuscripts, metadata and code remain readable as plain files—not trapped behind a PDF or proprietary interface.</p></div>
   <div><span>02</span><h2>Survival is evidence</h2><p>A paper that clears the new gate has survived a deliberately hostile, reproducible test by leading frontier models. AIRR publishes the reports and disagreement instead of asking readers to trust the badge.</p></div>
   <div><span>03</span><h2>History remains visible</h2><p>Published versions are identified by hashes and releases. Corrections create a new immutable version rather than silently rewriting the past.</p></div>
 </section>
-<section class="recent"><div class="section-heading"><div><span>Catalogue</span><h2>Latest accepted research</h2></div><a href="{base}/papers/">View papers</a></div>{recent}</section>
 """
     canonical = f"{canonical_url}/" if canonical_url else ""
     tokens = dict.fromkeys(token.strip() for token in google_site_verification.splitlines() if token.strip())
@@ -526,7 +599,7 @@ def build_home(papers: list, timestamps: dict, base: str, canonical_url: str, au
         website = {"@context": "https://schema.org", "@type": "WebSite", "@id": f"{canonical}#website", "name": SITE_NAME, "alternateName": ["AIRR", SITE_FULL_NAME, "airr.science"], "url": canonical}
         structured = json.dumps(website, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
         identity = f'<meta property="og:type" content="website">\n  <meta property="og:title" content="{SITE_NAME} — {esc(SITE_FULL_NAME)}">\n  <meta property="og:url" content="{esc(canonical)}">\n  <script type="application/ld+json">{structured}</script>'
-    return page_shell(title=f"{SITE_NAME} — {SITE_FULL_NAME}", description="Independent research with a disclosed version-locked frontier-model audit, public evidence and human editorial sign-off. Free access to papers and their preserved versions.", content=content, base=base, canonical=canonical, head_extra=verification + "\n  " + identity)
+    return page_shell(title=f"{SITE_NAME} — {SITE_FULL_NAME}", description="Read and cite open research in mathematics, physics and beyond. Explore versioned papers, reproducible evidence and disclosed model assessments on AIRR.", content=content, base=base, canonical=canonical, head_extra=verification + "\n  " + identity)
 
 
 def build_papers_index(papers: list, timestamps: dict, base: str, canonical_url: str, author_lookup: dict[str, dict] | None = None, metrics: dict | None = None, page: int = 1, page_size: int = 50) -> str:
@@ -545,7 +618,7 @@ def build_papers_index(papers: list, timestamps: dict, base: str, canonical_url:
     pagination += f'<a href="{next_url}">Next 50 →</a>' if page < page_count else '<span>Next 50 →</span>'
     pagination += '</nav>'
     content = f"""
-<section class="page-intro"><span>Public catalogue</span><h1>Research papers</h1><p>Exactly 50 records per full page, ordered by the real publication chronology. Current AIRR admissions and author-authorized historical imports are visibly distinct; historical imports have not passed AIRR's frontier-model gate.</p>{search_form(base)}</section>
+<section class="page-intro"><span>Public catalogue</span><h1>Research papers</h1><p>Read the latest research or find a specific topic. Historical imports are labelled and have not passed AIRR's admission audit.</p>{search_form(base)}<div class="browse-tools"><a href="{base}/subjects/">Browse by subject</a><a href="{base}/search/">Filter by subject, year and status</a></div></section>
 {pagination}
 <section class="catalogue">{cards}</section>
 {pagination}
@@ -798,14 +871,18 @@ def build_paper_page(
         pdf_url = f"{base}{page_path}{tag}.pdf"
     links = []
     if pdf_url:
-        links.append(f'<a class="button" href="{esc(pdf_url)}">Download {"mirrored" if archival else "canonical"} PDF</a>')
+        links.append(f'<a class="button" href="{esc(pdf_url)}">Read PDF</a>')
+        if local_pdf:
+            links.append(f'<a class="button secondary" href="{esc(pdf_url)}" download="{esc(tag)}.pdf">Download PDF</a>')
+    links.append('<a class="button secondary" href="#cite">Cite this paper</a>')
     if release_url:
-        links.append(f'<a class="button secondary" href="{esc(release_url)}">Download release assets</a>')
+        links.append(f'<a class="text-link" href="{esc(release_url)}">Files &amp; code</a>')
     if source_url:
-        links.append(f'<a class="button secondary" href="{esc(source_url)}">Browse plain sources</a>')
+        links.append(f'<a class="text-link" href="{esc(source_url)}">Sources</a>')
     if metadata.get("doi"):
         links.append(f'<a class="text-link" href="https://doi.org/{esc(metadata["doi"])}">DOI {esc(metadata["doi"])}</a>')
-    keywords = "".join(f"<li>{esc(keyword)}</li>" for keyword in metadata.get("keywords", []))
+    keywords = "".join(f'<li><a href="{base}/search/?q={quote(keyword)}">{esc(keyword)}</a></li>' for keyword in metadata.get("keywords", []))
+    subjects = ''.join(f'<a href="{base}/subjects/{subject_slug(subject)}/">{esc(subject)}</a>' for subject in metadata.get('subjects', []))
     evaluators = "".join(
         f'<li><strong>{esc(item["model_id"])}</strong><span>{esc(item["provider"])}' +
         (f' · reasoning effort {esc(item["reasoning_effort"])}' if item.get("reasoning_effort") else '') +
@@ -830,9 +907,7 @@ def build_paper_page(
     for entry in sorted(version_timestamps, key=lambda item: int(item["version"][1:]), reverse=True):
         version = entry["version"]
         source_available = version in source_versions
-        if version == latest_version:
-            target = root_url
-        elif source_available:
+        if source_available:
             target = f"{root_url}versions/{quote(version)}/"
         elif entry.get("publication_state") == "published" and repository:
             target = f"https://github.com/{repository}/releases/tag/{quote(entry['release_tag'])}"
@@ -849,7 +924,7 @@ def build_paper_page(
             f'<li>{label}<span>{exact_time(chronology_time(entry))} · {esc(source_note + current)}</span></li>'
         )
     version_history = (
-        '<section class="version-history"><h2>Version history</h2><p>The paper identifier remains stable. Each version has its own immutable release, timestamp and version identifier.</p><ul>'
+        '<section class="version-history" id="versions"><h2>Version history</h2><p>The paper identifier remains stable. Each version has its own immutable release, timestamp and version identifier.</p><ul>'
         + "".join(history_items)
         + "</ul></section>"
     )
@@ -902,31 +977,50 @@ def build_paper_page(
         note_section = f"""
   <section class="note-scope"><h2>Technical-note scope</h2><dl class="record"><div><dt>Kind</dt><dd>{esc(note_profile['kind'].replace('_', ' ').title())}</dd></div><div><dt>Maturity</dt><dd>{esc(note_profile['maturity'].replace('_', ' ').title())}</dd></div></dl><h3>Contribution boundary</h3><p>{esc(note_profile['scope_statement'])}</p><h3>Limitations</h3><p>{esc(note_profile['limitations'])}</p></section>
 """
+    exports = citation_exports(metadata, canonical_url)
+    permanent_url = canonical_url + version_path(metadata) if canonical_url else base + version_path(metadata)
+    citation_root = base + version_path(metadata)
+    export_links = ''.join(f'<a href="{citation_root}citation.{suffix}" download="{esc(tag)}.{suffix}">{label}</a>' for suffix, label in [('bib', 'BibTeX'), ('ris', 'RIS'), ('csl.json', 'CSL JSON'), ('txt', 'Plain text')])
+    citation_section = f'''<section class="citation-panel" id="cite" aria-labelledby="cite-heading">
+      <div class="section-heading"><div><span>Reference this work</span><h2 id="cite-heading">Cite this paper</h2></div><span class="citation-version">{esc(metadata['version'])} · {esc(metadata['date'])}</span></div>
+      <p class="citation-text" id="citation-text" tabindex="-1">{esc(exports['txt'].strip())}</p>
+      <div class="citation-actions"><button class="button" type="button" hidden data-copy-target="citation-text" data-copy-label="Citation">Copy citation</button>{export_links}</div>
+      <label class="permalink-label" for="paper-permalink">Permanent link to this version</label><div class="permalink-row"><input id="paper-permalink" type="url" readonly value="{esc(permanent_url)}"><button class="button secondary" type="button" hidden data-copy-target="paper-permalink" data-copy-label="Version link">Copy link</button></div>
+      <p class="citation-help">Use this version link to cite the manuscript you read. AIRR acceptance is not journal peer review. Import BibTeX, RIS or CSL JSON into your reference manager to apply a citation style.</p>
+      <p class="copy-status" role="status" aria-live="polite" data-copy-status></p>
+    </section>'''
+    preview = ''
+    if local_pdf:
+        preview = f'''<details class="pdf-preview" data-pdf-preview="{esc(pdf_url)}" data-pdf-title="{esc(metadata['title'])} — {esc(metadata['version'])}"><summary>Preview PDF on this page <span>{esc(metadata['version'])}</span></summary><div class="pdf-preview-body"><p>Uses your browser's PDF viewer. <a href="{esc(pdf_url)}">Open the PDF directly</a> if a preview is unavailable.</p><noscript><p>Open the PDF above to read it without JavaScript.</p></noscript></div></details>'''
+    reader_version = hashlib.sha256((SITE_DIR / 'reader.js').read_bytes()).hexdigest()[:12]
     content = f"""
 <article class="paper-page">
+  <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="{base}/">Home</a><span aria-hidden="true">/</span><a href="{base}/{route}/">{'Technical notes' if route == 'notes' else 'Papers'}</a><span aria-hidden="true">/</span><span>{esc(metadata['id'])}</span></nav>
   {version_notice}
   {archival_notice}
   <div class="paper-meta">{type_badge(metadata)}{status_badge(metadata['status'])}<span>{esc(metadata['id'])} · {esc(metadata['version'])} · {esc(metadata['date'])}</span></div>
   <h1>{esc(metadata['title'])}</h1>
   <p class="paper-authors">{authors}</p>
-  <section class="abstract"><span>{summary_label}</span><p>{esc(metadata['abstract'])}</p></section>
   <div class="download-row">{''.join(links)}</div>
-  {record_timestamp_panel}
-  <section class="activity-panel" aria-label="Public activity"><div><span>{activity_heading}</span><strong>{activity_value}</strong><small>{activity_note}</small></div><div><span>Page views</span><strong>{metric_number(activity['page_views'])}</strong><small>{esc((metrics or {}).get('views', {}).get('definition', 'No privacy-reviewed page-view source is connected.'))}</small></div><a href="{base}/rankings/#method">Definitions and rankings →</a></section>
-  <div class="paper-assessment-badge">{assessment_badge(paper, assessments)}</div>
-  <div class="paper-grid">
+  <section class="abstract"><span>{summary_label}</span><p>{esc(metadata['abstract'])}</p></section>
+  <div class="paper-subjects" aria-label="Subjects">{subjects}</div>
+  <nav class="paper-jump" aria-label="On this page"><a href="#cite">Cite</a><a href="#versions">Versions</a><a href="#evidence">Verification</a><a href="#model-assessments">Assessments</a><a href="#disclosures">Disclosures</a></nav>
+  {preview}
+  {citation_section}
+  {version_history}
+  {source_history}
+  {revision_section}
+  <div class="paper-grid" id="evidence">
     <section><h2>Verification record</h2><dl class="checks">{verification_rows(metadata)}</dl><p class="protocol-note">Recorded under <a href="{base}/protocol/">{esc(metadata['verification']['protocol'])}</a>. AIRR verification and screening are not peer review.</p></section>
     <aside><h2>Record</h2><dl class="record"><div><dt>Record type</dt><dd>{esc(record_type_label(metadata))}</dd></div><div><dt>Manuscript license</dt><dd>{esc(metadata['licenses']['manuscript'])}</dd></div><div><dt>Metadata license</dt><dd>{esc(metadata['licenses']['metadata'])}</dd></div><div><dt>Canonical source</dt><dd>{esc(metadata['source_of_truth'])}</dd></div><div><dt>Canonical SHA-256</dt><dd><code>{esc(metadata['integrity'].get('canonical_sha256', 'recorded in release manifest'))}</code></dd></div><div><dt>Stable record</dt><dd>{esc(metadata['record_id'])}</dd></div><div><dt>Version identifier</dt><dd>{esc(metadata['version_id'])}</dd></div><div><dt>AI assistance</dt><dd>{'Declared' if metadata['ai_assistance']['used'] else 'Not used'}</dd></div></dl><ul class="keywords">{keywords}</ul></aside>
   </div>
-  {revision_section}
-  {version_history}
-  {source_history}
   {note_section}
   {related_section}
-  <section class="disclosure"><h2>AI assistance statement</h2><p>{disclosure_text(metadata['ai_assistance']['statement'])}</p></section>
+  <section class="disclosure" id="disclosures"><h2>AI assistance statement</h2><p>{disclosure_text(metadata['ai_assistance']['statement'])}</p></section>
   <section class="screening-record"><h2>Frontier-model screening</h2><p>Status: <strong>{esc(metadata['screening']['status'])}</strong>. Any listed reports correspond to this exact version under {esc(metadata['screening']['protocol'])}; no absent assessment is represented as a pass.</p><ul>{evaluators}</ul></section>
   {paper_assessment_section(paper, assessments, highlight, base)}
   <section class="disclosure"><h2>Editorial disclosure</h2><p>{disclosure_text(metadata['editorial']['statement'])}</p></section>
+  <details class="record-provenance"><summary>Record timestamps &amp; download statistics</summary>{record_timestamp_panel}<section class="activity-panel" aria-label="Public activity"><div><span>{activity_heading}</span><strong>{activity_value}</strong><small>{activity_note}</small></div><div><span>Page views</span><strong>{metric_number(activity['page_views'])}</strong><small>{esc((metrics or {}).get('views', {}).get('definition', 'No privacy-reviewed page-view source is connected.'))}</small></div><a href="{base}/rankings/#method">Definitions and rankings →</a></section></details>
 </article>
 """
     return page_shell(
@@ -935,7 +1029,7 @@ def build_paper_page(
         content=content,
         base=base,
         canonical=canonical,
-        head_extra=scholarly_head(metadata, canonical=canonical, release_url=release_url or "", pdf_url=citation_pdf_url, online_date=timestamp.get("published_at", ""), site_root=canonical_url),
+        head_extra=scholarly_head(metadata, canonical=canonical, release_url=release_url or "", pdf_url=citation_pdf_url, online_date=timestamp.get("published_at", ""), site_root=canonical_url) + f'\n  <script src="{base}/assets/reader.js?v={reader_version}" defer></script>',
     )
 
 
@@ -1269,6 +1363,7 @@ def write_sitemaps(papers: list, groups: dict, profiles: list[dict], canonical_u
         (f"{canonical_url}/", latest_date),
         (f"{canonical_url}/papers/", latest_date),
         (f"{canonical_url}/search/", latest_date),
+        (f"{canonical_url}/subjects/", latest_date),
         (f"{canonical_url}/notes/", latest_date),
         (f"{canonical_url}/authors/", latest_date),
         (f"{canonical_url}/rankings/", latest_date),
@@ -1284,6 +1379,10 @@ def write_sitemaps(papers: list, groups: dict, profiles: list[dict], canonical_u
         (f"{canonical_url}/contact/", latest_date),
     ]
     urls.extend((f"{canonical_url}/authors/{profile['id']}/", latest_date) for profile in profiles)
+    for group in subject_groups(papers):
+        root = f"{canonical_url}/subjects/{group['slug']}/"
+        urls.append((root, latest_date))
+        urls.extend((f"{root}page/{page}/", latest_date) for page in range(2, (len(group['papers']) + 49) // 50 + 1))
     paper_page_count = max(1, (sum(paper.record_type == "research_paper" for paper in papers) + 49) // 50)
     urls.extend((f"{canonical_url}/papers/page/{page}/", latest_date) for page in range(2, paper_page_count + 1))
     submit_page_count = max(1, (sum(paper.record_type == "research_paper" for paper in papers) + 49) // 50)
@@ -1414,10 +1513,18 @@ def main() -> int:
     (OUTPUT_DIR / "schema").mkdir(parents=True)
     shutil.copy2(SITE_DIR / "style.css", OUTPUT_DIR / "assets" / "style.css")
     shutil.copy2(SITE_DIR / "search.js", OUTPUT_DIR / "assets" / "search.js")
+    shutil.copy2(SITE_DIR / "reader.js", OUTPUT_DIR / "assets" / "reader.js")
     search_data = json.dumps(search_records(papers, base), ensure_ascii=False, separators=(",", ":")) + "\n"
     search_version = hashlib.sha256(search_data.encode("utf-8")).hexdigest()[:12]
     write(OUTPUT_DIR / "assets" / "search-index.json", search_data)
-    write(OUTPUT_DIR / "search" / "index.html", build_search(base, canonical_url, search_version))
+    write(OUTPUT_DIR / "search" / "index.html", build_search(base, canonical_url, search_version, papers))
+    write(OUTPUT_DIR / "subjects" / "index.html", build_subjects(papers, base, canonical_url))
+    for group in subject_groups(papers):
+        for page in range(1, (len(group['papers']) + 49) // 50 + 1):
+            destination = OUTPUT_DIR / "subjects" / group["slug"]
+            if page > 1:
+                destination = destination / "page" / str(page)
+            write(destination / "index.html", build_subject_page(group, timestamps, base, canonical_url, author_lookup, metrics, page))
     shutil.copy2(SITE_DIR / "arr-logo.png", OUTPUT_DIR / "assets" / "arr-logo.png")
     shutil.copy2(SITE_DIR / "airr-logo.png", OUTPUT_DIR / "assets" / "airr-logo.png")
     for icon in ("favicon.ico", "favicon.svg", "favicon-96x96.png", "apple-touch-icon.png"):
@@ -1493,6 +1600,10 @@ def main() -> int:
     for paper in papers:
         version_timestamps = [entry for (paper_id, _), entry in timestamps.items() if paper_id == paper.id]
         source_versions = {version.version: version for version in groups[paper.id]}
+        for version in groups[paper.id]:
+            export_dir = OUTPUT_DIR / record_route(version.metadata) / version.id / "versions" / version.version
+            for suffix, data in citation_exports(version.metadata, canonical_url).items():
+                write(export_dir / f"citation.{suffix}", data)
         write(
             OUTPUT_DIR / record_route(paper.metadata) / paper.id / "index.html",
             build_paper_page(
