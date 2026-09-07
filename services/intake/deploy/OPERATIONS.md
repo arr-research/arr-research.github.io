@@ -25,8 +25,8 @@ and verified in another failure domain. A failed or incomplete snapshot is not a
 successful backup. Keep scheduled offsite transfer, retention, alerts and recovery
 key custody in the signed deployment evidence, not merely in this guide.
 The latest three local snapshots are kept, none older than seven days, and cleanup
-only follows a successful new snapshot. Configure an at-most-seven-day lifecycle
-at the offsite destination. Reapply erasure
+only follows a successful new snapshot. Target no more than seven days offsite,
+allowing for provider lifecycle scheduling (see the configuration below). Reapply erasure
 schedules and known requests before reopening a restored instance. Deployment
 rollback copies must also be removed after their documented rollback window.
 
@@ -49,7 +49,68 @@ local snapshot age. Run it without `--notify` first; notification mode reports
 only changed failures to the operator, without author data. The separate GitHub
 scheduled workflow checks the public archive and HTTPS login from outside Netcup;
 its schedule is best effort and GitHub failure-notification preferences must be
-verified by the operator. Neither check proves that an offsite transfer succeeded.
+verified by the operator. The external availability check does not prove that an
+offsite transfer succeeded; the on-host monitor also checks the verified offsite
+status when configured.
+
+## Backblaze B2 offsite copies
+
+Install `rclone` from the operating system's signed package repository. The
+transfer uses its S3 interface with a private B2 EU Central bucket, not a public
+URL or a replication service. Create a one-year application key restricted to
+that bucket and the `intake/` prefix; never use the account's master key. The
+provider's Read and Write preset can include bucket-setting and delete
+capabilities in addition to file read/write. Account restrictions, encryption and
+short retention are not protection against every action of a compromised root.
+
+Store the following root-only configuration inside the encrypted volume:
+
+- `secrets/b2-rclone.conf`: remote named `airrb2`, S3 provider `Other`, key ID and
+  application key, endpoint `https://s3.eu-central-003.backblazeb2.com`, region
+  `eu-central-003`, `no_check_bucket = true`, `force_path_style = true`.
+- `secrets/offsite.json`, linked from `/etc/airr-intake/offsite.json`: `enabled`,
+  `bucket`, `prefix` (`intake/`), `region`, `max_snapshot_bytes` (at most
+  500,000,000), and the actual ISO8601 `key_expires_at`. Both files are included
+  in encrypted snapshots. Never place the offline age identity in this folder.
+
+`offsite.py` accepts only a completed, recent age archive whose sidecar hash
+matches. It copies the immutable snapshot, checks its size, downloads it again
+and compares SHA-256, then copies the checksum sidecar. It performs neither a
+remote sync nor remote deletion. Failed or partial transfers never advance the
+success record in `/var/lib/airr-offsite/status.json`; a failure record replaces
+the success state so the monitor reports the problem. The encrypted archive is
+downloaded once per run, so repeated manual runs also consume download quota.
+
+Configure a lifecycle restricted to `intake/`: hide after four days, delete one
+day after hiding, and cancel unfinished large uploads after one day. This leaves
+room for the provider's daily processing within the seven-day target; deletion
+is not instantaneous. Verify effective retention in service operation and
+escalate delays or outstanding erasure requests. Do not enable Object Lock when
+it conflicts with the erasure schedule. References:
+[B2 lifecycle processing](https://www.backblaze.com/docs/cloud-storage-lifecycle-rules)
+and [application keys](https://www.backblaze.com/docs/cloud-storage-application-keys).
+
+On the initial account, verified caps were $0 / 10 GB storage, $0 / 1 GB daily
+downloads and 2,500 daily Class B/C requests, with operator alerts. Preserve these
+caps until the owner explicitly approves changing them. The 500 MB snapshot
+guard leaves download headroom for a verification and recovery download. If the
+archive grows beyond the guard, backup transfer fails visibly and needs capacity
+review; it must not silently buy capacity or skip verification.
+
+After a successful manual upload and disposable restore, install the supplied
+offsite service/timer. It runs at 04:40 with up to five minutes of jitter in the
+server's timezone, after the 04:10 local backup and its 15-minute jitter. Confirm
+both timers' actual next run. The monitor flags unsuccessful transfers, disabled
+timers, snapshots or verification older than 30 hours, missing configuration
+after activation, and a key expiring within 30 days. Run the monitor without
+`--notify` before resuming notifications.
+
+A recovery drill must download from the remote bucket, verify SHA-256, decrypt
+with the separately held identity, and inspect the restored database, operator
+access and protected configuration in disposable encrypted storage. The initial
+live drill contained one operator and no submitted PDFs; a separate synthetic-PDF
+drill does not establish coverage of future real submissions. Keep recovery keys
+under independent operator custody and record restore evidence outside Git.
 
 The launch-approval example has every check false. Neither an installation nor a
 passing unit suite creates a legal review, postal contact, independent editor,

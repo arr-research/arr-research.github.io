@@ -11,6 +11,27 @@ import sys
 import urllib.request
 
 
+def offsite_checks(settings_path, state_path, now):
+    if not settings_path.exists():
+        return {'offsite_copy_verified': False} if state_path.exists() else {}
+    try:
+        settings = json.loads(settings_path.read_text())
+        state = json.loads(state_path.read_text())
+        expiry = datetime.fromisoformat(settings['key_expires_at'])
+        verified = datetime.fromisoformat(state['verified_at'])
+        snapshot = datetime.fromisoformat(state['snapshot_at'])
+        return {
+            'offsite_key_valid': (expiry - now).total_seconds() > 30 * 86400,
+            'offsite_copy_verified': settings.get('enabled') is True and state.get('ok') is True
+                and state.get('download_verified') is True
+                and state.get('bucket') == settings.get('bucket')
+                and 0 <= (now - verified).total_seconds() < 30 * 3600
+                and 0 <= (now - snapshot).total_seconds() < 30 * 3600,
+        }
+    except (OSError, ValueError, KeyError, TypeError):
+        return {'offsite_copy_verified': False}
+
+
 def main():
     checks = {}
     checks['encrypted_volume_mounted'] = os.path.ismount('/srv/airr-private')
@@ -31,6 +52,11 @@ def main():
         checks['system_storage_space'] = system_space.f_bavail * system_space.f_frsize > 1024**3
         latest = sorted(Path('/var/backups/airr').glob('airr-*.tar.gz.age'))
         checks['local_encrypted_backup_recent'] = bool(latest) and datetime.now(timezone.utc).timestamp() - latest[-1].stat().st_mtime < 30 * 3600
+        if Path('/etc/airr-intake/offsite.json').exists() or Path('/var/lib/airr-offsite/status.json').exists():
+            checks.update(offsite_checks(Path('/etc/airr-intake/offsite.json'),
+                Path('/var/lib/airr-offsite/status.json'), datetime.now(timezone.utc)))
+            checks['offsite_timer_active'] = subprocess.run(['systemctl','is-active','--quiet',
+                'airr-intake-offsite.timer'], check=False).returncode == 0
     status = {'checked_at': datetime.now(timezone.utc).isoformat(), 'checks': checks, 'ok': all(checks.values())}
     state_dir = Path('/var/lib/airr-monitor')
     state_dir.mkdir(mode=0o700, exist_ok=True)
