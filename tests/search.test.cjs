@@ -16,6 +16,13 @@ const records = [
   record('irrelevant', 'Bounds for two passive networks', { abstract: '2 cases of saturation' }),
 ];
 
+test('canonical subject filters include parent fields and preserve deposited-label filters', () => {
+  const index = makeIndex([record('quantum','SU(2) result',{subjects:['Quantum information theory'],subject_ids:['quantum-info','physics'],status:'accepted'}), record('other','SU(2) method',{subjects:['Algebra'],subject_ids:['math'],status:'archived'})]);
+  assert.deepEqual(filterResults(index,'SU(2)',{subject:'physics',status:'accepted'}).map(h=>h.record.id), ['quantum']);
+  assert.deepEqual(filterResults(index,'',{subject:'Quantum information theory'}).map(h=>h.record.id), ['quantum']);
+  assert.deepEqual(filterResults(index,'',{subject:'unknown'}), []);
+});
+
 test('scientific notation variants return the same relevance order', () => {
   const index = makeIndex(records);
   for (const query of ['SU(2)', 'su2', 'SU ( 2 )', 'SU 2', 'SU₂', '$\\mathrm{SU}\\left(2\\right)$']) {

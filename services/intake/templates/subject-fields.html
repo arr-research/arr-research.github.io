@@ -1,0 +1,27 @@
+{% set groups = subject_options() %}
+{% macro picker(number, label, name, selected, required=false) %}
+<div class="subject-picker">
+  <label for="subject-search-{{ number }}" data-picker-search-label hidden>Find {{ label|lower }}
+    <input id="subject-search-{{ number }}" type="search" maxlength="160" data-picker-search placeholder="Search by name, synonym or discipline" autocomplete="off" aria-controls="subject-{{ number }}">
+  </label>
+  <label for="subject-{{ number }}">{{ label }}
+    <select id="subject-{{ number }}" name="{{ name }}" {% if required %}required{% endif %} aria-describedby="subject-help-{{ number }}">
+      <option value="">{{ 'Choose a subject' if required else 'None' }}</option>
+      {% for group in groups %}<optgroup label="{{ group.label }}">{% for term in group.terms %}<option value="{{ term.id }}" {% if selected == term.id %}selected{% endif %}>{{ term.label }}{% if term.parent %} — {{ term.path.rsplit(' › ',1)[0] }}{% endif %}</option>{% endfor %}</optgroup>{% endfor %}
+    </select>
+  </label>
+  <p class="meta" id="subject-help-{{ number }}" data-picker-status role="status" aria-live="polite"></p>
+</div>
+{% endmacro %}
+<fieldset class="subject-fields" data-subject-pickers data-catalogue-url="{{ url_for('subject_catalogue') }}">
+<legend>Research subjects</legend>
+<p>Choose a main field and up to two additional fields for interdisciplinary work. Broad fields are valid.</p>
+{{ picker(1, 'Main subject', 'primary_subject', request.form.get('primary_subject',request.args.get('subject','')), true) }}
+{% set secondary = request.form.getlist('secondary_subject') %}
+<details {% if secondary|select|list %}open{% endif %}><summary>Additional subjects — optional</summary>
+{{ picker(2, 'Additional subject 1', 'secondary_subject', secondary[0] if secondary|length > 0 else '') }}
+{{ picker(3, 'Additional subject 2', 'secondary_subject', secondary[1] if secondary|length > 1 else '') }}
+</details>
+<label>Specific or emerging topic — optional<input name="specific_topic" maxlength="200" value="{{ request.form.get('specific_topic','') }}" placeholder="e.g. a new method or a topic spanning several disciplines"></label>
+<p class="meta">If no field fits, choose “Other or emerging research areas” and describe your topic. An editor will review the classification. Vocabulary: EuroSciVoc with AIRR additions. <a href="https://airr.science/subjects/" target="_blank" rel="noreferrer">Explore the full directory</a>.</p>
+</fieldset>

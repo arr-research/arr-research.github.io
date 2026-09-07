@@ -102,7 +102,7 @@
   function filterResults(index, query, filters = {}) {
     let hits = query.trim() ? search(index, query) : index.map(entry => ({ record: entry.record, score: 0, matchedFields: [] }));
     hits = hits.filter(({ record }) =>
-      (!filters.subject || (record.subjects || []).some(subject => normalize(subject) === normalize(filters.subject))) &&
+      (!filters.subject || (record.subject_ids || []).includes(filters.subject) || (record.subjects || []).some(subject => normalize(subject) === normalize(filters.subject))) &&
       (!filters.status || record.status === filters.status) &&
       (!filters.year || String(record.date || "").slice(0, 4) === filters.year));
     const sort = filters.sort === "relevance" || !filters.sort ? (query.trim() ? "relevance" : "newest") : filters.sort;

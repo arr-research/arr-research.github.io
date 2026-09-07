@@ -6,6 +6,14 @@ non-public quarantine, fails closed when malware scanning is unavailable, emails
 the operator a protected case link without attaching the manuscript, and records
 human decisions. It never publishes a submission or writes to `papers/`.
 
+The form uses the shared multidisciplinary subject vocabulary, with one main
+subject, up to two additional subjects and an optional emerging topic. The
+versioned selection is stored with the case and shown on receipts and editor
+pages. Run `init-db` before upgrading an existing installation; its additive
+classification migration is idempotent. See
+[`docs/SUBJECT_TAXONOMY.md`](../../docs/SUBJECT_TAXONOMY.md) for scope, provenance,
+selection rules and publication handoff.
+
 After storing an upload, the receiver redirects to a session-protected receipt
 with the assigned `SUB-...` registration number, received timestamp, manuscript
 hash, current state and a downloadable text receipt. The number proves receipt,
