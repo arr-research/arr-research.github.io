@@ -41,6 +41,7 @@ def main():
     assert len(archive) <= 128 * 1024 * 1024, 'Source archive exceeds deployment limit'
     archive_hash = hashlib.sha256(archive).hexdigest()
     release.mkdir(mode=0o755)
+    release.chmod(0o755)
     exact = {'scripts/__init__.py', 'scripts/subjectlib.py', 'scripts/donationlib.py',
              'site/donations.json', 'site/subjects.js',
              'registry/euroscivoc.json', 'registry/subject-extensions.json'}
