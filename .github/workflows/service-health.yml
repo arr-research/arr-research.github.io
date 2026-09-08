@@ -30,6 +30,10 @@ jobs:
         run: |
           set -euo pipefail
           test "$INTAKE_URL" = 'https://submit.airr.science'
-          code=$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' \
-            --connect-timeout 15 --max-time 45 --retry 2 --retry-all-errors "$INTAKE_URL/submit")
-          test "$code" = 200 || { echo "Private intake entry point returned $code"; exit 1; }
+          # An open /submit sends unsigned-in visitors to their workspace login.
+          # Registration itself must also be available; a paused gate returns 503.
+          for path in /account/register /submit; do
+            code=$(curl --silent --show-error --location --output /dev/null --write-out '%{http_code}' \
+                --connect-timeout 15 --max-time 45 --retry 2 --retry-all-errors "$INTAKE_URL$path")
+            test "$code" = 200 || { echo "Private intake $path returned $code"; exit 1; }
+          done
