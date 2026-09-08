@@ -483,7 +483,10 @@ def scanner_command(path: Path) -> list[str] | None:
         executable = str(configured_path) if configured_path.is_absolute() and configured_path.is_file() else shutil.which(configured)
         return [executable, str(path)] if executable else None
     if shutil.which("clamdscan"):
-        return ["clamdscan", "--fdpass", "--no-summary", str(path)]
+        # Passing a descriptor across systemd mount namespaces can be rejected
+        # by clamd's AppArmor profile as a disconnected path. Stream the bytes
+        # to the same local daemon without widening its filesystem permissions.
+        return ["clamdscan", "--stream", "--no-summary", str(path)]
     if shutil.which("clamscan"):
         return ["clamscan", "--no-summary", str(path)]
     return None
@@ -526,22 +529,23 @@ def scan_submission(row: sqlite3.Row) -> tuple[str, str]:
 
 
 def scanner_is_ready() -> bool:
-    command = scanner_command(Path(current_app_config('QUARANTINE')) / 'readiness-probe.pdf')
-    if not command:
-        return False
-    if Path(command[0]).name in {'clamdscan', 'clamdscan.exe'}:
-        try:
-            probe = subprocess.run([command[0], '--ping=1'], capture_output=True, timeout=4, check=False)  # nosec B603
-            return probe.returncode == 0
-        except (OSError, subprocess.TimeoutExpired):
-            return False
-    # Standalone scanners need a real harmless probe, not just an executable check.
+    # A responding daemon may still reject real files. Exercise the same command,
+    # service identity and quarantine directory as an upload, with a short timeout.
     probe_path = Path(current_app_config('QUARANTINE')) / ('.readiness-' + secrets.token_hex(12))
     try:
+        command = scanner_command(probe_path)
+        if not command:
+            return False
         probe_path.write_bytes(b'AIRR harmless scanner readiness check\n')
-        return scan_file(probe_path)[0] == 'clean'
+        probe = subprocess.run(command, capture_output=True, timeout=4, check=False)  # nosec B603
+        return probe.returncode == 0
+    except (OSError, subprocess.TimeoutExpired):
+        return False
     finally:
-        probe_path.unlink(missing_ok=True)
+        try:
+            probe_path.unlink(missing_ok=True)
+        except OSError:
+            return False
 
 
 def valid_email(value: str) -> bool:
