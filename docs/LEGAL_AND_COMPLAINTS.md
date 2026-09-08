@@ -44,8 +44,10 @@ Contact the controller first if practical. Data subjects may also complain direc
 to the Swedish Authority for Privacy Protection (IMY):
 <https://www.imy.se/en/individuals/forms-and-e-services/file-a-gdpr-complaint/>.
 
-## Service-address limitation
+## Public contact and operating scope
 
-This electronic contact is usable for the direct-submission pilot. AIRR must obtain and
-publish a stable service/postal address and obtain Swedish legal review before it
-opens unrestricted public accounts or describes the service as fully compliant.
+The pilot requires a service/postal contact address chosen for publication by the
+operator. Account or billing details must not be republished by inference.
+Opening reception is not an external legal certification. Review the applicable
+obligations when AIRR changes its activity, recipients or commercial arrangements,
+and obtain qualified advice where needed.

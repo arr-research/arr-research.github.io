@@ -3,7 +3,7 @@
 The public catalogue remains on GitHub Pages. `submit.airr.science` points only to
 the private Netcup receiver. Caddy terminates TLS and overwrites all trusted
 forwarding headers before sending traffic to loopback. Its liveness check permits
-editor setup while `ARR_INTAKE_OPEN=0`; the application enforces the signed opening
+editor setup while `ARR_INTAKE_OPEN=0`; the application enforces the recorded opening
 gate separately on every public submission request. `/healthz` and `/readyz` are
 not exposed by the supplied Caddy configuration.
 
@@ -23,7 +23,7 @@ encrypted volume. Only the age public recipient resides on the VPS. A snapshot
 and checksum in `/var/backups/airr` are not an independent backup until transferred
 and verified in another failure domain. A failed or incomplete snapshot is not a
 successful backup. Keep scheduled offsite transfer, retention, alerts and recovery
-key custody in the signed deployment evidence, not merely in this guide.
+key custody status in the deployment evidence, not merely in this guide.
 The latest three local snapshots are kept, none older than seven days, and cleanup
 only follows a successful new snapshot. Target no more than seven days offsite,
 allowing for provider lifecycle scheduling (see the configuration below). Reapply erasure
@@ -112,10 +112,15 @@ live drill contained one operator and no submitted PDFs; a separate synthetic-PD
 drill does not establish coverage of future real submissions. Keep recovery keys
 under independent operator custody and record restore evidence outside Git.
 
-The launch-approval example has every check false. Neither an installation nor a
-passing unit suite creates a legal review, postal contact, independent editor,
-restore-key handoff or offsite schedule. Evidence and the operator's signature
-must be real before setting the public switch and GitHub intake URL.
+The `AIRR-PILOT-1.0` launch example has every check false. Each required check needs
+an evidence reference, plus the real operator's authorization identity, date and
+source. A tool may record an existing explicit instruction; it must not call that
+an electronic signature or invent completed checks. Postal contact, data handling,
+restoration, HTTPS, operator MFA, scheduled backups, monitoring, incident handling
+and end-to-end receipt must be reviewed before enabling the switch and GitHub URL.
+An independent editor is required for conflicted final decisions and appeals,
+not for ordinary receipt. Record incomplete recovery-key custody honestly as an
+ongoing continuity task. See `docs/INTAKE_OPERATIONS.md` for the reception policy.
 
 
 ## Deploying agent intake
@@ -133,6 +138,6 @@ large incoming PDF fragments on the encrypted volume. Maintain the encrypted
 mount requirement and the private filesystem permissions on the whole instance.
 
 The new API and browser form share PDF persistence, malware scanning and editorial
-notification. A deployed API does not open intake: it enforces the existing signed
-launch approval. Confirm the human form, authorization request and upload all
+notification. A deployed API does not open intake: it enforces the recorded
+launch authorization. Confirm the human form, authorization request and upload all
 return 503 before the operator completes that approval.

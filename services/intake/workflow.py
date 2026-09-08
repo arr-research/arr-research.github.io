@@ -7,7 +7,7 @@ import io
 import json
 import secrets
 import sqlite3
-from datetime import timedelta
+from datetime import datetime, timedelta
 from email.message import EmailMessage
 from pathlib import Path
 from urllib.parse import quote
@@ -95,14 +95,30 @@ def install(app, a):
             approval = json.loads(Path(app.config['LAUNCH_APPROVAL_FILE']).read_text())
         except (OSError, ValueError):
             return False
-        required = {'legal_review', 'postal_contact', 'processor_register', 'storage_and_restore',
-                    'https', 'operator_2fa', 'independent_editor', 'backup_schedule',
-                    'monitoring', 'incident_exercise', 'end_to_end'}
-        checks = approval.get('checks', {})
-        if not approval.get('signed_by') or not approval.get('signed_at') or not all(checks.get(k) is True for k in required):
+        # Readiness for receiving is separate from authority to decide a
+        # conflicted case. The per-case recusal and appeal guards remain below.
+        if not isinstance(approval, dict) or approval.get('policy_version') != 'AIRR-PILOT-1.0':
             return False
-        roles = {x[0] for x in a.get_db().execute("SELECT DISTINCT role FROM users WHERE active=1 AND totp_secret IS NOT NULL")}
-        return {'operator', 'independent_editor'}.issubset(roles)
+        required = {'postal_contact', 'data_handling_review', 'storage_and_restore',
+                    'https', 'operator_2fa', 'backup_schedule',
+                    'monitoring', 'incident_procedure', 'end_to_end'}
+        checks = approval.get('checks', {})
+        evidence = approval.get('evidence', {})
+        if not isinstance(checks, dict) or not isinstance(evidence, dict):
+            return False
+        if not all(checks.get(k) is True and isinstance(evidence.get(k), str) and evidence[k].strip() for k in required):
+            return False
+        source = approval.get('authorization_source')
+        if approval.get('authorized_by') != app.config['OPERATOR_EMAIL'] or not isinstance(source, str) or not source.strip():
+            return False
+        try:
+            authorized_at = datetime.fromisoformat(approval.get('authorized_at', ''))
+            if authorized_at.tzinfo is None or authorized_at > a.now():
+                return False
+        except (ValueError, TypeError):
+            return False
+        return a.get_db().execute("SELECT 1 FROM users WHERE email=? AND role='operator' AND active=1 AND totp_secret IS NOT NULL",
+                                  (approval['authorized_by'],)).fetchone() is not None
 
     def case(case_id):
         row = a.get_db().execute("SELECT s.*,u.email,u.display_name FROM submissions s JOIN users u ON u.id=s.user_id WHERE s.id=?", (case_id,)).fetchone()
@@ -445,7 +461,7 @@ def install(app, a):
 
     @app.cli.command('launch-status')
     def launch_status():
-        click.echo(json.dumps({'public_switch': app.config['INTAKE_OPEN'], 'signed_launch_checks': launch_approved()}))
+        click.echo(json.dumps({'public_switch': app.config['INTAKE_OPEN'], 'recorded_launch_checks': launch_approved()}))
 
     @app.cli.command('workflow-sweep')
     def workflow_sweep():
