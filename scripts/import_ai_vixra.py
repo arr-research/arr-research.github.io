@@ -130,7 +130,7 @@ def download_latest(record: dict, download_dir: Path, mirror_tag: str) -> dict:
             with requests.get(
                 candidate["pdf_url"],
                 timeout=90,
-                headers={"User-Agent": "AIRR archival importer/1.0 (+https://arr-research.github.io/)"},
+                headers={"User-Agent": "AIRR archival importer/1.0 (+https://airr.science/)"},
             ) as response:
                 response.raise_for_status()
                 payload = response.content
@@ -181,7 +181,7 @@ def main() -> int:
         errors: list[str] = []
     else:
       with requests.Session() as session:
-        session.headers.update({"User-Agent": "AIRR archival importer/1.0 (+https://arr-research.github.io/)"})
+        session.headers.update({"User-Agent": "AIRR archival importer/1.0 (+https://airr.science/)"})
         author_response = get(session, args.author_url)
         author_soup = BeautifulSoup(author_response.text, "html.parser")
         abstract_urls: list[str] = []

@@ -66,7 +66,7 @@ def published_pdf(paper, timestamp: dict, *, cache_dir: Path, fetch_remote: bool
         r"/[^/]+/[^/]+/releases/download/[^/]+/[^/]+\.pdf", parsed.path
     ) or parsed.query or parsed.fragment:
         raise ValueError("remote PDF must be a public HTTPS GitHub Release PDF")
-    request = Request(url, headers={"User-Agent": "ARR-Pages-PDF-Mirror/1.0"})
+    request = Request(url, headers={"User-Agent": "AIRR-Pages-PDF-Mirror/1.0"})
     for attempt in range(3):
         try:
             with urlopen(request, timeout=30) as response:

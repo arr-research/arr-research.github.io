@@ -14,12 +14,12 @@ from pathlib import Path
 
 
 INDEXNOW_ENDPOINT = "https://api.indexnow.org/indexnow"
-USER_AGENT = "ARR-IndexNow/1.0 (+https://arr-research.github.io/)"
+USER_AGENT = "AIRR-IndexNow/1.0 (+https://airr.science/)"
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Submit the deployed AIRR sitemap to IndexNow.")
-    parser.add_argument("--site-root", required=True, help="Canonical site root, for example https://arr-research.github.io/")
+    parser.add_argument("--site-root", required=True, help="Canonical site root, for example https://airr.science/")
     parser.add_argument("--key-file", required=True, type=Path, help="UTF-8 IndexNow key file")
     parser.add_argument("--endpoint", default=INDEXNOW_ENDPOINT, help="IndexNow endpoint")
     parser.add_argument("--retries", type=int, default=4, help="Retries for transient deployment/API failures")

@@ -1,7 +1,8 @@
 # AIRR private intake service
 
 This service is the direct private-submission boundary in front of the public AIRR
-repository. Authors need no invitation or account. It accepts PDF manuscripts into
+repository. Authors use a private alias/password workspace without an invitation,
+author email or legal name. It accepts PDF manuscripts into
 non-public quarantine, fails closed when malware scanning is unavailable, emails
 the operator a protected case link without attaching the manuscript, and records
 human decisions. It never publishes a submission or writes to `papers/`.
@@ -22,16 +23,19 @@ The receipt displays the shared destination from `site/donations.json`, an optio
 PayPal link and a copyable registration reference. No paper data is automatically
 sent to PayPal. Payment notes have no effect on editorial decisions.
 
-`/receipt` and `/receipt/download` work only in the submitting browser session.
-The number is never used as an access credential. Both routes, the form and editor
-pages carry `no-store` and `noindex` responses. Authors should download the receipt
-before the browser session ends; a later upload replaces that session's displayed
-receipt. Safety-rejected files get a rejection explanation rather than a donation
-invitation.
+`/receipt` and `/receipt/download` show the latest receipt in the submitting
+browser session. The persistent case and its correspondence are available after
+signing back into the same workspace at `/account`. The registration number is
+never an access credential. Receipts, forms and editor pages carry `no-store` and
+`noindex` responses. Safety-rejected files get a rejection explanation rather
+than a donation invitation. Each account has a rolling allowance of 10 papers in
+24 hours shared by form and delegated agents; see the production runbook for
+attempt limits and delegation scopes.
 
-The service is suitable for a controlled pilot after the production checklist in
-[`docs/INTAKE_OPERATIONS.md`](../../docs/INTAKE_OPERATIONS.md) has evidence and recorded operator authorization.
-It is not permission to open general public intake.
+The hosted AIRR pilot opened on 8 September 2026 after recorded operator
+authorization and production checks. Every new installation still requires its
+own evidence under [`docs/INTAKE_OPERATIONS.md`](../../docs/INTAKE_OPERATIONS.md);
+this README does not open an installation or authorize publication.
 
 ## Local setup
 
@@ -92,13 +96,13 @@ operator TOTP account. An independent editor is still required for conflicted fi
 decisions and appeals. The example file contains no approvals. `flask launch-status`
 reports this gate.
 
-Authors receive a queued transactional receipt with a single-use link, valid for
-seven days. A POST consumes the token and opens an eight-hour session; email link
-scanners do not consume it by fetching the URL. Links are stored as hashes, except
-for the pending message body in the encrypted instance. Never enable URL/access
-logging at the proxy. `send-pending-mail` sends queued messages; uncertain SMTP
-results require investigation, not automatic retry. The minute mail timer does
-not send anything until an application action queues a message.
+Authors manage cases in their alias workspace and retain their password and
+recovery code. New submissions do not request author email or send author access
+links. The operator still receives minimal email notifications. Legacy queued
+mail/token paths remain for compatibility and retention of older records; they
+are not the current sign-in flow. Never enable URL/access logging at the proxy.
+`send-pending-mail` handles queued messages; uncertain SMTP results require
+investigation, not automatic retry.
 
 Editors declare the exact providers/models and their service-specific notice
 before recording reports. The author separately confirms the plan. After the

@@ -37,7 +37,11 @@ The first source snapshot remains at the record root for backward compatibility.
 
 ### GitHub Pages
 
-The static site contains only HTML, CSS, JSON and NDJSON catalogue files. Paper pages link to Git sources and Release assets rather than copying heavy files into the website deployment.
+The static site contains HTML, CSS, JavaScript, images and machine-readable
+catalogue files. It also mirrors verified canonical PDFs beside their abstract
+pages for scholarly crawlers. Paper pages link to Git sources and immutable
+Release assets; the Pages PDF copies are reproducible from those verified
+sources and are not the authoritative preservation store.
 
 ### Future preservation
 
