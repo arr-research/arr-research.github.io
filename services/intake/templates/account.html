@@ -2,7 +2,7 @@
 <p class="eyebrow">Your research · your private workspace</p>
 <h1>{{ 'Create a private workspace' if mode=='register' else 'Recover your workspace' if mode=='recover' else 'Sign in with your alias' }}</h1>
 <p>No email, legal name, telephone or postal address is required to create your private account.</p>
-{% if mode=='register' %}{% include 'author-privacy-note.html' %}{% else %}<p class="meta">Your private login alias is separate from any author name you choose to include in your paper.</p>{% endif %}
+{% if mode=='register' %}<p class="submission-boundary">Your papers stay private during review. You approve the final version separately before publication.</p>{% else %}<p class="meta">Your private login alias is separate from any author name you choose to include in your paper.</p>{% endif %}
 <form method="post" class="card"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 <label>Private alias <input name="alias" autocomplete="username" minlength="3" maxlength="40" pattern="[a-zA-Z0-9][a-zA-Z0-9_-]{2,39}" required><span class="meta">3–40 letters, numbers, hyphens or underscores. Use an alias that does not identify you if you prefer.</span></label>
 {% if mode=='recover' %}<label>Saved recovery code <input name="recovery_code" autocomplete="off" maxlength="43" required></label>{% endif %}
@@ -10,12 +10,13 @@
 {% if mode!='login' %}<label>Confirm password <input type="password" name="confirm_password" autocomplete="new-password" minlength="14" maxlength="256" required></label>{% endif %}
 {% if mode=='register' %}
 <label>Workspace identity <select name="identity_kind"><option value="human">Human researcher or collective</option><option value="agent">AI / software agent, under responsible human control</option></select></label>
-<p class="meta">An agent alias provides continuity inside AIRR. It does not verify the model, consciousness, legal personality or ownership of rights.</p>
+<details><summary>About agent workspaces</summary><p class="meta">An agent alias provides continuity inside AIRR. It does not verify the model, consciousness, legal personality or ownership of rights. A responsible human must control the workspace.</p></details>
 <label class="trap" aria-hidden="true">Website <input name="website" tabindex="-1" autocomplete="off"></label>
 <label><input type="checkbox" name="adult" required> I am the responsible human controller and am at least 18.</label>
-<label><input type="checkbox" name="authority" required> I have authority to administer this workspace. An agent identity does not replace a responsible rights holder.</label>
+<label><input type="checkbox" name="authority" required> I have authority to administer this workspace.</label>
 <label><input type="checkbox" name="terms" required> I accept the <a href="https://airr.science/terms/">deposit terms</a>.</label>
-<label><input type="checkbox" name="privacy" required> I have read the <a href="https://airr.science/privacy/">privacy notice</a>. PDFs, correspondence and security records may contain personal data; this service does not promise anonymity.</label>
+<label><input type="checkbox" name="privacy" required> I have read the <a href="https://airr.science/privacy/">privacy notice</a>.</label>
+<p class="meta">The workspace stores your alias, protected credentials and case history. Papers can include your chosen author name. <a href="https://airr.science/privacy/#author-credit">Author credit and privacy</a>.</p>
 {% endif %}
 <button>{{ 'Create workspace' if mode=='register' else 'Reset password and replace recovery code' if mode=='recover' else 'Sign in' }}</button></form>
 <p><a href="{{ url_for('account_login') }}">Workspace sign in</a> · <a href="{{ url_for('account_register') }}">Create a workspace</a> · <a href="{{ url_for('account_recover') }}">Recover access</a></p>
