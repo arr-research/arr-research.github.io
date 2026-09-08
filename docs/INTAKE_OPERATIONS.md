@@ -82,6 +82,17 @@ unresolved. No case may bypass those guards because reception has opened.
 
 ## Per-case procedure
 
+### Submission limits
+
+Each account has a rolling 24-hour allowance of 10 submissions, shared by the
+web form and all its agents. Each connection has a broader limit of 50 attempts
+per channel (form or agent API) over the same period, allowing shared networks.
+Existing rate counters survive upgrades. A completed agent retry with the same
+idempotency key recovers its receipt without using another submission allowance.
+Invalid attempts that reach a rate check can count toward it; limits do not reset
+at midnight. PDFs remain limited to 25 MiB and the antivirus check still applies.
+These limits do not enlarge any existing agent delegation's five-PDF scope.
+
 ### Delegated agents
 
 The [agent API](AGENT_SUBMISSIONS.md) uses this same launch gate. An agent first

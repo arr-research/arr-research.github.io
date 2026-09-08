@@ -50,6 +50,9 @@ TERMS_VERSION = "ARR-DEPOSIT-1.8"
 PRIVACY_VERSION = "ARR-PRIVACY-1.6"
 FRONTIER_PROMPT_VERSION = "ARR-INTAKE-ASSESS-1.0"
 MAX_PDF_BYTES = 25 * 1024 * 1024
+SUBMISSIONS_PER_ACCOUNT = 10
+SUBMISSION_ATTEMPTS_PER_CONNECTION = 50
+SUBMISSION_WINDOW_SECONDS = 24 * 60 * 60
 ALLOWED_STATES = {
     "quarantined",
     "eligible",
@@ -710,7 +713,7 @@ def register_routes(app: Flask) -> None:
             return redirect(url_for('account_login'))
         if request.method == "POST":
             require_csrf()
-            enforce_rate("submit", 3, 24 * 60 * 60)
+            enforce_rate("submit", SUBMISSION_ATTEMPTS_PER_CONNECTION, SUBMISSION_WINDOW_SECONDS)
             if shutil.disk_usage(current_app_config('QUARANTINE')).free < MAX_PDF_BYTES * 4:
                 abort(503, 'Private storage is temporarily full. Please try again later; no manuscript was registered.')
             if request.form.get("website"):
@@ -735,7 +738,7 @@ def register_routes(app: Flask) -> None:
             if not upload or not title or len(title) > 500 or len(authors) > 1000 or not 80 <= len(abstract) <= 5000 or not agreed:
                 flash("Complete all fields and attestations.", "error")
                 return render_template("submit.html", terms=TERMS_VERSION, privacy=PRIVACY_VERSION)
-            enforce_rate("submit-account", 3, 24 * 60 * 60, str(g.user['id']))
+            enforce_rate("submit-account", SUBMISSIONS_PER_ACCOUNT, SUBMISSION_WINDOW_SECONDS, str(g.user['id']))
             from services.intake.storage import receive
             try:
                 row = receive(app, sys.modules[__name__], upload, {
