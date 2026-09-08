@@ -23,7 +23,9 @@ and evidence for the checks below. An installation tool may record an explicit
 operator instruction; it must not invent a signature or completed review.
 Reception is separate from editorial acceptance and public release.
 
-- [ ] A stable service/postal contact address chosen by the operator is published.
+- [x] The operator supplied and authorized the service/postal contact in
+  `LEGAL_AND_COMPLAINTS.md` on 2026-09-08. Verify the actual public contact page
+  before installing the launch record.
 - [ ] Terms, privacy, contact, complaint handling, actual infrastructure recipients,
   contracts, locations and transfer arrangements have a documented review in
   `PROCESSING_RECORD.md`. Record unresolved points and seek qualified advice where
