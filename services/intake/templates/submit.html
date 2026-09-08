@@ -1,19 +1,24 @@
 {% extends 'base.html' %}{% block title %}Submit a paper — AIRR.SCIENCE{% endblock %}{% block content %}
-<p class="eyebrow">Open research · private submission</p><h1>Submit your paper to AIRR.</h1><p>Use your private alias workspace; no email or legal name is requested. Authors and authorized agents can submit a PDF, maximum 25 MiB. Your manuscript stays private while approval is considered.</p><p>After the file is received, you will get a registration number and a downloadable receipt. Registration does not mean acceptance or publication. The operator receives an email notice with a protected case link.</p>
-<p><a href="{{ url_for('agents_help') }}">Submitting with an LLM or software agent? Use a delegated permission.</a></p>
+<p class="eyebrow">Open research · private submission</p><h1>Submit your paper to AIRR.</h1>
+<p>Send a PDF for private review. You will receive a registration number and can follow the review in your workspace.</p>
+<p class="submission-boundary"><strong>You choose when to publish.</strong> Sending a paper does not publish it or authorize publication. If accepted, you will approve the final version and its license separately.</p>
+<p class="meta">1. Send privately &nbsp; → &nbsp; 2. Review together &nbsp; → &nbsp; 3. Approve publication</p>
 <form class="card" method="post" enctype="multipart/form-data">{% if g.revision_parent %}<input type="hidden" name="revision_of" value="{{ g.revision_parent['id'] }}"><p>Corrected revision of {{ g.revision_parent['id'] }}. This revision stays in your private workspace.</p>{% endif %}<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-<p>Private workspace: <strong>{{ g.user['display_name'] }}</strong>. This alias is not published automatically.</p>
+<p class="meta">Private workspace: <strong>{{ g.user['display_name'] }}</strong> — no email or legal name is requested. This alias is not published automatically.</p>
 <label class="trap" aria-hidden="true">Website <input name="website" tabindex="-1" autocomplete="off"></label>
 <label>Title <input name="title" value="{{ request.form.get('title','') }}" maxlength="500" required></label><label>Public author names or aliases (optional) <input name="authors" value="{{ request.form.get('authors','') }}" maxlength="1000"></label>
-<p class="meta">Leave the author field blank for Anonymous. Choose the credit you are authorized to use; never impersonate another person. Leaving this field blank does not remove a name from the PDF.</p>
+<p class="meta">Leave blank for Anonymous. Use only names or aliases you are authorized to credit.</p>
 {% include 'author-privacy-note.html' %}
 {% include 'subject-fields.html' %}
-<label>Abstract <textarea name="abstract" minlength="80" maxlength="5000" rows="8" required>{{ request.form.get('abstract','') }}</textarea></label><label>Canonical manuscript <input type="file" name="manuscript" accept="application/pdf,.pdf" required></label>
+<label>Abstract <textarea name="abstract" minlength="80" maxlength="5000" rows="8" required>{{ request.form.get('abstract','') }}</textarea></label><label>Paper PDF <input type="file" name="manuscript" accept="application/pdf,.pdf" required><span class="meta">One PDF, up to 25 MiB. Check the file and author credit before sending.</span></label>
+<fieldset class="submission-agreement"><legend>Before you send</legend>
 <label><input type="checkbox" name="adult" required> I am at least 18 years old.</label>
-<label><input type="checkbox" name="authority" required> I am an author, rights holder or authorized agent and the disclosures are accurate.</label>
-<label><input type="checkbox" name="terms" required> I accept <a href="https://airr.science/terms/" target="_blank" rel="noreferrer">{{ terms }}</a>.</label>
-<label><input type="checkbox" name="privacy" required> I have read <a href="https://airr.science/privacy/" target="_blank" rel="noreferrer">{{ privacy }}</a>.</label>
+<label><input type="checkbox" name="authority" required> I have the rights or permission to submit this paper, and my disclosures are accurate.</label>
+<label><input type="checkbox" name="terms" required> I accept the <a href="https://airr.science/terms/" target="_blank" rel="noreferrer" title="{{ terms }}">deposit terms</a> for private review.</label>
+<label><input type="checkbox" name="privacy" required> I have read the <a href="https://airr.science/privacy/" target="_blank" rel="noreferrer" title="{{ privacy }}">privacy notice</a>.</label>
+<label><input type="checkbox" name="ai_review_opt_in" required> I understand that AI assessment is required for acceptance. I will approve the named services separately before my paper is shared with them.</label>
+<details><summary>How the private review works</summary><p class="meta">Your file is checked and stored privately. The operator receives an email notice with a protected case link; your updates stay in this workspace. Before external AI assessment, AIRR shows the exact providers/models and their confidentiality, retention and transfer safeguards for your confirmation. No fixed provider or number of reports is promised. A human decides the editorial outcome. These checkboxes do not authorize external AI transfer or public release.</p><p class="meta">Recorded documents: {{ terms }} · {{ privacy }}. Acknowledging the privacy notice does not waive your applicable rights.</p><p class="meta"><a href="{{ url_for('agents_help') }}">Submitting with an LLM or software agent? Read about delegated permission.</a></p></details>
+</fieldset>
 <label><input type="checkbox" name="operator_conflict"> An author has a personal, financial, supervisory or close collaborative relationship with the AIRR operator/editor.</label>
-<label><input type="checkbox" name="ai_review_opt_in" required> I understand that frontier-model screening is required for acceptance. Before any transfer, AIRR will present the exact providers/models and their confidentiality, retention and transfer safeguards for my separate confirmation. This checkbox alone does not authorize a provider to receive my manuscript.</label>
-<button>Submit privately</button><p class="meta">Submission and assessment are free. The receipt offers an optional donation link; donating does not affect approval, review speed, scores or ranking.</p></form>
+<button>Send for private review</button><p class="meta">This sends the paper for review only. Publication needs your separate approval.</p><p class="meta">Submission and assessment are free. Donating is optional and does not affect the review or decision.</p></form>
 <script src="{{ url_for('subject_search_script') }}" defer></script><script src="{{ url_for('static',filename='subject-picker.js') }}" defer></script>{% endblock %}

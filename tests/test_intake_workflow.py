@@ -216,12 +216,20 @@ class WorkflowTests(fixtures.IntakeTests):
 
     def test_release_handoff_requires_publication_permission_and_excludes_contact(self):
         case_id = self.upload()
+        with self.app.app_context():
+            self.assertEqual(get_db().execute('SELECT COUNT(*) FROM publication_permissions').fetchone()[0], 0)
+        csrf = self.author_session(case_id)
+        self.assertEqual(self.client.post('/case/' + case_id, data={'csrf_token': csrf, 'action': 'publication', 'license': 'CC-BY-4.0', 'publication_confirm': 'on'}).status_code, 409)
         self.add_model_review(case_id, 1)
         token = self.login_session('operator@example.org')
         self.client.post(f'/admin/submission/{case_id}/decision', data={'csrf_token': token, 'action': 'accept', 'reason': 'Checks complete'})
         path = f'/admin/submission/{case_id}/release-package'
         self.assertEqual(self.client.get(path).status_code, 409)
         csrf = self.author_session(case_id)
+        confirmation = self.client.get('/case/' + case_id)
+        self.assertIn(b'Open the accepted PDF before approving', confirmation.data)
+        self.assertIn(self.row(case_id)['sha256'].encode(), confirmation.data)
+        self.assertEqual(self.client.post('/case/' + case_id, data={'csrf_token': csrf, 'action': 'publication', 'license': 'CC-BY-4.0'}).status_code, 409)
         self.assertEqual(self.client.post('/case/' + case_id, data={'csrf_token': csrf, 'action': 'publication', 'license': 'CC-BY-4.0', 'publication_confirm': 'on'}).status_code, 302)
         self.login_session('operator@example.org')
         result = self.client.get(path)
