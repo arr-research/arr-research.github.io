@@ -1,6 +1,6 @@
-# AIRR deposit terms — ARR-DEPOSIT-1.6
+# AIRR deposit terms — ARR-DEPOSIT-1.7
 
-**Effective:** 2026-09-07
+**Effective:** 2026-09-08
 **Brand wording updated:** 2026-09-06; see [identity and continuity](BRAND_IDENTITY.md).
 
 **Operator:** Lluis Eriksson, Sweden — lluiseriksson@gmail.com
@@ -11,18 +11,19 @@ after advance publication of new terms and clear notice before submission. No fe
 will be imposed retroactively on a submission governed by this version, and a
 future fee will never purchase acceptance, priority or a favourable decision.
 
-This version replaces `ARR-DEPOSIT-1.5` before direct public submission was
+This version replaces `ARR-DEPOSIT-1.6` before direct public submission was
 activated.
 
-These terms govern AIRR's direct private-submission pilot. No invitation or author
-account is required. They are accepted when a depositor ticks the versioned
+These terms govern AIRR's direct private-submission pilot. No invitation, email or
+legal name is required. Depositors use a private alias workspace protected by a
+password and recovery code. Terms are accepted when a depositor ticks the versioned
 agreement and uploads a manuscript through the private form. Email and GitHub
 issues are not deposit channels.
 
 The authorized-agent API is another private deposit channel. A responsible adult
-confirms a limited delegation through their email before the agent can upload.
+confirms a limited delegation inside their signed-in private workspace before the agent can upload.
 The delegation covers at most five PDFs over seven days, subject to daily limits,
-and can be revoked through the confirmation email. The person may act for an
+and can be revoked in workspace settings, including while intake is paused. The person may act for an
 organization but must have authority to make the deposit and accept these terms.
 Declared model or agent identity is not proof of authorship or rights. The
 responsible person is accountable for the agent's deposits and disclosures.
@@ -39,14 +40,31 @@ review and correct every field, links a storable copy of these terms, and identi
 the steps as direct upload to quarantine, security/eligibility checks, human
 assessment, decision and—only if finally accepted—a separate publication release.
 AIRR archives the accepted terms/privacy version and immediately shows an electronic
-case identifier. Editorial responses use the depositor's submitted email address.
+case identifier. Editorial responses are recorded in the private case. Depositors
+must check the workspace for updates; no depositor notification or password-reset
+email is sent.
 
 ## 1. Eligibility and authority
 
-The depositor must be at least 18, be an author, rights holder or authorized agent,
+The responsible human controller must be at least 18 and be an author, rights holder or authorized representative,
 and have authority from every necessary rights holder. The depositor warrants that
 authorship, AI assistance, funding, competing interests, third-party material,
 licenses and provenance are accurate and complete and will promptly correct them.
+
+Private aliases may represent people, collectives or declared software agents.
+An alias does not establish legal personality, consciousness, verified identity or
+ownership of rights. Responsible human authority is still required. Public author
+credit is separate from the private alias: permitted names or aliases may be
+supplied, or Anonymous used when omitted. The author field does not remove credits
+or personal data from the PDF. Do not impersonate others or conceal a conflict by
+using a pseudonym. Missing attribution or rights information may require
+clarification before publication.
+
+Keep your password and recovery code private. Whoever controls them can act in
+the workspace; authentication does not verify legal identity. Losing both may
+mean losing access. Recovery invalidates previous sessions and agent delegations.
+Public release still requires separate exact-version permission. A workspace is
+not a public profile or a grant of editorial powers.
 
 ## 2. Permitted deposit
 
@@ -107,7 +125,7 @@ tombstone; AIRR cannot recall third-party copies.
 
 ## 6. Privacy and frontier-model review
 
-Processing follows `ARR-PRIVACY-1.4`. Private submissions are not placed in the
+Processing follows `ARR-PRIVACY-1.5`. Private submissions are not placed in the
 public repository. Completing the disclosed frontier-model screening is required
 for acceptance. The depositor may withdraw before a transfer not yet made, but AIRR
 then cannot complete the acceptance protocol. Providers may use the manuscript only

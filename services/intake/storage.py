@@ -37,7 +37,9 @@ def receive(app, a, upload, data, reserve=None):
         checksum = fingerprint.hexdigest()
         if data.get('expected_sha256') and data['expected_sha256'] != checksum:
             raise ValueError('The PDF does not match the declared SHA-256.')
-        submitter = a.find_or_create_submitter(data['email'], data['display_name'])
+        submitter = db.execute("SELECT * FROM users WHERE id=? AND active=1 AND role='depositor'", (data.get('user_id'),)).fetchone()
+        if not submitter:
+            abort(403, 'A private workspace must own this submission.')
         conflict = int(data['email'] == app.config['OPERATOR_EMAIL'] or bool(data.get('operator_conflict')))
         db.execute('BEGIN IMMEDIATE')
         db.execute('''INSERT INTO submissions(

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}{% block content %}
+<h1>Save your recovery code.</h1><p>Your private workspace is ready. This code is shown only now. Store it in your password manager; anyone with it can reset your password.</p>
+<label>Recovery record <textarea id="recovery-record" rows="7" readonly>AIRR.SCIENCE private workspace
+Login: {{ url_for('account_login', _external=True) }}
+Private alias: {{ alias }}
+Recovery code: {{ recovery }}
+Keep this private. It is not a paper number or a donation reference.
+Using recovery replaces this code and revokes existing sessions and agent permissions.</textarea></label>
+<button id="download-recovery" type="button">Download recovery record</button>
+<p>No email address was collected. AIRR cannot recover your password. Without your password or this code, access may be lost.</p>
+<p><a class="button" href="{{ session.get('workspace_return', url_for('dashboard')) }}">I have saved it — continue</a></p>
+<script src="{{ url_for('static', filename='account-recovery.js') }}" defer></script>
+{% endblock %}

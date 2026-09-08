@@ -127,16 +127,31 @@ def install(app, a):
         return row
 
     def author_case(case_id):
+        row = case(case_id)
+        if getattr(g, 'user', None) and g.user['role'] == 'depositor' and row['user_id'] == g.user['id']:
+            return row
+        # Legacy links remain scoped to pre-workspace deposits only. Password
+        # recovery must not leave a bypass for a new workspace's cases.
+        if app.extensions['accounts']['profile'](row['user_id']):
+            abort(404)
         access = session.get("author_case") or {}
         if access.get("id") != case_id or access.get("expires", "") < a.iso():
             abort(404)
-        return case(case_id)
+        return row
 
     def current_plan(case_id):
         return a.get_db().execute("SELECT * FROM assessment_plans WHERE submission_id=? ORDER BY id DESC LIMIT 1", (case_id,)).fetchone()
 
     def enqueue(row, subject, body, access=True):
         db = a.get_db()
+        if app.extensions['accounts']['profile'](row['user_id']):
+            db.execute('INSERT INTO correspondence(submission_id,kind,body,actor_user_id,created_at) VALUES(?,?,?,?,?)',
+                       (row['id'], 'editor_notice', subject + '\n\n' + body,
+                        g.user['id'] if getattr(g, 'user', None) and g.user['role'] in {'operator','independent_editor'} else None, a.iso()))
+            db.commit()
+            return
+        if row['email'].endswith(('@accounts.invalid', '@invalid.local')):
+            abort(409, 'This private workspace has been erased; there is no email recipient.')
         if access:
             token = secrets.token_urlsafe(32)
             db.execute("INSERT INTO access_links VALUES(?,?,?,NULL)", (digest(token), row['id'], a.iso(a.now() + timedelta(days=7))))
@@ -182,8 +197,6 @@ def install(app, a):
                 row = author_case(parent_id)
                 if row['status'] != 'changes_requested':
                     abort(409, 'A revision must follow an editorial request for changes.')
-                if request.method == 'POST' and request.form.get('email', '').strip().lower() != row['email'].lower():
-                    abort(403)
                 g.revision_parent = row
             elif not app.config['INTAKE_OPEN'] or (not app.config['TESTING'] and not launch_approved()):
                 return render_template('closed.html'), 503
@@ -319,6 +332,8 @@ def install(app, a):
         row = a.get_db().execute('SELECT * FROM access_links WHERE token_hash=? AND used_at IS NULL AND expires_at>?', (digest(token), a.iso())).fetchone()
         if not row:
             abort(404, 'This link is expired or already used. Request a new link from AIRR.')
+        if app.extensions['accounts']['profile'](case(row['submission_id'])['user_id']):
+            abort(404)
         if request.method == 'POST':
             a.require_csrf()
             db = a.get_db()
@@ -389,6 +404,46 @@ def install(app, a):
             flash('Your response has been recorded.', 'success')
             return redirect(url_for('author_view', submission_id=submission_id))
         return render_template('author-case.html', submission=row)
+
+    @app.get('/case/<submission_id>/file')
+    def author_file(submission_id):
+        row = author_case(submission_id)
+        if row['scan_status'] != 'clean' or row['status'] == 'removed':
+            abort(404)
+        from flask import send_file
+        path = Path(app.config['QUARANTINE']) / row['stored_name']
+        if not path.is_file():
+            abort(404)
+        return send_file(path, mimetype='application/pdf', as_attachment=True, download_name=submission_id + '.pdf', conditional=False)
+
+    @app.post('/admin/submission/<submission_id>/message')
+    @a.editor_required
+    def editor_message(submission_id):
+        a.require_csrf()
+        row = case(submission_id)
+        body = request.form.get('body', '').strip()
+        if not 20 <= len(body) <= 12000 or row['status'] in {'removed', 'withdrawn', 'superseded'}:
+            abort(400)
+        enqueue(row, 'Message from the AIRR editor', body)
+        a.audit('editor_message_recorded', submission_id)
+        flash('Message saved in the private case.', 'success')
+        return redirect(url_for('submission_detail', submission_id=submission_id))
+
+    @app.post('/admin/submission/<submission_id>/conflict')
+    @a.editor_required
+    def record_operator_conflict(submission_id):
+        a.require_csrf()
+        row = case(submission_id)
+        reason = request.form.get('reason', '').strip()
+        if row['public_released_at'] or row['status'] in {'removed','withdrawn','superseded'} or not 20 <= len(reason) <= 2000:
+            abort(409, 'Record a reason on an active private case; published records require a separate correction.')
+        db = a.get_db()
+        state = 'awaiting_independent_decision' if row['status'] == 'accepted_for_publication' else row['status']
+        db.execute('UPDATE submissions SET operator_conflict=1,status=?,updated_at=? WHERE id=?', (state, a.iso(), submission_id))
+        db.commit()
+        a.audit('operator_conflict_recorded', submission_id, reason=reason)
+        enqueue(row, 'Operator conflict recorded', reason + '\nAn independent editor is required before a final acceptance.')
+        return redirect(url_for('submission_detail', submission_id=submission_id))
 
     @app.post('/admin/submission/<submission_id>/adjudicate/<int:review_id>')
     @a.editor_required

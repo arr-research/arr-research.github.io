@@ -1,4 +1,4 @@
-"""Delegation ownership, email proof, upload integrity, retries and revocation."""
+"""Delegation ownership, private-workspace authorization, upload integrity, retries and revocation."""
 from datetime import timedelta
 import hashlib
 import io
@@ -31,27 +31,27 @@ class AgentIntakeTests(unittest.TestCase):
 
     def begin_confirmation(self,grant,email='responsible@example.org'):
         human = self.app.test_client()
-        path = urlsplit(grant['authorization_url']).path
-        self.assertEqual(human.get(path).status_code,200)
+        alias = email.split('@')[0]
+        human.get('/account/register')
         with human.session_transaction() as state:
             csrf = state['csrf_token']
-        response = human.post(path,data={'csrf_token':csrf,'responsible_name':'Responsible Author',
-            'email':email,'adult':'on','authority':'on','terms':'on','privacy':'on','screening':'on'})
+        response = human.post('/account/register', data={'csrf_token':csrf,'alias':alias,
+            'password':'a-long-test-password-123','confirm_password':'a-long-test-password-123',
+            'identity_kind':'human','adult':'on','authority':'on','terms':'on','privacy':'on'})
         self.assertEqual(response.status_code,200,response.data)
-        with self.app.app_context():
-            mail = get_db().execute('SELECT * FROM mail_outbox ORDER BY id DESC LIMIT 1').fetchone()
-            self.assertEqual(mail['recipient'],email)
-        path = '/agents/verify/' + mail['body'].split('/agents/verify/')[1].split()[0]
-        self.assertNotIn(path.encode(),response.data)
+        path = urlsplit(grant['authorization_url']).path
+        self.assertEqual(human.get(path).status_code,200)
         return human,path
 
     def approve(self,grant,email='responsible@example.org'):
         human,path = self.begin_confirmation(grant,email)
-        self.assertEqual(human.get(path).status_code,200)
         with human.session_transaction() as state:
             csrf = state['csrf_token']
-        self.assertEqual(human.post(path,data={'csrf_token':csrf,'action':'approve'}).status_code,200)
-        return human,path,csrf
+        response = human.post(path,data={'csrf_token':csrf,'adult':'on','authority':'on','terms':'on','privacy':'on','screening':'on'})
+        self.assertEqual(response.status_code,200,response.data)
+        with self.app.app_context():
+            self.assertEqual(get_db().execute('SELECT COUNT(*) FROM mail_outbox').fetchone()[0],0)
+        return human,'/account/grants/' + grant['request_id'] + '/revoke',csrf
 
     def upload(self,grant,key='paper-retry-001',metadata_changes=None,pdf=b'%PDF-1.7\nagent fixture',scan='clean'):
         value = {'title':'An exact research result','authors':'Responsible Author','abstract':'A' * 120,
@@ -66,12 +66,12 @@ class AgentIntakeTests(unittest.TestCase):
         response.request.environ['wsgi.input'].close()
         return response
 
-    def test_an_agent_cannot_upload_before_email_confirmation(self):
+    def test_an_agent_cannot_upload_before_workspace_confirmation(self):
         grant = self.request_grant()
         self.assertEqual(self.upload(grant).status_code,403)
         human,path = self.begin_confirmation(grant)
         self.assertEqual(self.upload(grant).status_code,403)
-        # An email-link preview and a forged POST do not approve anything.
+        # A page preview and a forged POST do not approve anything.
         human.get(path)
         self.assertEqual(self.upload(grant).status_code,403)
         self.assertEqual(human.post(path,data={'action':'approve'}).status_code,400)
@@ -116,10 +116,10 @@ class AgentIntakeTests(unittest.TestCase):
         grant = self.request_grant()
         human,path,csrf = self.approve(grant)
         self.app.config['INTAKE_OPEN'] = False
-        self.assertEqual(human.post(path,data={'csrf_token':csrf,'action':'revoke'}).status_code,200)
+        self.assertEqual(human.post(path,data={'csrf_token':csrf,'action':'revoke'}).status_code,302)
         self.app.config['INTAKE_OPEN'] = True
         self.assertEqual(self.upload(grant).status_code,403)
-        self.assertEqual(human.post(path,data={'csrf_token':csrf,'action':'approve'}).status_code,409)
+        self.assertEqual(human.post(urlsplit(grant['authorization_url']).path,data={'csrf_token':csrf,'action':'approve'}).status_code,409)
 
     def test_expired_exhausted_and_outdated_delegations_cannot_receive_a_pdf(self):
         grant = self.request_grant()

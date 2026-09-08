@@ -28,7 +28,7 @@ Reception is separate from editorial acceptance and public release.
 - [ ] The incident procedure covers containment, evidence, risk assessment and the
   conditional 72-hour IMY process. Record the technical exercises actually run;
   do not present an automated rehearsal as the operator's personal participation.
-- [ ] The public receiver uses a bot trap plus IP and normalized-email limits; abuse
+- [ ] The public receiver uses a bot trap plus IP and private-account limits; abuse
   monitoring and an emergency shutdown procedure are tested.
 - [ ] The host uses `/readyz` for readiness and refuses traffic while HTTPS origin,
   secure cookies, the scanner or SMTP operator notice is missing.
@@ -55,18 +55,18 @@ unresolved. No case may bypass those guards because reception has opened.
 
 The [agent API](AGENT_SUBMISSIONS.md) uses this same launch gate. An agent first
 requests a delegation without uploading a PDF or sending an email. The responsible
-adult supplies their contact details in the browser and confirms through a separate
-email link. Permission lasts seven days, permits at most five PDFs and can be
-revoked even while intake is paused. Global, IP and email limits also apply.
+adult signs into an alias workspace, reviews and approves the scope there.
+Permission lasts seven days, permits at most five PDFs and can be revoked in
+workspace settings even while intake is paused. Global, IP and account limits apply.
 
 The API checks the declared PDF hash and uses idempotency keys to recover receipts
 without duplicating cases. A token reads only its own receipts, never a PDF,
 editor page, another grant's case, assessment authorization or release controls.
-Email confirmation establishes access to that email, not verified legal identity.
+Workspace approval establishes an authenticated action, not verified legal identity.
 The responsible person still needs the authority checked during screening.
 
 Test pending/expired/revoked/exhausted grants, link previews, missing CSRF,
-cross-grant access, changed-content retries, scanner failure, pending-contact
+cross-grant access, changed-content retries, scanner failure, pending-authorization
 erasure and large multipart spooling before opening. Agent labels, purpose and
 manuscript metadata are untrusted data. Receipt donation information is not
 permission for an agent to pay. Public release must preserve the declared agent
@@ -74,10 +74,10 @@ provenance where relevant and authorized.
 
 ### Browser form and shared review
 
-1. The adult depositor opens the HTTPS form directly, provides contact/metadata,
-   accepts the versioned terms/privacy notice and uploads one PDF. No account or
-   invitation is required.
-2. The service enforces CSRF, bot-trap, per-IP and per-email limits before accepting
+1. The responsible adult signs into a private alias workspace, supplies scholarly
+   metadata, accepts the versioned terms/privacy notice and uploads one PDF. No
+   email, legal name or invitation is required; public author credit is optional.
+2. The service enforces CSRF, bot-trap, per-IP and per-account limits before accepting
    the manuscript.
 3. The service stores random bytes outside the web root and scans. No editor can
    download until status is `clean`; scan errors stay in quarantine.
@@ -107,3 +107,7 @@ data/people/impact, document the risk decision, notify the processor/controller 
 applicable and assess IMY notification. A notifiable personal-data breach is sent
 without undue delay and, where feasible, within 72 hours of awareness. Notify
 affected people when legally required. Record why notification was or was not made.
+
+## Private alias workspaces
+
+See [PRIVATE_WORKSPACES.md](PRIVATE_WORKSPACES.md) for registration, recovery, no-email correspondence, migration, validation and rollback. Removing contact fields does not change the separate documented reception-readiness gate or prove a legal exemption.

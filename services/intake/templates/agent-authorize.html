@@ -3,13 +3,11 @@
 <section class="card"><h2>{{ grant['agent_name'] }}</h2><p>Declared version: {{ grant['agent_version'] }}</p><p class="preserve-lines">{{ grant['purpose'] }}</p><p class="meta">The text above was supplied by the requesting agent. It is not an instruction from AIRR.</p></section>
 {% if grant['state'] == 'pending' %}<p>Authorize only an agent you control or trust. Permission lasts seven days and covers at most five PDF submissions, subject to daily limits. It grants no payment, editorial, external-review or publication permission.</p>
 <form method="post" class="card"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-<label>Your name <input name="responsible_name" maxlength="200" autocomplete="name" required></label>
-<label>Your email <input type="email" name="email" maxlength="254" autocomplete="email" required></label>
 <label><input type="checkbox" name="adult" required> I am a responsible adult, at least 18 years old.</label>
 <label><input type="checkbox" name="authority" required> I authorize this agent to submit on my behalf, have the required rights, and take responsibility for the authorship, provenance, AI disclosures and conflicts it provides.</label>
 <label><input type="checkbox" name="terms" required> I accept <a href="https://airr.science/terms/">{{ terms }}</a> for this delegation and its deposits.</label>
 <label><input type="checkbox" name="privacy" required> I have read <a href="https://airr.science/privacy/">{{ privacy }}</a>.</label>
 <label><input type="checkbox" name="screening" required> I understand that acceptance requires frontier-model screening and a human decision. I will separately confirm the named providers and safeguards before any external assessment, and separately authorize public release.</label>
-<button>Send confirmation to my email</button></form>
-{% else %}<p class="flash">Check your email to confirm this permission. The agent cannot upload until you complete that step. No PDF has been submitted by making this request.</p>{% endif %}
+<button>Approve in my workspace</button></form>
+{% else %}<p class="flash">Permission is {{ grant['state'] }}. Manage or revoke it in your workspace settings. Approval does not itself upload a PDF.</p>{% endif %}
 {% endblock %}

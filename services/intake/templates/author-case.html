@@ -3,8 +3,9 @@
 <p class="eyebrow">Your private submission · revision {{ submission['revision_number'] }}</p>
 <h1>{{ submission['title'] }}</h1><p class="registration-number">{{ submission['id'] }}</p>
 <p><strong>{{ submission['status']|replace('_',' ') }}</strong> · safety checks: {{ submission['scan_status'] }}</p>
+{% if submission['scan_status']=='clean' and submission['status']!='removed' %}<p><a href="{{ url_for('author_file', submission_id=submission['id']) }}">Download this manuscript</a></p>{% endif %}
 {% if submission['parent_id'] %}<p>Revision of {{ submission['parent_id'] }}. Earlier files and their reports are preserved separately.</p>{% endif %}
-{% for child in wf.children %}<p>Later revision registered: {{ child['id'] }} · {{ child['status']|replace('_',' ') }}. Use the access link for that revision.</p>{% endfor %}
+{% for child in wf.children %}<p>Later revision registered: <a href="{{ url_for('author_view',submission_id=child['id']) }}">{{ child['id'] }}</a> · {{ child['status']|replace('_',' ') }}.</p>{% endfor %}
 {% if submission['decision_reason'] %}<section class="card"><h2>Editorial decision</h2><p>{{ submission['decision_reason'] }}</p><p class="preserve-lines">{{ submission['decision_note'] or '' }}</p></section>{% endif %}
 {% if wf.plan %}<section class="card"><h2>Proposed assessment services</h2><p class="preserve-lines">{{ wf.plan['notice'] }}</p><pre>{{ wf.plan['providers_json'] }}</pre>
 <p class="fingerprint">Exact manuscript SHA-256: {{ wf.plan['manuscript_sha256'] }}</p>
