@@ -1,6 +1,7 @@
 # AIRR privacy notice — ARR-PRIVACY-1.4
 
 **Effective:** 2026-09-07
+**Provider references clarified before opening:** 2026-09-08
 **Brand wording updated:** 2026-09-06; see [identity and continuity](BRAND_IDENTITY.md).
 
 **Service state:** currently fee-free direct private-submission pilot; the receiver
@@ -67,9 +68,10 @@ handles the editorial outcome and any challenge to an automated security result.
 
 Private intake data is available only to the operator and a specifically appointed
 independent editor where a conflict requires one. Infrastructure, encrypted backup,
-operator-notification email and security providers may process the minimum data needed under written
-instructions and appropriate contractual safeguards. The production processor
-register must identify them before direct submission is activated.
+operator-notification email and security providers may process the minimum data needed.
+Their roles, contractual references and transfer safeguards are identified in the
+[processing record](PROCESSING_RECORD.md); not every provider relationship is the
+same kind of controller/processor arrangement.
 
 The configured private receiver uses Netcup (VPS in Vienna, Austria), Brevo for
 transactional email, and Backblaze B2 EU Central (Amsterdam) for client-encrypted
@@ -80,6 +82,16 @@ inbox; this may involve international delivery. Provider group locations and
 subprocessors are distinct from the selected storage region. The operator's
 [processing record](PROCESSING_RECORD.md) identifies contractual references and
 limits of the current verification.
+
+Brevo's service terms identify it as a processor for customer service data, while
+account administration is separate. Backblaze's published EEA terms describe
+individual accounts, including AIRR's current account type, as joint-controller
+relationships rather than the processor arrangement described for organizations.
+B2 receives encrypted snapshots without the decryption identity. Its EU storage
+location does not exclude US account administration or international support.
+These disclosures describe the current configuration, not an external legal
+certification. Contact AIRR about rights concerning submission data; the linked
+provider terms explain provider contacts and applicable safeguards.
 
 Private manuscripts are not stored in the public GitHub repository. If accepted,
 the disclosed author information, scholarly metadata and licensed research object
