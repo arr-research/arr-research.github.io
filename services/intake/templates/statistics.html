@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Website statistics — AIRR{% endblock %}
+{% block content %}
+<p class="eyebrow">Private operator dashboard</p><h1>Website statistics</h1>
+<p>Consenting page views on the public AIRR website. A view is not a unique person.</p>
+{% if not enabled %}<p class="flash warning">Collection is currently disabled.</p>{% endif %}
+<p>{% for period in [7,30,90,365] %}<a href="?days={{ period }}" {% if period==days %}aria-current="page"{% endif %}>{{ period }} days</a>{% if not loop.last %} · {% endif %}{% endfor %} · Dates in UTC</p>
+<div class="two-fields"><article><h2>Today</h2><strong style="font-size:2rem">{{ today }}</strong><p>Recorded page views</p></article><article><h2>Last {{ days }} days</h2><strong style="font-size:2rem">{{ total }}</strong><p>Recorded page views</p></article></div>
+<section class="card"><h2>Daily activity</h2>
+{% if total==0 %}<p>No page views recorded in this period. Collection begins when visitors allow anonymous statistics; earlier visits cannot be reconstructed.</p>{% endif %}
+<div style="display:flex;align-items:end;gap:2px;height:130px" aria-hidden="true">{% for row in series %}<div title="{{ row.day }}: {{ row.views }}" style="flex:1;background:#e1b85b;min-height:1px;height:{{ (row.views/maximum*100)|round(2) }}%"></div>{% endfor %}</div>
+<details><summary>Daily totals as a table</summary><table><thead><tr><th>Date (UTC)</th><th>Page views</th></tr></thead><tbody>{% for row in series|reverse %}<tr><td>{{ row.day }}</td><td>{{ row.views }}</td></tr>{% endfor %}</tbody></table></details></section>
+<section class="card"><h2>Most viewed pages</h2><table><thead><tr><th>Public page</th><th>Views</th></tr></thead><tbody>{% for row in top %}<tr><td><a href="https://airr.science{{ row.path }}" target="_blank" rel="noopener noreferrer">{{ row.title }}</a><br><small>{{ row.path }}</small></td><td>{{ row.views }}</td></tr>{% else %}<tr><td colspan="2">No recorded views yet.</td></tr>{% endfor %}</tbody></table></section>
+<p class="meta">Only daily page totals are stored, for up to 400 days. No visitor profiles, IP addresses, referrers, search terms or private submission pages are stored in these statistics. Reloads may count again; declined consent, blockers and automation affect coverage. These figures measure a sample of page activity and are not a scientific-quality ranking.</p>
+{% endblock %}

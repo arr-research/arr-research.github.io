@@ -286,6 +286,8 @@ def create_app(test_config: dict | None = None) -> Flask:
         DONATIONS_CONFIG=str(Path(__file__).resolve().parents[2] / "site" / "donations.json"),
         INTAKE_OPEN=os.environ.get("ARR_INTAKE_OPEN", "0") == "1",
         LAUNCH_APPROVAL_FILE=os.environ.get("ARR_LAUNCH_APPROVAL_FILE", "/etc/airr-intake/launch-approval.json"),
+        ANALYTICS_ENABLED=os.environ.get("AIRR_ANALYTICS_ENABLED", "0") == "1",
+        ANALYTICS_MANIFEST=str(Path(__file__).resolve().parents[2] / 'site' / 'analytics-pages.json'),
         TESTING=False,
     )
     if test_config:
@@ -311,6 +313,8 @@ def create_app(test_config: dict | None = None) -> Flask:
     install(app, sys.modules[__name__])
     from services.intake.agents import install as install_agents
     install_agents(app, sys.modules[__name__])
+    from services.intake.pageviews import install as install_pageviews
+    install_pageviews(app, sys.modules[__name__])
 
     @app.after_request
     def security_headers(response):
@@ -363,6 +367,8 @@ def init_db() -> None:
     migrate(db)
     from services.intake.agents import migrate as migrate_agents
     migrate_agents(db)
+    from services.intake.pageviews import migrate as migrate_pageviews
+    migrate_pageviews(db)
 
 
 def audit(event: str, submission_id: str | None = None, **detail) -> None:
@@ -1020,6 +1026,8 @@ def register_commands(app: Flask) -> None:
 
     @app.cli.command("retention-sweep")
     def retention_sweep():
+        from services.intake.pageviews import sweep as sweep_pageviews
+        sweep_pageviews(get_db(), now().date())
         rows = get_db().execute(
             "SELECT * FROM submissions WHERE delete_after IS NOT NULL AND delete_after<=? AND status!='legal_hold'",
             (iso(),),

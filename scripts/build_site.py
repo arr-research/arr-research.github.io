@@ -5,13 +5,14 @@ import argparse
 import hashlib
 import html
 import json
+import os
 import re
 import shutil
 import sys
 from collections import Counter, defaultdict
 import unicodedata
 from pathlib import Path
-from urllib.parse import quote
+from urllib.parse import quote, urlsplit
 
 from site_pdfs import published_pdf
 from donationlib import load_donation_url as load_verified_donation_url
@@ -130,7 +131,7 @@ def load_metrics(path: Path | None) -> dict:
             },
             "views": {
                 "available": False,
-                "definition": "Page views are not measured until AIRR connects a privacy-reviewed, no-cookie analytics source.",
+                "definition": "Page-view counts are not available in this public snapshot. Optional operator statistics are separate.",
                 "provider": "",
                 "window_start": None,
                 "window_end": None,
@@ -160,7 +161,7 @@ def paper_activity(paper_id: str, metrics: dict) -> dict:
 
 
 def metric_number(value: int | None) -> str:
-    return f"{value:,}" if isinstance(value, int) else "Not measured"
+    return f"{value:,}" if isinstance(value, int) else "Not available"
 
 
 def download_label(value: int) -> str:
@@ -190,6 +191,9 @@ def paper_chronology(metadata: dict, timestamp: dict) -> str:
 
 def page_shell(*, title: str, description: str, content: str, base: str, canonical: str = "", head_extra: str = "") -> str:
     canonical_tag = f'<link rel="canonical" href="{esc(canonical)}">' if canonical else ""
+    analytics = ''
+    if os.environ.get('AIRR_ANALYTICS') == '1' and urlsplit(canonical).hostname in {'airr.science', 'www.airr.science'}:
+        analytics = f'<script defer src="{base}/assets/analytics.js" data-page="{esc(urlsplit(canonical).path or "/")}"></script>'
     style_version = hashlib.sha256((SITE_DIR / "style.css").read_bytes()).hexdigest()[:12]
     return f"""<!doctype html>
 <html lang="en">
@@ -208,6 +212,7 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
   <link rel="icon" type="image/svg+xml" href="{base}/favicon.svg" sizes="any">
   <link rel="apple-touch-icon" href="{base}/apple-touch-icon.png" sizes="180x180">
   <link rel="stylesheet" href="{base}/assets/style.css?v={style_version}">
+  {analytics}
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -985,7 +990,7 @@ def build_paper_page(
     <div><span>Historical mirror</span><strong>{esc(archival['mirrored_version'])}</strong><small>Author-authorized AIRR bulk release · SHA-256 recorded</small></div>
   </section>"""
         activity_heading = "Mirrored PDF downloads"
-        activity_value = "Not measured"
+        activity_value = "Not available"
         activity_note = "Bulk historical-release assets are not yet included in AIRR's per-record download snapshot."
     else:
         record_timestamp_panel = timestamp_panel(timestamp)
@@ -1308,7 +1313,7 @@ def build_privacy(base: str, canonical_url: str) -> str:
   <article><h2>Private data</h2><p>Agent delegation additionally records the responsible person’s email confirmation, declared agent identity, scope, expiry and revocation. AIRR processes the adult depositor's name and email, submission metadata and PDF, declarations, decisions, correspondence and pseudonymized security events to administer the deposit agreement and protect the service. Direct submission requires no author account.</p></article>
   <article><h2>Frontier-model screening</h2><p>Acceptance remains human, but the disclosed pre-publication protocol requires version-locked external frontier-model reports. The form acknowledges screening; the responsible person separately confirms the named providers and safeguards before any transfer. AIRR records provider, model, time and response hash.</p></article>
   <article><h2>Retention</h2><p>Malware bytes are erased immediately, withdrawn PDFs after 7 days, declined PDFs after 30 days, and accepted private copies 30 days after verified public release. A minimal decision record is retained for three years, subject to narrowly reviewed legal hold.</p></article>
-  <article><h2>Public-site measurement</h2><p>AIRR currently runs no per-page visitor analytics and sets no analytics cookies. Displayed PDF-download totals come from public GitHub release-asset counters and do not identify readers to AIRR. The notice will be updated before any page-view provider is enabled.</p></article>
+  <article><h2>Optional public-site statistics</h2><p>When enabled, AIRR asks before counting public-page views. Allow or Decline; change your choice through Statistics preferences in the footer. Your choice is stored in your browser for 180 days. Consenting views become daily page totals on our Netcup server, retained for 400 days, plus up to seven days in encrypted backups. No visitor IDs, IP addresses, referrers, search terms or private pages are stored in these statistics. Only the operator sees these totals. GitHub PDF-download counters remain a separate public metric. See the full notice below for consent, hosting and retention details.</p></article>
   <article><h2>Your rights</h2><p>Applicable rights include access, correction, erasure, restriction, portability and objection. You can complain to Sweden's IMY or another competent EEA authority. Requests receive proportionate identity verification.</p></article>
   <article><h2>Voluntary support</h2><p>The support page links to PayPal when donations are available. AIRR loads no PayPal widgets or tracking scripts. If you choose to pay on PayPal, it provides the operator with transaction details for payment, refund, fraud, accounting and legal administration. You may optionally identify the paper your support relates to using its published ID or your submission receipt's registration reference. The reference gives no private access and is not sent to PayPal automatically. Donor information is used for support administration, not published or used for mailing lists, ranking or editorial decisions. The donation notice was updated on 2026-09-06.</p></article>
 </section>
@@ -1583,6 +1588,7 @@ def main() -> int:
     shutil.copy2(SITE_DIR / "style.css", OUTPUT_DIR / "assets" / "style.css")
     shutil.copy2(SITE_DIR / "search.js", OUTPUT_DIR / "assets" / "search.js")
     shutil.copy2(SITE_DIR / "reader.js", OUTPUT_DIR / "assets" / "reader.js")
+    shutil.copy2(SITE_DIR / "analytics.js", OUTPUT_DIR / "assets" / "analytics.js")
     for asset in ("subjects.js", "subject-selection.js", "lluis-eriksson.jpg"):
         shutil.copy2(SITE_DIR / asset, OUTPUT_DIR / "assets" / asset)
     write(OUTPUT_DIR / "assets" / "subjects.json", json.dumps(public_vocabulary(papers), ensure_ascii=False, separators=(",", ":")) + "\n")
@@ -1735,6 +1741,16 @@ def main() -> int:
     write_sitemaps(papers, groups, profiles, canonical_url)
     write_llm_guides(papers, canonical_url)
 
+    analytics_pages = {}
+    for page_file in OUTPUT_DIR.rglob('index.html'):
+        markup = page_file.read_text(encoding='utf-8')
+        canonical_match = re.search(r'<link rel="canonical" href="([^"]+)"', markup)
+        title_match = re.search(r'<title>(.*?)</title>', markup, re.S)
+        if canonical_match and title_match:
+            page_url = urlsplit(html.unescape(canonical_match.group(1)))
+            if page_url.hostname in {'airr.science', 'www.airr.science'} and page_url.path.endswith('/'):
+                analytics_pages[page_url.path] = html.unescape(title_match.group(1))[:400]
+    write(OUTPUT_DIR / 'analytics-pages.json', json.dumps(analytics_pages, ensure_ascii=False, sort_keys=True))
     paper_count = sum(paper.record_type == "research_paper" for paper in papers)
     note_count = sum(paper.record_type == "technical_note" for paper in papers)
     print(

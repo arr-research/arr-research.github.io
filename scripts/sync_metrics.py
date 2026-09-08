@@ -57,7 +57,7 @@ def load_views(path: Path | None) -> tuple[dict, dict[str, dict[str, int | None]
         return (
             {
                 "available": False,
-                "definition": "Page views are not measured until AIRR connects a privacy-reviewed, no-cookie analytics source.",
+                "definition": "Page-view counts are not available in this public snapshot. Optional operator statistics are separate.",
                 "provider": "",
                 "window_start": None,
                 "window_end": None,

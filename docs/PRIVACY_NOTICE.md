@@ -106,15 +106,34 @@ Rejected-case reports remain private and follow the case retention schedule.
 
 ## Public-site activity measurement
 
-AIRR currently sets no analytics cookies and runs no per-page visitor analytics.
-The public site displays cumulative download counters reported by GitHub for each
-canonical PDF release asset. AIRR receives an aggregate integer through GitHub's
-public release API, not a reader identity or per-reader download history.
+Public-site measurement notice updated **2026-09-08**. When enabled, AIRR asks before
+sending any optional page-view event. Allow and Decline are equally available;
+ignoring the choice sends no event. You may change your choice using **Statistics
+preferences** in the footer. The browser stores only that choice and its expiry
+for 180 days in local storage; it is not a visitor identifier or an analytics cookie.
 
-Page views and unique visitors are shown as **not measured**. AIRR will not enable
-or publish page-view analytics until the provider, purpose, data fields, retention,
-lawful basis, processor terms and any transfer safeguards have been reviewed and
-this notice has been updated before collection begins.
+With your consent, the browser sends the public page's canonical path and a fixed
+consent indicator to AIRR's Netcup server in Vienna. No search query, fragment,
+referrer, email, private-page path or visitor identifier is sent in the event.
+Network communication necessarily exposes an IP address to the receiving host;
+AIRR does not retain it in the statistics or enable collector access logs.
+The server immediately increments a daily page total. It does not store an event
+history or link views to people. The purpose is to understand use of public pages;
+the basis for optional collection is consent (Article 6(1)(a), where applicable).
+Netcup's existing hosting/DPA arrangement applies; no additional analytics provider
+receives the events. Private submission and editor pages do not use the collector.
+
+Only the operator can read the daily totals. They are erased by the daily sweep
+after 400 days; encrypted disaster-recovery snapshots on the configured EU B2
+storage may retain a deleted total for up to seven additional days. Changing to
+Decline stops future collection. Past totals cannot be isolated by person because
+no individual history is retained. Repeated visits, consent choices, blockers and
+automation affect the sample; AIRR does not measure unique visitors.
+
+Public PDF-download totals remain GitHub release-asset counters. AIRR receives an
+aggregate integer, not a reader identity. Operator page-view totals are not yet
+exported to public paper/author counters or rankings; those fields remain **Not
+available**, rather than being presented as zero.
 
 ## Retention
 
