@@ -200,8 +200,8 @@ def install(app, a):
             if existing['request_hash'] != request_hash:
                 abort(409, 'This Idempotency-Key already belongs to different metadata or PDF bytes.')
             return receipt(a.get_db().execute('SELECT * FROM submissions WHERE id=?',(existing['submission_id'],)).fetchone())
-        a.enforce_rate('submit-account',3,86400,str(grant['owner_user_id']))
-        a.enforce_rate('agent-submit-ip',10,86400)
+        a.enforce_rate('submit-account',a.SUBMISSIONS_PER_ACCOUNT,a.SUBMISSION_WINDOW_SECONDS,str(grant['owner_user_id']))
+        a.enforce_rate('agent-submit-ip',a.SUBMISSION_ATTEMPTS_PER_CONNECTION,a.SUBMISSION_WINDOW_SECONDS)
         def reserve(db,case_id):
             changed = db.execute('''UPDATE agent_grants SET uses=uses+1 WHERE id=? AND state='approved'
                 AND expires_at>? AND uses<? AND terms_version=? AND privacy_version=?''',
