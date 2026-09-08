@@ -21,7 +21,8 @@ class WorkflowTests(fixtures.IntakeTests):
         with self.client.session_transaction() as state:
             state.clear()
             state['csrf_token'] = 'author-csrf'
-            state['author_case'] = {'id': case_id, 'expires': '2099-01-01T00:00:00+00:00'}
+            state['user_id'] = self.row(case_id)['user_id']
+            state['credential_version'] = 1
         return 'author-csrf'
 
     def test_closed_receiver_cannot_persist_an_upload(self):
@@ -128,20 +129,14 @@ class WorkflowTests(fixtures.IntakeTests):
         self.login_session('independent@example.org')
         self.assertEqual(self.client.get(f'/admin/submission/{case_id}').status_code, 200)
 
-    def test_private_email_link_is_single_use_and_get_does_not_consume(self):
+    def test_workspace_receipt_has_no_email_or_access_link_and_is_private(self):
         case_id = self.upload()
         with self.app.app_context():
-            body = get_db().execute('SELECT body FROM mail_outbox WHERE submission_id=?', (case_id,)).fetchone()[0]
-        link = '/case/access/' + body.split('/case/access/')[1].split()[0]
-        outsider = self.app.test_client()
-        self.assertEqual(outsider.get('/case/' + case_id).status_code, 404)
-        self.assertEqual(outsider.get(link).status_code, 200)
-        self.assertEqual(outsider.get(link).status_code, 200)
-        with outsider.session_transaction() as state:
-            csrf = state['csrf_token']
-        self.assertEqual(outsider.post(link, data={'csrf_token': csrf}).status_code, 302)
-        self.assertEqual(outsider.get('/case/' + case_id).status_code, 200)
-        self.assertEqual(self.app.test_client().get(link).status_code, 404)
+            self.assertEqual(get_db().execute('SELECT COUNT(*) FROM mail_outbox').fetchone()[0], 0)
+            self.assertEqual(get_db().execute('SELECT COUNT(*) FROM access_links').fetchone()[0], 0)
+            self.assertIn('registered', get_db().execute('SELECT body FROM correspondence WHERE submission_id=?', (case_id,)).fetchone()[0])
+        self.assertEqual(self.app.test_client().get('/case/' + case_id).status_code, 404)
+        self.assertEqual(self.client.get('/case/' + case_id).status_code, 200)
 
     def test_plan_requires_author_confirmation_and_locks_after_report(self):
         case_id = self.upload()
@@ -171,7 +166,7 @@ class WorkflowTests(fixtures.IntakeTests):
         self.client.get('/submit?revision_of=' + old_id)
         with patch('services.intake.app.scan_file', return_value=('clean', 'test scanner')):
             response = self.client.post('/submit', data={
-                'csrf_token': csrf, 'revision_of': old_id, 'display_name': 'Direct Author', 'email': 'direct-author@example.org',
+                'csrf_token': csrf, 'revision_of': old_id,
                 'title': 'Corrected title', 'authors': 'Author Example', 'abstract': 'Corrected and supported. ' * 10,
                 'primary_subject': 'airr-quantum-information', 'adult': 'on', 'terms': 'on', 'privacy': 'on',
                 'authority': 'on', 'ai_review_opt_in': 'on', 'manuscript': (io.BytesIO(b'%PDF-1.7\ncorrected bytes'), 'corrected.pdf')}, content_type='multipart/form-data')
@@ -239,7 +234,8 @@ class WorkflowTests(fixtures.IntakeTests):
         case_id = self.upload()
         self.app.config.update(SMTP_HOST='smtp.example.org', SMTP_FROM='submissions@example.org')
         with self.app.app_context(), patch('services.intake.app.send_mail', return_value=False) as sending:
-            message_id = get_db().execute('SELECT id FROM mail_outbox WHERE submission_id=?', (case_id,)).fetchone()[0]
+            message_id = get_db().execute('INSERT INTO mail_outbox(submission_id,recipient,subject,body,created_at,message_id) VALUES(?,?,?,?,?,?)', (case_id,'legacy@example.org','Legacy notice','Historical mail delivery fixture',iso(),'<legacy-test@airr.science>')).lastrowid
+            get_db().commit()
             deliver = self.app.extensions['editorial']['deliver']
             self.assertFalse(deliver(message_id))
             self.assertFalse(deliver(message_id))

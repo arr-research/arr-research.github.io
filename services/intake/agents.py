@@ -1,4 +1,4 @@
-"""Email-confirmed, revocable delegation for machine deposit; never editorial access."""
+"""Workspace-approved, revocable machine deposit; never editorial access."""
 import hashlib
 import json
 from datetime import timedelta
@@ -7,7 +7,7 @@ import re
 import secrets
 import sqlite3
 
-from flask import Blueprint, abort, g, render_template, request, url_for
+from flask import Blueprint, abort, g, redirect, render_template, request, session, url_for
 from werkzeug.exceptions import HTTPException
 
 from services.intake.storage import receive
@@ -102,7 +102,9 @@ def install(app, a):
 
     def approved(grant):
         if grant['state'] != 'approved' or not grant['expires_at'] or grant['expires_at'] <= a.iso():
-            abort(403, 'The responsible person must confirm an active delegation through their email.')
+            abort(403, 'The responsible controller must approve an active delegation in their private workspace.')
+        if not grant['owner_user_id'] or not a.get_db().execute('SELECT 1 FROM users WHERE id=? AND active=1 AND role=\'depositor\'', (grant['owner_user_id'],)).fetchone():
+            abort(403, 'A current private workspace must own this delegation.')
         if grant['terms_version'] != a.TERMS_VERSION or grant['privacy_version'] != a.PRIVACY_VERSION:
             abort(403, 'New terms require a new delegation.')
 
@@ -128,7 +130,7 @@ def install(app, a):
         a.audit('agent_authorization_requested',grant_id=grant_id)
         return {'request_id':grant_id,'agent_token':claim,'state':'pending',
                 'authorization_url':app.config['PUBLIC_ORIGIN'] + url_for('agent_authorize',token=setup),
-                'expires_at':expiry,'next_step':'Give the authorization URL to the responsible adult. Email confirmation is required before any PDF upload.'},201
+                'expires_at':expiry,'next_step':'Give the authorization URL to the responsible adult controller. They approve it after signing into their private alias workspace; no email is collected.'},201
 
     @api.get('/agent-authorization')
     def authorization_status():
@@ -179,8 +181,9 @@ def install(app, a):
                     'sha256','ai_disclosure','operator_conflict','rights_confirmed'}
         if not isinstance(value,dict) or set(value) != expected:
             abort(400, 'Metadata fields must match the published API contract.')
-        for field,minimum,maximum in (('title',1,500),('authors',2,1000),('abstract',80,5000),('ai_disclosure',20,2000)):
+        for field,minimum,maximum in (('title',1,500),('authors',0,1000),('abstract',80,5000),('ai_disclosure',20,2000)):
             value[field] = text(value[field],minimum,maximum)
+        value['authors'] = value['authors'] or 'Anonymous'
         if value['rights_confirmed'] is not True or type(value['operator_conflict']) is not bool:
             abort(400, 'Confirm authority for this exact paper and disclose conflicts explicitly.')
         if not isinstance(value['sha256'],str) or not re.fullmatch('[a-f0-9]{64}',value['sha256']):
@@ -197,7 +200,7 @@ def install(app, a):
             if existing['request_hash'] != request_hash:
                 abort(409, 'This Idempotency-Key already belongs to different metadata or PDF bytes.')
             return receipt(a.get_db().execute('SELECT * FROM submissions WHERE id=?',(existing['submission_id'],)).fetchone())
-        a.enforce_rate('submit-email',3,86400,grant['email'])
+        a.enforce_rate('submit-account',3,86400,str(grant['owner_user_id']))
         a.enforce_rate('agent-submit-ip',10,86400)
         def reserve(db,case_id):
             changed = db.execute('''UPDATE agent_grants SET uses=uses+1 WHERE id=? AND state='approved'
@@ -210,8 +213,9 @@ def install(app, a):
             except sqlite3.IntegrityError:
                 abort(409, 'A simultaneous request used this key. Retry with the same key to recover its receipt.')
         try:
+            owner = a.get_db().execute('SELECT * FROM users WHERE id=?', (grant['owner_user_id'],)).fetchone()
             row = receive(app,a,request.files['manuscript'],{
-                'display_name':grant['responsible_name'],'email':grant['email'],'title':value['title'],
+                'display_name':owner['display_name'],'email':owner['email'],'user_id':owner['id'],'title':value['title'],
                 'authors':value['authors'],'abstract':value['abstract'],'classification':classification,
                 'operator_conflict':value['operator_conflict'],'expected_sha256':value['sha256'],'channel':'agent',
                 'agent_provenance':{'name':grant['agent_name'],'version':grant['agent_version'],
@@ -233,34 +237,32 @@ def install(app, a):
         grant = a.get_db().execute('SELECT * FROM agent_grants WHERE setup_hash=?',(digest(token),)).fetchone()
         if not grant or grant['request_expires_at'] <= a.iso():
             abort(404)
+        if not g.user or g.user['role'] != 'depositor' or not app.extensions['accounts']['profile'](g.user['id']):
+            if request.method == 'POST':
+                abort(401, 'Sign in to a private workspace first.')
+            session['workspace_return'] = request.path
+            return redirect(url_for('account_login'))
+        if grant['owner_user_id'] and grant['owner_user_id'] != g.user['id']:
+            abort(404)
         if request.method == 'POST':
             a.require_csrf()
             if grant['state'] != 'pending':
-                abort(409,'This request already has a confirmation in progress. Check your email.')
-            name = text(request.form.get('responsible_name',''),2,200)
-            email = request.form.get('email','').strip().lower()
-            if not a.valid_email(email) or not all(request.form.get(x) == 'on' for x in ('adult','authority','terms','privacy','screening')):
-                abort(400,'Complete the responsible person details and all acknowledgments.')
+                abort(409,'This request has already been handled. Manage it in your workspace.')
+            if any(k in request.form for k in ('email','responsible_name')):
+                abort(400, 'Contact details are not accepted.')
+            if not all(request.form.get(x) == 'on' for x in ('adult','authority','terms','privacy','screening')):
+                abort(400,'The responsible adult controller must confirm all acknowledgments.')
             a.enforce_rate('agent-confirm-ip',3,86400)
-            a.enforce_rate('agent-confirm-email',3,86400,email)
-            verification = secrets.token_urlsafe(32)
+            a.enforce_rate('agent-confirm-account',3,86400,str(g.user['id']))
             db = a.get_db()
-            changed = db.execute('''UPDATE agent_grants SET state='awaiting_email',email=?,responsible_name=?,
-                verification_hash=?,terms_version=?,privacy_version=? WHERE id=? AND state='pending' ''',
-                (email,name,digest(verification),a.TERMS_VERSION,a.PRIVACY_VERSION,grant['id'])).rowcount
+            changed = db.execute('''UPDATE agent_grants SET state='approved',owner_user_id=?,approved_at=?,expires_at=?,
+                terms_version=?,privacy_version=? WHERE id=? AND state='pending' ''',
+                (g.user['id'],a.iso(),a.iso(a.now()+timedelta(days=7)),a.TERMS_VERSION,a.PRIVACY_VERSION,grant['id'])).rowcount
             if changed != 1:
                 db.rollback()
                 abort(409)
-            body = ('Someone requested permission for the following agent to submit to AIRR on your behalf.\n\n'
-                + grant['agent_name'] + ' / ' + grant['agent_version'] + '\n'
-                + 'Limit: five private PDF submissions over seven days. No editorial, payment, external-review or publication rights.\n'
-                + 'Confirm only if you requested and authorize this delegation. Otherwise ignore this message.\n\n'
-                + app.config['PUBLIC_ORIGIN'] + url_for('agent_verify',token=verification)
-                + '\n\nThe email-confirmation request expires within 24 hours. The same link can revoke an approved delegation.\nAIRR.SCIENCE')
-            mail = db.execute('INSERT INTO mail_outbox(recipient,subject,body,created_at,message_id) VALUES(?,?,?,?,?)',
-                (email,'Confirm AIRR agent submission permission',body,a.iso(),f'<{secrets.token_hex(24)}@airr.science>'))
-            db.execute('INSERT INTO agent_mail VALUES(?,?)',(grant['id'],mail.lastrowid))
             db.commit()
+            a.audit('agent_delegation_approved', grant_id=grant['id'])
             grant = db.execute('SELECT * FROM agent_grants WHERE id=?',(grant['id'],)).fetchone()
         return render_template('agent-authorize.html',grant=grant,terms=a.TERMS_VERSION,privacy=a.PRIVACY_VERSION)
 

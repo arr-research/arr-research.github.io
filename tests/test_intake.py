@@ -47,7 +47,16 @@ class IntakeTests(unittest.TestCase):
                 ("independent@example.org", "Independent", generate_password_hash("independent-password-123"), "independent_editor", "JBSWY3DPEHPK3PXQ", iso()),
             )
             db.commit()
+        with self.app.app_context():
+            db = get_db()
+            user = db.execute("INSERT INTO users(email,display_name,password_hash,role,active,created_at) VALUES(?,?,?,?,1,?)", ('direct-author@accounts.invalid','direct-author',generate_password_hash('workspace-password-123'),'depositor',iso()))
+            db.execute("INSERT INTO private_accounts(user_id,alias,identity_kind,recovery_hash,created_at,last_seen_at,terms_version,privacy_version) VALUES(?,?,?,?,?,?,?,?)", (user.lastrowid,'direct-author','human','fixture-recovery-hash',iso(),iso(),'ARR-DEPOSIT-1.7','ARR-PRIVACY-1.5'))
+            db.commit()
         self.client = self.app.test_client()
+        with self.client.session_transaction() as state:
+            state['user_id'] = user.lastrowid
+            state['credential_version'] = 1
+            state['csrf_token'] = 'csrf-for-tests'
 
     def tearDown(self) -> None:
         self.temp.cleanup()
@@ -61,16 +70,16 @@ class IntakeTests(unittest.TestCase):
         with self.client.session_transaction() as session:
             session["user_id"] = self.user_id(email)
             session["csrf_token"] = token
+            session["credential_version"] = 1
         return token
 
     def upload(self, *, conflict: bool = False, fields: dict | None = None, expected_status: int = 302) -> str:
+        self.login_session("direct-author@accounts.invalid")
         self.client.get("/submit")
         with self.client.session_transaction() as session:
             token = session["csrf_token"]
         data = {
             "csrf_token": token,
-            "display_name": "Direct Author",
-            "email": "direct-author@example.org",
             "title": "A rigorous test manuscript",
             "authors": "Author Example",
             "abstract": "A" * 120,
@@ -97,12 +106,12 @@ class IntakeTests(unittest.TestCase):
             row = get_db().execute("SELECT * FROM submissions ORDER BY created_at DESC LIMIT 1").fetchone()
             self.assertEqual(row["scan_status"], "clean")
             self.assertEqual(row["status"], "eligible")
-            self.assertEqual(row["terms_version"], "ARR-DEPOSIT-1.6")
-            self.assertEqual(row["privacy_version"], "ARR-PRIVACY-1.4")
+            self.assertEqual(row["terms_version"], "ARR-DEPOSIT-1.7")
+            self.assertEqual(row["privacy_version"], "ARR-PRIVACY-1.5")
             self.assertTrue((Path(self.app.config["QUARANTINE"]) / row["stored_name"]).exists())
             submitter = get_db().execute("SELECT * FROM users WHERE id=?", (row["user_id"],)).fetchone()
-            self.assertEqual(submitter["email"], "direct-author@example.org")
-            self.assertEqual(submitter["active"], 0)
+            self.assertEqual(submitter["email"], "direct-author@accounts.invalid")
+            self.assertEqual(submitter["active"], 1)
             get_db().execute('INSERT INTO case_editors VALUES(?,?,?,?)', (row['id'], self.user_id('independent@example.org'), self.user_id('operator@example.org'), iso()))
             get_db().commit()
             return row["id"]
@@ -168,6 +177,7 @@ class IntakeTests(unittest.TestCase):
         selected = "airr-number-theory"
         page = self.client.get("/submit?subject=" + selected)
         self.assertIn(f'value="{selected}" selected'.encode(), page.data)
+        self.login_session("direct-author@accounts.invalid")
         self.client.get("/submit")
         with self.client.session_transaction() as session:
             token = session["csrf_token"]
@@ -206,10 +216,11 @@ class IntakeTests(unittest.TestCase):
         self.assertEqual(good.status_code, 302)
         self.assertEqual(good.headers["Location"], "/")
 
-    def test_direct_form_requires_no_invitation_or_author_login(self) -> None:
+    def test_direct_form_uses_private_workspace_without_contact_fields(self) -> None:
         response = self.client.get("/submit")
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b"No invitation or account is required", response.data)
+        self.assertIn(b"no email or legal name is requested", response.data)
+        self.assertNotIn(b'name="email"', response.data)
         self.assertNotIn(b"password", response.data.lower())
 
     def test_receipt_confirms_persisted_bytes_and_pending_approval(self) -> None:
@@ -301,6 +312,7 @@ class IntakeTests(unittest.TestCase):
         self.assertFalse(response.json["checks"]["operator_email_notification"])
 
     def test_bot_trap_discards_payload_without_creating_a_case(self) -> None:
+        self.login_session("direct-author@accounts.invalid")
         self.client.get("/submit")
         with self.client.session_transaction() as session:
             token = session["csrf_token"]
@@ -377,6 +389,7 @@ class IntakeTests(unittest.TestCase):
             self.assertEqual(row["status"], "eligible")
 
     def test_missing_scanner_fails_closed(self) -> None:
+        self.login_session("direct-author@accounts.invalid")
         self.client.get("/submit")
         with self.client.session_transaction() as session:
             token = session["csrf_token"]
@@ -385,8 +398,6 @@ class IntakeTests(unittest.TestCase):
                 "/submit",
                 data={
                     "csrf_token": token,
-                    "display_name": "Scanner Author",
-                    "email": "scanner-author@example.org",
                     "title": "Scanner failure test",
                     "authors": "Author Example",
                     "abstract": "B" * 120,

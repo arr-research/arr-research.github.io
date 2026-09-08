@@ -15,7 +15,7 @@ hold is skipped and the hold is reviewed at least every 90 days.
 | Superseded private revision | replacement received | 30 days |
 | Accepted private working copy | verified immutable public release | 30 days |
 | Minimal case/decision record | terminal decision | 3 years, then erase or irreversibly aggregate |
-| Depositor contact row | last case closed and no active submission | review after 180 days; erase or pseudonymize unless still required for the case |
+| Private workspace alias and credentials | no use for 180 days, no active private case, and no recent case activity | deactivate, erase alias/password/recovery hash, revoke agent grants and pseudonymize the legacy user row; minimal case records follow their separate schedule |
 | Public accepted record | publication | preserved long-term under the deposit license; corrections/withdrawals use versioning/tombstones |
 
 “Minimal case/decision record” means case identifier, work title, submitter identity

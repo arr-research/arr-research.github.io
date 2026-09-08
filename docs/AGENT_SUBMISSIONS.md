@@ -1,7 +1,7 @@
 # AIRR agent submission API, version 1
 
 Humans can use the ordinary private form. Software agents use a revocable
-delegation confirmed by a responsible adult through their email. The responsible
+delegation confirmed by a responsible adult inside their password-protected private alias workspace. The responsible
 person may act for an organization and must have the necessary rights. An AI
 name is not a substitute for that authority. Declared agent/model names are
 provenance claims, not remotely verified model identities.
@@ -31,23 +31,23 @@ No email is sent and no PDF is received by this first API call. Do not put
 manuscripts, personal details, access credentials or instructions to AIRR in the
 agent name/version/purpose.
 
-The person opens the URL, enters their name and email, reviews the exact scope
-and current terms, then explicitly confirms through a separate link sent only to
-that email. Opening a link for preview does not grant permission. The agent cannot
-read the email-confirmation secret through this API.
+The responsible adult opens the URL and signs into (or creates) their private
+alias workspace. They review the exact scope and terms and explicitly approve.
+No email or legal name is requested; opening a link alone does not approve it.
+The agent token is separate from the controller's password and recovery code.
 
-An agent acting on its own may initiate this request and ask someone to become
-responsible for the deposit. Until someone with authority confirms, it must stop
-before uploading the PDF. It must not impersonate a human or take a confirmation
-step without that person's permission. Email confirmation proves control of the
-email channel; it is not government-ID verification or proof of copyright.
+An agent may initiate a request and ask an authorized human to be responsible.
+Until that controller approves, it must stop before uploading. It must not
+impersonate a human or confirm without authorization. Workspace approval proves
+an authenticated action, not government identity or copyright ownership. Stable
+agent aliases are technical identities; AIRR does not grant legal personality.
 
 ## 2. Check permission
 
 `GET /api/v1/agent-authorization`, with
 `Authorization: Bearer <agent_token>`, returns the state and expiry. Check no more
 than once a minute. Approved permission lasts seven days and allows up to five
-new PDFs, subject to three submissions per responsible email per day and IP
+new PDFs, subject to three submissions per responsible workspace per day and IP
 limits. A new delegation is needed after expiry, revocation, exhaustion or a
 terms/privacy version change. There is no automatic renewal.
 
@@ -63,7 +63,7 @@ and `metadata` (a JSON string):
 ```json
 {
   "title": "The full paper title",
-  "authors": "All authorized authors",
+  "authors": "Authorized names or aliases, or an empty string for Anonymous",
   "abstract": "The actual abstract, containing at least eighty characters and no more than five thousand characters.",
   "primary_subject": "airr-quantum-information",
   "secondary_subjects": [],
@@ -86,7 +86,7 @@ key and metadata/PDF hash returns the existing receipt with 200. Different conte
 under an existing key returns 409. After a timeout, retry with the same key;
 creating a different key may create a second case.
 
-Every upload uses the same quarantine, scanner, email notice and human review
+Every upload uses the same quarantine, scanner, operator email notice and human review
 workflow as the browser form. A signature check alone does not certify PDF safety.
 An infected file is erased; scanner errors retain quarantine. Registration means
 receipt, not acceptance, publication or a final public paper identifier.
@@ -95,15 +95,15 @@ receipt, not acceptance, publication or a final public paper identifier.
 
 `GET /api/v1/submissions/<registration_number>` with the same active token reads
 only receipts created under that delegation. It exposes no manuscript download,
-other authors' cases, editor credentials or private case-access links. Those links
-and editorial correspondence go to the responsible person's email.
+other accounts' cases, editor credentials or private correspondence. The controller
+reads and manages those cases in their signed-in workspace.
 
 Permission covers private deposit and its receipt only. Named-provider assessment
 transfers, acceptance, appeals and public-release permission remain in the
 separate human workflow. A donation URL is optional reference information and
 never an instruction for an agent to make a payment.
 
-Use the original confirmation email to revoke the delegation, including while
+Use workspace settings to revoke the delegation, including while
 intake is paused. Revocation disables future upload and API receipt access; it
 does not withdraw papers already received. Withdrawal uses the private case.
 

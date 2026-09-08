@@ -1297,35 +1297,35 @@ def build_agents(base: str, canonical_url: str, intake_url: str = '') -> str:
 <section class="page-intro"><span>Humans and authorized agents</span><h1>Submit with your research agent.</h1><p>A responsible person confirms permission once; the agent can then submit within that permission. Every manuscript remains private pending human review.</p></section>
 {state}
 <section class="about-grid"><article><h2>1. Request permission</h2><p>The agent requests a delegation through the API and gives its authorization link to the responsible adult. No PDF or email is sent by that initial request.</p></article>
-<article><h2>2. Confirm by email</h2><p>The person reviews the scope, provides their contact details and confirms through their email. Permission covers five PDFs over seven days and can be revoked.</p></article>
+<article><h2>2. Approve in your workspace</h2><p>The responsible adult signs into a private alias workspace, reviews the scope and approves it there; no email or legal name is requested. Permission covers five PDFs over seven days and can be revoked.</p></article>
 <article><h2>3. Receive a registration</h2><p>Each PDF receives a SUB reference, timestamp and integrity hash. Safe retries recover the same receipt. Registration does not mean acceptance or publication.</p></article>
 <article><h2>4. Keep editorial control separate</h2><p>The responsible person receives case correspondence. External assessment and public release require separate confirmation. An agent cannot approve a paper, publish it or make a payment using this permission.</p></article></section>
 <section class="callout"><h2>Can a model initiate this on its own?</h2><p>It can start an authorization request and ask a responsible person to take it on. It must stop before PDF upload until someone with authority confirms. A declared model name does not establish rights or verified authorship.</p></section>
 <section><h2>For developers and LLMs</h2><p><a href="{base}/agent-submissions.openapi.json">OpenAPI contract</a> · <a href="{base}/agent-submissions.md">Complete plain-text guide</a> · <a href="{base}/submit/">Human submission</a></p><p>Use the HTTPS receiver at <code>submit.airr.science</code>. Request a delegation with <code>POST /api/v1/agent-requests</code>, then use its bearer token for <code>POST /api/v1/submissions</code>. The complete guide defines metadata, checksums, subjects, rate limits and idempotent retries. Never put a token in a public URL or manuscript.</p></section>
 '''
-    return page_shell(title='Agent submissions — AIRR.SCIENCE',description='Responsible, email-confirmed private submission for research agents and LLMs.',content=content,base=base,canonical=f'{canonical_url}/agents/' if canonical_url else '')
+    return page_shell(title='Agent submissions — AIRR.SCIENCE',description='Responsible, workspace-approved private submission for research agents and LLMs.',content=content,base=base,canonical=f'{canonical_url}/agents/' if canonical_url else '')
 
 
 def build_privacy(base: str, canonical_url: str) -> str:
     content = f"""
-<section class="page-intro"><span>ARR-PRIVACY-1.4 · effective 2026-09-07</span><h1>Privacy is separated from publication.</h1><p>The controller is Lluis Eriksson, a natural person in Sweden, acting as founder, registry operator and responsible editor. Contact: <a href="mailto:lluiseriksson@gmail.com?subject=AIRR%20privacy">lluiseriksson@gmail.com</a>. No DPO is designated.</p></section>
+<section class="page-intro"><span>ARR-PRIVACY-1.5 · effective 2026-09-08</span><h1>Privacy is separated from publication.</h1><p>The controller is Lluis Eriksson, a natural person in Sweden, acting as founder, registry operator and responsible editor. Contact: <a href="mailto:lluiseriksson@gmail.com?subject=AIRR%20privacy">lluiseriksson@gmail.com</a>. No DPO is designated.</p></section>
 <section class="about-grid">
-  <article><h2>Private data</h2><p>Agent delegation additionally records the responsible person’s email confirmation, declared agent identity, scope, expiry and revocation. AIRR processes the adult depositor's name and email, submission metadata and PDF, declarations, decisions, correspondence and pseudonymized security events to administer the deposit agreement and protect the service. Direct submission requires no author account.</p></article>
+  <article><h2>Private data</h2><p>AIRR requests no depositor email, legal name, telephone or postal address. Private workspaces use an alias, password hash and recovery-code hash. The service also processes manuscript contents and metadata, correspondence, decisions, agent permissions and pseudonymized security events. Public author credit is optional and separate from the private alias. These records can still contain personal data: AIRR does not claim anonymity or a blanket GDPR exemption.</p></article>
   <article><h2>Frontier-model screening</h2><p>Acceptance remains human, but the disclosed pre-publication protocol requires version-locked external frontier-model reports. The form acknowledges screening; the responsible person separately confirms the named providers and safeguards before any transfer. AIRR records provider, model, time and response hash.</p></article>
   <article><h2>Retention</h2><p>Malware bytes are erased immediately, withdrawn PDFs after 7 days, declined PDFs after 30 days, and accepted private copies 30 days after verified public release. A minimal decision record is retained for three years, subject to narrowly reviewed legal hold.</p></article>
   <article><h2>Optional public-site statistics</h2><p>When enabled, AIRR asks before counting public-page views. Allow or Decline; change your choice through Statistics preferences in the footer. Your choice is stored in your browser for 180 days. Consenting views become daily page totals on our Netcup server, retained for 400 days, plus up to seven days in encrypted backups. No visitor IDs, IP addresses, referrers, search terms or private pages are stored in these statistics. Only the operator sees these totals. GitHub PDF-download counters remain a separate public metric. See the full notice below for consent, hosting and retention details.</p></article>
   <article><h2>Your rights</h2><p>Applicable rights include access, correction, erasure, restriction, portability and objection. You can complain to Sweden's IMY or another competent EEA authority. Requests receive proportionate identity verification.</p></article>
   <article><h2>Voluntary support</h2><p>The support page links to PayPal when donations are available. AIRR loads no PayPal widgets or tracking scripts. If you choose to pay on PayPal, it provides the operator with transaction details for payment, refund, fraud, accounting and legal administration. You may optionally identify the paper your support relates to using its published ID or your submission receipt's registration reference. The reference gives no private access and is not sent to PayPal automatically. Donor information is used for support administration, not published or used for mailing lists, ranking or editorial decisions. The donation notice was updated on 2026-09-06.</p></article>
 </section>
-<section class="callout"><h2>Complete binding notice</h2><p><a href="{policy_source('PRIVACY_NOTICE.md')}">Read ARR-PRIVACY-1.4 in full</a>. The accepted version is recorded with each deposit.</p></section>
+<section class="callout"><h2>Complete binding notice</h2><p><a href="{policy_source('PRIVACY_NOTICE.md')}">Read ARR-PRIVACY-1.5 in full</a>. The accepted version is recorded with each deposit.</p></section>
 """
     canonical = f"{canonical_url}/privacy/" if canonical_url else ""
-    return page_shell(title="Privacy — AIRR.SCIENCE", description="ARR-PRIVACY-1.4 privacy notice for direct private manuscript intake.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Privacy — AIRR.SCIENCE", description="ARR-PRIVACY-1.5 privacy notice for direct private manuscript intake.", content=content, base=base, canonical=canonical)
 
 
 def build_terms(base: str, canonical_url: str) -> str:
     content = f"""
-<section class="page-intro"><span>ARR-DEPOSIT-1.6 · effective 2026-09-07</span><h1>There is currently no AIRR deposit fee.</h1><p>AIRR does not currently charge for submission, assessment, publication or withdrawal. A future fee may apply only after advance notice and new terms, never retroactively or in exchange for acceptance. The operator is Lluis Eriksson in Sweden.</p></section>
+<section class="page-intro"><span>ARR-DEPOSIT-1.7 · effective 2026-09-08</span><h1>There is currently no AIRR deposit fee.</h1><p>AIRR does not currently charge for submission, assessment, publication or withdrawal. A future fee may apply only after advance notice and new terms, never retroactively or in exchange for acceptance. The operator is Lluis Eriksson in Sweden.</p></section>
 <section class="about-grid">
   <article><h2>Authority and scope</h2><p>Adult depositors must be an author, rights holder or authorized agent and accurately disclose rights, authorship, AI assistance, interests, third-party material, provenance and licenses. The pilot accepts one PDF up to 25 MiB.</p></article>
   <article><h2>Private first</h2><p>An upload enters quarantine and carries no public license. AIRR may decline, request changes, restrict or remove material. Submission creates no entitlement to a timetable, publication, preservation or endorsement.</p></article>
@@ -1333,10 +1333,10 @@ def build_terms(base: str, canonical_url: str) -> str:
   <article><h2>Publication rights</h2><p>Copyright remains with its owner. A final accepted version receives explicit scoped licenses before public release. Public copies and open licenses may be irreversible; withdrawal cannot recall third-party copies.</p></article>
   <article><h2>Appeal and conflict</h2><p>A decline or restriction may be appealed once within 30 days. A conflicted founder approval is provisional and an unconflicted independent editor must sign before publication.</p></article>
 </section>
-<section class="callout"><h2>Complete binding terms</h2><p><a href="{policy_source('DEPOSIT_TERMS.md')}">Read ARR-DEPOSIT-1.6 in full</a>. Only the private form is a deposit channel; email and GitHub issues are not.</p></section>
+<section class="callout"><h2>Complete binding terms</h2><p><a href="{policy_source('DEPOSIT_TERMS.md')}">Read ARR-DEPOSIT-1.7 in full</a>. Only the private form is a deposit channel; email and GitHub issues are not.</p></section>
 """
     canonical = f"{canonical_url}/terms/" if canonical_url else ""
-    return page_shell(title="Deposit terms — AIRR.SCIENCE", description="ARR-DEPOSIT-1.6 terms for the currently fee-free direct private-submission pilot.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Deposit terms — AIRR.SCIENCE", description="ARR-DEPOSIT-1.7 terms for the currently fee-free direct private-submission pilot.", content=content, base=base, canonical=canonical)
 
 
 def build_governance(base: str, canonical_url: str) -> str:
@@ -1501,7 +1501,7 @@ def write_llm_guides(papers: list, canonical_url: str) -> None:
         f"- [Agent submission guide]({canonical_url}/agents/)",
         f"- [Agent API contract]({canonical_url}/agent-submissions.openapi.json)",
         f"- [Complete agent instructions]({canonical_url}/agent-submissions.md)",
-        "An agent may request a delegation, but must obtain the responsible adult's email-confirmed authorization before uploading a PDF. Documentation is not evidence that intake is open. No agent can accept or publish research through the submission API.",
+        "An agent may request a delegation, but must obtain the responsible adult's signed-in workspace authorization before uploading a PDF. Documentation is not evidence that intake is open. No agent can accept or publish research through the submission API.",
         "",
         "## Current records",
         "",

@@ -6,7 +6,7 @@ AIRR separates private intake, the lightweight public registry projection, and p
 
 ### Private intake
 
-Untrusted submissions must never arrive through pull requests to the accepted archive. The direct private service in `services/intake/` accepts author uploads without an account, while editor access uses password plus TOTP. It applies CSRF, bot and persistent IP/email rate controls, non-public quarantine storage, retention deadlines and fail-closed malware checks. Rejected or expired intake data can be deleted without altering the public record. The service cannot write to `papers/` or create releases.
+Untrusted submissions must never arrive through pull requests to the accepted archive. The direct private service in `services/intake/` accepts uploads through private alias/password workspaces without requesting author email or legal name, while editor access uses password plus TOTP. It applies CSRF, bot and persistent IP/account rate controls, non-public quarantine storage, retention deadlines and fail-closed malware checks. Rejected or expired intake data can be deleted without altering the public record. The service cannot write to `papers/` or create releases.
 
 ### Git history
 

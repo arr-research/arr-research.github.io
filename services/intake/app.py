@@ -46,8 +46,8 @@ from scripts.donationlib import load_donation_url
 from scripts.subjectlib import classification_options, classification_text, public_vocabulary, validate_classification
 
 
-TERMS_VERSION = "ARR-DEPOSIT-1.6"
-PRIVACY_VERSION = "ARR-PRIVACY-1.4"
+TERMS_VERSION = "ARR-DEPOSIT-1.7"
+PRIVACY_VERSION = "ARR-PRIVACY-1.5"
 FRONTIER_PROMPT_VERSION = "ARR-INTAKE-ASSESS-1.0"
 MAX_PDF_BYTES = 25 * 1024 * 1024
 ALLOWED_STATES = {
@@ -313,6 +313,8 @@ def create_app(test_config: dict | None = None) -> Flask:
     install(app, sys.modules[__name__])
     from services.intake.agents import install as install_agents
     install_agents(app, sys.modules[__name__])
+    from services.intake.accounts import install as install_accounts
+    install_accounts(app, sys.modules[__name__])
     from services.intake.pageviews import install as install_pageviews
     install_pageviews(app, sys.modules[__name__])
 
@@ -367,6 +369,8 @@ def init_db() -> None:
     migrate(db)
     from services.intake.agents import migrate as migrate_agents
     migrate_agents(db)
+    from services.intake.accounts import migrate as migrate_accounts
+    migrate_accounts(db)
     from services.intake.pageviews import migrate as migrate_pageviews
     migrate_pageviews(db)
 
@@ -384,6 +388,15 @@ def audit(event: str, submission_id: str | None = None, **detail) -> None:
 def load_user() -> None:
     user_id = session.get("user_id")
     g.user = get_db().execute("SELECT * FROM users WHERE id=? AND active=1", (user_id,)).fetchone() if user_id else None
+    if g.user and g.user['role'] == 'depositor':
+        from services.intake.accounts import profile
+        account = profile(sys.modules[__name__], g.user['id'])
+        if account and session.get('credential_version') != account['credential_version']:
+            session.clear()
+            g.user = None
+        elif account and account['last_seen_at'][:10] != iso()[:10]:
+            get_db().execute('UPDATE private_accounts SET last_seen_at=? WHERE user_id=?', (iso(), user_id))
+            get_db().commit()
 
 
 def login_required(view):
@@ -565,7 +578,8 @@ def notify_operator(submission_id: str, title: str, submitter_email: str, scan_s
     message["Subject"] = f"[AIRR private submission] {submission_id}: {safe_title[:120]}"
     message["From"] = sender
     message["To"] = current_app_config("OPERATOR_EMAIL")
-    message["Reply-To"] = submitter_email
+    if submitter_email and not submitter_email.endswith('@accounts.invalid'):
+        message["Reply-To"] = submitter_email
     message.set_content(
         "A new manuscript was submitted to AIRR's private quarantine.\n\n"
         f"Case: {submission_id}\n"
@@ -636,7 +650,7 @@ def register_routes(app: Flask) -> None:
             enforce_rate("login", 8, 15 * 60)
             email = request.form.get("email", "").strip().lower()
             user = get_db().execute("SELECT * FROM users WHERE email=? AND active=1", (email,)).fetchone()
-            valid = bool(user and check_password_hash(user["password_hash"], request.form.get("password", "")))
+            valid = bool(user and user['role'] in {'operator', 'independent_editor'} and check_password_hash(user["password_hash"], request.form.get("password", "")[:256]))
             if valid and user["role"] in {"operator", "independent_editor"}:
                 valid = bool(user["totp_secret"] and verify_totp(user["totp_secret"], request.form.get("totp", "")))
             if not valid:
@@ -658,8 +672,9 @@ def register_routes(app: Flask) -> None:
         return redirect(url_for("login"))
 
     @app.get("/")
-    @login_required
     def dashboard():
+        if not g.user:
+            return redirect(url_for('account_login'))
         if g.user["role"] in {"operator", "independent_editor"}:
             query = "SELECT s.*,u.email,u.display_name FROM submissions s JOIN users u ON u.id=s.user_id"
             parameters = ()
@@ -685,6 +700,10 @@ def register_routes(app: Flask) -> None:
 
     @app.route("/submit", methods=("GET", "POST"))
     def submit():
+        if not g.user or g.user['role'] != 'depositor' or not app.extensions['accounts']['profile'](g.user['id']):
+            if request.method == 'POST':
+                abort(401, 'Sign in to your private workspace first.')
+            return redirect(url_for('account_login'))
         if request.method == "POST":
             require_csrf()
             enforce_rate("submit", 3, 24 * 60 * 60)
@@ -694,10 +713,12 @@ def register_routes(app: Flask) -> None:
                 flash("Submission received for processing.", "success")
                 return redirect(url_for("submit"))
             upload = request.files.get("manuscript")
-            display_name = request.form.get("display_name", "").strip()
-            email = request.form.get("email", "").strip().lower()
+            if 'email' in request.form or 'display_name' in request.form:
+                abort(400, 'Personal contact fields are not accepted. Use your private workspace.')
+            display_name = g.user['display_name']
+            email = g.user['email']
             title = request.form.get("title", "").strip()
-            authors = request.form.get("authors", "").strip()
+            authors = request.form.get("authors", "").strip() or 'Anonymous'
             abstract = request.form.get("abstract", "").strip()
             try:
                 classification = validate_classification(
@@ -707,14 +728,14 @@ def register_routes(app: Flask) -> None:
                 flash(str(error), "error")
                 return render_template("submit.html", terms=TERMS_VERSION, privacy=PRIVACY_VERSION), 400
             agreed = all(request.form.get(field) for field in ("adult", "terms", "privacy", "authority", "ai_review_opt_in"))
-            if not upload or len(display_name) < 2 or not valid_email(email) or not title or not authors or len(abstract) < 80 or not agreed:
+            if not upload or not title or len(title) > 500 or len(authors) > 1000 or not 80 <= len(abstract) <= 5000 or not agreed:
                 flash("Complete all fields and attestations.", "error")
                 return render_template("submit.html", terms=TERMS_VERSION, privacy=PRIVACY_VERSION)
-            enforce_rate("submit-email", 3, 24 * 60 * 60, email)
+            enforce_rate("submit-account", 3, 24 * 60 * 60, str(g.user['id']))
             from services.intake.storage import receive
             try:
                 row = receive(app, sys.modules[__name__], upload, {
-                    'display_name': display_name, 'email': email, 'title': title,
+                    'display_name': display_name, 'email': email, 'user_id': g.user['id'], 'title': title,
                     'authors': authors, 'abstract': abstract, 'classification': classification,
                     'operator_conflict': bool(request.form.get('operator_conflict')),
                 })
@@ -903,7 +924,7 @@ def register_routes(app: Flask) -> None:
     def withdraw(submission_id: str):
         require_csrf()
         row = get_db().execute("SELECT * FROM submissions WHERE id=? AND user_id=?", (submission_id, g.user["id"])).fetchone()
-        if not row or row["status"] == "accepted_for_publication":
+        if not row or row["status"] in {'accepted_for_publication','legal_hold','removed','withdrawn','superseded'}:
             abort(404)
         db = get_db()
         db.execute(
@@ -1062,11 +1083,14 @@ def register_commands(app: Flask) -> None:
         inactive = db.execute(
             """SELECT u.id FROM users u WHERE u.role='depositor' AND u.created_at<?
                AND u.email NOT LIKE 'erased-user-%@invalid.local'
+               AND NOT EXISTS(SELECT 1 FROM private_accounts p WHERE p.user_id=u.id AND p.last_seen_at>=?)
                AND NOT EXISTS(SELECT 1 FROM submissions s WHERE s.user_id=u.id AND
                (s.updated_at>=? OR s.status NOT IN ('declined','withdrawn','removed','accepted_for_publication')))""",
-            (account_cutoff, account_cutoff),
+            (account_cutoff, account_cutoff, account_cutoff),
         ).fetchall()
         for user in inactive:
+            db.execute("UPDATE agent_grants SET state='revoked' WHERE owner_user_id=?", (user['id'],))
+            db.execute('DELETE FROM private_accounts WHERE user_id=?', (user['id'],))
             db.execute(
                 "UPDATE users SET email=?,display_name='[erased contact]',password_hash=?,active=0 WHERE id=?",
                 (f"erased-user-{user['id']}@invalid.local", generate_password_hash(secrets.token_urlsafe(32)), user["id"]),

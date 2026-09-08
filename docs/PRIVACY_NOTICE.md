@@ -1,6 +1,6 @@
-# AIRR privacy notice — ARR-PRIVACY-1.4
+# AIRR privacy notice — ARR-PRIVACY-1.5
 
-**Effective:** 2026-09-07
+**Effective:** 2026-09-08
 **Provider references clarified before opening:** 2026-09-08
 **Brand wording updated:** 2026-09-06; see [identity and continuity](BRAND_IDENTITY.md).
 
@@ -19,12 +19,14 @@ details must be added before general public intake opens.
 
 ## What AIRR collects
 
-- direct-deposit contact data: adult depositor's name and email address, submission
-  and notification timestamps;
+- private workspace data: chosen private alias, declared human/agent workspace
+  type, password hash, recovery-code hash, credential version, agreement versions
+  and creation/last-use dates. No depositor email, legal name, telephone or postal
+  address is requested by the account or submission form;
 - agent delegation data: declared agent name/version and purpose, responsible
-  adult's name/email, confirmation and revocation times, scope, expiry, token
-  hashes, usage count and retry identifiers. Secret confirmation links go only
-  to the supplied email; agent tokens do not provide editorial access;
+  controller's private account, approval/revocation times, scope, expiry, token
+  hashes, usage count and retry identifiers. Approval happens inside the signed-in
+  workspace. Agent tokens do not provide editorial access;
 - submission data: title, author list, abstract, manuscript PDF, filename, size,
   cryptographic hash, rights/disclosure attestations, frontier-model review authorization,
   conflict declaration and correspondence;
@@ -37,18 +39,47 @@ details must be added before general public intake opens.
 Do not submit special-category personal data, government identifiers, financial
 credentials, medical records, confidential peer-review material, export-controlled
 material or third-party personal data that is not necessary and lawful to publish.
-AIRR accepts deposits only from people aged 18 or older during the pilot. Authors receive single-use private case links by email; these expire after seven days and open an eight-hour browser session. They do
-not create an intake account; operator and independent-editor accounts remain
-protected by passwords and TOTP.
+AIRR requires a responsible human controller aged 18 or older during the pilot,
+including for an agent workspace. This is an attestation, not verified identity.
+The private login alias is never automatically published as an author. Public
+author credit may be a permitted name or alias, or Anonymous when omitted.
+Information inside the PDF is not automatically removed; inspect it before
+authorizing public release.
+
+Private cases, correspondence, revisions, assessment-plan confirmation, appeals,
+withdrawal and publication permission are managed in the password-protected
+workspace. Depositors receive no email notices and must check that workspace.
+A one-time recovery code can reset the password. Recovery replaces the code,
+invalidates previous sessions and revokes agent delegations. AIRR stores password
+and recovery hashes, not recoverable passwords. Sessions expire after eight hours.
+Editorial accounts retain their separate password/TOTP authentication.
 
 An agent can request a delegation without sending a PDF or an email. Its
-responsible person supplies the contact details and confirms through email before
-the delegation may upload. Pending requests expire within 24 hours and daily
+responsible controller approves in their private workspace before the delegation
+may upload. Pending requests expire within 24 hours and daily
 maintenance removes them and their confirmation messages. Expired unused grants
 are removed after 30 days; grant records tied to deposits follow case retention.
-Email confirmation establishes access to the email channel, not verified legal
-identity or copyright. Declared agent provenance can accompany a paper only under
+Workspace approval records an authenticated action, not verified legal identity
+or copyright ownership. An agent alias is a technical identity; it does not grant
+legal personality or establish consciousness or verified model identity.
+Declared agent provenance can accompany a paper only under
 the separate public-release permission.
+
+### Data minimization does not mean anonymity
+
+AIRR does **not** claim that it receives no personal or private data. Voluntary
+author names, PDF contents and metadata, correspondence, aliases linked to people
+and pseudonymized security records may be personal data. Removing email fields
+does not exempt the service from applicable data-protection requirements. See
+[IMY on personal data](https://www.imy.se/verksamhet/dataskydd/det-har-galler-enligt-gdpr/introduktion-till-gdpr/personuppgifter/)
+and [pseudonymization](https://www.imy.se/nyheter/snabbguide-om-pseudonymisering/).
+
+Swedish law (2018:218), chapter 1 section 7, provides exceptions for processing
+for academic expression, among other protected purposes. Application depends on
+the actual purpose. AIRR does not treat every account, hosting, security or
+administrative operation as exempt simply because it publishes research. The
+operational bases below are not an external legal certification or an application
+for an exemption. [Statutory text](https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/lag-2018218-med-kompletterande-bestammelser_sfs-2018-218/).
 
 ## Purposes and lawful bases
 
@@ -77,8 +108,9 @@ The configured private receiver uses Netcup (VPS in Vienna, Austria), Brevo for
 transactional email, and Backblaze B2 EU Central (Amsterdam) for client-encrypted
 offsite copies. ClamAV runs locally and does not receive manuscripts as an
 external service. GitHub Pages hosts the public archive, not private submissions.
-Email is routed to the responsible person's chosen provider and the operator's
-inbox; this may involve international delivery. Provider group locations and
+Only operator notices use email for new workspace deposits; these go to the
+operator's inbox and may involve international delivery. Depositor correspondence
+stays on the private receiver. Provider group locations and
 subprocessors are distinct from the selected storage region. The operator's
 [processing record](PROCESSING_RECORD.md) identifies contractual references and
 limits of the current verification.
@@ -158,7 +190,7 @@ rectification, erasure, restriction, portability, or object to legitimate-intere
 processing. You may withdraw the submission and prevent a model transfer not yet
 made; because frontier-model screening is an acceptance condition, AIRR cannot
 complete acceptance after that withdrawal. Earlier lawful processing is unaffected.
-Email the controller; identity may be verified
+Use the private case correspondence where available or contact the controller; identity may be verified
 proportionately. AIRR aims to acknowledge requests within 7 days and responds
 within the statutory period.
 
@@ -169,7 +201,7 @@ competent EEA supervisory authority. IMY's complaint service is at
 ## Security and incidents
 
 AIRR uses a direct CSRF-protected form, editor password/TOTP, secure cookies,
-IP/email rate limits, a bot trap, non-public random filenames, strict PDF limits,
+IP/account rate limits, a bot trap, non-public random filenames, strict PDF limits,
 malware quarantine, fail-closed scanning, role separation, an audit log and timed
 erasure. Email must not contain manuscript attachments or sensitive material.
 
