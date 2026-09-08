@@ -1,5 +1,19 @@
 # Private intake production runbook
 
+## Local antivirus transport
+
+The default `clamdscan` client streams to the configured local ClamAV daemon.
+Passing file descriptors across the application's systemd mount namespace caused
+AppArmor to reject an actual upload on 2026-09-08, despite a successful daemon
+ping. Do not disable AppArmor or widen manuscript permissions to work around it.
+Readiness now scans harmless bytes from the actual quarantine directory under
+the application's service identity, with a four-second timeout and cleanup.
+
+On the configured Netcup host, `/tmp` is tmpfs and ClamAV's stream limit is
+26,214,400 bytes, matching the 25 MiB upload cap. Preserve local-only daemon
+access and memory-backed scanner temporary storage when reprovisioning. A
+custom scanner must pass the same actual-file readiness check.
+
 ## Planned upgrades and monitoring
 
 Use the current `services/intake/deploy/upgrade.py` with a full pinned commit.
