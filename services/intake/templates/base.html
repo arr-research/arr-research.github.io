@@ -9,5 +9,6 @@ body{background:#080b10}nav{flex-wrap:wrap;justify-content:space-between;border-
 .preserve-lines{white-space:pre-wrap;overflow-wrap:anywhere}.two-fields{display:grid;grid-template-columns:1fr 1fr;gap:1rem}details{margin:1rem 0}summary{cursor:pointer;padding:.5rem 0}td{overflow-wrap:anywhere}@media(max-width:600px){.two-fields{grid-template-columns:1fr}table{font-size:.85rem}}
 </style></head><body>
 <nav><a href="{{ url_for('dashboard') if g.user else url_for('submit') }}"><img src="{{ url_for('static', filename='airr-logo.png') }}" alt="AIRR.SCIENCE — Archive for Independent &amp; Rigorous Research" width="1859" height="336"></a>{% if g.user %}<span>{{ g.user['display_name'] }} · {{ g.user['role'] }}</span><form method="post" action="{{ url_for('logout') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button>Sign out</button></form>{% else %}<a href="{{ url_for('login') }}">Editor sign in</a>{% endif %}</nav>
+{% if g.user and g.user['role']=='operator' and g.user['totp_secret'] %}<p><a href="{{ url_for('dashboard') }}">Review queue</a> · <a href="{{ url_for('pageview_dashboard') }}">Website statistics</a></p>{% endif %}
 <main>{% for category,message in get_flashed_messages(with_categories=true) %}<p class="flash {{ category }}">{{ message }}</p>{% endfor %}{% block content %}{% endblock %}</main>
 </body></html>

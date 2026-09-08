@@ -5,6 +5,7 @@ hold is skipped and the hold is reviewed at least every 90 days.
 
 | Data | Trigger | Erasure or review |
 | --- | --- | --- |
+| Optional public-site daily page totals | UTC collection date | erased by daily sweep after 400 days; encrypted snapshots may survive up to 7 additional days |
 | Pseudonymized rate-limit events | collection | erased after 90 days |
 | Authentication/security audit | event | reviewed and erased or aggregated after 12 months, unless an incident needs it |
 | Infected uploaded bytes | scanner detection | immediately |

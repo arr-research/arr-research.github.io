@@ -29,14 +29,20 @@ its full count to every listed author's total; counts are not divided fractional
 
 ## Page views and unique visitors
 
-AIRR currently has no page-view analytics provider. Pages therefore say **Not
-measured**, and no page-view ranking is generated. Zero is not substituted for
-missing measurement.
+Since the 2026-09-08 implementation, optional public-page measurement can be enabled
+for the private operator dashboard. Only visitors who choose Allow contribute.
+One page load contributes one view of its canonical public path; reloads may count
+again. No visitor identifiers are created, so unique visitors are not measured.
+Automation can affect totals; the collector's global burst limit is not a guarantee
+of human readership. No events are collected from private submission/editor pages.
+See `PRIVACY_NOTICE.md` and `ANALYTICS_OPERATIONS.md` for consent, Netcup hosting,
+400-day daily aggregate retention and access controls.
 
-Before activating views, AIRR must document a privacy-reviewed provider, exact event
-definition, measurement window, bot handling, retention and applicable privacy
-terms. The provider export must enter the build through the documented interchange
-format; values are never hand-authored in page templates.
+These operator totals are not currently exported to public paper/author counters.
+The public pages say **Not available**, and no page-view ranking is generated.
+Zero is not substituted for missing publication data. Before publishing such
+counts, an export must define its measurement window and coverage and enter the
+build through the documented interchange format; values are never hand-authored.
 
 ## Refresh, ties and publication
 
