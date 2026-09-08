@@ -8,7 +8,12 @@ This repository is the technical foundation for the archive. It keeps lightweigh
 
 ## Current status
 
-AIRR operates a public archive and is building a **currently fee-free direct private-submission pilot**. Authors will use one form without an invitation or account; activation remains gated by the signed production checklist. The manuscript enters private quarantine and email carries only an operator notice, never the PDF. No record is considered published merely because it appears in a branch, pull request or private intake. A research paper or technical note becomes an AIRR publication only after a human acceptance workflow completes and a versioned release is created.
+AIRR operates the public archive at **[airr.science](https://airr.science/)**. The **currently fee-free private-submission pilot is open** following the recorded production checks and operator authorization on 8 September 2026. Authors [create a private workspace](https://submit.airr.science/account/register) with an alias and password; no invitation, author email or legal name is requested. Each account may submit up to 10 papers in any 24-hour period, shared with its delegated agents. The manuscript enters private quarantine and email carries only an operator notice, never the PDF. Sending a paper does not authorize external AI assessment or public release: those require separate confirmations. A research paper or technical note becomes an AIRR publication only after the editorial workflow and author permission complete and a versioned release is created. New installations remain closed until their own launch checks pass.
+
+The current brand is **AIRR.SCIENCE — Archive for Independent & Rigorous Research**.
+Existing `ARR-…` paper identifiers, policy identifiers and the GitHub repository
+address remain stable so that citations and integrations keep working. See
+[brand and compatibility](docs/BRAND_IDENTITY.md).
 
 ## Local checks
 
@@ -56,9 +61,13 @@ Copy-ready agent instructions are in [docs/AGENT_DEPOSIT_PROMPTS.es.md](docs/AGE
 
 AIRR separates private intake, the public metadata registry, and immutable artifact storage so that GitHub can be replaced or complemented without changing record identifiers. See [capacity and migration](docs/SCALE_READINESS.md), [state and evidence labels](docs/STATE_MODEL.md), and the [licensing policy](LICENSE_POLICY.md).
 
-The private intake service is in [`services/intake/`](services/intake/). AIRR does not currently charge for submission, assessment, publication or withdrawal under [`ARR-DEPOSIT-1.4`](docs/DEPOSIT_TERMS.md); any future fee would apply only after advance notice and new terms. New admissions require the version-locked frontier-model gate in [`ARR-ASSESS-1.0`](docs/MODEL_ASSESSMENT_POLICY.md), while legacy records remain honestly labelled `not_assessed`. The operator is Lluis Eriksson, founder, registry operator, responsible editor and GDPR controller. See [privacy](docs/PRIVACY_NOTICE.md), [complaints/contact](docs/LEGAL_AND_COMPLAINTS.md), [retention](docs/RETENTION_SCHEDULE.md), [governance](docs/GOVERNANCE.md) and the [production launch gate](docs/INTAKE_OPERATIONS.md).
+The private intake service is in [`services/intake/`](services/intake/). AIRR does not currently charge for submission, assessment, publication or withdrawal under [`ARR-DEPOSIT-1.8`](docs/DEPOSIT_TERMS.md); any future fee would apply only after advance notice and new terms. New admissions require the version-locked frontier-model gate in [`ARR-ASSESS-1.0`](docs/MODEL_ASSESSMENT_POLICY.md), while legacy records remain honestly labelled `not_assessed`. The operator is Lluis Eriksson, founder, registry operator, responsible editor and GDPR controller. See [privacy](docs/PRIVACY_NOTICE.md), [complaints/contact](docs/LEGAL_AND_COMPLAINTS.md), [retention](docs/RETENTION_SCHEDULE.md), [governance](docs/GOVERNANCE.md) and the [production launch gate](docs/INTAKE_OPERATIONS.md).
 
 Platform software is `AGPL-3.0-or-later`; AIRR-authored documentation is `CC-BY-4.0`; public catalogue metadata is `CC0-1.0`; deposited papers, code and data declare their own scoped licenses.
+
+Historical reproduction environments are preserved with their papers. They are
+not the production application's dependencies. Read the
+[dependency security notice](docs/DEPENDENCY_SECURITY.md) before running them.
 
 Public author profiles use stable identities from `registry/authors.json`. Paper and
 author activity rankings are generated from reproducible provider snapshots under

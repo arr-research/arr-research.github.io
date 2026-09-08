@@ -29,6 +29,14 @@ its full count to every listed author's total; counts are not divided fractional
 
 ## Page views and unique visitors
 
+GitHub repository Traffic is a separate measurement. Its full clones and
+repository-page visitors do not measure visits to `airr.science`. A unique cloner
+is not evidence of a reader, scientific reuse, endorsement or citation; automated
+clients and development activity can contribute, and AIRR cannot identify their
+purpose from these aggregates. See [GitHub's traffic documentation](https://docs.github.com/en/repositories/viewing-activity-and-data-for-your-repository/viewing-traffic-to-a-repository).
+Use the private operator statistics dashboard for the public site's consenting
+page-view sample, with the limitations below.
+
 Since the 2026-09-08 implementation, optional public-page measurement can be enabled
 for the private operator dashboard. Only visitors who choose Allow contribute.
 One page load contributes one view of its canonical public path; reloads may count

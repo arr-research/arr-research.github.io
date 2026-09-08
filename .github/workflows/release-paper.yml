@@ -24,9 +24,15 @@ concurrency:
 jobs:
   release:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PAPER_ID: ${{ inputs.paper_id }}
+      REQUESTED_VERSION: ${{ inputs.version }}
     steps:
       - name: Check out accepted source
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
@@ -36,8 +42,8 @@ jobs:
       - name: Build PDF when LaTeX is the canonical source
         shell: bash
         run: |
-          paper_id='${{ inputs.paper_id }}'
-          requested_version='${{ inputs.version }}'
+          paper_id="$PAPER_ID"
+          requested_version="$REQUESTED_VERSION"
           paper_dir="$(python scripts/resolve_record.py "$paper_id" --version "$requested_version" --field path)"
           metadata_path="$paper_dir/metadata.json"
           source_of_truth="$(python -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["source_of_truth"])' "$metadata_path")"
@@ -55,19 +61,20 @@ jobs:
               texlive-latex-extra
             (
               cd "$paper_dir"
-              latexmk -pdf -interaction=nonstopmode -halt-on-error paper.tex
+              # Ignore document-supplied Perl configuration and forbid TeX commands.
+              latexmk -norc -pdf -no-shell-escape -interaction=nonstopmode -halt-on-error paper.tex
             )
           else
             echo "Preserving canonical source byte-for-byte: $source_of_truth"
           fi
       - name: Build immutable package
-        run: python scripts/package_paper.py "${{ inputs.paper_id }}" --version "${{ inputs.version }}"
+        run: python scripts/package_paper.py "$PAPER_ID" --version "$REQUESTED_VERSION"
       - name: Resolve version and release path
         id: record
         shell: bash
         run: |
-          paper_id='${{ inputs.paper_id }}'
-          requested_version='${{ inputs.version }}'
+          paper_id="$PAPER_ID"
+          requested_version="$REQUESTED_VERSION"
           version="$(python scripts/resolve_record.py "$paper_id" --version "$requested_version" --field version)"
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "directory=dist/release/$paper_id/$version" >> "$GITHUB_OUTPUT"

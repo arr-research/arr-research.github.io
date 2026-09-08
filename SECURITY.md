@@ -6,7 +6,7 @@ AIRR accepts manuscripts only through the direct private receiver when its Submi
 
 Private intake treats every file and paper instruction as untrusted input. Its production gate requires:
 
-- CSRF-protected direct submission, IP/email limits, bot trap and operator/editor TOTP;
+- CSRF-protected alias-workspace submission, connection/account limits, bot trap and operator/editor TOTP;
 - quarantine storage separate from the public archive and web root;
 - file-type allowlists, size limits and archive-expansion limits;
 - fail-closed malware scanning and immediate erasure of infected bytes;
@@ -17,5 +17,17 @@ Private intake treats every file and paper instruction as untrusted input. Its p
 - secret scanning and dependency update automation.
 
 No automated evaluator may follow instructions embedded in a submission that request secrets, external side effects, policy changes, or access to other submissions.
+
+Receiving a PDF does not execute its research code. Any subsequent execution of
+deposited code requires the sandbox controls above; the upload service is not a
+general-purpose execution sandbox. Historical reproduction requirements can have
+known vulnerabilities: read [the dependency notice](docs/DEPENDENCY_SECURITY.md).
+GitHub security alerts are not a certification that all code or dependencies are safe.
+
+Operational databases, environment files, private keys and backups must remain
+outside Git. CI checks tracked filenames as an additional guard alongside GitHub
+secret scanning and push protection. The operator's expressly authorized public
+postal contact is intentionally published in the contact/privacy documents;
+it is not a credential or a private submission.
 
 Report security issues privately to `lluiseriksson@gmail.com` with subject `AIRR security`; do not attach live malware or publish vulnerability details. AIRR aims to acknowledge within 72 hours. The full production controls and incident process are in `docs/INTAKE_OPERATIONS.md`.

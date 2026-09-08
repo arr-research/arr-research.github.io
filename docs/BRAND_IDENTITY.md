@@ -13,7 +13,7 @@ wording is preserved in Git history.
 Compatibility and the scholarly record require retaining the original identifiers:
 
 - Published `ARR-YYYY-…` record IDs, version IDs, release tags and file paths.
-- Protocol and policy identifiers such as `ARR-ASSESS-1.0` and `ARR-DEPOSIT-1.4`.
+- Protocol and policy identifiers such as `ARR-ASSESS-1.0` and `ARR-DEPOSIT-1.8`.
 - Existing `arr:` schema namespaces, environment variables and repository URLs.
 - Original manuscripts, abstracts, references, exact model reports, declarations
   in preserved source metadata and historical audit records.
@@ -25,3 +25,10 @@ across rendered HTML, scientific text, model reports or the preserved corpus.
 
 Only the current AIRR wordmark is used in the interface. Legacy image filenames may
 remain addressable for old links; they are not the current brand.
+
+GitHub's organization display name, repository description and homepage use the
+current AIRR name and `https://airr.science/`. The organization/repository slugs
+remain `arr-research/arr-research.github.io`; they are infrastructure identifiers,
+not the displayed brand. Schema `$id` URLs and legacy receipt wording remain
+accepted for compatibility. Do not rename IDs or rewrite scientific sources to
+remove these historical occurrences.
