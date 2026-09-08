@@ -4,7 +4,7 @@
 **Brand wording updated:** 2026-09-06; see [identity and continuity](BRAND_IDENTITY.md).
 
 **Service state:** currently fee-free direct private-submission pilot; the receiver
-opens only after the production launch gate is signed.
+opens only after the operator authorizes the documented reception-readiness record.
 
 ## Controller and contact
 

@@ -3,6 +3,7 @@ import io
 import json
 import re
 import qrcode
+from pathlib import Path
 from unittest.mock import patch
 
 import test_intake as fixtures
@@ -36,6 +37,82 @@ class WorkflowTests(fixtures.IntakeTests):
         self.assertEqual(self.client.get('/submit').status_code, 503)
         self.assertEqual(self.client.post('/submit').status_code, 503)
         self.assertEqual(self.client.get('/login').status_code, 200)
+
+    def pilot_record(self):
+        required = ('postal_contact','data_handling_review','storage_and_restore','https',
+                    'operator_2fa','backup_schedule','monitoring','incident_procedure','end_to_end')
+        return {'policy_version':'AIRR-PILOT-1.0','authorized_by':'operator@example.org',
+                'authorized_at':iso(),'authorization_source':'Explicit operator instruction in isolated test',
+                'checks':{key:True for key in required},
+                'evidence':{key:'Isolated fixture evidence for ' + key for key in required}}
+
+    def record_pilot(self, record):
+        path = Path(self.temp.name) / 'launch-approval.json'
+        path.write_text(json.dumps(record),encoding='utf-8')
+        self.app.config.update(TESTING=False, INTAKE_OPEN=True, LAUNCH_APPROVAL_FILE=str(path))
+
+    def test_ordinary_intake_can_open_with_authorized_operator_before_independent_appointment(self):
+        with self.app.app_context():
+            get_db().execute("UPDATE users SET active=0 WHERE role='independent_editor'")
+            get_db().commit()
+        self.record_pilot(self.pilot_record())
+        self.assertEqual(self.client.get('/submit').status_code,200)
+        case_id = self.upload()
+        self.assertEqual(self.row(case_id)['status'],'eligible')
+        request = self.client.post('/api/v1/agent-requests',json={
+            'agent_name':'Test research agent','agent_version':'1',
+            'purpose':'Authorized test of the private research receiving route.'})
+        self.assertEqual(request.status_code,201,request.data)
+        self.assertEqual(request.json['state'],'pending')
+
+    def test_pilot_record_requires_actual_readiness_evidence_and_active_operator_mfa(self):
+        for field in self.pilot_record()['checks']:
+            record = self.pilot_record()
+            record['evidence'][field] = ''
+            self.record_pilot(record)
+            self.assertEqual(self.client.get('/submit').status_code,503,field)
+        for change in ({'authorized_by':'other@example.org'}, {'authorized_at':'2099-01-01T00:00:00+00:00'},
+                       {'authorized_at':'2026-09-07'}, {'policy_version':'old'}, {'authorization_source':True}):
+            record = self.pilot_record()
+            record.update(change)
+            self.record_pilot(record)
+            self.assertEqual(self.client.get('/submit').status_code,503)
+        self.record_pilot([])
+        self.assertEqual(self.client.get('/submit').status_code,503)
+        self.record_pilot(self.pilot_record())
+        with self.app.app_context():
+            get_db().execute("UPDATE users SET totp_secret=NULL WHERE role='operator'")
+            get_db().commit()
+        self.assertEqual(self.client.get('/submit').status_code,503)
+
+    def test_open_pilot_does_not_allow_operator_to_finalize_a_conflict(self):
+        with self.app.app_context():
+            get_db().execute("UPDATE users SET active=0 WHERE role='independent_editor'")
+            get_db().commit()
+        self.record_pilot(self.pilot_record())
+        case_id = self.upload(conflict=True)
+        self.add_model_review(case_id,1)
+        token = self.login_session('operator@example.org')
+        data = {'csrf_token':token,'action':'accept','reason':'All required manuscript checks complete.'}
+        self.assertEqual(self.client.post(f'/admin/submission/{case_id}/decision',data=data).status_code,302)
+        self.assertEqual(self.row(case_id)['status'],'awaiting_independent_decision')
+        self.assertEqual(self.client.post(f'/admin/submission/{case_id}/decision',data=data).status_code,403)
+        self.assertEqual(self.client.get(f'/admin/submission/{case_id}/release-package').status_code,409)
+
+    def test_open_pilot_does_not_allow_operator_to_resolve_own_appeal(self):
+        with self.app.app_context():
+            get_db().execute("UPDATE users SET active=0 WHERE role='independent_editor'")
+            get_db().commit()
+        self.record_pilot(self.pilot_record())
+        other = self.upload()
+        token = self.login_session('operator@example.org')
+        self.client.post(f'/admin/submission/{other}/decision',data={'csrf_token':token,'action':'decline','reason':'Missing evidence'})
+        csrf = self.author_session(other)
+        self.assertEqual(self.client.post('/case/' + other,data={'csrf_token':csrf,'action':'appeal',
+            'body':'The original decision overlooked reproducible evidence in the second appendix.'}).status_code,302)
+        token = self.login_session('operator@example.org')
+        self.assertEqual(self.client.post(f'/admin/submission/{other}/appeal',data={'csrf_token':token,
+            'outcome':'reopen','resolution':'The original reviewer cannot act alone to resolve this appeal.'}).status_code,403)
 
     def test_independent_editor_cannot_browse_unassigned_private_cases(self):
         case_id = self.upload()

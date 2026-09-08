@@ -6,5 +6,6 @@ periods are in [`RETENTION_SCHEDULE.md`](RETENTION_SCHEDULE.md).
 
 The engineering controls exist for a direct private-submission pilot, but the production
 launch gate in [`INTAKE_OPERATIONS.md`](INTAKE_OPERATIONS.md) remains authoritative.
-The public receiver must not open until the legal, service-address, processor and
-deployment items there are complete.
+The public receiver must not open until the contact, data-handling and deployment
+checks there have evidence and the operator's recorded authorization. Receipt
+does not grant conflicted editorial decisions, resolve an appeal or publish a PDF.

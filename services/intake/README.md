@@ -30,7 +30,7 @@ receipt. Safety-rejected files get a rejection explanation rather than a donatio
 invitation.
 
 The service is suitable for a controlled pilot after the production checklist in
-[`docs/INTAKE_OPERATIONS.md`](../../docs/INTAKE_OPERATIONS.md) has been signed.
+[`docs/INTAKE_OPERATIONS.md`](../../docs/INTAKE_OPERATIONS.md) has evidence and recorded operator authorization.
 It is not permission to open general public intake.
 
 ## Local setup
@@ -80,15 +80,17 @@ are configured; production routing must use `/readyz` as its readiness gate.
 After the receiver is deployed and `/readyz` passes, set the GitHub Actions
 repository variable `ARR_INTAKE_URL` to its HTTPS origin. The next Pages deployment
 will turn the disabled control at `/submit/` into a direct link to the private form.
-Do not set the variable before the production checklist is signed.
+Do not set the variable before the reception-readiness record is complete and authorized.
 
 ## Editorial workflow and controlled opening
 
 `ARR_INTAKE_OPEN` defaults to `0`. HTTPS/editor setup can operate while public
-upload remains closed. Opening requires both `ARR_INTAKE_OPEN=1` and a signed
+upload remains closed. Opening requires both `ARR_INTAKE_OPEN=1` and an evidenced
 `ARR_LAUNCH_APPROVAL_FILE` (default `/etc/airr-intake/launch-approval.json`) covering
-the launch checklist, plus active operator and independent-editor TOTP accounts.
-The example file contains no approvals. `flask launch-status` reports this gate.
+the `AIRR-PILOT-1.0` reception checks and real authorization source, plus an active
+operator TOTP account. An independent editor is still required for conflicted final
+decisions and appeals. The example file contains no approvals. `flask launch-status`
+reports this gate.
 
 Authors receive a queued transactional receipt with a single-use link, valid for
 seven days. A POST consumes the token and opens an eight-hour session; email link

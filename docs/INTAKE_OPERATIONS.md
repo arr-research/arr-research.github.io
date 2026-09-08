@@ -2,26 +2,32 @@
 
 ## Launch gate
 
-The direct-submission pilot may receive real manuscripts only after every item is signed
-and dated by the operator:
+The direct-submission pilot uses the versioned `AIRR-PILOT-1.0` readiness record.
+The record identifies the real operator's authorization, its date and source,
+and evidence for the checks below. An installation tool may record an explicit
+operator instruction; it must not invent a signature or completed review.
+Reception is separate from editorial acceptance and public release.
 
-- [ ] Swedish/EU counsel reviewed terms, privacy, DSA/e-commerce classification,
-  complaints and the intended hosting arrangement.
-- [ ] A stable service/postal address is published without exposing a home address.
-- [ ] Every infrastructure/SMTP-email/backup/scanning processor, DPA, location,
-  subprocessor and transfer safeguard is recorded in `PROCESSING_RECORD.md`.
+- [ ] A stable service/postal contact address chosen by the operator is published.
+- [ ] Terms, privacy, contact, complaint handling, actual infrastructure recipients,
+  contracts, locations and transfer arrangements have a documented review in
+  `PROCESSING_RECORD.md`. Record unresolved points and seek qualified advice where
+  needed. A blanket requirement to hire counsel is not a technical reception gate,
+  and the record must not claim external legal certification.
 - [ ] The intake instance directory and backups are encrypted, private and outside
   the public Git checkout; restore and erasure have been tested.
 - [ ] HTTPS, HSTS, a 32-byte-or-longer persistent session secret and secure cookies
   are verified; proxy forwarded headers are trusted only from the actual proxy.
 - [ ] ClamAV definitions are current and a harmless EICAR test proves detection.
   The service proves fail-closed behavior when the scanner is stopped.
-- [ ] Operator TOTP and a recovery procedure are tested; an independent editor has
-  been appointed for conflicts/appeals and also uses TOTP.
+- [ ] Operator TOTP and a recovery procedure are tested. Independent editors require
+  TOTP when appointed; their appointment is required before handling a conflicted
+  final decision or an appeal, not before receiving an ordinary manuscript.
 - [ ] Daily `scan-pending` and `retention-sweep`, monitoring and encrypted backups
   are scheduled; failed jobs alert the operator.
-- [ ] A breach tabletop verifies containment, evidence, risk assessment and the
-  conditional 72-hour IMY process.
+- [ ] The incident procedure covers containment, evidence, risk assessment and the
+  conditional 72-hour IMY process. Record the technical exercises actually run;
+  do not present an automated rehearsal as the operator's personal participation.
 - [ ] The public receiver uses a bot trap plus IP and normalized-email limits; abuse
   monitoring and an emergency shutdown procedure are tested.
 - [ ] The host uses `/readyz` for readiness and refuses traffic while HTTPS origin,
@@ -30,10 +36,18 @@ and dated by the operator:
   without an attachment, clean/infected paths, manual accept/decline, conflict
   escalation, appeal and deletion.
 
-Until every item is complete, the public site must keep the direct-submit button
+Independent custody of recovery keys is an ongoing continuity task: record its
+actual status and owner. A verified restore does not prove independent custody.
+Do not replace an existing unresolved task with a fictional completion date.
+
+Until reception checks are complete, the public site must keep the direct-submit button
 disabled. It must not solicit invitations or accept manuscript email attachments.
-After sign-off and a successful `/readyz`, set the repository variable
+After recorded authorization and a successful `/readyz`, set the repository variable
 `ARR_INTAKE_URL` to the receiver's HTTPS origin and redeploy Pages.
+
+The readiness record does not grant editorial powers. If an independent reviewer
+is unavailable, a conflicted acceptance remains provisional and an appeal stays
+unresolved. No case may bypass those guards because reception has opened.
 
 ## Per-case procedure
 

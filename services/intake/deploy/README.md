@@ -63,7 +63,7 @@ permissions alone do **not** provide encryption at rest. Do not set
 
 HTTPS may expose only the closed-intake page and protected editor setup/login
 while that checklist is pending. The application defaults to `ARR_INTAKE_OPEN=0`
-and also requires the signed launch-approval record. See [OPERATIONS.md](OPERATIONS.md)
+and also requires the evidenced launch-authorization record. See [OPERATIONS.md](OPERATIONS.md)
 for the encrypted volume, proxy and backup layout used by the deployed receiver.
 
 For an update, back up the private instance, verify the next archive, prepare a
