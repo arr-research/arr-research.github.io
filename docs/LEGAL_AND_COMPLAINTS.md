@@ -9,6 +9,7 @@ presented as a registered company; “VD/CEO” is not used.
 
 - General, deposit, privacy, editorial appeal and legal notices:
   **lluiseriksson@gmail.com**
+- Postal contact: **Lluis Eriksson, Ångstavägen 44, 834 99 Tandsbyn, Sweden**.
 - Security reports: follow `SECURITY.md`; do not disclose a vulnerability publicly.
 - No manuscript attachments or sensitive evidence by ordinary email. Ask for a
   secure case channel first.
@@ -46,8 +47,8 @@ to the Swedish Authority for Privacy Protection (IMY):
 
 ## Public contact and operating scope
 
-The pilot requires a service/postal contact address chosen for publication by the
-operator. Account or billing details must not be republished by inference.
+The postal contact above was supplied and explicitly authorized for publication
+by the operator on 2026-09-08. It is also available on the public contact page.
 Opening reception is not an external legal certification. Review the applicable
 obligations when AIRR changes its activity, recipients or commercial arrangements,
 and obtain qualified advice where needed.

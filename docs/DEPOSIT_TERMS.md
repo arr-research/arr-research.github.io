@@ -5,6 +5,8 @@
 
 **Operator:** Lluis Eriksson, Sweden — lluiseriksson@gmail.com
 
+**Postal contact:** Ångstavägen 44, 834 99 Tandsbyn, Sweden.
+
 **Current fee:** EUR 0.00. AIRR does not currently charge for submission,
 assessment, publication or withdrawal. This may change for future submissions only
 after advance publication of new terms and clear notice before submission. No fee

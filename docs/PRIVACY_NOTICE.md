@@ -13,9 +13,12 @@ The data controller is **Lluis Eriksson**, a natural person in Sweden,
 acting as founder, registry operator and responsible editor of the Archive for Independent & Rigorous Research (AIRR). Contact: **lluiseriksson@gmail.com** with the subject
 `AIRR privacy`. No data protection officer has been designated.
 
+Postal contact: **Lluis Eriksson, Ångstavägen 44, 834 99 Tandsbyn, Sweden**.
+The operator supplied and authorized this contact address for publication on 2026-09-08.
+
 AIRR is not represented as a Swedish limited company and “VD/CEO” is therefore
-not used as a legal title. A service postal address and any later legal-entity
-details must be added before general public intake opens.
+not used as a legal title. This notice will be updated if the responsible legal
+entity or contact details change.
 
 ## What AIRR collects
 
