@@ -19,6 +19,56 @@ import urllib.error
 import urllib.request
 
 
+MONITOR = 'airr-intake-monitor'
+BACKGROUND = ['airr-intake-' + name for name in ('mail', 'maintenance', 'backup', 'offsite')]
+
+
+def run(*command):
+    subprocess.run(command, check=True, stdout=subprocess.DEVNULL)
+
+
+def unit_state(unit):
+    return subprocess.check_output(
+        ['systemctl', 'show', unit, '--property=ActiveState', '--value'], text=True).strip()
+
+
+def wait_for_idle(units, timeout=60):
+    deadline = time.monotonic() + timeout
+    while True:
+        # Type=oneshot is "activating" while its program runs, not "active".
+        # Unknown/transitional states must not let us replace a live worker.
+        pending = [unit for unit in units if unit_state(unit) not in {'inactive', 'failed'}]
+        if not pending:
+            return
+        if time.monotonic() >= deadline:
+            raise RuntimeError('Background operation still running: ' + ', '.join(pending))
+        time.sleep(1)
+
+
+def pause_background(timers):
+    # Let any in-flight health check finish against the still-running service.
+    # Stopping only its timer neither stops nor waits for that oneshot process.
+    if MONITOR + '.timer' in timers:
+        run('systemctl', 'stop', MONITOR + '.timer')
+    wait_for_idle([MONITOR + '.service'])
+    workers = [timer for timer in timers if timer != MONITOR + '.timer']
+    if workers:
+        run('systemctl', 'stop', *workers)
+    wait_for_idle([unit + '.service' for unit in BACKGROUND])
+
+
+def resume_background(timers):
+    workers = [timer for timer in timers if timer != MONITOR + '.timer']
+    try:
+        if workers:
+            run('systemctl', 'start', *workers)
+    finally:
+        # Resume monitoring last, even if restarting a worker failed: a real
+        # failure must still alert. No alert suppression or grace period is used.
+        if MONITOR + '.timer' in timers:
+            run('systemctl', 'start', MONITOR + '.timer')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('commit', help='Full pinned Git commit identifier')
@@ -81,14 +131,6 @@ def main():
     rollback = Path('/srv/airr-private') / ('rollback-' + args.commit[:12])
     rollback.mkdir(mode=0o700)
     (rollback / 'previous-release.txt').write_text(str(previous) + '\n')
-    units = ['airr-intake-' + name for name in ('monitor', 'mail', 'maintenance', 'backup', 'offsite')]
-
-    def run(*command):
-        subprocess.run(command, check=True, stdout=subprocess.DEVNULL)
-
-    def active(unit):
-        return subprocess.run(['systemctl', 'is-active', '--quiet', unit]).returncode == 0
-
     def switch(path):
         temporary = current.with_name('current-next')
         assert not temporary.exists() and not temporary.is_symlink()
@@ -112,17 +154,12 @@ def main():
         except urllib.error.HTTPError as error:
             return error.code
 
-    timers = [unit + '.timer' for unit in units if active(unit + '.timer')]
+    timers = [unit + '.timer' for unit in [MONITOR, *BACKGROUND]
+              if unit_state(unit + '.timer') == 'active']
     saved = False
     try:
         assert status('/submit') == 503, 'Public reception must be paused'
-        if timers:
-            run('systemctl', 'stop', *timers)
-        for _ in range(60):
-            if not any(active(unit + '.service') for unit in units):
-                break
-            time.sleep(1)
-        assert not any(active(unit + '.service') for unit in units), 'A background operation is still running'
+        pause_background(timers)
         run('systemctl', 'stop', 'airr-intake.service')
         before = counts()
         snapshot(database, rollback / 'intake.sqlite3')
@@ -163,8 +200,7 @@ def main():
         run('systemctl', 'start', 'airr-intake.service')
         raise
     finally:
-        if timers:
-            run('systemctl', 'start', *timers)
+        resume_background(timers)
 
 
 if __name__ == '__main__':

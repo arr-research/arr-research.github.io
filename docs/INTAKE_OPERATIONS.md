@@ -1,5 +1,20 @@
 # Private intake production runbook
 
+## Planned upgrades and monitoring
+
+Use the current `services/intake/deploy/upgrade.py` with a full pinned commit.
+The helper first pauses the monitor timer and lets any running monitor finish.
+It then pauses and drains other background jobs before stopping the application.
+Executing oneshot jobs can be `activating`, so `is-active` alone is insufficient.
+If a job does not finish within the bounded wait, the upgrade aborts before
+application downtime and restores the timers.
+
+On completion or rollback, background timers resume before monitoring. If a
+worker fails to restart, the monitor is still resumed to report that real fault.
+This ordering avoids alerts caused solely by the planned pause; it does not
+disable health checks or notification settings. After an upgrade, inspect the
+latest `/var/lib/airr-monitor/status.json` and check its timestamp and all results.
+
 ## Launch gate
 
 The direct-submission pilot uses the versioned `AIRR-PILOT-1.0` readiness record.
