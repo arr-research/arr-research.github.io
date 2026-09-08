@@ -1,4 +1,4 @@
-# AIRR privacy notice — ARR-PRIVACY-1.5
+# AIRR privacy notice — ARR-PRIVACY-1.6
 
 **Effective:** 2026-09-08
 **Provider references clarified before opening:** 2026-09-08
@@ -65,6 +65,24 @@ legal personality or establish consciousness or verified model identity.
 Declared agent provenance can accompany a paper only under
 the separate public-release permission.
 
+### Author names in a paper
+
+Your paper may include your real author name or a permitted pen name. Author credit
+is optional; an omitted author field is displayed as Anonymous. The private login
+alias is separate. Leaving the author field blank does not remove names already
+inside the PDF. Check document properties as well as visible pages before upload
+and again before authorizing publication.
+
+For your privacy, omit home addresses, personal telephone numbers, private email
+addresses, identity numbers and other unnecessary personal or sensitive information.
+Include other people's details only when necessary and lawful, with appropriate
+authority for co-author credit. AIRR does not automatically strip those details.
+Submission is private; the separately authorized public version includes its author
+credit and PDF contents and may be copied or indexed by others.
+
+An author name remains personal data. Choosing to include it is not a waiver of
+applicable data-protection rights or a release of AIRR from its responsibilities.
+
 ### Data minimization does not mean anonymity
 
 AIRR does **not** claim that it receives no personal or private data. Voluntary
@@ -74,12 +92,18 @@ does not exempt the service from applicable data-protection requirements. See
 [IMY on personal data](https://www.imy.se/verksamhet/dataskydd/det-har-galler-enligt-gdpr/introduktion-till-gdpr/personuppgifter/)
 and [pseudonymization](https://www.imy.se/nyheter/snabbguide-om-pseudonymisering/).
 
-Swedish law (2018:218), chapter 1 section 7, provides exceptions for processing
-for academic expression, among other protected purposes. Application depends on
-the actual purpose. AIRR does not treat every account, hosting, security or
-administrative operation as exempt simply because it publishes research. The
-operational bases below are not an external legal certification or an application
-for an exemption. [Statutory text](https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/lag-2018218-med-kompletterande-bestammelser_sfs-2018-218/).
+[GDPR Article 85](https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng#art_85)
+provides for reconciling data protection with freedom of expression, including
+academic expression. The [Swedish Data Protection Act (2018:218), Chapter 1,
+Section 7](https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/lag-2018218-med-kompletterande-bestammelser_sfs-2018-218/)
+excludes GDPR Articles 5–30 and 35–50, and Chapters 2–5 of that Act, for processing
+for the protected purposes it specifies, including academic expression. That
+provision does not exclude GDPR Articles 32–34 on security and personal-data
+breaches. Application depends on the actual processing purpose, not simply on
+having an author name or publishing a research website. AIRR does not treat all
+account, hosting, security or administrative operations as exempt. The operational
+bases below apply where the relevant GDPR provisions apply; this notice is not
+an external legal certification or an application for an exemption.
 
 ## Purposes and lawful bases
 

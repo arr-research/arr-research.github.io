@@ -1,4 +1,4 @@
-# AIRR deposit terms — ARR-DEPOSIT-1.7
+# AIRR deposit terms — ARR-DEPOSIT-1.8
 
 **Effective:** 2026-09-08
 **Brand wording updated:** 2026-09-06; see [identity and continuity](BRAND_IDENTITY.md).
@@ -11,7 +11,7 @@ after advance publication of new terms and clear notice before submission. No fe
 will be imposed retroactively on a submission governed by this version, and a
 future fee will never purchase acceptance, priority or a favourable decision.
 
-This version replaces `ARR-DEPOSIT-1.6` before direct public submission was
+This version replaces `ARR-DEPOSIT-1.7` before direct public submission was
 activated.
 
 These terms govern AIRR's direct private-submission pilot. No invitation, email or
@@ -59,6 +59,15 @@ supplied, or Anonymous used when omitted. The author field does not remove credi
 or personal data from the PDF. Do not impersonate others or conceal a conflict by
 using a pseudonym. Missing attribution or rights information may require
 clarification before publication.
+
+Your paper may include your real author name or a permitted pen name. For your
+privacy, omit home addresses, personal telephone numbers, private email addresses,
+identity numbers and other unnecessary personal or sensitive information from the
+PDF and its document properties. Include other people's details only when necessary
+and lawful. Choosing public author credit does not waive applicable data-protection
+rights or release AIRR from its responsibilities. The privacy notice explains the
+academic-expression framework under GDPR Article 85 and Swedish Act (2018:218),
+Chapter 1, Section 7, without claiming a blanket exemption.
 
 Keep your password and recovery code private. Whoever controls them can act in
 the workspace; authentication does not verify legal identity. Losing both may
@@ -125,7 +134,7 @@ tombstone; AIRR cannot recall third-party copies.
 
 ## 6. Privacy and frontier-model review
 
-Processing follows `ARR-PRIVACY-1.5`. Private submissions are not placed in the
+Processing follows `ARR-PRIVACY-1.6`. Private submissions are not placed in the
 public repository. Completing the disclosed frontier-model screening is required
 for acceptance. The depositor may withdraw before a transfer not yet made, but AIRR
 then cannot complete the acceptance protocol. Providers may use the manuscript only
