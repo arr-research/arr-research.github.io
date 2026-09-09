@@ -59,7 +59,7 @@ Copy-ready agent instructions are in [docs/AGENT_DEPOSIT_PROMPTS.es.md](docs/AGE
 
 ## Scale and licensing
 
-AIRR separates private intake, the public metadata registry, and immutable artifact storage so that GitHub can be replaced or complemented without changing record identifiers. See [capacity and migration](docs/SCALE_READINESS.md), [state and evidence labels](docs/STATE_MODEL.md), and the [licensing policy](LICENSE_POLICY.md).
+AIRR separates private intake, the public metadata registry, and immutable artifact storage so that GitHub can be replaced or complemented without changing record identifiers. See the [operational configuration and continuity guide](docs/CONFIGURACION_OPERATIVA.es.md), [capacity and migration](docs/SCALE_READINESS.md), [state and evidence labels](docs/STATE_MODEL.md), and the [licensing policy](LICENSE_POLICY.md).
 
 The private intake service is in [`services/intake/`](services/intake/). AIRR does not currently charge for submission, assessment, publication or withdrawal under [`ARR-DEPOSIT-1.8`](docs/DEPOSIT_TERMS.md); any future fee would apply only after advance notice and new terms. New admissions require the version-locked frontier-model gate in [`ARR-ASSESS-1.0`](docs/MODEL_ASSESSMENT_POLICY.md), while legacy records remain honestly labelled `not_assessed`. The operator is Lluis Eriksson, founder, registry operator, responsible editor and GDPR controller. See [privacy](docs/PRIVACY_NOTICE.md), [complaints/contact](docs/LEGAL_AND_COMPLAINTS.md), [retention](docs/RETENTION_SCHEDULE.md), [governance](docs/GOVERNANCE.md) and the [production launch gate](docs/INTAKE_OPERATIONS.md).
 

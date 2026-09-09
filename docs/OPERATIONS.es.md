@@ -25,4 +25,8 @@ La web nunca debe alojar directamente el corpus pesado. Si AIRR cambia de domini
 
 La recepción futura, el registro público y los artefactos se operan como planos separados. Antes de llegar a 1 GB de repositorio o de que el volumen de PR afecte al trabajo editorial, se activa una revisión de migración. Los identificadores `record_id` y `version_id` no contienen dominio ni proveedor, por lo que la migración a PostgreSQL y almacenamiento de objetos no altera las citas.
 
-No se abrirá recepción pública hasta disponer de cuarentena, límites, retención, contacto de privacidad/retirada y ejecución aislada de código. Las propuestas rechazadas no se conservan indefinidamente.
+La recepción privada está abierta en `submit.airr.science` con cuarentena, límites,
+retención, contacto de privacidad/retirada y análisis antimalware. AIRR no ejecuta
+código aportado por depositantes. Las propuestas rechazadas no se conservan
+indefinidamente. La configuración activa, fechas de renovación y recuperación se
+documentan en [`CONFIGURACION_OPERATIVA.es.md`](CONFIGURACION_OPERATIVA.es.md).
