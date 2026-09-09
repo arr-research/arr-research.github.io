@@ -28,6 +28,8 @@ OVH no pertenece a AIRR y no forma parte de esta arquitectura.
 - La página pública ya explica que los trabajos del fundador requieren dos modelos identificados distintos.
 - Límite de una cuenta: 10 sumisiones en una ventana móvil de 24 horas.
 - Tamaño máximo por PDF: 25 MiB.
+- Dominio bloqueado contra transferencias no autorizadas y protegido mediante privacidad WHOIS.
+- DNS comprobado en Porkbun: web pública, `www`, recepción privada, verificación de GitHub y autenticación de Brevo presentes.
 
 ## Flujo para publicar trabajos del fundador
 
@@ -61,7 +63,7 @@ Una copia dentro del mismo VPS no protege frente a la pérdida completa del serv
 | Elemento | Fecha o frecuencia conocida | Acción |
 |---|---|---|
 | Netcup VPS | Facturación mensual; el contrato indicaba preaviso de 31 días | Mantener el pago activo y revisar avisos de factura |
-| Dominio `airr.science` | Registro multianual en Porkbun | Anotar en el calendario la fecha exacta mostrada por Porkbun y activar renovación automática con método válido |
+| Dominio `airr.science` | Vence el 6 de septiembre de 2028; renovación automática activada | Mantener un método de pago válido y revisar el dominio antes del 23 de julio de 2028 (45 días antes) |
 | Clave Brevo `AIRR Netcup intake` | Caducidad configurada: 7 de septiembre de 2027 | Sustituirla durante agosto de 2027 y enviar un correo de prueba |
 | Clave B2 `AIRR-Netcup-backup-2026-09` | Caducidad configurada: 7 de septiembre de 2027 | Crear una nueva durante agosto de 2027, actualizar Netcup y verificar una copia completa |
 | Certificado HTTPS | Renovación automática por Caddy | Investigar cualquier alerta; no renovarlo manualmente mientras Caddy funcione |
@@ -79,6 +81,10 @@ Una copia dentro del mismo VPS no protege frente a la pérdida completa del serv
 - Identidad privada `age`/clave de recuperación del archivo cifrado, guardada fuera de Netcup.
 
 El correo personal puede servir para recuperar cuentas, pero no debe utilizarse como almacén único de secretos. Como mínimo, conservar una segunda copia offline de los códigos de recuperación y de la clave privada de las copias cifradas.
+
+La cuenta de Porkbun debe mantener autenticación multifactor mediante aplicación o
+llave de seguridad, avisos de acceso y un método de pago vigente. La privacidad
+WHOIS y el bloqueo de transferencia deben permanecer activos.
 
 ## Operación normal
 
@@ -123,4 +129,3 @@ Mientras el uso sea principalmente el de los papers del fundador, Netcup es sufi
 - `docs/GOVERNANCE.md`: decisiones del fundador y conflictos.
 - `docs/WORKFLOW.md`: publicación y creación de releases.
 - `docs/SCALE_READINESS.md`: fases y señales de migración.
-
