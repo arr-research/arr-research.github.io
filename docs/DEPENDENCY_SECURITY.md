@@ -1,9 +1,9 @@
 # Dependency security and preserved research environments
 
-**Checked: 8 September 2026.** GitHub reports 111 open dependency alerts, covering
-37 advisories repeated across three archived reproduction manifests. All concern
-`pypdf==6.4.0`: 6 high, 96 medium and 9 low alert instances. These counts are a
-dated snapshot, not a permanent assurance about subsequent advisories.
+**Initial check: 8 September 2026.** GitHub reported 111 open dependency alerts,
+covering 37 advisories repeated across three archived reproduction manifests. All
+concerned `pypdf==6.4.0`: 6 high, 96 medium and 9 low alert instances. These counts
+are a dated snapshot, not a permanent assurance about subsequent advisories.
 
 Affected records and manifests:
 
@@ -20,7 +20,7 @@ it does not execute deposited research code.
 
 Do not use the old PDF parser with untrusted PDFs or expose those reproduction
 environments as services. The known advisories include excessive runtimes and
-memory consumption on crafted documents. Version **6.16.1** is at or above the
+memory consumption on crafted documents. Version **6.17.0** is above the
 patched version listed for all 37 advisories in this audit. See the publisher's
 [security advisories](https://github.com/py-pdf/pypdf/security/advisories) and the
 latest reviewed [outlines](https://github.com/advisories/GHSA-23w6-3w8w-8484) and
@@ -36,14 +36,28 @@ as evidence. Use an isolated copy with the updated parser, record that deviation
 and recheck the results before claiming equivalence. Installing the old exact
 pin together with a conflicting constraint does not upgrade it.
 
-## Why the archived pins remain visible
+## Why the original pins remain visible in release history
 
-Published source snapshots, hashes, release tags and citations are immutable.
-Silently editing the historical requirements would misrepresent the published
-experiment. A fully revalidated environment belongs in a documented new version
-or companion reproduction, with new evidence. This audit does **not** claim that
-those scientific reproductions have been rerun.
+Published release assets, hashes, release tags and citations are immutable. Their
+original environment declaration remains preserved in release history and
+provenance. A maintained repository requirement may advance after an explicit
+security revalidation without changing the canonical paper.
 
-The 111 historical alerts remain open. They have not been dismissed merely to
-make the repository appear clean. Follow-up is to revalidate those three
-environments; new platform dependencies must be maintained independently.
+## Revalidation and maintained environments — 9 September 2026
+
+The three maintained repository requirements now use pypdf 6.17.0. Each exact
+scientific verifier passed in a fresh Python 3.12 environment containing the other
+declared dependencies. The three canonical PDFs were read and text-extracted with
+6.17.0; page counts, byte counts and SHA-256 values matched their deposited
+metadata. The 7N replay regenerated both frozen certificates byte-for-byte.
+
+The preserved package checks could not be rerun from the flattened repository
+trees because their pre-deposit `output/release/manifest.json` files are not part of
+those trees. This is a packaging-layout limitation, not a pypdf failure; the exact
+scientific checks and direct PDF checks above passed. The immutable release assets
+retain their original environment declaration and should not be used to process
+untrusted PDFs.
+
+GitHub's 111 alerts should close from the updated default-branch manifests. They
+have not been dismissed as tolerable risk. This does not erase the dated snapshot
+or claim that future advisories cannot arise.

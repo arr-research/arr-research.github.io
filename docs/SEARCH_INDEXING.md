@@ -160,14 +160,14 @@ a separate author-account workflow.
 
 ## Initial bibliographic spot check, 2026-09-05
 
-The following is an open editorial follow-up, not a claim of full Scholar
-compliance. No manuscript or immutable source metadata was changed by the site
-repair.
+The following spot check identified two metadata differences. They were resolved
+on 9 September 2026 as recorded in `BIBLIOGRAPHIC_CORRECTIONS.md`; this is not a
+claim of full Scholar compliance.
 
 | Record and version | PDF comparison | Follow-up |
 | --- | --- | --- |
-| `ARR-2026-5QQF95VHTC9GABH8 v1` (norm-optimal self-commutator rank) | First-page title, Lluis Eriksson and 30 August 2026 agree. The registry abstract is a shorter reformulation with additional scope wording. | Reconcile the public abstract with the complete author-written manuscript abstract through a documented bibliographic correction. |
-| `ARR-2026-7H9FAPTBZA897AMJ v2` (Haar two-plane phase diagram) | Lluis Eriksson and 14 August 2026 agree. The PDF's subtitle additionally includes “sharp thermodynamic contact asymptotics”; its abstract and the registry abstract differ in wording. | Reconcile the citation title/subtitle and the complete abstract with the exact PDF. |
+| `ARR-2026-5QQF95VHTC9GABH8 v1` (norm-optimal self-commutator rank) | First-page title, Lluis Eriksson and 30 August 2026 agree. The registry abstract was a shorter reformulation with additional scope wording. | **Resolved 9 September 2026:** catalogue metadata now carries the complete author-written abstract in plain-text notation. |
+| `ARR-2026-7H9FAPTBZA897AMJ v2` (Haar two-plane phase diagram) | Lluis Eriksson and 14 August 2026 agree. The PDF's subtitle additionally includes “sharp thermodynamic contact asymptotics”; its abstract and the registry abstract differed in wording. | **Resolved 9 September 2026:** catalogue and citation metadata now carry the complete title and author-written abstract in plain-text notation. |
 
 Both inspected first pages have searchable text. The full build checks file
 identity and links across the catalogue; it does not adjudicate scientific claims

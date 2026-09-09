@@ -1,0 +1,26 @@
+[Unit]
+Description=AIRR weekly operating-system security update
+Documentation=file:/opt/airr-intake/current/services/intake/deploy/OPERATIONS.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/unattended-upgrade --verbose
+ExecStartPost=/usr/bin/touch /var/lib/airr-system-maintenance/last-success
+StateDirectory=airr-system-maintenance
+StateDirectoryMode=0700
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+TimeoutStartSec=2h
+
+# Package updates require root. The unit has no application secrets or private-volume path.
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+

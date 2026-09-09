@@ -32,7 +32,11 @@ Expected output SHA-256:
 b455b13c193dfbe101bf53632da046ff08575d507b7c104286470f9af0c35b5a  repro/results/symbolic_constructors.json
 ```
 
-The package was frozen with Python 3.12.6, pypdf 6.4.0, and SymPy 1.14.0.
+The original release package was frozen with Python 3.12.6, pypdf 6.4.0, and
+SymPy 1.14.0. The maintained repository environment uses pypdf 6.17.0 after a
+security revalidation on 9 September 2026; the exact replay outputs and canonical
+PDF hash remained unchanged. The immutable release asset retains its original
+environment declaration as provenance.
 Install the pinned nonstandard dependencies with
 `python -m pip install -r repro/requirements.txt` if needed.  `pypdf` is used
 only by the release-container verifier; the rational replay itself remains a
