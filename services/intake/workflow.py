@@ -85,6 +85,7 @@ def migrate(db):
     for name, definition in (("parent_id", "TEXT REFERENCES submissions(id)"),
                              ("revision_number", "INTEGER NOT NULL DEFAULT 1"),
                              ("founder_authored", "INTEGER NOT NULL DEFAULT 0"),
+                             ("other_operator_conflict", "INTEGER NOT NULL DEFAULT 0"),
                              ("founder_declared_by", "INTEGER REFERENCES users(id)"),
                              ("founder_declared_at", "TEXT")):
         if name not in columns:
@@ -225,7 +226,7 @@ def install(app, a):
 
     def founder_may_decide(row, user=None):
         user = user if user is not None else getattr(g, "user", None)
-        return bool(row["founder_authored"] and user and user["active"]
+        return bool(row["founder_authored"] and not row["other_operator_conflict"] and user and user["active"]
                     and user["role"] == "operator"
                     and user["email"] == app.config["OPERATOR_EMAIL"]
                     and row["founder_declared_by"] == user["id"])
@@ -473,7 +474,7 @@ def install(app, a):
             abort(409, 'Record a reason on an active private case; published records require a separate correction.')
         db = a.get_db()
         state = 'awaiting_independent_decision' if row['status'] == 'accepted_for_publication' else row['status']
-        db.execute('UPDATE submissions SET operator_conflict=1,status=?,updated_at=? WHERE id=?', (state, a.iso(), submission_id))
+        db.execute('UPDATE submissions SET operator_conflict=1,other_operator_conflict=1,status=?,updated_at=? WHERE id=?', (state, a.iso(), submission_id))
         db.commit()
         a.audit('operator_conflict_recorded', submission_id, reason=reason)
         enqueue(row, 'Operator conflict recorded', reason + '\nAn independent editor is required before a final acceptance.')
@@ -677,6 +678,7 @@ def install(app, a):
                     'decision_reason': row['decision_reason'], 'decided_at': row['decided_at'],
                     'conflict_disclosed': bool(row['operator_conflict']),
                     'founder_authored': bool(row['founder_authored']),
+                    'other_operator_conflict': bool(row['other_operator_conflict']),
                     'author_editor_acceptance': bool(row['founder_authored'] and row['decision_by'] == row['founder_declared_by']),
                     'founder_policy': 'AIRR-FOUNDER-1.0' if row['founder_authored'] else None,
                     'editor': db.execute('SELECT display_name FROM users WHERE id=?', (row['decision_by'],)).fetchone()[0],

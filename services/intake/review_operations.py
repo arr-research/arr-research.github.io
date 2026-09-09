@@ -113,7 +113,7 @@ def install(app, a, case, current_plan):
         try:
             report = db.execute('INSERT INTO model_reviews(submission_id,provider,model_id,assessed_at,recommendation,millennium_score,overall_stars,unresolved_material_objections,response_json,response_sha256,recorded_by,recorded_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)',
                        (row['id'],value['provider'],value['model_id'],value['assessed_at'],value['recommendation'],value['millennium_score'],value['overall_stars'],len(value['unresolved_material_objections']),canonical,canonical_hash,actor['id'],a.iso()))
-            db.execute("UPDATE submissions SET status='under_assessment',updated_at=? WHERE id=?",(a.iso(),row['id']))
+            db.execute("UPDATE submissions SET status=CASE WHEN status='eligible' THEN 'under_assessment' ELSE status END,updated_at=? WHERE id=?",(a.iso(),row['id']))
             db.commit()
         except sqlite3.IntegrityError:
             db.rollback()
