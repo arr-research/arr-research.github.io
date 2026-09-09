@@ -1,7 +1,11 @@
 # Reproducibility
 
-Tested on Windows 11 with Python 3.12.13, NumPy 2.5.1, pypdf 6.4.0, and MiKTeX
-pdfTeX 1.40.28.  The numerical replay is lightweight and requires no network.
+The original release asset was tested on Windows 11 with Python 3.12.13,
+NumPy 2.5.1, pypdf 6.4.0, and MiKTeX pdfTeX 1.40.28. The maintained repository
+environment uses pypdf 6.17.0 after a security revalidation on 9 September 2026.
+The frozen numerical certificate, canonical PDF bytes and integrity hash remained
+unchanged. The immutable release asset retains the original declaration. The
+numerical replay is lightweight and requires no network.
 
 From the ARR record root, create an isolated environment and install the
 pinned Python dependencies before running the checker:

@@ -48,6 +48,13 @@ and inspect its exit status. Signature updates remain managed by the ClamAV
 package's service. The timer records failures in the system journal; external
 failure alerts still need configuring before launch.
 
+Install and verify weekly operating-system security maintenance separately using
+the two `airr-system-security-update` units and `52airr-unattended-upgrades` in
+this directory. Automatic reboot must stay disabled because the encrypted private
+volume requires an operator-held unlock key. The production monitor treats a
+missing/stale security run or a pending reboot as an incident; see
+[OPERATIONS.md](OPERATIONS.md).
+
 Validate malware detection with the harmless EICAR test in an isolated,
 temporary directory owned by the service account. Verify that scanner failures
 leave files quarantined. Use synthetic metadata and a separate disposable test

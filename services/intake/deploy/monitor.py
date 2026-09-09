@@ -11,6 +11,25 @@ import sys
 import urllib.request
 
 
+SECURITY_SUCCESS = Path('/var/lib/airr-system-maintenance/last-success')
+
+
+def security_update_checks(now):
+    try:
+        age = now.timestamp() - SECURITY_SUCCESS.stat().st_mtime
+        recent = 0 <= age < 8 * 86400
+    except OSError:
+        recent = False
+    return {
+        'security_update_timer_active': subprocess.run(
+            ['systemctl', 'is-active', '--quiet', 'airr-system-security-update.timer'],
+            check=False,
+        ).returncode == 0,
+        'security_updates_recent': recent,
+        'reboot_not_pending': not Path('/var/run/reboot-required').exists(),
+    }
+
+
 def offsite_checks(settings_path, state_path, now):
     if not settings_path.exists():
         return {'offsite_copy_verified': False} if state_path.exists() else {}
@@ -34,6 +53,7 @@ def offsite_checks(settings_path, state_path, now):
 
 def main():
     checks = {}
+    checked_at = datetime.now(timezone.utc)
     checks['encrypted_volume_mounted'] = os.path.ismount('/srv/airr-private')
     for unit in ('airr-intake.service', 'caddy.service', 'clamav-daemon.service', 'clamav-freshclam.service', 'airr-intake-maintenance.timer', 'airr-intake-mail.timer'):
         checks[unit] = subprocess.run(['systemctl', 'is-active', '--quiet', unit], check=False).returncode == 0
@@ -57,7 +77,8 @@ def main():
                 Path('/var/lib/airr-offsite/status.json'), datetime.now(timezone.utc)))
             checks['offsite_timer_active'] = subprocess.run(['systemctl','is-active','--quiet',
                 'airr-intake-offsite.timer'], check=False).returncode == 0
-    status = {'checked_at': datetime.now(timezone.utc).isoformat(), 'checks': checks, 'ok': all(checks.values())}
+    checks.update(security_update_checks(checked_at))
+    status = {'checked_at': checked_at.isoformat(), 'checks': checks, 'ok': all(checks.values())}
     state_dir = Path('/var/lib/airr-monitor')
     state_dir.mkdir(mode=0o700, exist_ok=True)
     (state_dir / 'status.json').write_text(json.dumps(status, indent=2))

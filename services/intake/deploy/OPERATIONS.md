@@ -38,6 +38,24 @@ Never print the restored environment or key. A restore test must not overwrite t
 current instance. Keep old deployment/database snapshots for rollback until the
 new version has passed its production probes.
 
+## Operating-system security maintenance
+
+Install Debian's signed `unattended-upgrades` package and copy
+`52airr-unattended-upgrades` to `/etc/apt/apt.conf.d/`. Copy and enable the supplied
+`airr-system-security-update.service` and `.timer`, then run the service once and
+inspect its journal before relying on the schedule. It applies the distribution's
+configured security origins every Sunday around 02:15, records a successful run,
+and never requests an automatic reboot. Do not add third-party package origins to
+the unattended allow-list without a separate review.
+
+`monitor.py` requires the timer to be active, the last successful run to be less
+than eight days old and `/var/run/reboot-required` to be absent. A pending reboot
+therefore creates one deduplicated operator alert. Schedule that reboot manually:
+pause intake, finish mail and maintenance work, make and verify local and offsite
+encrypted backups, reboot from the Netcup console, unlock and mount the LUKS2
+volume, start the services, then confirm `/readyz`, the public form, the editor
+login and a dry monitor result. Never reboot while a PDF upload is active.
+
 Pending mail is processed each minute. Uncertain SMTP handoffs remain marked
 `uncertain`, avoiding silent duplicate deliveries. The editor must inspect provider
 logs before issuing another case link. Daily maintenance scans quarantined cases,

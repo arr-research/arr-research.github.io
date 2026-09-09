@@ -34,6 +34,10 @@ a LaTeX rebuild.
 
 Reference environment used for the figure: Python 3.12.6, NumPy 2.5.1,
 Matplotlib 3.11.1. The exact verifier uses only the Python standard library.
+The original release asset used pypdf 6.4.0 for PDF packaging. The maintained
+repository environment uses pypdf 6.17.0 after a security revalidation on
+9 September 2026. The exact verifier, canonical PDF bytes and integrity hash did
+not change; the immutable release asset retains the original declaration.
 
 ## Scope
 
