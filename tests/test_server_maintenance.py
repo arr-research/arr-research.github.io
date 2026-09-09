@@ -1,5 +1,6 @@
 from datetime import datetime, timezone
 from pathlib import Path
+import os
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -13,6 +14,7 @@ class ServerMaintenanceMonitorTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             marker = Path(directory) / "last-success"
             marker.touch()
+            os.utime(marker, (now.timestamp() - 60, now.timestamp() - 60))
             with (
                 patch.object(monitor, "SECURITY_SUCCESS", marker),
                 patch("services.intake.deploy.monitor.subprocess.run") as run,

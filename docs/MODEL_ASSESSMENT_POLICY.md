@@ -1,5 +1,7 @@
 # AIRR frontier-model assessment policy — ARR-ASSESS-1.0
 
+**Founder-authored rule updated: 2026-09-09 — AIRR-FOUNDER-1.0.**
+
 **Effective:** 2026-08-30  
 **Operator:** Lluis Eriksson  
 **Public registry:** `registry/model-assessments.json`
@@ -17,7 +19,8 @@ verification.
 
 For each new admission, the operator declares a version-locked frontier-model audit
 set suited to the available services, quota and subject. AIRR promises no fixed
-provider, model, report count or reasoning tier. Every valid result obtained in the
+provider, model or reasoning tier. Founder-authored admission requires two distinct
+identified models. Every valid result obtained in the
 declared round is retained. An unresolved material objection blocks acceptance: the
 editor must request a corrected version or decline the submission. The human editor
 decides whether an objection is material and records that decision.
@@ -82,6 +85,17 @@ output; the invalid-response hash and rerun reason remain in the private audit l
 Later reassessment is a new dated batch, not a silent replacement. Donations,
 authorship, personal relationships and an editor's preferred result cannot affect
 model selection or report visibility.
+
+### Founder-authored admission and prior model involvement
+
+Founder-authored admission requires documented review by two identified models.
+Reports from models involved in preparation may support that admission decision
+when their involvement is accurately declared. This does not relabel them as
+`not_involved_in_manuscript`, change headline-aggregate eligibility, or establish
+statistical independence. A fresh reviewing conversation is a distinct evaluation
+context, not a different model. Draft generation alone is not a review report.
+The version-locking, actual-response provenance, retention and material-objection
+rules above continue to apply. The human decision follows GOVERNANCE.md.
 
 ## The 0.00–10.00 Millennium scale
 

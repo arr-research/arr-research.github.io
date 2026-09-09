@@ -92,8 +92,9 @@ Do not set the variable before the reception-readiness record is complete and au
 upload remains closed. Opening requires both `ARR_INTAKE_OPEN=1` and an evidenced
 `ARR_LAUNCH_APPROVAL_FILE` (default `/etc/airr-intake/launch-approval.json`) covering
 the `AIRR-PILOT-1.0` reception checks and real authorization source, plus an active
-operator TOTP account. An independent editor is still required for conflicted final
-decisions and appeals. The example file contains no approvals. `flask launch-status`
+operator TOTP account. An independent editor is still required for other conflicted
+final decisions and appeals; founder-authored decisions follow AIRR-FOUNDER-1.0.
+The example file contains no approvals. `flask launch-status`
 reports this gate.
 
 Authors manage cases in their alias workspace and retain their password and

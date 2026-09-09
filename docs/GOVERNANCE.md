@@ -1,12 +1,14 @@
 # AIRR governance and conflict controls
 
+**Founder-authored rule updated: 2026-09-09 — AIRR-FOUNDER-1.0.**
+
 ## Roles
 
 - **Founder, registry operator, responsible editor and data controller:** Lluis
   Eriksson. He operates intake, signs ordinary external decisions and maintains the
   public registry.
 - **Independent editor:** a named person with no relevant conflict, appointed for
-  founder-authored/conflicted submissions and appeals.
+  other conflicted submissions and appeals; optional additional review of founder-authored submissions.
 - **Depositor/author:** supplies the work and disclosures; has no access to another
   submission and cannot alter the public registry.
 
@@ -27,18 +29,18 @@ supervision, close institutional dependence, family/close personal relationship,
 financial interest, active dispute or another circumstance reasonably affecting
 impartiality. The submitter and editor must disclose it.
 
-When the operator is an author or directly conflicted:
+For a founder-authored submission, Lluis Eriksson may make the human acceptance
+decision after documented review by two distinct identified models. The decision must name
+the exact version and artifact hash, retain the actual reports and the disposition
+of material objections, and disclose that the accepting editor is also an author.
+This is an author-editor acceptance after AI review, not independent human review.
+The models' prior involvement in producing or revising the manuscript must be
+disclosed. Separate conversations do not establish statistical independence.
 
-1. he may perform administrative and security triage but cannot issue final
-   acceptance or decide an appeal;
-2. his “accept” action becomes `awaiting_independent_decision`;
-3. a named independent editor reviews the same version and records the final basis;
-4. the public record discloses the founder relationship and independent sign-off;
-5. absent an available independent editor, the case remains private or is declined
-   without a quality inference.
+For other direct conflicts, an independent editor remains required. Appeals are
+reviewed by someone other than the original decision-maker.
 
-An editor never decides their own work. Appeals are reviewed by someone other than
-the original decision-maker. Aggregate counts of submissions, outcomes, appeals,
+Aggregate counts of submissions, outcomes, appeals,
 conflicts and reversals should be published annually once the pilot has activity,
 without exposing rejected manuscripts or personal data.
 

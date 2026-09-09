@@ -1,5 +1,43 @@
 # Private intake production runbook
 
+## Founder-authored review — AIRR-FOUNDER-1.0, 2026-09-09
+
+The configured operator can explicitly declare founder authorship on a clean,
+current private case. This records his author-editor role; it does not accept the
+paper. Acceptance requires the authorized round to include at least two distinct
+provider/model pairs and actual reports from both. Prior participation must remain
+accurate, including `involved_in_manuscript` for a model that helped prepare it.
+Every blocking report remains visible and blocks acceptance until corrected or
+individually adjudicated with inspectable evidence. Other conflicts and appeals
+retain independent-editor controls. Publication still requires a separate human
+decision, author permission and public release.
+
+Host administrators may record explicit instructions received outside the author
+form with `flask --app services.intake.app prepare-founder-round CASE evidence.json`.
+This command uses the existing configured operator, without changing accounts,
+credentials or MFA. It records external authorization as such, never as a web
+signature. It cannot overwrite an existing round. Optional `--request-changes`
+requests a new author revision; it cannot accept or publish anything.
+
+The private evidence JSON must contain exactly `submission_id`,
+`manuscript_sha256`, `notice`, `author_instruction`, `source_reference`,
+`authorization_recorded_at`, `models` and `founder_authorship_basis`. Preserve the
+actual instruction and its dated source; do not invent consent. The notice states
+the service conditions and settings the author actually authorized, without
+inventing no-training or retention guarantees. `models` is an array of distinct
+objects with `provider` and `model_id`. The exact case and PDF hash are mandatory.
+
+After an actual model invocation, `flask --app services.intake.app record-assessment
+report.json runtime.json` validates the same report schema, current artifact and
+authorized providers as the web form. Runtime evidence identifies `provider`,
+`model_id`, the original file's `report_sha256`, and `source_reference`; retain
+the actual platform invocation/response evidence in private storage. Both original
+and canonical response hashes are recorded, with immutable findings. The result
+states whether the model gate is ready and always reports `accepted: false`.
+Neither command sends email or records a final editorial decision.
+
+Keep these evidence files on the encrypted private volume, never in public Git.
+
 ## Local antivirus transport
 
 The default `clamdscan` client streams to the configured local ClamAV daemon.
@@ -52,7 +90,7 @@ Reception is separate from editorial acceptance and public release.
 - [ ] ClamAV definitions are current and a harmless EICAR test proves detection.
   The service proves fail-closed behavior when the scanner is stopped.
 - [ ] Operator TOTP and a recovery procedure are tested. Independent editors require
-  TOTP when appointed; their appointment is required before handling a conflicted
+  TOTP when appointed; their appointment is required before handling another conflicted
   final decision or an appeal, not before receiving an ordinary manuscript.
 - [ ] Daily `scan-pending` and `retention-sweep`, monitoring and encrypted backups
   are scheduled; failed jobs alert the operator.
@@ -77,7 +115,7 @@ After recorded authorization and a successful `/readyz`, set the repository vari
 `ARR_INTAKE_URL` to the receiver's HTTPS origin and redeploy Pages.
 
 The readiness record does not grant editorial powers. If an independent reviewer
-is unavailable, a conflicted acceptance remains provisional and an appeal stays
+is unavailable, another conflicted acceptance remains provisional and an appeal stays
 unresolved. No case may bypass those guards because reception has opened.
 
 ## Per-case procedure
@@ -136,8 +174,10 @@ provenance where relevant and authorized.
 6. Review the exact SHA-256 version. External AI gets nothing until the depositor separately confirms the declared
    provider-specific notice in their private case. The initial screening
    acknowledgment is not transfer authorization.
-7. Lluis records accept, decline or changes requested. A conflict routes acceptance
-   to the independent editor. No decision publishes automatically.
+7. Lluis records accept, decline or changes requested. Founder-authored cases follow
+   AIRR-FOUNDER-1.0: two distinct actual model reviews, disclosed prior model
+   participation and author-editor role. Other conflicts route acceptance to the
+   independent editor. No decision publishes automatically.
 8. Notify the depositor, explain the appeal window, then allow the separate public
    packaging/release workflow only for a final acceptance.
 9. Run and audit retention erasure.

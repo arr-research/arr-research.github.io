@@ -1,5 +1,7 @@
 # AIRR deposit terms — ARR-DEPOSIT-1.8
 
+**Founder-authored amendment: 2026-09-09 — AIRR-FOUNDER-1.0.**
+
 **Effective:** 2026-09-08
 **Brand wording updated:** 2026-09-06; see [identity and continuity](BRAND_IDENTITY.md).
 
@@ -114,10 +116,12 @@ apply. No model makes the final decision.
 ## 4. Editorial decision and conflicts
 
 The operator normally signs accept/decline decisions one by one and gives a concise
-basis. The depositor may appeal once within 30 days. If the founder/operator is an
-author, close collaborator, supervisor, financial participant or otherwise directly
-conflicted, his approval is provisional only; a disclosed independent editor must
-sign before publication. An editor may not decide their own submission.
+basis. The depositor may appeal once within 30 days. Under AIRR-FOUNDER-1.0
+(effective 2026-09-09), Lluis Eriksson may accept his own work after two distinct
+identified model reviews of the exact version. The public record discloses his
+author-editor role and each model's previous involvement; this is not independent
+human review. Other direct conflicts require an independent editor, as do appeals.
+No model report or general instruction constitutes a final human acceptance.
 
 AIRR acceptance means only that the identified process was applied to the exact
 version. It is not journal peer review and not a certification that claims are true.
