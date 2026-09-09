@@ -6,7 +6,7 @@
   Eriksson. He operates intake, signs ordinary external decisions and maintains the
   public registry.
 - **Independent editor:** a named person with no relevant conflict, appointed for
-  founder-authored/conflicted submissions and appeals.
+  appeals, blocking-report adjudication or an optional independent review.
 - **Depositor/author:** supplies the work and disclosures; has no access to another
   submission and cannot alter the public registry.
 
@@ -29,18 +29,20 @@ impartiality. The submitter and editor must disclose it.
 
 When the operator is an author or directly conflicted:
 
-1. he may perform administrative and security triage but cannot issue final
-   acceptance or decide an appeal;
-2. his “accept” action becomes `awaiting_independent_decision`;
-3. a named independent editor reviews the same version and records the final basis;
-4. the public record discloses the founder relationship and independent sign-off;
-5. absent an available independent editor, the case remains private or is declined
-   without a quality inference.
+1. the relationship is recorded before the final decision;
+2. he may accept only after the authorized assessment round is complete and every
+   report recommends acceptance with zero unresolved material objections;
+3. the release handoff records the conflict and his identity as decision-maker;
+4. the public record says **founder-authored and self-approved; not independently
+   human reviewed** unless a named, unconflicted person separately reviews it;
+5. he cannot overrule a blocking assessment or decide an appeal; those actions
+   require a named independent editor.
 
-An editor never decides their own work. Appeals are reviewed by someone other than
-the original decision-maker. Aggregate counts of submissions, outcomes, appeals,
-conflicts and reversals should be published annually once the pilot has activity,
-without exposing rejected manuscripts or personal data.
+Founder self-publication is an archive decision, not peer review or evidence of
+independent endorsement. Appeals are reviewed by someone other than the original
+decision-maker. Aggregate counts of submissions, outcomes, appeals, conflicts and
+reversals should be published annually once the pilot has activity, without
+exposing rejected manuscripts or personal data.
 
 ## Change control
 

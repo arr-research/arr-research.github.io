@@ -92,8 +92,10 @@ Do not set the variable before the reception-readiness record is complete and au
 upload remains closed. Opening requires both `ARR_INTAKE_OPEN=1` and an evidenced
 `ARR_LAUNCH_APPROVAL_FILE` (default `/etc/airr-intake/launch-approval.json`) covering
 the `AIRR-PILOT-1.0` reception checks and real authorization source, plus an active
-operator TOTP account. An independent editor is still required for conflicted final
-decisions and appeals. The example file contains no approvals. `flask launch-status`
+operator TOTP account. An independent editor is still required to adjudicate a
+blocking report or decide an appeal; a clean founder-authored round may be signed
+by the operator with the conflict disclosed and no independent-review claim. The
+example file contains no approvals. `flask launch-status`
 reports this gate.
 
 Authors manage cases in their alias workspace and retain their password and
@@ -109,7 +111,8 @@ before recording reports. The author separately confirms the plan. After the
 first report the declared set cannot be changed. Each required model must have a
 report before acceptance. A signed, evidenced adjudication may explain an
 inapplicable blocking report without altering its score or original response.
-Conflicted adjudications and final decisions require an independent editor.
+Conflicted adjudications of blocking reports and appeals require an independent
+editor. A disclosed founder self-publication with a clean round does not.
 
 After a changes request, the author may upload a corrected PDF using their private
 case session. The original and reports remain separate; the correction has its

@@ -86,7 +86,7 @@ class WorkflowTests(fixtures.IntakeTests):
             get_db().commit()
         self.assertEqual(self.client.get('/submit').status_code,503)
 
-    def test_open_pilot_does_not_allow_operator_to_finalize_a_conflict(self):
+    def test_open_pilot_allows_disclosed_clean_round_founder_acceptance(self):
         with self.app.app_context():
             get_db().execute("UPDATE users SET active=0 WHERE role='independent_editor'")
             get_db().commit()
@@ -96,8 +96,8 @@ class WorkflowTests(fixtures.IntakeTests):
         token = self.login_session('operator@example.org')
         data = {'csrf_token':token,'action':'accept','reason':'All required manuscript checks complete.'}
         self.assertEqual(self.client.post(f'/admin/submission/{case_id}/decision',data=data).status_code,302)
-        self.assertEqual(self.row(case_id)['status'],'awaiting_independent_decision')
-        self.assertEqual(self.client.post(f'/admin/submission/{case_id}/decision',data=data).status_code,403)
+        self.assertEqual(self.row(case_id)['status'],'accepted_for_publication')
+        self.assertEqual(self.client.post(f'/admin/submission/{case_id}/decision',data=data).status_code,409)
         self.assertEqual(self.client.get(f'/admin/submission/{case_id}/release-package').status_code,409)
 
     def test_open_pilot_does_not_allow_operator_to_resolve_own_appeal(self):
@@ -214,6 +214,21 @@ class WorkflowTests(fixtures.IntakeTests):
         self.assertEqual(self.client.post(path, data=data).status_code, 302)
         self.assertEqual(self.row(case_id)['status'], 'changes_requested')
 
+    def test_founder_cannot_overrule_a_blocking_model_report(self):
+        case_id = self.upload(conflict=True)
+        self.add_model_review(case_id, 1, recommendation='reject', material=True)
+        token = self.login_session('operator@example.org')
+        with self.app.app_context():
+            review = get_db().execute('SELECT id FROM model_reviews WHERE submission_id=?', (case_id,)).fetchone()
+        path = f"/admin/submission/{case_id}/adjudicate/{review['id']}"
+        evidence = {'csrf_token': token,
+            'basis': 'The report is disputed, but a conflicted operator cannot adjudicate this blocking finding alone.',
+            'evidence': 'The exact manuscript and complete report remain preserved for independent adjudication.',
+            'all_objections_addressed': 'on'}
+        self.assertEqual(self.client.post(path, data=evidence).status_code, 403)
+        self.assertEqual(self.client.post(f'/admin/submission/{case_id}/decision', data={
+            'csrf_token': token, 'action': 'accept', 'reason': 'Attempted self-approval'}).status_code, 409)
+
     def test_release_handoff_requires_publication_permission_and_excludes_contact(self):
         case_id = self.upload()
         with self.app.app_context():
@@ -249,6 +264,22 @@ class WorkflowTests(fixtures.IntakeTests):
             self.assertFalse(deliver(message_id))
             self.assertEqual(sending.call_count, 1)
             self.assertEqual(get_db().execute('SELECT state FROM mail_outbox WHERE id=?', (message_id,)).fetchone()[0], 'uncertain')
+
+    def test_founder_release_handoff_discloses_self_approval(self):
+        case_id = self.upload(conflict=True)
+        self.add_model_review(case_id, 1)
+        token = self.login_session('operator@example.org')
+        self.client.post(f'/admin/submission/{case_id}/decision', data={
+            'csrf_token': token, 'action': 'accept', 'reason': 'Clean disclosed founder round'})
+        csrf = self.author_session(case_id)
+        self.client.post('/case/' + case_id, data={'csrf_token': csrf, 'action': 'publication',
+            'license': 'CC-BY-4.0', 'publication_confirm': 'on'})
+        self.login_session('operator@example.org')
+        result = self.client.get(f'/admin/submission/{case_id}/release-package')
+        self.assertEqual(result.status_code, 200)
+        self.assertTrue(result.json['conflict_disclosed'])
+        self.assertEqual(result.json['editorial_relationship'], 'operator_conflicted_self_approval')
+        self.assertFalse(result.json['independent_human_review'])
 
     def test_editor_setup_requires_totp_does_not_put_secret_in_cookie_or_overwrite_user(self):
         result = self.app.test_cli_runner().invoke(args=['invite-editor', 'new-editor@example.org', '--name', 'New Editor', '--role', 'independent_editor'])

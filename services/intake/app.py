@@ -46,7 +46,7 @@ from scripts.donationlib import load_donation_url
 from scripts.subjectlib import classification_options, classification_text, public_vocabulary, validate_classification
 
 
-TERMS_VERSION = "ARR-DEPOSIT-1.8"
+TERMS_VERSION = "ARR-DEPOSIT-1.9"
 PRIVACY_VERSION = "ARR-PRIVACY-1.6"
 FRONTIER_PROMPT_VERSION = "ARR-INTAKE-ASSESS-1.0"
 MAX_PDF_BYTES = 25 * 1024 * 1024
@@ -885,8 +885,6 @@ def register_routes(app: Flask) -> None:
             abort(403, "An editor cannot decide their own submission")
         if row["status"] in {"accepted_for_publication", "declined", "withdrawn", "removed", "legal_hold"}:
             abort(409, "This state requires the correction, appeal, takedown or legal-hold workflow")
-        if row["status"] == "awaiting_independent_decision" and g.user["role"] != "independent_editor":
-            abort(403, "Only an independent editor may complete this conflicted decision")
         action = request.form.get("action")
         reason = request.form.get("reason", "").strip()[:200]
         note = request.form.get("note", "").strip()[:2000]
@@ -905,9 +903,7 @@ def register_routes(app: Flask) -> None:
                 abort(409, "A declared version-locked frontier-model audit record is required before acceptance")
             if not app.extensions['editorial']['can_accept'](row, reviews):
                 abort(409, "Complete the authorized round and resolve every blocking report with a signed, evidenced adjudication")
-        if action == "accept" and row["operator_conflict"] and g.user["role"] != "independent_editor":
-            new_status = "awaiting_independent_decision"
-        elif action == "accept":
+        if action == "accept":
             new_status = "accepted_for_publication"
         elif action == "decline":
             new_status = "declined"

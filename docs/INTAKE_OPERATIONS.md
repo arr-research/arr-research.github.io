@@ -77,8 +77,9 @@ After recorded authorization and a successful `/readyz`, set the repository vari
 `ARR_INTAKE_URL` to the receiver's HTTPS origin and redeploy Pages.
 
 The readiness record does not grant editorial powers. If an independent reviewer
-is unavailable, a conflicted acceptance remains provisional and an appeal stays
-unresolved. No case may bypass those guards because reception has opened.
+is unavailable, a blocking report cannot be overruled and an appeal stays
+unresolved. A clean founder-authored round may use the disclosed self-publication
+path; reception readiness itself never authorizes a decision.
 
 ## Per-case procedure
 

@@ -1,6 +1,6 @@
-# AIRR deposit terms — ARR-DEPOSIT-1.8
+# AIRR deposit terms — ARR-DEPOSIT-1.9
 
-**Effective:** 2026-09-08
+**Effective:** 2026-09-09
 **Brand wording updated:** 2026-09-06; see [identity and continuity](BRAND_IDENTITY.md).
 
 **Operator:** Lluis Eriksson, Sweden — lluiseriksson@gmail.com
@@ -13,8 +13,8 @@ after advance publication of new terms and clear notice before submission. No fe
 will be imposed retroactively on a submission governed by this version, and a
 future fee will never purchase acceptance, priority or a favourable decision.
 
-This version replaces `ARR-DEPOSIT-1.7` before direct public submission was
-activated.
+This version replaces `ARR-DEPOSIT-1.8` and permits a transparently labelled
+founder-authored deposit to proceed without claiming independent review.
 
 These terms govern AIRR's direct private-submission pilot. No invitation, email or
 legal name is required. Depositors use a private alias workspace protected by a
@@ -113,11 +113,14 @@ apply. No model makes the final decision.
 
 ## 4. Editorial decision and conflicts
 
-The operator normally signs accept/decline decisions one by one and gives a concise
-basis. The depositor may appeal once within 30 days. If the founder/operator is an
-author, close collaborator, supervisor, financial participant or otherwise directly
-conflicted, his approval is provisional only; a disclosed independent editor must
-sign before publication. An editor may not decide their own submission.
+The operator signs accept/decline decisions one by one and gives a concise basis.
+The depositor may appeal once within 30 days. The founder/operator may sign his own
+paper or another directly conflicted deposit only when the declared assessment round
+is complete and every model report recommends acceptance with no unresolved material
+objection. The release handoff records the conflict and editor identity, and the
+public record must say **founder-authored and self-approved; not independently human
+reviewed**. An independent editor is required to override a blocking assessment or
+to decide an appeal, and may optionally add a separate independent review.
 
 AIRR acceptance means only that the identified process was applied to the exact
 version. It is not journal peer review and not a certification that claims are true.

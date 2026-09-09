@@ -1,8 +1,9 @@
 # Independent editor onboarding
 
-AIRR needs a named independent editor for founder-authored or otherwise conflicted
-acceptances and for appeals. The role is a human accountability function. A model
-assessment, automated check or agent account cannot substitute for it.
+AIRR needs a named independent editor to adjudicate a blocking model report, decide
+an appeal or add an optional independent human review. The role is a human
+accountability function. A model assessment, automated check or agent account cannot
+substitute for it.
 
 ## Eligibility
 
@@ -37,5 +38,6 @@ identity documents or manuscripts by email. Appointment is discretionary and doe
 not create employment, authority over AIRR generally or permission to publish a
 submission outside its assigned workflow.
 
-No founder-authored paper may be represented as independently accepted until a real
-eligible editor has completed this process and signed that exact version.
+No founder-authored paper may be represented as independently human reviewed until
+a real eligible editor has completed this process and signed that exact version. A
+founder self-publication remains visibly labelled as such.

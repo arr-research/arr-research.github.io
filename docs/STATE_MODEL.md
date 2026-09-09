@@ -6,10 +6,12 @@ Submission state and public record status are deliberately separate. A submissio
 
 `received → quarantined → eligible → under_assessment → accepted_for_publication`
 
-Additional controlled states are `changes_requested` and
-`awaiting_independent_decision`. The latter is mandatory when an operator's
-conflicted acceptance needs an independent signature. No intake state is public and
-even `accepted_for_publication` cannot publish automatically.
+Additional controlled states are `changes_requested` and the legacy
+`awaiting_independent_decision`. New founder-authored submissions can reach
+`accepted_for_publication` through the disclosed clean-round rule; legacy cases in
+the waiting state must be reconsidered explicitly and are never migrated silently.
+No intake state is public and even `accepted_for_publication` cannot publish
+automatically.
 
 Terminal alternatives are `declined`, `expired`, `removed`, and `legal_hold`. Intake states are private operational data and must not be presented as quality labels.
 

@@ -17,7 +17,9 @@ SECURITY_SUCCESS = Path('/var/lib/airr-system-maintenance/last-success')
 def security_update_checks(now):
     try:
         age = now.timestamp() - SECURITY_SUCCESS.stat().st_mtime
-        recent = 0 <= age < 8 * 86400
+        # Filesystem timestamp rounding or small host-clock corrections can put a
+        # fresh marker a few seconds ahead of the process clock.
+        recent = -300 <= age < 8 * 86400
     except OSError:
         recent = False
     return {

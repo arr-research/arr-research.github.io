@@ -112,7 +112,7 @@ class PrivateAccountTests(unittest.TestCase):
         with self.app.app_context():
             self.assertEqual(get_db().execute('SELECT COUNT(*) FROM mail_outbox').fetchone()[0],0)
 
-    def test_newly_discovered_conflict_blocks_release_even_for_an_alias(self):
+    def test_newly_discovered_conflict_is_disclosed_without_reversing_acceptance(self):
         owner = fixtures.IntakeTests('runTest')
         owner.__dict__.update(self.__dict__)
         case_id = owner.upload()
@@ -124,7 +124,7 @@ class PrivateAccountTests(unittest.TestCase):
         self.assertEqual(result.status_code,302)
         with self.app.app_context():
             row = get_db().execute('SELECT status,operator_conflict FROM submissions WHERE id=?', (case_id,)).fetchone()
-            self.assertEqual(tuple(row), ('awaiting_independent_decision',1))
+            self.assertEqual(tuple(row), ('accepted_for_publication',1))
         self.assertEqual(self.client.get('/admin/submission/'+case_id+'/release-package').status_code,409)
 
     def test_password_change_requires_current_secret_and_replaces_recovery(self):

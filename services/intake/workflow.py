@@ -438,11 +438,11 @@ def install(app, a):
         if row['public_released_at'] or row['status'] in {'removed','withdrawn','superseded'} or not 20 <= len(reason) <= 2000:
             abort(409, 'Record a reason on an active private case; published records require a separate correction.')
         db = a.get_db()
-        state = 'awaiting_independent_decision' if row['status'] == 'accepted_for_publication' else row['status']
+        state = row['status']
         db.execute('UPDATE submissions SET operator_conflict=1,status=?,updated_at=? WHERE id=?', (state, a.iso(), submission_id))
         db.commit()
         a.audit('operator_conflict_recorded', submission_id, reason=reason)
-        enqueue(row, 'Operator conflict recorded', reason + '\nAn independent editor is required before a final acceptance.')
+        enqueue(row, 'Operator conflict recorded', reason + '\nAny publication will disclose that the operator was conflicted and must not be presented as independently reviewed.')
         return redirect(url_for('submission_detail', submission_id=submission_id))
 
     @app.post('/admin/submission/<submission_id>/adjudicate/<int:review_id>')
@@ -636,13 +636,17 @@ def install(app, a):
             abort(409, 'Final acceptance and exact-version publication permission are both required.')
         # Export only the approved scholarly handoff. No email, bearer link, SMTP secret or private conversation.
         db = a.get_db()
+        decision_editor = db.execute('SELECT display_name,role FROM users WHERE id=?', (row['decision_by'],)).fetchone()
+        self_approved = bool(row['operator_conflict'] and decision_editor['role'] == 'operator')
         manifest = {'submission_id': row['id'], 'revision': row['revision_number'], 'sha256': row['sha256'],
                     'title': row['title'], 'authors': row['authors'], 'abstract': row['abstract'],
                     'classification': json.loads(row['classification_json']), 'license': permission['license'],
                     'submission_channel': row['submission_channel'], 'agent_provenance': json.loads(row['agent_provenance_json']),
                     'decision_reason': row['decision_reason'], 'decided_at': row['decided_at'],
                     'conflict_disclosed': bool(row['operator_conflict']),
-                    'editor': db.execute('SELECT display_name FROM users WHERE id=?', (row['decision_by'],)).fetchone()[0],
+                    'editor': decision_editor['display_name'],
+                    'editorial_relationship': 'operator_conflicted_self_approval' if self_approved else ('independent_editor' if decision_editor['role'] == 'independent_editor' else 'operator_unconflicted'),
+                    'independent_human_review': bool(decision_editor['role'] == 'independent_editor'),
                     'reports': [json.loads(x[0]) for x in db.execute('SELECT response_json FROM model_reviews WHERE submission_id=? ORDER BY id', (submission_id,))],
                     'adjudications': [dict(x) for x in db.execute('SELECT d.basis,d.evidence,d.signed_at,u.display_name AS editor,r.response_sha256 FROM adjudications d JOIN model_reviews r ON r.id=d.review_id JOIN users u ON u.id=d.signed_by WHERE r.submission_id=?', (submission_id,))]}
         a.audit('release_handoff_exported', submission_id)

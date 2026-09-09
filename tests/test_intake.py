@@ -50,7 +50,7 @@ class IntakeTests(unittest.TestCase):
         with self.app.app_context():
             db = get_db()
             user = db.execute("INSERT INTO users(email,display_name,password_hash,role,active,created_at) VALUES(?,?,?,?,1,?)", ('direct-author@accounts.invalid','direct-author',generate_password_hash('workspace-password-123'),'depositor',iso()))
-            db.execute("INSERT INTO private_accounts(user_id,alias,identity_kind,recovery_hash,created_at,last_seen_at,terms_version,privacy_version) VALUES(?,?,?,?,?,?,?,?)", (user.lastrowid,'direct-author','human','fixture-recovery-hash',iso(),iso(),'ARR-DEPOSIT-1.8','ARR-PRIVACY-1.6'))
+            db.execute("INSERT INTO private_accounts(user_id,alias,identity_kind,recovery_hash,created_at,last_seen_at,terms_version,privacy_version) VALUES(?,?,?,?,?,?,?,?)", (user.lastrowid,'direct-author','human','fixture-recovery-hash',iso(),iso(),'ARR-DEPOSIT-1.9','ARR-PRIVACY-1.6'))
             db.commit()
         self.client = self.app.test_client()
         with self.client.session_transaction() as state:
@@ -106,7 +106,7 @@ class IntakeTests(unittest.TestCase):
             row = get_db().execute("SELECT * FROM submissions ORDER BY created_at DESC LIMIT 1").fetchone()
             self.assertEqual(row["scan_status"], "clean")
             self.assertEqual(row["status"], "eligible")
-            self.assertEqual(row["terms_version"], "ARR-DEPOSIT-1.8")
+            self.assertEqual(row["terms_version"], "ARR-DEPOSIT-1.9")
             self.assertEqual(row["privacy_version"], "ARR-PRIVACY-1.6")
             self.assertTrue((Path(self.app.config["QUARANTINE"]) / row["stored_name"]).exists())
             submitter = get_db().execute("SELECT * FROM users WHERE id=?", (row["user_id"],)).fetchone()
@@ -354,22 +354,14 @@ class IntakeTests(unittest.TestCase):
         )
         self.assertEqual(blocked.status_code, 409)
 
-    def test_founder_conflict_requires_independent_editor(self) -> None:
+    def test_founder_conflict_allows_disclosed_clean_round_acceptance(self) -> None:
         submission_id = self.upload(conflict=True)
         token = self.login_session("operator@example.org")
         self.add_model_review(submission_id, 1)
         token = self.login_session("operator@example.org")
         self.client.post(
             f"/admin/submission/{submission_id}/decision",
-            data={"csrf_token": token, "action": "accept", "reason": "operator-provisional", "note": "Conflict disclosed."},
-        )
-        with self.app.app_context():
-            status = get_db().execute("SELECT status FROM submissions WHERE id=?", (submission_id,)).fetchone()[0]
-            self.assertEqual(status, "awaiting_independent_decision")
-        token = self.login_session("independent@example.org")
-        self.client.post(
-            f"/admin/submission/{submission_id}/decision",
-            data={"csrf_token": token, "action": "accept", "reason": "independent-signoff", "note": "Independent review complete."},
+            data={"csrf_token": token, "action": "accept", "reason": "founder-clean-round", "note": "Conflict disclosed."},
         )
         with self.app.app_context():
             status = get_db().execute("SELECT status FROM submissions WHERE id=?", (submission_id,)).fetchone()[0]

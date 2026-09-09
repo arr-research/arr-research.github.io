@@ -136,8 +136,9 @@ source. A tool may record an existing explicit instruction; it must not call tha
 an electronic signature or invent completed checks. Postal contact, data handling,
 restoration, HTTPS, operator MFA, scheduled backups, monitoring, incident handling
 and end-to-end receipt must be reviewed before enabling the switch and GitHub URL.
-An independent editor is required for conflicted final decisions and appeals,
-not for ordinary receipt. Record incomplete recovery-key custody honestly as an
+An independent editor is required for blocking-report adjudication and appeals,
+not for ordinary receipt or a disclosed clean-round founder self-publication.
+Record incomplete recovery-key custody honestly as an
 ongoing continuity task. See `docs/INTAKE_OPERATIONS.md` for the reception policy.
 
 

@@ -13,7 +13,7 @@ wording is preserved in Git history.
 Compatibility and the scholarly record require retaining the original identifiers:
 
 - Published `ARR-YYYY-…` record IDs, version IDs, release tags and file paths.
-- Protocol and policy identifiers such as `ARR-ASSESS-1.0` and `ARR-DEPOSIT-1.8`.
+- Protocol and policy identifiers such as `ARR-ASSESS-1.0` and `ARR-DEPOSIT-1.9`.
 - Existing `arr:` schema namespaces, environment variables and repository URLs.
 - Original manuscripts, abstracts, references, exact model reports, declarations
   in preserved source metadata and historical audit records.
