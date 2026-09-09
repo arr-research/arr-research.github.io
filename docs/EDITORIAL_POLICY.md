@@ -1,5 +1,7 @@
 # AIRR editorial policy — direct private-submission pilot
 
+**Founder-authored rule updated: 2026-09-09 — AIRR-FOUNDER-1.0.**
+
 ## Scope
 
 AIRR is a curated archive of research papers and technical notes with preserved canonical artifacts and machine-readable renditions. It is not a journal, and publication does not imply peer review, correctness, novelty or importance. When AIRR publishes a frontier-model assessment, that report describes only the identified model's inspection of the exact identified version.
@@ -22,7 +24,7 @@ A record may be accepted only when:
 5. automated checks succeed;
 6. every performed assessment is labelled with its actual outcome and legacy `not_assessed` records remain visible rather than being retrospectively scored;
 7. new admissions under ARR-ASSESS-1.0 require declared, version-specific frontier-model screening, and any unresolved material objection blocks acceptance pending correction or a signed human adjudication;
-8. an `AI screened: pass` label requires a declared, version-specific frontier-model audit record and no unresolved critical objection; AIRR promises no fixed provider, model, report count or reasoning tier;
+8. an `AI screened: pass` label requires a declared, version-specific frontier-model audit record and no unresolved critical objection; AIRR promises no fixed provider, model or reasoning tier; founder-authored cases require two distinct identified models;
 9. a human editor signs off on the exact version;
 10. the final decision is tied to stable record/version identifiers, a SHA-256 manifest and protocol version;
 11. deposit authority, scoped licenses and third-party material disclosures are recorded.
@@ -41,8 +43,8 @@ Published files are not silently replaced. Corrections produce a new version. Wi
 
 ## Founder conflict
 
-When an editor, founder or operator is also an author or directly conflicted, that relationship is visible and his acceptance is provisional. A named, unconflicted independent editor must sign the exact version before publication. Editors cannot decide their own submissions, and appeals do not return to the sole original decision-maker. The binding controls are in [`GOVERNANCE.md`](GOVERNANCE.md).
+For founder-authored submissions, Lluis Eriksson may sign acceptance after documented review by two identified models. The public record must disclose his author-editor role, the models and their prior involvement, the exact version reviewed and the resolution of material objections. This does not constitute independent human review. Other conflicts and appeals remain subject to the controls in [`GOVERNANCE.md`](GOVERNANCE.md).
 
 ## Intake boundary
 
-Direct private submission currently carries no AIRR fee and requires no invitation or author account. Manuscript intake is rate-limited, quarantined and separate from the accepted archive. Any future fee requires advance notice and new terms and cannot purchase an editorial outcome. The public receiver may open only after the operator authorizes the documented reception-readiness record. An independent editor is required for conflicted final decisions and appeals, not for initial receipt of ordinary cases. Submission does not create a right to publication, indefinite storage or evaluation, and no automated system makes the editorial decision.
+Direct private submission currently carries no AIRR fee and requires no invitation or author account. Manuscript intake is rate-limited, quarantined and separate from the accepted archive. Any future fee requires advance notice and new terms and cannot purchase an editorial outcome. The public receiver may open only after the operator authorizes the documented reception-readiness record. An independent editor is required for other conflicted final decisions and appeals; the founder-authored exception is defined above. Neither requirement applies to initial receipt of ordinary cases. Submission does not create a right to publication, indefinite storage or evaluation, and no automated system makes the editorial decision.

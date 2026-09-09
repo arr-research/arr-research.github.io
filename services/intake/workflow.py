@@ -83,7 +83,10 @@ def migrate(db):
     db.executescript(SCHEMA)
     columns = {row[1] for row in db.execute("PRAGMA table_info(submissions)")}
     for name, definition in (("parent_id", "TEXT REFERENCES submissions(id)"),
-                             ("revision_number", "INTEGER NOT NULL DEFAULT 1")):
+                             ("revision_number", "INTEGER NOT NULL DEFAULT 1"),
+                             ("founder_authored", "INTEGER NOT NULL DEFAULT 0"),
+                             ("founder_declared_by", "INTEGER REFERENCES users(id)"),
+                             ("founder_declared_at", "TEXT")):
         if name not in columns:
             db.execute(f"ALTER TABLE submissions ADD COLUMN {name} {definition}")
     db.commit()
@@ -220,12 +223,21 @@ def install(app, a):
                 if pair not in {(x['provider'], x['model_id']) for x in json.loads(plan['providers_json'])}:
                     abort(409, 'This provider and model are not in the authorized assessment plan.')
 
+    def founder_may_decide(row, user=None):
+        user = user if user is not None else getattr(g, "user", None)
+        return bool(row["founder_authored"] and user and user["active"]
+                    and user["role"] == "operator"
+                    and user["email"] == app.config["OPERATOR_EMAIL"]
+                    and row["founder_declared_by"] == user["id"])
+
     def can_accept(row, reviews):
         plan = current_plan(row['id'])
         if not plan or not plan['authorized_at'] or plan['manuscript_sha256'] != row['sha256']:
             return False
         expected = {(x['provider'], x['model_id']) for x in json.loads(plan['providers_json'])}
         actual = {(x['provider'], x['model_id']) for x in reviews}
+        if row["founder_authored"] and (len(expected) < 2 or len(actual) < 2):
+            return False
         if not expected.issubset(actual):
             return False
         for review in reviews:
@@ -233,7 +245,7 @@ def install(app, a):
                 ruling = a.get_db().execute("SELECT * FROM adjudications WHERE review_id=?", (review['id'],)).fetchone()
                 if not ruling:
                     return False
-                if row['operator_conflict'] and a.get_db().execute("SELECT role FROM users WHERE id=?", (ruling['signed_by'],)).fetchone()[0] != 'independent_editor':
+                if row['operator_conflict'] and a.get_db().execute("SELECT role FROM users WHERE id=?", (ruling['signed_by'],)).fetchone()[0] != 'independent_editor' and not founder_may_decide(row, a.get_db().execute("SELECT * FROM users WHERE id=?", (ruling['signed_by'],)).fetchone()):
                     return False
         return True
 
@@ -256,8 +268,29 @@ def install(app, a):
         body = f"Case: {case_id}\nDecision: {row['status'].replace('_', ' ')}\nReason: {row['decision_reason']}\n\n{row['decision_note'] or ''}\n\nAcceptance does not publish the manuscript. You may appeal an editorial decision once within 30 days through the private case page. An independent editor handles appeals."
         enqueue(row, f"AIRR editorial decision: {case_id}", body)
 
-    app.extensions['editorial'] = dict(can_accept=can_accept, received=received, decided=decided,
+    app.extensions['editorial'] = dict(can_accept=can_accept, founder_may_decide=founder_may_decide, received=received, decided=decided,
                                        enqueue=enqueue, deliver=deliver, launch_approved=launch_approved)
+
+    from .review_operations import install as install_review_operations
+    install_review_operations(app, a, case, current_plan)
+
+    @app.post('/admin/submission/<submission_id>/founder-authorship')
+    @a.editor_required
+    def declare_founder_authorship(submission_id):
+        a.require_csrf()
+        row = case(submission_id)
+        reason = request.form.get('reason', '').strip()
+        if g.user['role'] != 'operator' or g.user['email'] != app.config['OPERATOR_EMAIL']:
+            abort(403)
+        if row['status'] not in {'eligible', 'under_assessment', 'changes_requested', 'awaiting_independent_decision'} or row['founder_authored']:
+            abort(409)
+        if not request.form.get('founder_author') or not 40 <= len(reason) <= 2000:
+            abort(400)
+        a.get_db().execute('UPDATE submissions SET founder_authored=1,operator_conflict=1,founder_declared_by=?,founder_declared_at=?,updated_at=? WHERE id=?',
+                           (g.user['id'], a.iso(), a.iso(), submission_id))
+        a.get_db().commit()
+        a.audit('founder_authorship_declared', submission_id, reason=reason, policy='AIRR-FOUNDER-1.0')
+        return redirect(url_for('submission_detail', submission_id=submission_id))
 
     @app.context_processor
     def workflow_context():
@@ -273,7 +306,8 @@ def install(app, a):
                         appeal=db.execute('SELECT * FROM appeals WHERE submission_id=?', (case_id,)).fetchone(),
                         permission=db.execute('SELECT * FROM publication_permissions WHERE submission_id=?', (case_id,)).fetchone(),
                         children=db.execute('SELECT id,revision_number,status FROM submissions WHERE parent_id=?', (case_id,)).fetchall())
-        return {'workflow_details': details}
+        return {'workflow_details': details, 'founder_may_decide': founder_may_decide,
+                'is_founder_operator': bool(getattr(g, 'user', None) and g.user['role'] == 'operator' and g.user['email'] == app.config['OPERATOR_EMAIL'])}
 
     @app.post('/admin/submission/<submission_id>/assign-editor')
     @a.editor_required
@@ -450,9 +484,9 @@ def install(app, a):
     def adjudicate(submission_id, review_id):
         a.require_csrf()
         row = case(submission_id)
-        if row['status'] not in {'eligible', 'under_assessment', 'changes_requested', 'awaiting_independent_decision'} or row['user_id'] == g.user['id']:
+        if row['status'] not in {'eligible', 'under_assessment', 'changes_requested', 'awaiting_independent_decision'} or (row['user_id'] == g.user['id'] and not founder_may_decide(row)):
             abort(409)
-        if row['operator_conflict'] and g.user['role'] != 'independent_editor':
+        if row['operator_conflict'] and g.user['role'] != 'independent_editor' and not founder_may_decide(row):
             abort(403, 'An independent editor must adjudicate this conflicted case.')
         review = a.get_db().execute('SELECT * FROM model_reviews WHERE id=? AND submission_id=?', (review_id, submission_id)).fetchone()
         basis, evidence = request.form.get('basis', '').strip(), request.form.get('evidence', '').strip()
@@ -642,6 +676,9 @@ def install(app, a):
                     'submission_channel': row['submission_channel'], 'agent_provenance': json.loads(row['agent_provenance_json']),
                     'decision_reason': row['decision_reason'], 'decided_at': row['decided_at'],
                     'conflict_disclosed': bool(row['operator_conflict']),
+                    'founder_authored': bool(row['founder_authored']),
+                    'author_editor_acceptance': bool(row['founder_authored'] and row['decision_by'] == row['founder_declared_by']),
+                    'founder_policy': 'AIRR-FOUNDER-1.0' if row['founder_authored'] else None,
                     'editor': db.execute('SELECT display_name FROM users WHERE id=?', (row['decision_by'],)).fetchone()[0],
                     'reports': [json.loads(x[0]) for x in db.execute('SELECT response_json FROM model_reviews WHERE submission_id=? ORDER BY id', (submission_id,))],
                     'adjudications': [dict(x) for x in db.execute('SELECT d.basis,d.evidence,d.signed_at,u.display_name AS editor,r.response_sha256 FROM adjudications d JOIN model_reviews r ON r.id=d.review_id JOIN users u ON u.id=d.signed_by WHERE r.submission_id=?', (submission_id,))]}
