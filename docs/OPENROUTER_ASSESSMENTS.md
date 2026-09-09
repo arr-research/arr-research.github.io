@@ -53,6 +53,13 @@ fails. Increase `--max-requests` only after a complete valid canary from every m
 configuration. This prevents an incompatible prompt or provider from multiplying
 cost across the batch.
 
+The runner sends the configured reasoning effort to every model and allows up to
+48,000 completion tokens so a long audit can still emit its final structured
+report. If a model exhausts that allowance without content, preserve the failure
+and retry at most once at a lower disclosed reasoning effort. A retry is valid
+only for transport, truncation or schema failure; it must never be triggered by
+the scientific score or recommendation.
+
 ## Editorial import
 
 Inspect every outcome and adjudicate every material objection. A material problem

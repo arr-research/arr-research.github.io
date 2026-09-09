@@ -171,11 +171,7 @@ def request_body(item: dict[str, Any], independence: str) -> dict[str, Any]:
         "the summary at most 1200 characters; each list item at most 600 characters; "
         "use at most 8 items per list. Return the final JSON before the output limit."
     )
-    reasoning = (
-        {"max_tokens": 12000, "exclude": True}
-        if item["model"].startswith("anthropic/")
-        else {"effort": item["reasoning_effort"], "exclude": True}
-    )
+    reasoning = {"effort": item["reasoning_effort"], "exclude": True}
     return {
         "model": item["model"],
         "messages": [{"role": "user", "content": [
@@ -186,7 +182,7 @@ def request_body(item: dict[str, Any], independence: str) -> dict[str, Any]:
         "plugins": [{"id": "file-parser", "pdf": {"engine": item["pdf_engine"]}}],
         "provider": {"allow_fallbacks": True, "require_parameters": False, "data_collection": "deny"},
         "reasoning": reasoning,
-        "max_completion_tokens": 32000,
+        "max_completion_tokens": 48000,
         "stream": False,
     }
 
