@@ -1,0 +1,973 @@
+      The inverse self-commutator cost at inertia (m,2): a
+ dimension-free closed formula, block-shift optimizers and a Pieri
+                            certificate
+
+                          Lluis Eriksson (Independent researcher)
+
+                         9 September 2026 - Internal revision v004
+
+
+Abstract
+For a traceless Hermitian 𝐹 ∈ 𝑀𝑑 (ℂ) let 𝜅𝑑 (𝐹 ) = 12 min{‖𝐶‖2𝐻𝑆 ∶ 𝐶𝐶 ∗ − 𝐶 ∗ 𝐶 = 2𝐹 }. We give
+the exact value of 𝜅𝑑 on the whole inertia-(𝑚, 2) stratum (positive eigenvalues 𝑎1 ≥ … ≥ 𝑎𝑚 > 0,
+two negative eigenvalues −𝑏2 ≥ −𝑏1 , any number of zeros) for every 𝑚 ≥ 2 and every 𝑑: 𝜅𝑑 =
+max(𝐹0 , … , 𝐹𝑚−1 , 𝐺1 , 𝐺3 , … ) for explicit linear forms. The lower bound sums Lidskii–Wielandt
+and Weyl inequalities with one Pieri-type Horn triple (Littlewood–Richardson coeﬀicient 1); the
+upper bound is an explicit 2×2-block weighted shift whose feasibility is a one-parameter interval
+recursion. Both bounds are dimension-free, so the value is invariant under zero padding, and the
+chamber structure is explicit. Every optimizer has rank 𝑚 or 𝑚 + 1, the minimal optimal rank
+equals max(𝑛+ , 𝑛− ) = 𝑚 in every dimension, and rank 𝑚+1 occurs exactly in one open chamber
+after padding, where the optimal spectrum is not unique. By 𝐹 ↦ −𝐹 the same formula covers
+inertia (2, 𝑛).
+
+1. Introduction: antecedents and contribution
+The quantity 𝜅𝑑 (𝐹 ) measures the cheapest way, in Hilbert–Schmidt norm, to realise a pre-
+scribed traceless Hermitian 𝐹 as a self-commutator 21 (𝐶𝐶 ∗ − 𝐶 ∗ 𝐶); equivalently (Lemma 2.1 of
+[FourLevel]) as inf ‖𝐴‖𝐻𝑆 ‖𝐵‖𝐻𝑆 over Hermitian 𝐴, 𝐵 with −𝑖[𝐴, 𝐵] = 𝐹 . Its theory has been
+developed in a series of records of the AI Research Record archive, cited here by descriptive
+keys (their ARR identifiers and titles are in the reference list); everything used from them is
+restated in this paper, so that it can be read without them. [FourLevel] reduced 𝜅𝑑 to a finite
+linear program over Horn inequalities (the Horn program, Theorem 2.2 there, restated as (2.1)
+below) and gave the exact four-level formula (Theorem 3.1 there) 𝜅4 = max{𝜆1 − 𝜆3 , 𝜆2 − 𝜆4 ,
+𝜆1 − 2𝜆2 − 𝜆3 , 𝜆2 + 2𝜆3 − 𝜆4 }. [FiveLevel] gave the twelve-term five-level formula (Theorem
+3.1 there). [OneSpike] proved the one-spike formula 𝜅𝑑 = ∑𝑗 𝑗 𝑏𝑗 when one sign has multiplic-
+ity one (Theorem 3.1 there), with rigidity for balanced optima, and noted that the cost is not
+known in closed form on general sign patterns. [RankAdaptive] proved the rank-adaptive bound
+𝑃 ≤ 𝜅𝑑 ≤ (𝜌/2)𝑃 , 𝜌 = rank 𝐹 (Theorem 1.1 there), and introduced the universal LR-one triples.
+[RankOnset] certified 𝑟∗ = 𝑟0 = max(𝑛+ , 𝑛− ) for 𝑑 ≤ 7 (Theorem 3.1 there), exhibited the first
+target (𝑑 = 8, Theorem 4.1 there) whose optimizers all have rank above the inertia bound, and
+showed (Remark 3.3 there) that zero padding can lower the value: the spectrum (25, 18, 18, −10,
+ − 17, − 17, − 17)/7 has 𝜅7 = 74/7 but 𝜅8 = 73/7. [Ceiling] proved the sharp inertia ceiling
+𝜅𝑑 ≤ 𝑀+12 𝑃 , 𝑀 = max(𝑛+ , 𝑛− ) (Theorem 1 there).
+
+Contribution. We treat the first stratum on which both signs have multiplicity larger than
+one: inertia (𝑚, 2) (and, by 𝐹 ↦ −𝐹 , inertia (2, 𝑛)), with arbitrary zero padding. Theorem
+A gives the closed formula, Theorem B its chamber structure, and Theorem C′ the rank and
+
+
+                                                1
+uniqueness properties of optimizers. The proof has two elementary halves. The lower bound is a
+sum of classical Lidskii–Wielandt and Weyl inequalities plus one non-Lidskii Horn triple whose
+Littlewood–Richardson coeﬀicient is 1 by the Pieri rule; only the necessity direction of the Horn–
+Klyachko theorem is used. The upper bound is an explicit operator, a “2×2-block weighted shift”
+generalising the cumulative-sum weighted shift of [RankAdaptive,OneSpike], whose feasibility
+reduces to a one-parameter recursion in 2 × 2 matrices. Both halves are independent of 𝑑, which
+is why the value is padding-invariant here although, as [RankOnset] showed, it is not in general;
+the set of optimizers is not padding-invariant even on this stratum (Section 7).
+Novelty, stated honestly. Two web searches (Section 11) and the nine records of the line
+found no prior closed formula for this stratum and no prior use of block weighted shifts or of a
+Pieri certificate in this problem. The nearest literature on norms in commutator representations
+is the quantitative commutator theorem of Johnson–Ozawa–Schechtman [JOS13] and its Hilbert–
+Schmidt version by Angel–Schechtman [AS15]. For general factorisations 𝐴 = [𝐵, 𝐶] of a zero-
+trace matrix, [JOS13] bounds the product of the two operator norms, whereas [AS15] uses the
+operator norm of 𝐵 and the Hilbert–Schmidt norm of 𝐶. Both objectives differ from the self-
+commutator cost with prescribed spectrum studied here. These searches do not certify priority.
+
+2. Setting
+Throughout, ‖𝑋‖2 = Tr 𝑋 ∗ 𝑋 and 𝐹 ∈ 𝑀𝑑 (ℂ) is Hermitian with Tr 𝐹 = 0 and ordered spectrum
+𝜆1 ≥ … ≥ 𝜆𝑑 . On the inertia-(𝑚, 2) stratum we write
+
+                              𝜆 = (𝑎1 ≥ … ≥ 𝑎𝑚 > 0, 0𝑧 , −𝑏2 , −𝑏1 ),
+                                            𝑏1 ≥ 𝑏2 > 0,
+                                      ∑ 𝑎𝑗 = 𝑏1 + 𝑏2 =∶ 𝑃 ,
+                                       𝑗
+
+                                           𝑑 = 𝑚 + 𝑧 + 2,
+
+and use the notation
+
+                                    𝐴𝑖 ∶= ∑ 𝑎𝑘 (𝐴𝑚+1 = 0),
+                                            𝑘≥𝑖
+
+                        𝐸𝑖 ∶= 𝑎𝑖 + 𝑎𝑖+2 + 𝑎𝑖+4 + ⋯ (𝐸𝑚+1 = 𝐸𝑚+2 = 0),
+                               𝑔𝑗 ∶= 𝑎𝑗 − 𝑎𝑗+1 (𝑗 odd, 𝑎𝑚+1 ∶= 0),
+                                           𝑔∗ ∶= max 𝑔𝑗 .
+                                                  𝑗 odd≤𝑚
+
+Note 𝐴𝑖 = 𝐸𝑖 + 𝐸𝑖+1 , 𝐸𝑖 ≥ 𝐸𝑖+1 , and 𝐸1 − 𝐸2 = ∑𝑗 odd 𝑔𝑗 ≥ 𝑔∗ .
+Given 𝐶 with 𝐶𝐶 ∗ − 𝐶 ∗ 𝐶 = 2𝐹 , put 𝑅 = 𝐶𝐶 ∗ /2 and 𝑆 = 𝐶 ∗ 𝐶/2. Then 𝑅, 𝑆 ⪰ 0 have the same
+spectrum 𝑠1 ≥ … ≥ 𝑠𝑑 ≥ 0 (the common spectrum), 𝑅 − 𝑆 = 𝐹 , and 21 ‖𝐶‖2 = Tr 𝑅 = ∑𝑡 𝑠𝑡 .
+Conversely any pair√𝑅, 𝑆 ⪰ 0 with equal spectra 𝑅 = 𝑈 Σ𝑈 ∗ , 𝑆 = 𝑉 Σ𝑉 ∗ and 𝑅 − 𝑆 = 𝐹
+comes from 𝐶 = 𝑈 2Σ𝑉 ∗ . Hence ([FourLevel] Theorem 2.2, [RankOnset] Proposition 2.2, in
+the 𝑠 = 𝑝/2 normalisation)
+
+         𝜅𝑑 (𝐹 ) = min { ∑ 𝑠𝑡 ∶ 𝑠1 ≥ … ≥ 𝑠𝑑−1 ≥ 𝑠𝑑 = 0, (𝑠, −𝑠rev , 𝜆) Horn-feasible},       (2.1)
+                        𝑡<𝑑
+
+where Horn-feasible means that 𝛼 = (𝑠1 , … , 𝑠𝑑−1 , 0), 𝛽 = (0, − 𝑠𝑑−1 , … , − 𝑠1 ), 𝛾 = 𝜆 are the
+spectra of Hermitian 𝑅, −𝑆, 𝐹 = 𝑅+(−𝑆), i.e. satisfy all Horn inequalities ∑𝑘∈𝐾 𝛾𝑘 ≤ ∑𝑖∈𝐼 𝛼𝑖 +
+∑𝑗∈𝐽 𝛽𝑗 , (𝐼, 𝐽 , 𝐾) ∈ 𝑇𝑟𝑑 [Ho62,Kl98,KT99,Fu00]. The normalisation 𝑠𝑑 = 0 is legitimate because
+subtracting 𝑠𝑑 1 from 𝑅 and 𝑆 preserves positivity, equal spectra and 𝑅 − 𝑆 = 𝐹 , and lowers the
+cost. The sign convention is 𝑅 − 𝑆 = 𝐹 with 𝑅 = 𝐶𝐶 ∗ /2; replacing 𝐶 by 𝐶 ∗ swaps 𝑅 and 𝑆,
+
+                                                   2
+so 𝜅𝑑 (−𝐹 ) = 𝜅𝑑 (𝐹 ), which transfers every statement below to inertia (2, 𝑛). Finally 𝑃 = Tr 𝐹+ ,
+𝑟0 (𝐹 ) ∶= max(𝑛+ , 𝑛− ) and 𝑟∗ (𝐹 ) ∶= least rank of an HS-optimizer.
+In 𝑠-notation a Horn triple (𝐼, 𝐽 , 𝐾) reads
+
+                                  ∑ 𝑠𝑖 −         ∑       𝑠𝑑+1−𝑗 ≥ ∑ 𝜆𝑘 .                      (2.2)
+                              𝑖∈𝐼, 𝑖<𝑑       𝑗∈𝐽, 𝑗>1                 𝑘∈𝐾
+
+We write 𝜆(𝐼) = (𝑖𝑟 −𝑟, … , 𝑖1 − 1) for the partition attached to 𝐼 = (𝑖1 < ⋯ < 𝑖𝑟 ); by Klyachko’s
+theorem [Kl98] the inequality (2.2) holds for all Hermitian triples whenever the Littlewood–
+                        𝜆(𝐾)
+Richardson coeﬀicient 𝑐𝜆(𝐼)𝜆(𝐽) is nonzero. Only this necessity direction is load-bearing for
+Theorems A and B; Horn suﬀiciency (Klyachko, Knutson–Tao) enters only to identify the set of
+optimal common spectra with the optimal face of the linear program (2.1).
+
+3. Statements
+Theorem A (inertia (𝑚, 2), all 𝑑). For every 𝑚 ≥ 2, 𝑧 ≥ 0 and every (𝑎, 𝑏) as in Section 2,
+
+                    𝜅𝑑 (𝐹 ) = Φ(𝑎; 𝑏) ∶= max (        max      𝐹𝑘 ,       max        𝐺𝑗 ),
+                                                  0≤𝑘≤𝑚−1             𝑗 odd, 1≤𝑗≤𝑚
+
+with
+                                  𝑚
+                                                                 𝑗 − 𝑘,             𝑗 ≤ 𝑘,
+                    𝐹𝑘 = 𝑘 𝑏1 + ∑ 𝑐𝑘 (𝑗) 𝑎𝑗 ,     𝑐𝑘 (𝑗) = {
+                                  𝑗=1                            ⌈(𝑗 − 𝑘)/2⌉,       𝑗 ≥ 𝑘,
+                                          𝑚
+                                             𝑖
+                               𝐺𝑗 = 𝑏2 + ∑ ⌊ ⌋𝑎𝑖 + (𝑎𝑗 − 𝑎𝑗+1 ).
+                                         𝑖=1
+                                             2
+Equivalently, in tail-sum form,
+
+                                             𝐹 0 = ∑ 𝐴𝑡 ,
+                                                     𝑡 odd
+                                      𝑘
+                       𝐹𝑘 = 𝑏1 + ∑(𝐴𝑗 − 𝑏2 ) +                ∑           𝐴𝑡 (𝑘 ≥ 1),
+                                   𝑗=2                   𝑡≥𝑘+1, 𝑡−𝑘 odd
+
+                        𝐺𝑗 = 𝑏2 + ∑ 𝐴𝑖 + 𝑎𝑗 + 𝐴𝑗+2 +                      ∑        𝐴𝑖 .
+                                      𝑖 even<𝑗                        𝑖 even≥𝑗+3
+
+
+The value does not depend on 𝑧. The same formula gives 𝜅𝑑 on the inertia-(2, 𝑛) stratum (two
+positive eigenvalues 𝑏1 ≥ 𝑏2 , negative eigenvalues −𝑎1 , … , − 𝑎𝑛 ).
+Theorem B (chambers and exposed forms). Let 𝑘∗ ∶= max{𝑘 ≥ 1 ∶ 𝐸𝑘+1 ≥ 𝑏2 } (defined
+when 𝑏2 ≤ 𝐸2 ) and 𝑗∗ ∈ arg max𝑗 odd 𝑔𝑗 . Then
+
+                     ⎧𝐹𝑘∗ , 0 < 𝑏2 ≤ 𝐸2 (equivalently 𝐸𝑘∗ +2 ≤ 𝑏2 ≤ 𝐸𝑘∗ +1 ),
+                     {
+                 𝜅𝑑 = 𝐹0 , 𝐸 2 ≤ 𝑏 2 ≤ 𝐸 1 − 𝑔 ∗ ,
+                     ⎨
+                     {𝐺 ∗ , 𝐸 − 𝑔∗ ≤ 𝑏 (≤ 𝑏 ).
+                     ⎩ 𝑗      1        2       1
+
+Along the 𝐹 -family 𝐹𝑘 ≥ 𝐹𝑘−1 ⟺ 𝐸𝑘+1 ≥ 𝑏2 (so 𝑘 ↦ 𝐹𝑘 is unimodal); along the 𝐺-family
+𝐺𝑗 ≥ 𝐺𝑗′ ⟺ 𝑔𝑗 ≥ 𝑔𝑗′ ; and 𝐺𝑗 ≥ 𝐹0 ⟺ 𝑏2 ≥ 𝐸1 − 𝑔𝑗 . The forms that are the unique
+maximiser at some point of the stratum (“exposed” forms) are exactly 𝐹1 , … , 𝐹𝑚−1 , all 𝐺𝑗 (𝑗
+odd), and 𝐹0 when 𝑚 ≥ 3; their number is (𝑚 − 1) + ⌈𝑚/2⌉ + [𝑚 ≥ 3], i.e. 2, 5, 6, 8, 9, 11, 12, 14
+for 𝑚 = 2, … , 9.
+Theorem C′ (rank and uniqueness of optimizers). Let 𝐶 be an HS-optimizer, i.e. 𝐶𝐶 ∗ −
+𝐶 ∗ 𝐶 = 2𝐹 and 21 ‖𝐶‖2 = 𝜅𝑑 (𝐹 ), with common spectrum 𝑠.
+
+                                                     3
+   1. 𝑠𝑑 = 0, 𝑠𝑑−1 = 0 and 𝑠𝑡 = 0 for 𝑚 + 2 ≤ 𝑡 ≤ 𝑑 − 1. Hence rank 𝐶 ∈ {𝑚, 𝑚 + 1}, and
+      𝑟∗ (𝐹 ) = 𝑟0 (𝐹 ) = 𝑚 on the stratum in every dimension 𝑑.
+   2. If 𝑧 = 0, or the maximum Φ is attained by some form other than 𝐺𝑚 with 𝑚 odd (in
+      particular if 𝑚 is even or 𝑏2 ≤ 𝐸1 − 𝑎𝑚 ), then also 𝑠𝑚+1 = 0 and rank 𝐶 = 𝑚.
+   3. If 𝑚 is odd, 𝑧 ≥ 1 and 𝑏2 > 𝐸1 − 𝑎𝑚 (the open 𝐺𝑚 chamber; inside the stratum this forces
+      𝑎𝑚 = 𝑔𝑚 > 𝑔𝑗 for every odd 𝑗 < 𝑚, so 𝐺𝑚 is the unique maximiser), then optimizers of
+      rank 𝑚 and of rank 𝑚 + 1 both exist.
+   4. The optimal common spectrum is unique for 𝑚 = 2 (all 𝑧) and for 𝑚 = 3 when 𝑧 = 0 or
+      when 𝑏2 ≤ 𝐸1 − 𝑎3 ; it is not unique for 𝑚 = 3, 𝑧 ≥ 1, 𝑏2 > 𝐸1 − 𝑎3 . For every 𝑚 ≥ 4 it is
+      not unique on the open 𝐹𝑚−3 chamber 𝐸𝑚−1 < 𝑏2 < 𝐸𝑚−2 whenever 𝑎𝑚−2 > 𝑎𝑚−1 .
+In particular the value 𝜅𝑑 is padding-invariant on the stratum but the optimizer set is not:
+rank-(𝑚 + 1) optimizers appear only after padding.
+
+4. Lower bound
+4.1 Dimension-free inequalities
+All inequalities below are instances of (2.2) valid in every 𝑑 ≥ 𝑚 + 2.
+Lemma 4.1 (Lidskii–Wielandt instances). For 𝐼 = 𝐾 of size 𝑟 and 𝐽 = (1, … , 𝑟), 𝜆(𝐽 ) = 0
+                                        𝑑−1
+and 𝑐 = 1; (2.2) becomes ∑𝑘∈𝐾,𝑘<𝑑 𝑠𝑘 − ∑𝑡=𝑑−𝑟+1 𝑠𝑡 ≥ ∑𝑘∈𝐾 𝜆𝑘 [Li50,Wi55]. The instances
+used are:
+   • 𝐾 = (1..𝑑 − 1): 𝑠1 ≥ 𝑏1 .
+   • (𝑇𝑗 ) 𝐾 = (𝑗..𝑑 − 1), 2 ≤ 𝑗 ≤ 𝑚: 𝑠𝑗 ≥ 𝐴𝑗 − 𝑏2 .
+   • (Π𝑡 ) 𝐾 = (𝑡..𝑑 − 2), 1 ≤ 𝑡 ≤ 𝑚 − 1: 𝑠𝑡 + 𝑠𝑡+1 − 𝑠𝑑−1 ≥ 𝐴𝑡 .
+   • (𝐵𝑗 ) 𝐾 = {𝑗} ∪ (𝑗 + 2..𝑑 − 2), 𝑗 + 2 ≤ 𝑚: 𝑠𝑗 + 𝑠𝑗+2 − 𝑠𝑑−1 ≥ 𝑎𝑗 + 𝐴𝑗+2 .
+   • (Weyl) 𝐼 = 𝐾 = {𝑗}, 𝐽 = {1}, i.e. the triple (𝑗; 1; 𝑗): 𝑠𝑗 ≥ 𝑎𝑗 for 1 ≤ 𝑗 ≤ 𝑚 (no other
+     𝑠-index occurs, since 𝐽 ∖ {1} = ∅).
+Proof. For 𝐾 = (𝑡..𝑑−2) the left side of (2.2) is (𝑠𝑡 +⋯+𝑠𝑑−2 )−(𝑠𝑡+2 +⋯+𝑠𝑑−1 ) = 𝑠𝑡 +𝑠𝑡+1 −𝑠𝑑−1
+                        𝑑−2
+and the right side is ∑𝑘=𝑡 𝜆𝑘 = 𝐴𝑡 because the zeros contribute nothing; the other cases are
+identical computations. □
+Lemma 4.2 (lower Weyl). 𝐼 = (1..𝑑 − 1), 𝐽 = 𝐾 = [𝑑] ∖ {𝑑 − 1}: 𝑠2 ≥ 𝑏2 .
+Proof. 𝜆(𝐼) = 0, 𝜆(𝐽 ) = 𝜆(𝐾) = (1), 𝑐 = 1; the sum condition ∑ 𝐼 + ∑ 𝐽 = ∑ 𝐾 + 𝑟(𝑟 + 1)/2
+holds with 𝑟 = 𝑑 − 1. The left side of (2.2) is (𝑠1 + ⋯ + 𝑠𝑑−1 ) − (𝑠1 + 𝑠3 + ⋯ + 𝑠𝑑−1 ) = 𝑠2 and
+the right side is −𝜆𝑑−1 = 𝑏2 . It is the Weyl inequality 𝜆𝑑−1 (𝐹 ) ≥ 𝜆𝑑 (𝑅) + 𝜆𝑑−1 (−𝑆). □
+Lemma 4.3 (Pieri triple). For even 𝑖 with 𝑖 + 2 ≤ 𝑑 − 1 let 𝑟 = 𝑑 − 𝑖 − 1 and
+
+        𝐼 = {𝑖 − 1} ∪ (𝑖 + 1..𝑑 − 2),     𝐽 = (1..𝑑 − 𝑖 − 2) ∪ {𝑑 − 𝑖},       𝐾 = (𝑖..𝑑 − 2).
+                                                                       𝜆(𝐾)
+Then 𝜆(𝐼) = ((𝑖 − 1)𝑟−1 , 𝑖 − 2), 𝜆(𝐽 ) = (1), 𝜆(𝐾) = ((𝑖 − 1)𝑟 ), so 𝑐𝜆(𝐼)𝜆(𝐽) = 1 by the Pieri rule,
+and (2.2) reads
+                               (Pi)𝑖 ∶     𝑠𝑖−1 + 𝑠𝑖+2 − 𝑠𝑑−1 ≥ 𝐴𝑖 ,
+which for 𝑖 + 2 = 𝑑 − 1 collapses to 𝑠𝑖−1 ≥ 𝐴𝑖 .
+Proof. The cardinalities are 𝑑 − 𝑖 − 1 each; with 𝑛 = 𝑑 − 𝑖, ∑ 𝐼 + ∑ 𝐽 − ∑ 𝐾 = −1 + 𝑛 +
+(𝑛−1      𝑛
+   2 ) = ( 2 ) = 𝑟(𝑟 + 1)/2. The partitions are read off from the definition (𝑖𝑟 = 𝑑 − 2 gives
+𝑖𝑟 − 𝑟 = 𝑖 − 1, and so on down to 𝑖1 − 1 = 𝑖 − 2; in 𝐽 only the last index exceeds its position,
+by one). 𝜆(𝐾)/𝜆(𝐼) is a single box, so the Pieri rule gives 𝑐 = 1 [Fu97]. The left side of (2.2) is
+                                                                                      𝑑−2
+𝑠𝑖−1 +(𝑠𝑖+1 +⋯+𝑠𝑑−2 )−(𝑠𝑑−1 +⋯+𝑠𝑖+3 )−𝑠𝑖+1 = 𝑠𝑖−1 +𝑠𝑖+2 −𝑠𝑑−1 , the right side ∑𝑘=𝑖 𝜆𝑘 = 𝐴𝑖 .
+□
+
+                                                   4
+Example (𝑑 = 6, 𝑖 = 2). Here 𝑟 = 3, 𝐼 = {1, 3, 4}, 𝐽 = {1, 2, 4}, 𝐾 = {2, 3, 4}. The associated
+partitions, with trailing zeros retained, are (1, 1, 0), (1, 0, 0) and (1, 1, 1). Adding one box in the
+third row is the unique Pieri step, so the coeﬀicient is one. The sum condition is 8 + 7 − 9 =
+6 = 3 ⋅ 4/2. With 𝑠6 = 0, the left side of (2.2) is
+
+                         (𝑠1 + 𝑠3 + 𝑠4 ) + (−𝑠6 − 𝑠5 − 𝑠3 ) = 𝑠1 + 𝑠4 − 𝑠5 .
+
+For inertia (4, 2) without padding, its right side is 𝑎2 +𝑎3 +𝑎4 = 𝐴2 . This gives the representative
+inequality 𝑠1 + 𝑠4 − 𝑠5 ≥ 𝐴2 with the complete Horn/Pieri data.
+The triple (Pi)𝑖 is not of Lidskii–Wielandt type (neither 𝐼 nor 𝐽 is an initial segment (1..𝑟)).
+Its membership in Fulton’s recursively defined 𝑇𝑟𝑑 was checked directly for 𝑑 ≤ 8 (author’s
+generator) and 𝑑 ≤ 9 (reviewer’s independent generator), and 𝑐 = 1 for 𝑑 ≤ 12 by both LR
+implementations. Several Horn triples share the 𝑠-form 𝑠𝑖−1 + 𝑠𝑖+2 − 𝑠𝑑−1 — for instance the
+Lidskii–Wielandt triple 𝐼 = 𝐾 = {𝑖 − 1, 𝑖 + 2}, 𝐽 = (1, 2), whose right side is only 𝜆𝑖−1 + 𝜆𝑖+2 ;
+the exhaustive enumeration of 𝑇𝑟𝑑 in pieri_triples_search.py lists all of them for 𝑑 ≤ 9 (6;
+12, 40; 32, 24; 94, 48, 160 triples for 𝑑 = 6, … , 9 and 𝑖 = 2, 4, …) and confirms that (Pi)𝑖 is the
+only one whose right side is 𝐴𝑖 . That a triple outside the Lidskii–Wielandt family is genuinely
+needed is visible in the linear program: restricted to the Lidskii–Wielandt-type triples (𝐼 = 𝐾,
+𝐽 = (1..𝑟) or 𝐽 = 𝐾, 𝐼 = (1..𝑟), which include all Weyl inequalities), the Horn LP (2.1) falls
+short of Φ by up to 11% at 𝐺-chamber points in 𝑑 = 6, 7 (same script, floating-point HiGHS).
+
+4.2 Certificates
+A certificate for a form is a list of the inequalities above whose sum has every 𝑠𝑡 -coeﬀicient at
+most 1 on the left and exactly the form on the right. Since ∑𝑡<𝑑 𝑠𝑡 minus the certificate’s left
+side is a nonnegative combination of the 𝑠𝑡 , every feasible 𝑠 then has cost ≥ the form.
+Proposition 4.4 (certificate for 𝐹𝑘 ).
+   • 𝑘 = 0: add Π1 , Π3 , Π5 , …, ending with 𝑠𝑚 ≥ 𝑎𝑚 if 𝑚 is odd. The sum is ∑𝑡≤𝑚 𝑠𝑡 −𝑁 𝑠𝑑−1 ≥
+     𝐴1 + 𝐴3 + ⋯ = 𝐹0 , 𝑁 the number of Π’s.
+   • 𝑘 ≥ 1: add [𝑠1 ≥ 𝑏1 ], 𝑇2 , … , 𝑇𝑘 , and Π𝑘+1 , Π𝑘+3 , …, ending with 𝑠𝑚 ≥ 𝑎𝑚 if 𝑚 − 𝑘 is odd.
+                                                𝑘
+     The sum is ∑𝑡≤𝑚 𝑠𝑡 − 𝑁 𝑠𝑑−1 ≥ 𝑏1 + ∑𝑗=2 (𝐴𝑗 − 𝑏2 ) + ∑𝑡≥𝑘+1, 𝑡−𝑘 odd 𝐴𝑡 = 𝐹𝑘 .
+Each index 1, … , 𝑚 occurs exactly once, no index above 𝑚 occurs with positive coeﬀicient, and
+∑𝑡<𝑑 𝑠𝑡 = [left side] + ∑𝑚<𝑡<𝑑 𝑠𝑡 + 𝑁 𝑠𝑑−1 ≥ 𝐹𝑘 .
+Proposition 4.5 (certificate for 𝐺𝑗 , 𝑗 odd). Add [𝑠2 ≥ 𝑏2 ], (Pi)𝑖 for every even 𝑖 < 𝑗, then
+𝐵𝑗 (replaced by 𝑠𝑗 ≥ 𝑎𝑗 if 𝑗 + 2 > 𝑚), then Π𝑗+3 , Π𝑗+5 , … (the last replaced by 𝑠𝑚 ≥ 𝑎𝑚 if
+needed). The indices used are 2; {1, 4}, {3, 6}, … , {𝑗 − 2, 𝑗 + 1}; {𝑗, 𝑗 + 2}; {𝑗 + 3, 𝑗 + 4}, … —
+each of 1, … , 𝑚 at most once — and the sum is
+
+         ∑ 𝑠𝑡 (+ 𝑠𝑚+1 ) − 𝑁 𝑠𝑑−1 ≥ 𝑏2 + ∑ 𝐴𝑖 + 𝑎𝑗 + 𝐴𝑗+2 +                  ∑         𝐴𝑖 = 𝐺 𝑗 .
+         𝑡≤𝑚                                   𝑖 even<𝑗                  𝑖 even≥𝑗+3
+
+The term +𝑠𝑚+1 is present exactly when 𝑗 = 𝑚 is odd and 𝑧 ≥ 1: it comes from (Pi)𝑚−1 , whose
+𝑠𝑖+2 = 𝑠𝑚+1 collapses against −𝑠𝑑−1 only when 𝑧 = 0. It is harmless for the lower bound (the
+coeﬀicient is still ≤ 1), but it matters for rigidity (Section 7).
+Proof of both propositions. Direct addition; the index bookkeeping is as displayed and the right
+sides are the tail-sum forms of Theorem A. The tail-sum and closed forms coincide: expanding
+𝐴𝑗 −𝑏2 = 𝑏1 −(𝑎1 +⋯+𝑎𝑗−1 ) in 𝐹𝑘 gives coeﬀicient −(𝑘−𝑖) = 𝑖−𝑘 for 𝑎𝑖 , 𝑖 ≤ 𝑘, and #{𝑡 ∈ [𝑘+1,
+𝑖] ∶ 𝑡 − 𝑘 odd} = ⌈(𝑖 − 𝑘)/2⌉ for 𝑖 ≥ 𝑘; the count for 𝐺𝑗 is similar (verified symbolically for 𝑚 ≤ 9
+in symbolic.py). □
+Corollary 4.6. 𝜅𝑑 (𝐹 ) ≥ Φ(𝑎; 𝑏) for all 𝑚 ≥ 2, 𝑧 ≥ 0.
+
+                                                  5
+Proof. Let 𝐶 be feasible with common spectrum 𝑠 (not necessarily 𝑠𝑑 = 0). The shifted pair
+𝑅 − 𝑠𝑑 1, −(𝑆 − 𝑠𝑑 1) has spectra 𝛼, 𝛽 built from 𝑠′ = 𝑠 − 𝑠𝑑 with 𝑠′𝑑 = 0 and sums to 𝐹 , so all
+inequalities of 4.1 hold for 𝑠′ , and 21 ‖𝐶‖2 = ∑𝑡≤𝑑 𝑠𝑡 ≥ ∑𝑡<𝑑 𝑠′𝑡 ≥ every form. □
+
+4.3 Write-outs for 𝑚 = 4
+The reviewer’s independent re-derivation (my_cert.py, own Fulton generator and own LR coef-
+ficients by the bialternant formula) produced all 168 certificates for 𝑚 ≤ 7, 𝑧 ∈ {0, 1, 2, 5}; the
+case 𝑚 = 4 at 𝑧 = 0, 1, 5 (𝑑 = 6, 7, 11) reads as follows, 𝑏1 eliminated via 𝑏1 = 𝑃 − 𝑏2 .
+𝐹2 :
+
+inequality    (𝐼; 𝐽 ; 𝐾)                                      𝑠-form                  right side
+𝑠1 ≥ 𝑏 1      (1..𝑑−1; 1..𝑑−1; 1..𝑑−1)                        𝑠1                   𝑎1 + 𝑎2 + 𝑎3 + 𝑎4 − 𝑏2
+𝑇2            (2..𝑑−1; 1..𝑑−2; 2..𝑑−1)                        𝑠2                   𝑎2 + 𝑎3 + 𝑎4 − 𝑏2
+Π3            (3..𝑑−2; 1..𝑑−4; 3..𝑑−2)                        𝑠3 + 𝑠4 − 𝑠𝑑−1       𝑎3 + 𝑎4
+sum                                                           𝑠1 +𝑠2 +𝑠3 +𝑠4 −𝑠𝑑−1 𝑎1 +2𝑎2 +3𝑎3 +3𝑎4 −2𝑏2 =
+                                                                                   𝐹2
+
+
+For 𝑑 = 6, 7, 11 the three Π3 triples are ((3, 4); (1, 2); (3, 4)), ((3, 4, 5); (1, 2, 3); (3, 4, 5)) and
+((3..9); (1..7); (3..9)).
+𝐺3 :
+
+inequality    (𝐼; 𝐽 ; 𝐾)                                      𝑠-form                  right side
+𝑠2 ≥ 𝑏 2      (1..𝑑−1; 1..𝑑−2, 𝑑; 1..𝑑−2, 𝑑)                  𝑠2                   𝑎1 + 𝑎2 + 𝑎3 + 𝑎4 − 𝑏1
+(Pi)2         (1, 3..𝑑−2; 1..𝑑−4, 𝑑−2; 2..𝑑−2)                𝑠1 + 𝑠4 − 𝑠𝑑−1       𝑎2 + 𝑎3 + 𝑎4
+Weyl          (3; 1; 3)                                       𝑠3                   𝑎3
+sum                                                           𝑠1 +𝑠2 +𝑠3 +𝑠4 −𝑠𝑑−1 𝑏2 + 𝑎2 + 2𝑎3 + 𝑎4 = 𝐺3
+
+
+For 𝑑 = 6, 7, 11 the Pieri triples are ((1, 3, 4); (1, 2, 4); (2, 3, 4)), ((1, 3, 4, 5); (1, 2, 3, 5); (2, 3, 4, 5))
+and ((1, 3, … , 9); (1, … , 7, 9); (2, … , 9)). In all cases the only index above 𝑚 = 4 is 𝑑 − 1 with
+coeﬀicient −1. The Weyl row is the Lidskii–Wielandt instance 𝐼 = 𝐾 = {3}, 𝐽 = {1} of Lemma
+4.1, as in the reviewer’s listing my_cert.log (version 1 misprinted it as (3; 3; 3), which is not a
+Horn triple: 3 + 3 ≠ 3 + 1).
+Each certificate is an exact dual-feasible vector of the program (2.1) (all multipliers 1 in 𝑠-units,
+1/2 in the 𝑝-units of [FourLevel]) with dual objective equal to the form; together with the primal
+points of Section 5 this shows that the LP value equals the form at every point of its chamber
+without any floating-point computation. The certificates coincide with the HiGHS dual solutions
+extracted by horn_duals_pad.py.
+
+5. Upper bound: 2 × 2-block weighted shifts
+5.1 The construction
+Partition the nonzero spectrum (optionally together with some zeros) into ordered layers Λ0 ,
+Λ1 , … , Λ𝑇 of size 1 or 2, with Λ0 nonpositive and Λ𝑇 nonnegative, and let 𝐷𝑡 = diag Λ𝑡 . Take
+         𝑇
+𝐶 = ∑𝑡=1 𝑀𝑡 block-bidiagonal with 𝑀𝑡 ∶ Λ𝑡−1 → Λ𝑡 . Then 𝐶𝐶 ∗ = ⨁𝑡 𝑀𝑡 𝑀𝑡∗ =∶ ⨁ 2𝑅𝑡 (with
+
+
+
+
+                                                         6
+𝑅𝑡 on Λ𝑡 ) and 𝐶 ∗ 𝐶 = ⨁𝑡 𝑀𝑡∗ 𝑀𝑡 =∶ ⨁ 2𝑆𝑡 (𝑆𝑡 on Λ𝑡−1 ), so 𝐶𝐶 ∗ − 𝐶 ∗ 𝐶 = 2𝐹 iff
+
+                                                 𝑆1 = −𝐷0 ,
+                                      𝑅𝑡 − 𝑆𝑡+1 = 𝐷𝑡 (1 ≤ 𝑡 < 𝑇 ),
+                                                                                                         (5.1)
+                                                 𝑅𝑇 = 𝐷𝑇 ,
+                             𝑅𝑡 and 𝑆𝑡 have the same nonzero spectrum.
+                                                                              √
+Conversely, given PSD 𝑅𝑡 , 𝑆𝑡 with equal nonzero spectra, 𝑀𝑡 = 𝑉               2Σ𝑊 ∗ realises them. The
+cost is
+                                         𝑇           𝑇
+                               1    2
+                               2 ‖𝐶‖  = ∑   Tr 𝑆𝑡 = ∑   ( − ∑ Tr 𝐷𝑢 ),
+                                        𝑡=1         𝑡=1     𝑢<𝑡
+
+a sum of layer partial sums — the block analogue of the excursion cost of [RankAdaptive].
+With singleton layers only this is the weighted shift of [RankAdaptive,OneSpike]. Eigenvalues
+of 𝐹 (zeros) not placed in any layer are left outside: 𝐶 vanishes on their span, which lies in
+ker 𝐶 ∩ ker 𝐶 ∗ , and (5.1) on the layers is then equivalent to 𝐶𝐶 ∗ − 𝐶 ∗ 𝐶 = 2𝐹 on all of ℂ𝑑 . We
+use three families of layerings:
+   • ℒ(𝐹0 ): {−𝑏1 , − 𝑏2 }, {𝑎1 , 𝑎2 }, {𝑎3 , 𝑎4 }, …;
+   • ℒ(𝐹𝑘 ), 𝑘 ≥ 1: {−𝑏1 }, {𝑎1 }, … , {𝑎𝑘−1 }, {𝑎𝑘 , − 𝑏2 }, {𝑎𝑘+1 , 𝑎𝑘+2 }, …;
+   • ℒ(𝐺𝑗 ), 𝑗 odd: {−𝑏2 } followed by the consecutive pairs of (𝑎0 , 𝑎1 , … , 𝑎𝑚 ), 𝑎0 ∶= −𝑏1 , with
+     𝑎𝑗 and 𝑎𝑗+1 transposed: {−𝑏1 , 𝑎1 }, {𝑎2 , 𝑎3 }, … , {𝑎𝑗−3 , 𝑎𝑗−2 }, {𝑎𝑗−1 , 𝑎𝑗+1 }, {𝑎𝑗 , 𝑎𝑗+2 }, {𝑎𝑗+3 ,
+     𝑎𝑗+4 }, … (for 𝑗 = 1: {−𝑏1 , 𝑎2 }, {𝑎1 , 𝑎3 }, {𝑎4 , 𝑎5 }, …; for 𝑗 = 𝑚: the pairs of (𝑎0 , … , 𝑎𝑚−2 )
+     followed by {𝑎𝑚−1 }, {𝑎𝑚 }).
+A trailing odd element forms a singleton layer. The layer partial sums are 𝐴1 , 𝐴3 , … for ℒ(𝐹0 );
+𝑏1 , 𝐴2 − 𝑏2 , … , 𝐴𝑘 − 𝑏2 , 𝐴𝑘+1 , 𝐴𝑘+3 , … for ℒ(𝐹𝑘 ); and 𝑏2 , 𝐴2 , 𝐴4 , … , 𝐴𝑗−1 , 𝑎𝑗 + 𝐴𝑗+2 , 𝐴𝑗+3 ,
+𝐴𝑗+5 , … for ℒ(𝐺𝑗 ). Hence cost(ℒ(𝑋)) = 𝑋 for each form 𝑋 (tail-sum form; verified symbolically
+for 𝑚 ≤ 9). In all three families rank 𝐶 = ∑𝑡 rank 𝑅𝑡 ≤ 𝑚.
+
+5.2 Feasibility as an interval recursion
+Lemma 5.0 (feasibility depends only on the spectra of the 𝑆𝑡 ). Fix a layering. By
+(5.1) the traces are forced, Tr 𝑆𝑡 = − ∑𝑢<𝑡 Tr 𝐷𝑢 and Tr 𝑅𝑡 = Tr 𝑆𝑡 , and 𝑅𝑡 may be any PSD
+matrix on √ Λ𝑡 with  the nonzero spectrum of 𝑆𝑡 (given 𝑆𝑡 = 𝑊 Σ𝑊 ∗ and such an 𝑅𝑡 = 𝑉 Σ𝑉 ∗ ,
+                  ∗
+𝑀𝑡 = 𝑉 2Σ𝑊 realises the pair); in particular rank 𝑆𝑡 ≤ |Λ𝑡 | is necessary. Hence the set of
+matrices 𝑆𝑡+1 = 𝑅𝑡 − 𝐷𝑡 ⪰ 0 attainable at step 𝑡 depends on the past only through the spectrum
+of 𝑆𝑡 , and for a two-element layer Λ𝑡−1 the only free datum is the smaller eigenvalue 𝜎2 (𝑆𝑡 ) (the
+larger one is Tr 𝑆𝑡 − 𝜎2 ). A layering is feasible iff the recursion of Lemmas 5.1–5.2, started at
+Λ0 , has a nonempty set of attainable 𝜎2 at every layer and meets the terminal condition at Λ𝑇 ;
+and because Lemma 5.2 is exact in both directions, every value in each attainable interval is
+realised by some solution of (5.1) — this is used in Section 7.
+Lemma 5.1 (step lemma). Let 𝑅 ⪰ 0 be 2 × 2 with eigenvalues 𝜎1 ≥ 𝜎2 and 𝐷 = diag(𝛿, 𝛿 ′ ),
+𝛿 ≥ 𝛿 ′ . With 𝜏1 ≥ 𝜏2 the eigenvalues of 𝑅 − 𝐷, 𝜏1 + 𝜏2 = 𝜎1 + 𝜎2 − 𝛿 − 𝛿 ′ and, as the eigenbasis
+of 𝑅 rotates, 𝜏2 takes exactly the values in [𝜎2 − 𝛿, min(𝜎1 − 𝛿, 𝜎2 − 𝛿 ′ )].
+Proof. With 𝑅 the rotation of diag(𝜎1 , 𝜎2 ) by angle 𝜃 and 𝑥 = cos2 𝜃,
+
+                       det(𝑅 − 𝐷) = (𝜎2 − 𝛿)(𝜎1 − 𝛿 ′ ) + (𝜎1 − 𝜎2 )(𝛿 − 𝛿 ′ ) 𝑥,
+                                                                          √
+aﬀine and nondecreasing in 𝑥 ∈ [0, 1]; the trace is fixed, so 𝜏2 = 21 (𝜏 − 𝜏 2 − 4 det) is continuous
+and monotone in 𝑥 and ranges over the interval between its values at 𝑥 = 0 (eigenvalues 𝜎2 − 𝛿,
+𝜎1 − 𝛿 ′ ) and 𝑥 = 1 (eigenvalues 𝜎1 − 𝛿, 𝜎2 − 𝛿 ′ ). The endpoints are the three Weyl bounds. □
+
+
+                                                      7
+Track, for each layer, the state (Tr, [𝑙𝑜, ℎ𝑖]): the trace of 𝑆𝑡 (forced: Tr 𝑆𝑡 = − ∑𝑢<𝑡 Tr 𝐷𝑢 ) and
+the set of attainable second eigenvalues 𝜎2 of 𝑆𝑡 (a 2 × 2 matrix when |Λ𝑡−1 | = 2; we always
+have 𝑙𝑜 ≤ ℎ𝑖 ≤ Tr /2).
+Lemma 5.2 (interval recursion). If 𝜎2 ranges over [𝑙𝑜, ℎ𝑖] and the next layer is the pair
+{𝛿 ≥ 𝛿 ′ }, the set of attainable 𝜏2 ≥ 0 for 𝑆𝑡+1 = 𝑅𝑡 − 𝐷𝑡 is the interval
+
+             [𝑙𝑜′ , ℎ𝑖′ ] = [ max(0, 𝑙𝑜 − 𝛿), min (ℎ𝑖 − 𝛿 ′ , Tr −𝛿 − 𝑙𝑜, (Tr −𝛿 − 𝛿 ′ )/2)],
+
+and the layer is feasible iff 𝑙𝑜′ ≤ ℎ𝑖′ . Transitions with singletons: Λ0 = {−𝑏} gives state (𝑏, [0,
+0]) and Λ0 = {−𝑏1 , − 𝑏2 } gives (𝑏1 + 𝑏2 , [𝑏2 , 𝑏2 ]); a singleton {𝛿} after a pair requires 0 ∈ [𝑙𝑜, ℎ𝑖]
+(rank-one 𝑆𝑡 ) and leads to the scalar Tr −𝛿 ≥ 0, whose successor pair starts from [0, 0]; the last
+layer {𝛿, 𝛿 ′ } requires 𝛿 ′ ∈ [𝑙𝑜, ℎ𝑖], and a last singleton is automatic given the trace.
+Proof. For fixed 𝜎 = 𝜎2 the fibre is [max(0, 𝜎 − 𝛿), min(Tr −𝛿 − 𝜎, 𝜎 − 𝛿 ′ )] by Lemma 5.1,
+nonempty iff 𝜎 ∈ [𝛿 ′ , Tr −𝛿]. Over the effective domain [max(𝑙𝑜, 𝛿 ′ ), min(ℎ𝑖, Tr −𝛿, Tr /2)] the
+endpoints vary continuously and the fibres are nonempty, so their union is an interval; its lower
+end is max(0, 𝑙𝑜 − 𝛿) (as 𝛿 ′ ≤ 𝛿) and its upper end is the maximum of the concave function
+𝜎 ↦ min(Tr −𝛿 − 𝜎, 𝜎 − 𝛿 ′ ) over the domain, which is the minimum of the three displayed
+quantities. If 𝑙𝑜′ ≤ ℎ𝑖′ then ℎ𝑖′ ≥ 0 forces ℎ𝑖 ≥ 𝛿 ′ , 𝑙𝑜 ≤ Tr −𝛿 and 𝛿 ′ ≤ Tr −𝛿, so the effective
+domain is nonempty and the formula is exact. The singleton rules are the rank-one cases of
+(5.1). □
+The recursion is implemented exactly (rational arithmetic) in layer_chain.feasible and, inde-
+pendently with the explicit domain intersection, in the reviewer’s my_construct.forward; the
+two agree on all 2708 boundary-heavy exact points of adversarial.py.
+Lemma 5.3 (pair chains from 𝑙𝑜 = 0). Consider a state (Tr, [0, ℎ]) followed by pair lay-
+ers {𝛿1 ≥ 𝛿1′ }, … , {𝛿𝑞 ≥ 𝛿𝑞′ } of nonnegative numbers, possibly followed by singleton layers of
+                                                                                           𝑞
+nonnegative numbers, with Tr the total of all these layers. The chain is feasible iff ℎ ≥ ∑𝑖=1 𝛿𝑖′ .
+Proof. Since 𝑙𝑜 = 0 propagates (max(0, 0 − 𝛿) = 0), write ℎ1 = ℎ and ℎ𝑖+1 = min(ℎ𝑖 − 𝛿𝑖′ ,
+  Tr𝑖 −𝛿𝑖 , (Tr𝑖 −𝛿𝑖 − 𝛿𝑖′ )/2), Tr𝑖 the trace before pair 𝑖. Let 𝑁𝑖 = ∑𝑖′ ≥𝑖 𝛿𝑖′′ . If ℎ𝑖 ≥ 𝑁𝑖 then
+ℎ𝑖+1 ≥ 𝑁𝑖+1 : the first term by hypothesis; Tr𝑖 −𝛿𝑖 is the sum of everything after 𝛿𝑖 , which
+contains all later 𝛿 ′ ; and (Tr𝑖 −𝛿𝑖 − 𝛿𝑖′ )/2 ≥ 𝑁𝑖+1 because the later layers contain, besides the 𝛿𝑖′′ ,
+the 𝛿𝑖′ ≥ 𝛿𝑖′′ . Hence all ℎ𝑖 ≥ 0, and the terminal condition (𝛿𝑞′ ∈ [0, ℎ𝑞 ] for a pair end, ℎ𝑞+1 ≥ 0
+for a singleton end) holds. Conversely ℎ𝑖+1 ≤ ℎ𝑖 − 𝛿𝑖′ gives ℎ𝑞 ≤ ℎ − ∑𝑖<𝑞 𝛿𝑖′ , so the terminal
+condition forces ℎ ≥ 𝑁1 . □
+
+5.3 Closed-form feasibility regions
+Proposition 5.4. Inside the stratum (0 < 𝑏2 ≤ 𝑏1 ):
+   1. ℒ(𝐹𝑘 ), 𝑘 ≥ 1, is feasible iff 𝐸𝑘+2 ≤ 𝑏2 ≤ 𝐸𝑘+1 .
+   2. ℒ(𝐺𝑗 ) is feasible iff 𝑏2 ≥ 𝐸1 − 𝑔𝑗 ; inside the stratum this forces 𝑔𝑗 = 𝑔∗ .
+   3. ℒ(𝐹0 ) is feasible iff 𝐸2 ≤ 𝑏2 ≤ 𝐸1 − 𝑔∗ .
+Proof of 1. The singleton chain {−𝑏1 }, {𝑎1 }, … , {𝑎𝑘−1 } has scalars 𝑏1 , 𝑏1 − 𝑎1 , … , 𝐴𝑘 − 𝑏2 ,
+nonnegative iff 𝑏2 ≤ 𝐴𝑘 . The mixed layer {𝑎𝑘 , − 𝑏2 } (𝛿 = 𝑎𝑘 , 𝛿 ′ = −𝑏2 ) starts from (𝐴𝑘 − 𝑏2 ,
+[0, 0]) and by Lemma 5.2 yields (𝐴𝑘+1 , [0, ℎ]) with ℎ = min(𝑏2 , 𝐴𝑘+1 − 𝑏2 , 𝐴𝑘+1 /2) = min(𝑏2 ,
+𝐴𝑘+1 − 𝑏2 ). The remaining pairs {𝑎𝑘+1 , 𝑎𝑘+2 }, … have ∑ 𝛿 ′ = 𝐸𝑘+2 , so by Lemma 5.3 the
+layering is feasible iff min(𝑏2 , 𝐴𝑘+1 − 𝑏2 ) ≥ 𝐸𝑘+2 , i.e. iff 𝐸𝑘+2 ≤ 𝑏2 ≤ 𝐴𝑘+1 − 𝐸𝑘+2 = 𝐸𝑘+1 ; this
+implies 𝑏2 ≤ 𝐴𝑘 , so the singleton chain is nonnegative whenever the whole layering is feasible.
+Boundary cases: for 𝑘 = 𝑚 − 1 there is no pair after the mixed layer, only the singleton {𝑎𝑚 },
+and Lemma 5.3 with 𝑞 = 0 gives feasibility iff ℎ ≥ 0, i.e. iff 𝑏2 ≤ 𝐴𝑚 = 𝐸𝑚 , in agreement with
+
+
+                                                    8
+𝐸𝑚+1 = 0; when 𝑚 − 𝑘 is odd the chain ends with the singleton {𝑎𝑚 }, covered by Lemma 5.3.
+(When 𝑏2 = 𝐴𝑘+1 /2 the third term of the recursion, not the second, is the binding one after the
+first pair; it never causes infeasibility, which is all that is needed.)
+Proof of 2. Let 𝑗 ≥ 3. After {−𝑏2 } the state is (𝑏2 , [0, 0]); the pair {−𝑏1 , 𝑎1 } (𝛿 = 𝑎1 , 𝛿 ′ = −𝑏1 )
+gives (𝐴2 , [0, ℎ]) with ℎ = min(𝑏1 , 𝑏2 − 𝑎1 , (𝑃 − 𝑎1 )/2) = 𝑏2 − 𝑎1 , the other two terms being
+dominated because 𝑏2 ≤ 𝑏1 . The later pairs have 𝛿 ′ -values 𝑎3 , 𝑎5 , … , 𝑎𝑗−2 , 𝑎𝑗+1 , 𝑎𝑗+2 , 𝑎𝑗+4 , …,
+which sum to 𝐸3 − (𝑎𝑗 − 𝑎𝑗+1 ) = 𝐸3 − 𝑔𝑗 (for 𝑗 = 𝑚 the trailing {𝑎𝑚−1 }, {𝑎𝑚 } are singletons and
+the sum is 𝐸3 − 𝑎𝑚 ). The tail of the chain is: for 𝑚 odd and 𝑗 ≤ 𝑚 − 2, pairs only (the last pair
+is {𝑎𝑚−1 , 𝑎𝑚 }); for 𝑚 even and 𝑗 ≤ 𝑚 − 3, pairs followed by the singleton {𝑎𝑚 }; for 𝑗 = 𝑚 − 1
+(𝑚 even), the pairs end with {𝑎𝑚−2 , 𝑎𝑚 } and the singleton {𝑎𝑚−1 } follows; for 𝑗 = 𝑚 (𝑚 odd),
+the pairs end with {𝑎𝑚−3 , 𝑎𝑚−2 } and the two singletons {𝑎𝑚−1 }, {𝑎𝑚 } follow (the scalar after
+the first singleton is 𝑎𝑚 ≥ 0, the last singleton is automatic). In each case the 𝛿 ′ -sum is 𝐸3 − 𝑔𝑗
+as displayed, the layer entries are nonnegative and the trace is the total, so Lemma 5.3 applies:
+feasible iff 𝑏2 − 𝑎1 ≥ 𝐸3 − 𝑔𝑗 , i.e. 𝑏2 ≥ 𝐸1 − 𝑔𝑗 . For 𝑗 = 1 the first pair is {−𝑏1 , 𝑎2 }, ℎ = min(𝑏1 ,
+ 𝑏2 − 𝑎2 , (𝑃 − 𝑎2 )/2) = 𝑏2 − 𝑎2 by the same argument, the later 𝛿 ′ -sum is 𝐸3 , and the condition
+is 𝑏2 ≥ 𝑎2 + 𝐸3 = 𝐸1 − 𝑔1 (for 𝑚 = 2 the tail is the single singleton {𝑎1 } and 𝐸3 = 0). Finally
+𝐸1 − 𝑔𝑗 ≤ 𝑏2 ≤ 𝑃 /2 = (𝐸1 + 𝐸2 )/2 gives ∑𝑗′ ≠𝑗 𝑔𝑗′ < 𝑔𝑗 or equality, so 𝑔𝑗 = 𝑔∗ .
+
+Proof of 3. The initial state is (𝐴1 , [𝑏2 , 𝑏2 ]) (this uses 𝑏2 ≤ 𝑏1 ). Let (𝐴2𝑡+1 , [𝑙𝑜𝑡 , ℎ𝑖𝑡 ]) be the state
+before the pair {𝑎2𝑡+1 , 𝑎2𝑡+2 }. By Lemma 5.2, 𝑙𝑜𝑡 = max (0, 𝑏2 − (𝑎1 + 𝑎3 + ⋯ + 𝑎2𝑡−1 )) and
+
+                                 ⎧          𝑏2 − (𝑎2 + ⋯ + 𝑎2𝑡 ),         ⎫
+                                 {                                        }
+                       ℎ𝑖𝑡 = min      𝐴2𝑟 − 𝑙𝑜𝑟−1 − (𝑎2𝑟+2 + ⋯ + 𝑎2𝑡 ),     .
+                                 ⎨                                        ⎬
+                                 {1𝐴                                      }
+                                 ⎩ 2 2𝑟+1 − (𝑎2𝑟+2 + ⋯ + 𝑎2𝑡 ) (1 ≤ 𝑟 ≤ 𝑡)⎭
+Induction for the displayed endpoints. Empty sums are zero, and all dotted sums above advance
+by two. At 𝑡 = 0 the minimum contains only 𝑏2 , so 𝑙𝑜0 = ℎ𝑖0 = 𝑏2 . Applying Lemma 5.2 to the
+next nonterminal pair gives
+                            𝑙𝑜𝑡+1 = max(0, 𝑙𝑜𝑡 − 𝑎2𝑡+1 ),
+                            ℎ𝑖𝑡+1 = min{ℎ𝑖𝑡 − 𝑎2𝑡+2 , 𝐴2𝑡+2 − 𝑙𝑜𝑡 , 12 𝐴2𝑡+3 }.
+The first identity proves the formula for 𝑙𝑜𝑡+1 . Subtracting 𝑎2𝑡+2 from every candidate in ℎ𝑖𝑡
+appends that term to each even-indexed tail sum; the other two candidates are precisely the
+displayed terms with 𝑟 = 𝑡 + 1 and an empty tail. This proves the closed form by induction
+at every retained state. Equivalently the formulas can be unfolded algebraically before testing
+feasibility; the terminal and intermediate checks below show that none of the required intervals
+is empty on the stated region.
+Terminal conditions. For 𝑚 even the last layer is the pair {𝑎𝑚−1 , 𝑎𝑚 } and requires 𝑙𝑜𝑞−1 ≤ 𝑎𝑚 ≤
+ℎ𝑖𝑞−1 , 𝑞 = 𝑚/2; for 𝑚 odd the last layer is the singleton {𝑎𝑚 } and requires 𝑙𝑜𝑞 = 0 ≤ ℎ𝑖𝑞 ,
+𝑞 = (𝑚 − 1)/2. The 𝑙𝑜 condition is 𝑏2 ≤ 𝑎1 + 𝑎3 + ⋯ + 𝑎𝑚−3 + 𝑎𝑚 = 𝐸1 − 𝑔𝑚−1 (𝑚 even) or
+𝑏2 ≤ 𝑎1 + ⋯ + 𝑎𝑚−2 = 𝐸1 − 𝑔𝑚 (𝑚 odd). In the ℎ𝑖 condition the first term gives 𝑏2 ≥ 𝐸2 ; the
+𝑟-th middle term gives, after simplifying 𝐴2𝑟 − (𝑎2𝑟+2 + 𝑎2𝑟+4 + … ) = 𝑎2𝑟 + 𝐸2𝑟+1 , the condition
+𝑏2 ≤ 𝑎1 + 𝑎3 + ⋯ + 𝑎2𝑟−3 + 𝑎2𝑟 + 𝐸2𝑟+1 = 𝐸1 − 𝑔2𝑟−1 for 𝑗 = 2𝑟 − 1 = 1, 3, … (𝑟 ≤ 𝑞 − 1 for 𝑚
+even, 𝑟 ≤ 𝑞 for 𝑚 odd); the third terms are automatic since 𝐴2𝑟+1 = 𝐸2𝑟+1 + 𝐸2𝑟+2 ≥ 2𝐸2𝑟+2 .
+Together the terminal conditions are exactly 𝐸2 ≤ 𝑏2 ≤ 𝐸1 − 𝑔𝑗 for every odd 𝑗 ≤ 𝑚, and they
+are necessary. Intermediate conditions. 𝑙𝑜𝑡 ≤ ℎ𝑖𝑡 for 𝑡 before the terminal index. If 𝑙𝑜𝑡 = 0
+each term of ℎ𝑖𝑡 exceeds the corresponding terminal term, so the terminal conditions suﬀice. If
+𝑙𝑜𝑡 = 𝑏2 − (𝑎1 + ⋯ + 𝑎2𝑡−1 ) > 0 then also 𝑙𝑜𝑟−1 > 0 for 𝑟 ≤ 𝑡 (𝑙𝑜 is nonincreasing), and the three
+conditions become: for the first term, 𝑎1 + 𝑎3 + ⋯ + 𝑎2𝑡−1 ≥ 𝑎2 + ⋯ + 𝑎2𝑡 , automatic; for the
+middle term with index 𝑟, after substituting 𝑙𝑜𝑟−1 ,
+              𝐴2𝑟 − (𝑎2𝑟+2 + ⋯ + 𝑎2𝑡 ) + (𝑎1 + ⋯ + 𝑎2𝑟−3 ) + (𝑎1 + ⋯ + 𝑎2𝑡−1 ) ≥ 2𝑏2 ,
+
+                                                       9
+                                                             𝑡−1
+whose left side minus 𝑃 equals ∑𝑖<𝑟 (𝑎2𝑖−1 − 𝑎2𝑖 ) + ∑𝑖=𝑟 (𝑎2𝑖+1 − 𝑎2𝑖+2 ) ≥ 0, so it holds because
+                                               𝑡                                   𝑟
+2𝑏2 ≤ 𝑃 ; for the third term, put 𝑂𝑡 = ∑𝑖=1 𝑎2𝑖−1 . Since 𝐴2𝑟+1 = 𝑃 − ∑𝑖=1 (𝑎2𝑖−1 + 𝑎2𝑖 ), the
+exact identity is
+                               𝑡
+                    1                           𝑃       1 𝑟
+                      𝐴2𝑟+1 − ∑ 𝑎2𝑖 + 𝑂𝑡 − 𝑏2 =   − 𝑏2 + ∑(𝑎2𝑖−1 − 𝑎2𝑖 )
+                    2        𝑖=𝑟+1
+                                                2       2 𝑖=1
+                                                             𝑡
+                                                         + ∑ (𝑎2𝑖−1 − 𝑎2𝑖 ) ≥ 0.
+                                                           𝑖=𝑟+1
+
+The first term is nonnegative because 𝑃 = 𝑏1 + 𝑏2 and 𝑏1 ≥ 𝑏2 ; the remaining differences are
+nonnegative by the ordering of the 𝑎𝑖 . Empty sums are zero, so this includes 𝑟 = 𝑡 and all
+equality cases. Thus the third candidate for ℎ𝑖𝑡 is at least 𝑙𝑜𝑡 = 𝑏2 − 𝑂𝑡 . Thus the intermediate
+conditions in the case 𝑙𝑜𝑡 > 0 are consequences of the stratum condition 𝑏2 ≤ 𝑏1 and not of
+the terminal conditions alone; on the stratum they are harmless. (For 𝑚 = 2 there is no
+intermediate step: the single pair {𝑎1 , 𝑎2 } is terminal and requires 𝑏2 = 𝑙𝑜0 ≤ 𝑎2 ≤ ℎ𝑖0 = 𝑏2 ,
+i.e. 𝑏2 = 𝑎2 = 𝐸2 = 𝐸1 − 𝑔1 , the degenerate 𝐹0 region.) □
+All three regions were re-derived independently by the reviewer’s recursion (my_construct.
+forward) and are checked against the exact recursion on a fine rational grid with every tie
+and boundary case, 𝑚 ≤ 10 (coverage_exact.py, Section 9).
+Proposition 5.5 (coverage). For every (𝑎, 𝑏) in the stratum some layering is feasible, and its
+cost is Φ(𝑎; 𝑏).
+Proof. Since 𝐸𝑚+1 = 0 < 𝑏2 : if 𝑏2 ≤ 𝐸2 then 𝑘∗ = max{𝑘 ≥ 1 ∶ 𝐸𝑘+1 ≥ 𝑏2 } ≤ 𝑚 − 1 exists and
+𝐸𝑘∗ +2 ≤ 𝑏2 ≤ 𝐸𝑘∗ +1 , so ℒ(𝐹𝑘∗ ) is feasible; if 𝐸2 ≤ 𝑏2 ≤ 𝐸1 − 𝑔∗ , ℒ(𝐹0 ) is feasible; if 𝑏2 ≥ 𝐸1 − 𝑔∗ ,
+ℒ(𝐺𝑗∗ ) is feasible. The three intervals cover (0, ∞) because 𝐸2 ≤ 𝐸1 − 𝑔∗ . The cost of the
+feasible layering is its form, which is ≤ Φ ≤ 𝜅𝑑 by Corollary 4.6, while the layering shows 𝜅𝑑 ≤
+its cost. □
+Proof of Theorem A. Corollary 4.6 and Proposition 5.5 give 𝜅𝑑 = Φ in 𝑑 = 𝑚 + 𝑧 + 2 for every
+𝑧; neither depends on 𝑧. The (2, 𝑛) case follows from 𝜅𝑑 (−𝐹 ) = 𝜅𝑑 (𝐹 ). □
+Because the regions in Proposition 5.4 are exact (both directions), the feasibility region of each
+layering coincides with the chamber of its form in Theorem B, and exactly the argmax layerings
+are feasible at every point — a fact checked at 400 exact points per 𝑚 ≤ 8, 300 per 𝑚 ≤ 13, and
+at 9567 grid points for 𝑚 ≤ 10 that include every breakpoint 𝐸𝑘 , 𝐸1 − 𝑔𝑗 , 𝑏1 = 𝑏2 , flat and tied
+spectra (coverage_exact.py). The end-to-end construction of 𝐶 (backward choice of the 𝜎2 ’s,
+rotation angles from the aﬀine determinant, SVD blocks) gives residuals ‖𝐶𝐶 ∗ − 𝐶 ∗ 𝐶 − 2𝐹 ‖ and
+| 12 ‖𝐶‖2 − Φ| at the 10−14 level away from tie points and ≤ 2 ⋅ 10−8 at exact ties, with rank 𝐶 = 𝑚.
+
+6. Chambers and exposedness: proof of Theorem B
+From the tail-sum forms, 𝐹1 − 𝐹0 = 𝑏1 − 𝐸1 = 𝐸2 − 𝑏2 and, for 𝑘 ≥ 2, 𝐹𝑘 − 𝐹𝑘−1 = (𝐴𝑘 −
+𝑏2 ) + ∑𝑡≥𝑘+1, 𝑡−𝑘 odd 𝐴𝑡 − ∑𝑡≥𝑘, 𝑡−𝑘 even 𝐴𝑡 = −𝑏2 + 𝑎𝑘+1 + 𝑎𝑘+3 + ⋯ = 𝐸𝑘+1 − 𝑏2 . Since 𝐸𝑘+1
+is nonincreasing in 𝑘, 𝑘 ↦ 𝐹𝑘 increases while 𝐸𝑘+1 ≥ 𝑏2 and decreases afterwards: unimodal
+with maximum at 𝑘∗ when 𝑏2 ≤ 𝐸2 and at 𝑘 = 0 when 𝑏2 ≥ 𝐸2 . From the closed forms
+𝐺𝑗 − 𝐺𝑗′ = 𝑔𝑗 − 𝑔𝑗′ , and since 𝐹0 = ∑𝑖 ⌈𝑖/2⌉𝑎𝑖 = ∑𝑖 ⌊𝑖/2⌋𝑎𝑖 + 𝐸1 , 𝐺𝑗 − 𝐹0 = 𝑏2 − 𝐸1 + 𝑔𝑗 . Hence
+for 𝑏2 ≤ 𝐸2 the maximum is 𝐹𝑘∗ (as 𝐸2 ≤ 𝐸1 − 𝑔∗ gives 𝐹0 ≥ 𝐺𝑗 for all 𝑗); for 𝐸2 ≤ 𝑏2 ≤ 𝐸1 − 𝑔∗
+it is 𝐹0 ; for 𝑏2 ≥ 𝐸1 − 𝑔∗ it is 𝐺𝑗∗ . This proves the chamber description.
+Exposedness. 𝐹𝑘 (1 ≤ 𝑘 ≤ 𝑚−1) is the unique maximiser on the open interval 𝐸𝑘+2 < 𝑏2 < 𝐸𝑘+1 :
+there 𝐹𝑘′ − 𝐹𝑘′ −1 = 𝐸𝑘′ +1 − 𝑏2 is > 0 for 𝑘′ ≤ 𝑘 and < 0 for 𝑘′ > 𝑘, and 𝐹0 > 𝐺𝑗 for every 𝑗
+because 𝑏2 < 𝐸2 ≤ 𝐸1 −𝑔𝑗 . The interval lies inside the stratum because 𝐸𝑘+1 ≤ 𝐸2 ≤ 𝑃 /2, and it
+
+
+                                                    10
+is nonempty iff 𝐸𝑘+1 > 𝐸𝑘+2 . Here the correct alternating-sum identities are 𝐸𝑘+1 −𝐸𝑘+3 = 𝑎𝑘+1
+and 𝐸𝑘+1 − 𝐸𝑘+2 = (𝑎𝑘+1 − 𝑎𝑘+2 ) + (𝑎𝑘+3 − 𝑎𝑘+4 ) + ⋯, the last term being 𝑎𝑚 > 0 when 𝑚 − 𝑘
+is odd (version 1 wrote 𝐸𝑘+1 − 𝐸𝑘+2 = 𝑎𝑘+1 , which is false: for 𝑎 = (4, 3, 2, 1) and 𝑘 = 1,
+𝐸2 − 𝐸3 = 2 ≠ 𝑎2 = 3). So the open 𝐹𝑘 chamber is nonempty whenever 𝑎𝑘+1 > 𝑎𝑘+2 or 𝑚 − 𝑘
+is odd, and empty exactly when 𝑚 − 𝑘 is even and every pair satisfies 𝑎𝑘+1+2𝑡 = 𝑎𝑘+2+2𝑡 for
+0 ≤ 𝑡 < (𝑚 − 𝑘)/2; an exposing point exists for every 𝑘, e.g. for 𝑎 = (𝑚, 𝑚 − 1, … , 1), where
+𝐸𝑘+1 − 𝐸𝑘+2 ≥ 1. 𝐹0 is the unique maximiser on 𝐸2 < 𝑏2 < 𝐸1 − 𝑔∗ , nonempty iff ∑𝑗 odd 𝑔𝑗 > 𝑔∗ ,
+i.e. iff at least two odd gaps are positive, possible iff 𝑚 ≥ 3; for 𝑚 = 2, 𝐸2 = 𝐸1 − 𝑔1 = 𝑎2
+and at that point 𝐹0 = 𝐹1 = 𝐺1 , so 𝐹0 is never a unique maximiser (indeed 𝐹0 ≤ max(𝐹1 , 𝐺1 )
+since 𝐹0 − 𝐹1 = 𝑏2 − 𝑎2 and 𝐹0 − 𝐺1 = 𝑎2 − 𝑏2 ). 𝐺𝑗 is the unique maximiser when 𝑏2 > 𝐸1 − 𝑔𝑗
+and 𝑔𝑗 > 𝑔𝑗′ for 𝑗′ ≠ 𝑗; a point with 𝐸1 − 𝑔𝑗 < 𝑏2 ≤ 𝑃 /2 exists iff ∑𝑗′ ≠𝑗 𝑔𝑗′ < 𝑔𝑗 , which is
+realised by 𝑎1 = ⋯ = 𝑎𝑗 = 1, 𝑎𝑗+1 = ⋯ = 𝑎𝑚 = 𝜀 (all 𝑎𝑖 = 1 when 𝑗 = 𝑚). This gives the
+count (𝑚 − 1) + ⌈𝑚/2⌉ + [𝑚 ≥ 3]; exact unique-argmax sampling (20000 rational points per 𝑚,
+rank_more.py) and the LP-dual counts in forms_m*_pad*.json return the same numbers 2, 5, 6,
+8, 9, 11, 12, 14. □
+For example, 𝑎 = (4, 3, 3, 1, 1) and 𝑘 = 1 give 𝐸2 = 𝐸3 = 4: the open 𝐹1 chamber is empty
+although the tail (3, 3, 1, 1) is not constant. The corrected criterion follows because 𝐸𝑘+1 − 𝐸𝑘+2
+is a sum of nonnegative pair differences, plus the positive unpaired last term when 𝑚 − 𝑘 is odd.
+It does not change the formula for the cost or the global count of exposed forms, which asserts
+existence over varying spectra.
+When are the 𝐺-forms active? Since 𝐺𝑗∗ ≥ 𝐹0 ⟺ 𝑏2 ≥ 𝐸1 − 𝑔∗ and 𝑏2 ≤ 𝑃 /2 = (𝐸1 + 𝐸2 )/2
+on the stratum, some 𝐺𝑗 attains Φ at some point of the stratum iff 𝐸1 − 𝑔∗ ≤ 𝑃 /2, i.e. iff
+∑𝑗≠𝑗∗ 𝑔𝑗 ≤ 𝑔∗ (the largest odd gap is at least the sum of the others); a 𝐺𝑗 is the unique
+maximiser somewhere iff this inequality is strict. When it holds with equality, the 𝐺-forms are
+active exactly on the line 𝑏1 = 𝑏2 , where they tie with 𝐹0 : for 𝑚 = 3, 𝑎 = (2, 1, 1), 𝑏1 = 𝑏2 = 2
+one has 𝑔1 = 𝑔3 = 1 and 𝐹0 = 𝐺1 = 𝐺3 = 5. In particular, if all ⌈𝑚/2⌉ odd gaps are equal
+to some 𝑔: for 𝑚 ∈ {3, 4} (two odd gaps) the 𝐺-forms are active only at 𝑏1 = 𝑏2 , tied with 𝐹0 ;
+for 𝑚 ≥ 5 and 𝑔 > 0 they are never active; and if 𝑔 = 0 (𝑚 even, 𝑎2𝑖−1 = 𝑎2𝑖 for all 𝑖) then
+𝐸1 = 𝐸2 = 𝑃 /2 and every 𝐺𝑗 ties with 𝐹0 at 𝑏1 = 𝑏2 . Version 1 stated that the 𝐺-forms are
+never active when all odd gaps are equal and 𝑚 ≥ 3; that statement omitted these tie cases.
+
+7. Rank and uniqueness: proof of Theorem C′
+Inertia bound. For any feasible 𝐶 and 𝑥 ∈ ker 𝐶 ∗ , ⟨2𝐹 𝑥, 𝑥⟩ = −‖𝐶𝑥‖2 ≤ 0, so 𝐹 ⪯ 0 on a
+subspace of dimension 𝑑 − rank 𝐶, whence rank 𝐶 ≥ 𝑛+ = 𝑚; symmetrically rank 𝐶 ≥ 𝑛− . This
+is the inertia obstruction, Lemma 2.1 of [RankOnset].
+(1) and (2). Let 𝐶 be an optimizer with common spectrum 𝑠. Then ∑𝑡≤𝑑 𝑠𝑡 = ∑𝑡<𝑑 (𝑠𝑡 −𝑠𝑑 )+𝑑
+𝑠𝑑 ≥ Φ + 𝑑 𝑠𝑑 by Corollary 4.6 applied to 𝑠 − 𝑠𝑑 , so 𝑠𝑑 = 0. Let 𝑋 be any form attaining Φ and
+consider its certificate, whose left side is 𝐿(𝑠) = ∑𝑡∈𝑈 𝑠𝑡 − 𝑁 𝑠𝑑−1 with 𝑈 ⊆ {1, … , 𝑚 + 1} the
+indices used with coeﬀicient +1 and 𝑁 ≥ 0 the number of −𝑠𝑑−1 terms (possibly 𝑁 = 0, e.g. for
+𝐹𝑚−1 ). Then ∑𝑡<𝑑 𝑠𝑡 − 𝐿(𝑠) = ∑𝑡<𝑑, 𝑡∉𝑈 𝑠𝑡 + 𝑁 𝑠𝑑−1 ≥ 0 and 𝐿(𝑠) ≥ 𝑋 = Φ = ∑𝑡<𝑑 𝑠𝑡 , so every
+coordinate 𝑠𝑡 with 𝑡 < 𝑑, 𝑡 ∉ 𝑈 vanishes (and 𝑠𝑑−1 = 0 also when 𝑁 ≥ 1). For every 𝐹𝑘 and
+every 𝐺𝑗 with 𝑗 < 𝑚, and for 𝐺𝑚 with 𝑧 = 0, the used indices are ⊆ {1, … , 𝑚} together with
+−𝑠𝑑−1 : hence 𝑠𝑡 = 0 for 𝑚 < 𝑡 < 𝑑 and rank 𝐶 = 𝑚. For 𝐺𝑚 with 𝑚 odd and 𝑧 ≥ 1 the used
+indices are {1, … , 𝑚 + 1} and −𝑠𝑑−1 with 𝑑 − 1 ≥ 𝑚 + 2: hence 𝑠𝑡 = 0 for 𝑚 + 2 ≤ 𝑡 ≤ 𝑑 − 1, and
+𝑠𝑚+1 is unconstrained by this argument. In all cases 𝑑 − 1 ∉ 𝑈 (as 𝑑 − 1 ≥ 𝑚 + 1, with equality
+only when 𝑧 = 0, where the 𝑠𝑚+1 term collapsed), so 𝑠𝑑−1 = 0 and rank 𝐶 = #{𝑡 ∶ 𝑠𝑡 > 0} ∈ {𝑚,
+𝑚 + 1}. If some form other than 𝐺𝑚 attains Φ its certificate forces 𝑠𝑚+1 = 0; this covers 𝑚
+even, 𝑧 = 0, and every point where 𝐺𝑚 is not the unique maximiser, in particular 𝑏2 ≤ 𝐸1 − 𝑎𝑚
+(where 𝐺𝑚 ≤ 𝐹0 ). The block construction has rank 𝑚, so 𝑟∗ = 𝑟0 = 𝑚 in every 𝑑, extending
+
+
+                                                11
+the 𝑑 ≤ 7 certificate of [RankOnset] (Theorem 3.1 there) to the whole stratum. The two cases
+(2) and (3) are exhaustive: for 𝑚 odd and 𝑧 ≥ 1, either 𝑏2 ≤ 𝐸1 − 𝑎𝑚 , where 𝐺𝑚 ≤ 𝐹0 and (2)
+applies, or 𝑏2 > 𝐸1 − 𝑎𝑚 , the open 𝐺𝑚 chamber of (3).
+(3) Rank-(𝑚 + 1) optimizers. The preceding certificate leaves 𝑠𝑚+1 free in this case; the
+following construction determines whether positive values are attainable. Let 𝑚 be odd, 𝑧 ≥ 1,
+and use the layering
+           ℒ′𝑚 ∶      {−𝑏2 }, {−𝑏1 , 𝑎1 }, {𝑎2 , 𝑎3 }, … , {𝑎𝑚−3 , 𝑎𝑚−2 }, {𝑎𝑚−1 , 0}, {𝑎𝑚 },
+i.e. ℒ(𝐺𝑚 ) with one zero eigenvalue placed inside the penultimate layer; the remaining zeros
+are left outside (they span ker 𝐶 ∩ ker 𝐶 ∗ ). Its cost is still 𝐺𝑚 . Number the layers Λ0 = {−𝑏2 },
+Λ1 = {−𝑏1 , 𝑎1 }, …, Λ𝑇 −1 = {𝑎𝑚−1 , 0}, Λ𝑇 = {𝑎𝑚 }, 𝑇 = (𝑚+3)/2. By Lemma 5.3 (the 𝛿 ′ -values
+after the first pair are 𝑎3 , … , 𝑎𝑚−2 , 0) it is feasible iff 𝑏2 − 𝑎1 ≥ 𝐸3 − 𝑎𝑚 , i.e. 𝑏2 ≥ 𝐸1 − 𝑎𝑚 , the
+closed 𝐺𝑚 region. Its rank is ∑𝑡 rank 𝑅𝑡 = ∑𝑡 rank 𝑆𝑡 , where rank 𝑆1 = rank 𝑆𝑇 = 1 (𝑆1 = 𝑏2 ;
+𝑆𝑇 must have rank one because Λ𝑇 is a singleton) and rank 𝑆𝑡 = 1+[𝜎2 (𝑆𝑡 ) > 0] for 2 ≤ 𝑡 ≤ 𝑇 −1.
+For 2 ≤ 𝑡 ≤ 𝑇 − 2 the layer Λ𝑡 following 𝑆𝑡 is a pair {𝑎2𝑡−2 , 𝑎2𝑡−1 } with 𝛿𝑡′ = 𝑎2𝑡−1 > 0, and the
+fibre of Lemma 5.2 is nonempty only when 𝜎2 (𝑆𝑡 ) ≥ 𝛿𝑡′ > 0; so these 𝑆𝑡 have rank 2 in every
+solution, and
+                                    𝑇 −2
+                     rank 𝐶 = 1 + ∑ 2 + rank 𝑆𝑇 −1 + 1 = 𝑚 + [𝜎2 (𝑆𝑇 −1 ) > 0],
+                                     𝑡=2
+where 𝑆𝑇 −1 lives on {𝑎𝑚−3 , 𝑎𝑚−2 } (on {−𝑏1 , 𝑎1 } when 𝑚 = 3). Its successor {𝑎𝑚−1 , 0} is
+followed by the singleton {𝑎𝑚 }, which needs 𝜏2 (𝑆𝑇 ) = 0; from 𝜎2 (𝑆𝑇 −1 ) = 𝜎 this is attainable iff
+𝜎 − 𝑎𝑚−1 ≤ 0 ≤ min(𝑎𝑚 − 𝜎, 𝜎) (Lemma 5.1 with Tr 𝑆𝑇 −1 = 𝑎𝑚−1 + 𝑎𝑚 ), i.e. iff 𝜎 ∈ [0, 𝑎𝑚 ]. So
+rank 𝑚+1 is attainable iff the upper end ℎ of the 𝜎2 -interval of 𝑆𝑇 −1 is positive, and 𝜎 = 0 always
+gives rank 𝑚. When 𝑏2 > 𝐸1 − 𝑎𝑚 the induction of Lemma 5.3 runs with strict inequalities
+(ℎ1 > 𝑁1 , and every later term exceeds 𝑁𝑖+1 by at least 𝑎𝑚 > 0 or by 12 (∑(𝛿 − 𝛿 ′ ) + 𝑎𝑚 ) > 0),
+so ℎ > 𝑁 = 0. When 𝑏2 = 𝐸1 − 𝑎𝑚 , ℎ ≤ ℎ1 − ∑𝑖<𝑞 𝛿𝑖′ = (𝑏2 − 𝑎1 ) − (𝐸3 − 𝑎𝑚 ) = 0, consistent
+with (2) since 𝐺𝑚 = 𝐹0 there. This proves (3); both directions are checked exactly on the grid
+of coverage_exact.py for odd 𝑚 ≤ 9.
+Example (the reviewer’s counterexample to the original rank claim). 𝜆 = (2, 2, 23 , 0,
+ − 25 , − 3): 𝑚 = 3, 𝑧 = 1, 𝑎 = (2, 2, 32 ), 𝑏 = (3, 52 ), 𝑔1 = 0, 𝑔3 = 32 , 𝐸1 − 𝑔3 = 2 < 𝑏2 = 52 ≤ 𝑏1 .
+The forms are 𝐹0 = 7, 𝐹1 = 13                       11                     15
+                                       2 , 𝐹2 = 2 , 𝐺1 = 6, 𝐺3 = 2 = 𝜅6 . The 𝐺3 certificate is
+                                                  5                     7
+[𝑠2 ≥ 𝑏2 ] + (Pi)2 + [𝑠3 ≥ 𝑎3 ], i.e. 𝑠2 ≥ 2 , 𝑠1 + 𝑠4 − 𝑠5 ≥ 2 , 𝑠3 ≥ 32 ; every 𝑠(𝑡) = ( 72 − 𝑡, 52 ,
+3                        1                                         15                           1          1
+2 , 𝑡, 0, 0), 0 ≤ 𝑡 ≤ 2 , makes all three tight with cost 2 . The endpoints 𝑡 = 0, 2 (and 𝑡 = 4 )
+satisfy all 522 Horn inequalities of 𝑑 = 6 exactly (rank_test.py, nonunique_check.py, rational
+arithmetic, two independent Horn generators), hence so does every 𝑡 ∈ [0, 12 ] by convexity of the
+Horn polyhedron; the LP maximum of 𝑠4 at cost 15                          1                   ′      5
+                                                             2 is exactly 2 . The layering ℒ3 = {− 2 }, {−3,
+               3                    1                                                    1
+2}, {2, 0}, { 2 } with 𝜎2 (𝑆2 ) = 4 (the midpoint of the admissible interval [0, 2 ]) can be solved in
+                                                          𝑝     𝑞
+closed form (exact_rank4_matrix.py): 𝑅1 = (                         ) with 𝑞 2 = 𝑝( 25 − 𝑝) is rank one, and
+                                                          𝑞 52 − 𝑝
+                                                 𝑢      𝑤
+det(𝑅1 −𝐷1 ) = 13                   11                                          13 1
+                     16 forces 𝑝 = 80 ; 𝑅2 = (𝑤 7 − 𝑢) with spectrum { 4 , 4 } and det(𝑅2 −𝐷2 ) = 0
+                                                      2
+forces 𝑢 = 99        2     455
+               32 , 𝑤 = 1024 . In the basis ordered (−𝑏2 , − 𝑏1 , 𝑎1 , 𝑎2 , 0, 𝑎3 ) the resulting real matrix
+is
+                                0           0                 0           0        0    0
+                           ⎛
+                           ⎜
+                              √                                                           ⎞
+                           ⎜
+                                110
+                                20          0                 0           0        0    0⎟⎟
+                           ⎜
+                           ⎜   √                                                          ⎟
+                                                                                          ⎟
+                           ⎜ 3 210                                                        ⎟
+                           ⎜    20          0                 0           0        0    0 ⎟
+                     𝐶=⎜   ⎜
+                                             √
+                                        15+91 165
+                                                           √     √
+                                                         39 35−5 231
+                                                                                          ⎟
+                                                                                          ⎟ ,
+                           ⎜    0                                         0        0    0 ⎟
+                           ⎜
+                           ⎜           √   480 √          √  480√                         ⎟
+                                                                                          ⎟
+                           ⎜
+                           ⎜ 0
+                                      5 3003−3 455      15 13+7 2145
+                                                                          0        0    0⎟⎟
+                                           480               480          √       √
+                                                                            35       13
+                           ⎝ 0              0                 0         − 4     − 4     0⎠
+
+                                                    12
+numerically 𝐶21 = 0.5244, 𝐶31 = 2.1737, 𝐶42 = 2.4665, 𝐶43 = 0.3224, 𝐶52 = 0.4375, 𝐶53 =
+0.7881, 𝐶64 = −1.4790, 𝐶65 = −0.9014. For this 𝐶, 𝐶𝐶 T − 𝐶 T 𝐶 − 2𝐹 = 0 exactly (verified
+symbolically), 21 ‖𝐶‖2 = 15    2 = Φ, rank 𝐶 = 4 = 𝑚 + 1, and the common spectrum is ( 4 , 2 ,
+                                                                                                       13 5
+3 1                                                                                            −15
+2 , 4 , 0, 0). The exact entries evaluated in double precision give residual 1.4 ⋅ 10              , and the
+                                                                        −15
+floating-point construction of my_construct.py gives 4.8 ⋅ 10 ; the four-decimal display alone
+gives 2.1⋅10−4 , so the full-precision entries (repro/data/rank4_optimizer_exact.json and rank4_
+optimizer_30digits.txt, 30 significant digits) are needed to reproduce the residual. The same
+construction gives rank-(𝑚 + 1) optimizers for 𝑚 = 5, 7 with 𝑧 = 1 (rank_more.py, residuals
+3 ⋅ 10−15 , 7 ⋅ 10−15 ; e.g. 𝑚 = 5: 𝑠 = (2.7, 2.4, 1.7, 1.2, 0.9, 0.2, 0, 0)). For 𝑧 = 0 the same 𝜆 without
+the zero has (Pi)2 reading 𝑠1 ≥ 𝐴2 and every optimizer has rank 3.
+(4) Uniqueness. By Horn suﬀiciency the optimal common spectra are the points of the optimal
+face of (2.1). 𝑚 = 2: in the 𝐹1 chamber (𝑏2 ≤ 𝑎2 ) the certificate is [𝑠1 ≥ 𝑏1 ] + [𝑠2 ≥ 𝑎2 ] and
+tightness gives 𝑠 = (𝑏1 , 𝑎2 , 0, … ); in the 𝐺1 chamber (𝑏2 ≥ 𝑎2 ) it is [𝑠2 ≥ 𝑏2 ] + [𝑠1 ≥ 𝑎1 ], giving
+𝑠 = (𝑎1 , 𝑏2 , 0, … ); unique for all 𝑧. 𝑚 = 3: 𝐹2 (𝑏2 ≤ 𝑎3 ): 𝑠 = (𝑏1 , 𝐴2 − 𝑏2 , 𝑎3 , 0, … ). 𝐹1
+(𝑎3 ≤ 𝑏2 ≤ 𝑎2 ): 𝑠1 = 𝑏1 , 𝑠2 + 𝑠3 = 𝐴2 = 𝑎2 + 𝑎3 with 𝑠4 = ⋯ = 0; the Weyl inequalities 𝑠2 ≥ 𝑎2 ,
+𝑠3 ≥ 𝑎3 pin 𝑠 = (𝑏1 , 𝑎2 , 𝑎3 , 0, … ). 𝐹0 (𝑎2 ≤ 𝑏2 ≤ 𝐸1 − 𝑔∗ ): 𝑠1 + 𝑠2 = 𝑃 , 𝑠3 = 𝑎3 ; with 𝑠1 ≥ 𝑏1
+and 𝑠2 ≥ 𝑏2 this pins 𝑠 = (𝑏1 , 𝑏2 , 𝑎3 , 0, … ). 𝐺1 (𝑏2 ≥ 𝑎2 + 𝑎3 ): 𝑠2 = 𝑏2 , 𝑠1 + 𝑠3 = 𝑎1 + 𝑎3 , pinned
+by Weyl to (𝑎1 , 𝑏2 , 𝑎3 , 0, … ). 𝐺3 with 𝑧 = 0: 𝑠 = (𝐴2 , 𝑏2 , 𝑎3 , 0, 0). All these pinning inequalities
+hold in every 𝑑, so the optimal spectrum is unique for 𝑚 = 3 whenever 𝑧 = 0 or 𝑏2 ≤ 𝐸1 −𝑎3 , and
+(3) shows non-uniqueness in the open 𝐺3 chamber for 𝑧 ≥ 1 (the family 𝑠(𝑡) above, or in general
+(𝐴2 − 𝜎, 𝑏2 , 𝑎3 , 𝜎, 0, … ) with 𝜎 ∈ [0, min(ℎ, 𝑎3 )]). 𝑚 ≥ 4: take 𝑘 = 𝑚 − 3 ≥ 1 and a point of the
+open 𝐹𝑚−3 chamber 𝑎𝑚−1 = 𝐸𝑚−1 < 𝑏2 < 𝐸𝑚−2 = 𝑎𝑚−2 + 𝑎𝑚 with 𝑎𝑚−2 > 𝑎𝑚−1 . In ℒ(𝐹𝑚−3 )
+the layer after the mixed layer is the pair {𝑎𝑚−2 , 𝑎𝑚−1 }, followed by the singleton {𝑎𝑚 }. Its
+state is (𝐴𝑚−2 , [0, ℎ]) with ℎ = min(𝑏2 , 𝐴𝑚−2 − 𝑏2 ) > 𝑎𝑚−1 , and the singleton requires 𝜏2 = 0,
+attainable from 𝜎2 = 𝜎 iff 𝜎 ∈ [𝑎𝑚−1 , min(𝑎𝑚−2 , 𝑎𝑚−1 + 𝑎𝑚 )]. Every 𝜎 ∈ [𝑎𝑚−1 , min(𝑎𝑚−2 ,
+𝑎𝑚−1 + 𝑎𝑚 , ℎ)], a nondegenerate interval, is attainable and gives an optimizer with common
+spectrum containing the pair (𝐴𝑚−2 − 𝜎, 𝜎); distinct 𝜎 give distinct spectra. (The corresponding
+𝐹𝑚−3 certificate ends with Π𝑚−2 and [𝑠𝑚 ≥ 𝑎𝑚 ], whose tightness 𝑠𝑚−2 + 𝑠𝑚−1 = 𝐴𝑚−2 leaves
+exactly this one degree of freedom; the “free split” of a certificate alone does not prove non-
+uniqueness, the construction does.) For 𝑚 = 4, 𝑎 = (4, 3, 2, 1), 𝑏2 = 25 : 𝑠 = ( 15        2 , 6 − 𝜎, 𝜎, 1, 0,
+0) is Horn-feasible for 𝜎 = 2, 94 , 52 (all 522 inequalities, nonunique_check.py), cost 29      2 = 𝐹1 . LP
+scans find non-unique optimal spectra at 37/60 random points for 𝑚 = 4, 𝑧 = 0 (active forms
+𝐹1 , 𝐺1 , 𝐺3 ; reviewer) and at 25/40 (𝑚 = 4) and 37/40 (𝑚 = 6) random points (author), at 3/80
+and 2/40 points for 𝑚 = 3 with 𝑧 = 1, 2 (all in the 𝐺3 chamber), and never for 𝑚 = 2 or for
+𝑚 = 3, 𝑧 = 0. □
+Remark (quantifier). “Every optimizer” refers to HS-optimizers of 21 ‖𝐶‖2 under 𝐶𝐶 ∗ − 𝐶 ∗ 𝐶 =
+2𝐹 . In the two-operator formulation inf ‖𝐴‖‖𝐵‖, unbalanced product optimizers (𝑠𝐴, 𝑠−1 𝐵) give
+𝐶 = 𝑠𝐴 + 𝑖𝑠−1 𝐵 of larger rank already for 𝐹 = diag(1, − 1), as noted in the audit of [OneSpike];
+the rank statements here are for the self-commutator formulation.
+
+8. Consistency checks
+𝑚 = 2 versus the four-level formula. On 𝜆 = (𝑎1 , 𝑎2 , − 𝑏2 , − 𝑏1 ): 𝜆1 − 𝜆3 = 𝑎1 + 𝑏2 = 𝐺1 ,
+𝜆2 −𝜆4 = 𝑎2 +𝑏1 = 𝐹1 , 𝜆1 −2𝜆2 −𝜆3 = 𝐺1 −2𝑎2 , 𝜆2 +2𝜆3 −𝜆4 = 𝐹1 −2𝑏2 , and 𝐹0 = 𝑃 ≤ max(𝐹1 ,
+𝐺1 ) (Section 6). So Φ = max(𝐹1 , 𝐺1 ) coincides identically with [FourLevel] Theorem 3.1; here
+𝜅4 = max(𝜆1 − 𝜆3 , 𝜆2 − 𝜆4 ).
+𝑚 = 3 versus the twelve five-level terms. The gap forms 𝑞1 , … , 𝑞6 and their reversals of
+[FiveLevel] Theorem 3.1, written as spectral forms on 𝜆 = (𝑎1 , 𝑎2 , 𝑎3 , − 𝑏2 , − 𝑏1 ), are (sympy,
+symbolic.py, d5_dominated_terms.py): five of them are our forms, 𝜌𝑞5 = 𝜆3 −𝜆4 −𝜆5 = 𝐹0 , 𝜌𝑞2 =
+𝜆2 + 𝜆3 − 𝜆5 = 𝐹1 , 𝜌𝑞4 = −𝜆1 + 𝜆3 − 2𝜆5 = 𝐹2 , 𝑞6 = 𝜆1 + 𝜆3 − 𝜆4 = 𝐺1 , 𝜌𝑞3 = 𝜆2 + 2𝜆3 − 𝜆4 = 𝐺3 ;
+
+
+                                                     13
+the other seven are dominated termwise by a single form on the stratum, hence exactly:
+
+     𝑞1 = 2𝜆1 − 2𝜆2 − 𝜆3 + 𝜆5 = 𝐺1 − 3𝑎2 − 3𝑎3 , 𝜌𝑞1 = −𝜆1 + 𝜆3 + 2𝜆4 − 2𝜆5 = 𝐹2 − 2𝑏2 ,
+     𝑞2 = 𝜆1 − 𝜆3 − 𝜆4 = 𝐺1 − 2𝑎3 ,                    𝑞3 = 𝜆2 − 2𝜆3 − 𝜆4 = 𝐺3 − 4𝑎3 ,
+     𝑞4 = 2𝜆1 − 𝜆3 + 𝜆5 = 𝐺1 − 𝑎2 − 3𝑎3 ,              𝑞5 = 𝜆1 + 𝜆2 − 𝜆3 = 𝐹0 − 3𝑎3 ,
+    𝜌𝑞6 = 𝜆2 − 𝜆3 − 𝜆5 = 𝐹1 − 2𝑎3 .
+
+(verify_mn2.py PART3 also checks both formulas against Φ at 3000 exact stratum points each.)
+One-spike limit. At 𝑏2 = 0, 𝐸𝑚+1 = 0 ≤ 𝑏2 ≤ 𝐸𝑚 selects 𝐹𝑚−1 = (𝑚 − 1)𝑃 + ∑𝑗<𝑚 (𝑗 −
+𝑚 + 1)𝑎𝑗 + 𝑎𝑚 = ∑𝑗 𝑗 𝑎𝑗 , the one-spike formula of [OneSpike] Theorem 3.1 after 𝐹 ↦ −𝐹 ; the
+certificate and the layering ℒ(𝐹𝑚−1 ) remain valid at 𝑏2 = 0, and the extension is also forced by
+continuity of 𝜅𝑑 on the chamber ([FourLevel] Theorem 2.2, [Ceiling] Section 2).
+Reduction 𝑎𝑚 → 0. At 𝑎𝑚 = 0 the forms of Φ𝑚 reduce to those of Φ𝑚−1 except 𝐹𝑚−1 , which
+becomes 𝐹𝑚−2 − 𝑏2 < 𝐹𝑚−2 , and (for 𝑚 odd) 𝐺𝑚 , which becomes 𝐺𝑚−2 − 𝑔𝑚−2 ≤ 𝐺𝑚−2 ; so
+Φ𝑚 |𝑎𝑚 =0 = Φ𝑚−1 , as padding invariance requires.
+Padding. The example of [RankOnset] Remark 3.3, (25, 18, 18, − 10, − 17, − 17, − 17)/7 with
+𝜅7 = 74/7 ≠ 𝜅8 = 73/7, has inertia (3, 4) and lies outside both the (𝑚, 2) stratum and its mirror
+(2, 𝑛); it does not contradict Theorem A. On our stratum the value is padding-invariant, while
+Section 7 shows that the optimizer set is not.
+
+9. Exact verification
+All checks use rational arithmetic unless stated otherwise.
+Author’s scripts (verify_mn2.py 8, lr.py, layer_chain.py 13 300). lr.py: the criterion
+ 𝜆(𝐾)
+𝑐𝜆(𝐼)𝜆(𝐽) > 0 reproduces Fulton’s recursive 𝑇𝑟𝑑 exactly for 𝑑 ≤ 7 (counts 3; 6, 6; 10, 21, 10; 15,
+56, 56, 15; 21, 126, 228, 126, 21; 28, 252, 751, 751, 252, 28) and gives 𝑐 = 1 for the Pieri triples
+for 𝑑 ≤ 12. PART1: for every form, 𝑚 ≤ 8, 𝑧 ∈ {0, 1, 2} (675 triples), the certificate list is
+generated and checked for the sum condition, 𝑐 ≥ 1, membership in 𝑇𝑟𝑑 for 𝑑 ≤ 8, all left
+coeﬀicients ≤ 1, and right side = form. PART2: at 400 exact points per 𝑚 ≤ 8, feasibility
+of each layering ⟺ its closed-form region, the argmax layering is feasible, chambers as
+in Theorem B. PART2b: explicit 𝐶 at 60 points per 𝑚 ≤ 8 with residuals ≤ 2 ⋅ 10−8 (float
+eigensolves at ties; 10−14 elsewhere) and rank 𝑚. PART3: the 𝑑 = 4 and 𝑑 = 5 formulas at
+3000 points each; the one-spike limit for 𝑚 ≤ 8. layer_chain.py: 300 random exact points per
+𝑚 ≤ 13, no point without a feasible layering, histogram of the number of feasible layerings.
+Reviewer’s scripts (independent implementations; the author’s code was imported only for com-
+parison). my_horn.py: own Fulton generator and own LR coeﬀicients (bialternant formula,
+Jacobi–Trudi), agreeing on the counts above. my_cert.py: all 168 certificates for 𝑚 ≤ 7, 𝑧 ∈ {0,
+1, 2, 5}, with a different elimination of 𝑏1 ; the systematic scan lists exactly the nine certificates
+with a +𝑠𝑚+1 term (𝐺3 , 𝐺5 , 𝐺7 at 𝑧 = 1, 2, 5). my_construct.py, adversarial.py: own inter-
+val recursion agreeing with the author’s on 2708 exact boundary-heavy points (𝑏1 = 𝑏2 , every
+𝑏2 = 𝐸𝑘 , every 𝑏2 = 𝐸1 − 𝑔𝑗 , flat 𝑎, ties, 𝑎𝑚 = 10−6 , one dominant 𝑎1 , geometric 𝑎, 𝑚 ≤ 12),
+no point without a feasible layering; 732 explicit matrices at boundary points with residuals
+≤ 8.4 ⋅ 10−9 and rank 𝑚. symbolic.py: all identities of Theorem B and of Section 8 symbolically
+for 𝑚 ≤ 9. lp_checks.py: an own float Horn LP at 600 random points for each of nine (𝑚,
+𝑧) pairs (5400 points, 𝑑 ≤ 7) agrees with Φ to 10−9 and returns exactly the forms 𝐹𝑘 , 𝐺𝑗 as
+dual gradients; uniqueness scans as quoted in Section 7. rank_test.py, rank_more.py: the exact
+rank-4 certificate and the rank-(𝑚 + 1) optimizers for 𝑚 = 3, 5, 7; exposed-form counts. The
+hive-LP duals of mn2_forms.py (m ≤ 9, 𝑧 ≤ 2) were the original source of the conjectured forms.
+
+
+
+                                                 14
+Scripts added in version 2 (all in repro/, run by run_all.py). exact_rank4_matrix.py: the rank-
+4 optimizer of Section 7 in closed form (sympy), residual exactly zero, entries written to data/
+with 30 significant digits. coverage_exact.py: for 2 ≤ 𝑚 ≤ 10, on a rational grid of 9567 points
+containing every breakpoint 𝐸𝑘 , 𝐸1 − 𝑔𝑗 and 𝑏1 = 𝑏2 , flat, tied, geometric and dominant-gap
+spectra, exact checks of cost = form, feasibility ⟺ region for every layering (Proposition
+5.4), coverage (Proposition 5.5), the chambers and comparison identities of Theorem B, the
+feasibility and rank-(𝑚 + 1) criteria of Theorem C′ (3) for odd 𝑚, the nondegenerate family of
+Theorem C′ (4) for 𝑚 ≥ 4, and the corrected activity criterion for the 𝐺-forms of Section 6.
+pieri_triples_search.py: exhaustive enumeration of 𝑇𝑟𝑑 (𝑑 ≤ 9) of all Horn triples sharing the
+𝑠-form of (Pi)𝑖 , and the Lidskii–Wielandt-only LP comparison of Section 4.1. The workshop’s
+own script check_horn.py (Fulton recursion up to 𝑑 = 7, 200 float LPs, exact Horn checks of the
+six spectra of Section 7) was rerun on the author’s machine and reproduces its published output
+(maximal LP discrepancy 7.1 ⋅ 10−15 ; log in logs/taller_check_horn.json).
+The received version reports that its reruns (repro/run_all.py) reproduce the outputs quoted
+above; its reported runtimes are listed in repro/README.md. The present workshop’s own reruns
+and their limits are itemized separately in the v003 revision report and verification records; the
+full runner was not repeated in this revision.
+
+10. Open questions
+   1. Inertia (𝑚, 3) and beyond. The certificate here uses one Pieri-type triple per even index; a
+      natural guess is that inertia (𝑚, 𝑛) requires triples adding 𝑛 − 1 boxes to a rectangle, and
+      that block shifts with blocks of size up to 𝑛 attain. Neither is known; the 𝑑 = 8 example
+      of [RankOnset] with 𝑟∗ > 𝑟0 has inertia (4, 4) and shows that the rank-𝑚 block picture
+      cannot persist unchanged.
+   2. A general interior formula for 𝜅𝑑 on the ordered chamber remains open beyond 𝑑 = 5; the
+      present result is the first infinite family of strata with a closed formula in which both signs
+      have multiplicity > 1.
+   3. Balanced stability constants 𝛾𝑁 . The optimal forward coeﬀicients of [Ceiling,Bal44,Bal55]
+      are known exactly for 𝑁 = 2, … , 5 (1/2, 17/36, 4/7, 113/152). Hive-LP computations
+      reported in the author’s line notes give the numerical values 𝛾6 = 9/10, 𝛾7 = 781/740,
+      𝛾8 = 317/264, 𝛾9 = 23/17, 𝛾10 = 3/2, with the extremal family switching at 𝑁 = 7 from
+      the (𝐴𝑁 , 𝐵) pairs to a (𝑢3 , 𝑧𝑁 ) family; these are numerical only, without exact certificates.
+   4. Classification of optimizers for 𝑚 ≥ 4: which chambers have a unique optimal spectrum,
+      and a description of the optimal face.
+   5. Which Horn triples are needed in general? On this stratum all facets are certified by Lidskii–
+      Wielandt, Weyl and a single Pieri family; whether the facets of 𝜅𝑑 on every stratum admit
+      certificates with LR coeﬀicient 1 and bounded “distance from Lidskii” is open.
+
+11. Reproducibility
+The directory repro/ accompanying this manuscript contains the author’s scripts (lr.py,
+layer_chain.py, verify_mn2.py, hive_core.py, check_horn_lp.py, mn2_forms.py, conj_formula.
+py, horn_duals_pad.py), the reviewer’s scripts (my_horn.py, my_cert.py, my_construct.py, rank_
+test.py, rank_more.py, lp_checks.py, adversarial.py, symbolic.py) with their logs, two small
+scripts written for this manuscript (nonunique_check.py, d5_dominated_terms.py), the three
+scripts added in version 2 (exact_rank4_matrix.py, coverage_exact.py, pieri_triples_search.
+py) with the data files they write in data/, the workshop script check_horn.py and its output,
+a runner run_all.py, and README.md with commands, measured runtimes and the expected
+final lines of every script. Dependencies: Python 3, numpy, scipy (HiGHS), sympy. Literature
+searches (2026-09-07, two queries on the inverse self-commutator problem with prescribed
+
+
+                                                 15
+spectrum and on block weighted shifts / Horn certificates) returned only generic material on
+almost-commuting matrices, commutator norm inequalities and Horn expositions.
+
+AI-assistance statement
+The received version declares substantial generative-AI assistance in drafting, mathematical
+derivations, code and review, attributed there to “Claude Fable 5.1” (Anthropic). That historical
+model identity, the reported review sessions and their independence have not been authenticated
+by this workshop. Historical descriptions of an “author” or “reviewer” script identify the supplied
+files, not a verified independent editorial review. OpenAI Codex assisted with the present private
+workshop revision: checking arguments and sources, correcting identified errors, running the
+checks recorded in the accompanying revision report, and preparing the PDF. Numerical checks
+support only their tested instances. This assistance is not an independent human peer review
+or a formal AIRR model-assessment report. Lluis Eriksson is the declared author and AIRR
+founder/operator; this conflict must be handled by the separate editorial process. Scientific
+authorship and approval remain with the author.
+The deposited v003 was subsequently assessed in actual OpenAI Codex calls by gpt-6-astra
+and gpt-5.6-sol on 9 September 2026. Their original reports and subsequent clarifications are
+retained. Both sets of comments informed this v004 revision; Astra had also participated in
+earlier manuscript preparation. A separate reviewing context does not erase that history. Neither
+the v003 reports nor this disclosure constitute approval of the revised v004 artifact.
+
+Changes in internal revision v004 (9 September 2026)
+  1. Expanded the third candidate inequality in Proposition 5.4(3) into its exact sum of ordered
+     differences, including empty sums and equality cases. The general identity has a direct
+     derivation and supplementary symbolic checks.
+Expanded the induction for both interval endpoints in Proposition 5.4(3) and supplied the
+complete d=6, i=2 Horn/Pieri example, including partitions, coeﬀicient and both sides of the
+inequality.
+The earlier deposited v003 and its model reports are retained. This revision responds to their
+findings; it is not a final acceptance.
+
+Changes in internal revision v003 (8 September 2026)
+  1. Corrected the exact criterion for an empty open 𝐹𝑘 chamber: equality within each indicated
+     pair, not constancy of the entire tail.
+  2. Added the exact counterexample (4, 3, 3, 1, 1) and the nonnegative-sum proof of the cor-
+     rected criterion.
+  3. Made the unpadded case an explicit alternative in Theorem C’(2), rather than implying
+     that it forces a different active form.
+  4. Clarified the rank argument and qualified historical AI-review provenance. The main cost
+     formula is unchanged.
+  5. Distinguished the operator-norm objective in [JOS13] from the mixed operator/Hilbert–
+     Schmidt objective in [AS15], and completed the latter’s bibliographic entry.
+
+Changes in version 2 (8 September 2026)
+Version 2 answers the items of the external workshop evaluation (TALLER-0004); the workshop’s
+page numbers refer to the version-1 PDF.
+
+
+
+                                                16
+  1. (Item: page 9, Section 6, identity 𝐸𝑘+1 − 𝐸𝑘+2 = 𝑎𝑘+1 .) Accepted: the identity was
+     false (𝑎 = (4, 3, 2, 1), 𝑘 = 1 gives 𝐸2 − 𝐸3 = 2 ≠ 3). The exposedness argument now
+     uses the correct identities 𝐸𝑘+1 − 𝐸𝑘+3 = 𝑎𝑘+1 and 𝐸𝑘+1 − 𝐸𝑘+2 = ∑(pair gaps) (+𝑎𝑚 ),
+     characterises exactly when the open 𝐹𝑘 chamber is empty, and exhibits explicit exposing
+     spectra. Theorems A, B, C′ are unchanged.
+  2. (Item: page 6, Weyl row (3; 3; 3).) Accepted: the triple is (3; 1; 3) (𝐼 = 𝐾 = {3}, 𝐽 = {1}),
+     as in Lemma 4.1 and in the reviewer’s my_cert.log; the Weyl item of Lemma 4.1 now
+     states 𝐼, 𝐽 , 𝐾 explicitly. No other certificate display was affected.
+  3. (Item: last sentence of Section 6.) Accepted: the sentence is replaced by the exact criterion
+     “some 𝐺𝑗 is active somewhere on the stratum iff ∑𝑗≠𝑗∗ 𝑔𝑗 ≤ 𝑔∗ , uniquely iff strict”, with the
+     tie cases (including the workshop’s example 𝑎 = (2, 1, 1), 𝑏1 = 𝑏2 = 2, 𝐹0 = 𝐺1 = 𝐺3 = 5)
+     spelled out.
+  4. (Item: page 11 matrix at full precision.) Accepted: the rank-4 optimizer is now given in
+     closed form (square roots of integers), with residual exactly zero; the workshop’s residual
+     2.15 ⋅ 10−4 from the four-decimal print is reproduced and explained; data files with 30
+     significant digits and the script are in repro/.
+  5. (Item: re-audit of Sections 5.2–5.3 and of Theorem C′ .) No mathematical error was found
+     in Lemmas 5.1–5.3, Proposition 5.4 or Proposition 5.5, but the exposition was tightened: a
+     new Lemma 5.0 states why feasibility reduces exactly to the interval recursion; the proofs
+     of Proposition 5.4 list every tail case (𝑘 = 𝑚 − 1; 𝑗 = 1, 𝑗 = 𝑚 − 1, 𝑗 = 𝑚; 𝑚 even/odd;
+     𝑚 = 2); the rank bookkeeping in the proof of Theorem C′ (3) was corrected (version 1
+     wrote rank 𝐶 = 1 + 2#{… } + 1; the correct count is rank 𝐶 = 𝑚 + [𝜎2 (𝑆𝑇 −1 ) > 0], because
+     every earlier 𝑆𝑡 has rank 2 in any solution), a misleading parenthetical in the proof of (1)–
+     (2) was removed, and the exhaustiveness of cases (2)/(3) is stated. A new exact-arithmetic
+     script (coverage_exact.py) checks all these statements on a fine rational grid with all ties
+     and boundaries for 𝑚 ≤ 10.
+  6. (Item: dependence on internal record codes.) The antecedent records are cited by descrip-
+     tive keys with theorem numbers and are restated where used; the reference list gives their
+     titles and ARR identifiers. The sentence citing a script (find_triples.py) that was not
+     part of the reproducibility package was replaced by a verifiable statement backed by pieri_
+     triples_search.py.
+  7. The workshop’s check_horn.py was rerun and agrees with its published results (Section 9).
+     The reproducibility package was completed (README with expected outputs, data files,
+     logs).
+
+References
+  • [FourLevel] L. Eriksson, The Exact Four-Level Inverse Commutator Cost: Horn–
+    Littlewood–Richardson Facets, Rank Transitions, and Sharp Loop Synthesis, AI Research
+    Record, ARR-2026-3M1EEG1T689ADSMW (2026). Cited: Lemma 2.1 (two-operator
+    reduction), Theorem 2.2 (Horn program), Theorem 3.1 (four-level formula).
+  • [FiveLevel] L. Eriksson, The Exact Five-Level Inverse Commutator Cost: Twelve Horn
+    Chambers, Optimal Rank, and the Sharp 5/2 Resource Tax, AI Research Record, ARR-
+    2026-37B8R0QTA894GTFF (2026). Cited: Theorem 3.1 (five-level formula).
+  • [RankAdaptive] L. Eriksson, Sharp Rank-Adaptive Bounds for Inverse Self-Commutators,
+    AI Research Record, ARR-2026-1D2QV1RP1292JREW (2026). Cited: Theorem 1.1 (rank-
+    adaptive bound), the weighted-shift construction of Section 4.
+  • [OneSpike] L. Eriksson, One-Spike Inverse Self-Commutators and Exact Three-versus-
+    Four-Kick Curvature Synthesis, AI Research Record, ARR-2026-7NPRNBW4488HG90K
+    (2026). Cited: Theorem 3.1 (one-spike formula and rigidity).
+  • [RankOnset] L. Eriksson, Sharp Onset and Unbounded Growth of Norm-Optimal Self-
+    Commutator Rank, AI Research Record, ARR-2026-5QQF95VHTC9GABH8 (2026).
+
+                                               17
+  Cited: Lemma 2.1 (inertia obstruction), Proposition 2.2 (Horn program in the 𝑠-
+  normalisation), Theorem 3.1 (𝑟∗ = 𝑟0 for 𝑑 ≤ 7), Theorem 4.1 (the 𝑑 = 8 phase), Remark
+  3.3 (padding example).
+• [Ceiling] L. Eriksson, Sharp inertia ceilings and optimal stability for inverse self-
+  commutators, AI Research Record, ARR-2026-24M24KDPZK8HDBQ9 (2026). Cited:
+  Theorem 1 (inertia ceiling), Section 2 (continuity), Theorem 3 (balanced stability
+  constants).
+• [Bal44] L. Eriksson, Polynomial vertex reduction and optimal stability at balanced inertia
+  (4,4), AI Research Record, ARR-2026-54Q3HMFJ0Z8CZB4T (2026).
+• [Bal55] L. Eriksson, Optimal stability and all equality cases at balanced inertia (5,5), AI
+  Research Record, ARR-2026-6ZJY1SSSJA98WBWX (2026).
+• [Ho62] A. Horn, Eigenvalues of sums of Hermitian matrices, Pacific J. Math. 12 (1962)
+  225–241.
+• [Kl98] A. A. Klyachko, Stable bundles, representation theory and Hermitian operators,
+  Selecta Math. (N.S.) 4 (1998) 419–445.
+• [KT99] A. Knutson, T. Tao, The honeycomb model of 𝐺𝐿𝑛 (ℂ) tensor products I: proof of
+  the saturation conjecture, J. Amer. Math. Soc. 12 (1999) 1055–1090.
+• [Fu00] W. Fulton, Eigenvalues, invariant factors, highest weights, and Schubert calculus,
+  Bull. Amer. Math. Soc. 37 (2000) 209–249.
+• [Fu97] W. Fulton, Young Tableaux, LMS Student Texts 35, Cambridge University Press,
+  1997 (Pieri rule).
+• [Li50] V. B. Lidskii, On the characteristic numbers of the sum and product of symmetric
+  matrices, Dokl. Akad. Nauk SSSR 75 (1950) 769–772.
+• [Wi55] H. Wielandt, An extremum property of sums of eigenvalues, Proc. Amer. Math.
+  Soc. 6 (1955) 106–110.
+• [We12] H. Weyl, Das asymptotische Verteilungsgesetz der Eigenwerte linearer partieller
+  Differentialgleichungen, Math. Ann. 71 (1912) 441–479.
+• [JOS13] W. B. Johnson, N. Ozawa, G. Schechtman, A quantitative version of the commuta-
+  tor theorem for zero trace matrices, Proc. Natl. Acad. Sci. USA 110 (2013) 19251–19255.
+• [AS15] O. Angel, G. Schechtman, The Hilbert–Schmidt version of the commutator the-
+  orem for zero trace matrices, Bull. London Math. Soc. 47 (2015), no. 4, 715–719;
+  doi:10.1112/blms/bdv045; arXiv:1503.07980.
+
+
+
+
+                                           18
+

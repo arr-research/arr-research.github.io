@@ -1,0 +1,66 @@
+--- deposited-v003/paper.md
++++ candidate-v004/paper.md
+@@ -2,7 +2,7 @@
+ 
+ **Lluis Eriksson** (Independent researcher)
+ 
+-8 September 2026 (internal workshop revision v003; received version 2 preserved)
++9 September 2026 (internal workshop revision v004; received version 2 and deposited v003 preserved)
+ 
+ ## Abstract
+ 
+@@ -141,9 +141,9 @@
+ 
+ The degree identity also holds for an arbitrary minimal basis, without assuming that it minimizes the interpolation problem: if $M$ has total column degree $e$, Proposition 5.4 gives $\deg(MH_o^{-1})\le e$. Conversely, take a minimal realization of $F_0=MH_o^{-1}$ of degree $n$ and denominator $\chi$. Lemma B makes the vector $w_I=\chi\operatorname{minor}_I(F_0)$ polynomial of degree at most $n$. Its primitive vector represents the same rational column space as $M$, so Lemma A(2) gives its degree as $e$. Thus $e\le n$, and $\deg F_0=e$ for every minimal basis. This is the version used in Theorem 5.7, where the rational column space is fixed independently of the interpolation minimum.
+ 
+-**Theorem 5.6 (same-state completion; Alpay–Jorgensen–Lewkowicz [AJL, Theorem 2.1 I]).** *Let $F$ be a $p\times m$ rational function, $p\ge m$, with all poles in $\mathbb D$ (Schur stable), and write $F(w)=D+C(wI-A)^{-1}B$. (i) $F$ is isometric on $\mathbb T$ iff it admits a minimal realization matrix $R=\begin{pmatrix}A&B\\ C&D\end{pmatrix}$ with $R^*R=I_{n+m}$. (ii) If so, there exist $\tilde B\in\mathbb C^{n\times(p-m)}$, $\tilde D\in\mathbb C^{p\times(p-m)}$ such that $\begin{pmatrix}A&B&\tilde B\\ C&D&\tilde D\end{pmatrix}$ is unitary.*
+-
+-Part (ii) is elementary: an isometry is completed to a unitary by an orthonormal basis of the orthogonal complement of its range; this is what the numerical pipeline does. To apply the theorem, note that if $F_0(z)=D+zC(I-zA)^{-1}B$ is our disc-convention realization, then $F_0(1/w)=D+C(wI-A)^{-1}B$ has the *same* realization matrix, is analytic at $w=\infty$, has all poles in $\mathbb D$ ($F_0$ is analytic on $\overline{\mathbb D}$), is isometric on $\mathbb T$ ($\mathbb T$ is invariant under $w\mapsto1/w$) and is minimal iff $F_0$ is. No paraconjugation is needed.
++**Theorem 5.6 (same-state completion; Alpay–Jorgensen–Lewkowicz [AJL, Theorem 2.1 I(i)--(ii), p. 5, equations (2.3)--(2.5)]).** *Let $F$ be a $p\times m$ rational function, $p\ge m$, with all poles in $\mathbb D$ (Schur stable), and write $F(w)=D+C(wI-A)^{-1}B$. (i) $F$ is isometric on $\mathbb T$ iff it admits a minimal realization matrix $R=\begin{pmatrix}A&B\\ C&D\end{pmatrix}$ with $R^*R=I_{n+m}$. (ii) If so, there exist $\tilde B\in\mathbb C^{n\times(p-m)}$, $\tilde D\in\mathbb C^{p\times(p-m)}$ such that $\begin{pmatrix}A&B&\tilde B\\ C&D&\tilde D\end{pmatrix}$ is unitary.*
++
++Part (ii) is elementary: an isometry is completed to a unitary by an orthonormal basis of the orthogonal complement of its range; this is what the numerical pipeline does. To apply the theorem, note that if $F_0(z)=D+zC(I-zA)^{-1}B$ is our disc-convention realization, then $F_0(1/w)=D+C(wI-A)^{-1}B$ has the *same* realization matrix, is analytic at $w=\infty$, has all poles in $\mathbb D$ ($F_0$ is analytic on $\overline{\mathbb D}$), is isometric on $\mathbb T$ ($\mathbb T$ is invariant under $w\mapsto1/w$) and is minimal iff $F_0$ is. No paraconjugation is needed. In AJL's notation $p=r$, $m=k$ and the state dimension is $n$; equation (2.3) makes the $(n+r)\times(n+k)$ matrix an isometry, and (2.4)--(2.5) add exactly $r-k$ input columns without changing $A$ or $C$. This identifies the same-state assertion used below.
+ 
+ **Theorem 1 (Grassmannian degree law).** *For every $k$, every $N$, every finite table of $k$-planes at distinct boundary nodes,*
+ $$d_{\min}=\delta_{\mathrm{Gr}} .$$
+@@ -163,6 +163,8 @@
+ 
+ Theorem 1 uses a minimal basis, which has no base points. In practice a witness pencil $P$ may be produced by any means (Lagrange interpolation, a random element of $V_{e_1}\times\dots\times V_{e_k}$), and the natural compiler is $P\mapsto PH_P^{-1}$ with $H_P$ the outer factor of $P^\sharp P$ (Theorem 5.1 in its semidefinite form; $H_P$ may then be singular at points of $\mathbb T$). The following statement, asserted by experiment in the first version and proved here, explains what the compiler returns.
+ 
++*Boundary convention.* All rational products $PH_P^{-1}$ below are understood after cancelling removable singularities. The outer factor has no zero in $\mathbb D$. If $\det H_P$ vanishes at $\xi\in\mathbb T$, then on a punctured boundary arc the identity $(PH_P^{-1})^*(PH_P^{-1})=I_k$ bounds every entry by one. An entry with a genuine pole at $\xi$ would be unbounded along that arc. Thus each possible pole is removable, and the isometry identity extends by continuity at $\xi$. There is no extra McMillan state from such a cancelled boundary factor.
++
+ **Theorem 6.1 (base-point law).** *Let $P\in\mathbb C[z]^{r\times k}$ be an admissible pencil ($\operatorname{rank}P(\zeta_i)=k$, $\operatorname{colspan}P(\zeta_i)=Y_i$), $V$ its column space, $M$ a minimal basis of $V$, $F_0=MH_o^{-1}$, and $g_P$ the gcd of the $k\times k$ minors of $P$ (its zeros are the base points of $P$; none lies at a node by Lemma A(4)). Then $PH_P^{-1}=F_0U_i$ with $U_i$ a $k\times k$ rational inner function, and*
+ $$\deg(PH_P^{-1})=\operatorname{fdeg}(P)+\#\{\text{zeros of }g_P\text{ in }\mathbb D\}\quad(\text{with multiplicity}).$$
+ *Base points on $\mathbb T\setminus\{\zeta_i\}$, outside $\overline{\mathbb D}$, or at $\infty$ (a drop of rank of the leading-coefficient matrix) are free; base points in $\mathbb D$ cost one state each. Since $\operatorname{fdeg}(P)\ge\delta_{\mathrm{Gr}}$ for every admissible $P$ (Lemma A), the compiler attains $d_{\min}$ iff $\operatorname{fdeg}(P)=\delta_{\mathrm{Gr}}$ and $P$ has no base point in $\mathbb D$.* The first condition holds automatically when $P=[f_1\cdots f_k]$ with $f_j\in V_{e_j}$, $\sum_je_j=\delta_{\mathrm{Gr}}$ and nonzero wedges at the nodes (the witnesses of Section 8; Lemma A gives $\operatorname{fdeg}(P)\le\sum_je_j$), but not for an arbitrary admissible pencil, which merely interpolates (Example 6.2).
+@@ -205,6 +207,8 @@
+ The dimensions $\dim V_{e'}$ of the graph data ($0$ for $e'<e$, $m_0$ for $e'=e$) were also checked by exact linear algebra for $k=2,3$ and $1\le L\le12$ (`repro/scratch_v2/taller_and_graph_witness.py`). Version 1 stated the theorem for $(2,4)$ and $3\le L\le7$ only, with the upper bound taken from the exact random witnesses of Section 8; those witnesses (now in `repro/witnesses/`) remain an independent confirmation that *random* data over $\mathbb Q(i)$ lie in the open set of the theorem, and the exact values $3,6,6,9$ for random data with $(k,r)=(3,6)$, $L=3,4,5,6$ (Table 2) confirm the case $k=3$.
+ 
+ The naive count $\dim\{\text{degree-}e\text{ maps}\}=4+4e\ge4L$ predicts $L-1$ (e.g. $3$ for $L=4$, $5$ for $L=6$) and is wrong: a cubic through four generic points would need splitting type $(0,3)$ or $(1,2)$, i.e. a nonzero element of $V_1$, which is generically $0$. The possible relation to quantum Schubert calculus [Be] is not used in this proof; the degree values here follow from the interpolation argument above.
++
++*Comparison with fixed-domain curve counts.* Buch--Pandharipande [BP-Tev, Section 1.1, Definition 1.1 and Theorem 1.4] study virtual Tevelev degrees with the marked domain fixed. Under $\mathrm{Gr}(2,4)\cong Q^4$, genus zero and $L\ge3$, the dimension constraint is $d=L-1$ and their quadric formula gives $(1+(-1)^d)/2$: one for odd $L$, zero for even $L$. This parity comparison helps place Theorem 7.4 in the existing literature. A vanishing virtual count is not by itself nonexistence of an interpolating morphism, nor does a nonzero virtual count prove the minimum or existence for every fixed node configuration considered here. Our minimum and fixed-node assertion follow from the explicit interpolation proof above; the construction of a rational inner router is an additional analytic step. No priority or equivalence claim is inferred from this comparison.
+ 
+ **Conjecture 7.5 (generic law).** Generic $\delta_{\mathrm{Gr}}=k\,e_0+\max(0,k-m_0)$, i.e. the bound of Proposition 7.3 is attained. The upper bound requires a witness tuple with $\min(k,m_0)$ columns in $V_{e_0}$ and the rest in $V_{e_0+1}$ having independent node values, a degree-$k$ multilinear rather than linear condition (quadratic when $k=2$); it is proved for $r=2k$ and every $L$ (Theorem 7.4: there $m_0\ge k$ and the formula reads $k\lfloor L/2\rfloor$), certified by exact computation for $(2,3,L=4,5,6)$ (values $2,3,4$), and confirmed redundantly on random data for $(2,4,L\le7)$ and $(3,6,L=3,4,5,6)$ (values $2\lfloor L/2\rfloor$ and $3,6,6,9$). For $k=1$ and for $r=kL$ the conjecture is the published law.
+ 
+@@ -292,6 +296,17 @@
+ 
+ The received version declares substantial generative-AI assistance in drafting, mathematical derivations, code and review, attributed there to “Claude Fable 5.1” (Anthropic). That historical model identity, the reported review sessions and their independence have not been authenticated by this workshop. Historical descriptions of an “author” or “reviewer” script identify the supplied files, not a verified independent editorial review. OpenAI Codex assisted with the present private workshop revision: checking arguments and sources, correcting identified errors, running the checks recorded in the accompanying revision report, and preparing the PDF. Numerical checks support only their tested instances. This assistance is not an independent human peer review or a formal AIRR model-assessment report. Lluis Eriksson is the declared author and AIRR founder/operator; this conflict must be handled by the separate editorial process. Scientific authorship and approval remain with the author.
+ 
++The deposited v003 was subsequently assessed in actual OpenAI Codex calls by gpt-6-astra and gpt-5.6-sol on 9 September 2026. Their original reports and subsequent clarifications are retained. Both sets of comments informed this v004 revision; Astra had also participated in earlier manuscript preparation. A separate reviewing context does not erase that history. Neither the v003 reports nor this disclosure constitute approval of the revised v004 artifact.
++
++## Changes in internal revision v004 (9 September 2026)
++
++1. Explained cancellation of removable boundary singularities using boundedness on a punctured unit-circle arc.
++2. Added a fixed-version comparison with Buch--Pandharipande's virtual Tevelev degrees, separating parity context from existence, minimality and the analytic router construction.
++
++Made the already cited AJL completion theorem more readily checkable by adding its page, subparts, equations and the dimension correspondence; retained the existing inversion-of-variable argument.
++
++The earlier deposited v003 and its model reports are retained. This revision responds to their findings; it is not a final acceptance.
++
+ ## Changes in internal revision v003 (8 September 2026)
+ 
+ 1. Corrected matrix multiplication order in Lemma 5.3.
+@@ -354,3 +369,5 @@
+ ARR-2026-52B6MSS1W197W9T2, L. Eriksson, *Exact Memory of Finite Spectral Routing Tables: The Direct-Sum Occupancy Law and Its Singular Strata*, 2026 (Theorem 1.2, Lemma 2.1, Lemma 3.1, Theorems 5.1–5.2, Limitation 8.2).
+ 
+ ARR-2026-6M3VGTXZ6W8JW9C9, L. Eriksson, *Projective Memory and Resonant Bottlenecks in Passive Spectral Routing*, 2026 (Definition 2.1, Lemma 2.2, Theorem 2.3, Corollary 2.4, Theorems 3.2, 4.1, 5.1, 9.2, 11.1).
++
++[BP-Tev] A. S. Buch and R. Pandharipande, *Tevelev degrees in Gromov-Witten theory*, arXiv:2112.14824v1 [math.AG], 2021, Sections 1.1 and 1.3, Theorem 1.4. [Fixed version](https://arxiv.org/abs/2112.14824v1).

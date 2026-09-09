@@ -1,0 +1,370 @@
+# Rank plus Weyl sparsity is at least $p+1$: an operator form of the Chebotarev-Tao uncertainty principle in prime dimension
+
+Lluis Eriksson (Independent researcher) - 9 September 2026.
+
+Internal revision v004; candidate for author approval.
+
+## Abstract
+
+Let $p$ be prime and let $W_{(a,b)}=X^aZ^b$ be the cyclic Weyl operators on $\mathbb C^p$. We prove that every nonzero linear combination $C$ of $\ell$ Weyl operators satisfies $\dim\ker C\le\ell-1$, i.e. $\operatorname{rank}C+s_W(C)\ge p+1$, where $s_W$ counts the nonzero Weyl coefficients. The collinear case is Tao's uncertainty principle on $\mathbb Z/p$ (Chebotarev's theorem on Fourier minors). The general case follows from the reduction-modulo-$(1-\omega)$ mechanism of Frenkel and Tao after two further observations: Weyl combinations stay integral under the non-unimodular Clifford conjugations $F'Q_s$, which realise all $p+1$ line directions of $\mathbb F_p^2$, and, in the nonvacuous sparsity range, a pigeonhole over those directions produces a nonzero fibre sum. The bound is sharp for every $\ell\le p$ and fails in every composite dimension. As a self-contained corollary, for one use of the $p^2$ Weyl channels the minimal perfect list length over probes of Schmidt rank $r$ is exactly $p-r+1$. An exact certificate refutes a natural "line conjecture".
+
+## 1. Introduction
+
+### 1.1 The result
+
+Fix a prime $p$, $\omega=e^{2\pi i/p}$, and the Weyl basis $W_{(a,b)}=X^aZ^b$ of $M_p(\mathbb C)$, where $X$ is the cyclic shift and $Z=\operatorname{diag}(\omega^j)$. Every matrix $C$ has a unique expansion $C=\sum_gc_gW_g$ over $g\in\mathbb F_p^2$; its **Weyl sparsity** $s_W(C)$ is the number of nonzero coefficients. The main result (Theorem 1, Section 3) is
+
+$$\operatorname{rank}C+s_W(C)\ \ge\ p+1\qquad\text{for every nonzero }C\in M_p(\mathbb C),$$
+
+with equality attained at every sparsity $1\le\ell\le p$ (Section 5.1). When the support lies on a line of $\mathbb F_p^2$, $C$ is (up to a Weyl translation and Clifford conjugation) a polynomial $f(Z)$ with $\ell$ monomials and the statement reduces to Tao's principle "an $\ell$-term polynomial has at most $\ell-1$ zeros among the $p$-th roots of unity", which is Chebotarev's theorem on the minors of the Fourier matrix. The new content is the non-collinear case. The proof (Section 4) is short: it is the Frenkel-Tao reduction-modulo-$p$ argument together with (i) the observation that the non-unimodular Clifford operators $U_s=F'Q_s$ (unnormalised Fourier matrix times a quadratic phase) conjugate Weyl combinations to Weyl combinations with the *same* coefficients up to $p$-th roots of unity, so integrality is preserved along all $p+1$ parallel classes of lines of $\mathbb F_p^2$, and (ii) a pigeonhole over the $p+1$ lines through a coefficient of minimal valuation, which guarantees a direction in which the reduced matrix is a nonzero circulant. Theorem 1' is the sharper valuation-theoretic form. Section 5 shows that the bound is sharp for every $\ell\le p$, that every intermediate corank is attained at exact sparsity $\ell$, that the multiplicative bound alone does not imply it (the multiplicative bound $\operatorname{rank}C\cdot s_W(C)\ge d$ holds in every dimension), and exactly where primality enters, matching the composite counterexamples of [0WE]. An exact certificate over $\mathbb Z[\omega_5]$ refutes the natural refinement "nullity $\le$ (largest collinear subset) $-1$" (Proposition 5).
+
+Section 6 gives a self-contained application to quantum list decoding: for one use of the $p^2$ channels $\operatorname{Ad}(W_g)$ with a pure probe of Schmidt rank $r$, the least list length admitting a perfect decoder, minimised over all such probes, is exactly $p-r+1$. The lower bound is Theorem 1 through a sparse-factorisation criterion (Lemma 6, a Weyl-covariant form of Lemma 9 and Corollary 11 of Johnston, Lovitz, Russo and Sikora [JLRS25]); the upper bound is an explicit decoder for the consecutive probe (Lemma 7, the mechanism of [3H0] Theorem 6.1). Both are proved here with their exact hypotheses.
+
+### 1.2 Antecedents
+
+**Vector-level uncertainty principles.** Chebotarev's theorem (1926) states that every minor of the $p\times p$ Fourier matrix $(\omega^{jk})$ is nonzero; see Stevenhagen and Lenstra [SL96] for the history and Frenkel [Fr04] for a half-page proof. Tao [Ta05] observed that it is equivalent to $|\operatorname{supp}f|+|\operatorname{supp}\hat f|\ge p+1$ for $f\ne0$ on $\mathbb Z/p$, proved it by reduction modulo the prime $(1-\omega)$ of $\mathbb Z[\omega]$, and showed the bound sharp. Frenkel's proof and Tao's are the same mechanism: after reduction, $x^p-1=(x-1)^p$, and an $m$-term polynomial cannot vanish to order $m$ at $x=1$ because the Euler operator $x\,d/dx$ applied $j<m$ times and evaluated at $1$ yields a Vandermonde system in the (distinct modulo $p$) exponents. The multiplicative bound $|\operatorname{supp}f|\,|\operatorname{supp}\hat f|\ge|G|$ for every finite abelian group is due to Donoho and Stark [DS89]; Meshulam [Me92, Me06] refined it for groups with nontrivial subgroups and extended it to nonabelian groups (rank-support form, [WW21, Thm. 3.9]); Ghobber and Jaming [GJ11] generalised Tao's theorem to pairs of bases of $\mathbb C^n$. Later variants of Chebotarev's theorem remain at the level of vectors: functions with symmetry (Garcia, Karaali and Katz [GKK21]), cyclic groups of composite order $pr$ (Loukaki [Lo25]), real and finite-field Fourier matrices (Emmrich and Kunis [EK25]), and finite-field-valued functions on $\mathbb Z/p$ (Quader, Russell and Sundaram [QRS19]).
+
+**Time-frequency shifts.** Krahmer, Pfander and Rashkov [KPR08] proved uncertainty principles for the short-time Fourier transform on finite abelian groups; on $\mathbb Z/p$ their Proposition 4.4 gives $\|V_gf\|_0\ge p(p+1)-\|f\|_0\|g\|_0$ when $\|f\|_0+\|g\|_0>p$, and $\|V_gf\|_0\ge p(p+1)-(p+1-\|f\|_0)(p+1-\|g\|_0)$ otherwise and their Theorem 4.5 gives $\|f\|_0+\|V_gf\|_0\ge p^2+1$ for a generic window $g$. Since $V_gf(\lambda)$ is, up to a phase, the Weyl coefficient of the rank-one operator $f\otimes\bar g$ at $\lambda$, these are statements about the Weyl support of *rank-one* operators, stronger than Theorem 1 in that case and silent for rank $\ge2$. Lawrence, Pfander and Walnut [LPW05] proved that generic Gabor systems in prime dimension are full spark, and Malikiosis [Ma15] extended this to every dimension; these concern linear independence of the *vectors* $W_gv$, not the rank of the *operators* $\sum_gc_gW_g$.
+
+**Operator-level antecedents.** A directly related published inequality between operator rank and Weyl (Pauli) support is multiplicative: Bu's "uncertainty principle for Pauli rank" [Bu24, arXiv v1, Theorem 1, equation (2)] states, for an $n$-qudit *state* $\rho$ expanded in the Heisenberg-Weyl basis, $\log\operatorname{rank}\rho+\log\chi_P(\rho)\ge n\log d$, with equality exactly for stabiliser states, where $\chi_P$ counts the nonzero Weyl coefficients. In Bu's Section II normalization, $\Xi_\rho(g)=\operatorname{Tr}(\rho w(g)^*)$ and $\rho=d^{-n}\sum_g\Xi_\rho(g)w(g)$. For $n=1,d=p$, changing $w(g)$ to $X^aZ^b$ changes only nonzero phases and the indexing; our expansion coefficients are $p^{-1}\Xi_\rho(g)$ up to those phases. Thus $\chi_P(\rho)=s_W(\rho)$, including the identity coefficient, and exponentiating gives $\operatorname{rank}\rho\,s_W(\rho)\ge p$. This is the field-free bound $\operatorname{rank}C\cdot s_W(C)\ge d$ of Section 5.2 restricted to positive operators (the proof there is the same Cauchy-Schwarz argument), and it is exactly the kind of bound that Section 5.2 shows cannot yield the additive law. Meshulam's nonabelian rank-support inequality, applied to a function on the Heisenberg group of order $p^3$ supported on $\ell$ lifts of the labels, bounds $\ell$ times the total rank of its convolution operator, summed over all irreducible representations; it does not bound the rank of the single $p$-dimensional block $\sum_gc_gW_g$. Among the sources consulted, we found no statement of $\operatorname{rank}C+s_W(C)\ge p+1$ for general operators, or of the corresponding Chebotarev-type theorem for the twisted group algebra of $\mathbb F_p^2$. This bounded search does not establish priority (Appendix A).
+
+**The Weyl records.** Two earlier records of the author study one use of the $d^2$ Weyl channels $\operatorname{Ad}(W_g)$ with an entangled probe and a final list-valued measurement. Record ARR-2026-3H0ZKWJMH18MH9FX [3H0] proves in its Theorem 6.1 that for the consecutive probe $|\Phi_r\rangle=r^{-1/2}\sum_{x<r}|x\rangle|x\rangle$ a perfect one-use list decoder exists iff $\ell\ge d-r+1$; its Remark 6.4 exhibits, when $r\mid d$, an arithmetic-support probe of the same Schmidt rank with the smaller threshold $d/r$, and its Corollary 6.5 shows that $d/r$ is optimal among all probes of Schmidt rank $r$ when $r\mid d$. The optimum over probes in the nondivisible branch $r\nmid d$ was left open, pinned between $\lceil d/r\rceil$ and $d-r+1$. Record ARR-2026-0WESHW4YMM9FG8EK [0WE] reduces the list problem to a rank problem through its equation (8), the Weyl-covariant form of the factor-width criterion of [JLRS25] (re-derived here as Lemma 6), and proves rank laws for sparsity $s_W\le3$: Corollary 2.1 (a non-commuting Weyl trinomial in prime dimension has nullity at most one), Theorem 3 (for $d=p^k$ the coranks of nonzero matrices with $s_W\le3$ are exactly $p^j$ and $2p^j$, $0\le j<k$, for odd $p$), the two-label criterion (rank $r<d$ admits two labels iff $(d-r)\mid d$), and composite-dimension trinomials with large kernels.
+
+Two elementary facts frame what was open. The field-free bound $\operatorname{rank}(C)\cdot s_W(C)\ge d$ settles the sparsities $\ell\in\{p-1,p\}$, and $\ell\le3$ is settled by [0WE] Corollary 2.1 together with Chebotarev's theorem for collinear supports. Hence for $p\le5$ the law was already a theorem by assembly, and the open cases were $4\le\ell\le p-2$, the first being $p=7$, $\ell\in\{4,5\}$.
+
+**Calibration.** We describe the contribution as a short, apparently new corollary of the Frenkel-Tao reduction-mod-$p$ method; the new ingredients are the integrality of Weyl combinations under the non-unimodular Clifford conjugations $F'Q_s$ and the pigeonhole over the $p+1$ directions. The literature searches (above and Appendix A) found no prior statement of the operator inequality, but a bounded negative search does not certify priority. Appendix A records how the manuscript was produced.
+
+## 2. Setting
+
+Throughout, $p$ is a prime, $\omega=e^{2\pi i/p}$, and $X,Z$ act on $\mathbb C^p$ by $X|j\rangle=|j+1\bmod p\rangle$, $Z|j\rangle=\omega^j|j\rangle$. They satisfy $ZX=\omega XZ$. The cyclic Weyl basis is $W_{(a,b)}=X^aZ^b$, $(a,b)\in\mathbb F_p^2$; it is orthogonal for the trace form, $\operatorname{Tr}(W_g^*W_h)=p\,\delta_{gh}$, and it is the fixed basis of [0WE] and [3H0] (a tensor product of qubit Pauli bases is a different setting and is not considered). For $C\in M_p(\mathbb C)$ write $C=\sum_gc_gW_g$; the **Weyl support** is $S(C)=\{g:c_g\ne0\}$ and the **Weyl sparsity** is $s_W(C)=|S(C)|$. Products of Weyl operators are Weyl operators up to powers of $\omega$: $W_gW_h=\omega^{\langle g,h\rangle}W_{g+h}$ for a bilinear form $\langle\cdot,\cdot\rangle$ on $\mathbb F_p^2$, and $W_g^{-1}=W_g^*$ is a phase times $W_{-g}$. Consequently $\operatorname{Tr}(CW_g)=p\,\omega^{\langle-g,g\rangle}c_{-g}$, so $\{g:\operatorname{Tr}(CW_g)\ne0\}=-S(C)$.
+
+**Symmetries of the problem.** Three kinds of operations preserve rank and nullity and act on the Weyl support:
+
+* *Translations.* Left multiplication by $W_h^{-1}$ (invertible) maps $\sum_gc_gW_g$ to $\sum_gc_g\,\phi_{g,h}W_{g-h}$ with phases $\phi_{g,h}\in\mu_p$: the support is translated by $-h$, the coefficients are multiplied by roots of unity, and the kernel is unchanged. Right multiplication translates the support in the same way and preserves the rank.
+* *Clifford conjugations.* A unitary $U$ with $UW_gU^{-1}\in\mathbb C\,W_{Mg}$ for all $g$, $M\in SL_2(\mathbb F_p)$, is a Clifford operator; conjugation by it permutes the Weyl basis up to phases, maps the support to $MS$ (a *linear* map, fixing the origin), and preserves Weyl sparsity, rank and nullity. Every $M\in SL_2(\mathbb F_p)$ is realised. For odd $p$, we use the following explicit matrices over $\mathbb Q(\omega)$: the unnormalised Fourier matrix $F'=(\omega^{jk})_{j,k}\in M_p(\mathbb Z[\omega])$, with $F'^{-1}=p^{-1}F'^*$, and the unitary quadratic phases $Q_s=\operatorname{diag}(\omega^{s\cdot2^{-1}j^2})_j$ for $s\in\mathbb F_p$, where $2^{-1}$ is the inverse of $2$ modulo $p$ ($p$ odd). The Fourier matrix $F'$, and hence $F'Q_s$, is invertible but not unitary. Their conjugation action is computed in Section 4, Step 3.
+* *Transposition and Galois action.* Transposition realises a determinant $-1$ label map, and the Galois automorphisms $\omega\mapsto\omega^t$ realise the other determinants (they preserve the rank of matrices with algebraic entries; Step 1 of the proof shows this suffices).
+
+Together these generate the affine group $\mathrm{AGL}(2,p)$ acting on supports; the maximal nullity over full-support coefficient vectors is an $\mathrm{AGL}(2,p)$-invariant of the support (used in Section 7(d)). Note that a line of $\mathbb F_p^2$ not through the origin can be moved onto the $Z$-axis $\{(0,b)\}$ only by a translation *followed by* a Clifford conjugation; conjugation alone fixes the origin.
+
+**Lines and directions.** The affine plane $\mathbb F_p^2$ has $p+1$ parallel classes of lines (directions), one for each nonzero linear form $\lambda:\mathbb F_p^2\to\mathbb F_p$ up to scalars: the fibres $\lambda^{-1}(t)$, $t\in\mathbb F_p$, are the $p$ lines of that class. For a subset $S$ let $N_\lambda(S)$ be the number of $\lambda$-fibres that meet $S$. Any two lines through a common point $g_0$ with different directions meet only in $g_0$, so the $p+1$ lines through $g_0$ partition $\mathbb F_p^2\setminus\{g_0\}$.
+
+**Valuation rings.** Let $K$ be a field containing $\mathbb Q(\omega)$. A valuation ring $\mathcal O\subset K$ with maximal ideal $\mathfrak m$ and residue field $k=\mathcal O/\mathfrak m$ is called **admissible** if $1-\omega\in\mathfrak m$. Since $p=\prod_{j=1}^{p-1}(1-\omega^j)$ and each factor is a unit of $\mathbb Z[\omega]$ times $1-\omega$, admissibility forces $p\in\mathfrak m$, so $k$ has characteristic $p$ and contains $\mathbb F_p$; moreover $\omega\equiv1\pmod{\mathfrak m}$, hence $\bar Z=I$ and every power of $\omega$ reduces to $1$. Write $v$ for the valuation and $x\mapsto\bar x$ for reduction $\mathcal O\to k$, extended entrywise to matrices. Two rank facts are used: for $A\in M_p(\mathcal O)$, $\operatorname{rank}_KA\ge\operatorname{rank}_k\bar A$ (a nonzero minor of $\bar A$ lifts to a minor of $A$ that is a unit of $\mathcal O$), and for $A\in M_p(K)$, $\operatorname{rank}_KA=\operatorname{rank}_{\mathbb C}A$ whenever $K\subseteq\mathbb C$ (rank is the size of the largest nonzero minor, and the minors lie in $K$).
+
+## 3. Statement
+
+**Theorem 1 (Weyl sparsity-nullity law in prime dimension).** Let $p$ be prime, $S\subseteq\mathbb F_p^2$ with $|S|=\ell$, and $C=\sum_{g\in S}c_gW_g$ with all $c_g\in\mathbb C\setminus\{0\}$. Then
+$$\dim\ker C\le\ell-1,\qquad\text{equivalently}\qquad\operatorname{rank}C+s_W(C)\ge p+1.$$
+The bound is attained for every $1\le\ell\le p$: $C_\ell=\prod_{i=0}^{\ell-2}(Z-\omega^iI)$ has exactly $\ell$ nonzero Weyl coefficients and nullity exactly $\ell-1$. For $\ell\ge p+1$ the inequality is vacuous.
+
+**Theorem 1' (valuation form).** Let $C$ be as in Theorem 1 with $c_g\in K$ for a field $\mathbb Q(\omega)\subseteq K\subseteq\mathbb C$, let $\mathcal O\subset K$ be an admissible valuation ring, and scale $C$ by a coefficient of minimal valuation so that $\min_gv(c_g)=0$; let $\bar c_g\in k$ be the residues. For a nonzero linear form $\lambda$ on $\mathbb F_p^2$ put
+$$\gamma^\lambda_t=\sum_{g\in S:\ \lambda(g)=t}\bar c_g\in k\quad(t\in\mathbb F_p),\qquad m_\lambda=\#\{t:\gamma^\lambda_t\ne0\}.$$
+Then for every $\lambda$ with $m_\lambda\ge1$,
+$$\dim\ker C\le m_\lambda-1.$$
+Some $\lambda$ with $m_\lambda\ge1$ exists whenever $\ell\le p+1$, and always $m_\lambda\le N_\lambda(S)\le\ell$. Consequently $\dim\ker C\le\min(m_\lambda-1)$, where the minimum is over all admissible $\mathcal O$ (each with its own scaling) and all $\lambda$ with $m_\lambda\ge1$, provided this indexing family is nonempty. An empty family supplies no additional bound.
+
+Theorem 1' implies Theorem 1 for algebraic coefficients; Step 1 of the proof shows that this suffices, or one can apply Theorem 1' directly to $K=\mathbb Q(\omega)(c_g)$ with a dominating valuation ring supplied by [Stacks, Tag 00IA].
+
+**Corollary 2 (list decoding; hypotheses and proof in Section 6).** For one use of the $p^2$ channels $\operatorname{Ad}(W_g)$, every pure probe of Schmidt rank $r$ admits a perfect $\ell$-list decoder only if $\ell\ge p-r+1$, and the consecutive probe attains $\ell=p-r+1$. Hence $\ell^{\rm exact}_{\min}(p,r)=p-r+1$ for $1\le r\le p$.
+
+## 4. Proof of Theorems 1 and 1'
+
+**The case $p=2$.** Theorem 1 is immediate: at $\ell=1$ the matrix is invertible; at $\ell=2$ a nonzero $2\times2$ matrix has nullity at most $1$; and at $\ell\ge3$ the bound is vacuous. To prove Theorem 1' as well, extend the scaled coefficient vector by zeros and write
+$$C=\begin{pmatrix}c_{00}+c_{01}&c_{10}-c_{11}\\c_{10}+c_{11}&c_{00}-c_{01}\end{pmatrix},\qquad \det C=c_{00}^{\,2}-c_{01}^{\,2}-c_{10}^{\,2}+c_{11}^{\,2}.$$
+In the residue field of characteristic $2$,
+$$\overline{\det C}=\left(\sum_{a,b\in\mathbb F_2}\bar c_{ab}\right)^2.$$
+If $m_\lambda=1$, the total residue sum is the single nonzero fibre sum, so $\det C\ne0$ and $\dim\ker C=0$. If $m_\lambda=2$, nonzeroness of $C$ gives $\dim\ker C\le1$. Existence of a nonzero fibre sum for $\ell\le3$ follows from Step 5, which applies to every prime. This proves Theorem 1' for $p=2$.
+
+Henceforth $p$ is odd. Theorem 1 is vacuous for $\ell\ge p+1$, so its algebraic reduction in Step 1 only concerns $1\le\ell\le p$. For Theorem 1', the valuation ring is already given: Steps 2-4 and 6 apply at any sparsity whenever $m_\lambda\ge1$.
+
+**Specialization lemma.** Let $F\subset\mathbb C$ be a number field and let $f_1,\ldots,f_N\in F[x_1,\ldots,x_s]$ be homogeneous polynomials of positive degree. If their common zero set contains a nonzero complex point, it contains a nonzero point over $\overline{\mathbb Q}$.
+
+*Proof.* Put $I=(f_1,\ldots,f_N)$. If the only common zero over $\overline{\mathbb Q}$ were the origin, Hilbert's Nullstellensatz would give, for each $j$, an integer $n_j\ge1$ and an identity $x_j^{n_j}=\sum_i h_{ij}f_i$ in $\overline{\mathbb Q}[x]$. The same identities hold in $\mathbb C[x]$, forcing every complex common zero to be the origin, a contradiction. The conclusion preserves nonzeroness, not necessarily every nonzero coordinate. $\square$
+
+**Step 1: reduction to algebraic coefficients; the valuation.** Fix $S$ with $1\le|S|=\ell\le p$ and consider the locus $B_S=\{c\in\mathbb C^S:\operatorname{rank}C(c)\le p-\ell\}$. Its defining $(p-\ell+1)$-minors are homogeneous polynomials of positive degree with coefficients in $\mathbb Z[\omega]\subset\mathbb Q(\omega)$. The specialization lemma shows that a nonzero complex point of $B_S$ gives a nonzero algebraic point $c'$. Its support $S'=\{g:c'_g\ne0\}\subseteq S$ is nonempty and $\operatorname{rank}C(c')\le p-\ell\le p-|S'|$, so $c'$ is a counterexample to Theorem 1 on $S'$ with all coefficients nonzero and algebraic. It therefore suffices to prove Theorem 1 for every support and all nonzero algebraic coefficients; no induction on $\ell$ is needed.
+
+So let $c_g\in\bar{\mathbb Q}\setminus\{0\}$ and $K=\mathbb Q(\omega,c_g:g\in S)$, a number field. Let $\mathfrak P$ be any prime of the ring of integers $\mathcal O_K$ above $p$. Because $(1-\omega)$ is the unique prime of $\mathbb Z[\omega]$ above $p$ (totally ramified), $\mathfrak P\cap\mathbb Z[\omega]=(1-\omega)$, so the localisation $\mathcal O=(\mathcal O_K)_{\mathfrak P}$ is an admissible discrete valuation ring with finite residue field $k\supseteq\mathbb F_p$.
+
+*Alternative route (extension of valuation rings).* One may skip the Nullstellensatz: for arbitrary nonzero complex $c_g$ the field $K=\mathbb Q(\omega)(c_g:g\in S)\subset\mathbb C$ is finitely generated over $\mathbb Q(\omega)$, and the valuation-domination lemma [Stacks, Tag 00IA] applies to the discrete valuation ring $\mathbb Z[\omega]_{(1-\omega)}$ of $\mathbb Q(\omega)$ to give a valuation ring $\mathcal O$ with fraction field $K$ dominating it. Domination means that the maximal ideal contracts to $(1-\omega)$ in that local subring, so $\mathcal O$ is admissible. Its value group need not be $\mathbb Z$ and $k$ need not be finite, but the rest of the proof uses only that $\mathcal O$ is an admissible valuation ring; in particular a coefficient of minimal valuation exists because $S$ is finite. This is the form in which Theorem 1' is stated.
+
+**Step 2: scaling and rank comparison.** Choose $g_0\in S$ with $v(c_{g_0})$ minimal and replace $C$ by $c_{g_0}^{-1}C$; the kernel is unchanged, all $c_g$ now lie in $\mathcal O$, and $\bar c_{g_0}=1\ne0$. Every Weyl matrix has entries in $\{0\}\cup\mu_p\subset\mathbb Z[\omega]\subset\mathcal O$, so $C\in M_p(\mathcal O)$. By Section 2, $\operatorname{rank}_{\mathbb C}C=\operatorname{rank}_KC\ge\operatorname{rank}_k\bar C$, and the same holds for any $\mathcal O$-combination of Weyl matrices.
+
+**Step 3: the $p+1$ directions by explicit Clifford conjugation.** Direct computation gives
+$$F'XF'^{-1}=Z,\qquad F'ZF'^{-1}=X^{-1},\qquad Q_sXQ_s^{-1}=\omega^{s\cdot2^{-1}}XZ^s,\qquad Q_sZQ_s^{-1}=Z.$$
+(For the first two: $F'X|k\rangle=\sum_j\omega^{j(k+1)}|j\rangle=ZF'|k\rangle$ and $F'Z|k\rangle=\sum_j\omega^{(j+1)k}|j\rangle=X^{-1}F'|k\rangle$; for the third: $Q_sXQ_s^{-1}|j\rangle=\omega^{s\cdot2^{-1}((j+1)^2-j^2)}|j+1\rangle=\omega^{s\cdot2^{-1}}\omega^{sj}|j+1\rangle$.) Using $ZX=\omega XZ$, $(XZ^s)^a=\omega^{s\,a(a-1)/2}X^aZ^{sa}$ and $Z^aX^{-c}=\omega^{-ac}X^{-c}Z^a$, one obtains for $U_s:=F'Q_s$ and every label $(a,b)$ the exact identity in $M_p(\mathbb Q(\omega))$
+$$U_s\,W_{(a,b)}\,U_s^{-1}=\omega^{e(s,a,b)}\,X^{-(sa+b)}Z^{a},\qquad e(s,a,b)=-s\cdot2^{-1}a^2-ab\in\mathbb F_p.\tag{4.1}$$
+Indeed $Q_sW_{(a,b)}Q_s^{-1}=\omega^{s\cdot2^{-1}a}\,\omega^{s\,a(a-1)/2}X^aZ^{sa+b}=\omega^{s\cdot2^{-1}a^2}X^aZ^{sa+b}$, and conjugating by $F'$ gives $\omega^{s\cdot2^{-1}a^2}Z^aX^{-(sa+b)}=\omega^{s\cdot2^{-1}a^2-a(sa+b)}X^{-(sa+b)}Z^a$. All phases are $p$-th roots of unity: no $2p$-th roots appear because the basis is $X^aZ^b$ (not a symmetrised Weyl basis) and $2^{-1}$ is taken in $\mathbb F_p$. The label map $(a,b)\mapsto(-(sa+b),a)$ has first coordinate $\lambda_s(a,b)=-(sa+b)$, whose fibres are the lines of direction $(1,-s)$. Together with $U_\infty:=I$, whose "first coordinate" is $\lambda_\infty(a,b)=a$ with fibres the lines of direction $(0,1)$, the $p+1$ operators $U\in\{I\}\cup\{U_s:s\in\mathbb F_p\}$ realise every parallel class of lines exactly once.
+
+For each such $U$ put $C_U:=UCU^{-1}=\sum_{g\in S}c_g\,\omega^{e_g}\,W_{M_Ug}$. Although $U_s$ is not unimodular over $\mathcal O$ ($\det F'$ has positive valuation), $C_U$ is intrinsically an $\mathcal O$-combination of Weyl matrices, hence lies in $M_p(\mathcal O)$, and $\operatorname{rank}_KC_U=\operatorname{rank}_KC$. Identity (4.1) was verified exactly in $\mathbb Z[\omega]$ for all $s$ and all labels, $p\in\{3,5,7,11\}$, by three implementations (Section 7); these computational checks are not independent editorial reports.
+
+**Step 4: the reduction is a circulant of fibre sums.** Let $\lambda$ be the linear form attached to $U$. Modulo $\mathfrak m$ every $Z^b$ and every phase $\omega^e$ becomes $1$, while $X$ (a permutation matrix) becomes the cyclic shift $\bar X$ over $k$. Therefore
+$$\bar C_U=\sum_{t\in\mathbb F_p}\gamma^\lambda_t\,\bar X^{\,t},\qquad\gamma^\lambda_t=\sum_{g\in S:\ \lambda(g)=t}\bar c_g,\tag{4.2}$$
+that is, $\bar C_U=\bar g_\lambda(\bar X)$ for the polynomial $\bar g_\lambda(x)=\sum_t\gamma^\lambda_tx^t\in k[x]$ of degree $<p$ (exponents are representatives in $\{0,\dots,p-1\}$, which is legitimate because $\bar X^p=I$).
+
+**Step 5: pigeonhole over the $p+1$ lines through $g_0$.** The $p+1$ lines through $g_0$ (one per direction) partition $\mathbb F_p^2\setminus\{g_0\}$, so the sets $(L\setminus\{g_0\})\cap S$ are $p+1$ pairwise disjoint subsets of $S\setminus\{g_0\}$, a set of $\ell-1$ elements. If $\ell-1<p+1$, i.e. $\ell\le p+1$, one of them is empty: for the corresponding direction $\lambda$ the fibre through $g_0$ meets $S$ only in $g_0$, and $\gamma^\lambda_{\lambda(g_0)}=\bar c_{g_0}=1\ne0$. Hence $m_\lambda\ge1$ and $\bar g_\lambda\ne0$. In every direction $m_\lambda\le N_\lambda(S)\le\ell$, since a nonzero fibre sum needs a fibre meeting $S$.
+
+**Step 6: rank of a sparse circulant in characteristic $p$ (Frenkel's lemma).** Let $\bar g\in k[x]$ be nonzero of degree $<p$ with exactly $m$ nonzero monomials $x^{t_1},\dots,x^{t_m}$, the $t_i$ distinct in $\{0,\dots,p-1\}$ and hence distinct in $\mathbb F_p\subseteq k$. As a $k[x]$-module with $x$ acting as $\bar X$, $k^p\cong k[x]/(x^p-1)=k[x]/(x-1)^p$ (characteristic $p$), and $\bar g(\bar X)$ is multiplication by $\bar g$. Write $\bar g=(x-1)^ru$ with $u(1)\ne0$, so $u$ is a unit modulo $(x-1)^p$ and $r<p$; the kernel of multiplication by $(x-1)^r$ on $k[x]/(x-1)^p$ is $(x-1)^{p-r}k[x]/(x-1)^p$, of dimension $r$. Thus
+$$\operatorname{rank}_k\bar g(\bar X)=p-\operatorname{ord}_{x=1}\bar g.$$
+*Claim:* $\operatorname{ord}_{x=1}\bar g\le m-1$. If $m\ge p$ this is trivial, because $\deg\bar g<p\le m$ and $\bar g\ne0$ exclude $(x-1)^m\mid\bar g$; so assume $m\le p-1$ and suppose $(x-1)^m\mid\bar g$. Let $\theta=x\,d/dx$ (ordinary derivative; no Hasse derivatives are needed). Since $\theta\big((x-1)^ih\big)=x\big(i(x-1)^{i-1}h+(x-1)^ih'\big)\in(x-1)^{i-1}k[x]$ in every characteristic, $(x-1)^{m-j}\mid\theta^j\bar g$ for $0\le j\le m$, hence $(\theta^j\bar g)(1)=0$ for $j=0,\dots,m-1$. But $\theta^jx^t=t^jx^t$, so these equations read $\sum_{i=1}^m\gamma_{t_i}t_i^{\,j}=0$ for $j=0,\dots,m-1$: a Vandermonde system in the $m$ distinct elements $t_i\in\mathbb F_p\subseteq k$, which is invertible over any field containing $\mathbb F_p$. So all $\gamma_{t_i}=0$, contradicting $\bar g\ne0$. Therefore
+$$\operatorname{rank}_k\bar g(\bar X)\ge p-m+1.\tag{4.3}$$
+
+**Conclusion.** Take any admissible $\mathcal O$, any direction $\lambda$ with $m_\lambda\ge1$ (Step 5 provides one when $\ell\le p+1$), and the corresponding $U$. Then
+$$\begin{aligned}
+\operatorname{rank}_{\mathbb C}C
+&=\operatorname{rank}_KC=\operatorname{rank}_KC_U\\
+&\ge\operatorname{rank}_k\bar C_U=\operatorname{rank}_k\bar g_\lambda(\bar X)\\
+&\ge p-m_\lambda+1\ge p-N_\lambda(S)+1\ge p-\ell+1,
+\end{aligned}$$
+which is Theorem 1' and, for $\ell\le p+1$, the inequality of Theorem 1. For $\ell\ge p+1$ the inequality $\dim\ker C\le p\le\ell-1$ is vacuous. Sharpness is proved in Section 5.1. $\square$
+
+The only place where the choice of $\mathcal O$ enters is through the residues $\bar c_g$; different primes above $p$ in $K$ can give different residue maps and different optimal directions (Section 7, the split-prime check), which is why Theorem 1' is stated as a minimum over $(\mathcal O,\lambda)$.
+
+## 5. Sharpness and the role of primality
+
+### 5.1 Attainment of every corank at exact sparsity $\ell$
+
+For $S$ on the $Z$-axis, $C=f(Z)$ with $f(z)=\sum_bc_bz^b$, and $\dim\ker C=\#\{j:f(\omega^j)=0\}$; Theorem 1 specialises to Tao's principle "an $\ell$-term polynomial has at most $\ell-1$ zeros among the $p$-th roots of unity" (in any non-vertical direction the $\ell$ points lie in distinct fibres, so $m_\lambda=\#\{b:\bar c_b\ne0\}\le\ell$). For the family $C_\ell=\prod_{i=0}^{\ell-2}(Z-\omega^iI)$, $2\le\ell\le p$, the $q$-binomial theorem with $q=\omega$ and $n=\ell-1$ gives
+$$\prod_{i=0}^{n-1}(z-\omega^i)=\sum_{k=0}^{n}(-1)^{n-k}\omega^{\binom{n-k}{2}}\begin{bmatrix}n\\k\end{bmatrix}_\omega z^k,$$
+and the Gaussian binomials $\begin{bmatrix}n\\k\end{bmatrix}_\omega=\prod_{i=1}^k\frac{1-\omega^{n-i+1}}{1-\omega^i}$ are nonzero because $1\le n<p$ keeps every exponent away from multiples of $p$. So $C_\ell$ has exactly $\ell$ nonzero Weyl coefficients and exactly $\ell-1$ zeros $\omega^0,\dots,\omega^{\ell-2}$ among the $p$-th roots of unity: nullity $\ell-1$. (Exact check in $\mathbb Z[\omega_7]$ for all $\ell\le7$, Section 7.)
+
+More generally, every corank $k\in\{0,\dots,\ell-1\}$ is attained at exact sparsity $\ell\le p$: take $f(z)=\prod_{i<k}(z-\omega^i)\prod_{j<\ell-1-k}(z-\alpha_j)$. Each coefficient of $f$ is a polynomial in $\alpha=(\alpha_j)$ which is not identically zero (at $\alpha_j=\omega^{k+j}$ it is a coefficient of $C_\ell$), so for $\alpha$ outside a proper Zariski-closed set all $\ell$ coefficients are nonzero and no $\alpha_j$ is a $p$-th root of unity; then $f(Z)$ has sparsity $\ell$ and nullity exactly $k$. Together with Theorem 1 this extends [0WE] Theorem 3 from $s_W\le3$ to all sparsities in prime dimension:
+
+**Proposition 3.** For $d=p$ prime and $1\le\ell\le p$, the set of ranks of nonzero matrices with $s_W\le\ell$ is exactly $\{p-\ell+1,\dots,p\}$; there are no forbidden ranks.
+
+### 5.2 The field-free bound and its limits
+
+Let $P$ be the orthogonal projector onto $\operatorname{ran}C$. Trace orthogonality gives $\operatorname{Tr}(W_g^*C)=p\,c_g$, and $|\operatorname{Tr}(W_g^*C)|=|\langle PW_g,C\rangle_F|\le\|PW_g\|_F\|C\|_F=\sqrt{\operatorname{rank}C}\,\|C\|_F$ with $\|C\|_F^2=p\sum_h|c_h|^2$. Hence $p\,|c_g|^2\le\operatorname{rank}(C)\sum_h|c_h|^2$ for every $g$, and summing over $g\in S$,
+$$\operatorname{rank}(C)\cdot s_W(C)\ge p,$$
+a Donoho-Stark-type inequality, valid verbatim in every dimension $d$ and for every nonzero matrix. For density matrices in the $n$-qudit Heisenberg-Weyl basis this is Bu's uncertainty principle for Pauli rank [Bu24, arXiv v1, Theorem 1, equation (2)] (with the same Cauchy-Schwarz proof, and equality exactly for stabiliser states); we are not aware of it being stated for general matrices, but it is elementary. It is sharp at $\ell=p$ (the rank-one $|0\rangle\langle0|=p^{-1}\sum_bZ^b$) and it already yields Theorem 1 for $\ell\in\{p-1,p\}$ (rank $\ge2$, resp. $\ge1$), but for $4\le\ell\le p-2$ it is far weaker than $p-\ell+1$ (for $p=7$, $\ell=4$: rank $\ge2$ versus $\ge4$). Thus this multiplicative inequality alone does not imply the additive bound. In particular, a proof using only assumptions that hold equally in all composite dimensions would be insufficient; the present proof uses primality as described below.
+
+### 5.3 Prime powers $d=p^k$, $k\ge2$
+
+In $\mathbb Z[\omega_{p^k}]$ the element $1-\omega_{p^k}$ still generates the unique (totally ramified) prime above $p$, so an admissible reduction exists and Step 4 still produces a circulant of size $p^k$ over a field of characteristic $p$, with $x^{p^k}-1=(x-1)^{p^k}$. What fails is Step 6: the exponents $t_i$ are distinct modulo $p^k$ but not modulo $p$, and the Vandermonde argument needs them distinct in the residue field. The example $1-x^{p^{k-1}}=(1-x)^{p^{k-1}}$ has $m=2$ monomials and order $p^{k-1}$ at $x=1$; it is the reduction of $I-Z^{p^{k-1}}$ (after a Fourier conjugation), which indeed has $\ell=2$ and nullity $p^{k-1}$. This matches [0WE] Theorem 3 exactly: for $d=p^k$ the coranks attainable with $s_W\le3$ are $p^j$ and $2p^j$, $0\le j<k$, and for $j\ge1$ these exceed $\ell-1$. The law is thus a prime-dimension phenomenon and not a prime-power one.
+
+### 5.4 Composite $d$ that is not a prime power
+
+If $d$ has at least two distinct prime factors then $\Phi_d(1)=1$, so $1-\omega_d$ is a unit of $\mathbb Z[\omega_d]$ and there is no prime ideal in which $\omega_d\equiv1$: Step 1 has no starting point. Correspondingly the law is false. [0WE] Proposition 4 gives $2^{1/4}I+X^3+Z^3$ in $d=12$ with $\ell=3$ and nullity $3$; [0WE] eq. (6a) gives $I+X^3+iX^{-3}Z^{18}$ in $d=36$ with $\ell=3$ and nullity $6$; and [0WE] eq. (6c) gives the binomial $X+XZ^6=X(I+Z^6)$ in $d=12$ with $\ell=2$ and nullity $6$. The two failure mechanisms (no admissible prime; non-distinct exponents modulo $p$) are exactly the two places where primality is used in Section 4.
+
+### 5.5 Finer bounds for small supports, and the exact refutation of the line conjecture
+
+Theorem 1 is the universal law, not the finest statement for particular supports. Theorem 1' already recovers the nullity bound $1$ for every non-collinear trinomial, consistent with [0WE] Corollary 2.1. Indeed, choose a coefficient of minimal valuation at $g_0$ and let $\lambda$ have fibres parallel to the line through the other two support points. Since the three points are non-collinear, the fibre through $g_0$ is a singleton with nonzero residue, while the remaining two points lie in one other fibre. Thus $1\le m_\lambda\le2$, and Theorem 1' gives $\dim\ker C\le1$. A further bound, used in Section 7 to certify two support orbits, is:
+
+**Proposition 4 (line plus one point).** Let $S$ consist of $\ell-1\ge1$ points on an affine line $L\subset\mathbb F_p^2$ and exactly one point $h\notin L$, with all coefficients nonzero. Then $\dim\ker C\le1$.
+
+*Proof.* Three rank-preserving normalisations (Section 2, "Symmetries") bring $C$ to a standard form.
+
+(i) *Translation.* Pick a point $g_1\in L$ and replace $C$ by $W_{g_1}^{-1}C$. This does not change the kernel; it translates the support by $-g_1$ and multiplies each coefficient by a root of unity, so all coefficients remain nonzero. The line $L$ becomes $L_0=L-g_1$, a line *through the origin*, i.e. a one-dimensional subspace $\mathbb F_pu$, and the off-line point becomes $h-g_1\notin L_0$.
+
+(ii) *Clifford conjugation.* Since $SL_2(\mathbb F_p)$ acts transitively on nonzero vectors, choose $M\in SL_2(\mathbb F_p)$ with $Mu=(0,1)$ and a Clifford unitary $U$ realising $M$; replace $C$ by $UCU^{-1}$. The kernel dimension is unchanged, the coefficients are multiplied by phases, $L_0$ becomes the $Z$-axis $\{(0,b)\}$, and the off-line point becomes $(a,b_1)$ with $a\ne0$ (a point of $\mathbb F_p^2$ not on $\mathbb F_pu$ is mapped to a point not on the $Z$-axis). Now $C=g(Z)+c\,X^aZ^{b_1}$ with $g$ a polynomial having exactly $\ell-1$ nonzero coefficients and $c\ne0$.
+
+(iii) *Right multiplication.* Replace $C$ by $CZ^{-b_1}$: the rank is unchanged, $g(Z)Z^{-b_1}=(z^{-b_1}g)(Z)$ is again a polynomial in $Z$ with exactly $\ell-1$ nonzero coefficients (multiplication by $z^{-b_1}$ permutes the monomials of $\mathbb C[z]/(z^p-1)$ cyclically), and the second term becomes $cX^a$.
+
+So it suffices to bound the nullity of $C=g(Z)+cX^a$ with $a\ne0$, $c\ne0$ and $g\ne0$. In coordinates, $(g(Z)v)_j=g(\omega^j)v_j$ and $(X^av)_j=v_{j-a}$, so $Cv=0$ reads
+$$g(\omega^j)\,v_j=-c\,v_{j-a}\qquad(j\in\mathbb Z/p).$$
+Since $a\ne0$ and $p$ is prime, $j\mapsto j-a$ is a single $p$-cycle on $\mathbb Z/p$, and because $c\ne0$ each equation determines $v_{j-a}$ from $v_j$. If $g(\omega^{j_0})=0$ for some $j_0$, the equation at $j_0$ gives $v_{j_0-a}=0$, then the equation at $j_0-a$ gives $v_{j_0-2a}=0$, and following the cycle every coordinate vanishes: nullity $0$. If $g(\omega^j)\ne0$ for all $j$, each equation also determines $v_j$ from $v_{j-a}$; starting from $v_0$ one obtains $v_a,v_{2a},\dots,v_{(p-1)a}$ successively, and the remaining equation (at $j=0$, closing the cycle) is one consistency condition. Hence the kernel is at most one-dimensional. $\square$
+
+It is natural to guess that collinearity is the only source of large kernels, i.e. that $\dim\ker C\le(\text{size of the largest collinear subset of }S)-1$ (the "line conjecture"). This is false, and the counterexample is exact:
+
+**Proposition 5 (exact refutation of the line conjecture).** Let $p=5$ and $S=\{(t,t^2):t\in\mathbb F_5\}=\{(0,0),(1,1),(2,4),(3,4),(4,1)\}$, a parabola with no three points collinear (a line meets $y=x^2$ in at most two points). The full-support combination
+$$C=I+W_{(1,1)}+\omega^2W_{(2,4)}+\omega^3W_{(3,4)}+W_{(4,1)},\qquad\omega=e^{2\pi i/5},$$
+has rank exactly $3$, i.e. nullity $2$, whereas the line conjecture would allow nullity at most $1$. Theorem 1 (nullity $\le4$) is respected. In fact the maximal nullity on this support is exactly $2$: choose a point $(t_0,t_0^2)$ whose coefficient has minimal valuation and take $\lambda(a,b)=b-2t_0a$. On the parabola, $\lambda(t,t^2)=(t-t_0)^2-t_0^2$ takes exactly three values, with the fibre through $t_0$ a singleton. Hence $1\le m_\lambda\le3$, and Theorem 1' gives nullity at most $2$ for every full-support coefficient vector. The displayed $C$ attains it.
+
+The certificate was found through a symmetry: the map $\Phi(C)=W_{(1,1)}Q_2\,C\,Q_2^{-1}$ sends $W_{(t,t^2)}$ to $\omega^{t^2+t}W_{(t+1,(t+1)^2)}$ (by (4.1)-type bookkeeping: $Q_2W_{(a,b)}Q_2^{-1}=\omega^{a^2}W_{(a,2a+b)}$ and $W_{(1,1)}W_{(a,b')}=\omega^aW_{(a+1,b'+1)}$), hence permutes the five Weyl operators of $S$ cyclically with total phase $\omega^{40}=1$. Its eigenvectors on $\operatorname{span}\{W_g:g\in S\}$ are $C_k=\sum_t\omega^{f_k(t)}W_{(t,t^2)}$ with $f_k(t)=\sum_{i<t}(i^2+i-k)$, $k\in\mathbb F_5$; all coefficients are roots of unity, so the rank can be computed exactly over $\mathbb Q(\omega_5)$ through the regular representation over $\mathbb Q$ (rank of a $20\times20$ integer matrix divided by $4$). All five $C_k$ have rank $3$; $C=C_0$ is the case $k=0$, with $f_0=(0,0,2,3,0)$. Numerically, $CC^*$ has eigenvalues $10,10,5,0,0$. The five exponent vectors, the five $20\times20$ matrices and their ranks are stored in `repro/data/parabola_certificate.json`; the workshop that evaluated version 1 recomputed the rank $12$ of the $20\times20$ matrix independently (Section 7(g)).
+
+## 6. The list-decoding corollary
+
+This section is self-contained: it proves the two ingredients (Lemmas 6 and 7) that, together with Theorem 1, give Corollary 2.
+
+### 6.1 Setting and hypotheses
+
+*Channels.* Dimension $d=p$ prime. The $p^2$ channels are the unitary channels $\operatorname{Ad}(W_g):\sigma\mapsto W_g\sigma W_g^*$, $g\in\mathbb F_p^2$; one of them, with unknown label $g$, is applied exactly once. Priors are irrelevant for what follows.
+
+*Probes.* A pure probe is a unit vector $|\psi\rangle\in\mathbb C^p\otimes\mathbb C^R$ (channel input tensor a reference of arbitrary finite dimension $R$). Using the vectorisation $|M\rangle\!\rangle=\sum_{i,j}M_{ij}|i\rangle|j\rangle$, which satisfies $(U\otimes V)|M\rangle\!\rangle=|UMV^{T}\rangle\!\rangle$ and $\langle\!\langle M|N\rangle\!\rangle=\operatorname{Tr}(M^*N)$, write $|\psi\rangle=|A\rangle\!\rangle$ with $A\in\mathbb C^{p\times R}$, $\operatorname{Tr}(A^*A)=1$. The reduced state on the channel input is $\rho=AA^*$, and the Schmidt rank is $r=\operatorname{SR}(\psi)=\operatorname{rank}A=\operatorname{rank}\rho$. The output states are $|\psi_g\rangle=(W_g\otimes I)|A\rangle\!\rangle=|W_gA\rangle\!\rangle$. All of them lie in $\mathbb C^p\otimes V$, where $V\subseteq\mathbb C^R$ is the row space of $A$ (of dimension $r$), because $W_g$ only permutes and rescales the rows of $A$; compressing every measurement effect by the projector onto $\mathbb C^p\otimes V$ changes no outcome probability, so we may and do assume $R=r$ and $A\in\mathbb C^{p\times r}$ of full column rank $r$.
+
+*Decoders.* A one-use strategy consists of the probe, the channel and a final POVM $\{M_L\}$ on $\mathbb C^p\otimes\mathbb C^r$ whose outcomes are lists $L\subseteq\mathbb F_p^2$ with $|L|\le\ell$; zero effects and unused lists are allowed ("weak exclusion"). The decoder is **perfect** if the true label is always in the reported list: $\langle\psi_g|M_L|\psi_g\rangle=0$ whenever $g\notin L$. With a single channel use, the general parallel, sequential and indefinite-causal-order testers of Bavaresco, Murao and Quintino [BMQ21, BMQ22] all reduce to "probe, channel, POVM", so this is the most general one-use strategy. Let $\ell_{\min}(\psi)$ be the least $\ell$ admitting a perfect decoder for the probe $\psi$ and
+$$\ell^{\rm exact}_{\min}(p,r)=\min_{\operatorname{SR}(\psi)=r}\ell_{\min}(\psi).$$
+Since $\ell_{\min}(\psi)$ depends on $\psi$ only through $\rho$ (purifications of the same $\rho$ differ by an isometry on the reference, which can be absorbed in the POVM), $\ell^{\rm exact}_{\min}(p,r)$ is a minimum over reduced states of rank $r$.
+
+*Relation to [JLRS25].* An indexed family of (possibly subnormalised) pure states $\{|\psi_g\rangle\}$ is called $k$-learnable in [JLRS25, Def. 1] if there is a POVM indexed by $k$-subsets $S$ with $\langle\psi_g|M_S|\psi_g\rangle=0$ whenever $g\notin S$; their Lemma 9 states that this holds iff the Gram matrix $(\langle\psi_g|\psi_h\rangle)$ is $k$-incoherent, i.e. a sum of rank-one positive matrices $vv^*$ with $v$ having at most $k$ nonzero entries, and their Corollary 11 identifies the least such $k$ with the factor width of the Gram matrix. For the Weyl family, $\langle\psi_g|\psi_h\rangle=\operatorname{Tr}(\rho\,W_g^*W_h)$ is a phase times a Weyl coefficient of $\rho$ at $h-g$, and the $k$-incoherent decompositions of the Gram matrix correspond to the sparse factorisations of $\rho$ in Lemma 6 below. We give the direct proof in Weyl coordinates, which is short, rather than translating the phases.
+
+### 6.2 The sparse-factorisation criterion
+
+**Lemma 6 (Weyl-covariant factor-width criterion; [0WE] eq. (8)).** Under the hypotheses of Section 6.1, a perfect $\ell$-list decoder exists for a probe with reduced state $\rho$ if and only if
+$$\rho=\sum_jC_jC_j^*\qquad\text{with}\qquad s_W(C_j)\le\ell\ \text{ for all }j,\tag{6.1}$$
+for finitely many matrices $C_j\in M_p(\mathbb C)$.
+
+*Proof of necessity.* Let $\{M_L\}$ be a perfect $\ell$-list POVM on $\mathbb C^p\otimes\mathbb C^r$. Spectrally decompose each effect, $M_L=\sum_i|B_{L,i}\rangle\!\rangle\langle\!\langle B_{L,i}|$ with $B_{L,i}\in\mathbb C^{p\times r}$, and index the pairs $(L,i)$ by $j$, writing $L_j$ for the list of the $j$-th vector. Perfectness gives, for $g\notin L_j$,
+$$0=\langle\!\langle B_j|W_gA\rangle\!\rangle=\operatorname{Tr}(B_j^*W_gA)=\operatorname{Tr}(AB_j^*\,W_g).$$
+By Section 2, $\{g:\operatorname{Tr}(CW_g)\ne0\}=-S(C)$; hence $C_j:=AB_j^*/\sqrt p$ has Weyl support $S(C_j)\subseteq-L_j$, so $s_W(C_j)\le\ell$. Completeness $\sum_j|B_j\rangle\!\rangle\langle\!\langle B_j|=I_p\otimes I_r$, after a partial trace over the first factor (for which $\operatorname{Tr}_1|B\rangle\!\rangle\langle\!\langle B|=(B^*B)^{T}$), gives $\sum_jB_j^*B_j=p\,I_r$. Therefore $\sum_jC_jC_j^*=p^{-1}A\big(\sum_jB_j^*B_j\big)A^*=AA^*=\rho$.
+
+*Proof of sufficiency.* Given (6.1), positivity ($C_jC_j^*\le\rho$) gives $\operatorname{ran}C_j\subseteq\operatorname{ran}\rho=\operatorname{ran}A$. Let $A^+=(A^*A)^{-1}A^*$ be the left inverse of $A$ ($A^+A=I_r$, $AA^+$ the projector onto $\operatorname{ran}A$) and set $B_j^*:=A^+C_j\in\mathbb C^{r\times p}$. Then $AB_j^*=AA^+C_j=C_j$ and $\sum_jB_j^*B_j=A^+\rho\,(A^+)^*=A^+AA^*(A^+)^*=I_r$. Define effects indexed by $(j,g)$, $g\in\mathbb F_p^2$:
+$$M_{j,g}=\frac1p\,|W_gB_j\rangle\!\rangle\langle\!\langle W_gB_j|.$$
+The Weyl twirl $\sum_gW_gYW_g^*=p\operatorname{Tr}(Y)\,I_p$, applied to the first tensor factor, gives $\sum_gM_{j,g}=I_p\otimes(B_j^*B_j)^{T}$, so $\sum_{j,g}M_{j,g}=I_p\otimes I_r$: a POVM. Its outcome probabilities on the output state of label $h$ are
+$$\langle\psi_h|M_{j,g}|\psi_h\rangle=\frac1p\,|\operatorname{Tr}(B_j^*W_g^*W_hA)|^2=\frac1p\,|\operatorname{Tr}(AB_j^*\,W_g^*W_h)|^2=\frac1p\,|\operatorname{Tr}(C_j\,W_{h-g})|^2$$
+(the phase of $W_g^*W_h\in\mu_pW_{h-g}$ disappears in the modulus), which vanishes unless $h-g\in-S(C_j)$, i.e. unless $h\in g-S(C_j)$. Reporting the list $L_{j,g}=g-S(C_j)$, of size $s_W(C_j)\le\ell$, on outcome $(j,g)$ therefore gives a perfect decoder. $\square$
+
+Only the necessity direction is used for the lower bound in Corollary 2; sufficiency shows that (6.1) is an achievability criterion, and it gives the upper bound an equivalent form (Remark after Lemma 7).
+
+### 6.3 The consecutive-probe decoder
+
+**Lemma 7 (mechanism of [3H0] Theorem 6.1, prime dimension).** For $1\le r\le p$, the consecutive probe $|\Phi_r\rangle=r^{-1/2}\sum_{x=0}^{r-1}|x\rangle|x\rangle$, i.e. $A=r^{-1/2}\binom{I_r}{0}$, $\rho=r^{-1}P_r$ with $P_r$ the projector onto $\operatorname{span}\{|0\rangle,\dots,|r-1\rangle\}$, admits a perfect list decoder with lists of size $p-r+1$.
+
+*Proof.* The output states are
+$$|\psi_{(a,b)}\rangle=r^{-1/2}\sum_{x=0}^{r-1}\omega^{bx}\,|x+a\rangle|x\rangle .$$
+For each $a\in\mathbb F_p$ let $V_a=\operatorname{span}\{|x+a\rangle|x\rangle:0\le x<r\}$ and let $J_a:\mathbb C^r\to V_a$ be the isometry $|x\rangle\mapsto|x+a\rangle|x\rangle$. The $p$ subspaces $V_a$ are mutually orthogonal (for fixed $x$ the first factors $|x+a\rangle$, $a\in\mathbb F_p$, are orthonormal), and $|\psi_{(a,b)}\rangle=J_a\varphi_b$ with the **phase frame**
+$$\varphi_b=r^{-1/2}\,(1,\omega^{b},\omega^{2b},\dots,\omega^{(r-1)b})^{T}\in\mathbb C^r,\qquad b\in\mathbb F_p .$$
+Let $T\in\mathbb C^{r\times p}$ have columns $\varphi_b$. Then $TT^*=\sum_b\varphi_b\varphi_b^*=\frac1r\sum_{x,y}\big(\sum_b\omega^{b(x-y)}\big)|x\rangle\langle y|=\frac pr\,I_r$: the frame is tight with bound $\alpha=p/r$.
+
+For every $(r-1)$-subset $E\subseteq\mathbb F_p$ let $T_E\in\mathbb C^{r\times(r-1)}$ be the submatrix of columns $\varphi_b$, $b\in E$, and define $w_E\in\mathbb C^r$ by its signed cofactors,
+$$(w_E)_x=(-1)^x\,\overline{\det T_E^{(x)}}\qquad(0\le x<r),$$
+where $T_E^{(x)}$ is $T_E$ with row $x$ deleted (for $r=1$, $E=\emptyset$ and $w_\emptyset=1$). Two properties follow from determinant expansions:
+
+(a) *Orthogonality.* Laplace expansion along the first column gives 
+$$\langle w_E,\varphi_b\rangle=\sum_x(-1)^x\det T_E^{(x)}\,(\varphi_b)_x=\det[\varphi_b\,|\,T_E],$$
+which vanishes for $b\in E$ (a repeated column). (For $b\notin E$ it is a nonzero Vandermonde-type determinant, since the $\omega^b$ are distinct; this full-spark property is not needed below.)
+
+(b) *Tightness (Cauchy-Binet).* 
+$$\begin{aligned}
+\sum_E(w_E)_x\overline{(w_E)_y}
+&=(-1)^{x+y}\sum_E\overline{\det T_E^{(x)}}\det T_E^{(y)}\\
+&=(-1)^{x+y}\,\overline{\det\big(T^{(x)}(T^{(y)})^*\big)},
+\end{aligned}$$
+where $T^{(x)}$ is $T$ with row $x$ deleted; $T^{(x)}(T^{(y)})^*$ is the $(r-1)\times(r-1)$ submatrix of $TT^*=\alpha I_r$ with row $x$ and column $y$ deleted, whose determinant is $\alpha^{r-1}$ if $x=y$ and $0$ otherwise (a zero row appears). Hence
+$$\sum_{|E|=r-1}w_Ew_E^*=\alpha^{r-1}I_r .$$
+
+Now define the POVM on $\mathbb C^p\otimes\mathbb C^r$ with outcomes $(a,E)$ and a remainder:
+$$M_{a,E}=\alpha^{-(r-1)}\,J_a\,w_Ew_E^*\,J_a^*,\qquad M_{\rm rest}=I-\sum_aJ_aJ_a^*.$$
+By (b), $\sum_EM_{a,E}=J_aJ_a^*$ is the projector onto $V_a$; the $V_a$ are orthogonal, so $M_{\rm rest}$ is the projector onto their common orthogonal complement and the effects sum to $I$. On outcome $(a,E)$ report the list $L_{a,E}=\{(a,b):b\notin E\}$, of size $p-r+1$; on $M_{\rm rest}$ report any fixed list. Perfectness: $\langle\psi_{(a',b)}|M_{a,E}|\psi_{(a',b)}\rangle=0$ for $a'\ne a$ (orthogonal sectors), and for $a'=a$ it equals $\alpha^{-(r-1)}|\langle w_E,\varphi_b\rangle|^2=0$ when $b\in E$ by (a); and $M_{\rm rest}$ annihilates every output state since they all lie in $\bigoplus_aV_a$. So the true label is always in the reported list. $\square$
+
+*Remarks.* (1) At $r=p$ the construction is dense coding [BW92]: $T$ is $p^{-1/2}$ times the Fourier matrix, each $w_E$ is proportional to the single $\varphi_b$ with $b\notin E$, and the lists have length $1$. At $r=1$ it measures the shift $a$ and reports all $p$ phase labels. (2) In the language of Lemma 6, the decoder corresponds to the factorisation $\rho=\sum_EC_EC_E^*$ with $C_E=(r\alpha^{r-1})^{-1/2}h_E(Z)$, where $h_E$ is the polynomial of degree $<p$ with $h_E(\omega^j)=(w_E)_j$ for $j<r$ and $h_E(\omega^j)=0$ for $j\ge r$; by (a) its coefficient vector vanishes on $E$, so $s_W(C_E)=|\mathbb F_p\setminus E|=p-r+1$, and by (b) the sum of the $C_EC_E^*$ is $r^{-1}P_r$. This form, and the POVM itself, were verified numerically for $p\in\{3,5,7\}$ and all $r$ (Section 7(g)). (3) The lemma uses only the tightness of the phase frame, not full spark; full spark is what makes $p-r+1$ *necessary* for this particular probe in [3H0] Theorem 6.1, but here necessity comes from Theorem 1 and holds for every probe of Schmidt rank $r$.
+
+### 6.4 Proof of Corollary 2
+
+*Lower bound.* Suppose a perfect $\ell$-list decoder exists for a probe of Schmidt rank $r$. By Lemma 6 (necessity), $\rho=\sum_jC_jC_j^*$ with $s_W(C_j)\le\ell$; some $C_j\ne0$ because $\rho\ne0$, and $\operatorname{ran}C_j\subseteq\operatorname{ran}\rho$ by positivity. Theorem 1 gives
+$$r=\operatorname{rank}\rho\ge\operatorname{rank}C_j\ge p-s_W(C_j)+1\ge p-\ell+1,$$
+i.e. $\ell\ge p-r+1$.
+
+*Upper bound.* Lemma 7 gives a probe of Schmidt rank $r$ with a perfect decoder of list size $p-r+1$. Hence $\ell^{\rm exact}_{\min}(p,r)=p-r+1$. The rank-budget version $\min_{\operatorname{SR}(\psi)\le r}\ell_{\min}(\psi)$ has the same value because $p-r+1$ is decreasing in $r$. $\square$
+
+**Consistency checks.** At $r=1$ both bounds give $\ell=p$, the support-dimension value $\lceil p/r\rceil$. At $r=p$ both give $\ell=1$. The two-label criterion of [0WE] (rank $r<d$ admits two labels iff $(d-r)\mid d$) reads, for $d=p$, "iff $r=p-1$", which agrees with $p-r+1=2$. The divisor branch of [3H0] Corollary 6.5 is, in prime dimension, only $r\in\{1,p\}$, where $d/r$ and $p-r+1$ coincide.
+
+**What changes in the corpus.** [3H0] closed the optimised-probe problem only for $r\mid d$ and left $\lceil d/r\rceil\le\min_\psi\ell_{\min}(\psi)\le d-r+1$ otherwise; [0WE] added the point $\ell=2$. In prime dimension the whole curve is now closed at the *upper* end of that interval: the consecutive probe is globally optimal for every Schmidt rank, the arithmetic-support trick of [3H0] Remark 6.4 has no prime-dimension analogue, and the support-dimension bound $\lceil p/r\rceil$ is off by a factor of about $r$ for mid-range $r$. By Proposition 3 there are no forbidden ranks and no positive-sum surprises of the $13d/16$ type found in [0WE] for $d=2^k$ (a positive sum can only raise the rank).
+
+**Non-claims.** Approximate decoding, mixed probes, several channel uses, composite $d$, and the Bayes success curves below threshold are untouched.
+
+## 7. Exact and numerical verification
+
+The computations below were reported in the supplied version 2. During preparation of v003, the workshop reran the scripts for (a), (b), and (g), inspecting their outputs; (g) also rechecked all five exact ranks in (c). Historical timings and the other runs below are retained as reported results, not fresh checks. Scripts and the new execution log are described in Section 9. Finite tests support the written arguments but do not prove the general theorems.
+
+**(a) Every ingredient of the proof, exactly** (`e2_exact_padic_checks.py`, 52-59 s). Exact arithmetic in $\mathbb Z[\omega]=\mathbb Z[x]/\Phi_p$; rank over $\mathbb Q(\omega)$ through the regular representation over $\mathbb Q$; reduction modulo $(1-\omega)$ by $\omega\mapsto1$ followed by reduction modulo $p$. Identity (4.1) for all $s$ and all labels, $p\in\{3,5,7,11\}$ ($27+125+343+1331=1826$ cases). Then $92$ random instances ($p=5,7,11$; $2\le\ell\le5$; fixed seed) in four regimes: random support and coefficients; the collinear equality family; coefficients with positive $(1-\omega)$-adic valuation forcing cancellations; integer coefficients whose vertical fibre sums vanish modulo $p$. For every instance and every direction: $UCU^{-1}$ integral, reduction equal to the fibre-sum circulant (4.2), $\operatorname{rank}_{\mathbb Q(\omega)}C\ge\operatorname{rank}_{\mathbb F_p}$(reduction), reduced rank $=p-\operatorname{ord}_1\bar g$ with $\operatorname{ord}_1\bar g\le m-1$, and maximum over directions $\ge p-\ell+1$. Equality $\operatorname{rank}C=p-\ell+1$ occurred in $23$ instances (the collinear products). The rerun output is identical to the original modulo timings.
+
+**(b) Second implementation, including a split prime** (`review_check_proof.py`, historical runtime 42-47 s; no import of the first ring implementation). Part A: identity (4.1) with the explicit phase $e(s,a,b)$, exact for $p\in\{3,5,7\}$. Part B: $p=7$, $\ell=5$, coefficients in $A=\mathbb Z[\omega_7,\sqrt2]$, where $(1-\omega)$ *splits* ($2\equiv3^2\bmod7$) into two primes with different residue maps, $\mathfrak P_3:\sqrt2\mapsto3$ and $\mathfrak P_4:\sqrt2\mapsto4$. Fourteen instances (generic; coefficients with positive valuation at exactly one of the two primes; a common factor $(1-\omega)^2$ removed by exact scaling; forced fibre-sum cancellations; the collinear equality family), each tested against both primes and all $8$ directions: $UCU^*$ exactly divisible by $7$ in $A$; reduction equal to the predicted circulant; $\mathbb F_7$-rank $=7-\operatorname{ord}_1\bar g$ with $\operatorname{ord}_1\bar g\le m-1$; exact rank over $\mathbb Q(\omega,\sqrt2)$ (regular representation of degree $12$) at least every reduced rank; maximum over directions $\ge3$. In several instances the best direction differs between $\mathfrak P_3$ and $\mathfrak P_4$, illustrating the minimum over $(\mathcal O,\lambda)$ in Theorem 1'. Part C: exhaustive check of Step 6, that every polynomial over $\mathbb F_p$ of degree $<p$ with exactly $m$ nonzero monomials has $\operatorname{ord}_{x=1}\le m-1$: $p=7$, all $m$, all exponent sets and all nonzero coefficient vectors ($823{,}542$ polynomials); $p=5$, all $m$; $p=11$, $m\le4$ ($3.47$ million). Never violated, always attained; the sanity example $1-x^7$ over $\mathbb F_7$ ($m=2$, order $7$) shows where distinctness modulo $p$ enters. Part D: the family $\prod_{i<\ell-1}(Z-\omega^iI)$ in $\mathbb Z[\omega_7]$ has exactly $\ell$ nonzero coefficients and nullity $\ell-1$ for all $\ell\le7$.
+
+**(c) Exact refutation of the line conjecture** (`review_line_conjecture_exact.py`, 9-12 s including the imported numerics). Proposition 5: exact rank $3$ over $\mathbb Q(\omega_5)$ for all five $C_k$, no three support points collinear (checked exactly). The script also reproduces, numerically, the other general-position orbit of $p=5$, $\ell=5$ (representative $\{(0,0),(1,0),(0,1),(1,1),(2,3)\}$) reaching $\sigma_4\approx3\cdot10^{-16}$ with all $|c_g|\ge0.29$; its coefficient ratios were not recognised as low-degree algebraic numbers, so that orbit remains numerical. The coefficient vector is stored at full double precision in `repro/data/gp5_numerical_witness.json`, together with a recomputation of $\sigma_4$ from the stored numbers.
+
+**(d) Exhaustive support-orbit enumeration with multistart numerical searches** (`e1_orbits_numeric.py p ell restarts`). The symmetry group of the rank problem is $\mathrm{AGL}(2,p)=GL_2(\mathbb F_p)\ltimes\mathbb F_p^2$ (Section 2, "Symmetries"). Orbit representatives are computed by canonical forms and orbit sizes by stabiliser counts, with $\sum|\mathrm{orbit}|=\binom{p^2}{\ell}$ asserted in every run. The enumeration is exhaustive; the coefficient search is not. For a representative $S$ and target nullity $k$, alternating minimisation of $\sum_{i>p-k}\sigma_i(C_S(c))^2$ on $\|c\|_2=1$ uses $20$-$60$ random restarts. Write $c^{(u)}_{S,k}$ for the final iterates actually examined and define the observed residual
+$$\widehat\mu_{S,k}:=\min_u\sigma_{p-k+1}(C_S(c^{(u)}_{S,k})),\qquad
+\widehat\mu_{p,\ell}:=\min_{S\in\mathcal R}\widehat\mu_{S,\ell},$$
+where $\mathcal R$ is the set of tested representatives. The table reports floating-point approximations of these finite minima, not certified global minima or positive lower bounds over all coefficients. In exact arithmetic on the sampled iterates, the true global minimum is at most the observed minimum; rounding is not certified either. Numerically detected nullity uses threshold $10^{-9}$ and the coefficient sphere permits zeros, so detection may occur on a sub-support. In the table, "detected nullity" is the largest such detection over the representatives, "best residual" is $\widehat\mu_{p,\ell}$, and the next column identifies where nullity $\ell-1$ was numerically detected. The rank symmetry using Galois automorphisms does not by itself transport normalized singular values to every support in the orbit.
+
+| $p$ | $\ell$ | orbits | detected nullity | best residual | detecting $\ell-1$ | time |
+|---|---|---|---|---|---|---|
+| 3 | 2 | 1 | 1 | 0.707 | the pair | <1 s |
+| 5 | 2 | 1 | 1 | 0.437 | the pair | <1 s |
+| 5 | 3 | 2 | 2 | 0.407 | collinear only | <1 s |
+| 5 | 4 | 5 | 3 | 0.500 | collinear only | 3 s |
+| 5 | 5 | 11 | 4 | 1.000 | collinear only | 33 s |
+| 7 | 2 | 1 | 1 | 0.315 | the pair | <1 s |
+| 7 | 3 | 3 | 2 | 0.218 | 2 collinear orbits | <1 s |
+| 7 | 4 | 8 | 3 | 0.180 | 2 collinear orbits | 17 s |
+| 7 | 5 | 32 | 4 | 0.241 | collinear only | 186 s |
+| 11 | 4 | 14 | 3 | 0.027 | 4 collinear orbits | 38 s |
+
+No tested search detected nullity $\ell$. The reported best residuals are at least $0.18$ except at $p=11$ (30 restarts); these are observations about the finite searches, not lower bounds on all coefficient vectors. Largest numerically detected nullities per representative: for $(7,4)$ and $(11,4)$, collinear $\to3$; "three collinear plus one" $\to2$ (realised on the collinear sub-support, since Proposition 4 gives $\le1$ when the off-line coefficient is nonzero); general position $\to1$. For $(7,5)$: collinear $\to4$; "four collinear plus one" $\to3$; twenty orbits $\to2$ (all general-position $5$-sets among them); nine orbits $\to1$, five of which ("three collinear plus two") have best observed $\sigma_6$ residuals between $4\cdot10^{-5}$ and $2\cdot10^{-3}$, so nullity $2$ there is numerically undecided (the relevant best observed $\sigma_3$ residual was at least $0.48$ on those representatives; this numerical observation is not used to prove the law).
+
+**(e) Additional exact certification of the statement for $p=7$, $\ell=4$** (`e3_groebner_p7_l4.py`), the first case not covered by [0WE] and the field-free bound. For each of the $8$ orbit representatives, with $c_0=1$ (legitimate by Step 1), the ideal generated by $\Phi_7(w)$ and the $4\times4$ minors of $C$ in $\mathbb Q[c_1,c_2,c_3,w]$ was tested for a Gröbner basis $\{1\}$. Six orbits were certified with at most $240$ random minors ($0.2$-$31$ s each); the two "three collinear plus one" orbits were not (a rerun with all $1225$ minors was stopped after $25$ minutes) and are instead certified by Proposition 4 (nullity $\le1$). Given Section 4 this certification is redundant, but it predates the proof and does not share its logic.
+
+**(f) Corank attainment and Proposition 4** (`e4_corank_attainment.py`, 1 s; `e5_line_plus_point_and_gp5.py`, 20 s). Every corank $k\le\ell-1$ at exact sparsity $\ell$ for $p\in\{5,7,11,13\}$ by the construction of Section 5.1; Proposition 4 on $68$ random exact instances in $\mathbb Z[\omega]$, $p\in\{5,7,11\}$, all of rank $\ge p-1$.
+
+**(g) Workshop checks and version-2 additions** (`w1_workshop_and_data.py`, 6 s). The external workshop that evaluated version 1 (AIRR taller, 2026-09-08, item TALLER-0001) wrote its own script from the PDF alone: it verified identity (4.1) entrywise modulo $p$ for all parameters and labels with $p\in\{3,5,7,11\}$ ($1826$ identities) and recomputed the rank of the $20\times20$ regular-representation matrix of the parabola operator as $12$ (rank $3$, nullity $2$ over $\mathbb Q(\omega_5)$). Both numbers agree with (a)-(c). `w1_workshop_and_data.py` re-derives them independently of the author's ring code (integer exponent arithmetic; rank by exact Fraction elimination and by sympy), writes the data files of Section 9, and verifies the decoder of Lemma 7 numerically for $p\in\{3,5,7\}$ and all $1\le r\le p$: tightness $TT^*=(p/r)I_r$, the Cauchy-Binet identity $\sum_Ew_Ew_E^*=(p/r)^{r-1}I_r$, orthogonality $\langle w_E,\varphi_b\rangle=0$ for $b\in E$ (and $\ne0$ for $b\notin E$), completeness of the POVM, zero probability for every label outside the reported list, and the factorisation $\rho=\sum_EC_EC_E^*$ with $s_W(C_E)=p-r+1$ of Remark (2).
+
+## 8. Open questions
+
+1. **Exact maximal nullity per support.** For a support $S$ let $\nu(S)$ be the maximal nullity over full-support coefficient vectors, an $\mathrm{AGL}(2,p)$-invariant. Known: $\ell-1$ for collinear $S$; $\le1$ for non-collinear trinomials ([0WE] Cor. 2.1) and for "line plus one point" (Proposition 4); $2$ for the parabola in $\mathbb F_5^2$ (Proposition 5). A dimension count (rank $\le p-n$ has codimension $n^2$ in $\mathbb P^{\ell-1}$) suggests $\nu(S)\le\lfloor\sqrt{\ell-1}\rfloor$ in general position, consistent with Section 7(d) ($\ell=4$: $1$; $\ell=5$: $2$), but this is a heuristic, not a conjecture we can support beyond $p\le11$.
+2. **A Newton-polygon refinement.** Theorem 1' is a first-order statement (residues modulo $\mathfrak m$). The first-order bound already settles non-collinear trinomials and the parabola of Proposition 5 (Section 5.5). Can higher-order information sharpen the bound for other supports and determine more values of $\nu(S)$?
+3. **Prime powers.** For $d=p^k$ the reduction step survives and only the Vandermonde step fails (Section 5.3). The $s_W\le3$ data of [0WE] Theorem 3 (coranks $p^j$, $2p^j$) are consistent with $\dim\ker C\le(\ell-1)p^{k-1}$, which for collinear supports is the question of how many $p^k$-th roots of unity an $\ell$-term polynomial can annihilate; we have not investigated it.
+4. **Real and orthogonal analogues.** Chebotarev-type statements exist for real Fourier matrices and over finite fields [GKK21, EK25]; is there a rank-sparsity law for real Clifford-covariant operator bases, or for the Weyl operators of other finite groups (for instance groups of order $pq$, where Meshulam's inequality replaces Tao's)?
+5. **Quantitative versions.** The finite-search residuals of Section 7(d) motivate explicit quantitative bounds on $\sigma_{p-\ell+1}(C)/\|c\|$ in terms of $p$ and $\ell$. Theorem 1 and compactness give a qualitative positive minimum for fixed $p,\ell$ in the nonvacuous range, including sub-supports, but do not identify it with an experimental residual.
+
+## 9. Reproducibility
+
+The companion source package contains the manuscript, the received verification scripts in `repro/`, and fresh v003 execution logs in `verification/`. The final workshop run used Python 3.12, numpy 2.5.1, scipy 1.18 and sympy 1.14 on Windows. The scripts `e2_exact_padic_checks.py`, `review_check_proof.py` and `w1_workshop_and_data.py` were inspected and rerun. Their assertions passed; the logs and hashes identify the exact files and distinguish historical outputs from this run. The workshop's `final_revision_checks.py` verifies the two repaired normalization identities and the new residue arguments for $p=2$, trinomials and the parabola. These finite checks are not a substitute for the proofs in Sections 4-6.
+
+The data files in `repro/data/` include the five exact parabola certificates, full-precision coefficients of a separate numerical witness, and the decoder checks. The slower orbit search and Gröbner-basis experiments were not repeated for v003; Section 7 explicitly identifies them as historical. No source text from the cited literature is redistributed. The source package is prepared as a supplement; its inclusion in an eventual public record is subject to the author's approval and repository requirements.
+
+## Changes in internal revision v004 (9 September 2026)
+
+1. Replaced global-minimum/floor language by explicitly defined finite-search residuals and a numerical nullity threshold; unchanged historical values are not claimed as certified bounds.
+2. Added the exact valuation-domination reference and stated how domination gives the required contraction.
+3. Updated the author-editor disclosure to the publicly deployed AIRR-FOUNDER-1.0 rule; no acceptance is claimed.
+
+Added a standalone specialization lemma, matched the Pauli-characteristic-function normalization to Bu's exact v1 theorem and equation, and softened the literature-search wording.
+
+The earlier deposited v003 and its model reports are retained. This revision responds to their findings; it is not a final acceptance.
+
+## Appendix A. AI assistance, provenance and conflicts
+
+The author-supplied drafts attribute substantial use of generative AI to development of the theorem, proof, scripts and exposition under the author's direction. The supplied history names Anthropic agents; that history and the exact historical model designation have not been independently authenticated by this workshop. During preparation of the present revision, OpenAI Codex assisted with mathematical review, local corrections, additional written arguments, execution of verification scripts, bibliographic checking and document preparation. The author remains responsible for the scientific content and must approve this exact revision before submission.
+
+This preparation is AI-assisted manuscript work. It is not a human peer review, an independent editorial decision, or a formal AIRR model-assessment report. Historical model verdicts are retained in the private workshop history and are not presented as editorial endorsements. The deposited v003 was subsequently assessed in actual OpenAI Codex calls by gpt-6-astra and gpt-5.6-sol on 9 September 2026. Their original reports and subsequent clarifications are retained. Both sets of comments informed this v004 revision; Astra had also participated in earlier manuscript preparation. A separate reviewing context does not erase that history. Neither the v003 reports nor this disclosure constitute approval of the revised v004 artifact.
+
+The author is the founder/operator of AIRR.SCIENCE, the intended repository; this is a declared editorial conflict. Submission and acceptance are separate steps. Under the repository's AIRR-FOUNDER-1.0 rule of 9 September 2026, the author may make the human acceptance decision after two distinct identified model reviews, with his author-editor role and prior model participation disclosed. This is not independent human peer review; the final decision remains pending.
+
+The antecedent discussion is based on the sources cited in Section 1.2. Selected primary statements and bibliographic records were checked during workshop preparation. Neither the historical searches nor the present bounded checks establish an exhaustive literature search or certify priority.
+
+## References
+
+[0WE] L. Eriksson, *Three-term Weyl operators: central multiplicities, rank laws, and exact list decoding*, Archive for Rigorous Research, ARR-2026-0WESHW4YMM9FG8EK (2026-09-05). [Source](https://airr.science/papers/ARR-2026-0WESHW4YMM9FG8EK/).
+
+[3H0] L. Eriksson, *Strictly Scalable Exterior Decoders for Quantum Lists: Exact Full-Spark Widths and Fixed-Probe Weyl Bayes Curves*, Archive for Rigorous Research, ARR-2026-3H0ZKWJMH18MH9FX (2026-08-24). [Source](https://airr.science/papers/ARR-2026-3H0ZKWJMH18MH9FX/).
+
+[BMQ21] J. Bavaresco, M. Murao, M. T. Quintino, *Strict hierarchy between parallel, sequential, and indefinite-causal-order strategies for channel discrimination*, Phys. Rev. Lett. 127 (2021) 200504. [Source](https://doi.org/10.1103/PhysRevLett.127.200504).
+
+[BMQ22] J. Bavaresco, M. Murao, M. T. Quintino, *Unitary channel discrimination beyond group structures: advantages of sequential and indefinite-causal-order strategies*, J. Math. Phys. 63 (2022) 042203; arXiv:2105.13369. [Source](https://doi.org/10.1063/5.0075919).
+
+[Bu24] K. Bu, *Extremality of stabilizer states*, arXiv:2403.13632 (2024). [Source](https://arxiv.org/abs/2403.13632).
+
+[BW92] C. H. Bennett, S. J. Wiesner, *Communication via one- and two-particle operators on Einstein-Podolsky-Rosen states*, Phys. Rev. Lett. 69 (1992) 2881-2884. [Source](https://doi.org/10.1103/PhysRevLett.69.2881).
+
+[DS89] D. L. Donoho, P. B. Stark, *Uncertainty principles and signal recovery*, SIAM J. Appl. Math. 49 (1989) 906-931. [Source](https://doi.org/10.1137/0149053).
+
+[EK25] T. Emmrich, S. Kunis, *Real and finite field versions of Chebotarëv's theorem*, arXiv:2506.02947 (2025). [Source](https://arxiv.org/abs/2506.02947).
+
+[Fr04] P. E. Frenkel, *Simple proof of Chebotarev's theorem on roots of unity*, arXiv:math/0312398 (2004). [Source](https://arxiv.org/abs/math/0312398).
+
+[GJ11] S. Ghobber, P. Jaming, *On uncertainty principles in the finite dimensional setting*, Linear Algebra Appl. 435 (2011) 751-768. [Source](https://arxiv.org/abs/0903.2923).
+
+[GKK21] S. R. Garcia, G. Karaali, D. J. Katz, *An improved uncertainty principle for functions with symmetry*, J. Algebra 586 (2021) 899-934; arXiv:1807.07648. [Source](https://arxiv.org/abs/1807.07648).
+
+[JLRS25] N. Johnston, B. Lovitz, V. Russo, J. Sikora, *The complexity of perfect quantum state classification*, arXiv:2510.20789 (2025). [Source](https://arxiv.org/abs/2510.20789).
+
+[KPR08] F. Krahmer, G. E. Pfander, P. Rashkov, *Uncertainty in time-frequency representations on finite abelian groups and applications*, Appl. Comput. Harmon. Anal. 25 (2008) 209-225; arXiv:math/0611493. [Source](https://arxiv.org/abs/math/0611493).
+
+[Lo25] M. Loukaki, *Chebotarev's theorem for groups of order $pq$ and an uncertainty principle*, arXiv:2412.08600 (2024, revised 2025). [Source](https://arxiv.org/abs/2412.08600).
+
+[LPW05] J. Lawrence, G. E. Pfander, D. Walnut, *Linear independence of Gabor systems in finite dimensional vector spaces*, J. Fourier Anal. Appl. 11 (2005) 715-726. [Source](https://doi.org/10.1007/s00041-005-5017-6).
+
+[Ma15] R.-D. Malikiosis, *A note on Gabor frames in finite dimensions*, Appl. Comput. Harmon. Anal. 38 (2015) 318-330. [Source](https://doi.org/10.1016/j.acha.2014.06.004).
+
+[Me92] R. Meshulam, *An uncertainty inequality for groups of order pq*, European J. Combin. 13 (1992) 401-407. [Source](https://doi.org/10.1016/S0195-6698(05)80019-8).
+
+[Me06] R. Meshulam, *An uncertainty inequality for finite abelian groups*, European J. Combin. 27 (2006) 63-67. [Source](https://arxiv.org/abs/math/0312407).
+
+[QRS19] S. Quader, A. Russell, R. Sundaram, *Small-support uncertainty principles on $\mathbb Z/p$ over finite fields*, arXiv:1906.05179 (2019). [Source](https://arxiv.org/abs/1906.05179).
+
+[SL96] P. Stevenhagen, H. W. Lenstra Jr., *Chebotarëv and his density theorem*, Math. Intelligencer 18 (1996), no. 2, 26-37 (contains Chebotarev's 1926 theorem on Fourier minors). [Source](https://pub.math.leidenuniv.nl/~lenstrahw/PUBLICATIONS/1996d/art.pdf).
+
+[Ta05] T. Tao, *An uncertainty principle for cyclic groups of prime order*, Math. Res. Lett. 12 (2005) 121-127; arXiv:math/0308286. [Source](https://arxiv.org/abs/math/0308286).
+
+[WW21] A. Wigderson, Y. Wigderson, *The uncertainty principle: variations on a theme*, Bull. Amer. Math. Soc. 58 (2021) 225-261; arXiv:2006.11206. [Source](https://arxiv.org/abs/2006.11206).
+
+[Stacks] The Stacks Project Authors, *Valuation rings*, Lemma 10.50.2, Tag 00IA, consulted 9 September 2026. [Source](https://stacks.math.columbia.edu/tag/00IA).

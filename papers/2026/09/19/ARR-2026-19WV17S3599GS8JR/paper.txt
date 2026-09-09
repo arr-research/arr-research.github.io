@@ -1,0 +1,991 @@
+    The Grassmannian Degree Law for Passive k-Plane Spectral
+                           Routing
+
+                          Lluis Eriksson (Independent researcher)
+
+                         9 September 2026 - Internal revision v004
+
+
+Abstract
+A passive lossless 𝑁 -port network must send one fixed 𝑘-dimensional input channel to prescribed
+output 𝑘-planes 𝑌1 , … , 𝑌𝐿 at 𝐿 distinct frequencies on the unit circle. We prove that the
+minimum McMillan degree 𝑑min of a rational inner 𝑁 × 𝑁 matrix performing this task equals
+𝛿Gr , the least degree of a rational curve ℙ1 → Gr(𝑘, 𝐻) through the data, 𝐻 = ∑𝑖 𝑌𝑖 , for every
+𝑘, 𝑁 and 𝐿. The lower bound projects the Plücker vector of the routed column onto Λ𝑘 𝐻.
+The upper bound shows that the lossless lift 𝑀 𝐻𝑜−1 of a Forney minimal basis 𝑀 has exactly
+∑𝑗 deg 𝑚𝑗 states, through the backward-shift identity 𝑃 𝐾𝑀 = 𝐾𝐹0 , and completes it without
+new states. The published laws (𝑘 = 1 projective degree, direct-sum occupancy 𝑘(𝐿 − 𝑛∗ ),
+generic 𝑘(𝐿 − 1)) are special cases. We also prove the additivity deg(𝐹0 𝑈 ) = deg 𝐹0 + deg 𝑈 , a
+base-point law for arbitrary witness pencils 𝑃 (the compiled router has fdeg(𝑃 ) states plus one
+per base point in the open disc, so it is minimal iff fdeg(𝑃 ) = 𝛿Gr and no base point lies in the
+disc), the generic bound 𝛿Gr ≥ 𝑘⌊𝐿(𝑟 − 𝑘)/𝑟⌋ and, for every 𝐿, the generic value 𝑘⌊𝐿/2⌋ in Gr(𝑘,
+2𝑘), in particular 2⌊𝐿/2⌋ in Gr(2, 4).
+
+1. Introduction
+1.1 Antecedents
+Published special cases. Three earlier records of the author determine 𝑑min on special strata
+of the data.
+  • ARR-2026-6M3VGTXZ6W8JW9C9, Projective Memory and Resonant Bottlenecks in Pas-
+    sive Spectral Routing, Theorem 2.3 (global projective memory law): for one input line
+    (𝑘 = 1) and target lines 𝑌𝑖 at distinct nodes, 𝑑min = 𝛿𝐻 , where 𝛿𝐻 is the least degree of
+    a morphism ℙ1 → ℙ(𝐻) with 𝑅(𝜁𝑖 ) = 𝑌𝑖 , independently of the ambient port number. Its
+    lower-bound proof uses the a-priori estimate 𝑑 ≤ 𝐿 − 1 < 𝐿 to force the routed column
+    into 𝐻.
+  • ARR-2026-52B6MSS1W197W9T2, Exact Memory of Finite Spectral Routing Tables: The
+    Direct-Sum Occupancy Law and Its Singular Strata, Theorem 1.2: for a routing word
+    𝑤 = 𝑤1 ⋯ 𝑤𝐿 over 𝑚 target 𝑘-planes in direct-sum position (dim ∑𝑎 𝑌𝑎 = 𝑚𝑘), 𝑑min =
+    𝑘(𝐿−𝑛∗ ) with 𝑛∗ the least occupancy of a letter. Its compiler (Lemma 3.1) is only bounded
+    by 𝑘 ⋅ (column degree); Theorem 5.2 gives the detector-rank hierarchy 𝑑min ≥ max{𝑟 − 𝑘,
+    Δ} and Limitation 8.2 states that no complete formula is known off the direct-sum locus.
+  • ARR-2026-1WXCVX96S68GA9VK, Orthogonal Spectral Fan-Out Costs 𝑘(𝐿 − 1)
+    States, Theorem 3.1 (mutually orthogonal 𝑘-planes: 𝑑min = 𝑘(𝐿 − 1)), and ARR-2026-
+    33BE6K3HW78F4T7F, Exact Memory of Direct-Sum Spectral Fan-Out, Theorem 1.1
+    (universal sandwich 𝑟 − 𝑘 ≤ 𝑑min ≤ 𝑘(𝐿 − 1), 𝑟 = dim ∑𝑖 𝑌𝑖 ) and Corollary 1.2 (direct-sum
+    position 𝑟 = 𝑘𝐿 gives 𝑑min = 𝑘(𝐿 − 1), an open dense condition when 𝑁 ≥ 𝑘𝐿).
+
+
+                                                1
+The enumerative side. That the McMillan degree of a linear system is the degree of a rational
+curve in a Grassmannian (the graph curve 𝑧 ↦ colspan[𝐹 (𝑧); 𝐼]) goes back to Martin–Hermann
+[MH] and is the starting point of Ravi–Rosenthal–Wang [RRW1, RRW2] and Sottile [So], who
+identify the space of degree-𝑒 curves with a Quot scheme and count curves through Schubert
+conditions at fixed points of ℙ1 by Bertram’s quantum Schubert calculus [Be]. On the algebraic
+side, Forney [Fo] showed that a rational vector space has minimal polynomial bases whose column
+degrees 𝑒1 ≤ … ≤ 𝑒𝑘 are invariants of the space and that ∑𝑗 𝑒𝑗 is the McMillan degree of the
+space (Kailath [Ka, §6.5.4]).
+Subspace boundary interpolation. Boundary Nevanlinna–Pick interpolation for matrix
+Schur functions is treated by Bolotnikov–Dym [BD]. Rank-one Blaschke–Potapov factorisation
+[Po] identifies the McMillan degree of a square rational inner matrix with the winding number of
+its determinant. Alpay, Jorgensen and Lewkowicz [AJL, Theorem 2.1] characterise rectangular
+lossless rational functions by isometric minimal realizations and complete them to square lossless
+functions with the same state space. The matrix Fejér–Riesz theorem is due to Rosenblum [Ro];
+we use the form in Dritschel–Rovnyak [DR].
+The closest antecedent in the filter-design literature is the subspace Nevanlinna–Pick interpo-
+lation (SNIP) for discrete-time matrix all-pass filters of Bharath, Gaharwar, Appaiah and Pal
+[BGAP]. Their boundary problem (their Section 4.1, conditions (2a)–(2c)) prescribes at 𝑛 dis-
+tinct frequencies 𝜔𝑖 the full unitary value 𝐺(𝑒𝑗𝜔𝑖 ) = 𝐴𝑖 of an 𝑚 × 𝑚 all-pass filter 𝐺 together
+with a positive definite “group-delay matrix” Γ𝑖 unitarily similar to 𝑗𝐺∗ (𝑒𝑗𝜔𝑖 ) 𝑑𝐺
+                                                                                  𝑑𝜔 (𝑒
+                                                                                       𝑗𝜔𝑖
+                                                                                           ); the word
+                                                                                        𝐼𝑚
+“subspace” refers to the encoding of each value 𝐴𝑖 as the neutral subspace span ( 𝐴 ) ⊂ ℂ2𝑚 of
+                                                                                         𝑖
+the classical SNIP of control theory, not to subspace-valued data. Their Theorem 1 states that
+a rational solution exists iff a modified Pick matrix with diagonal blocks Γ𝑖 is positive definite,
+and their inductive construction (Section 4.3) produces 𝐺 = 𝑁 𝐷−1 with 𝑁 , 𝐷 polynomial of
+degree 𝑛, one 2𝑚 × 2𝑚 linear factor per node, i.e. a filter with up to 𝑛𝑚 states; the free Γ𝑖
+are then chosen by a semidefinite programme minimising the trace of the Pick matrix. The
+routing problem of this paper differs in all three respects: only the image 𝑆(𝜁𝑖 ) ran 𝑋 = 𝑌𝑖 of
+one 𝑘-plane is prescribed, with bases and phases free; no derivative data enter; and the question
+answered is the least McMillan degree compatible with the data, which [BGAP] does not pose
+(its solution has a definite, not a minimal, degree, and the SNIP data always admit degree-𝑛𝑚
+solutions when the Pick matrix is definite, whereas 𝑑min here can be as small as 𝑟 −𝑘 and as large
+as 𝑘(𝐿 − 1)). For interior nodes and full tangential data, minimal-degree rational interpolation
+without the inner constraint is classical (Antoulas–Ball–Kang–Willems [ABKW]), and inner in-
+terpolants of degree equal to the number of conditions are given by Blaschke–Potapov products
+[Po]; we found no source that states the minimum McMillan degree of an inner interpolant for
+subspace-valued boundary data with free phases (the queries are recorded in the response file of
+version 2). The comparison with [BGAP] was made from Sections 1–4 of its arXiv text.
+
+1.2 Contribution
+Theorem 1 states 𝑑min = 𝛿Gr for all 𝑘, 𝑁 and 𝐿 and all 𝑘-plane data at distinct boundary nodes.
+The ingredients that are new relative to the antecedents are:
+   1. a degree-preservation lemma for the lossless lift of a minimal basis: 𝐹0 ∶= 𝑀 𝐻𝑜−1 has
+      exactly ∑𝑗 𝑒𝑗 states, proved through the identity 𝑃 𝐾𝑀 = 𝐾𝐹0 between backward-shift
+      invariant subspaces (Proposition 5.4), which replaces the bound 𝑘 ⋅max𝑗 𝑒𝑗 of 52B6 Lemma
+      3.1;
+   2. a lower bound by coordinate projection of the Plücker vector (Proposition 4.2), valid for
+      every rational 𝑁 × 𝑘 column through the data without any passivity hypothesis, which
+      removes the restriction 𝑑 < 𝐿 of 6M3V and shows that 𝛿Gr does not depend on 𝑁 ;
+
+
+
+                                                  2
+   3. the additivity deg(𝐹0 𝑈 ) = deg 𝐹0 + deg 𝑈 for inner 𝑈 (Theorem 5.7), giving uniqueness of
+      the minimum-degree inner column with prescribed column space, and the base-point law
+      (Theorem 6.1): the lossless lift of an arbitrary admissible pencil 𝑃 has fdeg(𝑃 ) states plus
+      one per base point in the open disc, and nothing for base points on the circle, outside the
+      closed disc, or at infinity; it is a minimum-degree router iff fdeg(𝑃 ) = 𝛿Gr and no base
+      point lies in the disc (version 1 omitted the first condition; Example 6.2);
+   4. the generic lower bound 𝛿Gr ≥ 𝑘⌊𝐿(𝑟 − 𝑘)/𝑟⌋ + max(0, 𝑘 − 𝑚0 ) (Proposition 7.3) and the
+      generic value 𝛿Gr = 𝑘⌊𝐿/2⌋ in Gr(𝑘, 2𝑘) for every 𝐿 (Theorem 7.4, proved with an explicit
+      witness), in particular 2⌊𝐿/2⌋ in Gr(2, 4), which is not the dimension count 𝐿 − 1; the
+      matching generic upper bound for general (𝑘, 𝑟) is left as a conjecture.
+The received version reports AI-assisted drafting and adversarial checks (see the qualified prove-
+nance statement at the end); the present text includes arguments addressing the uniqueness
+clause of Lemma C and the base-point formula. Version 2 answers the external evaluation of the
+AIRR workshop of 8 September 2026, which refuted the last clause of Theorem 6.1 of version
+1 by an explicit example (reproduced as Example 6.2), asked that the generic value in Gr(2,
+4) be either restricted to 3 ≤ 𝐿 ≤ 7 or proved for all 𝐿 (now proved), and asked for the exact
+witnesses behind Table 1 (now in repro/witnesses/); the changes are listed at the end.
+
+2. Setting
+𝔻 is the open unit disc, 𝕋 the unit circle, ℂ[𝑧] the polynomial ring. A rational 𝑁 × 𝑁 matrix
+function 𝑆 is inner if it is analytic in 𝔻 and unitary on 𝕋. A rational function unitary (or
+isometric) almost everywhere on 𝕋 cannot have a pole on 𝕋, so an inner 𝑆 is analytic on a
+neighbourhood of 𝔻 and contractive there by the maximum principle.
+McMillan degree. For a rational 𝑝 × 𝑞 matrix 𝐹 analytic at 0, a realization is 𝐹 (𝑧) =
+𝐷 + 𝑧𝐶(𝐼 − 𝑧𝐴)−1 𝐵 with 𝐴 ∈ ℂ𝑛×𝑛 ; deg 𝐹 is the least such 𝑛. It equals the rank of the block
+Hankel matrix (𝐹𝑠+𝑡+1 )𝑠,𝑡≥0 of the Taylor coeﬀicients and the total pole multiplicity of 𝐹 on the
+Riemann sphere, the point ∞ included; a minimal realization is reachable and observable, and
+its 𝐴 has 𝜎(𝐴) ⊂ 𝔻 when 𝐹 is analytic on 𝔻. We write 𝜒(𝑧) ∶= det(𝐼 − 𝑧𝐴) for the realization
+denominator; 𝜒 ≠ 0 on 𝔻 in that case. 𝐹 ♯ (𝑧) ∶= 𝐹 (1/𝑧)̄ ∗ .
+Lemma 2.1 (winding). If 𝑈 is a 𝑘 × 𝑘 rational inner function of degree 𝑛, then det 𝑈 is a
+finite Blaschke product with exactly 𝑛 zeros in 𝔻 (with multiplicity), i.e. wind𝕋 det 𝑈 = 𝑛.
+                                                                                          𝑛
+Proof. By Potapov’s theorem [Po] a rational inner 𝑈 of degree 𝑛 is a product 𝑈0 ∏𝑞=1 (𝐼 +
+(𝑏𝑎𝑞 − 1)𝑢𝑞 𝑢∗𝑞 ) of a constant unitary and 𝑛 rank-one factors, 𝑏𝑎 (𝑧) = (𝑧 − 𝑎)/(1 − 𝑎𝑧),
+                                                                                       ̄ |𝑎𝑞 | < 1,
+‖𝑢𝑞 ‖ = 1. Each factor has determinant 𝑏𝑎𝑞 . □ (This is the “topological McMillan degree” of
+ARR-2026-07EH3CZRD89YC8JN.)
+Routing data. An isometric input frame 𝑋 ∈ ℂ𝑁×𝑘 ; distinct nodes 𝜁1 , … , 𝜁𝐿 ∈ 𝕋; target
+𝑘-planes 𝑌𝑖 ⊆ ℂ𝑁 (dim 𝑌𝑖 = 𝑘; repeated targets allowed); 𝐻 ∶= ∑𝑖 𝑌𝑖 , 𝑟 ∶= dim 𝐻. The routing
+problem asks for inner 𝑆 with
+
+                                𝑆(𝜁𝑖 ) ran 𝑋 = 𝑌𝑖     (1 ≤ 𝑖 ≤ 𝐿),
+
+bases and endpoint phases being free, and
+
+              𝑑min ∶= min{deg 𝑆 ∶ 𝑆 rational inner 𝑁 × 𝑁 , 𝑆(𝜁𝑖 ) ran 𝑋 = 𝑌𝑖 ∀𝑖}.
+
+The upper bound 𝑘(𝐿 − 1) of 33BE Theorem 1.1 shows the minimum exists.
+Chordal error. For two 𝑘-planes with orthogonal projectors Π, Π′ we use dist = ‖Π − Π′ ‖op ,
+the sine of the largest principal angle; for 𝑘 = 1 and unit vectors this is √1 − |⟨𝑦, 𝑓⟩|2 , the
+chordal distance used in 6M3V. The experiments report max𝑖 dist(𝑆(𝜁𝑖 ) ran 𝑋, 𝑌𝑖 ).
+
+                                                3
+3. Three definitions of 𝛿Gr
+Curves. A morphism 𝑅 ∶ ℙ1 → Gr(𝑘, 𝐻) composed with the Plücker embedding into ℙ(Λ𝑘 𝐻)
+is given by a vector of (𝑘𝑟 ) homogeneous polynomials of a common degree 𝑒 without common
+zero on ℙ1 ; 𝑒 is the degree of 𝑅 (the pullback degree of 𝒪(1)). Dehomogenising at 𝑡 = 1 gives
+a primitive polynomial vector 𝑣 ∈ ℂ[𝑧] ⊗ Λ𝑘 𝐻 (coordinates without common zero) of maximal
+coordinate degree exactly 𝑒, and conversely a primitive vector of maximal coordinate degree 𝑒
+whose values are decomposable defines a morphism of degree 𝑒. Put
+             𝛿Gr ∶= min{deg 𝑅 ∶ 𝑅 ∶ ℙ1 → Gr(𝑘, 𝐻) a morphism, 𝑅(𝜁𝑖 ) = 𝑌𝑖 ∀𝑖}.
+
+Pencils and minimal bases. Fix coordinates 𝐻 = ℂ𝑟 . For a polynomial 𝑟 × 𝑘 matrix 𝑃
+of rank 𝑘 over ℂ(𝑧) let fdeg(𝑃 ) ∶= max𝐼 deg minor𝐼 (𝑃 ) − deg gcd𝐼 minor𝐼 (𝑃 ) (Forney degree),
+the maximum over the 𝑘 × 𝑘 minors. Let 𝑉 ⊆ ℂ(𝑧)𝑟 be a 𝑘-dimensional ℂ(𝑧)-subspace. A
+polynomial basis 𝑀 = [𝑚1 ⋯ 𝑚𝑘 ] of 𝑉 with column degrees 𝑒1 ≤ … ≤ 𝑒𝑘 is a minimal basis [Fo]
+if (a) rank 𝑀 (𝑧) = 𝑘 for every 𝑧 ∈ ℂ and (b) the leading-coeﬀicient matrix [lc(𝑚1 ) ⋯ lc(𝑚𝑘 )] has
+rank 𝑘. Minimal bases exist and the 𝑒𝑗 depend only on 𝑉 . Finally, for 𝑒 ≥ 0 put
+                             𝑉𝑒 ∶= {𝑓 ∈ ℂ[𝑧]𝑟 ∶ deg 𝑓 ≤ 𝑒, 𝑓(𝜁𝑖 ) ∈ 𝑌𝑖 ∀𝑖}.
+
+Lemma A.
+           𝛿Gr = min{fdeg(𝑃 ) ∶ 𝑃 ∈ ℂ[𝑧]𝑟×𝑘 , rank 𝑃 (𝜁𝑖 ) = 𝑘, colspan 𝑃 (𝜁𝑖 ) = 𝑌𝑖 ∀𝑖}
+
+               = min{∑ deg 𝑚𝑗 ∶ 𝑀 a minimal basis, colspan 𝑀 (𝜁𝑖 ) = 𝑌𝑖 ∀𝑖}
+                         𝑗
+
+                     = min{∑ 𝑒𝑗 ∶ 𝑓𝑗 ∈ 𝑉𝑒𝑗 , 𝑓1 (𝜁𝑖 ) ∧ ⋯ ∧ 𝑓𝑘 (𝜁𝑖 ) ≠ 0 ∀𝑖}.
+                                 𝑗
+
+
+Proof. (1) Every polynomial basis 𝑃 of 𝑉 is 𝑃 = 𝑀 𝑈 with 𝑈 ∈ ℂ[𝑧]𝑘×𝑘 . By (a) the 𝑘 × 𝑘 minors
+of 𝑀 have no common zero, so a Bézout identity ∑𝐼 𝑎𝐼 det 𝑀𝐼 = 1 holds with polynomial 𝑎𝐼 ,
+and 𝑀 + ∶= ∑𝐼 𝑎𝐼 adj(𝑀𝐼 )𝐸𝐼 (𝐸𝐼 the row selector) is a polynomial left inverse of 𝑀 ; 𝑈 = 𝑀 + 𝑃
+is polynomial.
+ (2) fdeg(𝑃 ) = ∑𝑗 𝑒𝑗 for every polynomial basis 𝑃 of 𝑉 . No minor of 𝑀 exceeds degree ∑𝑗 𝑒𝑗 ,
+     the 𝑧∑ 𝑒𝑗 coeﬀicient of minor𝐼 (𝑀 ) is the corresponding minor of the leading-coeﬀicient
+     matrix, nonzero for some 𝐼 by (b), and the minors are coprime by (a). By Cauchy–Binet,
+     minor𝐼 (𝑀 𝑈 ) = minor𝐼 (𝑀 ) det 𝑈 , so the gcd of the minors of 𝑃 is det 𝑈 up to a constant
+     and fdeg(𝑃 ) = ∑𝑗 𝑒𝑗 .
+ (3) Minimal bases are curves and conversely. The primitive vector of minors of 𝑀 has maximal
+     degree ∑𝑗 𝑒𝑗 (by (2)), no common zero at finite points (by (a)) and none at ∞ (by (b)); its
+     values are minors of a rank-𝑘 matrix, hence decomposable; so it is a morphism of degree
+     ∑𝑗 𝑒𝑗 . Conversely, a morphism 𝑅 of degree 𝑒 pulls the tautological subbundle back to a
+     rank-𝑘 subbundle 𝒮𝑅 ↪ 𝒪𝑟ℙ1 of degree −𝑒; by Grothendieck’s theorem 𝒮𝑅 ≅ ⨁𝑗 𝒪(−𝑒𝑗 )
+     with 𝑒𝑗 ≥ 0 (an injection 𝒪(𝑎) ↪ 𝒪 forces 𝑎 ≤ 0) and ∑𝑗 𝑒𝑗 = 𝑒. Each inclusion 𝒪(−𝑒𝑗 ) →
+     𝒪𝑟 is a vector of homogeneous polynomials of degree 𝑒𝑗 ; dehomogenising gives 𝑚𝑗 with
+     deg 𝑚𝑗 ≤ 𝑒𝑗 , and fibrewise injectivity of the subbundle at finite points gives (a), at ∞ that
+     the 𝑧𝑒𝑗 coeﬀicients are linearly independent, i.e. deg 𝑚𝑗 = 𝑒𝑗 and (b). The value of 𝑅 at 𝑧
+     is colspan 𝑀 (𝑧).
+ (4) Interpolation survives gcd removal. If 𝑃 = 𝑀 𝑈 has rank 𝑃 (𝜁𝑖 ) = 𝑘 then det 𝑈 (𝜁𝑖 ) ≠ 0, so
+     the gcd of the minors of 𝑃 does not vanish at the nodes and the curve of the primitive
+     vector of minors of 𝑃 passes through colspan 𝑀 (𝜁𝑖 ) = colspan 𝑃 (𝜁𝑖 ) = 𝑌𝑖 . In particular an
+     admissible pencil never has a base point at a node.
+
+                                                   4
+Chain: a curve of degree 𝛿Gr gives, by (3), a minimal basis 𝑀 with ∑ 𝑒𝑗 = 𝛿Gr through the data,
+which is an admissible pencil of Forney degree 𝛿Gr by (2), whose columns lie in 𝑉𝑒𝑗 with nonzero
+wedge at every node. Conversely 𝑓𝑗 ∈ 𝑉𝑒𝑗 with nonzero wedges give a pencil 𝑃 = [𝑓1 ⋯ 𝑓𝑘 ] with
+fdeg(𝑃 ) ≤ max𝐼 deg minor𝐼 (𝑃 ) ≤ ∑𝑗 𝑒𝑗 , and by (4) and (3) the primitive vector of its minors is
+a curve through the data of that degree. □
+The last form is what the exact scripts evaluate (Section 8): for each tuple (𝑒𝑗 ) in increasing
+∑ 𝑒𝑗 , 𝑉𝑒𝑗 is a kernel computed exactly over ℚ(𝑖), and for 𝑘 = 2 the existence of a pair with
+nonzero wedge at all nodes is equivalent to each of the 𝐿 bilinear forms (𝑓1 , 𝑓2 ) ↦ 𝑓1 (𝜁𝑖 ) ∧ 𝑓2 (𝜁𝑖 )
+on 𝑉𝑒1 × 𝑉𝑒2 being a nonzero matrix (a finite product of nonzero polynomials is a nonzero
+polynomial, so finitely many proper hypersurfaces do not cover 𝑉𝑒1 × 𝑉𝑒2 ).
+Remark 3.1 (𝑁 -independence). The minimum over morphisms ℙ1 → Gr(𝑘, ℂ𝑁 ) through
+the data equals 𝛿Gr : if 𝑃 is an 𝑁 × 𝑘 minimal basis of degree 𝑒 through the data, the 𝑘 × 𝑘
+minors of the 𝑟 × 𝑘 block of 𝑃 with rows in 𝐻 are among the minors of 𝑃 , hence of degree ≤ 𝑒,
+and are nonzero at the nodes because colspan 𝑃 (𝜁𝑖 ) = 𝑌𝑖 ⊆ 𝐻; dividing by their gcd gives a
+curve in Gr(𝑘, 𝐻) of degree ≤ 𝑒 through the data (decomposability as in Section 4).
+
+4. Lower bound: 𝑑min ≥ 𝛿Gr
+Lemma B (minors of a degree-𝑛 function). Let 𝐹 = 𝐷 + 𝑧𝐶(𝐼 − 𝑧𝐴)−1 𝐵 with 𝐴 ∈ ℂ𝑛×𝑛
+and 𝜒 = det(𝐼 − 𝑧𝐴). For every 𝑗 × 𝑗 submatrix 𝐹𝐼𝐽 , 𝜒 det 𝐹𝐼𝐽 is a polynomial of degree ≤ 𝑛.
+Proof. The Schur-complement identity
+
+             𝐼 − 𝑧𝐴 −𝑧𝐵𝐽
+        det (            ) = det(𝐼 − 𝑧𝐴) det(𝐷𝐼𝐽 + 𝑧𝐶𝐼 (𝐼 − 𝑧𝐴)−1 𝐵𝐽 ) = 𝜒 det 𝐹𝐼𝐽
+               𝐶𝐼    𝐷𝐼𝐽
+
+exhibits 𝜒 det 𝐹𝐼𝐽 as the determinant of an (𝑛 + 𝑗) × (𝑛 + 𝑗) matrix whose first 𝑛 rows are aﬀine
+in 𝑧 and whose last 𝑗 rows are constant; by multilinearity in the rows it is a polynomial of degree
+≤ 𝑛. □
+No inner-ness is used; 07EH Lemma 3.2, 1WXC Lemma 3.2 and 52B6 Lemma 2.1 are this
+statement for inner 𝐹 . Poles at ∞ (singular 𝐴) are included in the count 𝑛.
+Proposition 4.2 (projection bound). Let 𝐹 be a rational 𝑁 × 𝑘 matrix function analytic at
+0 and at the nodes with colspan 𝐹 (𝜁𝑖 ) = 𝑌𝑖 for all 𝑖. Then deg 𝐹 ≥ 𝛿Gr .
+Proof. Let 𝑛 = deg 𝐹 and take a minimal realization, so 𝜒(𝜁𝑖 ) ≠ 0 (the poles of 𝐹 are the zeros
+of 𝜒 together with possibly ∞). Choose a unitary 𝑈 with 𝑈 ∗ 𝐻 = ℂ𝑟 ⊕ 0 and replace (𝐹 , 𝑌𝑖 ) by
+(𝑈 ∗ 𝐹 , 𝑈 ∗ 𝑌𝑖 ); so assume 𝐻 = span(𝑒1 , … , 𝑒𝑟 ). Let
+
+        𝑤(𝑧) ∶= 𝜒(𝑧) ⋅ (the 𝑘 × 𝑘 minors of 𝐹 (𝑧) with rows in {1, … , 𝑟}) ∈ ℂ[𝑧] ⊗ Λ𝑘 ℂ𝑟 .
+
+By Lemma B, 𝑤 is a polynomial vector of degree ≤ 𝑛; it is 𝜒 times the Plücker vector of the top
+𝑟×𝑘 block 𝐹𝐻 (𝑧) of 𝐹 (𝑧). At a node, colspan 𝐹 (𝜁𝑖 ) = 𝑌𝑖 ⊆ 𝐻 forces the last 𝑁 −𝑟 rows of 𝐹 (𝜁𝑖 ) to
+vanish, so 𝐹𝐻 (𝜁𝑖 ) has rank 𝑘 and 𝑤(𝜁𝑖 ) = 𝜒(𝜁𝑖 ) ⋅ (nonzero multiple of the Plücker vector of 𝑌𝑖 ) ≠
+0. Hence 𝑤 ≢ 0; let 𝑔 be the gcd of its coordinates and 𝑣 ∶= 𝑤/𝑔. Then 𝑣 is primitive of degree
+≤ 𝑛; 𝑔(𝜁𝑖 ) ≠ 0, so 𝑣(𝜁𝑖 ) is a nonzero multiple of the Plücker vector of 𝑌𝑖 ; and for every 𝑧 with
+𝜒(𝑧)𝑔(𝑧) ≠ 0, 𝑣(𝑧) is a scalar multiple of the vector of minors of 𝐹𝐻 (𝑧), hence lies in the cone over
+Gr(𝑘, 𝑟) (decomposable vectors, including 0), which is Zariski-closed in Λ𝑘 ℂ𝑟 . A polynomial map
+whose values lie in a closed set off a finite set lies in it everywhere, also at ∞ after homogenising.
+So 𝑣 is a morphism ℙ1 → Gr(𝑘, 𝐻) of degree ≤ 𝑛 through the data, and 𝛿Gr ≤ 𝑛. □
+Corollary 4.3. 𝑑min ≥ 𝛿Gr .
+
+
+
+                                                   5
+Proof. If 𝑆 is an inner interpolant of degree 𝑑 with realization 𝐷 + 𝑧𝐶(𝐼 − 𝑧𝐴)−1 𝐵, then
+𝐹 ∶= 𝑆𝑋 = 𝐷𝑋 + 𝑧𝐶(𝐼 − 𝑧𝐴)−1 (𝐵𝑋) has a realization with 𝑑 states, so deg 𝐹 ≤ 𝑑; 𝐹 is analytic
+on 𝔻 and colspan 𝐹 (𝜁𝑖 ) = 𝑆(𝜁𝑖 ) ran 𝑋 = 𝑌𝑖 . Apply Proposition 4.2. □
+Remarks 4.4. (i) The relation between 𝑑 and 𝐿 plays no role. The 6M3V argument (“ℓ𝑛
+vanishes at 𝐿 > 𝑑 nodes, so the column stays in 𝐻”) fails for 𝑘 > 1, where 𝑑min can exceed 𝐿
+(e.g. 𝑘(𝐿 − 1)); it is not needed, because the column may leave 𝐻 along the curve of 𝐹 while its
+Plücker projection to Λ𝑘 𝐻 still has degree ≤ 𝑛, and removing the gcd can only lower the degree.
+(ii) The bound holds for every rational column through the data, passive or not; passivity enters
+only in the upper bound, and the proposition applies verbatim to the rectangular inner column
+𝐹0 of Section 5.
+
+5. Upper bound: 𝑑min ≤ 𝛿Gr
+Throughout, 𝑀 = [𝑚1 ⋯ 𝑚𝑘 ] is a minimal basis in 𝐻-coordinates (𝑟×𝑘) with colspan 𝑀 (𝜁𝑖 ) = 𝑌𝑖
+and ∑𝑗 𝑒𝑗 = 𝛿Gr (Lemma A), and 𝑚 ∶= max𝑗 𝑒𝑗 .
+Theorem 5.1 (matrix Fejér–Riesz; Rosenblum [Ro], Dritschel–Rovnyak [DR]). Let
+𝑅(𝑧) = ∑|𝑡|≤𝑚 𝑅𝑡 𝑧𝑡 be a 𝑘 × 𝑘 Laurent polynomial with 𝑅(𝑧) ⪰ 0 on 𝕋 and det 𝑅 ≢ 0. Then
+                                               𝑚
+𝑅 = 𝐻 ♯ 𝐻 on 𝕋 for a polynomial 𝐻(𝑧) = ∑𝑡=0 𝐻𝑡 𝑧𝑡 that is outer: det 𝐻(𝑧) ≠ 0 for 𝑧 ∈ 𝔻. If
+𝑅 ≻ 0 on 𝕋 then also det 𝐻 ≠ 0 on 𝕋.
+The last clause follows from | det 𝐻|2 = det 𝑅 on 𝕋. Apply it to 𝑅 ∶= 𝑀 ♯ 𝑀 , 𝑅𝑡 = ∑𝑠 𝑀𝑠∗ 𝑀𝑠+𝑡 ,
+which is ≻ 0 on 𝕋 because 𝑀 (𝑧) has rank 𝑘 at every 𝑧 ∈ ℂ (property (a) of a minimal basis, not
+only at the nodes). Let 𝐻𝑜 be the outer factor and put
+
+                                          𝐹0 ∶= 𝑀 𝐻𝑜−1 .
+
+𝐹0 is rational and analytic on a neighbourhood of 𝔻, 𝐹0∗ 𝐹0 = 𝐻𝑜−∗ 𝑀 ∗ 𝑀 𝐻𝑜−1 = 𝐼𝑘 on 𝕋 (a
+rectangular inner column), and colspan 𝐹0 (𝜁𝑖 ) = colspan 𝑀 (𝜁𝑖 ) = 𝑌𝑖 since 𝐻𝑜 (𝜁𝑖 ) is invertible.
+                                      2
+Backward shift. On the Hardy space 𝐻𝑁     let (𝑆 ∗ ℎ)(𝑧) = (ℎ(𝑧) − ℎ(0))/𝑧. For a rational
+     ∞
+𝐹 ∈ 𝐻𝑁×𝑘 put
+                   𝐾𝐹 ∶= span{𝑆 ∗𝑚 (𝐹 𝑐) ∶ 𝑚 ≥ 1, 𝑐 ∈ ℂ𝑘 } ⊂ 𝐻𝑁  2
+                                                                   .
+
+Lemma 5.2. (i) dim 𝐾𝐹 = deg 𝐹 . (ii) For a polynomial matrix 𝑀 with column degrees 𝑒𝑗 ,
+dim 𝐾𝑀 ≤ ∑𝑗 𝑒𝑗 .
+
+Proof. (i) With a minimal 𝑛-state realization, 𝐹 = 𝐷 + ∑𝑚≥1 𝑧𝑚 𝐶𝐴𝑚−1 𝐵, so 𝑆 ∗𝑚 𝐹 =
+∑𝑡≥0 𝑧𝑡 𝐶𝐴𝑚+𝑡−1 𝐵 = 𝐶(𝐼 − 𝑧𝐴)−1 𝐴𝑚−1 𝐵.             Hence 𝐾𝐹 = {𝐶(𝐼 − 𝑧𝐴)−1 𝑥 ∶            𝑥 ∈
+            𝑚−1                    −1           𝑛                                         −1
+span𝑚,𝑐 𝐴       𝐵𝑐} = {𝐶(𝐼 − 𝑧𝐴) 𝑥 ∶ 𝑥 ∈ ℂ } by reachability, and 𝑥 ↦ 𝐶(𝐼 − 𝑧𝐴) 𝑥 =
+      𝑡   𝑡
+∑𝑡 𝑧 𝐶𝐴 𝑥 is injective by observability. (ii) 𝑆 ∗𝑚 (𝑀 𝑒𝑗 ) = 0 for 𝑚 > 𝑒𝑗 , so the ∑𝑗 𝑒𝑗 vectors
+𝑆 ∗𝑚 (𝑀 𝑒𝑗 ), 1 ≤ 𝑚 ≤ 𝑒𝑗 , span 𝐾𝑀 . □
+                                   ∞
+Lemma 5.3 (product rule). For 𝑓 ∈ 𝐻𝑁×𝑘 and 𝑔 ∈ 𝐻𝑘2 , 𝑆 ∗ (𝑓𝑔) = 𝑓 ⋅ 𝑆 ∗ 𝑔 + (𝑆 ∗ 𝑓)𝑔(0), and
+               𝑡   2
+for ℎ = ∑𝑡 ℎ𝑡 𝑧 ∈ 𝐻𝑘 and 𝑚 ≥ 1
+                                                       𝑚
+                             𝑆 ∗𝑚 (𝑓ℎ) = 𝑓 ⋅ 𝑆 ∗𝑚 ℎ + ∑(𝑆 ∗𝑗 𝑓) ℎ𝑚−𝑗 .
+                                                       𝑗=1
+
+
+
+Proof. The first identity is 𝑓𝑔−𝑓(0)𝑔(0)
+                                     𝑧     = 𝑓 𝑔−𝑔(0)
+                                                 𝑧    + 𝑓−𝑓(0)
+                                                          𝑧    𝑔(0). Induction on 𝑚: applying 𝑆 ∗ to
+the displayed formula, 𝑆 ∗ (𝑓𝑆 ∗𝑚 ℎ) = 𝑓𝑆 ∗(𝑚+1) ℎ + (𝑆 ∗ 𝑓)(𝑆 ∗𝑚 ℎ)(0) with (𝑆 ∗𝑚 ℎ)(0) = ℎ𝑚 , and
+𝑆 ∗ ((𝑆 ∗𝑗 𝑓)ℎ𝑚−𝑗 ) = (𝑆 ∗(𝑗+1) 𝑓)ℎ𝑚−𝑗 because ℎ𝑚−𝑗 is constant. □
+
+
+                                                   6
+                                                                      2
+Proposition 5.4 (𝑃 𝐾𝑀 = 𝐾𝐹0 ). Let 𝑃 be the orthogonal projection of 𝐻𝑁 onto (𝐹0 𝐻𝑘2 )⟂ .
+Then 𝑃 𝐾𝑀 = 𝐾𝐹0 .
+Proof. (i) 𝐾𝐹0 ⟂ 𝐹0 𝐻𝑘2 . Multiplication by 𝐹0 is an isometry 𝐻𝑘2 → 𝐻𝑁  2
+                                                                          since 𝐹0∗ 𝐹0 = 𝐼 on 𝕋.
+                𝑘         2   ∗𝑚                       𝑚             𝑚
+For 𝑚 ≥ 1, 𝑐 ∈ ℂ , ℎ ∈ 𝐻𝑘 : ⟨𝑆 (𝐹0 𝑐), 𝐹0 ℎ⟩ = ⟨𝐹0 𝑐, 𝑧 𝐹0 ℎ⟩ = ⟨𝑐, 𝑧 ℎ⟩ = 0. Hence 𝑃 |𝐾𝐹 = id.
+                                                                                               0
+
+                                𝑘                                                         ∗𝑚
+(ii) 𝑃 𝐾𝑀 ⊆ 𝐾𝐹0 . For 𝑐 ∈ ℂ put ℎ ∶= 𝐻𝑜 𝑐, so 𝐹0 ℎ = 𝑀 𝑐. Lemma 5.3 gives 𝑆 (𝑀 𝑐) =
+             𝑚                                                               𝑚
+𝐹0 𝑆 ∗𝑚 ℎ + ∑𝑗=1 (𝑆 ∗𝑗 𝐹0 )ℎ𝑚−𝑗 ; 𝑃 kills the first term, so 𝑃 𝑆 ∗𝑚 (𝑀 𝑐) = ∑𝑗=1 (𝑆 ∗𝑗 𝐹0 )(𝐻𝑜 𝑐)𝑚−𝑗 ∈
+𝐾𝐹0 .
+(iii) 𝐾𝐹0 ⊆ 𝑃 𝐾𝑀 . For 𝜆 ∈ 𝔻 and 𝑐 ∈ ℂ𝑘 set
+
+                        Φ𝑐 (𝜆) ∶= ∑ 𝜆𝑚 𝑃 𝑆 ∗𝑚 (𝑀 𝑐)
+                                    𝑚≥1
+
+                              = ∑ 𝜆𝑗 (𝑆 ∗𝑗 𝐹0 ) ∑ 𝜆𝑡 (𝐻𝑜 )𝑡 𝑐 = 𝐺(𝜆)𝐻𝑜 (𝜆)𝑐,
+                                 𝑗≥1               𝑡≥0
+                                          𝑗   ∗𝑗
+                        𝐺(𝜆) ∶= ∑ 𝜆 𝑆 𝐹0 .
+                                    𝑗≥1
+
+The sum defining Φ𝑐 is finite (𝑆 ∗𝑚 (𝑀 𝑐) = 0 for 𝑚 > 𝑚max ); 𝐺(𝜆) = 𝐶(𝐼 − 𝑧𝐴)−1 𝜆(𝐼 −
+𝜆𝐴)−1 𝐵 converges for |𝜆| < 1/𝜌(𝐴), in particular on 𝔻, and takes values in the finite-dimensional
+space 𝐾𝐹0 , so the rearrangement is legitimate. For an analytic map Ψ from 𝔻 into a finite-
+dimensional space, the span of its values equals the span of its Taylor coeﬀicients at 0 (a linear
+functional annihilating one set annihilates the other, and subspaces of a finite-dimensional space
+are determined by their annihilators). Therefore
+                          𝑃 𝐾𝑀 = span𝑚,𝑐 𝑃 𝑆 ∗𝑚 (𝑀 𝑐) = span𝜆,𝑐 Φ𝑐 (𝜆)
+                                 = span𝜆,𝑐 𝐺(𝜆)𝐻𝑜 (𝜆)𝑐 = span𝜆,𝑐′ 𝐺(𝜆)𝑐′
+                                 = span𝑗≥1,𝑐′ (𝑆 ∗𝑗 𝐹0 )𝑐′ = 𝐾𝐹0 .
+using that 𝐻𝑜 (𝜆) is invertible for every 𝜆 ∈ 𝔻 (outerness) in the fourth equality and the same
+span principle for 𝐺 in the fifth. □
+Corollary 5.5. deg 𝐹0 = dim 𝐾𝐹0 = dim 𝑃 𝐾𝑀 ≤ dim 𝐾𝑀 ≤ ∑𝑗 𝑒𝑗 = 𝛿Gr ; combined with
+Proposition 4.2, deg 𝐹0 = 𝛿Gr exactly, and all inequalities are equalities (dim 𝐾𝑀 = ∑𝑗 𝑒𝑗 , 𝑃 is
+injective on 𝐾𝑀 ).
+The degree identity also holds for an arbitrary minimal basis, without assuming that it minimizes
+the interpolation problem: if 𝑀 has total column degree 𝑒, Proposition 5.4 gives deg(𝑀 𝐻𝑜−1 ) ≤ 𝑒.
+Conversely, take a minimal realization of 𝐹0 = 𝑀 𝐻𝑜−1 of degree 𝑛 and denominator 𝜒. Lemma
+B makes the vector 𝑤𝐼 = 𝜒 minor𝐼 (𝐹0 ) polynomial of degree at most 𝑛. Its primitive vector
+represents the same rational column space as 𝑀 , so Lemma A(2) gives its degree as 𝑒. Thus
+𝑒 ≤ 𝑛, and deg 𝐹0 = 𝑒 for every minimal basis. This is the version used in Theorem 5.7, where
+the rational column space is fixed independently of the interpolation minimum.
+Theorem 5.6 (same-state completion; Alpay–Jorgensen–Lewkowicz [AJL, Theorem
+2.1 I(i)–(ii), p. 5, equations (2.3)–(2.5)]). Let 𝐹 be a 𝑝 × 𝑚 rational function, 𝑝 ≥ 𝑚, with
+all poles in 𝔻 (Schur stable), and write 𝐹 (𝑤) = 𝐷 + 𝐶(𝑤𝐼 − 𝐴)−1 𝐵. (i) 𝐹 is isometric on 𝕋 iff
+                                               𝐴 𝐵
+it admits a minimal realization matrix 𝑅 = (        ) with 𝑅∗ 𝑅 = 𝐼𝑛+𝑚 . (ii) If so, there exist
+                                               𝐶 𝐷
+                                           𝐴 𝐵 𝐵̃
+𝐵̃ ∈ ℂ𝑛×(𝑝−𝑚) , 𝐷̃ ∈ ℂ𝑝×(𝑝−𝑚) such that (           ) is unitary.
+                                           𝐶 𝐷 𝐷̃
+Part (ii) is elementary: an isometry is completed to a unitary by an orthonormal basis of the
+orthogonal complement of its range; this is what the numerical pipeline does. To apply the
+
+                                                     7
+theorem, note that if 𝐹0 (𝑧) = 𝐷 + 𝑧𝐶(𝐼 − 𝑧𝐴)−1 𝐵 is our disc-convention realization, then
+𝐹0 (1/𝑤) = 𝐷 + 𝐶(𝑤𝐼 − 𝐴)−1 𝐵 has the same realization matrix, is analytic at 𝑤 = ∞, has all
+poles in 𝔻 (𝐹0 is analytic on 𝔻), is isometric on 𝕋 (𝕋 is invariant under 𝑤 ↦ 1/𝑤) and is minimal
+iff 𝐹0 is. No paraconjugation is needed. In AJL’s notation 𝑝 = 𝑟, 𝑚 = 𝑘 and the state dimension
+is 𝑛; equation (2.3) makes the (𝑛 + 𝑟) × (𝑛 + 𝑘) matrix an isometry, and (2.4)–(2.5) add exactly
+𝑟 − 𝑘 input columns without changing 𝐴 or 𝐶. This identifies the same-state assertion used
+below.
+Theorem 1 (Grassmannian degree law). For every 𝑘, every 𝑁 , every finite table of 𝑘-planes
+at distinct boundary nodes,
+                                  𝑑min = 𝛿Gr .
+The value depends only on the configuration (𝑌𝑖 ) ⊂ Gr(𝑘, 𝐻) and the nodes, not on 𝑁 . A
+minimum-degree curve, represented by a minimal basis 𝑀 , compiles to a square inner router of
+the same degree by 𝑀 ↦ 𝑀 𝐻𝑜−1 followed by unitary augmentation of an isometric realization;
+conversely every router of degree 𝑑 yields a curve of degree ≤ 𝑑 through the data.
+Proof. Corollary 4.3 gives ≥. For ≤, let 𝑛 = deg 𝐹0 = 𝛿Gr (Corollary 5.5) and take, by Theorem
+5.6 (i)–(ii), a minimal isometric realization of 𝐹0 augmented to a unitary matrix. Then 𝑆𝐻 (𝑧) ∶=
+     ̃
+[𝐷 𝐷]+𝑧𝐶(𝐼     −𝑧𝐴)−1 [𝐵 𝐵]̃ is 𝑟×𝑟 with a unitary realization matrix and 𝜎(𝐴) ⊂ 𝔻, hence analytic
+                                                                                ̄ ∗ )−1 (𝐼 − 𝑧𝐴)−1 𝐵𝑓 ,
+on 𝔻 and unitary on 𝕋 by the identity 𝐼 − 𝑆𝐻 (𝑧)∗ 𝑆𝐻 (𝑧) = (1 − |𝑧|2 )𝐵𝑓∗ (𝐼 − 𝑧𝐴
+𝐵𝑓 = [𝐵 𝐵];  ̃ it has ≤ 𝑛 states, and its first 𝑘 columns are 𝐹0 of degree 𝑛, so deg 𝑆𝐻 = 𝑛. Let 𝑈
+be unitary with 𝑈 (ℂ𝑟 ⊕ 0) = 𝐻 and 𝑉0 unitary with 𝑉0 ran 𝑋 = ℂ𝑘 ⊕ 0, and set
+
+                                      𝑆 ∶= 𝑈 (𝑆𝐻 ⊕ 𝐼𝑁−𝑟 ) 𝑉0 .
+
+Then deg 𝑆 = 𝑛 = 𝛿Gr and 𝑆(𝜁𝑖 ) ran 𝑋 = 𝑈 (colspan 𝐹0 (𝜁𝑖 ) ⊕ 0) = 𝑌𝑖 . □
+Theorem 5.7 (Lemma C: additivity and uniqueness). Let 𝐹 be an inner 𝑁 × 𝑘 column
+(analytic on 𝔻, isometric on 𝕋) whose ℂ(𝑧)-column space is 𝑉 , let 𝑀 be a minimal basis of 𝑉
+with column degrees 𝑒𝑗 and 𝐹0 = 𝑀 𝐻𝑜−1 . Then 𝐹 = 𝐹0 𝑈 with 𝑈 a 𝑘 × 𝑘 rational inner function
+and
+                           deg 𝐹 = deg 𝐹0 + deg 𝑈 = ∑ 𝑒𝑗 + deg 𝑈 .
+                                                           𝑗
+
+In particular 𝐹0 is the unique minimum-degree inner column with column space 𝑉 , up to a
+constant unitary factor on the right.
+Proof. Write 𝐹 = 𝑃 /𝜒 with 𝜒 the denominator of a minimal realization (deg 𝜒 ≤ 𝑛′ ∶= deg 𝐹 ,
+𝜒 ≠ 0 on 𝔻) and 𝑃 polynomial with column space 𝑉 (over ℂ(𝑧), 𝐹 has rank 𝑘 since it is isometric
+on 𝕋). By Lemma A(1), 𝑃 = 𝑀 𝑄 with 𝑄 polynomial, so 𝐹 = 𝑀 𝑄/𝜒 = 𝐹0 (𝐻𝑜 𝑄/𝜒) =∶ 𝐹0 𝑈 .
+𝑈 is rational and analytic on 𝔻, and on 𝕋, 𝑈 ∗ 𝑈 = 𝑈 ∗ 𝐹0∗ 𝐹0 𝑈 = 𝐹 ∗ 𝐹 = 𝐼; so 𝑈 is inner. The
+inequality deg(𝐹0 𝑈 ) ≤ deg 𝐹0 + deg 𝑈 is the product of realizations. For the reverse, Cauchy–
+Binet gives minor𝐼 (𝐹 ) = minor𝐼 (𝑀 ) det 𝑄/𝜒𝑘 , and Lemma B applied to the minimal realization
+of 𝐹 says that 𝜒 minor𝐼 (𝐹 ) = minor𝐼 (𝑀 ) det 𝑄/𝜒𝑘−1 is a polynomial of degree ≤ 𝑛′ for every
+𝐼. Thus 𝜒𝑘−1 divides minor𝐼 (𝑀 ) det 𝑄 for all 𝐼; since the minors of 𝑀 are coprime (Bézout),
+𝜒𝑘−1 ∣ det 𝑄, say det 𝑄 = 𝜒𝑘−1 𝑞,̃ and deg minor𝐼 (𝑀 ) + deg 𝑞 ̃ ≤ 𝑛′ for all 𝐼. Taking 𝐼 with
+deg minor𝐼 (𝑀 ) = ∑𝑗 𝑒𝑗 (Lemma A(2)) gives 𝑛′ ≥ ∑𝑗 𝑒𝑗 +deg 𝑞.̃ Now det 𝑈 = det 𝐻𝑜 det 𝑄/𝜒𝑘 =
+         ̃
+det 𝐻𝑜 𝑞/𝜒, and by Lemma 2.1 det 𝑈 has exactly deg 𝑈 zeros in 𝔻; none can come from det 𝐻𝑜
+(outer, nonzero on 𝕋) or from 1/𝜒 (zero-free on 𝔻), so deg 𝑞 ̃ ≥ #{zeros of 𝑞 ̃ in 𝔻} ≥ deg 𝑈 .
+Hence 𝑛′ ≥ ∑𝑗 𝑒𝑗 + deg 𝑈 = deg 𝐹0 + deg 𝑈 . If deg 𝐹 = deg 𝐹0 then deg 𝑈 = 0: 𝑈 is a constant
+unitary. □
+
+
+
+
+                                                  8
+6. Base points
+Theorem 1 uses a minimal basis, which has no base points. In practice a witness pencil 𝑃 may
+be produced by any means (Lagrange interpolation, a random element of 𝑉𝑒1 × ⋯ × 𝑉𝑒𝑘 ), and the
+natural compiler is 𝑃 ↦ 𝑃 𝐻𝑃−1 with 𝐻𝑃 the outer factor of 𝑃 ♯ 𝑃 (Theorem 5.1 in its semidefinite
+form; 𝐻𝑃 may then be singular at points of 𝕋). The following statement, asserted by experiment
+in the first version and proved here, explains what the compiler returns.
+Boundary convention. All rational products 𝑃 𝐻𝑃−1 below are understood after cancelling remov-
+able singularities. The outer factor has no zero in 𝔻. If det 𝐻𝑃 vanishes at 𝜉 ∈ 𝕋, then on a
+punctured boundary arc the identity (𝑃 𝐻𝑃−1 )∗ (𝑃 𝐻𝑃−1 ) = 𝐼𝑘 bounds every entry by one. An
+entry with a genuine pole at 𝜉 would be unbounded along that arc. Thus each possible pole is
+removable, and the isometry identity extends by continuity at 𝜉. There is no extra McMillan
+state from such a cancelled boundary factor.
+Theorem 6.1 (base-point law). Let 𝑃 ∈ ℂ[𝑧]𝑟×𝑘 be an admissible pencil (rank 𝑃 (𝜁𝑖 ) = 𝑘,
+colspan 𝑃 (𝜁𝑖 ) = 𝑌𝑖 ), 𝑉 its column space, 𝑀 a minimal basis of 𝑉 , 𝐹0 = 𝑀 𝐻𝑜−1 , and 𝑔𝑃 the gcd
+of the 𝑘 × 𝑘 minors of 𝑃 (its zeros are the base points of 𝑃 ; none lies at a node by Lemma A(4)).
+Then 𝑃 𝐻𝑃−1 = 𝐹0 𝑈𝑖 with 𝑈𝑖 a 𝑘 × 𝑘 rational inner function, and
+
+               deg(𝑃 𝐻𝑃−1 ) = fdeg(𝑃 ) + #{zeros of 𝑔𝑃 in 𝔻} (with multiplicity).
+
+Base points on 𝕋 ∖ {𝜁𝑖 }, outside 𝔻, or at ∞ (a drop of rank of the leading-coeﬀicient matrix) are
+free; base points in 𝔻 cost one state each. Since fdeg(𝑃 ) ≥ 𝛿Gr for every admissible 𝑃 (Lemma
+A), the compiler attains 𝑑min iff fdeg(𝑃 ) = 𝛿Gr and 𝑃 has no base point in 𝔻. The first condition
+holds automatically when 𝑃 = [𝑓1 ⋯ 𝑓𝑘 ] with 𝑓𝑗 ∈ 𝑉𝑒𝑗 , ∑𝑗 𝑒𝑗 = 𝛿Gr and nonzero wedges at the
+nodes (the witnesses of Section 8; Lemma A gives fdeg(𝑃 ) ≤ ∑𝑗 𝑒𝑗 ), but not for an arbitrary
+admissible pencil, which merely interpolates (Example 6.2).
+Proof. By Lemma A(1), 𝑃 = 𝑀 𝑈𝑃 with 𝑈𝑃 polynomial, det 𝑈𝑃 = 𝑔𝑃 up to a constant. Then
+𝑃 ♯ 𝑃 = 𝑈𝑃♯ 𝐻𝑜♯ 𝐻𝑜 𝑈𝑃 = (𝐻𝑜 𝑈𝑃 )♯ (𝐻𝑜 𝑈𝑃 ) on 𝕋. Let 𝐻𝑜 𝑈𝑃 = 𝑈𝑖 𝐻𝑃′ be the inner–outer factorisation
+of the polynomial matrix 𝐻𝑜 𝑈𝑃 (det ≢ 0): 𝑈𝑖 is a square rational inner function and 𝐻𝑃′ is outer.
+Then 𝑃 ♯ 𝑃 = 𝐻𝑃′♯ 𝐻𝑃′ on 𝕋, so 𝐻𝑃′ is an outer spectral factor of 𝑃 ♯ 𝑃 and coincides with 𝐻𝑃 up
+to a constant unitary on the left; absorbing it into 𝑈𝑖 ,
+
+                        𝑃 𝐻𝑃−1 = 𝑀 𝑈𝑃 𝐻𝑃−1 = 𝑀 𝐻𝑜−1 (𝐻𝑜 𝑈𝑃 )𝐻𝑃−1 = 𝐹0 𝑈𝑖 .
+
+By Theorem 5.7, deg(𝑃 𝐻𝑃−1 ) = deg 𝐹0 + deg 𝑈𝑖 = fdeg(𝑃 ) + deg 𝑈𝑖 (Lemma A(2)). By Lemma
+2.1, deg 𝑈𝑖 is the number of zeros of det 𝑈𝑖 = det 𝐻𝑜 det 𝑈𝑃 / det 𝐻𝑃 in 𝔻; det 𝐻𝑜 and det 𝐻𝑃
+have no zeros in 𝔻 (outer), so this is the number of zeros of det 𝑈𝑃 = 𝑔𝑃 in 𝔻. Zeros of 𝑔𝑃 on
+𝕋 are absorbed by the outer factor (det 𝐻𝑃 may vanish on 𝕋) and do not count; zeros outside
+𝔻 and a rank drop at ∞ do not contribute an additional term to the degree formula beyond
+fdeg(𝑃 ). For the final claim, Lemma A says that 𝛿Gr is the minimum of fdeg over admissible
+pencils, so fdeg(𝑃 ) ≥ 𝛿Gr and deg(𝑃 𝐻𝑃−1 ) ≥ 𝛿Gr = 𝑑min (Theorem 1), with equality iff both
+terms of the formula are minimal. (Version 1 asserted at this point that every admissible 𝑃 has
+fdeg(𝑃 ) = 𝛿Gr , and concluded that the compiler is minimal iff there is no base point in 𝔻; the
+workshop example below refutes that clause, while the degree formula stands.) □
+Example 6.2 (an admissible pencil without base points whose lift is not minimal;
+AIRR workshop, 2026-09-08). Take 𝑘 = 1, 𝑁 = 𝑟 = 2, nodes 𝜁1 = 1, 𝜁2 = −1 and targets
+𝑌1 = span 𝑒1 , 𝑌2 = span 𝑒2 . A degree-0 curve is impossible (𝑌1 ≠ 𝑌2 ) and 𝑄(𝑧) = (𝑧 + 1, 𝑧 − 1)𝑇
+has 𝑄(1) = (2, 0)𝑇 , 𝑄(−1) = (0, − 2)𝑇 , so 𝛿Gr = 𝑑min = 1. The pencil 𝑃 (𝑧) = (𝑧 + 1, 𝑧(𝑧 − 1))𝑇
+is admissible (𝑃 (1) = (2, 0)𝑇 , 𝑃 (−1) = (0, 2)𝑇 ) and its coordinates are coprime, so 𝑔𝑃 = 1 and
+𝑃 has no base point, but fdeg(𝑃 ) = 2. On 𝕋, 𝑃 ♯ 𝑃 = |𝑧 + 1|2 + |𝑧 − 1|2 = 4, so 𝐻𝑃 = 2 and the
+
+
+                                                 9
+compiler returns 𝑃 /2, a polynomial column of McMillan degree 2 = fdeg(𝑃 ) + 0, as the formula
+predicts, while the inner matrix
+
+                                      1 𝑧+1 𝑧−1
+                           𝑆1 (𝑧) =    (        ),           det 𝑆1 = 𝑧,
+                                      2 𝑧−1 𝑧+1
+
+is a router of degree 1 (𝑆1 (1)𝑒1 = 𝑒1 , 𝑆1 (−1)𝑒1 = −𝑒2 ), and 𝑆2 ∶= diag(1, 𝑧)𝑆1 is inner of degree
+2 with first column 𝑃 /2 and det 𝑆2 = 𝑧 2 . Here 𝑃 is itself a minimal basis of its column space
+𝑉 = ℂ(𝑧)𝑃 , so 𝐹0 = 𝑃 /2, 𝑈𝑖 = 1, and Theorem 5.7 correctly says that 𝑃 /2 is the minimum-
+degree inner column with column space 𝑉 ; the point is that the column space of the optimal
+router’s first column, ℂ(𝑧)𝑄, is a different line. Unitarity of 𝑆1 , 𝑆2 on 𝕋, the determinants, the
+gcd, the interpolation values and the three McMillan degrees (Hankel ranks 1, 2, 2) were veri-
+fied symbolically (repro/scratch_v2/taller_and_graph_witness.py; the workshop’s own script
+check_core.py is rerun in repro/taller_check/).
+
+Section 8 verifies the degree formula on nine witnesses, all with fdeg(𝑃 ) = 𝛿Gr = 3: one, two
+and double base points in 𝔻 (cost 1, 2, 2), the pair ± 12 (2), one inside and one outside (1), a
+non-diagonal 𝑈𝑃 with det 𝑈𝑃 = 𝑧 − 12 (1), a unimodular 𝑈𝑃 raising the column degrees but not
+the Forney degree (0), and base points at 2 and at ∞ (0). Base points on 𝕋 were not tested
+numerically (the Wilson iteration used there requires 𝑃 ♯ 𝑃 ≻ 0 on 𝕋).
+
+7. Consequences and comparison with the published laws
+7.1 Lines (𝑘 = 1). Gr(1, 𝐻) = ℙ(𝐻), minors are coordinates, fdeg is the projective degree, and
+Theorem 1 is 6M3V Theorem 2.3 with a lower-bound proof that does not use 𝑑 ≤ 𝐿 − 1.
+7.2 Direct-sum words. Let 𝑤 be a word over targets 𝑌𝑎 in direct-sum position and 𝐹0 ∶=
+∑𝑎 𝑝𝑎 (𝑧)𝑊𝑎 with 𝑝𝑎 ∶= ∏𝑖∶𝑤 ≠𝑎 (𝑧 − 𝜁𝑖 ) (the compiler input of 52B6, Section 3). Every column
+                              𝑖
+has degree ≤ 𝐿 − 𝑛∗ and 𝐹0 (𝜁𝑖 ) = 𝑝𝑤𝑖 (𝜁𝑖 )𝑊𝑤𝑖 has rank 𝑘, so Lemma A gives 𝛿Gr ≤ 𝑘(𝐿 − 𝑛∗ ).
+The 52B6 lower bound transfers to curves: with 𝐷𝑎 the block-dual detectors (𝐷𝑎 𝑊𝑏 = 𝛿𝑎𝑏 𝐼𝑘 )
+and 𝑀 a minimal basis through the data, det(𝐷𝑎 𝑀 (𝑧)) = ∑𝐼 det(𝐷𝑎 )∶,𝐼 minor𝐼 (𝑀 ) has degree
+≤ ∑𝑗 𝑒𝑗 , vanishes to order ≥ 𝑘 at every node not labelled 𝑎 and is nonzero at nodes labelled
+𝑎, so ∑𝑗 𝑒𝑗 ≥ 𝑘(𝐿 − 𝑛𝑎 ). Hence 𝛿Gr = 𝑘(𝐿 − 𝑛∗ ) and Theorem 1 recovers 52B6 Theorem 1.2.
+Theorem 1 also explains why 52B6 Lemma 3.1 bounded the compiler by 𝑘 ⋅ (𝐿 − 𝑛∗ ) only: the
+exact count is ∑𝑗 𝑒𝑗 , which equals 𝑘 max𝑗 𝑒𝑗 precisely for this word construction.
+7.3 Generic 𝑘(𝐿 − 1) and the span bound. When 𝑟 = 𝑘𝐿 each node is its own letter,
+𝑛∗ = 1, and 𝛿Gr = 𝑘(𝐿 − 1): 33BE Corollary 1.2 and 1WXC Theorem 3.1. In general the
+∑𝑗 (𝑒𝑗 + 1) = 𝛿Gr + 𝑘 coeﬀicient vectors of a minimal basis span a space containing every 𝑀 (𝜁𝑖 ),
+hence 𝐻; so 𝛿Gr ≥ 𝑟−𝑘, which is the lower half of 33BE Theorem 1.1 and 52B6 Theorem 5.1. For
+𝑟 < 𝑘𝐿 the generic value can be strictly smaller than 𝑘(𝐿 − 1): in Gr(2, 4) it is 2⌊𝐿/2⌋ < 2(𝐿 − 1)
+for every 𝐿 ≥ 3 (Theorem 7.4).
+Proposition 7.3 (generic lower bound). Let 𝑒0 ∶= ⌊𝐿(𝑟 − 𝑘)/𝑟⌋, the least 𝑒 with 𝑟(𝑒 + 1) >
+𝐿(𝑟 − 𝑘), and 𝑚0 ∶= 𝑟(𝑒0 + 1) − 𝐿(𝑟 − 𝑘) ∈ {1, … , 𝑟}. Let Ω1 ⊆ Gr(𝑘, 𝑟)𝐿 be the set of data with
+𝑉𝑒 = 0 for all 𝑒 < 𝑒0 and dim 𝑉𝑒0 = 𝑚0 . Then Ω1 is nonempty and Zariski-open, and at every
+point of Ω1
+                                𝛿Gr ≥ 𝑘 𝑒0 + max(0, 𝑘 − 𝑚0 ).
+
+Proof. 𝑉𝑒 is the kernel of the incidence map 𝜄𝑒 ∶ ℂ[𝑧]≤𝑒 ⊗ 𝐻 → ⨁𝑖 𝐻/𝑌𝑖 , of dimensions 𝑟(𝑒 + 1)
+and 𝐿(𝑟 − 𝑘); injectivity of 𝜄𝑒 for 𝑒 < 𝑒0 and surjectivity of 𝜄𝑒0 are Zariski-open conditions on
+the data. A witness for both: 𝑌𝑖 = span{𝑒𝑎 ∶ 𝑎 ∉ 𝐼𝑖 } with the 𝑟 − 𝑘 missed coordinates 𝐼𝑖
+assigned cyclically, so that coordinate 𝑎 is missed by |𝐼𝑎 | ∈ {⌊𝐿(𝑟 − 𝑘)/𝑟⌋, ⌈𝐿(𝑟 − 𝑘)/𝑟⌉} nodes,
+∑𝑎 |𝐼𝑎 | = 𝐿(𝑟 − 𝑘). Then 𝑓 ∈ 𝑉𝑒 iff each coordinate 𝑓𝑎 (degree ≤ 𝑒) vanishes at the |𝐼𝑎 | distinct
+
+                                                 10
+nodes missing 𝑎, so dim 𝑉𝑒 = ∑𝑎 max(0, 𝑒 + 1 − |𝐼𝑎 |), which is 0 for 𝑒 + 1 ≤ 𝑒0 ≤ min𝑎 |𝐼𝑎 |, and
+equals #{𝑎 ∶ |𝐼𝑎 | = 𝑒0 } = 𝑟(𝑒0 + 1) − 𝐿(𝑟 − 𝑘) = 𝑚0 for 𝑒 = 𝑒0 (if 𝐿(𝑟 − 𝑘)/𝑟 is an integer all
+|𝐼𝑎 | = 𝑒0 and dim 𝑉𝑒0 = 𝑟 = 𝑚0 ). On the open set, every column of a minimal basis attaining
+𝛿Gr is a nonzero element of 𝑉𝑒𝑗 , so 𝑒𝑗 ≥ 𝑒0 ; the columns with 𝑒𝑗 = 𝑒0 are linearly independent
+over ℂ and lie in 𝑉𝑒0 , so there are at most 𝑚0 of them and the remaining max(0, 𝑘 −𝑚0 ) columns
+have degree ≥ 𝑒0 + 1. □
+For 𝑘 = 1 this is the one-band generic value ⌊𝐿(𝑟 − 1)/𝑟⌋ of 6M3V Theorem 3.2, where it is also
+an upper bound; for 𝑟 = 𝑘𝐿 it is 𝑘(𝐿 − 1).
+Theorem 7.4 (generic value for 𝑟 = 2𝑘; in particular Gr(2, 4)). For data in the ambient
+Grassmannian Gr(𝑘, 2𝑘), let 𝐿 ≥ 1 and 𝑒 ∶= ⌊𝐿/2⌋. Then 𝛿Gr = 𝑘 𝑒 on a nonempty Zariski-open
+subset of Gr(𝑘, 2𝑘)𝐿 . In particular 𝛿Gr = 2⌊𝐿/2⌋ generically on Gr(2, 4)𝐿 , for every 𝐿.
+Proof. For 𝐿 = 1, a constant curve through the single target has degree 0 = 𝑘𝑒; its actual
+span has dimension 𝑘. For 𝐿 ≥ 2, work in the ambient space of dimension 𝑟 = 2𝑘; Remark 3.1
+permits this even for special data of smaller span. Here 𝑒0 = ⌊𝐿(𝑟 − 𝑘)/𝑟⌋ = ⌊𝐿/2⌋ = 𝑒 and
+𝑚0 = 2𝑘(𝑒 + 1) − 𝑘𝐿, which is 2𝑘 for 𝐿 = 2𝑒 and 𝑘 for 𝐿 = 2𝑒 + 1; in both cases 𝑚0 ≥ 𝑘, so
+Proposition 7.3 gives 𝛿Gr ≥ 𝑘𝑒 at every point of Ω1 .
+Explicit data. Write vectors of ℂ2𝑘 as (𝑢; 𝑣) with 𝑢, 𝑣 ∈ ℂ𝑘 , and for the given nodes put 𝑌𝑖 ∶= {(𝑥;
+𝜁𝑖𝑒 𝑥) ∶ 𝑥 ∈ ℂ𝑘 }, the graph of 𝜁𝑖𝑒 𝐼𝑘 . These are the values at the nodes of the curve 𝑧 ↦ graph(𝑧 𝑒 𝐼𝑘 ),
+whose minimal basis 𝑃𝑒 ∶= (𝑧𝐼𝑒𝑘𝐼 ) has column degrees (𝑒, … , 𝑒) (rank 𝑘 at every 𝑧; leading-
+                                    𝑘
+
+coeﬀicient matrix (𝐼0 ) when 𝑒 > 0, and (𝐼𝐼𝑘 ) when 𝑒 = 0, in both cases of rank 𝑘) and 𝑘 × 𝑘
+                    𝑘                        𝑘
+minors that include 1 and 𝑧𝑘𝑒 ; so fdeg(𝑃𝑒 ) = 𝑘𝑒 and 𝛿Gr ≤ 𝑘𝑒 for these data.
+The graph data lie in Ω1 . A vector 𝑓 = (𝑢; 𝑣) ∈ ℂ[𝑧]2𝑘 of degree ≤ 𝑒′ satisfies 𝑓(𝜁𝑖 ) ∈ 𝑌𝑖 iff
+𝑤 ∶= 𝑣 − 𝑧 𝑒 𝑢 vanishes at 𝜁𝑖 , and deg 𝑤 ≤ 𝑒 + 𝑒′ . If 𝑒′ ≤ 𝑒 − 1 then deg 𝑤 ≤ 2𝑒 − 1 < 𝐿, so 𝑤 = 0,
+𝑣 = 𝑧 𝑒 𝑢, and deg 𝑣 ≤ 𝑒′ < 𝑒 forces 𝑢 = 0: 𝑉𝑒′ = 0. If 𝑒′ = 𝑒 and 𝐿 = 2𝑒 + 1, again 𝑤 = 0 and
+𝑣 = 𝑧 𝑒 𝑢 with deg 𝑣 ≤ 𝑒 forces 𝑢 constant, so 𝑉𝑒 = {(𝑢; 𝑧 𝑒 𝑢) ∶ 𝑢 ∈ ℂ𝑘 } has dimension 𝑘 = 𝑚0 . If
+𝑒′ = 𝑒 and 𝐿 = 2𝑒, then 𝑤 = 𝑐 𝜋 with 𝜋 ∶= ∏𝑖 (𝑧 − 𝜁𝑖 ) = ∑𝑡 𝜋𝑡 𝑧𝑡 and 𝑐 ∈ ℂ𝑘 , and 𝑣 = 𝑧 𝑒 𝑢 + 𝑐𝜋
+has degree ≤ 𝑒 iff its coeﬀicients of 𝑧𝑒+1 , … , 𝑧 2𝑒 vanish, i.e. 𝑢𝑗 = −𝜋𝑒+𝑗 𝑐 for 𝑗 = 1, … , 𝑒, with
+𝑢0 ∈ ℂ𝑘 free: dim 𝑉𝑒 = 2𝑘 = 𝑚0 . Hence the graph data are in Ω1 , and 𝛿Gr = 𝑘𝑒 there.
+Openness. Let Ω2 ⊇ Ω1 be the open set where 𝜄𝑒 is surjective; over Ω2 the kernel 𝑉𝑒 is a vector
+bundle of rank 𝑚0 (kernel of a surjective map between vector bundles, the target being ⨁𝑖 𝒬𝑖
+with 𝒬 the universal quotient bundle). For each node 𝑖 the 𝑘-linear bundle map 𝑉𝑒×𝑘 → Λ𝑘 ℂ2𝑘 ,
+(𝑓1 , … , 𝑓𝑘 ) ↦ 𝑓1 (𝜁𝑖 ) ∧ ⋯ ∧ 𝑓𝑘 (𝜁𝑖 ), vanishes identically on a closed subset, so the set 𝑊 ⊆ Ω2
+where none of the 𝐿 maps vanishes identically is open. On 𝑊 , choose for each 𝑖 a nonzero
+coordinate 𝑞𝑖 of the 𝑖-th map; ∏𝑖 𝑞𝑖 is a nonzero polynomial function on 𝑉𝑒×𝑘 , so some tuple has
+all wedges nonzero and Lemma A (last form) gives 𝛿Gr ≤ 𝑘𝑒. The graph data lie in Ω1 ∩ 𝑊 (the
+columns of 𝑃𝑒 are in 𝑉𝑒 with independent values everywhere), so Ω1 ∩ 𝑊 is a nonempty open
+set on which 𝛿Gr = 𝑘𝑒. □
+The dimensions dim 𝑉𝑒′ of the graph data (0 for 𝑒′ < 𝑒, 𝑚0 for 𝑒′ = 𝑒) were also checked by exact
+linear algebra for 𝑘 = 2, 3 and 1 ≤ 𝐿 ≤ 12 (repro/scratch_v2/taller_and_graph_witness.py).
+Version 1 stated the theorem for (2, 4) and 3 ≤ 𝐿 ≤ 7 only, with the upper bound taken from
+the exact random witnesses of Section 8; those witnesses (now in repro/witnesses/) remain an
+independent confirmation that random data over ℚ(𝑖) lie in the open set of the theorem, and
+the exact values 3, 6, 6, 9 for random data with (𝑘, 𝑟) = (3, 6), 𝐿 = 3, 4, 5, 6 (Table 2) confirm
+the case 𝑘 = 3.
+The naive count dim{degree-𝑒 maps} = 4 + 4𝑒 ≥ 4𝐿 predicts 𝐿 − 1 (e.g. 3 for 𝐿 = 4, 5 for 𝐿 = 6)
+and is wrong: a cubic through four generic points would need splitting type (0, 3) or (1, 2),
+i.e. a nonzero element of 𝑉1 , which is generically 0. The possible relation to quantum Schubert
+
+
+                                                    11
+calculus [Be] is not used in this proof; the degree values here follow from the interpolation
+argument above.
+Comparison with fixed-domain curve counts. Buch–Pandharipande [BP-Tev, Section 1.1, Defini-
+tion 1.1 and Theorem 1.4] study virtual Tevelev degrees with the marked domain fixed. Under
+Gr(2, 4) ≅ 𝑄4 , genus zero and 𝐿 ≥ 3, the dimension constraint is 𝑑 = 𝐿 − 1 and their quadric
+formula gives (1 + (−1)𝑑 )/2: one for odd 𝐿, zero for even 𝐿. This parity comparison helps place
+Theorem 7.4 in the existing literature. A vanishing virtual count is not by itself nonexistence of
+an interpolating morphism, nor does a nonzero virtual count prove the minimum or existence for
+every fixed node configuration considered here. Our minimum and fixed-node assertion follow
+from the explicit interpolation proof above; the construction of a rational inner router is an
+additional analytic step. No priority or equivalence claim is inferred from this comparison.
+Conjecture 7.5 (generic law). Generic 𝛿Gr = 𝑘 𝑒0 + max(0, 𝑘 − 𝑚0 ), i.e. the bound of
+Proposition 7.3 is attained. The upper bound requires a witness tuple with min(𝑘, 𝑚0 ) columns
+in 𝑉𝑒0 and the rest in 𝑉𝑒0 +1 having independent node values, a degree-𝑘 multilinear rather than
+linear condition (quadratic when 𝑘 = 2); it is proved for 𝑟 = 2𝑘 and every 𝐿 (Theorem 7.4:
+there 𝑚0 ≥ 𝑘 and the formula reads 𝑘⌊𝐿/2⌋), certified by exact computation for (2, 3, 𝐿 = 4, 5,
+6) (values 2, 3, 4), and confirmed redundantly on random data for (2, 4, 𝐿 ≤ 7) and (3, 6, 𝐿 = 3,
+4, 5, 6) (values 2⌊𝐿/2⌋ and 3, 6, 6, 9). For 𝑘 = 1 and for 𝑟 = 𝑘𝐿 the conjecture is the published
+law.
+7.6 Detector ranks cannot determine 𝑑min . 52B6 Theorem 5.2 bounds 𝑑min ≥ max{𝑟 − 𝑘,
+Δ} with Δ = max𝐷 ∑𝑖 (𝑘 − rank(𝐷𝑊𝑖 )) over constant 𝑘 × 𝑁 detectors 𝐷 with rank(𝐷𝑊𝑖 ) = 𝑘
+for some 𝑖. For 𝑘 = 2, 𝑁 = 4 and generic data, Δ is a Schubert count: rank(𝐷𝑊𝑖 ) < 2 means
+that ker 𝐷, a point of Gr(2, 4), meets 𝑌𝑖 nontrivially (the divisor class 𝜎1 ), and rank(𝐷𝑊𝑖 ) = 0
+means ker 𝐷 = 𝑌𝑖 , i.e. 𝐷 is the annihilator of 𝑌𝑖 , which has rank 2 on the other generic planes.
+Since 𝜎14 = 2 and 𝜎15 = 0 in 𝐻 ∗ (Gr(2, 4)), for 𝐿 = 4 an admissible ker 𝐷 can meet at most
+three of the planes (the two planes meeting all four give inadmissible 𝐷), and for 𝐿 ≥ 5 at most
+four. Hence generically Δ = 3 for 𝐿 = 4 and Δ = 4 for 𝐿 = 5, 6, whereas 𝛿Gr = 4, 4, 6. So
+the hierarchy bound is tight for 𝐿 = 5 and strictly below 𝑑min for 𝐿 = 4 and 𝐿 = 6. Moreover
+the structured data of Section 8 (four planes on a (1, 2)-curve) also have 𝑟 = 4 and Δ = 3 but
+𝑑min = 3: the pair (𝑟, Δ) takes the same value on data with 𝑑min = 3 and with 𝑑min = 4. This
+answers 52B6 Limitation 8.2 negatively for these statistics: off the direct-sum locus, 𝑑min is the
+degree of a curve and is not a function of 𝑟 and Δ. The numerical detector search of Section 8
+finds the witnesses (1, 1, 1, 2), (1, 1, 1, 1, 2) and (1, 1, 1, 1, 2, 2) predicted by this count.
+
+8. Experiments
+All computations are in repro/ (Section 10). Nodes are Gaussian-rational points of 𝕋 ( 3+4𝑖
+                                                                                          5 ,
+5+12𝑖 8+15𝑖
+ 13  ,  17  , …); targets are random Gaussian-integer frames of rank 𝑘; exact arithmetic over
+ℚ(𝑖) uses SymPy’s DomainMatrix; numerics use NumPy/SciPy in double precision.
+Table 1. Exact 𝛿Gr (author’s script grassmann_degree_exact.py, 𝑘 = 2). “Witness” is a
+random element of 𝑉𝑒1 × 𝑉𝑒2 with its Forney degree and the gcd of its minors. The exact nodes,
+frames, witness pencils and lower-bound certificates of every row except the last are the files
+repro/witnesses/*.json described after Table 3.
+
+                                                                      column        witness fdeg /
+data          𝑟             𝑟−𝑘           𝑘(𝐿 − 1)      𝛿Gr           degrees       gcd
+random seeds 4              2             6             4             (2,2)         4/1
+1, 2, 3;
+𝑁 = 4, 𝐿 = 4
+
+
+
+                                               12
+                                                                          column          witness fdeg /
+data            𝑟               𝑟−𝑘          𝑘(𝐿 − 1)      𝛿Gr            degrees         gcd
+seed 1         4                2            6             4              (2,2)           4/1
+embedded in
+ℂ5 (𝐻 =
+ℂ4 ⊊ ℂ5 )
+random (1,     4                2            6             3              (1,2)           3/1
+2)-curve data,
+𝐿=4
+same           4                2            8             3              (1,2)           3/1
+construction,
+𝐿=5
+generic 𝐿 = 3 4                 2            4             2              (1,1)           2/1
+generic 𝐿 = 5 4                 2            8             4              (2,2)           4/1
+generic 𝐿 = 6 4                 2            10            6              (3,3)           6/1
+generic 𝐿 = 7 4                 2            12            6              (3,3)           6/1
+Gr(2, 3),      3                1            6, 8, 10      2, 3, 4        (1,1), (1,2),   —
+generic                                                                   (2,2)
+𝐿 = 4, 5, 6
+(extra_
+checks.py)
+
+
+For every tuple with smaller sum the log records dim 𝑉𝑒1 , dim 𝑉𝑒2 and the failing wedge test;
+for generic 𝐿 = 4, dim 𝑉0 = dim 𝑉1 = 0 and dim 𝑉2 = 4, so (0, 3) and (1, 2) are impossible and
+(2, 2) works. The Gr(2, 3) ≅ ℙ2 values coincide with the exact 𝑘 = 1 projective degrees of the
+annihilator lines computed separately and with ⌊2𝐿/3⌋.
+Table 2. Reviewer’s independent exact computation (review_exact_delta.py, own
+code, different nodes and seeds).
+
+configuration                       published value                  𝛿Gr (exact)
+𝑘 = 1, three distinct coplanar      1 (33BE Thm 7.2)                 1
+lines
+𝑘 = 1, lines 𝑦1 , 𝑦1 , 𝑦2           2 (33BE Thm 7.2)                 2
+𝑘 = 1, four lines, pattern 3 + 1    3 (6M3V Thm 11.1)                3
+𝑘 = 1, binary word 𝑦1 𝑦2 𝑦1 𝑦2 𝑦1   max(𝑛0 , 𝑛∞ ) = 3 (6M3V Thm      3
+                                    9.2)
+𝑘 = 1, generic lines in ℂ3 , 𝐿 = 4, ⌊2𝐿/3⌋ = 2, 3, 4, 4 (6M3V Thm    2, 3, 4, 4
+5, 6, 7                             3.2)
+𝑘 = 2 in ℂ3 , generic 𝐿 = 4, 5, 6   ⌊2𝐿/3⌋ by duality                2, 3, 4
+𝑘 = 2, 𝐴 ⊕ 𝐵 = ℂ4 , words AAB / 𝑘(𝐿 − 𝑛∗ ) = 4/4/6/4/6/6 (52B6       4/4/6/4/6/6
+ABAB / AAAB / AABB /                Thm 1.2)
+AAABB / ABABA
+𝑘 = 3, 𝑁 = 6, 𝐿 = 2 generic         𝑘(𝐿 − 1) = 3 (33BE Cor 1.2)      3
+(direct sum)
+𝑘 = 3, 𝑁 = 6, 𝐿 = 3 generic         Prop. 7.3: ≥ 3; Conj. 7.5: 3     3
+𝑘 = 2, 𝑁 = 4, generic 𝐿 = 3, 4, 5, sandwich 2 ≤ 𝑑 ≤ 2(𝐿 − 1)         2, 4, 4, 6
+6 (fresh seeds)
+𝑘 = 3, 𝑁 = 6, generic 𝐿 = 4, 5, 6 Theorem 7.4: 3⌊𝐿/2⌋ = 6, 6, 9      6, 6, 9
+(version 2, reviewer’s code,
+scratch_v2/k3r6_generic.py)
+
+
+Table 3. Inner interpolants and base-point degree increments (inner_interpolant_
+numeric.py, extra_checks*.py, review_basepoint_additivity.py). Pipeline: exact witness 𝑀
+
+
+                                                      13
+→ 𝑅 = 𝑀 ♯ 𝑀 → outer factor 𝐻𝑜 by Wilson’s Newton iteration [Wi] on a 4096-point grid (7–60
+iterations; |𝐻𝑜♯ 𝐻𝑜 − 𝑅| ≤ 3.5 ⋅ 10−13 , Fourier tail beyond degree 𝑚 ≤ 7 ⋅ 10−13 , all zeros of det 𝐻𝑜
+outside 𝔻) → Taylor coeﬀicients of 𝐹0 = 𝑀 𝐻𝑜−1 (400 terms) → block-Hankel SVD (60 × 60
+blocks; rank = McMillan degree, with a clean gap, e.g. singular values 0.921, 0.82, 0.603, 0.446,
+0, 0, 0 for seed 1) → ERA realization [JP] → observability-Gramian scaling (isometric realization)
+→ null-space augmentation to a unitary realization matrix → square inner 𝑆 → checks. “res” is
+the largest of |𝐹0∗ 𝐹0 − 𝐼|𝕋 , |𝑅∗ 𝑅 − 𝐼| (isometric realization), |𝑆 ∗ 𝑆 − 𝐼|𝕋 ; the subspace distances
+max𝑖 dist(𝑆(𝜁𝑖 ) ran 𝑋, 𝑌𝑖 ) are < 10−12 in every row.
+                                                    𝑧 − 12   1              𝑧 − 21   𝑧
+In Table 3, the two mixing matrices are 𝑈1 = (                 ) and 𝑈2 = (            ).
+                                                      0      1                1      1
+
+                             predicted deg Hankel rank                     Hankel rank
+witness            𝛿Gr       (Thm 6.1)     of 𝐹0             wind det 𝑆    of 𝑆             res
+random seed 4                 4              4               4.000000      4                1.2 ⋅ 10−11
+1, minimal
+basis
+random seed 4                 4              4               4.000000      4                7.5 ⋅ 10−12
+2
+seed 1 in ℂ5 4                4              4               4.000000      4                2.2 ⋅ 10−12
+(1, 2)-curve        3         3              3               3.000000      3                2.4 ⋅ 10−15
+data,
+minimal
+basis [𝑝1 , 𝑝2 ]
+[𝑝1 , (𝑧 − 21 )𝑝2 ] 3         4              4               4.000000      4                5.7 ⋅ 10−15
+(base point in
+𝔻)
+[𝑝1 , (𝑧 −          3         5              5               5.000000      5                7.3 ⋅ 10−15
+ 1         1
+ 2 )(𝑧 −     )𝑝
+           3 2  ]
+(𝑧 − 21 )[𝑝1 , 𝑝2 ] 3         5              5               5.000000      5                8.0 ⋅ 10−15
+(double base
+point)
+[(𝑧 − 21 )𝑝1 ,      3         4              4               4.000000      4                3.4 ⋅ 10−15
+(𝑧 − 2)𝑝2 ]
+(one inside,
+one outside)
+𝑃0 𝑈1 (non-         3         4              4               4.000000      4                3.0 ⋅ 10−15
+diagonal,
+det 𝑈1 =
+𝑧 − 21 )
+𝑃0 𝑈2               3         3              3               3.000000      3                2.7 ⋅ 10−15
+(det 𝑈2 = − 21 ,
+column
+degrees (2,3))
+[𝑝1 ,               3         5              5               5.000000      5                6.4 ⋅ 10−15
+(𝑧2 − 41 )𝑝2 ]
+(base points
+± 12 )
+[𝑝1 , (𝑧 − 2)𝑝2 ] 3           3              3               3.000000      3                2.2 ⋅ 10−15
+(base point
+outside 𝔻)
+[𝑝1 , 𝑧 2 𝑝1 + 𝑝2 ] 3         3              3               3.000000      3                2.2 ⋅ 10−15
+(base point at
+∞; leading
+matrix rank
+1)
+generic 𝐿 = 5 4               4              4               4.000000      4                3.6 ⋅ 10−11
+
+
+                                                  14
+                            predicted deg Hankel rank                   Hankel rank
+witness       𝛿Gr           (Thm 6.1)     of 𝐹0          wind det 𝑆     of 𝑆          res
+generic 𝐿 = 6 6              6             6             6.000000       6             5.0 ⋅ 10−10
+
+
+The random instances have zeros of det 𝐻𝑜 as close as 1.014 to 𝕋 (𝐿 = 5), which is why their
+residuals are 10−10 –10−11 rather than 10−15 ; the structured instances (zeros at modulus ≥ 2)
+reach machine precision. In every minimal-basis row deg 𝑆 = 𝛿Gr with all checks below 10−9 ,
+and every base-point row matches Theorem 6.1.
+Witness files and the computer-assisted parts. Each file a JSON file in repro/witnesses/
+contains, as exact SymPy strings over ℚ(𝑖): the nodes, the 𝑁 × 𝑘 frames of the targets, the
+value 𝛿Gr , the column degrees (𝑒1 , 𝑒2 ), the two witness columns 𝑓1 ∈ 𝑉𝑒1 , 𝑓2 ∈ 𝑉𝑒2 , and the
+lower-bound certificate, i.e. for every pair 𝑒1 ≤ 𝑒2 with 𝑒1 + 𝑒2 < 𝛿Gr the dimensions dim 𝑉𝑒1 ,
+ dim 𝑉𝑒2 (a zero dimension rules the pair out) and, when both are positive, the fact that some
+wedge form 𝑉𝑒1 × 𝑉𝑒2 → Λ2 𝑌𝑖 is the zero matrix. The script verify_witness.py recomputes
+everything from the file (interpolation and rank at the nodes, fdeg = 𝛿Gr with coprime minors,
+the dimensions, the zero wedge forms) in about 15 seconds; for a reader without a computer,
+the 𝐿 = 3 file is small enough to check by hand (𝑉0 = 0 because three generic planes have no
+common vector, and dim 𝑉1 = 2). In version 2 no theorem depends on these files: Theorem
+7.4 is proved with the explicit graph witness. The computer-assisted statements are the values
+in Tables 1 and 2 for random data (exact certificates, in the sense of Section 10), the detector
+patterns of Section 7.6 (exact for the annihilator witnesses, numerical for the search), everything
+in Table 3 (floating point, with the residuals shown), and the Potapov search (evidence only).
+Detector ranks (numerical, detector_bound_plucker). For 𝑘 = 2, 𝑁 = 4: generic 𝐿 = 4
+(seeds 1, 2): Δ = 3 with pattern (1, 1, 1, 2), 𝛿Gr = 4; (1, 2)-curve data 𝐿 = 4: Δ = 3 (1, 1, 1,
+2), 𝛿Gr = 3; generic 𝐿 = 5: Δ = 4 (1, 1, 1, 1, 2), 𝛿Gr = 4; generic 𝐿 = 6: Δ = 4 (1, 1, 1, 1, 2, 2),
+𝛿Gr = 6. The search parametrises admissible detectors by the Klein quadric (each rank condition
+is a hyperplane section, since det(𝐷𝑊𝑖 ) is linear in the Plücker vector of the row space of 𝐷)
+with rank tolerances 10−8 ; the values agree with the Schubert count of Section 7.6.
+Direct search over Blaschke–Potapov products (reviewer, review_potapov_search.py).
+As evidence independent of the proof, all rational inner 4 × 4 functions of degree 𝑑 were
+                     𝑑
+parametrised as 𝑈 ∏𝑞=1 (𝐼 + (𝑏𝑎𝑞 − 1)𝑢𝑞 𝑢∗𝑞 ) and the objective ∑𝑖 ‖(𝐼 − Π𝑌𝑖 )𝑆(𝜁𝑖 )𝑋‖2𝐹 minimised
+by Levenberg–Marquardt from 120 random starts per degree. For the 𝐿 = 3 instance (𝛿Gr = 2):
+best values 1.99 (𝑑 = 0), 0.967 (𝑑 = 1), 6 ⋅ 10−30 (𝑑 = 2). For the 𝐿 = 4 instance (𝛿Gr = 4, where
+the prior bounds 𝑟 − 𝑘 = 2 and Δ = 3 are not tight): 0.572 (𝑑 = 2), 0.150 (𝑑 = 3, 120 restarts),
+3 ⋅ 10−30 (𝑑 = 4). The search never found a degree-3 interpolant, and found one of degree 4, as
+Theorem 1 requires.
+
+9. Open questions
+   1. Generic upper bound. Prove Conjecture 7.5 for 𝑟 ≠ 2𝑘, i.e. that for generic data a
+      tuple in ∏𝑗 𝑉𝑒𝑗 with 𝑒𝑗 ∈ {𝑒0 , 𝑒0 + 1} has independent node values. The graph witness of
+      Theorem 7.4 (nodes on the curve 𝑧 ↦ graph(𝑧 𝑒 𝐼𝑘 )) lies in Ω1 only when 𝑟 = 2𝑘; for other
+      (𝑘, 𝑟) one needs a curve of degree 𝑘𝑒0 + max(0, 𝑘 − 𝑚0 ) whose node values are in Ω1 . The
+      quantum Schubert calculus of Gr(𝑘, 𝑟) [Be, RRW2] may help study this question. Such a
+      comparison must retain the fixed marked nodes on the domain; no general identification
+      with an ordinary Gromov-Witten invariant is asserted here.
+   2. Singular strata. Theorem 1 reduces 𝑑min on every stratum (overlapping bands, repeated
+      targets, incidence tables) to the degree of a curve through Schubert conditions, computable
+      exactly by the enumeration of Lemma A but without a closed formula; the block law of
+
+
+                                                15
+      6M3V Theorem 3.2 for orthogonal bands and the occupancy law of 52B6 are the two closed
+      cases known.
+   3. Delay and error at fixed degree for 𝑘 > 1. The rank–error dichotomy and the
+      resonant trichotomy of 6M3V (Theorems 4.1 and 5.1) should generalise with the wedge
+      condition 𝑓1 (𝜁𝑖 ) ∧ ⋯ ∧ 𝑓𝑘 (𝜁𝑖 ) ≠ 0 replacing primitivity: 𝐸𝑑 = 0 iff some tuple in ∏𝑗 𝑉𝑒𝑗
+      with ∑ 𝑒𝑗 ≤ 𝑑 has independent node values except at a set of nodes that can be deleted
+      as base points. The border degree 𝑑𝜕 and the divergence of the peak Wigner–Smith delay
+      for 𝑑𝜕 ≤ 𝑑 < 𝑑min are not worked out here.
+   4. Real and orthogonal versions. For real data and real-orthogonal routers, Sottile’s real
+      Schubert calculus [So] suggests that the real 𝛿Gr can exceed the complex one; the Fejér–
+      Riesz and completion steps preserve realness, so the real law should again be the degree
+      of a real curve.
+   5. Confluent nodes and fixed endpoint frames are not addressed.
+
+10. Reproducibility
+The directory repro/ accompanying this manuscript contains the author’s scripts (scratch_D2/:
+grassmann_degree_exact.py, inner_interpolant_numeric.py, extra_checks.py, extra_checks2.
+py), the reviewer’s scripts (scratch_D2_review/: review_exact_delta.py, review_basepoint_
+additivity.py, review_potapov_search.py), the exact witness files with their verifier (witnesses/
+*.json, verify_witness.py, export_witnesses.py), the version-2 checks (scratch_v2/: symbolic
+verification of Example 6.2 and of the graph witness of Theorem 7.4, the (3, 6) instances, the
+rerun of the 𝐿 = 3 Potapov stage), the workshop’s script and its rerun (taller_check/), the
+original logs and the logs of every rerun, with commands, runtimes and expected final lines in
+repro/README.md. Environment: Python 3.12.6, SymPy 1.14.0, NumPy 2.5.1, SciPy 1.18.0. The
+exact computations are certificates: a witness tuple with nonzero wedges at all nodes is an exact
+upper bound, and the failure of every tuple of smaller degree sum is an exact lower bound. The
+numerical pipeline is a check of the two classical inputs (Fejér–Riesz factor, isometric realization
+and completion) on concrete instances, not part of the proof.
+
+AI-assistance statement
+The received version declares substantial generative-AI assistance in drafting, mathematical
+derivations, code and review, attributed there to “Claude Fable 5.1” (Anthropic). That historical
+model identity, the reported review sessions and their independence have not been authenticated
+by this workshop. Historical descriptions of an “author” or “reviewer” script identify the supplied
+files, not a verified independent editorial review. OpenAI Codex assisted with the present private
+workshop revision: checking arguments and sources, correcting identified errors, running the
+checks recorded in the accompanying revision report, and preparing the PDF. Numerical checks
+support only their tested instances. This assistance is not an independent human peer review
+or a formal AIRR model-assessment report. Lluis Eriksson is the declared author and AIRR
+founder/operator; this conflict must be handled by the separate editorial process. Scientific
+authorship and approval remain with the author.
+The deposited v003 was subsequently assessed in actual OpenAI Codex calls by gpt-6-astra
+and gpt-5.6-sol on 9 September 2026. Their original reports and subsequent clarifications are
+retained. Both sets of comments informed this v004 revision; Astra had also participated in
+earlier manuscript preparation. A separate reviewing context does not erase that history. Neither
+the v003 reports nor this disclosure constitute approval of the revised v004 artifact.
+
+
+
+
+                                                16
+Changes in internal revision v004 (9 September 2026)
+  1. Explained cancellation of removable boundary singularities using boundedness on a punc-
+     tured unit-circle arc.
+  2. Added a fixed-version comparison with Buch–Pandharipande’s virtual Tevelev degrees,
+     separating parity context from existence, minimality and the analytic router construction.
+Made the already cited AJL completion theorem more readily checkable by adding its page, sub-
+parts, equations and the dimension correspondence; retained the existing inversion-of-variable
+argument.
+The earlier deposited v003 and its model reports are retained. This revision responds to their
+findings; it is not a final acceptance.
+
+Changes in internal revision v003 (8 September 2026)
+  1. Corrected matrix multiplication order in Lemma 5.3.
+  2. Made the degree identity for an arbitrary minimal basis explicit before Theorem 5.7, so
+     that the additivity proof does not rely on interpolation optimality.
+  3. Separated the 𝐿 = 1 constant-curve case, its actual data span, and the degree-zero leading
+     coeﬀicient in Theorem 7.4.
+  4. Corrected the degree of the multilinear witness condition in Conjecture 7.5 and clarified
+     the base-point discussion at infinity.
+  5. Qualified historical AI-review provenance; the new numerical and exact checks are sepa-
+     rately recorded in the private revision report.
+
+Changes in version 2 (8 September 2026)
+Answers to the AIRR workshop evaluation of paper3.pdf (TALLER-0003, 2026-09-08); the
+point-by-point response is taller_feedback/RESPUESTA-TALLER-0003.md.
+  1. Theorem 6.1, last clause (workshop: proven flaw; accepted). The clause “the compiler
+     attains 𝑑min iff 𝑃 has no base point in 𝔻” and the last sentence of the proof, which used
+     fdeg(𝑃 ) = 𝛿Gr for every admissible 𝑃 , were wrong: admissibility means interpolation, not
+     minimality. Corrected to “iff fdeg(𝑃 ) = 𝛿Gr and 𝑃 has no base point in 𝔻”, with the proof
+     fixed; the degree formula deg(𝑃 𝐻𝑃−1 ) = fdeg(𝑃 ) + #{base points in 𝔻} and Theorem 1 are
+     unaffected. The workshop’s example (𝑘 = 1, nodes ±1, 𝑃 = (𝑧 + 1, 𝑧(𝑧 − 1))𝑇 , routers 𝑆1 ,
+     𝑆2 ) is reproduced and verified as Example 6.2. Abstract and Section 1.2 (item 3) reworded
+     accordingly.
+  2. Scope of the generic value 2⌊𝐿/2⌋ (workshop: restrict or prove; accepted, proved). Theorem
+     7.4 is now proved for all 𝐿 ≥ 1, and for Gr(𝑘, 2𝑘) with value 𝑘⌊𝐿/2⌋, by the explicit
+                            ⌊𝐿/2⌋
+     witness 𝑌𝑖 = graph(𝜁𝑖        𝐼𝑘 ) and the lower bound of Proposition 7.3, whose statement
+     now names the open set Ω1 on which it holds. The abstract, Sections 1.2, 7.3, Conjecture
+     7.5 and Open question 1 were updated; the quantum-cohomology paragraph is kept as a
+     consistency remark.
+  3. Witnesses and computer-assisted parts (workshop: evidence not attached; accepted). The
+     exact data, witness pencils and lower-bound certificates behind Table 1 are now data files
+     repro/witnesses/*.json with an independent verifier, described in Section 8, which also
+     states which claims are computer-assisted. Theorem 7.4 no longer depends on them. Table
+     2 gains the (3, 6), 𝐿 = 4, 5, 6 row.
+  4. Comparison with all-pass subspace interpolation (workshop: compare in more detail; ac-
+     cepted). Section 1.1 now describes the boundary SNIP of Bharath et al. (data, existence
+     criterion, degree of the construction) and states the three differences with the routing
+     problem; [ABKW] added for unconstrained minimal-degree interpolation.
+
+
+                                             17
+   5. Reproducibility. repro/README.md rewritten with commands, runtimes and expected final
+      lines; all fast scripts rerun on 2026-09-08 (identical verdicts), the workshop’s check_core.
+      py rerun, the 𝐿 = 3 stage of the Potapov search rerun.
+   6. Date line and AI-assistance statement updated. No other mathematical statement
+      changed.
+
+References
+[ABKW] A. C. Antoulas, J. A. Ball, J. Kang, J. C. Willems, On the solution of the minimal
+rational interpolation problem, Linear Algebra Appl. 137/138 (1990), 511–573.
+[AJL] D. Alpay, P. E. T. Jorgensen, I. Lewkowicz, Characterizations of rectangular (para)-unitary
+rational functions, Opuscula Math. 36 (2016), no. 6, 695–716; arXiv:1410.0283. Theorem 2.1.
+[Be] A. Bertram, Quantum Schubert calculus, Adv. Math. 128 (1997), 289–305.
+[BGAP] A. S. Bharath, D. S. Gaharwar, K. Appaiah, D. Pal, Design of discrete-time matrix all-
+pass filters using subspace Nevanlinna–Pick interpolation, Signal Processing 204 (2023), 108839.
+[BD] V. Bolotnikov, H. Dym, On Boundary Interpolation for Matrix Valued Schur Functions,
+Mem. Amer. Math. Soc. 181 (2006), no. 856.
+[DR] M. A. Dritschel, J. Rovnyak, The operator Fejér–Riesz theorem, in: A Glimpse at Hilbert
+Space Operators: Paul R. Halmos in Memoriam, Oper. Theory Adv. Appl. 207, Birkhäuser,
+Basel, 2010, 223–254.
+[Fo] G. D. Forney, Jr., Minimal bases of rational vector spaces, with applications to multivariable
+linear systems, SIAM J. Control 13 (1975), 493–520.
+[JP] J.-N. Juang, R. S. Pappa, An eigensystem realization algorithm for modal parameter iden-
+tification and model reduction, J. Guidance Control Dynam. 8 (1985), 620–627.
+[Ka] T. Kailath, Linear Systems, Prentice-Hall, 1980, §6.5.4.
+[MH] C. Martin, R. Hermann, Applications of algebraic geometry to systems theory: the McMil-
+lan degree and Kronecker indices of transfer functions as topological and holomorphic system
+invariants, SIAM J. Control Optim. 16 (1978), 743–755.
+[Po] V. P. Potapov, The multiplicative structure of J-contractive matrix functions, Trudy Moskov.
+Mat. Obshch. 4 (1955), 125–236; English transl. Amer. Math. Soc. Transl. (2) 15 (1960),
+131–243.
+[RRW1] M. S. Ravi, J. Rosenthal, X. Wang, Dynamic pole assignment and Schubert calculus,
+SIAM J. Control Optim. 34 (1996), 813–832.
+[RRW2] M. S. Ravi, J. Rosenthal, X. Wang, Degree of the generalized Plücker embedding of a
+Quot scheme and quantum cohomology, Math. Ann. 311 (1998), 11–26.
+[Ro] M. Rosenblum, Vectorial Toeplitz operators and the Fejér–Riesz theorem, J. Math. Anal.
+Appl. 23 (1968), 139–147.
+[So] F. Sottile, Rational curves on Grassmannians: systems theory, reality, and transversality,
+in: Advances in Algebraic Geometry Motivated by Physics, Contemp. Math. 276, Amer. Math.
+Soc., 2001, 9–42; arXiv:math/0012079.
+[Wi] G. T. Wilson, The factorization of matricial spectral densities, SIAM J. Appl. Math. 23
+(1972), 420–426.
+ARR-2026-07EH3CZRD89YC8JN, L. Eriksson, Lossless Calibration Is Stored Memory: A Topo-
+logical McMillan-Degree and Wigner–Smith Law, 2026 (Lemma 3.2).
+
+                                                18
+ARR-2026-1WXCVX96S68GA9VK, L. Eriksson, Orthogonal Spectral Fan-Out Costs 𝑘(𝐿 − 1)
+States: a Global Memory Law Beyond Pairwise Routing, 2026 (Theorem 3.1, Lemma 3.2).
+ARR-2026-33BE6K3HW78F4T7F, L. Eriksson, Exact Memory of Direct-Sum Spectral Fan-Out:
+Generic Maximality, Colliding Targets, and the Three-Line Phase Diagram, 2026 (Theorem 1.1,
+Corollary 1.2, Theorem 7.2).
+ARR-2026-52B6MSS1W197W9T2, L. Eriksson, Exact Memory of Finite Spectral Routing Tables:
+The Direct-Sum Occupancy Law and Its Singular Strata, 2026 (Theorem 1.2, Lemma 2.1, Lemma
+3.1, Theorems 5.1–5.2, Limitation 8.2).
+ARR-2026-6M3VGTXZ6W8JW9C9, L. Eriksson, Projective Memory and Resonant Bottlenecks
+in Passive Spectral Routing, 2026 (Definition 2.1, Lemma 2.2, Theorem 2.3, Corollary 2.4, The-
+orems 3.2, 4.1, 5.1, 9.2, 11.1).
+[BP-Tev] A. S. Buch and R. Pandharipande, Tevelev degrees in Gromov-Witten theory,
+arXiv:2112.14824v1 [math.AG], 2021, Sections 1.1 and 1.3, Theorem 1.4. Fixed version.
+
+
+
+
+                                             19
+

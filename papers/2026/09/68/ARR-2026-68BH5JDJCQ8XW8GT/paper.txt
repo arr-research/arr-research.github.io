@@ -1,0 +1,950 @@
+    One Fold, Unique Contact and the Complete Two-Piece
+Rate–Distortion Function of Rank-One Complex-Projective Born
+                          Prediction
+
+                           Lluis Eriksson (Independent researcher)
+
+                          9 September 2026 - Internal revision v004
+
+
+Abstract
+For a Haar-random pure state on ℂℙ𝑑−1 with squared-Frobenius distortion on density-
+matrix reproductions, the exact rate–distortion function 𝑅𝑑 (𝐷) is known (ARR-2026-
+1D2QYXPCVY9H7ANB) as a one-dimensional envelope over a radius 𝑏 ∈ [0, 1] and a multiplier
+𝜆; first contact was proved there, but uniqueness of the positive branch and absence of later
+branch exchange were left open (its Remark 3.2). We close that remark for every finite 𝑑 ≥ 3,
+in a note written to be read without the earlier record (only its envelope theorem is imported,
+with the elementary facts it rests on reproved here). The tool is the first-order equation
+𝜅𝑀 ′ = (𝜅 − 𝑑 + 1)𝑀 + (𝑑 − 1) for 𝑀 = 1 𝐹1 (1; 𝑑; 𝜅), which reduces the fold numerator 𝐾𝑑′ − 𝜅𝐾𝑑″
+to the sign of 𝜅 − Ψ𝑑 (𝑀 ) with Ψ𝑑 an explicit rational function; a transversality argument in
+the (𝑀 , 𝜅) plane then shows the stationary multiplier 𝜆(𝜅) has exactly one fold. This yields a
+unique coexistence multiplier 𝜆𝑐,𝑑 , no reentrance, and 𝑅𝑑 = a linear face glued at 𝐷𝑐,𝑑 to an
+explicit complex-Bingham curve. A computer-assisted theorem gives the one-change law for the
+fold-numerator coeﬀicients; 𝑑 = 2 recovers the Dytso–Cardone sphere result.
+
+1. Introduction
+Let 𝑋 be Haar-distributed on ℂℙ𝑑−1 , 𝜌𝑋 = |𝑥⟩⟨𝑥|, and let a reproduction be any density matrix
+𝜌 ̂ produced by an arbitrary stochastic map of 𝑋; the cost is ‖𝜌𝑋 − 𝜌‖̂ 2𝐹 and 𝑅𝑑 (𝐷) = inf{𝐼(𝑋;
+𝜌)̂ ∶ 𝔼‖𝜌𝑋 − 𝜌‖̂ 2𝐹 ≤ 𝐷}. Through the Born rule this is the classical information needed to predict
+the outcome statistics of Haar (or 2-design) measurements to squared error 𝐷/(𝑑(𝑑 + 1)).
+Antecedents. The record ARR-2026-1D2QYXPCVY9H7ANB (Exact Rate–Distortion The-
+ory for Complex-Projective Born Prediction: Finite-Dimensional Bingham Frontiers, Ther-
+modynamic Coexistence, and Worst-State Capacity; below “1D2Q”) proved, for 0 ≤ 𝐷 ≤
+  2                                                            2
+𝑅0,𝑑  = 1 − 1/𝑑, the exact envelope 𝑅𝑑 (𝐷) = sup𝜆≥0 {𝜆(𝑅0,𝑑        − 𝐷) − max0≤𝑏≤1 𝐺𝑑,𝜆 (𝑏)} with
+                          2  2
+𝐺𝑑,𝜆 (𝑏) = 𝐾𝑑 (2𝜆𝑏) − 𝜆𝑅0,𝑑 𝑏 , 𝐾𝑑 = log 1 𝐹1 (1; 𝑑; ⋅) − 𝜅/𝑑 (its Theorem 2.1, whose spectral in-
+put is the centred power-sum extremum of Brazitikos–Pandis [BP, Prop. 5.5]); every positive
+active radius is attained by a covariant complex-Bingham channel. Its Theorem 3.1 proved a
+discontinuous onset: for 𝑑 ≥ 3 there is 0 < 𝜆𝑐,𝑑 < 𝜆0,𝑑 = 𝑑(𝑑 + 1)/2 at which 𝑏 = 0 and
+some 𝑏𝑐,𝑑 > 0 are both global maximizers. Its Remark 3.2 explicitly does not assert unique-
+ness of the positive maximizer for larger 𝜆, nor exclude a later branch exchange; consequently
+the finite-𝑑 frontier was known only as an envelope, not as an explicit two-piece curve, and
+the asymptotics 𝜆𝑐,𝑑 = 𝛼∗ 𝑑 − 𝑐∗ log 𝑑 + 𝑂(1) (1D2Q Thm. 7.3) described a first contact, not
+the contact. Two sibling records did reach the complete statement in other geometries: ARR-
+2026-61Y0FFA39M8KMBJ5 (Complete Rank-Two Born-Prediction Rate–Distortion on Grℂ (2,
+4); “61Y0”, Lemma 6.1, Thm. 6.2, Cor. 6.3) via an explicit integer coeﬀicient sequence with one
+
+
+                                                1
+sign change, and ARR-2026-7H9FAPTBZA897AMJ (Complete Rate–Distortion Phase Diagram
+of Haar Oriented Two-Planes: One-Change Hypergeometric Coeﬀicients, Unique Coexistence,
+and No Reentrance; “7H9F”, Thm. 8.2, Thm. 9.1) for oriented two-planes in ℝ𝑛 , 𝑛 ≥ 6,
+via a parity-truncated binomial window and a likelihood-ratio ordering. The 7H9F normalizer
+𝐿𝑞 (𝜅) = 𝔼 cosh(𝜅𝑇 ), 𝑇 ∼ Beta(1, 𝑞), is the even part of the ℂℙ𝑞 normalizer 𝑀𝑞+1 (𝜅) = 𝔼𝑒𝜅𝑇 , but
+its window argument does not transfer to the full (non-parity-truncated) window that appears
+here. Externally: for 𝑑 = 2 the problem is the real two-sphere and 𝑅2 is the Dytso–Cardone
+curve [DC]; generalized Curie–Weiss models can have several first-order transitions (Eisele–Ellis
+[EE]), so uniqueness is not a generic fact; and the Kummer-ratio literature (Karp–Sitnik [KS],
+Kalmykov–Karp [KK], Sitnik [S]) studies monotonicity and Turán-type inequalities for ratios
+such as 𝑀𝑑+1 /𝑀𝑑 , which is exactly 1 − 𝑏𝑑 (𝜅) below, but contains no statement about the fold
+of 𝜅/𝑏𝑑 (𝜅).
+Contribution. (i) A first-order linear ODE for 𝑀𝑑 = 1 𝐹1 (1; 𝑑; 𝜅) (Lemma 3.1) that collapses
+the three-term fold numerator to a rational expression in (𝑀 , 𝜅) (Lemma 3.2). (ii) A phase-plane
+transversality theorem (Theorem 4.1): for every 𝑑 ≥ 3 the stationary multiplier has exactly one
+fold, with the proved bounds 2(𝑑 − 2)(𝑑 + 1)/𝑑 ≤ 𝜅𝑓,𝑑 < 2𝑑 and 𝑀𝑑 (𝜅𝑓,𝑑 ) ≥ 𝑑(𝑑 − 1)/2;
+no coeﬀicient sign pattern is needed. (iii) The complete radial phase and the two-piece rate–
+distortion function at every finite 𝑑 ≥ 3 (Theorem 5.1), closing 1D2Q Remark 3.2; the single
+statement imported from 1D2Q (Theorem A) is stated explicitly, and the elementary facts about
+Beta(1, 𝑑 − 1) that 1D2Q used are reproved in Lemma 2.1. (iv) The one-change coeﬀicient law
+in the style of 61Y0/7H9F (Theorem 6.1): proved analytically for every 𝑑 and every index
+except two boundary indices for 3 ≤ 𝑑 ≤ 35, which are settled by an exact integer check; for
+𝑑 ≥ 36 an explicit tail bound closes them. (v) The 𝑑 = 2 corollary (no fold, continuous onset,
+Dytso–Cardone). Sections 7–9 give numerical tables, open questions, and reproducibility data.
+What this note is, and what a reader gains without 1D2Q. This is a standalone note, not
+a continuation: Section 2 restates every object it uses (𝑀𝑑 , 𝐾𝑑 , 𝐺𝑑,𝜆 , the stationary parametriza-
+tion (2.3)), proves in Lemma 2.1 the three elementary facts about 𝑇 ∼ Beta(1, 𝑑 − 1) that the
+earlier record used, and imports exactly one statement from 1D2Q, Theorem A (the envelope
+formula and the attainability of active radii), with the equation numbers of its proof. Lemma
+3.1 itself is not new as a formula: it is a contiguous relation of Kummer’s function specialized
+to first parameter 1, where 1 𝐹1 (0; 𝑑; 𝜅) = 1 closes the recurrence into an inhomogeneous first-
+order equation (cf. [DLMF, §13.3]); we include its two-line series proof. What is new is what
+it buys. (1) The stationary radius becomes the elementary ratio 𝑏𝑑 = 1 − 𝑀𝑑+1 /𝑀𝑑 and the
+three-term fold numerator 𝐾𝑑′ − 𝜅𝐾𝑑″ becomes a rational function of (𝑀𝑑 , 𝜅) (Lemma 3.2), so
+the fold question is a sign problem for 𝜅 − Ψ𝑑 (𝑀𝑑 (𝜅)) about a classical special function, with
+no rate–distortion context needed. (2) That sign problem is settled globally by a transversality
+argument in the (𝑀 , 𝜅) plane (Theorem 4.1): the curve 𝜅 = Ψ𝑑 (𝑀 ) can be crossed by the
+graph of 𝜅(𝑀 ) only in one direction on (1, 𝑀1 ) and only in the other on (𝑀1 , ∞), which forces
+exactly one crossing and gives explicit bounds on where it lies. This answers completely the
+one-parameter Curie–Weiss-type problem “maximize 𝐾𝑑 (2𝜆𝑏) − 𝜆(1 − 1/𝑑)𝑏2 over 𝑏 ∈ [0, 1]” for
+every 𝜆 (Theorem 5.1(a)–(c)), a problem in which several first-order transitions are not excluded
+a priori [EE]. (3) The explicit two-piece rate–distortion function (Theorem 5.1(f)) is then the
+corollary of (2) and Theorem A. A reader who knows 1D2Q additionally obtains the closure of
+its Remark 3.2 and the identification of its first-contact asymptotics (Theorem 7.3 there) as the
+contact.
+
+2. Setting and notation
+Throughout 𝑑 ≥ 2 is an integer, 𝜅 > 0, and 𝑇 ∼ Beta(1, 𝑑 − 1) (density (𝑑 − 1)(1 − 𝑡)𝑑−2 on [0,
+1]). From 1D2Q eqs. (2)–(6):
+
+
+
+                                                 2
+                              𝜅𝑗                                            𝜅                  1
+ 𝑀𝑑 (𝜅) = 1 𝐹1 (1; 𝑑; 𝜅) = ∑       = 𝔼 𝑒𝜅𝑇 ,       𝐾𝑑 (𝜅) = log 𝑀𝑑 (𝜅) −      ,       2
+                                                                                     𝑅0,𝑑 = 1 − , (2.1)
+                         𝑗≥0
+                             (𝑑) 𝑗                                          𝑑                  𝑑
+
+                                2
+        𝐺𝑑,𝜆 (𝑏) = 𝐾𝑑 (2𝜆𝑏) − 𝜆𝑅0,𝑑 𝑏2 (0 ≤ 𝑏 ≤ 1),                     2
+                                                            𝑐𝑑 (𝜆) = −𝜆𝑅0,𝑑 + max 𝐺𝑑,𝜆 (𝑏).       (2.2)
+                                                                                  0≤𝑏≤1
+
+𝐾𝑑 is the cumulant generating function of 𝑇 −1/𝑑, so 𝐾𝑑′ (𝜅) = 𝔼𝜅 𝑇 −1/𝑑 and 𝐾𝑑″ (𝜅) = Var𝜅 𝑇 >
+0 under the tilted law ∝ 𝑒𝜅𝑡 . Write 𝑚𝑑 = 𝑀𝑑′ /𝑀𝑑 = 𝐾𝑑′ + 1/𝑑. The stationary equation
+                                                        2
+𝐺′𝑑,𝜆 (𝑏) = 0 for 𝑏 > 0 reads, with 𝜅 = 2𝜆𝑏, 𝐾𝑑′ (𝜅) = 𝑅0,𝑑 𝑏; hence the positive stationary radii
+are parametrized by 𝜅:
+
+                                 𝐾𝑑′ (𝜅)   𝑑 𝑚𝑑 (𝜅) − 1                    𝜅
+                      𝑏𝑑 (𝜅) =      2
+                                         =              ,     𝜆𝑑 (𝜅) =           ,                (2.3)
+                                 𝑅0,𝑑         𝑑−1                        2𝑏𝑑 (𝜅)
+
+(1D2Q eq. (110)). Define the fold numerator, the coexistence function and the polynomial-series
+numerator
+
+                       𝐻𝑑 = 𝐾𝑑′ − 𝜅𝐾𝑑″ ,         𝐹𝑑 = 2𝐾𝑑 − 𝜅𝐾𝑑′ ,
+                                                                           𝑀𝑑2
+                       𝑁𝑑 ∶= 𝑀𝑑2 𝐻𝑑 = 𝑀𝑑 𝑀𝑑′ − 𝜅𝑀𝑑 𝑀𝑑″ + 𝜅𝑀𝑑′2 −                                  (2.4)
+                                                                            𝑑
+                           = ∑ 𝑐𝑑,𝑛 𝜅𝑛 .
+                               𝑛≥0
+
+
+Then 𝐹𝑑′ = 𝐻𝑑 , 𝜆′𝑑 = 𝐻𝑑 /(2𝑅0,𝑑2
+                                  𝑏𝑑2 ), and at a stationary radius 𝐺𝑑,𝜆 (𝑏𝑑 (𝜅)) = 𝐹𝑑 (𝜅)/2 and
+𝜕𝑏2 𝐺𝑑,𝜆 = −(2𝜆/𝑏)𝐻𝑑 (𝜅) (direct differentiation; the three identities are rechecked symbolically
+in sym_check.py). We drop the index 𝑑 when harmless.
+Theorem A (imported; 1D2Q Theorem 2.1 and its proof, eqs. (106)–(112)). Let 𝑑 ≥ 2.
+                      2                          2
+(A1) For 0 ≤ 𝐷 ≤ 𝑅0,𝑑     , 𝑅𝑑 (𝐷) = sup𝜆≥0 {𝜆(𝑅0,𝑑 − 𝐷) − max0≤𝑏≤1 𝐺𝑑,𝜆 (𝑏)}. (A2) If 𝜆 > 0 and
+𝑏 ∈ (0, 1] is a global maximizer of 𝐺𝑑,𝜆 (“active”), then with 𝜅 = 2𝜆𝑏 the covariant channel
+                           2
+𝑑𝑃𝑋|𝑈=𝑢 /𝑑𝜇𝑑 = 𝑒𝜅|⟨𝑥,𝑢⟩| /𝑀𝑑 (𝜅), 𝑈 Haar, has posterior mean (1 − 𝑏)𝐼/𝑑 + 𝑏𝜌𝑢 and attains the
+              2
+pair 𝐷𝑏 = 𝑅0,𝑑                                            2
+                (1 − 𝑏2 ), 𝐼𝑏 = 𝜅𝑚𝑑 (𝜅) − log 𝑀𝑑 (𝜅) = 𝜆(𝑅0,𝑑 − 𝐷𝑏 ) − max𝑣 𝐺𝑑,𝜆 (𝑣). (A3) Mixing
+channels with probabilities 𝑡𝑖 independent of 𝑋 achieves distortion ∑𝑖 𝑡𝑖 𝐷𝑖 and information
+at most ∑𝑖 𝑡𝑖 𝐼𝑖 . Retaining the independent flag as an auxiliary output gives equality for the
+information of that enlarged output; discarding the flag cannot increase information. Equality
+for the rate-distortion frontier used below follows from the matching converse bound. For 𝑑 ≥ 3
+the spectral input rests on Brazitikos–Pandis [BP, Proposition 5.5] through 1D2Q Proposition
+A.1; it bounds centered power sums at fixed Euclidean norm. The interface and the information-
+theoretic steps needed here are detailed below; the cited extremal inequality itself remains an
+external theorem. The three elementary facts that 1D2Q also used (its eqs. (10), (11), (15)) are
+reproved here:
+Dependency and proof interface for Theorem A. For a centered real spectrum 𝑎 with ∑ 𝑎2𝑖 = 1,
+maximizers of a power sum 𝑝𝑗 (𝑎) = ∑ 𝑎𝑗𝑖 have at most three distinct coordinates: their Lagrange
+equation 𝑗𝑥𝑗−1 = 𝛼 + 𝛽𝑥 has at most two real roots for odd 𝑗 ≥ 3 by convexity, and at most
+three for even 𝑗 ≥ 4 by its derivative. The cases 𝑗 = 1, 2 are fixed by the constraints. The
+grouped-coordinate inequality [BP, Proposition 5.5] therefore gives |𝑝𝑗 (𝑎)| ≤ 𝑝𝑗 (𝑤) for odd 𝑗
+and 𝑝𝑗 (𝑎) ≤ 𝑝𝑗 (𝑤) for even 𝑗, where 𝑤 is the centered unit-norm spectrum with one positive
+spike. Newton’s expansion
+                                                     𝑛
+                                                        𝑝𝑗 (𝑎)𝑚𝑗
+                                ℎ𝑛 (𝑎) =     ∑      ∏
+                                         𝑚 +2𝑚 +⋯=𝑛 𝑗=1
+                                                        𝑚𝑗 ! 𝑗𝑚𝑗
+                                             1    2
+
+
+
+                                                   3
+implies ℎ𝑛 (𝑎) ≤ ℎ𝑛 (𝑤): bound each summand by its absolute value, then use the nonnegative
+power sums of 𝑤. Haar squared coordinates have the Dirichlet(1, … , 1) law, so for a Hermitian
+𝐴 with spectrum 𝑎,
+                                         ∗         ℎ (𝑎)𝑡𝑛
+                                   𝔼𝜇 𝑒𝑡𝑥 𝐴𝑥 = ∑ 𝑛         .
+                                               𝑛≥0
+                                                    (𝑑)𝑛
+The series is absolutely convergent; scaling the fixed norm extends the comparison to every
+traceless 𝐴 and 𝑡 ≥ 0. Thus at fixed ‖𝐴‖𝐹 = 𝑏𝑅0,𝑑 the Laplace transform is bounded by that of
+𝐴 = 𝑏(𝜌𝑢 − 𝐼/𝑑).
+For any density-matrix reproduction 𝑦, set 𝐴 = 𝑦 − 𝐼/𝑑 and 𝑆𝑥 = 𝜌𝑥 − 𝐼/𝑑. Then 0 ≤ 𝑏 =
+‖𝐴‖𝐹 /𝑅0,𝑑 ≤ 1, and the preceding bound gives
+
+                                         2
+                                                        2
+                 𝑍𝜆 (𝑦) ∶= ∫ 𝑒−𝜆‖𝑆𝑥 −𝐴‖𝐹 𝑑𝜇(𝑥) ≤ exp{−𝜆𝑅0,𝑑 + 𝐺𝑑,𝜆 (𝑏)} ≤ 𝑒𝑐𝑑 (𝜆) .
+
+                                                                  2
+Nonnegativity of relative entropy of 𝑃𝑋|𝑦 against 𝑒−𝜆‖𝑆𝑥 −𝐴‖ 𝜇/𝑍𝜆 (𝑦) yields 𝐼(𝑋; 𝑦) + 𝜆𝔼‖𝜌𝑋 −
+𝑦‖2𝐹 ≥ −𝑐𝑑 (𝜆). This proves the lower bound in (A1). The finite-information case suﬀices; infinite
+information is automatic.
+Every positive active radius at finite 𝜆 is interior by 𝐺′𝑑,𝜆 (1) < 0 (H2), and hence 𝐾𝑑′ (𝜅) = 𝑅0,𝑑2
+                                                                                                        𝑏.
+The displayed Bingham posterior has mean (1 − 𝑏)𝐼/𝑑 + 𝑏𝜌𝑢 by unitary symmetry and 𝔼𝜅 |⟨𝑋,
+𝑢⟩|2 = 𝑚𝑑 (𝜅). The posterior-mean identity gives 𝐷𝑏 = 𝑅0,𝑑    2
+                                                                 (1 − 𝑏2 ), and direct integration of its
+log density gives 𝐼𝑏 = 𝜅𝑚𝑑 − log 𝑀𝑑 . The map 𝑢 ↦ (1 − 𝑏)𝐼/𝑑 + 𝑏𝜌𝑢 is injective on projective
+space for 𝑏 > 0, so the same information is obtained with density-matrix output. This proves
+(A2); independence of the mixture flag and data processing give (A3). The radial analysis of
+Sections 4 and 5(a)-(e) uses no envelope equality. Its active channels, together with (A3), attain
+the lower bound for all distortions in Theorem 5.1(f) and Corollary 5.2, completing (A1) without
+circularity. This verifies the use of the earlier envelope theorem here while retaining [BP] as the
+stated external mathematical input.
+Clarification of the external power-sum input. We use the non-strict bound of [BP, Proposition
+5.5]. Its arXiv v1 proof, p.31, contains the erroneous estimate 75/64 < 1 for 𝑛 = 5. The local
+argument is repaired
+              √        by retaining the exponent 𝑘 ≥ 3: with its notation 𝑤2 = 1/2, 𝑠2 = 4/5 and
+𝑞 = 𝑡/𝑤 = 1/ 10 < 1/3, the finite geometric sum satisfies
+
+                             𝑆(𝑤)    2  5 𝑘    5 3 375
+                                  <    ( ) < 3( ) =     < 1.
+                              𝑠2𝑘   1−𝑞 8      8    512
+This restores that estimate for 𝑛 = 5, 𝑘 ≥ 3 and leaves the separately treated quartic cases
+unchanged. For 𝑛 = 3, 𝑘 = 2, the normalized fourth moment is identically 1/2; the non-strict
+inequality required here is unaffected. We import no uniqueness assertion for that exceptional
+case. This local repair does not replace the remainder of the cited proof.
+                                                                                                1
+Lemma 2.1 (elementary facts on Beta(1, 𝑑 − 1)). Let 𝑑 ≥ 2. (i) 𝑀𝑑 (𝜅) = (𝑑 − 1) ∫0 𝑒𝜅𝑡 (1 −
+                                                                                        𝑑−1
+𝑡)𝑑−2 𝑑𝑡 equals the series in (2.1), and 𝑀𝑑 is entire. (ii) 𝔼𝑇 = 1/𝑑, 𝑣𝑑 ∶= Var 𝑇 = 2           ,
+                                                                                      𝑑 (𝑑 + 1)
+                        2(𝑑 − 1)(𝑑 − 2)                          𝜇
+𝜇3,𝑑 ∶= 𝔼(𝑇 −1/𝑑)3 = 3                  ; hence 𝐾𝑑 (𝜅) = 𝑣2𝑑 𝜅2 + 3,𝑑 3    4
+                                                                   6 𝜅 +𝑂(𝜅 ) and, with 𝜅 = 2𝜆𝑏,
+                       𝑑 (𝑑 + 1)(𝑑 + 2)
+                                              2
+                         𝐺𝑑,𝜆 (𝑏) = 𝜆(2𝜆𝑣𝑑 − 𝑅0,𝑑 )𝑏2 + 34 𝜆3 𝜇3,𝑑 𝑏3 + 𝑂(𝑏4 ).                     (2.5)
+                                                                                         𝑑−2
+(iii) log 𝑀𝑑 (𝜅) = 𝜅 − (𝑑 − 1) log 𝜅 + log Γ(𝑑) + log 𝑃𝑑 (𝜅) with 𝑃𝑑 (𝜅) = 1 − 𝑒−𝜅 ∑𝑗=0 𝜅𝑗 /𝑗! ∈ (0,
+1) and 𝑃𝑑 (𝜅) → 1; in particular log 𝑀𝑑 (𝜅) = 𝜅 − (𝑑 − 1) log 𝜅 + log Γ(𝑑) + 𝑜(1) as 𝜅 → ∞.
+
+
+                                                    4
+                                  1
+Proof. (i) Termwise, (𝑑 − 1) ∫0 𝑡𝑗 (1 − 𝑡)𝑑−2 𝑑𝑡 = (𝑑 − 1)𝐵(𝑗 + 1, 𝑑 − 1) = 𝑗! (𝑑 − 1)!/(𝑑 − 1 +
+𝑗)! = 𝑗!/(𝑑)𝑗 . (ii) The same integral gives 𝔼𝑇 𝑘 = 𝑘!/(𝑑)𝑘 , so 𝔼𝑇 = 1/𝑑, 𝔼𝑇 2 = 2/(𝑑(𝑑 + 1)),
+𝔼𝑇 3 = 6/(𝑑(𝑑 + 1)(𝑑 + 2)); expanding 𝔼(𝑇 − 1/𝑑)2 and 𝔼(𝑇 − 1/𝑑)3 gives 𝑣𝑑 and 𝜇3,𝑑 , and the
+second and third cumulants of 𝑇 − 1/𝑑 are its second and third central moments; (2.5) follows
+                                2
+from 𝐺𝑑,𝜆 (𝑏) = 𝐾𝑑 (2𝜆𝑏) − 𝜆𝑅0,𝑑  𝑏2 . (iii) Substituting 𝑡 = 1 − 𝑠 and 𝑢 = 𝜅𝑠, 𝑀𝑑 (𝜅) = (𝑑 −
+            𝜅                                          𝜅
+1)𝑒𝜅 𝜅1−𝑑 ∫0 𝑒−𝑢 𝑢𝑑−2 𝑑𝑢 = Γ(𝑑)𝑒𝜅 𝜅1−𝑑 𝑃𝑑 (𝜅), where ∫0 𝑒−𝑢 𝑢𝑑−2 𝑑𝑢 = (𝑑 − 2)! 𝑃𝑑 (𝜅) by repeated
+integration by parts. □
+(These are 1D2Q eqs. (10), (11) and (15); the symbolic expansion (2.5) is rechecked in h6_
+remark63_check.py.)
+
+3. Exact reductions
+Lemma 3.1 (first-order equation). 𝜅𝑀𝑑′ = (𝜅 − 𝑑 + 1)𝑀𝑑 + (𝑑 − 1). Consequently
+
+                    𝑑 (𝑀𝑑 − 1)      𝑀 (𝜅)                                          𝑑−1
+     𝑏𝑑 (𝜅) = 1 −              = 1 − 𝑑+1    ,                    2
+                                                    𝜅𝐾𝑑′ (𝜅) = 𝜅𝑅0,𝑑 − (𝑑 − 1) +          .   (3.1)
+                       𝜅𝑀𝑑           𝑀𝑑 (𝜅)                                        𝑀𝑑 (𝜅)
+
+Proof. With 𝑎𝑗 = 1/(𝑑)𝑗 one has 𝑎𝑗−1 = (𝑑 − 1 + 𝑗)𝑎𝑗 , so the 𝜅𝑗 coeﬀicient of the right side is
+𝑎𝑗−1 − (𝑑 − 1)𝑎𝑗 = 𝑗 𝑎𝑗 for 𝑗 ≥ 1 and −(𝑑 − 1) + (𝑑 − 1) = 0 for 𝑗 = 0, matching 𝜅𝑀 ′ . Dividing
+by 𝜅𝑀 gives 𝑚𝑑 = 1 − (𝑑 − 1)(𝑀 − 1)/(𝜅𝑀 ), and (2.3) gives the first form of 𝑏𝑑 ; the second
+follows from 𝑑(𝑀𝑑 − 1)/𝜅 = ∑𝑖≥0 𝑑𝜅𝑖 /(𝑑)𝑖+1 = 𝑀𝑑+1 . Finally 𝜅𝐾 ′ = 𝜅𝑚𝑑 − 𝜅/𝑑. □
+Differentiating Lemma 3.1 gives Kummer’s equation 𝜅𝑀 ″ +(𝑑−𝜅)𝑀 ′ −𝑀 = 0, so no independent
+input is used below.
+Lemma 3.2 (rational reduction). Put
+
+                        𝑁𝑑̃ (𝜅) ∶= (𝜅 − 2𝑑)𝑀𝑑2 + 𝑑(𝜅 − 𝑑 + 3)𝑀𝑑 + 𝑑(𝑑 − 1)
+                               = 𝑀𝑑 (𝑀𝑑 + 𝑑)(𝜅 − Ψ𝑑 (𝑀𝑑 )),
+                                                                                              (3.2)
+                                  𝑑(𝑀 − 1)(2𝑀 + 𝑑 − 1)
+                       Ψ𝑑 (𝑀 ) ∶=                      .
+                                       𝑀 (𝑀 + 𝑑)
+
+            𝑑−1 ̃
+Then 𝑁𝑑 =      𝑁 ; hence sign 𝐻𝑑 (𝜅) = sign (𝜅 − Ψ𝑑 (𝑀𝑑 (𝜅))).
+             𝑑𝜅 𝑑
+Proof. Let 𝑃 = 𝜅𝑀 ′ = 𝐴𝑀 +(𝑑−1) with 𝐴 = 𝜅−𝑑+1; Kummer’s equation gives 𝜅2 𝑀 ″ = 𝜅𝑀 −
+(𝑑−𝜅)𝑃 . Then 𝜅𝑁𝑑 = 𝑀 𝑃 −𝑀 (𝜅𝑀 −(𝑑−𝜅)𝑃 )+𝑃 2 −𝜅𝑀 2 /𝑑 = (2−𝐴)𝑀 𝑃 +𝑃 2 −𝜅(1+1/𝑑)𝑀 2 .
+Expanding 𝑃 : (2 − 𝐴)𝑀 (𝐴𝑀 + 𝑑 − 1) + (𝐴𝑀 + 𝑑 − 1)2 = 2𝐴𝑀 2 + (𝑑 − 1)(𝐴 + 2)𝑀 + (𝑑 − 1)2 , and
+2𝐴 − 𝜅(𝑑 + 1)/𝑑 = 𝑑−1                                𝑑−1                     2   𝑑−1
+                      𝑑 (𝜅 − 2𝑑), (𝑑 − 1)(𝐴 + 2) = 𝑑 𝑑(𝜅 − 𝑑 + 3), (𝑑 − 1) = 𝑑 𝑑(𝑑 − 1). The
+factorization in (3.2) is an identity of rational functions (checked in sym_check.py), and 𝑀𝑑 > 1
+on 𝜅 > 0. □
+Remark 3.3. Substituting 𝜅 = from (3.1) one also finds 𝑁𝑑̃ = 𝜅𝑀𝑑 [(2𝑏𝑑 − 1)𝑀𝑑 + (𝑑 − 1)𝑏𝑑 + 1],
+so 𝐻𝑑 > 0 wherever 𝑏𝑑 ≥ 1/2; every zero of 𝐻𝑑 has 𝑏𝑑 < 1/2.
+                                                                            −1
+Proposition 3.4 (closed coeﬀicients). For 𝑛 ≥ 0 let 𝑇 = 2𝑑 − 2 + 𝑛, 𝑢𝑛 = (𝑇𝑑−2 ), 𝑊𝑛−1 =
+  𝑑−2+𝑛
+∑𝑘=𝑑−1 (𝑇 𝑘−1) (so 𝑊−1 = 0). Then
+                              2
+                     (𝑑 − 1)!                                        𝑑
+          [𝜅𝑛 ]𝑁𝑑̃ =           ̂ ,
+                              𝑐𝑑,𝑛      ̂ = (𝑛 − 2𝑑 − 2) 𝑊𝑛−1 +
+                                       𝑐𝑑,𝑛                             𝑛(𝑛 + 2𝑑) 𝑢𝑛 ,        (3.3)
+                        𝑇!                                          𝑑−1
+                        2
+                    (𝑑−1)!
+and 𝑐𝑑,𝑛 = 𝑑−1  𝑑 (2𝑑−1+𝑛)! 𝑐𝑑,𝑛+1
+                             ̂                 ̂ = 𝑐𝑑,1
+                                   . Moreover 𝑐𝑑,0  ̂ = 𝑐𝑑,2        ̂ = − (2𝑑+1)(𝑑−2)
+                                                         ̂ = 0 and 𝑐𝑑,3                2𝑑
+                                                                           (𝑑+1)(𝑑+2) ( 𝑑 ),
+i.e. [𝜅3 ]𝑁𝑑̃ = − 2 𝑑−2
+               𝑑 (𝑑+1)(𝑑+2)    .
+
+
+                                                5
+                                                                          2   𝑑−1+𝑛              2
+Proof. With 𝑎𝑗 = (𝑑 − 1)!/(𝑑 − 1 + 𝑗)!, [𝑀 2 ]𝑛 = ∑𝑖+𝑗=𝑛 𝑎𝑖 𝑎𝑗 = (𝑑−1)!𝑇!  ∑𝑘=𝑑−1 (𝑇𝑘 ) = (𝑑−1)!
+                                                                                             𝑇 ! 𝑊𝑛 .
+For 𝑛 ≥ 1, [𝜅 ]𝑁𝑑̃ = [𝑀 ]𝑛−1 − 2𝑑[𝑀 ]𝑛 + 𝑑 𝑎𝑛−1 + 𝑑(3 − 𝑑)𝑎𝑛 ; multiplying by 𝑇 !/(𝑑 − 1)!2 gives
+             𝑛          2              2
+                       −1
+𝑇 𝑊𝑛−1 − 2𝑑𝑊𝑛 + 𝑑𝑇 (𝑇𝑑−1                 𝑇
+                          ) + 𝑑(3 − 𝑑)(𝑑−1                                       𝑇 −1
+                                           ). Pascal’s rule and the symmetry (𝑑−1+𝑛          −1
+                                                                                      ) = (𝑇𝑑−2 ) give
+                            𝑇 −1        𝑑−1+𝑛        𝑇          𝑇
+𝑊𝑛 = 2𝑊𝑛−1 +2𝑢𝑛 , while ( 𝑑−1 ) = 𝑢𝑛 𝑑−1 and (𝑑−1) = 𝑢𝑛 𝑑−1 . Collecting, the 𝑊𝑛−1 coeﬀicient
+                                                     𝑑                            𝑑
+is 𝑇 − 4𝑑 = 𝑛 − 2𝑑 − 2 and the 𝑢𝑛 coeﬀicient is 𝑑−1     [𝑇 (𝑛 + 2) − 4(𝑑 − 1)] = 𝑑−1 𝑛(𝑛 + 2𝑑). The
+case 𝑛 = 0 is −2𝑑 + 𝑑(3 − 𝑑) + 𝑑(𝑑 − 1) = 0. The special values follow from 𝑊0 = (2𝑑−2           𝑑−1 ),
+        2𝑑−1          2𝑑 3𝑑+1               2𝑑  𝑑(𝑑−1)
+𝑊1 = 2( 𝑑−1 ), 𝑊2 = ( 𝑑 ) 𝑑+1 and 𝑢3 = ( 𝑑 ) (𝑑+1)(𝑑+2) . □
+Formula (3.3) is verified against the three-term definition in exact rational arithmetic for 2 ≤
+𝑑 ≤ 40, 0 ≤ 𝑛 ≤ 400 (verify_signs.py) and for 2 ≤ 𝑑 ≤ 12, 𝑛 ≤ 60 (check_formula.py).
+
+4. One fold for every 𝑑 ≥ 3
+Theorem 4.1. Let 𝑑 ≥ 3. 𝐻𝑑 has exactly one positive zero 𝜅𝑓,𝑑 ; 𝐻𝑑 < 0 on (0, 𝜅𝑓,𝑑 ) and
+𝐻𝑑 > 0 on (𝜅𝑓,𝑑 , ∞). Moreover
+
+                                𝑑(𝑑 − 1)       2(𝑑 − 2)(𝑑 + 1)
+         𝑀𝑑 (𝜅𝑓,𝑑 ) ≥ 𝑀1 ∶=              ,                     = Ψ𝑑 (𝑀1 ) ≤ 𝜅𝑓,𝑑 < 2𝑑.           (4.1)
+                                   2                  𝑑
+Hence 𝜆𝑑 decreases strictly on (0, 𝜅𝑓,𝑑 ] from 𝜆0,𝑑 = 𝑑(𝑑 + 1)/2 (its limit at 0+ ) to 𝜆min,𝑑 ∶=
+𝜆𝑑 (𝜅𝑓,𝑑 ) and increases strictly on [𝜅𝑓,𝑑 , ∞) to +∞.
+Proof. 𝜅 ↦ 𝑀𝑑 (𝜅) is analytic and strictly increasing (𝑀 ′ = 𝔼[𝑇 𝑒𝜅𝑇 ] > 0), a bijection (0,
+∞) → (1, ∞); let 𝜅(𝑀 ) be its 𝐶 ∞ inverse and 𝐷(𝑀 ) ∶= 𝜅(𝑀 ) − Ψ𝑑 (𝑀 ). By Lemma 3.2,
+sign 𝐻𝑑 (𝜅) = sign 𝐷(𝑀𝑑 (𝜅)), so it suﬀices to show that 𝐷 has exactly one zero 𝑀𝑓 on (1,
+∞), with 𝐷 < 0 before and 𝐷 > 0 after. By Lemma 3.1, 𝑑𝜅/𝑑𝑀 = 1/𝑀 ′ (𝜅) = Φ(𝑀 , 𝜅) ∶=
+𝜅/(𝜅𝑀 − (𝑑 − 1)(𝑀 − 1)), so
+
+                                 𝐷′ (𝑀 ) = Φ(𝑀 , 𝜅(𝑀 )) − Ψ′𝑑 (𝑀 ).
+
+At a zero 𝑀0 of 𝐷,
+
+                         𝐷′ (𝑀0 ) = Δ(𝑀0 ) ∶= Φ(𝑀0 , Ψ𝑑 (𝑀0 )) − Ψ′𝑑 (𝑀0 ).
+
+The following are rational identities in (𝑀 , 𝑑), obtained by direct computation (sym_check.py):
+ (a) On the curve 𝜅 = Ψ𝑑 (𝑀 ): 𝜅𝑀 − (𝑑 − 1)(𝑀 − 1) = (𝑑+1)𝑀(𝑀−1)
+                                                         𝑀+𝑑     > 0 for 𝑀 > 1, and Φ(𝑀 ,
+               𝑑(2𝑀+𝑑−1)
+     Ψ𝑑 (𝑀 )) = (𝑑+1)𝑀 2 .
+                         2
+ (b) Ψ′𝑑 (𝑀 ) = 𝑑[(𝑑+3)𝑀𝑀+2(𝑑−1)𝑀+𝑑(𝑑−1)]
+                          2 (𝑀+𝑑)2        > 0 for 𝑀 ≥ 1.
+
+                 𝑑 (𝑀 − 1)2 (2𝑀 − 𝑑(𝑑 − 1))
+  (c) Δ(𝑀 ) =                               : negative on (1, 𝑀1 ), zero at 𝑀1 = 𝑑(𝑑 − 1)/2,
+                     (𝑑 + 1)𝑀 2 (𝑀 + 𝑑)2
+      positive on (𝑀1 , ∞).
+                        (𝑑−1)(𝑀−1)
+ (d) 𝜕𝜅 Φ(𝑀 , 𝜅) = − (𝜅𝑀−(𝑑−1)(𝑀−1))2 < 0 for 𝑀 > 1 wherever the denominator is nonzero.
+
+
+
+  (e) 𝐷 < 0 on (1, 1+𝜀) for some 𝜀 > 0: by Proposition 3.4, 𝑁𝑑̃ (𝜅) = − 𝑑2 (𝑑+1)(𝑑+2)
+                                                                             𝑑−2
+                                                                                      𝜅3 +𝑂(𝜅4 ) < 0
+      for small 𝜅 > 0 when 𝑑 ≥ 3, i.e. 𝜅 < Ψ𝑑 (𝑀𝑑 (𝜅)).
+  (f) 2𝑑 − Ψ𝑑 (𝑀 ) = 𝑑[(𝑑+3)𝑀+𝑑−1]
+                         𝑀(𝑀+𝑑)    > 0, so Ψ𝑑 < 2𝑑 and 𝐷(𝑀 ) → +∞ as 𝑀 → ∞.
+Step 1: 𝐷 < 0 on (1, 𝑀1 ) and 𝐷(𝑀1 ) ≤ 0. Suppose 𝐷(𝑀 ) ≥ 0 for some 𝑀 ∈ (1, 𝑀1 ) and let
+𝑀∗ = inf{𝑀 ∈ (1, 𝑀1 ) ∶ 𝐷(𝑀 ) ≥ 0}. By (e), 𝑀∗ ≥ 1 + 𝜀; by continuity 𝐷(𝑀∗ ) = 0 and 𝐷 < 0
+on (1, 𝑀∗ ), so 𝐷′ (𝑀∗ ) ≥ 0. But 𝐷′ (𝑀∗ ) = Δ(𝑀∗ ) < 0 by (c). Contradiction; continuity gives
+𝐷(𝑀1 ) ≤ 0.
+
+                                                  6
+Step 2: on [𝑀1 , ∞), 𝐷(𝑀 ) < 0 implies 𝐷′ (𝑀 ) > 0. If 𝐷(𝑀 ) < 0 then 𝜅(𝑀 ) < Ψ𝑑 (𝑀 ).
+The denominator of Φ(𝑀 , ⋅) is aﬀine in 𝜅, equals 𝜅𝑀 ′ (𝜅) > 0 at 𝜅 = 𝜅(𝑀 ) and is positive at
+𝜅 = Ψ𝑑 (𝑀 ) by (a); hence it is positive on the whole segment [𝜅(𝑀 ), Ψ𝑑 (𝑀 )], where (d) applies,
+so Φ(𝑀 , 𝜅(𝑀 )) > Φ(𝑀 , Ψ𝑑 (𝑀 )) and 𝐷′ (𝑀 ) > Δ(𝑀 ) ≥ 0 by (c).
+Step 3: exactly one zero. Let 𝑀𝑓 = inf{𝑀 ≥ 𝑀1 ∶ 𝐷(𝑀 ) ≥ 0}, which exists by (f); then
+𝐷(𝑀𝑓 ) = 0 and, by Step 1 and the definition, 𝐷 < 0 on (1, 𝑀𝑓 ). We claim 𝐷 > 0 on (𝑀𝑓 , ∞).
+If 𝐷(𝑀2 ) < 0 for some 𝑀2 > 𝑀𝑓 , let 𝑀3 = sup{𝑀 ∈ [𝑀𝑓 , 𝑀2 ] ∶ 𝐷(𝑀 ) ≥ 0}; then 𝐷(𝑀3 ) = 0
+and 𝐷 < 0 on (𝑀3 , 𝑀2 ], so by Step 2 𝐷 is strictly increasing there and 𝐷(𝑀2 ) > 𝐷(𝑀3 ) = 0, a
+contradiction. Thus 𝐷 ≥ 0 on [𝑀𝑓 , ∞). If 𝐷(𝑀0 ) = 0 for some 𝑀0 > 𝑀𝑓 ≥ 𝑀1 , then 𝑀0 is a
+local minimum of 𝐷, so 𝐷′ (𝑀0 ) = 0, whereas 𝐷′ (𝑀0 ) = Δ(𝑀0 ) > 0 by (c). Hence 𝐷 > 0 on
+(𝑀𝑓 , ∞). (When 𝐷(𝑀1 ) = 0 this gives 𝑀𝑓 = 𝑀1 ; the argument does not need to distinguish
+the cases.)
+Therefore 𝜅𝑓,𝑑 ∶= 𝜅(𝑀𝑓 ) is the unique positive zero of 𝐻𝑑 , with the stated signs. Since 𝑀𝑓 ≥ 𝑀1
+and 𝜅𝑓,𝑑 = Ψ𝑑 (𝑀𝑓 ) with Ψ𝑑 increasing (b) and bounded by 2𝑑 (f), (4.1) follows; Ψ𝑑 (𝑀1 ) =
+                                                                                             2
+2(𝑑 − 2)(𝑑 + 1)/𝑑 is a direct evaluation. The monotonicity of 𝜆𝑑 follows from 𝜆′𝑑 = 𝐻𝑑 /(2𝑅0,𝑑 𝑏𝑑2 ),
+𝜆𝑑 (0 ) = 𝑅0,𝑑 /(2𝐾𝑑 (0)) = 𝑅0,𝑑 /(2𝑣𝑑 ) = 𝑑(𝑑 + 1)/2, and 𝜆𝑑 (𝜅) ≥ 𝜅/2 → ∞. □
+     +      2        ″         2
+
+
+Corollary 4.2 (𝑑 = 2). 𝐻2 > 0 on (0, ∞); 𝜆2 increases strictly from 𝜆0,2 = 3 to +∞.
+Proof. Now 𝑀1 = 1, so Δ > 0 on (1, ∞) by (c). Proposition 3.4 gives 𝑐2,𝑚̂  = (𝑚 − 6)(2𝑚+1 −
+2) + 2𝑚(𝑚 + 4), so 𝑐2,3         ̂ = 4, and 𝑁2̃ (𝜅) = 𝜅4 /180 + 𝑂(𝜅5 ) > 0: 𝐷 > 0 near 1+ .
+                      ̂ = 0, 𝑐2,4
+If 𝐷 had a zero, the first one, 𝑀∗ , would satisfy 𝐷′ (𝑀∗ ) ≤ 0 (approached from 𝐷 > 0) and
+𝐷′ (𝑀∗ ) = Δ(𝑀∗ ) > 0. □
+
+5. The chain to the rate–distortion function
+Standing facts, valid for 𝑑 ≥ 2 and all 𝜅 > 0, 𝜆 > 0:
+(H1) 𝑏𝑑′ = 𝐾𝑑″ /𝑅0,𝑑
+                 2
+                     > 0; 𝑏𝑑 (0+ ) = 0; 𝑏𝑑 (𝜅) → 1 as 𝜅 → ∞ (by (3.1), since 𝑑(𝑀 − 1)/(𝜅𝑀 ) → 0).
+(H2) 𝐾𝑑′ (𝜅) = 𝔼𝜅 𝑇 − 1/𝑑 < 𝑅0,𝑑
+                              2
+                                 because 𝑇 < 1 a.s.; hence 𝐺′𝑑,𝜆 (1) = 2𝜆(𝐾𝑑′ (2𝜆) − 𝑅0,𝑑
+                                                                                      2
+                                                                                          ) < 0, so
+𝑏 = 1 is never stationary and never a maximizer.
+(H3) For 𝑏 ∈ (0, 1]: 𝐺′𝑑,𝜆 (𝑏) = 0 ⟺ 𝑏 = 𝑏𝑑 (𝜅) and 𝜆 = 𝜆𝑑 (𝜅) with 𝜅 = 2𝜆𝑏; the map 𝜅 ↦ 𝑏𝑑 (𝜅)
+is injective by (H1).
+(H4) At such a stationary radius 𝐺𝑑,𝜆 (𝑏) = 𝐹𝑑 (𝜅)/2 and 𝐺″𝑑,𝜆 (𝑏) = −(2𝜆/𝑏)𝐻𝑑 (𝜅).
+                                                                       2
+(H5) 𝐹𝑑′ = 𝐻𝑑 , 𝐹𝑑 (0) = 0, and by (3.1) and Lemma 2.1(iii), 𝐹𝑑 (𝜅) = 𝑅0,𝑑 𝜅 − 2(𝑑 − 1) log 𝜅 +
+𝑂(1) → +∞.
+(H6) 𝐺𝑑,𝜆 (0) = 0, 𝐺′𝑑,𝜆 (0) = 0, 𝐺″𝑑,𝜆 (0) = 2𝜆(2𝜆𝑣𝑑 − 𝑅0,𝑑2
+                                                                ) and 𝐺‴                3
+                                                                            𝑑,𝜆 (0) = 8𝜆 𝜇3,𝑑 , by (2.5).
+         2
+Since 𝑅0,𝑑  /(2𝑣𝑑 ) = 𝑑(𝑑 + 1)/2 = 𝜆0,𝑑 : for 𝜆 < 𝜆0,𝑑 the radius 0 is a strict local maximum of
+𝐺𝑑,𝜆 , and for 𝜆 > 𝜆0,𝑑 a strict local minimum. At 𝜆 = 𝜆0,𝑑 the quadratic term vanishes and
+the dimensions differ: for 𝑑 ≥ 3, 𝜇3,𝑑 > 0, so 𝐺𝑑,𝜆0,𝑑 (𝑏) = 34 𝜆30,𝑑 𝜇3,𝑑 𝑏3 + 𝑂(𝑏4 ) > 0 for all small
+𝑏 > 0 and 0 is not a local maximum; for 𝑑 = 2, 𝜇3,2 = 0 and 𝐾2 (𝜅) = log ( sinh(𝜅/2)/(𝜅/2))
+                    9 4    9 6
+gives 𝐺2,3 (𝑏) = − 20 𝑏 + 35 𝑏 + 𝑂(𝑏8 ), so 0 remains a strict local maximum at 𝜆 = 𝜆0,2 = 3 (in
+agreement with Corollary 5.2, where 0 is the unique global maximizer for every 𝜆 ≤ 3). Only
+the cases 𝜆 < 𝜆0,𝑑 , 𝜆 > 𝜆0,𝑑 and (𝑑 ≥ 3, 𝜆 = 𝜆0,𝑑 ) are used below.
+Theorem 5.1 (complete radial phase and two-piece RDF, 𝑑 ≥ 3). Let 𝜅𝑓 = 𝜅𝑓,𝑑 ,
+𝜆min = 𝜆𝑑 (𝜅𝑓 ) be as in Theorem 4.1.
+  (a) Stationary radii. For 𝜆 > 0 the positive stationary radii of 𝐺𝑑,𝜆 are the 𝑏𝑑 (𝜅) with
+      𝜆𝑑 (𝜅) = 𝜆: none for 𝜆 < 𝜆min ; exactly one, 𝑏𝑑 (𝜅𝑓 ), for 𝜆 = 𝜆min ; two, 𝑏𝑑 (𝜅− ) < 𝑏𝑑 (𝜅+ )
+
+
+                                                   7
+      with 𝜅− < 𝜅𝑓 < 𝜅+ , for 𝜆min < 𝜆 < 𝜆0,𝑑 ; exactly one, 𝑏𝑑 (𝜅+ ) with 𝜅+ > 𝜅𝑓 , for 𝜆 ≥ 𝜆0,𝑑 .
+      A pre-fold radius (𝜅 < 𝜅𝑓 ) is a strict local minimum, a post-fold radius (𝜅 > 𝜅𝑓 ) a strict
+      local maximum, and the degenerate radius at 𝜆 = 𝜆min (where 𝐻𝑑 (𝜅𝑓 ) = 0) has gain
+      𝐺 = 𝐹𝑑 (𝜅𝑓 )/2 < 0 = 𝐺𝑑,𝜆 (0).
+ (b) Unique contact. 𝐹𝑑 decreases strictly on (0, 𝜅𝑓 ], is negative there, then increases strictly
+     to +∞; it has a unique positive zero 𝜅𝑐 = 𝜅𝑐,𝑑 > 𝜅𝑓 . Put 𝑏𝑐 = 𝑏𝑑 (𝜅𝑐 ), 𝜆𝑐 = 𝜆𝑑 (𝜅𝑐 ),
+            2
+     𝐷𝑐 = 𝑅0,𝑑 (1 − 𝑏𝑐2 ), 𝑅𝑐 = 𝜅𝑐 𝐾𝑑′ (𝜅𝑐 ) − 𝐾𝑑 (𝜅𝑐 ).
+  (c) Global maximizers. The set of global maximizers of 𝐺𝑑,𝜆 on [0, 1] is {0} for 0 < 𝜆 < 𝜆𝑐 ; {0,
+      𝑏𝑐 } for 𝜆 = 𝜆𝑐 ; {𝑏𝑑 (𝜅+ (𝜆))} for 𝜆 > 𝜆𝑐 , where 𝜅+ (𝜆) > 𝜅𝑐 is the unique post-fold solution
+      of 𝜆𝑑 (𝜅) = 𝜆. (At 𝜆 = 0, 𝐺𝑑,0 ≡ 0 and every 𝑏 ∈ [0, 1] is a maximizer.)
+ (d) 0 < 𝜆min < 𝜆𝑐 < 𝜆0,𝑑 .
+  (e) No reentrance. On (𝜆𝑐 , ∞), 𝜆 ↦ 𝑏𝑑 (𝜅+ (𝜆)) is continuous and strictly increasing to 1, so
+                                      2
+      the active distortion 𝐷(𝜆) = 𝑅0,𝑑 (1 − 𝑏𝑑 (𝜅+ (𝜆))2 ) decreases strictly from 𝐷𝑐 to 0. The
+                                                           2                            2
+      function 𝑐𝑑 of (2.2) is convex with −𝜕𝑐𝑑 (𝜆) = {𝑅0,𝑑    } for 0 < 𝜆 < 𝜆𝑐 , [𝐷𝑐 , 𝑅0,𝑑 ] at 𝜆𝑐 ,
+      {𝐷(𝜆)} for 𝜆 > 𝜆𝑐 .
+  (f) Two-piece rate–distortion function.
+
+                                      ⎧+∞,               𝐷 = 0,
+                                      {
+                                      { ′
+                                      {𝜅𝐾𝑑 (𝜅) − 𝐾𝑑 (𝜅), 0 < 𝐷 < 𝐷𝑐 ,
+                             𝑅𝑑 (𝐷) = ⎨
+                                            2                         2
+                                      {𝜆𝑐 (𝑅0,𝑑 − 𝐷),    𝐷𝑐 ≤ 𝐷 ≤ 𝑅0,𝑑  ,
+                                      {
+                                      {0,                       2
+                                                         𝐷 ≥ 𝑅0,𝑑 ,
+                                      ⎩
+
+                                                                               2
+      where, on 0 < 𝐷 < 𝐷𝑐 , 𝜅 > 𝜅𝑐 is the unique solution of 𝑏𝑑 (𝜅) = √1 − 𝐷/𝑅0,𝑑 and
+      𝜅𝐾𝑑′ (𝜅) − 𝐾𝑑 (𝜅) = 𝜅𝑚𝑑 (𝜅) − log 𝑀𝑑 (𝜅). The middle piece is attained by the covariant
+      complex-Bingham channel of field 𝜅 and the linear face by an independently flagged mix-
+      ture of the trivial channel and the field-𝜅𝑐 channel. The pieces meet at 𝐷𝑐 with value
+                2
+      𝑅𝑐 = 𝜆𝑐 𝑅0,𝑑           2
+                   𝑏𝑐2 = 𝜅𝑐 𝑅0,𝑑 𝑏𝑐 /2.
+Proof. (a) By (H3) the positive stationary radii at 𝜆 correspond bijectively to solutions 𝜅 > 0
+of 𝜆𝑑 (𝜅) = 𝜆, and Theorem 4.1 gives the counts: on (0, 𝜅𝑓 ], 𝜆𝑑 is strictly decreasing with values
+in [𝜆min , 𝜆0,𝑑 ) (the value 𝜆0,𝑑 is a limit, not attained); on [𝜅𝑓 , ∞) it is strictly increasing onto
+[𝜆min , ∞). The local type follows from (H4) and the sign of 𝐻𝑑 ; at 𝜅𝑓 , (H4) and (b) give
+𝐺 = 𝐹𝑑 (𝜅𝑓 )/2 < 0.
+ (b) 𝐹𝑑′ = 𝐻𝑑 has the sign pattern of Theorem 4.1, 𝐹𝑑 (0) = 0, and (H5). So 𝐹𝑑 < 0 on (0,
+     𝜅𝑓 ] and 𝐹𝑑 increases strictly from 𝐹𝑑 (𝜅𝑓 ) < 0 to +∞ on [𝜅𝑓 , ∞): one zero 𝜅𝑐 > 𝜅𝑓 , with
+     𝐹𝑑 < 0 on (𝜅𝑓 , 𝜅𝑐 ) and 𝐹𝑑 > 0 on (𝜅𝑐 , ∞).
+  (c) Fix 𝜆 > 0. 𝐺𝑑,𝜆 is continuous on [0, 1], so a maximizer exists among {0} ∪ {1} ∪
+      {interior stationary points}; 𝑏 = 1 is excluded by (H2), pre-fold radii by (a) (a strict
+      local minimum of a nonconstant analytic function is not a global maximum), and the de-
+      generate radius at 𝜆min by (a). So the only competitors of 0 (gain 0) are post-fold radii,
+      present iff 𝜆 > 𝜆min , unique, equal to 𝑏𝑑 (𝜅+ (𝜆)) with gain 𝐹𝑑 (𝜅+ (𝜆))/2 by (H4). Since 𝜅+
+      is the inverse of the strictly increasing 𝜆𝑑 |(𝜅𝑓 ,∞) , it is continuous and strictly increasing;
+      by (b) the gain is < 0, = 0, > 0 according as 𝜅+ (𝜆) < 𝜅𝑐 , = 𝜅𝑐 , > 𝜅𝑐 , i.e. 𝜆 < 𝜆𝑐 , = 𝜆𝑐 ,
+      > 𝜆𝑐 (note 𝜆𝑐 = 𝜆𝑑 (𝜅𝑐 ) > 𝜆𝑑 (𝜅𝑓 ) = 𝜆min , so the range 𝜆 ≤ 𝜆min is included in 𝜆 < 𝜆𝑐 ).
+ (d) 𝜆min < 𝜆𝑐 was just shown. By (H6), at 𝜆 = 𝜆0,𝑑 small positive radii have positive gain, so
+     0 is not a global maximizer there; by (c) this forces 𝜆0,𝑑 > 𝜆𝑐 .
+
+
+                                                  8
+  (e) The first sentence follows from (c), (H1) and the monotonicity of 𝜅+ . For each fixed 𝑏,
+                         2
+      𝜆 ↦ 𝐾𝑑 (2𝜆𝑏)−𝜆𝑅0,𝑑   (1+𝑏2 ) is convex (𝐾𝑑 convex), so 𝑐𝑑 is convex as a maximum of convex
+      functions, and Danskin’s theorem gives 𝜕𝑐𝑑 (𝜆) = conv{2𝑏𝐾𝑑′ (2𝜆𝑏)−𝑅0,𝑑  2
+                                                                                (1+𝑏2 ) ∶ 𝑏 active};
+                                      2
+      at an active 𝑏 > 0, 𝐾𝑑′ (𝜅) = 𝑅0,𝑑                                2
+                                         𝑏 turns the derivative into −𝑅0,𝑑 (1 − 𝑏2 ) = −𝐷𝑏 , and at
+                     2
+      𝑏 = 0 it is −𝑅0,𝑑 (1D2Q (112)). Insert the active sets from (c).
+                          2
+  (f) 𝑅𝑑 (𝐷) = 0 for 𝐷 ≥ 𝑅0,𝑑 (trivial channel) and 𝑅𝑑 (0) = +∞ (zero distortion forces 𝜌 ̂ = 𝜌𝑋
+      a.s., and 𝐼(𝑋; 𝑋) = +∞ for the continuous 𝑋; quantitatively, 1D2Q Prop. 3.3). Let
+      0 < 𝐷 < 𝐷𝑐 . By (H1) and (c)–(e), 𝑏𝑑 maps (𝜅𝑐 , ∞) increasingly onto (𝑏𝑐 , 1), so there is a
+                                          2 ; put 𝜆 = 𝜆 (𝜅) > 𝜆 . By (c), 𝑏 (𝜅) is the unique
+      unique 𝜅 > 𝜅𝑐 with 𝑏𝑑 (𝜅) = √1 − 𝐷/𝑅0,𝑑          𝑑       𝑐           𝑑
+     global maximizer of 𝐺𝑑,𝜆 , hence active, and 𝜅 = 2𝜆𝑏𝑑 (𝜅). By (A2) the covariant channel
+                                                                              2
+     attains distortion 𝐷 at information 𝐼 = 𝜅𝑚𝑑 (𝜅) − log 𝑀𝑑 (𝜅) = 𝜆(𝑅0,𝑑       − 𝐷) − max𝑣 𝐺𝑑,𝜆 (𝑣).
+     The right side is the expression inside the supremum of (A1) at this 𝜆, so 𝑅𝑑 (𝐷) ≥ 𝐼;
+     attainment gives 𝑅𝑑 (𝐷) ≤ 𝐼. Finally 𝜅𝑚𝑑 − log 𝑀𝑑 = 𝜅(𝐾𝑑′ + 1/𝑑) − 𝐾𝑑 − 𝜅/𝑑 = 𝜅𝐾𝑑′ − 𝐾𝑑 .
+                         2
+     Let 𝐷𝑐 ≤ 𝐷 ≤ 𝑅0,𝑑       . Taking 𝜆 = 𝜆𝑐 in (A1), where max 𝐺𝑑,𝜆𝑐 = 0 by (c), gives 𝑅𝑑 (𝐷) ≥
+           2
+     𝜆𝑐 (𝑅0,𝑑 − 𝐷). Conversely both 0 and 𝑏𝑐 are active at 𝜆𝑐 ; by (A2) the field-𝜅𝑐 channel
+                                              2                                            2
+     attains (𝐷𝑐 , 𝑅𝑐 ) with 𝑅𝑐 = 𝜆𝑐 (𝑅0,𝑑        − 𝐷𝑐 ) and the trivial channel attains (𝑅0,𝑑 , 0); by
+                                                            2            2
+     (A3) their flagged mixture with weight 𝑡 = (𝑅0,𝑑 − 𝐷)/(𝑅0,𝑑 − 𝐷𝑐 ) achieves distortion
+                                                2
+     𝐷 with information at most 𝜆𝑐 (𝑅0,𝑑           − 𝐷); the preceding lower bound forces equality.
+     The two expressions for 𝑅𝑐 agree because 𝐹𝑑 (𝜅𝑐 ) = 0 means 𝐾𝑑 (𝜅𝑐 ) = 𝜅𝑐 𝐾𝑑′ (𝜅𝑐 )/2, and
+          2
+     𝜆𝑐 𝑅0,𝑑           2
+             𝑏𝑐2 = 𝜅𝑐 𝑅0,𝑑 𝑏𝑐 /2 = 𝜅𝑐 𝐾𝑑′ (𝜅𝑐 )/2. □
+Consequences. The multiplier 𝜆𝑐,𝑑 of 1D2Q Theorem 3.1 is the 𝜆𝑐 above, its coexisting positive
+radius is unique and equals 𝑏𝑐 , and the asymptotics of 1D2Q Theorem 7.3 describe the contact.
+This closes 1D2Q Remark 3.2 for every finite 𝑑 ≥ 3. By (4.1), 𝜅𝑓 = 2𝑑 − 𝑂(1) and, by Remark
+3.3, 𝑏𝑑 (𝜅𝑓 ) < 1/2, so 𝜆min = 𝜅𝑓 /(2𝑏𝑑 (𝜅𝑓 )) > 𝜅𝑓 ; numerically 𝜆min − 2𝑑 → 0, matching the birth
+of stationary points at 𝛼 = 2 in 1D2Q Theorem 5.1.
+Corollary 5.2 (𝑑 = 2). For 0 < 𝜆 ≤ 3 the unique global maximizer of 𝐺2,𝜆 is 0; for 𝜆 > 3 it is
+                                         √ tends to 0 as 𝜆 ↓ 3 (continuous onset). Consequently
+the unique positive stationary radius, which
+𝑅2 (𝐷) = 𝜅𝐾2′ (𝜅) − 𝐾2 (𝜅) with 𝑏2 (𝜅) = 1 − 2𝐷 for 0 < 𝐷 < 1/2, which is the Dytso–Cardone
+formula 𝑅2 = 𝜂𝑟 − log(sinh 𝜂/𝜂), 𝑟 = coth 𝜂 − 1/𝜂, under 𝜅 = 2𝜂.
+Proof. By Corollary 4.2, 𝜆2 (𝜅) > 3 for all 𝜅 > 0 and 𝜆2 is a bijection (0, ∞) → (3, ∞). For
+𝜆 ≤ 3, 𝐺′2,𝜆 has no zero in (0, 1] and 𝐺′2,𝜆 (1) < 0 (H2), so 𝐺2,𝜆 is strictly decreasing and 0 is
+the unique maximizer. For 𝜆 > 3 there is exactly one stationary 𝑏+ ∈ (0, 1); 𝐺″ (0) > 0 by (H6)
+and 𝐺′ (1) < 0 give 𝐺′ > 0 on (0, 𝑏+ ) and 𝐺′ < 0 on (𝑏+ , 1]. Theorem A applies verbatim (it
+                                                                                2
+holds for 𝑑 = 2), and the proof of (f) goes through with 𝐷𝑐 replaced by 𝑅0,2       = 1/2. Finally
+𝑀2 (𝜅) = (𝑒 − 1)/𝜅 gives 𝐾2 (𝜅) = log(sinh 𝜂/𝜂), 𝑏2 = 2𝐾2 = coth 𝜂 − 1/𝜂 and 𝜅𝐾2′ = 𝜂𝑟. □
+            𝜅                                               ′
+
+
+
+6. The coeﬀicient sign law
+Theorem 4.1 did not use the coeﬀicients 𝑐𝑑,𝑛 . The following statement, in the format of 61Y0
+Lemma 6.1 and 7H9F Theorem 8.2, is nevertheless of independent interest and gives a second
+(Descartes-type) proof of one fold.
+Theorem 6.1 (one-change law). Let 𝑑 ≥ 3 and 𝑁𝑑 = ∑𝑛 𝑐𝑑,𝑛 𝜅𝑛 as in (2.4). Then 𝑐𝑑,0 =
+𝑐𝑑,1 = 0,
+
+                                                                          2𝑑 − 1, 𝑑 = 3, 4,
+         𝑐𝑑,𝑛 < 0 (2 ≤ 𝑛 ≤ 𝑛𝑑 ),       𝑐𝑑,𝑛 > 0 (𝑛 > 𝑛𝑑 ),       𝑛𝑑 = {
+                                                                          2𝑑,     𝑑 ≥ 5.
+
+For 𝑑 = 2: 𝑐2,0 = 𝑐2,1 = 𝑐2,2 = 0 and 𝑐2,𝑛 > 0 for 𝑛 ≥ 3. Status: proved for all 𝑑 ≥ 2 and all
+𝑛, except that for 3 ≤ 𝑑 ≤ 35 the two indices 𝑛 ∈ {2𝑑 − 1, 2𝑑} are settled by an exact integer
+
+                                                  9
+computation (tail_cases.py, which covers 3 ≤ 𝑑 ≤ 60); for 𝑑 ≥ 36 these indices are covered by
+the analytic bound in Lemma 6.2(iv).
+                                      ̂
+By Proposition 3.4, sign 𝑐𝑑,𝑛 = sign 𝑐𝑑,𝑛+1 ; we work with 𝑚 = 𝑛 + 1. For 3 ≤ 𝑚 ≤ 2𝑑 + 1 put
+
+                                  𝑊𝑚−1                     𝑑 𝑚(𝑚 + 2𝑑)
+                          𝑞𝑚 ∶=        ,      𝑔𝑚 ∶=                        .
+                                   𝑢𝑚                  (𝑑 − 1)(2𝑑 + 2 − 𝑚)
+
+                                                  ̂
+Since 𝑚 − 2𝑑 − 2 < 0 for 𝑚 ≤ 2𝑑 + 1, (3.3) gives 𝑐𝑑,𝑚 < 0 ⟺ 𝑞𝑚 > 𝑔𝑚 for 𝑚 ≤ 2𝑑 + 1, while
+                                                                                   ̂
+for 𝑚 ≥ 2𝑑 + 2 both terms of (3.3) are nonnegative and the second is positive, so 𝑐𝑑,𝑚 > 0.
+Lemma 6.2. Let 𝑑 ≥ 3.
+                            2(𝑑 + 𝑚)                             (𝑑 + 2)(3𝑑 + 1)
+  (i) Recursion. 𝑞𝑚+1 =              (𝑞 + 1) for 𝑚 ≥ 1, and 𝑞3 =                 .
+                           2𝑑 − 2 + 𝑚 𝑚                             𝑑(𝑑 − 1)
+                         (2𝑑 + 1)(𝑑 − 2)
+ (ii) Base. 𝑞3 − 𝑔3 =                    > 0.
+                        𝑑(𝑑 − 1)(2𝑑 − 1)
+                                  2(𝑑 + 𝑚)                     𝑚(𝑚 − 1)(2𝑑2 − 𝑑𝑚 − 𝑑 − 2)
+ (iii) Sub-solution. Π(𝑚, 𝑑) ∶=            (𝑔𝑚 + 1) − 𝑔𝑚+1 =                                 ,
+                                2𝑑 − 2 + 𝑚                   (𝑑 − 1)(2𝑑 + 1 − 𝑚)(2𝑑 + 2 − 𝑚)
+      which is ≥ 0 for integers 3 ≤ 𝑚 ≤ 2𝑑 − 2 and < 0 for 𝑚 ∈ {2𝑑 − 1, 2𝑑}.
+                                     2𝑑−3                          2𝑑−2
+ (iv) Boundary indices. 𝑞2𝑑 ≥ ∏𝑘=𝑑−2 4𝑑−3−𝑘
+                                          𝑘+1  and 𝑞2𝑑+1 ≥ ∏𝑘=𝑑−2 4𝑑−2−𝑘
+                                                                     𝑘+1 ; every factor is ≥ 1
+      and the ⌊𝑑/2⌋ + 1 factors with 𝑘 ≤ 3𝑑/2 − 2 are ≥ 5/3. Hence 𝑞2𝑑 , 𝑞2𝑑+1 ≥ (5/3)⌊𝑑/2⌋+1 .
+                   4𝑑3
+      Also 𝑔2𝑑 = 𝑑−1   < 𝑔2𝑑+1 = 𝑑(2𝑑+1)(4𝑑+1)
+                                      𝑑−1      ≤ 9𝑑2 for 𝑑 ≥ 16, and (5/3)⌊𝑑/2⌋+1 ≥ 9𝑑2 for all
+      𝑑 ≥ 36 (false for 𝑑 = 34, 35).
+                                                 𝑇 −1
+Proof. (i) Pascal’s rule with the symmetry (𝑑−1+𝑚             −1
+                                                       ) = (𝑇𝑑−2 ) gives 𝑊𝑚 = 2𝑊𝑚−1 + 2𝑢𝑚 , and
+𝑢𝑚+1 /𝑢𝑚 = (2𝑑 − 2 + 𝑚)/(𝑑 + 𝑚); divide. The value of 𝑞3 uses 𝑊2 and 𝑢3 from Proposition 3.4.
+(ii) Direct: the numerator of 𝑞3 −𝑔3 over 𝑑(𝑑 −1)(2𝑑 −1) is (3𝑑 +1)(𝑑 +2)(2𝑑 −1)−3𝑑2 (2𝑑 +3) =
+2𝑑2 − 3𝑑 − 2. (iii) The factorization is a rational identity (induction_check.py); for 3 ≤ 𝑚 ≤ 2𝑑
+the denominator is positive and the sign is that of 2𝑑2 − 𝑑𝑚 − 𝑑 − 2, which equals 𝑑 − 2 ≥ 0 at
+𝑚 = 2𝑑 − 2 and −2 at 𝑚 = 2𝑑 − 1, and is decreasing in 𝑚. (iv) For 𝑚 = 2𝑑, 𝑇 − 1 = 4𝑑 − 3
+                               3𝑑−2
+and the window 𝑊2𝑑−1 = ∑𝑘=𝑑−1 (4𝑑−3      𝑘 ) contains the central term 𝑘 = 2𝑑 − 2; keeping only
+                              2𝑑−3
+it, 𝑞2𝑑 ≥ (4𝑑−3    4𝑑−3             4𝑑−3−𝑘
+            2𝑑−2)/( 𝑑−2 ) = ∏𝑘=𝑑−2 𝑘+1
+                                                            𝑁
+                                           by telescoping (𝑗+1)/(𝑁𝑗 ) = 𝑁−𝑗
+                                                                        𝑗+1 . A factor is ≥ 1 iff
+                                         5𝑑−2    5
+𝑘 ≤ 2𝑑 − 2, and for 𝑘 ≤ 3𝑑/2 − 2 it is ≥ 3𝑑−2 ≥ 3 ; the number of integers 𝑘 ∈ [𝑑 − 2, 3𝑑/2 − 2] is
+                                                                                       5𝑑
+⌊𝑑/2⌋ + 1. The case 𝑚 = 2𝑑 + 1 (𝑇 − 1 = 4𝑑 − 2, central term 𝑘 = 2𝑑 − 1, factors ≥ 3𝑑−2   ≥ 35 for
+𝑘 ≤ 3𝑑/2 − 2) is identical. 𝑔2𝑑+1 ≤ 9𝑑2 ⟺ 𝑑2 − 15𝑑 − 1 ≥ 0 ⟺ 𝑑 ≥ 16. For the last claim,
+(5/3)19 > 16400 > 9 ⋅ 372 = 12321 covers 𝑑 = 36, 37, and passing from 𝑑 to 𝑑 + 2 multiplies the
+left side by 5/3 and the right side by ((𝑑 + 2)/𝑑)2 ≤ (38/36)2 < 1.12. □
+                                                              2(𝑑+𝑚)
+Proof of Theorem 6.1. Since Π ≥ 0 for 𝑚 ≤ 2𝑑 − 2 and 𝑞 ↦ 2𝑑−2+𝑚        (𝑞 + 1) is increasing, (i)–(iii)
+                                   ̂
+give by induction 𝑞𝑚 > 𝑔𝑚 , i.e. 𝑐𝑑,𝑚  < 0, for 3 ≤ 𝑚 ≤ 2𝑑 − 1 and every 𝑑 ≥ 3. For 𝑚 ≥ 2𝑑 + 2,
+  ̂
+𝑐𝑑,𝑚  > 0 as noted. The remaining indices are 𝑚 ∈ {2𝑑, 2𝑑 + 1} (i.e. 𝑛 ∈ {2𝑑 − 1, 2𝑑}). For
+𝑑 ≥ 36, Lemma 6.2(iv) gives min(𝑞2𝑑 , 𝑞2𝑑+1 ) ≥ (5/3)⌊𝑑/2⌋+1 ≥ 9𝑑2 ≥ 𝑔2𝑑+1 > 𝑔2𝑑 , so 𝑐𝑑,2𝑑  ̂    <0
+       ̂
+and 𝑐𝑑,2𝑑+1   < 0, i.e. 𝑛𝑑 = 2𝑑. For 3 ≤ 𝑑 ≤ 35, tail_cases.py compares 𝑞𝑚 and 𝑔𝑚 in exact
+integer arithmetic: 𝑞2𝑑 > 𝑔2𝑑 for all 3 ≤ 𝑑 ≤ 60, and 𝑞2𝑑+1 > 𝑔2𝑑+1 exactly for 5 ≤ 𝑑 ≤ 60,
+failing at 𝑑 = 3, 4; this gives 𝑛𝑑 = 2𝑑 for 5 ≤ 𝑑 ≤ 35 and 𝑛𝑑 = 2𝑑 − 1 for 𝑑 = 3, 4. Together
+with 𝑐𝑑,0      ̂ = 𝑐𝑑,2
+         ̂ = 𝑐𝑑,1                                         ̂
+                      ̂ = 0 (Proposition 3.4) and 𝑐𝑑,𝑛 ∝ 𝑐𝑑,𝑛+1 , the sign pattern is complete. For
+𝑑 = 2, (iii) is vacuous and 𝑐2,𝑚
+                              ̂  = (𝑚 − 6)(2𝑚+1 − 2) + 2𝑚(𝑚 + 4) is 0 at 𝑚 = 3 and positive for
+𝑚 ≥ 4 (it is 4, 28, 120, … and the first term is ≥ 0 from 𝑚 = 6 on). □
+What the finite check covers. Exactly the 66 integer inequalities 𝑞2𝑑 > 𝑔2𝑑 and 𝑞2𝑑+1 ≷ 𝑔2𝑑+1 for
+3 ≤ 𝑑 ≤ 35; each is a comparison of two explicit rationals built from binomial sums (fractions.
+
+
+                                                  10
+Fraction, math.comb). Independently, verify_signs.py recomputes every 𝑐𝑑,𝑛 from the three-
+term definition in exact rational arithmetic for 2 ≤ 𝑑 ≤ 40, 𝑛 ≤ 400 and confirms the pattern and
+the values of 𝑛𝑑 . The single central term already suﬀices analytically from 𝑑 ≥ 11 (𝑚 = 2𝑑 + 1)
+and 𝑑 ≥ 10 (𝑚 = 2𝑑), so the check could be shortened by summing a few more central terms;
+we did not pursue this.
+Remark 6.3 (Descartes route). Theorem 6.1 gives a second proof of the one-zero statement of
+Theorem 4.1 (without the bounds (4.1)), computer-assisted for 3 ≤ 𝑑 ≤ 35. Write 𝑁𝑑̃ (𝜅) =
+∑𝑚≥3 𝑎𝑚 𝜅𝑚 (entire, by Lemma 2.1(i)) with 𝑎𝑚 < 0 for 3 ≤ 𝑚 ≤ 𝑛𝑑 + 1 and 𝑎𝑚 > 0 for
+𝑚 ≥ 𝑛𝑑 + 2 (Theorem 6.1 with sign 𝑎𝑚 = sign 𝑐𝑑,𝑚−1 ). Then
+
+                           𝑁𝑑̃ (𝜅)
+                 𝑄(𝜅) ∶=           =    ∑ 𝑎𝑚 𝜅𝑚−𝑛𝑑 −1 + ∑ 𝑎𝑚 𝜅𝑚−𝑛𝑑 −1
+                           𝜅 𝑛𝑑 +1   3≤𝑚≤𝑛 +1          𝑚≥𝑛 +2
+                                          𝑑                       𝑑
+
+
+is a sum of negative multiples of nonpositive powers (the first sum, which contains the negative
+constant 𝑎𝑛𝑑 +1 ) and of positive multiples of positive powers (the second sum). Termwise dif-
+ferentiation (legitimate on (0, ∞) for an entire function divided by a monomial) gives 𝑄′ (𝜅) =
+∑𝑚 (𝑚 − 𝑛𝑑 − 1)𝑎𝑚 𝜅𝑚−𝑛𝑑 −2 , in which every term is ≥ 0 and the terms with 𝑚 ≥ 𝑛𝑑 + 2 are > 0:
+𝑄 is strictly increasing on (0, ∞). Since 𝑛𝑑 + 1 ≥ 6 > 3, the term 𝑎3 𝜅2−𝑛𝑑 forces 𝑄(𝜅) → −∞ as
+𝜅 ↓ 0, and 𝑄(𝜅) → +∞ as 𝜅 → ∞. Hence 𝑄, and so 𝑁𝑑̃ and 𝐻𝑑 , has exactly one positive zero,
+with 𝐻𝑑 < 0 before it and 𝐻𝑑 > 0 after. (This is the standard argument that a power series with
+one coeﬀicient sign change has at most one positive zero, and the closing step of 7H9F Theorem
+8.2. Version 1 of this note misdescribed 𝑄 as “a negative constant plus a series with positive
+coeﬀicients”: the negative-power terms are present; they do not spoil the monotonicity because
+their derivatives are positive. h6_remark63_check.py checks 𝑄′ > 0 on a grid for 𝑑 = 3, … , 6.)
+Remark 6.4 (why the 7H9F window argument does not transfer). In 7H9F the coeﬀicient is a
+parity-truncated central window mean of the form “𝑟 − 𝔼 𝛿 2 ”, controlled by a likelihood-ratio
+ordering in the window size. Here Lemma 3.1 collapses the three-term expression to a full
+window mass 𝑊𝑚−1 against a single boundary binomial 𝑢𝑚 ; the sign question becomes window
+mass versus boundary mass, monotone enough for the sub-solution induction up to 𝑚 = 2𝑑 − 1,
+with the last two indices exponentially safe.
+
+7. Numerical illustration
+chain_numerics.py (mpmath, 60 digits; 220-step bisection for 𝜅𝑓 on [𝜅1 , 2𝑑] with 𝜅1 = 2(𝑑 −
+2)(𝑑 + 1)/𝑑, and for 𝜅𝑐 on (𝜅𝑓 , 20𝑑 + 50]) gives the values below, printed to 12–14 significant
+digits; repro/chain_values_50digits.txt lists every quantity to 50 digits for fourteen values of
+𝑑. All rows satisfy the proved relations 𝜅1 ≤ 𝜅𝑓 < 2𝑑, 𝑀𝑑 (𝜅𝑓 ) ≥ 𝑑(𝑑 − 1)/2, 𝑏𝑑 (𝜅𝑓 ) < 1/2,
+𝜅𝑓 < 𝜅𝑐 , 𝜆min < 𝜆𝑐 < 𝜆0,𝑑 (asserted in the script).
+
+                              Table 1: the fold and the bounds (4.1).
+
+                         𝑑   𝜅1               𝜅𝑓               2𝑑 − 𝜅𝑓
+                         3   2.66666666667 3.2327088362698 2.76729
+                         5   7.2           8.4315508759981 1.56845
+                         17 31.7647058824 33.907100295951 0.0928997
+                         100 197.96        199.99999999999 9.68 ⋅ 10−12
+
+
+
+
+                                                   11
+                          Table 2: the fold radius and the minimal multiplier.
+
+𝑑                   𝑀𝑑 (𝜅𝑓 )              𝑑(𝑑 − 1)/2             𝑏𝑑 (𝜅𝑓 )             𝜆min
+3                   4.0410906             3                      0.301630225423       5.3587282768762
+5                   21.107032             10                     0.43508469636        9.6895511914568
+17                  3643.6645             136                    0.498767685262       33.990875208891
+100                 1.0640 ⋅ 1015         4950                   0.5 − 2.4 ⋅ 10−14    200 − 1.9 ⋅ 10−13
+
+
+                                         Table 3: the contact.
+
+                      𝑑    𝜅𝑐              𝑏𝑐               𝜆𝑐                 𝜆0,𝑑
+                      3   4.3442853031 0.400331536002 5.42585945949 6
+                      5   11.6440880518 0.573491039097 10.1519354776 15
+                      17 52.4714515166 0.676014299873 38.8094242433 153
+                      100 340.64385837 0.706438271107 241.099521574 5050
+
+
+                      Table 4: the contact point of the rate–distortion function.
+
+                           𝑑    𝐷𝑐               𝑅𝑐                  𝜆𝑐 /𝑑
+                           3   0.559823107522 0.579718136073 1.8086198
+                           5   0.53688642246 2.67111206245 2.0303871
+                           17 0.511063215405 16.6924477931 2.2829073
+                           100 0.495935519424 119.118709893 2.4109952
+
+
+The 𝑑 = 3 and 𝑑 = 5 rows agree to ≤ 5 ⋅ 10−9 , and the 𝑑 = 17 row to all printed digits, with
+an independent brute-force maximization of 𝐺𝑑,𝜆 over a grid in 𝑏 (no use of 𝐻𝑑 , 𝐹𝑑 , Ψ𝑑 or
+Lemma 3.1) performed by the adversarial reviewer; the two-piece formula agrees with a brute-
+force evaluation of the supremum in (A1) to 10−14 or better at sample points on both pieces.
+An external recomputation (AIRR workshop, 2026-09-08; 75-digit arithmetic, roots of 𝐻𝑑 and
+𝐹𝑑 evaluated through the Kummer derivatives 𝑀𝑑′ = 1 𝐹1 (2; 𝑑 + 1; 𝜅)/𝑑, 𝑀𝑑″ = 2 1 𝐹1 (3; 𝑑 + 2;
+𝜅)/(𝑑(𝑑 + 1)), i.e. without Lemma 3.1 or Ψ𝑑 ) reproduced 𝜅𝑓 , 𝜆min , 𝜅𝑐 , 𝑏𝑐 , 𝜆𝑐 , 𝐷𝑐 , 𝑅𝑐 for 𝑑 = 3,
+5, 17, 100 to its printed 20 digits; workshop_recheck.py repeats that route at 70 digits and agrees
+with the Ψ-route values of chain_values_50digits.txt to 50 significant digits, and confirms
+the located roots by direct quadrature of the tilted Beta(1, 𝑑 − 1) moments (residuals ≤ 10−43
+for 𝑑 ≤ 17 and ≤ 10−11 for 𝑑 = 100, where the quadrature itself is the limiting error). At
+𝑑 = 100, 𝜆𝑐 /𝑑 = 2.4110 versus 𝛼∗ − 𝑐∗ log 𝑑/𝑑 = 2.4104 (1D2Q Thm. 7.3, 𝛼∗ = 2.455407 …,
+𝑐∗ = 0.977136 …).
+The v003 workshop also compared the Kummer-derivative values with direct quadrature after
+dividing the integrand by its mode value, using 85-digit arithmetic and intervals split around the
+mode. For 𝑑 = 3, 5, 17, 100, the differences in 𝐾𝑑 , 𝐾𝑑′ and 𝐾𝑑′′ , and both fold/contact residuals,
+were below 10−65 . This scaling removes the tiny-integral accuracy loss of the earlier 𝑑 = 100
+quadrature. These are numerical comparisons, not certified interval error bounds. The exact
+inputs and outputs are included in the revision evidence.
+
+8. Open questions
+    1. Higher rank. For rank-𝑟 projectors on Grℂ (𝑟, 𝑑) the analogue of Theorem A needs a
+       global matrix-Bingham (HCIZ) spectral extremum at fixed Frobenius norm, known only
+       for Grℂ (2, 4) (61Y0) and in a weak/strong-field sense elsewhere; and the radial normalizer
+       is a matrix-argument 1 𝐹1 for which no first-order equation of the type of Lemma 3.1 is
+       available. Whether the one-fold property persists is open.
+
+                                                  12
+   2. Matrix-Jacobi normalizers. Lemma 3.1 exists because 𝑀𝑑 has a single numerator param-
+      eter; for 1 𝐹1 (𝑎; 𝑐; 𝜅) with 𝑎 > 1 (Jacobi-type overlap laws Beta(𝑎, 𝑐 − 𝑎)) the reduction
+      produces a second-order relation and the (𝑀 , 𝜅) transversality argument must be replaced
+      by one in a three-dimensional phase space. A clean criterion in terms of (𝑎, 𝑐) for exactly
+      one fold would unify 7H9F (𝐿𝑞 = even part of 𝑀𝑞+1 ) and the present result.
+   3. General Bingham fixed-norm extremum. The spectral input of Theorem A (one positive
+      spike maximizes the projective Laplace transform at fixed traceless norm, all degrees) is
+      the Brazitikos–Pandis extremum. A direct proof adapted to the tilted Beta structure, or
+      an extension to all rank-𝑟 Dirichlet partition functions, would remove the only external
+      black box of this line.
+   4. Not addressed here, as in 1D2Q: a matching third-order coding theorem and the uniform
+      double scaling 𝑑 → ∞, 𝐷 ↓ 0.
+
+9. Reproducibility
+All scripts are in repro/ next to this file, with a README.md listing commands, expected final lines
+and wall times (Python 3.12.6, sympy 1.14.0, mpmath 1.3.0; python run_all.py runs everything
+and writes runtimes.txt).
+
+script                   certifies                arithmetic                time
+sym_check.py         Lemma 3.2, identities      sympy exact                 2.0 s
+                     (a)–(f) of Theorem 4.1,
+                       ̂ , with 𝑑 symbolic
+                     𝑐𝑑,3
+                     𝑁𝑑 = 𝑑−1    ̃
+check_formula.py             𝑑𝜅 𝑁𝑑 and (3.3)    Fraction                    0.3 s
+                     coeﬀicientwise,
+                     2 ≤ 𝑑 ≤ 12, 𝑛 ≤ 60
+verify_signs.py      (3.3) against the          Fraction                    80.6 s
+                     three-term definition
+                     and the sign pattern of
+                     Theorem 6.1, 2 ≤ 𝑑 ≤ 40,
+                     𝑛 ≤ 400
+induction_check.py   factorization of Π(𝑚, 𝑑) sympy                         3.3 s
+                     and its sign table,
+                     3 ≤ 𝑑 ≤ 60
+tail_cases.py        recursion (i) for 𝑑 ≤ 29; exact integers               0.1 s
+                     the boundary
+                     comparisons of Theorem
+                     6.1 for 3 ≤ 𝑑 ≤ 60; the
+                     central-term and
+                     (5/3)⌊𝑑/2⌋+1 bounds
+boundary_exact.py    the 66 boundary            Fraction                    0.1 s
+                     comparisons as explicit
+                                          ̂
+                     rationals 𝑞𝑚 , 𝑔𝑚 , 𝑐𝑑,𝑚
+                     (written to boundary_
+                     exact.txt)
+h6_remark63_check.py expansion (2.5) with 𝑑, 𝜆 sympy; mpmath 30             2.9 s
+                     symbolic; 𝐺2,3 (𝑏) =       digits
+                         9 4    9 6
+                     − 20 𝑏 + 35 𝑏 + 𝑂(𝑏8 );
+                     𝑄′ > 0 in Remark 6.3
+                     for 𝑑 = 3, … , 6
+chain_numerics.py    Section 7 tables (14       mpmath, 60 digits           1.4 s
+                     values of 𝑑), the asserted
+                     inequalities, chain_
+                     values_50digits.txt
+
+
+
+
+                                                13
+script                   certifies                arithmetic                time
+workshop_recheck.py      the 66 signs from the     Fraction; mpmath         2.2 s
+                         three-term definition;
+                         Section 7 values by the
+                         Kummer-derivative
+                         route (70 digits) against
+                         the workshop’s 20 digits
+                         and chain_values_
+                         50digits.txt;
+                         quadrature residuals
+
+
+No proof step depends on floating point. The proof of Theorem 4.1 and Theorem 5.1 uses
+only Lemmas 2.1, 3.1–3.2, the rational identities (a)–(f) (which are one-line hand computations,
+machine-checked for safety), and Theorem A. Theorem 6.1 depends on tail_cases.py for 3 ≤
+𝑑 ≤ 35 as stated; the 66 exact rationals it compares are listed in boundary_exact.txt, so the
+finite part of that proof can be checked by hand or by any exact-arithmetic system.
+
+Changes in internal revision v004 (9 September 2026)
+   1. Documented and repaired a local arithmetic error in the proof of the external power-
+      sum inequality [BP], with the exact arXiv version and page identified. No main theorem
+      statement changed.
+   2. Corrected the reproduction runner to propagate subprocess failures and made the expected
+      symbolic identities and coeﬀicient signs mandatory assertions. The nine programs were
+      executed successfully in the audit supplement; the 66 proof-critical signs were also recon-
+      structed separately with exact arithmetic.
+   3. Preserved the earlier deposited v003 and all its evidence. The current PDF is a new
+      revision prepared for formal assessment, not an editorial acceptance.
+
+Changes in internal revision v003 (8 September 2026)
+   1. Added a proof interface for the imported envelope: the precise centered power-sum hypoth-
+      esis, the Haar/Dirichlet Laplace comparison, the entropy lower bound and active-channel
+      attainment. The cited Brazitikos-Pandis extremal inequality remains an external theorem.
+   2. Corrected (A3): forgetting an independent mixture flag gives an information upper bound;
+      the matching converse supplies equality on the frontier.
+   3. Replaced an imprecise moving-target limit notation by the corresponding difference.
+   4. Kept table captions with their tables and added a scaled-quadrature check that avoids
+      tiny-integral loss at 𝑑 = 100; results and limits are recorded separately.
+   5. Qualified historical AI-review and computation provenance.
+
+Changes in version 2 (8 September 2026)
+Version 2 answers the evaluation of the AIRR workshop of 8 September 2026 (its items for this
+note are numbered W1–W4 below). Version 1 is kept as paper_v1.md.
+   1. (W1) Remark 6.3. Version 1 claimed that 𝑁𝑑̃ (𝜅)/𝜅𝑛𝑑 +2 is “a negative constant plus a
+      series with positive coeﬀicients”. This is false: after division there are negative coeﬀicients
+      on negative powers, a positive constant and positive coeﬀicients on positive powers. The
+      remark now divides by 𝜅𝑛𝑑 +1 , differentiates termwise (every term of 𝑄′ is ≥ 0, the negative-
+      power terms contributing positive derivatives), and uses the left limit −∞; the conclusion
+      (one zero, one sign change) is unchanged, and Theorem 4.1 never depended on it. Checked
+      on a grid by h6_remark63_check.py.
+
+                                                 14
+  2. (W2) Fact (H6). Version 1 stated “0 is a strict local maximum iff 𝜆 < 𝜆0,𝑑 ” for all 𝑑 ≥ 2.
+                                                                             9 4     9 6
+     At 𝑑 = 2, 𝜆 = 𝜆0,2 = 3 this is false: 𝜇3,2 = 0 and 𝐺2,3 (𝑏) = − 20        𝑏 + 35  𝑏 + 𝑂(𝑏8 ), so
+     0 remains a strict local maximum, as Corollary 5.2 already implied. (H6) now separates
+     𝜆 < 𝜆0,𝑑 , 𝜆 > 𝜆0,𝑑 and 𝜆 = 𝜆0,𝑑 , the last split into 𝑑 ≥ 3 (cubic term, not a local maximum)
+     and 𝑑 = 2 (quartic term, strict local maximum), and records which cases are used. The
+     expansion is now derived in Lemma 2.1 (new) and checked symbolically.
+  3. (W3) Table and title page. The single twelve-column table of Section 7 overlapped in
+     the PDF; it is replaced by four tables of at most five columns (Tables 1–4), with the
+     values recomputed at 60 digits and listed to 50 digits in repro/chain_values_50digits.
+     txt. The bisection of chain_numerics.py was replaced by a fixed 220-step bisection because
+     mpmath.findroot(..., 'bisect') stopped at about 28 correct digits, short of the 50
+     digits announced in version 1 (the printed 10-digit values were unaffected). The duplicated
+     date on the title page is removed (the date is set by the rendering metadata only).
+  4. (W4) Framing and self-containment. The introduction now says explicitly that the note is
+     standalone, which single statement it imports (Theorem A), that Lemma 3.1 is a contiguous
+     relation of Kummer’s function whose novelty lies in its use, and what a reader gains without
+     1D2Q. Lemma 2.1 (new) reproves the facts previously cited as 1D2Q eqs. (10), (11), (15);
+     the direct reason for 𝑅𝑑 (0) = +∞ is added in the proof of Theorem 5.1(f). The note is
+     deliberately not merged with 1D2Q.
+  5. Verification of the workshop’s checks. Its 66 boundary sign comparisons and its 75-digit
+     fold/contact values for 𝑑 = 3, 5, 17, 100 were recomputed by routes independent of both
+     the workshop’s script and version 1’s scripts (workshop_recheck.py, boundary_exact.py);
+     all agree (Section 7).
+No theorem statement changed. The proofs of Theorems 4.1, 5.1 and 6.1 are unchanged except
+for the explicit case split in (H6), which they use only in the cases 𝜆 < 𝜆0,𝑑 , 𝜆 > 𝜆0,𝑑 and (𝑑 ≥ 3,
+𝜆 = 𝜆0,𝑑 ).
+
+AI-assistance statement
+The received version declares substantial generative-AI assistance in drafting, mathematical
+derivations, code and review, attributed there to “Claude Fable 5.1” (Anthropic). That historical
+model identity, the reported review sessions and their independence have not been authenticated
+by this workshop. Historical descriptions of an “author” or “reviewer” script identify the supplied
+files, not a verified independent editorial review. OpenAI Codex assisted with the present private
+workshop revision: checking arguments and sources, correcting identified errors, running the
+checks recorded in the accompanying revision report, and preparing the PDF. Numerical checks
+support only their tested instances. This assistance is not an independent human peer review
+or a formal AIRR model-assessment report. Lluis Eriksson is the declared author and AIRR
+founder/operator; this conflict must be handled by the separate editorial process. Scientific
+authorship and approval remain with the author.
+
+References
+[1D2Q] L. Eriksson, Exact Rate–Distortion Theory for Complex-Projective Born Prediction:
+Finite-Dimensional Bingham Frontiers, Thermodynamic Coexistence, and Worst-State Capacity,
+ARR-2026-1D2QYXPCVY9H7ANB, v1, 2026-08-13.
+[61Y0] L. Eriksson, Complete Rank-Two Born-Prediction Rate–Distortion on Grℂ (2, 4):
+All-Field Matrix–Bingham Rigidity and a Unique Coexistence Transition, ARR-2026-
+61Y0FFA39M8KMBJ5, v1, 2026-08-13.
+
+
+
+
+                                                 15
+[7H9F] L. Eriksson, Complete Rate–Distortion Phase Diagram of Haar Oriented Two-Planes:
+One-Change Hypergeometric Coeﬀicients, Unique Coexistence, and No Reentrance, ARR-2026-
+7H9FAPTBZA897AMJ, v2, 2026-08-14.
+[BP] S. Brazitikos and C. Pandis, Sharp Inequalities for Symmetric Polynomials, Hunter’s Con-
+jecture, and Moments of Exponential Random Variables, arXiv:2512.12254v1 [math.PR], 2025
+(Proposition 5.5; local estimate clarified in Section 2).
+[DLMF] NIST Digital Library of Mathematical Functions, Chapter 13 (Confluent Hypergeomet-
+ric Functions), §13.3 (recurrence relations and derivatives), https://dlmf.nist.gov/13.3.
+[DC] A. Dytso and M. Cardone, Uniform Distribution on (𝑛 − 1)-Sphere: Rate-Distortion under
+Squared Error Distortion, arXiv:2401.04248 [cs.IT], 2024.
+[EE] T. Eisele and R. S. Ellis, Multiple phase transitions in the generalized Curie–Weiss model,
+J. Stat. Phys. 52 (1988), no. 1–2, 161–202.
+[KS] D. Karp and S. M. Sitnik, Log-convexity and log-concavity of hypergeometric-like functions,
+J. Math. Anal. Appl. 364 (2010), 384–394.
+[KK] S. I. Kalmykov and D. B. Karp, Log-convexity and log-concavity for series in gamma ratios
+and applications, arXiv:1211.2882 [math.CA], 2012.
+[S] S. M. Sitnik, A conjecture on monotonicity of a ratio of Kummer hypergeometric functions,
+arXiv:1207.0936 [math.CA], 2012.
+
+
+
+
+                                              16
+
