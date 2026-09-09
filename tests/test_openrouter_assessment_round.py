@@ -47,7 +47,9 @@ class OpenRouterAssessmentRoundTests(unittest.TestCase):
         self.assertTrue(body["provider"]["allow_fallbacks"])
         self.assertFalse(body["provider"]["require_parameters"])
         self.assertEqual(body["messages"][0]["content"][1]["file"]["file_data"], item["pdf_url"])
-        self.assertEqual(body["reasoning"]["max_tokens"], 12000)
+        self.assertEqual(body["reasoning"]["effort"], "max")
+        self.assertTrue(body["reasoning"]["exclude"])
+        self.assertEqual(body["max_completion_tokens"], 48000)
         self.assertEqual(body["plugins"][0]["pdf"]["engine"], "native")
 
     def test_modified_manifest_is_rejected(self) -> None:
