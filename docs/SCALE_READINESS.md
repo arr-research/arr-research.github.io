@@ -42,6 +42,11 @@ Thresholds are review points, not promises. AIRR migrates before a provider hard
 - Intake data has a retention deadline and can be deleted without affecting public records.
 - Provider exports and disaster-recovery tests are performed before accepting external submissions.
 
-## What remains intentionally unbuilt
+## Current pilot boundary
 
-AIRR's direct private-upload service is implemented but remains closed until its production gate and external host are complete. AIRR does not run author accounts, payments, comments, social scores, automated quality scores or untrusted-code execution. New features must not weaken quarantine or human editorial control.
+AIRR's direct private-upload service is open on the configured Netcup host. It
+provides private alias workspaces and an editorial queue, while the public catalogue
+remains a static projection on GitHub Pages. AIRR does not run payments, comments,
+social scores, automated publication decisions or untrusted-code execution. New
+features must not weaken quarantine or human editorial control. Capacity is added
+only after measured demand reaches one of the review points above.
