@@ -1,0 +1,373 @@
+# The Grassmannian Degree Law for Passive $k$-Plane Spectral Routing
+
+**Lluis Eriksson** (Independent researcher)
+
+9 September 2026 (internal workshop revision v004; received version 2 and deposited v003 preserved)
+
+## Abstract
+
+A passive lossless $N$-port network must send one fixed $k$-dimensional input channel to prescribed output $k$-planes $Y_1,\dots,Y_L$ at $L$ distinct frequencies on the unit circle. We prove that the minimum McMillan degree $d_{\min}$ of a rational inner $N\times N$ matrix performing this task equals $\delta_{\mathrm{Gr}}$, the least degree of a rational curve $\mathbb P^1\to\mathrm{Gr}(k,H)$ through the data, $H=\sum_iY_i$, for every $k$, $N$ and $L$. The lower bound projects the Plücker vector of the routed column onto $\Lambda^kH$. The upper bound shows that the lossless lift $MH_o^{-1}$ of a Forney minimal basis $M$ has exactly $\sum_j\deg m_j$ states, through the backward-shift identity $PK_M=K_{F_0}$, and completes it without new states. The published laws ($k=1$ projective degree, direct-sum occupancy $k(L-n_*)$, generic $k(L-1)$) are special cases. We also prove the additivity $\deg(F_0U)=\deg F_0+\deg U$, a base-point law for arbitrary witness pencils $P$ (the compiled router has $\operatorname{fdeg}(P)$ states plus one per base point in the open disc, so it is minimal iff $\operatorname{fdeg}(P)=\delta_{\mathrm{Gr}}$ and no base point lies in the disc), the generic bound $\delta_{\mathrm{Gr}}\ge k\lfloor L(r-k)/r\rfloor$ and, for every $L$, the generic value $k\lfloor L/2\rfloor$ in $\mathrm{Gr}(k,2k)$, in particular $2\lfloor L/2\rfloor$ in $\mathrm{Gr}(2,4)$.
+
+## 1. Introduction
+
+### 1.1 Antecedents
+
+**Published special cases.** Three earlier records of the author determine $d_{\min}$ on special strata of the data.
+
+* ARR-2026-6M3VGTXZ6W8JW9C9, *Projective Memory and Resonant Bottlenecks in Passive Spectral Routing*, Theorem 2.3 (global projective memory law): for one input line ($k=1$) and target lines $Y_i$ at distinct nodes, $d_{\min}=\delta_H$, where $\delta_H$ is the least degree of a morphism $\mathbb P^1\to\mathbb P(H)$ with $R(\zeta_i)=Y_i$, independently of the ambient port number. Its lower-bound proof uses the a-priori estimate $d\le L-1<L$ to force the routed column into $H$.
+* ARR-2026-52B6MSS1W197W9T2, *Exact Memory of Finite Spectral Routing Tables: The Direct-Sum Occupancy Law and Its Singular Strata*, Theorem 1.2: for a routing word $w=w_1\cdots w_L$ over $m$ target $k$-planes in direct-sum position ($\dim\sum_aY_a=mk$), $d_{\min}=k(L-n_*)$ with $n_*$ the least occupancy of a letter. Its compiler (Lemma 3.1) is only bounded by $k\cdot(\text{column degree})$; Theorem 5.2 gives the detector-rank hierarchy $d_{\min}\ge\max\{r-k,\Delta\}$ and Limitation 8.2 states that no complete formula is known off the direct-sum locus.
+* ARR-2026-1WXCVX96S68GA9VK, *Orthogonal Spectral Fan-Out Costs $k(L-1)$ States*, Theorem 3.1 (mutually orthogonal $k$-planes: $d_{\min}=k(L-1)$), and ARR-2026-33BE6K3HW78F4T7F, *Exact Memory of Direct-Sum Spectral Fan-Out*, Theorem 1.1 (universal sandwich $r-k\le d_{\min}\le k(L-1)$, $r=\dim\sum_iY_i$) and Corollary 1.2 (direct-sum position $r=kL$ gives $d_{\min}=k(L-1)$, an open dense condition when $N\ge kL$).
+
+**The enumerative side.** That the McMillan degree of a linear system is the degree of a rational curve in a Grassmannian (the graph curve $z\mapsto\operatorname{colspan}[F(z);I]$) goes back to Martin–Hermann [MH] and is the starting point of Ravi–Rosenthal–Wang [RRW1, RRW2] and Sottile [So], who identify the space of degree-$e$ curves with a Quot scheme and count curves through Schubert conditions at fixed points of $\mathbb P^1$ by Bertram's quantum Schubert calculus [Be]. On the algebraic side, Forney [Fo] showed that a rational vector space has *minimal polynomial bases* whose column degrees $e_1\le\dots\le e_k$ are invariants of the space and that $\sum_je_j$ is the McMillan degree of the space (Kailath [Ka, §6.5.4]).
+
+**Subspace boundary interpolation.** Boundary Nevanlinna–Pick interpolation for matrix Schur functions is treated by Bolotnikov–Dym [BD]. Rank-one Blaschke–Potapov factorisation [Po] identifies the McMillan degree of a square rational inner matrix with the winding number of its determinant. Alpay, Jorgensen and Lewkowicz [AJL, Theorem 2.1] characterise rectangular lossless rational functions by isometric minimal realizations and complete them to square lossless functions with the same state space. The matrix Fejér–Riesz theorem is due to Rosenblum [Ro]; we use the form in Dritschel–Rovnyak [DR].
+
+The closest antecedent in the filter-design literature is the *subspace Nevanlinna–Pick interpolation* (SNIP) for discrete-time matrix all-pass filters of Bharath, Gaharwar, Appaiah and Pal [BGAP]. Their boundary problem (their Section 4.1, conditions (2a)–(2c)) prescribes at $n$ distinct frequencies $\omega_i$ the *full unitary value* $G(e^{j\omega_i})=A_i$ of an $m\times m$ all-pass filter $G$ together with a positive definite "group-delay matrix" $\Gamma_i$ unitarily similar to $jG^*(e^{j\omega_i})\,\tfrac{dG}{d\omega}(e^{j\omega_i})$; the word "subspace" refers to the encoding of each value $A_i$ as the neutral subspace $\operatorname{span}\binom{I_m}{A_i}\subset\mathbb C^{2m}$ of the classical SNIP of control theory, not to subspace-valued data. Their Theorem 1 states that a rational solution exists iff a modified Pick matrix with diagonal blocks $\Gamma_i$ is positive definite, and their inductive construction (Section 4.3) produces $G=ND^{-1}$ with $N,D$ polynomial of degree $n$, one $2m\times2m$ linear factor per node, i.e. a filter with up to $nm$ states; the free $\Gamma_i$ are then chosen by a semidefinite programme minimising the trace of the Pick matrix. The routing problem of this paper differs in all three respects: only the image $S(\zeta_i)\operatorname{ran}X=Y_i$ of one $k$-plane is prescribed, with bases and phases free; no derivative data enter; and the question answered is the least McMillan degree compatible with the data, which [BGAP] does not pose (its solution has a definite, not a minimal, degree, and the SNIP data always admit degree-$nm$ solutions when the Pick matrix is definite, whereas $d_{\min}$ here can be as small as $r-k$ and as large as $k(L-1)$). For interior nodes and full tangential data, minimal-degree rational interpolation *without* the inner constraint is classical (Antoulas–Ball–Kang–Willems [ABKW]), and inner interpolants of degree equal to the number of conditions are given by Blaschke–Potapov products [Po]; we found no source that states the minimum McMillan degree of an inner interpolant for subspace-valued boundary data with free phases (the queries are recorded in the response file of version 2). The comparison with [BGAP] was made from Sections 1–4 of its arXiv text.
+
+### 1.2 Contribution
+
+Theorem 1 states $d_{\min}=\delta_{\mathrm{Gr}}$ for all $k$, $N$ and $L$ and all $k$-plane data at distinct boundary nodes. The ingredients that are new relative to the antecedents are:
+
+1. a *degree-preservation lemma* for the lossless lift of a minimal basis: $F_0:=MH_o^{-1}$ has exactly $\sum_je_j$ states, proved through the identity $PK_M=K_{F_0}$ between backward-shift invariant subspaces (Proposition 5.4), which replaces the bound $k\cdot\max_je_j$ of 52B6 Lemma 3.1;
+2. a *lower bound by coordinate projection of the Plücker vector* (Proposition 4.2), valid for every rational $N\times k$ column through the data without any passivity hypothesis, which removes the restriction $d<L$ of 6M3V and shows that $\delta_{\mathrm{Gr}}$ does not depend on $N$;
+3. the *additivity* $\deg(F_0U)=\deg F_0+\deg U$ for inner $U$ (Theorem 5.7), giving uniqueness of the minimum-degree inner column with prescribed column space, and the *base-point law* (Theorem 6.1): the lossless lift of an arbitrary admissible pencil $P$ has $\operatorname{fdeg}(P)$ states plus one per base point in the open disc, and nothing for base points on the circle, outside the closed disc, or at infinity; it is a minimum-degree router iff $\operatorname{fdeg}(P)=\delta_{\mathrm{Gr}}$ *and* no base point lies in the disc (version 1 omitted the first condition; Example 6.2);
+4. the generic lower bound $\delta_{\mathrm{Gr}}\ge k\lfloor L(r-k)/r\rfloor+\max(0,k-m_0)$ (Proposition 7.3) and the generic value $\delta_{\mathrm{Gr}}=k\lfloor L/2\rfloor$ in $\mathrm{Gr}(k,2k)$ for every $L$ (Theorem 7.4, proved with an explicit witness), in particular $2\lfloor L/2\rfloor$ in $\mathrm{Gr}(2,4)$, which is *not* the dimension count $L-1$; the matching generic upper bound for general $(k,r)$ is left as a conjecture.
+
+The received version reports AI-assisted drafting and adversarial checks (see the qualified provenance statement at the end); the present text includes arguments addressing the uniqueness clause of Lemma C and the base-point formula. Version 2 answers the external evaluation of the AIRR workshop of 8 September 2026, which refuted the last clause of Theorem 6.1 of version 1 by an explicit example (reproduced as Example 6.2), asked that the generic value in $\mathrm{Gr}(2,4)$ be either restricted to $3\le L\le7$ or proved for all $L$ (now proved), and asked for the exact witnesses behind Table 1 (now in `repro/witnesses/`); the changes are listed at the end.
+
+## 2. Setting
+
+$\mathbb D$ is the open unit disc, $\mathbb T$ the unit circle, $\mathbb C[z]$ the polynomial ring. A rational $N\times N$ matrix function $S$ is *inner* if it is analytic in $\mathbb D$ and unitary on $\mathbb T$. A rational function unitary (or isometric) almost everywhere on $\mathbb T$ cannot have a pole on $\mathbb T$, so an inner $S$ is analytic on a neighbourhood of $\overline{\mathbb D}$ and contractive there by the maximum principle.
+
+**McMillan degree.** For a rational $p\times q$ matrix $F$ analytic at $0$, a *realization* is $F(z)=D+zC(I-zA)^{-1}B$ with $A\in\mathbb C^{n\times n}$; $\deg F$ is the least such $n$. It equals the rank of the block Hankel matrix $(F_{s+t+1})_{s,t\ge0}$ of the Taylor coefficients and the total pole multiplicity of $F$ on the Riemann sphere, the point $\infty$ included; a minimal realization is reachable and observable, and its $A$ has $\sigma(A)\subset\mathbb D$ when $F$ is analytic on $\overline{\mathbb D}$. We write $\chi(z):=\det(I-zA)$ for the realization denominator; $\chi\ne0$ on $\overline{\mathbb D}$ in that case. $F^\sharp(z):=F(1/\bar z)^*$.
+
+**Lemma 2.1 (winding).** *If $U$ is a $k\times k$ rational inner function of degree $n$, then $\det U$ is a finite Blaschke product with exactly $n$ zeros in $\mathbb D$ (with multiplicity), i.e. $\operatorname{wind}_{\mathbb T}\det U=n$.*
+
+*Proof.* By Potapov's theorem [Po] a rational inner $U$ of degree $n$ is a product $U_0\prod_{q=1}^n\bigl(I+(b_{a_q}-1)u_qu_q^*\bigr)$ of a constant unitary and $n$ rank-one factors, $b_a(z)=(z-a)/(1-\bar az)$, $|a_q|<1$, $\|u_q\|=1$. Each factor has determinant $b_{a_q}$. $\square$ (This is the "topological McMillan degree" of ARR-2026-07EH3CZRD89YC8JN.)
+
+**Routing data.** An isometric input frame $X\in\mathbb C^{N\times k}$; distinct nodes $\zeta_1,\dots,\zeta_L\in\mathbb T$; target $k$-planes $Y_i\subseteq\mathbb C^N$ ($\dim Y_i=k$; repeated targets allowed); $H:=\sum_iY_i$, $r:=\dim H$. The *routing problem* asks for inner $S$ with
+$$S(\zeta_i)\operatorname{ran}X=Y_i\qquad(1\le i\le L),$$
+bases and endpoint phases being free, and
+$$d_{\min}:=\min\{\deg S:\ S\ \text{rational inner } N\times N,\ S(\zeta_i)\operatorname{ran}X=Y_i\ \forall i\}.$$
+The upper bound $k(L-1)$ of 33BE Theorem 1.1 shows the minimum exists.
+
+**Chordal error.** For two $k$-planes with orthogonal projectors $\Pi,\Pi'$ we use $\operatorname{dist}=\|\Pi-\Pi'\|_{\mathrm{op}}$, the sine of the largest principal angle; for $k=1$ and unit vectors this is $\sqrt{1-|\langle y,f\rangle|^2}$, the chordal distance used in 6M3V. The experiments report $\max_i\operatorname{dist}(S(\zeta_i)\operatorname{ran}X,Y_i)$.
+
+## 3. Three definitions of $\delta_{\mathrm{Gr}}$
+
+**Curves.** A morphism $R:\mathbb P^1\to\mathrm{Gr}(k,H)$ composed with the Plücker embedding into $\mathbb P(\Lambda^kH)$ is given by a vector of $\binom rk$ homogeneous polynomials of a common degree $e$ without common zero on $\mathbb P^1$; $e$ is the degree of $R$ (the pullback degree of $\mathcal O(1)$). Dehomogenising at $t=1$ gives a *primitive* polynomial vector $v\in\mathbb C[z]\otimes\Lambda^kH$ (coordinates without common zero) of maximal coordinate degree exactly $e$, and conversely a primitive vector of maximal coordinate degree $e$ whose values are decomposable defines a morphism of degree $e$. Put
+$$\delta_{\mathrm{Gr}}:=\min\{\deg R:\ R:\mathbb P^1\to\mathrm{Gr}(k,H)\ \text{a morphism},\ R(\zeta_i)=Y_i\ \forall i\}.$$
+
+**Pencils and minimal bases.** Fix coordinates $H=\mathbb C^r$. For a polynomial $r\times k$ matrix $P$ of rank $k$ over $\mathbb C(z)$ let $\operatorname{fdeg}(P):=\max_I\deg\operatorname{minor}_I(P)-\deg\gcd_I\operatorname{minor}_I(P)$ (*Forney degree*), the maximum over the $k\times k$ minors. Let $V\subseteq\mathbb C(z)^r$ be a $k$-dimensional $\mathbb C(z)$-subspace. A polynomial basis $M=[m_1\cdots m_k]$ of $V$ with column degrees $e_1\le\dots\le e_k$ is a *minimal basis* [Fo] if (a) $\operatorname{rank}M(z)=k$ for every $z\in\mathbb C$ and (b) the leading-coefficient matrix $[\operatorname{lc}(m_1)\cdots\operatorname{lc}(m_k)]$ has rank $k$. Minimal bases exist and the $e_j$ depend only on $V$. Finally, for $e\ge0$ put
+$$V_e:=\{f\in\mathbb C[z]^r:\ \deg f\le e,\ f(\zeta_i)\in Y_i\ \forall i\}.$$
+
+**Lemma A.**
+$$\delta_{\mathrm{Gr}}=\min\{\operatorname{fdeg}(P):\ P\in\mathbb C[z]^{r\times k},\ \operatorname{rank}P(\zeta_i)=k,\ \operatorname{colspan}P(\zeta_i)=Y_i\ \forall i\}$$
+$$=\min\Bigl\{\sum_j\deg m_j:\ M\ \text{a minimal basis},\ \operatorname{colspan}M(\zeta_i)=Y_i\ \forall i\Bigr\}$$
+$$=\min\Bigl\{\sum_je_j:\ f_j\in V_{e_j},\ f_1(\zeta_i)\wedge\dots\wedge f_k(\zeta_i)\ne0\ \forall i\Bigr\}.$$
+
+*Proof.* (1) *Every polynomial basis $P$ of $V$ is $P=MU$ with $U\in\mathbb C[z]^{k\times k}$.* By (a) the $k\times k$ minors of $M$ have no common zero, so a Bézout identity $\sum_Ia_I\det M_I=1$ holds with polynomial $a_I$, and $M^+:=\sum_Ia_I\operatorname{adj}(M_I)E_I$ ($E_I$ the row selector) is a polynomial left inverse of $M$; $U=M^+P$ is polynomial.
+
+(2) *$\operatorname{fdeg}(P)=\sum_je_j$ for every polynomial basis $P$ of $V$.* No minor of $M$ exceeds degree $\sum_je_j$, the $z^{\sum e_j}$ coefficient of $\operatorname{minor}_I(M)$ is the corresponding minor of the leading-coefficient matrix, nonzero for some $I$ by (b), and the minors are coprime by (a). By Cauchy–Binet, $\operatorname{minor}_I(MU)=\operatorname{minor}_I(M)\det U$, so the gcd of the minors of $P$ is $\det U$ up to a constant and $\operatorname{fdeg}(P)=\sum_je_j$.
+
+(3) *Minimal bases are curves and conversely.* The primitive vector of minors of $M$ has maximal degree $\sum_je_j$ (by (2)), no common zero at finite points (by (a)) and none at $\infty$ (by (b)); its values are minors of a rank-$k$ matrix, hence decomposable; so it is a morphism of degree $\sum_je_j$. Conversely, a morphism $R$ of degree $e$ pulls the tautological subbundle back to a rank-$k$ subbundle $\mathcal S_R\hookrightarrow\mathcal O^r_{\mathbb P^1}$ of degree $-e$; by Grothendieck's theorem $\mathcal S_R\cong\bigoplus_j\mathcal O(-e_j)$ with $e_j\ge0$ (an injection $\mathcal O(a)\hookrightarrow\mathcal O$ forces $a\le0$) and $\sum_je_j=e$. Each inclusion $\mathcal O(-e_j)\to\mathcal O^r$ is a vector of homogeneous polynomials of degree $e_j$; dehomogenising gives $m_j$ with $\deg m_j\le e_j$, and fibrewise injectivity of the subbundle at finite points gives (a), at $\infty$ that the $z^{e_j}$ coefficients are linearly independent, i.e. $\deg m_j=e_j$ and (b). The value of $R$ at $z$ is $\operatorname{colspan}M(z)$.
+
+(4) *Interpolation survives gcd removal.* If $P=MU$ has $\operatorname{rank}P(\zeta_i)=k$ then $\det U(\zeta_i)\ne0$, so the gcd of the minors of $P$ does not vanish at the nodes and the curve of the primitive vector of minors of $P$ passes through $\operatorname{colspan}M(\zeta_i)=\operatorname{colspan}P(\zeta_i)=Y_i$. In particular *an admissible pencil never has a base point at a node.*
+
+Chain: a curve of degree $\delta_{\mathrm{Gr}}$ gives, by (3), a minimal basis $M$ with $\sum e_j=\delta_{\mathrm{Gr}}$ through the data, which is an admissible pencil of Forney degree $\delta_{\mathrm{Gr}}$ by (2), whose columns lie in $V_{e_j}$ with nonzero wedge at every node. Conversely $f_j\in V_{e_j}$ with nonzero wedges give a pencil $P=[f_1\cdots f_k]$ with $\operatorname{fdeg}(P)\le\max_I\deg\operatorname{minor}_I(P)\le\sum_je_j$, and by (4) and (3) the primitive vector of its minors is a curve through the data of that degree. $\square$
+
+The last form is what the exact scripts evaluate (Section 8): for each tuple $(e_j)$ in increasing $\sum e_j$, $V_{e_j}$ is a kernel computed exactly over $\mathbb Q(i)$, and for $k=2$ the existence of a pair with nonzero wedge at all nodes is equivalent to each of the $L$ bilinear forms $(f_1,f_2)\mapsto f_1(\zeta_i)\wedge f_2(\zeta_i)$ on $V_{e_1}\times V_{e_2}$ being a nonzero matrix (a finite product of nonzero polynomials is a nonzero polynomial, so finitely many proper hypersurfaces do not cover $V_{e_1}\times V_{e_2}$).
+
+**Remark 3.1 ($N$-independence).** The minimum over morphisms $\mathbb P^1\to\mathrm{Gr}(k,\mathbb C^N)$ through the data equals $\delta_{\mathrm{Gr}}$: if $P$ is an $N\times k$ minimal basis of degree $e$ through the data, the $k\times k$ minors of the $r\times k$ block of $P$ with rows in $H$ are among the minors of $P$, hence of degree $\le e$, and are nonzero at the nodes because $\operatorname{colspan}P(\zeta_i)=Y_i\subseteq H$; dividing by their gcd gives a curve in $\mathrm{Gr}(k,H)$ of degree $\le e$ through the data (decomposability as in Section 4).
+
+## 4. Lower bound: $d_{\min}\ge\delta_{\mathrm{Gr}}$
+
+**Lemma B (minors of a degree-$n$ function).** *Let $F=D+zC(I-zA)^{-1}B$ with $A\in\mathbb C^{n\times n}$ and $\chi=\det(I-zA)$. For every $j\times j$ submatrix $F_{IJ}$, $\chi\det F_{IJ}$ is a polynomial of degree $\le n$.*
+
+*Proof.* The Schur-complement identity
+$$\det\begin{pmatrix}I-zA&-zB_J\\ C_I&D_{IJ}\end{pmatrix}=\det(I-zA)\,\det\bigl(D_{IJ}+zC_I(I-zA)^{-1}B_J\bigr)=\chi\det F_{IJ}$$
+exhibits $\chi\det F_{IJ}$ as the determinant of an $(n+j)\times(n+j)$ matrix whose first $n$ rows are affine in $z$ and whose last $j$ rows are constant; by multilinearity in the rows it is a polynomial of degree $\le n$. $\square$
+
+No inner-ness is used; 07EH Lemma 3.2, 1WXC Lemma 3.2 and 52B6 Lemma 2.1 are this statement for inner $F$. Poles at $\infty$ (singular $A$) are included in the count $n$.
+
+**Proposition 4.2 (projection bound).** *Let $F$ be a rational $N\times k$ matrix function analytic at $0$ and at the nodes with $\operatorname{colspan}F(\zeta_i)=Y_i$ for all $i$. Then $\deg F\ge\delta_{\mathrm{Gr}}$.*
+
+*Proof.* Let $n=\deg F$ and take a minimal realization, so $\chi(\zeta_i)\ne0$ (the poles of $F$ are the zeros of $\chi$ together with possibly $\infty$). Choose a unitary $U$ with $U^*H=\mathbb C^r\oplus0$ and replace $(F,Y_i)$ by $(U^*F,U^*Y_i)$; so assume $H=\operatorname{span}(e_1,\dots,e_r)$. Let
+$$w(z):=\chi(z)\cdot\bigl(\text{the }k\times k\text{ minors of }F(z)\text{ with rows in }\{1,\dots,r\}\bigr)\in\mathbb C[z]\otimes\Lambda^k\mathbb C^r .$$
+By Lemma B, $w$ is a polynomial vector of degree $\le n$; it is $\chi$ times the Plücker vector of the top $r\times k$ block $F_H(z)$ of $F(z)$. At a node, $\operatorname{colspan}F(\zeta_i)=Y_i\subseteq H$ forces the last $N-r$ rows of $F(\zeta_i)$ to vanish, so $F_H(\zeta_i)$ has rank $k$ and $w(\zeta_i)=\chi(\zeta_i)\cdot(\text{nonzero multiple of the Plücker vector of }Y_i)\ne0$. Hence $w\not\equiv0$; let $g$ be the gcd of its coordinates and $v:=w/g$. Then $v$ is primitive of degree $\le n$; $g(\zeta_i)\ne0$, so $v(\zeta_i)$ is a nonzero multiple of the Plücker vector of $Y_i$; and for every $z$ with $\chi(z)g(z)\ne0$, $v(z)$ is a scalar multiple of the vector of minors of $F_H(z)$, hence lies in the cone over $\mathrm{Gr}(k,r)$ (decomposable vectors, including $0$), which is Zariski-closed in $\Lambda^k\mathbb C^r$. A polynomial map whose values lie in a closed set off a finite set lies in it everywhere, also at $\infty$ after homogenising. So $v$ is a morphism $\mathbb P^1\to\mathrm{Gr}(k,H)$ of degree $\le n$ through the data, and $\delta_{\mathrm{Gr}}\le n$. $\square$
+
+**Corollary 4.3.** $d_{\min}\ge\delta_{\mathrm{Gr}}$.
+
+*Proof.* If $S$ is an inner interpolant of degree $d$ with realization $D+zC(I-zA)^{-1}B$, then $F:=SX=DX+zC(I-zA)^{-1}(BX)$ has a realization with $d$ states, so $\deg F\le d$; $F$ is analytic on $\overline{\mathbb D}$ and $\operatorname{colspan}F(\zeta_i)=S(\zeta_i)\operatorname{ran}X=Y_i$. Apply Proposition 4.2. $\square$
+
+**Remarks 4.4.** (i) The relation between $d$ and $L$ plays no role. The 6M3V argument ("$\ell n$ vanishes at $L>d$ nodes, so the column stays in $H$") fails for $k>1$, where $d_{\min}$ can exceed $L$ (e.g. $k(L-1)$); it is not needed, because the column may leave $H$ along the curve of $F$ while its Plücker projection to $\Lambda^kH$ still has degree $\le n$, and removing the gcd can only lower the degree. (ii) The bound holds for every rational column through the data, passive or not; passivity enters only in the upper bound, and the proposition applies verbatim to the rectangular inner column $F_0$ of Section 5.
+
+## 5. Upper bound: $d_{\min}\le\delta_{\mathrm{Gr}}$
+
+Throughout, $M=[m_1\cdots m_k]$ is a minimal basis in $H$-coordinates ($r\times k$) with $\operatorname{colspan}M(\zeta_i)=Y_i$ and $\sum_je_j=\delta_{\mathrm{Gr}}$ (Lemma A), and $m:=\max_je_j$.
+
+**Theorem 5.1 (matrix Fejér–Riesz; Rosenblum [Ro], Dritschel–Rovnyak [DR]).** *Let $R(z)=\sum_{|t|\le m}R_tz^t$ be a $k\times k$ Laurent polynomial with $R(z)\succeq0$ on $\mathbb T$ and $\det R\not\equiv0$. Then $R=H^\sharp H$ on $\mathbb T$ for a polynomial $H(z)=\sum_{t=0}^mH_tz^t$ that is outer: $\det H(z)\ne0$ for $z\in\mathbb D$. If $R\succ0$ on $\mathbb T$ then also $\det H\ne0$ on $\mathbb T$.*
+
+The last clause follows from $|\det H|^2=\det R$ on $\mathbb T$. Apply it to $R:=M^\sharp M$, $R_t=\sum_sM_s^*M_{s+t}$, which is $\succ0$ on $\mathbb T$ because $M(z)$ has rank $k$ at *every* $z\in\mathbb C$ (property (a) of a minimal basis, not only at the nodes). Let $H_o$ be the outer factor and put
+$$F_0:=MH_o^{-1}.$$
+$F_0$ is rational and analytic on a neighbourhood of $\overline{\mathbb D}$, $F_0^*F_0=H_o^{-*}M^*MH_o^{-1}=I_k$ on $\mathbb T$ (a rectangular inner column), and $\operatorname{colspan}F_0(\zeta_i)=\operatorname{colspan}M(\zeta_i)=Y_i$ since $H_o(\zeta_i)$ is invertible.
+
+**Backward shift.** On the Hardy space $H^2_N$ let $(S^*h)(z)=(h(z)-h(0))/z$. For a rational $F\in H^\infty_{N\times k}$ put
+$$K_F:=\operatorname{span}\{S^{*m}(Fc):\ m\ge1,\ c\in\mathbb C^k\}\subset H^2_N .$$
+
+**Lemma 5.2.** *(i) $\dim K_F=\deg F$. (ii) For a polynomial matrix $M$ with column degrees $e_j$, $\dim K_M\le\sum_je_j$.*
+
+*Proof.* (i) With a minimal $n$-state realization, $F=D+\sum_{m\ge1}z^mCA^{m-1}B$, so $S^{*m}F=\sum_{t\ge0}z^tCA^{m+t-1}B=C(I-zA)^{-1}A^{m-1}B$. Hence $K_F=\{C(I-zA)^{-1}x:\ x\in\operatorname{span}_{m,c}A^{m-1}Bc\}=\{C(I-zA)^{-1}x:\ x\in\mathbb C^n\}$ by reachability, and $x\mapsto C(I-zA)^{-1}x=\sum_tz^tCA^tx$ is injective by observability. (ii) $S^{*m}(Me_j)=0$ for $m>e_j$, so the $\sum_je_j$ vectors $S^{*m}(Me_j)$, $1\le m\le e_j$, span $K_M$. $\square$
+
+**Lemma 5.3 (product rule).** *For $f\in H^\infty_{N\times k}$ and $g\in H^2_k$, $S^*(fg)=f\cdot S^*g+(S^*f)g(0)$, and for $h=\sum_th_tz^t\in H^2_k$ and $m\ge1$*
+$$S^{*m}(fh)=f\cdot S^{*m}h+\sum_{j=1}^m(S^{*j}f)\,h_{m-j}.$$
+
+*Proof.* The first identity is $\frac{fg-f(0)g(0)}z=f\frac{g-g(0)}z+\frac{f-f(0)}zg(0)$. Induction on $m$: applying $S^*$ to the displayed formula, $S^*(fS^{*m}h)=fS^{*(m+1)}h+(S^*f)(S^{*m}h)(0)$ with $(S^{*m}h)(0)=h_m$, and $S^*\bigl((S^{*j}f)h_{m-j}\bigr)=(S^{*(j+1)}f)h_{m-j}$ because $h_{m-j}$ is constant. $\square$
+
+**Proposition 5.4 ($PK_M=K_{F_0}$).** *Let $P$ be the orthogonal projection of $H^2_N$ onto $(F_0H^2_k)^\perp$. Then $PK_M=K_{F_0}$.*
+
+*Proof.* *(i) $K_{F_0}\perp F_0H^2_k$.* Multiplication by $F_0$ is an isometry $H^2_k\to H^2_N$ since $F_0^*F_0=I$ on $\mathbb T$. For $m\ge1$, $c\in\mathbb C^k$, $h\in H^2_k$:
+$\langle S^{*m}(F_0c),F_0h\rangle=\langle F_0c,z^mF_0h\rangle=\langle c,z^mh\rangle=0$. Hence $P|_{K_{F_0}}=\mathrm{id}$.
+
+*(ii) $PK_M\subseteq K_{F_0}$.* For $c\in\mathbb C^k$ put $h:=H_oc$, so $F_0h=Mc$. Lemma 5.3 gives $S^{*m}(Mc)=F_0S^{*m}h+\sum_{j=1}^m(S^{*j}F_0)h_{m-j}$; $P$ kills the first term, so $PS^{*m}(Mc)=\sum_{j=1}^m(S^{*j}F_0)(H_oc)_{m-j}\in K_{F_0}$.
+
+*(iii) $K_{F_0}\subseteq PK_M$.* For $\lambda\in\mathbb D$ and $c\in\mathbb C^k$ set
+$$\begin{aligned}\Phi_c(\lambda)&:=\sum_{m\ge1}\lambda^mPS^{*m}(Mc)\\&=\sum_{j\ge1}\lambda^j(S^{*j}F_0)\sum_{t\ge0}\lambda^t(H_o)_tc=G(\lambda)H_o(\lambda)c,\\G(\lambda)&:=\sum_{j\ge1}\lambda^jS^{*j}F_0.\end{aligned}$$
+The sum defining $\Phi_c$ is finite ($S^{*m}(Mc)=0$ for $m>m_{\max}$); $G(\lambda)=C(I-zA)^{-1}\lambda(I-\lambda A)^{-1}B$ converges for $|\lambda|<1/\rho(A)$, in particular on $\mathbb D$, and takes values in the finite-dimensional space $K_{F_0}$, so the rearrangement is legitimate. For an analytic map $\Psi$ from $\mathbb D$ into a finite-dimensional space, the span of its values equals the span of its Taylor coefficients at $0$ (a linear functional annihilating one set annihilates the other, and subspaces of a finite-dimensional space are determined by their annihilators). Therefore
+$$\begin{aligned}PK_M&=\operatorname{span}_{m,c}PS^{*m}(Mc)=\operatorname{span}_{\lambda,c}\Phi_c(\lambda)\\&=\operatorname{span}_{\lambda,c}G(\lambda)H_o(\lambda)c=\operatorname{span}_{\lambda,c'}G(\lambda)c'\\&=\operatorname{span}_{j\ge1,c'}(S^{*j}F_0)c'=K_{F_0}.\end{aligned}$$
+using that $H_o(\lambda)$ is invertible for every $\lambda\in\mathbb D$ (outerness) in the fourth equality and the same span principle for $G$ in the fifth. $\square$
+
+**Corollary 5.5.** $\deg F_0=\dim K_{F_0}=\dim PK_M\le\dim K_M\le\sum_je_j=\delta_{\mathrm{Gr}}$; combined with Proposition 4.2, $\deg F_0=\delta_{\mathrm{Gr}}$ exactly, and all inequalities are equalities ($\dim K_M=\sum_je_j$, $P$ is injective on $K_M$).
+
+The degree identity also holds for an arbitrary minimal basis, without assuming that it minimizes the interpolation problem: if $M$ has total column degree $e$, Proposition 5.4 gives $\deg(MH_o^{-1})\le e$. Conversely, take a minimal realization of $F_0=MH_o^{-1}$ of degree $n$ and denominator $\chi$. Lemma B makes the vector $w_I=\chi\operatorname{minor}_I(F_0)$ polynomial of degree at most $n$. Its primitive vector represents the same rational column space as $M$, so Lemma A(2) gives its degree as $e$. Thus $e\le n$, and $\deg F_0=e$ for every minimal basis. This is the version used in Theorem 5.7, where the rational column space is fixed independently of the interpolation minimum.
+
+**Theorem 5.6 (same-state completion; Alpay–Jorgensen–Lewkowicz [AJL, Theorem 2.1 I(i)--(ii), p. 5, equations (2.3)--(2.5)]).** *Let $F$ be a $p\times m$ rational function, $p\ge m$, with all poles in $\mathbb D$ (Schur stable), and write $F(w)=D+C(wI-A)^{-1}B$. (i) $F$ is isometric on $\mathbb T$ iff it admits a minimal realization matrix $R=\begin{pmatrix}A&B\\ C&D\end{pmatrix}$ with $R^*R=I_{n+m}$. (ii) If so, there exist $\tilde B\in\mathbb C^{n\times(p-m)}$, $\tilde D\in\mathbb C^{p\times(p-m)}$ such that $\begin{pmatrix}A&B&\tilde B\\ C&D&\tilde D\end{pmatrix}$ is unitary.*
+
+Part (ii) is elementary: an isometry is completed to a unitary by an orthonormal basis of the orthogonal complement of its range; this is what the numerical pipeline does. To apply the theorem, note that if $F_0(z)=D+zC(I-zA)^{-1}B$ is our disc-convention realization, then $F_0(1/w)=D+C(wI-A)^{-1}B$ has the *same* realization matrix, is analytic at $w=\infty$, has all poles in $\mathbb D$ ($F_0$ is analytic on $\overline{\mathbb D}$), is isometric on $\mathbb T$ ($\mathbb T$ is invariant under $w\mapsto1/w$) and is minimal iff $F_0$ is. No paraconjugation is needed. In AJL's notation $p=r$, $m=k$ and the state dimension is $n$; equation (2.3) makes the $(n+r)\times(n+k)$ matrix an isometry, and (2.4)--(2.5) add exactly $r-k$ input columns without changing $A$ or $C$. This identifies the same-state assertion used below.
+
+**Theorem 1 (Grassmannian degree law).** *For every $k$, every $N$, every finite table of $k$-planes at distinct boundary nodes,*
+$$d_{\min}=\delta_{\mathrm{Gr}} .$$
+*The value depends only on the configuration $(Y_i)\subset\mathrm{Gr}(k,H)$ and the nodes, not on $N$. A minimum-degree curve, represented by a minimal basis $M$, compiles to a square inner router of the same degree by $M\mapsto MH_o^{-1}$ followed by unitary augmentation of an isometric realization; conversely every router of degree $d$ yields a curve of degree $\le d$ through the data.*
+
+*Proof.* Corollary 4.3 gives $\ge$. For $\le$, let $n=\deg F_0=\delta_{\mathrm{Gr}}$ (Corollary 5.5) and take, by Theorem 5.6 (i)–(ii), a minimal isometric realization of $F_0$ augmented to a unitary matrix. Then $S_H(z):=[D\ \tilde D]+zC(I-zA)^{-1}[B\ \tilde B]$ is $r\times r$ with a unitary realization matrix and $\sigma(A)\subset\mathbb D$, hence analytic on $\overline{\mathbb D}$ and unitary on $\mathbb T$ by the identity $I-S_H(z)^*S_H(z)=(1-|z|^2)B_f^*(I-\bar zA^*)^{-1}(I-zA)^{-1}B_f$, $B_f=[B\ \tilde B]$; it has $\le n$ states, and its first $k$ columns are $F_0$ of degree $n$, so $\deg S_H=n$. Let $U$ be unitary with $U(\mathbb C^r\oplus0)=H$ and $V_0$ unitary with $V_0\operatorname{ran}X=\mathbb C^k\oplus0$, and set
+$$S:=U\,(S_H\oplus I_{N-r})\,V_0 .$$
+Then $\deg S=n=\delta_{\mathrm{Gr}}$ and $S(\zeta_i)\operatorname{ran}X=U\bigl(\operatorname{colspan}F_0(\zeta_i)\oplus0\bigr)=Y_i$. $\square$
+
+**Theorem 5.7 (Lemma C: additivity and uniqueness).** *Let $F$ be an inner $N\times k$ column (analytic on $\overline{\mathbb D}$, isometric on $\mathbb T$) whose $\mathbb C(z)$-column space is $V$, let $M$ be a minimal basis of $V$ with column degrees $e_j$ and $F_0=MH_o^{-1}$. Then $F=F_0U$ with $U$ a $k\times k$ rational inner function and*
+$$\deg F=\deg F_0+\deg U=\sum_je_j+\deg U .$$
+*In particular $F_0$ is the unique minimum-degree inner column with column space $V$, up to a constant unitary factor on the right.*
+
+*Proof.* Write $F=P/\chi$ with $\chi$ the denominator of a minimal realization ($\deg\chi\le n':=\deg F$, $\chi\ne0$ on $\overline{\mathbb D}$) and $P$ polynomial with column space $V$ (over $\mathbb C(z)$, $F$ has rank $k$ since it is isometric on $\mathbb T$). By Lemma A(1), $P=MQ$ with $Q$ polynomial, so $F=MQ/\chi=F_0\,(H_oQ/\chi)=:F_0U$. $U$ is rational and analytic on $\overline{\mathbb D}$, and on $\mathbb T$, $U^*U=U^*F_0^*F_0U=F^*F=I$; so $U$ is inner. The inequality $\deg(F_0U)\le\deg F_0+\deg U$ is the product of realizations. For the reverse, Cauchy–Binet gives $\operatorname{minor}_I(F)=\operatorname{minor}_I(M)\det Q/\chi^k$, and Lemma B applied to the minimal realization of $F$ says that $\chi\operatorname{minor}_I(F)=\operatorname{minor}_I(M)\det Q/\chi^{k-1}$ is a polynomial of degree $\le n'$ for every $I$. Thus $\chi^{k-1}$ divides $\operatorname{minor}_I(M)\det Q$ for all $I$; since the minors of $M$ are coprime (Bézout), $\chi^{k-1}\mid\det Q$, say $\det Q=\chi^{k-1}\tilde q$, and $\deg\operatorname{minor}_I(M)+\deg\tilde q\le n'$ for all $I$. Taking $I$ with $\deg\operatorname{minor}_I(M)=\sum_je_j$ (Lemma A(2)) gives $n'\ge\sum_je_j+\deg\tilde q$. Now $\det U=\det H_o\det Q/\chi^k=\det H_o\,\tilde q/\chi$, and by Lemma 2.1 $\det U$ has exactly $\deg U$ zeros in $\mathbb D$; none can come from $\det H_o$ (outer, nonzero on $\mathbb T$) or from $1/\chi$ (zero-free on $\overline{\mathbb D}$), so $\deg\tilde q\ge\#\{\text{zeros of }\tilde q\text{ in }\mathbb D\}\ge\deg U$. Hence $n'\ge\sum_je_j+\deg U=\deg F_0+\deg U$. If $\deg F=\deg F_0$ then $\deg U=0$: $U$ is a constant unitary. $\square$
+
+## 6. Base points
+
+Theorem 1 uses a minimal basis, which has no base points. In practice a witness pencil $P$ may be produced by any means (Lagrange interpolation, a random element of $V_{e_1}\times\dots\times V_{e_k}$), and the natural compiler is $P\mapsto PH_P^{-1}$ with $H_P$ the outer factor of $P^\sharp P$ (Theorem 5.1 in its semidefinite form; $H_P$ may then be singular at points of $\mathbb T$). The following statement, asserted by experiment in the first version and proved here, explains what the compiler returns.
+
+*Boundary convention.* All rational products $PH_P^{-1}$ below are understood after cancelling removable singularities. The outer factor has no zero in $\mathbb D$. If $\det H_P$ vanishes at $\xi\in\mathbb T$, then on a punctured boundary arc the identity $(PH_P^{-1})^*(PH_P^{-1})=I_k$ bounds every entry by one. An entry with a genuine pole at $\xi$ would be unbounded along that arc. Thus each possible pole is removable, and the isometry identity extends by continuity at $\xi$. There is no extra McMillan state from such a cancelled boundary factor.
+
+**Theorem 6.1 (base-point law).** *Let $P\in\mathbb C[z]^{r\times k}$ be an admissible pencil ($\operatorname{rank}P(\zeta_i)=k$, $\operatorname{colspan}P(\zeta_i)=Y_i$), $V$ its column space, $M$ a minimal basis of $V$, $F_0=MH_o^{-1}$, and $g_P$ the gcd of the $k\times k$ minors of $P$ (its zeros are the base points of $P$; none lies at a node by Lemma A(4)). Then $PH_P^{-1}=F_0U_i$ with $U_i$ a $k\times k$ rational inner function, and*
+$$\deg(PH_P^{-1})=\operatorname{fdeg}(P)+\#\{\text{zeros of }g_P\text{ in }\mathbb D\}\quad(\text{with multiplicity}).$$
+*Base points on $\mathbb T\setminus\{\zeta_i\}$, outside $\overline{\mathbb D}$, or at $\infty$ (a drop of rank of the leading-coefficient matrix) are free; base points in $\mathbb D$ cost one state each. Since $\operatorname{fdeg}(P)\ge\delta_{\mathrm{Gr}}$ for every admissible $P$ (Lemma A), the compiler attains $d_{\min}$ iff $\operatorname{fdeg}(P)=\delta_{\mathrm{Gr}}$ and $P$ has no base point in $\mathbb D$.* The first condition holds automatically when $P=[f_1\cdots f_k]$ with $f_j\in V_{e_j}$, $\sum_je_j=\delta_{\mathrm{Gr}}$ and nonzero wedges at the nodes (the witnesses of Section 8; Lemma A gives $\operatorname{fdeg}(P)\le\sum_je_j$), but not for an arbitrary admissible pencil, which merely interpolates (Example 6.2).
+
+*Proof.* By Lemma A(1), $P=MU_P$ with $U_P$ polynomial, $\det U_P=g_P$ up to a constant. Then $P^\sharp P=U_P^\sharp H_o^\sharp H_oU_P=(H_oU_P)^\sharp(H_oU_P)$ on $\mathbb T$. Let $H_oU_P=U_iH_P'$ be the inner–outer factorisation of the polynomial matrix $H_oU_P$ ($\det\not\equiv0$): $U_i$ is a square rational inner function and $H_P'$ is outer. Then $P^\sharp P=H_P'^\sharp H_P'$ on $\mathbb T$, so $H_P'$ is an outer spectral factor of $P^\sharp P$ and coincides with $H_P$ up to a constant unitary on the left; absorbing it into $U_i$,
+$$PH_P^{-1}=MU_PH_P^{-1}=MH_o^{-1}(H_oU_P)H_P^{-1}=F_0U_i .$$
+By Theorem 5.7, $\deg(PH_P^{-1})=\deg F_0+\deg U_i=\operatorname{fdeg}(P)+\deg U_i$ (Lemma A(2)). By Lemma 2.1, $\deg U_i$ is the number of zeros of $\det U_i=\det H_o\det U_P/\det H_P$ in $\mathbb D$; $\det H_o$ and $\det H_P$ have no zeros in $\mathbb D$ (outer), so this is the number of zeros of $\det U_P=g_P$ in $\mathbb D$. Zeros of $g_P$ on $\mathbb T$ are absorbed by the outer factor ($\det H_P$ may vanish on $\mathbb T$) and do not count; zeros outside $\overline{\mathbb D}$ and a rank drop at $\infty$ do not contribute an additional term to the degree formula beyond $\operatorname{fdeg}(P)$. For the final claim, Lemma A says that $\delta_{\mathrm{Gr}}$ is the *minimum* of $\operatorname{fdeg}$ over admissible pencils, so $\operatorname{fdeg}(P)\ge\delta_{\mathrm{Gr}}$ and $\deg(PH_P^{-1})\ge\delta_{\mathrm{Gr}}=d_{\min}$ (Theorem 1), with equality iff both terms of the formula are minimal. (Version 1 asserted at this point that every admissible $P$ has $\operatorname{fdeg}(P)=\delta_{\mathrm{Gr}}$, and concluded that the compiler is minimal iff there is no base point in $\mathbb D$; the workshop example below refutes that clause, while the degree formula stands.) $\square$
+
+**Example 6.2 (an admissible pencil without base points whose lift is not minimal; AIRR workshop, 2026-09-08).** Take $k=1$, $N=r=2$, nodes $\zeta_1=1$, $\zeta_2=-1$ and targets $Y_1=\operatorname{span}e_1$, $Y_2=\operatorname{span}e_2$. A degree-$0$ curve is impossible ($Y_1\ne Y_2$) and $Q(z)=(z+1,\ z-1)^T$ has $Q(1)=(2,0)^T$, $Q(-1)=(0,-2)^T$, so $\delta_{\mathrm{Gr}}=d_{\min}=1$. The pencil $P(z)=(z+1,\ z(z-1))^T$ is admissible ($P(1)=(2,0)^T$, $P(-1)=(0,2)^T$) and its coordinates are coprime, so $g_P=1$ and $P$ has no base point, but $\operatorname{fdeg}(P)=2$. On $\mathbb T$, $P^\sharp P=|z+1|^2+|z-1|^2=4$, so $H_P=2$ and the compiler returns $P/2$, a polynomial column of McMillan degree $2=\operatorname{fdeg}(P)+0$, as the formula predicts, while the inner matrix
+$$S_1(z)=\frac12\begin{pmatrix}z+1&z-1\\ z-1&z+1\end{pmatrix},\qquad\det S_1=z,$$
+is a router of degree $1$ ($S_1(1)e_1=e_1$, $S_1(-1)e_1=-e_2$), and $S_2:=\operatorname{diag}(1,z)S_1$ is inner of degree $2$ with first column $P/2$ and $\det S_2=z^2$. Here $P$ is itself a minimal basis of its column space $V=\mathbb C(z)P$, so $F_0=P/2$, $U_i=1$, and Theorem 5.7 correctly says that $P/2$ is the minimum-degree inner column *with column space $V$*; the point is that the column space of the optimal router's first column, $\mathbb C(z)Q$, is a different line. Unitarity of $S_1,S_2$ on $\mathbb T$, the determinants, the gcd, the interpolation values and the three McMillan degrees (Hankel ranks $1,2,2$) were verified symbolically (`repro/scratch_v2/taller_and_graph_witness.py`; the workshop's own script `check_core.py` is rerun in `repro/taller_check/`).
+
+Section 8 verifies the degree formula on nine witnesses, all with $\operatorname{fdeg}(P)=\delta_{\mathrm{Gr}}=3$: one, two and double base points in $\mathbb D$ (cost $1,2,2$), the pair $\pm\tfrac12$ ($2$), one inside and one outside ($1$), a non-diagonal $U_P$ with $\det U_P=z-\tfrac12$ ($1$), a unimodular $U_P$ raising the column degrees but not the Forney degree ($0$), and base points at $2$ and at $\infty$ ($0$). Base points on $\mathbb T$ were not tested numerically (the Wilson iteration used there requires $P^\sharp P\succ0$ on $\mathbb T$).
+
+## 7. Consequences and comparison with the published laws
+
+**7.1 Lines ($k=1$).** $\mathrm{Gr}(1,H)=\mathbb P(H)$, minors are coordinates, $\operatorname{fdeg}$ is the projective degree, and Theorem 1 is 6M3V Theorem 2.3 with a lower-bound proof that does not use $d\le L-1$.
+
+**7.2 Direct-sum words.** Let $w$ be a word over targets $Y_a$ in direct-sum position and $F_0:=\sum_ap_a(z)W_a$ with $p_a:=\prod_{i:w_i\ne a}(z-\zeta_i)$ (the compiler input of 52B6, Section 3). Every column has degree $\le L-n_*$ and $F_0(\zeta_i)=p_{w_i}(\zeta_i)W_{w_i}$ has rank $k$, so Lemma A gives $\delta_{\mathrm{Gr}}\le k(L-n_*)$. The 52B6 lower bound transfers to curves: with $D_a$ the block-dual detectors ($D_aW_b=\delta_{ab}I_k$) and $M$ a minimal basis through the data, $\det(D_aM(z))=\sum_I\det(D_a)_{:,I}\operatorname{minor}_I(M)$ has degree $\le\sum_je_j$, vanishes to order $\ge k$ at every node not labelled $a$ and is nonzero at nodes labelled $a$, so $\sum_je_j\ge k(L-n_a)$. Hence $\delta_{\mathrm{Gr}}=k(L-n_*)$ and Theorem 1 recovers 52B6 Theorem 1.2. Theorem 1 also explains why 52B6 Lemma 3.1 bounded the compiler by $k\cdot(L-n_*)$ only: the exact count is $\sum_je_j$, which equals $k\max_je_j$ precisely for this word construction.
+
+**7.3 Generic $k(L-1)$ and the span bound.** When $r=kL$ each node is its own letter, $n_*=1$, and $\delta_{\mathrm{Gr}}=k(L-1)$: 33BE Corollary 1.2 and 1WXC Theorem 3.1. In general the $\sum_j(e_j+1)=\delta_{\mathrm{Gr}}+k$ coefficient vectors of a minimal basis span a space containing every $M(\zeta_i)$, hence $H$; so $\delta_{\mathrm{Gr}}\ge r-k$, which is the lower half of 33BE Theorem 1.1 and 52B6 Theorem 5.1. For $r<kL$ the generic value can be strictly smaller than $k(L-1)$: in $\mathrm{Gr}(2,4)$ it is $2\lfloor L/2\rfloor<2(L-1)$ for every $L\ge3$ (Theorem 7.4).
+
+**Proposition 7.3 (generic lower bound).** *Let $e_0:=\lfloor L(r-k)/r\rfloor$, the least $e$ with $r(e+1)>L(r-k)$, and $m_0:=r(e_0+1)-L(r-k)\in\{1,\dots,r\}$. Let $\Omega_1\subseteq\mathrm{Gr}(k,r)^L$ be the set of data with $V_e=0$ for all $e<e_0$ and $\dim V_{e_0}=m_0$. Then $\Omega_1$ is nonempty and Zariski-open, and at every point of $\Omega_1$*
+$$\delta_{\mathrm{Gr}}\ \ge\ k\,e_0+\max(0,\,k-m_0).$$
+
+*Proof.* $V_e$ is the kernel of the incidence map $\iota_e:\mathbb C[z]_{\le e}\otimes H\to\bigoplus_iH/Y_i$, of dimensions $r(e+1)$ and $L(r-k)$; injectivity of $\iota_e$ for $e<e_0$ and surjectivity of $\iota_{e_0}$ are Zariski-open conditions on the data. A witness for both: $Y_i=\operatorname{span}\{e_a:a\notin I_i\}$ with the $r-k$ missed coordinates $I_i$ assigned cyclically, so that coordinate $a$ is missed by $|I_a|\in\{\lfloor L(r-k)/r\rfloor,\lceil L(r-k)/r\rceil\}$ nodes, $\sum_a|I_a|=L(r-k)$. Then $f\in V_e$ iff each coordinate $f_a$ (degree $\le e$) vanishes at the $|I_a|$ distinct nodes missing $a$, so $\dim V_e=\sum_a\max(0,e+1-|I_a|)$, which is $0$ for $e+1\le e_0\le\min_a|I_a|$, and equals $\#\{a:|I_a|=e_0\}=r(e_0+1)-L(r-k)=m_0$ for $e=e_0$ (if $L(r-k)/r$ is an integer all $|I_a|=e_0$ and $\dim V_{e_0}=r=m_0$). On the open set, every column of a minimal basis attaining $\delta_{\mathrm{Gr}}$ is a nonzero element of $V_{e_j}$, so $e_j\ge e_0$; the columns with $e_j=e_0$ are linearly independent over $\mathbb C$ and lie in $V_{e_0}$, so there are at most $m_0$ of them and the remaining $\max(0,k-m_0)$ columns have degree $\ge e_0+1$. $\square$
+
+For $k=1$ this is the one-band generic value $\lfloor L(r-1)/r\rfloor$ of 6M3V Theorem 3.2, where it is also an upper bound; for $r=kL$ it is $k(L-1)$.
+
+**Theorem 7.4 (generic value for $r=2k$; in particular $\mathrm{Gr}(2,4)$).** *For data in the ambient Grassmannian $\mathrm{Gr}(k,2k)$, let $L\ge1$ and $e:=\lfloor L/2\rfloor$. Then $\delta_{\mathrm{Gr}}=k\,e$ on a nonempty Zariski-open subset of $\mathrm{Gr}(k,2k)^L$. In particular $\delta_{\mathrm{Gr}}=2\lfloor L/2\rfloor$ generically on $\mathrm{Gr}(2,4)^L$, for every $L$.*
+
+*Proof.* For $L=1$, a constant curve through the single target has degree $0=ke$; its actual span has dimension $k$. For $L\ge2$, work in the ambient space of dimension $r=2k$; Remark 3.1 permits this even for special data of smaller span. Here $e_0=\lfloor L(r-k)/r\rfloor=\lfloor L/2\rfloor=e$ and $m_0=2k(e+1)-kL$, which is $2k$ for $L=2e$ and $k$ for $L=2e+1$; in both cases $m_0\ge k$, so Proposition 7.3 gives $\delta_{\mathrm{Gr}}\ge ke$ at every point of $\Omega_1$.
+
+*Explicit data.* Write vectors of $\mathbb C^{2k}$ as $(u;v)$ with $u,v\in\mathbb C^k$, and for the given nodes put $Y_i:=\{(x;\zeta_i^{e}x):x\in\mathbb C^k\}$, the graph of $\zeta_i^eI_k$. These are the values at the nodes of the curve $z\mapsto\operatorname{graph}(z^eI_k)$, whose minimal basis $P_e:=\binom{I_k}{z^eI_k}$ has column degrees $(e,\dots,e)$ (rank $k$ at every $z$; leading-coefficient matrix $\binom{0}{I_k}$ when $e>0$, and $\binom{I_k}{I_k}$ when $e=0$, in both cases of rank $k$) and $k\times k$ minors that include $1$ and $z^{ke}$; so $\operatorname{fdeg}(P_e)=ke$ and $\delta_{\mathrm{Gr}}\le ke$ for these data.
+
+*The graph data lie in $\Omega_1$.* A vector $f=(u;v)\in\mathbb C[z]^{2k}$ of degree $\le e'$ satisfies $f(\zeta_i)\in Y_i$ iff $w:=v-z^eu$ vanishes at $\zeta_i$, and $\deg w\le e+e'$. If $e'\le e-1$ then $\deg w\le2e-1<L$, so $w=0$, $v=z^eu$, and $\deg v\le e'<e$ forces $u=0$: $V_{e'}=0$. If $e'=e$ and $L=2e+1$, again $w=0$ and $v=z^eu$ with $\deg v\le e$ forces $u$ constant, so $V_e=\{(u;z^eu):u\in\mathbb C^k\}$ has dimension $k=m_0$. If $e'=e$ and $L=2e$, then $w=c\,\pi$ with $\pi:=\prod_i(z-\zeta_i)=\sum_t\pi_tz^t$ and $c\in\mathbb C^k$, and $v=z^eu+c\pi$ has degree $\le e$ iff its coefficients of $z^{e+1},\dots,z^{2e}$ vanish, i.e. $u_j=-\pi_{e+j}\,c$ for $j=1,\dots,e$, with $u_0\in\mathbb C^k$ free: $\dim V_e=2k=m_0$. Hence the graph data are in $\Omega_1$, and $\delta_{\mathrm{Gr}}=ke$ there.
+
+*Openness.* Let $\Omega_2\supseteq\Omega_1$ be the open set where $\iota_e$ is surjective; over $\Omega_2$ the kernel $V_e$ is a vector bundle of rank $m_0$ (kernel of a surjective map between vector bundles, the target being $\bigoplus_i\mathcal Q_i$ with $\mathcal Q$ the universal quotient bundle). For each node $i$ the $k$-linear bundle map $V_e^{\times k}\to\Lambda^k\mathbb C^{2k}$, $(f_1,\dots,f_k)\mapsto f_1(\zeta_i)\wedge\dots\wedge f_k(\zeta_i)$, vanishes identically on a closed subset, so the set $W\subseteq\Omega_2$ where none of the $L$ maps vanishes identically is open. On $W$, choose for each $i$ a nonzero coordinate $q_i$ of the $i$-th map; $\prod_iq_i$ is a nonzero polynomial function on $V_e^{\times k}$, so some tuple has all wedges nonzero and Lemma A (last form) gives $\delta_{\mathrm{Gr}}\le ke$. The graph data lie in $\Omega_1\cap W$ (the columns of $P_e$ are in $V_e$ with independent values everywhere), so $\Omega_1\cap W$ is a nonempty open set on which $\delta_{\mathrm{Gr}}=ke$. $\square$
+
+The dimensions $\dim V_{e'}$ of the graph data ($0$ for $e'<e$, $m_0$ for $e'=e$) were also checked by exact linear algebra for $k=2,3$ and $1\le L\le12$ (`repro/scratch_v2/taller_and_graph_witness.py`). Version 1 stated the theorem for $(2,4)$ and $3\le L\le7$ only, with the upper bound taken from the exact random witnesses of Section 8; those witnesses (now in `repro/witnesses/`) remain an independent confirmation that *random* data over $\mathbb Q(i)$ lie in the open set of the theorem, and the exact values $3,6,6,9$ for random data with $(k,r)=(3,6)$, $L=3,4,5,6$ (Table 2) confirm the case $k=3$.
+
+The naive count $\dim\{\text{degree-}e\text{ maps}\}=4+4e\ge4L$ predicts $L-1$ (e.g. $3$ for $L=4$, $5$ for $L=6$) and is wrong: a cubic through four generic points would need splitting type $(0,3)$ or $(1,2)$, i.e. a nonzero element of $V_1$, which is generically $0$. The possible relation to quantum Schubert calculus [Be] is not used in this proof; the degree values here follow from the interpolation argument above.
+
+*Comparison with fixed-domain curve counts.* Buch--Pandharipande [BP-Tev, Section 1.1, Definition 1.1 and Theorem 1.4] study virtual Tevelev degrees with the marked domain fixed. Under $\mathrm{Gr}(2,4)\cong Q^4$, genus zero and $L\ge3$, the dimension constraint is $d=L-1$ and their quadric formula gives $(1+(-1)^d)/2$: one for odd $L$, zero for even $L$. This parity comparison helps place Theorem 7.4 in the existing literature. A vanishing virtual count is not by itself nonexistence of an interpolating morphism, nor does a nonzero virtual count prove the minimum or existence for every fixed node configuration considered here. Our minimum and fixed-node assertion follow from the explicit interpolation proof above; the construction of a rational inner router is an additional analytic step. No priority or equivalence claim is inferred from this comparison.
+
+**Conjecture 7.5 (generic law).** Generic $\delta_{\mathrm{Gr}}=k\,e_0+\max(0,k-m_0)$, i.e. the bound of Proposition 7.3 is attained. The upper bound requires a witness tuple with $\min(k,m_0)$ columns in $V_{e_0}$ and the rest in $V_{e_0+1}$ having independent node values, a degree-$k$ multilinear rather than linear condition (quadratic when $k=2$); it is proved for $r=2k$ and every $L$ (Theorem 7.4: there $m_0\ge k$ and the formula reads $k\lfloor L/2\rfloor$), certified by exact computation for $(2,3,L=4,5,6)$ (values $2,3,4$), and confirmed redundantly on random data for $(2,4,L\le7)$ and $(3,6,L=3,4,5,6)$ (values $2\lfloor L/2\rfloor$ and $3,6,6,9$). For $k=1$ and for $r=kL$ the conjecture is the published law.
+
+**7.6 Detector ranks cannot determine $d_{\min}$.** 52B6 Theorem 5.2 bounds $d_{\min}\ge\max\{r-k,\Delta\}$ with $\Delta=\max_D\sum_i(k-\operatorname{rank}(DW_i))$ over constant $k\times N$ detectors $D$ with $\operatorname{rank}(DW_i)=k$ for some $i$. For $k=2$, $N=4$ and generic data, $\Delta$ is a Schubert count: $\operatorname{rank}(DW_i)<2$ means that $\ker D$, a point of $\mathrm{Gr}(2,4)$, meets $Y_i$ nontrivially (the divisor class $\sigma_1$), and $\operatorname{rank}(DW_i)=0$ means $\ker D=Y_i$, i.e. $D$ is the annihilator of $Y_i$, which has rank $2$ on the other generic planes. Since $\sigma_1^4=2$ and $\sigma_1^5=0$ in $H^*(\mathrm{Gr}(2,4))$, for $L=4$ an admissible $\ker D$ can meet at most three of the planes (the two planes meeting all four give inadmissible $D$), and for $L\ge5$ at most four. Hence generically $\Delta=3$ for $L=4$ and $\Delta=4$ for $L=5,6$, whereas $\delta_{\mathrm{Gr}}=4,4,6$. So the hierarchy bound is tight for $L=5$ and strictly below $d_{\min}$ for $L=4$ and $L=6$. Moreover the structured data of Section 8 (four planes on a $(1,2)$-curve) also have $r=4$ and $\Delta=3$ but $d_{\min}=3$: the pair $(r,\Delta)$ takes the same value on data with $d_{\min}=3$ and with $d_{\min}=4$. This answers 52B6 Limitation 8.2 negatively for these statistics: off the direct-sum locus, $d_{\min}$ is the degree of a curve and is not a function of $r$ and $\Delta$. The numerical detector search of Section 8 finds the witnesses $(1,1,1,2)$, $(1,1,1,1,2)$ and $(1,1,1,1,2,2)$ predicted by this count.
+
+## 8. Experiments
+
+All computations are in `repro/` (Section 10). Nodes are Gaussian-rational points of $\mathbb T$ ($\tfrac{3+4i}5,\tfrac{5+12i}{13},\tfrac{8+15i}{17},\dots$); targets are random Gaussian-integer frames of rank $k$; exact arithmetic over $\mathbb Q(i)$ uses SymPy's `DomainMatrix`; numerics use NumPy/SciPy in double precision.
+
+**Table 1. Exact $\delta_{\mathrm{Gr}}$ (author's script `grassmann_degree_exact.py`, $k=2$).** "Witness" is a random element of $V_{e_1}\times V_{e_2}$ with its Forney degree and the gcd of its minors. The exact nodes, frames, witness pencils and lower-bound certificates of every row except the last are the files `repro/witnesses/*.json` described after Table 3.
+
+| data | $r$ | $r-k$ | $k(L-1)$ | $\delta_{\mathrm{Gr}}$ | column degrees | witness fdeg / gcd |
+|---|---|---|---|---|---|---|
+| random seeds 1, 2, 3; $N=4$, $L=4$ | 4 | 2 | 6 | **4** | (2,2) | 4 / 1 |
+| seed 1 embedded in $\mathbb C^5$ ($H=\mathbb C^4\subsetneq\mathbb C^5$) | 4 | 2 | 6 | **4** | (2,2) | 4 / 1 |
+| random $(1,2)$-curve data, $L=4$ | 4 | 2 | 6 | **3** | (1,2) | 3 / 1 |
+| same construction, $L=5$ | 4 | 2 | 8 | **3** | (1,2) | 3 / 1 |
+| generic $L=3$ | 4 | 2 | 4 | **2** | (1,1) | 2 / 1 |
+| generic $L=5$ | 4 | 2 | 8 | **4** | (2,2) | 4 / 1 |
+| generic $L=6$ | 4 | 2 | 10 | **6** | (3,3) | 6 / 1 |
+| generic $L=7$ | 4 | 2 | 12 | **6** | (3,3) | 6 / 1 |
+| $\mathrm{Gr}(2,3)$, generic $L=4,5,6$ (`extra_checks.py`) | 3 | 1 | 6, 8, 10 | 2, 3, 4 | (1,1), (1,2), (2,2) | — |
+
+For every tuple with smaller sum the log records $\dim V_{e_1},\dim V_{e_2}$ and the failing wedge test; for generic $L=4$, $\dim V_0=\dim V_1=0$ and $\dim V_2=4$, so $(0,3)$ and $(1,2)$ are impossible and $(2,2)$ works. The $\mathrm{Gr}(2,3)\cong\mathbb P^2$ values coincide with the exact $k=1$ projective degrees of the annihilator lines computed separately and with $\lfloor2L/3\rfloor$.
+
+**Table 2. Reviewer's independent exact computation (`review_exact_delta.py`, own code, different nodes and seeds).**
+
+| configuration | published value | $\delta_{\mathrm{Gr}}$ (exact) |
+|---|---|---|
+| $k=1$, three distinct coplanar lines | 1 (33BE Thm 7.2) | 1 |
+| $k=1$, lines $y_1,y_1,y_2$ | 2 (33BE Thm 7.2) | 2 |
+| $k=1$, four lines, pattern $3+1$ | 3 (6M3V Thm 11.1) | 3 |
+| $k=1$, binary word $y_1y_2y_1y_2y_1$ | $\max(n_0,n_\infty)=3$ (6M3V Thm 9.2) | 3 |
+| $k=1$, generic lines in $\mathbb C^3$, $L=4,5,6,7$ | $\lfloor2L/3\rfloor=2,3,4,4$ (6M3V Thm 3.2) | 2, 3, 4, 4 |
+| $k=2$ in $\mathbb C^3$, generic $L=4,5,6$ | $\lfloor2L/3\rfloor$ by duality | 2, 3, 4 |
+| $k=2$, $A\oplus B=\mathbb C^4$, words AAB / ABAB / AAAB / AABB / AAABB / ABABA | $k(L-n_*)=4/4/6/4/6/6$ (52B6 Thm 1.2) | 4 / 4 / 6 / 4 / 6 / 6 |
+| $k=3$, $N=6$, $L=2$ generic (direct sum) | $k(L-1)=3$ (33BE Cor 1.2) | 3 |
+| $k=3$, $N=6$, $L=3$ generic | Prop. 7.3: $\ge3$; Conj. 7.5: 3 | 3 |
+| $k=2$, $N=4$, generic $L=3,4,5,6$ (fresh seeds) | sandwich $2\le d\le2(L-1)$ | 2, 4, 4, 6 |
+| $k=3$, $N=6$, generic $L=4,5,6$ (version 2, reviewer's code, `scratch_v2/k3r6_generic.py`) | Theorem 7.4: $3\lfloor L/2\rfloor=6,6,9$ | 6, 6, 9 |
+
+**Table 3. Inner interpolants and base-point degree increments (`inner_interpolant_numeric.py`, `extra_checks*.py`, `review_basepoint_additivity.py`).** Pipeline: exact witness $M$ → $R=M^\sharp M$ → outer factor $H_o$ by Wilson's Newton iteration [Wi] on a 4096-point grid (7–60 iterations; $|H_o^\sharp H_o-R|\le3.5\cdot10^{-13}$, Fourier tail beyond degree $m$ $\le7\cdot10^{-13}$, all zeros of $\det H_o$ outside $\overline{\mathbb D}$) → Taylor coefficients of $F_0=MH_o^{-1}$ (400 terms) → block-Hankel SVD ($60\times60$ blocks; rank = McMillan degree, with a clean gap, e.g. singular values $0.921,0.82,0.603,0.446,0,0,0$ for seed 1) → ERA realization [JP] → observability-Gramian scaling (isometric realization) → null-space augmentation to a unitary realization matrix → square inner $S$ → checks. "res" is the largest of $|F_0^*F_0-I|_{\mathbb T}$, $|R^*R-I|$ (isometric realization), $|S^*S-I|_{\mathbb T}$; the subspace distances $\max_i\operatorname{dist}(S(\zeta_i)\operatorname{ran}X,Y_i)$ are $<10^{-12}$ in every row.
+
+In Table 3, the two mixing matrices are $U_1=\begin{pmatrix}z-\frac12&1\\0&1\end{pmatrix}$ and $U_2=\begin{pmatrix}z-\frac12&z\\1&1\end{pmatrix}$.
+
+| witness | $\delta_{\mathrm{Gr}}$ | predicted $\deg$ (Thm 6.1) | Hankel rank of $F_0$ | $\operatorname{wind}\det S$ | Hankel rank of $S$ | res |
+|---|---|---|---|---|---|---|
+| random seed 1, minimal basis | 4 | 4 | 4 | 4.000000 | 4 | $1.2\cdot10^{-11}$ |
+| random seed 2 | 4 | 4 | 4 | 4.000000 | 4 | $7.5\cdot10^{-12}$ |
+| seed 1 in $\mathbb C^5$ | 4 | 4 | 4 | 4.000000 | 4 | $2.2\cdot10^{-12}$ |
+| $(1,2)$-curve data, minimal basis $[p_1,p_2]$ | 3 | 3 | 3 | 3.000000 | 3 | $2.4\cdot10^{-15}$ |
+| $[p_1,(z-\tfrac12)p_2]$ (base point in $\mathbb D$) | 3 | 4 | 4 | 4.000000 | 4 | $5.7\cdot10^{-15}$ |
+| $[p_1,(z-\tfrac12)(z-\tfrac13)p_2]$ | 3 | 5 | 5 | 5.000000 | 5 | $7.3\cdot10^{-15}$ |
+| $(z-\tfrac12)[p_1,p_2]$ (double base point) | 3 | 5 | 5 | 5.000000 | 5 | $8.0\cdot10^{-15}$ |
+| $[(z-\tfrac12)p_1,(z-2)p_2]$ (one inside, one outside) | 3 | 4 | 4 | 4.000000 | 4 | $3.4\cdot10^{-15}$ |
+| $P_0U_1$ (non-diagonal, $\det U_1=z-\tfrac12$) | 3 | 4 | 4 | 4.000000 | 4 | $3.0\cdot10^{-15}$ |
+| $P_0U_2$ ($\det U_2=-\tfrac12$, column degrees (2,3)) | 3 | 3 | 3 | 3.000000 | 3 | $2.7\cdot10^{-15}$ |
+| $[p_1,(z^2-\tfrac14)p_2]$ (base points $\pm\tfrac12$) | 3 | 5 | 5 | 5.000000 | 5 | $6.4\cdot10^{-15}$ |
+| $[p_1,(z-2)p_2]$ (base point outside $\overline{\mathbb D}$) | 3 | 3 | 3 | 3.000000 | 3 | $2.2\cdot10^{-15}$ |
+| $[p_1,z^2p_1+p_2]$ (base point at $\infty$; leading matrix rank 1) | 3 | 3 | 3 | 3.000000 | 3 | $2.2\cdot10^{-15}$ |
+| generic $L=5$ | 4 | 4 | 4 | 4.000000 | 4 | $3.6\cdot10^{-11}$ |
+| generic $L=6$ | 6 | 6 | 6 | 6.000000 | 6 | $5.0\cdot10^{-10}$ |
+
+The random instances have zeros of $\det H_o$ as close as $1.014$ to $\mathbb T$ ($L=5$), which is why their residuals are $10^{-10}$–$10^{-11}$ rather than $10^{-15}$; the structured instances (zeros at modulus $\ge2$) reach machine precision. In every minimal-basis row $\deg S=\delta_{\mathrm{Gr}}$ with all checks below $10^{-9}$, and every base-point row matches Theorem 6.1.
+
+**Witness files and the computer-assisted parts.** Each file a JSON file in `repro/witnesses/` contains, as exact SymPy strings over $\mathbb Q(i)$: the nodes, the $N\times k$ frames of the targets, the value $\delta_{\mathrm{Gr}}$, the column degrees $(e_1,e_2)$, the two witness columns $f_1\in V_{e_1}$, $f_2\in V_{e_2}$, and the lower-bound certificate, i.e. for every pair $e_1\le e_2$ with $e_1+e_2<\delta_{\mathrm{Gr}}$ the dimensions $\dim V_{e_1},\dim V_{e_2}$ (a zero dimension rules the pair out) and, when both are positive, the fact that some wedge form $V_{e_1}\times V_{e_2}\to\Lambda^2Y_i$ is the zero matrix. The script `verify_witness.py` recomputes everything from the file (interpolation and rank at the nodes, $\operatorname{fdeg}=\delta_{\mathrm{Gr}}$ with coprime minors, the dimensions, the zero wedge forms) in about 15 seconds; for a reader without a computer, the $L=3$ file is small enough to check by hand ($V_0=0$ because three generic planes have no common vector, and $\dim V_1=2$). In version 2 no theorem depends on these files: Theorem 7.4 is proved with the explicit graph witness. The computer-assisted statements are the values in Tables 1 and 2 for *random* data (exact certificates, in the sense of Section 10), the detector patterns of Section 7.6 (exact for the annihilator witnesses, numerical for the search), everything in Table 3 (floating point, with the residuals shown), and the Potapov search (evidence only).
+
+**Detector ranks (numerical, `detector_bound_plucker`).** For $k=2$, $N=4$: generic $L=4$ (seeds 1, 2): $\Delta=3$ with pattern $(1,1,1,2)$, $\delta_{\mathrm{Gr}}=4$; $(1,2)$-curve data $L=4$: $\Delta=3$ $(1,1,1,2)$, $\delta_{\mathrm{Gr}}=3$; generic $L=5$: $\Delta=4$ $(1,1,1,1,2)$, $\delta_{\mathrm{Gr}}=4$; generic $L=6$: $\Delta=4$ $(1,1,1,1,2,2)$, $\delta_{\mathrm{Gr}}=6$. The search parametrises admissible detectors by the Klein quadric (each rank condition is a hyperplane section, since $\det(DW_i)$ is linear in the Plücker vector of the row space of $D$) with rank tolerances $10^{-8}$; the values agree with the Schubert count of Section 7.6.
+
+**Direct search over Blaschke–Potapov products (reviewer, `review_potapov_search.py`).** As evidence independent of the proof, all rational inner $4\times4$ functions of degree $d$ were parametrised as $U\prod_{q=1}^d(I+(b_{a_q}-1)u_qu_q^*)$ and the objective $\sum_i\|(I-\Pi_{Y_i})S(\zeta_i)X\|_F^2$ minimised by Levenberg–Marquardt from 120 random starts per degree. For the $L=3$ instance ($\delta_{\mathrm{Gr}}=2$): best values $1.99$ ($d=0$), $0.967$ ($d=1$), $6\cdot10^{-30}$ ($d=2$). For the $L=4$ instance ($\delta_{\mathrm{Gr}}=4$, where the prior bounds $r-k=2$ and $\Delta=3$ are not tight): $0.572$ ($d=2$), $0.150$ ($d=3$, 120 restarts), $3\cdot10^{-30}$ ($d=4$). The search never found a degree-$3$ interpolant, and found one of degree $4$, as Theorem 1 requires.
+
+## 9. Open questions
+
+1. **Generic upper bound.** Prove Conjecture 7.5 for $r\ne2k$, i.e. that for generic data a tuple in $\prod_jV_{e_j}$ with $e_j\in\{e_0,e_0+1\}$ has independent node values. The graph witness of Theorem 7.4 (nodes on the curve $z\mapsto\operatorname{graph}(z^eI_k)$) lies in $\Omega_1$ only when $r=2k$; for other $(k,r)$ one needs a curve of degree $ke_0+\max(0,k-m_0)$ whose node values are in $\Omega_1$. The quantum Schubert calculus of $\mathrm{Gr}(k,r)$ [Be, RRW2] may help study this question. Such a comparison must retain the fixed marked nodes on the domain; no general identification with an ordinary Gromov-Witten invariant is asserted here.
+2. **Singular strata.** Theorem 1 reduces $d_{\min}$ on every stratum (overlapping bands, repeated targets, incidence tables) to the degree of a curve through Schubert conditions, computable exactly by the enumeration of Lemma A but without a closed formula; the block law of 6M3V Theorem 3.2 for orthogonal bands and the occupancy law of 52B6 are the two closed cases known.
+3. **Delay and error at fixed degree for $k>1$.** The rank–error dichotomy and the resonant trichotomy of 6M3V (Theorems 4.1 and 5.1) should generalise with the wedge condition $f_1(\zeta_i)\wedge\dots\wedge f_k(\zeta_i)\ne0$ replacing primitivity: $E_d=0$ iff some tuple in $\prod_jV_{e_j}$ with $\sum e_j\le d$ has independent node values *except* at a set of nodes that can be deleted as base points. The border degree $d_\partial$ and the divergence of the peak Wigner–Smith delay for $d_\partial\le d<d_{\min}$ are not worked out here.
+4. **Real and orthogonal versions.** For real data and real-orthogonal routers, Sottile's real Schubert calculus [So] suggests that the real $\delta_{\mathrm{Gr}}$ can exceed the complex one; the Fejér–Riesz and completion steps preserve realness, so the real law should again be the degree of a real curve.
+5. **Confluent nodes and fixed endpoint frames** are not addressed.
+
+## 10. Reproducibility
+
+The directory `repro/` accompanying this manuscript contains the author's scripts (`scratch_D2/`: `grassmann_degree_exact.py`, `inner_interpolant_numeric.py`, `extra_checks.py`, `extra_checks2.py`), the reviewer's scripts (`scratch_D2_review/`: `review_exact_delta.py`, `review_basepoint_additivity.py`, `review_potapov_search.py`), the exact witness files with their verifier (`witnesses/*.json`, `verify_witness.py`, `export_witnesses.py`), the version-2 checks (`scratch_v2/`: symbolic verification of Example 6.2 and of the graph witness of Theorem 7.4, the $(3,6)$ instances, the rerun of the $L=3$ Potapov stage), the workshop's script and its rerun (`taller_check/`), the original logs and the logs of every rerun, with commands, runtimes and expected final lines in `repro/README.md`. Environment: Python 3.12.6, SymPy 1.14.0, NumPy 2.5.1, SciPy 1.18.0. The exact computations are certificates: a witness tuple with nonzero wedges at all nodes is an exact upper bound, and the failure of every tuple of smaller degree sum is an exact lower bound. The numerical pipeline is a check of the two classical inputs (Fejér–Riesz factor, isometric realization and completion) on concrete instances, not part of the proof.
+
+## AI-assistance statement
+
+The received version declares substantial generative-AI assistance in drafting, mathematical derivations, code and review, attributed there to “Claude Fable 5.1” (Anthropic). That historical model identity, the reported review sessions and their independence have not been authenticated by this workshop. Historical descriptions of an “author” or “reviewer” script identify the supplied files, not a verified independent editorial review. OpenAI Codex assisted with the present private workshop revision: checking arguments and sources, correcting identified errors, running the checks recorded in the accompanying revision report, and preparing the PDF. Numerical checks support only their tested instances. This assistance is not an independent human peer review or a formal AIRR model-assessment report. Lluis Eriksson is the declared author and AIRR founder/operator; this conflict must be handled by the separate editorial process. Scientific authorship and approval remain with the author.
+
+The deposited v003 was subsequently assessed in actual OpenAI Codex calls by gpt-6-astra and gpt-5.6-sol on 9 September 2026. Their original reports and subsequent clarifications are retained. Both sets of comments informed this v004 revision; Astra had also participated in earlier manuscript preparation. A separate reviewing context does not erase that history. Neither the v003 reports nor this disclosure constitute approval of the revised v004 artifact.
+
+## Changes in internal revision v004 (9 September 2026)
+
+1. Explained cancellation of removable boundary singularities using boundedness on a punctured unit-circle arc.
+2. Added a fixed-version comparison with Buch--Pandharipande's virtual Tevelev degrees, separating parity context from existence, minimality and the analytic router construction.
+
+Made the already cited AJL completion theorem more readily checkable by adding its page, subparts, equations and the dimension correspondence; retained the existing inversion-of-variable argument.
+
+The earlier deposited v003 and its model reports are retained. This revision responds to their findings; it is not a final acceptance.
+
+## Changes in internal revision v003 (8 September 2026)
+
+1. Corrected matrix multiplication order in Lemma 5.3.
+2. Made the degree identity for an arbitrary minimal basis explicit before Theorem 5.7, so that the additivity proof does not rely on interpolation optimality.
+3. Separated the $L=1$ constant-curve case, its actual data span, and the degree-zero leading coefficient in Theorem 7.4.
+4. Corrected the degree of the multilinear witness condition in Conjecture 7.5 and clarified the base-point discussion at infinity.
+5. Qualified historical AI-review provenance; the new numerical and exact checks are separately recorded in the private revision report.
+
+## Changes in version 2 (8 September 2026)
+
+Answers to the AIRR workshop evaluation of `paper3.pdf` (TALLER-0003, 2026-09-08); the point-by-point response is `taller_feedback/RESPUESTA-TALLER-0003.md`.
+
+1. *Theorem 6.1, last clause (workshop: proven flaw; accepted).* The clause "the compiler attains $d_{\min}$ iff $P$ has no base point in $\mathbb D$" and the last sentence of the proof, which used $\operatorname{fdeg}(P)=\delta_{\mathrm{Gr}}$ for every admissible $P$, were wrong: admissibility means interpolation, not minimality. Corrected to "iff $\operatorname{fdeg}(P)=\delta_{\mathrm{Gr}}$ and $P$ has no base point in $\mathbb D$", with the proof fixed; the degree formula $\deg(PH_P^{-1})=\operatorname{fdeg}(P)+\#\{\text{base points in }\mathbb D\}$ and Theorem 1 are unaffected. The workshop's example ($k=1$, nodes $\pm1$, $P=(z+1,z(z-1))^T$, routers $S_1$, $S_2$) is reproduced and verified as Example 6.2. Abstract and Section 1.2 (item 3) reworded accordingly.
+2. *Scope of the generic value $2\lfloor L/2\rfloor$ (workshop: restrict or prove; accepted, proved).* Theorem 7.4 is now proved for all $L\ge1$, and for $\mathrm{Gr}(k,2k)$ with value $k\lfloor L/2\rfloor$, by the explicit witness $Y_i=\operatorname{graph}(\zeta_i^{\lfloor L/2\rfloor}I_k)$ and the lower bound of Proposition 7.3, whose statement now names the open set $\Omega_1$ on which it holds. The abstract, Sections 1.2, 7.3, Conjecture 7.5 and Open question 1 were updated; the quantum-cohomology paragraph is kept as a consistency remark.
+3. *Witnesses and computer-assisted parts (workshop: evidence not attached; accepted).* The exact data, witness pencils and lower-bound certificates behind Table 1 are now data files `repro/witnesses/*.json` with an independent verifier, described in Section 8, which also states which claims are computer-assisted. Theorem 7.4 no longer depends on them. Table 2 gains the $(3,6)$, $L=4,5,6$ row.
+4. *Comparison with all-pass subspace interpolation (workshop: compare in more detail; accepted).* Section 1.1 now describes the boundary SNIP of Bharath et al. (data, existence criterion, degree of the construction) and states the three differences with the routing problem; [ABKW] added for unconstrained minimal-degree interpolation.
+5. *Reproducibility.* `repro/README.md` rewritten with commands, runtimes and expected final lines; all fast scripts rerun on 2026-09-08 (identical verdicts), the workshop's `check_core.py` rerun, the $L=3$ stage of the Potapov search rerun.
+6. Date line and AI-assistance statement updated. No other mathematical statement changed.
+
+## References
+
+[ABKW] A. C. Antoulas, J. A. Ball, J. Kang, J. C. Willems, *On the solution of the minimal rational interpolation problem*, Linear Algebra Appl. 137/138 (1990), 511–573.
+
+[AJL] D. Alpay, P. E. T. Jorgensen, I. Lewkowicz, *Characterizations of rectangular (para)-unitary rational functions*, Opuscula Math. 36 (2016), no. 6, 695–716; arXiv:1410.0283. Theorem 2.1.
+
+[Be] A. Bertram, *Quantum Schubert calculus*, Adv. Math. 128 (1997), 289–305.
+
+[BGAP] A. S. Bharath, D. S. Gaharwar, K. Appaiah, D. Pal, *Design of discrete-time matrix all-pass filters using subspace Nevanlinna–Pick interpolation*, Signal Processing 204 (2023), 108839.
+
+[BD] V. Bolotnikov, H. Dym, *On Boundary Interpolation for Matrix Valued Schur Functions*, Mem. Amer. Math. Soc. 181 (2006), no. 856.
+
+[DR] M. A. Dritschel, J. Rovnyak, *The operator Fejér–Riesz theorem*, in: A Glimpse at Hilbert Space Operators: Paul R. Halmos in Memoriam, Oper. Theory Adv. Appl. 207, Birkhäuser, Basel, 2010, 223–254.
+
+[Fo] G. D. Forney, Jr., *Minimal bases of rational vector spaces, with applications to multivariable linear systems*, SIAM J. Control 13 (1975), 493–520.
+
+[JP] J.-N. Juang, R. S. Pappa, *An eigensystem realization algorithm for modal parameter identification and model reduction*, J. Guidance Control Dynam. 8 (1985), 620–627.
+
+[Ka] T. Kailath, *Linear Systems*, Prentice-Hall, 1980, §6.5.4.
+
+[MH] C. Martin, R. Hermann, *Applications of algebraic geometry to systems theory: the McMillan degree and Kronecker indices of transfer functions as topological and holomorphic system invariants*, SIAM J. Control Optim. 16 (1978), 743–755.
+
+[Po] V. P. Potapov, *The multiplicative structure of J-contractive matrix functions*, Trudy Moskov. Mat. Obshch. 4 (1955), 125–236; English transl. Amer. Math. Soc. Transl. (2) 15 (1960), 131–243.
+
+[RRW1] M. S. Ravi, J. Rosenthal, X. Wang, *Dynamic pole assignment and Schubert calculus*, SIAM J. Control Optim. 34 (1996), 813–832.
+
+[RRW2] M. S. Ravi, J. Rosenthal, X. Wang, *Degree of the generalized Plücker embedding of a Quot scheme and quantum cohomology*, Math. Ann. 311 (1998), 11–26.
+
+[Ro] M. Rosenblum, *Vectorial Toeplitz operators and the Fejér–Riesz theorem*, J. Math. Anal. Appl. 23 (1968), 139–147.
+
+[So] F. Sottile, *Rational curves on Grassmannians: systems theory, reality, and transversality*, in: Advances in Algebraic Geometry Motivated by Physics, Contemp. Math. 276, Amer. Math. Soc., 2001, 9–42; arXiv:math/0012079.
+
+[Wi] G. T. Wilson, *The factorization of matricial spectral densities*, SIAM J. Appl. Math. 23 (1972), 420–426.
+
+ARR-2026-07EH3CZRD89YC8JN, L. Eriksson, *Lossless Calibration Is Stored Memory: A Topological McMillan-Degree and Wigner–Smith Law*, 2026 (Lemma 3.2).
+
+ARR-2026-1WXCVX96S68GA9VK, L. Eriksson, *Orthogonal Spectral Fan-Out Costs $k(L-1)$ States: a Global Memory Law Beyond Pairwise Routing*, 2026 (Theorem 3.1, Lemma 3.2).
+
+ARR-2026-33BE6K3HW78F4T7F, L. Eriksson, *Exact Memory of Direct-Sum Spectral Fan-Out: Generic Maximality, Colliding Targets, and the Three-Line Phase Diagram*, 2026 (Theorem 1.1, Corollary 1.2, Theorem 7.2).
+
+ARR-2026-52B6MSS1W197W9T2, L. Eriksson, *Exact Memory of Finite Spectral Routing Tables: The Direct-Sum Occupancy Law and Its Singular Strata*, 2026 (Theorem 1.2, Lemma 2.1, Lemma 3.1, Theorems 5.1–5.2, Limitation 8.2).
+
+ARR-2026-6M3VGTXZ6W8JW9C9, L. Eriksson, *Projective Memory and Resonant Bottlenecks in Passive Spectral Routing*, 2026 (Definition 2.1, Lemma 2.2, Theorem 2.3, Corollary 2.4, Theorems 3.2, 4.1, 5.1, 9.2, 11.1).
+
+[BP-Tev] A. S. Buch and R. Pandharipande, *Tevelev degrees in Gromov-Witten theory*, arXiv:2112.14824v1 [math.AG], 2021, Sections 1.1 and 1.3, Theorem 1.4. [Fixed version](https://arxiv.org/abs/2112.14824v1).

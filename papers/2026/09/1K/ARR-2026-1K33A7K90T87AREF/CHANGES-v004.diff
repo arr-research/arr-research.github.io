@@ -1,0 +1,64 @@
+--- deposited-v003/paper.md
++++ candidate-v004/paper.md
+@@ -2,7 +2,7 @@
+ 
+ **Lluis Eriksson** (Independent researcher)
+ 
+-8 September 2026 (internal workshop revision v003; received version 2 preserved)
++9 September 2026 (internal workshop revision v004; received version 2 and deposited v003 preserved)
+ 
+ ## Abstract
+ 
+@@ -83,6 +83,10 @@
+ 
+ *Proof.* The cardinalities are $d-i-1$ each; with $n=d-i$, $\sum I+\sum J-\sum K=-1+n+\binom{n-1}{2}=\binom n2=r(r+1)/2$. The partitions are read off from the definition ($i_r=d-2$ gives $i_r-r=i-1$, and so on down to $i_1-1=i-2$; in $J$ only the last index exceeds its position, by one). $\lambda(K)/\lambda(I)$ is a single box, so the Pieri rule gives $c=1$ [Fu97]. The left side of (2.2) is $s_{i-1}+(s_{i+1}+\dots+s_{d-2})-(s_{d-1}+\dots+s_{i+3})-s_{i+1}=s_{i-1}+s_{i+2}-s_{d-1}$, the right side $\sum_{k=i}^{d-2}\lambda_k=A_i$. $\square$
+ 
++*Example ($d=6$, $i=2$).* Here $r=3$, $I=\{1,3,4\}$, $J=\{1,2,4\}$, $K=\{2,3,4\}$. The associated partitions, with trailing zeros retained, are $(1,1,0)$, $(1,0,0)$ and $(1,1,1)$. Adding one box in the third row is the unique Pieri step, so the coefficient is one. The sum condition is $8+7-9=6=3\cdot4/2$. With $s_6=0$, the left side of (2.2) is
++$$ (s_1+s_3+s_4)+(-s_6-s_5-s_3)=s_1+s_4-s_5.$$
++For inertia $(4,2)$ without padding, its right side is $a_2+a_3+a_4=A_2$. This gives the representative inequality $s_1+s_4-s_5\ge A_2$ with the complete Horn/Pieri data.
++
+ The triple $(\mathrm{Pi})_i$ is not of Lidskii–Wielandt type (neither $I$ nor $J$ is an initial segment $(1..r)$). Its membership in Fulton's recursively defined $T^d_r$ was checked directly for $d\le 8$ (author's generator) and $d\le 9$ (reviewer's independent generator), and $c=1$ for $d\le12$ by both LR implementations. Several Horn triples share the $s$-form $s_{i-1}+s_{i+2}-s_{d-1}$ — for instance the Lidskii–Wielandt triple $I=K=\{i-1,i+2\}$, $J=(1,2)$, whose right side is only $\lambda_{i-1}+\lambda_{i+2}$; the exhaustive enumeration of $T^d_r$ in `pieri_triples_search.py` lists all of them for $d\le9$ ($6$; $12,40$; $32,24$; $94,48,160$ triples for $d=6,\dots,9$ and $i=2,4,\dots$) and confirms that $(\mathrm{Pi})_i$ is the only one whose right side is $A_i$. That a triple outside the Lidskii–Wielandt family is genuinely needed is visible in the linear program: restricted to the Lidskii–Wielandt-type triples ($I=K$, $J=(1..r)$ or $J=K$, $I=(1..r)$, which include all Weyl inequalities), the Horn LP (2.1) falls short of $\Phi$ by up to $11\%$ at $G$-chamber points in $d=6,7$ (same script, floating-point HiGHS).
+ 
+ ### 4.2 Certificates
+@@ -188,10 +192,23 @@
+ 
+ *Proof of 3.* The initial state is $(A_1,[b_2,b_2])$ (this uses $b_2\le b_1$). Let $(A_{2t+1},[lo_t,hi_t])$ be the state before the pair $\{a_{2t+1},a_{2t+2}\}$. By Lemma 5.2, $lo_t=\max\big(0,\ b_2-(a_1+a_3+\dots+a_{2t-1})\big)$ and
+ $$hi_t=\min\left\{\begin{gathered}b_2-(a_2+\dots+a_{2t}),\\ A_{2r}-lo_{r-1}-(a_{2r+2}+\dots+a_{2t}),\\ \tfrac12A_{2r+1}-(a_{2r+2}+\dots+a_{2t})\ \ (1\le r\le t)\end{gathered}\right\}.$$
++*Induction for the displayed endpoints.* Empty sums are zero, and all dotted sums above advance by two. At $t=0$ the minimum contains only $b_2$, so $lo_0=hi_0=b_2$. Applying Lemma 5.2 to the next nonterminal pair gives
++$$\begin{aligned}
++lo_{t+1}&=\max(0,lo_t-a_{2t+1}),\\
++hi_{t+1}&=\min\{hi_t-a_{2t+2},\ A_{2t+2}-lo_t,\ \tfrac12 A_{2t+3}\}.
++\end{aligned}$$
++The first identity proves the formula for $lo_{t+1}$. Subtracting $a_{2t+2}$ from every candidate in $hi_t$ appends that term to each even-indexed tail sum; the other two candidates are precisely the displayed terms with $r=t+1$ and an empty tail. This proves the closed form by induction at every retained state. Equivalently the formulas can be unfolded algebraically before testing feasibility; the terminal and intermediate checks below show that none of the required intervals is empty on the stated region.
++
+ *Terminal conditions.* For $m$ even the last layer is the pair $\{a_{m-1},a_m\}$ and requires $lo_{q-1}\le a_m\le hi_{q-1}$, $q=m/2$; for $m$ odd the last layer is the singleton $\{a_m\}$ and requires $lo_q=0\le hi_q$, $q=(m-1)/2$. The $lo$ condition is $b_2\le a_1+a_3+\dots+a_{m-3}+a_m=E_1-g_{m-1}$ ($m$ even) or $b_2\le a_1+\dots+a_{m-2}=E_1-g_m$ ($m$ odd). In the $hi$ condition the first term gives $b_2\ge E_2$; the $r$-th middle term gives, after simplifying $A_{2r}-(a_{2r+2}+a_{2r+4}+\dots)=a_{2r}+E_{2r+1}$, the condition $b_2\le a_1+a_3+\dots+a_{2r-3}+a_{2r}+E_{2r+1}=E_1-g_{2r-1}$ for $j=2r-1=1,3,\dots$ ($r\le q-1$ for $m$ even, $r\le q$ for $m$ odd); the third terms are automatic since $A_{2r+1}=E_{2r+1}+E_{2r+2}\ge2E_{2r+2}$. Together the terminal conditions are exactly $E_2\le b_2\le E_1-g_j$ for every odd $j\le m$, and they are necessary.
+ *Intermediate conditions.* $lo_t\le hi_t$ for $t$ before the terminal index. If $lo_t=0$ each term of $hi_t$ exceeds the corresponding terminal term, so the terminal conditions suffice. If $lo_t=b_2-(a_1+\dots+a_{2t-1})>0$ then also $lo_{r-1}>0$ for $r\le t$ ($lo$ is nonincreasing), and the three conditions become: for the first term, $a_1+a_3+\dots+a_{2t-1}\ge a_2+\dots+a_{2t}$, automatic; for the middle term with index $r$, after substituting $lo_{r-1}$,
+ $$A_{2r}-(a_{2r+2}+\dots+a_{2t})+(a_1+\dots+a_{2r-3})+(a_1+\dots+a_{2t-1})\ \ge\ 2b_2,$$
+-whose left side minus $P$ equals $\sum_{i<r}(a_{2i-1}-a_{2i})+\sum_{i=r}^{t-1}(a_{2i+1}-a_{2i+2})\ge0$, so it holds because $2b_2\le P$; for the third term, similarly, the left side minus $P/2$ is a sum of nonnegative differences $a_{2i-1}-a_{2i}$ and $a_{2i+1}-a_{2i+2}$ times $\tfrac12$ or $1$. Thus the intermediate conditions in the case $lo_t>0$ are consequences of the stratum condition $b_2\le b_1$ and not of the terminal conditions alone; on the stratum they are harmless. (For $m=2$ there is no intermediate step: the single pair $\{a_1,a_2\}$ is terminal and requires $b_2=lo_0\le a_2\le hi_0=b_2$, i.e. $b_2=a_2=E_2=E_1-g_1$, the degenerate $F_0$ region.) $\square$
++whose left side minus $P$ equals $\sum_{i<r}(a_{2i-1}-a_{2i})+\sum_{i=r}^{t-1}(a_{2i+1}-a_{2i+2})\ge0$, so it holds because $2b_2\le P$; for the third term, put $O_t=\sum_{i=1}^t a_{2i-1}$. Since $A_{2r+1}=P-\sum_{i=1}^r(a_{2i-1}+a_{2i})$, the exact identity is
++$$\begin{aligned}
++\frac12A_{2r+1}-\sum_{i=r+1}^t a_{2i}+O_t-b_2
++&=\frac P2-b_2+\frac12\sum_{i=1}^r(a_{2i-1}-a_{2i})\\
++&\quad+\sum_{i=r+1}^t(a_{2i-1}-a_{2i})\ \ge0.
++\end{aligned}$$
++The first term is nonnegative because $P=b_1+b_2$ and $b_1\ge b_2$; the remaining differences are nonnegative by the ordering of the $a_i$. Empty sums are zero, so this includes $r=t$ and all equality cases. Thus the third candidate for $hi_t$ is at least $lo_t=b_2-O_t$. Thus the intermediate conditions in the case $lo_t>0$ are consequences of the stratum condition $b_2\le b_1$ and not of the terminal conditions alone; on the stratum they are harmless. (For $m=2$ there is no intermediate step: the single pair $\{a_1,a_2\}$ is terminal and requires $b_2=lo_0\le a_2\le hi_0=b_2$, i.e. $b_2=a_2=E_2=E_1-g_1$, the degenerate $F_0$ region.) $\square$
+ 
+ All three regions were re-derived independently by the reviewer's recursion (`my_construct.forward`) and are checked against the exact recursion on a fine rational grid with every tie and boundary case, $m\le10$ (`coverage_exact.py`, Section 9).
+ 
+@@ -279,6 +296,16 @@
+ ## AI-assistance statement
+ 
+ The received version declares substantial generative-AI assistance in drafting, mathematical derivations, code and review, attributed there to “Claude Fable 5.1” (Anthropic). That historical model identity, the reported review sessions and their independence have not been authenticated by this workshop. Historical descriptions of an “author” or “reviewer” script identify the supplied files, not a verified independent editorial review. OpenAI Codex assisted with the present private workshop revision: checking arguments and sources, correcting identified errors, running the checks recorded in the accompanying revision report, and preparing the PDF. Numerical checks support only their tested instances. This assistance is not an independent human peer review or a formal AIRR model-assessment report. Lluis Eriksson is the declared author and AIRR founder/operator; this conflict must be handled by the separate editorial process. Scientific authorship and approval remain with the author.
++
++The deposited v003 was subsequently assessed in actual OpenAI Codex calls by gpt-6-astra and gpt-5.6-sol on 9 September 2026. Their original reports and subsequent clarifications are retained. Both sets of comments informed this v004 revision; Astra had also participated in earlier manuscript preparation. A separate reviewing context does not erase that history. Neither the v003 reports nor this disclosure constitute approval of the revised v004 artifact.
++
++## Changes in internal revision v004 (9 September 2026)
++
++1. Expanded the third candidate inequality in Proposition 5.4(3) into its exact sum of ordered differences, including empty sums and equality cases. The general identity has a direct derivation and supplementary symbolic checks.
++
++Expanded the induction for both interval endpoints in Proposition 5.4(3) and supplied the complete d=6, i=2 Horn/Pieri example, including partitions, coefficient and both sides of the inequality.
++
++The earlier deposited v003 and its model reports are retained. This revision responds to their findings; it is not a final acceptance.
+ 
+ ## Changes in internal revision v003 (8 September 2026)
+ 
