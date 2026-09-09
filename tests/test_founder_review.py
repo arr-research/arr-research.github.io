@@ -54,6 +54,19 @@ class FounderReviewTests(unittest.TestCase):
         result=self.client.post(f'/admin/submission/{case_id}/founder-authorship',data={'csrf_token':token,'founder_author':'on','reason':'A sufficiently long explanation cannot authorize another operator role.'})
         self.assertEqual(result.status_code,403)
 
+    def test_another_conflict_blocks_founder_self_decision(self):
+        case_id=self.upload(conflict=True)
+        self.assertEqual(self.declare(case_id).status_code,302)
+        token=self.login_session('operator@example.org')
+        result=self.client.post(f'/admin/submission/{case_id}/conflict',data={'csrf_token':token,'reason':'An additional financial conflict beyond authorship was identified.'})
+        self.assertEqual(result.status_code,302)
+        with self.app.app_context():
+            row=get_db().execute('SELECT * FROM submissions WHERE id=?',(case_id,)).fetchone()
+            actor=get_db().execute("SELECT * FROM users WHERE email='operator@example.org'").fetchone()
+            self.assertTrue(row['founder_authored'])
+            self.assertTrue(row['other_operator_conflict'])
+            self.assertFalse(self.app.extensions['editorial']['founder_may_decide'](row,actor))
+
     def test_prior_involvement_requires_declared_exception(self):
         case_id=self.upload(conflict=True)
         with self.app.app_context():
@@ -103,7 +116,7 @@ class FounderReviewTests(unittest.TestCase):
         case_id=self.upload(conflict=True)
         path,value=self.evidence_file(case_id)
         cli=self.app.test_cli_runner()
-        self.assertEqual(cli.invoke(args=['prepare-founder-round',case_id,str(path)]).exit_code,0)
+        self.assertEqual(cli.invoke(args=['prepare-founder-round',case_id,str(path),'--request-changes']).exit_code,0)
         with self.app.app_context():
             row=get_db().execute('SELECT * FROM submissions WHERE id=?',(case_id,)).fetchone()
             report=model_review_template(row)
@@ -121,5 +134,5 @@ class FounderReviewTests(unittest.TestCase):
         self.assertFalse(json.loads(result.output)['model_gate_ready'])
         with self.app.app_context():
             self.assertEqual(json.loads(get_db().execute('SELECT response_json FROM model_reviews').fetchone()[0]),report)
+            self.assertEqual(get_db().execute('SELECT status FROM submissions WHERE id=?',(case_id,)).fetchone()[0],'changes_requested')
         self.assertNotEqual(cli.invoke(args=['record-assessment',str(report_path),str(runtime)]).exit_code,0)
-
