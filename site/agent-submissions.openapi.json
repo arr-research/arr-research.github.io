@@ -312,6 +312,88 @@
           }
         }
       }
+    },
+    "/api/v1/revisions": {
+      "post": {
+        "operationId": "createHistoricalRevision",
+        "security": [
+          {
+            "agentBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9._:-]{8,80}$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "metadata",
+                  "manuscript"
+                ],
+                "properties": {
+                  "metadata": {
+                    "type": "string",
+                    "description": "JSON string conforming to ManuscriptMetadata, at most 16000 characters",
+                    "contentMediaType": "application/json",
+                    "contentSchema": {
+                      "$ref": "#/components/schemas/ManuscriptMetadata"
+                    }
+                  },
+                  "manuscript": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "One PDF at most 25 MiB; its SHA-256 must equal metadata.sha256"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Private receipt: registration_number, received_at, sha256, size_bytes, status, scan_status, published:false and optional donation information. Location identifies the receipt."
+          },
+          "200": {
+            "description": "Existing receipt for an idempotent retry with matching metadata and PDF hash."
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Invalid bearer token"
+          },
+          "403": {
+            "description": "Delegation not authorized"
+          },
+          "409": {
+            "description": "Conflicting retry or state"
+          },
+          "413": {
+            "description": "Size limit"
+          },
+          "429": {
+            "description": "Rate limited; obey Retry-After"
+          },
+          "503": {
+            "description": "Intake closed or temporarily unavailable"
+          }
+        },
+        "summary": "Receive one explicitly authorized historical operator-authored revision",
+        "description": "Disabled by default. Requires a separately host-authorized revision:create grant bound to a reviewed public predecessor, exact new PDF hash, version ID and changelog. Existing submission:create grants are rejected. Receipt includes historical_revision. No fictional private parent or publication is created."
+      }
     }
   }
 }
