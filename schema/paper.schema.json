@@ -26,7 +26,7 @@
     "editorial"
   ],
   "properties": {
-    "schema_version": {"enum": ["1.0", "1.1", "1.2", "1.3"]},
+    "schema_version": {"enum": ["1.0", "1.1", "1.2", "1.3", "1.4"]},
     "record_id": {
       "type": "string",
       "pattern": "^arr:record:[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
@@ -55,7 +55,7 @@
       }
     },
     "date": {"type": "string", "format": "date"},
-    "status": {"enum": ["accepted", "corrected", "withdrawn", "archived"]},
+    "status": {"enum": ["working_paper", "accepted", "corrected", "withdrawn", "archived"]},
     "archival_source": {
       "type": "object",
       "additionalProperties": false,
@@ -183,7 +183,7 @@
         "status": {"enum": ["not_assessed", "pass", "fail"]},
         "completed_at": {"type": "string", "format": "date"},
         "critical_objections_unresolved": {"type": "integer", "minimum": 0},
-        "human_signoff": {"const": true},
+        "human_signoff": {"type": "boolean"},
         "evaluators": {
           "type": "array",
           "items": {
@@ -219,7 +219,7 @@
       "additionalProperties": false,
       "required": ["decision", "signed_by", "conflicts", "statement"],
       "properties": {
-        "decision": {"enum": ["founder_pilot", "standard_acceptance", "correction", "withdrawal", "historical_import"]},
+        "decision": {"enum": ["working_deposit", "founder_pilot", "standard_acceptance", "correction", "withdrawal", "historical_import"]},
         "signed_by": {"type": "string", "minLength": 2},
         "conflicts": {"type": "array", "items": {"type": "string", "minLength": 3}, "uniqueItems": true},
         "statement": {"type": "string", "minLength": 20}
@@ -229,10 +229,22 @@
   "allOf": [
     {
       "if": {
-        "properties": {"schema_version": {"enum": ["1.1", "1.2", "1.3"]}},
+        "properties": {"schema_version": {"enum": ["1.1", "1.2", "1.3", "1.4"]}},
         "required": ["schema_version"]
       },
       "then": {"required": ["record_type"]}
+    },
+    {
+      "if": {
+        "properties": {"status": {"const": "working_paper"}},
+        "required": ["status"]
+      },
+      "then": {
+        "properties": {
+          "schema_version": {"const": "1.4"},
+          "editorial": {"properties": {"decision": {"const": "working_deposit"}}}
+        }
+      }
     },
     {
       "if": {
@@ -244,7 +256,7 @@
     },
     {
       "if": {
-        "properties": {"schema_version": {"const": "1.2"}, "version": {"pattern": "^v([2-9]|[1-9][0-9]+)$"}},
+        "properties": {"schema_version": {"enum": ["1.2", "1.4"]}, "version": {"pattern": "^v([2-9]|[1-9][0-9]+)$"}},
         "required": ["schema_version", "version"]
       },
       "then": {"required": ["supersedes_version_id", "revision"]}

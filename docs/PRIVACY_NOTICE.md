@@ -1,6 +1,6 @@
-# AIRR privacy notice — ARR-PRIVACY-1.6
+# AIRR privacy notice — ARR-PRIVACY-1.7
 
-**Effective:** 2026-09-08
+**Effective:** 2026-09-10
 **Provider references clarified before opening:** 2026-09-08
 **Brand wording updated:** 2026-09-06; see [identity and continuity](BRAND_IDENTITY.md).
 
@@ -37,7 +37,9 @@ entity or contact details change.
   appeal and legal-hold information;
 - security data: pseudonymized IP-rate key, authentication and access events,
   malware result, timestamps and technical error information; and
-- after acceptance, public scholarly metadata and the licensed research object.
+- after separate exact-version permission, public scholarly metadata and the
+  licensed research object, labelled either Working paper or Accepted according to
+  the recorded editorial state.
 
 Do not submit special-category personal data, government identifiers, financial
 credentials, medical records, confidential peer-review material, export-controlled
@@ -80,8 +82,9 @@ For your privacy, omit home addresses, personal telephone numbers, private email
 addresses, identity numbers and other unnecessary personal or sensitive information.
 Include other people's details only when necessary and lawful, with appropriate
 authority for co-author credit. AIRR does not automatically strip those details.
-Submission is private; the separately authorized public version includes its author
-credit and PDF contents and may be copied or indexed by others.
+Submission begins privately; a separately authorized Working-paper or accepted
+version includes its author credit and PDF contents and may be copied or indexed by
+others.
 
 An author name remains personal data. Choosing to include it is not a waiver of
 applicable data-protection rights or a release of AIRR from its responsibilities.
@@ -115,7 +118,7 @@ an external legal certification or an application for an exemption.
 | Receive a direct private deposit, communicate, assess it and administer withdrawal | steps requested before and performance of the deposit agreement (Article 6(1)(b)) |
 | Protect the form and editor accounts, quarantine files, prevent abuse, investigate integrity issues and keep a proportionate audit trail | AIRR's and users' legitimate interests in a secure, accountable scholarly service (Article 6(1)(f)) |
 | Respond to binding authority requests and applicable record obligations | legal obligation where one applies (Article 6(1)(c)) |
-| Publish an accepted manuscript, its authorship, provenance and licenses worldwide | performance of the deposit agreement (Article 6(1)(b)); public distribution also follows the depositor's chosen license |
+| Publish a separately authorized Working paper or accepted manuscript, its authorship, provenance and licenses worldwide | performance of the deposit agreement (Article 6(1)(b)); public distribution also follows the depositor's chosen license |
 | Send a private manuscript to operator-selected external frontier-model evaluators solely for the disclosed pre-publication screening | steps requested before and performance of the deposit agreement (Article 6(1)(b)); the upload form acknowledges the screening requirement; a separate recorded confirmation of the named-provider notice authorizes the exact transfer |
 
 AIRR makes no solely automated acceptance or rejection decision and does not
@@ -152,11 +155,13 @@ These disclosures describe the current configuration, not an external legal
 certification. Contact AIRR about rights concerning submission data; the linked
 provider terms explain provider contacts and applicable safeguards.
 
-Private manuscripts are not stored in the public GitHub repository. If accepted,
-the disclosed author information, scholarly metadata and licensed research object
-are intentionally published worldwide through AIRR, GitHub and mirrors. The public
-nature and practical irreversibility of third-party copies will be shown again
-before final publication. Frontier-model providers receive the exact manuscript and
+Private manuscripts are not stored in the public GitHub repository unless the
+depositor separately authorizes the exact version for public release. A public
+Working paper is clearly labelled as outside the accepted collection. The disclosed
+author information, scholarly metadata and licensed research object are then
+intentionally published worldwide through AIRR, GitHub and mirrors. The public
+nature and practical irreversibility of third-party copies are shown before that
+authorization. Frontier-model providers receive the exact manuscript and
 case hash only for the disclosed assessment purpose. Before transfer, the depositor separately confirms a notice identifying the providers/models, confidentiality controls, retention and transfer safeguards. The operator records that confirmation, provider,
 model identifier, time and response hash. Provider terms, confidentiality controls
 and international-transfer safeguards must be reviewed before use; AIRR selects a
@@ -199,7 +204,9 @@ available**, rather than being presented as zero.
 The binding schedule is in [`RETENTION_SCHEDULE.md`](RETENTION_SCHEDULE.md).
 Rejected manuscript bytes are erased automatically 30 days after the decision;
 withdrawn bytes after 7 days; malware is erased immediately after detection.
-Accepted private working copies are erased 30 days after verified public release.
+A private review copy behind a public Working paper remains available while its
+assessment is active. Accepted private working copies are erased 30 days after
+verified public release.
 A minimal decision/audit record is retained for three years. A documented legal
 hold pauses deletion only for the material and time necessary and is reviewed at
 least every 90 days.

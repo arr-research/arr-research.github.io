@@ -287,7 +287,7 @@ def build_search(base: str, canonical_url: str, index_version: str, papers: list
     year_options = ''.join(f'<option>{esc(year)}</option>' for year in years)
     filters = f'''<div class="search-filters">
       <label>Subject<select name="subject"><option value="">All subjects</option>{subject_options}</select></label>
-      <label>Record status<select name="status"><option value="">All records</option><option value="accepted">Accepted</option><option value="corrected">Corrected</option><option value="archived">Historical imports</option><option value="withdrawn">Withdrawn</option></select></label>
+      <label>Record status<select name="status"><option value="">All records</option><option value="working_paper">Working papers</option><option value="accepted">Accepted</option><option value="corrected">Corrected</option><option value="archived">Historical imports</option><option value="withdrawn">Withdrawn</option></select></label>
       <label>Year<select name="year"><option value="">All years</option>{year_options}</select></label>
       <label>Sort by<select name="sort"><option value="relevance">Relevance</option><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="title">Title A–Z</option></select></label>
       <button class="filter-reset" type="button" data-reset-filters>Clear filters</button>
@@ -312,7 +312,7 @@ def build_search(base: str, canonical_url: str, index_version: str, papers: list
 
 
 def status_badge(value: str) -> str:
-    labels = {"accepted": "Accepted", "corrected": "Corrected", "withdrawn": "Withdrawn", "archived": "Historical import"}
+    labels = {"working_paper": "Working paper", "accepted": "Accepted", "corrected": "Corrected", "withdrawn": "Withdrawn", "archived": "Historical import"}
     return f'<span class="badge badge-{esc(value)}">{esc(labels.get(value, value.title()))}</span>'
 
 
@@ -579,17 +579,23 @@ def paper_card(
     )
     archival = metadata.get("archival_source")
     chronology_label = "First submitted to ai.vixra" if archival else ("Published" if timestamp["publication_state"] == "published" else "Deposit recorded")
+    working_note = (
+        '<p class="working-paper-note"><strong>Working paper.</strong> Citable, but not admitted to the AIRR accepted collection.</p>'
+        if metadata.get("status") == "working_paper" else ""
+    )
     return f"""
 <article class="paper-card">
   <div class="paper-card-header"><div class="paper-meta">{type_badge(metadata)}{status_badge(metadata['status'])}<span>{esc(metadata['id'])} · {esc(metadata['version'])}</span></div><span class="paper-date">{chronology_label} {exact_time(paper_chronology(metadata, timestamp))}</span></div>
   <h3><a href="{base}/{record_route(metadata)}/{quote(metadata['id'])}/">{esc(metadata['title'])}</a></h3>
   <div class="paper-byline"><p class="authors">{authors}</p><a class="paper-card-cite" href="{base}{version_path(metadata)}#cite">Cite this version</a></div>
   <p class="paper-summary">{esc(metadata['abstract'])}</p>
+  {working_note}
 </article>"""
 
 
 def build_home(papers: list, timestamps: dict, base: str, canonical_url: str, author_lookup: dict[str, dict] | None = None, metrics: dict | None = None, author_count: int = 0, google_site_verification: str = "", bing_site_verification: str = "") -> str:
     accepted_papers = sum(p.metadata["status"] in {"accepted", "corrected"} and p.record_type == "research_paper" for p in papers)
+    working_papers = sum(p.metadata["status"] == "working_paper" and p.record_type == "research_paper" for p in papers)
     archived_papers = sum(p.metadata["status"] == "archived" and p.record_type == "research_paper" for p in papers)
     accepted_notes = sum(p.metadata["status"] != "withdrawn" and p.record_type == "technical_note" for p in papers)
     recent = "".join(paper_card(p.metadata, timestamps[(p.id, p.version)], base, author_lookup, metrics) for p in papers[:6])
@@ -614,10 +620,11 @@ def build_home(papers: list, timestamps: dict, base: str, canonical_url: str, au
   </div>
 </section>
 <nav class="home-subjects" aria-label="Research subjects"><span class="eyebrow">Subjects</span><div class="subject-strip">{subject_links(papers, base, 6)}</div><a class="home-all-subjects" href="{base}/subjects/">All subjects →</a></nav>
-<section class="recent"><div class="section-heading"><div><span>Catalogue</span><h2>Latest research</h2></div><a href="{base}/papers/">View papers</a></div><p class="home-admission-note">New admissions require a disclosed model audit and human sign-off. Historical imports are labelled separately. <a href="{base}/protocol/">Admission policy</a></p>{recent}</section>
+<section class="recent"><div class="section-heading"><div><span>Catalogue</span><h2>Latest research</h2></div><a href="{base}/papers/">View papers</a></div><p class="home-admission-note">Working papers are citable and remain outside the accepted collection. Admission requires a disclosed model audit and human sign-off. Historical imports are labelled separately. <a href="{base}/protocol/">Admission policy</a></p>{recent}</section>
 <section class="frontier-gate" aria-label="AIRR admission standard"><strong>AIRR admission gate</strong><span>operator-selected frontier audit</span><span>exact PDF + SHA-256</span><span>0 unresolved material objections</span><span>human sign-off</span></section>
 <section class="stats" aria-label="Archive statistics">
   <div><strong>{accepted_papers}</strong><span>admitted papers</span></div>
+  <div><strong>{working_papers}</strong><span>working papers</span></div>
   <div><strong>{archived_papers}</strong><span>historical imports</span></div>
   <div><strong>{accepted_notes}</strong><span>technical notes</span></div>
   <div><strong>{author_count}</strong><span>author profiles</span></div>
@@ -649,7 +656,7 @@ def build_papers_index(papers: list, timestamps: dict, base: str, canonical_url:
     selected = research_papers[start:start + page_size]
     cards = "".join(paper_card(p.metadata, timestamps[(p.id, p.version)], base, author_lookup, metrics) for p in selected)
     if not cards:
-        cards = '<section class="empty-state compact"><h2>No accepted papers yet.</h2><p>The public catalogue begins only after the first candidate completes the AIRR workflow.</p></section>'
+        cards = '<section class="empty-state compact"><h2>No public papers yet.</h2><p>The catalogue begins when the first clean, authorized Working paper is released.</p></section>'
     previous_url = f"{base}/papers/" if page == 2 else f"{base}/papers/page/{page - 1}/"
     next_url = f"{base}/papers/page/{page + 1}/"
     pagination = '<nav class="pagination" aria-label="Catalogue pages">'
@@ -658,7 +665,7 @@ def build_papers_index(papers: list, timestamps: dict, base: str, canonical_url:
     pagination += f'<a href="{next_url}">Next 50 →</a>' if page < page_count else '<span>Next 50 →</span>'
     pagination += '</nav>'
     content = f"""
-<section class="page-intro"><span>Public catalogue</span><h1>Research papers</h1><p>Read the latest research or find a specific topic. Historical imports are labelled and have not passed AIRR's admission audit.</p>{search_form(base)}<div class="browse-tools"><a href="{base}/subjects/">Browse by subject</a><a href="{base}/search/">Filter by subject, year and status</a></div></section>
+<section class="page-intro"><span>Public catalogue</span><h1>Research papers</h1><p>Read and cite working papers while their review continues. Only records marked Accepted belong to the AIRR accepted collection; historical imports are labelled separately.</p>{search_form(base)}<div class="browse-tools"><a href="{base}/subjects/">Browse by subject</a><a href="{base}/search/">Filter by subject, year and status</a></div></section>
 {pagination}
 <section class="catalogue">{cards}</section>
 {pagination}
@@ -970,6 +977,12 @@ def build_paper_page(
     )
     source_history = ""
     archival_notice = ""
+    working_notice = ""
+    if metadata.get("status") == "working_paper":
+        working_notice = (
+            '<aside class="version-notice working"><strong>Working paper — not admitted to the AIRR accepted collection.</strong> '
+            'This exact version is public and citable while assessment and revision continue. Its presence records a deposit, not AIRR acceptance, peer review or a guarantee of correctness.</aside>'
+        )
     if isinstance(archival, dict):
         source_items = "".join(
             f'<li><a href="{esc(item["pdf_url"])}"><strong>{esc(item["version"])}</strong></a><span>{exact_time(item["submitted_at"])} · original ai.vixra file</span></li>'
@@ -1026,7 +1039,7 @@ def build_paper_page(
       <p class="citation-text" id="citation-text" tabindex="-1">{esc(exports['txt'].strip())}</p>
       <div class="citation-actions"><button class="button" type="button" hidden data-copy-target="citation-text" data-copy-label="Citation">Copy citation</button>{export_links}</div>
       <label class="permalink-label" for="paper-permalink">Permanent link to this version</label><div class="permalink-row"><input id="paper-permalink" type="url" readonly value="{esc(permanent_url)}"><button class="button secondary" type="button" hidden data-copy-target="paper-permalink" data-copy-label="Version link">Copy link</button></div>
-      <p class="citation-help">Use this version link to cite the manuscript you read. AIRR acceptance is not journal peer review. Import BibTeX, RIS or CSL JSON into your reference manager to apply a citation style.</p>
+      <p class="citation-help">Use this version link to cite the manuscript you read. A Working paper label means the version has not entered the AIRR accepted collection. AIRR acceptance is not journal peer review. Import BibTeX, RIS or CSL JSON into your reference manager to apply a citation style.</p>
       <p class="copy-status" role="status" aria-live="polite" data-copy-status></p>
     </section>'''
     preview = ''
@@ -1037,6 +1050,7 @@ def build_paper_page(
 <article class="paper-page">
   <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="{base}/">Home</a><span aria-hidden="true">/</span><a href="{base}/{route}/">{'Technical notes' if route == 'notes' else 'Papers'}</a><span aria-hidden="true">/</span><span>{esc(metadata['id'])}</span></nav>
   {version_notice}
+  {working_notice}
   {archival_notice}
   <div class="paper-meta">{type_badge(metadata)}{status_badge(metadata['status'])}<span>{esc(metadata['id'])} · {esc(metadata['version'])} · {esc(metadata['date'])}</span></div>
   <h1>{esc(metadata['title'])}</h1>
@@ -1253,7 +1267,7 @@ def build_submit(
   <div class="rank-metric"><strong>{value:,}</strong><span>{esc(metric_label)}</span></div>
 </li>""")
     if not rows:
-        rows.append('<li class="ranked-paper empty"><div class="rank-paper-main"><h3>No accepted papers yet.</h3></div></li>')
+        rows.append('<li class="ranked-paper empty"><div class="rank-paper-main"><h3>No public papers yet.</h3></div></li>')
     previous_link = (
         f'<a class="pager-link" rel="prev" href="{submit_page_url(base, page_number - 1)}">← Previous 50</a>'
         if page_number > 1
@@ -1308,8 +1322,8 @@ def build_agents(base: str, canonical_url: str, intake_url: str = '') -> str:
 
 def build_privacy(base: str, canonical_url: str) -> str:
     content = f"""
-<section class="page-intro"><span>ARR-PRIVACY-1.6 · effective 2026-09-08</span><h1>Privacy is separated from publication.</h1><p>The controller is Lluis Eriksson, a natural person in Sweden, acting as founder, registry operator and responsible editor. Contact: <a href="mailto:lluiseriksson@gmail.com?subject=AIRR%20privacy">lluiseriksson@gmail.com</a>. No DPO is designated. Postal contact: Ångstavägen 44, 834 99 Tandsbyn, Sweden.</p></section>
-<section id="author-credit"><h2>Your paper may include your author name.</h2><p>You may use your real name, a permitted pen name, or Anonymous. The private login alias is separate. For your privacy, omit home addresses, personal telephone numbers, private email addresses, identity numbers and other unnecessary personal or sensitive information from the PDF and its document properties. Include other people's details only when necessary and lawful. AIRR does not automatically remove them.</p><details><summary>Academic expression and data protection</summary><p><a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng#art_85">GDPR Article 85</a> and <a href="https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/lag-2018218-med-kompletterande-bestammelser_sfs-2018-218/">Swedish Data Protection Act (2018:218), Chapter 1, Section 7</a> provide a framework for academic-expression exceptions. Application depends on the actual processing purpose. An author name remains personal data; including it does not waive applicable rights or make all AIRR processing exempt. The full notice explains the scope.</p><p>Submissions remain private during review. Publication requires separate permission for the accepted version. Its author credit and PDF contents then become publicly accessible and may be copied or indexed elsewhere.</p></details></section>
+<section class="page-intro"><span>ARR-PRIVACY-1.7 · effective 2026-09-10</span><h1>Privacy is separated from publication.</h1><p>The controller is Lluis Eriksson, a natural person in Sweden, acting as founder, registry operator and responsible editor. Contact: <a href="mailto:lluiseriksson@gmail.com?subject=AIRR%20privacy">lluiseriksson@gmail.com</a>. No DPO is designated. Postal contact: Ångstavägen 44, 834 99 Tandsbyn, Sweden.</p></section>
+<section id="author-credit"><h2>Your paper may include your author name.</h2><p>You may use your real name, a permitted pen name, or Anonymous. The private login alias is separate. For your privacy, omit home addresses, personal telephone numbers, private email addresses, identity numbers and other unnecessary personal or sensitive information from the PDF and its document properties. Include other people's details only when necessary and lawful. AIRR does not automatically remove them.</p><details><summary>Academic expression and data protection</summary><p><a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng#art_85">GDPR Article 85</a> and <a href="https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/lag-2018218-med-kompletterande-bestammelser_sfs-2018-218/">Swedish Data Protection Act (2018:218), Chapter 1, Section 7</a> provide a framework for academic-expression exceptions. Application depends on the actual processing purpose. An author name remains personal data; including it does not waive applicable rights or make all AIRR processing exempt. The full notice explains the scope.</p><p>Submissions begin privately. Publication requires separate permission for the exact Working-paper or accepted version. Its author credit and PDF contents then become publicly accessible and may be copied or indexed elsewhere.</p></details></section>
 <section class="about-grid">
   <article><h2>Private data</h2><p>AIRR requests no depositor email, legal name, telephone or postal address. Private workspaces use an alias, password hash and recovery-code hash. The service also processes manuscript contents and metadata, correspondence, decisions, agent permissions and pseudonymized security events. Public author credit is optional and separate from the private alias. These records can still contain personal data: AIRR does not claim anonymity or a blanket GDPR exemption.</p></article>
   <article><h2>Frontier-model screening</h2><p>Acceptance remains human, but the disclosed pre-publication protocol requires version-locked external frontier-model reports. The form acknowledges screening; the responsible person separately confirms the named providers and safeguards before any transfer. AIRR records provider, model, time and response hash.</p></article>
@@ -1318,27 +1332,27 @@ def build_privacy(base: str, canonical_url: str) -> str:
   <article><h2>Your rights</h2><p>Applicable rights include access, correction, erasure, restriction, portability and objection. You can complain to Sweden's IMY or another competent EEA authority. Requests receive proportionate identity verification.</p></article>
   <article><h2>Voluntary support</h2><p>The support page links to PayPal when donations are available. AIRR loads no PayPal widgets or tracking scripts. If you choose to pay on PayPal, it provides the operator with transaction details for payment, refund, fraud, accounting and legal administration. You may optionally identify the paper your support relates to using its published ID or your submission receipt's registration reference. The reference gives no private access and is not sent to PayPal automatically. Donor information is used for support administration, not published or used for mailing lists, ranking or editorial decisions. The donation notice was updated on 2026-09-06.</p></article>
 </section>
-<section class="callout"><h2>Complete binding notice</h2><p><a href="{policy_source('PRIVACY_NOTICE.md')}">Read ARR-PRIVACY-1.6 in full</a>. The accepted version is recorded with each deposit.</p></section>
+<section class="callout"><h2>Complete binding notice</h2><p><a href="{policy_source('PRIVACY_NOTICE.md')}">Read ARR-PRIVACY-1.7 in full</a>. The accepted version is recorded with each deposit.</p></section>
 """
     canonical = f"{canonical_url}/privacy/" if canonical_url else ""
-    return page_shell(title="Privacy — AIRR.SCIENCE", description="ARR-PRIVACY-1.6 privacy notice for direct private manuscript intake.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Privacy — AIRR.SCIENCE", description="ARR-PRIVACY-1.7 privacy notice for direct manuscript intake and authorized public Working papers.", content=content, base=base, canonical=canonical)
 
 
 def build_terms(base: str, canonical_url: str) -> str:
     content = f"""
-<section class="page-intro"><span>ARR-DEPOSIT-1.8 · effective 2026-09-08</span><h1>There is currently no AIRR deposit fee.</h1><p>AIRR does not currently charge for submission, assessment, publication or withdrawal. A future fee may apply only after advance notice and new terms, never retroactively or in exchange for acceptance. The operator is Lluis Eriksson in Sweden.</p></section>
+<section class="page-intro"><span>ARR-DEPOSIT-1.9 · effective 2026-09-10</span><h1>There is currently no AIRR deposit fee.</h1><p>AIRR does not currently charge for submission, assessment, publication or withdrawal. A future fee may apply only after advance notice and new terms, never retroactively or in exchange for acceptance. The operator is Lluis Eriksson in Sweden.</p></section>
 <section class="about-grid">
   <article><h2>Authority and scope</h2><p>Adult depositors must be an author, rights holder or authorized agent and accurately disclose rights, authorship, AI assistance, interests, third-party material, provenance and licenses. The pilot accepts one PDF up to 25 MiB.</p></article>
   <article><h2>Author credit and personal details</h2><p>Your paper may include your real author name or a permitted pen name; public author credit is optional. Omit unnecessary personal or sensitive details from the PDF and its document properties. Choosing author credit does not waive applicable privacy rights. <a href="{base}/privacy/#author-credit">Read the guidance and academic-expression legal references.</a></p></article>
-  <article><h2>Private first</h2><p>An upload enters quarantine and carries no public license. AIRR may decline, request changes, restrict or remove material. Submission creates no entitlement to a timetable, publication, preservation or endorsement.</p></article>
+  <article><h2>Private first</h2><p>An upload enters quarantine and carries no public license. After a clean scan, the depositor may separately authorize the exact version as a citable Working paper. AIRR may decline, request changes, restrict or remove material. Submission creates no entitlement to a timetable, publication, preservation or endorsement.</p></article>
   <article><h2>Model gate</h2><p>Acceptance requires the operator-selected frontier-model audit record tied to the exact private PDF. Selection may vary with availability, quota, capability and subject fit; AIRR promises no fixed provider, model or reasoning tier; founder-authored cases require two distinct identified models. A non-accept recommendation or unresolved material objection blocks acceptance. The human editor makes and signs the final decision.</p></article>
-  <article><h2>Publication rights</h2><p>Copyright remains with its owner. A final accepted version receives explicit scoped licenses before public release. Public copies and open licenses may be irreversible; withdrawal cannot recall third-party copies.</p></article>
+  <article><h2>Publication rights</h2><p>Copyright remains with its owner. Every public Working-paper or accepted version receives explicit scoped licenses before release. Working papers are citable but remain outside the accepted collection until the exact version passes review and receives a human decision. Public copies and open licenses may be irreversible; withdrawal cannot recall third-party copies.</p></article>
   <article><h2>Appeal and conflict</h2><p>A decline or restriction may be appealed once within 30 days. Founder-authored cases require two distinct model reviews before Lluis Eriksson may sign as author-editor. His role and each model’s prior participation are disclosed. Other conflicts and appeals require an independent editor.</p></article>
 </section>
-<section class="callout"><h2>Complete binding terms</h2><p><a href="{policy_source('DEPOSIT_TERMS.md')}">Read ARR-DEPOSIT-1.8 in full</a>. Only the private form is a deposit channel; email and GitHub issues are not.</p></section>
+<section class="callout"><h2>Complete binding terms</h2><p><a href="{policy_source('DEPOSIT_TERMS.md')}">Read ARR-DEPOSIT-1.9 in full</a>. Only the private form is a deposit channel; email and GitHub issues are not.</p></section>
 """
     canonical = f"{canonical_url}/terms/" if canonical_url else ""
-    return page_shell(title="Deposit terms — AIRR.SCIENCE", description="ARR-DEPOSIT-1.8 terms for the currently fee-free direct private-submission pilot.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Deposit terms — AIRR.SCIENCE", description="ARR-DEPOSIT-1.9 terms for private intake and citable Working-paper release.", content=content, base=base, canonical=canonical)
 
 
 def build_governance(base: str, canonical_url: str) -> str:

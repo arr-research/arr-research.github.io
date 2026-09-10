@@ -1,8 +1,8 @@
-# AIRR deposit terms — ARR-DEPOSIT-1.8
+# AIRR deposit terms — ARR-DEPOSIT-1.9
 
 **Founder-authored amendment: 2026-09-09 — AIRR-FOUNDER-1.0.**
 
-**Effective:** 2026-09-08
+**Effective:** 2026-09-10
 **Brand wording updated:** 2026-09-06; see [identity and continuity](BRAND_IDENTITY.md).
 
 **Operator:** Lluis Eriksson, Sweden — lluiseriksson@gmail.com
@@ -15,8 +15,8 @@ after advance publication of new terms and clear notice before submission. No fe
 will be imposed retroactively on a submission governed by this version, and a
 future fee will never purchase acceptance, priority or a favourable decision.
 
-This version replaces `ARR-DEPOSIT-1.7` before direct public submission was
-activated.
+This version replaces `ARR-DEPOSIT-1.8` and adds separately authorized public
+Working-paper deposits before editorial admission.
 
 These terms govern AIRR's direct private-submission pilot. No invitation, email or
 legal name is required. Depositors use a private alias workspace protected by a
@@ -41,8 +41,8 @@ permission. The [API guide](AGENT_SUBMISSIONS.md) describes the technical limits
 
 The agreement language is English. Before upload, the form lets the depositor
 review and correct every field, links a storable copy of these terms, and identifies
-the steps as direct upload to quarantine, security/eligibility checks, human
-assessment, decision and—only if finally accepted—a separate publication release.
+the steps as direct upload to quarantine, security/eligibility checks, optional
+exact-version Working-paper release, assessment, revision and admission decision.
 AIRR archives the accepted terms/privacy version and immediately shows an electronic
 case identifier. Editorial responses are recorded in the private case. Depositors
 must check the workspace for updates; no depositor notification or password-reset
@@ -76,7 +76,7 @@ Chapter 1, Section 7, without claiming a blanket exemption.
 Keep your password and recovery code private. Whoever controls them can act in
 the workspace; authentication does not verify legal identity. Losing both may
 mean losing access. Recovery invalidates previous sessions and agent delegations.
-Public release still requires separate exact-version permission. A workspace is
+Every public release still requires separate exact-version permission. A workspace is
 not a public profile or a grant of editorial powers.
 
 ## 2. Permitted deposit
@@ -126,13 +126,23 @@ No model report or general instruction constitutes a final human acceptance.
 AIRR acceptance means only that the identified process was applied to the exact
 version. It is not journal peer review and not a certification that claims are true.
 
-## 5. Rights and publication license
+## 5. Working papers, rights and publication license
 
-Copyright remains with its owner. Before publication, the depositor chooses and
-records explicit licenses for manuscript, code, data and metadata and grants AIRR
-the rights necessary to host, reproduce, preserve, index, migrate, and distribute
-the accepted version under those licenses. No public license is inferred from a
-private upload. Public catalogue metadata is released under CC0-1.0.
+Copyright remains with its owner. After a clean safety check, the depositor may
+separately authorize the exact PDF for worldwide public release as a citable
+**Working paper — not admitted to the AIRR accepted collection**. Before any public
+release, the depositor chooses and records explicit licenses for manuscript, code,
+data and metadata and grants AIRR the rights necessary to host, reproduce,
+preserve, index, migrate and distribute that exact version. No public license is
+inferred from a private upload. Public catalogue metadata is released under
+CC0-1.0.
+
+A Working-paper record has a stable AIRR identifier, immutable version URL and
+citation exports, but carries no AIRR acceptance, endorsement or peer-review claim.
+Scientific objections do not silently rewrite it: a corrected manuscript receives
+a new version. Only the applicable completed audit and a human editorial decision
+can create a later version marked `accepted` or `corrected`. The earlier Working-paper
+version and its original status remain preserved.
 
 Open licenses and copies already lawfully distributed may be irrevocable. A later
 withdrawal removes AIRR's current endorsement and normally leaves a proportionate
@@ -140,19 +150,25 @@ tombstone; AIRR cannot recall third-party copies.
 
 ## 6. Privacy and frontier-model review
 
-Processing follows `ARR-PRIVACY-1.6`. Private submissions are not placed in the
-public repository. Completing the disclosed frontier-model screening is required
+Processing follows `ARR-PRIVACY-1.7`. A private submission is not placed in the
+public repository unless the depositor separately authorizes the exact version as
+a Working paper or accepted record. Completing the disclosed frontier-model screening is required
 for acceptance. The depositor may withdraw before a transfer not yet made, but AIRR
 then cannot complete the acceptance protocol. Providers may use the manuscript only
 for the assessment purpose under the selected service controls; AIRR records the
-provider/model and does not publish a rejected private manuscript or its review.
+provider/model and does not publish a private manuscript or its review without the
+applicable public-release permission. A Working paper may remain public after a
+later request for changes; that status is not represented as rejection or acceptance.
 
 ## 7. Retention, withdrawal and legal hold
 
-The depositor may withdraw a private, unaccepted submission at any time. Rejected
+The depositor may withdraw a private, unaccepted submission at any time. A public
+Working paper is replaced by a withdrawal notice in AIRR's current catalogue;
+openly licensed copies already held elsewhere may remain available. Rejected
 PDF bytes are scheduled for erasure after 30 days and withdrawn bytes after 7 days.
-Malware is erased immediately. Accepted private working copies are erased after
-public-release verification. A narrowly documented legal hold overrides automatic
+Malware is erased immediately. A private review copy behind a public Working paper
+is retained while assessment remains active. Accepted private working copies are
+erased after public-release verification. A narrowly documented legal hold overrides automatic
 deletion only as necessary. Exact periods are in `RETENTION_SCHEDULE.md`.
 
 ## 8. Complaints and removal notices

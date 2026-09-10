@@ -43,12 +43,13 @@ def main() -> int:
     metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
     metadata.update(
         {
-            "schema_version": "1.1",
+            "schema_version": "1.4",
             "record_id": f"arr:record:{record_uuid}",
             "version_id": f"arr:version:{version_uuid}",
             "id": public_id,
             "date": publication_date.isoformat(),
             "record_type": args.type.replace("-", "_"),
+            "status": "working_paper",
         }
     )
     if metadata["record_type"] == "technical_note":
@@ -65,7 +66,13 @@ def main() -> int:
         }
     metadata["authors"][0]["name"] = args.author
     metadata["deposit"]["depositor_name"] = args.author
-    metadata["editorial"]["signed_by"] = args.author
+    metadata["screening"]["human_signoff"] = False
+    metadata["editorial"] = {
+        "decision": "working_deposit",
+        "signed_by": args.author,
+        "conflicts": [],
+        "statement": "Public working-paper deposit authorized for this exact version; no AIRR acceptance or peer review is claimed.",
+    }
     metadata_path.write_text(json.dumps(metadata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
 
     provenance_path = destination / "PROVENANCE.json"

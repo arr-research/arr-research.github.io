@@ -55,12 +55,12 @@ def main() -> int:
     previous_version_id = metadata["version_id"]
     metadata.update(
         {
-            "schema_version": "1.2",
+            "schema_version": "1.4",
             "version_id": f"arr:version:{uuid.uuid4()}",
             "supersedes_version_id": previous_version_id,
             "version": next_version,
             "date": revision_date,
-            "status": "corrected",
+            "status": "working_paper",
             "revision": {"change_size": args.change_size, "summary": summary},
         }
     )
@@ -69,7 +69,7 @@ def main() -> int:
         "protocol": metadata.get("screening", {}).get("protocol", "ARR-SCREEN-1.0"),
         "status": "not_assessed",
         "critical_objections_unresolved": 0,
-        "human_signoff": True,
+        "human_signoff": False,
         "evaluators": [],
     }
     verification = metadata.setdefault("verification", {})
@@ -77,12 +77,15 @@ def main() -> int:
     verification["reproducibility"] = "not_assessed"
     verification["lean4"] = "not_assessed" if any(destination.glob("**/*.lean")) else "not_applicable"
     verification.pop("report", None)
-    editorial = metadata.setdefault("editorial", {})
-    editorial["decision"] = "correction"
-    editorial["statement"] = (
-        f"Version {next_version} supersedes {latest.version}. Declared {args.change_size} revision: {summary} "
-        "All assessments apply only when explicitly rerun and recorded for this exact version."
-    )
+    metadata["editorial"] = {
+        "decision": "working_deposit",
+        "signed_by": metadata.get("deposit", {}).get("depositor_name", "Depositor"),
+        "conflicts": [],
+        "statement": (
+            f"Working-paper version {next_version} supersedes {latest.version}. Declared {args.change_size} revision: {summary} "
+            "It remains outside the AIRR accepted collection until this exact version passes review and receives a human decision."
+        ),
+    }
     metadata_path.write_text(json.dumps(metadata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
 
     provenance_path = destination / "PROVENANCE.json"

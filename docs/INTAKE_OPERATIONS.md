@@ -167,20 +167,31 @@ provenance where relevant and authorized.
    is a non-secret registration number, not a manuscript access credential; it may
    be copied by the donor for support administration only. No donation is required
    and no donation fields enter the editorial data or ranking.
-4. Email the operator only the case identifier, title, scanner state and protected
+4. After a clean scan, the depositor may separately authorize worldwide release of
+   that exact SHA-256 version and choose its manuscript license. The editor can then
+   create a public record marked **Working paper — not admitted to the AIRR accepted
+   collection**, with a stable AIRR identifier, immutable version URL and citation
+   exports. This step is optional and is not acceptance. Agent uploads require the
+   responsible person to give this permission in the workspace; an agent token
+   cannot give it.
+5. Email the operator only the case identifier, title, scanner state and protected
    editor URL. Never attach the PDF or abstract. SMTP failure is audited and alerted.
-5. Verify identity/authority, scope, rights, disclosures, conflicts and minimum
+6. Verify identity/authority, scope, rights, disclosures, conflicts and minimum
    completeness before substantive assessment.
-6. Review the exact SHA-256 version. External AI gets nothing until the depositor separately confirms the declared
+7. Review the exact SHA-256 version. External AI gets nothing until the depositor separately confirms the declared
    provider-specific notice in their private case. The initial screening
    acknowledgment is not transfer authorization.
-7. Lluis records accept, decline or changes requested. Founder-authored cases follow
+8. Lluis records accept, decline or changes requested. Founder-authored cases follow
    AIRR-FOUNDER-1.0: two distinct actual model reviews, disclosed prior model
    participation and author-editor role. Other conflicts route acceptance to the
    independent editor. No decision publishes automatically.
-8. Notify the depositor, explain the appeal window, then allow the separate public
-   packaging/release workflow only for a final acceptance.
-9. Run and audit retention erasure.
+9. Notify the depositor and explain the appeal window. A change request creates a
+   new Working-paper version without overwriting the earlier one. Admission creates
+   a new accepted metadata version, preserving the same canonical PDF hash when the
+   manuscript itself did not change.
+10. Run and audit retention erasure. Keep the private review copy behind a public
+    Working paper while assessment remains active; apply the accepted-copy schedule
+    only after accepted release verification.
 
 ## Incident procedure
 
