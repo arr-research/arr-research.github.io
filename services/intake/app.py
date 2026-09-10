@@ -296,6 +296,9 @@ def create_app(test_config: dict | None = None) -> Flask:
         LAUNCH_APPROVAL_FILE=os.environ.get("ARR_LAUNCH_APPROVAL_FILE", "/etc/airr-intake/launch-approval.json"),
         ANALYTICS_ENABLED=os.environ.get("AIRR_ANALYTICS_ENABLED", "0") == "1",
         ANALYTICS_MANIFEST=str(Path(__file__).resolve().parents[2] / 'site' / 'analytics-pages.json'),
+        HISTORICAL_REVISIONS_ENABLED=os.environ.get('AIRR_HISTORICAL_REVISIONS_ENABLED', '0') == '1',
+        HISTORICAL_REVISION_CATALOGUE=os.environ.get('AIRR_HISTORICAL_REVISION_CATALOGUE', ''),
+        HISTORICAL_OPERATOR_AUTHOR=os.environ.get('AIRR_HISTORICAL_OPERATOR_AUTHOR', ''),
         TESTING=False,
     )
     if test_config:
@@ -1076,6 +1079,7 @@ def register_commands(app: Flask) -> None:
             db.execute("DELETE FROM correspondence WHERE submission_id=?", (row["id"],))
             db.execute("DELETE FROM mail_outbox WHERE submission_id=?", (row["id"],))
             db.execute("DELETE FROM agent_submissions WHERE submission_id=?", (row["id"],))
+            db.execute("DELETE FROM historical_revisions WHERE submission_id=?", (row["id"],))
             db.execute(
                 """UPDATE submissions SET original_filename='[deleted]',stored_name='deleted-'||id,
                    abstract='[deleted under retention policy]',classification_json='{}',agent_provenance_json='{}',updated_at=?,delete_after=NULL WHERE id=?""",

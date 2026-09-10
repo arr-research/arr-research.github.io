@@ -1,0 +1,5 @@
+{% set history = historical_revision(submission['id']) %}
+{% if history %}<section class="card"><h2>Revision of a public historical record</h2>
+<p>{{ history.paper_id }} · public candidate {{ history.version }}. This link does not create a private predecessor case or grant publication.</p>
+<dl><dt>Record ID</dt><dd>{{ history.record_id }}</dd><dt>Supersedes public version</dt><dd>{{ history.supersedes_version_id }}</dd><dt>Original PDF SHA-256</dt><dd>{{ history.parent_sha256 }}</dd><dt>New version ID</dt><dd>{{ history.version_id }}</dd><dt>New PDF SHA-256</dt><dd>{{ history.sha256 }}</dd></dl>
+<details><summary>Revision changelog</summary>{% for category, explanation in history.changelog.items() %}<h3>{{ category }}</h3><p class="preserve-lines">{{ explanation }}</p>{% endfor %}</details></section>{% endif %}

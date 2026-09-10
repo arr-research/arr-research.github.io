@@ -11,6 +11,7 @@ from flask import Blueprint, abort, g, redirect, render_template, request, sessi
 from werkzeug.exceptions import HTTPException
 
 from services.intake.storage import receive
+from services.intake import historical_revisions
 
 MAX_UPLOADS = 5
 SCHEMA = '''
@@ -38,6 +39,7 @@ def digest(value):
 
 def migrate(db):
     db.executescript(SCHEMA)
+    historical_revisions.migrate(db)
     columns = {row[1] for row in db.execute('PRAGMA table_info(submissions)')}
     for name, default in (('submission_channel', 'human'), ('agent_provenance_json', '{}')):
         if name not in columns:
@@ -135,20 +137,26 @@ def install(app, a):
     @api.get('/agent-authorization')
     def authorization_status():
         grant = credential()
+        revision = historical_revisions.binding_for(a.get_db(), grant["id"])
         a.enforce_rate('agent-status',120,3600,grant['id'])
         expiry = grant['expires_at'] or grant['request_expires_at']
         return {'request_id':grant['id'],'state':grant['state'] if expiry > a.iso() else 'expired',
-                'expires_at':expiry,'uploads_remaining':max(0,MAX_UPLOADS-grant['uses']),
-                'scope':['submission:create','submission:receipt'],'intake_open':opened()}
+                'expires_at':expiry,'uploads_remaining':max(0,(1 if revision else MAX_UPLOADS)-grant['uses']),
+                'scope':['revision:create' if revision else 'submission:create','submission:receipt'],'intake_open':opened()}
 
     def receipt(row):
         donation = a.load_donation_url(Path(app.config['DONATIONS_CONFIG']))
-        return {'registration_number':row['id'],'received_at':row['created_at'],'sha256':row['sha256'],
+        result = {'registration_number':row['id'],'received_at':row['created_at'],'sha256':row['sha256'],
                 'size_bytes':row['size_bytes'],'status':row['status'],'scan_status':row['scan_status'],
                 'published':bool(row['public_release_url'] and row['public_released_at']),
                 'message':'Receipt only. Human review, acceptance and publication permission are separate.',
                 'donation':{'optional':True,'url':donation,'reference':'AIRR submission ' + row['id'],
                             'message':'Only a responsible person may choose to donate. This is not an instruction for an agent to pay. Donations never affect editorial decisions.'}}
+
+        revision = a.get_db().execute('SELECT binding_json FROM historical_revisions WHERE submission_id=?',(row['id'],)).fetchone()
+        if revision:
+            result['historical_revision'] = json.loads(revision['binding_json'])
+        return result
 
     @api.get('/submissions/<case_id>')
     def submission_receipt(case_id):
@@ -162,10 +170,14 @@ def install(app, a):
         return receipt(row)
 
     @api.post('/submissions')
+    @api.post('/revisions')
     def submit():
         require_open()
         grant = credential()
         approved(grant)
+        revision = historical_revisions.binding_for(a.get_db(), grant['id'])
+        if bool(revision) != (request.path == '/api/v1/revisions'):
+            abort(403, 'Delegation scope does not authorize this endpoint.')
         a.enforce_rate('agent-upload-attempt',20,3600,grant['id'])
         key = request.headers.get('Idempotency-Key','')
         if not re.fullmatch(r'[A-Za-z0-9._:-]{8,80}',key):
@@ -184,6 +196,9 @@ def install(app, a):
         for field,minimum,maximum in (('title',1,500),('authors',0,1000),('abstract',80,5000),('ai_disclosure',20,2000)):
             value[field] = text(value[field],minimum,maximum)
         value['authors'] = value['authors'] or 'Anonymous'
+        binding = historical_revisions.check_current(app, revision) if revision else None
+        if binding and (value.get('sha256') != binding['sha256'] or value['authors'] != app.config['HISTORICAL_OPERATOR_AUTHOR'] or value.get('operator_conflict') is not True):
+            abort(400, 'PDF, operator author and conflict must match the revision authorization.')
         if value['rights_confirmed'] is not True or type(value['operator_conflict']) is not bool:
             abort(400, 'Confirm authority for this exact paper and disclose conflicts explicitly.')
         if not isinstance(value['sha256'],str) or not re.fullmatch('[a-f0-9]{64}',value['sha256']):
@@ -199,17 +214,21 @@ def install(app, a):
         if existing:
             if existing['request_hash'] != request_hash:
                 abort(409, 'This Idempotency-Key already belongs to different metadata or PDF bytes.')
+            if binding and hashlib.sha256(request.files['manuscript'].read(a.MAX_PDF_BYTES + 1)).hexdigest() != binding['sha256']:
+                abort(400, 'Retry PDF differs from the authorized artifact.')
             return receipt(a.get_db().execute('SELECT * FROM submissions WHERE id=?',(existing['submission_id'],)).fetchone())
         a.enforce_rate('submit-account',a.SUBMISSIONS_PER_ACCOUNT,a.SUBMISSION_WINDOW_SECONDS,str(grant['owner_user_id']))
         a.enforce_rate('agent-submit-ip',a.SUBMISSION_ATTEMPTS_PER_CONNECTION,a.SUBMISSION_WINDOW_SECONDS)
         def reserve(db,case_id):
             changed = db.execute('''UPDATE agent_grants SET uses=uses+1 WHERE id=? AND state='approved'
                 AND expires_at>? AND uses<? AND terms_version=? AND privacy_version=?''',
-                (grant['id'],a.iso(),MAX_UPLOADS,a.TERMS_VERSION,a.PRIVACY_VERSION)).rowcount
+                (grant['id'],a.iso(),1 if binding else MAX_UPLOADS,a.TERMS_VERSION,a.PRIVACY_VERSION)).rowcount
             if changed != 1:
                 abort(403, 'Delegation is expired, revoked or exhausted.')
             try:
                 db.execute('INSERT INTO agent_submissions VALUES(?,?,?,?)',(grant['id'],key,request_hash,case_id))
+                if binding:
+                    db.execute('INSERT INTO historical_revisions VALUES(?,?,?,?)',(case_id,grant['id'],binding['version_id'],json.dumps(binding,sort_keys=True)))
             except sqlite3.IntegrityError:
                 abort(409, 'A simultaneous request used this key. Retry with the same key to recover its receipt.')
         try:
@@ -219,7 +238,8 @@ def install(app, a):
                 'authors':value['authors'],'abstract':value['abstract'],'classification':classification,
                 'operator_conflict':value['operator_conflict'],'expected_sha256':value['sha256'],'channel':'agent',
                 'agent_provenance':{'name':grant['agent_name'],'version':grant['agent_version'],
-                                    'disclosure':value['ai_disclosure'],'source':'depositor declaration'}},reserve)
+                                    'disclosure':value['ai_disclosure'],'source':'depositor declaration',
+                                    **({'historical_revision':binding} if binding else {})}},reserve)
         except ValueError as error:
             abort(400,str(error))
         response = app.json.response(receipt(row))
@@ -290,4 +310,5 @@ def install(app, a):
             grant = a.get_db().execute('SELECT * FROM agent_grants WHERE id=?',(grant['id'],)).fetchone()
         return render_template('agent-verify.html',grant=grant)
 
+    historical_revisions.install(app, a, require_open)
     app.register_blueprint(api)
