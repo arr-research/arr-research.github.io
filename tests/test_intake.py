@@ -50,7 +50,7 @@ class IntakeTests(unittest.TestCase):
         with self.app.app_context():
             db = get_db()
             user = db.execute("INSERT INTO users(email,display_name,password_hash,role,active,created_at) VALUES(?,?,?,?,1,?)", ('direct-author@accounts.invalid','direct-author',generate_password_hash('workspace-password-123'),'depositor',iso()))
-            db.execute("INSERT INTO private_accounts(user_id,alias,identity_kind,recovery_hash,created_at,last_seen_at,terms_version,privacy_version) VALUES(?,?,?,?,?,?,?,?)", (user.lastrowid,'direct-author','human','fixture-recovery-hash',iso(),iso(),'ARR-DEPOSIT-1.8','ARR-PRIVACY-1.6'))
+            db.execute("INSERT INTO private_accounts(user_id,alias,identity_kind,recovery_hash,created_at,last_seen_at,terms_version,privacy_version) VALUES(?,?,?,?,?,?,?,?)", (user.lastrowid,'direct-author','human','fixture-recovery-hash',iso(),iso(),'ARR-DEPOSIT-1.9','ARR-PRIVACY-1.7'))
             db.commit()
         self.client = self.app.test_client()
         with self.client.session_transaction() as state:
@@ -106,8 +106,8 @@ class IntakeTests(unittest.TestCase):
             row = get_db().execute("SELECT * FROM submissions ORDER BY created_at DESC LIMIT 1").fetchone()
             self.assertEqual(row["scan_status"], "clean")
             self.assertEqual(row["status"], "eligible")
-            self.assertEqual(row["terms_version"], "ARR-DEPOSIT-1.8")
-            self.assertEqual(row["privacy_version"], "ARR-PRIVACY-1.6")
+            self.assertEqual(row["terms_version"], "ARR-DEPOSIT-1.9")
+            self.assertEqual(row["privacy_version"], "ARR-PRIVACY-1.7")
             self.assertTrue((Path(self.app.config["QUARANTINE"]) / row["stored_name"]).exists())
             submitter = get_db().execute("SELECT * FROM users WHERE id=?", (row["user_id"],)).fetchone()
             self.assertEqual(submitter["email"], "direct-author@accounts.invalid")

@@ -52,6 +52,16 @@ class CitationTests(unittest.TestCase):
         csl = json.loads(citation_exports(self.metadata(record_type="technical_note"), "https://airr.science")["csl.json"])[0]
         self.assertEqual(csl["URL"], "https://airr.science/notes/ARR-2026-EXAMPLE/versions/v1/")
 
+    def test_working_paper_is_citable_but_never_described_as_accepted(self):
+        exports = citation_exports(self.metadata(status="working_paper"), "https://airr.science")
+        for suffix in ("txt", "ris", "csl.json", "bib"):
+            self.assertIn("Working paper", exports[suffix])
+            self.assertIn("not admitted to the AIRR accepted collection", exports[suffix])
+        timestamp = {"publication_state": "published", "published_at": "2025-02-03T10:00:00+00:00", "deposit_recorded_at": "2025-02-02T10:00:00+00:00"}
+        card = paper_card(self.metadata(status="working_paper"), timestamp, "/preview")
+        self.assertIn("Working paper", card)
+        self.assertIn("not admitted", card)
+
     def test_catalogue_cite_link_keeps_the_version_shown_on_the_card(self):
         timestamp = {"publication_state": "published", "published_at": "2025-02-03T10:00:00+00:00", "deposit_recorded_at": "2025-02-02T10:00:00+00:00"}
         card = paper_card(self.metadata(), timestamp, "/preview")

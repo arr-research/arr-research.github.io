@@ -28,6 +28,7 @@ from arrlib import (  # noqa: E402
 )
 import new_record  # noqa: E402
 import new_version  # noqa: E402
+import admit_working_paper  # noqa: E402
 import arrlib  # noqa: E402
 import build_site  # noqa: E402
 import submit_indexnow  # noqa: E402
@@ -389,6 +390,38 @@ class PaperValidationTests(unittest.TestCase):
             self.assertIs(select_paper([first, second], first.id), second)
             self.assertEqual([item.version for item in group_paper_versions([second, first])[first.id]], ["v1", "v2"])
             self.assertFalse(any("versions" in path.relative_to(first.path).parts for path in iter_package_files(first.path)))
+
+    def test_admission_preserves_working_manuscript_and_creates_accepted_version(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            temporary_root = Path(temporary)
+            first = self.make_paper(temporary_root)
+            first.metadata.update({"schema_version": "1.4", "status": "working_paper"})
+            first.metadata["screening"].update(
+                {
+                    "status": "pass",
+                    "critical_objections_unresolved": 0,
+                    "human_signoff": False,
+                    "completed_at": "2026-08-13",
+                    "evaluators": [{"provider": "Test Provider", "model_id": "test-model", "outcome": "pass", "report": "assessment.md", "involved_in_creation": False}],
+                }
+            )
+            first.metadata["editorial"] = {"decision": "working_deposit", "signed_by": "Test Author", "conflicts": [], "statement": "Public working-paper deposit for the exact test version."}
+            (first.path / "metadata.json").write_text(json.dumps(first.metadata), encoding="utf-8")
+            (first.path / "assessment.md").write_text("Exact-version assessment", encoding="utf-8")
+            before = (first.path / "paper.tex").read_bytes()
+            with (
+                patch.object(admit_working_paper, "PAPERS_DIR", temporary_root),
+                patch.object(admit_working_paper, "discover_papers", return_value=[first]),
+                patch.object(sys, "argv", ["admit_working_paper.py", first.id, "--date", "2026-08-14", "--signed-by", "Test Editor", "--decision", "standard_acceptance", "--statement", "The exact test version passed the declared assessment and is admitted."]),
+            ):
+                with redirect_stdout(io.StringIO()):
+                    self.assertEqual(admit_working_paper.main(), 0)
+            destination = first.path / "versions" / "v2"
+            admitted = json.loads((destination / "metadata.json").read_text(encoding="utf-8"))
+            self.assertEqual(admitted["status"], "accepted")
+            self.assertEqual(admitted["supersedes_version_id"], first.metadata["version_id"])
+            self.assertTrue(admitted["screening"]["human_signoff"])
+            self.assertEqual((destination / "paper.tex").read_bytes(), before)
 
     def test_timestamp_registry_may_retain_release_only_older_versions(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

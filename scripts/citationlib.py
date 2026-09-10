@@ -31,14 +31,16 @@ def citation_exports(metadata: dict, site_root: str) -> dict[str, str]:
     if metadata.get("record_type") == "technical_note":
         genre = "Technical note"
     note = f"{genre}; {metadata['id']} {metadata['version']}. Not peer reviewed by AIRR."
-    if metadata.get("status") == "withdrawn":
+    if metadata.get("status") == "working_paper":
+        note += " Working paper; not admitted to the AIRR accepted collection."
+    elif metadata.get("status") == "withdrawn":
         note += " Withdrawn."
     elif metadata.get("status") == "archived":
         note += " Historical import; not assessed by AIRR."
     text = f"{'; '.join(authors)} ({date[:4]}). {title}. AIRR.SCIENCE, {metadata['id']}, {metadata['version']}. {url}"
     if metadata.get("doi"):
         text += f" DOI: {metadata['doi']}."
-    if metadata.get("status") in {"withdrawn", "archived"}:
+    if metadata.get("status") in {"working_paper", "withdrawn", "archived"}:
         text += " " + note
 
     fields = [

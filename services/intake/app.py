@@ -46,8 +46,8 @@ from scripts.donationlib import load_donation_url
 from scripts.subjectlib import classification_options, classification_text, public_vocabulary, validate_classification
 
 
-TERMS_VERSION = "ARR-DEPOSIT-1.8"
-PRIVACY_VERSION = "ARR-PRIVACY-1.6"
+TERMS_VERSION = "ARR-DEPOSIT-1.9"
+PRIVACY_VERSION = "ARR-PRIVACY-1.7"
 FRONTIER_PROMPT_VERSION = "ARR-INTAKE-ASSESS-1.1"
 MAX_PDF_BYTES = 25 * 1024 * 1024
 SUBMISSIONS_PER_ACCOUNT = 10
@@ -1005,26 +1005,32 @@ def register_commands(app: Flask) -> None:
     @click.argument("submission_id")
     @click.argument("release_url")
     def mark_published(submission_id: str, release_url: str):
-        """Record a separately verified public release and start private-copy erasure."""
+        """Record a separately verified working-paper or accepted-record release."""
         if not release_url.startswith("https://"):
             raise click.ClickException("The immutable public release URL must use HTTPS")
         row = get_db().execute("SELECT * FROM submissions WHERE id=?", (submission_id,)).fetchone()
-        if not row or row["status"] != "accepted_for_publication":
-            raise click.ClickException("Only a finally accepted submission can be marked published")
+        releasable_states = {"eligible", "under_assessment", "changes_requested", "awaiting_independent_decision", "accepted_for_publication"}
+        if not row or row["scan_status"] != "clean" or row["status"] not in releasable_states:
+            raise click.ClickException("Only a clean current submission with a releasable state can be marked published")
         permission = get_db().execute('SELECT * FROM publication_permissions WHERE submission_id=?', (submission_id,)).fetchone()
         if not permission or permission['manuscript_sha256'] != row['sha256']:
             raise click.ClickException('Exact-version public distribution permission has not been recorded')
+        public_status = "accepted" if row["status"] == "accepted_for_publication" else "working_paper"
+        delete_after = iso(now() + timedelta(days=30)) if public_status == "accepted" else None
         get_db().execute(
             """UPDATE submissions SET public_release_url=?,public_released_at=?,updated_at=?,
                delete_after=? WHERE id=?""",
-            (release_url, iso(), iso(), iso(now() + timedelta(days=30)), submission_id),
+            (release_url, iso(), iso(), delete_after, submission_id),
         )
         get_db().execute(
             "INSERT INTO audit_log(occurred_at,event,submission_id,detail_json) VALUES(?,?,?,?)",
-            (iso(), "public_release_verified", submission_id, json.dumps({"release_url": release_url})),
+            (iso(), "public_release_verified", submission_id, json.dumps({"release_url": release_url, "public_status": public_status})),
         )
         get_db().commit()
-        click.echo(f"{submission_id}: private working copy scheduled for erasure in 30 days")
+        if delete_after:
+            click.echo(f"{submission_id}: accepted release verified; private working copy scheduled for erasure in 30 days")
+        else:
+            click.echo(f"{submission_id}: working-paper release verified; private review copy retained")
 
     @app.cli.command("legal-hold")
     @click.argument("submission_id")

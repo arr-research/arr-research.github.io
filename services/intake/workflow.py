@@ -425,7 +425,8 @@ def install(app, a):
                 a.audit('appeal_received', submission_id)
             elif action == 'publication':
                 license_id = request.form.get('license')
-                if row['status'] != 'accepted_for_publication' or not request.form.get('publication_confirm') or license_id not in {'CC-BY-4.0', 'CC-BY-SA-4.0', 'CC0-1.0'}:
+                releasable_states = {'eligible', 'under_assessment', 'changes_requested', 'awaiting_independent_decision', 'accepted_for_publication'}
+                if row['scan_status'] != 'clean' or row['status'] not in releasable_states or not request.form.get('publication_confirm') or license_id not in {'CC-BY-4.0', 'CC-BY-SA-4.0', 'CC0-1.0'}:
                     abort(409)
                 try:
                     db.execute('INSERT INTO publication_permissions VALUES(?,?,?,?)', (submission_id, row['sha256'], license_id, a.iso()))
@@ -433,7 +434,8 @@ def install(app, a):
                 except sqlite3.IntegrityError:
                     db.rollback()
                     abort(409, 'Publication permission is already recorded; contact AIRR for a correction.')
-                a.audit('publication_permission_recorded', submission_id, license=license_id, sha256=row['sha256'])
+                public_status = 'accepted' if row['status'] == 'accepted_for_publication' else 'working_paper'
+                a.audit('publication_permission_recorded', submission_id, license=license_id, sha256=row['sha256'], public_status=public_status)
             else:
                 abort(400)
             flash('Your response has been recorded.', 'success')
@@ -667,13 +669,18 @@ def install(app, a):
     def release_package(submission_id):
         row = case(submission_id)
         permission = a.get_db().execute('SELECT * FROM publication_permissions WHERE submission_id=?', (submission_id,)).fetchone()
-        if row['status'] != 'accepted_for_publication' or not permission or permission['manuscript_sha256'] != row['sha256']:
-            abort(409, 'Final acceptance and exact-version publication permission are both required.')
+        releasable_states = {'eligible', 'under_assessment', 'changes_requested', 'awaiting_independent_decision', 'accepted_for_publication'}
+        if row['scan_status'] != 'clean' or row['status'] not in releasable_states or not permission or permission['manuscript_sha256'] != row['sha256']:
+            abort(409, 'A clean current version and its exact-version publication permission are required.')
         # Export only the approved scholarly handoff. No email, bearer link, SMTP secret or private conversation.
         db = a.get_db()
+        accepted = row['status'] == 'accepted_for_publication'
+        editor_row = db.execute('SELECT display_name FROM users WHERE id=?', (row['decision_by'],)).fetchone() if row['decision_by'] else None
         manifest = {'submission_id': row['id'], 'revision': row['revision_number'], 'sha256': row['sha256'],
-                    'title': row['title'], 'authors': row['authors'], 'abstract': row['abstract'],
-                    'classification': json.loads(row['classification_json']), 'license': permission['license'],
+                     'title': row['title'], 'authors': row['authors'], 'abstract': row['abstract'],
+                     'classification': json.loads(row['classification_json']), 'license': permission['license'],
+                     'public_status': 'accepted' if accepted else 'working_paper',
+                     'collection_notice': None if accepted else 'Working paper — not admitted to the AIRR accepted collection',
                     'submission_channel': row['submission_channel'], 'agent_provenance': json.loads(row['agent_provenance_json']),
                     'decision_reason': row['decision_reason'], 'decided_at': row['decided_at'],
                     'conflict_disclosed': bool(row['operator_conflict']),
@@ -681,7 +688,7 @@ def install(app, a):
                     'other_operator_conflict': bool(row['other_operator_conflict']),
                     'author_editor_acceptance': bool(row['founder_authored'] and row['decision_by'] == row['founder_declared_by']),
                     'founder_policy': 'AIRR-FOUNDER-1.0' if row['founder_authored'] else None,
-                    'editor': db.execute('SELECT display_name FROM users WHERE id=?', (row['decision_by'],)).fetchone()[0],
+                     'editor': editor_row[0] if editor_row else None,
                     'reports': [json.loads(x[0]) for x in db.execute('SELECT response_json FROM model_reviews WHERE submission_id=? ORDER BY id', (submission_id,))],
                     'adjudications': [dict(x) for x in db.execute('SELECT d.basis,d.evidence,d.signed_at,u.display_name AS editor,r.response_sha256 FROM adjudications d JOIN model_reviews r ON r.id=d.review_id JOIN users u ON u.id=d.signed_by WHERE r.submission_id=?', (submission_id,))]}
         a.audit('release_handoff_exported', submission_id)

@@ -15,11 +15,15 @@ Terminal alternatives are `declined`, `expired`, `removed`, and `legal_hold`. In
 
 ## Public record statuses
 
+- `working_paper`: public and citable exact version that has not been admitted to
+  the AIRR accepted collection. It may have no assessment yet or may remain under
+  revision. Publication of this status requires the depositor's exact-version
+  permission and a clean integrity/safety check; it is never evidence of acceptance.
 - `accepted`: first public version.
 - `corrected`: a new version that identifies `supersedes_version_id`.
 - `withdrawn`: a persistent tombstone; files are retained unless law or safety requires removal.
 
-Version numbers are monotonic integers: `v1`, `v2`, `v3`, and so on. The public AIRR identifier and `record_id` remain stable; every version has a new `version_id`, an explicit predecessor and an immutable release. A `minor` revision records a bounded correction or addition, while a `major` revision changes substantial claims, arguments, methods, data or conclusions within the same evolving work. A genuinely independent work receives a new AIRR identifier. The size label describes change scope, not quality.
+Version numbers are monotonic integers: `v1`, `v2`, `v3`, and so on. The public AIRR identifier and `record_id` remain stable; every version has a new `version_id`, an explicit predecessor and an immutable release. A revised manuscript returns as a new `working_paper` version while its exact checks run; it becomes `accepted` or `corrected` only after the applicable admission decision. A `minor` revision records a bounded correction or addition, while a `major` revision changes substantial claims, arguments, methods, data or conclusions within the same evolving work. A genuinely independent work receives a new AIRR identifier. The size label describes change scope, not quality.
 
 ## Public record types
 

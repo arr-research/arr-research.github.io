@@ -28,10 +28,11 @@ def main() -> int:
         return 1
     errors = validate_paper(paper)
     screening = paper.metadata.get("screening", {})
-    if screening.get("status") != "pass" or screening.get("critical_objections_unresolved") != 0:
-        errors.append("release gate: frontier-model screening must pass with zero unresolved critical objections")
-    if not screening.get("evaluators"):
-        errors.append("release gate: a declared version-specific frontier-model audit record is required")
+    if paper.metadata.get("status") != "working_paper":
+        if screening.get("status") != "pass" or screening.get("critical_objections_unresolved") != 0:
+            errors.append("release gate: frontier-model screening must pass with zero unresolved critical objections")
+        if not screening.get("evaluators"):
+            errors.append("release gate: a declared version-specific frontier-model audit record is required")
     if errors:
         for error in errors:
             print(f"- {error}", file=sys.stderr)
@@ -66,12 +67,19 @@ def main() -> int:
     metadata_copy.write_text(json.dumps(paper.metadata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     notes = output / "RELEASE_NOTES.md"
+    working_notice = (
+        "This is a citable working paper. It has not been admitted to the AIRR accepted collection.\n\n"
+        if paper.metadata.get("status") == "working_paper"
+        else ""
+    )
     notes.write_text(
         f"# {paper.metadata['title']}\n\n"
         f"AIRR record: `{paper.id}`  \n"
         f"Version: `{paper.version}`  \n"
         f"Record type: `{paper.record_type}`  \n"
+        f"Public status: `{paper.metadata['status']}`  \n"
         f"Protocol: `{paper.metadata['verification']['protocol']}`\n\n"
+        f"{working_notice}"
         "The attached manifest records SHA-256 hashes for every published source file, the complete source bundle, and the canonical PDF when supplied.\n",
         encoding="utf-8",
         newline="\n",

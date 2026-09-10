@@ -19,7 +19,7 @@ UUID_PATTERN = r"[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]
 RECORD_ID_PATTERN = re.compile(rf"^arr:record:{UUID_PATTERN}$")
 VERSION_ID_PATTERN = re.compile(rf"^arr:version:{UUID_PATTERN}$")
 VERSION_PATTERN = re.compile(r"^v[1-9]\d*$")
-ALLOWED_STATUSES = {"accepted", "corrected", "withdrawn", "archived"}
+ALLOWED_STATUSES = {"working_paper", "accepted", "corrected", "withdrawn", "archived"}
 ALLOWED_RECORD_TYPES = {"research_paper", "technical_note"}
 ALLOWED_NOTE_KINDS = {
     "result",
@@ -217,22 +217,22 @@ def validate_paper(paper: Paper) -> list[str]:
         _required_string(metadata, field, errors)
 
     schema_version = metadata.get("schema_version")
-    if schema_version not in {"1.0", "1.1", "1.2", "1.3"}:
-        errors.append("schema_version: must be 1.0, 1.1, 1.2 or 1.3")
+    if schema_version not in {"1.0", "1.1", "1.2", "1.3", "1.4"}:
+        errors.append("schema_version: must be 1.0, 1.1, 1.2, 1.3 or 1.4")
 
     explicit_record_type = metadata.get("record_type")
     record_type = explicit_record_type or "research_paper"
     if schema_version == "1.0" and explicit_record_type is not None:
         errors.append("record_type: schema 1.0 records must use the legacy implicit research_paper type")
-    if schema_version in {"1.1", "1.2", "1.3"} and explicit_record_type not in ALLOWED_RECORD_TYPES:
+    if schema_version in {"1.1", "1.2", "1.3", "1.4"} and explicit_record_type not in ALLOWED_RECORD_TYPES:
         errors.append(f"record_type: must be one of {sorted(ALLOWED_RECORD_TYPES)}")
     if record_type not in ALLOWED_RECORD_TYPES:
         errors.append(f"record_type: must be one of {sorted(ALLOWED_RECORD_TYPES)}")
 
     note_profile = metadata.get("technical_note")
     if record_type == "technical_note":
-        if schema_version not in {"1.1", "1.2"}:
-            errors.append("technical_note: technical notes require schema_version 1.1 or 1.2")
+        if schema_version not in {"1.1", "1.2", "1.4"}:
+            errors.append("technical_note: technical notes require schema_version 1.1, 1.2 or 1.4")
         if not isinstance(note_profile, dict):
             errors.append("technical_note: an object is required for technical notes")
         else:
@@ -289,7 +289,7 @@ def validate_paper(paper: Paper) -> list[str]:
             errors.append(f"path: version {version} must be stored at versions/{version}")
 
     revision = metadata.get("revision")
-    if schema_version == "1.2" and isinstance(version, str) and VERSION_PATTERN.match(version) and int(version[1:]) > 1:
+    if schema_version in {"1.2", "1.4"} and isinstance(version, str) and VERSION_PATTERN.match(version) and int(version[1:]) > 1:
         if not isinstance(metadata.get("supersedes_version_id"), str):
             errors.append("supersedes_version_id: required for version 2 and later")
         if not isinstance(revision, dict):
@@ -307,6 +307,8 @@ def validate_paper(paper: Paper) -> list[str]:
         errors.append(f"status: must be one of {sorted(ALLOWED_STATUSES)}")
     if metadata.get("status") == "corrected" and not metadata.get("supersedes_version_id"):
         errors.append("supersedes_version_id: required for a corrected version")
+    if metadata.get("status") == "working_paper" and schema_version != "1.4":
+        errors.append("status: working papers require schema_version 1.4")
 
     archival = metadata.get("archival_source")
     if metadata.get("status") == "archived":
@@ -550,8 +552,11 @@ def validate_paper(paper: Paper) -> list[str]:
         unresolved = screening.get("critical_objections_unresolved")
         if not isinstance(unresolved, int) or isinstance(unresolved, bool) or unresolved < 0:
             errors.append("screening.critical_objections_unresolved: must be a non-negative integer")
-        if screening.get("human_signoff") is not True:
-            errors.append("screening.human_signoff: must be true")
+        human_signoff = screening.get("human_signoff")
+        if not isinstance(human_signoff, bool):
+            errors.append("screening.human_signoff: must be a boolean")
+        elif metadata.get("status") in {"accepted", "corrected"} and human_signoff is not True:
+            errors.append("screening.human_signoff: accepted records require human sign-off")
         evaluators = screening.get("evaluators")
         if not isinstance(evaluators, list):
             errors.append("screening.evaluators: an array is required")
@@ -617,7 +622,7 @@ def validate_paper(paper: Paper) -> list[str]:
     if not isinstance(editorial, dict):
         errors.append("editorial: an object is required")
     else:
-        if editorial.get("decision") not in {"founder_pilot", "standard_acceptance", "correction", "withdrawal", "historical_import"}:
+        if editorial.get("decision") not in {"working_deposit", "founder_pilot", "standard_acceptance", "correction", "withdrawal", "historical_import"}:
             errors.append("editorial.decision: invalid value")
         if not isinstance(editorial.get("signed_by"), str) or not editorial["signed_by"].strip():
             errors.append("editorial.signed_by: required")
@@ -627,6 +632,8 @@ def validate_paper(paper: Paper) -> list[str]:
             errors.append("editorial.statement: a meaningful statement is required")
         if metadata.get("status") == "archived" and editorial.get("decision") != "historical_import":
             errors.append("editorial.decision: archived records require historical_import")
+        if metadata.get("status") == "working_paper" and editorial.get("decision") != "working_deposit":
+            errors.append("editorial.decision: working papers require working_deposit")
 
     if metadata.get("status") == "archived" and isinstance(screening, dict) and screening.get("status") != "not_assessed":
         errors.append("screening.status: historical imports must remain not_assessed until a new AIRR version is audited")
