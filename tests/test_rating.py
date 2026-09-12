@@ -132,6 +132,8 @@ class RatingTests(unittest.TestCase):
         result=aggregate_ratings([negative,later])
         self.assertEqual(result["score"],8)
         self.assertIn(negative["assessment_id"],result["blocking_report_ids"])
+        self.assertIn(negative["assessment_id"],result["material_objection_report_ids"])
+        self.assertIn("Material objections recorded",build_site.assessment_badge(self.paper,[negative,later]))
         self.assertEqual(result["evidence_backing"],"Limited")
         self.assertFalse(result["acceptance_determined"])
 
@@ -192,6 +194,16 @@ class RatingTests(unittest.TestCase):
             project_report(self.paper,source)
         self.assertEqual(json.loads(source.read_bytes()),native)
 
+    def test_accepted_catalogue_cards_show_the_weighted_score(self):
+        from arrlib import load_record_timestamps
+        accepted=next(p for p in self.papers if p.id=="ARR-2026-1K33A7K90T87AREF")
+        timestamps=load_record_timestamps()
+        page=build_site.build_papers_index([accepted],timestamps,"","https://example.test")
+        self.assertIn("Weighted score",page)
+        self.assertIn("4.55",page)
+        self.assertIn("Limited evidence",page)
+        self.assertIn("#model-assessments",page)
+
     def test_existing_reports_unchanged_and_every_paper_has_coverage(self):
         from arrlib import group_paper_versions
         registry=json.loads((ROOT/"registry/model-assessments.json").read_text(encoding="utf-8"))
@@ -201,13 +213,15 @@ class RatingTests(unittest.TestCase):
         page=build_site.build_assessments(papers,registry["assessments"],[],"","https://example.test",lookup)
         coverage=page.split('id="coverage"',1)[1]
         for p in papers:self.assertIn(p.id,coverage)
-        self.assertIn("8 rated current versions",page)
-        self.assertIn("12 preserved reports",page)
+        rated=sum(build_site.paper_rating(p,registry["assessments"]) is not None for p in papers)
+        self.assertIn(f"{rated} rated current versions",page)
+        self.assertIn(f"{len(registry['assessments'])} preserved reports",page)
         self.assertIn("Assessment pending",page)
         self.assertNotIn("Median assessment",page)
         self.assertNotIn("marked independent of manuscript",page)
-        for r in registry["assessments"]:
+        for r in registry["assessments"][:4]:
             self.assertNotIn("review_context",r)
+        for r in registry["assessments"]:
             self.assertEqual(aggregate_ratings([r])["evidence_backing"],"Limited")
 
 if __name__=="__main__":unittest.main()

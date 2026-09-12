@@ -403,7 +403,7 @@ def build_subject_page(group: dict, timestamps: dict, base: str, canonical_url: 
     papers = group["papers"]
     count = max(1, (len(papers) + 49) // 50)
     root = f'{base}/subjects/{group["slug"]}/'
-    cards = ''.join(paper_card(p.metadata, timestamps[(p.id, p.version)], base, author_lookup, metrics) for p in papers[(page-1)*50:page*50])
+    cards = ''.join(paper_card(p.metadata, timestamps[(p.id, p.version)], base, author_lookup, metrics, card_rating(p, base)) for p in papers[(page-1)*50:page*50])
     previous = root if page == 2 else f'{root}page/{page-1}/'
     pager = '<nav class="pagination" aria-label="Subject pages">'
     pager += f'<a href="{previous}">← Previous</a>' if page > 1 else '<span>← Previous</span>'
@@ -447,9 +447,11 @@ def assessment_badge(paper, assessments: list[dict], href: str = "#model-assessm
     aggregate = paper_rating(paper, assessments)
     if aggregate is None:
         return '<span class="assessment-unrated">Not yet rated</span>'
+    objection_notice = ('<strong class="assessment-objection">Material objections recorded · editorial review needed</strong>'
+                        if aggregate["material_objection_report_ids"] else "")
     return (
         f'<a class="assessment-compact" href="{esc(href)}">{star_row(aggregate["stars"])}'
-        f'<span>{aggregate["score"]:.2f} · {esc(aggregate["tier"])} · n={aggregate["count"]} · {rating_backing(aggregate)}</span></a>'
+        f'<span>{aggregate["score"]:.2f} · {esc(aggregate["tier"])} · n={aggregate["count"]} · {rating_backing(aggregate)}</span>{objection_notice}</a>'
     )
 
 
@@ -579,12 +581,22 @@ def verification_rows(metadata: dict) -> str:
     return "".join(rows)
 
 
+def card_rating(paper, base: str) -> str:
+    if paper.metadata["status"] not in {"accepted", "corrected"}:
+        return ""
+    reports = load_assessment_registry()["assessments"]
+    href = f'{base}/{record_route(paper.metadata)}/{quote(paper.id)}/#model-assessments'
+    badge = assessment_badge(paper, reports, href)
+    return f'<div class="paper-card-rating"><span>Weighted score</span>{badge}</div>'
+
+
 def paper_card(
     metadata: dict,
     timestamp: dict,
     base: str,
     author_lookup: dict[str, dict] | None = None,
     metrics: dict | None = None,
+    rating_html: str = "",
 ) -> str:
     authors = (
         author_links(metadata, author_lookup, base)
@@ -603,7 +615,7 @@ def paper_card(
   <h3><a href="{base}/{record_route(metadata)}/{quote(metadata['id'])}/">{esc(metadata['title'])}</a></h3>
   <div class="paper-byline"><p class="authors">{authors}</p><a class="paper-card-cite" href="{base}{version_path(metadata)}#cite">Cite this version</a></div>
   <p class="paper-summary">{esc(metadata['abstract'])}</p>
-  {working_note}
+  {working_note}{rating_html}
 </article>"""
 
 
@@ -612,7 +624,7 @@ def build_home(papers: list, timestamps: dict, base: str, canonical_url: str, au
     working_papers = sum(p.metadata["status"] == "working_paper" and p.record_type == "research_paper" for p in papers)
     archived_papers = sum(p.metadata["status"] == "archived" and p.record_type == "research_paper" for p in papers)
     accepted_notes = sum(p.metadata["status"] != "withdrawn" and p.record_type == "technical_note" for p in papers)
-    recent = "".join(paper_card(p.metadata, timestamps[(p.id, p.version)], base, author_lookup, metrics) for p in papers[:6])
+    recent = "".join(paper_card(p.metadata, timestamps[(p.id, p.version)], base, author_lookup, metrics, card_rating(p, base)) for p in papers[:6])
     downloads = sum(paper_activity(p.id, metrics or {"papers": {}})["pdf_downloads"] for p in papers)
     if not recent:
         recent = """
@@ -668,7 +680,7 @@ def build_papers_index(papers: list, timestamps: dict, base: str, canonical_url:
     page_count = max(1, (len(research_papers) + page_size - 1) // page_size)
     start = (page - 1) * page_size
     selected = research_papers[start:start + page_size]
-    cards = "".join(paper_card(p.metadata, timestamps[(p.id, p.version)], base, author_lookup, metrics) for p in selected)
+    cards = "".join(paper_card(p.metadata, timestamps[(p.id, p.version)], base, author_lookup, metrics, card_rating(p, base)) for p in selected)
     if not cards:
         cards = '<section class="empty-state compact"><h2>No public papers yet.</h2><p>The catalogue begins when the first clean, authorized Working paper is released.</p></section>'
     previous_url = f"{base}/papers/" if page == 2 else f"{base}/papers/page/{page - 1}/"
@@ -691,7 +703,7 @@ def build_papers_index(papers: list, timestamps: dict, base: str, canonical_url:
 
 def build_notes_index(papers: list, timestamps: dict, base: str, canonical_url: str, author_lookup: dict[str, dict] | None = None, metrics: dict | None = None) -> str:
     notes = [paper for paper in papers if paper.record_type == "technical_note"]
-    cards = "".join(paper_card(note.metadata, timestamps[(note.id, note.version)], base, author_lookup, metrics) for note in notes)
+    cards = "".join(paper_card(note.metadata, timestamps[(note.id, note.version)], base, author_lookup, metrics, card_rating(note, base)) for note in notes)
     if not cards:
         cards = '<section class="empty-state compact"><h2>No technical notes yet.</h2><p>This collection begins when the first concise, rigorous and machine-readable technical contribution completes the AIRR workflow.</p></section>'
     content = f"""
@@ -750,7 +762,7 @@ def build_author_page(profile: dict, author_papers: list, timestamps: dict, metr
         for item in profile.get("links", [])
     )
     cards = "".join(
-        paper_card(paper.metadata, timestamps[(paper.id, paper.version)], base, author_lookup, metrics)
+        paper_card(paper.metadata, timestamps[(paper.id, paper.version)], base, author_lookup, metrics, card_rating(paper, base))
         for paper in author_papers
     )
     content = f"""

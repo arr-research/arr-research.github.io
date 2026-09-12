@@ -14,7 +14,20 @@ os.environ.setdefault("ARR_SESSION_SECRET", "test-import-secret-" * 4)
 
 from werkzeug.security import generate_password_hash
 
-from services.intake.app import create_app, get_db, init_db, iso, model_review_template, now, totp
+from services.intake.app import create_app, get_db, init_db, iso, model_review_template, now, totp, validate_model_review
+
+
+class IntakeEligibilityTests(unittest.TestCase):
+    def test_participation_does_not_disqualify_or_override_objections(self) -> None:
+        row = {"id": "SUB-TEST", "sha256": "a" * 64, "title": "Test manuscript", "founder_authored": 0}
+        report = model_review_template(row)
+        self.assertEqual(report["independence"], "unknown")
+        report.update(provider="Test provider", model_id="test-model", assessed_at="2026-09-12T14:00:00Z", recommendation="accept")
+        for participation in ("involved_in_manuscript", "unknown", "not_involved_in_manuscript"):
+            report["independence"] = participation
+            self.assertEqual(validate_model_review(report, row), [])
+        report["unresolved_material_objections"] = ["A counterexample invalidates the main theorem."]
+        self.assertTrue(validate_model_review(report, row))
 
 
 class IntakeTests(unittest.TestCase):

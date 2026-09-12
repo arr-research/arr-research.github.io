@@ -88,6 +88,7 @@ def aggregate_ratings(items, *, benchmark=None, applicable=True):
     raw_mean = sum(x["score"] for x in weighted)/len(weighted)
     providers = {identity(r)[0] for r in selected}
     blockers = [r.get("assessment_id") for r in reports if r["recommendation"] != "accept" or r["unresolved_material_objections"]]
+    material = [r.get("assessment_id") for r in reports if r["unresolved_material_objections"]]
     reasons = []
     if len(selected)<2: reasons.append("Only one distinct model")
     if len(providers)<2: reasons.append("One provider; shared blind spots possible")
@@ -108,4 +109,4 @@ def aggregate_ratings(items, *, benchmark=None, applicable=True):
             "benchmark_snapshot":benchmark["snapshot_id"],"benchmark_snapshot_sha256":benchmark.get("snapshot_sha256"),
             "evidence_backing":backing,"evidence_reasons":reasons,"confidence_probability":None,
             "confidence_note":"Qualitative evidence description, not a calibrated probability or confidence interval. Model-only evidence never establishes high confidence.",
-            "blocking_report_ids":blockers,"acceptance_determined":False}
+            "blocking_report_ids":blockers,"material_objection_report_ids":material,"acceptance_determined":False}

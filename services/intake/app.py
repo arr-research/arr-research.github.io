@@ -165,7 +165,7 @@ def model_review_template(row: sqlite3.Row) -> dict:
         "model_id": "REPLACE_WITH_EXACT_MODEL_ID",
         "assessed_at": "REPLACE_WITH_OFFSET_AWARE_ISO_8601_TIMESTAMP",
         "prompt_version": FRONTIER_PROMPT_VERSION,
-        "independence": "not_involved_in_manuscript",
+        "independence": "unknown",
         "recommendation": "major_revision",
         "millennium_score": 3.00,
         "overall_stars": 3,
@@ -192,7 +192,7 @@ Case: {row['id']}
 Manuscript SHA-256: {row['sha256']}
 Title: {row['title']}
 
-Declare the model's actual prior involvement in producing or revising this manuscript. A fresh conversation does not remove previous involvement. Use involved_in_manuscript if involved, not_involved_in_manuscript if not, and unknown if unverified. Founder-authored cases permit disclosed prior involvement under AIRR-FOUNDER-1.0. Do not presume acceptance.
+Declare the model's actual prior involvement in producing or revising this manuscript. A fresh conversation does not remove previous involvement. Use involved_in_manuscript if involved, not_involved_in_manuscript if not, and unknown if unverified. Prior participation does not disqualify the model from reviewing or recommending acceptance under AIRR-RATING-1.0. Use a new review context without development history or other reviewers' reports; the operator records verified isolation controls separately. A model recommendation is not a human editorial decision. Do not presume acceptance.
 
 Act as a hostile but fair scientific referee. Check theorem dependencies, quantifiers, hidden assumptions, citations, novelty claims, computations and abstract/result mismatches. Try counterexamples. Distinguish possible issues from unresolved material objections capable of invalidating a main result. Do not claim browsing, execution or verification you did not perform. Do not provide hidden chain-of-thought; give concise findings and evidence.
 
@@ -215,11 +215,9 @@ def validate_model_review(value: object, row: sqlite3.Row) -> list[str]:
         errors.append("Case identifier or manuscript SHA-256 does not match this submission.")
     if value["prompt_version"] not in {FRONTIER_PROMPT_VERSION, "ARR-INTAKE-ASSESS-1.0"}:
         errors.append(f"prompt_version must be {FRONTIER_PROMPT_VERSION}.")
-    allowed = {"not_involved_in_manuscript"}
-    if "founder_authored" in row.keys() and row["founder_authored"]:
-        allowed |= {"involved_in_manuscript", "unknown"}
+    allowed = {"not_involved_in_manuscript", "involved_in_manuscript", "unknown"}
     if value["independence"] not in allowed:
-        errors.append("Prior model involvement must be declared; the founder exception requires recorded founder authorship.")
+        errors.append("Prior model involvement must be declared as involved, not involved, or unknown.")
     for field, maximum in (("provider", 100), ("model_id", 160)):
         if not isinstance(value[field], str) or not 2 <= len(value[field].strip()) <= maximum or value[field].startswith("REPLACE_"):
             errors.append(f"{field} is missing or invalid.")

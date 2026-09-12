@@ -19,7 +19,7 @@ from pathlib import Path
 from typing import Any
 
 from arrlib import discover_papers, select_paper
-from assessmentlib import normalize_model_response, validate_assessment
+from assessmentlib import assessment_artifact_sha256, normalize_model_response, validate_assessment
 from prepare_model_assessment import build_prompt
 
 
@@ -28,7 +28,7 @@ RUNS_ROOT = ROOT / "work" / "openrouter-assessment-rounds"
 API_URL = "https://openrouter.ai/api/v1/chat/completions"
 MODEL_URL = "https://openrouter.ai/api/v1/models"
 SITE_URL = "https://airr.science"
-OPERATOR_FIELDS = {"assessment_id", "source_response_sha256", "runtime_provenance"}
+OPERATOR_FIELDS = {"assessment_id", "source_response_sha256", "runtime_provenance", "review_context", "intake_source"}
 
 
 def canonical_bytes(value: object) -> bytes:
@@ -54,6 +54,10 @@ def model_response_schema() -> dict[str, Any]:
     schema["required"] = [field for field in schema["required"] if field not in OPERATOR_FIELDS]
     for field in OPERATOR_FIELDS:
         schema["properties"].pop(field, None)
+    # Native intake projections are an operator import format, not a response
+    # that a newly requested assessment may author.
+    schema["properties"]["prompt_version"] = {"const": "ARR-ASSESS-1.0"}
+    schema.pop("allOf", None)
     # Some upstream structured-output validators reject JSON Schema's
     # ``multipleOf`` keyword for numbers. AIRR applies the stricter two-decimal
     # check locally before an assessment can be imported.
@@ -105,7 +109,7 @@ def create_plan(args: argparse.Namespace) -> int:
     selected = [select_paper(papers, paper_id, args.version) for paper_id in args.papers]
     requests: list[dict[str, Any]] = []
     for paper in selected:
-        prompt = build_prompt(paper)
+        prompt = build_prompt(paper, args.independence_declaration)
         pdf_url = f"{SITE_URL}/papers/{paper.id}/{paper.id}-{paper.version}.pdf"
         for model in args.models:
             inputs = catalog[model].get("architecture", {}).get("input_modalities", [])
@@ -113,7 +117,7 @@ def create_plan(args: argparse.Namespace) -> int:
                 "paper_id": paper.id,
                 "version": paper.version,
                 "version_id": paper.metadata["version_id"],
-                "canonical_sha256": paper.metadata["integrity"]["canonical_sha256"],
+                "canonical_sha256": assessment_artifact_sha256(paper),
                 "pdf_url": pdf_url,
                 "model": model,
                 "model_canonical_slug": catalog[model].get("canonical_slug"),
@@ -160,7 +164,7 @@ def load_sealed(round_id: str) -> tuple[Path, dict[str, Any]]:
 
 def request_body(item: dict[str, Any], independence: str) -> dict[str, Any]:
     paper = select_paper(discover_papers(), item["paper_id"], item["version"])
-    prompt = build_prompt(paper)
+    prompt = build_prompt(paper, independence)
     if hashlib.sha256(prompt.encode("utf-8")).hexdigest() != item["prompt_sha256"]:
         raise ValueError(f"prompt changed after sealing for {item['paper_id']}")
     identity = (
@@ -289,7 +293,7 @@ def parser() -> argparse.ArgumentParser:
     plan.add_argument("--model", dest="models", action="append", required=True)
     plan.add_argument("--effort", dest="efforts", action="append", default=[], help="Per-model reasoning level as MODEL=LEVEL")
     plan.add_argument("--version")
-    plan.add_argument("--independence-declaration", choices=("not_involved_in_manuscript", "involved_in_manuscript", "unknown"), default="not_involved_in_manuscript")
+    plan.add_argument("--independence-declaration", choices=("not_involved_in_manuscript", "involved_in_manuscript", "unknown"), default="unknown")
     plan.set_defaults(func=create_plan)
     run = commands.add_parser("run", help="Execute every pending request in a sealed round")
     run.add_argument("--round-id", required=True)

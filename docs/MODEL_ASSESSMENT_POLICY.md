@@ -53,13 +53,16 @@ or an assessment of a different version.
    obtaining a new model response, and adjudicate every material objection. Never
    edit a model's scientific conclusion while presenting it as the original result.
 5. Append the exact structured result with
-   `python scripts/record_model_assessment.py --clipboard --review-context context.json --publish`, review the Git
+   `python scripts/record_model_assessment.py --clipboard --review-context context.json --runtime-provenance runtime.json --publish`, review the Git
    diff, run the repository tests and publish through the protected release flow.
 
 The separate context JSON follows `review_context` in the public assessment schema;
 its digest refers to retained operator evidence, not an assertion by the reviewer.
 The public response hash detects accidental duplicate imports. AIRR does not request
 or publish private chain-of-thought. Concise findings and their evidence are enough.
+The separate runtime JSON follows `runtime_provenance` in the schema. Omit either
+operator file when the corresponding evidence is unavailable; never fill it with
+an inferred model configuration or invented isolation controls.
 
 ### Runtime identity corrections
 
@@ -107,10 +110,13 @@ The operator records the verified controls separately in `review_context` and
 retains the underlying evidence. A `fresh_blind` record requires all three controls:
 history isolation (including workspace access), disabled memory, and withheld
 other reports. A model cannot write this operator-controlled object itself.
-Unverified controls must not be marked true. Legacy reports remain usable as
-explicitly limited evidence; missing context metadata is shown as unknown, not
-retrospectively certified. They require a documented new review before they can
-support the stronger evidence description. Statistical independence is not implied
+Unverified controls must not be marked true. If a service does not expose a control,
+record that limitation and instruct the reviewer not to use the unavailable context;
+an instruction is not technical verification. Reports with incomplete context evidence,
+including legacy reports, remain usable as explicitly limited evidence. Missing
+context metadata is shown as unknown, not retrospectively certified. A documented
+review with verified controls is required for the stronger evidence description.
+Statistical independence is not implied
 by separate conversations, different product names or different providers.
 
 AIRR publishes a bounded capability-weighted mean, score range and model count.
