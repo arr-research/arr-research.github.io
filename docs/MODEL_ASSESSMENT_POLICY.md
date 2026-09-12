@@ -89,6 +89,15 @@ context isolation or editorial decision is asserted by the import.
 
 ## Prior participation, separate review context and aggregation
 
+Current public `accepted` and `corrected` versions must have at least one genuine,
+valid exact-version PDF assessment from which a score can be calculated. Record
+validation and the site build enforce this coverage requirement. A report for a
+private candidate or predecessor cannot satisfy it. The rule does not generate
+missing grades, remove adverse findings, waive the applicable review quorum, or
+make an editorial decision. Historical predecessor pages and working papers may
+remain unrated. Bind an already-public intake source explicitly to each authorized
+version using the lossless import procedure above.
+
 Each report identifies whether that model was involved in producing the manuscript.
 Prior participation does not disqualify a model from reviewing, recommending
 acceptance or contributing its score. This supersedes the former exclusion of

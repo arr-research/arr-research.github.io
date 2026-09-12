@@ -13,6 +13,11 @@ deployment of the policy revision; a public Pages update does not deploy Netcup.
 
 ## Score coverage when an authorized version becomes public
 
+Record validation and the site build reject any current `accepted` or `corrected`
+version without a genuine, valid exact-version PDF assessment and calculable score.
+This is a coverage requirement; it neither creates a report nor decides acceptance.
+Working papers and preserved predecessor versions can still show `Not yet rated`.
+
 Include its genuine, exact-PDF reports in the public assessment registry as part
 of preparing that authorized release. An editorial `accepted` label alone cannot
 supply a score. For an already-public intake report, use:
