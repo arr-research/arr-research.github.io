@@ -10,6 +10,7 @@ import re
 import shutil
 import sys
 from collections import Counter, defaultdict
+from functools import lru_cache
 import unicodedata
 from pathlib import Path
 from urllib.parse import quote, urlsplit
@@ -832,6 +833,23 @@ def findings_block(title: str, findings: list[str]) -> str:
     return f'<section><h4>{esc(title)}</h4><ul>{"".join(f"<li>{esc(item)}</li>" for item in findings)}</ul></section>'
 
 
+@lru_cache(maxsize=1)
+def published_input_notices() -> list[dict]:
+    return load_assessment_registry().get("operator_notices", [])
+
+
+def render_input_notices(paper, notices: list[dict], base: str) -> str:
+    matching = [n for n in notices if n["paper_id"] == paper.id
+                and n["version_id"] == paper.metadata["version_id"]
+                and n["canonical_sha256"] == assessment_artifact_sha256(paper)]
+    return "".join(
+        f'<aside class="assessment-input-notice"><h3>Review input clarification</h3><p>{esc(n["message"])}</p>'
+        f'<p><small>Operator record · {exact_time(n["recorded_at"])} · '
+        f'<a href="{base}/registry/model-assessments.json">Source files and affected reports</a></small></p></aside>'
+        for n in matching
+    )
+
+
 def paper_assessment_section(paper, assessments: list[dict], highlight: dict | None, base: str) -> str:
     items = assessments_for(assessments, paper)
     aggregate = paper_rating(paper, assessments)
@@ -897,7 +915,7 @@ def paper_assessment_section(paper, assessments: list[dict], highlight: dict | N
     return f"""
 <section class="model-assessments" id="model-assessments">
   <header><div><span>Longitudinal frontier-model record</span><h2>Model assessments and review context</h2></div><a href="{base}/assessments/#scale">Read the scale and limits</a></header>
-  {summary}{highlight_html}<div class="model-report-list">{history}</div>
+  {summary}{render_input_notices(paper, published_input_notices(), base)}{highlight_html}<div class="model-report-list">{history}</div>
   <p class="protocol-note">A model assessment is not peer review or a correctness certificate. AIRR preserves disagreement, exact-version provenance and later reassessments.</p>
 </section>"""
 
