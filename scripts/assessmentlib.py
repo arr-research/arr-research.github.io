@@ -10,7 +10,7 @@ from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any, Iterable
 
-from arrlib import Paper, parse_exact_timestamp, select_paper
+from arrlib import Paper, group_paper_versions, parse_exact_timestamp, select_paper
 from ratinglib import aggregate_ratings
 
 
@@ -289,6 +289,27 @@ def aggregate_assessments(items: Iterable[dict[str, Any]], *, applicable: bool =
         return None
     stars = expected_stars(result["score"])
     return {**result, "stars": stars, "tier": tier_label(stars)}
+
+
+def validate_public_assessments(registry: object, papers: Iterable[Paper]) -> list[str]:
+    """Require real usable ratings for every currently approved public version."""
+    paper_list = list(papers)
+    errors = validate_registry(registry, paper_list)
+    if errors:
+        return errors
+    for versions in group_paper_versions(paper_list).values():
+        paper = versions[-1]
+        if paper.metadata.get("status") not in {"accepted", "corrected"}:
+            continue
+        prefix = f"{paper.id} {paper.version} ({paper.metadata['status']})"
+        try:
+            rating = aggregate_assessments(assessments_for(registry["assessments"], paper))
+        except ValueError as error:
+            errors.append(f"{prefix}: cannot calculate a valid rating: {error}")
+            continue
+        if rating is None:
+            errors.append(f"{prefix}: publish a genuine assessment for this exact version and PDF before release")
+    return errors
 
 
 def validate_highlights(registry: object, papers: Iterable[Paper]) -> list[str]:

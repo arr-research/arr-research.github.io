@@ -37,7 +37,7 @@ from assessmentlib import (
     load_highlight_registry,
     tier_label,
     validate_highlights,
-    validate_registry,
+    validate_public_assessments,
 )
 
 
@@ -1615,7 +1615,7 @@ def main() -> int:
     except (OSError, ValueError, json.JSONDecodeError) as error:
         print(f"Cannot build site: {error}", file=sys.stderr)
         return 1
-    assessment_errors = validate_registry(assessment_registry, all_versions)
+    assessment_errors = validate_public_assessments(assessment_registry, all_versions)
     highlight_errors = validate_highlights(highlight_registry, all_versions)
     if assessment_errors or highlight_errors:
         print("Cannot build site: assessment registry validation failed.", file=sys.stderr)
