@@ -28,7 +28,7 @@ class OpenRouterAssessmentRoundTests(unittest.TestCase):
 
     def test_request_locks_pdf_model_privacy_and_schema(self) -> None:
         paper = discover_papers()[0]
-        prompt = build_prompt(paper)
+        prompt = build_prompt(paper, "not_involved_in_manuscript")
         item = {
             "paper_id": paper.id,
             "version": paper.version,

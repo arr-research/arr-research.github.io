@@ -98,13 +98,14 @@ class AssessmentTests(unittest.TestCase):
         errors = validate_assessment(self.response(material=True), self.all_versions)
         self.assertTrue(any("unresolved material objections" in error for error in errors))
 
-    def test_aggregate_is_median_of_independent_exact_reports(self) -> None:
+    def test_prior_participation_does_not_exclude_or_discount_score(self) -> None:
         reports = [self.response(score=4.0), self.response(score=6.0), self.response(score=10.0, independence="involved_in_manuscript")]
         aggregate = aggregate_assessments(reports)
-        self.assertEqual(aggregate["score"], 5.0)
-        self.assertEqual(aggregate["stars"], 5)
-        self.assertEqual(aggregate["count"], 2)
-        self.assertEqual(aggregate["tier"], "Very good")
+        self.assertAlmostEqual(aggregate["score"], 20/3)
+        self.assertEqual(aggregate["stars"], 7)
+        self.assertEqual(aggregate["count"], 3)
+        self.assertEqual([w["weight"] for w in aggregate["weights"]], [1,1,1])
+        self.assertEqual(aggregate["evidence_backing"], "Limited")
 
     def test_public_scale_explains_five_is_very_good(self) -> None:
         page = build_site.build_assessments([self.paper], [], [], "", "https://arr.example", {self.paper.metadata["authors"][0]["name"]: {"id": "test-author"}})

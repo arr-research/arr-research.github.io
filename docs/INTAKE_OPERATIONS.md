@@ -1,5 +1,16 @@
 # Private intake production runbook
 
+## Model participation — AIRR-RATING-1.0, 2026-09-12
+
+Disclosed prior model participation does not disqualify an assessment, whether or
+not the paper is founder-authored. The template defaults to `unknown`; the operator
+must supply the factual declaration. Start a new review conversation, withhold
+development history and other reports, and record only the context controls actually
+verified. A model may recommend acceptance and contribute its score. Human editor
+conflicts, exact-hash authorization, material-objection adjudication, founder-model
+quorum and public-release controls remain separate. This receiver behavior requires
+deployment of the policy revision; a public Pages update does not deploy Netcup.
+
 ## Founder-authored review — AIRR-FOUNDER-1.0, 2026-09-09
 
 The configured operator can explicitly declare founder authorship on a clean,

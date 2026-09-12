@@ -67,13 +67,14 @@ class FounderReviewTests(unittest.TestCase):
             self.assertTrue(row['other_operator_conflict'])
             self.assertFalse(self.app.extensions['editorial']['founder_may_decide'](row,actor))
 
-    def test_prior_involvement_requires_declared_exception(self):
+    def test_prior_involvement_is_eligible_without_changing_founder_authorship(self):
         case_id=self.upload(conflict=True)
         with self.app.app_context():
             row=get_db().execute('SELECT * FROM submissions WHERE id=?',(case_id,)).fetchone()
             report=model_review_template(row)
             report.update(provider='OpenAI',model_id='gpt-6-astra',assessed_at=iso(),independence='involved_in_manuscript')
-            self.assertTrue(any('involvement' in x for x in validate_model_review(report,row)))
+            self.assertEqual(validate_model_review(report,row),[])
+            self.assertFalse(row['founder_authored'])
         self.assertEqual(self.declare(case_id).status_code,302)
         with self.app.app_context():
             row=get_db().execute('SELECT * FROM submissions WHERE id=?',(case_id,)).fetchone()

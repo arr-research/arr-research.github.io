@@ -33,7 +33,7 @@
       }
     },
     "assessed_at": {"type": "string", "format": "date-time"},
-    "prompt_version": {"const": "ARR-ASSESS-1.0"},
+    "prompt_version": {"enum": ["ARR-ASSESS-1.0", "ARR-INTAKE-ASSESS-1.1"]},
     "independence": {"enum": ["not_involved_in_manuscript", "involved_in_manuscript", "unknown"]},
     "recommendation": {"enum": ["accept", "minor_revision", "major_revision", "reject"]},
     "millennium_score": {"type": "number", "minimum": 0, "maximum": 10, "multipleOf": 0.01},
@@ -56,8 +56,124 @@
     "potential_errors": {"$ref": "#/$defs/findings"},
     "strong_novelty_candidates": {"$ref": "#/$defs/findings"},
     "unresolved_material_objections": {"$ref": "#/$defs/findings"},
+    "review_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "history_isolated",
+        "memory_disabled",
+        "other_reports_withheld",
+        "basis",
+        "evidence_sha256",
+        "recorded_at"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "fresh_blind",
+            "shared",
+            "unknown"
+          ]
+        },
+        "history_isolated": {
+          "type": "boolean"
+        },
+        "memory_disabled": {
+          "type": "boolean"
+        },
+        "other_reports_withheld": {
+          "type": "boolean"
+        },
+        "basis": {
+          "enum": [
+            "platform_runtime_metadata",
+            "author_verified_ui",
+            "operator_verified_ui"
+          ]
+        },
+        "evidence_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "recorded_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "fresh_blind"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "history_isolated": {
+                "const": true
+              },
+              "memory_disabled": {
+                "const": true
+              },
+              "other_reports_withheld": {
+                "const": true
+              }
+            }
+          }
+        }
+      ]
+    },
+    "intake_source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "file_sha256",
+        "submission_id"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^papers/.+/screening/[^/]+\\.json$"
+        },
+        "file_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "submission_id": {
+          "type": "string",
+          "pattern": "^SUB-[0-9A-F]+$"
+        }
+      }
+    },
     "source_response_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
   },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "prompt_version": {
+            "const": "ARR-INTAKE-ASSESS-1.1"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "intake_source"
+        ]
+      },
+      "else": {
+        "not": {
+          "required": [
+            "intake_source"
+          ]
+        }
+      }
+    }
+  ],
   "$defs": {
     "criterion": {
       "type": "object",

@@ -36,6 +36,9 @@ of material objections, and disclose that the accepting editor is also an author
 This is an author-editor acceptance after AI review, not independent human review.
 The models' prior involvement in producing or revising the manuscript must be
 disclosed. Separate conversations do not establish statistical independence.
+Prior involvement does not disqualify a model's review, recommendation or score.
+New rounds use separate, blinded review contexts with the controls and evidence
+described in MODEL_ASSESSMENT_POLICY.md; involvement remains accurately declared.
 
 For other direct conflicts, an independent editor remains required. Appeals are
 reviewed by someone other than the original decision-maker.
