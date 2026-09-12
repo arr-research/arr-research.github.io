@@ -31,6 +31,7 @@ from arrlib import (
 from assessmentlib import (
     CRITERIA,
     aggregate_assessments,
+    assessment_artifact_sha256,
     assessments_for,
     load_assessment_registry,
     load_highlight_registry,
@@ -429,13 +430,26 @@ def star_row(stars: int, maximum: int = 10) -> str:
     )
 
 
+def paper_rating(paper, assessments):
+    # Curated subject hierarchy, never title/keyword inference or all of physics.
+    mathematics = "eu-5ac3ab8e-7d50-4091-94e2-0eec71c915db"
+    subjects = {x.casefold() for x in paper.metadata.get("subjects", [])}
+    applicable = mathematics in record_subject_ids(paper.metadata) or "mathematical physics" in subjects
+    return aggregate_assessments(assessments_for(assessments, paper), applicable=applicable)
+
+
+def rating_backing(aggregate):
+    label = "Limited evidence" if aggregate["evidence_backing"] == "Limited" else aggregate["evidence_backing"]
+    return esc(label) + " · " + str(aggregate["benchmark_matches"]) + "/" + str(aggregate["count"]) + " benchmark matches"
+
+
 def assessment_badge(paper, assessments: list[dict], href: str = "#model-assessments") -> str:
-    aggregate = aggregate_assessments(assessments_for(assessments, paper))
+    aggregate = paper_rating(paper, assessments)
     if aggregate is None:
         return '<span class="assessment-unrated">Not yet rated</span>'
     return (
         f'<a class="assessment-compact" href="{esc(href)}">{star_row(aggregate["stars"])}'
-        f'<span>{aggregate["score"]:.2f} · {esc(aggregate["tier"])} · n={aggregate["count"]}</span></a>'
+        f'<span>{aggregate["score"]:.2f} · {esc(aggregate["tier"])} · n={aggregate["count"]} · {rating_backing(aggregate)}</span></a>'
     )
 
 
@@ -808,15 +822,17 @@ def findings_block(title: str, findings: list[str]) -> str:
 
 def paper_assessment_section(paper, assessments: list[dict], highlight: dict | None, base: str) -> str:
     items = assessments_for(assessments, paper)
-    aggregate = aggregate_assessments(items)
+    aggregate = paper_rating(paper, assessments)
     if aggregate is None:
-        summary = '<div class="assessment-summary unrated"><strong>Not yet rated</strong><p>No eligible independent ARR-ASSESS-1.0 report is published for this exact version. Missing evidence is not scored as zero.</p></div>'
+        summary = '<div class="assessment-summary unrated"><strong>Not yet rated</strong><p>No supported exact-version report is published for this exact version. Missing evidence is not scored as zero.</p></div>'
     else:
+        weight_rows = "".join(f'<tr><td>{esc(" · ".join(w["model"]))}</td><td>{w["score"]:.2f}</td><td>{w["weight"]:.3f}</td><td>{esc(w["reason"])}</td></tr>' for w in aggregate["weights"])
         summary = f"""
 <div class="assessment-summary">
   <div>{star_row(aggregate['stars'])}<strong>{aggregate['score']:.2f} / 10.00</strong><span>{esc(aggregate['tier'])}</span></div>
-  <dl><div><dt>Eligible reports</dt><dd>{aggregate['count']}</dd></div><div><dt>Range</dt><dd>{aggregate['minimum']:.2f}–{aggregate['maximum']:.2f}</dd></div><div><dt>Method</dt><dd>median · exact version only</dd></div></dl>
+  <dl><div><dt>Distinct models</dt><dd>{aggregate['count']}</dd></div><div><dt>Range</dt><dd>{aggregate['minimum']:.2f}–{aggregate['maximum']:.2f}</dd></div><div><dt>Method</dt><dd>bounded capability-weighted mean · exact version only</dd></div></dl><p>{rating_backing(aggregate)}. This is an evidence description, not a probability of correctness.</p><p>{esc("; ".join(aggregate["evidence_reasons"]))}</p>
 </div>"""
+        summary += f'<details class="rating-calculation"><summary>Score calculation and evidence</summary><p>Unweighted mean: {aggregate["unweighted_mean"]:.2f}. Policy: {esc(aggregate["policy"])}. <a href="{base}/assessments/#rating-method">Method and limits</a>.</p><div class="table-scroll"><table><thead><tr><th>Model</th><th>Original score</th><th>Weight</th><th>Basis</th></tr></thead><tbody>{weight_rows}</tbody></table></div><p><a href="{base}/registry/rating-snapshot.json">Download the calculation snapshot</a></p></details>'
     highlight_html = ""
     if highlight:
         strengths = "".join(f"<li>{esc(item)}</li>" for item in highlight["strengths"])
@@ -840,6 +856,10 @@ def paper_assessment_section(paper, assessments: list[dict], highlight: dict | N
         if reasoning_effort:
             model_label += f" · {reasoning_effort.title()}"
         runtime_note = ""
+        source_note = ""
+        if item.get("intake_source"):
+            source = item["intake_source"]
+            source_note = f'<p>Preserved intake report, displayed with its original protocol, date and findings. <a href="https://github.com/arr-research/arr-research.github.io/blob/main/{quote(source["path"], safe="/")}">Read the native report</a>. Native file SHA-256: <code>{esc(source["file_sha256"])}</code>.</p>'
         if runtime:
             runtime_note = (
                 f" · runtime identity: {esc(display_provider)} {esc(display_model)}"
@@ -852,17 +872,19 @@ def paper_assessment_section(paper, assessments: list[dict], highlight: dict | N
             for name in CRITERIA
         )
         independence = item["independence"].replace("_", " ")
+        context = item.get("review_context", {}).get("mode", "unknown")
+        independence += " · review context: " + context.replace("_", " ")
         material = item["unresolved_material_objections"]
         report_tone = "material" if material else "clear"
         reports.append(f"""
 <details class="model-report {report_tone}">
   <summary><span><strong>{esc(model_label)}</strong><small>{exact_time(item['assessed_at'])} · {esc(independence)}</small></span><span>{star_row(item['overall_stars'])}<strong>{float(item['millennium_score']):.2f}</strong></span></summary>
-  <div class="report-body"><p class="report-recommendation">Recommendation: <strong>{esc(item['recommendation'].replace('_', ' ').title())}</strong> · Material objections: <strong>{len(material)}</strong></p><p>{esc(item['summary'])}</p><dl class="criterion-grid">{criteria}</dl><div class="findings-grid">{findings_block('Strengths', item['strengths'])}{findings_block('Weaknesses', item['weaknesses'])}{findings_block('Potential errors', item['potential_errors'])}{findings_block('Strong novelty candidates', item['strong_novelty_candidates'])}{findings_block('Unresolved material objections', material)}</div><p class="assessment-provenance">{esc(item['assessment_id'])} · prompt {esc(item['prompt_version'])}{runtime_note} · response SHA-256 <code>{esc(item['source_response_sha256'])}</code> · canonical PDF SHA-256 <code>{esc(item['canonical_sha256'])}</code></p></div>
+  <div class="report-body">{source_note}<p class="report-recommendation">Recommendation: <strong>{esc(item['recommendation'].replace('_', ' ').title())}</strong> · Material objections: <strong>{len(material)}</strong></p><p>{esc(item['summary'])}</p><dl class="criterion-grid">{criteria}</dl><div class="findings-grid">{findings_block('Strengths', item['strengths'])}{findings_block('Weaknesses', item['weaknesses'])}{findings_block('Potential errors', item['potential_errors'])}{findings_block('Strong novelty candidates', item['strong_novelty_candidates'])}{findings_block('Unresolved material objections', material)}</div><p class="assessment-provenance">{esc(item['assessment_id'])} · prompt {esc(item['prompt_version'])}{runtime_note} · response SHA-256 <code>{esc(item['source_response_sha256'])}</code> · canonical PDF SHA-256 <code>{esc(item['canonical_sha256'])}</code></p></div>
 </details>""")
     history = "".join(reports) if reports else '<p class="assessment-empty">No model reports are published for this version.</p>'
     return f"""
 <section class="model-assessments" id="model-assessments">
-  <header><div><span>Longitudinal frontier-model record</span><h2>Independent model assessments</h2></div><a href="{base}/assessments/#scale">Read the scale and limits</a></header>
+  <header><div><span>Longitudinal frontier-model record</span><h2>Model assessments and review context</h2></div><a href="{base}/assessments/#scale">Read the scale and limits</a></header>
   {summary}{highlight_html}<div class="model-report-list">{history}</div>
   <p class="protocol-note">A model assessment is not peer review or a correctness certificate. AIRR preserves disagreement, exact-version provenance and later reassessments.</p>
 </section>"""
@@ -1105,7 +1127,7 @@ def build_protocol(base: str, canonical_url: str) -> str:
 def build_assessments(papers: list, assessments: list[dict], highlights: list[dict], base: str, canonical_url: str, author_lookup: dict[str, dict]) -> str:
     ranked = []
     for paper in papers:
-        aggregate = aggregate_assessments(assessments_for(assessments, paper))
+        aggregate = paper_rating(paper, assessments)
         if aggregate is not None:
             ranked.append((paper, aggregate))
     ranked.sort(key=lambda item: (-item[1]["score"], -item[1]["count"], item[0].metadata["title"].casefold()))
@@ -1113,25 +1135,33 @@ def build_assessments(papers: list, assessments: list[dict], highlights: list[di
     for rank, (paper, aggregate) in enumerate(ranked, start=1):
         authors = author_links(paper.metadata, author_lookup, base)
         rows.append(f"""
-<li class="assessment-rank-row"><span class="rank-number">{rank:02d}</span><div><span class="rank-record">{esc(paper.id)} · {esc(paper.version)}</span><h3><a href="{base}/{record_route(paper.metadata)}/{quote(paper.id)}/#model-assessments">{esc(paper.metadata['title'])}</a></h3><p>{authors}</p></div><div class="assessment-rank-score">{star_row(aggregate['stars'])}<strong>{aggregate['score']:.2f}</strong><span>{esc(aggregate['tier'])} · n={aggregate['count']} · {aggregate['minimum']:.2f}–{aggregate['maximum']:.2f}</span></div></li>""")
+<li class="assessment-rank-row"><span class="rank-number">{rank:02d}</span><div><span class="rank-record">{esc(paper.id)} · {esc(paper.version)}</span><h3><a href="{base}/{record_route(paper.metadata)}/{quote(paper.id)}/#model-assessments">{esc(paper.metadata['title'])}</a></h3><p>{authors}</p></div><div class="assessment-rank-score">{star_row(aggregate['stars'])}<strong>{aggregate['score']:.2f}</strong><span>{esc(aggregate['tier'])} · n={aggregate['count']} · {aggregate['minimum']:.2f}–{aggregate['maximum']:.2f}</span><span>{rating_backing(aggregate)}</span><span>{esc(paper.metadata['status'])} · acceptance recorded separately</span></div></li>""")
     if not rows:
-        rows.append('<li class="assessment-rank-empty"><strong>No scientific ranking yet.</strong><p>AIRR has not published an eligible independent assessment for any current paper version. Existing records remain “Not yet rated”; missing reports are never converted to zero.</p></li>')
+        rows.append('<li class="assessment-rank-empty"><strong>No scientific ranking yet.</strong><p>AIRR has not published an assessment for any current paper version. Existing records remain “Not yet rated”; missing reports are never converted to zero.</p></li>')
     labels = [tier_label(number) for number in range(1, 11)]
     scale_rows = "".join(
         f'<tr><td>{number}</td><td>{star_row(number)}</td><td>{esc(label)}</td><td>{esc("Publication floor" if number == 3 else "Very good is deliberately above the publication floor" if number == 5 else "Unconditional recognized Millennium Problem solution after extraordinary verification" if number == 10 else "")}</td></tr>'
         for number, label in enumerate(labels, start=1)
     )
+    coverage_rows = []
+    for paper in sorted(papers, key=lambda p: (p.metadata["status"] not in {"accepted", "corrected"}, p.metadata["title"].casefold())):
+        agg = paper_rating(paper, assessments)
+        label = (str(agg["count"]) + " model(s) · " + agg["evidence_backing"] + " evidence") if agg else "Assessment pending · no score"
+        coverage_rows.append(f'<tr><td><a href="{base}/{record_route(paper.metadata)}/{quote(paper.id)}/#model-assessments">{esc(paper.metadata["title"])}</a><br><small>{esc(paper.id)} · {esc(paper.version)}</small></td><td>{esc(paper.metadata["status"])}</td><td>{esc(label)}</td></tr>')
+    coverage = '<section class="criteria-panel" id="coverage"><h2>Assessment coverage: every current paper</h2><p>Existing editorial status and assessment coverage are separate. A legacy acceptance does not invent a modern score; a private candidate report cannot be assigned to the public predecessor.</p><div class="table-scroll"><table><thead><tr><th>Paper / exact version</th><th>Editorial status</th><th>Assessment</th></tr></thead><tbody>' + ''.join(coverage_rows) + '</tbody></table></div></section>'
     highlight_count = len(highlights)
     content = f"""
 <section class="assessment-index">
   <header><div><span>ARR-ASSESS-1.0 · exact-version evidence</span><h1>Model assessment ranking</h1></div><a class="policy-link" href="https://github.com/arr-research/arr-research.github.io/blob/main/docs/MODEL_ASSESSMENT_POLICY.md">Full policy</a></header>
   <p class="assessment-lead"><strong>AIRR asks the strongest suitable frontier models available for each assessment round to attack a paper, not merely summarize it.</strong> They search for counterexamples, hidden assumptions, proof gaps, unsupported novelty and reproducibility failures on the exact hashed version. AIRR promises no fixed provider, model or reasoning tier; founder-authored cases require two distinct identified models; every published score names the model, artifact, version and date, and unresolved material objections block admission.</p>
+  <p class="assessment-lead">A model may review a paper it helped develop, and its score counts. New rounds use separate conversations without development history, saved memory or other reviewers’ reports. Prior participation stays disclosed; legacy context that was not verified stays unknown.</p>
   <p class="assessment-boundary">Passing this unusually hard filter is meaningful positive evidence that a paper deserves serious attention. It is not infallibility: models can share blind spots, and a score cannot replace domain-expert review, formal proof or later correction.</p>
-  <div class="assessment-index-meta"><span>{len(ranked)} rated current versions</span><span>{sum(1 for paper in papers if aggregate_assessments(assessments_for(assessments, paper)) is None)} not yet rated</span><span>{len(assessments)} preserved reports</span><span>{highlight_count} signed highlights</span></div>
-  <div class="assessment-rank-head"><span>Rank</span><span>Paper</span><span>Median assessment</span></div>
-  <ol class="assessment-ranking">{''.join(rows)}</ol>
+  <div class="assessment-index-meta"><span>{len(ranked)} rated current versions</span><span>{sum(1 for paper in papers if paper_rating(paper, assessments) is None)} not yet rated</span><span>{len(assessments)} preserved reports</span><span>{highlight_count} signed highlights</span></div>
+  <div class="assessment-rank-head"><span>Rank</span><span>Paper</span><span>Weighted score · evidence</span></div>
+  <ol class="assessment-ranking">{''.join(rows)}</ol><p><a href="#coverage">See every paper and its assessment status</a></p>
   <section class="scale-panel" id="scale"><header><span>High-ceiling research scale</span><h2>Five is very good, not a failing grade.</h2></header><p>The 0.00–10.00 Millennium scale is not a school percentage or a probability of correctness. Three stars is the acceptable publication floor. Ten is the top comparison anchor and cannot be established by a model alone.</p><div class="table-scroll"><table><thead><tr><th>Stars</th><th>Display</th><th>Meaning</th><th>Anchor</th></tr></thead><tbody>{scale_rows}</tbody></table></div></section>
-  <section class="criteria-panel"><h2>Criterion profile</h2><p>Each report also supplies one to five stars, with a written basis, for correctness confidence, rigor, novelty, significance and reproducibility. These diagnostic ratings are shown separately and are not silently averaged into the headline score.</p><p>Only assessments marked independent of manuscript creation enter the median. AIRR shows the count and range, never pools different paper versions and preserves later reassessments so future systems can be compared with earlier ones.</p><p><a href="{base}/registry/model-assessments.json">Download the versioned machine-readable assessment registry</a> · <a href="{base}/schema/model-assessment.schema.json">JSON Schema</a></p></section>
+  <section class="criteria-panel" id="rating-method"><h2>How the score is calculated</h2><p><strong>Provisional method, AIRR-RATING-1.0.</strong> For a matching mathematical benchmark configuration, weight = 1 + 2 × max(0, accuracy − standard error). The score is the weighted mean of the original 0–10 scores. Weights stay between 1 and 3. Unknown model or effort receives weight 1 without an invented benchmark result. The raw report scores never change.</p><p>The pinned <a href="{base}/registry/benchmarks/epoch-frontiermath-tier4-v2-20260912.json">Epoch AI Tier 4 v2 snapshot, 12 September 2026</a> supplies mathematical-capability evidence; it does not measure reviewer honesty, novelty judgment or the probability that a paper is correct. The subtraction of one standard error and the weight cap are AIRR policy choices, not empirically calibrated reviewer reliability.</p><p>Evidence is described as Limited or Broader model support, with reasons on each paper. Models alone do not establish high confidence. Agreement, provider diversity, documented fresh blinded contexts and exact benchmark matches are recorded separately. Scores never overrule an unresolved material objection or sign an acceptance.</p></section>
+  <section class="criteria-panel"><h2>Criterion profile</h2><p>Each report also supplies one to five stars, with a written basis, for correctness confidence, rigor, novelty, significance and reproducibility. These diagnostic ratings are shown separately and are not silently averaged into the headline score.</p><p>Prior manuscript participation does not exclude a report or reduce its numerical weight. AIRR includes one latest report per evidenced model, preserves every earlier report, and shows count, range, participation and review-context evidence. A new blinded thread is distinct from statistical independence. Missing reports receive no stars.</p><p><a href="{base}/registry/model-assessments.json">Download the versioned machine-readable assessment registry</a> · <a href="{base}/schema/model-assessment.schema.json">JSON Schema</a></p></section>{coverage}
 </section>"""
     canonical = f"{canonical_url}/assessments/" if canonical_url else ""
     return page_shell(title="Model assessments — AIRR.SCIENCE", description="Version-locked longitudinal frontier-model assessments and the AIRR scientific ranking.", content=content, base=base, canonical=canonical)
@@ -1636,6 +1666,9 @@ def main() -> int:
     shutil.copy2(ROOT / "registry" / "record-timestamps.json", OUTPUT_DIR / "registry" / "record-timestamps.json")
     shutil.copy2(ROOT / "registry" / "model-assessments.json", OUTPUT_DIR / "registry" / "model-assessments.json")
     shutil.copy2(ROOT / "registry" / "editorial-highlights.json", OUTPUT_DIR / "registry" / "editorial-highlights.json")
+    shutil.copytree(ROOT / "registry" / "benchmarks", OUTPUT_DIR / "registry" / "benchmarks")
+    rating_snapshot = {"policy": "AIRR-RATING-1.0", "papers": [{"paper_id":p.id, "version_id":p.metadata["version_id"], "sha256":assessment_artifact_sha256(p), "editorial_status":p.metadata["status"], "rating":paper_rating(p,assessments)} for p in papers]}
+    write(OUTPUT_DIR / "registry" / "rating-snapshot.json", json.dumps(rating_snapshot,ensure_ascii=False,indent=2)+"\n")
 
     local_pdfs: set[tuple[str, str]] = set()
     for version in all_versions:

@@ -17,6 +17,7 @@ def parse_args() -> argparse.Namespace:
     source.add_argument("--stdin", action="store_true", help="Read the JSON response from standard input")
     source.add_argument("--clipboard", action="store_true", help="Read the JSON response from the desktop clipboard")
     parser.add_argument("--publish", action="store_true", help="Append the validated response to the public registry")
+    parser.add_argument("--review-context", type=Path, help="Separate operator evidence of the actual review context; never part of the model response")
     return parser.parse_args()
 
 
@@ -43,6 +44,8 @@ def main() -> int:
     try:
         response = json.loads(read_source(args))
         assessment = normalize_model_response(response)
+        if args.review_context:
+            assessment["review_context"] = json.loads(args.review_context.read_text(encoding="utf-8"))
     except (OSError, RuntimeError, ValueError, json.JSONDecodeError) as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 2
