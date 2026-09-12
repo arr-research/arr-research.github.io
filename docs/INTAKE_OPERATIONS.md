@@ -11,6 +11,30 @@ conflicts, exact-hash authorization, material-objection adjudication, founder-mo
 quorum and public-release controls remain separate. This receiver behavior requires
 deployment of the policy revision; a public Pages update does not deploy Netcup.
 
+## Score coverage when an authorized version becomes public
+
+Include its genuine, exact-PDF reports in the public assessment registry as part
+of preparing that authorized release. An editorial `accepted` label alone cannot
+supply a score. For an already-public intake report, use:
+
+```text
+python scripts/import_public_intake_assessment.py PAPER_ID path/to/version/screening/report.json --version vN --publish
+```
+
+Import every report from the round, including adverse findings. Inspect existing
+`intake_source` entries first so the same source is not submitted twice. The
+importer validates the unchanged native source and reviewed PDF; it does not
+authorize disclosure of a private report. A revised PDF needs its own assessment.
+Even when an admission version retains the exact PDF, bind the public report to
+that specific version explicitly instead of attaching a predecessor's registry
+entry to it. Preserve the original report and assessment date.
+
+Before release, build the catalogue and check the version in
+`_site/registry/rating-snapshot.json` and its paper page. Confirm that its weighted
+score has real underlying reports, all objections remain visible, and model
+configuration or context controls have not been inferred. Benchmark updates use
+the separately versioned procedure in `MODEL_ASSESSMENT_POLICY.md`.
+
 ## Founder-authored review — AIRR-FOUNDER-1.0, 2026-09-09
 
 The configured operator can explicitly declare founder authorship on a clean,
