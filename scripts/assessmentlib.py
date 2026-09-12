@@ -10,7 +10,7 @@ from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any, Iterable
 
-from arrlib import Paper, group_paper_versions, parse_exact_timestamp, select_paper
+from arrlib import Paper, group_paper_versions, parse_exact_timestamp, select_paper, sha256
 from ratinglib import aggregate_ratings
 
 
@@ -272,6 +272,48 @@ def validate_registry(registry: object, papers: Iterable[Paper]) -> list[str]:
                 errors.append(f"assessments[{index}].source_response_sha256: duplicate response")
             ids.add(assessment_id)
             hashes.add(response_hash)
+    notices = registry.get("operator_notices", [])
+    if not isinstance(notices, list):
+        return errors + ["operator_notices: must be a list"]
+    reports = {item.get("assessment_id"): item for item in registry["assessments"] if isinstance(item, dict)}
+    notice_ids = set()
+    required = {"notice_id", "paper_id", "version_id", "canonical_sha256", "recorded_at", "message", "affected_assessment_ids", "source_files"}
+    for index, notice in enumerate(notices):
+        prefix = f"operator_notices[{index}]"
+        if not isinstance(notice, dict) or set(notice) != required:
+            errors.append(f"{prefix}: invalid operator notice fields")
+            continue
+        if not isinstance(notice["notice_id"], str) or not notice["notice_id"] or notice["notice_id"] in notice_ids:
+            errors.append(f"{prefix}.notice_id: missing or duplicate")
+        else:
+            notice_ids.add(notice["notice_id"])
+        if not isinstance(notice["message"], str) or not 40 <= len(notice["message"]) <= 1800:
+            errors.append(f"{prefix}.message: invalid length")
+        try:
+            parse_exact_timestamp(notice["recorded_at"])
+        except (TypeError, ValueError):
+            errors.append(f"{prefix}.recorded_at: invalid timestamp")
+        affected = notice["affected_assessment_ids"]
+        if not isinstance(affected, list) or not affected or any(not isinstance(a, str) for a in affected):
+            errors.append(f"{prefix}.affected_assessment_ids: invalid report references")
+        else:
+            for assessment_id in affected:
+                report = reports.get(assessment_id)
+                if report is None or any(notice[key] != report.get(key) for key in ("paper_id", "version_id", "canonical_sha256")):
+                    errors.append(f"{prefix}: referenced report does not match the exact paper and PDF")
+        sources = notice["source_files"]
+        if not isinstance(sources, list) or not sources:
+            errors.append(f"{prefix}.source_files: missing evidence")
+        else:
+            for source in sources:
+                if not isinstance(source, dict) or set(source) != {"path", "sha256"} or not isinstance(source.get("path"), str):
+                    errors.append(f"{prefix}.source_files: invalid source record")
+                    continue
+                path = Path(source["path"])
+                if path.is_absolute() or ".." in path.parts or not source["path"].startswith("papers/") or notice["paper_id"] not in path.parts or not re.fullmatch(r"[0-9a-f]{64}", str(source["sha256"])):
+                    errors.append(f"{prefix}.source_files: invalid public path or hash")
+                elif not (ROOT / path).is_file() or sha256(ROOT / path) != source["sha256"]:
+                    errors.append(f"{prefix}.source_files: public evidence bytes do not match")
     return errors
 
 

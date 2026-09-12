@@ -273,3 +273,26 @@ evidence. The original model output remains preserved. AIRR may append an author
 response, a new independent assessment, or an editorial adjudication; substantive
 changes to the paper require a new version. The editor cannot characterize a
 model-detected issue as resolved without a public, concise basis.
+
+## Review input clarifications
+
+An operator preparation error must not be attributed to a manuscript. A missing
+file in a curated review packet does not prove that the file is absent from the
+public source. Preserve the original report, identify the exact affected PDF and
+report IDs, and record the available source paths and SHA-256 hashes. Restore the
+scientific inputs and obtain genuine new assessments when the omission could
+affect a score or finding.
+
+The assessment registry may include `operator_notices` separately from its native
+`assessments`. Notices are displayed only on the matching version and PDF. Their
+references and public source bytes are validated; they never edit native model
+fields, change score weights or issue editorial decisions. Later reports remain
+separate dated evidence, and older objections are not silently discarded.
+
+Packet curation should remove prior recommendations and scores while retaining
+scientific certificates, datasets and executable verification programs, including
+programs whose filenames contain "review". Preserve actual public source paths.
+When a canonical PDF is also a replay input, include the same verified published
+bytes at that genuine source location; never substitute another PDF or create an
+unverified path to force a check to succeed. Check both included-file integrity
+and the scope of omitted scientific dependencies before dispatch.
