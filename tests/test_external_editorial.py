@@ -47,6 +47,31 @@ class ExternalEditorialTests(HistoricalRevisionTests):
     def test_external_incomplete_round_cannot_accept(self):
         self.assertNotEqual(self.invoke_evidence('record-external-founder-decision',self.prepared_case(False)).exit_code,0)
 
+    def test_external_minor_disposition_preserves_report_and_gate(self):
+        e=self.prepared_case();sid=e['submission_id']
+        with self.app.app_context():
+            db=get_db();review=db.execute('SELECT * FROM model_reviews WHERE submission_id=? ORDER BY id DESC',(sid,)).fetchone()
+            db.execute("UPDATE model_reviews SET recommendation='minor_revision' WHERE id=?",(review['id'],));db.commit()
+        cmd='record-external-founder-adjudication'
+        v={k:x for k,x in e.items() if k not in {'decision','reason','report_sha256'}}
+        v.update(report_sha256=review['response_sha256'],basis='The minor source documentation issue was corrected in a separate associated-source note, preserving every original report and exact PDF.',resolution_evidence='Preserved source diff and reviewer correction receipt identify the original and corrected source hashes.',all_objections_addressed=True)
+        self.assertNotEqual(self.invoke_evidence('record-external-founder-decision',e).exit_code,0)
+        for update in [{'manuscript_sha256':'0'*64},{'report_sha256':'0'*64},{'human_name':'Other person'},{'all_objections_addressed':False},{'basis':'short'},{'recorded_at':'2000-01-01T00:00:00Z'}]:
+            self.assertNotEqual(self.invoke_evidence(cmd,{**v,**update}).exit_code,0)
+        with self.app.app_context():
+            db=get_db();db.execute('UPDATE model_reviews SET unresolved_material_objections=1 WHERE id=?',(review['id'],));db.commit()
+        self.assertNotEqual(self.invoke_evidence(cmd,v).exit_code,0)
+        with self.app.app_context():
+            db=get_db();db.execute('UPDATE model_reviews SET unresolved_material_objections=0 WHERE id=?',(review['id'],));db.commit()
+        result=self.invoke_evidence(cmd,v);self.assertEqual(result.exit_code,0,result.output)
+        self.assertFalse(json.loads(result.output)['accepted'])
+        self.assertNotEqual(self.invoke_evidence(cmd,v).exit_code,0)
+        with self.app.app_context():
+            db=get_db();preserved=db.execute('SELECT * FROM model_reviews WHERE id=?',(review['id'],)).fetchone()
+            self.assertEqual(preserved['response_json'],review['response_json']);self.assertEqual(preserved['response_sha256'],review['response_sha256']);self.assertEqual(preserved['recommendation'],'minor_revision')
+            self.assertNotEqual(db.execute('SELECT status FROM submissions WHERE id=?',(sid,)).fetchone()[0],'accepted_for_publication')
+        accepted=self.invoke_evidence('record-external-founder-decision',e);self.assertEqual(accepted.exit_code,0,accepted.output)
+
     def test_external_public_permission_is_separate_and_immutable(self):
         e=self.prepared_case();p={k:v for k,v in e.items() if k not in {'decision','reason','report_sha256'}}
         p.update(license='LicenseRef-Author-Retained',distribution_scope=['exact_manuscript','assessment_reports','associated_sources'],rights_basis='The author retains copyright and explicitly permits AIRR to distribute these exact files; no additional public reuse licence is granted.')

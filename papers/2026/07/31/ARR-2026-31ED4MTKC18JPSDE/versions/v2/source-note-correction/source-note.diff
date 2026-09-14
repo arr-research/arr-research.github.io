@@ -1,0 +1,38 @@
+--- historical/DenseClustering.lean
++++ documented/DenseClustering.lean
+@@ -42,21 +42,20 @@
+ > exponential growth of the clustering constant in the observable's support is
+ > **not** an obstruction to the transfer-operator gap.
+ 
+-## The proof, and why it is not elementary
+-
+-The result genuinely needs the functional calculus; this is not laziness.  The
+-naive routes fail for a reason worth recording:
+-
+-* Banach–Steinhaus does not apply: a dense *subspace* is meagre in general, so
+-  pointwise bounds on it give no uniform bound.
+-* Powers do not suffice: `B := S²/‖S‖²` is a positive contraction with `‖B‖ = 1`
+-  and `Bⁿ v → 0` for every `v`, yet nothing is contradicted — multiplication by
+-  `x` on `L²[0,1]` is exactly this.  The statement is about the spectral measure
+-  near the top of the spectrum, and only a functional calculus sees that.
+-* The resolvent route stalls: `v ∈ decayDomain` gives `v ∈ range (t − S)` for
+-  every `t > r` by a Neumann series, but with a *vector-dependent* bound, and a
+-  self-adjoint operator with dense range need not be invertible (continuous
+-  spectrum at the top).
++## The formal proof and the elementary alternative
++
++This preserved formalization uses continuous functional calculus. Functional
++calculus is not mathematically necessary for the theorem: Section 4 of the
++corrected manuscript gives a paper-level dyadic proof using self-adjointness,
++Cauchy--Schwarz and the common exponential orbit rate. That elementary proof
++is not formalized in this module; its declarations below remain unchanged.
++
++Banach--Steinhaus cannot be applied directly to an arbitrary dense subspace.
++Strong convergence of powers of a norm-one positive contraction to zero also
++does not by itself give a uniform exponential rate. Those observations do not
++rule out the dyadic argument, which uses the stronger common-rate hypothesis.
++The earlier source commentary claiming necessity of functional calculus and
++insufficiency of powers is superseded by this correction.
+ 
+ The argument used here: if `λ₀ ∈ spectrum S` with `|λ₀| = ‖S‖ > r`, pick
+ `r < c < |λ₀|` and `f x := max 0 (|x| − c)`, which vanishes on `{|x| ≤ c}` and
