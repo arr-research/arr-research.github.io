@@ -5,8 +5,16 @@ from services.intake.app import get_db, iso
 
 
 class ExternalEditorialTests(HistoricalRevisionTests):
-    def prepared_case(self, complete=True):
-        case_id=self.send_revision(self.issue()).get_json()['registration_number']
+    def prepared_case(self, complete=True, ordinary=False):
+        if ordinary:
+            from test_agent_intake import AgentIntakeTests
+            helper=AgentIntakeTests();helper.__dict__.update(self.__dict__)
+            grant=helper.request_grant();helper.approve(grant)
+            response=helper.upload(grant,metadata_changes={'authors':'Operator Author','operator_conflict':True},pdf=self.pdf)
+            self.assertEqual(response.status_code,201,response.data)
+            case_id=response.get_json()['registration_number']
+        else:
+            case_id=self.send_revision(self.issue()).get_json()['registration_number']
         token=self.login_session('operator@example.org')
         with self.app.app_context():
             get_db().execute("UPDATE users SET display_name='Operator Author' WHERE email='operator@example.org'");get_db().commit()
@@ -46,6 +54,34 @@ class ExternalEditorialTests(HistoricalRevisionTests):
 
     def test_external_incomplete_round_cannot_accept(self):
         self.assertNotEqual(self.invoke_evidence('record-external-founder-decision',self.prepared_case(False)).exit_code,0)
+
+    def test_ordinary_founder_case_uses_real_deposit_and_separate_public_permission(self):
+        e=self.prepared_case(ordinary=True);sid=e['submission_id']
+        with self.app.app_context():
+            db=get_db()
+            self.assertIsNone(db.execute('SELECT 1 FROM historical_revisions WHERE submission_id=?',(sid,)).fetchone())
+            self.assertIsNone(db.execute('SELECT parent_id FROM submissions WHERE id=?',(sid,)).fetchone()[0])
+        result=self.invoke_evidence('record-external-founder-decision',e)
+        self.assertEqual(result.exit_code,0,result.output)
+        self.assertFalse(json.loads(result.output)['published'])
+        p={k:v for k,v in e.items() if k not in {'decision','reason','report_sha256'}}
+        p.update(license='LicenseRef-Author-Retained',distribution_scope=['exact_manuscript','assessment_reports','associated_sources'],rights_basis='The sole author retains copyright and authorizes distribution of this exact manuscript and its associated reports and sources.')
+        result=self.invoke_evidence('record-external-founder-publication',p)
+        self.assertEqual(result.exit_code,0,result.output)
+        self.assertFalse(json.loads(result.output)['published'])
+
+    def test_ordinary_case_cannot_skip_owner_authorship_or_review_guards(self):
+        e=self.prepared_case(ordinary=True);sid=e['submission_id'];cmd='record-external-founder-decision'
+        with self.app.app_context():
+            db=get_db();owner=db.execute('SELECT user_id FROM submissions WHERE id=?',(sid,)).fetchone()[0]
+            db.execute('UPDATE users SET active=0 WHERE id=?',(owner,));db.commit()
+        self.assertNotEqual(self.invoke_evidence(cmd,e).exit_code,0)
+        with self.app.app_context():
+            db=get_db();db.execute('UPDATE users SET active=1 WHERE id=?',(owner,));db.execute("UPDATE submissions SET authors='Operator Author; Another Author' WHERE id=?",(sid,));db.commit()
+        self.assertNotEqual(self.invoke_evidence(cmd,e).exit_code,0)
+        with self.app.app_context():
+            db=get_db();db.execute("UPDATE submissions SET authors='Operator Author' WHERE id=?",(sid,));db.execute("UPDATE model_reviews SET unresolved_material_objections=1 WHERE submission_id=?",(sid,));db.commit()
+        self.assertNotEqual(self.invoke_evidence(cmd,e).exit_code,0)
 
     def test_external_minor_disposition_preserves_report_and_gate(self):
         e=self.prepared_case();sid=e['submission_id']
