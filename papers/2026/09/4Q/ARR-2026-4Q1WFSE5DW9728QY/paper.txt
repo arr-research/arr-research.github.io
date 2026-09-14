@@ -1,0 +1,981 @@
+The inverse self‑commutator cost at inertia (𝑚, 𝑛):
+ordered‑layering bounds, interlacing chains, and the Horn tiles
+that certify them
+Lluis Eriksson (Independent researcher)
+14 September 2026 — revised candidate
+Abstract
+For a traceless Hermitian 𝐹∈𝑀𝑑(ℂ) let 𝜅𝑑(𝐹) =
+1
+2 min{‖𝐶‖2
+𝐻𝑆∶𝐶𝐶∗−𝐶∗𝐶= 2𝐹}. On the inertia‑
+(𝑚, 𝑛) stratum (𝑚positive and 𝑛negative eigenvalues, 𝑧zeros) we prove three results valid for all
+𝑚, 𝑛, 𝑧: a dimension‑free lower bound 𝜅𝑑≥cost(𝐿) for every ordered full‑capacity layering 𝐿, certiϐied
+by Lidskii–Wielandt and Weyl inequalities alone; an exact additive formula on the aligned‑spike cone,
+where an optimizer is a direct sum of weighted shifts; and the closed form 𝜅𝑑= cost(𝐿𝑘) on explicit
+full‑dimensional regions 𝑅𝑘, 1 ≤𝑘≤𝑚−𝑛+ 1, obtained from one rank‑one interlacing step. Open
+question 1 of the inertia‑(𝑚, 2) paper is refuted by an exact weak‑duality certiϐicate: at inertia (5, 4) a
+Horn tile with 𝑛= 4 boxes is necessary, and one valid form cannot be certiϐied using Pieri‑shaped tiles
+alone. The 𝑑= 8 rank‑onset example is explained by a late negative. Conjectures for general (𝑚, 𝑛) are
+stated with their numerical evidence.
+1. Introduction
+The quantity 𝜅𝑑(𝐹) is the cheapest realisation, in Hilbert–Schmidt norm, of a traceless Hermitian 𝐹as
+a self‑commutator
+1
+2(𝐶𝐶∗−𝐶∗𝐶). Its theory has been developed in a line of records of the AI Research
+Record archive, cited by descriptive keys (identiϐiers in the reference list); everything used from them
+is restated here. [FourLevel] reduced 𝜅𝑑to a ϐinite linear program over Horn inequalities (the Horn pro‑
+gram (2.1)); [OneSpike] proved the one‑spike formula 𝜅𝑑= ∑𝑗𝑗𝑎𝑗when one sign has multiplicity one;
+[RankOnset] proved that the minimal optimal rank 𝑟∗equals the inertia bound 𝑟0 = max(𝑛+, 𝑛−) for
+𝑑≤7 and exhibited the ϐirst spectrum, 𝑑= 8 of inertia (4, 4), with 𝑟∗> 𝑟0. The published inertia‑(𝑚, 2)
+paper [Mtwo] gave a dimension‑free closed formula for two negative eigenvalues (Lidskii–Wielandt,
+Weyl and one Pieri‑type Horn triple below, 2 × 2‑block weighted shifts above) and asked in its Open
+question 1, quoted verbatim in Section 6, what survives at inertia (𝑚, 𝑛). The unpublished inertia‑
+(𝑚, 3) manuscript [Mthree] answered for three negatives and 𝑚≤9 by computer‑assisted “tiling”
+certiϐicates and 3 × 3‑block shifts, proved a dimension‑free lower bound for its ordered family A, and
+found a padding phase.
+Contribution. We treat general inertia (𝑚, 𝑛). Theorem 1 proves, for every 𝑚, 𝑛≥1 and 𝑧≥0, that
+the cost of every ordered full‑capacity layering — positives in decreasing order, every non‑ϐinal layer
+holding exactly as many positives as there are negatives before it, any order of the negatives — is a
+lower bound for 𝜅𝑑, certiϐied by Lidskii–Wielandt and Weyl inequalities alone. It contains Theorem 2 of
+1
+
+[Mthree] and the 𝐹𝑘bounds of [Mtwo] and extends them to schedules with inversions of the negatives;
+a rearrangement lemma shows that the best ordered bound is attained by a nondecreasing schedule,
+and an exact counterexample shows that full capacity cannot be relaxed. Theorem 2A characterises the
+layerings whose block‑shift chain can be solved diagonally: exactly those carrying a balanced path sys‑
+tem; the cost is then additive, 𝜅𝑑= ∑𝑖∑𝑗𝑗𝑎(𝑖)
+𝑗, and an optimizer is a direct sum of one‑spike weighted
+shifts, while alignment is a genuine restriction (23 < 24 in an explicit example). Theorem 2B gives, for
+every 𝑛≥2 and 1 ≤𝑘≤𝑚−𝑛+ 1, a full‑dimensional region 𝑅𝑘on which 𝜅𝑑equals the explicit form
+cost(𝐿𝑘), by a chain that is diagonal except for one rank‑one step whose feasibility is the converse of
+Cauchy interlacing (Golub [Go73], Chu [Chu98]); for 𝑛= 2 the regions are the 𝐹𝑘chambers of [Mtwo].
+Theorem 3 refutes the ϐirst half of Open question 1 of [Mtwo]: at inertia (5, 4) a valid form is certiϐied
+by no combination of Horn inequalities with at most 𝑛−1 = 3 boxes (an exact rational weak‑duality
+certiϐicate) but by a tiling with a 4‑box Pieri tile. The second half (blocks of size 𝑛attain) is supported
+numerically on every stratum tested and stated as a conjecture. Section 7 explains the 𝑑= 8 example
+of [RankOnset]: its two optimal forms are costs of feasible block shifts in which the largest negative
+enters a late layer, which forces rank 5 without padding. Section 8 collects the numerical structure of
+discovered form candidates on 14 strata (up to 𝑑= 12) and states a conjecture; Section 9 lists open
+questions.
+Status, stated honestly. Theorems 1, 2A, 2B and 3 are proved (Theorem 3 with an exact rational
+computation); Section 8 is numerical and Section 8.3 conjectural, and every numerical statement is
+labelled as such. The author‑supplied history reports a separate Fable‑agent adversarial review of
+the proofs and computational ingredients (Section 10); the corrections attributed to that development
+review — the range of 𝑘in Theorem 2B, the Weyl tiles of the box‑4 certiϐicate, a counterexample to
+a conjectured “Pieri shapes sufϐice” statement — are incorporated. Literature searches (Section 10)
+found no prior closed formula on an inertia stratum and no prior use of the interlacing converse inside
+a block‑shift chain; the nearest works [JOS13,AS15] bound different objectives over factorisations 𝐴=
+[𝐵, 𝐶]. A null search does not certify priority.
+2. Setting
+Throughout ‖𝑋‖2 = Tr 𝑋∗𝑋and 𝐹∈𝑀𝑑(ℂ) is Hermitian and traceless with ordered spectrum 𝜆1 ≥
+… ≥𝜆𝑑. On the inertia‑(𝑚, 𝑛) stratum
+𝜆= (𝑎1 ≥… ≥𝑎𝑚> 0, 0𝑧, −𝑏𝑛, … , −𝑏1),
+𝑏1 ≥… ≥𝑏𝑛> 0,
+෍
+𝑗
+𝑎𝑗= ෍
+𝑖
+𝑏𝑖=∶𝑃,
+𝑑= 𝑚+𝑛+𝑧.
+The spectrum index of 𝑎𝑗is 𝑗, that of −𝑏𝑖is 𝑑+ 1 −𝑖, and the zeros occupy 𝑚+ 1, … , 𝑚+ 𝑧. We write
+𝐴𝑢∶= ∑𝑗≥𝑢𝑎𝑗(𝐴𝑚+1 = 0) and 𝐵′ ∶= 𝑏2+⋯+𝑏𝑛. By 𝐹↦−𝐹(which replaces 𝐶by 𝐶∗) every statement
+transfers to inertia (𝑛, 𝑚).
+Given 𝐶with 𝐶𝐶∗−𝐶∗𝐶= 2𝐹, put 𝑅= 𝐶𝐶∗/2, 𝑆= 𝐶∗𝐶/2: they are positive semideϐinite with the
+same spectrum 𝑠1 ≥… ≥𝑠𝑑≥0, 𝑅−𝑆= 𝐹,
+1
+2‖𝐶‖2 = ∑𝑡𝑠𝑡, and conversely any such pair comes from
+𝐶= 𝑈√2Σ𝑉∗. Hence ([FourLevel] Theorem 2.2, [RankOnset] Proposition 2.2, [Mtwo] (2.1))
+𝜅𝑑(𝐹) = min ቄ෍
+𝑡<𝑑
+𝑠𝑡∶𝑠1 ≥… ≥𝑠𝑑−1 ≥𝑠𝑑= 0, (𝑠, −𝑠rev, 𝜆) Horn‑feasibleቅ,
+(2.1)
+where Horn‑feasible means that 𝛼= (𝑠1, … , 𝑠𝑑−1, 0), 𝛽= (0, −𝑠𝑑−1, … , −𝑠1) and 𝛾= 𝜆satisfy every
+Horn inequality ∑𝑘∈𝐾𝛾𝑘≤∑𝑖∈𝐼𝛼𝑖+ ∑𝑗∈𝐽𝛽𝑗, (𝐼, 𝐽, 𝐾) ∈𝑇𝑑
+𝑟[Ho62,Kl98,KT99,Fu00]. The normalisation
+2
+
+𝑠𝑑= 0 is legitimate because subtracting 𝑠𝑑1 from 𝑅and 𝑆preserves positivity, equal spectra and
+𝑅−𝑆= 𝐹, and lowers the cost ([Mtwo], remark after (2.1)). In 𝑠‑notation a triple reads
+෍
+𝑖∈𝐼, 𝑖<𝑑
+𝑠𝑖−
+෍
+𝑗∈𝐽, 𝑗>1
+𝑠𝑑+1−𝑗≥෍
+𝑘∈𝐾
+𝜆𝑘.
+(2.2)
+With 𝜆(𝐼) = (𝑖𝑟−𝑟, … , 𝑖1 −1) the partition attached to 𝐼= (𝑖1 < ⋯< 𝑖𝑟), (2.2) holds for all Her‑
+mitian triples whenever the Littlewood–Richardson coefϐicient 𝑐𝜆(𝐾)
+𝜆(𝐼)𝜆(𝐽) is nonzero (Klyachko [Kl98]);
+this necessity direction is all that the lower bounds use. Sufϐiciency (Klyachko, Knutson–Tao) enters
+only in identifying the optimal common spectra with the optimal face of (2.1) (Section 7) and inside
+the numerical chain LP of Section 8. We use that 𝜆↦𝜅𝑑(𝜆) is convex and piecewise linear (an LP value
+with 𝜆in the right‑hand sides) and that 𝜅𝑑+1(𝐹⊕0) ≤𝜅𝑑(𝐹).
+Forms. A form is 𝑔(𝜆) = ∑𝑗𝛼𝑗𝑎𝑗+ ∑𝑖<𝑛𝛽𝑖𝑏𝑖with integer coefϐicients, written (𝛼1, … , 𝛼𝑚; 𝛽1, … , 𝛽𝑛−1);
+the coefϐicient of 𝑏𝑛is normalised to 0 using ∑𝑎= ∑𝑏. It is valid if 𝑔≤𝜅𝑑on the stratum and
+exposed if it is the unique maximiser of the set of valid forms on a nonempty open set; its chamber
+is the closed set where it is a maximiser. 𝑆(𝑚, 𝑛, 𝑧) denotes the ϐinite set of numerically discovered,
+numerically validated exposed‑form candidates in Section 8. Its completeness is not asserted. The
+putative complete set in Conjecture 8.3 is denoted 𝒮(𝑚, 𝑛, 𝑧).
+Layerings and costs. A layering 𝐿is an ordered partition of the multiset {𝑎𝑗}∪{−𝑏𝑖}, possibly together
+with some zeros, into layers Λ0, Λ1, … , Λ𝑇. Write 𝑡(𝑥) for the index of the layer of 𝑥, 𝑡(𝑏𝑖) ∶= 𝑡(−𝑏𝑖),
+tail𝑢∶= ∑𝑥∈Λ𝑢∪⋯∪Λ𝑇𝑥, and cost(𝐿) ∶= ∑𝑇
+𝑢=1 tail𝑢.
+Lemma 2.1. cost(𝐿) = ∑𝑥𝑡(𝑥) 𝑥= ∑𝑗൫𝑡(𝑎𝑗) −𝑡(𝑏𝑛)൯𝑎𝑗+ ∑𝑖<𝑛൫𝑡(𝑏𝑛) −𝑡(𝑏𝑖)൯𝑏𝑖.
+Proof. ∑𝑢≥1 tail𝑢= ∑𝑥𝑥⋅#{𝑢≥1 ∶𝑢≤𝑡(𝑥)} = ∑𝑥𝑡(𝑥)𝑥; adding 𝑡(𝑏𝑛)(∑𝑖𝑏𝑖−∑𝑗𝑎𝑗) = 0 gives the
+canonical coordinates. □
+Conversely a form with 𝛼𝑗= 𝑡(𝑎𝑗) −𝑡(𝑏𝑛), 𝛽𝑖= 𝑡(𝑏𝑛) −𝑡(𝑏𝑖) for nonnegative integers 𝑡determines
+its level layering 𝐿(𝑔) (level sets of 𝑡, ordered, common shift ϐixed by min 𝑡= 0). The b‑schedule of a
+layering is 𝑢= (𝑢1, … , 𝑢𝑛), 𝑢𝑖∶= 𝑡(𝑏𝑖), and the capacity of layer 𝑢≥1 is 𝑐𝑢∶= #{𝑖∶𝑢𝑖< 𝑢}.
+Block shifts ([Mtwo] Section 5.1, valid for any layer sizes). Let 𝐷𝑡∶= diag Λ𝑡and 𝐶= ∑𝑇
+𝑡=1 𝑀𝑡with
+𝑀𝑡∶Λ𝑡−1 →Λ𝑡. With 2𝑅𝑡∶= 𝑀𝑡𝑀∗
+𝑡(on Λ𝑡) and 2𝑆𝑡∶= 𝑀∗
+𝑡𝑀𝑡(on Λ𝑡−1), 𝐶𝐶∗−𝐶∗𝐶= 2𝐹on the layered
+entries iff
+𝑆1 = −𝐷0,
+𝑅𝑡−𝑆𝑡+1 = 𝐷𝑡(1 ≤𝑡< 𝑇),
+𝑅𝑇= 𝐷𝑇,
+𝑅𝑡, 𝑆𝑡have the same nonzero spectrum;
+(2.3)
+conversely positive semideϐinite 𝑅𝑡, 𝑆𝑡with equal nonzero spectra are realised by 𝑀𝑡= 𝑉√2Σ𝑊∗. Then
+1
+2‖𝐶‖2 = ∑𝑡Tr 𝑆𝑡= cost(𝐿) and rank 𝐶= ∑𝑡rank 𝑆𝑡≤∑𝑡min(|Λ𝑡−1|, |Λ𝑡|); zeros of 𝐹left outside the
+layering lie in ker 𝐶∩ker 𝐶∗. A layering is feasible at 𝜆if (2.3) is solvable; then 𝜅𝑑≤cost(𝐿).
+3. Statements
+Deϐinition 3.1 (ordered full‑capacity layering 𝐿(𝑢)). Let 𝑢∈ℤ𝑛
+≥0 with min 𝑢= 0 and capacities
+𝑐𝑢= #{𝑖∶𝑢𝑖< 𝑢}. Place −𝑏𝑖in layer 𝑢𝑖. Place 𝑎1, 𝑎2, … in this order into layers 1, 2, …, layer 𝑢
+receiving exactly 𝑐𝑢positives while positives remain; let 𝑇be the layer receiving the last positive (it
+receives 𝑞positives, 1 ≤𝑞≤𝑐𝑇). Require 𝑢𝑖≤𝑇for all 𝑖. Write 𝑡𝑢for the index of the ϐirst positive in
+layers ≥𝑢(𝑡1 = 1, 𝑡𝑢+1 = 𝑡𝑢+ 𝑐𝑢for 𝑢< 𝑇) and 𝐵𝑢∶= {𝑑+ 1 −𝑖∶𝑢𝑖< 𝑢} for the spectrum indices
+of the negatives before layer 𝑢(|𝐵𝑢| = 𝑐𝑢).
+3
+
+Family A of [Mthree] is the case of nondecreasing 𝑢; the layerings ℒ(𝐹𝑘) of [Mtwo] are 𝑛= 2, 𝑢= (0, 𝑘);
+the class also contains every schedule with inversions of the negatives, e.g. 𝑢= (0, 2, 1).
+Theorem 1 (all 𝑚, 𝑛≥1, 𝑧≥0, every 𝑢as in 3.1). 𝜅𝑑(𝐹) ≥cost(𝐿(𝑢)) on the whole inertia‑(𝑚, 𝑛)
+stratum, in every dimension 𝑑≥𝑚+ 𝑛. The certiϐicate consists of Lidskii–Wielandt and Weyl triples
+with Littlewood–Richardson coefϐicient 1; each 𝑠𝑡with 𝑡≤𝑚occurs exactly once with coefϐicient +1
+and the only negative terms are −𝑠𝛽with 𝑑−𝑛+ 1 ≤𝛽≤𝑑−1.
+Lemma 3.2 (rearrangement). For a ϐixed multiset of schedule values, cost(𝐿(𝑢)) is maximised by the
+nondecreasing assignment 𝑢1 ≤… ≤𝑢𝑛. Hence max𝑢cost(𝐿(𝑢)) is attained by a family‑A layering.
+Proposition 3.3 (full capacity is necessary). For 𝑚= 𝑛= 2, 𝑎= 𝑏= (1, 1), the layering
+{−𝑏1, −𝑏2}{𝑎1}{𝑎2} (capacity 𝑐1 = 2, one positive placed) has cost 3 > 𝜅4 = 2.
+Theorem 2A (aligned‑spike cone; all 𝑚, 𝑛, 𝑧). Let 𝐿= 𝐿(𝑢) be ordered and full‑capacity. The chain
+(2.3) has a solution with all 𝑅𝑡, 𝑆𝑡diagonal iff 𝐿carries a balanced path system (Deϐinition 5.1); then
+the spectrum splits into 𝑛one‑spike blocks 𝐹𝑖= (𝑎(𝑖)
+1
+≥𝑎(𝑖)
+2
+≥… ; −𝑏𝑖) with ∑𝑗𝑎(𝑖)
+𝑗
+= 𝑏𝑖, and
+𝜅𝑑(𝐹) = cost(𝐿) =
+𝑛
+෍
+𝑖=1
+෍
+𝑗
+𝑗𝑎(𝑖)
+𝑗
+= ෍
+𝑖
+𝜅(𝐹𝑖).
+Theorem 2B (interlacing regions; all 𝑚≥𝑛≥2, 𝑧≥0, 1 ≤𝑘≤𝑚−𝑛+ 1). With 𝐿𝑘, 𝜏(𝑘) and 𝑅𝑘
+as in Deϐinition 5.5, 𝜅𝑑(𝐹) = cost(𝐿𝑘) for every 𝜆∈𝑅𝑘, where
+cost(𝐿𝑘) = 𝑘𝑏1 + ෍
+𝑗≤𝑘
+(𝑗−𝑘) 𝑎𝑗+ ෍
+𝑗>𝑘
+ቒ𝑗−𝑘
+𝑛
+ቓ𝑎𝑗.
+𝑅𝑘has nonempty interior whenever 𝑎1 > ⋯> 𝑎𝑚; for 𝑘≥𝑚−𝑛+ 2 the set 𝑅𝑘is empty. For 𝑛= 2,
+𝑅𝑘is the 𝐹𝑘chamber 𝐸𝑘+2 ≤𝑏2 ≤𝐸𝑘+1 of [Mtwo] Proposition 5.4(1). An optimizer of rank 𝑚is
+constructed explicitly.
+Theorem 3 (Open question 1 of [Mtwo], ϐirst half).
+For a Horn triple put box(𝐼, 𝐽, 𝐾)
+∶=
+min(|𝜆(𝐼)|, |𝜆(𝐽)|); every triple “adding 𝑛−1 boxes to a rectangle” has box ≤
+𝑛−1.
+On the
+inertia‑(5, 4) stratum (𝑧= 0) the valid form 𝑔= (3, 1, 1, 2, 2; −2, −1, 0) admits no certiϐicate — no
+nonnegative combination of Horn inequalities of box ≤3, ordering and nonnegativity constraints —
+while it is certiϐied by a tiling containing one box‑4 tile. Hence tiles with 𝑛boxes are necessary at
+𝑛= 4.
+4. Lower bound: proof of Theorem 1
+Fix 𝑢, write 𝐿= 𝐿(𝑢) with 𝑇, 𝑡𝑢, 𝐵𝑢as in Deϐinition 3.1, and note 𝐵𝑢⊆{𝑑−𝑛+1, … , 𝑑} = {𝑚+𝑧+1, … , 𝑑}.
+Tile 𝑢for 1 ≤𝑢< 𝑇. Take the Lidskii–Wielandt triple 𝐼= 𝐾= {𝑡𝑢, … , 𝑑} ∖𝐵𝑢, 𝐽= {1, … , 𝑟}, 𝑟= |𝐾| =
+𝑑−𝑡𝑢+1−𝑐𝑢. Then 𝜆(𝐽) = ∅and 𝜆(𝐼) = 𝜆(𝐾), so 𝑐𝜆(𝐾)
+𝜆(𝐼)𝜆(𝐽) = 1, and ∑𝐼+∑𝐽= ∑𝐾+𝑟(𝑟+1)/2 holds
+because 𝐼= 𝐾; (2.2) is the Lidskii–Wielandt inequality ∑𝑘∈𝐾𝜆𝑘(𝑅−𝑆) ≤∑𝑘∈𝐾𝜆𝑘(𝑅) + ∑𝑗≤𝑟𝜆𝑗(−𝑆)
+[Li50,Wi55], valid in every dimension. Its right side is
+෍
+𝑘∈𝐾
+𝜆𝑘= ෍
+𝑗≥𝑡𝑢
+𝑎𝑗−෍
+𝑖∶𝑢𝑖≥𝑢
+𝑏𝑖= tail𝑢,
+4
+
+because the positives in layers ≥𝑢are exactly 𝑎𝑡𝑢, … , 𝑎𝑚(placed in order, all placed), zeros contribute
+nothing, and the negatives in layers ≥𝑢are those with index outside 𝐵𝑢. Its left side is ∑𝑖∈[𝑡𝑢,𝑑−1]∖𝐵𝑢𝑠𝑖−
+∑𝑑−1
+𝑖=𝑑+1−𝑟𝑠𝑖with 𝑑+ 1 −𝑟= 𝑡𝑢+ 𝑐𝑢; since 𝑡𝑢+ 𝑐𝑢−1 = 𝑡𝑢+1 −1 ≤𝑚−1 while min 𝐵𝑢≥𝑚+ 𝑧+ 1,
+the block [𝑡𝑢, 𝑡𝑢+ 𝑐𝑢−1] misses 𝐵𝑢and 𝐵𝑢∖{𝑑} ⊆[𝑡𝑢+ 𝑐𝑢, 𝑑−1], so the left side equals
+𝑡𝑢+𝑐𝑢−1
+෍
+𝑖=𝑡𝑢
+𝑠𝑖−
+෍
+𝛽∈𝐵𝑢, 𝛽<𝑑
+𝑠𝛽.
+Tiles for the last layer 𝑇. Use the Weyl triples 𝐼= 𝐾= {𝑗}, 𝐽= {1} (𝜆(𝐽) = ∅, 𝜆(𝐼) = 𝜆(𝐾) = (𝑗−1),
+coefϐicient 1, sum condition 𝑗+ 1 = 𝑗+ 1), i.e. 𝑠𝑗≥𝑎𝑗, for 𝑗= 𝑡𝑇, … , 𝑚. Their sum is ∑𝑗≥𝑡𝑇𝑠𝑗≥
+∑𝑗≥𝑡𝑇𝑎𝑗= tail𝑇+ ∑𝑖∶𝑢𝑖=𝑇𝑏𝑖≥tail𝑇.
+Summation. The positive blocks [𝑡𝑢, 𝑡𝑢+1 −1] (𝑢< 𝑇) and [𝑡𝑇, 𝑚] partition {1, … , 𝑚}, and the negative
+terms involve only 𝑠𝛽with 𝑑−𝑛+ 1 ≤𝛽≤𝑑−1. Adding all tiles,
+෍
+𝑡≤𝑚
+𝑠𝑡−෍
+𝑢<𝑇
+෍
+𝛽∈𝐵𝑢∖{𝑑}
+𝑠𝛽≥
+𝑇
+෍
+𝑢=1
+tail𝑢= cost(𝐿),
+and ∑𝑡<𝑑𝑠𝑡exceeds the left side by ∑𝑚<𝑡<𝑑𝑠𝑡+∑𝑢<𝑇∑𝛽∈𝐵𝑢∖{𝑑} 𝑠𝛽≥0. Hence every 𝑠feasible for (2.1)
+has ∑𝑡<𝑑𝑠𝑡≥cost(𝐿), i.e. 𝜅𝑑≥cost(𝐿). Only the index bookkeeping depends on 𝑧. □
+Example(𝑛= 3, 𝑚= 4, 𝑧= 0, 𝑑= 7, theinvertedschedule𝑢= (0, 2, 1)): 𝐿= {−𝑏1}{−𝑏3, 𝑎1}{−𝑏2, 𝑎2, 𝑎3}{𝑎4},
+𝑐1 = 1, 𝑐2 = 2. Tile 𝑢= 1: 𝐼= 𝐾= {1, … , 6}, 𝐽= {1, … , 6}, reading 𝑠1 ≥𝑎1+𝑎2+𝑎3+𝑎4−𝑏2−𝑏3 = tail1.
+Tile 𝑢= 2: 𝐵2 = {5, 7}, 𝐼= 𝐾= {2, 3, 4, 6}, 𝐽= {1, 2, 3, 4}, reading 𝑠2+𝑠3−𝑠5 ≥𝑎2+𝑎3+𝑎4−𝑏2 = tail2.
+Last layer: 𝑠4 ≥𝑎4. Sum: 𝑠1 + 𝑠2 + 𝑠3 + 𝑠4 −𝑠5 ≥cost(𝐿) = 𝑎2 + 𝑎3 + 2𝑎4 + 𝑏1 −𝑏2, the form
+(0, 1, 1, 2; 1, −1).
+Remark 4.1 (what the proof uses). Only (i) positives in decreasing order, (ii) every non‑ϐinal layer
+holding exactly 𝑐𝑢positives, (iii) 𝐵𝑢⊆{𝑑−𝑛+ 1, … , 𝑑}. The order of the negatives never enters (𝐵𝑢is
+used as a set), which is why arbitrary b‑schedules are covered. Theorem 2 of [Mthree] is the case 𝑛= 3,
+𝑢nondecreasing; its alternative last‑layer tile is unnecessary. The certiϐicate was veriϐied exactly by the
+reviewer’s own code (own Fulton recursion for 𝑇𝑑
+𝑟, own LR counter) for every schedule of the strata
+(3, 3, 0), (3, 3, 1), (4, 3, 0), (4, 4, 0), (5, 4, 0), (5, 3, 1) (28, 28, 43, 157, 251, 61 schedules), including the
+coefϐicient pattern stated in Theorem 1. Numerically, max𝑢cost(𝐿(𝑢)) −𝜅𝑑≤2 ⋅10−15 at every one
+of 400 random points in each of 20 strata up to 𝑑= 12 (Section 8; one 2 ⋅10−7 outlier at (8, 4, 0) was
+a solver‑tolerance artefact, re‑solved to −9 ⋅10−16).
+Proof of Lemma 3.2. The capacities 𝑐𝑢, hence the placement of the positives and ∑𝑗𝑡(𝑎𝑗)𝑎𝑗, depend only
+on the multiset {𝑢𝑖}. The negative part of the cost is −∑𝑖𝑢𝑖𝑏𝑖with 𝑏1 ≥… ≥𝑏𝑛, maximised by the
+rearrangement inequality when 𝑢𝑖is nondecreasing in 𝑖. □
+Proof of Proposition 3.3. cost = 𝑎1 + 2𝑎2 = 3, while the four‑level formula 𝜅4 = max(𝜆1 −𝜆3, 𝜆2 −
+𝜆4, 𝜆1 −2𝜆2 −𝜆3, 𝜆2 + 2𝜆3 −𝜆4) ([FourLevel] Theorem 3.1) gives max(2, 2, 0, 0) = 2 at (1, 1, −1, −1).
+□
+The failing step is visible in the proof of Theorem 1: if layer 𝑢holds 𝑞< 𝑐𝑢positives, the next block
+starts at 𝑡𝑢+ 𝑞< 𝑡𝑢+ 𝑐𝑢, the positive blocks overlap and some 𝑠𝑡receives coefϐicient 2 (here 𝑠2: the
+tile 𝑢= 1 reads 𝑠1 + 𝑠2 ≥𝑎1 + 𝑎2 and the Weyl tile 𝑠2 ≥𝑎2), so the summed left side is no longer
+bounded by ∑𝑡<𝑑𝑠𝑡. Full capacity is exactly the disjointness condition 𝑡𝑢+1 = 𝑡𝑢+ 𝑐𝑢. Numerically,
+5
+
+the maximum over under‑ϐilled ordered layerings exceeds 𝜅𝑑at 50–78% of the random points in every
+stratum tested. Under‑ϐilled layerings can be valid when the schedule has inversions (families B and C
+of [Mthree], e.g. {𝑏1}{𝑏3, 𝑎1}{𝑏2, 𝑎2}{𝑎3}), but their certiϐicates need Pieri tiles.
+Remark 4.2 (mirror and late negatives). Applying Theorem 1 to −𝐹gives the mirror class (negatives
+in decreasing order at full capacity with respect to the positives before them), the relevant class when
+𝑚< 𝑛: in the sampled (4, 5, 0) catalogue none of the 62 candidates lies in the class of Deϐinition 3.1.
+Sign reϐlection is an exact symmetry, but the sampled catalogue counts 62 and 63 for the reϐlected strata
+do not establish complete reϐlected sets (Section 8.1). If some 𝑢𝑖> 𝑇, the tails beyond 𝑇are ≤0 and
+dropping their tiles proves the bound for the larger truncated cost; such schedules are dominated by
+moving the negative to layer 𝑇.
+5. Chains and exact regions: proofs of Theorems 2A and 2B
+5.1 Monomial chains are path systems
+Deϐinition 5.1. For a layering 𝐿(possibly with zeros), a path system is a partition of the layered entries
+into sequences 𝜋= (𝑥0, 𝑥1, … , 𝑥𝑘) with 𝑥𝑗∈Λ𝑢0+𝑗(one entry per consecutive layer) such that 𝑥0 +
+⋯+ 𝑥𝑗≤0 for 𝑗< 𝑘and 𝑥0 + ⋯+ 𝑥𝑘= 0 (a balanced path).
+Proposition 5.2. (i) If 𝐿admits a path system, 𝐿is feasible: 𝐶= ⨁𝜋𝑊𝜋, 𝑊𝜋the weighted shift 𝑒𝑥𝑗−1 ↦
+𝑤𝑗𝑒𝑥𝑗with |𝑤𝑗|2 = −2(𝑥0 + ⋯+ 𝑥𝑗−1), satisϐies 𝐶𝐶∗−𝐶∗𝐶= 2𝐹on the layered entries and vanishes
+on the rest, and
+1
+2‖𝐶‖2 = ∑𝜋∑𝑗𝑗𝑥𝑗= cost(𝐿). (ii) If (2.3) has a solution with every 𝑅𝑡, 𝑆𝑡diagonal in
+the eigenbasis of 𝐹, then 𝐿admits a path system.
+Proof. (i) On a path, (𝐶𝐶∗−𝐶∗𝐶)𝑒𝑥𝑗= (|𝑤𝑗|2 −|𝑤𝑗+1|2)𝑒𝑥𝑗with 𝑤0 = 𝑤𝑘+1 = 0; the recursion
+|𝑤𝑗+1|2 = |𝑤𝑗|2 −2𝑥𝑗has the stated solution, nonnegative exactly under the partial‑sum condition,
+and 𝑤𝑘+1 = 0 is the total‑sum condition. Distinct paths use disjoint basis vectors. Cost:
+1
+2 ∑𝑗|𝑤𝑗|2 =
+−∑𝑗≥1 ∑𝑖<𝑗𝑥𝑖= −∑𝑖(𝑘−𝑖)𝑥𝑖= ∑𝑖𝑖𝑥𝑖using ∑𝑖𝑥𝑖= 0; by Lemma 2.1 the layering cost restricted to the
+path is ∑𝑖(𝑢0 + 𝑖)𝑥𝑖= ∑𝑖𝑖𝑥𝑖. (ii) If 𝑅𝑡, 𝑆𝑡are diagonal, 𝑀𝑡= 𝑉√2Σ𝑊∗with 𝑉, 𝑊permutation matrices
+times phases, so every 𝑀𝑡and hence 𝐶is monomial; its support graph has edges only from Λ𝑡−1 to Λ𝑡,
+in‑ and out‑degree ≤1 and no cycles, hence is a disjoint union of directed paths through consecutive
+layers (isolated vertices must be zeros), and on each path the diagonal identity is the recursion of (i),
+which forces the partial‑sum conditions. □
+Lemma 5.3. Let 𝐿= 𝐿(𝑢) be ordered and full‑capacity (no zeros used) with a path system. Then every
+path starts at a negative, contains no other negative, takes exactly one positive from every layer strictly
+after its start up to layer 𝑇−1, and possibly one from layer 𝑇. Consequently the spectrum splits into
+one‑spike blocks 𝐹𝑖= (𝑎(𝑖)
+1
+≥𝑎(𝑖)
+2
+≥… ; −𝑏𝑖) with ∑𝑗𝑎(𝑖)
+𝑗
+= 𝑏𝑖, 𝑎(𝑖)
+𝑗
+being the positive taken by path 𝑖
+in layer 𝑢𝑖+ 𝑗.
+Proof. A path starts with 𝑥0 ≤0, hence at a negative. In layer 𝑢≤𝑇−1 the 𝑐𝑢positives lie on 𝑐𝑢
+distinct paths started at distinct negatives of layers < 𝑢, of which there are exactly 𝑐𝑢; so every earlier
+negative’s path is alive at 𝑢and takes a positive there. This excludes a second negative inside a path at
+a layer ≤𝑇−1, a path ending before layer 𝑇−1, and a negative at layer 𝑇inside a path (its total would
+be < 0). A path ends when its sum reaches 0, i.e. when 𝑏𝑖= ∑𝑗𝑎(𝑖)
+𝑗. Conversely, any assignment of the
+positives to alive paths with balanced spikes has partial sums ≤0 automatically. □
+Proof of Theorem 2A. The equivalence “diagonal solution iff path system” is Proposition 5.2; the block
+6
+
+structure is Lemma 5.3. Lower bound: Theorem 1. Upper bound and cost: Proposition 5.2(i), and for
+path 𝑖, ∑𝑗(𝑢𝑖+ 𝑗)𝑎(𝑖)
+𝑗
+−𝑢𝑖𝑏𝑖= ∑𝑗𝑗𝑎(𝑖)
+𝑗, the one‑spike value of [OneSpike] Theorem 3.1. □
+Remarks. (a) The cone has codimension 𝑛−1 (the balance equalities); on it the cost is additive over
+spikes whose offsets 𝑢𝑖make the merged layering sorted and full. (b) Alignment is a genuine restriction:
+𝜅7൫(10, 1, 1, 1; −13) ⊕(5; −5)൯= 23 < 24 = 𝜅(𝐹1) + 𝜅(𝐹2) (author’s hive LP and reviewer’s Horn LP,
+both 23.000000), because the spike (5; −5) cannot be offset so that the merged layering is sorted and
+full (the block (10, 1, 1, 1) ends two layers after (5)); at random two‑spike direct sums additivity held
+at 182/200 points. (c) Numerically (all labelled numerical): 460 random aligned points with 𝑛≤5
+give | cost −𝜅𝑑| ≤2.2 ⋅10−15 (author); at 125 aligned points in ϐive strata the reviewer’s explicit 𝐶has
+‖𝐶𝐶∗−𝐶∗𝐶−2𝐹‖ ≤6.2 ⋅10−16 and |
+1
+2‖𝐶‖2 −𝜅𝑑| ≤6.7 ⋅10−16.
+5.2 One rank‑one interlacing step
+Lemma 5.4 (rank‑one update, both directions). Let 𝐷= diag(𝑑1 ≥… ≥𝑑𝑁) and 𝑠≥0. The spectra
+of 𝐷+ 𝑠𝑣𝑣∗over unit vectors 𝑣are exactly the vectors 𝜎1 ≥… ≥𝜎𝑁with
+𝜎1 ≥𝑑1 ≥𝜎2 ≥𝑑2 ≥… ≥𝑑𝑁−1 ≥𝜎𝑁≥𝑑𝑁,
+∑𝜎= ∑𝑑+ 𝑠.
+Proof. Necessity is Cauchy–Weyl interlacing for a positive semideϐinite rank‑one perturbation plus
+the trace. If 𝑠= 0, interlacing and the equal trace force 𝜎= 𝑑, and any unit vector works. For
+𝑠> 0, sufϐiciency for distinct 𝑑𝑖: with 𝑣2
+𝑖∶= ∏𝑗(𝜎𝑗−𝑑𝑖)/൫𝑠∏𝑗≠𝑖(𝑑𝑗−𝑑𝑖)൯, interlacing gives nu‑
+merator and denominator the sign (−1)𝑁−𝑖, so 𝑣2
+𝑖≥0; the secular identity det(𝐷+ 𝑠𝑣𝑣∗−𝑥) =
+∏𝑖(𝑑𝑖−𝑥)൫1+𝑠∑𝑖𝑣2
+𝑖/(𝑑𝑖−𝑥)൯then has exactly the roots 𝜎𝑗, and ∑𝑖𝑣2
+𝑖= 1 follows from the trace con‑
+dition [Go73,Chu98,HJ]. Tied 𝑑𝑖: the attainable set (continuous image of the sphere) and the interlacing
+polytope are closed and vary continuously with 𝑑; take limits. □
+Deϐinition 5.5. For 𝑛≥2 and 1 ≤𝑘≤𝑚let
+𝐿𝑘∶= {−𝑏1}, {𝑎1}, … , {𝑎𝑘−1}, {𝑎𝑘, −𝑏2, … , −𝑏𝑛}, {𝑎𝑘+1, … , 𝑎𝑘+𝑛}, {𝑎𝑘+𝑛+1, … , 𝑎𝑘+2𝑛}, …
+(last layer partial), the ordered full‑capacity layering with schedule 𝑢= (0, 𝑘, … , 𝑘), and 𝜏𝑖(𝑘) ∶=
+∑𝑟≥0 𝑎𝑘+𝑖+𝑟𝑛(𝑖= 1, … , 𝑛; 𝑎𝑗∶= 0 for 𝑗> 𝑚), the column sums of the pure phase, 𝜏1 ≥… ≥𝜏𝑛≥0,
+∑𝑖𝜏𝑖= 𝐴𝑘+1. The tails are 𝐴𝑢−𝐵′ (𝑢≤𝑘) and 𝐴𝑘+1+𝑟𝑛(𝑟≥0), which gives the form of Theorem 2B.
+Let
+𝑅𝑘∶= {𝜆in the stratum ∶𝜏𝑖(𝑘) ≤𝑏𝑖≤𝜏𝑖−1(𝑘) for 𝑖= 2, … , 𝑛}.
+Proof of Theorem 2B. Range. If 𝑘≥𝑚−𝑛+ 2 then 𝑘+ 𝑛−1 > 𝑚, so 𝜏𝑛−1(𝑘) = 0 and 𝑅𝑘would force
+𝑏𝑛≤0: 𝑅𝑘is empty. If 𝑘≤𝑚−𝑛+ 1 and 𝑎1 > ⋯> 𝑎𝑚, then 𝜏𝑖−1(𝑘) −𝜏𝑖(𝑘) ≥𝑎𝑘+𝑖−1 −𝑎𝑘+𝑖> 0
+for 𝑖= 2, … , 𝑛(with 𝑎𝑚+1 = 0), so the box {𝜏𝑖< 𝑏𝑖< 𝜏𝑖−1} is open and nonempty; at its lower corner
+𝑏𝑖= 𝜏𝑖(𝑖≥2) one has 𝑏1 = 𝑃−∑𝑖≥2 𝜏𝑖= 𝑎1 + ⋯+ 𝑎𝑘+ 𝜏1 > 𝜏1 ≥𝑏2, so the box meets the stratum
+in an open set.
+Lower bound. 𝐿𝑘is ordered and full‑capacity (𝑐𝑢= 1 for 𝑢≤𝑘, 𝑐𝑢= 𝑛for 𝑢> 𝑘), so Theorem 1
+applies.
+Singleton phase. 𝑆1 = 𝑏1 and, layer by layer, 𝑅𝑢= 𝑆𝑢(scalars) and 𝑆𝑢+1 = 𝑆𝑢−𝑎𝑢, so 𝑆𝑢= 𝑏1−𝑎1−⋯−
+𝑎𝑢−1 = 𝐴𝑢−𝐵′ for 𝑢≤𝑘. These are nonnegative on 𝑅𝑘: 𝑏𝑖≤𝜏𝑖−1 gives 𝐵′ ≤𝜏1+⋯+𝜏𝑛−1 ≤𝐴𝑘+1 ≤𝐴𝑘
+(strictly positive inside the stratum).
+7
+
+Mixed layer 𝑘. 𝑆𝑘= 𝑠∶= 𝐴𝑘−𝐵′ is 1×1; take 𝑅𝑘= 𝑠𝑣𝑣∗on Λ𝑘with 𝑣a unit vector of ℂ𝑛(same nonzero
+spectrum). Then 𝑆𝑘+1 = 𝑅𝑘−𝐷𝑘= 𝑠𝑣𝑣∗+ diag(−𝑎𝑘, 𝑏2, … , 𝑏𝑛). By Lemma 5.4 with 𝑑= (𝑏2 ≥… ≥
+𝑏𝑛≥−𝑎𝑘), every 𝜎with 𝜎1 ≥𝑏2 ≥𝜎2 ≥𝑏3 ≥… ≥𝑏𝑛≥𝜎𝑛≥−𝑎𝑘and ∑𝜎= 𝐵′ −𝑎𝑘+ 𝑠= 𝐴𝑘+1
+is attainable. Choose 𝜎= 𝜏(𝑘): the trace matches, 𝜏𝑛≥0 ≥−𝑎𝑘, and the remaining conditions are
+𝜏𝑖≤𝑏𝑖≤𝜏𝑖−1 (𝑖= 2, … , 𝑛), i.e. 𝜆∈𝑅𝑘. So 𝑆𝑘+1 is positive semideϐinite with spectrum 𝜏.
+Pure phase (diagonal continuation).
+For 𝑟
+≥
+0 put 𝜏(𝑟)
+𝑖
+∶=
+∑𝑟′≥𝑟𝑎𝑘+𝑖+𝑟′𝑛and 𝑅𝑘+1+𝑟
+∶=
+diag(𝜏(𝑟)
+1 , … , 𝜏(𝑟)
+𝑛) on the slots 𝑎𝑘+1+𝑟𝑛, … , 𝑎𝑘+𝑛+𝑟𝑛of Λ𝑘+1+𝑟(exhausted columns carry 0; a partial
+layer uses only its existing slots, and the nonzero spectra still match). Then spec 𝑅𝑘+1 = 𝜏= spec 𝑆𝑘+1;
+𝑆𝑘+2+𝑟= 𝑅𝑘+1+𝑟−𝐷𝑘+1+𝑟= diag(𝜏(𝑟+1)) is positive semideϐinite with the nonzero spectrum of
+𝑅𝑘+2+𝑟; and at the last layer 𝜏(𝑟)
+𝑖
+= 𝑎𝑘+𝑖+𝑟𝑛, so 𝑅𝑇= 𝐷𝑇. Thus (2.3) holds and 𝜅𝑑≤cost(𝐿𝑘) on 𝑅𝑘.
+Rank. rank 𝐶= ∑𝑡rank 𝑆𝑡= 𝑘+ ∑𝑟≥0 #{𝑖∶𝑘+ 𝑖+ 𝑟𝑛≤𝑚} = 𝑘+ (𝑚−𝑘) = 𝑚.
+𝑛= 2. 𝜏1(𝑘) = 𝐸𝑘+1, 𝜏2(𝑘) = 𝐸𝑘+2 in the notation of [Mtwo], so 𝑅𝑘= {𝐸𝑘+2 ≤𝑏2 ≤𝐸𝑘+1}, the region
+of Proposition 5.4(1) there. □
+Remarks. (a) The chain is diagonal except for one rank‑one interlacing step, and its rank equals the
+inertia bound max(𝑛+, 𝑛−) when 𝑚≥𝑛. (b) Numerical: 1 320 random points of the regions 𝑅𝑘in nine
+strata up to (6, 4, 1) and (5, 5, 0) give max | cost(𝐿𝑘)−𝜅𝑑| ≤2.2⋅10−15 (author); the reviewer’s explicit
+𝐶(Golub’s 𝑣, eigendecomposition of 𝑆𝑘+1, diagonal continuation) at 10 points of every nonempty 𝑅𝑘
+in six strata up to (7, 4, 0) has residual ‖𝐶𝐶∗−𝐶∗𝐶−2𝐹‖ ≤1.6 ⋅10−15, | cost −𝜅𝑑| ≤1.1 ⋅10−15
+and rank 𝑚at every point, and reports 𝑅𝑘empty exactly for 𝑘> 𝑚−𝑛+ 1. (c) For 𝑛≥3, 𝑅𝑘is in
+general a proper subset of the chamber of cost(𝐿𝑘): with 𝑏𝑛pushed 5% below 𝜏𝑛, 𝐿𝑘remains optimal at
+37/44 points for (5, 3, 0) and 37/42 for (6, 4, 1); at (6, 3) the union ⋃𝑘𝑅𝑘covers 67 of the 92 points (of
+400) where some 𝐿𝑘is an argmax, at (7, 4) 13 of 35, while at (4, 2), (6, 2), (4, 3), (5, 4), (6, 5) the two
+sets coincide on all samples. The missing part of the chamber needs non‑diagonal steps in the pure
+phase (for 𝑛= 2, the 2 × 2 rotations of [Mtwo] Lemma 5.2). (d) The same mechanism gives sufϐicient
+regionsfor everyfamily‑A schedule with severalmixed layers(atlayer𝑢𝑖onealivepath absorbsthenew
+negatives by a rank‑one step, the others continue diagonally), a ϐinite union of polytopes; this general
+version was neither written out nor tested and is not claimed. For schedules with several negatives in
+Λ0 (e.g. 𝑢= 0𝑛) the initial state is forced and the pure‑phase freedom is essential.
+5.3 The pure phase: a necessary condition
+Consider a state 𝜎= spec 𝑆(𝑛values) followed by pure layers 𝛿(1), … , 𝛿(𝑞) of 𝑛sorted positives each
+(the last possibly shorter), with column sums 𝜏𝑖= ∑𝑡𝛿(𝑡)
+𝑖
+.
+Proposition 5.6. If the pure chain is feasible from 𝜎, then 𝜎≺𝜏(majorisation: the bottom‑𝑗sums of
+𝜎dominate those of 𝜏for every 𝑗).
+Proof. By Lidskii, spec(𝑅𝑡−𝐷𝑡)−spec 𝑅𝑡lies in the permutohedron Π(−𝛿(𝑡)). Summing along the chain,
+𝜎(𝑞) −𝜎∈∑1≤𝑡<𝑞Π(−𝛿(𝑡)) = Π(−∑1≤𝑡<𝑞𝛿(𝑡)) (Minkowski sums of permutohedra of similarly sorted
+vectors are permutohedra of the sums, since the support functions 𝑐↦⟨𝑐↓, 𝑥↓⟩add), with 𝜎(𝑞) = 𝛿(𝑞)
+sorted. Hence 𝜎∈𝛿(𝑞) + Π(𝜏′) ⊆Π(𝜏), 𝜏′ = ∑𝑡<𝑞𝛿(𝑡). □
+Numerically (chain LP of Section 8 in dimension 𝑛): for 𝑛= 2 the exact region is 𝜏2 ≤𝜎2 ≤𝜏1 −
+max𝑡(𝛿(𝑡)
+1
+−𝛿(𝑡)
+2 ) (no violation either way at 140 feasible of 800 sampled points; it is the 𝐹0 region
+𝐸2 ≤𝑏2 ≤𝐸1 −𝑔∗of [Mtwo]); for 𝑛= 3, 4 majorisation is never violated (0 of 67 feasible points)
+but the analogous gap inequalities are (13–14 of 24–27 at 𝑛= 3), so the exact region for 𝑛≥3 lies
+8
+
+strictly between the two and its facets are not identiϐied — the obstacle to a closed form for the 𝐹0‑type
+chambers.
+6. Which Horn triples are needed: Theorem 3 and data
+Open question 1 of [Mtwo] (Section 10 there) reads verbatim: “Inertia (𝑚, 3) and beyond. The cer‑
+tiϐicate here uses one Pieri‑type triple per even index; a natural guess is that inertia (𝑚, 𝑛) requires
+triples adding 𝑛−1 boxes to a rectangle, and that block shifts with blocks of size up to 𝑛attain. Neither
+is known; the 𝑑= 8 example of [RankOnset] with 𝑟∗> 𝑟0 has inertia (4, 4) and shows that the rank‑𝑚
+block picture cannot persist unchanged.” The Pieri triple of [Mtwo] Lemma 4.3 has 𝜆(𝐽) = (1) and
+𝜆(𝐾) a rectangle; the natural reading of the ϐirst half is that tiles of that type with |𝜆(𝐽)| = 𝑛−1 sufϐice.
+Every such tile has box ≤𝑛−1, so the Horn LP restricted to box ≤𝑛−1 upper‑bounds everything the
+guess can certify.
+Proof of Theorem 3. Let 𝐻3(𝜆) be the value of (2.1) with the Horn constraints restricted to the box‑
+≤3 triples of 𝑇9𝑟(box 0 is the Lidskii–Wielandt/Weyl class: 𝐼= 𝐾, 𝐽= (1..𝑟) or 𝐽= 𝐾, 𝐼= (1..𝑟)).
+Suppose 𝑔had a certiϐicate from this class: nonnegative multipliers 𝑦on the box‑≤3 inequalities, 𝑤
+on the ordering constraints 𝑠𝑡≥𝑠𝑡+1 and 𝑣on 𝑠𝑡≥0, with ∑𝑘𝑦𝑘𝐴𝑘+ ∑𝑡𝑤𝑡(𝑒𝑡−𝑒𝑡+1) + 𝑣= 1 and
+∑𝑘𝑦𝑘𝐵𝑘= 𝑔as linear forms in 𝜆. Then every 𝑠feasible for the restricted program satisϐies ∑𝑡<𝑑𝑠𝑡≥
+𝑔(𝜆), i.e. 𝐻3(𝜆) ≥𝑔(𝜆) for every 𝜆. At the rational point
+𝑎= ቀ
+97
+127,
+163
+979,
+86
+1945,
+29
+1445,
+1
+184ቁ,
+(𝑏2, 𝑏3, 𝑏4) = ቀ
+241
+885,
+479
+1954,
+209
+1774ቁ,
+𝑏1 = ∑𝑗𝑎𝑗−𝑏2 −𝑏3 −𝑏4
+(denominators ≤2000 except for 𝑏1, which restores the trace), the vector
+𝑠= ቀ
+97
+127,
+34142468748934736
+84409551000378285,
+479
+1954,
+209
+1774,
+3891
+265880, 0, 0, 0ቁ
+is nonincreasing, nonnegative, and satisϐies every box‑≤3 inequality of 𝑇9𝑟(13 328 of the 39 716 triples
+of 𝑇9𝑟have box ≤3) in exact rational arithmetic, with
+෍
+𝑡
+𝑠𝑡= 10550738857556475461
+6825198573622282920 ≈1.545851 < 𝑔(𝜆) = 57542567000354849
+37093470508816755 ≈1.551286.
+Hence 𝐻3(𝜆) ≤∑𝑡𝑠𝑡< 𝑔(𝜆), a contradiction. The tiling certiϐicate of 𝑔is: the Weyl tiles 𝑠1 ≥𝑎1
+(𝐼= 𝐽= 𝐾= {1}), 𝑠3 ≥𝑏3 (𝐼= (1..8), 𝐽= 𝐾= (1..9)∖{7}) and 𝑠4 ≥𝑏4 (𝐼= (1..8), 𝐽= 𝐾= (1..9)∖{6}),
+together with
+𝐼= (1, 2, 5, 6),
+𝐽= (1, 2, 3, 9),
+𝐾= (1, 4, 5, 9) ∶
+𝑠2 + 𝑠5 + 𝑠6 −𝑠7 −𝑠8 ≥𝑎1 + 𝑎4 + 𝑎5 −𝑏1,
+with 𝜆(𝐼) = (2, 2), 𝜆(𝐽) = (5), 𝜆(𝐾) = (5, 2, 2), sum condition 29 = 19 + 10, membership in 𝑇9
+4 ,
+and 𝑐(5,2,2)
+(2,2)(5) = 1 by the Pieri rule [Fu97] ((5, 2, 2)/(2, 2) is a horizontal strip); its box is 4. The sum is
+𝑠1 + ⋯+ 𝑠6 −𝑠7 −𝑠8 ≥2𝑎1 + 𝑎4 + 𝑎5 −𝑏1 + 𝑏3 + 𝑏4 = 3𝑎1 + 𝑎2 + 𝑎3 + 2𝑎4 + 2𝑎5 −2𝑏1 −𝑏2 = 𝑔,
+each 𝑠𝑡with 𝑡≤5 once. □
+𝑔is numerically observed to be exposed; its full‑dimensional exposedness is not needed for Theorem
+3. At the (ϐloating‑point) point above, 𝜅9 = 𝑔(𝜆) = 1.551286 with margin 0.069 over the next form
+of 𝑆(5, 4, 0), and the restricted values for 𝐵= 0, … , 5 are 1.531217, 1.531217, 1.545850, 1.545850,
+1.551286, 1.551286: the jump to 𝜅occurs exactly at 𝐵= 4. The certiϐicate is the dual returned by both
+the author’s and the reviewer’s LP (a ϐirst transcription listed 𝑠2 ≥𝑏2 instead of 𝑠3 ≥𝑏3, 𝑠4 ≥𝑏4, which
+9
+
+is not a tiling since the box‑4 tile already contains 𝑠2). The exact computation was carried out by the
+reviewer and is reproduced, with the rational point printed, by repro/exact_oq1.py; the multipliers
+of a general certiϐicate need not be 1, and the weak‑duality argument covers them all.
+Box counts on the computed strata (numerical). For 𝜆in the stratum let 𝐵min(𝜆) be the least 𝐵such
+that the box‑≤𝐵program attains 𝜅𝑑(𝜆) (ϐloating‑point HiGHS, tolerance 10−9, gaps ≥10−3 whenever
+a level is reported insufϐicient), and for an exposed form 𝑔let 𝐵min(𝑔) be 𝐵min at a point interior to both
+its chamber and the stratum (there a restricted certiϐicate attaining 𝜅certiϐies 𝑔).
+(𝑚, 𝑛, 𝑧)
+|𝑆|
+𝐵min(𝑔) histogram
+max
+(𝑚, 2, 𝑧), 𝑑≤9
+—
+(random points only)
+1
+(3, 3, 0), (3, 3, 1)
+10
+0:6, 1:4
+1
+(4, 3, 0) / (4, 3, 1)
+19 / 18
+0:10, 1:5, 2:4 / 2:3
+2
+(5, 3, 0) / (5, 3, 1)
+27 / 26
+0:13, 1:9, 2:3, 3:2 / 3:1
+3
+(6, 3, 0)
+34
+0:17, 1:13, 2:3, 3:1
+3
+(4, 4, 0) / (4, 4, 1)
+32
+0:14, 1:8, 2:10
+2
+(5, 4, 0) / (4, 5, 0)
+63 / 62
+0:21, 1:13, 2:19, 3:8,
+4:2 / 3:7, 4:2
+4
+So the box count is ≤𝑛in all data and reaches 𝑛for 𝑛= 3 (𝑚≥5; the reviewer reproduced the (5, 3, 0)
+histogram with own chamber points and own LP, the two box‑3 forms being (1, 2, 3, 3, 4; −2, −1) and
+(3, 1, 2, 2, 3; −2, −1)) and for 𝑛= 4 (𝑚= 5). The tile list of [Mthree] used 𝜆(𝐽) = (3) tiles; that box 3 is
+necessary at 𝑛= 3 is new here (numerical). The forms needing 𝑛boxes are b‑inverted layerings with
+the largest negative entering late, e.g. (3, 1, 1, 2, 2; −2, −1, 0) = {𝑏3, 𝑏4}{𝑏2, 𝑎2, 𝑎3}{𝑏1, 𝑎4, 𝑎5}{𝑎1} and
+(1, 1, 2, 3, 4; −2, −1, 0) = {𝑏3, 𝑏4}{𝑏2, 𝑎1, 𝑎2}{𝑏1, 𝑎3}{𝑎4}{𝑎5}. Rectangles: among the active non‑Lidskii
+tiles of the full‑LP duals, 𝜆(𝐾) is a rectangle at only 1/38 ((5, 4, 0)), 0/32 ((4, 4, 1)), 3/31 ((4, 5, 0)),
+5/27 ((6, 3, 0)) occurrences; the rectangle picture of the (𝑚, 2) Pieri triple does not persist. Shapes:
+the most frequent non‑Lidskii shapes are Pieri rows and columns (𝜆(𝐽) = (3) with a horizontal strip
+at 𝑛= 3; (6), (4), (2), (1, 1), (3, 3) at 𝑛= 4).
+Pieri shapes do not always sufϐice.
+A ϐirst draft conjectured that every exposed form has a
+tiling whose non‑Lidskii tiles are Pieri triples (𝜆(𝐼) or 𝜆(𝐽) a single row or column).
+The re‑
+viewer tested the Horn LP restricted to box‑0 tiles plus all triples in which 𝜆(𝐼) or 𝜆(𝐽) is
+a single row or column of any length (12 798 of the 39 716 triples at 𝑑
+=
+9; a superset of
+the conjectured class, with arbitrary multipliers) at interior chamber points of every exposed
+form: all forms of (3, 3, 0), (4, 3, 0), (5, 3, 0), (4, 4, 0), (4, 3, 1), (5, 3, 1), (4, 4, 1) pass, and exactly
+one form of (5, 4, 0) fails, 𝑔′
+=
+(1, 1, 2, 3, 4; −2, −1, 0), with gaps 0.008, 0.013, 0.016 at three
+chamber points.
+The obstruction is exact as well (repro/exact_oq1.py): at the rational point
+𝑎= (
+409
+1715,
+179
+878,
+283
+1424,
+339
+1784,
+203
+1202), (𝑏2, 𝑏3, 𝑏4) = (
+325
+1224,
+495
+1963,
+206
+955), 𝑏1 = ∑𝑗𝑎𝑗−𝑏2 −𝑏3 −𝑏4, the vector
+𝑠= (
+384815
+1072184,
+325
+1224,
+495
+1963,
+206
+955,
+203
+1202,
+46058
+3366545, 0, 0) satisϐies every inequality of that class exactly, with
+∑𝑡𝑠𝑡=
+67237875494435837
+52741022880857220 ≈1.274869 < 𝑔′(𝜆) =
+29791432143128927309
+23153309044696319580 ≈1.286703; the same value
+is reached by an exact box‑≤3 vertex, so 𝑔′ also needs box 4. Its returned certiϐicate (every tile in 𝑇9𝑟
+with LR coefϐicient 1 by both implementations) is
+tile (𝐼; 𝐽; 𝐾)
+𝑠‑form ≥right side
+𝜆(𝐼), 𝜆(𝐽), 𝜆(𝐾)
+(5; 1; 5)
+𝑠5 ≥𝑎5
+Weyl
+10
+
+tile (𝐼; 𝐽; 𝐾)
+𝑠‑form ≥right side
+𝜆(𝐼), 𝜆(𝐽), 𝜆(𝐾)
+(1, 5; 1, 5; 4, 5)
+𝑠1 ≥𝑎4 + 𝑎5
+(3), (3), (3, 3)
+(1, 2, 5, 6; 1, 2, 5, 9; 3, 4, 5, 9)
+𝑠2 + 𝑠6 −𝑠8 ≥𝑎3 + 𝑎4 + 𝑎5 −𝑏1
+(2, 2), (5, 2), (5, 2, 2, 2)
+(1..8; [9] ∖7; [9] ∖7)
+𝑠3 ≥𝑏3
+Weyl
+(1..8; [9] ∖6; [9] ∖6)
+𝑠4 ≥𝑏4
+Weyl
+Thethirdtilehasa two‑row𝜆(𝐽), andthe sumis𝑠1+⋯+𝑠6−𝑠8 ≥𝑎1+𝑎2+2𝑎3+3𝑎4+4𝑎5−2𝑏1−𝑏2 = 𝑔′.
+In the sampled catalogues, 𝑔′ occurs only at 𝑧= 0 and violates the inversion‑balance rule of Section
+8; no exact classiϐication of its exposedness after padding is claimed here. So the conjecture of Section
+8.3 is stated with a box bound only, and the shape statement is Question 8.4.
+7. The 𝑑= 8 example
+The spectrum 𝜆= (5, 1, 1, 1, −2, −2, −2, −2) of [RankOnset] Theorem 4.1 (4𝑐−3𝑏, 𝑏, 𝑏, 𝑏, −𝑐4 with
+𝑏= 1, 𝑐= 2) has 𝜅8 = 13 (hive and Horn LP, both authors’ codes) and 𝑟∗= 5 > 4 = 𝑟0. Exactly two of
+the 32 discovered candidates in 𝑆(4, 4, 0) attain 13 there:
+(3, 1, 1, 2; −2, −1, 0) = {𝑏3, 𝑏4}{𝑏2, 𝑎2, 𝑎3}{𝑏1, 𝑎4}{𝑎1},
+(4, 1, 2, 2; −3, −2, −1) = {𝑏4}{𝑏3, 𝑎2}{𝑏2, 𝑎3, 𝑎4}{𝑏1}{𝑎1}.
+Both level layerings are chain‑feasible at the point (blocks of size ≤3), and both have chain‑rank bound
+∑𝑡min(|Λ𝑡−1|, |Λ𝑡|) = 5. The minimum optimal rank 𝑟∗= 5 and value 13 follow from [RankOnset]
+Theorem 4.1 and Corollary 4.2. The original HiGHS face scan is numerical; integer input alone does not
+certify exactness. Here is an additional exact proof that every optimizer at this particular spectrum has
+rank 5. Besides 𝑠1 ≥5 and 𝑠4 ≥2, the following Horn triples at 𝑑= 8 give the indicated inequalities:
+• 𝐼= (1, 2), 𝐽= 𝐾= (1, 8): 𝑠2 ≥3.
+• 𝐼= (1, 2, 3, 5, 6, 7), 𝐽= (1, 2, 3, 5, 7, 8), 𝐾= (1, 3, 4, 6, 7, 8): 𝑠3 −𝑠4 + 𝑠5 ≥1.
+• 𝐼= (1, 2, 5), 𝐽= (1, 2, 8), 𝐾= (1, 4, 8): 𝑠2 + 𝑠5 −𝑠7 ≥4.
+• 𝐼= (1, 2, 3, 5, 6), 𝐽= (1, 2, 3, 7, 8), 𝐾= (1, 3, 4, 7, 8): 𝑠3 + 𝑠5 −𝑠7 ≥3.
+For 𝑠4 ≥2 use 𝐼= (1, … , 7) and 𝐽= 𝐾= {1, … , 8} ∖{5}; 𝑠1 ≥5 is the ϐirst Weyl inequality.
+Membership of these triples in the regenerated Horn set and all coefϐicient identities are checked in
+repro/astra/verify_revision.py. The ϐirst two displayed rows, 𝑠1 ≥5 and twice 𝑠4 ≥2 give
+𝑠1 + ⋯+ 𝑠5 ≥13. Since an optimizer has ∑7
+𝑡=1 𝑠𝑡= 13, this forces 𝑠6 = 𝑠7 = 0. The last two rows,
+𝑠1 ≥5 and 𝑠4 ≥2 give 𝑠1 + 𝑠2 + 𝑠3 + 𝑠4 + 2𝑠5 −2𝑠7 ≥14, hence 𝑠5 ≥1 on that face. The integer spec‑
+trum 𝑠= (5, 3, 2, 2, 1, 0, 0) satisϐies every Horn inequality exactly and attains 13. This establishes the
+universal rank‑ϐive statement at the stated spectrum, and supplies the missing upper‑rank argument.
+The extra rank comes from 𝑏1 entering a late layer ({𝑏1, 𝑎4} or {𝑏1} after the big layer), which raises the
+chain‑rank bound to 5; there is no padding (𝑧= 0). The point is maximally degenerate (the LP duals
+are not unique: the hive LP returns a non‑integer subgradient, the reviewer’s Horn LP an integer one
+outside 𝑆(4, 4, 0)), which is why the two candidate forms had to be identiϐied through the computed
+set. A ϐloating‑point scan along the family 𝑐∈[0.8, 3], 𝑏= 1, reports: 𝑟∗= 5 for 𝑐≥1.1 with argmax
+(3, 1, 1, 2; −2, −1, 0) (or (4, 1, 2, 2; −3, −2, −1) at 𝑐= 3); 𝑟∗= 4 at 𝑐= 1 (all entries ±1); 𝑟∗= 5 again
+for 𝑐< 1, where the sorted spectrum changes, with argmax (2, 3, 3, 1; −2, −2, −1). This sharpens the
+remark in Open question 1: the block picture persists at 𝑑= 8, but not the rank‑𝑚block picture —
+11
+
+the relevant layerings have inverted positives as well as late negatives. They are outside the ordered‑
+positive hypothesis of Theorem 1; their lower bounds require separate Horn certiϐicates. Allowing
+negative inversions in Theorem 1 does not remove its positive‑order hypothesis.
+8. Numerical structure and a conjecture for inertia (𝑚, 𝑛)
+Everything in this section is NUMERICAL (ϐloating‑point HiGHS; hive LP of [Mthree] and explicit Horn
+LP over Fulton’s 𝑇𝑑
+𝑟for 𝑑≤9, agreeing to ≤4⋅10−15 at every point used). Sampling laws: exponential,
+uniform, squared normal, tie‑heavy (integer entries 1–3), dominant 𝑎1 with ϐlat 𝑏; 𝑃= 1.
+8.1 Discovered exposed‑form candidates. The ϐinite sampled sets are not certiϐied complete cata‑
+logues. In particular, the reported counts |𝑆(5, 4, 0)| = 63 and |𝑆(4, 5, 0)| = 62 cannot both be counts
+of the complete exposed sets: 𝐹↦−𝐹gives a bijection between the complete sets, preserving exposed‑
+ness. At least one discovery or classiϐication is incomplete. The original data and counts are retained
+as observations; no exact complete count is inferred. All set comparisons and absences below concern
+these sampled catalogues.
+Hive‑LP dual gradients at 1 500–8 000 random points were rationalised; every integer form found was
+checked numerically for validity (joint LP) and exposedness (radius LP), and the maximum of the result‑
+ing set equals 𝜅𝑑at 300 fresh points per stratum to ≤4⋅10−15. The (𝑚, 3) counts reproduce 𝑆(𝑚, 𝑧) of
+[Mthree]; the reviewer’s own Horn‑LP gradients reproduce the sets at (3, 3, 0) and (4, 4, 0) exactly. In
+the table, “ordered” is the number of forms in the class of Deϐinition 3.1 (for (4, 5, 0): 0, and 7 in the mir‑
+ror class), “𝑎‑ord.” the number whose level layering has the positives in decreasing order, and “𝜅= OL”
+the share of 400 random points (300 for 𝑑≤7) at which 𝜅𝑑equals the ordered bound max𝑢cost(𝐿(𝑢))
+(in every run equal to the family‑A maximum, as Lemma 3.2 predicts; the dominant‑𝑎1 law never lies
+in this region).
+(𝑚, 𝑛, 𝑧)
+𝑑
+|𝑆|
+ordered
+𝑎‑ord.
+max layer
+𝜅= OL (%)
+(3, 3, 0) /
+(3, 3, 1)
+6 / 7
+10 / 10
+2
+4
+3
+22.0 / 19.7
+(4, 3, 0) /
+(4, 3, 1)
+7 / 8
+19 / 18
+5
+9 / 8
+3
+38.7 / 32.2
+(5, 3, 0) /
+(5, 3, 1)
+8 / 9
+27 / 26
+8
+13 / 12
+3
+43.5 / —
+(6, 3, 0) /
+(6, 3, 1)
+9 / 10
+34 / —
+11
+14
+3
+— / 53.8
+(4, 4, 0) /
+(4, 4, 1)
+8 / 9
+32 / 32
+3
+8
+4
+12.8 / 11.8
+(5, 4, 0) /
+(5, 4, 1)
+9 / 10
+63 / 62
+7
+19
+4
+24.5 / 26.8
+(4, 5, 0)
+9
+62
+0
+15
+4
+—
+(6, 4, 0) /
+(6, 4, 1)
+10 / 11
+92 / —
+12
+24
+4
+30.2 / 33.0
+(7, 4, 0) /
+(8, 4, 0)
+11 / 12
+—
+—
+—
+—
+43.2 / 48.8
+(5, 5, 0) /
+(5, 5, 1)
+10 / 11
+108 / —
+4
+19
+5
+7.8 / 7.0
+(6, 5, 0)
+11
+—
+—
+—
+—
+18.5
+12
+
+(𝑚, 𝑛, 𝑧)
+𝑑
+|𝑆|
+ordered
+𝑎‑ord.
+max layer
+𝜅= OL (%)
+Within these samples, the ordered region grows with 𝑚at ϐixed 𝑛and shrinks with 𝑛. Every discov‑
+ered candidate’s level layering has Λ0 purely negative, Λ𝑇purely positive, no empty layer, at most 𝑐𝑢
+positives in layer 𝑢, and layers of size ≤min(𝑚, 𝑛) (100% of 10–108 forms in all 14 strata; reviewer:
+0 violations in all 15 ϐiles). Padding: 𝑆(4, 4, 0) = 𝑆(4, 4, 1); 𝑆(5, 4, 0) ≠𝑆(5, 4, 1) with three 𝑧= 0‑
+only forms, (0, 1, 1, 2, 3; −1, 0, 1), (1, 1, 2, 3, 4; −2, −1, 0), (2, 1, 2, 3, 4; −2, −1, −1), and two 𝑧= 1‑only
+forms, (−1, 0, 0, 1, 2; 1, 2, −1), (1, 2, 2, 3, 4; −2, −1, −1) (60 common) — the ϐirst occurrence of exposed
+forms created by padding (for 𝑛= 3 padding only removes forms); (4, 3) and (5, 3) have exactly one
+𝑧= 0‑only form each, (6, 4, 0) has ϐive forms violating the inversion balance below and (5, 5, 0) none.
+8.2 Blocks of size min(𝑚, 𝑛) attain (numerical). The chain LP of [Mthree] Section 5.2 (Horn program
+in dimension ≤5 per step, rank caps, ordering, trace and terminal conditions) was ported to blocks
+of size ≤5; at each of 300 random points per stratum every discovered candidate tied at 𝜅𝑑(toler‑
+ance 10−8) was tested through its level layering, with up to two inserted zeros when 𝑧≥1. In all 13
+strata ((3, 3, 0), (3, 3, 2), (4, 3, 0), (5, 3, 0), (6, 3, 0), (5, 3, 1), (4, 4, 0), (4, 4, 1), (5, 4, 0), (5, 4, 1), (4, 5, 0),
+(6, 4, 0), (5, 5, 0)) some tied form’s level layering is chain‑feasible at 300/300 points, with blocks of
+size ≤min(𝑚, 𝑛) and no inserted zero except at one point each of (5, 3, 1) and (5, 4, 1). Testing only
+the dual form returned by the LP fails at tie‑heavy points where that form’s layering is provably never
+chain‑feasible (e.g. (1, 1, 2, 1, 2; −1, 1, −1) at (5, 4, 0)), while another tied form works. The reviewer did
+not re‑implement the chain LP; it is the author’s port of the cycle‑2 code audited then.
+8.3 Conjecture (inertia (𝑚, 𝑛)). For every (𝑚, 𝑛) and 𝑧, 𝜅𝑑is the maximum of a ϐinite set 𝒮(𝑚, 𝑛, 𝑧) of
+integer forms, each the cost of its level layering 𝐿(𝑔), and:
+1. (structure) Λ0 consists of negatives only, Λ𝑇of positives only, no layer is empty; layer 𝑢≥1 holds
+at most 𝑐𝑢positives (capacity rule) and |Λ𝑢| ≤min(𝑛+, 𝑛−) for all 𝑢;
+2. (inversion balance) for 𝑧≥1, #{𝑗< 𝑗′ ∶𝑡(𝑎𝑗) > 𝑡(𝑎𝑗′)} + ∑𝑢(𝑐𝑢−𝑞𝑢) ⋅#{positives in layers >
+𝑢} = #{𝑖< 𝑖′ ∶𝑡(𝑏𝑖) > 𝑡(𝑏𝑖′)}, 𝑞𝑢the number of positives in layer 𝑢(the 𝑛‑negative version of
+the rule of [Mthree]); the forms violating it are exactly the 𝑧= 0‑only forms;
+3. (ordered part) the exposed family‑A forms are those whose chamber meets the interior of the
+stratum, and the mirror family plays the same role for 𝑛> 𝑚;
+4. (upper bound) for every 𝑔∈𝒮(𝑚, 𝑛, 𝑧) and every 𝜆in its chamber, 𝐿(𝑔), with at most one inserted
+zero when 𝑧≥1, is chain‑feasible; so 𝜅𝑑is attained by block weighted shifts with blocks of
+size ≤min(𝑛+, 𝑛−) in every dimension, while the minimal optimal rank can exceed max(𝑛+, 𝑛−)
+already at 𝑧= 0 (Section 7);
+5. (lower bound) every 𝑔∈𝒮(𝑚, 𝑛, 𝑧) has a tiling certiϐicate (multipliers 1, each 𝑠𝑡with 𝑡≤𝑚once)
+whose tiles have box ≤min(𝑛+, 𝑛−), and for some forms no certiϐicate with fewer boxes exists
+once 𝑚≥𝑛+ 1 (proved for (5, 4): Theorem 3);
+6. (padding) 𝒮(𝑚, 𝑛, 𝑧) is independent of 𝑧≥1; 𝒮(𝑚, 𝑛, 0)∖𝒮(𝑚, 𝑛, 1) consists of the forms violating
+2, and their existence is what gives 𝜅𝑑> 𝜅𝑑+1(𝜆⊕0) on an open set (the 𝑧= 1‑only forms are
+dominated at 𝑧= 0, e.g. (2, 1, 2, 3, 4; −2, −1, −1) −(1, 2, 2, 3, 4; −2, −1, −1) = 𝑎1 −𝑎2 ≥0);
+a padding phase exists for (𝑚, 𝑛) = (5, 4), (4, 5), (6, 4) but not for (4, 4) or (5, 5), so the set of
+(𝑚, 𝑛) with a padding phase is not a congruence condition in 𝑚alone (𝑛= 3: 3 ∤𝑚).
+Numerical status (tests on the discovered candidates, not veriϐication of a complete 𝒮): 1 holds for all
+14 sampled strata; 2 holds for all forms at 𝑧≥1 ((3, 3, 1), (4, 3, 1), (5, 3, 1), (4, 4, 1), (5, 4, 1)) and fails
+at 𝑧= 0 exactly for the 𝑧= 0‑only forms of (4, 3), (5, 3) and for 3 forms of (5, 4, 0), 3 of (4, 5, 0), 5 of
+13
+
+(6, 4, 0); 4: 300/300in 13 strata; 5: box histograms of Section 6. What isprovedtowardsthe conjecture:
+Theorem 1 (every ordered form is valid, all 𝑑), Lemma 3.2, Theorem 2A, Theorem 2B, Proposition 5.6,
+Theorem 3.
+8.4 Question (Pieri shapes). At 𝑧≥1 every discovered candidate in the seven tested strata has a
+numerically returned certiϐicate built from Lidskii–Wielandt tiles and tiles with 𝜆(𝐼) or 𝜆(𝐽) a single
+row or column, whereas the form observed only at 𝑧= 0, 𝑔′ = (1, 1, 2, 3, 4; −2, −1, 0) ∈𝑆(5, 4, 0) has
+none (Section 6). Do all forms of 𝑆(𝑚, 𝑛, 𝑧) with 𝑧≥1 — the forms present after padding, including any
+created by padding — admit tilings with Pieri‑shaped tiles of at most min(𝑛+, 𝑛−) boxes? The general‑𝑧
+validity of such tilings would follow from the strip condition of the Pieri rule tile by tile, as sketched in
+[Mthree] Section 4.3.
+9. Open questions
+1. The chambers of 𝐿𝑘for 𝑛≥3. Describe the chain‑feasibility region of 𝐿𝑘beyond 𝑅𝑘(non‑diagonal
+pure phase) and the facets of the exact pure‑phase region of Section 5.3; for 𝐹0‑type layerings
+(𝑢= 0𝑛) this is the whole problem.
+2. Severalmixedlayers. Writeoutandtestthemulti‑stepinterlacingregionsofRemark(d)inSection
+5.2, which would give closed forms for every family‑A layering on a union of polytopes.
+3. Beyond the ordered class. The b‑inverted exposed forms need Pieri or two‑row tiles; a general‑𝑧
+proof of their validity and a characterisation of the exposed layerings are open. Question 8.4 is
+the shape part.
+4. Padding phases. Prove the inversion‑balance rule, determine the set of (𝑚, 𝑛) with a padding
+phase, and explain why padding can create exposed forms for 𝑛≥4.
+5. Optimizers. Classify the chambers by minimal optimal rank (Section 7: rank 𝑚+ 1 at 𝑧= 0 for
+(4, 4)) and by uniqueness of the optimal spectrum.
+6. Growth. A formula, or the growth rate, for the cardinality of the complete exposed set |𝒮(𝑚, 𝑛, 𝑧)|
+(the currently discovered counts are 10, 19, 27, 34 at 𝑛= 3; 32, 63, 92 at 𝑛= 4; 108 at (5, 5)).
+10. Veriϐication and reproducibility
+Author’s code (Python 3.12, numpy/scipy with HiGHS; repro/author/): mn_tools.py, joint_lp.py
+(validity and radius LPs), horn_lp.py (Horn LP over 𝑇𝑑
+𝑟with box ϐilter, 𝑑≤9), hive_core.py,
+ol_test.py(Theorem1andLemma3.2numerically, 20strata), interlace_test.py, region_coverage.py
+(Theorems 2A, 2B), pure_chain.py (Section 5.3), forms_mn.py, inv_rule.py (exposed forms and
+rules; JSON ϐiles forms_m{m}_n{n}_z{z}.json), horn_boxes.py, form_boxes.py (box counts and
+shapes), chain_lp.py (Section 8.2), d8_example.py (Section 7), with logs.
+Code attributed to the development reviewer (repro/reviewer/): myhorn.py — own 𝑇𝑑
+𝑟by the
+Horn–Fulton recursion (counts 41, 142, 522, 2062, 8752, 39716 for 𝑑= 4, … , 9, set‑equal to the au‑
+thor’s lists and to the LR‑positivity criterion for 𝑑≤7), own LR counter, own Horn LP with box ϐil‑
+ter, duals and optimal‑face minimisation, validated against the four‑level and one‑spike formulas and
+the hive LP (10−15); test_thm1.py (exact certiϐicate check of Theorem 1 for all 568 schedules of six
+strata; Proposition 3.3), test_thm2AB.py (explicit weighted shifts and interlacing chains, Section 5),
+test_oq1.py (Theorem 3, the (5, 3, 0) histogram, the exposed sets at (3, 3, 0) and (4, 4, 0), the 𝑑= 8 ex‑
+ample). The author‑supplied history states that the development reviewer also re‑derived every proof;
+this attribution is not an external assessment receipt.
+14
+
+Exact arithmetic is used in the certiϐicate of Theorem 1 (integer identities, LR coefϐicients), in the
+rational points and vertices of Section 6 (repro/exact_oq1.py, which also veriϐies both certiϐicates
+there: membership in 𝑇9𝑟, LR coefϐicients by two implementations, integer tiling identities), and, in
+this revised candidate, in the additional coefϐicient‑checked 𝑑= 8 optimal‑face proof in Section 7. The
+original HiGHS face scans are ϐloating point. Everything else is ϐloating point with the tolerances stated.
+Package repro/:
+author/ (verbatim working directory plus the four Fulton pickles it reads,
+one marked path line), reviewer/ (two absolute paths made package‑relative, marked REPRO),
+exact_oq1.py, run_fast.sh (reruns the fast scripts into logs/, times in logs/timings.txt;
+forms_mn.py is not rerun because it overwrites the data ϐiles) and README.md with commands,
+runtimes and expected ϐinal lines.
+Literature queries (2026‑09‑14, three WebSearch queries on
+the prescribed‑spectrum self‑commutator cost and Horn certiϐicates, on the rank‑one interlacing
+converse, and on Lidskii certiϐicates with block bidiagonal weighted shifts) returned only commutator
+norm inequalities, almost‑commuting matrices, limiting Horn inequalities (arXiv:2410.08907), the
+rank‑one sources [Go73,Chu98] and [Fu00].
+Revision replay. repro/astra/verify_revision.py veriϐies the two printed rational obstruction
+witnesses, their full‑Horn equality witnesses, the LR tiling identities and the added exact dimension‑
+eight face certiϐicates. It uses a memory‑only Horn generator copied from the inspected submitted
+implementation. Original code, cached data and original logs are preserved unchanged in their existing
+folders; the fresh generator does not load those caches. The separate local preassessment contains the
+original‑hash construction/certiϐicate checks and their actual logs. This is not a complete rerun of the
+discovery campaign or a new‑hash referee assessment.
+AI‑assistance statement
+The original mathematics, computations and text of this manuscript were produced by Claude Fable
+5.1 agents (Anthropic) working under the direction of the author, who set the problem, selected the
+line of records and is responsible for the claims. One agent carried out the research (proofs, scripts,
+experiments) and wrote the report on which this manuscript is based; a second, independent agent
+performed an adversarial review with its own implementations of every computational ingredient, ver‑
+iϐied the constructions, upgraded the refutation of Open question 1 to exact arithmetic, and found the
+corrections incorporated here (range of 𝑘in Theorem 2B, the Weyl tiles of the box‑4 certiϐicate, the
+counterexample to the Pieri‑shape statement, a mis‑citation and a redundant sentence); a third agent
+wrote this text, added exact_oq1.py, assembled the reproducibility package and reran the fast scripts.
+No fallback to another model occurred in any of these sessions. The manuscript has not been peer re‑
+viewed by humans. For this author‑side revised candidate, a native Codex Astra High session checked
+the original manuscript and relevant supplied code, regenerated Horn lists without loading supplied
+pickle caches, identiϐied the bounded scope corrections, and added the exact Section 7 certiϐicate and
+its replay. The original‑hash local preassessment remains separate and does not assess or accept this
+revised PDF. Historical Fable model‑routing statements above are author‑supplied provenance, not in‑
+dependently authenticated by this revision.
+References
+• [Mtwo] L. Eriksson, The inverse self‑commutator cost at inertia (m,2):
+a dimension‑free
+closed formula, block‑shift optimizers and a Pieri certiϔicate, AI Research Record, ARR‑2026‑
+1K33A7K90T87AREF (2026). Cited: (2.1)–(2.2) and the remark after (2.1), Lemma 4.3 (Pieri
+15
+
+triple), Section 5.1 (block shifts), Lemma 5.2, Proposition 5.4, Open question 1.
+• [Mthree] L. Eriksson, The inverse self‑commutator cost at inertia (m,3): tiling certiϔicates, 3×3‑
+block shifts and a padding phase, unpublished manuscript, 13 September 2026. Cited: Lemma
+2.1, Theorem 2 (family A), Section 4.3 (Pieri tiles of families B–F), Section 5.2 (chain LP), the
+inversion‑balance rule.
+• [FourLevel] L. Eriksson, The Exact Four‑Level Inverse Commutator Cost:
+Horn–Littlewood–
+Richardson Facets, Rank Transitions, and Sharp Loop Synthesis, AI Research Record, ARR‑2026‑
+3M1EEG1T689ADSMW (2026). Cited: Theorem 2.2 (Horn program), Theorem 3.1 (four‑level
+formula).
+• [OneSpike] L. Eriksson, One‑Spike Inverse Self‑Commutators and Exact Three‑versus‑Four‑Kick
+Curvature Synthesis, AI Research Record, ARR‑2026‑7NPRNBW4488HG90K (2026).
+Cited:
+Theorem 3.1 (one‑spike formula).
+• [RankOnset] L. Eriksson, Sharp Onset and Unbounded Growth of Norm‑Optimal Self‑Commutator
+Rank, AI Research Record, ARR‑2026‑5QQF95VHTC9GABH8 (2026). Cited: Proposition 2.2, The‑
+orem 3.1, Theorem 4.1 (the 𝑑= 8 example).
+• [Go73] G. H. Golub, Some modiϐied matrix eigenvalue problems, SIAM Review 15 (1973) 318–334.
+• [Chu98] M. T. Chu, Inverse eigenvalue problems, SIAM Review 40 (1998) 1–39.
+• [HJ] R. A. Horn, C. R. Johnson, Matrix Analysis, 2nd ed., Cambridge University Press, 2013, Section
+4.3 (interlacing for rank‑one perturbations).
+• [Ho62] A. Horn, Eigenvalues of sums of Hermitian matrices, Paciϔic J. Math. 12 (1962) 225–241.
+• [Kl98] A. A. Klyachko, Stable bundles, representation theory and Hermitian operators, Selecta
+Math. (N.S.) 4 (1998) 419–445.
+• [KT99] A. Knutson, T. Tao, The honeycomb model of 𝐺𝐿𝑛(ℂ) tensor products I: proof of the satu‑
+ration conjecture, J. Amer. Math. Soc. 12 (1999) 1055–1090.
+• [Fu00] W. Fulton, Eigenvalues, invariant factors, highest weights, and Schubert calculus, Bull.
+Amer. Math. Soc. 37 (2000) 209–249.
+• [Fu97] W. Fulton, Young Tableaux, LMS Student Texts 35, Cambridge University Press, 1997 (Pieri
+rule).
+• [Li50] V. B. Lidskii, On the characteristic numbers of the sum and product of symmetric matrices,
+Dokl. Akad. Nauk SSSR 75 (1950) 769–772.
+• [Wi55] H. Wielandt, An extremum property of sums of eigenvalues, Proc. Amer. Math. Soc. 6
+(1955) 106–110.
+• [JOS13] W. B. Johnson, N. Ozawa, G. Schechtman, A quantitative version of the commutator theo‑
+rem for zero trace matrices, Proc. Natl. Acad. Sci. USA 110 (2013) 19251–19255.
+• [AS15] O. Angel, G. Schechtman, The Hilbert–Schmidt version of the commutator theorem for
+zero trace matrices, Bull. London Math. Soc. 47 (2015) 715–719; arXiv:1503.07980.
+16
