@@ -80,10 +80,10 @@ Keep these evidence files on the encrypted private volume, never in public Git.
 
 ## Explicit founder instructions received outside the web form
 
-For a sole-author historical case, the authenticated host can record an actual
+For a declared sole-author founder case, including an ordinary deposit, the authenticated host can record an actual
 human editorial instruction with `record-external-founder-decision evidence.json`.
 This does not simulate a web login or signature. The evidence binds the exact
-case/PDF, the configured MFA operator's name, their actual instruction and dated
+case/PDF, its active private owner, the configured MFA operator's name, their actual instruction and dated
 source, and every recorded report hash. The normal authorized two-model and
 objection gates apply. Additional conflicts, appeals, stale evidence, changed
 bytes and replacement decisions are rejected. Models cannot supply the human act.

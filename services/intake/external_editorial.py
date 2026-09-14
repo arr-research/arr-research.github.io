@@ -2,7 +2,8 @@
 
 No web session or human signature is simulated. Each operation requires a fresh,
 exact-artifact human instruction; model recommendations alone never invoke it.
-Only sole-author historical cases owned by the configured founder are supported.
+Only declared sole-author founder cases are supported, including ordinary deposits.
+The existing account, exact-artifact, review and conflict gates still apply.
 """
 import hashlib
 import json
@@ -42,9 +43,9 @@ def install(app, a, case):
             raise click.ClickException('The actual configured MFA operator must be named.')
         g.user = actor
         row = case(value['submission_id'])
-        binding = db.execute('SELECT binding_json FROM historical_revisions WHERE submission_id=?', (row['id'],)).fetchone()
-        if not binding or row['authors'] != value['human_name'] or not app.extensions['editorial']['founder_may_decide'](row, actor):
-            raise click.ClickException('Only the declared sole-author historical founder case qualifies.')
+        owner = db.execute("SELECT 1 FROM users u JOIN private_accounts p ON p.user_id=u.id WHERE u.id=? AND u.active=1 AND u.role='depositor'", (row['user_id'],)).fetchone()
+        if not owner or row['authors'] != value['human_name'] or not app.extensions['editorial']['founder_may_decide'](row, actor):
+            raise click.ClickException('An active private owner and the declared sole-author founder case are required.')
         if row['sha256'] != value['manuscript_sha256'] or row['scan_status'] != 'clean':
             raise click.ClickException('Exact clean manuscript required.')
         if hashlib.sha256((Path(app.config['QUARANTINE']) / row['stored_name']).read_bytes()).hexdigest() != row['sha256']:
