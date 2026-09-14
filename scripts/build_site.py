@@ -1713,8 +1713,9 @@ def main() -> int:
         destination.mkdir(parents=True, exist_ok=True)
         filename = f"{version.id}-{version.version}.pdf"
         (destination / filename).write_bytes(data)
-        if version.version == groups[version.id][-1].version:
-            (OUTPUT_DIR / record_route(version.metadata) / version.id / filename).write_bytes(data)
+        # A previously latest version may already be cited at this versioned
+        # PDF URL. Keep that exact URL when a newer manuscript is published.
+        (OUTPUT_DIR / record_route(version.metadata) / version.id / filename).write_bytes(data)
         local_pdfs.add((version.id, version.version))
     print(f"Prepared same-directory PDFs for {len(local_pdfs)} version(s).")
 
