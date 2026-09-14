@@ -1,0 +1,947 @@
+Exact Hive Certiϐicates for the Balanced‑Inertia Stability
+Constants (N = 3 to 12) in Every Dimension, the (𝐴𝑁, 𝐵) Cost Law,
+and the Twenty‑Two‑Form Six‑Level Cost Formula
+Lluis Eriksson (Independent researcher)
+14 September 2026 — revised candidate
+Abstract
+For a traceless Hermitian 𝐹with 𝑁positive, 𝑁negative and 𝑑−2𝑁zero eigenvalues, the inverse self‑
+commutator cost 𝜅𝑑(𝐹) satisϐies 𝛿𝑑≥𝛾𝑁,𝑑𝐷∗with an optimal rational constant 𝛾𝑁,𝑑; the values 𝛾2, … , 𝛾5
+were known and 𝛾6, … , 𝛾10 only numerically. We give exact, independently machine‑checked certiϐicates
+proving 𝛾𝑁,𝑑= 𝛾𝑁for 𝑁= 3, … , 12 and every 𝑑≥2𝑁: 17/36, 4/7, 113/152, 9/10, 781/740, 317/264,
+23/17, 3/2, 773/468, 289/160. The minimising pairs switch at 𝑁= 7 from (𝐴𝑁, 𝐵) to (𝑢3, 𝑧𝑁). The
+certiϐicates are exact rational hive primals at every positive‑distance vertex of the ϐinite reduction and
+matching duals at the listed minimisers, and dimension‑independent Horn combinations (Weyl, two
+size‑two and Lidskii–Wielandt inequalities) at the minimisers, written out in full. We also prove the
+(𝐴𝑁, 𝐵) cost law for 𝑁≤14 and the exact six‑level formula 𝜅6 = max of twenty‑two explicit linear forms,
+all exposed. The supplied package reports a separate adversarial replay; fresh checks using separately
+written code are documented in Section 7, with provenance limits stated explicitly.
+1. Introduction
+Antecedents. The quantity studied here is the least Hilbert–Schmidt cost of realising a prescribed trace‑
+less Hermitian 𝐹as a self‑commutator, 𝜅𝑑(𝐹) =
+1
+2 min{‖𝐶‖2
+𝐻𝑆∶𝐶𝐶∗−𝐶∗𝐶= 2𝐹}. Its theory has been
+developed in a sequence of records of the AI Research Record archive, cited by descriptive keys (identi‑
+ϐiers and titles are in the reference list); everything used from them is restated in Section 2. [FourLevel]
+reduced 𝜅𝑑to a ϐinite linear program over Horn’s inequalities (its Theorem 2.2, the Horn program) and
+gave the exact four‑level formula (its Theorem 3.1: the maximum of four spectral forms). [FiveLevel]
+gave the twelve‑term ϐive‑level formula (its Theorem 3.1) together with the per‑chamber certiϔicate tem‑
+plate — a sparse Horn dual for each form as a global lower bound and, on the chamber where that form
+is the largest, an explicit feasible construction attaining it — which Section 6 follows. [RankOnset] intro‑
+duced the hive machinery into this line (exact rational hive primals and duals, its Section 6 and Lemma
+6.1 on coarse graining) and showed (its Remark 3.3) that zero padding can lower 𝜅𝑑, which is why “ev‑
+ery dimension” is a genuine issue. [Ceiling] proved the sharp inertia ceiling 𝜅𝑑≤
+𝑁+1
+2 𝑃on the balanced
+stratum (its Theorem 1), the stability inequality 𝛾𝐷∗≤𝛿𝑑≤
+𝑁−1
+2 𝐷∗with the sharp reverse constant
+(its Theorem 3) and the optimal forward constants 𝛾2 = 1/2 and 𝛾3 = 17/36 (its Theorems 3 and 4).
+[Bal44] proved the ϐinite reduction (its Theorem A: 𝛾𝑁,𝑑is the minimum of a ratio over an explicit ϐinite
+rational set 𝑊𝑁, independent of 𝑑) and 𝛾4 = 4/7 (its Theorem B); its Lemma 3 is the ϐirst dimension‑
+independent Horn lower bound at an extremal pair. [Bal55] proved 𝛾5 = 113/152 (its Theorem 1) by
+1
+
+enumerating all 191,353 Horn triples of 𝑑= 10. The published (𝑚, 2) paper [Inertia_m2] listed as its
+Open question 3 the numerical values 𝛾6 = 9/10, 𝛾7 = 781/740, 𝛾8 = 317/264, 𝛾9 = 23/17, 𝛾10 = 3/2,
+obtained by ϐloating‑point hive LPs, “without exact certiϐicates”, and noted the switch of the extremal
+family at 𝑁= 7. Externally: Horn’s conjecture, proved by Klyachko [Kl98] and Knutson–Tao [KT99]
+(saturation), with the hive model expounded by Buch [Bu00] and surveyed by Fulton [Fu00], is the tool;
+Weyl, Lidskii and Wielandt [We12, Li50, Wi55] supply the classical inequalities that turn out to sufϐice
+at the minimisers.
+Contribution. (i) Theorem 1: 𝛾𝑁,𝑑= 𝛾𝑁exactly for 𝑁= 3, … , 12 and every 𝑑≥2𝑁, with the two
+minimising pairs and their costs; 𝑁= 3, 4, 5 reproduce the published constants, 𝑁= 6, … , 10 turn the
+numerical values of [Inertia_m2] into theorems, and 𝑁= 11, 12 are new. (ii) Theorem 2: the (𝐴𝑁, 𝐵)
+cost law 𝜅2𝑁(𝐴𝑁, −𝐵rev) =
+3
+2 + (⌊(𝑁−2)2/4⌋−1)
+𝑁+2
+4𝑁(𝑁−1) for 𝑁≤14, in every 𝑑≥2𝑁for 𝑁≤6.
+(iii) Theorem 3: 𝜅6 is the maximum of twenty‑two explicit rational forms on the ordered trace‑zero
+cone, every form exposed, so that the non‑wall facet sequence of the unit ball of 𝜅𝑑begins 2, 4, 12, 22
+for 𝑑= 3, … , 6. (iv) A certiϐicate architecture in which each claim is a ϐinite list of exact rational objects
+checked by two independent veriϐiers: hive primals and duals, windowed Horn templates valid in every
+dimension (with a reϐlection trick that halves the search), and ray witnesses with global duals for the
+chambers of 𝜅6. (v) The dimension‑independent certiϐicates at the minimisers are so short — three to
+seven inequalities, multipliers 1 or 2 — that they are written out in full in Section 5 and can be checked by
+hand. The ϐindings of the adversarial review (Section 7), including three reporting errors of the working
+report, are incorporated.
+2. Setting
+Throughout 𝑑≥2, Hermitian matrices are 𝑑× 𝑑, spectra are listed in decreasing order, and 𝑥rev is the
+reversed list. For traceless Hermitian 𝐹with spectrum 𝜆, [FourLevel] Theorem 2.2 (also [RankOnset]
+Proposition 2.2, in the normalisation 𝑠= 𝑝/2 used here) gives the Horn program
+𝜅𝑑(𝜆) = min ቄ
+𝑑
+෍
+𝑡=1
+𝑠𝑡∶𝑠1 ≥… ≥𝑠𝑑≥0, (𝑠, −𝑠rev, 𝜆) Horn‑feasibleቅ,
+(2.1)
+where a triple (𝛼, 𝛽, 𝛾) of decreasing real 𝑑‑vectors is Horn‑feasible if Hermitian 𝐴, 𝐵exist with spectra
+𝛼, 𝛽and spec(𝐴+ 𝐵) = 𝛾. (Given 𝐶, put 𝑅= 𝐶𝐶∗/2, 𝑆= 𝐶∗𝐶/2: they have a common spectrum 𝑠≥0,
+𝑅−𝑆= 𝐹and
+1
+2‖𝐶‖2 = ∑𝑠𝑡; conversely 𝑅, 𝑆⪰0 with common spectrum and 𝑅−𝑆= 𝐹come from some
+𝐶.) Letting 𝑠𝑑be free rather than 0 is harmless: if (𝑠, −𝑠rev, 𝜆) is feasible with 𝑠𝑑= 𝑐, then (𝐴−𝑐𝐼, 𝐵+𝑐𝐼)
+shows (𝑠−𝑐1, … ) is feasible at lower cost, so the minimum has 𝑠𝑑= 0.
+Horn’s inequalities. For 1 ≤𝑟< 𝑑let 𝑇𝑑
+𝑟be Horn’s recursively deϐined set of triples (𝐼, 𝐽, 𝐾) of 𝑟‑
+subsets of {1, … , 𝑑}: ∑𝐼𝑖+ ∑𝐽𝑗= ∑𝐾𝑘+ 𝑟(𝑟+ 1)/2 and, for every 𝑞< 𝑟and (𝐹, 𝐺, 𝐻) ∈𝑇𝑟𝑞, ∑𝑓∈𝐹𝑖𝑓+
+∑𝑔∈𝐺𝑗𝑔≤∑ℎ∈𝐻𝑘ℎ+ 𝑞(𝑞+ 1)/2 (elements listed increasingly). The theorem of Klyachko and Knutson–
+Tao [Kl98, KT99, Fu00] states that (𝛼, 𝛽, 𝛾) is Horn‑feasible iff ∑𝛾= ∑𝛼+ ∑𝛽and
+෍
+𝑘∈𝐾
+𝛾𝑘≤෍
+𝑖∈𝐼
+𝛼𝑖+ ෍
+𝑗∈𝐽
+𝛽𝑗
+for all (𝐼, 𝐽, 𝐾) ∈𝑇𝑑
+𝑟, 1 ≤𝑟< 𝑑,
+(2.2)
+and that 𝑇𝑑
+𝑟is exactly the set of triples whose Littlewood–Richardson coefϐicient 𝑐𝜆(𝐾)
+𝜆(𝐼)𝜆(𝐽) is positive. The
+counts are |𝑇𝑑| = 3, 12, 41, 142, 522, 2062 for 𝑑= 2, … , 7 and 8,752 for 𝑑= 8. In (2.1), 𝛼= 𝑠, 𝛽𝑗=
+−𝑠𝑑+1−𝑗, so the trace condition is ∑𝜆= 0 and (2.2) reads ∑𝑘∈𝐾𝜆𝑘≤∑𝑖∈𝐼𝑠𝑖−∑𝑗∈𝐽𝑠𝑑+1−𝑗.
+2
+
+Hives. An order‑𝑑hive is a function ℎon {(𝑖, 𝑗) ∈ℤ2 ∶𝑖, 𝑗≥0, 𝑖+𝑗≤𝑑} such that for every unit rhombus
+of the triangular lattice ℎ(𝑜1) + ℎ(𝑜2) ≥ℎ(𝑎1) + ℎ(𝑎2) (𝑜the obtuse, 𝑎the acute vertices; there are
+3൫𝑑
+2൯rhombi). With ℎ(0, 0) = 0 we say ℎhas boundary (𝛼, 𝛽, 𝛾) if the increments along (0, 0) →(𝑑, 0)
+are 𝛼1, … , 𝛼𝑑, along (𝑑, 0) →(0, 𝑑) are 𝛽1, … , 𝛽𝑑and along (0, 0) →(0, 𝑑) are 𝛾1, … , 𝛾𝑑(the Knutson–
+Tao/Buch convention; the labelling was calibrated against the explicit Horn LP, Section 7). Knutson–Tao
+[KT99] prove that for integral data an integral hive exists iff 𝑐𝛾
+𝛼𝛽> 0, and by saturation iff the hive
+polytope is nonempty; since the projection of the hive cone to boundaries and the cone cut out by (2.2)
+are closed rational polyhedral cones that agree on rational points, they agree on real points:
+(𝛼, 𝛽, 𝛾) Horn‑feasible ⟺an order‑𝑑hive with boundary (𝛼, 𝛽, 𝛾) exists.
+(2.3)
+Hence 𝜅𝑑(𝜆) is the value of the hive LP: minimise ∑𝑠𝑡over 𝑠decreasing ≥0 and ℎa hive with boundary
+(𝑠, −𝑠rev, 𝜆), with (𝑑+1)(𝑑+2)/2 hive variables and 𝑑common‑spectrum variables (including variables
+ϐixed by the boundary constraints), and 3൫𝑑
+2൯rhombus rows instead of |𝑇𝑑| rows.
+The balanced stratum. Fix 𝑁≥2 and 𝑑≥2𝑁, normalise 𝑃= 1, and write the spectrum of an exact‑
+inertia‑(𝑁, 𝑁, 𝑑−2𝑁) target as 𝜆= (𝑎, 0𝑑−2𝑁, −𝑏rev) with 𝑎, 𝑏in the ordered simplex 𝒮𝑁= {𝑎1 ≥… ≥
+𝑎𝑁≥0, ∑𝑎𝑖= 1} (closure allowed). Following [Ceiling, Bal44]: 𝑒= (1, 0, … , 0), 𝑢= (1/𝑁, … , 1/𝑁),
+𝐻𝑁= (𝑁+ 1)/2,
+𝐸(𝑎) = ‖𝑎−𝑒‖1 = 2(1 −𝑎1),
+𝑈(𝑎) = ‖𝑎−𝑢‖1,
+𝛿𝑑(𝑎, 𝑏) = 𝐻𝑁−𝜅𝑑(𝑎, 0, −𝑏rev),
+𝐷∗(𝑎, 𝑏) = min{𝐸(𝑎) + 𝑈(𝑏), 𝑈(𝑎) + 𝐸(𝑏)},
+and 𝛾𝑁,𝑑is the largest constant with 𝛾𝑁,𝑑𝐷∗≤𝛿𝑑on the stratum. Theorem A of [Bal44] (ϐinite reduc‑
+tion): for every ϐixed 𝑑≥2𝑁,
+𝛾𝑁,𝑑=
+min
+(𝑎,𝑏)∈𝑊𝑁, 𝐷∗(𝑎,𝑏)>0
+𝐻𝑁−𝜅𝑑(𝑎, 0, −𝑏rev)
+𝐷∗(𝑎, 𝑏)
+,
+(2.4)
+where 𝑊𝑁is an explicit ϐinite rational set independent of 𝑑(the cut vertices of the cell complex of 𝐷∗,
+constructed by geometry.py of the [Bal44] record; the supplied provenance describes this copy as byte‑
+identical to the record’s; the present fresh checks do not authenticate that historical byte comparison).
+Its sizes are |𝑊𝑁| = 22, 89, 267, 628, 1354, 2611, 4615, 7614, 12120, 18385 for 𝑁= 3, … , 12; exactly
+two members, (𝑒, 𝑢) and (𝑢, 𝑒), have 𝐷∗= 0. (The working report misprinted 4617 and 7616 for 𝑁=
+9, 10; the certiϐied counts |𝑊𝑁| −2 were right.)
+The two families. For 𝑁≥3 put
+𝐴𝑁= ቀ
+3𝑁−2
+4𝑁, ൫
+𝑁+2
+4𝑁(𝑁−1)൯
+𝑁−1ቁ,
+𝐵= ൫
+1
+2,
+1
+2, 0𝑁−2൯,
+𝑢3 = ൫
+1
+3,
+1
+3,
+1
+3, 0𝑁−3൯,
+𝑧𝑁= ቀ
+4𝑁−3
+9𝑁,
+4𝑁−3
+9𝑁, ൫
+𝑁+6
+9𝑁(𝑁−2)൯
+𝑁−2ቁ.
+Direct computation gives 𝐷∗(𝐴𝑁, 𝐵) =
+5𝑁−6
+2𝑁
+and 𝐷∗(𝑢3, 𝑧𝑁) =
+4(7𝑁−12)
+9𝑁
+, both orientations being equal in
+each case (𝐸(𝑢3) = 4/3, 𝑈(𝑧𝑁) =
+16𝑁−48
+9𝑁
+, 𝑈(𝑢3) =
+2(𝑁−3)
+𝑁
+, 𝐸(𝑧𝑁) =
+2(5𝑁+3)
+9𝑁
+). For 𝑁≤12 the pairs of
+Table 1 are members of 𝑊𝑁(cut vertices in the sense of [Bal44] Lemma 2).
+3. Statements
+Allthreetheoremsarecomputer‑assisted: eachisreduced, bytheargumentsofSection4, toaϐinitelistof
+exact rational identities and inequalities, which are stored in JSON certiϐicates and were replayed by two
+3
+
+independent veriϐiers (Section 7). The imported theorems are exactly those of Section 2: the Horn pro‑
+gram (2.1), Horn–Klyachko–Knutson–Tao (2.2), the hive equivalence (2.3), and Theorem A (2.4). Noth‑
+ing else is imported; in particular no ϐloating‑point computation enters any proof.
+Theorem 1 (balanced stability constants, all dimensions). For 𝑁∈{3, … , 12} and every 𝑑≥2𝑁,
+𝛾𝑁,𝑑= 𝛾𝑁with the values, minimising pairs and costs of Table 1. For 𝑁≤6 the ratio in (2.4) is attained
+at (𝐴𝑁, 𝐵) and (𝐵, 𝐴𝑁), for 𝑁≥7 at (𝑢3, 𝑧𝑁) and (𝑧𝑁, 𝑢3); at these pairs 𝜅𝑑has the tabulated value for
+every 𝑑≥2𝑁.
+Table 1: Theorem 1. 𝜅= 𝜅𝑑at the minimising pair (every 𝑑≥2𝑁); the last column is the number of
+pairs of 𝑊𝑁with 𝐷∗> 0, each carrying an exact hive primal.
+𝑁
+𝛾𝑁
+pair
+𝜅
+𝐷∗
+pairs
+3
+17/36
+(𝐴3, 𝐵)
+31/24
+3/2
+20
+4
+4/7
+(𝐴4, 𝐵)
+3/2
+7/4
+87
+5
+113/152
+(𝐴5, 𝐵)
+127/80
+19/10
+265
+6
+9/10
+(𝐴6, 𝐵)
+17/10
+2
+626
+7
+781/740
+(𝑢3, 𝑧7)
+479/315
+148/63
+1352
+8
+317/264
+(𝑢3, 𝑧8)
+169/108
+22/9
+2609
+9
+23/17
+(𝑢3, 𝑧9)
+43/27
+68/27
+4613
+10
+3/2
+(𝑢3, 𝑧10)
+49/30
+116/45
+7612
+11
+773/468
+(𝑢3, 𝑧11)
+1481/891
+260/99
+12118
+12
+289/160
+(𝑢3, 𝑧12)
+101/60
+8/3
+18383
+The switch at 𝑁= 7. At (𝐴7, 𝐵) the cost is 99/56 and the ratio 125/116; at (𝐴8, 𝐵), 13/7 and 148/119;
+both exceed the (𝑢3, 𝑧𝑁) ratios 781/740, 317/264. The certiϐied minimisers are the pairs at which a hive
+dual is stored; uniqueness of the minimising pair is not certiϐied (another pair of 𝑊𝑁could have the same
+ratio, with its stored hive primal not tight), and the value of 𝛾𝑁is unaffected by this.
+Theorem 2 ((𝐴𝑁, 𝐵) cost law). For 𝑁= 3, … , 14,
+𝜅2𝑁൫𝐴𝑁, −𝐵rev൯= 3
+2 + ቀቔ(𝑁−2)2
+4
+ቕ−1ቁ
+𝑁+ 2
+4𝑁(𝑁−1),
+(3.1)
+i.e. 31/24, 3/2, 127/80, 17/10, 99/56, 13/7, 553/288, 2, 907/440, 47/22, 457/208, 59/26. For 𝑁=
+3, 4, 5, 6 the same value is 𝜅𝑑(𝐴𝑁, 0𝑑−2𝑁, −𝐵rev) for every 𝑑≥2𝑁. Exact values are also certiϐied at
+(𝑢3, 𝑧𝑁) in 𝑑= 2𝑁for 𝑁= 6, … , 12 (13/9 for 𝑁= 6, then the column of Table 1) and at the minimising
+pairs for 𝑁= 6, … , 10 in 𝑑= 2𝑁+1, 2𝑁+2, 2𝑁+3 (constant in 𝑑). The law (3.1) for general 𝑁remains
+a conjecture; for 𝑁= 4 it re‑derives [Bal44] Lemma 3, and [Bal55] Lemma 3 gives the lower bound with
+𝑁−4 in place of ⌊(𝑁−2)2/4⌋−1, tight only for 𝑁≤5.
+Theorem 3 (six‑level formula). For every traceless Hermitian 6 × 6 𝐹with decreasing spectrum 𝜆and
+gaps 𝑔𝑗= 𝜆𝑗−𝜆𝑗+1 ≥0 (𝑗= 1, … , 5),
+𝜅6(𝐹) =
+max
+𝑟=1,…,22 𝑞𝑟⋅𝑔,
+(3.2)
+with the twenty‑two rational forms 𝑞𝑟of Table 2 (Section 6), a list closed under reversal 𝑔↦𝑔rev. Every
+form is exposed: its dominance chamber 𝐶𝑟= {𝑔≥0 ∶(𝑞𝑟−𝑞𝑗) ⋅𝑔≥0 ∀𝑗} is full‑dimensional, so 𝑞𝑟
+is the unique maximiser on a non‑empty open set. Consequently the unit ball {𝜅𝑑≤1} of the ordered
+trace‑zero cone has exactly 2, 4, 12, 22 non‑wall facets for 𝑑= 3, 4, 5, 6 (the counts for 𝑑= 3, 4, 5 follow
+from the closed formulas of [FourLevel] and [FiveLevel]).
+4
+
+4. Certiϐicate architecture and proofs
+4.1 Exact hive primals and duals
+A hive primal for 𝜆in dimension 𝑑is a rational decreasing 𝑠≥0 together with a rational hive ℎ(stored as
+integers ℎint and a common denominator) with boundary (𝑠, −𝑠rev, 𝜆). Checking it means checking 3൫𝑑
+2൯
+rhombus inequalities and 3𝑑boundary equalities in exact arithmetic; by (2.3) it proves 𝜅𝑑(𝜆) ≤∑𝑠𝑡. A
+hivedual isalistofnonnegativerationalmultipliers𝑦ontherhombi, 𝑧ontheorderingrows𝑠𝑘−𝑠𝑘+1 ≥0,
+𝑠𝑑≥0, and signed multipliers 𝜇on the boundary equalities, such that
+෍
+𝑡
+𝑠𝑡−𝑣= ෍
+rhombi
+𝑦⋅(rhombus slack) + ෍𝑧⋅(ordering slack) + ෍𝜇⋅(boundary residual) + ෍
+𝑡
+𝜈𝑡𝑠𝑡
+(4.1)
+holds as an identity of linear forms in (ℎ, 𝑠) with 𝜈≥0; then ∑𝑠𝑡≥𝑣on every feasible point, and
+by (2.3) 𝜅𝑑(𝜆) ≥𝑣. When primal cost and dual value coincide, 𝜅𝑑(𝜆) is known exactly. The generators
+solve the hive LP in ϐloating point (HiGHS dual simplex), rationalise 𝑠, ℎand the multipliers by continued
+fractions, and re‑verify exactly before writing anything; a fallback exact re‑solve on the ϐloating‑point
+support exists but was never needed (all failure counters are 0 in every run).
+4.2 Dimension‑independent lower bounds: windowed Horn templates
+A template is (𝐼0, 𝐼1, 𝐽0, 𝐽1, 𝐾0, 𝐾1, 𝑟, refl) with 𝐼0, … , 𝐾1 ⊆{1, … , 𝑀}, |𝐼0|+|𝐼1| = |𝐽0|+|𝐽1| = |𝐾0|+|𝐾1| = 𝑟
+and |𝐼1| + |𝐽1| = |𝐾1|. In dimension 𝑑≥2𝑀it deϐines 𝐼= 𝐼0 ∪{𝑑+ 1 −𝑡∶𝑡∈𝐼1} and likewise 𝐽, 𝐾:
+“small” indices ≤𝑀and “large” indices ≥𝑑+ 1 −𝑀, which do not overlap. Write 𝑠′
+𝑡∶= 𝑠𝑑+1−𝑡. For
+𝜆= (𝑎, 0𝑑−2𝑁, −𝑏rev) (𝑀≥𝑁; 𝑎𝑘∶= 0 for 𝑘> 𝑁, 𝑏𝑡∶= 0 for 𝑡> 𝑁) the Horn inequality of the template
+reads
+෍
+𝑘∈𝐾0
+𝑎𝑘−෍
+𝑡∈𝐾1
+𝑏𝑡≤෍
+𝑖∈𝐼0
+𝑠𝑖+ ෍
+𝑡∈𝐼1
+𝑠′
+𝑡−෍
+𝑗∈𝐽0
+𝑠′
+𝑗−෍
+𝑡∈𝐽1
+𝑠𝑡,
+(4.2)
+an inequality whose coefϐicients do not depend on 𝑑.
+Lemma 4.1 (stability). Fix a template and 𝑑0 ≥2𝑀. Membership (𝐼, 𝐽, 𝐾) ∈𝑇𝑑
+𝑟is a ϐinite conjunction
+of conditions each of which is afϐine in 𝑑(the sum condition has zero slope; each recursive condition
+(𝐹, 𝐺, 𝐻) ∈𝑇𝑟𝑞contributes an inequality whose 𝑑‑coefϐicient is #{𝑓∈𝐹∶𝑖𝑓large}+#{𝑔∈𝐺∶𝑗𝑔large}−
+#{ℎ∈𝐻∶𝑘ℎlarge}). If every condition holds at 𝑑= 𝑑0 and has slope ≤0, the template is a Horn triple
+in every 𝑑≥𝑑0, and (4.2) holds for every feasible 𝑠in every such 𝑑.
+Proof. For 𝑑≥2𝑀the sorted order of 𝐼is 𝑑‑independent, so the recursive conditions refer to ϐixed
+positions; an afϐine function of 𝑑with slope ≤0 that is satisϐied at 𝑑0 is satisϐied for all 𝑑≥𝑑0. The
+inequality then holds by the necessity half of (2.2). □
+Lemma 4.2 (reϐlection). (𝛼, 𝛽, 𝛾) is Horn‑feasible iff (−𝛼rev, −𝛽rev, −𝛾rev) is (negate 𝐴, 𝐵) iff (𝛽, 𝛼, 𝛾)
+is (commute the sum). Applied to (𝑠, −𝑠rev, 𝜆) this gives (𝑠, −𝑠rev, −𝜆rev), and −𝜆rev = (𝑏, 0𝑑−2𝑁, −𝑎rev).
+Hence the feasible sets of 𝑠for the targets (𝑎, 𝑏) and (𝑏, 𝑎) coincide, 𝜅𝑑is the same for both orientations,
+and the Horn inequalities of the reϐlected target (refl = 1: exchange the roles of 𝑎and 𝑏in (4.2)) are
+valid constraints on the same 𝑠.
+An all‑𝑑certiϔicate for (𝑎, 𝑏) with bound 𝑣is a list of stable templates with nonnegative rational multi‑
+pliers 𝑦(and, optionally, multipliers on the ordering rows, unused in all the certiϐicates here) such that
+the 𝑦‑combination of the inequalities (4.2) is ∑𝑖𝑐𝑖𝑠𝑖+ ∑𝑡𝑐′
+𝑡𝑠′
+𝑡≥𝑣with every 𝑐𝑖, 𝑐′
+𝑡≤1. Since 𝑠≥0,
+∑all 𝑠≥∑𝑖𝑐𝑖𝑠𝑖+ ∑𝑡𝑐′
+𝑡𝑠′
+𝑡≥𝑣in every 𝑑≥𝑑0, i.e. 𝜅𝑑(𝑎, 0𝑑−2𝑁, −𝑏rev) ≥𝑣for all 𝑑≥𝑑0. The veriϐier
+re‑derives stability of every template from Horn’s recursion (its own implementation) and re‑assembles
+5
+
+the combination; a second checker instantiates each template at 𝑑= 𝑑0, … , 𝑑0+8 and tests membership
+in 𝑇𝑑
+𝑟directly.
+The certiϐicates were found by linear programming over families of stable templates: a generic enumer‑
+ation of all stable templates with 𝑟≤5 (stable_templates.py; 1.53 million templates for 𝑁= 6, 496
+s) and, much more cheaply, the structured family (alld_family.py) consisting of all stable templates
+with 𝑟≤2 together with all Lidskii–Wielandt templates 𝐼= {1, … , 𝑟}, 𝐽= 𝐾and their mirrors, in both
+orientations. The structured family reproduces the 𝑁= 6, 7 certiϐicates in 0.5 s and 1.4 s and certiϐies
+𝑁= 3, 4, 5, 8, … , 12 in at most 74 s each. A generic search restricted to 𝑟≤4 cannot certify 𝑁= 7 (best
+bound 466/315 < 479/315): the tight certiϐicate needs an 𝑟= 6 Lidskii–Wielandt inequality.
+4.3 Chambers of 𝜅6: ray witnesses and global duals
+Work in 𝑑= 6 with 𝑠6 = 0 (Section 2) and gap coordinates 𝑔∈ℝ5
+≥0, 𝜆(𝑔) the trace‑zero spectrum with
+those gaps; (2.1) becomes the explicit LP with the 522 rows of 𝑇6 and four ordering rows. For a form 𝑞
+two objects are stored. (a) A global dual: multipliers 𝑦≥0 on the 522 triples and 𝑧≥0 on the ordering
+rows with 𝑐∶= ∑𝑟𝑦𝑟𝛼𝑟+𝐷⊤𝑧≤(1, 1, 1, 1, 1) componentwise, where 𝛼𝑟is the 𝑠‑coefϐicient vector of row
+𝑟and 𝐷the ordering matrix, and ∑𝑟𝑦𝑟1𝐾𝑟= 𝑞as a linear form on trace‑zero 𝜆(i.e. in gap coordinates).
+Summing the rows gives 𝑐⋅𝑠≥𝑞⋅𝑔; since 𝑠≥0 and 𝑐≤1 componentwise, ∑𝑠≥𝑐⋅𝑠≥𝑞⋅𝑔for every
+feasible 𝑠and every 𝑔, since the multipliers do not depend on 𝜆; hence 𝜅6 ≥max𝑟𝑞𝑟⋅𝑔everywhere. (b)
+Ray witnesses: the extreme rays 𝜌of the dominance chamber 𝐶𝑟(primitive integer vectors) and, at each,
+an exact feasible 𝑠(𝜌) with ∑𝑠(𝜌) = 𝑞𝑟⋅𝜌. The feasible set {(𝑠, 𝜆)} of the Horn program is a polyhedral
+convex cone, 𝜆(𝑔) is linear, and 𝐶𝑟⊆ℝ5
+≥0 is pointed, hence generated by its extreme rays; for 𝑔= ∑𝑐𝜌𝜌
+with 𝑐≥0 the point ∑𝑐𝜌𝑠(𝜌) is feasible for 𝜆(𝑔) with cost 𝑞𝑟⋅𝑔. So 𝜅6 ≤𝑞𝑟⋅𝑔on 𝐶𝑟, and with (a),
+𝜅6 = 𝑞𝑟⋅𝑔= max𝑗𝑞𝑗⋅𝑔there. Coverage is automatic: for every 𝑔some 𝑟attains the maximum and
+then 𝑔∈𝐶𝑟by deϐinition. Extreme rays were computed by brute force over 4‑subsets of the chamber
+inequalities (complete for a pointed cone in ℝ5: an extreme ray has at least four linearly independent
+tight inequalities) and, in review, by pycddlib (exact GMP arithmetic); the two sets coincide.
+4.4 Padding monotonicity and the proof of Theorem 1
+Lemma 4.3 (padding monotonicity). If 𝐶realises 𝐹in dimension 𝑑then 𝐶⊕0𝑒−𝑑realises 𝐹⊕0𝑒−𝑑
+with the same Hilbert–Schmidt norm; the sorted spectrum of 𝐹⊕0 is (𝑎, 0𝑒−2𝑁, −𝑏rev) (the new zeros
+land between 𝑎𝑁≥0 and −𝑏𝑁≤0). Hence 𝜅𝑒(𝑎, 0𝑒−2𝑁, −𝑏rev) ≤𝜅𝑑(𝑎, 0𝑑−2𝑁, −𝑏rev) for 𝑒≥𝑑≥2𝑁;
+the ratios in (2.4) are non‑decreasing in 𝑑and 𝛾𝑁,𝑑≥𝛾𝑁,2𝑁. □
+Proof of Theorem 1. Fix 𝑁and let 𝑚be the value in Table 1. (i) By Theorem A, 𝛾𝑁,𝑑is the minimum of
+(2.4) over the |𝑊𝑁| −2 pairs with 𝐷∗> 0, for every ϐixed 𝑑≥2𝑁. (ii) For every such pair 𝑝the stored
+order‑2𝑁hive primal gives 𝜅2𝑁(𝑝) ≤∑𝑠(𝑝), and by Lemma 4.3 𝜅𝑑(𝑝) ≤𝜅2𝑁(𝑝); the veriϐier checks
+(𝐻𝑁−∑𝑠(𝑝))/𝐷∗(𝑝) ≥𝑚for every 𝑝. So every ratio in every 𝑑≥2𝑁is ≥𝑚. (iii) At the two minimising
+pairs 𝑝∗the stored hive dual gives 𝜅2𝑁(𝑝∗) = ∑𝑠(𝑝∗) exactly, and the all‑𝑑certiϐicate of Section 5 gives
+𝜅𝑑(𝑝∗) ≥𝜅2𝑁(𝑝∗) for every 𝑑≥2𝑁; with Lemma 4.3, 𝜅𝑑(𝑝∗) = 𝜅2𝑁(𝑝∗) and the ratio at 𝑝∗equals 𝑚in
+every 𝑑. By Lemma 4.2 one all‑𝑑certiϐicate covers both orientations. Hence 𝛾𝑁,𝑑= 𝑚for all 𝑑≥2𝑁. □
+Which imported facts are used where: the upper bounds (ii) use the hive equivalence (2.3) in the direc‑
+tion “hive ⇒feasible” in dimension 2𝑁only; the exact values at the minimisers use (2.3) in the direction
+“feasible ⇒hive” in dimension 2𝑁; the all‑𝑑lower bounds use only the necessity of Horn’s inequalities,
+in every 𝑑. The inequalities that occur (Section 5) are Weyl’s (𝑟= 1), two 𝑟= 2 types with Littlewood–
+Richardson coefϐicient 1 (by the Pieri rule, e.g. 𝑐(𝑑−4,2)
+(2),(𝑑−4) for 𝐼= {1, 4}, 𝐽= {1, 𝑑−2}, 𝐾= {3, 𝑑−2}),
+their mirrors, and Lidskii–Wielandt inequalities (𝐼= {1, … , 𝑟}, 𝐽= 𝐾), all classical [We12, Li50, Wi55].
+6
+
+Proof of Theorem 2. Each of the 34 entries of AB_costs.json carries a hive primal and a hive dual of
+equal value (Section 4.1), which is (3.1) for the twelve (𝐴𝑁, 𝐵) entries. For 𝑁≤6 the all‑𝑑certiϐicates
+alld_lower_AB_N3..N6 give 𝜅𝑑≥the value in every 𝑑≥2𝑁, and Lemma 4.3 gives ≤. □
+Proof of Theorem 3. Section 4.3 with the stored 22 duals and 112 ray witnesses; exposedness is the
+rank‑5 check on each chamber. □
+5. The explicit all‑𝑑certiϐicates
+Notation: 𝑠′
+𝑡= 𝑠𝑑+1−𝑡; each line is one Horn inequality (4.2), valid for every feasible 𝑠in every 𝑑≥2𝑁
+by Lemmas 4.1–4.2; “reϐl” means the inequality is taken for the reϐlected target (𝑏, 0, −𝑎rev); multipliers
+are written in front. The index sets below are those of the JSON ϐiles (the working report misprinted the
+𝐽and 𝐾sets of the 𝑟= 2 templates for 𝑁= 5, 9, 12; the inequalities themselves were right). All lines are
+reproduced, with their exact values, by print_alld_certificates.py.
+𝑁= 6, (𝐴6, 𝐵), 𝑎= (2/3, (1/15)5), 𝑏= (1/2, 1/2, 04), 𝑑≥12:
+• reϐl Weyl, 𝐼= 𝐾= {2}, 𝐽= {1}: 𝑏2 =
+1
+2 ≤𝑠2 −𝑠′
+1;
+• Weyl, 𝐼= 𝐾= {6}, 𝐽= {1}: 𝑎6 =
+1
+15 ≤𝑠6 −𝑠′
+1;
+• reϐl Lidskii–Wielandt 𝑟= 3, 𝐼= {1, 2, 3}, 𝐽= 𝐾= {1, 2, 𝑑−1}: 𝑏1 + 𝑏2 −𝑎2 =
+14
+15 ≤(𝑠1 + 𝑠2 +
+𝑠3) −(𝑠′
+1 + 𝑠′
+2 + 𝑠2) = 𝑠1 + 𝑠3 −𝑠′
+1 −𝑠′
+2;
+• reϐl Lidskii–Wielandt 𝑟= 5, 𝐼= {1, … , 5}, 𝐽= 𝐾= {1, 2, 𝑑−2, 𝑑−1, 𝑑}: 𝑏1 + 𝑏2 −𝑎1 −𝑎2 −𝑎3 =
+1
+5 ≤∑𝑖≤5 𝑠𝑖−(𝑠′
+1 + 𝑠′
+2 + 𝑠1 + 𝑠2 + 𝑠3) = 𝑠4 + 𝑠5 −𝑠′
+1 −𝑠′
+2.
+Sum: 𝑠1 + ⋯+ 𝑠6 −4𝑠′
+1 −2𝑠′
+2 ≥
+1
+2 +
+1
+15 +
+14
+15 +
+1
+5 =
+17
+10; all coefϐicients ≤1 and 𝑠≥0 give ∑all 𝑠≥
+17/10 = 𝜅12(𝐴6, 𝐵), so 𝜅𝑑= 17/10 for all 𝑑≥12.
+𝑁= 7, (𝑢3, 𝑧7), 𝑎= (
+1
+3,
+1
+3,
+1
+3, 04), 𝑏= (
+25
+63,
+25
+63, (
+13
+315)5), 𝑑≥14:
+• 2× Weyl, 𝐼= 𝐾= {3}, 𝐽= {1}: 2𝑎3 =
+2
+3 ≤2𝑠3 −2𝑠′
+1;
+• reϐl Weyl, 𝐼= 𝐾= {7}, 𝐽= {1}: 𝑏7 =
+13
+315 ≤𝑠7 −𝑠′
+1;
+• 𝑟= 2, 𝐼= {1, 4}, 𝐽= {1, 𝑑−2}, 𝐾= {3, 𝑑−2}: 𝑎3 −𝑏3 =
+92
+315 ≤𝑠1 + 𝑠4 −𝑠′
+1 −𝑠3;
+• Lidskii–Wielandt 𝑟= 6, 𝐼= {1, … , 6}, 𝐽= 𝐾= {1, 2, 3, 𝑑−3, 𝑑−2, 𝑑}: 𝑎1 +𝑎2 +𝑎3 −𝑏1 −𝑏3 −𝑏4 =
+164
+315 ≤∑𝑖≤6 𝑠𝑖−(𝑠′
+1 + 𝑠′
+2 + 𝑠′
+3 + 𝑠1 + 𝑠3 + 𝑠4) = 𝑠2 + 𝑠5 + 𝑠6 −𝑠′
+1 −𝑠′
+2 −𝑠′
+3.
+Sum: 𝑠1 + ⋯+ 𝑠7 −5𝑠′
+1 −𝑠′
+2 −𝑠′
+3 ≥
+210+13+92+164
+315
+=
+479
+315 = 𝜅14(𝑢3, 𝑧7).
+The remaining certiϐicates (same conventions; 𝑊𝑘= Weyl on index 𝑘, i.e. 𝜆𝑘≤𝑠𝑘−𝑠′
+1; 𝐿6 = the 𝑟= 6
+Lidskii–Wielandt line above; 𝐿9 = Lidskii–Wielandt 𝑟= 9 with 𝐼= {1, … , 9}, 𝐽= 𝐾= {1, 2, 3} ∪{𝑑−
+5, … , 𝑑}: 𝑎1 + 𝑎2 + 𝑎3 −∑𝑡≤6 𝑏𝑡≤𝑠7 + 𝑠8 + 𝑠9 −𝑠′
+1 −𝑠′
+2 −𝑠′
+3; 𝑅2 = the 𝑟= 2 line 𝐼= {1, 4}, 𝐽= {1, 𝑑−2},
+𝐾= {3, 𝑑−2} above):
+• 𝑁= 3, (𝐴3, 𝐵), bound 31/24: 𝑊1 (𝑎1 =
+7
+12), reϐl 𝑊2 (𝑏2 =
+1
+2), 𝑊3 (𝑎3 =
+5
+24); sum 𝑠1+𝑠2+𝑠3−3𝑠′
+1 ≥
+31/24.
+• 𝑁= 4, (𝐴4, 𝐵), bound 3/2: 2× reϐl 𝑊2, 𝑊4 (𝑎4 =
+1
+8), reϐl 𝑟= 2 with 𝐼= {1, 3}, 𝐽= {1, 𝑑−1},
+𝐾= {2, 𝑑−1}: 𝑏2 −𝑎2 =
+3
+8 ≤𝑠1 + 𝑠3 −𝑠′
+1 −𝑠2 (the two‑row argument of [Bal44] Lemma 3); sum
+𝑠1 + ⋯+ 𝑠4 −4𝑠′
+1 ≥3/2.
+7
+
+• 𝑁= 5, (𝐴5, 𝐵), bound 127/80: 2× reϐl 𝑊2, 𝑊5 (𝑎5 =
+7
+80), the reϐl 𝑟= 2 line of 𝑁= 4 (𝑏2−𝑎2 =
+33
+80),
+and 𝑟= 2 with 𝐼= {4, 𝑑−4}, 𝐽= {1, 5}, 𝐾= {5, 𝑑−2}: 𝑎5 −𝑏3 =
+7
+80 ≤𝑠4 +𝑠′
+5 −𝑠′
+1 −𝑠′
+5 = 𝑠4 −𝑠′
+1;
+sum 𝑠1 + ⋯+ 𝑠5 −5𝑠′
+1 ≥127/80.
+• 𝑁= 8, (𝑢3, 𝑧8), bound 169/108: the 𝑁= 7 certiϐicate with 𝑊7 replaced by reϐl 𝑊7 and reϐl 𝑊8
+(𝑏7 = 𝑏8 =
+7
+216), 𝑅2 (
+65
+216), 𝐿6 (
+115
+216); sum 𝑠1 + ⋯+ 𝑠8 −6𝑠′
+1 −𝑠′
+2 −𝑠′
+3.
+• 𝑁= 9, (𝑢3, 𝑧9), bound 43/27: 2 × 𝑊3, reϐl 𝑊8, reϐl 𝑊9 (
+5
+189 each), 𝑅2 (
+58
+189), reϐl 𝑟= 2 with 𝐼=
+{7, 𝑑−8}, 𝐽= {1, 9}, 𝐾= {9, 𝑑−3}: 𝑏9 −𝑎4 =
+5
+189 ≤𝑠7 + 𝑠′
+9 −𝑠′
+1 −𝑠′
+9 = 𝑠7 −𝑠′
+1 (weaker than
+Weyl, chosen by the LP for the coefϐicient budget), 𝐿6 (
+34
+63); sum 𝑠1 + ⋯+ 𝑠9 −7𝑠′
+1 −𝑠′
+2 −𝑠′
+3.
+• 𝑁= 10, (𝑢3, 𝑧10), bound 49/30: 2×𝑊3, reϐl 𝑊10 (
+1
+45), 𝑅2 (
+14
+45), 𝐿6 (
+49
+90), 𝐿9 (
+4
+45); sum 𝑠1 +⋯+𝑠10 −
+6𝑠′
+1 −2𝑠′
+2 −2𝑠′
+3.
+• 𝑁= 11, (𝑢3, 𝑧11), bound 1481/891: 2 × 𝑊3, reϐl 𝑊10, reϐl 𝑊11 (
+17
+891 each), 𝑅2 (
+280
+891), 𝐿6 (
+488
+891), 𝐿9
+(
+85
+891); sum 𝑠1 + ⋯+ 𝑠11 −7𝑠′
+1 −2𝑠′
+2 −2𝑠′
+3.
+• 𝑁= 12, (𝑢3, 𝑧12), bound 101/60: 2 × 𝑊3, reϐl 𝑊11, reϐl 𝑊12 (
+1
+60 each), 𝑅2 (
+19
+60), reϐl 𝑟= 2 with
+𝐼= {10, 𝑑−11}, 𝐽= {1, 12}, 𝐾= {12, 𝑑−3}: 𝑏12 −𝑎4 =
+1
+60 ≤𝑠10 −𝑠′
+1, 𝐿6 (
+11
+20), 𝐿9 (
+1
+10); sum
+𝑠1 + ⋯+ 𝑠12 −8𝑠′
+1 −2𝑠′
+2 −2𝑠′
+3.
+In every case the multipliers are 1 or 2, no ordering multiplier is needed, and the assembled left side
+is ∑𝑖≤𝑁𝑠𝑖minus nonnegative multiples of 𝑠′
+1, 𝑠′
+2, 𝑠′
+3. The 𝑁= 7, … , 12 certiϐicates share a skeleton —
+2× Weyl on 𝜆3, reϐlected Weyl on the ϐlat tail of 𝑧𝑁, the 𝑟= 2 line 𝑅2, and Lidskii–Wielandt lines with
+𝐾= {1, 2, 3}∪large indices (𝑟= 6 for 𝑁≤9; 𝑟= 6 and 9 for 𝑁≥10).
+6. The 𝜅6 formula
+Table 2 lists the twenty‑two forms in gap coordinates, the index of the reversed form, the number of ex‑
+treme rays of the dominance chamber and the number of Horn triples in the support of the global dual
+(no ordering multipliers are needed in any of the 22 duals). The list is the eleven representatives found
+by LP‑dual facet discovery in the author’s cycle‑1 notes together with their reversals; the certiϐicate gen‑
+erator, which would have appended a missing facet whenever a ray witness failed, never had to. There
+are 112 rays in total.
+Table 2: the forms 𝑞𝑟of Theorem 3 (𝜅6 = max𝑟𝑞𝑟⋅𝑔, 𝑔the ϐive gaps).
+𝑟
+𝑞𝑟
+rev
+rays
+dual
+1
+(−3/2, −2, −3/2, 0, 5/2)
+22
+5
+5
+2
+(−7/6, −4/3, −1/2, 4/3, 13/6)
+21
+5
+4
+3
+(−5/6, −2/3, 1/2, 5/3, 11/6)
+20
+5
+4
+4
+(−1/2, 0, 1/2, 2, 3/2)
+19
+6
+3
+5
+(−1/2, 0, 3/2, 1, 3/2)
+18
+5
+3
+6
+(−1/2, 0, 3/2, 2, 1/2)
+13
+5
+3
+7
+(−1/6, 2/3, 3/2, 4/3, 7/6)
+17
+5
+3
+8
+(0, 0, 1, 2, 1)
+16
+5
+4
+9
+(1/6, 1/3, 3/2, 5/3, 5/6)
+15
+5
+3
+10
+(1/6, 4/3, 3/2, 2/3, 5/6)
+14
+5
+3
+11
+(1/2, 0, 1/2, 2, 1/2)
+12
+5
+3
+12
+(1/2, 2, 1/2, 0, 1/2)
+11
+5
+3
+8
+
+𝑟
+𝑞𝑟
+rev
+rays
+dual
+13
+(1/2, 2, 3/2, 0, −1/2)
+6
+5
+3
+14
+(5/6, 2/3, 3/2, 4/3, 1/6)
+10
+5
+3
+15
+(5/6, 5/3, 3/2, 1/3, 1/6)
+9
+5
+3
+16
+(1, 2, 1, 0, 0)
+8
+5
+4
+17
+(7/6, 4/3, 3/2, 2/3, −1/6)
+7
+5
+3
+18
+(3/2, 1, 3/2, 0, −1/2)
+5
+5
+3
+19
+(3/2, 2, 1/2, 0, −1/2)
+4
+6
+3
+20
+(11/6, 5/3, 1/2, −2/3, −5/6)
+3
+5
+4
+21
+(13/6, 4/3, −1/2, −4/3, −7/6)
+2
+5
+4
+22
+(5/2, 0, −3/2, −2, −3/2)
+1
+5
+5
+In spectral coordinates 𝑞⋅𝑔= ∑𝑗(𝑞𝑗−𝑞𝑗−1)𝜆𝑗(with 𝑞0 = 𝑞6 = 0); e.g. 𝑞16 ⋅𝑔= 𝜆1 + 𝜆2 −𝜆3 −𝜆4
+and 𝑞22 ⋅𝑔=
+5
+2𝜆1 −
+5
+2𝜆2 −
+3
+2𝜆3 −
+1
+2𝜆4 +
+1
+2𝜆5 +
+3
+2𝜆6. Two exact consistency checks tie the formula to
+the rest of the paper: at the 20 pairs of 𝑊3 the maximum of the 22 forms equals the hive‑certiϐied 𝜅6
+of gamma_N3.json, and on 40 random rational spectra it equals the exact primal‑equals‑dual hive value
+(crosscheck_horn_vs_hive.py). The observation of [FiveLevel] that the facet normals have denomi‑
+nators dividing 𝑑persists at 𝑑= 6 (denominators 1, 2, 3, 6).
+7. Veriϐication
+Author’s veriϐiers and supplied historical runs.
+verify_certificates.py (Python standard
+library, fractions only, no LP solver) replays every certiϐicate exactly: it regenerates 𝑊𝑁from
+geometry.py, recomputes 𝐷∗, checks that the certiϐied pairs are exactly those with 𝐷∗> 0, checks every
+hive primal with its own rhombus enumeration, every hive dual as the identity (4.1) (in the author’s
+“stationarity residual” formulation), the minimum ratio and the minimiser list, all 34 AB_costs entries,
+the 522 Horn triples of 𝑇6 from Horn’s recursion, the 22 chambers (rays by its own 4‑subset brute
+force, rank, witnesses, duals), and all 12 active all‑𝑑ϐiles (stability of each template by its own recur‑
+sion, assembly, coefϐicients ≤1). Final run: TOTAL: 0 failures, 451 s (logs/verify_final.log).
+check_templates_explicit.py instantiates every template at 𝑑= 𝑑0, … , 𝑑0 + 8 (up to 𝑑= 32 for
+𝑁= 12), tests membership in 𝑇𝑑
+𝑟directly from the recursive deϐinition and re‑assembles the inequality
+at each 𝑑; it also tests the sign convention of (2.2) on 130 random Hermitian triples (522 and 2062
+inequalities): ALL OK, 18 s. crosscheck_horn_vs_hive.py ties the hive LP to the explicit Horn LP of
+𝑑= 6, 7, 8 (522, 2062, 8,752 rows, HiGHS): 0 mismatches, max |diff| ≤4.4 ⋅10−15, 6 s. The generator
+hive_exact.py was itself calibrated against the Horn LP (max |diff| = 2 ⋅10−15 on 𝑑= 4, 5), which
+ϐixes the boundary labelling of Section 2.
+Author‑supplied historical review (described by the author as a separate agent, 2026‑09‑13; scripts
+in repro/reviewer/). The session identity, model conϐiguration and contextual independence of this
+historical review have not been authenticated in the present cycle. The following recounts the supplied
+report and logs. The reviewer wrote its own tools before running the author’s: a recursive Horn‑triple
+generator; a Littlewood–Richardson coefϐicient counter (tableau rule) as a second, non‑recursive mem‑
+bership test; an explicit Horn LP for 𝑑≤7; a hive LP in a different formulation (ℎ‑variables only, 𝑠
+eliminated); an exact hive‑primal checker with rhombi derived from the three lattice directions; an
+exact hive‑dual checker verifying (4.1) as an identity of linear forms (opposite sign convention for 𝜇;
+perturbing one multiplier makes it reject); an all‑𝑑template checker re‑deriving Lemma 4.1 and instan‑
+tiating at 𝑑= 2𝑁, 2𝑁+ 1, 2𝑁+ 5, 2𝑁+ 9 with membership tested by recursion and by LR positivity;
+9
+
+and a chamber checker with extreme rays recomputed by pycddlib and by its own brute force. Find‑
+ings: 𝑇𝑑
+𝑟agrees with LR positivity over all sum‑condition triples for 𝑑= 5, 6, 7 (196, 897, 4366 triples,
+0 mismatches); the reviewer’s hive LP agrees with its Horn LP to 2.7 ⋅10−15; every hive primal at all
+20, … , 18383 pairs and every minimiser dual pass its checker, and the minimum ratios and minimiser
+lists are reproduced; all 34 AB_costs entries have primal = dual; all 12 active all‑𝑑ϐiles pass; the 112
+rays coincide between cdd and brute force, every witness and every dual is valid; on 5,000 random spec‑
+tra |Horn LP −max𝑟𝑞𝑟⋅𝑔| ≤1.1 ⋅10−14; the author’s veriϐier re‑run by the reviewer gave 0 failures in
+438.5 s. The reviewer’s verdict on all three theorems was CORRECT, with three reporting errors in the
+working report, corrected here: the sizes |𝑊9| = 4615, |𝑊10| = 7614; the 𝐽, 𝐾sets of the 𝑟= 2 tem‑
+plates for 𝑁= 5, 9, 12 (Section 5); and the remark that the gamma_N*.json ϐiles store a kappa ϐield for
+every pair while a dual is stored only at the minimisers — for a non‑minimising pair only kappa_upper
+(the primal cost) is certiϐied, and kappa there is an uncertiϐied record of the generator’s dual value.
+Supplied rerun of 2026‑09‑13. repro/run_fast.py (Section 9) re‑executed the author’s veriϐier on
+the subset 𝑁≤8 plus AB_costs, kappa6 and all all‑𝑑ϐiles, the explicit‑𝑑check, the crosscheck, the
+two manuscript scripts and the reviewer’s scripts rev_A, rev_C, rev_E, rev_F and rev_B (default range
+𝑁≤8 and AB_costs), all with exit status 0; wall times are in repro/runtimes.txt. The reviewer’s logs
+for 𝑁= 9, … , 12 (rev_B_9_10_11.log, rev_B_12.log) are included unchanged.
+Fresh checks of 14 September 2026. The coordinator replayed the supplied full veriϐier in a sep‑
+arate work copy: all certiϐicates passed, with TOTAL: 0 failures, in 268.969 seconds. A fresh As‑
+tra High task independently reconstructed the ϐinite pair sets, Horn membership using Littlewood–
+Richardson tableaux, and chamber rays using integer cofactors, without importing the submitted Python
+code: 47,685 vertex primals, 20 minimiser duals, 34 additional primal‑dual entries, 12 active all‑d ϐiles,
+522 dimension‑six Horn triples and all 112 chamber‑ray incidences passed. A fresh Sol Medium task sep‑
+arately checked the dimension‑six chamber certiϐicates and all‑d inequalities. Both reviews concerned
+the original PDF; the underlying certiϐicate bytes and veriϐier code are unchanged in this corrected can‑
+didate. Section 4.3 now states the componentwise coefϐicient bound actually satisϐied by all stored duals
+(equality is unnecessary). These checks are computational evidence, not human peer review or a proof
+of model‑session independence. Historical scripts and logs remain preserved as historical evidence.
+8. Observations and open questions
+Observation 8.1 (quasi‑polynomial cost at (𝑢3, 𝑧𝑁); conjecture only). Exact primal‑equals‑dual hive
+values (not stored, uz_kappa_scan.py, 0.4 s) give, for 𝑁= 6, … , 16, 𝜅2𝑁(𝑢3, −𝑧rev
+𝑁) = 13/9, 479/315,
+169/108, 43/27, 49/30, 1481/891, 101/60, 2206/1287, 73/42, 1028/585, 899/504. Multiplied by
+9𝑁(𝑁−2) these are the integers 312, 479, 676, 903, 1176, 1481, 1818, 2206, 2628, 3084, 3596, whose
+second differences 30, 30, 46 | 32, 32, 51 | 34, 34, 56 are not periodic, but show a pattern across three
+residue classes compatible with a conjectural quasi‑polynomial of period 3 (the three‑fold 𝑢3), not a
+single quadratic. (15𝑁2 −28𝑁−60)/(9𝑁(𝑁−2)) ϐits 𝑁= 6, … , 9 (it is the value of the 𝐿6 certiϐicate
+pattern of Section 5) and (16𝑁2 −31𝑁−114)/(9𝑁(𝑁−2)) ϐits 𝑁= 9, … , 12; neither ϐits 𝑁≥13. No
+closed form is claimed.
+Observation 8.2 (conjectured minimiser). For all 𝑁≥7 the minimiser of (2.4) is (𝑢3, 𝑧𝑁) and 𝛾𝑁=
+9𝑁(𝐻𝑁−𝜅2𝑁(𝑢3, 𝑧𝑁))/(4(7𝑁−12)); exact for 𝑁≤12, and the ratios at 𝑁= 13, … , 16 would be
+6803/3476, 363/172, 913/403, 677/280 if so. The extremal family switches once, at 𝑁= 7, from the
+(𝐴𝑁, 𝐵) pairs of [Ceiling, Bal44, Bal55]; whether it switches again (to (𝑢4, 𝑧4,𝑁)‑type cut vertices) is open.
+Open questions. (1) 𝛾𝑁for all 𝑁: a proof that the argmin over 𝑊𝑁lies in the (𝑢𝑘, 𝑧𝑘,𝑁) family, and
+a closed form for 𝜅2𝑁(𝑢3, 𝑧𝑁); the uniform certiϐicate skeleton of Section 5 suggests that the Lidskii–
+10
+
+Wielandt index sets can be given as a function of 𝑁(which 𝑟occur, and where the large indices sit), but
+this was not attempted. (2) The general‑𝑁cost law (3.1) and its all‑𝑑version for 𝑁≥7. (3) The non‑wall
+facets of the unit ball of 𝜅7 (the sequence 2, 4, 12, 22, …): the per‑chamber template scales, but the 2062‑
+row LP and the number of chambers grow. (4) A representation‑theoretic derivation of the 22 facets:
+the unit ball is the Kirwan polytope of the 𝑈(6)‑action on ℙ(𝔤𝔩6), so its facets should be computable by
+Ressayre‑type or Berenstein–Sjamaar restriction criteria rather than by projecting the Horn program.
+9. Reproducibility
+The directory repro/ next to this ϐile contains the certiϐicates (certs/, 7.5 MB: gamma_N3.json,
+gamma_N4.json plain, gamma_N5..N12.json.gz from 12 kB to 3.3 MB — uncompressed up to 37 MB
+—, AB_costs.json 230 kB, kappa6_certificate.json 11 kB, twelve active alld_lower_*.json
+under 1.3 kB each), the author’s generators and veriϐiers copied unchanged from the working directory
+(crosscheck_horn_vs_hive.py with one import path changed to ϐind check_horn_lp.py, copied from
+the cycle‑1 scratch directory), the author’s logs (logs/), the reviewer’s scripts reviewer/rev_*.py
+(unchanged except that two absolute paths were made relative) with the reviewer’s logs, three scripts
+written for this manuscript (print_alld_certificates.py, kappa6_table.py, run_fast.py) and
+README.md with ϐile sizes, commands, expected ϐinal lines and measured wall times. Dependencies:
+Python 3.12; numpy and scipy (HiGHS) for the generators, the crosscheck and the reviewer’s LPs;
+pycddlib for rev_E.py; the veriϐiers need only the standard library.
+Commands (from repro/):
+python verify_certificates.py (full replay,
+about 7.5 min);
+python check_templates_explicit.py (18 s);
+python crosscheck_horn_vs_hive.py (8 s);
+python run_fast.py (the subset of Section 7, writes <name>.out and runtimes.txt); python
+reviewer/rev_B.py 9 10 11 12 (20, 44, 88, 139 s); python gen_gamma.py N regenerates a
+certiϐicate (12 s for 𝑁= 7 up to 607 s for 𝑁= 12); python gen_AB_costs.py (0.7 s); python
+gen_kappa6.py (106 s); python alld_family.py N N 2 UZ --lean regenerates an all‑𝑑certiϐicate
+(≤74 s; AB for 𝑁≤6). Expected ϐinal lines: TOTAL: 0 failures; ALL OK: True; problems: NONE for
+every reviewer ϐile; ALL OK from the manuscript scripts. Generating everything took about 40 minutes
+on one machine, dominated by 𝑁= 10, … , 12 and by the two generic template searches, which the
+structured family makes unnecessary.
+AI‑assistance statement
+The author supplied the original manuscript, code and certiϐicates as work produced with Claude Fable
+5.1, with authoring, adversarial‑review and writing roles described in the delivery. These are author‑
+supplied historical identities and role descriptions; neither the serving conϐiguration nor isolation of
+those sessions has been authenticated here. On 14 September 2026, native Codex reviews conϐigured
+as GPT‑6 Astra High and GPT‑5.6 Sol Medium assessed the original exact PDF in fresh delegated tasks and
+ran separate exact checks. The coordinator then prepared this corrected candidate, including the com‑
+ponentwise dual condition in Section 4.3 and reporting corrections. Those original‑PDF assessments
+are preserved separately and do not constitute assessments or acceptance of this new PDF. No indepen‑
+dent human peer review is claimed. The mathematical content rests on the exact certiϐicates and the
+imported results listed in Section 3. Scientiϐic responsibility rests with the author.
+11
+
+References
+• [FourLevel] L. Eriksson, The Exact Four‑Level Inverse Commutator Cost:
+Horn–Littlewood–
+Richardson Facets, Rank Transitions, and Sharp Loop Synthesis, AI Research Record, ARR‑2026‑
+3M1EEG1T689ADSMW (2026). Cited: Theorem 2.2 (Horn program), Theorem 3.1 (four‑level
+formula).
+• [FiveLevel] L. Eriksson, The Exact Five‑Level Inverse Commutator Cost: Twelve Horn Chambers, Op‑
+timal Rank, and the Sharp 5/2 Resource Tax, AI Research Record, ARR‑2026‑37B8R0QTA894GTFF
+(2026). Cited: Theorem 3.1 (ϐive‑level formula) and its per‑chamber certiϐicate template.
+• [RankOnset] L. Eriksson, Sharp Onset and Unbounded Growth of Norm‑Optimal Self‑Commutator
+Rank, AI Research Record, ARR‑2026‑5QQF95VHTC9GABH8 (2026). Cited: Proposition 2.2 (Horn
+program in the 𝑠‑normalisation), Remark 3.3 (padding example), Section 6 and Lemma 6.1 (hive
+certiϐicates and coarse graining).
+• [Ceiling] L. Eriksson, Sharp inertia ceilings and optimal stability for inverse self‑commutators, AI
+Research Record, ARR‑2026‑24M24KDPZK8HDBQ9 (2026). Cited: Theorem 1 (inertia ceiling),
+Theorem 3 (balanced stability, 𝛾2 = 1/2), Theorem 4 (𝛾3 = 17/36).
+• [Bal44] L. Eriksson, Polynomial vertex reduction and optimal stability at balanced inertia (4,4), AI
+Research Record, ARR‑2026‑54Q3HMFJ0Z8CZB4T (2026). Cited: Theorem A (ϐinite reduction,
+the set 𝑊𝑁and geometry.py), Theorem B (𝛾4 = 4/7), Lemma 2 (cut vertices), Lemma 3 (two‑row
+Horn bound).
+• [Bal55] L. Eriksson, Optimal stability and all equality cases at balanced inertia (5,5), AI Research
+Record, ARR‑2026‑6ZJY1SSSJA98WBWX (2026). Cited: Theorem 1 (𝛾5 = 113/152), Lemma 3.
+• [Inertia_m2] L. Eriksson, The inverse self‑commutator cost at inertia (𝑚, 2): a dimension‑free
+closed formula, block‑shift optimizers and a Pieri certiϔicate, AI Research Record, ARR‑2026‑
+1K33A7K90T87AREF (2026). Cited: Open question 3 (numerical 𝛾6, … , 𝛾10).
+• [Ho62] A. Horn, Eigenvalues of sums of Hermitian matrices, Paciϔic J. Math. 12 (1962) 225–241.
+• [Kl98] A. A. Klyachko, Stable bundles, representation theory and Hermitian operators, Selecta
+Math. (N.S.) 4 (1998) 419–445.
+• [KT99] A. Knutson, T. Tao, The honeycomb model of 𝐺𝐿𝑛(ℂ) tensor products I: proof of the satu‑
+ration conjecture, J. Amer. Math. Soc. 12 (1999) 1055–1090.
+• [Bu00] A. S. Buch, The saturation conjecture (after A. Knutson and T. Tao), Enseign. Math. 46
+(2000) 43–60.
+• [Fu00] W. Fulton, Eigenvalues, invariant factors, highest weights, and Schubert calculus, Bull. Amer.
+Math. Soc. 37 (2000) 209–249.
+• [We12] H. Weyl, Das asymptotische Verteilungsgesetz der Eigenwerte linearer partieller Differen‑
+tialgleichungen, Math. Ann. 71 (1912) 441–479.
+• [Li50] V. B. Lidskii, On the characteristic numbers of the sum and product of symmetric matrices,
+Dokl. Akad. Nauk SSSR 75 (1950) 769–772.
+• [Wi55] H. Wielandt, An extremum property of sums of eigenvalues, Proc. Amer. Math. Soc. 6
+(1955) 106–110.
+12

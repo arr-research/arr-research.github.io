@@ -1,0 +1,9 @@
+# Exact-version verification
+
+Canonical PDF SHA-256: 810df760794f04ec3d423f157d6c6e4a30f9651545d636994fc5ce35eebdb654. Clean private receipt: SUB-8BEBDAF4EFE3CF59.
+
+Two exact-PDF native model reviews were adopted into the registered intake, one per model. Original local reports and intake binding provenance remain preserved; binding does not add another scientific review. Both model families participated in revision. One provider and incomplete benchmark matching limit the evidence; the weighted score is not a probability of correctness. A separate disclosed founder-author editorial decision and exact public permission were recorded. The intake Astra context read and explicitly adopted a preceding Astra report; it was not a fresh blind review. Required clarification accompanying this unchanged PDF: The four minor presentation findings are addressed in the visible author clarification: credit Sra–Karp 2013; specify the domain [m_f,1); establish strict m_f>1/2 using the positive second derivative; and state the lambda=0 convention. The same exact PDF, original minor report and score remain unchanged. The original Astra clarification review verifies each correction; the note must accompany publication.
+
+Weighted score: 4.51/10; evidence Limited. AIRR-RATING-1.0 uses the frozen exact-configuration mathematical benchmark: Astra High weight 2.904, Sol Medium weight 1 without an exact match. Read both complete reports, BINDING-PROVENANCE.json, and scientific-evidence/ for actual checks and unchecked claims. Criteria stars and overall score stars have different scales.
+
+Only the canonical paper.pdf is the accepted manuscript; preceding-original/paper.pdf and older reports are historical evidence. Reproduction is scoped to recorded executed checks; no full rerun of every supplied script or exhaustive novelty search is claimed. Code and data retain their existing notices.

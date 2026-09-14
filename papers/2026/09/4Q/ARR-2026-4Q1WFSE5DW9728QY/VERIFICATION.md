@@ -1,0 +1,9 @@
+# Exact-version verification
+
+Canonical PDF SHA-256: ffea17de8edce73844df1705c439f89e4a8f18eaf3de4a0f374cdec056c51921. Clean private receipt: SUB-F9A9D1AC4838F75F.
+
+Two exact-PDF native model reviews were adopted into the registered intake, one per model. Original local reports and intake binding provenance remain preserved; binding does not add another scientific review. Both model families participated in revision. One provider and incomplete benchmark matching limit the evidence; the weighted score is not a probability of correctness. A separate disclosed founder-author editorial decision and exact public permission were recorded. Required clarification accompanying this unchanged PDF: The minor codimension statement is qualified in the visible author clarification: n-1 is the rank of the ambient balance equations, while codimension n-1 for the ordered intersection requires relative interior in that balance subspace. The m=n=2, u=(1,0) counterexample has four entries equal and codimension 2. The same Astra reviewer verified the qualification and exact counterexample; the original PDF and minor score remain unchanged.
+
+Weighted score: 4.58/10; evidence Limited. AIRR-RATING-1.0 uses the frozen exact-configuration mathematical benchmark: Astra High weight 2.904, Sol Medium weight 1 without an exact match. Read both complete reports, BINDING-PROVENANCE.json, and scientific-evidence/ for actual checks and unchecked claims. Criteria stars and overall score stars have different scales.
+
+Only the canonical paper.pdf is the accepted manuscript; preceding-original/paper.pdf and older reports are historical evidence. Reproduction is scoped to recorded executed checks; no full rerun of every supplied script or exhaustive novelty search is claimed. Code and data retain their existing notices.

@@ -1,0 +1,732 @@
+All‑degree Born rigidity in dimensions four and three: an exact
+simplex optimum and a certiϐied ϐive‑outcome frame
+Lluis Eriksson (Independent researcher)
+14 September 2026 — revised candidate
+Abstract
+For an equal‑trace rank‑one POVM seed 𝐹on ℂℙ𝑑−1 the all‑degree Born‑rigidity gap is 𝛾(𝐹) =
+inf𝑘≥2 𝑔𝑘(𝐹), where 𝑔𝑘is the squared singular value of the orbit‑normalisation operator on the
+projective harmonic sector of degree 𝑘, and Γ𝑑is its supremum over outcome‑simple seeds. A previous
+record proved Γ𝑑= 𝑑−6/(𝑑+ 1), attained only by an orthonormal basis, for 𝑑≥5, and left 𝑑= 3, 4
+open. We prove an explicit tail bound |𝑄𝑛,𝑑(𝑡)| ≤(1 −𝑡)−(𝑑−2)/൫𝑛+𝑑−2
+𝑛
+൯for the normalised zonal
+function (a two‑line corollary of Koornwinder’s Laplace‑type integral) and use it to settle 𝑑= 4 exactly:
+Γ4 = 22018975/7340032 = 2.999847 …, attained only by the regular ϐive‑outcome simplex, with the
+minimising degree 𝑘= 6. In 𝑑= 3 we prove 77/45 < Γ3 ≤9/5, certify Γ3 ≥1.776009937964733
+by an explicit ϐive‑outcome frame in exact arithmetic, and locate numerically a strict local maximum
+1.7760099429996636 … with ϐive tied degrees 4, 8, 9, 12, 16.
+1. Introduction
+Fix a ϐinite rank‑one POVM seed 𝐹= {(𝑤𝑖, 𝑥𝑖)}𝑁
+𝑖=1 in ℂ𝑑and rotate it by every unitary. Under the
+homogeneous‑response ansatz, normalisation on this orbit constrains a scalar ray response 𝑓on
+ℂℙ𝑑−1, and the strength of that constraint on the harmonic sector of degree 𝑘is a number 𝑔𝑘(𝐹) (the
+record [Rec], Theorem 3.1). The optimal 𝐿2 inverse constant off the afϐine trace‑one quadratic sector
+is 𝛾(𝐹)−1/2 with 𝛾(𝐹) = inf𝑘≥2 𝑔𝑘(𝐹) ([Rec], Deϐinition 3.2 and Theorem 3.3). The design question of
+[Rec] is: among outcome‑simple equal‑trace seeds, which seed has the largest gap Γ𝑑= sup𝐹𝛾(𝐹)? Its
+Theorem 5.2 answers this for 𝑑≥5: Γ𝑑= 𝑑−6/(𝑑+ 1), attained only by an orthonormal basis (ONB).
+The proof compares the ONB with the 𝑁= 𝑑+ 1 regular simplex at degree 𝑘= 3 and kills 𝑁≥𝑑+ 2
+by the ceiling 𝛾≤𝑑2/𝑁; the degree‑three comparison reverses sign in 𝑑= 3 and 𝑑= 4 ([Rec], Section
+7.1), and the record explicitly makes no claim there.
+This paper settles 𝑑= 4 and narrows 𝑑= 3.
+Theorem A (𝑑= 4). Γ4 = 22018975/7340032 = 2.999847276 …, attained exactly and only by the
+regular ϐive‑outcome projective simplex (𝑤𝑖= 4/5, |⟨𝑥𝑖, 𝑥𝑗⟩|2 = 1/16); the minimising degree is 𝑘= 6.
+The ONB, with 𝛾= 14/5, is not optimal: 𝛾simp −𝛾ONB = 7334427/36700160 = 0.19984727 …
+The proof is exact: rational arithmetic for the degrees 2 ≤𝑘≤10 and an analytic tail bound (Lemma
+T) for 𝑘≥11. For tail control we give a self‑contained two‑line consequence of Koornwinder’s
+Laplace‑type integral representation of Jacobi polynomials (DLMF 18.10.3). This convenient bound
+is not claimed as new: Haagerup–Schlichtkrull [HS14], equation (20), already implies a stronger
+1
+
+explicit bound in the integer‑parameter range used here (Section 3). Our contribution is the exact
+low‑dimensional optimisation and the certiϐied three‑dimensional construction, rather than a new
+Jacobi inequality. A second, structural observation is that the outcome count 𝑁= 5 is rigid in ℂ4 ([Rec],
+Lemma 5.1(ii)): there is no positive‑dimensional family to optimise over, so the theorem reduces to
+one exact spectrum.
+Dimension three. The picture that emerges is: Γ3 is numerical (a ϐive‑outcome frame with no visible
+symmetry), Γ4 is the simplex, Γ𝑑is the ONB for 𝑑≥5. In 𝑑= 3 we prove that the simplex has 𝛾= 77/45
+(minimum at 𝑘= 4), that every seed with 𝑁≥6 outcomes has 𝛾≤3/2 (the ONB value), that Γ3 ≤
+9/5, and that the supremum is attained. Five‑outcome seeds form a four‑dimensional family (Naimark
+complement: ϐive unit Bloch vectors with zero sum, modulo rotations). We exhibit an explicit frame in
+that family, speciϐied by Bloch vectors with coordinates in ℚ(√𝑞), and certify in exact integer arithmetic
+that its gap is at least 1.776009937964733. Hence Γ3 ≥1.776009937964733 > 77/45 > 3/2: in
+𝑑= 3 neither the ONB nor the simplex is optimal and the maximiser has 𝑁= 5. The conjectured value,
+Γ3 = 1.77600994299966361808 …, and the identity of the proposed maximiser (optimum B, ϐive tied
+degrees 4, 8, 9, 12, 16, all Karush–Kuhn–Tucker multipliers positive) are numerical, supported by four
+differential‑evolution runs and 270 local multistarts, and stated as such.
+Status, stated honestly. Lemma T and Theorem A are proved (Theorem A computer‑assisted with ex‑
+act rational arithmetic; no ϐloating point enters). In 𝑑= 3, the ceiling 9/5, the simplex value 77/45, the
+reduction to 𝑁= 5 and the lower bound 1.776009937964733 are proved (the last computer‑assisted,
+exact). The value of Γ3 and the global optimality of B are numerical. An independent adversarial review
+(Section 6) re‑derived every proof and recomputed every number with its own code; its three correc‑
+tions (a wrong rational for the ONB–simplex difference, a missing multistart census, one citation year)
+are incorporated. The literature account was corrected in this revision to acknowledge the stronger
+explicit estimate already implied by [HS14], equation (20). The searches described in Section 6 did not
+locate the exact low‑dimensional all‑degree results; a null search does not certify priority.
+2. Setting
+Everything is as in [Rec]; we restate what is used. Let 𝑑≥3. A seed is 𝐹= {(𝑤𝑖, 𝑥𝑖)}𝑁
+𝑖=1 with 𝑥𝑖unit
+vectors in ℂ𝑑(representatives of points of ℂℙ𝑑−1), 𝑤𝑖> 0 and ∑𝑖𝑤𝑖𝑃𝑥𝑖= 𝐼𝑑([Rec], Deϐinition 2.1). It is
+equal‑trace if 𝑤𝑖= 𝑑/𝑁for all 𝑖and outcome‑simple if the rays 𝑥𝑖are pairwise distinct. ℱ𝑑is the class
+of ϐinite outcome‑simple equal‑trace seeds, modulo unitary equivalence and relabelling. Weights are
+not free in this class; the unequal‑weight problem is outside it ([Rec], Section 7.3).
+Let 𝐻𝑘be the projective harmonic sector of degree 𝑘: the restrictions to the unit sphere of harmonic
+polynomials of bidegree (𝑘, 𝑘), the 𝑈(𝑑)‑irreducible of highest weight (𝑘, 0, … , 0, −𝑘). Its normalised
+zonal function is
+𝑄𝑘,𝑑(𝑡) = 𝑃(𝑑−2,0)
+𝑘
+(2𝑡−1)
+൫𝑑+𝑘−2
+𝑘
+൯
+,
+𝑄𝑘,𝑑(1) = 1,
+a Koornwinder disk polynomial in the overlap 𝑡= |⟨𝑥, 𝑦⟩|2. The spectral formula ([Rec], Theorem 3.1)
+is
+𝑔𝑘(𝐹) =
+𝑁
+෍
+𝑖,𝑗=1
+𝑤𝑖𝑤𝑗𝑄𝑘,𝑑൫|⟨𝑥𝑖, 𝑥𝑗⟩|2൯,
+(2.1)
+and the gap is 𝛾(𝐹) = inf𝑘≥2 𝑔𝑘(𝐹) ([Rec], Deϐinition 3.2). Degree 𝑘= 1 is excluded because 𝑔1 = 0
+for every POVM (completeness is equivalent to 𝑔1 = 0), so inf𝑘≥1 𝑔𝑘would vanish identically; degree
+2
+
+0 is the trace normalisation. Finally Γ𝑑= sup𝐹∈ℱ𝑑𝛾(𝐹).
+Two facts from [Rec] are used and were re‑derived. First, ([Rec], Lemma 5.1) an equal‑trace seed has
+𝑁≥𝑑; 𝑁= 𝑑forces an ONB with 𝑤𝑖= 1; 𝑁= 𝑑+ 1 forces the regular projective simplex, unique
+up to unitary equivalence and phases, with 𝑤𝑖= 𝑑/(𝑑+ 1) and |⟨𝑥𝑖, 𝑥𝑗⟩|2 = 1/𝑑2 for 𝑖≠𝑗(the Gram
+matrix is
+𝑑+1
+𝑑(𝐼−𝑢𝑢∗) with |𝑢𝑖|2 = 1/(𝑑+ 1); rephasing makes 𝑢constant). This is the classical
+statement that an equiangular tight frame of 𝑑+ 1 vectors is the simplex, the Welch‑bound‑saturating
+case (𝑁−𝑑)/(𝑑(𝑁−1)) = 1/𝑑2 [Tr05, FJMP18, We74]. Second, the ONB spectrum ([Rec], (10)):
+𝑔ONB
+𝑘
+(𝑑) = 𝑑ቂ1 + (𝑑−1) (−1)𝑘
+൫𝑑+𝑘−2
+𝑘
+൯ቃ,
+𝛾ONB(𝑑) = 𝑔ONB
+3
+(𝑑) = 𝑑−
+6
+𝑑+ 1,
+(2.2)
+the odd‑degree values increasing in 𝑘and the even‑degree values exceeding 𝑑.
+For the simplex,
+𝑔simp
+𝑘
+(𝑑) =
+𝑑2
+𝑑+1ൣ1 + 𝑑𝑄𝑘,𝑑(1/𝑑2)൧.
+3. Lemma T: an explicit tail bound for the zonal function
+Lemma T. For 𝑑≥3, 0 ≤𝑡< 1 and every 𝑛≥0,
+|𝑄𝑛,𝑑(𝑡)| ≤(1 −𝑡)−(𝑑−2)
+൫𝑛+𝑑−2
+𝑛
+൯
+.
+(3.1)
+At 𝑡= 0 this is an equality: 𝑄𝑛,𝑑(0) = (−1)𝑛/൫𝑛+𝑑−2
+𝑛
+൯.
+Proof. (a) Integral representation. Let 𝐾= 𝑈(𝑑−1) ⊂𝑈(𝑑) be the stabiliser of 𝑒1. Put 𝑎= 𝑒1 + 𝑒2,
+𝑏= 𝑒1 −𝑒2, so ⟨𝑎, 𝑏⟩= 0, and ℎ(𝜉) = (⟨𝜉, 𝑎⟩⟨𝑏, 𝜉⟩)𝑛on ℂ𝑑, with ⟨⋅, ⋅⟩linear in the ϐirst slot. Then ℎis
+bihomogeneous of bidegree (𝑛, 𝑛) and harmonic: with Δ = 4 ∑𝑗𝜕2/𝜕𝜉𝑗𝜕̄𝜉𝑗,
+Δℎ= 4𝑛2ቀ෍
+𝑗
+̄𝑎𝑗𝑏𝑗ቁ(⟨𝜉, 𝑎⟩⟨𝑏, 𝜉⟩)𝑛−1 = 4𝑛2⟨𝑏, 𝑎⟩(⋯)𝑛−1 = 0.
+Hence ℎrestricted to the sphere descends to ℂℙ𝑑−1 and lies in 𝐻𝑛. The 𝐾‑average 𝜉↦∫𝐾ℎ(𝑘𝜉) 𝑑𝑘is
+a 𝐾‑invariant element of 𝐻𝑛, hence a scalar multiple of the zonal function 𝜉↦𝑄𝑛,𝑑(|𝜉1|2); evaluating
+at 𝑒1 (ϐixed by 𝐾, ℎ(𝑒1) = 1, 𝑄𝑛,𝑑(1) = 1) shows that the scalar is 1. Write 𝑡= |𝜉1|2, 𝜉′ = (𝜉2, … , 𝜉𝑑),
+so |𝜉′|2 = 1 −𝑡, and 𝑤= (𝑘𝜉′)1/|𝜉′|. For Haar‑random 𝑘∈𝑈(𝑑−1), 𝑤is the ϐirst coordinate of a
+uniform point on the unit sphere of ℂ𝑑−1, so 𝑢= |𝑤|2 ∼Beta(1, 𝑑−2) (density (𝑑−2)(1 −𝑢)𝑑−3 on
+[0, 1]) with a uniform phase independent of 𝑢. Since ℎ(𝑘𝜉) = ൣ|𝜉1|2 −|(𝑘𝜉′)1|2 + 2𝑖Im൫(𝑘𝜉′)1 ̄𝜉1൯൧
+𝑛,
+𝑄𝑛,𝑑(𝑡) = 𝔼[𝑧𝑛],
+𝑧= 𝑡−(1 −𝑡)𝑢+ 2𝑖ඥ𝑡(1 −𝑡) √𝑢cos 𝜑,
+(3.2)
+with 𝑢∼Beta(1, 𝑑−2) and 𝜑∼Unif[0, 𝜋] independent. This is Koornwinder’s Laplace‑type integral
+(DLMF 18.10.3 [DLMF], with 𝛼= 𝑑−2 > 𝛽= 0 > −1/2, whose constant 2Γ(𝛼+ 1)/(√𝜋Γ(𝛼−
+𝛽)Γ(𝛽+
+1
+2)) reduces to 2(𝑑−2)/𝜋and whose measure (1 −𝑟2)𝑑−3𝑟𝑑𝑟𝑑𝜑becomes, with 𝑢= 𝑟2, the
+product measure above), proved in [Ko74, As74] and in the group‑theoretic form used here in [Ko73].
+Independently of the literature, (3.2) was veriϐied as an exact polynomial identity in 𝑡for 0 ≤𝑛≤40
+and 𝑑= 3, 4, 5, 6 (script s2, Section 8), which covers every degree that enters Theorem A exactly.
+3
+
+(b) Bound. |𝑧|2 = (𝑡−(1−𝑡)𝑢)2+4𝑡(1−𝑡)𝑢cos2 𝜑≤(𝑡+(1−𝑡)𝑢)2 ≤1. Hence, with 𝑣= 𝑡+(1−𝑡)𝑢,
+1 −𝑢= (1 −𝑣)/(1 −𝑡), 𝑑𝑢= 𝑑𝑣/(1 −𝑡),
+|𝑄𝑛,𝑑(𝑡)| ≤𝔼ൣ(𝑡+ (1 −𝑡)𝑢)𝑛൧
+= (𝑑−2)(1 −𝑡)−(𝑑−2) න
+1
+𝑡
+𝑣𝑛(1 −𝑣)𝑑−3 𝑑𝑣
+≤(𝑑−2)(1 −𝑡)−(𝑑−2)𝐵(𝑛+ 1, 𝑑−2).
+and (𝑑−2)𝐵(𝑛+ 1, 𝑑−2) = 𝑛!(𝑑−2)!/(𝑛+ 𝑑−2)! = 1/൫𝑛+𝑑−2
+𝑛
+൯. At 𝑡= 0, 𝑧= −𝑢and 𝔼[(−𝑢)𝑛] =
+(−1)𝑛/൫𝑛+𝑑−2
+𝑛
+൯= 𝑃(𝑑−2,0)
+𝑛
+(−1)/൫𝑛+𝑑−2
+𝑛
+൯. □
+The lemma holds for all 𝑛≥0; the thresholds “𝑘≥11” and “𝑘≥14” below are only where (3.1)
+beats a speciϐic exact value. Numerically, over 𝑑∈{3, … , 6}, a grid of 𝑡and 𝑛≤400, the ratio
+|𝑄𝑛,𝑑(𝑡)|൫𝑛+𝑑−2
+𝑛
+൯(1 −𝑡)𝑑−2 equals 1 only at 𝑡= 0 and is at most 0.9212 for 𝑡> 0 (reviewer’s script
+r2b).
+Corollary 3.1 (ceiling with a rate). For an outcome‑simple equal‑trace seed with 𝑁outcomes, 𝑔𝑘(𝐹) →
+𝑑2/𝑁as 𝑘→∞; hence 𝛾(𝐹) ≤𝑑2/𝑁. Proof. In (2.1) the diagonal terms contribute ∑𝑖𝑤2
+𝑖= 𝑁(𝑑/𝑁)2 =
+𝑑2/𝑁since 𝑄𝑘,𝑑(1) = 1; each off‑diagonal overlap is < 1 by outcome‑simplicity, and 𝑄𝑘,𝑑(𝑡) →0 by
+(3.1) because ൫𝑘+𝑑−2
+𝑘
+൯→∞. Then 𝛾= inf𝑘≥2 𝑔𝑘≤lim𝑘𝑔𝑘. □
+This recovers [Rec], Lemma 4.1 and Proposition 4.2 with an explicit rate and without Darboux asymp‑
+totics. The Bernstein‑type inequality of Chow–Gatteschi–Wong [CGW94] is stated for −
+1
+2 ≤𝛼, 𝛽≤
+1
+2 (DLMF 18.14.3) and does not cover 𝛼= 𝑑−2 ≥1; the main uniform inequality of Haagerup–
+Schlichtkrull [HS14], Theorem 1.1, assumes 𝛼, 𝛽≥0. More directly, their normalisation on page 1 and
+equation (20) on page 6 give |𝑔(𝛼,𝛽)
+𝑛
+(𝑥)| ≤1 for nonnegative integer parameters. Setting 𝛼= 𝑑−2,
+𝛽= 0 and 𝑥= 2𝑡−1 cancels their gamma‑function prefactor and yields
+|𝑄𝑛,𝑑(𝑡)| ≤(1 −𝑡)−(𝑑−2)/2
+൫𝑛+𝑑−2
+𝑛
+൯
+.
+(3.3)
+This is stronger than (3.1) for 0 < 𝑡< 1 and 𝑑≥3. Thus Lemma T follows from an existing explicit
+estimate; we retain its elementary integral proof and the conservative thresholds based on (3.1). The
+generalised Jacobi‑weight questions of [EMN94] are related background, and are not needed for this
+argument.
+4. Theorem A: dimension four
+Theorem A. Γ4 = 22018975/7340032 = 2.999847276 …, attained exactly by the regular ϐive‑outcome
+projective simplex (𝑤𝑖= 4/5, |⟨𝑥𝑖, 𝑥𝑗⟩|2 = 1/16 for 𝑖≠𝑗), which is the unique maximiser in ℱ4 up to
+unitary equivalence, phases and relabelling. The minimum over degrees is attained only at 𝑘= 6,
+where 𝑄6,4(1/16) = −7345637/469762048 = −0.0156369 … In particular the ONB (𝛾= 14/5) is
+not optimal in 𝑑= 4, and
+𝛾simp(4) −𝛾ONB(4) = 22018975
+7340032 −14
+5 = 7334427
+36700160 = 0.19984727 …
+Proof. By [Rec], Lemma 5.1, a seed in ℱ4 has 𝑁= 4 (ONB), 𝑁= 5 (simplex) or 𝑁≥6.
+4
+
+(i) 𝑁
+=
+4: by (2.2), 𝛾ONB(4)
+=
+min𝑘4[1 + 3(−1)𝑘/൫𝑘+2
+𝑘൯]
+=
+14/5 at 𝑘
+=
+3 (values
+6, 14/5, 24/5, 24/7, 31/7, 11/3, … for 𝑘= 2, 3, …).
+(ii) 𝑁≥6: by Corollary 3.1, 𝛾≤16/𝑁≤8/3 < 14/5.
+(iii) 𝑁= 5: the seed is the simplex and 𝑔𝑘=
+16
+5 ൣ1+4𝑄𝑘,4(1/16)൧. The exact values, computed with a
+three‑term recurrence in rational arithmetic and cross‑checked against sympy.jacobi (author’s
+s1, s2; reviewer’s r1), are given in Table 1.
+𝑘
+𝑔simp
+𝑘
+(4) exact
+decimal
+2
+33/8
+4.1250000
+3
+49/16
+3.0625000
+4
+1563/512
+3.0527344
+5
+49041/14336
+3.4208287
+6
+22018975/7340032
+2.9998473
+7
+219021/65536
+3.3419952
+8
+104799063/33554432
+3.1232555
+9
+4754959807/1476395008
+3.2206556
+10
+608283021429/188978561024
+3.2187938
+Table 1: exact spectrum of the ϐive‑outcome simplex in ℂ4, degrees 2 ≤𝑘≤10.
+Exact comparison of the entries gives min2≤𝑘≤10 𝑔𝑘= 𝑔6, with 𝑔𝑘> 𝑔6 for every other 𝑘in this range
+(the script checks 2 ≤𝑘≤400, redundantly). For 𝑘≥11, Lemma T with 𝑡= 1/16, 𝑑= 4 gives
+|𝑄𝑘,4(1/16)| ≤ቀ16
+15ቁ
+2
+2
+(𝑘+ 1)(𝑘+ 2) ≤ቀ16
+15ቁ
+2 1
+78 = 0.014587 < 0.0156369 = −𝑄6,4(1/16),
+so 𝑔𝑘> 𝑔6 for all 𝑘≥11. The exact check cannot stop earlier: at 𝑘= 10 the Lemma T bound
+is (16/15)2/66 = 0.017239 > 0.015637, so 𝑘= 10 must be, and is, compared exactly. Therefore
+𝛾simp(4) = 𝑔6 = 22018975/7340032, attained at 𝑘= 6 only.
+(iv) 22018975/7340032 = 2.99985 > 14/5 > 8/3. The simplex is the unique 𝑁= 5 class, so it is
+the unique maximiser and Γ4 = 22018975/7340032. □
+What is exact and what is ϔinite. Everything in the proof is exact rational arithmetic or analytic; the ϐinite
+parts are the ten values of Table 1 and, as a redundant check of the zonal‑function identiϐication, the
+symbolic identity (3.2) for 𝑛≤40. No ϐloating‑point number enters Theorem A.
+Remark (correction to the working brief). The brief for this problem asked for a ϐinite optimisation over
+a “four‑parameter family of ϐive‑outcome frames in 𝑑= 4”. No such family exists: 𝑁= 𝑑+1 equal‑trace
+seeds are rigid ([Rec], Lemma 5.1(ii)). The four‑dimensional family lives in 𝑑= 3, 𝑁= 5 (Section 5).
+5. Dimension three
+5.1 Proved facts: ceiling, simplex, reduction to ϐive outcomes
+Proposition 5.1. In 𝑑= 3: (a) every seed with 𝑁≥6 has 𝛾≤9/6 = 3/2 = 𝛾ONB(3); (b) the ONB has
+𝛾= 3/2 (at 𝑘= 3); (c) the regular simplex (𝑁= 4, 𝑤𝑖= 3/4, overlaps 1/9) has 𝛾simp(3) = 77/45 =
+1.7111 …, attained only at 𝑘= 4, where 𝑄4,3(1/9) = −97/1215; (d) Γ3 = max ൫77/45, sup𝑁=5 𝛾൯≤
+5
+
+9/5, and the supremum over 𝑁= 5 is attained; hence Γ3 is attained, by the simplex or by a ϐive‑outcome
+seed.
+Proof. (a) is Corollary 3.1; (b) is (2.2) with 𝑑= 3: 𝑔𝑘= 3[1 + 2(−1)𝑘/(𝑘+ 1)], minimum 3/2 at
+𝑘= 3. (c) 𝑔𝑘=
+9
+4[1 + 3𝑄𝑘,3(1/9)]; exact values for 2 ≤𝑘≤13 (script s1; the two smallest are 77/45
+at 𝑘= 4 and 90863/45927 = 1.9784 at 𝑘= 6) give the minimum 𝑔4; for 𝑘≥14, Lemma T gives
+|𝑄𝑘,3(1/9)| ≤
+9
+8 ⋅
+1
+𝑘+1 ≤
+9
+120 = 0.075 < 0.079835 = −𝑄4,3(1/9), while at 𝑘= 13 the bound is 0.08036,
+so 𝑘= 13 is inside the exact range. (d) With 𝑁= 5 the ceiling is 9/5; 77/45 < 9/5 and 3/2 < 77/45
+give the ϐirst statement. Attainment: the 𝑁= 5 family is compact (Section 5.2), each 𝑔𝑘is continuous,
+so 𝛾= inf𝑘𝑔𝑘is upper semicontinuous and attains its supremum on a compact set. □
+5.2 The ϐive‑outcome family: Naimark complement and Bloch vectors
+Let 𝑋∈ℂ3×5 have unit columns 𝑥𝑖with 𝑋𝑋∗=
+5
+3𝐼3 (equal trace, 𝑤𝑖= 3/5). The Gram matrix 𝐺= 𝑋∗𝑋
+equals
+5
+3𝑃with 𝑃a rank‑three orthogonal projection, and
+5
+3(𝐼5 −𝑃) is the Gram matrix of ϐive vectors
+𝑦𝑖∈ℂ2 with |𝑦𝑖|2 =
+5
+3(1 −
+3
+5) =
+2
+3 and ⟨𝑥𝑖, 𝑥𝑗⟩= −⟨𝑦𝑖, 𝑦𝑗⟩for 𝑖≠𝑗. Writing 𝑦𝑖𝑦∗
+𝑖=
+1
+3(𝐼2 + 𝑛𝑖⋅𝜎) with
+unit Bloch vectors 𝑛𝑖∈𝑆2,
+|⟨𝑥𝑖, 𝑥𝑗⟩|2 = |⟨𝑦𝑖, 𝑦𝑗⟩|2 = 4
+9 ⋅1 + 𝑛𝑖⋅𝑛𝑗
+2
+= 2
+9(1 + 𝑛𝑖⋅𝑛𝑗),
+෍
+𝑖
+𝑦𝑖𝑦∗
+𝑖= 5
+3𝐼2 + 1
+3ቀ෍
+𝑖
+𝑛𝑖ቁ⋅𝜎,
+so tightness of the 𝑦’s is ∑𝑖𝑛𝑖= 0. Conversely ϐive unit Bloch vectors with zero sum give a tight frame
+in ℂ2 whose complementary Gram
+5
+3𝐼5 −
+5
+3𝑃′ is the Gram of a ϐive‑outcome equal‑trace seed in ℂ3. The
+overlaps satisfy |⟨𝑥𝑖, 𝑥𝑗⟩|2 ≤4/9 < 1, so every such seed is outcome‑simple. By (2.1) the objective
+depends only on the Gram matrix (𝑛𝑖⋅𝑛𝑗):
+𝑔𝑘= 9
+25ቂ5 + 2 ෍
+𝑖<𝑗
+𝑄𝑘,3(𝑡𝑖𝑗)ቃ,
+𝑡𝑖𝑗= 2
+9(1 + 𝑛𝑖⋅𝑛𝑗),
+𝑔𝑘→9
+5.
+(5.1)
+For optimisation of the objective, the parameter space {(𝑛1, … , 𝑛5) ∈(𝑆2)5 ∶∑𝑛𝑖= 0}/𝑂(3) is com‑
+pactofdimension10−3−3 = 4. The unitaryactiononBlochvectorscorrespondsto𝑆𝑂(3); quotienting
+by 𝑂(3) additionally identiϐies conjugate conϐigurations, which have the same overlaps and objective.
+This extra identiϐication does not affect the supremum or attainment. The exact parametrisation used
+in all searches (no penalty term): 𝑛1, 𝑛2, 𝑛3 free, 𝑠= 𝑛1 + 𝑛2 + 𝑛3 with |𝑠| ≤2, 𝑛4,5 = −𝑠/2 ± 𝑣with
+𝑣⟂𝑠, |𝑣|2 = 1 −|𝑠|2/4; seven angles, three of them redundant under 𝑆𝑂(3).
+5.3 Numerical optimum B and the second local maximum A
+Global search. s3 (scipy differential_evolution, population 40 × 7, Sobol initialisation, up to 3000
+generations, tolerance 10−12, then four rounds of Nelder–Mead and Powell; 300 degrees during the
+search, 2000 for the ϐinal spectrum; 20–25 minutes per seed) was run with four seeds. Seeds 0 and
+1 converged to 𝛾= 1.776009943000 with ϐive tied degrees 𝑘= 4, 8, 9, 12, 16 (optimum B); seeds 2
+and 3 to 𝛾= 1.775372547336 with tied degrees 5, 6, 8, 12, 18 (optimum A). Both exceed the simplex
+value 77/45 = 1.7111 and the earlier penalty‑method value 1.77194 of this line, which was not exactly
+feasible (| ∑𝑛𝑖| = 8 ⋅10−5).
+Multistart census. s3b draws random feasible starts and runs three rounds of Nelder–Mead and Powell
+on each (about 37 s per start). Three batches were run: batch 1 (default seed, 30 starts, 1114 s) and
+6
+
+batch 2 (seeds 21–24; 34, 32, 24, 30 starts, 4456 s) log the ten best values per batch; batch 3 (seeds
+31–34; 27, 26, 26, 29 starts, 5241 s) logs every local optimum with its active set. Table 2 gives the full
+census of batch 3.
+count
+𝛾
+active degrees
+20
+1.7760099
+4, 8, 9, 12, 16 (B)
+1
+1.7760099
+8, 9, 12, 16 (B, not fully converged)
+23
+1.7753725
+5, 6, 8, 12, 18 (A)
+3
+1.7752–1.7754
+subsets of the ties of A (not fully converged)
+11
+1.7714479
+5, 6, 9, 18, 29
+2
+1.7698530
+4, 6, 9, 18, 29
+3
+1.7698108
+4, 6, 8, 18, 29
+1
+1.7697419
+4, 6, 8, 16, 20
+2
+1.7684799
+5, 6, 8, 16, 22
+21
+1.7677921
+3, 5, 6, 16, 22
+2
+1.7674484
+5, 6, 8, 11, 20
+1
+1.7674007
+5, 6, 8, 11, 18
+6
+1.7665272
+3, 5, 6, 9, 22
+1
+1.7649654
+4, 5, 9, 12, 18
+5
+1.7568215
+3, 6, 9, 12, 16
+1
+1.7544253
+3, 5, 9, 12, 16
+5
+1.7675–1.7699
+two to four ties only (not fully converged)
+Table 2: census of the 108 local optima of batch 3 (seeds 31–34), values rounded to 7 digits, grouped
+by active set.
+In batches 1 and 2 the ten best values per batch were 6/9/6/5/7 hits of B and 3/1/4/5/2 hits of A
+(batch 1, then seeds 21, 22, 23, 24), plus two isolated values, 1.77589251 (batch 1) and 1.77539759
+(seed 24), that did not recur in the per‑start census of batch 3 and are most plausibly incompletely
+converged points near A or B; they were not reϐined. Over all 270 multistarts (including the reviewer’s
+independent 12‑start run, Section 6: three hits of B, four of A, two of 1.7677921, one of 1.7674484, two
+of 1.7568215), B was the best value in every batch, was reached at least 56 times, and no value above
+1.7760099430 was ever observed. The landscape is rich: fourteen distinct ϐive‑tie values above 1.75
+were returned, all with the generic “ϐive active degrees in four degrees of freedom” structure (only A
+and B were subjected to the KKT analysis below).
+Reϔinement to 40 digits (s6, mpmath, 40 digits). Gauss–Newton with a pseudo‑inverse on the four tie
+equations converges quadratically from the ϐloat optimum (residual 10−28 after one step, then 0 at
+working precision):
+𝛾𝐵= 1.77600994299966361808274335434298818 …
+(𝑔4 = 𝑔8 = 𝑔9 = 𝑔12 = 𝑔16),
+𝛾𝐴= 1.77537254733646573261448304592585103 …
+(𝑔5 = 𝑔6 = 𝑔8 = 𝑔12 = 𝑔18).
+At B the next degrees are 𝑔5 = 1.77614303734, 𝑔6 = 1.77692094836, 𝑔22 = 1.77831392549; at A,
+𝑔9 = 1.77935107582, 𝑔29 = 1.78036182092. The Gram matrix (𝑛𝑖⋅𝑛𝑗) of B is given in Table 3 to 20
+digits (the 40‑digit data are in s6_refined_B.json; those of A in s6_refined.json).
+7
+
+(𝑖, 𝑗)
+𝑛𝑖⋅𝑛𝑗
+(1,2)
+−0.67842266787263714880
+(1,3)
+0.60176255795439951187
+(1,4)
+−0.59255829171541443911
+(1,5)
+−0.33078159836634792396
+(2,3)
+0.15386171600661905357
+(2,4)
+−0.04298464090164038497
+(2,5)
+−0.43245440723234151981
+(3,4)
+−0.94165867347132659257
+(3,5)
+−0.81396560048969197287
+(4,5)
+0.57720160608838141664
+Table 3: Bloch Gram matrix of optimum B, 𝑡𝑖𝑗=
+2
+9(1 + 𝑛𝑖⋅𝑛𝑗).
+All ten entries are distinct; no symmetry is visible; mpmath.findpoly and identify ϐind no algebraic
+relation of degree ≤8 with coefϐicients up to 106 for 𝛾𝐴, 𝛾𝐵, the Gram entries or their power sums,
+apart from ∑𝑖<𝑗𝑛𝑖⋅𝑛𝑗= −5/2, which is forced by ∑𝑛𝑖= 0.
+First‑order optimality (KKT). At B the 5×7 matrix of gradients of the active 𝑔𝑘with respect to the seven
+angles has rank 4 (singular values 1.476, 0.407, 0.336, 0.123, 2 ⋅10−26; the three‑dimensional null
+space is the 𝑆𝑂(3) orbit), and the multipliers solving ∑𝑘𝜆𝑘∇𝑔𝑘= 0, ∑𝑘𝜆𝑘= 1 are
+𝜆= (0.10633, 0.24897, 0.21648, 0.12593, 0.30229)
+for 𝑘= (4, 8, 9, 12, 16),
+all strictly positive, with residual 3 ⋅10−26.
+(The preserved historical output carries a hard‑
+coded header “𝑘
+=
+5, 6, 8, 12, 18” copied from the run for A; the multipliers listed here be‑
+long to B. The revised script now derives its labels from the actual active set.)
+At A: rank 4,
+𝜆= (0.0197, 0.5875, 0.0424, 0.0796, 0.2707) for 𝑘= (5, 6, 8, 12, 18). The relevant exact criterion
+is conditional: if an exact tied point has positive multipliers and active gradients spanning the four‑
+dimensional tangent space of the quotient, then 0 lies in the interior of their convex hull. For every
+nonzero tangent direction 𝑣some active 𝑘then has ⟨∇𝑔𝑘, 𝑣⟩< 0; otherwise the positive weighted
+sum would force all inner products to vanish, contradicting the rank.
+Compactness of the unit
+tangent sphere makes the decrease uniform, so this criterion yields a strict local maximum without
+second‑order analysis. The computed ranks and multipliers support this vertex structure for A and
+B, but do not certify an exact root or the hypotheses of the criterion. For B, the non‑active degrees
+are numerically separated by at least 1.3 ⋅10−4 and the Lemma‑T tail beyond degree 2000 is at least
+1.79559. The four tie equations are polynomial of degree ≤16 (B) or ≤18 (A) in the ten overlaps,
+subject to the Gram constraints. Their numerically nonsingular quotient Jacobian is consistent with
+isolated algebraic solutions; no exact algebraic isolation is claimed.
+5.4 Exact certiϐied lower bound
+From the 40‑digit point B, s5 builds an exact frame 𝐹ex
+𝐵: 𝑛1, 𝑛2, 𝑛3 are rational unit vectors (stereo‑
+graphic images of rational points with denominator 108), 𝑤is a rational vector orthogonal to 𝑠=
+𝑛1 + 𝑛2 + 𝑛3, and 𝑛4,5 = −𝑠/2 ± √𝑞𝑤with 𝑞= (1 −|𝑠|2/4)/|𝑤|2 ∈ℚ, 𝑞> 0; unit norms and
+∑𝑛𝑖= 0 hold identically and were asserted in exact rational arithmetic. All overlaps 𝑡𝑖𝑗then lie in
+ℚ(√𝑞), and s4int evaluates 𝑔𝑘for 2 ≤𝑘≤600 exactly in ℤ[𝜌] up to an integer scale, 𝜌= √𝑞𝑛𝑞𝑑,
+8
+
+by the integer‑scaled three‑term recurrence (no gcd, no ϐloating point), replaces 𝜌by an integer enclo‑
+sure (isqrt, 40 digits, the side chosen by the sign of the 𝜌‑coefϐicient) and ϐloors to 10−30. The tail uses
+Lemma T with 𝑑= 3: for 𝑘> 600,
+𝑔𝑘≥
+9
+25ቂ5 −
+2𝑆
+𝑘+ 1ቃ≥
+9
+25ቂ5 −2𝑆
+602ቃ≥1.78533,
+𝑆= ෍
+𝑖<𝑗
+(1 −𝑡𝑖𝑗)−1 ≤12.2591.
+The result (14 s on rerun) is
+𝛾(𝐹ex
+𝐵) ≥177600993796473305296398794157
+1029
+= 1.776009937964733 … ,
+the minimum over 𝑘occurring at 𝑘
+=
+9; the ϐive near‑tied degrees 9, 16, 12, 4, 8 all lie in
+[1.7760099379, 1.7760099493].
+The reviewer’s independent 60‑digit evaluation of the same
+exact frame gives 𝑔9 = 1.776009937964733053, consistent with the certiϐicate to every printed digit.
+Theorem B (𝑑= 3, proved, computer‑assisted). Γ3 ≥1.776009937964733 > 77/45 > 3/2.
+Consequently, in 𝑑= 3 the ONB and the simplex are both non‑optimal, and every maximiser of 𝛾
+on ℱ3 (which exists by Proposition 5.1) has exactly ϐive outcomes. Together with Proposition 5.1(d),
+1.776009937964733 ≤Γ3 ≤9/5.
+A test of the certiϐicate pipeline on the triangular bipyramid (three equatorial Bloch vectors plus the
+poles) returns exactly 1.545185185 …, the value known for that conϐiguration from the earlier experi‑
+ments.
+5.5 What a proof of Γ3 = 𝛾𝐵would need
+The only upper bound is the ceiling 9/5. Global optimality of B is numerical. A proof would need a
+certiϐied global bound sup𝐹min(𝑔4, 𝑔8, 𝑔9, 𝑔12, 𝑔16) ≤𝛾𝐵over the four‑dimensional family, i.e. a cer‑
+tiϐied global optimisation of the minimum of ϐive polynomials of degree ≤16 in the ten Gram entries
+(or in the seven angles), for instance by interval branch‑and‑bound on the (𝑛1, 𝑛2, 𝑛3, 𝜓)‑box or by a
+Lasserre/SOS relaxation, together with an algebraic identiϐication of the point B from its four tie equa‑
+tions. Neither was attempted. A direct interval‑arithmetic evaluation of the certiϐicate was tried and
+abandoned: the forward three‑term recurrence ampliϐies interval widths exponentially (s4iv, kept for
+the record), which is why the certiϐicate works in exact integers instead.
+6. Veriϐication
+Independent review. A second agent, working from the report and the record and writing its own
+code, re‑derived Lemma T from DLMF 18.10.3 with the constants recomputed, re‑derived the bound,
+and conϐirmed numerically that the ratio in (3.1) never exceeds 1 (r2b: own three‑term recurrence
+cross‑checked against mpmath.jacobi to 10−42; 𝑑= 3, … , 6; 𝑛≤400). It recomputed Table 1 with
+sympy.jacobi (r1) and the Lemma T thresholds (0.017239 at 𝑘= 10, 0.014587 at 𝑘= 11 in 𝑑= 4;
+0.08036 at 𝑘= 13, 0.075 at 𝑘= 14 in 𝑑= 3), re‑derived the 𝑁= 5 rigidity in ℂ4 and the 𝑁≥6 exclu‑
+sion, checked the exact feasibility of the certiϐied frame in rational arithmetic, re‑ran the integer certiϐi‑
+cate (identical output) and evaluated the exact frame and the 40‑digit point B independently at 60 digits
+(r3), reproduced the KKT multipliers and the rank‑4 structure from ambient central‑difference gradi‑
+ents projected to the constraint manifold (r5, and a sampled minimum of max𝑘(−𝜕𝑣𝑔𝑘) = 0.0108 over
+20000 random unit tangent directions, a diagnostic rather than an all‑directions proof), and ran its own
+12‑start multistart with its own parametrisation and scipy.special.eval_jacobi (r4), reaching 𝛾𝐵
+9
+
+to 12 digits. Its corrections, all incorporated: the rational 1466335/7340032 given for 𝛾simp −𝛾ONB in
+the report was wrong (the correct value is 7334427/36700160; the decimal was right); the multistart
+census was missing; the Koornwinder addition‑formula paper is dated 1973, not 1972; and the header
+of the multiplier line in s6_out_B.txt is mislabelled (Section 5.3). None affects a verdict.
+Labelling. Theorem A is exact: rational arithmetic for 2 ≤𝑘≤10, Lemma T for 𝑘≥11; the degree
+𝑘= 10 needs the exact check because the Lemma T bound is 0.01724 there, above 0.01564. The 𝑑= 3
+value 1.7760099429996636 … is numerical; the exact certiϐied statement is Γ3 ≥1.776009937964733.
+Literature. Four searches were made (2026‑09‑14). (1) Koornwinder’s Laplace‑type integral: [Ko74],
+[As74], the group‑theoretic addition formula [Ko73], and DLMF 18.10.3 (source Askey [As75], eq.
+(4.20)); The original search did not identify the consequence of [HS14], equation (20); the present revi‑
+sion corrects that omission with (3.3). Lemma T is a convenient weaker estimate with a self‑contained
+proof, not a new inequality. (2) Bernstein‑type bounds: [CGW94] (range −
+1
+2 ≤𝛼, 𝛽≤
+1
+2, not applica‑
+ble), [HS14], [EMN94]. (3) Gleason‑type and frame‑function literature: Benedetto–Koprowski–Nolan
+[BKN20], Moretti–Pastorello [MP13], Caves–Fuchs–Manne–Renes [CFMR04], Saini–Kiukas–Burgarth–
+Gilchrist [SKBG26] (condition number of the frame operator on the Born sector only); none formulates
+the all‑degree objective 𝛾or its optimisers in 𝑑= 3, 4. (4) Frames: the uniqueness of the (𝑑+1)‑vector
+equiangular tight frame [Tr05, FJMP18], the Welch bound [We74], SIC‑POVMs [RBSC04] (which have
+𝑔2 = 0 by [Rec], Section 6, and are irrelevant to the maximisation). Novelty note. Theorem A is, to our
+knowledge, new, but its ingredients are standard and its difϐiculty is modest; its value lies in closing a
+case that [Rec] left open using established analytic tools. The 𝑑= 3 results are a certiϐied lower bound
+plus a numerical picture.
+7. Open questions
+1. The value of Γ3. Prove Γ3 = 𝛾𝐵(Section 5.5), or ϐind a better upper bound than 9/5.
+2. Algebraic nature of B. The numerical candidate B satisϐies four tie equations of degree ≤16 in
+the overlaps to the reported precision. Can an exact solution be isolated and its algebraic degree
+determined, and does it have a hidden symmetry that the Gram matrix does not display?
+3. Why ϔive active degrees. At every local maximum found, exactly dim +1 = 5 degrees are active
+(the generic vertex structure). Is there a conϐiguration where fewer degrees tie with a degenerate
+(non‑vertex) maximum?
+4. Unequal weights. [Rec], Section 7.3, leaves the weighted problem open in every dimension; in
+𝑑= 3, 4 the present rigid or four‑dimensional pictures may change.
+5. Dimension two. [Rec] notes that in 𝑑= 2 the ONB has an inϐinite odd‑degree kernel and the trine
+has positive gap; Γ2 is untouched here.
+8. Reproducibility
+The package repro/ (relative to this manuscript) contains author/ (the original research scripts and
+ϐinished per‑start logs of multistart seeds 31–34, with the diagnostic‑only revision edits recorded
+in SOURCE-DIFF.patch), reviewer/ (the six independent scripts r1_exact.py, r2_lemmaT.py,
+r2b_lemmaT.py, r3_exactframe.py, r4_opt.py, r5_kkt.py, with two paths made package‑relative
+and marked REPRO), run_fast.sh, logs/ and README.md. Environment: Python 3.12, numpy 2.5.1,
+scipy 1.18, sympy 1.14, mpmath 1.3.
+Author’s scripts:
+s1_exact_simplex_spectra.py (exact 𝑔𝑘of ONB and simplex, 𝑑
+=
+3, 4,
+10
+
+𝑘
+≤
+400; 1 s), s2_zonal_integral_identity.py (identity (3.2) as exact polynomials in 𝑡,
+𝑛≤40, 𝑑= 3, … , 6; 154 s on rerun), s3_d3_N5_global.py (differential evolution, 20–25 min
+per seed, not rerun; outputs kept), s3b_d3_multistart.py (multistart; not rerun; all logs kept),
+s4int_d3_exact_certificate.py (integer certiϐicate; 14 s), s4iv_d3_interval_certificate.py
+(failed interval attempt, kept), s5_rationalise_and_certify.py (rational frame from the 40‑digit
+point, then the certiϐicate; 16 s), s6_tie_refine_mp.py (40‑digit reϐinement and multipliers; 4–5
+s), s7_identify_and_rank.py (rank and findpoly; 3 s), tally.py (census).
+run_fast.sh re‑
+runs everything except s3 and s3b into logs/, with times in logs/timings.txt; the rerun of s6
+from the raw seed‑0 point followed by s5 reproduced the exact frame speciϐication byte for byte
+(logs/timings.txt, last line), so the certiϐicate is reproducible from the ϐloat optimum without any
+stored intermediate. Reviewer’s scripts rerun in 4–20 s each; r2_lemmaT.py (direct mpmath.jacobi
+at high degree) fails with a hypergeometric convergence error at 𝑘≈400 and was superseded by
+r2b_lemmaT.py (recurrence), both kept; r4_opt.py takes about 10 min and its output r4_seed7.txt
+is included.
+Revision veriϐication and precision boundary
+The revision includes fresh replay logs under repro/revision_logs/, separate from all preserved
+historical logs. The exact certiϐicate uses integer and rational arithmetic; its rational output, rather than
+a ϐloating‑point diagnostic, is authoritative. s6 uses 40‑digit mpmath arithmetic and central differences
+at step 10−15; r3 evaluates rational and decimal‑string inputs at 60 digits. r5 forms ϐinite differences
+with mpmath but converts the ϐinal gradient and constraint calculations to NumPy binary64; its rank
+and multiplier results are numerical. Its random‑direction sample cannot certify a minimum over all
+directions, and the ambient tangent space includes rotations.
+As a cross‑check during original‑version preassessment, a newly written four‑coordinate Bloch
+parametrisation, binomial Jacobi formula and 80‑digit root calculation reproduced the printed B value
+and positive multipliers, with tie residual about 4.8 ⋅10−80. This is numerical corroboration, not an
+interval or algebraic‑isolation certiϐicate. No new global search, proof of Γ3 = 𝛾𝐵, intake assessment
+or editorial decision is implied. The revision replay records list precisely which supplied scripts were
+executed again.
+AI‑assistance statement
+The mathematics, computations and text of this manuscript were produced by Claude Fable 5.1
+agents (Anthropic) working under the direction of the author, who set the problem, selected the
+line of records and is responsible for the claims.
+One agent carried out the research (Lemma T,
+Theorem A, the 𝑑= 3 searches, the exact certiϐicate) and wrote the report on which this manuscript
+is based; a second, independent agent performed an adversarial review with its own implemen‑
+tations of every computational ingredient and found the corrections incorporated here; a third
+agent wrote this text, completed the multistart census, assembled the reproducibility package
+and reran the fast scripts. No fallback to another model occurred in any of these sessions. The
+manuscript has not been peer reviewed by humans. After that author‑supplied Fable workϐlow, a
+conϐigured Astra High agent performed a fresh local preassessment of the original PDF, SHA‑256
+ade85760907efcbeb0db82db9f194a5822e329680eae7abea33a6284c15bea80,
+and then assisted
+with the present bounded revision. That original assessment does not assess this revised PDF. The
+revision corrects literature attribution, qualiϐies numerical local‑optimality statements, clariϐies the
+conjugation quotient and ϐixes diagnostic labels; it does not alter Theorems A or B. Historical Fable
+11
+
+model identity and execution claims above are author‑supplied, not independently certiϐied by this
+revision.
+References
+• [Rec] L. Eriksson, Orthogonal Measurements Maximize All‑Degree Born Rigidity among Equal‑
+Trace Rank‑One POVM Orbits in Dimension Five and Above, AI Research Record, ARR‑2026‑
+0DZQ2WNKPW8GCTPA (2026). Cited: Deϐinition 2.1 (seeds), Theorem 3.1 (spectral formula
+(2.1)), Deϐinition 3.2 (𝛾= inf𝑘≥2 𝑔𝑘; 𝑔1 = 0), Theorem 3.3 (inverse constant 𝛾−1/2), Lemma
+4.1 and Proposition 4.2 (ceiling), Lemma 5.1 (ONB at 𝑁= 𝑑, simplex rigidity at 𝑁= 𝑑+ 1),
+(10)–(11) (ONB spectrum), Theorem 5.2 (Γ𝑑= 𝑑−6/(𝑑+ 1) for 𝑑≥5), Section 7.1 (failure of
+the degree‑three comparison in 𝑑= 3, 4), Section 7.3.
+• [DLMF] NIST Digital Library of Mathematical Functions, §18.10(ii), eq.
+18.10.3 (Laplace‑
+type integral for Jacobi polynomials) and §18.14, eq.
+18.14.3, https://dlmf.nist.gov/18.10,
+https://dlmf.nist.gov/18.14.
+• [Ko73] T. H. Koornwinder, The addition formula for Jacobi polynomials and spherical harmonics,
+SIAM J. Appl. Math. 25 (1973) 236–246.
+• [Ko74] T. H. Koornwinder, Jacobi polynomials II. An analytic proof of the product formula, SIAM J.
+Math. Anal. 5 (1974) 125–137.
+• [As74] R. Askey, Jacobi polynomials I. New proofs of Koornwinder’s Laplace type integral repre‑
+sentation and Bateman’s bilinear sum, SIAM J. Math. Anal. 5 (1974) 119–124.
+• [As75] R. Askey, Orthogonal Polynomials and Special Functions, CBMS‑NSF Regional Conference
+Series in Applied Mathematics 21, SIAM, 1975, eq. (4.20).
+• [CGW94] Y. Chow, L. Gatteschi, R. Wong, A Bernstein‑type inequality for the Jacobi polynomial,
+Proc. Amer. Math. Soc. 121 (1994) 703–709.
+• [EMN94] T. Erdélyi, A. P. Magnus, P. Nevai, Generalized Jacobi weights, Christoffel functions, and
+Jacobi polynomials, SIAM J. Math. Anal. 25 (1994) 602–614.
+• [HS14] U. Haagerup, H. Schlichtkrull, Inequalities for Jacobi polynomials, Ramanujan J. 33 (2014)
+227–246; arXiv:1201.0495.
+• [Tr05] J. A. Tropp, Complex equiangular tight frames, Proc. SPIE 5914, Wavelets XI (2005)
+591401.
+• [FJMP18] M. Fickus, J. Jasper, D. G. Mixon, J. Peterson, Equiangular tight frames that contain reg‑
+ular simplices, Linear Algebra Appl. 555 (2018) 98–138.
+• [We74] L. R. Welch, Lower bounds on the maximum cross correlation of signals, IEEE Trans. In‑
+form. Theory 20 (1974) 397–399.
+• [RBSC04] J. M. Renes, R. Blume‑Kohout, A. J. Scott, C. M. Caves, Symmetric informationally com‑
+plete quantum measurements, J. Math. Phys. 45 (2004) 2171–2180.
+• [CFMR04] C. M. Caves, C. A. Fuchs, K. Manne, J. M. Renes, Gleason‑type derivations of the quantum
+probability rule for generalized measurements, Found. Phys. 34 (2004) 193–209; arXiv:quant‑
+ph/0306179.
+• [MP13] V. Moretti, D. Pastorello, Generalized complex spherical harmonics, frame functions, and
+Gleason theorem, Ann. Henri Poincaré 14 (2013) 1435–1443; arXiv:1205.4504.
+• [BKN20] J. J. Benedetto, P. J. Koprowski, J. S. Nolan, A generalization of Gleason’s frame function
+for quantum measurement (2020), arXiv:2001.06738.
+• [SKBG26] R. Saini, J. Kiukas, D. Burgarth, A. Gilchrist, Completeness stability of quantum mea‑
+surements, Phys. Rev. A 113 (2026) 012424; arXiv:2506.11539.
+12
