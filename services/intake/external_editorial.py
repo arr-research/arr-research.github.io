@@ -6,6 +6,7 @@ Only sole-author historical cases owned by the configured founder are supported.
 """
 import hashlib
 import json
+import sqlite3
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -51,6 +52,29 @@ def install(app, a, case):
         if db.execute('SELECT 1 FROM appeals WHERE submission_id=?', (row['id'],)).fetchone():
             raise click.ClickException('Appeals require their separate independent workflow.')
         return db, actor, row
+
+    @app.cli.command('record-external-founder-adjudication')
+    @click.argument('evidence_file', type=click.Path(exists=True, dir_okay=False))
+    def record_adjudication(evidence_file):
+        """Preserve a minor report and record its evidenced external disposition."""
+        value, digest = evidence(evidence_file, {'report_sha256', 'basis', 'resolution_evidence', 'all_objections_addressed'})
+        db, actor, row = guarded_case(value)
+        if row['status'] not in {'eligible', 'under_assessment', 'changes_requested', 'awaiting_independent_decision'}:
+            raise click.ClickException('A current undecided case is required.')
+        review = db.execute('SELECT * FROM model_reviews WHERE submission_id=? AND response_sha256=?', (row['id'], value['report_sha256'])).fetchone()
+        if not review or review['recommendation'] != 'minor_revision' or review['unresolved_material_objections']:
+            raise click.ClickException('This external route only handles a minor report with no unresolved material objections.')
+        if value['all_objections_addressed'] is not True or any(not isinstance(value[k], str) or not n <= len(value[k].strip()) <= 6000 for k,n in [('basis',80),('resolution_evidence',40)]):
+            raise click.ClickException('A claim-by-claim disposition and inspectable evidence are required.')
+        note = 'Operator-recorded external human instruction; not a simulated web signature. Evidence SHA-256: ' + digest + '\n' + value['basis']
+        try:
+            result = db.execute('INSERT INTO adjudications(review_id,basis,evidence,signed_by,signed_at) VALUES(?,?,?,?,?)', (review['id'],note,value['resolution_evidence'],actor['id'],a.iso()))
+            db.commit()
+        except sqlite3.IntegrityError:
+            db.rollback()
+            raise click.ClickException('An existing adjudication cannot be replaced.')
+        a.audit('review_adjudicated',row['id'],review_id=review['id'],method='operator_recorded_external_instruction',evidence=value,evidence_sha256=digest)
+        click.echo(json.dumps({'submission_id':row['id'],'review_id':review['id'],'adjudication_id':result.lastrowid,'report_sha256':review['response_sha256'],'evidence_sha256':digest,'accepted':False,'published':False}))
 
     @app.cli.command('record-external-founder-decision')
     @click.argument('evidence_file', type=click.Path(exists=True, dir_okay=False))
