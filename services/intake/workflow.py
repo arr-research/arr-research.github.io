@@ -274,6 +274,8 @@ def install(app, a):
 
     from .review_operations import install as install_review_operations
     install_review_operations(app, a, case, current_plan)
+    from .external_editorial import install as install_external_editorial
+    install_external_editorial(app, a, case)
 
     @app.post('/admin/submission/<submission_id>/founder-authorship')
     @a.editor_required

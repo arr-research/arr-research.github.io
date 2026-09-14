@@ -376,9 +376,11 @@ def validate_paper(paper: Paper) -> list[str]:
     if isinstance(publication_date, str):
         try:
             parsed_date = date.fromisoformat(publication_date)
-            if id_match and str(parsed_date.year) != id_match.group(1):
+            # Storage and public identifiers date the original record. Later
+            # immutable revisions retain that identity but have their own date.
+            if id_match and paper.version_number == 1 and str(parsed_date.year) != id_match.group(1):
                 errors.append("date: year must match public id")
-            if id_match and paper.record_root is not None and paper.record_root.parts[-3] != f"{parsed_date.month:02d}":
+            if id_match and paper.version_number == 1 and paper.record_root is not None and paper.record_root.parts[-3] != f"{parsed_date.month:02d}":
                 errors.append("path: month must match publication date")
         except ValueError:
             errors.append("date: must use YYYY-MM-DD")
