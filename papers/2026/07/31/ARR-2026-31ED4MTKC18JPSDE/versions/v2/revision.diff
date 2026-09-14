@@ -1,0 +1,121 @@
+--- candidate1.tex
++++ candidate2.tex
+@@ -40,7 +40,7 @@
+ \large Observable-dependent prefactors are harmless\\
+ at a common exponential rate}
+ \author{Lluis Eriksson}
+-\date{AIRR v2 candidate -- 10 September 2026}
++\date{Subsequent correction candidate -- 10 September 2026}
+ 
+ \usepackage{xurl}
+ \begin{document}
+@@ -282,12 +282,13 @@
+ dense, yet $\|B\|=1>r$.  This example is a paper-level explanation of the
+ hypothesis, not an additional Lean declaration.
+ 
+-\subsection*{Why a functional calculus is needed}
++\subsection*{The chosen formal proof and a direct alternative}
+ \label{rem:notelem}
+ 
+-Three routes that suggest themselves all fail.  Recording why is the main
+-reason a formalization of this criterion is worth reading: it says which
+-architecture survives, not merely that a theorem type-checks.
++The formal proof above uses continuous functional calculus.  Two tempting
++shortcuts do not by themselves close the argument, but a pointwise dyadic
++estimate does give an elementary alternative.  The distinction is between
++the chosen formal implementation and mathematical necessity.
+ 
+ \smallskip\noindent\emph{Banach--Steinhaus does not apply.}  A dense
+ \emph{subspace} may be meagre --- the algebraic span of a countable
+@@ -298,22 +299,40 @@
+ and completeness pays for the uniformity, and Theorem~\ref{thm:sharp},
+ where it is not.
+ 
+-\smallskip\noindent\emph{Powers do not suffice.}  Put
+-$B = S^2/\|S\|^2$, a positive contraction with $\|B\| = 1$.  It can happen
+-that $B^n v \to 0$ for \emph{every} $v$ while $\|B^n\| = 1$ for every $n$
+---- multiplication by $x$ on $L^2[0,1]$ is exactly that --- so the norm
+-level alone yields no contradiction.  (For a general self-adjoint $S$ the
+-powers need not tend to $0$ at all: if $\pm\|S\|$ is an eigenvalue they
+-converge to the corresponding eigenprojection.  What is asserted here is
+-only that the norm-level argument admits a counterexample.)
++\smallskip\noindent\emph{A pointwise argument with powers.}
++For a bounded self-adjoint $S$, Cauchy--Schwarz gives, for every integer $m\ge1$,
++\[
++  \|S^m v\|^2=|\inn{v}{S^{2m}v}|
++       \le \|v\|\,\|S^{2m}v\|.
++\]
++Iterating with $m=1,2,4,\ldots$ gives, for $k\ge1$,
++\[
++  \|Sv\|\le \|v\|^{1-2^{-k}}\,
++                    \|S^{2^k}v\|^{2^{-k}}.
++\]
++If $v\in\mathcal D_r(S)$ and $r>0$, take its finite constant $C_v$ in
++$\|S^n v\|\le C_v r^n$.  For $v\ne0$, the case $n=0$ implies
++$C_v\ge\|v\|>0$, and hence
++\[
++  \|Sv\|\le \|v\|^{1-2^{-k}}C_v^{2^{-k}}r
++       \longrightarrow r\|v\|.
++\]
++The zero vector is immediate; if $r=0$, the estimate at $n=1$ already
++gives $Sv=0$.  Density and continuity now imply $\|S\|\le r$.
++This is a paper-level alternative proof, valid over real or complex
++Hilbert spaces, not a new Lean declaration.  Strong convergence of powers
++alone would not suffice: multiplication by $x$ on $L^2[0,1]$ has powers
++converging strongly to zero while their norms remain one.  That example
++does not defeat the common exponential-rate hypothesis used above.
+ 
+ \smallskip\noindent\emph{The resolvent route stalls.}  A vector
+ $v \in \mathcal{D}_r(S)$ lies in the range of $t - S$ for every $t > r$ by
+ a Neumann series, but with a vector-dependent bound; and a self-adjoint
+ operator with dense range need not be invertible.
+ 
+-\smallskip\noindent The statement is about the spectral measure near the
+-top of the spectrum, and only a functional calculus sees that.
++\smallskip\noindent Continuous functional calculus supplies the formal
++proof retained here; the dyadic estimate supplies a direct mathematical
++alternative.  The existing theorem statements and formal sources are unchanged.
+ 
+ \begin{corollary}[support-exponential constants are not an obstruction]
+ \label{cor:noobstruction}
+@@ -457,11 +476,13 @@
+ design.  Mathlib has no complexification of a real inner-product space,
+ and its continuous functional calculus for self-adjoint elements is
+ derived from the complex case, so it is unavailable for operators on a
+-real Hilbert space.  Theorem~\ref{thm:equiv} needs no functional
+-calculus and is therefore stated over $\R$; Theorems~\ref{thm:sharp}
+-and~\ref{thm:sharpbridge} need one and are stated over $\C$.  That split
+-is forced by tooling, not by mathematics, and the transport between the
+-two is not formalized (Remark~\ref{rem:RC}).
++real Hilbert space.  The formal proof of Theorem~\ref{thm:equiv} uses
++no functional calculus and is stated over $\R$; the formal proofs of
++Theorems~\ref{thm:sharp} and~\ref{thm:sharpbridge} use it and are stated
++over $\C$.  This split reflects the chosen implementation and available
++tooling, not a mathematical necessity.  The direct argument in
++Section~\ref{sec:sharp} is paper-level; no new formal transport between
++the real and complex statements is claimed (Remark~\ref{rem:RC}).
+ 
+ \paragraph{Two devices that may be reusable.}  First, the $C^*$ step
+ $\|S^2\| = \|S\|^2$ for symmetric $S$ is proved directly from
+@@ -650,12 +671,14 @@
+ 
+ 
+ \paragraph{AIRR revision disclosure.}
+-This separate candidate was prepared with GPT-6 Astra High assistance
+-in response to the original manuscript's model assessment. Astra is
+-involved in this manuscript. The accompanying change log identifies
+-the corrections and any change of scope. Historical build and numerical
+-records retain their original provenance; no fresh Lean build of this
+-revision is claimed. Prior model recommendations do not transfer to this
+-new PDF. New assessment and editorial decision remain pending.
++This subsequent TeX candidate addresses the bounded corrections in the
++GPT-6 Astra High referee report on the preceding exact AIRR PDF.
++Astra remains involved in the manuscript. The accompanying correction
++JSON identifies that assessed PDF, the source hashes and every replacement.
++Historical formal sources, build records and numerical evidence retain
++their original provenance. No new Lean build or numerical rerun is claimed
++for these corrections. The local operator compiled this new PDF after the source audit;
++no existing PDF assessment transfers to it. This compiled candidate
++requires its own exact-byte assessment. No editorial decision is made here.
+ 
+ \end{document}
