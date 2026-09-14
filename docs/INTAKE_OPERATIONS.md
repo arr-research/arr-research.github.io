@@ -78,6 +78,30 @@ Neither command sends email or records a final editorial decision.
 
 Keep these evidence files on the encrypted private volume, never in public Git.
 
+## Explicit founder instructions received outside the web form
+
+For a sole-author historical case, the authenticated host can record an actual
+human editorial instruction with `record-external-founder-decision evidence.json`.
+This does not simulate a web login or signature. The evidence binds the exact
+case/PDF, the configured MFA operator's name, their actual instruction and dated
+source, and every recorded report hash. The normal authorized two-model and
+objection gates apply. Additional conflicts, appeals, stale evidence, changed
+bytes and replacement decisions are rejected. Models cannot supply the human act.
+
+Publication remains a separate instruction and command:
+`record-external-founder-publication evidence.json`. It requires the prior human
+acceptance, exact file hash, author identity, distribution scope and rights basis.
+Historical authors can retain `LicenseRef-Author-Retained` while explicitly
+permitting AIRR to distribute the manuscript, assessments and associated sources;
+this grants no additional public reuse licence. A Creative Commons licence must
+be specifically authorized. Neither command creates a public release, expands an
+agent token, changes credentials or replaces an existing permission.
+
+Both commands use the `flask --app services.intake.app` prefix. Their exact
+evidence schemas are defined in `services/intake/external_editorial.py`. Original
+preassessments remain unchanged; a model's own same-hash intake binding must be
+labelled as such and cannot count as another scientific review.
+
 ## Local antivirus transport
 
 The default `clamdscan` client streams to the configured local ClamAV daemon.
