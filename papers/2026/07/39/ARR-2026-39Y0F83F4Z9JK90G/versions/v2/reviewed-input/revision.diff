@@ -1,0 +1,127 @@
+--- original.tex
++++ paper.tex
+@@ -27,13 +27,14 @@
+ \author{Lluis Eriksson\thanks{This manuscript and parts of the formal
+ development were produced with AI assistance under the repository's
+ audit protocol.  Every theorem below is machine-checked in Lean~4
+-against a pinned Mathlib; the independent numerical companion of
++against a pinned Mathlib; the author-produced numerical companion of
+ Section~\ref{sec:companion} is a committed interval-arithmetic
+ transcript; remaining numerics are labelled paper-level where they
+ occur.  Repository:
+ \url{https://github.com/lluiseriksson/THE-ERIKSSON-PROGRAMME}.}}
+-\date{July 2026}
+-
++\date{AIRR v2 candidate -- 10 September 2026}
++
++\usepackage{xurl}
+ \begin{document}
+ \maketitle
+ 
+@@ -108,7 +109,7 @@
+ $c \ge 1$ the reverse inequality holds uniformly
+ (Theorem~\ref{thm:lowerhalf}).  As mathematics this is equivalent
+ to results of \cite{RS16}; the claim is the formalization ---
+-uniform in real order, from the series, with explicit rational
++uniform in real order, from the series, with explicit
+ witnesses, inside one pinned axiom-clean development.
+ \item \textbf{The quantitative crossing theorem.}  For $\nu \ge 0$
+ and $\tfrac12 < c < 1$, the fixed diagonal member $\Bfam_{\nu,c}$
+@@ -170,7 +171,7 @@
+ \;\Longleftrightarrow\;
+ c \le \tfrac12 .
+ \]
+-The failure witness for $c > \tfrac12$ is explicit and rational:
++The failure witness for $c > \tfrac12$ is an explicit rational function of $c$:
+ $x_0(c) = 2/(2c-1)$ at $\nu = 0$
+ (\lean{amosFamily\_lt\_amosLower\_witness}).
+ \end{theorem}
+@@ -232,6 +233,12 @@
+ Theorem~\ref{thm:crossing} is strict and uniqueness and orientation
+ hold unconditionally.
+ \end{theorem}
++
++The displayed curvature calculation is derived internally, under the
++hypothetical contact assumptions, in the proof of
++\lean{crossing\_no\_critical\_contact}.  That declaration exports their
++contradiction (\lean{False}); it does not export the second-derivative
++identity as a separate named theorem.
+ 
+ \begin{theorem}[the Tur\'an inequality at real order;
+ \lean{besselIReal\_turan}]\label{thm:turan}
+@@ -582,8 +589,8 @@
+ \end{center}
+ \noindent \lean{lake build AmosClosure} completed successfully
+ (\textbf{8175 jobs}); the axiom oracle printed, for all
+-\textbf{110} registered statements (the 74 of the \lean{c4-v1.0}
+-release registry plus the 36 of this paper), exactly
++\textbf{110} registered statements (the 74-entry historical C4
++phase-3c cohort plus 36 C5 registrations), exactly
+ \begin{center}
+ \lean{[propext, Classical.choice, Quot.sound]}.
+ \end{center}
+@@ -608,8 +615,10 @@
+ 
+ \medskip
+ \noindent Headline-theorem-to-artifact map (all in module
+-\lean{AmosClosure}; every row carries a direct oracle witness; the
+-74 inherited statements are mapped in
++\lean{AmosClosure}; \lean{AmosClosure/Oracle.lean} enumerates the
++audited declarations, whereas the certified row refers to numerical
++evidence rather than to a Lean oracle output; the historical
++74-entry cohort is mapped in
+ \cite{ErikssonC2,ErikssonC3,ErikssonC4}):
+ 
+ \begin{center}
+@@ -651,23 +660,25 @@
+ tectonic -X compile papers/c5-crossing/c5_crossing.tex
+ \end{verbatim}
+ {\sloppy
+-At the release revision, canonical artifact hashes will be
+-recorded --- tag-scoped, in \lean{RELEASE-MANIFEST.md} in this
+-paper's directory --- committed together with the release revision
+-of this manuscript; compare against
+-\lean{git show <rev>:path}, never a worktree checkout.  The
+-annotated tag \lean{c5-v1.0} will mark that release commit after
+-the pre-release audits close, with the audit registry in
+-\lean{docs/C5-CHARTER.md}; the release-tree audit is recorded in
+-the manifest, post-tag by sequencing, with any fixes in post-tag
+-commits; tags never move.\par}
++The historical manuscript audited here is the released
++\lean{c5-v1.0.1} artifact.  Its annotated tag object is
++\nolinkurl{71097284551d65d989ab7bf024a7c179ee063866}, which points to commit
++\nolinkurl{3eb5cf9293d2b8cc6ece17f5e37d422726b9d27d}.
++The original PDF SHA-256 is
++\nolinkurl{95eed84d8c6f85b03bb92ba8f3fe29e3e7664aafb06c4d0c9998e7f5840ec2f0}.
++Release records are in \lean{RELEASE-MANIFEST.md} and
++\lean{RELEASE-NOTES.md} in this paper's directory; the audit registry is
++\lean{docs/C5-CHARTER.md}.  Compare historical files with
++\lean{git show <commit>:path}.  This corrected source is a subsequent,
++separate candidate; it is not the PDF identified by that hash and does
++not inherit an assessment of those original bytes.\par}
+ 
+ \section{Conclusion}
+ 
+ For the diagonal Amos-type family at real order, the pinned formal
+ development now contains the parameter classification ---
+ uniform upper bound iff $c \le \tfrac12$, uniform lower bound for
+-$c \ge 1$, with explicit rational witnesses --- and, in the
++$c \ge 1$, with explicit witnesses --- and, in the
+ intermediate regime $\tfrac12 < c < 1$, a global quantitative
+ crossing theorem: exactly one crossing, transversal, strictly above
+ an explicit threshold, with bilateral orientation, a constructive
+@@ -758,4 +769,14 @@
+ 
+ \end{thebibliography}
+ 
++
++\paragraph{AIRR revision disclosure.}
++This separate candidate was prepared with GPT-6 Astra High assistance
++in response to the original manuscript's model assessment. Astra is
++involved in this manuscript. The accompanying change log identifies
++the corrections and any change of scope. Historical build and numerical
++records retain their original provenance; no fresh Lean build of this
++revision is claimed. Prior model recommendations do not transfer to this
++new PDF. New assessment and editorial decision remain pending.
++
+ \end{document}
