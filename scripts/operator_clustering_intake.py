@@ -75,7 +75,7 @@ def main():
         validate_binding(binding, entries, app.config['HISTORICAL_OPERATOR_AUTHOR'])
         db = a.get_db()
         existing = db.execute('SELECT submission_id FROM historical_revisions WHERE version_id=?', (binding['version_id'],)).fetchone()
-        recent = db.execute("SELECT COUNT(*) FROM submissions WHERE owner_user_id=4 AND created_at>=?", (a.iso(a.now()-__import__('datetime').timedelta(hours=24)),)).fetchone()[0]
+        recent = db.execute("SELECT COUNT(*) FROM submissions WHERE user_id=4 AND created_at>=?", (a.iso(a.now()-__import__('datetime').timedelta(hours=24)),)).fetchone()[0]
         if args.mode == 'inspect':
             value = {'checked_at':a.iso(), 'paper_id':PID, 'sha256':SHA, 'packet_verified':True, 'catalogue_binding_valid':True, 'owner_recent_24h_deposits':recent, 'existing_submission':existing[0] if existing else None, 'terms_version':a.TERMS_VERSION, 'privacy_version':a.PRIVACY_VERSION}
             save('inspection.json',value);print(json.dumps(value,indent=2));return
