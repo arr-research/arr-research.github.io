@@ -1,0 +1,94 @@
+--- candidate-2/paper.tex
++++ candidate-3/paper.tex
+@@ -28,7 +28,7 @@
+ transcript; remaining numerics are labelled paper-level where they
+ occur.  Repository:
+ \url{https://github.com/lluiseriksson/THE-ERIKSSON-PROGRAMME}.}}
+-\date{AIRR v2, candidate 2 -- 10 September 2026}
++\date{AIRR v2, candidate 3 -- 10 September 2026}
+ 
+ \begin{document}
+ \maketitle
+@@ -80,6 +80,11 @@
+ an \emph{Amos-type} bound: the attribution of this exact display to
+ a specific equation of \cite{Amos74} is deliberately not asserted
+ here pending collation with the primary source.
++The displayed upper bound is precisely the first inequality of
++Ruiz-Antol\'in and Segura \cite[Theorem~2]{RS16}, with their order
++replaced by $\nu+1$. Their classical range becomes $\nu\ge-1/2$;
++the present formalization proves the restriction $\nu\ge0$ and
++does not claim the remaining negative-order interval.
+ 
+ The contribution of this paper is the formalization at
+ \emph{real order}.  Two companion papers of this series formalized,
+@@ -494,12 +499,26 @@
+ The final command compiles the original release manuscript;
+ AIRR v2 is supplied as a separate source and PDF.
+ \begin{verbatim}
++git clone https://github.com/lluiseriksson/THE-ERIKSSON-PROGRAMME
++cd THE-ERIKSSON-PROGRAMME
++git checkout --detach cd62e1225e59335df974949d5c58a455cb790192
+ lake exe cache get
+ lake build AmosClosure
+ lake env lean AmosClosure/Oracle.lean
+ python scripts/c4_amos_real_arb.py
+ tectonic -X compile papers/c4-amos-real/c4_amos_real.tex
+ \end{verbatim}
++To compile this separate candidate, run the following from its supplied
++source directory (not the historical repository manuscript directory):
++\begin{verbatim}
++tectonic -X compile paper.tex
++python c4_amos_real_arb_strict.py
++\end{verbatim}
++The strict numerical companion is a new, separately hashed script. It
++preserves the numerical algorithm, returns a nonzero exit status for
++any FAIL or UNDECIDED result, and compares each mpmath sign with its
++stored certified verdict; disagreement also fails the command. The
++historical script and transcripts are retained unchanged.
+ {\sloppy
+ The original manuscript is preserved at tag \lean{c4-v1.0}, commit
+ \begin{center}\small
+@@ -513,21 +532,31 @@
+ changelog and hashes accompany the private submission. No release or
+ editorial acceptance of v2 is asserted.\par}
+ 
++{\sloppy
+ \paragraph{Revision verification and disclosure.}
+ The September 2026 revision was prepared with GPT-6 Astra assistance
+ in Codex in response to the private GPT-5.6 Sol assessment of AIRR v1.
+-This second candidate incorporates four prose corrections from a
+-GPT-6 Astra High audit, including the exponent qualification in
+-Remark 4.1. The formal sources and mathematical statements are unchanged. The recorded Lean build and oracle above are historical
+-author-repository evidence; this revision does not claim a fresh Lean
+-rebuild or independent formal verification. The unchanged interval
+-script was rerun during this correction with python-flint 0.9.0:
+-70 PASS, 0 FAIL, 0 UNDECIDED at 128 bits; the mpmath 1.3.0 pass at
+-50 decimal digits agreed on all 70 signs. The new transcript is
+-included in the revision package. This correction-session rerun is
+-not an independent editorial assessment. Assessments of the preceding private candidate do not transfer to this
+-changed PDF. Assessments and decisions for this exact artifact remain
+-pending.
++This third private candidate incorporates precise classical attribution,
++explicit reproduction commands and a strict numerical companion following
++a formal GPT-6 Astra High report recommending minor revision on candidate~2.
++Formal sources and mathematical statements remain unchanged. A fresh local
++project build at the pinned release completed successfully on 10 September
++2026: 8174 jobs, followed by 96 oracle entries containing only
++$[\lean{propext},\lean{Classical.choice},\lean{Quot.sound}]$.
++The raw build log, oracle log, environment summary and their hashes are
++included in this candidate's supplementary package. The build used the
++pinned downloaded Mathlib cache; it is operator-run evidence, not an
++independent referee execution or a rebuild of every Mathlib dependency.
++The historical derivative-source comment saying both factored exponents
++are at least one is imprecise: the even exponent can be zero. Remark~4.1
++states the correct qualification; the code already handles this case.
++The immutable source tag is preserved with this comment erratum.
++Earlier numerical transcripts record 70 PASS, 0 FAIL, 0 UNDECIDED at
++128 bits and a 70/70 mpmath sign comparison. Their provenance remains
++historical; any run of the new strict companion is recorded separately.
++Assessments of preceding candidates do not transfer to this changed PDF.
++Evaluation and editorial decision for this exact candidate remain pending.\par}
++
+ 
+ 
+ \section{Conclusion}

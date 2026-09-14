@@ -1,0 +1,1 @@
+This browsable extraction renames metadata.json to candidate-metadata.original.json and MANIFEST.sha256 to ORIGINAL-MANIFEST.txt to avoid treating candidate metadata as a public AIRR record. Both file contents remain exact. Verify the original paths and manifest inside the unchanged review-package-corrected.zip. The containing v2 manifest verifies these extracted paths.
