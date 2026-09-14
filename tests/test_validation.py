@@ -119,6 +119,14 @@ class PaperValidationTests(unittest.TestCase):
             paper = self.make_paper(Path(temporary))
             self.assertEqual(validate_paper(paper), [])
 
+    def test_initial_version_still_requires_its_storage_date(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            paper = self.make_paper(Path(temporary))
+            paper.metadata['date'] = '2027-09-14'
+            errors = validate_paper(paper)
+            self.assertIn('date: year must match public id', errors)
+            self.assertIn('path: month must match publication date', errors)
+
     def test_scholarly_discovery_metadata_is_complete(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             paper = self.make_paper(Path(temporary))
@@ -367,7 +375,7 @@ class PaperValidationTests(unittest.TestCase):
                         "new_version.py",
                         first.id,
                         "--date",
-                        "2026-08-14",
+                        "2027-09-14",
                         "--change-size",
                         "minor",
                         "--summary",

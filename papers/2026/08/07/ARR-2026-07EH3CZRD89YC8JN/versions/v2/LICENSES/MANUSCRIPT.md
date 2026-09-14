@@ -1,0 +1,1 @@
+Author-retained rights. Lluis Eriksson authorizes AIRR distribution of this exact corrected manuscript, its assessment reports and associated scientific sources. No additional public reuse license is inferred. Embedded notices in historical sources remain in force. Catalogue metadata is CC0-1.0.
