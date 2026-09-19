@@ -253,7 +253,8 @@ class IndexingTests(unittest.TestCase):
             with self.subTest(root=root):
                 text = build_site.build_home([self.paper], timestamps, "", root)
                 self.assertIn('<meta property="og:site_name" content="AIRR.SCIENCE">', text)
-                self.assertIn("AIRR.SCIENCE is an open archive of research", text)
+                self.assertIn("<strong>AIRR.SCIENCE</strong> is an open research archive", text)
+                self.assertNotIn("search-help", text)
                 if root:
                     structured = json.loads(text.split('<script type="application/ld+json">')[1].split("</script>")[0])
                     self.assertEqual(structured["@type"], "WebSite")
