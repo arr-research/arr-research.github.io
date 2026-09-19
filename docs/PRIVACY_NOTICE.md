@@ -170,8 +170,8 @@ Rejected-case reports remain private and follow the case retention schedule.
 
 ## Public-site activity measurement
 
-Public-site measurement notice updated **2026-09-08**. When enabled, AIRR asks before
-sending any optional page-view event. Allow and Decline are equally available;
+Public-site measurement notice updated **2026-09-19** (PDF opens added). When enabled, AIRR asks before
+sending any optional page-view or PDF-open event. Allow and Decline are equally available;
 ignoring the choice sends no event. You may change your choice using **Statistics
 preferences** in the footer. The browser stores only that choice and its expiry
 for 180 days in local storage; it is not a visitor identifier or an analytics cookie.
@@ -181,7 +181,10 @@ consent indicator to AIRR's Netcup server in Vienna. No search query, fragment,
 referrer, email, private-page path or visitor identifier is sent in the event.
 Network communication necessarily exposes an IP address to the receiving host;
 AIRR does not retain it in the statistics or enable collector access logs.
-The server immediately increments a daily page total. It does not store an event
+The same consent covers opening, previewing or downloading a paper PDF from its
+AIRR record page: the browser then sends a fixed label for that paper version (for
+example `/papers/ID/versions/v1/pdf/`) instead of a page path, at most once per page
+load. The server immediately increments a daily page or PDF total. It does not store an event
 history or link views to people. The purpose is to understand use of public pages;
 the basis for optional collection is consent (Article 6(1)(a), where applicable).
 Netcup's existing hosting/DPA arrangement applies; no additional analytics provider

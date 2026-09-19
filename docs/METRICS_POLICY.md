@@ -18,7 +18,8 @@ The accepted asset name is exactly `{ARR-ID}-vN.pdf`; source archives and other
 assets are excluded. Draft releases are excluded.
 
 Direct reads of the same-directory PDFs served by AIRR's GitHub Pages site are
-not measured by these counters. The counters cover GitHub Release downloads only;
+not included in these counters (consenting PDF opens are counted only in the
+private operator statistics described below). The counters cover GitHub Release downloads only;
 they must not be described as total PDF readership. Cold mirror-cache downloads
 can increment GitHub's counters; cached copies are reused on subsequent builds.
 
@@ -42,7 +43,14 @@ for the private operator dashboard. Only visitors who choose Allow contribute.
 One page load contributes one view of its canonical public path; reloads may count
 again. No visitor identifiers are created, so unique visitors are not measured.
 Automation can affect totals; the collector's global burst limit is not a guarantee
-of human readership. No events are collected from private submission/editor pages.
+of human readership.
+
+Since 2026-09-19 the same consent also covers PDF opens started from an AIRR record
+page: Read PDF, Download PDF, the on-page preview or its direct link. The browser
+sends a fixed per-version label such as `/papers/{ARR-ID}/versions/v1/pdf/`, listed
+in `analytics-pages.json`, at most once per version per page load. PDFs opened
+from search engines, saved links or GitHub are not counted, so PDF opens are a
+lower bound on readership, never a total. No events are collected from private submission/editor pages.
 See `PRIVACY_NOTICE.md` and `ANALYTICS_OPERATIONS.md` for consent, Netcup hosting,
 400-day daily aggregate retention and access controls.
 

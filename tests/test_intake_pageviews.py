@@ -10,13 +10,16 @@ os.environ.setdefault('ARR_SESSION_SECRET', 'test-import-secret-' * 4)
 from services.intake.app import create_app, get_db, init_db, iso, now
 from services.intake.pageviews import validate_manifest
 
+PDF = '/papers/ARR-X/versions/v1/pdf/'
+
 
 class PageviewTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         root = Path(self.temp.name)
         manifest = root / 'pages.json'
-        manifest.write_text(json.dumps({'/': 'AIRR', '/papers/': 'Papers'}))
+        manifest.write_text(json.dumps({'/': 'AIRR', '/papers/': 'Papers',
+                                        PDF: 'PDF v1 · Paper X — AIRR.SCIENCE'}))
         self.app = create_app(dict(TESTING=True, SECRET_KEY='test-pageviews-secret',
             DATABASE=str(root/'db.sqlite3'), QUARANTINE=str(root/'quarantine'),
             SESSION_COOKIE_SECURE=False, ANALYTICS_ENABLED=True,
@@ -107,6 +110,23 @@ class PageviewTests(unittest.TestCase):
             get_db().execute("UPDATE users SET totp_secret=NULL WHERE role='operator'")
             get_db().commit()
         self.assertEqual(self.client.get('/admin/statistics').status_code,403)
+
+    def test_dashboard_reports_pdf_opens_separately_from_page_views(self):
+        self.post()
+        for _ in range(3):
+            self.assertEqual(self.post({'path':PDF, 'consent':'aggregate-v1'}).status_code,204)
+        self.login('operator')
+        with patch('services.intake.pageviews.render_template', return_value='') as render:
+            self.assertEqual(self.client.get('/admin/statistics?days=7').status_code,200)
+        context = render.call_args.kwargs
+        self.assertEqual((context['total'], context['today']), (1, 1))
+        self.assertEqual((context['pdf_total'], context['pdf_today']), (3, 3))
+        self.assertEqual([row['path'] for row in context['top']], ['/'])
+        self.assertEqual(context['top_pdfs'], [{'path':PDF, 'views':3, 'title':'PDF v1 · Paper X — AIRR.SCIENCE'}])
+        self.assertEqual((context['series'][-1]['views'], context['series'][-1]['pdfs']), (1, 3))
+        response = self.client.get('/admin/statistics?days=7')
+        self.assertIn(b'Most opened PDFs', response.data)
+        self.assertIn(b'href="https://airr.science/papers/ARR-X/versions/v1/"', response.data)
 
     def test_retention_sweep_without_new_traffic(self):
         today=now().date()

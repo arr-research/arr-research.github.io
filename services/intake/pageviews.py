@@ -1,5 +1,6 @@
 """Opt-in daily totals. No visitor IDs, raw request logs or private-page collection."""
 import json
+import re
 import threading
 import time
 import urllib.request
@@ -16,6 +17,8 @@ CREATE TABLE IF NOT EXISTS public_pageviews (
 '''
 ORIGINS = {'https://airr.science', 'https://www.airr.science'}
 MANIFEST_URL = 'https://airr.science/analytics-pages.json'
+# Build-time labels for consenting PDF opens, e.g. /papers/ID/versions/v1/pdf/.
+PDF_LABEL = re.compile(r'^/(papers|notes)/[^/]+/versions/[^/]+/pdf/$')
 
 
 def validate_manifest(value):
@@ -124,14 +127,20 @@ def install(app, a):
         today = a.now().date()
         since = (today - timedelta(days=days - 1)).isoformat()
         db = a.get_db()
-        daily = dict(db.execute('SELECT day,SUM(views) FROM public_pageviews WHERE day>=? GROUP BY day', (since,)))
-        series = [{'day': (today-timedelta(days=offset)).isoformat(),
-                   'views': daily.get((today-timedelta(days=offset)).isoformat(), 0)}
-                  for offset in range(days-1, -1, -1)]
+        daily, pdf_daily, by_path = {}, {}, {}
+        for day, path, views in db.execute('SELECT day,path,views FROM public_pageviews WHERE day>=?', (since,)):
+            target = pdf_daily if PDF_LABEL.match(path) else daily
+            target[day] = target.get(day, 0) + views
+            by_path[path] = by_path.get(path, 0) + views
+        days_shown = [(today-timedelta(days=offset)).isoformat() for offset in range(days-1, -1, -1)]
+        series = [{'day': day, 'views': daily.get(day, 0), 'pdfs': pdf_daily.get(day, 0)} for day in days_shown]
         titles = catalogue()
-        top = [{'path': row['path'], 'views': row['views'], 'title': titles.get(row['path'], row['path'])}
-               for row in db.execute('SELECT path,SUM(views) AS views FROM public_pageviews WHERE day>=? GROUP BY path ORDER BY views DESC,path LIMIT 40', (since,))]
-        return render_template('statistics.html', days=days, series=series, top=top,
+        ranked = sorted(by_path.items(), key=lambda item: (-item[1], item[0]))
+        rows = [{'path': path, 'views': views, 'title': titles.get(path, path)} for path, views in ranked]
+        top = [row for row in rows if not PDF_LABEL.match(row['path'])][:40]
+        top_pdfs = [row for row in rows if PDF_LABEL.match(row['path'])][:40]
+        return render_template('statistics.html', days=days, series=series, top=top, top_pdfs=top_pdfs,
                                total=sum(daily.values()), today=daily.get(today.isoformat(), 0),
+                               pdf_total=sum(pdf_daily.values()), pdf_today=pdf_daily.get(today.isoformat(), 0),
                                maximum=max([row['views'] for row in series]+[1]),
                                enabled=app.config['ANALYTICS_ENABLED'])

@@ -173,6 +173,36 @@ class IndexingTests(unittest.TestCase):
         self.assertIn("https://doi.org/10.1234/example", structured["identifier"])
         self.assertEqual(structured["encoding"]["contentUrl"], page.meta["citation_pdf_url"][0])
 
+    def test_tex_is_readable_in_discovery_metadata_and_verbatim_on_the_page(self):
+        self.paper.metadata["title"] = "The cost at inertia $(m,n)$ for $\\kappa_d$"
+        self.paper.metadata["abstract"] = "For $F\\in M_d(\\mathbb C)$ let $\\kappa_d(F)=\\tfrac12\\min\\{\\|C\\|_{HS}^2\\}$. " + "More words follow here. " * 12
+        text = self.render()
+        page = check_site_indexing.Page(text)
+        title = "The cost at inertia (m,n) for κ_d"
+        self.assertIn(f"<title>{title} — AIRR.SCIENCE</title>", text)
+        self.assertEqual(page.meta["citation_title"], [title])
+        self.assertEqual(page.meta["DC.title"], [title])
+        description = page.meta["description"][0]
+        self.assertTrue(description.startswith("For F ∈ M_d(ℂ) let κ_d(F)=½min{‖C‖_HS²}."), description)
+        self.assertLessEqual(len(description), 160)
+        self.assertNotIn("$", description + page.meta["twitter:description"][0] + page.meta["twitter:title"][0])
+        self.assertIn(f'<meta property="og:description" content="{build_site.esc(description)}">', text)
+        self.assertEqual(page.meta["DCTERMS.abstract"], [self.paper.metadata["abstract"]])
+        self.assertIn(build_site.esc(self.paper.metadata["abstract"]), text)
+        structured = json.loads(text.split('<script type="application/ld+json">')[1].split("</script>")[0])
+        self.assertEqual(structured["headline"], title)
+        self.assertEqual(structured["abstract"], self.paper.metadata["abstract"])
+
+    def test_pdf_links_carry_the_version_statistics_label(self):
+        for permanent in (False, True):
+            text = self.render(permanent)
+            label = f'data-pdf-event="/papers/{self.paper.id}/versions/v1/pdf/"'
+            self.assertEqual(text.count(label), 4)  # Read, Download, preview and its direct link
+        (self.paper.path / "paper.pdf").write_bytes(PDF)
+        remote = self.render(local=False)
+        self.assertIn("/releases/download/", remote)
+        self.assertEqual(remote.count("data-pdf-event"), 1)  # Read PDF from the release asset only
+
     def test_verification_token_is_optional_and_escaped_on_the_homepage(self):
         timestamps = {(self.paper.id, self.paper.version): self.timestamp}
         for token in ("", 'google-token"<&'):
