@@ -1,6 +1,6 @@
 # AIRR.SCIENCE — ficha de configuración y continuidad
 
-**Estado documentado:** 9 de septiembre de 2026  
+**Estado documentado:** 19 de septiembre de 2026  
 **Fase:** archivo personal/piloto con recepción privada abierta  
 **Criterio de capacidad:** mantener la configuración actual mientras el volumen sea principalmente el de los trabajos del fundador.
 
@@ -21,10 +21,12 @@ OVH no pertenece a AIRR y no forma parte de esta arquitectura.
 
 ## Estado comprobado
 
-- Versión instalada en Netcup: commit `243735ff8a83761f557f3d2b733b7fb2d0fc9500`.
-- Recepción pública de sumisiones: abierta.
-- Datos preservados durante la actualización: 6 sumisiones, 1 cuenta privada y 8 códigos de recuperación.
-- Comprobación del 9 de septiembre de 2026: aplicación, Caddy/HTTPS, ClamAV, correo, mantenimiento, copias locales, copia externa y actualizaciones de seguridad en estado correcto.
+- Versión instalada en Netcup: commit `dabf37834d44c1f23e35b4a9d7252f09f32b4951`. Se desplegó el 19 de septiembre de 2026 con `upgrade.py`; la versión anterior era `d645134e650eda2f15a7908eaaae545220f04b15` y su punto de reversión está en `/srv/airr-private/rollback-dabf37834d44`.
+- Recepción pública de sumisiones: abierta. Se cerró solo durante la actualización del 19 de septiembre y se reabrió al terminar.
+- Datos preservados durante esa actualización: 4 usuarios, 29 sumisiones, 8 códigos de recuperación y 0 correos pendientes. Migración verificada y preparación de la aplicación en 200.
+- Comprobación del 19 de septiembre de 2026: se hizo una copia local y otra externa antes del cambio (B2 `airr-20260919T140907Z.tar.gz.age`, descarga verificada). Tras el cambio, el monitor devolvió `ok: true`.
+- Correo de contacto público: `editor@airr.science`. Porkbun lo reenvía a Gmail, igual que `submissions@airr.science`. Se probó el 19 de septiembre de 2026.
+- Consola del Netcup SCP: el teclado remoto pierde las teclas Mayúsculas y Ctrl. Hay que escribir los comandos con **Clipboard → Type as Keys**, en líneas de menos de unos 120 caracteres, y leer la línea completa antes de pulsar Enter.
 - La página pública ya explica que los trabajos del fundador requieren dos modelos identificados distintos.
 - Límite de una cuenta: 10 sumisiones en una ventana móvil de 24 horas.
 - Tamaño máximo por PDF: 25 MiB.
