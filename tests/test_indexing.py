@@ -203,6 +203,37 @@ class IndexingTests(unittest.TestCase):
         self.assertIn("/releases/download/", remote)
         self.assertEqual(remote.count("data-pdf-event"), 1)  # Read PDF from the release asset only
 
+    def test_math_assets_load_only_where_tex_appears(self):
+        plain = build_site.page_shell(title="t", description="d", content="<p>No formulas</p>", base="/preview")
+        self.assertNotIn("katex", plain)
+        tex = build_site.page_shell(title="t", description="d", content="<p>$x$</p>", base="/preview")
+        self.assertIn('src="/preview/assets/katex/katex.min.js"', tex)
+        self.assertIn('src="/preview/assets/math.js?v=', tex)
+        self.assertIn("katex", build_site.page_shell(title="t", description="d", content="", base="", math=True))
+
+    def test_light_reading_theme_keeps_the_dark_logo_for_dark_mode(self):
+        text = build_site.page_shell(title="t", description="d", content="", base="")
+        self.assertIn('<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">', text)
+        self.assertIn('<source srcset="/assets/airr-logo.png" media="(prefers-color-scheme: dark)">', text)
+        self.assertIn('src="/assets/airr-logo-light.png"', text)
+        self.assertIn("not peer review", text)
+
+    def test_record_page_states_review_status_and_folds_identifiers(self):
+        self.paper.metadata["status"] = "accepted"
+        text = self.render()
+        self.assertIn('<p class="review-status">Admitted after checks by named AI models and editor approval. Not peer reviewed.', text)
+        self.assertLess(text.index('class="review-status"'), text.index('<section class="abstract">'))
+        self.assertIn('<details class="record-ids"><summary>Identifiers and checksum</summary>', text)
+        self.assertIn('title="Admitted after checks by named AI models and editor approval. Not peer reviewed.">Screened</span>', text)
+
+    def test_author_ranking_waits_for_several_authors(self):
+        def page(count):
+            profiles = [{"id": f"a{i}", "name": f"Author {i}"} for i in range(count)]
+            return build_site.build_rankings(profiles, {p["id"]: [] for p in profiles}, [], {"papers": {}}, "", SITE)
+        self.assertNotIn("Authors by canonical PDF downloads", page(1))
+        self.assertIn("Paper activity.", page(1))
+        self.assertIn("Authors by canonical PDF downloads", page(build_site.MIN_RANKED_AUTHORS))
+
     def test_verification_token_is_optional_and_escaped_on_the_homepage(self):
         timestamps = {(self.paper.id, self.paper.version): self.timestamp}
         for token in ("", 'google-token"<&'):
@@ -222,7 +253,7 @@ class IndexingTests(unittest.TestCase):
             with self.subTest(root=root):
                 text = build_site.build_home([self.paper], timestamps, "", root)
                 self.assertIn('<meta property="og:site_name" content="AIRR.SCIENCE">', text)
-                self.assertIn("AIRR.SCIENCE is the Archive for Independent &amp; Rigorous Research", text)
+                self.assertIn("AIRR.SCIENCE is an open archive of research", text)
                 if root:
                     structured = json.loads(text.split('<script type="application/ld+json">')[1].split("</script>")[0])
                     self.assertEqual(structured["@type"], "WebSite")

@@ -194,15 +194,19 @@ class RatingTests(unittest.TestCase):
             project_report(self.paper,source)
         self.assertEqual(json.loads(source.read_bytes()),native)
 
-    def test_accepted_catalogue_cards_show_the_weighted_score(self):
+    def test_catalogue_cards_leave_the_weighted_score_to_the_record_page(self):
         from arrlib import load_record_timestamps
         accepted=next(p for p in self.papers if p.id=="ARR-2026-1K33A7K90T87AREF")
         timestamps=load_record_timestamps()
         page=build_site.build_papers_index([accepted],timestamps,"","https://example.test")
-        self.assertIn("Weighted score",page)
-        self.assertIn("4.55",page)
-        self.assertIn("Limited evidence",page)
-        self.assertIn("#model-assessments",page)
+        # Listings stay calm; the score and its limits live on the record page.
+        self.assertNotIn("Weighted score",page)
+        self.assertNotIn("★",page)
+        self.assertIn(">Screened<",page)
+        section=build_site.paper_assessment_section(accepted,build_site.load_assessment_registry()["assessments"],None,"")
+        self.assertIn("4.55",section)
+        self.assertIn("Limited evidence",section)
+        self.assertIn('id="model-assessments"',section)
 
     def test_existing_reports_unchanged_and_every_paper_has_coverage(self):
         from arrlib import group_paper_versions

@@ -60,7 +60,8 @@ class CitationTests(unittest.TestCase):
         timestamp = {"publication_state": "published", "published_at": "2025-02-03T10:00:00+00:00", "deposit_recorded_at": "2025-02-02T10:00:00+00:00"}
         card = paper_card(self.metadata(status="working_paper"), timestamp, "/preview")
         self.assertIn("Working paper", card)
-        self.assertIn("not admitted", card)
+        self.assertIn("not yet screened", card)
+        self.assertNotIn(">Accepted<", card)
 
     def test_catalogue_cite_link_keeps_the_version_shown_on_the_card(self):
         timestamp = {"publication_state": "published", "published_at": "2025-02-03T10:00:00+00:00", "deposit_recorded_at": "2025-02-02T10:00:00+00:00"}
