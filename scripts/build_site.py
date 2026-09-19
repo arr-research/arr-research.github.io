@@ -272,11 +272,13 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
 """
 
 
-def search_form(base: str, filters: str = "") -> str:
+def search_form(base: str, filters: str = "", help_text: bool = True) -> str:
+    help_html = '<p id="search-help">Search titles, abstracts, keywords and authors. Try SU(2), Weyl operators or an author name.</p>' if help_text else ""
+    described = ' aria-describedby="search-help"' if help_text else ""
     return f"""<form class="paper-search" role="search" action="{base}/search/" method="get">
   <label for="paper-query">Search papers</label>
-  <div class="search-controls"><input id="paper-query" name="q" type="search" maxlength="300" placeholder="Title, topic, author or paper ID — e.g. SU(2)" aria-describedby="search-help"><button class="button" type="submit">Search</button></div>
-  <p id="search-help">Search titles, abstracts, keywords and authors. Try SU(2), Weyl operators or an author name.</p>
+  <div class="search-controls"><input id="paper-query" name="q" type="search" maxlength="300" placeholder="Title, topic, author or paper ID — e.g. SU(2)"{described}><button class="button" type="submit">Search</button></div>
+  {help_html}
   {filters}
 </form>"""
 
@@ -698,15 +700,15 @@ def build_home(papers: list, timestamps: dict, base: str, canonical_url: str, au
   <div class="home-intro">
     <div class="eyebrow">Discover · Read · Cite</div>
     <h1>Independent research.<br>Inspectable evidence.</h1>
-    <p class="lede">AIRR.SCIENCE is an open archive of research in mathematics, physics and beyond, operated by independent researcher Lluis Eriksson. Every version stays citable, and screened papers publish the AI checks behind them. Nothing here is peer reviewed. <a href="{base}/about/">About AIRR</a></p>
+    <p class="lede">Open research papers in mathematics, physics and beyond.</p>
   </div>
   <div class="home-discovery">
-    {search_form(base)}
+    {search_form(base, help_text=False)}
     <div class="hero-actions"><a class="text-link" href="{base}/papers/">Latest papers →</a><a class="text-link" href="{base}/protocol/">How screening works →</a></div>
   </div>
 </section>
 <nav class="home-subjects" aria-label="Research subjects"><span class="eyebrow">Subjects</span><div class="subject-strip">{subject_links(papers, base, 6)}</div><a class="home-all-subjects" href="{base}/subjects/">All subjects →</a></nav>
-<section class="recent"><div class="section-heading"><div><span>Catalogue</span><h2>Latest research</h2></div><a href="{base}/papers/">View papers</a></div><p class="home-admission-note">Screened papers were checked by named AI models and approved by the editor; working papers are citable but not yet screened; historical imports are labelled separately. Nothing on AIRR is peer reviewed. <a href="{base}/protocol/">How screening works</a></p>{recent}</section>
+<section class="recent"><div class="section-heading"><div><span>Catalogue</span><h2>Latest research</h2></div><a href="{base}/papers/">View papers</a></div>{recent}</section>
 <section class="stats" aria-label="Archive statistics">
   {archive_counts([(accepted_papers, "screened papers"), (working_papers, "working papers"), (archived_papers, "historical imports"), (accepted_notes, "technical notes")])}
 </section>
