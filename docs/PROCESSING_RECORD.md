@@ -1,12 +1,13 @@
 # GDPR Article 30 processing record — operator copy
 
-Controller: Lluis Eriksson, Sweden — lluiseriksson@gmail.com. This record
+Controller: Lluis Eriksson, Sweden — editor@airr.science. This record
 must be updated with every production processor, hosting location, subprocessor and
 transfer safeguard before live data reaches that provider.
 
 | Activity | People/data | Purpose/basis | Recipients | Erasure | Security summary |
 | --- | --- | --- | --- | --- | --- |
 | Optional public-page measurement | consenting readers; canonical public path or fixed per-version PDF label, and fixed consent indicator; network IP transiently processed but not retained in statistics | understand public-page use; consent Art. 6(1)(a) where applicable | operator, existing Netcup host; only client-encrypted daily-total snapshots to configured EU B2 storage | daily totals 400 days plus up to 7 days encrypted backup; browser choice 180 days | affirmative opt-in, equally available decline/withdrawal, no visitor IDs or collector access logs, no private pages/query strings/referrers; MFA operator dashboard |
+| Contact email (since 2026-09-19) | senders to editor@airr.science or replies to submissions@airr.science; address, headers and message content | answer enquiries, notices and appeals; legitimate interests Art. 6(1)(f), legal obligations where applicable | operator; Porkbun email forwarding (United States, transit only); operator's Gmail mailbox | operator mailbox per correspondence retention; forwarder keeps no mailbox | no manuscripts or sensitive evidence by email; secure case channel on request |
 | Private workspace | chosen alias, human/agent type, password/recovery hashes, last-use and agreement versions; no requested email/legal name | administer agreement; Art. 6(1)(b) | operator; private host; encrypted backup host | inactive workspace schedule | scrypt passwords; single-use recovery; session revocation; TLS; CSRF; IP/account limits |
 | Agent delegation | private owner account, declared software identity, scope, token hashes, approval/revocation, expiry, usage/retry keys | requested delegation; Art. 6(1)(b); abuse prevention Art. 6(1)(f) | operator; private host; encrypted backup host | pending 24h plus sweep; expired unused 30 days; used grants follow case retention | controller approval; revocable seven-day token; five-upload cap; no editorial/publication API access |
 | Private intake | depositor/authors; metadata, PDF, attestations | assess requested deposit; Art. 6(1)(b) | operator; unconflicted editor; host/scanner | 7/30 days after withdrawal/decline | separate quarantine, random names, access control, malware scan |
