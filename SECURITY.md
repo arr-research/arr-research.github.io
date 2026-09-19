@@ -30,4 +30,4 @@ secret scanning and push protection. The operator's expressly authorized public
 postal contact is intentionally published in the contact/privacy documents;
 it is not a credential or a private submission.
 
-Report security issues privately to `lluiseriksson@gmail.com` with subject `AIRR security`; do not attach live malware or publish vulnerability details. AIRR aims to acknowledge within 72 hours. The full production controls and incident process are in `docs/INTAKE_OPERATIONS.md`.
+Report security issues privately to `editor@airr.science` with subject `AIRR security`; do not attach live malware or publish vulnerability details. AIRR aims to acknowledge within 72 hours. The full production controls and incident process are in `docs/INTAKE_OPERATIONS.md`.
