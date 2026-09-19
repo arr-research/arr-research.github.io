@@ -10,13 +10,8 @@ opens only after the operator authorizes the documented reception-readiness reco
 ## Controller and contact
 
 The data controller is **Lluis Eriksson**, a natural person in Sweden,
-acting as founder, registry operator and responsible editor of the Archive for Independent & Rigorous Research (AIRR). Contact: **editor@airr.science** with the subject
+acting as founder, registry operator and responsible editor of the Archive for Independent & Rigorous Research (AIRR). Contact: **lluiseriksson@gmail.com** with the subject
 `AIRR privacy`. No data protection officer has been designated.
-
-Contact channel updated **2026-09-19**: mail to `editor@airr.science` is forwarded by the
-domain registrar Porkbun (United States) to the operator's personal mailbox. Porkbun
-processes the message only to deliver it. Do not send manuscripts or sensitive
-evidence by email.
 
 Postal contact: **Lluis Eriksson, Ångstavägen 44, 834 99 Tandsbyn, Sweden**.
 The operator supplied and authorized this contact address for publication on 2026-09-08.
