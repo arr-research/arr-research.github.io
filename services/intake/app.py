@@ -797,7 +797,7 @@ def register_routes(app: Flask) -> None:
             f"Optional donation note: AIRR submission {row['id']}\n"
             "Donating is optional and does not affect approval, review speed, scores or ranking.\n"
             "A donation reference cannot open the private submission or receipt.\n"
-            "Contact: editor@airr.science\n"
+            "Contact: lluiseriksson@gmail.com\n"
         )
         return send_file(io.BytesIO(body.encode("utf-8")), mimetype="text/plain",
                          as_attachment=True, download_name=f"{row['id']}-receipt.txt", conditional=False)

@@ -5,7 +5,7 @@
 **Effective:** 2026-09-10
 **Brand wording updated:** 2026-09-06; see [identity and continuity](BRAND_IDENTITY.md).
 
-**Operator:** Lluis Eriksson, Sweden — editor@airr.science
+**Operator:** Lluis Eriksson, Sweden — lluiseriksson@gmail.com
 
 **Postal contact:** Ångstavägen 44, 834 99 Tandsbyn, Sweden.
 

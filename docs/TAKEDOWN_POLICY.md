@@ -18,6 +18,6 @@ Files may be removed or access-restricted for credible copyright claims, unlawfu
 
 Every request receives a case identifier, timestamp, evidence log, decision, reasons and notification where lawful. The notice, counter-notice and appeal procedure is in [`LEGAL_AND_COMPLAINTS.md`](LEGAL_AND_COMPLAINTS.md). Emergency security reports follow `SECURITY.md`.
 
-The responsible operator is Lluis Eriksson, reachable at `editor@airr.science`
+The responsible operator is Lluis Eriksson, reachable at `lluiseriksson@gmail.com`
 and Ångstavägen 44, 834 99 Tandsbyn, Sweden. See the public contact page and
 `LEGAL_AND_COMPLAINTS.md` for the complete contact and complaint procedure.
