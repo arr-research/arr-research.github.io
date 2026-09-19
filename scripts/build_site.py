@@ -19,6 +19,7 @@ from site_pdfs import published_pdf
 from donationlib import load_donation_url as load_verified_donation_url
 from citationlib import citation_exports, version_path
 from subjectlib import vocabulary, public_vocabulary, subject_counts, record_subject_ids
+from texlib import plain_text, summary
 
 from arrlib import (
     ROOT,
@@ -413,7 +414,8 @@ def build_subject_page(group: dict, timestamps: dict, base: str, canonical_url: 
     pager += '</nav>'
     content = f'''<section class="page-intro"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="{base}/subjects/">Subjects</a><span aria-hidden="true">/</span><span>{esc(group['label'])}</span></nav><h1>{esc(group['label'])}</h1><p>{len(papers)} records · Newest first · Historical imports are labelled separately.</p><a class="text-link" href="{base}/search/?subject={quote(group['key'])}">Search within this subject →</a></section>{pager}<section class="catalogue">{cards}</section>{pager}'''
     suffix = f'/subjects/{group["slug"]}/' + (f'page/{page}/' if page > 1 else '')
-    return page_shell(title=f"{group['label']} — page {page} — AIRR.SCIENCE", description=f"Research in {group['label']} on AIRR.SCIENCE, with abstracts, PDFs and version-specific citations.", content=content, base=base, canonical=canonical_url + suffix if canonical_url else "")
+    page_label = f" — page {page}" if page > 1 else ""
+    return page_shell(title=f"{group['label']} papers{page_label} — AIRR.SCIENCE", description=f"{len(papers)} open-access records in {group['label']} on AIRR.SCIENCE, newest first, with abstracts, free PDFs and version-specific citations.", content=content, base=base, canonical=canonical_url + suffix if canonical_url else "")
 
 
 def type_badge(metadata: dict) -> str:
@@ -456,6 +458,11 @@ def assessment_badge(paper, assessments: list[dict], href: str = "#model-assessm
     )
 
 
+def pdf_event_path(metadata: dict) -> str:
+    """Aggregate-statistics label for one version's PDF; not a page or file URL."""
+    return f"{version_path(metadata)}pdf/"
+
+
 def release_asset_url(release_url: str, filename: str) -> str:
     marker = "/releases/tag/"
     if marker not in release_url:
@@ -468,15 +475,19 @@ def scholarly_head(metadata: dict, *, canonical: str, release_url: str = "", pdf
     """Emit discovery metadata for scholarly crawlers and general web/AI search."""
     authors = [author["name"] for author in metadata["authors"]]
     keywords = metadata.get("keywords", [])
+    # Crawlers and search snippets show TeX source literally, so discovery fields
+    # use a readable rendering; DCTERMS.abstract and the page body stay verbatim.
+    title = plain_text(metadata["title"])
+    snippet = summary(metadata["abstract"])
     meta: list[tuple[str, object]] = [
-        ("citation_title", metadata["title"]),
+        ("citation_title", title),
         *[("citation_author", author) for author in authors],
         ("citation_publication_date", metadata["date"].replace("-", "/")),
         ("citation_abstract_html_url", canonical),
         ("citation_technical_report_institution", f"{SITE_NAME} — {SITE_FULL_NAME}"),
         ("citation_technical_report_number", f"{metadata['id']} {metadata['version']}"),
         ("citation_language", "en"),
-        ("DC.title", metadata["title"]),
+        ("DC.title", title),
         *[("DC.creator", author) for author in authors],
         ("DC.date", metadata["date"]),
         ("DC.identifier", canonical),
@@ -501,9 +512,9 @@ def scholarly_head(metadata: dict, *, canonical: str, release_url: str = "", pdf
     structured: dict[str, object] = {
         "@context": "https://schema.org",
         "@type": article_type,
-        "headline": metadata["title"],
-        "name": metadata["title"],
-        "description": metadata["abstract"],
+        "headline": title,
+        "name": title,
+        "description": plain_text(metadata["abstract"]),
         "abstract": metadata["abstract"],
         "author": [{"@type": "Person", "name": author} for author in authors],
         "datePublished": metadata["date"],
@@ -537,13 +548,13 @@ def scholarly_head(metadata: dict, *, canonical: str, release_url: str = "", pdf
     social_tags = "\n  ".join(
         [
             '<meta property="og:type" content="article">',
-            f'<meta property="og:title" content="{esc(metadata["title"])}">',
-            f'<meta property="og:description" content="{esc(metadata["abstract"])}">',
+            f'<meta property="og:title" content="{esc(title)}">',
+            f'<meta property="og:description" content="{esc(snippet)}">',
             f'<meta property="og:url" content="{esc(canonical)}">',
             f'<meta property="article:published_time" content="{esc(metadata["date"])}">',
             '<meta name="twitter:card" content="summary">',
-            f'<meta name="twitter:title" content="{esc(metadata["title"])}">',
-            f'<meta name="twitter:description" content="{esc(metadata["abstract"])}">',
+            f'<meta name="twitter:title" content="{esc(title)}">',
+            f'<meta name="twitter:description" content="{esc(snippet)}">',
         ]
     )
     return f'{meta_tags}\n  {social_tags}\n  <script type="application/ld+json">{structured_json}</script>'
@@ -699,7 +710,8 @@ def build_papers_index(papers: list, timestamps: dict, base: str, canonical_url:
 """
     canonical_suffix = "papers/" if page == 1 else f"papers/page/{page}/"
     canonical = f"{canonical_url}/{canonical_suffix}" if canonical_url else ""
-    return page_shell(title=f"Papers — page {page} — AIRR.SCIENCE", description="AIRR research catalogue and clearly labelled historical imports.", content=content, base=base, canonical=canonical)
+    page_label = f" — page {page}" if page > 1 else ""
+    return page_shell(title=f"Research papers{page_label} — AIRR.SCIENCE", description=f"{len(research_papers)} open research papers on AIRR.SCIENCE, newest first, with free PDFs, version-specific citations and clearly labelled historical imports.", content=content, base=base, canonical=canonical)
 
 
 def build_notes_index(papers: list, timestamps: dict, base: str, canonical_url: str, author_lookup: dict[str, dict] | None = None, metrics: dict | None = None) -> str:
@@ -779,7 +791,8 @@ def build_author_page(profile: dict, author_papers: list, timestamps: dict, metr
     canonical = f"{canonical_url}/authors/{profile['id']}/" if canonical_url else ""
     same_as = [item["url"] for item in profile.get("links", [])]
     structured = json.dumps({"@context": "https://schema.org", "@type": "Person", "name": profile["name"], "url": canonical, "affiliation": profile.get("affiliation", ""), "sameAs": same_as}, ensure_ascii=False).replace("</", "<\\/")
-    return page_shell(title=f"{profile['name']} — AIRR.SCIENCE author", description=profile.get("bio", "AIRR author profile."), content=content, base=base, canonical=canonical, head_extra=f'<script type="application/ld+json">{structured}</script>')
+    record_count = f"{totals['papers']} open-access {'record' if totals['papers'] == 1 else 'records'} with free PDFs and citations on AIRR.SCIENCE."
+    return page_shell(title=f"{profile['name']} — research papers — AIRR.SCIENCE", description=f"{profile.get('bio', 'AIRR author profile.')} {record_count}", content=content, base=base, canonical=canonical, head_extra=f'<script type="application/ld+json">{structured}</script>')
 
 
 def ranking_rows(items: list[tuple[str, str, int]], base: str) -> str:
@@ -820,7 +833,7 @@ def build_rankings(profiles: list[dict], by_author: dict[str, list], papers: lis
   <article><h2>Papers by canonical PDF downloads</h2><div class="table-scroll"><table><thead><tr><th>Rank</th><th>Paper</th><th>Downloads</th></tr></thead><tbody>{ranking_rows(paper_downloads, base)}</tbody></table></div></article>
   <article><h2>Authors by canonical PDF downloads</h2><div class="table-scroll"><table><thead><tr><th>Rank</th><th>Author</th><th>Downloads</th></tr></thead><tbody>{ranking_rows(author_downloads, base)}</tbody></table></div></article>
   <article><h2>Page views</h2>{view_notice}</article>
-  <article id="method"><h2>Method and limits</h2><p>PDF downloads are the cumulative GitHub <code>download_count</code> for each canonical PDF asset across all published versions. Direct reads of PDFs served by AIRR are not measured by these counters. They are not unique and may include repeat downloads, automation or bots. In an author total, a multi-author paper is attributed in full to every listed author. Counts are a snapshot generated at <code>{esc(generated)}</code>.</p><p><a href="{base}/metrics.json">Download the metrics snapshot</a> · <a href="https://github.com/arr-research/arr-research.github.io/blob/main/docs/METRICS_POLICY.md">Read the complete metrics policy</a></p></article>
+  <article id="method"><h2>Method and limits</h2><p>PDF downloads are the cumulative GitHub <code>download_count</code> for each canonical PDF asset across all published versions. Direct reads of PDFs served by AIRR are not included in these public counters; consenting AIRR PDF opens are counted only in the private operator statistics. They are not unique and may include repeat downloads, automation or bots. In an author total, a multi-author paper is attributed in full to every listed author. Counts are a snapshot generated at <code>{esc(generated)}</code>.</p><p><a href="{base}/metrics.json">Download the metrics snapshot</a> · <a href="https://github.com/arr-research/arr-research.github.io/blob/main/docs/METRICS_POLICY.md">Read the complete metrics policy</a></p></article>
 </section>
 """
     canonical = f"{canonical_url}/rankings/" if canonical_url else ""
@@ -968,11 +981,13 @@ def build_paper_page(
     citation_pdf_url = f"{canonical}{tag}.pdf" if canonical and local_pdf else ""
     if local_pdf:
         pdf_url = f"{base}{page_path}{tag}.pdf"
+    # Consent-gated analytics.js reports PDF opens under this per-version label.
+    pdf_event = f' data-pdf-event="{esc(pdf_event_path(metadata))}"'
     links = []
     if pdf_url:
-        links.append(f'<a class="button" href="{esc(pdf_url)}">Read PDF</a>')
+        links.append(f'<a class="button" href="{esc(pdf_url)}"{pdf_event}>Read PDF</a>')
         if local_pdf:
-            links.append(f'<a class="button secondary" href="{esc(pdf_url)}" download="{esc(tag)}.pdf">Download PDF</a>')
+            links.append(f'<a class="button secondary" href="{esc(pdf_url)}" download="{esc(tag)}.pdf"{pdf_event}>Download PDF</a>')
     links.append('<a class="button secondary" href="#cite">Cite this paper</a>')
     if release_url:
         links.append(f'<a class="text-link" href="{esc(release_url)}">Files &amp; code</a>')
@@ -1061,7 +1076,7 @@ def build_paper_page(
         record_timestamp_panel = timestamp_panel(timestamp)
         activity_heading = "Canonical PDF downloads"
         activity_value = metric_number(activity["pdf_downloads"])
-        activity_note = "GitHub release downloads only; direct AIRR PDF reads are not measured"
+        activity_note = "GitHub release downloads only; direct AIRR PDF reads are not included"
     revision = metadata.get("revision")
     revision_section = ""
     if isinstance(revision, dict):
@@ -1096,7 +1111,7 @@ def build_paper_page(
     </section>'''
     preview = ''
     if local_pdf:
-        preview = f'''<details class="pdf-preview" data-pdf-preview="{esc(pdf_url)}" data-pdf-title="{esc(metadata['title'])} — {esc(metadata['version'])}"><summary>Preview PDF on this page <span>{esc(metadata['version'])}</span></summary><div class="pdf-preview-body"><p>Uses your browser's PDF viewer. <a href="{esc(pdf_url)}">Open the PDF directly</a> if a preview is unavailable.</p><noscript><p>Open the PDF above to read it without JavaScript.</p></noscript></div></details>'''
+        preview = f'''<details class="pdf-preview" data-pdf-preview="{esc(pdf_url)}" data-pdf-title="{esc(metadata['title'])} — {esc(metadata['version'])}"{pdf_event}><summary>Preview PDF on this page <span>{esc(metadata['version'])}</span></summary><div class="pdf-preview-body"><p>Uses your browser's PDF viewer. <a href="{esc(pdf_url)}"{pdf_event}>Open the PDF directly</a> if a preview is unavailable.</p><noscript><p>Open the PDF above to read it without JavaScript.</p></noscript></div></details>'''
     reader_version = hashlib.sha256((SITE_DIR / 'reader.js').read_bytes()).hexdigest()[:12]
     content = f"""
 <article class="paper-page">
@@ -1130,8 +1145,8 @@ def build_paper_page(
 </article>
 """
     return page_shell(
-        title=f"{metadata['title']} — AIRR.SCIENCE",
-        description=metadata["abstract"],
+        title=f"{plain_text(metadata['title'])} — AIRR.SCIENCE",
+        description=summary(metadata["abstract"]),
         content=content,
         base=base,
         canonical=canonical,
@@ -1388,7 +1403,7 @@ def build_privacy(base: str, canonical_url: str) -> str:
   <article><h2>Private data</h2><p>AIRR requests no depositor email, legal name, telephone or postal address. Private workspaces use an alias, password hash and recovery-code hash. The service also processes manuscript contents and metadata, correspondence, decisions, agent permissions and pseudonymized security events. Public author credit is optional and separate from the private alias. These records can still contain personal data: AIRR does not claim anonymity or a blanket GDPR exemption.</p></article>
   <article><h2>Frontier-model screening</h2><p>Acceptance remains human, but the disclosed pre-publication protocol requires version-locked external frontier-model reports. The form acknowledges screening; the responsible person separately confirms the named providers and safeguards before any transfer. AIRR records provider, model, time and response hash.</p></article>
   <article><h2>Retention</h2><p>Malware bytes are erased immediately, withdrawn PDFs after 7 days, declined PDFs after 30 days, and accepted private copies 30 days after verified public release. A minimal decision record is retained for three years, subject to narrowly reviewed legal hold.</p></article>
-  <article><h2>Optional public-site statistics</h2><p>When enabled, AIRR asks before counting public-page views. Allow or Decline; change your choice through Statistics preferences in the footer. Your choice is stored in your browser for 180 days. Consenting views become daily page totals on our Netcup server, retained for 400 days, plus up to seven days in encrypted backups. No visitor IDs, IP addresses, referrers, search terms or private pages are stored in these statistics. Only the operator sees these totals. GitHub PDF-download counters remain a separate public metric. See the full notice below for consent, hosting and retention details.</p></article>
+  <article><h2>Optional public-site statistics</h2><p>When enabled, AIRR asks before counting public-page views and PDF opens. Allow or Decline; change your choice through Statistics preferences in the footer. Your choice is stored in your browser for 180 days. Consenting views and PDF opens become daily page and per-version PDF totals on our Netcup server, retained for 400 days, plus up to seven days in encrypted backups. No visitor IDs, IP addresses, referrers, search terms or private pages are stored in these statistics. Only the operator sees these totals. GitHub PDF-download counters remain a separate public metric. See the full notice below for consent, hosting and retention details.</p></article>
   <article><h2>Your rights</h2><p>Applicable rights include access, correction, erasure, restriction, portability and objection. You can complain to Sweden's IMY or another competent EEA authority. Requests receive proportionate identity verification.</p></article>
   <article><h2>Voluntary support</h2><p>The support page links to PayPal when donations are available. AIRR loads no PayPal widgets or tracking scripts. If you choose to pay on PayPal, it provides the operator with transaction details for payment, refund, fraud, accounting and legal administration. You may optionally identify the paper your support relates to using its published ID or your submission receipt's registration reference. The reference gives no private access and is not sent to PayPal automatically. Donor information is used for support administration, not published or used for mailing lists, ranking or editorial decisions. The donation notice was updated on 2026-09-06.</p></article>
 </section>
@@ -1829,7 +1844,13 @@ def main() -> int:
         if canonical_match and title_match:
             page_url = urlsplit(html.unescape(canonical_match.group(1)))
             if page_url.hostname in {'airr.science', 'www.airr.science'} and page_url.path.endswith('/'):
-                analytics_pages[page_url.path] = html.unescape(title_match.group(1))[:400]
+                page_title = html.unescape(title_match.group(1))
+                analytics_pages[page_url.path] = page_title[:400]
+                # PDF opens are allowlisted as per-version labels next to their record page.
+                for event_path in set(re.findall(r'data-pdf-event="([^"]+)"', markup)):
+                    event_path = html.unescape(event_path)
+                    version = event_path.rstrip('/').split('/')[-2]
+                    analytics_pages.setdefault(event_path, f"PDF {version} · {page_title}"[:400])
     write(OUTPUT_DIR / 'analytics-pages.json', json.dumps(analytics_pages, ensure_ascii=False, sort_keys=True))
     paper_count = sum(paper.record_type == "research_paper" for paper in papers)
     note_count = sum(paper.record_type == "technical_note" for paper in papers)

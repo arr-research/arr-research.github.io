@@ -7,7 +7,10 @@ separate from the public-intake opening switch.
 
 ## What it measures
 
-Consenting public-page loads, grouped by UTC day and canonical page path. The
+Consenting public-page loads, grouped by UTC day and canonical page path, and
+consenting PDF opens from AIRR record pages, grouped by UTC day and a fixed
+per-version label (`/papers/ID/versions/vN/pdf/`). The dashboard reports PDF opens
+separately from page views. The
 dashboard shows today's total, 7/30/90/365-day totals, daily activity and the top
 40 pages. It cannot reconstruct past traffic, count unique people, attribute
 referrers, or prove that a request came from a person rather than automation.
