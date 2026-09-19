@@ -47,6 +47,8 @@ SITE_DIR = ROOT / "site"
 OUTPUT_DIR = ROOT / "_site"
 AUTHORS_FILE = ROOT / "registry" / "authors.json"
 SITE_NAME = "AIRR.SCIENCE"
+# An empty collection in the menu reads as an abandoned section; main() sets this.
+NOTES_PUBLISHED = False
 SITE_FULL_NAME = "Archive for Independent & Rigorous Research"
 
 
@@ -212,6 +214,24 @@ def math_assets(base: str) -> str:
     )
 
 
+def share_image_tags(canonical: str, base: str, card_declared: bool = False) -> str:
+    """Link previews in social apps, chat tools and AI assistants use one archive card."""
+    if not canonical:
+        return ""
+    parts = urlsplit(canonical)
+    image = f"{parts.scheme}://{parts.netloc}{base}/assets/og-image.png"
+    tags = [
+        f'<meta property="og:image" content="{esc(image)}">',
+        '<meta property="og:image:width" content="1200">',
+        '<meta property="og:image:height" content="630">',
+        '<meta property="og:image:alt" content="AIRR.SCIENCE — open research papers in mathematics, physics and beyond">',
+        f'<meta name="twitter:image" content="{esc(image)}">',
+    ]
+    if not card_declared:
+        tags.append('<meta name="twitter:card" content="summary_large_image">')
+    return "\n  ".join(tags)
+
+
 def page_shell(*, title: str, description: str, content: str, base: str, canonical: str = "", head_extra: str = "", math: bool | None = None) -> str:
     canonical_tag = f'<link rel="canonical" href="{esc(canonical)}">' if canonical else ""
     analytics = ''
@@ -221,6 +241,7 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
     if math is None:
         math = "$" in content or "\\(" in content
     math_tags = math_assets(base) if math else ""
+    share_tags = share_image_tags(canonical, base, card_declared="twitter:card" in head_extra)
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -233,6 +254,7 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
   <meta name="application-name" content="{SITE_NAME}">
   <meta property="og:site_name" content="{SITE_NAME}">
   {canonical_tag}
+  {share_tags}
   {head_extra}
   <link rel="icon" href="{base}/favicon.ico" sizes="16x16 32x32 48x48">
   <link rel="icon" type="image/png" href="{base}/favicon-96x96.png" sizes="96x96">
@@ -257,7 +279,7 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
       <details class="nav-more"><summary><span class="nav-more-long">About &amp; more</span><span class="nav-more-short">More</span></summary><div>
         <a href="{base}/about/">About AIRR</a><a href="{base}/protocol/">How screening works</a>
         <a href="{base}/assessments/">Model screening reports</a><a href="{base}/governance/">Governance</a>
-        <a href="{base}/notes/">Technical notes</a><a href="{base}/support/">Support AIRR</a>
+        {f'<a href="{base}/notes/">Technical notes</a>' if NOTES_PUBLISHED else ''}<a href="{base}/support/">Support AIRR</a>
         <a href="{base}/contact/">Contact</a>
       </div></details>
     </nav>
@@ -355,6 +377,21 @@ def status_badge(value: str) -> str:
     hint = STATUS_HINTS.get(value)
     title = f' title="{esc(hint)}"' if hint else ""
     return f'<span class="badge badge-{esc(value)}"{title}>{esc(STATUS_LABELS.get(value, value.title()))}</span>'
+
+
+LICENSE_LABELS = {"LicenseRef-Author-Retained": "All rights retained by the author"}
+
+
+def paper_facts(metadata: dict, timestamp: dict, subjects_html: str) -> str:
+    """Short record facts beside the abstract; full identifiers stay in the record section."""
+    license_id = metadata["licenses"]["manuscript"]
+    rows = [
+        ("Version", f'{esc(metadata["version"])} · {display_date(paper_chronology(metadata, timestamp))}'),
+        ("Identifier", esc(metadata["id"])),
+        ("Subjects", subjects_html or "—"),
+        ("License", esc(LICENSE_LABELS.get(license_id, license_id))),
+    ]
+    return '<dl class="paper-facts">' + "".join(f"<div><dt>{label}</dt><dd>{value}</dd></div>" for label, value in rows) + "</dl>"
 
 
 def review_status(metadata: dict) -> str:
@@ -598,7 +635,7 @@ def scholarly_head(metadata: dict, *, canonical: str, release_url: str = "", pdf
             f'<meta property="og:description" content="{esc(snippet)}">',
             f'<meta property="og:url" content="{esc(canonical)}">',
             f'<meta property="article:published_time" content="{esc(metadata["date"])}">',
-            '<meta name="twitter:card" content="summary">',
+            '<meta name="twitter:card" content="summary_large_image">',
             f'<meta name="twitter:title" content="{esc(title)}">',
             f'<meta name="twitter:description" content="{esc(snippet)}">',
         ]
@@ -747,7 +784,7 @@ def build_papers_index(papers: list, timestamps: dict, base: str, canonical_url:
     pagination += f'<a href="{next_url}">Next 50 →</a>' if page < page_count else '<span>Next 50 →</span>'
     pagination += '</nav>'
     content = f"""
-<section class="page-intro"><span>Public catalogue</span><h1>Research papers</h1><p>Read and cite every version. Records marked Screened were checked by named AI models and approved by the editor; working papers are not yet screened and historical imports are labelled separately. None of these records is peer reviewed.</p>{search_form(base)}<div class="browse-tools"><a href="{base}/subjects/">Browse by subject</a><a href="{base}/search/">Filter by subject, year and status</a></div></section>
+<section class="page-intro"><span>Public catalogue</span><h1>Research papers</h1>{search_form(base, help_text=False)}<div class="browse-tools"><a href="{base}/subjects/">Browse by subject</a><a href="{base}/search/">Filter by subject, year and status</a></div></section>
 {pagination}
 <section class="catalogue">{cards}</section>
 {pagination}
@@ -1049,7 +1086,7 @@ def build_paper_page(
     if metadata.get("doi"):
         links.append(f'<a class="text-link" href="https://doi.org/{esc(metadata["doi"])}">DOI {esc(metadata["doi"])}</a>')
     keywords = "".join(f'<li><a href="{base}/search/?q={quote(keyword)}">{esc(keyword)}</a></li>' for keyword in metadata.get("keywords", []))
-    subjects = ''.join(f'<a href="{base}/subjects/{subject_slug(subject)}/">{esc(subject)}</a>' for subject in metadata.get('subjects', []))
+    subjects = '<br>'.join(f'<a href="{base}/subjects/{subject_slug(subject)}/">{esc(subject)}</a>' for subject in metadata.get('subjects', []))
     evaluators = "".join(
         f'<li><strong>{esc(item["model_id"])}</strong><span>{esc(item["provider"])}' +
         (f' · reasoning effort {esc(item["reasoning_effort"])}' if item.get("reasoning_effort") else '') +
@@ -1176,9 +1213,10 @@ def build_paper_page(
   <h1>{esc(metadata['title'])}</h1>
   <p class="paper-authors">{authors}</p>
   {review_status(metadata)}
-  <div class="download-row">{''.join(links)}</div>
-  <section class="abstract"><span>{summary_label}</span><p>{esc(metadata['abstract'])}</p></section>
-  <div class="paper-subjects" aria-label="Subjects">{subjects}</div>
+  <div class="paper-head">
+    <section class="abstract"><span>{summary_label}</span><p>{esc(metadata['abstract'])}</p></section>
+    <aside class="paper-actions" aria-label="Read and cite this version"><div class="download-row">{''.join(links)}</div>{paper_facts(metadata, timestamp, subjects)}</aside>
+  </div>
   <nav class="paper-jump" aria-label="On this page"><a href="#cite">Cite</a><a href="#versions">Versions</a><a href="#evidence">Verification</a><a href="#model-assessments">Assessments</a><a href="#disclosures">Disclosures</a></nav>
   {preview}
   {citation_section}
@@ -1579,7 +1617,7 @@ def write_sitemaps(papers: list, groups: dict, profiles: list[dict], canonical_u
         (f"{canonical_url}/papers/", latest_date),
         (f"{canonical_url}/search/", latest_date),
         (f"{canonical_url}/subjects/", latest_date),
-        (f"{canonical_url}/notes/", latest_date),
+        *([(f"{canonical_url}/notes/", latest_date)] if NOTES_PUBLISHED else []),
         (f"{canonical_url}/authors/", latest_date),
         (f"{canonical_url}/rankings/", latest_date),
         (f"{canonical_url}/assessments/", latest_date),
@@ -1695,6 +1733,8 @@ def main() -> int:
     groups = group_paper_versions(all_versions)
     papers = [versions[-1] for versions in groups.values()]
     papers.sort(key=lambda paper: (paper_chronology(paper.metadata, timestamps[(paper.id, paper.version)]), paper.id), reverse=True)
+    global NOTES_PUBLISHED
+    NOTES_PUBLISHED = any(paper.record_type == "technical_note" for paper in papers)
     try:
         profiles, author_lookup = load_authors(papers)
         metrics = load_metrics(args.metrics_file)
@@ -1735,7 +1775,7 @@ def main() -> int:
     shutil.copy2(SITE_DIR / "search.js", OUTPUT_DIR / "assets" / "search.js")
     shutil.copy2(SITE_DIR / "reader.js", OUTPUT_DIR / "assets" / "reader.js")
     shutil.copy2(SITE_DIR / "analytics.js", OUTPUT_DIR / "assets" / "analytics.js")
-    for asset in ("subjects.js", "subject-selection.js", "lluis-eriksson.jpg", "math.js", "airr-logo-light.png"):
+    for asset in ("subjects.js", "subject-selection.js", "lluis-eriksson.jpg", "math.js", "airr-logo-light.png", "og-image.png"):
         shutil.copy2(SITE_DIR / asset, OUTPUT_DIR / "assets" / asset)
     shutil.copytree(SITE_DIR / "vendor" / "katex", OUTPUT_DIR / "assets" / "katex", ignore=shutil.ignore_patterns("README.md"))
     write(OUTPUT_DIR / "assets" / "subjects.json", json.dumps(public_vocabulary(papers), ensure_ascii=False, separators=(",", ":")) + "\n")

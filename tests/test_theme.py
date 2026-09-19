@@ -47,6 +47,14 @@ class ThemeTests(unittest.TestCase):
         rules = re.sub(r"@media \(prefers-color-scheme: dark\) \{.*?\n\}\n", "", rules, count=1, flags=re.S)
         self.assertEqual(sorted(set(re.findall(r"#[0-9a-fA-F]{3,8}\b", rules))), ["#fff"])
 
+    def test_content_blocks_fill_the_column_without_fixed_width_caps(self):
+        # Owner rule: no empty bands beside intros, forms or record sections.
+        allowed = ("footer p", ".home-hero .lede", ".hero h1", ".author-header {")
+        caps = [line.strip()[:60] for line in CSS.splitlines()
+                if re.search(r"max-width: ?\d+(px|ch)", line) and not line.lstrip().startswith("@media")
+                and not line.lstrip().startswith(allowed)]
+        self.assertEqual(caps, [])
+
 
 if __name__ == "__main__":
     unittest.main()
