@@ -291,8 +291,9 @@ class PaperValidationTests(unittest.TestCase):
             timestamp = {"deposit_recorded_at": "2026-08-30T10:00:00+00:00", "publication_state": "pending"}
             card = build_site.paper_card(paper.metadata, timestamp, "")
             self.assertIn("Historical import", card)
-            self.assertIn("First submitted to ai.vixra", card)
-            self.assertIn("2025-12-23 10:38:28 UTC", card)
+            self.assertIn("Originally posted", card)
+            self.assertIn('<time datetime="2025-12-23T10:38:28+00:00"', card)
+            self.assertIn(">23 Dec 2025</time>", card)
 
     def test_wrong_shard_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

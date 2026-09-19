@@ -144,7 +144,7 @@
     const start = shown;
     const end = Math.min(shown + 25, results.length);
     const fragment = document.createDocumentFragment();
-    const labels = { accepted: "Accepted", corrected: "Corrected", archived: "Historical import", withdrawn: "Withdrawn" };
+    const labels = { accepted: "Screened", corrected: "Corrected", archived: "Historical import", withdrawn: "Withdrawn" };
     for (let i = shown; i < end; i++) {
       const record = results[i].record;
       const item = element("li", "paper-card");
@@ -172,6 +172,7 @@
       fragment.append(item);
     }
     list.append(fragment);
+    if (typeof window.airrRenderMath === "function") window.airrRenderMath(list);
     shown = end;
     more.hidden = shown >= results.length;
     const labelsBySort = { relevance: activeQuery ? "By relevance" : "Newest first", newest: "Newest first", oldest: "Oldest first", title: "Title A–Z" };

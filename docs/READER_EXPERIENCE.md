@@ -1,6 +1,20 @@
 # Reading, discovery and citations
 
-AIRR provides a static, crawlable catalogue and version-specific reference exports. A reader can find a paper, open its PDF, inspect its history and download a citation without an account. The dark, gold and serif visual identity is retained.
+AIRR provides a static, crawlable catalogue and version-specific reference exports. A reader can find a paper, open its PDF, inspect its history and download a citation without an account. The gold and serif identity is kept.
+
+## Reading defaults (2026-09-19)
+
+These choices follow the reading and credibility evidence summarised in the September 2026 audit.
+
+- **Colour theme.** Pages use dark text on light paper by default. Positive polarity reads better for younger and older adults (Piepenbrock et al., *Ergonomics* 2013; *Human Factors* 2014). Readers whose system asks for dark mode get the original dark palette through `prefers-color-scheme`. Nothing is stored in the browser.
+  - Both palettes are CSS variables in `site/style.css`.
+  - `tests/test_theme.py` requires WCAG AA contrast (4.5:1) for all reading text in both themes, and rejects fixed colours outside the palettes.
+- **Mathematics.** Inline TeX in titles, abstracts, listings and search results is typeset with KaTeX 0.18.7. KaTeX is vendored under `site/vendor/katex/` (MIT) and served from AIRR, so no third-party request is made. It loads only on pages that contain TeX. Citation text, permalinks and exports stay verbatim.
+  - Search-engine metadata uses the Unicode rendering in `scripts/texlib.py`.
+- **Line length.** Listing summaries are capped at 75 characters per line, following WCAG 1.4.8 and Dyson & Haselgrove 2001.
+- **Review status.** Badges read *Screened*, *Working paper* or *Historical import*. Hovering a badge explains it, and each record repeats the explanation under the title. Every explanation says the record is not peer reviewed (Wingen et al. 2022). The formal status value `accepted` and the policies that define it are unchanged.
+- **Scores.** Model scores and stars appear only in the record's screening section and on `/assessments/`, never in listings. This avoids false precision next to titles (Leiden Manifesto, principle 8).
+- **Activity.** The author ranking appears only when at least three author profiles exist.
 
 ## Citation contract
 

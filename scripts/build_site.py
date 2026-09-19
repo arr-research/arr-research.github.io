@@ -81,6 +81,12 @@ def disclosure_text(value: str) -> str:
     return esc(re.sub(r"\bARR\b(?![-_])", "AIRR", value))
 
 
+def display_date(value: str) -> str:
+    """Reader-facing day; the exact timestamp stays in the datetime and tooltip."""
+    parsed = parse_exact_timestamp(value)
+    return f'<time datetime="{esc(value)}" title="{esc(parsed.isoformat())}">{parsed.day} {parsed:%b %Y}</time>'
+
+
 def exact_time(value: str) -> str:
     parsed = parse_exact_timestamp(value)
     offset = parsed.strftime("%z")
@@ -192,18 +198,36 @@ def paper_chronology(metadata: dict, timestamp: dict) -> str:
     return archival["first_submitted_at"] if isinstance(archival, dict) else chronology_time(timestamp)
 
 
-def page_shell(*, title: str, description: str, content: str, base: str, canonical: str = "", head_extra: str = "") -> str:
+def asset_version(name: str) -> str:
+    return hashlib.sha256((SITE_DIR / name).read_bytes()).hexdigest()[:12]
+
+
+def math_assets(base: str) -> str:
+    """Self-hosted KaTeX for pages whose titles or abstracts contain inline TeX."""
+    return (
+        f'<link rel="stylesheet" href="{base}/assets/katex/katex-swap.min.css">\n'
+        f'  <script defer src="{base}/assets/katex/katex.min.js"></script>\n'
+        f'  <script defer src="{base}/assets/katex/auto-render.min.js"></script>\n'
+        f'  <script defer src="{base}/assets/math.js?v={asset_version("math.js")}"></script>'
+    )
+
+
+def page_shell(*, title: str, description: str, content: str, base: str, canonical: str = "", head_extra: str = "", math: bool | None = None) -> str:
     canonical_tag = f'<link rel="canonical" href="{esc(canonical)}">' if canonical else ""
     analytics = ''
     if os.environ.get('AIRR_ANALYTICS') == '1' and urlsplit(canonical).hostname in {'airr.science', 'www.airr.science'}:
         analytics = f'<script defer src="{base}/assets/analytics.js" data-page="{esc(urlsplit(canonical).path or "/")}"></script>'
-    style_version = hashlib.sha256((SITE_DIR / "style.css").read_bytes()).hexdigest()[:12]
+    style_version = asset_version("style.css")
+    if math is None:
+        math = "$" in content or "\\(" in content
+    math_tags = math_assets(base) if math else ""
     return f"""<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0b0f17">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0b0f17" media="(prefers-color-scheme: dark)">
   <title>{esc(title)}</title>
   <meta name="description" content="{esc(description)}">
   <meta name="application-name" content="{SITE_NAME}">
@@ -215,32 +239,32 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
   <link rel="icon" type="image/svg+xml" href="{base}/favicon.svg" sizes="any">
   <link rel="apple-touch-icon" href="{base}/apple-touch-icon.png" sizes="180x180">
   <link rel="stylesheet" href="{base}/assets/style.css?v={style_version}">
+  {math_tags}
   {analytics}
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
     <a class="brand" href="{base}/" aria-label="AIRR.SCIENCE — Archive for Independent &amp; Rigorous Research, home">
-      <img class="brand-logo" src="{base}/assets/airr-logo.png" width="1859" height="336" alt="AIRR.SCIENCE">
+      <picture><source srcset="{base}/assets/airr-logo.png" media="(prefers-color-scheme: dark)"><img class="brand-logo" src="{base}/assets/airr-logo-light.png" width="1859" height="336" alt="AIRR.SCIENCE"></picture>
     </a>
     <nav aria-label="Primary navigation">
       <a href="{base}/papers/">Papers</a>
       <a href="{base}/search/">Search</a>
       <a href="{base}/subjects/">Subjects</a>
       <a href="{base}/authors/">Authors</a>
-      <a href="{base}/assessments/">Assessments</a>
       <a class="nav-submit" href="{base}/submit/">Submit</a>
-      <details class="nav-more"><summary>About &amp; more</summary><div>
-        <a href="{base}/about/">About AIRR</a><a href="{base}/protocol/">Review protocol</a>
-        <a href="{base}/governance/">Governance</a><a href="{base}/notes/">Technical notes</a>
-        <a href="{base}/rankings/">Activity</a><a href="{base}/support/">Support AIRR</a>
+      <details class="nav-more"><summary><span class="nav-more-long">About &amp; more</span><span class="nav-more-short">More</span></summary><div>
+        <a href="{base}/about/">About AIRR</a><a href="{base}/protocol/">How screening works</a>
+        <a href="{base}/assessments/">Model screening reports</a><a href="{base}/governance/">Governance</a>
+        <a href="{base}/notes/">Technical notes</a><a href="{base}/support/">Support AIRR</a>
         <a href="{base}/contact/">Contact</a>
       </div></details>
     </nav>
   </header>
   <main id="main">{content}</main>
   <footer>
-    <p><strong>AIRR.SCIENCE</strong> is the hostile-audit research registry: new admissions face an operator-selected, version-locked frontier-model audit and human sign-off. AIRR promises no fixed model; founder-authored cases require two distinct identified models. Passing is strong, inspectable evidence—not a guarantee of truth or peer review.</p>
+    <p><strong>AIRR.SCIENCE</strong> is an open research archive operated by Lluis Eriksson, an independent researcher in Sweden. Every version is preserved and citable. Before admission, a paper is checked by named AI models and approved by the editor; this screening is not peer review. <a href="{base}/governance/">Governance and conflicts</a>.</p>
     <p><a href="{base}/catalog.json">Machine-readable catalogue (CC0)</a> · <a href="{base}/registry/model-assessments.json">Model assessments</a> · <a href="{base}/authors/index.json">Author registry (CC0)</a> · <a href="{base}/metrics.json">Activity snapshot (CC0)</a> · <a href="{base}/registry/record-timestamps.json">Exact record timestamps (CC0)</a> · <a href="{base}/protocol/">Verification protocol</a> · <a href="{base}/licensing/">Licensing</a> · <a href="{base}/privacy/">Privacy</a> · <a href="{base}/terms/">Deposit terms</a> · <a href="{base}/contact/">Contact and complaints</a> · <a href="https://github.com/arr-research/arr-research.github.io">Source (AGPL)</a></p>
   </footer>
 </body>
@@ -290,7 +314,7 @@ def build_search(base: str, canonical_url: str, index_version: str, papers: list
     year_options = ''.join(f'<option>{esc(year)}</option>' for year in years)
     filters = f'''<div class="search-filters">
       <label>Subject<select name="subject"><option value="">All subjects</option>{subject_options}</select></label>
-      <label>Record status<select name="status"><option value="">All records</option><option value="working_paper">Working papers</option><option value="accepted">Accepted</option><option value="corrected">Corrected</option><option value="archived">Historical imports</option><option value="withdrawn">Withdrawn</option></select></label>
+      <label>Record status<select name="status"><option value="">All records</option><option value="working_paper">Working papers</option><option value="accepted">Screened</option><option value="corrected">Corrected</option><option value="archived">Historical imports</option><option value="withdrawn">Withdrawn</option></select></label>
       <label>Year<select name="year"><option value="">All years</option>{year_options}</select></label>
       <label>Sort by<select name="sort"><option value="relevance">Relevance</option><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="title">Title A–Z</option></select></label>
       <button class="filter-reset" type="button" data-reset-filters>Clear filters</button>
@@ -311,12 +335,32 @@ def build_search(base: str, canonical_url: str, index_version: str, papers: list
         base=base,
         canonical=f"{canonical_url}/search/" if canonical_url else "",
         head_extra=f'<script src="{base}/assets/search.js?v={script_version}" defer></script>',
+        math=True,
     )
 
 
+STATUS_LABELS = {"working_paper": "Working paper", "accepted": "Screened", "corrected": "Corrected", "withdrawn": "Withdrawn", "archived": "Historical import"}
+# "Accepted" read as journal acceptance; the badge names what actually happened.
+STATUS_HINTS = {
+    "accepted": "Admitted after checks by named AI models and editor approval. Not peer reviewed.",
+    "working_paper": "Citable version that has not completed AIRR screening. Not peer reviewed.",
+    "archived": "Earlier deposit preserved without the current AIRR screening. Not peer reviewed.",
+    "corrected": "Corrected version of a screened paper. Not peer reviewed.",
+}
+
+
 def status_badge(value: str) -> str:
-    labels = {"working_paper": "Working paper", "accepted": "Accepted", "corrected": "Corrected", "withdrawn": "Withdrawn", "archived": "Historical import"}
-    return f'<span class="badge badge-{esc(value)}">{esc(labels.get(value, value.title()))}</span>'
+    hint = STATUS_HINTS.get(value)
+    title = f' title="{esc(hint)}"' if hint else ""
+    return f'<span class="badge badge-{esc(value)}"{title}>{esc(STATUS_LABELS.get(value, value.title()))}</span>'
+
+
+def review_status(metadata: dict) -> str:
+    """One plain line near the title: what checking this version had, and that it is not peer review."""
+    hint = STATUS_HINTS.get(metadata["status"])
+    if not hint:
+        return ""
+    return f'<p class="review-status">{esc(hint)} <a href="#evidence">Screening record</a></p>'
 
 
 def record_type(metadata: dict) -> str:
@@ -405,7 +449,7 @@ def build_subject_page(group: dict, timestamps: dict, base: str, canonical_url: 
     papers = group["papers"]
     count = max(1, (len(papers) + 49) // 50)
     root = f'{base}/subjects/{group["slug"]}/'
-    cards = ''.join(paper_card(p.metadata, timestamps[(p.id, p.version)], base, author_lookup, metrics, card_rating(p, base)) for p in papers[(page-1)*50:page*50])
+    cards = ''.join(paper_card(p.metadata, timestamps[(p.id, p.version)], base, author_lookup, metrics) for p in papers[(page-1)*50:page*50])
     previous = root if page == 2 else f'{root}page/{page-1}/'
     pager = '<nav class="pagination" aria-label="Subject pages">'
     pager += f'<a href="{previous}">← Previous</a>' if page > 1 else '<span>← Previous</span>'
@@ -616,14 +660,14 @@ def paper_card(
         else esc(", ".join(author["name"] for author in metadata["authors"]))
     )
     archival = metadata.get("archival_source")
-    chronology_label = "First submitted to ai.vixra" if archival else ("Published" if timestamp["publication_state"] == "published" else "Deposit recorded")
+    chronology_label = "Originally posted" if archival else ("Published" if timestamp["publication_state"] == "published" else "Deposit recorded")
     working_note = (
-        '<p class="working-paper-note"><strong>Working paper.</strong> Citable, but not admitted to the AIRR accepted collection.</p>'
+        '<p class="working-paper-note"><strong>Working paper.</strong> Citable, but not yet screened for the AIRR collection.</p>'
         if metadata.get("status") == "working_paper" else ""
     )
     return f"""
 <article class="paper-card">
-  <div class="paper-card-header"><div class="paper-meta">{type_badge(metadata)}{status_badge(metadata['status'])}<span>{esc(metadata['id'])} · {esc(metadata['version'])}</span></div><span class="paper-date">{chronology_label} {exact_time(paper_chronology(metadata, timestamp))}</span></div>
+  <div class="paper-card-header"><div class="paper-meta">{type_badge(metadata)}{status_badge(metadata['status'])}<span>{esc(metadata['id'])} · {esc(metadata['version'])}</span></div><span class="paper-date">{chronology_label} {display_date(paper_chronology(metadata, timestamp))}</span></div>
   <h3><a href="{base}/{record_route(metadata)}/{quote(metadata['id'])}/">{esc(metadata['title'])}</a></h3>
   <div class="paper-byline"><p class="authors">{authors}</p><a class="paper-card-cite" href="{base}{version_path(metadata)}#cite">Cite this version</a></div>
   <p class="paper-summary">{esc(metadata['abstract'])}</p>
@@ -631,13 +675,17 @@ def paper_card(
 </article>"""
 
 
+def archive_counts(items: list[tuple[int, str]]) -> str:
+    # Empty categories add nothing for a reader and look like an abandoned archive.
+    return "".join(f"<div><strong>{count:,}</strong><span>{esc(label)}</span></div>" for count, label in items if count)
+
+
 def build_home(papers: list, timestamps: dict, base: str, canonical_url: str, author_lookup: dict[str, dict] | None = None, metrics: dict | None = None, author_count: int = 0, google_site_verification: str = "", bing_site_verification: str = "") -> str:
     accepted_papers = sum(p.metadata["status"] in {"accepted", "corrected"} and p.record_type == "research_paper" for p in papers)
     working_papers = sum(p.metadata["status"] == "working_paper" and p.record_type == "research_paper" for p in papers)
     archived_papers = sum(p.metadata["status"] == "archived" and p.record_type == "research_paper" for p in papers)
     accepted_notes = sum(p.metadata["status"] != "withdrawn" and p.record_type == "technical_note" for p in papers)
-    recent = "".join(paper_card(p.metadata, timestamps[(p.id, p.version)], base, author_lookup, metrics, card_rating(p, base)) for p in papers[:6])
-    downloads = sum(paper_activity(p.id, metrics or {"papers": {}})["pdf_downloads"] for p in papers)
+    recent = "".join(paper_card(p.metadata, timestamps[(p.id, p.version)], base, author_lookup, metrics) for p in papers[:6])
     if not recent:
         recent = """
 <section class="empty-state">
@@ -650,27 +698,21 @@ def build_home(papers: list, timestamps: dict, base: str, canonical_url: str, au
   <div class="home-intro">
     <div class="eyebrow">Discover · Read · Cite</div>
     <h1>Independent research.<br>Inspectable evidence.</h1>
-    <p class="lede">AIRR.SCIENCE is the Archive for Independent &amp; Rigorous Research. Open papers in mathematics, physics and beyond.</p>
+    <p class="lede">AIRR.SCIENCE is an open archive of research in mathematics, physics and beyond, operated by independent researcher Lluis Eriksson. Every version stays citable, and screened papers publish the AI checks behind them. Nothing here is peer reviewed. <a href="{base}/about/">About AIRR</a></p>
   </div>
   <div class="home-discovery">
     {search_form(base)}
-    <div class="hero-actions"><a class="text-link" href="{base}/papers/">Latest papers →</a><a class="text-link" href="{base}/assessments/">Explore assessments →</a></div>
+    <div class="hero-actions"><a class="text-link" href="{base}/papers/">Latest papers →</a><a class="text-link" href="{base}/protocol/">How screening works →</a></div>
   </div>
 </section>
 <nav class="home-subjects" aria-label="Research subjects"><span class="eyebrow">Subjects</span><div class="subject-strip">{subject_links(papers, base, 6)}</div><a class="home-all-subjects" href="{base}/subjects/">All subjects →</a></nav>
-<section class="recent"><div class="section-heading"><div><span>Catalogue</span><h2>Latest research</h2></div><a href="{base}/papers/">View papers</a></div><p class="home-admission-note">Working papers are citable and remain outside the accepted collection. Admission requires a disclosed model audit and human sign-off. Historical imports are labelled separately. <a href="{base}/protocol/">Admission policy</a></p>{recent}</section>
-<section class="frontier-gate" aria-label="AIRR admission standard"><strong>AIRR admission gate</strong><span>operator-selected frontier audit</span><span>exact PDF + SHA-256</span><span>0 unresolved material objections</span><span>human sign-off</span></section>
+<section class="recent"><div class="section-heading"><div><span>Catalogue</span><h2>Latest research</h2></div><a href="{base}/papers/">View papers</a></div><p class="home-admission-note">Screened papers were checked by named AI models and approved by the editor; working papers are citable but not yet screened; historical imports are labelled separately. Nothing on AIRR is peer reviewed. <a href="{base}/protocol/">How screening works</a></p>{recent}</section>
 <section class="stats" aria-label="Archive statistics">
-  <div><strong>{accepted_papers}</strong><span>admitted papers</span></div>
-  <div><strong>{working_papers}</strong><span>working papers</span></div>
-  <div><strong>{archived_papers}</strong><span>historical imports</span></div>
-  <div><strong>{accepted_notes}</strong><span>technical notes</span></div>
-  <div><strong>{author_count}</strong><span>author profiles</span></div>
-  <div><strong>{downloads:,}</strong><span>canonical PDF downloads</span></div>
+  {archive_counts([(accepted_papers, "screened papers"), (working_papers, "working papers"), (archived_papers, "historical imports"), (accepted_notes, "technical notes")])}
 </section>
 <section class="principles">
   <div><span>01</span><h2>Inspectable by default</h2><p>Manuscripts, metadata and code remain readable as plain files—not trapped behind a PDF or proprietary interface.</p></div>
-  <div><span>02</span><h2>Survival is evidence</h2><p>A paper that clears the new gate has survived a deliberately hostile, reproducible test by leading frontier models. AIRR publishes the reports and disagreement instead of asking readers to trust the badge.</p></div>
+  <div><span>02</span><h2>Screening is disclosed</h2><p>Before admission, named AI models look for errors, gaps and overstated claims. Their reports and disagreements are published with the paper. Screening is evidence, not peer review.</p></div>
   <div><span>03</span><h2>History remains visible</h2><p>Published versions are identified by hashes and releases. Corrections create a new immutable version rather than silently rewriting the past.</p></div>
 </section>
 """
@@ -692,7 +734,7 @@ def build_papers_index(papers: list, timestamps: dict, base: str, canonical_url:
     page_count = max(1, (len(research_papers) + page_size - 1) // page_size)
     start = (page - 1) * page_size
     selected = research_papers[start:start + page_size]
-    cards = "".join(paper_card(p.metadata, timestamps[(p.id, p.version)], base, author_lookup, metrics, card_rating(p, base)) for p in selected)
+    cards = "".join(paper_card(p.metadata, timestamps[(p.id, p.version)], base, author_lookup, metrics) for p in selected)
     if not cards:
         cards = '<section class="empty-state compact"><h2>No public papers yet.</h2><p>The catalogue begins when the first clean, authorized Working paper is released.</p></section>'
     previous_url = f"{base}/papers/" if page == 2 else f"{base}/papers/page/{page - 1}/"
@@ -703,7 +745,7 @@ def build_papers_index(papers: list, timestamps: dict, base: str, canonical_url:
     pagination += f'<a href="{next_url}">Next 50 →</a>' if page < page_count else '<span>Next 50 →</span>'
     pagination += '</nav>'
     content = f"""
-<section class="page-intro"><span>Public catalogue</span><h1>Research papers</h1><p>Read and cite working papers while their review continues. Only records marked Accepted belong to the AIRR accepted collection; historical imports are labelled separately.</p>{search_form(base)}<div class="browse-tools"><a href="{base}/subjects/">Browse by subject</a><a href="{base}/search/">Filter by subject, year and status</a></div></section>
+<section class="page-intro"><span>Public catalogue</span><h1>Research papers</h1><p>Read and cite every version. Records marked Screened were checked by named AI models and approved by the editor; working papers are not yet screened and historical imports are labelled separately. None of these records is peer reviewed.</p>{search_form(base)}<div class="browse-tools"><a href="{base}/subjects/">Browse by subject</a><a href="{base}/search/">Filter by subject, year and status</a></div></section>
 {pagination}
 <section class="catalogue">{cards}</section>
 {pagination}
@@ -716,7 +758,7 @@ def build_papers_index(papers: list, timestamps: dict, base: str, canonical_url:
 
 def build_notes_index(papers: list, timestamps: dict, base: str, canonical_url: str, author_lookup: dict[str, dict] | None = None, metrics: dict | None = None) -> str:
     notes = [paper for paper in papers if paper.record_type == "technical_note"]
-    cards = "".join(paper_card(note.metadata, timestamps[(note.id, note.version)], base, author_lookup, metrics, card_rating(note, base)) for note in notes)
+    cards = "".join(paper_card(note.metadata, timestamps[(note.id, note.version)], base, author_lookup, metrics) for note in notes)
     if not cards:
         cards = '<section class="empty-state compact"><h2>No technical notes yet.</h2><p>This collection begins when the first concise, rigorous and machine-readable technical contribution completes the AIRR workflow.</p></section>'
     content = f"""
@@ -775,7 +817,7 @@ def build_author_page(profile: dict, author_papers: list, timestamps: dict, metr
         for item in profile.get("links", [])
     )
     cards = "".join(
-        paper_card(paper.metadata, timestamps[(paper.id, paper.version)], base, author_lookup, metrics, card_rating(paper, base))
+        paper_card(paper.metadata, timestamps[(paper.id, paper.version)], base, author_lookup, metrics)
         for paper in author_papers
     )
     content = f"""
@@ -800,6 +842,9 @@ def ranking_rows(items: list[tuple[str, str, int]], base: str) -> str:
         f'<tr><td>{rank}</td><td><a href="{base}{esc(url)}">{esc(label)}</a></td><td>{value:,}</td></tr>'
         for rank, (label, url, value) in enumerate(items, start=1)
     )
+
+
+MIN_RANKED_AUTHORS = 3
 
 
 def build_rankings(profiles: list[dict], by_author: dict[str, list], papers: list, metrics: dict, base: str, canonical_url: str) -> str:
@@ -827,11 +872,17 @@ def build_rankings(profiles: list[dict], by_author: dict[str, list], papers: lis
     else:
         view_notice = '<aside class="metric-note"><strong>Page views are not currently measured.</strong><p>AIRR will not display or rank invented visits. This section activates only after a privacy-reviewed source is connected and documented.</p></aside>'
     generated = metrics.get("generated_at") or "No deployment snapshot supplied"
+    # An author ranking only informs readers once several authors can be compared.
+    author_table = (
+        f'<article><h2>Authors by canonical PDF downloads</h2><div class="table-scroll"><table><thead><tr><th>Rank</th><th>Author</th><th>Downloads</th></tr></thead><tbody>{ranking_rows(author_downloads, base)}</tbody></table></div></article>'
+        if len(profiles) >= MIN_RANKED_AUTHORS else ""
+    )
+    heading = "Paper and author rankings." if author_table else "Paper activity."
     content = f"""
-<section class="page-intro"><span>Transparent activity</span><h1>Paper and author rankings.</h1><p>These tables report public use signals, not correctness, novelty, importance or editorial preference. Ties are ordered alphabetically.</p></section>
+<section class="page-intro"><span>Transparent activity</span><h1>{heading}</h1><p>These tables report public use signals, not correctness, novelty, importance or editorial preference. Ties are ordered alphabetically.</p></section>
 <section class="rankings-page">
   <article><h2>Papers by canonical PDF downloads</h2><div class="table-scroll"><table><thead><tr><th>Rank</th><th>Paper</th><th>Downloads</th></tr></thead><tbody>{ranking_rows(paper_downloads, base)}</tbody></table></div></article>
-  <article><h2>Authors by canonical PDF downloads</h2><div class="table-scroll"><table><thead><tr><th>Rank</th><th>Author</th><th>Downloads</th></tr></thead><tbody>{ranking_rows(author_downloads, base)}</tbody></table></div></article>
+  {author_table}
   <article><h2>Page views</h2>{view_notice}</article>
   <article id="method"><h2>Method and limits</h2><p>PDF downloads are the cumulative GitHub <code>download_count</code> for each canonical PDF asset across all published versions. Direct reads of PDFs served by AIRR are not included in these public counters; consenting AIRR PDF opens are counted only in the private operator statistics. They are not unique and may include repeat downloads, automation or bots. In an author total, a multi-author paper is attributed in full to every listed author. Counts are a snapshot generated at <code>{esc(generated)}</code>.</p><p><a href="{base}/metrics.json">Download the metrics snapshot</a> · <a href="https://github.com/arr-research/arr-research.github.io/blob/main/docs/METRICS_POLICY.md">Read the complete metrics policy</a></p></article>
 </section>
@@ -856,9 +907,9 @@ def render_input_notices(paper, notices: list[dict], base: str) -> str:
                 and n["version_id"] == paper.metadata["version_id"]
                 and n["canonical_sha256"] == assessment_artifact_sha256(paper)]
     return "".join(
-        f'<aside class="assessment-input-notice"><h3>Review input clarification</h3><p>{esc(n["message"])}</p>'
+        f'<details class="assessment-input-notice"><summary>Review input clarification</summary><p>{esc(n["message"])}</p>'
         f'<p><small>Operator record · {exact_time(n["recorded_at"])} · '
-        f'<a href="{base}/registry/model-assessments.json">Source files and affected reports</a></small></p></aside>'
+        f'<a href="{base}/registry/model-assessments.json">Source files and affected reports</a></small></p></details>'
         for n in matching
     )
 
@@ -1047,7 +1098,7 @@ def build_paper_page(
     working_notice = ""
     if metadata.get("status") == "working_paper":
         working_notice = (
-            '<aside class="version-notice working"><strong>Working paper — not admitted to the AIRR accepted collection.</strong> '
+            '<aside class="version-notice working"><strong>Working paper — not yet screened for the AIRR collection.</strong> '
             'This exact version is public and citable while assessment and revision continue. Its presence records a deposit, not AIRR acceptance, peer review or a guarantee of correctness.</aside>'
         )
     if isinstance(archival, dict):
@@ -1106,7 +1157,7 @@ def build_paper_page(
       <p class="citation-text" id="citation-text" tabindex="-1">{esc(exports['txt'].strip())}</p>
       <div class="citation-actions"><button class="button" type="button" hidden data-copy-target="citation-text" data-copy-label="Citation">Copy citation</button>{export_links}</div>
       <label class="permalink-label" for="paper-permalink">Permanent link to this version</label><div class="permalink-row"><input id="paper-permalink" type="url" readonly value="{esc(permanent_url)}"><button class="button secondary" type="button" hidden data-copy-target="paper-permalink" data-copy-label="Version link">Copy link</button></div>
-      <p class="citation-help">Use this version link to cite the manuscript you read. A Working paper label means the version has not entered the AIRR accepted collection. AIRR acceptance is not journal peer review. Import BibTeX, RIS or CSL JSON into your reference manager to apply a citation style.</p>
+      <p class="citation-help">Use this version link to cite the manuscript you read. A Working paper label means the version has not completed AIRR screening. AIRR screening is not journal peer review. Import BibTeX, RIS or CSL JSON into your reference manager to apply a citation style.</p>
       <p class="copy-status" role="status" aria-live="polite" data-copy-status></p>
     </section>'''
     preview = ''
@@ -1122,6 +1173,7 @@ def build_paper_page(
   <div class="paper-meta">{type_badge(metadata)}{status_badge(metadata['status'])}<span>{esc(metadata['id'])} · {esc(metadata['version'])} · {esc(metadata['date'])}</span></div>
   <h1>{esc(metadata['title'])}</h1>
   <p class="paper-authors">{authors}</p>
+  {review_status(metadata)}
   <div class="download-row">{''.join(links)}</div>
   <section class="abstract"><span>{summary_label}</span><p>{esc(metadata['abstract'])}</p></section>
   <div class="paper-subjects" aria-label="Subjects">{subjects}</div>
@@ -1133,7 +1185,7 @@ def build_paper_page(
   {revision_section}
   <div class="paper-grid" id="evidence">
     <section><h2>Verification record</h2><dl class="checks">{verification_rows(metadata)}</dl><p class="protocol-note">Recorded under <a href="{base}/protocol/">{esc(metadata['verification']['protocol'])}</a>. AIRR verification and screening are not peer review.</p></section>
-    <aside><h2>Record</h2><dl class="record"><div><dt>Record type</dt><dd>{esc(record_type_label(metadata))}</dd></div><div><dt>Manuscript license</dt><dd>{esc(metadata['licenses']['manuscript'])}</dd></div><div><dt>Metadata license</dt><dd>{esc(metadata['licenses']['metadata'])}</dd></div><div><dt>Canonical source</dt><dd>{esc(metadata['source_of_truth'])}</dd></div><div><dt>Canonical SHA-256</dt><dd><code>{esc(metadata['integrity'].get('canonical_sha256', 'recorded in release manifest'))}</code></dd></div><div><dt>Stable record</dt><dd>{esc(metadata['record_id'])}</dd></div><div><dt>Version identifier</dt><dd>{esc(metadata['version_id'])}</dd></div><div><dt>AI assistance</dt><dd>{'Declared' if metadata['ai_assistance']['used'] else 'Not used'}</dd></div></dl><ul class="keywords">{keywords}</ul></aside>
+    <aside><h2>Record</h2><dl class="record"><div><dt>Record type</dt><dd>{esc(record_type_label(metadata))}</dd></div><div><dt>Manuscript license</dt><dd>{esc(metadata['licenses']['manuscript'])}</dd></div><div><dt>Metadata license</dt><dd>{esc(metadata['licenses']['metadata'])}</dd></div><div><dt>AI assistance</dt><dd>{'Declared' if metadata['ai_assistance']['used'] else 'Not used'}</dd></div></dl><details class="record-ids"><summary>Identifiers and checksum</summary><dl class="record"><div><dt>Canonical source</dt><dd>{esc(metadata['source_of_truth'])}</dd></div><div><dt>Canonical SHA-256</dt><dd><code>{esc(metadata['integrity'].get('canonical_sha256', 'recorded in release manifest'))}</code></dd></div><div><dt>Stable record</dt><dd>{esc(metadata['record_id'])}</dd></div><div><dt>Version identifier</dt><dd>{esc(metadata['version_id'])}</dd></div></dl></details><ul class="keywords">{keywords}</ul></aside>
   </div>
   {note_section}
   {related_section}
@@ -1239,15 +1291,16 @@ def build_support(base: str, canonical_url: str, donation_url: str = "") -> str:
 
 def build_about(base: str, canonical_url: str) -> str:
     content = """
-<section class="page-intro"><span>About the archive</span><h1>The hostile-audit research registry.</h1><p>AIRR exists because uploading a PDF proves almost nothing. It distinguishes work that has survived disclosed frontier-model attacks on an exact version from work that has merely been posted online.</p></section>
+<section class="page-intro"><span>About the archive</span><h1>An open research archive with disclosed screening.</h1><p>Uploading a PDF proves almost nothing. AIRR keeps every version citable and shows, for each paper, which AI models checked it, what they found and who approved it.</p></section>
 <section class="about-grid">
-  <article><h2>What AIRR is</h2><p>AIRR.SCIENCE is the Archive for Independent &amp; Rigorous Research. It is a versioned registry where new research must survive a disclosed hostile frontier-model audit selected for that assessment round and a human decision. Canonical manuscripts, prompts, model identities, findings, code, provenance and verification records remain inspectable. Existing paper identifiers and preserved versions remain unchanged.</p></article>
+  <article><h2>Who runs AIRR</h2><p>AIRR is run by Lluis Eriksson, an independent researcher in Sweden, who is also the author of most records at present. The archive is open to other authors and submission is free. Because the operator publishes his own work here, the conflict rules below apply and are disclosed on every record.</p></article>
+  <article><h2>What AIRR is</h2><p>AIRR.SCIENCE is the Archive for Independent &amp; Rigorous Research. It is a versioned registry where new research is checked by named AI models that look for errors, then approved or declined by a human editor. Canonical manuscripts, prompts, model identities, findings, code, provenance and verification records remain inspectable. Existing paper identifiers and preserved versions remain unchanged.</p></article>
   <article><h2>Two publication types</h2><p>Research papers present complete scholarly arguments at paper scale. Technical notes preserve narrower but rigorous results, proofs, formalizations, methods, replications, negative results, software or protocols. A note is different in scope, not exempt from evidence or integrity requirements.</p></article>
   <article><h2>What AIRR is not</h2><p>AIRR is not a journal, a replacement for expert peer review or a guarantee that a scientific claim is true. Activity rankings measure use; the separate scientific ranking reports version-locked model opinions with their provenance and limits.</p></article>
   <article><h2>Governance</h2><p>Lluis Eriksson is founder, registry operator, responsible editor and data controller. Every decision is human. Under AIRR-FOUNDER-1.0, he may accept his own work after two distinct model reviews, with his author-editor role and prior model participation disclosed. Other conflicts and appeals require an independent editor.</p></article>
   <article><h2>Preservation</h2><p>Stable identifiers are independent of GitHub. Versioned releases distribute generated and large files; future object storage and independent preservation mirrors can replace any provider without changing citations.</p></article>
   <article><h2>Submissions</h2><p>AIRR does not currently charge for submission, assessment, publication or withdrawal. Authors use one direct private form without requesting an invitation. Manuscripts enter a separate quarantine service; GitHub and ordinary email are never manuscript channels.</p></article>
-  <article><h2>Frontier expertise</h2><p>AIRR deliberately uses the strongest available frontier models as tireless adversarial referees. Published assessments remain comparable over time: model, date, score, strengths, weaknesses, possible errors and novelty candidates are preserved rather than overwritten.</p></article>
+  <article><h2>How AI screening is used</h2><p>AIRR asks strong current AI models to look for errors, gaps and overstated claims in the exact version submitted. Their reports stay comparable over time: model, date, score, strengths, weaknesses, possible errors and novelty candidates are preserved rather than overwritten. They do not replace expert peer review.</p></article>
 </section>
 """
     canonical = f"{canonical_url}/about/" if canonical_url else ""
@@ -1338,7 +1391,7 @@ def build_submit(
         rows.append(f"""
 <li class="ranked-paper">
   <span class="rank-number">{rank:02d}</span>
-  <div class="rank-paper-main"><span class="rank-record">{esc(record_details)}</span><h3><a href="{base}/{record_route(paper.metadata)}/{quote(paper.id)}/">{esc(paper.metadata['title'])}</a></h3><p>{authors}{keywords_html}</p><div class="rank-assessment">{assessment_badge(paper, assessments, f'{base}/{record_route(paper.metadata)}/{quote(paper.id)}/#model-assessments')}</div></div>
+  <div class="rank-paper-main"><span class="rank-record">{esc(record_details)}</span><h3><a href="{base}/{record_route(paper.metadata)}/{quote(paper.id)}/">{esc(paper.metadata['title'])}</a></h3><p>{authors}{keywords_html}</p></div>
   <div class="rank-metric"><strong>{value:,}</strong><span>{esc(metric_label)}</span></div>
 </li>""")
     if not rows:
@@ -1680,8 +1733,9 @@ def main() -> int:
     shutil.copy2(SITE_DIR / "search.js", OUTPUT_DIR / "assets" / "search.js")
     shutil.copy2(SITE_DIR / "reader.js", OUTPUT_DIR / "assets" / "reader.js")
     shutil.copy2(SITE_DIR / "analytics.js", OUTPUT_DIR / "assets" / "analytics.js")
-    for asset in ("subjects.js", "subject-selection.js", "lluis-eriksson.jpg"):
+    for asset in ("subjects.js", "subject-selection.js", "lluis-eriksson.jpg", "math.js", "airr-logo-light.png"):
         shutil.copy2(SITE_DIR / asset, OUTPUT_DIR / "assets" / asset)
+    shutil.copytree(SITE_DIR / "vendor" / "katex", OUTPUT_DIR / "assets" / "katex", ignore=shutil.ignore_patterns("README.md"))
     write(OUTPUT_DIR / "assets" / "subjects.json", json.dumps(public_vocabulary(papers), ensure_ascii=False, separators=(",", ":")) + "\n")
     search_data = json.dumps(search_records(papers, base), ensure_ascii=False, separators=(",", ":")) + "\n"
     search_version = hashlib.sha256(search_data.encode("utf-8")).hexdigest()[:12]
