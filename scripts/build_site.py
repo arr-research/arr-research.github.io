@@ -47,6 +47,8 @@ SITE_DIR = ROOT / "site"
 OUTPUT_DIR = ROOT / "_site"
 AUTHORS_FILE = ROOT / "registry" / "authors.json"
 SITE_NAME = "AIRR.SCIENCE"
+# An empty collection in the menu reads as an abandoned section; main() sets this.
+NOTES_PUBLISHED = False
 SITE_FULL_NAME = "Archive for Independent & Rigorous Research"
 
 
@@ -257,7 +259,7 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
       <details class="nav-more"><summary><span class="nav-more-long">About &amp; more</span><span class="nav-more-short">More</span></summary><div>
         <a href="{base}/about/">About AIRR</a><a href="{base}/protocol/">How screening works</a>
         <a href="{base}/assessments/">Model screening reports</a><a href="{base}/governance/">Governance</a>
-        <a href="{base}/notes/">Technical notes</a><a href="{base}/support/">Support AIRR</a>
+        {f'<a href="{base}/notes/">Technical notes</a>' if NOTES_PUBLISHED else ''}<a href="{base}/support/">Support AIRR</a>
         <a href="{base}/contact/">Contact</a>
       </div></details>
     </nav>
@@ -355,6 +357,21 @@ def status_badge(value: str) -> str:
     hint = STATUS_HINTS.get(value)
     title = f' title="{esc(hint)}"' if hint else ""
     return f'<span class="badge badge-{esc(value)}"{title}>{esc(STATUS_LABELS.get(value, value.title()))}</span>'
+
+
+LICENSE_LABELS = {"LicenseRef-Author-Retained": "All rights retained by the author"}
+
+
+def paper_facts(metadata: dict, timestamp: dict, subjects_html: str) -> str:
+    """Short record facts beside the abstract; full identifiers stay in the record section."""
+    license_id = metadata["licenses"]["manuscript"]
+    rows = [
+        ("Version", f'{esc(metadata["version"])} · {display_date(paper_chronology(metadata, timestamp))}'),
+        ("Identifier", esc(metadata["id"])),
+        ("Subjects", subjects_html or "—"),
+        ("License", esc(LICENSE_LABELS.get(license_id, license_id))),
+    ]
+    return '<dl class="paper-facts">' + "".join(f"<div><dt>{label}</dt><dd>{value}</dd></div>" for label, value in rows) + "</dl>"
 
 
 def review_status(metadata: dict) -> str:
@@ -747,7 +764,7 @@ def build_papers_index(papers: list, timestamps: dict, base: str, canonical_url:
     pagination += f'<a href="{next_url}">Next 50 →</a>' if page < page_count else '<span>Next 50 →</span>'
     pagination += '</nav>'
     content = f"""
-<section class="page-intro"><span>Public catalogue</span><h1>Research papers</h1><p>Read and cite every version. Records marked Screened were checked by named AI models and approved by the editor; working papers are not yet screened and historical imports are labelled separately. None of these records is peer reviewed.</p>{search_form(base)}<div class="browse-tools"><a href="{base}/subjects/">Browse by subject</a><a href="{base}/search/">Filter by subject, year and status</a></div></section>
+<section class="page-intro"><span>Public catalogue</span><h1>Research papers</h1>{search_form(base, help_text=False)}<div class="browse-tools"><a href="{base}/subjects/">Browse by subject</a><a href="{base}/search/">Filter by subject, year and status</a></div></section>
 {pagination}
 <section class="catalogue">{cards}</section>
 {pagination}
@@ -1049,7 +1066,7 @@ def build_paper_page(
     if metadata.get("doi"):
         links.append(f'<a class="text-link" href="https://doi.org/{esc(metadata["doi"])}">DOI {esc(metadata["doi"])}</a>')
     keywords = "".join(f'<li><a href="{base}/search/?q={quote(keyword)}">{esc(keyword)}</a></li>' for keyword in metadata.get("keywords", []))
-    subjects = ''.join(f'<a href="{base}/subjects/{subject_slug(subject)}/">{esc(subject)}</a>' for subject in metadata.get('subjects', []))
+    subjects = '<br>'.join(f'<a href="{base}/subjects/{subject_slug(subject)}/">{esc(subject)}</a>' for subject in metadata.get('subjects', []))
     evaluators = "".join(
         f'<li><strong>{esc(item["model_id"])}</strong><span>{esc(item["provider"])}' +
         (f' · reasoning effort {esc(item["reasoning_effort"])}' if item.get("reasoning_effort") else '') +
@@ -1176,9 +1193,10 @@ def build_paper_page(
   <h1>{esc(metadata['title'])}</h1>
   <p class="paper-authors">{authors}</p>
   {review_status(metadata)}
-  <div class="download-row">{''.join(links)}</div>
-  <section class="abstract"><span>{summary_label}</span><p>{esc(metadata['abstract'])}</p></section>
-  <div class="paper-subjects" aria-label="Subjects">{subjects}</div>
+  <div class="paper-head">
+    <section class="abstract"><span>{summary_label}</span><p>{esc(metadata['abstract'])}</p></section>
+    <aside class="paper-actions" aria-label="Read and cite this version"><div class="download-row">{''.join(links)}</div>{paper_facts(metadata, timestamp, subjects)}</aside>
+  </div>
   <nav class="paper-jump" aria-label="On this page"><a href="#cite">Cite</a><a href="#versions">Versions</a><a href="#evidence">Verification</a><a href="#model-assessments">Assessments</a><a href="#disclosures">Disclosures</a></nav>
   {preview}
   {citation_section}
@@ -1695,6 +1713,8 @@ def main() -> int:
     groups = group_paper_versions(all_versions)
     papers = [versions[-1] for versions in groups.values()]
     papers.sort(key=lambda paper: (paper_chronology(paper.metadata, timestamps[(paper.id, paper.version)]), paper.id), reverse=True)
+    global NOTES_PUBLISHED
+    NOTES_PUBLISHED = any(paper.record_type == "technical_note" for paper in papers)
     try:
         profiles, author_lookup = load_authors(papers)
         metrics = load_metrics(args.metrics_file)

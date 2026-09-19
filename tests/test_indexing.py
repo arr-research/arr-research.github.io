@@ -226,6 +226,16 @@ class IndexingTests(unittest.TestCase):
         self.assertIn('<details class="record-ids"><summary>Identifiers and checksum</summary>', text)
         self.assertIn('title="Admitted after checks by named AI models and editor approval. Not peer reviewed.">Screened</span>', text)
 
+    def test_record_page_pairs_abstract_with_actions_and_facts(self):
+        text = self.render()
+        head = text[text.index('<div class="paper-head">'):text.index('<nav class="paper-jump"')]
+        self.assertIn('<section class="abstract">', head)
+        self.assertIn('<aside class="paper-actions" aria-label="Read and cite this version">', head)
+        self.assertIn(">Read PDF</a>", head)
+        self.assertIn("<dt>Identifier</dt>", head)
+        self.assertIn("<dt>License</dt>", head)
+        self.assertNotIn('class="paper-subjects"', text)
+
     def test_author_ranking_waits_for_several_authors(self):
         def page(count):
             profiles = [{"id": f"a{i}", "name": f"Author {i}"} for i in range(count)]
