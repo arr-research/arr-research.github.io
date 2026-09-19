@@ -8,7 +8,7 @@ founder, registry operator, responsible editor and GDPR data controller. AIRR is
 presented as a registered company; “VD/CEO” is not used.
 
 - General, deposit, privacy, editorial appeal and legal notices:
-  **lluiseriksson@gmail.com**
+  **editor@airr.science**
 - Postal contact: **Lluis Eriksson, Ångstavägen 44, 834 99 Tandsbyn, Sweden**.
 - Security reports: follow `SECURITY.md`; do not disclose a vulnerability publicly.
 - No manuscript attachments or sensitive evidence by ordinary email. Ask for a
