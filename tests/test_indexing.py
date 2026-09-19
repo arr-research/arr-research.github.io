@@ -236,6 +236,15 @@ class IndexingTests(unittest.TestCase):
         self.assertIn("<dt>License</dt>", head)
         self.assertNotIn('class="paper-subjects"', text)
 
+    def test_every_page_has_one_large_share_card(self):
+        record = self.render(canonical="https://airr.science")
+        plain = build_site.page_shell(title="t", description="d", content="", base="", canonical="https://airr.science/about/")
+        for text in (record, plain):
+            self.assertRegex(text, r'<meta property="og:image" content="https://airr\.science(/preview)?/assets/og-image\.png">')
+            self.assertEqual(text.count('name="twitter:card"'), 1)
+            self.assertIn('content="summary_large_image"', text)
+        self.assertNotIn("og:image", build_site.page_shell(title="t", description="d", content="", base=""))
+
     def test_author_ranking_waits_for_several_authors(self):
         def page(count):
             profiles = [{"id": f"a{i}", "name": f"Author {i}"} for i in range(count)]

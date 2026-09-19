@@ -214,6 +214,24 @@ def math_assets(base: str) -> str:
     )
 
 
+def share_image_tags(canonical: str, base: str, card_declared: bool = False) -> str:
+    """Link previews in social apps, chat tools and AI assistants use one archive card."""
+    if not canonical:
+        return ""
+    parts = urlsplit(canonical)
+    image = f"{parts.scheme}://{parts.netloc}{base}/assets/og-image.png"
+    tags = [
+        f'<meta property="og:image" content="{esc(image)}">',
+        '<meta property="og:image:width" content="1200">',
+        '<meta property="og:image:height" content="630">',
+        '<meta property="og:image:alt" content="AIRR.SCIENCE — open research papers in mathematics, physics and beyond">',
+        f'<meta name="twitter:image" content="{esc(image)}">',
+    ]
+    if not card_declared:
+        tags.append('<meta name="twitter:card" content="summary_large_image">')
+    return "\n  ".join(tags)
+
+
 def page_shell(*, title: str, description: str, content: str, base: str, canonical: str = "", head_extra: str = "", math: bool | None = None) -> str:
     canonical_tag = f'<link rel="canonical" href="{esc(canonical)}">' if canonical else ""
     analytics = ''
@@ -223,6 +241,7 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
     if math is None:
         math = "$" in content or "\\(" in content
     math_tags = math_assets(base) if math else ""
+    share_tags = share_image_tags(canonical, base, card_declared="twitter:card" in head_extra)
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -235,6 +254,7 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
   <meta name="application-name" content="{SITE_NAME}">
   <meta property="og:site_name" content="{SITE_NAME}">
   {canonical_tag}
+  {share_tags}
   {head_extra}
   <link rel="icon" href="{base}/favicon.ico" sizes="16x16 32x32 48x48">
   <link rel="icon" type="image/png" href="{base}/favicon-96x96.png" sizes="96x96">
@@ -615,7 +635,7 @@ def scholarly_head(metadata: dict, *, canonical: str, release_url: str = "", pdf
             f'<meta property="og:description" content="{esc(snippet)}">',
             f'<meta property="og:url" content="{esc(canonical)}">',
             f'<meta property="article:published_time" content="{esc(metadata["date"])}">',
-            '<meta name="twitter:card" content="summary">',
+            '<meta name="twitter:card" content="summary_large_image">',
             f'<meta name="twitter:title" content="{esc(title)}">',
             f'<meta name="twitter:description" content="{esc(snippet)}">',
         ]
@@ -1597,7 +1617,7 @@ def write_sitemaps(papers: list, groups: dict, profiles: list[dict], canonical_u
         (f"{canonical_url}/papers/", latest_date),
         (f"{canonical_url}/search/", latest_date),
         (f"{canonical_url}/subjects/", latest_date),
-        (f"{canonical_url}/notes/", latest_date),
+        *([(f"{canonical_url}/notes/", latest_date)] if NOTES_PUBLISHED else []),
         (f"{canonical_url}/authors/", latest_date),
         (f"{canonical_url}/rankings/", latest_date),
         (f"{canonical_url}/assessments/", latest_date),
@@ -1755,7 +1775,7 @@ def main() -> int:
     shutil.copy2(SITE_DIR / "search.js", OUTPUT_DIR / "assets" / "search.js")
     shutil.copy2(SITE_DIR / "reader.js", OUTPUT_DIR / "assets" / "reader.js")
     shutil.copy2(SITE_DIR / "analytics.js", OUTPUT_DIR / "assets" / "analytics.js")
-    for asset in ("subjects.js", "subject-selection.js", "lluis-eriksson.jpg", "math.js", "airr-logo-light.png"):
+    for asset in ("subjects.js", "subject-selection.js", "lluis-eriksson.jpg", "math.js", "airr-logo-light.png", "og-image.png"):
         shutil.copy2(SITE_DIR / asset, OUTPUT_DIR / "assets" / asset)
     shutil.copytree(SITE_DIR / "vendor" / "katex", OUTPUT_DIR / "assets" / "katex", ignore=shutil.ignore_patterns("README.md"))
     write(OUTPUT_DIR / "assets" / "subjects.json", json.dumps(public_vocabulary(papers), ensure_ascii=False, separators=(",", ":")) + "\n")
