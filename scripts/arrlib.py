@@ -505,7 +505,7 @@ def validate_paper(paper: Paper) -> list[str]:
     if not isinstance(deposit, dict):
         errors.append("deposit: an object is required")
     else:
-        if deposit.get("relationship") not in {"author", "rights_holder", "authorized_agent"}:
+        if deposit.get("relationship") not in {"author", "rights_holder", "authorized_agent", "authorized_depositor"}:
             errors.append("deposit.relationship: invalid value")
         if deposit.get("deposit_authorized") is not True:
             errors.append("deposit.deposit_authorized: must be true")
@@ -539,8 +539,8 @@ def validate_paper(paper: Paper) -> list[str]:
     if not isinstance(ai, dict):
         errors.append("ai_assistance: an object is required")
     else:
-        if not isinstance(ai.get("used"), bool):
-            errors.append("ai_assistance.used: a boolean is required")
+        if ai.get("used") is not None and not isinstance(ai.get("used"), bool):
+            errors.append("ai_assistance.used: true, false or null is required")
         if not isinstance(ai.get("statement"), str) or len(ai["statement"].strip()) < 10:
             errors.append("ai_assistance.statement: a meaningful statement is required")
 
