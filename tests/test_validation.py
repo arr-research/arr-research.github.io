@@ -119,6 +119,22 @@ class PaperValidationTests(unittest.TestCase):
             paper = self.make_paper(Path(temporary))
             self.assertEqual(validate_paper(paper), [])
 
+    def test_external_working_paper_can_disclose_unknown_ai_use_without_inventing_nonuse(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            paper = self.make_paper(Path(temporary))
+            paper.metadata["schema_version"] = "1.4"
+            paper.metadata["status"] = "working_paper"
+            paper.metadata["screening"]["human_signoff"] = False
+            paper.metadata["editorial"]["decision"] = "working_deposit"
+            paper.metadata["deposit"]["relationship"] = "authorized_depositor"
+            paper.metadata["ai_assistance"] = {
+                "used": None,
+                "statement": "AI assistance was not disclosed; its status is unknown.",
+            }
+            self.assertEqual(validate_paper(paper), [])
+            paper.metadata["ai_assistance"]["used"] = "unknown"
+            self.assertIn("ai_assistance.used: true, false or null is required", validate_paper(paper))
+
     def test_initial_version_still_requires_its_storage_date(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             paper = self.make_paper(Path(temporary))
