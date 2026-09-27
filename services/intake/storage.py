@@ -48,11 +48,15 @@ def receive(app, a, upload, data, reserve=None):
             privacy_version,created_at,updated_at,classification_json,submission_channel,agent_provenance_json)
             VALUES(?,?,?,?,?,?,?,?,?,'pending','Awaiting approved scanner.','quarantined',?,1,?,?,?,?,?,?,?)''',
             (case_id,submitter['id'],data['title'][:500],data['authors'][:1000],data['abstract'][:5000],
-             original,stored,checksum,size,conflict,a.TERMS_VERSION,a.PRIVACY_VERSION,a.iso(),a.iso(),
+             original,stored,checksum,size,conflict,data.get('deposit_policy', a.TERMS_VERSION),a.PRIVACY_VERSION,a.iso(),a.iso(),
              json.dumps(data['classification'],ensure_ascii=False),data.get('channel','human'),
              json.dumps(data.get('agent_provenance',{}),ensure_ascii=False)))
         if reserve:
             reserve(db, case_id)
+        anonymous = data.get('publication_mode') == 'anonymous' or data['authors'].strip().casefold() == 'anonymous'
+        db.execute('UPDATE submissions SET publication_mode=?,originality_required=?,source_disclosure=? WHERE id=?',
+                   ('anonymous' if anonymous else data.get('publication_mode', 'standard'), int(anonymous or bool(data.get('originality_required'))),
+                    data.get('source_disclosure', ''), case_id))
         db.commit()
         committed = True
     finally:

@@ -1,0 +1,22 @@
+{% set originality = originality_state(submission) %}
+{% if originality.required %}<section class="card" id="originality"><h2>Originality before publication</h2>
+<p><strong>{{ 'Review complete: no unresolved concerns in the sources checked.' if originality.ready else 'Publication blocked: originality review pending or concerns remain.' }}</strong></p>
+<p>Check the exact PDF against AIRR, relevant public research and its cited sources. Review matches, quotations, reused figures, formulas, attribution and distribution rights. Similarity is not a plagiarism verdict; no check guarantees global originality. Do not send private text to another service without its separate permission.</p>
+<p class="fingerprint">{{ submission['sha256'] }}</p>
+<details><summary>Source and generation disclosure</summary><p class="preserve-lines">{{ submission['source_disclosure'] or 'No source disclosure supplied. Request it before clearance.' }}</p></details>
+<form method="post" action="{{ url_for('originality_scan', submission_id=submission['id']) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button>Compare extractable text with the AIRR public corpus</button></form>
+{% if originality.scan %}<details><summary>Latest local comparison · {{ originality.scan['created_at'] }}</summary><pre>{{ originality.scan['result_json'] }}</pre></details>
+<form method="post" action="{{ url_for('originality_review', submission_id=submission['id']) }}">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="sha256" value="{{ submission['sha256'] }}"><input type="hidden" name="scan_id" value="{{ originality.scan['id'] }}">
+{% for name,label in [('search_scope','Search scope and limitations'),('sources_checked','Public source URLs checked, methods and findings'),('match_adjudication','Assessment of each material match and duplicate'),('attribution_basis','Attribution, references, formulas and figures'),('rights_basis','Distribution rights and provenance evidence'),('privacy_check','Names and personal data in the PDF and its properties')] %}<label>{{ label }}<textarea name="{{ name }}" minlength="40" maxlength="8000" required></textarea></label>{% endfor %}
+<label>Result<select name="outcome"><option value="concerns">Concerns remain — block release</option><option value="clear">No unresolved concerns in the sources checked</option></select></label>
+<label><input type="checkbox" name="signed" required> I performed and documented these checks on this exact PDF. This is an editorial finding, not a guarantee of originality.</label><button>Sign originality review</button></form>{% endif %}
+{% if originality.review %}<details><summary>Latest signed finding · {{ originality.review['outcome'] }} · {{ originality.review['signed_at'] }}</summary><pre>{{ originality.review['evidence_json'] }}</pre></details>{% endif %}
+{% if submission['submission_channel']=='independent_agent' and originality.ready and originality.agent_request and originality.agent_request['publication_requested'] %}
+<form method="post" action="{{ url_for('independent_release', submission_id=submission['id']) }}"><h3>Verify authority for the requested public release</h3>
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="sha256" value="{{ submission['sha256'] }}">
+<p>An agent request is not a human signature or proof of ownership. Establish the distribution and licensing basis from inspectable evidence.</p>
+<p>Requested manuscript license: <strong>{{ originality.agent_request['requested_license'] }}</strong>. Requested public credit: <strong>{{ submission['authors'] }}</strong>.</p>
+<label>Evidence supporting this PDF's distribution under the requested license<textarea name="permission_evidence" minlength="80" maxlength="8000" required></textarea></label>
+<label><input type="checkbox" name="signed" required> I verified a sufficient distribution basis and the requested license.</label><button>Record editor-verified release authority</button></form>{% endif %}
+</section>{% endif %}

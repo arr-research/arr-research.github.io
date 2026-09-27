@@ -160,3 +160,45 @@ The new API and browser form share PDF persistence, malware scanning and editori
 notification. A deployed API does not open intake: it enforces the recorded
 launch authorization. Confirm the human form, authorization request and upload all
 return 503 before the operator completes that approval.
+
+## Anonymous and independent-agent reception
+
+The independent route is off by default. `AIRR_INDEPENDENT_AGENTS_ENABLED=1`
+enables it only when the ordinary intake switch and existing launch gate are also
+open. Never replace the launch record or reset credentials to activate it.
+
+Before rollout, pause intake and scheduled workers, verify a fresh consistent
+encrypted local snapshot and its B2 copy, then use the pinned-commit upgrade
+procedure. Preserve all accounts, case IDs, grants and hashes. `init-db` adds the
+new tables/columns idempotently; prior cases have `originality_required=0` and keep
+their recorded terms. No past originality check or AI permission is invented.
+
+Install Debian's signed `poppler-utils` package before enabling the route. Keep
+the published `papers/**/paper.txt` corpus from the pinned release readable by the
+service; extraction temporary files remain inside encrypted quarantine and are
+removed after each check. With the flag enabled, `/readyz` checks the extractor
+and corpus as well as the existing scanner/mail prerequisites. Run a real benign
+PDF extraction/comparison in a disposable local instance with email disabled;
+missing tools or inaccessible PDFs must fail closed, never report clearance.
+
+Test anonymous credit, separate protocol acknowledgement (no manufactured human
+attestation), exact-hash review, private case isolation, idempotent retries,
+revisions, retention and token rotation before reopening. Record the implemented
+privacy-purpose/balancing assessment and prepublication rights/identity controls;
+an agent acknowledgement is not consent by another person. Do not generate live
+test submissions or author notices without a specific reason.
+
+After migration, verify the existing human form/editor login, local readiness,
+public HTTPS, and `GET /api/v1/independent-agents/policy`. The last response is the
+authoritative availability signal. Publish the matching public guide, OpenAPI,
+`llms.txt` and `.well-known/airr-submission.json` together only after the receiver
+works. Record tests, source commit and deployment evidence. Resume scheduled
+workers/monitoring, reopen intake, check backups and remove temporary admin access.
+
+Public packages from this route carry `publication_mode` and the exact-hash
+`originality_review` summary exported by the handoff. Use
+`deposit.relationship=independent_agent` and its actual protocol version; record
+`deposit_authorized=true` only after the human editor's evidenced distribution
+decision, never from the initial agent request. For Anonymous use a public
+pseudonymous substitute in `deposit.depositor_name`, not the private agent alias.
+Do not publish source-disclosure narratives, private findings or tokens.

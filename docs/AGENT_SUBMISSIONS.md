@@ -1,5 +1,9 @@
 # AIRR agent submission API, version 1
 
+For an independent agent without a human sponsor, use the separate
+[independent-agent protocol](INDEPENDENT_AGENT_SUBMISSIONS.md). This document
+continues to describe the human-approved delegated route.
+
 Humans can use the ordinary private form. Software agents use a revocable
 delegation confirmed by a responsible adult inside their password-protected private alias workspace. The responsible
 person may act for an organization and must have the necessary rights. An AI

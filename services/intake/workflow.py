@@ -211,6 +211,9 @@ def install(app, a):
             if row['status'] in {'superseded', 'appeal_pending'}:
                 abort(409, 'Use the current revision or the independent appeal procedure.')
             if request.endpoint == 'record_model_review':
+                if row['submission_channel'] == 'independent_agent':
+                    from .originality import require_ready
+                    require_ready(a.get_db(), row)
                 if row['scan_status'] != 'clean' or row['status'] not in {'eligible', 'under_assessment', 'changes_requested'}:
                     abort(409, 'Only a clean, open case can receive an assessment.')
                 plan = current_plan(row['id'])
@@ -232,6 +235,9 @@ def install(app, a):
                     and row["founder_declared_by"] == user["id"])
 
     def can_accept(row, reviews):
+        from .originality import ready
+        if not ready(a.get_db(), row):
+            return False
         plan = current_plan(row['id'])
         if not plan or not plan['authorized_at'] or plan['manuscript_sha256'] != row['sha256']:
             return False
@@ -674,16 +680,25 @@ def install(app, a):
         releasable_states = {'eligible', 'under_assessment', 'changes_requested', 'awaiting_independent_decision', 'accepted_for_publication'}
         if row['scan_status'] != 'clean' or row['status'] not in releasable_states or not permission or permission['manuscript_sha256'] != row['sha256']:
             abort(409, 'A clean current version and its exact-version publication permission are required.')
+        from .originality import require_ready, public_summary
+        require_ready(a.get_db(), row)
+        from .independent_agents import release_ready
+        if not release_ready(a.get_db(), row, permission):
+            abort(409, 'Independent-agent release needs the editor-verified exact-PDF distribution and licensing basis.')
         # Export only the approved scholarly handoff. No email, bearer link, SMTP secret or private conversation.
         db = a.get_db()
         accepted = row['status'] == 'accepted_for_publication'
         editor_row = db.execute('SELECT display_name FROM users WHERE id=?', (row['decision_by'],)).fetchone() if row['decision_by'] else None
+        provenance = json.loads(row['agent_provenance_json'])
+        if row['publication_mode'] == 'anonymous':
+            provenance = {'source': 'self-declared agent', 'identity_verified': False, 'human_sponsor': False} if row['submission_channel'] == 'independent_agent' else {}
         manifest = {'submission_id': row['id'], 'revision': row['revision_number'], 'sha256': row['sha256'],
                      'title': row['title'], 'authors': row['authors'], 'abstract': row['abstract'],
                      'classification': json.loads(row['classification_json']), 'license': permission['license'],
                      'public_status': 'accepted' if accepted else 'working_paper',
                      'collection_notice': None if accepted else 'Working paper — not admitted to the AIRR accepted collection',
-                    'submission_channel': row['submission_channel'], 'agent_provenance': json.loads(row['agent_provenance_json']),
+                     'submission_channel': row['submission_channel'], 'agent_provenance': provenance,
+                     'publication_mode': row['publication_mode'], 'originality_review': public_summary(db, row),
                     'decision_reason': row['decision_reason'], 'decided_at': row['decided_at'],
                     'conflict_disclosed': bool(row['operator_conflict']),
                     'founder_authored': bool(row['founder_authored']),

@@ -6,11 +6,14 @@
 <form class="card" method="post" enctype="multipart/form-data">{% if g.revision_parent %}<input type="hidden" name="revision_of" value="{{ g.revision_parent['id'] }}"><p>Corrected revision of {{ g.revision_parent['id'] }}. This revision stays in your private workspace.</p>{% endif %}<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 <p class="meta">Private workspace: <strong>{{ g.user['display_name'] }}</strong> — no email or legal name is requested. This alias is not published automatically.</p>
 <label class="trap" aria-hidden="true">Website <input name="website" tabindex="-1" autocomplete="off"></label>
+<label>Submission route <select name="publication_mode"><option value="standard">Standard research deposit</option><option value="anonymous" {{ 'selected' if request.values.get('mode')=='anonymous' or request.form.get('publication_mode')=='anonymous' else '' }}>Anonymous or pseudonymous — originality checked before release</option></select></label>
+<p class="meta">AI agents without a human sponsor can use the <a href="{{ url_for('anonymous_help') }}">independent-agent route</a>.</p>
 <label>Title <input name="title" value="{{ request.form.get('title','') }}" maxlength="500" required></label><label>Public author names or aliases (optional) <input name="authors" value="{{ request.form.get('authors','') }}" maxlength="1000"></label>
 <p class="meta">Leave blank for Anonymous. Use only names or aliases you are authorized to credit.</p>
 {% include 'author-privacy-note.html' %}
 {% include 'subject-fields.html' %}
 <label>Abstract <textarea name="abstract" minlength="80" maxlength="5000" rows="8" required>{{ request.form.get('abstract','') }}</textarea></label><label>Paper PDF <input type="file" name="manuscript" accept="application/pdf,.pdf" required><span class="meta">One PDF, up to 25 MiB. Check the file and author credit before sending.</span></label>
+<label>Sources, earlier versions and reuse (especially for anonymous work)<textarea name="source_disclosure" maxlength="5000" rows="4">{{ request.form.get('source_disclosure','') }}</textarea></label><p class="meta">Describe references, reused text/figures, generation tools and evidence supporting your right to share them. Anonymous papers stay private until originality, attribution, rights and PDF identity checks are documented.</p>
 <fieldset class="submission-agreement"><legend>Before you send</legend>
 <label><input type="checkbox" name="adult" required> I am at least 18 years old.</label>
 <label><input type="checkbox" name="authority" required> I have the rights or permission to submit this paper, and my disclosures are accurate.</label>

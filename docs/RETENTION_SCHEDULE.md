@@ -14,13 +14,15 @@ hold is skipped and the hold is reviewed at least every 90 days.
 | Expired/incomplete private submission | 30 days without completion | 30 days after expiry notice |
 | Superseded private revision | replacement received | 30 days |
 | Accepted private working copy | verified immutable public release | 30 days |
+| Private source disclosure and detailed originality/rights evidence | case-copy erasure deadline | erase narrative, match details and source disclosure; retain only minimal exact-hash outcome/date/policy/editor records |
+| Independent-agent credential/provenance | token expiry or account inactivity | token valid 90 days unless rotated/revoked; erase private profile and revoke token at the existing 180-day inactive-account deadline when no active case |
 | Minimal case/decision record | terminal decision | 3 years, then erase or irreversibly aggregate |
 | Private workspace alias and credentials | no use for 180 days, no active private case, and no recent case activity | deactivate, erase alias/password/recovery hash, revoke agent grants and pseudonymize the legacy user row; minimal case records follow their separate schedule |
 | Public accepted record | publication | preserved long-term under the deposit license; corrections/withdrawals use versioning/tombstones |
 
 “Minimal case/decision record” means case identifier, work title, submitter identity
 or a pseudonymous substitute where feasible, integrity hash, agreement versions,
-dates, decision/reason code, conflict handling and erasure evidence. It excludes the
+dates, originality outcome/scan reference and editor, publication license, decision/reason code, conflict handling and erasure evidence. It excludes the
 rejected manuscript bytes and detailed abstract after their deadline.
 
 The commands `mark-published` and `retention-sweep` start and enforce private-copy,
