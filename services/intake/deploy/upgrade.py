@@ -23,6 +23,14 @@ MONITOR = 'airr-intake-monitor'
 BACKGROUND = ['airr-intake-' + name for name in ('mail', 'maintenance', 'backup', 'offsite')]
 
 
+def deployable_path(relative):
+    exact = {'scripts/__init__.py', 'scripts/subjectlib.py', 'scripts/donationlib.py',
+             'site/donations.json', 'site/subjects.js',
+             'registry/euroscivoc.json', 'registry/subject-extensions.json'}
+    return (relative.startswith('services/intake/') or relative in exact or
+            (relative.startswith('papers/') and relative.endswith('/paper.txt')))
+
+
 def run(*command):
     subprocess.run(command, check=True, stdout=subprocess.DEVNULL)
 
@@ -92,16 +100,13 @@ def main():
     archive_hash = hashlib.sha256(archive).hexdigest()
     release.mkdir(mode=0o755)
     release.chmod(0o755)
-    exact = {'scripts/__init__.py', 'scripts/subjectlib.py', 'scripts/donationlib.py',
-             'site/donations.json', 'site/subjects.js',
-             'registry/euroscivoc.json', 'registry/subject-extensions.json'}
     with tarfile.open(fileobj=io.BytesIO(archive)) as source:
         for member in source.getmembers():
             parts = member.name.split('/', 1)
             if len(parts) != 2:
                 continue
             relative = parts[1]
-            if not (relative.startswith('services/intake/') or relative in exact):
+            if not deployable_path(relative):
                 continue
             target = release / relative
             assert target.resolve().is_relative_to(release)
@@ -115,8 +120,9 @@ def main():
                 target.chmod(0o644)
             else:
                 raise RuntimeError('Source archive contains an unsupported link')
-    for filename in ('app.py', 'accounts.py', 'agents.py', 'workflow.py', 'pageviews.py'):
+    for filename in ('app.py', 'accounts.py', 'agents.py', 'workflow.py', 'pageviews.py', 'independent_agents.py', 'originality.py'):
         assert (release / 'services/intake' / filename).is_file()
+    assert any((release / 'papers').glob('**/paper.txt')), 'Public originality corpus must accompany this release'
     # The public-path allowlist is generated, not part of Git. Preserve the last
     # verified manifest; the collector's existing refresh mechanism updates it.
     manifest = previous / 'site/analytics-pages.json'

@@ -6,11 +6,19 @@ from unittest.mock import patch
 
 import test_validation as fixtures
 from scripts import build_site, arrlib
+from services.intake.deploy.upgrade import deployable_path
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 class IndependentDiscoveryTests(unittest.TestCase):
+    def test_server_package_includes_public_comparison_texts_only(self):
+        self.assertTrue(deployable_path('papers/2026/09/00/ARR-EXAMPLE/paper.txt'))
+        self.assertTrue(deployable_path('papers/2026/09/00/ARR-EXAMPLE/versions/v1/paper.txt'))
+        self.assertFalse(deployable_path('papers/2026/09/00/ARR-EXAMPLE/paper.pdf'))
+        self.assertFalse(deployable_path('papers/2026/09/00/ARR-EXAMPLE/screening/report.json'))
+        self.assertFalse(deployable_path('outputs/private/paper.txt'))
+
     def test_independent_and_delegated_routes_remain_distinct_and_discoverable(self):
         page = build_site.build_agents('/preview', 'https://example.test/preview', 'https://submit.airr.science')
         for link in ('/preview/independent-agents.md', '/preview/independent-agents.openapi.json',
