@@ -768,7 +768,7 @@ def build_home(papers: list, timestamps: dict, base: str, canonical_url: str, au
         website = {"@context": "https://schema.org", "@type": "WebSite", "@id": f"{canonical}#website", "name": SITE_NAME, "alternateName": ["AIRR", SITE_FULL_NAME, "airr.science"], "url": canonical}
         structured = json.dumps(website, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
         identity = f'<meta property="og:type" content="website">\n  <meta property="og:title" content="{SITE_NAME} — {esc(SITE_FULL_NAME)}">\n  <meta property="og:url" content="{esc(canonical)}">\n  <script type="application/ld+json">{structured}</script>'
-    return page_shell(title=f"{SITE_NAME} — {SITE_FULL_NAME}", description="Read and cite open research in mathematics, physics and beyond. Explore versioned papers, reproducible evidence and disclosed model assessments on AIRR.", content=content, base=base, canonical=canonical, head_extra=verification + "\n  " + identity)
+    return page_shell(title=f"{SITE_NAME} — {SITE_FULL_NAME}", description="Read open research in mathematics and physics. AIRR welcomes papers from humans and independent AI agents, with originality checks before publication.", content=content, base=base, canonical=canonical, head_extra=verification + "\n  " + identity)
 
 
 def build_papers_index(papers: list, timestamps: dict, base: str, canonical_url: str, author_lookup: dict[str, dict] | None = None, metrics: dict | None = None, page: int = 1, page_size: int = 50) -> str:
@@ -1621,53 +1621,55 @@ def write_catalogue_exports(papers: list, groups: dict, timestamps: dict) -> Non
 def write_sitemaps(papers: list, groups: dict, profiles: list[dict], canonical_url: str) -> None:
     if not canonical_url:
         return
-    latest_date = max(paper.metadata["date"] for paper in papers)
+    # Cited manuscript dates are not web-page modification dates. Omit optional
+    # lastmod until actual per-page update evidence is available; scheduled builds
+    # and unrelated new papers must not invent freshness signals.
     urls = [
-        (f"{canonical_url}/", latest_date),
-        (f"{canonical_url}/papers/", latest_date),
-        (f"{canonical_url}/search/", latest_date),
-        (f"{canonical_url}/subjects/", latest_date),
-        *([(f"{canonical_url}/notes/", latest_date)] if NOTES_PUBLISHED else []),
-        (f"{canonical_url}/authors/", latest_date),
-        (f"{canonical_url}/rankings/", latest_date),
-        (f"{canonical_url}/assessments/", latest_date),
-        (f"{canonical_url}/protocol/", latest_date),
-        (f"{canonical_url}/submit/", latest_date),
-        (f"{canonical_url}/agents/", latest_date),
-        (f"{canonical_url}/licensing/", latest_date),
-        (f"{canonical_url}/about/", latest_date),
-        (f"{canonical_url}/support/", latest_date),
-        (f"{canonical_url}/privacy/", latest_date),
-        (f"{canonical_url}/terms/", latest_date),
-        (f"{canonical_url}/governance/", latest_date),
-        (f"{canonical_url}/contact/", latest_date),
+        f"{canonical_url}/",
+        f"{canonical_url}/papers/",
+        f"{canonical_url}/search/",
+        f"{canonical_url}/subjects/",
+        *([f"{canonical_url}/notes/"] if NOTES_PUBLISHED else []),
+        f"{canonical_url}/authors/",
+        f"{canonical_url}/rankings/",
+        f"{canonical_url}/assessments/",
+        f"{canonical_url}/protocol/",
+        f"{canonical_url}/submit/",
+        f"{canonical_url}/agents/",
+        f"{canonical_url}/licensing/",
+        f"{canonical_url}/about/",
+        f"{canonical_url}/support/",
+        f"{canonical_url}/privacy/",
+        f"{canonical_url}/terms/",
+        f"{canonical_url}/governance/",
+        f"{canonical_url}/contact/",
     ]
-    urls.extend((f"{canonical_url}/authors/{profile['id']}/", latest_date) for profile in profiles)
+    urls.extend(f"{canonical_url}/authors/{profile['id']}/" for profile in profiles)
     for group in subject_groups(papers):
         root = f"{canonical_url}/subjects/{group['slug']}/"
-        urls.append((root, latest_date))
-        urls.extend((f"{root}page/{page}/", latest_date) for page in range(2, (len(group['papers']) + 49) // 50 + 1))
+        urls.append(root)
+        urls.extend(f"{root}page/{page}/" for page in range(2, (len(group['papers']) + 49) // 50 + 1))
     paper_page_count = max(1, (sum(paper.record_type == "research_paper" for paper in papers) + 49) // 50)
-    urls.extend((f"{canonical_url}/papers/page/{page}/", latest_date) for page in range(2, paper_page_count + 1))
+    urls.extend(f"{canonical_url}/papers/page/{page}/" for page in range(2, paper_page_count + 1))
     submit_page_count = max(1, (sum(paper.record_type == "research_paper" for paper in papers) + 49) // 50)
-    urls.extend((f"{canonical_url}/submit/page/{page}/", latest_date) for page in range(2, submit_page_count + 1))
-    urls.extend((f"{canonical_url}/{record_route(paper.metadata)}/{paper.id}/", paper.metadata["date"]) for paper in papers)
+    urls.extend(f"{canonical_url}/submit/page/{page}/" for page in range(2, submit_page_count + 1))
+    urls.extend(f"{canonical_url}/{record_route(paper.metadata)}/{paper.id}/" for paper in papers)
     for paper in papers:
         route = record_route(paper.metadata)
         urls.extend(
-            (f"{canonical_url}/{route}/{paper.id}/versions/{version.version}/", version.metadata["date"])
+            f"{canonical_url}/{route}/{paper.id}/versions/{version.version}/"
             for version in groups[paper.id]
         )
     chunks = [urls[index : index + 10_000] for index in range(0, len(urls), 10_000)]
     if len(chunks) == 1:
-        sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"  <url><loc>{esc(url)}</loc><lastmod>{esc(date)}</lastmod></url>\n" for url, date in chunks[0]) + "</urlset>\n"
+        sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"  <url><loc>{esc(url)}</loc></url>\n" for url in chunks[0]) + "</urlset>\n"
         write(OUTPUT_DIR / "sitemap.xml", sitemap)
         return
 
     sitemap_links = []
     for number, chunk in enumerate(chunks, start=1):
         filename = f"sitemaps/sitemap-{number:05d}.xml"
-        sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"  <url><loc>{esc(url)}</loc><lastmod>{esc(date)}</lastmod></url>\n" for url, date in chunk) + "</urlset>\n"
+        sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"  <url><loc>{esc(url)}</loc></url>\n" for url in chunk) + "</urlset>\n"
         write(OUTPUT_DIR / filename, sitemap)
         sitemap_links.append(f"  <sitemap><loc>{esc(canonical_url + '/' + filename)}</loc></sitemap>\n")
     index = '<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(sitemap_links) + "</sitemapindex>\n"
