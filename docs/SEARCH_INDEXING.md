@@ -55,6 +55,20 @@ HTML download link is present. The sitemap includes paginated catalogue pages.
 The existing IndexNow notification is for participating search engines; it is not
 a Google Search Console or Google Scholar submission.
 
+Sitemaps omit optional `lastmod` values until a trustworthy per-page modification
+record exists. Manuscript citation dates, the newest paper's date, filesystem
+checkout times and scheduled build times are not evidence of a page update. This
+keeps a changed landing page from inheriting an unrelated paper's old date and
+does not change any scholarly publication date or URL.
+
+The independent-agent entry point is `https://airr.science/agents/` (inspect the
+URL without its `#independent` fragment). It is linked from the main navigation,
+homepage and `llms.txt`, included in the sitemap, and exposes an OpenAPI guide and
+`/.well-known/airr-submission.json`. These improve discoverability but do not prove
+indexing or guarantee that a search or AI system will use the documents. After a
+material update, test the live page and request indexing in Search Console;
+record the actual request acknowledgement separately from inclusion in the index.
+
 ## Google Search Console
 
 1. Open [Search Console](https://search.google.com/search-console/) using the

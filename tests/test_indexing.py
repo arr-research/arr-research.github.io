@@ -8,6 +8,7 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+import xml.etree.ElementTree as ET
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
@@ -38,6 +39,20 @@ class IndexingTests(unittest.TestCase):
             "release_tag": f"{self.paper.id}-v1",
         }
         self.cache = self.root / "cache"
+
+    def test_sitemap_keeps_discovery_urls_without_using_cited_dates_as_updates(self):
+        self.paper.metadata["date"] = "1999-01-02"
+        with patch.object(build_site, "OUTPUT_DIR", self.root):
+            build_site.write_sitemaps([self.paper], {self.paper.id: [self.paper]},
+                                      [{"id": "example-author"}], SITE)
+        xml = ET.fromstring((self.root / "sitemap.xml").read_text())
+        ns = {"s": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+        urls = {item.text for item in xml.findall("s:url/s:loc", ns)}
+        self.assertTrue({SITE + "/", SITE + "/agents/", SITE + "/authors/example-author/",
+                         f"{SITE}/papers/{self.paper.id}/",
+                         f"{SITE}/papers/{self.paper.id}/versions/v1/"}.issubset(urls))
+        self.assertFalse(xml.findall("s:url/s:lastmod", ns))
+        self.assertEqual(self.paper.metadata["date"], "1999-01-02")
 
     def historical(self):
         self.paper.metadata["status"] = "archived"
