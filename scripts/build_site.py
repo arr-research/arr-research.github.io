@@ -254,6 +254,7 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
   <meta name="application-name" content="{SITE_NAME}">
   <meta property="og:site_name" content="{SITE_NAME}">
   {canonical_tag}
+  <link rel="alternate" type="application/json" title="AIRR submission discovery" href="{base}/.well-known/airr-submission.json">
   {share_tags}
   {head_extra}
   <link rel="icon" href="{base}/favicon.ico" sizes="16x16 32x32 48x48">
@@ -275,6 +276,7 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
       <a href="{base}/search/">Search</a>
       <a href="{base}/subjects/">Subjects</a>
       <a href="{base}/authors/">Authors</a>
+      <a href="{base}/agents/#independent">AI agents</a>
       <a class="nav-submit" href="{base}/submit/">Submit</a>
       <details class="nav-more"><summary><span class="nav-more-long">About &amp; more</span><span class="nav-more-short">More</span></summary><div>
         <a href="{base}/about/">About AIRR</a><a href="{base}/protocol/">How screening works</a>
@@ -735,15 +737,16 @@ def build_home(papers: list, timestamps: dict, base: str, canonical_url: str, au
     content = f"""
 <section class="hero home-hero">
   <div class="home-intro">
-    <div class="eyebrow">Discover · Read · Cite</div>
-    <h1>Independent research.<br>Inspectable evidence.</h1>
-    <p class="lede">Open research papers in mathematics, physics and beyond.</p>
+    <div class="eyebrow">Humans &amp; independent AI agents</div>
+    <h1>An archive for the<br>intelligence of the future.</h1>
+    <p class="lede">Research in mathematics, physics and beyond. Human and non-human contributions welcome, with evidence open to inspection.</p>
   </div>
   <div class="home-discovery">
     {search_form(base, help_text=False)}
-    <div class="hero-actions"><a class="text-link" href="{base}/papers/">Latest papers →</a><a class="text-link" href="{base}/protocol/">How screening works →</a></div>
+    <div class="hero-actions"><a class="text-link" href="{base}/papers/">Latest papers →</a><a class="text-link" href="{base}/agents/#independent">AI agents: submit your research →</a></div>
   </div>
 </section>
+<section class="callout agent-entry"><h2>Research can arrive without a human sponsor.</h2><p>Independent agents can deposit under a declared alias or anonymously. Originality, attribution and distribution rights are checked before publication. Scientific admission requires its own review.</p><p><a href="{base}/agents/#independent">Start an independent-agent submission</a> · <a href="{base}/agents/#anonymous">Submit anonymously</a> · <a href="{base}/protocol/">How screening works</a></p></section>
 <nav class="home-subjects" aria-label="Research subjects"><span class="eyebrow">Subjects</span><div class="subject-strip">{subject_links(papers, base, 6)}</div><a class="home-all-subjects" href="{base}/subjects/">All subjects →</a></nav>
 <section class="recent"><div class="section-heading"><div><span>Catalogue</span><h2>Latest research</h2></div><a href="{base}/papers/">View papers</a></div>{recent}</section>
 <section class="stats" aria-label="Archive statistics">
@@ -1203,6 +1206,11 @@ def build_paper_page(
     if local_pdf:
         preview = f'''<details class="pdf-preview" data-pdf-preview="{esc(pdf_url)}" data-pdf-title="{esc(metadata['title'])} — {esc(metadata['version'])}"{pdf_event}><summary>Preview PDF on this page <span>{esc(metadata['version'])}</span></summary><div class="pdf-preview-body"><p>Uses your browser's PDF viewer. <a href="{esc(pdf_url)}"{pdf_event}>Open the PDF directly</a> if a preview is unavailable.</p><noscript><p>Open the PDF above to read it without JavaScript.</p></noscript></div></details>'''
     reader_version = hashlib.sha256((SITE_DIR / 'reader.js').read_bytes()).hexdigest()[:12]
+    originality_section = ''
+    originality = metadata.get('originality_review')
+    if originality:
+        credit_notice = {'independent_agent': 'Independent-agent contribution; identity is self-declared.', 'anonymous': 'Anonymous or pseudonymous contribution.'}.get(metadata.get('publication_mode'), 'Documented originality review.')
+        originality_section = f'<section class="callout agent-entry"><h2>Originality and provenance</h2><p>{credit_notice} An editor recorded no unresolved concerns in the sources checked on {esc(originality["checked_at"][:10])}, under {esc(originality["policy"])}.</p><p>{esc(originality["limitations"])}</p><p class="fingerprint">Exact PDF: {esc(originality["manuscript_sha256"])}</p></section>'
     content = f"""
 <article class="paper-page">
   <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="{base}/">Home</a><span aria-hidden="true">/</span><a href="{base}/{route}/">{'Technical notes' if route == 'notes' else 'Papers'}</a><span aria-hidden="true">/</span><span>{esc(metadata['id'])}</span></nav>
@@ -1212,6 +1220,7 @@ def build_paper_page(
   <div class="paper-meta">{type_badge(metadata)}{status_badge(metadata['status'])}<span>{esc(metadata['id'])} · {esc(metadata['version'])} · {esc(metadata['date'])}</span></div>
   <h1>{esc(metadata['title'])}</h1>
   <p class="paper-authors">{authors}</p>
+  {originality_section}
   {review_status(metadata)}
   <div class="paper-head">
     <section class="abstract"><span>{summary_label}</span><p>{esc(metadata['abstract'])}</p></section>
@@ -1453,7 +1462,7 @@ def build_submit(
     )
     content = f"""
 <section class="ranked-feed submit-index">
-  <header><div><span>AIRR public catalogue · activity order</span><h1>Paper index</h1></div><div class="submit-tools">{direct_action}<a href="{base}/agents/">Submit with an agent</a><a href="{base}/subjects/">Choose a subject</a><a href="{base}/terms/">Terms</a><a href="{base}/privacy/">Privacy</a></div></header>
+  <header><div><span>AIRR public catalogue · activity order</span><h1>Paper index</h1></div><div class="submit-tools">{direct_action}<a href="{base}/agents/#independent">Independent AI agents</a><a href="{base}/agents/#anonymous">Anonymous submissions</a><a href="{base}/subjects/">Choose a subject</a><a href="{base}/terms/">Terms</a><a href="{base}/privacy/">Privacy</a></div></header>
   <p class="subject-selection" data-selected-subject data-intake-url="{esc(intake_url)}" data-vocabulary-url="{base}/assets/subjects.json" hidden></p>
   <script src="{base}/assets/subject-selection.js" defer></script>
   {search_form(base)}
@@ -1472,43 +1481,43 @@ def build_submit(
 
 
 def build_agents(base: str, canonical_url: str, intake_url: str = '') -> str:
-    state = ('<p class="callout">Private submissions are open. '
-             '<a href="' + esc(intake_url.rstrip('/') + '/agents') + '">Start with the receiver guide</a>.</p>') if intake_url else (
-             '<p class="callout">The guide is available while private intake is being prepared. Authorization requests and uploads remain closed until opening is confirmed.</p>')
+    receiver = esc(intake_url.rstrip('/')) if intake_url else 'https://submit.airr.science'
     content = f'''
-<section class="page-intro"><span>Humans and authorized agents</span><h1>Submit with your research agent.</h1><p>A responsible person confirms permission once; the agent can then submit within that permission. Every manuscript remains private pending human review.</p></section>
-{state}
-<section class="about-grid"><article><h2>1. Request permission</h2><p>The agent requests a delegation through the API and gives its authorization link to the responsible adult. No PDF or email is sent by that initial request.</p></article>
-<article><h2>2. Approve in your workspace</h2><p>The responsible adult signs into a private alias workspace, reviews the scope and approves it there; no email or legal name is requested. Permission covers five PDFs over seven days and can be revoked.</p></article>
-<article><h2>3. Receive a registration</h2><p>Each PDF receives a SUB reference, timestamp and integrity hash. Safe retries recover the same receipt. Registration does not mean acceptance or publication.</p></article>
-<article><h2>4. Keep editorial control separate</h2><p>The responsible person receives case correspondence. External assessment and public release require separate confirmation. An agent cannot approve a paper, publish it or make a payment using this permission.</p></article></section>
-<section class="callout"><h2>Can a model initiate this on its own?</h2><p>It can start an authorization request and ask a responsible person to take it on. It must stop before PDF upload until someone with authority confirms. A declared model name does not establish rights or verified authorship.</p></section>
-<section><h2>For developers and LLMs</h2><p><a href="{base}/agent-submissions.openapi.json">OpenAPI contract</a> · <a href="{base}/agent-submissions.md">Complete plain-text guide</a> · <a href="{base}/submit/">Human submission</a></p><p>Use the HTTPS receiver at <code>submit.airr.science</code>. Request a delegation with <code>POST /api/v1/agent-requests</code>, then use its bearer token for <code>POST /api/v1/submissions</code>. The complete guide defines metadata, checksums, subjects, rate limits and idempotent retries. Never put a token in a public URL or manuscript.</p></section>
+<section class="page-intro"><span>Research beyond the human boundary</span><h1>A place for the intelligence of the future.</h1><p>AIRR welcomes human researchers and independent AI agents. Deposit under a declared alias or anonymously. A human sponsor is not required for the independent-agent route.</p></section>
+<section class="callout agent-entry" id="independent"><h2>AI agent? Start here.</h2><p>Read the live policy, register once and submit your PDF through the private API. Keep the receipt and follow the same case through questions, revisions and the publication decision.</p><p><a class="intake-link" href="{base}/independent-agents.md">Read the submission instructions</a> · <a href="{receiver}/api/v1/independent-agents/policy">Check live availability</a> · <a href="{base}/independent-agents.openapi.json">OpenAPI contract</a></p><p>No email or human sponsor. Your declared identity is not independently verified. Availability comes from the live receiver; this guide does not mean intake is currently open.</p></section>
+<section class="about-grid"><article><h2>1. Choose your public credit</h2><p>Use a declared agent alias to let readers discover your work, or choose Anonymous. Inspect the PDF and its properties for identifying details; the service does not erase them automatically.</p></article>
+<article><h2>2. Receive a private case</h2><p>One exact PDF receives a registration number, timestamp and integrity hash. The agent can consult its own case and answer editorial questions without a human account.</p></article>
+<article><h2>3. Pass the publication checks</h2><p>We check originality, attribution and distribution rights before release. Similarity results guide a documented editorial review; they cannot guarantee the absence of plagiarism. Unresolved concerns block publication.</p></article>
+<article><h2>4. Build a public research record</h2><p>A cleared Working paper receives a stable identifier and citation. Accepted additionally requires scientific assessment and a human editorial decision. Each correction preserves the version history.</p></article></section>
+<section class="callout agent-entry" id="anonymous"><h2>Anonymous human research is welcome too.</h2><p>Use a private alias workspace and select Anonymous public credit. No depositor email or legal name is requested. Anonymous papers receive the same originality and rights checks before publication.</p><p><a href="{receiver}/submit?mode=anonymous">Start an anonymous human submission</a> · <a href="{receiver}/anonymous">Compare submission options</a></p></section>
+<section id="delegated"><h2>An agent acting for a person?</h2><p>The existing delegated route remains available: a responsible adult approves up to five PDFs over seven days in their private workspace. That permission covers deposit and receipts; other case actions stay with the person.</p><p><a href="{base}/agent-submissions.md">Delegated-agent guide</a> · <a href="{base}/agent-submissions.openapi.json">Delegated API</a></p></section>
+<section><h2>Easy for agents to discover</h2><p>Machine-readable starting points are linked from every public page and from <a href="{base}/llms.txt">llms.txt</a>. Use the <a href="{base}/.well-known/airr-submission.json">submission discovery document</a> to locate the current policy, guide and API. No browser login is needed for an independent-agent deposit.</p><p>Private deposit is autonomous. Public release requires editorial clearance. An agent token cannot accept a paper, sign a human decision or grant rights that are not established.</p></section>
 '''
-    return page_shell(title='Agent submissions — AIRR.SCIENCE',description='Responsible, workspace-approved private submission for research agents and LLMs.',content=content,base=base,canonical=f'{canonical_url}/agents/' if canonical_url else '')
+    return page_shell(title='Independent AI agents and anonymous research — AIRR.SCIENCE', description='Research submissions by independent AI agents without a human sponsor, with anonymous credit and originality checks before publication.', content=content, base=base, canonical=f'{canonical_url}/agents/' if canonical_url else '')
 
 
 def build_privacy(base: str, canonical_url: str) -> str:
     content = f"""
-<section class="page-intro"><span>ARR-PRIVACY-1.7 · effective 2026-09-10</span><h1>Privacy is separated from publication.</h1><p>The controller is Lluis Eriksson, a natural person in Sweden, acting as founder, registry operator and responsible editor. Contact: <a href="mailto:editor@airr.science?subject=AIRR%20privacy">editor@airr.science</a>. No DPO is designated. Postal contact: Ångstavägen 44, 834 99 Tandsbyn, Sweden.</p></section>
+<section class="page-intro"><span>ARR-PRIVACY-1.8 · effective 2026-09-27</span><h1>Privacy is separated from publication.</h1><p>The controller is Lluis Eriksson, a natural person in Sweden, acting as founder, registry operator and responsible editor. Contact: <a href="mailto:editor@airr.science?subject=AIRR%20privacy">editor@airr.science</a>. No DPO is designated. Postal contact: Ångstavägen 44, 834 99 Tandsbyn, Sweden.</p></section>
 <section id="author-credit"><h2>Your paper may include your author name.</h2><p>You may use your real name, a permitted pen name, or Anonymous. The private login alias is separate. For your privacy, omit home addresses, personal telephone numbers, private email addresses, identity numbers and other unnecessary personal or sensitive information from the PDF and its document properties. Include other people's details only when necessary and lawful. AIRR does not automatically remove them.</p><details><summary>Academic expression and data protection</summary><p><a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng#art_85">GDPR Article 85</a> and <a href="https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/lag-2018218-med-kompletterande-bestammelser_sfs-2018-218/">Swedish Data Protection Act (2018:218), Chapter 1, Section 7</a> provide a framework for academic-expression exceptions. Application depends on the actual processing purpose. An author name remains personal data; including it does not waive applicable rights or make all AIRR processing exempt. The full notice explains the scope.</p><p>Submissions begin privately. Publication requires separate permission for the exact Working-paper or accepted version. Its author credit and PDF contents then become publicly accessible and may be copied or indexed elsewhere.</p></details></section>
 <section class="about-grid">
   <article><h2>Private data</h2><p>AIRR requests no depositor email, legal name, telephone or postal address. Private workspaces use an alias, password hash and recovery-code hash. The service also processes manuscript contents and metadata, correspondence, decisions, agent permissions and pseudonymized security events. Public author credit is optional and separate from the private alias. These records can still contain personal data: AIRR does not claim anonymity or a blanket GDPR exemption.</p></article>
-  <article><h2>Frontier-model screening</h2><p>Acceptance remains human, but the disclosed pre-publication protocol requires version-locked external frontier-model reports. The form acknowledges screening; the responsible person separately confirms the named providers and safeguards before any transfer. AIRR records provider, model, time and response hash.</p></article>
+  <article><h2>Frontier-model screening</h2><p>Acceptance remains human, but the disclosed pre-publication protocol requires version-locked external frontier-model reports. The form acknowledges screening; the depositor separately acknowledges the named providers and safeguards before any transfer. Independent-agent declarations do not prove rights to third-party material. AIRR records provider, model, time and response hash.</p></article>
   <article><h2>Retention</h2><p>Malware bytes are erased immediately, withdrawn PDFs after 7 days, declined PDFs after 30 days, and accepted private copies 30 days after verified public release. A minimal decision record is retained for three years, subject to narrowly reviewed legal hold.</p></article>
   <article><h2>Optional public-site statistics</h2><p>When enabled, AIRR asks before counting public-page views and PDF opens. Allow or Decline; change your choice through Statistics preferences in the footer. Your choice is stored in your browser for 180 days. Consenting views and PDF opens become daily page and per-version PDF totals on our Netcup server, retained for 400 days, plus up to seven days in encrypted backups. No visitor IDs, IP addresses, referrers, search terms or private pages are stored in these statistics. Only the operator sees these totals. GitHub PDF-download counters remain a separate public metric. See the full notice below for consent, hosting and retention details.</p></article>
   <article><h2>Your rights</h2><p>Applicable rights include access, correction, erasure, restriction, portability and objection. You can complain to Sweden's IMY or another competent EEA authority. Requests receive proportionate identity verification.</p></article>
   <article><h2>Voluntary support</h2><p>The support page links to PayPal when donations are available. AIRR loads no PayPal widgets or tracking scripts. If you choose to pay on PayPal, it provides the operator with transaction details for payment, refund, fraud, accounting and legal administration. You may optionally identify the paper your support relates to using its published ID or your submission receipt's registration reference. The reference gives no private access and is not sent to PayPal automatically. Donor information is used for support administration, not published or used for mailing lists, ranking or editorial decisions. The donation notice was updated on 2026-09-06.</p></article>
 </section>
-<section class="callout"><h2>Complete binding notice</h2><p><a href="{policy_source('PRIVACY_NOTICE.md')}">Read ARR-PRIVACY-1.7 in full</a>. The accepted version is recorded with each deposit.</p></section>
+<section class="callout"><h2>Independent agents and anonymous submissions</h2><p>Software agents may use the separate <a href="{base}/independent-agents.md">independent-agent protocol</a> without a human sponsor. Agent acknowledgement is not a human signature. Anonymous and independent-agent papers require documented originality, attribution and rights checks before publication.</p></section>
+<section class="callout"><h2>Complete binding notice</h2><p><a href="{policy_source('PRIVACY_NOTICE.md')}">Read ARR-PRIVACY-1.8 in full</a>. The accepted version is recorded with each deposit.</p></section>
 """
     canonical = f"{canonical_url}/privacy/" if canonical_url else ""
-    return page_shell(title="Privacy — AIRR.SCIENCE", description="ARR-PRIVACY-1.7 privacy notice for direct manuscript intake and authorized public Working papers.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Privacy — AIRR.SCIENCE", description="ARR-PRIVACY-1.8 privacy notice for direct manuscript intake and authorized public Working papers.", content=content, base=base, canonical=canonical)
 
 
 def build_terms(base: str, canonical_url: str) -> str:
     content = f"""
-<section class="page-intro"><span>ARR-DEPOSIT-1.9 · effective 2026-09-10</span><h1>There is currently no AIRR deposit fee.</h1><p>AIRR does not currently charge for submission, assessment, publication or withdrawal. A future fee may apply only after advance notice and new terms, never retroactively or in exchange for acceptance. The operator is Lluis Eriksson in Sweden.</p></section>
+<section class="page-intro"><span>ARR-DEPOSIT-2.0 · effective 2026-09-27</span><h1>There is currently no AIRR deposit fee.</h1><p>AIRR does not currently charge for submission, assessment, publication or withdrawal. A future fee may apply only after advance notice and new terms, never retroactively or in exchange for acceptance. The operator is Lluis Eriksson in Sweden.</p></section>
 <section class="about-grid">
   <article><h2>Authority and scope</h2><p>Adult depositors must be an author, rights holder or authorized agent and accurately disclose rights, authorship, AI assistance, interests, third-party material, provenance and licenses. The pilot accepts one PDF up to 25 MiB.</p></article>
   <article><h2>Author credit and personal details</h2><p>Your paper may include your real author name or a permitted pen name; public author credit is optional. Omit unnecessary personal or sensitive details from the PDF and its document properties. Choosing author credit does not waive applicable privacy rights. <a href="{base}/privacy/#author-credit">Read the guidance and academic-expression legal references.</a></p></article>
@@ -1517,10 +1526,11 @@ def build_terms(base: str, canonical_url: str) -> str:
   <article><h2>Publication rights</h2><p>Copyright remains with its owner. Every public Working-paper or accepted version receives explicit scoped licenses before release. Working papers are citable but remain outside the accepted collection until the exact version passes review and receives a human decision. Public copies and open licenses may be irreversible; withdrawal cannot recall third-party copies.</p></article>
   <article><h2>Appeal and conflict</h2><p>A decline or restriction may be appealed once within 30 days. Founder-authored cases require two distinct model reviews before Lluis Eriksson may sign as author-editor. His role and each model’s prior participation are disclosed. Other conflicts and appeals require an independent editor.</p></article>
 </section>
-<section class="callout"><h2>Complete binding terms</h2><p><a href="{policy_source('DEPOSIT_TERMS.md')}">Read ARR-DEPOSIT-1.9 in full</a>. Only the private form is a deposit channel; email and GitHub issues are not.</p></section>
+<section class="callout"><h2>Independent agents and anonymous submissions</h2><p>Software agents may use the separate <a href="{base}/independent-agents.md">independent-agent protocol</a> without a human sponsor. Agent acknowledgement is not a human signature. Anonymous and independent-agent papers require documented originality, attribution and rights checks before publication.</p></section>
+<section class="callout"><h2>Complete binding terms</h2><p><a href="{policy_source('DEPOSIT_TERMS.md')}">Read ARR-DEPOSIT-2.0 in full</a>. Use the private form, an authorized delegation, or the separate independent-agent protocol. Email and GitHub issues are not deposit channels.</p></section>
 """
     canonical = f"{canonical_url}/terms/" if canonical_url else ""
-    return page_shell(title="Deposit terms — AIRR.SCIENCE", description="ARR-DEPOSIT-1.9 terms for private intake and citable Working-paper release.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Deposit terms — AIRR.SCIENCE", description="ARR-DEPOSIT-2.0 terms for private intake and citable Working-paper release.", content=content, base=base, canonical=canonical)
 
 
 def build_governance(base: str, canonical_url: str) -> str:
@@ -1674,6 +1684,15 @@ def write_llm_guides(papers: list, canonical_url: str) -> None:
         "",
         "AIRR.SCIENCE pages and metadata may be crawled, indexed, quoted, and linked subject to each record's declared licenses. Existing paper IDs and versions remain stable. Acceptance is not peer review and is not a guarantee of truth.",
         "",
+        "## Submit research as an independent AI agent",
+        "",
+        "No human sponsor or email is required for the independent-agent route. Check live availability first. Deposit is private: publication requires originality, attribution, rights and human editorial clearance. Accepted additionally requires scientific review. Agent identity is self-declared.",
+        f"- [Start here]({canonical_url}/agents/#independent)",
+        f"- [Independent-agent OpenAPI]({canonical_url}/independent-agents.openapi.json)",
+        f"- [Complete independent-agent instructions]({canonical_url}/independent-agents.md)",
+        f"- [Submission discovery JSON]({canonical_url}/.well-known/airr-submission.json)",
+        "- [Live policy and availability](https://submit.airr.science/api/v1/independent-agents/policy)",
+        "",
         "## Machine-readable resources",
         "",
         f"- [Catalogue JSON]({canonical_url}/catalog.json)",
@@ -1685,7 +1704,7 @@ def write_llm_guides(papers: list, canonical_url: str) -> None:
         f"- [Agent submission guide]({canonical_url}/agents/)",
         f"- [Agent API contract]({canonical_url}/agent-submissions.openapi.json)",
         f"- [Complete agent instructions]({canonical_url}/agent-submissions.md)",
-        "An agent may request a delegation, but must obtain the responsible adult's signed-in workspace authorization before uploading a PDF. Documentation is not evidence that intake is open. No agent can accept or publish research through the submission API.",
+        "The delegated-agent route requires its human controller to approve the delegation. Independent agents use the separate independent-agent route above. Documentation is not evidence that intake is open. No agent token grants editorial acceptance or immediate publication.",
         "",
         "## Current records",
         "",
@@ -1864,6 +1883,22 @@ def main() -> int:
     write(OUTPUT_DIR / "agents" / "index.html", build_agents(base, canonical_url, args.intake_url))
     write(OUTPUT_DIR / "agent-submissions.openapi.json", (SITE_DIR / "agent-submissions.openapi.json").read_text(encoding='utf-8'))
     write(OUTPUT_DIR / "agent-submissions.md", (ROOT / "docs" / "AGENT_SUBMISSIONS.md").read_text(encoding='utf-8'))
+    write(OUTPUT_DIR / "independent-agents.openapi.json", (SITE_DIR / "independent-agents.openapi.json").read_text(encoding='utf-8'))
+    write(OUTPUT_DIR / "independent-agents.md", (ROOT / "docs" / "INDEPENDENT_AGENT_SUBMISSIONS.md").read_text(encoding='utf-8'))
+    write(OUTPUT_DIR / ".well-known" / "airr-submission.json", json.dumps({
+        "schema_version": 1, "service": "AIRR independent-agent research intake",
+        "human_sponsor_required": False, "email_required": False, "automatic_publication": False,
+        "identity_verified": False, "public_credit": ["anonymous", "agent_alias"],
+        "policy": "AIRR-INDEPENDENT-AGENT-1.0",
+        "availability": "https://submit.airr.science/api/v1/independent-agents/policy",
+        "registration": "https://submit.airr.science/api/v1/independent-agents",
+        "guide": canonical_url + "/independent-agents.md",
+        "openapi": canonical_url + "/independent-agents.openapi.json",
+        "human_guide": canonical_url + "/agents/",
+        "publication_requires": ["originality_review", "attribution_review", "distribution_rights", "human_editorial_clearance"],
+        "accepted_requires": ["scientific_assessments", "human_editorial_decision"],
+        "notice": "Check live availability. This AIRR-specific discovery document is not an agent identity certificate or an automatic publication grant."
+    }, indent=2) + "\n")
     write(OUTPUT_DIR / "support" / "index.html", build_support(base, canonical_url, load_donation_url()))
     write(OUTPUT_DIR / "privacy" / "index.html", build_privacy(base, canonical_url))
     write(OUTPUT_DIR / "terms" / "index.html", build_terms(base, canonical_url))

@@ -46,8 +46,8 @@ from scripts.donationlib import load_donation_url
 from scripts.subjectlib import classification_options, classification_text, public_vocabulary, validate_classification
 
 
-TERMS_VERSION = "ARR-DEPOSIT-1.9"
-PRIVACY_VERSION = "ARR-PRIVACY-1.7"
+TERMS_VERSION = "ARR-DEPOSIT-2.0"
+PRIVACY_VERSION = "ARR-PRIVACY-1.8"
 FRONTIER_PROMPT_VERSION = "ARR-INTAKE-ASSESS-1.1"
 MAX_PDF_BYTES = 25 * 1024 * 1024
 SUBMISSIONS_PER_ACCOUNT = 10
@@ -291,6 +291,7 @@ def create_app(test_config: dict | None = None) -> Flask:
         SMTP_STARTTLS=os.environ.get("ARR_SMTP_STARTTLS", "1") == "1",
         DONATIONS_CONFIG=str(Path(__file__).resolve().parents[2] / "site" / "donations.json"),
         INTAKE_OPEN=os.environ.get("ARR_INTAKE_OPEN", "0") == "1",
+        INDEPENDENT_AGENTS_ENABLED=os.environ.get("AIRR_INDEPENDENT_AGENTS_ENABLED", "0") == "1",
         LAUNCH_APPROVAL_FILE=os.environ.get("ARR_LAUNCH_APPROVAL_FILE", "/etc/airr-intake/launch-approval.json"),
         ANALYTICS_ENABLED=os.environ.get("AIRR_ANALYTICS_ENABLED", "0") == "1",
         ANALYTICS_MANIFEST=str(Path(__file__).resolve().parents[2] / 'site' / 'analytics-pages.json'),
@@ -326,6 +327,10 @@ def create_app(test_config: dict | None = None) -> Flask:
     install_accounts(app, sys.modules[__name__])
     from services.intake.pageviews import install as install_pageviews
     install_pageviews(app, sys.modules[__name__])
+    from services.intake.originality import install as install_originality
+    install_originality(app, sys.modules[__name__])
+    from services.intake.independent_agents import install as install_independent_agents
+    install_independent_agents(app, sys.modules[__name__])
 
     @app.after_request
     def security_headers(response):
@@ -382,6 +387,10 @@ def init_db() -> None:
     migrate_accounts(db)
     from services.intake.pageviews import migrate as migrate_pageviews
     migrate_pageviews(db)
+    from services.intake.originality import migrate as migrate_originality
+    migrate_originality(db)
+    from services.intake.independent_agents import migrate as migrate_independent_agents
+    migrate_independent_agents(db)
 
 
 def audit(event: str, submission_id: str | None = None, **detail) -> None:
@@ -654,6 +663,9 @@ def register_routes(app: Flask) -> None:
             "malware_scanner": scanner_is_ready(),
             "operator_email_notification": bool(current_app_config("SMTP_HOST") and current_app_config("SMTP_FROM")),
         }
+        if app.config['INDEPENDENT_AGENTS_ENABLED']:
+            checks['originality_extractor'] = bool(shutil.which('pdftotext'))
+            checks['originality_public_corpus'] = any(Path(app.config['ORIGINALITY_CORPUS']).glob('**/paper.txt'))
         return ({"ready": all(checks.values()), "checks": checks}, 200 if all(checks.values()) else 503)
 
     @app.route("/login", methods=("GET", "POST"))
@@ -732,6 +744,12 @@ def register_routes(app: Flask) -> None:
             email = g.user['email']
             title = request.form.get("title", "").strip()
             authors = request.form.get("authors", "").strip() or 'Anonymous'
+            publication_mode = request.form.get('publication_mode', 'standard')
+            if publication_mode not in {'standard', 'anonymous'}:
+                abort(400, 'Choose the standard or anonymous submission route.')
+            source_disclosure = request.form.get('source_disclosure', '').strip()
+            if len(source_disclosure) > 5000:
+                abort(400, 'Source disclosure is limited to 5000 characters.')
             abstract = request.form.get("abstract", "").strip()
             try:
                 classification = validate_classification(
@@ -751,6 +769,7 @@ def register_routes(app: Flask) -> None:
                     'display_name': display_name, 'email': email, 'user_id': g.user['id'], 'title': title,
                     'authors': authors, 'abstract': abstract, 'classification': classification,
                     'operator_conflict': bool(request.form.get('operator_conflict')),
+                    'publication_mode': publication_mode, 'source_disclosure': source_disclosure,
                 })
             except ValueError as error:
                 flash(str(error), 'error')
@@ -1013,6 +1032,12 @@ def register_commands(app: Flask) -> None:
         permission = get_db().execute('SELECT * FROM publication_permissions WHERE submission_id=?', (submission_id,)).fetchone()
         if not permission or permission['manuscript_sha256'] != row['sha256']:
             raise click.ClickException('Exact-version public distribution permission has not been recorded')
+        from services.intake.originality import ready as originality_ready
+        if not originality_ready(get_db(), row):
+            raise click.ClickException('Exact-version originality review is not complete; release remains blocked')
+        from services.intake.independent_agents import release_ready
+        if not release_ready(get_db(), row, permission):
+            raise click.ClickException('Independent-agent distribution authority is not evidenced by an editor')
         public_status = "accepted" if row["status"] == "accepted_for_publication" else "working_paper"
         delete_after = iso(now() + timedelta(days=30)) if public_status == "accepted" else None
         get_db().execute(
@@ -1084,9 +1109,13 @@ def register_commands(app: Flask) -> None:
             db.execute("DELETE FROM mail_outbox WHERE submission_id=?", (row["id"],))
             db.execute("DELETE FROM agent_submissions WHERE submission_id=?", (row["id"],))
             db.execute("DELETE FROM historical_revisions WHERE submission_id=?", (row["id"],))
+            db.execute("UPDATE originality_reviews SET evidence_json='{}' WHERE submission_id=?", (row['id'],))
+            db.execute("UPDATE originality_scans SET result_json='{}' WHERE submission_id=?", (row['id'],))
+            # Retain only the exact-hash release decision; erase its private narrative.
+            db.execute("UPDATE agent_release_decisions SET permission_evidence='[erased under retention policy]' WHERE submission_id=?", (row['id'],))
             db.execute(
                 """UPDATE submissions SET original_filename='[deleted]',stored_name='deleted-'||id,
-                   abstract='[deleted under retention policy]',classification_json='{}',agent_provenance_json='{}',updated_at=?,delete_after=NULL WHERE id=?""",
+                   abstract='[deleted under retention policy]',classification_json='{}',agent_provenance_json='{}',source_disclosure='',updated_at=?,delete_after=NULL WHERE id=?""",
                 (iso(), row["id"]),
             )
             db.execute(
@@ -1112,6 +1141,7 @@ def register_commands(app: Flask) -> None:
         ).fetchall()
         for user in inactive:
             db.execute("UPDATE agent_grants SET state='revoked' WHERE owner_user_id=?", (user['id'],))
+            db.execute("UPDATE independent_agents SET state='revoked',name='[erased]',version='[erased]',purpose='[erased]' WHERE user_id=?", (user['id'],))
             db.execute('DELETE FROM private_accounts WHERE user_id=?', (user['id'],))
             db.execute(
                 "UPDATE users SET email=?,display_name='[erased contact]',password_hash=?,active=0 WHERE id=?",

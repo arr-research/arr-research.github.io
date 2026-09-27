@@ -505,7 +505,7 @@ def validate_paper(paper: Paper) -> list[str]:
     if not isinstance(deposit, dict):
         errors.append("deposit: an object is required")
     else:
-        if deposit.get("relationship") not in {"author", "rights_holder", "authorized_agent", "authorized_depositor"}:
+        if deposit.get("relationship") not in {"author", "rights_holder", "authorized_agent", "authorized_depositor", "independent_agent"}:
             errors.append("deposit.relationship: invalid value")
         if deposit.get("deposit_authorized") is not True:
             errors.append("deposit.deposit_authorized: must be true")
@@ -534,6 +534,29 @@ def validate_paper(paper: Paper) -> list[str]:
                 errors.append("integrity.canonical_bytes: required for PDF-origin records")
             elif source == "paper.pdf" and canonical_path.is_file() and canonical_path.stat().st_size != canonical_bytes:
                 errors.append("integrity.canonical_bytes: does not match paper.pdf")
+
+    mode = metadata.get('publication_mode', 'standard')
+    if mode not in {'standard', 'anonymous', 'independent_agent'}:
+        errors.append('publication_mode: invalid value')
+    originality = metadata.get('originality_review')
+    if mode in {'anonymous', 'independent_agent'} and not isinstance(originality, dict):
+        errors.append('originality_review: required for this publication mode')
+    if isinstance(deposit, dict) and deposit.get('relationship') == 'independent_agent':
+        if mode not in {'anonymous', 'independent_agent'} or deposit.get('terms_version') != 'AIRR-INDEPENDENT-AGENT-1.0':
+            errors.append('deposit: independent agents require their own protocol and publication mode')
+    if originality is not None:
+        fields = {'policy', 'manuscript_sha256', 'checked_at', 'outcome', 'limitations'}
+        if not isinstance(originality, dict) or set(originality) != fields:
+            errors.append('originality_review: only the scoped public summary is permitted')
+        else:
+            if originality.get('policy') != 'AIRR-ORIGINALITY-1.0' or originality.get('outcome') != 'no_unresolved_concerns_in_checked_sources':
+                errors.append('originality_review: invalid policy or outcome')
+            if not isinstance(integrity, dict) or originality.get('manuscript_sha256') != integrity.get('canonical_sha256') or not re.fullmatch('[a-f0-9]{64}', str(originality.get('manuscript_sha256', ''))):
+                errors.append('originality_review: must match the exact canonical PDF hash')
+            if not isinstance(originality.get('checked_at'), str) or not re.fullmatch(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|\+00:00)', originality['checked_at']):
+                errors.append('originality_review.checked_at: UTC timestamp required')
+            if not isinstance(originality.get('limitations'), str) or len(originality['limitations']) < 30:
+                errors.append('originality_review.limitations: a scoped qualification is required')
 
     ai = metadata.get("ai_assistance")
     if not isinstance(ai, dict):

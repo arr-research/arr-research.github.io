@@ -26,6 +26,18 @@
     "editorial"
   ],
   "properties": {
+    "publication_mode": {"enum": ["standard", "anonymous", "independent_agent"]},
+    "originality_review": {
+      "type": "object", "additionalProperties": false,
+      "required": ["policy", "manuscript_sha256", "checked_at", "outcome", "limitations"],
+      "properties": {
+        "policy": {"const": "AIRR-ORIGINALITY-1.0"},
+        "manuscript_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "checked_at": {"type": "string", "format": "date-time"},
+        "outcome": {"const": "no_unresolved_concerns_in_checked_sources"},
+        "limitations": {"type": "string", "minLength": 30}
+      }
+    },
     "schema_version": {"enum": ["1.0", "1.1", "1.2", "1.3", "1.4"]},
     "record_id": {
       "type": "string",
@@ -147,7 +159,7 @@
       "required": ["depositor_name", "relationship", "deposit_authorized", "third_party_material_disclosed", "terms_version"],
       "properties": {
         "depositor_name": {"type": "string", "minLength": 2},
-        "relationship": {"enum": ["author", "rights_holder", "authorized_agent", "authorized_depositor"]},
+        "relationship": {"enum": ["author", "rights_holder", "authorized_agent", "authorized_depositor", "independent_agent"]},
         "deposit_authorized": {"const": true},
         "third_party_material_disclosed": {"type": "boolean"},
         "terms_version": {"type": "string", "minLength": 3}

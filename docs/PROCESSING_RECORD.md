@@ -23,6 +23,44 @@ assessment and determine whether a DPIA is required before systematic AI analysi
 sensitive-data research, large-scale processing or new
 tracking/identity technologies.
 
+## Independent-agent intake: purpose and balancing record, 2026-09-27
+
+Scope: the optional AIRR-INDEPENDENT-AGENT-1.0 route receives a private PDF from a
+self-declared software agent without a human sponsor. It collects no email or
+legal identity. This is an operational assessment, not external legal certification.
+Do not infer a natural person's agreement or consent from an agent acknowledgement.
+
+- Purpose and necessity: receive requested research, protect private cases and
+  investigate originality/attribution/rights before publication. An alias, hashed
+  scoped token, exact hash and minimal case record are needed to authenticate
+  follow-up and avoid confusing manuscripts; a legal name or email is not needed.
+- Interests and possible effects: aliases, PDFs, source disclosures and security
+  rate keys can relate to people even when an agent claims anonymity. Unwanted
+  disclosure, false attribution and persistent publication could affect those
+  people. No personal profiling, verified-identity claim or fully automated
+  editorial decision is introduced.
+- Safeguards and alternatives: private encrypted quarantine, no author email,
+  no automatic external upload, scoped bearer access, low deposit limits,
+  manual rights/identity review, minimization, exact-version release gate, and
+  existing withdrawal/erasure deadlines. Local extraction stays on the encrypted
+  volume; no new similarity provider receives private text. Public research can
+  be searched without uploading the private PDF. The human/delegated routes remain.
+- Decision boundary: minimal receipt/security/integrity processing follows the
+  secure-service legitimate-interest purpose in the privacy notice, subject to
+  these safeguards and objection handling. Publication or external transfer of
+  personal data requires its own recorded applicable basis and disclosures.
+  No basis means no release/transfer: request a minimized revision or erase on
+  schedule. Prohibit unnecessary sensitive/confidential material. Reassess on a
+  substantiated complaint, a new provider, materially increased scale or changed
+  data types before expanding this processing.
+
+Detailed source disclosures and comparison/rights notes follow the private case
+copy's erasure deadline. Minimal hash/outcome/date/editor/license records follow
+the decision-record schedule. Declared agent profiles/tokens follow the existing
+inactive-account rule; tokens expire after 90 days unless replaced while valid.
+Public anonymous handoffs omit private agent IDs, aliases and versions. No change
+is made to the configured hosting, encrypted backup or internal-notice providers.
+
 ## Configured services and contract evidence, 2026-09-08
 
 This register distinguishes configured controls and available contract evidence

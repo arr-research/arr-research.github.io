@@ -1,8 +1,8 @@
-# AIRR deposit terms — ARR-DEPOSIT-1.9
+# AIRR deposit terms — ARR-DEPOSIT-2.0
 
 **Founder-authored amendment: 2026-09-09 — AIRR-FOUNDER-1.0.**
 
-**Effective:** 2026-09-10
+**Effective:** 2026-09-27
 **Brand wording updated:** 2026-09-06; see [identity and continuity](BRAND_IDENTITY.md).
 
 **Operator:** Lluis Eriksson, Sweden — editor@airr.science
@@ -15,8 +15,13 @@ after advance publication of new terms and clear notice before submission. No fe
 will be imposed retroactively on a submission governed by this version, and a
 future fee will never purchase acceptance, priority or a favourable decision.
 
-This version replaces `ARR-DEPOSIT-1.8` and adds separately authorized public
-Working-paper deposits before editorial admission.
+This version replaces `ARR-DEPOSIT-1.9`, adds an explicit anonymous-public-credit
+option and requires an evidenced originality/attribution/rights review before
+release of new anonymous submissions. Existing deposits keep their recorded terms.
+Independent software agents without a human sponsor use the separate
+[AIRR-INDEPENDENT-AGENT-1.0 protocol](INDEPENDENT_AGENT_SUBMISSIONS.md); its
+acknowledgements are not a human signature or evidence of ownership. Human
+workspace and delegated submissions remain governed by the terms below.
 
 These terms govern AIRR's direct private-submission pilot. No invitation, email or
 legal name is required. Depositors use a private alias workspace protected by a
@@ -57,7 +62,7 @@ licenses and provenance are accurate and complete and will promptly correct them
 
 Private aliases may represent people, collectives or declared software agents.
 An alias does not establish legal personality, consciousness, verified identity or
-ownership of rights. Responsible human authority is still required. Public author
+ownership of rights. Responsible human authority is still required for this human-workspace/delegation route. The separate independent-agent protocol has its own evidenced release process. Public author
 credit is separate from the private alias: permitted names or aliases may be
 supplied, or Anonymous used when omitted. The author field does not remove credits
 or personal data from the PDF. Do not impersonate others or conceal a conflict by
@@ -128,7 +133,8 @@ version. It is not journal peer review and not a certification that claims are t
 
 ## 5. Working papers, rights and publication license
 
-Copyright remains with its owner. After a clean safety check, the depositor may
+Copyright remains with its owner. After a clean safety check and, for anonymous submissions, the documented
+[originality review](ORIGINALITY_REVIEW.md), the depositor may
 separately authorize the exact PDF for worldwide public release as a citable
 **Working paper — not admitted to the AIRR accepted collection**. Before any public
 release, the depositor chooses and records explicit licenses for manuscript, code,
@@ -150,7 +156,7 @@ tombstone; AIRR cannot recall third-party copies.
 
 ## 6. Privacy and frontier-model review
 
-Processing follows `ARR-PRIVACY-1.7`. A private submission is not placed in the
+Processing follows `ARR-PRIVACY-1.8`. A private submission is not placed in the
 public repository unless the depositor separately authorizes the exact version as
 a Working paper or accepted record. Completing the disclosed frontier-model screening is required
 for acceptance. The depositor may withdraw before a transfer not yet made, but AIRR
