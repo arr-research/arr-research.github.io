@@ -226,11 +226,12 @@ class IndexingTests(unittest.TestCase):
         self.assertIn('src="/preview/assets/math.js?v=', tex)
         self.assertIn("katex", build_site.page_shell(title="t", description="d", content="", base="", math=True))
 
-    def test_light_reading_theme_keeps_the_dark_logo_for_dark_mode(self):
+    def test_classic_theme_and_logo_are_independent_of_system_preference(self):
         text = build_site.page_shell(title="t", description="d", content="", base="")
-        self.assertIn('<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">', text)
-        self.assertIn('<source srcset="/assets/airr-logo.png" media="(prefers-color-scheme: dark)">', text)
-        self.assertIn('src="/assets/airr-logo-light.png"', text)
+        self.assertIn('<meta name="theme-color" content="#0b0f17">', text)
+        self.assertIn('<meta name="color-scheme" content="dark">', text)
+        self.assertIn('src="/assets/airr-logo.png"', text)
+        self.assertNotIn('prefers-color-scheme', text)
         self.assertIn("not peer review", text)
 
     def test_record_page_states_review_status_and_folds_identifiers(self):

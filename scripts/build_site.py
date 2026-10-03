@@ -247,8 +247,8 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#0b0f17" media="(prefers-color-scheme: dark)">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0b0f17">
   <title>{esc(title)}</title>
   <meta name="description" content="{esc(description)}">
   <meta name="application-name" content="{SITE_NAME}">
@@ -269,7 +269,7 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
     <a class="brand" href="{base}/" aria-label="AIRR.SCIENCE — Archive for Independent &amp; Rigorous Research, home">
-      <picture><source srcset="{base}/assets/airr-logo.png" media="(prefers-color-scheme: dark)"><img class="brand-logo" src="{base}/assets/airr-logo-light.png" width="1859" height="336" alt="AIRR.SCIENCE"></picture>
+      <img class="brand-logo" src="{base}/assets/airr-logo.png" width="1859" height="336" alt="AIRR.SCIENCE">
     </a>
     <nav aria-label="Primary navigation">
       <a href="{base}/papers/">Papers</a>

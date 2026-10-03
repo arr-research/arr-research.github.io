@@ -25,26 +25,23 @@ def contrast(a: str, b: str) -> float:
 
 class ThemeTests(unittest.TestCase):
     def setUp(self):
-        light_start = CSS.index(":root {")
-        self.light = palette(CSS[light_start:CSS.index("\n}", light_start)])
-        dark_start = CSS.index("@media (prefers-color-scheme: dark) {")
-        self.dark = palette(CSS[dark_start:CSS.index("\n}", dark_start)])
+        start = CSS.index(":root {")
+        self.theme = palette(CSS[start:CSS.index("\n}", start)])
 
-    def test_both_palettes_define_the_same_colours_without_self_reference(self):
-        self.assertEqual(set(self.light) - {"max"}, set(self.dark) | {"white"})
-        for name, value in {**self.light, **self.dark}.items():
+    def test_palette_defines_all_used_colours_without_self_reference(self):
+        used = set(re.findall(r"var\(--([a-z-]+)\)", CSS))
+        self.assertFalse(used - set(self.theme))
+        for name, value in self.theme.items():
             self.assertNotIn(f"var(--{name})", value, name)
 
-    def test_reading_text_meets_wcag_aa_in_both_themes(self):
-        for theme in (self.light, self.dark):
-            for ink in ("ink", "ink-soft", "muted", "blue", "gold", "green", "red"):
-                for ground in ("paper", "surface"):
-                    with self.subTest(ink=ink, ground=ground, paper=theme["paper"]):
-                        self.assertGreaterEqual(contrast(theme[ink], theme[ground]), 4.5)
+    def test_reading_text_meets_wcag_aa(self):
+        for ink in ("ink", "ink-soft", "muted", "blue", "gold", "green", "red"):
+            for ground in ("paper", "surface"):
+                with self.subTest(ink=ink, ground=ground):
+                    self.assertGreaterEqual(contrast(self.theme[ink], self.theme[ground]), 4.5)
 
     def test_rules_use_palette_variables_not_fixed_dark_colours(self):
         rules = re.sub(r":root \{.*?\n\}", "", CSS, count=1, flags=re.S)
-        rules = re.sub(r"@media \(prefers-color-scheme: dark\) \{.*?\n\}\n", "", rules, count=1, flags=re.S)
         self.assertEqual(sorted(set(re.findall(r"#[0-9a-fA-F]{3,8}\b", rules))), ["#fff"])
 
     def test_content_blocks_fill_the_column_without_fixed_width_caps(self):
