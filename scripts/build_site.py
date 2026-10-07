@@ -1071,6 +1071,11 @@ def build_paper_page(
     if permanent_version_page:
         page_path += f"versions/{metadata['version']}/"
     canonical = f"{canonical_url}{page_path}" if canonical_url else ""
+    # The permanent page of the current version repeats the record page word for word.
+    # Search engines are asked to index the record page; the version URL stays valid for citations.
+    search_canonical = canonical
+    if permanent_version_page and canonical_url and metadata["version"] == latest_version:
+        search_canonical = f"{canonical_url}/{route}/{metadata['id']}/"
     citation_pdf_url = f"{canonical}{tag}.pdf" if canonical and local_pdf else ""
     if local_pdf:
         pdf_url = f"{base}{page_path}{tag}.pdf"
@@ -1250,7 +1255,7 @@ def build_paper_page(
         description=summary(metadata["abstract"]),
         content=content,
         base=base,
-        canonical=canonical,
+        canonical=search_canonical,
         head_extra=scholarly_head(metadata, canonical=canonical, release_url=release_url or "", pdf_url=citation_pdf_url, online_date=timestamp.get("published_at", ""), site_root=canonical_url) + f'\n  <script src="{base}/assets/reader.js?v={reader_version}" defer></script>',
     )
 
@@ -1656,9 +1661,11 @@ def write_sitemaps(papers: list, groups: dict, profiles: list[dict], canonical_u
     urls.extend(f"{canonical_url}/{record_route(paper.metadata)}/{paper.id}/" for paper in papers)
     for paper in papers:
         route = record_route(paper.metadata)
+        # The permanent page of the current version declares the record page as its canonical, so only older versions are listed.
         urls.extend(
             f"{canonical_url}/{route}/{paper.id}/versions/{version.version}/"
             for version in groups[paper.id]
+            if version.version != paper.version
         )
     chunks = [urls[index : index + 10_000] for index in range(0, len(urls), 10_000)]
     if len(chunks) == 1:

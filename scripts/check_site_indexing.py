@@ -73,13 +73,19 @@ def check_site(root: Path, site_url: str) -> tuple[list[str], int, int]:
             if not page.meta.get(field) or not all(page.meta[field]):
                 errors.append(f"{label}: missing {field}")
         try:
+            own_url = page.canonical
             if site_file(root, site_url, page.canonical) != path.resolve():
-                errors.append(f"{label}: canonical URL points at a different page")
+                # The permanent page of a record's current version may name the record page as canonical.
+                record_page = path.parent.parent.parent / "index.html" if path.parent.parent.name == "versions" else None
+                if record_page is None or site_file(root, site_url, page.canonical) != record_page.resolve():
+                    errors.append(f"{label}: canonical URL points at a different page")
+                else:
+                    own_url = f"{site_url.rstrip('/')}/{path.parent.relative_to(root).as_posix()}/"
             if page.canonical not in sitemap_urls:
                 errors.append(f"{label}: canonical URL is missing from sitemap")
             for pdf in page.meta.get("citation_pdf_url", []):
                 pdf_count += 1
-                parsed, abstract = urlsplit(pdf), urlsplit(page.canonical)
+                parsed, abstract = urlsplit(pdf), urlsplit(own_url)
                 if (parsed.scheme, parsed.netloc) != (abstract.scheme, abstract.netloc) or parsed.path.rsplit("/", 1)[0] + "/" != abstract.path:
                     errors.append(f"{label}: PDF must be in the same directory as its abstract")
                 if not parsed.path.endswith(".pdf") or parsed.query or parsed.fragment:

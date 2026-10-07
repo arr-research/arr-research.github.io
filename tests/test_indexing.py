@@ -49,8 +49,8 @@ class IndexingTests(unittest.TestCase):
         ns = {"s": "http://www.sitemaps.org/schemas/sitemap/0.9"}
         urls = {item.text for item in xml.findall("s:url/s:loc", ns)}
         self.assertTrue({SITE + "/", SITE + "/agents/", SITE + "/authors/example-author/",
-                         f"{SITE}/papers/{self.paper.id}/",
-                         f"{SITE}/papers/{self.paper.id}/versions/v1/"}.issubset(urls))
+                         f"{SITE}/papers/{self.paper.id}/"}.issubset(urls))
+        self.assertNotIn(f"{SITE}/papers/{self.paper.id}/versions/v1/", urls)
         self.assertFalse(xml.findall("s:url/s:lastmod", ns))
         self.assertEqual(self.paper.metadata["date"], "1999-01-02")
 
@@ -130,12 +130,12 @@ class IndexingTests(unittest.TestCase):
                 site_pdfs.published_pdf(self.paper, self.timestamp, cache_dir=self.cache, fetch_remote=True)
             request.assert_not_called()
 
-    def render(self, permanent=False, local=True, canonical=SITE):
+    def render(self, permanent=False, local=True, canonical=SITE, latest="v2"):
         with patch.object(build_site, "ROOT", self.root):
             return build_site.build_paper_page(
                 self.paper, self.timestamp, [], {self.paper.id: "papers"},
                 [dict(self.timestamp, id=self.paper.id, version="v1")],
-                {"v1": self.paper}, "v2", permanent, "/preview", canonical,
+                {"v1": self.paper}, latest, permanent, "/preview", canonical,
                 "arr-research/arr-research.github.io", local_pdf=local,
             )
 
@@ -152,6 +152,27 @@ class IndexingTests(unittest.TestCase):
                 self.assertLess(text.index('<section class="abstract">'), text.index('class="timestamp-panel"'))
                 self.assertEqual(page.meta["citation_publication_date"], ["2026/08/13"])
                 self.assertEqual(page.meta["citation_online_date"], ["2026/08/14"])
+
+    def test_permanent_page_of_current_version_names_the_record_page_as_canonical(self):
+        record = f"{SITE}/papers/{self.paper.id}/"
+        current = check_site_indexing.Page(self.render(permanent=True, latest="v1"))
+        older = check_site_indexing.Page(self.render(permanent=True, latest="v2"))
+        self.assertEqual(current.canonical, record)
+        self.assertEqual(older.canonical, f"{record}versions/v1/")
+        self.assertEqual(check_site_indexing.Page(self.render(latest="v1")).canonical, record)
+        # the citation metadata of the snapshot still points at its own PDF copy
+        self.assertEqual(current.meta["citation_pdf_url"], [f"{record}versions/v1/{self.paper.id}-v1.pdf"])
+
+    def test_sitemap_lists_only_older_versions(self):
+        old = test_validation.PaperValidationTests.make_paper(self, self.root / "old")
+        old.metadata["version"] = "v1"
+        self.paper.metadata["version"] = "v2"
+        with patch.object(build_site, "OUTPUT_DIR", self.root):
+            build_site.write_sitemaps([self.paper], {self.paper.id: [old, self.paper]}, [], SITE)
+        xml = ET.fromstring((self.root / "sitemap.xml").read_text())
+        urls = {item.text for item in xml.findall("{http://www.sitemaps.org/schemas/sitemap/0.9}url/{http://www.sitemaps.org/schemas/sitemap/0.9}loc")}
+        self.assertIn(f"{SITE}/papers/{self.paper.id}/versions/v1/", urls)
+        self.assertNotIn(f"{SITE}/papers/{self.paper.id}/versions/v2/", urls)
 
     def test_no_external_or_relative_pdf_citation_in_offline_preview(self):
         for local, canonical in [(False, SITE), (True, "")]:
