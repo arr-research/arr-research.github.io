@@ -2,7 +2,7 @@
 Adapted with attribution from the exact-algebra portion of GPT-6 Astra's v1 review.
 This published adaptation is reproducibility material, not an independent v2 review.
 No import or execution of the author's verify.py. Exact generic identities use a
-multiquadratic algebra over Q(u), and numerical checks form a 36x36 channel.
+multiquadratic algebra over Q(u); this script performs exact symbolic checks only.
 """
 from pathlib import Path
 import json, hashlib, platform, time

@@ -4,7 +4,7 @@
 
 Lluis Eriksson · ARR-2026-3RH54K4NC58MRSX3 · v2 · 11 October 2026.
 
-Canonical PDF: `paper.pdf`, SHA-256 `3c60aee3179b0f8d9c7a07960b7b600cca8cac70b5898f710676d8d124ea25ae`, eight pages. Editable source: `paper.tex`. The `paper.md` and `paper.txt` renditions are extracted from this PDF; consult the PDF for mathematical typography.
+Canonical PDF: `paper.pdf`, SHA-256 `58fdb7edfe8b5a663512746326134acf59c97a1108c36f45d634d211aa06c4fb`, eight pages. Editable source: `paper.tex`. The `paper.md` and `paper.txt` renditions are extracted from this PDF; consult the PDF for mathematical typography.
 
 V2 supplies the complete generic overlap derivation, corrects the geometric-optimizer decimal, clarifies the twelve product bases in the sharpness example, and includes the reproducibility material omitted from the v1 public release. It also clarifies frame/vectorization identities, invariant sectors, compression, the spectral-moment comparison and the compactness/equality argument. The principal theorem and one-parameter scope are unchanged. See `RESPONSE-TO-REVIEWS.txt`.
 

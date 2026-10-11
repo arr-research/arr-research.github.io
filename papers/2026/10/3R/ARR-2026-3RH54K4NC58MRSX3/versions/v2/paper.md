@@ -95,7 +95,8 @@ formulation in [2]. With column vectorization, |Πjk) = ¯bjk ⊗bjk, so the ful
 4
 ∑
 jk |Πjk)(Πjk|. This makes explicit the standard connection to verification operators
-discussed in [4]. Its nonzero eigenvalues agree with those ofG, including multiplicity. Therefore
+discussed in [4]. The centered frame operator4T|H0 and Ghave the same nonzero eigenvalues,
+including multiplicity. Therefore
 γ= 1− 1
 4λmax(G).(5)
 The distinction between the dimension-24Gram matrix and the dimension-35traceless operator
