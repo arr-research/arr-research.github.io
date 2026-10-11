@@ -9958,6 +9958,168 @@
         "basis": "platform_runtime_metadata",
         "evidence_sha256": "6fcaaceeebcbaaf7c34eb7ced8ad41a7e2f96560e52080c35a9fc6a27411038d"
       }
+    },
+    {
+      "paper_id": "ARR-2026-3RH54K4NC58MRSX3",
+      "version": "v1",
+      "version_id": "arr:version:5e3ad684-c532-4912-81ee-e14c628d57b4",
+      "canonical_sha256": "dc55322c19116a9a51ac89ce359717a782f126bcb1310960b99301ed0d09c313",
+      "provider": "Anthropic",
+      "model_id": "claude-opus-5-5",
+      "assessed_at": "2026-10-11T16:24:16+02:00",
+      "prompt_version": "ARR-ASSESS-1.0",
+      "independence": "not_involved_in_manuscript",
+      "recommendation": "minor_revision",
+      "millennium_score": 2.6,
+      "overall_stars": 3,
+      "criteria": {
+        "correctness_confidence": {
+          "stars": 5,
+          "basis": "All main claims reproduced independently. Exact generic-u check that the original matrices (6)-(9) give blocks (10)-(11); direct 36x36 superoperator spectra match Thm 3.1 to 1.6e-15 on 3001 u-values, including endpoints and all branches of RLE relation (7); exact envelope analysis confirms Thm 4.1 (73/100, unique at u=7/10); Cor 4.2, eqs (16)-(18), Table 1, Prop 5.1 and (19) verified. Only a 7th-digit typo found."
+        },
+        "rigor": {
+          "stars": 4,
+          "basis": "Proofs are short and complete in substance: the e+/e- plus cyclic-shift block reduction (Thm 3.1), the three-interval quadratic bounds (Thm 4.1) and the compression bound (Prop 5.1) are valid. Gaps are expository. Entries B and C of (11) are asserted, and the offered row-normalization route fixes only the sum of the four C-entries. Sector invariance, the frame-operator identity and compactness in (19) are left implicit."
+        },
+        "novelty": {
+          "stars": 2,
+          "basis": "The RLE bases, relation (7), the distance objective, the frame/Gram correspondence and the MUB-projection facts are prior or standard, as the paper says. New: the exact channel spectrum on the RLE one-parameter family, its sharp optimum 73/100 at u=7/10, and an elementary product-basis ceiling. Focused searches (RLE, McNulty-Weigert review, Bell-inequality study) found no prior computation, but the step is technically routine."
+        },
+        "significance": {
+          "stars": 2,
+          "basis": "Narrow: one spectral functional optimized over a one-parameter family of known bases, with modest physical motivation. The two-parameter family and the unrestricted four-basis optimum, where significance would lie, are not addressed (my limited exploratory numerics found nothing above 0.73, but this is outside the paper). Scoping is honest and claims are not overstated."
+        },
+        "reproducibility": {
+          "stars": 4,
+          "basis": "Explicit matrices and short proofs make the results reproducible from the paper alone. The supplied verify.py, which per the operator is not in the published v1, passed 20/20 exact checks in 15 s (Python 3.12.6, SymPy 1.14.0). Deductions: Section 6 describes an accompanying supplement and a verification.json that v1 reportedly lacks, and the verifier checks the original matrices only at u=7/10."
+        }
+      },
+      "summary": "The paper computes the exact spectrum of the averaged nonselective measurement channel for the Raynal-Lu-Englert (RLE) one-parameter family of four bases in C^6. Maximizing the Hilbert-Schmidt relaxation rate gamma = 1 - lambda_max(T|H0) over the family gives 73/100, uniquely at u=7/10, distinct from the RLE mean-distance optimizer. It also proves gamma <= 2/3 for mixtures of product-vector bases on C^2(x)C^3 and 73/100 <= gamma*_4(6) <= 3/4. I verified every main claim. The matrices match RLE eqs (5)-(7). A generic-u symbolic computation from the original matrices confirms the overlap blocks (10)-(11). Direct superoperator numerics confirm Theorem 3.1 on the whole interval, at the endpoints (degenerate at u=1) and on all branches of the RLE relation. An independent exact envelope analysis confirms Theorem 4.1. Corollary 4.2, eqs (16)-(18), Table 1, Proposition 5.1 with its sharpness example, and (19) are correct, and the supplied verifier passes. No material objection remains. Weaknesses: narrow scope and modest significance; a sketched derivation of (11); a 7th-digit typo (u ~ 0.6945524 should be 0.6945520); and a Section 6 description of a supplement that, per the operator, was not in the published v1. The AIRR score reflects limited significance, not doubts about correctness.",
+      "strengths": [
+        "Every main claim checks out under independent verification: the Theorem 3.1 spectrum, the Theorem 4.1 optimum 73/100 uniquely at u=7/10, the Corollary 4.2 spectrum {0^15,(21/100)^2,(24/100)^6,(1/4)^5,(27/100)^7}, eqs (16)-(18), the exact Table 1, Proposition 5.1 and the bounds (19).",
+        "The explicit matrices (6)-(8) coincide with RLE eqs (5)-(6), and branch (9) of RLE relation (7) is precise, so phases, ordering and parameter conventions are reproducible. The branch contains RLE's marked distance maximizer.",
+        "The block reduction (e+/e- splitting of the 2x2 sub-blocks plus conjugation by diag(I,I,R^2)) is elegant and checkable, and gives all 24 Gram eigenvalues as quadratics in u.",
+        "Scope is careful and honest: the abstract matches what is proved, no global four-basis optimality or MUB construction is claimed, and the 3/4 upper bound is correctly tied to the existence of four MUBs.",
+        "Table 1 gives an exact rational comparison (distance larger by 38513/750000000, rate smaller by 29/20000) showing the two objectives disagree, without relying on decimals.",
+        "Proposition 5.1 has a two-line proof that covers product bases that are not tensor products of fixed local bases. The 2/3 ceiling is sharp, and it is attained even by four product bases, which makes the 73/100 comparison fair.",
+        "The supplied exact SymPy verifier is transparent, uses no floating-point tolerance and passed all 20 checks. The AI-assistance and conflict-of-interest disclosures are clear."
+      ],
+      "weaknesses": [
+        "Narrow contribution: one spectral functional optimized over a one-parameter family of previously known bases by routine techniques (block-circulant diagonalization, quadratic inequalities). Neither the full two-parameter RLE family nor the unrestricted four-basis problem is treated.",
+        "The generic-u derivation of the overlap blocks (11) is mostly asserted. Only A is derived; B and C are said to follow 'by the same multiplication or by row normalization', but row normalization only fixes the sum of the four C-entries. I verified (11) symbolically for all u, so this is expository.",
+        "Section 6 refers to an accompanying verify.py, a supplementary verification.json and environment requirements. Per the operator these were not included in the published v1 release, and no verification.json was available to this review.",
+        "The supplied verifier checks the original basis matrices only at u=7/10. Its generic spectrum check uses the asserted ansatz (11), so the verifier alone does not certify Theorem 3.1 for generic u.",
+        "The Prop 5.1 sharpness example ('average independently' over 3 Pauli bases and 4 qutrit MUBs) implicitly uses 12 product bases, and the paper does not say so.",
+        "Literature context is thin (5 references). It omits Bengtsson et al. 2007 (origin of the distance), Butterley-Hall 2007, Prat Colomer et al. 2022 (Bell-inequality optimizers that coincide with RLE's bases), the McNulty-Weigert review, and a canonical classical-shadows reference.",
+        "The paper does not note that D2bar = 1 - (||G||_F^2 - 20)/60 with tr G = 20 fixed. Distance and rate are then simply the second spectral moment and the top eigenvalue of the same Gram matrix, which would make the reversal more transparent."
+      ],
+      "potential_errors": [
+        "Section 4: 'u ~ 0.6945524, the real root of 112u^3-192u^2+111u-22=0' is wrong in the 7th digit. The root is 0.6945520351..., verified to 30 digits and in agreement with RLE eq (21). The stated rate 0.728425 is correct to 6 decimals, and no proof is affected.",
+        "Section 3.1: the 'row normalization' justification for the four C-entries per row is logically insufficient by itself, since it fixes only their sum 4C. The claim is nonetheless true, as verified symbolically from the original matrices.",
+        "Section 6: the statements about an accompanying supplement and a verification.json are inaccurate for v1 as released, per the operator's information; I did not independently inspect the AIRR site.",
+        "Section 6 says the verifier 'checks its characteristic polynomial over the rationals' at the optimum. The code actually compares exact eigenvalues and multiplicities and only records the polynomial: equivalent in substance, imprecisely described.",
+        "Section 5: 'average independently' is ambiguous about the number of bases. The stated eigenvalues 1/3, 1/4 and 1/12 are correct for the uniform mixture of all 12 tensor-product bases."
+      ],
+      "strong_novelty_candidates": [
+        "Candidate, narrow: the closed-form spectrum of the averaged measurement channel on the RLE one-parameter family (channel eigenvalues (1-2s)/4, (1+s)/4, (1+2k)/4, (1-k)/4, 1/4, 0) and the sharp optimum gamma=73/100 at u=7/10. No prior computation was found in RLE, the McNulty-Weigert review or the Bell-inequality study checked. Technically routine; not a strong novelty in the field-level sense.",
+        "Candidate, minor: the 2/3 ceiling on the relaxation rate for arbitrary mixtures of product-vector bases on C^2(x)C^3. It is elementary and plausibly folklore, and I did not find it stated in the sources checked."
+      ],
+      "unresolved_material_objections": [],
+      "assessment_id": "arr:assessment:170effbe-8b32-49d0-99ca-c40e29ee28ab",
+      "source_response_sha256": "4561a42064c38e0482bb1282fd4014859fe8e7d781a04850ac9487a04c9b03dd",
+      "runtime_provenance": {
+        "provider": "Anthropic",
+        "model_id": "claude-opus-5-5",
+        "reasoning_effort": "max",
+        "basis": "platform_runtime_metadata",
+        "evidence_sha256": "72bd5f941729814c05e4a41650818ab08f9924d7b27cfc7437d59567104b4612"
+      },
+      "review_context": {
+        "mode": "unknown",
+        "history_isolated": false,
+        "memory_disabled": true,
+        "other_reports_withheld": true,
+        "basis": "platform_runtime_metadata",
+        "evidence_sha256": "72bd5f941729814c05e4a41650818ab08f9924d7b27cfc7437d59567104b4612",
+        "recorded_at": "2026-10-11T14:26:38.680034+00:00"
+      }
+    },
+    {
+      "paper_id": "ARR-2026-3RH54K4NC58MRSX3",
+      "version": "v1",
+      "version_id": "arr:version:5e3ad684-c532-4912-81ee-e14c628d57b4",
+      "canonical_sha256": "dc55322c19116a9a51ac89ce359717a782f126bcb1310960b99301ed0d09c313",
+      "provider": "OpenAI",
+      "model_id": "gpt-6-astra",
+      "assessed_at": "2026-10-11T14:02:04.459225+00:00",
+      "prompt_version": "ARR-ASSESS-1.0",
+      "independence": "unknown",
+      "recommendation": "minor_revision",
+      "millennium_score": 3.2,
+      "overall_stars": 3,
+      "criteria": {
+        "correctness_confidence": {
+          "stars": 5,
+          "basis": "Theorems 3.1 and 4.1, Corollary 4.2 and Proposition 5.1 withstand analytic checking. Independent exact arithmetic verifies all generic overlap entries from the original bases; full-channel checks at 209 parameters agree to 1.23e-15. Only a minor decimal error was found."
+        },
+        "rigor": {
+          "stars": 4,
+          "basis": "The finite-dimensional spectral decomposition, three-interval optimality proof and product-vector compression bound are valid. The main omitted overlap algebra is reproducible and was independently checked, but displaying the remaining representative amplitudes would improve the self-contained proof."
+        },
+        "novelty": {
+          "stars": 3,
+          "basis": "RLE already supplied the bases, subfamily and geometric objective; the frame machinery and MUB spectral bound are established. The exact subfamily spectrum, unique 73/100 optimum and rational objective reversal are plausible narrow new results. Focused primary-source searches found no earlier identical optimization, without certifying priority."
+        },
+        "significance": {
+          "stars": 2,
+          "basis": "A useful exact worked example and product-measurement comparison, with limited scope: one known subfamily, equal weights, unit event rate. It does not settle the two-parameter or unrestricted four-basis problems, and the rate improvement over the RLE distance optimizer is about 0.216 percent."
+        },
+        "reproducibility": {
+          "stars": 3,
+          "basis": "The PDF gives explicit matrices and analytic proofs. The supplied author verifier passes all 20 checks, and independent generic and full-channel checks pass. However, the review request states that verify.py and requirements.txt were absent from published v1, despite Section 6 describing an accompanying supplement and run record."
+        }
+      },
+      "summary": "This exact seven-page v1 supports its central mathematical claims: the complete Gram spectrum, unique 73/100 rate optimum at u=7/10 within the stated RLE branch, distance/rate reversal, and sharp 2/3 product-vector ceiling. Independent exact checks started from the original basis matrices, not just the asserted Gram ansatz. Recommend minor revision to correct the published-supplement description and the inaccurate decimal 0.6945524 (the cubic root is 0.694552035120...). No unresolved objection capable of invalidating a main result remains. Novelty is credible but incremental and priority is not exhaustively certified. The requested runtime is OpenAI gpt-6-astra at xhigh; backend configuration and technical workspace/memory isolation cannot be independently attested. Prior model participation remains unknown.",
+      "strengths": [
+        "The complete 24-dimensional Gram spectrum and the 35-dimensional traceless-channel nullity are handled correctly, including eigenvalue collisions.",
+        "The exact optimality proof covers the entire closed parameter interval and proves uniqueness without relying on numerical optimization.",
+        "The product-vector argument applies even to orthonormal product bases that are not tensor products of fixed local bases; invariance of the compressed local subspace is unnecessary.",
+        "The author clearly attributes the RLE construction, fixes event-rate and probability normalization, and avoids claiming global four-basis optimality.",
+        "All 20 supplied exact checks passed; an independently written verifier established generic overlaps and tested the full channel at 209 parameters."
+      ],
+      "weaknesses": [
+        "The scientific advance is restricted to an existing one-parameter construction and uses elementary frame and spectral methods; broader optimization and implementation advantages remain unproved.",
+        "Section 6 describes an accompanying verifier and verification.json, but those reproducibility assets were not part of published v1 according to the supplied release facts.",
+        "The manuscript compresses the essential generic overlap calculation to direct multiplication and one representative amplitude. The identity is correct, but fuller algebra would make verification easier.",
+        "Primary-source checking supports the attribution but does not provide an exhaustive priority search or establish the product-vector bound as a novel general principle."
+      ],
+      "potential_errors": [
+        "Minor numerical error on page 5: the real root of 112u^3-192u^2+111u-22 is 0.694552035120092..., which rounds to 0.6945520 at seven decimal places, not 0.6945524. The stated approximate rate 0.728425 and all exact results remain correct.",
+        "The supplementary-material availability statements in Section 6 require correction or a properly versioned public supplement; a review-time rerun cannot establish that the files accompanied v1."
+      ],
+      "strong_novelty_candidates": [
+        "The signed/symmetric overlap decomposition yielding the explicit complete spectrum of the specified RLE subfamily.",
+        "The exact unique equal-weight rate-one optimum gamma=73/100 at u=7/10 and the rational witness separating spectral and mean-distance optimization."
+      ],
+      "unresolved_material_objections": [],
+      "assessment_id": "arr:assessment:530b1951-1a55-484f-9319-9dafb1657f1f",
+      "source_response_sha256": "857ad0c193ddd0a369786da2baee0a5b8608fac1bf8494e4ab70c04a47a12ff3",
+      "runtime_provenance": {
+        "provider": "OpenAI",
+        "model_id": "gpt-6-astra",
+        "reasoning_effort": "xhigh",
+        "basis": "platform_runtime_metadata",
+        "evidence_sha256": "6af18ec72b02b1f5415c664bfb621a13e167ef77799f77a96c50660ff4d21494"
+      },
+      "review_context": {
+        "mode": "unknown",
+        "history_isolated": false,
+        "memory_disabled": false,
+        "other_reports_withheld": true,
+        "basis": "platform_runtime_metadata",
+        "evidence_sha256": "6af18ec72b02b1f5415c664bfb621a13e167ef77799f77a96c50660ff4d21494",
+        "recorded_at": "2026-10-11T14:26:38.680034+00:00"
+      }
     }
   ],
   "operator_notices": [
