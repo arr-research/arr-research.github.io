@@ -102,7 +102,7 @@ class PageviewTests(unittest.TestCase):
         for days in [7,30,90,365]:
             response = self.client.get('/admin/statistics?days='+str(days))
             self.assertEqual(response.status_code,200)
-            self.assertIn(b'not a unique person',response.data)
+            self.assertIn('no una persona única',response.get_data(as_text=True))
             self.assertIn(b'no-store',response.headers['Cache-Control'].encode())
         for days in ['0','-1','100000','hello']:
             self.assertEqual(self.client.get('/admin/statistics?days='+days).status_code,400)
@@ -125,7 +125,7 @@ class PageviewTests(unittest.TestCase):
         self.assertEqual(context['top_pdfs'], [{'path':PDF, 'views':3, 'title':'PDF v1 · Paper X — AIRR.SCIENCE'}])
         self.assertEqual((context['series'][-1]['views'], context['series'][-1]['pdfs']), (1, 3))
         response = self.client.get('/admin/statistics?days=7')
-        self.assertIn(b'Most opened PDFs', response.data)
+        self.assertIn('PDF abiertos desde AIRR', response.get_data(as_text=True))
         self.assertIn(b'href="https://airr.science/papers/ARR-X/versions/v1/"', response.data)
 
     def test_retention_sweep_without_new_traffic(self):

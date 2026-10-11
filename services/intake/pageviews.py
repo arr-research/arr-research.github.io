@@ -113,34 +113,43 @@ def install(app, a):
         state['swept'] = day
         return response
 
+    from services.intake.admin_statistics import (
+        reporting_range, daily_series, csv_daily, dashboard_data, install_download_reader,
+    )
+    read_downloads = install_download_reader(app)
+
+    def operator_only():
+        if g.user['role'] != 'operator' or not g.user['totp_secret']:
+            abort(403)
+
+    @app.get('/admin')
     @app.get('/admin/statistics')
     @a.login_required
     def pageview_dashboard():
-        if g.user['role'] != 'operator' or not g.user['totp_secret']:
-            abort(403)
+        operator_only()
+        today = a.now().date()
+        start, end = reporting_range(request.args, today)
         try:
-            days = int(request.args.get('days', '30'))
+            account_page = int(request.args.get('accounts_page', '1'))
         except ValueError:
             abort(400)
-        if days not in {7, 30, 90, 365}:
-            abort(400)
-        today = a.now().date()
-        since = (today - timedelta(days=days - 1)).isoformat()
-        db = a.get_db()
-        daily, pdf_daily, by_path = {}, {}, {}
-        for day, path, views in db.execute('SELECT day,path,views FROM public_pageviews WHERE day>=?', (since,)):
-            target = pdf_daily if PDF_LABEL.match(path) else daily
-            target[day] = target.get(day, 0) + views
-            by_path[path] = by_path.get(path, 0) + views
-        days_shown = [(today-timedelta(days=offset)).isoformat() for offset in range(days-1, -1, -1)]
-        series = [{'day': day, 'views': daily.get(day, 0), 'pdfs': pdf_daily.get(day, 0)} for day in days_shown]
         titles = catalogue()
-        ranked = sorted(by_path.items(), key=lambda item: (-item[1], item[0]))
-        rows = [{'path': path, 'views': views, 'title': titles.get(path, path)} for path, views in ranked]
-        top = [row for row in rows if not PDF_LABEL.match(row['path'])][:40]
-        top_pdfs = [row for row in rows if PDF_LABEL.match(row['path'])][:40]
-        return render_template('statistics.html', days=days, series=series, top=top, top_pdfs=top_pdfs,
-                               total=sum(daily.values()), today=daily.get(today.isoformat(), 0),
-                               pdf_total=sum(pdf_daily.values()), pdf_today=pdf_daily.get(today.isoformat(), 0),
-                               maximum=max([row['views'] for row in series]+[1]),
-                               enabled=app.config['ANALYTICS_ENABLED'])
+        context = dashboard_data(a.get_db(), start, end, today, titles, account_page)
+        downloads, download_refresh_failed = read_downloads()
+        if downloads:
+            # Cache remains public IDs/counts only; labels come from the public catalogue.
+            downloads = {**downloads, 'rows': [{**row, 'title': titles.get(
+                '/papers/' + row['paper_id'] + '/', row['paper_id'])} for row in downloads['rows']]}
+        return render_template('statistics.html', **context,
+                               downloads=downloads, download_refresh_failed=download_refresh_failed,
+                               generated_at=a.iso(), enabled=app.config['ANALYTICS_ENABLED'])
+
+    @app.get('/admin/statistics.csv')
+    @a.login_required
+    def pageview_csv():
+        operator_only()
+        start, end = reporting_range(request.args, a.now().date())
+        response = Response(csv_daily(daily_series(a.get_db(), start, end)), mimetype='text/csv')
+        response.headers['Content-Disposition'] = (
+            f'attachment; filename="airr-statistics-{start}-{end}.csv"')
+        return response

@@ -670,7 +670,7 @@ def install(app, a):
         session.permanent = True
         a.audit('editor_recovery_login')
         flash('A one-use recovery code was consumed. Contact the operator to restore your authenticator through the recovery procedure.', 'warning')
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('pageview_dashboard' if user['role'] == 'operator' else 'dashboard'))
 
     @app.get('/admin/submission/<submission_id>/release-package')
     @a.editor_required

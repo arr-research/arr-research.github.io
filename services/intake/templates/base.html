@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="{% block language %}en{% endblock %}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
 <title>{% block title %}AIRR.SCIENCE private submissions{% endblock %}</title>
 <style>
@@ -8,9 +8,9 @@ body{background:#080b10}nav{flex-wrap:wrap;justify-content:space-between;border-
 [hidden]{display:none!important}.subject-fields{border:1px solid #53647a;padding:1rem;margin:1rem 0;min-width:0}.subject-fields legend{font-weight:700;color:#e1b85b}.subject-fields p{overflow-wrap:anywhere}.subject-fields select{width:100%;max-width:100%;min-width:0;text-overflow:ellipsis}.subject-fields summary{cursor:pointer;min-height:44px;display:flex;align-items:center}.subject-picker{min-width:0}select:focus-visible,summary:focus-visible{outline:3px solid #f0cb79;outline-offset:3px}
 .preserve-lines{white-space:pre-wrap;overflow-wrap:anywhere}.two-fields{display:grid;grid-template-columns:1fr 1fr;gap:1rem}details{margin:1rem 0}summary{cursor:pointer;padding:.5rem 0}td{overflow-wrap:anywhere}@media(max-width:600px){.two-fields{grid-template-columns:1fr}table{font-size:.85rem}}
 .submission-boundary{border-left:3px solid #e1b85b;padding:.3rem 0 .3rem 1rem}.submission-agreement{border:0;border-top:1px solid #2b3748;padding:1rem 0 0;margin:1.5rem 0;min-width:0}.submission-agreement legend{font-weight:700;padding-right:.75rem}.release-summary{margin:1rem 0}.release-summary dt{font-size:.9rem;color:#aab6c5}.release-summary dd{margin:0 0 .75rem;overflow-wrap:anywhere}
-</style></head><body>
+</style>{% block extra_head %}{% endblock %}</head><body>
 <nav><a href="{{ url_for('dashboard') if g.user else url_for('submit') }}"><img src="{{ url_for('static', filename='airr-logo.png') }}" alt="AIRR.SCIENCE — Archive for Independent &amp; Rigorous Research" width="1859" height="336"></a>{% if g.user %}<span>{{ g.user['display_name'] }} · {{ g.user['role'] }}</span><form method="post" action="{{ url_for('logout') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button>Sign out</button></form>{% else %}<a href="{{ url_for('account_login') }}">Workspace sign in</a><a href="{{ url_for('login') }}">Editor sign in</a>{% endif %}</nav>
-{% if g.user and g.user['role']=='operator' and g.user['totp_secret'] %}<p><a href="{{ url_for('dashboard') }}">Review queue</a> · <a href="{{ url_for('pageview_dashboard') }}">Website statistics</a></p>{% endif %}
+{% if g.user and g.user['role']=='operator' and g.user['totp_secret'] %}<p><a href="{{ url_for('dashboard') }}">Review queue</a> · <a href="{{ url_for('pageview_dashboard') }}">Panel de administración</a></p>{% endif %}
 {% if private_account %}<p><a href="{{ url_for('dashboard') }}">My submissions</a> · <a href="{{ url_for('submit') }}">Submit a paper</a> · <a href="{{ url_for('account_settings') }}">Workspace settings</a></p>{% endif %}
 <main>{% for category,message in get_flashed_messages(with_categories=true) %}<p class="flash {{ category }}">{{ message }}</p>{% endfor %}{% block content %}{% endblock %}</main>
 <footer><p class="meta"><a href="https://airr.science/contact/">Operator and contact</a> · <a href="https://airr.science/privacy/">Privacy</a> · <a href="https://airr.science/terms/">Deposit terms</a></p></footer>

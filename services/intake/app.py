@@ -685,7 +685,7 @@ def register_routes(app: Flask) -> None:
                 session["user_id"] = user["id"]
                 session.permanent = True
                 audit("login")
-                return redirect(url_for("dashboard"))
+                return redirect(url_for("pageview_dashboard" if user["role"] == "operator" else "dashboard"))
         return render_template("login.html")
 
     @app.post("/logout")
