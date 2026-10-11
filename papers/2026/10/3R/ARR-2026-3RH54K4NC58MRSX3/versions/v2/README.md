@@ -14,4 +14,6 @@ Use Python 3.10 or later and SymPy 1.14.0 (`requirements.txt`). From this direct
 
 The first script passes 20 exact checks; the second passes 10 generic original-matrix check groups. `verification-summary.json` distinguishes author-assisted reproduction from model review. V1 model reports and ratings remain on v1; any v2 reports are separately registered against this PDF. Publication does not grant human scientific acceptance.
 
+The [complete v2 assessment record](https://github.com/arr-research/arr-research.github.io/blob/main/registry/assessment-evidence/relaxation-v2-20261011-summary/README.md) preserves both models' original reports, final checks and protocol clarification. Astra recommends acceptance for the narrow scope. Opus finds the work scientifically suitable as a working paper but recommends a substantive extension for admission to AIRR's accepted collection; its AIRR score remains 2.60. No review or grade is silently replaced, and no human acceptance is asserted.
+
 Manuscript: CC BY 4.0. Metadata: CC0. The two verifier scripts: Apache 2.0. Generated results: CC0. Scope and AI-assisted provenance are explicit in `LICENSES.json`, `LICENSES/` and `PROVENANCE.json`. Third-party dependencies are not bundled.
