@@ -227,7 +227,7 @@ class IntakeTests(unittest.TestCase):
             data={"csrf_token": csrf, "email": "operator@example.org", "password": "operator-password-123", "totp": totp("JBSWY3DPEHPK3PXP")},
         )
         self.assertEqual(good.status_code, 302)
-        self.assertEqual(good.headers["Location"], "/")
+        self.assertEqual(good.headers["Location"], "/admin/statistics")
 
     def test_direct_form_uses_private_workspace_without_contact_fields(self) -> None:
         response = self.client.get("/submit")

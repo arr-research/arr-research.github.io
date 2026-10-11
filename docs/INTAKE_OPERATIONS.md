@@ -268,3 +268,37 @@ affected people when legally required. Record why notification was or was not ma
 ## Private alias workspaces
 
 See [PRIVATE_WORKSPACES.md](PRIVATE_WORKSPACES.md) for registration, recovery, no-email correspondence, migration, validation and rollback. Removing contact fields does not change the separate documented reception-readiness gate or prove a legal exemption.
+
+## Private administrator dashboard
+
+The operator signs in at `https://submit.airr.science/login` with the existing
+password and authenticator, then lands at `/admin/statistics` (also available at
+`/admin`). Bookmark that page for subsequent visits. The editorial queue remains
+at `/`; independent editors retain their assigned-case access and cannot read
+the operator dashboard or its CSV export.
+
+The Spanish dashboard provides daily charts, custom date ranges within the
+400-day traffic retention window, a daily CSV, top public pages and PDF opens,
+current account records and submission counts. These are consenting page loads,
+not unique people. Missing rows do not establish collection uptime. Today is
+partial; comparisons are withheld when the preceding period starts before the
+first retained traffic row. Account/submission history reflects records still
+present, including revisions and tests. Account aliases are declared identities,
+not verified distinct people. Account records are paginated 50 at a time and do
+not expose email addresses, password hashes, MFA secrets or recovery material.
+
+GitHub PDF download counts come from the public `metrics.json` snapshot, fetched
+on demand and cached in each worker for ten minutes. Its source timestamp remains
+visible; a failed refresh shows the dated last copy or an unavailable message,
+never an invented zero. It is a cumulative metric, separate from date-filtered
+PDF opens, and has no reconstructed daily history. Search Console buttons open
+the owner's Google reports; no Google credentials or search statistics are
+stored by intake.
+
+The dashboard adds no database migration, tracking category or scheduled job.
+All dashboard/export responses retain the existing login/MFA requirement,
+operator-only authorization, `no-store`, `noindex` and private-site CSP. Deploy
+with the existing pinned-commit upgrade and encrypted rollback procedure;
+preserve accounts, MFA, grants, receipts and existing case decisions. Verify the
+authenticated panel and CSV, unauthenticated redirect, readiness and worker
+resumption before recording completion.
