@@ -22,6 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       canonical_url: ${{ steps.catalogue.outputs.canonical_url }}
+      indexnow_urls: ${{ steps.indexnow.outputs.urls }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
@@ -76,6 +77,14 @@ jobs:
             --bing-site-verification "$AIRR_BING_SITE_VERIFICATION" \
             --fetch-remote-pdfs
           python scripts/check_site_indexing.py --canonical-url "$canonical_url"
+      - name: Find the pages that changed since the last deployment
+        id: indexnow
+        # Scheduled builds only refresh counters; search engines are told about pages that read differently.
+        # If this step fails the output stays empty and the whole sitemap is submitted, as before.
+        continue-on-error: true
+        env:
+          SITE_ROOT: ${{ steps.catalogue.outputs.canonical_url }}
+        run: python scripts/submit_indexnow.py --site-root "$SITE_ROOT" --plan _site
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5
         with:
@@ -102,7 +111,9 @@ jobs:
       - name: Notify participating search engines
         env:
           SITE_ROOT: ${{ needs.build.outputs.canonical_url }}
+          INDEXNOW_URLS: ${{ needs.build.outputs.indexnow_urls }}
         run: >-
           python scripts/submit_indexnow.py
           --site-root "$SITE_ROOT"
           --key-file site/indexnow-key.txt
+          --urls-json "$INDEXNOW_URLS"
