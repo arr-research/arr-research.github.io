@@ -10120,6 +10120,160 @@
         "evidence_sha256": "6af18ec72b02b1f5415c664bfb621a13e167ef77799f77a96c50660ff4d21494",
         "recorded_at": "2026-10-11T14:26:38.680034+00:00"
       }
+    },
+    {
+      "paper_id": "ARR-2026-3RH54K4NC58MRSX3",
+      "version": "v2",
+      "version_id": "arr:version:bc5c9f23-b39f-49a1-901c-16f499937caf",
+      "canonical_sha256": "58fdb7edfe8b5a663512746326134acf59c97a1108c36f45d634d211aa06c4fb",
+      "provider": "Anthropic",
+      "model_id": "claude-opus-5-5",
+      "assessed_at": "2026-10-11T19:24:44+02:00",
+      "prompt_version": "ARR-ASSESS-1.0",
+      "independence": "involved_in_manuscript",
+      "recommendation": "major_revision",
+      "millennium_score": 2.6,
+      "overall_stars": 3,
+      "criteria": {
+        "correctness_confidence": {
+          "stars": 5,
+          "basis": "The unchanged mathematics was fully verified in my earlier audit in this session with referee-written code. That covered exact generic-u blocks from the displayed matrices, the proof's 24 eigenvectors satisfying G(u)v=lambda(u)v identically, a semialgebraic check of the unique optimum at u=7/10, exact distance and table values, and the Section 5 proofs with stress tests. The only changed manuscript sentence (p.2) is now correct: the centered frame operator S=VV* kills I and equals 4T on H0, and G=V*V shares its nonzero spectrum. Reruns are identical."
+        },
+        "rigor": {
+          "stars": 4,
+          "basis": "Proofs are complete, with correct quantifiers, domain [1/4,1] and endpoint handling; the p.2 imprecision is fixed. Two minor points remain. The block placement in (11) rests on 'direct multiplication', RLE's cyclic structure and the exact supplement rather than a written derivation. 'Equivalent phase branches' is asserted without proof, though referee numerics show identical overlap blocks on all eight arcs of RLE relation (7)."
+        },
+        "novelty": {
+          "stars": 2,
+          "basis": "The bases, relation and distance objective are RLE (2011), and the frame/Gram method is standard. Bound (19) with its MUB equality case matches Zhu-Hayashi's g-setting (parsimonious) result, since gamma equals their verification gap. Prop 5.1 is an elementary compression argument. New, per a focused non-exhaustive search, is only the closed-form spectrum of the RLE subfamily and its sharp equal-weight optimum: a narrow calculation. Unchanged by the final edits."
+        },
+        "significance": {
+          "stars": 2,
+          "basis": "This is a one-dimensional optimization of a max of five quadratics on a known slice. The gain over RLE's distance optimizer is 0.216%, and the global question (gamma_4*(6) < 3/4?) is untouched. The equal-probability constraint is binding and still not discussed: weights (27,25,25,25)/102 on the same bases give 25/34 > 73/100. The exact objective reversal and the 9.5% margin over product bases are clean but modest. Unchanged by the final edits."
+        },
+        "reproducibility": {
+          "stars": 5,
+          "basis": "The final verify.py (20/20) and verify_generic.py (10/10), rerun on copies, match the regenerated dated outputs except for timestamps. Relative to the prior candidate only the files_sha256 provenance changes, and exact-gram.json is byte-identical. The verifier's executable code is syntax-tree-identical to the audited version, and its corrected docstring ('exact symbolic checks only') is now accurate."
+        }
+      },
+      "summary": "Administrative protocol reconciliation of my final assessment of v2 (PDF SHA-256 58fdb7ed...). No manuscript or scientific input changed (byte-identical to the final-candidate packet). Every scientific finding, criterion rating, the 2.6 score and the 6.0/10 ordinary grade are unchanged. Scientific verdict, from my full audit and final correction check in this session: Theorems 3.1 and 4.1 (73/100, unique at u=7/10), Corollary 4.2, the exact distance reversal, the 2/3 product-vector ceiling and 73/100 <= gamma_4*(6) <= 3/4 are correct. No compulsory correction or material objection remains, and the paper is scientifically suitable for release as a narrow working paper. Admission verdict: AIRR's native 'accept' means admission to the accepted collection and requires the 3.00 'acceptable and substantive' floor. My score stays 2.6 because the contribution is a narrow calculation of modest originality and significance: reweighting the same bases gives 25/34, and the two-parameter and global questions remain open. My earlier 'accept' used conventional referee semantics and contradicted my own score under this protocol. In the native admission sense my recommendation is major_revision: admission would need a substantive extension, not minor edits. This asserts no error and no compulsory correction; no single native category expresses both verdicts.",
+      "strengths": [
+        "Both required corrections from the full review are resolved exactly as described, with no collateral change. Independent diffs, per-page PDF text comparison (only page 2 changes, besides PDF timestamps) and a docstring-stripped syntax-tree comparison of verify_generic.py confirm this.",
+        "Theorem 3.1 holds identically in u on [1/4,1]. The full audit verified the proof's u-independent eigenvectors symbolically and checked the generic-u overlap blocks from the original matrices with two different exact implementations. The follow-up also found the blocks identical on all eight arcs of RLE relation (7).",
+        "Theorem 4.1 is sharp, with a unique maximizer; an independent semialgebraic computation gives {u: h(u) <= 2/25} = {7/10}. Corollary 4.2, Eq. (17), Table 1 and all decimals are exact or correct to the quoted precision, and agree with RLE's own closed forms (Eqs. 17-18, 21-22).",
+        "Section 5 is correct: the 2/3 product-vector ceiling holds for non-tensor product bases, the 12-basis example gives exactly 2/3, and the 3/4 bound has the MUB equality case and is attained by compactness. Random and adversarial searches found no counterexample.",
+        "Scope discipline: the abstract, theorems and limitations consistently restrict claims to the stated branch, equal probabilities and unit rate, and disclaim global optimality and any new MUB construction.",
+        "Exemplary reproducibility: pinned SymPy, exact arithmetic, dated outputs that regenerate field-for-field, accurate script documentation, and clear separation of proof from computational checks."
+      ],
+      "weaknesses": [
+        "Narrow contribution. Once the RLE block structure is known, the result is a one-dimensional optimization of a max of five quadratics using the standard frame/Gram correspondence.",
+        "The equal-probability restriction is binding and still not discussed. The canonical basis's traceless range is orthogonal to the other three, so weights (27,25,25,25)/102 on the same bases at u=7/10 give exactly 25/34 ~ 0.7353 > 73/100.",
+        "Prior art is understated. gamma equals the Zhu-Hayashi verification spectral gap for the maximally entangled state with these four test bases, and the 3/4 bound with its MUB equality case is their g-setting (parsimonious) result. The paper only cites a 'standard connection'.",
+        "Prop 5.1 and its sharpness example are correct but elementary.",
+        "'Equivalent phase branches are not needed for the theorem' asserts an unproven equivalence. Referee numerics show identical overlap blocks on all eight arcs (max deviation 1.3e-15), so it is true, but a short symmetry argument is missing.",
+        "The block placement in (11) is delegated to 'direct multiplication' plus RLE's cyclic structure and the supplement, rather than written out.",
+        "The two-parameter RLE family is not analyzed. A bounded referee scan in the full review found no point above 0.73; it is numerical evidence only."
+      ],
+      "potential_errors": [
+        "Citation precision: '[3, Eqs. (5)-(7)]' and '[3, Eqs. (8)-(12)]' match the numbering of arXiv:1103.1025v1. The referee did not access the published PRA version to confirm its numbering."
+      ],
+      "strong_novelty_candidates": [
+        "Closed-form Gram/channel spectrum of the RLE one-parameter subfamily as quadratics in u (Thm 3.1) and the sharp equal-probability relaxation optimum 73/100 at u=7/10 (Thm 4.1). No prior computation was located in a focused search; the novelty is narrow and methodologically standard."
+      ],
+      "unresolved_material_objections": [],
+      "assessment_id": "arr:assessment:ba6b5fae-95a7-4fee-8bc4-4a56ffd692cc",
+      "source_response_sha256": "d15c4972a30414bc817afe5c9f998da1bcc874db158fb81c87ad5345240e1582",
+      "runtime_provenance": {
+        "provider": "Anthropic",
+        "model_id": "claude-opus-5-5",
+        "reasoning_effort": "max",
+        "basis": "platform_runtime_metadata",
+        "evidence_sha256": "5d061521d5ece4dc851ab9d2bdc19c4a8c72b32b4bcfe1153d509c972ec172f4"
+      },
+      "review_context": {
+        "mode": "unknown",
+        "history_isolated": false,
+        "memory_disabled": true,
+        "other_reports_withheld": true,
+        "basis": "platform_runtime_metadata",
+        "evidence_sha256": "5d061521d5ece4dc851ab9d2bdc19c4a8c72b32b4bcfe1153d509c972ec172f4",
+        "recorded_at": "2026-10-11T17:26:46.035263+00:00"
+      }
+    },
+    {
+      "paper_id": "ARR-2026-3RH54K4NC58MRSX3",
+      "version": "v2",
+      "version_id": "arr:version:bc5c9f23-b39f-49a1-901c-16f499937caf",
+      "canonical_sha256": "58fdb7edfe8b5a663512746326134acf59c97a1108c36f45d634d211aa06c4fb",
+      "provider": "OpenAI",
+      "model_id": "gpt-6-astra",
+      "assessed_at": "2026-10-11T17:00:01+00:00",
+      "prompt_version": "ARR-ASSESS-1.0",
+      "independence": "involved_in_manuscript",
+      "recommendation": "accept",
+      "millennium_score": 3,
+      "overall_stars": 3,
+      "criteria": {
+        "correctness_confidence": {
+          "stars": 5,
+          "basis": "The required centered-frame clarification is correct in the final source and PDF. Complete comparison verifies unchanged mathematics, so the prior same-session analytic audit, fresh exact verifier runs and separate amplitude/full-channel checks remain applicable. No main-claim error remains identified."
+        },
+        "rigor": {
+          "stars": 5,
+          "basis": "Explicit invariant sectors and multiplicities, exact interval inequalities, amplitude derivations, compression without invariance, and compactness/equality reasoning support the narrowly quantified results. The spectral-correspondence wording now unambiguously states the correct operator and normalization."
+        },
+        "novelty": {
+          "stars": 3,
+          "basis": "The explicit polynomial spectrum and unique relaxation optimum on the existing RLE subfamily remain plausible narrow novelty candidates. Bases, distance objective, frame methods and MUB projection bounds are prior work. The prior focused primary-literature search was limited and was not repeated."
+        },
+        "significance": {
+          "stars": 2,
+          "basis": "A useful specialized exact example separating a spectral maximum from a second-moment objective and comparing with product-vector measurements. The wording corrections add no mathematical breadth, global optimality or demonstrated implementation advantage."
+        },
+        "reproducibility": {
+          "stars": 5,
+          "basis": "The prior full audit reproduced 20 exact checks and 10 generic groups and performed 26 additional groups. This follow-up passes 23 provenance/correction checks: executable verifier code is unchanged, final author-output source hashes are valid and scientific outputs match the previously reproduced results. Verifiers and numerical grids were not rerun in this follow-up."
+        }
+      },
+      "summary": "Accept as a scientifically satisfactory narrow working paper, as an advisory model recommendation rather than human editorial acceptance. This final same-session follow-up verifies the exact eight-page PDF hash, the sole centered-frame sentence edit and the sole generic-verifier docstring edit; the earlier full mathematical audit is reused for unchanged content. The unique equal-weight rate-one optimum gamma=73/100 at u=7/10, full spectrum, exact distance reversal, corrected decimals, product-vector ceiling and twelve-basis sharpness example remain supported. The previously required minor correction is resolved, with no required scientific revision or unresolved material objection identified. AIRR significance remains 3.00; the separate ordinary overall grade is 8.0/10. Public release and supplemental licensing remain pending.",
+      "strengths": [
+        "The centered frame operator 4T|H0 is now explicitly identified as sharing G's nonzero spectrum, removing the previous normalization ambiguity.",
+        "The complete symbolic spectrum and unique optimum are proved analytically and survived the prior exact and direct-channel checks.",
+        "The generic amplitudes, phase factors, endpoint degeneracies and exact geometric comparison were checked in the full audit and are unchanged.",
+        "The compression proof covers non-Cartesian product bases and the twelve-basis construction attains the product ceiling.",
+        "Complete source/script comparison supports reuse of prior verification; all final scientific inputs and the original reports were preserved.",
+        "RLE attribution, model involvement, narrow scope and the absence of human scientific acceptance remain explicit."
+      ],
+      "weaknesses": [
+        "The contribution is specialized and uses a pre-existing family and standard methods; no full two-parameter or unrestricted four-basis optimum is established.",
+        "The priority search remains limited, and no experimental or implementation-cost advantage has been demonstrated.",
+        "The final packet's public release and supplemental licensing have not occurred or been independently verified; local reproducibility does not certify a public upload.",
+        "The copied final-candidate rubric retains the prior PDF hash. This assessment follows the latest explicit final-candidate request and the independently verified final PDF hash; the administrative rubric copy should be aligned."
+      ],
+      "potential_errors": [],
+      "strong_novelty_candidates": [
+        "The complete quadratic-polynomial Gram spectrum for the specified branch of the RLE subfamily.",
+        "The exact unique relaxation optimum gamma=73/100 at u=7/10 and its exact rational separation from the geometric distance objective."
+      ],
+      "unresolved_material_objections": [],
+      "assessment_id": "arr:assessment:8b792cdc-c9dd-426a-b4ec-0b12606ef92c",
+      "source_response_sha256": "fc265dbe42b9c91d293ffb9296c631f15a955a41260957783e6b62f9ffc23010",
+      "runtime_provenance": {
+        "provider": "OpenAI",
+        "model_id": "gpt-6-astra",
+        "reasoning_effort": "xhigh",
+        "basis": "platform_runtime_metadata",
+        "evidence_sha256": "2624eda818c997b38ddb5e9fa8f447f0a828cc9c1752ef0630db9bba11712bab"
+      },
+      "review_context": {
+        "mode": "unknown",
+        "history_isolated": false,
+        "memory_disabled": false,
+        "other_reports_withheld": true,
+        "basis": "platform_runtime_metadata",
+        "evidence_sha256": "2624eda818c997b38ddb5e9fa8f447f0a828cc9c1752ef0630db9bba11712bab",
+        "recorded_at": "2026-10-11T17:26:46.035263+00:00"
+      }
     }
   ],
   "operator_notices": [

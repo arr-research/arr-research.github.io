@@ -67,7 +67,14 @@ def check_site(root: Path, site_url: str) -> tuple[list[str], int, int]:
             continue
         article_count += 1
         label = path.relative_to(root).as_posix()
-        if any(path.parent.glob("*.pdf")) and not page.meta.get("citation_pdf_url"):
+        # A record directory keeps the PDFs of earlier versions, so the page of a newer
+        # version that still awaits its release has no PDF of its own to advertise.
+        report = page.meta.get("citation_technical_report_number", [""])[0].split()
+        if len(report) == 2:
+            has_pdf = (path.parent / f"{report[0]}-{report[1]}.pdf").is_file()
+        else:
+            has_pdf = any(path.parent.glob("*.pdf"))
+        if has_pdf and not page.meta.get("citation_pdf_url"):
             errors.append(f"{label}: local PDF has no citation_pdf_url")
         for field in ("citation_title", "citation_author", "citation_publication_date"):
             if not page.meta.get(field) or not all(page.meta[field]):

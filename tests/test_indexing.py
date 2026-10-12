@@ -342,6 +342,19 @@ class IndexingTests(unittest.TestCase):
         errors, _, _ = check_site_indexing.check_site(root, SITE)
         self.assertTrue(any("same directory" in error for error in errors))
 
+    def test_site_checker_accepts_an_earlier_pdf_beside_a_version_awaiting_release(self):
+        root = self.root / "site"
+        page_dir = root / "papers" / self.paper.id
+        page_dir.mkdir(parents=True)
+        self.paper.metadata["version"] = "v2"
+        self.timestamp = {"publication_state": "pending", "deposit_recorded_at": "2026-08-15T10:00:00+00:00"}
+        (page_dir / "index.html").write_text(self.render(local=False), encoding="utf-8")
+        (page_dir / f"{self.paper.id}-v1.pdf").write_bytes(PDF)
+        canonical = f"{SITE}/papers/{self.paper.id}/"
+        (root / "sitemap.xml").write_text(f'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>{canonical}</loc></url></urlset>')
+        (root / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {SITE}/sitemap.xml\n")
+        self.assertEqual(check_site_indexing.check_site(root, SITE), ([], 1, 0))
+
 
 if __name__ == "__main__":
     unittest.main()

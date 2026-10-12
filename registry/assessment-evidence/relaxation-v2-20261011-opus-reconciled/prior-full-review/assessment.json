@@ -1,0 +1,62 @@
+{
+  "paper_id": "ARR-2026-3RH54K4NC58MRSX3",
+  "version": "v2",
+  "version_id": "arr:version:bc5c9f23-b39f-49a1-901c-16f499937caf",
+  "canonical_sha256": "3c60aee3179b0f8d9c7a07960b7b600cca8cac70b5898f710676d8d124ea25ae",
+  "provider": "Anthropic",
+  "model_id": "claude-opus-5-5",
+  "assessed_at": "2026-10-11T19:05:08+02:00",
+  "prompt_version": "ARR-ASSESS-1.0",
+  "independence": "involved_in_manuscript",
+  "recommendation": "minor_revision",
+  "millennium_score": 2.6,
+  "overall_stars": 3,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 5,
+      "basis": "Every main claim was checked by referee-written code independent of the author's scripts. Thm 3.1: the generic-u blocks (Eqs. 10-11) were rederived from the displayed matrices (6)-(9) by exact radical reduction, endpoints included. The proof's 24 u-independent eigenvectors satisfy G(u)v=lambda(u)v identically and are independent. A direct 35x35 channel computation at 50-digit inputs agrees. Thm 4.1: a semialgebraic check gives {u: h<=2/25}={7/10}. Cor 4.2, Eqs. (17)-(18), Table 1, the decimals, Prop 5.1 and bound (19) all check. No counterexample was found."
+    },
+    "rigor": {
+      "stars": 4,
+      "basis": "Proofs are complete and quantifiers, domain [1/4,1], branch and endpoint treatment are correct. The block placement in (11) is asserted by 'direct multiplication' plus RLE's cyclic structure, backed by the supplement rather than written out. One sentence on p.2 ('Its nonzero eigenvalues agree with those of G') is false if read as referring to the full channel, though Eq. (5) is right. The theorem is proved on one branch of RLE relation (7), as the paper explicitly states."
+    },
+    "novelty": {
+      "stars": 2,
+      "basis": "The bases, relation and distance objective are RLE (2011), and the frame/Gram method is standard. Bound (19) with its MUB equality case matches Zhu-Hayashi's g-setting result, since gamma equals their verification gap. Prop 5.1 is an elementary compression argument. New, per a focused non-exhaustive search, is only the closed-form spectrum of the RLE subfamily and its sharp equal-weight optimum: a narrow calculation."
+    },
+    "significance": {
+      "stars": 2,
+      "basis": "This is a one-dimensional optimization of a max of five quadratics on a known slice. The gain over RLE's distance optimizer is 0.216%. The global question (gamma_4*(6) < 3/4?) is untouched. The equal-probability constraint is binding: reweighting the same bases (27,25,25,25)/102 gives 25/34 > 73/100, so the headline value is a constrained optimum. The exact objective reversal and the 9.5% margin over product bases are modest but clean."
+    },
+    "reproducibility": {
+      "stars": 5,
+      "basis": "verify.py (20/20) and verify_generic.py (10/10) were rerun on copies with Python 3.12.6 and SymPy 1.14.0, using exact arithmetic. The outputs match the dated records field-for-field apart from timestamps, and exact-gram.json is byte-identical; the records reference the current paper.tex hash. Minor: the verify_generic.py docstring advertises '36x36 channel' numerical checks that the code does not contain. The PDF's own description is accurate."
+    }
+  },
+  "summary": "Version v2, PDF SHA-256 3c60aee3..., differs from the superseded candidate only in the Roy-Scott DOI; reversing that edit reproduces the prior source hash, and Crossref confirms 10.1063/1.2748617. For four bases (canonical plus RLE's three Hadamard bases on branch (9), 1/4<=u<=1), the paper gives the complete 24x24 Gram spectrum as quadratics in u. With equal probabilities and unit rate, it proves the relaxation rate is maximized uniquely at u=7/10 with value 73/100. It shows this differs from RLE's distance optimizer through an exact rational reversal, and proves a 2/3 ceiling for product-vector bases on C^2(x)C^3 plus 73/100 <= gamma_4*(6) <= 3/4. All of this was verified independently, and the attributions match RLE arXiv:1103.1025v1. The contribution is correct, carefully scoped and fully reproducible, but narrow. Required changes are minor wording and documentation fixes, and no material objection remains.",
+  "strengths": [
+    "Theorem 3.1 holds identically in u. The proof's 24 explicit eigenvectors (e+/e- split, R-conjugation) are u-independent, verified symbolically and linearly independent, so the spectrum and multiplicities are complete for every u in [1/4,1], endpoints included.",
+    "The generic-u overlap blocks were verified from the original displayed matrices by two different exact implementations: the author's multiquadratic class and the referee's sympy radical reduction. The p.4 amplitude identities and the cosine branch identities also check.",
+    "Theorem 4.1's three-interval proof is correct. An independent semialgebraic computation shows h(u) <= 2/25 only at u=7/10, and the exact spectrum at the optimum and the nullity 15 (Cor 4.2) were confirmed.",
+    "The distance side agrees with the primary source. Eq. (17) equals RLE Eqs. (17)-(18) symbolically on relation (7), the cubic root equals RLE closed form (21) to 40 digits, and D^2(u*)=0.9982916927 equals RLE Eq. (22). Table 1, the derivative -12/625, gamma(u*)=0.7284249712 and the 0.2162% gain are exact or correct to the quoted precision.",
+    "Scope discipline: the abstract, theorem statements and limitations section consistently restrict the claims to the stated branch, equal probabilities and unit rate, and disclaim global optimality and any new MUB construction.",
+    "Exemplary reproducibility bundle: pinned SymPy, exact arithmetic, dated outputs that regenerate field-for-field, and clear separation between proof and computational checks."
+  ],
+  "weaknesses": [
+    "Narrow contribution. Once the RLE block structure is known, the result is a one-dimensional optimization of a max of five quadratics using the standard frame/Gram correspondence.",
+    "The equal-probability restriction is binding but not discussed. The canonical basis's traceless range is orthogonal to the other three, so weights (27,25,25,25)/102 on the same bases at u=7/10 give exactly 25/34 ~ 0.7353 > 73/100. A numerical probe over arbitrary weights found nothing better.",
+    "Prior art is understated. gamma equals the Zhu-Hayashi verification spectral gap for the maximally entangled state with these four test bases, and the upper bound 3/4 with its MUB equality case is their g-setting (parsimonious) result. The paper only gestures at a 'standard connection'.",
+    "Prop 5.1 and the sharpness example are correct but elementary. Relaxation versus distance having different optimizers is acknowledged as generic.",
+    "The theorem covers one arc of RLE relation (7). Referee numerics show all eight arcs have the identical spectrum as a function of u=sin^2(theta_x), but the paper gives no symmetry argument.",
+    "The two-parameter RLE family is not analyzed. A bounded referee scan (240x240 grid plus local refinement) found no point above 0.73 and converged to the subfamily optimum, which the paper could report as numerical evidence."
+  ],
+  "potential_errors": [
+    "p.2: 'Its nonzero eigenvalues agree with those of G, including multiplicity.' If 'Its' means the full channel (1/4)sum|Pi)(Pi| just mentioned, this is false: that channel has the extra eigenvalue 1 on I and the G-eigenvalues scaled by 1/4. It is true for the frame operator 4T|H0. Eq. (5) is unaffected.",
+    "Bundle, not PDF: the verify_generic.py docstring states 'numerical checks form a 36x36 channel', but the script contains no numerical check. The PDF's Section 6 description is accurate.",
+    "Citation precision: '[3, Eqs. (5)-(7)]' and '[3, Eqs. (8)-(12)]' match the numbering of arXiv:1103.1025v1. The referee did not access the published PRA version to confirm its numbering."
+  ],
+  "strong_novelty_candidates": [
+    "Closed-form Gram/channel spectrum of the RLE one-parameter subfamily as quadratics in u (Thm 3.1) and the sharp equal-probability relaxation optimum 73/100 at u=7/10 (Thm 4.1). No prior computation was located in a focused search; the novelty is narrow and methodologically standard."
+  ],
+  "unresolved_material_objections": []
+}
