@@ -172,8 +172,9 @@ def summary(value: str, limit: int = 160) -> str:
         return text
     window = text[: limit - 1]
     sentence_end = max(window.rfind(". "), window.rfind("? "), window.rfind("! "))
-    if sentence_end >= limit // 2:
+    # A lone opening sentence is often under a hundred characters, which search engines report as too short.
+    if sentence_end >= limit * 3 // 4:
         return window[: sentence_end + 1]
     word_end = window.rfind(" ")
-    cut = window[:word_end] if word_end >= limit // 2 else window
-    return cut.rstrip(" ,;:–—-(") + "…"
+    cut = (window[:word_end] if word_end >= limit // 2 else window).rstrip(" ,;:–—-(")
+    return cut if cut.endswith((".", "?", "!")) else cut + "…"

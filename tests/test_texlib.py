@@ -39,6 +39,12 @@ class PlainTextTests(unittest.TestCase):
         self.assertEqual(summary("Short abstract."), "Short abstract.")
         sentence = "First sentence is here. " + "x" * 200
         self.assertEqual(summary(sentence, limit=40), "First sentence is here.")
+        # A short opening sentence does not end the snippet while there is room for more of the abstract.
+        opening = "A short opening sentence that says little. " + "More of the abstract follows here. " * 8
+        longer = summary(opening)
+        self.assertTrue(longer.startswith("A short opening sentence that says little. More of the abstract"), longer)
+        self.assertGreaterEqual(len(longer), 120)
+        self.assertLessEqual(len(longer), 160)
         words = "word " * 60
         result = summary(words, limit=50)
         self.assertTrue(result.endswith("word…"), result)

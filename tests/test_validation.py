@@ -159,6 +159,41 @@ class PaperValidationTests(unittest.TestCase):
             self.assertIn('"@type":"ScholarlyArticle"', head)
             self.assertIn('"contentUrl":', head)
 
+    def test_indexnow_fingerprint_ignores_counters_and_asset_versions(self) -> None:
+        page = (
+            '<html><head><title>A paper — AIRR.SCIENCE</title><meta name="description" content="An abstract.">'
+            '<link rel="canonical" href="https://airr.science/papers/X/"><script src="/assets/reader.js?v={version}"></script></head>'
+            "<body><h1>A paper</h1><p>{text}</p><strong>{downloads}</strong> downloads on {day} October</body></html>"
+        )
+        before = submit_indexnow.fingerprint(page.format(version="aaa111", text="The result holds.", downloads="12", day="11"))
+        rebuilt = submit_indexnow.fingerprint(page.format(version="bbb222", text="The result holds.", downloads="1,340", day="12"))
+        edited = submit_indexnow.fingerprint(page.format(version="aaa111", text="The result is withdrawn.", downloads="12", day="11"))
+        self.assertEqual(before, rebuilt)
+        self.assertNotEqual(before, edited)
+        self.assertNotEqual(before, submit_indexnow.fingerprint(page.replace("An abstract.", "A longer abstract.").format(version="aaa111", text="The result holds.", downloads="12", day="11")))
+
+    def test_indexnow_plan_reports_only_new_and_changed_pages(self) -> None:
+        site = "https://airr.science"
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            pages = {"": "Home", "papers/A/": "Paper A", "papers/B/": "Paper B"}
+            for relative, text in pages.items():
+                (root / relative).mkdir(parents=True, exist_ok=True)
+                (root / relative / "index.html").write_text(f"<title>{text}</title><p>{text}</p>", encoding="utf-8")
+            (root / "sitemap.xml").write_text(
+                '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+                + "".join(f"<url><loc>{site}/{relative}</loc></url>" for relative in pages)
+                + "</urlset>",
+                encoding="utf-8",
+            )
+            manifest = submit_indexnow.build_manifest(root, site)
+        self.assertEqual(list(manifest), [f"{site}/", f"{site}/papers/A/", f"{site}/papers/B/"])
+        self.assertEqual(submit_indexnow.changed_urls(manifest, dict(manifest)), [])
+        deployed = {f"{site}/": manifest[f"{site}/"], f"{site}/papers/A/": "0" * 20}
+        self.assertEqual(submit_indexnow.changed_urls(manifest, deployed), [f"{site}/papers/A/", f"{site}/papers/B/"])
+        # Without a deployed manifest the state is unknown and every page is submitted once.
+        self.assertEqual(submit_indexnow.changed_urls(manifest, None), list(manifest))
+
     def test_indexnow_payload_is_host_scoped(self) -> None:
         urls = [
             "https://arr-research.github.io/",

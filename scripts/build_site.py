@@ -73,6 +73,11 @@ def clean_base_path(value: str) -> str:
     return "/" + value.strip("/")
 
 
+def page_note(page: int) -> str:
+    """Tell the pages of one paginated list apart in their search snippets."""
+    return f" Page {page}." if page > 1 else ""
+
+
 def esc(value: object) -> str:
     return html.escape(str(value), quote=True)
 
@@ -356,7 +361,7 @@ def build_search(base: str, canonical_url: str, index_version: str, papers: list
 </section>"""
     return page_shell(
         title="Search papers — AIRR.SCIENCE",
-        description="Search the full AIRR catalogue by title, abstract, topic, author or identifier, ordered by relevance.",
+        description="Search the full AIRR catalogue of open research papers by title, abstract, topic, author or identifier, with results ordered by relevance.",
         content=content,
         base=base,
         canonical=f"{canonical_url}/search/" if canonical_url else "",
@@ -500,7 +505,7 @@ def build_subject_page(group: dict, timestamps: dict, base: str, canonical_url: 
     content = f'''<section class="page-intro"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="{base}/subjects/">Subjects</a><span aria-hidden="true">/</span><span>{esc(group['label'])}</span></nav><h1>{esc(group['label'])}</h1><p>{len(papers)} records · Newest first · Historical imports are labelled separately.</p><a class="text-link" href="{base}/search/?subject={quote(group['key'])}">Search within this subject →</a></section>{pager}<section class="catalogue">{cards}</section>{pager}'''
     suffix = f'/subjects/{group["slug"]}/' + (f'page/{page}/' if page > 1 else '')
     page_label = f" — page {page}" if page > 1 else ""
-    return page_shell(title=f"{group['label']} papers{page_label} — AIRR.SCIENCE", description=f"{len(papers)} open-access records in {group['label']} on AIRR.SCIENCE, newest first, with abstracts, free PDFs and version-specific citations.", content=content, base=base, canonical=canonical_url + suffix if canonical_url else "")
+    return page_shell(title=f"{group['label']} papers{page_label} — AIRR.SCIENCE", description=f"{len(papers)} open-access records in {group['label']} on AIRR.SCIENCE, newest first, with abstracts, free PDFs and version-specific citations.{page_note(page)}", content=content, base=base, canonical=canonical_url + suffix if canonical_url else "")
 
 
 def type_badge(metadata: dict) -> str:
@@ -795,7 +800,7 @@ def build_papers_index(papers: list, timestamps: dict, base: str, canonical_url:
     canonical_suffix = "papers/" if page == 1 else f"papers/page/{page}/"
     canonical = f"{canonical_url}/{canonical_suffix}" if canonical_url else ""
     page_label = f" — page {page}" if page > 1 else ""
-    return page_shell(title=f"Research papers{page_label} — AIRR.SCIENCE", description=f"{len(research_papers)} open research papers on AIRR.SCIENCE, newest first, with free PDFs, version-specific citations and clearly labelled historical imports.", content=content, base=base, canonical=canonical)
+    return page_shell(title=f"Research papers{page_label} — AIRR.SCIENCE", description=f"{len(research_papers)} open research papers on AIRR.SCIENCE, newest first, with free PDFs, version-specific citations and clearly labelled historical imports.{page_note(page)}", content=content, base=base, canonical=canonical)
 
 
 def build_notes_index(papers: list, timestamps: dict, base: str, canonical_url: str, author_lookup: dict[str, dict] | None = None, metrics: dict | None = None) -> str:
@@ -849,7 +854,7 @@ def build_authors_index(profiles: list[dict], by_author: dict[str, list], metric
 <section class="author-grid">{''.join(cards)}</section>
 """
     canonical = f"{canonical_url}/authors/" if canonical_url else ""
-    return page_shell(title="Authors — AIRR.SCIENCE", description="Stable AIRR author profiles and their public research records.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Authors — AIRR.SCIENCE", description="Stable author profiles on AIRR.SCIENCE: every paper attributed to each author in one place, with descriptive activity counts that are never a quality score.", content=content, base=base, canonical=canonical)
 
 
 def build_author_page(profile: dict, author_papers: list, timestamps: dict, metrics: dict, author_lookup: dict[str, dict], base: str, canonical_url: str) -> str:
@@ -930,7 +935,7 @@ def build_rankings(profiles: list[dict], by_author: dict[str, list], papers: lis
 </section>
 """
     canonical = f"{canonical_url}/rankings/" if canonical_url else ""
-    return page_shell(title="Activity rankings — AIRR.SCIENCE", description="Reproducible AIRR paper and author activity rankings.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Activity rankings — AIRR.SCIENCE", description="Reproducible AIRR activity rankings by canonical PDF downloads, with the method and its limits. Activity signals do not measure correctness or quality.", content=content, base=base, canonical=canonical)
 
 
 def findings_block(title: str, findings: list[str]) -> str:
@@ -1272,7 +1277,7 @@ def build_protocol(base: str, canonical_url: str) -> str:
 <section class="callout"><h2>Lean 4 verification levels</h2><p><strong>L0</strong> source supplied · <strong>L1</strong> clean build · <strong>L2</strong> kernel-checked, no unfinished proofs, axioms audited · <strong>L3</strong> correspondence between formalization and manuscript independently reviewed.</p></section>
 """
     canonical = f"{canonical_url}/protocol/" if canonical_url else ""
-    return page_shell(title="Screening protocol — AIRR.SCIENCE", description="The documented AIRR screening and verification protocol.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Screening protocol — AIRR.SCIENCE", description="The AIRR screening and verification protocol: complete research objects, technical verification, hostile frontier-model screening and human editorial sign-off.", content=content, base=base, canonical=canonical)
 
 
 def build_assessments(papers: list, assessments: list[dict], highlights: list[dict], base: str, canonical_url: str, author_lookup: dict[str, dict]) -> str:
@@ -1315,7 +1320,7 @@ def build_assessments(papers: list, assessments: list[dict], highlights: list[di
   <section class="criteria-panel"><h2>Criterion profile</h2><p>Each report also supplies one to five stars, with a written basis, for correctness confidence, rigor, novelty, significance and reproducibility. These diagnostic ratings are shown separately and are not silently averaged into the headline score.</p><p>Prior manuscript participation does not exclude a report or reduce its numerical weight. AIRR includes one latest report per evidenced model, preserves every earlier report, and shows count, range, participation and review-context evidence. A new blinded thread is distinct from statistical independence. Missing reports receive no stars.</p><p><a href="{base}/registry/model-assessments.json">Download the versioned machine-readable assessment registry</a> · <a href="{base}/schema/model-assessment.schema.json">JSON Schema</a></p></section>{coverage}
 </section>"""
     canonical = f"{canonical_url}/assessments/" if canonical_url else ""
-    return page_shell(title="Model assessments — AIRR.SCIENCE", description="Version-locked longitudinal frontier-model assessments and the AIRR scientific ranking.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Model assessments — AIRR.SCIENCE", description="How frontier AI models attack each exact paper version on AIRR, how the capability-weighted score is calculated, and the assessment ranking of current papers.", content=content, base=base, canonical=canonical)
 
 
 def load_donation_url() -> str:
@@ -1340,7 +1345,7 @@ def build_support(base: str, canonical_url: str, donation_url: str = "") -> str:
   <div class="support-grid"><section><h2>Research stays independent</h2><p>Submission, assessment, publication and withdrawal are currently free. Any future contribution will be voluntary and cannot influence editorial decisions or rankings.</p></section><aside><h2>Donations are not available yet</h2><p>Thank you for wanting to support AIRR. The payment link will appear here when setup is complete.</p></aside></div>
 </section>"""
     canonical = f"{canonical_url}/support/" if canonical_url else ""
-    return page_shell(title="Support AIRR", description="Voluntary support for AIRR with no influence on editorial decisions or rankings.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Support AIRR", description="Support AIRR with a voluntary contribution towards archive operation, preservation and assessment costs. Donations never influence decisions, scores or rankings.", content=content, base=base, canonical=canonical)
 
 
 def build_about(base: str, canonical_url: str) -> str:
@@ -1358,7 +1363,7 @@ def build_about(base: str, canonical_url: str) -> str:
 </section>
 """
     canonical = f"{canonical_url}/about/" if canonical_url else ""
-    return page_shell(title="About — AIRR.SCIENCE", description="About AIRR.SCIENCE, the Archive for Independent & Rigorous Research.", content=content, base=base, canonical=canonical)
+    return page_shell(title="About — AIRR.SCIENCE", description="AIRR.SCIENCE is the Archive for Independent & Rigorous Research: a versioned open archive where named AI models check each paper and a human editor decides.", content=content, base=base, canonical=canonical)
 
 
 def build_licensing(base: str, canonical_url: str) -> str:
@@ -1373,7 +1378,7 @@ def build_licensing(base: str, canonical_url: str) -> str:
 </section>
 """
     canonical = f"{canonical_url}/licensing/" if canonical_url else ""
-    return page_shell(title="Licensing — AIRR.SCIENCE", description="Licensing scopes for AIRR software, metadata, documentation and deposited research.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Licensing — AIRR.SCIENCE", description="Licensing on AIRR.SCIENCE by scope: AGPL-3.0-or-later platform software, CC0 catalogue metadata and schemas, and the license each deposited paper declares.", content=content, base=base, canonical=canonical)
 
 
 def policy_source(filename: str) -> str:
@@ -1482,7 +1487,7 @@ def build_submit(
         f"{canonical_url}/submit/" if page_number == 1 else f"{canonical_url}/submit/page/{page_number}/"
     ) if canonical_url else ""
     title = "Submit and most-read papers — AIRR.SCIENCE" if page_number == 1 else f"Most-read papers, page {page_number} — AIRR.SCIENCE"
-    return page_shell(title=title, description="Direct private submission and the paginated AIRR paper activity ranking.", content=content, base=base, canonical=canonical)
+    return page_shell(title=title, description=f"Submit a paper privately to AIRR.SCIENCE and browse the paper index ordered by canonical PDF downloads. Activity is not a scientific-quality score.{page_note(page_number)}", content=content, base=base, canonical=canonical)
 
 
 def build_agents(base: str, canonical_url: str, intake_url: str = '') -> str:
@@ -1517,7 +1522,7 @@ def build_privacy(base: str, canonical_url: str) -> str:
 <section class="callout"><h2>Complete binding notice</h2><p><a href="{policy_source('PRIVACY_NOTICE.md')}">Read ARR-PRIVACY-1.8 in full</a>. The accepted version is recorded with each deposit.</p></section>
 """
     canonical = f"{canonical_url}/privacy/" if canonical_url else ""
-    return page_shell(title="Privacy — AIRR.SCIENCE", description="ARR-PRIVACY-1.8 privacy notice for direct manuscript intake and authorized public Working papers.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Privacy — AIRR.SCIENCE", description="ARR-PRIVACY-1.8 privacy notice for AIRR: what stays private in manuscript intake, what a public Working paper shows, retention, and your rights under GDPR.", content=content, base=base, canonical=canonical)
 
 
 def build_terms(base: str, canonical_url: str) -> str:
@@ -1535,7 +1540,7 @@ def build_terms(base: str, canonical_url: str) -> str:
 <section class="callout"><h2>Complete binding terms</h2><p><a href="{policy_source('DEPOSIT_TERMS.md')}">Read ARR-DEPOSIT-2.0 in full</a>. Use the private form, an authorized delegation, or the separate independent-agent protocol. Email and GitHub issues are not deposit channels.</p></section>
 """
     canonical = f"{canonical_url}/terms/" if canonical_url else ""
-    return page_shell(title="Deposit terms — AIRR.SCIENCE", description="ARR-DEPOSIT-2.0 terms for private intake and citable Working-paper release.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Deposit terms — AIRR.SCIENCE", description="ARR-DEPOSIT-2.0 deposit terms for AIRR: no deposit fee at present, private intake first, the model gate, publication rights, and appeal and conflict rules.", content=content, base=base, canonical=canonical)
 
 
 def build_governance(base: str, canonical_url: str) -> str:
@@ -1550,7 +1555,7 @@ def build_governance(base: str, canonical_url: str) -> str:
 <section class="callout"><h2>Full governance rules</h2><p><a href="{policy_source('GOVERNANCE.md')}">Read the version-controlled policy</a>. <a href="{policy_source('INDEPENDENT_EDITOR_ONBOARDING.md')}">Independent editor eligibility and onboarding</a>.</p></section>
 """
     canonical = f"{canonical_url}/governance/" if canonical_url else ""
-    return page_shell(title="Governance — AIRR.SCIENCE", description="AIRR governance, manual editorial gate and founder conflict controls.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Governance — AIRR.SCIENCE", description="AIRR governance: how the responsible editor decides each case, the disclosed rules for founder-authored papers, appeals and transparency.", content=content, base=base, canonical=canonical)
 
 
 def build_contact(base: str, canonical_url: str) -> str:
@@ -1565,7 +1570,7 @@ def build_contact(base: str, canonical_url: str) -> str:
 <section class="callout"><h2>Complete procedure</h2><p><a href="{policy_source('LEGAL_AND_COMPLAINTS.md')}">Read legal contact, notices and complaints in full</a>. Contact AIRR by email or at the postal address above. Qualified volunteers may use subject <code>AIRR independent editor</code> and read the <a href="{policy_source('INDEPENDENT_EDITOR_ONBOARDING.md')}">editor eligibility and onboarding procedure</a>; do not send manuscripts or identity documents by email.</p></section>
 """
     canonical = f"{canonical_url}/contact/" if canonical_url else ""
-    return page_shell(title="Contact and complaints — AIRR.SCIENCE", description="AIRR operator, legal contact, editorial appeal and notice procedure.", content=content, base=base, canonical=canonical)
+    return page_shell(title="Contact and complaints — AIRR.SCIENCE", description="Contact AIRR.SCIENCE: the accountable operator and legal contact, editorial appeals, rights and illegal-content notices, and privacy requests.", content=content, base=base, canonical=canonical)
 
 
 def write(path: Path, value: str) -> None:
