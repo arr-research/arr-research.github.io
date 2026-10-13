@@ -276,7 +276,9 @@ class IndexingTests(unittest.TestCase):
         node = shutil.which("node")
         if node is None:
             self.skipTest("Node is not installed")
-        loader = re.findall(r"<script>(.*?)</script>", build_site.page_shell(title="t", description="d", content="", base=""), re.S)[-1]
+        scripts = test_validation.script_elements(build_site.page_shell(title="t", description="d", content="", base=""))
+        self.assertEqual([attrs for attrs, _ in scripts], [{}])  # the loader is the only script of a plain page
+        loader = scripts[0][1]
         harness = self.root / "counter-loader-harness.js"
         harness.write_text(
             """const vm = require("node:vm");

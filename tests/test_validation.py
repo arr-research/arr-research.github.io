@@ -2,13 +2,13 @@
 from __future__ import annotations
 
 import json
-import re
 import io
 import tempfile
 import unittest
 import uuid
 from pathlib import Path
 from contextlib import redirect_stdout
+from html.parser import HTMLParser
 from types import SimpleNamespace
 from unittest.mock import patch
 
@@ -36,6 +36,34 @@ import submit_indexnow  # noqa: E402
 
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+class _ScriptCollector(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=False)
+        self.scripts: list[tuple[dict, str]] = []
+        self._open: list | None = None
+
+    def handle_starttag(self, tag, attrs) -> None:
+        if tag == "script":
+            self._open = [dict(attrs), ""]
+
+    def handle_data(self, data) -> None:
+        if self._open is not None:
+            self._open[1] += data
+
+    def handle_endtag(self, tag) -> None:
+        if tag == "script" and self._open is not None:
+            self.scripts.append((self._open[0], self._open[1]))
+            self._open = None
+
+
+def script_elements(page: str) -> list[tuple[dict, str]]:
+    """Every <script> of a page as (attributes, text), read with an HTML parser rather than a regexp."""
+    collector = _ScriptCollector()
+    collector.feed(page)
+    collector.close()
+    return collector.scripts
 
 
 class PaperValidationTests(unittest.TestCase):
@@ -594,9 +622,9 @@ class PaperValidationTests(unittest.TestCase):
         self.assertIn('href="/preview/privacy/"', page)
         self.assertNotIn("Donations are not available yet", page)
         # The only script on any page is AIRR's own cookie-free page-counter loader; PayPal adds none.
-        scripts = re.findall(r"<script\b.*?</script>", page, re.S)
-        self.assertEqual(scripts, [build_site.PAGE_COUNTER])
-        self.assertNotIn("paypal", scripts[0].lower())
+        scripts = script_elements(page)
+        self.assertEqual(scripts, [({}, build_site.PAGE_COUNTER[len("<script>"):-len("</script>")])])
+        self.assertNotIn("paypal", scripts[0][1].lower())
         self.assertNotIn("<script", page.replace(build_site.PAGE_COUNTER, ""))
         self.assertNotIn("<iframe", page)
         self.assertNotIn("paypalobjects.com", page)
