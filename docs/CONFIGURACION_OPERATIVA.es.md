@@ -15,6 +15,7 @@ Este documento explica dónde funciona AIRR, qué debe vigilarse y cómo crecer 
 | Repositorio y publicaciones | GitHub | Código, registros aceptados, historial, Actions y Releases inmutables | No; es el registro público y su historial |
 | Aplicación privada | Netcup VPS | Cuentas privadas, recepción de PDFs, cuarentena, revisión editorial y estadísticas | **Sí; es el único servidor operativo de AIRR** |
 | Correo transaccional | Brevo | Avisos técnicos y de nuevas sumisiones desde `submissions@airr.science` | No |
+| Contador de visitas | erikssonai.se (Firebase Hosting) y Firestore de Google | Guion enlazado desde cada página pública que suma 1 al total diario de `airr`, sin cookies ni datos personales (desde el 13 de octubre de 2026) | No; es un servicio de otra web del mismo operador y no recibe sumisiones |
 | Copia externa | Backblaze B2 EU Central | Copias cifradas fuera del VPS | No; no sirve la web ni recibe sumisiones |
 
 OVH no pertenece a AIRR y no forma parte de esta arquitectura.
@@ -127,7 +128,7 @@ Mientras el uso sea principalmente el de los papers del fundador, Netcup es sufi
 
 - `docs/INTAKE_OPERATIONS.md`: recepción, límites y retención.
 - `services/intake/deploy/OPERATIONS.md`: despliegue, cifrado, copias y recuperación.
-- `docs/ANALYTICS_OPERATIONS.md`: estadísticas privadas de visitas.
+- `docs/ANALYTICS_OPERATIONS.md`: estadísticas privadas de visitas y contador sin cookies.
 - `docs/GOVERNANCE.md`: decisiones del fundador y conflictos.
 - `docs/WORKFLOW.md`: publicación y creación de releases.
 - `docs/SCALE_READINESS.md`: fases y señales de migración.

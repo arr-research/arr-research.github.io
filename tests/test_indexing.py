@@ -247,6 +247,20 @@ class IndexingTests(unittest.TestCase):
         self.assertIn('src="/preview/assets/math.js?v=', tex)
         self.assertIn("katex", build_site.page_shell(title="t", description="d", content="", base="", math=True))
 
+    def test_cookie_free_page_counter_closes_every_page_exactly_once(self):
+        counter = '<script src="https://erikssonai.se/contador.js" data-sitio="airr" async></script>'
+        for kwargs in ({}, {"canonical": "https://airr.science/privacy/"}, {"math": True}):
+            with self.subTest(kwargs=kwargs):
+                text = build_site.page_shell(title="t", description="d", content="<p>x</p>", base="", **kwargs)
+                self.assertEqual(text.count("erikssonai.se/contador.js"), 1)
+                self.assertEqual(text.count('data-sitio="airr"'), 1)
+                self.assertTrue(text.rstrip().endswith(counter + "\n</body>\n</html>"))
+        privacy = build_site.build_privacy("", "https://airr.science")
+        self.assertIn("Page views are counted per day, without cookies or personal data.", privacy)
+        self.assertIn("erikssonai.se", privacy)
+        support = build_site.build_support("", "https://airr.science", "")
+        self.assertNotIn("tracking script", privacy + support)
+
     def test_classic_theme_and_logo_are_independent_of_system_preference(self):
         text = build_site.page_shell(title="t", description="d", content="", base="")
         self.assertIn('<meta name="theme-color" content="#0b0f17">', text)

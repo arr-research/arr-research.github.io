@@ -23,7 +23,7 @@ destination and an updated notice.
 PayPal processes payments on its own service, under its own terms, privacy notice
 and transaction fees. Visitors should check the recipient, amount and frequency
 on PayPal before paying. AIRR uses a normal external link and loads no PayPal
-widget or tracking script. AIRR does not collect card details or infer payment
+widget or script. AIRR does not collect card details or infer payment
 success from a return URL.
 
 PayPal provides transaction data such as donor name, email, amount, currency,

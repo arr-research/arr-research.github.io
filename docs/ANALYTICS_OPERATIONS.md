@@ -58,3 +58,24 @@ and requests still use existing VPS/backup capacity. No public view-count export
 or visitor ranking is enabled by this feature. Review the notice and this record
 before extending collection to identities, locations, referrers or additional
 providers.
+
+## Cookie-free page counter (erikssonai.se)
+
+Independent of the Netcup collector above, `page_shell()` in `scripts/build_site.py`
+ends every generated public page with
+`<script src="https://erikssonai.se/contador.js" data-sitio="airr" async></script>`
+(the `PAGE_COUNTER` constant). The script belongs to the operator's other site; it is
+only linked, never copied or modified here. Each page view adds 1 to the Firestore
+document `visitas/airr_<day>` of project `eriksson-larande-ai`, with no cookie, no
+browser storage and no per-visitor data. The daily figures appear in the private panel
+at `erikssonai.se/panel/` (tab *Webs*). The Allow/Decline choice does not govern it,
+and the `AIRR_ANALYTICS` variable does not switch it.
+
+- GitHub Pages sets no Content-Security-Policy for `airr.science`. If one is ever
+  added, allow `https://erikssonai.se` in `script-src` and
+  `https://firestore.googleapis.com` in `connect-src`, and nothing else.
+- To stop counting, remove `PAGE_COUNTER` from `page_shell()` (and the notices in
+  `build_privacy`, `docs/PRIVACY_NOTICE.md`, `docs/PROCESSING_RECORD.md`), merge and let
+  Pages rebuild. Never put the script on `submit.airr.science` pages.
+- `tests/test_indexing.py` checks that the script is on every page exactly once,
+  immediately before `</body>`.
