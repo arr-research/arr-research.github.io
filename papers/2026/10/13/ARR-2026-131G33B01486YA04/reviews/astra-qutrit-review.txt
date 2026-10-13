@@ -1,0 +1,151 @@
+REVISIÓN ADVERSARIAL DEL CANDIDATO QUTRIT
+Fecha: 2026-10-12
+Revisor: agente independiente solicitado como GPT-6 Astra / xhigh.
+Estado: informe asesor de investigación, no revisión editorial formal ni certificado de prioridad.
+
+Documento examinado completo y revisado tras la ampliación: qutrit-paper.tex, 31 080 bytes.
+Título: A sharp two-rate reset witness against static qutrit disorder.
+SHA256: da17b9dd4c07bb92210765fc286f9d01fd2720dfc34a9ed9c7f41819da3fbbc3.
+Directorio: D:\Temp\airr\2026-10-12_frontera.
+Artefactos examinados: qutrit_verify.py y qutrit-verification.json para el núcleo inalterado; robust_calibration_check.py y robust-calibration-verification.json para la ampliación. Comprobaciones propias en astra-qutrit-checks.py / .json y astra-qutrit-robust-checks.py / .json.
+La revisión anterior astra-review.txt / astra-review.json se conserva intacta.
+La primera revisión qutrit, sobre qutrit-candidate.tex SHA256 f8074902eaa1cdcecf2cafc48756c88ee3a470487112bbbf3f21709ac50a8f3a, está preservada en astra-qutrit-v1-review.txt / .json. Ese candidato carecía de calibración robusta y recibió ordinaria 8.0, AIRR 5.5. El presente juicio corresponde a un resultado matemáticamente ampliado.
+Independencia: no he leído ni utilizado la evaluación Opus. Durante el desarrollo comuniqué al autor comprobaciones, antecedentes y la mejora de la cota de calibración por monotonicidad espectral. Por ello este dictamen no es una revisión ciega ni una segunda prueba completamente independiente de cada idea del texto.
+
+1. VEREDICTO
+
+No encuentro un error matemático fatal en el manuscrito revisado. La desigualdad universal, la caracterización de su igualdad, la violación del semigrupo físico, el óptimo de escala dentro de la familia escogida, la distancia exacta 1/45 para los tres estadísticos seleccionados y la no consecución del ínfimo están demostrados correctamente. La nueva reducción espectral proporciona, en cualquier dimensión finita, una sola ley diagonal que funciona en todas las tasas; conduce a una exclusión robusta de cualquier conjunto estático de Hamiltonianos qutrit mediante fugas poblacionales pequeñas. También es válida la calibración exacta con solo dos preparaciones. Se exige la misma distribución para todas las preparaciones y tasas.
+
+Sí hay una mejora sustantiva respecto del candidato anterior sobre alias de qubit. El resultado principal ya no consiste esencialmente en especializar cuadratura racional: proporciona un certificado finito concreto, margen exacto y minimalidad de dos tasas para el ejemplo. Además, la nueva calibración elimina la necesidad de asumir diagonalidad exacta para la exclusión con precisión finita. Esto merece desarrollarse como artículo técnico de investigación.
+
+Mi valoración ordinaria es 8.5/10. Mi valoración de relevancia AIRR, en la escala exigente donde 6 requiere una contribución sustancial más allá de un resultado especializado limpio, es 6.0/10 para esta versión ampliada. Es una evaluación en el extremo inferior de ese nivel, no una afirmación de trabajo excepcional o transformador del campo. La diferencia entre las dos escalas es intencional. Las puntuaciones no son promedios automáticos y la prioridad sigue sin estar certificada.
+
+Desglose orientativo:
+  Corrección: 9.5/10.
+  Rigor y verificabilidad: 9.0/10.
+  Originalidad específica sustentada: 6.5/10, con prioridad todavía no resuelta.
+  Alcance y utilidad demostrada: 6.0/10.
+  Nota global ordinaria: 8.5/10.
+  Relevancia AIRR: 6.0/10.
+
+2. COMPROBACIÓN DE LA DESIGUALDAD Y DEL EJEMPLO FÍSICO
+
+Para x=X/a, y=Y/a, el defecto puntual h=5-A_1(x,y)-9A_4(x,y)+5g_4(x+y) tiene el denominador positivo indicado en el texto. La identidad h=5P/(2 Delta) se verifica exactamente por álgebra simbólica independiente.
+
+Para p=xy>=0 y d=(x-y)^2>=0, la expresión
+  P=(5p^2+48)d^2+2B(p)d+8p(p-2)^2(p+1)(p+16)
+es no negativa porque
+  B(p)=p^4+15p^3+108(p-46/27)^2+1904/27>0.
+En este sector P=0 fuerza d=0 y p=0 o p=2. No hay cancelación oculta: todos los sumandos utilizados son no negativos. Para p<0, q=-p>0 y s=(x+y)^2>=0, la segunda expresión de P tiene coeficientes positivos y término independiente estrictamente positivo. Esta cubre completamente el sector de signos opuestos. Por tanto, los únicos puntos finitos de igualdad son (0,0), (sqrt(2),sqrt(2)) y su negativo. La sustitución algebraica entre ambas expresiones también se verificó exactamente.
+
+La integración contra cualquier probabilidad de R^2 es legítima sin momentos finitos: h y los observables son acotados. Si su esperanza es cero, h=0 casi seguramente, y el soporte de la medida queda dentro de esos tres puntos. La prueba no supone independencia de X,Y ni simetría de la medida. Así se obtiene el límite universal W_a<=5 para toda distribución estática diagonal del modelo.
+
+El generador -gamma[D,[D,rho]], con D=diag(0,1,2), es un generador de Lindblad válido; puede escribirse con un operador de salto sqrt(2 gamma)D. Los autovalores de decaimiento de las coherencias son gamma, gamma y 4 gamma, y las poblaciones se conservan. No se ha introducido una terna de tasas incompatible con completa positividad.
+
+La fórmula
+  W_a-5=t(7-5t)/[(1+t)(4+t)], t=gamma/a,
+y su derivada son correctas. El máximo es 1/3 en t=1/2, de modo que a=2 gamma, la segunda tasa es 8 gamma y W=16/3. Este es el máximo de la escala a para el testigo y la razón de tasas 4 fijados. No es un teorema de optimalidad entre todos los testigos, todas las razones de tasas ni todos los presupuestos experimentales. El manuscrito delimita correctamente esta afirmación.
+
+3. DISTANCIA EXACTA, IGUALDAD Y ESCAPE A INFINITO
+
+El vector ideal seleccionado es b=(2/3,8/9,2/3). Con ell=(1,9,-5), ||ell||_1=15 y ell.b-5=1/3. Para cualquier vector estático seleccionado T, la dualidad elemental de normas proporciona ||T-b||_infty>=1/45. Es una cota para estos tres estadísticos, no para una norma de estados, la tomografía completa, los tres pares en las dos tasas ni los componentes imaginarios.
+
+La medida de siete átomos es positiva y normalizada: masa 19/45 en el origen; 1/5 en cada punto diagonal +/-sqrt(2); 2/45 en cada uno de los cuatro puntos de los ejes con radio R. Sus tres coordenadas son exactamente
+  29/45+(4/45)g_1(R),
+  13/15+(4/45)g_4(R),
+  31/45+(8/45)g_4(R).
+La tercera desviación domina las otras dos en valor absoluto porque 0<=g_1(R)<=g_4(R)<=1. En consecuencia el error exacto a R finito es
+  1/45+128/[45(16+R^2)],
+y el límite alcanza la cota inferior. Estas fórmulas se comprobaron simbólicamente, no solo en una malla.
+
+La no consecución también está bien probada. Igualdad en la cota de norma fuerza simultáneamente W=5 y el vector seleccionado (29/45,13/15,31/45). Toda medida de igualdad está soportada en los tres puntos finitos de igualdad puntual, donde la segunda coordenada es al menos 8/9; el valor requerido 13/15 es menor. Por tanto ninguna probabilidad sobre R^2, tampoco de soporte infinito, alcanza ese vector. El conjunto de datos estáticos seleccionado no es cerrado, y el ínfimo pertenece a su cierre. La singularidad consiste en perder masa hacia energías infinitas, no en una probabilidad ordinaria con átomos infinitos.
+
+Un radio de soporte acotado hace compacto el dominio de medidas y garantiza que el mínimo se alcanza; debe ser estrictamente mayor que 1/45. El manuscrito no obtiene una fórmula para ese mínimo en función del radio, y no se le atribuye tal resultado. La geometría de no consecución aporta contenido por encima de la desigualdad sola.
+
+4. MINIMALIDAD Y COMPATIBILIDAD DE TRAYECTORIAS
+
+A una sola tasa nu, los Hamiltonianos +/-sqrt(gamma nu)D con igual probabilidad reproducen exactamente las tres coherencias reales del semigrupo y eliminan sus partes imaginarias. La identidad pertinente es g_nu(k sqrt(gamma nu))=nu/(nu+k^2 gamma), para k=1,2. Como ambos modelos son diagonales y mantienen las poblaciones, reproducen el estado estacionario completo de la preparación considerada. De hecho, la igualdad de los factores de cada coherencia hace válida la igualdad de los canales de reset a esa tasa. La ley imitadora depende de nu; por eso no contradice la exclusión conjunta en dos tasas.
+
+La proposición de alias de qubit da una razón válida para el contraste dimensional dentro de esta familia de experimentos. Su mínimo N+1 es un número de valores de un registro clásico estático. No debe reinterpretarse como dimensión mínima de una dilación cuántica general. La atribución explícita a cuadratura racional clásica en la versión revisada es adecuada. No se ha probado una imposibilidad general de identificación de todo qubit con cualquier control o preparación temporal.
+
+La caracterización de la trayectoria completa por las desigualdades triangulares de Gamma es correcta para las coherencias reales exponenciales especificadas. La unicidad de la función característica impone marginales Cauchy para X, Y y X+Y. Para 0<p<1, subaditividad y escala dan Gamma_13^p<=Gamma_12^p+Gamma_23^p; el límite p hacia 1 produce una desigualdad triangular, y la permutación de las diferencias produce las otras. La construcción con tres energías Cauchy independientes, de anchuras b_j=(Gamma_jk+Gamma_jl-Gamma_kl)/2, prueba suficiencia, incluyendo anchuras nulas como masas de Dirac.
+
+Esta caracterización explica la incompatibilidad de (gamma,gamma,4 gamma), pero no es una caracterización de todos los generadores de desfasamiento ni una demostración de una nueva teoría general de realizaciones. Su antecedente probabilístico es cercano y debe mantenerse como contexto, no como principal reclamo de novedad.
+
+5. SIGNIFICADO FÍSICO, CALIBRACIÓN Y ERRORES
+
+La distinción entre conjunto y trayectoria está bien conservada. La distribución estática se prepara de forma idéntica entre realizaciones independientes y se mantiene dentro de cada realización; las tasas de reset son independientes del registro. El límite estacionario de cada realización puede promediarse porque los operadores están acotados. No hace falta ni se demuestra ergodicidad del registro estático. Repetir indefinidamente medidas correlacionadas sobre un único registro conservado no produce por sí solo el conjunto requerido para la tomografía o para Hoeffding.
+
+El ejemplo de referencia es también realizable con ruido clásico dependiente del tiempo: U_t=exp[-i sqrt(2 gamma) W_t D]. Por ello W>5 no demuestra ruido cuántico, entrelazamiento con un baño, no clasicidad bajo cualquier definición ni falta de Markovianidad. Excluye una ley estática fija del tipo indicado. La versión revisada lo dice expresamente y no veo sobreinterpretación fatal.
+
+La calibración exacta para Hamiltonianos 3x3 arbitrarios es sólida. R_nu(P_j)=P_j implica que la integral positiva de |<k|exp(-iHt)|j>|^2 es cero. Fubini proporciona un conjunto de medida uno de H donde todas las amplitudes relevantes son nulas para casi todo t; la continuidad las hace nulas para todo t y la derivada en cero anula los elementos H_kj. Las dos columnas j=1,2, junto con hermiticidad y dimensión tres, eliminan todos los elementos no diagonales. No se intercambia una derivada con una esperanza ni se requieren momentos de ||H||. La misma ley de H en las preparaciones es indispensable.
+
+La ampliación robusta es correcta y elimina una limitación material de la primera versión. Para cada H se toman sus medidas espectrales locales eta_j^H y se eligen E_1,...,E_d independientemente condicionados a H. El Hamiltoniano diagonal resultante define UNA probabilidad conjunta, independiente de tiempo y tasa. Su coherencia libre jk es U_jj conjugado(U_kk). No se elige una representación diferente para cada tasa, que habría invalidado la aplicación del testigo.
+
+La coherencia normalizada original del estado uniforme es (U_jj+s_j) conjugado(U_kk+s_k). Con l_j=1-|U_jj|^2, unitariedad identifica la fuga de la columna j con la suma de cuadrados fuera de diagonal en la fila j. Cauchy-Schwarz da |s_j|<=sqrt(d-1)sqrt(l_j). La diferencia de las coherencias está acotada por sqrt(d-1)(sqrt(l_j)+sqrt(l_k))+(d-1)sqrt(l_j l_k). Jensen y Cauchy-Schwarz sobre la medida conjunta de H y de la edad exponencial producen exactamente el teorema del manuscrito, incluso para el módulo complejo. Los integrandos están acotados y no hace falta una cota de energía ni momento alguno.
+
+Además, la identidad positiva
+  L_j(nu)=E_H integral integral (E-E')^2/[nu^2+(E-E')^2] d eta_j^H(E) d eta_j^H(E')
+demuestra que L_j(nu) no crece con nu. Por tanto, tres calibraciones L_j(a)<=delta controlan también L_j(4a). Cada coherencia difiere de la de esa misma ley diagonal a lo sumo 2sqrt(2delta)+2delta en ambas tasas. Sumando los pesos absolutos del testigo se obtiene rigurosamente
+  W_a <= 5+30sqrt(2delta)+30delta.
+La cota anterior 58sqrt(2delta)+114delta también era válida, pero la monotonicidad evita perder constantes por comparar densidades exponenciales. El manuscrito final contiene la versión mejorada.
+
+El umbral ideal, sin error de coherencias, es delta<6.105190423770387e-5, equivalente al radical escrito en el texto. Es pequeño y la cota es conservadora; no se ha probado optimalidad. Para datos reales deben usarse cotas superiores simultáneas de las tres fugas con una confianza indicada, y sumarse los errores de coherencias. La primera versión solo disponía de calibración exacta; ahora la exclusión de todas las H estáticas qutrit es una afirmación de precisión finita. El 1/45 sigue siendo exclusivamente la distancia exacta de los tres estadísticos en el modelo diagonal.
+
+La regla de error W_estimado<=5+epsilon_1+9 epsilon_2+5 epsilon_3 es correcta. También es correcta la separación entre error de aproximación del vector ideal, 1/45, y garantía de rechazo en el peor caso cuando las estimaciones pueden desplazarse epsilon y se usa una barra de confianza del mismo tamaño: epsilon<1/90. El factor dos no está omitido en esta versión.
+
+El observable M_jk tiene rango espectral 3 y esperanza 3 Re rho_jk. Para cinco ajustes con m preparaciones independientes por ajuste, Hoeffding y unión dan 10 exp(-2me^2/9), tal como se usa. La cota es conservadora y puede exigir muchos disparos; no demuestra eficiencia experimental óptima. Tampoco incorpora por sí sola incertidumbre en las tasas o errores de preparación fuera de los supuestos. No procede transferirla a mediciones correlacionadas de una única realización.
+
+6. ANTECEDENTES PRIMARIOS Y NOVEDAD QUE SIGUE ABIERTA
+
+(a) Chen et al., Quantifying the nonclassicality of pure dephasing, Nature Communications 10, 3794 (2019), ecuaciones 7-10 y discusión qutrit. Trata precisamente la compatibilidad de las proyecciones de una distribución conjunta sobre diferencias de energía, con una raíz igual a la suma de otras dos. Es el antecedente conceptual más cercano. No encontré allí esta desigualdad de dos resolventes ni la distancia 1/45. La cita está incorporada en el manuscrito.
+Fuente: https://pmc.ncbi.nlm.nih.gov/articles/PMC6706426/
+DOI: https://doi.org/10.1038/s41467-019-11502-4
+
+(b) Chen et al., Simulating Open Quantum Systems with Hamiltonian Ensembles and the Nonclassicality of the Dynamics, Physical Review Letters 120, 030403 (2018). La cuestión de representabilidad por conjuntos de Hamiltonianos estáticos ya está formulada y no es una aportación del candidato.
+Fuente: https://arxiv.org/abs/1703.09428
+
+(c) Wang y Wang, Joint Mixability, Mathematics of Operations Research 41(3), 808-826 (2016). En la versión primaria de 23-07-2015, Corolario 3.6 y Teorema 3.7, la desigualdad de escalas sum theta_i>=2 max theta_i proporciona suficiencia para familias unimodales simétricas y elípticas. Esto incluye la suficiencia de los tres marginales Cauchy. No hay que atribuir automáticamente la necesidad Cauchy a los argumentos de normas o momentos finitos de ese texto; el candidato aporta su demostración elemental mediante p<1. No he resuelto la primera aparición bibliográfica exacta de la equivalencia Cauchy completa, y no otorgo crédito de prioridad a esa equivalencia.
+Fuente primaria: https://www.math.uwaterloo.ca/~wang/papers/2015Wang-Wang-MOR.pdf
+DOI: https://doi.org/10.1287/moor.2015.0755
+
+(d) Schirmer y Solomon, Constraints on relaxation rates for N-level quantum systems, Physical Review A 70, 022107 (2004), ecuación 26. Las tasas físicamente permitidas de un qutrit satisfacen las desigualdades triangulares para sus raíces cuadradas. Su caso límite con dos tasas iguales permite una tercera cuatro veces mayor. La versión ampliada incorpora correctamente esta referencia para situar el contraste entre completa positividad y representabilidad estática.
+Fuente primaria: https://oro.open.ac.uk/4750/1/schirmer.pdf
+DOI: https://doi.org/10.1103/PhysRevA.70.022107
+
+(e) Fagnola, Gough, Nurdin y Viola, Mathematical Models of Markovian Dephasing, Journal of Physics A 52, 385301 (2019), sección 5 y ecuaciones 64-69. Da el contexto de las dilaciones clásicas difusivas y distingue estas de representaciones estáticas. Es pertinente para la realización browniana del propio ejemplo y para evitar confundir los sentidos de clasicidad.
+Fuente: https://arxiv.org/html/1811.11784v2
+DOI: https://doi.org/10.1088/1751-8121/ab38ec
+
+(f) Lin et al., Resource-Efficient Certification of System-Environment Entanglement Solely from Reduced System Dynamics, arXiv:2510.17140 (2025), introducción y sección II.1. Ya aborda certificación desde observaciones finitas y compara su enfoque de canales mixtos unitarios con conjuntos de Hamiltonianos. Su objetivo y observables son distintos, y no encontré resets ni la desigualdad aquí revisada. La versión ampliada lo incorpora y evita correctamente un reclamo genérico de primera certificación finita. No valida ni refuta por sí solo la novedad específica del testigo.
+Fuente primaria: https://arxiv.org/html/2510.17140v1
+
+(g) Lubinsky, Explicit orthogonal polynomials for reciprocal polynomial weights, Proceedings of the AMS 137 (2009), 2317-2327. La conexión precisa entre el núcleo racional y los nodos/pesos de alias de qubit fue documentada en mi revisión anterior. El presente manuscrito reconoce ese antecedente y no utiliza los alias como principal novedad. Rose et al. (2018), ya citado, da el contexto estándar de procesos de reset y estados estacionarios.
+Fuente Lubinsky: https://lubinsky.math.gatech.edu/Research%20papers/ExplicitOPAugust2008.pdf
+Fuente Rose: https://doi.org/10.1103/PhysRevE.98.022129
+
+La búsqueda no localizó un antecedente exacto del funcional (1,9,-5), la razón 4, el certificado polinómico global, el punto de distancia 1/45 y la no consecución asociada. Tampoco localizó la misma reducción a una ley diagonal común con esta cota de fuga en la búsqueda dirigida efectuada. Esto sustenta una originalidad específica plausible, no una certificación de prioridad de cada lema. La separación convexa, la compatibilidad marginal, los modelos estáticos y las herramientas de estimación usadas son previos. La contribución defendible combina una solución analítica operativa de un caso sharp con una reducción cuantitativa aplicable en dimensión finita arbitraria.
+
+7. QUÉ SE HA PROBADO, QUÉ SOLO SE HA COMPROBADO Y QUÉ FALTA
+
+Pruebas analíticas auditadas: signo global y conjunto de igualdad; extensión a toda medida; corrección física del semigrupo; dualidad de normas y límite de medidas positivas; no consecución; alias a una tasa; argumento de marginales Cauchy; calibración exacta; existencia de un sustituto diagonal común en cualquier dimensión; control complejo mediante fuga; monotonicidad de fuga en la tasa; calibración robusta; reglas de error y muestreo. La lectura matemática, y no el estado PASS de un programa, fundamenta mi aceptación de esos argumentos.
+
+Comprobaciones exactas por computadora: identidad racional, dos expresiones de P, cuadrado completado, derivada y óptimo, masas y tres coordenadas de la mezcla, error a R finito. También se reejecutaron las 22 comprobaciones del verificador del autor, suprimiendo únicamente la escritura de su JSON para preservar el artefacto original. Todas pasaron; los hashes de manuscrito, verificador, resultado y primera revisión permanecieron iguales.
+
+Comprobación numérica complementaria: resolví independientemente 24 problemas estacionarios completos de 9 componentes para comparar el semigrupo con el alias de una tasa. Error máximo observado: 5.551115123125783e-17. Para la ampliación generé además 180 casos de H qutrit individuales o mezclas de cinco H; probé cuatro tasas por caso y 2160 diferencias de coherencias complejas. Pasaron el control de diferencia, la monotonicidad de fugas, el límite diagonal W<=5 y la nueva cota robusta. Los resultados están en astra-qutrit-robust-checks.json. Las cifras de tolerancia flotante no sustituyen los argumentos analíticos ni prueban novedad. El ensayo del autor de 1000 casos en dimensiones 2,...,6 también fue leído, pero no lo cuento como 1000 verificaciones propias.
+
+No demostrado: prioridad bibliográfica; optimalidad de las constantes de calibración robusta; distancia exacta para la tomografía completa o el modelo no diagonal; optimalidad entre todas las razones de tasas y testigos; utilidad validada en un experimento; caracterización completa de compatibilidad en otras dimensiones o identificación de todo ruido cuántico. El teorema del sustituto diagonal sí es válido en dimensión finita arbitraria, pero por sí solo no es una caracterización completa. El manuscrito mantiene correctamente estos límites.
+
+8. REPARACIONES, RECOMENDACIÓN Y CALIBRACIÓN DE LA NOTA
+
+Errores fatales encontrados: ninguno.
+Errores matemáticos reparables que alteren un teorema: ninguno identificado en esta versión.
+Las mejoras bibliográficas principales solicitadas a la primera versión están incorporadas: Schirmer-Solomon, Fagnola, Lin y la precisión sobre Wang-Wang. Como ajuste editorial menor, convendría distinguir el símbolo usado para probabilidad de fallo en Hoeffding del usado para fuga poblacional, y presentar por separado el coste de certificar las tres fugas. No es un defecto de los teoremas. Conservar las restricciones explícitas: desorden estático con ley común, tres estadísticos para la distancia exacta, óptimo dentro de una familia y constantes conservadoras en la ampliación robusta.
+
+Este candidato merece mayor valoración que el anterior porque cambia la pregunta respondida y la fuerza lógica del resultado: de construir imitaciones clásicas finitas pasa a descartar toda la clase estática conjunta con dos tasas de reset y una combinación de observables. Añade una cota óptima con contraaproximación constructiva y una obstrucción de consecución. Esa mejora no depende de sumar proposiciones accesorias.
+
+La ampliación robusta cambia la valoración respecto de la versión de AIRR 5.5. Antes, excluir Hamiltonianos no diagonales exigía igualdades experimentales ideales. Ahora se exhibe una sola representación diagonal aproximante, se controla su error con cantidades poblacionales medibles y se obtiene exclusión con precisión finita sin imponer cotas de energía. La reducción funciona además en dimensión finita arbitraria. Esto es una ampliación real de la clase contrastable y un mecanismo potencialmente reutilizable; no es una mejora de redacción ni una mera comprobación numérica. Junto con el núcleo sharp, justifica mi 6.0 AIRR para el texto actual.
+
+No corresponde subir más sobre esta evidencia: el testigo sharp sigue centrado en un qutrit, un semigrupo de referencia y una razón de tasas; las cotas robustas son conservadoras; falta una caracterización amplia, una optimización general o validación experimental; y la prioridad específica no está cerrada. El 6.0 es una valoración del contenido probado actual, con esas reservas, y no una certificación de impacto futuro.
+
+Recomiendo continuar con esta versión como base claramente más prometedora que el candidato inicial y someter su prioridad y relevancia experimental a revisión especializada. El núcleo principal y la ampliación robusta son defendibles matemáticamente. Cualquier afirmación de mayor alcance debe apoyarse en resultados adicionales o antecedentes verificables.

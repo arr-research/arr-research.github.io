@@ -1,0 +1,142 @@
+# Informe de arbitraje: «A sharp two-rate reset witness against static qutrit disorder»
+
+**Alcance de la revisión.** He leído el manuscrito completo, `qutrit_verify.py`, `qutrit-verification.json`, `robust_calibration_check.py` y su JSON, además de `rubric.txt`. No he ejecutado los scripts ni ningún cálculo nuevo, y no he modificado ningún archivo. Las comprobaciones que siguen son manuales. Tampoco he verificado el hash SHA-256 del JSON.
+
+## 1. Veredicto matemático
+
+**No he encontrado ningún error fatal ni contraejemplo.** Todas las afirmaciones centrales se sostienen tal como están formuladas, y la mayor parte la he verificado a mano. Los problemas son menores: presentación, notación, contexto bibliográfico y, sobre todo, la relevancia práctica de la versión robusta. Recomendación ordinaria: **revisión menor**. La contribución es correcta y limpia, pero estrecha.
+
+## 2. Verificación afirmación por afirmación
+
+**Teorema 1 (desigualdad W_a ≤ 5).**
+- **Reescalado.** E g_a(X) = E g_1(X/a) y E g_{4a}(X) = E g_4(X/a). Es correcto.
+- **Identidad racional (8).** La comprobé en siete puntos: (0,0), (√2,√2), (1,0), (1,−1), (2,1), (2,−1) y (3,1). Por ejemplo, h(2,1) = 1/68 = 5·500/(2·85000), y h(3,1) = 36/425 = 5·9216/(2·272000).
+  - También la comprobé de forma estructural en toda la recta y = 0: h(x,0) = (g_4 − g_1)/2 = 15x²/[2(1+x²)(16+x²)], que coincide con 5P/(2Δ) cuando P = 48x⁴ + 768x².
+  - La identidad completa en grado 10 descansa en la verificación simbólica del script, que no he reejecutado. Mis comprobaciones son coherentes con ella.
+- **Forma B(p).** B(p) = p⁴ + 15p³ + 108p² − 368p + 384. Correcto: 8464/27 + 1904/27 = 384.
+- **Caso p < 0.** Desarrollé a mano la sustitución d = s + 4q, p = −q y obtuve los tres coeficientes de (10).
+  - Por ejemplo, el término constante es 64q⁴ + 1248q³ + 3744q² + 2560q, usando (q+2)²(q²−17q+16) = q⁴ − 13q³ − 48q² − 4q + 64.
+  - Todos los coeficientes son positivos, así que P > 0 cuando q > 0.
+- **Caso p ≥ 0 y conjunto de igualdad.** La igualdad exige d = 0 y p(p−2)² = 0, lo que deja exactamente los tres puntos. La integración es legítima porque h es continua, acotada y no negativa. La caracterización «μ soportada en los tres puntos» es correcta.
+- **Ceros en el infinito (omisión relevante).** h(x,0) → 0 y h(0,y) → 0 cuando |x| o |y| → ∞; en esas direcciones, el resto de límites de h es ≥ 0 y solo vale 0 cuando la otra coordenada es 0. Esta tangencia asintótica es la razón geométrica del escape a infinito del Teorema 2 y debería figurar en el enunciado del Teorema 1.
+
+**Corolario (semigrupo).** Comprobé W − 5 = t(7−5t)/[(1+t)(4+t)] y la derivada −4(2t−1)(4t+7)/[…]. El máximo vale 1/3 en t = 1/2, y W = 16/3. El generador con salto √(2γ)D da tasas γ(j−k)². Todo correcto.
+
+**Teorema 2 (ínfimo 1/45 y no alcanzabilidad).**
+- **Cota inferior.** ‖ℓ‖₁ = 15 y ℓ(b) = 16/3. Correcto.
+- **Masas y estadísticos de la medida de siete puntos.** Comprobé (19 + 18 + 8)/45 = 1 y los tres estadísticos de (12).
+- **Errores.** Son −1/45 + (4/45)g_1, −1/45 + (4/45)g_4 y 1/45 + (8/45)g_4. Como g_1 ≤ g_4, domina la tercera coordenada, lo que da (13). Correcto.
+- **No alcanzabilidad.** La igualdad en la dualidad ℓ¹/ℓ^∞ con los tres coeficientes no nulos fuerza T = b − (1/45)(1, 1, −1). Con soporte en los tres puntos, T₂ ≥ 8/9 > 13/15. El argumento es válido.
+- **Observación 1.** Por el teorema de Richter–Rogosinski–Tchakaloff, cada vector T(μ_R) se realiza ya con ≤ 4 átomos. «Siete puntos» es una construcción concreta, no un mínimo; conviene decirlo.
+- **Observación 2.** La regla de error de la §6 puede decir «ε ≤ 1/45», porque el ínfimo no se alcanza.
+
+**Proposición «una tasa».** H = ±√(γν)D reproduce el multiplicador de Schur completo. Por tanto reproduce el estado estacionario para *cualquier* preparación, no solo para ρ₊. El alcance «para este semigrupo» es correcto.
+
+**Proposición qubit.**
+- **Paridad y fase.** La estructura de paridad, el conteo de cruces de fase y la simplicidad de los polos son correctos.
+- **Residuos.** Rehíce los residuos con R = E/O = −i cot ψ en el eje imaginario. El residuo es 1/(1 + γψ′/sin²ψ) y, en el polo, sin²ψ = γ²/(γ² + ω²). Eso reproduce exactamente (15), y p₀ coincide.
+- **Cota inferior.** El complemento de Schur 2γ diag(f) C diag(f) es correcto, y C es una matriz de Cauchy definida positiva.
+- **Matiz.** «Menos átomos son imposibles» vale para medidas que reproducen la coherencia *compleja*, que es lo que dice el enunciado. El párrafo de minimalidad está bien acotado.
+- **Antecedente omitido.** Esto es interpolación de Nevanlinna–Pick, y la relación entre el rango de la matriz de Pick y el número mínimo de átomos es clásica. Debe citarse junto a Lubinsky.
+
+**Criterio de Cauchy (desigualdades triangulares).**
+- **Necesidad.** El argumento con momentos fraccionarios p < 1 es correcto y evita la media. Es un pequeño aporte real: las condiciones necesarias de Wang–Wang (longitud y varianza) son triviales para Cauchy, y su desigualdad de normas no cubre el caso L^p con p < 1.
+- **Suficiencia.** La construcción con escalas b_j es correcta. Comprobé que Wang–Wang, MOR 2016, Cor. 3.6 (p. 11), cubre la suficiencia, y también su Teorema 3.7 (elípticas; Cauchy es elíptica 1D según su Remark 3.2).
+- **Schirmer–Solomon.** El contraste con la condición sobre raíces cuadradas es correcto: (γ, γ, 4γ) está en el borde, porque √4 = 1 + 1.
+
+**Errores y medición.**
+- **Regla determinista.** La regla (18) es trivialmente correcta.
+- **Umbral 1/90.** Con desviación de hasta ε respecto al ideal, el rechazo garantizado exige 16/3 − 15ε > 5 + 15ε, es decir, ε < 1/90. Es necesario y suficiente en el peor caso.
+- **Observable.** M_jk tiene autovalores {±3/2, 0}; el rango es 3.
+- **Número de disparos.** Hoeffding más cota de unión sobre 5 ajustes da m ≥ (9/2e²) log(10/δ). Correcto.
+- **Conflicto de notación.** δ denota a la vez la probabilidad de fallo y la fuga de población, y A(s) a la vez un polinomio y la media de coherencias. Debe corregirse.
+
+**Teorema 3 (sustituto diagonal común, dimensión d).** Es correcto y elegante.
+- La independencia condicional de E_j ~ η_j^H da la coherencia U_jj·conj(U_kk), porque ∫e^{−iEt} dη_j = U_jj.
+- La diferencia con la coherencia real es U_jj·conj(s_k) + s_j·conj(U_kk) + s_j·conj(s_k).
+- Por Cauchy–Schwarz y la norma de fila, |s_j| ≤ √(d−1)·√l_j.
+- Después vienen Jensen (E√l ≤ √(El)) y Cauchy–Schwarz (E√(l_j l_k) ≤ √(L_j L_k)).
+- Se cumple E l_j = L_j(ν), y la ley del sustituto no depende ni de t ni de ν.
+- No hace falta ningún supuesto de momentos.
+- Detalle menor: el canal R_ν se usa en el Teorema 3 pero solo se define en la Proposición 8.
+
+**Corolario robusto 30√(2δ) + 30δ y monotonía.**
+- **Representación (20).** Es correcta: |U_jj|² = ∬ e^{−i(E−E′)t} dη dη′, su transformada de Laplace tiene parte real ν²/(ν² + ω²) y la parte imaginaria se cancela por simetría. Por tanto L_j(ν) = ∬ ω²/(ν² + ω²), que es no creciente en ν. De ahí L_j(4a) ≤ L_j(a) ≤ δ.
+- **Constante.** Con d = 3, cada coherencia tiene error ≤ 2√(2δ) + 2δ, y la suma da (1 + 9 + 5)(…) = 30√(2δ) + 30δ. Correcto.
+- **Umbral.** δ* = [(2√115 − 15√2)/30]² ≈ 6.1×10⁻⁵. Es correcto, pero el texto debería dar el valor numérico.
+
+**Proposición 8 (calibración exacta).** Tonelli implica que la amplitud se anula para casi todo t; por continuidad, para todo t; derivando en 0, H_kj = 0. Con j = 1, 2 y la hermiticidad se obtienen todos los elementos fuera de la diagonal. Correcto.
+
+## 3. Desorden estático frente a ruido clásico dependiente del tiempo
+
+El manuscrito es honesto aquí. La fase browniana √(2γ)W_t·D reproduce exactamente el semigrupo de referencia, así que el testigo **solo excluye la independencia temporal del ruido**: no certifica cuanticidad, entorno cuántico ni no-markovianidad. Faltan dos cosas:
+- **(i) Ruido de correlación finita.** Una discusión del ruido con tiempo de correlación τ_c (por ejemplo, Ornstein–Uhlenbeck), que interpola entre ambos casos. El test realmente mide si τ_c ≫ 1/a.
+- **(ii) Antecedente de dilatación clásica.** Citar Kümmerer–Maassen (dilataciones esencialmente conmutativas), que es el resultado clásico sobre esa realización.
+
+## 4. Puntos que deben corregirse
+
+1. **Ceros asintóticos de h.** Enunciar en el Teorema 1 que h se anula asintóticamente sobre los ejes en el infinito, y vincularlo explícitamente con el Teorema 2.
+2. **Antecedente central omitido: eco de Hahn y técnicas afines.** El eco de espín, el *hole burning* y los ecos de fotones son la herramienta canónica para separar ensanchamiento estático de ruido dinámico, ya con un qubit. La novedad debe acotarse explícitamente a datos de *libre evolución* sin pulsos de control.
+3. **Encuadre operativo.** c(ν) = ν × transformada de Laplace de la señal FID/Ramsey. Basta con tiempos de espera exponenciales; el «reset» no es físicamente necesario. Conviene decirlo, junto con el vínculo con la propuesta FID de Chen et al. 2018.
+4. **Antecedentes matemáticos.** Citar el problema general de momentos (Kemperman 1968; Karlin–Studden), del que el testigo es un certificado dual. Citar también Nevanlinna–Pick para la parte de qubit, Puccetti–Rigo–Wang–Wang (Cauchy sin media) para el criterio triangular, y Helm–Strunz / Landau–Streater sobre desfase no de unitarios aleatorios.
+5. **Notación.** Corregir el doble uso de δ y A(·) y definir R_ν antes del Teorema 3.
+6. **Relevancia práctica de la versión robusta.**
+   - Dar δ* ≈ 6×10⁻⁵ en el texto, junto con el presupuesto conjunto de peor caso: 30e + 30√(2δ) + 30δ < 1/3.
+   - Con la cota (19), e ≈ 1/180 exige del orden de 8×10⁵ disparos por ajuste.
+   - Certificar δ ~ 10⁻⁵ exige del orden de 10⁵ disparos sin fuga por estado base.
+7. **«Seven-point».** Precisar que son siete puntos como construcción explícita y que bastan cuatro átomos por Richter–Tchakaloff.
+8. **Autocitas.** Las dos autocitas no revisadas por pares (ai.viXra, AIRR) no aportan nada a la prueba; conviene eliminarlas o reducir su papel.
+
+## 5. Novedad
+
+- **No hallado en la literatura:** la desigualdad concreta A(a) + 9A(4a) − 5c₁₃(4a) ≤ 5, su conjunto de igualdad, el ínfimo 1/45 y el sustituto diagonal común con cota √(d−1). No aparecen en Chen et al. (2018, 2019, 2021), Lin et al. (2025) ni en la literatura de mezclabilidad conjunta consultada. Chen 2019 usa el sistema de raíces de su(3) sin derivar condiciones triangulares ni testigos con datos finitos. Esto no prueba que no exista.
+- **Ya conocido:**
+  - el obstáculo conceptual de las marginales de un qutrit (Chen 2019);
+  - la suficiencia del criterio de Cauchy (Wang–Wang);
+  - la cuadratura racional positiva para el qubit (que el autor reconoce);
+  - el método, un hiperplano separador en un problema de momentos truncado, que es estándar.
+- **Estado:** contribución específica plausiblemente nueva, con técnica clásica y alcance estrecho.
+
+## 6. Scripts
+
+`qutrit_verify.py` comprueba de forma simbólica lo que dice comprobar. La «no alcanzabilidad» del script es solo `13/15 < 8/9`; la lógica real está en la prosa, que es correcta. El test robusto es numérico y sus semillas son reproducibles. Ninguno de los dos sustituye a las pruebas, pero ambos son coherentes con ellas.
+
+## 7. Puntuaciones
+
+- **Corrección: 8.5/10.** No hay errores. La identidad de grado 10 depende en parte de la verificación simbólica.
+- **Rigor: 7.5/10.** Las pruebas son completas y concisas. Fallan la notación, los ceros en el infinito y la definición tardía de R_ν.
+- **Originalidad: 4.5/10.** Resultado concreto nuevo, pero con método estándar y concepto previo.
+- **Significación: 3.5/10.** El alcance es estrecho, el eco ya resuelve la pregunta física con control, y el umbral robusto es muy exigente.
+- **Global ordinario: 5.5/10.** Nota correcta y publicable en una revista especializada tras revisión menor.
+- **Relevancia AIRR (escala Millennium): 3.6/10.** Trabajo sustantivo e inspeccionable, por encima del umbral «Acceptable» (3) y por debajo de «Strong» (4). Esta cifra no es comparable con la puntuación ordinaria.
+- **Criterios AIRR en estrellas (1–5):**
+
+| Criterio | Estrellas |
+|---|---|
+| Confianza en la corrección | 4 |
+| Rigor | 4 |
+| Novedad | 2 |
+| Significación | 2 |
+| Reproducibilidad | 4 |
+
+## Enlaces bibliográficos
+
+**Verificados en esta revisión:**
+- [Chen et al., Nat. Commun. 10, 3794 (2019)](https://www.nature.com/articles/s41467-019-11502-4) · [arXiv:1811.09053](https://arxiv.org/html/1811.09053)
+- [Chen et al., PRL 120, 030403 / arXiv:1703.09428](https://arxiv.org/pdf/1703.09428)
+- [Chen & Chen, Sci. Rep. 11, 10046 (2021)](https://www.nature.com/articles/s41598-021-89400-3)
+- [Kropf et al., PRX 6, 031023](https://journals.aps.org/prx/abstract/10.1103/PhysRevX.6.031023)
+- [Lin et al., arXiv:2510.17140](https://arxiv.org/pdf/2510.17140)
+- [Wang & Wang, Joint mixability, MOR (DOI)](https://pubsonline.informs.org/doi/10.1287/moor.2015.0755) · [PDF del autor](https://math.uwaterloo.ca/~wang/papers/2015Wang-Wang-MOR.pdf)
+- [Puccetti, Rigo, Wang & Wang, Centers of probability measures without the mean](https://math.uwaterloo.ca/~wang/papers/2018Puccetti-Rigo-Wang-Wang-JTP.pdf)
+- [Helm & Strunz, arXiv:0910.5364](https://arxiv.org/pdf/0910.5364)
+
+**No verificados en línea en esta revisión:**
+- Hahn, Phys. Rev. 80, 580 (1950), doi:10.1103/PhysRev.80.580
+- Kümmerer–Maassen, CMP 109 (1987)
+- Kemperman, Ann. Math. Stat. 39 (1968)
+- Lubinsky, Rose et al., Schirmer–Solomon y Fagnola et al., tal como los cita el manuscrito.
+
+```json
+{"paper":"qutrit-paper.tex","verdict":"correct_minor_revision","fatal_errors":0,"scores_10":{"correctness":8.5,"rigor":7.5,"originality":4.5,"significance":3.5,"ordinary_overall":5.5,"airr_relevance":3.6},"airr_criterion_stars":{"correctness":4,"rigor":4,"novelty":2,"significance":2,"reproducibility":4},"must_fix":["asymptotic zeros of h on axes","Hahn echo / control-based antecedents","Laplace-FID framing","moment-problem, Nevanlinna-Pick, Puccetti-Rigo-Wang-Wang, Kummerer-Maassen citations","notation clashes delta and A; define R_nu earlier","state delta* ~6.1e-5 and joint error budget","seven-point not minimal (<=4 atoms)"],"scripts_executed_by_reviewer":false}
+```

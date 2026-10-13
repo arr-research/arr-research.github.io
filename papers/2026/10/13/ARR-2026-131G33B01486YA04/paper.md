@@ -1,0 +1,562 @@
+# A sharp two-rate reset witness against static qutrit disorder
+
+Machine-readable extraction of the canonical ten-page PDF. Consult paper.pdf for mathematical typography. The preparation-time phrase "research candidate, not deposited" in the immutable PDF predates the authorized public deposit recorded in metadata.json.
+
+--- Page 1 ---
+A sharp two-rate reset witness against static qutrit disorder
+Lluis Eriksson
+Research manuscript prepared with AI assistance
+12 October 2026 — research candidate, not deposited
+Abstract
+Can stationary states at a few reset rates distinguish fluctuating dephasing from an
+arbitrary distribution of static Hamiltonians? F or a qubit, every finite list of stationary
+states of a real dephasing semigroup has a finite static alias. W e exhibit a sharp obstruction
+for a qutrit. If cjk (ν) is the real, normalized stationary coherence under Poisson resets and
+A(ν) = [ c12(ν) + c23(ν)]/2, every static diagonal Hamiltonian ensemble, without support or
+moment restrictions, satisfies
+A(a) + 9 A(4a) − 5c13(4a) ≤ 5 ( a > 0).
+The completely positive semigroup with generator −γ[D, [D, ·]], D = diag(0 , 1, 2), gives 16/3
+at a = 2 γ. W e prove the inequality by an explicit polynomial certificate, determine all its
+finite equality points, and show that the exact infimum of the uniform error in the three
+selected statistics is 1/45. The infimum is approached by seven-point static ensembles but is
+attained by no probability measure on R2. A single reset rate cannot exclude static disorder
+for this semigroup. W e also give a deterministic error rule, a finite-shot implementation,
+and a spectral coupling that extends the exclusion to arbitrary static qutrit Hamiltonian
+ensembles with noisy population calibration. If all three population leakages at rate a are at
+most δ, the bound becomes Wa ≤ 5 + 30
+√
+2δ + 30δ. This is a witness against static disorder,
+not against classical time-dependent noise or a proof of a quantum environment.
+1 Question and relation to earlier work
+Static Hamiltonian ensembles are an established description of inhomogeneous broadening. In
+particular, Cauchy-distributed qubit frequencies reproduce exponential dephasing exactly [ 1, 2].
+Higher-dimensional dephasing imposes additional consistency: three transition frequencies of a
+qutrit must be differences of the same three energies. Chen et al. explicitly formulate this joint-
+distribution constraint using the root system of su(3) [3]. The distinction between Hamiltonian
+ensemble representability and other notions of classicality or Markovianity is also established
+[4]. Pulse-based discrimination of static broadening is much older: the Hahn echo refocuses
+static frequency disorder already for a qubit [ 13]. Our restrictions are free evolution between
+preparations and stationary or exponentially sampled observations, without echo or decoupling
+pulses. W e claim no advantage over those controlled protocols. Classical stochastic dilations of
+dephasing semigroups are studied systematically in [ 14, 8]. Finite-data certification of different
+environmental properties, including tests based on failure of mixed-unitarity , is already available
+[10]; our selected statistics do not certify that stronger property .
+The question here is narrower and operational: can two stationary reset settings , without re-
+constructing a full time-dependent channel, exclude every static diagonal ensemble? W e give an
+explicit yes answer, an exact bounded-observable inequality , and a sharp distance to the allowed
+data. The conceptual incompatibility of qutrit marginals is prior work. The candidate contri-
+bution is the finite-resolvent witness and its sharp error geometry . The separating-hyperplane
+method is classical generalized-moment geometry [ 15], not a new general method of moment
+1
+
+--- Page 2 ---
+inference. The literature comparison does not establish that nobody has previously derived the
+same inequality .
+Stationary reset states are Laplace transforms of free evolution; this renewal description
+is standard [ 5]. Their diagnostic value depends on which controls and preparations are held
+fixed. The same probability law of static Hamiltonians must be used at all settings. Allowing
+a different law at each reset rate destroys the proposed test. The author’s earlier discussions
+of maintenance and restoration [ 11] and finite-data moment falsification [ 12] motivated this
+question. These unreviewed manuscripts are contextual only; no theorem from them is used
+here, and no thermodynamic work claim is made.
+2 Protocol and the model being excluded
+Set ℏ = 1 . In each realization draw (X, Y ) from an arbitrary Borel probability measure µ on R2
+and hold
+HX,Y = diag(0 , X, X + Y ) (1)
+fixed. No independence, symmetry , density , finite-support, bandwidth or moment assumption
+is imposed on µ. Reset the system, independently of its sampled energies, to ρ+ = |+3⟩⟨+3|,
+where |+3⟩ = ( |1⟩ + |2⟩ + |3⟩)/
+√
+3, at Poisson rate ν > 0. The static register is not reset. After
+taking the stationary limit, average across independently prepared realizations. This is ensemble
+tomography , not an ergodic time average over a single conserved register.
+F or a signed energy gap Z, the normalized stationary coherence is
+zZ(ν) =
+Z ∞
+0
+νe−νtEeiZt dt = E ν
+ν − iZ , c Z(ν) := ℜzZ(ν) = Egν(Z), g ν(z) = ν2
+ν2 + z2 . (2)
+Boundedness justifies the interchange of expectations and integrals. Operationally this is also
+a Laplace-weighted free-induction-decay (FID/Ramsey) measurement: prepare independently ,
+draw a waiting time from Exp(ν), and measure once. Physical repeated resetting is therefore
+not necessary to obtain the same averaged data. The preparation and Hamiltonian law must
+still be the same at every setting; compare the FID formulation in [ 2]. Thus cjk(ν) = 3 ℜ(ρµ,ν)jk
+and
+c12(ν) = Egν(X), c 23(ν) = Egν(Y ), c 13(ν) = Egν(X + Y ), A (ν) = c12(ν) + c23(ν)
+2 . (3)
+All populations equal 1/3. Imaginary coherences are allowed in the excluded model; the witness
+uses their real parts only .
+The reference process is the legitimate Lindblad semigroup
+Lγ(ρ) = −γ[D, [D, ρ]], D = diag(0 , 1, 2), γ > 0. (4)
+It has jump operator √2γD. Its adjacent coherences decay as e−γt and the outer coherence as
+e−4γt. Under the same reset protocol,
+AM (ν) = ν
+ν + γ , c 13,M (ν) = ν
+ν + 4γ . (5)
+This semigroup also has a classical time-dependent Gaussian noise realization: the random phase√2γWtD, with standard Brownian motion Wt, produces precisely these factors. It follows that
+rejecting static ensembles does not certify quantum noise, nonclassical dynamics in every usage
+of that term, or non-Markovianity .
+2
+
+--- Page 3 ---
+3 The sharp universal inequality
+Theorem 1 (T wo-rate static-disorder bound). F or every probability measureµ in (1) and every
+a > 0,
+Wa := A(a) + 9 A(4a) − 5c13(4a) ≤ 5. (6)
+The constant 5 is attained. Equality holds exactly when µ is supported on
+(0, 0), (a
+√
+2, a
+√
+2), (−a
+√
+2, −a
+√
+2). (7)
+Proof. Rescale x = X/a, y = Y/a and write Ar(x, y) = [ gr(x) + gr(y)]/2. It is enough to show
+h(x, y) := 5 − A1(x, y) − 9A4(x, y) + 5 g4(x + y) ≥ 0. (8)
+Let
+∆ = (1 + x2)(16 + x2)(1 + y2)(16 + y2)(16 + ( x + y)2) > 0.
+Clearing denominators gives the exact identity
+h(x, y) = 5P(x, y)
+2∆ . (9)
+F orp = xy and d = ( x − y)2, the polynomial has the form
+P = (5 p2 + 48)d2 + 2B(p)d + 8p(p − 2)2(p + 1)(p + 16), (10)
+B(p) = p4 + 15p3 + 108
+
+p − 46
+27
+2
++ 1904
+27 .
+If p ≥ 0, all terms are nonnegative and B(p) > 0. Equality requires d = 0 and p ∈ {0, 2}, giving
+the three points in ( 7) after rescaling.
+If p < 0, set q = −p > 0 and s = ( x + y)2 ≥ 0. The same polynomial is
+P = (5 q2 + 48)s2 + (2q4 + 10q3 + 216q2 + 1120q + 768)s (11)
++ 64q4 + 1248q3 + 3744q2 + 2560q > 0.
+This proves the pointwise inequality and all its zeros. Integrate (8) against µ. Since h is bounded,
+nonnegative, and vanishes only at the stated points, its integral is zero if and only if the measure
+is supported there. No moment condition has entered the argument.
+The equality set above consists of finite points. There is also asymptotic saturation along
+the coordinate axes:
+h(x, 0) = h(0, x) = 15x2
+2(1 + x2)(16 + x2) − →0.
+These escaping directions explain the limiting construction in Theorem3; they are not additional
+points in R2.
+Corollary 2 (Violation by a completely positive semigroup) . F or(4), put t = γ/a. Then
+Wa,M − 5 = t(7 − 5t)
+(1 + t)(4 + t). (12)
+It is positive for 0 < t < 7/5, and its maximum over a > 0 is 1/3, attained at a = 2 γ. In
+particular,
+AM (2γ) = 2
+3, A M (8γ) = 8
+9, c 13,M (8γ) = 2
+3, W 2γ,M = 16
+3 .
+Proof. Substitute (5). The derivative of the right side of ( 12) is −4(2t − 1)(4t + 7)/[(t + 1)2(t +
+4)2].
+The optimizing statement concerns this particular witness family with rate ratio four, not
+all possible witnesses or reset protocols.
+3
+
+--- Page 4 ---
+4 An exact error floor and escape to infinity
+Use the three selected real statistics, in scaled coordinates,
+T(µ) = ( EA1(X, Y ), EA4(X, Y ), Eg4(X + Y )) , b =
+2
+3, 8
+9, 2
+3
+
+. (13)
+Here X, Y are dimensionless; physical gaps are aX, aY with a = 2 γ. The vector in ( 13) deliber-
+ately does not include c13(a) or all entries of the two stationary states.
+Theorem 3 (Sharp distance for the selected statistics) . Over al l Borel probability measures on
+R2,
+inf
+µ
+∥T(µ) − b∥∞ = 1
+45. (14)
+No measure attains the infimum. It is approached by symmetric seven-point ensembles with
+unbounded support radius.
+Proof. The linear functional ℓ(u) = u1 + 9u2 − 5u3 has dual norm ∥ℓ∥1 = 15 , and ℓ(b) = 16 /3.
+Theorem 1 therefore gives 15∥T(µ) − b∥∞ ≥ 1/3.
+F or the matching upper bound, assign mass 19/45 to (0, 0), mass 1/5 to each of (
+√
+2,
+√
+2)
+and (−
+√
+2, −
+√
+2), and mass 2/45 to each of (0, R), (R, 0), (0, −R), (−R, 0), where R > 0. These
+seven masses sum to one. Their statistics are
+T(µR) =
+29
+45 + 4
+45g1(R), 13
+15 + 4
+45g4(R), 31
+45 + 8
+45g4(R)
+
+. (15)
+Consequently
+∥T(µR) − b∥∞ = 1
+45 + 128
+45(16 + R2) − → 1
+45. (16)
+F or the equality obstruction, attaining 1/45 forces equality in both the linear bound and the
+static witness. All three nonzero coeﬀicients then force T = (29 /45, 13/15, 31/45). But equality
+in the static witness requires support on ( 7); every such measure has its second coordinate at
+least 8/9, whereas 13/15 < 8/9. This is impossible.
+Seven points are an explicit symmetric construction, not an optimal atom count. F or the
+three selected real statistics alone, every attainable vector has a representation with at most
+four atoms: apply the measurable-function version of T chakaloff’s theorem [ 16, Corollary 2] to
+1, A1, A4, g4(X + Y ). Such a reduction need not preserve the other or imaginary coherences.
+Thus the set of attainable selected data is not closed. This point matters in numerical
+optimization: an apparent optimum can represent probability mass moving to arbitrarily large
+energy gaps. On any fixed compact gap domain the probability measures form a compact set
+and T is continuous, so the best error is attained and is strictly larger than 1/45. The theorem
+gives the infimum for the three selected statistics, not a sharp trace-distance error for the full
+states.
+5 Why the second rate and the third level matter
+Proposition 4 (One rate is insuﬀicient for the reference example) . F or every single rate ν > 0,
+a two-point static qutrit ensemble reproduces the entire stationary state of (4) exactly. Indeed,
+take H = ±√γνD with equal probability.
+Proof. F or a gap k√γν with k = 1 , 2, the averaged complex coherence is real and equals
+gν(k√γν) = ν/(ν + k2γ). These are exactly the adjacent and outer coherences; populations
+agree as well.
+4
+
+--- Page 5 ---
+Proposition 5 (Finite qubit aliases). F or a qubit with real Markovian dephasing rateγ > 0 and
+any N distinct positive reset rates, a symmetric finite static frequency distribution reproduces
+al l stationary states exactly. One can use N + 1 signed frequencies, and fewer are impossible.
+Proof. Let ν1, . . . , νN be the rates and write Q(s) = Q
+j(s + νj) = E(s) + O(s), separating even
+and odd powers. Set
+F(s) =
+(
+O(s)/(sO(s) + γE(s)), N odd,
+E(s)/(sE(s) + γO(s)), N even. (17)
+Since Q(−νj) = 0 , E(νj) = O(νj), giving F(νj) = 1 /(νj + γ).
+The denominator is the degree- N + 1 parity part of (s + γ)Q(s). F or ω ≥ 0 the phase
+θ(ω) = arctan( ω/γ) +
+X
+j
+arctan(ω/νj)
+is strictly increasing from 0 to (N + 1) π/2. Its crossings of (k + 1 /2)π when N is odd, or kπ
+when N is even, give all the nonnegative imaginary-axis poles. The poles are simple, come in
+pairs, and include zero exactly when N is even. Their total number is N + 1 . Each nonzero
+signed pole has residue
+pω = γ
+(γ2 + ω2)[γ/(γ2 + ω2) + P
+j νj/(ν2
+j + ω2)] > 0. (18)
+When present, the zero residue is p0 = (1 + γ P
+j ν−1
+j )−1 > 0. Also sF(s) → 1, so the residues
+sum to one. Partial fractions therefore express F as the Cauchy transform of a symmetric
+probability measure on these frequencies.
+F or the lower bound letvj(ω) = ( νj + iω)−1 and fj = ( νj + γ)−1. Any representing measure
+has the same Gram matrix of 1, v1, . . . , vN , whose lower-right block is Kij = ( fi + fj)/(νi + νj).
+Its Schur complement is
+K − ff T = 2 γ diag(f)C diag(f), C ij = 1
+νi + νj
+=
+Z ∞
+0
+e−νite−νj t dt > 0.
+The distinct exponentials are linearly independent, so the Gram matrix has rank N + 1 . A
+measure with fewer than N + 1 atoms cannot have that rank.
+The construction in Proposition 5 is a specialization of classical positive rational quadrature.
+In particular Lubinsky’s reciprocal-polynomial reproducing kernel [ 6, equations (1.11)–(1.12)],
+for weight proportional to [(γ2 + ω2) Q
+j(ν2
+j + ω2)]−1, produces the same phase nodes and, after
+multiplying by Q
+j(ν2
+j + ω2), the masses ( 18). W e do not claim this quadrature formula as a
+new discovery; the proof is included to make the qubit/qutrit contrast self-contained. Positive
+Cauchy transforms and their Gram-matrix constraints also belong to classical Nevanlinna–Pick
+interpolation; see [ 17, Theorem 1.2 and the Herglotz representation].
+The minimality statement is consequently precise: for real dephasing-semigroup reset data
+with a fixed dephasing basis, no qubit provides this finite-rate rejection, while the displayed
+qutrit does; and this particular qutrit cannot be rejected at one rate. It is not a minimality
+claim over arbitrary controls, echoes, preparations or general non-dephasing processes.
+6 Compatibility of the full qutrit semigroup
+The finite witness can be related to a simpler full-trajectory fact. The latter is a Cauchy-
+marginal compatibility problem, within the classical joint-mixability framework [ 7]; it is not
+presented as the main novelty of this paper. In particular, the suﬀiciency follows from W ang
+5
+
+--- Page 6 ---
+and W ang’s Corollary 3.6 for unimodal symmetric location-scale families. W e include an elemen-
+tary construction and a fractional-moment necessity argument, without applying a finite-mean
+assumption to Cauchy laws. Mixability without finite means, including Cauchy laws, has also
+been studied directly in [ 18]; absence of a mean is not in itself a novel diﬀiculty introduced by
+this example.
+Proposition 6 (Three Cauchy marginals) . F or nonnegative real dephasing rates Γ12, Γ23, Γ13,
+a static diagonal ensemble reproduces al l factors e−Γjk t for every t ≥ 0 if and only if the three
+rates satisfy al l triangle inequalities.
+Proof. The characteristic functions, extended to negative times by conjugacy , force X, Y, X + Y
+to have centered Cauchy laws of scales Γ12, Γ23, Γ13, with scale zero interpreted as a point mass.
+F or0 < p < 1,
+|X + Y |p ≤ |X|p + |Y |p, E|ΓZ|p = Γ pE|Z|p < ∞
+for a standard Cauchy Z. T aking expectations and then p ↑ 1 gives Γ13 ≤ Γ12 + Γ23. The other
+two inequalities follow by writing X = ( X + Y ) − Y and Y = ( X + Y ) − X.
+Conversely , letE1, E2, E3 be independent centered Cauchy variables with scales bj = (Γ jk +
+Γjℓ − Γkℓ)/2 ≥ 0. Then Ek − Ej is centered Cauchy of scale bj + bk = Γ jk. The ensemble
+diag(E1, E2, E3), after removing the irrelevant common energy , is of the form ( 1) and gives all
+the desired factors.
+The reference rates (γ, γ, 4γ) violate this condition despite generating a completely positive
+semigroup. F or comparison, complete positivity of real qutrit dephasing requires triangle inequal-
+ities for the square roots of the rates [9], a different condition. Theorem 1 replaces full-trajectory
+information by two reset settings and bounded observables for this example.
+7 Error control and measurement
+Suppose estimates of the selected statistics obey simultaneous deterministic error bounds
+| bA(a) − A(a)| ≤ ε1, | bA(4a) − A(4a)| ≤ ε2, |bc13(4a) − c13(4a)| ≤ ε3.
+Every static diagonal model must then satisfy
+cWa ≤ 5 + ε1 + 9ε2 + 5ε3. (19)
+This is a model-exclusion rule for a given data set. In particular, the ideal reference vector
+cannot be matched to within uniform error ε < 1/45. If the estimates themselves may deviate
+from the ideal reference by ε, and the same size error bar is used in ( 19), a conservative worst-
+case guarantee of rejection requires ε < 1/90. These two different error statements must not be
+conflated.
+F or a direct finite-shot implementation, measure
+Mjk = 3
+2(|j⟩⟨k| + |k⟩⟨j|).
+Its expectation equals cjk and its outcomes lie in {−3/2, 0, 3/2}. Use independent station-
+ary preparations for the five settings (12, a), (23, a), (12, 4a), (23, 4a), (13, 4a), with m shots per
+setting. A union bound and Hoeffding’s inequality give simultaneous errors at most e with
+probability at least 1 − αc whenever
+m ≥ 9
+2e2 log 10
+αc
+. (20)
+The averages definingA then also have error at moste. This conservative bound is not an optimal
+experimental allocation. Independence here means independently prepared static registers, not
+repeated correlated measurements on a single conserved register.
+6
+
+--- Page 7 ---
+8 Robust population calibration for general static ensembles
+The sharp witness and distance concern diagonal Hamiltonians. W e next give a quantitative
+reduction from an arbitrary static ensemble to one diagonal ensemble that works simultaneously
+at every reset rate. F or any law µ on Hermitian matrices, define its reset channel by
+Rν(ρ) = Eµ
+Z ∞
+0
+νe−νte−iHtρeiHt dt.
+Theorem 7 (A common diagonal surrogate) . Let µ be any probability law on finite Hermitian
+d × d matrices, and let Rν be its stationary reset channel. Define
+Lj(ν) = 1 − ⟨j|Rν(Pj)|j⟩, P j = |j⟩⟨j|.
+There is one probability law eµ on diagonal Hamiltonians, independent of ν, such that the nor-
+malized coherences from the uniform reset state satisfy, for al l j ̸= k and al l ν > 0,
+|zjk,µ(ν) − zjk,eµ(ν)| ≤
+√
+d − 1
+ q
+Lj(ν) +
+p
+Lk(ν)
+
++ (d − 1)
+q
+Lj(ν)Lk(ν). (21)
+Here zjk,µ(ν) = d⟨j|Rν(ρ+)|k⟩ and ρ+ is the uniform pure state. No norm or moment bound on
+the Hamiltonian distribution is needed.
+Proof. Conditional on H, let ηH
+j (B) = ⟨j|PH(B)|j⟩ be its local spectral probability measure.
+Draw energies E1, . . . , Ed independently conditional on H, with respective laws ηH
+j , and set
+eH = diag( E1, . . . , Ed). The resulting diagonal Hamiltonian law is independent of time and reset
+rate. This construction uses spectral measures and does not require an arbitrary eigenbasis
+choice at degenerate eigenvalues. F or U = e−iHt, its conditional free coherence is Ujj Ukk.
+F or the original uniform pure input, the normalized free coherence is (Ujj + sj)(Ukk + sk),
+where sj = P
+ℓ̸=j Ujℓ. Put lj = 1 − |Ujj |2 ∈ [0, 1]. Unitarity and Cauchy–Schwarz give |sj| ≤√
+d − 1
+p
+lj. The same lj equals the total probability of leaving |j⟩, since the squared norm of
+both row j and column j is one. Since |Ujj | ≤ 1, the absolute difference of the two coherences
+is bounded by √
+d − 1(
+p
+lj +
+p
+lk) + ( d − 1)
+p
+ljlk.
+A verage overH and over the exponential age distribution νe−νtdt. This is a probability space,
+and Elj = Lj(ν). Jensen’s and Cauchy–Schwarz inequalities give ( 21). All integrands are
+bounded, so no moment or dominated-differentiation assumption is necessary .
+Corollary 8 (Noisy population-calibrated qutrit witness) . F or any static qutrit Hamiltonian
+ensemble, if Lj(a) ≤ δ for al l j = 1 , 2, 3, then its uniform-reset data obey
+Wa ≤ 5 + 30
+√
+2δ + 30δ. (22)
+Consequently, with simultaneous coherence error bounds as in (19) and simultaneous certified
+population bounds Lj(a) ≤ δ, observing
+cWa > 5 + 30
+√
+2δ + 30δ + ε1 + 9ε2 + 5ε3
+excludes every static qutrit Hamiltonian ensemble using the same Hamiltonian law for al l the
+tested reset rates and preparations.
+Proof. F or a fixed Hamiltonian, the population leakage has the positive spectral representation
+Lj(ν) = EH
+ZZ (E − E′)2
+ν2 + (E − E′)2 dηH
+j (E) dηH
+j (E′). (23)
+7
+
+--- Page 8 ---
+Indeed, the return amplitude is Ujj (t) =
+R
+e−iEtdηH
+j (E); expanding its squared modulus and
+taking the exponential age average gives ( 23). Thus Lj(ν) is nonincreasing in ν, without any
+moment restriction. In particular Lj(4a) ≤ Lj(a) ≤ δ. Theorem 7 bounds each coherence error
+relative to its one common diagonal surrogate by 2
+√
+2δ + 2 δ at both rates. The same bound
+holds for the adjacent averages. Apply Theorem 1 to the surrogate and sum the errors:
+(1 + 9 + 5)(2
+√
+2δ + 2δ) = 30
+√
+2δ + 30δ.
+The constants in (22) are conservative, not claimed optimal. The ideal reference has Lj = 0 .
+In the absence of coherence error, its margin 1/3 exceeds the correction whenever
+δ <
+
+2
+√
+115 − 15
+√
+2
+30
+!2
+.
+F or finite data, population upper bounds must have their own stated joint confidence. Sampling
+a fresh register for each shot remains essential; an independent-shot analysis cannot be applied
+to one uncontrolled conserved register. The sharp 1/45 distance from Theorem 3 remains a
+statement about the diagonal model and selected statistics, not a sharp error for this enlarged
+test.
+The practical requirements of this conservative bound are demanding. With no coherence
+error, the reference is certified only when δ < δ ∗ ≃ 6.1052 × 10−5. With five simultaneous
+coherence errors at most e, the worst-case reference guarantee is
+30e + 30
+√
+2δ + 30δ < 1
+3.
+F or example, e = 1 /180 and αc = 0 .025 require about 8.74 × 105 shots per coherence setting
+under (20). F or each of the three population preparations,n independent shots with zero escapes
+give the one-sided upper bound Lj ≤ log(3/αp)/n, simultaneously except with probability at
+most αp: for any larger leakage, the probability of zero escapes is at most e−nLj , and a union
+bound covers the three states. T aking αp = 0 .025 requires about 4.79 × 105 zero-escape shots
+per state to certify δ ≤ 10−5. The combined coverage is at least 1 − αc − αp. If escapes occur,
+a binomial confidence bound must replace the zero-event formula. These estimates account for
+sampling only , not state-preparation or measurement bias, and are not evidence that an eﬀicient
+experiment has been achieved.
+Exact data admit a simpler calibration with only two basis states.
+Proposition 9 (Exact population calibration). Let µ be a probability measure on arbitrary finite
+Hermitian 3 × 3 matrices, with Rν as defined above. If, at any one ν > 0, Rν(P1) = P1 and
+Rν(P2) = P2, where Pj = |j⟩⟨j|, then H is diagonal almost surely. Consequently, these two
+exact calibrations together with Wa > 5 exclude every static qutrit Hamiltonian ensemble with
+the same Hamiltonian law for al l reset preparations and rates.
+Proof. F or eachj = 1 , 2 and k ̸= j, the assumption gives
+0 = Eµ
+Z ∞
+0
+νe−νt|⟨k|e−iHt|j⟩|2 dt.
+The integrand is nonnegative. F or almost every H, all these finitely many amplitudes vanish
+for almost every t, and hence for every t by continuity . Differentiating at zero gives Hkj = 0 .
+Hermiticity and dimension three leave no off-diagonal entry .
+The reference semigroup passes these population calibrations exactly . Neither the exact
+nor the noisy calibration excludes arbitrary system–bath Hamiltonians with a quantum bath or
+preparation-dependent changes in the Hamiltonian distribution.
+8
+
+--- Page 9 ---
+9 V erification, scope and open questions
+The accompanying verifier checks the rational identity ( 9), both polynomial representations,
+the equality points, the semigroup violation and its optimizing rate, and the exact seven-point
+construction using symbolic arithmetic. A separate numerical stress test checks the common
+diagonal surrogate for 1000 Hermitian examples of dimensions two through six. This numerical
+check supplements the analytic proof and is not a substitute for it. Numerical searches helped
+locate the witness; the theorems above do not rely on a finite grid, floating-point positivity , a
+fitted polynomial, or a semidefinite solver’s status.
+The concrete advance proposed here is a finite-rate and quantitatively sharp compatibility
+test. Earlier Hamiltonian-ensemble work supplies the conceptual question, and classical rational
+quadrature explains the contrasting qubit aliases. The paper does not solve general quantum
+process identification, establish a microscopic source of noise, or assert a universal boundary for
+all dephasing generators. There is no experimental validation in this manuscript. Noise with a
+finite correlation time is a separate interpolation problem: rejection of a static law alone does not
+estimate that correlation time or identify an Ornstein–Uhlenbeck process. Echo-based methods
+and non-random-unitary dephasing tests [ 13, 19] address different control or model classes.
+Natural next problems are to optimize over other rate ratios and measurement budgets,
+to determine the sharp distance for the full two-state data, and to sharpen the population-
+calibration constants. Higher-dimensional energy-difference constraints may supply further finite
+resolvent witnesses. These are open directions, not results claimed here.
+AI assistance and reproducibility . AI systems assisted the literature search, exploratory
+computation, proof development and writing. A GPT-6 Astra advisory review contributed lit-
+erature suggestions and the spectral-monotonicity sharpening of the population bound; it is not
+a blind independent review. A separate Claude Opus 5.5 review of the preceding draft found
+no fatal error but rated its significance substantially lower. Both reports and a response are
+preserved with the source; the present editorial revision has not received a new score. Reviews
+are advisory and are not formal proof certificates or evidence of scientific priority . The com-
+panion source and verification script make every algebraic claim in the main witness auditable.
+The manuscript is an unsubmitted candidate; no publication decision or external peer-review
+outcome is implied.
+References
+[1] C. M. Kropf, C. Gneiting and A. Buchleitner, Effective dynamics of disordered quantum
+systems, Phys. Rev. X 6, 031023 (2016). doi:10.1103/PhysRevX.6.031023.
+[2] H.-B. Chen, C. Gneiting, P .-Y. Lo, Y.-N. Chen and F. Nori, Simulating open quantum
+systems with Hamiltonian ensembles and the nonclassicality of the dynamics, Phys. Rev.
+Lett. 120, 030403 (2018). doi:10.1103/PhysRevLett.120.030403.
+[3] H.-B. Chen, P .-Y. Lo, C. Gneiting, J. Bae, Y.-N. Chen and F. Nori, Quantifying the non-
+classicality of pure dephasing, Nature Communications 10, 3794 (2019). doi:10.1038/s41467-
+019-11502-4.
+[4] H.-B. Chen and Y.-N. Chen, Canonical Hamiltonian ensemble representation of dephas-
+ing dynamics and the impact of thermal fluctuations on quantum-to-classical transition,
+Scientific Reports 11, 10046 (2021). doi:10.1038/s41598-021-89400-3.
+[5] D. C. Rose, H. T ouchette, I. Lesanovsky and J. P . Garrahan, Spectral properties
+of simple classical and quantum reset processes, Phys. Rev. E 98, 022129 (2018).
+doi:10.1103/PhysRevE.98.022129.
+9
+
+--- Page 10 ---
+[6] D. S. Lubinsky , Explicit orthogonal polynomials for reciprocal polynomial weights, Proc.
+Amer. Math. Soc. 137, 2317–2327 (2009). Author manuscript.
+[7] B. W ang and R. W ang, Joint mixability ,Mathematics of Operations Research 41, 808–826
+(2016). doi:10.1287/moor.2015.0755.
+[8] F. F agnola, J. E. Gough, H. I. Nurdin and L. Viola, Mathematical models of Markovian
+dephasing (2019). arXiv:1811.11784.
+[9] S. G. Schirmer and A. I. Solomon, Constraints on relaxation rates for N-level quantum
+systems, Phys. Rev. A 70, 022107 (2004). doi:10.1103/PhysRevA.70.022107.
+[10] J.-D. Lin et al., Resource eﬀicient certification of system environment entanglement solely
+from reduced system dynamics (2025). arXiv:2510.17140.
+[11] L. Eriksson, Maintenance is not restoration: endpoint no-go theorems, exact SSH resource
+horizons, and quantum rapid-replacement equality (2026). ai.viXra:2607.0031.
+[12] L. Eriksson, Finite-sample-valid tests for structured matricial Hausdorff moments: joint
+Gaussian Grams, strict half-time separation, and sharp tangent-cone power (2026). AIRR
+ARR-2026-7X5XX0CBE19MXVSZ.
+[13] E. L. Hahn, Spin echoes, Phys. Rev. 80, 580–594 (1950). doi:10.1103/PhysRev.80.580.
+[14] B. Kümmerer and H. Maassen, The essentially commutative dilations of dynamical semi-
+groups on Mn, Commun. Math. Phys. 109, 1–22 (1987). doi:10.1007/BF01205670.
+[15] J. H. B. Kemperman, The general moment problem, a geometric approach, Ann. Math.
+Statist. 39, 93–122 (1968). doi:10.1214/aoms/1177698508.
+[16] C. Bayer and J. T eichmann, The proof of T chakaloff’s theorem, Proc. Amer. Math. Soc.
+134, 3035–3040 (2006). arXiv:math/0502473.
+[17] J. Agler and J. E. McCarthy , The use of kernel functions in solving the Pick interpolation
+problem (2014). Author manuscript.
+[18] G. Puccetti, P . Rigo, B. W ang and R. W ang, Centers of probability measures without the
+mean (2018 manuscript). arXiv:1704.02660.
+[19] J. Helm and W. T. Strunz, Quantum decoherence of two qubits, Phys. Rev. A 80, 042108
+(2009). arXiv:0910.5364.
+10
