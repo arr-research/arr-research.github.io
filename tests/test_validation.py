@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import re
 import io
 import tempfile
 import unittest
@@ -592,8 +593,10 @@ class PaperValidationTests(unittest.TestCase):
         self.assertIn("entirely optional", page)
         self.assertIn('href="/preview/privacy/"', page)
         self.assertNotIn("Donations are not available yet", page)
-        # The only script on any page is AIRR's own cookie-free page counter; PayPal adds none.
-        self.assertEqual(page.count("<script"), 1)
+        # The only script on any page is AIRR's own cookie-free page-counter loader; PayPal adds none.
+        scripts = re.findall(r"<script\b.*?</script>", page, re.S)
+        self.assertEqual(scripts, [build_site.PAGE_COUNTER])
+        self.assertNotIn("paypal", scripts[0].lower())
         self.assertNotIn("<script", page.replace(build_site.PAGE_COUNTER, ""))
         self.assertNotIn("<iframe", page)
         self.assertNotIn("paypalobjects.com", page)

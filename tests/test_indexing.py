@@ -5,8 +5,12 @@ import hashlib
 import io
 import json
 from pathlib import Path
+import re
+import shutil
+import subprocess
 import sys
 import tempfile
+import time
 import unittest
 import xml.etree.ElementTree as ET
 from unittest.mock import patch
@@ -248,18 +252,100 @@ class IndexingTests(unittest.TestCase):
         self.assertIn("katex", build_site.page_shell(title="t", description="d", content="", base="", math=True))
 
     def test_cookie_free_page_counter_closes_every_page_exactly_once(self):
-        counter = '<script src="https://erikssonai.se/contador.js" data-sitio="airr" async></script>'
         for kwargs in ({}, {"canonical": "https://airr.science/privacy/"}, {"math": True}):
             with self.subTest(kwargs=kwargs):
                 text = build_site.page_shell(title="t", description="d", content="<p>x</p>", base="", **kwargs)
                 self.assertEqual(text.count("erikssonai.se/contador.js"), 1)
-                self.assertEqual(text.count('data-sitio="airr"'), 1)
-                self.assertTrue(text.rstrip().endswith(counter + "\n</body>\n</html>"))
+                self.assertEqual(text.count('s.dataset.sitio="airr"'), 1)
+                self.assertEqual(text.count("airr-statistics-choice-v1"), 1)
+                self.assertTrue(text.rstrip().endswith(build_site.PAGE_COUNTER + "\n</body>\n</html>"))
+        self.assertEqual(build_site.PAGE_COUNTER.count("<script"), 1)
+        self.assertNotIn(" src=", build_site.PAGE_COUNTER)  # the counter is added by the loader, not linked directly
+
+    def test_counter_loader_reads_the_choice_site_analytics_writes(self):
+        analytics = (Path(__file__).resolve().parents[1] / "site" / "analytics.js").read_text(encoding="utf-8")
+        match = re.search(r"const key = '([^']+)'", analytics)
+        self.assertIsNotNone(match)
+        self.assertIn(f'localStorage.getItem("{match.group(1)}")', build_site.PAGE_COUNTER)
+        self.assertNotIn("setItem", build_site.PAGE_COUNTER)  # the loader only reads the choice
+        self.assertIn("['allow','decline']", analytics)
+        self.assertIn('c.value==="decline"', build_site.PAGE_COUNTER)
+
+    def run_counter_loader(self, storage):
+        """Run the loader of a generated page in Node with a fake DOM; returns the scripts it appended."""
+        node = shutil.which("node")
+        if node is None:
+            self.skipTest("Node is not installed")
+        loader = re.findall(r"<script>(.*?)</script>", build_site.page_shell(title="t", description="d", content="", base=""), re.S)[-1]
+        harness = self.root / "counter-loader-harness.js"
+        harness.write_text(
+            """const vm = require("node:vm");
+const input = JSON.parse(require("node:fs").readFileSync(0, "utf8"));
+const log = {appended: [], reads: [], writes: []};
+const sandbox = {
+  Date, JSON,
+  document: {
+    createElement: (tag) => ({tag, dataset: {}, async: false}),
+    body: {appendChild: (element) => log.appended.push(element)},
+  },
+};
+Object.defineProperty(sandbox, "localStorage", {get() {
+  if (input.blocked) throw new Error("storage blocked");
+  return {getItem: (key) => { log.reads.push(key); return input.raw; }, setItem: (key, value) => log.writes.push(key)};
+}});
+vm.runInNewContext(input.loader, sandbox);
+process.stdout.write(JSON.stringify(log));
+""",
+            encoding="utf-8",
+        )
+        result = subprocess.run([node, str(harness)], input=json.dumps({"loader": loader, **storage}), capture_output=True, text=True, timeout=60)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        return json.loads(result.stdout)
+
+    def test_counter_loads_without_a_choice_or_with_allow_and_not_after_decline(self):
+        now = int(time.time() * 1000)
+        day = 86400000
+
+        def saved(value, expires):
+            return {"raw": json.dumps({"value": value, "expires": expires})}
+
+        loads = {
+            "no choice": {"raw": None},
+            "allow": saved("allow", now + day),
+            "decline that has expired": saved("decline", now - day),
+            "decline without an expiry": {"raw": json.dumps({"value": "decline"})},
+            "unreadable value": {"raw": "{not json"},
+            "unknown value": saved("maybe", now + day),
+            "blocked storage": {"blocked": True},
+        }
+        for name, storage in loads.items():
+            with self.subTest(name):
+                log = self.run_counter_loader(storage)
+                self.assertEqual(log["appended"], [{"tag": "script", "dataset": {"sitio": "airr"}, "async": True, "src": "https://erikssonai.se/contador.js"}])
+                self.assertEqual(log["writes"], [])
+        with self.subTest("decline"):
+            log = self.run_counter_loader(saved("decline", now + day))
+            self.assertEqual(log["appended"], [])
+            self.assertEqual(log["reads"], ["airr-statistics-choice-v1"])
+            self.assertEqual(log["writes"], [])
+
+    def test_privacy_texts_say_decline_also_stops_the_page_counter(self):
         privacy = build_site.build_privacy("", "https://airr.science")
         self.assertIn("Page views are counted per day, without cookies or personal data.", privacy)
         self.assertIn("erikssonai.se", privacy)
+        self.assertIn("If you choose Decline in Statistics preferences, this counter is not loaded either", privacy)
+        self.assertIn("Global Privacy Control or Do Not Track", privacy)
+        self.assertNotIn("does not govern", privacy)
         support = build_site.build_support("", "https://airr.science", "")
         self.assertNotIn("tracking script", privacy + support)
+        docs = Path(__file__).resolve().parents[1] / "docs"
+        for name in ("PRIVACY_NOTICE.md", "PROCESSING_RECORD.md", "METRICS_POLICY.md", "ANALYTICS_OPERATIONS.md", "CONFIGURACION_OPERATIVA.es.md"):
+            with self.subTest(name):
+                text = " ".join((docs / name).read_text(encoding="utf-8").split())
+                self.assertIn("Decline", text)
+                self.assertIn("Global Privacy Control", text)
+                for stale in ("does not govern", "not gated by the consent", "independent of the opt-in", "Allow/Decline choice does not"):
+                    self.assertNotIn(stale, text)
 
     def test_classic_theme_and_logo_are_independent_of_system_preference(self):
         text = build_site.page_shell(title="t", description="d", content="", base="")

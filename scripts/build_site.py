@@ -238,7 +238,16 @@ def share_image_tags(canonical: str, base: str, card_declared: bool = False) -> 
 
 
 # Cookie-free page counter of the same publisher; see docs/ANALYTICS_OPERATIONS.md and the privacy notice.
-PAGE_COUNTER = '<script src="https://erikssonai.se/contador.js" data-sitio="airr" async></script>'
+# A minimal inline loader adds it unless the visitor's saved Statistics preferences choice is an unexpired
+# "decline". Key and shape are the ones site/analytics.js writes (tests keep them in step); no choice, an
+# expired or unreadable one, or blocked storage all mean "no Decline", so the counter loads.
+PAGE_COUNTER = (
+    '<script>(function(){var d=false;'
+    'try{var c=JSON.parse(localStorage.getItem("airr-statistics-choice-v1"));'
+    'd=!!c&&c.value==="decline"&&c.expires>Date.now()}catch(e){}'
+    'if(d)return;var s=document.createElement("script");s.src="https://erikssonai.se/contador.js";'
+    's.async=true;s.dataset.sitio="airr";document.body.appendChild(s)})()</script>'
+)
 
 
 def page_shell(*, title: str, description: str, content: str, base: str, canonical: str = "", head_extra: str = "", math: bool | None = None) -> str:
@@ -1520,7 +1529,7 @@ def build_privacy(base: str, canonical_url: str) -> str:
   <article><h2>Frontier-model screening</h2><p>Acceptance remains human, but the disclosed pre-publication protocol requires version-locked external frontier-model reports. The form acknowledges screening; the depositor separately acknowledges the named providers and safeguards before any transfer. Independent-agent declarations do not prove rights to third-party material. AIRR records provider, model, time and response hash.</p></article>
   <article><h2>Retention</h2><p>Malware bytes are erased immediately, withdrawn PDFs after 7 days, declined PDFs after 30 days, and accepted private copies 30 days after verified public release. A minimal decision record is retained for three years, subject to narrowly reviewed legal hold.</p></article>
   <article><h2>Optional public-site statistics</h2><p>When enabled, AIRR asks before counting public-page views and PDF opens. Allow or Decline; change your choice through Statistics preferences in the footer. Your choice is stored in your browser for 180 days. Consenting views and PDF opens become daily page and per-version PDF totals on our Netcup server, retained for 400 days, plus up to seven days in encrypted backups. No visitor IDs, IP addresses, referrers, search terms or private pages are stored in these statistics. Only the operator sees these totals. GitHub PDF-download counters remain a separate public metric. See the full notice below for consent, hosting and retention details.</p></article>
-  <article id="page-counter"><h2>Page counter</h2><p>Page views are counted per day, without cookies or personal data. A script from <strong>erikssonai.se</strong>, another website operated by Lluis Eriksson, adds 1 to a daily total for airr.science in Google Firestore. It stores nothing in your browser and sends no page path, search term or visitor identifier. As with any web request, your browser necessarily reveals its IP address to the servers that deliver the script and receive the count; it is not part of the total. This counter is separate from the optional statistics above, so the Allow/Decline choice does not govern it. Notice added 2026-10-13.</p></article>
+  <article id="page-counter"><h2>Page counter</h2><p>Page views are counted per day, without cookies or personal data. A script from <strong>erikssonai.se</strong>, another website operated by Lluis Eriksson, adds 1 to a daily total for airr.science in Google Firestore. It stores nothing in your browser and sends no page path, search term or visitor identifier. As with any web request, your browser necessarily reveals its IP address to the servers that deliver the script and receive the count; it is not part of the total. If you choose Decline in Statistics preferences, this counter is not loaded either: your browser keeps that choice for 180 days, it applies from the next page you open, and a view counted before you chose is not removed. The counter also ignores visitors whose browser sends Global Privacy Control or Do Not Track. It is otherwise separate from the optional statistics above: Allow is not needed for it, and it feeds no other figure. Notice added 2026-10-13, updated the same day.</p></article>
   <article><h2>Your rights</h2><p>Applicable rights include access, correction, erasure, restriction, portability and objection. You can complain to Sweden's IMY or another competent EEA authority. Requests receive proportionate identity verification.</p></article>
   <article><h2>Voluntary support</h2><p>The support page links to PayPal when donations are available. AIRR loads no PayPal widgets or scripts. If you choose to pay on PayPal, it provides the operator with transaction details for payment, refund, fraud, accounting and legal administration. You may optionally identify the paper your support relates to using its published ID or your submission receipt's registration reference. The reference gives no private access and is not sent to PayPal automatically. Donor information is used for support administration, not published or used for mailing lists, ranking or editorial decisions. The donation notice was updated on 2026-09-06.</p></article>
 </section>
