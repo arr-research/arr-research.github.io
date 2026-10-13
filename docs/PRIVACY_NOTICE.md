@@ -234,18 +234,29 @@ aggregate integer, not a reader identity. Operator page-view totals are not yet
 exported to public paper/author counters or rankings; those fields remain **Not
 available**, rather than being presented as zero.
 
-## Cookie-free page counter — notice added 2026-10-13
+## Cookie-free page counter — notice added 2026-10-13, updated 2026-10-13
 
 Page views are counted per day, without cookies or personal data.
 
 Every public page of `airr.science` loads one script,
 `https://erikssonai.se/contador.js`, from **erikssonai.se**, another website operated
-by Lluis Eriksson. The script is not copied into AIRR. When a page loads it adds 1 to
+by Lluis Eriksson, unless you have chosen Decline (see below). The script is not
+copied into AIRR. When a page loads it adds 1 to
 a daily total for the label `airr` in one Google Cloud Firestore document of the
 operator's project `eriksson-larande-ai`. The total holds only that label, the date
 and the number. The script sets no cookie, stores nothing in the browser and sends no
 page path, search term, fragment or visitor identifier; it does not run on localhost
 or in automated-test browsers.
+
+**Decline and browser signals.** If you choose **Decline** in **Statistics
+preferences**, this counter is not loaded on the pages you open afterwards: a small
+inline script of the page only reads your saved choice (the same one described under
+public-site activity measurement, kept in your browser for 180 days) and skips loading
+the counter when that choice is Decline. It reads the choice and never writes or
+sends it. The choice takes effect from the next page you open; a page view counted
+before you chose Decline is an anonymous number and cannot be removed. Without a saved
+choice, or with Allow, the counter is loaded. The counter also does not count a visitor
+whose browser sends Global Privacy Control or Do Not Track.
 
 Network communication necessarily exposes an IP address, the browser's usual request
 headers and the origin `airr.science` to the servers that deliver the script and receive
@@ -256,11 +267,13 @@ or erase.
 
 The purpose is to know how much the public site is read overall. The basis is the
 operator's legitimate interest (Article 6(1)(f)): the data are minimal, nothing is
-stored in the browser, and the result is a single daily number. You may
+stored in the browser, and the result is a single daily number. Choosing Decline or
+sending Global Privacy Control or Do Not Track is respected as an objection to this
+counting. You may also
 object by writing to `editor@airr.science`, or simply block requests to
 `erikssonai.se` and `firestore.googleapis.com`; the site works the same without them.
-This counter is separate from the optional statistics above: **Statistics
-preferences** (Allow/Decline) does not govern it, and it neither feeds the Netcup
+This counter is otherwise separate from the optional statistics above: it does not
+need **Allow**, and it neither feeds the Netcup
 collector nor any public paper, author or ranking figure. Private submission and
 editor pages, which are served from `submit.airr.science`, do not load it.
 

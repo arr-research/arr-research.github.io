@@ -56,10 +56,11 @@ See `PRIVACY_NOTICE.md` and `ANALYTICS_OPERATIONS.md` for consent, Netcup hostin
 
 Since 2026-10-13 every public page also loads a separate cookie-free counter from
 `erikssonai.se` (same operator) that adds 1 to a single daily total for the whole
-`airr.science` site. It is not gated by the consent choice above, records no page path
-and counts reloads and automation, so it cannot be turned into per-paper or per-author
-figures and is not a unique-visitor measure. See `PRIVACY_NOTICE.md` and
-`ANALYTICS_OPERATIONS.md`.
+`airr.science` site. It does not need the Allow choice above, but it respects Decline: a
+saved Decline stops it from loading, and it does not count visitors who send Global
+Privacy Control or Do Not Track. It records no page path and counts reloads and
+automation, so it cannot be turned into per-paper or per-author figures and is not a
+unique-visitor measure. See `PRIVACY_NOTICE.md` and `ANALYTICS_OPERATIONS.md`.
 
 These operator totals are not currently exported to public paper/author counters.
 The public pages say **Not available**, and no page-view ranking is generated.

@@ -15,7 +15,7 @@ Este documento explica dónde funciona AIRR, qué debe vigilarse y cómo crecer 
 | Repositorio y publicaciones | GitHub | Código, registros aceptados, historial, Actions y Releases inmutables | No; es el registro público y su historial |
 | Aplicación privada | Netcup VPS | Cuentas privadas, recepción de PDFs, cuarentena, revisión editorial y estadísticas | **Sí; es el único servidor operativo de AIRR** |
 | Correo transaccional | Brevo | Avisos técnicos y de nuevas sumisiones desde `submissions@airr.science` | No |
-| Contador de visitas | erikssonai.se (Firebase Hosting) y Firestore de Google | Guion enlazado desde cada página pública que suma 1 al total diario de `airr`, sin cookies ni datos personales (desde el 13 de octubre de 2026) | No; es un servicio de otra web del mismo operador y no recibe sumisiones |
+| Contador de visitas | erikssonai.se (Firebase Hosting) y Firestore de Google | Guion enlazado desde cada página pública que suma 1 al total diario de `airr`, sin cookies ni datos personales (desde el 13 de octubre de 2026); no se carga si el visitante eligió Decline en Statistics preferences y no cuenta a quien envía Global Privacy Control o Do Not Track | No; es un servicio de otra web del mismo operador y no recibe sumisiones |
 | Copia externa | Backblaze B2 EU Central | Copias cifradas fuera del VPS | No; no sirve la web ni recibe sumisiones |
 
 OVH no pertenece a AIRR y no forma parte de esta arquitectura.
