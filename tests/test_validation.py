@@ -592,7 +592,9 @@ class PaperValidationTests(unittest.TestCase):
         self.assertIn("entirely optional", page)
         self.assertIn('href="/preview/privacy/"', page)
         self.assertNotIn("Donations are not available yet", page)
-        self.assertNotIn("<script", page)
+        # The only script on any page is AIRR's own cookie-free page counter; PayPal adds none.
+        self.assertEqual(page.count("<script"), 1)
+        self.assertNotIn("<script", page.replace(build_site.PAGE_COUNTER, ""))
         self.assertNotIn("<iframe", page)
         self.assertNotIn("paypalobjects.com", page)
 

@@ -234,6 +234,36 @@ aggregate integer, not a reader identity. Operator page-view totals are not yet
 exported to public paper/author counters or rankings; those fields remain **Not
 available**, rather than being presented as zero.
 
+## Cookie-free page counter — notice added 2026-10-13
+
+Page views are counted per day, without cookies or personal data.
+
+Every public page of `airr.science` loads one script,
+`https://erikssonai.se/contador.js`, from **erikssonai.se**, another website operated
+by Lluis Eriksson. The script is not copied into AIRR. When a page loads it adds 1 to
+a daily total for the label `airr` in one Google Cloud Firestore document of the
+operator's project `eriksson-larande-ai`. The total holds only that label, the date
+and the number. The script sets no cookie, stores nothing in the browser and sends no
+page path, search term, fragment or visitor identifier; it does not run on localhost
+or in automated-test browsers.
+
+Network communication necessarily exposes an IP address, the browser's usual request
+headers and the origin `airr.science` to the servers that deliver the script and receive
+the count (Google Firebase Hosting and Cloud Firestore, acting for the operator).
+AIRR does not keep them in the total and cannot link a count to a person. Because
+the total contains no personal data, there is no individual history to access, correct
+or erase.
+
+The purpose is to know how much the public site is read overall. The basis is the
+operator's legitimate interest (Article 6(1)(f)): the data are minimal, nothing is
+stored in the browser, and the result is a single daily number. You may
+object by writing to `editor@airr.science`, or simply block requests to
+`erikssonai.se` and `firestore.googleapis.com`; the site works the same without them.
+This counter is separate from the optional statistics above: **Statistics
+preferences** (Allow/Decline) does not govern it, and it neither feeds the Netcup
+collector nor any public paper, author or ranking figure. Private submission and
+editor pages, which are served from `submit.airr.science`, do not load it.
+
 ## Retention
 
 The binding schedule is in [`RETENTION_SCHEDULE.md`](RETENTION_SCHEDULE.md).
@@ -287,7 +317,7 @@ Earlier versions remain in repository history.
 ## Voluntary support — notice updated 2026-09-06
 
 The support page links to PayPal when donations are available. AIRR loads no
-PayPal widget or tracking script. When a visitor chooses to donate on PayPal,
+PayPal widget or script. When a visitor chooses to donate on PayPal,
 PayPal acts under its own terms and privacy notice and provides
 the operator with transaction data such as donor name, email, amount, currency and
 transaction identifier and any note. The recipient remains Lluis Eriksson, acting
