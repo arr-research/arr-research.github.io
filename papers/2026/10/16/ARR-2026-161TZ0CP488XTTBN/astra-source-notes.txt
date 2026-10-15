@@ -1,0 +1,91 @@
+NOTAS DE COTEJO DE FUENTE, PREVIAS AL PDF
+15 de octubre de 2026 — GPT-6 Astra xhigh solicitado.
+Contexto compartido e intervención sustancial en el manuscrito.
+
+Fuente leída:
+D:\Entregas\airr\2026-10-15_rango-weyl\weyl-overlap.tex
+
+Estas notas complementan astra-proof-review.txt, que permanece intacto
+(SHA256 ff743e97e7ba7e0468aa60ea879366215560a921eff4d440b6ae4c2c7ca45c57).
+No atribuyen todavía una nota a un PDF definitivo. La fuente seguía siendo
+revisada por el autor durante este cotejo, por lo que estas observaciones
+deben verificarse otra vez contra la versión congelada.
+
+1. La fuente desarrolla correctamente la prueba auditada del candidato:
+cuarto momento ponderado, reducción del generador mediante SL_2, acarreo
+común en bloques, inyectividad de etiquetas, suma de rangos cuando todos
+los desplazamientos coinciden y argumento triangular acíclico en d27,s8.
+La demostración unitaria directa de la normalización es válida: las dos
+columnas de una matriz de determinante uno proporcionan Weyl con el mismo
+conmutador que X,Z; tras reescalar sus potencias d-ésimas, el recorrido de
+un autovector produce una base ortonormal de d vectores. No se está
+presuponiendo una representación irreducible sin justificarla.
+
+2. El lema de tres términos ha sido formulado para toda dimensión 2^k,
+extendiendo el mismo argumento que suministré para d16. Esa extensión es
+correcta. El extremo de bloques de dimensión uno está atendido mediante
+la imposibilidad por inyectividad. La intervención de este revisor incluye
+este argumento, aclaraciones de fases/bloques, revisión de los casos s8,
+calibración del corolario de recuperación y las observaciones siguientes.
+
+3. El ejemplo inicialmente incluido de omitir siete coeficientes en d16
+y recuperar rango uno era correcto, pero ya se deducía del producto:
+ceil(16/7)=3>2. Señalé esa limitación al autor. El autor propuso después
+un presupuesto universal exacto en d27 para rango<=2; contrasté la prueba
+y su testigo, y la versión leída posteriormente ya incorpora ese corolario.
+
+La nueva afirmación es correcta. Si A,B tienen rango<=2 y coinciden fuera
+de S, su diferencia D tiene rango<=4 y soporte de Weyl contenido en S.
+Para |S|<=8, cualquier D no nula tiene rango>=6: con soporte efectivo<=5
+lo da el producto; con seis, siete u ocho términos lo da el nuevo teorema.
+
+Para demostrar fallo a nueve, tome
+S={(0,3j):0<=j<=8} y
+P=sum_(j=0)^8 Z^(3j)=9(E_00+E_99+E_18,18).
+Entonces A=9(E_00+E_99) y B=-9E_18,18 satisfacen A-B=P, tienen rangos
+dos y uno y coinciden en todos los coeficientes medidos. Por ello ocho
+es el mayor presupuesto universal. El producto solo garantizaba seis.
+La prueba demuestra una mejora estricta 6->8 en este modelo concreto.
+No es un resultado sobre pares de matrices de densidad: B es negativo y
+el coeficiente identidad se encuentra entre las omisiones. Tampoco prueba
+un algoritmo eficiente ni estabilidad uniforme explícita de todo soporte.
+
+4. Observación opcional comunicada al autor: para T contenido en S,
+mu(T)<=mu(S) y 1-1/|T|<=1-1/|S|. Así, K(S)=1+mu(S)(1-1/|S|) es ya un
+parámetro válido uniforme para todos los soportes efectivos T no vacíos.
+No hace falta enumerar subconjuntos para obtener esa cota conservadora;
+la enumeración solo puede mejorarla. La redacción previa que proponía
+tomar el peor caso sobre subconjuntos era correcta, aunque innecesaria.
+
+5. La comparación con Peijie Yin está bien delimitada. Contrasté el README
+y el enunciado Sharp rank-two Weyl bound en la fuente pública:
+https://github.com/holdonyb/weyl-stft-paper
+https://github.com/holdonyb/weyl-stft-paper/blob/main/research/manuscript.tex
+Ese manuscrito enuncia una cota de soporte para operadores hermíticos,
+sin traza y de rango<=2. No enuncia el cierre de rango>=4/6 para todas
+las combinaciones complejas tratadas aquí. No replayé su formalización
+Lean ni certifiqué su demostración completa; la cita actual no dice que
+lo haya hecho. La consecuencia de omisiones de coeficientes tampoco debe
+presentarse como una nueva garantía universal de recuperación de fase.
+
+6. El localizador de Delvaux–Van Barel debe ser el Theorem 10, ecuación
+(23), del informe TW470. La fuente leída lo identifica así correctamente.
+Los datos de la publicación en Linear Algebra and its Applications 429(7)
+(2008),1587–1605 y DOI 10.1016/j.laa.2008.04.043 se confirmaron en el editor:
+https://www.sciencedirect.com/science/article/pii/S0024379508002164
+y el registro universitario de KU Leuven. La numeración del informe no
+se atribuye sin comprobación a la versión de revista.
+
+7. Se leyeron verify_overlap.py, verification-results.json, verify_two_runs.py
+y two-run-results.json. La descripción de 480 diagnósticos numéricos,
+108.201 comprobaciones exactas de índices/fases y 90.000 selecciones
+acíclicas corresponde a esos archivos. No declaro haber repetido esos
+programas del autor: sí ejecuté los dos verificadores propios cuyos
+resultados constan en astra-independent-checks.json y astra-s8-checks.json.
+
+No se encontró una nueva objeción matemática que altere la valoración
+provisional 8,2/10 ordinaria y 5,0/10 AIRR. El presupuesto exacto de ocho
+omisiones aclara una consecuencia útil del resultado ya evaluado, sin
+convertir la nota en una contribución general de gran impacto. Falta
+verificar la correspondencia, los caracteres y la presentación del PDF
+congelado antes de atribuir a ese archivo un dictamen final.

@@ -1,0 +1,1 @@
+Manuscript, editable source, explanatory documents and retained advisory reports: CC BY 4.0. Metadata and generated verification data: CC0 1.0. Research verification programs: Apache-2.0, copyright 2026 Lluis Eriksson. Cited third-party works and dependencies retain their own licenses.
