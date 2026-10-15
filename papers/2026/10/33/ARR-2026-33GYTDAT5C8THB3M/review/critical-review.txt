@@ -1,0 +1,110 @@
+REVISIÓN CRÍTICA DEL CANDIDATO DE DETECCIÓN DE RUIDO DE FASE
+OpenAI GPT-6 Astra — 15 de octubre de 2026
+Cierre de comprobaciones principales: 2026-10-15T08:42:14Z. La escritura del informe es posterior.
+
+ALCANCE Y PROCEDENCIA
+Audité candidate.txt, incluidos sus nuevos §§9–10, y los dos certificados racionales. No se me ha presentado un PDF final de este nuevo trabajo. Mi contexto es distinto del que propone y redacta el candidato, pero hay coordinación explícita y uso del mismo proveedor/modelo. Es revisión de IA, no revisión humana ni ciega ni estadísticamente independiente. Leí las pruebas propuestas como objetos de examen, no como autoridad; no leí informes de otros revisores ni los scripts del autor de optimización/certificación/circuito. No modifiqué archivos del autor ni desarrollé extensiones del teorema. Las comprobaciones propias están en esta subcarpeta.
+
+Versión final examinada de candidate.txt, §§1–10:
+SHA256 0b7848b7c9073e1de6ab0530a5182edd4b497e2ebac811512fee4069183c5caa.
+La primera comprobación del certificado se hizo contra la versión §§1–8, SHA256 5f9171da0277b98ea28e192598fd80c8c99e405e7977cb80365beafa7d7ce8d5; los dos certificados no cambiaron.
+Q: 18ecfa37bc84e3b0ca40efdc9dbdda6b87442479d76a17f4f7ff04563f088463.
+R: 8a3bc80cdc93463652359b7145a095ac528c1469486173fb3f3cc3ad8e4000be.
+
+DICTAMEN
+No encontré un error material en las afirmaciones matemáticas centrales. La caracterización causal es físicamente suficiente además de necesaria; el óptimo paralelo incluye ancillas arbitrarias; el certificado de cinco usos prueba exactamente una separación estricta en el intervalo declarado; y la extensión minimax por fase portadora desconocida supera el examen analítico. El candidato merece convertirse en un artículo especializado, con atribución más precisa y las delimitaciones señaladas abajo.
+
+La conclusión de novedad es más limitada: no localicé una publicación de la combinación exacta «óptimo permanente sobre todos los probes paralelos + óptimo causal minimax con portador desconocido + separación calibrada certificada». Sí localicé antecedentes muy directos de los permanentes de Gram y de la reconstrucción causal, que no deben presentarse como nuevas herramientas. Esto no es una certificación exhaustiva de prioridad.
+
+1. CARACTERIZACIÓN CAUSAL: EXAMEN FÍSICO
+Las condiciones Q_k(xa,yb)=0 para a distinto de b y suma_a Q_k(xa,ya)=Q_{k-1}(x,y) son las que impone una consulta diagonal ordinaria, tomando los vectores inmediatamente después de esa consulta. Los controles unitarios posteriores preservan Gram y el último puede absorberse en la medición. Instrumentos intermedios y aleatoriedad se purifican con memoria, dentro del acceso permitido.
+
+En sentido inverso, factores de Gram de los bloques de último símbolo pueden situarse en sectores ortogonales |a> tensor memoria. La suma de sus Gram coincide con el Gram anterior: por tanto la transformación prescrita sobre los vectores anteriores está bien definida incluso si hay dependencias lineales y es una isometría en su span. Se extiende a una unitaria tras completar espacios. No se está sustituyendo un canal físico por una mera condición de normalización polinómica.
+
+Para B con columnas v_x, el rechazo tiene R=B* M_rej B. De 0<=R<=B*B se sigue que R anula ker B y que el efecto definido mediante pseudoinversa es positivo y acotado por identidad sobre ran B. La condición RV=0 equivale al rechazo nulo de todas las sumas de tipo, y estas generan exactamente el span de los vectores nulos porque los caracteres de tipo son distintos. El objetivo Tr(C^{tensor n}R) tiene la orientación de índices correcta, también para C complejo.
+
+La cota de espacio es suficiente: dimensión total d^n y memoria d^{n-1} permiten realizar las soluciones. Conviene escribir «dimensión suficiente» o «se puede comprimir a», no «dimensión máxima» de todos los protocolos con ancilla arbitraria. Tampoco implica que la memoria necesaria sea siempre esa ni que sea eficiente la compilación en puertas elementales.
+
+2. LEY PERMANENTE PARA TODO PARALELO
+La expansión |psi>=sum_x |x>|a_x> ya incluye una purificación de cualquier probe mixto y ancilla. Aunque los |a_x> se solapen, los registros |x> hacen que los sumandos de distintos tipos sean ortogonales. En la aceptación sobre el span nulo, los factores de ancilla se reducen a p_x p_y, no a solapamientos omitidos. La aceptación mínima es el proyector sobre ese span. Para p_m=0 se omite el tipo y no se divide por cero.
+
+Cada bloque de C^{tensor n} es positivo semidefinido y es invariante bajo permutación simultánea de las ranuras. La función cuadrática sobre distribuciones reales es convexa; promediar una distribución por esa acción transitiva da la uniforme sin aumentar el coste. La normalización combinatoria es correcta: el permanente cuenta cada cadena del tipo multiplicada por producto_a m_a!, y el número de cadenas es n!/producto_a m_a!. El valor resultante es per(C[m])/n!, sin factor adicional. La mezcla entre tipos no puede mejorar el menor de sus valores. La prueba cubre C complejo y singular y no necesita positividad entrada por entrada.
+
+La fórmula qubit y su argumento de razón de verosimilitudes son correctos. El cociente declarado aumenta en j cuando w<(n-1)/2, con la extensión usual del soporte en su extremo. Eta=0 y eta=1 se tratan sin singularidades. Verifiqué además 34 tipos complejos para d=3,n<=4 mediante permanentes exactos y todos los pesos para n=1,...,20 en eta=0,1/5,7/10,1 mediante racionales.
+
+3. CERTIFICADO DE CINCO USOS
+Usé eliminación de Schur con Fraction exacta, distinta del verificador del autor. Resultado:
+- Q es definida positiva, rango 32.
+- R es semidefinida positiva, rango 26.
+- Q-R es definida positiva, rango 32.
+- Todas las ortogonalidades de último símbolo y reducciones causales son exactas; Q_0=1.
+- RV=0 exactamente.
+- El polinomio de éxito coincide coeficiente por coeficiente con el del candidato.
+- La factorización del gap es exacta. El discriminante de la derivada del cúbico es -66647776694132; su coeficiente principal es positivo. La única raíz real es aproximadamente 0.533142405218584.
+
+En eta=7/10:
+ beta_paralela = 46603/100000 = 0.46603;
+ beta_certificado = 2301478964279/5000000000000 = 0.4602957928558;
+ diferencia = 28671035721/5000000000000 = 0.0057342071442.
+Esto son aproximadamente 0.5734 puntos porcentuales de detección adicionales. El tamaño pequeño no invalida la separación, pero importa para su interpretación práctica.
+
+Reconstruí independientemente cinco unitarias en dimensión 32, a partir de factores de Gram por bloques y completamientos ortogonales, y el efecto final mediante la inversa de B. La mayor desviación de unitariedad fue 1.72e-14. La medición tiene máximo autovalor aproximado 0.9970574531 y mínimo -4.85e-16, error de redondeo compatible con la positividad exacta probada antes. Cien fases estáticas dieron rechazo máximo 1.70e-16; cincuenta secuencias de fases independientes reprodujeron los vectores con error máximo 3.35e-15; veintiún canales iid reprodujeron el éxito con error máximo 1.78e-15.
+
+Estos cálculos numéricos son un control de implementación de la construcción física; no reemplazan la prueba racional. El certificado demuestra una estrategia mejor que todo paralelo, NO el óptimo causal, NO minimalidad de cinco consultas y NO que la cifra SDP 0.4571737 sea exacta. El candidato respeta esas distinciones.
+
+4. NUEVO TEOREMA MINIMAX, §§9–10
+La prueba propuesta es válida. Las sumas u_m de un protocolo causal no tienen por qué ser ortogonales; esto no es una laguna porque Parseval sólo se usa para obtener sum_m ||u_m||^2=1. La condición de error nulo fuerza A u_m=u_m y sqrt(A)u_m=u_m para el efecto de aceptación A. Promediar la fase portadora común elimina únicamente términos de tipos diferentes, dejando los bloques K_m.
+
+En cada bloque, la suma de fila es constante y vale N_m F_m. La descomposición a_x=u_m/N_m+b_x, con suma_x b_x=0, anula exactamente los términos cruzados. La energía restante es no negativa por K_m>=0. Esta observación no requiere entradas reales ni no negativas, ni una hipótesis omitida de ortogonalidad entre u_m. El promedio queda acotado por min_m F_m. Se usa sup_phi>=promedio, no un intercambio injustificado entre inf y sup. La estrategia paralela uniforme de un tipo minimizador tiene el mismo rendimiento para toda phi y alcanza la cota.
+
+La adaptación destinada a aprender phi ya está incluida en la clase causal usada en la prueba. El portador es fijo durante las n consultas; no es una fase renovada adicional por ranura. El corolario C=I_d y ocupaciones equilibradas es correcto y aplica también al caso calibrado, pues ese canal no depende del portador.
+
+Como comprobación adicional, generé 30 circuitos causales aleatorios propios para (d,n)=(2,2),(2,3),(2,4),(3,2),(3,3),(4,2), con C complejos de Gram y sumas u_m no ortogonales. Todas las desigualdades de bloques y del promedio pasaron. Para el certificado dado y eta=.7, la aceptación media sobre el portador es aproximadamente 0.490402846144, superior a 0.46603: la ventaja calibrada no sobrevive a esta media. Estos controles son diagnósticos, no una prueba por muestreo del teorema general.
+
+5. OTRAS AFIRMACIONES Y LÍMITES
+La cota beta>=p^n+q^n es correcta para n>=1: los recorridos Kraus todos I y todos Z son dos componentes distintos del canal iid y ambos corresponden a un nulo estático que se acepta con certeza. El argumento funciona con memoria y adaptación. La cota paralela superior y el exponente -log p se siguen como se indica, para eta fijo. Si se permite n=0, aquella cota inferior debe excluirlo.
+
+La equivalencia entre rechazo nulo frente a todas las leyes estáticas de primera marginal fijada y rechazo nulo punto a punto es correcta para eta<1. La construcción de un átomo de masa epsilon>0 con epsilon<=(1-eta)/2 deja el resto de la media en el disco unidad. Es crucial decir TODAS las leyes compatibles: el resultado no es el de una única ley estática conocida.
+
+La cota cuadrática de falsos positivos es correcta para el desvío escalar de fase relativa qubit. Si se enuncia junto al teorema general d-dimensional, debe marcarse como cota qubit o definirse la anchura de fases pertinente. No establece que el protocolo siga ganando a los paralelos óptimos cuando se permite un nivel positivo de falso rechazo. Los controles y la memoria siguen siendo ideales.
+
+Una distinción física requiere atención: C>=0,diag C=1 garantiza un canal de Schur, pero para d>=4 no garantiza una representación C=E[zz*], |z_a|=1. La matemática general del candidato no falla; la interpretación como renovación de fases aleatorias clásicas exige esa condición adicional. En el caso qubit certificado sí existe tal representación. Véase Dykema–Juschenko, Matrices of unitary moments, https://arxiv.org/abs/0901.0288, §§2 y 4: el cuerpo de correlaciones de fases coincide con todas las correlaciones hasta dimensión 3, pero no en general desde dimensión 4.
+
+Detectar una alternativa dentro de esta promesa no certifica universalmente que un entorno sea cuántico, que sea Markoviano o que el ruido se renueve de una determinada manera. Se excluye el nulo estático especificado. La distinción entre calibración y falta de calibración es informacional; no mide el coste de un reloj, referencia de fase ni aparato de control.
+
+6. AUDITORÍA DE NOVEDAD: FUENTES PRIMARIAS MÁS PRÓXIMAS
+A. Chefles, Andersson y Jex, Unambiguous comparison of the states of multiple quantum systems (2004), https://arxiv.org/abs/quant-ph/0402125; DOI https://doi.org/10.1088/0305-4470/37/29/009. En §IV, ecuación (4.10), el fallo de la comparación universal de estados puros mediante el proyector simétrico es exactamente per(Gram)/N!. Es un antecedente directo e indispensable del lenguaje de «ley permanente». El candidato añade la optimización sobre probes y ancillas de un problema de canales con tipos, y no debe atribuirse la aparición original de ese permanente. No encontré en ese artículo el problema minimax causal con portador ni la separación calibrada del candidato.
+
+B. Grillo y Marquezino, Quantum Query as a State Decomposition, arXiv:1602.07716v2, https://arxiv.org/abs/1602.07716; DOI https://doi.org/10.1016/j.tcs.2018.03.017. La Definición 2 y los Teoremas 2–3 establecen la equivalencia entre algoritmos y Block Sets, con ortogonalidad jerárquica, normalización y reconstrucción. Es mucho más próximo al §3 que una referencia genérica a SDP. La formulación del candidato adapta ese principio a fases continuas y al objetivo de detección. Barnum, https://arxiv.org/abs/quant-ph/0703141, también caracteriza existencia de algoritmos con consultas unitarias mediante restricciones SDP y reconstrucción. No considero nueva la equivalencia general «Gram factible implica circuito físico».
+
+C. Chiribella, D'Ariano y Perinotti, Theoretical framework for quantum networks, https://arxiv.org/abs/0904.4483. Es el antecedente general de combs y realización causal. La utilidad del candidato es una parametrización reducida apropiada para consultas diagonales y certificados pequeños, no la invención de la normalización causal.
+
+D. Andersson, Jex y Barnett, Comparison of unitary transforms, https://arxiv.org/abs/quant-ph/0208153, y Sedlák–Ziman, Unambiguous comparison of unitary channels, https://arxiv.org/abs/0809.4401. Establecen comparación sin identificar la transformación y el papel de la simetría/entrelazamiento. Parte del trabajo de 2002 admite caminos interferométricos donde una transformación puede no aplicarse y una fase global resulta observable; no debe trasladarse sin más a las consultas ordinarias del candidato.
+
+E. Hashimoto, Soeda y Murao, Comparison of unknown unitary channels with multiple queries, https://arxiv.org/abs/2208.12519v2. Consulté el texto actualizado v2, depositado el 7 de septiembre de 2026, no sólo el resumen antiguo. Su Teorema 2 resuelve la comparación no ambigua para todos N1,N2, con óptimo paralelo incluso frente a general testers. Compara dos bloques de unitaries Haar idénticas frente a independientes. El candidato tiene n ranuras de ruido iid frente a una fase estática, grupo abeliano conocido y alternativa de Schur calibrada o con nuisance común. El resultado previo impide vender la optimalidad paralela en comparación unitaria como nueva en general, pero no contiene la fórmula ni la separación concretas examinadas aquí.
+
+F. Huang, Lami y Wilde, Exact Quantum Sensing Limits for Bosonic Dephasing Channels, PRX Quantum 5, 020354 (2024), https://arxiv.org/abs/2402.05793, https://doi.org/10.1103/PRXQuantum.5.020354. Obtienen límites adaptativos exactos por simulación/seizing del entorno para canales bosónicos de desfasado sin restricción de energía. Son antecedentes importantes contra afirmaciones generales de novedad sobre «límites exactos adaptativos para desfasado». No son el problema finito-dimensional con nulo estático compuesto y error unilateral exactamente cero del candidato.
+
+G. Sieniawski–Demkowicz-Dobrzański, Adaptive quantum channel discrimination using methods of quantum metrology, https://arxiv.org/abs/2510.15506v3, §V.D y conclusión: incluye discriminación con desfasado paralelo y optimización de estrategias adaptativas, pero entre canales dados y con otra función de error. Zhang–Wang–Ying, https://arxiv.org/abs/quant-ph/0611122, trata discriminación de pureza con proyección simétrica; Chen et al., https://arxiv.org/abs/2212.09319, estima unitariedad con modelos de acceso distintos. Son contexto, no coincidencias del resultado central.
+
+H. Pollock et al., Operational Markov condition for quantum processes, https://arxiv.org/abs/1801.09811, fundamenta por qué la información de múltiples tiempos y las intervenciones exceden los canales marginales. La idea de detectar memoria o correlaciones temporales con intervenciones es anterior al candidato.
+
+I. Antecedentes del propio autor leídos como manuscritos, sin informes: ARR-2026-7PEKNEDVH38HV8PX considera muestreo fresco de canales a distintos tiempos, y explícitamente excluye intervenciones dentro de una misma realización; ARR-2026-6WX2JF38WE87GB2M aporta el método de soporte polinómico de consultas; ARR-2026-5KS70GV7KK9DYA69 ya tiene una separación paralela/causal racional y un óptimo causal exacto a dos consultas para ecos tetraédricos. El candidato actual cambia sustancialmente la promesa y obtiene una ley para todo d,n,C, pero no es la primera separación adaptativa exacta del propio programa. En su ejemplo calibrado, a diferencia del antecedente tetraédrico, el óptimo causal exacto queda abierto.
+
+7. IMPORTANCIA Y COMPARACIÓN HONESTA
+Antes de §§9–10, habría descrito el trabajo como una fórmula paralela elegante acompañada de otro ejemplo certificado, todavía bastante próximo al patrón metodológico de los antecedentes. La extensión minimax mejora el conjunto: identifica una condición informacional precisa bajo la que desaparece toda ganancia causal y la contrapone a una separación comprobada al conocer el portador. Ese contraste es el elemento conceptual más fuerte.
+
+Veo potencial de un buen artículo especializado, no evidencia actual de un avance excepcional o que transforme el campo. La generalidad d,n,C del teorema minimax y la ausencia de dependencia de SDP para esa parte son virtudes. Limitan su impacto el criterio de cero falso positivo exacto, la promesa ideal de base y controles conocidos, la ganancia finita pequeña en el ejemplo, la ausencia de mejora de exponente, la falta de óptimo causal calibrado y de explicación simple de por qué aparece la mejora de cinco usos. Son límites de alcance/entendimiento, no defectos del certificado.
+
+Frente a Weyl, el candidato ofrece una historia operativa más amplia y es razonable considerarlo competitivo en interés conceptual. Frente a la ley universal 4a de estabilización, no tengo base suficiente para asegurar que este candidato sea claramente superior: allí hay una constante óptima universal y construcción explícita sencilla; aquí hay un contraste más rico entre promesas, pero la parte positiva adaptativa sigue apoyada en un certificado de 32 dimensiones sin óptimo causal. Mi valoración es «comparable y prometedor», no «salto garantizado». No aumento una calificación para satisfacer el deseo de un paper más fuerte. No asigno nota definitiva de manuscrito/AIRR a este esquema de candidato, que aún debe fijarse como artículo completo.
+
+Recomendación: continuar con un artículo cuidadosamente acotado si se desea esta contribución especializada. Antes de una afirmación pública de novedad, incorporar al menos Chefles–Andersson–Jex y Grillo–Marquezino, distinguir explícitamente Schur de mezcla clásica de fases, mantener la versión actual de Hashimoto y no presentar calibración como un recurso físico cuantificado. No he encontrado un bloqueo matemático que obligue a abandonar el candidato.
+
+8. EVIDENCIA REPRODUCIBLE
+Todos los scripts resuelven las entradas respecto de __file__; no requieren los scripts del autor ni un solver SDP. Requieren Python con numpy y sympy; se incluye la ruta local de bibliotecas de este equipo, que puede retirarse en otro entorno con dichas bibliotecas instaladas.
+verify_independent.py SHA256 953475448751dae2b4b185502978ab4478bdd2bddcb9690667e4c92449124256
+independent-checks.json SHA256 fcdf86a024b11a5ad5ccb4e7b63bb0bd07c2605808388d811c5df9bb4738c1f8
+verify_minimax.py SHA256 94802a851ef90bc685b22f9db70cf2022c88e29acd99c2d5f67bd2923585361a
+minimax-checks.json SHA256 7398f5818cad171a5853c63fc87e9221bdac20a7c7a8b4c45453235a3e3e07f4
+
+Fin del informe. Las verificaciones exactas cubren los certificados proporcionados; el razonamiento general se ha revisado matemáticamente, sin verificación formal en un asistente de pruebas. La búsqueda de fuentes fue dirigida y sustantiva, pero no exhaustiva.
