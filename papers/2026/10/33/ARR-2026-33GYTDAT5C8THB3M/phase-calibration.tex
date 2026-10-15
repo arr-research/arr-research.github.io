@@ -1,0 +1,698 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern,microtype}
+\usepackage[margin=26mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,booktabs}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,allcolors=blue!50!black,breaklinks=true]{hyperref}
+\usepackage{enumitem}
+\setlist{nosep}
+\setlength{\emergencystretch}{2em}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\DeclareMathOperator{\per}{per}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\rank}{rank}
+\newcommand{\ket}[1]{|#1\rangle}
+\newcommand{\bra}[1]{\langle#1|}
+\newcommand{\ip}[2]{\langle #1,#2\rangle}
+\newcommand{\T}{\mathbb T}
+\newcommand{\E}{\mathcal E}
+\newcommand{\Id}{\mathrm{Id}}
+\title{Phase calibration unlocks adaptive tests\\for renewed quantum noise}
+\author{Lluis Eriksson\\\small Independent researcher}
+\date{15 October 2026\\\small Working manuscript}
+\begin{document}
+\maketitle
+\begin{abstract}
+Can interventions distinguish an unknown phase that is frozen throughout an
+experiment from phase noise renewed at every use? We study ordinary forward
+queries, arbitrary quantum memory, and exactly zero false positives for every
+frozen diagonal unitary. For any Schur channel with correlation matrix \(C\),
+the optimal parallel failure probability is
+\(\min_{|m|=n}\per(C[m])/n!\), where \(C[m]\) repeats rows and columns according
+to the occupation vector \(m\). The same formula is the exact optimum over
+all causal strategies when the renewed channel has an unknown common phase
+carrier and failure is evaluated in the worst case over that carrier.
+Calibration changes this conclusion: for qubit dephasing we give a rational
+five-query certificate that beats every parallel strategy for
+\(0.5331424052\ldots<\eta<1\). At \(\eta=0.7\), failure decreases from
+\(0.46603\) to \(0.4602957928558\). We prove physical realizability of the
+certificate, obtain exact causal limits at complete dephasing, and show that
+adaptation cannot improve the asymptotic failure exponent. The separation
+concerns finite-query performance under a calibrated statistical promise;
+it neither quantifies the hardware cost of a phase reference nor certifies
+a quantum environment.
+\end{abstract}
+
+\section{Question, contribution, and scope}
+
+A random phase can be sampled once and retained, or sampled anew at each
+interaction. These mechanisms can have identical one-use channels and
+different multi-time behavior. The operational role of interventions and
+multi-time descriptions is well established \cite{pollock}. Our question is
+more specific: how much can coherent control between uses improve
+\emph{unambiguous exclusion of all frozen phases}?
+
+There are two distinct promises for the renewed alternative. With a
+\emph{calibrated carrier}, its channel is known. With an \emph{uncalibrated
+carrier}, the channel is known only up to a fixed diagonal unitary applied
+at every slot, and a test must perform well for every such carrier. This
+distinction determines whether a finite-query adaptive advantage can occur.
+Theorem~\ref{thm:minimax} rules out any advantage in the uncalibrated minimax
+problem, in every dimension and at every query count.
+Theorem~\ref{thm:separation} supplies a calibrated counterpoint using
+commuting qubit noise. Here and below, \emph{adaptive} includes coherent
+intermediate controls and memory; it does not require a recorded intermediate
+measurement.
+
+The permanent itself is not new to unambiguous comparison: Chefles,
+Andersson, and Jex obtained \(\per(\mathrm{Gram})/N!\) as a symmetric-projector
+failure probability \cite[Eq.~(4.10)]{chefles}. Our parallel theorem optimizes
+the input, including arbitrary ancillas, for a channel problem indexed by
+occupation types. Its extension to all causal tests under a common
+unknown carrier is the principal structural result.
+Likewise, causal Gram reconstruction is a specialization of established
+query methods, notably Block Sets \cite[Definition~2, Theorems~2--3]{grillo},
+semidefinite query characterizations \cite{barnum}, and quantum networks
+\cite{combs}. We provide the specialized construction because a numerical
+matrix inequality alone would not prove a physical adaptive separation.
+
+Earlier unitary-comparison work \cite{andersson,sedlak,hashimoto} provides
+direct context, but uses different alternatives or access models.
+In particular, the updated multi-query comparison theorem of
+Hashimoto, Soeda, and Murao \cite{hashimoto} establishes parallel optimality
+for comparison of two Haar-unitary blocks, including general testers.
+Exact adaptive sensing limits for bosonic dephasing \cite{huang} and
+adaptive discrimination of specified channels \cite{sieniawski} also
+predate this work. We claim neither a general invention of adaptive
+discrimination nor the first exact dephasing limit.
+
+The author's earlier work concerns sampling static disorder without
+interventions within one realization \cite{sampling}, polynomial query
+support \cite{support}, and an exact two-query adaptive separation for
+tetrahedral echoes \cite{tetrahedral}. The present contribution is the
+all-\(d,n,C\) calibration dichotomy together with its certified qubit
+separation. Unlike the tetrahedral example, the calibrated causal optimum
+here remains open.
+
+\section{Model and notation}
+
+Fix \(d\geq2\) and \(n\geq1\). A query acts on a \(d\)-dimensional register
+in a known basis. Under the null, every slot applies the same unknown
+\[
+ D_\theta=\diag(e^{i\theta_0},\ldots,e^{i\theta_{d-1}}),
+ \qquad \theta\in\T^d.
+\]
+It may be sampled from any distribution once per run. The experiment
+outputs either rejection of the frozen-phase null or an inconclusive
+outcome. Its rejection probability must be exactly zero for \emph{every}
+\(\theta\). We call the inconclusive probability under the alternative
+the failure probability \(\beta\). This is a one-sided test; it does not
+unambiguously certify the null.
+
+The calibrated alternative consists of independent uses of the Schur channel
+\begin{equation}\label{eq:schur}
+ \E_C(\ket a\bra b)=C_{ab}\ket a\bra b,\qquad C\succeq0,\quad C_{aa}=1.
+\end{equation}
+A dilation sends \(\ket a\) to \(\ket a\ket{e_a}\), with
+\(\ip{e_b}{e_a}=C_{ab}\), using a fresh environment at each slot.
+For a classical random-phase interpretation one additionally needs
+\[
+ C\in\operatorname{conv}\{zz^\dagger:|z_a|=1\}.
+\]
+This extra condition holds for the qubit channels below, but does not
+follow from positive semidefiniteness and unit diagonal in general
+dimension \(d\geq4\) \cite{dykema}. Our general theorems concern Schur
+channels; their classical phase-renewal interpretation has this restriction.
+
+Allowed tests use ordinary forward queries, finite ancillary systems,
+ideal controls, and a final two-outcome measurement. Intermediate
+instruments and randomness may be purified and stored in memory. We do
+not allow inverse queries, controlled bypass of the queried device,
+environment access, or indefinite causal order.
+A parallel test prepares all \(n\) inputs jointly, queries them without
+intervening controls, and measures jointly. Write
+\(\beta_{\rm par}(n,C)\) and \(\beta_{\rm causal}(n,C)\) for the infima over
+parallel and all causal tests respectively.
+
+A word \(x=(x_1,\ldots,x_n)\in\{0,\ldots,d-1\}^n\) has occupation
+\(m(x)=(m_0,\ldots,m_{d-1})\).
+Let
+\[
+ \Omega_m=\{x:m(x)=m\},\qquad N_m=|\Omega_m|
+       =\frac{n!}{\prod_a m_a!},\qquad |m|=n.
+\]
+For a representative word \(x\in\Omega_m\), let \(C[m]\) be the \(n\times n\)
+matrix with entries \(C_{x_i x_j}\); its permanent is independent of the
+representative. Set
+\begin{equation}\label{eq:F}
+ F_m(C)=\frac{\per(C[m])}{n!}.
+\end{equation}
+
+\section{The exact parallel optimum}
+
+\begin{theorem}[Optimized permanent law]\label{thm:parallel}
+For every correlation matrix \(C\), every \(d\), and \(n\geq1\),
+\begin{equation}\label{eq:parallel}
+ \beta_{\rm par}(n,C)=\min_{|m|=n}F_m(C).
+\end{equation}
+An optimum uses no ancilla: prepare
+\(\ket{D_m}=N_m^{-1/2}\sum_{x\in\Omega_m}\ket x\) for a minimizing type,
+and use the inconclusive effect \(\ket{D_m}\bra{D_m}\).
+\end{theorem}
+\begin{proof}
+Purify an arbitrary parallel probe and write it as
+\(\ket\psi=\sum_x\ket x\ket{a_x}\), with
+\(p_x=\|\ket{a_x}\|^2\) and \(\sum_xp_x=1\).
+Its null output is
+\[
+ \sum_m e^{im\cdot\theta}\ket{\psi_m},
+ \qquad \ket{\psi_m}=\sum_{x\in\Omega_m}\ket x\ket{a_x}.
+\]
+Distinct characters are linearly independent, and the nonzero
+\(\psi_m\) are orthogonal. Thus the null span is their direct sum.
+If \(A\) is the inconclusive effect, zero rejection forces it to be
+identity on that span; since \(0\preceq A\preceq I\), it dominates
+the corresponding orthogonal projector.
+
+Put \(K=C^{\otimes n}\) and \(p_m=\sum_{x\in\Omega_m}p_x\).
+The resulting lower bound on failure is
+\begin{equation}\label{eq:parallel-energy}
+ \sum_{m:p_m>0}\frac{1}{p_m}
+     \sum_{x,y\in\Omega_m}p_xp_y K_{xy}.
+\end{equation}
+This expression retains arbitrary ancillas: the orthogonal word registers
+make the two inner products in each projector expectation equal to
+\(p_x\) and \(p_y\).
+Each principal block \(K_m=K|_{\Omega_m}\) is positive semidefinite.
+Consequently \(q\mapsto q^\dagger K_m q\) is convex on the real probability
+simplex. Slot permutations preserve \(K_m\) and act transitively on
+\(\Omega_m\); averaging \(q_x=p_x/p_m\) over those permutations gives the
+uniform distribution without increasing the energy.
+
+The uniform energy is the constant row sum of \(K_m\) divided by \(N_m\).
+In the permanent of \(C[m]\), each distinct word of type \(m\) occurs
+\(\prod_a m_a!\) times. Hence this energy is
+\[
+ \frac{\per(C[m])}{N_m\prod_a m_a!}=F_m(C).
+\]
+Equation~\eqref{eq:parallel-energy} is bounded below by
+\(\sum_m p_m F_m(C)\), and thus by the smallest \(F_m(C)\).
+The stated uniform-type probe and projector attain equality.
+\end{proof}
+
+\begin{remark}
+The argument includes complex and singular \(C\). It does not assume
+entrywise nonnegativity. Its permanent is the familiar Gram-permanent
+quantity from state comparison \cite{chefles}; the additional statement
+is global optimization over channel probes and ancillas.
+\end{remark}
+
+\section{Unknown carrier: a minimax theorem for all causal tests}
+
+Suppose the alternative is known only up to a fixed common carrier
+\(\phi\in\T^d\):
+\[
+ C^{(\phi)}=D_\phi C D_\phi^\dagger,\qquad
+ \E_{C^{(\phi)}}=\mathcal U_\phi\circ\E_C,\quad
+ \mathcal U_\phi(X)=D_\phi XD_\phi^\dagger.
+\]
+Conditional on \(\phi\), the \(n\) uses are independent. The carrier is
+fixed throughout the run, rather than drawn anew at every slot.
+Define
+\[
+ \beta_{\rm causal}^{\rm wc}(n,C)
+ =\inf_{T:\,\text{zero null error}}\ \sup_{\phi\in\T^d}
+                   \beta_T(C^{(\phi)}).
+\]
+The infimum includes strategies that attempt to learn \(\phi\) within
+their \(n\) queries.
+
+\begin{theorem}[Calibration-free minimax equality]\label{thm:minimax}
+For every \(d,n,C\) as above,
+\begin{equation}\label{eq:minimax}
+ \beta_{\rm causal}^{\rm wc}(n,C)
+ =\beta_{\rm par}(n,C)=\min_{|m|=n}F_m(C).
+\end{equation}
+Thus a uniform-type parallel test is minimax optimal among all causal tests.
+\end{theorem}
+\begin{proof}
+A purified causal circuit has a phase-history expansion
+\begin{equation}\label{eq:history}
+ \ket{\Psi(z_1,\ldots,z_n)}
+   =\sum_x\left(\prod_{j=1}^n z_{j,x_j}\right)\ket{v_x},
+ \qquad |z_{j,a}|=1.
+\end{equation}
+Let \(u_m=\sum_{x\in\Omega_m}v_x\). Under the frozen null the output is
+\(\sum_m e^{im\cdot\theta}u_m\), of norm one for every \(\theta\).
+Haar integration and Parseval give
+\begin{equation}\label{eq:parseval}
+ \sum_m\|u_m\|^2=1.
+\end{equation}
+The vectors \(u_m\) need not be orthogonal.
+
+Let \(A\) be the inconclusive effect. Zero rejection gives
+\(A\Psi_\theta=\Psi_\theta\). Fourier extraction then implies
+\(\sqrt A\,u_m=u_m\). Write \(a_x=\sqrt A\,v_x\), so that
+\(\sum_{x\in\Omega_m}a_x=u_m\).
+The alternative output, by the fresh-environment dilation of
+\eqref{eq:schur}, has acceptance probability
+\[
+ \sum_{x,y}K_{xy}
+ e^{i(m(x)-m(y))\cdot\phi}\ip{a_y}{a_x}.
+\]
+Averaging \(\phi\) deletes only cross-type terms. On one type block,
+slot-permutation invariance implies
+\(K_m\mathbf1=N_mF_m(C)\mathbf1\).
+Decompose
+\[
+ a_x=\frac{u_m}{N_m}+b_x,\qquad
+ \sum_{x\in\Omega_m}b_x=0.
+\]
+The mixed terms vanish by the constant row sum, and positivity of \(K_m\)
+gives
+\begin{equation}\label{eq:block}
+ \sum_{x,y\in\Omega_m}K_{xy}\ip{a_y}{a_x}
+ =F_m(C)\|u_m\|^2+
+   \sum_{x,y\in\Omega_m}K_{xy}\ip{b_y}{b_x}
+ \ \geq\ F_m(C)\|u_m\|^2.
+\end{equation}
+For complex \(C\), the last energy is nonnegative because it is the
+contraction of two positive Gram matrices (equivalently, a sum of squared
+tensor-product norms).
+Sum \eqref{eq:block} and apply \eqref{eq:parseval}. The mean failure over
+\(\phi\), hence its supremum, is at least \(\min_m F_m(C)\).
+No interchange of infimum and supremum is required.
+The uniform-type test in Theorem~\ref{thm:parallel} has the same failure
+for every carrier, since \(m(x)=m(y)\) throughout its support.
+It attains the lower bound.
+\end{proof}
+
+\begin{corollary}[Complete dephasing]\label{cor:complete}
+For \(C=I_d\), even with a calibrated carrier,
+\begin{equation}\label{eq:complete}
+ \beta_{\rm causal}(n,I_d)
+ =\beta_{\rm par}(n,I_d)
+ =\frac{1}{\max_{|m|=n}\binom{n}{m_0,\ldots,m_{d-1}}}.
+\end{equation}
+The maximum occurs when occupations differ by at most one.
+\end{corollary}
+\begin{proof}
+The channel is invariant under carrier shifts, so its minimax and
+calibrated problems coincide. Here \(K_m\) is identity and \(F_m=1/N_m\).
+If \(m_a\geq m_b+2\), moving one count from \(a\) to \(b\) decreases
+\(\prod_a m_a!\); iterating proves the balancing assertion.
+\end{proof}
+
+\section{Qubit formulas and the asymptotic limit}
+
+For qubits take a known zero carrier and
+\begin{equation}\label{eq:eta}
+ C_\eta=\begin{pmatrix}1&\eta\\ \eta&1\end{pmatrix},
+ \quad 0\leq\eta\leq1,\qquad
+ \E_\eta=p\Id+q\mathcal Z,\quad
+ p=\frac{1+\eta}{2},\quad q=\frac{1-\eta}{2},
+\end{equation}
+where \(\mathcal Z(X)=ZXZ\) and \(Z=\diag(1,-1)\).
+For a known nonzero carrier, a compensating control gives this model
+while preserving the composite frozen null.
+
+\begin{proposition}[Balanced qubit formula]\label{prop:qubit}
+With \(w=\lfloor n/2\rfloor\),
+\begin{equation}\label{eq:qubit}
+ \beta_{\rm par}(n,\eta)
+ =\frac{\displaystyle\sum_{j=0}^{w}
+            \binom{w}{j}\binom{n-w}{j}\eta^{2j}}{\binom{n}{w}}.
+\end{equation}
+\end{proposition}
+\begin{proof}
+In a weight-\(w\) block, a fixed binary word has
+\(\binom wj\binom{n-w}j\) words at Hamming distance \(2j\), giving the
+displayed value for that weight.
+Let \(J_w\) have probabilities
+\(\pi_w(j)=\binom wj\binom{n-w}j/\binom nw\).
+For \(w<(n-1)/2\), the likelihood ratio on the common support is
+\[
+ \frac{\pi_{w+1}(j)}{\pi_w(j)}
+ =\frac{(w+1)^2(n-w-j)}{(n-w)^2(w+1-j)},
+\]
+which increases with \(j\); any new support lies at the upper end.
+Thus \(J_{w+1}\) stochastically dominates \(J_w\). Since
+\(\eta^{2j}\) decreases in \(j\), the block value decreases toward the
+balanced weight. Symmetry handles the other half. At \(\eta=0\) the
+value is \(1/\binom nw\), and at \(\eta=1\) all values are one.
+\end{proof}
+
+\begin{proposition}[No improvement of the failure exponent]\label{prop:exp}
+For \(n\geq1\) and \(0\leq\eta\leq1\),
+\begin{equation}\label{eq:expbounds}
+ p^n+q^n\ \leq\ \beta_{\rm causal}(n,\eta)
+ \ \leq\ \beta_{\rm par}(n,\eta)\ \leq\ (n+1)p^n.
+\end{equation}
+Consequently, for fixed \(0\leq\eta<1\), both optimal failure exponents
+are \(-\log((1+\eta)/2)\).
+\end{proposition}
+\begin{proof}
+The Kraus trajectories consisting entirely of \(I\), or entirely of
+\(Z\), have probabilities \(p^n\) and \(q^n\). Each is a frozen null and
+must be inconclusive with certainty, for any causal protocol.
+This proves the lower bound. In \eqref{eq:qubit}, the numerator is at most
+\((1+\eta)^n\): it is a sub-sum of the product
+\((1+\eta)^w(1+\eta)^{n-w}\) with nonnegative terms.
+Also \(\binom n{\lfloor n/2\rfloor}\geq2^n/(n+1)\).
+Taking logarithms and dividing by \(n\) proves the limit.
+\end{proof}
+
+\section{Causal certificates and physical realization}
+
+For completeness we specialize known query-decomposition methods
+\cite{grillo,barnum,combs} to the present continuous-phase setting.
+Index level \(k\) by words of length \(k\), with the last symbol appended
+on the right. Let \(V\) be the \(d^n\times\binom{n+d-1}{d-1}\) matrix whose
+columns are the type indicators \(\mathbf1_{\Omega_m}\).
+
+\begin{lemma}[Causal Gram realization]\label{lem:gram}
+The following conditions characterize causal rejection statistics:
+\begin{align}
+ &Q_0=[1],\qquad Q_k\succeq0,\label{eq:gram1}\\
+ &(Q_k)_{xa,yb}=0\quad(a\ne b),\qquad
+   \sum_a(Q_k)_{xa,ya}=(Q_{k-1})_{x,y},\label{eq:gram2}\\
+ &0\preceq R\preceq Q_n,\qquad RV=0.\label{eq:gram3}
+\end{align}
+The rejection probability under \(\E_C^{\otimes n}\) is
+\begin{equation}\label{eq:objective}
+ s(C)=\Tr(C^{\otimes n}R).
+\end{equation}
+Every feasible collection has a realization using a \(d\)-dimensional
+query register and memory of dimension at most \(d^{n-1}\).
+\end{lemma}
+\begin{proof}
+Expand the purified output immediately after each query into its
+phase histories, with coefficient vectors \(v_x^{(k)}\), and set
+\((Q_k)_{x,y}=\ip{v_x^{(k)}}{v_y^{(k)}}\).
+Projection onto the last queried symbol makes distinct last-symbol
+branches orthogonal. Summing these projections preserves the previous
+inner products, proving \eqref{eq:gram1}--\eqref{eq:gram2}.
+For a final rejection effect \(M\), set
+\(R_{x,y}=\ip{v_x^{(n)}}{M v_y^{(n)}}\).
+Then \(0\preceq R\preceq Q_n\). Fourier extraction of the null characters
+shows that zero rejection is equivalent to annihilating all type sums;
+by positivity this is \(RV=0\).
+The channel dilation contracts two histories with
+\((C^{\otimes n})_{xy}\), giving \eqref{eq:objective}, including for
+complex \(C\).
+
+Conversely, factor the same-last-symbol blocks of \(Q_k\) as
+\(B_a^\dagger B_a\). If previous coefficient vectors have Gram
+\(Q_{k-1}\), define on their span
+\[
+ v_x^{(k-1)}\longmapsto \sum_a\ket a\otimes B_a\ket x.
+\]
+The Gram recursion makes this map well defined and isometric, including
+when the previous vectors are linearly dependent. Extend the isometry
+to a unitary after completing the ambient spaces. Applying the next
+diagonal query produces exactly the required next coefficient vectors.
+This constructs all levels.
+
+If \(S\) has the terminal vectors as columns, \(S^\dagger S=Q_n\).
+The inequality \(0\preceq R\preceq S^\dagger S\) ensures that \(R\)
+annihilates \(\ker S\). The effect
+\(M=(S^+)^\dagger R S^+\) on \(\operatorname{ran}S\), extended by zero,
+satisfies \(0\preceq M\preceq I\) and \(S^\dagger M S=R\).
+Each same-symbol block has size at most \(d^{k-1}\).
+Embedding all levels in a space of dimension \(d^n\) proves the stated
+sufficient memory bound.
+\end{proof}
+
+This lemma is an exact physical characterization, not a relaxation
+based only on polynomial normalization. It supplies a convenient
+specialization of the earlier reconstruction principles; we do not
+claim their general equivalence as new. The sufficient memory bound
+also says nothing about efficient compilation into a restricted gate set.
+
+\section{A certified calibrated separation}
+
+At \(n=5\), \eqref{eq:qubit} becomes
+\begin{equation}\label{eq:fivepar}
+ \beta_{\rm par}(5,\eta)=\frac{1+6\eta^2+3\eta^4}{10}.
+\end{equation}
+The supplementary files \texttt{phase-certificate-Q.json} and
+\texttt{phase-certificate-R.json} specify rational \(32\times32\)
+matrices, in binary lexicographic order. They define a single fixed
+strategy, independent of \(\eta\).
+
+\begin{theorem}[Five-query calibrated advantage]\label{thm:separation}
+There is a causal five-query test with exactly zero rejection of every
+frozen phase, whose rejection probability is
+\begin{align}
+ s_*(\eta)={}&\frac{1086981}{1250000}
+ +\frac{3225799}{50000000}\eta
+ -\frac{3784393}{6250000}\eta^2 \notag\\
+ &-\frac{585391}{25000000}\eta^3
+ -\frac{103157}{390625}\eta^4
+ -\frac{2055017}{50000000}\eta^5.\label{eq:success}
+\end{align}
+It strictly improves on every parallel test for
+\(\eta_*<\eta<1\), where \(\eta_*\) is the unique real root of
+\[
+ g(\eta)=2055017\eta^3-1795904\eta^2+3225799\eta-1520760
+\]
+and \(0.53314<\eta_*<0.53315\).
+At \(\eta=7/10\), its failure and improvement are respectively
+\begin{equation}\label{eq:exactgap}
+ 1-s_*(7/10)=\frac{2301478964279}{5000000000000},\qquad
+ \beta_{\rm par}(5,7/10)-(1-s_*(7/10))
+ =\frac{28671035721}{5000000000000}.
+\end{equation}
+\end{theorem}
+\begin{proof}[Proof with a finite rational certificate]
+Reduce \(Q=Q_5\) recursively by
+\((Q_{k-1})_{xy}=(Q_k)_{x0,y0}+(Q_k)_{x1,y1}\).
+The supplied entries satisfy all off-last-symbol zeros and \(Q_0=[1]\).
+Exact rational Schur-complement elimination establishes
+\[
+ Q\succ0,\quad Q-R\succ0,\quad R\succeq0,\qquad
+ \rank Q=\rank(Q-R)=32,\quad\rank R=26.
+\]
+The six type-indicator columns are annihilated exactly by \(R\).
+Lemma~\ref{lem:gram} therefore supplies a physical test with one query
+qubit and at most a 16-dimensional memory.
+
+Summing \(R_{xy}\) over each Hamming distance gives the six coefficients
+in \eqref{eq:success}. Subtracting its failure from \eqref{eq:fivepar}
+gives the exact identity
+\begin{equation}\label{eq:factor}
+ \beta_{\rm par}(5,\eta)-(1-s_*(\eta))
+       =\frac{(1-\eta^2)g(\eta)}{50000000}.
+\end{equation}
+The derivative of \(g\) has positive leading coefficient and negative
+discriminant \(-66647776694132\), so \(g\) increases on the real line.
+Exact substitution at \(0.53314\) and \(0.53315\) brackets its root.
+Equations~\eqref{eq:factor} and \eqref{eq:exactgap} follow.
+
+The included verifier replays all checks in exact rational arithmetic.
+No semidefinite optimizer is needed.
+Positive semidefiniteness is checked by successive Schur complements:
+a negative pivot fails, and a zero pivot is allowed only if its remaining
+row is identically zero. This yields an exact finite-arithmetic proof
+for the supplied entries.
+\end{proof}
+
+\begin{center}
+\begin{tabular}{lrr}
+\toprule
+Test at \(\eta=0.7\) & Failure & Detection\\
+\midrule
+Optimal parallel & \(0.4660300000000\) & \(0.5339700000000\)\\
+Certified causal & \(0.4602957928558\) & \(0.5397042071442\)\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The improvement is about \(0.5734\) percentage points of detection.
+It is mathematically strict but modest. The theorem does not identify
+the optimal causal test, prove that five queries are necessary, or
+improve the exponent in Proposition~\ref{prop:exp}. In particular, a
+floating-point optimizer value is not an additional exact theorem.
+At \(\eta=0\), the exact optimum is \(1/\binom52=0.1\) by
+Corollary~\ref{cor:complete}; the displayed certificate is not optimal
+there. At \(\eta=1\), the alternative is itself a frozen unitary.
+
+\section{Equal marginals and perturbations}
+
+\begin{proposition}[Matched one-use channels]\label{prop:matching}
+For \(0\leq\eta<1\), requiring zero rejection against every frozen qubit
+phase law with first moment \(\eta\) is equivalent to requiring zero
+rejection for each deterministic frozen phase.
+\end{proposition}
+\begin{proof}
+Fix a point \(z\) on the unit circle. Choose
+\(0<\epsilon\leq(1-\eta)/2\).
+The residual mean \((\eta-\epsilon z)/(1-\epsilon)\) lies in the unit
+disk, because \(|\eta-\epsilon z|\leq\eta+\epsilon\leq1-\epsilon\).
+It is a convex combination of two circle points. Thus a phase law
+of mean \(\eta\) can assign positive mass \(\epsilon\) to any prescribed
+\(z\). Zero rejection averaged over every such law, together with
+nonnegativity, forces zero rejection at that point. The converse is
+immediate.
+\end{proof}
+
+In particular, sampling \(I\) or \(Z\) once with probabilities \(p,q\)
+and retaining it has the same one-use channel as independently
+sampling them at every slot. The proposition concerns \emph{all}
+compatible frozen laws, rather than a known two-point null law alone.
+Rejection excludes the specified frozen-phase null within the promise;
+it does not establish universal Markovianity, an intrinsically quantum
+bath, or a unique physical noise mechanism.
+
+\begin{proposition}[Qubit null perturbations]\label{prop:robust}
+For any zero-null-error qubit test, suppose the relative phase at slot
+\(j\) is \(\theta+\delta_j\), with \(|\delta_j|\leq\pi\).
+Its false-positive probability is at most
+\begin{equation}\label{eq:robust}
+ \min\left\{1,\left(\frac12\sum_{j=1}^n|\delta_j|\right)^2\right\}.
+\end{equation}
+A common phase change across all slots remains an exact null.
+\end{proposition}
+\begin{proof}
+After removing a global scalar, the operator-norm change of one qubit
+phase query is \(2|\sin(\delta_j/4)|\leq|\delta_j|/2\).
+Telescoping the purified isometric circuit bounds the final vector
+change by the sum. The square root of the rejection effect annihilates
+the ideal null vector and is a contraction. Squaring gives
+\eqref{eq:robust}.
+\end{proof}
+
+This is a bound on a fixed test's false positives. It does not prove
+superiority to the best parallel test allowed a positive false-positive
+level. Translating time errors into \(\delta_j\) requires a frequency
+or phase-width bound. The result is not a claim of clock robustness
+without a physical scale, and it does not include arbitrary state
+preparation, measurement, or memory errors.
+
+\section{Reproducibility and remaining questions}
+
+The certificate matrices were obtained by numerical semidefinite search,
+interior mixing, rational rounding, and exact constraint repair.
+The final proof depends on the rational entries and their verifier,
+not on optimizer tolerances. The two matrix files have SHA-256 hashes
+\begin{quote}\small\ttfamily
+Q: 18ecfa37bc84e3b0ca40efdc9dbdda6b87442479d76a17f4f7ff04563f088463\\
+R: 8a3bc80cdc93463652359b7145a095ac528c1469486173fb3f3cc3ad8e4000be
+\end{quote}
+The standard-library verifier checks causal constraints, positivity,
+null annihilation, coefficient aggregation, and the exact separation.
+A separate numerical reconstruction checks the circuit against frozen
+phases, independent phase histories, and direct Kraus evolution; its
+largest probability discrepancy was below \(10^{-14}\).
+These numerical checks are diagnostics, not proofs of continuum claims.
+
+A separate GPT-6 Astra review context checked the candidate proofs,
+reimplemented rational verification, reconstructed the circuit, and
+tested the minimax argument. That review shares the model provider and
+was coordinated with the authoring process; it is neither blind review
+nor human peer review. Its report and scope are included with the
+supplement. AI systems assisted literature triage, mathematical
+development, coding, drafting, and review. No formal proof-assistant
+verification is claimed.
+
+The literature search renewed indexes from frontier-AI mathematics
+collections and the author's repositories, followed by targeted reading
+of the closest quantum-information sources. Index coverage is not
+full-text mathematical verification. The accompanying search audit
+records that distinction; the absence of a located identical result is
+not a guarantee of priority.
+
+Three questions remain especially concrete. First, what is the exact
+calibrated causal optimum, and what is the smallest query count admitting
+a strict advantage? Second, can the five-query certificate be replaced
+by a low-memory analytic circuit that explains the beneficial
+interference between occupation sectors? Third, does a useful advantage
+persist after jointly optimizing both test classes at a positive
+false-positive allowance and with realistic control costs?
+The present results settle the uncalibrated minimax problem and exhibit
+a finite calibrated separation, while leaving these stronger claims open.
+
+\begin{thebibliography}{99}
+\bibitem{chefles}
+A. Chefles, E. Andersson, and I. Jex,
+\emph{Unambiguous comparison of the states of multiple quantum systems},
+J. Phys. A \textbf{37}, 7315 (2004).
+\href{https://arxiv.org/abs/quant-ph/0402125}{arXiv:quant-ph/0402125}.
+\bibitem{grillo}
+S. A. Grillo and F. L. Marquezino,
+\emph{Quantum Query as a State Decomposition},
+Theoretical Computer Science (2018),
+\href{https://doi.org/10.1016/j.tcs.2018.03.017}{doi:10.1016/j.tcs.2018.03.017}.
+\href{https://arxiv.org/abs/1602.07716v2}{arXiv:1602.07716v2}.
+\bibitem{barnum}
+H. Barnum,
+\emph{Semidefinite programming characterization and spectral adversary
+method for quantum complexity with noncommuting unitary queries} (2007).
+\href{https://arxiv.org/abs/quant-ph/0703141}{arXiv:quant-ph/0703141}.
+\bibitem{combs}
+G. Chiribella, G. M. D'Ariano, and P. Perinotti,
+\emph{Theoretical framework for quantum networks},
+Phys. Rev. A \textbf{80}, 022339 (2009).
+\href{https://arxiv.org/abs/0904.4483}{arXiv:0904.4483}.
+\bibitem{andersson}
+E. Andersson, I. Jex, and S. M. Barnett,
+\emph{Comparison of unitary transforms},
+J. Phys. A \textbf{36} (2003),
+\href{https://doi.org/10.1088/0305-4470/36/9/310}{doi:10.1088/0305-4470/36/9/310}.
+\href{https://arxiv.org/abs/quant-ph/0208153}{arXiv:quant-ph/0208153}.
+\bibitem{sedlak}
+M. Sedl\'ak and M. Ziman,
+\emph{Unambiguous comparison of unitary channels},
+Phys. Rev. A \textbf{79}, 012303 (2009).
+\href{https://arxiv.org/abs/0809.4401}{arXiv:0809.4401}.
+\bibitem{hashimoto}
+Y. Hashimoto, A. Soeda, and M. Murao,
+\emph{Comparison of unknown unitary channels with multiple queries},
+\href{https://arxiv.org/abs/2208.12519v2}{arXiv:2208.12519v2}
+(version of 7 September 2026).
+\bibitem{huang}
+Z. Huang, L. Lami, and M. M. Wilde,
+\emph{Exact Quantum Sensing Limits for Bosonic Dephasing Channels},
+PRX Quantum \textbf{5}, 020354 (2024).
+\href{https://arxiv.org/abs/2402.05793}{arXiv:2402.05793}.
+\bibitem{sieniawski}
+S. Sieniawski and R. Demkowicz-Dobrza\'nski,
+\emph{Adaptive quantum channel discrimination using methods of quantum
+metrology}, New J. Phys. \textbf{28}, 024502 (2026).
+\href{https://arxiv.org/abs/2510.15506}{arXiv:2510.15506}.
+\bibitem{pollock}
+F. A. Pollock, C. Rodr\'iguez-Rosario, T. Frauenheim,
+M. Paternostro, and K. Modi,
+\emph{Operational Markov condition for quantum processes},
+Phys. Rev. Lett. \textbf{120}, 040405 (2018).
+\href{https://arxiv.org/abs/1801.09811}{arXiv:1801.09811}.
+\bibitem{dykema}
+K. Dykema and K. Juschenko,
+\emph{Matrices of unitary moments} (2009).
+\href{https://arxiv.org/abs/0901.0288}{arXiv:0901.0288}.
+\bibitem{sampling}
+L. Eriksson, \emph{The arithmetic of sampling static quantum disorder:
+exact aliases, finite witnesses, and clock robustness}, working paper.
+\href{https://airr.science/papers/ARR-2026-7PEKNEDVH38HV8PX/versions/v1/}
+{AIRR ARR-2026-7PEKNEDVH38HV8PX, v1 (2026)}.
+\bibitem{support}
+L. Eriksson, \emph{Algebraic Query Support for Unitary Oracles: Exact
+Hilbert Laws, Harmonic Spectra, and General-Tester Bounds}, working paper.
+\href{https://airr.science/papers/ARR-2026-6WX2JF38WE87GB2M/versions/v1/}
+{AIRR ARR-2026-6WX2JF38WE87GB2M, v1 (2026)}.
+\bibitem{tetrahedral}
+L. Eriksson, \emph{Two-Query Chirality in Tetrahedral Quantum Echoes:
+Exact Parallel Readout, a Nine-Dimensional Query Defect, and a Certified
+Adaptive Advantage}, working paper.
+\href{https://airr.science/papers/ARR-2026-5KS70GV7KK9DYA69/versions/v1/}
+{AIRR ARR-2026-5KS70GV7KK9DYA69, v1 (2026)}.
+\end{thebibliography}
+\end{document}
