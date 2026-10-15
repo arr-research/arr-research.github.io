@@ -1,0 +1,245 @@
+INFORME ORIGINAL — REVISIÓN CRÍTICA DEL PDF CONGELADO
+15 de octubre de 2026
+
+Manuscrito: The arithmetic of sampling static quantum disorder: exact aliases, finite witnesses, and clock robustness, Lluis Eriksson, 9 páginas.
+PDF SHA256: c3c125a369147cfe5d8cb2892971cc3d48cb1d22268ad8497b6f3b69f3045f63
+TeX SHA256: 7fc78b9fb8b0092b2b85c66b989a26a455499cc5639217961b757f1647de7053
+
+Recomendación: REVISAR CON CAMBIOS MENORES. Los resultados principales me parecen matemáticamente correctos bajo el modelo declarado. No he encontrado un contraejemplo ni una laguna que exija rehacer los teoremas. Recomiendo completar una atribución bibliográfica concreta, corregir los índices de las sumas impares y precisar algunos detalles de interpretación y reproducción antes de la versión definitiva. La contribución merece consideración como artículo especializado; no la considero un avance de impacto excepcional o general demostrado.
+
+Nota ordinaria global: 7,8/10.
+Nota AIRR Millennium global: 4,7/10; visualización redondeada de 5 estrellas, «Very good». Esta escala no es una probabilidad de corrección ni una nota escolar. La nota no es el promedio de los cinco criterios.
+
+1. Qué se comprobó y qué significa esta revisión
+
+Leí el texto completo del PDF de nueve páginas, inspeccioné visualmente sus nueve páginas renderizadas y contrasté la fuente TeX. Verifiqué ambos hashes. Leí la petición, la rúbrica, el dossier bibliográfico, el código y sus resultados; consulté partes pertinentes del predecesor suministrado para distinguir resultados heredados. Reejecuté el verificador en checks/supplied-rerun: sus 29 grupos de comprobaciones pasan. Escribí otro verificador en checks/independent_checks.py, sin importar el código suministrado, con una segunda certificación racional y ensayos adicionales. Todos sus resultados finales están en checks/independent-results.json.
+
+Las pruebas generales se evaluaron por sus argumentos, no por el éxito de esos ensayos. Una búsqueda numérica no es una prueba universal; los límites racionales sí certifican las constantes indicadas, dentro de la corrección usual del código y de la aritmética racional de Python. No se ha realizado verificación formal, experimento de laboratorio ni arbitraje humano.
+
+OpenAI Codex participó en la preparación; GPT-6 Astra había revisado trabajo precursor relacionado. No recibí aquellos informes ni sus notas. Un contexto nuevo no elimina esa participación previa a nivel de modelo. Además, existe acceso técnico a un sistema de archivos compartido: esta revisión no es técnicamente ciega ni estadísticamente independiente. Durante el trabajo llegó un aviso de que se preparaba una posible ampliación futura; no consulté esa ampliación ni la incorporé al dictamen del PDF congelado. Estos límites se declaran sin favorecer ni penalizar las conclusiones.
+
+2. Comprobación matemática de los resultados centrales
+
+2.1. Interior gaussiano, Lemas 3.1–3.2, página 3.
+
+El argumento de soporte es válido y evita correctamente exigir rango completo a la configuración euclidiana. Si un funcional afín L es no negativo sobre C_d y L(M(t))=0, entonces L(z(x)z(x)*) es una función continua no negativa cuya integral contra una gaussiana de densidad estrictamente positiva es cero. Debe anularse para todo x del espacio de la configuración. Puede, por tanto, integrarse contra cualquier otra varianza: L(M(s))=0 para todo s>0. Como Γ_ij>0 fuera de la diagonal, M(s) tiende a I. El hecho de que I sea interior obliga a que el funcional de soporte sea trivial. Esto prueba interior en todo el espacio afín hermítico de diagonal uno, no solamente en una subvariedad de matrices reales o gaussianas.
+
+Intenté romper este paso con puntos colineales y diferencias repetidas. Las coincidencias de frecuencias pueden producir relaciones lineales sobre la órbita gaussiana, pero no un funcional de soporte no trivial no negativo en todo C_d que también se anule en I. No encontré fallo. No debe sustituirse este argumento por «M(t) es definida positiva»: en dimensiones generales eso no basta para interior del cuerpo de correlaciones de fase.
+
+Casos límite: si v_i=v_j hay una coherencia exactamente uno y puede aparecer una cara propia; la fusión de niveles descrita en la observación 3.5 es correcta. En t=0 se está en la frontera y el lema no lo incluye. Para k=1 la independencia racional es automática y el resultado concuerda con la representación aleatoria unitaria de un solo canal.
+
+2.2. Alias finitos exactos, Teorema 3.3 y Corolario 3.4, páginas 3–4.
+
+La condición necesaria para la órbita continua es n·t≠0 para todo n entero no nulo. No hace falta añadir el número 1 a esa condición, como sucedería con una órbita discreta: el manuscrito usa correctamente energías reales continuas. Fijando ε_d=0, las d−1 coordenadas de energía producen una órbita densa en el producto de k toros de fases. La envolvente convexa del producto de conjuntos de fases de rango uno es el producto C_d^k. La inclusión ri(conv K)⊂conv S, para S denso, da igualdad exacta en el interior; la densidad por sí sola no la daría. Carathéodory justifica 1+k d(d−1) átomos en la dimensión real indicada. Los átomos son Hamiltonianos finitos, aunque no existe aquí una cota uniforme de sus energías.
+
+La restricción al interior es sustancial. Ejemplo adversarial que confirma que no se puede omitir: para d=2 y tiempos 1,√2, exigir coherencia 1 en el primero y −1 en el segundo forzaría simultáneamente ε_1−ε_2∈2πZ y √2(ε_1−ε_2)∈π+2πZ casi seguramente, lo cual es imposible. Es un dato de frontera aproximable por densidad, pero no exactamente realizable. El texto no hace esa extensión incorrecta.
+
+La indistinguibilidad con ancillas y adaptación es correcta para consultas a canales sin memoria entre usos: basta que un miembro del nulo reproduzca exactamente cada canal permitido. El argumento híbrido de la frontera y su cota d²ε son conservadores pero válidos. No son afirmaciones sobre un Hamiltoniano oculto compartido durante una secuencia de intervenciones. Esa distinción debe mantenerse.
+
+2.3. Alias en la rejilla infinita, Teorema 4.1, página 4.
+
+Se verifica q≥1−Σ_{i<j}2r_ij/(1+r_ij) y ∫q=1. La identidad de momentos se debe a que n(e_i−e_j), con n positivo y i<j, no coincide ni con otro rayo de raíces ni con su negativo. Por ortogonalidad de Haar, cada momento de una diferencia recibe exactamente el coeficiente r_ij^{|n|} de su propio núcleo y cero de los demás. No se supone independencia de las diferencias —suposición que sería generalmente falsa—. Elegir representantes de fase en [−π,π) da las energías y el ancho declarados. La positividad es suficiente, no necesaria.
+
+Para el qutrit, 4/5+2/257=1038/1285 y q≥247/1285, tal como se afirma. Verifiqué además un ejemplo de cuatro niveles con seis parámetros pequeños distintos: normalización 1 y error máximo de momentos aproximadamente 1,7×10^−16. Es sólo una comprobación adicional de la implementación; la justificación general es la ortogonalidad. Conviene declarar d≥2 al introducir M y γ_min, porque la fórmula log(2M−1)/γ_min no está definida para d=1; ese caso es trivial y no afecta al resultado físico.
+
+2.4. Representación circular, límite y completitud, páginas 5–6.
+
+La normalización 1/2 de la integral de semicircunferencias es correcta: el conjunto de cortes que separan dos puntos a distancia circular ρ tiene longitud 2ρ. Los casos coincidente y antipodal también satisfacen la identidad. La suma de Fourier converge absolutamente y permite intercambio con esperanza sin hipótesis de momentos sobre H.
+
+Derivé de nuevo F'(s)=(2/π)log coth(s/2). Más precisamente,
+F(s)=(2/π)s[log(1/s)+1+log 2]+O(s³).
+Por ello πF(Δγ)/(2Δlog(1/Δ))→γ para γ>0, y para γ=0 la expresión vale exactamente cero. La configuración es finita, por lo que el paso componente a componente al cono cerrado CUT_d es legítimo. La construcción por Cauchy independientes prueba la suficiencia, sin atribuir estabilidad conjunta a cualquier ley posible.
+
+El orden de cuantificadores del Teorema 5.3 es correcto: primero elegir Δ con w·F(ΔΓ)>0, mantener ese Δ fijo y después tomar K con 2Wb_K<w·F(ΔΓ). Así V≥w·F(ΔΓ)−Wb_K>Wb_K=U. No se precisa una cota uniforme sobre las energías para controlar la cola, porque |C_ij|≤1. Tampoco hay aquí una garantía de complejidad polinómica o de eficiencia uniforme, y el texto lo reconoce.
+
+La clasificación continua y el sustituto espectral son heredados del predecesor. El nuevo contenido es la versión de menú finito de armónicos y su cota uniforme de truncación. No deben sumarse ambos como descubrimientos independientes al valorar originalidad.
+
+2.5. Hamiltonianos no diagonales y medición física, página 2.
+
+Para cada H, T_ij(t)=U_ii(t)·conj(U_jj(t)). El producto de las medidas espectrales de los vectores de base, condicionado a H, construye una sola ley conjunta válida para todos los pares y tiempos. La independencia es condicional a H; no se necesita independencia incondicional. La afirmación se restringe correctamente a i≠j: el sustituto no reproduce en general las poblaciones ni el canal entero.
+
+Para las cuatro preparaciones y lecturas,
+E[O]=(1/4)Tr[XΨ(X)+YΨ(Y)]=Re⟨i|Ψ(E_ij)|j⟩.
+Las contribuciones de P se cancelan al promediar el signo, y el promedio de X e Y elimina la transferencia cruzada no deseada. Los estados tienen traza uno y son positivos; los observables tienen resultados −1,0,+1. No se está proponiendo medir directamente el operador no físico E_ij. Mi comprobación con canales CPTP genéricos no unitales, además de evolución unitaria no diagonal, reproduce la identidad con errores numéricos por debajo de 3×10^−15.
+
+2.6. Los 40.500 disparos, páginas 6–7.
+
+Recalculé con fracciones racionales π=4[arctan(1/2)+arctan(1/3)], usando series alternantes, y las exponenciales mediante polinomios de Taylor alternantes directos y su resto. Es una implementación distinta de la fórmula de Machin y las sumas positivas recíprocas del código suministrado. Obtuve los recintos declarados y:
+
+  b_20 = 0,015912181476754966…
+  A = 4,664652435954425…
+  g = 0,11365328926264492…
+  40500 g²/(8A²) > 3,00531829290024… > 3.
+
+Los límites exactos quedan en checks/independent-rational-certificate.json. La cota numérica de error es aproximadamente 0,049522989 por cada cola; la prueba estricta usa e³>20. La constante 8A² es correcta para una variable normalizada en [−1,1] y umbral a g/(2A) de la media. No procede multiplicar por 20 o hacer una corrección por múltiples pruebas: hay una sola estadística aleatorizada. Son 40.500 disparos totales, distribuidos entre tiempos, pares y fases.
+
+El nulo compuesto permite la extensión de deriva predecible declarada si H se elige antes de todos los ajustes frescos. La potencia bajo la alternativa requiere el modelo de referencia independiente o su correspondiente control condicional; no se deduce de ajustar un semigrupo después de observar los datos. No se ha demostrado optimalidad del número de disparos. Una búsqueda numérica adicional del máximo de la estadística nula encontró ≈0,0130283 frente a la cota usada U≈0,0477365: es una indicación de conservadurismo, no un certificado de un máximo mejor.
+
+2.7. Errores de reloj, páginas 7–8.
+
+El Corolario 7.1 es correcto para errores fijos por ajuste, con un intervalo independiente no degenerado en cada coordenada: cualquier caja abierta contiene un menú racionalmente independiente. El alias puede depender del menú efectivo; no se está afirmando que una misma ley finita funcione simultáneamente para toda la caja. La conclusión es minimax y no demuestra que una fluctuación temporal aleatoria en cada disparo, con una distribución prescrita, destruya toda posibilidad de detección. El párrafo posterior lo aclara acertadamente. También es correcta la excepción de un error multiplicativo común que preserva las relaciones armónicas.
+
+El ancho espectral B controla las diferencias del sustituto y da |C_ij(t)−C_ij(s)|≤B|t−s|. La alternativa tiene constante de Lipschitz G en tiempos no negativos. Sumar con los módulos de los coeficientes da g_η=g−A(B+G)η. Para B=10 y G=4, recalculé el umbral 0,00174034233024864…; 0,00174 es un límite conservador correcto. La mera positividad de g_η no conserva el 5 % con 40.500 disparos: deben usarse el nuevo margen y el nuevo tamaño muestral. El teorema da correctamente esa fórmula.
+
+La prueba escrita trata los errores como perturbaciones de las funciones C_ij. Si se desea permitir errores de tiempo dependientes también de la fase de preparación o de H, convendría explicitar el modelo o añadir la cota a nivel de cada disparo |Tr A[U_tρU_t*−U_sρU_s*]|≤B|t−s|, obtenida desplazando H por el centro de su espectro. Esta aclaración evita aplicar sin explicación la cancelación de fases a canales distintos y conserva la misma constante. No encontré un contraejemplo a la cota en el modelo físico indicado.
+
+3. Bibliografía, originalidad y relevancia
+
+La omisión bibliográfica más concreta es el antecedente directo del Lema 3.1. Dykema–Juschenko, Matrices of unitary moments, proposición 2.5, observación 2.7 y sección 4/proposición 4.1, estudian precisamente C_d, su representación por correlaciones de rango uno, la cota de Carathéodory y el interior alrededor de I. Kribs–Levick–Pereira–Rahaman, sección 5/proposición 27 y observación 28, dan otra representación integral y señalan explícitamente ese antecedente. Deben citarse. Esto no refuta el nuevo argumento gaussiano del Lema 3.2 ni el teorema de tiempos racionalmente independientes. Impide presentar como nuevos el cuerpo de fases, la interioridad de I o la cota convexa elemental.
+
+Fuentes primarias consultadas, con alcance de lectura:
+
+[S1] Chen et al. (2018), definición de ensemble común, representación de Fourier, discusión de Bochner y alcance de la interpretación ambiental: https://arxiv.org/html/1703.09428v3 . Es antecedente del problema de representación de familias completas; no encontré en las partes examinadas el teorema de interpolación exacta en menús racionalmente independientes.
+
+[S2] Chen et al. (2019), secciones de representación canónica, ecuación (10), raíces y ejemplo de qutrit: https://arxiv.org/html/1811.09053 . La compatibilidad de proyecciones de una ley conjunta sobre las raíces ya pertenece a este marco. El manuscrito actual aporta diseños finitos específicos, no la idea general de comprobar una ley común. No certifiqué todas las afirmaciones de unicidad de CHER de ese trabajo, que no son premisas necesarias aquí.
+
+[S3] Kropf (2020), introducción y revisión de desorden estático, incluida la relación entre Cauchy-Lorentz y decaimiento semigrupal: https://journals.aps.org/prresearch/pdf/10.1103/PhysRevResearch.2.033311 . Este fenómeno no es nuevo; no realicé auditoría completa de sus resultados perturbativos.
+
+[S4] Kato–Ley–Loizidou–Mardia (2024), construcción de la cópula, marginales y teorema 5 sobre momentos trigonométricos: https://arxiv.org/html/2401.10824v2 . Ya hay leyes conjuntas circulares con marginales de diferencias wrapped-Cauchy. Su familia y sus relaciones entre parámetros no son la suma de núcleos de la ecuación (8). La aplicación de esa suma a todas las parejas y todos los tiempos de una rejilla es una contribución plausible, pero elemental; no se ha demostrado prioridad exhaustiva entre todas las construcciones aditivas de cópulas o problemas de marginales.
+
+[S5] Van der Hoeven, sección 2, teoremas clásicos de densidad y equidistribución: https://www.texmacs.org/joris/limsup/limsup-corrected.html . La herramienta de Kronecker está correctamente atribuida como clásica.
+
+[S6] Dykema–Juschenko (2009/2011), proposición 2.5, observación 2.7 y sección 4: https://arxiv.org/html/0901.0288 . Antecedente directo ausente, descrito arriba.
+
+[S7] Kribs–Levick–Pereira–Rahaman (2023/2024), sección 5, proposición 27 y observación 28: https://arxiv.org/html/2306.04077 . Antecedente directo ausente, descrito arriba.
+
+[S8] Schoenberg (1938), introducción del artículo original y formulación de la conexión entre inmersión hilbertiana y núcleos gaussianos: https://pages.stat.wisc.edu/~wahba/stat860public/pdf1/schoenberg.1938.pdf . Lectura parcial; no auditoría completa de todas sus demostraciones. El uso finito en el manuscrito se comprueba directamente mediante la representación gaussiana y la condición negativa condicional.
+
+[S9] Deza–Laurent, ficha editorial e índice, especialmente el capítulo The Cut Cone and ℓ1-Metrics: https://link.springer.com/book/10.1007/978-3-642-04295-9 . No leí íntegramente el libro ni verifiqué una página específica para la identidad circular. La identidad circular de este manuscrito sí fue rederivada directamente. La referencia ganaría utilidad con un localizador exacto.
+
+La lectura directa de las páginas editoriales de Chen (2019/2021) encontró errores de acceso; para 2019 utilicé el texto primario completo de arXiv. De 2021 sólo inspeccioné contenido editorial recuperado por búsqueda; no lo cuento como una comprobación sustantiva adicional. Tampoco consulté íntegramente Rockafellar. La ausencia de coincidencias en búsquedas sobre Hamiltonian ensembles, finite-time sampling, characteristic functions, Kronecker y phase-correlation interiors no demuestra novedad. Los inventarios de muchos repositorios y manuscritos del dossier no equivalen a una búsqueda especializada exhaustiva y no elevan por sí solos la nota.
+
+Lo más interesante es la combinación de dos resultados: exactitud para todo menú racionalmente independiente y existencia de menús armónicos finitos separadores. La prueba del interior gaussiano hace que el primer resultado incluya configuraciones degeneradas; la cola uniforme de Fourier hace que el segundo sea válido sin cotas de energía. Es una aportación nítida a un problema específico de identificabilidad. La prueba es corta y usa herramientas clásicas, lo que favorece su inspección pero no acredita profundidad o impacto excepcional. Faltan costes de energía de los alias, una clasificación de menús con relaciones racionales generales y diseños estadísticos eficientes; el texto reconoce estas limitaciones. No exige resolverlas para que los teoremas actuales sean válidos.
+
+4. Objeciones, correcciones mínimas y recomendaciones
+
+Objeción material para la atribución: añadir S6 y S7 y delimitar con precisión lo nuevo frente a la geometría ya conocida de C_d. No hay una objeción matemática material demostrada contra los teoremas principales. No he localizado una fuente que contenga el paquete completo de nuevos teoremas, pero eso tampoco permite proclamar prioridad universal.
+
+Correcciones mínimas:
+• Reparar las cuatro apariciones de «n m odd» en la página 5: ecuaciones (10), (11), (12) y la suma posterior a (13). El TeX contiene literalmente un salto de línea donde debería estar el comando de estilo romano. Usar una condición inequívoca n impar o n∈2N+1. No es sólo un defecto de extracción: aparece en el PDF renderizado.
+• Añadir los antecedentes de interioridad indicados y localizadores concretos para geometría de cortes; incorporar una referencia de Hoeffding al justificar la garantía estadística.
+• Cambiar «exact interpolation» al describir el resultado del programa lineal por «interpolation to floating-point precision»; la existencia exacta proviene del teorema, no del archivo JSON. Los tiempos almacenados son aproximaciones binarias de los tiempos matemáticos previstos. El propio texto ya avisa que es una ilustración, de modo que es una corrección de precisión verbal.
+• Declarar d≥2 para la fórmula de rejilla y tiempos efectivos no negativos en la estabilidad.
+• Dejar explícito que la igualdad de canales entre consultas se usa como un modelo sin memoria; mantener aparte las trayectorias con H compartido. Conservar la condición de que H no depende de tiempo, par, fase ni lectura recién elegidos. Para la versión más amplia de errores aleatorios, incluir la aclaración de la cota por disparo indicada en 2.7.
+
+Recomendaciones útiles, no condiciones para aceptar los teoremas: mostrar U, V y el umbral de decisión del ejemplo; explicar que los 40.500 disparos son totales; separar la tolerancia que conserva margen positivo de la tolerancia que conserva una potencia dada; facilitar un comando reproducible con versiones de Python, NumPy y SciPy. No presentaría el protocolo como una validación experimental lista para usar sin presupuestos de preparación, lectura y calibración. No hay aquí certificación de un entorno cuántico: un ruido clásico dependiente del tiempo puede realizar la alternativa.
+
+5. Razón de cada nota
+
+Diagnóstico ordinario, cada componente sobre 10:
+• Corrección: 9,0. Todos los pasos principales pasan la revisión algebraica y de cuantificadores; las constantes tienen una segunda certificación racional. No asigno certeza absoluta ni confundo los ensayos con una prueba formal.
+• Rigor y completitud: 8,6. Pruebas autocontenidas, hipótesis esenciales visibles, distinción adecuada entre existencia exacta y aproximación. Restan precisión del modelo de errores temporales más amplio y pequeños detalles de dominio y reproducción.
+• Originalidad: 6,7. La síntesis de interior gaussiano, menús independientes y certificados armónicos parece una aportación propia respecto de lo comprobado. Geometría de fase, Kronecker, Carathéodory, Cauchy, Fourier, clasificación continua y sustituto espectral tienen antecedentes o son heredados; falta citar un antecedente directo.
+• Relevancia: 6,8. Resuelve una cuestión de diseño e identificabilidad concreta con una consecuencia de calibración poco obvia. El alcance físico es limitado a canales de un uso y el valor experimental cuantitativo aún es preliminar. No hay evidencia de impacto amplio, resolución de un problema célebre o tecnología experimental validada.
+• Claridad: 8,2. La narrativa separa bien las tres clases de muestreo y reconoce sus límites. La notación defectuosa de los impares, la frase del programa lineal y algunos supuestos operativos deben pulirse.
+
+Global ordinaria 7,8: buen artículo especializado, con argumentos sólidos y una idea reconocible; publicación razonable después de correcciones menores. No es una media mecánica de los diagnósticos.
+
+Cinco criterios AIRR, cada uno sobre 5 estrellas:
+• Confianza en corrección: 4/5. Alto respaldo por prueba y cálculo, con los límites de una revisión de modelo y sin verificación formal o humana.
+• Rigor y completitud: 4/5. Estructura demostrativa suficiente para los resultados declarados; faltan las precisiones menores detalladas.
+• Novedad frente a fuentes comprobadas: 3/5. Aporte plausible y específico; herramientas centrales conocidas, resultados heredados y laguna bibliográfica identificada. Lo no comprobado no cuenta a favor.
+• Relevancia si los resultados se sostienen: 3/5. Útil para una subárea de identificabilidad; no se establece alcance transformador ni eficiencia práctica general.
+• Reproducibilidad e inspección: 5/5. Texto y fuente disponibles, argumentos cortos inspeccionables, código ejecutable y certificados racionales que pude reproducir y recalcular. Esta nota no declara formalización ni independencia estadística del arbitraje.
+
+Global AIRR 4,7: contribución fuerte y cercana a «Very good» en la escala facilitada. Las notas 6–10 exigirían una profundidad, amplitud, consecuencia o verificación extraordinaria que este trabajo de alcance específico no demuestra. No se ha usado una nota objetivo.
+
+JSON FINAL
+{
+  "pdf_sha256": "c3c125a369147cfe5d8cb2892971cc3d48cb1d22268ad8497b6f3b69f3045f63",
+  "tex_sha256": "7fc78b9fb8b0092b2b85c66b989a26a455499cc5639217961b757f1647de7053",
+  "recommendation": "revise",
+  "revision_degree": "minor",
+  "ordinary_overall": 7.8,
+  "airr_overall": 4.7,
+  "diagnostics": {
+    "correctness": 9,
+    "rigor": 8.6,
+    "originality": 6.7,
+    "significance": 6.8,
+    "clarity": 8.2
+  },
+  "criterion_stars": {
+    "correctness_confidence": 4,
+    "rigor_and_completeness": 4,
+    "novelty_against_checked_sources": 3,
+    "significance_if_correct": 3,
+    "reproducibility_and_inspectability": 5
+  },
+  "material_objections": [
+    {
+      "id": "B1",
+      "kind": "bibliographic_attribution",
+      "severity": "moderate",
+      "finding": "Faltan Dykema–Juschenko, sección 4, y Kribs–Levick–Pereira–Rahaman, sección 5, antecedentes directos de la interioridad de I en el cuerpo de correlaciones de fase.",
+      "effect": "Requiere completar la atribución y delimitar la novedad; no invalida el lema gaussiano ni el teorema de menú finito."
+    }
+  ],
+  "mathematical_counterexample_found": false,
+  "minor_fixes": [
+    "Cuatro índices «n m odd» incorrectos en la página 5.",
+    "Precisar que la interpolación del programa lineal es numérica.",
+    "Declarar d≥2 donde aparece γ_min y tiempos efectivos no negativos.",
+    "Explicitar el modelo sin memoria entre consultas y, si se permiten errores temporales dependientes de la fase o de H, justificar la cota por disparo.",
+    "Añadir localizadores bibliográficos y referencia de Hoeffding."
+  ],
+  "checked_sources": [
+    {
+      "url": "https://arxiv.org/html/1703.09428v3",
+      "scope": "Definición de ensemble común, Fourier y Bochner; lectura de secciones pertinentes."
+    },
+    {
+      "url": "https://arxiv.org/html/1811.09053",
+      "scope": "Representación conjunta, raíces, ecuación (10), ejemplo de qutrit; no auditoría de todas las afirmaciones de unicidad."
+    },
+    {
+      "url": "https://journals.aps.org/prresearch/pdf/10.1103/PhysRevResearch.2.033311",
+      "scope": "Introducción y revisión de desorden estático; no auditoría de resultados perturbativos."
+    },
+    {
+      "url": "https://arxiv.org/html/2401.10824v2",
+      "scope": "Construcción, marginales y teorema 5 sobre momentos trigonométricos."
+    },
+    {
+      "url": "https://www.texmacs.org/joris/limsup/limsup-corrected.html",
+      "scope": "Sección 2, densidad y equidistribución."
+    },
+    {
+      "url": "https://arxiv.org/html/0901.0288",
+      "scope": "Proposición 2.5, observación 2.7, sección 4 y proposición 4.1."
+    },
+    {
+      "url": "https://arxiv.org/html/2306.04077",
+      "scope": "Sección 5, proposición 27 y observación 28."
+    },
+    {
+      "url": "https://pages.stat.wisc.edu/~wahba/stat860public/pdf1/schoenberg.1938.pdf",
+      "scope": "Introducción y conexión entre inmersión hilbertiana y núcleo gaussiano; lectura parcial."
+    },
+    {
+      "url": "https://link.springer.com/book/10.1007/978-3-642-04295-9",
+      "scope": "Ficha e índice editorial solamente; no libro completo ni localizador de la identidad circular."
+    }
+  ],
+  "verification": {
+    "supplied_assertion_groups_passed": 29,
+    "independent_rational_certificate": true,
+    "g": 0.11365328926264492,
+    "A": 4.664652435954425,
+    "b20": 0.015912181476754966,
+    "shot_exponent": 3.0053182929002413,
+    "each_error_bound_numeric": 0.04952298900378289,
+    "independent_results": "checks/independent-results.json"
+  },
+  "limitations": [
+    "Revisión de modelo; no arbitraje humano, verificación formal ni validación de laboratorio.",
+    "Codex ayudó a preparar el manuscrito; Astra participó previamente en trabajo relacionado. No se leyeron aquellos informes ni sus notas.",
+    "Sistema de archivos compartido: no revisión técnicamente ciega ni estadísticamente independiente.",
+    "Aviso recibido sobre posible ampliación futura; esa ampliación no fue consultada ni usada para este dictamen congelado.",
+    "Búsqueda bibliográfica acotada; ausencia de coincidencias no prueba prioridad.",
+    "Chen 2021 sólo se inspeccionó parcialmente mediante contenido editorial de búsqueda; Rockafellar y Deza–Laurent no se leyeron íntegramente.",
+    "Las comprobaciones numéricas y el programa lineal no prueban los teoremas generales."
+  ],
+  "report_path": "D:/Temp/airr/2026-10-15_frontera/astra-packet/astra-review.txt"
+}
+

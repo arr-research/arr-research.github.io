@@ -1,0 +1,255 @@
+--- frozen-original.tex
++++ amended.tex
+@@ -38,7 +38,9 @@
+ $5\%$. Consequently, exact finite-time detectability can disappear under
+ arbitrarily small independent perturbations of the sampling times. A
+ spectral-width assumption restores robustness with an explicit timing
+-error budget. All results concern fresh single-use channel experiments,
++error budget. Alternatively, fresh bounded time randomization tolerates
++independent additive clock error without an energy prior; a certified
++qutrit design needs 53,000 shots. All results concern fresh single-use channel experiments,
+ not interventions within one noise trajectory. The contribution is an
+ identifiability and experimental-design theory; no quantum environment or
+ solution of an Erd\H{o}s problem is claimed.
+@@ -65,20 +67,25 @@
+ The mathematical ingredients have classical antecedents. The torus-density
+ argument is the continuous Kronecker theorem; the convex-hull and
+ finite-support arguments are standard finite-dimensional convex analysis
+-\cite{vdh,rockafellar}. Wrapped Cauchy kernels and circular copulas are
++\cite{vdh,rockafellar}. The phase-correlation body, finite convex
++representations, and interiority of the identity are established in
++Dykema--Juschenko \cite[Proposition 2.5, Remark 2.7, Section 4]{dykema}
++and Kribs et al.\ \cite[Theorem 27, Remark 28]{kribs}.
++Wrapped Cauchy kernels and circular copulas are
+ well studied \cite{kato}. Cut-cone and $L^1$ metric representations are
+-classical \cite{deza}. Our earlier manuscript \cite{parent} gives the
++classical \cite[Chapter 4, pp.\ 37--52]{deza}. Our earlier manuscript \cite{parent} gives the
+ continuous-time cut-cone classification and a diagonal spectral surrogate.
+ Those results are restated with proofs here, and are not counted as new
+ independent discoveries. The new results developed here are the exact
+ finite-menu alias theorem, the explicit simultaneous grid alias, the
+ complete finite harmonic certificates, and their timing-robustness
+-consequences. We have not located these combined statements in the cited
++consequences, including a bounded-time randomized repair and a lower
++bound on the energy cost of nearby aliases. We have not located these combined statements in the cited
+ literature; this is a scoped priority assessment, not an exhaustive
+ novelty certificate.
+ 
+ \section{Access model and observables}\label{sec:model}
+-Fix a distinguished basis of $\C^d$, write $E_{ij}=|i\rangle\langle j|$,
++Fix an integer $d\geq2$ and a distinguished basis of $\C^d$, write $E_{ij}=|i\rangle\langle j|$,
+ and set $\hbar=1$. A static ensemble has a probability law $\mu$ on
+ finite Hermitian $d\times d$ matrices and channels
+ \begin{equation}\label{eq:static}
+@@ -86,7 +93,9 @@
+ \end{equation}
+ The law is the same at every queried time; it cannot depend on the fresh
+ time, input, or readout choice. A shot prepares a fresh system, applies
+-one such channel, and measures it. The channel model makes no statement
++one such channel, and measures it. Channel queries are memoryless between
++uses: the hidden Hamiltonian is drawn afresh with a common law, independently
++of the newly chosen time, pair, preparation phase and readout. The channel model makes no statement
+ about multiple interventions within the same realization of $H$.
+ 
+ For a real symmetric matrix $\Gamma$ with zero diagonal, the reference is
+@@ -318,8 +327,7 @@
+ Fourier series is
+ \begin{equation}\label{eq:rho}
+  \rho(\theta)=\frac\pi2-\frac4\pi
+-       \sum_{\substack{n\geq1\\n\ {
+-m odd}}}\frac{\cos(n\theta)}{n^2}.
++       \sum_{\substack{n\geq1\\n\ \mathrm{odd}}}\frac{\cos(n\theta)}{n^2}.
+ \end{equation}
+ 
+ \begin{lemma}[Circular cut representation]\label{lem:circle}
+@@ -328,8 +336,7 @@
+ static ensemble and every $\Delta>0$ the matrix with off-diagonal entries
+ \begin{equation}\label{eq:D}
+  D_{ij}(\Delta)=\frac\pi2-\frac4\pi
+-  \sum_{n\geq1,\ n\ {
+-m odd}}\frac{C_{ij}(n\Delta)}{n^2}
++  \sum_{n\geq1,\ n\ \mathrm{odd}}\frac{C_{ij}(n\Delta)}{n^2}
+ \end{equation}
+ and diagonal zero belongs to $\CUT_d$.
+ \end{lemma}
+@@ -349,15 +356,13 @@
+ For the reference semigroup these entries are $F(\Delta\Gamma_{ij})$,
+ where
+ \begin{align}
+- F(s)&=\frac\pi2-\frac4\pi\sum_{n\geq1,\ n\ {
+-m odd}}
++ F(s)&=\frac\pi2-\frac4\pi\sum_{n\geq1,\ n\ \mathrm{odd}}
+                           \frac{e^{-ns}}{n^2},\label{eq:F}\\
+  F'(s)&=\frac2\pi\log\coth(s/2),\qquad
+  F(s)=\frac2\pi s\log(1/s)+O(s)\quad(s\downarrow0).\label{eq:Fasym}
+ \end{align}
+ Here $F(0)=0$. To verify the derivative, sum
+-$\sum_{n\ {
+-m odd}}e^{-ns}/n=\frac12\log\coth(s/2)$ and integrate
++$\sum_{n\geq1,\ n\ \mathrm{odd}}e^{-ns}/n=\frac12\log\coth(s/2)$ and integrate
+ from zero. Consequently, for every fixed $\gamma\geq0$,
+ \begin{equation}\label{eq:ratelimit}
+  \lim_{\Delta\downarrow0}\frac{\pi F(\Delta\gamma)}
+@@ -452,7 +457,7 @@
+ \end{proposition}
+ \begin{proof}
+ The normalized separation is $g/A$ and each decision threshold is at
+-least $g/(2A)$ from the corresponding mean. Hoeffding's inequality for
++least $g/(2A)$ from the corresponding mean. Hoeffding's inequality \cite{hoeffding} for
+ $[-1,1]$-valued variables gives \eqref{eq:shots}. Its conditional
+ exponential-moment proof gives the stated drift version.
+ \end{proof}
+@@ -474,6 +479,8 @@
+  A&\in(4.66465243,4.66465244),\\
+  g&\in(0.11365,0.11366).&&
+ \end{align*}
++Here $U=3b_{20}\simeq0.04773654$, $V=U+g\simeq0.16138983$,
++and the threshold for $c+A\overline Z$ is approximately $0.10456319$.
+ The maximum queried time is $39\Delta=5.07$. A total of 40,500 shots
+ is sufficient for each error probability to be less than $0.05$.
+ \end{corollary}
+@@ -529,7 +536,9 @@
+ \begin{theorem}[Timing stability]\label{thm:clock}
+ Suppose the static null satisfies
+ $\diam\operatorname{spec}(H)\leq B$ almost surely. If every implemented
+-time differs from its intended time by at most $\eta$, the statistic
++time is nonnegative and differs from its intended time by at most $\eta$, with the timing
++error independent of the input/readout phase and the hidden Hamiltonian,
++the statistic
+ \eqref{eq:amplitude} has null upper bound $U+AB\eta$.
+ Set $G=\max_{i<j}\Gamma_{ij}$. The value under the reference
+ \eqref{eq:semigroup} is at least $V-AG\eta$.
+@@ -559,13 +568,100 @@
+ the same finite data. The high-energy aliases in
+ Theorem~\ref{thm:alias} explain why such an assumption matters.
+ 
++\subsection{Fresh clock randomization without a spectral-width prior}
++The bandwidth hypothesis can be replaced by a different, explicit
++experimental resource: a fresh continuously randomized base time.
++This changes the access model from a finite menu to a finite family of
++time distributions. It does not contradict Corollary~\ref{cor:jitter}.
++
++Choose $0<h<\Delta$ and draw $S$ uniformly from
++$[\Delta-h,\Delta+h]$ on each shot, independently of the hidden
++Hamiltonian and other settings. For a selected harmonic $n$, use the
++intended time $nS$. Retain the coefficients in \eqref{eq:amplitude}.
++The ideal static bound is still $U=b_KW$: condition on $S$ and apply
++Theorem~\ref{thm:finite}. Define
++\begin{align}
++ c_h(n,\gamma)&=
++ \begin{cases}
++ \displaystyle\frac{e^{-n\gamma(\Delta-h)}-
++ e^{-n\gamma(\Delta+h)}}{2n\gamma h},&\gamma>0,\\
++ 1,&\gamma=0,
++ \end{cases}\label{eq:ditherfactor}\\
++ V_h&=c+\sum_{i<j,\ n\in\mathcal O_K}a_{ijn}c_h(n,\Gamma_{ij}),
++ \qquad L_h=\frac{4W}{\pi h}\sum_{n\in\mathcal O_K}\frac1{n^3}.
++ \label{eq:dithergap}
++\end{align}
++
++\begin{theorem}[Bounded-time dither with independent additive error]
++\label{thm:dither}
++For each selected pair and harmonic, suppose the actual time is $nS+E$,
++where $|E|\leq\eta<\Delta-h$ almost surely. Its conditional error law
++may depend on the pair and harmonic, but is independent of $S$, the
++hidden Hamiltonian, and the input/readout phase. No spectral-width
++assumption is made. The static null upper bound is $U+\eta L_h$, and
++the reference lower bound is $V_h-AG\eta$. Hence the gap
++\begin{equation}\label{eq:ditherrobust}
++ g_{h,\eta}=V_h-U-\eta(L_h+AG)
++\end{equation}
++is certified whenever positive. With fresh independent shots, midpoint
++thresholding gives each error probability at most
++$\exp[-Ng_{h,\eta}^2/(8A^2)]$. For every rate matrix outside $\CUT_d$
++there exist $K,\Delta,h$ and a strictly positive $\eta$ for which this
++gap is positive.
++\end{theorem}
++\begin{proof}
++The total variation distance between a uniform law on an interval of
++length $2nh$ and its translate by $e$ is
++$\min(1,|e|/(2nh))$. A function bounded in $[-1,1]$ therefore changes
++its expectation by at most $|e|/(nh)$. Conditional on the chosen
++settings, apply this to the bounded mean outcome of the physical
++four-phase experiment, and then average over the independent error.
++Summing the absolute coefficients bounds the null shift by
++$\eta\sum|a_{ijn}|/(nh)=\eta L_h$ without controlling frequencies.
++For the reference, the Lipschitz bound from Theorem~\ref{thm:clock}
++gives a shift at most $AG\eta$. Integrating the ideal exponential over
++the base interval gives \eqref{eq:ditherfactor}. The shot bound follows
++as before. Finally, first select a positive finite-menu gap, then use
++$V_h\to V$ as $h\downarrow0$, and last choose $\eta>0$ small enough.
++\end{proof}
++
++For the qutrit certificate, take $h=1/20$ and $\eta=1/10000$.
++Exact rational exponential bounds give
++$g_{h,\eta}\in(0.09992,0.09993)$ and
++$53000g_{h,\eta}^2/(8A^2)>3$. Thus 53,000 shots suffice for both
++errors below $5\%$, with all actual times in $[0,7.0201]$ and no
++spectral-width prior. These are 20 randomized time intervals, not 20
++exact times. The error model includes fixed setting-dependent offsets
++and independent bounded additive jitter. It does not cover adversarial
++errors depending on the realized base time, rounding to a finite menu,
++or an unknown time distribution merely assumed to be uniform.
++More generally, a verified total-variation bound on each implemented
++time law can replace the additive-error assumption in the proof.
++
++\begin{corollary}[Energy cost near a separating finite menu]
++Any bounded-width static ensemble that exactly aliases the reference
++at perturbed versions of a finite separating menu, with maximum
++perturbation $\eta>0$, has essential spectral width
++\[
++ B\geq\frac{g}{A\eta}-G.
++\]
++In particular, finite-support aliases from Theorem~\ref{thm:alias}
++must have widths diverging at least as $1/\eta$ when approaching that
++menu.
++\end{corollary}
++\begin{proof}
++Exact agreement forces the adjusted null upper bound in
++Theorem~\ref{thm:clock} to be at least its reference lower bound.
++\end{proof}
++
+ \section{Verification, interpretation, and open questions}
+ The companion code supplies an exact rational certificate for
+-Corollary~\ref{cor:20}, checks the Fourier moments and positivity of the
++Corollary~\ref{cor:20} and the randomized-clock example, checks the Fourier moments and positivity of the
+ explicit qutrit grid density, and tests the phase estimator and spectral
+ surrogate against direct unitary evolution in several dimensions. A
+-finite linear-programming example illustrates exact interpolation on
+-two rationally independent times. That numerical interpolation is an
++finite linear-programming example illustrates interpolation to
++floating-point precision at binary approximations of two intended
++rationally independent times. That numerical interpolation is an
+ illustration; Theorem~\ref{thm:alias} supplies its existence proof.
+ No proof-assistant formalization or laboratory validation is claimed.
+ 
+@@ -581,8 +677,9 @@
+ noise; it does not certify nonclassical environmental correlations.
+ 
+ Several quantitative problems remain. The coarse-grid positivity
+-criterion is only sufficient. The smallest bandwidth of a finite-menu
+-alias, especially near a harmonic menu, is not determined. Neither the
++criterion is only sufficient. Beyond the inverse-error lower bound,
++the smallest bandwidth of a finite-menu alias near a harmonic menu is
++not determined. Neither the
+ 20-time design nor its shot bound is claimed optimal. Quantitative
+ Diophantine approximation may bound alias energies, while sharper
+ trigonometric majorants and statistical estimators may reduce certificate
+@@ -598,6 +695,17 @@
+ from editorial acceptance or validation of a claimed priority.
+ 
+ \begin{thebibliography}{99}
++\bibitem{dykema} K. Dykema and K. Juschenko, Matrices of unitary moments,
++\emph{Mathematica Scandinavica} 109(2) (2011).
++\url{https://arxiv.org/abs/0901.0288}.
++\bibitem{kribs} D. W. Kribs, J. Levick, R. Pereira, and M. Rahaman,
++Operator Algebra Generalization of a Theorem of Watrous and Mixed
++Unitary Quantum Channels, arXiv:2306.04077 (2023), Section 5.
++\url{https://arxiv.org/abs/2306.04077}.
++\bibitem{hoeffding} W. Hoeffding, Probability inequalities for sums of
++bounded random variables, \emph{J. Amer. Statist. Assoc.} 58(301),
++13--30 (1963).
++\href{https://doi.org/10.1080/01621459.1963.10500830}{doi:10.1080/01621459.1963.10500830}.
+ \bibitem{chen2018} H.-B. Chen, C. Gneiting, P.-Y. Lo, Y.-N. Chen,
+ and F. Nori, Simulating open quantum systems with Hamiltonian ensembles
+ and the nonclassicality of the dynamics, \emph{Phys. Rev. Lett.} 120,

@@ -1,0 +1,646 @@
+--- Page 1 ---
+The arithmetic of sampling static quantum disorder:
+exact aliases, ﬁnite witnesses, and clock robustness
+Lluis Eriksson
+Independent researcher, Sweden
+15 October 2026 — working paper
+Abstract
+Whether a dephasing experiment can exclude static Hamiltonian disorder depends on
+the arithmetic of its measurement times. We prove that at any ﬁnite set of rationally in-
+dependent positive times, every real dephasing semigroup with strictly positive oﬀ-diagonal
+rates is reproduced exactly by one ﬁnite ensemble of static diagonal Hamiltonians. At most
+1 + kd(d −1) Hamiltonians suﬃce for k times and d levels; no uniform energy bound is as-
+serted. We also construct an explicit bounded-energy static ensemble reproducing the same
+semigroup on an entire suﬃciently coarse uniform grid.
+In the opposite direction, every
+rate matrix outside the cut cone admits a separating test on ﬁnitely many odd harmonics
+of one clock period. The proof combines a circle-distance cut representation with an ex-
+plicit Fourier-tail bound, and applies to arbitrary static Hermitian ensembles through their
+coherence-transfer entries. A qutrit example uses 20 times and 40,500 shots to bound each
+error probability by 5%. Consequently, exact ﬁnite-time detectability can disappear under
+arbitrarily small independent perturbations of the sampling times. A spectral-width assump-
+tion restores robustness with an explicit timing error budget. Alternatively, fresh bounded
+time randomization tolerates independent additive clock error without an energy prior; a
+certiﬁed qutrit design needs 53,000 shots. All results concern fresh single-use channel exper-
+iments, not interventions within one noise trajectory. The contribution is an identiﬁability
+and experimental-design theory; no quantum environment or solution of an Erdős problem
+is claimed.
+1
+Question and relation to existing work
+An ensemble of time-independent Hamiltonians can produce irreversible- looking coherence de-
+cay. A Cauchy-distributed ﬁxed frequency even gives exact exponential decay. Hamiltonian-
+ensemble representations and their Fourier compatibility constraints are established tools [4, 5,
+6, 7]. Nevertheless, an incompatibility of a whole time-dependent family need not be visible in
+a speciﬁed ﬁnite collection of its channels. This paper asks which sampling designs preserve or
+destroy that distinction.
+The answer has three parts. Generic ﬁnite menus admit exact static aliases, carefully related
+ﬁnite menus can exclude every static model, and coarse inﬁnite grids can admit aliases again.
+These statements are compatible: they use diﬀerent arithmetic relations between times. Our
+constructive separation also exposes a discontinuity relevant to clock calibration. Without an
+energy bound, independent timing errors cannot be treated as a uniformly small perturbation
+of the static null.
+The mathematical ingredients have classical antecedents. The torus-density argument is the
+continuous Kronecker theorem; the convex-hull and ﬁnite-support arguments are standard ﬁnite-
+dimensional convex analysis [8, 9]. The phase-correlation body, ﬁnite convex representations,
+and interiority of the identity are established in Dykema–Juschenko [1, Proposition 2.5, Remark
+2.7, Section 4] and Kribs et al. [2, Theorem 27, Remark 28]. Wrapped Cauchy kernels and circular
+1
+
+
+--- Page 2 ---
+copulas are well studied [10]. Cut-cone and L1 metric representations are classical [11, Chapter
+4, pp. 37–52]. Our earlier manuscript [13] gives the continuous-time cut-cone classiﬁcation and
+a diagonal spectral surrogate. Those results are restated with proofs here, and are not counted
+as new independent discoveries. The new results developed here are the exact ﬁnite-menu alias
+theorem, the explicit simultaneous grid alias, the complete ﬁnite harmonic certiﬁcates, and their
+timing-robustness consequences, including a bounded-time randomized repair and a lower bound
+on the energy cost of nearby aliases. We have not located these combined statements in the
+cited literature; this is a scoped priority assessment, not an exhaustive novelty certiﬁcate.
+2
+Access model and observables
+Fix an integer d ≥2 and a distinguished basis of Cd, write Eij = |i⟩⟨j|, and set ℏ= 1. A static
+ensemble has a probability law µ on ﬁnite Hermitian d × d matrices and channels
+Ψt(A) = Eµ[e−itHAeitH],
+t ≥0.
+(1)
+The law is the same at every queried time; it cannot depend on the fresh time, input, or readout
+choice. A shot prepares a fresh system, applies one such channel, and measures it. Channel
+queries are memoryless between uses: the hidden Hamiltonian is drawn afresh with a common
+law, independently of the newly chosen time, pair, preparation phase and readout. The channel
+model makes no statement about multiple interventions within the same realization of H.
+For a real symmetric matrix Γ with zero diagonal, the reference is
+Φt(Eij) = e−tΓijEij.
+(2)
+We assume complete positivity: Γ is conditionally negative semideﬁnite, or equivalently Γij =
+∥vi −vj∥2 for suitable real vectors vi [12]. In particular, Γij ≥0. This is a random diagonal
+unitary channel at each individual time: if G is a standard real Gaussian vector, the phases
+√
+2t⟨vi, G⟩realize (2). This representation changes its phase law with time and does not itself
+give a static Hamiltonian law.
+For an arbitrary channel deﬁne
+Tij(t) = ⟨i|Ψt(Eij)|j⟩,
+Cij(t) = Re Tij(t)
+(i ̸= j).
+(3)
+Population preservation is not assumed for the static null.
+Lemma 2.1 (Diagonal spectral surrogate). For every law in (1) there is one joint law of real
+random variables (ε1, . . . , εd) such that
+Tij(t) = Ee−it(εi−εj)
+(i ̸= j, t ∈R).
+(4)
+If diam spec(H) ≤B almost surely, this law can be chosen with |εi −εj| ≤B almost surely.
+Proof. Conditionally on H, independently sample each εi from the spectral probability measure
+⟨i|PH(·)|i⟩. Then E[e−itεi | H] = (e−itH)ii, and conditional independence gives E[e−it(εi−εj) |
+H] = (e−itH)ii(e−itH)jj. The latter is the transfer entry in (3) before averaging over H. All
+sampled energies lie in the same conditional spectrum.
+The surrogate reproduces these entries, not necessarily the whole channel. It is nevertheless
+enough for every separating statistic below.
+Lemma 2.2 (Bounded measurement of a transfer entry). Set P = Eii + Ejj, X = Eij + Eji,
+and Y = −iEij + iEji. Uniformly choose (A, s) from {X, Y } × {−1, 1}, prepare (P + sA)/2,
+measure A after the channel, and multiply the outcome by s. The resulting variable O belongs
+to [−1, 1] and has mean Cij(t).
+Proof. The mean is 1
+4 Tr[XΨt(X) + Y Ψt(Y )] = Re Tij(t). The identity uses only linearity and
+Hermiticity preservation. The bounded-outcome assertion additionally uses a physical channel,
+positive input states, and observables with spectrum in [−1, 1].
+2
+
+
+--- Page 3 ---
+3
+Exact aliases on generic ﬁnite time menus
+Let Cd = conv{zz∗: z ∈Cd, |zi| = 1}, viewed in the real aﬃne space of Hermitian matrices
+with diagonal one. These are the correlation matrices of random diagonal unitary channels. Its
+dimension is d(d −1).
+Lemma 3.1 (Convex density and the phase body). If S is dense in a compact set K ⊂Rm,
+then conv S = conv K and ri(conv K) ⊆conv S. The identity matrix is an interior point of Cd.
+Proof. The closure assertion follows by approximating each vertex of a ﬁnite convex combina-
+tion. For the relative-interior assertion, take a small simplex surrounding the point within the
+aﬃne hull, approximate its vertices by points of conv S, and retain containment under a small
+perturbation. Expanding the vertex combinations gives membership in conv S. For the second
+assertion, Haar-averaging zz∗gives I. A supporting aﬃne functional at I would give a nonnega-
+tive trigonometric polynomial with Haar integral zero, hence the zero polynomial. The distinct
+characters zizj, i ̸= j, are linearly independent, so this functional is constant on the full aﬃne
+space. Thus there is no nonconstant supporting functional at I.
+Lemma 3.2 (Interior of real dephasing data). If Γij > 0 for i ̸= j, every correlation matrix
+M(t) = (e−tΓij)ij, t > 0, is interior to Cd. No strict conditional negative deﬁniteness is required.
+Proof. Use the Gaussian phase representation from Section 2. Suppose a nonnegative aﬃne
+functional on Cd vanishes at M(t).
+Its continuous, nonnegative value on the phase vectors
+zi(x) = e−i⟨vi,x⟩has zero integral against a Gaussian with everywhere-positive density on Rr. It
+therefore vanishes for every x. Averaging against a Gaussian of any other variance shows that it
+vanishes at M(s) for every s > 0. Since all oﬀ-diagonal rates are positive, M(s) →I as s →∞.
+This contradicts Lemma 3.1 unless the functional is constant.
+Theorem 3.3 (Finite-menu alias theorem). Let t1, . . . , tk > 0 satisfy
+k
+∑
+ℓ=1
+nℓtℓ= 0,
+n ∈Zk
+=⇒
+n = 0.
+(5)
+The closure of the static diagonal-ensemble data at these times is Ck
+d. Every tuple in the interior
+of this product is realized exactly by a static diagonal ensemble supported on at most 1+kd(d−1)
+Hamiltonians. In particular, this holds for the channels (2) whenever all oﬀ-diagonal rates are
+positive.
+Proof. The orbit s 7→(e−it1s, . . . , e−itks) is dense in Tk. For completeness, the time average
+of each nonconstant torus character along this orbit tends to zero by (5). Approximation by
+trigonometric polynomials implies convergence of the time averages of continuous functions to
+their Haar integrals. A nonempty open set cannot be missed by the orbit. This is the continuous
+Kronecker argument.
+Choose each energy εi independently as a coordinate in R, with εd = 0 as a gauge. The
+resulting phase arrays are dense in (Td−1)k. Taking the phase correlation matrix at each time is
+a continuous map. Its image closure is the product of the rank-one phase-correlation sets, whose
+convex hull is Ck
+d: independent convex combinations in the factors give a joint combination
+by multiplying their weights. Lemma 3.1 proves exact interior representation by ﬁnite convex
+combinations of actual static energy vectors. Carathéodory’s theorem bounds their number by
+the aﬃne dimension plus one. Lemma 3.2 gives the ﬁnal assertion.
+Corollary 3.4 (Statistical indistinguishability). Under the hypotheses of Theorem 3.3, no test
+restricted to fresh single-use queries at those k times can distinguish the reference from every
+static ensemble with type-I and type-II errors whose sum is less than one. This remains true
+with arbitrary input states, ancillas, measurements, and adaptation between queries.
+3
+
+
+--- Page 4 ---
+Proof. The alias and reference supply exactly the same channel at every allowed query. Sequen-
+tial composition with the experimenter’s operations gives identical outcome laws.
+Rejection
+probabilities are therefore equal.
+For a boundary tuple only approximation is asserted. It still excludes a uniform positive
+ﬁnite-query testing gap: if each entry diﬀers by at most ϵ, a crude diamond-norm bound for the
+Schur-channel diﬀerence is d2ϵ, obtained by summing its elementary A 7→EiiAEjj maps. An
+N-query hybrid argument bounds outcome total variation by Nd2ϵ/2.
+Remark 3.5. The support bound counts Hamiltonians, not their spectral width. The construc-
+tion need not keep energies small as the time menu approaches a rational relation. This dis-
+tinction is essential in Section 7. Zero oﬀ-diagonal rates can be handled by ﬁrst merging equal
+vectors vi; the stated theorem avoids that bookkeeping.
+4
+An explicit alias on an inﬁnite coarse grid
+The next construction is independent of the density argument and gives a bounded-energy law
+with inﬁnitely many matching observations. For 0 ≤r < 1, the Poisson kernel on the circle is
+Pr(θ) =
+1 −r2
+1 −2r cos θ + r2 = 1 + 2
+∑
+n≥1
+rn cos(nθ).
+(6)
+Theorem 4.1 (Coarse-grid alias). Let Γij > 0 for i ̸= j, and put rij = e−∆Γij for a spacing
+∆> 0. If
+∑
+i<j
+2rij
+1 + rij
+≤1,
+(7)
+then the density, relative to Haar probability measure on Td,
+q(θ) = 1 +
+∑
+i<j
+(
+Prij(θi −θj) −1
+)
+(8)
+deﬁnes a static diagonal ensemble reproducing (2) at every t = n∆, n = 0, 1, 2, . . .. Its energies
+may be chosen in [−π/∆, π/∆), hence with spectral width at most 2π/∆. Writing M =
+(d
+2
+)
+and
+γmin = mini<j Γij, the suﬃcient condition
+∆≥log(2M −1)
+γmin
+(9)
+implies (7); for d = 2 any positive spacing works.
+Proof. Every summand has Haar mean zero. The minimum of Pr is (1 −r)/(1 + r), so (7)
+makes q nonnegative. Distinct positive multiples of distinct roots ei −ej, with i < j, are distinct
+Fourier frequencies, even up to sign. Equation (6) and orthogonality therefore give
+∫
+e−in(θi−θj)q(θ) dm(θ) = r|n|
+ij
+(n ̸= 0).
+Choose centered representatives of the phases and set H = diag(θ1, . . . , θd)/∆. Integer multiples
+of ∆remove the representative ambiguity. All populations are ﬁxed, so equality of the coherence
+factors is equality of the whole channels. Finally, rij ≤(2M −1)−1 implies each summand in
+(7) is at most 1/M.
+This suﬃcient condition is not asserted to be necessary or optimal. The Poisson kernel itself
+is standard, as are circular models with wrapped Cauchy marginals [10]. The particular sum
+in (8) is used because its disjoint Fourier supports prescribe all integer moments of all pair
+diﬀerences simultaneously. It need not be a wrapped multivariate Cauchy distribution.
+4
+
+
+--- Page 5 ---
+5
+Finite harmonic certiﬁcates are complete
+For a subset S ⊆{1, . . . , d} let δS(i, j) = |1S(i) −1S(j)|. The cut cone CUTd consists of all
+nonnegative combinations of these cut semimetrics. It is a closed, ﬁnitely generated cone. All
+pair sums below are over i < j.
+Let ρ(θ) = minm∈Z |θ−2πm| ∈[0, π] be geodesic distance to zero on the circle. Its absolutely
+convergent Fourier series is
+ρ(θ) = π
+2 −4
+π
+∑
+n≥1
+n odd
+cos(nθ)
+n2
+.
+(10)
+Lemma 5.1 (Circular cut representation). For arbitrary phases θ1, . . . , θd, the matrix (ρ(θi −
+θj))ij belongs to CUTd.
+Hence for every static ensemble and every ∆> 0 the matrix with
+oﬀ-diagonal entries
+Dij(∆) = π
+2 −4
+π
+∑
+n≥1, n odd
+Cij(n∆)
+n2
+(11)
+and diagonal zero belongs to CUTd.
+Proof. For the rotating half-circle Iα = [α, α + π),
+ρ(θi −θj) = 1
+2
+∫2π
+0
+|1Iα(θi) −1Iα(θj)| dα.
+Partitioning the integral by its ﬁnitely many induced subsets gives a nonnegative cut combi-
+nation.
+Apply this identity to θi = ∆εi (mod 2π) from Lemma 2.1 and take expectations.
+Absolute convergence justiﬁes (11).
+For the reference semigroup these entries are F(∆Γij), where
+F(s) = π
+2 −4
+π
+∑
+n≥1, n odd
+e−ns
+n2 ,
+(12)
+F ′(s) = 2
+π log coth(s/2),
+F(s) = 2
+πs log(1/s) + O(s)
+(s ↓0).
+(13)
+Here F(0) = 0. To verify the derivative, sum ∑
+n≥1, n odd e−ns/n = 1
+2 log coth(s/2) and integrate
+from zero. Consequently, for every ﬁxed γ ≥0,
+lim
+∆↓0
+πF(∆γ)
+2∆log(1/∆) = γ.
+(14)
+Proposition 5.2 (Continuous-time classiﬁcation, with a circle proof). The real semigroup (2)
+is static exactly when Γ ∈CUTd. Necessity still holds if only all its real oﬀ-diagonal transfer
+entries agree with an arbitrary static Hermitian ensemble for every t ≥0.
+Proof. Necessity follows from Lemma 5.1, positive rescaling, (14), and closedness of the cut
+cone.
+For suﬃciency write Γ = ∑
+S aSδS with aS ≥0.
+Let independent centered Cauchy
+variables ZS have characteristic functions Ee−itZS = e−aS|t| and set εi = ∑
+S 1S(i)ZS. Then
+Ee−it(εi−εj) = e−|t|Γij, which gives the required diagonal ensemble.
+For K ≥1 deﬁne OK = {1, 3, . . . , 2K −1} and
+bK = 4
+π
+∑
+n≥2K+1, n odd
+1
+n2 = π
+2 −4
+π
+∑
+n∈OK
+1
+n2 .
+(15)
+Replace the inﬁnite sum in (11) by n ∈OK to obtain D(K)
+ij
+(∆). Uniformly over every static
+energy law, |D(K)
+ij
+−Dij| ≤bK.
+5
+
+
+--- Page 6 ---
+Theorem 5.3 (Complete ﬁnite harmonic separation). Let Γ /∈CUTd.
+Choose a real pair
+functional w such that
+∑
+i<j
+wijδS(i, j) ≤0
+for every S,
+∑
+i<j
+wijΓij > 0,
+(16)
+and put W = ∑
+i<j |wij|. There exist ∆> 0 and a ﬁnite K such that the statistic
+SK,∆=
+∑
+i<j
+wijD(K)
+ij
+(∆)
+(17)
+has null upper bound U = bKW for every static Hermitian ensemble, while its reference value
+V satisﬁes g := V −U > 0. Only the K times ∆, 3∆, . . . , (2K −1)∆are needed. Conversely,
+a rate matrix in CUTd cannot be excluded by any valid static-null test on the whole reference
+family.
+Proof. A separator exists because CUTd is closed and convex. The null bound follows from
+Lemma 5.1 and |w · (D(K) −D)| ≤bKW. By (14), w · (F(∆Γij)) is positive for suﬃciently small
+∆. Fix such a spacing and increase K until twice the truncation bound bKW is smaller than
+this positive number. Then V > bKW. The converse follows from Proposition 5.2.
+This proves existence and supplies computable certiﬁcates; it does not claim polynomial
+complexity in dimension or an optimal number of times. For any proposed w, its validity can
+be checked on the ﬁnitely many cuts. Thus the general certiﬁcate does not require trusting the
+output of a cone-membership solver.
+6
+Finite-shot experiment and a certiﬁed example
+Write the statistic in the form
+SK,∆= c +
+∑
+i<j, n∈OK
+aijnCij(n∆),
+c = π
+2
+∑
+i<j
+wij,
+aijn = −4wij
+πn2 ,
+A =
+∑
+|aijn| = 4W
+π
+∑
+n∈OK
+1
+n2 .
+(18)
+Choose (i, j, n) with probability |aijn|/A and perform the four-phase experiment of Lemma 2.2
+at n∆. Set Z = sgn(aijn)O. Then |Z| ≤1 and EZ = (SK,∆−c)/A.
+Proposition 6.1 (Shot guarantee). Given g = V −U > 0, reject the static null when c + AZ >
+(U + V )/2. For independent fresh shots, each error probability is at most
+exp
+(
+−Ng2
+8A2
+)
+.
+(19)
+The null guarantee also holds with predictable drift if, conditionally on the past, the current
+Hamiltonian law is chosen before the independent random measurement settings and obeys the
+same static null bound.
+Proof. The normalized separation is g/A and each decision threshold is at least g/(2A) from
+the corresponding mean. Hoeﬀding’s inequality [3] for [−1, 1]-valued variables gives (19). Its
+conditional exponential-moment proof gives the stated drift version.
+Consider the qutrit rates
+Γ =
+
+
+0
+1
+4
+1
+0
+1
+4
+1
+0
+
+.
+(20)
+6
+
+
+--- Page 7 ---
+They arise from the generator −[D, [D, ·]] with D = diag(0, 1, 2) and so deﬁne physical channels.
+The triangle functional w13 = 1, w12 = w23 = −1 is nonpositive on every cut, but w · Γ = 2.
+Thus the whole family has no static representation.
+Corollary 6.2 (Twenty-time certiﬁcate). For (20), take K = 20 and ∆= 13/100 in the time
+units ﬁxed by (20). Then
+b20 ∈(0.01591218, 0.01591219),
+A ∈(4.66465243, 4.66465244),
+g ∈(0.11365, 0.11366).
+Here U = 3b20 ≃0.04773654, V = U + g ≃0.16138983, and the threshold for c + AZ is
+approximately 0.10456319. The maximum queried time is 39∆= 5.07. A total of 40,500 shots
+is suﬃcient for each error probability to be less than 0.05.
+Proof. Here W = 3, c = −π/2, and the exact margin is
+g = 4
+π
+∑
+n∈O20
+2e−13n/100 −e−52n/100 + 3
+n2
+−2π.
+(21)
+The companion veriﬁer brackets this ﬁnite expression using rational arithmetic: alternating
+arctangent sums in Machin’s formula bracket π, and positive Taylor sums with a geometric tail
+bracket each exponential. The displayed conservative bounds imply 40500 g2/(8A2) > 3; the
+positive series for e3 gives e3 > 20. Equation (19) completes the proof.
+The same example has an exact alias on every grid time n log 4. Indeed r12 = r23 = 1/4 and
+r13 = 1/256, and (7) becomes 4/5 + 2/257 = 1038/1285 < 1. The density (8) is therefore at
+least 247/1285. This gives an explicit pair of physically diﬀerent models whose entire coarse-grid
+channel data are identical, although the 20-time certiﬁcate excludes every static model on its
+ﬁner, deliberately related menu.
+7
+Clock fragility and a quantitative repair
+The set of time vectors satisfying (5) has full Lebesgue measure and is dense: its complement is
+a countable union of integer hyperplanes.
+Corollary 7.1 (No unrestricted independent-jitter guarantee). Fix a real dephasing semigroup
+with positive oﬀ-diagonal rates and any ﬁnite nominal menu of positive times.
+Every open
+neighborhood of that menu contains actual timings at which one static ﬁnite ensemble reproduces
+the reference channels exactly. Consequently, no test has a uniform positive separation over an
+unrestricted static null and an independent nonzero uncertainty interval for each time setting.
+Proof. Choose a rationally independent vector in the uncertainty box and apply Theorem 3.3
+and Corollary 3.4.
+The corollary concerns ﬁxed but independently uncertain menu entries. It does not assert
+that all clock errors destroy detection. A common multiplicative clock error preserves harmonic
+relations. Nor does it cover a continuum of freshly randomized times whose law is independent
+of the hidden Hamiltonian; that is a diﬀerent experiment, as in [13, 14].
+Theorem 7.2 (Timing stability). Suppose the static null satisﬁes diam spec(H) ≤B almost
+surely. If every implemented time is nonnegative and diﬀers from its intended time by at most η,
+with the timing error independent of the input/readout phase and the hidden Hamiltonian, the
+statistic (18) has null upper bound U +ABη. Set G = maxi<j Γij. The value under the reference
+(2) is at least V −AGη. Thus a positive certiﬁed gap remains whenever
+gη = g −A(B + G)η > 0.
+(22)
+7
+
+
+--- Page 8 ---
+Using the midpoint of the adjusted bounds in the decision rule gives each error probability at most
+exp[−Ng2
+η/(8A2)].
+Proof. Lemma 2.1 and |eix −eiy| ≤|x −y| imply |Cij(t) −Cij(s)| ≤B|t −s|. The reference
+factors satisfy |e−tΓij −e−sΓij| ≤G|t −s| for nonnegative times. Sum the biases against the
+absolute coeﬃcients in (18) and apply Proposition 6.1. The same argument permits random
+timing errors bounded almost surely, provided the setting-independent Hamiltonian assumption
+is retained.
+For the qutrit example, G = 4. The suﬃcient calibration requirement is η < g/[A(B + 4)];
+setting B = 10 gives η < 0.00174 in the chosen time units. This is a bound conditional on a
+separately justiﬁed spectral-width prior, not a bound inferred from the same ﬁnite data. The
+high-energy aliases in Theorem 3.3 explain why such an assumption matters.
+7.1
+Fresh clock randomization without a spectral-width prior
+The bandwidth hypothesis can be replaced by a diﬀerent, explicit experimental resource: a fresh
+continuously randomized base time. This changes the access model from a ﬁnite menu to a ﬁnite
+family of time distributions. It does not contradict Corollary 7.1.
+Choose 0 < h < ∆and draw S uniformly from [∆−h, ∆+ h] on each shot, independently
+of the hidden Hamiltonian and other settings. For a selected harmonic n, use the intended time
+nS. Retain the coeﬃcients in (18). The ideal static bound is still U = bKW: condition on S
+and apply Theorem 5.3. Deﬁne
+ch(n, γ) =
+
+
+
+e−nγ(∆−h) −e−nγ(∆+h)
+2nγh
+,
+γ > 0,
+1,
+γ = 0,
+(23)
+Vh = c +
+∑
+i<j, n∈OK
+aijnch(n, Γij),
+Lh = 4W
+πh
+∑
+n∈OK
+1
+n3 .
+(24)
+Theorem 7.3 (Bounded-time dither with independent additive error). For each selected pair
+and harmonic, suppose the actual time is nS + E, where |E| ≤η < ∆−h almost surely. Its
+conditional error law may depend on the pair and harmonic, but is independent of S, the hidden
+Hamiltonian, and the input/readout phase. No spectral-width assumption is made. The static
+null upper bound is U + ηLh, and the reference lower bound is Vh −AGη. Hence the gap
+gh,η = Vh −U −η(Lh + AG)
+(25)
+is certiﬁed whenever positive. With fresh independent shots, midpoint thresholding gives each
+error probability at most exp[−Ng2
+h,η/(8A2)]. For every rate matrix outside CUTd there exist
+K, ∆, h and a strictly positive η for which this gap is positive.
+Proof. The total variation distance between a uniform law on an interval of length 2nh and
+its translate by e is min(1, |e|/(2nh)).
+A function bounded in [−1, 1] therefore changes its
+expectation by at most |e|/(nh). Conditional on the chosen settings, apply this to the bounded
+mean outcome of the physical four-phase experiment, and then average over the independent
+error. Summing the absolute coeﬃcients bounds the null shift by η ∑|aijn|/(nh) = ηLh without
+controlling frequencies. For the reference, the Lipschitz bound from Theorem 7.2 gives a shift at
+most AGη. Integrating the ideal exponential over the base interval gives (23). The shot bound
+follows as before. Finally, ﬁrst select a positive ﬁnite-menu gap, then use Vh →V as h ↓0, and
+last choose η > 0 small enough.
+For the qutrit certiﬁcate, take h = 1/20 and η = 1/10000. Exact rational exponential bounds
+give gh,η ∈(0.09992, 0.09993) and 53000g2
+h,η/(8A2) > 3.
+Thus 53,000 shots suﬃce for both
+8
+
+
+--- Page 9 ---
+errors below 5%, with all actual times in [0, 7.0201] and no spectral-width prior. These are 20
+randomized time intervals, not 20 exact times. The error model includes ﬁxed setting-dependent
+oﬀsets and independent bounded additive jitter. It does not cover adversarial errors depending
+on the realized base time, rounding to a ﬁnite menu, or an unknown time distribution merely
+assumed to be uniform. More generally, a veriﬁed total-variation bound on each implemented
+time law can replace the additive-error assumption in the proof.
+Corollary 7.4 (Energy cost near a separating ﬁnite menu). Any bounded-width static ensemble
+that exactly aliases the reference at perturbed versions of a ﬁnite separating menu, with maximum
+perturbation η > 0, has essential spectral width
+B ≥g
+Aη −G.
+In particular, ﬁnite-support aliases from Theorem 3.3 must have widths diverging at least as 1/η
+when approaching that menu.
+Proof. Exact agreement forces the adjusted null upper bound in Theorem 7.2 to be at least its
+reference lower bound.
+8
+Veriﬁcation, interpretation, and open questions
+The companion code supplies an exact rational certiﬁcate for Corollary 6.2 and the randomized-
+clock example, checks the Fourier moments and positivity of the explicit qutrit grid density,
+and tests the phase estimator and spectral surrogate against direct unitary evolution in several
+dimensions. A ﬁnite linear-programming example illustrates interpolation to ﬂoating-point pre-
+cision at binary approximations of two intended rationally independent times. That numerical
+interpolation is an illustration; Theorem 3.3 supplies its existence proof.
+No proof-assistant
+formalization or laboratory validation is claimed.
+The results are stronger than simply observing ordinary frequency aliasing. They concern
+one positive joint energy law matching many transition channels simultaneously, and identify
+an arithmetic contrast between entire classes of experimental menus. At the same time, the
+proof ingredients are elementary and the scope is speciﬁc. The null assumes a fresh single-use
+channel on each shot.
+Multi-time interventions, echo controls within a single trajectory, or
+measurements of the hidden Hamiltonian may provide information unavailable in this model.
+Likewise, failure of a static explanation can be caused by classical time-dependent noise; it does
+not certify nonclassical environmental correlations.
+Several quantitative problems remain. The coarse-grid positivity criterion is only suﬃcient.
+Beyond the inverse-error lower bound, the smallest bandwidth of a ﬁnite-menu alias near a
+harmonic menu is not determined. Neither the 20-time design nor its shot bound is claimed
+optimal.
+Quantitative Diophantine approximation may bound alias energies, while sharper
+trigonometric majorants and statistical estimators may reduce certiﬁcate cost. These are open
+extensions of the stated theorems, not results silently assumed in them.
+Reproducibility and assistance.
+The release package contains the source, veriﬁcation code
+and output, public source inventory, and a scoped literature audit. The author used OpenAI
+Codex for research assistance, mathematical drafting, code, and veriﬁcation.
+AI assistance
+and any subsequent model assessments do not constitute human peer review. Publication as a
+working paper is distinct from editorial acceptance or validation of a claimed priority.
+References
+[1] K. Dykema and K. Juschenko, Matrices of unitary moments, Mathematica Scandinavica
+109(2) (2011). https://arxiv.org/abs/0901.0288.
+9
+
+
+--- Page 10 ---
+[2] D. W. Kribs, J. Levick, R. Pereira, and M. Rahaman, Operator Algebra Generalization of
+a Theorem of Watrous and Mixed Unitary Quantum Channels, arXiv:2306.04077 (2023),
+Section 5. https://arxiv.org/abs/2306.04077.
+[3] W. Hoeﬀding, Probability inequalities for sums of bounded random variables, J. Amer.
+Statist. Assoc. 58(301), 13–30 (1963). doi:10.1080/01621459.1963.10500830.
+[4] H.-B. Chen, C. Gneiting, P.-Y. Lo, Y.-N. Chen, and F. Nori, Simulating open quantum
+systems with Hamiltonian ensembles and the nonclassicality of the dynamics, Phys. Rev.
+Lett. 120, 030403 (2018). arXiv:1703.09428.
+[5] H.-B. Chen, P.-Y. Lo, C. Gneiting, J. Bae, Y.-N. Chen, and F. Nori, Quantifying the non-
+classicality of pure dephasing, Nature Communications 10, 3794 (2019). doi:10.1038/s41467-
+019-11502-4.
+[6] H.-B. Chen and Y.-N. Chen, Canonical Hamiltonian ensemble representation of dephas-
+ing dynamics and the impact of thermal ﬂuctuations on quantum-to-classical transition,
+Scientiﬁc Reports 11, 10046 (2021). doi:10.1038/s41598-021-89400-3.
+[7] C. M. Kropf, Protecting quantum coherences from static noise and disorder, Phys. Rev.
+Research 2, 033311 (2020). doi:10.1103/PhysRevResearch.2.033311.
+[8] J. van der Hoeven, On the computation of limsups, corrected author manuscript dated 26
+February 1996, Section 2. https://www.texmacs.org/joris/limsup/limsup-corrected.
+html.
+[9] R. T. Rockafellar, Convex Analysis, Princeton University Press (1970), Sections 6 and 17.
+[10] S. Kato, C. Ley, S. Loizidou, and K. V. Mardia, A versatile trivariate wrapped Cauchy
+copula with applications to toroidal and cylindrical data, arXiv:2401.10824, version 2 (2024).
+https://arxiv.org/abs/2401.10824.
+[11] M. Deza and M. Laurent, Geometry of Cuts and Metrics, Springer (1997). doi:10.1007/978-
+3-642-04295-9.
+[12] I. J. Schoenberg, Metric spaces and positive deﬁnite functions, Trans. Amer. Math. Soc. 44,
+522–536 (1938). doi:10.1090/S0002-9947-1938-1501980-0.
+[13] L. Eriksson, Static Hamiltonian disorder: exact classiﬁcation, global obstructions, and
+phase-cycled witnesses, unpublished manuscript, 14 October 2026. Private AIRR deposit
+SUB-2CDB76AE0F389DD5, revision 1. The deposited artifact is distinct from the present
+manuscript.
+[14] L. Eriksson, A sharp two-rate reset witness against static qutrit disorder, AIRR working
+paper ARR-2026-131G33B01486YA04, version 1 (2026). https://airr.science/papers/
+ARR-2026-131G33B01486YA04/versions/v1/.
+10

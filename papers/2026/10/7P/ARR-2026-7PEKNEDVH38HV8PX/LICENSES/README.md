@@ -1,0 +1,1 @@
+Manuscript, editable source, explanatory documentation and advisory-report bundle: CC BY 4.0. Metadata: CC0 1.0. Research verifier: Apache-2.0, copyright 2026 Lluis Eriksson. Generated verifier results: CC0-1.0. Dependencies and cited works are not bundled and retain their own licenses.
