@@ -1,0 +1,329 @@
+AUDITORÍA DE LA AMPLIACIÓN UNIFORME A DIMENSIONES BINARIAS
+15 de octubre de 2026
+GPT-6 Astra xhigh solicitado; contexto compartido e intervención sustancial.
+
+ESTADO
+
+Esta es una evaluación nueva de la ampliación comunicada por el agente autor
+después de astra-proof-review.txt y astra-source-notes.txt. Los dos archivos
+anteriores se conservan intactos. La ampliación todavía no estaba incorporada
+a un manuscrito congelado cuando se solicitó esta auditoría. Ninguna nota
+de este archivo se atribuye a un PDF no cotejado.
+
+DICTAMEN
+
+No encuentro un fallo fatal. El argumento, con la clasificación completa
+indicada abajo, demuestra un teorema uniforme:
+
+  Para d=2^k, k>=1, todo C no nulo de soporte cíclico de Weyl de tamaño
+  s<=min(7,d^2) satisface rank(C)>=d/4.
+
+Se puede enunciar para d>=4, donde d/4 es entero, y tratar d=2 aparte.
+Para todo d=2^k>=4 la cota es aguda bajo cada presupuesto m=4,5,6,7:
+sum_(j=0)^3 Z^(jd/4) tiene cuatro términos y rango d/4. Junto al resultado
+de tres términos, se obtiene la envolvente binaria completa hasta s=7.
+En particular se cierran también d32,s6,7 y los mismos tamaños de soporte
+en todas las potencias de dos mayores.
+
+Esto sí constituye una ampliación matemática sustancial: reemplaza una
+lista de dimensiones pequeñas por una familia infinita uniforme y permite
+un umbral exacto de borrado para todo un intervalo de rangos. El alcance
+sigue limitado a s<=7; no demuestra la conjetura binaria para todos los
+soportes, ni la conjetura general de potencias de primo.
+
+Valoración provisional del contenido ampliado, antes de cotejar manuscrito:
+ordinaria 8,5/10; AIRR 5,5/10. La mejora respecto de 8,2 y 5,0 del candidato
+anterior corresponde a la uniformidad en d y al corolario exacto, no al
+número de páginas ni a una nota objetivo. Sigue siendo un resultado
+especializado con herramientas clásicas y una clasificación finita de
+soportes pequeños; no hay evidencia de impacto general que justifique
+una valoración extraordinaria. Las notas finales deberán identificar el
+PDF exacto y las dependencias que realmente aparezcan en él.
+
+1. LEMA DE SELECCIÓN ACÍCLICA: VÁLIDO, CON ANTECEDENTE DIRECTO
+
+Sea A un conjunto de N sectores activos. Tras permutar sectores de salida,
+supongamos que un grupo de términos ocupa los bloques diagonales y que
+los restantes ocupan como máximo t-1 desplazamientos no nulos distintos.
+El grafo dirigido inducido en A tiene grado saliente a lo sumo t-1.
+
+Ordenamos A uniformemente al azar y conservamos cada vértice que aparezca
+antes que todos sus vecinos salientes que pertenecen a A. Su probabilidad
+de conservarse es 1/(1+grado saliente en A), al menos 1/t. Si dos vértices
+conservados están unidos por una arista, esta apunta hacia delante en el
+orden. Por tanto el subgrafo conservado no contiene ciclos dirigidos,
+incluidos ciclos de longitud dos. La esperanza de su cardinalidad es
+al menos N/t; alguna elección tiene al menos ceil(N/t) vértices.
+
+Esta prueba es correcta. No necesita independencia entre los sucesos
+de selección. El grafo debe excluir la diagonal, de modo que no tenga
+bucles; los desplazamientos no nulos aseguran esto. Los términos que
+se anulan pueden dejarse como aristas superfluas sin perjudicar la cota.
+
+No es un nuevo resultado de teoría de grafos. Hermann Gruber demuestra
+una cota más refinada, suma_v 1/(1+outdeg(v)), en Theorem 4 de
+Bounding the Feedback Vertex Number of Digraphs in Terms of Vertex Degrees,
+Discrete Applied Mathematics 159(8),872–875 (2011), DOI
+10.1016/j.dam.2011.01.006. Se leyeron el enunciado y la prueba en
+https://arxiv.org/html/1101.1291
+La forma N/t es una consecuencia inmediata. La demostración breve por
+orden aleatorio puede incluirse por autosuficiencia, con atribución.
+
+2. BLOQUES TRIANGULARES CON DIAGONALES SINGULARES: LA COTA ES CORRECTA
+
+Una matriz triangular por bloques T, con bloques diagonales D_j, satisface
+
+  rank(T) >= sum_j rank(D_j).
+
+Prueba: para cada j se elige un menor no nulo de D_j de orden rank(D_j).
+Se toman en T la unión de las filas y la unión de las columnas elegidas.
+Las filas y columnas internas no tienen que coincidir. El menor resultante
+sigue siendo triangular por bloques; su determinante es el producto de
+los menores diagonales elegidos, por tanto no es cero. Los bloques de
+rango cero simplemente se omiten. Esto prueba la desigualdad sobre C
+y sobre cualquier campo.
+
+Después de seleccionar un conjunto acíclico, un orden topológico de
+sectores produce precisamente esa situación. Si cada diagonal tiene rango
+al menos rho, se obtiene rank(C)>=rho ceil(N/t). Para diagonales unitarias
+de tamaño n, rho=n. Para los binomios binarios, basta rho=n/2.
+No se está suponiendo invertibilidad cuando las diagonales son singulares.
+
+3. INGREDIENTES Y ORDEN LÓGICO
+
+Se usan el cuarto momento ya auditado,
+
+  rank(C)>=d/[1+mu(1-1/s)],
+
+el producto rank(C)s>=d, el lema de órbitas y salidas, la compresión
+cíclica con etiquetas inyectivas, y la cota de rango n/2 para combinaciones
+de a lo sumo tres Weyl en dimensión binaria n. Este último lema ya tiene
+una prueba uniforme independiente del resultado de siete términos.
+
+Primero hay que probar s<=5 para todas las dimensiones binarias; después
+s=6 y finalmente s=7. La rama q=2,s=7 usa el resultado de cinco términos
+en dimensión d/2. Con ese orden no hay circularidad ni una inducción
+oculta que presuponga el propio teorema de siete términos.
+
+Para d<=8 el objetivo rank>=d/4 sigue directamente del producto o de
+rank>=1. En las compresiones pueden aparecer bloques n=1 incluso cuando
+d es grande: los enunciados de a lo sumo dos/tres/cinco términos admiten
+el caso escalar trivial. Si se habla de dos Weyl distintos, su existencia
+en n=1 queda excluida por la inyectividad de etiquetas. No dividir por
+una cantidad no entera ni invocar un primo inexistente para n=1.
+
+En una sola órbita de orden q>=8 con soporte <=7, la ley escalar clásica
+de Delvaux–Van Barel da rango >=(d/q)(q/4)=d/4. Esta dependencia es
+explícita en las ramas colineales con varias cadenas. Una sola cadena
+de longitud l se trata por grado: rango >=(d/q)(q-l+1).
+
+4. CASO s=5
+
+Para mu<=3, el cuarto momento da 5d/17>d/4. No puede haber mu=5,
+porque una potencia de dos no trivial no divide cinco.
+
+Para mu=4 hay una salida. Si q=2, hay dos pares completos y un singleton.
+Con todos los desplazamientos iguales, el singleton mantiene activos ambos
+bloques, cada uno con a lo sumo tres términos y rango >=n/2; el total es
+>=n=d/2. Si se separan los desplazamientos, existe un grupo de un coset
+y algún bloque unitario de tamaño n=d/2.
+
+Para q=4, hay un ciclo completo y un singleton. Con desplazamientos
+distintos aparece un bloque unitario de tamaño n=d/4. Si coinciden,
+los cuatro bloques son no nulos y de a lo sumo dos términos; bastan
+sus cotas de rango n/2.
+
+Para q>=8 hay una sola cadena de cinco puntos. El grado cuatro da
+rango >=(d/q)(q-4)>=d/2. Esto termina uniformemente s<=5, pues s<=4
+ya satisface el producto.
+
+5. CASO s=6
+
+Para mu<=3, el momento da 2d/7>d/4. Si mu=6, el periodo tiene orden
+dos: tres cosets completos, y un bloque no nulo de a lo sumo tres Weyl
+en dimensión n=d/2 tiene rango >=n/2=d/4.
+
+Si mu=5, hay una salida. q=2 es imposible, porque m_h es par para una
+traslación de orden dos. Para q=4 hay un ciclo completo y una cadena
+de dos puntos. Con desplazamientos distintos se obtiene un bloque
+unitario n=d/4; si coinciden, la cadena está activa en al menos tres
+sectores y los bloques son de a lo sumo dos términos. Para q>=8, la
+cadena única de seis puntos da (d/q)(q-5)>=d/4.
+
+Queda mu=4, dos salidas.
+
+q=2: dos pares completos y dos singletons, cuatro cosets. Si todos los
+desplazamientos coinciden, ambos bloques están activos y cada uno tiene
+a lo sumo cuatro términos, rango >=n/4; total >=n/2=d/4. Si se reparten
+3+1, un bloque del grupo aislado tiene rango n. Si se reparten 2+2,
+algún bloque binomial no nulo tiene rango >=n/2=d/4.
+
+q=4: la lista completa de perfiles es:
+  (a) ciclo completo + singleton + singleton;
+  (b) cadena de tres + cadena de tres;
+  (c) ciclo completo + par opuesto en otro coset.
+El perfil (c) faltaba en la primera enumeración recibida. No es fatal:
+tiene periodo 2h, luego mu=6 y no aparece en una rama de máximo mu=4.
+También se puede tratar directamente, como propuso después el autor.
+Su polinomio parcial de grado dos está activo en al menos dos sectores.
+Si sus desplazamientos coinciden, dos bloques binomiales aportan >=n;
+si no, un bloque unitario aporta n. En (a), los desplazamientos diferentes
+dan un grupo aislado; cuando coinciden, hay cuatro bloques no nulos de
+a lo sumo tres términos. En (b), si los desplazamientos coinciden hay
+al menos dos bloques no nulos de a lo sumo dos términos; si no, hay un
+bloque unitario. Todos los subcasos dan >=n=d/4.
+
+q>=8: no hay ciclos completos. Una órbita se resuelve con la ley escalar
+clásica. Si hay dos órbitas, cada una contiene una cadena y la menor tiene
+longitud <=3, por lo que está activa en N>=q-2 sectores. Con iguales
+desplazamientos, esos bloques binomiales aportan >=nN/2. Con distintos
+desplazamientos, el lema acíclico con t=2 da >=n ceil(N/2). Ambas cotas
+son >=nq/4=d/4 para q>=8.
+
+6. CASO s=7
+
+Para mu<=3, el momento da 7d/25>d/4. mu=7 es imposible.
+
+mu=6, una salida: para q=2 hay tres pares completos y un singleton.
+Si los desplazamientos no coinciden todos, un bloque no nulo tiene a lo
+sumo tres términos en dimensión n=d/2 y rango >=n/2. Si coinciden,
+ambos bloques no nulos tienen a lo sumo cuatro términos y suman >=n/2.
+Para q=4 hay un ciclo completo y una cadena de tres puntos; un bloque
+unitario o dos bloques binomiales dan n=d/4. Para q>=8 hay una cadena
+de siete puntos: (d/q)(q-6)>=d/4, con igualdad en la cota cuando q=8.
+
+mu=5, dos salidas: q=2 es imposible por paridad. Para q=4 el único
+perfil es ciclo completo + cadena de dos + singleton. Si no coinciden
+todos los desplazamientos, hay un grupo aislado y un bloque de rango n.
+Si coinciden, el singleton asegura cuatro bloques de a lo sumo tres
+términos; suman >=2n. Para q>=8 hay una o dos órbitas. En una se aplica
+la ley escalar; en dos, la cadena menor tiene longitud <=3 y se usa
+el mismo argumento N>=q-2 del caso de seis términos.
+
+mu=4, tres salidas:
+
+q=2: dos pares completos y tres singletons, cinco cosets. Si coinciden
+todos los desplazamientos, ambos bloques están activos y tienen a lo
+sumo cinco términos. El caso s<=5 ya probado da rango >=n/4 en cada
+uno, total >=n/2=d/4. En una partición 4+1 hay un bloque unitario n;
+en una partición 3+2 hay un bloque binomial no nulo de rango >=n/2.
+
+q=4: la lista completa es:
+  (a) ciclo completo + tres singletons (cuatro cosets);
+  (b) ciclo completo + par opuesto + singleton (tres cosets);
+  (c) cadenas de longitudes 3,3,1 (tres cosets);
+  (d) cadenas de longitudes 3,2,2 (tres cosets).
+El caso (b) incluso tiene m_(2h)>=6, pero puede tratarse sin excluirlo.
+En los casos de tres cosets, si los desplazamientos no coinciden todos,
+hay un coset aislado con un bloque unitario de rango n. Si coinciden,
+hay al menos dos sectores activos: lo garantiza un singleton en (b),(c)
+y la cadena de tres en (d). Cada bloque tiene rango >=n/2; total >=n.
+
+En (a), si todos los desplazamientos coinciden, los cuatro bloques están
+activos y tienen a lo sumo cuatro términos: el producto da total >=n.
+Toda partición no trivial salvo 2+2 tiene un grupo aislado y un bloque
+unitario de rango n. Para 2+2, escoja como grupo diagonal uno que contenga
+un singleton. Cada uno de sus cuatro bloques es no nulo por inyectividad
+y tiene rango >=n/2. El otro grupo ocupa un único desplazamiento no nulo.
+El lema acíclico conserva al menos ceil(4/2)=2 sectores. La desigualdad
+de rango triangular del apartado 2 da >=2(n/2)=n=d/4, aunque las
+diagonales elegidas sean singulares.
+
+q>=8: no hay órbitas completas y hay exactamente tres cadenas parciales.
+Si están en una órbita, se aplica la ley escalar clásica. Si están en
+dos, una órbita lleva dos cadenas y la otra una sola. Esta última cadena
+tiene longitud <=5, porque las otras dos contienen al menos dos puntos.
+Está activa en N>=q-4 sectores. Con desplazamientos iguales, los bloques
+binomiales dan >=nN/2; con distintos, el lema acíclico da >=n ceil(N/2).
+Ambas cotas son >=nq/4 cuando q>=8.
+
+Si las tres cadenas están en tres órbitas, la menor tiene longitud <=2
+y está activa en al menos q-1 sectores. Si todos los desplazamientos
+coinciden, se suman bloques de a lo sumo tres términos y se obtiene
+>=n(q-1)/2. Si se agrupan 2+1, se elige el coset aislado como diagonal;
+su cadena tiene longitud <=5, de modo que el caso t=2 anterior aplica
+con N>=q-4. Si los tres desplazamientos son distintos, se elige la cadena
+menor como diagonal y t=3 da
+
+  rank(C)>=n ceil((q-1)/3)>=nq/4.
+
+Se han agotado todos los órdenes y todas las distribuciones de salidas.
+El argumento es uniforme en k y no presupone valores genéricos de fases
+ni coeficientes. La inyectividad de etiquetas evita las cancelaciones
+completas de los bloques que se cuentan como activos.
+
+7. COROLARIO GENERAL DE BORRADO: CORRECTO Y AGUDO
+
+Sea d=2^k>=16 y r entero con d/16<=r<d/8. El mayor presupuesto universal
+de coeficientes de Weyl que pueden omitirse manteniendo identificación
+entre TODAS las matrices complejas de rango <=r es exactamente siete.
+
+Suficiencia: una diferencia no nula de dos matrices de rango <=r tiene
+rango <=2r<d/4. Si está soportada en a lo sumo siete etiquetas, el teorema
+demostrado impone rango >=d/4, contradicción.
+
+Necesidad a ocho: tome S={(0,jd/8):0<=j<=7} y
+
+  P=sum_(j=0)^7 Z^(jd/8).
+
+P tiene valor diagonal 8 en los índices múltiplos de ocho y cero en los
+demás, luego rank(P)=d/8. Como d/8<=2r, sus d/8 entradas no nulas pueden
+partirse en dos grupos de tamaño <=r. Sea A la parte de P en el primer
+grupo y B el negativo de la parte en el segundo. Entonces A-B=P,
+rank(A),rank(B)<=r, y sus coeficientes fuera de S son iguales.
+
+El producto solo garantiza m erasures cuando 2rm<d. Si r>d/16, para
+m=7 ya no puede alcanzar siempre el nuevo presupuesto; de hecho su
+máximo es floor((d-1)/(2r))<=7, y es estrictamente menor que siete
+exactamente cuando 14r>=d. Por tanto la afirmación más amplia recibida
+«mejora el producto cuando r>d/16» requiere esta precisión: no todos
+los r estrictamente mayores que d/16 producen mejora estricta.
+En un mensaje previo acepté esa comparación demasiado amplia; la rectifico
+aquí. El agente autor comunicó también la misma corrección al finalizar
+la escritura de este informe.
+
+Contraejemplo a esa frase de calibración: d=128,r=9 satisface 8<9<16,
+pero 14r=126<128, así que el producto ya garantiza siete omisiones.
+Sí hay mejora para d32,r3: el producto garantiza cinco y el nuevo
+resultado siete. También hay mejora para d64,r5,6,7. El teorema de
+presupuesto exacto siete es correcto en todo el intervalo anunciado;
+el ajuste afecta solo a la comparación con la cota previa.
+
+La necesidad utiliza una matriz B negativa y omite el coeficiente
+identidad. No es una afirmación de agudeza para matrices positivas,
+matrices de densidad ni traza fijada. No proporciona un algoritmo de
+reconstrucción ni una constante uniforme explícita de estabilidad.
+
+8. COMPROBACIONES Y EXPOSICIÓN
+
+astra-binary-plateau-checks.py y .json verifican la lista completa de
+perfiles de ocupación para q=2,4 y los tamaños/salidas relevantes; el
+periodo 2h del perfil inicialmente omitido; la selección por orden
+aleatorio en los 2.401 digrafos sin bucles de cuatro vértices y grado
+saliente <=2, para sus 24 órdenes (57.624 parejas grafo/orden); las
+longitudes de cadenas; y 406 comparaciones racionales/enteras en órdenes
+q=8 hasta 2^60. Todos los grupos pasaron. Son diagnósticos finitos;
+la prueba universal es el razonamiento precedente, no la enumeración.
+
+Recomendaciones al incorporar:
+* Dar primero el lema acíclico, con referencia a Gruber, y la prueba
+  de rango triangular que permite diagonales deficientes.
+* Formular y probar s<=5 en todas las dimensiones antes de utilizarlo
+  en la rama de cinco cosets del caso s=7.
+* Incluir los perfiles completos o explicar expresamente cuáles quedan
+  excluidos por un periodo de mayor solapamiento.
+* Mantener la distinción entre presupuesto y soporte exacto, el extremo
+  n=1 y las dependencias escalares de Delvaux–Van Barel.
+* Si se reemplaza la prueba específica de d16 por esta prueba general,
+  no seguir afirmando que aquella prueba es enteramente autosuficiente:
+  la ruta general importa la ley escalar. Alternativamente, conservar
+  la prueba especial anterior como demostración independiente para d16.
+* Corregir la condición de mejora estricta del producto en el corolario
+  de borrado: 14r>=d, no simplemente r>d/16.
+* Declarar que esta auditoría forma parte de la elaboración matemática,
+  incluyendo la clasificación, la selección gráfica y la calibración
+  del corolario. No se trata de una revisión ciega e independiente.
+
+No he editado el manuscrito ni publicado nada. El resultado uniforme
+es matemáticamente viable con los detalles anteriores; el próximo
+dictamen deberá cotejar la versión final que realmente lo incorpore.

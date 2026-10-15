@@ -1,0 +1,575 @@
+# Sparse Weyl operators: a uniform binary rank theorem and sharp erasure thresholds
+
+Plain-text extraction; consult paper.pdf for mathematical typography.
+
+Sparse Weyl operators:
+a uniform binary rank theorem
+and sharp erasure thresholds
+Lluis Eriksson
+Independent researcher, Sweden
+15 October 2026 Working manuscript
+Abstract
+For a complex matrix expanded in the cyclic Weyl basis, support size alone gives the
+rank bound rank(C)s ≥ d. We reﬁne this estimate by the largest nonzero translate overlap
+µ of its support:
+rank(C) ≥
+⌈ d
+1 + µ(1 − 1/s)
+⌉
+.
+The estimate is an elementary fourth-moment argument. Its complement is structural:
+large overlaps force few partial cyclic runs. Combining cyclic compression with acyclic
+block selection, we prove that every nonzero combination of at most seven Weyl opera-
+tors in dimension d = 2 k has rank at least d/4. For d ≥ 4, this is sharp under every
+support budget from four through seven, uniformly in k. It completes the conjectured
+rank envelope in dimension 16 and closes additional gaps in dimensions 27 and 32. Two
+exact universal erasure budgets follow for arbitrary complex low-rank matrices: seven in
+a binary family of ranks, and eight for rank at most two in dimension 27. Explicit exam-
+ples fail at the next erasure. A quantitative fourth-moment bound also controls distance
+from low rank. The proofs use classical scalar uncertainty and graph lemmas; no general
+prime-power conjecture or Erdős problem is claimed solved.
+1 The question and the results
+Let d ≥ 2, ω = e2πi/d, and let X, Z ∈ Md(C) be given by
+Xej = ej+1 modd, Ze j = ωjej.
+Write W(a,b) = XaZb for (a, b) ∈ G = ( Z/d)2. Thus ZX = ωXZ and the d2 matrices Wg are
+orthogonal for the Hilbert–Schmidt inner product. Throughout,
+C =
+∑
+g∈S
+cgWg ̸= 0 , c g ̸= 0 , s = |S|.
+Coeﬃcients are arbitrary complex numbers; Hermiticity, positivity and algebraicity are not
+assumed. Rank always means exact complex rank. All statements concern this cyclic Weyl
+basis; a tensor product of qubit Pauli bases is a diﬀerent setting.
+For d = pk and 0 ≤ t < d , deﬁne
+wp(t) =
+k−1∏
+j=0
+(tj + 1), t =
+k−1∑
+j=0
+tjpj, Ωk(m) = max {t < d : wp(t) ≤ m}.
+1
+
+The scalar Fourier uncertainty law of Delvaux and Van Barel identiﬁes d − Ωk(m) as the
+minimum rank of a nonzero polynomial in Z with at most m terms [2]. The operator conjecture
+in [ 1] asks whether
+rank(C) ≥ d − Ωk(s) (1)
+holds for arbitrary Weyl supports. That paper proves a low-sparsity range and identiﬁes
+d = 16 , s = 6 , 7 as its ﬁrst unresolved cases. These are questions within that speciﬁc research
+programme, not classical named open problems.
+Theorem 1 (Uniform binary seven-term bound) . Let d = 2 k ≥ 4. Every nonzero combination
+of at most seven cyclic Weyl operators has rank at least d/4. Consequently, for every support
+budget 4 ≤ m ≤ 7,
+min{rank(C) : C ̸= 0 , | suppW (C)| ≤ m} = d/4.
+Here suppW denotes support in the Weyl basis.
+Theorem 2 (Dimension sixteen) . For every nonzero C ∈ M16(C) with Weyl sparsity s,
+rank(C) ≥
+
+
+
+16, s = 1 ,
+8, 2 ≤ s ≤ 3,
+4, 4 ≤ s ≤ 7,
+2, 8 ≤ s ≤ 15,
+1, 16 ≤ s ≤ 256.
+Each bound is attained under the corresponding support budget. Consequently (1) holds in
+dimension 16 at every sparsity.
+Theorem 3 (Further gaps). In dimension 32, sparsities 5, 6 and 7 imply rank at least 8, and
+sparsity 11 implies rank at least 4. In dimension 27, sparsities 6, 7 and 8 imply rank at least
+6, and sparsity 14 implies rank at least 3.
+The bounds match the conjectured envelope at these parameters. Their distinction from
+the elementary product bound is recorded in Table 1. They do not settle all sparsities in
+dimensions 27 or 32.
+d s ⌈d/s⌉ New lower bound Proof component
+16 6 3 4 uniform binary theorem
+16 7 3 4 uniform binary theorem
+27 6 5 6 moment bound and periodic blocks
+27 7 4 6 moment bound and single-chain blocks
+27 8 4 6 moment bound and two-chain blocks
+27 14 2 3 coprime support size
+32 5 7 8 uniform binary theorem
+32 6 6 8 uniform binary theorem
+32 7 5 8 uniform binary theorem
+32 11 3 4 coprime support size
+Table 1: Previously uncovered parameters listed in [ 1] and closed here. “New” is relative to
+that stated baseline; the literature search does not certify worldwide priority.
+2
+
+Relation to existing methods. Support uncertainty and additive structure have a long
+history, including Tao’s prime-order theorem [ 3], Meshulam’s divisor-sensitive bound [ 4], and
+the scalar prime-power law [ 2]. Recent work relates scalar uncertainty and recovery to additive
+energy [5, 6]. Our moment estimate uses the familiar principle that repeated diﬀerences control
+a fourth moment. We also use a classical acyclic-set bound [ 8]. The proposed contribution
+is the combination of these tools with a complete classiﬁcation of the high-overlap exceptions
+at sparsity at most seven, yielding a uniform operator theorem rather than only isolated
+dimensions. The proof imports the scalar theorem only in explicitly collinear branches; it
+does not import an earlier operator uncertainty theorem.
+2 An overlap bound and its quantitative form
+For h ∈ G \ {0} put
+mh = |{g ∈ S : g + h ∈ S}|, µ (S) = max
+h̸=0
+mh.
+For a singleton support, µ = 0 . Let M = ∑
+g |cg|2 and Q = ∑
+g |cg|4.
+Proposition 4 (Fourth moment). For every dimension and every support,
+1
+d Tr((C∗C)2) ≤ M2 + µ(M2 − Q), (2)
+rank(C) ≥ d
+1 + µ(1 − Q/M2) ≥ d
+1 + µ(1 − 1/s). (3)
+Integer ceilings may be taken in (3).
+Proof. For g = ( a, b) and h = ( u, v) the Weyl product gives
+W∗
+g Wg+h = ω−buWh.
+Thus C∗C = ∑
+h AhWh, where A0 = M and
+Ah =
+∑
+g,g+h∈S
+cgcg+hω−bgu.
+Since C∗C is Hermitian, trace orthogonality gives
+1
+d Tr((C∗C)2) =
+∑
+h
+|Ah|2.
+Cauchy–Schwarz on each nonzero diﬀerence ﬁbre yields
+|Ah|2 ≤ mh
+∑
+g,g+h∈S
+|cg|2|cg+h|2.
+Summing over h ̸= 0 proves ( 2), because every ordered pair of distinct support points occurs
+once. If λi are the nonzero eigenvalues of C∗C, then
+(dM)2 =
+(∑
+i
+λi
+)2
+≤ rank(C)
+∑
+i
+λ2
+i .
+Finally Q ≥ M2/s.
+3
+
+We also use the product bound
+rank(C)s ≥ d. (4)
+Indeed ∥C∥op ≤ ∑|cg| ≤
+√
+sM and ∥C∥2
+F = dM ≤ rank(C)∥C∥2
+op. This often outperforms
+(3) when µ = s; the two bounds should be used together.
+Corollary 5 (Aperiodic and coprime supports) . If S has no nonzero translation period, then
+rank(C) ≥
+⌈ ds
+s2 − s + 1
+⌉
+.
+In particular this holds if gcd(s, d) = 1 .
+Proof. An overlap mh = s means S + h = S. Its orbits have size ord(h) > 1, which divides
+both s and d. If there is no such period, µ ≤ s − 1 and Proposition 4 applies.
+Proposition 6 (Distance from low rank) . Set K = 1 + µ(1 − 1/s). For 1 ≤ r < d and every
+matrix B of rank at most r,
+∥C − B∥2
+F
+∥C∥2
+F
+≥ max
+{
+0, 1 − r
+d −
+√
+r(d − r)(K − 1)
+d
+}
+. (5)
+One may replace K by 1 + µ(1 − Q/M2).
+Proof. Normalize the eigenvalues of C∗C to have sum one and arrange them decreasingly.
+Their squared sum is at most K/d. If t is the sum of the largest r, Cauchy–Schwarz separately
+on the two parts gives
+t2
+r + (1 − t)2
+d − r ≤ K
+d .
+Solving the quadratic inequality bounds t by (r +
+√
+r(d − r)(K − 1))/d. The squared Frobe-
+nius error of the best rank- r approximation is the tail sum 1 −t; this follows directly from the
+singular-value decomposition.
+For d = 16 , r = 3 , the bound is strictly positive for s = 6 , µ ≤ 5 and for s = 7 , µ ≤ 5. For
+the latter it equals
+13 −
+√
+1170/7
+16 > 0.
+This certiﬁes separation from rank three even in the presence of bounded matrix error. We
+do not infer a universal numerical tolerance for the exceptional supports from this formula.
+3 Large overlaps force cyclic structure
+Lemma 7 (Orbits and exits) . Fix a nonzero h ∈ G of order q and partition G into cosets of
+H = ⟨h⟩. Then s − mh is the total number of occupied runs in the partially occupied directed
+h-cycles. Full and empty cycles contribute zero. In particular:
+(i) if mh = s, S is a union of full H-cosets;
+(ii) if mh = s − 1, S is a union of full H-cosets and exactly one proper consecutive chain in
+one other coset.
+Proof. The diﬀerence s − mh counts the points g ∈ S with g + h /∈ S. Each occupied run in
+a partial cycle has exactly one such exit.
+4
+
+We next give the block decomposition with its phase and injectivity details. Those details
+matter: distinct global Weyl labels need not remain distinct on an arbitrary subspace.
+Lemma 8 (Cyclic compression) . Let d = pk, let h ∈ G have order q, and set n = d/q. After
+a unitary Weyl-coordinate change, H = ⟨h⟩ becomes ⟨(0, n)⟩. Write
+C =
+t∑
+i=1
+W(ai,bi)fi(Zn)
+using distinct H-cosets. Let Ej = span {ej+qu : u ∈ Z/n} for j ∈ Z/q, and ζq = e2πi/q. Coset
+i contributes to the block from Ej to Ej+δi , where δi = ai mod q, as a scalar fi(ζj
+q ) times an
+n-dimensional Weyl unitary. Within each ﬁxed block, distinct cosets give distinct Weyl labels,
+up to a common unitary and scalar phases. If every δi is the same, the global rank is the sum
+of the q block ranks.
+Proof. First justify the coordinate change. Write h = gv, with g = gcd( h1, h2, d) = n. Since d
+is a prime power, v has at least one coordinate coprime to p. Choose u1, u2 with u1v1+u2v2 = 1
+(mod d). The matrix
+T =
+(v2 −v1
+u1 u2
+)
+∈ SL2(Z/d)
+sends h to (0, n). Such a symplectic coordinate change is implemented by a unitary, allowing
+phases on Weyl operators: its two column Weyls have the same commutation relation as X, Z;
+rephase them to have dth powers I. An eigenvector of the second and its successive images
+under the ﬁrst form an orthonormal basis, since their eigenvalues run through all d distinct
+roots. This constructs the required unitary. Phases only change the coeﬃcients and preserve
+support.
+Now use the normalized coordinates. Choose representatives 0 ≤ δi < q and write ai =
+qAi + δi. Put j′ = ( j + δi) mod q and κ = ⌊(j + δi)/q⌋. On the bases indexed by u ∈ Z/n,
+W(ai,bi)|Ej →Ej′ = ωbijXAi+κ
+n Zbi
+n . (6)
+The carry κ is common to all terms with a ﬁxed δi. After factoring Xκ
+n, the labels are
+(Ai mod n, b i mod n).
+Equal labels with equal δi mean equal ai mod d and bi diﬀering by a multiple of n, precisely
+equality of the original H-cosets. This proves injectivity. Finally, if all output shifts agree,
+distinct input sectors map to mutually orthogonal output sectors, so ranks add.
+The binary three-term bound below is already contained in the author’s three-term rank
+classiﬁcation [ 9]. We give a shorter overlap-based proof of the inequality needed here; that
+inequality itself is not a new result of this manuscript.
+Lemma 9 (Two elementary rank facts) . (i) A nonzero binomial of distinct Weyls in di-
+mension n = pk has rank at least n − n/p.
+(ii) In dimension n = 2 k, a nonzero combination of at most three Weyls has rank at least
+n/2.
+Proof. For (i), multiply by a Weyl inverse to obtain aI + bWu, u ̸= 0 . If q = ord( u), rephase
+Wu so that its qth power is I. Its eigenvalues are all qth roots, each with multiplicity n/q:
+indeed Tr(Wj
+u) = 0 for 1 ≤ j < q , and Fourier inversion determines the multiplicities. Hence
+the nullity is at most n/q ≤ n/p.
+5
+
+For (ii), only exact sparsity three remains after (i). Periodicity is impossible since a
+nontrivial power of two cannot divide three. If µ ≤ 1, Proposition 4 gives rank at least
+3n/5 ≥ n/2. If µ = 2 , choose a direction of overlap two and use Lemma 7. For its order
+q ≥ 4, the support is a consecutive chain of three, so after left multiplication by a Weyl, C is
+a degree-two polynomial in an order- q Weyl. At most two eigenvalues vanish and the rank is
+at least (n/q)(q − 2) ≥ n/2.
+For q = 2 , the support is a full pair and a singleton in another coset. Apply Lemma 8.
+If their output shifts diﬀer, a nonzero singleton block is a scalar unitary of size n/2. If they
+agree, the singleton is nonzero in both input sectors. Both blocks are nonzero combinations
+of at most two distinct Weyls in dimension n/2, so (i) gives rank at least n/4 each. If n/2 = 1 ,
+this last case is impossible by injectivity of block labels. This completes the proof.
+4 A uniform theorem in binary dimension
+Lemma 10 (Acyclic block selection) . Suppose that a square matrix is partitioned into equal-
+sized blocks indexed by a ﬁnite set V . On a subset A ⊆ V of N indices, every diagonal block
+has rank at least ρ, and each block column has at most t − 1 oﬀ-diagonal nonzero blocks with
+row index in A. Then the matrix has rank at least ρ ⌈N/t⌉.
+Proof. Draw an arc j → i for each oﬀ-diagonal nonzero block on A. Choose a uniformly
+random total order and retain every vertex preceding all its out-neighbours. Each vertex is
+retained with probability at least 1/t. Every arc between retained vertices increases the order,
+so the retained graph is acyclic. Some choice retains at least ⌈N/t⌉ vertices. This is a special
+case of the directed acyclic-set bound in [ 8, Theorem 4].
+Topologically ordering those vertices makes the selected block matrix triangular. Its rank
+is at least the sum of the diagonal ranks, even when the diagonal blocks are singular: choose
+an invertible minor of full rank in each diagonal block. Their union is a triangular minor
+whose determinant is the product of those nonzero determinants.
+In Lemma 8, grouping the cosets by output shift and permuting the output sectors puts
+any chosen group on the diagonal. If there are t distinct shifts, Lemma 10 applies with that t.
+In particular, a single coset active on N sectors and one other shift give rank at least n ⌈N/2⌉.
+If all shifts agree, ranks add without any sector loss. We call a sector active for a coset when
+its scalar polynomial does not vanish there. A chain of length ℓ is active on at least q − ℓ + 1
+sectors, by its degree; a singleton is active everywhere.
+Proof of Theorem 1. The cases d = 4 , 8 follow from ( 4). We may take d ≥ 16. Sparsities at
+most three follow from Lemma 9; sparsity four follows from ( 4). We ﬁrst prove the ﬁve-term
+assertion in every binary dimension, before using it for seven terms. In each high-overlap case
+choose h with mh = µ, put q = ord( h) and n = d/q, and use Lemmas 7 and 8.
+Five terms, in all binary dimensions. If µ ≤ 3, the moment bound gives 5d/17 > d/ 4.
+Periodicity is impossible, so the only remaining overlap is four, with one partial run. For q = 2 ,
+the support is two full pairs and a singleton. If all shifts agree, the singleton keeps both blocks
+nonzero; the three-term bound gives rank at least n/2 in each, hence d/2. Otherwise the
+partition by shift is 2 + 1 , so a block containing just one coset is a scalar unitary somewhere,
+of rank n = d/2. For q = 4 , there is one full cycle and a singleton. Distinct shifts give a
+unitary block of rank n = d/4; a common shift gives four nonzero binomial blocks and total
+rank at least 2n. For q ≥ 8, a single chain of length ﬁve has rank at least n(q − 4) ≥ d/2.
+6
+
+Six terms: zero or one exit. If µ ≤ 3, the moment bound gives 2d/7 > d/ 4. At µ = 6
+a period has order two; the three full cosets give nonzero blocks with at most three terms
+in dimension n = d/2, hence a block of rank at least d/4. At µ = 5 there is one exit. An
+involution has even overlap, so q ̸= 2 . At q = 4 the support is a full cycle and a two-point
+chain. Distinct shifts give a unitary block of rank n = d/4; a common shift gives at least
+three nonzero binomial blocks, of total rank at least 3n/2. For q ≥ 8, a chain of length six
+has rank at least n(q − 5) ≥ 3d/8.
+Six terms: two exits. It remains to take µ = 4 . At q = 2 the support consists of two full
+pairs and two singletons. A common shift gives two nonzero blocks with at most four terms,
+of rank at least n/4 each by ( 4). Otherwise the shift partition is 3+1 or 2+2 ; a scalar-unitary
+block or a nonzero binomial block has rank at least n/2 = d/4.
+At q = 4 the complete list is two three-point chains; a full cycle and two singleton cosets;
+or a full cycle and an opposite pair in another coset. In the ﬁrst case at least two sectors are
+active for a chain; a common shift therefore gives two binomial blocks of rank at least n/2
+each, and distinct shifts give a unitary block of rank n. The second case has a singleton shift
+group unless all shifts agree; in the latter case four nonzero blocks have at most three terms
+and total rank at least 2n. In the third case the opposite pair is active on at least two sectors,
+and the ﬁrst argument applies. Thus every case gives at least n = d/4.
+For q ≥ 8 there are no full cycles. If both runs lie in one coset, the scalar binary uncertainty
+law [ 2, Theorem 10, equation (23), TW470] gives rank at least n(q/4) = d/4, since the scalar
+support has six terms. If they lie in two cosets, the shorter chain has length at most three
+and is active on N ≥ q − 2 sectors. A common shift gives rank at least Nn/2 by the binomial
+bound; distinct shifts give rank at least n ⌈N/2⌉ by Lemma 10. Both exceed d/4.
+Seven terms: one exit. If µ ≤ 3, the moment bound gives 7d/25 > d/ 4. Periodicity is
+impossible. At µ = 6 there is one exit. For q = 2 , there are three full pairs and a singleton.
+A common shift gives two active blocks with at most four terms and total rank at least
+n/2 = d/4. If shifts split, a nonzero block contains at most three terms, hence has rank at
+least n/2. For q = 4 , there is a full cycle and a three-point chain. A common shift gives at
+least two binomial blocks of rank at least n/2 each; distinct shifts give a unitary block of rank
+n = d/4. For q ≥ 8, the chain of length seven gives rank at least n(q − 6) ≥ d/4.
+Seven terms: two exits. At µ = 5 , parity excludes q = 2 . For q = 4 , the support is a full
+cycle, a two-point chain and a singleton, in three cosets. If the shifts split, a singleton shift
+group gives a unitary block of rank n = d/4; if all shifts agree, the singleton keeps four blocks
+active, each of rank at least n/2. For q ≥ 8, one coset is handled by the scalar theorem as
+above. Otherwise the shorter of two chains has length at most three, and the same N ≥ q − 2
+argument used for six terms applies.
+Seven terms: three exits, small orders. At µ = 4 , q = 2 gives two full pairs and
+three singletons. If all shifts agree, both blocks are active and have at most ﬁve terms. The
+already proved ﬁve-term assertion in dimension n = d/2 gives total rank at least 2(n/4) = d/4.
+Otherwise the partition by the two possible shifts is 4 + 1 or 3 + 2 . The ﬁrst gives a unitary
+block; in the second a nonzero block in the two-coset group is a binomial, with rank at least
+n/2 = d/4.
+For q = 4 , all possibilities, up to cycle rotation, are
+(3, 2, 2), (3, 3, 1), (4, 2opp, 1), (4, 1, 1, 1),
+7
+
+where a part below four denotes a consecutive chain unless marked as an opposite pair. This
+list follows by distributing three exits among partial four-cycles, while full cycles contribute
+zero. In each three-coset case, a split of shifts has a singleton group and gives a unitary block
+of rank n = d/4. With a common shift, at least two sectors are active: this follows from a
+singleton in the middle two cases, and a length-two chain in the ﬁrst. Each active block has
+at most three terms and rank at least n/2. For (4, 1, 1, 1), a common shift gives four nonzero
+four-term blocks, of total rank at least n. A split with a singleton group again gives a unitary
+block. The only remaining partition is 2 + 2 . One of the two groups contains a singleton,
+so its diagonal blocks, after permuting output sectors, are active in all four sectors and have
+rank at least n/2. There is just one other shift. Lemma 10 retains at least two sectors, giving
+rank at least n.
+Seven terms: three exits, orders at least eight. There are no full cycles, and at most
+three occupied cosets. One coset is again scalar. With two cosets, one contains exactly one
+run, of length at most ﬁve because the other contains two nonempty runs. This chain is active
+on N ≥ q − 4 sectors. A common shift gives N binomial blocks of rank at least n/2; distinct
+shifts give ⌈N/2⌉ invertible diagonal blocks. Both give rank at least d/4 for q ≥ 8.
+With three cosets, each has a single chain, and their lengths sum to seven. If all shifts
+agree, a shortest chain has length at most two and keeps at least q − 1 blocks active; the
+three-term bound gives total rank at least (q − 1)n/2. If exactly two shifts agree, the isolated
+coset has length at most ﬁve. Put it on the diagonal: at least q − 4 diagonal blocks are
+invertible and there is one other shift, giving rank at least n ⌈(q − 4)/2⌉ ≥ d/4. If the three
+shifts are distinct, put a shortest chain on the diagonal. At least q − 1 diagonal blocks are
+invertible and there are two other shifts, so Lemma 10 gives
+rank(C) ≥ n ⌈(q − 1)/3⌉ ≥ nq/4 = d/4 ( q ≥ 8).
+This exhausts all overlap values and all orders. When a compressed dimension is one, a
+nonzero scalar has rank one; any branch requiring distinct labels in the same scalar block is
+impossible by Lemma 8. Thus no small-block exception has been used implicitly.
+Finally the four-term subgroup sum ∑3
+j=0 Zjd/4 has rank d/4, proving sharpness under
+every budget from four through seven.
+Proof of Theorem 2. One term is unitary. Two and three terms are covered by Lemma 9,
+four through seven by Theorem 1, and the remaining ranges by ( 4). The sums ∑2t−1
+j=0 Zj16/2t
+,
+0 ≤ t ≤ 4, attain each bound under the corresponding support budgets.
+5 Dimensions twenty-seven and thirty-two
+Proof of Theorem 3. The binary cases with ﬁve through seven terms follow from Theorem 1.
+Two remaining coprime cases follow from Corollary 5:
+(32, 11) : ⌈352/111⌉ = 4 , (27, 14) : ⌈378/183⌉ = 3 .
+In dimension 27 with six terms, µ ≤ 5 gives ⌈162/31⌉ = 6 . If µ = 6 , a period has order
+three, and the support consists of two full cosets. Compression gives blocks of size nine. If the
+output shifts agree, some nonzero block is a binomial and has rank at least six by Lemma 9(i).
+If the shifts diﬀer, a nonzero block is a scalar unitary and has rank nine.
+With seven terms, µ ≤ 5 gives ⌈189/37⌉ = 6 ; overlap seven is impossible. At overlap six,
+orders q = 9 , 27 give a single seven-point chain. The degree-six argument gives rank at least
+(27/q)(q − 6) ≥ 9. For q = 3 , the support is two full three-cycles and one singleton. If the
+output shifts are not all equal, each block contains at most two nine-dimensional Weyls, and
+8
+
+a nonzero block has rank at least six. If the shifts are all equal, the singleton makes all three
+blocks nonzero. Each has at most three terms, so ( 4) gives rank at least three in each block,
+hence at least nine in total.
+Eight terms. If µ ≤ 5, the moment bound gives ⌈216/43⌉ = 6 . Overlap eight is impossible
+because no nontrivial power of three divides eight.
+If mh = 7 , there is a single partial chain. For q = 9 , 27 the chain has length eight and the
+degree-seven bound gives rank at least (27/q)(q − 7) ≥ 6. For q = 3 , there are two full cycles
+and a two-point chain in a third coset. The chain polynomial is nonzero on at least two of
+the three sectors. If all output shifts agree, these two nonzero nine-dimensional blocks have
+at most three terms each and total rank at least six. If the shifts do not all agree, every block
+has at most two terms and a nonzero block already has rank at least six.
+It remains to consider mh = 6 , which gives exactly two exits. If q = 3 , each partial
+cycle has a single run, and the size count forces two full cycles and two singleton cosets. If
+all four output shifts agree, all three input blocks are nonzero, have at most four terms in
+dimension nine, and have rank at least three each. Otherwise partition the four cosets by
+output shift. A singleton part gives a nonzero scalar-unitary block of rank nine somewhere,
+since its polynomial is not identically zero on the three roots. If there is no singleton part,
+the only nontrivial partition is 2 + 2 , and a nonzero binomial block has rank at least six.
+For q = 9 or 27, there are no full cycles. If the two runs occupy just one coset, the problem
+is collinear. The classical scalar law [ 2, Theorem 10, equation (23), in the TW470 report] gives
+ranks at least (27/9)H9(8) = 6 or H27(8) = 6 , respectively, where Hq(m) = q − Ω(m).
+If the runs occupy two diﬀerent cosets, their lengths sum to eight. The shorter has length
+at most four, so its polynomial f1 is nonzero in at least N ≥ q −3 input sectors. If the output
+shifts agree, then q = 9 (the case q = 27 , block size one, has only one coset label per block).
+The N ≥ 6 nonzero blocks are binomials in dimension three, each of rank at least two.
+Finally suppose the output shifts diﬀer. After permuting output sectors, the ﬁrst coset
+supplies invertible diagonal blocks on those N sectors; the second supplies blocks on the
+directed edges of translation by a nonzero δ ∈ Z/q. Let r = ord( δ) ≥ 3. Remove at most one
+active sector from every translation cycle that is entirely active. The remaining set I has
+|I| ≥ N − q/r ≥ q − 3 − q/3.
+The submatrix with input and output sectors in I has invertible diagonal blocks and an acyclic
+directed graph of oﬀ-diagonal blocks. A topological ordering makes it block triangular, hence
+its rank is n|I|, where n = 27 /q. This is at least nine when q = 9 and at least ﬁfteen when
+q = 27 , both more than required.
+The bounds are sharp as budget statements at these parameters. In dimension 32, sub-
+group sums of four and eight powers of Z have ranks eight and four. In dimension 27, writing
+ζ = e2πi/3,
+(Z18 + Z9 + I)(Z3 − ζI )
+has exactly six terms and rank six: the ﬁrst factor vanishes on eighteen eigenvalues, the second
+on three further eigenvalues. A sum of nine subgroup powers has rank three. These witnesses
+also explain why one must distinguish a budget from exact sparsity.
+6 Consequences, veriﬁcation and limitations
+Sharp erasure thresholds. For a set S of omitted Weyl labels, let MSc (A) be the list of
+coeﬃcients d−1 Tr(W∗
+g A) for g /∈ S.
+9
+
+Corollary 11 (Binary erasure budget) . Let d = 2 k ≥ 16 and let r be an integer with d/16 ≤
+r < d/ 8. The map MSc is injective on all complex matrices of rank at most r whenever
+|S| ≤ 7. Some set of eight omitted labels makes it noninjective. The universal erasure budget
+is therefore exactly seven.
+Proof. A diﬀerence of two rank-at-most- r matrices has rank at most 2r < d/ 4. If it is
+supported on at most seven Weyl labels, Theorem 1 forces it to vanish. For failure at eight,
+take S = {(0, jd/8) : 0 ≤ j ≤ 7}. The sum
+P =
+7∑
+j=0
+Zjd/8 = 8
+∑
+0≤u<d
+8|u
+Euu
+has rank d/8 ≤ 2r. Partition its nonzero diagonal positions into two groups of size at most
+r. Let A equal P on the ﬁrst group and let B equal −P on the second, with zero entries
+elsewhere. Then A − B = P and the measured coeﬃcients agree.
+The product bound alone guarantees ⌈d/(2r)⌉− 1 erasures. For example, at (d, r) = (32 , 3)
+it guarantees ﬁve, whereas Corollary 11 gives the exact value seven. This is a uniform family
+of rank-sensitive statements, not a claim about arbitrary ranks or all sparsity ranges.
+Corollary 12 (Universal rank-two erasure budget) . In dimension 27, the map MSc is injec-
+tive on the set of all complex matrices of rank at most two for every S with |S| ≤ 8. There
+exists a set of nine labels for which it is not injective. Thus the largest universal erasure budget
+is exactly eight.
+Proof. If A, B both have rank at most two and agree on the measured coeﬃcients, then
+D = A − B has rank at most four and Weyl support contained in S. A nonzero D with at
+most ﬁve terms has rank at least six by ( 4); with six, seven or eight terms it has rank at least
+six by Theorem 3. Hence D = 0 .
+For failure at nine, take S = {(0, 3j) : 0 ≤ j ≤ 8} and
+P =
+8∑
+j=0
+Z3j = 9( E00 + E99 + E18,18).
+With A = 9( E00 + E99) and B = −9E18,18, the distinct matrices A, B have ranks two and
+one, and A − B = P is supported in S.
+The product estimate alone guarantees only six erasures in this setting, since 27 > 4 · 6
+but 27 ≤ 4 · 7. The counterexample above is not a pair of density matrices: B is negative,
+and the identity label is among the omissions. The corollary concerns arbitrary complex
+matrices, with no positivity or ﬁxed-trace constraint. It proves noiseless identiﬁability, not an
+eﬃcient reconstruction algorithm. Related Weyl-support obstructions for Hermitian traceless
+rank-two matrices and phase retrieval are studied by Yin [ 7]; we do not claim a new universal
+phase-retrieval threshold.
+Quantitative certiﬁcates depend on the support. For ﬁxed S satisfying a suﬃciently
+small overlap bound, Proposition 6 gives an explicit error margin for the same low-rank
+obstruction. If the eﬀective nonempty support is T ⊆ S, then µ(T) ≤ µ(S) and 1 − 1/|T| ≤
+1−1/|S|. Thus KS = 1+ µ(S)(1−1/|S|) is already a valid uniform choice for all those subsets.
+The integer improvements in Table 1 alone do not constitute uniform, dimension-independent
+conditioning estimates.
+10
+
+Reproducibility. The accompanying verify_overlap.py records exact rational checks
+of the moment thresholds; 66,332 exhaustive binary cycle patterns at orders 2, 3, 4, 8, 9, 16;
+108,201 exact integer checks of block indices and phases; and 2,069 determinant-one normal-
+izers in dimensions 8, 16, 27, 32. Sharp budget witnesses are certiﬁed by polynomial greatest
+common divisors or cyclotomic remainders over Q. The complementary verify_two_runs.py
+checks the eight-term moment threshold, the order-three occupancy count and 90,000 acyclic
+submatrix selections. The ﬁle verify_erasure.py checks all 729 coeﬃcients of the sharp
+dimension-27 erasure witness over Q(ζ3).
+The reviewer’s astra-binary-plateau-checks.py enumerates the short-orbit proﬁles
+used in the uniform theorem. It checks the random-order selection on all 2,401 loopless four-
+vertex digraphs with maximum outdegree two and all 24 orders; 406 exact branch inequalities
+at power-of-two orders through 260; and 131,071 pairs (d, r) for the erasure arithmetic and
+its comparison with the product bound. These ﬁnite checks support the written classiﬁcation
+and proof, and do not prove the arbitrary-dimension quantiﬁer by enumeration.
+A separate set of 480 ﬂoating-point instances checks the twisted fourth-moment identity
+and tail inequalities; its maximum relative identity residual was below 1.8 × 10−15. Those
+numerical checks are diagnostics, not proofs of the universal statements. No exhaustive search
+over all complex coeﬃcient vectors is asserted.
+What remains open. The argument does not settle the general prime-power envelope,
+nor even the complete binary envelope in every dimension. In particular it leaves d = 32 ,
+s = 12 , . . . , 15, and d = 27 , s = 15 , 16, 17 from the previous gap list. Theorem 1 is uniform in
+the dimension but restricted to sparsity at most seven. More generally, overlap s − j permits
+j partial cyclic runs. Extending the exceptional-support classiﬁcation beyond this range is a
+concrete next question. The overlap bound can be loose because it discards phase cancellation
+and replaces all diﬀerence multiplicities by their maximum.
+Research and AI disclosure. This manuscript arose from a catalog-level sweep of math-
+ematical work, followed by selected full-text reading. The sweep is documented separately; it
+is not a claim to have veriﬁed every proof in the surveyed corpus. Codex assisted the search,
+derivations, writing and computational checks. A GPT-6 Astra reviewer with shared task con-
+text supplied the binary three-term argument, audited the uniform seven-term extension and
+identiﬁed the graph reference. This is mathematical involvement, not an independent blind
+review. Model reports, when supplied with the frozen artifact, are assessments rather than
+human peer review or formal proof veriﬁcation. No new Opus review is claimed. Worldwide
+novelty remains subject to further literature review.
+References
+[1] L. Eriksson, Sparse cyclic Weyl operators in prime-power dimension: an operator
+extension of the scalar uncertainty law through sparsity 2p − 1, AIRR.SCIENCE,
+ARR-2026-1KTM07SEEV968BCB, v1 (2026). https://airr.science/papers/
+ARR-2026-1KTM07SEEV968BCB/versions/v1/.
+[2] S. Delvaux and M. Van Barel, Rank-deﬁcient submatrices of Fourier matrices, Lin-
+ear Algebra Appl. 429 (2008), 1587–1605. doi:10.1016/j.laa.2008.04.043. Author report
+TW470 (2006), whose theorem numbering is used here: https://www.cs.kuleuven.be/
+publicaties/rapporten/tw/TW470.pdf.
+[3] T. Tao, An uncertainty principle for cyclic groups of prime order, Math. Res. Lett. 12
+(2005), 121–127. https://arxiv.org/abs/math/0308286.
+11
+
+[4] R. Meshulam, An uncertainty inequality for ﬁnite abelian groups, European J. Combin.
+27 (2006), 63–67. https://arxiv.org/abs/math/0312407.
+[5] K. Aldahleh, A. Iosevich, J. Iosevich, J. Jaimangal, A. Mayeli and S. Pack, Additive
+energy, uncertainty principle and signal recovery mechanisms , arXiv:2504.14702 (2025).
+https://arxiv.org/abs/2504.14702.
+[6] I. Bortnovskyi et al., Reﬁned additive uncertainty principle , arXiv:2510.26664 (2025).
+https://arxiv.org/abs/2510.26664.
+[7] P. Yin, A Sharp Rank-Two Uncertainty Principle for Finite Weyl Transforms , public
+manuscript and accompanying formalization repository, accessed 15 October 2026. https:
+//github.com/holdonyb/weyl-stft-paper. The repository’s formalization claims were
+not independently replayed for this paper.
+[8] H. Gruber, Bounding the feedback vertex number of digraphs in terms of vertex degrees,
+Discrete Appl. Math. 159 (2011), 872–875. https://arxiv.org/abs/1101.1291.
+[9] L. Eriksson, Three-term Weyl operators: central multiplicities, rank laws, and exact
+list decoding , AIRR.SCIENCE, ARR-2026-0WESHW4YMM9FG8EK, v1 (2026). https:
+//airr.science/papers/ARR-2026-0WESHW4YMM9FG8EK/versions/v1/.
+12

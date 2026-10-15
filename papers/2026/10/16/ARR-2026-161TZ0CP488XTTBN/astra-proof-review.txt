@@ -1,0 +1,406 @@
+AUDITORÍA ADVERSARIAL PROVISIONAL — OPERADORES CÍCLICOS DE WEYL
+15 de octubre de 2026, 07:04 CEST (UTC+02:00)
+Revisor solicitado: OpenAI GPT-6 Astra, esfuerzo xhigh.
+Contexto compartido; intervención matemática declarada; revisión no ciega.
+
+OBJETO Y DICTAMEN
+
+He auditado proof-candidate.txt, SHA-256
+b23ba0df3e8810e8d7852c7feee50e93b27b7c9b1e28b2780a843d255d76f749,
+y las ampliaciones comunicadas en esta misma colaboración: eliminación de las
+dependencias de resultados previos del autor, casos (32,11), (27,14) y extensión
+a (27,8). El antecedente autorizado es ARR-2026-1KTM07SEEV968BCB, paper.md.
+No he revisado todavía un PDF definitivo de este nuevo trabajo. Este informe
+no debe vincularse a un PDF futuro sin cotejo posterior.
+
+No encuentro un fallo fatal. Las demostraciones reconstruidas abajo son
+válidas para coeficientes complejos arbitrarios no nulos en el soporte exacto.
+La combinación del cuarto momento con la clasificación de una o dos salidas
+y el análisis de bloques demuestra los casos anunciados. En particular:
+
+* En d=16 se obtiene toda la envolvente escalar como cota inferior de rango
+  para operadores cíclicos de Weyl, con agudeza para un presupuesto de soporte.
+* En d=32 se obtienen rango >=8 para s=5 y rango >=4 para s=11.
+* En d=27 se obtienen rango >=6 para s=6,7,8 y rango >=3 para s=14.
+
+La clausura en dimensión 16 puede presentarse sin importar los teoremas
+operadores anteriores del autor. La prueba de s=8 en dimensión 27 sí emplea
+el resultado escalar clásico de Delvaux–Van Barel en un subcaso colineal.
+No queda demostrada la conjetura general en todas las potencias de primo.
+
+Recomendación provisional: desarrollar el candidato en una nota de
+investigación con los detalles indicados, y cotejar después el PDF final.
+Nota ordinaria provisional: 8,2/10.
+Nota AIRR provisional: 5,0/10 (muy bueno en su escala de impacto, no 50% de
+corrección). Son juicios sobre el contenido auditado, no notas certificadas
+de una versión todavía inexistente ni probabilidades de corrección.
+
+La nota ordinaria reconoce una prueba corta, sólida y verificable de casos
+no conmutativos concretos. La nota AIRR refleja también su alcance acotado:
+cierra una dimensión pequeña de una conjetura del autor y varios parámetros,
+con herramientas esencialmente clásicas. No establece un principio nuevo de
+alcance general, una resolución de un problema histórico ni una consecuencia
+aplicada cuantificada. No he seguido un objetivo de nota ni he incrementado
+la valoración por el mero número de casos añadidos.
+
+INDEPENDENCIA Y ALCANCE
+
+La etiqueta adecuada es involved_in_manuscript. Este agente recibió el
+argumento del agente autor y sus refinamientos; devolvió verificaciones,
+detalles de fases/bloques y una prueba autónoma del caso s=3 en d=16 que el
+autor comunicó que incorporaría. La prueba original y la extensión s=8
+vinieron del agente autor. Mis comprobaciones están implementadas aparte,
+pero esa separación de código no convierte la evaluación en revisión ciega
+ni elimina la intervención en el contenido. La identidad y el esfuerzo aquí
+son los de la configuración solicitada; este archivo no inventa evidencia
+adicional de runtime o de aislamiento.
+
+Leí el índice D:\LEEME.md antes de crear archivos. No modifiqué el candidato,
+el antecedente ni los informes de la tarea anterior. No publiqué nada.
+
+1. CUARTO MOMENTO: SIGNOS, NORMALIZACIÓN Y REDONDEO
+
+Sean X e_j=e_(j+1), Z e_j=omega^j e_j, ZX=omega XZ y W_(a,b)=X^a Z^b.
+Para h=(a_h,b_h) y g=(a_g,b_g),
+
+  W_g^* W_(g+h) = omega^(-b_g a_h) W_h.
+
+Por tanto, si C=sum_(g in S)c_g W_g, el coeficiente u_h de W_h en C^*C es
+
+  u_h=sum_(g,g+h in S) conjugate(c_g)c_(g+h) omega^(-b_g a_h).
+
+No falta un conjugado ni un término de fase. Poniendo M=sum|c_g|^2,
+Q=sum|c_g|^4, m_h=|{g:g,g+h in S}| y mu=max_(h!=0)m_h, la ortogonalidad
+de traza da
+
+  Tr((C^*C)^2)/d = sum_h |u_h|^2
+    <= M^2 + sum_(h!=0) m_h sum_(g,g+h in S)|c_g|^2|c_(g+h)|^2
+    <= M^2 + mu(M^2-Q)
+    <= [1+mu(1-1/s)]M^2.
+
+Aquí la suma sobre diferencias no nulas cuenta cada par ordenado distinto
+una sola vez; Q>=M^2/s es Cauchy–Schwarz. Como Tr(C^*C)=dM,
+
+  rank(C) >= ceil(d/[1+mu(1-1/s)]).                         (1)
+
+La desigualdad es para singularidades, no requiere C normal ni hermítico.
+También se tiene rank(C)*s>=d, pues ||C||op<=sum|c_g|<=sqrt(sM).
+
+Si m_h=s, S es una unión de órbitas completas de la traslación por h, de
+modo que ord(h) divide s. Así, para cualquier d y gcd(s,d)=1, mu<=s-1 y
+
+  rank(C) >= ceil(ds/(s^2-s+1)).                            (2)
+
+La cota de momento y esta consecuencia no necesitan d potencia de primo;
+esa hipótesis sí interviene en las reducciones estructurales posteriores.
+Las aplicaciones aritméticas nuevas son ceil(160/21)=8 para (32,5),
+ceil(352/111)=4 para (32,11), y ceil(378/183)=3 para (27,14).
+
+2. QUÉ SIGNIFICA CASI INVARIANCIA
+
+La cantidad s-m_h cuenta las salidas del soporte a su complemento bajo la
+traslación por h. En cada órbita cíclica, un subconjunto propio no vacío
+se divide en cadenas consecutivas; cada cadena aporta exactamente una
+salida. Una órbita llena aporta cero.
+
+Por ello, m_h=s-1 significa una única cadena parcial en una única órbita,
+además de órbitas completas. Para m_h=s-2 hay exactamente dos cadenas
+parciales, que pueden pertenecer a la misma órbita o a dos distintas.
+No debe confundirse el número de cadenas con el número de órbitas parciales
+en este segundo caso. Esa distinción está respetada en la prueba de s=8.
+
+3. REDUCCIÓN CLIFFORD Y BLOQUES: JUSTIFICACIÓN COMPLETA
+
+En d=p^k, si h tiene orden q, escribamos n=d/q y h=n(a_0,b_0).
+Al menos una coordenada a_0,b_0 es una unidad módulo p, y por tanto módulo d.
+Si a_0 es unidad, la matriz
+
+  [[b_0,-a_0],[a_0^{-1},0]]
+
+tiene determinante 1 y lleva h a (0,n). Si b_0 es unidad, puede usarse
+
+  [[b_0,-a_0],[0,b_0^{-1}]].
+
+Esto normaliza el generador h, no solamente su subgrupo. Una implementación
+Clifford de estas matrices existe; en dimensión par se permiten fases de
+orden 2d. Las fases se absorben en los coeficientes sin cambiar soporte ni
+rango. La referencia estándar adecuada es Hostens–Dehaene–De Moor [H].
+También puede darse una demostración elemental mediante Fourier y chirps.
+Es importante no dividir por 2 módulo d cuando d es par.
+
+Tras esta normalización escribimos
+
+  C=sum_i W_(a_i,b_i) f_i(Z^n),
+
+donde los i recorren cosets distintos de <(0,n)>. Sea
+E_j=span{e_(j+qt): t in Z_n}, 0<=j<q. Para delta=a_i mod q, alpha_i=(a_i-delta)/q
+y kappa=floor((j+delta)/q), el bloque E_j -> E_(j+delta mod q) es
+
+  f_i(zeta_q^j) omega^(b_i j) X_n^kappa
+       W^(n)_(alpha_i mod n,b_i mod n).                    (3)
+
+El acarreo X_n^kappa depende de j y delta, pero es común a todos los términos
+del bloque. Si dos cosets con el mismo delta producen la misma etiqueta
+(alpha mod n,b mod n), entonces sus a son iguales módulo d y sus b difieren
+por un múltiplo de n; son el mismo coset. La aplicación es inyectiva.
+
+En consecuencia, términos no nulos de cosets distintos no pueden cancelar
+el bloque entero, porque las matrices de Weyl de dimensión n son linealmente
+independientes. Si todos los delta coinciden, C es una permutación de una
+matriz diagonal por bloques y los rangos se suman. Con delta diferentes,
+un bloque aislado da una cota inferior, pero no se pueden sumar sus rangos
+sin una justificación adicional. La prueba siguiente nunca usa esa suma
+indebida; en el último subcaso usa una submatriz triangular.
+
+4. DOS INGREDIENTES ELEMENTALES
+
+Un binomio de Weyl no nulo en dimensión n=p^a tiene rango al menos n-n/p.
+Se reduce por multiplicación unitaria a alpha I+beta W_h, h!=0. Si h tiene
+orden q, W_h^q es escalar y Tr(W_h^j)=0 para 1<=j<q. Sus q autovalores
+distintos tienen multiplicidad n/q. Como q>=p, un binomio anula a lo sumo
+n/p dimensiones. Esto incluye los casos n=3,4,8,9 usados abajo.
+
+En dimensión 8, toda combinación de a lo sumo tres Weyl tiene rango >=4.
+Para s<=2 basta la cota producto. Para s=3 no hay periodo no trivial porque
+ninguna potencia de 2 distinta de 1 divide 3; mu<=2 y (1) da ceil(24/7)=4.
+Así no hace falta importar el teorema de tres términos del autor.
+
+Una cadena de longitud l en una órbita de orden q se escribe, tras fases
+y un factor monomial, como un polinomio de grado l-1. No se anula en más
+de l-1 de los q autovalores. Su rango es al menos (d/q)(q-l+1). Este
+argumento elemental reemplaza la ley escalar en todos los casos de una sola
+cadena que se usan para d=16 y para d=27,s=7.
+
+5. CLAUSURA COMPLETA EN DIMENSIÓN 16
+
+s=1: rango 16. s=2: rango >=8 por producto.
+
+s=3: no hay periodo no trivial. Si mu<=1, (1) da ceil(48/5)=10. Si mu=2,
+tomamos h con una salida. Para q=4,8,16 hay una sola cadena de tres puntos;
+el grado dos da (16/q)(q-2)>=8. Para q=2 hay un par completo y un singleton
+en otro coset. Con delta distintos, un bloque unitario tiene rango 8; con
+delta iguales, el singleton asegura dos bloques no nulos de a lo sumo dos
+Weyl en dimensión 8, cada uno de rango >=4. En ambos casos rango >=8.
+
+s=4,5: la cota producto da rango >=4.
+
+s=6: si mu<=5, (1) da ceil(96/31)=4. Si mu=6, el periodo h tiene orden
+que divide simultáneamente 16 y 6, luego q=2. Hay tres cosets completos.
+Todo bloque no nulo tiene a lo sumo tres Weyl en dimensión 8 y rango >=4.
+
+s=7: mu=7 es imposible. Si mu<=5, ceil(112/37)=4. Para mu=6 hay una salida.
+Los órdenes posibles son q=2,4,8,16, sin omisiones:
+
+  q=8 o 16: cadena de longitud 7, grado 6, rango >=4 o >=10.
+
+  q=4: un coset completo y una cadena de longitud 3 en otro. El polinomio
+  de la cadena está activo en al menos dos sectores. Si los delta difieren,
+  aparece un bloque unitario de tamaño 4. Si coinciden, en cada uno de esos
+  sectores hay un bloque no nulo de a lo sumo dos Weyl, rango >=2; suman >=4.
+
+  q=2: tres pares completos y un singleton en un cuarto coset. Si los delta
+  no coinciden todos, cada bloque contiene a lo sumo tres términos y un bloque
+  no nulo tiene rango >=4. Si coinciden todos, el singleton mantiene activos
+  ambos bloques. Cada uno tiene a lo sumo cuatro términos en dimensión 8 y
+  rango >=2 por producto; la suma es >=4.
+
+Para 8<=s<=15, ceil(16/s)>=2. Para 16<=s<=256, C!=0 implica rango >=1.
+Así la envolvente inferior es 16,8,4,2,1 en los intervalos de presupuesto
+[1,1],[2,3],[4,7],[8,15],[16,256], respectivamente.
+
+La agudeza bajo presupuesto se obtiene en m=1,2,4,8,16 con
+sum_(j=0)^(m-1) Z^(16j/m), de soporte m y rango 16/m. No se ha demostrado
+con estas construcciones agudeza para cada soporte exacto s; por ejemplo,
+no debe afirmarse que la construcción tiene exactamente seis o siete términos.
+
+6. DIMENSIÓN 27: s=6,7 Y LA AMPLIACIÓN s=8
+
+s=6: mu<=5 da ceil(162/31)=6. Si mu=6, q divide 6 y 27, luego q=3 y hay
+dos cosets completos. Con delta distintos hay un bloque unitario de rango
+9. Con delta iguales, cualquier bloque no nulo tiene a lo sumo dos Weyl
+en dimensión 9 y rango >=6.
+
+s=7: mu=7 es imposible y mu<=5 da ceil(189/37)=6. Para mu=6 hay una salida.
+Si q=9 o 27, una cadena de longitud 7 da rango >=9 o >=21. Si q=3, hay
+dos cosets completos y un singleton. Con delta no todos iguales, cualquier
+bloque no nulo tiene a lo sumo dos términos y rango >=6. Si todos coinciden,
+los tres bloques son no nulos, tienen a lo sumo tres términos en dimensión
+9 y rango >=3 cada uno; suman >=9.
+
+s=8: mu=8 es imposible. Si mu<=5, (1) da ceil(216/43)=6. Quedan mu=7 y 6.
+
+  mu=7, una salida:
+  - q=3: dos cosets completos y una cadena de dos puntos. Esta última está
+    activa en al menos dos sectores. Si todos los delta coinciden, cada
+    uno de esos bloques tiene a lo sumo tres términos y rango >=3, total
+    >=6. Si no coinciden todos, un bloque no nulo tiene a lo sumo dos
+    términos y rango >=6.
+  - q=9 o 27: cadena de ocho puntos, grado siete, rango >=6 o >=20.
+
+  mu=6, dos salidas:
+  - q=3: las únicas ocupaciones posibles son dos cosets completos y dos
+    singletons en cosets distintos. En efecto, si u cuenta singletons y
+    v pares parciales, u+v=2 y u+2v+3w=8 fuerzan u=2,v=0,w=2.
+    Si los cuatro delta coinciden, cada uno de los tres bloques es no
+    nulo y tiene a lo sumo cuatro términos: rango >=ceil(9/4)=3 por bloque,
+    total >=9. Si no coinciden todos, una partición 3+1 o cualquier
+    partición con parte 1 produce algún bloque unitario de rango 9.
+    Para la partición 2+2, un bloque no nulo tiene rango >=6 por binomio.
+  - q=9 o 27: como ocho puntos no llenan una órbita, hay una o dos órbitas
+    ocupadas. Si hay una, es un caso escalar: Delvaux–Van Barel [D],
+    Definition 7 y Theorem 10, da H_27(8)=6. Para q=9 la cota correspondiente
+    sería 3 H_9(8)=6; en realidad ocho puntos de un ciclo de nueve tienen
+    una sola salida, así que este subcaso no ocurre cuando mu=6.
+  - Si hay dos órbitas, cada una contiene una cadena. Sus longitudes l_1,l_2
+    suman ocho; elegimos l_1<=4. Por grado, f_1 está activo en un conjunto A
+    de al menos q-3 sectores. Si los delta coinciden y q=9, cada bloque
+    activo tiene a lo sumo dos Weyl en dimensión 3 y rango >=2; la suma es
+    >=12. Para q=27, n=1 y dos cosets distintos con el mismo delta son
+    imposibles por inyectividad.
+  - Si los dos delta difieren, permutamos las filas de sectores para poner
+    el primer coset en la diagonal. La forma resultante es D_1+P_delta D_2,
+    con delta!=0 y D_1 invertible por bloques en los sectores A. La traslación
+    j -> j+delta divide Z_q en q/ord(delta)<=q/3 ciclos. De cada ciclo entero
+    contenido en A retiramos un vértice. El conjunto I restante tiene
+    |I|>=q-3-q/3. El grafo inducido de la traslación en I es acíclico; un
+    orden topológico hace triangular la submatriz de filas y columnas I.
+    Todos sus bloques diagonales son invertibles. Tiene rango n|I|, que es
+    >=9 para q=9 y >=15 para q=27. Esto es una cota por una submatriz
+    invertible, no una suma injustificada de bloques que se solapan.
+
+Quedan cubiertos todos los valores de mu y todos los órdenes de h en s=8.
+La selección de sectores es un argumento determinista para coeficientes
+arbitrarios; no depende de ninguna elección genérica de las fases.
+
+7. ESTABILIDAD DEL RANGO: COROLARIO CORRECTO Y LÍMITES
+
+Normalícese ||C||_F^2=sum_j sigma_j^2=1 y sea K=1+mu(1-1/s). El cuarto
+momento da sum sigma_j^4<=K/d. Para 1<=r<d y t=sum_(j<=r)sigma_j^2,
+
+  t^2/r+(1-t)^2/(d-r)<=K/d.
+
+Despejando,
+
+  sum_(j>r)sigma_j^2 >=
+  max(0,1-r/d-sqrt(r(d-r)(K-1))/d).                         (4)
+
+Es la distancia de Frobenius relativa al cuadrado a las matrices de rango
+<=r. No es una cota de distancia sin cuadrado ni una cota de norma operador.
+En d=16,r=3,mu<=5, vale al menos 0,0157782010011 para s=6 y
+0,00447661808937 para s=7. Especificar 1<=r<d evita divisiones por cero.
+
+La fórmula no proporciona por sí sola una constante positiva uniforme
+explícita en los soportes estructurados excepcionales. La clausura del
+rango para todos los soportes <=7 sí implica por compacidad alguna distancia
+positiva uniforme después de normalizar, pero no calcula esa constante.
+No debe venderse (4) como un algoritmo de recuperación o una garantía de
+muestreo hasta formular y demostrar esa aplicación por separado.
+
+8. ANTECEDENTES Y NOVEDAD: EVALUACIÓN ADVERSARIAL
+
+[D] S. Delvaux y M. Van Barel, Rank-deficient submatrices of Fourier matrices,
+    informe TW470 (2006), Definition 7 y Theorem 10, ecuación (23).
+    https://www.cs.kuleuven.be/publicaties/rapporten/tw/TW470.pdf
+    Se consultó la definición del presupuesto y el enunciado/prueba del
+    teorema pertinente. La envolvente escalar de potencias de primo es
+    clásica; no es una contribución de este nuevo trabajo. El caso colineal
+    de s=8 arriba depende explícitamente de ella.
+
+[H] E. Hostens, J. Dehaene y B. De Moor, Stabilizer states and Clifford
+    operations for systems of arbitrary dimensions, and modular arithmetic.
+    https://arxiv.org/html/quant-ph/0408190
+    Se consultaron II.3 y la construcción de Clifford. La acción simpléctica
+    sobre etiquetas y la necesidad de fases módulo 2d son estándar. Su uso
+    no debe presentarse como una nueva normalización Clifford.
+
+[A] K. Aldahleh, A. Iosevich, J. Iosevich, J. Jaimangal, A. Mayeli y S. Pack,
+    Additive energy, uncertainty principle and signal recovery mechanisms.
+    https://arxiv.org/html/2504.14702
+    Se consultaron Definition 1.6, Theorem 1.8 y el argumento de cuarto
+    momento. El vínculo entre energía aditiva, expansión de momentos e
+    incertidumbre ya existe. El enunciado es escalar/Fourier; no enuncia
+    estos cierres de rango para combinaciones no conmutativas de Weyl.
+
+[B] I. Bortnovskyi et al., Refined additive uncertainty principle.
+    https://arxiv.org/html/2510.26664
+    Se consultaron la formulación y Theorem 1.4, además de su contexto de
+    prueba. Los términos correctores que distinguen soportes extremales ya
+    forman parte de la literatura. No hay base para atribuir originalidad
+    a la idea general de mejorar incertidumbre midiendo estructura aditiva.
+
+[W] A. Wigderson y Y. Wigderson, The uncertainty principle: variations on a
+    theme, apartados 3.2 y 3.2.4, Theorems 3.9 y 3.14.
+    https://www.math.ias.edu/~avi/PUBLICATIONS/WigdersonWi2020.pdf
+    Se consultó la formulación de soporte de rango para grupos finitos y
+    su prueba mediante normas de Schatten. Da contexto clásico para pasar
+    de estimaciones de normas a rango; no he encontrado allí las clausuras
+    concretas auditadas aquí.
+
+El mecanismo de (1) es una adaptación elemental de energía ponderada con
+un cociclo de fase y una norma de Schatten. La cantidad mu es una
+multiplicidad máxima de diferencias, no la energía aditiva completa; para
+un soporte S, la energía ordinaria es sum_h m_h^2. Conviene no intercambiar
+ambas magnitudes ni insinuar una equivalencia de enunciados.
+
+La novedad candidata defendible es la clasificación de los casos en que
+la cota elemental deja de bastar y su resolución mediante sectores de
+Weyl de menor dimensión, incluyendo la submatriz acíclica para s=8. El
+resultado en d=16 resuelve todos los soportes y coeficientes en esa dimensión,
+no solamente los colineales. Esto sí supera el problema escalar clásico.
+
+La búsqueda pública fue acotada; no localizó estos mismos cierres dentro de
+las fuentes examinadas. Esto no prueba prioridad mundial. No se verificó
+exhaustivamente toda la literatura de álgebras de grupo torcidas, operadores
+Gabor o incertidumbre no conmutativa. Ninguna de las fuentes consultadas
+justifica por sí sola anunciar la resolución de la conjetura en todo d.
+
+La escala AIRR se consultó en https://airr.science/assessments/ únicamente
+como marco de valoración: 3 aceptable, 4 sólido, 5 muy bueno, 6 excelente;
+los niveles superiores exigen impacto mucho mayor. Las notas de otros
+trabajos no son evidencia matemática ni se usan para establecer prioridad.
+
+9. COMPROBACIONES PROPIAS Y SUS LÍMITES
+
+astra-independent-checks.py y astra-independent-checks.json: ocho grupos
+PASS. Incluyen 45.881 identidades de acción/etiquetas/acarreo por bloques,
+3.312.932 identidades modulares de fase del producto adjunto, 66.332 ciclos
+binarios para la clasificación de una salida, 2.164 normalizaciones SL_2,
+aritmética racional de las cotas, covarianza numérica Fourier/chirp,
+96 ejemplos matriciales de expansión/momento/cola y ejemplos de agudeza
+bajo presupuesto en d=16. El mayor error numérico de covarianza fue
+1,88e-11; las pequeñas desviaciones de momento fueron de redondeo.
+
+astra-s8-checks.py y astra-s8-checks.json: cuatro grupos PASS. Se comprobaron
+exactamente las ocupaciones de ciclos de tres para una y dos salidas,
+la aritmética nueva y 86.944 elecciones de conjuntos con a lo sumo tres
+huecos y traslaciones no nulas en Z_9 y Z_27. En cada caso la selección
+propuesta elimina ciclos y admite orden topológico. La cota analítica
+conservadora usada en la prueba basta, aunque los mínimos de la selección
+examinada fueron mayores (4 y 16 sectores).
+
+Los ensayos numéricos no son una demostración sobre todos los coeficientes.
+Las comprobaciones finitas de fórmulas no son una enumeración de todos los
+soportes de Z_d^2. La demostración auditada es el argumento analítico de
+los apartados 1–7; no depende de que una búsqueda numérica no encuentre
+contraejemplos. No se ha producido una formalización Lean/Coq.
+
+10. CONDICIONES PARA EL COTEJO FINAL DEL MANUSCRITO
+
+Antes de atribuir un dictamen a un PDF exacto deben aparecer claramente:
+
+1) Convención ZX=omega XZ, soporte exacto y coeficientes complejos arbitrarios.
+2) Normalización del generador h, fases pares y acarreo común en (3).
+3) Inyectividad de etiquetas y regla precisa de cuándo se suman rangos.
+4) Clasificación exhaustiva de los casos, incluido mu=6 en d27,s8 y su
+   pequeño lema de submatriz acíclica.
+5) Distinción entre agudeza bajo presupuesto y soporte exactamente s.
+6) Rango 1 para s>=d, hipótesis de (4) y separación de estabilidad explícita
+   en mu<=5 respecto de los casos estructurados.
+7) Atribución de herramientas clásicas, dependencia escalar de s8 y alcance
+   limitado de la búsqueda de antecedentes.
+8) Declaración de colaboración e intervención de este revisor.
+
+Estos puntos son requisitos de precisión y completitud de la exposición;
+no he encontrado un obstáculo matemático pendiente para los resultados
+enumerados. El siguiente paso de revisión es cotejar la fuente y el PDF
+definitivos, preservando este informe provisional sin reescribir su juicio.
