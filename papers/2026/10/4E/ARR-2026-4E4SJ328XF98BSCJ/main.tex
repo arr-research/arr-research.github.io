@@ -1,0 +1,275 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=25mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,booktabs,microtype}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\C}{\mathbb C}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\capop}{\operatorname{cap}}
+\newcommand{\F}{\mathcal F}
+\newcommand{\K}{\mathcal C}
+\newcommand{\id}{\operatorname{id}}
+\title{A dimension-independent capacity bound for amplified determinants\\of Hermitian matrix tuples}
+\author{Lluis Eriksson\\Independent researcher, Sweden}
+\date{16 October 2026 --- research draft, not peer reviewed}
+\begin{document}
+\maketitle
+\begin{abstract}
+For a matrix tuple, we maximize the geometric mean of the squared singular values of its linear pencil over auxiliary matrices with unit normalized Hilbert--Schmidt energy, allowing arbitrary auxiliary size. We compare this regularized optimum with an optimization of Gurvits capacity over coefficient covariance matrices. The capacity optimization is an upper bound for every tuple. If the coefficients are Hermitian and their real span contains a positive definite matrix, it also bounds the optimum from below up to the universal factor $e$. The lower bound combines the established Mai--Speicher free determinant formula with finite-dimensional regularization. An imaginary shift is represented inside the original coefficient tuple, and its energy cost is computed exactly. Real covariance suffices for the capacity optimum, giving normal auxiliary witnesses without size doubling. A separate dilation transfers general bounded moment approximants to feasible witnesses. Only convergence of a bounded, regularized logarithm is needed; convergence of unregularized Gaussian log determinants is not asserted. The result gives finite witnesses approaching the bound, without a quantitative dimension estimate. We state separately the unresolved extension to arbitrary matrix tuples and the question of an effective construction.
+\end{abstract}
+
+\section{The question and the precise scope}
+Write $\tau_m=\Tr/m$. For $A=(A_1,\ldots,A_s)\in M_d(\C)^s$, define
+\begin{align}
+ \F_m(A)&=\max_{\sum_i\tau_m(Y_iY_i^*)=1}
+ \left|\det\left(\sum_i A_i\otimes Y_i\right)\right|^{2/(dm)},\label{eq:F}\\
+ \F_\infty(A)&=\sup_{m\ge1}\F_m(A).
+\end{align}
+The coefficient presentation and its Euclidean energy are part of the problem; replacing a tuple by an arbitrary basis of the same span need not preserve this objective. The variables $Y_i$ may be complex and need not be Hermitian.
+
+For a positive semidefinite $s\times s$ matrix $Q$ of trace one, set
+\begin{align}
+ \Phi_Q(X)&=\sum_{i,j}Q_{ij}A_iXA_j^*,\\
+ \capop(\Phi)&=\inf_{\substack{X>0\\\det X=1}}\det\Phi(X),&
+ \K(A)&=\max_{\substack{Q\ge0\\\Tr Q=1}}\capop(\Phi_Q)^{1/d}.\label{eq:C}
+\end{align}
+Here capacity is the determinant invariant of a completely positive map, not quantum communication capacity. If $Q=LL^*$ and $B_j=\sum_iL_{ij}A_i$, then $\Phi_Q(X)=\sum_jB_jXB_j^*$, so the map is completely positive even when $Q$ is singular.
+
+\begin{theorem}\label{thm:main}
+For every complex matrix tuple, $\F_\infty(A)\le\K(A)$. If each $A_i=A_i^*$ and
+\[
+ \sum_i b_iA_i=D>0\qquad\text{for some }b\in\R^s,
+\]
+then
+\begin{equation}\label{eq:main}
+ \frac{\K(A)}{e}\ \le\ \F_\infty(A)\ \le\ \K(A).
+\end{equation}
+In the latter case $\K(A)>0$. For every $\eta>0$ there is a finite auxiliary size and a feasible tuple whose objective is at least $(1-\eta)\K(A)/e$.
+\end{theorem}
+
+Thus the logarithmic optimum is determined within one nat:
+\[
+ -\log\K(A)\le-\log\F_\infty(A)\le-\log\K(A)+1.
+\]
+The factor does not depend on $d$, $s$, or the coefficients within the stated class. The witness size can depend on all of them and on $\eta$. We do not claim that $e$ is optimal, that the covariance optimization is exact, or that the proof yields a polynomial-time algorithm.
+
+Earlier work on the same objective gives sharp special-family values and noise laws \cite{sharp,tropical}. In particular, the comparison in \cite{tropical} is uniform over positive reweightings of a fixed pencil, with constants depending on that pencil. The present comparison uses a different reference quantity and a universal factor, under an additional Hermitian positivity hypothesis. The free determinant identity used below is a theorem of Mai and Speicher \cite{ms}; the proposed contribution here is its transfer to energy-constrained finite witnesses by a perturbation that stays in the given tuple.
+
+\section{The capacity upper bound}
+The maximum in \eqref{eq:C} exists. For fixed $X>0$, the function $Q\mapsto\det\Phi_Q(X)^{1/d}$ is continuous and nonnegative. Its infimum over $\det X=1$ is upper semicontinuous, so it attains a maximum on the compact set of density matrices. It is finite since $X=I_d$ gives a finite upper bound. The same observation and concavity of the determinant root show that this capacity root is concave in $Q$. This does not justify interchanging the maximum and infimum in \eqref{eq:C}.
+
+\begin{proposition}\label{prop:upper}
+Every feasible tuple $Y$ in \eqref{eq:F}, with
+$Q_{ij}=\tau_m(Y_iY_j^*)$, satisfies
+\[
+ \left|\det\left(\sum_i A_i\otimes Y_i\right)\right|^{2/(dm)}
+ \le \capop(\Phi_Q)^{1/d}.
+\]
+\end{proposition}
+\begin{proof}
+The matrix $Q$ is positive semidefinite and has trace one. Put $H=\sum_iA_i\otimes Y_i$. If $H$ is singular, the conclusion is immediate. Otherwise fix $X>0$ with $\det X=1$ and put $M=H(X\otimes I_m)H^*>0$. The normalized partial trace $E=\id_{M_d}\otimes\tau_m$ gives $E(M)=\Phi_Q(X)$. Averaging conjugates of $M$ by a unitary error basis on the auxiliary factor gives $E(M)\otimes I_m$. Concavity and unitary invariance of $\log\det$ therefore give
+\[
+ \frac{1}{dm}\log\det M\le\frac1d\log\det E(M).
+\]
+Since $\det M=|\det H|^2$, exponentiation and the infimum over $X$ prove the assertion.
+\end{proof}
+
+\begin{lemma}[Real covariance suffices]\label{lem:real}
+If all $A_i$ are Hermitian, the maximum in \eqref{eq:C} has a real symmetric maximizer.
+\end{lemma}
+\begin{proof}
+The Hilbert--Schmidt adjoint satisfies $\Phi_Q^*=\Phi_{\overline Q}$. Capacity is invariant under this adjoint; see \cite{ms}, immediately after Theorem~1.2. Consequently $f(Q)=\capop(\Phi_Q)^{1/d}$ satisfies $f(\overline Q)=f(Q)$. The matrix $Q_{\R}=(Q+\overline Q)/2$ is real symmetric, positive semidefinite, and of trace one. Concavity of $f$ gives $f(Q_{\R})\ge f(Q)$.
+\end{proof}
+
+\section{An exact finite-dimensional regularization}
+We first assume that the positive direction is $I_d$:
+\begin{equation}\label{eq:identity}
+ A_i=A_i^*,\qquad \sum_i b_iA_i=I_d,\qquad b_i\in\R .
+\end{equation}
+For arbitrary $Y_i\in M_N(\C)$ and $\varepsilon>0$, define
+\begin{align}
+ H_N&=\sum_i A_i\otimes Y_i,&
+ E_N&=\sum_i\tau_N(Y_iY_i^*),\\
+ Z_i&=
+ \begin{pmatrix}0&Y_i\\Y_i^*&0\end{pmatrix}
+ +i\varepsilon b_iI_{2N},&
+ \widehat Z_i&=\frac{Z_i}{\sqrt{E_N+\varepsilon^2\|b\|_2^2}}.\label{eq:Z}
+\end{align}
+
+\begin{lemma}[Finite witness identity]\label{lem:dilation}
+The tuple $\widehat Z$ is feasible at auxiliary size $2N$, and its objective equals
+\begin{equation}\label{eq:identityvalue}
+ \left|\det\left(\sum_i A_i\otimes\widehat Z_i\right)\right|^{1/(dN)}
+ =
+ \frac{\exp\left\{\dfrac1{dN}\Tr\log(H_N^*H_N+\varepsilon^2I_{dN})\right\}}
+ {E_N+\varepsilon^2\|b\|_2^2}.
+\end{equation}
+\end{lemma}
+\begin{proof}
+The first summand in $Z_i$ is Hermitian. As $b_i$ is real, multiplication by its adjoint cancels the two cross terms, giving
+\[
+ \tau_{2N}(Z_iZ_i^*)=\tau_N(Y_iY_i^*)+\varepsilon^2b_i^2.
+\]
+After permuting tensor factors, \eqref{eq:identity} gives
+\[
+ \sum_i A_i\otimes Z_i
+ \simeq
+ \begin{pmatrix}0&H_N\\H_N^*&0\end{pmatrix}
+ +i\varepsilon I_{2dN}.
+\]
+The Hermitian block matrix has eigenvalues $\pm s_j(H_N)$, including zeros. Hence
+\[
+ \left|\det\left(\sum_i A_i\otimes Z_i\right)\right|
+ =\prod_{j=1}^{dN}\bigl(s_j(H_N)^2+\varepsilon^2\bigr)
+ =\det(H_N^*H_N+\varepsilon^2I).
+\]
+Dividing every $Z_i$ by the square root of its total energy divides the objective by that energy. This proves \eqref{eq:identityvalue}.
+\end{proof}
+
+The shift has no uncharged coefficient: its cost is exactly $\varepsilon^2\|b\|_2^2$. The construction also changes the auxiliary size from $N$ to $2N$, which is permitted by the supremum in $\F_\infty$.
+
+If each $Y_i=Y_i^*$, doubling is unnecessary. In that case $H_N=H_N^*$, and the normal matrices
+\begin{equation}\label{eq:nodouble}
+ W_i=\frac{Y_i+i\varepsilon b_iI_N}{\sqrt{E_N+\varepsilon^2\|b\|_2^2}}
+\end{equation}
+are feasible and have the same right-hand side of \eqref{eq:identityvalue}, now as the objective at size $N$. This follows directly from $|\det(H_N+i\varepsilon I)|^2=\det(H_N^2+\varepsilon^2I)$ and cancellation of the energy cross terms. The dilation above remains useful for non-Hermitian $Y_i$.
+
+\begin{proposition}[Transfer from bounded moment approximants]\label{prop:transfer}
+Assume \eqref{eq:identity}. Let $y_1,\ldots,y_s$ belong to a tracial von Neumann algebra $(\mathcal M,\tau)$ with $\sum_i\tau(y_iy_i^*)=1$. Suppose tuples $Y^{(N)}$ converge to $y$ in joint normalized $*$-moments and satisfy $\sup_{N,i}\|Y_i^{(N)}\|<\infty$. Put
+\[
+ H=\sum_i A_i\otimes y_i,\qquad \tau_d=\Tr/d\otimes\tau,\qquad
+ \Delta(H)=\exp\bigl(\tau_d(\log|H|)\bigr),
+\]
+where the last expression is defined by decreasing positive regularization and may be zero. Then $\F_\infty(A)\ge\Delta(H)^2$.
+\end{proposition}
+\begin{proof}
+Fix $\varepsilon>0$. The matrices $H_N^*H_N$ have uniformly bounded spectra, and their normalized moments converge to those of $H^*H$. Polynomial approximation to the continuous function $t\mapsto\log(t+\varepsilon^2)$ on a common compact interval gives
+\[
+ \lim_{N\to\infty}\frac1{dN}\Tr\log(H_N^*H_N+\varepsilon^2I)
+ =\tau_d\bigl(\log(H^*H+\varepsilon^2I)\bigr).
+\]
+Also $E_N\to1$. Lemma~\ref{lem:dilation} therefore implies
+\[
+ \F_\infty(A)\ge
+ \frac{\exp\{\tau_d(\log(H^*H+\varepsilon^2I))\}}
+ {1+\varepsilon^2\|b\|_2^2}.
+\]
+Letting $\varepsilon\downarrow0$ yields the result, including when $\Delta(H)=0$.
+The order of limits is fixed: first $N\to\infty$ for fixed $\varepsilon$, then $\varepsilon\downarrow0$. No claim about $\det H_N$ is used.
+\end{proof}
+
+\section{Proof of the universal factor in the stated class}
+We use two established inputs. First, for free standard semicircular variables $s_j$ and arbitrary fixed matrices $B_j\in M_d(\C)$, the Mai--Speicher formula gives
+\begin{equation}\label{eq:MS}
+ \Delta\left(\sum_jB_j\otimes s_j\right)^2
+ =e^{-1}\capop\left(X\mapsto\sum_jB_jXB_j^*\right)^{1/d}.
+\end{equation}
+This is \cite[Theorem 1.2]{ms}. The identity and its constant are prior results.
+
+Second, independent GUE matrices with normalized second moment converging to one have realizations converging jointly in $*$-moments to free standard semicircular variables, with uniformly bounded operator norms. These standard Gaussian approximation facts follow from Gaussian asymptotic freeness and norm convergence; see \cite{v,ht}. Only bounded norms and moment convergence are needed here.
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+The upper bound was proved in Proposition~\ref{prop:upper}. Under \eqref{eq:identity}, Lemma~\ref{lem:real} permits us to choose a real maximizing $Q\ge0$ of trace one and factor $Q=LL^T$ with $L$ real. Set
+\[
+ y_i=\sum_jL_{ij}s_j,\qquad B_j=\sum_iL_{ij}A_i.
+\]
+Since $\tau(s_js_k)=\delta_{jk}$, the energy of $y$ is $\Tr Q=1$. Taking the same real linear combinations of GUE approximants supplies Hermitian bounded moment approximants. The regularized convergence argument in Proposition~\ref{prop:transfer}, using \eqref{eq:nodouble}, and \eqref{eq:MS} imply
+\[
+ \F_\infty(A)\ge\Delta\left(\sum_iA_i\otimes y_i\right)^2
+ =e^{-1}\capop(\Phi_Q)^{1/d}.
+\]
+Since $Q$ is maximizing, this proves the bound when $I_d$ is in the real span, with normal auxiliary witnesses and no doubling of the Gaussian approximation size.
+
+For the general hypothesis, let $S=D^{-1/2}$ and $\widetilde A_i=SA_iS$. Then the $\widetilde A_i$ are Hermitian and $\sum_i b_i\widetilde A_i=I_d$. Direct determinant scaling gives
+\begin{equation}\label{eq:scaling}
+ \F_m(\widetilde A)=\det(D)^{-2/d}\F_m(A),\qquad
+ \capop(\widetilde\Phi_Q)=\det(D)^{-2}\capop(\Phi_Q).
+\end{equation}
+For the second identity, $\widetilde\Phi_Q(X)=S\Phi_Q(SXS)S$. As $X$ runs through positive matrices of determinant one, $SXS$ runs through positive matrices of determinant $\det(D)^{-1}$; homogeneity of $\Phi_Q$ gives the stated factor. Thus both sides of \eqref{eq:main} scale identically.
+
+Finally, the scalar tuple $Y_i=b_i/\|b\|_2$ has invertible pencil $D/\|b\|_2$, so $\F_1(A)>0$. Finite witnesses arbitrarily near the asserted lower bound follow from the definition of the supremum, or directly by first fixing a small $\varepsilon$ in \eqref{eq:identityvalue} and then taking a sufficiently large $N$.
+\end{proof}
+
+\section{Examples and checks on the scope}
+\subsection{A single positive definite coefficient}
+For $s=1$ and $A_1=D>0$, direct separation of determinants and the arithmetic--geometric mean inequality give
+\[
+ \F_m(A)=\F_\infty(A)=\K(A)=\det(D)^{2/d}.
+\]
+Equality is obtained with a unitary $Y_1$. Thus the factor $e$ is not an equality statement for every tuple. Even in this case, the semicircular construction alone has limiting value $\K(A)/e$.
+
+\subsection{Orthogonal projections}
+Let $A_i=P_i$ be mutually orthogonal nonzero projections summing to $I_d$, of ranks $r_i$, and write $w_i=r_i/d$. The pencil is block diagonal, and for $e_i=\tau_m(Y_iY_i^*)$,
+\[
+ \left|\det\left(\sum_iP_i\otimes Y_i\right)\right|^{2/(dm)}
+ \le\prod_i e_i^{w_i}\le\prod_i w_i^{w_i}.
+\]
+The choice $Y_i=\sqrt{w_i}I_m$ attains this value. Also $\Phi_Q(I_d)=\sum_iQ_{ii}P_i$, so $\K(A)\le\max_Q\prod_iQ_{ii}^{w_i}=\prod_iw_i^{w_i}$. The upper bound already proved shows
+\[
+ \F_m(A)=\F_\infty(A)=\K(A)=\prod_iw_i^{w_i}.
+\]
+This example checks the coefficient energy and normalized exponents.
+
+\subsection{A noncommuting family with a small positive direction}
+In dimension three take
+\[
+ A_0=\delta I_3,\qquad
+ A_1=\frac{i(E_{12}-E_{21})}{\sqrt2},\quad
+ A_2=\frac{i(E_{23}-E_{32})}{\sqrt2},\quad
+ A_3=\frac{i(E_{31}-E_{13})}{\sqrt2},\qquad \delta>0.
+\]
+These are Hermitian, and \eqref{eq:identity} holds with $b=(\delta^{-1},0,0,0)$. The main theorem applies for every positive $\delta$, with the same factor $e$. The finite construction, however, pays $\varepsilon^2/\delta^2$. It does not supply a witness size uniform as $\delta\downarrow0$, nor does it prove a statement for the limiting traceless tuple by simply setting $\delta=0$.
+
+More generally, the hypothesis cannot be replaced in this proof by an arbitrary change of basis to a Hermitian spanning family: that change can alter the coefficient energy. Hermiticity is used to obtain the lower-left block $H_N^*$; the positive direction is used to create an imaginary scalar shift after congruence.
+
+\section{What this step establishes and what remains}
+Lemma~\ref{lem:dilation} is an exact finite identity. Proposition~\ref{prop:transfer} supplies a bridge from bounded moment approximants to feasible witnesses. Combined with the existing free capacity formula, it gives a universal approximation factor in the class of Theorem~\ref{thm:main}. It does not establish convergence of centered Gaussian log determinants, a separate issue discussed in \cite{ms}. It also does not identify optimal finite witnesses.
+
+The next mathematical targets are:
+\begin{enumerate}
+ \item Determine whether $\K(A)/e\le\F_\infty(A)$ holds for arbitrary complex tuples, or find a counterexample. The in-span Hermitian shift used here is unavailable in general.
+ \item Give quantitative auxiliary-size and computational bounds, with explicit dependence on conditioning and target error.
+ \item Determine the optimal comparison constant and a concrete operational consequence for the channel-testing model of \cite{sharp}.
+\end{enumerate}
+The general extension is a research question, not a theorem of this manuscript. Claims about practical importance require progress on these questions or another independently useful application.
+
+\paragraph{Verification and provenance.}
+The accompanying executable checks the finite dilation identity and its energy normalization in exact arithmetic, and also checks the direct Hermitian construction, adjoint covariance identity, and congruence scaling numerically. Such checks test implementation and normalization; they do not replace the proof or certify novelty. The manuscript was developed with assistance from OpenAI Codex. A GPT-6 Astra review with shared development context suggested the real-covariance simplification; it is not a blind independent review. The manuscript has not undergone human peer review or formal proof verification. The imported free determinant formula and Gaussian approximation facts are explicitly attributed.
+
+\begin{thebibliography}{9}
+\bibitem{ms}
+T. Mai and R. Speicher,
+\emph{Fuglede--Kadison determinants of matrix-valued semicircular elements and capacity estimates},
+arXiv:2406.15922.
+\url{https://arxiv.org/abs/2406.15922}.
+
+\bibitem{v}
+D. Voiculescu,
+\emph{Limit laws for random matrices and free products},
+Inventiones Mathematicae \textbf{104} (1991), 201--220.
+\url{https://doi.org/10.1007/BF01245072}.
+
+\bibitem{ht}
+U. Haagerup and S. Thorbj{\o}rnsen,
+\emph{A new application of random matrices: $\operatorname{Ext}(C^*_{\rm red}(F_2))$ is not a group},
+arXiv:math/0212265.
+\url{https://arxiv.org/abs/math/0212265}.
+
+\bibitem{sharp}
+L. Eriksson,
+\emph{Sharp determinant bounds for amplified antisymmetric channels and a noise law for noncommutative rank},
+AIRR working paper ARR-2026-6FWR12DH3F8QBA5C, version 1 (2026).
+\url{https://airr.science/papers/ARR-2026-6FWR12DH3F8QBA5C/versions/v1/}.
+
+\bibitem{tropical}
+L. Eriksson,
+\emph{Uniform tropical bounds for amplified determinants: finite phase witnesses and multiscale quantum noise},
+AIRR working paper ARR-2026-4C11Z7N0BX8VP8P2, version 1 (2026).
+\url{https://airr.science/papers/ARR-2026-4C11Z7N0BX8VP8P2/versions/v1/}.
+\end{thebibliography}
+\end{document}
