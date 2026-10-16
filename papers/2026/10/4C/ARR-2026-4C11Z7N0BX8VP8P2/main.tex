@@ -1,0 +1,235 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=25mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,booktabs,microtype}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\conv}{\operatorname{conv}}
+\newcommand{\Newt}{\operatorname{Newt}}
+\newcommand{\C}{\mathbb C}
+\newcommand{\R}{\mathbb R}
+\newcommand{\N}{\mathbb N}
+\newcommand{\F}{\mathcal F}
+\title{Uniform tropical bounds for amplified determinants:\\finite phase witnesses and multiscale quantum noise}
+\author{Lluis Eriksson\\Independent researcher, Sweden}
+\date{16 October 2026 --- research draft}
+\begin{document}
+\maketitle
+\begin{abstract}
+We study determinants of matrix pencils evaluated on auxiliary matrices under a normalized Hilbert--Schmidt energy constraint. For a fixed full noncommutative-rank pencil of size $d$, we show that its objective, regularized over all auxiliary sizes, is uniformly comparable on the entire positive coefficient orthant to the monomial envelope of its noncommutative Newton polytope. The lower bound uses auxiliary size $\max\{1,d-1\}$ and a single tuple whose entries vary only by scalar phases. A finite phase menu suffices. Thus every simultaneous coefficient reweighting has the same noise exponent at that fixed size as under unrestricted amplification. For mixtures of quantum channels this gives an exact piecewise-linear law for arbitrary simultaneous power-law noise rates, including the normalization of mixture weights. An explicit six-parameter qutrit pencil has five branches, one absent at scalar size; a single fixed size-two tuple approximates its regularized objective within a factor four for every positive parameter choice. The algebraic polytope and its stabilization are established results. Our contribution is a uniform analytic comparison and its finite-witness and noise-law consequences; we do not claim exact finite-size optimization or a coefficient-uniform approximation factor for general pencils.
+\end{abstract}
+\section{Question and prior work}
+For fixed matrices $A_1,\ldots,A_s\in M_d(\C)$, let
+\begin{align}
+ \F_m(z)&=\max_{\sum_i\Tr(Y_i^*Y_i)/m=1}
+ \left|\det\left(\sum_i z_iA_i\otimes Y_i\right)\right|^{2/(dm)},\label{eq:def}\\
+ \F_\infty(z)&=\sup_{m\ge1}\F_m(z),\qquad z\in(0,\infty)^s.
+\end{align}
+The maximum at each fixed size exists by compactness. When the $A_i$ are Kraus operators, this is the amplified determinant objective studied in \cite{sharp,tests}. The parameter $m$ is part of that mathematical amplification; it is not a free ancillary resource in a different channel-testing model.
+
+An asymptotic formula on one noise ray need not control other rays, and pointwise finite-size witnesses need not give a uniform bound as coefficients approach zero. We address both issues by comparing the entire positive-parameter family with a finite polyhedral envelope. The resulting constants depend on the fixed matrix tuple, but neither on the coefficients nor on the amplification size.
+
+The main algebraic input is the theory of weighted noncommutative determinants developed by Hirai and by Hirai--Ikeda \cite{hi}, and extended by Hirai--Iwamasa--Oki--Soma \cite{hios}. Its noncommutative Newton polytope, integrality, weighted-degree algorithms, and stabilization in auxiliary size are prior results. The proof below combines that input with maximum modulus, generic nonvanishing, and Parseval's identity. The earlier depolarizing-noise rank law \cite{sharp} treats a particular perturbation; here the comparison is simultaneous over arbitrary positive reweightings and gives a bounded-size family of witnesses.
+
+\section{The algebraic polytope}
+Let $X_i$ be generic $m\times m$ matrices with independent commuting entries. In each monomial of
+\[
+ D_m(X)=\det\left(\sum_i A_i\otimes X_i\right),
+\]
+group the entry degrees by the index $i$. If this grouped vector is $\alpha\in\N^s$, include $\alpha/m$ in $P_m$. More precisely, $P_m$ is the convex hull of all such normalized grouped degrees with nonzero coefficient. Put
+\[
+ P=\conv\bigcup_{m\ge1}P_m.
+\]
+We assume the span of the $A_i$ has full noncommutative rank. If it does not, all the determinants in \eqref{eq:def} vanish and there is no finite logarithmic noise exponent.
+
+\begin{lemma}[Established stabilization]\label{lem:algebra}
+The set $P$ is an integral polytope in
+$\{u\in\R_{\ge0}^s:\sum_i u_i=d\}$. For every
+$m\ge d-1$ with $m\ge1$, one has $P_m=P$.
+\end{lemma}
+\begin{proof}
+The full-determinant polytope and its stabilization are stated explicitly in \cite[Section 4.2, after Theorem 4.3; Theorem 4.4]{hi}; see also \cite[Theorem 3.12]{hios}. For an integer weight vector $w$, the maximum degree of the generic blow-up of $\sum_i A_i t^{w_i}x_i$, divided by $m$, is the support function of $P_m$ at $w$. Proposition 2.6 of \cite{hios} identifies it with the degree of the Dieudonn\'e determinant for every $m\ge d-1$. That degree is the support function of $P$. Equality at every integer direction implies equality of the compact convex polytopes. The case $d=1$ is immediate. Homogeneity gives the sum of coordinates.
+\end{proof}
+The conventions in \cite{hios} use maximum degrees at infinity. We will obtain minimum weighted degrees for parameters tending to zero by changing the sign of the weight vector; no interchange of an infinite supremum with a small-noise limit is needed.
+
+\section{A uniform analytic comparison}
+Write
+\[
+ T_P(z)=\max_{u\in P}\prod_i z_i^{2u_i/d},\qquad M=\max\{1,d-1\},
+\]
+and let $G=(\Tr A_i^*A_j)_{i,j}$ be the Gram matrix of the coefficients.
+
+\begin{theorem}[Uniform tropical comparison]\label{thm:main}
+There is a constant $c_A>0$ such that, for every positive $z$,
+\begin{equation}
+ c_A T_P(z)\le \F_M(z)\le\F_\infty(z)
+ \le C_A T_P(z),\qquad C_A=\frac{\lambda_{\max}(G)}{d}.\label{eq:sandwich}
+\end{equation}
+The lower bound is attained within a family
+$(e^{i\phi_1}Y_1,\ldots,e^{i\phi_s}Y_s)$ for one fixed energy-normalized tuple $Y$ of size $M$. A finite set of phase choices, independent of $z$, suffices for the same lower constant.
+\end{theorem}
+
+\begin{lemma}[Toric maximum modulus]\label{lem:toric}
+For a nonzero polynomial $p$ in $s$ variables and positive $z$,
+\[
+ |p(z)|\le\max_{|\omega_i|=1}|p(\omega)|\,
+       \max_{\alpha\in\Newt(p)}z^\alpha.
+\]
+\end{lemma}
+\begin{proof}
+First take $z_i=r^{k_i}$, where $r>1$ and the $k_i$ are integers of either sign. The Laurent polynomial $f(w)=p(w^{k_1},\ldots,w^{k_s})$ has largest exponent at most
+$H=\max_{\alpha\in\Newt(p)}k\cdot\alpha$. The function $w^{-H}f(w)$ is analytic on the exterior unit disk including infinity. Applying maximum modulus there gives the assertion. Approximate arbitrary $\log z$ by rational vectors, using $r=e^{1/N}$, and use continuity. Cancellation among terms of $f$ can only decrease its largest exponent.
+\end{proof}
+
+\begin{proof}[Proof of Theorem \ref{thm:main}]
+Fix $m$ and an admissible tuple $Y$, and let
+$p_Y(z)=\det(\sum_i z_iA_i\otimes Y_i)$. Its Newton polytope is contained in $mP$ because specialization can remove monomials but cannot add grouped degrees. For $|\omega_i|=1$, the Gram inequality and arithmetic--geometric mean imply
+\begin{align}
+ |p_Y(\omega)|^{2/(dm)}
+ &\le \frac{1}{dm}\left\|\sum_i\omega_i A_i\otimes Y_i\right\|_F^2\\
+ &\le\frac{\lambda_{\max}(G)}{dm}\sum_i\|Y_i\|_F^2=C_A.
+\end{align}
+Lemma \ref{lem:toric} now gives the upper bound uniformly in $m$ and $Y$. Taking their suprema preserves it.
+
+For the lower bound, let $V$ be the finite vertex set of $P$. By Lemma \ref{lem:algebra}, for every $v\in V$ the coefficient of $z^{Mv}$ in
+$\det(\sum_i z_iA_i\otimes X_i)$ is a nonzero polynomial in the entries of $X$. Their finite product is nonzero. Choose a tuple where all these coefficients are nonzero, and scale it to energy one. Write
+$p_Y(z)=\sum_\alpha b_\alpha z^\alpha$ and $b_v=b_{Mv}\ne0$. Parseval on the phase torus gives
+\begin{equation}
+ \int_{\mathbb T^s}|p_Y(z_1\omega_1,\ldots,z_s\omega_s)|^2\,d\omega
+   =\sum_\alpha |b_\alpha|^2z^{2\alpha}.\label{eq:parseval}
+\end{equation}
+The maximum over phases is at least each term on the right. Taking the power $1/(dM)$ of the squared modulus yields \eqref{eq:sandwich} with
+\[
+ c_A=\min_{v\in V}|b_v|^{2/(dM)}>0.
+\]
+Each coordinate degree is at most $dM$. Replacing the integral by the product grid of $(dM+1)$st roots of unity gives the same coefficient orthogonality. Since $p_Y$ is homogeneous, one common phase is immaterial and can be fixed. Thus at most $(dM+1)^{s-1}$ choices suffice (one if $s=1$).
+\end{proof}
+
+\begin{corollary}[Uniform limitation on further amplification]
+For the fixed pencil,
+\[
+ 1\le\frac{\F_\infty(z)}{\F_M(z)}\le\frac{C_A}{c_A}
+ \quad\text{for all }z>0.
+\]
+This bound also holds when the coefficients follow an arbitrary path, including paths with no limiting power-law direction.
+\end{corollary}
+This is a fixed-pencil statement. The proof supplies neither a universal small value of $C_A/c_A$ nor a polynomial-size phase menu. It does not state that $\F_M=\F_\infty$, or that the supremum is attained at size $M$.
+
+\section{Multiscale noise and channel normalization}
+\begin{corollary}[All directional exponents]\label{cor:rates}
+For $w\in\R^s$ and $0<t<1$,
+\[
+ \F_\infty(t^{w_1},\ldots,t^{w_s})\asymp_A t^{\theta(w)},\qquad
+ \theta(w)=\frac2d\min_{u\in P}w\cdot u.
+\]
+The constants can be chosen independently of both $w$ and $t$. The function $\theta$ is continuous, concave, piecewise linear, and rational linear on every cone of its fan. The same exponent holds for $\F_M$.
+\end{corollary}
+\begin{proof}
+Substitute $z_i=t^{w_i}$ into \eqref{eq:sandwich}. Because $\log t<0$, the maximum monomial corresponds to a minimum scalar product. The remaining properties follow from the finite integral vertex set of $P$.
+\end{proof}
+For rational matrix entries and rational weights, the existing algorithms for weighted noncommutative determinants \cite{hios} compute the exponent under their stated complexity guarantees. This does not compute the regularized prefactor or optimize \eqref{eq:def}.
+
+Let $\mathcal E_g$ be finitely many CPTP maps on $M_d$, with Kraus lists $A_{gj}$ whose union has full noncommutative rank. Project $P$ to the group coordinates $q_g=\sum_j u_{gj}$ and call the resulting polytope $Q$. It lies in $\sum_gq_g=d$. For positive probabilities $p_g$, the Kraus list of $\mathcal E_p=\sum_gp_g\mathcal E_g$ is $\sqrt{p_g}A_{gj}$. Theorem \ref{thm:main} gives
+\begin{equation}
+ a_\infty(\mathcal E_p)\asymp_A
+ \max_{q\in Q}\prod_g p_g^{q_g/d},\label{eq:mixture}
+\end{equation}
+where $a_\infty$ denotes the regularized objective for a Kraus list at unit coefficients. The comparison is independent of $p$ and the same comparison holds at size $M$.
+For normalized power-law weights
+\[
+ p_g(t)=\frac{t^{\beta_g}}{\sum_h t^{\beta_h}},
+\]
+we obtain
+\begin{equation}
+ \lim_{t\downarrow0}\frac{\log a_\infty(\mathcal E_{p(t)})}{\log t}
+ =\frac1d\min_{q\in Q}\beta\cdot q-\min_g\beta_g.\label{eq:mixrate}
+\end{equation}
+The subtraction on the right is required by trace preservation.
+
+More generally, if
+$R(z)=\sum_i z_i^2A_i^*A_i$ is positive definite, then
+$K_i(z)=z_iA_iR(z)^{-1/2}$ defines a CPTP map. Factoring the common right matrix from the block determinant proves, at every size and after taking the supremum,
+\begin{equation}
+ a_\infty(\mathcal E_z)=\frac{\F_\infty(z)}{\det(R(z))^{1/d}}.\label{eq:normalization}
+\end{equation}
+The normalizing determinant is a positive sum of monomials by Cauchy--Binet. Its small-noise order must therefore be subtracted from the unnormalized order. These identities concern matrix amplification as in \cite{tests}; they do not change its hypothesis-testing access assumptions.
+
+\section{A qutrit phase diagram with an explicit factor four}
+Let
+\[
+ A_{12}=E_{12}-E_{21},\quad A_{23}=E_{23}-E_{32},\quad
+ A_{31}=E_{31}-E_{13},\quad D_j=E_{jj}.
+\]
+Assign amplitudes $(x,y,z,a,b,c)$ to these six matrices, in that order. Define
+\begin{equation}
+ T=\max\{(abc)^{2/3},(cx^2)^{2/3},(ay^2)^{2/3},
+                 (bz^2)^{2/3},(xyz)^{2/3}\}.\label{eq:T}
+\end{equation}
+\begin{proposition}\label{prop:example}
+For every positive choice of the six amplitudes,
+\[
+ \frac16T\le\F_2\le\F_\infty\le\frac23T.
+\]
+The lower bound uses a single fixed tuple of size two, independent of all six amplitudes. Its value is at least one quarter of the regularized optimum throughout the positive parameter orthant.
+\end{proposition}
+\begin{proof}
+For a grouped normalized monomial degree $u=(u_x,u_y,u_z,u_a,u_b,u_c)$, row and column counts in the block determinant imply
+\[
+ 2u_a+u_x+u_z=2,\quad
+ 2u_b+u_x+u_y=2,\quad
+ 2u_c+u_y+u_z=2,\quad u\ge0.
+\]
+This polytope has the five vertices
+\begin{align*}
+ &(0,0,0,1,1,1),\ (2,0,0,0,0,1),\ (0,2,0,1,0,0),\\
+ &(0,0,2,0,1,0),\ (1,1,1,0,0,0).
+\end{align*}
+To verify exhaustiveness directly, eliminate $u_a,u_b,u_c$; the remaining constraints are $u_x,u_y,u_z\ge0$ and the three pairwise sums at most $2$. Their vertices are the origin, the three axis points of coordinate $2$, and $(1,1,1)$.
+The first four degrees occur in the scalar identity
+\[
+ \det\begin{pmatrix}a&x&-z\\-x&b&y\\z&-y&c\end{pmatrix}
+ =abc+cx^2+ay^2+bz^2.
+\]
+Let $\sigma_x,\sigma_y,\sigma_z$ be the standard Pauli matrices and set
+\[
+ Y=\frac1{\sqrt6}(\sigma_x,\sigma_y,\sigma_z,I_2,I_2,I_2).
+\]
+Its energy is one. Put $S=abc+ay^2+bz^2+cx^2$. Direct block-determinant expansion gives the exact identity
+\begin{equation}
+ \det\left(\sum_i z_i A_i\otimes Y_i\right)
+ =\frac{(S+2i xyz)^2}{216}.\label{eq:factor}
+\end{equation}
+For an explicit verification before normalization, the real terms of the determinant are $S^2-4x^2y^2z^2$, while its imaginary terms are $4i xyzS$. The coefficients of the five doubled vertex degrees are $1,1,1,1,-4$. Thus all five vertices occur and the polytope is exact.
+The value supplied by this one tuple is
+\begin{equation}
+ W(x,y,z,a,b,c)=\frac{(S^2+4x^2y^2z^2)^{1/3}}6.\label{eq:witness}
+\end{equation}
+For positive amplitudes, $S$ dominates each of its four summands, and $S^2+4x^2y^2z^2$ also dominates $(xyz)^2$. Therefore $W\ge T/6$, with no phase search. Orthogonality of the coefficient matrices gives
+$G=\operatorname{diag}(2,2,2,1,1,1)$ and hence upper constant $2/3$ from Theorem~\ref{thm:main}. The same fixed tuple is admissible for every parameter choice.
+\end{proof}
+For the scalar objective the last branch in \eqref{eq:T} is absent. Taking
+$x=y=z=1$ and $(a,b,c)=(t^{r_1},t^{r_2},t^{r_3})$ with all $r_j>0$ makes the regularized exponent zero, whereas the scalar exponent is
+$\frac23\min_j r_j$. The CPTP normalization is
+\[
+ R=\operatorname{diag}(a^2+x^2+z^2,\ b^2+x^2+y^2,\ c^2+y^2+z^2),
+\]
+which has a strictly positive limit on this ray, so the separation persists for the normalized channels. General rays are governed by the five linear forms in \eqref{eq:T} with the exponent of $\det R$ subtracted as in \eqref{eq:normalization}. This example exhibits a whole parameter region of exponent separation, rather than just an isolated singular pencil.
+
+\section{Checks, scope, and remaining questions}
+The accompanying exact computation verifies the factorization \eqref{eq:factor}, enumerates the polytope vertices, and checks the five vertex coefficients. Numerical stress tests use 240 random complex tuples at auxiliary sizes $1,2,3,4,5,7$ over a wide range of positive weights; no violation of the proved upper bound was found. Another 120 positive parameter choices check the fixed-witness formula across widely separated scales. Ten additional choices verify the discrete phase Parseval identity underlying the earlier general construction. These checks supplement the proofs and are not formal verification or evidence of an unproved global numerical optimum.
+
+The main result controls logarithmic asymptotics uniformly and limits the benefit of larger amplification for a fixed pencil. It leaves open sharp general prefactors, efficient selection of good phases, and practical bounds for the constant as the coefficient matrices themselves vary. In particular, it does not establish a universal constant-factor approximation through operator capacity, nor any random-matrix log-determinant convergence conjecture. The five-branch example is an explicit application, not a claim that the underlying fractional matching polytope is new.
+
+This draft was developed with AI assistance and is intended for mathematical review. Any associated model assessment must identify the precise reviewed version and disclose shared context. Neither a model score nor the numerical checks certify novelty or replace expert peer review.
+
+\begin{thebibliography}{9}
+\bibitem{hi} H. Hirai and M. Ikeda, \emph{A cost-scaling algorithm for computing the degree of determinants}, \href{https://arxiv.org/abs/2008.11388v2}{arXiv:2008.11388v2} (2020), Section 4.2.
+\bibitem{hios} H. Hirai, Y. Iwamasa, T. Oki and T. Soma, \emph{Algebraic combinatorial optimization on the degree of determinants of noncommutative symbolic matrices}, Mathematical Programming, DOI: \href{https://doi.org/10.1007/s10107-024-02158-0}{10.1007/s10107-024-02158-0}. Preprint \href{https://arxiv.org/abs/2310.15502}{arXiv:2310.15502} (2023). Numbered statements cited here follow the arXiv version.
+\bibitem{sharp} L. Eriksson, \emph{Sharp determinant bounds for amplified antisymmetric channels and a noise law for noncommutative rank}, AIRR working paper \href{https://airr.science/papers/ARR-2026-6FWR12DH3F8QBA5C/versions/v1/}{ARR-2026-6FWR12DH3F8QBA5C}, v1 (2026).
+\bibitem{tests} L. Eriksson, \emph{Universal optimal tests of unknown unitary dynamics: determinant exponents and tensor stability}, AIRR working paper \href{https://airr.science/papers/ARR-2026-2GTKNVK5QM9H8BFR/versions/v1/}{ARR-2026-2GTKNVK5QM9H8BFR}, v1 (2026).
+\end{thebibliography}
+\end{document}
