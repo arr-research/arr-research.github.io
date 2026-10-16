@@ -1,0 +1,145 @@
+RESEARCH CANDIDATE — NOT YET REFEREED OR PUBLISHED
+16 October 2026
+Uniform tropical bounds for amplified determinants and multiscale quantum noise
+
+Purpose: test a broader successor to ARR-2026-6FWR12DH3F8QBA5C. No score,
+priority claim, or claim of resolving a famous open problem is attached.
+
+SETUP
+Let A_1,...,A_s be complex d by d matrices. For z in (0,infinity)^s set
+ F_m(z)=max_{sum_i Tr(Y_i*Y_i)/m=1}
+             |det(sum_i z_i A_i tensor Y_i)|^{2/(dm)},
+ F_infty(z)=sup_{m>=1}F_m(z).
+Assume span(A_i) has full noncommutative rank; otherwise all F_m vanish.
+Let P be its nc-Newton polytope: take all monomials in the generic block
+determinants det(sum_i A_i tensor X_i), group their degrees by i, divide
+by block size, and take their convex hull over all block sizes.
+Write T_P(z)=max_{u in P} product_i z_i^{2u_i/d}.
+
+EXISTING ALGEBRAIC INPUT, NOT CLAIMED AS NEW
+Hirai, Iwamasa, Oki and Soma, arXiv:2310.15502, Proposition 2.6 and
+Theorem 3.12: P is an integral polytope, and the support function of P
+is attained at every block size m>=d-1. Their convention is maximum
+degree in t. Equality for every integer weight implies equality of
+the entire normalized Newton polytopes at every such block size.
+For d=1 take m=1. Denote M=max(1,d-1).
+
+PROPOSED THEOREM
+There exist constants 0<c_A<=C_A, independent of z and m, such that
+ c_A T_P(z) <= F_M(z) <= F_infty(z) <= C_A T_P(z)
+for every positive z. One may take C_A=lambda_max(G)/d, with
+G_ij=Tr(A_i* A_j). Moreover the lower bound is achieved within a single
+fixed energy-normalized tuple Y, allowing only independent scalar
+phases Y_i -> exp(i phi_i)Y_i to depend on z.
+Consequently amplification beyond M improves the objective by at most
+the finite factor C_A/c_A, uniformly over all positive reweightings of
+this fixed matrix tuple. No coefficient-uniform or efficient numerical
+approximation bound is asserted: c_A can be small and its construction
+can require many coefficients/vertices.
+
+PROOF OF UPPER BOUND
+For any normalized Y, p_Y(z)=det(sum z_i A_i tensor Y_i) has Newton
+polytope contained in mP. On the unit torus, changing phases of Y does
+not change its energy. The Gram bound and scalar arithmetic-geometric
+mean give
+ |p_Y(omega)|^{2/(dm)} <= ||sum omega_i A_i tensor Y_i||_F^2/(dm)
+ <= lambda_max(G)/d = C_A.
+For an arbitrary polynomial p and positive z, the toric maximum-modulus
+inequality is
+ |p(z)| <= sup_{|omega_i|=1}|p(omega)| max_{alpha in Newt(p)} z^alpha.
+Here is an elementary proof, so no new analytic convergence theorem is
+being assumed. First let z_i=r^{k_i}, r>1 and k_i integers. The Laurent
+polynomial f(w)=p(w^{k_1},...,w^{k_s}) has highest exponent at most
+H=max_{alpha in Newt(p)} k.alpha. Then w^{-H} f(w) is analytic and bounded
+on the exterior unit disk, including infinity. The maximum-modulus
+principle on the Riemann sphere gives |f(r)|<=r^H sup_{|w|=1}|f(w)|.
+Possible cancellation of the highest coefficient only improves this
+bound. Approximate arbitrary log z by rational vectors, taking r=e^{1/N},
+and pass to the limit. Apply the inequality to p_Y and take the power
+2/(dm). The resulting bound is uniform in m; then take the supremum.
+
+PROOF OF LOWER BOUND
+At size M the normalized generic Newton polytope equals P. For every
+vertex v of P, the coefficient of z^{Mv} in
+det(sum z_i A_i tensor X_i) is a nonzero polynomial in the entries of X.
+Finitely many such polynomials are simultaneously nonzero at a generic
+tuple. Fix such a tuple and normalize its positive total energy to one.
+Call the coefficients b_v; they remain nonzero. For every z>0, Parseval
+on the s-dimensional phase torus gives
+ integral |p_Y(z_1 exp(i phi_1),...,z_s exp(i phi_s))|^2 dphi
+   = sum_alpha |b_alpha|^2 z^{2alpha}.
+The supremum is at least the integral, and hence at least each vertex
+term |b_v|^2 z^{2Mv}. Independent phases are allowed normalized tuples.
+Thus c_A=min_v |b_v|^{2/(dM)}>0 gives the claimed lower bound.
+
+COROLLARY: ALL RATES, NOT ONLY ONE NOISE RAY
+For any real weight vector w, z_i=t^{w_i}, 0<t<1, gives
+ F_infty(t^w)=Theta_A(t^{theta(w)}),
+ theta(w)=(2/d) min_{u in P} w.u.
+The two comparison constants are independent of w and t. The exponent
+is continuous, concave, piecewise linear, and rational linear on each
+cone (P is integral). The same exponent is already attained at size M.
+For rational matrix data and rational weights the exponent can be found
+using the existing weighted nc-determinant algorithms. This is a
+complexity claim about the exponent, not about F_infty or its prefactor.
+
+CHANNEL MIXTURES
+Let E_g be finitely many CPTP maps on M_d, with fixed Kraus lists A_gj,
+and full nc-rank for the union. Give each group the common amplitude
+z_gj=sqrt(p_g), with p_g>0 and sum p_g=1. Let Q be the projection of P
+that adds coordinates within each group. Then the regularized amplified
+determinant of E_p=sum p_g E_g is within constants independent of p of
+ max_{q in Q} product_g p_g^{q_g/d}.
+In particular p_g(t)=t^{beta_g}/sum_h t^{beta_h} yields exponent
+ theta_mix(beta)=(1/d)min_{q in Q} beta.q - min_g beta_g.
+Every q in Q has sum q_g=d. This formula incorporates the normalization.
+It applies to arbitrary finite noise families, rather than assuming a
+depolarizing perturbation. It does not identify amplification with a free
+ancilla; operational interpretation retains the access model in the
+previous universal-testing manuscript.
+
+GENERAL CPTP NORMALIZATION
+If R(z)=sum z_i^2 A_i* A_i is positive definite, K_i(z)=z_i A_i R(z)^(-1/2)
+is a Kraus representation of a CPTP map. Its regularized amplified
+determinant is F_infty(z)/(det R(z))^{1/d}. The same identity holds at
+every finite m. This subtraction matters for every proposed noise law.
+
+EXPLICIT SIX-PARAMETER EXAMPLE
+Take d=3, A_12=E12-E21, A_23=E23-E32, A_31=E31-E13, and D_j=Ejj.
+Use positive amplitudes x,y,z on A_12,A_23,A_31 and a,b,c on D_1,D_2,D_3.
+The nc-Newton polytope has exactly these five vertices, in the order
+(x,y,z,a,b,c):
+ (0,0,0,1,1,1), (2,0,0,0,0,1), (0,2,0,1,0,0),
+ (0,0,2,0,1,0), (1,1,1,0,0,0).
+Proof of containment: in every block-determinant monomial, row and
+column counts imply 2u_a+u_x+u_z=2,
+2u_b+u_x+u_y=2, 2u_c+u_y+u_z=2 and nonnegative coordinates. The resulting
+polytope is the fractional perfect matching polytope of a triangle with
+loops and has the displayed five vertices (enumerate basic feasible
+solutions). The first four are already realized at m=1, since
+ det(diag(a,b,c)+x A12+y A23+z A31)=abc+c x^2+a y^2+b z^2.
+The last is realized at m=2 by choosing three Pauli matrices: the
+6 by 6 block determinant is nonzero and has grouped degree (2,2,2).
+Hence, up to constants uniform over all six amplitudes,
+ F_infty ~ max{(abc)^{2/3}, (c x^2)^{2/3}, (a y^2)^{2/3},
+                    (b z^2)^{2/3}, (xyz)^{2/3}}.
+The scalar objective has only the first four branches. For CPTP use
+R=diag(a^2+x^2+z^2,b^2+x^2+y^2,c^2+y^2+z^2) and divide by det(R)^{1/3}.
+This gives a complete multirate phase diagram with a genuinely
+noncommutative extra branch, extending the single W3 isotropic example.
+
+NOVELTY AND LIMITS
+The nc-Newton polytope, its integrality, stabilization, and algorithms
+are prior art. Maximum modulus, Parseval, and generic nonvanishing are
+standard. The candidate contribution is their combination into uniform
+two-sided analytic bounds, a fixed-size phase-only witness family, and
+all-direction normalized noise laws. The theorem does not solve the
+open uniform capacity-factor approximation conjecture or finite-GUE
+log-determinant convergence. Its significance relative to a score above
+5 AIRR must be assessed by a reviewer; no such score is promised.
+
+PRIMARY SOURCES
+https://arxiv.org/abs/2310.15502
+https://doi.org/10.1007/s10107-024-02158-0
+https://airr.science/papers/ARR-2026-6FWR12DH3F8QBA5C/versions/v1/
+https://airr.science/papers/ARR-2026-2GTKNVK5QM9H8BFR/versions/v1/
