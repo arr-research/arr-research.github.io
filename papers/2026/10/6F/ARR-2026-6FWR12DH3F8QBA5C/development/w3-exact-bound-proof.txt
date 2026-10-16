@@ -1,0 +1,181 @@
+PRUEBA EXPLORATORIA COORDINADA: DETERMINANTE REGULARIZADO DEL CANAL W3
+Fecha: 2026-10-16. Autor de esta nota: agente revisor GPT-6 Astra, en coordinación
+con el agente principal durante el desarrollo. No es revisión ciega ni humana.
+Esta nota aporta una prueba; no asigna nota al manuscrito y no certifica prioridad.
+
+1. Definiciones y resultado
+
+Sea W3(X)=(Tr(X)I-X^T)/2, con Kraus K1=A12/sqrt(2), K2=A13/sqrt(2),
+K3=A23/sqrt(2), donde Aij=Eij-Eji. Para m>=1 defínase
+
+ a_m(W3)=max |det H|^(2/(3m)),
+ H=sum_i K_i tensor Y_i,
+ sum_i tau_m(Y_i^*Y_i)=1,
+
+donde tau_m=Tr/m. En la normalización del proyecto esto es
+a_m(E)=m^2 delta(E tensor D_m). En efecto, los Kraus de D_m son Eab/sqrt(m):
+si sum||X_i||_F^2=1, poner Y_i=sqrt(m)X_i da G=H/m.
+El nulo operacional se amplía a todas las unitarias U(3m): D_m no es ancilla gratis.
+
+RESULTADO:
+
+ a_m(W3) <= T := 2^(2/9)/4 = 0.29163225989402913,
+ con igualdad si y solo si 3 divide m.
+
+Por tanto sup_m a_m(W3)=T. El límite ordinario también existe y vale T.
+La mínima dimensión auxiliar que alcanza este supremo es m=3.
+No se afirma una fórmula exacta de a_m cuando m no es múltiplo de 3.
+
+2. Normalización de ambos Grams en un máximo no singular
+
+La esfera de coeficientes es compacta; el determinante continuo alcanza su máximo.
+Si el máximo es cero, la cota es inmediata. En caso contrario H es invertible
+en cualquier maximizador, y puede diferenciarse la función invariante de escala
+
+ f(Y)=2 log|det H|/(3m) - log(S/m),  S=sum_i Tr(Y_i^*Y_i).
+
+Tomar S=m. La variación Y_i -> Y_i(I+tD), para cualquier D hermítica, da
+H -> H(I_3 tensor(I+tD)). Su derivada en t=0 es
+
+ 0 = (2/m)Tr D - (2/m)Tr[(sum_i Y_i^*Y_i)D].
+
+Luego sum_i Y_i^*Y_i=I_m. Aplicar de igual modo Y_i -> (I+tD)Y_i da
+sum_i Y_iY_i^*=I_m. Se trata de condiciones necesarias en un máximo global
+no singular, no de una suposición sobre todos los coeficientes admisibles.
+No se necesita convergencia de ningún algoritmo de escalado.
+
+3. Norma y dos momentos
+
+Como sum_i K_iK_i^*=I_3, la factorización fila-columna
+
+ H = [K1 tensor I, K2 tensor I, K3 tensor I]
+     [I tensor Y1; I tensor Y2; I tensor Y3]
+
+da ||H||<=1. Además Tr(K_i^*K_j)=delta_ij, luego Tr(H^*H)=m.
+La identidad exacta de cuarto orden es
+
+ Tr(K_i^*K_jK_k^*K_l)
+    = (delta_ij delta_kl + delta_il delta_jk)/4.
+
+Por consiguiente
+
+ Tr[(H^*H)^2]
+  = (Tr[(sum_i Y_i^*Y_i)^2] + Tr[(sum_i Y_iY_i^*)^2])/4
+  = m/2.
+
+Comprobación alternativa de índices: escribir (Y1,Y2,Y3)=(A,B,C),
+V=[C,-B,A], P=V^*V. Entonces VV^*=I_m y P es proyección de rango m.
+Si t_3 transpone únicamente la matriz de bloques 3x3,
+
+ H^*H=(I_{3m}-P^{t_3})/2.
+
+La transposición parcial preserva Tr y la norma de Hilbert-Schmidt, y P^{t_3}
+es hermítica. De ahí Tr[(H^*H)^2]=(3m-2m+m)/4=m/2.
+No se supone que P^{t_3} sea una proyección ni que preserve positividad.
+
+4. Mayorante escalar exacta
+
+Sean a=3/4, b=3 y c=16(log4-3)/81<0. Definir
+
+ q(x)=log a+(x-a)/a+c(x-a)^2.
+
+Para 0<x<=3 se cumple q(x)>=log x, con igualdad únicamente en x=a y x=3.
+Prueba: para h=q-log, h(a)=h(3)=0 y
+
+ h'(x)=(x-a)(2cx+1/a)/x.
+
+El otro cero de la derivada es t=27/[8(3-log4)], y a<t<3.
+Así h decrece hasta a, crece de a a t y decrece de t a 3. Esto demuestra
+la desigualdad en todo el intervalo, incluido el extremo x->0.
+
+Aplicarla a los 3m autovalores x de 3H^*H. Son positivos, <=3, y sus medias son
+
+ E x=1, E x^2=3/2, E(x-a)^2=9/16.
+
+Por tanto
+
+ E log x <= E q(x)
+ =log(3/4)+1/3+(log4-3)/9
+ =log(3/4)+log4/9.
+
+Restando log3 y exponenciando se obtiene
+
+ |det H|^(2/(3m)) <= (1/4)4^(1/9)=T.
+
+5. Testigo e igualdad
+
+En m=3 tomar Y_i=K_i. Ambos Grams suman I y la energía normalizada es 1.
+Con Omega=sum_{j=1}^3 e_j tensor e_j SIN normalizar, y F el intercambio,
+
+ H=sum_i K_i tensor K_i=(|Omega><Omega|-F)/2.
+
+Su cuadrado tiene autovalor 1 una vez y 1/4 ocho veces; det H=-1/256.
+Así alcanza T. Para m=3k, tomar k copias directas de este testigo.
+
+Recíprocamente, la igualdad obliga a que todo autovalor de H^*H sea 1 o 1/4.
+Si t es la multiplicidad de 1, Tr(H^*H)=m exige
+
+ t+(3m-t)/4=m, esto es t=m/3.
+
+Luego 3 divide m. La compacidad garantiza desigualdad estricta en cada tamaño
+no divisible por 3; no se afirma una brecha uniforme al variar esos tamaños.
+
+El testigo m=2 con Y_i=Pauli_i/sqrt(3) es invertible y tiene
+a_2=2^(2/3)/6 (su optimalidad exacta se obtuvo en la revisión anterior).
+Las sumas directas de testigos m=3 y m=2 producen dimensiones arbitrariamente
+grandes: para m=3k+2 usar k bloques de 3 y uno de 2; para m=3k+1>=4 usar
+k-1 bloques de 3 y dos de 2. Las medias geométricas ponderadas tienden a T.
+Junto con la cota uniforme esto demuestra lim_m a_m=T sin apelar a una
+convergencia de determinantes de matrices aleatorias.
+
+6. Familia W_d completa y crédito previo
+
+Para W_d(X)=(Tr(X)I-X^T)/(d-1), d>=2, sus Kraus son
+Kij=Aij/sqrt(d-1). Choi tiene autovalor 2/(d-1) sobre el espacio skew.
+El techo de Frobenius es L_d=2/[d(d-1)]. Una unitaria U en skew_d tensor M_m
+lo alcanza: escribir U=sum Aij tensor Uij y poner
+Yij=sqrt(2/d)Uij, H=sqrt(L_d)U. Puesto que
+2 sum tau_m(Uij^*Uij)=d, la energía vale 1.
+
+Para d par basta una unitaria skew escalar, por lo que a_1=L_d.
+Para d impar>=5 usar la unitaria skew por bloques de Haagerup-Musat en
+M5 tensor M4, y añadir bloques J2 tensor I4: así a_4=L_d.
+La fuente es Haagerup-Musat, arXiv:1408.6476v1, Lema5.1, Teorema5.2(1),
+ecuaciones(5.17)-(5.19), páginas impresas15-16. Esta construcción y su
+consecuencia para d!=3 se atribuyen a ellos, no se presentan como álgebra nueva.
+No se afirma que m=4 sea mínimo en los casos d impar>=5.
+
+Así A_infty(W_d)=L_d para d!=3, mientras A_infty(W3)=T<L_3=1/3.
+La excepción dimensional ya era conocida en factorizabilidad; la cantidad
+determinantal exacta, y la prueba de optimalidad en todo tamaño, son la
+aportación candidata de esta nota.
+
+7. Antecedentes y alcance de la búsqueda
+
+Haagerup-Musat también prueban en Lema5.4 la cota25/27 para la masa skew de
+una unitaria sobre una álgebra finita tracial. Su Lema5.3 usa un argumento de
+momentos de cuarto orden. Son antecedentes cercanos que deben citarse; la
+mera obstrucción uniforme a saturar1/3 no es nueva. La nota presente optimiza
+el determinante y añade estacionariedad y una mayorante de log para dar T.
+Fuente primaria: https://arxiv.org/pdf/1408.6476
+
+La búsqueda dirigida de combinaciones Werner-Holevo/determinant,
+antisymmetric/G-concurrence, skew/Fuglede-Kadison y del valor exacto no halló
+un enunciado previo de este máximo. Esto no acredita prioridad mundial.
+Tampoco es una revisión bibliográfica exhaustiva ni revisión humana.
+
+El puente de matrices libres a determinantes finitos sigue separado:
+Mai-Speicher, arXiv:2406.15922v1, Teorema1.2 y Conjetura1 de sección5;
+https://arxiv.org/html/2406.15922v1
+Kargin, arXiv:2610.15180v1, sección12, vuelve a señalar ese problema;
+https://arxiv.org/html/2610.15180v1
+No se necesita ninguna de esas conjeturas para la prueba W3 anterior.
+
+8. Evidencia local
+
+check_w3_exact_bound.py y w3-exact-bound-checks.json verifican exactamente
+las81 identidades de cuarto orden, el contacto y la derivada factorizada de q,
+el espectro y determinante del testigo m3; además comprueban30 ejemplos
+numéricos de coeficientes con ambos Grams iguales a I, en m=2,3,4,5,7,9.
+Las optimizaciones previas m=2,...,6 son exploratorias, no certificados.
+No hay formalización asistida por un demostrador ni dictamen humano.
