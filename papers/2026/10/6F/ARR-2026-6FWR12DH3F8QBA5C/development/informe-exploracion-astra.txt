@@ -1,0 +1,139 @@
+INFORME DE EXPLORACIÓN Y COMPROBACIÓN DE DESARROLLO
+2026-10-16, GPT-6 Astra
+
+Dictamen acotado
+
+Las pruebas centrales del borrador Sharp determinant bounds for amplified
+antisymmetric channels and a noise law for noncommutative rank son correctas
+según la comprobación realizada. No he detectado un defecto matemático material.
+La cota exacta W3 se cerró en este contexto durante el desarrollo y se comunicó
+al redactor. Esta comprobación no es una revisión ciega o independiente, no es
+un voto adicional y no asigna nota de calidad o importancia. El objetivo deseado
+por el autor no determina ninguna valoración.
+
+Fuente leída íntegramente y reexaminada tras las atribuciones bibliográficas:
+D:/Entregas/airr/2026-10-16_determinantes-amplificados/main.tex
+SHA256 eac94490ec1d7cc6b9065f62e5a51686a6294f2d87dd8be1b6c367de36687b1d
+La comprobación aquí se refiere a esa fuente, no a un PDF exportado posterior.
+No se ha modificado el manuscrito ni publicado desde este contexto.
+
+Resultados que han superado la comprobación
+
+1. Con a_m(E)=m^2 delta(E tensor D_m), la restricción correcta es
+sum_j tau_m(Y_j^*Y_j)=1 y la matriz H=sum_j K_j tensor Y_j.
+
+2. Para W3, a_m<=2^(2/9)/4 en todo m, con igualdad si y solo si 3 divide m.
+La prueba usa máximos compactos, estacionariedad de ambos Grams, norma<=1,
+primer y segundo momentos de H*H, y una mayorante cuadrática sharp de log.
+El testigo m3 tiene espectro de H*H igual a1 una vez y1/4 ocho veces.
+El criterio de divisibilidad procede de la multiplicidad entera de1, no de
+una extrapolación numérica. Las sumas directas dan la aproximación O(1/m).
+La prueba íntegra está en w3-exact-bound-proof.txt.
+
+3. Para W_d y d!=3, el valor regularizado es2/[d(d-1)]. Los testigos de
+dimensión auxiliar1 para d par, y4 para d impar>=5, son consecuencias de
+álgebra elemental y de la construcción de Haagerup-Musat. No son nuevas
+factorizaciones ni se afirma minimalidad de4. Su papel está bien atribuido.
+
+4. Para E_eps=(1-eps)E+epsD_d,
+ A_infty(E_eps)=Theta_E(eps^((d-ncrk(S_E))/d)).
+La cota superior controla la cola de singularidades uniformemente en m.
+Una matriz de rango máximo y una isometría entre sus núcleos dan una cota
+inferior al mismo exponente en un tamaño fijo. También es correcto el
+enunciado a tamaño m con exponente1-rho_m/(dm), y el ejemplo exacto replacer.
+La prueba íntegra está en noise-exponent-proof.txt.
+
+5. El orden de límites operacional está expresado con cuidado: primero el
+exponente de consultas n a canal y tamaño fijos; después normalizar por m^2
+y tomar supremo; después eps->0. No se obtiene un teorema de consultas finitas
+con m creciendo con n. D_m cambia la alternativa y amplía el nulo a U(dm).
+
+Observaciones bibliográficas resueltas durante esta comprobación
+
+La versión de fuente identificada reconoce explícitamente:
+- Haagerup-Musat, Lema5.3: el uso previo del cuarto momento skew.
+- Haagerup-Musat, Lema5.1/Teorema5.2(1)/(5.17)-(5.19): construcción m4.
+- Hirai-Iwamasa-Oki-Soma: la teoría previa de grados/valoraciones NC.
+No queda pendiente una objeción concreta sobre esos créditos. La búsqueda fue
+dirigida y limitada: no prueba ausencia de literatura anterior ni prioridad
+mundial. Los enunciados específicos de máximo determinantal uniforme y ley
+Theta con constante uniforme no fueron encontrados en las fuentes consultadas.
+
+Rutas exploratorias descartadas o todavía abiertas
+
+A. Factorizabilidad no equivale a saturación del techo lambda_max(J)/d.
+Contraejemplo: pinching en dimensión3 con proyecciones de rangos2 y1.
+Es mezcla de dos unitarias, pero a_m=2^(2/3)/3 para todo m, menor que2/3.
+En general, para pinching con rangos r_j, a_m=product_j(r_j/d)^(r_j/d).
+El techo se alcanza en un m finito exactamente cuando el espacio propio
+superior de Choi, visto como espacio de operadores y amplificado, contiene
+una unitaria salvo escala. Esto no equivale a factorizar el canal dado.
+
+B. Hay una necesidad cuantitativa para saturación aproximada. Sea S_top el
+espacio propio superior, lambda1 el valor superior de Choi, lambda2 el mayor
+valor estrictamente inferior (o0 si todos los valores no nulos son lambda1).
+Si gamma_m=min_U dist_2(U,S_top tensor M_m)^2, con normaHS normalizada, entonces
+
+ a_m <= lambda1/d - (lambda1-lambda2) gamma_m/d.
+
+Un puente útil es mu_m=max_U Tr[J_E J_FU]/d^2, donde
+F_U=(id tensor tau_m) Ad_U(.-tensor I). Se tiene a_m<=mu_m<=lambda1/d.
+Se obtiene por dualidad de la norma de traza del operador H y AM-GM.
+Por tanto A_infty=lambda1/d implica inf_m gamma_m=0. La recíproca meramente
+en norma2 no se ha probado: los singulares muy pequeños impiden deducir
+convergencia logarítmica. Un ejemplo de una mala sucesión no refutaría por sí
+solo una equivalencia existencial, y aquí no se afirma tal refutación.
+
+C. Una formulación de capacidad proporciona una cota superior válida:
+Qij=tau(Y_i^*Y_j), Q>=0, TrQ=1,
+T_Q(X)=sum_ij Qij Ki^* X Kj,
+C(E)=max_Q cap(T_Q)^(1/d), cap(T)=inf_{X>0,detX=1} detT(X).
+Entonces A_infty(E)<=C(E), por Jensen de log y la traza parcial.
+La función de Q maximizada es cóncava; ello no autoriza intercambiar max e inf
+por una aplicación ordinaria de Sion al dominio no convexo detX=1.
+
+La fórmula de Mai-Speicher para el determinante libre sugeriría C(E)/e como
+valor de una construcción libre. No se ha demostrado el puente necesario
+para concluir C(E)/e<=A_infty(E) en matrices finitas. Mai-Speicher enuncia
+una convergencia de determinantes como Conjetura1, y Kargin vuelve a señalar
+el problema de los singulares pequeños en su sección de matrices aleatorias.
+El determinante Fuglede-Kadison es semicontinuo en la dirección que no basta
+para la cota inferior propuesta. La e-aproximación no debe presentarse como
+teorema. El manuscrito actual no la utiliza, correctamente.
+
+D. Para toda E, el supremo A_infty también es límite de a_m. Si ncrk<d todos
+los valores son cero. Si ncrk=d, Derksen-Makam da valores positivos para todo
+m suficientemente grande. Las sumas directas, con un bloque de tamaño p
+repetido y un resto tomado de un conjunto finito de tamaños positivos,
+demuestran liminf a_m>=a_p para cada p. No se necesita monotonicidad de a_m.
+Este hecho no es necesario para las pruebas principales del borrador.
+
+Evidencia y límites
+
+check_w3_exact_bound.py verifica81 identidades simbólicas, la mayorante,
+el espectro exacto de los testigos m2 y m3 y30 ejemplos finitos de momentos.
+check_noise_law.py comprueba15 completados de núcleos por SVD y80 tuplas
+factibles aleatorias, incluidos todos los factores de normalización.
+check_regularization_identities.py contiene45 ejemplos CPTP, la dualidad
+Choi, la cota de covarianza, pinching y la unitaria Clifford de W5.
+Los resultados están en los respectivos JSON y todos pasan.
+explore_regularization.py y su JSON son búsqueda local exploratoria m2..6;
+no son certificado de optimalidad ni necesarios para la demostración final.
+
+No hay revisión humana, formalización por asistente de pruebas o garantía de
+independencia entre proveedores. Mi contexto ha contribuido matemáticamente
+a la redacción y debe etiquetarse como involved_in_manuscript en cualquier
+transcripción de este informe. Una valoración posterior requiere otro acto
+de revisión con identidad del PDF y limitaciones explícitas; este informe
+no proporciona ni autoriza una nota editorial.
+
+Fuentes primarias consultadas
+
+Haagerup-Musat: https://arxiv.org/pdf/1408.6476
+Haagerup-Musat (factorización): https://arxiv.org/abs/1009.0778
+Ueda: https://arxiv.org/abs/1803.10446
+Derksen-Makam: https://arxiv.org/abs/1512.03393
+Ivanyos-Qiao-Subrahmanyam: https://arxiv.org/abs/1512.03531
+Hirai-Iwamasa-Oki-Soma: https://doi.org/10.1007/s10107-024-02158-0
+Mai-Speicher: https://arxiv.org/html/2406.15922v1
+Kargin: https://arxiv.org/html/2610.15180v1

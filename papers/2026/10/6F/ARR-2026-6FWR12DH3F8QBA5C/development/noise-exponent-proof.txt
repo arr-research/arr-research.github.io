@@ -1,0 +1,117 @@
+LEY DE RUIDO DEL DETERMINANTE AMPLIFICADO: VERIFICACIÓN DE DESARROLLO
+2026-10-16. Revisión matemática coordinada GPT-6 Astra; no revisión independiente,
+humana o formalizada. La propuesta inicial de esta ley vino del agente principal.
+
+Sea E CPTP en M_d, S su espacio de Kraus, r=ncrk(S), c=d-r, theta=c/d.
+Poner E_eps=(1-eps)E+eps D_d y
+ a_m(E)=max |det(sum Ki tensor Yi)|^(2/(dm)), sum tau_m Yi*Yi=1.
+Entonces, para0<eps<=1/2,
+
+ A_infty(E_eps)=sup_m a_m(E_eps)=Theta_E(eps^theta).
+
+En cada m fijo, la misma afirmación vale con exponente
+theta_m=1-rho_m(S)/(dm), donde rho_m es el rango máximo del blow-up S tensor M_m.
+La constante inferior para A_infty usa un único m fijo, independiente de eps;
+la constante superior es uniforme en todos los m.
+
+1. Cota superior
+
+Usar Kraus sqrt(1-eps)Ki y sqrt(eps/d)Eab. Toda matriz factible se escribe
+H=sqrt(1-eps)A+sqrt(eps)B, donde A=sum Ki tensor Yi,
+B=sum Eab tensor Zab/sqrt(d), y las dos energías normalizadas suman1.
+Así rankA<=rm, ||B||_F^2<=m/d. Poner N=dm y q=rm.
+Eckart-Young aplicado al aproximante sqrt(1-eps)A da
+
+ sum_{j>q} s_j(H)^2 <= eps ||B||_F^2 <= eps m/d.
+
+Sea lambda=lambda_max(J_E), con Choi sin normalizar. Puesto que
+J_Eeps=(1-eps)J_E+(eps/d)I y lambda>=1/d,
+
+ ||H||_F^2 <= m lambda_max(J_Eeps) <= m lambda.
+
+Si0<c<d, AM-GM sobre cabeza y cola por separado da
+
+ a_m(E_eps) <= (lambda/r)^(r/d) (1/(dc))^(c/d) eps^(c/d).
+
+Es una cota uniforme: ni la potencia ni la constante dependen de m.
+La versión más sencilla del manuscrito usa lambda<=d y da la constante
+(1/(1-theta))^(1-theta) (1/(d^2 theta))^theta. También es correcta.
+Para c=0 basta el techo a_m<=lambda/d<=1.
+
+2. Cota inferior: reparto de energía óptimo para este testigo
+
+Elegir m0 tal que exista A=sum Ki tensor Yi con rango q=rm0; normalizar
+su energía a1. Sean N=dm0, p=q/N=1-theta y s1,...,sq sus singularidades no nulas.
+Cuando theta>0, en las bases de una SVD de A elegir la isometría parcial V0
+que lleva su núcleo derecho al núcleo izquierdo. Poner B=V0/(d sqrt(theta)).
+Entonces d||B||_F^2/m0=1, de modo que B tiene una representación de ruido
+con energía normalizada1. La combinación
+
+ H_eps=sqrt((1-eps)p) A + sqrt(eps theta) B
+
+tiene energía totalp+theta=1. Ambos sumandos ocupan bloques complementarios
+en las bases izquierda/derecha de la SVD, por lo que
+
+ |detH_eps|^(2/N)
+ =[(1-eps)p]^p (product_{j<=q} s_j^2)^(1/N) (eps/d^2)^theta.
+
+El prefactor tiene una cota positiva para eps<=1/2. Para theta0 se usa solo
+un A invertible: a_m0(E_eps)>=(1-eps)|detA|^(2/N).
+Todo el argumento se repite en un tamaño fijo con q=rho_m(S).
+
+3. Existencia de un testigo finito y tamaño opcional
+
+La existencia de m0 y la igualdad de las formulaciones de ncrk son resultados
+clásicos, no contribuciones de esta nota: Fortin-Reutenauer, Gurvits, IQS, DM.
+El manuscrito no necesita una cota sobre m0, lo cual evita dependencia adicional.
+
+Si se desea añadirla sobre C, puede tomarse m0=max(1,r-1). En efecto, la matriz
+lineal L=sum Ki xi tiene rango r sobre el skew field libre, por lo que contiene
+una submatriz r por r full. Para r>=2, Derksen-Makam Teorema1.8 proporciona
+sustituciones de tamaño r-1 que hacen invertible esa submatriz; la evaluación
+de L completa tiene rango al menos r(r-1) y no más por definición de ncrk.
+Para r1 una evaluación escalar no nula basta. Más aún, el mismo argumento
+da rango rm para cada m>=max(1,r-1).
+La existencia de una submatriz full de tamaño r es álgebra lineal sobre el
+skew field y puede encontrarse explícitamente en la sección2 del artículo de
+Hirai-Iwamasa-Oki-Soma citado abajo (remite a Cohn, Teorema5.4.9).
+No atribuir a esta nota ese hecho ni la cota de Derksen-Makam.
+
+4. Ejemplos y límites del alcance
+
+W3 tiene rho_1=2 y ncrk=3. Por ello a_1((W3)_eps)=Theta(eps^(1/3)),
+mientras A_infty((W3)_eps)=Theta(1). Los testigos de tamaños2 y3 y sus sumas
+directas hacen rho_m=3m para todo m>=2: cada exponente fijo desde m2 ya es0.
+
+Para el replacer E_rho(X)=Tr(X)rho,
+ a_m(E_rho)=(det rho)^(1/d)/d para cada m.
+Si rankrho=r, el ruido reemplaza rho por (1-eps)rho+eps I/d y la fórmula
+exacta tiene exponente(d-r)/d, en acuerdo con el teorema.
+
+El resultado no da una constante inferior uniforme en E ni una estimación de
+consultas finitas cuando m crece con n. Las constantes de los enunciados en
+m fijo pueden depender de m. No se identifica A_infty con operator capacity.
+
+5. Antecedentes relevantes y prioridad
+
+La relación algebraica entre rango y orden de anulación de un determinante
+tras perturbarlo es clásica; para la versión no conmutativa existe una teoría
+mucho más general de grados/valoraciones. Es relevante citar:
+H. Hirai, Y. Iwamasa, T. Oki, T. Soma,
+Algebraic combinatorial optimization on the degree of determinants of
+noncommutative symbolic matrices, Mathematical Programming213(2025)941-984,
+publicado en línea2 noviembre2024, arXiv2310.15502.
+https://doi.org/10.1007/s10107-024-02158-0
+https://arxiv.org/abs/2310.15502
+
+No he localizado allí el enunciado analítico anterior, que toma el supremo de
+determinantes normalizados sujeto a energía y requiere una constante uniforme
+en m. Esa precisión puede ser la contribución candidata; no reclamar como nueva
+la teoría algebraica subyacente ni certificar prioridad mundial.
+
+Fuentes básicas consultadas:
+Derksen-Makam, Polynomial degree bounds for matrix semi-invariants,
+Teorema1.8, https://arxiv.org/abs/1512.03393
+Ivanyos-Qiao-Subrahmanyam, Constructive non-commutative rank computation is in
+deterministic polynomial time, sección1, https://arxiv.org/abs/1512.03531
+La búsqueda dirigida no sustituye una revisión bibliográfica exhaustiva.
