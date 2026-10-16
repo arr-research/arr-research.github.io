@@ -1,0 +1,89 @@
+AUDITORÍA INTERNA DE LAS DEMOSTRACIONES — 15-10-2026
+Revisor: la misma sesión de OpenAI Codex que preparó el manuscrito.
+No es una evaluación independiente ni una formalización en asistente de pruebas.
+
+1. Convenciones y normalización.
+   Choi no normalizado: tr J=d, tr_out J=I. Se agrupan todas las salidas antes
+   de todas las entradas. D_lambda es un proyector de rango q_lambda^2.
+   M0=sum(m_lambda/q_lambda)D_lambda tiene tr M0=d^n.
+   T_lambda=D_lambda/(q_lambda*m_lambda) satisface tr(T_lambda M0)=1.
+   Riesgo revisado: perder un factor de m por confundir Phi normalizada con
+   vectorización no normalizada. Factores comprobados por circuitos explícitos.
+
+2. Lema de bloques 4.1.
+   Los dos grupos unitarios eliminan acoplamientos entre pares de etiquetas.
+   El producto iid conmuta con las permutaciones simultáneas. En M_lambda
+   tensor M_lambda la representación trivial es única; no puede acoplarse
+   a representaciones no triviales. La positividad del resto es legítima
+   porque D_lambda es reductor, no una compresión con acoplamientos omitidos.
+   Se verificaron los bloques por un diseño exacto hasta n=3 para qubits.
+   No se utilizó el grupo Clifford como diseño de orden cuatro.
+
+3. Teorema de clase completa 3.1.
+   Los pesos son positivos y suman c, con 0<=c<=1 por normalización física
+   sobre unitarias. El protocolo de reemplazo usa una lotería sobre pruebas
+   físicas y rechaza con probabilidad 1-c. Domina el promedio orbital original,
+   y de ahí el riesgo máximo. NO domina necesariamente cada orientación
+   original por separado: esta distinción está explícita en el manuscrito.
+
+4. Alternativas robustas.
+   Para alfa<1 se normalizan los pesos mediante p=w/c y se usa c>=1-alfa.
+   No se intercambian injustificadamente inf y sup. La continuidad y la
+   compacidad dan existencia de un minimizador. Alfa=1 se trata aparte.
+   Una alternativa que contenga unitarias produce el valor trivial 1-alfa.
+
+5. Realización física.
+   Estado: I_V/q tensor Phi_MA. Medida: I_V tensor Phi_MA, cero fuera del sector.
+   La mezcla en V no requiere retener su purificación. La entrada es invariante
+   bajo la rotación desconocida R; la medida bajo L. Se implementaron
+   explícitamente sectores de tres y cuatro qubits, sin inferir realizabilidad
+   sólo porque un SDP devolviera una matriz positiva.
+   75 evaluaciones de circuitos; 50 comparan directamente con la fórmula de
+   referencia completa, y 15 incluyen el valor depolarizante exacto. Los
+   restantes casos con referencia limitada sólo verifican el circuito descrito,
+   sin afirmar optimalidad general con memoria limitada para todo canal.
+
+6. Dos queries.
+   Los cuatro términos SWAP dan d^2, tr(E(I)^2), d y tr(J^2).
+   La diferencia b_plus-b_minus=(d*s-p)/(d*(d^2-1)) es no negativa porque
+   s>=d y p<=d^2. Incluidos controles: identidad, despolarización, reemplazo
+   puro, dephasing, amplitude damping y canales aleatorios no unitales.
+   Casos límite: una query no discrimina; reemplazo puro se detecta con dos.
+
+7. Referencia finita, Teorema 6.1.
+   El twirl de entrada conserva la salida depolarizada y promedia la aceptación
+   nula; el twirl de medida conserva ambos estados ya invariantes.
+   X<=min(m,K) I tensor tr_M X se prueba por Schmidt y suma de rangos uno.
+   La cota se aplica a estados mixtos y coherencias originales entre sectores.
+   Las dos desigualdades q_lambda>=q_bal y q_lambda/m_lambda>=q_bal/m_bal
+   son necesarias para concluir optimalidad balanceada a TODO K.
+   La segunda es una propiedad conocida del cociente de dimensiones; la
+   primera usa positividad clásica de Kostka y la órbita de un peso balanceado.
+   Se comprobaron ambas exactamente en aritmética racional para 11.626
+   particiones y 80.909 pares de parámetros de referencia.
+   No se ha transferido el límite K a memoria total de estrategias adaptativas.
+
+8. Exponente para mezcla ortogonal de unitarias.
+   El componente repetido de probabilidad p_max^n pertenece a la nula y da
+   la cota inferior para cualquier tester positivo. El test simétrico sobre
+   estados Choi da h_n(p) y un prefactor polinómico. La hipótesis de
+   ortogonalidad es esencial para identificar p con el espectro Choi.
+   No se afirma la misma fórmula para cualquier canal no unital.
+
+9. Estabilidad.
+   Se usa telescopaje de potencias tensoriales en norma diamante y el factor
+   1/2 de la diferencia de probabilidades entre estados normalizados. Tomar
+   mínimos conserva la cota uniforme sobre las pruebas de sectores.
+
+10. Dependencias y límites de prioridad.
+    No hay dependencia de una conjetura de OpenAI, Anthropic o DeepMind.
+    Los ingredientes externos son Schur–Weyl, ortogonalidad de Schur,
+    dimensiones y pesos clásicos, y la representación positiva de testers.
+    El borrador distingue los antecedentes cercanos y limita su pretensión
+    de novedad a la reducción simultánea para alternativas CPTP iid rotadas.
+    Sigue pendiente una revisión especializada de novedad y de las pruebas.
+
+RESULTADO DE ESTA REVISIÓN INTERNA
+No se detectó una laguna en el argumento descrito tras fijar las convenciones
+de normalización y acotar el alcance durante la elaboración. Esta frase no
+es una garantía de corrección ni sustituye a un referee independiente.
