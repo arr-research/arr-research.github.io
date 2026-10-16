@@ -1,0 +1,270 @@
+REVISIÓN MATEMÁTICA DEL MANUSCRITO ORIGINAL
+A complete class of optimal quantum tests for unknown unitary dynamics
+Lluis Eriksson; borrador de 15 de octubre de 2026; 11 páginas
+
+Configuración solicitada para esta revisión: GPT-6 Astra, esfuerzo xhigh.
+Fecha de revisión: 15 de octubre de 2026, comprobada con el reloj de la sesión.
+
+IDENTIFICACIÓN EXACTA
+
+PDF: D:\Entregas\airr\2026-10-15_tests-unitarios-optimos\optimal-unitary-tests.pdf
+SHA-256: 4f2f50c505580afa840b997bf7c2924bc4ccf9ca23c9f9a029a927a290c9b141
+Tamaño: 123041 bytes. Creación del archivo: 2026-10-15 11:44:05.9748239 UTC.
+Última modificación: 2026-10-15 11:44:05.9909189 UTC.
+Fecha de creación interna del PDF: 2026-10-15 11:43:55 UTC.
+Fuente revisada: optimal-unitary-tests.tex, 37630 bytes, modificada el
+2026-10-15 11:43:41.4327353 UTC, en el mismo directorio.
+
+Este dictamen corresponde exclusivamente a ese PDF y su fuente acompañante.
+No se transfiere automáticamente a versiones posteriores, aunque conserven el título.
+
+DICTAMEN
+
+No he encontrado un error matemático material en las demostraciones centrales.
+El teorema de dominación paralela, la fórmula minimax, el resultado universal
+para dos consultas y la identidad de referencia finita son coherentes bajo las
+hipótesis declaradas. Mi recomendación es favorable como preprint, con revisiones
+menores de atribución bibliográfica antes de presentarlo como una aportación nueva.
+No identifico un motivo matemático que obligue a retirar o detener este borrador.
+Esto no es una decisión editorial, ni certificación formal, ni revisión humana.
+
+La contribución plausible es precisa: una reducción simultánea de todos los
+testers positivos a una familia física de tests paralelos para alternativas CPTP
+sin memoria, con orientaciones colectivas de entrada y salida desconocidas e
+independientes. No doy por demostrada su prioridad bibliográfica absoluta.
+La construcción de multiplicidades, los argumentos de simetría, la relajación
+positiva, el uso de D_max y varios ingredientes del análisis de recursos ya
+tienen antecedentes cercanos. El manuscrito reconoce gran parte de esa deuda.
+
+NOTAS, EN DOS ESCALAS DIFERENTES
+
+Calidad ordinaria del manuscrito: 8.2/10.
+Fundamento: demostración corta y sólida, normalizaciones verificables, promesa
+estadística bien delimitada, consecuencias exactas útiles y buena trazabilidad
+computacional. No llega a una nota de excelencia máxima: la prioridad no está
+cerrada, falta afinar dos atribuciones y no se demuestra implementación eficiente
+ni ventaja práctica para modelos calibrados o con memoria.
+
+Nota AIRR: 4.6/10.
+Fundamento: aportación especializada fuerte, próxima al ancla «Very good» de 5,
+con alcance finito y concreto. No hay aquí evidencia para «field-shaping», una
+ruptura histórica o niveles 8–10. Esta cifra no es una probabilidad de corrección
+ni la conversión aritmética de 8.2. La escala consultada coloca 3 en el umbral de
+publicación, 4 en «Strong», 5 en «Very good» y 10 en el ancla Millennium.
+Fuente de la escala: https://airr.science/assessments/#scale
+
+Perfil diagnóstico independiente del promedio:
+- Confianza en corrección: 4/5. Núcleo rederivado y sometido a comprobaciones
+  propias; sigue faltando una revisión humana especializada y formalización.
+- Rigor: 4/5. Argumentos completos a nivel de artículo de teoría cuántica;
+  algunos pasos de contracción y representación están condensados.
+- Novedad: 3/5. Extensión plausible y bien identificada; herramientas y varios
+  ingredientes estrechamente anticipados. No se certifica prioridad global.
+- Significación: 3/5. Reducción exacta útil para una clase importante pero
+  restringida por una fuerte incertidumbre de orientación.
+- Reproducibilidad: 4/5. Fuente, código y salidas acompañan el artículo; se
+  añadieron verificaciones propias. No se reejecutó aquí toda la batería original.
+
+COMPROBACIÓN ANALÍTICA DEL NÚCLEO
+
+1. Soporte nulo y normalización (páginas 3–6, ecuaciones 8–10 y 18–25).
+
+Con Choi sin normalizar, Tr J_E=d. En cada sector, la vectorización de la
+identidad de multiplicidad tiene norma al cuadrado m_lambda, mientras que la
+ortogonalidad de Schur aporta 1/q_lambda. De ahí resulta exactamente
+M0 = sum_lambda (m_lambda/q_lambda) D_lambda.
+Los D_lambda tienen rango q_lambda^2 y son proyectores mutuamente ortogonales.
+No falta una potencia de d, un m_lambda ni una transposición global.
+
+El tester físico T_lambda=D_lambda/(q_lambda m_lambda) satisface
+Tr(T_lambda M0)=1. La preparación I_V/q tensor Phi_MA y la medición
+I_V tensor Phi_MA producen esa contracción: el estado maximamente entrelazado
+normalizado aporta el factor 1/m_lambda. El registro V se prepara mixto sin
+conservar su purificación; la referencia de dimensión m_lambda es suficiente.
+
+Como comprobación adicional de factibilidad, D_lambda <= I_O tensor Pi_lambda^I.
+Por ello T_lambda <= I_O tensor [Pi_lambda^I/(q_lambda m_lambda)], donde la
+expresión de entrada tiene traza uno. Esta comprobación valida un efecto de
+tester paralelo; la construcción explícita del artículo es la que justifica
+la dimensión reducida de la referencia.
+
+2. Lema de bloques y teorema de clase completa (páginas 4–6).
+
+Este es el paso decisivo y lo encuentro correcto. Los dos twirls separan los
+pares de irreducibles (lambda,mu) y hacen escalar la parte V_lambda tensor V_mu.
+La invariancia de J_E^{tensor n} bajo permutaciones simultáneas persiste tras
+los twirls. En M_lambda tensor M_lambda, el subespacio trivial es unidimensional.
+Por tanto no se puede acoplar con componentes no triviales y D_lambda reduce B_E.
+Su escalar se obtiene de la traza dividida por q_lambda^2; el complemento sigue
+siendo positivo. La conclusión no se obtiene de asumir que un circuito adaptativo
+se vuelve paralelo al promediarlo: se obtiene de esta descomposición positiva.
+
+Para T>=0, los pesos (m_lambda/q_lambda)Tr(TD_lambda) son no negativos y suman
+c=Tr(TM0)<=1. La positividad del complemento da la desigualdad simultánea para
+cualquier E. La lotería de tests físicos reproduce dichos pesos, con rechazo
+adicional de probabilidad 1-c. La dominación es respecto al promedio de la órbita
+y al peor caso nulo; el artículo no la confunde con dominación puntual de cada
+orientación del tester original.
+
+3. Corolarios minimax y familias robustas (página 4).
+
+Si c>=1-alpha>0, dividir los pesos por c produce una distribución sobre
+particiones. La no negatividad de b_lambda permite sustituir c por 1-alpha en
+la cota inferior. La construcción aleatoria alcanza la cota para toda la familia
+a la vez. El caso alpha=1 está separado correctamente. La compacidad y continuidad
+son suficientes para existencia del mínimo; no se requiere intercambiar min y sup.
+Para una sola alternativa, el mínimo de una función lineal en el simplex está
+en un vértice. La linealidad exacta en 1-alpha queda justificada.
+
+El alcance adaptativo e indefinido está condicionado a una representación
+multilineal con efecto positivo y normalización física. Eso es lo que demuestra
+la prueba; no demuestra nada para modelos que incumplan esa condición, acceso
+a dilaciones controladas, inversas o ruido temporal correlacionado general.
+
+4. Dos consultas y ejemplos (páginas 6–7).
+
+Los cuatro términos del desarrollo de D_+/- son d^2, s, d y p. Dividir por
+q_+/- da la ecuación 27. La diferencia de sectores es (d s-p)/(d(d^2-1)),
+no negativa porque s>=d y p<=d^2. La optimalidad universal del sector antisimétrico
+se sigue sin suponer unitalidad. Para qubits, s=2(1+||t||^2) y
+p=1+||A||_F^2+||t||^2, lo que reproduce la ecuación 31.
+
+Verifiqué los ejemplos: amortiguamiento de amplitud da 1-gamma; reemplazo por
+sigma da (1-Tr sigma^2)/2; reemplazo puro da cero; despolarización completa da
+(d-1)/(2d). La interpretación del reemplazo puro es correcta: dos salidas puras
+idénticas no tienen componente antisimétrica. La afirmación de que una sola
+consulta no tiene poder minimax también se deduce correctamente de b_(1)=1.
+
+5. Referencia finita (páginas 7–8, teorema 6.1).
+
+El twirl de la entrada no altera la salida despolarizada y convierte la aceptación
+nula en su promedio Haar, todavía >=1-alpha. Tras ello, twirlear la medición no
+cambia ninguna de las dos probabilidades. La desigualdad
+X <= min(m,K) I_m tensor Tr_m X
+es válida: para cada vector puro se deduce por Cauchy–Schwarz en su expansión
+de Schmidt, y sumar una descomposición positiva conserva la desigualdad.
+Sustituir el marginal de un bloque por el marginal total sólo amplía el lado
+derecho. La cota y su saturación con un estado plano de rango min(K,m) son correctas.
+
+La minimización global necesita dos desigualdades diferentes, y el artículo
+demuestra ambas. El cociente q/m disminuye al equilibrar las filas. Para q,
+la dominancia sobre lambda_* implica que lambda_* aparece como peso; sus
+binom(d,r) permutaciones distintas dan q>=binom(d,r). La representación equilibrada
+alcanza esa dimensión. Combinar q>=q_* y q/m>=q_*/m_* demuestra el mínimo para
+cualquier K, incluso cuando el sector con multiplicidad mayor no es lambda_*.
+No confundí esta cota con una cota sobre toda la memoria de un protocolo adaptativo.
+La tabla de qubits y las dos expresiones asintóticas son consistentes.
+
+6. Exponente, estabilidad y apéndices (páginas 9–10).
+
+Para la mezcla de unitarias ortogonales, el componente con todas las etiquetas
+iguales da la cota inferior (1-alpha)p_max^n por positividad. La prueba superior
+de estados Choi con proyector simétrico da h_n(p), acotado por un factor polinómico
+por p_max^n. No falta un coeficiente multinomial: cada vector de ocupación
+normalizado del subespacio simétrico contribuye una sola vez. El exponente sigue
+para d y canal fijos, incluido el caso unitario p_max=1.
+
+La cota de estabilidad usa correctamente la mitad de la distancia traza de
+estados de igual traza, la telescopía de canales CPTP y luego el mínimo finito.
+El factor 1-alpha permanece fuera. Las fórmulas de caracteres y de Kraus tienen
+los factores 1/[q(n!)^2] y 1/(q m^2) correctos. La formulación con D_max maneja
+b=0 mediante la convención de soporte y D_max infinito.
+
+ANTECEDENTES Y OBJECIONES CONCRETAS
+
+R1. Severidad moderada de atribución; no invalida un teorema.
+En la sección 6 debe citarse explícitamente que Chiribella–Ebler ya obtiene
+el rango r=min(m_lambda,d_R), además de los estados de multiplicidades y la
+optimización del cociente dimensional. La función de error allí es diferente:
+q_lambda f(r)/(2d^N), con f(r)=r(1-sqrt(1-r^-2)), para identificación causal.
+La nueva identidad de Neyman–Pearson no queda refutada, pero la truncación del
+rango por K no debe presentarse como ingrediente nuevo. La contribución defendible
+es la fórmula exacta del problema actual y su optimización conjunta para d,n,K.
+Referencia primaria: https://arxiv.org/html/1806.06459v3, apéndice B, ecuaciones
+43–44 y 50, lema 3. Conviene añadir esa referencia precisa a la sección 6.
+
+R2. Severidad menor de cobertura bibliográfica; no invalida un teorema.
+La preparación antisimétrica y la medición de simetría ya figuran en Sedlák–Ziman,
+Unambiguous comparison of unitary channels, Phys. Rev. A 79, 012303 (2009),
+sección III.1, ecuaciones 26–27. Recomiendo añadir esa cita al inicio de la
+sección 5. Su problema compara dos unitarias desconocidas; no establece por sí
+solo la optimalidad frente a toda alternativa CPTP rotada del presente artículo.
+Así, la aportación nueva defendible es esa optimalidad universal y su fórmula,
+no la invención de la preparación y medición.
+Referencia primaria: https://arxiv.org/html/0809.4401v2
+
+El antecedente 2502.01464 es particularmente próximo: su teorema 3, ecuaciones
+S14–S19, ya iguala la optimización paralela, ICO y positiva y obtiene la ley
+(1-epsilon)exp[-D_max]. Su ecuación S11 también contiene la descomposición
+del promedio unitario. Allí se prueban hipótesis de subgrupo frente a Haar para
+representaciones unitarias. No identifiqué una sustitución directa que cubra
+las potencias de cualquier canal CPTP, especialmente no unital. Por eso el
+lema de bloques y la dominación simultánea del manuscrito siguen siendo una
+aportación plausible, mientras que la fórmula de D_max por sí sola no lo es.
+Referencia primaria: https://arxiv.org/html/2502.01464v1
+
+En 2501.09312, el teorema 4 demuestra simulación paralela para estimación de una
+acción de grupo con pérdida covariante. Comparte el método de representación
+y la independencia de la estructura causal, pero no enuncia el problema CPTP
+del manuscrito. La atribución de la introducción es razonable.
+Referencia primaria: https://arxiv.org/html/2501.09312v2
+
+En 2104.09759, los teoremas de simetrización y minimax, y el corolario 22 sobre
+simetrías por ranura, establecen herramientas generales relevantes. La simetría
+colectiva de orientación aquí no se identifica automáticamente con aquellas
+simetrías independientes por ranura. No encontré en las secciones revisadas
+la familia explícita completa de tests del manuscrito.
+Referencia primaria: https://arxiv.org/html/2104.09759v4
+
+Se verificaron también títulos, autores, fechas y resúmenes primarios de
+2606.10730, 2609.40355, 2609.38134, 2208.12519 y 2411.14292. Las distinciones
+de promesa mencionadas en la introducción son compatibles con esos resúmenes.
+No hice una auditoría completa de sus demostraciones ni de toda la literatura.
+
+Mejora opcional, no condición de corrección: un ejemplo concreto de familia
+robusta para n>=3 haría más visible el valor del teorema simultáneo frente al
+caso de una sola alternativa. Tampoco es necesario para que la prueba sea válida.
+
+EVIDENCIA COMPUTACIONAL PROPIA
+
+Código nuevo: check_independent.py. Salida: independent-checks.json.
+No se importó código del autor. Semilla: 15102026.
+Se calculó el twirl Haar como proyección de Hilbert–Schmidt al conmutante
+generado por permutaciones. Esto cubre n=4 para qubits sin usar el grupo Clifford
+como falso diseño de orden cuatro.
+
+- 34 casos de canal/dimensión/consultas: (d,n)=(2,1),(2,2),(2,3),(2,4),(3,2),(3,3).
+  Incluyen unitarias, despolarización, reemplazo puro, CPTP aleatorias de dos
+  rangos y amortiguamiento de amplitud para qubits.
+- Residuo máximo del lema de bloques: 2.2912e-15.
+- Residuo máximo de M0 frente a un twirl unilateral independiente: 2.6420e-15.
+- Error máximo de normalización nula: 2.2205e-16.
+- Autovalor mínimo del certificado B-b M0: -1.0066e-15, compatible con redondeo.
+- Autovalor mínimo en la comprobación de factibilidad paralela: -2.4425e-15.
+- Error máximo de la fórmula de dos consultas: 6.6614e-16.
+- 17 889 comparaciones exactas de particiones para 2<=d<=6 y 1<=n<=30.
+- 142 008 comparaciones racionales exactas para dimensiones de referencia
+  seleccionadas alrededor de m_* y m_lambda: ningún fallo.
+
+No se interpreta el muestreo numérico como demostración para todo canal, toda
+dimensión o toda consulta. El respaldo principal sigue siendo la prueba analítica.
+Después de formular mi juicio analítico y ejecutar el código propio, inspeccioné
+partes de los scripts y reportes de verificacion. Los conteos declarados se
+corresponden con esos reportes, y el código restringe correctamente el twirl
+Clifford a n<=3. No reejecuté la batería causal SDP original completa ni presento
+sus resultados como reproducción independiente.
+
+Se contrastó el PDF con la fuente y se inspeccionaron visualmente las páginas
+centrales de las pruebas. No detecté una diferencia de contenido ni un defecto
+de composición que afecte a las fórmulas revisadas.
+
+INDEPENDENCIA Y LÍMITES
+
+Esta revisión se inició en un contexto separado, sin participación en la
+redacción del manuscrito. No se leyeron auditoria-demostraciones.txt, el barrido
+de novedad ni opiniones previas del manuscrito antes de emitir este juicio.
+La revisión y parte de la asistencia de autoría proceden del mismo proveedor,
+OpenAI. Un contexto nuevo no demuestra independencia estadística ni aporta
+diversidad de proveedores. No hubo revisor humano ni comprobación por asistente
+de pruebas. Las notas son juicios razonados del modelo, no hechos medidos sobre
+el impacto futuro. Ningún informe se ha publicado ni se ha modificado el manuscrito.
