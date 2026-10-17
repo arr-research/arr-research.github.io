@@ -1,0 +1,264 @@
+One calibration query activates a ﬁnite adaptive advantage
+in frozen-versus-renewed dephasing tests
+Lluis Eriksson
+17 October 2026
+Working-paper manuscript; not independently reviewed
+Abstract
+We quantify a ﬁnite calibration resource in one-sided discrimination between a frozen
+unknown qubit phase and independently renewed dephasing. With ﬁve signal queries, de-
+phasing parameter η= 7/10, and one separate noiseless calibration query, an explicit causal
+strategy has failure probability 0.4657926731886833125. Every parallel ﬁve-signal strategy,
+even with perfect knowledge of the carrier, has failure probability at least 0.46603. The gap
+is certiﬁed by rational matrices and a solver-free veriﬁer. Without calibration, no causal
+strategy improves the parallel minimax value, so one calibration query is suﬃcient and min-
+imal at this signal budget. The resource distinction is essential: six parallel signal queries
+already achieve 0.38442745, and the displayed strategy therefore gives no advantage when
+calibration and signal queries can be freely exchanged at equal cost. A trajectory bound
+also rules out an improved asymptotic error exponent in this model. The contribution is a
+small explicit ﬁnite-resource construction, not a claim of a new phase-estimation framework
+or large scientiﬁc impact.
+1 Experiment and resource accounting
+Let Uθ = diag(1,eiθ) and let
+Eη(ρ) =pρ+ qZρZ, p = (1 +η)/2, q = (1− η)/2, 0 ≤ η≤ 1.
+The signal black box has two hypotheses. Under H0, every call is the same Uθ, with arbitrary
+unknown θ. Under H1, each call is independently Uϕ ◦ Eη, with arbitrary unknown common
+carrier ϕ. A separate calibration oracle implements Uϕ under both hypotheses. Under H0, θ
+and ϕ range independently. In particular, the calibration oracle contains no direct label of the
+hypothesis.
+A test must have rejection probability exactly zero under H0 for every pair (θ,ϕ). Its failure
+probability β is the probability of accepting H0 under H1, maximized over ϕ. The resources are
+an ordered pair (n,L): n signal queries and L calibration queries. Signal queries are ordinary
+forward calls, with arbitrary ﬁnite quantum memory and ideal controls. There is no environment
+access, coherent bypass of the signal, or indeﬁnite causal order. Parallel strategies apply their
+signal calls in one layer; causal strategies may interleave controls and signal calls.
+The calibration resource counts information about the unknown carrier. It does not charge
+for the laboratory phase convention, preparation and readout apparatus, classical precision,
+energy, or control synthesis. A complete physical implementation would need additional resource
+accounting. No statement about consciousness, an ether, or the ontology of time is involved.
+One calibration call applied to |+⟩ supplies
+|rϕ⟩ = 2−1/2(|0⟩ + eiϕ|1⟩).
+1
+
+Measure it with the canonical covariant phase POVM E(dˆϕ) = |eˆϕ⟩⟨eˆϕ| dˆϕ/(2π), where |et⟩ =
+|0⟩ + eit|1⟩. This is a valid POVM because its integral is the identity. The error δ = ϕ− ˆϕ has
+density and moments
+f(δ) = 1 + cosδ
+2π , µ k =
+∫ 2π
+0
+eikδf(δ) dδ=
+
+
+
+1 k= 0,
+1/2 |k| = 1,
+0 |k| ≥ 2.
+(1)
+Before each signal call apply the known compensating gate U−ˆϕ. Under H0 this merely changes
+the frozen phase to θ− ˆϕ, so a test that rejects no frozen phase remains one-sided for every
+calibration outcome. Under H1 the residual carrier is δ and its law is independent of ϕ.
+The construction does not require a continuous measurement outcome. Use the seven-
+outcome POVM Ej = |etj ⟩⟨etj |/7, tj = 2πj/7, 0 ≤ j < 7, and compensate by U−tj . Its
+probabilities are (1 + cos(ϕ− tj))/7. A ﬁve-query rejection function s(δ) has Fourier degree at
+most ﬁve. Therefore (1 + cosδ)s(δ) has degree at most six, and averaging it on this seven-point
+grid equals its circle average for every shift ϕ. The resulting success is exactly the value computed
+from ( 1). The conditional errors themselves need not have a carrier-independent distribution;
+the ﬁnal success does.
+2 Exact ﬁnite-resource separation
+Theorem 1. For η= 7/10 and resource budget (n,L) = (5,1) there is a causal test with exactly
+zero false positives and carrier-independent failure
+βcert = 7452682771018933
+16000000000000000.
+The optimal parallel failure with ﬁve signal queries equals βpar = 46603/100000, even if the
+carrier is supplied perfectly. Consequently
+βpar − βcert = 3797228981067
+16000000000000000 = 0.0002373268113166875 >0.
+With no calibration calls and no other carrier information, the ﬁve-signal causal minimax op-
+timum equals 46603/100000. Thus one calibration query is the least integer calibration budget
+that permits a strict causal advantage for these ﬁxed parameters. This statement does not assert
+optimality of the displayed causal test or minimality of ﬁve signal queries.
+The gap is about 0.02373 percentage points of failure probability. The parallel comparison
+is at the same signal budget; giving the parallel side a perfect carrier is an upper bound on what
+any ﬁnite calibration assistance can accomplish.
+2.1 Parallel benchmark and the zero-calibration bound
+Write x∈ { 0,1}n, w(x) = ∑
+j xj, and d(x,y) for Hamming distance. For words of ﬁxed weight
+w, the matrix
+Kw = (ηd(x,y))w(x)=w(y)=w
+is positive semideﬁnite, as a principal submatrix of
+( 1 η
+η 1
+) ⊗n
+. Its row sum is rw = ∑
+j
+( w
+j
+)( n−w
+j
+)
+η2j.
+Let Nw =
+( n
+w
+)
+and Fw = rw/Nw. Since the all-ones vector is an eigenvector, positivity on its
+orthogonal complement gives
+Kw ⪰ Fw11T . (2)
+For a parallel pure input ∑
+x |x⟩|ax⟩, the frozen output span is generated by the mutually
+orthogonal vectors |ψw⟩ = ∑
+w(x)=w |x⟩|ax⟩. One-sidedness forces the acceptance eﬀect to be the
+2
+
+identity on this span. Put tx = ∥|ax⟩∥2 and tw = ∑
+w(x)=w tx. Projection onto the frozen span
+lower-bounds failure by
+∑
+w:tw>0
+1
+tw
+∑
+x,y:w(x)=w(y)=w
+txtyηd(x,y) ≥
+∑
+w
+twFw ≥ minw Fw.
+The carrier cancels within every weight sector. Uniform input on a minimizing weight sector
+and projection onto its uniform vector attain equality. Purifying a mixed input covers arbitrary
+ancillas. This proves the benchmark even when ϕ is known.
+For an arbitrary causal circuit without carrier information, purify all operations and expand
+its frozen ﬁnal state as ∑
+x eiw(x)θ|ax⟩. Set |ψw⟩ = ∑
+w(x)=w |ax⟩. These vectors need not be
+orthogonal, but integration of the unit-norm frozen state gives ∑
+w ∥ψw∥2 = 1. Averaging the
+renewed output over ϕ removes terms of unequal weight. Equation ( 2) implies
+ρ1 ⪰
+∑
+w
+Fw|ψw⟩⟨ψw|.
+One-sidedness makes the acceptance eﬀect equal to the identity on all ψw, so average failure is
+at least minw Fw. Worst-case failure is at least average failure, and the parallel construction
+attains this value for every ϕ.
+For n= 5, the minimum is at w= 2,3 for 0 ≤ η≤ 1, and
+βpar(5,η) = 1 + 6η2 + 3η4
+10 . (3)
+The zero-calibration and parallel arguments reproduce the structure of the earlier calibrated-
+noise work [ 1]; they are included here to state the comparison without relying on a numerical
+optimum.
+2.2 Causal certiﬁcate and its realization
+The attached ﬁles Q.json and R.json contain exact rational 32 by 32 real symmetric matri-
+ces, indexed by ﬁve-bit words in lexicographic order. Deﬁne Q5 = Q and obtain lower levels
+recursively by
+(Qk−1)x,y = (Qk)x0,y0 + (Qk)x1,y1. (4)
+The veriﬁer checks
+Q⪰ 0, R ⪰ 0, Q − R⪰ 0, Q 0 = [1], (5)
+(Qk)xa,yb = 0 ( a̸= b), k = 1,..., 5, (6)
+∑
+y:w(y)=w
+Rx,y = 0 ( x∈ {0,1}5, w= 0,..., 5). (7)
+Lower Qk are positive semideﬁnite because they are sums of principal submatrices. The exact
+ranks of (Q,R,Q − R) are (32,26,32).
+For completeness these constraints have an ordinary-circuit interpretation. Choose trajectory
+vectors with Gram matrix Qk. By ( 6), the two last-symbol sectors are orthogonal, and can be
+represented as query states |0⟩ and |1⟩ tensor memory. By ( 4), the sums of the two child vectors
+have the same Gram matrix as the parent vectors. An isometry therefore maps parents to these
+sums; extending the isometry to a unitary implements the next control. The diagonal query
+then multiplies each child by its corresponding phase. Iteration constructs a ﬁve-query causal
+circuit. A query qubit and memory of dimension at most 16 suﬃce. Finally 0 ⪯ R⪯ Qrealizes
+R as the Gram matrix of a rejection eﬀect on the terminal vectors. Equation ( 7) annihilates
+every frozen weight sum, proving exact one-sidedness.
+3
+
+Under renewed dephasing and residual carrier δ, the rejection probability is
+s(δ) =
+∑
+x,y
+Rx,yηd(x,y)ei(w(x)−w(y))δ.
+Integrating with ( 1) gives the rational functional
+s=
+∑
+x,y
+Rx,yηd(x,y)µw(x)−w(y) = 8547317228981067
+16000000000000000. (8)
+Equations ( 3) and ( 8) prove the strict gap.
+The veriﬁer uses only Python’s standard-library integer fractions. It performs symmetric
+Schur elimination, rejecting a negative pivot or a nonzero remaining row at a zero pivot. It also
+replays the probability through all 32 independent I/Z noise histories, checks the six parallel
+weight values and the seven-point Fourier quadrature, and rejects four deliberately broken con-
+straints. Numerical optimization was used to ﬁnd a candidate, followed by rational projection
+and an interior perturbation; the theorem uses only the ﬁnal exact certiﬁcate. No solver status
+is used as a proof of feasibility or optimality.
+3 What the resource comparison rules out
+Proposition 1. The displayed construction does not outperform parallel testing under a freely
+reallocatable budget of six equally costly queries.
+Proof. Using all six calls on the signal, the balanced parallel test has
+βpar(6,7/10) = 1 + 9(7/10)2 + 9(7/10)4 + (7/10)6
+20 = 7688549
+20000000 = 0.38442745 <βcert.
+This is a countercomparison to the displayed construction, not a theorem that all causal schemes
+lose at total budget six.
+Proposition 2. For ﬁxed n≥ 1 signal calls, any one-sided causal protocol in this model, even
+with arbitrary noiseless carrier-calibration assistance, has β ≥ pn + qn. Calibration cannot
+improve the optimal asymptotic error exponent per signal query beyond − log p. The optimal
+exponent under a freely reallocatable total-query budget is also − log p.
+Proof. In the renewed mixture, the all- I history has probability pn. Its joint signal and cali-
+bration experiment is exactly the allowed null experiment with θ = ϕ. The all- Z history, of
+probability qn, is the null experiment with θ= ϕ+πand the same calibration oracle. Exact one-
+sidedness forces acceptance on both histories, including when calibration and signal operations
+are coherent and interleaved. Their probabilities give the lower bound.
+Conversely, for any ﬁxed-weight parallel input the sum over that weight is bounded by the
+sum over all words:
+Fw ≤ (1 +η)n
+( n
+w
+) .
+A largest binomial coeﬃcient is at least 2n/(n+ 1), so βpar ≤ (n+ 1)pn. The two bounds have
+the same exponent. For total budget N = n+ L, the lower bound β ≥ pn ≥ pN and the
+all-signal parallel construction with n = N give the same conclusion. The case p = 1 has zero
+exponent.
+The path argument extends an obstruction already present in Ref. [ 1]; it is not presented as
+a new general no-go principle. Finite-sample gains may still matter when signal access is scarce,
+calibration is reusable, or the two kinds of calls have diﬀerent costs. Those possibilities require
+explicit new models and proofs.
+4
+
+4 Prior art, self-review, and open work
+Finite quantum phase references and covariant phase estimation are established subjects [ 2,
+3]. For a longer token ∑ L
+j=0 cjeijϕ|j⟩, its Fourier error moments are autocorrelations of the
+coeﬃcients cj. Optimizing an average phase-dependent payoﬀ is a Toeplitz eigenvalue problem,
+a structure explicitly treated in recent phase-estimation work [ 4, 5]. We therefore make no
+novelty claim for that reduction. The operational value of asymmetry for discrimination is
+also known in broader settings [ 6]. Our narrow candidate contribution is the exact one-query
+activation at the stated one-sided signal-testing task and its explicit resource comparison.
+In the ﬁrst exploration, the earlier ﬁxed ﬁve-query tester needed a longer reference to show
+an advantage. Reoptimizing the signal tester produced the present one-query certiﬁcate. This
+refutes any inference that the reference threshold of one ﬁxed tester is a universal threshold.
+The current certiﬁcate was recalculated by a separate exact veriﬁcation script, but all reasoning
+and code were produced in the same assistant session: this is self-review, not review by an
+independent researcher or model.
+The strongest outstanding questions are quantitative and ﬁnite: the exact causal optimum
+with one calibration query, the minimum signal budget allowing activation, explicit low-memory
+circuits, comparisons with coherent rather than measured reference access, and robustness when
+both test classes are jointly optimized at a positive false-positive allowance. No signiﬁcant impact
+rating or priority guarantee follows from the current evidence. Before admission as an accepted
+article, the scope and novelty need external scrutiny, and the physical cost of controls must be
+separated from the ﬁnite carrier-information budget. A failure of a more ambitious conjecture
+should be retained as a constraint on subsequent searches rather than hidden by changing the
+benchmark.
+References
+[1] L. Eriksson, Phase calibration unlocks adaptive tests for renewed quantum noise , working
+paper, AIRR ARR-2026-33GYTDAT5C8THB3M, v1 (2026). Permanent version. Deposited;
+not peer reviewed.
+[2] V. Buzek, R. Derka, and S. Massar, Optimal Quantum Clocks (1998), arXiv:quant-
+ph/9808042.
+[3] S. D. Bartlett, T. Rudolph, and R. W. Spekkens, Reference frames, superselection rules, and
+quantum information (2006), arXiv:quant-ph/0610030.
+[4] J. G. Smith, C. H. W. Barnes, and D. R. M. Arvidsson-Shukur, Risk-minimizing states for
+the quantum-phase-estimation algorithm (2025), arXiv:2505.00764.
+[5] Q. Qian and C. N. Gagatsos, Optimal Probe State for Phase Estimation Under Covariant
+Measurement (2026), arXiv:2606.18169.
+[6] M. Piani et al., Robustness of asymmetry and coherence of quantum states (2016),
+arXiv:1601.03782.
+5
