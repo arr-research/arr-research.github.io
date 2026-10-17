@@ -1,0 +1,700 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=27mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,booktabs,microtype}
+\usepackage[colorlinks=true,allcolors=blue]{hyperref}
+\setlength{\emergencystretch}{2em}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{corollary}[theorem]{Corollary}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+\newcommand{\conv}{\operatorname{conv}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\one}{\mathbf 1}
+\newcommand{\Hinf}{H_{\infty}}
+\newcommand{\Finf}{F_{\theta,\infty}}
+\newcommand{\Ginf}{G_{\xi,\infty}}
+\newcommand{\ket}[1]{|#1\rangle}
+\title{A four-qubit criterion for entropy minimax duality\\
+\large Sharp R\'enyi threshold and a W-state counterexample}
+\author{Lluis Eriksson\\ \small Independent researcher}
+\date{17 October 2026\\ \small Research draft; independent review pending}
+\begin{document}
+\maketitle
+\begin{abstract}
+We characterize entropy functions for which support--radial minimax
+duality holds on every multiqubit orbit closure. For a continuous,
+strictly increasing function of the smaller marginal eigenvalue,
+vanishing at zero, universal validity is equivalent to concavity.
+It suffices to test a single tensor, the four-qubit W state, over all
+positive weights. For binary R\'enyi entropy this gives the sharp
+range \(0<\alpha\le2\); every order above two admits a four-qubit
+obstruction. The scalar curvature facts are established properties;
+the proposed contribution is their universal W-state test.
+At min-entropy, the three-qubit W tensor already contradicts the first
+identity of Theorem 60 in Christandl--Lysikov--Zuiddam,
+both in arXiv:2012.14412v3 and in the 2023 journal version:
+its two sides are \(3/2\) and \(2^{2/3}\).
+We compute the weighted min-entropy functionals of all W tensors,
+repair the identity by convexifying entropy vectors, and retain the
+reverse identity. A typical-projector argument explains tensor
+regularization in terms of established Shannon functionals; the
+unweighted identification was already known from G-stable rank.
+The proofs include an exact finite-order witness. Priority and
+independent validation remain open.
+\end{abstract}
+
+\section{Definitions and the exact scope of the obstruction}
+Let \(T\ne0\) be a complex tensor in \(\bigotimes_{i=1}^k\C^{d_i}\).
+Write \(\Pi(T)\) for the tuples of ordered reduced-density-matrix
+spectra of normalized representatives of its projective local
+general-linear orbit closure. This is a compact set. Logarithms are
+base two. For a probability vector \(p\), let
+\[
+ \Hinf(p)=-\log\max_jp_j,\qquad H(p)=-\sum_jp_j\log p_j .
+\]
+Set
+\[
+ \begin{gathered}
+ \Theta_k=\{\theta\in\R_{\ge0}^k:\textstyle\sum_i\theta_i=1\},\qquad
+ \Xi_k=\{\xi\in\R_{\ge0}^k:\max_i\xi_i=1\},\\
+ \Theta_k(\xi)=\{\theta\in\Theta_k:\supp\theta\subseteq\supp\xi\}.
+ \end{gathered}
+\]
+The natural \(k\)-party versions of the min-entropy quantities are
+\begin{align}
+ F_{\theta,\infty}(T)
+ &=\max_{p\in\Pi(T)}2^{\sum_i\theta_i\Hinf(p_i)},\label{eq:F}\\
+ G_{\xi,\infty}(T)
+ &=\max_{p\in\Pi(T)}\min_{i:\xi_i>0}2^{\Hinf(p_i)/\xi_i}.
+ \label{eq:G}
+\end{align}
+For \(k=3\), these are the definitions in \cite[Section 5.3]{CLZ}.
+The first identity of its Theorem 60, also stated in its introductory
+Theorem 14, asserts
+\begin{equation}
+ G_{\xi,\infty}(T)
+ \stackrel{\text{claimed}}{=}
+ \min_{\theta\in\Theta_3(\xi)}
+ F_{\theta,\infty}(T)^{1/\langle\theta,\xi\rangle}.
+ \label{eq:claimed}
+\end{equation}
+We assessed \textbf{arXiv:2012.14412v3, dated 19 April 2023}, with
+Theorem 60 on printed page 26, and the \textbf{final journal version},
+J. Math. Pures Appl.\ 172 (2023), with that theorem on page 327.
+The journal text was checked in the University of Amsterdam repository
+copy linked in \cite{CLZ}; it contains the same first identity and
+the same preceding concavity assertion. This comparison does not
+establish the absence of a later correction elsewhere.
+
+The general concave minimax theorem in \cite[Theorem 50]{CLZ} is not
+contradicted. The issue is its use for min-entropy: \(\Hinf\) is not
+concave. For \(p=(1,0)\), \(q=(1/2,1/2)\),
+\[
+ \Hinf((p+q)/2)=\log(4/3)<\tfrac12
+ =\tfrac12\Hinf(p)+\tfrac12\Hinf(q).
+\]
+Quasiconcavity does not give the concavity required for that application.
+The established Shannon-entropy identities are unaffected.
+
+\section{Exact W-state formulas}
+Let
+\[
+ W_k=\sum_{j=1}^k\ket{0\cdots 0\,1_j\,0\cdots0},\qquad k\ge2,
+\]
+and write \(\theta_{(1)}\ge\theta_{(2)}\ge\cdots\) for sorted weights.
+
+\begin{lemma}\label{lem:orbit}
+For every marginal tuple in \(\Pi(W_k)\), its largest eigenvalues
+\(\lambda_i\) satisfy
+\begin{equation}
+ \tfrac12\le\lambda_i\le1,\qquad \sum_i\lambda_i\ge k-1.
+ \label{eq:lambda}
+\end{equation}
+Conversely, every tuple with \(\lambda_i\in[1/2,1]\) and
+\(\sum_i\lambda_i=k-1\) is attained in the orbit closure.
+\end{lemma}
+\begin{proof}
+For a tensor in the orbit, apply local unitaries that take each
+\(g_i\ket0\) to a multiple of \(\ket0\). Expanding each \(g_i\ket1\)
+then gives the normalized form
+\[
+ \psi=a_0\ket{0\cdots0}+\sum_{j=1}^ka_j\ket{0\cdots1_j\cdots0},
+ \qquad \sum_{j=0}^k|a_j|^2=1.
+\]
+With \(r_j=|a_j|^2\), the \(j\)-th marginal has diagonal entries
+\(1-r_j,r_j\). Its smaller eigenvalue \(\mu_j\) is at most \(r_j\),
+by the Rayleigh principle. Hence
+\(\sum_j\mu_j\le\sum_jr_j\le1\), giving \eqref{eq:lambda};
+continuity extends this bound to the closure.
+
+For the converse, put \(r_j=1-\lambda_j\), so that
+\(0\le r_j\le1/2\) and \(\sum_jr_j=1\). The state
+\(\sum_j\sqrt{r_j}\ket{0\cdots1_j\cdots0}\) has diagonal marginals
+\((1-r_j,r_j)\). Positive coefficients are obtained by invertible
+diagonal local maps on \(W_k\), and zero coefficients by limits.
+\end{proof}
+
+\begin{theorem}\label{thm:W}
+For every \(\theta\in\Theta_k\),
+\begin{equation}
+ F_{\theta,\infty}(W_k)=2^{\theta_{(1)}+\theta_{(2)}}.
+ \label{eq:Wf}
+\end{equation}
+For \(\xi\in\Xi_k\) with every \(\xi_i>0\), let \(t_*>1\) be the
+unique solution of
+\[
+ \sum_{i=1}^kt_*^{-\xi_i}=k-1.
+\]
+Then
+\begin{equation}
+ G_{\xi,\infty}(W_k)=\min\{2,t_*\}.
+ \label{eq:Wg}
+\end{equation}
+In particular,
+\begin{equation}
+ G_{\one,\infty}(W_k)=\frac{k}{k-1},\qquad
+ \min_{\theta\in\Theta_k}F_{\theta,\infty}(W_k)=2^{2/k}.
+ \label{eq:unweighted}
+\end{equation}
+\end{theorem}
+\begin{proof}
+Put \(\mu_i=1-\lambda_i\). Lemma \ref{lem:orbit} places this tuple
+in \(Q=\{\mu:0\le\mu_i\le1/2,\ \sum_i\mu_i\le1\}\).
+The function \(-\sum_i\theta_i\log(1-\mu_i)\) is convex on \(Q\).
+Its maximum is attained at a vertex. The vertices of \(Q\) are
+the zero vector, the vectors with one entry \(1/2\), and those with
+two entries \(1/2\). Indeed, after scaling by two, a fractional
+vertex would admit a coordinate perturbation, or a two-coordinate
+perturbation when the sum constraint is tight.
+The largest objective value is \(\theta_{(1)}+\theta_{(2)}\).
+It is attained by projecting all but the corresponding two parties
+onto \(\ket0\), leaving an entangled pair and pure spectators.
+This proves \eqref{eq:Wf}.
+
+For \(G_{\xi,\infty}\ge t\), all largest marginal eigenvalues must
+satisfy \(\lambda_i\le t^{-\xi_i}\). Since some \(\xi_i=1\),
+the necessary conditions are
+\begin{equation}
+ 1\le t\le2,\qquad \sum_it^{-\xi_i}\ge k-1.
+ \label{eq:feasible}
+\end{equation}
+They are sufficient: choose
+\(\lambda_i\in[1/2,t^{-\xi_i}]\) with sum \(k-1\).
+Such a choice exists because the lower endpoints sum to \(k/2\le k-1\),
+whereas the upper endpoints sum to at least \(k-1\).
+Use the converse in Lemma \ref{lem:orbit}. The sum in
+\eqref{eq:feasible} decreases strictly and continuously from \(k\)
+to zero as \(t\) runs from one to infinity, proving \eqref{eq:Wg}.
+
+The unweighted case follows by symmetry. The sum of the two largest
+entries of a probability vector is at least \(2/k\), with equality
+at the uniform vector, proving the second formula.
+\end{proof}
+
+\begin{proposition}[Counterexample to \eqref{eq:claimed}]\label{prop:counter}
+For \(W=W_3=\ket{100}+\ket{010}+\ket{001}\) and \(\xi=(1,1,1)\),
+\[
+ G_{\xi,\infty}(W)=\frac32
+ <2^{2/3}
+ =\min_{\theta\in\Theta_3}F_{\theta,\infty}(W)^{1/\langle\theta,\xi\rangle}.
+\]
+\end{proposition}
+\begin{proof}
+Here \(\langle\theta,\xi\rangle=1\). Apply Theorem \ref{thm:W};
+the strict inequality is exactly \(27/8<4\) after cubing.
+\end{proof}
+
+The value \(3/2\) is already known from Derksen's computation of the
+G-stable rank \cite{Derksen}; the W-polytope geometry is likewise
+established \cite{Walter}. We use a self-contained orbit argument to
+make the contradiction independently checkable. For every \(k>2\),
+the analogous gap is also strict: \((1-1/k)^k>1/4\), since
+\(x\log(1-1/x)\) increases for \(x>1\) and has value \(\log(1/4)\)
+at \(x=2\).
+
+\section{What the minimax expression actually computes}
+The distinction is between an entropy image and its convex hull.
+The following statement does not assume that the original parameter
+space is convex.
+
+\begin{theorem}[Convexified radial duality]\label{thm:convex}
+Let \(E\subset\R_{\ge0}^k\) be nonempty and compact. Define
+\[
+ f_\theta=\max_{e\in E}\langle\theta,e\rangle,\quad
+ g_\xi=\max_{e\in E}\min_{i:\xi_i>0}\frac{e_i}{\xi_i},\quad
+ \widehat g_\xi=\max_{z\in\conv E}
+                    \min_{i:\xi_i>0}\frac{z_i}{\xi_i}.
+\]
+Then
+\begin{equation}
+ \widehat g_\xi
+ =\min_{\theta\in\Theta_k(\xi)}
+       \frac{f_\theta}{\langle\theta,\xi\rangle},
+ \qquad g_\xi\le\widehat g_\xi.
+ \label{eq:repair}
+\end{equation}
+An optimizer for the active coordinates of \(\widehat g_\xi\)
+can be obtained from a convex combination of at most
+\(|\supp\xi|\) points of \(E\). Moreover, without convexifying,
+\begin{equation}
+ f_\theta=\max_{\xi\in\Xi_k}g_\xi\langle\theta,\xi\rangle.
+ \label{eq:reverse}
+\end{equation}
+\end{theorem}
+\begin{proof}
+Let \(I=\supp\xi\) and
+\(\Lambda=\{u\ge0:\supp u\subseteq I,\ \langle u,\xi\rangle=1\}\).
+This is compact and convex, and
+\(\min_{u\in\Lambda}\langle u,z\rangle=\min_{i\in I}z_i/\xi_i\).
+The bilinear minimax theorem gives
+\[
+ \max_{z\in\conv E}\min_{u\in\Lambda}\langle u,z\rangle
+ =\min_{u\in\Lambda}\max_{e\in E}\langle u,e\rangle.
+\]
+Parameterize \(u=\theta/\langle\theta,\xi\rangle\) to obtain
+\eqref{eq:repair}. This is an application of classical convex
+minimax, not a new minimax principle.
+
+For the support bound, project onto the coordinates in \(I\).
+An optimal \(z\) lies in the supporting face exposed by an optimal
+\(u\). That face has affine dimension at most \(|I|-1\), since
+\(u\ne0\). Carath\'eodory's theorem on that face gives at most
+\(|I|\) points. Those points may be taken from the projected \(E\):
+a convex combination can attain the supporting value only through
+points attaining that value.
+
+For \eqref{eq:reverse}, an optimizer \(e\) of \(g_\xi\) satisfies
+\(e_i\ge g_\xi\xi_i\) for all \(i\), including the inactive coordinates.
+Thus \(g_\xi\langle\theta,\xi\rangle\le f_\theta\).
+Conversely, choose \(e\) attaining \(f_\theta\). If \(e\ne0\), set
+\(a=\max_i e_i\) and \(\xi=e/a\). Then \(g_\xi\ge a\), giving the
+opposite inequality. If \(f_\theta=0\), nonnegativity and the first
+inequality already prove equality.
+\end{proof}
+
+Apply Theorem \ref{thm:convex} to
+\[
+ E_\infty(T)=\{(\Hinf(p_1),\ldots,\Hinf(p_k)):p\in\Pi(T)\}.
+\]
+The right-hand side of \eqref{eq:claimed} is \(2^{\widehat g_\xi}\),
+whereas its left-hand side is \(2^{g_\xi}\). Thus convexification
+repairs precisely the failed identity. The second identity in
+\cite[Theorem 60]{CLZ}, namely the multiplicative form of
+\eqref{eq:reverse}, remains valid.
+
+For \(W_k\), the downward closure of \(\conv E_\infty(W_k)\) in
+the nonnegative orthant is
+\[
+ \{z\in[0,1]^k:\textstyle\sum_i z_i\le2\}.
+\]
+Indeed, the upper bounds follow from \eqref{eq:Wf}, and the pair
+indicator vectors are attained by entangled pairs with pure spectators.
+Their convex hull is the face \(\sum_i z_i=2\); its downward closure
+is the displayed set. Consequently,
+\begin{equation}
+ \widehat g_\xi=\min\{1,\,2/\textstyle\sum_i\xi_i\},
+ \qquad \xi\in\Xi_k.
+ \label{eq:Wconvex}
+\end{equation}
+For \(W_3\), averaging the three entropy vectors
+\((0,1,1),(1,0,1),(1,1,0)\) gives the balanced vector
+\((2/3,2/3,2/3)\) responsible for the incorrect one-copy prediction.
+
+Other basic properties do not depend on the failed identity.
+Orbit-closure monotonicity is immediate from inclusion; on the
+diagonal tensor of size \(r\), \(G_{\xi,\infty}=r\).
+For tensor products, local maximum eigenvalues multiply. Taking
+optimizing states and using
+\(\min_i(a_i+b_i)\ge\min_i a_i+\min_i b_i\) gives
+\[
+ G_{\xi,\infty}(S\otimes T)
+ \ge G_{\xi,\infty}(S)\,G_{\xi,\infty}(T).
+\]
+Thus the monotonicity, normalization and supermultiplicativity
+assertions of \cite[Corollary 61]{CLZ} have direct proofs.
+
+\section{A universal four-qubit test}\label{sec:criterion}
+The obstruction extends beyond min-entropy. Let
+\(h:[0,1/2]\to\R_{\ge0}\) be continuous and strictly increasing,
+with \(h(0)=0\). For a nonzero multiqubit tensor \(T\), let
+\(P(T)\) denote its orbit-closure marginal tuples in smaller-eigenvalue
+coordinates \(\mu=(\mu_1,\ldots,\mu_k)\). This is an affine image of
+the entanglement polytope and hence is compact and convex
+\cite[Supplementary Information, Corollary 2]{Walter}.
+Define logarithmic quantities
+\[
+ f^h_\theta(T)=\max_{\mu\in P(T)}\sum_i\theta_i h(\mu_i),\qquad
+ g^h_\xi(T)=\max_{\mu\in P(T)}\min_{i:\xi_i>0}\frac{h(\mu_i)}{\xi_i}.
+\]
+
+\begin{theorem}[Four-qubit criterion]\label{thm:criterion}
+Under the stated assumptions on \(h\), the following are equivalent:
+\begin{enumerate}
+ \item \(h\) is concave on \([0,1/2]\).
+ \item For every \(k\ge2\), every nonzero \(k\)-qubit tensor \(T\),
+ and every \(\xi\in\Xi_k\),
+ \begin{equation}
+  g^h_\xi(T)=\min_{\theta\in\Theta_k(\xi)}
+       \frac{f^h_\theta(T)}{\langle\theta,\xi\rangle}.
+  \label{eq:hduality}
+ \end{equation}
+ \item Equation \eqref{eq:hduality} holds for \(T=W_4\) and every
+ \(\xi\in\Xi_4\) with strictly positive coordinates.
+\end{enumerate}
+If concavity fails, a witness to failure on \(W_4\) can be obtained
+by mixing just two entropy vectors of weighted W states.
+\end{theorem}
+\begin{proof}
+Suppose \(h\) is concave. On the compact convex set \(P(T)\),
+the function \(\sum_i u_i h(\mu_i)\) is concave in \(\mu\) for
+every \(u\ge0\), and is linear in \(u\). Apply the concave minimax
+theorem with the compact weight set \(\Lambda\) from the proof of
+Theorem \ref{thm:convex}. This proves \eqref{eq:hduality}, including
+weights with inactive coordinates. The second assertion plainly
+implies the third.
+
+For the converse, continuity implies that failure of concavity
+has a midpoint witness: there are \(0\le x<y\le1/2\) such that,
+writing \(a=(x+y)/2\) and \(b=1/2-a\),
+\[
+ c=\frac{h(x)+h(y)}2>h(a).
+\]
+Both \(a\) and \(b\) lie strictly between zero and \(1/2\).
+Lemma \ref{lem:orbit} shows that
+\(r^+=(x,y,b,b)\) and \(r^-=(y,x,b,b)\) belong to \(P(W_4)\):
+their coordinates lie in \([0,1/2]\) and sum to one.
+Their entropy vectors have average
+\(z=(c,c,h(b),h(b))\). Set \(d=\max_i z_i>0\) and \(\xi=z/d\).
+These weights are strictly positive. The convexified radial value
+is at least \(d\), since \(z\) lies in the convex hull.
+
+The original radial value is strictly less than \(d\).
+Otherwise, compactness would give \(\mu\in P(W_4)\) with
+\(h(\mu_i)\ge z_i\) for every \(i\). Strict monotonicity would imply
+\(\mu_1>a\), \(\mu_2>a\), \(\mu_3\ge b\), \(\mu_4\ge b\),
+and thus \(\sum_i\mu_i>2a+2b=1\), contradicting
+Lemma \ref{lem:orbit}. By Theorem \ref{thm:convex}, the right-hand
+side of \eqref{eq:hduality} equals the convexified radial value,
+so \eqref{eq:hduality} fails for these weights.
+\end{proof}
+
+The theorem concerns universal validity over all weights and all
+multiqubit orbit closures. It does not say that every choice of
+weights fails when \(h\) is nonconcave. The sufficiency direction
+is the usual concave minimax argument. The converse identifies
+\(W_4\) as a single test tensor for this whole class of scalar functions.
+
+\subsection{The sharp R\'enyi range}
+Write
+\[
+ h_\alpha(p)=\frac{\log\bigl(p^\alpha+(1-p)^\alpha\bigr)}{1-\alpha},
+ \quad 0<\alpha<\infty,\quad\alpha\ne1,
+\]
+with the continuous Shannon limit at \(\alpha=1\), and
+\(h_\infty(p)=-\log(1-p)\) for \(0\le p\le1/2\).
+These functions are continuous, strictly increasing on this interval,
+and vanish at zero. We include the scalar curvature argument so that
+the threshold does not depend on a numerical plot. The loss of
+concavity for orders above two is already recorded, for example,
+in \cite[Lemma 4.3]{Hillion}; that scalar observation is not new.
+
+\begin{lemma}[Binary R\'enyi curvature]\label{lem:renyi}
+The function \(h_\alpha\) is concave on \([0,1/2]\) exactly when
+\(0<\alpha\le2\). For every finite \(\alpha>2\),
+\[
+ \lim_{p\downarrow0}h_\alpha''(p)
+ =\frac{\alpha}{(\alpha-1)\ln2}>0.
+\]
+The min-entropy limit is strictly convex on this interval.
+\end{lemma}
+\begin{proof}
+For \(0<\alpha<1\), the sum \(p^\alpha+(1-p)^\alpha\) is concave
+and positive. Composition with the increasing concave logarithm,
+and division by \(1-\alpha>0\), preserve concavity. Shannon's
+binary entropy is concave as well.
+
+For \(1<\alpha\le2\), set \(F=p^\alpha+(1-p)^\alpha\),
+\(r=\alpha-1\in(0,1]\), and \(t=p/(1-p)>0\). Expansion gives
+\[
+ \frac{FF''-(F')^2}{\alpha[p(1-p)]^{\alpha-1}}
+ =r(t+t^{-1})+2\alpha-(t^r+t^{-r}).
+\]
+Convexity of \(s\mapsto t^s+t^{-s}\) on \([0,1]\) gives
+\(t^r+t^{-r}\le r(t+t^{-1})+2(1-r)\).
+Thus the displayed quantity is at least \(4r>0\), and
+\[
+ h_\alpha''(p)
+ =-\frac{FF''-(F')^2}{(\alpha-1)(\ln2)F^2}<0.
+\]
+Continuity extends concavity to the endpoints. For \(\alpha>2\),
+as \(p\downarrow0\), \(F\to1\), \(F'\to-\alpha\), and
+\(F''\to\alpha(\alpha-1)\), giving the asserted positive limit.
+Finally, \(h_\infty''(p)=1/((1-p)^2\ln2)>0\).
+\end{proof}
+
+\begin{corollary}[Sharp multiqubit threshold]\label{cor:threshold}
+The support--radial minimax identity formed from R\'enyi marginal
+entropies is valid on every multiqubit orbit closure, for every weight
+vector, if and only if \(0<\alpha\le2\).
+For every \(2<\alpha\le\infty\), it already fails for \(W_4\)
+with some strictly positive weights.
+\end{corollary}
+\begin{proof}
+Apply Theorem \ref{thm:criterion} and Lemma \ref{lem:renyi}.
+\end{proof}
+
+This is a statement about the marginal support and radial quantities
+defined here. It is not a statement about conditional R\'enyi entropy,
+LOCC spectral functionals, or general entropic inequalities.
+In particular, no claim about the Shepp--Olkin conjectures for sums
+of Bernoulli variables is implied.
+
+\subsection{An exact witness at order three}
+Take \(h=h_3\), \(x=1/20\), \(y=3/20\), \(a=1/10\),
+and \(b=2/5\). Since \(h_3(p)=-\tfrac12\log f(p)\) for
+\(f(p)=1-3p+3p^2\), the required strict midpoint gap follows from
+the rational identity
+\[
+ f(a)^2-f(x)f(y)=\frac{543}{160000}>0,
+ \qquad f(x)f(y)=\frac{84721}{160000}.
+\]
+The two normalized states have squared single-excitation amplitudes
+\((1,3,8,8)/20\) and \((3,1,8,8)/20\), so their reduced spectra
+and membership in the W orbit are explicit. With
+\(c=(h_3(x)+h_3(y))/2\), choose
+\[
+ \xi=(c/h_3(b),c/h_3(b),1,1).
+\]
+Theorem \ref{thm:criterion} gives a strict duality gap with these
+exactly specified weights.
+
+For numerical orientation, the first weight is approximately
+\(0.2497358423\). The original logarithmic radial value is
+approximately \(0.9169557149\), whereas the convexified value is
+at least \(h_3(2/5)\approx0.9182506339\).
+The first value can be computed from
+\[
+ \sum_{i=1}^4 h_3^{-1}(t\xi_i)=1,
+ \qquad h_3^{-1}(u)=\frac{3-\sqrt{12\,2^{-2u}-3}}6.
+\]
+Indeed, feasibility requires \(\mu_i\ge h_3^{-1}(t\xi_i)\) and
+\(\sum_i\mu_i\le1\); it is sufficient by filling the coordinates
+to sum to one, each at most \(1/2\), and using Lemma \ref{lem:orbit}.
+The decimal values are high-precision diagnostics, not interval
+certificates. Strictness of the gap rests on the rational identity
+and the theorem's proof.
+
+\section{Tensor regularization and simultaneous spectral flattening}
+Here we restrict the stated identification to tripartite tensors,
+so that all external inputs agree directly with \cite{CLZ,CVZ}.
+Let
+\[
+ F_\theta(T)=\max_{p\in\Pi(T)}2^{\sum_i\theta_iH(p_i)},\qquad
+ G_\xi^{H}(T)=\max_{p\in\Pi(T)}\min_{i:\xi_i>0}2^{H(p_i)/\xi_i}.
+\]
+We use two established facts: the Shannon quantum functional
+\(F_\theta\) is multiplicative \cite{CVZ}, and the Shannon minimax
+identity is valid \cite{CLZ}. These are inputs, not conclusions
+claimed as new in this note.
+
+\begin{lemma}[Simultaneous local typical projection]\label{lem:typical}
+For a normalized multipartite pure state \(\psi\), let \(H_i\)
+be the entropy of its \(i\)-th marginal. For every \(\delta>0\)
+there are local projectors on \(\psi^{\otimes m}\), with success
+probability \(q_m\to1\), whose normalized output \(\sigma^{(m)}\)
+satisfies, for every party,
+\[
+ \Hinf(\sigma_i^{(m)})\ge m(H_i-\delta)+\log q_m.
+ \label{eq:flatten}
+\]
+\end{lemma}
+\begin{proof}
+Let \(P_i^{(m)}\) be the spectral projector of \(\rho_i^{\otimes m}\)
+onto eigenvalues at most \(2^{-m(H_i-\delta)}\).
+The law of large numbers for the random variable \(-\log p\), sampled
+according to the positive eigenvalues of \(\rho_i\), gives
+\(\Tr(P_i^{(m)}\rho_i^{\otimes m})\to1\).
+The local projectors commute, so for \(P=\bigotimes_iP_i^{(m)}\),
+\[
+ q_m=\|P\psi^{\otimes m}\|^2
+ \ge1-\sum_i\bigl(1-\Tr(P_i^{(m)}\rho_i^{\otimes m})\bigr)\to1.
+\]
+For sufficiently large \(m\), normalize \(P\psi^{\otimes m}\).
+Projection on the other parties decreases the unnormalized reduced
+operator in positive-semidefinite order. More explicitly, partial
+trace is cyclic with respect to operators on the traced subsystem,
+and \(0\le P_{\ne i}\le I\). Therefore
+\[
+ q_m\sigma_i^{(m)}
+ \le P_i^{(m)}\rho_i^{\otimes m}P_i^{(m)}
+ \le 2^{-m(H_i-\delta)}P_i^{(m)}.
+\]
+Taking operator norms proves the assertion. This is a standard
+typical-subspace construction, written out to make the simultaneous
+marginal bound explicit.
+\end{proof}
+
+\begin{theorem}[Regularization identities]\label{thm:regular}
+For every nonzero complex tripartite tensor \(T\),
+\begin{align}
+ \lim_{m\to\infty}F_{\theta,\infty}(T^{\otimes m})^{1/m}
+ &=F_\theta(T),\label{eq:Freg}\\
+ \lim_{m\to\infty}G_{\xi,\infty}(T^{\otimes m})^{1/m}
+ &=G_\xi^{H}(T).\label{eq:Greg}
+\end{align}
+\end{theorem}
+\begin{proof}
+Choose any normalized representative \(\psi\) in the projective
+orbit closure of \(T\). The outputs in Lemma \ref{lem:typical}
+belong to the orbit closure of \(T^{\otimes m}\), since singular
+local maps are limits of invertible ones. Applying the lemma,
+then taking \(m\to\infty\), \(\delta\downarrow0\), and optimizing
+over \(\psi\), gives the lower limits in both identities.
+For \eqref{eq:Greg}, division by active \(\xi_i\) causes no problem:
+their minimum is positive for the fixed vector \(\xi\).
+
+For the first upper limit, use \(\Hinf\le H\) and multiplicativity:
+\[
+ F_{\theta,\infty}(T^{\otimes m})
+ \le F_\theta(T^{\otimes m})=F_\theta(T)^m .
+\]
+For every \(\theta\in\Theta_3(\xi)\), a weighted average dominates
+the minimum of the active ratios, hence
+\[
+ G_{\xi,\infty}(T^{\otimes m})
+ \le F_{\theta,\infty}(T^{\otimes m})^{1/\langle\theta,\xi\rangle}
+ \le F_\theta(T)^{m/\langle\theta,\xi\rangle}.
+\]
+Minimize over \(\theta\) and use the valid Shannon minimax identity.
+The lower and upper limits agree.
+\end{proof}
+
+The unweighted identity \eqref{eq:Greg} already follows from
+Derksen's constant-factor comparison of G-stable rank with slice
+rank \cite{Derksen}, together with the known asymptotic slice-rank
+formula \cite{CLZ}. The proof above also treats nonuniform weights
+and \eqref{eq:Freg}; whether these formulations have appeared
+elsewhere requires further priority checking.
+
+A concrete three-copy restriction illustrates why the single-copy
+value cannot be treated as multiplicative. In copy \(j\) of \(W_3\),
+project party \(j\) onto \(\ket0\), for \(j=1,2,3\).
+The result is a triangle of three entangled pairs. Each grouped
+party has two maximally mixed qubits and one pure qubit, so
+\[
+ G_{\one,\infty}(W_3^{\otimes3})\ge4>(3/2)^3.
+\]
+This familiar entangled-pair construction is an illustration,
+not a claimed new protocol. The three relevant scales are
+\begin{center}
+\begin{tabular}{lc}
+\toprule
+Operation on \(W_3\) & Value\\
+\midrule
+One-copy min-entropy radial value & \(3/2\)\\
+Convexified one-copy entropy image & \(2^{2/3}\)\\
+Tensor-regularized radial value & \(2^{H(1/3,\,2/3)}=3/2^{2/3}\)\\
+\bottomrule
+\end{tabular}
+\end{center}
+For completeness, the last value follows from Lemma \ref{lem:orbit}:
+some smaller marginal eigenvalue is at most \(1/3\), and binary
+entropy increases on \([0,1/2]\). The symmetric W state attains
+the resulting upper bound. This is the established W asymptotic
+slice-rank value, recovered here for comparison.
+
+\section{Verification and limits of the claim}
+The proofs above are mathematical arguments; finite computation
+is supplementary. The accompanying deterministic script,
+with random seed \(2026101707\), checks:
+\begin{itemize}
+ \item the rational contradiction \(27/8<4\) and the exact three-copy
+ restriction, whose unnormalized marginal matrices have four
+ diagonal entries equal to two and four equal to zero;
+ \item the orbit inequality and weighted functional bound on
+ \(200\) random local transforms for \(3\le k\le7\);
+ \item the weighted scalar-root formula against independent linear
+ feasibility calculations and explicit attaining states in \(32\)
+ cases for \(3\le k\le6\);
+ \item \(24\) finite instances of the positive-semidefinite domination
+ in Lemma \ref{lem:typical}.
+\end{itemize}
+All checks passed. The largest root-versus-feasibility discrepancy
+was \(1.83\times10^{-9}\) or less. Random tests do not prove a universal
+statement, and these are author-context diagnostics, not independent
+peer review or formal proof-assistant verification.
+
+The additional R\'enyi verifier checks the order-three polynomial
+gap and eight marginal matrices exactly, four symbolic curvature
+identities, 48 concavity instances, and nine midpoint violations
+above order two. The case \(\alpha=2.01\) uses \(a=10^{-400}\)
+and 890 decimal digits, making explicit the precision needed near
+the threshold. These finite checks supplement the proof of
+Theorem \ref{thm:criterion}; they do not establish its universal
+quantifiers by sampling.
+
+The arXiv PDF's definitions and Theorem 60 were visually checked
+against the source. The journal repository's extracted page 327
+also contains the identity and its concavity premise. The correction
+claim concerns these two specified versions; a separate corrigendum
+has not been ruled out. Neither the known value of the W
+G-stable rank, the W-polytope geometry, classical convex duality,
+nor the unweighted asymptotic identification is claimed as new.
+The classical curvature of binary R\'enyi entropy is also credited;
+the proposed new structural statement is the four-qubit criterion
+and its sharp minimax consequence, whose priority remains unchecked
+beyond the targeted sources and searches described in the audit.
+No result here concerns the general validity of the main Shannon
+theory. An independent mathematical assessment and a broader
+priority search are required before assigning significance or
+asserting that this obstruction has not been noticed before.
+
+\paragraph{AI assistance and review status.}
+The drafting, literature inspection, calculations and computational
+diagnostics were developed with substantial OpenAI Codex assistance.
+This manuscript has not yet received the requested independent
+model assessments. No independent score or publication acceptance
+is implied.
+
+\begin{thebibliography}{9}
+\bibitem{CLZ}
+M. Christandl, V. Lysikov and J. Zuiddam,
+\emph{Weighted slice rank and a minimax correspondence to Strassen's spectra},
+J. Math. Pures Appl. \textbf{172} (2023), 299--329.
+Versions assessed: \href{https://arxiv.org/abs/2012.14412v3}{arXiv:2012.14412v3}
+(19 April 2023), Theorem 60 on p.~26; and the
+\href{https://dare.uva.nl/id/5f9e575f-cd5d-4316-8f0c-9320c049778f}{final journal version},
+Theorem 60 on p.~327.
+\href{https://doi.org/10.1016/j.matpur.2023.02.006}{doi:10.1016/j.matpur.2023.02.006}.
+
+\bibitem{Derksen}
+H. Derksen, \emph{The G-stable rank for tensors and the cap set problem},
+Algebra Number Theory \textbf{16} (2022), 1071--1097.
+\href{https://arxiv.org/abs/2002.08435}{arXiv:2002.08435}.
+\href{https://doi.org/10.2140/ant.2022.16.1071}{doi:10.2140/ant.2022.16.1071}.
+
+\bibitem{CVZ}
+M. Christandl, P. Vrana and J. Zuiddam,
+\emph{Universal points in the asymptotic spectrum of tensors},
+J. Amer. Math. Soc. \textbf{36} (2023), 31--79.
+\href{https://arxiv.org/abs/1709.07851}{arXiv:1709.07851}.
+\href{https://doi.org/10.1090/jams/996}{doi:10.1090/jams/996}.
+
+\bibitem{Walter}
+M. Walter, B. Doran, D. Gross and M. Christandl,
+\emph{Entanglement polytopes: Multiparticle entanglement from single-particle information},
+Science \textbf{340} (2013), 1205--1208.
+\href{https://arxiv.org/abs/1208.0365}{arXiv:1208.0365}.
+\href{https://doi.org/10.1126/science.1232957}{doi:10.1126/science.1232957}.
+\bibitem{Hillion}
+E. Hillion and O. Johnson,
+\emph{A proof of the Shepp--Olkin entropy concavity conjecture},
+Bernoulli \textbf{23} (2017), 3638--3649.
+\href{https://arxiv.org/abs/1503.01570}{arXiv:1503.01570}.
+\href{https://doi.org/10.3150/16-BEJ860}{doi:10.3150/16-BEJ860}.
+\end{thebibliography}
+\end{document}

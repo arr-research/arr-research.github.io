@@ -1,0 +1,183 @@
+INFORME DE ARBITRAJE MATEMÁTICO ADVERSARIAL
+17 de octubre de 2026
+
+Manuscrito: Lluis Eriksson, «A four-qubit criterion for entropy minimax duality: Sharp Rényi threshold and a W-state counterexample», 9 páginas, versión del 17-10-2026.
+
+Dictamen: no he identificado un error matemático material en los resultados del manuscrito. Recomiendo revisión menor antes de considerarlo una nota especializada publicable. La corrección concreta a la primera identidad de CLZ está demostrada; la parte más interesante del trabajo es la caracterización necesaria y suficiente mediante W4. La prioridad de esa caracterización y de las formulaciones ponderadas de regularización no queda establecida por esta revisión.
+
+Calidad ordinaria del manuscrito: 8,5/10.
+Significación científica AIRR, según la escala suministrada: 4,5/10.
+Son evaluaciones distintas, no probabilidades de corrección. La segunda sitúa el trabajo entre «Strong» y «Very good», muy lejos de las categorías reservadas a consecuencias excepcionales, históricas o a problemas del Milenio.
+
+1. IDENTIDAD, PARTICIPACIÓN Y ALCANCE DE LA EVIDENCIA
+
+La configuración solicitada en el despacho fue OpenAI gpt-6-astra, reasoning_effort=xhigh y fork_turns=none. El agente coordinador comunicó contemporáneamente esos argumentos y que la herramienta devolvió únicamente task_name=/root/astra_minentropy_referee. No se expuso un campo que verificara por separado la identidad efectiva del modelo o el esfuerzo realmente ejecutado. Por tanto, consigno «gpt-6-astra / xhigh solicitado», con identidad efectiva y esfuerzo observado no verificados; no atribuyo al resultado una certificación técnica que las herramientas no dieron.
+
+Declaración de participación previa suministrada: GPT-6 Astra participó en el programa de investigación precedente, pero no había revisado ni redactado este manuscrito exacto. Esa participación se conserva. Esta evaluación no es estadísticamente independiente por el hecho de comenzar en un contexto nuevo. No consulté conversaciones previas, informes de otros árbitros, memorias del usuario ni espacios de desarrollo. Esa descripción de mi actuación y el parámetro de despacho no certifican aislamiento de historial, memoria deshabilitada ni los demás controles técnicos de AIRR.
+
+Leí el texto completo de main.tex y las nueve páginas de main.pdf, incluida inspección visual de las nueve páginas. Leí los dos verificadores, sus diagnósticos conservados, review-request.txt, assessment-policy.md, primary-sources.txt y source-audit.json. Contrasté las definiciones y los pasajes pertinentes del PDF arXiv suministrado, incluidas las páginas impresas 25–26, y las fuentes públicas indicadas abajo. No modifiqué el manuscrito, no contacté a autores ni editores y no publiqué nada.
+
+Comprobé las 13 entradas de manifest-sha256.json y volví a comprobarlas tras ejecutar los programas: todas coinciden y el paquete original permanece intacto.
+
+SHA256 main.pdf:
+8edda28feac9392a5e5e5f15844290453b2dedb3c692ff8133a67ef491790cd5
+SHA256 main.tex:
+1d48760d62970bd9f3b120515af553e26ae78e438c4fd15c451e69208d114b7d
+SHA256 target-clz-v3.pdf:
+b6520c7a27c18c94804b635b3f9602bffe38f5dbcbce2155d3bd60998f5cb25f
+
+2. OBJECIONES Y CAMBIOS ACONSEJADOS
+
+No hay en este informe una objeción matemática bloqueante. Sí hay límites de presentación, documentación y alcance que conviene resolver antes de una presentación editorial.
+
+A. Fórmula ponderada en la frontera, Teorema 2, pp. 2–3. La fórmula de G se enuncia expresamente sólo para pesos positivos y es correcta en ese dominio. Las definiciones iniciales y la posterior discusión permiten pesos nulos. Para que la exposición de los «weighted functionals» quede completa, añadiría una frase que cubra esa frontera. Si I=supp(xi) y s=|I|, la condición exacta es 1<=t<=2 y sum_{i in I} t^(-xi_i)>=s-1. Para s=1 el valor es 2; para s>=2 puede usarse la raíz única de sum_{i in I}t^(-xi_i)=s-1, truncada en 2. En particular, s=2 también da 2. Esto se deriva del argumento ya escrito y no constituye un contraejemplo al enunciado actual.
+
+B. Carathéodory, prueba del Teorema 4, p. 4. El soporte <=|I| es correcto, pero la frase que coloca el óptimo en la cara expuesta merece una justificación de una línea. Para un óptimo primal z*, uno dual u* y valor v, se tiene v=min_u<u,z*><=<u*,z*><=max_z<u*,z>=v. Así z* está en la cara expuesta por u*. Esta adición evita que el lector interprete el paso como una aplicación directa de Carathéodory que sólo daría |I|+1. Es una aclaración, no un hueco fatal.
+
+C. Dependencias y prioridad, sección 5 y pp. 8–9. Deben darse localizadores precisos para la multiplicatividad de F_theta y la comparación con slice rank; sugiero CVZ, Teorema 3.30 y Corolario 3.31, y Derksen, Proposición 4.9 y la caracterización del Teorema 5.2. El manuscrito reconoce correctamente los antecedentes, pero el lector no debe confundir la nueva demostración pedagógica de regularización con una prioridad demostrada de todas sus formulaciones. Mantendría las reservas actuales y ampliaría la búsqueda antes de afirmar primacía.
+
+D. Disponibilidad de los suplementos, sección 6, pp. 8–9. Los programas son ejecutables y reproducibles en el paquete examinado, pero el PDF no proporciona un identificador archivístico estable para descargarlos. Para una versión pública deben adjuntarse los dos scripts, sus resultados y versiones de dependencias a un suplemento identificable. No afirmo que falten de una publicación externa; este juicio se limita al paquete suministrado.
+
+E. Número de qubits y alcance. El Teorema 5 demuestra que cuatro qubits bastan como prueba universal. No demuestra que cuatro sea el número mínimo universal ni clasifica cuándo bastan tres; el texto evita correctamente esa pretensión. Tampoco extiende el umbral 2 a dimensiones locales arbitrarias. No debe ampliarse la publicidad del resultado más allá de estas restricciones.
+
+3. AUDITORÍA AFIRMACIÓN POR AFIRMACIÓN
+
+3.1. Definiciones, error de CLZ y significado del contraejemplo, pp. 1–3
+
+Las definiciones de F_{theta,infty} y G_{xi,infty} coinciden con las cantidades de CLZ para tres partes. La omisión explícita de coordenadas con xi_i=0 respeta su convención. No hay un cambio oculto de función ni una confusión entre espectros y coeficientes del tensor.
+
+El ejemplo escalar H_infty((p+q)/2)=log_2(4/3)<1/2, con p=(1,0), q=(1/2,1/2), identifica correctamente la falta de concavidad. Los dos vectores están en el mismo sector ordenado, de modo que restringirse a espectros ordenados no salva la premisa.
+
+Verifiqué la presencia de la primera identidad del Teorema 60 y de la premisa de concavidad tanto en arXiv:2012.14412v3 como en la copia final de revista. Descargué esta última y examiné visualmente la página impresa 327, página 30 de un PDF de 32 páginas. Su SHA256 es d447effc4e6087a7c228684a08a048f0b9a2080c83aaa926a8e74fd139e7dae7. Esto constituye una comprobación nueva respecto del diagnóstico de los autores, que sólo documentaba lectura textual y descargas fallidas.
+
+Fuente comprobada: https://pure.uva.nl/ws/files/183028305/Weighted_slice_rank_and_a_minimax_correspondence_to_Strassen_s_spectra.pdf
+
+El valor 3/2 frente a 2^(2/3) es una contradicción real de esa identidad en esas versiones. No se basa únicamente en que una prueba publicada sea inválida. No prueba que exista un error en las identidades Shannon ni que todas las consecuencias de la sección minentropía sean falsas. No encontré una corrección en la búsqueda realizada, pero no he demostrado que no exista otra corrección, comunicación o versión posterior.
+
+3.2. Forma de órbita de W y cota espectral, Lema 1, p. 2
+
+La reducción por unitarias locales es válida: g_i|0> es no nulo y puede alinearse con |0>; cada término transformado de W mantiene, después de expandir, a lo sumo una excitación. Aparece un término de vacío a_0, y el manuscrito lo incluye. Omitir ese término habría sido una laguna; aquí no se omite.
+
+La marginal j tiene diagonal (1-r_j,r_j), con posible coherencia a_0 conjugado(a_j). Por Rayleigh, su menor autovalor es <=r_j incluso con esa coherencia. De ahí sum_j mu_j<=sum_j r_j<=1. El paso al cierre usa continuidad de autovalores de representantes normalizados y es correcto.
+
+La recíproca sólo se afirma en la cara sum mu_j=1. Allí los estados de una excitación con amplitudes sqrt(mu_j) tienen las marginales diagonales anunciadas. Los ceros se alcanzan por degeneración de mapas diagonales invertibles. No hay obligación de que Q={0<=mu_i<=1/2,sum mu_i<=1} entero sea el politopo físico: no lo es en general, y ninguna prueba del manuscrito necesita esa igualdad. Ésta es una distinción crucial que la argumentación respeta.
+
+3.3. Fórmulas W, Teorema 2 y Proposición 3, pp. 2–3
+
+El objetivo -sum theta_i log_2(1-mu_i) es convexo para theta_i>=0. Maximizarlo sobre Q proporciona una cota superior, no una cota inferior. Tras escalar por dos, los vértices de Q tienen cero, una o dos entradas iguales a uno. El valor máximo es theta_(1)+theta_(2). Aunque los vértices con una sola marginal mixta no sean estados puros realizables, los vértices con dos entradas 1/2 sí lo son, mediante un par de Bell y espectadores puros; bastan para alcanzar la cota. También funciona si algunos theta_i son cero y para k=2.
+
+Para G, t<=2 se sigue de una coordenada xi_i=1. Si t<=2, todos los intervalos [1/2,t^(-xi_i)] son no vacíos. La condición sobre la suma de los extremos superiores permite escoger lambda con suma k-1; el Lema 1 da un estado realizador. La raíz positiva es única cuando todos los pesos son positivos. No detecté error de signo ni un máximo artificial en la relajación.
+
+Con xi=1, G(W_k)=k/(k-1) y min_theta F(W_k)=2^(2/k). Para k=3, elevar al cubo reduce la separación estricta a 27/8<4. El valor 3/2 ya figura en Derksen; la aportación es usarlo, junto con el cálculo de F, para exhibir el fallo preciso de CLZ. No corresponde atribuir novedad al valor aislado.
+
+3.4. Convexificación, soporte e identidad inversa, Teorema 4, pp. 3–4
+
+Lambda es compacto: en coordenadas activas u_i<=1/xi_i, y las inactivas se anulan. La parametrización u=theta/<theta,xi> es biyectiva con la normalización adecuada. El minimax bilineal se aplica a conv(E), compacto en dimensión finita, sin requerir convexidad de E. Por tanto, la expresión de soporte calcula exactamente el radio de conv(E), no necesariamente el de E.
+
+Verifiqué el soporte <=|I| por la igualdad de silla indicada en la observación B. La cara expuesta está contenida en un hiperplano no trivial de R^I, aun si el conjunto tiene dimensión menor o el valor óptimo es cero. Se puede descomponer en puntos del propio E que alcanzan el valor de soporte, no sólo en puntos arbitrarios de conv(E). El conteo es correcto.
+
+La identidad inversa tampoco necesita convexidad. La desigualdad g_xi<theta,xi><=f_theta usa e>=g_xi xi y no negatividad en las coordenadas inactivas. Para la desigualdad contraria, e que maximiza f_theta y xi=e/max_i e_i dan g_xi>=max_i e_i. El caso f_theta=0 está tratado. Esta construcción garantiza que el máximo se alcanza; no necesita suponer continuidad de g en la frontera.
+
+Advertencia conceptual comprobada: esa continuidad puede fallar. Para E={(0,1)}, g_(epsilon,1)=0 cuando epsilon>0, pero g_(0,1)=1. Esto no contradice nada afirmado en el Teorema 4 ni en el Teorema 5, que trabajan con el soporte activo. Conviene no importar automáticamente al manuscrito afirmaciones de continuidad de otras formulaciones minimax.
+
+La descripción de la clausura descendente de conv(E_infty(W_k)) mediante 0<=z_i<=1 y sum z_i<=2 es correcta: las cotas vienen de los soportes y la cara de suma dos se genera por indicadores de pares. El radio min{1,2/sum xi_i} y el promedio (2/3,2/3,2/3) siguen. La segunda identidad de CLZ sobrevive. También sobreviven monotonicidad, normalización y supermultiplicatividad de G por las demostraciones directas expuestas; no se deducen aquí de la identidad refutada.
+
+3.5. Criterio universal de cuatro qubits, Teorema 5, pp. 4–5
+
+Éste es el resultado principal y he comprobado las dos direcciones.
+
+Suficiencia: para qubits, pasar del espectro ordenado (1-mu_i,mu_i) a mu_i es afín. La convexidad y compacidad de P(T) citadas son las que se necesitan. Para u>=0, sum u_i h(mu_i) es cóncava en mu y lineal en u. El minimax correspondiente incluye pesos xi nulos porque Lambda sólo contiene coordenadas activas. No se presupone que la imagen h(P(T)) sea convexa.
+
+Necesidad: una función continua midpoint-cóncava es cóncava por aproximación diádica; por contraposición existe x<y con c=(h(x)+h(y))/2>h((x+y)/2). Es un paso válido para funciones no diferenciables. Puesto que 0<=x<y<=1/2, a=(x+y)/2 y b=1/2-a están estrictamente entre 0 y 1/2, incluso si x=0 o y=1/2.
+
+Las tuplas (x,y,b,b) y (y,x,b,b) tienen suma uno y cada entrada <=1/2. Por el Lema 1 pertenecen a P(W4); si x=0 puede ser necesario el cierre, que está permitido. La estricta monotonía y h(0)=0 dan c>0 y h(b)>0. Por tanto, xi=z/max z tiene todas sus coordenadas positivas, no meramente no negativas.
+
+Si el radio original fuera >=d=max z, compacidad daría un mu con h(mu)>=z. Entonces mu_1>a, mu_2>a, mu_3>=b y mu_4>=b, imposible porque sum mu_i>1. La compacidad es lo que convierte la falta de realización en una desigualdad estricta entre óptimos. El radio convexificado es >=d por construcción, sin que sea necesario conocerlo exactamente. El uso del Teorema 4 cierra la implicación y todos los cuantificadores quedan satisfechos.
+
+Como prueba propia de que no se está usando una hipótesis oculta de suavidad, construí además h(p)=p+max(0,p-1/10). Con los x,y,b del ejemplo del artículo, los pesos son exactamente (5/28,5/28,1,1), el radio original es 112/165 y el convexificado es al menos 7/10: la separación es al menos 7/330. Esta comprobación racional es auxiliar; no reemplaza la prueba universal ni se propone como contribución del manuscrito.
+
+3.6. Umbral Rényi, Lema 6 y Corolario 7, pp. 5–6
+
+La composición con log para 0<alpha<1 y el límite Shannon están bien utilizados. Para 1<alpha<=2, rederivé la expansión de FF''-(F')² y verifiqué que el signo es positivo antes de multiplicar por 1/(1-alpha). La cota mediante convexidad de t^s+t^(-s) en s da exactamente 4(alpha-1)>0. No hay inversión incorrecta de desigualdad.
+
+Para alpha>2, F->1, F'->-alpha y F''->alpha(alpha-1), por lo que h_alpha''->alpha/((alpha-1)ln 2)>0. Esa positividad proporciona un intervalo pequeño de convexidad estricta y, por tanto, un testigo de punto medio. Cerca de alpha=2 ese intervalo puede ser extremadamente pequeño; un barrido numérico con resolución fija no demostraría el umbral. El argumento escrito sí lo demuestra. h_infty es estrictamente convexa.
+
+El corolario identifica exactamente el rango para estas cantidades marginales sobre todos los cierres de órbita multiqubit. No es una afirmación sobre entropías condicionales, toda la simplex de dimensión arbitraria o sumas de Bernoulli. La pérdida de concavidad escalar por encima de dos está ya en Hillion–Johnson, Lema 4.3; no debe puntuarse como descubrimiento nuevo.
+
+3.7. Testigo exacto alpha=3, sección 4.2, p. 6
+
+La igualdad p³+(1-p)³=1-3p+3p² y las fracciones 84721/160000 y 543/160000 son correctas. La desigualdad f(x)f(y)<f(a)² implica c>h_3(a), con el sentido correcto del logaritmo negativo. Las ocho marginales de los dos estados son exactamente las anunciadas y los cuatro coeficientes de cada estado son positivos: aquí los estados están en la órbita, no sólo en su cierre.
+
+Como x,y<b, c<h_3(b), de modo que la elección de pesos con las dos últimas entradas iguales a uno cumple xi in Xi4. La fórmula inversa de h_3 usa la rama correcta en [0,1/2], con dominio de entropía [0,1]. La factibilidad por llenar hasta suma uno se justifica por la cara realizable del Lema 1.
+
+Reproduje 0,249735842255146668... para el primer peso, 0,916955714878628562... para el radio original y 0,918250633858560294... como cota inferior convexificada. La diferencia mostrada, aproximadamente 0,001294918979931732..., es una orientación numérica, no una cota de intervalo certificada. El manuscrito lo distingue correctamente. La demostración estricta descansa en aritmética racional y el Teorema 5.
+
+3.8. Proyección simultánea y regularización, Lema 8 y Teorema 9, p. 7
+
+El proyector usa una cola unilateral del espectro, lo cual basta para controlar la norma de operador. La ley de los grandes números se aplica a los autovalores positivos con su propia distribución; los autovalores cero no causan problemas. Los proyectores actúan en factores distintos y conmutan, por lo que la cota de unión q_m>=1-sum_i(1-Tr(P_i rho_i^m)) es válida y q_m->1.
+
+La dominación por traza parcial es correcta aunque la proyección condicional pueda aumentar la marginal normalizada. Para cualquier vector v local, el elemento cuadrático de la diferencia es la esperanza de |v><v| tensor (I-P_otros), después del filtrado local, y es no negativo. Por ello la desigualdad es para q_m sigma_i; el factor q_m y el signo +log_2 q_m en la cota entrópica son correctos.
+
+Si psi pertenece al cierre de la órbita de T, psi^m pertenece al de T^m por continuidad del producto tensorial. Después se aplican los proyectores, mapas singulares que son límites de invertibles. El resultado no nulo está en el cierre admitido. Esta cadena no exige que el mapa tensorizado tenga forma de producto por copia: basta que sea local respecto de las tres partes agrupadas.
+
+Los límites inferiores se obtienen para cada psi fijo, luego delta->0 y optimización. Los superiores usan H_infty<=H y la multiplicatividad Shannon realmente disponible en CVZ. La desigualdad que compara el mínimo de cocientes con la media ponderada es válida para theta apoyado en supp(xi); no usa la identidad minentropía falsa. El minimax Shannon completa el sandwich. No hace falta intercambiar un límite con un máximo ni afirmar uniformidad al tender xi_i a cero. El resultado es para cada peso fijo y la prueba cubre exactamente ese alcance.
+
+La comparación de Derksen con slice rank confirma que la identificación no ponderada ya era conocida. La construcción de tres copias da un triángulo de pares entrelazados con marginales de rango cuatro uniformes y verifica G(W3^3)>=4>(3/2)^3. Distinguir 3/2, 2^(2/3) y 3/2^(2/3) es correcto y útil; no son tres expresiones de una misma regularización.
+
+4. COMPROBACIONES EFECTIVAMENTE EJECUTADAS
+
+Copié, sin modificar, los dos verificadores a la carpeta de revisión y los ejecuté con Python 3.12.14, NumPy 2.2.6, SciPy 1.18.0, SymPy 1.14.0 y mpmath 1.3.0. Ambos terminaron con código cero. Los JSON resultantes son semánticamente idénticos a los retenidos en el paquete.
+
+Reejecución de verify_minentropy.py: desigualdades racionales y restricción exacta de tres copias; 200 transformaciones locales aleatorias; 32 comparaciones raíz/factibilidad lineal con estados realizadores; 24 verificaciones de dominación positiva. Máxima discrepancia raíz/LP: 1,8203545337769356e-9.
+
+Reejecución de verify_renyi_threshold.py: identidad racional del testigo, ocho matrices marginales exactas, cuatro identidades simbólicas de curvatura, 48 muestras de concavidad y nueve testigos por encima de dos, incluido alpha=2,01 con 890 dígitos. La reejecución verifica reproducibilidad del código autoral, no su independencia de diseño ni una prueba formal de los teoremas.
+
+Comprobaciones adicionales escritas y ejecutadas durante este arbitraje, conservadas en referee_checks.py:
+- 150 pares de problemas lineales primal/dual para conjuntos E finitos, incluyendo ceros y degeneraciones, con comprobación del tamaño de soporte y de la identidad inversa. Discrepancia máxima primal/dual: 3,9968028886505635e-15.
+- 119 casos de factibilidad W con k=2,...,6, todos los patrones no vacíos de soporte en cada dimensión y pesos pequeños de 1e-8. Error máximo de realización: 1,0331220101633676e-8.
+- Testigo racional de la función no diferenciable descrita arriba.
+- 20 verificaciones racionales de la fórmula del determinante marginal con amplitud de vacío.
+- Comprobación final de integridad del paquete y comparación de ambos JSON autorales.
+
+Conservo una limitación de mi propia implementación: la primera ejecución de las pruebas de frontera falló porque la tolerancia por defecto del optimizador podía ignorar restricciones del orden de 1e-8; además, calcular directamente potencias generó desbordamientos. Ajusté la tolerancia a 1e-10 y evalué el mínimo en unidades logarítmicas. La ejecución corregida pasó. Este episodio está registrado en referee-checks.json; no fue un contraejemplo matemático ni una razón para cambiar el manuscrito.
+
+Las muestras finitas no verifican cuantificadores universales, el paso asintótico ni prioridad. Las conclusiones matemáticas de este informe proceden de la lectura y reconstrucción de las pruebas, apoyadas, no sustituidas, por esos cálculos.
+
+5. FUENTES PRIMARIAS CONSULTADAS Y BÚSQUEDA DE ANTECEDENTES
+
+- Christandl–Lysikov–Zuiddam, arXiv:2012.14412v3: definiciones de Pi, F y G, Definición 46, Teoremas 50, 55, 59–60 y Corolario 61; PDF suministrado y contraste con el texto de revista. Página arXiv consultada: https://arxiv.org/abs/2012.14412 . Mostraba v3 como última entrada. La copia final de revista quedó descargada y fijada por hash, como se indica en 3.1. El enlace DOI del editor no fue accesible a través de la herramienta web; no afirmo haber inspeccionado su historial de correcciones.
+
+- Derksen, «The G-stable rank for tensors»: caracterización compleja en sección 1.4/Teorema 5.2, ejemplos del tensor W y comparación de la Proposición 4.9. El factor 2/k frente a slice rank hace que las tasas asintóticas coincidan. Sus pesos multiplican el cociente de normas; no son los exponentes 1/xi del manuscrito. https://arxiv.org/html/2002.08435v1 . El acceso al PDF NSF citado por los autores falló en esta sesión; no cuento ese PDF como leído.
+
+- Christandl–Vrana–Zuiddam, «Universal points in the asymptotic spectrum of tensors»: sección 3.3, Teorema 3.30 y Corolario 3.31; identificación del funcional entrópico sobre el politopo y su condición de punto espectral, que incluye multiplicatividad. https://arxiv.org/html/1709.07851 . La representación consultada se identificaba como v3. No realicé una nueva auditoría completa de su demostración de teoría de representaciones.
+
+- Walter–Doran–Gross–Christandl, «Entanglement Polytopes»: definición del politopo y Corolario 2 del suplemento, que establece compacidad y convexidad para cualquier número de partes, junto con la discusión de W. https://arxiv.org/html/1208.0365v3 . Esto respalda el input geométrico de la suficiencia.
+
+- Hillion–Johnson, «A proof of the Shepp–Olkin entropy concavity conjecture»: sección 4, Lema 4.3 y cálculo Bernoulli cuando p->0. https://arxiv.org/html/1503.01570 . Confirma el antecedente de curvatura positiva para órdenes mayores que dos; no confundí ese resultado con una solución de las conjeturas generalizadas para sumas de Bernoulli.
+
+- Bugár–Vrana, «Interpolating between Rényi entanglement entropies for arbitrary bipartitions via operator geometric means»: introducción, panorama de resultados, relación con los funcionales cuánticos y definiciones de minentropía/Rényi. https://arxiv.org/html/2208.14438v2 . Trata construcciones y regularizaciones relacionadas, pero distintas; esa lectura parcial no permite concluir ni prioridad ni duplicación del Teorema 9 del manuscrito.
+
+- «Strassen’s support functionals coincide with the quantum functionals», arXiv:2601.21553v2: introducción y sección sobre G-stable rank. https://arxiv.org/html/2601.21553v2 . En la representación consultada, la caracterización pertinente era Corolario V.21, demostrado con el objetivo recíproco convexo max_i ||p_i||_infty/alpha_i; no inferí un fallo de ese resultado del error de CLZ. El localizador «Proposition V.22» del source-audit autoral no coincidía con esa representación, por lo que no lo he reproducido como comprobación propia. Esto afecta a la trazabilidad de ese diagnóstico auxiliar, no a una cita del manuscrito ni a su demostración.
+
+Busqué, entre otras combinaciones, «Weighted slice rank corrigendum min-entropy», «2012.14412 erratum», «2012.14412 correction», «min-entropy Theorem 60», «min-entropy quantum functionals regularization», «W state entropy minimax concavity Renyi», «four-qubit minimax» y «G-stable rank weighted asymptotic». No identifiqué en los resultados inspeccionados una corrección publicada ni un antecedente que enunciara el criterio W4. Varios resultados eran irrelevantes. No se ha hecho una búsqueda exhaustiva en MathSciNet, zbMATH, toda la literatura de optimización multiobjetivo, versiones no indexadas o correspondencia privada. Una ausencia de coincidencia en estas búsquedas no constituye evidencia suficiente de novedad.
+
+6. VALORACIÓN, LIMITACIONES Y RECOMENDACIÓN
+
+El manuscrito combina una corrección concreta, verificable y bien delimitada con un criterio sencillo y general dentro del problema planteado. La prueba de necesidad con dos estados W4 tiene valor conceptual: muestra que no basta con reemplazar Shannon por cualquier función creciente del menor autovalor. La reducción es breve, pero no es una mera tabla de ejemplos numéricos. La reparación convexificada explica exactamente qué cantidad estaba calculando la identidad fallida.
+
+Su alcance sigue siendo especializado. No altera la teoría principal Shannon, no produce un nuevo punto espectral general, no resuelve un problema amplio de complejidad tensorial y no establece resultados sobre entropías condicionales o dimensiones locales arbitrarias. La geometría W, el valor G-stable 3/2, las herramientas convexas, el umbral escalar y la regularización no ponderada no son nuevos. La significación del trabajo debe apoyarse en el criterio estructural y en la corrección precisa, sin sumar de nuevo esos antecedentes como descubrimientos.
+
+Cinco criterios AIRR, en estrellas de 1 a 5:
+- Confianza en corrección: 4/5. Pruebas reconstruidas sin objeción material y comprobaciones reproducidas; no hay certificación formal ni arbitraje humano.
+- Rigor y completitud: 4/5. Argumentos suficientes, con mejoras menores de frontera, localizadores y explicación del soporte.
+- Novedad frente a fuentes efectivamente consultadas: 3/5. Criterio W4 no identificado en ellas; búsqueda de prioridad incompleta y muchos ingredientes conocidos.
+- Significación si los resultados se sostienen: 3/5. Corrección útil y caracterización nítida en un ámbito acotado; no consta impacto amplio o transformador.
+- Reproducibilidad e inspeccionabilidad: 5/5. Artefacto fijado, prueba corta, testigo exacto, scripts ejecutables y resultados reproducidos. Esta nota no equivale a certificación de corrección.
+
+Calidad ordinaria: 8,5/10. Es una nota técnicamente sólida y clara; las reservas indicadas impiden tratarla como una versión editorial completamente cerrada.
+Significación AIRR: 4,5/10. Es una contribución seria de alcance específico, con prioridad todavía abierta. Las estrellas de criterio no se han promediado para obtener esta cifra.
+
+Recomendación consultiva: revisión menor y consideración favorable como nota especializada, condicionada a la comprobación editorial habitual de antecedentes y a incorporar las aclaraciones y suplementos indicados. No recomiendo rechazo por motivos matemáticos sobre la evidencia inspeccionada. Tampoco recomiendo presentar esta única evaluación como aceptación editorial, revisión humana, verificación formal, independencia estadística o satisfacción por sí sola del quorum AIRR de admisión. Según la propia política suministrada, la evidencia de un solo modelo y los controles de contexto/runtime no verificados permanece «Limited».
+
+Todos los resultados, código de comprobación, capturas y este informe se conservan exclusivamente en:
+D:\Temp\airr\2026-10-17_astra-minentropia
