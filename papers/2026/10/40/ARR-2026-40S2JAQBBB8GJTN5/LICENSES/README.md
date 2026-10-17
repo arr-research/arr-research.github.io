@@ -1,0 +1,1 @@
+Manuscript, source and textual reports: CC BY 4.0. Metadata and generated data: CC0. Authored programs: Apache-2.0, copyright 2026 Lluis Eriksson. Cited works and dependencies retain their licenses; downloaded third-party papers are not redistributed.

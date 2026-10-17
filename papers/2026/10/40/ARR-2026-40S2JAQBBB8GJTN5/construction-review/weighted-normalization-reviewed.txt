@@ -1,0 +1,24 @@
+UNREVIEWED ADDENDUM: CONSTANT-GAP RATIONAL NORMALIZATION
+2026-10-17. Supersedes only the final balancing in averaged-gap-candidate.txt.
+
+Aim: fixed additive approximation hardness with known capacity exactly one. Do NOT claim the final coefficient map is doubly stochastic or has the old fixed finite alphabet.
+
+Start with the same R=7N words (length <=4), one padding-square gate PER word, all padded multiplication gates repeated 25 times, and one singleton per label. Let s0 be labels, G gates before repetition, q_l positive integer coefficient squared Frobenius weights, d0=sum q_l=s0+50G. The unbalanced coefficient map is unital and trace preserving, and supports are disjoint.
+For each label choose integer w_l=ceil(sqrt(2q_l)). Append w_l²-q_l singleton blocks. Its coefficient squared norm becomes w_l² and number of singleton occurrences is 1+w_l²-q_l >=w_l²/2. Also 2q_l<=w_l²<6q_l. Let D0=sum w_l². Set t=ceil(sqrt(D0)), D=t². Add D-D0 entirely NEW labels, each in one singleton block with w_l=1. Their singleton proportion is 1, so all labels still have >=w_l²/2 singleton occurrences. Final A_l are real rational with entries {0,+/-1,+/-3/5,+/-4/5}, disjoint support, sum A_l A_l*=sum A_l*A_l=I_D, Tr A_l*A_l=w_l². Sum_l w_l²=D=t².
+
+Now define B_l=(t/w_l)A_l. All B_l are rational. Their normalized Gram matrix is the IDENTITY: tau_D(B_l*B_h)=delta_lh. For a density Q let Phi_Q(X)=sum Q_lh B_l X B_h*. Then tau_D Phi_Q(I)=Tr Q=1, hence cap(Phi_Q)^(1/D)<=det(Phi_Q(I))^(1/D)<=1. For Q0=diag(w_l²/D), Phi_Q0=Psi_A is doubly stochastic, of capacity one. Therefore covariance-optimized capacity C(B)=1. This proof does not rely on an unproved general capacity equality for F_infty.
+
+Under sum_l tau_m(Y_l*Y_l)=1, set Z_l=(t/w_l)Y_l, so L_B(Y)=L_A(Z)=X and tau_Dm X*X=sum_l (w_l²/D)||Z_l||_2²=1. Thus F_m(B)<=1. A unitary-label assignment V gives normalized coefficients Y_l=(w_l/t)V_l; energy is exactly sum w_l²/D=1. The forward logarithmic bound from the prior candidate is unchanged with sF_m replaced by F_m and rho=R/D.
+
+For reverse rounding, the polar distance Delta²<=2delta of X to a block polar P controls
+  (1/2)sum_l (w_l²/D)||Z_l-V_l||_2² <=Delta²
+using at least w_l²/2 singleton copies. Therefore ||L_A(V)-X||_2<=sqrt(2)Delta. The rest of the reverse gate-defect argument is unchanged: xi<35delta/rho, and the recovered synchronous strategy fails with probability <=1750delta/rho using the conservative 50xi game bound.
+
+SIZE AND CONSTANT GAP
+For nonempty N and no unused variables, n<=3N=3R/7. Padded original words use at most 4R prefix labels; padding-square words use none. Thus s0<=n+2+4R<=33R/7<5R (R=7N>=7). G<=6R. Hence d0<=305R, D0<1830R and D=t²<=4D0<7320R. In particular rho=R/D>1/8000. Also G>=2R so rho<1; this loose upper bound is enough.
+Rational entries t/w_l times {0,+/-1,+/-3/5,+/-4/5} have numerators/denominators polynomial in R, so binary length O(log R). Number of extra singleton labels is D-D0<=2sqrt(D0)+1=O(sqrt R). Dense tuple encoding remains polynomial in the expanded row-list size.
+
+Let a source/normalization give fixed synchronous NO soundness sigma<1 and YES error <=K epsilon for a fixed K (the source-interface repair may change these). Define beta=(1-sigma)/3500>0. NO implies F_infty<=1-beta rho<=1-beta/8000. Choose fixed source epsilon so (3600/49)*34*K*epsilon<=beta/32000. Then YES gives F_infty>=1-beta/32000. Gap at least 3beta/32000, with C(B)=1. Thus approximation to one fixed positive rational absolute tolerance (e.g. beta/128000) would decide Halt, provided the source interface is repaired rigorously.
+Consequently no total recursive dimension bound exists even for this one fixed tolerance on this family, as finite-level maxima are uniformly computable by real quantifier elimination. State the tolerance carefully (a witness additive deficit less than half the YES/NO gap suffices, followed by numerical evaluation error smaller than the remaining margin).
+
+This is a new candidate derivation, not yet referee-validated. It changes the normalization class: final B_l are Gram-orthonormal and have capacity one but generally are NOT a doubly stochastic tuple themselves. Underlying A_l are doubly stochastic. Keep these distinct throughout.

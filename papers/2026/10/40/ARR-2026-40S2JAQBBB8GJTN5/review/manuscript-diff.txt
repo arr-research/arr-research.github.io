@@ -1,0 +1,62 @@
+--- baseline/main.tex
++++ revised/main.tex
+@@ -49,6 +49,7 @@
+ \]
+ We call $\K$ the covariance-optimized capacity. The normalization in the following theorem makes it explicitly computable on every constructed instance.
+ 
++\newpage
+ \begin{theorem}\label{thm:main}
+ Set
+ \[
+@@ -163,11 +164,11 @@
+ \[
+  \norm{V_j-X_j}_2^2\le\norm{V_j^2-I}_2^2.
+ \]
+-For each row, the new product residual squared is at most four times the sum of its old product residual squared and the individual rounding errors. A new pair commutator residual squared is at most
++For each row, the new product residual squared is at most four times the sum of its old product residual squared and the individual rounding errors. Write $e_{jk}=\norm{V_jV_kV_jV_k-I}_2$ for the original pair residual. A new pair commutator residual squared is at most
+ \[
+  3e_{jk}^2+12\norm{V_j-X_j}_2^2+12\norm{V_k-X_k}_2^2.
+ \]
+-Hence the sum of the new product and pair commutator squared errors is at most 28 times the original seven-relation squared-error sum for that row.
++Each variable appears in at most two pairs. Its squared rounding error therefore has coefficient at most $4+2\cdot12=28$; the old product and pair residuals have coefficients at most four and three. Hence the sum of the new product and pair commutator squared errors is at most 28 times the original seven-relation squared-error sum for that row.
+ 
+ For a row of size three write its rounded variables as $X,Y,Z$. Pinch $Y$ to the algebra commuting with $X$:
+ \[
+@@ -261,7 +262,7 @@
+ It is the intermediate tuple $A$, not generally $B$, whose coefficient map is doubly stochastic. The final rational coefficients $B_\ell$ do not belong to a fixed finite alphabet. These distinctions are needed for the fixed-gap result.
+ 
+ \section{The averaged determinant transfer}
+-Let $\rho=R/D$, so $1/8000\le\rho\le1/200$.
++Let $\rho=R/D$, so $1/8000\le\rho\le1/200$, and write $L_A(Z)=\sum_\ell A_\ell\otimes Z_\ell$ (likewise for $L_B$). For an original relation $r$, let $e_r$ denote its normalized Hilbert--Schmidt residual norm in the definition of $\xi$.
+ \begin{proposition}\label{prop:transfer}
+ For the tuple $B$ above, unitary variables of mean relation error $\xi$ in dimension $m$ give
+ \begin{equation}
+@@ -307,11 +308,17 @@
+  \norm{HH^*-I}_2^2\le C_0\Delta^2,
+  \qquad C_0=\frac{144}{25}(3+2\sqrt2).
+ \]
+-A gate of residual $e_g$ has normalized squared unitarity defect $c^2e_g^2$. Its 25 copies contribute $50c^2 e_g^2/D$ to the global squared defect. Thus
++For a gate $g$ with unitary labels $U,V,W,V_z$, put $e_g=\norm{UV_z^*-WV^*}_2$. Its normalized squared unitarity defect is $c^2e_g^2$. Its 25 copies contribute $50c^2 e_g^2/D$ to the global squared defect. Thus
+ \[
+  \frac{50c^2}{D}\sum_g e_g^2\le C_0\Delta^2.
+ \]
+-Right multiply all labels by $V_z^*$ to fix the reference. Telescoping a padded word and removing its two padding factors uses at most six assigned gates, including its own square gate. The squared residual is at most six times the sum of their squared errors. These groups of gates are disjoint. Consequently
++Right multiply all labels by $V_z^*$ to fix the reference, and denote the gauged labels by $\widetilde V_\ell$. Let $G_r$ be the occurrences of gates assigned to relation $r$, including its own copy of the square gate $p^2=I$. Telescoping the padded product and then removing its two padding factors gives
++\[
++ \norm{\widetilde V_{i_1(r)}\cdots\widetilde V_{i_{k(r)}(r)}-\sigma_r I}_2
++ \le\sum_{g\in G_r}e_g,
++ \qquad |G_r|\le6.
++\]
++The last summand can be chosen as the residual of that relation's square gate. Cauchy--Schwarz bounds the squared left-hand side by $|G_r|\sum_{g\in G_r}e_g^2$. The sets $G_r$ are disjoint sets of occurrences, even when their labels coincide. Consequently
+ \[
+  \xi\le\frac6R\sum_g e_g^2
+  \le\frac{12C_0}{50c^2}\frac{\delta}{\rho}
+@@ -354,7 +361,7 @@
+ \section{Diagnostics and scope}
+ The accompanying compact compiler stores scalar blocks and multiplicities rather than allocating the full dense tuple. Exact rational checks cover 70 context lists, all five encountered local label patterns, the stochastic identities, coefficient orthogonality, square normalization and singleton proportions. Forty-eight complex-matrix cases check each of the forward bound, reverse bound and unitary-to-strategy rounding, with 48 inexact relation controls. These are finite diagnostics, not a proof of undecidability.
+ 
+-For the six-row magic square, the compiler produces $R=42$, 210 multiplication gates before replication, $D=23409$, and 438 final labels. The standard four-dimensional Pauli assignment makes the determinant objective exactly one; all 512 scalar sign assignments fail the row system. This is a familiar illustration of the construction, not a new nonlocality result.
++For the six-row magic square, the compiler produces $R=42$, 210 multiplication gates before replication, $D=23409$, and 438 final labels. The standard four-dimensional Pauli assignment makes the determinant objective exactly one; all 512 scalar sign assignments fail the row system. A separate positional-normalization verifier covers a nonuniform rational distribution with coincident Bob queries, including exhaustive scalar cases and complex-matrix tests of both error transfers. This is a familiar illustration of the construction, not a new nonlocality result; neither verifier implements the full machine-to-game source reduction.
+ 
+ The proof has several explicit limits. The gap $\gamma\approx2.76\cdot10^{-11}$ is a conservative theoretical constant, not a claim about achievable numerical experiments. The source-to-explicit-list expansion need not be efficient. The final coefficients are rational with controlled bit length, but are not uniformly bounded in one fixed alphabet and do not themselves form a doubly stochastic tuple. The capacity-one identity uses a displayed covariance $Q_0$. The source game hardness, quantum logic background and general noncomputability of tracial approximation are credited to prior work. Targeted source searches do not certify worldwide novelty or establish an importance rating.
+ 

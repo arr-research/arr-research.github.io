@@ -1,0 +1,95 @@
+REVISIÓN ADVERSARIAL DE LA EXTENSIÓN PROMEDIO Y SU NORMALIZACIÓN RACIONAL
+17 de octubre de 2026
+
+Objeto: averaged-gap-candidate.txt, SHA-256 d462ac3b6c31860c839874f1a8d8631a069277f6e3afa6f8f9d656562f6d275a, y weighted-normalization-addendum.txt, SHA-256 6e9ae2d33e1f4f4eea9e2fd0757e3833260dc3a5fd812621f14b875587bddb82, ambos en D:\Proyectos\airr-investigacion\2026-10-17_saturacion-indecidible.
+
+Esta es una extensión nueva. No se modifica ni se vuelve a puntuar el artículo congelado ARR-2026-438PTRJA439VSRTW v1 ni su informe. No hay nota numérica de esta propuesta. Revisión solicitada a Astra xhigh, con contexto reutilizado e involucrado; modelo y esfuerzo efectivos no atestados independientemente. No se ejecutó Opus, no se publicó y no se contactó a autores.
+
+CONCLUSIÓN
+
+La propuesta contiene un hueco material de interfaz que ya identifica como pendiente: las consultas repetidas del test fuente no se pueden convertir silenciosamente en contextos de variables distintas con selección uniforme. El hueco admite una reparación explícita, demostrada en normalization-and-constant-gap-proof.txt. Con esa reparación, las constantes promedio y la normalización por pesos cuadrados sostienen el resultado más fuerte: una familia computable de tuplas racionales B con Gram identidad y capacidad C(B)=1, para la cual aproximar F_infty(B) a una precisión absoluta fija es indecidible. Esto se refiere a la función uniforme sobre entradas finitas, no a incomputabilidad de cada valor individual.
+
+La conclusión depende del Teorema 5.2 de Taller–Vidick para dureza de sus tests síncronos. La revisión contrasta su enunciado, convención y prueba de parámetros, pero no rehace toda la demostración de MIP*=RE ni la reducción de la fuente. El mecanismo nuevo es la transferencia a un objetivo determinante homogéneo con una sola restricción de norma. La incomputabilidad tracial general y la dureza de objetivos tracialmente muy simples ya tienen antecedentes primarios fuertes.
+
+R1. CONSULTAS REPETIDAS: HUECO MATERIAL DEL TEXTO CANDIDATO, REPARADO AQUÍ
+
+Localización: sección PRIMARY SOURCE AND SIMPLIFICATION y primera frase de NOTATION del candidato; en la fuente, Definition 4.1, pasos (5)–(9), y construcción del decodificador en la prueba del Theorem 5.2.
+
+Hay tres posiciones de respuesta, pero sus queries plegadas pueden coincidir. Por ejemplo, g'=g ocurre si mu coincide con la extensión de f; con ruido de soporte completo esa elección tiene probabilidad positiva. No basta invocar la expresión informal LCS para descartar el caso. La descripción fuente usa tanto una elección entre tres queries como un índice asociado a la query, por lo que conviene conservar el índice comprobado del predicado en vez de basarse en notación de conjuntos.
+
+Contraejemplo al atajo: las filas equiprobables (a,a,b)=+1 y b=-1 tienen valor clásico 5/6 cuando se comprueba una posición uniforme de la primera fila. Si se cancelan las dos a y se reemplaza la primera por la fila uniforme b=+1, el valor pasa a 1/2. Verificación exacta incluida. Ni la distribución de comprobaciones ni las restricciones de conmutación se preservan automáticamente al cancelar.
+
+Reparación: describir el test con una distribución mu(omega,p,j), donde Alice recibe omega, Bob j, y el árbitro comprueba la posición p de la respuesta de Alice. Introducir tres auxiliares distintos por omega, una fila de paridad con mitad de masa y filas de igualdad auxiliar–variable de Bob con la otra mitad, ponderadas por mu. Las filas resultantes tienen dos o tres variables distintas. Se demuestra e_new<=e_src/4 y e_src<=18 e_new, conservando dimensión y sincronía. De ahí soundness nuevo 1295/1296 a partir de 71/72. La prueba precisa está en los apartados 1–2 del archivo complementario.
+
+La uniformización racional debe duplicar filas, manteniendo las mismas variables globales. No debe convertir la semilla del verificador en información adicional de Alice. Para unas medidas de Bob fijadas, preguntas duplicadas de la misma fila no mejoran el valor frente a elegir una sola PVM local óptima; esto justifica colapsar o expandir las multiplicidades.
+
+El reciente Cleve–Culf–Taller define E3-LIN usando índices estrictamente distintos y cita dureza de esa clase. Eso es evidencia bibliográfica pertinente, pero no se usa para saltar la comprobación de la convención síncrona y los detalles del sampler que se desea conservar. La reparación propia evita esa dependencia adicional.
+
+R2. CONVENCIÓN SÍNCRONA Y REDONDEO: LAS AFIRMACIONES CENTRALES SOBREVIVEN
+
+La simplificación propuesta es correcta. La sección 5.1 de Taller–Vidick define LIN-MIP* usando el valor síncrono; su prueba del Theorem 5.2 fija 71/72 y permite cualquier epsilon racional entre 0 y 1/72. La recuperación construye exactamente PVMs comunes con transpuestas y estado maximalmente entrelazado sobre la unión de preguntas de contexto y variable. Por tanto no se necesita el redondeo de estrategias de estado general ni trasladar las constantes de Remark 5.3.
+
+Lemma 1 del candidato: con k<=3, la pérdida de consistencia es sum d_j^2/(4k). El producto aporta <=3 sum d_j^2; los conmutadores positivos aportan <=16 sum d_j^2. Tras siete palabras por fila resulta xi<=228e/7<34e. Repetir una relación en filas diferentes es correcto: conserva los pesos por incidencia.
+
+Lemma 2: sign(Re V) redondea un unitario a una involución y satisface la desigualdad anunciada. Los nuevos residuos de producto y conmutadores suman <=28 veces la suma antigua por fila. La prueba de pinching es válida incluso si T tiene autovalor cero, fijando sign(0)=+1. Las partes diagonal y fuera de bloques son ortogonales en Hilbert–Schmidt; no debe sustituirse esa ortogonalidad por una suma de normas que perdería la constante. Para k=3 las observables X,Y',sigma XY' conmutan y satisfacen exactamente la paridad. Para k=2 y k=1 las fórmulas separadas del candidato son correctas. Se obtiene e<=49xi, y usar 50xi es conservador.
+
+R3. COMPILADOR PROMEDIO: LAS MULTIPLICIDADES Y FACTORES DOS SON CORRECTOS
+
+Localización: AVERAGED DETERMINANT COMPILER, FORWARD AVERAGED BOUND, REVERSE AVERAGED BOUND.
+
+El relleno hasta peso 2M deja al menos M+1 singletons por etiqueta y D=2sM. Su masa controla el promedio de errores polares sin el factor D de la prueba anterior de error máximo. Se mantienen ambas identidades estocásticas y Gram I_s/s. Las constantes espectrales y logarítmicas del bloque asimétrico son las mismas ya demostradas.
+
+En la dirección directa, cada puerta ocupa 2m y el determinante se eleva a 2/(Dm). Sus 25 copias producen el factor 50/D. La pérdida total es (3600/49)rho xi. En la inversa, la constante cuadrática es C0=(144/25)(3+2sqrt(2)), y las copias de puertas aportan (50c^2/D)sum e_g^2. La constante final es exactamente 12C0/(50c^2)=18+12sqrt(2)<35.
+
+La copia de t^2 asignada A CADA palabra es esencial para esta prueba promedio. Si se usara una sola puerta de padding para todas las palabras, el término de su error se multiplicaría por R al sumar, y no quedaría demostrada la constante uniforme. El candidato evita correctamente ese problema: la etiqueta t es común, pero cada palabra tiene su propio bloque de verificación.
+
+Tras la reparación R1, el candidato con peso común conserva sus promesas originales: racionalidad en alfabeto fijo, doble estocasticidad y Gram I_s/s, capacidad 1/s. Su brecha es computable y dependiente de la entrada. Cambiar beta a 1/4536000 y usar el error de completitud epsilon/4 mantiene la separación. No es una brecha aditiva fija en esa normalización.
+
+R4. PESOS CUADRADOS: LA VARIANTE MÁS FUERTE TAMBIÉN SOBREVIVE, CON PROMESAS DISTINTAS
+
+Localización: weighted-normalization-addendum.txt completo.
+
+Para q_l>=1, w_l=ceil(sqrt(2q_l)) satisface 2q_l<=w_l^2<6q_l. El número de singletons es al menos w_l^2/2. Añadir etiquetas libres hasta una dimensión cuadrada no rompe esa proporción. El escalado B_l=(t/w_l)A_l es racional y da Gram I. La densidad Q0=diag(w_l^2/D) recupera el mapa subyacente doblemente estocástico; todos los otros Q tienen traza normalizada de Phi_Q(I) igual a uno. De aquí C(B)=1 por Jensen y AM–GM.
+
+El cambio de variables Z_l=(t/w_l)Y_l conserva exactamente la normalización ponderada necesaria. No se trata de aplicar una afirmación general no demostrada de igualdad F_infty=C. La tupla final B deja de ser doblemente estocástica y pierde el alfabeto finito fijo: ambas limitaciones están bien advertidas en el addendum y deben permanecer en el nuevo manuscrito. Con más de un coeficiente, Gram I es incluso incompatible con suma B_l*B_l=I por traza.
+
+La cota superior D<8000R es válida. Es útil añadir también D>=200R, que se obtiene de D0>=2d0 y G>=2R. Por tanto 1/8000<=rho<=1/200. La segunda cota permite conservar la fuente epsilon=2^-40 y obtener dos umbrales universales con las constantes de R1.
+
+Constantes revisadas:
+ sigma=1295/1296,
+ beta=1/4536000,
+ gamma=beta/8000=1/36288000000,
+ YES: F_infty(B)>=1-gamma/4,
+ NO: F_infty(B)<=1-gamma.
+
+La pérdida YES se acota por 153/53876069761024, menor que gamma/4. La desigualdad racional se verificó exactamente. El gap es 3gamma/4, y tolerancia absoluta gamma/8 basta para decidir con umbral 1-5gamma/8. Es una constante diminuta, no una promesa de utilidad numérica práctica. Las afirmaciones sobre completitud se toman en el supremo; no requieren un optimizador finito en los casos YES.
+
+R5. CONSECUENCIA COMPUTACIONAL Y LÍMITES DE LA NOVEDAD
+
+El argumento de incomputabilidad uniforme es válido después de R1. El sampler fuente produce una distribución finita computable; expandirla puede costar muchísimo, pero sólo se pretende una reducción computable. Una aproximación uniforme al determinante con el error racional requerido decidiría Halt. En la variante normalizada, basta un error absoluto fijo gamma/8.
+
+Asimismo, una cota total recursiva b(L) de dimensión para déficit gamma/8 sobre la familia normalizada permitiría evaluar todos los F_m hasta b(L) a error gamma/16 y distinguir los casos. Los máximos a dimensión fija son uniformemente computables por optimización semialgebraica compacta. No se necesita monotonía de F_m en m: se toma el máximo finito de todos los niveles. Este argumento tampoco afirma que un valor individual fijado sea un real no computable.
+
+Antecedente obligatorio: Goldbring–Hart, The Universal Theory of the Hyperfinite II_1 Factor Is Not Computable, arXiv:2006.05629, Corollary 3.9, Theorem 4.1 y Remark 4.2. Su resultado ya establece incomputabilidad tracial y ausencia de un módulo computable de dimensión para aproximar momentos; incluso señala el grado cuatro. No se debe presentar ese fenómeno general como nuevo. Se contrastó el PDF primario de arXiv; el endpoint del autor devolvió 502 en un intento, y no se lo cuenta como lectura exitosa.
+
+Antecedente cercano adicional: Cleve–Culf–Taller, XOR Games at Full Tilt: The Hardness of Binary Nonlocal Games, arXiv:2607.06876v1, sección 6.4. Theorem 6.14 prueba dureza para estrategias tracialmente representadas, y Corollary 6.15 para una variante de Max-Cut no conmutativo con involuciones hermíticas y X1=I. Ya hay, por tanto, dureza aproximada para objetivos tracialmente sencillos. La distinción defendible aquí es el determinante de un pencil homogéneo, la sola esfera de norma como dominio de coeficientes, Gram I y capacidad exactamente conocida. No se ha demostrado que esa formulación específica no aparezca en otro trabajo.
+
+Las búsquedas dirigidas sobre determinantes, espacios matriciales unitarios e incomputabilidad no establecen prioridad por ausencia de coincidencias. Esta extensión constituye una reducción concreta de dureza heredada; no una nueva demostración de MIP*=RE ni de existencia de grupos no hiperlineales.
+
+PRUEBAS REALIZADAS
+
+verify_averaged_extension.py es una implementación separada escrita para esta revisión; no importa ni ejecuta los verificadores del autor o los informes anteriores. Resultado PASS, Python 3.12.14 y NumPy 2.2.6, semilla 202610171400.
+
+Se comprobaron exactamente 72 compilaciones, 36 con peso común pesado y 36 con pesos cuadrados: estocasticidad local racional, soportes, multiplicidades, asignación disjunta de puertas y Gram de la normalización racional. Cada una tiene una prueba compleja de transferencia directa y otra inversa. También se ejecutaron 360 pruebas de cada dirección entre palabras y estrategias, 400 pruebas de la normalización de slots con los cinco patrones de coincidencia posibles, un caso de pinching con T=0 y el contraejemplo escalar exacto a la cancelación ingenua. Las constantes finales se verifican con Fraction, sin tolerancia numérica.
+
+No hubo un fallo de ejecución o un test matemático fallido en esta nueva batería. El control negativo detecta deliberadamente que la normalización ingenua cambia el valor. No se materializaron matrices densas enormes: se usó su descomposición exacta por bloques con multiplicidades, incluyendo todas las contribuciones a trazas, log-determinantes y distancias polares. La inspección matemática anterior, no estas pruebas finitas, justifica las afirmaciones universales.
+
+Los verificadores del autor mencionados en mensajes no se utilizaron como sustituto ni se reprodujeron en esta subtarea. La prioridad fue auditar independientemente el argumento nuevo y entregar una reparación demostrada. Código, copia exacta de entradas, salidas y auditoría quedan en esta carpeta. Los archivos del candidato y del paquete congelado permanecen intactos.
+
+FUENTES PRIMARIAS CONSULTADAS
+
+Taller–Vidick, versión exacta v2: https://arxiv.org/html/2507.22444v2
+Goldbring–Hart, PDF primario: https://arxiv.org/pdf/2006.05629
+Cleve–Culf–Taller, versión exacta v1: https://arxiv.org/html/2607.06876v1
+
+Estado: el candidato tal como estaba escrito necesitaba completar R1. La reparación aportada cierra ese paso y valida las consecuencias con las constantes indicadas, bajo el resultado fuente citado. Una futura fuente final necesita incorporar explícitamente esta reparación y conservar la distinción entre las dos normalizaciones; debe revisarse por sus propios bytes antes de emitir una evaluación de manuscrito.

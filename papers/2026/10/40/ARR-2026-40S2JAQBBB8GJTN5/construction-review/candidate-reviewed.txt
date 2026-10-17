@@ -1,0 +1,57 @@
+UNREVIEWED RESEARCH CANDIDATE — 2026-10-17
+Root derivation after the frozen 8-page paper. This file does NOT change that paper, does NOT carry its assessment, and is not ready for publication.
+
+Proposed result: noncomputability of numerical approximation of F_infty(A), even for real rational doubly stochastic tuples with scalar coefficient Gram matrix and known covariance-optimized capacity C(A)=1/s. Consequence: no total recursive uniform bound on approximate witness dimension. The source of hardness is inherited from Taller–Vidick, not a new proof of MIP*=RE or non-hyperlinear groups.
+
+PRIMARY SOURCE AND SIMPLIFICATION
+Aviv Taller and Thomas Vidick, Approximating the quantum value of an LCS game is RE-hard, arXiv:2507.22444v2 (1 April 2026), https://arxiv.org/html/2507.22444v2 . Theorem 5.2 gives Halt in LIN-MIP*_{1-epsilon,71/72} for fixed rational 0<epsilon<1/72 (see proof). This uses their synchronous strategy convention: common finite dimension, maximally entangled state, PVMs/transposes; Section 3.2 explicitly represents LCS strategies by context observables A_j^i and variable observables B^j. Our recovery produces exactly this type of strategy. Thus use synchronous soundness directly; no general-state rounding, Connes lemma, or Remark 5.3 constant is needed! Do not silently equate synchronous and unrestricted quantum value.
+The games are presented succinctly by a finite random sampler. We may explicitly enumerate all samples and duplicate rows according to rational probabilities, producing a uniform list. Only a COMPUTABLE reduction from Halt is claimed, not polynomial time in the original Turing-machine encoding. The matrix construction itself is polynomial in the expanded row list.
+SOURCE CHECK REQUIRED: the test in Definition 4.1 has three answer positions, with possibly coincident folded queries. Verify carefully that Theorem 5.2 genuinely supplies ordinary LCS contexts (sets of at most three distinct variables), or supply a sound normalization. This is an open review item, not an established step. Sections 3.2 and 5 describe them as LCS games, but the potential repeated-query ambiguity must not be hidden.
+
+NOTATION
+Normalized Hilbert–Schmidt norm ||X||_2^2=Tr(X*X)/m. Uniform list of N nonempty LCS contexts, each k_i in {1,2,3}, distinct variable names within a context, parity sigma_i. Remove unused variables. Let R=7N. For each row list k_i square words x_j x_j=I, one product word in a fixed order =sigma_i I, and one positive commutator x_j x_k x_j x_k=I for each pair. Pad its list to seven words using tautological EMPTY words =I. For unitary variables define xi as the mean squared residual over all R words. Repeated relations in different rows remain separate.
+
+LEMMA 1: SYNCHRONOUS STRATEGY TO WORDS
+A finite synchronous strategy winning 1-e has commuting involutions A_j^i per row, product sigma_i I, and shared variable involutions X_j. Define d_ij=||A_j^i-X_j||_2^2. Strategy failure e=(1/N) sum_i (1/(4 k_i)) sum_j d_ij, hence sum_ij d_ij <=12Ne.
+Squares have zero error. A row's product error squared <=3 sum_j d_ij by unitary telescoping. Each pair's positive commutator error squared <=8(d_ij+d_ik), since four positions contain each twice and Cauchy–Schwarz. Sum of at most three pairs <=16 sum_j d_ij. Thus total residual squared <=19 sum_ij d_ij <=228Ne. Therefore xi <=(228/7)e <34e, with dimension unchanged. Empty words have zero error.
+
+LEMMA 2: WORDS TO A SYNCHRONOUS STRATEGY
+Given arbitrary unitary V_j, spectrally round to closest involution X_j (choose sign of real part, resolve ties +1). Then d_j^2:=||V_j-X_j||_2^2 <=||V_j^2-I||_2^2.
+For each row the new product residual squared <=4(e_product^2 + sum_{j in row}d_j^2), including k=1,2. Each new positive commutator residual squared <=3 e_comm^2 +12 d_j^2+12 d_k^2. Thus new product plus all new pair-commutator residuals squared <=28 times the sum of the original seven squared residuals for that row.
+For k=3, call the rounded variables X,Y,Z. Pinch T=(Y+XYX)/2, let Y'=sign(T), so Y' is an involution commuting with X. The off-diagonal error has square ||[X,Y]||_2^2/4. Since Y^2=I, sign-rounding square error <= the same off-diagonal square. Hence ||Y-Y'||_2^2 <=||[X,Y]||_2^2/2. Alice uses X,Y',sigma XY', commuting involutions of required parity. Total squared discrepancy to X,Y,Z <=2||XYZ-sigma I||_2^2 +3||Y-Y'||_2^2 <=2 times (new product and all new commutator squared errors). With maximally entangled state, transpose Alice's joint PVM; Bob uses X_j. Row failure <= new residual sum /6.
+For k=2 Alice uses X,sigma X, giving row failure ||XY-sigma I||_2^2/8. For k=1 Alice outputs sigma, giving failure ||X-sigma I||_2^2/4. Every case is bounded by one quarter of the new residual sum (k=3 uses 1/6). Therefore total failure <=7 times the mean original row sum =49 xi <=50 xi. All measurements can be placed on the union of context and variable question sets and extended by the matching transposes, hence form a synchronous strategy in the source's convention. Check this identification explicitly.
+
+AVERAGED DETERMINANT COMPILER
+Use a=3/5,b=4/5,c=12/25 and H(U,V,W,Z)=[[aU,bW],[bZ,-aV]]. For unitary labels, H H*= [[I,cR],[cR*,I]], R=UZ*-WV*. Thus squared singular values lie in [1/25,49/25], op norm <=7/5, and -log|det H|^(1/m) <=(72/49)||R||_2^2. The frozen manuscript proves this local bound.
+For EACH of R original words add a separate occurrence of t^2=I, using the SAME padding label t, then append tt to the original word. Use fresh prefix labels for lengths 2,...,k-1 of each padded word; k<=6. Every original word needs at most five gates; its assigned t^2 occurrence needs one more. Empty words padded tt need one gate. Include reference z; gate lower-left label z, final output sigma z, intermediate outputs fresh. No input is z or its own output, including empty original words. Include 25 copies of every gate and one singleton of every label. Let q_l be initial coefficient squared Frobenius weight (an integer), M=max q_l, s number of labels.
+KEY CHANGE: append 2M-q_l singleton copies, rather than M-q_l. Then every label's total weight is 2M, D=2sM, and each label occurs in at least M+1 singleton blocks. Entries remain in {0,+/-1,+/-3/5,+/-4/5}. Both stochastic identities and Gram identity tau_D(A_l*A_h)=delta_lh/s hold. Set rho=R/D>0. This is explicitly computable rational and inverse-polynomial in the expanded construction length. There are G<=6R gates, O(R+n) labels, M=O(R+n), D polynomial. Each original word has its own padding-square gate; no heavily reused gate error can spoil averaged estimates.
+The capacity proof from the frozen manuscript applies verbatim: C(A)=1/s and F_m<=1/s, where F_m=max_{sum tau(Y_l*Y_l)=1}|det sum A_l tensor Y_l|^{2/(Dm)}.
+
+FORWARD AVERAGED BOUND
+Given unitary original variables of mean error xi, set t=z=I and exact prefixes. Only the R original final gates may be inexact. With labels normalized by sqrt(s),
+  -log(s*objective) <= (50/D)*(72/49)*sum_r e_r^2 = (3600/49)rho xi.
+Thus s F_m >= exp[-(3600/49)rho xi]. This lower bound does not need perfect completeness.
+
+REVERSE AVERAGED BOUND
+If sF_m>=1-delta, choose a maximizing tuple and set X=sqrt(s)L(Y), normalized trace X*X=1. Its block polar P has Delta^2=||X-P||_2^2<=2delta. Polar-round individual labels Z_l=sqrt(s)Y_l to V_l. Singleton multiplicities >=M imply (1/s)sum_l||Z_l-V_l||_2^2 <=2Delta^2. Thus B=L(V) obeys ||B-X||_2<=sqrt(2)Delta and ||B-P||_2<=(1+sqrt(2))Delta. All labels unitary imply opnorm B<=7/5. Consequently
+  ||BB*-I||_2^2 <= C0 Delta^2,
+  C0=(144/25)(3+2sqrt(2)).
+Twenty-five copies of each gate give (50c^2/D)sum_g e_g^2<=C0 Delta^2. Gauge labels by V_z*. A padded word telescopes over at most five gates; removing tt adds its OWN padding-square gate. Cauchy–Schwarz gives original residual squared <=6 times the sum of those assigned gate squared errors. Assignments of gates to original words are disjoint. Therefore
+  xi <=(6/R)sum_g e_g^2 <=[12C0/(50c^2)]delta/rho
+      =(18+12sqrt(2))delta/rho <35delta/rho.
+Lemma 2 then yields a synchronous game strategy winning at least 1-1750 delta/rho.
+
+CANDIDATE HARDNESS CONSEQUENCE
+Take source synchronous soundness s0=71/72 and beta=(1-s0)/3500=1/252000. Fix rational epsilon=2^-40 (or any smaller source-permitted value); (3600/49)*34*epsilon <=beta/4. If a source YES value is >=1-epsilon but supremum not attained, take e approaching epsilon from above; supremum determinant still satisfies
+  sF_infty >=exp[-(3600/49)rho*34epsilon]>=1-beta rho/4.
+If source NO has synchronous value <=71/72, then sF_infty<=1-beta rho: a value strictly larger produces a finite witness with delta<beta rho, and recovered strategy wins >1-1750 beta=(1+s0)/2>s0, contradiction. Finite-level equality cases are irrelevant to this supremum argument.
+So there is an input-computable additive gap of at least 3 beta rho/(4s) between YES and NO. Approximating F_infty with error beta rho/(8s), then comparing to an intermediate rational threshold, would decide Halt. C(A)=1/s is nevertheless explicit. This is NOT a fixed additive gap independent of the input, NOT perfect completeness, and NOT polynomial-time hardness in the succinct source input.
+If a total recursive bound b(L,k) guaranteed an m<=b with F_m>=F_infty-2^-k on every input of length L, evaluate finitely many fixed-m maxima to sufficient rational accuracy and take their max. Fixed m is a compact semialgebraic optimization: real/imaginary entries, quadratic norm constraint, squared determinant polynomial; roots are monotone and algebraic. This would compute F_infty, contradiction. The same argument handles relative error since F_infty<=1/s<=1. Need state precisely that no such uniform recursive approximation witness bound exists; no assertion that each individual tuple's value is a noncomputable real.
+
+REVIEW PRIORITIES
+1. The source's exact game class, contexts/query coincidences, rational row expansion and synchronous convention.
+2. Heavy-singleton reverse average; factors two from normalized block trace and squared determinant root.
+3. Pinching/sign lemma and uniform constants for k=1,2,3.
+4. Computability reduction and no-recursive-approximate-witness consequence.
+5. Antecedents/equivalent determinant formulations: no global novelty claim without source search.
+Do not publish or score until all material issues resolved. Preserve current frozen 8-page paper and its already finished report.

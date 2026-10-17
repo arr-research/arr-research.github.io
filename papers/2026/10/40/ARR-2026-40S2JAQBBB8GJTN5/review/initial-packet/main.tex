@@ -1,0 +1,399 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=26mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,booktabs}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[hidelinks]{hyperref}
+\usepackage{microtype}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newcommand{\C}{\mathbb C}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\N}{\mathbb N}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\capop}{\operatorname{cap}}
+\newcommand{\F}{\mathcal F}
+\newcommand{\K}{\mathcal C}
+\newcommand{\norm}[1]{\lVert#1\rVert}
+\title{Constant-precision undecidability for amplified determinants with capacity one}
+\author{Lluis Eriksson}
+\date{17 October 2026\\Working paper}
+\begin{document}
+\maketitle
+\begin{abstract}
+We give a computable reduction from the halting problem to approximating a normalized determinant optimized over matrix coefficients of unrestricted auxiliary dimension. The coefficient matrices are real rational, orthonormal for normalized Hilbert--Schmidt inner product, and have covariance-optimized operator capacity exactly one. Nevertheless, approximating the determinant optimum to one fixed additive precision is undecidable. The proof combines the synchronous linear-game hardness theorem of Taller and Vidick with a homogeneous multiplication block, weighted rational normalization, and two quantitative rounding arguments. A positional-question normalization handles repeated queries without identifying distinct answer positions. The constructed pencils have a linear scalar dimension in the expanded relation list and an explicit constant gap. It follows that even at one fixed precision no total recursive uniform bound on the required auxiliary dimension exists. The hardness of the source games is an inherited theorem; the contribution is its transfer to this constrained determinant objective. The gap constant is very small, and no practical numerical hardness threshold or globally certified priority is claimed.
+\end{abstract}
+
+\section{The objective and the result}
+For a tuple $B=(B_1,\ldots,B_s)$ in $M_D(\C)$, define
+\begin{equation}
+ \F_m(B)=
+ \max_{\sum_{\ell=1}^s\tau_m(Y_\ell^*Y_\ell)=1}
+ \left|\det\!\left(\sum_{\ell=1}^s B_\ell\otimes Y_\ell\right)\right|^{2/(Dm)},
+ \qquad
+ \F_\infty(B)=\sup_{m\ge1}\F_m(B),                         \label{eq:objective}
+\end{equation}
+where $\tau_d=\Tr/d$. Each fixed-$m$ feasible set is compact. The variables $Y_\ell$ are arbitrary complex matrices: they are not required to be unitary, Hermitian, or mutually commuting.
+
+For a completely positive map $\Phi:M_D(\C)\to M_D(\C)$ let
+\[
+ \capop(\Phi)=\inf_{X>0,\ \det X=1}\det\Phi(X).
+\]
+For a density matrix $Q\in M_s(\C)$ put
+\[
+ \Phi_Q(X)=\sum_{\ell,h}Q_{\ell h}B_\ell X B_h^*,
+ \qquad
+ \K(B)=\sup_{Q\succeq0,\ \Tr Q=1}\capop(\Phi_Q)^{1/D}.
+\]
+We call $\K$ the covariance-optimized capacity. The normalization in the following theorem makes it explicitly computable on every constructed instance.
+
+\begin{theorem}\label{thm:main}
+Set
+\[
+ \gamma=\frac1{36\,288\,000\,000}.
+\]
+There is a computable map from Turing machines $T$ to finite real rational matrix tuples $B(T)$ such that
+\begin{equation}
+ \tau_D(B_\ell^*B_h)=\delta_{\ell h},
+ \qquad \K(B)=1,                                      \label{eq:normal}
+\end{equation}
+and
+\begin{align}
+ T\text{ halts}&\ \Longrightarrow\
+       \F_\infty(B(T))\ge1-\gamma/4, \label{eq:yes}\\
+ T\text{ does not halt}&\ \Longrightarrow\
+       \F_\infty(B(T))\le1-\gamma.   \label{eq:no}
+\end{align}
+Thus approximating $\F_\infty$ to additive error $\gamma/8$ is undecidable, even on the class \eqref{eq:normal}.
+\end{theorem}
+
+The reduction is computable in the original machine description. It may explicitly expand a succinct game into a much larger finite list; we do not claim polynomial running time in the machine description. Once that list is given explicitly, the matrix construction has polynomial size.
+
+\begin{corollary}\label{cor:dimension}
+For the same class there is no total recursive function of input length that bounds a dimension $m$ satisfying
+\[
+ \F_m(B)\ge\F_\infty(B)-\gamma/8.
+\]
+In particular, there is no total recursive uniform auxiliary-dimension bound for arbitrary requested precision.
+\end{corollary}
+
+These are approximation statements, stronger than undecidability of exact equality with an upper bound. A previous construction \cite{prior} transferred exact and asymptotic saturation to balanced pencils, but its error bounds did not establish a fixed approximation gap. Here weighted singleton blocks and rational square normalization keep a constant fraction of the dimension available to test relations. All proofs of this new transfer are included.
+
+The general phenomenon of noncomputability in quantum correlations and tracial matrix optimization is established. The source theorem is Taller--Vidick \cite{tv}; its foundations include $\mathsf{MIP}^*=\mathsf{RE}$ \cite{mip}. Goldbring--Hart \cite{gh} already prove noncomputability of the universal theory of the hyperfinite factor and the absence of computable general matrix-moment approximation bounds. Cleve--Culf--Taller \cite{cct} prove fixed-precision hardness for tilted XOR games and a constrained tracial Max-Cut problem. Our claim concerns the particular homogeneous determinant objective \eqref{eq:objective}, with only a quadratic normalization on its variables and with \eqref{eq:normal}. It is not a new general theorem about the noncomputability of tracial optimization.
+
+\section{A source game with unambiguous question positions}
+Throughout, a synchronous strategy means the convention used in \cite[Sections 2.4 and 5.1]{tv}: a common finite-dimensional space, a maximally entangled state, and projective measurements paired with their transposes. For a constraint-variable game, this permits a joint measurement for each constraint and a separate binary measurement for each variable. The two question sets can be included in one disjoint union. We use synchronous value throughout this section; no equality with unrestricted quantum value is assumed.
+
+Theorem 5.2 and its proof in \cite{tv} provide, for any fixed rational $0<\varepsilon<1/72$, a computable reduction with synchronous completeness $1-\varepsilon$ and soundness $71/72$. Its verifier receives three parity-constrained answer bits from Alice and one bit from Bob and compares Bob's bit with a specified Alice position. A folded query can coincide with another query. The following normalization avoids silently treating three positions as three distinct variables.
+
+Write $\pi(x,y,i)$ for the rational joint probability of an Alice question $x$, a Bob question $y$, and the answer position $i\in\{1,2,3\}$ checked by the verifier. If the position is a deterministic function of $(x,y)$, this notation simply has support on that function. Alice's three answers must have product $\sigma_x\in\{\pm1\}$. Let $\pi_X$ be the Alice marginal.
+
+\begin{lemma}[Positional normalization]\label{lem:positions}
+Such a game can be transformed computably into a rationally weighted constraint-variable game with contexts of two or three distinct variables. If the old game has a synchronous strategy of error $e$, the new one has a synchronous strategy of error at most $e/4$. Every synchronous strategy of error $e'$ for the new game yields one of error at most $18e'$ for the old game. Dimensions are unchanged.
+\end{lemma}
+\begin{proof}
+Introduce three distinct local variables $u_{x,1},u_{x,2},u_{x,3}$ for every Alice question, and a variable $v_y$ for every Bob question. These two families are disjoint. Give the parity row
+\[
+ u_{x,1}u_{x,2}u_{x,3}=\sigma_x
+\]
+weight $\pi_X(x)/2$. Give the equality row $u_{x,i}v_y=1$ weight $\pi(x,y,i)/2$. Zero weights may be omitted; duplicate rows may be combined. A row is sampled according to these weights, and a variable uniformly within that row.
+
+For completeness, let $P_{x,i}$ be Alice's commuting parity observables and let $V_y$ be Bob's observables on the common space. For the new variables use $P_{x,i}$ and $V_y$. Alice uses the original joint measurement on parity rows; on an equality row she measures $P_{x,i}$ and returns the same bit twice. The first equality position agrees perfectly and the second has exactly the old disagreement probability. The equality rows have total weight $1/2$, giving error $e/4$. Invalid parity answers of an old strategy can first be replaced by a fixed valid answer without decreasing success.
+
+For soundness, write $U_{x,i}$ and $V_y$ for the new variable observables. On each parity row let Alice's commuting observables be $P_{x,i}$, with product $\sigma_x I$. On each equality row her two valid answers coincide, so they are generated by one involution $E_{x,y,i}$. Let $e_{\rm par}$ and $e_{\rm eq}$ be the conditional errors on the two types of rows; then $e'=(e_{\rm par}+e_{\rm eq})/2$. In normalized Hilbert--Schmidt norm,
+\[
+ e_{\rm par}=\sum_x\frac{\pi_X(x)}{12}
+                  \sum_{i=1}^3\norm{P_{x,i}-U_{x,i}}_2^2,
+\]
+and
+\[
+ e_{\rm eq}=\sum_{x,y,i}\frac{\pi(x,y,i)}8
+       \bigl(\norm{E_{x,y,i}-U_{x,i}}_2^2+
+             \norm{E_{x,y,i}-V_y}_2^2\bigr).
+\]
+Decode with Alice's parity measurement $P_{x,i}$ and Bob's $V_y$. The squared triangle inequality gives
+\[
+ \norm{P_{x,i}-V_y}_2^2
+ \le2\norm{P_{x,i}-U_{x,i}}_2^2+
+     2\norm{U_{x,i}-V_y}_2^2.
+\]
+Since $\sum_y\pi(x,y,i)\le\pi_X(x)$ and
+$\norm{U-V}_2^2\le2\norm{U-E}_2^2+2\norm{E-V}_2^2$,
+the decoded error is at most
+\[
+ 6e_{\rm par}+8e_{\rm eq}\le16e'\le18e'.
+\]
+The conservative constant 18 will suffice.
+\end{proof}
+
+Enumerate the bounded finite sampler and aggregate probabilities of identical original questions, retaining the position actually checked; do not reveal its hidden random seed to Alice. The resulting probabilities are rational. After positional normalization, duplicating rows with a common denominator gives a uniform row list. Variables retain their global names across copies. For fixed Bob observables, identical copies have the same local optimization for Alice, so choosing a least-error measurement among the copies shows that this duplication does not change the supremal value. This may be very large but is a terminating computation. Keep multiplicities rather than replacing them by an unweighted set. Thus the source theorem and Lemma~\ref{lem:positions} give a uniform list with
+\begin{equation}
+ \text{YES error}\le\varepsilon/4,
+ \qquad
+ \text{NO synchronous value}\le\sigma:=1-\frac1{1296}.
+                                                               \label{eq:source}
+\end{equation}
+The soundness follows because a new value greater than $1-1/1296$ would give an old value greater than $71/72$. Suprema need not be attained.
+
+\section{From game errors to averaged unitary relations}
+Allow nonempty contexts of sizes $1,2,3$; this slightly generalizes the normalized source. Let there be $N\ge1$ rows and remove unused variables. For each row, list the square relation for each variable, the signed product relation, and one positive commutator $x_jx_kx_jx_k=I$ for each pair. Complete this list to seven relations with empty words equal to $I$. There are
+\[
+ R=7N
+\]
+listed relations, each of length at most four. Occurrences in different rows remain distinct. For unitary variables $V=(V_j)$ let
+\[
+ \xi(V)=\frac1R\sum_{r=1}^R
+         \norm{V_{i_1(r)}\cdots V_{i_{k(r)}(r)}-\sigma_r I}_2^2.
+\]
+
+\begin{lemma}\label{lem:gamewords}
+A synchronous strategy of error $e$ yields unitary variables with $\xi\le34e$ in the same dimension. Conversely, unitary variables with averaged error $\xi$ yield a synchronous strategy of error at most $50\xi$ in the same dimension.
+\end{lemma}
+\begin{proof}
+For the first direction let $A^i_j$ be the row observables and $X_j$ the variable involutions. Put $d_{ij}=\norm{A^i_j-X_j}_2^2$. The normalized-trace expression for a maximally entangled strategy gives
+\[
+ e=\frac1N\sum_i\frac1{4k_i}\sum_{j\in S_i}d_{ij},
+ \qquad \sum_{i,j}d_{ij}\le12Ne.
+\]
+Unitary telescoping bounds a product residual squared by $3\sum_jd_{ij}$. A pair commutator residual squared is at most $8(d_{ij}+d_{ik})$. Summing pairs costs at most $16\sum_jd_{ij}$. Squares and empty words have zero error. Consequently $R\xi\le228Ne$, so $\xi\le(228/7)e<34e$.
+
+For the reverse direction, round each unitary $V_j$ spectrally to the closest Hermitian involution $X_j$. Eigenvalue by eigenvalue,
+\[
+ \norm{V_j-X_j}_2^2\le\norm{V_j^2-I}_2^2.
+\]
+For each row, the new product residual squared is at most four times the sum of its old product residual squared and the individual rounding errors. A new pair commutator residual squared is at most
+\[
+ 3e_{jk}^2+12\norm{V_j-X_j}_2^2+12\norm{V_k-X_k}_2^2.
+\]
+Hence the sum of the new product and pair commutator squared errors is at most 28 times the original seven-relation squared-error sum for that row.
+
+For a row of size three write its rounded variables as $X,Y,Z$. Pinch $Y$ to the algebra commuting with $X$:
+\[
+ T=(Y+XYX)/2,\qquad Y'=\operatorname{sign}(T),
+\]
+with sign $+1$ on a zero eigenvalue. Then $Y'$ is an involution commuting with $X$, and
+\begin{equation}
+ \norm{Y-Y'}_2^2\le\tfrac12\norm{XY-YX}_2^2.             \label{eq:pinch}
+\end{equation}
+Indeed the off-diagonal part of $Y$ in the $X$-eigenspaces has squared norm $\norm{XY-YX}_2^2/4$. The sign-rounding error of the diagonal Hermitian contraction is no larger than this: use $(1-|\lambda|)^2\le1-\lambda^2$ and $Y^2=I$. The two errors are orthogonal.
+
+Alice uses the commuting involutions $X,Y',\sigma XY'$ and their joint measurement. The sum of squared distances to $X,Y,Z$ is at most
+\[
+ 2\norm{XYZ-\sigma I}_2^2+3\norm{Y-Y'}_2^2.
+\]
+Thus this row's game error is at most one sixth of its new product-plus-commutator error sum. For a size-two row use $X,\sigma X$, giving error $\norm{XY-\sigma I}_2^2/8$; for size one use the constant $\sigma$, giving error $\norm{X-\sigma I}_2^2/4$. All cases are bounded by one quarter of the new error sum. Averaging yields at most
+$28\cdot7\xi/4=49\xi\le50\xi$.
+Bob uses the $X_j$ and Alice the transposed joint measurements on a maximally entangled state. These extend to a synchronous strategy on the disjoint union of question sets.
+\end{proof}
+
+\section{A homogeneous multiplication block}
+Put $a=3/5$, $b=4/5$, $c=ab=12/25$, and define
+\[
+ H(U,V,W,Z)=\begin{pmatrix}aU&bW\\bZ&-aV\end{pmatrix}.
+\]
+\begin{lemma}\label{lem:gate}
+For unitary $m\times m$ labels, set $E=UZ^*-WV^*$. Then
+\[
+ HH^*=\begin{pmatrix}I&cE\\cE^*&I\end{pmatrix}.
+\]
+In particular $H$ is unitary precisely when
+$(UZ^*)(VZ^*)=WZ^*$. Its squared singular values belong to
+$[1/25,49/25]$, its operator norm is at most $7/5$, and
+\begin{equation}
+ -\frac1m\log|\det H|\le\frac{72}{49}\norm E_2^2.        \label{eq:log}
+\end{equation}
+\end{lemma}
+\begin{proof}
+Direct multiplication proves the identity. Since $\norm E_{\rm op}\le2$, the eigenvalues are $1\pm c s_j(E)$, giving the interval. Also
+\[
+ -\frac1m\log|\det H|
+   =-\frac1{2m}\sum_j\log(1-c^2s_j(E)^2).
+\]
+For $0\le u\le4c^2=576/625$, $-\log(1-u)\le u/(1-4c^2)$. Its coefficient is
+$c^2/[2(1-4c^2)]=72/49$.
+\end{proof}
+Uniform invertibility is essential here: a Hilbert--Schmidt estimate alone would not control a logarithmic determinant near zero.
+
+For each original signed word add two padding letters $pp$ and use fresh prefix labels of lengths $2,\ldots,k-1$ for its padded length $k$. Introduce one common reference label $z$. A multiplication gate has lower-left label $z$, takes two successive factors as its diagonal labels, and has a fresh prefix as output, except that the final output is $\sigma z$. The two input labels may coincide, but neither equals $z$ or its own output.
+
+For \emph{each} original word include its own extra gate imposing $p^2=I$, with the same label $p$ shared across words. This deliberate repetition prevents an error in one padding gate from being charged to every relation. Empty original words require one padded gate and their own square gate. A word of length at most four uses at most six gates including the square gate. Gates assigned to different words are disjoint occurrences.
+
+Take 25 copies of each gate and initially one singleton block for every label. Write the resulting coefficient matrices as $A_\ell^{(0)}$. Each entry has only one label. The sums $\sum_\ell A_\ell^{(0)}A_\ell^{(0)*}$ and $\sum_\ell A_\ell^{(0)*}A_\ell^{(0)}$ are the identity block by block. For a gate this follows from $a^2+b^2=1$ and the stated label separation, even when its two inputs coincide. Coefficient supports are disjoint. Let
+\[
+ q_\ell=\Tr(A_\ell^{(0)*}A_\ell^{(0)})\in\N.
+\]
+These are positive integers: the 25 copies contribute 9 per diagonal occurrence and 16 per off-diagonal occurrence, while the singleton contributes 1.
+
+\section{Weighted rational normalization}
+\begin{lemma}\label{lem:weights}
+The construction can be completed to rational matrices $A_\ell\in M_D(\Q)$ and positive integers $w_\ell,t$ such that
+\begin{gather}
+ D=t^2=\sum_\ell w_\ell^2,\quad
+ \sum_\ell A_\ell A_\ell^*=\sum_\ell A_\ell^*A_\ell=I_D,\quad
+ \Tr(A_\ell^*A_h)=\delta_{\ell h}w_\ell^2,               \label{eq:A}\\
+ \text{label $\ell$ has at least $w_\ell^2/2$ singleton blocks},
+ \qquad 200R\le D\le8000R.                             \label{eq:size}
+\end{gather}
+The tuple $B_\ell=tA_\ell/w_\ell$ is real rational and satisfies \eqref{eq:normal}.
+\end{lemma}
+\begin{proof}
+For each initial label choose $w_\ell=\lceil\sqrt{2q_\ell}\rceil$ and append $w_\ell^2-q_\ell$ singleton blocks. Its squared coefficient norm becomes $w_\ell^2$ and its singleton count is $1+w_\ell^2-q_\ell\ge w_\ell^2/2$. Moreover $2q_\ell\le w_\ell^2<6q_\ell$. Let $D_0=\sum_\ell w_\ell^2$ and $t=\lceil\sqrt{D_0}\rceil$. Append $t^2-D_0$ entirely new labels, each appearing in one singleton only, and give each weight $w=1$. This makes $D=t^2$ and preserves all identities. New labels obey the singleton condition as well.
+
+If $n$ is the number of original variables, $n\le3N=3R/7$. There are at most $4R$ prefix labels, so the initial label count is
+$s_0\le n+2+4R\le33R/7<5R$. The number $G$ of gates before replication obeys $2R\le G\le6R$. Thus the initial scalar dimension is
+\[
+ d_0=\sum_\ell q_\ell=s_0+50G\le305R.
+\]
+We have $2d_0\le D_0<6d_0$ and $D\le4D_0$, proving \eqref{eq:size} with conservative constants. The construction and dense rational encoding have polynomial size in the expanded row list. Coefficient numerators and denominators have $O(\log R)$ bits.
+
+For $B_\ell=tA_\ell/w_\ell$, \eqref{eq:A} gives $\tau_D(B_\ell^*B_h)=\delta_{\ell h}$. Therefore, for any density $Q$,
+$\tau_D\Phi_Q(I)=1$ and
+\[
+ \capop(\Phi_Q)^{1/D}\le\det\Phi_Q(I)^{1/D}\le1.
+\]
+For $Q_0=\operatorname{diag}(w_\ell^2/D)$, we instead have
+$\Phi_{Q_0}(X)=\sum_\ell A_\ell XA_\ell^*$, a unital trace-preserving map. Its capacity is one: operator concavity of $\log$ gives
+$\Tr\log\Phi_{Q_0}(X)\ge\Tr\log X$ for $X>0$, and $X=I$ gives the reverse bound. This is also the standard doubly stochastic capacity identity \cite{ggow}. Hence $\K(B)=1$.
+\end{proof}
+
+It is the intermediate tuple $A$, not generally $B$, whose coefficient map is doubly stochastic. The final rational coefficients $B_\ell$ do not belong to a fixed finite alphabet. These distinctions are needed for the fixed-gap result.
+
+\section{The averaged determinant transfer}
+Let $\rho=R/D$, so $1/8000\le\rho\le1/200$.
+\begin{proposition}\label{prop:transfer}
+For the tuple $B$ above, unitary variables of mean relation error $\xi$ in dimension $m$ give
+\begin{equation}
+ \F_m(B)\ge\exp\bigl(-(3600/49)\rho\xi\bigr).            \label{eq:forward}
+\end{equation}
+Conversely, if $\F_m(B)\ge1-\delta$ with $0<\delta<1$, there are unitary variables in the same dimension with
+\begin{equation}
+ \xi<35\delta/\rho.                                    \label{eq:reverse}
+\end{equation}
+In particular the source constraint-variable game has a synchronous strategy of error at most $1750\delta/\rho$.
+\end{proposition}
+\begin{proof}
+For the forward direction choose $z=p=I$ as matrix labels. Assign exact generator products to prefixes and $I$ to the added free labels. Every gate except the final gate of an original relation is unitary. Set $Y_\ell=(w_\ell/\sqrt D)V_\ell$, where $V_\ell$ are the unitary labels. Then $\sum\tau_m(Y_\ell^*Y_\ell)=\sum w_\ell^2/D=1$, and the pencil equals $L_A(V)$. Each original final gate occurs 25 times. Equation \eqref{eq:log} gives
+\[
+ -\log\left|\det L_A(V)\right|^{2/(Dm)}
+ \le\frac{50}{D}\frac{72}{49}
+       \sum_{r=1}^R e_r^2
+ =\frac{3600}{49}\rho\xi .
+\]
+
+For the reverse direction choose a maximizing feasible tuple $Y$. Write
+\[
+ Z_\ell=\frac{\sqrt D}{w_\ell}Y_\ell,\qquad
+ X=L_A(Z)=L_B(Y).
+\]
+The Gram identity gives $\tau_{Dm}(X^*X)=1$. A block diagonal polar unitary $P$ satisfies
+\begin{equation}
+ \Delta^2:=\norm{X-P}_2^2
+ =2(1-\tau_{Dm}|X|)
+ \le2(1-\sqrt{1-\delta})\le2\delta.                    \label{eq:polar}
+\end{equation}
+This uses arithmetic--geometric mean on the singular values, and allows arbitrary nonunitary starting labels.
+
+Let $V_\ell$ be polar unitaries of $Z_\ell$. The singleton multiplicities in \eqref{eq:size} give
+\[
+ \sum_\ell\frac{w_\ell^2}{D}\norm{Z_\ell-V_\ell}_2^2
+ \le2\Delta^2.
+\]
+With $H=L_A(V)$, orthogonal supports therefore imply
+$\norm{H-X}_2\le\sqrt2\Delta$ and
+$\norm{H-P}_2\le(1+\sqrt2)\Delta$. Lemma~\ref{lem:gate} gives $\norm H_{\rm op}\le7/5$, including all singleton blocks, so
+\[
+ \norm{HH^*-I}_2^2\le C_0\Delta^2,
+ \qquad C_0=\frac{144}{25}(3+2\sqrt2).
+\]
+A gate of residual $e_g$ has normalized squared unitarity defect $c^2e_g^2$. Its 25 copies contribute $50c^2 e_g^2/D$ to the global squared defect. Thus
+\[
+ \frac{50c^2}{D}\sum_g e_g^2\le C_0\Delta^2.
+\]
+Right multiply all labels by $V_z^*$ to fix the reference. Telescoping a padded word and removing its two padding factors uses at most six assigned gates, including its own square gate. The squared residual is at most six times the sum of their squared errors. These groups of gates are disjoint. Consequently
+\[
+ \xi\le\frac6R\sum_g e_g^2
+ \le\frac{12C_0}{50c^2}\frac{\delta}{\rho}
+ =(18+12\sqrt2)\frac{\delta}{\rho}
+ <35\frac{\delta}{\rho}.
+\]
+Apply Lemma~\ref{lem:gamewords} for the game strategy.
+\end{proof}
+
+\section{A fixed gap and nonrecursive witnesses}
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Fix $\varepsilon=2^{-40}$ in the source theorem and perform the positional normalization. Let
+\[
+ \beta=\frac{1-\sigma}{3500}=\frac1{4\,536\,000},
+ \qquad \gamma=\beta/8000.
+\]
+For a YES instance, \eqref{eq:source} and Lemma~\ref{lem:gamewords} yield averaged unitary errors approaching at most $34\varepsilon/4$. Taking the supremum in \eqref{eq:forward} gives
+\[
+ \F_\infty(B)\ge
+ \exp\left(-\frac{3600}{49}\rho\frac{34\varepsilon}{4}\right)
+ \ge 1-\frac{3600}{49}\frac1{200}\frac{34}{4}\,2^{-40}.
+\]
+The last loss equals $153/(49\cdot2^{40})<1/145152000000=\gamma/4$, by direct rational arithmetic. This establishes \eqref{eq:yes} without assuming an attaining strategy or perfect completeness.
+
+For a NO instance, suppose $\F_\infty(B)>1-\beta\rho$. There would be a finite $m$ and a feasible witness with $\F_m(B)>1-\beta\rho$. Proposition~\ref{prop:transfer} would give a synchronous game strategy of error less than
+\[
+ 1750\beta=(1-\sigma)/2,
+\]
+contradicting \eqref{eq:source}. Thus $\F_\infty(B)\le1-\beta\rho\le1-\gamma$. Lemma~\ref{lem:weights} proves the promised rationality and capacity identity. A $\gamma/8$ approximation separates the two cases, for example by comparison with $1-5\gamma/8$, and would decide the halting problem.
+\end{proof}
+
+\begin{proof}[Proof of Corollary~\ref{cor:dimension}]
+At fixed $m$, \eqref{eq:objective} is a compact semialgebraic optimization in the real and imaginary parts of the entries. For a rational threshold $r\ge0$, comparison with $r$ can be expressed using the squared determinant polynomial and $r^{Dm}$; real quantifier elimination makes $\F_m$ uniformly computable. This is a computability statement, not an efficiency claim.
+
+Suppose a total recursive bound $b(L)$ guaranteed a witness with additive deficit at most $\gamma/8$ for every encoded instance of length $L$. Evaluate all $\F_m$ with $1\le m\le b(L)$ to error at most $\gamma/16$, and take their maximum. On a YES instance this is at least $1-7\gamma/16$; on a NO instance it is at most $1-15\gamma/16$. Comparing with $1-3\gamma/4$ decides halting, a contradiction.
+\end{proof}
+
+The absence of a uniform recursive bound does not say that every fixed tuple has a noncomputable real optimum, or that every instance is difficult. At every fixed dimension the optimization remains decidable. Nor does the proof produce non-hyperlinear groups: its source completeness is strictly less than one.
+
+\section{Diagnostics and scope}
+The accompanying compact compiler stores scalar blocks and multiplicities rather than allocating the full dense tuple. Exact rational checks cover 70 context lists, all five encountered local label patterns, the stochastic identities, coefficient orthogonality, square normalization and singleton proportions. Forty-eight complex-matrix cases check each of the forward bound, reverse bound and unitary-to-strategy rounding, with 48 inexact relation controls. These are finite diagnostics, not a proof of undecidability.
+
+For the six-row magic square, the compiler produces $R=42$, 210 multiplication gates before replication, $D=23409$, and 438 final labels. The standard four-dimensional Pauli assignment makes the determinant objective exactly one; all 512 scalar sign assignments fail the row system. This is a familiar illustration of the construction, not a new nonlocality result.
+
+The proof has several explicit limits. The gap $\gamma\approx2.76\cdot10^{-11}$ is a conservative theoretical constant, not a claim about achievable numerical experiments. The source-to-explicit-list expansion need not be efficient. The final coefficients are rational with controlled bit length, but are not uniformly bounded in one fixed alphabet and do not themselves form a doubly stochastic tuple. The capacity-one identity uses a displayed covariance $Q_0$. The source game hardness, quantum logic background and general noncomputability of tracial approximation are credited to prior work. Targeted source searches do not certify worldwide novelty or establish an importance rating.
+
+\paragraph{Assistance and assessment.}
+Developed with substantial OpenAI Codex assistance in derivation, writing, source checking and finite computations. GPT-6 Astra at xhigh effort was requested to review the candidate construction in reused context; runtime model identity was not separately attested. Any final exact-version assessment is recorded separately and must not be inferred from an earlier paper's score. No human peer review, certified independent context or proof-assistant verification is claimed.
+
+\begin{thebibliography}{9}
+\bibitem{tv}
+A.~Taller and T.~Vidick,
+\emph{Approximating the quantum value of an LCS game is RE-hard},
+arXiv:2507.22444v2 (1 April 2026), especially Sections 2.4, 3.2 and 5.1, Theorem 5.2 and its proof.
+\url{https://arxiv.org/abs/2507.22444v2}.
+\bibitem{mip}
+Z.~Ji, A.~Natarajan, T.~Vidick, J.~Wright and H.~Yuen,
+\emph{MIP*=RE}, arXiv:2001.04383.
+\url{https://arxiv.org/abs/2001.04383}.
+\bibitem{gh}
+I.~Goldbring and B.~Hart,
+\emph{The universal theory of the hyperfinite $\mathrm{II}_1$ factor is not computable},
+Bulletin of Symbolic Logic \textbf{30}(2) (2024), 181--198.
+\url{https://doi.org/10.1017/bsl.2024.7}.
+\bibitem{cct}
+R.~Cleve, E.~Culf and A.~Taller,
+\emph{XOR Games at Full Tilt: The Hardness of Binary Nonlocal Games},
+arXiv:2607.06876v1 (8 July 2026), especially Section 6.4.
+\url{https://arxiv.org/abs/2607.06876v1}.
+\bibitem{ggow}
+A.~Garg, L.~Gurvits, R.~Oliveira and A.~Wigderson,
+\emph{Operator Scaling: Theory and Applications},
+Foundations of Computational Mathematics \textbf{20} (2020), 223--290.
+\url{https://doi.org/10.1007/s10208-019-09417-z}.
+\bibitem{prior}
+L.~Eriksson,
+\emph{Exponential witness size and undecidable saturation for amplified determinants},
+AIRR working paper, ARR-2026-438PTRJA439VSRTW, v1 (2026).
+\url{https://airr.science/papers/ARR-2026-438PTRJA439VSRTW/versions/v1/}.
+\bibitem{slofstra}
+W.~Slofstra, \emph{The set of quantum correlations is not closed},
+Forum of Mathematics, Pi \textbf{7} (2019), e1.
+\url{https://arxiv.org/abs/1703.08618}.
+\end{thebibliography}
+\end{document}
