@@ -1,0 +1,1560 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=27mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern,amsmath,amssymb,amsthm,mathtools,microtype,booktabs}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+\makeatletter
+\renewcommand{\@seccntformat}[1]{\csname the#1\endcsname.\quad}
+\makeatother
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\DeclareMathOperator{\Hess}{Hess}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\tr}{tr}
+\newcommand{\R}{\mathbb R}
+\newcommand{\one}{\mathbf 1}
+\newcommand{\bnu}{\boldsymbol{\nu}}
+\newcommand{\dd}{\partial}
+\title{Rank-two obstructions to Lorentzian\\graph partition functions}
+\author{Lluis Eriksson\\ \small Independent researcher, Sweden}
+\date{17 October 2026\\ \small Research draft}
+\begin{document}
+\maketitle
+\begin{abstract}
+We give rank-two antiferromagnetic obstructions to the Lorentzian
+property of graph partition functions. A connected noncomplete source
+of maximum degree $\Delta$ has a strictly positive rational obstruction
+on $\Delta+1$ spins whenever no two maximum-degree vertices have equal
+closed neighbourhoods. Consequently, the connected-source
+characterization holds for graphs without true twins, graphs with a
+unique maximum-degree vertex, and all connected edge-regular graphs,
+including strongly regular graphs. The proof uses a small-parameter
+limit of explicit conditioned-set Hessian kernels.
+A different endpoint yields a neighbourhood-independence-gap criterion.
+One fixed nonnegative four-spin matrix characterizes cliques among
+connected diamond-free sources and among connected complete multipartite
+sources. A fixed five-spin matrix does the same for joins of a nonempty
+clique with disjoint nonempty cliques. Positive rational perturbations
+exist for each source, but may depend on it; for triangle-free sources
+a single strictly positive three-spin matrix suffices.
+Further obstructions use degree-class adjacency and triangle counts.
+Exact rational certificates cover all $989$ connected noncliques of
+orders three through seven. The maximum-degree theorem has $821$
+exact checks, including $819$ direct partition-coefficient comparisons.
+An explicit ten-vertex graph proves that the small-parameter criterion
+alone is incomplete, while the full hierarchy detects it.
+These results are partial progress toward the connected-source
+conjecture of Lee--Oh--Seo; the conjecture and completeness of the
+full hierarchy remain unproved.
+\end{abstract}
+
+\section{Problem and scope}
+For a finite simple graph $G=(V,\mathcal{E})$ and an entrywise nonnegative
+symmetric $q\times q$ matrix $H$, write
+\begin{equation}
+ Z_G(\mathbf x;H)
+ =\sum_{\sigma:V\to\{0,\ldots,q-1\}}
+       \prod_{uv\in\mathcal{E}}H_{\sigma(u),\sigma(v)}
+       \prod_{v\in V}x_{\sigma(v)}.                 \label{eq:Z}
+\end{equation}
+It is homogeneous of degree $n=|V|$. We call $H$
+\emph{antiferromagnetic} when it has at most one positive eigenvalue,
+counting multiplicity. This is the spectral convention used in
+\cite{LOS,LS}.
+
+Lee--Oh--Seo prove that $Z_G$ is Lorentzian for every antiferromagnetic
+$H$ when $G$ is a clique \cite[Theorem 3.1]{LOS}. They conjecture a
+converse; the connected-source formulation is stated explicitly in
+\cite[Section 6]{LS}. We use that formulation:
+\begin{quote}
+If $G$ is connected and $Z_G(\mathbf x;H)$ is Lorentzian for every
+antiferromagnetic $H$, must $G$ be a clique?
+\end{quote}
+The restriction to connected graphs matters, since partition functions
+factor over components and Lorentzian polynomials are closed under
+products. The present paper establishes obstructions for several classes
+of source graphs, using only matrices of rank two.
+
+These questions concern all antiferromagnetic targets, rather than
+only proper-colouring targets. Matherne--Morales--Selover establish
+Lorentzianity of chromatic symmetric functions for abelian Dyck paths
+\cite[Theorem 1.5]{MMS}. Lee--Oh--Seo already give a non-Lorentzian
+three-vertex-path example with target
+$\left(\begin{smallmatrix}0&0&1\\0&0&2\\1&2&0\end{smallmatrix}\right)$,
+as well as a $K_{3,3}$ example \cite[Section 7]{LOS}. We do not claim
+those small obstructions as new. A research note by Zeng
+\cite{Zeng} gives a fixed rank-three, three-spin obstruction for
+bistable bipartite graphs with a two-vertex cut. Our triangle-free
+result uses a strictly positive rank-two target and requires neither
+bistability nor a two-vertex cut; it does not claim Zeng's coefficient
+formula relating the obstruction to vertex connectivity.
+Our proposed contributions are a maximum-degree criterion excluding
+true twins at that degree (Theorem~\ref{thm:maxtwins}), the resulting
+obstructions for all connected noncomplete edge-regular graphs,
+and fixed targets for triangle-free, connected diamond-free and complete
+multipartite sources,
+a fixed five-spin target for joins of a clique with disjoint cliques,
+the neighbourhood-independence-gap criterion, the degree-count
+identity and its compression certificate, and the parameterized
+conditioned-set identities below. A diamond means an induced copy
+of $K_4$ with one edge removed. The four-spin target for this class
+has one zero entry; the positive perturbations are allowed to depend
+on the source graph.
+
+The arguments are elementary counting and real symmetric linear
+algebra. Their computational corroboration uses exact arithmetic.
+A targeted prior-art search does not certify worldwide priority; a
+separate referee assessment of this draft remains pending.
+
+\section{A rank-two family and the Hessian test}
+We use a necessary consequence of the definition of Lorentzian
+polynomials \cite{BH}. If a homogeneous polynomial $f$ of degree
+$n\geq2$ with nonnegative coefficients is Lorentzian, then
+\begin{equation}
+ \Hess(\dd^\alpha f)\text{ has at most one positive eigenvalue}
+ \quad\text{for every }\alpha\in\mathbb N_0^q,\quad|\alpha|=n-2.
+                                                        \label{eq:test}
+\end{equation}
+The derivative is quadratic, so its Hessian is constant. We need
+only this necessary condition for the general obstructions.
+For the finite fixed-target limits reported below, we also use the
+full characterization: nonnegative homogeneous polynomials with
+M-convex support are Lorentzian precisely when all these quadratic
+derivatives satisfy the Hessian condition \cite[Theorem 2.25]{BH}.
+
+\begin{lemma}\label{lem:target}
+For a nonconstant vector $\mathbf t\in(0,\infty)^q$, the matrix
+\begin{equation}
+ H(\mathbf t)_{ij}=t_i+t_j                              \label{eq:H}
+\end{equation}
+is positive entrywise and has inertia $(1,1,q-2)$, where inertia lists
+positive, negative and zero eigenvalues.
+\end{lemma}
+\begin{proof}
+Write $H=\one\mathbf t^\top+\mathbf t\one^\top$.
+Its rank is at most two, and its quadratic form vanishes on
+$\one^\perp$. A positive definite two-dimensional subspace would
+intersect $\one^\perp$ nontrivially, which is impossible.
+For $t_i\ne t_j$, the corresponding principal determinant is
+$4t_it_j-(t_i+t_j)^2=-(t_i-t_j)^2<0$. Thus there are a positive and a
+negative eigenvalue, and rank is exactly two.
+\end{proof}
+
+For integer $r\geq0$, introduce
+\begin{equation}
+ z_i=\frac{1+t_i}{2},\qquad
+ k_i=\frac{t_i-1}{t_i+1},\qquad
+ k_i z_i^r=z_i^r-z_i^{r-1}\quad(r\geq1).
+                                                        \label{eq:zk}
+\end{equation}
+A baseline spin of value $t=1$ has self-interaction $2$.
+If two free vertices are adjacent, the correction to their separate
+baseline changes is
+\begin{equation}
+ \frac{2(t_i+t_j)}{(1+t_i)(1+t_j)}=1-k_i k_j.
+                                                        \label{eq:correction}
+\end{equation}
+All denominators in these identities are positive.
+
+\section{A fixed target for all triangle-free sources}
+It is useful to normalize the interaction with the baseline spin.
+For distinct $a_i\in(-1,1)$, set
+\begin{equation}
+ K(\mathbf a)=\one\one^\top-\mathbf a\mathbf a^\top,
+ \qquad K_{ij}=1-a_i a_j.                              \label{eq:K}
+\end{equation}
+This matrix is positive entrywise and has rank two and exactly one
+positive eigenvalue. Indeed, its quadratic form is nonpositive on
+$\one^\perp$, and a principal $2\times2$ determinant for $a_i\ne a_j$
+equals $-(a_i-a_j)^2<0$.
+
+For a graph with $n\geq3$ vertices, $m$ edges, degrees $d_v$ and
+$T$ triangles, abbreviate
+\begin{equation}
+ N=n(n-1)(n-2),\quad E=2m(n-2),\quad
+ W=\sum_v d_v(d_v-1),\quad U=6T.                      \label{eq:counts}
+\end{equation}
+Here $W$ counts ordered wedges, including those inside triangles.
+Use $\mathbf a=(\ell,0,1/2)$, with $-1<\ell<0$, and let
+$V_{i\cdot}=(1,a_i,a_i^2)$.
+
+\begin{theorem}[Edge--wedge--triangle identity]\label{thm:normalized}
+For every finite simple graph $G$ on $n\geq3$ vertices,
+\begin{align}
+ \Hess\bigl(\dd_0\dd_1^{\,n-3}Z_G(\mathbf x;K(\mathbf a))\bigr)
+    &=(n-3)!\,V\widehat{B}_\ell V^\top,                 \label{eq:normalized}\\
+ \widehat{B}_\ell&=
+ \begin{pmatrix}
+ N&-\ell E&0\\-\ell E&\ell^2W-E&\ell W\\
+ 0&\ell W&-\ell^2U
+ \end{pmatrix},                                       \label{eq:Bhat}\\
+ \det\widehat{B}_\ell
+    &=\ell^2\bigl[N(EU-W^2)+\ell^2U(E^2-NW)\bigr].    \label{eq:detnormalized}
+\end{align}
+If $W^2>EU$, a positive rank-two three-spin target makes $Z_G$
+non-Lorentzian.
+\end{theorem}
+\begin{proof}
+Place the conditioned spin $0$ at $v$ and baseline spin $1$, with
+$a_1=0$, everywhere else. Every initial edge weight is one.
+After assigning free spins $i,j$ to distinct vertices $u,w\ne v$,
+the exact edge product is
+\[
+ (1-\ell a_i A_{uv})(1-\ell a_j A_{vw})
+                         (1-a_i a_j A_{uw}).
+\]
+Summing over ordered distinct triples gives counts $N$ for the
+constant term, $E$ for every single-edge indicator, $W$ for each
+two-edge product, and $U$ for the three-edge product. This is exactly
+$V\widehat{B}_\ell V^\top$. The derivative multiplicity is $(n-3)!$.
+Expanding the $3\times3$ determinant proves
+\eqref{eq:detnormalized}.
+
+If $A_*=N(W^2-EU)>0$ and $R_*=U(E^2-NW)$, choose
+$L=2+\lceil\max(R_*,0)/A_*\rceil$ and $\ell=-1/L$.
+Then $\ell^2R_*<A_*$, so the determinant is negative.
+The entry $(\widehat{B}_\ell)_{00}=N$ is positive, and hence its
+inertia is $(2,1,0)$. The Vandermonde matrix $V$ is invertible,
+so \eqref{eq:test} proves the conclusion.
+\end{proof}
+
+\begin{corollary}[One fixed positive target]\label{cor:trianglefree}
+Let
+\begin{equation}
+ K_* =\frac14\begin{pmatrix}3&4&5\\4&4&4\\5&4&3\end{pmatrix}.
+                                                               \label{eq:Kstar}
+\end{equation}
+For a triangle-free finite simple graph $G$, $Z_G(\mathbf x;K_*)$
+is Lorentzian if and only if every component of $G$ is an isolated
+vertex or a single edge. In particular, every connected triangle-free
+graph on at least three vertices fails the universal-target property.
+\end{corollary}
+\begin{proof}
+The target is $K(-1/2,0,1/2)$ and has eigenvalues $3,-1/2,0$.
+If $G$ contains two adjacent edges, then $n\geq3$, $W>0$ and $U=0$.
+Thus \eqref{eq:detnormalized} becomes $-NW^2/4<0$, proving the
+obstruction for this fixed target.
+Otherwise every component is a vertex or an edge. Their partition
+functions are respectively a nonnegative linear form and a
+quadratic form with Hessian $2K_*$. They are Lorentzian, as is
+their product \cite[Corollary 2.32]{BH}. The empty graph, if allowed,
+contributes the constant one.
+\end{proof}
+
+For a regular graph, $E=nd(n-2)$, $W=nd(d-1)$ and $U=n\tau$;
+the inequality $W^2>EU$ is exactly \eqref{eq:threshold} below.
+The general inequality also applies to irregular graphs with triangles.
+
+\section{The degree-count kernel}
+Let $m=|\mathcal{E}|$, let $d_v$ denote vertex degree, and let
+$\Delta=\max_v d_v\geq2$. For $0\leq r\leq\Delta$, let
+$\nu_r=|\{v:d_v=r\}|$, and put $\bnu=(\nu_0,\ldots,\nu_\Delta)^\top$.
+For $1\leq r,s\leq\Delta$, let
+\begin{equation}
+ C_{rs}=|\{(u,v):uv\in\mathcal{E},\ d_u=r,\ d_v=s\}|.
+                                                        \label{eq:C}
+\end{equation}
+These are \emph{ordered} edge counts; in particular an edge inside a
+degree class contributes two to its diagonal entry.
+Let $e_0,\ldots,e_\Delta$ be the standard basis, and let
+$L$ be the $(\Delta+1)\times\Delta$ matrix with column
+$L_r=e_r-e_{r-1}$ for $1\leq r\leq\Delta$.
+Define the symmetric integer matrix
+\begin{equation}
+ B_G=\bnu\bnu^\top-\diag(\bnu)-LCL^\top.                \label{eq:B}
+\end{equation}
+
+\begin{theorem}[Degree-count identity]\label{thm:kernel}
+Take $q=\Delta+1$, $t_i=i+1$ for $0\leq i\leq\Delta$, and
+$H=H(\mathbf t)$. With $V_{ir}=z_i^r$, one has
+\begin{equation}
+ \Hess\bigl(\dd_0^{\,n-2}Z_G(\mathbf x;H)\bigr)
+ =(n-2)!\,2^m\,V B_G V^\top.                          \label{eq:kernel}
+\end{equation}
+The matrix $V$ is invertible. Consequently, two positive eigenvalues
+of $B_G$ certify that $Z_G(\mathbf x;H)$ is not Lorentzian.
+\end{theorem}
+\begin{proof}
+The $(i,j)$ entry of the Hessian is $(n-2)!$ times a sum over ordered
+distinct vertices $(u,v)$, giving them spins $i,j$ and every other
+vertex the baseline spin $0$, whose value is $t_0=1$.
+This interpretation is valid even if a free spin equals the baseline
+or the two free spins agree: ordered placements give precisely the
+falling-factorial multiplicities of differentiation.
+
+The baseline edge product is $2^m$. Changing the two free vertices
+separately gives $z_i^{d_u}z_j^{d_v}$; if $uv\in\mathcal{E}$,
+\eqref{eq:correction} supplies the correction. After dividing by
+$(n-2)!2^m$, the Hessian entry is therefore
+\[
+ \sum_{u\ne v}z_i^{d_u}z_j^{d_v}
+ -\sum_{(u,v):uv\in\mathcal{E}} k_i z_i^{d_u} k_j z_j^{d_v}.
+\]
+The first sum is the $(i,j)$ entry of
+$V(\bnu\bnu^\top-\diag(\bnu))V^\top$.
+Using \eqref{eq:zk}, the second is the corresponding entry of
+$VLCL^\top V^\top$. This proves \eqref{eq:kernel}.
+The $z_i=(i+2)/2$ are distinct, so the square Vandermonde matrix $V$
+is invertible. Sylvester's law of inertia and \eqref{eq:test}
+complete the proof.
+\end{proof}
+
+\begin{theorem}[Independent minimum-degree class]\label{thm:minimum}
+Suppose $G$ has positive minimum degree $\delta$ and its
+minimum-degree vertices form an independent set. Then $B_G$ has at
+least two positive eigenvalues. In particular,
+$Z_G(\mathbf x;H(1,2,\ldots,\Delta+1))$ is not Lorentzian.
+\end{theorem}
+\begin{proof}
+Put $p=\one\in\R^{\Delta+1}$ and $u=e_{\delta-1}$.
+Since $L^\top p=0$, $\nu_{\delta-1}=0$ and $C_{\delta\delta}=0$,
+\begin{equation}
+ a:=p^\top B_Gp=n(n-1)>0,\qquad
+ u^\top B_Gp=0,\qquad u^\top B_Gu=0.                   \label{eq:null}
+\end{equation}
+In computing $L^\top u$, a possible component indexed $\delta-1$
+is harmless: that degree class is empty. Hence
+\[
+ B_Gu=LCe_\delta\ne0,
+\]
+where on the right $e_\delta$ denotes the column basis vector in
+$\R^\Delta$ indexed by the degree $\delta$.
+For the inequality, a minimum-degree vertex has a neighbour, and
+every such neighbour has degree greater than $\delta$. Choose the
+largest $s$ for which $C_{s\delta}>0$; the coefficient of $e_s$ in
+$LCe_\delta$ is then positive.
+
+Set $w=B_Gu$ and $c=u^\top B_Gw=\|B_Gu\|_2^2>0$.
+The compression to the columns $(p,u,w)$ has the form
+\begin{equation}
+ Q=
+ \begin{pmatrix}
+   a&0&b\\0&0&c\\b&c&e
+ \end{pmatrix},
+ \qquad \det Q=-ac^2<0.                              \label{eq:compression}
+\end{equation}
+Its positive diagonal entry $a$ excludes three negative eigenvalues,
+so its inertia is $(2,1,0)$. In particular its three columns are
+independent, and its two-dimensional positive subspace gives one for
+$B_G$. Apply Theorem~\ref{thm:kernel}.
+\end{proof}
+
+\begin{corollary}\label{cor:leaf}
+Every connected graph on at least three vertices with a leaf has a
+positive rank-two antiferromagnetic target for which its partition
+function is not Lorentzian. This holds for every tree of order at
+least three.
+\end{corollary}
+\begin{proof}
+Two degree-one vertices cannot be adjacent in a connected graph of
+order at least three. Thus its minimum-degree class is independent.
+Every tree of that order has a leaf.
+\end{proof}
+
+The certificate \eqref{eq:compression} uses integer matrices of size
+at most $\Delta+1$, followed by a $3\times3$ determinant. It does not
+require expanding the $q^n$ terms in \eqref{eq:Z}.
+
+\section{A parameterized obstruction for regular graphs}
+The preceding criterion is not sufficient for regular graphs.
+Indeed, for a $d$-regular graph its kernel is
+\begin{equation}
+ B_G=n(n-1)e_de_d^\top
+       -nd(e_d-e_{d-1})(e_d-e_{d-1})^\top,             \label{eq:regularfirst}
+\end{equation}
+which has at most one positive eigenvalue.
+We therefore use a different quadratic derivative.
+
+Let $G$ be $d$-regular, with $n\geq3$ and $d\geq2$, and let $T$
+be its number of unordered triangles. Set $\tau=6T/n$.
+Choose $s>0$, $s\notin\{1,2\}$, and take three spin values
+\[
+ (t_0,t_1,t_2)=(s,1,2),\qquad
+ \ell=\frac{s-1}{s+1}.
+\]
+Define $z_i,k_i$ by \eqref{eq:zk}, and set
+\[
+ V_{i\cdot}=(1,k_i,k_i^2),\qquad
+ D_z=\diag(z_0^d,z_1^d,z_2^d).
+\]
+The three $k_i$ are distinct, and $D_z$ is positive and invertible.
+
+\begin{theorem}[Regular-graph identity]\label{thm:regular}
+For the target $H=H(s,1,2)$,
+\begin{align}
+ &\Hess\bigl(\dd_0\dd_1^{\,n-3}Z_G(\mathbf x;H)\bigr)
+       =c_G(s)D_z V B_\ell V^\top D_z,               \label{eq:regular}\\
+ &c_G(s)=(n-3)!\,n\,2^{m-d}(s+1)^d>0, \notag\\
+ &B_\ell=
+ \begin{pmatrix}
+ (n-1)(n-2)&-\ell d(n-2)&0\\
+ -\ell d(n-2)&\ell^2d(d-1)-d(n-2)&\ell d(d-1)\\
+ 0&\ell d(d-1)&-\ell^2\tau
+ \end{pmatrix}.                                     \label{eq:Bell}
+\end{align}
+Its determinant is
+\begin{equation}
+ \det B_\ell=\ell^2d(n-2)
+ \left[(n-1)\bigl((n-2)\tau-d(d-1)^2\bigr)
+              +\ell^2\tau(n-1-d)\right].             \label{eq:det}
+\end{equation}
+\end{theorem}
+\begin{proof}
+The Hessian entry is $(n-3)!$ times a sum over ordered distinct
+vertices $(v,u,w)$: assign spin $0$ to $v$, free spins $i,j$ to
+$u,w$, and baseline spin $1$ to all remaining vertices.
+The initial edge weight, before changing $u,w$, is
+$2^{m-d}(s+1)^d$, independent of $v$.
+For a free vertex adjacent to $v$, its change has an additional factor
+\[
+ \frac{2(s+t_i)}{(s+1)(1+t_i)}=1-\ell k_i.
+\]
+The correction for adjacency of the two free vertices is still
+\eqref{eq:correction}. Divide out
+$(n-3)!2^{m-d}(s+1)^d z_i^d z_j^d$.
+The remaining entry is
+\begin{equation}
+ \sum_{\substack{v,u,w\\\text{all distinct}}}
+ (1-\ell k_i A_{uv})(1-\ell k_j A_{vw})
+                         (1-k_i k_j A_{uw}),         \label{eq:triples}
+\end{equation}
+where $A$ is the adjacency matrix of $G$.
+
+In this sum there are $n(n-1)(n-2)$ ordered triples.
+Each single-edge indicator has sum $nd(n-2)$.
+Each product of two different edge indicators has sum $nd(d-1)$:
+choose its common vertex, then two ordered distinct neighbours.
+The product of all three indicators has sum $6T$.
+Expanding \eqref{eq:triples} and dividing by $n$ gives
+\[
+ \begin{split}
+ &(n-1)(n-2)-\ell d(n-2)(k_i+k_j)\\
+ &\quad+\bigl(\ell^2d(d-1)-d(n-2)\bigr)k_i k_j\\
+ &\quad+\ell d(d-1)(k_i^2k_j+k_ik_j^2)
+                         -\ell^2\tau k_i^2k_j^2,
+ \end{split}
+\]
+which is $V_{i\cdot}B_\ell V_{j\cdot}^{\top}$.
+This proves \eqref{eq:regular}. Expanding the determinant of
+\eqref{eq:Bell} gives \eqref{eq:det}.
+\end{proof}
+
+\begin{corollary}[Triangle threshold]\label{cor:regular}
+If
+\begin{equation}
+ \frac{6T}{n}<\frac{d(d-1)^2}{n-2},                  \label{eq:threshold}
+\end{equation}
+then a positive three-spin rank-two antiferromagnetic target makes
+$Z_G$ non-Lorentzian. Conversely, if \eqref{eq:threshold} fails,
+none of the Hessians in Theorem~\ref{thm:regular} has two positive
+eigenvalues. This converse concerns only that derivative and target
+family.
+\end{corollary}
+\begin{proof}
+Write
+\[
+ A_*=(n-1)\bigl(d(d-1)^2-(n-2)\tau\bigr),\qquad
+ R_*=\tau(n-1-d)\geq0.
+\]
+Under \eqref{eq:threshold}, $A_*>0$. The entirely rational choice
+\begin{equation}
+ K=2+\left\lceil R_*/A_*\right\rceil,\qquad
+ \ell=-1/K,\qquad s=(K-1)/(K+1)                     \label{eq:choice}
+\end{equation}
+has $0<s<1$ and $\ell^2R_*<A_*$. Indeed, for $r=R_*/A_*\geq0$,
+$(2+\lceil r\rceil)^2>r$.
+Equation~\eqref{eq:det} is therefore negative.
+Since $(B_\ell)_{00}>0$, its inertia is $(2,1,0)$.
+The invertible congruence \eqref{eq:regular}, followed by
+\eqref{eq:test}, proves the obstruction.
+
+If \eqref{eq:threshold} fails, then $A_*\leq0$, $\tau>0$,
+and \eqref{eq:det} is nonnegative for every allowed $\ell$.
+The diagonal entries $(B_\ell)_{00}>0$ and
+$(B_\ell)_{22}=-\ell^2\tau<0$ force at least one positive and one
+negative eigenvalue. A nonnegative determinant then forces the third
+to be nonpositive. The same holds for the congruent Hessian.
+\end{proof}
+
+\begin{corollary}
+Every regular triangle-free graph of degree at least two has a
+non-Lorentzian partition function for the fixed positive target
+$H(1/3,1,2)$.
+\end{corollary}
+\begin{proof}
+For $T=0$, \eqref{eq:det} is negative for every $\ell\ne0$.
+Take $\ell=-1/2$, equivalently $s=1/3$.
+\end{proof}
+
+\begin{remark}
+The strict threshold is exact for this one-conditioned-spin family,
+not an optimal condition among all targets or derivatives. For a
+clique $d=n-1$ and $\tau=d(d-1)$, the bracket in
+\eqref{eq:det} vanishes identically, consistent with the known
+Lorentzian result.
+\end{remark}
+
+\section{Conditioning larger vertex sets}
+The single conditioned vertex can be replaced by a set. This yields
+an explicit hierarchy of tests; no assertion is made that the
+hierarchy detects every connected nonclique.
+
+Fix any finite simple graph $G$, an integer $1\leq h\leq n-2$, and
+$-1<\ell<0$. Take $q=h+2$ distinct values $a_i\in(-1,1)$ with
+$a_0=\ell$, $a_1=0$, and the positive target $K(\mathbf a)$.
+For $S\subseteq V$, $|S|=h$, write
+\[
+ r_S(v)=|N(v)\cap S|\quad(v\notin S),\qquad
+ \nu^S_r=|\{v\notin S:r_S(v)=r\}|\quad(0\leq r\leq h).
+\]
+Let $C^S_{ab}$ count ordered edges of $G[V\setminus S]$ between
+vertices of profiles $a,b$, and let $e(S)$ be the number of edges
+inside $S$. Define the $(h+2)\times(h+1)$ coefficient matrix
+\[
+ F_{jr}=\binom rj(-\ell)^j\quad
+ (0\leq j\leq h+1,\ 0\leq r\leq h),
+\]
+where $\binom rj=0$ for $j>r$.
+Let $J$ be the $(h+2)\times(h+2)$ matrix that shifts coordinates
+down by one, with zeros in the first row. Set
+\begin{equation}
+ \begin{split}
+ \mathcal B_h(\ell)=\sum_{|S|=h}(1-\ell^2)^{e(S)}
+ \bigl[&F\bigl(\boldsymbol\nu^S(\boldsymbol\nu^S)^\top
+                    -\diag(\boldsymbol\nu^S)\bigr)F^\top\\
+       &-(JF)C^S(JF)^\top\bigr].
+ \end{split}                                           \label{eq:hierarchyB}
+\end{equation}
+All matrices in the brackets have size $h+2$.
+
+\begin{theorem}[Conditioned-set identity]\label{thm:hierarchy}
+With $V_{ij}=a_i^j$ for $0\leq i,j\leq h+1$, one has
+\begin{align}
+ \Hess\bigl(\dd_0^h\dd_1^{\,n-h-2}Z_G(\mathbf x;K(\mathbf a))\bigr)
+    &=c_h V\mathcal B_h(\ell)V^\top,
+                                                        \label{eq:hierarchy}\\
+ c_h&=h!(n-h-2)!>0. \notag
+\end{align}
+Thus $\mathcal B_h(\ell)$ and the quadratic-derivative Hessian have
+the same inertia. For $h=1$, $\mathcal B_1(\ell)=\widehat{B}_\ell$;
+for a $d$-regular graph this is $nB_\ell$.
+\end{theorem}
+\begin{proof}
+Assign spin $0$ to $S$ and baseline spin $1$ to its complement.
+All edges outside $G[S]$ have weight one, and its $e(S)$ internal
+edges have weight $1-\ell^2$. The baseline product is therefore
+$(1-\ell^2)^{e(S)}$.
+Changing a free vertex $u\notin S$ to spin $i$ multiplies its
+separate baseline contribution by
+$(1-\ell a_i)^{r_S(u)}$.
+For two adjacent free vertices the additional correcting factor
+is $1-a_i a_j$, as before.
+
+The coefficient vector of $(1-\ell k)^r$ in powers of $k$ is the
+$r$th column of $F$; the vector for $k(1-\ell k)^r$ is the
+corresponding column of $JF$.
+Summing over distinct free vertices first gives the first matrix
+in \eqref{eq:hierarchyB}, and subtracting the adjacency correction
+gives the second. Summing the baseline weights over $S$ gives
+$\mathcal B_h(\ell)$.
+The derivative multiplicity is $h!(n-h-2)!$: it counts ordered
+placements of the $h$ conditioned spins and the remaining baseline
+spins. This also accounts for coincidences between free and
+conditioned spin labels. These observations prove
+\eqref{eq:hierarchy}.
+The $a_i$ are distinct, so the congruence is invertible.
+For $h=1$, expanding the profiles gives precisely the triple counts
+in Theorem~\ref{thm:normalized}.
+\end{proof}
+
+For fixed $h$, the kernel can be assembled by examining the
+$\binom nh$ conditioned sets and their degree profiles; no expansion
+over all $(h+2)^n$ spin assignments is needed.
+The formulas extend continuously to $\ell=-1$, where
+$(1-\ell^2)^{e(S)}$ retains exactly the independent sets $S$
+(with exponent zero interpreted as weight one).
+
+For comparison with the additive targets, \eqref{eq:zk} gives
+$H(\mathbf t)=2\diag(\mathbf z)K(\mathbf k)\diag(\mathbf z)$.
+When $G$ is $d$-regular,
+\begin{equation}
+ Z_G(\mathbf x;H(\mathbf t))
+    =2^m Z_G((z_i^d x_i)_i;K(\mathbf k)).              \label{eq:regularscaling}
+\end{equation}
+Thus the additive-target version of \eqref{eq:hierarchy} has
+the additional positive factor $2^{m-hd}(s+1)^{hd}$ and the
+diagonal congruence $D_z$, when $t_0=s$ and $t_1=1$.
+Such a source-independent diagonal change is not asserted for
+irregular graphs.
+
+
+\section{Structural consequences of the profile identity}
+A change of polynomial basis makes the boundary of the hierarchy
+particularly useful. Retain the notation $r_S$, $\bnu^S$ and $C^S$
+from Theorem~\ref{thm:hierarchy}. Let $\overline{\bnu}^S$ append a
+zero to $\bnu^S$, and let $D_h$ be the $(h+2)\times(h+1)$ matrix
+with column $r$ equal to $e_r-e_{r+1}$, for $0\leq r\leq h$.
+For $0\leq\theta\leq1$ define
+\begin{equation}
+\begin{split}
+ Q_h(\theta)=\sum_{|S|=h}(1-\theta)^{e(S)}
+ \bigl[&\theta\bigl(\overline{\bnu}^S(\overline{\bnu}^S)^\top
+                -\diag(\overline{\bnu}^S)\bigr)\\
+       &-D_h C^S D_h^\top\bigr].
+\end{split}                                               \label{eq:profilekernel}
+\end{equation}
+At $\theta=1$, the convention $0^0=1$ leaves precisely the
+independent $h$-sets.
+
+\begin{lemma}[Profile-basis identity]\label{lem:profile}
+Let $\theta=\ell^2$, with $-1<\ell<0$. For any $q\geq2$,
+take $q$ distinct parameters in $(-1,1)$ with $a_0=\ell$, $a_1=0$,
+and the target $K(\mathbf a)$. Put $U_{ir}=(1-\ell a_i)^r$ for
+$0\leq i<q$ and $0\leq r\leq h+1$. Then
+\begin{equation}
+ \Hess\bigl(\dd_0^h\dd_1^{n-h-2}Z_G(\mathbf x;K(\mathbf a))\bigr)
+  =\frac{h!(n-h-2)!}{\theta}\,UQ_h(\theta)U^\top.       \label{eq:profileidentity}
+\end{equation}
+The matrix $U$ is invertible when $q=h+2$; for other $q$ the
+identity is a rectangular matrix factorization. It extends to $\ell=-1$
+when $a_0=-1$ and the remaining $a_i$ stay distinct in $(-1,1)$.
+\end{lemma}
+\begin{proof}
+In the polynomial basis $1,y,\ldots,y^{h+1}$, where
+$y=1-\ell k$, the profile factor is $y^r$, and
+\[
+ k(1-\ell k)^r=\frac{y^r-y^{r+1}}{\ell}.
+\]
+Thus the adjacency correction in the proof of
+Theorem~\ref{thm:hierarchy} has coefficient matrix
+$D_hC^SD_h^\top/\ell^2$. The other term is the embedded profile-count
+matrix in \eqref{eq:profilekernel}. This proves
+\eqref{eq:profileidentity}, with the same derivative multiplicity.
+The counting argument does not require the evaluation matrix to
+be square. The nodes $1-\ell a_i$ are distinct, so $U$ is an
+invertible Vandermonde matrix when $q=h+2$. All coefficients are
+continuous at $\ell=-1$, proving the boundary statement; in the
+square case invertibility also persists there.
+\end{proof}
+
+\subsection{The small-parameter limit and true twins}
+The other endpoint of the profile kernel gives a different structural
+criterion. Define the unweighted edge-profile matrix
+\begin{equation}
+ T_h=\sum_{|S|=h}C^S,\qquad 1\leq h\leq n-2.
+ \label{eq:unweightedprofile}
+\end{equation}
+The sum here includes all $h$-sets, whether or not they are independent.
+
+\begin{lemma}[A small-parameter obstruction]\label{lem:smallparameter}
+If $T_h$ has a negative eigenvalue, a strictly positive rational
+antiferromagnetic target of rank two on $h+2$ spins makes $Z_G$
+non-Lorentzian.
+\end{lemma}
+\begin{proof}
+Choose $f$ with $f^\top T_hf<0$. The matrix $D_h$ has full column
+rank, so there is $y\in\R^{h+2}$ with $D_h^\top y=f$. Let
+$p=\one\in\R^{h+2}$ and $R=n-h\geq2$. Polynomial continuation
+of \eqref{eq:profilekernel} to zero gives
+\[
+ Q_h(0)=-D_hT_hD_h^\top,\qquad Q_h(0)p=0,\qquad
+ d_0:=y^\top Q_h(0)y=-f^\top T_hf>0.
+\]
+For $\theta\geq0$, direct evaluation gives
+\begin{align}
+ p^\top Q_h(\theta)p&=\theta A(\theta),&
+ A(\theta)&=R(R-1)\sum_{|S|=h}(1-\theta)^{e(S)},\notag\\
+ p^\top Q_h(\theta)y&=\theta B(\theta),&
+ B(\theta)&=(R-1)\sum_{|S|=h}(1-\theta)^{e(S)}
+                         (\overline{\bnu}^S)^\top y.
+ \label{eq:smallcompression}
+\end{align}
+In particular $A(0)=\binom nhR(R-1)>0$. The determinant of the
+compression of $Q_h(\theta)$ to columns $p,y$ is
+\[
+ \theta A(\theta)y^\top Q_h(\theta)y-\theta^2 B(\theta)^2
+   =\theta A(0)d_0+O(\theta^2).
+\]
+For all sufficiently small $\theta>0$, this determinant and the first
+diagonal entry are positive. Hence the compression is positive definite,
+and $Q_h(\theta)$ has at least two positive eigenvalues.
+
+Choose $\ell=-1/m$ for a sufficiently large integer $m$, so that
+$\theta=1/m^2$, and put $q=h+2$. Take $a_0=\ell$, $a_1=0$ and,
+for example, $a_i=(i-1)/(q+1)$ for $2\leq i<q$. These rational
+parameters are distinct and lie in $(-1,1)$. For each such nonzero
+$\ell$, the matrix $U$ in Lemma~\ref{lem:profile} is invertible.
+Thus the Hessian in \eqref{eq:profileidentity} has two positive
+eigenvalues, and \eqref{eq:test} proves the claim. The argument does
+not assume that $U$ remains invertible at $\ell=0$.
+\end{proof}
+
+Two distinct vertices are \emph{true twins} if their closed
+neighbourhoods are equal. Such vertices are adjacent and have equal degree.
+
+\begin{theorem}[Maximum degree and true twins]\label{thm:maxtwins}
+Let $G$ be a connected noncomplete graph with maximum degree $\Delta$.
+If no two vertices of degree $\Delta$ are true twins, a strictly positive
+rational antiferromagnetic target of rank two on $\Delta+1$ spins has
+a non-Lorentzian partition polynomial on $G$.
+\end{theorem}
+\begin{proof}
+Put $h=\Delta-1$. Connectedness and noncompleteness imply
+$\Delta\geq2$, and hence $1\leq h\leq n-2$.
+If an ordered edge $uv$ outside an $h$-set $S$ contributes to
+$(T_h)_{hh}$, both endpoints are adjacent to every vertex of $S$
+and to one another. The degree bound forces
+\[
+ d_u=d_v=\Delta,\qquad N(u)\setminus\{v\}=S=N(v)\setminus\{u\}.
+\]
+Then $N[u]=N[v]$, contrary to the hypothesis. Therefore $(T_h)_{hh}=0$.
+Take a vertex $u$ of degree $\Delta$ and a neighbour $v$, and use
+$S=N(u)\setminus\{v\}$. The edge $uv$ contributes to $(T_h)_{hj}$
+with $j=|N(v)\cap S|<h$, by the same argument. Thus $(T_h)_{hj}>0$.
+The principal matrix on indices $h,j$ has determinant
+$-(T_h)_{hj}^2<0$, so $T_h$ has a negative eigenvalue.
+Apply Lemma~\ref{lem:smallparameter}, with $h+2=\Delta+1$.
+\end{proof}
+
+This proof is constructive. For $c=(T_h)_{hj}>0$ and $a=(T_h)_{jj}$,
+the rational vector $f=e_j-(a+1)e_h/(2c)$ satisfies $f^\top T_hf=-1$.
+Set $y_{h+1}=0$ and $y_r=\sum_{k=r}^h f_k$, so that $D_h^\top y=f$.
+Testing $\ell=-2^{-k}$ with exact arithmetic eventually gives a
+positive definite compression in \eqref{eq:smallcompression}.
+
+\begin{corollary}\label{cor:edgeregular}
+The conclusion of Theorem~\ref{thm:maxtwins} holds for every connected
+noncomplete graph without true twins, for every connected graph of
+order at least three with a unique maximum-degree vertex, and for every
+connected noncomplete edge-regular graph. In particular it holds for
+all connected noncomplete strongly regular graphs.
+\end{corollary}
+\begin{proof}
+The first two statements follow directly. For the third, edge-regular
+means regular of degree $d$, with a constant number $\lambda$ of
+common neighbours for each adjacent pair. A true-twin edge would give
+$\lambda=d-1$, making every edge a true-twin edge. Equality of closed
+neighbourhoods along paths would then make the connected graph complete.
+Thus no such edge exists. Strong regularity implies edge regularity.
+\end{proof}
+
+For an infinite family outside the earlier triangle threshold, take the
+line graph of $K_m$, $m\geq6$. It has $n=m(m-1)/2$, $d=2(m-2)$ and
+$\lambda=m-2$; its ordered triangle count per vertex is $\tau=d\lambda$.
+Since
+\[
+ \lambda(n-2)-(d-1)^2
+     =\frac{(m-3)(m^2-8m+14)}2>0,
+\]
+the threshold \eqref{eq:threshold} fails, while
+Corollary~\ref{cor:edgeregular} still gives an obstruction.
+Any nonclique counterexample to the full connected-source conjecture
+must therefore contain true twins of maximum degree. Neither the number
+of spins nor the parameter choice in this theorem is asserted uniform
+over all graphs.
+
+\subsection{The independent-set endpoint}
+
+For a graph with an edge, let $\alpha$ denote independence number,
+with $\alpha(\varnothing)=0$, and set
+\begin{align}
+ b(G)&=\max_{(u,v):uv\in\mathcal E}
+             \alpha\bigl(G[N(u)\setminus\{v\}]\bigr),\\
+ c(G)&=\max_{uv\in\mathcal E}
+             \alpha\bigl(G[N(u)\cap N(v)]\bigr).       \label{eq:gapparameters}
+\end{align}
+The first maximum uses both orientations of each edge.
+
+\begin{theorem}[Neighbourhood independence gap]\label{thm:gap}
+If $b(G)>c(G)$, a strictly positive rational antiferromagnetic
+matrix of rank two on $c(G)+3$ spins has a non-Lorentzian partition
+function on $G$.
+\end{theorem}
+\begin{proof}
+Put $h=c(G)+1$. Since $b(G)\geq h$, some edge $uv$ and independent
+$h$-set $S\subseteq N(u)\setminus\{v\}$ exist. In particular,
+$h\leq n-2$. Let
+\[
+ C_* = \sum_{\substack{|S|=h\\S\text{ independent}}}C^S,
+ \qquad Q=Q_h(1).
+\]
+One has $(C_*)_{hh}=0$. Otherwise the two endpoints of an edge
+would be adjacent to every vertex in an independent $h$-set,
+contradicting $c(G)<h$. The chosen $u,v,S$ gives
+$(C_*)_{hj}>0$ for some $j<h$, so $C_*e_h\ne0$.
+
+Take $p=\one\in\R^{h+2}$ and $u_0=e_{h+1}$. Since
+$D_h^\top p=0$, $D_h^\top u_0=-e_h$, and the last entry of
+$\overline{\bnu}^S$ is zero,
+\begin{align}
+ s_0:=p^\top Qp&=I_h(G)(n-h)(n-h-1)>0,\\
+ p^\top Qu_0&=0,\qquad u_0^\top Qu_0=0,\qquad
+ Qu_0=D_hC_*e_h\ne0,                                  \label{eq:gapnull}
+\end{align}
+where $I_h(G)$ counts independent $h$-sets. The last inequality
+uses injectivity of $D_h$.
+Put $w=Qu_0$ and $c_0=\|Qu_0\|_2^2>0$. The compression of $Q$
+to the columns $(p,u_0,w)$ has the form
+\[
+ \begin{pmatrix}s_0&0&b_0\\0&0&c_0\\b_0&c_0&e_0\end{pmatrix},
+ \qquad \det=-s_0c_0^2<0.
+\]
+Its positive diagonal entry excludes three negative eigenvalues,
+so the compression has two positive eigenvalues. Hence so does $Q$.
+Choose any distinct rational remaining $a_i\in(-1,1)$ with $a_1=0$.
+Lemma~\ref{lem:profile} first gives an obstruction at $\ell=-1$.
+The two positive eigenvalues persist when the rational parameter
+$\ell>-1$ is sufficiently close to $-1$. All $a_i$ then lie in
+$(-1,1)$, so $K(\mathbf a)$ is strictly positive and has rank two.
+The Hessian test \eqref{eq:test} proves the result.
+\end{proof}
+
+The proof is constructive: with the remaining rational $a_i$ fixed,
+exactly testing $\ell=-1+1/k$ for integers $k\geq2$ eventually
+finds a positive target. It does not assert a uniform bound on $k$
+over all source graphs.
+
+\begin{corollary}[One target for connected diamond-free sources]
+\label{cor:diamond}
+Let
+\begin{equation}
+ K_{\diamond}=\frac19
+ \begin{pmatrix}
+ 0&9&12&15\\9&9&9&9\\12&9&8&7\\15&9&7&5
+ \end{pmatrix}.                                      \label{eq:diamondtarget}
+\end{equation}
+For every connected diamond-free finite simple graph $G$,
+$Z_G(\mathbf x;K_{\diamond})$ is Lorentzian if and only if
+$G$ is a clique. Thus the connected-source characterization
+conjecture holds on diamond-free graphs. For each nonclique,
+a strictly positive rational rank-two target on at most four
+spins also gives an obstruction.
+\end{corollary}
+\begin{proof}
+The displayed target is $K(-1,0,1/3,2/3)$; it is nonnegative,
+has rank two and inertia $(1,1,2)$. For a clique the result is
+\cite[Theorem 3.1]{LOS}.
+
+Suppose $G$ is not complete. If $G$ is triangle-free, then
+$c(G)=0$ and $b(G)\geq1$, because a connected nonclique contains
+two adjacent edges. The proof of Theorem~\ref{thm:gap}, at
+$h=1$ and $\ell=-1$, gives a two-positive-eigenvalue Hessian for
+the principal target $K(-1,0,1/3)$. This Hessian is a principal
+submatrix of the same quadratic derivative for $K_{\diamond}$,
+so the latter also fails \eqref{eq:test}.
+
+Otherwise $G$ contains a triangle. Diamond-freeness implies
+$c(G)=1$: a common neighbourhood of an edge cannot contain an
+independent pair, while a triangle gives a common neighbour.
+There is a nonsimplicial vertex $u$ of degree at least three.
+Indeed, if every vertex of degree at least three were simplicial
+and such a vertex $v$ existed, its closed neighbourhood $N[v]$
+would be a clique of size at least four. Every vertex of that clique
+has degree at least three and is simplicial. An outside neighbour
+of any of them would therefore also be adjacent to $v$, a
+contradiction. Hence $N[v]$ would be a whole component, making
+$G$ complete. If no vertex has degree at least three, a connected
+graph containing a triangle is just $K_3$, again complete.
+
+Choose nonadjacent $x,y\in N(u)$ and a third neighbour $v$.
+Then $\{x,y\}\subseteq N(u)\setminus\{v\}$, so $b(G)\geq2>c(G)$.
+The proof of Theorem~\ref{thm:gap}, now at $h=2$ and $\ell=-1$,
+applies directly to $K_{\diamond}$. Finally perturb its first
+parameter from $-1$ into $(-1,0)$; the two positive Hessian
+eigenvalues persist and all target entries become positive.
+\end{proof}
+
+The fixed matrix \eqref{eq:diamondtarget} has one zero entry.
+Its strictly positive perturbation may depend on $G$; no fixed
+positive four-spin target for the entire class is asserted.
+The gap condition in Theorem~\ref{thm:gap} is sufficient, not
+necessary for an obstruction or for failure of the universal-target
+property.
+
+\section{Clique separators with disjoint complete branches}
+The independent-set boundary also treats sources containing diamonds
+that need not satisfy the neighbourhood-gap criterion. Write $\vee$
+for graph join and $\sqcup$ for disjoint union.
+
+\begin{proposition}[Two branches]\label{prop:twocliques}
+For integers $a,b,s\geq1$, let $G=K_s\vee(K_a\sqcup K_b)$.
+Then $Z_G(\mathbf x;K_{\diamond})$ is not Lorentzian.
+More generally, the same conclusion holds for any four-spin target
+$K(-1,0,c,d)$ with $-1<c,d<1$ and all four parameters distinct.
+\end{proposition}
+\begin{proof}
+Put $A=a-1$, $B=b-1$, $L=A+B$ and $C=A(A-1)+B(B-1)$.
+Suppose first that $L>0$ and use $h=2$, $\theta=1$ in
+Lemma~\ref{lem:profile}. Every independent two-set contains one
+vertex in each branch, so there are $ab$ such sets. Outside each
+one the profile counts are $\nu_1=L$, $\nu_2=s$, and the ordered
+edge counts are $C_{11}=C$, $C_{12}=C_{21}=sL$ and
+$C_{22}=s(s-1)$. Consequently,
+\begin{equation}
+ Q_2(1)=ab(0\oplus M),\qquad
+ M=\begin{pmatrix}
+ 2AB&C&sL\\ C&2sL-C&s(s-1-L)\\
+ sL&s(s-1-L)&-s(s-1)
+ \end{pmatrix}.                                      \label{eq:twoM}
+\end{equation}
+Direct expansion gives
+\begin{align}
+ \det M&=-s(L+s-1)
+ \bigl[L^2(L+2s-1)+2AB(s-1)(L+s)\bigr]<0,             \label{eq:twoMdet}\\
+ \one^\top M\one&=(L+s)(L+s-1)>0.\notag
+\end{align}
+Thus $M$ has inertia $(2,1,0)$. The square evaluation matrix $U$
+is invertible for the four distinct parameters, so the Hessian in
+\eqref{eq:profileidentity} has two positive eigenvalues.
+Here $n-h=L+s\geq2$, as required.
+
+If $L=0$, then $a=b=1$ and $G$ is $K_{s+2}$ with one edge removed.
+The counts in \eqref{eq:counts} are
+\[
+ N=s(s+1)(s+2),\quad E=s^2(s+3),\quad
+ W=s(s^2+3s-2),\quad U=s(s+4)(s-1).
+\]
+They satisfy $W^2-EU=E^2-NW=4s^2$. The polynomial counting
+identity \eqref{eq:normalized} extends to $\ell=-1$, and its
+coefficient matrix does not depend on the third spin parameter.
+Therefore, at $h=1$,
+\[
+ \det\widehat B_{-1}
+ =N(EU-W^2)+U(E^2-NW)=-24s^3<0.
+\]
+Its first diagonal entry $N$ is positive. The three distinct
+parameters $(-1,0,c)$ give an invertible evaluation matrix, hence
+a principal Hessian submatrix with two positive eigenvalues.
+The four-spin Hessian has at least as many positive directions.
+In both cases \eqref{eq:test} proves the conclusion.
+\end{proof}
+
+\begin{theorem}[One fixed five-spin target]\label{thm:clusterjoin}
+Let
+\begin{equation}
+ K_5=\frac1{16}
+ \begin{pmatrix}
+ 0&16&20&24&28\\
+ 16&16&16&16&16\\
+ 20&16&15&14&13\\
+ 24&16&14&12&10\\
+ 28&16&13&10&7
+ \end{pmatrix}
+ =K(-1,0,1/4,1/2,3/4).                              \label{eq:fixedfive}
+\end{equation}
+For every $s\geq1$, $r\geq2$ and $a_1,\ldots,a_r\geq1$, the
+connected noncomplete graph
+\[
+ G=K_s\vee\bigl(K_{a_1}\sqcup\cdots\sqcup K_{a_r}\bigr)
+\]
+has non-Lorentzian partition polynomial $Z_G(\mathbf x;K_5)$.
+The target is nonnegative of rank two, with exactly one zero entry.
+For each such $G$, a strictly positive rational five-spin
+perturbation also gives an obstruction.
+\end{theorem}
+\begin{proof}
+The target has inertia $(1,1,3)$ by the argument for
+\eqref{eq:K}. For $r=2$, Proposition~\ref{prop:twocliques}
+applies to the first four spins; its quadratic-derivative Hessian
+is a principal submatrix of the five-spin Hessian.
+We therefore assume $r\geq3$.
+
+Put $A_i=a_i-1$, $L=\sum_i A_i$, and
+$C=\sum_i A_i(A_i-1)$. If $L>0$, use $h=r$ at the boundary
+$\theta=1$ in Lemma~\ref{lem:profile}, now with $q=5$.
+Every independent $h$-set chooses one vertex from each branch,
+and there are $P=\prod_i a_i$ choices. The remaining branch
+vertices have profile $1$, and separator vertices have profile $h$.
+The only nonzero part of $Q_h(1)$ is on indices $(1,2,h,h+1)$,
+where it is $P$ times
+\begin{equation}
+ M=\begin{pmatrix}
+ L(L-1)-C&C&0&sL\\
+ C&-C&sL&-sL\\
+ 0&sL&0&s(s-1)\\
+ sL&-sL&s(s-1)&-s(s-1)
+ \end{pmatrix}.                                     \label{eq:clusterM}
+\end{equation}
+Its determinant and the principal determinant on profile indices
+$2,h$ are
+\begin{align}
+ \det M&=Ls^2(L+s-1)\bigl[sL^2-(s-1)C\bigr]>0,
+                                                      \label{eq:clusterMdet}\\
+ \det M[\{2,h\}]&=-s^2L^2<0.\notag
+\end{align}
+Indeed $0\leq C\leq L(L-1)$, so the bracket in
+\eqref{eq:clusterMdet} is at least $L(L+s-1)>0$.
+The negative principal determinant gives a positive and a negative
+direction. The positive full determinant then forces inertia
+$(2,2,0)$.
+
+The four active columns of $U$ have degrees $1,2,h,h+1$.
+On the four positive nodes $1,5/4,3/2,7/4$ they are linearly
+independent. To see this, a nonzero polynomial with four distinct
+powers has at most three positive roots by Descartes' sign rule;
+dependence would give four distinct positive roots. Thus the
+$5\times4$ active evaluation matrix has full column rank.
+Multiplication on its two sides preserves the nonzero inertia of
+$M$, and \eqref{eq:profileidentity} gives two positive eigenvalues.
+The derivative is valid because $n-h=L+s\geq2$.
+
+If $L=0$, all branches are singletons. Choose $h=r-1\geq2$.
+Each independent $h$-set leaves one branch vertex of profile $0$
+and $s$ vertices of profile $h$. There are $r$ such sets, and
+$Q_h(1)$ is $r$ times the following matrix on indices $(0,1,h,h+1)$:
+\begin{equation}
+ M_0=\begin{pmatrix}
+ 0&0&0&s\\0&0&s&-s\\
+ 0&s&0&s(s-1)\\s&-s&s(s-1)&-s(s-1)
+ \end{pmatrix}.                                      \label{eq:clusterMzero}
+\end{equation}
+Here $\det M_0=s^4>0$, whereas its principal determinant on
+indices $1,h$ is $-s^2$. Hence its inertia is again $(2,2,0)$.
+The active powers $0,1,h,h+1$ are distinct, and the same four-node
+argument gives full column rank. The Hessian therefore has two
+positive eigenvalues. Now $n-h=s+1\geq2$.
+
+Finally, perturb the first parameter from $-1$ into $(-1,0)$.
+The two strictly positive Hessian eigenvalues persist by continuity.
+Choose a rational perturbation; all target entries become strictly
+positive, with rank two and one positive eigenvalue.
+\end{proof}
+
+When $r=1$ the source is a clique and its partition polynomial
+is Lorentzian by \cite[Theorem 3.1]{LOS}. Thus the fixed target
+\eqref{eq:fixedfive} characterizes the complete members of the
+whole family with $s\geq1$, $r\geq1$ and nonempty branches.
+The number of target states is independent of the number and sizes
+of the branches. We do not assert that five is minimal, that one
+strictly positive perturbation works for every source, or that the
+four-spin target of Proposition~\ref{prop:twocliques} suffices for
+the entire family.
+
+
+
+\begin{remark}[A limit of a four-spin restriction]\label{rem:fourrestriction}
+Full column rank in the preceding proof is essential. Take
+$G=K_s\vee(K_2\sqcup K_1\sqcup K_1)$ and $h=3$. For
+$K_{\diamond}$ the first row and column of the boundary Hessian
+vanish. After removing its positive scalar factor, the remaining
+matrix is $VMV^\top$, where $M$ is \eqref{eq:clusterM} with
+$L=1,C=0$ and $V$ evaluates powers $1,2,3,4$ at $1,4/3,5/3$.
+Its determinant is
+\[
+ \det(VMV^\top)=\frac{12800}{4782969}s^3(185s-473)>0
+ \qquad(s\geq3).
+\]
+The original $M$ has two positive and two negative eigenvalues,
+so the restriction has at most two positive eigenvalues. Its
+positive determinant and positive trace therefore give inertia
+$(1,2,0)$. This derivative is inconclusive for $s\geq3$.
+Other derivatives may still detect these graphs; this is not a
+counterexample to universality of $K_{\diamond}$.
+\end{remark}
+
+\section{Complete multipartite sources}
+The same four-spin target also detects a family not contained in the
+diamond-free class. In this section a complete multipartite graph has
+nonempty parts, and two vertices are adjacent exactly when they belong
+to different parts.
+
+\begin{theorem}[One fixed target for complete multipartite sources]
+\label{thm:multipartite}
+For every connected complete multipartite graph $G$, the partition
+polynomial $Z_G(\mathbf x;K_{\diamond})$ is Lorentzian if and only
+if $G$ is a clique. For every noncomplete such $G$, a strictly positive
+rational four-spin rank-two perturbation of $K_{\diamond}$ also has
+a non-Lorentzian partition polynomial. The perturbation may depend on $G$.
+\end{theorem}
+\begin{proof}
+The clique direction follows from \cite[Theorem 3.1]{LOS}.
+For the converse, write the part sizes as $a_1,\ldots,a_r$.
+Connectedness and noncompleteness give $r\geq2$ and
+$\alpha=\max_i a_i\geq2$. Put $h=\alpha-1$; then
+$1\leq h\leq n-2$. Apply Lemma~\ref{lem:profile} at
+$\ell=-1$, $\theta=1$, and $q=4$. Only independent $h$-sets contribute.
+
+Such a set $S$ lies in one part $i$ with $a_i\geq h$.
+There are $w_i=\binom{a_i}{h}$ choices. Outside $S$, the
+$k_i=a_i-h\in\{0,1\}$ vertices in that part have profile $0$,
+and the other $y_i=n-a_i$ vertices have profile $h$.
+Every pair between these two classes is an edge, there are no edges
+within profile $0$, and the ordered edge count within profile $h$ is
+\[
+ t_i=y_i^2-\sum_{j\ne i}a_j^2.
+\]
+Summing over all $i$ with $a_i\geq h$, define
+\begin{equation}
+ A=\sum_i w_i\sum_{j\ne i}a_j(a_j-1),\qquad
+ B=\sum_i w_i k_i y_i,\qquad C=\sum_i w_i t_i.
+ \label{eq:multipartiteABC}
+\end{equation}
+All three numbers are nonnegative. Moreover $B>0$: a largest
+part has $k_i=1$ and $y_i>0$.
+
+First let $h\geq2$. Substitution into \eqref{eq:profilekernel}
+shows that $Q_h(1)$ is supported on indices $(0,1,h,h+1)$,
+where it is the matrix
+\begin{equation}
+ M=\begin{pmatrix}
+ 0&0&0&B\\0&0&B&-B\\0&B&A&C\\B&-B&C&-C
+ \end{pmatrix}.                                    \label{eq:multipartiteM}
+\end{equation}
+Indeed, the profile-$0$ diagonal is zero because $k_i(k_i-1)=0$,
+and its pair term with profile $h$ cancels the corresponding edge
+term. The profile-$h$ diagonal is $y_i(y_i-1)-t_i$, whose sum is $A$.
+All other entries follow from the two differences in the columns of $D_h$.
+Now $\det M=B^4>0$, while its principal determinant on indices
+$1,h$ is $-B^2<0$. Thus $M$ has inertia $(2,2,0)$.
+
+The active evaluation matrix in \eqref{eq:profileidentity} evaluates
+the powers $0,1,h,h+1$ at $0,1,4/3,5/3$. It is invertible.
+In fact, a vanishing linear combination has zero constant coefficient
+by evaluation at zero. Dividing by the variable leaves at most three
+nonzero monomials, which by Descartes' sign rule have at most two
+positive roots unless the polynomial is zero. The three distinct
+positive evaluation nodes therefore force all coefficients to vanish.
+The quadratic-derivative Hessian has two positive eigenvalues.
+
+If $h=1$, the middle two profile indices coincide. Direct substitution
+instead gives the $3\times3$ kernel
+\[
+ M_1=\begin{pmatrix}
+ 0&0&B\\0&A+2B&C-B\\B&C-B&-C
+ \end{pmatrix}.
+\]
+Its determinant is $-B^2(A+2B)<0$, and its middle diagonal entry
+is positive, so its inertia is $(2,1,0)$. The evaluation matrix on
+powers $0,1,2$ at the same four nodes has full column rank.
+Again the Hessian has two positive eigenvalues.
+
+Both cases violate \eqref{eq:test}. Finally, replace the first target
+parameter $-1$ by a rational $\ell\in(-1,0)$ sufficiently close to
+$-1$. The two positive eigenvalues persist by continuity. All target
+entries become strictly positive, and its rank and inertia are those
+of the rank-two family already proved above.
+\end{proof}
+
+The theorem includes arbitrarily many parts and arbitrarily large part
+sizes. Its proof uses only four active profile columns even when
+$h>2$; a square evaluation matrix of size $h+2$ is unnecessary.
+The Lorentzian characterization of complete multipartite graphs by
+Choudhury--Khare \cite[Theorem 2.3]{CK} concerns instead the homogenized
+determinant of a distance-matrix blowup. It is not a statement about
+the spin partition polynomial \eqref{eq:Z} or the fixed target here.
+
+
+\section{Examples and limits}
+\subsection{A second-level obstruction beyond the triangle threshold}
+Start with two disjoint copies of $K_4$ on vertices $\{0,1,2,3\}$
+and $\{4,5,6,7\}$. Delete edges $(0,1)$ and $(4,5)$, and add
+$(0,4)$ and $(1,5)$. The resulting graph is connected, cubic,
+and has four triangles. Hence $\tau=3$, while the right side of
+\eqref{eq:threshold} is $2$. The one-conditioned-spin test cannot
+detect it for any of its allowed parameter values.
+
+For $h=2$ and the boundary value $\ell=-1$, direct evaluation gives
+\[
+ \mathcal B_2(-1)=
+ \begin{pmatrix}
+ 480&480&60&0\\480&264&-120&-12\\
+ 60&-120&-148&-16\\0&-12&-16&-4
+ \end{pmatrix}.
+\]
+Symmetric elimination without permutations has consecutive pivots
+\[
+ 480,\quad -216,\quad -\frac{11}{2},\quad \frac{106}{33}.
+\]
+Its inertia is therefore $(2,2,0)$. Theorem~\ref{thm:hierarchy}
+at the continuous boundary supplies a non-Lorentzian Hessian.
+Its two positive eigenvalues persist for $\ell>-1$ sufficiently
+close to $-1$, giving positive rank-two targets as well.
+The supplement checks explicitly that $\ell=-99/101$ works, using
+rational elimination of $\mathcal B_2(-99/101)$ and direct
+comparison with the additively scaled target $H(1/100,1,2,3)$
+via \eqref{eq:regularscaling}.
+
+\subsection{Parameter variation enlarges the test}
+Allowing the boundary value $s=0$ in the counting identity gives
+$\ell=-1$ and the more restrictive sufficient condition
+\begin{equation}
+ \tau<\frac{(n-1)d(d-1)^2}{(n-1)^2-d}.               \label{eq:old}
+\end{equation}
+For a concrete strict improvement, take the graph on
+$\{0,\ldots,11\}$ with edges
+\[
+\begin{split}
+ &(0,1),(0,2),(0,8),(0,9),(1,4),(1,7),(1,9),(2,5),\\
+ &(2,8),(2,11),(3,6),(3,7),(3,8),(3,11),(4,5),(4,7),\\
+ &(4,10),(5,6),(5,9),(6,10),(6,11),(7,10),(8,9),(10,11).
+\end{split}
+\]
+It is connected and $4$-regular, and has $7$ triangles.
+Thus $n=12$, $d=4$, $\tau=7/2$.
+At $s=0$, $\det B_{-1}=540>0$, so this Hessian has at most one
+positive eigenvalue. At $s=2/3$, $\ell=-1/5$ and
+\[
+ \det B_{-1/5}=-\frac{2004}{125}<0.
+\]
+The positive target is
+\[
+ H(2/3,1,2)=
+ \begin{pmatrix}4/3&5/3&8/3\\5/3&2&3\\8/3&3&4\end{pmatrix}.
+\]
+The supplement verifies the full Hessian identity for this graph
+with rational arithmetic.
+
+\subsection{The degree-count test does not settle all irregular graphs}
+\label{ex:degreefailure}
+Consider the connected six-vertex graph with edge set
+\[
+ \{(0,1),(0,4),(0,5),(1,2),(1,5),(2,3),(2,5),(3,4)\}.
+\]
+Its degree counts are $\nu_2=2$, $\nu_3=4$, and its kernel is
+\[
+ B_G=
+ \begin{pmatrix}
+ 0&0&0&0\\0&-2&0&2\\0&0&-6&16\\0&2&16&2
+ \end{pmatrix}.
+\]
+The characteristic polynomial is
+$\lambda(\lambda^3+6\lambda^2-264\lambda-560)$.
+The cubic has exactly one positive root by Descartes' rule of signs
+and a sign change between zero and sufficiently large positive
+$\lambda$. Thus this kernel has only one positive eigenvalue.
+It does not establish Lorentzianity of the partition function.
+A different derivative supplies a countermodel in the finite
+certificates described below.
+
+Graphs with many triangles can also fail
+\eqref{eq:threshold}. The condition $b(G)>c(G)$
+also leaves cases untreated. These sufficient criteria do not prove
+the full connected-source conjecture, and their failure is not evidence
+against that conjecture.
+
+
+\subsection{Limits of three fixed subtargets}
+The same fixed four-spin target $K_{\diamond}$ has an exact
+quadratic-derivative obstruction for every connected nonclique of
+orders three through seven in the graph atlas: $989$ graphs.
+This is a stronger finite assertion than allowing a different
+target for each graph, but it is not an arbitrary-order theorem.
+An additional deterministic sample of $64$ graphs, with orders up
+to ten, also yields exact obstructions. This sample is not an
+exhaustive census beyond order seven.
+
+Deleting one of the last three states can destroy this property.
+For the principal target on states $(0,1,2)$, the seven-vertex graph
+with edge set
+\[
+ \{(0,1),(0,4),(1,2),(1,4),(2,3),(4,5),(5,6)\}
+\]
+has a Lorentzian partition polynomial. For the principal targets
+on states $(0,1,3)$ and $(0,2,3)$, the six-vertex graph in
+Section~\ref{ex:degreefailure} has that property. The supplement
+records every quadratic-derivative Hessian: $21$ in the first
+case and $15$ in each of the other two. Exact rational congruences
+give at most one positive eigenvalue in each, and the full M-convex
+exchange condition is verified on each support. The full
+characterization cited after \eqref{eq:test} proves these finite
+claims. They concern three specific fixed targets; they do not
+show that every three-spin target fails or that four spins are
+necessary in general.
+
+\subsection{The small-parameter criterion is not complete}
+\label{ex:zerolimit}
+Let $G=C_5[K_2]$: replace each vertex of a five-cycle by a two-vertex
+clique, and join all vertices in two replacement cliques whenever the
+original cycle vertices are adjacent. This is a connected noncomplete
+$5$-regular graph on ten vertices, and each replacement pair is a pair
+of true twins. Every matrix $T_h$, $1\leq h\leq8$, is positive
+semidefinite, so Lemma~\ref{lem:smallparameter} does not detect $G$.
+Here this is an exact finite claim with a short coefficient certificate.
+
+For an ordered edge $uv$, put $c=|N(u)\cap N(v)|$,
+$a=d_u-1-c$, $b=d_v-1-c$, and $d=n-d_u-d_v+c$.
+Partitioning the other vertices by their adjacency to $u,v$ gives
+the contribution
+\begin{equation}
+ \sum_k\binom ck\binom a{r-k}\binom b{t-k}
+               \binom d{h-r-t+k}
+ \label{eq:localprofile}
+\end{equation}
+to $(T_h)_{rt}$, with out-of-range binomial coefficients zero.
+For this graph, ten ordered edges have $c=4$ and forty have $c=2$.
+Thus $(T_h)_{rt}$ is the coefficient of $x^r y^t z^h$ in
+\[
+ 10(1+xyz)^4(1+z)^4
+ +40(1+xyz)^2(1+xz)^2(1+yz)^2(1+z)^2.
+\]
+For $h=1,2,3,4$, ordinary symmetric elimination without permutations
+has the following positive diagonal pivots:
+\begin{center}
+\begin{tabular}{@{}cl@{}}
+\toprule
+$h$ & Pivots of $T_h$\\
+\midrule
+1 & $120,\ 200/3$\\
+2 & $100,\ 224,\ 300/7$\\
+3 & $40,\ 480,\ 360,\ 200/9$\\
+4 & $10,\ 320,\ 600,\ 592/3,\ 250/37$\\
+\bottomrule
+\end{tabular}
+\end{center}
+For each fixed outside edge, complementing $S$ in its other eight
+vertices replaces $h$ by $8-h$ and each profile $r$ by $4-r$.
+It therefore relates $T_h$ and $T_{8-h}$ by reversal of the active
+profile indices and zero padding. This proves positive semidefiniteness
+for $h=5,6,7$;
+for $h=8$ the sole nonzero entry is $(T_8)_{44}=50$.
+
+This failure does not extend to the full profile hierarchy.
+Use $q=h+2$, $a_0=\ell$, $a_1=0$ and $a_i=(i-1)/(h+2)$ for $i\geq2$.
+At $\ell=-99/100$, its kernels for $h=3,4,5$ have respective inertias
+$(2,3,0)$, $(2,4,0)$ and $(2,3,2)$, verified by exact congruences
+and direct partition-coefficient identities. All three targets are
+strictly positive. Since $\alpha(G)=2$, the unscaled endpoint $Q_h(1)$
+vanishes at these levels. The first nonzero term after dividing by
+the smallest power of $1-\theta$ has two positive eigenvalues for
+$h=3,4$, but only one for $h=5$. The nearby kernel at $h=5$ nevertheless
+has two. Thus neither the zero-parameter test nor the leading endpoint
+term alone supplies a general completeness argument.
+
+
+\section{Exact checks and reproducibility}
+The accompanying supplement contains the source scripts, their data,
+and a manifest of file hashes. All checks were run in the authoring
+context; none is a formal proof-assistant verification or an
+independent model assessment. The general proofs are the counting
+identities and compression arguments above.
+
+\begin{center}
+\begin{tabular}{@{}p{9.0cm}r@{}}
+\toprule
+Check & Cases\\
+\midrule
+Normalized three-spin identity, including irregular sources &288\\
+Degree identity, all connected graphs of orders $3$--$5$,
+original nonnegative target & 29\\
+Degree identity, strictly positive target of Theorem~\ref{thm:kernel}
+&29\\
+Independent minimum-degree compression,
+connected graph atlas of orders $3$--$7$ &806\\
+Original regular identity, exact enumeration &13\\
+Parameterized regular identity: $18$ graphs, $5$ rational parameters
+&90\\
+Additive-target conditioned-set identity for $h=1,2,3$
+&26\\
+Normalized conditioned-set identity, including irregular sources &24\\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{center}
+\begin{tabular}{@{}p{9.0cm}r@{}}
+\toprule
+Certificate census & Cases\\
+\midrule
+Exact three-spin countermodels for all connected noncliques
+of orders $3$--$6$ in the atlas &137\\
+Positive rank-two hierarchy certificates for all connected
+noncliques of orders $3$--$7$ &989\\
+Characteristic-polynomial audit of those kernels &989\\
+Neighbourhood-gap compression and positive continuation &634\\
+Fixed diamond-free target, direct identities &255\\
+Positive perturbations of the diamond-free target, direct identities &255\\
+Fixed four-spin certificates on all connected noncliques of orders $3$--$7$ &989\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+
+\begin{center}
+\begin{tabular}{@{}p{9.0cm}r@{}}
+\toprule
+Clique-separator and fixed-target checks & Cases\\
+\midrule
+Two-branch sources: direct fixed four-spin boundary identities &64\\
+Two-branch sources: direct positive continuations &46\\
+Clique--cluster joins: direct fixed five-spin boundary identities &64\\
+Clique--cluster joins: direct positive continuations &27\\
+Additional seeded fixed four-spin obstructions, orders up to ten &64\\
+Exact Lorentzian counterexamples to three fixed subtargets &3\\
+Four-spin restriction: direct checks of Remark~\ref{rem:fourrestriction} &6\\
+Complete multipartite sources: direct fixed four-spin identities &36\\
+Complete multipartite sources: direct positive continuations &17\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{@{}p{9.0cm}r@{}}
+\toprule
+Small-parameter checks & Cases\\
+\midrule
+Maximum-degree theorem: exact compression certificates &821\\
+Maximum-degree theorem: direct positive Hessian identities &819\\
+Unweighted profile-kernel probe, atlas and selected blowups &1001\\
+$C_5[K_2]$: exact semidefinite kernels, all valid $h$ &8\\
+$C_5[K_2]$: direct positive full-hierarchy identities &3\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The maximum-degree checks cover all $817$ eligible connected noncliques
+of orders three through seven, two larger wheels, the line graph of
+$K_6$, and the $4$-by-$4$ rook graph. Each records a rational negative
+direction for $T_h$ and a positive definite two-dimensional compression
+of a nearby $Q_h$. The $15$- and $16$-vertex examples use exact kernels
+and the proved identity; the other $819$ also use direct partition
+enumeration. Among these $821$ graphs, $244$ fail the earlier
+edge--wedge--triangle sufficient criterion. The separate unweighted
+probe finds an indefinite $T_h$ for every atlas nonclique, but fails
+on nine selected clique blowups beyond the atlas. Section~\ref{ex:zerolimit}
+proves the first such limitation explicitly. Neither this probe nor
+the theorem asserts completeness of the unweighted criterion.
+
+The three-spin census contains $141$ connected graphs, including four
+complete-graph controls. Each of the $137$ certificates records the
+edge set, integer target $H_{ij}=t_i+t_j$, derivative multi-index,
+integer Hessian, its negative determinant and positive trace.
+These signs prove inertia $(2,1,0)$. The finite census does not
+establish the conjecture at arbitrary order; absence of a detected
+obstruction in the clique controls is not its proof.
+
+The larger census contains all $994$ connected graphs of orders
+three through seven, of which five are cliques. For each of the
+$989$ noncliques it gives a strictly positive rational rank-two
+target, an integer-scaled profile kernel, a rational congruence
+certificate, and direct agreement with a Hessian obtained by
+partition-coefficient enumeration. A separate audit checks the
+characteristic polynomial of every stored kernel. Its real roots
+are counted exactly using Descartes bounds for positive and negative
+roots together with the exact zero multiplicity; the bounds sum to
+the degree and agree with the congruence inertia. These are separate
+computations within the same authoring context, not a separate referee.
+
+The gap check covers $634$ graphs in the same atlas. All $255$
+connected diamond-free noncliques there satisfy the criterion;
+$88$ are triangle-free and $167$ contain triangles. For these
+$255$ sources, both the fixed boundary target and strictly positive
+rational perturbations were checked by direct partition-coefficient
+enumeration. The finite checks corroborate the general proof of
+Corollary~\ref{cor:diamond}; they do not replace it.
+
+The clique-separator checks expand the determinant identities
+symbolically and compare the predicted Hessians with direct
+partition-coefficient enumeration. The fixed-five sample includes
+$r=2,3,4,5,6$, so the number of conditioned vertices can exceed
+the number of nonbaseline target states. The full proof uses the
+rectangular identity and the four-column rank argument, rather
+than extrapolating from these checks.
+The complete multipartite sample has largest parts from two through six.
+Its $36$ boundary identities and $17$ positive identities were checked
+by direct partition-coefficient enumeration; the symbolic determinants
+in Theorem~\ref{thm:multipartite} were expanded separately.
+
+\noindent\begin{minipage}{\textwidth}
+The main scripts are:
+\begin{flushleft}\ttfamily
+\begin{tabular}{@{}ll@{}}
+verify\_degree\_kernel.py & verify\_neighbourhood\_gap.py\\
+verify\_normalized\_target.py & verify\_fixed\_diamond.py\\
+verify\_regular\_obstruction.py & verify\_two\_clique\_extension.py\\
+verify\_parametric\_obstruction.py & verify\_fixed\_five\_cluster.py\\
+verify\_conditioning\_hierarchy.py & probe\_fixed\_diamond\_scope.py\\
+certify\_source\_witnesses.py & probe\_larger\_fixed\_target.py\\
+certify\_profile\_hierarchy.py & probe\_three\_spin\_targets.py\\
+audit\_profile\_certificates.py & verify\_four\_spin\_restriction.py\\
+verify\_multipartite\_extension.py & verify\_maximum\_degree\_twins.py\\
+verify\_blowup\_layer.py & probe\_zero\_parameter\_kernels.py\\
+\end{tabular}
+\end{flushleft}
+\end{minipage}\par\medskip
+The source-witness script reads the preserved finite-search candidates and
+recomputes their Hessians by exact enumeration.
+The parameterized script separately checks the symbolic determinant,
+the rational parameter selection, and the positive-target identity.
+Python, SymPy and NetworkX suffice for these checks; NumPy is used
+only by the exploratory witness search.
+The supplementary README gives invocation and provenance details.
+
+\section{Remaining question}
+The obstructions extract degree-to-degree adjacency and
+edge, wedge and triangle counts. The conditioned-set hierarchy
+uses finer adjacency profiles. Its small-parameter limit gives the
+maximum-degree criterion: any nonclique counterexample to the source
+conjecture must have true twins of maximum degree. The explicit
+$C_5[K_2]$ limitation shows why that limit alone is insufficient. Its independent-set boundary gives
+the neighbourhood-gap theorem and the diamond-free characterization.
+Its rectangular evaluation also gives a fixed five-spin obstruction
+for joins of a clique with any number of complete branches, and a
+fixed four-spin obstruction for all noncomplete complete multipartite
+sources.
+A general argument would have to prove that a suitable test detects
+every connected nonclique; no such sufficiency is established here.
+The distinction between bounded
+countermodel search and a proof for graphs of arbitrary order remains
+essential.
+
+\paragraph{Authorship and AI assistance.}
+Lluis Eriksson is the responsible human author. Codex assisted with
+literature searches, derivations, manuscript preparation and
+computational checks. Any model assessments are maintained separately,
+bound to the exact manuscript hash; they do not constitute human peer
+review or formal verification. No numerical rating forms part of this
+manuscript.
+The author operates AIRR, the intended repository; this relationship
+does not constitute external peer review.
+
+\clearpage
+\begin{thebibliography}{9}
+\bibitem{BH}
+P. Br\"and\'en and J. Huh,
+\emph{Lorentzian polynomials},
+Annals of Mathematics \textbf{192} (2020), 821--891.
+\href{https://doi.org/10.4007/annals.2020.192.3.4}
+{doi:10.4007/annals.2020.192.3.4}.
+
+\bibitem{LOS}
+J. Lee, J. Oh and J. Seo,
+\emph{Counting homomorphisms in antiferromagnetic graphs via
+Lorentzian polynomials}, arXiv:2506.13659v2 (2025).
+\url{https://arxiv.org/html/2506.13659v2}.
+
+\bibitem{LS}
+J. Lee and J. Seo,
+\emph{Antiferromagnetic models are clique-minimizing},
+arXiv:2608.17920v1 (2026).
+\url{https://arxiv.org/html/2608.17920v1}.
+
+\bibitem{MMS}
+J. P. Matherne, A. H. Morales and J. Selover,
+\emph{The Newton polytope and Lorentzian property of chromatic
+symmetric functions},
+Selecta Mathematica \textbf{30} (2024), article 42;
+arXiv:2201.07333v4.
+\url{https://arxiv.org/html/2201.07333v4}.
+
+\bibitem{Zeng}
+X. Zeng,
+\emph{Two-vertex cuts and a Lorentzian obstruction for bistable
+bipartite graphs}, research note, AI-Has-Taste,
+BW2-PR20260914-lorentzian\_cliques (2026).
+\href{https://github.com/ArtificialZeng/AI-Has-Taste/blob/f3ae144b74f238f22c2b84b5283cb14ce912fd33/reproducible_source_code/BigWIN2/BW2-PR20260914-lorentzian_cliques/source/manuscript/main.tex}{Archived source, accessed 17 October 2026}.
+
+\bibitem{CK}
+P. N. Choudhury and A. Khare,
+\emph{Blowup polynomials and delta-matroids of graphs},
+S\'eminaire Lotharingien de Combinatoire \textbf{86B} (2022),
+article 42, 12 pp.; arXiv:2203.04105.
+\url{https://www.mat.univie.ac.at/~slc/wpapers/FPSAC2022/42.pdf}.
+
+\end{thebibliography}
+\end{document}
