@@ -1,0 +1,351 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=25mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,booktabs,microtype}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newcommand{\C}{\mathbb C}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\F}{\mathcal F}
+\newcommand{\K}{\mathcal C}
+\newcommand{\capop}{\operatorname{cap}}
+\newcommand{\U}{\mathcal U}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\title{Exponential witness size and undecidable saturation\\for amplified determinants}
+\author{Lluis Eriksson\\Independent researcher, Sweden}
+\date{17 October 2026 --- research preprint}
+\begin{document}
+\maketitle
+\begin{abstract}
+We construct real rational matrix tuples whose covariance-optimized operator capacity is explicitly known, but whose amplified determinant witnesses have large or undecidable dimension requirements. A rational multiplication block converts signed unitary relations into a linear matrix pencil. Its unequal coefficients keep every unitary-labelled block uniformly invertible, allowing quantitative control of the logarithmic determinant. Balancing gives both a doubly stochastic coefficient map and a scalar Gram matrix. Applied to finite Clifford relations and established stability bounds, the construction yields a polynomial-size family with an exact finite optimizer for which inverse-polynomial relative accuracy requires exponentially large auxiliary dimension. Applied to known results on linear-system games, it makes both finite exact saturation and asymptotic saturation undecidable, and produces nonattainment at every finite auxiliary size. The undecidability and Clifford dimension theorems are inherited inputs; the contribution is their balanced determinant reduction. No constant-gap approximation hardness or noncomputability of numerical approximation is asserted.
+\end{abstract}
+
+\section{Value and witness size}
+For $A=(A_1,\ldots,A_s)\in M_D(\C)^s$, put $\tau_m=\Tr/m$ and
+\begin{align}
+ \F_m(A)&=\max_{\sum_i\tau_m(Y_i^*Y_i)=1}
+ \left|\det\left(\sum_i A_i\otimes Y_i\right)\right|^{2/(Dm)},
+ &\F_\infty(A)&=\sup_{m\ge1}\F_m(A). \label{eq:F}
+\end{align}
+The maximum at fixed $m$ exists by compactness. Define
+\begin{align}
+ \Phi_Q(X)&=\sum_{i,j}Q_{ij}A_iXA_j^*,&
+ \K(A)&=\max_{Q\succeq0,\ \Tr Q=1}\capop(\Phi_Q)^{1/D}, \label{eq:C}\\
+ \capop(\Phi)&=\inf_{X>0,\ \det X=1}\det\Phi(X). \notag
+\end{align}
+This is operator-scaling capacity, not a communication capacity. Our tuples satisfy the exact promises
+\begin{equation}
+ \sum_iA_iA_i^*=\sum_iA_i^*A_i=I_D,\qquad
+ \tau_D(A_i^*A_j)=\frac{\delta_{ij}}s. \label{eq:balanced}
+\end{equation}
+All their entries belong to the fixed alphabet
+\[
+ \mathcal A=\{0,\pm1,\pm3/5,\pm4/5\}\subset\Q.
+\]
+
+\begin{theorem}[Exponential size at inverse-polynomial accuracy]\label{thm:exponential}
+There is an explicit family $A^{(n)}\in M_{D_n}(\Q)^{s_n}$, $n\ge2$, with entries in $\mathcal A$, satisfying \eqref{eq:balanced}, such that $s_n=O(n^2)$, $D_n=O(n^4)$, and
+\[
+ \F_\infty(A^{(n)})=\K(A^{(n)})=1/s_n.
+\]
+This value is attained at auxiliary dimension $2^{\lfloor n/2\rfloor}$. Set
+\begin{equation}
+ \varepsilon_n=\bigl[10000D_n(n+1)^2\bigr]^{-2}. \label{eq:epsilon}
+\end{equation}
+For every $m$,
+\[
+ \F_m(A^{(n)})\ge(1-\varepsilon_n)\F_\infty(A^{(n)})
+ \quad\Longrightarrow\quad m\ge2^{\lfloor n/2\rfloor-1}.
+\]
+Consequently no polynomial in the rational input length and $1/\varepsilon$ bounds the auxiliary dimension needed for relative $\varepsilon$ approximation of $\F_\infty$ on all tuples.
+\end{theorem}
+
+\begin{theorem}[Undecidable saturation]\label{thm:undecidable}
+On an effectively constructed subclass of tuples satisfying \eqref{eq:balanced} with entries in $\mathcal A$, each of the following questions is undecidable:
+\[
+ \exists m\ge1:\ \F_m(A)=\K(A),\qquad
+ \F_\infty(A)=\K(A).
+\]
+For every tuple in this subclass $\K(A)=1/s$ is explicitly known.
+Some tuples satisfy $\F_\infty(A)=1/s$ while $\F_m(A)<1/s$ for every finite $m$. There is no total recursive bound, in the rational input length, on the least exactly saturating $m$ among instances where such an $m$ exists.
+\end{theorem}
+
+Theorem~\ref{thm:exponential} is a family statement, not a growth assertion for one fixed tuple. It is stronger than an exact-attainment obstruction in its treatment of positive error, but weaker than a nonrecursive approximation bound. Theorem~\ref{thm:undecidable} concerns equality with a specified threshold; an undecidable equality test does not by itself make approximation of a real-valued function uncomputable.
+
+The construction below is independent of the author's earlier constant-factor capacity comparison \cite{prior}. It does not preclude polynomial-size witnesses at a fixed ratio such as $1/e$, nor polynomial algorithms for the capacity value or for detecting noncommutative invertibility.
+
+\paragraph{Closest antecedents and scope.}
+Undecidability for variable-size matrix equations is established: Herrmann, Tsukamoto and Ziegler \cite[Theorem 2(b)--(d)]{htz} treat quadratic systems, a single quartic equation with adjoints, and nonrecursive dimension bounds. Lee and Watrous \cite[Section 3]{lw} prove hardness of unitary quadratic minimization in a prescribed matrix dimension. Our reduction addresses a more constrained target: a homogeneous rational pencil with both identities in \eqref{eq:balanced}, an explicitly known capacity, and quantitative determinant control in unchanged auxiliary dimension. These antecedents rule out claiming generic matrix undecidability or generic unitary optimization hardness as new results.
+
+Musat and R\o rdam \cite[Proposition 3.2 and Theorems 3.6, 4.1]{mr} connect projection constraints with unitary correlations and obtain nonclosure and channels requiring infinite-dimensional ancillas. Herrmann and Ziegler \cite[Theorem 4.10]{hz} discuss the connection between matrix feasibility and recursive dimension bounds. The present claims concern the specified determinant functional and its rational balanced encoding; the general phenomena and the dimension-enumeration argument have these antecedents.
+
+\section{A rational block for multiplication}
+All $2$-norms below are normalized: $\norm T_2^2=\tau_m(T^*T)$ on $M_m$.
+Let
+\[
+ a=3/5,\qquad b=4/5,\qquad c=ab=12/25.
+\]
+For $m\times m$ unitaries $U,V,W,Z$ define
+\begin{equation}
+ H(U,V,W,Z)=
+ \begin{pmatrix}aU&bW\\bZ&-aV\end{pmatrix}. \label{eq:block}
+\end{equation}
+\begin{lemma}\label{lem:block}
+The block $H$ is unitary if and only if
+\[
+ (UZ^*)(VZ^*)=WZ^*.
+\]
+For all unitary labels, whether or not this relation holds,
+\begin{equation}
+ \frac1{25}I\preceq HH^*\preceq\frac{49}{25}I,\qquad
+ -\log|\det H|^{1/m}\le\frac{72}{49}\norm{UZ^*-WV^*}_2^2. \label{eq:blockbounds}
+\end{equation}
+\end{lemma}
+\begin{proof}
+Put $R=UZ^*-WV^*$. Direct multiplication gives
+\[
+ HH^*=\begin{pmatrix}I&cR\\cR^*&I\end{pmatrix}.
+\]
+The off-diagonal block vanishes precisely when the asserted relation holds. Since $\norm R_{\rm op}\le2$, the spectral bounds follow from $1\pm2c=1/25,49/25$. The block determinant formula gives
+\[
+ \det(HH^*)=\det(I-c^2R^*R).
+\]
+Thus, with normalized trace on $M_m$,
+\[
+ -\log|\det H|^{1/m}
+ =-\tfrac12\tau_m\log(I-c^2R^*R)
+ \le\frac{c^2}{2(1-4c^2)}\tau_m(R^*R)
+ =\frac{72}{49}\norm R_2^2.
+\]
+We used $-\log(1-x)\le x/(1-4c^2)$ for $0\le x\le4c^2$.
+\end{proof}
+In particular $\norm H_{\rm op}\le7/5$ and $\sigma_{\min}(H)\ge1/5$. The unequal coefficients prevent a logarithmic singular-value tail from appearing in the later approximation argument.
+
+\section{Compiling signed relations into a balanced pencil}
+A signed presentation is a finite list of requirements
+\begin{equation}
+ x_{i_1}\cdots x_{i_k}=\sigma I,\qquad \sigma\in\{1,-1\}, \label{eq:words}
+\end{equation}
+on unitary generators. Repetitions and empty words are permitted. Its size counts the generators and the total listed word length, together with the number of relations.
+
+Add a new generator $t$, impose $t^2=I$, and append $tt$ to every original word. This leaves exact solvability unchanged and preserves existence of arbitrarily accurate normalized-$2$-norm solutions. Every padded word now has length at least two. We call the maximum padded length $r$; include $r\ge2$ to cover the extra relation $t^2=I$.
+
+Introduce a reference label $z$, all generator labels, and fresh labels for proper prefixes of lengths $2,\ldots,k-1$ of each padded word of length $k$. Labels are new for each occurrence of a word. Use $k-1$ blocks \eqref{eq:block}: multiply the first two letters, then each prefix by the next letter. Intermediate outputs have fresh labels; the final output is $\sigma z$. The lower-left label is always $z$. Include one singleton block for every label. The pencil is homogeneous and linear in its labels; it contains no fixed identity matrix entry. At a unitary solution, right multiplication of every label by $Z^*$ fixes the reference and recovers \eqref{eq:words}.
+
+\begin{lemma}[Balancing]\label{lem:balance}
+This construction can be completed in polynomial time to a pencil
+\[
+ L(Y)=\sum_{\ell=1}^s A_\ell\otimes Y_\ell
+\]
+with $A_\ell\in M_D(\Q)$, entries in $\mathcal A$, and \eqref{eq:balanced}. A unitary in this pencil is equivalent, in the same auxiliary dimension, to a unitary solution of the signed presentation.
+\end{lemma}
+\begin{proof}
+Initially include 25 copies of each multiplication block and one singleton of every label. In a multiplication block, its two input labels are distinct from $z$, and its output is either a fresh label or $\pm z$. The two input labels may coincide. Each scalar entry contains exactly one label. For the coefficient matrices of this block, both sums $\sum A_\ell A_\ell^*$ and $\sum A_\ell^*A_\ell$ equal $I_2$: the diagonal sums are $a^2+b^2=1$, and the off-diagonal sums vanish because an input never coincides with the reference or its own output. Singleton blocks have the same property.
+
+Different coefficient matrices have disjoint entry supports. Let $q_\ell$ be the squared Frobenius norm of coefficient $\ell$. Each $q_\ell$ is a positive integer: the 25 repeated blocks contribute $9$ per diagonal occurrence and $16$ per off-diagonal occurrence; the initial singleton contributes $1$. Set $M=\max_\ell q_\ell$ and append $M-q_\ell$ singleton blocks of label $\ell$. All coefficient norms now equal $M$. Their squared norms sum to the scalar dimension $D$, so $D=sM$. The stochastic identities persist block by block, and disjoint supports give the Gram identity in \eqref{eq:balanced}. The dimensions and number of entries are polynomial in the presentation size.
+
+If the completed pencil is unitary, its singleton blocks make all labels unitary and Lemma~\ref{lem:block} recovers the relations after the common right gauge. Conversely, a solution extends to unitary prefix labels, making every block unitary. Added singleton blocks impose no further constraints.
+\end{proof}
+For arbitrary labels the construction gives
+\begin{equation}
+ \tau_{Dm}\bigl(L(Y)^*L(Y)\bigr)
+ =\frac1s\sum_\ell\tau_m(Y_\ell^*Y_\ell). \label{eq:gram}
+\end{equation}
+This identity, as well as both stochastic identities, is important; norm balancing alone would not imply them.
+
+\section{Capacity and exact equality}
+\begin{proposition}\label{prop:capacity}
+For every compiled tuple, $\K(A)=1/s$, $\F_m(A)\le1/s$, and
+\[
+ \F_m(A)=1/s
+ \quad\Longleftrightarrow\quad
+ \text{the signed presentation has an $m$-dimensional unitary solution}.
+\]
+\end{proposition}
+\begin{proof}
+Write $\Psi(X)=\sum_\ell A_\ell XA_\ell^*$. By \eqref{eq:balanced}, $\Psi$ is unital and trace preserving. Operator concavity of the logarithm gives
+$\Tr\log\Psi(X)\ge\Tr\Psi(\log X)=\Tr\log X$ for $X>0$; unitality ensures $\Psi(X)>0$. Thus $\capop(\Psi)=1$, with the upper bound witnessed by $X=I$. This is also the standard doubly stochastic capacity identity \cite{ggow}. At $Q=I_s/s$ it yields a capacity root $1/s$.
+
+For any density $Q$, normalized trace and \eqref{eq:balanced} give $\tau_D\Phi_Q(I)=1/s$. Evaluating capacity at $I$ and applying determinant arithmetic--geometric mean proves the reverse bound. The same inequality with \eqref{eq:gram} gives $\F_m\le1/s$. Equality in this scalar AM--GM holds precisely when $\sqrt{s}L(Y)$ is unitary. Apply Lemma~\ref{lem:balance} to the labels $\sqrt{s}Y_\ell$. Conversely, unitary labels $U_\ell$ give feasible coefficients $Y_\ell=U_\ell/\sqrt{s}$ and attain equality.
+\end{proof}
+
+\section{Quantitative transfer without a logarithmic-tail assumption}
+Let a relation error mean the normalized $2$-norm distance of its word from its signed identity.
+
+\begin{proposition}\label{prop:quantitative}
+Suppose the padded signed presentation has an $m$-dimensional unitary assignment with all relation errors at most $\eta$. Then
+\begin{equation}
+ s\F_m(A)\ge \exp(-72\eta^2/49). \label{eq:forward}
+\end{equation}
+Conversely, if $s\F_m(A)\ge1-\varepsilon$, $0<\varepsilon<1$, then its original unpadded presentation has an $m$-dimensional unitary assignment with every relation error at most
+\begin{equation}
+ K_{D,r}\sqrt{\varepsilon},\qquad
+ K_{D,r}=5r\sqrt D(\sqrt D+1). \label{eq:reverse}
+\end{equation}
+\end{proposition}
+\begin{proof}
+For the first assertion choose $Z=I$, and assign each proper prefix its exact generator product. Every internal gate is exact and every final gate has error at most $\eta$. Singleton blocks are unitary. Lemma~\ref{lem:block} bounds each gate's normalized log-determinant loss by $72\eta^2/49$ and ensures uniform invertibility, including erroneous gates. Taking the dimension-weighted average over all blocks proves \eqref{eq:forward}; \eqref{eq:gram} normalizes the labels by $\sqrt{s}$.
+
+For the converse choose a maximizing feasible tuple and put $X=\sqrt{s}L(Y)$. Then $\tau(X^*X)=1$ and its squared determinant root is at least $1-\varepsilon$. A block diagonal polar unitary $P$ satisfies
+\begin{equation}
+ \delta^2:=\norm{X-P}_2^2
+ =2(1-\tau|X|)
+ \le2(1-\sqrt{1-\varepsilon})\le2\varepsilon. \label{eq:polar}
+\end{equation}
+Here the geometric mean of singular values is at most their arithmetic mean.
+
+Let $V_\ell$ be a polar unitary of $Z_\ell=\sqrt{s}Y_\ell$. An original singleton block is present for each label, so
+\[
+ d_\ell^2:=\norm{Z_\ell-V_\ell}_2^2\le D\delta^2.
+\]
+Set $B=L(V)$. By \eqref{eq:gram},
+\[
+ \norm{B-X}_2^2=\frac1s\sum_\ell d_\ell^2\le D\delta^2.
+\]
+Every label of $B$ is unitary, hence $\norm B_{\rm op}\le7/5$, and
+\[
+ \norm{BB^*-I}_2
+ \le(\norm B_{\rm op}+1)\norm{B-P}_2
+ \le\frac{12}{5}(\sqrt D+1)\delta.
+\]
+No operator-norm bound on the original $Y_\ell$ has been assumed.
+
+For any individual gate, Lemma~\ref{lem:block} identifies its normalized squared defect as $c^2\norm R_2^2$. It contributes $2/D$ times this quantity to the global squared defect. Therefore every gate error is at most
+\[
+ 5\sqrt{D/2}(\sqrt D+1)\delta.
+\]
+Right gauge all $V_\ell$ by $V_z^*$. Telescoping unitary products over a padded word uses at most $r-1$ gate errors. Removing the appended $tt$ costs at most one more, from the explicit padding-square relation. Inserting \eqref{eq:polar} proves \eqref{eq:reverse}.
+\end{proof}
+
+In particular, $\F_\infty(A)=1/s$ if and only if the signed presentation admits arbitrarily accurate finite matrix solutions. The auxiliary dimension is unchanged in both transfers. The lower bound on gate singular values is what makes the forward implication valid for the determinant, rather than merely for distance to the unitary group.
+
+\section{The Clifford family: large witnesses for an easy value}
+Use the $n$ unitary generators with relations
+\begin{equation}
+ x_i^2=I,\qquad x_ix_jx_ix_j=-I\quad(i<j). \label{eq:Clifford}
+\end{equation}
+Exact solutions are the standard Clifford representations. In dimension $2^{\lfloor n/2\rfloor}$ they exist, and their dimension is minimal. These established representation facts supply the exact witness; we do not claim a new Clifford dimension theorem.
+
+We use the following robust version, in the formulation of Slofstra \cite[Lemmas 3.1 and 3.4]{profile}. For the finite Clifford group with central involution $J$, a $\theta$-approximate representation of its defining relations induces an $(n+1)^2\theta$-almost-homomorphism by normal forms. If an $u$-almost-homomorphism has $\norm{\psi(J)-I}_2>42u$, its dimension is at least $2^{\lfloor n/2\rfloor-1}$. This follows from finite-group representation stability; the dimension lower bound is an external input.
+
+\begin{proof}[Proof of Theorem~\ref{thm:exponential}]
+Compile \eqref{eq:Clifford}. There are $O(n^2)$ words of length at most four, so the padded maximum length is $r=6$. Counting the labels and the reference coefficient's weight gives
+\begin{align*}
+ s_n&=2n^2+n+2,& M_n&=48n^2+16n+33,\\
+ D_n&=s_nM_n=96n^4+80n^3+178n^2+65n+66.
+\end{align*}
+The reference weight is maximal: original generators have weight $18n+1$, fresh prefixes have weight $26$, and the padding generator has weight $18\bigl(n+\binom n2+1\bigr)+1\le M_n$. These formulas give $s_n=O(n^2)$ and $D_n=O(n^4)$ and bound the dense rational encoding length by a polynomial in $n$. Proposition~\ref{prop:capacity} and an exact Clifford representation give the claimed value and attainment.
+
+Assume near-saturation in dimension $m$. Proposition~\ref{prop:quantitative} gives unitary $X_i$ obeying all original signed words within
+\[
+ \eta=30\sqrt{D_n}(\sqrt{D_n}+1)\sqrt{\varepsilon}
+ \le60D_n\sqrt{\varepsilon}.
+\]
+For a unitary, $\norm{X_i^{-1}-X_i}_2=\norm{X_i^2-I}_2\le\eta$. Replacing the two inverses therefore gives
+\[
+ \norm{X_iX_jX_i^{-1}X_j^{-1}+I}_2\le3\eta.
+\]
+Put $J=-I$. Its square and centrality relations are exact; the assignments form a $3\eta$-approximate representation of the finite Clifford group. Its normal-form map is an $u$-almost-homomorphism with
+\[
+ u\le3(n+1)^2\eta\le180D_n(n+1)^2\sqrt{\varepsilon}.
+\]
+At \eqref{eq:epsilon}, $u\le0.018<1/16$ and $42u\le0.756<2=\norm{-I-I}_2$. The cited robust dimension bound proves the result.
+
+Both the full input length and $1/\varepsilon_n=O(n^{12})$ are polynomial in $n$, whereas the necessary $m$ grows exponentially. A putative polynomial bound in these two input parameters would contradict this family.
+\end{proof}
+The tolerance is intentionally conservative. No optimal dependence on $n$ or $\varepsilon$ is claimed.
+
+\paragraph{A scalar witness and the precision regime.}
+The family also admits a simple witness illustrating this limitation. Set every label to $1$ and normalize by $\sqrt{s_n}$. All singleton, internal and positive final blocks are unitary. Each negative relation contributes only its final block, whose determinant magnitude is $7/25$, repeated 25 times. Hence
+\[
+ s_n\F_1(A^{(n)})\ge
+ (7/25)^{50\binom n2/D_n}=1-O(n^{-2}).
+\]
+Thus a scalar witness already approaches the optimal value along the family. The exponential lower bound concerns the much smaller error \eqref{eq:epsilon}; it supplies no fixed-gap separation from scalar witnesses.
+
+\section{Linear-system games: two different undecidable questions}
+For a binary system $Bx=b$, its operator solutions satisfy
+\[
+ x_j^2=I,\quad
+ \prod_{j:B_{ij}=1}x_j=(-1)^{b_i}I,\quad
+ x_jx_kx_jx_k=I
+ \ \text{when $j,k$ occur in the same row}.
+\]
+With the square relations, the last equations impose commutation. This is the solution-group presentation with its central involution $J$ fixed to $-I$.
+
+We require three established facts. Perfect finite-dimensional strategies for binary linear-system games are undecidable, and so are perfect strategies in the closure of finite-dimensional correlations; a game can have the latter without the former \cite[Theorems 1.1--1.2 and Corollary 1.4]{slofstra}. Exact strategies correspond to finite matrix solutions \cite[Theorem 3.2]{slofstra}. Arbitrarily near-perfect quantum strategies correspond to arbitrarily accurate matrix representations with $J=-I$ \cite[Theorem 5.1, Corollaries 5.2--5.3 and Proposition 2.7]{sv}. The last converse uses the general-state result in Section 5, not just the maximally entangled case in Section 4. Remove zero columns before applying that result, assigning the unused generators $I$ when restoring them.
+
+Replacing inverse commutators by the positive words above preserves approximate solvability: when square errors are at most $\eta$, each replacement costs at most $2\eta$. Conversely a solution with $J$ nontrivial can be restricted to its negative eigenspace in the exact case; the approximate correspondence cited above handles the limiting case. Unused variables can be assigned the identity.
+
+\begin{proof}[Proof of Theorem~\ref{thm:undecidable}]
+Compile this signed presentation. Proposition~\ref{prop:capacity} makes finite exact saturation equivalent to a finite matrix solution; Proposition~\ref{prop:quantitative} makes asymptotic saturation equivalent to arbitrarily accurate matrix solutions. The cited game results transfer both undecidability assertions and the existence of asymptotic saturation without any finite exact saturation.
+
+If a total recursive bound on the least exactly saturating auxiliary dimension existed as a function of input length, enumerate all dimensions up to that bound. At any fixed $m$, the equations $L(U)^*L(U)=I$ are a finite system of polynomial equations over the real and imaginary parts of the unknown entries, with rational coefficients. Quantifier elimination over real closed fields decides their feasibility. The bounded enumeration would decide finite saturation, contradicting the first assertion.
+\end{proof}
+
+\section{Diagnostics, attribution and limits}
+The accompanying implementation generates a compact block description instead of materializing a large dense tuple. For the magic-square relations, it produces $s=119$ labels, $142$ multiplication gates before replication, $M=2817$ and $D=335223$. With the standard four-dimensional Pauli-product assignment, every gate is exactly unitary. All $512$ scalar sign assignments fail the magic-square row/column requirements. This is an illustration of the reduction, not a new nonlocality example.
+
+Exact symbolic checks verify the local stochastic identities, disjoint supports and balancing, including empty words, one-letter words, repetitions and contradictory relations. Three hundred complex unitary tests check the gate spectral and logarithmic bounds; two hundred erroneous-gate controls are detected. These finite checks do not prove an undecidability theorem, establish novelty, or replace the general proof.
+
+A separate implementation written during the Astra construction review checks 160 additional word lists, 360 complex blocks and 48 tests of the two quantitative transfers. Its Clifford checks verify the size formulas for $n=2,\ldots,10$ and 5440 products of normal forms for $n=2,3,4,5$. The implementations were written separately, but the review used shared conversational context; this is not a claim of independent human validation.
+
+The word-problem and nonlocal-game results, finite Clifford representations, and stability theorem belong to the cited authors. Our claimed contribution is the rational homogeneous block reduction with simultaneous balancing and logarithmic control, and its consequences for \eqref{eq:F}. Targeted searches have not established global priority. Related work on factorizable channels, unitary correlations and noncommutative optimization may contain equivalent formulations.
+
+Theorem~\ref{thm:exponential} does not imply nonrecursive approximation complexity, fixed-ratio hardness or one fixed tuple with superpolynomial accuracy growth. Theorem~\ref{thm:undecidable} does not imply a constant separation between yes and no instances. The capacity is easy on all constructed examples; it is the requested determinant witness that carries the obstruction.
+
+\paragraph{Assistance and review status.}
+Developed with substantial OpenAI Codex assistance in mathematical reasoning, source checking and computational diagnostics. GPT-6 Astra at xhigh effort was requested for adversarial review of the construction in reused context. Requested model and effort were not separately attested at runtime. Any exact-version assessment is recorded separately with the deposited files; no human review, certified model isolation or proof-assistant verification is claimed.
+
+\begin{thebibliography}{9}
+\bibitem{ggow}
+A.~Garg, L.~Gurvits, R.~Oliveira and A.~Wigderson,
+\emph{Operator Scaling: Theory and Applications},
+Foundations of Computational Mathematics \textbf{20} (2020), 223--290.
+\url{https://doi.org/10.1007/s10208-019-09417-z}.
+\bibitem{slofstra}
+W.~Slofstra, \emph{The set of quantum correlations is not closed},
+Forum of Mathematics, Pi \textbf{7} (2019), e1.
+Numbered references here use arXiv:1703.08618v2 (2017).
+\url{https://arxiv.org/abs/1703.08618v2}.
+\bibitem{sv}
+W.~Slofstra and T.~Vidick,
+\emph{Entanglement in non-local games and the hyperlinear profile of groups},
+Annales Henri Poincar\'e \textbf{19} (2018), 2979--3005.
+Numbered references use arXiv:1711.10676v2.
+\url{https://arxiv.org/abs/1711.10676v2}.
+\bibitem{profile}
+W.~Slofstra,
+\emph{A group with at least subexponential hyperlinear profile},
+arXiv:1806.05267v1 (2018), Lemmas 3.1 and 3.4.
+\url{https://arxiv.org/abs/1806.05267v1}.
+\bibitem{prior}
+L.~Eriksson,
+\emph{A universal capacity bound for amplified determinants and polynomial witnesses in the Hermitian case},
+AIRR working paper, ARR-2026-1DGGW5KX2M9R4VJT, v1 (2026).
+\url{https://airr.science/papers/ARR-2026-1DGGW5KX2M9R4VJT/versions/v1/}.
+\bibitem{htz}
+C.~Herrmann, Y.~Tsukamoto and M.~Ziegler,
+\emph{Progress on the Computability, Complexity, and Expressiveness of Geometric Quantum Logic},
+author-hosted manuscript, Theorem 2(b)--(d), accessed 17 October 2026.
+\url{https://www2.mathematik.tu-darmstadt.de/~herrmann/qex38.pdf}.
+\bibitem{lw}
+C.~Do-Yan Lee and J.~Watrous,
+\emph{Detecting mixed-unitary quantum channels is NP-hard},
+Quantum \textbf{4} (2020), 253.
+\url{https://doi.org/10.22331/q-2020-04-16-253}.
+\bibitem{hz}
+C.~Herrmann and M.~Ziegler,
+\emph{Computational Complexity of Quantum Satisfiability},
+Journal of the ACM \textbf{63}(2) (2016), Article 19.
+\url{https://www2.mathematik.tu-darmstadt.de/~herrmann/X3.pdf}.
+\bibitem{mr}
+M.~Musat and M.~R\o rdam, with an appendix by N.~Ozawa,
+\emph{Non-closure of quantum correlation matrices and factorizable channels that require infinite dimensional ancilla},
+arXiv:1806.10242v4 (2019).
+\url{https://arxiv.org/abs/1806.10242v4}.
+\end{thebibliography}
+\end{document}

@@ -1,0 +1,28 @@
+PROPOSED STRONGER QUANTITATIVE CONSEQUENCE — 17 October 2026
+Not yet reviewed; supplementary to immutable candidate-proof.txt.
+
+The rejected use of Slofstra's unknown-hyperlinear fixed group is unnecessary for a FAMILY lower bound. Use the FINITE Clifford group C(n), whose exact matrix representations with J=-I are known to exist.
+
+For n>=2 take signed unitary words x_i^2=I and x_i x_j x_i x_j=-I for all i<j. Apply the same signed-word compiler, adding t^2=I and padding every original word with tt. These are valid signed words even though this presentation is not itself a binary linear-system game. The reduction and its capacity/quantitative lemmas only require signed words, so apply without change.
+
+Exact Clifford representations in dimension 2^floor(n/2) give F_infty(A_n)=C(A_n)=1/s_n, with exact equality at that finite m. The tuple has a polynomial number of labels and gates and polynomial base dimension D_n; all coefficients stay in the fixed rational alphabet. With O(n^2) input words of length at most4, both s_n and the maximum multiplicity are O(n^2), so D_n=O(n^4).
+
+Suppose s_n F_m(A_n)>=1-epsilon. The extraction proof yields each padded relation with error <=(k-1) K0 delta, K0=5 sqrt(D_n/2)(sqrt(D_n)+1), delta<=sqrt(2 epsilon), and the extra padding-square relation with error <=K0 delta. As k<=6, every ORIGINAL signed word has error at most
+  6 K0 delta <= 60 D_n sqrt(epsilon) =: eta.
+For the Clifford group presentation with inverses, the square relations have error <=eta and
+  ||X_i X_j X_i^{-1} X_j^{-1}+I||_2 <=3 eta,
+because replacing either inverse by the corresponding generator costs at most its square-relation error. Set J=-I; J^2 and centrality hold exactly. Thus these assignments form a (3 eta)-representation of C(n).
+
+Primary source: W. Slofstra, arXiv:1806.05267v1, Lemmas3.1 and3.4, https://arxiv.org/html/1806.05267.
+Lemma3.4 converts a relation-error theta representation of C(n) into an (n+1)^2 theta almost-homomorphism by evaluating normal forms. Its value on J remains -I.
+Lemma3.1 says that a u-almost-homomorphism with ||psi(J)-I||_2>42u requires m>=2^{floor(n/2)-1}. It follows from the Gowers–Hatami stability theorem; it is an external established dimension bound, not a new theorem of this work.
+
+Choose the explicit rational tolerance
+  epsilon_n = [10000 D_n (n+1)^2]^{-2}.
+Then u<=3(n+1)^2 eta <=180/10000=0.018, so 42u<=0.756<2=||-I-I||_2. Therefore
+  F_m(A_n)>=(1-epsilon_n)F_infty(A_n)
+    implies m>=2^{floor(n/2)-1}.
+
+Since D_n,s_n,the full rational input length, and 1/epsilon_n all grow polynomially in n, this rules out a universal POLYNOMIAL bound on auxiliary dimension in the rational input length and inverse relative error for approximating F_infty. It already holds for an explicit rational balanced family with KNOWN capacity and an exact finite-dimensional optimizer. It is independent of undecidability and of the unsettled hyperlinearity caveat in Slofstra's Theorem1.2.
+
+Limits: this family is not one fixed tuple as n grows. This does NOT show non-computability of approximation, no recursive approximation bound, or impossibility of polynomial-size witnesses at a fixed constant approximation ratio such as1/e. It separates high-accuracy witness SIZE from the easy capacity VALUE. Check the normal-form error conversion, signed commutator orientation, constants and input-size claims before use.

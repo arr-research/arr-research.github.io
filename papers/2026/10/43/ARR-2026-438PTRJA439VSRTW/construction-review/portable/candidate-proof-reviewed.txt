@@ -1,0 +1,86 @@
+RESEARCH CANDIDATE — 17 October 2026
+Status: proposed proof, not externally reviewed; no score or publication claim.
+Working title: Undecidable determinant saturation at a known operator capacity
+
+1. Proposed statement and scope
+
+There is an effective polynomial construction from binary linear-system games to real rational matrix tuples A=(A_1,...,A_s) in M_D(Q), with entries in {0,+/-1,+/-3/5,+/-4/5}, satisfying
+  sum_i A_i A_i^*=sum_i A_i^* A_i=I_D,
+  Tr(A_i^* A_j)/D=delta_ij/s.
+Consequently their covariance-optimized operator capacity C(A) is exactly 1/s. Nevertheless both problems are undecidable on this family:
+  (a) is F_m(A)=1/s for some positive integer m?
+  (b) is F_infty(A)=1/s?
+Here F_m is the maximum of |det(sum A_i tensor Y_i)|^(2/(Dm)) subject to sum tau_m(Y_i Y_i^*)=1; F_infty=sup_m F_m.
+There are tuples in this family with F_infty=1/s but F_m<1/s for every finite m. There is no total recursive upper bound, as a function of input size, for the least EXACTLY saturating m on the yes-instances of (a).
+These conclusions do NOT establish a constant promise gap, uncomputability of approximating the numerical value, or absence of a recursive bound for epsilon-optimal witnesses. Those stronger claims are not made.
+The essential undecidability and non-closure inputs are established results of Slofstra and collaborators, not new results here. The proposed contribution is a rational, balanced, quantitative reduction into determinant saturation.
+
+2. Signed words representing the source constraints
+
+For a binary system Bx=b introduce unitary variables x_j and impose x_j^2=I, each row word product x_j=(-1)^b_i I, and x_j x_k x_j x_k=I for pairs in a row. Together with the square relations the last constraints are exactly commutation. This is the solution-group presentation with its central involution fixed to -I. Centrality and J^2=I are automatic after fixing J=-I.
+Add a fresh unitary variable t and the word t t=I. Append t t to every original signed word. Exact solutions are unchanged. Approximate solutions with arbitrarily small normalized-Hilbert-Schmidt error are also unchanged: extend using t=I in one direction; in the other direction the added square constraint removes the appended pair with at most one additional relation error. All word lengths are at least two, including originally empty row words.
+No scalar variables are identified with the reference label below. The original symbols, t, and every proper prefix label remain distinct from that label.
+
+3. Rational multiplication block
+
+Let a=3/5, b=4/5, c=ab=12/25. For four unitary m by m matrices U,V,W,Z put
+  H(U,V,W,Z) = [[a U, b W], [b Z, -a V]].
+Then H is unitary if and only if U Z^*=W V^*, equivalently
+  (U Z^*)(V Z^*)=W Z^*.
+This follows by multiplying H H^*: its diagonal blocks are I and its off-diagonal block is c R, R=U Z^*-W V^*.
+Every such block, even when the equation fails, is uniformly invertible:
+  (1/25) I <= H H^* <= (49/25) I,
+because ||R||_op<=2. In particular ||H||_op<=7/5 and sigma_min(H)>=1/5.
+Moreover tau_(2m)(H H^*)=1 and
+  -log |det H|^(1/m) = -(1/2) tau_m log(I-c^2 R R^*)
+    <= (72/49) ||R||_(2,m)^2.
+Indeed c^2=144/625, 1-4c^2=49/625, and -log(1-x)<=x/(1-4c^2) on [0,4c^2]. The exponent 1/m is 2/(2m), as required for squared geometric mean.
+The unequal coefficients are essential to this proof: the symmetric 1/sqrt(2) block would lose the uniform lower singular-value bound.
+
+4. Homogeneous linear pencil and balancing
+
+Use a reference variable Z and a variable for each original generator, t, and each proper word prefix. For a word x_1 ... x_k = sigma I, k>=2, make gates for the prefix products. The first uses U=x_1, V=x_2, with output a fresh prefix variable if k>2. Subsequent gates use the preceding prefix and the next original symbol. The last output is W=sigma Z. Include the reference Z as the lower-left entry of every gate. Thus a global gauge U_label -> U_label Z^* turns all gates into exactly the signed word constraints.
+Form a block diagonal pencil L(Y) containing one singleton block Y_l for EVERY label l, including the reference, followed by 25 copies of every multiplication block. Each matrix entry of the pencil contains exactly one label with a rational coefficient. In a gate U,V are not reference labels, and W is either a fresh label distinct from U,V or +/-Z. U=V is allowed. These restrictions imply that, for the coefficient matrices of each 2 by 2 scalar block, sum A_l A_l^* = sum A_l^* A_l = I_2: possible mixed row/column terms vanish. This must be checked rather than inferred just from the norms.
+The coefficient matrices have pairwise disjoint entry supports. Let q_l be the sum of squared entries of the coefficient of label l. Initially q_l is a positive INTEGER: singleton blocks contribute 1, and the 25 gate copies contribute 9 for each occurrence in a diagonal slot and 16 for each off-diagonal slot. Let M=max_l q_l. Append M-q_l further singleton copies of each label l. Now all q_l=M, and D=sM because the total sum of the q_l equals the scalar matrix dimension. Balancing adds only redundant unitarity constraints. The total number of labels, gates, copies and rows is polynomial in the signed-word input length.
+The final pencil is L(Y)=sum_l A_l tensor Y_l. Its coefficients are real rational, satisfy both stochastic identities, and have Gram matrix I_s/s. For arbitrary Y,
+  tau_(Dm)(L(Y)^*L(Y)) = (1/s) sum_l tau_m(Y_l^*Y_l).
+
+5. Known capacity and exact saturation
+
+For Q=I_s/s, Phi_Q(X)=(1/s)sum A_l X A_l^*. The map sum A_l X A_l^* is doubly stochastic, hence has operator capacity one. For example operator concavity of log and trace preservation give Tr log Phi(X)>=Tr log X for positive X, and equality holds at X=I. Therefore cap(Phi_Q)^(1/D)=1/s.
+The identity scaling and the Gram matrix give cap(Phi_R)^(1/D)<=Tr(R I_s/s)=1/s for any density R, by determinant arithmetic-geometric mean at X=I. Thus C(A)=1/s without using any previous manuscript in the programme.
+For feasible Y, tau(L(Y)^*L(Y))=1/s, so determinant AM-GM gives F_m(A)<=1/s. Equality holds iff sqrt(s)L(Y) is unitary. All singleton blocks then force sqrt(s)Y_l to be unitaries, and the gates yield the exact signed-word solution after gauging by the reference. Conversely any m-dimensional unitary solution assigns unitary prefix labels and Z=I; Y_l=U_l/sqrt(s) is feasible and attains equality. Thus equality in dimension m is equivalent to an m-dimensional operator solution of the source system. A fixed-m maximum exists by compactness of the coefficient sphere.
+
+6. Approximate saturation: forward construction
+
+Given unitary generators satisfying all signed words with normalized 2-error at most eta, set Z=I and assign each prefix its exact word product. All internal gates then hold exactly; each final gate has ||R||_2<=eta. The singleton blocks are unitary and every gate has uniformly bounded singular values as in section 3. The balanced pencil L(U) has normalized squared Hilbert-Schmidt norm one. Averaging log determinants over all blocks gives
+  -log |det L(U)|^(2/(Dm)) <= (72/49) eta^2.
+With Y_l=U_l/sqrt(s), this yields
+  s F_m(A) >= exp(-(72/49) eta^2).
+In particular arbitrarily accurate approximate solutions imply F_infty(A)=1/s. The explicit spectral lower bound avoids any illegitimate inference from 2-norm convergence to log-determinant convergence.
+
+7. Approximate saturation: extraction
+
+Suppose a feasible tuple has s times its determinant objective >=1-epsilon, 0<epsilon<1. Put X=sqrt(s)L(Y), so tau(X^*X)=1. Its polar unitary P satisfies
+  delta^2:=||X-P||_2^2 = 2(1-tau|X|)
+       <= 2(1-sqrt(1-epsilon)) <=2 epsilon.
+X is invertible in this case, but a unitary polar extension also suffices generally. As X is block diagonal, take P block diagonal.
+For each label l, one original singleton block is Z_l=sqrt(s)Y_l. Let V_l be a polar unitary of Z_l. Its normalized squared error d_l^2<=D delta^2, because this singleton contributes d_l^2/D to the global polar distance. Set B=L(V). By the balanced Gram identity,
+  ||B-X||_2^2=(1/s)sum_l d_l^2<=D delta^2.
+All labels of B are unitary, so ||B||_op<=7/5. Therefore
+  ||B B^*-I||_2 <= (||B||_op+1)||B-P||_2
+                    <= (12/5)(sqrt(D)+1)delta.
+Each individual 2 by 2 gate has normalized squared defect c^2||R||_2^2, and contributes 2/D times that to the global squared defect. Hence
+  ||R||_2 <= 5 sqrt(D/2)(sqrt(D)+1)delta.
+Gauge V_l by V_Z^*. A word of length k has at most k-1 gates, so telescoping along unitary products bounds its signed relation error by (k-1) times the displayed gate bound. Removing the padding t t introduces at most one additional relation error. Thus a sequence of determinant objectives tending to 1/s yields arbitrarily accurate matrix approximate representations of the original signed presentation, in dimensions unchanged. No operator-norm control of the initial Y_l was assumed; it is the rounded pencil B that is uniformly bounded.
+
+8. External theorems and consequences to verify
+
+Slofstra, arXiv:1703.08618v2: Corollary 1.4 says finite-dimensional perfect strategies of binary linear-system games are undecidable; Theorem 1.2 says perfect strategies in the closure C_qa are undecidable; Theorem 1.1 gives non-closure. Theorem 3.2 gives the exact solution-group correspondence. Central J nontrivial can be restricted to its -1 eigenspace.
+Slofstra--Vidick, arXiv:1711.10676: verify the precise statements in section 4 and the converse linking quantum value 1 to approximate matrix representations with J=-I. This is a required dependency for asserting the general approximate equivalence, not merely an abstract-level citation.
+Once this equivalence is checked, sections 5--7 transfer both undecidability statements and nonattainment into the balanced tuple family. For no recursive exact dimension bound, assume such a bound b(input length) exists and use quantifier elimination over real closed fields to decide the polynomial equations L(U)^*L(U)=I in every dimension m<=b(length). Rational coefficients make every fixed-m question decidable. This would decide the source undecidable language, contradiction.
+
+9. Context and limits
+
+This is a proposed consequence of established group/game undecidability, not a new proof of those theorems. It gives an obstruction for exact finite saturation despite a known positive capacity. It does not contradict polynomial algorithms for capacity, noncommutative invertibility witnesses, or the earlier constant-factor determinant comparison. No global novelty, numerical score, publication status, formal verification or claim about a fixed approximation gap is currently established.
+Searches so far: matrix space + unitary + undecidable; linear subspace + unitary + Slofstra; unitary matrix completion + undecidable; determinant + Slofstra. No exact match observed in these limited queries. Related factorizable-channel and unitary-correlation literature must be examined. Absence of a search hit is not priority evidence.

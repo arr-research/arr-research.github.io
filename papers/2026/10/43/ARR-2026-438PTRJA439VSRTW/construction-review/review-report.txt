@@ -1,0 +1,266 @@
+REVISIÓN MATEMÁTICA DE LA CONSTRUCCIÓN DE SATURACIÓN
+Fecha: 17 de octubre de 2026
+Estado: revisión de una construcción candidata, sin nota y sin publicación
+
+DICTAMEN
+
+Las afirmaciones principales del candidato sobreviven a esta revisión. No he encontrado una identidad falsa, un contraejemplo ni una pérdida de normalización que invalide la reducción. El bloque racional, el balance simultáneo, la capacidad conocida, la equivalencia exacta y las dos implicaciones aproximadas tienen demostraciones correctas. La dependencia bibliográfica incompleta del paso hacia C_qa se puede cerrar: hace falta la sección 5 de Slofstra–Vidick, no solamente la sección 4. También debe explicitarse un factor constante al pasar de palabras positivas a conmutadores con inversos.
+
+La extensión posterior con la familia FINITA de grupos de Clifford también sobrevive. Da una obstrucción incondicional a una cota universal polinomial en tamaño de entrada e inversa de precisión para la dimensión de testigos que aproximan F_infty. No da una obstrucción recursiva para aproximación, ni un gap constante, ni no computabilidad del valor.
+
+La novedad que esta revisión deja abierta es la realización específica mediante determinantes de lápices racionales balanceados y su control cuantitativo. La indecidibilidad matricial, la ausencia de cotas recursivas de dimensión en otros problemas matriciales, las dificultades de optimización sobre unitarias y la no clausura de correlaciones/canales tienen antecedentes primarios explícitos. No considero defendible presentar esos fenómenos generales como nuevos.
+
+1. OBJETO Y LÍMITES DE LA REVISIÓN
+
+Se leyeron únicamente estos dos textos de la nueva construcción:
+
+  D:\Proyectos\airr-investigacion\2026-10-17_saturacion-indecidible\candidate-proof.txt
+  10972 bytes; SHA256:
+  73e4cfca4fd371f56b9539c232e64daf6c25feb4d0e8653b35286f811496f13e
+
+  D:\Proyectos\airr-investigacion\2026-10-17_saturacion-indecidible\clifford-supplement.txt
+  SHA256:
+  67a99cbb8820895af581ececfe692b6058b8d4f1aa1d4c43a635b76d23e09de4
+
+El segundo texto se añadió al encargo durante la revisión. Las localizaciones de este informe usan las líneas de esos bytes, reproducidas en candidate-proof-numbered.txt y clifford-supplement-numbered.txt dentro de esta carpeta. Los originales no se editaron. El informe anterior de capacidad/qutrit queda intacto.
+
+La selección solicitada fue gpt-6-astra con esfuerzo xhigh. La herramienta de colaboración sólo expone el nombre del agente; esta declaración no es una atestación independiente del modelo efectivamente ejecutado. Se ha reutilizado el contexto de la revisión anterior y se recibieron mensajes del agente principal, incluidos resúmenes de sus pruebas. Por tanto no se afirma aislamiento certificado ni revisión ciega. Modelos Astra participaron previamente en el programa y en una dependencia del manuscrito anterior. Esta construcción se ha comprobado por sus propios argumentos, sin usar esa dependencia como premisa.
+
+No se leyeron ESTADO.json, dispatch-state.json, memorias, otros informes ni los verificadores/diagnósticos del autor de la nueva construcción. Los dos verificadores aquí conservados se escribieron independientemente. Sólo se usaron fuentes científicas primarias públicas para los antecedentes y dependencias. No se ejecutó Opus, no se contactó a autores y no se publicó nada. No se asigna ninguna nota.
+
+2. CORRECCIONES NECESARIAS ANTES DE CONVERTIR EL CANDIDATO EN MANUSCRITO
+
+R1. Cita insuficiente para el converse aproximado.
+Localización: candidato, línea 80.
+La sección 4 de Slofstra–Vidick sólo da el converse directamente para estrategias máximamente entrelazadas. Para estados generales hay que citar Theorem 5.1 y Corollaries 5.2–5.3, en la sección 5. Theorem 5.1 produce una representación aproximada sobre un subespacio con J exactamente igual a −I y error O(error_del_juego^(1/4)); Proposition 4.4(a) proporciona la dirección inversa. Lemma 4.2 convierte el error promedio del juego en error por pregunta, con constante dependiente del juego. Un generador ausente de las ecuaciones puede fijarse a I.
+Efecto: es una reparación real de la justificación externa, pero no exige retirar la afirmación. Fuente: [SV], pp. 16–18 del PDF, Proposition 4.4 y Theorem 5.1/Corollary 5.3. El PDF v2 contiene erratas en las columnas nulas del enunciado; Proposition 5.4 y la prueba aclaran la hipótesis. Fijar los generadores ausentes a I satisface sus cuadrados.
+
+R2. Conversión entre las dos presentaciones aproximadas.
+Localización: candidato, líneas 20–21 y 75–80.
+Las ecuaciones positivas xyxy=I y las de conmutación usuales son equivalentes exactamente cuando x²=y²=I. En el régimen aproximado se necesita una estimación. Para unitarias X,Y,
+
+  ||X^{-1}−X||_2 = ||X²−I||_2,
+  ||XYX^{-1}Y^{-1}−σI||_2
+    ≤ ||XYXY−σI||_2 + ||X²−I||_2 + ||Y²−I||_2.
+
+El mismo razonamiento funciona en sentido inverso. Por ello error η en las palabras positivas implica error como máximo 3η en las relaciones correspondientes con inversos. Esto no cambia ninguna equivalencia cualitativa ni la indecidibilidad. El suplemento Clifford ya contiene correctamente este factor.
+
+R3. Alcance de la novedad.
+Localización: candidato, líneas 16 y 85–86; futuro apartado de antecedentes.
+La formulación prudente actual es apropiada. Deben añadirse al menos los antecedentes [HTZ], [LW] y [MR] comentados más abajo. La falta de resultados en una búsqueda no certifica prioridad. La transferencia de indecidibilidad tras una equivalencia efectiva y el argumento de eliminación de cuantificadores son consecuencias estándar; no son aportaciones independientes de gran profundidad.
+
+R4. Enunciado independiente del compilador.
+Localización: candidato, líneas 18–46; suplemento, línea 6.
+Conviene formular el lema de construcción para listas de palabras positivas con signos ±1, con etiquetas de prefijo nuevas para cada aparición. Después se especializa a juegos y a Clifford. Esto hace explícito por qué el suplemento, que no es una presentación de juego binario, está cubierto. Se deben enumerar los prefijos auxiliares de longitudes 2,...,k−1; el prefijo de longitud 1 ya es la etiqueta original. No se detecta un problema matemático, pero sí una precisión útil de implementación.
+
+3. BLOQUE RACIONAL: ORIENTACIÓN, ESPECTRO Y LOGARITMO
+
+Localización: candidato, líneas 26–38.
+
+Con a=3/5, b=4/5 y c=12/25,
+
+  HH* = [[I,cR],[cR*,I]],       R=UZ*−WV*.
+
+Las singularidades de R dan los autovalores 1±cσ_j(R) de HH*. Como R es diferencia de dos unitarias, σ_j(R)≤2. Resultan exactamente las cotas 1/25 y 49/25, y por tanto 1/5≤σ_j(H)≤7/5. Ambas cotas se alcanzan, por ejemplo con U=V=Z=I y W=−I. En dimensión uno este bloque tiene |det H|=7/25.
+
+La orientación de la ecuación es correcta. Multiplicar R=0 por VZ* a la derecha da
+
+  (UZ*)(VZ*)=WZ*.
+
+No se pueden intercambiar U y V ni sustituir el adjunto de Z por su transpuesta. Lo comprobé también con matrices racionales complejas y referencia no real; ambas modificaciones erróneas fueron detectadas.
+
+Por complemento de Schur,
+
+  det(HH*) = det(I−c²R*R) = det(I−c²RR*).
+
+En consecuencia,
+
+  −log |det H|^(1/m) = −(1/2)τ_m log(I−c²RR*)
+    ≤ [c²/(2(1−4c²))] ||R||_2² = (72/49)||R||_2².
+
+No falta ningún factor de 2: el bloque tiene tamaño 2m y la potencia de la magnitud del determinante es 2/(2m)=1/m. El coeficiente 72/49 es holgado, pero correcto. La elección asimétrica de a,b proporciona justamente la protección frente a valores singulares pequeños que necesita el logaritmo. El bloque con a=b=1/√2 es singular en el ejemplo extremo anterior y no serviría para este argumento uniforme.
+
+4. CONSTRUCCIÓN Y BALANCE SIMULTÁNEO
+
+Localización: candidato, líneas 21–22 y 42–46.
+
+Las dos identidades estocásticas se verifican por bloques, no por una mera suma de normas. En cada fila y en cada columna de un bloque 2×2, las etiquetas que podrían generar un producto cruzado son distintas. Las coincidencias permitidas U=V y W=±Z se sitúan en posiciones diagonales opuestas o antidiagonales opuestas, y no crean productos cruzados en AA* ni en A*A. Cada entrada diagonal de las dos sumas es a²+b²=1. Los bloques singleton aportan igualmente la identidad.
+
+La condición sobre etiquetas es esencial: permitir W=U, por ejemplo, produce un término cruzado no nulo en A*A. El verificador incluye ese caso prohibido como control negativo.
+
+Los soportes disjuntos de las matrices A_l implican Tr(A_i*A_j)=0 si i≠j. Tras 25 copias, cada aparición diagonal aporta 9 a q_l y cada aparición antidiagonal aporta 16; no hay interferencia entre entradas distintas de una misma etiqueta. Añadir M−q_l singletons conserva las identidades estocásticas, deja todas las normas de Frobenius al cuadrado iguales a M y produce D=sM. Así,
+
+  τ_D(A_i*A_j)=δ_ij/s,
+  τ_Dm(L(Y)*L(Y))=(1/s) Σ_l τ_m(Y_l*Y_l).
+
+Sea G el número de puertas y L el tamaño de la lista de palabras, incluyendo símbolos. Se tienen s=O(L), M≤1+32G=O(L) y D=O(L²). Incluso escribir las s matrices densas necesita sólo un número polinomial de entradas, O(L^5). La expansión de un sistema binario en relaciones de cuadrado, fila y pares que conmutan también es polinomial. El precio práctico puede ser grande, pero no invalida la afirmación de complejidad.
+
+El padding es correcto para palabras vacías, de longitud uno y con símbolos repetidos. Las dos condiciones tt=I y palabra·tt=σI tienen las soluciones exactas previstas; en aproximación, retirar tt cuesta a lo sumo su error de cuadrado. Se comprobaron expresamente las palabras vacías con ambos signos.
+
+5. CAPACIDAD Y SATURACIÓN EXACTA
+
+Localización: candidato, líneas 50–52 y 81.
+
+La prueba de capacidad es autónoma. Si T(X)=Σ_l A_lXA_l*, entonces T es unital y preserva la traza. Para X>0, Jensen para log da Tr log T(X)≥Tr log X, y X=I realiza la igualdad. Por tanto cap(T)=1 y cap(T/s)^(1/D)=1/s.
+
+Para cualquier matriz de densidad R, la aplicación covariante Φ_R satisface τ_D(Φ_R(I))=1/s por la identidad de Gram. Evaluar la capacidad en I y usar AM–GM da cap(Φ_R)^(1/D)≤1/s. Esto prueba C(A)=1/s sin una dependencia del programa anterior y sin optimizar R numéricamente.
+
+La esfera de coeficientes de dimensión fija es compacta. AM–GM para las singularidades de L(Y) da F_m≤1/s, y su caso de igualdad es que X=√sL(Y) sea unitario. Cada singleton obliga entonces a √sY_l a ser unitario. Las puertas, tras el cambio común U_l↦U_lU_Z*, dan exactamente las relaciones de palabras. Recíprocamente una solución de palabras en dimensión m, con referencia I y prefijos como productos, produce un maximizador con Y_l=U_l/√s. La dimensión m se conserva en esta equivalencia.
+
+No se ha confundido invertibilidad con unitariedad. De hecho todos los bloques construidos a partir de etiquetas unitarias son invertibles, aunque fallen las relaciones; la dificultad reside en alcanzar la igualdad de AM–GM.
+
+Para un m fijo, la pregunta L(U)*L(U)=I se expresa mediante ecuaciones polinómicas reales con coeficientes racionales en partes reales e imaginarias. Los singletons ya imponen unitariedad, y no se necesita introducir √s como constante algebraica. La eliminación de cuantificadores decide esta pregunta. Si existiera una función recursiva que acotara la menor dimensión saturante de todas las instancias afirmativas según el tamaño de entrada, bastaría decidir las dimensiones 1,...,b(tamaño). La reducción daría un decisor del problema indecidible de estrategias perfectas finitas. El argumento establece correctamente ausencia de cota recursiva para SATURACIÓN EXACTA.
+
+6. LAS DOS DIRECCIONES APROXIMADAS
+
+Localización: candidato, líneas 56–75.
+
+Dirección constructiva. Para etiquetas unitarias, todos los bloques de L(U) tienen sus valores singulares en [1/5,7/5]. Los singletons no aportan pérdida logarítmica; cada puerta aporta la cota del apartado 3 con peso 50/D, contando sus 25 copias. La suma de los pesos de las puertas es ≤1. Si las palabras tienen error ≤η, los prefijos exactos anulan las puertas internas y sólo quedan errores finales ≤η. Por tanto
+
+  −log |det L(U)|^(2/(Dm)) ≤ (72/49)η²,
+  sF_m ≥ exp(−72η²/49).
+
+Esta estimación es uniforme en la dimensión auxiliar. No se deduce continuidad de log det a partir de mera cercanía de Hilbert–Schmidt: se demuestra directamente la cota espectral que impide una cola logarítmica problemática.
+
+Dirección extractiva. Si s veces el objetivo es ≥1−ε, para X=√sL(Y) se tiene τ(X*X)=1. La polar P cumple
+
+  δ²=||X−P||_2²=2−2τ|X|≤2(1−√(1−ε))≤2ε.
+
+La desigualdad central procede de AM–GM aplicada a las singularidades de X, cuyo promedio geométrico es al menos √(1−ε). La positividad del objetivo asegura invertibilidad, incluso de los singletons. Puede tomarse la polar por bloques.
+
+Sea V_l la polar de √sY_l. Un solo singleton da d_l²≤Dδ². Gram convierte esto en ||L(V)−X||_2≤√Dδ. Para B=L(V), ||B||op≤7/5 y
+
+  BB*−PP*=(B−P)B*+P(B*−P*),
+
+de donde ||BB*−I||_2≤(12/5)(√D+1)δ. La contribución de UNA copia de una puerta es (2/D)c²||R||_2². Ignorar las otras 24 copias sólo debilita la cota. Se obtiene exactamente
+
+  ||R||_2≤5√(D/2)(√D+1)δ.
+
+El cambio de referencia convierte R en error de multiplicación sin cambiar su norma. Telescopar una palabra acolchada de longitud k cuesta k−1 errores de puerta; retirar tt cuesta otro. Si la longitud original máxima es ℓ, todas sus relaciones tienen error a lo sumo
+
+  5(ℓ+2)√D(√D+1)√ε ≤ 10(ℓ+2)D√ε.
+
+No se usa una cota de norma de operador de los coeficientes iniciales Y_l. Se obtiene después de redondearlos a unitarias. Todos los factores m se cancelan al normalizar las trazas.
+
+7. TRANSFERENCIA DESDE JUEGOS Y CONSECUENCIAS
+
+La fuente [S] contiene los ingredientes de indecidibilidad y no clausura precisos: Corollary 1.4 para estrategias perfectas finitas, Theorem 1.2 para C_qa, Theorem 1.1 para un juego con estrategia perfecta en C_qa y sin ella en C_qs, y Theorem 3.2 para la correspondencia con representaciones finitas del grupo solución. Se usa la involución central J; una representación finita donde no sea trivial se restringe a su subespacio de autovalor −1. Estos son resultados importados, no demostrados de nuevo aquí. [S]
+
+Combinando R1–R2 con los apartados 5–6 quedan las equivalencias necesarias:
+
+  alguna saturación finita ⇔ alguna solución unitaria finita de palabras
+                           ⇔ estrategia perfecta finita;
+
+  F_infty=1/s ⇔ soluciones matriciales de palabras con errores arbitrariamente pequeños
+               ⇔ valor cuántico 1 ⇔ estrategia perfecta en C_qa.
+
+La última equivalencia entre valor 1 y una correlación perfecta en C_qa usa sólo la clausura de las correlaciones finitas dentro de un espacio finito de probabilidades y continuidad del funcional del juego. No exige que un límite esté realizado en una dimensión finita.
+
+Por ello sobreviven ambas indecidibilidades, la existencia de no alcanzamiento finito y la ausencia de una cota recursiva para la dimensión de SATURACIÓN EXACTA. Esta última es una propiedad de un problema de igualdad, no una afirmación sobre cálculo aproximado de un número. Tampoco el no alcanzamiento finito implica por sí solo una tasa no recursiva de aproximación.
+
+8. EXTENSIÓN CLIFFORD
+
+Localización: suplemento, líneas 6–26.
+
+El compilador admite las palabras x_i²=I y x_ix_jx_ix_j=−I. No necesita que pares de una fila de un juego conmuten. La prueba exacta sigue siendo la del apartado 5. Los generadores de Clifford, construidos con productos tensoriales de matrices de Pauli, dan una solución en dimensión 2^floor(n/2). En particular F_infty=C=1/s se alcanza exactamente para cada n; aquí no hay un supuesto pendiente de hiperlinealidad.
+
+Contando prefijos nuevos por aparición, obtuve y comprobé:
+
+  s_n = 2n²+n+2,
+  G_n = (5n²+n+2)/2,
+  M_n = 48n²+16n+33,
+  D_n = s_n M_n = 96n⁴+80n³+178n²+65n+66.
+
+La referencia tiene peso 1+16(G_n+R_n), donde R_n=n(n+1)/2+1 es el número de palabras después de añadir t². Ese peso es máximo. Las etiquetas originales tienen peso 18n+1, la etiqueta t tiene 9n²+9n+19 y cada prefijo tiene 26. Esto explica M_n; no basta contar sólo las apariciones finales de la referencia, porque aparece abajo a la izquierda en TODAS las puertas.
+
+Como ℓ≤4, la cota extractiva da η≤60D_n√ε. Convertir las relaciones a conmutadores con inversos cuesta el factor 3 de R2; las relaciones de J=−I son exactas. Los lemas externos utilizados son realmente Lemmas 3.1 y 3.4 de [C], pp. 8–10: error θ en la presentación implica un casi homomorfismo de error (n+1)²θ, y la condición ||ψ(J)−I||_2>42u fuerza dimensión al menos 2^(floor(n/2)−1). El segundo hecho usa estabilidad de representaciones de grupos finitos; no depende del grupo infinito de Theorem 1.2 de ese artículo. [C]
+
+La evaluación de formas normales deja ψ(J)=−I. La cuenta de errores del lema se puede comprobar normalizando productos de palabras; el número de usos de relaciones es ≤n(n+1)+1≤(n+1)². En nuestra especialización, mover J no tiene coste, lo que sólo mejora la estimación.
+
+Con ε_n=[10000D_n(n+1)²]^−2,
+
+  u≤3(n+1)²·60D_n√ε_n=9/500,
+  42u≤189/250=0.756<2=||−I−I||_2.
+
+También u<1/16, como requiere el resultado de estabilidad utilizado en la prueba externa. La desigualdad estricta del lema queda satisfecha con margen. En consecuencia,
+
+  F_m(A_n)≥(1−ε_n)F_infty(A_n) ⇒ m≥2^(floor(n/2)−1).
+
+Para el tamaño de entrada, D_n≤100(n+1)^4 y 1/ε_n≤10^12(n+1)^12. La representación densa de las matrices tiene s_nD_n²=O(n^10) entradas de un alfabeto racional fijo. Por tanto cualquier polinomio en la longitud de entrada y 1/ε_n crece sólo como una potencia de n, mientras que la dimensión requerida crece exponencialmente. La consecuencia del suplemento es correcta incluso si se insiste en una entrada densa, sin una representación comprimida de los bloques.
+
+Esta familia excluye una cota universal POLINOMIAL de dimensión a alta precisión. No excluye cotas recursivas, dimensiones polinomiales a un factor constante, representaciones comprimidas de los testigos ni el cálculo eficiente del valor: en la propia familia el valor es conocido exactamente.
+
+9. ANTECEDENTES Y NOVEDAD
+
+[HTZ], Theorem 2(b)–(d), ya demuestra indecidibilidad de sistemas cuadráticos de ecuaciones matriciales con coeficientes de {−1,0,1}, de una ecuación cuártica con adjuntos, y ausencia de cotas recursivas de dimensión. Su prueba usa la misma idea general de decidir cada dimensión y derivar una contradicción de una cota recursiva. El candidato añade restricciones muy específicas: variables recuperadas como unitarias, lápiz homogéneo, coeficientes en un alfabeto fijo, dos identidades estocásticas, Gram escalar y un criterio de determinante. No se ha mostrado que [HTZ] ya contenga esa normalización. [HTZ]
+
+[HZ], Theorem 4.10, trata explícitamente la equivalencia entre decidibilidad de factibilidad matricial y una cota recursiva de dimensión; su nota añadida en pruebas remite al resultado de indecidibilidad posterior. Es un antecedente adicional directo para evitar presentar el argumento de la cota recursiva como una nueva técnica. [HZ]
+
+[LW] define Unitary Quadratic Minimization (UQM; Definition 1) y prueba su NP-dureza en §3. A umbral cero, el objetivo cuadrático pide una unitaria ortogonal a una lista de matrices, es decir, una unitaria en un subespacio lineal prescrito. Esto es un antecedente cercano de la geometría subyacente. Su problema es de dimensión dada, y no establece por sí mismo las conclusiones con amplificación ilimitada, normalización de capacidad y log-determinante del candidato. [LW]
+
+[MR], Proposition 3.2, codifica datos de proyecciones mediante correlaciones de unitarias; Theorems 3.6 y 4.1 establecen fenómenos de no clausura y canales que requieren ancillas infinitas. Allí existe ya una conexión entre restricciones lineales, unitariedad, correlaciones y factorización. Sus formulaciones no son la equivalencia con el determinante racional balanceado comprobada aquí. Además, no basta citar no clausura abstracta de un conjunto para obtener automáticamente una instancia con entradas racionales y el umbral exactamente conocido de este candidato. [MR]
+
+Juicio sobre la contribución: la reducción contiene una pieza concreta que merece una presentación precisa, el bloque racional asimétrico con control uniforme del logaritmo combinado con el balance. Una vez establecido ese lema, la mayor parte de las consecuencias lógicas y la transferencia Clifford son aplicaciones breves de resultados externos fuertes. No encontré en las fuentes consultadas una demostración de exactamente el mismo teorema con ese alfabeto y esas identidades. Eso deja la prioridad sin determinar; no constituye evidencia positiva de que el teorema sea nuevo, ni permite calificarlo como un avance general sobre indecidibilidad.
+
+Las búsquedas incluyeron combinaciones de matrix space/subspace, unitary feasibility/completion, linear pencil, determinant, Slofstra, factorizable channels y tracial polynomial optimization. Se excluyó airr.science para evitar contaminación adicional por páginas del programa. No se usaron resúmenes automáticos o páginas agregadoras como fundamento matemático. El contraste se hizo con los textos primarios enlazados a continuación.
+
+10. PRUEBAS REPRODUCIBLES
+
+independent_checks.py, sin importar código del autor:
+  • identidades exactas del bloque con racionales complejos, referencia no real y controles de orientación;
+  • extremos espectrales exactos y control singular del bloque simétrico;
+  • seis patrones permitidos de coincidencia de etiquetas y rechazo de una coincidencia prohibida;
+  • siete casos límite de construcción y 160 listas aleatorias de palabras, con comprobaciones exactas mediante Fraction;
+  • 360 bloques complejos en dimensiones 1,2,3,5,8, verificando espectro, fórmula logarítmica y su cota;
+  • 48 pruebas de las dos direcciones aproximadas con coeficientes no unitarios en la extracción;
+  • ejemplo exacto no conmutativo de palabras, con referencia compleja, realizable en dimensión 2 y no en dimensión 1.
+
+clifford_checks.py, que reutiliza sólo nuestro compilador independiente:
+  • fórmulas de tamaño para n=2,...,10;
+  • soluciones de Clifford y todas las puertas exactas para esas nueve dimensiones;
+  • tablas completas de formas normales para n=2,3,4,5: 64+256+1024+4096=5440 productos;
+  • perturbaciones unitarias para comprobar el factor 3 y el error (n+1)²;
+  • aritmética racional exacta de u=9/500 y 42u=189/250.
+
+Ambos procesos terminaron con código 0. No hubo fallos inesperados que corregir; los rechazos enumerados son controles negativos deliberados y se conservan. Los resultados completos están en independent-checks.json y clifford-checks.json. Las pruebas numéricas son diagnósticos finitos; las afirmaciones universales se apoyan en las demostraciones analíticas anteriores. No se ha realizado verificación formal en un asistente de pruebas.
+
+Reproducción en este equipo:
+
+  & 'C:\Users\lluis\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' -B 'D:\Temp\airr\2026-10-17_astra-saturacion\independent_checks.py'
+  & 'C:\Users\lluis\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' -B 'D:\Temp\airr\2026-10-17_astra-saturacion\clifford_checks.py'
+
+Los archivos fuente revisados se vuelven a comprobar mediante SHA256 al comienzo y al final de cada verificador. Las copias primarias descargadas, sus hashes, número de páginas y URLs están en primary-source-manifest.json. Todos los productos de esta revisión se guardaron bajo D:\Temp\airr\2026-10-17_astra-saturacion.
+
+11. FUENTES PRIMARIAS
+
+[S] W. Slofstra, The set of quantum correlations is not closed, arXiv:1703.08618v2.
+https://arxiv.org/pdf/1703.08618v2
+Localizaciones comprobadas: Theorems 1.1, 1.2, 3.2, Corollary 1.4, Proposition 3.4.
+
+[SV] W. Slofstra y T. Vidick, Entanglement in non-local games and the hyperlinear profile of groups, arXiv:1711.10676v2.
+https://arxiv.org/pdf/1711.10676v2
+Localizaciones comprobadas: Proposition 2.7; Lemma 4.2, Proposition 4.4; Theorem 5.1 y Corollaries 5.2–5.3. La dependencia decisiva del converse general es §5.
+
+[C] W. Slofstra, A group with at least subexponential hyperlinear profile, arXiv:1806.05267v1.
+https://arxiv.org/pdf/1806.05267v1
+Localizaciones comprobadas: definición de C(n) en §2, Lemmas 3.1 y 3.4 y sus pruebas; Theorem 3.2. La advertencia posterior a Corollary 1.4 impide usar sin más el grupo infinito para afirmar valor cuántico 1; el suplemento finito no necesita esa afirmación.
+
+[HTZ] C. Herrmann, Y. Tsukamoto y M. Ziegler, Progress on the Computability, Complexity, and Expressiveness of Geometric Quantum Logic, versión pública de los autores.
+https://www2.mathematik.tu-darmstadt.de/~herrmann/qex38.pdf
+Localización comprobada: Theorem 2, especialmente (b)–(d), y el argumento de cotas recursivas.
+
+[HZ] C. Herrmann y M. Ziegler, Computational Complexity of Quantum Satisfiability, Journal of the ACM 63(2), artículo 19 (2016).
+https://www2.mathematik.tu-darmstadt.de/~herrmann/X3.pdf
+Localizaciones comprobadas: Theorem 4.10 y nota añadida en pruebas.
+
+[LW] C. Do-Yan Lee y J. Watrous, Detecting mixed-unitary quantum channels is NP-hard, copia pública de los autores fechada 8 de febrero de 2019.
+https://jhwatrous.github.io/LeeWatrous2020.pdf
+Localizaciones comprobadas: Definition 1, §3, y contexto de la reducción a detección de canales mixed-unitary.
+
+[MR] M. Musat y M. Rørdam, Non-closure of quantum correlation matrices and factorizable channels that require infinite dimensional ancilla, arXiv:1806.10242v4, con apéndice de N. Ozawa.
+https://arxiv.org/pdf/1806.10242v4
+Localizaciones comprobadas: Proposition 3.2, Theorems 3.6 y 4.1.
+
+CONCLUSIÓN DE REVISIÓN
+
+Puede prepararse un manuscrito a partir del núcleo y de la extensión Clifford con las correcciones R1–R4. No he establecido una objeción material que fuerce retirar sus conclusiones delimitadas. La contribución debe presentarse como una reducción cuantitativa específica que importa resultados previos de indecidibilidad y estabilidad. La prioridad y la valoración científica requieren una evaluación posterior del manuscrito terminado; este informe no asigna notas.
