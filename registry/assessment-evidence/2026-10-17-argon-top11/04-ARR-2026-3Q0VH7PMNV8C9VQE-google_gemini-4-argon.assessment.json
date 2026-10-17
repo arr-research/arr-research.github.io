@@ -1,0 +1,57 @@
+{
+  "assessed_at": "2026-10-17T14:26:27.822506+00:00",
+  "canonical_sha256": "1f5334e93e8c7a72207c47c237537f4e6bd4c108f3f631b5d9df7c65b06fa1c0",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All analytic proofs and scaling calculations for the two negative walls (Sections 5-7) were verified directly by hand and are mathematically sound. While the external Lean 4 repository could not be executed in this tool-less review environment, the mathematical arguments in the PDF are elementary, explicit, and self-consistent.",
+      "stars": 5
+    },
+    "novelty": {
+      "basis": "The Lean 4 formalizations of the fixed-volume Combes-Thomas bound on finite metric graphs and the concrete matricial su(n) adjoint model (dim_R su(n) = n^2 - 1 with isometric coordinate transport) are solid formalization contributions. However, the two negative walls mathematically reflect a missing L^(d-2) coarse-norm scaling factor in the setup rather than a deep obstruction in Yang-Mills theory.",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "The manuscript supplies a complete theorem-to-artifact map, exact Lean 4 (v4.29.0-rc6) and Mathlib commit hashes, git tags, build targets, and axiom-oracle specifications. Static inspection confirms thorough documentation, though executable verification was not performed as no source archive or network access was available in this run.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Quantifier discipline, non-vacuity witnesses, dimensional conditions (d >= 3, N_c >= 2, N' >= 1), and scope disclaimers are stated with exceptional clarity. A minor expositional gap exists in Section 2, where the prose description of the block map Q omits the transverse block-averaging factor in linAvg needed to derive Theorem 7.4 from first principles.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "The positive substrate provides reusable Lean 4 infrastructure for lattice gauge covariance decay and su(n) Lie algebra geometry. The negative results provide an honest, well-documented case study in how formal verification catches scaling/normalization mismatches and quantifier errors, with commendably transparent scope boundaries.",
+      "stars": 3
+    }
+  },
+  "independence": "unknown",
+  "millennium_score": 3.2,
+  "model_id": "google/gemini-4-argon",
+  "overall_stars": 3,
+  "paper_id": "ARR-2026-3Q0VH7PMNV8C9VQE",
+  "potential_errors": [
+    "In Section 2 ('The block map'), the prose states that Q 'assigns to a coarse bond the unscaled line integral (sum) of the L fine bond values along the corresponding block line (flatBlockConstraintQCLM, built on linAvg).' A pure 1D sum without transverse block averaging over the L^(d-1) transverse sites in the block would not satisfy the general contraction bound ||QA||^2 <= L^(-1) ||A||^2 for d >= 3 in Theorem 7.4 (since ||QA||^2 <= (L^2 / L^d) ||A||^2 uses the full d-dimensional block average). Writing out the explicit mathematical formula for linAvg and Q in Section 2 would prevent reader confusion."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "OpenRouter",
+  "recommendation": "accept",
+  "strengths": [
+    "Exemplary scientific honesty and scope discipline: the paper clearly states what is proved and what is not, avoiding any overclaiming toward the continuum Yang-Mills mass gap.",
+    "Complete transparency regarding quantifier order (exists C_P forall L vs. forall L exists C_P) accompanied by explicit fixed-volume existence proofs (Remark 5.7) and concrete matricial su(n) inhabitants (Theorem 4.1) that ensure the refuted gates are non-vacuous.",
+    "Clean, exact finite-lattice construction of the fluctuation-sector square-wave falsifier (Section 7), avoiding asymptotic approximations in favor of exact interface counts (the factor 8 in Theorem 7.3).",
+    "Valuable positive Lean 4 infrastructure: a general fixed-volume Combes-Thomas exponential decay chain for coercive finite-range operators on metric graphs (Theorem 3.1) and a concrete formalization of su(n) with its trace inner product and dimension n^2 - 1 (Theorem 4.1).",
+    "Comprehensive theorem-to-Lean-artifact mapping (Section 8) and detailed reproducibility metadata (Section 9)."
+  ],
+  "strong_novelty_candidates": [
+    "Lean 4 formalization of the finite-volume Combes-Thomas exponential decay bound instantiated on the flat gauge-fixed lattice Yang-Mills covariance operator (Theorem 3.1).",
+    "Lean 4 formalization of the real Lie algebra su(n) inner-product space, its real dimension n^2 - 1, and its isometric coordinate transport carrying the adjoint action of SU(n) (Theorem 4.1)."
+  ],
+  "summary": "This manuscript reports two machine-checked negative results ('Poincare walls') and two supporting positive infrastructure results within a Lean 4 formalization programme for lattice Yang-Mills theory. The positive results establish (1) a fixed-volume Combes-Thomas exponential kernel decay bound for self-adjoint coercive finite-range operators instantiated on the flat gauge-fixed covariance, and (2) a concrete matricial construction of the adjoint representation of SU(n) on su(n) with real dimension n^2 - 1 and trace inner product. The two negative results prove that under the repository's specific unscaled block map Q and unweighted coarse l^2 norm, the Poincare constant C_P on a torus of side L*N' satisfies C_P >= L^(d-2) on the constant sector (Wall 1) and C_P >= 2M/9 at even block scale L = 2M on the fluctuation sector via a half-period square-wave witness (Wall 2). Consequently, no volume-uniform coercivity bound can be obtained through this specific unscaled operator and unweighted coarse norm for d >= 3, N_c >= 2. The mathematical proofs in the PDF were verified by static inspection and are completely sound; external Lean artifacts were not executed in this sandboxed review.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:4f550b85-7b67-4b71-acd5-20a214b27e2f",
+  "weaknesses": [
+    "From the perspective of mathematical physics (e.g., Balaban's renormalization group), both walls arise from omitting the coarse volume-element weight L^(d-2) (or L^(d/2 - 1) field rescaling) when comparing fine and coarse l^2 norms; thus the obstruction diagnoses a normalization defect in the formalized definition rather than an intrinsic obstacle to block-Poincare inequalities.",
+    "Section 2 gives Lean identifier names and prose descriptions for K_0 and Q rather than writing out their explicit coordinate formulas on the lattice, requiring the reader to infer the exact transverse averaging in linAvg from Lemma 5.1 and Theorem 7.4.",
+    "External Lean 4 source files were not included in the review packet and could not be executed in this sandboxed environment, so verification of the machine-checked claims relies on static inspection of the manuscript and its proof sketches."
+  ]
+}

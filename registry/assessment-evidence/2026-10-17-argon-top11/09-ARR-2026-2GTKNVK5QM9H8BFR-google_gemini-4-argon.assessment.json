@@ -1,0 +1,59 @@
+{
+  "assessed_at": "2026-10-17T14:29:15.873923+00:00",
+  "canonical_sha256": "9e10959a09984da0951b68fa3203c6339a9dba901d6d5310539ef3a4d8d79ddd",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "Every theorem, lemma, and exact constant was audited analytically. The Schur-Weyl block reduction (Lemma 3.1), Gaussian-Schur moment identity (Lemma 3.2), normalized Schur dominance (Lemma 3.3), polynomial sphere-evaluation bounds for the determinant exponent (Theorem 4.1), perfect-detection rank threshold (Theorem 5.1), shrunk-subspace tensor stability (Theorem 6.1), qubit spin-flip generating function (Theorem 7.1), and qutrit Werner-Holevo tensor examples (Theorems 8.1-8.2) are all sound.",
+      "stars": 5
+    },
+    "novelty": {
+      "basis": "While building on established Schur-Weyl minimax reductions, Sra's normalized Schur monotonicity, Wootters' spin-flip spectrum, and classical noncommutative-rank/blow-up theorems (Fortin-Reutenauer, Derksen-Makam, Li et al.), the Gaussian-Schur representation of block acceptance probabilities and its operational consequences—universal optimality of the balanced partition, the determinant exponent, and exact tensor-partner exponents for W3—are original and nontrivial.",
+      "stars": 4
+    },
+    "reproducibility": {
+      "basis": "All main results are proved analytically in full detail within the 14-page manuscript. In addition, static inspection of the accompanying public verification scripts and JSON artifacts confirms clean symbolic and numerical cross-checks of the Gaussian-Schur identity, qubit spin-flip moments, 12-variable minor identity, and tensor-square determinant reduction.",
+      "stars": 5
+    },
+    "rigor": {
+      "basis": "Assumptions, quantifiers, and scope boundaries (two-sided independent unknown rotations, memoryless calls, unbounded reference dimension m_*, and the global U(dm) null in tensor-stability statements) are stated with high precision, and prior algebraic and quantum-testing results are scrupulously attributed. Proofs are concise and complete.",
+      "stars": 5
+    },
+    "significance": {
+      "basis": "The paper completely resolves minimax hypothesis testing of an unknown unitary channel against memoryless noise with independent input/output rotations, eliminating the channel-dependent partition search at every finite query number and linking asymptotic and zero-error performance to clean determinant, rank, and noncommutative-rank invariants of the Kraus span.",
+      "stars": 4
+    }
+  },
+  "independence": "unknown",
+  "millennium_score": 5.6,
+  "model_id": "google/gemini-4-argon",
+  "overall_stars": 6,
+  "paper_id": "ARR-2026-2GTKNVK5QM9H8BFR",
+  "potential_errors": [
+    "In the proof of Lemma 3.3 (p. 5), the expansion s_lambda = sum_mu K_{lambda,mu} m_mu in infinitely many variables can have K_{lambda,mu} > 0 for partitions mu with more than d parts even when lambda has at most d rows (e.g., d=2, n=3, lambda=(2,1), mu=(1,1,1)). Because Lemma 3.3 evaluates polynomials on x in [0,infinity)^d, m_mu(x_1,...,x_d) vanishes identically whenever ell(mu) > d; explicitly noting that the d-variable expansion restricts to ell(mu) <= d avoids dividing by m_mu(1^d) = 0."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "OpenRouter",
+  "recommendation": "accept",
+  "strengths": [
+    "Lemma 3.2 (Gaussian-Schur representation) is an elegant structural identity: expressing the Schur-Weyl block acceptance probability b_lambda(E) as E[s_lambda(G^dagger G)] / (n! s_lambda(1^d)) for a standard complex Gaussian combination G of Kraus operators immediately bridges quantum channel testing and classical symmetric-function inequalities.",
+    "Theorem 2.1 establishes a single universal parallel test—using the balanced partition lambda_* = ((a+1)^r, a^{d-r})—that is simultaneously optimal for every CPTP alternative, every query number n, and every compact alternative family, outperforming or matching all adaptive and general positive physical testers.",
+    "Theorem 4.1 derives the exact asymptotic error exponent -log delta(E) with prefactor-free lower bound delta(E)^n and explicit polynomial upper bound via a clean reproducing-kernel / sphere-evaluation inequality on homogeneous vector-valued polynomials.",
+    "Theorems 5.1 and 6.1 give sharp algebraic characterizations of finite-query perfect detection (n_perfect = rho(E) + 1) and its stability under arbitrary tensor partners in the global-unitary model (c(S) > 0, or ncrk(S) < d), proving that any unital channel with finite perfect detection loses it when tensored with D_{d-1}.",
+    "Theorems 7.1, 8.1, and 8.2 provide closed-form analytical results for concrete systems, including an exact generating function for even-query qubit errors in terms of Wootters' spin-flip roots and exact determinant exponents for W_3 tensor W_3 and W_3 tensor D_2.",
+    "Attribution of prior work in quantum channel discrimination, symmetric functions, noncommutative rank, and hyperdeterminants is unusually thorough and transparent about model limitations and AI assistance."
+  ],
+  "strong_novelty_candidates": [
+    "The Gaussian-Schur moment formula b_lambda(E) = E[s_lambda(G^dagger G)] / (n! s_lambda(1^d)) (Lemma 3.2) and the resulting proof that the balanced partition lambda_* is universally optimal across all CPTP channels and query numbers (Theorem 2.1).",
+    "The characterization of the asymptotic testing exponent via the maximum normalized determinant delta(E) = max_{||z||_2=1} |det K(z)|^{2/d} together with explicit finite-query polynomial sandwich bounds (Theorem 4.1).",
+    "The operational characterization of tensor stability of finite-query perfect detection under a global-unitary null via the shrunk-subspace deficiency c(S) > 0 and the exact exponents for W_3 tensor W_3 and W_3 tensor D_2 (Theorems 6.1, 8.1, and 8.2)."
+  ],
+  "summary": "This manuscript studies minimax hypothesis testing of an unknown unitary channel against memoryless noise with independent unknown input and output rotations. Building on a Schur-Weyl reduction to isotypic blocks, the author proves a key Gaussian-Schur identity (Lemma 3.2) expressing each block acceptance probability as the expectation of a normalized Schur polynomial evaluated on a Gaussian linear combination of Kraus matrices. Combining this identity with Muirhead/Sra majorization (Lemma 3.3) shows that the balanced partition lambda_* = ((a+1)^r, a^{d-r}) minimizes the Type II error simultaneously for every CPTP channel, every query number n, and every compact family of alternatives, even against adaptive protocols (Theorem 2.1). From this formula, the paper derives the exact asymptotic error exponent via the maximum determinant delta(E) of a unit Kraus combination with explicit polynomial finite-query bounds (Theorem 4.1), proves that finite perfect detection occurs iff the commutative Kraus rank rho(E) < d at threshold n_perfect = rho(E) + 1 (Theorem 5.1), characterizes stability of perfect detection under arbitrary tensor partners in the global-unitary model via shrunk subspaces / noncommutative rank (Theorem 6.1), derives an exact generating function for even-query qubit errors via spin-flip singular values (Theorem 7.1), and computes exact exponents for W_3 tensor W_3 and W_3 tensor D_2 (Theorems 8.1-8.2). All proofs are rigorous and verified.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:203b1110-ef94-401c-ba39-997246c7ba72",
+  "weaknesses": [
+    "The optimal parallel test for n > d requires a bypass reference system of dimension m_* = dim M_{lambda_*}, which grows exponentially with n; the optimality under a fixed finite memory budget remains open (as the manuscript explicitly acknowledges).",
+    "In Theorem 8.2 (p. 12), the polynomial identity det H = p_013 p_023 - p_012 p_123 is justified by direct 12-variable expansion and citation to the 2x2x3 hyperdeterminant; adding the brief polarization identity det H = (1/2) det(W R W^T) and Cauchy-Binet expansion (present in the supplement) would make the proof of (24) self-contained by hand.",
+    "The polynomial prefactor in the finite-query upper bound of Theorem 4.1 scales as binom(n+k-1, k-1), which suffices for the asymptotic exponent but is not sharp for specific channels such as complete depolarization."
+  ]
+}

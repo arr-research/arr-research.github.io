@@ -1,0 +1,57 @@
+{
+  "assessed_at": "2026-10-17T14:28:28.545410+00:00",
+  "canonical_sha256": "a725d4f88c947f88c03882a6b2e9d663f4c78134a8c5bdc052b240525ebf223b",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "The reduction to exact rational certificates is mathematically sound. I manually verified the D_* and gamma_N values in Table 1, the (A_N,B) cost values in Theorem 2, the affine slope stability argument (Lemma 4.1), and all ten explicit all-d Horn certificate combinations in Section 5. Static inspection of the verifier scripts and JSON certificates confirms exact rational arithmetic is used without floating-point dependencies in the proofs.",
+      "stars": 5
+    },
+    "novelty": {
+      "basis": "Proves the exact balanced-inertia stability constants gamma_{N,d} = gamma_N for N=6..12 across all dimensions d >= 2N (resolving numerical conjectures for N=6..10 and adding N=11,12), rigorously establishes the extremal family switch at N=7, proves the (A_N,B) cost law for N <= 14, and determines the 22 exposed facets of the six-level cost functional kappa_6. The windowed Horn template stability framework is an effective tool for all-d bounds.",
+      "stars": 4
+    },
+    "reproducibility": {
+      "basis": "The supplementary reproducibility package is exemplary. It includes the exact rational JSON certificates (hive primals/duals, all-d templates, and d=6 chamber rays/duals) alongside compact, self-contained Python verifiers that rely only on the standard library's exact fractions module, plus human-readable proofs in Section 5.",
+      "stars": 5
+    },
+    "rigor": {
+      "basis": "Proofs avoid floating-point approximations by using LP solvers solely for candidate discovery, followed by exact rational verification of primal feasibility and Lagrangian/Horn dual identities. All external dependencies (Klyachko-Knutson-Tao Horn/hive equivalence and prior finite-reduction results from the author's series) are stated explicitly.",
+      "stars": 5
+    },
+    "significance": {
+      "basis": "Provides a complete, computer-verified resolution of several concrete open questions on the Hilbert-Schmidt inverse self-commutator norm and its stability constants, while extending the known facet structure of the unit ball to d=6. The scope is specialized within matrix analysis and spectral inequalities.",
+      "stars": 3
+    }
+  },
+  "independence": "unknown",
+  "millennium_score": 4.2,
+  "model_id": "google/gemini-4-argon",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-5B1F02F3EG9ZB9NN",
+  "potential_errors": [
+    "Minor notation inconsistency: the target spectrum (a, 0^{d-2N}, -b^{rev}) is written as (A_N, -B^{rev}) in Theorem 2 and Observation 8.1, but abbreviated as (A_N, B) or (u_3, z_N) inside kappa_d in Section 5 and Observation 8.2. The intended meaning is clear from context."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "OpenRouter",
+  "recommendation": "accept",
+  "strengths": [
+    "Complete, hand-checkable all-dimension lower-bound certificates in Section 5 using Weyl, r=2 Pieri, and Lidskii-Wielandt inequalities, underpinned by the affine dimension-stability criterion of Lemma 4.1.",
+    "Clean separation between floating-point LP discovery and exact rational certificate verification (using Python's fractions module), eliminating numerical tolerance issues from the proofs.",
+    "Rigorous confirmation of the structural transition of the minimising pair at N=7 from the (A_N,B) family to the (u_3,z_N) family across all dimensions d >= 2N.",
+    "Exact polyhedral determination of the 22-form formula for kappa_6 via global Horn duals and extreme-ray primal witnesses on each dominance chamber."
+  ],
+  "strong_novelty_candidates": [
+    "Windowed Horn template stability method (Lemma 4.1) combined with structured Lidskii-Wielandt families to certify dimension-independent spectral lower bounds for all d >= 2N.",
+    "Exact 22-form piecewise linear formula for the six-level inverse self-commutator cost kappa_6 and confirmation of the non-wall facet sequence 2, 4, 12, 22 for d=3, 4, 5, 6.",
+    "Exact rational determination of the balanced-inertia stability constants gamma_{N,d} for N=6..12 and all d >= 2N, establishing the extremal family switch at N=7."
+  ],
+  "summary": "This paper establishes exact rational values for the balanced-inertia inverse self-commutator stability constants gamma_{N,d} = gamma_N for N = 3, ..., 12 and all dimensions d >= 2N, confirming previously numerical values for N = 6, ..., 10 (including the switch of the minimising pair from (A_N,B) to (u_3,z_N) at N = 7) and obtaining new constants for N = 11, 12. It also proves the exact (A_N,B) cost law in dimension 2N for N <= 14 (and all d >= 2N for N <= 6) and derives the exact 22-form formula for the six-level cost kappa_6. The proof architecture reduces each theorem to finite rational certificates: order-2N hive primals at every positive-distance cut vertex of the finite reduction set W_N, matching hive duals at the minimisers, windowed Horn templates that remain valid in all dimensions d >= 2N via an affine slope criterion (Lemma 4.1), and extreme-ray witnesses paired with global Horn duals for the 22 chambers of kappa_6. Static inspection of the supplementary code and certificates, alongside manual verification of the explicit all-d inequalities in Section 5 and the arithmetic in Table 1 and Theorem 2, confirms that the arguments are rigorous and well-documented.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:6b548389-4e93-4a68-966d-743cac10e5bc",
+  "weaknesses": [
+    "Theorem 1 relies on Theorem A of an earlier preprint in the author's archive sequence ([Bal44]) and its accompanying script geometry.py for the finite reduction from the continuous balanced stratum to the cut-vertex set W_N; the paper is not self-contained regarding the proof that W_N suffices.",
+    "For N >= 7, the (A_N,B) cost law (Theorem 2) is certified in dimension d = 2N up to N = 14, while the all-d invariance and general-N closed formulas for (A_N,B) and (u_3,z_N) remain open conjectures.",
+    "In the gamma_N certificate files, duals are stored only at the minimising pairs to save space, so uniqueness of the minimising pair within W_N is not certified (as the author explicitly notes in Section 3, this does not affect the certified value of gamma_N)."
+  ]
+}

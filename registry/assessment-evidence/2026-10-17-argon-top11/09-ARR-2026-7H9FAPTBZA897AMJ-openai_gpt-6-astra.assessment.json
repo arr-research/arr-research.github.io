@@ -1,0 +1,60 @@
+{
+  "assessed_at": "2026-10-17T14:11:10.676344+00:00",
+  "canonical_sha256": "f8bd2e9ed5f8b166e014dd7b51578adc572dd603b37a82c1fde837b7d89488be",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "Static checking supports the orbital series, parity-binomial reduction, positive-field phase classification and asymptotic coefficients. No substantive counterexample was identified. The uniqueness assertions at zero field are false as written but admit a local correction. Diagnostic code also contains errors that do not affect the analytic results.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "The exact coefficient-sign classification, including c_{4,3}=0, and its one-fold/unique-contact consequences are credible strong novelty candidates. Standard geometric and information-theoretic machinery and previously obtained leading thermodynamic constants are appropriately credited. Bibliographic priority was not independently verified.",
+      "stars": 4
+    },
+    "reproducibility": {
+      "basis": "Readable sources, exact-arithmetic diagnostics and frozen results are supplied. Static inspection identifies an incorrect unused variance calculation and a FAIL-reporting path that does not fail the replay wrapper. No scripts were executed, hashes recalculated, links followed or numerical outputs independently reproduced.",
+      "stars": 3
+    },
+    "rigor": {
+      "basis": "The central argument is genuinely all-dimensional: likelihood-ratio ordering and a displayed rational tail certificate establish coefficient signs, rather than extrapolating numerical screens. Stability, coexistence and asymptotic localization are separately justified. The principal regularity requirements are adequately supported by compactness and analyticity; zero-field handling needs correction.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "An exact unrestricted RDF and complete positive-field phase topology for an entire homogeneous-source family constitute a substantial specialized contribution. Controlled contact corrections and universal-capacity consequences add value. The work does not establish a new general minimax principle or a quantum compression theorem.",
+      "stars": 4
+    }
+  },
+  "independence": "unknown",
+  "millennium_score": 4.8,
+  "model_id": "openai/gpt-6-astra",
+  "overall_stars": 5,
+  "paper_id": "ARR-2026-7H9FAPTBZA897AMJ",
+  "potential_errors": [
+    "Zero-field counterexample: φ_0(b)=0 for every b∈[0,1]. Thus Theorem 7.2's uniqueness assertion for 0≤λ≤λ_0 is false at λ=0; the same exception affects Theorem 9.1's below-contact statement and Theorem 6.1's exclusion of b=1 at every finite field. Restrict these assertions to positive fields and state the zero-field degeneracy separately. This does not undermine the positive-field phase diagram.",
+    "In make_complete_phase_figure.py, the l2 prefactor is smaller by a factor of two. At κ=0, cumulants() returns variance 1/[(q+1)(q+2)], whereas equation (12) requires 2/[(q+1)(q+2)]. The prefactor multiplying the sum of the two hypergeometric terms should be 1/[(q+1)(q+2)], not half that. All supplied figure callers discard this variance, so the plotted contacts and rates are unaffected.",
+    "verify_global_phase.py prints a JSON status of FAIL without raising an exception or returning a nonzero exit code. replay_all.ps1 checks exit codes, so this diagnostic's FAIL does not itself stop the wrapper. Moreover, its report is printed rather than written to global_phase_verification.json; hashing that cached file does not compare it with the freshly computed report. Add explicit failure propagation and structured output comparison."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "OpenRouter",
+  "recommendation": "minor_revision",
+  "strengths": [
+    "Theorems 3.1–3.2 give an economical spectral reduction: Dirichlet moments produce a positive complete-homogeneous series, and the degree-four contribution enforces simplicity at every nonzero field. The exterior/Frobenius factor of two and the full mass-norm reproduction body are explicitly handled.",
+    "The low-dimensional arguments are coefficientwise, not numerical. For higher dimensions, equation (26) correctly converts the derivative coefficient into a parity-window second-moment comparison. The exceptional c_{4,3}=0 is accommodated without compromising the one-change argument.",
+    "Theorem 9.1 does not confuse local Landau behavior with global phase selection. The shared numerator in λ_q' and F_q', together with stationary-point stability and endpoint exclusion for λ>0, supports unique positive coexistence and rules out subsequent exchanges and radial reentrance.",
+    "The thermodynamic proof localizes the actual unique contact inside a fixed y-interval before applying uniform Gamma-tail estimates. The logarithmic shifts in κ_c, λ_c, b_c, D_c and R_c are algebraically consistent. The high-fidelity pre-log n−2 matches half the manifold dimension.",
+    "The operational arguments distinguish unrestricted posterior reports from orbit quantization. Constant-divergence covariant channels support the universal-capacity identity, while the iid chain rule supports tensorization. Section 12 correctly limits the finite-block claim to a converse rather than exact finite-codebook achievability."
+  ],
+  "strong_novelty_candidates": [
+    "The exact all-q coefficient-sign law for J_q, obtained through central parity-truncated binomial moments, including the isolated zero c_{4,3}. This is the manuscript's clearest distinctive technical contribution, subject to independent literature comparison.",
+    "The resulting complete source-specific phase classification: continuous activation for n=3,4,5 and exactly one fold and one positive coexistence contact for every n≥6, yielding the two-piece unrestricted RDF without later radial reentrance.",
+    "Uniform finite-q contact control and explicit logarithmic corrections for all five coexistence observables. The manuscript appropriately distinguishes these refinements from the leading limiting constants attributed to reference [21]."
+  ],
+  "summary": "Static inspection of the supplied canonical-PDF rendering and corresponding sources supports a strong, specialized exact result. The coefficient theorem provides a credible global argument beyond a local cumulant diagnosis, and the RDF, contact asymptotics and operational consequences follow coherently. I found no unresolved objection threatening the substantive positive-field results. Minor revision is warranted for the false uniqueness assertions at λ=0 and identifiable diagnostic-code defects; neither appears to change the main phase classification or plotted contacts. The score reflects substantive mathematical value, not a general information-theoretic or Millennium-level breakthrough. This assessment did not execute code, verify artifact hashes, browse references or independently establish priority. Prior involvement remains unknown, and context-isolation controls were not verified.",
+  "unresolved_material_objections": [],
+  "version": "v2",
+  "version_id": "arr:version:1f2d37b4-1269-45ac-b8d8-6f12c8bc237a",
+  "weaknesses": [
+    "The diagnostic coverage is narrower than a full verification of the manuscript. verify_global_phase.py uses a different, coarser tail bound starting at r=8 rather than directly regenerating Appendix A's weighted-tail certificate. The contact script asserts only that two residual magnitudes decrease between its first and last sampled dimensions; it does not certify the stated remainder orders.",
+    "The novelty comparisons with hypergeometric inequalities and the companion results in references [21] and [23] remain qualified here because those sources were not independently inspected. This is a limitation of the present assessment, not evidence that the cited artifacts are unavailable. The main analytic proofs do not require the unpublished companion results.",
+    "The canonical PDF's replay command uses the original work/twelfth_paper workspace path, whereas the deposited replay README supplies a self-contained directory-relative command. Align the manuscript instructions with the released layout and distinguish cached-artifact integrity checks from fresh computational comparisons."
+  ]
+}

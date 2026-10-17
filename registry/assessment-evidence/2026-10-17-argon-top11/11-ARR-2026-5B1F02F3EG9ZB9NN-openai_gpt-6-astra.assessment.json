@@ -1,0 +1,61 @@
+{
+  "assessed_at": "2026-10-17T14:15:42.056263+00:00",
+  "canonical_sha256": "a725d4f88c947f88c03882a6b2e9d663f4c78134a8c5bdc052b240525ebf223b",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "The Table 1 ratios and Section 5 Horn combinations check algebraically. Padding monotonicity, reflection and the chamber argument have the correct logical directions. Confidence remains qualified: I did not replay the large hive collections or independently consult the cited precursor proofs.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "Uniform-dimension certification and the complete six-level formula are substantive novelty candidates. N=3–5 reproduce known constants and N=6–10 certify previously numerical values. External priority and the relationship of the AB cost law to the cited inertia-(m,2) formula remain unverified.",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "The package provides detailed rational certificates, generators and an inspectable solver-free principal checker. However, several diagnostic scripts do not propagate failures, and the principal checker lacks a mandatory complete-artifact mode. These weaken automated assurance. No execution was performed in this review.",
+      "stars": 3
+    },
+    "rigor": {
+      "basis": "The exact weak-duality identities, symbolic all-dimension argument and complete extreme-ray enumeration criterion are sound. Floating-point optimization is confined to discovery. Remaining weaknesses concern proof-to-artifact binding, diagnostic failure handling and explanation of sharpness at boundary-inertia pairs.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "A strong specialized contribution to exact spectral optimization: new stability constants, dimension-uniform sharpness and an explicit 22-facet formula. The finite-N scope and reliance on established Horn/hive machinery limit broader significance; no general-N classification is obtained.",
+      "stars": 3
+    }
+  },
+  "independence": "unknown",
+  "millennium_score": 4.0,
+  "model_id": "openai/gpt-6-astra",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-5B1F02F3EG9ZB9NN",
+  "potential_errors": [
+    "Failure propagation contradicts the runner/README claims. check_templates_explicit.py can print 'ALL OK: False' and exit successfully; crosscheck_horn_vs_hive.py only prints mismatches; rev_B, rev_C and rev_E do not consistently turn accumulated problems into nonzero exits. Consequently run_fast.py's 'ALL OK' is not sufficient evidence that every diagnostic passed. Add explicit failure exits.",
+    "verify_certificates.py silently skips absent expected files and can report zero failures for an empty existing certificate directory. It also does not require nonempty minimizer lists or enforce the full expected AB target/dimension inventory. Add a full-manuscript verification mode with required artifacts and claim-specific coverage checks. This is a validation weakness, not evidence that the actual public artifacts are absent or false.",
+    "Section 6 and crosscheck_horn_vs_hive.py describe nonminimizer values as hive-certified, but the script compares against P['kappa'], which Section 7 correctly identifies as uncertified without a stored dual. Compare the formula directly with the verified primal cost sum(s), or check matching duals. The supplied N=3 entries appear consistent, so this is an audit-description/implementation problem rather than a demonstrated numerical error.",
+    "Dependency documentation is inaccurate: the repro README lists check_templates_explicit.py among standard-library-only verifiers, but it imports numpy. The reviewer’s exact-checking scripts also import rev_lib, which imports numpy and scipy. Separate exact-only and numerical dependencies, or correct the installation instructions."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "OpenRouter",
+  "recommendation": "minor_revision",
+  "strengths": [
+    "Theorem 1 correctly combines finite-dimensional primal upper bounds with padding monotonicity, then uses dimension-independent lower bounds at an extremal pair to force equality. It does not extrapolate padding invariance from finitely many numerical tests.",
+    "Direct inspection supports all ten Section 5 certificate totals and the resulting Table 1 ratios. The size-two triples satisfy the stated Horn recursion in their claimed dimension ranges; the longer triples are Lidskii–Wielandt cases. Window nonoverlap and coefficients at most one justify the all-dimension cost bounds.",
+    "The six-level proof is logically complete at the architectural level: global duals supply lower bounds, extreme-ray witnesses extend by conic combination, and dominance chambers automatically cover the nonnegative gap cone, including walls and the origin.",
+    "The supplied six-level certificate is compact and transparent: its 112 chamber-ray incidences involve only 19 distinct ray directions. The principal checker recomputes rays and checks witnesses rather than trusting stored chamber ranks or sampling alone.",
+    "The manuscript appropriately separates certified primal upper bounds from uncertified nonminimizer cost metadata, disclaims uniqueness of minimizers, and labels the general-N extensions as conjectures. Exact verification is separated from floating-point certificate discovery."
+  ],
+  "strong_novelty_candidates": [
+    "Exact certification of gamma_6 through gamma_10 and the new values gamma_11=773/468 and gamma_12=289/160, with equality uniformly for every d>=2N.",
+    "The complete, irredundant twenty-two-form formula for kappa_6, supported by global Horn duals and full-dimensional dominance chambers.",
+    "Short dimension-independent Horn combinations establishing sharpness at the two extremal families, together with the finite-to-all-dimension certificate strategy."
+  ],
+  "summary": "Static inspection supports a strong specialized computer-assisted result. The padding argument, all-dimension Horn bounds and six-level chamber proof are sound, and the displayed certificate arithmetic agrees with the claimed constants. I found no counterexample or unresolved objection invalidating a main theorem. Minor revision is warranted for demonstrably incorrect failure-status claims, incomplete automated coverage checks and remaining certification/dependency descriptions. The AB-law novelty comparison also needs clarification. This assessment uses the supplied parsed rendering of the identified v1 PDF and static scientific supplement; I did not execute code, browse literature, authenticate file hashes or verify context isolation. Large omitted certificate collections are described as publicly available: their omission limits this review, not the manuscript's public artifact completeness. Historical check reports are not my own verification, and reviewer independence remains unknown.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:6b548389-4e93-4a68-966d-743cac10e5bc",
+  "weaknesses": [
+    "The listed minimizing pairs lie on the closure, not generally in the exact-(N,N) inertia stratum. Equation (2.4) imports the necessary reduction, but explicitly explain sharpness on exact inertia using positive perturbations and continuity of the fixed-d polyhedral LP value. Distinguish boundary attainment from an attained minimum on the open stratum.",
+    "Theorem 2's targets have nonzero inertia (N,2), while [Inertia_m2] is titled a dimension-free closed formula for that class. Explain precisely whether its formula implies the AB cost law or padding invariance beyond N=6, and why the general-N law remains conjectural. The citation title alone does not establish redundancy, but the comparison is important for novelty.",
+    "The crucial finite reduction is imported rather than proved, and W_N is primarily specified through geometry.py. A short concavity/affine-cell argument explaining product vertices, hyperplane-edge cuts and zero-distance vertices would make the completeness dependency substantially easier to audit."
+  ]
+}
