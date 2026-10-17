@@ -1,0 +1,798 @@
+SIGUIENTE FRONTERA: INFORME MATEMÁTICO DE INVESTIGACIÓN
+17 de octubre de 2026. Notas de investigación, no manuscrito ni evaluación editorial.
+
+Resultado recomendado de esta exploración: el redondeo del compilador traslada
+la brecha fija a optimización lineal sobre canales aproximadamente factorizables.
+El coste es una proyección ortogonal racional de norma1; la relajación a todos
+los canales biestocásticos tiene valor0 y certificado Choi racional de soporte
+exacto. La cantidad equivale a distancia unitaria de un subespacio amplificado
+y a una estabilización de la obstrucción de Kraus de Yu--Duan--Xu.
+
+Como resultado separado, para cualquier par A,B de matrices cuadradas,
+F_m=F_1 para todo m y el factor óptimo C/F_infty en esa clase es e/2.
+La agudeza escalar procede de la polarización estudiada por Yuan--Parrilo;
+no se reivindica ese mecanismo como nuevo. Tres coeficientes queda abierto.
+
+No hay una prueba de que e sea óptima globalmente, ni de que pueda sustituirse
+por 2. Tampoco hay una reducción a tres coeficientes. Las búsquedas fueron
+dirigidas y limitadas; no certifican prioridad.
+
+CONTEXTO Y AUTORÍA DE ESTA REVISIÓN
+
+Encargo recibido como agente Astra, con modelo/esfuerzo solicitado gpt-6-astra /
+xhigh y contexto reutilizado. La herramienta expone el nombre del agente; no
+hay una atestación independiente de identidad efectiva. El agente ha participado
+en revisiones y reparaciones del programa. No se trata de evaluación ciega ni
+aislamiento certificado. No se asigna nota. No se ha publicado, contactado con
+autores o con el revisor del manuscrito congelado, ni modificado manuscritos.
+
+Se consultó el contenido científico de los manuscritos de brecha determinantal,
+capacidad universal, regularización tensorial y determinantes amplificados, y
+fuentes primarias públicas. El archivo source-inputs.json identifica los textos
+locales por hash. Los resultados nuevos de estas notas se distinguen de las
+consecuencias del teorema de brecha utilizado como dependencia exacta.
+
+NOTACIÓN
+
+tau_n=Tr/n, ||X||_2^2=tau_n(X*X). Para A=(A_1,...,A_s) en M_d,
+
+ F_m(A)=max_{sum_i ||Y_i||_2^2=1}|det(sum_i A_i tensor Y_i)|^(2/(dm)),
+ F_infty(A)=sup_m F_m(A),
+ C(A)=max_{Q>=0,Tr Q=1} cap(Phi_Q)^(1/d),
+ Phi_Q(X)=sum_ij Q_ij A_i X A_j*.
+
+Las convenciones de conjugación del vector fila pueden cambiar Q por su
+transpuesta; esto no cambia la optimización sobre todas las densidades.
+
+CANDIDATO 1. FRONTERA EXACTA DE DOS COEFICIENTES Y CONSTANTE e/2
+Estado: prueba completa. Resultado estructural independiente que conviene
+conservar separado de la aplicación a canales; no se presume alta importancia.
+
+1.1. Teorema de ausencia de mejora por amplificación.
+
+Para A,B arbitrarias en M_d(C) y todo entero m>=1,
+
+                   F_m(A,B)=F_1(A,B).
+
+No se exige que A o B sea invertible, ni que el lápiz sea regular. El tamaño d
+es arbitrario; no debe confundirse este resultado con clasificaciones de tuplas
+de matrices de tamaño 2x2 con número arbitrario de coeficientes.
+
+Prueba. Primero supongamos Y_1 invertible y escribamos Y_2=Y_1 T. Entonces
+
+ A tensor Y_1+B tensor Y_2
+       =(I_d tensor Y_1)(A tensor I_m+B tensor T).
+
+Si lambda_1,...,lambda_m son los autovalores de T, con multiplicidades, la
+triangularización de Schur de T da la identidad exacta
+
+ |det L|^(2/(dm))
+   = |det Y_1|^(2/m) product_j |det(A+lambda_j B)|^(2/(dm)).       (1)
+
+La restricción energética equivale a
+
+ tau_m[Y_1*Y_1(I+TT*)]=1.
+
+Aplicando AM–GM a (I+TT*)^(1/2)Y_1*Y_1(I+TT*)^(1/2),
+
+ |det Y_1|^(2/m) <= det(I+TT*)^(-1/m).                           (2)
+
+Además,
+
+ det(I+TT*) >= product_j(1+|lambda_j|^2).                        (3)
+
+Una demostración elemental de (3) usa Schur y Cauchy–Binet. Para una matriz
+triangular R, det(I+RR*) es la suma de los cuadrados de todos los menores de R,
+incluido el menor vacío. Conservar sólo los menores principales da al menos
+sum_{J} product_{j in J}|R_jj|^2=product_j(1+|lambda_j|^2).
+
+Al combinar (1)–(3),
+
+ |det L|^(2/(dm))
+ <= product_j [ |det(A+lambda_j B)|^(2/d)/(1+|lambda_j|^2) ]^(1/m)
+ <= F_1(A,B).
+
+Cada factor entre corchetes es el valor del testigo escalar
+(1,lambda_j)/sqrt(1+|lambda_j|^2). La cota incluye factores nulos.
+Los pares factibles con Y_1 invertible son densos en la esfera factible:
+perturbar Y_1 por eps I fuera del conjunto finito de eps singulares y normalizar.
+La continuidad del determinante extiende la desigualdad a todos los testigos.
+El sentido contrario se obtiene tensorizando un maximizador escalar con I_m.
+Esto prueba el teorema, también para lápices idénticamente singulares.
+
+Consecuencias: F_infty es computable para pares gaussianos racionales, mediante
+optimización semialgebraica compacta de cuatro variables reales. No se afirma
+una cota de complejidad de bits sin analizarla. Un coeficiente también es trivial.
+Toda posible indecidibilidad de F_infty con número fijo de coeficientes exige
+al menos tres coeficientes efectivos. Si el span tiene dimensión <=2, una
+transformación unitaria del índice de coeficientes elimina las redundancias y
+reduce al mismo teorema, conservando la energía.
+
+1.2. Capacidad de una familia triangular.
+
+Si K_1,...,K_r son triangulares superiores y
+c_k=sum_j |(K_j)_kk|^2, entonces
+
+              cap(X -> sum_j K_j X K_j*)=product_k c_k.          (4)
+
+Para la cota inferior, factorizar X=RR*, R triangular superior, y formar la
+matriz horizontal [K_1R ... K_rR]. En Cauchy–Binet para su matriz Gram, elegir,
+para cada k, la columna k de uno de los r bloques. El menor resultante es
+triangular después de ordenar las columnas por k. Sus cuadrados suman
+product_k [sum_j |(K_j)_kk R_kk|^2]=det(X) product_k c_k. El resto
+de menores es no negativo.
+
+Para la cota superior, sea S_t=diag(t^(k-(d+1)/2))_{k=1}^d, 0<t<1.
+Entonces det S_t=1 y S_t^(-1) K_j S_t converge a diag(K_j) cuando t baja a0.
+Tomar X_t=S_t S_t*; el determinante de la imagen coincide con el de
+sum_j(S_t^(-1)K_jS_t)(S_t^(-1)K_jS_t)*, cuyo límite es product_k c_k.
+La demostración también cubre c_k=0; no necesita continuidad abstracta de cap.
+
+Aplicando la descomposición QZ compleja a A,B se obtienen dos matrices
+triangulares superiores T_1,T_2 mediante multiplicaciones unitarias comunes
+por izquierda y derecha. Esas multiplicaciones preservan F y C. Definir
+a_k=((T_1)_kk,(T_2)_kk). Para cada Q, sus Kraus son combinaciones lineales de
+T_1,T_2, así que (4) demuestra
+
+ C(A,B)=max_{Q>=0,Tr Q=1} product_{k=1}^d(a_k Q a_k*)^(1/d).     (5)
+
+El determinante escalar es el producto de las correspondientes formas lineales.
+Así, incluso para un par no normal, la comparación C/F_1 es exactamente la
+relajación de productos de formas lineales complejas en DOS variables.
+
+1.3. Cota (2/e) C y agudeza.
+
+Para filas a_k complejas en C^r y Q óptima de rango r, el redondeo de
+Yuan–Parrilo da
+
+ F_1 >= exp(-L_r) C,       L_r=H_{r-1}-log r.                   (6)
+
+Breve reconstrucción: z~CN(0,Q), y=z/||z||. Cada término satisface
+E log|a_k z|^2=log(a_k Q a_k*)-gamma_E.
+Si las r eigenvalues positivas de Q suman1, la concavidad y simetría de
+E log(sum_j lambda_j |g_j|^2) muestran que su máximo ocurre en lambda_j=1/r.
+Allí vale H_{r-1}-gamma_E-log r. Restar esta esperanza al promedio de los
+logaritmos anteriores prueba que algún y logra (6). Los casos de valor0
+son inmediatos. Esta es una técnica anterior, no una reivindicación de novedad.
+
+Para un par r<=2, L_2=1-log2. Por 1.1 y (5)–(6),
+
+                 (2/e) C(A,B) <= F_infty(A,B) <= C(A,B).        (7)
+
+La constante e/2 es óptima, incluso dentro de pares diagonales. Sea a Haar en
+la esfera unitaria de C². Para todo vector unitario y, |a*y|² es uniforme en
+[0,1], y E log|a*y|²=-1. Añadir a cada fila a su complemento ortogonal
+a_perp garantiza un frame ajustado: la media de aa* es I_2/2. Por ello, para
+cualquier conjunto finito así simetrizado, C=1/2: Q=I_2/2 da esa cota inferior,
+y AM–GM con la media aa*=I_2/2 da la superior.
+
+Para convertir la media continua en una cota UNIFORME sobre y, fijar M>0 y
+f_M(a,y)=max(log|a*y|²,-M). Es continua en el producto compacto de esferas y
+
+                  E_a f_M(a,y)=-1+exp(-M),                     (8)
+
+independientemente de y. Una cuadratura suficientemente fina aproxima esa
+media uniformemente en y, por continuidad uniforme. La simetrización con
+a_perp mantiene este hecho porque la transformación preserva Haar.
+Como log|a*y|²<=f_M(a,y), para toda eta>0 existen listas finitas ajustadas con
+log F_1 <= -1+eta. Por otra parte, (7) obliga F_1>=e^(-1).
+Resulta F_1 -> e^(-1), C/F_infty -> e/2. Ningún intercambio injustificado
+de límite y máximo del log no acotado es necesario.
+
+Escalar todas las filas por sqrt2 da Gram I_2 y C=1, con F_infty ->2/e.
+También se pueden obtener pares gaussianos racionales arbitrariamente próximos
+en razón: F_1 y (5) son máximos continuos sobre compactos para cada lista finita.
+Si se desea además Gram I EXACTA y racionalidad, aproximar las filas de norma
+sqrt2 por puntos gaussianos racionales de esa esfera (densidad por la
+parametrización racional desde (1,1)) y añadir sus complementos ortogonales.
+Cada pareja sigue teniendo matriz de frame 2I_2; por tanto la media es I_2.
+
+El mecanismo de las instancias extremales escalares está en Yuan–Parrilo,
+arXiv:2102.13220, sección5, vía constantes de polarización. La afirmación
+adicional aquí es que, para dos coeficientes, ninguna dimensión auxiliar
+puede cerrar ese gap escalar. La prioridad exacta de esta combinación queda
+pendiente de una búsqueda más amplia; no la certifico por ausencia de hits.
+
+1.4. Ejemplo explícito de tamaño6, verificable a mano.
+
+ A=diag(sqrt2,0,1,1,1,1),
+ B=diag(0,sqrt2,1,-1,i,-i).
+
+Su Gram normalizada es I_2 y C=1, por las filas ajustadas de norma sqrt2.
+Para un escalar unitario y, describir su estado puro por n=(n_x,n_y,n_z)
+en la esfera de Bloch. El producto de las seis singularidades al cuadrado es
+product_{j=x,y,z}(1-n_j²). Por AM–GM, usando sum_j n_j²=1,
+
+ F_1 <= [(2/3)^3]^(1/6)=sqrt(2/3).
+
+Se alcanza con n_x²=n_y²=n_z²=1/3. El teorema1.1 da el valor exacto para TODO m:
+
+             F_m=F_infty=sqrt(2/3),    C/F_infty=sqrt(3/2).
+
+No es una deducción basada en optimizadores locales. Los números irracionales
+de este ejemplo no suponen un problema para la cuestión analítica de e.
+
+1.5. Familia conmutativa hermítica y lo que NO se ha demostrado sobre e.
+
+Para cualquier número de coeficientes hermíticos que conmuten,
+
+                         F_infty(A)=C(A).                      (9)
+
+Tras diagonalizar, las filas a_k son reales. Reemplazar Q por Re Q preserva
+todas las formas a_k Q a_k^T y la positividad real. Factorizar Q=CC^T. Sean
+Gamma_1,...,Gamma_r matrices de Clifford hermíticas con
+Gamma_i Gamma_j+Gamma_j Gamma_i=2 delta_ij I,
+tau(Gamma_i Gamma_j)=delta_ij, en tamaño 2^floor(r/2).
+Tomar Y_i=sum_j C_ij Gamma_j. Su energía es Tr Q=1 y cada bloque
+(sum_i a_ki Y_i)^2=(a_k Q a_k^T)I. Su determinante alcanza exactamente (5),
+ahora con cualquier número de columnas. Esto demuestra (9) y da testigo finito.
+Es una aplicación estándar de Clifford, no una nueva construcción de Clifford.
+
+Para diagonales COMPLEJAS, el mismo redondeo previo da F_1>=e^(-gamma_E) C.
+No se ha demostrado aquí que ese factor sea óptimo para F_infty cuando hay
+>=3 coeficientes. No se puede transferir la agudeza ESCALAR de Yuan–Parrilo a
+F_infty sin una cota superior válida para TODOS los auxiliares.
+
+El cálculo libre de Mai–Speicher da e^(-1) para un testigo semicircular/circular
+con covarianza dada. No es una cota superior sobre el testigo óptimo.
+El artículo de Cappellini–Sommers–Zyczkowski obtiene el valor típico 1/e de
+G-concurrence para estados aleatorios. En el espacio matricial completo el
+valor óptimo es1 porque contiene I. Por tanto la concentración gaussiana en
+1/e no prueba la optimalidad de e en el problema optimizado.
+
+La comparación universal vigente y (7) sólo dejan, en estas notas,
+
+        e/2 <= sup_{A:C(A)>0} C(A)/F_infty(A) <= e.
+
+El factor global2 sigue siendo una posibilidad, no un resultado ni una
+conjetura apoyada por evidencia suficiente. El redondeo no conmutativo de
+Grothendieck de Naor–Regev–Vidick controla objetivos bilineales; no controla
+la cola logarítmica. Por ejemplo, matrices de energía1 con espectro singular
+(0,sqrt(n/(n-1)),...,sqrt(n/(n-1))) tienen (tau|X|)^2=(n-1)/n y determinante0.
+Sustituir0 por exp(-n²), ajustando las otras singularidades, da matrices
+invertibles con media singular casi1 y determinante geométrico muy pequeño.
+Este contraejemplo refuta la inferencia de una cota logarítmica a partir de
+una cota Schatten1, NO refuta la desigualdad global F_infty>=C/2.
+
+Tensorizar un ejemplo malo tampoco multiplica automáticamente C/F_infty:
+la regularización tensorial del programa converge a C y permite activación.
+
+CANDIDATO 2. UNA CONSECUENCIA EXTERNA: DISTANCIA UNITARIA AMPLIFICADA
+Estado: prueba completa CONDICIONAL al compilador y su estimación inversa
+del manuscrito de brecha, identificado por hash en source-inputs.json.
+
+2.1. Problema estándar de base y versión amplificada.
+
+Lee–Watrous estudian minimización cuadrática unitaria (UQM): minimizar una
+suma de cuadrados de funcionales lineales sobre U(n), y muestran NP-dureza
+con dimensión finita especificada. Aquí el problema es una versión
+amplificada de ese problema, con coste especialmente restringido.
+
+Para S<=M_D(C), sea P_S la proyección ortogonal Hilbert–Schmidt. Definir
+
+ d_m(S)=min_{U in U(Dm)} ||(I-P_S tensor id_m)(U)||_2²,
+ d_infty(S)=inf_{m>=1} d_m(S).                                 (10)
+
+El coste es cuadrático, positivo, y viene de UNA proyección ortogonal en el
+espacio vectorizado, amplificada por identidad. No contiene logaritmos ni
+determinantes. Las dimensiones auxiliares son la única regularización.
+No es el problema UQM original de dimensión fijada, ni una capacidad cuántica
+de comunicación. La proyección puede codificarse sin elegir una base
+irracional del complemento ortogonal.
+
+Si B es la tupla racional de Gram I del manuscrito de brecha y S=span B,
+
+ P_S(X)=sum_l B_l tau_D(B_l* X),
+
+es una proyección con coeficientes gaussianos racionales. Sobre S tensor M_m,
+la energía de coeficientes coincide exactamente con ||X||_2².
+
+2.2. Identidad de dualidad.
+
+Definir p_m(S)=max_{X in S tensor M_m,||X||_2=1}(tau_{Dm}|X|)^2.
+Entonces
+
+                         d_m(S)=1-p_m(S).                      (11)
+
+En efecto, la proyección da d_m=1-max_U||P_SU||_2². Por dualidad de la
+norma Hilbert–Schmidt sobre el subespacio y max_U |tau(U*X)|=tau|X|,
+max_U||P_SU||_2=max_{X in S,||X||_2=1}tau|X|. Las dos optimizaciones
+son compactas en cada dimensión; el orden de los dos máximos se intercambia
+sin un teorema minimax. Esto demuestra (11).
+
+Como la media geométrica de singularidades no supera la aritmética,
+
+                         F_m(B)<=p_m(S).                       (12)
+
+La conversión inversa NO vale para espacios arbitrarios. Se usará información
+específica del compilador; éste es el paso que evita un simple renombrado.
+
+2.3. Transferencia cuantitativa de la brecha.
+
+El compilador vigente tiene rho=R/D>=1/8000 y gamma=1/36288000000.
+La parte de su prueba inversa anterior a la estimación del logaritmo da,
+para cualquier evaluación X de energía1 y distancia polar cuadrada Delta²,
+
+ xi <= (9+6sqrt2) Delta²/rho,
+ error del juego <=50 xi.                                    (13)
+
+Esto se obtiene leyendo la misma cadena del manuscrito, ecuaciones de polar,
+singletons y residuos: la sustitución Delta²<=2delta se hace sólo después.
+La evaluación X es bloque diagonal; su polar puede elegirse bloque diagonal.
+Una unitaria externa cualquiera proporciona una cota superior de esa distancia.
+No es necesario que X sea un maximizador del determinante para esa cadena.
+
+Si T es YES, el teorema previo y (12) dan d_infty<=gamma/4.
+Si d_m<gamma para algún m, elegir U que minimice (10), poner X=P_SU y
+a=||X||_2²=1-d_m>0. Para W=X/sqrt(a),
+
+ ||W||_2²=1,
+ Re tau(U*W)=sqrt(a),
+ dist(W,U(Dm))² <= ||W-U||_2²=2-2sqrt(1-d_m)<=2d_m.             (14)
+
+De (13)–(14), el error del juego es menor que1750 d_m/rho.
+Para d_m<gamma y rho>=1/8000 es menor que
+
+             1750*8000*gamma =1/2592,
+
+que contradice la solidez 1/1296 de la fuente normalizada en un caso NO.
+Por consiguiente,
+
+       YES: d_infty(S)<=gamma/4;     NO: d_infty(S)>=gamma.     (15)
+
+De ahí indecidibilidad de aproximación aditiva gamma/8 de (10), incluso
+cuando se presenta S por una base racional ortonormal y C(B)=1 es conocida.
+Por eliminación de cuantificadores cada d_m es computable; una cota recursiva
+uniforme de dimensión para aproximar d_infty a gamma/8 también decidiría la
+promesa y por tanto no existe. Se usan los mismos márgenes que en el teorema
+determinantal; no hace falta optimizar constantes.
+
+La consecuencia trata un objetivo cuadrático de interés propio y por tanto
+añade más contenido externo que llamar al determinante G-concurrence. Aun así,
+la dificultad general de optimización tracial ya está establecida por
+Goldbring–Hart y por Cleve–Culf–Taller. El aporte que cabría reivindicar es esta
+forma específica de UQM amplificada con proyección racional, si una búsqueda
+adicional no encuentra una equivalencia anterior. No se ha establecido aún
+que eso justifique un nuevo artículo independiente.
+
+2.4. Canales factorizables: identificación exacta y promesas de la entrada.
+
+Usamos vec(K)=sum_{i,j}K_ij |i>_out tensor |j>_in, sin conjugar K.
+El producto Hilbert--Schmidt de matrices de tamaño Dm es normalizado por
+1/(Dm); las trazas de estados de Choi en esta sección son NO normalizadas.
+Definir la matriz de la proyección del subespacio y su complemento por
+
+ P=(1/D) sum_l vec(B_l) vec(B_l)*,       H=I_{D²}-P.             (16)
+
+El Gram I da P²=P=P*, por lo que H²=H=H*, 0<=H<=I. Sus entradas
+son racionales gaussianas, y son reales racionales para el compilador actual.
+H es UNA proyección positiva sobre C^D tensor C^D, no una proyección
+completamente positiva actuando sobre M_D. Esa última propiedad NO se promete.
+No necesitamos construir una base ortonormal racional del complemento.
+
+Para U in U(Dm), escribir U_ab in M_D para sus bloques de ancilla:
+(U_ab)_ij=U_{(i,a),(j,b)}. Definir el canal
+
+ T_U(X)=(id_D tensor tau_m)[U(X tensor I_m)U*]
+       =(1/m) sum_{a,b} U_ab X U_ab*.
+
+Es completamente positivo, unital y preserva la traza: de UU*=U*U=I
+se obtiene sum_ab U_ab U_ab*=sum_ab U_ab*U_ab=m I_D. Con la convención
+J(T)=sum_{j,k}T(E_jk) tensor E_jk, su estado de Choi normalizado es
+
+ rho_U=J(T_U)/D=(1/(Dm)) sum_ab vec(U_ab)vec(U_ab)*.             (17)
+
+En particular Tr rho_U=1, Tr_in rho_U=Tr_out rho_U=I_D/D. Para
+la segunda marginal aparece (sum_ab U_ab*U_ab)^T, que sigue siendo m I_D.
+La orientación del traspuesto queda así explícita. Las identidades (16)--(17)
+dan directamente
+
+ Tr(H rho_U)=(1/(Dm))sum_ab ||(I-P_S)U_ab||_F²
+           =||(I-P_S tensor id_{M_m})(U)||_{2,Dm}².             (18)
+
+Equivalente: ordenar los índices de vec(U) como ((i,j),(a,b)); entonces
+el coste es vec(U)*(H tensor I_{m²})vec(U)/(Dm), con ese reordenamiento.
+No es H tensor I_m sobre los vectores: la ancilla vectorizada tiene tamaño m².
+
+Sea FM_matr(D) la unión de estos canales sobre todas las ancillas M_m
+con su traza normalizada. Sea FM_fin(D) la clase de canales que factorizan
+por una C*-álgebra tracial finito-dimensional arbitraria. Una tal álgebra
+es suma directa de M_{m_j}; su traza es sum_j lambda_j tau_{m_j}, y una
+unitaria en M_D tensor esa álgebra tiene bloques U_j unitarios. Por ello
+el canal es sum_j lambda_j T_{U_j}. Recíprocamente esa suma directa realiza
+cualquier combinación convexa finita. Así
+
+ FM_fin(D)=conv FM_matr(D),
+ d_infty(S)=inf_{T in FM_matr}Tr(H J(T)/D)
+           =min_{T in closure(FM_fin)}Tr(H J(T)/D).             (19)
+
+La primera igualdad y la igualdad de clausuras son conocidas; véase Musat
+2025, Proposition3.8. Para (19) sólo hacen falta linealidad y continuidad:
+la infimum sobre un conjunto coincide con la de su envolvente convexa y su
+clausura. Esta clausura es compacta dentro del conjunto de canales UCPT.
+El mínimo de (19) puede no tener realización con ancilla finita. No sustituimos
+closure(FM_fin) por TODOS los canales factorizables con ancilla tracial general.
+Haagerup--Musat, Theorems3.6--3.7, y el fracaso de CEP impiden identificar
+esos conjuntos en general. Tampoco confundimos FM_fin con mixed-unitary:
+los últimos son conv FM_matr con ancilla m=1, una clase distinta.
+
+La covarianza diagonal del compilador proporciona números racionales
+q_l=w_l²/D>0, sum q_l=1, con
+sum q_l B_l B_l*=sum q_l B_l*B_l=I_D. Por tanto el canal explícito
+
+ T_0(X)=sum_l q_l B_l X B_l*
+
+tiene coeficientes racionales y es UCPT. No se necesitan raíces sqrt(q_l)
+en su codificación. Su estado normalizado
+
+ rho_0=(1/D)sum_l q_l vec(B_l)vec(B_l)*                         (20)
+
+es racional positivo, tiene traza1 y ambas marginales I_D/D, y cumple
+H rho_0=0 y supp(rho_0)=ker H. Las últimas afirmaciones usan q_l>0 y
+la independencia de los B_l. En ambos tipos de instancia, el SDP
+
+ min Tr(H rho),  rho>=0, Tr_in rho=Tr_out rho=I_D/D             (21)
+
+tiene valor EXACTO0, con certificado racional (20). No basta resolver este
+SDP para resolver la restricción de factorizabilidad aproximable.
+
+Consecuencia externa precisa, dependiente del compilador ya demostrado:
+es indecidible el siguiente problema prometido de optimización LINEAL sobre
+la clase estándar closure(FM_fin(D)). La entrada contiene D, una proyección
+H real racional en M_{D²} y el certificado rho_0 de (20); se promete
+
+ YES: min_{T in closure(FM_fin)}Tr(H J(T)/D)<=gamma/4,
+ NO:  min_{T in closure(FM_fin)}Tr(H J(T)/D)>=gamma,             (22)
+
+donde gamma=1/36288000000 es una constante independiente de D y la entrada.
+Probar (22) no exige evaluar un determinante: (18)--(19) y la transferencia
+polar de 2.3 bastan. La proyección y el canal certificado se construyen con
+aritmética racional efectiva, de tamaño polinómico en la salida explícita B.
+El coste tiene norma de operador1. Una aproximación aditiva gamma/8
+resolvería la promesa usando el umbral5gamma/8. El gap es fijo, pero diminuto.
+
+En un caso NO, para todo rho de Choi normalizado en closure(FM_fin),
+||rho-rho_0||_1>=|Tr H(rho-rho_0)|>=gamma. No hay conclusión inversa
+en un caso YES: un canal de bajo coste puede tener un estado de Choi lejos
+de rho_0 dentro de ker H. Así, (22) NO demuestra un problema prometido de
+pertenencia o distancia para T_0. Tampoco es una afirmación de capacidad
+operacional, ni una equivalencia con distancia diamond a un canal dado.
+
+La no existencia de una cota recursiva uniforme de ancilla a error gamma/8
+se obtiene como al final de2.3. También vale para tamaño total de ancillas
+finito-dimensionales con pesos arbitrarios: si una combinación convexa tiene
+coste bajo, alguno de sus sumandos tiene coste a lo sumo ese promedio.
+
+2.5. Por qué una amplificación adicional no trivializa (22).
+
+Para todo k fijo, el reordenamiento tensorial da
+
+ d_m(S tensor M_k)=d_{km}(S).
+
+Además U -> U tensor I_k conserva el coste normalizado, por lo que
+d_{mk}(S)<=d_m(S). La infimum sobre los múltiplos de k es a la vez >=d_infty(S)
+y <=d_m(S) para todo m. En consecuencia
+
+                     d_infty(S tensor M_k)=d_infty(S).        (23)
+
+Toda ancilla matricial finita adicional ya está incluida en esta regularización.
+Las sumas directas con mezclas clásicas tampoco cambian la infimum por (19).
+Permitir una ancilla tracial arbitraria que no sea aproximable por matrices
+es una relajación diferente y no está cubierta por la prueba. Añadir I a S
+es también una operación diferente: hace d_infty=0 porque I es una unitaria.
+
+2.6. Semicomputabilidad superior y ausencia de módulo recursivo.
+
+Para una entrada racional H y dimensión D fija, cada d_m es uniformemente
+computable: U*U=I son ecuaciones polinómicas reales en las partes real e
+imaginaria de U, el objetivo es un polinomio cuadrático racional y U(Dm)
+es compacto. Eliminación de cuantificadores reales permite decidir si el
+mínimo es menor o mayor que un racional, o aislar el valor algebraico.
+Esto es una afirmación de computabilidad, no de eficiencia práctica.
+
+Poner h_n=d_{n!}(S). La divisibilidad y la amplificación del testigo dan
+h_{n+1}<=h_n. Además, para todo m fijo y n>=m, m divide n! y h_n<=d_m.
+Por tanto h_n disminuye a d_infty. Una sucesión racional computable que
+disminuya desde arriba se obtiene calculando r_n con |r_n-h_n|<=2^(-n)
+y poniendo a_n=min_{j<=n}(r_j+2^(-j)). Entonces a_n>=d_infty y a_n
+disminuye a d_infty. El valor en (22) es semicomputable superiormente.
+
+No existe una función recursiva N(L) que garantice para todas las entradas
+prometidas de longitud<=L que h_{N(L)}<=d_infty+gamma/8: la dimensión
+N(L)! daría precisamente la cota de testigo excluida por (15). Tampoco existe
+un módulo recursivo uniforme N(L,k) de convergencia a precisión2^(-k), pues
+se fija k con 2^(-k)<=gamma/8. Cada entrada individual admite aproximaciones;
+la imposibilidad es uniforme y efectiva respecto a la entrada. No se afirma
+que una instancia concreta identificada tenga un valor real no computable.
+
+2.7. Identificación adicional con la obstrucción de Kraus de Yu--Duan--Xu.
+
+Yu--Duan--Xu2012, Lemma2, introducen para un canal Phi con espacio de Kraus
+K(Phi) la cantidad C_Phi=min_{L in K(Phi)} tau_D[(|L|-I_D)^2].
+Por el teorema polar y por proyección ortogonal, respectivamente,
+
+ C_Phi=min_{L in K(Phi), U in U(D)}||L-U||_2²
+      =min_{U in U(D)}||(I-P_{K(Phi)})U||_2²
+      =d_1(K(Phi)).                                           (24)
+
+El mínimo existe: tras minimizar en L, se optimiza una función continua
+sobre el compacto U(D). Esta prueba incluye L singular y subespacios sin
+unitarias. No hace falta imponer ||L||_2=1 en C_Phi; escalar óptimamente
+una dirección recupera precisamente 1-p_1 de (11), no 2(1-sqrt(p_1)).
+
+Sea Dep_m(X)=tau_m(X)I_m. Sus operadores de Kraus E_ab/sqrt(m) abarcan M_m.
+Como K(T_0)=S por q_l>0, K(T_0 tensor Dep_m)=S tensor M_m y
+
+ d_infty(S)=inf_m C_{T_0 tensor Dep_m}.                         (25)
+
+Así se obtiene indecidibilidad a precisión fija para la estabilización de
+una obstrucción de canales ya estudiada. No se reivindica que C_Phi sea nueva.
+El Lemma2 de Yu--Duan--Xu acota inferiormente la distancia diamond a mixed-
+unitary mediante C_Phi. Su Theorem2 controla tensorizar con canales SCHUR;
+Dep_m tiene espacio de Kraus completo y es un canal distinto de esa clase
+cuando m>1. La aplicación de su resultado no elimina la regularización de (25).
+Esta identificación motiva la pregunta externa, sin convertir por sí sola
+la promesa YES en cercanía diamond de T_0 a una clase de canales.
+
+2.8. Contraste de prioridad y alcance del problema externo.
+
+El puente Choi de (18) es elemental y no se presenta como descubrimiento
+aislado. La relación entre factorización, ancillas matriciales y trazas
+aproximables es anterior: Haagerup--Musat2014, Theorem3.6; Musat--Rordam2019,
+Propositions3.1--3.2; Musat2025, Proposition3.8. Goldbring--Hart ya prueban
+no computabilidad tracial general y ausencia de módulos computables de
+aproximación de microestados. No se reclama ninguna de esas ideas como nueva.
+
+Lee--Watrous (Definition1 y sección3) estudian el objetivo cuadrático sobre
+una unitaria de dimensión ESPECIFICADA, con promesa inversamente polinómica,
+y lo relacionan con pertenencia mixed-unitary. Nuestro m es libre, y (22)
+se refiere a closure(FM_fin), una clase conocida distinta. No hay conflicto
+entre computabilidad para cada m fijo e indecidibilidad uniforme del límite.
+
+Paulsen--Rahaman, Theorem4.1, relacionan correlaciones bisíncronas con canales
+factorizables mediante matrices de permutación cuántica, con igual número
+de entradas y salidas. La conversión general de síncrono a bisíncrono que
+describen no conserva automáticamente esa igualdad. Además una reducción
+robusta a optimización sobre TODAS las unitarias exige imponer cuantitativamente
+esa forma especial. Por tanto citar ese puente no sustituye la demostración
+polar de la promesa restringida (22).
+
+Harris--Paulsen estudian conjuntos de correlaciones unitarias y equivalencias
+de CEP. Cleve--Culf--Taller2026 prueban dureza de optimización tracial para
+tilted XOR/noncommutative Max-Cut. Estos son antecedentes próximos de la
+dureza tracial; no identificamos sin una reducción el coste con proyección
+racional única, norma1 y certificado biestocástico de coste SDP cero con sus
+problemas. El uso de relaciones unitarias para codificar juegos es anterior.
+
+La contribución matemática concreta que estas notas acreditan es la cadena
+completa desde el compilador hasta ese coste restringido y esas promesas.
+La búsqueda dirigida NO demuestra prioridad de la formulación de (22).
+La no computabilidad de optimización lineal general sobre clases de canales
+aproximablemente factorizables podría deducirse por otras rutas conocidas;
+no se afirma que aquí aparezca por primera vez. La promesa de proyección
+y el certificado SDP cero son las restricciones que requieren contraste
+específico antes de escribir un artículo. No se ha encontrado ni probado
+una reducción inversa a una formulación previa que haga esas restricciones
+rutinarias, pero esa ausencia no constituye prueba de novedad.
+
+2.9. Hermitización exacta y frontera unital (corolarios auxiliares).
+
+Para cualquier B_i, definir
+
+ H_i=[[0,B_i],[B_i*,0]],      K_i=[[0,i B_i],[-i B_i*,0]].
+
+La tupla T=(H_1,...,H_s,K_1,...,K_s) satisface, para todo m,
+
+             F_m(T)=F_m(B),
+
+incluso si en la salida se restringen todos los auxiliares a hermíticos.
+Para el sentido superior escribir U_i=(Y_i+i Z_i)/sqrt2,
+V_i=(Y_i-i Z_i)/sqrt2. La energía total es la suma de sus energías y
+
+ valor_T(Y,Z)=2 sqrt(valor_B(U) valor_{B*}(V)).
+
+Se usa F_m(B*)=F_m(B), tomando adjuntos de todos los auxiliares. Si la energía
+de U es a, el lado derecho no supera2sqrt(a(1-a))F_m(B)<=F_m(B).
+En el sentido inferior, para un testigo W_i de B tomar Y_i=Re W_i,
+Z_i=Im W_i, ambos hermíticos. La evaluación de T es [[0,L_B(W)],[L_B(W)*,0]]
+y la energía se conserva; el valor coincide exactamente.
+
+Gram I se conserva. Para la familia de brecha, si q_i es la covarianza
+diagonal certificada con sum q_i B_i B_i*=sum q_i B_i*B_i=I, la densidad
+q_i/2 repetida sobre H_i y K_i produce un mapa biestocástico. Junto con el
+Gram, prueba C(T)=1. Los coeficientes son hermíticos, gaussianos racionales,
+de traza0, y el span complejo es autoadjunto. Esto traslada la dureza a lápices
+autoadjuntos con auxiliares hermíticos. Es hermitización estándar aplicada al
+teorema previo, no un salto conceptual suficiente por sí solo.
+
+Por contraste, si S contiene una unitaria y se usa la norma Hilbert–Schmidt
+intrínseca del subespacio, F_m=1 para todos m por AM–GM y la unitaria testigo;
+C=1 por el Gram y la covarianza de rango1 de ese testigo. En particular el
+problema es trivial en todos los sistemas de operadores UNITALES con esta
+normalización. Añadir I y después ortonormalizar no conserva una instancia
+difícil. Mantener un coeficiente delta I con métrica anisotrópica es un problema
+distinto, cuya dureza no se reclama aquí.
+
+La vectorización da también G(psi)=|det X|^(2/N), N=Dm, para
+psi=vec(X)/sqrt(N), ||X||_2=1. Entonces -log G=D(I_N/N || rho_psi).
+Es entropía relativa con este ORDEN de argumentos, no entropía de entrelazamiento
+usual. El máximo en el subespacio amplificado no es automáticamente la
+G-concurrence of assistance, una cantidad que optimiza promedios sobre
+descomposiciones. No se ha producido un teorema sobre capacidad cuántica,
+capacidad clásica de canales o entropía dinámica mediante esa identidad.
+
+CANDIDATO 3. TRES COEFICIENTES: PREGUNTA ABIERTA Y OBSTÁCULOS CONCRETOS
+Estado: candidato sin reducción demostrada. No debe convertirse aún en enunciado.
+
+El resultado1.1 muestra que tres es el primer número posible. El ejemplo
+antisymétrico de dimensión3 ya muestra activación con tres coeficientes, pero
+activación no es indecidibilidad. El compilador de brecha utiliza un número
+creciente de etiquetas, incluidas etiquetas independientes de prefijos. Su
+prueba energética depende de singletons por etiqueta. No permite eliminarlas
+gratuitamente.
+
+Una codificación de muchos generadores como palabras en dos no basta: cambia
+el lápiz lineal en un polinomio no conmutativo. La linearización conserva
+invertibilidad/determinante en un sentido algebraico, pero puede añadir
+variables, factores determinantes, bloques de identidad y costes de energía.
+Es necesario demostrar una comparación cuantitativa sobre TODOS los testigos,
+no sólo construir testigos YES con el patrón deseado. En particular, una
+normalización que introduzca una unitaria en el subespacio hace F=1 trivial.
+
+Una propuesta concreta recibida del agente principal usa tres etiquetas z,u,v
+y, por palabra de longitud k, un bloque cíclico I+alpha C_r. Si los pesos de
+las aristas son unitarios y el gauge está justificado, su determinante se
+reduce a det(I-(-alpha)^k word_r). Esta identidad no prueba la reducción:
+
+ (a) el bloque no es unitario al satisfacer la relación;
+ (b) la calibración de su máximo sobre unitarias no excluye auxiliares
+     arbitrarios que aprovechen la energía de otra manera;
+ (c) para |alpha|<1, el efecto normalizado de la palabra es del orden
+     |alpha|^k/k y pierde la brecha fija para longitudes crecientes;
+ (d) usar |alpha|=1 reintroduce ceros y exige un nuevo control del log;
+ (e) singletons pueden controlar polarización, pero no demuestran por sí solos
+     que el valor calibrado sea la cota global.
+
+Puede merecer explorar precisión dependiente de la instancia antes que brecha
+fija. Incluso eso requiere una cota NO global; no está demostrada aquí.
+
+Los resultados anteriores de indecidibilidad con un número fijo de Kraus en
+ocurrencia de medidas cuánticas (Eisert–Müller–Gogolin) se refieren a productos
+arbitrariamente largos, no a este máximo lineal con dimensión auxiliar libre.
+No se pueden importar directamente. Las cotas o equivalencias de rango no
+conmutativo tampoco controlan el valor del determinante normalizado.
+
+RECOMENDACIÓN
+
+Conservar el teorema de pares, su prueba y su factor e/2 como frontera exacta.
+La prioridad recomendada es la consecuencia de optimización sobre canales
+aproximablemente factorizables de (22): tiene un objetivo y una clase estándar
+estudiados por otras comunidades, y explicita una relajación SDP de valor cero
+que no detecta la brecha. La prueba está cerrada condicionalmente al compilador;
+su prioridad bibliográfica todavía requiere contraste específico, sin presumir
+que la no computabilidad tracial general sea nueva. No recomiendo redactar
+otro paper sólo por hermitización, Choi o G-concurrence. La reducción a tres
+coeficientes queda abierta y subordinada a esta aplicación concreta.
+
+No se debe presentar e/2 en pares como mejora de la constante universal, ni
+la instancia de polarización de Yuan–Parrilo como descubrimiento propio.
+La investigación ha producido dos resultados concretos y una pregunta
+delimitada; no un avance demostrado sobre el factor global e o un teorema
+de indecidibilidad con tres coeficientes.
+
+FUENTES PRIMARIAS Y ALCANCE DE LA CONSULTA
+
+[YP20] C. Yuan, P. A. Parrilo, Maximizing Products of Linear Forms, and The
+Permanent of Positive Semidefinite Matrices, arXiv:2002.04149v2, sección3,
+Theorem3.3. https://arxiv.org/html/2002.04149v2
+Se comprobó la prueba del redondeo y la constante por rango L_r.
+
+[YP21] C. Yuan, P. A. Parrilo, Semidefinite Relaxations of Products of
+Nonnegative Forms on the Sphere, arXiv:2102.13220v2, secciones4–5.
+https://arxiv.org/html/2102.13220v2
+Antecedente directo de los gaps por distribuciones esféricas/polarización.
+No confundir su variable n con el tamaño matricial d de estas notas.
+
+[MS] T. Mai, R. Speicher, Fuglede-Kadison determinants of matrix-valued
+semicircular elements and capacity estimates, arXiv:2406.15922.
+https://arxiv.org/abs/2406.15922
+Fórmula para el testigo libre, no óptimo sobre todos los testigos.
+
+[CSZ] V. Cappellini, H.-J. Sommers, K. Zyczkowski, Distribution of G-concurrence
+of random pure states, Phys.Rev.A74,062322 (2006).
+https://arxiv.org/abs/quant-ph/0605251
+Se comprobó la afirmación de concentración en1/e; no proporciona cota del máximo.
+
+[NRV] A. Naor, O. Regev, T. Vidick, Efficient Rounding for the Noncommutative
+Grothendieck Inequality, Theory of Computing10(11),257–295 (2014).
+https://theoryofcomputing.org/articles/v010a011/
+Se contrastó el objetivo bilineal y el alcance del redondeo; no se obtiene una
+cota de log-determinante sólo citando la constante1/2.
+
+[LW] C.-K. Lee, J. Watrous, Detecting mixed-unitary quantum channels is NP-hard,
+2020, sección3 (UQM). https://jhwatrous.github.io/LeeWatrous2020.pdf
+Antecedente directo del problema cuadrático; dimensión fija en la entrada.
+
+[HM14] U. Haagerup, M. Musat, An asymptotic property of factorizable completely
+positive maps and the Connes embedding problem, arXiv:1408.6476,
+Theorems3.6--3.7. https://arxiv.org/html/1408.6476
+Equivalencia entre aproximabilidad por ancillas matriciales y factorización
+con ancilla embebible en R^omega; no permite reemplazar la clausura por FM.
+
+[MR19] M. Musat, M. Rordam, Factorizable maps and traces on the universal
+free product of matrix algebras, arXiv:1903.10182, Propositions3.1--3.2 y
+Corollary3.4. https://arxiv.org/html/1903.10182
+Publicado en IMRN2021,17951--17970. Identificación Choi/trazas y la clausura.
+
+[M25] M. Musat, The Connes--Kirchberg Problem and infinite-dimensional
+phenomena in quantum information theory, arXiv:2512.00432v1, Theorem3.7 y
+Proposition3.8. https://arxiv.org/html/2512.00432
+Primaria con resultados nuevos además de exposición; en particular precisa
+FM_fin=conv(FM_matr) y la igualdad de sus clausuras. Consultada directamente.
+
+[PR19] V. Paulsen, M. Rahaman, Bisynchronous Games and Factorizable Maps,
+arXiv:1908.03842v2, Remark1.3 y Theorem4.1.
+https://arxiv.org/html/1908.03842
+
+[HP16] S. Harris, V. Paulsen, Unitary Correlation Sets, arXiv:1612.02791v2,
+secciones3--4. https://arxiv.org/html/1612.02791
+
+[YDX12] N. Yu, R. Duan, Q. Xu, Bounds on the distance between a unital quantum
+channel and the convex hull of unitary channels, with applications to the
+asymptotic quantum Birkhoff conjecture, arXiv:1201.1172v1, Lemma2 y Theorem2
+en secciónIV. https://arxiv.org/html/1201.1172
+La obstrucción C_Phi es exactamente d_1(K(Phi)); su estabilización con Dep_m
+coincide con el problema de estas notas. No contiene una indecidibilidad
+de esa estabilización en los resultados comprobados.
+
+[GH] I. Goldbring, B. Hart, The universal theory of the hyperfinite II_1 factor
+is not computable, arXiv:2006.05629, BSL30(2),181–198 (2024).
+https://arxiv.org/abs/2006.05629
+Antecedente general obligatorio de no computabilidad tracial y de módulos de
+aproximación matricial. Consultado en la investigación anterior reutilizada.
+
+[CCT] R. Cleve, E. Culf, A. Taller, XOR Games at Full Tilt: The Hardness of
+Binary Nonlocal Games, arXiv:2607.06876v1, sección6.4.
+https://arxiv.org/html/2607.06876v1
+Antecedente cercano de optimización tracial, distinto del coste de proyección
+de (10). Consultado en la investigación anterior reutilizada.
+
+[Gour] G. Gour, Mixed State Entanglement of Assistance and the Generalized
+Concurrence, Phys.Rev.A72,042318 (2005).
+https://arxiv.org/abs/quant-ph/0506229
+Antecedente de la interpretación determinantal; no se identifica sin prueba
+el máximo de subespacio con el promedio asistido.
+
+[EMG] J. Eisert, M. P. Müller, C. Gogolin, Quantum measurement occurrence is
+undecidable, Phys.Rev.Lett.108,260501 (2012).
+https://arxiv.org/abs/1111.3965
+Fuente primaria consultada también mediante el PDF del repositorio institucional
+https://refubium.fu-berlin.de/bitstream/handle/fub188/14407/PhysRevLett.108.260501.pdf
+Indecidibilidad con9Kraus de tamaño15, para ocurrencia de productos; no es una
+reducción al presente problema de lápices de tres coeficientes.
+
+VERIFICACIÓN REPRODUCIBLE Y LIMITACIONES
+
+verify_frontier.py usa semilla2026101703 y sólo escribe diagnostics.json aquí.
+Pasaron160 factorizaciones binarias y sus cadenas superiores,160 lifts
+escalares,160 invariancias QZ,60 cotas de capacidad triangular,400 comprobaciones
+del ejemplo6x6,90 lifts hermíticos,90 factorizaciones de hermitización y48
+testigos de Clifford. Máximo error de identidad:1.07e-14.
+
+Las cuadraturas CP1 incluidas son diagnósticos con optimización LOCAL, no
+certificaciones del máximo global y no tienen por qué ser monótonas. La agudeza
+se demuestra con (8), no con esas cifras. Los verificadores no prueban
+indecidibilidad, no comprueban la fuente MIP* y no sustituyen las pruebas
+anteriores. Los argumentos universales en m son analíticos.
+
+verify_unitary_distance.py pasó108 casos complejos con16 comprobaciones por
+caso: orientación Choi, ambas marginales, coste vectorizado, proyección,
+normalización y polar, y dos identidades de amplificación. Máximo error1.85e-14.
+También verifica simbólicamente un proyector racional y su certificado Choi
+con soporte exacto, usando el subespacio antisimétrico3x3 como ejemplo pequeño;
+ese ejemplo no es una instancia del compilador indecidible. Los márgenes
+gamma,1/2592<1/1296 y los umbrales de decisión se comprueban racionalmente.
+Salida: unitary-distance-diagnostics.json. Ambos verificadores pasaron a la
+primera ejecución de sus versiones guardadas; no hubo fallos ocultados.
+Ningún archivo de un manuscrito previo se modifica como parte de estas
+comprobaciones. source-inputs.json identifica las fuentes locales por hash.

@@ -1,0 +1,200 @@
+DICTAMEN CRÍTICO SOBRE LA CONSECUENCIA DE DISTANCIA UNITARIA
+17 de octubre de 2026. Investigación externa; no es un manuscrito ni una evaluación con nota.
+
+Resultado: la consecuencia propuesta es correcta como corolario del compilador del paquete revisado, con las precisiones que se demuestran abajo. No encuentro una refutación matemática. Hay dos detalles que deben incorporarse a una formulación completa: usar una polar unitaria que respete los bloques, y distinguir la amplificación de la aplicación sobre matrices de la amplificación de su matriz vectorizada. La posible novedad está en la transferencia con brecha fija a un coste que es una proyección racional; no está en introducir la distancia de un subespacio a las unitarias. La prioridad mundial no queda certificada por esta revisión.
+
+Base exacta: Constant-precision undecidability for amplified determinants with capacity one; paquete review-packet-revised; identidad ARR-2026-40S2JAQBBB8GJTN5/v1, version_id arr:version:286722b6-3d9d-4f52-ac15-82692cb57050.
+PDF: SHA256 2ddac39b1c8eed27d04b420b070eb581f8f36c317b3e170f5fc94fd8a628584d.
+TeX: SHA256 24550be9e3566399668cda48f8b952385fe43a2672f1ec1dd993270224b51b77.
+Ambos hashes se comprobaron de nuevo. Los dictámenes anteriores permanecen cerrados y no se transfieren puntuaciones a esta investigación.
+
+1. CONVENCIONES Y LA IDENTIDAD EXACTA
+
+Sea S=span_C{B_1,...,B_s}⊂M_D(C), no el espacio lineal real. Se usa τ_n=Tr/n y ||X||_2²=τ_n(X*X) en el tamaño n correspondiente. Escribamos P=Π_S, V_m=S⊗M_m y P_m=P⊗id_{M_m}. La proyección ortogonal es la misma si en M_D se usa Tr o τ_D. En M_{Dm}, P_m es precisamente la proyección ortogonal sobre V_m, porque la traza normalizada se factoriza. El símbolo id_m debe significar la identidad sobre M_m, no una identidad sobre un espacio vectorial de dimensión m.
+
+Para unitaria U, ||U||_2²=1; por Pitágoras,
+
+  ||(I−P_m)U||_2² = 1−||P_m U||_2².
+
+Todos los máximos y mínimos a m fijo se alcanzan. La esfera unitaria de V_m es no vacía porque S≠{0}. Por dualidad de Hilbert y la fórmula variacional de la norma de traza,
+
+  max_U ||P_m U||_2
+    = max_U max_{X∈V_m, ||X||_2=1} |τ_{Dm}(X*U)|
+    = max_{X∈V_m, ||X||_2=1} τ_{Dm}|X|.
+
+Solo se intercambia el orden de dos máximos sobre un producto compacto; no se invoca un teorema minimax. La última igualdad sigue de una descomposición polar y de extender la isometría parcial a una unitaria cuando X es singular. Por tanto,
+
+  h_m(S) = 1−max_{X∈V_m, ||X||_2=1}(τ_{Dm}|X|)².                  (1)
+
+Otra identidad útil, sin normalización impuesta a X, es
+
+  h_m(S) = min_{X∈V_m, U unitario} ||X−U||_2²
+         = min_{X∈V_m} τ_{Dm}[(|X|−I)²].                       (2)
+
+La primera igualdad minimiza primero sobre el subespacio; la segunda, primero sobre las unitarias. Alternativamente, si ||W||_2=1, minimizar 1+r²−2rτ|W| sobre r≥0 da 1−(τ|W|)². Esto relaciona directamente (1) y (2), sin atribuir una condición unitaria a los coeficientes del lápiz.
+
+Se define h_∞=inf_{m≥1}h_m. No hace falta que ese ínfimo se alcance. Por repetición tensorial h_{km}≤h_m; no se ha demostrado ni utilizado monotonía para todos los enteros consecutivos m. Las sumas directas dan promedios ponderados por dimensiones.
+
+2. EL LADO YES Y EL LADO NO
+
+La identidad Gram del manuscrito identifica la esfera de coeficientes de F_m(B) con la esfera ||X||_2=1 de V_m. Para los Dm valores singulares, la desigualdad entre media geométrica y aritmética da
+
+  |det X|^{2/(Dm)} ≤ (τ_{Dm}|X|)².
+
+Así h_m≤1−F_m y h_∞≤1−F_∞. El caso YES del manuscrito implica h_∞≤γ/4, con
+
+  γ=1/36 288 000 000.
+
+No se selecciona un testigo que alcance F_∞ ni h_∞.
+
+También hay una completitud directa, que hace innecesario invocar el teorema determinantal. Para una puerta H con etiquetas unitarias, sus valores singulares s están en [1/5,7/5]. Por tanto (s−1)²≤(25/36)(s²−1)² y
+
+  dist_{2,τ_{2m}}(H,U(2m))² ≤ (25/36)||HH*−I||_2²
+                             = (4/25)e_g².
+
+Asigne productos exactos a los prefijos y z=p=I, como en la construcción. Solo la puerta final de cada relación puede ser no unitaria. Sus 25 copias, cada una de peso 2/D en la norma global, dan para W=L_A(V)∈V_m
+
+  dist_{2,τ_{Dm}}(W,U(Dm))² ≤ (8/D)Σ_r e_r² = 8ρξ.
+
+Por (2), h_m≤8ρξ. En YES los errores de relación se aproximan a lo sumo a 34ε/4, por lo que
+
+  h_∞≤8(1/200)(34ε/4)=(17/50)ε<γ/4,  ε=2^−40.
+
+Esto usa el mismo compilador y su estimación espectral elemental, pero ninguna cota de logaritmo de determinante. La constante γ puede conservarse sin cambios. El paso a errores límite vuelve a evitar una hipótesis de consecución del valor del juego.
+
+El argumento NO necesita la prueba interna del compilador: NO para el determinante, por sí solo, no implica NO para la media de valores singulares. Sea una instancia NO y supóngase h=h_m<γ para algún m. El caso h=0 se trata directamente: existe una unitaria en V_m y la cadena inversa tiene error cero. Supongamos 0<h<γ y elijamos una unitaria minimizante U. Definamos
+
+  X=P_m U,   ||X||_2²=1−h,   W=X/√(1−h).
+
+Como τ(X*U)=τ(X*X)=1−h,
+
+  ||W−U||_2² = 2−2√(1−h) ≤ 2h.                              (3)
+
+W pertenece al lápiz y es bloque diagonal en la descomposición del compilador; U no tiene por qué respetar esa descomposición. Elijamos una polar unitaria Q de W bloque por bloque, con extensiones unitarias en los núcleos. Es una unitaria global y minimiza la distancia a W entre todas las unitarias. Entonces
+
+  Δ²:=||W−Q||_2² ≤ ||W−U||_2² ≤ 2h.                        (4)
+
+Este paso permite reutilizar exactamente la estimación de los singletons. No es correcto simplemente llamar a U «la polar bloque diagonal» sin justificarlo. Por (1), también se puede mostrar que U alcanza el máximo polar correspondiente a W, pero esta observación adicional no hace falta.
+
+Escribiendo W=L_A(Z), los pesos y singletons del manuscrito dan, para polares unitarias V_l de Z_l,
+
+  Σ_l (w_l²/D)||Z_l−V_l||_{2,τ_m}² ≤ 2Δ².
+
+Si H=L_A(V), entonces ||H−W||_2≤√2Δ y ||H−Q||_2≤(1+√2)Δ. La norma de operador de H es ≤7/5. Por consiguiente
+
+  ||HH*−I||_2² ≤ C_0 Δ²,   C_0=(144/25)(3+2√2).
+
+Poniendo c=12/25, cada grupo de 25 copias de una puerta aporta 50c²e_g²/D al defecto global. Los grupos G_r de puertas asignados a relaciones son disjuntos como ocurrencias y tienen a lo sumo seis elementos. Si ρ=R/D,
+
+  ξ ≤ (6/R)Σ_g e_g²
+    ≤ [6C_0/(50c²)] Δ²/ρ
+    ≤ (18+12√2)h/ρ
+    < 35h/ρ.
+
+El lema de redondeo del juego produce error <1750h/ρ. Dado que ρ≥1/8000 y β=(1−σ)/3500=1/4 536 000, se tiene γ=β/8000 y
+
+  1750h/ρ < 1750γ/ρ ≤ (1−σ)/2 < 1−σ.
+
+Esto contradice la cota NO de valor síncrono ≤σ. Por tanto h_m≥γ para todo m y h_∞≥γ. El mismo argumento da h_m≥βρ; la constante universal γ es la simplificación utilizada aquí. Ningún paso posterior a (4) necesita un determinante, invertibilidad de W o que W maximice el determinante. Sí necesita la estructura del compilador y sus singletons.
+
+En consecuencia, para la familia computable T↦S(T),
+
+  T se detiene       ⇒ h_∞(S(T))≤γ/4,
+  T no se detiene    ⇒ h_∞(S(T))≥γ.
+
+Un algoritmo de aproximación aditiva γ/8 separaría los casos, por ejemplo con umbral 5γ/8. Esta es indecidibilidad uniforme sobre las entradas finitas de la familia; no afirma que cada instancia individual tenga un valor real no computable. D no está fijado universalmente: forma parte de la entrada. No se ha demostrado aquí dureza con un único D constante.
+
+3. EL COSTE ES UNA PROYECCIÓN RACIONAL, CON LA AMPLIFICACIÓN CORRECTA
+
+Para la base Gram-ortogonal real racional del manuscrito,
+
+  Π_S(T)=Σ_l B_l τ_D(B_l* T).
+
+Con vectorización vec(E_ij)=e_i⊗e_j, la matriz de esta aplicación es
+
+  P=(1/D)Σ_l vec(B_l)vec(B_l)* ∈M_{D²}(Q).
+
+Es real simétrica e idempotente. K=I_{D²}−P también lo es. En coordenadas de bloques U=Σ_{i,j}E_ij⊗U_ij, agrupando primero (i,j) y después las dos coordenadas de la ancilla,
+
+  h_m = min_{U∈U(Dm)} [1/(Dm)] vec(U)* (K⊗I_{m²}) vec(U).       (5)
+
+Para otra convención de vectorización interviene una permutación fija. Es K⊗I_{m²}, no K⊗I_m. El coste es una forma cuadrática positiva semidefinida; U*U=I son restricciones cuadráticas reales tras separar partes real e imaginaria. La aplicación Π_S, aunque positiva como operador en el espacio de Hilbert de matrices, no tiene por qué ser positiva ni completamente positiva como aplicación entre álgebras de matrices. No debe llamarse canal ni expectativa condicional.
+
+No se necesitan raíces irracionales para escribir el coste como suma de cuadrados de formas lineales. Las filas de K ya proporcionan tal escritura porque K*K=K; sus normas euclídeas son ≤1. Al desvectorizarlas se obtienen coeficientes racionales de una UQM ordinaria a cada m fijo, con el factor de normalización 1/(Dm). Así se puede comparar con la definición de Lee–Watrous sin construir una base ortonormal irracional de S perpendicular.
+
+Para cada m fijo, (5) es una optimización compacta semialgebraica con datos racionales, uniformemente computable mediante eliminación real de cuantificadores. La indecidibilidad procede del ínfimo sobre ancillas arbitrarias. También excluye una cota total recursiva uniforme, en la longitud de la entrada, que garantice una ancilla con error aditivo γ/8: se calcularía el mínimo de los valores para 1≤m≤b(L) a precisión γ/16 y se separaría YES de NO. No es una afirmación de complejidad práctica; la brecha es aproximadamente 2,76·10^−11.
+
+4. OBJECIÓN DE ESTABILIZACIÓN: QUÉ TEOREMAS NO SE PUEDEN APLICAR
+
+Definamos a_m=||Π_S⊗id_{M_m}||_{∞→2,τ_{Dm}}, con norma de operador en la entrada y Hilbert–Schmidt normalizada en la salida. Cada contracción cuadrada es promedio de dos unitarias, como se ve por descomposición en valores singulares. Por convexidad de la norma de salida, a_m=max_U||P_mU||_2. Luego
+
+  h_∞=1−(sup_m a_m)².
+
+La fórmula es correcta. No convierte a sup_m a_m automáticamente en la norma completamente acotada usual.
+
+Smith, en la formulación primaria accesible de Watrous, estabiliza la norma ∞→∞ en la dimensión de salida; la dualidad da el resultado correspondiente para 1→1. El artículo también construye programas semidefinidos para esas normas. Ninguno de esos enunciados es una estabilización de la norma aquí definida. Véase [Watrous, pp. 221–222](https://theoryofcomputing.org/articles/v005a011/v005a011.pdf).
+
+Hay una razón estructural concreta: las normas Y↦||Y||_{2,τ_{Dm}} no son los niveles matriciales de un espacio de operadores. Para Y⊕Z, con tamaños de ancilla m,n, el cuadrado de la norma es el promedio ponderado [m||Y||²+n||Z||²]/(m+n), mientras el axioma de suma directa requiere el máximo. Incluso añadir un bloque cero cambia la norma. En las normas completamente acotadas de Schatten, la definición utiliza normas mixtas (∞,q)→(∞,p), o (t,q)→(t,p) con el mismo t. No se puede sustituir la salida por la norma (2,2) manteniendo en la entrada la norma (∞,∞).
+
+Una excepción relevante merece una comprobación explícita: Devetak–Junge–King–Ruskai, Theorem 13(b), sí prueba multiplicatividad de las normas usuales q→p para mapas completamente positivos cuando q≥p. Con q=∞,p=2 y el factor m^−1/2, produciría estabilización para nuestra expresión si Π_S fuera CP. Esa hipótesis falla. En el compilador, un coeficiente de prefijo tiene una entrada arriba a la derecha de una puerta donde la entrada abajo a la izquierda pertenece a z. Los singletons exclusivos de cada etiqueta fijan los coeficientes de cualquier combinación en S. Por ello B_prefijo* no puede pertenecer a S. El espacio no es cerrado bajo adjuntos y su proyección no preserva adjuntos, condición necesaria para ser CP. Véase [DJKR, (3.1)–(3.5), Theorem 13](https://arxiv.org/pdf/quant-ph/0506196).
+
+El análisis no consiste solo en «no he encontrado un teorema»: la reducción demostrada en los apartados 1–3 excluye cualquier estabilización exacta o aproximada uniforme con cota recursiva suficiente para esa precisión, aplicada a esta familia. No excluye fórmulas distintas, relajaciones, cotas de aproximación muy gruesas o resultados con hipótesis adicionales. No he certificado exhaustivamente toda la literatura de normas matriciales.
+
+La frontera CP tiene además una prueba elemental útil. Si Π es CP, A=Π(I)≥0, y U es unitaria, aplicar Π a la matriz positiva de bloques [[I,U],[U*,I]] da [[A,Π(U)],[Π(U)*,A]]≥0. De ello se deduce Π(U)=A^{1/2}CA^{1/2} con ||C||_op≤1. Si A es singular, la positividad fuerza que Π(U) tenga soporte en el de A a ambos lados; la factorización se hace allí, o se obtiene por límite a partir de A+εI y una subsucesión de contracciones. Hölder para Schatten normalizada da
+
+  ||Π(U)||_2 ≤ ||A^{1/2}||_4² = ||A||_2.
+
+U=I alcanza la cota. Aplicando lo mismo a Π⊗id_m, cuyo valor en la identidad es A⊗I_m, se obtiene a_m=||Π(I)||_{2,τ_D} para todo m. Para una proyección ortogonal CP, en particular,
+
+  h_m=1−||Π(I)||_{2,τ_D}²,   para todo m.
+
+Así, la no positividad completa de las proyecciones del compilador no es una sutileza de terminología: permite salir de una clase con fórmula explícita y estabilización inmediata.
+
+5. IDENTIFICACIÓN EXACTA CON CANALES DE ANCILLA MATRICIAL
+
+Para U=Σ E_ij⊗U_ij, sea
+
+  Φ_U(X)=(id_D⊗τ_m)[U(X⊗I_m)U*].
+
+Es un canal unital y preservador de traza con factorización matricial. Use el Choi en orden salida–entrada, J(Φ)=Σ_{j,l}Φ(E_jl)⊗E_jl. Entonces
+
+  J(Φ_U)_{(i,j),(k,l)}=τ_m(U_ij U_kl*),
+  ||(I−P_m)U||_2²=Tr[K J(Φ_U)]/D.                            (6)
+
+Las igualdades se comprueban expandiendo entradas; la tracialidad permite invertir el orden dentro de cada producto de dos factores. No hay una trasposición parcial escondida si se mantiene esta convención.
+
+Sea FM_matrix(D) el conjunto de los Φ_U con un único M_m como ancilla, m arbitrario. Puesto que J/D es una matriz densidad y la clausura vive en dimensión finita,
+
+  h_∞ = min_{Φ∈cl(FM_matrix(D))} Tr[K J(Φ)]/D.                 (7)
+
+La clausura coincide con la de las factorizaciones por álgebras finito-dimensionales con trazas arbitrarias: una suma directa da una combinación convexa, y sus pesos se aproximan por multiplicidades racionales después de ampliar los bloques. Esta identificación concreta es coherente con Musat–Rørdam, Proposition 3.2, que expresa la clausura a través de trazas hiperlíneales. Su Corollary 3.4 distingue esa clausura de todos los mapas factorizables mediante la equivalencia con el problema de Connes. [Fuente primaria](https://arxiv.org/pdf/1903.10182).
+
+No se debe reemplazar el conjunto de (7) por todos los canales biestocásticos. Hay una refutación interna particularmente clara: las matrices A_l del compilador ya cumplen ΣA_l*A_l=ΣA_lA_l*=I. Su canal Ψ_A tiene J(Ψ_A)=Σvec(A_l)vec(A_l)* soportado en S. Por tanto Tr[KJ(Ψ_A)]/D=0 en TODAS las instancias, incluso las NO. La relajación semidefinida a todos los canales biestocásticos tiene siempre valor cero; (7) vale al menos γ en NO.
+
+Tampoco se debe reemplazar ese conjunto por los canales mixtos de unitarias. Una ancilla conmutativa produce una mezcla de conjugaciones unitarias. Como el funcional (6) es lineal, su mínimo sobre esas mezclas es el valor m=1. Una ancilla matricial general permite un conjunto mayor.
+
+Esto es optimización lineal sobre una clausura de canales factorizables. No es todavía una reducción de pertenencia aproximada de un canal dado a ese conjunto. En NO, Ψ_A está separado de él por el test K; en YES, un canal factorizable con pequeña fuga de soporte no tiene por qué aproximar a Ψ_A. Falta esa implicación para convertir sin más el argumento en una promesa de pertenencia. Tampoco se obtiene indecidibilidad de mixed-unitary membership a dimensión finita.
+
+6. ANTECEDENTES Y ALCANCE DE LA POSIBLE NOVEDAD
+
+Lee–Watrous, Detecting mixed-unitary quantum channels is NP-hard, Quantum 4, 253 (2020): Definition 1 y Section 3 estudian Σ_j|Tr(A_j*U)|² en una dimensión finita incluida en la entrada y establecen dureza NP fuerte. Su parámetro m unario controla la precisión; no es nuestra dimensión de ancilla. Section 4 transfiere esa dureza a detección de canales mixtos de unitarias. El trabajo presente sería una variante con amplificación ilimitada y brecha constante, con coste restringido a proyecciones racionales. No es la primera dureza de minimización cuadrática unitaria. [Publicado](https://quantum-journal.org/papers/q-2020-04-16-253/); [v3 examinada](https://arxiv.org/pdf/1902.03164v3); [PDF del autor](https://jhwatrous.github.io/LeeWatrous2020.pdf).
+
+Un antecedente aún más cercano a la identidad es Yu–Duan–Xu, Bounds on the distance between a unital quantum channel and the convex hull of unitary channels, Lemma 2. Definen C_Φ=min_{L∈K(Φ)}Tr[(|L|−I)²]/D y lo usan como cota inferior de una distancia a canales mixtos de unitarias. Por (2), C_Φ=h_1(K(Φ)). Si Δ_m(X)=τ_m(X)I_m es el canal despolarizante, su espacio de Kraus es M_m, de modo que C_{Φ⊗Δ_m}=h_m(K(Φ)). Para nuestro Ψ_A, el espacio de Kraus es S. Estas igualdades son una deducción del presente dictamen, no una afirmación de que ese artículo pruebe la nueva indecidibilidad. [Fuente primaria, Lemma 2](https://arxiv.org/pdf/1201.1172).
+
+Harris–Paulsen, Unitary Correlation Sets, estudian momentos de entradas de matrices unitarias y comparan modelos finitos, aproximados y conmutantes. Theorem 4.6 los relaciona con el problema de Connes. Sus conjuntos no deben identificarse con el Choi tracial de una sola U sin demostrar una correspondencia. Constituyen un antecedente sustancial de la estructura, pero el enunciado inspeccionado no es el problema de proyección racional de (5). [Fuente primaria](https://arxiv.org/pdf/1612.02791).
+
+Musat–Rørdam, Non-closure of quantum correlation matrices and factorizable channels that require infinite dimensional ancilla, muestran no clausura y necesidades de ancilla infinita. Esas propiedades no implican por sí solas ausencia de una cota recursiva para aproximar a precisión fija; tampoco prueban que una relajación biestocástica sea exacta. [Fuente primaria](https://arxiv.org/pdf/1806.10242v4).
+
+Goldbring–Hart prueban la no computabilidad de la teoría universal de R (Corollary 3.9) y relacionan su computabilidad con cotas recursivas para aproximar momentos matriciales (Theorem 4.1). Eso establece el fenómeno general mucho antes de esta propuesta. No basta lógicamente para inferirlo sobre el subconjunto específico de costes que son proyecciones racionales: se necesita una reducción que conserve esa forma y una brecha cuantitativa. El compilador revisado proporciona aquí esa reducción. [Fuente primaria](https://arxiv.org/pdf/2006.05629).
+
+En las fuentes primarias inspeccionadas no he localizado el enunciado exacto de indecidibilidad a una precisión aditiva fija para (5). Esto no certifica novedad, y no demuestra que un especialista no pueda deducirlo rápidamente de otra reducción conocida. La identidad (2) es previa en su forma de espacio de Kraus; la teoría de canales y de momentos también es previa. La aportación defendible, si se decide desarrollarla, es la transferencia explícita y cuantitativa a una proyección ortogonal racional. Respecto al manuscrito determinantal, es un corolario cercano: elimina la necesidad del determinante en el lado inverso, pero conserva el núcleo del compilador y la dureza heredada. No debe presentarse como una segunda prueba independiente de la dureza original ni como una nueva frontera general de la computabilidad.
+
+7. VERIFICACIONES REALIZADAS Y LÍMITES
+
+Se releyeron las definiciones y la prueba inversa de la versión exacta revisada, y se recalcularon los factores 2, 50c²/D, 6/R, 18+12√2 y 1750. Se comprobaron analíticamente la identidad variacional, el paso polar con bloques singulares, la representación racional, la convención de Choi y las distinciones de normas. Se consultaron las fuentes primarias citadas, incluyendo la v3 concreta de Lee–Watrous. No se implementó la reducción máquina–juego.
+
+El programa independiente check_unitary_distance.py no importa archivos del manuscrito ni depende de rutas privadas. Incluye 180 casos de matrices complejas (D=2,3,4; m=1,2,3), cinco casos de un subespacio de rango uno con valor analítico h_m=1/10, una polar singular por bloques, un proyector racional exacto con su amplificación y comprobaciones racionales de las constantes. Comprueba Pitágoras, normalización, cotas polares, igualdad de coste Choi, trazas parciales, K⊗I_{m²}, media geométrica y minimización radial. La ampliación del programa añade 64 puertas para la completitud directa y 90 casos CP con Φ(I) singular. Se ejecutaron la versión inicial y la versión ampliada; los resultados efectivos de la última están en finite-checks.json. Estos ensayos son diagnósticos finitos: no certifican máximos globales, indecidibilidad ni novedad.
+
+No se volvieron a renderizar las diez páginas del PDF ni a ejecutar los verificadores del paquete en esta investigación: esas tareas pertenecen a la revisión anterior cerrada. Esta comprobación usa el mismo hash, la relectura relevante y pruebas nuevas de la consecuencia externa. No se modificó ningún manuscrito, paquete o informe previo, ni se publicó o contactó a autores.
+
+Independencia: contexto anterior reutilizado, fresh_blind=false. La misma familia/modelo participó en la construcción previa; independencia=involved_in_manuscript. GPT-6 Astra con esfuerzo xhigh fue solicitado, pero la identidad del runtime y el aislamiento de memoria no se atestiguaron de forma independiente. Se recibió del coordinador la propuesta, la objeción de estabilización, una referencia a Musat–Rørdam y las dos mejoras de prueba sobre completitud directa y frontera CP; se comprobaron los argumentos y la referencia directamente. No se leyó el informe del otro agente. No hay revisión humana ni formalización en asistente de pruebas. No se asigna nota ordinaria ni de importancia a esta investigación.
