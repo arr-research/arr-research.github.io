@@ -1,0 +1,136 @@
+NORMALIZACIÓN DE CONSULTAS Y BRECHA CONSTANTE: FORMULACIÓN REVISADA
+17 de octubre de 2026. Subtarea Astra solicitada con esfuerzo xhigh, contexto reutilizado e involucrado; selección efectiva no atestada independientemente. No es una evaluación ni una modificación del artículo congelado de ocho páginas. No contiene una nota.
+
+1. INTERFAZ EXACTA CON EL JUEGO FUENTE
+
+Usar el valor SÍNCRONO de Taller–Vidick 2507.22444v2, sección 5.1 y prueba del Teorema 5.2. Esta prueba admite epsilon=2^-40 y soundness 71/72. No se identifica este valor con el quantum general.
+
+Un test de tres posiciones se describe por una distribución racional finita mu(omega,p,j), p en {1,2,3}. Alice recibe omega, Bob recibe j. Alice contesta (a1,a2,a3), Bob b. El árbitro acepta si a1 a2 a3=sigma_omega y a_p=b. El signo depende sólo de omega. El índice p puede ser parte de la información interna del árbitro; no se revela como una nueva pregunta a los jugadores. Los mismos j pueden aparecer en dos o tres posiciones. Esta formulación también cubre un decodificador que determine p a partir de (omega,j): entonces mu sólo tiene soporte en ese índice. Definir p_omega=sum_{p,j} mu(omega,p,j).
+
+La distribución se obtiene enumerando el muestreador finito, conservando el índice que el predicado realmente comprueba. No se sustituye un multiconjunto de preguntas por un conjunto uniforme, ni se revela a Alice la semilla aleatoria del verificador. Si varios caminos aleatorios producen el mismo omega, sus probabilidades se suman.
+
+Se puede restringir a respuestas de paridad correcta sin disminuir el valor. Para cada omega, reagrupar todos los proyectores de respuestas de paridad incorrecta en una respuesta válida fija. Esos resultados antes perdían siempre. Reagrupar una PVM sigue siendo una PVM. Extender con la transpuesta correspondiente mantiene la convención síncrona sobre la unión de los conjuntos de preguntas. Así Alice tiene observables A_{omega,1}, A_{omega,2}, A_{omega,3} que conmutan y cuyo producto es sigma_omega I. Bob tiene involuciones X_j. El fallo es
+
+ e_src = (1/4) sum_{omega,p,j} mu(omega,p,j) ||A_{omega,p}-X_j||_2^2.
+
+Esto usa normas Hilbert–Schmidt normalizadas y la identidad de correlación del estado maximalmente entrelazado. La PVM de Alice se toma transpuesta respecto de los observables escritos en el mismo espacio que Bob.
+
+2. REPARACIÓN MEDIANTE VARIABLES AUXILIARES DISTINTAS
+
+Crear tres variables nuevas u_{omega,1},u_{omega,2},u_{omega,3} por pregunta omega. Son distintas entre sí y de todas las variables x_j de Bob.
+
+Crear una fila de paridad
+ u_{omega,1} u_{omega,2} u_{omega,3} = sigma_omega
+con probabilidad p_omega/2.
+
+Por cada triple (omega,p,j) con mu>0, crear una fila de igualdad
+ u_{omega,p} x_j = +1
+con probabilidad mu(omega,p,j)/2.
+
+En cada fila nueva, el árbitro elige una variable uniformemente dentro de la fila. Todas las filas tienen dos o tres variables distintas. Sus probabilidades suman uno. Las probabilidades racionales se convierten en una lista uniforme por multiplicidades enteras comunes. Las variables se conservan globalmente: copiar una fila no crea copias de sus variables.
+
+Las preguntas duplicadas a Alice por esta expansión no cambian el valor óptimo. Para unos observables de Bob fijados, cada fila duplicada tiene el mismo problema local de optimización; se puede elegir una de sus PVMs de menor fallo y usarla en todas las copias sin aumentar el fallo. Lo mismo vale para decodificar una estrategia de la lista expandida. Por tanto es legítimo tratar inicialmente la distribución ponderada y después uniformizarla.
+
+Completitud. A partir de la estrategia fuente anterior, asignar a la variable auxiliar u_{omega,p} la involución A_{omega,p}, y a x_j la involución X_j. En la fila de paridad, Alice usa la PVM fuente. Esa fila gana perfectamente, pues las variables auxiliares coinciden con sus observables. En una fila de igualdad, Alice mide A_{omega,p} y devuelve dos copias del resultado. La mitad de las veces se comprueba u y gana; la mitad se comprueba x_j. Por tanto esa fila pierde ||A_{omega,p}-X_j||_2^2/8. Tras ponderar la mitad de masa en filas de igualdad,
+
+ e_new <= e_src/4.
+
+La dimensión no cambia. Si sólo se conoce un supremo de valor >=1-epsilon, se toma una sucesión de estrategias y se obtiene supremo nuevo >=1-epsilon/4.
+
+Solidez. Dada una estrategia síncrona para el nuevo juego, escribir U_{omega,p},X_j para las variables de Bob. En la fila de paridad, Alice tiene tres involuciones conmutantes C_{omega,p} de producto sigma_omega I. En una fila de igualdad tiene la misma involución E_{omega,p,j} en sus dos posiciones. Definir
+
+ a_{omega,p}^2 = ||C_{omega,p}-U_{omega,p}||_2^2,
+ b_{omega,p,j}^2 = ||U_{omega,p}-E_{omega,p,j}||_2^2,
+ c_{omega,p,j}^2 = ||E_{omega,p,j}-X_j||_2^2.
+
+Entonces
+ e_new = (1/24) sum_omega p_omega sum_p a_{omega,p}^2
+       + (1/16) sum_{omega,p,j} mu(omega,p,j)(b^2+c^2).
+
+Decodificar el juego fuente usando C_{omega,p} para Alice y X_j para Bob. Son una estrategia síncrona válida con paridad correcta. La desigualdad de tres términos y mu marginalmente acotada por p_omega dan
+
+ e_src <= (3/4) sum mu(a^2+b^2+c^2)
+       <= (3/4) sum_omega p_omega sum_p a^2
+          +(3/4) sum mu(b^2+c^2)
+       <= 18 e_new.
+
+Por consiguiente, si el juego fuente NO tiene valor síncrono <=71/72, el juego nuevo tiene valor <=1295/1296. La constante 18 es deliberadamente conservadora. La reducción sigue siendo computable después de expandir el muestreador, sin afirmar tiempo polinomial en la descripción sucinta de la máquina de Turing.
+
+Una cancelación ingenua no sirve. Con dos filas de igual peso, (a,a,b)=+1 y b=-1, el juego que comprueba uniformemente las tres posiciones de la primera fila tiene valor clásico 5/6. Cancelar a,a y convertir la primera fila en la fila uniforme b=+1 cambia ese valor a 1/2. Esta diferencia se comprobó por enumeración exacta y se demuestra escogiendo b=-1: se pierde sólo una de tres comprobaciones en la primera fila. Las auxiliares anteriores evitan esa modificación.
+
+3. LEMAS DE REDONDEO DE LAS FILAS ORDINARIAS
+
+Para cada fila de k<=3 variables distintas, listar sus k cuadrados, su producto con signo y sus binom(k,2) conmutadores positivos. Rellenar a siete palabras con identidades vacías. Para N filas, R=7N. Denotar xi el promedio de los R residuos al cuadrado.
+
+La estrategia síncrona de fallo e da xi<34e. En cada fila, las distancias d_j^2 entre la variable de Bob y la correspondiente observable de Alice satisfacen sum d_j^2=4k e_fila. La cota de producto es 3 sum d_j^2, y la suma de conmutadores es <=16 sum d_j^2. Así la suma de residuos de esa fila es <=19 sum d_j^2; al promediar, xi<34e.
+
+Recíprocamente, redondear cada unitario V a la involución X=sign(Re V), con sign(0)=+1. Entonces ||V-X||_2^2<=||V^2-I||_2^2. La suma del producto y conmutadores redondeados de una fila es <=28 veces su suma original de los siete residuos.
+
+Para tres involuciones X,Y,Z, poner T=(Y+XYX)/2 y Y'=sign(T). Entonces [X,Y']=0 y ||Y-Y'||_2^2<=||[X,Y]||_2^2/2. En efecto, Y-T es la parte fuera de los bloques espectrales de X; su norma al cuadrado es ||[X,Y]||_2^2/4. La parte T-sign(T) es ortogonal a ella en Hilbert–Schmidt, y su norma al cuadrado es <=tau(I-T^2)=||Y-T||_2^2. La regla en cero es necesaria para una involución bien definida.
+
+Alice usa X,Y',sigma XY'. Son involuciones conmutantes de paridad exacta, y su discrepancia cuadrática total con X,Y,Z es <=2||XYZ-sigma I||_2^2+3||Y-Y'||_2^2. El fallo por fila es <=1/6 de la nueva suma de residuos. Para k=2 usa X,sigma X, con fallo ||XY-sigma I||_2^2/8. Para k=1 devuelve sigma, con fallo ||X-sigma I||_2^2/4. Todas las filas tienen fallo <=1/4 de la nueva suma, y por tanto
+
+ e_new <=49 xi <=50 xi.
+
+Los observables por fila y por variable se amplían con sus transpuestas a una estrategia síncrona de la convención de Taller–Vidick. No se necesitan una conversión de estado general ni un resultado de Connes.
+
+4. COMPILADOR PROMEDIO Y CONSTANTES
+
+Añadir tt a cada una de las R palabras, con una misma etiqueta t, pero incluir una puerta separada para t^2=I ASIGNADA A CADA palabra. Prefijos siempre nuevos, referencia z, 25 copias de cada puerta y un singleton inicial por etiqueta. Cada palabra usa a lo sumo cinco puertas, además de su puerta propia de padding. Los conjuntos de puertas asignados a palabras diferentes son disjuntos. La construcción tiene 2R<=G<=6R.
+
+Para cualquier normalización que conserve al menos la mitad del peso de cada etiqueta en singletons, las pruebas dan
+
+ -log F_normalizado <=(3600/49) rho xi,
+ xi <=(18+12sqrt(2)) delta/rho <35 delta/rho,
+ rho=R/D,
+
+donde F_normalizado=s F_m en el balance de peso común, y F_normalizado=F_m en la normalización del apartado siguiente. La segunda desigualdad se aplica cuando F_normalizado>=1-delta.
+
+Detalle de la dirección inversa: Delta^2=||X-P||_2^2<=2delta. La mitad de masa singleton controla el promedio ponderado de los errores polares por 2Delta^2. Por tanto B=L_A(V) verifica ||B-P||_2<=(1+sqrt(2))Delta y ||BB*-I||_2^2<=C0 Delta^2, con C0=(144/25)(3+2sqrt(2)). Las 25 copias por puerta aportan (50c^2/D) sum_g e_g^2, c=12/25. La telescopía y el padding asignado dan sum_palabras residual^2<=6 sum_g e_g^2. Como 12C0/(50c^2)=18+12sqrt(2), la constante anterior es exacta. La estrategia recuperada pierde a lo sumo 1750 delta/rho.
+
+5. PESOS CUADRADOS, GRAM IDENTIDAD Y CAPACIDAD UNO
+
+Sea q_l el peso entero inicial, s0 el número de etiquetas iniciales y d0=sum q_l=s0+50G. Elegir w_l=ceil(sqrt(2q_l)) y añadir w_l^2-q_l singletons. Se cumple 2q_l<=w_l^2<6q_l y cada etiqueta tiene 1+w_l^2-q_l>=w_l^2/2 singletons. Poner D0=sum w_l^2, t=ceil(sqrt D0), D=t^2. Añadir D-D0 etiquetas nuevas y libres, cada una en su singleton único y con w=1. Esas nuevas etiquetas satisfacen también la proporción requerida.
+
+Las matrices A_l así obtenidas son racionales, doblemente estocásticas como tupla y tienen soportes disjuntos, con Tr(A_l* A_l)=w_l^2 y sum w_l^2=D. Definir
+ B_l=(t/w_l) A_l.
+Entonces tau_D(B_l*B_h)=delta_lh. Con Q0=diag(w_l^2/D), Phi_{Q0,B}=sum A_l X A_l* es doblemente estocástico y tiene capacidad uno. Para cualquier Q densidad, tau_D Phi_{Q,B}(I)=1; evaluar en I y AM–GM da capacidad-raíz <=1. Por tanto C(B)=1.
+
+La tupla B NO es doblemente estocástica y no conserva el alfabeto finito original. Es racional con Gram identidad. De hecho, si hay h>1 coeficientes, sum_l Tr(B_l*B_l)=hD, que ya impide la identidad estocástica con traza D.
+
+Para coeficientes factibles Y, poner Z_l=(t/w_l)Y_l. Entonces L_B(Y)=L_A(Z) y tau(X*X)=sum_l(w_l^2/D)||Z_l||_2^2=sum_l||Y_l||_2^2=1. Los polares se controlan con esos pesos. Para una asignación unitaria V, elegir Y_l=(w_l/t)V_l da energía uno. Así las dos transferencias del apartado 4 se aplican exactamente a F_m(B), sin factor s.
+
+Si se han eliminado las variables no usadas y N>=1, n<=3N=3R/7, s0<=n+2+4R<=33R/7<5R. De aquí d0<305R, D0<1830R y D<=4D0<7320R<8000R. En sentido opuesto, D>=D0>=2d0>=100G>=200R. Por tanto
+ 1/8000 <= rho <=1/200.
+
+La cantidad de etiquetas libres es O(sqrt R). D, el número de etiquetas y el tamaño de salida densa son polinomiales en la lista expandida. Los coeficientes racionales tienen O(log R) bits, pues t y w_l están acotados por polinomios en R.
+
+6. DOS UMBRALES CONSTANTES Y UNA PRECISIÓN FIJA
+
+Usar la reparación del apartado 2: completitud de error <=epsilon/4, soundness sigma=1295/1296. Elegir
+ epsilon=2^-40,
+ beta=(1-sigma)/3500=1/4536000,
+ gamma=beta/8000=1/36288000000.
+
+En un caso NO, F_infty(B)<=1-beta rho. Si el supremo fuese estrictamente mayor, existiría un m finito y un testigo con delta<beta rho; su estrategia nueva tendría fallo <1750 beta=(1-sigma)/2, contradiciendo soundness. No se requiere que F_infty alcance su supremo. Por rho>=1/8000,
+ NO: F_infty(B)<=1-gamma.
+
+En un caso YES, la transferencia de completitud, xi<=34 e_new y rho<=1/200 dan
+ F_infty(B)>=exp[-(3600/49)rho*34*epsilon/4]
+            >=1-(3600/49)*34*epsilon/800.
+La pérdida racional de la última expresión es
+ 153/53876069761024 = 153/(49*2^40).
+Es menor que gamma/4=1/145152000000, pues
+ 153*145152000000=22208256000000 < 53876069761024.
+Así
+ YES: F_infty(B)>=1-gamma/4.
+
+Los dos umbrales son universales, no dependen de rho ni del tamaño de entrada. La brecha es 3gamma/4. Una aproximación absoluta con error <=gamma/8, comparada con 1-5gamma/8, decide Halt. La constante es extremadamente pequeña (gamma aproximadamente 2.76e-11); no representa precisión práctica. La reducción original desde una máquina sucinta sólo se afirma computable, no polinomial en esa codificación.
+
+No hay una cota total recursiva b(L) del tamaño de testigo para déficit aditivo gamma/8 en esta familia. Si la hubiese, calcular todos los F_m para m<=b(L) con error <=gamma/16 y tomar su máximo permitiría decidir por los mismos umbrales. En dimensión fija el dominio es la esfera compacta definida por la norma, el cuadrado del determinante es polinómico racional en partes reales e imaginarias, y la raíz positiva es monótona y computable. El caso YES da máximo >=1-3gamma/8 antes del error numérico, y el NO máximo <=1-gamma. No se afirma que cada tupla concreta defina un real no computable.
+
+7. LÍMITE DE LA VALIDACIÓN
+
+Las pruebas anteriores resuelven la interfaz para cualquier test explícito de paridad y comprobación de una posición, con mu racional. La dureza de esos tests se importa del Teorema 5.2 de Taller–Vidick; no se vuelve a demostrar MIP*=RE ni toda su reducción. En la redacción final debe exponerse el muestreador, conservar el índice realmente comprobado y probar esta normalización, en vez de asumir que las tres consultas son distintas. No se precisa el resultado general-state de esa fuente.
+
+Comprobaciones reproducibles: verify_averaged_extension.py y checks.json en esta carpeta. Incluyen un contraejemplo a la cancelación ingenua, 72 compilaciones exactas y ambas transferencias, 360 redondeos de cada dirección, 400 normalizaciones de slots y el caso de pinching T=0. No prueban la indecidibilidad externa; corroboran las identidades y constantes finitas utilizadas.
