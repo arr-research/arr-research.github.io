@@ -1,0 +1,57 @@
+{
+  "paper_id": "ARR-2026-5QQF95VHTC9GABH8",
+  "version": "v1",
+  "version_id": "arr:version:5b0e260a-0da2-4bb7-87ff-8247660c333d",
+  "canonical_sha256": "17b2361721027649b8ef5b98440032b91b5b04e89e2a9535fcbe7a27954ac1c5",
+  "provider": "OpenRouter",
+  "model_id": "google/gemini-4-argon",
+  "assessed_at": "2026-10-17T14:24:16.098883+00:00",
+  "prompt_version": "ARR-ASSESS-1.0",
+  "independence": "unknown",
+  "recommendation": "accept",
+  "millennium_score": 4.5,
+  "overall_stars": 5,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 5,
+      "basis": "Static inspection confirms the Horn LP reduction (Prop 2.2), hand-verifies the d=8 primal/dual phase (Thm 4.1) and the symbolic hive coarse-graining telescoping identities and boundary normalization (Lemma 6.1, Thm 7.3), and verifies that the computer-assisted d<=7 projection and order-27 seed scripts check all Farkas and LP dual identities over exact rational arithmetic."
+    },
+    "rigor": {
+      "stars": 5,
+      "basis": "Quantifiers, singular strata, and scope boundaries are stated with high precision. Potential pitfalls—such as ambient zero-padding lowering the unrestricted cost (Remark 3.3), projected equality rows requiring two-sided Farkas certificates, and coarse-grid boundary normalization Q_s = P_s - P_n—are explicitly addressed and closed."
+    },
+    "novelty": {
+      "stars": 4,
+      "basis": "Determining the exact dimension threshold (d=8) where Hilbert-Schmidt norm optimality forces self-commutator factor rank strictly above the inertia bound, together with the coarse-grid hive restriction method proving unbounded additive rank excess in dimension 27t, represents a novel contribution to finite matrix commutator theory."
+    },
+    "significance": {
+      "stars": 4,
+      "basis": "Resolves a natural structural question at the intersection of operator theory and Horn/hive polyhedral combinatorics, showing that norm optimality and rank minimality for inverse self-commutators coincide through d=7 but diverge arbitrarily in higher dimensions."
+    },
+    "reproducibility": {
+      "stars": 5,
+      "basis": "Static inspection of the supplementary archive confirms a comprehensive, self-contained verification architecture separating numerical support discovery from exact rational certification, with independent implementations for LR tableaux, equality orientations, and symbolic hive telescoping."
+    }
+  },
+  "summary": "This paper studies the minimum rank r_*(F) among Hilbert-Schmidt norm-minimizing factors C satisfying CC^* - C^*C = 2F for a traceless Hermitian matrix F in M_d(C), compared against the universal inertia lower bound r_0(F) = max{n_+(F), n_-(F)}. Using a Horn linear programming reduction and exact rational polyhedral projection (GMP cddlib with exact nonnegative Farkas certificates across all 33 sign-zero strata), the author proves that r_*(F) = r_0(F) for every target in dimensions d <= 7, including singular spectra. The paper then proves that this compatibility fails sharply at d = 8 along an explicit two-ray spectral cone where r_0 = 4 but r_* = 5 in the interior, with an exact tent-function rank penalty min{b, c-b}. Finally, using a symbolic coarse-grid restriction lemma for Knutson-Tao triangular hives (Lemma 6.1) combined with an exact rational dual certificate for an order-27 seed at rank 17, the paper proves that for a two-valued family G_t in dimension 27t, r_0(G_t) = 15t while 17t + 1 <= r_*(G_t) <= 18t, establishing that the additive rank excess r_*(F) - r_0(F) grows without bound. Static inspection of the proofs and verification code confirms that the results are mathematically sound and rigorously scoped.",
+  "strengths": [
+    "Complete resolution of the low-dimensional compatibility question (d <= 7) that explicitly certifies all singular strata (z > 0) rather than relying on an invalid zero-padding reduction.",
+    "Explicit, hand-verifiable primal and sparse dual Horn certificates for the two-chamber dimension-eight cone (Theorem 4.1) and the two-valued dimension-nine witness (Proposition 5.1).",
+    "Elegant symbolic coarse-grid restriction lemma for triangular hives (Lemma 6.1), where coarse rhombus slacks telescope as nonnegative t-by-t sums of fine rhombus slacks, transferring whole rank-face lower bounds across dimensions.",
+    "Careful treatment of the affine hive normalization H'(I,L) = H(I,L) + P_n(I-L) needed to restore the zero terminal eigenvalue condition in unrestricted coarse-graining.",
+    "Exemplary separation between floating-point discovery and exact rational certification (Fraction and GMP arithmetic) across multiple independent verification routes in the supplement."
+  ],
+  "weaknesses": [
+    "The proofs of Theorem 4.1 and Proposition 5.1 in the main PDF omit the explicit tables of sparse Horn triples and dual multipliers, deferring those finite lists to the verification scripts and absorbed supplement.",
+    "The exact value of r_*(G_t) in Theorem 7.3 is narrowed to the interval [17t + 1, 18t] rather than pinned down to 18t, and the conjectured intermediate rank-cost curve 30k - j for general k, j remains open.",
+    "Theorem 3.1 and Proposition 7.2 rely on computer-assisted polyhedral/LP certificates rather than a purely conceptual or proof-assistant-verified proof, though the rational Farkas/dual certificates are compact and independently audited."
+  ],
+  "potential_errors": [
+    "In the excluded inventory metadata, math/results/d_le_7_epigraph_certificate.json is listed with SHA-256 146af6cd... (likely due to line-ending normalization in the outer repository), whereas Section 8 of the PDF, manifest.json, and run_scientific_replay.py record 0103a643...; this is a minor packaging metadata discrepancy that does not affect the mathematical content or script execution."
+  ],
+  "strong_novelty_candidates": [
+    "The sharp dimension threshold (Theorem 3.1 and Corollary 4.3) showing that d = 8 is the least dimension in which Hilbert-Schmidt norm optimality forces self-commutator factor rank strictly above the inertia bound.",
+    "The hive coarse-graining amplification mechanism (Lemma 6.1 and Theorem 7.3) proving that the additive excess r_*(F) - r_0(F) of norm-optimal self-commutator rank over inertia is unbounded."
+  ],
+  "unresolved_material_objections": []
+}

@@ -1,0 +1,64 @@
+{
+  "assessed_at": "2026-10-17T14:04:10.189727+00:00",
+  "canonical_sha256": "75ab15f5b1145b7579de198f99e5c4409ec4a01d9f7c7e52023e5b91b9c91d89",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "The main proof withstands static inspection: specialization, valuation normalization, integral Clifford conjugation, singleton-fibre selection and the characteristic-p Vandermonde bound fit together correctly. Lemmas 6–7 establish the decoding corollary with consistent normalizations. Identified errors are local and do not undermine the intended nonzero-operator results.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "The general-rank additive inequality and its fibre-sum refinement appear substantively distinct from the vector, rank-one and multiplicative antecedents described. The manuscript appropriately attributes the underlying reduction method. Priority and the accuracy of external literature comparisons were not independently checked.",
+      "stars": 4
+    },
+    "reproducibility": {
+      "basis": "The supplement supplies explicit arithmetic implementations, integer certificate matrices, seeds, environment descriptions and historical logs. Static inspection supports the principal verification methods, and Proposition 5 also admits a direct algebraic check. No scripts were executed, certificates replayed, links followed or hashes recomputed in this assessment.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "The essential arguments are self-contained and correctly distinguish rank before and after reduction, arbitrary complex coefficients, and numerical observations from proofs. The full-support symmetry justification needs a small addition; the prime-power discussion, quoted corank hypotheses and determinantal dimension heuristic need local corrections.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "A sharp universal operator uncertainty inequality in every prime dimension is a strong specialized contribution. Its exact optimization of one-use Weyl-channel list length over all pure probes of prescribed Schmidt rank provides a concrete consequence beyond the original vector uncertainty principle.",
+      "stars": 4
+    }
+  },
+  "independence": "unknown",
+  "millennium_score": 4.4,
+  "model_id": "openai/gpt-6-astra",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-3WVWP20DY09HFASA",
+  "potential_errors": [
+    "Sections 5.3 and 8(3) overstate that only the Vandermonde step fails in prime-power dimension. Step 5 also uses field-plane geometry. In (Z/9Z)^2, S={(0,0),(3,0),(0,3),(3,3),(3,6)} has no singleton fibre through the origin for any primitive linear form. Thus the singleton-direction argument does not transfer unchanged. This does not affect the prime-dimensional proof.",
+    "Section 8(1) places determinantal codimension n^2 in the wrong ambient space. Rank at most p−n has codimension n^2 in P(M_p), not automatically in the particular Weyl subspace P^{ell−1}. The latter requires an intersection/transversality argument. Present this only as the expected dimension for a generic linear section; geometric general position of labels does not establish that hypothesis.",
+    "Section 5.3's summary of [0WE] needs the qualifications 'positive coranks' and 'odd p'. The identity matrix has corank zero, omitted from the stated list. Without the odd-prime restriction, p=2 and j=k−1 would list corank 2^k for a nonzero matrix, which is impossible. The earlier introduction includes the odd-prime restriction.",
+    "Section 2 cites Step 1 to justify AGL invariance of maximal nullity over full-support coefficient vectors, but Step 1 explicitly allows coordinates to vanish. Add the nonvanishing constraint t·product(c_g)=1 when specializing the relevant determinantal locus, or explain extension of the Galois automorphism to C. The symmetry claim is repairable and is not needed for the main proof.",
+    "The Gram-entry description in Section 6.1 has both a normalization and an indexing error under the manuscript's fixed expansion convention: Tr(rho W_g* W_h)=p times a phase times c_{g−h}, not merely a phase times c_{h−g}. At g=h, the Gram entry is 1 whereas c_0=1/p. Lemma 6 itself uses the correct trace-support identity, so the corollary survives.",
+    "Theorem 1 should explicitly repeat S nonempty, or C nonzero. Otherwise the empty set satisfies its coefficient condition vacuously and gives the excluded zero operator. The abstract, introduction and proof consistently impose the intended nonzero restriction, so this is a local hypothesis correction rather than a counterexample to the advertised result."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "OpenRouter",
+  "recommendation": "minor_revision",
+  "strengths": [
+    "The essential integrality issue is genuinely resolved: equation (4.1) expresses UCU^{-1} directly as an integral Weyl combination. The argument does not incorrectly reduce U^{-1} or assume that the unnormalized Fourier matrix is unimodular.",
+    "The coefficient quantifiers are handled correctly in the main proof. Specialization may shrink support, but rank ≤ p−ell still violates the bound for the smaller support. The alternative valuation-extension route also accommodates transcendental coefficients without assuming discreteness or a finite residue field.",
+    "The pigeonhole argument supplies a nonzero reduced circulant throughout the required sparsity range. The Euler-operator Vandermonde argument works over every characteristic-p residue field because the exponents are distinct modulo p. The separate p=2 argument closes the exceptional case.",
+    "Sharpness at every sparsity and attainment of every intermediate corank follow from explicit diagonal polynomials and a legitimate finite avoidance argument. The decoding lower bound uses positivity correctly, while the conjugated-cofactor tight-frame construction supplies the matching upper bound.",
+    "Proposition 5 has a direct static algebraic verification: C_{jk}=omega^{2j^3−2j} omega^{4jk^2} omega^{−k^3+2k}, with exponents modulo 5. The middle matrix has three distinct Fourier columns because k^2 takes values 0,1,4. This proves rank 3 and squared singular values 10,10,5,0,0 without relying on execution of the supplied certificate.",
+    "The numerical section explicitly distinguishes exhaustive support enumeration from non-exhaustive coefficient optimization, permits sub-support detections, and avoids treating observed positive residuals as certified global lower bounds."
+  ],
+  "strong_novelty_candidates": [
+    "The universal additive inequality rank(C)+s_W(C)≥p+1 for arbitrary nonzero complex operators in prime dimension, rather than only vectors, rank-one operators or positive states.",
+    "The valuation-dependent fibre-sum refinement dim ker(C)≤m_lambda−1, obtained by integral Clifford conjugation and characteristic-p circulant reduction.",
+    "The resulting exact optimum p−r+1 for perfect one-use Weyl-channel list decoding over all pure probes of Schmidt rank r; the factorization criterion and consecutive-probe construction themselves are appropriately attributed to antecedents."
+  ],
+  "summary": "Static inspection supports the main nonzero-operator inequality, its valuation refinement, sharpness and the optimized list-decoding corollary. The supplied PDF extraction was cross-read with TeX for conjugation notation. The central proof correctly addresses the potentially dangerous non-unimodular conjugation and arbitrary-coefficient steps. The parabola counterexample can additionally be checked by a short Fourier-column factorization. I found local hypothesis, normalization and explanatory errors, but no unresolved material objection to the intended main results; minor revision is appropriate. External priority, reported executions and the canonical PDF hash were not independently verified. Appendix A reports prior Astra participation; that report is noted while retaining the operator's independence disclosure of unknown. Context-isolation controls were not verified.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:2d943ed8-68cd-4725-8afe-9db7999c89c7",
+  "weaknesses": [
+    "The abstract's claim of failure in every composite dimension is true, but Section 5.4 supplies only particular non-prime-power examples. Include the general witness: for any prime q dividing composite d, I−Z^{d/q} has sparsity 2 and nullity d/q≥2. The absence of an admissible reduction alone only explains failure of the proof method, not failure of the inequality.",
+    "Bibliographic novelty remains provisional. The supplied discussion usefully distinguishes related results, but the cited primary sources and earlier author records were not supplied in full or independently consulted here. The main proofs do not depend on accepting those priority comparisons.",
+    "Some supplementary documentation retains older wording about global minima and independently reviewing agents. Historical logs should remain unchanged, but current documentation should consistently distinguish finite-search observations, implementation independence and reviewer independence."
+  ]
+}

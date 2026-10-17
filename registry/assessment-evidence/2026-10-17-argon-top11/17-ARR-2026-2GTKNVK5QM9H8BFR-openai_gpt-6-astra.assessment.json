@@ -1,0 +1,64 @@
+{
+  "assessed_at": "2026-10-17T14:09:21.759942+00:00",
+  "canonical_sha256": "9e10959a09984da0951b68fa3203c6339a9dba901d6d5310539ef3a4d8d79ddd",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "Static inspection found no material flaw in the positive-tester reduction, Gaussian–Schur identity, determinant bounds, rank threshold, qubit normalization or tensor constants. Theorem 6.1 correctly reduces to classical complex-field rank/blow-up results; their cited originals were not independently checked in this run.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "The strongest candidate is the Gaussian–Schur operational identity establishing one balanced minimax test for every channel, followed by determinant and rank consequences. Classical probe constructions, Schur inequalities, spin-flip spectra and noncommutative-rank results are appropriately distinguished from new claims. Priority remains unverified.",
+      "stars": 4
+    },
+    "reproducibility": {
+      "basis": "Supplied scripts expose complementary Choi, Gaussian-coefficient, symbolic and spectral checks; static loop counts support the reported 99/90/252 cases. I did not execute programs or recompute artifact hashes. An incorrectly reported RNG seed and incomplete full-suite dependency metadata warrant small corrections.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "The proof chain handles singular matrices by polynomial continuity, compact-family maxima by continuity, and the necessary alpha<1 restriction. The global-unitary tensor model and distinction between ordinary and noncommutative rank are explicit. Equation (24) would benefit from a short analytic derivation beyond the asserted determinant expansion.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Provides exact finite-query optima, asymptotic exponents and perfect-detection thresholds for a substantial symmetry-constrained testing problem. Tensor stability adds a useful structural classification. Applicability remains limited by independent unknown rotations, memoryless calls and unrestricted reference resources; efficient implementation and determinant optimization are not established.",
+      "stars": 4
+    }
+  },
+  "independence": "unknown",
+  "millennium_score": 4.7,
+  "model_id": "openai/gpt-6-astra",
+  "overall_stars": 5,
+  "paper_id": "ARR-2026-2GTKNVK5QM9H8BFR",
+  "potential_errors": [
+    "The abstract says a depolarizing partner 'destroys perfect detection whenever this condition fails.' Failure of the shrunk-subspace condition also includes unitary channels, which never admitted perfect detection. Qualify this statement by initial perfect detectability, or say the partner precludes finite perfect detection. Theorem 6.1 itself states the correct conclusion.",
+    "verification/verify_universal.py records seed 45151026, but its local generator is unused. Random channels come from the imported schur_checks.random_channel, whose generator is seeded with 20261015. Report the effective seed or pass the declared generator explicitly. This is a reproducibility-metadata error, not a counterexample to the mathematical results.",
+    "Following Equation (14), the evaluation functional has norm sqrt(N_{n,k}); its squared norm is N_{n,k}. The displayed inequality uses the correct constant. Adjust the prose 'evaluation norm N_{n,k}' to distinguish the norm from its square."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "OpenRouter",
+  "recommendation": "minor_revision",
+  "strengths": [
+    "Lemma 3.1 gives a channel-independent positive decomposition of the twirled alternative and an explicitly realizable parallel tester. The converse requires positivity and physical normalization without incorrectly identifying all positive matrices with experiments or assuming adaptive testers can be physically twirled.",
+    "The Gaussian moment normalization and Schur-block multiplicity factors are consistent. The direct Kostka/Muirhead argument establishes the required balanced minimum without depending on an uninspected general Schur inequality. Pointwise optimality justifies the compact-family result without an unsupported minimax interchange.",
+    "Theorem 4.1 supplies both sides of the exponent estimate, including nonzero query remainders. The homogeneous-polynomial evaluation bound and Maclaurin inequality support the lower bound, while trace preservation supplies contraction and the upper bound. The continuity argument also handles changing Choi rank.",
+    "Theorem 5.1 derives an exact, strategy-independent threshold from nonvanishing minors, rather than merely exhibiting a successful antisymmetric test. The alpha<1 condition and the absence of a bypass reference at the threshold are correctly specified.",
+    "The tensor-stability argument correctly distinguishes ordinary matrix-space rank from noncommutative rank. Its elementary shrunk-subspace bound applies to every partner, and the converse uses the depolarizing channel's full matrix Kraus span. The enlarged global-unitary null is repeatedly made explicit.",
+    "The qubit formulas have consistent Choi and spin-flip normalizations. Both tensor examples optimize over complex coefficient spaces, not merely real witnesses; the congruence reduction and signed-minor bound support the stated sharp constants."
+  ],
+  "strong_novelty_candidates": [
+    "The operational Gaussian–Schur identity combined with balanced-partition minimality, yielding a single finite-query minimax test simultaneously for all CPTP alternatives in the stated two-sided rotation model.",
+    "The exact determinant-controlled error exponent with polynomial finite-query bounds, together with the sharp ordinary-rank-plus-one threshold for finite perfect detection.",
+    "The operational characterization of perfect-detection stability under every tensor partner by shrunk subspaces, including the explicit depolarizing partner bound. The underlying algebraic characterization is classical, not a novelty candidate.",
+    "The exact operational determinant constants for W3 tensor W3 and W3 tensor D2, with the latter demonstrating the smallest possible partner dimension. The underlying skew-space phenomenon and hyperdeterminant are not new."
+  ],
+  "summary": "Version v1 presents a coherent analytic solution of the stated rotation-invariant minimax problem. The positive-tester reduction, Gaussian–Schur identity and balanced-partition inequality support the universal optimizer; polynomial sphere bounds then yield the determinant exponent and sharp perfect-query threshold. Tensor stability is a properly delimited application of classical noncommutative rank, and the two Werner–Holevo constants appear correctly derived and normalized. I found no unresolved objection capable of invalidating a main theorem. Minor revision is appropriate for abstract wording, RNG metadata and auditability improvements. This assessment is based on static inspection of the supplied parsed PDF and source text: I did not render or independently hash the PDF, execute programs, browse sources or certify worldwide priority.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:203b1110-ef94-401c-ba39-997246c7ba72",
+  "weaknesses": [
+    "Equation (24) is the least transparent self-contained algebraic step: the manuscript asserts a twelve-variable determinant expansion and provides supporting scripts. A short Schur-complement or polarized-determinant derivation would make the exact six-dimensional maximum easier to audit without symbolic execution.",
+    "The universal result is specific to a strong nuisance-symmetry model and unrestricted reference size. Exponentially growing multiplicity references and difficult determinant optimization limit immediate implementation value. These limitations are acknowledged, but should remain prominent when describing broader applications.",
+    "The supplied environment.json does not record CVXPY/Clarabel versions used by standalone schur_checks.py, and review/verify_independent.py inserts an author-specific Windows package path. A portable full-suite dependency specification would improve executable reproducibility; these issues do not affect the analytic proofs.",
+    "The search audit largely documents a company/author manuscript corpus and indexing activity, not an exhaustive specialist literature comparison. The proposed novelty is plausible and carefully delimited, but comparisons with the closest cited quantum-testing and matrix-space works were not independently verified here.",
+    "Review-control limitation, not a mathematical objection: the supplement includes development/informe-candidato-tensorial.txt, an earlier developmental assessment. Report isolation therefore cannot be claimed for this packet. Participation remains unknown as instructed; prior verdicts are not treated as verification of the mathematics."
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "assessed_at": "2026-10-17T14:06:34.129643+00:00",
+  "canonical_sha256": "66b83edcef934f296dcfc63e55f8463b3cbd9187b37afe06c4ab3a49cb5dcc33",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "The proofs use established convex analysis and elementary Fourier/probability arguments. Theorem 7.3 correctly bounds the mean drift of bounded observables under a translated uniform time law.",
+      "stars": 5
+    },
+    "novelty": {
+      "basis": "Combines known cut-cone geometry with quantum dephasing to construct exact discrete-time aliases and harmonic witnesses, adding a new randomized-clock protocol to avoid energy priors.",
+      "stars": 4
+    },
+    "reproducibility": {
+      "basis": "The Python script verify_sampling.py provides exact rational certificates for the 20-time and randomized-clock numerical bounds, cleanly reproducing the paper's claims.",
+      "stars": 5
+    },
+    "rigor": {
+      "basis": "Assumptions are clearly separated from claims. The timing error model is carefully restricted to independent additive jitter, acknowledging that rounding errors break the total-variation bound.",
+      "stars": 5
+    },
+    "significance": {
+      "basis": "Clarifies fundamental operational limits for characterizing static quantum disorder, providing a concrete, verifiable experimental design for ruling out static Hamiltonians.",
+      "stars": 4
+    }
+  },
+  "independence": "unknown",
+  "millennium_score": 5.0,
+  "model_id": "google/gemini-3.1-pro-preview",
+  "overall_stars": 5,
+  "paper_id": "ARR-2026-7PEKNEDVH38HV8PX",
+  "potential_errors": [
+    "The sufficient condition in Theorem 4.1 may be far from optimal; tighter aliases might exist on coarser grids."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "OpenRouter",
+  "recommendation": "accept",
+  "strengths": [
+    "Resolves the high-energy alias vulnerability to clock jitter without requiring an unphysical energy prior, using a dithered-clock protocol and total variation bounds.",
+    "The exact finite-menu aliases and complete harmonic separation neatly map the identifiability geometry using cut cones and Kronecker's theorem.",
+    "Numerical bounds for the qutrit witness and required shot counts are rigorously certified via exact rational arithmetic."
+  ],
+  "strong_novelty_candidates": [
+    "Theorem 7.3: Bounded-time dither with independent additive error, establishing timing robustness for static-null testing without a spectral-width assumption.",
+    "Theorem 3.3: Exact representation of any finite set of rationally independent dephasing channels (with positive rates) by a finite diagonal Hamiltonian ensemble."
+  ],
+  "summary": "The manuscript investigates the identifiability of static Hamiltonian disorder from finite-time dephasing channel queries. It proves that generic finite time menus always admit exact static aliases (Theorem 3.3), but carefully selected harmonic times can strictly separate static models from certain time-dependent dynamics (Theorem 5.3). The author addresses the physical fragility of these exact certificates to clock jitter by introducing a randomized-clock protocol (Theorem 7.3). By drawing a fresh base time from a continuous uniform distribution, the protocol establishes a uniform total-variation bound against independent additive timing errors without requiring an ad-hoc maximum energy prior. The numerical examples are rigorously certified using exact rational arithmetic. The revision successfully addresses the main weakness of the prior draft by replacing an unrealistic spectral width assumption with an explicit, well-analyzed experimental resource.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:97442b43-e965-450e-9c25-a06e8dff7d5c",
+  "weaknesses": [
+    "The dither protocol relies on the precise uniformity of the continuous time randomization; base-time-dependent errors like digital rounding can still invalidate the bounds.",
+    "The static null model strictly assumes memoryless channel queries; it does not apply to experimental setups allowing multiple interventions within a single Hamiltonian realization."
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "assessed_at": "2026-10-17T14:29:01.844266+00:00",
+  "canonical_sha256": "66b83edcef934f296dcfc63e55f8463b3cbd9187b37afe06c4ab3a49cb5dcc33",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All analytical proofs (Lemmas 2.1-5.1, Propositions 5.2-6.1, Theorems 3.3, 4.1, 5.3, 7.2, 7.3, and Corollaries) were checked step-by-step and are mathematically sound. The rational arithmetic enclosures for the 40,500-shot and 53,000-shot qutrit certificates are exact and consistent with the companion verifier.",
+      "stars": 5
+    },
+    "novelty": {
+      "basis": "The paper transparently attributes classical tools (Kronecker density, Dykema-Juschenko/Kribs phase body, Poisson kernels, Schoenberg/Deza-Laurent cut-cone metrics). The synthesis into an arithmetic identifiability trichotomy for quantum dephasing channels and the TV-based clock-dither repair without bandwidth priors are original.",
+      "stars": 4
+    },
+    "reproducibility": {
+      "basis": "Proofs are self-contained and elementary. The public release bundle includes deterministic Python verification scripts using exact rational arithmetic (fractions.Fraction) to certify all numerical constants in Corollary 6.2 and Section 7.1, alongside numerical sanity checks.",
+      "stars": 5
+    },
+    "rigor": {
+      "basis": "Assumptions on the single-use memoryless access model, channel complete positivity, and independence of timing jitter from the hidden Hamiltonian and readout phases are stated with high precision. Scope limitations and classical antecedents are scrupulously documented.",
+      "stars": 5
+    },
+    "significance": {
+      "basis": "Establishes a rigorous experimental-design theory for falsifying static Hamiltonian disorder, exposing a striking discontinuity between rational and irrational sampling menus and providing a practical randomized-clock protocol that eliminates unverified spectral-width priors.",
+      "stars": 4
+    }
+  },
+  "independence": "unknown",
+  "millennium_score": 4.2,
+  "model_id": "google/gemini-4-argon",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-7PEKNEDVH38HV8PX",
+  "potential_errors": [
+    "In Section 7.1 (p. 9), the brief remark that a verified total-variation bound on each implemented time law can replace the additive-error assumption in Theorem 7.3 leaves implicit two details: (i) the time-law perturbation must remain conditionally independent of the hidden Hamiltonian H and preparation/readout phase (or the TV bound must hold conditionally), and (ii) under the reference semigroup, replacing the bounded additive shift |E|<=eta by a pure TV bound replaces the Lipschitz shift AG*eta with an L_infinity/TV shift 2*sum |a_{ijn}|*tau_{ijn}.",
+    "In Corollary 7.4 (p. 9), the lower bound B >= g/(A*eta) - G invokes Theorem 7.2 and therefore implicitly requires that the perturbed menu times remain nonnegative (e.g., eta <= min_l t_l, oreta <= Delta for the odd-harmonic menu)."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "OpenRouter",
+  "recommendation": "accept",
+  "strengths": [
+    "Clean, complete arithmetic trichotomy showing that generic rationally independent finite menus admit exact finite-support static aliases (Theorem 3.3), coarse infinite uniform grids admit explicit bounded-energy static aliases (Theorem 4.1), and finite odd-harmonic menus completely separate all rate matrices outside the cut cone (Theorem 5.3).",
+    "Elegant use of disjoint Fourier supports of pairwise Poisson kernels on the torus to prescribe all integer moments of all pair differences simultaneously in Theorem 4.1.",
+    "Ingenious circular cut representation (Lemma 5.1) combined with an explicit O(1/K) Fourier-tail bound to yield solver-free, finite-shot statistical witnesses against arbitrary non-population-preserving static Hermitian ensembles.",
+    "Sharp analysis of clock calibration fragility (Corollary 7.1, Corollary 7.4) paired with two constructive remedies: a Lipschitz budget under a spectral-width prior (Theorem 7.2) and a fresh uniform time-dither protocol using total-variation smoothing that requires no energy bound (Theorem 7.3).",
+    "Exemplary scientific hygiene, including exact rational arithmetic certification of the 40,500-shot and 53,000-shot qutrit designs and forthright attribution of prior convex-analytic and operator-algebraic literature."
+  ],
+  "strong_novelty_candidates": [
+    "Theorem 3.3 and Corollary 7.1: Exact finite-support static diagonal aliasing of any strictly positive real dephasing semigroup on arbitrary rationally independent finite time menus, and the resulting breakdown of uniform testability under unrestricted independent clock jitter.",
+    "Theorem 4.1: Explicit simultaneous torus density construction using sums of pairwise Poisson kernels to alias dephasing semigroups on coarse infinite uniform grids with bounded spectral width.",
+    "Theorem 5.3 and Theorem 7.3: Complete finite odd-harmonic cut-cone separation certificates for arbitrary static Hermitian ensembles and their spectral-prior-free stabilization against additive clock error via fresh uniform base-time dithering."
+  ],
+  "summary": "This paper investigates when single-use channel queries at a discrete set of times can distinguish a real dephasing semigroup from static Hermitian Hamiltonian disorder. It proves a sharp arithmetic trichotomy: (1) on any finite menu of rationally independent positive times, every CP real dephasing semigroup with strictly positive off-diagonal rates is reproduced exactly by a static diagonal ensemble of at most 1 + kd(d-1) Hamiltonians (Theorem 3.3); (2) on any sufficiently coarse infinite uniform time grid, an explicit positive sum of pairwise Poisson kernels on the torus yields a bounded-energy static alias matching the entire grid (Theorem 4.1); and (3) whenever the rate matrix lies outside the cut cone CUT_d, a finite menu of odd harmonics of a small base period certifies non-staticity against all static Hermitian ensembles via a circular cut identity and Fourier-tail truncation (Theorem 5.3). Because rationally independent menus are dense, unrestricted static-null tests are fragile to arbitrarily small independent timing errors (Corollary 7.1), with nearby aliases requiring spectral width Omega(1/eta) (Corollary 7.4). Robustness is restored either by a spectral-width prior (Theorem 7.2) or, without any energy prior, by freshly dithering the base period uniformly on each shot (Theorem 7.3). Explicit qutrit certificates (40,500 and 53,000 shots) are rigorously verified with exact rational arithmetic. The proofs are complete, elementary, and sound.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:97442b43-e965-450e-9c25-a06e8dff7d5c",
+  "weaknesses": [
+    "Theorem 3.3 is non-constructive regarding the energy scale of the finite-support alias; while Corollary 7.4 provides a 1/eta lower bound near a separating menu, no upper bound via quantitative Diophantine approximation is derived (acknowledged as an open question in Section 8).",
+    "The sufficient coarse-grid spacing bound in Theorem 4.1 scales as log(d(d-1)-1)/gamma_min, which is conservative for large dimension d.",
+    "The finite-shot guarantees (Propositions 6.1, Corollaries 6.2 and Theorem 7.3) use importance sampling and Hoeffding's inequality; variance-aware concentration (e.g., Empirical Bernstein) or deterministic shot allocation across harmonics could substantially reduce the shot budget."
+  ]
+}
