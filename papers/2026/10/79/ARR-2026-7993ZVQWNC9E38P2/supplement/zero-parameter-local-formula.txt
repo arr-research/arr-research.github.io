@@ -1,0 +1,34 @@
+EXACT LOCAL-TYPE FORMULA FOR T_h
+Author-side note, 17 October 2026.
+
+For each ordered edge (u,v), remove u,v and divide the other n-2 vertices
+into four classes. Their sizes are
+  c = |N(u) intersect N(v)|,
+  a = d_u-1-c,
+  b = d_v-1-c,
+  d = n-d_u-d_v+c.
+These classes consist of common neighbours, neighbours only of u,
+neighbours only of v, and neighbours of neither endpoint.
+
+An h-set S has r neighbours of u and t neighbours of v precisely when
+it chooses k common neighbours, r-k only-u vertices, t-k only-v vertices,
+and h-r-t+k neither-endpoint vertices. Therefore the contribution of
+this ordered edge to (T_h)_(r,t) is
+
+sum_k binom(c,k) binom(a,r-k) binom(b,t-k) binom(d,h-r-t+k).
+
+A binomial coefficient is zero outside 0<=lower<=upper. Summing over all
+ordered edges proves the formula, with no independence restriction on S.
+The script groups unordered edges by (min(d_u,d_v),max(d_u,d_v),c), and
+adds both orientations. Diagonal entries consequently receive both
+orientations, as required by the manuscript convention.
+
+The formula is exact at arbitrary n and depends only on these edge types.
+It does not imply that T_h must be indefinite. C5[K2] is an explicit
+counterexample to that proposed universal criterion: every T_h, h=1,...,8,
+is positive semidefinite. Exact matrices and rational congruence blocks
+are stored in blowup-layer-checks.json; direct subset enumeration agrees
+with the local formula on all eight levels. The same graph does have
+positive rational rank-two obstructions from the full hierarchy, directly
+verified at h=3,4,5 and ell=-99/100. Thus this is a limit of the sufficient
+zero-parameter test, not a counterexample to the source conjecture.
