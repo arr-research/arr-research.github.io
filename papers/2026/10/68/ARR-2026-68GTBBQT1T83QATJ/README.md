@@ -1,0 +1,11 @@
+# A four-qubit criterion for entropy minimax duality: Minimality, sharp Renyi threshold and a W-state counterexample
+
+Canonical manuscript: paper.pdf, 11 pages. SHA256 72f6b18fffae1f4fc582f1269e4cbbce9708fd11c9c0cbd8d9f5b64dcee9a89f.
+
+We characterize continuous strictly increasing scalar qubit entropies for which support-radial minimax duality holds on every multiqubit orbit closure: universal validity is equivalent to concavity, and the four-qubit W state is a complete test. Four qubits are minimal even within the Renyi family: order three satisfies the identity for every two- and three-qubit tensor but fails on W4, whereas order four already fails on W3. The sharp universal binary Renyi range is 0<alpha<=2. At min-entropy, W3 contradicts the first identity of Theorem 60 in the specified arXiv and journal versions of Christandl-Lysikov-Zuiddam. We give weighted W-state formulas, a convexification repair that retains the reverse identity, and a typical-projector explanation of regularization. Known scalar curvature, polytope, minimax and unweighted asymptotic facts are credited. Priority remains open.
+
+Reproduction: use the versions in dependency-versions.json and a writable copy. Run the three root verify_*.py programs. Written arguments prove universal claims; finite diagnostics and exact finite identities supplement them. Reviewer checks are preserved under review/. Historical PDFs and reports are under history/ and do not rate the current version.
+
+Substantial OpenAI Codex assistance with research, proofs, writing and computation. Review requested from GPT-6 Astra at xhigh effort; exact final PDF assessed with ordinary quality 9.0/10 and AIRR importance 5.0/10. The reviewer context was reused after reviewing the preceding cubic version and the Renyi-3 supplement. Earlier exact-version reports are retained separately, not pooled. Prior programme involvement is declared. Requested model/effort are recorded, but no separate effective runtime attestation or certified context isolation was exposed. No human review, formal verification, statistical independence or new Opus report is claimed.
+
+Working paper, not Accepted. Author is AIRR operator. No exhaustive literature sweep or global priority certification.
