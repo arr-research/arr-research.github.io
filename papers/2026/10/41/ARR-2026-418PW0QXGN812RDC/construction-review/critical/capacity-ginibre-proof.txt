@@ -1,0 +1,157 @@
+CAPACIDAD NORMALIZADA DE TUPLAS GINIBRE: PRUEBA Y ALCANCE
+17 de octubre de 2026. Nota de investigación, no manuscrito ni evaluación.
+
+Resultado comprobado
+
+Sean A_1,...,A_s matrices D por D independientes, con entradas complejas
+gaussianas centradas de varianza 1/D. Fijado cualquier entero s>=4096,
+defínase Phi_D(X)=s^(-1) sum_i A_i X A_i*. Entonces
+
+ lim_{D->infinito} P{cap(Phi_D)^(1/D)>=1-23/sqrt(s)}=1,
+
+donde cap(Phi)=inf_{X>0} det(Phi(X))/det(X). En particular la respuesta
+a la pregunta 1-o_s(1) es afirmativa con el orden de límites solicitado:
+primero s grande FIJO, después D->infinito. No se afirma convergencia de
+la capacidad a 1 para un s fijo. Las constantes son conservadoras.
+
+1. Lema determinista sin pérdida logarítmica en la dimensión
+
+Sea Phi:M_D(C)->M_D(C) positivo; ser completamente positivo es suficiente
+pero no necesario. Poner Dep(X)=tau_D(X)I. Sean epsilon,q>=0 tales que
+
+ Phi(I),Phi*(I)>=(1-epsilon)I,
+ ||Phi-Dep||_{2->2}<=q,
+ c=1-epsilon-2q>=1/2.
+
+Entonces cap(Phi)^(1/D)>=c. La norma 2->2 es de Hilbert--Schmidt, con
+ambas trazas normalizadas o ambas sin normalizar: su valor coincide.
+
+Prueba. Para bases ortonormales u_j y v_i, definir la matriz no negativa
+B_ij=<v_i,Phi(u_j u_j*)v_i>. Sus filas y columnas suman al menos
+1-epsilon. Para conjuntos S,T de tamaños a,b, la hipótesis de norma da
+
+ |B(S,T)-ab/D|<=q sqrt(ab).                                 (1)
+
+Es también consecuencia de que la compresión diagonal de Phi-Dep tiene
+norma <=q. Esta afirmación vale para TODAS las bases, sin una red de bases.
+
+Una matriz W biestocástica con cW<=B existe si y solo si
+
+ B(S,T^c)>=c(|S|-|T|)                                      (2)
+
+para todos S,T. En efecto, aplicar max-flow/min-cut a la red con capacidad
+c de la fuente a cada fila, B_ij de fila a columna, y c de cada columna
+al sumidero. Un flujo de valor cD equivale a la matriz cW. Los cortes
+finitos tienen exactamente la condición (2); no se requiere integralidad.
+
+Si a<=b, (2) es automática. Para a>b:
+
+-- Si a<=cD, (1) y la cota de filas dan
+ B(S,T^c)>=a(1-epsilon-q)-ab/D.
+ La diferencia con c(a-b) es qa+b(c-a/D)>=0.
+
+-- Si D-b<=cD, escribir v=D-b y u=D-a<v. La cota de columnas,
+ restando B(S^c,T^c), da diferencia qv+u(c-v/D)>=0.
+
+-- Si a>cD y v=D-b>cD, (1) implica
+ B(S,T^c)>=av/D-q sqrt(av)>=(1-q/c)av/D.
+ De 1-c=epsilon+2q y c>=1/2 se deduce q<=c(1-c), por lo que
+ la última expresión es >=c av/D>=c(a+v-D)=c(a-b).
+
+Queda demostrada (2). Para X>0, escoger u_j como base de autovectores
+de X y v_i como base de autovectores de Phi(X). Sean x_j>0 e y_i>=0
+sus autovalores. Entonces y_i=sum_j B_ij x_j>=c sum_j W_ij x_j>0.
+La media aritmética-geométrica ponderada en cada fila y las sumas de
+columnas de W dan product_i y_i>=c^D product_j x_j. Tomando ínfimo
+se obtiene el lema. No se supone alcanzado el ínfimo de capacidad.
+
+2. Entrada probabilística: Ginibre directamente, no isometrías Haar
+
+Fuentes primarias y copias exactas: véase source-audit.json.
+
+Poner Y_i=A_i/sqrt(s), M=sum_i Y_i tensor overline(Y_i) y
+omega=|vec(I)/sqrt(D)><vec(I)/sqrt(D)|. Hasta una convención fija de
+vectorización, M representa Phi_D y omega representa Dep.
+
+González-Guillén--Junge--Nechita, arXiv:1811.08847v1, Lemma 5.3 y
+la prueba de Proposition 5.4, páginas impresas 10--11, aplicados con
+n=d=D,k=s, proporcionan para p par la estimación
+
+ E||M(I-omega)||^p
+ <=2^p D^2 s^(p/2) [2/sqrt(s)+e_D+b_D sqrt(p/D)]^(2p),       (3)
+
+con e_D->0 y b_D acotado para s fijo, uniformemente en p en esta
+forma anterior al cuadrado. La copia inspeccionada contiene conjugación
+en el desacoplamiento; conjugar la copia independiente no cambia su ley.
+
+Para nuestra aplicación elegir p=2 ceil(a log(D)/2). Al reagrupar (3),
+su raíz p-ésima, salvo D^(2/p), tiene límite 8/sqrt(s). El término
+adicional p/D que aparece al elevar al cuadrado tiende a cero y se
+absorbe en O_s(sqrt(p/D)). No se necesita ni se presume esta absorción
+para valores p arbitrariamente mayores que D.
+
+Para D grande, el corchete efectivo es <=8.5/sqrt(s). Markov da
+
+ P{||M(I-omega)||>9/sqrt(s)}
+ <=D^2 (17/18)^p ->0
+
+si, por ejemplo, a=100. Es una aplicación de resultados sobre bloques
+Ginibre; el factor chi de la comparación con isometrías no interviene.
+
+Los dos balances Phi_D(I) y Phi_D*(I) tienen, por separado, la ley de
+(sD)^(-1)GG* para G de tamaño D por sD con gaussianas complejas estándar.
+El resultado de extremos Wishart con razón 1/s da límites
+(1-1/sqrt(s))^2 y (1+1/sqrt(s))^2. Por tanto, para s>1 fijo,
+
+ P{ambos errores de balance en norma op <=3/sqrt(s)} ->1.    (4)
+
+La referencia primaria de la versión compleja inspeccionada es
+Bai--Silverstein, Exact Separation of Eigenvalues of Large Dimensional
+Sample Covariance Matrices, introducción y Lemma 1.2. Allí se remite
+a Yin--Bai--Krishnaiah (1988) y Bai--Yin (1993). No se presupone que
+los dos balances sean independientes; basta la unión de dos eventos malos.
+
+En la norma HS normalizada, escribir X=alpha I+X_0 con tau_D(X_0)=0.
+Las estimaciones anteriores implican
+
+ ||(Phi_D-Dep)X||_2
+ <=(3|alpha|+9||X_0||_2)/sqrt(s)
+ <=sqrt(90/s)||X||_2 <(10/sqrt(s))||X||_2.                   (5)
+
+Aquí se usa ortogonalidad de los dos subespacios del DOMINIO; no se
+supone que sus imágenes sean ortogonales. Aplicar el lema con
+epsilon=3/sqrt(s),q=10/sqrt(s) y c=1-23/sqrt(s). Para s>=4096,
+c>=1/2. (3)--(5) y la unión de los eventos malos prueban el resultado.
+
+3. Qué no basta y qué no se necesita
+
+La casi biestocasticidad sola no es el argumento: la cercanía de Phi a
+Dep en norma 2->2 excluye los cortes deficientes. Tampoco se deduce la
+capacidad a partir únicamente del segundo valor singular de Phi sin
+controlar la dirección de la identidad.
+
+Kwok--Lau--Ramachandran, SIAM J. Comput. 50(3), 2021, Theorem 1.8,
+hereda la hipótesis lambda^2>=C epsilon log D de Theorem 1.5. Ese
+resultado, tal como está enunciado, no resuelve el límite con s fijo
+y epsilon de orden s^(-1/2). Además sus teoremas iniciales están
+formulados para matrices reales y su capacidad utiliza otra escala.
+No se ha usado una extensión compleja ni eliminado su log D por decreto.
+
+No se construyen escalados de condición acotada, no se estima su distancia
+a la identidad y no se necesita localizar un minimizador de capacidad.
+La conclusión basta para una cota de log(cap)/D y conserva la normalización
+E[A_i A_i*]=I. No se certifica prioridad bibliográfica del lema de cortes.
+
+4. Verificaciones y procedencia
+
+verify_capacity_cuts.py es portable y usa numpy; finite-checks.json registra
+la ejecución. Incluye 30.780 verificaciones racionales de las ramas del
+corte, 201.952 cortes en matrices finitas, 64 compresiones cuánticas y
+64 muestras positivas para la desigualdad de determinantes. Son controles
+de errores algebraicos y de normalización, no prueba numérica del límite.
+
+Firma de contexto: agente /root/astra_gap_final; modelo/esfuerzo solicitado
+GPT-6 Astra xhigh. Se reutiliza el contexto de la investigación y se participó
+en la construcción del lema; no es revisión ciega ni independiente. No hay
+atestación independiente de la identidad efectiva del runtime o memoria.
+No se asigna nota y no se ha modificado ni publicado ningún manuscrito.

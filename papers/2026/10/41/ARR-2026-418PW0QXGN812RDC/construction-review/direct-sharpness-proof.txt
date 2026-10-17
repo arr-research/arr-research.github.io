@@ -1,0 +1,250 @@
+AGUDEZA GLOBAL DE e: VÍA DIRECTA CON COEFICIENTES GINIBRE
+17 de octubre de 2026. Investigación, no manuscrito, nota ni publicación.
+
+ESTADO Y CONTRIBUCIONES
+
+Esta versión propone una prueba íntegra de que el factor universal e es óptimo.
+La cadena fue construida y criticada en colaboración dentro del encargo Astra:
+este agente desarrolló el balance óptimo y la cota uniforme por momentos;
+astra_gap_final aportó el lema de capacidad por cortes y localizó el uso directo
+de GJN Lemma5.3/Proposition5.4; el agente principal comprobó cortes y escalados.
+Se solicita una crítica final antes de convertirla en afirmación de manuscrito.
+No se certifica prioridad ni independencia. Modelo/esfuerzo solicitado heredado:
+gpt-6-astra/xhigh; no atestación independiente de identidad efectiva.
+
+La prueba anterior candidate-sharpness-proof.txt se conserva intacta: es una
+ruta alternativa mediante compleción ponderada, más larga y anisotrópica.
+La presente ruta no la necesita. Tampoco necesita Grothendieck, un control de
+cola logarítmica inferior, ni convergencia de determinantes sin regularización.
+
+ENUNCIADO PROPUESTO
+
+Para todo K<e existe una tupla finita A=(A_1,...,A_s) de matrices cuadradas
+complejas con C(A)>K F_infty(A). Se puede exigir además Gram(A)=I_s.
+Así, si se usa el teorema previo C/e<=F_infty<=C, el factor óptimo es e.
+En particular no se puede mejorar universalmente la comparación a C/2.
+
+La familia es existencial, de dimensión grande; no se ofrece un contraejemplo
+pequeño certificado. El número s crece para aproximar e. No se prueba que
+una tupla finita alcance exactamente la razón e ni que pueda fijarse s=3.
+
+Convenciones: tau_D=Tr/D, ||X||_2²=tau_D(X*X),
+F_m(A)=max_{sum_i tau_m(Y_i*Y_i)=1}|det(sum_i A_i tensor Y_i)|^(2/(Dm)).
+C(A)=max_{Q>=0,TrQ=1}cap(Phi_Q)^(1/D), Phi_Q(X)=sum_ij Q_ij A_i X A_j*.
+La norma HS->HS de un mapa cuadrado no cambia al normalizar ambas trazas.
+
+A. BALANCE NECESARIO DE CADA MAXIMIZADOR POSITIVO
+
+Si F_m(A)>0, un maximizador existe por compacidad. Para tal Y,
+
+             sum_i Y_i*Y_i=sum_i Y_iY_i*=I_m.                 (A1)
+
+En efecto S=sum_i Y_i*Y_i es invertible: un vector en su kernel sería un
+vector común del kernel de todos los Y_i y anularía el determinante evaluado.
+El reemplazo Y_i->Y_i S^(-1/2) tiene energía tau_m(I)=1 y multiplica el
+objetivo por (det S)^(-1/m)>=1. La desigualdad es estricta salvo S=I,
+por AM--GM y tau_m(S)=1. La maximalidad da S=I. El argumento de escalado
+común por la izquierda da la otra igualdad. En particular ||Y_i||op<=1.
+
+B. LEY LIBRE EXACTA PARA AUXILIARES BALANCEADOS
+
+Para circulares libres estándar c_1,...,c_s y cualquier Y que cumpla (A1),
+H=sum_i c_i tensor Y_i tiene ley singular al cuadrado MP_1. Para verlo,
+su hermitización es un semicircular operador-valuado sobre M_{2m}, con
+covarianza
+
+ eta([[U,V],[W,Z]])=[[sum_i Y_i Z Y_i*,0],[0,sum_i Y_i* U Y_i]].
+
+Por (A1), eta(I)=I. La recurrencia de Wick empieza en I y permanece en
+múltiplos escalares de I: los momentos pares son Catalan_k I, y los impares0.
+Así la ley escalar de la hermitización es semicircular de varianza1 y la
+de H*H es Marchenko--Pastur de parámetro1. Por tanto, para t>0,
+
+ tau log(H*H+t I)=ell(t),    ell(0)=-1,
+ 0<=ell(t)+1<=2sqrt(t).                                      (B1)
+
+La última cota resulta de
+ell'(t)=(sqrt(1+4/t)-1)/2<=1/sqrt(t).
+
+C. COTA UNIFORME EN TODAS LAS AMPLIFICACIONES A PARTIR DE MOMENTOS
+
+Fijados s,t,zeta>0, existe una lista finita de condiciones de momentos tal
+que cualquier A con ||A_i||op<=3 que las cumpla satisface
+
+                         F_infty(A)<=exp(ell(t)+3zeta).       (C1)
+
+Construcción y prueba. Aproximar f(x)=log(x+t) por un polinomio real
+p(x)=sum_{j=0}^k p_j x^j con error<=zeta en [0,9s²]. Pedir que todos los
+*-momentos de A de longitud<=2k estén a distancia<=a de los circulares,
+donde a sum_{j=1}^k |p_j|s^(2j)<=zeta.
+
+Para cualquier m con F_m>0, escoger un maximizador Y. (A1) da contracciones;
+las normas de L_A(Y) y H son<=3s, por la desigualdad triangular y ||c_i||=2.
+Al expandir tau[(L_A*L_A)^j], cada sumando es un momento de los A_i
+multiplicado por una traza normalizada de una palabra en Y_i,Y_i*. Esa traza
+tiene módulo<=1, sin factor m. Hay s^(2j) sumandos. Por tanto las trazas
+de p difieren a lo sumo zeta, UNIFORMEMENTE en m y Y. Con dos errores
+de aproximación polinómica,
+
+ log F_m(A)=tau log(L_A*L_A)
+ <=tau log(L_A*L_A+tI)<=tau log(H*H+tI)+3zeta=ell(t)+3zeta.
+
+Si F_m=0, (C1) es trivial. Así vale para todos m. Este argumento sólo
+MAYORA el log por un log regularizado; no pasa un límite a través de una
+cola singular negativa. Tampoco intercambia sup_m y límite de matrices
+aleatorias: las condiciones finitas obtenidas son ya uniformes en m.
+
+En particular, para s fijo y A_i^(D) Ginibre independientes, varianza1/D,
+sus momentos convergen a los circulares, y ||A_i^(D)||op->2. Para cada
+theta>0, (B1)--(C1) dan con probabilidad tendiendo a1
+
+                         F_infty(A^(D))<=e^(-1+theta).        (C2)
+
+D. LEMA DETERMINISTA DE CAPACIDAD POR CORTES
+
+Sea Phi:M_D->M_D completamente positivo, y sea Dep(X)=tau_D(X)I_D.
+Supongamos
+
+ Phi(I),Phi*(I)>=(1-eps)I,
+ ||Phi-Dep||_{HS->HS}<=q,
+ c=1-eps-2q>=1/2.                                           (D1)
+
+Entonces cap(Phi)^(1/D)>=c.                                  (D2)
+
+Prueba. Para bases ortonormales u_i,v_j, definir
+B_ij=<u_i,Phi(v_jv_j*)u_i>>=0. Todas las sumas de filas y columnas son
+al menos1-eps. Si S,T son subconjuntos de tamaños a,b,
+
+ |B(S,T)-ab/D|<=q sqrt(ab),                                  (D3)
+
+aplicando la norma HS del mapa a las dos proyecciones correspondientes.
+Queremos una matriz Z<=B con sumas de filas y columnas iguales a c.
+El teorema max-flow/min-cut da la condición equivalente
+
+                    B(S,T^c)>=c(|S|-|T|)                    (D4)
+
+para todos S,T. Si a<=b, es trivial. Si a>b, hay tres casos:
+
+1) a<=cD. Por la cota de filas y (D3), usando sqrt(ab)<=a,
+B(S,T^c)>=a(1-eps)-ab/D-qa. Restar c(a-b) da
+qa+b(c-a/D)>=0.
+
+2) D-b<=cD. Aplicar el caso análogo a las columnas de T^c, restando
+las filas de S^c. Con v=D-b,u=D-a<v, la resta es
+qv+u(c-v/D)>=0.
+
+3) a>cD y D-b>cD. Con v=D-b, (D3) da
+B(S,T^c)>=av/D-q sqrt(av)>=(1-q/c)av/D.
+De c>=1/2 y 1-c=eps+2q se obtiene c(1-c)>=q, luego1-q/c>=c.
+Además av/D>=a+v-D=a-b. Esto prueba (D4).
+
+Escribir Z=cW con W biestocástica. Para X>0, escoger v_j que diagonalice X
+y u_i que diagonalice Phi(X). Entonces sus autovalores positivos cumplen
+y_i=sum_j B_ij x_j >= c sum_j W_ij x_j. Jensen para log y las sumas de
+W implican product_i y_i >= c^D product_j x_j. Las bases pueden depender
+de X porque (D3)--(D4) valen para TODAS las bases. Tomar la infimum da(D2).
+
+E. CONTROL GAUSSIANO DEL MAPA: USO EXACTO DE LA FUENTE PRIMARIA
+
+Sea s>=4096 FIJO y A_i^(D) Ginibre COMPLEJAS independientes de varianza1/D.
+Poner Phi_D(X)=s^(-1)sum_i A_i^(D) X A_i^(D)*. Con probabilidad que tiende
+a1 al aumentar D,
+
+ ||Phi_D(I)-I||op, ||Phi_D*(I)-I||op <=3/sqrt(s),
+ ||Phi_D-Dep||_{HS->HS}<=10/sqrt(s).                          (E1)
+
+La primera línea es la cota de extremos de covarianzas Wishart, con límites
+(1+-1/sqrt(s))². La concatenación horizontal y vertical son ambos modelos
+Wishart y s es fijo.
+
+Para la segunda línea se usa DIRECTAMENTE González-Guillén--Junge--Nechita,
+arXiv:1811.08847v1, Lemma5.3 y Proposition5.4, NO su teorema final para
+isometrías Haar. Con sus n=d=D,k=s y Y_i=A_i/sqrt(s), sus entradas tienen
+varianza1/(Ds). Sea M_D=sum_i Y_i tensor overline(Y_i) el superoperador y
+omega la proyección sobre vec(I)/sqrt(D). El Lemma5.3 de desacoplamiento
+y Proposition5.4, para p par, dan
+
+ E ||M_D(I-omega)||op^p
+ <=D² [8/sqrt(s)+o_D(1)+O_s(sqrt(p/D))]^p.                    (E2)
+
+Elegir p la siguiente paridad de a_s log D. El factorD² se absorbe en
+Markov eligiendo a_s suficientemente grande; el término sqrt(p/D) tiende0.
+Se obtiene P{||M_D(I-omega)||>9/sqrt(s)}->0. Se puede obtener limsup8
+con Borel--Cantelli, pero9 es suficiente y conserva margen.
+Al cuadrar la estimación de la prueba de Proposition5.4 aparece también
+p/D: para p~logD éste se absorbe en O_s(sqrt(p/D)); no se exige tal absorción
+para p arbitrariamente mayor que D.
+
+Para X=alpha I+X_0 con tau(X_0)=0,
+||(Phi_D-Dep)X||_2 <=[3|alpha|+9||X_0||_2]/sqrt(s)
+ <=sqrt(90/s) ||X||_2 <10/sqrt(s)||X||_2. Esto demuestra(E1).
+
+Aplicar D con eps=3/sqrt(s),q=10/sqrt(s),c_s=1-23/sqrt(s)>=1/2:
+
+ C(A^(D))>=cap(Phi_D)^(1/D)>=1-23/sqrt(s).                    (E3)
+
+El primer paso usa la covarianza admisible Q=I_s/s, no identifica C con
+la capacidad de esa única covarianza. La estimación es uniforme en D y
+se mantiene con margen para D suficientemente grande.
+
+F. CONCLUSIÓN DE AGUDEZA Y OPCIÓN GRAM I
+
+Para s fijo, (C2) y (E3) ocurren simultáneamente con probabilidad tendiendo
+a1. Por tanto, para todo theta>0 hay una tupla finita con
+
+             C(A)/F_infty(A)>=(1-23/sqrt(s))e^(1-theta).       (F1)
+
+Primero elegir s fijo grande y luego D grande; después dejar crecer s y
+disminuir theta. Las razones se aproximan a e desde la cota inferior.
+Con la comparación universal previa, e es óptima.
+
+Ejemplo de parámetros suficientes para descartar2: s=65536,theta=1/20.
+La razón de(F1) es (233/256)e^(19/20)>2.35>2. Es una especificación de
+familia aleatoria y tolerancias existenciales, no un ejemplo pequeño ya
+materializado ni un certificado numérico de un óptimo.
+
+Se puede imponer Gram I. Para s fijo, G_D=(tau_D(A_i*A_j)) converge a I_s.
+Multiplicar los coeficientes por la matriz G_D^(-1/2), con la orientación
+de índices que ortonormaliza su mapa de síntesis, produce B_i de Gram I.
+Con s fijo, cada ||B_i-A_i||op tiende0: ||A_i||op están acotadas y la
+matriz s por s de transformación converge a I. Así se preservan momentos,
+normas y, con errores que tienden0, las estimaciones(E1). Las diferencias
+de los mapas CP se acotan por
+
+ ||Phi_B-Phi_A||_{HS->HS}
+ <=s^(-1)sum_i(||B_i||op+||A_i||op)||B_i-A_i||op ->0,
+
+y análogamente para sus dos imágenes de I. Hay margen entre los límites
+de E y las constantes3,9,10. Por ello(F1) vale también con Gram I.
+En ese caso C(B)<=1 por AM--GM evaluando Phi_Q en I y usando el Gram;
+(E3) muestra que C(B) tiende a1 al aumentar s. NO se afirma C(B)=1 exacto.
+
+La invariancia de la razón bajo escalados comunes A_i->L A_i R no impone
+por sí sola simultáneamente Gram I y capacidad1; no se utiliza ese paso.
+
+G. ANTECEDENTES Y LÍMITES DE LA BÚSQUEDA
+
+Fuentes primarias consultadas directamente:
+González-Guillén--Junge--Nechita, On the spectral gap of random quantum
+channels, arXiv:1811.08847v1, Lemma5.3 y Proposition5.4, §5.
+https://arxiv.org/html/1811.08847
+Su estimate gaussiano ya está publicado; no se atribuye a estas notas.
+
+Mai--Speicher, Fuglede-Kadison determinants of matrix-valued semicircular
+elements and capacity estimates, arXiv:2406.15922.
+https://arxiv.org/html/2406.15922
+La identidad libre es un antecedente. Aquí la uniformidad del óptimo
+amplificado utiliza el balance y momentos, no sólo su valor de un testigo.
+
+Bai--Yin, Ann.Probab.21(1993),1275--1294, extremos Wishart:
+https://doi.org/10.1214/aop/1176989118
+Voiculescu, Invent.Math.104(1991),201--220, límites gaussianos libres:
+https://doi.org/10.1007/BF01245072
+El acceso web a ese DOI de Voiculescu falló en esta consulta; no se finge
+haber inspeccionado su PDF íntegro. El límite usado es el clásico de momentos,
+que también se obtiene por Wick y varianzas gaussianas.
+
+No se afirma barrido bibliográfico exhaustivo ni prioridad de la conclusión.
+El lema de cortes debe contrastarse con literatura de escalado, y la
+normalización de maximizadores con resultados anteriores de optimización
+determinantal. No se asigna nota ni importancia numérica.

@@ -1,0 +1,517 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=27mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype,amsmath,amssymb,amsthm,mathtools,booktabs}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage{enumitem}
+\setlist{nosep}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}\newtheorem{remark}[theorem]{Remark}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\ncrk}{\operatorname{ncrk}}
+\newcommand{\Span}{\operatorname{span}}
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\D}{\mathcal D}
+\newcommand{\E}{\mathcal E}
+\newcommand{\W}{\mathcal W}
+\newcommand{\M}{M}
+\newcommand{\Ainf}{A_\infty}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\DeclareMathOperator{\diag}{diag}
+\title{Sharp determinant bounds for amplified antisymmetric channels\\
+and a noise law for noncommutative rank}
+\author{Lluis Eriksson}
+\date{16 October 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+We study the largest normalized determinant in a Kraus matrix space after amplification by a completely depolarizing channel. For the three-dimensional antisymmetric channel, we prove a bound uniform in the auxiliary dimension, identify its exact value \(2^{2/9}/4\), and show that a finite amplification attains it if and only if its dimension is divisible by three. The proof balances a determinant maximizer, fixes its second and fourth singular-value moments, and uses a quadratic majorant of the logarithm. Combined with known unitary constructions, this determines the regularized value for every Holevo--Werner channel: dimension three is the unique exceptional case. We also prove that adding depolarizing noise of strength \(\varepsilon\) produces a power law whose exponent is the normalized noncommutative-rank defect of the original Kraus space. The latter estimate is uniform over all auxiliary dimensions and has a matching lower bound at one fixed finite dimension. These results sharpen finite-dimensional examples and an exact-rank criterion into, respectively, an infinite-amplification optimum and a quantitative noise law. We state the operational interpretation for tests of an unknown global unitary separately from free ancillary assistance.
+\end{abstract}
+
+\section{Introduction and scope}
+A matrix space can contain only singular matrices and yet acquire an invertible element after its scalar coefficients are replaced by matrices. This distinction between ordinary and noncommutative rank is classical \cite{DM,IQS,Li}. For quantum channels it has a direct manifestation: a test that can reject every unknown unitary perfectly can lose that property when the alternative channel is tensored with another noisy channel and the null is enlarged to all unitaries on the joint system \cite{previous}. Rank decides whether the obstruction vanishes. It does not quantify the determinant remaining after it vanishes, or the effect of a small full-rank noise component.
+
+The present paper addresses these two quantitative questions. Our first result solves an optimization over \emph{all} matrix amplification sizes for the three-dimensional Holevo--Werner channel. A fixed \(3\times3\) auxiliary system attains the regularized optimum; equality is impossible at dimensions not divisible by three. Thus a small witness is certified globally optimal, rather than merely being the best example among a finite list. The exact constant is strictly below the elementary Choi spectral ceiling.
+
+Our second result applies to every finite-dimensional channel. The order of vanishing under depolarizing noise is the noncommutative-rank defect divided by the input dimension. Its proof gives an upper bound independent of auxiliary dimension and a constructive lower bound from a single rank witness. In particular, the result controls a regularization taken before the small-noise limit.
+
+The surrounding ingredients are not new. Matrix-space blow-ups and shrunk subspaces come from noncommutative-rank theory \cite{DM,IQS}; determinant maximization is closely related to operator scaling \cite{GGOW}; the exceptional factorizability and fourth-moment geometry of the three-dimensional Holevo--Werner channel are known \cite{HM}; and determinants already occur in entanglement measures \cite{Gour}. Valuations of noncommutative determinants also have an established theory \cite{HIOS}. We do not claim a new rank algorithm, a resolution of a random-matrix determinant conjecture, or a classification of all channel factorizations. The proposed contributions are the sharp amplified determinant bound with its attainment criterion, and the uniform noise exponent for this determinant functional. Our search for earlier versions of these statements was bounded; it is not a certificate of priority.
+
+\section{The amplified determinant functional}
+All vector spaces are complex. Write \(\tau_m=\Tr/m\), and let
+\(\E:\M_d(\mathbb C)\to\M_d(\mathbb C)\) be completely positive and trace preserving, with Kraus operators \(K_1,\ldots,K_k\):
+\[
+ \E(X)=\sum_{j=1}^kK_jXK_j^\dagger,\qquad
+ \sum_jK_j^\dagger K_j=I_d .
+\]
+The Kraus space is \(S_\E=\Span\{K_j\}\).
+Define
+\begin{equation}\label{eq:delta}
+ \delta(\E)=\max_{\sum_j|z_j|^2=1}
+       \abs{\det\Bigl(\sum_jz_jK_j\Bigr)}^{2/d}.
+\end{equation}
+Isometric changes of Kraus representation leave this quantity invariant. Equivalently, if \(J_\E=\sum_j|K_j\rangle\!\rangle\langle\!\langle K_j|\) is the unnormalized Choi matrix,
+\[
+ \delta(\E)=
+ \max_{\;|B\rangle\!\rangle\langle\!\langle B|\preceq J_\E}
+ |\det B|^{2/d}.
+\]
+Using a closed unit ball instead of a sphere makes the equality immediate also for a redundant representation or a singular matrix space.
+
+Let \(\D_m(X)=\Tr(X)I_m/m\). Our amplified quantity is
+\begin{equation}\label{eq:am}
+ a_m(\E)=m^2\delta(\E\otimes\D_m)
+   =\max_{\sum_j\tau_m(Y_j^\dagger Y_j)=1}
+       \abs{\det H(Y)}^{2/(dm)},\qquad
+ H(Y)=\sum_jK_j\otimes Y_j .
+\end{equation}
+Indeed the Kraus operators of \(\D_m\) are \(E_{ab}/\sqrt m\).
+If \(Z_j=(z_{jab})\), then \(\sum_j\|Z_j\|_F^2=1\);
+putting \(Y_j=\sqrt m\,Z_j\) gives the second expression, including the factor \(m^2\).
+Set
+\[
+ \Ainf(\E)=\sup_{m\ge1}a_m(\E).
+\]
+The maxima at fixed \(m\) exist by compactness. The factor \(m^2\) removes the elementary normalization cost of the depolarizing partner; \(\Ainf\) is not a communication capacity.
+
+\begin{lemma}[Spectral ceiling and direct sums]\label{lem:elementary}
+For every \(m\),
+\[
+ 0\le a_m(\E)\le \frac{\lambda_{\max}(J_\E)}d\le1 .
+\]
+Moreover,
+\[
+ a_{m+n}(\E)\ge
+ a_m(\E)^{m/(m+n)}a_n(\E)^{n/(m+n)},\qquad
+ a_{\ell m}(\E)\ge a_m(\E).
+\]
+\end{lemma}
+\begin{proof}
+The Hilbert--Schmidt Gram matrix of the \(K_j\) has the nonzero spectrum of \(J_\E\). Consequently
+\[
+ \frac{\Tr H^\dagger H}{dm}
+ \le \frac{\lambda_{\max}(J_\E)}d
+       \sum_j\tau_m(Y_j^\dagger Y_j).
+\]
+Apply the arithmetic--geometric mean inequality to the eigenvalues of
+\(H^\dagger H\), and use \(\Tr J_\E=d\).
+For direct sums put \(Y_j=Y_j^{(m)}\oplus Y_j^{(n)}\).
+The normalized energy remains one and the determinant factors.
+\end{proof}
+
+\begin{lemma}[Balancing at a nonsingular maximum]\label{lem:balance}
+If \(a_m(\E)>0\), every maximizing tuple in \eqref{eq:am} satisfies
+\begin{equation}\label{eq:balance}
+ \sum_jY_j^\dagger Y_j=I_m,\qquad
+ \sum_jY_jY_j^\dagger=I_m .
+\end{equation}
+\end{lemma}
+\begin{proof}
+Let \(T=T^\dagger\) be traceless and replace \(Y_j\) by \(Y_je^{tT}\).
+The unnormalized determinant is unchanged because
+\(H\) is multiplied by \(I_d\otimes e^{tT}\), whose determinant is one.
+Write \(e(t)=\sum_j\tau_m(e^{tT}Y_j^\dagger Y_je^{tT})\).
+After normalization the objective is \(a_m(\E)/e(t)\).
+Maximality implies \(e'(0)=0\), hence
+\(\Tr(T\sum_jY_j^\dagger Y_j)=0\) for every such \(T\).
+The sum is scalar and its trace is \(m\), proving the first identity.
+The variations \(e^{tT}Y_j\) prove the second.
+\end{proof}
+
+This is a stationary-point argument on a compact sphere, not an assumption that an arbitrary tuple has already been scaled. A maximum with zero determinant requires no balancing argument.
+
+\section{The unique antisymmetric exception}
+For \(d\ge2\), consider the Holevo--Werner channel
+\[
+ \W_d(X)=\frac{\Tr(X)I_d-X^{\mathsf T}}{d-1}.
+\]
+Its Kraus operators are \((E_{ij}-E_{ji})/\sqrt{d-1}\), \(i<j\), and
+\[
+ J_{\W_d}=\frac{2}{d-1}P_-,
+ \qquad a_m(\W_d)\le L_d:=\frac{2}{d(d-1)}.
+\]
+For \(d=3\) use real skew matrices \((A_i)_{ab}=\epsilon_{iab}\) and
+\(K_i=A_i/\sqrt2\). Put
+\[
+ B_*=\frac{2^{2/9}}4=0.291632\ldots .
+\]
+
+\begin{theorem}[Sharp bound in dimension three]\label{thm:sharp}
+For every positive integer \(m\),
+\[
+ a_m(\W_3)\le B_*.
+\]
+Equality holds if and only if \(3\mid m\). In particular
+\[
+ \Ainf(\W_3)=B_*<\frac13,
+ \qquad \min\{m:a_m(\W_3)=\Ainf(\W_3)\}=3.
+\]
+At any maximizing tuple attaining \(B_*\), the spectrum of \(H^\dagger H\) consists of \(1\) with multiplicity \(m/3\) and \(1/4\) with multiplicity \(8m/3\).
+\end{theorem}
+
+\subsection{Two moments and a norm bound}
+\begin{lemma}\label{lem:moments}
+For a balanced triple \(Y_1,Y_2,Y_3\) and
+\(H=\sum_iK_i\otimes Y_i\),
+\[
+ 0\preceq H^\dagger H\preceq I_{3m},\qquad
+ \tau_{3m}(H^\dagger H)=\frac13,\qquad
+ \tau_{3m}((H^\dagger H)^2)=\frac16 .
+\]
+\end{lemma}
+\begin{proof}
+The row operator with entries \(K_i\otimes I_m\) has norm one since
+\(\sum_iK_iK_i^\dagger=I_3\). The column operator with entries \(I_3\otimes Y_i\) also has norm one. Their product is \(H\), so \(\|H\|\le1\).
+The skew matrices obey
+\begin{align}
+ \Tr(K_i^\dagger K_j)&=\delta_{ij},\label{eq:gram}\\
+ \Tr(K_i^\dagger K_jK_k^\dagger K_l)
+   &=\frac{\delta_{ij}\delta_{kl}+\delta_{il}\delta_{jk}}4.
+ \label{eq:fourtrace}
+\end{align}
+The first identity gives \(\Tr H^\dagger H=m\).
+The second gives
+\[
+ \Tr((H^\dagger H)^2)
+ =\frac14\Tr\Bigl(\sum_iY_i^\dagger Y_i\Bigr)^2
+  +\frac14\Tr\Bigl(\sum_iY_iY_i^\dagger\Bigr)^2
+ =\frac m2.
+\]
+\end{proof}
+
+\begin{lemma}[Logarithmic moment bound]\label{lem:log}
+If a positive definite matrix \(X\) satisfies
+\(X\preceq3I\), \(\tau(X)=1\), and \(\tau(X^2)=3/2\), then
+\[
+ \tau(\log X)\le\log(3/4)+\frac{\log4}{9}.
+\]
+Equality holds exactly when the spectrum is contained in \(\{3/4,3\}\).
+\end{lemma}
+\begin{proof}
+Let \(u=3/4\) and
+\[
+ q(x)=\log u+\frac{x-u}{u}
+      +\frac{\log4-3}{(3-u)^2}(x-u)^2 .
+\]
+This polynomial agrees with \(\log x\) and its first derivative at \(u\), and agrees with \(\log x\) at \(3\). The Hermite interpolation remainder has sign
+\[
+ \log x-q(x)=\frac{(\log)'''(\xi)}{3!}(x-u)^2(x-3)\le0
+ \quad(0<x\le3)
+\]
+for an intermediate positive \(\xi\); equality occurs only at \(u\) and \(3\).
+The same sign follows directly by differentiating \(q-\log\).
+Since
+\(\tau((X-uI)^2)=3/2-2u+u^2=9/16\),
+\[
+ \tau(q(X))
+ =\log(3/4)+\frac13+\frac{\log4-3}{9}
+ =\log(3/4)+\frac{\log4}{9}.
+\]
+Functional calculus completes the proof.
+\end{proof}
+
+\subsection{Proof of the sharp theorem}
+If the maximum determinant is zero, the upper bound is immediate. Otherwise apply Lemma~\ref{lem:balance} to a maximizing tuple and put \(X=3H^\dagger H\). Lemmas~\ref{lem:moments} and \ref{lem:log} imply
+\[
+ \log a_m(\W_3)=\tau_{3m}\log(H^\dagger H)
+ \le-\log3+\log(3/4)+\frac{\log4}{9}
+ =\log B_*.
+\]
+For equality the eigenvalues of \(H^\dagger H\) are \(1/4\) and \(1\).
+If the multiplicity of \(1\) is \(r\), the first moment gives
+\(r+(3m-r)/4=m\), hence \(r=m/3\). Thus \(3\mid m\).
+
+For sufficiency take \(m=3\) and \(Y_i=K_i\). The tuple is balanced and
+\[
+ H=\frac12\sum_i A_i\otimes A_i
+   =\frac{|\Omega\rangle\langle\Omega|-F}{2},
+ \qquad |\Omega\rangle=\sum_{a=1}^3|aa\rangle ,
+\]
+where \(F\) swaps the two factors. Its eigenvalues are \(1\) on \(\Omega\),
+\(-1/2\) on the five-dimensional symmetric orthogonal complement, and \(1/2\) on the three-dimensional antisymmetric subspace. Therefore
+\(\det H=-1/256\) and \(|\det H|^{2/9}=B_*\).
+Direct sums give every multiple of three. This also proves the spectral assertion.
+\qed
+
+\begin{corollary}[Finite-size approach]\label{cor:rate}
+Let \(b_2=1/(3\,2^{1/3})\). For \(m\ge2\), choose
+\[
+ r_m=\begin{cases}
+ 0,&m\equiv0\pmod3,\\
+ 2,&m\equiv2\pmod3,\\
+ 4,&m\equiv1\pmod3 .
+ \end{cases}
+\]
+Then
+\[
+ B_*\left(\frac{b_2}{B_*}\right)^{r_m/m}
+ \le a_m(\W_3)\le B_*,
+ \qquad
+ 0\le\log\frac{B_*}{a_m(\W_3)}
+ \le \frac4m\log\frac{B_*}{b_2}.
+\]
+Thus \(\lim_{m\to\infty}a_m(\W_3)=B_*\).
+\end{corollary}
+\begin{proof}
+The balanced triple \(Y_i=\sigma_i/\sqrt3\), with the three Pauli matrices, yields squared singular values \(2/3,2/3,1/6,1/6,1/6,1/6\) and objective \(b_2\). Combine blocks of size three and two using Lemma~\ref{lem:elementary}. The displayed choices use zero, one or two blocks of size two. The bound is valid also at \(m=2,4\). No monotonicity in every consecutive dimension is asserted.
+\end{proof}
+
+\begin{theorem}[All antisymmetric dimensions]\label{thm:all}
+For \(d\ge2\),
+\[
+ \Ainf(\W_d)=
+ \begin{cases}
+ 2^{2/9}/4,&d=3,\\
+ 2/[d(d-1)],&d\ne3 .
+ \end{cases}
+\]
+For even \(d\) the second value is attained at \(m=1\).
+For odd \(d\ge5\) it is attained at \(m=4\).
+\end{theorem}
+\begin{proof}
+The case \(d=3\) is Theorem~\ref{thm:sharp}.
+For even \(d\), the skew space contains the unitary direct sum of
+\(\begin{psmallmatrix}0&1\\-1&0\end{psmallmatrix}\), so the Choi spectral ceiling is attained.
+
+For odd \(d\ge5\), Haagerup--Musat \cite[Lemma 5.1 and Theorem 5.2(1), equations (5.17)--(5.19)]{HM} construct a unitary in the dimension-five skew space tensored with \(\M_4\). Add blocks \(\begin{psmallmatrix}0&1\\-1&0\end{psmallmatrix}\otimes I_4\) to reach every odd \(d\ge5\). If \(U=\sum_{i<j}(E_{ij}-E_{ji})\otimes Z_{ij}\) is such a unitary, then
+\(\sum_{i<j}\tau_m(Z_{ij}^\dagger Z_{ij})=d/2\).
+Taking \(Y_{ij}=\sqrt{2/d}\,Z_{ij}\) in \eqref{eq:am} gives
+\(H=\sqrt{2/[d(d-1)]}\,U\), attaining the ceiling.
+\end{proof}
+
+The non-exceptional construction in this theorem is an application of known factorizations, not a new factorization theorem. The new sharp calculation concerns dimension three. Haagerup--Musat's obstruction to factorization and their trace-norm bounds concern different functionals; non-factorizability alone does not determine the determinant value above.
+
+\section{Depolarizing noise measures the noncommutative-rank defect}
+For a matrix space \(S\subseteq\M_d\), put
+\[
+ \rho_m(S)=\max\{\rank A:A\in S\otimes\M_m\},\qquad
+ r(S)=\ncrk(S)=\sup_{m\ge1}\frac{\rho_m(S)}m .
+\]
+Over \(\mathbb C\), noncommutative-rank theory identifies \(r(S)\) with the integer
+\[
+ d-\max_{U\subseteq\mathbb C^d}\bigl(\dim U-\dim S(U)\bigr),
+ \qquad
+ S(U)=\Span\{Au:A\in S,\ u\in U\},
+\]
+and guarantees attainment at a finite matrix size \cite{DM,IQS}.
+In particular \(\rho_m(S)\le mr(S)\) for every \(m\).
+No dimension bound for the smallest rank witness is needed below.
+
+For \(0<\varepsilon<1\), set
+\[
+ \E_\varepsilon=(1-\varepsilon)\E+\varepsilon\D_d,\qquad
+ \theta=\frac{d-r(S_\E)}d,\qquad
+ \theta_m=1-\frac{\rho_m(S_\E)}{dm}.
+\]
+Since a channel has a nonzero Kraus operator, \(0\le\theta\le\theta_m<1\).
+
+\begin{theorem}[Uniform noise law]\label{thm:noise}
+There are positive constants \(c_\E,C_{d,\theta}\), independent of \(\varepsilon\), such that for \(0<\varepsilon\le1/2\),
+\begin{equation}\label{eq:noiselaw}
+ c_\E\,\varepsilon^\theta
+ \le \Ainf(\E_\varepsilon)
+ \le C_{d,\theta}\,\varepsilon^\theta .
+\end{equation}
+The lower bound is attained as a lower estimate at one fixed finite amplification size. Consequently
+\[
+ \lim_{\varepsilon\downarrow0}
+ \frac{\log\Ainf(\E_\varepsilon)}{\log\varepsilon}
+ =\theta .
+\]
+At every fixed \(m\) there likewise are positive constants, depending on \(\E,m\), with
+\(a_m(\E_\varepsilon)=\Theta_{\E,m}(\varepsilon^{\theta_m})\).
+\end{theorem}
+
+\subsection{Upper bound uniform in the amplification}
+Use the Kraus representation
+\(\{\sqrt{1-\varepsilon}K_j,\sqrt{\varepsilon/d}E_{ab}\}\).
+Every feasible amplified matrix can be written
+\[
+ H=\sqrt{1-\varepsilon}\,A+\sqrt\varepsilon\,B,\quad
+ A=\sum_jK_j\otimes Y_j,\quad
+ B=\frac1{\sqrt d}\sum_{a,b}E_{ab}\otimes Z_{ab},
+\]
+where
+\[
+ \sum_j\tau_m(Y_j^\dagger Y_j)
+ +\sum_{a,b}\tau_m(Z_{ab}^\dagger Z_{ab})=1.
+\]
+In particular
+\[
+ \rank A\le mr(S_\E)=(1-\theta)dm,\qquad
+ \frac{\|B\|_F^2}{dm}\le\frac1{d^2}.
+\]
+The first inequality simply states \(\rank A\le mr(S_\E)\).
+Let \(N=dm\), \(q=(1-\theta)N\), and order the singular values of \(H\) decreasingly. The best low-rank approximation inequality gives
+\[
+ \sum_{\ell>q}s_\ell(H)^2\le\varepsilon\|B\|_F^2
+ \le\frac{\varepsilon N}{d^2}.
+\]
+Also \(\|H\|_F^2/N\le1\) by the argument of Lemma~\ref{lem:elementary}, applied to the channel \(\E_\varepsilon\).
+For \(0<\theta<1\), applying arithmetic--geometric mean separately to the first \(q\) and last \(N-q\) squared singular values yields
+\begin{equation}\label{eq:uniformupper}
+ |\det H|^{2/N}
+ \le \left(\frac1{1-\theta}\right)^{1-\theta}
+      \left(\frac{\varepsilon}{d^2\theta}\right)^\theta .
+\end{equation}
+This proves the uniform upper bound. For \(\theta=0\), use \(a_m\le1\).
+Replacing \(q\) by \(\rho_m(S_\E)\) gives the fixed-size upper bound with \(\theta_m\).
+
+\subsection{A finite witness for the lower bound}
+Choose \(m_0\) and a feasible tuple producing
+\(A\in S_\E\otimes\M_{m_0}\) of rank
+\(q=r(S_\E)m_0\).
+Write \(N=dm_0\), \(p=q/N=1-\theta\), and let
+\(s_1,\ldots,s_q>0\) be the nonzero singular values of \(A\).
+Assume first \(\theta>0\).
+In an SVD of \(A\), let \(V_0\) be the partial isometry carrying its right kernel onto its left kernel, and put
+\[
+ B=\frac{V_0}{d\sqrt\theta}.
+\]
+This matrix has a depolarizing-noise representation with normalized coefficient energy one: if \(B=(B_{ab})_{a,b=1}^d\), take \(Z_{ab}=\sqrt d\,B_{ab}\), giving
+\[
+ \sum_{a,b}\tau_{m_0}(Z_{ab}^\dagger Z_{ab})
+ =\frac d{m_0}\|B\|_F^2=1.
+\]
+Allocate coefficient energy \(p\) to \(A\) and \(\theta\) to \(B\). The feasible matrix
+\[
+ H_\varepsilon=\sqrt{(1-\varepsilon)p}\,A
+                 +\sqrt{\varepsilon\theta}\,B
+\]
+is block diagonal in the left and right SVD bases. Its determinant therefore satisfies
+\begin{equation}\label{eq:lowerwitness}
+ |\det H_\varepsilon|^{2/N}
+ = [(1-\varepsilon)p]^p
+     \left(\prod_{\ell=1}^q s_\ell^2\right)^{1/N}
+     \left(\frac{\varepsilon}{d^2}\right)^\theta .
+\end{equation}
+The prefactor is bounded below by a positive constant for
+\(0<\varepsilon\le1/2\).
+For \(\theta=0\), the witness \(A\) is invertible and using only the original Kraus coefficients gives
+\(a_{m_0}(\E_\varepsilon)\ge(1-\varepsilon)|\det A|^{2/N}>0\).
+The same construction at any fixed \(m\), using a matrix of rank \(\rho_m(S_\E)\), proves the fixed-size lower bound.
+Taking logarithms in the two-sided estimates proves the theorem. \qed
+
+The uniform upper bound is essential: convergence at each fixed auxiliary dimension would not by itself justify the statement about the supremum over all dimensions. No exchange of an unproved random-matrix determinant limit is used.
+
+\subsection{Two different kinds of singularity}
+For \(S_{\W_3}\), ordinary rank is two but noncommutative rank is three. Hence
+\[
+ a_1((\W_3)_\varepsilon)=\Theta(\varepsilon^{1/3}),\qquad
+ \Ainf((\W_3)_\varepsilon)=\Theta(1).
+\]
+Already at every fixed \(m\ge2\), the exponent is zero: the size-two and size-three witnesses and their direct sums give full rank.
+This contrasts with a genuinely shrunk Kraus space, whose positive exponent persists under arbitrary amplification.
+
+For an exact example of the latter, let \(\E_\rho(X)=\Tr(X)\rho\), with \(\rho\) a density matrix. At every \(m\),
+\begin{equation}\label{eq:replacer}
+ a_m(\E_\rho)=\frac{(\det\rho)^{1/d}}d.
+\end{equation}
+To see this, diagonalize \(\rho\) and write
+\(H=(\sqrt\rho\otimes I_m)Z\), where
+\(\|Z\|_F^2=m\). Arithmetic--geometric mean gives
+\(|\det Z|^{2/(dm)}\le1/d\), attained by \(Z=I_{dm}/\sqrt d\).
+For a pure replacer with depolarizing noise,
+\[
+ a_m((\E_{\rm pure})_\varepsilon)
+ =\frac1d\left(1-\varepsilon+\frac\varepsilon d\right)^{1/d}
+          \left(\frac\varepsilon d\right)^{(d-1)/d}.
+\]
+Its Kraus space has noncommutative rank one, so the exponent \((d-1)/d\) agrees exactly with Theorem~\ref{thm:noise}.
+
+\section{Operational meaning and limitations}
+The determinant in \eqref{eq:delta} is the error exponent in the following composite testing problem \cite{previous}. The null is one unknown fixed unitary, used on every call. The alternative is an i.i.d.\ channel with independent unknown fixed input and output changes of basis. Arbitrary ancillary memory and adaptive testers are allowed; the optimal test can be parallel. If \(b_n(\E)\) is its minimum type-II error at zero type-I error, then for \(\delta(\E)>0\),
+\[
+ \lim_{n\to\infty}-\frac1n\log b_n(\E)=-\log\delta(\E).
+\]
+This statement uses the precise null and orbit model in the cited theorem. It is not a claim about every form of channel discrimination.
+
+For the alternative \(\E\otimes\D_m\), the null in that theorem becomes all unknown unitaries on \(\mathbb C^{dm}\). Thus
+\[
+ -\log\delta(\E\otimes\D_m)
+ =2\log m-\log a_m(\E).
+\]
+Theorem~\ref{thm:sharp} computes the exact supremum of the normalized determinant over the auxiliary dimension. Theorem~\ref{thm:noise} identifies the coefficient of \(\log(1/\varepsilon)\) in its regularized, normalized exponent:
+\[
+ -\log\Ainf(\E_\varepsilon)
+ =\frac{d-\ncrk(S_\E)}d\log(1/\varepsilon)+O_\E(1).
+\]
+The order of limits here is: obtain the \(n\)-query exponent for each fixed channel and auxiliary size, remove the explicit \(2\log m\) term, take the supremum defining \(\Ainf\), then let \(\varepsilon\) decrease. We make no uniform finite-\(n\) claim when \(m\) grows with \(n\).
+
+The auxiliary depolarizing channel changes the physical alternative and enlarges the null. It is \emph{not} a free bypass ancilla for the same hypothesis test. The error-exponent interpretation consequently does not assert that adding free memory worsens an otherwise fixed testing task.
+
+\section{Relation to earlier results and reproducibility}
+The companion manuscript \cite{previous} gives a universal optimal test, identifies its determinant exponent, characterizes finite perfect detection by ordinary Kraus rank, and connects tensor stability with noncommutative rank. It evaluates selected low-dimensional tensor examples. It does not bound every auxiliary dimension in the three-dimensional antisymmetric case, prove the divisibility criterion for equality, or establish the uniform depolarizing-noise law proved here.
+
+Haagerup--Musat \cite{HM} establish the exceptional factorization behavior of \(\W_3\) and finite factorizations for the other odd-dimensional Holevo--Werner channels. We use the latter construction explicitly. Their Lemma 5.3 already exploits the fourth moment of skew block matrices in a trace-norm argument. Our proof uses this same special moment geometry, combined with determinant-maximizer balancing and a sharp logarithmic majorant; the fourth-moment identity itself is not a new claim. The stationary balancing argument is consistent with the established operator-scaling perspective \cite{GGOW}. For a general channel, balancing alone does not fix this moment.
+
+The general connection between rank defects and orders of determinant vanishing is also established algebraic territory. Hirai--Iwamasa--Oki--Soma \cite{HIOS} study degrees of noncommutative determinants and their optimization. Theorem~\ref{thm:noise} concerns a different quantitative assertion: a two-sided estimate for the energy-normalized determinant maximum, with an upper constant uniform over every matrix amplification and a fixed-size lower witness. We do not claim the underlying rank--valuation principle as new.
+
+Mai--Speicher \cite{MS} compute a Fuglede--Kadison determinant in terms of operator capacity. Their finite random-matrix determinant convergence statement is a conjecture; the more recent variational treatment \cite{Kargin} also distinguishes free determinants from finite-matrix determinant convergence. Neither convergence statement is assumed in our proofs. This distinction ruled out a tempting but unjustified route to a general constant-factor approximation during development.
+
+The accompanying verification files check the finite trace identities symbolically, the two explicit saturation witnesses, scalar majorant values, direct-sum constructions, and the rank/noise estimates on reproducible finite examples. Such calculations are checks on normalization and implementation, not replacements for the all-dimension proofs. Numerical searches used to discover the dimension-three optimum establish no global upper bound; the proof above does.
+
+This manuscript was developed with OpenAI models, including GPT-6 Astra in a separate development context. Its final review, if supplied, must identify the exact PDF and disclose model involvement and context reuse. No human peer review, formal proof-assistant certification, model score, or journal acceptance is claimed by this document. The author also operates AIRR; publication as a Working paper must retain that conflict disclosure. Opus did not contribute a completed review to this draft.
+
+\begin{thebibliography}{99}
+\bibitem{previous}
+L.~Eriksson,
+\emph{Universal optimal tests of unknown unitary dynamics: determinant exponents and tensor stability},
+AIRR Working paper, ARR-2026-2GTKNVK5QM9H8BFR, v1 (2026).
+\url{https://airr.science/papers/ARR-2026-2GTKNVK5QM9H8BFR/versions/v1/}.
+
+\bibitem{DM}
+H.~Derksen and V.~Makam,
+\emph{Polynomial degree bounds for matrix semi-invariants},
+Advances in Mathematics \textbf{310} (2017), 44--63.
+\url{https://arxiv.org/abs/1512.03393}.
+
+\bibitem{IQS}
+G.~Ivanyos, Y.~Qiao and K.~V.~Subrahmanyam,
+\emph{Constructive non-commutative rank computation is in deterministic polynomial time},
+Computational Complexity \textbf{27} (2018), 561--593.
+\url{https://arxiv.org/abs/1512.03531}.
+
+\bibitem{Li}
+Y.~Li, Y.~Qiao, X.~Wang and R.~Duan,
+\emph{Tripartite-to-bipartite entanglement transformation by stochastic local operations and classical communication and the structure of matrix spaces},
+\url{https://arxiv.org/abs/1612.06491}.
+
+\bibitem{GGOW}
+A.~Garg, L.~Gurvits, R.~Oliveira and A.~Wigderson,
+\emph{Operator scaling: theory and applications},
+\url{https://arxiv.org/abs/1511.03730}.
+
+\bibitem{HM}
+U.~Haagerup and M.~Musat,
+\emph{An asymptotic property of factorizable completely positive maps and the Connes embedding problem},
+Communications in Mathematical Physics \textbf{338} (2015), 721--752.
+\url{https://arxiv.org/abs/1408.6476}.
+
+\bibitem{Gour}
+G.~Gour,
+\emph{Family of concurrence monotones and its applications},
+Physical Review A \textbf{71} (2005), 012318.
+\url{https://arxiv.org/abs/quant-ph/0410148}.
+
+\bibitem{MS}
+T.~Mai and R.~Speicher,
+\emph{Fuglede--Kadison determinants of matrix-valued semicircular elements and capacity estimates},
+\url{https://arxiv.org/abs/2406.15922}.
+
+\bibitem{HIOS}
+H.~Hirai, Y.~Iwamasa, T.~Oki and T.~Soma,
+\emph{Algebraic combinatorial optimization on the degree of determinants of noncommutative symbolic matrices},
+\url{https://arxiv.org/abs/2310.15502}.
+
+\bibitem{Kargin}
+V.~Kargin,
+\emph{Fuglede--Kadison Determinants of Shifted Matrix Semicircles},
+\url{https://arxiv.org/abs/2610.15180} (2026).
+\end{thebibliography}
+\end{document}
