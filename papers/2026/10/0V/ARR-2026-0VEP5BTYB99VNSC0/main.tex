@@ -1,0 +1,616 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=27mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern,amsmath,amssymb,amsthm,mathtools,microtype,booktabs,array}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}\newtheorem{remark}[theorem]{Remark}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\Hess}{Hess}
+\DeclareMathOperator{\rank}{rank}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\one}{\mathbf 1}
+\newcommand{\cI}{\mathcal I}
+\title{Six-spin Lorentzian obstructions for clique blowups\\of independence-stable graphs}
+\author{Lluis Eriksson\\\small Independent researcher, Sweden}
+\date{17 October 2026\\\small Working-paper manuscript}
+\begin{document}
+\maketitle
+\begin{abstract}
+Let $F$ be a connected simple graph with at least one edge, and suppose
+that deleting any edge leaves its independence number unchanged.
+For every integer $s\ge2$, we construct a strictly positive rational
+antiferromagnetic matrix of rank two on six spins for which the
+partition polynomial of the clique blowup $F[K_s]$ is not Lorentzian.
+The number of spins is independent of the order and degrees of $F$
+and of the blowup size. The matrix itself may depend on $F$ and $s$.
+The proof combines the classical equality case of Turan's theorem
+with a conditioned Hessian identity. Edge-deletion independence
+stability forces all minimum-edge occupations onto maximum
+independent sets. The first four active profiles then form a
+nonsingular block of inertia $(2,2,0)$; a two-stage limiting argument
+realizes this block using six spins. The theorem includes clique
+blowups of all connected biregular bipartite graphs with at least
+one edge other than $K_2$, and of connected graphs with at least
+one edge and a unique maximum independent set.
+Exact checks cover 720 blowups of 360 bases of orders three through
+seven, and four explicit positive six-spin witnesses.
+The connected-source classification conjecture remains open.
+\end{abstract}
+
+\section{Statement and relation to earlier work}
+
+For a finite simple graph $G=(V,E)$ and an entrywise nonnegative
+symmetric matrix $K$ indexed by $q$ spins, define
+\begin{equation}
+ Z_G(\mathbf x;K)=
+ \sum_{\sigma:V\to\{0,\ldots,q-1\}}
+ \prod_{uv\in E}K_{\sigma(u),\sigma(v)}
+ \prod_{v\in V}x_{\sigma(v)}.                    \label{eq:partition}
+\end{equation}
+We use the spectral convention that $K$ is \emph{antiferromagnetic}
+when it has at most one positive eigenvalue. Lee--Oh--Seo prove that
+clique partition polynomials are Lorentzian for every such target
+and propose a converse \cite{LOS}. We use the connected-source
+formulation discussed by Lee--Seo \cite{LS}: must a connected graph
+whose partition polynomial is Lorentzian for every antiferromagnetic
+target be a clique? Connectedness is necessary because partition
+polynomials factor over components and Lorentzian polynomials are
+closed under products \cite{BH}.
+
+For a homogeneous polynomial of degree $n\ge2$ with strictly positive
+coefficients on the full degree-$n$ simplex, Lorentzianity is
+equivalent to every partial derivative of total order $n-2$ having
+a Hessian with at most one positive eigenvalue
+\cite[Theorem 2.25]{BH}. The partition polynomials for positive
+targets have this full support. Inertia triples list positive,
+negative and zero eigenvalue counts, in that order.
+
+Write $\alpha(F)$ for the independence number. A graph is
+\emph{$\alpha^-$-stable} if $\alpha(F-e)=\alpha(F)$ for every edge $e$.
+This terminology and its characterization by maximum independent
+sets are classical \cite[Theorem 2.1]{LM}. The graph $F[K_s]$ replaces
+each vertex of $F$ by a clique of order $s$, and each edge by all
+edges between the corresponding cliques.
+
+\newpage
+\begin{theorem}\label{thm:main}
+Let $F$ be a connected $\alpha^-$-stable simple graph with at least
+one edge. For every integer $s\ge2$, there are distinct rational
+numbers $a_0,\ldots,a_5$ in $(-1,1)$, with $a_1=0$, such that
+\[
+ K=\one\one^\top-aa^\top
+\]
+is strictly positive entrywise and
+$Z_{F[K_s]}(\mathbf x;K)$ is not Lorentzian.
+The matrix $K$ has inertia $(1,1,4)$.
+\end{theorem}
+
+The six-spin bound is uniform. The rational parameters are not
+asserted to be uniform, and the theorem does not identify the
+smallest possible number of spins.
+
+The preceding work \cite{Eriksson} establishes a positive rank-two
+obstruction for connected noncliques with no true twins among their
+maximum-degree vertices, together with several other source classes.
+Every vertex of $F[K_s]$ has true twins when $s\ge2$, so that
+maximum-degree theorem does not apply to these blowups. Some special
+families overlap earlier results, including particular joins of
+cliques. The present statement supplies one criterion for all
+$\alpha^-$-stable bases and a spin bound independent of graph size.
+It is not a claim to solve the full conjecture.
+
+For a concrete distinction, $C_6[K_2]$ is covered here. It is
+$5$-regular with true twins, and adjacent pairs have either two
+or four common neighbours, so it is not edge-regular. The earlier
+neighbourhood-gap quantities satisfy $b=c=2$, so that strict-gap
+criterion also does not apply. In contrast, $P_3[K_s]$ overlaps
+the earlier join-of-cliques family. The abstract block form is
+already familiar from \cite{Eriksson}; the contribution here is
+its uniform occurrence at the \emph{first} active profiles, together
+with suppression of every later profile by six-spin compression.
+
+\begin{center}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{.28\textwidth}>{\raggedright\arraybackslash}p{.34\textwidth}>{\raggedright\arraybackslash}p{.28\textwidth}@{}}
+\toprule
+Ingredient & Role here & Attribution\\
+\midrule
+$\alpha^-$-stability & Controls maximum independent sets &
+Classical \cite{LM}\\
+Turan equality & Classifies the leading occupations &
+Classical \cite{Turan}\\
+Conditioned profiles & Expresses the Hessian &
+Earlier framework \cite{Eriksson}\\
+Initial four-profile block & Produces two positive directions &
+Present argument\\
+Six-spin compression & Realizes those directions in a positive target &
+Present argument\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Conditioned Hessians and their leading term}
+
+We recall the identity needed from \cite{Eriksson}, including its
+derivation to make the argument self-contained. Choose target nodes
+$a_0=\ell$, $a_1=0$, and $a_i\in(-1,1)$, where $\ell\ne0$, and put
+$\theta=\ell^2$. Let $n=|V(G)|$ and $0\le h\le n-2$.
+
+For an $h$-vertex subset $S$, define the profile of an outside vertex by
+\[
+ r_S(v)=|N_G(v)\cap S|.
+\]
+Let $\nu^S_r$ count outside vertices with profile $r$, and let
+$C^S_{rt}$ count \emph{ordered} adjacent pairs of distinct outside
+vertices with respective profiles $r,t$. Thus $C^S$ is symmetric.
+Pad $\nu^S$ with a zero in coordinate $h+1$. Let
+$D e_r=e_r-e_{r+1}$, for $0\le r\le h$. Here $C^S$ is
+$(h+1)\times(h+1)$ and $D$ is $(h+2)\times(h+1)$. Set
+\begin{equation}
+ Q_h(\theta)=\sum_{|S|=h}(1-\theta)^{e(G[S])}
+ \left[
+ \theta\bigl(\nu^S(\nu^S)^\top-\diag\nu^S\bigr)
+ -D C^S D^\top
+ \right].                                      \label{eq:Q}
+\end{equation}
+The matrix has profile coordinates $0,\ldots,h+1$.
+
+\begin{lemma}\label{lem:identity}
+For $U_{ir}=(1-\ell a_i)^r$,
+\begin{equation}
+ \Hess\!\left(\partial_0^h\partial_1^{n-h-2}
+       Z_G(\mathbf x;K)\right)
+ =\frac{h!(n-h-2)!}{\theta}\,
+       UQ_h(\theta)U^\top.                       \label{eq:hessian}
+\end{equation}
+This identity holds for any number of target states.
+\end{lemma}
+\begin{proof}
+Choose the $h$ vertices differentiated in spin zero; they form $S$.
+All but two of the other vertices are differentiated in spin one.
+Because $a_1=0$, all interactions involving those latter vertices
+have weight one. The internal edges of $S$ contribute
+$(1-\theta)^{e(G[S])}$.
+If the two remaining vertices have profiles $r,t$ and spins $i,j$,
+their interactions with $S$ contribute
+$(1-\ell a_i)^r(1-\ell a_j)^t$.
+Their mutual edge, when present, adds the factor $1-a_i a_j$.
+The matrix $\nu\nu^\top-\diag\nu$ counts all ordered distinct pairs,
+and $C$ counts the ordered edges.
+Finally
+\[
+ (UD)_{ir}=(1-\ell a_i)^r-(1-\ell a_i)^{r+1}
+           =\ell a_i(1-\ell a_i)^r.
+\]
+This yields \eqref{eq:hessian}, including the differentiation
+factorials.
+\end{proof}
+
+A Lorentzian polynomial has at most one positive Hessian eigenvalue
+in every quadratic partial derivative \cite{BH}. Thus two positive
+eigenvalues in any principal restriction of \eqref{eq:hessian}
+provide an obstruction.
+
+Let
+\[
+ e_0=\min_{|S|=h}e(G[S]).
+\]
+The polynomial identity \eqref{eq:Q} gives
+\begin{equation}
+ \lim_{\theta\uparrow1}
+ \frac{Q_h(\theta)}{(1-\theta)^{e_0}}=L,\qquad
+ L=\sum_{\substack{|S|=h\\ e(G[S])=e_0}}
+ \left[\nu^S(\nu^S)^\top-\diag\nu^S-D C^S D^\top\right].
+                                                        \label{eq:leading}
+\end{equation}
+All limits are in fixed finite-dimensional matrix spaces. We call
+$L$ the leading profile kernel. A profile index is \emph{active}
+if its row in $L$ contains a nonzero entry. It is a rescaled limit; the
+unscaled derivative at $\ell=-1$ may vanish.
+
+\section{Minimum-edge occupations}
+
+We first record the classical stability characterization and the
+part used in the proof.
+
+\begin{lemma}[Classical; see \cite{LM}]\label{lem:stability}
+The following are equivalent:
+\begin{enumerate}
+\item $\alpha(F-e)=\alpha(F)$ for every edge $e$;
+\item every maximum independent set $I$ is $2$-dominating:
+$|N_F(u)\cap I|\ge2$ for every $u\notin I$.
+\end{enumerate}
+Under these conditions, two maximum independent sets cannot differ
+by replacing a single vertex.
+\end{lemma}
+\begin{proof}
+Maximality excludes zero neighbours in $I$. If $u$ has exactly one
+neighbour $v\in I$, deleting $uv$ makes $I\cup\{u\}$ independent.
+Conversely, an independent $(\alpha(F)+1)$-set created by deleting
+$uv$ must contain both endpoints; removing $u$ gives a maximum
+independent set in which $u$ has just the neighbour $v$.
+For the last assertion, a replacement vertex is nonadjacent to all
+the retained vertices, and can have at most one neighbour in the
+original maximum independent set.
+\end{proof}
+
+Let $\alpha=\alpha(F)$, $G=F[K_s]$, and
+\begin{equation}
+ h=\alpha s-1,\qquad
+ e_0=(\alpha-1)\binom{s}{2}+\binom{s-1}{2}.        \label{eq:h}
+\end{equation}
+The hypotheses of Theorem~\ref{thm:main} imply $\alpha\ge2$:
+a connected graph with an edge and $\alpha=1$ is complete and is
+not $\alpha^-$-stable. Also $\alpha<|V(F)|$, so $h\le |V(G)|-2$.
+
+\begin{lemma}\label{lem:ground}
+The minimum number of edges induced by an $h$-vertex subset of $G$
+is $e_0$. Every minimizing subset is obtained from a maximum
+independent set $I$ of $F$ by selecting all vertices of its classes
+except for one omitted vertex in one class $v\in I$.
+For each pair $(I,v)$ there are exactly $s$ such subsets.
+\end{lemma}
+\begin{proof}
+The independence number of every induced subgraph of $G$ is at
+most $\alpha$. Turan's theorem and its equality case
+\cite{Turan}, applied to the complement of an $h$-vertex induced
+subgraph, imply the bound \eqref{eq:h}. Equality requires a
+disjoint union of $\alpha$ cliques: one of order $s-1$ and the
+others of order $s$. The construction in the statement attains it.
+
+It remains to exclude other equality occupations. Choose one
+occupied base class from each of these $\alpha$ clique components.
+Their base vertices form a maximum independent set in $F$.
+If a component occupied two or more base classes, replacing its
+chosen representative by another would give two maximum
+independent sets differing in one vertex. This contradicts
+Lemma~\ref{lem:stability}. Therefore each component occupies one
+class, and its size determines the asserted construction.
+The omitted vertex has $s$ choices.
+\end{proof}
+
+This argument uses the equality case of a classical extremal
+theorem. It does not assert a new extremal edge bound.
+
+\section{The initial four-profile block}
+
+Let $\cI$ be the set of maximum independent sets of $F$.
+For $I\in\cI$ and $u\notin I$, put $d_I(u)=|N_F(u)\cap I|$, and define
+\begin{equation}
+ N_d=\bigl|\{(I,u): I\in\cI,\ u\notin I,\ d_I(u)=d\}\bigr|,
+ \qquad d_0=\min\{d:N_d>0\}.                    \label{eq:Nd}
+\end{equation}
+By Lemma~\ref{lem:stability}, $d_0\ge2$.
+
+For a minimizing occupation indexed by $(I,v)$, the single remaining
+vertex of class $v$ has profile $s-1$. Each outside class $u\notin I$
+has $s$ remaining vertices and profile
+\begin{equation}
+ r_u=s\,d_I(u)-\mathbf 1_{\{uv\in E(F)\}}\ge2s-1.
+                                                        \label{eq:profiles}
+\end{equation}
+All other classes in $I$ have no remaining vertices.
+
+\begin{proposition}\label{prop:block}
+The first four active profile coordinates of $L$ are
+\[
+ A=(s-1,\ s,\ d_0s-1,\ d_0s).
+\]
+The corresponding principal block has the form
+\begin{equation}
+ L[A,A]=
+ \begin{pmatrix}0_{2\times2}&B\\B^\top&H\end{pmatrix},
+ \qquad
+ B=s^2N_{d_0}
+ \begin{pmatrix}0&\alpha\\d_0&-d_0\end{pmatrix}. \label{eq:block}
+\end{equation}
+It has inertia $(2,2,0)$, and
+\[
+ \det L[A,A]=s^8\alpha^2d_0^2N_{d_0}^4>0.
+\]
+\end{proposition}
+\begin{proof}
+There is exactly one remaining vertex of profile $s-1$, no
+remaining vertex of profile $s$, and no earlier profile.
+The internal ordered-edge contribution at $s-1$ is zero.
+Consequently the leading $2\times2$ block on $s-1,s$ is zero.
+
+We compute its couplings to the other coordinates. For a fixed
+$(I,v)$ and an outside class $u$, write $d=d_I(u)$.
+The term $\nu\nu^\top-\diag\nu$ contributes $s$ between the
+remaining vertex of class $v$ and class $u$.
+If $uv$ is an edge, the edge correction cancels this contribution
+at $ds-1$ and restores it at $ds$ through the difference operator.
+If $uv$ is not an edge, its profile is already $ds$.
+The row at $s$ is the opposite difference of the two edge endpoints.
+Summing over $v\in I$ and the $s$ choices of omitted vertex yields
+\begin{align}
+ L_{s-1,ds}&=s^2\alpha N_d,&
+ L_{s-1,ds-1}&=0, \label{eq:row1}\\
+ L_{s,ds-1}&=s^2dN_d,&
+ L_{s,ds}&=-s^2dN_d. \label{eq:row2}
+\end{align}
+All other entries in these two rows vanish. Edges between outside
+classes affect only the remaining block, and need not be counted.
+
+Equation~\eqref{eq:profiles} and the one-step difference operator
+show that no coordinate strictly between $s$ and $d_0s-1$ is active.
+The four displayed coordinates are distinct because $s,d_0\ge2$;
+their couplings show that they are active. This proves
+\eqref{eq:block}. Its off-diagonal block has determinant
+$-s^4\alpha d_0N_{d_0}^2\ne0$.
+An invertible congruence removes $H$, leaving
+$\left(\begin{smallmatrix}0&B\\B^\top&0\end{smallmatrix}\right)$,
+which has two eigenvalues of each sign.
+The determinant is $(\det B)^2$.
+\end{proof}
+
+\section{Compressing to six spins}
+
+The fact that the block in Proposition~\ref{prop:block} uses the
+\emph{first} active profiles is essential to the following argument.
+
+\begin{lemma}\label{lem:compression}
+Let $L$ be a finite real symmetric matrix indexed by distinct
+nonnegative integers. Let $b_1<\cdots<b_r$ be its first $r$ active
+indices, and suppose $L[B,B]$ is nonsingular. Choose distinct
+positive numbers $z_1,\ldots,z_r$, and put
+$U_\delta(i,j)=(\delta z_i)^j$ on the active columns.
+For sufficiently small $\delta>0$, $U_\delta L U_\delta^\top$
+has the same inertia as $L[B,B]$.
+\end{lemma}
+\begin{proof}
+Let $V_\delta=U_\delta[:,B]$. The generalized Vandermonde matrix
+$V_1=(z_i^{b_j})$ is invertible. Indeed, a nonzero linear
+combination of $r$ distinct monomials has at most $r-1$ distinct
+positive zeros, by Descartes' rule of signs.
+Since $V_\delta=V_1\diag(\delta^{b_j})$, every entry of
+$V_\delta^{-1}U_\delta[:,t]$ for $t>b_r$ is a constant times
+$\delta^{t-b_j}$, and tends to zero. Hence
+\[
+ V_\delta^{-1}U_\delta L U_\delta^\top V_\delta^{-\top}
+ \longrightarrow L[B,B].
+\]
+Inertia is locally constant at a nonsingular real symmetric matrix,
+and invariant under invertible congruence.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Apply Lemma~\ref{lem:compression} with $r=4$,
+$z_i=i$, and the block in Proposition~\ref{prop:block}.
+Choose a sufficiently small rational $\delta\in(0,1/4)$ so that
+$U_\delta L U_\delta^\top$ has inertia $(2,2,0)$.
+
+Fix this $\delta$, and choose the six target nodes
+\begin{equation}
+ a_0=\ell,\qquad a_1=0,\qquad
+ a_{i+1}=-1+\delta i\quad(1\le i\le4).           \label{eq:nodes}
+\end{equation}
+As $\ell\downarrow-1$ from above,
+$1-\ell a_{i+1}\to\delta i$.
+Let $W_\ell$ consist of rows $2,3,4,5$ of $U$.
+By \eqref{eq:leading},
+\[
+ \frac{W_\ell Q_h(\ell^2)W_\ell^\top}{(1-\ell^2)^{e_0}}
+ \longrightarrow U_\delta L U_\delta^\top.
+\]
+It retains two positive eigenvalues for $\ell>-1$ sufficiently
+close to $-1$. Choose such an $\ell$ rational, and sufficiently
+close that it is different from all other nodes.
+
+All six nodes now lie in $(-1,1)$, so every entry of $K$ is
+strictly positive. The vectors $\one$ and $a$ are independent;
+the representation
+\[
+ K=\begin{pmatrix}\one&a\end{pmatrix}
+       \begin{pmatrix}1&0\\0&-1\end{pmatrix}
+       \begin{pmatrix}\one&a\end{pmatrix}^{\!\top}
+\]
+gives inertia $(1,1,4)$.
+The positive scalar in \eqref{eq:hessian} preserves the two
+positive eigenvalues of the principal Hessian restriction.
+Therefore the quadratic partial derivative is not Lorentzian,
+and neither is $Z_G$.
+\end{proof}
+
+The limits are taken in a specified order: first choose $\delta$,
+then choose $\ell$. No interchange or graph-uniform neighbourhood
+is used. In particular, the argument does not assert that the
+boundary target with $\ell=-1$ is itself an obstruction.
+
+\section{Examples and a finite construction procedure}
+
+\begin{corollary}\label{cor:biregular}
+Theorem~\ref{thm:main} applies to every connected biregular
+bipartite base with at least one edge other than $K_2$.
+\end{corollary}
+\begin{proof}
+Let the bipartition sizes be $a\le b$, with respective degrees
+$D\ge d>0$, so $aD=bd$. For an independent set $J$,
+\[
+ D|J\cap A|+d|J\cap B|\le |E(F)|=db.
+\]
+It follows that $\alpha(F)=b$. If $D>d$, equality in cardinality
+forces $J=B$, so the maximum independent set is unique.
+If $D=d$, equality means every edge has exactly one endpoint in
+$J$, so the complement is also independent. Connectedness gives
+just the two bipartition classes. Except for $K_2$, those two
+classes cannot differ by a single-vertex replacement.
+In either case a maximum independent set cannot have an outside
+vertex with just one neighbour in it; apply Lemma~\ref{lem:stability}.
+\end{proof}
+
+\begin{corollary}
+Every connected base with at least one edge and a unique maximum
+independent set satisfies Theorem~\ref{thm:main}.
+\end{corollary}
+\begin{proof}
+An outside vertex with one neighbour would give a different maximum
+independent set by replacement. The zero-neighbour case contradicts
+maximality.
+\end{proof}
+This graph-class inclusion is classical \cite[Lemma 2.3]{LMStructure};
+the conclusion about six-spin obstructions is its application here.
+
+The construction is effective for a finite input, without a
+polynomial-time complexity claim. Enumerate maximum independent
+sets and the leading kernel. Search through rational
+$\delta=2^{-t}$, $t\ge3$, until exact congruence certifies
+inertia $(2,2,0)$ for $U_\delta L U_\delta^\top$.
+Then search through $\ell=-1+2^{-u}$, with $u>t+1$, until the exact
+quadratic Hessian restriction has two positive eigenvalues.
+The two limiting arguments prove termination of these unbounded
+searches. Enumerating all occupations or subsets is generally
+expensive; a practical search cap is not a mathematical bound.
+
+For a direct check of the second step, sum over occupations $c$
+of the base classes, with $\sum c_v=h$. Put
+$b_v=s-c_v$,
+$r_v=c_v+\sum_{u\sim v}c_u$,
+$w(c)=\prod_v\binom{s}{c_v}$, and
+\[
+ e(c)=\sum_v\binom{c_v}{2}+\sum_{uv\in E(F)}c_uc_v.
+\]
+For witness spins $i,j$, let $u_i(v)=(1-\ell a_i)^{r_v}$ and
+$v_i=\sum_vb_vu_i(v)$. The normalized Hessian entry is
+\begin{align}
+ \sum_c w(c)(1-\ell^2)^{e(c)}
+ \Bigl[\,v_iv_j-\sum_vb_vu_i(v)u_j(v)
+       -a_ia_j\,E_{ij}(c)\Bigr],                \label{eq:direct}\\
+ E_{ij}(c)=
+ \sum_vb_v(b_v-1)u_i(v)u_j(v)
+ +\sum_{uv\in E(F)}b_ub_v
+ \bigl(u_i(u)u_j(v)+u_i(v)u_j(u)\bigr).
+ \nonumber
+\end{align}
+The omitted factor is $h!(|V(G)|-h-2)!>0$.
+This formula counts outside ordered pairs directly and is suitable
+for rational verification.
+
+\section{Exact checks and reproducibility}
+
+All 994 connected graphs of orders three through seven in the
+NetworkX graph atlas were screened by two equivalent definitions:
+edge deletion and the maximum-independent-set neighbour condition.
+Exactly 360 satisfy the hypothesis. For each such base, both
+$s=2$ and $s=3$ were checked, giving 720 blowups.
+For every case, a separate enumeration of bounded occupation
+vectors found all minimum-edge patterns. They agreed exactly with
+Lemma~\ref{lem:ground}, including multiplicities, and the first
+four-profile block agreed with Proposition~\ref{prop:block}.
+These checks support the argument; the general theorem follows
+from its proof, not an extrapolation of this census.
+
+Four complete rational Hessian witnesses were also constructed
+using \eqref{eq:direct}. All four used the same nodes
+\[
+ (a_0,\ldots,a_5)=
+ \frac1{32}(-31,0,-28,-24,-20,-16).
+\]
+This is a statement about the four examples, not a universal
+choice for the theorem.
+
+\begin{center}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Base $F$ & $s$ & $h$ & Occupations & Hessian inertia\\
+\midrule
+$P_3$ & 2 & 3 & 7 & $(2,2,0)$\\
+$C_6$ & 2 & 5 & 126 & $(2,2,0)$\\
+$K_4$ minus one edge & 2 & 3 & 16 & $(2,2,0)$\\
+Mixed-degree example below & 2 & 5 & 51 & $(2,2,0)$\\
+\bottomrule
+\end{tabular}
+\end{center}
+The last base has vertex set $\{0,1,2,3,4\}$ and edges
+$\{03,13,04,14,24,34\}$. Its unique maximum independent set is
+$\{0,1,2\}$; outside degrees into that set are two and three.
+
+The supplement includes the graph lists, occupation checks,
+exact rational matrices and congruence records. The driver
+\path{verify_all.py} reproduces both checks and compares all exact
+records with the archived results. The witness-construction script
+has finite practical search caps, documented separately
+from the unbounded terminating construction above.
+No floating-point eigenvalue calculation is used as a correctness
+certificate. The mathematical checks are not a formal proof
+assistant verification.
+
+\section{Scope and remaining questions}
+
+The result handles uniform clique blowups of $\alpha^-$-stable
+bases. It does not assert that every noncomplete base is stable:
+odd cycles, for example, have critical edges and fall outside the
+hypothesis. It does not classify all graphs whose partition
+polynomials are universally Lorentzian. The six-spin construction
+also leaves open whether fewer spins suffice, whether target
+parameters can be chosen uniformly for useful subclasses, and
+whether effective parameter bounds can avoid full enumeration.
+
+The proof uses a general transfer mechanism: a nonsingular initial
+profile block can be realized by a small number of evaluation
+nodes, with a separate base spin and pin spin. Applying that
+mechanism requires an actual initial block with the needed
+inertia; an arbitrary principal minor at later profiles does not
+automatically give the same spin bound.
+
+\paragraph{Assistance and review status.}
+Substantial OpenAI Codex assistance was used for the argument,
+writing and exact computations. The author operates AIRR.
+The separate source argument received a technical audit by
+GPT-6 Astra, requested at effort \texttt{xhigh}; that audit found no
+material mathematical objection and included its own exact checks.
+Version-specific manuscript assessments are recorded separately
+with artifact hashes and must not be transferred between versions.
+No independent human peer review, formal verification, or worldwide
+priority determination is claimed. The numerical assessments of
+earlier papers do not apply to this manuscript.
+
+\begin{thebibliography}{9}
+\bibitem{BH}
+P. Br\"and\'en and J. Huh.
+\emph{Lorentzian polynomials}.
+\href{https://arxiv.org/abs/1902.03719}{arXiv:1902.03719}.
+
+\bibitem{LOS}
+J. Lee, J. Oh and J. Seo.
+\emph{Counting homomorphisms in antiferromagnetic graphs via
+Lorentzian polynomials}.
+\href{https://arxiv.org/abs/2506.13659}{arXiv:2506.13659}, version 2.
+
+\bibitem{LS}
+J. Lee and J. Seo.
+\emph{Antiferromagnetic models are clique-minimizing}.
+\href{https://arxiv.org/abs/2608.17920}{arXiv:2608.17920}, version 1.
+
+\bibitem{Eriksson}
+L. Eriksson.
+\emph{Rank-two obstructions to Lorentzian graph partition functions}.
+AIRR, ARR-2026-7993ZVQWNC9E38P2, version 1, 17 October 2026.
+\href{https://airr.science/papers/ARR-2026-7993ZVQWNC9E38P2/versions/v1/}
+{Permanent version record}. Working paper.
+
+\bibitem{LM}
+V. E. Levit and E. Mandrescu.
+\emph{Matrices and $\alpha$-Stable Bipartite Graphs}.
+\href{https://arxiv.org/abs/math/9912120}{arXiv:math/9912120}, 1999.
+Theorem 2.1 attributes the stability characterization to
+T. W. Haynes, L. M. Lawson, R. C. Brigham and R. D. Dutton.
+
+\bibitem{LMStructure}
+V. E. Levit and E. Mandrescu.
+\emph{On the structure of $\alpha$-stable graphs}.
+\href{https://arxiv.org/abs/math/9911227}{arXiv:math/9911227}, 1999.
+
+\bibitem{Turan}
+P. Tur\'an.
+\emph{On an extremal problem in graph theory} (in Hungarian).
+Matematikai \'es Fizikai Lapok \textbf{48} (1941), 436--452.
+\end{thebibliography}
+\end{document}
