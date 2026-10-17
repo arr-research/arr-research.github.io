@@ -1,0 +1,284 @@
+CONSTANTE UNIVERSAL: CANDIDATO DE DEMOSTRACIÓN DE AGUDEZA DE e
+17 de octubre de 2026. Notas de investigación, NO manuscrito ni evaluación.
+
+Estado: cadena de prueba completa propuesta, pendiente de crítica adversarial
+del agente principal. No se reclama prioridad. Contexto reutilizado, selección
+solicitada Astra/xhigh sin atestación independiente de identidad efectiva.
+No se ha modificado ni publicado ningún manuscrito. Esta construcción NO
+pertenece a la subclase Gram I: usa una métrica anisotrópica y coeficientes
+adicionales pequeños. Su span matricial es completo.
+
+OBJETIVO PRECISO
+
+Para cada theta>0 se propone construir una tupla finita B en M_D, con
+C(B)>=1 y F_m(B)<=exp(-1+theta) para TODO m>=1. Esto descarta cualquier
+constante universal K<e en F_infty>=C/K y, combinado con la comparación
+C/e<=F_infty ya demostrada en el programa, acredita la agudeza global de e.
+
+No se deduce una cota superior optimizada a partir de un testigo aleatorio.
+El paso uniforme en m se obtiene del balance NECESARIO de todos los
+maximizadores positivos y de una aproximación POLINÓMICA del log regularizado.
+
+NOTACIÓN
+
+tau_n=Tr/n, ||X||_2²=tau_n(X*X),
+F_m(B)=max_{sum_l tau_m(Y_l*Y_l)=1}|det sum_l B_l tensor Y_l|^(2/(Dm)).
+Para una CP Phi, cap(Phi)=inf_{X>0}det(Phi(X))/det(X),
+C(B)=max_{Q>=0,TrQ=1}cap(Phi_Q)^(1/D).
+
+1. LEMA DE BALANCE DE MAXIMIZADORES
+
+Si F_m(B)>0 y Y es un maximizador, entonces
+
+       sum_l Y_l*Y_l=I_m,       sum_l Y_lY_l*=I_m.              (1)
+
+Prueba. La esfera de energía es compacta, así que el máximo existe. Su
+evaluación es invertible. S=sum_l Y_l*Y_l es definida positiva: de Sv=0
+se deduciría Y_lv=0 para todos l, y un kernel de la evaluación. Reemplazar
+Y_l por Y_l S^(-1/2) conserva energía1 y multiplica el objetivo por
+(det S)^(-1/m). Como tau_m(S)=1, AM--GM da det S<=1, con igualdad sólo
+si S=I. La maximalidad obliga S=I. Aplicar el mismo argumento por la izquierda
+prueba la segunda identidad. Por tanto ||Y_l||op<=1 para cada l.
+Si F_m=0, cualquier cota superior positiva ya es trivial.
+
+2. LEMA CIRCULAR SUBBALANCEADO CON REGULARIZACIÓN
+
+Sean c_1,...,c_s circulares libres estándar (tau(c_i*c_j)=delta_ij).
+Para Y_i in M_m tales que sum_i Y_iY_i*<=I y sum_i Y_i*Y_i<=I, definir
+H=sum_i c_i tensor Y_i. Para eta>0,
+
+ (tau tensor tau_m) log(H*H+eta I)<=ell(eta),                  (2)
+ ell(eta)=integral log(x+eta) dMP_1(x),
+ ell(0)=-1,           0<=ell(eta)+1<=2sqrt(eta).               (3)
+
+Prueba de (2). Los déficits E'=I-sum_i Y_iY_i* y F'=I-sum_i Y_i*Y_i
+son positivos con la misma traza. Si esa traza es cero ambos son cero.
+Si T=Tr(E')=Tr(F')>0, añadir Z_ab=E'^(1/2)E_ab F'^(1/2)/sqrt(T).
+Entonces sum_ab Z_ab Z_ab*=E' y sum_ab Z_ab*Z_ab=F'.
+Con circulares adicionales d_ab libres de todos los c_i, la suma total
+Htot=H+sum_ab d_ab tensor Z_ab tiene ambos mapas de covarianza unitales.
+La hermitización X=[[0,Htot],[Htot*,0]] es un semicircular con valores
+en M_{2m}, cuya covarianza eta_X satisface eta_X(I)=I. La recurrencia de Wick
+operador-valuada da E(X^(2k))=Catalan_k I y E(X^(2k+1))=0. Por tanto
+Htot*Htot tiene ley escalar Marchenko--Pastur de parámetro1.
+
+Queda demostrar que añadir ese ruido circular no reduce el log regularizado.
+Usar matrices Ginibre complejas G_i^(N),G_ab'^(N), independientes, varianza1/N.
+Para cada realización fija de las primeras y cada entrada compleja z de
+las segundas, el lápiz P(z) es holomorfo. Por Cauchy--Binet,
+
+ det(P(z)*P(z)+eta I)=sum_{k,I,J}eta^(n-k)|det P(z)_{I,J}|²,
+
+incluido el término constante eta^n. El logaritmo de esa suma de cuadrados
+de funciones holomorfas es subarmónico. La media radial gaussiana es al menos
+el valor en cero. Aplicar sucesivamente a todas las entradas añadidas y luego
+promediar sobre las originales prueba la desigualdad de expectativas finitas.
+
+Para m y la familia Y,Z FIJADOS, el límite de momentos Ginibre identifica
+las leyes libres correspondientes. La regularización eta>0 acota el log
+por abajo. Para pasar expectativas basta integrabilidad uniforme de la parte
+positiva: por Jensen,
+
+ tau_n log(P*P+eta I)<=log(eta+tau_n(P*P)),
+
+y el segundo momento de tau_n(P*P) está uniformemente acotado en N para
+estas familias fijas. Esto se comprueba por Wick; equivale a una forma
+cuadrática gaussiana con traza esperada fija y varianza acotada. La convergencia
+débil de leyes más un momento uniforme de orden2 controla también la cola
+espectral alta. No se necesita convergencia del log NO regularizado ni una
+cota de mínimo valor singular. Así pasa la desigualdad al límite, dando (2).
+El argumento vale para cada m arbitrario, y su cota final no depende de m.
+
+Para (3), MP_1 tiene densidad sqrt((4-x)/x)/(2pi) en (0,4). Su integral
+logarítmica es -1 y
+ell'(eta)=(sqrt(1+4/eta)-1)/2<=1/sqrt(eta).
+Integrar desde0 da la cota. Todas las normalizaciones son de singularidades
+AL CUADRADO: exp ell(0)=e^(-1), no e^(-1/2).
+
+3. TRANSFERENCIA UNIFORME DE MOMENTOS FINITOS
+
+Fijar s, eta>0 y zeta>0. Existen un entero k y una tolerancia a>0 tales que
+si A_1,...,A_s in M_D cumplen ||A_i||op<=3 y aproximan a c_i en todos
+los *-momentos de longitud<=2k con error<=a, entonces para TODO m y toda
+familia subbalanceada Y_1,...,Y_s como en (2),
+
+ tau_{Dm}log[(sum A_i tensor Y_i)*(sum A_i tensor Y_i)+eta I]
+                         <=ell(eta)+3zeta.                   (4)
+
+Prueba. Tanto la evaluación matricial como la libre tienen norma<=3s
+(en la libre basta ||c_i||=2). Sus cuadrados singulares están en [0,9s²].
+Elegir un polinomio real p con |p(x)-log(x+eta)|<=zeta en ese intervalo.
+Para p(x)=sum_{j=0}^k p_j x^j, la diferencia de trazas de cada término j
+se expande en s^(2j) productos de un momento de A y una traza de palabra
+en los Y_i. Cada segunda traza tiene módulo<=1 por ||Y_i||op<=1.
+Así la diferencia total es <=a sum_{j=1}^k |p_j|s^(2j). Elegir a para
+que esto sea<=zeta. Dos errores de aproximación polinómica y (2) dan (4).
+No se toma un límite uniforme de matrices aleatorias indexado por m: sólo
+se exige una lista FINITA de momentos de A, y la desigualdad algebraica
+resultante es ya uniforme para todos los m.
+
+4. EXISTENCIA DE COEFICIENTES CASI BI-ESTOCÁSTICOS CON ESOS MOMENTOS
+
+Para todo delta>0, elegir s fijo tan grande que 2/sqrt(s)+1/s<delta.
+Existen D y A_i con todos los momentos finitos requeridos en3, ||A_i||op<=3,
+y además
+
+ ||s^(-1)sum_i A_i A_i*-I||op<=delta,
+ ||s^(-1)sum_i A_i* A_i-I||op<=delta.                         (5)
+
+Se pueden tomar muestras de s matrices Ginibre reales independientes con
+entradas N(0,1/D), y después aproximarlas por entradas racionales con margen
+en las desigualdades. Para s fijo, sus *-momentos normalizados convergen a
+los de circulares libres estándar. La expansión de Wick muestra que los
+emparejamientos planares orientados dan los momentos circulares; los otros
+tienen menos índices libres y desaparecen. La varianza de cada traza de
+palabra fija tiende a0 (también por Wick o Poincaré gaussiana).
+
+Las sumas en (5) son las covarianzas Wishart de la concatenación horizontal
+D por sD y de la concatenación vertical sD por D. Bai--Yin da límites
+extremos (1+-1/sqrt(s))². Para cada A_i por separado, ||A_i||op tiende a2.
+Con s fijo, todas estas condiciones y una lista finita de momentos ocurren
+simultáneamente con probabilidad tendiendo a1 cuando D tiende a infinito.
+La densidad de matrices racionales preserva cualquier versión estricta de
+las condiciones. Esto es EXISTENCIA de matrices finitas; no un tamaño útil.
+
+Advertencia: (5) sola NO implica capacidad cercana a1 uniformemente en D.
+Ese paso falso se evita mediante la compleción exacta que sigue.
+
+5. COMPLECIÓN EXACTA CON COSTE PEQUEÑO EN LA MÉTRICA DE COEFICIENTES
+
+Fijar 0<delta<1/4 y 0<eps<1/4. Poner
+
+ K_i=A_i/sqrt[s(1+2delta)],
+ E=I-sum_i K_iK_i*,       F=I-sum_i K_i*K_i,
+ t=tau_D(E)=tau_D(F).
+
+Por (5),
+
+ delta/(1+2delta) I <= E,F <= 3delta/(1+2delta) I.             (6)
+
+En particular t>0. Para 1<=a,b<=D, poner
+
+ C_ab=E^(1/2) E_ab F^(1/2)/sqrt(Tr E).
+
+Usando sum_ab E_ab F E_ba=(Tr F)I se verifica
+sum_ab C_ab C_ab*=E y sum_ab C_ab*C_ab=F. La familia (K_i,C_ab)
+define por tanto un mapa EXACTAMENTE biestocástico.
+
+Asignar pesos de covarianza y coeficientes del nuevo lápiz:
+
+ q_i=(1-eps)/s,      B_i=K_i/sqrt(q_i)=r A_i,
+ q_ab=eps/D²,        B_ab=C_ab/sqrt(q_ab),
+ r=[(1+2delta)(1-eps)]^(-1/2).                               (7)
+
+Los q son positivos y suman1. Phi_diag(q) de B es el mapa biestocástico
+anterior, de capacidad1. Por ello
+
+                              C(B)>=1.                       (8)
+
+Para la familia añadida, su Gram HS normalizado tiene norma
+
+ ||Gram(B_ab)||op=||E||op||F||op/(eps t)
+               <=9delta/[eps(1+2delta)]<=9delta/eps.          (9)
+
+Prueba de la igualdad: el mapa de síntesis vec(C_ab) es
+(F^{T/2} tensor E^(1/2))/sqrt(Dt); multiplicar por D/sqrt(eps)
+y normalizar el Gram por1/D da el operador positivo unitariamente equivalente
+a (F^T tensor E)/(eps t). El argumento no presupone que E,F conmuten.
+En particular, para cualesquiera auxiliares Z_ab,
+
+ ||sum_ab B_ab tensor Z_ab||_{2,Dm}
+       <=3sqrt(delta/eps) [sum_ab ||Z_ab||_{2,m}²]^(1/2).      (10)
+
+La compleción tiene D² coeficientes, pero (9)--(10) no pierden un factor D.
+Ésta es la razón de asignar masa total eps a esos coeficientes. Su span
+es M_D porque E,F son invertibles. Esto no trivializa F: la norma impuesta
+es la de coeficientes, no la norma HS intrínseca del span. No se afirma Gram I.
+
+6. ESTABILIDAD REGULARIZADA BAJO PERTURBACIONES HS
+
+Para matrices X,Z del mismo tamaño n y eta>0,
+
+ |tau_n log(X*X+eta I)-tau_n log(Z*Z+eta I)|
+                         <=||X-Z||_{2,n}/sqrt(eta).           (11)
+
+En la recta P(u)=X+u(Z-X), la derivada es
+2 Re tau[(P*P+eta I)^(-1)P*(Z-X)]. La norma de
+P(P*P+eta I)^(-1) es <=1/(2sqrt eta). La dualidad traza--operador
+y ||W||_{1,n}<=||W||_{2,n} acotan la derivada por el RHS de (11).
+Integrar da el resultado. La cota permite norma de operador grande para
+la perturbación; es uniforme en el tamaño matricial.
+
+7. COTA SUPERIOR PARA TODOS LOS TESTIGOS ÓPTIMOS
+
+Para cada m, elegir un maximizador de F_m(B). Es positivo: los coeficientes
+añadidos abarcan M_D y por ello proporcionan una evaluación invertible.
+Por1, todos sus auxiliares están balanceados. Los s originales Y_i son
+entonces SUBbalanceados, y la energía de los añadidos es<=1. Escribir
+
+ L_B(Y)=r sum_{i=1}^s A_i tensor Y_i + L_extra.
+
+Aplicando log<=log regularizado, (10), (11) y (4) con eta/r², se obtiene
+
+ log F_m(B)
+ <= log r² + ell(eta/r²)+3zeta+3sqrt[delta/(eps eta)]          (12)
+
+para TODO m. Las condiciones finitas de momentos de A se eligieron en3
+para esta eta/r² fija. No dependen de m. Si delta,eps<1/4, r^(-2)<2,
+log r²<=-log(1-eps). Por (3),
+
+ log F_infty(B)
+ <= -1 -log(1-eps)+2sqrt(2eta)+3zeta
+                                  +3sqrt[delta/(eps eta)].    (13)
+
+Dado theta>0, elegir eps,eta,zeta para que los primeros tres errores
+sumen<theta/2, luego delta suficientemente pequeño para que el último
+sea<theta/2; después elegir s fijo grande, luego la lista finita de momentos,
+y finalmente D y las A_i de4. Este orden no es circular: r queda fijado
+al escoger delta,eps antes de la aproximación polinómica. (8) y (13) dan
+C(B)>=1 y F_infty(B)<=exp(-1+theta).
+
+Ejemplo de parámetros que DESCARTA2, sin pretender tamaño razonable:
+eps=1/100, eta=1/1000, zeta=1/100, delta=1/100000000,
+s=10^18 (mayor que lo necesario). El error de (13) es
+
+ -log(99/100)+2sqrt(1/500)+3/100+3sqrt(1/1000)<0.225.
+
+Así F_infty(B)<exp(-0.775)<1/2<=C(B)/2. La existencia de D y de matrices
+con las tolerancias de momentos requeridas está garantizada, pero NO se
+materializa semejante instancia ni se anuncia un ejemplo pequeño explícito.
+
+8. QUÉ QUEDA POR AUDITAR Y QUÉ NO SE ESTÁ AFIRMANDO
+
+La crítica debe concentrarse en: (i) normalizaciones de (9); (ii) paso
+psh/Ginibre de (2) y la integrabilidad uniforme regularizada; (iii) balance
+de todos los maximizadores, no sólo algunos; (iv) existencia simultánea de
+momentos y (5) con s FIJO; (v) que la métrica anisotrópica sea parte legítima
+del problema C/F_infty original. No se detectó un hueco en esos pasos al
+redactar esta versión, pero todavía es una propuesta que requiere crítica.
+
+No hay afirmación sobre agudeza en Gram I, tuplas biestocásticas sin pesos,
+coeficientes de alfabeto fijo, s fijo universal, ni el tamaño práctico de D.
+La covarianza q da C>=1, NO C=1 exacto. La cota universal e, si se usa,
+además implica C<=exp(theta) para esta familia. No es necesaria para
+refutar2; sí para concluir que e es el factor óptimo y no sólo una cota inferior.
+
+ANTECEDENTES PRIMARIOS CONSULTADOS Y PENDIENTES DE PRECISAR
+
+- Mai--Speicher, arXiv:2406.15922: identidad capacidad--determinante circular;
+  no se usa para convertir un testigo aleatorio en cota superior optimizada.
+  https://arxiv.org/html/2406.15922
+- Voiculescu, Limit laws for random matrices and free products, Invent.Math.
+  104(1991),201--220, DOI10.1007/BF01245072: límite de momentos gaussianos.
+  https://doi.org/10.1007/BF01245072
+- Bai--Yin, Limit of the Smallest Eigenvalue of a Large Dimensional Sample
+  Covariance Matrix, Ann.Probab.21(1993),1275--1294: extremos Wishart.
+  https://doi.org/10.1214/aop/1176989118
+- Kwok--Lau--Ramachandran, arXiv:1904.03213: escalado con brecha espectral.
+  No se invoca para suplir (8); su condición con log D no da automáticamente
+  el límite s fijo,D→infinito que aquí se necesita.
+  https://arxiv.org/html/1904.03213
+
+Las pruebas de balance, transferencia uniforme, compleción ponderada y
+estabilidad se han escrito explícitamente. No se certifica novedad de estas
+herramientas ni de la conclusión mediante búsquedas sin resultados.

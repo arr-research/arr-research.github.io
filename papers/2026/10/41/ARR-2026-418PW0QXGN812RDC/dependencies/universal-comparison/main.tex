@@ -1,0 +1,292 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=25mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,booktabs,microtype}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newcommand{\C}{\mathbb C}
+\newcommand{\R}{\mathbb R}
+\newcommand{\E}{\mathbb E}
+\newcommand{\Prob}{\mathbb P}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\capop}{\operatorname{cap}}
+\newcommand{\F}{\mathcal F}
+\newcommand{\K}{\mathcal C}
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\vecop}{\operatorname{vec}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\title{A universal capacity bound for amplified determinants\\and polynomial witnesses in the Hermitian case}
+\author{Lluis Eriksson\\Independent researcher, Sweden}
+\date{17 October 2026 --- research draft, not peer reviewed}
+\begin{document}
+\maketitle
+\begin{abstract}
+For an arbitrary finite tuple of complex square matrices, we maximize the geometric mean of the squared singular values of its linear pencil over auxiliary matrices with unit normalized Hilbert--Schmidt energy and unrestricted size. We prove that this optimum lies between $\K/e$ and $\K$, where $\K$ is the maximum, over coefficient covariances, of the dimension-normalized operator capacity. No Hermitian or positive-span assumption is imposed on this comparison. An invertible finite evaluation supplies a perturbation inside the original matrix space, subharmonicity selects its phase, and quantitative resolvent comparison, algebraic spectral regularity and Han's least-singular-value theorem control the entire logarithmic tail. This transfers the Mai--Speicher free determinant formula to feasible finite witnesses. Separately, for Hermitian coefficients whose real span contains the identity, we give an explicit polynomial auxiliary-size bound and a Gaussian sampling guarantee. We do not assert an optimal constant or a general polynomial-time witness algorithm.
+\end{abstract}
+
+\section{Statement and contribution}
+Write $\tau_n=\Tr/n$. For $A=(A_1,\ldots,A_s)\in M_d(\C)^s$, put
+\begin{align}
+ \F_m(A)&=\max_{\sum_i\tau_m(Y_iY_i^*)=1}
+ \left|\det\left(\sum_i A_i\otimes Y_i\right)\right|^{2/(dm)},\label{eq:F}\\
+ \F_\infty(A)&=\sup_{m\ge1}\F_m(A).
+\end{align}
+The tuple presentation and its Euclidean energy are part of the data. For $Q\ge0$ with $\Tr Q=1$, define
+\begin{align}
+ \Phi_Q(X)&=\sum_{i,j}Q_{ij}A_iXA_j^*,\\
+ \capop(\Phi)&=\inf_{X>0,\,\det X=1}\det\Phi(X),&
+ \K(A)&=\max_{Q\ge0,\,\Tr Q=1}\capop(\Phi_Q)^{1/d}.\label{eq:C}
+\end{align}
+Capacity is the invariant of a completely positive map, not a communication rate. If $Q=LL^*$, then $B_j=\sum_iL_{ij}A_i$ are Kraus matrices for $\Phi_Q$.
+
+\begin{theorem}[Universal comparison]\label{thm:universal}
+For every complex square matrix tuple,
+\begin{equation}\label{eq:universal}
+ e^{-1}\K(A)\le\F_\infty(A)\le\K(A).
+\end{equation}
+For every density matrix $Q$ and every $\theta>0$ there are a finite $m$ and a feasible tuple whose objective is at least $e^{-1-\theta}\capop(\Phi_Q)^{1/d}$. The result includes tuples with no invertible scalar linear combination.
+\end{theorem}
+
+The prior working paper \cite{bridge} proved this comparison for Hermitian coefficients with a positive definite real linear combination. Theorem~\ref{thm:universal} removes both restrictions. The factor $e^{-1}$ and the free determinant identity are due to Mai and Speicher \cite{ms}. The contribution is their transfer to feasible finite matrices in the unrestricted class; no new capacity identity or sharpness claim is made.
+
+For the quantitative result suppose
+\begin{equation}\label{eq:positive}
+ A_i=A_i^*,\quad \sum_i b_iA_i=I_d,\quad b\in\R^s,
+ \qquad a^2=\sum_i\norm{A_i}^2,\quad\beta=\norm b_2.
+\end{equation}
+The norms in $a$ are operator norms, and $a\beta\ge1$.
+\begin{theorem}[Polynomial auxiliary size]\label{thm:poly}
+Under \eqref{eq:positive}, for $0<\theta\le1$, every integer
+\begin{equation}\label{eq:polysize}
+ m\ge\max\left\{2,\left\lceil4d(a\beta)^4\theta^{-3}\right\rceil\right\}
+\end{equation}
+satisfies $\F_m(A)\ge e^{-1-\theta}\K(A)$. Witnesses can be chosen with every auxiliary matrix normal. Section~\ref{sec:poly} gives a sharper covariance-dependent bound and a sampling probability.
+\end{theorem}
+This improves the very large finite-quotient construction in the unpublished intermediate note \cite{effective}, at the cost of dependence on $d$ and a probabilistic existence argument. The general complex theorem is qualitative in auxiliary size. Neither theorem establishes finite-bit complexity or efficient covariance optimization.
+
+\section{Capacity and the free comparison value}
+The capacity root is an infimum of continuous functions of $Q$, hence upper semicontinuous, so the maximum in \eqref{eq:C} exists on the compact density-matrix set. It is finite by taking $X=I_d$. It is concave: each $\det\Phi_Q(X)^{1/d}$ is concave, and an infimum preserves concavity.
+\begin{proposition}[Upper bound]\label{prop:upper}
+For a feasible tuple $Y$ and $Q_{ij}=\tau_m(Y_iY_j^*)$, its objective is at most $\capop(\Phi_Q)^{1/d}$.
+\end{proposition}
+\begin{proof}
+$Q$ is a positive Gram matrix of trace one. Put $H=\sum_i A_i\otimes Y_i$. If $H$ is singular the assertion is immediate. Otherwise, for $X>0$ with $\det X=1$, let $M=H(X\otimes I_m)H^*>0$. Its normalized partial trace is $\Phi_Q(X)$. Concavity of $\log\det$ applied to auxiliary unitary averaging gives
+\[
+ \frac1{dm}\log\det M\le\frac1d\log\det\Phi_Q(X).
+\]
+Use $\det M=|\det H|^2$ and take the infimum over $X$.
+\end{proof}
+We separate three established inputs from the finite transfer below.
+\begin{enumerate}
+\item Mai--Speicher \cite[Theorem 1.2]{ms} prove, for arbitrary complex $B_j$ and free standard semicircular variables $s_j$,
+\begin{equation}\label{eq:MS}
+ \Delta\left(\sum_jB_j\otimes s_j\right)^2
+ =e^{-1}\capop\left(X\mapsto\sum_jB_jXB_j^*\right)^{1/d}.
+\end{equation}
+Here $\Delta(T)=\exp(\tau\log|T|)$ uses normalized trace. The same identity holds for free standard circular variables $c_j$: write $c_j=(s_j+it_j)/\sqrt2$ and use the doubled coefficient list $B_j/\sqrt2,iB_j/\sqrt2$.
+\item Positive operator capacity is equivalent to full noncommutative rank, hence an invertible finite matrix evaluation \cite{ggow}. Thus, if some $\Phi_Q$ has positive capacity, there exist $k$ and $T_i\in M_k(\C)$ such that
+\begin{equation}\label{eq:B}
+ B=\sum_i A_i\otimes T_i\quad\text{is invertible}.
+\end{equation}
+Only existence is used, not a bound on $k$ or the conditioning of $B$.
+\item Fuglede--Kadison determinants are multiplicative and $z\mapsto\log\Delta(T-zI)$ is subharmonic for bounded $T$ in a finite tracial von Neumann algebra \cite{hs}. Factoring out an invertible deterministic $B$ gives subharmonicity of $z\mapsto\log\Delta(H+zB)$.
+\end{enumerate}
+Weak convergence of singular-value distributions does not justify integrating $\log t$. The next lemma supplies the additional control needed for our perturbation.
+
+\section{Affine Ginibre pencils and the logarithmic tail}\label{sec:affine}
+Fix $D,R_1,\ldots,R_r\in M_q(\C)$, with $D$ invertible. Let $G_j^{(N)}$ be independent complex Ginibre matrices, with entry variance $1/N$, and let $c_j$ be free standard circular variables. Set
+\[
+ P_N=D\otimes I_N+\sum_jR_j\otimes G_j^{(N)},\qquad
+ P=D\otimes1+\sum_jR_j\otimes c_j.
+\]
+\begin{lemma}[Affine determinant convergence]\label{lem:affine}
+If $\Delta(P)>0$, then
+\begin{equation}\label{eq:logconv}
+ \frac1{qN}\log|\det P_N|\longrightarrow\log\Delta(P)
+ \quad\text{in probability}.
+\end{equation}
+\end{lemma}
+\begin{proof}
+We give the tail argument explicitly.
+
+\emph{Least singular value.} Multiplication by $D^{-1}\otimes I_N$ reduces to Han \cite[Theorem 1.5]{han}. There is a fixed $b>0$ with
+\begin{equation}\label{eq:lsv}
+ \Prob\{s_{\min}(P_N)<N^{-b}\}\longrightarrow0.
+\end{equation}
+Absorb fixed multiplicative constants by increasing $b$. The invertibility of $D$ is essential to this use of Han's theorem.
+
+\emph{Free spectral regularity.} Hermitize as
+\[
+ X_N=\begin{pmatrix}0&P_N\\P_N^*&0\end{pmatrix},\qquad
+ X=\begin{pmatrix}0&P\\P^*&0\end{pmatrix}.
+\]
+$X$ is a selfadjoint matrix polynomial in semicircular variables. Its scalar Cauchy transform is algebraic by Shlyakhtenko--Skoufranis \cite[Theorems 1.1 and 5.4]{ss}. Since $\Delta(P)>0$, its spectral law has no atom at zero. The local Puiseux expansion gives constants $C>0$ and $0<\alpha<1$ such that the singular-value law $\nu$ of $P$ satisfies
+\begin{equation}\label{eq:freepower}
+ \nu([0,t])\le Ct^\alpha\qquad(0<t\le1).
+\end{equation}
+If zero is outside the support this is immediate. Otherwise the integrable density branches have Puiseux exponents greater than $-1$; integrate and, if necessary, reduce the positive exponent. No exponent uniform over all pencils is asserted.
+
+\emph{Comparison at a shrinking scale.} For the selfadjoint Gaussian series $X_N$, its variance norm $\sigma^2=\norm{\E(X_N-\E X_N)^2}$ is bounded, and its entry covariance norm $v^2$ is $O(N^{-1})$. Before hermitization the latter covariance is, up to permutation,
+\[
+ N^{-1}\left(\sum_j\vecop(R_j)\vecop(R_j)^*\right)\otimes I_{N^2}.
+\]
+Hermitization increases this norm by at most two. The variance norm is bounded by the sums $\sum R_jR_j^*$ and $\sum R_j^*R_j$.
+
+The free counterpart in Bandeira--Boedihardjo--van Handel \cite[Theorem 2.8]{bbvh} has the same scalar law as $X$. Indeed its covariance, restricted to $M_{2q}\otimes I_N$, acts by
+\begin{equation}\label{eq:covariance}
+ \eta\begin{pmatrix}U&V\\W&Z\end{pmatrix}
+ =\begin{pmatrix}\sum_jR_j ZR_j^*&0\\0&\sum_jR_j^*UR_j\end{pmatrix},
+\end{equation}
+the circular hermitization covariance. The deterministic mean is also in this subalgebra. The operator-valued Wick recursion starts at the identity and stays there, proving equality of all matrix-valued moments and hence of compactly supported scalar laws. Therefore the scalar Cauchy transforms obey
+\begin{equation}\label{eq:resolvent}
+ |\E\tau_{2qN}((i\eta-X_N)^{-1})-(\tau_{2q}\otimes\tau)((i\eta-X)^{-1})|
+ \le C/(N\eta^5).
+\end{equation}
+The deterministic shift does not enter $\sigma$ or $v$.
+
+Let $\nu_N$ be the empirical singular-value law and $F_N(t)=\nu_N([0,t])$. Hermitization gives
+\[
+ F_N(t)\le2\int\frac{t^2}{t^2+x^2}\,d\nu_N(x).
+\]
+Using \eqref{eq:freepower}, a dyadic decomposition of the free integral, and \eqref{eq:resolvent}, we obtain
+\begin{equation}\label{eq:meso}
+ \E F_N(t)\le Ct^\alpha+\frac{C}{Nt^4}\qquad(0<t\le1).
+\end{equation}
+Choose $0<c<1/(4+\alpha)$ and increase $b$ so that $b>c$. For $t\ge N^{-c}$ the second term is bounded by $Ct^\alpha$. On $\mathcal G_N=\{s_{\min}(P_N)\ge N^{-b}\}$, the expected logarithmic contribution from $[N^{-b},N^{-c}]$ is at most $Cb(\log N)N^{-c\alpha}$. For $[N^{-c},\varepsilon]$, integration by parts gives
+\begin{equation}\label{eq:tail}
+ \E\left[\mathbf1_{\mathcal G_N}\int_{(0,\varepsilon]}|\log t|\,d\nu_N(t)\right]
+ \le Cb(\log N)N^{-c\alpha}
+ +C\varepsilon^\alpha\bigl(|\log\varepsilon|+\alpha^{-1}\bigr).
+\end{equation}
+Together with \eqref{eq:lsv}, this controls the logarithmic lower tail in probability. It does not follow from a minimum-singular-value estimate alone.
+
+Gaussian asymptotic freeness gives weak convergence $\nu_N\to\nu$ in probability, and the finitely many Ginibre norms are bounded with probability tending to one \cite{han}. Truncate $\log$ below, use these facts, then let the truncation decrease to zero using \eqref{eq:tail} and Markov's inequality. This proves \eqref{eq:logconv}.
+\end{proof}
+This lemma is a consequence of the cited estimates, not a general determinant approximation theorem for arbitrary microstates or finite group quotients. The latter distinction matters in view of \cite{kammeyer}. We do not assert convergence for unshifted singular-constant pencils.
+
+\section{Proof of the universal comparison}
+\begin{proof}[Proof of Theorem~\ref{thm:universal}]
+The upper bound is Proposition~\ref{prop:upper}. Fix $Q=LL^*$ with positive capacity and set $B_j=\sum_iL_{ij}A_i$. Choose $B,T_i$ as in \eqref{eq:B}, and put
+\[
+ t_0=\sum_i\tau_k(T_iT_i^*)>0,\qquad
+ H=\sum_j(B_j\otimes I_k)\otimes c_j.
+\]
+Normalized traces are unchanged by tensor amplification, so \eqref{eq:MS} yields
+\begin{equation}\label{eq:basefree}
+ \Delta(H)^2=e^{-1}\capop(\Phi_Q)^{1/d}>0.
+\end{equation}
+The function
+\[
+ u(z)=\log\Delta(H+zB)=\log\Delta(B)+\log\Delta(B^{-1}H+zI)
+\]
+is subharmonic and $u(0)$ is finite. For any $r,\delta>0$, its submean inequality supplies a phase $|z|=r$ with
+\begin{equation}\label{eq:phase}
+ u(z)\ge u(0)-\delta> -\infty.
+\end{equation}
+Such phases form a set of positive measure; otherwise the mean would be smaller than $u(0)$. The value is bounded above by the logarithm of an operator norm, so is finite at the chosen phase.
+
+For this fixed $z\ne0$, set
+\begin{align}
+ V_i^{(N)}&=I_k\otimes\left(\sum_jL_{ij}G_j^{(N)}\right)+zT_i\otimes I_N,\label{eq:Vi}\\
+ e_N&=\sum_i\tau_{kN}(V_i^{(N)}V_i^{(N)*}),&W_i^{(N)}&=e_N^{-1/2}V_i^{(N)}.
+\end{align}
+The pencil is $zB\otimes I_N+\sum_j(B_j\otimes I_k)\otimes G_j^{(N)}$. Its constant is invertible and its free determinant is positive by \eqref{eq:phase}, so Lemma~\ref{lem:affine} applies. First and second Gaussian trace moments also give
+\begin{equation}\label{eq:energy}
+ e_N\longrightarrow1+r^2t_0\quad\text{in probability}.
+\end{equation}
+The random quadratic term tends to $\Tr LL^*=1$; every cross term contains $\tau_N(G_j^{(N)})\to0$. The logarithmic objective of $W^{(N)}$ therefore tends to
+\[
+ 2u(z)-\log(1+r^2t_0)
+ \ge\log\capop(\Phi_Q)^{1/d}-1-2\delta-\log(1+r^2t_0).
+\]
+Choose $r,\delta>0$ so that the last two losses sum to less than $\theta$, and then choose $N$ large enough to obtain a sample attaining the claimed bound. The order is fixed: finite invertible evaluation, radius and phase, then matrix size. No uniformity in $z$ is required. Optimize over $Q$. If $\K(A)=0$, the upper bound already implies $\F_\infty(A)=0$.
+\end{proof}
+\section{Polynomial witnesses and sampling}\label{sec:poly}
+Assume \eqref{eq:positive}. Real covariances suffice: $\Phi_Q^*=\Phi_{\overline Q}$, capacity is adjoint invariant \cite{ms}, and concavity implies that $(Q+\overline Q)/2$ has no smaller capacity. Fix real $Q=LL^T$ with trace one and set
+\begin{equation}\label{eq:parameters}
+ B_j=\sum_iL_{ij}A_i,\qquad v_0=\norm{\sum_jB_j^2},\qquad
+ g_0=\norm{\sum_j\vecop(B_j)\vecop(B_j)^*}.
+\end{equation}
+Vectorization uses the unnormalized Hilbert--Schmidt inner product. We have
+\[
+ \sum_j\norm{B_j}^2\le a^2\norm L_{\mathrm{HS}}^2=a^2.
+\]
+Consequently,
+\begin{equation}\label{eq:coarse}
+ v_0\le a^2,\qquad g_0\le da^2.
+\end{equation}
+Take independent normalized $m\times m$ GUE matrices $G_j$, and put $Y_i=\sum_jL_{ij}G_j$, $H_m=\sum_jB_j\otimes G_j$, $E_m=\sum_i\tau_m(Y_i^2)$. Then $\E E_m=1$. For $\varepsilon>0$ the normal matrices
+\begin{equation}\label{eq:normalW}
+ W_i=\frac{Y_i+i\varepsilon b_iI_m}{\sqrt{E_m+\varepsilon^2\beta^2}}
+\end{equation}
+have energy exactly one by cancellation of cross terms. Their logarithmic determinant objective is
+\begin{equation}\label{eq:J}
+ J=\tau_{dm}\log(H_m^2+\varepsilon^2I)-\log(E_m+\varepsilon^2\beta^2).
+\end{equation}
+\begin{proposition}[Expected objective]\label{prop:expected}
+If $\capop(\Phi_Q)>0$, then
+\begin{equation}\label{eq:expected}
+ \E J\ge\log\capop(\Phi_Q)^{1/d}-1
+ -\frac{v_0g_0}{2m\varepsilon^4}-\log(1+\varepsilon^2\beta^2).
+\end{equation}
+\end{proposition}
+\begin{proof}
+Let $S=\sum_jB_j\otimes s_j$. In the Gaussian-series representation of $H_m$, the variance norm is $v_0$ and the entry covariance norm is $g_0/m$. For a real Hilbert--Schmidt orthonormal basis $F_p$ of Hermitian matrices,
+\[
+ G_j=m^{-1/2}\sum_{p=1}^{m^2}g_{jp}F_p,\qquad
+ \sum_pF_pUF_p=\Tr(U)I_m.
+\]
+As in \eqref{eq:covariance}, the free counterpart has scalar law $S$. Theorem~2.8 of \cite{bbvh} bounds the scalar resolvent difference at $it$ by $v_0g_0/(mt^5)$.
+
+For $h_t(x)=\log(x^2+t^2)$, its derivative in $t$ has trace equal to minus twice the imaginary part of that resolvent. The difference of the log statistics tends to zero as $t\to\infty$, since $0\le\log(1+x^2/t^2)\le x^2/t^2$. Integrating from $\varepsilon$ to infinity gives
+\begin{equation}\label{eq:integrated}
+ \left|\E\tau_{dm}h_\varepsilon(H_m)-(\tau_d\otimes\tau)h_\varepsilon(S)\right|
+ \le\frac{v_0g_0}{2m\varepsilon^4}.
+\end{equation}
+The free term is at least $2\log\Delta(S)=\log\capop(\Phi_Q)^{1/d}-1$ by \eqref{eq:MS}. Jensen gives $\E\log(E_m+\varepsilon^2\beta^2)\le\log(1+\varepsilon^2\beta^2)$. The shift bounds negative parts, and Gaussian second moments bound positive parts, so these expectations are finite.
+\end{proof}
+\begin{proof}[Proof of Theorem~\ref{thm:poly}]
+Choose a real maximizing $Q$ and put $\varepsilon^2=\theta/(2\beta^2)$. If $m\ge4v_0g_0\beta^4\theta^{-3}$, the two losses in \eqref{eq:expected} are at most $\theta/2$ each, strictly so for the logarithmic one. Some sample therefore has $J\ge\log\K(A)-1-\theta$. Use \eqref{eq:coarse} for \eqref{eq:polysize}.
+\end{proof}
+\begin{proposition}[Sampling probability]\label{prop:prob}
+Fix real $Q$ with positive capacity, $0<\theta\le1$, $\varepsilon^2=\theta/(4\beta^2)$ and an integer $m\ge\max\{2,32v_0g_0\beta^4\theta^{-3}\}$. One sample of \eqref{eq:normalW} attains objective at least $e^{-1-\theta}\capop(\Phi_Q)^{1/d}$ except with probability at most
+\begin{equation}\label{eq:prob}
+ \exp\left(-\frac{m^2\theta^3}{32(\beta\sqrt{g_0/d}+1)^2}\right).
+\end{equation}
+\end{proposition}
+\begin{proof}
+For standard real Gaussian coordinates $g=(g_{jp})$, the map $\delta g\mapsto\delta H_m$ has Hilbert--Schmidt norm at most $\sqrt{g_0/m}\norm{\delta g}_2$. Since $\sup_x|h_\varepsilon'(x)|=1/\varepsilon$, differentiating under the trace and applying Hilbert--Schmidt Cauchy--Schwarz gives Lipschitz constant $\sqrt{g_0/d}/(m\varepsilon)$ for the first term of \eqref{eq:J}.
+Also, up to coordinate ordering, $E_m=m^{-2}g^T(L^TL\otimes I_{m^2})g$ and $\norm L\le1$. For $c=\varepsilon^2\beta^2$,
+\[
+ \norm{\nabla\log(E_m+c)}_2\le\frac{2\sqrt{E_m}}{m(E_m+c)}\le\frac1{m\sqrt c}.
+\]
+Thus $J$ is globally Lipschitz with $L_J\le(\sqrt{g_0/d}+1/\beta)/(m\varepsilon)$. Gaussian concentration \cite{agz} yields $\Prob(J<\E J-t)\le\exp(-t^2/(2L_J^2))$. The expected loss is at most $\theta/2$; insert $t=\theta/2$ to get \eqref{eq:prob}.
+\end{proof}
+For $\sum_i b_iA_i=D>0$, use $D^{-1/2}A_iD^{-1/2}$ in this section. Both $\F_m$ and $\K$ acquire the factor $\det(D)^{-2/d}$, so the relative guarantee is unchanged. The parameter $a\beta$ is computed after normalization and may be large. The sampler assumes exact real Gaussian inputs; finite-precision implementation needs a rounding analysis.
+
+\section{Scope checks and limitations}
+For one coefficient, unitary auxiliaries attain $\F_m(A_1)=|\det A_1|^{2/d}=\K(A_1)$. The factor $e^{-1}$ need not be attained. Conversely, the standard three $3\times3$ skew-symmetric generators span a space with identically zero scalar determinant but an invertible Pauli $2\times2$ evaluation. Multiplication by $i$ makes them Hermitian and traceless, so their real span has no positive definite matrix. The universal theorem applies to this familiar example, whereas \cite{bridge} does not. We claim no novelty for that matrix space.
+
+The quantitative theorem provides polynomial auxiliary size only in the positive-span class. The universal theorem allows every tuple but does not control the constants in Han's estimate or the algebraic exponent after phase selection. Combining them does not give a general polynomial-size theorem. Neither proves convergence of unperturbed homogeneous Ginibre log determinants at every fixed point.
+
+Kargin's recent variational formula \cite{kargin} concerns free determinants with matrix shifts and Brown potentials. That free problem is distinct from the finite energy-constrained transfer here. We use the older Mai--Speicher identity and classical subharmonicity; no shifted free determinant formula is claimed as new. Broad source-index screening was followed by targeted reading of the primary proof inputs. This is not a certificate of worldwide priority or a verification of every screened preprint.
+
+\paragraph{Verification and provenance.}
+Accompanying checks examine covariance identities, normalization, exact finite evaluations, parameter constants and numerical stress cases. They supplement the proof without proving its infinite-dimensional inputs. OpenAI Codex assisted the development and writing. GPT-6 Astra examined the proof in shared development context and contributed to the transfer argument. This is not blind, independent, or human peer review. No editorial acceptance or historical-impact claim is made.
+
+\begin{thebibliography}{12}
+\bibitem{bridge} L. Eriksson, \emph{A dimension-independent capacity bound for amplified determinants of Hermitian matrix tuples}, AIRR working paper ARR-2026-4E4SJ328XF98BSCJ (2026). \url{https://airr.science/papers/ARR-2026-4E4SJ328XF98BSCJ/versions/v1/}.
+\bibitem{effective} L. Eriksson, \emph{Explicit finite witnesses for Hermitian amplified determinants via finite quotients of free groups}, unpublished note, 16 October 2026. Not a proof input here.
+\bibitem{ms} T. Mai and R. Speicher, \emph{Fuglede--Kadison determinants of matrix-valued semicircular elements and capacity estimates}, arXiv:2406.15922. \url{https://arxiv.org/abs/2406.15922}.
+\bibitem{ggow} A. Garg, L. Gurvits, R. Oliveira and A. Wigderson, \emph{Operator scaling: theory and applications}, arXiv:1511.03730. \url{https://arxiv.org/abs/1511.03730}.
+\bibitem{han} Y. Han, \emph{Brown measure convergence for the spectrum of polynomials in Ginibre matrices}, arXiv:2606.01664v1 (2026), Theorem 1.5. \url{https://arxiv.org/abs/2606.01664}.
+\bibitem{bbvh} A. S. Bandeira, M. T. Boedihardjo and R. van Handel, \emph{Matrix concentration inequalities and free probability}, Invent. Math. \textbf{234} (2023), 419--487. \url{https://arxiv.org/abs/2108.06312}.
+\bibitem{ss} D. Shlyakhtenko and P. Skoufranis, \emph{Freely independent random variables with non-atomic distributions}, Trans. Amer. Math. Soc. \textbf{367} (2015), 6267--6291. \url{https://arxiv.org/abs/1305.1920}.
+\bibitem{hs} U. Haagerup and H. Schultz, \emph{Invariant subspaces for operators in a general II$_1$-factor}, Publ. Math. IHES \textbf{109} (2009), 19--111, introduction. \url{https://doi.org/10.1007/s10240-009-0018-7}.
+\bibitem{agz} G. W. Anderson, A. Guionnet and O. Zeitouni, \emph{An Introduction to Random Matrices}, Cambridge University Press (2010), Gaussian concentration.
+\bibitem{kargin} V. Kargin, \emph{Fuglede--Kadison determinants of shifted matrix semicircles}, arXiv:2610.15180 (2026). \url{https://arxiv.org/abs/2610.15180}.
+\bibitem{kammeyer} H. Kammeyer, \emph{A counterexample to the determinant approximation conjecture}, arXiv:2609.15567 (2026). \url{https://arxiv.org/abs/2609.15567}.
+\end{thebibliography}
+\end{document}

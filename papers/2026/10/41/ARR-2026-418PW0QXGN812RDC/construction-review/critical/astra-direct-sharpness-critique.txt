@@ -1,0 +1,175 @@
+CRÍTICA ADVERSARIAL DE LA CADENA DIRECTA DE AGUDEZA
+17 de octubre de 2026. Investigación; sin nota ni certificación de prioridad.
+
+Objeto exacto leído
+
+D:/Proyectos/airr-investigacion/2026-10-17_constante-universal/direct-sharpness-proof.txt
+SHA256: 2dd638e90b459356d8a43aceb8135a97d027112002f723eabf8a5c6180644bca
+El dictamen se refiere a estos bytes. El archivo fue leído, no editado.
+
+Conclusión
+
+No encuentro un defecto material en A--F. La cadena demuestra que para
+todo K<e existe una tupla compleja finita, incluso con Gram I, tal que
+C(A)>K F_infty(A). La afirmación de que e es el factor universal óptimo
+usa además la desigualdad previa C/e<=F_infty; esa desigualdad anterior
+no se vuelve a auditar en este dictamen. La nueva obstrucción a cualquier
+factor K<e sí queda sustentada por la cadena examinada.
+
+Esta conclusión no es un certificado de novedad, una revisión externa
+independiente, una nota numérica ni un ejemplo pequeño computado.
+
+1. Balance de maximizadores: correcto, con condición de positividad
+
+Para cada m, la esfera de energía de los auxiliares es compacta. Si F_m>0,
+un maximizador Y tiene evaluación invertible y ambas matrices
+S_R=sum Y_i*Y_i y S_L=sum Y_iY_i* son invertibles. El reemplazo por
+Y_i S_R^(-1/2) conserva energía 1 y multiplica F_m por
+(det S_R)^(-1/m). Como tau(S_R)=1, este factor es >=1 y la igualdad
+es posible únicamente para S_R=I. El mismo argumento independiente
+por la izquierda da S_L=I para el maximizador ORIGINAL. No se requiere
+que una secuencia arbitraria de escalados preserve ambos balances.
+
+Intento de refutación descartado: un maximizador singular o F_m=0 no
+admite esta operación, pero el texto separa correctamente F_m=0. Para
+las tuplas Ginibre, A_1 es invertible casi seguramente; tomar Y_1=I_m
+y los otros cero da F_m>0. Tras una mezcla invertible de los coeficientes,
+la presencia de un elemento invertible en su span se mantiene y puede
+normalizarse su coeficiente, de modo que la razón final es legítima.
+
+2. Ley Marchenko--Pastur: correcto y antecedente conocido
+
+Escribir c_i=(s_i+i t_i)/sqrt(2), con semicirculares libres de varianza1.
+Los coeficientes autoadjuntos de la hermitización son
+ [[0,Y_i],[Y_i*,0]]/sqrt(2) y [[0,iY_i],[-iY_i*,0]]/sqrt(2).
+Su covarianza anula los bloques no diagonales y tiene exactamente los
+dos mapas descritos en B. Ambos balances implican eta(I)=I. La recurrencia
+de pares no cruzados produce Catalan_n I; por tanto la hermitización
+tiene ley semicircular estándar y H*H tiene ley MP_1. No se presume
+conmutatividad de los Y_i ni independencia escalar de sus entradas.
+
+La expresión útil para verificar las constantes de regularización es
+
+ ell(t)=-1+(sqrt(t(t+4))-t)/2+2 asinh(sqrt(t)/2),  t>0.
+
+Su derivada es (sqrt(1+4/t)-1)/2 y ell(t)+1 está entre 0 y 2sqrt(t).
+La ley de la hermitización se integra con traza normalizada en 2m;
+la de H*H usa traza normalizada en m. No aparece un factor 2 adicional.
+
+La especialización semicircular con covarianza unital ya figura en
+Mai--Speicher, arXiv:2406.15922, Proposition 3.2. Su Theorem 1.2 conecta
+el determinante libre con capacidad. Esta parte debe acreditarse como
+antecedente; por sí sola no es el argumento uniforme de agudeza finita.
+
+3. Uniformidad en TODAS las amplificaciones: el punto clave es válido
+
+Fijados s,t,zeta, el grado y los coeficientes del polinomio aproximante
+dependen de esos tres parámetros, pero NO de m. Cada Y_i de un
+maximizador positivo es contracción. Cada traza de palabra en auxiliares
+tiene módulo <=1, incluso cuando la palabra y los auxiliares cambian
+con D y m. Por ello una tolerancia finita de momentos de A sirve
+simultáneamente para cualquier m y cualquier maximizador.
+
+El conteo s^(2j), el intervalo [0,9s^2] y los tres errores zeta son
+conservadores y correctos. La constante del momento de orden cero
+coincide exactamente en ambas trazas. Si la suma ponderada de los
+coeficientes no constantes fuese cero, no se impone una restricción
+de momentos; de otro modo se toma la tolerancia indicada o una menor.
+
+No hay intercambio indebido de sup_m y límite aleatorio. Tampoco hace
+falta una tasa uniforme de invertibilidad o una cota de la cola inferior
+del logaritmo: solo se usa log x<=log(x+t). La regularización se fija
+ANTES del grado, de la tolerancia y del límite D->infinito. Las condiciones
+finitas de momentos convergen por la expansión de Wick de Ginibre:
+los emparejamientos no cruzados dan el límite libre y los términos
+conectados de dos trazas dan varianza O(D^(-2)) para cada palabra fija.
+
+Para exponer los cuantificadores sin ambigüedad: dado K<e, fijar primero
+s grande y theta pequeño con (1-23/sqrt(s)) exp(1-theta)>K. Elegir
+t>0,zeta>0 de modo que 2sqrt(t)+3zeta<=theta. Después elegir polinomio,
+grado y tolerancias; solo entonces tomar D suficientemente grande.
+No se permite tomar s=s(D) en una estimación declarada para s fijo.
+
+4. Capacidad y existencia simultánea: correcto
+
+La prueba detallada de D--E está en capacity-ginibre-proof.txt. La cota
+de capacidad se obtiene para la covarianza admisible Q=I_s/s; por tanto
+es una cota INFERIOR de C, no una fórmula para su máximo. Los tres
+casos del corte son exhaustivos; no hay pérdida dependiente de D.
+
+Las condiciones de momentos, las cotas de norma de A_i, la mezcla
+en HS y los dos balances ocurren con probabilidad tendiendo a uno
+para el mismo s fijo. Su intersección también, sin suponer independencia.
+Se obtiene así una MISMA tupla finita con C grande y F_infty pequeño.
+No se juntan testigos de dimensiones o realizaciones incompatibles.
+
+La parte de Proposition 5.4 que se usa es p=O(log D), donde la prueba
+publicada da la estimación requerida antes y después de cuadrar. La
+nota acertadamente no extiende la absorción de p/D a p arbitrario.
+
+5. Gram I EXACTO: correcto, precisando la orientación y los márgenes
+
+Sea G_ij=tau_D(A_i* A_j), R=G^(-1/2) y definir explícitamente
+
+                   B_j=sum_i A_i R_ij.
+
+Entonces Gram(B)=R* G R=I EXACTAMENTE, no solo asintóticamente. Para
+s fijo, G->I y las normas op de A_i están acotadas con alta probabilidad,
+por lo que max_j||B_j-A_j||op->0. Esta mezcla no es unitaria en general:
+NO sería válido afirmar invariancia exacta de C/F bajo ella. El texto
+utiliza correctamente continuidad de condiciones suficientes con margen.
+
+El error de mapas HS está acotado por
+s^(-1) sum_i (||B_i||op+||A_i||op)||B_i-A_i||op.
+La misma expresión controla los errores de ambos balances en norma op.
+Los límites de los errores de balance son (2+1/sqrt(s))/sqrt(s),
+estrictamente menores que 3/sqrt(s). El componente ortogonal a I tiene
+limsup <=8/sqrt(s), estrictamente menor que 9/sqrt(s). Junto con
+sqrt(90)<10, estos márgenes permiten retener las constantes 3 y 10
+después de la ortonormalización para D grande. Las normas <=3 y las
+tolerancias finitas de momentos también se conservan con margen.
+
+Si Gram(B)=I, tau_D(Phi_Q(I))=Tr(Q)=1. Evaluar la capacidad en I y
+aplicar AM--GM da cap(Phi_Q)^(1/D)<=1 y por tanto C(B)<=1. La cota
+inferior dice C(B)>=1-23/sqrt(s), NO C(B)=1. No se han confundido
+Gram I, capacidad 1 y biestocasticidad exacta de Q=I_s/s.
+
+6. Ajustes de exposición recomendados, sin error material
+
+-- Incluir la fórmula explícita B_j=sum_i A_i(G^(-1/2))_ij.
+-- Escribir la elección de parámetros en el orden descrito en el punto 3.
+-- Cambiar «la estimación es uniforme en D» por «las constantes no dependen
+   de D y la probabilidad del evento tiende a uno para s fijo». La primera
+   expresión podría sugerir una garantía probabilística para todo D.
+-- Citar el PDF/abstract verificable de GJN; su dirección /html puede no
+   estar disponible. Para Wishart complejo, la fuente inspeccionada es
+   Bai--Silverstein Lemma 1.2, además de las referencias originales.
+
+No he comprobado un manuscrito posterior, ni afirmo que estas observaciones
+estén incorporadas en él. No hay petición de revisión mayor ni condición
+matemática pendiente en la cadena examinada.
+
+7. Verificaciones y límites
+
+La ejecución portable de verify_capacity_cuts.py produjo PASS. Incluye
+30.780 comprobaciones racionales de las ramas del lema; 201.952 cortes
+enumerados; 64 compresiones y 64 desigualdades de determinantes; 24
+identidades de escalado de auxiliares; 24 momentos de covarianzas no
+conmutativas hasta orden 16; 25 integrales regularizadas MP; y tres
+ortonormalizaciones Gram I. Los cálculos matriciales restantes son de
+punto flotante. No se optimizó numéricamente F_infty, no se probó mediante
+muestras un límite probabilístico y no se materializó la tupla extrema.
+
+No se ha realizado un barrido suficiente para certificar novedad de la
+agudeza global. La lectura primaria de Mai--Speicher confirma un antecedente
+esencial; la identidad libre no debe presentarse como hallazgo nuevo. La
+página editorial de Voiculescu 1991 se abrió, pero no se obtuvo allí el
+texto completo. El límite de momentos usado también admite la prueba
+de Wick resumida arriba; no se finge haber auditado ese PDF completo.
+
+Firma de contexto: /root/astra_gap_final, 2026-10-17. Modelo y esfuerzo
+solicitados: GPT-6 Astra xhigh. Contexto reutilizado; este agente aportó
+el lema de cortes y la interfaz Ginibre/GJN y contrastó avances con
+/root y /root/astra_capacity_referee. independence=involved_in_proof;
+fresh_blind=false. Sin atestación independiente del runtime o memoria.
+Los dictámenes anteriores cerrados permanecen intactos.

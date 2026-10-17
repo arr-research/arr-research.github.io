@@ -1,0 +1,955 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=28mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\capop}{cap}
+\DeclareMathOperator{\id}{id}
+\DeclareMathOperator{\spanop}{span}
+\newcommand{\C}{\mathbb C}
+\newcommand{\N}{\mathbb N}
+\newcommand{\E}{\mathbb E}
+\newcommand{\Prob}{\mathbb P}
+\newcommand{\M}{M}
+\newcommand{\Dep}{\mathcal D}
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\hs}{2\to2}
+\newcommand{\Finf}{F_{\infty}}
+\newcommand{\calC}{\mathcal C}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+
+\title{Sharpness of the universal capacity bound\\
+for amplified determinants}
+\author{Lluis Eriksson\\
+\small Independent researcher, Sweden}
+\date{17 October 2026\\ \small Research draft}
+
+% SOURCE-ONLY DRAFT: prepared for separate compilation and review.
+% No compilation, PDF creation, submission, or publication accompanies this file.
+% Development used reused-context Astra assistance, not blind independent review.
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+For a finite tuple of square complex matrices, let $\Finf$ be the
+supremum of the normalized determinant over all matrix amplifications
+and Hilbert--Schmidt unit coefficient tuples, and let $\calC$ be the
+maximum operator capacity over coefficient covariances of trace one.
+The previously established comparison
+$\calC/e\leq\Finf\leq\calC$ has the optimal universal constant:
+we construct finite tuples with $\calC/\Finf$ arbitrarily close to $e$.
+The tuples may have exactly identity Hilbert--Schmidt Gram matrix;
+their capacities tend to one and their amplified determinant values
+tend to $e^{-1}$. The construction uses independent complex Gaussian
+coefficients with a fixed number of coefficients before the matrix
+dimension tends to infinity. A balance property of determinant
+maximizers makes polynomial moment comparison uniform over every
+amplification. A separate cut criterion turns Gaussian expansion
+estimates into a dimension-independent capacity lower bound.
+For each fixed number of Gaussian coefficients, scalar and
+arbitrarily amplified optima both converge in probability to $e^{-1}$.
+\end{abstract}
+
+\section{Definitions and statement}
+
+Write $\tau_d=d^{-1}\Tr$ on $\M_d(\C)$ and
+$\norm{X}_2=\tau_d(X^*X)^{1/2}$. Operator norms are denoted by
+$\norm{\,\cdot\,}_{\op}$. For a tuple
+$A=(A_1,\ldots,A_s)\in\M_d(\C)^s$, put
+\begin{align}
+ L_A(Y)&=\sum_{i=1}^s A_i\otimes Y_i, \label{eq:pencil}\\
+ F_m(A)&=
+ \max_{\substack{Y_i\in\M_m(\C)\\
+             \sum_i\tau_m(Y_i^*Y_i)=1}}
+       \abs{\det L_A(Y)}^{2/(dm)},&
+ \Finf(A)&=\sup_{m\geq1}F_m(A). \label{eq:F}
+\end{align}
+The maximum in $F_m$ exists by compactness. Singular evaluations
+contribute zero.
+
+For a completely positive map $\Phi:\M_d(\C)\to\M_d(\C)$, define
+\begin{equation}
+ \capop(\Phi)
+  =\inf_{X>0}\frac{\det\Phi(X)}{\det X}
+  =\inf_{\substack{X>0\\\det X=1}}\det\Phi(X). \label{eq:capacity}
+\end{equation}
+For $Q\in\M_s(\C)$ positive semidefinite with $\Tr Q=1$, let
+\begin{equation}
+ \Phi_{A,Q}(X)=\sum_{i,j=1}^s Q_{ij}A_iXA_j^*,\qquad
+ \calC(A)=\max_{\substack{Q\geq0\\\Tr Q=1}}
+                    \capop(\Phi_{A,Q})^{1/d}. \label{eq:C}
+\end{equation}
+The convention in \eqref{eq:C} makes $\Phi_{A,Q}$ completely positive.
+The maximum exists: capacity is an infimum of continuous functions
+of $Q$, hence is upper semicontinuous on the compact covariance set.
+The Gram matrix is
+\begin{equation}
+ G(A)_{ij}=\tau_d(A_i^*A_j). \label{eq:Gram}
+\end{equation}
+
+The universal comparison proved in
+\cite[Theorem \emph{Universal comparison}]{ErikssonUniversal} is
+\begin{equation}
+ e^{-1}\calC(A)\leq\Finf(A)\leq\calC(A) \label{eq:previous}
+\end{equation}
+for arbitrary finite square complex tuples. Our construction below
+does not use either inequality to bound its examples. We import
+\eqref{eq:previous} only when identifying the optimal universal
+constant and, consequently, the limits of the constructed values.
+The cited item is the published version
+ARR-2026-1DGGW5KX2M9R4VJT~v1, not its earlier Hermitian-only
+predecessor.
+
+\begin{theorem}\label{thm:main}
+For every integer $s\geq4096$ and every $\theta>0$, there exist
+$d\in\N$ and $B\in\M_d(\C)^s$ such that
+\begin{equation}
+ G(B)=I_s,\qquad
+ 1-\frac{23}{\sqrt{s}}\leq\calC(B)\leq1,\qquad
+ 0<\Finf(B)\leq \exp(-1+\theta). \label{eq:main}
+\end{equation}
+In particular there is a sequence of finite tuples with identity
+Gram matrix for which $\calC(B)\to1$ and $\Finf(B)\to e^{-1}$.
+\end{theorem}
+
+\begin{corollary}\label{cor:sharp}
+The optimal universal comparison constant is $e$:
+\begin{equation}
+ \inf_{\substack{d,s\geq1,\ A\in\M_d(\C)^s\\\calC(A)>0}}
+       \frac{\Finf(A)}{\calC(A)}=\frac1e. \label{eq:sharp}
+\end{equation}
+The same infimum is obtained after imposing $G(A)=I_s$.
+Thus $\Finf(A)\geq\calC(A)/2$ is false in general.
+\end{corollary}
+
+\begin{proof}[Proof of the corollary from Theorem~\ref{thm:main}]
+The lower bound for the infimum is \eqref{eq:previous}.
+The theorem gives
+\[
+ \frac{\Finf(B)}{\calC(B)}
+ \leq\frac{e^{-1+\theta}}{1-23/\sqrt{s}}.
+\]
+First choose $s$ large, and then choose $\theta$ small.
+For example, $s=65536$ and $\theta=1/20$ give
+$\calC(B)/\Finf(B)\geq(233/256)e^{19/20}>2$.
+This specifies parameters of an existence construction, rather than
+an explicit small matrix tuple.
+\end{proof}
+
+The inputs from random matrix theory are standard. Gaussian
+convergence is used in the form of
+Haagerup--Thorbj{\o}rnsen \cite[Theorem~A and (1.2)]{HT}.
+The Gaussian superoperator estimate is the square specialization
+of Gonz\'alez-Guill\'en--Junge--Nechita
+\cite[Lemma~5.3 and Proposition~5.4]{GJN}; the logarithmic moment
+choice needed here is detailed in Section~\ref{sec:gaussian}.
+The broader connection between free determinants and operator
+capacity was established by Mai--Speicher \cite{MS}.
+Spectral-gap bounds for operator capacity also precede this work;
+see Kwok--Lau--Ramachandran \cite[Theorem~1.8]{KLR}.
+We use an elementary sufficient cut criterion, rather than
+asserting novelty for the general connection between expansion
+and capacity. Balancing determinant maximizers and combining their
+moments with a logarithmic majorant were already used for the
+three-dimensional antisymmetric channel in
+\cite[Lemmas \emph{Balancing at a nonsingular maximum} and
+\emph{Logarithmic moment bound}]{ErikssonAntisymmetric}.
+We restate the balance argument and extend the finite-moment
+comparison to Gaussian coefficient tuples. The resulting examples
+establish sharpness of the unrestricted constant.
+Uniform trace-polynomial approximation on bounded matrix tuples
+is also established background; see
+\cite[Section~3.3, Definition~3.4 and Lemma~3.6]{Jekel}.
+Our use is the concrete finite-word estimate in
+Proposition~\ref{prop:transfer}.
+
+\section{Balance and a uniform determinant upper bound}
+\label{sec:upper}
+
+\begin{lemma}[Balance at a positive maximum]\label{lem:balance}
+If $F_m(A)>0$, every maximizing tuple in \eqref{eq:F} satisfies
+\begin{equation}
+ \sum_iY_i^*Y_i=I_m,\qquad \sum_iY_iY_i^*=I_m. \label{eq:balance}
+\end{equation}
+In particular $\norm{Y_i}_{\op}\leq1$ for each $i$.
+\end{lemma}
+
+\begin{proof}
+Let $Y$ be a maximizer and put $S=\sum_iY_i^*Y_i$.
+If $Sv=0$ for $v\ne0$, then $Y_iv=0$ for every $i$.
+Consequently $L_A(Y)$ has a nonzero kernel, contrary to positivity
+of the maximum. Thus $S>0$. The tuple
+$\widetilde Y_i=Y_iS^{-1/2}$ is feasible, since
+$\sum_i\widetilde Y_i^*\widetilde Y_i=I_m$. Moreover
+\[
+ L_A(\widetilde Y)=L_A(Y)(I_d\otimes S^{-1/2}),
+ \qquad
+ \abs{\det L_A(\widetilde Y)}^{2/(dm)}
+   =\abs{\det L_A(Y)}^{2/(dm)}(\det S)^{-1/m}.
+\]
+Since $\tau_m(S)=1$, the arithmetic--geometric mean inequality
+gives $\det S\leq1$, with equality exactly when $S=I_m$.
+A strict inequality would contradict maximality.
+
+The same argument on the left, with $T=\sum_iY_iY_i^*$ and
+$\widehat Y_i=T^{-1/2}Y_i$, proves $T=I_m$.
+Here $T$ is positive definite because a common left kernel would
+again make $L_A(Y)$ singular. Finally $Y_i^*Y_i\leq I_m$.
+\end{proof}
+
+Let $(c_1,\ldots,c_s)$ be a free standard circular family in a
+tracial $C^*$-probability space $(\mathcal A,\tau)$ with faithful
+trace. Thus $c_i=(x_i+\mathrm i z_i)/\sqrt2$, where the $2s$
+self-adjoint variables $x_i,z_i$ form a free semicircular family
+of variance one. In particular $\norm{c_i}_{\op}=2$ and
+$\tau(c_i^*c_j)=\delta_{ij}$.
+
+\begin{lemma}[Balanced circular evaluation]\label{lem:circular}
+Suppose that $Y_i\in\M_m(\C)$ satisfy \eqref{eq:balance}, and put
+$H=\sum_i c_i\otimes Y_i$. The law of $H^*H$ under
+$\tau\otimes\tau_m$ is
+\begin{equation}
+ d\mu(x)=\frac1{2\pi}\sqrt{\frac{4-x}{x}}\,
+                  \mathbf1_{(0,4)}(x)\,dx, \label{eq:MP}
+\end{equation}
+the Marchenko--Pastur law of parameter one. If
+\[
+ \ell(t)=\int_0^4\log(x+t)\,d\mu(x)\qquad(t>0),
+\]
+then
+\begin{equation}
+ \ell(0):=\int_0^4\log x\,d\mu(x)=-1,\qquad
+ 0\leq\ell(t)+1\leq2\sqrt t. \label{eq:ell}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Hermitize $H$:
+\[
+ \mathsf H=\begin{pmatrix}0&H\\H^*&0\end{pmatrix}.
+\]
+Conditional expectation over the free variables makes $\mathsf H$
+a semicircular element with values in $\M_{2m}(\C)$.
+Its covariance on a block matrix is
+\begin{equation}
+ \eta\begin{pmatrix}U&V\\W&Z\end{pmatrix}
+  =
+ \begin{pmatrix}
+  \sum_iY_iZY_i^*&0\\
+  0&\sum_iY_i^*UY_i
+ \end{pmatrix}. \label{eq:eta}
+\end{equation}
+This also follows directly by expanding the free Wick formula:
+only the pairings $c_i$ with $c_i^*$ and $c_i^*$ with $c_i$
+have nonzero second cumulant. Balance gives $\eta(I_{2m})=I_{2m}$.
+
+For completeness, let $M_k$ be the conditional expectation of
+$\mathsf H^k$. Noncrossing pairings have zero contribution to
+odd moments. Pairing the first letter of an even word with its
+partner gives the recurrence
+\[
+ M_0=I_{2m},\qquad
+ M_{2k}=\sum_{j=0}^{k-1}\eta(M_{2j})M_{2(k-1-j)}.
+\]
+Induction yields $M_{2k}=C_kI_{2m}$, where
+$C_0=1$ and $C_k=\sum_{j=0}^{k-1}C_jC_{k-1-j}$ are the Catalan
+numbers. The lower diagonal block of $\mathsf H^{2k}$ is
+$(H^*H)^k$. Its moments are therefore $C_k$, which are the moments
+of \eqref{eq:MP}. Both laws have compact support, so the moments
+identify the law.
+
+The logarithmic integral can be computed from
+\[
+ \int x^\alpha\,d\mu(x)
+  =\frac{4^\alpha\Gamma(\alpha+\tfrac12)}
+         {\sqrt{\pi}\Gamma(\alpha+2)}
+  =\frac{\Gamma(2\alpha+1)}
+         {\Gamma(\alpha+1)\Gamma(\alpha+2)}
+       \quad(\alpha>-\tfrac12).
+\]
+Differentiating at zero and using
+$\Gamma(u+1)=u\Gamma(u)$ gives $-1$.
+For $t>0$, integration of \eqref{eq:MP} gives
+\[
+ \ell'(t)=\int\frac{d\mu(x)}{x+t}
+     =\frac{\sqrt{1+4/t}-1}{2}\leq t^{-1/2}.
+\]
+Integrating from zero proves \eqref{eq:ell}.
+\end{proof}
+
+A word in $s$ variables and their adjoints has a \emph{length}
+equal to its number of letters. The following finite condition
+is the step that controls every auxiliary dimension at once.
+
+\begin{proposition}[Uniform polynomial transfer]\label{prop:transfer}
+Fix $s\in\N$, $t>0$, and $\zeta>0$. There exist an integer
+$k\geq1$ and a number $a>0$ such that the following implication
+holds for every $d$ and every tuple $A\in\M_d(\C)^s$.
+If $\norm{A_i}_{\op}\leq3$ and
+\begin{equation}
+ \abs{\tau_d(w(A))-\tau(w(c))}\leq a
+       \quad\text{for every word $w$ of length at most $2k$},
+       \label{eq:moment-condition}
+\end{equation}
+then
+\begin{equation}
+ \Finf(A)\leq \exp\bigl(\ell(t)+3\zeta\bigr).
+       \label{eq:transfer}
+\end{equation}
+The parameters $k,a$ do not depend on the amplification dimension.
+\end{proposition}
+
+\begin{proof}
+Choose a real polynomial $p(x)=\sum_{j=0}^k p_jx^j$ such that
+\[
+ \sup_{0\leq x\leq9s^2}\abs{p(x)-\log(x+t)}\leq\zeta,
+\]
+using polynomial approximation of a continuous function on a
+compact interval. Increase $k$ to one if necessary and choose
+$a>0$ with
+\begin{equation}
+ a\sum_{j=1}^k\abs{p_j}s^{2j}\leq\zeta. \label{eq:a}
+\end{equation}
+If the sum is zero, any $a>0$ suffices.
+
+Fix $m$ with $F_m(A)>0$ and choose a maximizing tuple $Y$.
+Lemma~\ref{lem:balance} makes every $Y_i$ a contraction.
+Writing $L=L_A(Y)$ and $H=\sum_i c_i\otimes Y_i$, we have
+$\norm{L}_{\op}\leq3s$ and $\norm{H}_{\op}\leq2s$.
+For each $j\geq1$, expand $(L^*L)^j$ and $(H^*H)^j$.
+There are $s^{2j}$ summands. Each is a coefficient word of length
+$2j$ tensored with a word in $Y_i,Y_i^*$, and
+the absolute normalized trace of the latter word is at most one.
+Consequently \eqref{eq:moment-condition} and \eqref{eq:a} give
+\[
+ \abs{(\tau_d\otimes\tau_m)p(L^*L)
+             -(\tau\otimes\tau_m)p(H^*H)}\leq\zeta.
+\]
+The constant terms agree. Functional calculus and two polynomial
+approximation errors now give
+\begin{align*}
+ \log F_m(A)
+   &=(\tau_d\otimes\tau_m)\log(L^*L)\\
+   &\leq(\tau_d\otimes\tau_m)\log(L^*L+tI)\\
+   &\leq(\tau\otimes\tau_m)\log(H^*H+tI)+3\zeta\\
+   &=\ell(t)+3\zeta,
+\end{align*}
+where Lemma~\ref{lem:circular} applies because $Y$ is balanced.
+If $F_m(A)=0$, the desired upper bound is automatic.
+Taking the supremum over all $m$ proves \eqref{eq:transfer}.
+\end{proof}
+
+\begin{remark}\label{rem:uniform}
+Moment convergence for each fixed $m$ would not, by itself,
+justify an upper bound for $\Finf$. Proposition~\ref{prop:transfer}
+avoids that interchange: a single finite list of scalar moments
+controls every $m$. Also, only the inequality
+$\log x\leq\log(x+t)$ is used. No lower-tail estimate for the
+smallest singular value, or convergence of unregularized
+logarithmic determinants, is required.
+\end{remark}
+
+\section{A dimension-independent capacity criterion}
+\label{sec:capacity}
+
+For a linear map on $\M_d(\C)$, let $\norm{\Phi}_{\hs}$ be its
+operator norm on the Hilbert space with norm $\norm{\,\cdot\,}_2$.
+Using unnormalized Hilbert--Schmidt norms on both sides gives
+the same map norm. Let $\Phi^*$ be the trace adjoint and set
+$\Dep_d(X)=\tau_d(X)I_d$.
+
+\begin{lemma}[Capacity from cut estimates]\label{lem:cuts}
+Let $\Phi:\M_d(\C)\to\M_d(\C)$ be completely positive.
+Suppose $\epsilon,q\geq0$ satisfy
+\begin{equation}
+ \Phi(I_d),\Phi^*(I_d)\geq(1-\epsilon)I_d,\qquad
+ \norm{\Phi-\Dep_d}_{\hs}\leq q,\qquad
+ c:=1-\epsilon-2q\geq\tfrac12. \label{eq:cut-hyp}
+\end{equation}
+Then
+\begin{equation}
+ \capop(\Phi)^{1/d}\geq c. \label{eq:cut-conclusion}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Choose any two orthonormal bases $(u_i)$ and $(v_j)$ of $\C^d$,
+and define a nonnegative matrix
+\[
+ B_{ij}=\langle u_i,\Phi(v_jv_j^*)u_i\rangle.
+\]
+Every row sum and column sum is at least $1-\epsilon$.
+For subsets $S,T\subseteq\{1,\ldots,d\}$ of sizes $a,b$, write
+$B(S,T)=\sum_{i\in S,j\in T}B_{ij}$. Applying the map norm in
+\eqref{eq:cut-hyp} to the projections onto the two coordinate
+subspaces gives
+\begin{equation}
+ \abs{B(S,T)-ab/d}\leq q\sqrt{ab}. \label{eq:mixing}
+\end{equation}
+Indeed the normalized-trace estimate is
+$q\sqrt{a/d}\sqrt{b/d}$, and multiplication by $d$ gives
+\eqref{eq:mixing}.
+
+We claim that $B$ dominates an entrywise nonnegative matrix $Z$
+whose row and column sums are all $c$. The max-flow/min-cut
+criterion \cite{FF} says this is equivalent to
+\begin{equation}
+ B(S,T^c)\geq c(a-b) \quad\text{for all $S,T$}. \label{eq:cuts}
+\end{equation}
+To see the exact orientation, place an edge of capacity $c$
+from a source to each row, an edge of capacity $B_{ij}$ from
+row $i$ to column $j$, and an edge of capacity $c$ from each
+column to the sink. The cut with rows $S$ and columns $T$
+on the source side has capacity
+$c(d-a)+B(S,T^c)+cb$.
+Thus \eqref{eq:cuts} gives a flow of total value $cd$, and
+the row-to-column flows form $Z$.
+
+If $a\leq b$, \eqref{eq:cuts} follows from nonnegativity.
+Suppose $a>b$. There are three cases.
+
+If $a\leq cd$, the row sums and \eqref{eq:mixing} imply
+\[
+ B(S,T^c)\geq(1-\epsilon)a-ab/d-q\sqrt{ab}
+          \geq(1-\epsilon-q)a-ab/d.
+\]
+After subtracting $c(a-b)$, the last expression leaves
+$qa+b(c-a/d)\geq0$.
+
+If $v:=d-b\leq cd$, put $u=d-a<v$ and use the column sums
+over $T^c$, subtracting $B(S^c,T^c)$. This gives
+\[
+ B(S,T^c)\geq(1-\epsilon-q)v-uv/d.
+\]
+The difference from $c(v-u)=c(a-b)$ is
+$qv+u(c-v/d)\geq0$.
+
+In the remaining case $a>cd$ and $v=d-b>cd$, we have
+\[
+ B(S,T^c)\geq av/d-q\sqrt{av}
+        \geq(1-q/c)\,av/d.
+\]
+Here $\sqrt{av}\geq cd$ justifies the second inequality.
+Since $1-c=\epsilon+2q$ and $c\geq1/2$,
+$c(1-c)\geq q$, and hence $1-q/c\geq c$.
+Finally
+$av/d-(a+v-d)=(d-a)(d-v)/d\geq0$.
+This proves \eqref{eq:cuts}.
+
+Write $Z=cW$, where $W$ is doubly stochastic.
+For an arbitrary $X>0$, now choose the $v_j$ to diagonalize
+$X$, with eigenvalues $x_j$, and the $u_i$ to diagonalize
+$\Phi(X)$, with eigenvalues $y_i$.
+The latter matrix is positive definite because
+$\Phi(X)\geq\lambda_{\min}(X)\Phi(I_d)>0$.
+These basis choices are legitimate because all preceding estimates
+hold for every pair of bases. We obtain
+\[
+ y_i=\sum_jB_{ij}x_j\geq c\sum_jW_{ij}x_j.
+\]
+Concavity of the logarithm and the two stochasticity conditions yield
+\[
+ \sum_i\log y_i
+  \geq d\log c+\sum_{i,j}W_{ij}\log x_j
+  =d\log c+\sum_j\log x_j.
+\]
+Taking the infimum in \eqref{eq:capacity} proves the result.
+\end{proof}
+
+\begin{remark}
+The expansion hypothesis in \eqref{eq:cut-hyp} is essential
+to this argument. Approximate unitality and trace preservation
+alone are not being used as a dimension-independent continuity
+principle for capacity. The cut proof supplies the missing control
+over subspaces of every dimension.
+\end{remark}
+
+\begin{remark}[Relation to spectral scaling bounds]
+Theorem~1.8 of \cite{KLR} gives a capacity estimate under the
+assumptions of its Theorem~1.5, including
+$\lambda^2\geq C\epsilon\log d$ in the square case.
+With $s$ fixed in our Gaussian model, the marginal error is of
+order $s^{-1/2}$ as $d\to\infty$; that displayed hypothesis
+does not give the dimension-independent estimate required here.
+Lemma~\ref{lem:cuts} is an elementary sufficient bound tailored
+to this order of limits, not a claim of superiority under the
+different hypotheses of \cite{KLR}.
+\end{remark}
+
+\section{Gaussian coefficients and expansion}
+\label{sec:gaussian}
+
+Fix $s$. For each $d$, let $A_1^{(d)},\ldots,A_s^{(d)}$ be independent
+complex Ginibre matrices: their entries are independent centered
+complex Gaussian variables with
+$\E\abs{(A_i^{(d)})_{ab}}^2=1/d$.
+Set
+\begin{equation}
+ \Psi_d(X)=\frac1s\sum_{i=1}^s A_i^{(d)}X(A_i^{(d)})^*,
+ \qquad
+ P_d(X)=X-\tau_d(X)I_d. \label{eq:Psi}
+\end{equation}
+Throughout this section $s$ is fixed as $d\to\infty$.
+
+\begin{lemma}[Gaussian convergence facts]\label{lem:gaussian-basic}
+For fixed $s$, the following hold almost surely:
+\begin{align}
+ \tau_d(w(A^{(d)}))&\longrightarrow\tau(w(c))
+                      &&\text{for every fixed $*$-word $w$}, \label{eq:g-mom}\\
+ \norm{A_i^{(d)}}_{\op}&\longrightarrow2
+                      &&(1\leq i\leq s), \label{eq:g-norm}\\
+ \norm{\Psi_d(I_d)-I_d}_{\op},
+ \ \norm{\Psi_d^*(I_d)-I_d}_{\op}
+       &\longrightarrow r_s:=\frac2{\sqrt{s}}+\frac1s .
+                      \label{eq:g-margin}
+\end{align}
+\end{lemma}
+
+\begin{proof}
+Write $A_i^{(d)}=(H_i^{(d)}+\mathrm iK_i^{(d)})/\sqrt2$,
+where the $2s$ matrices $H_i^{(d)},K_i^{(d)}$ are independent
+GUE matrices normalized by $\E\tau_d((H_i^{(d)})^2)=1$.
+This representation has exactly the Ginibre entry distribution.
+The moment convergence and strong convergence theorem
+\cite[(1.2) and Theorem~A]{HT} apply to these $2s$ matrices,
+and hence to all fixed $*$-polynomials in the $A_i^{(d)}$.
+They give \eqref{eq:g-mom} and \eqref{eq:g-norm}.
+
+For \eqref{eq:g-margin}, the two limiting polynomials are
+$s^{-1}\sum_i c_ic_i^*-1$ and $s^{-1}\sum_i c_i^*c_i-1$.
+Each positive sum has the free Poisson law of rate $s$, scaled
+by $1/s$. Its support is
+$[(1-s^{-1/2})^2,(1+s^{-1/2})^2]$; the rate is at least one,
+so there is no separated atom at zero. The trace is faithful,
+and the distance of the furthest endpoint from one is $r_s$.
+Strong convergence gives the asserted norms. Equivalently,
+these are the two rectangular Wishart edge limits obtained by
+horizontal and vertical concatenation of the Ginibre blocks.
+\end{proof}
+
+The next statement is a Gaussian estimate, not a claim that the
+maps $\Psi_d$ are channels. In particular no conversion from
+Haar isometries is necessary.
+
+\begin{lemma}[Gaussian restriction estimate]\label{lem:restriction}
+For every fixed $s$ and every $h>8/\sqrt{s}$,
+\begin{equation}
+ \Prob\{\norm{\Psi_dP_d}_{\hs}>h\}\longrightarrow0.
+       \label{eq:restriction}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+We give the parameter substitution and the moment argument.
+Under Hilbert--Schmidt vectorization, $P_d$ is the projection
+$I_{d^2}-\omega_d$, where $\omega_d$ projects onto
+$\operatorname{vec}(I_d)/\sqrt d$. Put
+$U_i=A_i^{(d)}/\sqrt s$, so the entries of $U_i$ have variance
+$(ds)^{-1}$. The superoperator matrix of $\Psi_d$ is, up to
+the vectorization convention,
+$M_d=\sum_iU_i\otimes\overline{U_i}$.
+
+The direct Gaussian statements in
+\cite[Lemma~5.3 and Proposition~5.4]{GJN}, with their
+$n=d$, $k=s$, and aspect ratio $\lambda=1$, give the following.
+If $V_i$ are independent copies of $U_i$ and $p\geq2$ is even, then
+\begin{align}
+ \E\norm{M_d(I-\omega_d)}_{\op}^p
+   &\leq 2^p\,\E\norm{\textstyle\sum_iU_i\otimes V_i}_{\op}^p,
+                                                   \label{eq:decouple}\\
+ \E\norm{\textstyle\sum_iU_i\otimes V_i}_{\op}^p
+   &\leq d^2s^{p/2}
+      \bigl(\E\norm{U_1}_{\op}^p\bigr)^2.             \label{eq:GJN-trace}
+\end{align}
+The second inequality is the trace-moment estimate
+(15) in that proof, followed by
+$\Tr|U_1|^p\leq d\norm{U_1}_{\op}^p$.
+The first uses the Gaussian decoupling factor $2$ only.
+The factor involving $\chi$ in their Proposition~5.2 concerns
+Haar isometries and does not enter \eqref{eq:decouple}.
+
+Gaussian concentration, as used in \cite[(14)]{GJN}, supplies
+the scalar estimate
+\[
+ \bigl(\E\norm{U_1}_{\op}^p\bigr)^{1/p}
+  \leq \frac2{\sqrt{s}}+a_d+K_s\sqrt{p/d},
+       \qquad a_d\longrightarrow0,
+\]
+with $K_s$ independent of $d,p$. We retain the square in the
+resulting bound:
+\begin{equation}
+ \E\norm{M_d(I-\omega_d)}_{\op}^p
+ \leq d^2
+  \left[
+    2\sqrt{s}\left(\frac2{\sqrt{s}}
+                         +a_d+K_s\sqrt{p/d}\right)^2
+  \right]^p.                                      \label{eq:moment-explicit}
+\end{equation}
+For any fixed $a>0$ and the even integer
+$p_d=2\lceil a\log d/2\rceil$, the bracket is
+$8/\sqrt{s}+o(1)$. Terms of order $p_d/d$ tend to zero;
+no estimate uniform for arbitrarily large $p/d$ is asserted.
+
+Choose $b$ strictly between $8/\sqrt{s}$ and $h$.
+For all sufficiently large $d$, Markov's inequality gives
+\[
+ \Prob\{\norm{M_d(I-\omega_d)}_{\op}>h\}
+ \leq d^2(b/h)^{p_d}.
+\]
+Taking $a>3/\log(h/b)$ makes the right-hand side tend to zero.
+Vectorization preserves the relevant operator norm, proving
+\eqref{eq:restriction}.
+\end{proof}
+
+\begin{remark}
+The factor $d^2$ in \eqref{eq:moment-explicit} is the reason
+for choosing a logarithmic moment order. A fixed moment bound
+would not establish \eqref{eq:restriction}.
+\end{remark}
+
+\begin{proposition}[Capacity of the Gaussian family]\label{prop:randomcap}
+For every fixed $s\geq4096$,
+\begin{equation}
+ \Prob\left\{
+  \capop(\Psi_d)^{1/d}\geq1-\frac{23}{\sqrt{s}}
+       \right\}\longrightarrow1. \label{eq:randomcap}
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Lemmas~\ref{lem:gaussian-basic} and \ref{lem:restriction} imply,
+with probability tending to one,
+\[
+ \norm{\Psi_d(I_d)-I_d}_{\op},
+ \norm{\Psi_d^*(I_d)-I_d}_{\op}\leq\frac3{\sqrt{s}},
+ \qquad
+ \norm{\Psi_dP_d}_{\hs}\leq\frac9{\sqrt{s}}.
+\]
+For $X=\alpha I_d+X_0$, where $\tau_d(X_0)=0$, the domain
+decomposition is orthogonal and
+$\norm{X}_2^2=\abs{\alpha}^2+\norm{X_0}_2^2$. Therefore
+\begin{align}
+ \norm{(\Psi_d-\Dep_d)(X)}_2
+  &\leq\frac3{\sqrt{s}}\abs{\alpha}
+                 +\frac9{\sqrt{s}}\norm{X_0}_2 \notag\\
+  &\leq\frac{\sqrt{90}}{\sqrt{s}}\norm{X}_2
+   <\frac{10}{\sqrt{s}}\norm{X}_2. \label{eq:orthogonal-domain}
+\end{align}
+The last step is scalar Cauchy--Schwarz; it does not require
+the two images to be orthogonal.
+Apply Lemma~\ref{lem:cuts} with
+$\epsilon=3/\sqrt{s}$, $q=10/\sqrt{s}$, and
+$c=1-23/\sqrt{s}\geq1/2$.
+\end{proof}
+
+\section{Exact Gram normalization and the proof of sharpness}
+\label{sec:normalization}
+
+\begin{lemma}[Stability under Gram normalization]\label{lem:whitening}
+For fixed $s$, let $A^{(d)}$ be the Gaussian family above and define
+\begin{equation}
+ G_d=\bigl(\tau_d((A_i^{(d)})^*A_j^{(d)})\bigr)_{i,j=1}^s,
+ \qquad
+ B_j^{(d)}=\sum_{i=1}^s A_i^{(d)}(G_d^{-1/2})_{ij}
+                                                        \label{eq:whitening}
+\end{equation}
+whenever $G_d>0$. Then $G(B^{(d)})=I_s$.
+The probability that $G_d>0$ tends to one, and
+\begin{equation}
+ \max_j\norm{B_j^{(d)}-A_j^{(d)}}_{\op}\longrightarrow0
+ \quad\text{almost surely}.                              \label{eq:close}
+\end{equation}
+The moment limits \eqref{eq:g-mom} and norm limits
+\eqref{eq:g-norm} hold with $B^{(d)}$ in place of $A^{(d)}$.
+Moreover, for $s\geq4096$ fixed, the maps
+\[
+ \widetilde\Psi_d(X)=s^{-1}\sum_iB_i^{(d)}X(B_i^{(d)})^*
+\]
+satisfy, with probability tending to one,
+\begin{align}
+ \norm{\widetilde\Psi_d(I_d)-I_d}_{\op},
+ \norm{\widetilde\Psi_d^*(I_d)-I_d}_{\op}
+       &\leq3/\sqrt{s}, \label{eq:white-margins}\\
+ \norm{\widetilde\Psi_dP_d}_{\hs}
+       &\leq9/\sqrt{s}. \label{eq:white-restrict}
+\end{align}
+\end{lemma}
+
+\begin{proof}
+By \eqref{eq:g-mom}, $G_d\to I_s$ almost surely. Since $s$
+is fixed, $G_d$ is eventually positive definite and
+$T_d:=G_d^{-1/2}\to I_s$ in every matrix norm. The orientation
+of the coefficient indices in \eqref{eq:whitening} gives
+$G(B^{(d)})=T_d^*G_dT_d=I_s$.
+The boundedness of the $\norm{A_i^{(d)}}_{\op}$ and the finite
+sum
+\[
+ B_j^{(d)}-A_j^{(d)}
+  =\sum_i A_i^{(d)}(T_d-I_s)_{ij}
+\]
+give \eqref{eq:close}. Telescoping each fixed word shows
+that its normalized trace changes by $o(1)$; norms likewise
+change by $o(1)$.
+
+Put
+\[
+ \delta_d=\frac1s\sum_i
+   \bigl(\norm{B_i^{(d)}}_{\op}+\norm{A_i^{(d)}}_{\op}\bigr)
+           \norm{B_i^{(d)}-A_i^{(d)}}_{\op}.
+\]
+Then $\delta_d\to0$ almost surely, and expanding the difference
+of the two quadratic expressions gives
+\begin{align*}
+ \norm{\widetilde\Psi_d-\Psi_d}_{\hs}&\leq\delta_d,\\
+ \norm{\widetilde\Psi_d(I_d)-\Psi_d(I_d)}_{\op}&\leq\delta_d,\\
+ \norm{\widetilde\Psi_d^*(I_d)-\Psi_d^*(I_d)}_{\op}&\leq\delta_d.
+\end{align*}
+For $s\geq4096$, $r_s<(5/2)/\sqrt{s}$.
+Thus \eqref{eq:g-margin} and Lemma~\ref{lem:restriction}
+give, with probability tending to one, marginal errors at most
+$(5/2)/\sqrt{s}$ and a restriction norm at most
+$(17/2)/\sqrt{s}$ for $\Psi_d$.
+Intersect this event with $\delta_d\leq1/(2\sqrt{s})$.
+The last three inequalities imply
+\eqref{eq:white-margins}--\eqref{eq:white-restrict}.
+These strict preliminary margins justify using the same final
+constants after Gram normalization.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Fix $s\geq4096$ and $\theta>0$. Choose $t,\zeta>0$ such that
+$2\sqrt t+3\zeta\leq\theta$, and let $k,a$ be as in
+Proposition~\ref{prop:transfer}. Lemma~\ref{lem:whitening}
+shows that, with probability tending to one, the tuple
+$B^{(d)}$ is defined, has exactly identity Gram matrix,
+has coefficient norms at most three, and satisfies
+\eqref{eq:moment-condition}. Hence
+\[
+ \Finf(B^{(d)})
+ \leq\exp(\ell(t)+3\zeta)
+ \leq\exp(-1+\theta).
+\]
+On another event with probability tending to one, the two
+estimates \eqref{eq:white-margins}--\eqref{eq:white-restrict}
+hold. The argument \eqref{eq:orthogonal-domain} and
+Lemma~\ref{lem:cuts} then give
+\[
+ \capop(\widetilde\Psi_d)^{1/d}
+       \geq1-\frac{23}{\sqrt{s}}.
+\]
+Since $\widetilde\Psi_d=\Phi_{B^{(d)},I_s/s}$, its covariance
+is admissible in \eqref{eq:C}. This proves the desired lower
+bound for $\calC(B^{(d)})$.
+
+For the upper bound, identity Gram gives, for every admissible $Q$,
+\[
+ \tau_d(\Phi_{B^{(d)},Q}(I_d))
+   =\sum_{i,j}Q_{ij}\tau_d(B_i^{(d)}(B_j^{(d)})^*)
+   =\Tr Q=1.
+\]
+Evaluating capacity at $X=I_d$ and using the
+arithmetic--geometric mean inequality therefore gives
+$\capop(\Phi_{B^{(d)},Q})^{1/d}\leq1$.
+Taking the maximum over $Q$ yields $\calC(B^{(d)})\leq1$.
+
+The positive-value condition also holds. Almost surely
+$A_1^{(d)}$ is invertible. An invertible change of coefficient
+coordinates preserves their linear span, so some scalar
+combination of the $B_i^{(d)}$ is invertible. Normalizing its
+scalar coefficient vector shows $F_1(B^{(d)})>0$.
+
+For all sufficiently large $d$, the intersection of the required
+events has positive probability. Select a realization in that
+intersection to obtain \eqref{eq:main}.
+Finally let $s\to\infty$ and $\theta\downarrow0$ along a sequence.
+The capacities tend to one, and \eqref{eq:previous} together with
+the determinant upper bound gives $\Finf(B)\to e^{-1}$.
+\end{proof}
+
+\begin{proposition}[No asymptotic gain from amplification at fixed $s$]
+\label{prop:fixed-s}
+For every fixed $s\geq1$, the Gaussian family satisfies
+\[
+ F_1(A^{(d)})\longrightarrow e^{-1},
+ \qquad \Finf(A^{(d)})\longrightarrow e^{-1}
+ \quad\text{in probability as }d\to\infty.
+\]
+The same statements hold for the Gram-normalized tuples $B^{(d)}$.
+Consequently $\Finf/F_1\to1$ in probability for both families.
+This statement does not require the capacity comparison
+\eqref{eq:previous}.
+\end{proposition}
+
+\begin{proof}
+Lemmas~\ref{lem:gaussian-basic} and \ref{lem:whitening}, together
+with Proposition~\ref{prop:transfer} and \eqref{eq:ell}, already give
+the upper bound in probability for every fixed $s$.
+For a matching scalar lower bound, use
+\[
+ F_1(A^{(d)})\geq \abs{\det A_1^{(d)}}^{2/d}.
+\]
+We recall the elementary complex Gaussian determinant calculation
+underlying the complex Wishart formula of Goodman \cite{Goodman}.
+Apply Gram--Schmidt to the independent columns of
+$\sqrt d\,A_1^{(d)}$. Conditional on the preceding columns,
+the squared norm of the orthogonal residual is a sum of
+$r$ independent unit-mean exponential variables, where
+$r=d,d-1,\ldots,1$. Its conditional distribution does not
+depend on the preceding columns. The residual squared norms
+are therefore independent, and
+\[
+ \abs{\det A_1^{(d)}}^2
+   \ \stackrel{\mathrm{law}}{=}\ d^{-d}\prod_{r=1}^d Z_r,
+ \qquad Z_r\ \text{independent with law }\operatorname{Gamma}(r,1).
+\]
+Differentiating
+$\E Z_r^u=\Gamma(r+u)/\Gamma(r)$ at zero gives
+$\E\log Z_r=\psi(r)=H_{r-1}-\gamma_{\!E}$ and
+$\operatorname{Var}(\log Z_r)=\psi_1(r)=\sum_{k=r}^{\infty}k^{-2}$.
+Here $H_d=\sum_{k=1}^d k^{-1}$, $H_0=0$, and $\gamma_{\!E}$
+is Euler's constant. Hence, for
+$W_d=d^{-1}\log\abs{\det A_1^{(d)}}^2$,
+\begin{align*}
+ \E W_d&=H_d-1-\gamma_{\!E}-\log d\longrightarrow-1,\\
+ \operatorname{Var}(W_d)
+   &=\frac1{d^2}
+       \left(H_d+d\sum_{k>d}k^{-2}\right)
+     \leq\frac{H_d+1}{d^2}\longrightarrow0.
+\end{align*}
+Thus $\abs{\det A_1^{(d)}}^{2/d}\to e^{-1}$ in probability.
+
+For the normalized tuple let $z=G_d^{1/2}e_1$.
+The coefficient convention \eqref{eq:whitening} gives
+$\sum_jB_j^{(d)}z_j=A_1^{(d)}$ and
+$\norm{z}_{\ell^2}^2=(G_d)_{11}\to1$. Normalizing this scalar
+coefficient vector proves
+\[
+ F_1(B^{(d)})
+  \geq\frac{\abs{\det A_1^{(d)}}^{2/d}}{(G_d)_{11}}.
+\]
+The common upper bound, these lower bounds, and
+$F_1\leq\Finf$ prove all claims, including the ratio limit.
+On the event that $G_d$ is singular, define $B^{(d)}$
+arbitrarily; the probability of this event tends to zero.
+\end{proof}
+
+\section{Scope of the construction}
+
+The order of choices is part of the proof. For prescribed accuracy
+one first fixes a sufficiently large, finite number $s$ of
+coefficients, fixes the logarithmic regularization and its polynomial
+approximation, and only then increases $d$. The auxiliary size $m$
+is unrestricted throughout. After selecting a finite tuple one may
+increase $s$ to improve the ratio. No convergence estimate uniform
+in a simultaneously growing $s$ and $d$ is needed.
+
+The result settles the unrestricted comparison constant, including
+the identity-Gram class. It does not assert that a finite tuple
+attains the ratio $e$, that the number of coefficients can be held
+at a prescribed small value while approaching $e$, or that the
+tuples have Hermitian coefficients. Gram normalization gives
+$\calC\leq1$ and capacities converging to one, rather than an
+identity proving $\calC=1$ for each tuple. The argument is an
+existence construction; it provides neither small explicit matrices
+nor a quantitative dimension bound in terms of the desired error.
+
+The free value $e^{-1}$ alone would not establish sharpness:
+larger matrix amplifications could in principle improve it.
+The balance lemma and uniform finite-moment transfer rule out that
+improvement for these tuples. Conversely, the near-balanced Gaussian
+marginals alone would not provide the required capacity estimate.
+The restriction bound and cut argument supply that independent step.
+
+\paragraph{Development note.}
+This draft was developed with AI assistance, including mathematical
+checks using reused context. Such checks are not independent peer
+review. The cited primary results are external inputs; no claim of
+an exhaustive priority search or historical precedence is made here.
+
+\begin{thebibliography}{9}
+
+\bibitem{ErikssonUniversal}
+L.~Eriksson,
+\emph{A universal capacity bound for amplified determinants and
+polynomial witnesses in the Hermitian case},
+AIRR, ARR-2026-1DGGW5KX2M9R4VJT, version~1 (2026).
+\url{https://airr.science/papers/ARR-2026-1DGGW5KX2M9R4VJT/versions/v1/}.
+
+\bibitem{ErikssonAntisymmetric}
+L.~Eriksson,
+\emph{Sharp determinant bounds for amplified antisymmetric channels
+and a noise law for noncommutative rank},
+AIRR, ARR-2026-6FWR12DH3F8QBA5C, version~1 (2026).
+\url{https://airr.science/papers/ARR-2026-6FWR12DH3F8QBA5C/versions/v1/}.
+
+\bibitem{FF}
+L.~R.~Ford, Jr. and D.~R.~Fulkerson,
+Maximal flow through a network,
+\emph{Canadian Journal of Mathematics} \textbf{8} (1956), 399--404.
+\href{https://doi.org/10.4153/CJM-1956-045-5}
+     {doi:10.4153/CJM-1956-045-5}.
+
+\bibitem{GJN}
+C.~E.~Gonz\'alez-Guill\'en, M.~Junge, and I.~Nechita,
+\emph{On the spectral gap of random quantum channels},
+arXiv:1811.08847 (2018), Section~5, Lemma~5.3 and
+Proposition~5.4, especially (14)--(15).
+\url{https://arxiv.org/abs/1811.08847}.
+
+\bibitem{Goodman}
+N.~R.~Goodman,
+The distribution of the determinant of a complex Wishart
+distributed matrix,
+\emph{Annals of Mathematical Statistics} \textbf{34} (1963), 178--180.
+\href{https://doi.org/10.1214/aoms/1177704251}
+     {doi:10.1214/aoms/1177704251}.
+
+\bibitem{HT}
+U.~Haagerup and S.~Thorbj{\o}rnsen,
+A new application of random matrices:
+$\operatorname{Ext}(C^*_{\mathrm{red}}(F_2))$ is not a group,
+\emph{Annals of Mathematics} \textbf{162} (2005), 711--775.
+\href{https://doi.org/10.4007/annals.2005.162.711}
+     {doi:10.4007/annals.2005.162.711}.
+Theorem~A and equation~(1.2).
+
+\bibitem{Jekel}
+D.~Jekel,
+Conditional expectation, entropy, and transport for convex Gibbs
+laws in free probability,
+\emph{International Mathematics Research Notices}
+\textbf{2022} (2022), no.~6, 4514--4619.
+\href{https://doi.org/10.1093/imrn/rnaa181}
+     {doi:10.1093/imrn/rnaa181}.
+Section~3.3.
+
+\bibitem{KLR}
+T.~C.~Kwok, L.~C.~Lau, and A.~Ramachandran,
+Spectral analysis of matrix scaling and operator scaling,
+\emph{SIAM Journal on Computing} \textbf{50} (2021), 1034--1102.
+\href{https://doi.org/10.1137/20M1315981}
+     {doi:10.1137/20M1315981}.
+Theorems~1.5 and~1.8; arXiv:1904.03213.
+
+\bibitem{MS}
+T.~Mai and R.~Speicher,
+\emph{Fuglede--Kadison determinants of matrix-valued
+semicircular elements and capacity estimates},
+arXiv:2406.15922 (2024).
+\url{https://arxiv.org/abs/2406.15922}.
+
+\end{thebibliography}
+\end{document}

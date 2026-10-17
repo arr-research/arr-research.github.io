@@ -1,0 +1,743 @@
+# Sharpness of the universal capacity bound for amplified determinants
+
+Extracted text; equations are authoritative in paper.pdf.
+
+Sharpness of the universal capacity bound
+for ampliﬁed determinants
+Lluis Eriksson
+Independent researcher, Sweden
+17 October 2026
+Research draft
+Abstract
+For a ﬁnite tuple of square complex matrices, let F∞ be the supremum of the nor-
+malized determinant over all matrix ampliﬁcations and Hilbert–Schmidt unit coeﬃcient
+tuples, and let C be the maximum operator capacity over coeﬃcient covariances of trace
+one. The previously established comparison C/e ≤ F∞ ≤ C has the optimal univer-
+sal constant: we construct ﬁnite tuples with C/F∞ arbitrarily close to e. The tuples
+may have exactly identity Hilbert–Schmidt Gram matrix; their capacities tend to one
+and their ampliﬁed determinant values tend to e−1. The construction uses independent
+complex Gaussian coeﬃcients with a ﬁxed number of coeﬃcients before the matrix dimen-
+sion tends to inﬁnity. A balance property of determinant maximizers makes polynomial
+moment comparison uniform over every ampliﬁcation. A separate cut criterion turns
+Gaussian expansion estimates into a dimension-independent capacity lower bound. For
+each ﬁxed number of Gaussian coeﬃcients, scalar and arbitrarily ampliﬁed optima both
+converge in probability to e−1.
+1 Deﬁnitions and statement
+Write τd = d−1 Tr on Md(C) and ∥X∥2 = τd(X∗X)1/2. Operator norms are denoted by
+∥ · ∥op. For a tuple A= ( A1,...,A s) ∈ Md(C)s, put
+LA(Y) =
+s∑
+i=1
+Ai ⊗ Yi, (1)
+Fm(A) = max
+Yi∈Mm(C)∑
+i τm(Y ∗
+i Yi)=1
+|det LA(Y)|2/(dm) , F∞(A) = sup
+m≥1
+Fm(A). (2)
+The maximum in Fm exists by compactness. Singular evaluations contribute zero.
+For a completely positive map Φ : Md(C) → Md(C), deﬁne
+cap(Φ) = inf
+X>0
+det Φ(X)
+det X = inf
+X>0
+det X=1
+det Φ(X). (3)
+For Q∈ Ms(C) positive semideﬁnite with TrQ= 1 , let
+ΦA,Q(X) =
+s∑
+i,j=1
+QijAiXA∗
+j , C(A) = max
+Q≥0
+TrQ=1
+cap(ΦA,Q)1/d. (4)
+1
+
+The convention in ( 4) makes ΦA,Q completely positive. The maximum exists: capacity is
+an inﬁmum of continuous functions of Q, hence is upper semicontinuous on the compact
+covariance set. The Gram matrix is
+G(A)ij = τd(A∗
+i Aj). (5)
+The universal comparison proved in [ 1, Theorem Universal comparison ] is
+e−1C(A) ≤ F∞(A) ≤ C (A) (6)
+for arbitrary ﬁnite square complex tuples. Our construction below does not use either inequal-
+ity to bound its examples. We import ( 6) only when identifying the optimal universal con-
+stant and, consequently, the limits of the constructed values. The cited item is the published
+version ARR-2026-1DGGW5KX2M9R4VJT v1, not its earlier Hermitian-only predecessor.
+Theorem 1.For every integer s≥ 4096 and every θ> 0, there exist d∈ N and B ∈ Md(C)s
+such that
+G(B) = Is, 1 − 23√s ≤ C (B) ≤ 1, 0 <F∞(B) ≤ exp(−1 + θ). (7)
+In particular there is a sequence of ﬁnite tuples with identity Gram matrix for which C(B) → 1
+and F∞(B) → e−1.
+Corollary 2. The optimal universal comparison constant is e:
+inf
+d,s≥1, A ∈Md(C)s
+C(A)>0
+F∞(A)
+C(A) = 1
+e. (8)
+The same inﬁmum is obtained after imposing G(A) = Is. Thus F∞(A) ≥ C (A)/2 is false in
+general.
+Proof of the corollary from Theorem 1. The lower bound for the inﬁmum is ( 6). The theo-
+rem gives
+F∞(B)
+C(B) ≤ e−1+θ
+1 − 23/√s.
+First choose s large, and then choose θ small. For example, s = 65536 and θ = 1 /20 give
+C(B)/F∞(B) ≥ (233/256)e19/20 >2. This speciﬁes parameters of an existence construction,
+rather than an explicit small matrix tuple.
+The inputs from random matrix theory are standard. Gaussian convergence is used in
+the form of Haagerup–Thorbjørnsen [ 6, Theorem A and (1.2)]. The Gaussian superopera-
+tor estimate is the square specialization of González-Guillén–Junge–Nechita [ 4, Lemma 5.3
+and Proposition 5.4]; the logarithmic moment choice needed here is detailed in Section 4.
+The broader connection between free determinants and operator capacity was established
+by Mai–Speicher [ 9]. Spectral-gap bounds for operator capacity also precede this work; see
+Kwok–Lau–Ramachandran [ 8, Theorem 1.8]. We use an elementary suﬃcient cut criterion,
+rather than asserting novelty for the general connection between expansion and capacity. Bal-
+ancing determinant maximizers and combining their moments with a logarithmic majorant
+were already used for the three-dimensional antisymmetric channel in [ 2, Lemmas Balanc-
+ing at a nonsingular maximum and Logarithmic moment bound ]. We restate the balance
+argument and extend the ﬁnite-moment comparison to Gaussian coeﬃcient tuples. The re-
+sulting examples establish sharpness of the unrestricted constant. Uniform trace-polynomial
+approximation on bounded matrix tuples is also established background; see [ 7, Section 3.3,
+Deﬁnition 3.4 and Lemma 3.6]. Our use is the concrete ﬁnite-word estimate in Proposition 5.
+2
+
+2 Balance and a uniform determinant upper bound
+Lemma 3 (Balance at a positive maximum) . If Fm(A) >0, every maximizing tuple in (2)
+satisﬁes ∑
+i
+Y∗
+i Yi = Im,
+∑
+i
+YiY∗
+i = Im. (9)
+In particular ∥Yi∥op ≤ 1 for each i.
+Proof. Let Y be a maximizer and put S = ∑
+i Y∗
+i Yi. If Sv = 0 for v ̸= 0 , then Yiv = 0 for
+every i. Consequently LA(Y) has a nonzero kernel, contrary to positivity of the maximum.
+Thus S >0. The tuple ˜Yi = YiS−1/2 is feasible, since ∑
+i ˜Y∗
+i ˜Yi = Im. Moreover
+LA( ˜Y) = LA(Y)(Id ⊗ S−1/2),
+⏐⏐⏐det LA( ˜Y)
+⏐⏐⏐
+2/(dm)
+= |det LA(Y)|2/(dm) (det S)−1/m.
+Since τm(S) = 1 , the arithmetic–geometric mean inequality gives det S ≤ 1, with equality
+exactly when S = Im. A strict inequality would contradict maximality.
+The same argument on the left, with T = ∑
+i YiY∗
+i and ˆYi = T−1/2Yi, proves T = Im.
+Here T is positive deﬁnite because a common left kernel would again make LA(Y) singular.
+Finally Y∗
+i Yi ≤ Im.
+Let (c1,...,c s) be a free standard circular family in a tracial C∗-probability space (A,τ)
+with faithful trace. Thus ci = ( xi + izi)/
+√
+2, where the 2s self-adjoint variables xi,zi form a
+free semicircular family of variance one. In particular ∥ci∥op = 2 and τ(c∗
+i cj) = δij.
+Lemma 4 (Balanced circular evaluation) . Suppose that Yi ∈ Mm(C) satisfy (9), and put
+H = ∑
+i ci ⊗ Yi. The law of H∗H under τ ⊗ τm is
+dµ(x) = 1
+2π
+√
+4 − x
+x 1(0,4)(x) dx, (10)
+the Marchenko–Pastur law of parameter one. If
+ℓ(t) =
+∫4
+0
+log(x+ t) dµ(x) ( t> 0),
+then
+ℓ(0) :=
+∫4
+0
+log xdµ(x) = −1, 0 ≤ ℓ(t) + 1 ≤ 2
+√
+t. (11)
+Proof. Hermitize H:
+H =
+(
+0 H
+H∗ 0
+)
+.
+Conditional expectation over the free variables makes H a semicircular element with values
+in M2m(C). Its covariance on a block matrix is
+η
+(
+U V
+W Z
+)
+=
+( ∑
+i YiZY∗
+i 0
+0 ∑
+i Y∗
+i UYi
+)
+. (12)
+This also follows directly by expanding the free Wick formula: only the pairings ci with c∗
+i
+and c∗
+i with ci have nonzero second cumulant. Balance gives η(I2m) = I2m.
+For completeness, let Mk be the conditional expectation of Hk. Noncrossing pairings
+have zero contribution to odd moments. Pairing the ﬁrst letter of an even word with its
+partner gives the recurrence
+M0 = I2m, M 2k =
+k−1∑
+j=0
+η(M2j)M2(k−1−j).
+3
+
+Induction yields M2k = CkI2m, where C0 = 1 and Ck = ∑k−1
+j=0 CjCk−1−j are the Catalan
+numbers. The lower diagonal block of H2k is (H∗H)k. Its moments are therefore Ck, which
+are the moments of ( 10). Both laws have compact support, so the moments identify the law.
+The logarithmic integral can be computed from
+∫
+xα dµ(x) = 4αΓ(α+ 1
+2 )√πΓ(α+ 2) = Γ(2α+ 1)
+Γ(α+ 1)Γ(α+ 2) (α> −1
+2 ).
+Diﬀerentiating at zero and using Γ(u+ 1) = uΓ(u) gives −1. For t >0, integration of ( 10)
+gives
+ℓ′(t) =
+∫ dµ(x)
+x+ t =
+√
+1 + 4 /t− 1
+2 ≤ t−1/2.
+Integrating from zero proves ( 11).
+A word in svariables and their adjoints has a length equal to its number of letters. The
+following ﬁnite condition is the step that controls every auxiliary dimension at once.
+Proposition 5(Uniform polynomial transfer) . Fix s∈ N, t> 0, and ζ >0. There exist an
+integer k ≥ 1 and a number a> 0 such that the following implication holds for every d and
+every tuple A∈ Md(C)s. If ∥Ai∥op ≤ 3 and
+|τd(w(A)) − τ(w(c))| ≤ a for every word w of length at most 2k, (13)
+then
+F∞(A) ≤ exp
+(
+ℓ(t) + 3 ζ
+)
+. (14)
+The parameters k,a do not depend on the ampliﬁcation dimension.
+Proof. Choose a real polynomial p(x) = ∑k
+j=0 pjxj such that
+sup
+0≤x≤9s2
+|p(x) − log(x+ t)| ≤ ζ,
+using polynomial approximation of a continuous function on a compact interval. Increase k
+to one if necessary and choose a> 0 with
+a
+k∑
+j=1
+|pj| s2j ≤ ζ. (15)
+If the sum is zero, any a> 0 suﬃces.
+Fix m with Fm(A) > 0 and choose a maximizing tuple Y. Lemma 3 makes every Yi a
+contraction. Writing L= LA(Y) and H = ∑
+i ci ⊗ Yi, we have ∥L∥op ≤ 3s and ∥H∥op ≤ 2s.
+For each j ≥ 1, expand (L∗L)j and (H∗H)j. There are s2j summands. Each is a coeﬃcient
+word of length 2j tensored with a word in Yi,Y ∗
+i , and the absolute normalized trace of the
+latter word is at most one. Consequently ( 13) and ( 15) give
+|(τd ⊗ τm)p(L∗L) − (τ ⊗ τm)p(H∗H)| ≤ ζ.
+The constant terms agree. Functional calculus and two polynomial approximation errors
+now give
+log Fm(A) = ( τd ⊗ τm) log(L∗L)
+≤ (τd ⊗ τm) log(L∗L+ tI)
+≤ (τ ⊗ τm) log(H∗H+ tI) + 3 ζ
+= ℓ(t) + 3 ζ,
+where Lemma 4 applies because Y is balanced. If Fm(A) = 0 , the desired upper bound is
+automatic. Taking the supremum over all m proves ( 14).
+4
+
+Remark 6. Moment convergence for each ﬁxed mwould not, by itself, justify an upper bound
+for F∞. Proposition 5 avoids that interchange: a single ﬁnite list of scalar moments controls
+every m. Also, only the inequality log x ≤ log(x+ t) is used. No lower-tail estimate for
+the smallest singular value, or convergence of unregularized logarithmic determinants, is
+required.
+3 A dimension-independent capacity criterion
+For a linear map on Md(C), let ∥Φ∥2→2 be its operator norm on the Hilbert space with norm
+∥ · ∥2. Using unnormalized Hilbert–Schmidt norms on both sides gives the same map norm.
+Let Φ∗ be the trace adjoint and set Dd(X) = τd(X)Id.
+Lemma 7 (Capacity from cut estimates) . Let Φ : Md(C) → Md(C) be completely positive.
+Suppose ϵ,q ≥ 0 satisfy
+Φ(Id),Φ∗(Id) ≥ (1 − ϵ)Id, ∥Φ − Dd∥2→2 ≤ q, c := 1 − ϵ− 2q≥ 1
+2 . (16)
+Then
+cap(Φ)1/d ≥ c. (17)
+Proof. Choose any two orthonormal bases (ui) and (vj) of Cd, and deﬁne a nonnegative
+matrix
+Bij = ⟨ui,Φ(vjv∗
+j )ui⟩.
+Every row sum and column sum is at least 1 − ϵ. For subsets S,T ⊆ {1,...,d } of sizes a,b,
+write B(S,T) = ∑
+i∈S,j∈T Bij. Applying the map norm in ( 16) to the projections onto the
+two coordinate subspaces gives
+|B(S,T) − ab/d| ≤ q
+√
+ab. (18)
+Indeed the normalized-trace estimate is q
+√
+a/d
+√
+b/d, and multiplication by d gives ( 18).
+We claim that B dominates an entrywise nonnegative matrix Z whose row and column
+sums are all c. The max-ﬂow/min-cut criterion [ 3] says this is equivalent to
+B(S,Tc) ≥ c(a− b) for all S,T. (19)
+To see the exact orientation, place an edge of capacity cfrom a source to each row, an edge of
+capacity Bij from row ito column j, and an edge of capacity cfrom each column to the sink.
+The cut with rows S and columns T on the source side has capacity c(d− a) + B(S,Tc) + cb.
+Thus ( 19) gives a ﬂow of total value cd, and the row-to-column ﬂows form Z.
+If a≤ b, ( 19) follows from nonnegativity. Suppose a>b . There are three cases.
+If a≤ cd, the row sums and ( 18) imply
+B(S,Tc) ≥ (1 − ϵ)a− ab/d− q
+√
+ab≥ (1 − ϵ− q)a− ab/d.
+After subtracting c(a− b), the last expression leaves qa+ b(c− a/d) ≥ 0.
+If v := d− b ≤ cd, put u = d− a < vand use the column sums over Tc, subtracting
+B(Sc,Tc). This gives
+B(S,Tc) ≥ (1 − ϵ− q)v− uv/d.
+The diﬀerence from c(v− u) = c(a− b) is qv+ u(c− v/d) ≥ 0.
+In the remaining case a>cd and v= d− b>cd , we have
+B(S,Tc) ≥ av/d− q√av≥ (1 − q/c) av/d.
+5
+
+Here √av≥ cdjustiﬁes the second inequality. Since 1 − c= ϵ+ 2q and c≥ 1/2, c(1 − c) ≥ q,
+and hence 1 − q/c≥ c. Finally av/d− (a+ v− d) = ( d− a)(d− v)/d≥ 0. This proves ( 19).
+Write Z = cW, where W is doubly stochastic. For an arbitrary X >0, now choose the
+vj to diagonalize X, with eigenvalues xj, and the ui to diagonalize Φ(X), with eigenvalues
+yi. The latter matrix is positive deﬁnite because Φ(X) ≥ λmin(X)Φ(Id) > 0. These basis
+choices are legitimate because all preceding estimates hold for every pair of bases. We obtain
+yi =
+∑
+j
+Bijxj ≥ c
+∑
+j
+Wijxj.
+Concavity of the logarithm and the two stochasticity conditions yield
+∑
+i
+log yi ≥ dlog c+
+∑
+i,j
+Wij log xj = dlog c+
+∑
+j
+log xj.
+Taking the inﬁmum in ( 3) proves the result.
+Remark 8. The expansion hypothesis in ( 16) is essential to this argument. Approximate uni-
+tality and trace preservation alone are not being used as a dimension-independent continuity
+principle for capacity. The cut proof supplies the missing control over subspaces of every
+dimension.
+Remark 9 (Relation to spectral scaling bounds) . Theorem 1.8 of [ 8] gives a capacity estimate
+under the assumptions of its Theorem 1.5, including λ2 ≥ Cϵlog d in the square case. With
+sﬁxed in our Gaussian model, the marginal error is of order s−1/2 as d→ ∞; that displayed
+hypothesis does not give the dimension-independent estimate required here. Lemma 7 is an
+elementary suﬃcient bound tailored to this order of limits, not a claim of superiority under
+the diﬀerent hypotheses of [ 8].
+4 Gaussian coeﬃcients and expansion
+Fix s. For each d, let A(d)
+1 ,...,A (d)
+s be independent complex Ginibre matrices: their entries
+are independent centered complex Gaussian variables with E
+⏐⏐⏐(A(d)
+i )ab
+⏐⏐⏐
+2
+= 1 /d. Set
+Ψd(X) = 1
+s
+s∑
+i=1
+A(d)
+i X(A(d)
+i )∗, P d(X) = X− τd(X)Id. (20)
+Throughout this section s is ﬁxed as d→ ∞.
+Lemma 10 (Gaussian convergence facts) . For ﬁxed s, the following hold almost surely:
+τd(w(A(d))) − →τ(w(c)) for every ﬁxed ∗-word w, (21)
+A(d)
+i
+
+op
+− →2 (1 ≤ i≤ s), (22)
+∥Ψd(Id) − Id∥op , ∥Ψ∗
+d(Id) − Id∥op − →rs := 2√s + 1
+s. (23)
+Proof. Write A(d)
+i = ( H(d)
+i + i K(d)
+i )/
+√
+2, where the 2s matrices H(d)
+i ,K(d)
+i are independent
+GUE matrices normalized by Eτd((H(d)
+i )2) = 1 . This representation has exactly the Ginibre
+entry distribution. The moment convergence and strong convergence theorem [ 6, (1.2) and
+Theorem A] apply to these 2s matrices, and hence to all ﬁxed ∗-polynomials in the A(d)
+i .
+They give ( 21) and ( 22).
+6
+
+For ( 23), the two limiting polynomials are s−1 ∑
+i cic∗
+i − 1 and s−1 ∑
+i c∗
+i ci − 1. Each
+positive sum has the free Poisson law of rate s, scaled by 1/s. Its support is [(1−s−1/2)2,(1+
+s−1/2)2]; the rate is at least one, so there is no separated atom at zero. The trace is faithful,
+and the distance of the furthest endpoint from one is rs. Strong convergence gives the
+asserted norms. Equivalently, these are the two rectangular Wishart edge limits obtained by
+horizontal and vertical concatenation of the Ginibre blocks.
+The next statement is a Gaussian estimate, not a claim that the maps Ψd are channels.
+In particular no conversion from Haar isometries is necessary.
+Lemma 11 (Gaussian restriction estimate) . For every ﬁxed s and every h> 8/√s,
+P{∥ΨdPd∥2→2 >h} − →0. (24)
+Proof. We give the parameter substitution and the moment argument. Under Hilbert–
+Schmidt vectorization, Pd is the projection Id2 − ωd, where ωd projects onto vec(Id)/
+√
+d.
+Put Ui = A(d)
+i /√s, so the entries of Ui have variance (ds)−1. The superoperator matrix of
+Ψd is, up to the vectorization convention, Md = ∑
+i Ui ⊗ Ui.
+The direct Gaussian statements in [ 4, Lemma 5.3 and Proposition 5.4], with their n= d,
+k = s, and aspect ratio λ = 1 , give the following. If Vi are independent copies of Ui and
+p≥ 2 is even, then
+E∥Md(I− ωd)∥p
+op ≤ 2p E∥∑
+i Ui ⊗ Vi∥p
+op , (25)
+E∥∑
+i Ui ⊗ Vi∥p
+op ≤ d2sp/2(
+E∥U1∥p
+op
+) 2. (26)
+The second inequality is the trace-moment estimate (15) in that proof, followed by Tr|U1|p ≤
+d∥U1∥p
+op. The ﬁrst uses the Gaussian decoupling factor 2 only. The factor involving χ in
+their Proposition 5.2 concerns Haar isometries and does not enter ( 25).
+Gaussian concentration, as used in [ 4, (14)], supplies the scalar estimate
+(
+E∥U1∥p
+op
+) 1/p ≤ 2√s + ad + Ks
+√
+p/d, a d − →0,
+with Ks independent of d,p. We retain the square in the resulting bound:
+E∥Md(I− ωd)∥p
+op ≤ d2
+[
+2√s
+( 2√s + ad + Ks
+√
+p/d
+) 2] p
+. (27)
+For any ﬁxed a> 0 and the even integer pd = 2 ⌈alog d/2⌉, the bracket is 8/√s+o(1). Terms
+of order pd/d tend to zero; no estimate uniform for arbitrarily large p/d is asserted.
+Choose b strictly between 8/√s and h. For all suﬃciently large d, Markov’s inequality
+gives
+P{∥Md(I− ωd)∥op >h} ≤ d2(b/h)pd.
+Taking a >3/log(h/b) makes the right-hand side tend to zero. Vectorization preserves the
+relevant operator norm, proving ( 24).
+Remark 12. The factor d2 in ( 27) is the reason for choosing a logarithmic moment order. A
+ﬁxed moment bound would not establish ( 24).
+Proposition 13 (Capacity of the Gaussian family) . For every ﬁxed s≥ 4096,
+P
+{
+cap(Ψd)1/d ≥ 1 − 23√s
+}
+− →1. (28)
+7
+
+Proof. Lemmas 10 and 11 imply, with probability tending to one,
+∥Ψd(Id) − Id∥op ,∥Ψ∗
+d(Id) − Id∥op ≤ 3√s, ∥ΨdPd∥2→2 ≤ 9√s.
+For X = αId + X0, where τd(X0) = 0 , the domain decomposition is orthogonal and ∥X∥2
+2 =
+|α|2 + ∥X0∥2
+2. Therefore
+∥(Ψd − Dd)(X)∥2 ≤ 3√s|α| + 9√s∥X0∥2
+≤
+√
+90√s ∥X∥2 < 10√s∥X∥2 . (29)
+The last step is scalar Cauchy–Schwarz; it does not require the two images to be orthogonal.
+Apply Lemma 7 with ϵ= 3 /√s, q= 10 /√s, and c= 1 − 23/√s≥ 1/2.
+5 Exact Gram normalization and the proof of sharpness
+Lemma 14 (Stability under Gram normalization) . For ﬁxed s, let A(d) be the Gaussian
+family above and deﬁne
+Gd =
+(
+τd((A(d)
+i )∗A(d)
+j )
+) s
+i,j=1, B (d)
+j =
+s∑
+i=1
+A(d)
+i (G−1/2
+d )ij (30)
+whenever Gd >0. Then G(B(d)) = Is. The probability that Gd >0 tends to one, and
+max
+j
+B(d)
+j − A(d)
+j
+
+op
+− →0 almost surely . (31)
+The moment limits (21) and norm limits (22) hold with B(d) in place of A(d). Moreover, for
+s≥ 4096 ﬁxed, the maps
+˜Ψd(X) = s−1 ∑
+i
+B(d)
+i X(B(d)
+i )∗
+satisfy, with probability tending to one,
+˜Ψd(Id) − Id
+
+op
+,
+˜Ψ∗
+d(Id) − Id
+
+op
+≤ 3/√s, (32)
+˜ΨdPd
+
+2→2
+≤ 9/√s. (33)
+Proof. By ( 21), Gd → Is almost surely. Since s is ﬁxed, Gd is eventually positive deﬁnite
+and Td := G−1/2
+d → Is in every matrix norm. The orientation of the coeﬃcient indices in
+(30) gives G(B(d)) = T∗
+d GdTd = Is. The boundedness of the
+A(d)
+i
+
+op
+and the ﬁnite sum
+B(d)
+j − A(d)
+j =
+∑
+i
+A(d)
+i (Td − Is)ij
+give ( 31). Telescoping each ﬁxed word shows that its normalized trace changes by o(1);
+norms likewise change by o(1).
+Put
+δd = 1
+s
+∑
+i
+( B(d)
+i
+
+op
++
+A(d)
+i
+
+op
+) B(d)
+i − A(d)
+i
+
+op
+.
+8
+
+Then δd → 0 almost surely, and expanding the diﬀerence of the two quadratic expressions
+gives
+˜Ψd − Ψd
+
+2→2
+≤ δd,
+˜Ψd(Id) − Ψd(Id)
+
+op
+≤ δd,
+˜Ψ∗
+d(Id) − Ψ∗
+d(Id)
+
+op
+≤ δd.
+For s≥ 4096, rs <(5/2)/√s. Thus ( 23) and Lemma 11 give, with probability tending to one,
+marginal errors at most (5/2)/√sand a restriction norm at most (17/2)/√sfor Ψd. Intersect
+this event with δd ≤ 1/(2√s). The last three inequalities imply ( 32)–(33). These strict
+preliminary margins justify using the same ﬁnal constants after Gram normalization.
+Proof of Theorem 1. Fix s≥ 4096 and θ >0. Choose t,ζ >0 such that 2
+√
+t+ 3ζ ≤ θ, and
+let k,a be as in Proposition 5. Lemma 14 shows that, with probability tending to one, the
+tuple B(d) is deﬁned, has exactly identity Gram matrix, has coeﬃcient norms at most three,
+and satisﬁes ( 13). Hence
+F∞(B(d)) ≤ exp(ℓ(t) + 3 ζ) ≤ exp(−1 + θ).
+On another event with probability tending to one, the two estimates ( 32)–(33) hold. The
+argument ( 29) and Lemma 7 then give
+cap( ˜Ψd)1/d ≥ 1 − 23√s.
+Since ˜Ψd = Φ B(d),Is/s, its covariance is admissible in ( 4). This proves the desired lower bound
+for C(B(d)).
+For the upper bound, identity Gram gives, for every admissible Q,
+τd(ΦB(d),Q(Id)) =
+∑
+i,j
+Qijτd(B(d)
+i (B(d)
+j )∗) = Tr Q= 1 .
+Evaluating capacity at X = Id and using the arithmetic–geometric mean inequality therefore
+gives cap(ΦB(d),Q)1/d ≤ 1. Taking the maximum over Q yields C(B(d)) ≤ 1.
+The positive-value condition also holds. Almost surely A(d)
+1 is invertible. An invertible
+change of coeﬃcient coordinates preserves their linear span, so some scalar combination of
+the B(d)
+i is invertible. Normalizing its scalar coeﬃcient vector shows F1(B(d)) >0.
+For all suﬃciently large d, the intersection of the required events has positive probability.
+Select a realization in that intersection to obtain ( 7). Finally let s→ ∞ and θ ↓ 0 along a
+sequence. The capacities tend to one, and ( 6) together with the determinant upper bound
+gives F∞(B) → e−1.
+Proposition 15 (No asymptotic gain from ampliﬁcation at ﬁxed s). For every ﬁxed s≥ 1,
+the Gaussian family satisﬁes
+F1(A(d)) − →e−1, F ∞(A(d)) − →e−1 in probability as d→ ∞.
+The same statements hold for the Gram-normalized tuples B(d). Consequently F∞/F1 → 1
+in probability for both families. This statement does not require the capacity comparison (6).
+9
+
+Proof. Lemmas 10 and 14, together with Proposition 5 and ( 11), already give the upper
+bound in probability for every ﬁxed s. For a matching scalar lower bound, use
+F1(A(d)) ≥
+⏐⏐⏐det A(d)
+1
+⏐⏐⏐
+2/d
+.
+We recall the elementary complex Gaussian determinant calculation underlying the complex
+Wishart formula of Goodman [ 5]. Apply Gram–Schmidt to the independent columns of√
+dA(d)
+1 . Conditional on the preceding columns, the squared norm of the orthogonal residual
+is a sum of r independent unit-mean exponential variables, where r = d,d − 1,..., 1. Its
+conditional distribution does not depend on the preceding columns. The residual squared
+norms are therefore independent, and
+⏐⏐⏐det A(d)
+1
+⏐⏐⏐
+2 law= d−d
+d∏
+r=1
+Zr, Z r independent with law Gamma(r,1).
+Diﬀerentiating EZu
+r = Γ( r + u)/Γ(r) at zero gives Elog Zr = ψ(r) = Hr−1 − γE and
+Var(logZr) = ψ1(r) = ∑∞
+k=r k−2. Here Hd = ∑d
+k=1 k−1, H0 = 0 , and γE is Euler’s con-
+stant. Hence, for Wd = d−1 log
+⏐⏐⏐det A(d)
+1
+⏐⏐⏐
+2
+,
+EWd = Hd − 1 − γE − log d− → −1,
+Var(Wd) = 1
+d2
+
+Hd + d
+∑
+k>d
+k−2
+
+ ≤ Hd + 1
+d2 − →0.
+Thus
+⏐⏐⏐det A(d)
+1
+⏐⏐⏐
+2/d
+→ e−1 in probability.
+For the normalized tuple let z= G1/2
+d e1. The coeﬃcient convention ( 30) gives ∑
+j B(d)
+j zj =
+A(d)
+1 and ∥z∥2
+ℓ2 = ( Gd)11 → 1. Normalizing this scalar coeﬃcient vector proves
+F1(B(d)) ≥
+⏐⏐⏐det A(d)
+1
+⏐⏐⏐
+2/d
+(Gd)11
+.
+The common upper bound, these lower bounds, and F1 ≤ F∞ prove all claims, including the
+ratio limit. On the event that Gd is singular, deﬁne B(d) arbitrarily; the probability of this
+event tends to zero.
+6 Scope of the construction
+The order of choices is part of the proof. For prescribed accuracy one ﬁrst ﬁxes a suﬃciently
+large, ﬁnite number s of coeﬃcients, ﬁxes the logarithmic regularization and its polynomial
+approximation, and only then increases d. The auxiliary size m is unrestricted throughout.
+After selecting a ﬁnite tuple one may increase sto improve the ratio. No convergence estimate
+uniform in a simultaneously growing s and d is needed.
+The result settles the unrestricted comparison constant, including the identity-Gram class.
+It does not assert that a ﬁnite tuple attains the ratio e, that the number of coeﬃcients can
+be held at a prescribed small value while approaching e, or that the tuples have Hermitian
+coeﬃcients. Gram normalization gives C ≤ 1 and capacities converging to one, rather than
+an identity proving C = 1 for each tuple. The argument is an existence construction; it
+provides neither small explicit matrices nor a quantitative dimension bound in terms of the
+desired error.
+10
+
+The free value e−1 alone would not establish sharpness: larger matrix ampliﬁcations
+could in principle improve it. The balance lemma and uniform ﬁnite-moment transfer rule
+out that improvement for these tuples. Conversely, the near-balanced Gaussian marginals
+alone would not provide the required capacity estimate. The restriction bound and cut
+argument supply that independent step.
+Development note. This draft was developed with AI assistance, including mathematical
+checks using reused context. Such checks are not independent peer review. The cited primary
+results are external inputs; no claim of an exhaustive priority search or historical precedence
+is made here.
+References
+[1] L. Eriksson, A universal capacity bound for ampliﬁed determinants and polynomial wit-
+nesses in the Hermitian case , AIRR, ARR-2026-1DGGW5KX2M9R4VJT, version 1
+(2026). https://airr.science/papers/ARR-2026-1DGGW5KX2M9R4VJT/versions/v1/.
+[2] L. Eriksson, Sharp determinant bounds for ampliﬁed antisymmetric channels and a
+noise law for noncommutative rank , AIRR, ARR-2026-6FWR12DH3F8QBA5C, version 1
+(2026). https://airr.science/papers/ARR-2026-6FWR12DH3F8QBA5C/versions/v1/.
+[3] L. R. Ford, Jr. and D. R. Fulkerson, Maximal ﬂow through a network, Canadian Journal
+of Mathematics 8 (1956), 399–404. doi:10.4153/CJM-1956-045-5.
+[4] C. E. González-Guillén, M. Junge, and I. Nechita, On the spectral gap of random quantum
+channels, arXiv:1811.08847 (2018), Section 5, Lemma 5.3 and Proposition 5.4, especially
+(14)–(15). https://arxiv.org/abs/1811.08847.
+[5] N. R. Goodman, The distribution of the determinant of a complex Wishart
+distributed matrix, Annals of Mathematical Statistics 34 (1963), 178–180.
+doi:10.1214/aoms/1177704251.
+[6] U. Haagerup and S. Thorbjørnsen, A new application of random matrices:
+Ext(C∗
+red(F2)) is not a group, Annals of Mathematics 162 (2005), 711–775.
+doi:10.4007/annals.2005.162.711. Theorem A and equation (1.2).
+[7] D. Jekel, Conditional expectation, entropy, and transport for convex Gibbs laws in free
+probability, International Mathematics Research Notices 2022 (2022), no. 6, 4514–4619.
+doi:10.1093/imrn/rnaa181. Section 3.3.
+[8] T. C. Kwok, L. C. Lau, and A. Ramachandran, Spectral analysis of matrix
+scaling and operator scaling, SIAM Journal on Computing 50 (2021), 1034–1102.
+doi:10.1137/20M1315981. Theorems 1.5 and 1.8; arXiv:1904.03213.
+[9] T. Mai and R. Speicher, Fuglede–Kadison determinants of matrix-valued semicircular el-
+ements and capacity estimates , arXiv:2406.15922 (2024). https://arxiv.org/abs/2406.
+15922.
+11
