@@ -1,0 +1,346 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=26mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,booktabs}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype}
+\usepackage[hidelinks]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newcommand{\C}{\mathbb C}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\vecop}{\operatorname{vec}}
+\newcommand{\dist}{\operatorname{dist}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\norm}[1]{\lVert#1\rVert}
+\newcommand{\FM}{\mathcal F}
+\newcommand{\UCPT}{\mathcal B}
+\title{Undecidable projection costs for quantum channels\\with finite tracial ancillas}
+\author{Lluis Eriksson}
+\date{17 October 2026\\Research draft}
+\begin{document}
+\maketitle
+\begin{abstract}
+We transfer a quantitative unitary-relation construction to a quadratic optimization problem for quantum channels. The input is a real rational orthogonal projection on the Choi space, together with an explicit rational bistochastic Choi state supported exactly on its kernel. The minimum cost over all bistochastic channels is therefore zero. Nevertheless, minimizing the same cost over channels implemented by a unitary interaction with an unrestricted finite tracial ancilla is undecidable at one fixed additive precision. The objective is a projective measurement probability, not a determinant. Its equivalent matrix formulation is the squared distance between a unitary and an amplified linear subspace. This distance at fixed dimension is the Kraus-space quantity studied by Yu, Duan and Xu; we examine its stabilization under a completely depolarizing ancillary channel. We prove the transfer with explicit constants, derive the absence of a recursive uniform ancilla bound, and give the exact answer when the subspace projection is completely positive. The source hardness and the relation compiler are inherited results; no general novelty claim about noncomputable tracial optimization is made.
+\end{abstract}
+
+\section{The channel test and the main result}
+Let $\tau_d=\Tr/d$, and put $\norm X_{2,d}^2=\tau_d(X^*X)$. All matrix-space norms below use this normalized trace. Traces of density matrices are ordinary, unnormalized traces. Our vectorization convention is
+\[
+ \vecop(K)=\sum_{i,j}K_{ij}|i\rangle_{\rm out}\otimes|j\rangle_{\rm in},
+ \qquad J(T)=\sum_{j,k}T(E_{jk})\otimes E_{jk}.
+\]
+For $U\in\mathcal U(Dm)$ define
+\begin{equation}
+ T_U(X)=(\id_D\otimes\tau_m)\bigl(U(X\otimes I_m)U^*\bigr),
+ \qquad \rho_U=J(T_U)/D.                         \label{eq:channel}
+\end{equation}
+These channels are completely positive, unital and trace preserving. The ancilla is maximally mixed; allowing an arbitrary pure ancilla would give a different class.
+
+Given a Hermitian projection $H\in M_{D^2}(\Q)$, set
+\begin{equation}
+ v_m(H)=\min_{U\in\mathcal U(Dm)}\Tr(H\rho_U),
+ \qquad v_\infty(H)=\inf_{m\ge1}v_m(H).            \label{eq:value}
+\end{equation}
+Operationally, prepare a maximally entangled input and reference, apply the channel to the input, and measure the two-outcome projective test $\{H,I-H\}$. The cost is the probability of the outcome $H$. We do not impose restrictions on the circuit implementing $U$.
+
+\begin{theorem}\label{thm:main}
+There is a computable map from Turing machines $T$ to pairs of real rational matrices $(H_T,\rho_{0,T})$, of a finite dimension $D$ depending on $T$, such that
+\begin{gather}
+ H_T^*=H_T=H_T^2,\qquad \rho_{0,T}\succeq0,\qquad
+ \Tr_{\rm in}\rho_{0,T}=\Tr_{\rm out}\rho_{0,T}=I_D/D,\\
+ \supp(\rho_{0,T})=\ker H_T,                       \label{eq:certificate}
+\end{gather}
+and, with $\gamma=1/36\,288\,000\,000$,
+\begin{align}
+ T\text{ halts}&\ \Longrightarrow\ v_\infty(H_T)\le\gamma/4,\\
+ T\text{ does not halt}&\ \Longrightarrow\ v_\infty(H_T)\ge\gamma.
+\end{align}
+Consequently additive approximation to error $\gamma/8$ is undecidable on these promised inputs. Yet the semidefinite relaxation
+\begin{equation}
+ \min_{\rho\succeq0,\ \Tr_{\rm in}\rho=\Tr_{\rm out}\rho=I_D/D}
+       \Tr(H_T\rho)=0                             \label{eq:sdp}
+\end{equation}
+has the displayed rational optimizer $\rho_{0,T}$.
+\end{theorem}
+
+The theorem concerns optimization of a test over a class of channels. It does not decide whether the particular channel with state $\rho_{0,T}$ belongs to that class. The YES alternative gives a small cost, not exact membership in a zero-cost face. The constant is approximately $2.76\cdot10^{-11}$ and is not a practical numerical threshold. The reduction is computable; expansion of its source games need not run in polynomial time in the machine description.
+
+Lee and Watrous \cite{lw} establish NP-hardness for unitary quadratic minimization in a dimension specified as part of the finite input. Here each fixed-$m$ problem is decidable, and noncomputability enters through unrestricted auxiliary dimension. Yu, Duan and Xu \cite[Lemma 2]{ydx} already study the fixed-dimensional Kraus-space distance used below. Factorizable channels and their closures are established objects \cite{hm,mr,musat}. General noncomputability of tracial optimization is established by Goldbring and Hart \cite{gh}, with related fixed-precision results in \cite{cct}. The proposed contribution is the simultaneous restriction to one rational projection cost, a fixed gap, and the explicit zero-cost bistochastic certificate in \eqref{eq:certificate}.
+
+\section{Subspace distance and its channel interpretation}
+For a nonzero complex linear subspace $S\subseteq M_D(\C)$ let $\Pi_S$ be its Hilbert--Schmidt orthogonal projection and define
+\begin{equation}
+ h_m(S)=\min_{U\in\mathcal U(Dm)}
+       \norm{U-(\Pi_S\otimes\id_{M_m})(U)}_{2,Dm}^2,
+ \qquad h_\infty(S)=\inf_m h_m(S).                 \label{eq:h}
+\end{equation}
+If $B_1,\ldots,B_s$ is a basis with $\tau_D(B_\ell^*B_k)=\delta_{\ell k}$, its vectorized projection and complementary cost are
+\begin{equation}
+ P_S=\frac1D\sum_\ell\vecop(B_\ell)\vecop(B_\ell)^*,
+ \qquad H_S=I_{D^2}-P_S.                           \label{eq:proj}
+\end{equation}
+Real rational $B_\ell$ give real rational $H_S$. No rational orthonormal basis of the complementary space is needed. Positivity of the matrix $P_S$ on vectorized Hilbert space must not be confused with complete positivity of the map $\Pi_S$.
+
+\begin{lemma}\label{lem:duality}
+At each finite $m$,
+\begin{align}
+ h_m(S)&=\min_{X\in S\otimes M_m}\tau_{Dm}\bigl((|X|-I)^2\bigr), \label{eq:ydx}\\
+ 1-h_m(S)&=
+ \max_{\substack{X\in S\otimes M_m\\\norm X_{2,Dm}=1}}
+                      \bigl(\tau_{Dm}|X|\bigr)^2.              \label{eq:duality}
+\end{align}
+Moreover $v_m(H_S)=h_m(S)$.
+\end{lemma}
+\begin{proof}
+The squared distance from a fixed $X$ to the unitary group equals
+$\tau((|X|-I)^2)$: a unitary polar factor attains it, also when $X$ is singular by extending its partial isometry. Minimizing $\norm{X-U}_2^2$ first over $X\in S\otimes M_m$ instead gives the projection in \eqref{eq:h}. This proves \eqref{eq:ydx}; a minimizing $X$ is the projection of a minimizing unitary.
+
+Orthogonality gives
+\[
+ 1-h_m=\max_U\norm{(\Pi_S\otimes\id)(U)}_2^2.
+\]
+Hilbert-space duality and $\max_U|\tau(U^*X)|=\tau|X|$ then give \eqref{eq:duality}, by interchanging two maxima over compact sets.
+
+For the last claim, let $U_{ab}\in M_D$ be the ancillary blocks, namely
+$(U_{ab})_{ij}=U_{(i,a),(j,b)}$. Then
+\[
+ \rho_U=\frac1{Dm}\sum_{a,b}\vecop(U_{ab})\vecop(U_{ab})^*,
+ \qquad
+ \Tr(H_S\rho_U)=\frac1{Dm}\sum_{a,b}
+                 \norm{(I-\Pi_S)(U_{ab})}_{F}^2.
+\]
+The latter is precisely the squared norm in \eqref{eq:h}. After reordering the indices of $\vecop(U)$ as $((i,j),(a,b))$, the quadratic form is
+$\vecop(U)^*(H_S\otimes I_{m^2})\vecop(U)/(Dm)$.
+The vectorized ancillary identity has size $m^2$, not $m$.
+\end{proof}
+
+For a channel $\Phi$ write $K(\Phi)$ for its Kraus operator span. The quantity on the right of \eqref{eq:ydx} at $m=1$ is exactly $C_\Phi$ of \cite{ydx} when $S=K(\Phi)$. The completely depolarizing channel $\Delta_m(X)=\tau_m(X)I_m$ has Kraus span $M_m$, so
+\[
+ h_m(K(\Phi))=C_{\Phi\otimes\Delta_m}.
+\]
+Thus the objective is a stabilization of an existing quantity. The Schur-channel tensoring result in \cite[Theorem 2]{ydx} concerns a diagonal Kraus span, rather than $M_m$, and does not provide a stabilization bound here.
+
+Let $\FM_{\rm matr}(D)$ be the union of the channels \eqref{eq:channel}, and $\FM_{\rm fin}(D)$ the channels factoring through finite-dimensional tracial $C^*$-algebras. The standard identification \cite[Proposition 3.8]{musat} is
+\[
+ \FM_{\rm fin}(D)=\operatorname{conv}\FM_{\rm matr}(D).
+\]
+Indeed an ancillary direct sum $\bigoplus_j M_{m_j}$ with trace
+$\sum_j\lambda_j\tau_{m_j}$ gives the corresponding convex combination of matrix-ancilla channels, and conversely. Consequently
+\begin{equation}
+ v_\infty(H)=\min_{\Phi\in\overline{\FM_{\rm fin}(D)}}
+                  \Tr\bigl(HJ(\Phi)/D\bigr).                   \label{eq:fm}
+\end{equation}
+Linearity preserves the infimum under convexification, and continuity preserves it under closure; the closure is compact. This minimum need not be realized by one finite ancilla. We do not replace this closure by all factorizable channels through arbitrary finite von Neumann algebras \cite{hm,mr}.
+
+\section{The quantitative relation construction}
+We use the source-game and rational block construction from \cite{compiler}, whose hardness input is Taller--Vidick \cite[Theorem 5.2]{tv}. We state precisely the imported interface and reprove the quadratic transfer. This paper does not claim a new machine-to-game theorem.
+
+For $\varepsilon=2^{-40}$ the construction produces a finite uniform context list. In the YES case it admits finite-dimensional synchronous strategies with errors approaching a value at most $\varepsilon/4$; in the NO case every such strategy has error at least $1/1296$. Each context gives seven signed unitary words, of length at most four; let $R$ be their total number. For unitary generators define their mean squared relation error by
+\[
+ \xi=\frac1R\sum_{r=1}^R
+       \norm{V_{i_1(r)}\cdots V_{i_{k(r)}(r)}-\sigma_r I}_{2,m}^2.
+\]
+A game strategy of error $e$ gives generators with $\xi\le34e$, and generators with error $\xi$ give a game strategy of error at most $50\xi$, in the same dimension. Positional normalization in \cite{compiler} handles repeated questions, rational sampling weights and distinct answer positions; those steps are part of the imported construction.
+
+The construction yields real rational $A_\ell$, positive integers $w_\ell,t$, and $D=t^2$, with
+\begin{gather}
+ \sum_\ell A_\ell A_\ell^*=\sum_\ell A_\ell^*A_\ell=I_D,\qquad
+ \Tr(A_\ell^*A_k)=\delta_{\ell k}w_\ell^2,\qquad
+ \sum_\ell w_\ell^2=D,                              \label{eq:weights}\\
+ \rho:=R/D\in[1/8000,1/200].
+\end{gather}
+Set $B_\ell=tA_\ell/w_\ell$ and $S=\operatorname{span}_{\C}\{B_\ell\}$.
+The matrices $A_\ell$ have disjoint entry supports. Their pencil $L_A(Z)=\sum_\ell A_\ell\otimes Z_\ell$ is a direct sum of singleton labels and 25 copies of each two-by-two block
+\begin{equation}
+ G(U,V,W,Z)=
+ \begin{pmatrix}(3/5)U&(4/5)W\\(4/5)Z&-(3/5)V\end{pmatrix}.
+                                                               \label{eq:gate}
+\end{equation}
+Label $\ell$ has at least $w_\ell^2/2$ singleton occurrences. Every original relation has at most six assigned gate occurrences, including its own padding-square gate; these occurrence sets are disjoint across relations. A common reference label makes the construction homogeneous. Telescoping after fixing that reference bounds each word residual by the sum of its assigned gate residuals. The use of separate occurrences, even for repeated labels, is essential for the averaged estimate below.
+
+For completeness, assign exact products to the prefix labels and identities to the reference, padding and free labels. Every gate is then unitary except the final gate for each original relation. The residual of that final gate is the original word residual, up to unitary multiplication. All these properties, including the computable rational normalization, are established in \cite[Sections 2--5]{compiler}.
+
+\begin{lemma}[Quadratic transfer]\label{lem:transfer}
+For this constructed space, a unitary relation assignment of mean error $\xi$ gives
+\begin{equation}
+ h_m(S)\le8\rho\xi.                                  \label{eq:forward}
+\end{equation}
+Conversely, every $W\in S\otimes M_m$ with $\norm W_2=1$ and
+$\Delta=\dist_{2,Dm}(W,\mathcal U(Dm))$ gives a synchronous game strategy of error at most
+\begin{equation}
+ 50(9+6\sqrt2)\Delta^2/\rho.                          \label{eq:round}
+\end{equation}
+\end{lemma}
+\begin{proof}
+For unitary labels in \eqref{eq:gate}, put $c=12/25$ and $E=UZ^*-WV^*$. Direct multiplication gives
+\[
+ GG^*=\begin{pmatrix}I&cE\\cE^*&I\end{pmatrix},\qquad
+ \norm{GG^*-I}_{2,2m}^2=c^2\norm E_{2,m}^2.
+\]
+Since $\norm E_{\rm op}\le2$, the singular values of $G$ lie in $[1/5,7/5]$. For any such singular value $s$,
+$(s-1)^2\le(25/36)(s^2-1)^2$. Therefore
+\[
+ \dist_{2,2m}(G,\mathcal U(2m))^2\le\frac4{25}\norm E_{2,m}^2.
+\]
+Choose the completeness labels described above and $W=L_A(V)\in S\otimes M_m$. The 25 copies of each final gate have total scalar size 50; all other blocks have zero polar distance. Thus
+\[
+ h_m(S)\le\dist_{2,Dm}(W,\mathcal U(Dm))^2
+ \le\frac{50}{D}\frac4{25}\sum_r e_r^2=8\rho\xi,
+\]
+where the first inequality follows by using this $W$ in the joint distance minimization.
+
+For the reverse direction write $W=L_A(Z)$. The Gram identity gives
+$\sum_\ell(w_\ell^2/D)\norm{Z_\ell}_2^2=1$. Because $W$ is block diagonal, a nearest polar unitary $P$ may be chosen block diagonal. For each label choose a polar unitary $V_\ell$ of $Z_\ell$. The singleton proportion yields
+\[
+ \sum_\ell\frac{w_\ell^2}{D}\norm{Z_\ell-V_\ell}_2^2\le2\Delta^2.
+\]
+For $K=L_A(V)$, disjoint supports imply $\norm{K-W}_2\le\sqrt2\Delta$.
+Hence $\norm{K-P}_2\le(1+\sqrt2)\Delta$. All gate and singleton blocks satisfy
+$\norm K_{\rm op}\le7/5$, giving
+\[
+ \norm{KK^*-I}_2^2\le C_0\Delta^2,
+ \qquad C_0=\frac{144}{25}(3+2\sqrt2).
+\]
+If $e_g$ is the residual norm of gate $g$ with these unitary labels, its 25 copies contribute $50c^2e_g^2/D$ to that squared defect. The disjoint gate-occurrence sets and Cauchy--Schwarz in the at-most-six-term telescoping bounds give
+\[
+ \xi\le\frac6R\sum_g e_g^2
+ \le\frac{6C_0}{50c^2}\frac{\Delta^2}{\rho}
+ =(9+6\sqrt2)\frac{\Delta^2}{\rho}.
+\]
+Apply the imported game-rounding estimate $e\le50\xi$. This argument requires no determinant bound or maximizing determinant witness.
+\end{proof}
+
+\section{Fixed precision and an explicit bistochastic certificate}
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Use the preceding construction and define $H_T=H_S$ by \eqref{eq:proj}.
+In a YES instance, take strategies approaching the stated completeness value. Equation \eqref{eq:forward} gives
+\[
+ h_\infty(S)\le8\rho\frac{34\varepsilon}{4}
+ \le\frac{17}{50}\,2^{-40}<\gamma/4.
+\]
+The argument uses an infimum and does not assume the optimal strategy is attained.
+
+For soundness suppose $h_m(S)<\gamma$ for some $m$, and choose a minimizing unitary $U$ in \eqref{eq:h}. Set
+\[
+ X=(\Pi_S\otimes\id)(U),\qquad a=\norm X_2^2=1-h_m(S),\qquad
+ W=X/\sqrt a.
+\]
+Then $\norm W_2=1$ and orthogonality gives
+$\operatorname{Re}\tau(U^*W)=\sqrt a$. Consequently
+\begin{equation}
+ \dist(W,\mathcal U(Dm))^2
+ \le\norm{W-U}_2^2
+ =2-2\sqrt{1-h_m(S)}\le2h_m(S).                     \label{eq:projectround}
+\end{equation}
+Although this $U$ need not be block diagonal, a nearest polar unitary of $W$ is; replacing $U$ by that polar unitary only improves the distance. Lemma~\ref{lem:transfer} gives a game strategy of error
+\[
+ e\le100(9+6\sqrt2)h_m(S)/\rho
+ <1750h_m(S)/\rho
+ <1750\cdot8000\gamma=\frac1{2592}.
+\]
+This contradicts the NO lower bound $1/1296$. Hence all $h_m(S)\ge\gamma$ in a NO instance. Lemma~\ref{lem:duality} transfers the conclusion to $v_\infty$.
+
+Finally let $T_0(X)=\sum_\ell A_\ell XA_\ell^*$ and
+\[
+ \rho_0=\frac1D\sum_\ell\vecop(A_\ell)\vecop(A_\ell)^*
+       =\frac1D\sum_\ell\frac{w_\ell^2}{D}
+                       \vecop(B_\ell)\vecop(B_\ell)^*.
+\]
+The two identities in \eqref{eq:weights} give both marginals $I_D/D$.
+In our convention the input marginal uses
+$(\sum_\ell A_\ell^*A_\ell)^T$, also $I_D$. All entries are real rational.
+Since every weight is positive and the $B_\ell$ are independent, the support is exactly $\vecop(S)=\ker H_T$. This proves \eqref{eq:certificate} and makes $\rho_0$ a zero-cost optimizer of \eqref{eq:sdp}. An additive $\gamma/8$ approximation separates the alternatives by comparison with $5\gamma/8$, and would decide halting.
+\end{proof}
+
+The zero relaxation value is a promise satisfied in both alternatives, not a test that detects the YES case. In a NO instance every approximately matrix-factorizable channel has test cost at least $\gamma$, even though the rational bistochastic channel $T_0$ has cost zero. This separates optimization over two distinct feasible channel classes.
+
+\section{Ancilla bounds, amplification and a computable boundary}
+\begin{corollary}\label{cor:bound}
+No total recursive function of the encoded input length uniformly bounds an ancilla size $m$ for which
+$v_m(H)\le v_\infty(H)+\gamma/8$ on the inputs of Theorem~\ref{thm:main}.
+\end{corollary}
+\begin{proof}
+At fixed $m$, unitarity is a finite system of real polynomial equations and the objective is quadratic with rational coefficients. The feasible set is compact. Real quantifier elimination therefore computes $v_m$ to arbitrary rational precision, uniformly in the finite input.
+
+If a proposed bound is $b(L)$, compute every $v_m$, $1\le m\le b(L)$, to error $\gamma/16$ and take their minimum. In YES instances this is at most $7\gamma/16$; in NO instances it is at least $15\gamma/16$. Comparison with $3\gamma/4$ decides halting.
+\end{proof}
+
+Since $U\mapsto U\otimes I_k$ preserves normalized cost, $h_{mk}(S)\le h_m(S)$.
+The sequence $h_{n!}(S)$ decreases to $h_\infty(S)$. Indeed every fixed $m$ divides all sufficiently large factorials. Finite-dimensional quantifier elimination and rational error bounds consequently provide upper semicomputability of $h_\infty$; Theorem~\ref{thm:main} rules out a uniform computable convergence modulus at the displayed precision. This does not assert that every individual input has a noncomputable value.
+
+For any fixed $k$, associativity and a permutation of tensor factors give
+\[
+ h_m(S\otimes M_k)=h_{km}(S),\qquad
+ h_\infty(S\otimes M_k)=h_\infty(S).
+\]
+For the second identity, the infimum over multiples is no smaller than the unrestricted one, while replication of any witness into a multiple of $k$ gives the reverse inequality. This invariance does not provide a finite stabilization dimension.
+
+\begin{proposition}[Completely positive subspace projection]\label{prop:cp}
+If $\Pi_S$ is completely positive as a map on $M_D$, then for every $m$,
+\[
+ h_m(S)=1-\norm{\Pi_S(I_D)}_{2,D}^2.
+\]
+Thus this class has an exact computable value whenever $\Pi_S$ is rational.
+\end{proposition}
+\begin{proof}
+Put $\Psi=\Pi_S\otimes\id_{M_m}$ and $A=\Psi(I)=\Pi_S(I_D)\otimes I_m$.
+For unitary $U$, complete positivity sends the positive block matrix
+$\left(\begin{smallmatrix}I&U\\U^*&I\end{smallmatrix}\right)$ to
+$\left(\begin{smallmatrix}A&\Psi(U)\\\Psi(U)^*&A\end{smallmatrix}\right)$.
+Block positivity implies $\Psi(U)=A^{1/2}CA^{1/2}$ for a contraction $C$ on the support of $A$; the statement for singular $A$ follows by restriction to its support, or by an $A+\eta I$ limit. Schatten H\"older gives
+\[
+ \norm{\Psi(U)}_2
+ \le\norm{A^{1/2}}_4^2\norm C_{\rm op}\le\norm A_2.
+\]
+Equality is attained at $U=I$. Apply the projection identity in Lemma~\ref{lem:duality} and normalized trace under tensoring.
+\end{proof}
+
+This is a standard complete-positivity norm argument, consistent with the multiplicativity results in \cite{djkr}; it is included to specify the boundary of the hardness claim. Our construction promises positivity of $H$ as a matrix, not complete positivity of $\Pi_S$. Likewise, if $S$ contains a unitary then $h_m(S)=0$ for all $m$. In particular adjoining the identity to $S$ would trivialize this problem. No stabilization theorem for operator norms can be applied without checking these hypotheses and the normalized Schatten norm used here.
+
+\section{Verification, dependencies and remaining questions}
+The transfer is analytic and uniform in $m$. Finite complex-matrix diagnostics check projection, polar-distance, Choi, marginal and amplification identities; rational arithmetic checks the projection certificate and the gap margins. Such tests do not prove source-game undecidability, replace the cited relation construction, or constitute a proof-assistant verification. The accompanying research record identifies exact files and rerun results.
+
+The dependency on \cite{compiler} is substantial: its rational compiler, singleton proportions, question normalization and game-rounding constants are reused. The forward estimate here is proved directly from the gate singular values, and the reverse estimate applies to a projected arbitrary unitary. The channel formulation and the zero-relaxation certificate make the consequence externally interpretable, but do not remove that dependence. The interpretations of \eqref{eq:ydx} and \eqref{eq:fm} are established background, explicitly credited above. Targeted literature checking has not certified worldwide priority.
+
+The theorem gives no fixed value of $D$, no bounded circuit architecture, no laboratory resource estimate, and no communication-capacity result. It also does not show undecidability of mixed-unitary membership at a fixed finite dimension. Determining the least number of Kraus directions needed for this phenomenon, or useful restrictions beyond complete positivity of $\Pi_S$ with effective ancilla bounds, remain separate questions.
+
+\paragraph{Assistance and review provenance.}
+Developed with substantial OpenAI Codex assistance. GPT-6 Astra with xhigh effort was requested for mathematical criticism in reused contexts involved in this research programme; runtime identity was not independently attested. Any assessment of this exact draft must be recorded separately. No score is inherited from a previous paper, and no human peer review or certified blind review is claimed.
+
+\begin{thebibliography}{10}
+\bibitem{compiler}
+L.~Eriksson, \emph{Constant-precision undecidability for amplified determinants with capacity one}, AIRR working paper ARR-2026-40S2JAQBBB8GJTN5, v1 (2026).
+\url{https://airr.science/papers/ARR-2026-40S2JAQBBB8GJTN5/versions/v1/}.
+\bibitem{tv}
+A.~Taller and T.~Vidick, \emph{Approximating the quantum value of an LCS game is RE-hard}, arXiv:2507.22444v2 (2026), Theorem 5.2.
+\url{https://arxiv.org/abs/2507.22444v2}.
+\bibitem{lw}
+C.-K.~Lee and J.~Watrous, \emph{Detecting mixed-unitary quantum channels is NP-hard}, Quantum \textbf{4}, 253 (2020).
+\url{https://doi.org/10.22331/q-2020-04-16-253}.
+\bibitem{ydx}
+N.~Yu, R.~Duan and Q.~Xu, \emph{Bounds on the distance between a unital quantum channel and the convex hull of unitary channels, with applications to the asymptotic quantum Birkhoff conjecture}, arXiv:1201.1172.
+\url{https://arxiv.org/abs/1201.1172}.
+\bibitem{hm}
+U.~Haagerup and M.~Musat, \emph{An asymptotic property of factorizable completely positive maps and the Connes embedding problem}, arXiv:1408.6476.
+\url{https://arxiv.org/abs/1408.6476}.
+\bibitem{mr}
+M.~Musat and M.~R{\o}rdam, \emph{Factorizable maps and traces on the universal free product of matrix algebras}, arXiv:1903.10182v2 (2019).
+\url{https://arxiv.org/abs/1903.10182v2}.
+\bibitem{musat}
+M.~Musat, \emph{The Connes--Kirchberg Problem and infinite-dimensional phenomena in quantum information theory}, arXiv:2512.00432v1 (2025), Proposition 3.8.
+\url{https://arxiv.org/abs/2512.00432v1}.
+\bibitem{gh}
+I.~Goldbring and B.~Hart, \emph{The universal theory of the hyperfinite $\mathrm{II}_1$ factor is not computable}, Bulletin of Symbolic Logic \textbf{30}(2) (2024), 181--198.
+\url{https://doi.org/10.1017/bsl.2024.7}.
+\bibitem{cct}
+R.~Cleve, E.~Culf and A.~Taller, \emph{XOR Games at Full Tilt: The Hardness of Binary Nonlocal Games}, arXiv:2607.06876v1 (2026), Section 6.4.
+\url{https://arxiv.org/abs/2607.06876v1}.
+\bibitem{djkr}
+I.~Devetak, M.~Junge, C.~King and M.~B.~Ruskai, \emph{Multiplicativity of completely bounded $p$-norms implies a new additivity result}, Communications in Mathematical Physics \textbf{266} (2006), 37--63.
+\url{https://arxiv.org/abs/quant-ph/0506196}.
+\end{thebibliography}
+\end{document}
