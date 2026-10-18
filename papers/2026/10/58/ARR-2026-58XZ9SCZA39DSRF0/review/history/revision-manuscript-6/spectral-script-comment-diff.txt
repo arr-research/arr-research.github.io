@@ -1,0 +1,13 @@
+--- audited-dossier-script
++++ exact-supplement-script
+@@ -28,8 +28,8 @@
+     sq=(vec*np.sqrt(np.maximum(val,0)))@vec.conj().T
+     psi=sq.reshape(-1)
+     tau=np.zeros((d,d));tau[0,0]=1
+-    # vec(sqrt(rho)) has both marginals rho and rho.T; this convention
+-    # puts the transposed marginal on the untouched reference.
++    # Row-major vec(sqrt(rho)) has reference marginal rho and
++    # channel-input marginal rho.T. The formulas below use that convention.
+     joint=lam*np.outer(psi,psi.conj())+(1-lam)*np.kron(rho,tau)
+     out=lam*rho.T+(1-lam)*tau
+     return S(rho)+S(out)-S(joint)

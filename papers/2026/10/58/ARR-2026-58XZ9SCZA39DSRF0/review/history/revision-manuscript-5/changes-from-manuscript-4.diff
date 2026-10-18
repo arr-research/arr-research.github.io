@@ -1,0 +1,307 @@
+--- manuscript-4
++++ manuscript-5
+@@ -12,7 +12,7 @@
+ \newcommand{\Rcal}{\mathcal R_{\lambda,\tau}}
+ \newcommand{\Ecal}{\mathcal E_\lambda}
+ \newcommand{\id}{\operatorname{id}}
+-\title{Constant-gap entanglement distillation\\for diagonal invariant states\\and quantum reset channels}
++\title{Constant-gap entanglement distillation\\and noise-universal quantum communication}
+ \author{Lluis Eriksson}
+ \date{18 October 2026 --- Working paper}
+ \begin{document}\maketitle
+@@ -30,11 +30,15 @@
+ also implies at most $\log_2 6$ ebits of irreversibility for any mixture
+ of a pure state and separable noise, without a marginal constraint,
+ and controls mixtures with a mixed maximally correlated component.
+-Applications give constant-gap bounds for identity/entanglement-breaking
+-channels and absolute $o(1)$ gaps for six oscillator reset capacities
+-for every fixed reset state, even at infinite reset energy or entropy.
+-We also obtain reversible distributed states and a vanishing classical
+-arbitrary-partner additivity defect. No optimal constant, efficient
++For an identity component mixed with arbitrary channel noise, we give
++six capacity guarantees and reduce their simultaneous worst cases to
++depolarizing channels. An explicit isotropic interval has absolute width
++tending to $2(1-f)$ at fixed entangled fraction $f$, refining the known
++relative large-dimension approximation. For every fixed oscillator reset
++state, even at infinite energy or entropy, six capacities approach erasure
++benchmarks with absolute $o(1)$ loss. We also obtain reversible distributed
++states and a vanishing classical arbitrary-partner additivity defect.
++No optimal constant, efficient
+ implementation or exact finite-energy capacity is asserted.
+ \end{abstract}
+ 
+@@ -72,8 +76,12 @@
+ correlated useful component, for which the controlled quantities are
+ $E_D,K_D,E_R^\infty,E_R$, rather than entanglement cost.
+ Corollary~\ref{cor:ebchannel} applies the pure-state result to every
+-identity/entanglement-breaking channel mixture.
+-The second part of the paper applies it to oscillator reset channels,
++identity/entanglement-breaking channel mixture. Section~\ref{sec:minimax}
++then allows arbitrary input-dependent noise: standard twirling organizes
++six simultaneous worst-case capacities, while the classification theorem
++provides a new absolute two-way interval for the isotropic minimizer.
++The minimax reduction does not solve its unknown capacity functions.
++The final part applies the recovery bound to oscillator reset channels,
+ obtaining absolute vanishing gaps for six energy-constrained capacities
+ for any fixed reset state, including infinite energy or entropy.
+ We give the finite-dimensional operational proof first, then the
+@@ -413,6 +421,213 @@
+ \cite[Sections III.B--C]{gew}. No covariance or reset form of
+ $\mathcal B_d$ is required.
+ \end{proof}
++
++\section{Arbitrary noise and worst-case communication}\label{sec:minimax}
++Let $U:\mathbb C^d\to\mathcal H_B$ be an isometry, $d\ge2$, with
++finite-dimensional output, and consider the fixed memoryless channel
++\[
++ \mathcal N_{\mathcal M}=\lambda\operatorname{Ad}_U+(1-\lambda)\mathcal M,
++ \qquad q=1-\lambda,
++\]
++where $\mathcal M$ is any CPTP map. It need not be separable, unital,
++covariant or a replacement channel. We use unassisted classical,
++quantum and private capacities $C,Q,P$, entanglement-assisted classical
++capacity $C_{\rm EA}$, and two-way quantum and key capacities $Q_2,K_2$.
++Only $C_{\rm EA}$ receives free initial entanglement; only $Q_2,K_2$
++receive free authenticated public communication. Each block has finite
++memories, alphabets and rounds, with no uniform bound across blocklengths.
++All private tasks include the full channel environment and public record.
++The infima below optimize over fixed channels, with codes allowed to
++depend on the channel. They are not compound-channel or adversarial-noise
++capacities.
++
++\begin{corollary}[Six noise-universal bounds]\label{cor:universal}
++Define the benchmarks and losses by
++\[
++\begin{array}{c|c|c}
++ X&r_X&c_X\\ \hline
++ C&\lambda\log_2d&h(\lambda)\\
++ C_{\rm EA}&2\lambda\log_2d&h(\lambda)\\
++ Q,P&(2\lambda-1)_+\log_2d&h(\lambda)\\
++ Q_2,K_2&\lambda\log_2d&h(\lambda)+q\log_2 5
++\end{array}
++\]
++For every $\mathcal M$, $X(\mathcal N_{\mathcal M})\ge
++\max\{0,r_X-c_X\}$, and
++\begin{equation}\label{eq:minimaxbounds}
++ \max\{0,r_X-c_X\}\le\inf_{\mathcal M}X(\mathcal N_{\mathcal M})\le r_X.
++\end{equation}
++For $\lambda\le1/2$, the $Q$ and $P$ infima are exactly zero.
++The losses are at most one bit for the first four capacities and
++$\log_2 6$ for the last two; all tend to zero as $\lambda\to1$,
++uniformly in dimension and noise.
++\end{corollary}
++\begin{proof}
++The first four lower bounds are standard entropy-of-mixture estimates.
++For a uniform orthonormal input ensemble, put
++$\omega_i=\mathcal M(|i\rangle\langle i|)$ and
++$\bar\omega=d^{-1}\sum_i\omega_i$. Concavity and the mixture upper bound
++give Holevo information at least
++$\lambda\log_2d-h(\lambda)+q[S(\bar\omega)-d^{-1}\sum_iS(\omega_i)]$.
++For the Bell input write the output as
++$\rho=\lambda\Phi_U+q\chi$, where $\chi_A=I/d$. Then
++\[
++ S(\rho_B)\ge\lambda\log_2d+qS(\chi_B),\qquad
++ S(\rho_{AB})\le h(\lambda)+q[\log_2d+S(\chi_B)].
++\]
++Coherent-information coding and $P\ge Q$ give the $Q,P$ bounds;
++adding $S(\rho_A)=\log_2d$ and the entanglement-assisted coding theorem
++gives the $C_{\rm EA}$ bound \cite{wq,bsst}.
++
++For $Q_2,K_2$, Bob projects onto $\operatorname{ran}U$. The retained
++unnormalized state is $\lambda\Phi_d+\delta\chi'$ for some
++$0\le\delta\le q$. Apply Theorem~\ref{thm:recovery} to its normalized
++state and multiply the achievable rate by $\lambda+\delta$.
++This gives $\lambda\log_2d-b(\lambda,\delta)-\delta\log_2 5$,
++at least the asserted bound. The rejected state's Alice marginal is
++irrelevant: those copies are discarded. Distributing Choi copies and
++distilling them is allowed for $Q_2$, and $K_2\ge Q_2$.
++
++For the upper bound on the infimum, choose any replacement noise.
++The resulting channel is receiver postprocessing of the erasure channel
++with survival $\lambda$, whose six capacities are $r_X$
++\cite{bds,bsst,dsw}. For completeness, erasure has coherent-information
++rate $(2\lambda-1)\log_2d$ when degradable and has $Q=P=0$ when
++antidegradable; its two-way quantum/key rate is $\lambda\log_2d$,
++achieved on successful transmissions and bounded by the erasure
++squashed-entanglement bound. This upper bound concerns the infimum,
++not every noise: $\mathcal M=\operatorname{Ad}_U$ is noiseless.
++\end{proof}
++
++The worst noise admits a standard symmetry reduction. We give the
++resource accounting because private and unassisted capacities must
++not silently receive free shared secret randomness. Define the
++depolarizing channel $\mathcal D_f$ through its normalized Choi state
++\begin{equation}\label{eq:isotropic}
++ J_f=f\Phi_d+\frac{1-f}{d^2-1}(I-\Phi_d),\qquad
++ \mathcal D_f(\rho)=p_f\rho+(1-p_f)\frac{I}{d}\Tr\rho,
++ \quad p_f=\frac{d^2f-1}{d^2-1}.
++\end{equation}
++
++\begin{proposition}[Simultaneous minimax reduction]\label{prop:minimax}
++For each of the six capacities above,
++\begin{equation}\label{eq:exactminimax}
++ \inf_{\mathcal M}X(\mathcal N_{\mathcal M})
++ =X(\mathcal D_{f_*}),\qquad f_* = \max\{\lambda,d^{-2}\}.
++\end{equation}
++One noise channel attains all six infima simultaneously. This reduces
++the problem to depolarizing capacities; it does not evaluate the
++generally unknown quantum, private or two-way capacities.
++\end{proposition}
++\begin{proof}
++First suppose $U=I$. Conjugation twirling sends any channel $\mathcal N$
++to $\mathcal D_f$, where $f=\langle\Phi_d|J_{\mathcal N}|\Phi_d\rangle$.
++The Haar average is a finite convex combination of unitary conjugations
++by finite-dimensional convexity. Twirling cannot increase any of the
++six capacities. For $C,Q,C_{\rm EA}$, expand an $n$-use code for the
++twirled channel over the independent unitary seeds. Average decoding
++error or entanglement infidelity tends to zero, so one deterministic
++sequence works; absorb it into the encoder and decoder. This is the
++usual coding use of twirling \cite[Appendix B]{bdsw}.
++
++For $P$, a Stinespring dilation of the twirl retains a coherent seed
++register. Dephasing that register in Eve's output gives the actual
++environment of $\mathcal N$ with the public seed. Contractivity gives
++security for this degraded environment. Since the seed is independent
++of the message, the block diagonal secrecy distance is the average
++conditional secrecy distance. A deterministic sequence has vanishing
++sum of average decoding and secrecy errors. Thus no random resource
++is added to the unassisted code. For adaptive $Q_2,K_2$, fresh public
++seeds implement each twirled use. Measuring the coherent environment
++seed gives precisely this implementation, with every seed retained by
++Eve. The original protocol ignores those extra labels after the required
++conjugations; the full output security is preserved by contractivity.
++
++For $\mathcal N=\lambda\id+q\mathcal M$ we have $f\ge\lambda$.
++When $\lambda\ge d^{-2}$, $p_f\ge p_\lambda\ge0$; receiver
++postprocessing by a depolarizing channel of parameter $p_\lambda/p_f$
++reduces $\mathcal D_f$ to $\mathcal D_\lambda$. The case $p_f=0$ is
++immediate. Hence $X(\mathcal N)\ge X(\mathcal D_\lambda)$.
++Equality is attained by the CPTP noise
++\[
++ \mathcal M_0(\rho)=\frac{dI\Tr\rho-\rho}{d^2-1},
++ \qquad J_{\mathcal M_0}=\frac{I-\Phi_d}{d^2-1}.
++\]
++When $\lambda\le d^{-2}$, the CPTP map
++$\mathcal M=(\mathcal D_{d^{-2}}-\lambda\id)/(1-\lambda)$
++makes the mixture completely depolarizing. Its Choi eigenvalues are
++$(d^{-2}-\lambda)/(1-\lambda)$ on $\Phi_d$ and
++$[d^2(1-\lambda)]^{-1}$ on its orthogonal complement.
++All six capacities then vanish.
++
++For general $U$, decode by
++$\mathcal R(Y)=U^*YU+\Tr[(I-UU^*)Y]\tau_0$, with any state $\tau_0$.
++This CPTP map satisfies $\mathcal R\operatorname{Ad}_U=\id$,
++so the lower bound reduces to the square case. Composing its attaining
++noises with $\operatorname{Ad}_U$ gives equality.
++\end{proof}
++
++The classical formulas in this reduction are established results.
++For $\lambda\ge d^{-2}$, put $a=(d\lambda+1)/(d+1)$. King
++\cite[Theorem 1]{king} and Bennett et al.\ \cite{bsst} give, respectively,
++\begin{align*}
++ \inf_{\mathcal M}C(\mathcal N_{\mathcal M})
++ &=\log_2d-h(a)-(1-a)\log_2(d-1),\\
++ \inf_{\mathcal M}C_{\rm EA}(\mathcal N_{\mathcal M})
++ &=2\log_2d-h(\lambda)-(1-\lambda)\log_2(d^2-1).
++\end{align*}
++Below $d^{-2}$ both are zero. The new classification bound instead
++controls the unresolved two-way rates with an absolute interval.
++
++\begin{corollary}[An absolute isotropic interval]\label{cor:isotropic}
++For $f\ge1/d$, set
++\[
++ q=1-f,\quad t=\frac{q}{d+1},\quad w=f+t,\quad
++ v=w\log_2d-wh(f/w)-t\log_2(d-1),
++\]
++and define
++\[
++ L=\max\{0,v-h(w)-2(1-w)\},\qquad
++ U=\log_2d-h(f)-q\log_2(d-1).
++\]
++Both $E_D(J_f)$ and $K_D(J_f)$ lie in $[L,U]$, whose width is exactly
++\begin{equation}\label{eq:isowidth}
++ U-L=\min\{U,qA_d\},\qquad
++ A_d=\frac{2d}{d+1}+\log_2(d+1)-\frac{d}{d+1}\log_2(d-1).
++\end{equation}
++The same interval bounds the two minimax capacities in
++\eqref{eq:exactminimax} with $f=\lambda\ge1/d$.
++For fixed $0<f<1$, its width tends to $2(1-f)$ as $d\to\infty$.
++The two-way minimax capacities vanish for $\lambda\le1/d$ and are
++strictly positive for $\lambda>1/d$.
++\end{corollary}
++\begin{proof}
++The correlated block of $J_f$ has eigenvalues $f$ and
++$q/(d^2-1)$ with multiplicity $d-1$, total weight $w$ and uniform
++diagonal. Thus Theorem~\ref{thm:classification} gives $L$.
++The known isotropic relative entropy is $E_R(J_f)=U$
++\cite[Supplementary Note 5, Eqs.\ (S195)--(S196)]{plob}; it bounds
++both rates. The entropy chain rule
++\[
++ h(w)+wh(f/w)=h(f)+q h\!\left(\frac1{d+1}\right)
++\]
++gives $U-[v-h(w)-2(1-w)]=qA_d$, proving \eqref{eq:isowidth}.
++Depolarizing channels are teleportation covariant, so their two-way
++capacities equal $E_D(J_f)$ and $K_D(J_f)$ respectively: distribution
++gives one direction and exact teleportation simulation gives the other
++\cite{bdsw,plob}. Isotropic states are separable up to $f=1/d$;
++above it, reduction violation gives positive distillability
++\cite{hh,vw}. This proves the threshold, even where the displayed
++quantitative lower bound is zero.
++\end{proof}
++Vollbrecht--Wolf \cite[Section VI.B--C, Eqs.\ (40)--(47)]{vw}
++already obtained the optimal normalized isotropic rate
++$E_D(J_f)/\log_2d\to f$. The assertion here is the finite-dimensional
++absolute interval \eqref{eq:isowidth}, not that prelog, the symmetry
++reduction, or the established classical and entanglement-assisted
++formulas. No equality $E_D=K_D$, optimal constant, or exact positive
++depolarizing quantum/private capacity is claimed.
++
+ 
+ \section{Oscillator model, prior work and conventions}
+ Let $\mathcal H=\ell^2(\mathbb N_0)$ and
+@@ -937,6 +1152,11 @@
+ finite phase averages, including explicit control families. These
+ finite-matrix checks are not proofs of asymptotic coding,
+ security, capacity, or exhaustive counterexample searches.
++The minimax supplement adds 65 exact rational checks and 45 numerical
++parameter cases, including an independent nonidentity Weyl construction,
++correlated-block spectra and the interval-width identity; its largest
++algebraic residual is below $2\,10^{-14}$. It does not test coding
++or privacy by simulation.
+ 
+ Table~\ref{tab:bounds} gives conservative analytic gap bounds from
+ \eqref{eq:choose} for $\lambda=0.7$ and only the assumption $M\le10$.
+@@ -971,7 +1191,10 @@
+ The argument does not cover reset states changing arbitrarily with $N$,
+ general infinite-dimensional input-dependent noise, partial-loss fading
+ components or Gaussian thermal attenuation. The separate finite-dimensional
+-identity/entanglement-breaking result has the scope in Corollary~\ref{cor:ebchannel}. It determines neither finite-$N$ capacities nor optimal error
++arbitrary-noise result in Section~\ref{sec:minimax} concerns fixed memoryless
++channels and codes that can depend on them. It does not provide adversarial
++noise protection or evaluate the unknown depolarizing capacity functions.
++The oscillator result determines neither finite-$N$ capacities nor optimal error
+ rates or second-order coding costs. The growing code dimension is an
+ asymptotic construction, not an efficient experimental receiver.
+ Exact finite-energy classical additivity for arbitrary reset states
+@@ -1078,5 +1301,21 @@
+ Semidefinite hierarchies for diagonal unitary invariant bipartite
+ quantum states,
+ \href{https://arxiv.org/abs/2512.06551v2}{arXiv:2512.06551v2} (2026).
++
++\bibitem{bdsw} C.~H. Bennett, D.~P. DiVincenzo, J.~A. Smolin and
++W.~K. Wootters, Mixed-state entanglement and quantum error correction,
++\emph{Phys.\ Rev.\ A} \textbf{54}, 3824--3851 (1996).
++\href{https://arxiv.org/abs/quant-ph/9604024}{arXiv:quant-ph/9604024}.
++\bibitem{king} C. King, The capacity of the quantum depolarizing channel,
++\emph{IEEE Trans.\ Inf.\ Theory} \textbf{49}, 221--229 (2003).
++\href{https://arxiv.org/abs/quant-ph/0204172}{arXiv:quant-ph/0204172}.
++\bibitem{bsst} C.~H. Bennett, P.~W. Shor, J.~A. Smolin and
++A.~V. Thapliyal, Entanglement-Assisted Classical Capacity of Noisy
++Quantum Channels, \emph{Phys.\ Rev.\ Lett.} \textbf{83}, 3081--3084 (1999).
++\href{https://arxiv.org/abs/quant-ph/9904023}{arXiv:quant-ph/9904023}.
++\bibitem{plob} S. Pirandola, R. Laurenza, C. Ottaviani and L. Banchi,
++Fundamental limits of repeaterless quantum communications,
++\emph{Nature Communications} \textbf{8}, 15043 (2017).
++\href{https://arxiv.org/abs/1510.08863}{arXiv:1510.08863}.
+ \end{thebibliography}
+ \end{document}
