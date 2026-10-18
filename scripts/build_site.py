@@ -1647,12 +1647,35 @@ def write_catalogue_exports(papers: list, groups: dict, timestamps: dict) -> Non
     )
 
 
-def write_sitemaps(papers: list, groups: dict, profiles: list[dict], canonical_url: str) -> None:
+def page_update_times(paper, versions: list, timestamps: dict, assessments: list) -> tuple[str | None, dict[str, str]]:
+    """Recorded web events that changed a record's pages: deposits, version releases and exact-version assessments.
+
+    Returns the latest event for the record page and each version's own release time. Only recorded deposit,
+    publication and assessment timestamps count; cited manuscript dates and scheduled rebuilds never do.
+    """
+    def stamp(value):
+        try:
+            return parse_exact_timestamp(str(value)) if value else None
+        except (TypeError, ValueError):
+            return None
+    released = {}
+    for version in versions:
+        entry = timestamps.get((version.id, version.version)) or {}
+        if entry.get("publication_state") == "published" and stamp(entry.get("published_at")):
+            released[version.version] = entry["published_at"]
+    events = [(stamp(value), value) for value in released.values()]
+    events += [(stamp(entry.get("deposit_recorded_at")), entry.get("deposit_recorded_at")) for entry in (timestamps.get((version.id, version.version)) or {} for version in versions)]
+    events += [(stamp(item.get("assessed_at")), item.get("assessed_at")) for item in assessments_for(assessments, paper)]
+    events = [event for event in events if event[0]]
+    return (max(events)[1] if events else None), released
+
+
+def write_sitemaps(papers: list, groups: dict, profiles: list[dict], canonical_url: str, timestamps: dict | None = None, assessments: list | None = None) -> None:
     if not canonical_url:
         return
-    # Cited manuscript dates are not web-page modification dates. Omit optional
-    # lastmod until actual per-page update evidence is available; scheduled builds
-    # and unrelated new papers must not invent freshness signals.
+    # Cited manuscript dates are not web-page modification dates. lastmod is given only for
+    # record and version pages, from recorded release and assessment times (page_update_times);
+    # scheduled builds and unrelated new papers must not invent freshness signals.
     urls = [
         f"{canonical_url}/",
         f"{canonical_url}/papers/",
@@ -1683,6 +1706,15 @@ def write_sitemaps(papers: list, groups: dict, profiles: list[dict], canonical_u
     submit_page_count = max(1, (sum(paper.record_type == "research_paper" for paper in papers) + 49) // 50)
     urls.extend(f"{canonical_url}/submit/page/{page}/" for page in range(2, submit_page_count + 1))
     urls.extend(f"{canonical_url}/{record_route(paper.metadata)}/{paper.id}/" for paper in papers)
+    lastmod: dict[str, str] = {}
+    if timestamps is not None:
+        for paper in papers:
+            route = record_route(paper.metadata)
+            latest, released = page_update_times(paper, groups[paper.id], timestamps, assessments or [])
+            if latest:
+                lastmod[f"{canonical_url}/{route}/{paper.id}/"] = latest
+            for version, released_at in released.items():
+                lastmod[f"{canonical_url}/{route}/{paper.id}/versions/{version}/"] = released_at
     for paper in papers:
         route = record_route(paper.metadata)
         # The permanent page of the current version declares the record page as its canonical, so only older versions are listed.
@@ -1691,16 +1723,19 @@ def write_sitemaps(papers: list, groups: dict, profiles: list[dict], canonical_u
             for version in groups[paper.id]
             if version.version != paper.version
         )
+    def entry(url: str) -> str:
+        return f"  <url><loc>{esc(url)}</loc>" + (f"<lastmod>{esc(lastmod[url])}</lastmod>" if url in lastmod else "") + "</url>\n"
+
     chunks = [urls[index : index + 10_000] for index in range(0, len(urls), 10_000)]
     if len(chunks) == 1:
-        sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"  <url><loc>{esc(url)}</loc></url>\n" for url in chunks[0]) + "</urlset>\n"
+        sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(entry(url) for url in chunks[0]) + "</urlset>\n"
         write(OUTPUT_DIR / "sitemap.xml", sitemap)
         return
 
     sitemap_links = []
     for number, chunk in enumerate(chunks, start=1):
         filename = f"sitemaps/sitemap-{number:05d}.xml"
-        sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"  <url><loc>{esc(url)}</loc></url>\n" for url in chunk) + "</urlset>\n"
+        sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(entry(url) for url in chunk) + "</urlset>\n"
         write(OUTPUT_DIR / filename, sitemap)
         sitemap_links.append(f"  <sitemap><loc>{esc(canonical_url + '/' + filename)}</loc></sitemap>\n")
     index = '<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(sitemap_links) + "</sitemapindex>\n"
@@ -1997,7 +2032,7 @@ def main() -> int:
         "User-agent: OAI-SearchBot\nAllow: /\n\nUser-agent: *\nAllow: /\n"
         + (f"Sitemap: {canonical_url}/sitemap.xml\n" if canonical_url else ""),
     )
-    write_sitemaps(papers, groups, profiles, canonical_url)
+    write_sitemaps(papers, groups, profiles, canonical_url, timestamps, assessments)
     write_llm_guides(papers, canonical_url)
 
     analytics_pages = {}
