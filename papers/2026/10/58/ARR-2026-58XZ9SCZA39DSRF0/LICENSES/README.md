@@ -1,0 +1,1 @@
+Manuscript, source and textual reports: CC BY4.0. Metadata and generated data: CC0. Authored verification programs: Apache2.0, copyright2026 Lluis Eriksson. Third-party sources/libraries retain their own terms and are not redistributed. Scoped licenses also apply inside archives.

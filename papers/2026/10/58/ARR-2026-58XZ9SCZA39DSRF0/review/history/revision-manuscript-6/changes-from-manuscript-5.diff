@@ -1,0 +1,571 @@
+--- manuscript-5/main.tex
++++ manuscript-6/main.tex
+@@ -12,7 +12,7 @@
+ \newcommand{\Rcal}{\mathcal R_{\lambda,\tau}}
+ \newcommand{\Ecal}{\mathcal E_\lambda}
+ \newcommand{\id}{\operatorname{id}}
+-\title{Constant-gap entanglement distillation\\and noise-universal quantum communication}
++\title{Constant-gap entanglement distillation\\and a spectral criterion for noise-universal communication}
+ \author{Lluis Eriksson}
+ \date{18 October 2026 --- Working paper}
+ \begin{document}\maketitle
+@@ -34,12 +34,19 @@
+ six capacity guarantees and reduce their simultaneous worst cases to
+ depolarizing channels. An explicit isotropic interval has absolute width
+ tending to $2(1-f)$ at fixed entangled fraction $f$, refining the known
+-relative large-dimension approximation. For every fixed oscillator reset
+-state, even at infinite energy or entropy, six capacities approach erasure
+-benchmarks with absolute $o(1)$ loss. We also obtain reversible distributed
+-states and a vanishing classical arbitrary-partner additivity defect.
+-No optimal constant, efficient
+-implementation or exact finite-energy capacity is asserted.
++relative large-dimension approximation. For general discrete Hamiltonians with a finite partition sum at some
++temperature, we identify the exact spectral boundary of absolute
++entanglement-assisted recovery: for each fixed reset state, the loss
++vanishes precisely when the partition sum diverges at its critical
++inverse temperature. In that regime all six capacities attain their
++erasure benchmarks with absolute $o(1)$ loss. In the complementary
++regime every fixed reset has a strictly positive limiting assisted
++deficit, given by a critical-Gibbs variational formula. An explicit
++integer spectrum has an exact constant-loss plateau. The reset may
++have infinite energy or entropy. Oscillator consequences include
++reversible distributed states and a vanishing classical arbitrary-partner
++additivity defect. Optimal constants, efficient implementations and
++general exact finite-energy capacities remain unresolved.
+ \end{abstract}
+ 
+ \section{Introduction and scope}
+@@ -87,10 +94,26 @@
+ We give the finite-dimensional operational proof first, then the
+ oscillator construction and its separate channel-theoretic dependencies.
+ 
++Section~\ref{sec:spectral} determines when the oscillator mechanism
++extends to a general discrete Hamiltonian. The critical Gibbs entropy
++description is established \cite[Proposition 1a]{shirokoventropy};
++we derive an operational dichotomy from it. Divergence of the partition
++sum at the critical inverse temperature permits entropy-preserving
++escape and six absolute recovery laws. If the critical sum is finite,
++every fixed reset state instead has a positive entanglement-assisted
++deficit, characterized by relative entropy to the critical Gibbs state
++plus a continuous binary-flag loss. The proof uses infinite-dimensional
++relative-entropy sufficiency \cite{jencova} and finite-flag continuity
++\cite{shirokovcontinuity}. A constructed spectrum makes the loss
++constant at every sufficiently large energy. The scalar vacuum-reset
++decomposition is credited to \cite[Appendix C]{catalano}; the new claim
++is the capacity criterion and defect, not that decomposition or the
++critical entropy description.
++
+ The constants are not claimed optimal, and the protocols are asymptotic
+ existence results, not efficient coding algorithms. We do not claim
+ general mixed-state reversibility, resolution of NPT bound entanglement,
+-exact finite-energy reset capacities, or exhaustive priority certification.
++general exact finite-energy reset capacities, or exhaustive priority certification.
+ 
+ \section{Entanglement recovery with a constant absolute loss}\label{sec:recovery}
+ All systems in this section are finite dimensional. $E_D$ is two-way
+@@ -1098,6 +1121,453 @@
+ \end{proof}
+ This is an asymptotic classical statement, not exact additivity at finite
+ energy. No quantum or private arbitrary-partner additivity is asserted.
++
++\section{A sharp spectral criterion for absolute recovery}\label{sec:spectral}
++The oscillator construction extends to a larger class of Hamiltonians,
++but not to every Hamiltonian with finite entropy at finite energy.
++In this section $H$ has a countably infinite eigenbasis, eigenvalues
++$0=e_0\le e_1\le\cdots\to\infty$, finite multiplicities, and
++$Z(\beta):=\Tr 2^{-\beta H}<\infty$ for at least one $\beta>0$.
++Define
++\[
++ \beta_c=\inf\{\beta\ge0:Z(\beta)<\infty\},\qquad
++ Z_c=\lim_{\beta\downarrow\beta_c}Z(\beta),\qquad
++ F_H(E)=\sup_{\Tr H\rho\le E}S(\rho).
++\]
++Thus $\beta_c<\infty$ and $1<Z_c\le\infty$. The base of the
++exponential fixes the units of $\beta$; all entropies remain in bits.
++The input, error and security conventions are those above, with $H$
++replacing the number operator. In particular, the two-way convention is
++countably decomposable LOCC, with expected block-average input cost.
++Fix $0<\lambda<1$ and any density operator $\tau$; neither its energy
++nor its entropy is required to be finite.
++
++\Needspace{18\baselineskip}
++\begin{theorem}[Critical-partition dichotomy]\label{thm:spectral}
++If $Z_c=\infty$, then for every fixed $\tau$,
++\begin{equation}\label{eq:spectral-six}
++ X(\Rcal,H,E)=r_X F_H(E)+o(1),\qquad E\to\infty,
++\end{equation}
++simultaneously for
++\[
++ (X,r_X)=
++ (C,\lambda),\ (C_{\rm EA},2\lambda),\
++ (Q,(2\lambda-1)_+),\ (P,(2\lambda-1)_+),\
++ (Q_2,\lambda),\ (K_2,\lambda).
++\]
++Each benchmark is an upper bound. If $Z_c<\infty$, put
++$\gamma_c=2^{-\beta_cH}/Z_c$. Then, for every fixed $\tau$,
++\begin{align}
++ 2\lambda F_H(E)-C_{\rm EA}(\Rcal,H,E)
++   &\longrightarrow\Delta_{\lambda,\tau}(H)>0,
++       \label{eq:spectral-defect}\\
++ \Delta_{\lambda,\tau}(H)
++   &=\inf_{\rho:\Tr H\rho<\infty}
++       \{2\lambda D(\rho\Vert\gamma_c)+e_{\lambda,\tau}(\rho)\},
++       \label{eq:critical-variational}\\
++ 0<\Delta_{\lambda,\tau}(H)
++   &\le e_{\lambda,\tau}(\gamma_c)\le h(\lambda).
++       \label{eq:critical-bounds}
++\end{align}
++Here $e_{\lambda,\tau}$ is the finite binary-flag loss defined in
++Lemma~\ref{lem:flag-continuity}. In particular, for each fixed reset
++state, absolute entanglement-assisted recovery holds if and only if
++$Z_c=\infty$. No finite-$Z_c$ formula for $Q,P,Q_2,K_2$ is asserted.
++\end{theorem}
++
++The critical Gibbs entropy description used below is established:
++Shirokov \cite[Proposition 1a]{shirokoventropy} gives the variational
++formula, critical slope, linear regime and possible nonattainment.
++We use that description to distinguish two operational capacity regimes.
++The general energy-capacity formulas of \cite{wq,dsw} with an
++all-temperature Gibbs hypothesis cannot simply be applied here, since
++$\beta_c$ may be positive. We give the erasure converse directly.
++
++\subsection{Entropy escape and the erasure benchmark}
++\begin{lemma}\label{lem:spectral-escape}
++Under the stated spectral assumptions,
++\begin{equation}\label{eq:critical-entropy}
++ \frac{F_H(E)}{E}\longrightarrow\beta_c,\qquad
++ F_H(E)-\beta_cE\nearrow\log_2 Z_c.
++\end{equation}
++If $Z_c=\infty$, there exist diagonal finite-rank states $\sigma_E$
++and their support projections $P_E$ such that
++\begin{equation}\label{eq:spectral-escape}
++ \Tr H\sigma_E<E,\qquad
++ S(\sigma_E)=F_H(E)-o(1),\qquad
++ \Tr P_E\tau\longrightarrow0
++\end{equation}
++for every fixed trace-class density $\tau$.
++\end{lemma}
++\begin{proof}
++For completeness, the relevant entropy argument can be expressed by
++the Gibbs duality
++\[
++ \log_2 Z(\beta)=\sup_{E\ge0}\{F_H(E)-\beta E\}.
++\]
++The finite concave nondecreasing function $F_H$ has an asymptotic
++slope. Gibbs' bound makes it at most $\beta_c$. A strictly smaller
++slope would make the displayed supremum finite for some
++$\beta<\beta_c$, a contradiction. All secant slopes dominate the
++asymptotic slope, so $F_H(E)-\beta_cE$ is nondecreasing. Its
++supremum is $\log_2 Z_c$, proving \eqref{eq:critical-entropy}.
++This reasoning does not assume that the entropy supremum is attained.
++
++Remove the first $m$ energy eigenvectors, and write $Z_{>m}$ and
++$F_{>m}$ for the partition sum and entropy supremum on the remaining
++space. For fixed $m$ and sufficiently large $E$, its Gibbs distribution
++has mean $E$ at an inverse temperature $\beta_m(E)>\beta_c$.
++Its mean tends to infinity as $\beta\downarrow\beta_c$: otherwise
++integrating the bounded mean, the negative derivative of
++$\log Z_{>m}$, would contradict the divergence of $Z_{>m}$.
++Thus $\beta_m(E)\downarrow\beta_c$. Evaluating the full Gibbs bound
++at that temperature gives
++\[
++ 0\le F_H(E)-F_{>m}(E)
++ \le\log_2\frac{Z(\beta_m(E))}{Z_{>m}(\beta_m(E))}
++ \longrightarrow0.
++\]
++The removed partition sum is bounded and the retained sum diverges.
++Choose $m=m(E)\to\infty$ slowly by a diagonal argument. Upper
++truncation of each tail Gibbs distribution preserves its entropy in
++the limit and lowers its mean energy. If necessary, first decrease
++the chosen mean by a positive amount tending sufficiently quickly
++to zero; continuity of the finite concave entropy supremum supplies
++strict energy slack with $o(1)$ entropy loss. The resulting finite
++spectral window lies above its first $m(E)$ vectors. Consequently
++$\Tr P_E\tau\le\Tr\mathbf1_{\{j>m(E)\}}\tau\to0$ for every fixed
++$\tau$. There is no uniform rate over all density operators.
++\end{proof}
++
++\begin{lemma}[Erasure with a single finite partition sum]\label{lem:general-erasure}
++For the six operational conventions of Theorem~\ref{thm:spectral},
++\begin{equation}\label{eq:general-erasure}
++ X(\Ecal,H,E)=r_XF_H(E).
++\end{equation}
++\end{lemma}
++\begin{proof}
++For $E>0$, finite-support entropy approximants with strict cost slack, followed
++by finite-dimensional erasure coding, give achievability. The order
++is: fix the finite approximation, take block length to infinity,
++then improve the approximation. For two-way transmission the
++receiver announces the surviving copies and distills their pure
++entanglement. No entropy-maximizing infinite-dimensional code state
++is required. At $E=0$, use the finite ground eigenspace directly.
++
++For the converse, any admissible $n$-use average input has
++$S(\rho_{A^n})\le\sum_iS(\rho_{A_i})\le nF_H(E)<\infty$.
++The erasure outputs and complementary outputs also have finite
++entropy, bounded by this sum plus $nh(\lambda)$.
++Conditioning on the independent erasure pattern bounds the output
++Holevo quantity by $\lambda\sum_i S(\rho_{A_i})$.
++Fano's inequality on the finite message alphabet proves the $C$
++converse. For assistance, $I(\rho,\Ecal)=2\lambda S(\rho)$;
++mutual-information subadditivity gives the corresponding $n$-use
++bound. The general constrained entanglement-assisted formula
++\cite[Theorem 1]{hs} applies to the present positive observable.
++
++For $\lambda\le1/2$ erasure is antidegradable, so $Q=P=0$.
++For $\lambda>1/2$ let $B^n$ and $W^n$ be its output and full
++environment. Product degradability and data processing of total
++correlation give
++\begin{align*}
++ I_c(\rho,\Ecal^{\otimes n})
++ &=\sum_i I_c(\rho_{A_i},\Ecal)
++       -\operatorname{TC}(B^n)+\operatorname{TC}(W^n)\\
++ &\le(2\lambda-1)\sum_i S(\rho_{A_i}).
++\end{align*}
++Here $\operatorname{TC}(B^n)=\sum_iS(B_i)-S(B^n)$, and similarly
++for $W^n$. All these entropy expressions are finite. If a quantum encoder has
++an additional purifying system $F$, then
++$S(F)\le S(R)+S(A^n)<\infty$ for its finite logical reference $R$.
++The complementary channel is antidegradable, so $FW^n$ has a
++two-extension on $W^n$. Weak monotonicity gives $S(F|W^n)\ge0$,
++and purity of the full dilation gives
++$I(R\rangle B^n)=I_c(\rho,\Ecal^{\otimes n})-S(F|W^n)$.
++Coherent-information monotonicity under decoding and continuity on
++the finite logical reference prove the quantum converse.
++For any finite private ensemble, its private information is
++$I_c(\bar\rho)-\sum_xp_x I_c(\rho_x)$.
++Degradability makes each subtracted coherent information nonnegative;
++classical Fano and secrecy continuity on the finite message register
++give the same private converse. None of these arguments uses uniform
++entropy continuity on the whole energy ball.
++
++For two-way protocols consider one input system $A$ held by Alice,
++with her remaining memory $L$ and Bob's memory $B$. Transferring $A$
++to Bob can increase squashed entanglement by at most $S(A)$.
++Indeed the extended conditional-mutual-information chain rule
++\cite[equation (14)]{shirokovcontinuity} gives, for any extension $W$,
++\[
++ I(L;AB|W)\le I(LA;B|W)+2S(A).
++\]
++Choose an extension within any positive tolerance of the pre-use
++squashed entanglement. Starting from zero, this quantity remains
++finite by induction, and $S(A)$ is finite by the input cost, so
++there is no subtraction of infinite quantities. Failure is a local
++discard and cannot increase squashed entanglement. Store the
++independent success flag in the extension; the expected increment
++is at most $\lambda S(A)$. Average over public histories and apply
++entropy concavity and Jensen's inequality to obtain
++\[
++ E_{\rm sq}(\text{final state})\le\lambda nF_H(E).
++\]
++We use squashed entanglement in infinite dimensions
++\cite[Proposition 2B]{shirokovsquashed} and the approximate-private-state bound
++\cite[Theorem 2]{wildeprivate}. Retain the local purifiers
++as shields when representing the key protocol by an approximate private
++state; Eve includes the public transcript. The bound is applied to
++that state, before measuring its key registers. Its error terms
++depend on the finite key size, not on shield dimension.
++With vanishing error it bounds the secret-key rate, and therefore
++the entanglement rate, by $\lambda F_H(E)$.
++The operations retain the stated countably decomposable convention.
++\end{proof}
++
++\begin{proof}[Proof of \eqref{eq:spectral-six}]
++Decode the finite spectral window of Lemma~\ref{lem:spectral-escape}
++by projection and an orthogonal failure flag. The accepted reset
++weight is $\delta_E=(1-\lambda)\Tr P_E\tau\to0$ and its binary
++ambiguity cost is $b_E=(\lambda+\delta_E)
++h(\lambda/(\lambda+\delta_E))\to0$.
++The finite-channel results proved above give respectively the lower
++bounds
++\[
++ \lambda S(\sigma_E)-b_E,\quad
++ 2\lambda S(\sigma_E)-b_E,\quad
++ [(2\lambda-1)S(\sigma_E)-b_E]_+,
++\]
++for $C,C_{\rm EA},Q/P$, and
++$[\lambda S(\sigma_E)-b_E-\delta_E\log_2 5]_+$ for $Q_2/K_2$.
++The paid seed uses copies of the same strictly admissible input.
++Reset is postprocessing of erasure, so Lemma~\ref{lem:general-erasure}
++supplies all upper bounds. Substitution of
++$S(\sigma_E)=F_H(E)-o(1)$ proves the result. For $\lambda\le1/2$,
++the quantum and private capacities are identically zero.
++\end{proof}
++
++\subsection{A finite flag and a positive variational defect}
++The necessity statement is stronger than a counterexample using a
++vacuum reset: every fixed reset state has a positive limiting
++entanglement-assisted deficit when $Z_c$ is finite.
++
++\begin{lemma}\label{lem:flag-continuity}
++For any density operators $\rho,\tau$, choose a purification
++$\psi_\rho$ with $B$ marginal $\rho$, and let
++\[
++ \Omega_{JRB}=
++ \lambda|0\rangle\langle0|_J\otimes\psi_\rho
++ +(1-\lambda)|1\rangle\langle1|_J\otimes\rho_R\otimes\tau_B.
++\]
++The quantity $e_{\lambda,\tau}(\rho):=I(J;R|B)_\Omega$ is
++well defined, continuous in trace norm in $\rho$ and $\tau$, and
++lies in $[0,h(\lambda)]$. If $S(\rho)<\infty$, then
++\begin{equation}\label{eq:flag-loss-exact}
++ I(\rho,\Rcal)=2\lambda S(\rho)-e_{\lambda,\tau}(\rho).
++\end{equation}
++For every faithful mixed state $\gamma$,
++$e_{\lambda,\tau}(\gamma)>0$, even if $S(\gamma)=\infty$.
++\end{lemma}
++\begin{proof}
++Equivalently, $e$ is the difference of the Holevo quantities of
++the two binary ensembles
++$\{\lambda,\psi_\rho;1-\lambda,\rho_R\otimes\tau\}$ and
++$\{\lambda,\rho;1-\lambda,\tau\}$.
++Define those quantities through relative entropy. Both are finite
++and at most $h(\lambda)$, regardless of the state entropies.
++Data processing gives the asserted bounds. Keeping $J$ in the
++channel output gives $I(R;BJ)=2\lambda S(\rho)$; the chain rule
++then proves \eqref{eq:flag-loss-exact} when $S(\rho)$ is finite.
++Canonical purifications vary continuously in trace norm, by the
++square-root continuity of positive trace-class operators. Conditional
++mutual information is uniformly continuous when one unconditioned
++system is the two-dimensional $J$
++\cite[Corollary 1, equation (25)]{shirokovcontinuity}.
++This proves continuity of $e$ without continuity of $S(\rho)$.
++
++Suppose $e_{\lambda,\tau}(\gamma)=0$. The binary Holevo data
++processing inequality under $\Tr_R$ is then an equality.
++Each component has finite relative entropy to its ensemble average,
++because that average dominates it by its positive prior weight.
++Equality in relative-entropy data processing therefore supplies one
++normal recovery channel $T:B\to RB$ with
++\[
++ T(\gamma)=\psi_\gamma,\qquad
++ T(\tau)=\gamma_R\otimes\tau.
++\]
++Here we use the infinite-dimensional sufficiency theorem
++\cite[Section 2.3, Theorem 2]{jencova}, restricted to the support
++of the ensemble average; no bounded density inverse is assumed.
++A channel mapping a faithful state to a pure state is constant:
++if $Q=I-\psi_\gamma$, then
++$\Tr\gamma T^*(Q)=0$ and positivity and faithfulness imply
++$T^*(Q)=0$. Every output is consequently supported on that same
++one-dimensional subspace. Thus $T(\tau)=\psi_\gamma$, contrary
++to the mixed product state $\gamma_R\otimes\tau$.
++\end{proof}
++
++\begin{proof}[Proof of \eqref{eq:spectral-defect}--\eqref{eq:critical-bounds}]
++If $Z_c<\infty$, then $\beta_c>0$ and $\gamma_c$ is faithful.
++For every finite-energy input, entropy is finite and the Gibbs
++identity gives
++\[
++ D(\rho\Vert\gamma_c)
++   =\beta_c\Tr H\rho+\log_2 Z_c-S(\rho)<\infty.
++\]
++The constrained entanglement-assisted formula \cite[Theorem 1]{hs}
++and Lemma~\ref{lem:flag-continuity} imply
++\[
++ 2\lambda F_H(E)-h(\lambda)
++ \le C_{\rm EA}(\Rcal,H,E)\le2\lambda F_H(E).
++\]
++Write this finite concave nondecreasing capacity as $C_E$. By
++\eqref{eq:critical-entropy}, $C_E/E\to2\lambda\beta_c$.
++Concavity implies that $C_E-2\lambda\beta_c E$ is nondecreasing,
++so its limit equals its supremum. Optimizing the energy allowance
++down to the mean cost of each input yields
++\begin{align*}
++ \sup_E(C_E-2\lambda\beta_c E)
++ &=\sup_{\Tr H\rho<\infty}
++       [I(\rho,\Rcal)-2\lambda\beta_c\Tr H\rho]\\
++ &=2\lambda\log_2 Z_c-\Delta_{\lambda,\tau}(H).
++\end{align*}
++This identity uses suprema, not existence of an optimizing state.
++Combining it with \eqref{eq:critical-entropy} gives the limit.
++
++If the infimum in \eqref{eq:critical-variational} were zero,
++both its nonnegative summands would vanish along a sequence.
++Pinsker's inequality would give $\rho_n\to\gamma_c$ in trace
++norm. Continuity would then give
++$e_{\lambda,\tau}(\rho_n)\to e_{\lambda,\tau}(\gamma_c)>0$,
++a contradiction. For the upper bound take normalized finite
++energy truncations $\gamma_{c,m}$. Their relative entropy is
++$-\log_2\Tr(P_m\gamma_c)\to0$, and their flag loss converges
++to that of $\gamma_c$. This remains valid when the critical
++state has infinite mean energy or infinite entropy. Neither
++attainment of the variational infimum nor a positive lower bound
++uniform over all reset states is claimed.
++\end{proof}
++
++\subsection{An explicit permanent loss at arbitrarily large energy}
++For a unique ground state and the reset $\tau=|0\rangle\langle0|$,
++the defect is a scalar optimization. Put $q=1-\lambda$ and define
++\begin{align}
++ a&=\lambda+qx,\qquad
++ \mu_\pm=\tfrac12\bigl(a\pm\sqrt{a^2-4\lambda qx(1-x)}\bigr),\nonumber\\
++ f_\lambda(x)&=h(x)+h(\lambda(1-x))
++       -H(\mu_+,\mu_-,q(1-x)),\label{eq:vacuum-scalar}\\
++ e_\lambda(x)&=2\lambda h(x)-f_\lambda(x).\nonumber
++\end{align}
++For a diagonal input $x|0\rangle\langle0|+(1-x)\sigma$,
++$I(\rho,\Rcal)=2\lambda(1-x)S(\sigma)+f_\lambda(x)$.
++These eigenvalues and this decomposition are the established
++vacuum-reset calculation of Catalano et al.
++\cite[Section VI.B and Appendix C, equations (C1)--(C11)]{catalano}.
++Applying it to the excited-space entropy supremum $F_{H,+}$ gives
++\begin{equation}\label{eq:vacuum-general-H}
++ C_{\rm EA}(\Rcal,H,E)=
++ \sup_{0\le x<1}
++ \{2\lambda(1-x)F_{H,+}(E/(1-x))+f_\lambda(x)\},
++\end{equation}
++where $x$ must meet the minimum excited-energy constraint; the
++actual $x=1$ input separately gives zero.
++To justify diagonal restriction without uniform energy-ball entropy
++continuity, average successively over phases on the first finitely
++many energy vectors. Covariance and concavity do not decrease mutual
++information. The pinched inputs converge to the diagonal input,
++and their entropies increase to its finite diagonal entropy, by
++lower semicontinuity and the entropy upper bound on that diagonal.
++The same pinching argument applies to output and complement; the
++latter retains the displayed two-dimensional block and the remaining
++eigenvalues $q(1-x)\operatorname{spec}(\sigma)$. Their limiting
++entropies are finite. Passing to the limit preserves the inequality.
++
++If $Z_c<\infty$, let $Z_+=Z_c-1$ and $p_c=1/Z_c$.
++The excited-space version of \eqref{eq:critical-entropy}, substituted
++into \eqref{eq:vacuum-general-H}, gives
++\begin{equation}\label{eq:vacuum-defect}
++ \Delta_{\lambda,|0\rangle}(H)=
++ \min_{0\le x\le1}
++       \{2\lambda D_{\rm Bern}(x\Vert p_c)+e_\lambda(x)\}.
++\end{equation}
++The remainder is uniform because $E/(1-x)\ge E$; the $x\to1$
++endpoint is approached through admissible $x<1$, and is not a
++claim that the vacuum carries energy. Strict positivity can also
++be checked directly: dephase and coarsen the reference to its
++ground/excited label in the flag-loss expression. This gives
++\[
++ e_\lambda(x)\ge
++ (q+\lambda x)h\!\left(\frac q{q+\lambda x}\right)-xh(\lambda)>0
++ \quad(0<x<1).
++\]
++The last expression is a classical conditional mutual information:
++at the vacuum output an excited reference forces failure, whereas
++a ground reference allows either branch. Compactness and the
++strictly interior $p_c$ prove positivity in \eqref{eq:vacuum-defect}.
++
++\begin{proposition}[An exact constant-loss plateau]\label{prop:spectral-example}
++Take one ground vector and, for each integer $n\ge1$, a shell of
++energy $n^2+n$ with multiplicity $2^{n^2}$. Then
++$\beta_c=1$, $Z_c=2$, and, for the ground-state reset and every $E\ge8$,
++\begin{align}
++ C_{\rm EA}(\Rcal,H,E)&=2\lambda E+max_{0\le x\le1}f_\lambda(x),
++       \label{eq:plateau-capacity}\\
++ 2\lambda F_H(E)-C_{\rm EA}(\Rcal,H,E)
++       &=2\lambda-\max_x f_\lambda(x)>0.\label{eq:plateau-gap}
++\end{align}
++The scalar maximum is unique and interior. At $\lambda=1/2$ the
++gap is numerically $0.409719932065909\ldots$ bits per use.
++The capacity equality is a supremum over operational codes; an
++entropy-maximizing finite-energy input need not exist.
++\end{proposition}
++\begin{proof}
++Here
++$Z(\beta)=1+\sum_{n\ge1}2^{(1-\beta)n^2-\beta n}$,
++which establishes the critical parameters. The normalized excited
++critical Gibbs law has shell probabilities $2^{-n}$, mean energy
++$\sum(n^2+n)2^{-n}=8$ and entropy $8$. The full critical state
++has ground probability $1/2$, mean energy $4$ and entropy $5$.
++The Gibbs entropy suprema \cite[Proposition 1a]{shirokoventropy}
++are therefore
++\[
++ F_H(E)=E+1\quad(E\ge4),\qquad
++ F_{H,+}(E)=E\quad(E\ge8).
++\]
++One can see the nonattained linear part explicitly: truncate the
++critical Gibbs law, then mix in a uniform state on a much higher
++shell $m$. Its weight is of order the extra energy divided by
++$m^2+m$, while its entropy per added energy tends to
++$m^2/(m^2+m)\to1$. Let the upper shell tend to infinity and
++then improve the finite base truncation. The displayed upper
++bounds are approached. Above the critical mean, equality in the
++Gibbs bound would force the critical Gibbs state itself, which
++has the wrong energy; thus these are suprema rather than maxima.
++Substitution into \eqref{eq:vacuum-general-H} proves
++\eqref{eq:plateau-capacity}, and \eqref{eq:vacuum-defect} proves
++the positive gap.
++
++Finally $f_\lambda(x)$ is the mutual information of a two-level
++diagonal input. For any nontrivial mixture of two different such
++inputs, its concavity gap is
++$\chi_{\rm input}+\chi_{\rm output}-\chi_{\rm environment}
++\ge\chi_{\rm output}>0$, by data processing and $\lambda>0$.
++Hence it is strictly concave. It vanishes at both endpoints and
++is positive in the interior, as is already seen by measuring
++the reference in the binary basis. The reported numerical root
++is a diagnostic evaluation of this unique maximum, not a proof
++by sampling.
++\end{proof}
++
++For contrast, a shell of energy $n$ and multiplicity $2^n$ for
++each $n\ge0$ has $\beta_c=1$ but $Z_c=\infty$, and
++$F_H(E)=E+g(E)$. Removing the first $m$ shells leaves the entropy
++supremum $E+g(E-m)$ for $E\ge m$; its deficit tends to zero.
++Thus a positive critical inverse temperature is not itself the
++obstruction. Normalizability at that temperature is decisive.
++These deliberately constructed spectra establish the mathematical
++boundary of the capacity law; no experimental Hamiltonian or
++thermodynamic phase transition is claimed.
++
+ 
+ \section{Consequences and quantitative checks}
+ \begin{corollary}
+@@ -1194,11 +1664,23 @@
+ arbitrary-noise result in Section~\ref{sec:minimax} concerns fixed memoryless
+ channels and codes that can depend on them. It does not provide adversarial
+ noise protection or evaluate the unknown depolarizing capacity functions.
+-The oscillator result determines neither finite-$N$ capacities nor optimal error
++The oscillator result determines neither general finite-$N$ capacities nor optimal error
+ rates or second-order coding costs. The growing code dimension is an
+ asymptotic construction, not an efficient experimental receiver.
+ Exact finite-energy classical additivity for arbitrary reset states
+ would require a separate argument.
++
++\paragraph{Spectral checks.}
++The spectral checks independently evaluate the vacuum joint-state
++spectrum on 200 diagonal inputs, test phase pinching on 200 complex
++inputs, and check 2,807 scalar positivity cases. Twenty-five parameter
++choices compare the two defect expressions; five plateau maxima are
++evaluated with 80-digit arithmetic. Forty-two finite high-shell mixtures
++check the nonattained entropy construction and fifteen cases check
++the contrasting divergent-partition example. These are finite numerical
++diagnostics, not proofs of the spectral dichotomy, capacity converses,
++infinite-dimensional recovery or priority. The analytic arguments above
++supply those mathematical claims, subject to their cited dependencies.
+ 
+ \paragraph{Provenance and reproducibility.}
+ This working paper was developed with AI assistance in exploration,
+@@ -1317,5 +1799,26 @@
+ Fundamental limits of repeaterless quantum communications,
+ \emph{Nature Communications} \textbf{8}, 15043 (2017).
+ \href{https://arxiv.org/abs/1510.08863}{arXiv:1510.08863}.
++\bibitem{shirokoventropy} M.~E. Shirokov,
++Entropic characteristics of subset of states,
++\href{https://arxiv.org/abs/quant-ph/0510073v2}{arXiv:quant-ph/0510073v2}
++(2005), Proposition 1a.
++\bibitem{shirokovcontinuity} M.~E. Shirokov,
++Tight continuity bounds for the quantum conditional mutual information,
++for the Holevo quantity and for capacities of quantum channels,
++\href{https://arxiv.org/abs/1512.09047v7}{arXiv:1512.09047v7} (2017).
++\bibitem{jencova} A. Jen\v{c}ov\'a,
++Recoverability of quantum channels via hypothesis testing,
++\emph{Lett. Math. Phys.} \textbf{114}, 31 (2024),
++\href{https://doi.org/10.1007/s11005-024-01775-2}{doi:10.1007/s11005-024-01775-2}.
++\href{https://arxiv.org/abs/2303.11707}{arXiv:2303.11707}.
++\bibitem{shirokovsquashed} M.~E. Shirokov,
++Squashed entanglement in infinite dimensions,
++\href{https://arxiv.org/abs/1507.08964v5}{arXiv:1507.08964v5} (2015),
++Proposition 2B.
++\bibitem{wildeprivate} M.~M. Wilde,
++Squashed entanglement and approximate private states,
++\href{https://arxiv.org/abs/1606.08028v3}{arXiv:1606.08028v3} (2018).
++
+ \end{thebibliography}
+ \end{document}
