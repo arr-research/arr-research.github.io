@@ -66,10 +66,16 @@ ends every generated public page with the `PAGE_COUNTER` constant: one minimal i
 script that adds `<script src="https://erikssonai.se/contador.js" data-sitio="airr" async>`
 to the page unless the visitor chose Decline. The counter script belongs to the
 operator's other site; it is only linked, never copied or modified here. Each page view
-adds 1 to the Firestore document `visitas/airr_<day>` of project
-`eriksson-larande-ai`, with no cookie, nothing written to browser storage and no
-per-visitor data. The daily figures appear in the private panel at
-`erikssonai.se/panel/` (tab *Webs*). The `AIRR_ANALYTICS` variable does not switch it.
+is sent to the operator's own function `contarFirma`
+(`https://europe-west1-linguaula-web.cloudfunctions.net/contarFirma`, Google Cloud,
+region europe-west1, Belgium). The function uses the IP address and browser type only in
+memory to compute an encrypted fingerprint with a random key that changes every day; the
+fingerprint deletes itself within 48 hours and the IP address is never stored. Only daily
+totals (page views and different people) remain. The counter sets no cookie and writes
+nothing to browser storage; the single exception is the marker saved in the operator's
+own browser by opening the site with `?nocontar`, so that browser is not counted. The
+daily figures appear in the private panel at `erikssonai.se/panel/` (tab *Webs*). The
+`AIRR_ANALYTICS` variable does not switch it.
 
 - **Decline is respected.** The inline loader reads (never writes) the same browser
   choice as `site/analytics.js`: local-storage key `airr-statistics-choice-v1`, value
@@ -83,9 +89,9 @@ per-visitor data. The daily figures appear in the private panel at
   browsers (change made on 2026-10-13 at `erikssonai.se/contador.js`, not in this repo).
 - GitHub Pages sets no Content-Security-Policy for `airr.science`. If one is ever
   added, allow `https://erikssonai.se` in `script-src` and
-  `https://firestore.googleapis.com` in `connect-src`, and let the inline loader
-  through with a `sha256-` hash of its text (a nonce does not suit static pages) rather
-  than `'unsafe-inline'`; the hash changes whenever `PAGE_COUNTER` changes.
+  `https://europe-west1-linguaula-web.cloudfunctions.net` in `connect-src`, and let the
+  inline loader through with a `sha256-` hash of its text (a nonce does not suit static
+  pages) rather than `'unsafe-inline'`; the hash changes whenever `PAGE_COUNTER` changes.
 - To stop counting, remove `PAGE_COUNTER` from `page_shell()` (and the notices in
   `build_privacy`, `docs/PRIVACY_NOTICE.md`, `docs/PROCESSING_RECORD.md`), merge and let
   Pages rebuild. Never put the script on `submit.airr.science` pages.

@@ -55,12 +55,18 @@ See `PRIVACY_NOTICE.md` and `ANALYTICS_OPERATIONS.md` for consent, Netcup hostin
 400-day daily aggregate retention and access controls.
 
 Since 2026-10-13 every public page also loads a separate cookie-free counter from
-`erikssonai.se` (same operator) that adds 1 to a single daily total for the whole
-`airr.science` site. It does not need the Allow choice above, but it respects Decline: a
-saved Decline stops it from loading, and it does not count visitors who send Global
-Privacy Control or Do Not Track. It records no page path and counts reloads and
-automation, so it cannot be turned into per-paper or per-author figures and is not a
-unique-visitor measure. See `PRIVACY_NOTICE.md` and `ANALYTICS_OPERATIONS.md`.
+`erikssonai.se` (same operator). It does not need the Allow choice above, but it
+respects Decline: a saved Decline stops it from loading, and it does not count visitors
+who send Global Privacy Control or Do Not Track. Each page view goes to the operator's
+own function in the EU (Google Cloud, Belgium), which uses the IP address and browser
+type only in memory to compute an encrypted fingerprint with a random key that changes
+every day; the fingerprint deletes itself within 48 hours and the IP address is never
+stored. Only daily totals of page views and of different people are kept for the whole
+`airr.science` site, so they cannot be turned into per-paper or per-author figures. The
+"people" figure is an estimate, not an exact count of individuals: people sharing a
+network and browser type may count as one, one person on another network or browser
+counts again, and reloads and automation can still add page views. See
+`PRIVACY_NOTICE.md` and `ANALYTICS_OPERATIONS.md`.
 
 These operator totals are not currently exported to public paper/author counters.
 The public pages say **Not available**, and no page-view ranking is generated.
