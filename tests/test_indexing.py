@@ -58,6 +58,23 @@ class IndexingTests(unittest.TestCase):
         self.assertFalse(xml.findall("s:url/s:lastmod", ns))
         self.assertEqual(self.paper.metadata["date"], "1999-01-02")
 
+    def test_sitemap_lastmod_comes_only_from_recorded_releases_and_assessments(self):
+        self.paper.metadata["date"] = "1999-01-02"
+        timestamps = {(self.paper.id, self.paper.version): {"publication_state": "published", "published_at": "2026-10-11T08:00:00+02:00"}}
+        with patch.object(build_site, "OUTPUT_DIR", self.root):
+            build_site.write_sitemaps([self.paper], {self.paper.id: [self.paper]}, [{"id": "example-author"}], SITE, timestamps, [])
+        xml = ET.fromstring((self.root / "sitemap.xml").read_text())
+        ns = {"s": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+        dated = {item.findtext("s:loc", namespaces=ns): item.findtext("s:lastmod", namespaces=ns) for item in xml.findall("s:url", ns)}
+        self.assertEqual(dated[f"{SITE}/papers/{self.paper.id}/"], "2026-10-11T08:00:00+02:00")
+        self.assertIsNone(dated[SITE + "/"])
+        self.assertNotIn("1999-01-02", (self.root / "sitemap.xml").read_text())
+        # A version that is not released yet gives no date.
+        timestamps[(self.paper.id, self.paper.version)] = {"publication_state": "pending"}
+        with patch.object(build_site, "OUTPUT_DIR", self.root):
+            build_site.write_sitemaps([self.paper], {self.paper.id: [self.paper]}, [], SITE, timestamps, [])
+        self.assertNotIn("<lastmod>", (self.root / "sitemap.xml").read_text())
+
     def historical(self):
         self.paper.metadata["status"] = "archived"
         self.paper.metadata["source_of_truth"] = "external_pdf"
