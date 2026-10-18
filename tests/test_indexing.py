@@ -350,10 +350,17 @@ process.stdout.write(JSON.stringify(log));
 
     def test_privacy_texts_say_decline_also_stops_the_page_counter(self):
         privacy = build_site.build_privacy("", "https://airr.science")
-        self.assertIn("Page views are counted per day, without cookies or personal data.", privacy)
+        self.assertIn("We count visits with our own counter, without cookies.", privacy)
+        self.assertIn("Each page view is sent to our own server in the EU (Google Cloud, Belgium).", privacy)
+        self.assertIn("the fingerprint deletes itself within 48 hours and the IP address is never stored", privacy)
+        self.assertIn("We only keep daily totals (page views and people).", privacy)
+        self.assertIn("If your browser sends Global Privacy Control or Do Not Track, or you decline statistics, we count nothing.", privacy)
         self.assertIn("erikssonai.se", privacy)
-        self.assertIn("If you choose Decline in Statistics preferences, this counter is not loaded either", privacy)
+        self.assertIn("If you choose Decline, this counter is not loaded either", privacy)
+        self.assertIn("Statistics preferences", privacy)
         self.assertIn("Global Privacy Control or Do Not Track", privacy)
+        for stale in ("without cookies or personal data", "adds 1 to a daily total", "Google Firestore", "no personal data"):
+            self.assertNotIn(stale, privacy)
         self.assertNotIn("does not govern", privacy)
         support = build_site.build_support("", "https://airr.science", "")
         self.assertNotIn("tracking script", privacy + support)
@@ -365,6 +372,9 @@ process.stdout.write(JSON.stringify(log));
                 self.assertIn("Global Privacy Control", text)
                 for stale in ("does not govern", "not gated by the consent", "independent of the opt-in", "Allow/Decline choice does not"):
                     self.assertNotIn(stale, text)
+                self.assertNotIn("firestore.googleapis.com", text)
+                self.assertNotIn("without cookies or personal data", text)
+                self.assertNotIn("sin cookies ni datos personales", text)
 
     def test_classic_theme_and_logo_are_independent_of_system_preference(self):
         text = build_site.page_shell(title="t", description="d", content="", base="")

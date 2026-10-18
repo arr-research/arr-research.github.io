@@ -227,26 +227,34 @@ after 400 days; encrypted disaster-recovery snapshots on the configured EU B2
 storage may retain a deleted total for up to seven additional days. Changing to
 Decline stops future collection. Past totals cannot be isolated by person because
 no individual history is retained. Repeated visits, consent choices, blockers and
-automation affect the sample; AIRR does not measure unique visitors.
+automation affect the sample; this optional measurement does not measure unique
+visitors (the separate cookie-free counter below estimates how many different
+people visit per day).
 
 Public PDF-download totals remain GitHub release-asset counters. AIRR receives an
 aggregate integer, not a reader identity. Operator page-view totals are not yet
 exported to public paper/author counters or rankings; those fields remain **Not
 available**, rather than being presented as zero.
 
-## Cookie-free page counter — notice added 2026-10-13, updated 2026-10-13
+## Cookie-free page counter — notice added 2026-10-13, updated 2026-10-18
 
-Page views are counted per day, without cookies or personal data.
+**Visit statistics.** We count visits with our own counter, without cookies. Each page
+view is sent to our own server in the EU (Google Cloud, Belgium). There, your IP address
+and browser type are used only in memory to compute an encrypted fingerprint with a
+random key that changes every day; the fingerprint deletes itself within 48 hours and the
+IP address is never stored. This tells us how many different people visit each day. We
+only keep daily totals (page views and people). Nothing is used for advertising or
+shared with anyone. Legal basis: our legitimate interest in knowing how much the site is
+used (Art. 6(1)(f) GDPR). If your browser sends Global Privacy Control or Do Not Track,
+or you decline statistics, we count nothing.
 
 Every public page of `airr.science` loads one script,
 `https://erikssonai.se/contador.js`, from **erikssonai.se**, another website operated
-by Lluis Eriksson, unless you have chosen Decline (see below). The script is not
-copied into AIRR. When a page loads it adds 1 to
-a daily total for the label `airr` in one Google Cloud Firestore document of the
-operator's project `eriksson-larande-ai`. The total holds only that label, the date
-and the number. The script sets no cookie, stores nothing in the browser and sends no
-page path, search term, fragment or visitor identifier; it does not run on localhost
-or in automated-test browsers.
+by Lluis Eriksson (served by Google Firebase Hosting), unless you have chosen Decline
+(see below). The script is not copied into AIRR and sets no cookie. The count is
+received by the operator's own function in Google Cloud, region europe-west1 (Belgium),
+acting for the operator. The daily totals hold only the label `airr`, the date and the
+numbers of page views and of people; they contain no personal data.
 
 **Decline and browser signals.** If you choose **Decline** in **Statistics
 preferences**, this counter is not loaded on the pages you open afterwards: a small
@@ -254,24 +262,25 @@ inline script of the page only reads your saved choice (the same one described u
 public-site activity measurement, kept in your browser for 180 days) and skips loading
 the counter when that choice is Decline. It reads the choice and never writes or
 sends it. The choice takes effect from the next page you open; a page view counted
-before you chose Decline is an anonymous number and cannot be removed. Without a saved
-choice, or with Allow, the counter is loaded. The counter also does not count a visitor
-whose browser sends Global Privacy Control or Do Not Track.
+before you chose Decline is only part of an anonymous daily total and cannot be removed
+from it (its fingerprint, if one was made, deletes itself within 48 hours). Without a
+saved choice, or with Allow, the counter is loaded. The counter also does not count a
+visitor whose browser sends Global Privacy Control or Do Not Track.
 
-Network communication necessarily exposes an IP address, the browser's usual request
-headers and the origin `airr.science` to the servers that deliver the script and receive
-the count (Google Firebase Hosting and Cloud Firestore, acting for the operator).
-AIRR does not keep them in the total and cannot link a count to a person. Because
-the total contains no personal data, there is no individual history to access, correct
-or erase.
+As with any web request, the servers that deliver the script and receive the count
+necessarily see your IP address, the browser's usual request headers and the origin
+`airr.science`. The counter uses the IP address and browser type only in memory for the
+fingerprint described above, and the IP address is never stored. No individual history
+is kept after the fingerprint is deleted, so beyond that period there is nothing to
+access, correct or erase per person.
 
-The purpose is to know how much the public site is read overall. The basis is the
-operator's legitimate interest (Article 6(1)(f)): the data are minimal, nothing is
-stored in the browser, and the result is a single daily number. Choosing Decline or
-sending Global Privacy Control or Do Not Track is respected as an objection to this
-counting. You may also
-object by writing to `editor@airr.science`, or simply block requests to
-`erikssonai.se` and `firestore.googleapis.com`; the site works the same without them.
+The purpose is to know how much the public site is read and by how many different
+people. The basis is the operator's legitimate interest (Article 6(1)(f)): the data are
+minimal, used only in memory or for at most 48 hours, and the result is daily totals.
+Choosing Decline or sending Global Privacy Control or Do Not Track is respected as an
+objection to this counting. You may also object by writing to `editor@airr.science`, or
+simply block requests to `erikssonai.se` and
+`europe-west1-linguaula-web.cloudfunctions.net`; the site works the same without them.
 This counter is otherwise separate from the optional statistics above: it does not
 need **Allow**, and it neither feeds the Netcup
 collector nor any public paper, author or ranking figure. Private submission and
