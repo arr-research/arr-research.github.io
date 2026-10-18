@@ -740,12 +740,16 @@ def archive_counts(items: list[tuple[int, str]]) -> str:
     return "".join(f"<div><strong>{count:,}</strong><span>{esc(label)}</span></div>" for count, label in items if count)
 
 
+# The home page lists the newest records so readers see the archive is active.
+HOME_RECENT_LIMIT = 100
+
+
 def build_home(papers: list, timestamps: dict, base: str, canonical_url: str, author_lookup: dict[str, dict] | None = None, metrics: dict | None = None, author_count: int = 0, google_site_verification: str = "", bing_site_verification: str = "") -> str:
     accepted_papers = sum(p.metadata["status"] in {"accepted", "corrected"} and p.record_type == "research_paper" for p in papers)
     working_papers = sum(p.metadata["status"] == "working_paper" and p.record_type == "research_paper" for p in papers)
     archived_papers = sum(p.metadata["status"] == "archived" and p.record_type == "research_paper" for p in papers)
     accepted_notes = sum(p.metadata["status"] != "withdrawn" and p.record_type == "technical_note" for p in papers)
-    recent = "".join(paper_card(p.metadata, timestamps[(p.id, p.version)], base, author_lookup, metrics) for p in papers[:6])
+    recent = "".join(paper_card(p.metadata, timestamps[(p.id, p.version)], base, author_lookup, metrics) for p in papers[:HOME_RECENT_LIMIT])
     if not recent:
         recent = """
 <section class="empty-state">
