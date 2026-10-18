@@ -1,0 +1,141 @@
+EXACT-VERSION REFEREE REPORT
+
+Paper: One calibration query activates a finite adaptive advantage in frozen-versus-renewed dephasing tests
+Author: Lluis Eriksson
+paper_id: ARR-2026-0S8D4XJMZS9PDV1Z
+version: v1
+version_id: arr:version:3679a295-f640-4c02-8905-3397fa3f45f0
+Canonical PDF SHA-256: 867e09f7114e6ce9be66f4afa110f42f4eeee2ce3f3f9aeb99eb4b8eae4ae07e
+Reviewer: OpenAI, gpt-6-astra; native response protocol ARR-ASSESS-1.0.
+Assessment time: see assessment.json, generated on completion in offset-aware ISO 8601.
+
+RECOMMENDATION AND SCALE
+
+Accept as a narrowly scoped theoretical research note. Millennium score 3.40/10.00; public whole-star score 3. The work clears the policy's substantive, inspectable publication floor. The exact finite-resource activation is supported; it is an incremental contribution with limited demonstrated significance. This is not a probability of correctness and the five criterion ratings are not averaged to produce it.
+
+I found no unresolved material mathematical objection and no counterexample to a stated theorem. The scientific recommendation does not certify priority, human peer review, independent verification of every physical implementation detail, or a formal proof-assistant result.
+
+CONTEXT AND LIMITS OF THIS REVIEW
+
+The agent began without manuscript-development history. Its own prior participation in producing this manuscript was absent. Historical involvement of the base model was supplied as UNKNOWN, and independence is recorded as unknown. Filesystem isolation was instructional, not technically verified: shared filesystem access remained possible. I did not inspect other chats, development folders, or local prior reports. Scientific local inputs were confined to the provided input packet; new files are confined to this output folder.
+
+There was one accidental context exposure. While following manuscript reference [1] to obtain its primary paper, opening
+https://airr.science/papers/ARR-2026-33GYTDAT5C8THB3M/versions/v1/
+returned the public landing page with an embedded earlier model assessment, its score, recommendation, and findings, although the retrieval was for the predecessor's primary paper. Those contents entered this review context. I immediately notified the operator and thereafter used the direct primary PDF. I do not reproduce that score or use that assessment as scientific evidence. Its possible influence cannot be technically erased or excluded. This review must not be labelled fresh_blind or other-reports-withheld. The operator has acknowledged the incident and will attach its own context evidence. No score penalty is imposed for model participation or context limitations; those affect the strength of the review evidence, not the manuscript's scientific score.
+
+ACTUAL INPUT AND EXECUTION CHECKS
+
+1. Read the entire five-page canonical PDF, extracted all five pages, inspected renders of all five pages, and read the complete paper.tex and AIRR-ASSESSMENT-POLICY.md. The PDF is legible; no missing equation, clipped claim, or material PDF/source inconsistency was found.
+2. Computed the PDF SHA-256 above. All seven entries in INPUT-MANIFEST.json match their actual bytes: PDF, TeX, construction metadata, Q, R, stored verification report, and verifier.
+3. Read the complete verify.py. Copied the certificate directory to output/scratch/certificate and executed that copy with the supplied Python runtime. It exited successfully. The regenerated verification.json is structurally identical to the supplied report. The input packet was not modified.
+4. The supplied verifier's exact Fraction arithmetic checked PSD, ranks, all five causal levels, all six weight null vectors, all six parallel values, the objective, 32 I/Z histories, seven-outcome Fourier quadrature, and four deliberately invalid controls. The controls test normalization, frozen-null annihilation, a negative pivot, and a zero pivot with a nonzero row. These tests do not constitute exhaustive verifier mutation testing.
+5. Wrote and executed independent-audit.py without importing the supplied verifier. For Q and Q-R, integer Bareiss elimination verified positive leading principal minors after clearing denominators. For R, choose one reference word per weight and let B have columns e_i-e_ref(weight(i)) for the remaining 26 words. I verified exactly R=B S B^T, where S is the corresponding 26-by-26 principal submatrix; all its leading principal minors are positive. This separately establishes ranks (32,26,32) and the required semidefinite inequalities by Sylvester's criterion. The code also checks symmetry, dimensions, causal recursion, normalization, null sums, and the rational objective.
+6. Independently reconstructed an ordinary signal circuit numerically in dimension 32 (query qubit times 16-dimensional memory), using block Cholesky factors and unitary extensions. This is a diagnostic supporting the analytic realization argument, not an exact numerical proof. Maximum unitary error was 1.78e-15; maximum parent-to-child isometry error was 8.33e-17. The rejection effect had numerical eigenvalues between -9.81e-16 and 0.9999642649; the small negative endpoint is floating-point roundoff and the exact PSD proof above is controlling. Ninety-seven frozen phases had rejection magnitude at most 7.27e-17. For 41 carrier phases, direct simulation of all 32 noise histories and all seven calibration outcomes agreed with the certified success within 3.34e-16. No optimizer was run and no physical device was used.
+
+EXACT NUMERICAL FINDINGS
+
+The six parallel failure values at eta=7/10 are
+  1, 74/125, 46603/100000, 46603/100000, 74/125, 1.
+The certificate has
+  success = 8547317228981067/16000000000000000,
+  failure = 7452682771018933/16000000000000000,
+  strict advantage = 3797228981067/16000000000000000
+                   = 0.0002373268113166875.
+The gain is 0.02373268113166875 percentage points of detection or failure, not a large effect.
+The same witness's success averaged without calibration is
+  52978072648546953/100000000000000000,
+which is below the optimal parallel success 0.53397, as required.
+The balanced six-signal failure is exactly 7688549/20000000 = 0.38442745.
+
+PROOF AUDIT AND ADVERSARIAL CHECKS
+
+A. Parallel benchmark, including arbitrary ancillas and a perfectly known carrier.
+For the fixed-weight kernel, the all-ones vector is an eigenvector with eigenvalue r_w, and positivity on its orthogonal complement gives K_w >= (r_w/N_w)11^T. The stated bound is therefore valid, including singular endpoint cases. In a purified parallel probe, orthogonality comes from the word register, not from any unsupported orthogonality of ancilla vectors. The projector expression really contains t_x t_y. An acceptance effect between zero and identity that accepts every frozen output with certainty dominates the projector onto their span. Known carrier information can change the probe and measurement but does not change this argument. It can also simulate any finite noiseless carrier calibration, so the comparison is conservative and covers coherent calibration assistance to the parallel side.
+
+For n=5, putting u=eta^2 gives F_1-F_2=(1-u)(1+3u)/10 and F_0-F_2=3(1-u)(3+u)/10. Thus weights 2 and 3 minimize on the claimed interval; at eta=1 other weights tie. The manuscript does not claim uniqueness.
+
+B. No-calibration minimax theorem.
+The history vectors of an arbitrary purified causal circuit need not be orthogonal. The manuscript correctly uses Fourier integration of the normalized frozen state instead: sum_w ||psi_w||^2=1. Averaging the renewed carrier removes only unequal-weight terms. Congruencing the positive matrix inequalities for K_w with the history-vector maps gives the stated operator bound. Zero rejection on every frozen state forces the rejection square root to annihilate every Fourier coefficient psi_w, hence the acceptance effect is identity on these coefficients. The lower bound on average failure is therefore valid; worst-case failure is at least average failure. The uniform fixed-weight parallel test attains it for every carrier. There is no illicit exchange of minimization and maximization and no assumption that a causal test refrains from estimating the carrier internally.
+
+C. Calibration and zero false positives.
+The continuous POVM integrates to identity and gives exactly the displayed moments. The finite POVM also sums to identity. For any five forward calls, s(delta) has Fourier degree at most five; multiplying by the calibration likelihood produces degree at most six. A seven-point grid annihilates every nonconstant frequency in that range for every shift of the carrier. This proves worst-case, not merely prior-averaged, success. Independently, the exact certificate has only frequencies 0, +/-1, +/-2, +/-3, with
+  c_0 = 52978072648546953/100000000000000000,
+  c_1 = 1770640130338863/400000000000000000,
+  c_2 = -2577780972501/50000000000000000,
+  c_3 = -3016901538987/250000000000000000,
+and c_-k=c_k. The success is c_0+c_1, agreeing with the theorem. The seven-outcome scheme is sufficient even though it is not an optimized outcome count.
+
+Under H0 the compensated phase is still a frozen phase, for each calibration outcome and each independent pair (theta,phi). Therefore averaging calibration outcomes cannot conceal a false positive. The calibration oracle alone carries no hypothesis label. The proof does rely on the stated ideal controls and free laboratory reference; it does not establish a resource advantage when those physical costs are included.
+
+D. From Gram constraints to an actual causal test.
+At each level, opposite last-symbol sectors are orthogonal. Their two child-vector sums have the parent Gram matrix because both cross terms vanish and the recursion sums the same-symbol terms. Equality of Gram matrices makes the parent-to-sum linear map well defined even for dependent vectors and isometric; extending it to a unitary in a common 32-dimensional space supplies a legitimate next control. No bypass or inverse query is needed. Each last-symbol block has dimension at most 16, justifying the signal memory bound. For terminal vector matrix V, V^*V=Q and the effect M=(V^+)^* R V^+ realizes R; here Q is actually full rank. R<=Q ensures M<=I, and R annihilates every weight indicator, ensuring exact null rejection. The published sufficiency argument is concise but sound. The 16-dimensional memory statement concerns this signal-circuit construction; classical storage and control of the calibration outcome are ideal external resources in the stated model.
+
+E. All noise histories, total cost, and exponent.
+The independent history expansion agrees with the kernel eta^d and the objective. The all-I and all-Z rejection values are exactly zero. Under arbitrary coherent and interleaved noiseless calibration, those histories still coincide with allowed null experiments at theta=phi and theta=phi+pi. Their positive probabilities therefore give beta>=p^n+q^n for n>=1. For the upper exponent bound, positivity of eta makes the fixed-weight row sum a sub-sum of (1+eta)^n, and a largest binomial coefficient is at least 2^n/(n+1). The two exponential bounds coincide. The total-query comparison follows from n<=N; the case of zero signal queries is trivially beta=1. These arguments cover eta=0 and eta=1 without a problematic limiting interchange. The six-signal countercomparison is explicitly restricted to the displayed construction and does not falsely prove global causal inferiority at total budget six.
+
+F. What was not established.
+I did not optimize the L=1 causal value, prove the minimum signal count, characterize coherent-reference optima, test experimental noise, optimize a positive-false-positive tradeoff, or independently regenerate the numerical search that found the rational matrices. Those are not stated theorems. Exact verifier success is a proof of this certificate's feasibility, not optimality. The manuscript appropriately distinguishes these points.
+
+NOVELTY AND PRIMARY LITERATURE ACTUALLY CONSULTED
+
+The bounded search included exact-title queries, frozen/renewed and correlated/uncorrelated dephasing discrimination queries, and combinations of unknown phase, calibration, reference, adaptive, and one-sided discrimination. Search hits were leads only; the substantive comparisons below use the primary papers. No exhaustive priority claim follows from this search.
+
+1. L. Eriksson, Phase calibration unlocks adaptive tests for renewed quantum noise, ARR-2026-33GYTDAT5C8THB3M v1 (2026), especially Sections 2-7 of the primary PDF:
+https://airr.science/papers/ARR-2026-33GYTDAT5C8THB3M/versions/v1/ARR-2026-33GYTDAT5C8THB3M-v1.pdf
+This is the closest predecessor. Its primary theorem already gives the uncalibrated causal minimax equality, the calibrated five-query separation, causal Gram realization, and the common exponent. Thus those ingredients are not new in the present note, as the note acknowledges. The substantive new step is replacing perfect carrier knowledge with one actual calibration call and supplying a different exact feasible tester that still gives a strict separation.
+
+2. V. Buzek, R. Derka, S. Massar, Optimal Quantum Clocks, quant-ph/9808042v2, particularly the POVM/cost discussion and matrix optimization around Eqs. (5)-(10):
+https://arxiv.org/pdf/quant-ph/9808042
+The primary text already treats finite phase states, covariant measurement, Fourier costs, and optimization over the probe. These are background methods, not new concepts of this manuscript.
+
+3. J. G. Smith, C. H. W. Barnes, D. R. M. Arvidsson-Shukur, Risk-minimizing states for the quantum-phase-estimation algorithm, 2505.00764v1, Section II, Eqs. (11)-(18):
+https://arxiv.org/html/2505.00764v1
+This explicitly gives a Toeplitz matrix built from loss Fourier coefficients and an eigenvector optimization. It supports the manuscript's decision to make no novelty claim for that reduction.
+
+4. Q. Qian, C. N. Gagatsos, Optimal Probe State for Phase Estimation Under Covariant Measurement, 2606.18169v1, Sections II-III, especially Theorem 3:
+https://arxiv.org/html/2606.18169v1
+The cited title, authors, and identifier are genuine. This also concerns probe optimization via a Fourier-defined Toeplitz matrix under its stated covariant-measurement/cost assumptions. It is not the same composite-null channel-testing problem.
+
+5. M. Piani et al., Robustness of asymmetry and coherence of quantum states, 1601.03782, Section III.E, Theorem 3 and the following channel-discrimination discussion:
+https://arxiv.org/pdf/1601.03782
+Asymmetry as an operational resource for channel discrimination is established there. Its discrimination games and resource comparison do not by themselves give this manuscript's n=5, L=1 one-sided adaptive-versus-parallel separation.
+
+6. S. A. Grillo, F. L. Marquezino, Quantum Query as a State Decomposition, 1602.07716, Block Set reconstruction and Theorems 2-3:
+https://arxiv.org/pdf/1602.07716
+The trajectory/Gram realization method has clear prior query-decomposition antecedents. A direct citation here would improve attribution; the predecessor already provides that connection. This does not invalidate the self-contained realization proof or the narrow claimed novelty.
+
+7. Y. Hashimoto, A. Soeda, M. Murao, Comparison of unknown unitary channels with multiple queries, 2208.12519v2, problem setting and principal results:
+https://arxiv.org/html/2208.12519v2
+This optimizes comparison of two Haar-unitary blocks, including general testers, and attains the optimum in parallel. Its null and alternative, and the role of the second device, differ from an independently renewed dephasing signal with a separate noiseless carrier oracle. It supplies important context but no contradiction or direct duplication of the claimed witness.
+
+8. A. W. Harrow, A. Hassidim, D. W. Leung, J. Watrous, Adaptive versus non-adaptive strategies for quantum channel discrimination, Sections 3-4:
+https://cs.uwaterloo.ca/~watrous/Papers/AdaptivelyDistinguishingQuantumChannels.pdf
+This primary construction already demonstrates strict adaptive advantages for specified channels. General adaptive advantage is therefore not the novelty here. The current paper's calibrated composite-null model and resource threshold are more specialized.
+
+The Bartlett-Rudolph-Spekkens review (quant-ph/0610030) was checked at the bibliographic/abstract level only, not independently audited throughout or used as primary evidence of a new theorem. The Bergh-Datta-Salzmann-Wilde parallelization paper was encountered at abstract/search level only; I did not treat its general finite-error bounds as proving or refuting this exact zero-false-positive model.
+
+SIGNIFICANCE AND NONBLOCKING IMPROVEMENTS
+
+The strongest novelty candidate is exact activation by the smallest positive integer calibration budget, at the specified signal budget and noise parameter. The L=0 impossibility plus L=1 feasible certificate establishes that threshold. It is stronger than merely showing that sufficiently accurate calibration preserves a known advantage, but it is a small finite construction, not a broad new framework. No checked source provided the identical claim; that is bounded evidence, not a priority certificate.
+
+The practical significance remains low to moderate. The absolute gain is tiny, five signal uses are fixed, noiseless calibration and ideal controls are assumed, an extra signal use wins under fungible costs, and the error exponent is unchanged. The paper has no experimental demonstration or robust advantage analysis with both classes reoptimized at positive false positives. These are genuine limits, accurately disclosed rather than hidden proof defects.
+
+For presentation, a direct citation to query-decomposition or quantum-network realization, a short expanded formula for the rejection effect, and an explicit supplement URL next to Q.json/R.json would make the note easier to use alone. None is an unresolved material objection to the supplied version. I do not require a stronger optimum theorem or an experiment as a condition for this narrow claim.
+
+CRITERION RATINGS
+
+Correctness confidence: 4/5. Exact certificate, independent arithmetic method, analytic proof audit, and circuit diagnostic agree. No material error found; no formal proof-assistant certification.
+Rigor: 4/5. Assumptions and resource limits are explicit; the minimax, physical-realization, and exponent arguments close the relevant logical gaps. Some construction details could be expanded.
+Novelty: 3/5. A distinct but incremental one-query activation witness relative to sources checked; most structural machinery and the perfect-calibration separation precede it.
+Significance: 2/5. Useful specialized finite-resource example, with a tiny gain and no demonstrated broad or practical consequence.
+Reproducibility: 5/5. Exact rational matrices, short solver-free verifier, matching version hashes, and successful replay plus a separate arithmetic implementation.
+
+RETAINED AUDIT ARTIFACTS
+
+assessment.json -- sole native structured response, with only ARR-ASSESS-1.0 response fields.
+referee-report.txt -- this report.
+independent-audit.py and independent-checks.json -- separate exact checks and numerical circuit diagnostic.
+scratch/certificate/ -- copied published certificate and the replayed verification.json.
+paper-extracted.txt and renders/page-1.png through page-5.png -- canonical PDF reading aids.
+
+Unresolved material objections: none.
