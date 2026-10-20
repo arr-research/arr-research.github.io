@@ -447,6 +447,11 @@ process.stdout.write(JSON.stringify(log));
                     self.assertIn("AIRR", structured["alternateName"])
                     self.assertEqual(structured["url"], f"{root}/")
                     self.assertEqual(structured["@id"], f"{root}/#website")
+                    organization = json.loads(text.split('<script type="application/ld+json">')[2].split("</script>")[0])
+                    self.assertEqual(organization["@type"], "Organization")
+                    self.assertEqual(organization["url"], f"{root}/")
+                    self.assertEqual(structured["publisher"], {"@id": f"{root}/#organization"})
+                    self.assertIn("https://github.com/arr-research", organization["sameAs"])
                 else:
                     self.assertNotIn('"@type":"WebSite"', text)
 
