@@ -1,0 +1,1563 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=27mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype,amsmath,amssymb,amsthm,mathtools,booktabs}
+\usepackage[unicode,colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage{enumitem}
+\setlist{itemsep=3pt,topsep=5pt}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}\newtheorem{remark}[theorem]{Remark}
+\newcommand{\D}{\mathbb D}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+\newcommand{\av}[1]{\left\langle #1\right\rangle}
+\newcommand{\Rea}{\operatorname{Re}}
+\newcommand{\Ima}{\operatorname{Im}}
+\newcommand{\Res}{\operatorname{Res}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\norm}[1]{\left\lVert #1\right\rVert}
+\DeclareMathOperator{\diag}{diag}
+\title{Finite convex interpolation for polynomial Lyapunov existence}
+\author{Lluis Eriksson}
+\date{18 October 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+We characterize polynomial Lyapunov existence over all degrees for planar
+homogeneous polynomial fields with nonvanishing angular velocity.
+A moment threshold separates strict polynomial certificates from the
+absence of local analytic weak certificates in the stable case.
+Classical confluent Nevanlinna--Pick interpolation gives a finite convex
+semialgebraic formulation, with exact boundary decision for algebraic
+coefficients. For each odd field degree, the certificate region is open
+and semialgebraic, and compact admissible families have a computable
+common certificate degree.
+For rational fields in dense binary encoding, we prove polynomial-time
+additive approximation of the threshold and polynomial-time decision
+under a supplied positive gap promise. Explicit inner and outer radii
+permit a classical weak convex optimization reduction; a uniform
+functional perturbation argument handles algebraic poles without
+constructing their common number field. This approximates a value and
+does not bound the output size of a Lyapunov polynomial polynomially.
+Jackson bounds and a constructive sufficient-degree estimate complement
+the finite formulation. An exact cubic example has an algebraic threshold
+and minimum Lyapunov degree eight at one rational parameter.
+Beyond the rotating class, a boundary-factor obstruction produces a
+full twelve-dimensional rational box of stable quintic fields with
+sign-changing angular velocity and no local analytic weak certificate.
+One explicit rational $C^1$ Lyapunov function works for the entire box.
+The latter result is a sufficient obstruction, not a general classification
+with angular zeros. General certified solver implementations are not supplied.
+\end{abstract}
+
+\section{The certificate problem}
+Consider a real planar homogeneous polynomial vector field \(X\) of
+degree \(d\geq1\). Write its polar equations as
+\begin{equation}\label{eq:polar}
+ \dot r=r^d F(\theta),\qquad
+ \dot\theta=r^{d-1}G(\theta).
+\end{equation}
+We assume that \(G\) never vanishes. Its sign is constant; reflecting
+the plane if necessary makes \(G>0\). Antipodal parity then forces
+\(d\) to be odd, and \(F,G\) are \(\pi\)-periodic trigonometric
+polynomials. Define
+\begin{equation}\label{eq:profile}
+ a=-\frac1{2\pi}\int_0^{2\pi}\frac{F(\theta)}{G(\theta)}\,d\theta,
+ \qquad
+ q(\phi)=\frac{F(\phi/2)}{G(\phi/2)}+a.
+\end{equation}
+The profile \(q\) is real analytic and has zero mean.
+
+A \emph{weak Lyapunov function} here satisfies \(V(0)=0\), is positive
+away from the origin in its domain, and has \(L_XV\leq0\).
+A strict function has \(L_XV<0\). Homogeneous polynomial certificates
+are required globally; analytic certificates may be defined only near
+the origin. We study the stable rotating case \(a>0\).
+
+\begin{theorem}[Finite decision in the rotating class]\label{thm:decision}
+For a planar homogeneous polynomial field with real algebraic
+coefficients and \(G\) of one strict sign, existence of a strict
+polynomial Lyapunov function is decidable by a finite algorithm.
+In the case \(a>0\), the following are equivalent:
+\begin{enumerate}[label=(\roman*)]
+\item a strict homogeneous polynomial Lyapunov function exists;
+\item a weak polynomial Lyapunov function exists;
+\item a positive local real-analytic weak Lyapunov function exists.
+\end{enumerate}
+The algorithm also decides inputs on the boundary between existence
+and nonexistence. It uses finite semialgebraic interpolation data,
+without prescribing a Lyapunov degree. Exact boundary decision uses
+quantifier elimination. Polynomial-time approximation and promised-gap
+decision for dense rational inputs are established separately in
+Theorem~\ref{thm:rationalcomplexity}.
+\end{theorem}
+
+Theorem~\ref{thm:decision} concerns existence of a particular kind of
+certificate. Stability in this class already follows from the sign
+of the classical polar average \(a\). The distinction matters:
+Liu and Fitzsimmons \cite{liu} exhibit a stable homogeneous cubic
+field with no polynomial or local analytic weak Lyapunov function.
+Their family, stability analysis and original counterexample are
+prior results. We use the same factorization and leading-term
+viewpoint, extending the certificate problem to every profile in
+\eqref{eq:profile}.
+
+Earlier results show that polynomial Lyapunov degree cannot be
+bounded solely by dimension and vector-field degree
+\cite{ahmadi-parrilo,ahmadi-khadir}; this does not rule out an
+input-dependent decision procedure. Fixed-degree semialgebraic
+searches and converse sums-of-squares results address different
+questions. Gram and Toeplitz methods also provide sufficient
+certificates for systems with angular variables \cite{tripathi}.
+Our finite interpolation formulation decides existence over all
+polynomial degrees for the rotating homogeneous class.
+
+Korda's recent stability decision procedure covers planar homogeneous
+fields, including angular zeros \cite{korda}; Part~III of its supplement
+explicitly distinguishes stability from polynomial-certificate existence.
+Its Theorem~20.3 already computes the normalized polar mean as an
+algebraic residue sum. We use that established calculation in our
+normalization. The additional problem here is the existence of a
+polynomial certificate of some degree.
+
+The analytic tools used below are classical: Fej\'er--Riesz
+factorization \cite{fejer}, positive-real representations,
+Jackson kernels \cite{jackson}, semidefinite duality, confluent
+interpolation \cite{clark}, and real quantifier elimination
+\cite{tarski}. The contribution is the reduction connecting them
+to this all-degree certificate problem.
+
+\section{A moment threshold and finite error bounds}
+For a real \(2\pi\)-periodic function use the conventions
+\[
+ \av{v}=\frac1{2\pi}\int_0^{2\pi}v(t)\,dt,\qquad
+ q(t)=\sum_{k\in\mathbb Z}q_k e^{ikt},\qquad
+ H\cos kt=\sin kt,\quad H\sin kt=-\cos kt.
+\]
+Assume for now that \(q\in C^2\), \(q_0=0\).
+For \(N\geq1\), set
+\[
+ T_N(m)=(m_{k-j})_{j,k=0}^N,\qquad m_{-k}=\overline{m_k}.
+\]
+Define the finite optimum
+\begin{equation}\label{eq:sdp}
+ \begin{split}
+ a_N(q)=\min\{b:\;&m_0=1,\quad T_N(m)\succeq0,\quad T_N(w)\succeq0,\\
+ &w_0=b,\quad w_k=i m_k-q_k\quad(1\leq k\leq N)\}.
+ \end{split}
+\end{equation}
+The diagonal of \(T_N(w)\) imposes \(b\geq0\).
+The choice \(m_k=0\), \(b\geq\max q\), is feasible, since
+\(b-q\geq0\). Principal minors give \(|m_k|\leq1\), so the
+minimum is attained after restricting \(b\leq\max q\).
+Principal submatrices also show
+\[
+ 0\leq a_1(q)\leq a_2(q)\leq\cdots\leq\max q.
+\]
+Thus
+\begin{equation}\label{eq:A}
+ A(q)=\sup_{N\geq1}a_N(q)
+\end{equation}
+is well defined. The integer \(N\) is a moment order, not a
+Lyapunov polynomial degree.
+
+\begin{theorem}[Finite brackets]\label{thm:brackets}
+Let \(\vartheta_N=\pi/(N+2)\). Then
+\begin{equation}\label{eq:En}
+ 0\leq A(q)-a_N(q)
+ \leq E_N:=\frac{\pi^2}{4}(1-\cos\vartheta_N)\norm{q''}_\infty
+ \leq\frac{\pi^4\norm{q''}_\infty}{8(N+2)^2}.
+\end{equation}
+Independently, if the weighted Fourier sum converges,
+\begin{equation}\label{eq:fourierbound}
+ 0\leq A(q)-a_N(q)
+ \leq \frac{\pi^2}{(N+2)^2}\sum_{k\geq1}k^2|q_k|.
+\end{equation}
+The two right-hand majorants need not be ordered.
+\end{theorem}
+
+\begin{proof}
+Put
+\[
+ v_j=\sqrt{\frac2{N+2}}\sin((j+1)\vartheta_N),\quad 0\leq j\leq N,
+ \qquad K_N(t)=\left|\sum_{j=0}^N v_j e^{ijt}\right|^2.
+\]
+The kernel is even, nonnegative and has mean one. Its real Fourier
+coefficients are
+\[
+ \kappa_k=\sum_{j=0}^{N-k}v_jv_{j+k}\ (0\leq k\leq N),
+ \qquad \kappa_k=0\ (k>N),
+\]
+with \(\kappa_0=1\) and \(\kappa_1=\cos\vartheta_N\).
+These are the classical Jackson coefficients:
+\begin{equation}\label{eq:jackson}
+ \kappa_k=
+ \frac{(N+2-k)\cos(k\vartheta_N)+
+       \cot(\vartheta_N)\sin(k\vartheta_N)}{N+2}
+ \quad(0\leq k\leq N);
+\end{equation}
+see \cite[eq.~(2.11)]{jackson}.
+Extending \(v\) by zero to \(\ell^2(\mathbb Z)\) and using the bilateral
+shift gives
+\begin{equation}\label{eq:shift}
+ 1-\kappa_k=\tfrac12\norm{v-S^kv}^2
+ \leq k^2(1-\kappa_1),\qquad k\geq1.
+\end{equation}
+
+Take an optimizer in \eqref{eq:sdp} and set
+\[
+ u_N(t)=1+2\Rea\sum_{k=1}^N\kappa_k m_k e^{ikt},\qquad
+ w_N(t)=a_N+2\Rea\sum_{k=1}^N\kappa_k w_k e^{ikt}.
+\]
+For \(z_j(t)=v_j e^{ijt}\), these are respectively
+\(z(t)^*T_N(m)z(t)\) and \(z(t)^*T_N(w)z(t)\).
+Both are nonnegative, and
+\[
+ w_N=a_N-q_N-Hu_N,\qquad q_N=K_N*q.
+\]
+With \(E=\norm{q-q_N}_\infty\), the two nonnegative densities
+\(u_N\) and \(w_N+E-(q-q_N)\) give feasible moments at every
+order at damping \(a_N+E\). Hence \(A\leq a_N+E\). This argument
+constructs compatible full moment sequences; it does not assume
+that arbitrary simultaneous truncations extend.
+
+Taylor's theorem, evenness of the kernel, and
+\(t^2\leq(\pi^2/2)(1-\cos t)\) on \([-\pi,\pi]\) yield
+\[
+ E\leq\frac{\norm{q''}_\infty}{2}\av{t^2K_N(t)}
+ \leq\frac{\pi^2}{4}\norm{q''}_\infty(1-\kappa_1).
+\]
+Finally \(1-\cos\vartheta_N\leq\vartheta_N^2/2\) gives
+\eqref{eq:En}. Applying \eqref{eq:shift} directly to the Fourier
+series gives
+\(E\leq2(1-\kappa_1)\sum_{k\geq1}k^2|q_k|\), proving
+\eqref{eq:fourierbound}.
+\end{proof}
+
+\section{All degrees of polynomial certificates}
+For \(|\alpha|<1\), define the positive quadratic form
+\begin{equation}\label{eq:quad}
+ Q_\alpha(x,y)=(1+|\alpha|^2)(x^2+y^2)
+ -2\Rea(\alpha)(x^2-y^2)+4\Ima(\alpha)xy.
+\end{equation}
+Its circle profile is \(|1-\alpha e^{2i\theta}|^2\).
+
+\begin{theorem}[Strict threshold]\label{thm:threshold}
+For \(a>0\) and a real mean-zero \(C^2\) profile \(q\), the following
+are equivalent:
+\begin{enumerate}[label=(\roman*)]
+\item \(a>A(q)\);
+\item a finite product \(P=\prod_{j=1}^M Q_{\alpha_j}\),
+      \(|\alpha_j|<1\), satisfies
+\[
+  -a+q(2\theta)+\frac{p'(\theta)}{2M p(\theta)}<0,
+  \qquad p(\theta)=P(\cos\theta,\sin\theta);
+\]
+\item some positive homogeneous polynomial of even degree satisfies
+      the corresponding weak inequality with \(\leq0\).
+\end{enumerate}
+In particular equality \(a=A(q)>0\) admits no such weak certificate.
+\end{theorem}
+
+\begin{proof}
+For a positive homogeneous polynomial of degree \(2M\),
+Fej\'er--Riesz factorization of its circle profile, choosing the
+factor with all zeros outside the closed disk, gives
+\[
+ p(\theta)=C\prod_{j=1}^M|1-\alpha_j e^{2i\theta}|^2,
+ \qquad |\alpha_j|<1.
+\]
+Factors with \(\alpha_j=0\) pad the actual Fourier degree to \(M\).
+Differentiation gives
+\begin{equation}\label{eq:herglotz}
+ \frac{p'(\theta)}{2M p(\theta)}
+ =\Ima h(e^{2i\theta}),\qquad
+ h(z)=\frac1M\sum_{j=1}^M\frac{1+\alpha_jz}{1-\alpha_jz},
+ \quad h(0)=1.
+\end{equation}
+Thus \(u=\Rea h\) has a strictly positive minimum on the circle.
+If \(w=a-q-Hu\geq0\), its coefficients satisfy
+\(w_k=i m_k-q_k\), where \(m_k\) are the coefficients of \(u\).
+Both moment matrices are positive, so \(A\leq a\).
+
+To prove the necessary \emph{strict} inequality, let
+\(Q(z)=2\sum_{k\geq1}q_kz^k\). The \(C^2\) hypothesis implies
+absolute convergence on the closed disk. For small \(\varepsilon>0\),
+\[
+ h_\varepsilon=(1-\varepsilon)h+\varepsilon(1-iQ)
+\]
+still has positive real part and \(h_\varepsilon(0)=1\).
+Since \(\Ima(1-iQ)=-q\) on the circle, its slack is
+\[
+ a-q-\Ima h_\varepsilon=(1-\varepsilon)w+\varepsilon a.
+\]
+It remains positive after replacing \(a\) by
+\(a-\varepsilon a/2\). This gives \(A<a\), using \(a>0\).
+
+Conversely suppose \(a>A\). Theorem~\ref{thm:brackets} supplies
+\(N\) with \(a_N+E_N<a\). Form the nonnegative densities \(u_N,w_N\)
+in its proof, and let \(h_N(z)=1+2\sum\kappa_km_kz^k\).
+For \(r<1\) close enough to one,
+\[
+ \Rea h_N(rz)>0\quad(|z|\leq1),\qquad
+ a-q-\Ima h_N(re^{it})
+ =(w_N)_r+(a-a_N)-[q-(q_N)_r]>0.
+\]
+Here a subscript \(r\) means Poisson smoothing.
+The Herglotz representation of \(h_N\) has a probability measure
+on the circle. Approximate it by equal-weight empirical measures.
+For this fixed \(r<1\), the kernel is uniformly continuous on the
+closed disk, so the resulting functions
+\[
+ h_M(z)=\frac1M\sum_{j=1}^M
+        \frac{1+r e^{-it_j}z}{1-r e^{-it_j}z}
+\]
+approximate \(h_N(rz)\) uniformly. They retain the strict slack
+when \(M\) is large. Equation~\eqref{eq:herglotz} now gives the
+required product of positive quadratic forms.
+\end{proof}
+
+\begin{proposition}[Local analytic and global polynomial certificates]
+\label{prop:analytic}
+For the field \eqref{eq:polar} with \(G>0\) and \(a>0\), the three
+conditions in Theorem~\ref{thm:decision} are equivalent to \(a>A(q)\).
+\end{proposition}
+\begin{proof}
+For \(P=r^{2M}p(\theta)\),
+\begin{equation}\label{eq:lie}
+ \frac{L_XP}{2M r^{d-1}G P}
+ =-a+q(2\theta)+\frac{p'(\theta)}{2M p(\theta)}.
+\end{equation}
+Thus Theorem~\ref{thm:threshold} handles homogeneous certificates.
+If \(V\) is local analytic, take its first nonzero homogeneous
+Taylor term \(P_m\). Positivity of \(V\) and homogeneity of \(X\)
+give \(P_m\geq0\) and \(L_XP_m\leq0\).
+For \(p_m=P_m|_{S^1}\),
+\[
+ p_m'+m(F/G)p_m\leq0.
+\]
+If \(p_m(\theta_0)=0\), multiplication by
+\(\exp(m\int_{\theta_0}^{\theta}F/G)\) yields a nonnegative
+nonincreasing function starting at zero, over a full following
+period. This forces \(p_m\equiv0\), a contradiction. Hence \(P_m\)
+is positive definite, \(m\) is even, and
+Theorem~\ref{thm:threshold} gives \(a>A(q)\).
+A polynomial is analytic; a strict homogeneous polynomial is
+itself a local analytic weak certificate.
+\end{proof}
+
+The local leading-term mechanism follows the argument used for the
+specific cubic counterexample in \cite{liu}.
+For completeness, the classical stability statement is also direct.
+A periodic primitive \(B'(\theta)=F/G+a\) gives
+\[
+ V_{\rm sm}(r,\theta)=r^2 e^{-2B(\theta)},\qquad
+ L_XV_{\rm sm}=-2a r^{d-1}G V_{\rm sm}.
+\]
+This function is coercive and \(C^1\) at the origin; for \(a>0\)
+it proves global asymptotic stability. If \(a=0\) the polar trajectories
+are closed, and if \(a<0\) they spiral outward. Neither case admits
+a strict Lyapunov function. This does not exclude weak first integrals
+when \(a=0\).
+
+\section{A finite interpolation representation}
+We now assume
+\begin{equation}\label{eq:rational}
+ q(t)=R(e^{it}),
+\end{equation}
+where \(R\) is rational, has no pole on the unit circle, is real
+there and has zero circle mean. Algebraic coefficients will be
+needed only for the effective decision conclusion.
+
+\subsection{The quadrant dual}
+\begin{lemma}[Finite dual]\label{lem:dual}
+The number \(a_N(q)\) equals the maximum of
+\begin{equation}\label{eq:dualobjective}
+ \av{q\,\Ima f}-c
+\end{equation}
+over analytic polynomials \(f\) of degree at most \(N\) such that
+\(f(0)=c+i\), \(c\geq0\), and \(\Rea f,\Ima f\geq0\) on the circle.
+\end{lemma}
+\begin{proof}
+Positive semidefinite Gram multipliers for the two Toeplitz
+constraints correspond to nonnegative trigonometric polynomials
+\(U,V\) of degree at most \(N\). Every such polynomial has a Gram
+representation by Fej\'er--Riesz. With formal moments of \(u\),
+\(\av{u}=1\), the Lagrangian is
+\[
+ b-\av{uU}-\av{(b-q-Hu)V}
+ =b(1-\av V)+\av{qV}-\av{u(U+HV)}.
+\]
+We used skew-adjointness of \(H\) under the real circle pairing.
+Stationarity requires \(\av V=1\) and \(U+HV=c\) constant,
+with \(c=\av U\geq0\). This says exactly that \(f=U+iV\) is
+analytic, \(f(0)=c+i\). The dual objective is \eqref{eq:dualobjective}.
+The primal is strictly feasible at \(m_k=0\), \(b>\max q\);
+its finite optimum is attained. Finite-dimensional semidefinite
+strong duality proves the assertion.
+\end{proof}
+
+Let \(\zeta_j\) be the interior poles of \(R(z)/z\), of orders
+\(n_j\). For any analytic \(f\) on \(\D\), define the finite jet functional
+\begin{equation}\label{eq:lambda}
+ \Lambda_R(f)=\sum_{|\zeta_j|<1}
+       \Res_{z=\zeta_j}\frac{R(z)f(z)}{z}.
+\end{equation}
+Only derivatives through order \(n_j-1\) at \(\zeta_j\) occur.
+For polynomials, the residue theorem gives
+\(\Lambda_R(f)=\av{qf}\). For a general analytic \(f\),
+\eqref{eq:lambda} is the definition; a boundary integral is not required.
+
+\begin{proposition}[Quadrant formulation]\label{prop:quadrant}
+Let \(\mathcal Q_c\) be the analytic maps from \(\D\) to the open
+first quadrant with \(f(0)=c+i\), where \(c>0\). Then
+\begin{equation}\label{eq:quadrant}
+ A(q)=\sup_{c>0,\ f\in\mathcal Q_c}
+           \bigl(\Ima\Lambda_R(f)-c\bigr).
+\end{equation}
+\end{proposition}
+\begin{proof}
+Any dual polynomial with \(c>0\) belongs to \(\mathcal Q_c\)
+by the strong minimum principle for its two harmonic parts.
+A dual polynomial with \(c=0\) is identically \(i\) and contributes
+zero. Constants \(c+i\) already have objectives tending to zero
+as \(c\downarrow0\).
+
+For \(f\in\mathcal Q_c\) and \(r<1\), both parts of \(f(rz)\)
+have positive minima on the closed disk. Its Taylor polynomials
+converge uniformly there and eventually preserve both positive
+parts, with the same constant term. Their objectives approach
+\(\Ima\Lambda_R(f(r\,\cdot))-c\). Every interior jet in
+\eqref{eq:lambda} converges to the jet of \(f\) as \(r\uparrow1\).
+The union of the finite duals therefore has the same supremum
+as \eqref{eq:quadrant}.
+\end{proof}
+
+\subsection{Interior jets and a Pick matrix}
+Include \(0\) among the nodes, adding multiplicity one if it is
+not already a pole of \(R(z)/z\). Let the distinct nodes be
+\(\zeta_1,\ldots,\zeta_s\), with multiplicities \(n_j\), and put
+\(m=\sum n_j\). Introduce normalized jet variables
+\[
+ u_{jp}=\frac{f^{(p)}(\zeta_j)}{p!},\qquad 0\leq p<n_j.
+\]
+At node \(0\), impose the value \(c+i\). Require
+\begin{equation}\label{eq:jetpositive}
+ c>0,\qquad \Rea u_{j0}>0,\quad \Ima u_{j0}>0.
+\end{equation}
+Define the jets of the proposed square \(g=f^2\) by
+\[
+ v_{jp}=\sum_{\ell=0}^p u_{j\ell}u_{j,p-\ell}.
+\]
+Form the Hermitian \(m\times m\) matrix
+\begin{equation}\label{eq:pick}
+ \mathcal P_{(j,p),(k,\ell)}
+ =\left.\frac{\partial_z^p\partial_{\bar w}^{\,\ell}}{p!\ell!}
+ \frac{g(z)-\overline{g(w)}}{i(1-z\bar w)}
+ \right|_{z=\zeta_j,\ w=\zeta_k}.
+\end{equation}
+The right-hand side uses only the specified jets \(v\).
+In particular for values alone its entry is
+\((v_{j0}-\overline{v_{k0}})/(i(1-\zeta_j\bar\zeta_k))\).
+
+\begin{lemma}[Classical confluent interpolation]\label{lem:pick}
+The tuples satisfying \eqref{eq:jetpositive}, the value condition at
+\(0\), and \(\mathcal P\succeq0\), are exactly the jet tuples of
+the functions in \(\bigcup_{c>0}\mathcal Q_c\).
+\end{lemma}
+\begin{proof}
+If \(f\) maps to the first quadrant, \(g=f^2\) maps to the
+upper half-plane. Its positive Pick kernel and its derivatives give
+\(\mathcal P\succeq0\).
+
+Conversely, classical interior confluent Nevanlinna--Pick
+interpolation provides an analytic \(g\) with \(\Ima g\geq0\)
+and the prescribed jets when \(\mathcal P\succeq0\), including
+singular semidefinite data. This is the half-plane theorem;
+see \cite[Section~3, pp.~246--247]{clark}, after multiplication
+of \(g\) by \(-i\). The normalized derivative kernels in
+\eqref{eq:pick} and the repeated-node basis there are related by
+an invertible change of basis. All interpolation nodes are interior.
+
+At zero, \(g(0)=(c+i)^2\) has imaginary part \(2c>0\);
+the minimum principle implies \(\Ima g>0\) throughout \(\D\).
+The unique analytic square root taking values in the first
+quadrant exists on the upper half-plane. The inequalities in
+\eqref{eq:jetpositive} select this root at each node.
+Successive derivatives of \(f^2=g\) recover all higher prescribed
+jets, since the coefficient of the next jet is \(2u_{j0}\ne0\).
+\end{proof}
+
+\begin{theorem}[Finite algebraic threshold]\label{thm:algebraic}
+For a rational profile \eqref{eq:rational}, \(A(q)\) is the
+supremum of the finite problem
+\begin{equation}\label{eq:finite}
+ \sup\{J(c,u): (c,u)\in\mathcal S_R\},\qquad
+ J(c,u)=\Ima\Lambda_R(u)-c,
+\end{equation}
+where \(\mathcal S_R\) is defined by \eqref{eq:jetpositive}, the
+value at \(0\), and \(\mathcal P\succeq0\).
+If \(R\) has algebraic coefficients, \(\mathcal S_R\) is
+semialgebraic over real algebraic numbers, \(A(q)\) is algebraic,
+and its comparison with any algebraic number is decidable.
+The supremum in \eqref{eq:finite} need not be attained.
+\end{theorem}
+\begin{proof}
+Proposition~\ref{prop:quadrant} and Lemma~\ref{lem:pick} give
+\eqref{eq:finite}. Interior poles and residue coefficients of
+an algebraic rational function are algebraic and effectively
+computable. Each matrix entry in \eqref{eq:pick} is a polynomial
+of degree at most two in the real jet variables, with algebraic
+coefficients. The denominators \(1-\zeta_j\bar\zeta_k\) are
+nonzero constants. Hermitian positivity can be expressed using
+principal minors, or a real symmetric block matrix.
+Thus \(\mathcal S_R\) is semialgebraic and \(J\) is affine.
+
+The set is nonempty, and its supremum is finite and nonnegative
+by \eqref{eq:A}. For algebraic \(a>0\), the condition \(a>A(q)\)
+is the first-order real sentence
+\begin{equation}\label{eq:qe}
+ \exists\varepsilon>0\ \forall(c,u)\quad
+ [(c,u)\in\mathcal S_R\ \Longrightarrow\ J(c,u)\leq a-\varepsilon].
+\end{equation}
+Real quantifier elimination \cite{tarski} decides this sentence.
+The supremum itself is defined by the conditions that \(B\)
+is an upper bound and that, for each \(\varepsilon>0\), some
+feasible \(J\) exceeds \(B-\varepsilon\).
+Eliminating quantifiers describes the singleton \(\{A(q)\}\)
+over the real algebraic numbers. Such a singleton is algebraic,
+and real root isolation gives an effective specification.
+No compactness or maximizer of \eqref{eq:finite} is assumed.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:decision}]
+The no-zero condition on the angular component is decidable on
+the unit circle by real quantifier elimination. Reflect if needed.
+The functions \(F,G\) have only even angular frequencies, so \(F/G\)
+is rational in \(z=e^{2i\theta}\) with algebraic coefficients and
+no circle poles. Its mean is a sum of interior residues of
+\((F/G)(z)/z\), and hence \(a\) in \eqref{eq:profile} is algebraic
+and computable; see also \cite[Supplement, Theorem~20.3]{korda}.
+For \(a\leq0\) there is no strict certificate,
+as noted after Proposition~\ref{prop:analytic}. For \(a>0\),
+form \(R=F/G+a\), its interior nodes and the finite problem
+\eqref{eq:finite}. Decide \eqref{eq:qe} and apply
+Proposition~\ref{prop:analytic}. Equality \(a=A(q)>0\) yields
+a negative answer by the strict threshold theorem.
+\end{proof}
+
+\begin{remark}
+The matrix \(\mathcal P\) has size determined by the poles of the
+input profile, rather than a candidate Lyapunov degree.
+Its entries are quadratic in the jets, so this representation is not
+a linear matrix inequality in the displayed variables. Nevertheless,
+\(\mathcal S_R\) is convex: convex combinations of quadrant maps with
+\(\Ima f(0)=1\) remain in that class, and taking jets is linear.
+Lemma~\ref{lem:pick} identifies its image with \(\mathcal S_R\).
+Thus \eqref{eq:finite} is a convex semialgebraic optimization problem.
+This observation alone supplies neither a finite lifted semidefinite
+representation nor an efficiency bound. The finite moment programs
+\eqref{eq:sdp} are also convex, but their approximation alone does not
+decide equality.
+\end{remark}
+
+\section{Polynomial-time additive approximation}
+The convexity of the jet set has a quantitative consequence. The
+input model throughout this section is dense binary rational data:
+all coefficients or jets up to the indicated degree are explicit.
+The statements do not apply to compressed exponent encodings.
+
+\begin{theorem}[Rational jet data]\label{thm:ratjets}
+Let \(\zeta_j\in\mathbb Q[i]\cap\D\) be distinct nodes including
+zero, with positive multiplicities \(n_j\), and let
+\[
+ \Lambda(f)=\sum_{j,p<n_j}b_{jp}\frac{f^{(p)}(\zeta_j)}{p!},
+ \qquad b_{jp}\in\mathbb Q[i],\quad\Lambda(1)=0.
+\]
+Over quadrant maps \(f(0)=c+i\), \(c>0\), define
+\(A_\Lambda=\sup(\Ima\Lambda(f)-c)\).
+For rational \(0<\varepsilon\leq1\), a rational approximation to
+\(A_\Lambda\) with absolute error at most \(\varepsilon\) can be
+computed in time polynomial in the binary encoding of the data and
+the tolerance. In particular, the cost for \(\varepsilon=2^{-p}\)
+is polynomial in \(p\). This is a value approximation, not a
+polynomial-time construction of a Lyapunov polynomial.
+\end{theorem}
+\begin{proof}
+Write \(f=c+iH\). Then \(H(0)=1\), \(\Rea H>0\), and
+Herglotz representation gives, for \(|z|\leq r<1\),
+\begin{equation}\label{eq:hergbounds}
+ |H(z)|\leq U_0(r):=\frac{1+r}{1-r},\qquad
+ \left|\frac{H^{(p)}(z)}{p!}\right|
+ \leq U_p(r):=\frac2{(1-r)^{p+1}}\quad(p\geq1).
+\end{equation}
+Take the rational radii \(r_j=(1+|\zeta_j|^2)/2\), which dominate
+\(|\zeta_j|\), and put
+\[
+ B=1+\sum_{j,p}(|\Rea b_{jp}|+|\Ima b_{jp}|)U_p(r_j).
+\]
+Since \(\Lambda(1)=0\), the affine objective is
+\(J=\Rea\Lambda(H)-c\leq B-c\). Constants \(c+i\) show
+\(0\leq A_\Lambda\leq B\), and near-maximizers may be chosen
+with \(c\leq B+1\).
+
+For \(0<\delta\leq1/2\), let \(K_\delta\) be the feasible jet
+set with \(\delta\leq c\leq C:=2B+2\). It is convex. Harnack
+gives the positive closed value bounds
+\[
+ \Rea f(\zeta_j)\geq\delta\frac{1-r_j}{1+r_j},\qquad
+ \Ima f(\zeta_j)\geq\frac{1-r_j}{1+r_j}.
+\]
+Add the interval for \(c\) and the Pick PSD condition.
+Lemma~\ref{lem:pick} shows that these closed conditions characterize
+\(K_\delta\) exactly.
+Equation~\eqref{eq:hergbounds} bounds all remaining coordinates,
+so this body is compact. Take a nearly optimal map. Its convex
+combination with the constant \(1+i\), using weights
+\(1-\delta,\delta\), shows
+\begin{equation}\label{eq:truncate}
+ 0\leq A_\Lambda-\max_{K_\delta}J\leq\delta(B+1).
+\end{equation}
+This does not assume attainment of the original supremum.
+
+Put \(m=\sum n_j\) and remove the fixed coordinate
+\(\Ima f(0)=1\), leaving \(n=2m-1\) real coordinates.
+Let \(x_0\) be the jets of \(1+i\), and let the confluent
+Vandermonde matrix be
+\[
+ V_{(j,p),\ell}=\binom\ell p\zeta_j^{\ell-p}
+ \quad(0\leq\ell<m),
+\]
+with zero entries if \(\ell<p\). It is invertible. Define
+\[
+ T=\max\left(1,\sum_{a,b}
+ (|\Rea(V^{-1})_{ab}|+|\Ima(V^{-1})_{ab}|)\right),
+ \qquad r_0=(4T)^{-1}.
+\]
+Any real jet perturbation of Euclidean norm at most \(r_0\)
+has a Hermite interpolating polynomial \(p\) with
+\(\sup_{\overline\D}|p|\leq Tr_0\leq1/4\).
+Thus \(1+i+p\) stays in the quadrant and its anchor has real
+part in \([3/4,5/4]\). Consequently
+\(B(x_0,r_0)\subseteq K_\delta\).
+With \(U=\max_{j,p}U_p(r_j)\), the rational radius
+\(R_0=2n(C+U+2)\) contains \(K_\delta\) about both zero and
+\(x_0\).
+
+Membership of rational tuples in \(K_\delta\) is polynomial-time:
+form the quadratic squared-map jets and the rational Hermitian
+Pick matrix, test the scalar bounds, and test PSD by exact Schur
+elimination. A negative diagonal rejects; a zero diagonal requires
+its row to be zero; a positive pivot allows a Schur complement.
+Rational pivots are ratios of minors, so determinant bounds control
+their bit lengths polynomially. No enumeration of all principal
+minors is needed. This exact test is a valid weak-membership oracle.
+
+Apply the classical centered-convex-body oracle theorem of
+Gr\"otschel--Lov\'asz--Schrijver
+\cite[Corollary~4.3.12]{gls}. Its hypotheses are the rational
+center, inner and outer radii just exhibited and weak membership.
+For tolerance \(\eta<r_0\), it returns \(\widehat x\) within
+\(\eta\) of \(K_\delta\), whose objective is at least the
+maximum on its \(\eta\)-interior minus \(\eta\).
+The empty-interior alternative is impossible because of the inner ball.
+Write \(J(x)=w\cdot x+j_0\), \(W=\max(1,\sum|w_i|)\).
+Contracting a maximizer toward \(x_0\) by \(\eta/r_0\)
+puts it in that interior and loses at most \(\eta W R_0/r_0\).
+Proximity bounds any excess objective by \(\eta W\). Therefore
+\[
+ |J(\widehat x)-\max_{K_\delta}J|
+ \leq\eta[1+W(1+R_0/r_0)].
+\]
+Choose
+\[
+ \delta=\frac\varepsilon{4(B+1)},\qquad
+ \eta=\min\left(\frac{r_0}2,
+ \frac\varepsilon{4[1+W(1+R_0/r_0)]}\right).
+\]
+Together with \eqref{eq:truncate}, this gives error at most
+\(\varepsilon/2\). All displayed rational data have polynomial
+binary length: powers have exponents \(O(m)\), and rational
+matrix inversion and determinant bounds control the inverse
+Vandermonde. Tiny geometric radii affect their logarithms, not
+the number of bits exponentially. The oracle theorem bounds
+both the number and size of its queries, completing the ordinary
+Turing polynomial-time reduction.
+\end{proof}
+
+The theorem uses classical weak optimization, not a new general
+convex optimization algorithm or an asserted finite LMI lift.
+It already applies to trigonometric polynomials with rational Fourier
+coefficients, since their functionals use only jets at zero.
+Equality and the size of an explicit certificate remain separate issues.
+
+\subsection{Rational profiles with algebraic poles}
+Exact arithmetic in the compositum of all pole fields need not have
+polynomial degree. The next argument avoids that arithmetic by
+approximating the objective on a fixed analytic function class.
+
+\begin{lemma}[Uniform perturbation of the functional]\label{lem:perturb}
+Let \(f_p=f^{(p)}/p!\), and suppose that the functionals
+\[
+ \Lambda(f)=\sum b_{jp}f_p(\zeta_j),\qquad
+ \widetilde\Lambda(f)=\sum\widetilde b_{jp}f_p(\widetilde\zeta_j)
+\]
+annihilate constants. Suppose corresponding
+nodes have the same jet orders and all nodes have modulus at most
+\(\rho<1\). Then
+\[
+ |A_\Lambda-A_{\widetilde\Lambda}|\leq
+ \sum_{j,p}|b_{jp}-\widetilde b_{jp}|U_p(\rho)
+ +\sum_{j,p}|\widetilde b_{jp}|(p+1)U_{p+1}(\rho)
+ |\zeta_j-\widetilde\zeta_j|.
+\]
+\end{lemma}
+\begin{proof}
+Write \(f=c+iH\) as before. Constants cancel exactly in both
+objectives. Since \(H_p'=(p+1)H_{p+1}\), integrate the derivative
+bound along the chord between corresponding nodes. Equation~
+\eqref{eq:hergbounds} bounds the coefficient error. Taking suprema
+over the same class of quadrant maps proves the assertion.
+No continuity claim about perturbed Pick feasible sets is used.
+\end{proof}
+
+\begin{theorem}[Polynomial-time value approximation for rational fields]
+\label{thm:rationalcomplexity}
+Let \(S=N/D\), \(N,D\in\mathbb Q[i][z]\), be given densely,
+real on the unit circle, with \(D\) having no zeros there.
+Both \(\mu=\av{S}\) and \(A(S-\mu)\) admit rational additive
+\(\varepsilon\)-approximations in time polynomial in the dense
+binary input length and the tolerance encoding.
+
+Consequently, given a rational planar homogeneous field with
+nonvanishing angular speed, and a rational promised separation
+\(\gamma>0\), existence of a strict polynomial Lyapunov function
+of some degree can be decided in polynomial time on inputs satisfying
+\(|a-A(q)|\geq\gamma\). For stable inputs \(a>0\), this also
+decides existence of a local analytic weak certificate under the
+same promise. The latter equivalence is not asserted for centers.
+\end{theorem}
+\begin{proof}
+Clear a common denominator of \(N,D\), scaling both together,
+and put \(Q=zD\). At an interior root \(\zeta_j\) of \(Q\)
+of multiplicity \(n_j\), set
+\[
+ E_j(t)=\sum_{k\geq0}\frac{Q^{(n_j+k)}(\zeta_j)}{(n_j+k)!}t^k,
+ \qquad c_{jp}=[t^{n_j-1-p}]\frac{N(\zeta_j+t)}{E_j(t)}.
+\]
+Then \(\Lambda_S(f)=\sum c_{jp}f_p(\zeta_j)\) is the residue
+functional, and \(\mu=\sum_jc_{j0}\). Include the anchor zero
+with multiplicity at least one. The normalized functional
+\(\Lambda=\Lambda_S-\mu f(0)\) has the same derivative
+coefficients, and its zeroth anchor coefficient is
+\[
+ b_{00}=-\sum_{\zeta_j\ne0}c_{j0}.
+\]
+Thus it annihilates constants without first constructing the
+algebraic mean in a common number field. Removable poles may be
+cancelled by rational polynomial gcd, or retained with zero residues.
+
+We record the bit bounds needed to approximate these data. Let
+\(n,\tau\) bound degrees and cleared integer coefficient lengths;
+both are polynomial in the dense input. Define
+\(Q^\#(z)=z^{\deg Q}\overline{Q(1/\bar z)}\).
+The primitive squarefree part \(P\) of
+\[
+ zQQ^\#\overline Q\,\overline{Q^\#}
+\]
+is an integer polynomial of polynomial degree and coefficient
+length; bars on polynomial factors here conjugate coefficients.
+Its roots include zero, all roots of \(Q\), and the reciprocal
+conjugates of their nonzero roots. Squarefree extraction uses
+polynomial gcd and preserves polynomial bit bounds.
+
+For \(P\) of degree \(d_0\geq2\) and height \(H_0\geq1\),
+Cauchy's root bound and its nonzero integral discriminant give the
+conservative separation
+\(\sigma=(4H_0)^{-d_0^2}\) between distinct roots. Indeed all
+roots have modulus at most \(2H_0\), and isolating one squared
+distance in the discriminant product, while bounding every other
+distance by \(4H_0\), proves this lower bound. When \(d_0=1\)
+only zero is relevant and we set \(\sigma=1\).
+For an interior nonzero root with \(|\zeta|>1/2\),
+\[
+ \sigma\leq|\zeta-1/\bar\zeta|
+ =\frac{1-|\zeta|^2}{|\zeta|},\qquad
+ 1-|\zeta|\geq\sigma/4.
+\]
+Hence \(\beta=\min(1/2,\sigma/4)\) is a lower bound for
+the distance of every interior node from the unit circle.
+The reciprocal argument likewise separates exterior roots from it.
+Both \(\sigma\) and \(\beta\) have polynomial binary length.
+
+The multiplicities and number of distinct roots of \(Q\) are
+computed by gcd over \(\mathbb Q[i]\). Certified complex root
+isolation and refinement have polynomial bit complexity here;
+for example, the geometric bounds of
+Mehlhorn--Sagraloff--Wang \cite[Theorems~3--4]{msw} apply.
+Root magnitudes, inverse separations and inverse products of
+root differences in those bounds have polynomial logarithms by
+the preceding estimates. The rational coefficient oracle is exact.
+Refining to \(2^{-k}\) accuracy therefore costs a polynomial in
+the original input and \(k\).
+
+Residue coefficients have the same approximation property, even
+at multiple poles. At multiplicity \(r\),
+\[
+ \left|\frac{Q^{(r)}(\zeta)}{r!}\right|
+ =|\operatorname{lead}(Q)|\prod_{w\ne\zeta}
+ |\zeta-w|^{\operatorname{mult}(w)}\geq\sigma^{\deg Q}.
+\]
+The leading coefficient is a nonzero Gaussian integer. For an
+explicit bound let \(n\geq1\) dominate both polynomial degrees,
+let \(2^\tau\) bound real and imaginary coefficient parts, and put
+\[
+ C_0=(n+1)^3 2^{\tau+2n+4},\qquad
+ h=\sigma^{\deg Q},\qquad B_0=2C_0/h.
+\]
+On \(|z|\leq2\), \(C_0\) bounds all factorial-normalized
+derivatives of \(N,Q\) and their first derivatives, by the
+binomial theorem. Within distance
+\(\rho_0=\min(1/4,h/(2C_0))\) of the root, the series
+denominator's constant term has modulus at least \(h/2\).
+Write its coefficients as \(e_j(w)\), and those of the translated
+numerator as \(a_j(w)\). Series division obeys
+\[
+ t_\ell=\frac{a_\ell-\sum_{j=1}^\ell e_jt_{\ell-j}}{e_0}.
+\]
+Induction gives \(|t_\ell|\leq B_0(1+B_0)^\ell\).
+Differentiating the recurrence gives
+\[
+ |t'_\ell|\leq B_0\left(1+\sum_{k<\ell}|t_k|
+                  +\sum_{k<\ell}|t'_k|+|t_\ell|\right).
+\]
+A second induction bounds every derivative for \(\ell\leq n\)
+by \(L_0=(n+2)B_0^2(1+B_0)^{2n}\), whose logarithm is
+polynomial in the input. Root accuracy
+\(\min(\rho_0,\delta/(2L_0))\), followed by rounding within
+\(\delta/2\), gives residue error at most \(\delta\).
+Exact rational series evaluation has polynomial bit growth: at
+order \(\ell\) its denominator introduces at most \(\ell+1\)
+powers of the common constant denominator, in addition to
+polynomial coefficient and evaluation denominators.
+Thus the computation is polynomial in the input and requested
+precision bits, treating each pole separately.
+
+Let \(m\) be the total interior multiplicity including the anchor.
+Coarse certified coefficient enclosures supply rational
+\(M\geq1+\max|b_{jp}|\) with polynomial length. Set
+\[
+ \rho=1-\beta/2,\qquad U=\max_{0\leq p\leq m}U_p(\rho),\qquad
+ \delta=\min\left(\frac\beta8,\frac\sigma8,
+ \frac\varepsilon{8mU(1+2mM)}\right).
+\]
+Keep zero exact, approximate other nodes within \(\delta\), and
+approximate all coefficients except \(b_{00}\) within
+\(\delta/(m+1)\). Set the new anchor coefficient to minus the
+sum of the other zeroth coefficients. Every coefficient error is
+at most \(\delta\); constants cancel exactly. Nodes remain
+distinct inside radius \(\rho\) and
+\(|\widetilde b_{jp}|\leq2M\).
+Lemma~\ref{lem:perturb} bounds the threshold error by
+\(m\delta U+2m^2M\delta U\leq\varepsilon/8\).
+Theorem~\ref{thm:ratjets}, with tolerance \(\varepsilon/2\),
+approximates the new rational functional. It need not itself arise
+from a real circle profile. The total error is less than
+\(\varepsilon\), with polynomial encoding throughout.
+Approximating and summing the zeroth residues separately gives
+the asserted approximation of the real mean \(\mu\).
+
+Finally, a dense rational homogeneous field gives Laurent
+\(F,G\) of degree at most \((d+1)/2\), with polynomial bit cost.
+Multiplication by that power of \(z\) represents \(F/G\) with
+polynomial numerator and denominator degrees at most \(d+1\).
+After reflection if necessary, \(G>0\); its denominator has
+no unit-circle root. Approximate \(-\mu\) and \(A\) to
+\(\gamma/4\) to distinguish the promised cases. For
+\(\gamma\geq1\), fixed smaller tolerances suffice.
+The strict-certificate criterion also rejects \(a\leq0\);
+the equivalence with weak analytic certificates is used only
+for \(a>0\), as in Theorem~\ref{thm:decision}.
+\end{proof}
+
+Neither theorem makes exact equality polynomial-time, bounds the
+output size of a polynomial certificate polynomially, or implements
+the classical oracle algorithm. The gain is precision dependence:
+increasing the Jackson hierarchy alone gives no corresponding
+polynomial bound in \(\log(1/\varepsilon)\).
+The primary ingredients remain classical interpolation,
+convex-body optimization and root refinement; the reduction
+establishes their hypotheses for this certificate threshold.
+
+\section{A semialgebraic region of certificate existence}
+The preceding construction is uniform in the coefficients, even when
+interior poles collide or cancel. This gives a statement about families
+without fixing a certificate degree.
+
+\begin{theorem}[Uniform coefficient region]\label{thm:region}
+Fix an odd integer \(d\geq1\). In the coefficient space
+\(\R^{2(d+1)}\) of planar homogeneous fields of degree \(d\), let
+\(\mathcal R_d\) denote the fields whose angular component has one
+strict sign, and let \(\mathcal C_d\subset\mathcal R_d\) denote those
+admitting a strict polynomial Lyapunov function of some degree.
+Then \(\mathcal C_d\) is open and semialgebraic, with an effectively
+constructible first-order real definition over \(\mathbb Q\).
+The interpolation matrix in this definition has size at most \(d+2\),
+including the normalization node at zero.
+\end{theorem}
+\begin{proof}
+The condition defining \(\mathcal R_d\) is a strict sign condition on
+the unit circle, hence semialgebraic and open. Treat \(G>0\); a fixed
+reflection treats \(G<0\). Put \(k=(d+1)/2\). The Laurent polynomials
+\(F,G\) in \(z=e^{2i\theta}\) have degrees at most \(k\), so
+\[
+ N(z)=z^k F(z),\qquad D(z)=z^k G(z)
+\]
+are polynomials of degree at most \(d+1\). Their coefficients depend
+\(\mathbb Q[i]\)-linearly on the field coefficients. The polynomial
+\(D\) is nonzero and has no root on the unit circle.
+
+There are finitely many degree and root-multiplicity patterns for \(D\).
+For each pattern introduce its leading coefficient and distinct complex
+roots, impose the coefficient identities for their product, and specify
+which roots satisfy \(|\zeta|<1\) and which satisfy \(|\zeta|>1\).
+All these conditions are real semialgebraic. Taking the finite union of
+patterns handles collisions and degree drops without a continuous choice
+of root labels.
+
+The mean \(-a\) is the sum of interior residues of \(N/(zD)\).
+On a fixed pattern these residues are rational functions of coefficients
+and root variables: repeated poles require only finitely many derivatives.
+All denominators are nonzero on the pattern, and auxiliary inverse
+variables turn each division into a polynomial equality. This classical
+mean computation, also explicit in \cite[Supplement, Theorem~20.3]{korda},
+therefore defines \(a\) semialgebraically in the parameters.
+
+Set \(R=N/D+a\). In \eqref{eq:lambda} and \eqref{eq:pick}, use the
+interior roots of \(zD\) with their full denominator multiplicities.
+This includes zero with multiplicity at least one. Removable poles may
+be retained: their unused residue coefficients vanish. The extra jets
+do not change the feasible objectives, because every quadrant map
+supplies them and Lemma~\ref{lem:pick} still characterizes the full
+jet tuples. The total multiplicity is at most
+\(\deg D+1\leq d+2\). If \(D(0)=0\), the node zero is counted once
+with its multiplicity increased by one.
+
+Both the residue objective and the Pick matrix entries are rational
+functions of the root and coefficient variables, polynomial of degree at
+most two in the jets. Their denominators, including
+\(1-\zeta_j\bar\zeta_\ell\), do not vanish. Thus the anchor condition,
+quadrant inequalities and positive semidefiniteness are semialgebraic
+jointly in all parameters. Existentially quantify the root and mean
+variables, require \(a>0\), and then impose \eqref{eq:qe}, with its
+quantifiers over the feasible jets. Any admissible root listing describes
+the same profile and threshold. The finite union of these formulas
+defines exactly \(\mathcal C_d\); real quantifier elimination gives
+the asserted effective semialgebraic description over \(\mathbb Q\).
+
+Finally a strict homogeneous certificate \(P\) for \(X\) has positive
+minima of \(P\) and \(-L_XP\) on the circle. The same \(P\) remains
+strict under small coefficient changes in \(X\), while the sign of
+\(G\) persists. Proposition~\ref{prop:analytic} supplies a homogeneous
+certificate at every point of \(\mathcal C_d\), proving openness.
+\end{proof}
+
+\begin{corollary}[Finitely many parameter transitions]\label{cor:transitions}
+For a polynomial or rational one-real-parameter family of fixed odd
+degree, with real algebraic coefficients and a semialgebraic parameter
+domain over the real algebraic numbers, assume its rational denominators
+do not vanish on that domain. The parameters where the field belongs
+to \(\mathcal C_d\) form a finite union of intervals and points with
+algebraic finite endpoints. If the domain is open, this set is relatively
+open and has no isolated point.
+\end{corollary}
+\begin{proof}
+Take the inverse image of \(\mathcal C_d\) under the semialgebraic
+coefficient map. One-dimensional semialgebraic sets have the stated
+form; continuity gives the additional openness assertion.
+\end{proof}
+
+\begin{corollary}[A computable degree for compact families]\label{cor:compact}
+Given a compact semialgebraic coefficient set \(K\), defined over real
+algebraic numbers, inclusion \(K\subset\mathcal C_d\) is decidable.
+If it holds, an algorithm finds an even degree \(2M\) such that every
+\(X\in K\) admits a strict homogeneous certificate of degree \(2M\).
+The certificate may depend on \(X\).
+\end{corollary}
+\begin{proof}
+Decide inclusion using Theorem~\ref{thm:region}. A strict homogeneous
+certificate at each \(X\in K\) works on a neighborhood. Compactness
+gives a finite cover with finitely many certificate degrees. Taking
+positive integer powers raises these certificates to their least common
+multiple degree and preserves strictness. Hence some even degree works
+throughout \(K\).
+
+For \(M=1,2,\ldots\), quantifier elimination decides
+\[
+ \forall X\in K\ \exists P\in\R[x,y]_{2M}\ \forall(x,y):\quad
+ x^2+y^2=1\ \Longrightarrow\ P(x,y)>0\ \text{and}\ -L_XP(x,y)>0,
+\]
+where \(\R[x,y]_{2M}\) denotes homogeneous forms of degree \(2M\)
+and the existential variables are their coefficients. The search
+terminates by the finite-cover argument. For empty \(K\) it may return
+degree two. This is a common degree, not necessarily a common polynomial,
+and no efficiency bound is asserted.
+\end{proof}
+
+These are consequences of the finite interpolation representation;
+they do not give a new decision procedure for stability itself.
+
+\section{Effective separation and a sufficient degree}
+The finite brackets also have a quantitative use independent of
+quantifier elimination. If \(a<A(q)\), some \(a_N>a\) excludes
+certificates of every degree. If \(a>A(q)\), some \(a_N+E_N<a\)
+proves existence. For nonzero separation, it suffices to use
+\[
+ N=O\!\left(\max\left\{1,
+ \sqrt{\frac{\norm{q''}_\infty}{|a-A(q)|}}\right\}\right).
+\]
+This statement concerns exact bounds on the finite optimum.
+A numerical implementation needs certified errors smaller than
+the separation; floating solver statuses do not supply them.
+
+\begin{theorem}[Constructive sufficient degree]\label{thm:degree}
+Let \(\Delta=a-A(q)>0\) and
+\(L=2\sum_{k\geq1}k|q_k|<\infty\).
+If \(L=0\), \(P=x^2+y^2\) is a certificate.
+Otherwise let
+\[
+ \tau=\min\{1/2,\Delta/(4L)\},\qquad r=1-\tau,\qquad
+ M=\max\left\{1,\left\lceil\frac{8\pi r}
+                      {\Delta(1-r^2)}\right\rceil\right\}.
+\]
+There is a product of \(M\) positive quadratic forms with
+normalized slack at least \(\Delta/2\).
+When \(\Delta\leq2L\), one may use
+\(M\leq\lceil32\pi L/\Delta^2\rceil\).
+The Lyapunov polynomial degree is \(2M\).
+\end{theorem}
+\begin{proof}
+Take a diagonal subsequence of finite optimizers. The bounds
+\(|m_k|\leq1\), \(a_N\leq\max q\), and closedness of every finite
+positive cone give compatible full moments. The classical
+positive trigonometric moment representation yields a probability
+measure \(\mu\) and a positive measure \(\nu\) of mass \(A\), with
+\(\nu_k=i\mu_k-q_k\), \(k\geq1\).
+Poisson smoothing at radius \(r\) loses at most
+\[
+ \norm{q-q_r}_\infty\leq L(1-r)\leq\Delta/4.
+\]
+The smoothed Herglotz function thus has slack at least \(3\Delta/4\).
+
+Choose a cut of the circle with no atom of \(\mu\), and use its
+\(M\) midpoint quantiles with equal weights. Their cumulative
+discrepancy is at most \(1/(2M)\), also in the presence of atoms.
+Integration by parts and the total variation of the Herglotz kernel
+give, uniformly on the closed disk,
+\[
+ \norm{h_M-h_r}_\infty
+ \leq\frac1{2M}\int_0^{2\pi}\frac{2r}{|1-re^{it}|^2}\,dt
+ =\frac{2\pi r}{M(1-r^2)}\leq\Delta/4.
+\]
+Use \eqref{eq:herglotz}. The last bound on \(M\) follows from
+\(\tau=\Delta/(4L)\) and
+\(r/(1-r^2)\leq1/\tau\).
+\end{proof}
+
+No optimality of the exponent or constants is claimed.
+Strict binary forms are sums of two squares of real forms, so both
+the constructed \(P\) and \(-L_XP\) admit such decompositions.
+This is the classical binary positivity fact, not a new general
+SOS theorem. A small rational perturbation of the coefficients of
+\(P\) preserves both strict inequalities on the unit circle.
+Thus for a rational input field a rational-coefficient certificate
+exists whenever the strict criterion holds. This does not assert
+a two-square decomposition over the rationals.
+
+\section{Two explicit profiles}
+\subsection{One harmonic}
+If \(q\) is a trigonometric polynomial of degree \(s\), the
+functional only uses Taylor coefficients at zero:
+\[
+ \Lambda_R(f)=\sum_{k=1}^s\overline{q_k}f_k,\qquad f_0=c+i.
+\]
+Put \(g_k=\sum_{\ell=0}^k f_\ell f_{k-\ell}\).
+The finite interpolation condition reduces to
+\[
+ T_s(\mu)\succeq0,\qquad
+ \mu_0=2c,\quad \mu_k=g_k/(2i)\quad(k\geq1).
+\]
+This is the classical Carath\'eodory--Fej\'er condition for
+\(-ig\) to have nonnegative real part; its imaginary constant is
+unrestricted.
+
+For \(q=b\cos\phi\), \(b\geq0\), the \(2\times2\) condition is
+\[
+ |f_1|\leq \frac{2c}{\sqrt{1+c^2}}.
+\]
+The objective is \((b/2)\Ima f_1-c\), so
+\begin{equation}\label{eq:single}
+ A(b\cos\phi)
+ =\sup_{c>0}\left(\frac{bc}{\sqrt{1+c^2}}-c\right)
+ =(b^{2/3}-1)_+^{3/2}.
+\end{equation}
+The maximum for \(b>1\) occurs at \(c=\sqrt{b^{2/3}-1}\);
+for \(b\leq1\) the supremum is zero.
+Changing the phase replaces \(b\) by \(|b|\).
+Consequently the stable cubic family with \(G=1\) and
+\(F=-a+b\cos2\theta\) has a polynomial or analytic weak certificate
+exactly when \(|b|<(1+a^{2/3})^{3/2}\).
+The family itself is from \cite{liu}.
+
+\subsection{A rational profile with nonconstant angular speed}
+Consider
+\begin{equation}\label{eq:qexample}
+ q(\phi)=\frac{3\cos\phi}{1+(3/5)\cos\phi}+\frac54.
+\end{equation}
+Writing \(C=25/4\), \(r=1/3\), one has
+\(q=C(1-P_{-r})\), where
+\(P_{-r}(\phi)=(1-r^2)/|1+r e^{i\phi}|^2\).
+Thus
+\[
+ \Lambda_R(f)=-C\,[f(-r)-f(0)].
+\]
+Set \(f(0)=c+i\), \(f(-r)=x+iy\), with \(c,x,y>0\).
+The two-node Pick condition reduces exactly to
+\begin{equation}\label{eq:D}
+ D(c,x,y):=18cxy-(c^2-1-x^2+y^2)^2-4(c+xy)^2\geq0.
+\end{equation}
+Therefore
+\begin{equation}\label{eq:Aexample}
+ A(q)=\frac{25}{4}-
+      \inf_{\substack{c,x,y>0\\D(c,x,y)\geq0}}
+      \left(c+\frac{25}{4}y\right).
+\end{equation}
+
+\begin{proposition}[An exact algebraic instance]\label{prop:example}
+Let
+\begin{align*}
+ \mathcal R(t)={}&16777216t^{12}-8141930496t^{10}
+       +1537904087040t^8\\
+ &-104707265987520t^6+2126206939995165t^4\\
+ &-15011745808074246t^2+81397225546445341.
+\end{align*}
+It has a unique root \(t_*\) in \((0,19/4)\), and the profile
+\eqref{eq:qexample} satisfies \(A(q)=25/4-t_*\). In particular
+\begin{equation}\label{eq:exactinterval}
+ 1.657217310707<A(q)<1.657217310708.
+\end{equation}
+The endpoints in \eqref{eq:exactinterval} are exact decimal rationals.
+\end{proposition}
+\begin{proof}
+The feasible rational triple \((c,x,y)=(1,1,3/5)\) has
+\(D=94/625>0\) and objective \(19/4<25/4\).
+Restrict a minimizing sequence to objective at most \(19/4\).
+The equivalent disk condition
+\begin{equation}\label{eq:disk}
+ \left|(x+iy)^2-\left(c^2-1+\frac52ic\right)\right|
+ \leq\frac32c
+\end{equation}
+bounds \(x\), as \(c,y\) are already bounded.
+If \(c\to0\), the squared value tends to \(-1\), forcing
+\(x\to0\), \(y\to1\); the objective would tend to \(25/4\),
+a contradiction. Hence \(c\) is bounded below.
+The imaginary part of \eqref{eq:disk} gives \(2xy\geq c\),
+so \(x,y\) also stay bounded away from zero.
+A minimum is attained in the positive octant and lies on \(D=0\).
+
+At a regular minimizing boundary point, the multiplier equations,
+and at a singular point the vanishing gradient, imply
+\begin{equation}\label{eq:critical}
+ D=0,\quad D_x=0,\quad 4D_y-25D_c=0,\quad 4t-4c-25y=0.
+\end{equation}
+Exact rational elimination in the variable order \(x,c,y,t\)
+gives the univariate eliminant
+\begin{equation}\label{eq:eliminant}
+ t^2(4t-25)^2(4t+25)^2(t^2+1)^2\,\mathcal R(t).
+\end{equation}
+The supplementary program recomputes a graded reverse lexicographic
+Gr\"obner basis over \(\mathbb Q\), converts it to lexicographic order,
+verifies \eqref{eq:eliminant} and its zero remainder, and performs
+exact Sturm root counts. These give one root of \(\mathcal R\)
+in \((0,19/4)\), no endpoint root, and one root in
+\[
+ \left(\frac{4592782689292}{10^{12}},
+             \frac{4592782689293}{10^{12}}\right).
+\]
+Since every minimizer satisfies \eqref{eq:critical} and
+\(0<t\leq19/4\), none of the other factors in
+\eqref{eq:eliminant} vanishes. Existence of the minimum identifies
+it with the unique root \(t_*\), giving \eqref{eq:exactinterval}.
+No numerical optimizer is used for global optimality.
+\end{proof}
+
+This is realized by a concrete cubic vector field. With
+\[
+ \rho=x^2+y^2,\quad
+ H=\rho+\tfrac35(x^2-y^2),\quad
+ K=(-a+\tfrac54)H+3(x^2-y^2),
+\]
+take \(\dot x=Kx-Hy\), \(\dot y=Ky+Hx\).
+Then \(G=1+(3/5)\cos2\theta>0\) and
+\(F=(-a+5/4)G+3\cos2\theta\).
+It is globally asymptotically stable for every \(a>0\);
+polynomial and local analytic weak certificates exist precisely
+for \(a>A(q)\). The algebraic boundary value is therefore an
+explicit equality input to the finite decision theorem.
+
+\subsection{An exact minimum degree}
+At \(a=2\), the preceding cubic has a strict integer-coefficient
+certificate, while finite rational identities exclude every smaller degree.
+
+\begin{proposition}\label{prop:min8}
+For the cubic above at \(a=2\), the minimum degree of a polynomial
+weak Lyapunov function is eight, even allowing nonhomogeneous polynomials
+and inequalities only near the origin, with \(V(0)=0\).
+A homogeneous degree-eight strict certificate exists globally.
+\end{proposition}
+\begin{proof}
+Define
+\begin{align*}
+ P(x,y)={}&216x^8-2260x^7y+12820x^6y^2-45066x^5y^3
+              +99726x^4y^4\\
+          &-137242x^3y^5+113341x^2y^6-51276xy^7+9784y^8.
+\end{align*}
+The descending \(x\)-coefficients of \(5(-L_XP)\), of degree ten, are
+\[
+\begin{gathered}
+2528,\ -28576,\ 65016,\ 322736,\ -1562236,\ 1039608,\\
+5502688,\ -13799076,\ 13740768,\ -6471612,\ 1188936.
+\end{gathered}
+\]
+Exact signed Euclidean Sturm chains for \(P(t,1)\) and
+\(-L_XP(t,1)\) have variations \((4,4)\) and \((5,5)\) at
+minus and plus infinity, respectively. Neither has a real root.
+Their values at \((0,1)\) are \(9784\) and \(1188936/5\),
+and at the omitted projective point \((1,0)\) they are
+\(216\) and \(2528/5\). Homogeneity proves both strict positivities.
+
+For the lower bound write, at degree \(2M\),
+\[
+ p(\phi)=p_0+2\Rea\sum_{k=1}^M p_k e^{ik\phi},\qquad
+ d(\phi)=-MF(\phi)p(\phi)-G(\phi)p'(\phi),
+\]
+where \(\phi=2\theta\), \(F=-3/4+(51/20)\cos\phi\), and
+\(G=1+(3/5)\cos\phi\). On the circle \(-L_XP=2d\).
+Let \(v_M=(1,2\cos\phi,-2\sin\phi,\ldots,
+2\cos M\phi,-2\sin M\phi)^T\).
+For a real rational \(t\), set
+\(\cos\phi=(1-t^2)/(1+t^2)\), \(\sin\phi=2t/(1+t^2)\), and
+\[
+ b_M(t)=-MF(\phi)v_M(\phi)-G(\phi)v_M'(\phi).
+\]
+Thus \(b_M(t)\) is a rational column, and its pairing with the
+real Fourier coefficients gives \(d(\phi)\).
+For the nodes in the following table form
+\(B_M=[b_M(t_1)\ \cdots\ b_M(t_{2M+1})]\), and define
+\(w=-B_M^{-1}(1,0,\ldots,0)^T\).
+These formulas specify the weights exactly over \(\mathbb Q\).
+\begin{center}
+\begin{tabular}{clcc}
+\toprule
+\(M\)& Nodes \(t_j\)&\(\operatorname{sign}\det B_M\)&\(\min_j w_j>\)\\
+\midrule
+1&\(-3/10,\ 17/20,\ 9/10\)&\(1\)&1\\
+2&\(-7/20,\ 9/20,\ 1/2,\ 23/20,\ 6/5\)&\(-1\)&2\\
+3&\(-7/20,\ 1/4,\ 3/10,\ 7/10,\ 3/4,\ 13/10,\ 27/20\)&\(1\)&6\\
+\bottomrule
+\end{tabular}
+\end{center}
+Direct rational arithmetic gives the nonzero determinants and positive
+weight bounds displayed; the supplementary verifier supplies the full
+rational weights and checks every coefficient of
+\[
+ \sum_j w_j d(\phi_j)=-p_0.
+\]
+For a nonzero nonnegative \(p\), its mean \(p_0\) is positive.
+The identity is therefore incompatible with \(d\geq0\), excluding
+degrees two, four and six over arbitrary real coefficients.
+
+Finally, the first nonzero homogeneous term of any local polynomial
+weak certificate with \(V(0)=0\) is nonnegative, nonzero, of positive
+even degree, and has nonpositive Lie derivative. If its total degree
+were below eight, one of the three excluded cases would occur.
+The exact verifier uses no optimizer; numerical searches only discovered
+the fixed coefficients and support nodes.
+\end{proof}
+
+This is a minimum-degree result for this instance. It does not give
+a general minimum-degree law or a new positivity technique.
+
+\section{A robust obstruction when angular velocity changes sign}
+The preceding decision and complexity results require nonvanishing
+angular velocity. A sufficient obstruction extends to angular zeros
+and yields an explicit open set of stable systems outside that class.
+This is not a complete characterization with angular zeros.
+
+\begin{lemma}[A mean obstruction with boundary factors]\label{lem:zeros}
+For a homogeneous field of odd degree, let \(F,G\) be its real
+trigonometric polar profiles in \(\phi=2\theta\),
+with \(G\not\equiv0\), and write
+\[
+ G(\phi)=\sum_{k=-s}^s\gamma_k e^{ik\phi},\qquad
+ T_G(\alpha)=2\Ima\sum_{k=1}^s\overline{\gamma_k}\alpha^k.
+\]
+If
+\begin{equation}\label{eq:zeroobstruction}
+ \av{F}+\min_{|\alpha|\leq1}T_G(\alpha)>0,
+\end{equation}
+then the homogeneous field has no nonzero nonnegative homogeneous
+polynomial of positive degree with nonpositive Lie derivative.
+It consequently has no positive local real-analytic weak Lyapunov function.
+\end{lemma}
+\begin{proof}
+A nonzero nonnegative homogeneous polynomial has degree \(2M>0\)
+and circle restriction
+\[
+ p(\phi)=C\prod_{j=1}^M|1-\alpha_j e^{i\phi}|^2,
+ \qquad C>0,\quad |\alpha_j|\leq1.
+\]
+Zero parameters may complete the factor list. Where \(p>0\), the
+Lie inequality is
+\[
+ F+G\Ima h\leq0,\qquad
+ h(z)=\frac1M\sum_{j=1}^M\frac{1+\alpha_jz}{1-\alpha_jz}.
+\]
+Indeed \(\dot\phi=2r^{d-1}G\) and
+\(p'/(Mp)=\Ima h\). A zero of \(p\) at which \(G\ne0\)
+is impossible: on a short interval with constant sign of \(G\),
+the inequality \(Gp'+MFp\leq0\), an integrating factor, and
+\(p\geq0\) propagate that zero to a one-sided interval. The
+analytic trigonometric polynomial would vanish identically.
+
+For \(|\alpha|<1\), Fourier expansion gives
+\[
+ \av{G\Ima\frac{1+\alpha e^{i\phi}}{1-\alpha e^{i\phi}}}
+ =T_G(\alpha).
+\]
+For a boundary factor \(|\alpha|=1\), its pole occurs at a zero
+of \(G\). In a local coordinate \(t\) about this point,
+\(G(t)=O(t)\), so its product with \(\cot(t/2)\) extends
+continuously. The radial regularization has imaginary part
+\[
+ \frac{2r\sin t}{(1-r)^2+2r(1-\cos t)}.
+\]
+For \(|t|\leq\pi\), the inequalities
+\(|G(t)|\leq L|t|\) and
+\(1-\cos t\geq2t^2/\pi^2\) bound the product uniformly by
+\(L\pi^2/2\). Away from its pole it converges uniformly.
+Dominated convergence proves the same mean identity for boundary
+factors. Averaging the Lie inequality therefore gives
+\[
+ 0\geq\av{F}+\frac1M\sum_jT_G(\alpha_j)
+ \geq\av{F}+\min_{|\alpha|\leq1}T_G(\alpha)>0,
+\]
+a contradiction. The first nonzero homogeneous Taylor term of a
+positive analytic weak certificate is nonnegative, of positive even
+degree, and has nonpositive Lie derivative. The same contradiction
+excludes it; strict positivity of that leading term is not assumed.
+\end{proof}
+
+\begin{theorem}[A full coefficient box with a common rational certificate]
+\label{thm:box}
+Consider the quintic field
+\[
+ f_0=-x^5+16x^3y^2-3xy^4,\qquad
+ g_0=x^4y+20x^2y^3-y^5.
+\]
+Independently perturb each of the twelve real coefficients of these
+two homogeneous quintics by at most \(1/240\). Every resulting
+field is globally asymptotically stable, its angular velocity changes
+sign, and it admits no positive local analytic weak Lyapunov function.
+The same function
+\begin{equation}\label{eq:commonrational}
+ V(x,y)=\frac{(11x^2+y^2)^{11}}{(x^2+y^2)^{10}}
+ \quad((x,y)\ne0),\qquad V(0)=0,
+\end{equation}
+is a proper positive \(C^1\) certificate for the entire box, satisfying
+\(L_XV\leq-r^4V/5\).
+\end{theorem}
+\begin{proof}
+The central polar profiles are
+\[
+ F_0=-1+5\sin^2\phi,\qquad G_0=\sin\phi.
+\]
+Each perturbing Cartesian component has at most six terms, each
+bounded by \(1/240\) on the unit circle. Hence the changes in both
+\(F\) and \(G\) have uniform norm at most
+\(\epsilon=1/20\). The profiles have trigonometric degree at most
+three in \(\phi\). Consequently
+\[
+ |\av{F}-3/2|\leq\epsilon,\qquad
+ \norm{T_G-T_{G_0}}_{\infty,\overline\D}\leq6\epsilon.
+\]
+Since \(T_{G_0}(\alpha)=\Rea\alpha\), the obstruction margin in
+\eqref{eq:zeroobstruction} is at least
+\(1/2-7\epsilon=3/20>0\). Also
+\(G(\pi/2)\geq19/20\) and
+\(G(3\pi/2)\leq-19/20\), proving sign change.
+
+For stability set \(v=(\partial_\theta\log V)/2\). Directly,
+\[
+ v=-\frac{55\sin\phi}{6+5\cos\phi},\qquad
+ F_0+G_0v=-1-\frac{25\sin^2\phi(1-\cos\phi)}{6+5\cos\phi}
+ \leq-1.
+\]
+The identity
+\((6+5t)^2-11(1-t^2)=(5+6t)^2\) implies
+\(|v|\leq5\sqrt{11}<17\). Thus, for every field in the box,
+\[
+ F+Gv\leq-1+18\epsilon=-\frac1{10},\qquad
+ L_XV=2r^4V(F+Gv)\leq-\frac15r^4V.
+\]
+The function satisfies \(r^2\leq V\leq11^{11}r^2\) and
+\(\nabla V=O(r)\), so its extension is \(C^1\) and proper.
+Its compact sublevel sets ensure forward completeness; the strict
+Lie inequality gives global asymptotic stability.
+\end{proof}
+
+\begin{corollary}[Higher-order local perturbations]\label{cor:higher}
+If a locally \(C^1\) vector field satisfies \(X=X_5+O(r^6)\),
+with no terms of degree below five and
+\(X_5\) in the box of Theorem~\ref{thm:box}, the origin is locally
+asymptotically stable and has no positive local analytic weak
+Lyapunov function.
+\end{corollary}
+\begin{proof}
+The extra contribution to \(L_XV\) is \(O(r^7)\), whereas the
+negative term is at most \(-r^6/5\). The first nonzero Taylor
+term of a putative analytic certificate is governed by \(X_5\)
+and is excluded by Lemma~\ref{lem:zeros}. This argument is local;
+arbitrary higher-order perturbations need not preserve global stability.
+\end{proof}
+
+Liu--Fitzsimmons already establish robust counterexamples within
+their two-parameter rotating family \cite[Section~IV.D]{liu},
+using the factorization and Taylor methods that underlie our lemma.
+Ahmadi--El Khadir's rational converse theorem
+\cite[Theorem~3.1]{ahmadi-khadir} already guarantees rational
+certificates for asymptotically stable homogeneous fields.
+The specific additional conclusions here are the boundary-factor
+obstruction and a full twelve-dimensional rational coefficient box
+with angular sign changes and an explicit \emph{common} certificate.
+The rational expression is singular at the origin before extension;
+it is not an analytic certificate there. Smooth nonanalytic
+Lyapunov functions are not excluded.
+
+\section{Verification, scope and remaining questions}
+The principal equivalences are analytic proofs.
+The rational threshold additionally uses exact symbolic elimination
+and Sturm counting; its program, equations, output and rational
+interval are supplied for reproduction. Proposition~\ref{prop:min8}
+uses separate exact positivity checks and rational evaluation identities,
+including a verification that does not call an optimizer.
+Separate exact checks verify Fourier signs, Toeplitz quadratic-form
+identities, atomic quantile discrepancy, the confluent Pick kernel
+including a singular Gram example, determinant identities and residues.
+The coefficient-region proof additionally accounts for pole collisions,
+removable poles and degree drops. Its quantifier elimination is theoretical.
+The complexity results explicitly invoke classical weak convex optimization
+and certified root refinement; neither general algorithm is implemented here.
+Additional exact checks cover the rational PSD oracle, confluent Hermite
+perturbations, irrational simple and repeated residue poles, functional
+perturbation bounds on Cayley kernels, and the common rational quintic
+certificate. These finite checks verify formulas and signs, not the full
+analytic or bit-complexity proofs. Reviewer checks are recorded separately.
+
+Floating computations are retained as diagnostics. The hierarchy
+experiment has fifteen solves, nine labelled \texttt{optimal} and
+six \texttt{optimal\_inaccurate}. Eight further primal/dual comparisons
+include three inaccurate primal and two inaccurate dual solves.
+Small negative numerical duality gaps are not certified bounds.
+A six-start numerical search with nonlinear constraints for the rational
+example produced five
+infeasible failures and one apparent local success; all are retained.
+Proposition~\ref{prop:example} uses the separate exact elimination
+argument, not that local success.
+
+AI tools assisted the derivations, computation and writing.
+Proof dossiers were examined by the same involved model reviewer
+requested as GPT-6 Astra with extra-high effort. This is not blind
+review, an additional independent vote, human peer review or formal
+verification; runtime identity is not independently attested.
+Any exact-manuscript assessment is a separate record.
+No Lean proof is supplied.
+
+The literature comparison is targeted, not exhaustive.
+The original stability counterexample is credited to \cite{liu};
+the kernels, interpolation and quantifier elimination are classical.
+Worldwide priority of this connection is unconfirmed.
+The all-degree characterization remains restricted to nonvanishing
+angular velocity. Theorem~\ref{thm:box} supplies a sufficient obstruction
+with angular zeros, and Corollary~\ref{cor:higher} treats only the stated
+local higher-order perturbations. No general nonhomogeneous or
+higher-dimensional classification follows. The polynomial-time claims
+concern additive values and supplied gap promises in dense encoding;
+they do not decide equality efficiently or produce a polynomial-sized
+certificate. Practical certified solvers, optimal minimum-degree laws,
+and a complete certificate criterion with angular zeros remain open.
+
+\small
+\begin{thebibliography}{99}
+\bibitem{liu}
+J.~Liu and M.~Fitzsimmons,
+\emph{A globally asymptotically stable planar homogeneous polynomial
+vector field with no polynomial Lyapunov function},
+arXiv:2607.16171v1, 17 July 2026.
+\url{https://arxiv.org/abs/2607.16171v1}.
+\bibitem{ahmadi-parrilo}
+A.~A. Ahmadi and P.~A. Parrilo,
+\emph{Stability of polynomial differential equations:
+complexity and converse Lyapunov questions}, arXiv:1308.6833.
+\url{https://web.mit.edu/~a_a_a/Public/Publications/Selected_Papers/dTAC.pdf}.
+\bibitem{ahmadi-khadir}
+A.~A. Ahmadi and B.~El Khadir,
+\emph{On algebraic proofs of stability for homogeneous vector fields},
+IEEE Trans. Automat. Control \textbf{65} (2020), 325--332.
+\url{https://optimization-online.org/wp-content/uploads/2018/03/6502.pdf}.
+\bibitem{jackson}
+E.~de Klerk, R.~Hess and M.~Laurent,
+\emph{Improved convergence rates for Lasserre-type hierarchies of
+upper bounds for box-constrained polynomial optimization},
+SIAM J. Optim. \textbf{27}(1) (2017), 347--367.
+\url{https://doi.org/10.1137/16M1065264}.
+\bibitem{clark}
+D.~N. Clark, \emph{On matrices associated with generalized
+interpolation problems}, Pacific J. Math. \textbf{27}(2)
+(1968), 241--253.
+\url{https://msp.org/pjm/1968/27-2/pjm-v27-n2-p04-p.pdf}.
+\bibitem{tarski}
+A.~Tarski, \emph{A decision method for elementary algebra and geometry},
+second edition, University of California Press, 1951.
+\url{https://doi.org/10.1525/9780520348097}.
+\bibitem{fejer}
+M.~A. Dritschel and J.~Rovnyak,
+\emph{The operator Fej\'er--Riesz theorem}, arXiv:0903.3639.
+\url{https://arxiv.org/abs/0903.3639}.
+\bibitem{tripathi}
+S.~Tripathi, F.~Ilhan, A.~Gokcen, M.~Kudeyt, S.~Sahin and O.~Karabacak,
+\emph{Construction of Lyapunov certificates for oscillatory systems},
+preprint, 26 February 2026.
+\url{https://doi.org/10.20944/preprints202602.1723.v1}.
+\bibitem{korda}
+M.~Korda, \emph{Lyapunov stability of polynomial vector fields is
+undecidable}, arXiv:2609.22058v2, 25 September 2026, and
+\emph{Supplementary material}, Part~III, pp.~51--59.
+\url{https://arxiv.org/abs/2609.22058v2};
+\url{https://homepages.laas.fr/mkorda/arnold_supplement.pdf}.
+\bibitem{gls}
+M.~Gr\"otschel, L.~Lov\'asz and A.~Schrijver,
+\emph{Geometric Algorithms and Combinatorial Optimization},
+Springer, 1988, Corollary~4.3.12 and definitions in Section~2.1.
+\url{https://www.zib.de/userpage/groetschel/pubnew/paper/groetschellovaszschrijver1988.pdf}.
+\bibitem{msw}
+K.~Mehlhorn, M.~Sagraloff and P.~Wang,
+\emph{From approximate factorization to root isolation with application
+to cylindrical algebraic decomposition}, arXiv:1301.4870v2,
+23 January 2014, Theorems~3--4.
+\url{https://arxiv.org/abs/1301.4870v2}.
+\end{thebibliography}
+\end{document}
