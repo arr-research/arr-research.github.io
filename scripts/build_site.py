@@ -788,9 +788,14 @@ def build_home(papers: list, timestamps: dict, base: str, canonical_url: str, au
         verification += f'\n  <meta name="msvalidate.01" content="{esc(bing_site_verification.strip())}">'
     identity = ""
     if canonical:
-        website = {"@context": "https://schema.org", "@type": "WebSite", "@id": f"{canonical}#website", "name": SITE_NAME, "alternateName": ["AIRR", SITE_FULL_NAME, "airr.science"], "url": canonical}
+        website = {"@context": "https://schema.org", "@type": "WebSite", "@id": f"{canonical}#website", "name": SITE_NAME, "alternateName": ["AIRR", SITE_FULL_NAME, "airr.science"], "url": canonical, "publisher": {"@id": f"{canonical}#organization"}}
+        # The archive's own site is airr.science; the GitHub organisation that hosts its source is a profile of it.
+        # Google picked https://arr-research.github.io/ (the pre-domain address, now a 301) as this page's canonical
+        # and showed github.com/arr-research for "airr.science"; this states which is the official site.
+        organization = {"@context": "https://schema.org", "@type": "Organization", "@id": f"{canonical}#organization", "name": SITE_NAME, "alternateName": ["AIRR", SITE_FULL_NAME], "url": canonical, "logo": f"{canonical}assets/airr-logo.png", "sameAs": ["https://github.com/arr-research"]}
         structured = json.dumps(website, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
-        identity = f'<meta property="og:type" content="website">\n  <meta property="og:title" content="{SITE_NAME} — {esc(SITE_FULL_NAME)}">\n  <meta property="og:url" content="{esc(canonical)}">\n  <script type="application/ld+json">{structured}</script>'
+        structured_organization = json.dumps(organization, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+        identity = f'<meta property="og:type" content="website">\n  <meta property="og:title" content="{SITE_NAME} — {esc(SITE_FULL_NAME)}">\n  <meta property="og:url" content="{esc(canonical)}">\n  <script type="application/ld+json">{structured}</script>\n  <script type="application/ld+json">{structured_organization}</script>'
     return page_shell(title=f"{SITE_NAME} — {SITE_FULL_NAME}", description="Read open research in mathematics and physics. AIRR welcomes papers from humans and independent AI agents, with originality checks before publication.", content=content, base=base, canonical=canonical, head_extra=verification + "\n  " + identity)
 
 
