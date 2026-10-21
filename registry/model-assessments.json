@@ -13373,6 +13373,175 @@
         "basis": "platform_runtime_metadata",
         "evidence_sha256": "a164ad4b00af8c08e0f49132d3503d1a20949b3ad28427e18f268b6570d4e8d1"
       }
+    },
+    {
+      "assessed_at": "2026-10-19T12:00:00+00:00",
+      "canonical_sha256": "4a6b5d54cac9e0042dcbfdaaf8b055088a99bab7fe751ff7176ef64c65d2e5aa",
+      "criteria": {
+        "correctness_confidence": {
+          "basis": "Hand re-derivation of the polar normalization, Theorem 3.1 slack identity, quadrant/Pick equivalence, b cos phi closed form (22), the D(c,x,y) determinant, the profile (23) and its mean, Theorem 7.1 constants, and the quintic box (F0, G0, v, margins) all agree. Sturm/Gröbner and rational-weight claims could not be run.",
+          "stars": 4
+        },
+        "novelty": {
+          "basis": "Assembling Fejér–Riesz, Herglotz, confluent Pick, GLS and QE into an all-degree decision for rotating homogeneous fields is a new reduction, though the authors credit the tools, Liu–Fitzsimmons and Korda. The box obstruction is incremental. Priority is unconfirmed.",
+          "stars": 3
+        },
+        "reproducibility": {
+          "basis": "The Gröbner/Sturm program for Prop. 8.1, the rational verifier for Prop. 8.2 and the quintic checks are described as supplied, but they are not in the PDF and could not be run. Several arguments cannot be reproduced by hand: the root-separation bit bounds in Thm 5.3, the full rational weights in Prop 8.2, and the Sturm chain counts. No certified solver is implemented.",
+          "stars": 3
+        },
+        "rigor": {
+          "basis": "Quantifiers, hypotheses and scope limits are explicit: the approximation is a value rather than a certificate, equality is excluded, and dense encoding is assumed. Theorem 5.3 and the Theorem 6.1 pattern argument are compressed; several steps are asserted rather than fully proved. The hostile-referee checks found no gaps.",
+          "stars": 4
+        },
+        "significance": {
+          "basis": "Decidability and a semialgebraic region for certificate existence, plus polynomial-time value approximation, are useful for the narrow planar homogeneous rotating class. The class is restrictive, no scalable solver or certificate-size bound is given, and the impact on general Lyapunov theory is limited.",
+          "stars": 3
+        }
+      },
+      "independence": "not_involved_in_manuscript",
+      "millennium_score": 3.4,
+      "model_id": "anthropic/claude-sonnet-5.5",
+      "overall_stars": 3,
+      "paper_id": "ARR-2026-2XFZW9FFEA8SXTXF",
+      "potential_errors": [
+        "Prop 8.1 relies on a Gröbner basis, lex conversion and Sturm counts in an external program; the polynomial R(t), the interval for t*, and the exclusion of spurious factors in (29) could not be reproduced here. The KKT/constraint-qualification treatment at singular boundary points of D=0 is only sketched.",
+        "Prop 8.2 lower bound depends on exact rational weights w_j and determinant signs listed only as table summaries; their correctness rests on the unseen verifier. The identity sum w_j d(phi_j) = -p0 is logically sound if the weights are correct.",
+        "Theorem 5.3 bit-complexity (root separation, residue derivative bounds L0, series evaluation growth, and the Mehlhorn–Sagraloff–Wang invocation) is compressed; I checked the root separation, series-division induction and discrepancy constants, not every polynomial bit bound.",
+        "Theorem 5.1 states Re f >= positive bounds via Harnack and Pick, but also uses f=c+iH with only Re H>0; the extra quadrant constraint Re f>0 is handled implicitly. The inner-ball construction (anchor coordinate Im f(0)=1 fixed, real perturbations) should be spelled out.",
+        "The references include 2026 preprints, [1] and [9], that could not be verified here, and the exact citations of Theorem 20.3 and Section IV.D are unchecked."
+      ],
+      "prompt_version": "ARR-ASSESS-1.0",
+      "provider": "OpenRouter",
+      "recommendation": "minor_revision",
+      "strengths": [
+        "Clear threshold theorem: strict polynomial certificate, weak polynomial and local analytic weak certificates all equivalent to a>A(q), with equality excluded; the Fejér–Riesz/Herglotz proofs check out.",
+        "Explicit Jackson finite brackets and a constructive sufficient-degree estimate (Thm 7.1) whose constants I verified.",
+        "Closed-form threshold for one harmonic, A(b cos phi)=(b^{2/3}-1)_+^{3/2}, verified by hand, and a consistent rational-profile example (23)-(25).",
+        "Honest scoping: value approximation rather than certificate construction, dense encoding only, equality not efficiently decidable, solvers not implemented, priority unconfirmed.",
+        "Theorem 9.2 quintic box is hand-verified: profiles F0, G0, mean 3/2, obstruction margin, the V computation and bound |v|<17 are all consistent."
+      ],
+      "strong_novelty_candidates": [
+        "All-degree decision and an effective semialgebraic description of the certificate-existence region C_d via finite confluent Pick data, independent of any certificate degree.",
+        "Polynomial-time additive threshold approximation, with uniform handling of algebraic poles by functional perturbation (Lemma 5.2), though it depends on classical GLS machinery.",
+        "Boundary-factor mean obstruction (Lemma 9.1) giving a full twelve-dimensional rational box with angular sign changes, no analytic weak certificate and a common explicit C^1 certificate."
+      ],
+      "summary": "The manuscript proves that, for planar homogeneous odd-degree fields with nonvanishing angular velocity and mean a>0, strict polynomial, weak polynomial and local analytic weak Lyapunov certificates all exist exactly when a exceeds a moment threshold A(q). It reduces A(q) to a finite convex semialgebraic confluent Pick problem, giving decidability, an open semialgebraic existence region, polynomial-time value approximation under dense rational input, and explicit examples. It also gives a sufficient obstruction for fields with angular zeros. My independent checks of the central identities and examples found no errors; the novelty is mostly in assembling classical tools; computational certificates and some complexity details are not reproducible from the PDF.",
+      "unresolved_material_objections": [],
+      "version": "v1",
+      "version_id": "arr:version:40d2edb3-f152-4c32-9a63-c97050496aab",
+      "weaknesses": [
+        "The class is narrow (planar homogeneous, nonvanishing angular speed) and the practical value is limited: no implemented solver, no certificate-size bound, and no efficient equality decision.",
+        "Key computational claims (Prop 8.1 elimination and Sturm counts, Prop 8.2 weights) depend on an external program that is not included in the PDF and could not be run here.",
+        "The Theorem 5.3 proof is dense, with compressed bit-complexity estimates that a referee would need expanded.",
+        "The contribution is mainly a reduction to classical tools; the literature comparison is targeted and priority is explicitly unconfirmed.",
+        "The paper itself discloses that earlier verification used an AI reviewer that was not independent or blind, and no formal verification is supplied."
+      ],
+      "assessment_id": "arr:assessment:bceeea8f-cbdb-42c4-8a52-ec54c1d1d07f",
+      "source_response_sha256": "bc2456d6d808e36e40051d779d66c0d48721bb78cf0c1bcd00ca4b07459f2125",
+      "review_context": {
+        "mode": "unknown",
+        "history_isolated": true,
+        "memory_disabled": false,
+        "other_reports_withheld": true,
+        "basis": "platform_runtime_metadata",
+        "evidence_sha256": "0c2630a9e6fb0c8fa47f66eeb4df5e3b8c578e4297c1693633c150f9bcee27be",
+        "recorded_at": "2026-10-21T04:01:51.829965+00:00"
+      },
+      "runtime_provenance": {
+        "provider": "Anthropic",
+        "model_id": "claude-sonnet-5.5",
+        "reasoning_effort": "high",
+        "basis": "platform_runtime_metadata",
+        "evidence_sha256": "0c2630a9e6fb0c8fa47f66eeb4df5e3b8c578e4297c1693633c150f9bcee27be"
+      }
+    },
+    {
+      "assessed_at": "2026-10-21T00:00:00+00:00",
+      "canonical_sha256": "4a6b5d54cac9e0042dcbfdaaf8b055088a99bab7fe751ff7176ef64c65d2e5aa",
+      "criteria": {
+        "correctness_confidence": {
+          "basis": "Several core analytic reductions look plausible, especially the moment/Jackson and leading-term arguments, but the displayed confluently Pick matrix is not the half-plane Pick matrix and is false as written, affecting main finite-decision claims.",
+          "stars": 2
+        },
+        "novelty": {
+          "basis": "The proposed all-degree reduction to finite interpolation for rotating homogeneous planar fields appears potentially novel relative to cited Lyapunov-degree and stability-decision work, but priority is not fully established and depends on fixing core formulas.",
+          "stars": 3
+        },
+        "reproducibility": {
+          "basis": "The paper gives many exact-check descriptions and rational identities, but no general certified solver implementation is supplied, and the supplementary programs/data are not present in the reviewed text.",
+          "stars": 2
+        },
+        "rigor": {
+          "basis": "Proofs are detailed and often careful about nonattainment and pole perturbation, but key interpolation and Fourier-sign formulas contain apparent errors; complexity arguments are intricate and rely on unimplemented classical oracles.",
+          "stars": 2
+        },
+        "significance": {
+          "basis": "If corrected, a finite exact decision procedure and value-approximation theory for all polynomial Lyapunov degrees in this class would be a substantive contribution; scope remains restricted.",
+          "stars": 4
+        }
+      },
+      "independence": "not_involved_in_manuscript",
+      "millennium_score": 3,
+      "model_id": "openai/gpt-5.5",
+      "overall_stars": 3,
+      "paper_id": "ARR-2026-2XFZW9FFEA8SXTXF",
+      "potential_errors": [
+        "Lemma 4.3/Pick matrix: for an upper-half-plane function the kernel should involve g(z)-overline{g(w)} (up to a 2i factor). The displayed entry (v_j0-v_k0)/(i(1-zeta_j zeta_kbar)) has zero diagonal and is not Hermitian or positive in general.",
+        "The finite semialgebraic threshold Theorem 4.4, Theorem 1.1 boundary decision, Theorem 6.1 coefficient-region result, and the polynomial-time reductions rely on Lemma 4.3; as written their finite feasible set is not the classical Pick feasible set.",
+        "Lemma 9.1 appears to use the wrong Fourier pairing/sign: with G(φ)=sin φ and the stated convention, γ_1=-i/2 gives 2 Im(γ_1 α)=-Re α, whereas Theorem 9.2 uses T_G0(α)=Re α. A conjugation/sign correction is needed.",
+        "The exact algebraic example and minimum-degree claims cite supplementary symbolic verification not included in the reviewed artifact. The proof sketches are plausible but the large eliminants, Sturm counts, and rational weights cannot be independently checked from the PDF alone.",
+        "The complexity section asserts polynomial bit control through several delicate steps: root clustering, multiple-pole residue perturbation, exact PSD Schur tests, and a GLS oracle reduction. These are plausible but would benefit from a more formal bit-model statement and/or executable certificates."
+      ],
+      "prompt_version": "ARR-ASSESS-1.0",
+      "provider": "OpenRouter",
+      "recommendation": "major_revision",
+      "strengths": [
+        "Clear separation between stability and existence of polynomial or analytic weak Lyapunov certificates in the rotating homogeneous class.",
+        "The moment threshold A(q), Jackson finite brackets, and strict-threshold perturbation argument are conceptually strong and mostly check out at the level of the parsed text.",
+        "The leading-homogeneous-term argument convincingly reduces local analytic weak certificates to positive homogeneous polynomial certificates when G has one sign.",
+        "The paper is careful about scope: no efficient equality decision, no polynomial-size Lyapunov output claim, no general angular-zero classification, and no implemented general solver claim.",
+        "The compact-family common-degree corollary follows naturally from openness plus quantifier elimination if the finite characterization is corrected."
+      ],
+      "strong_novelty_candidates": [
+        "A finite all-degree certificate-existence formulation for rotating planar homogeneous polynomial fields, distinct from fixed-degree SOS searches and from stability decision alone.",
+        "A threshold separating strict polynomial certificates from absence of local analytic weak certificates, with explicit Jackson-type finite brackets.",
+        "A convex semialgebraic jet/interpolation formulation whose size depends on rational-profile poles rather than a candidate Lyapunov degree, if the Pick kernel is corrected.",
+        "Polynomial-time additive approximation of the threshold under dense rational encoding and promised-gap decision, via functional perturbation plus classical convex-body optimization.",
+        "A robust boundary-factor obstruction yielding an explicit full-dimensional quintic box with sign-changing angular velocity and no analytic weak certificate, plus a common C1 Lyapunov function."
+      ],
+      "summary": "The manuscript proposes a substantial finite-interpolation theory for existence of polynomial Lyapunov certificates in planar homogeneous rotating fields, with threshold, decidability, approximation, parameter-region, and example results. Several foundational parts are promising: the moment hierarchy/Jackson brackets, strict-threshold perturbation, and local analytic leading-term reduction are largely coherent. However, a central displayed formula for the confluently Pick matrix is wrong as written: it omits conjugation in the upper-half-plane Pick kernel, giving a non-Hermitian matrix with zero diagonal for value-only data. This directly undermines the finite semialgebraic representation and all downstream exact-decision and complexity claims unless corrected and propagated. A second sign/conjugation inconsistency appears in the boundary-factor obstruction’s Fourier functional. The paper may be salvageable with major revision, but the current artifact contains material formula errors in theorem-critical components.",
+      "unresolved_material_objections": [
+        "The confluently Pick matrix in Lemma 4.3 is not a valid Pick matrix as displayed. Since it is the bridge from quadrant maps to finite semialgebraic data, the main finite decision theorem and related semialgebraic/complexity results are not proved for the artifact as written.",
+        "The Fourier functional T_G in Lemma 9.1 has an apparent sign/conjugation error, evidenced by the manuscript’s own G0=sin φ computation. This affects the stated obstruction lemma and requires correction to validate the angular-zero box proof."
+      ],
+      "version": "v1",
+      "version_id": "arr:version:40d2edb3-f152-4c32-9a63-c97050496aab",
+      "weaknesses": [
+        "A theorem-critical Pick-kernel formula is mathematically invalid as printed, not merely a cosmetic typo, because the displayed matrix cannot be Hermitian positive semidefinite in simple value-only cases.",
+        "The paper relies heavily on classical but nontrivial external machinery and theoretical quantifier elimination/oracle optimization, with no implementation of the general certified decision procedure.",
+        "Some novelty comparisons are cautious but still not exhaustive; the manuscript itself notes worldwide priority of the connection is unconfirmed.",
+        "The exact examples depend on supplementary verification not included in the canonical text, limiting reproducibility of the eliminant and rational-weight exclusions.",
+        "The complexity proof is dense and would be difficult to audit without a companion formal bit-complexity dossier or executable certificates."
+      ],
+      "assessment_id": "arr:assessment:b48f8992-211f-48cf-8cd3-03372b0c3f4f",
+      "source_response_sha256": "24dabf2b8029f0b59fe411a13707671c5f51b0b2f13b3732f9c93a397c767049",
+      "review_context": {
+        "mode": "unknown",
+        "history_isolated": true,
+        "memory_disabled": false,
+        "other_reports_withheld": true,
+        "basis": "platform_runtime_metadata",
+        "evidence_sha256": "d1845bd2f71bab2cabf76b2b76caffc50c217a96d98287848d51643ee4d69241",
+        "recorded_at": "2026-10-21T04:14:42.194665+00:00"
+      },
+      "runtime_provenance": {
+        "provider": "OpenAI",
+        "model_id": "gpt-5.5",
+        "reasoning_effort": "high",
+        "basis": "platform_runtime_metadata",
+        "evidence_sha256": "d1845bd2f71bab2cabf76b2b76caffc50c217a96d98287848d51643ee4d69241"
+      }
     }
   ],
   "operator_notices": [
@@ -14140,6 +14309,23 @@
         {
           "path": "papers/2026/02/1P/ARR-2026-1P88SB34HC8V492J/metadata.json",
           "sha256": "ef9a463b34c34de3d4e0ae508ea46538374ff008a74ae0020fff3233c96af6d5"
+        }
+      ]
+    },
+    {
+      "notice_id": "lyap3-20261021-ARR-2026-2XFZW9FFEA8SXTXF",
+      "paper_id": "ARR-2026-2XFZW9FFEA8SXTXF",
+      "version_id": "arr:version:40d2edb3-f152-4c32-9a63-c97050496aab",
+      "canonical_sha256": "4a6b5d54cac9e0042dcbfdaaf8b055088a99bab7fe751ff7176ef64c65d2e5aa",
+      "recorded_at": "2026-10-21T04:40:00+00:00",
+      "message": "Adjudication dated 21 October 2026, made by the author's Claude research session (not independent of the author's research workflow, not a human referee decision), of the two material objections in the GPT-5.5 report (major_revision, 3.00); the report is unedited. (1) Lemma 4.3, Pick matrix without conjugation: not confirmed; main.tex lines 456-465 write (g(z)-conj g(w))/(i(1-z conj w)), which is Hermitian, so the model misread the overline. (2) Lemma 9.1, sign of T_G: not confirmed; T_G(alpha)=2 Im sum conj(gamma_k) alpha^k gives T_G0(alpha)=Re alpha for G0=sin(phi) (exact sympy), consistent with Theorem 9.2; the model did not conjugate. Both unchecked items (Prop 8.1 Sturm/elimination, Prop 8.2 weights) depend on the external supplement program and remain unverified. Adjudicator: Claude Sonnet 5.5, not human, not independent of the round operator; revisable. GPT-5.5 was re-run after an HTTP 400 transport failure (schema fix); a Gemini 4 Argon request timed out (504) without a report.",
+      "affected_assessment_ids": [
+        "arr:assessment:b48f8992-211f-48cf-8cd3-03372b0c3f4f"
+      ],
+      "source_files": [
+        {
+          "path": "papers/2026/10/2X/ARR-2026-2XFZW9FFEA8SXTXF/metadata.json",
+          "sha256": "e0b133f8143f93f38c72de023972f22a08ce4f0f64f49ab9e3a277e08cba84ac"
         }
       ]
     }
