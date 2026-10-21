@@ -1,0 +1,69 @@
+{
+  "assessed_at": "2026-10-21T00:00:00+00:00",
+  "canonical_sha256": "4a6b5d54cac9e0042dcbfdaaf8b055088a99bab7fe751ff7176ef64c65d2e5aa",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "Several core analytic reductions look plausible, especially the moment/Jackson and leading-term arguments, but the displayed confluently Pick matrix is not the half-plane Pick matrix and is false as written, affecting main finite-decision claims.",
+      "stars": 2
+    },
+    "novelty": {
+      "basis": "The proposed all-degree reduction to finite interpolation for rotating homogeneous planar fields appears potentially novel relative to cited Lyapunov-degree and stability-decision work, but priority is not fully established and depends on fixing core formulas.",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "The paper gives many exact-check descriptions and rational identities, but no general certified solver implementation is supplied, and the supplementary programs/data are not present in the reviewed text.",
+      "stars": 2
+    },
+    "rigor": {
+      "basis": "Proofs are detailed and often careful about nonattainment and pole perturbation, but key interpolation and Fourier-sign formulas contain apparent errors; complexity arguments are intricate and rely on unimplemented classical oracles.",
+      "stars": 2
+    },
+    "significance": {
+      "basis": "If corrected, a finite exact decision procedure and value-approximation theory for all polynomial Lyapunov degrees in this class would be a substantive contribution; scope remains restricted.",
+      "stars": 4
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3,
+  "model_id": "openai/gpt-5.5",
+  "overall_stars": 3,
+  "paper_id": "ARR-2026-2XFZW9FFEA8SXTXF",
+  "potential_errors": [
+    "Lemma 4.3/Pick matrix: for an upper-half-plane function the kernel should involve g(z)-overline{g(w)} (up to a 2i factor). The displayed entry (v_j0-v_k0)/(i(1-zeta_j zeta_kbar)) has zero diagonal and is not Hermitian or positive in general.",
+    "The finite semialgebraic threshold Theorem 4.4, Theorem 1.1 boundary decision, Theorem 6.1 coefficient-region result, and the polynomial-time reductions rely on Lemma 4.3; as written their finite feasible set is not the classical Pick feasible set.",
+    "Lemma 9.1 appears to use the wrong Fourier pairing/sign: with G(φ)=sin φ and the stated convention, γ_1=-i/2 gives 2 Im(γ_1 α)=-Re α, whereas Theorem 9.2 uses T_G0(α)=Re α. A conjugation/sign correction is needed.",
+    "The exact algebraic example and minimum-degree claims cite supplementary symbolic verification not included in the reviewed artifact. The proof sketches are plausible but the large eliminants, Sturm counts, and rational weights cannot be independently checked from the PDF alone.",
+    "The complexity section asserts polynomial bit control through several delicate steps: root clustering, multiple-pole residue perturbation, exact PSD Schur tests, and a GLS oracle reduction. These are plausible but would benefit from a more formal bit-model statement and/or executable certificates."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "OpenRouter",
+  "recommendation": "major_revision",
+  "strengths": [
+    "Clear separation between stability and existence of polynomial or analytic weak Lyapunov certificates in the rotating homogeneous class.",
+    "The moment threshold A(q), Jackson finite brackets, and strict-threshold perturbation argument are conceptually strong and mostly check out at the level of the parsed text.",
+    "The leading-homogeneous-term argument convincingly reduces local analytic weak certificates to positive homogeneous polynomial certificates when G has one sign.",
+    "The paper is careful about scope: no efficient equality decision, no polynomial-size Lyapunov output claim, no general angular-zero classification, and no implemented general solver claim.",
+    "The compact-family common-degree corollary follows naturally from openness plus quantifier elimination if the finite characterization is corrected."
+  ],
+  "strong_novelty_candidates": [
+    "A finite all-degree certificate-existence formulation for rotating planar homogeneous polynomial fields, distinct from fixed-degree SOS searches and from stability decision alone.",
+    "A threshold separating strict polynomial certificates from absence of local analytic weak certificates, with explicit Jackson-type finite brackets.",
+    "A convex semialgebraic jet/interpolation formulation whose size depends on rational-profile poles rather than a candidate Lyapunov degree, if the Pick kernel is corrected.",
+    "Polynomial-time additive approximation of the threshold under dense rational encoding and promised-gap decision, via functional perturbation plus classical convex-body optimization.",
+    "A robust boundary-factor obstruction yielding an explicit full-dimensional quintic box with sign-changing angular velocity and no analytic weak certificate, plus a common C1 Lyapunov function."
+  ],
+  "summary": "The manuscript proposes a substantial finite-interpolation theory for existence of polynomial Lyapunov certificates in planar homogeneous rotating fields, with threshold, decidability, approximation, parameter-region, and example results. Several foundational parts are promising: the moment hierarchy/Jackson brackets, strict-threshold perturbation, and local analytic leading-term reduction are largely coherent. However, a central displayed formula for the confluently Pick matrix is wrong as written: it omits conjugation in the upper-half-plane Pick kernel, giving a non-Hermitian matrix with zero diagonal for value-only data. This directly undermines the finite semialgebraic representation and all downstream exact-decision and complexity claims unless corrected and propagated. A second sign/conjugation inconsistency appears in the boundary-factor obstruction’s Fourier functional. The paper may be salvageable with major revision, but the current artifact contains material formula errors in theorem-critical components.",
+  "unresolved_material_objections": [
+    "The confluently Pick matrix in Lemma 4.3 is not a valid Pick matrix as displayed. Since it is the bridge from quadrant maps to finite semialgebraic data, the main finite decision theorem and related semialgebraic/complexity results are not proved for the artifact as written.",
+    "The Fourier functional T_G in Lemma 9.1 has an apparent sign/conjugation error, evidenced by the manuscript’s own G0=sin φ computation. This affects the stated obstruction lemma and requires correction to validate the angular-zero box proof."
+  ],
+  "version": "v1",
+  "version_id": "arr:version:40d2edb3-f152-4c32-9a63-c97050496aab",
+  "weaknesses": [
+    "A theorem-critical Pick-kernel formula is mathematically invalid as printed, not merely a cosmetic typo, because the displayed matrix cannot be Hermitian positive semidefinite in simple value-only cases.",
+    "The paper relies heavily on classical but nontrivial external machinery and theoretical quantifier elimination/oracle optimization, with no implementation of the general certified decision procedure.",
+    "Some novelty comparisons are cautious but still not exhaustive; the manuscript itself notes worldwide priority of the connection is unconfirmed.",
+    "The exact examples depend on supplementary verification not included in the canonical text, limiting reproducibility of the eliminant and rational-weight exclusions.",
+    "The complexity proof is dense and would be difficult to audit without a companion formal bit-complexity dossier or executable certificates."
+  ]
+}

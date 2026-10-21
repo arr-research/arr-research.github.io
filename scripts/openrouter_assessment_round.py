@@ -56,7 +56,7 @@ def model_response_schema() -> dict[str, Any]:
         schema["properties"].pop(field, None)
     # Native intake projections are an operator import format, not a response
     # that a newly requested assessment may author.
-    schema["properties"]["prompt_version"] = {"const": "ARR-ASSESS-1.0"}
+    schema["properties"]["prompt_version"] = {"type": "string", "const": "ARR-ASSESS-1.0"}
     schema.pop("allOf", None)
     # Some upstream structured-output validators reject JSON Schema's
     # ``multipleOf`` keyword for numbers. AIRR applies the stricter two-decimal

@@ -1,0 +1,64 @@
+{
+  "assessed_at": "2026-10-19T12:00:00+00:00",
+  "canonical_sha256": "4a6b5d54cac9e0042dcbfdaaf8b055088a99bab7fe751ff7176ef64c65d2e5aa",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "Hand re-derivation of the polar normalization, Theorem 3.1 slack identity, quadrant/Pick equivalence, b cos phi closed form (22), the D(c,x,y) determinant, the profile (23) and its mean, Theorem 7.1 constants, and the quintic box (F0, G0, v, margins) all agree. Sturm/Gröbner and rational-weight claims could not be run.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "Assembling Fejér–Riesz, Herglotz, confluent Pick, GLS and QE into an all-degree decision for rotating homogeneous fields is a new reduction, though the authors credit the tools, Liu–Fitzsimmons and Korda. The box obstruction is incremental. Priority is unconfirmed.",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "The Gröbner/Sturm program for Prop. 8.1, the rational verifier for Prop. 8.2 and the quintic checks are described as supplied, but they are not in the PDF and could not be run. Several arguments cannot be reproduced by hand: the root-separation bit bounds in Thm 5.3, the full rational weights in Prop 8.2, and the Sturm chain counts. No certified solver is implemented.",
+      "stars": 3
+    },
+    "rigor": {
+      "basis": "Quantifiers, hypotheses and scope limits are explicit: the approximation is a value rather than a certificate, equality is excluded, and dense encoding is assumed. Theorem 5.3 and the Theorem 6.1 pattern argument are compressed; several steps are asserted rather than fully proved. The hostile-referee checks found no gaps.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Decidability and a semialgebraic region for certificate existence, plus polynomial-time value approximation, are useful for the narrow planar homogeneous rotating class. The class is restrictive, no scalable solver or certificate-size bound is given, and the impact on general Lyapunov theory is limited.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.4,
+  "model_id": "anthropic/claude-sonnet-5.5",
+  "overall_stars": 3,
+  "paper_id": "ARR-2026-2XFZW9FFEA8SXTXF",
+  "potential_errors": [
+    "Prop 8.1 relies on a Gröbner basis, lex conversion and Sturm counts in an external program; the polynomial R(t), the interval for t*, and the exclusion of spurious factors in (29) could not be reproduced here. The KKT/constraint-qualification treatment at singular boundary points of D=0 is only sketched.",
+    "Prop 8.2 lower bound depends on exact rational weights w_j and determinant signs listed only as table summaries; their correctness rests on the unseen verifier. The identity sum w_j d(phi_j) = -p0 is logically sound if the weights are correct.",
+    "Theorem 5.3 bit-complexity (root separation, residue derivative bounds L0, series evaluation growth, and the Mehlhorn–Sagraloff–Wang invocation) is compressed; I checked the root separation, series-division induction and discrepancy constants, not every polynomial bit bound.",
+    "Theorem 5.1 states Re f >= positive bounds via Harnack and Pick, but also uses f=c+iH with only Re H>0; the extra quadrant constraint Re f>0 is handled implicitly. The inner-ball construction (anchor coordinate Im f(0)=1 fixed, real perturbations) should be spelled out.",
+    "The references include 2026 preprints, [1] and [9], that could not be verified here, and the exact citations of Theorem 20.3 and Section IV.D are unchecked."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "OpenRouter",
+  "recommendation": "minor_revision",
+  "strengths": [
+    "Clear threshold theorem: strict polynomial certificate, weak polynomial and local analytic weak certificates all equivalent to a>A(q), with equality excluded; the Fejér–Riesz/Herglotz proofs check out.",
+    "Explicit Jackson finite brackets and a constructive sufficient-degree estimate (Thm 7.1) whose constants I verified.",
+    "Closed-form threshold for one harmonic, A(b cos phi)=(b^{2/3}-1)_+^{3/2}, verified by hand, and a consistent rational-profile example (23)-(25).",
+    "Honest scoping: value approximation rather than certificate construction, dense encoding only, equality not efficiently decidable, solvers not implemented, priority unconfirmed.",
+    "Theorem 9.2 quintic box is hand-verified: profiles F0, G0, mean 3/2, obstruction margin, the V computation and bound |v|<17 are all consistent."
+  ],
+  "strong_novelty_candidates": [
+    "All-degree decision and an effective semialgebraic description of the certificate-existence region C_d via finite confluent Pick data, independent of any certificate degree.",
+    "Polynomial-time additive threshold approximation, with uniform handling of algebraic poles by functional perturbation (Lemma 5.2), though it depends on classical GLS machinery.",
+    "Boundary-factor mean obstruction (Lemma 9.1) giving a full twelve-dimensional rational box with angular sign changes, no analytic weak certificate and a common explicit C^1 certificate."
+  ],
+  "summary": "The manuscript proves that, for planar homogeneous odd-degree fields with nonvanishing angular velocity and mean a>0, strict polynomial, weak polynomial and local analytic weak Lyapunov certificates all exist exactly when a exceeds a moment threshold A(q). It reduces A(q) to a finite convex semialgebraic confluent Pick problem, giving decidability, an open semialgebraic existence region, polynomial-time value approximation under dense rational input, and explicit examples. It also gives a sufficient obstruction for fields with angular zeros. My independent checks of the central identities and examples found no errors; the novelty is mostly in assembling classical tools; computational certificates and some complexity details are not reproducible from the PDF.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:40d2edb3-f152-4c32-9a63-c97050496aab",
+  "weaknesses": [
+    "The class is narrow (planar homogeneous, nonvanishing angular speed) and the practical value is limited: no implemented solver, no certificate-size bound, and no efficient equality decision.",
+    "Key computational claims (Prop 8.1 elimination and Sturm counts, Prop 8.2 weights) depend on an external program that is not included in the PDF and could not be run here.",
+    "The Theorem 5.3 proof is dense, with compressed bit-complexity estimates that a referee would need expanded.",
+    "The contribution is mainly a reduction to classical tools; the literature comparison is targeted and priority is explicitly unconfirmed.",
+    "The paper itself discloses that earlier verification used an AI reviewer that was not independent or blind, and no formal verification is supplied."
+  ]
+}
