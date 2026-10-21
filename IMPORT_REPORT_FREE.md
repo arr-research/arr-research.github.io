@@ -1,3 +1,19 @@
+# ACTUALIZACION FINAL (Haiku repetidos importados)
+Los 2 Haiku rechazados por esquema (basis > 600 car.) se repitieron (no recortados) y se importaron: 8 de 8 informes en el registro.
+Primeros intentos conservados como `*.INTENTO1-esquema-rechazado.json` (+ `.evidence.json` con estado
+'not_imported_schema_rejected' y motivo); la evidencia anterior de los fallidos fue sustituida. Notices de procedencia y
+adjudicacion de lf y s3 reescritos (Schur c3: la objecion abierta NO se adjudica como error). Validacion: validate_papers OK,
+pytest 380 passed (102 subtests), build_site OK.
+
+| paper | n | media final | estrellas | rango |
+|---|---|---|---|---|
+| ARR-2026-5286KSE6RS984S9P | 2 | 2.75 | 3 Acceptable | 2.0-3.5 |
+| ARR-2026-5YJX444B6M95ZTG4 | 2 | 3.45 | 3 Acceptable | 2.5-4.4 |
+| ARR-2026-7W8BK4FK779W5ADJ | 2 | 3.30 | 3 Acceptable | 3.2-3.4 |
+| ARR-2026-6TQRG7PY6C8JZR2D | 2 | 3.20 | 3 Acceptable | 3.0-3.4 |
+
+(Las secciones siguientes son historicas; donde dicen 6 de 8 importados, queda superado por esta.)
+
 # IMPORT_REPORT_FREE - importacion de informes Claude (sala limpia imperfecta), 21-10-2026
 
 ## RESULTADO (actualizado tras las decisiones del director)

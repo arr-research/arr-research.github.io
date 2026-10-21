@@ -13925,6 +13925,132 @@
       "unresolved_material_objections": [],
       "assessment_id": "arr:assessment:04b375d6-cbf6-440e-90e9-fdc83809c5e9",
       "source_response_sha256": "170cf5690373a6c4bea6ad0b2bd43bf9b6900f0339e78205c8abe92c6611e903"
+    },
+    {
+      "paper_id": "ARR-2026-7W8BK4FK779W5ADJ",
+      "version": "v1",
+      "version_id": "arr:version:43d33522-87d1-4a10-a9cb-85574dcb648c",
+      "canonical_sha256": "bec07a6e5bb360ef1b8912959afcbf2d9d61674e728dd6ab4e612e9097dd66bc",
+      "provider": "Anthropic",
+      "model_id": "claude-haiku-5-5",
+      "assessed_at": "2026-10-21T06:58:51+02:00",
+      "prompt_version": "ARR-ASSESS-1.0",
+      "independence": "unknown",
+      "recommendation": "minor_revision",
+      "millennium_score": 3.4,
+      "overall_stars": 3,
+      "criteria": {
+        "correctness_confidence": {
+          "stars": 4,
+          "basis": "Hand-checked: the necessity chain (8)-(9) with u>=eps, mean(u)=1, skew-adjointness of H, and the minimisation over c at a^(1/3) giving (1+a^(2/3))^(3/2); boundary identities (10)-(13); h_c(0)=1; the Prop. 4 error bound. No gap found in the main chain. The Fejer-Riesz step in Lemma 2 relies on [1]; not re-derived."
+        },
+        "rigor": {
+          "stars": 4,
+          "basis": "Explicit analytic arguments: Lemma 2 identity and kernel positivity, Poisson smoothing (15), quantile error with sup|dK/dt| <= 2sigma/tau^2 and total 4 pi sigma/(N tau^2), and the integrating-factor argument in Prop. 5. Minor gaps: Lemma 2 factorisation is cited, not proved; explicit N is given only for b>1."
+        },
+        "novelty": {
+          "stars": 2,
+          "basis": "The sharp threshold for the family appears new, but the family, its global stability and the 2(a+1) obstruction rest on [1]. The arXiv abstract of [1] (2607.16171) describes one integer-coefficient example with no parameters a and b; the full text was not checked. Antecedents in [2] are unverified."
+        },
+        "significance": {
+          "stars": 2,
+          "basis": "Settles one explicit two-parameter family and its k-harmonic and angular-speed variants. Degree divergence (Prop. 5) is qualitative with no rate. The techniques (Fejer-Riesz, Herglotz representation, binary-form SOS) are classical, so impact on converse Lyapunov theory is limited."
+        },
+        "reproducibility": {
+          "stars": 2,
+          "basis": "Analytic constructions can be checked from the text. The numerical diagnostic (2048 factors, 8192 samples, margin about 0.1545) gives no code, data or enclosure, and the supplementary author computations are not supplied. The PDF alone does not let a reader reproduce the rational-factorization checks."
+        }
+      },
+      "summary": "The manuscript claims that the Liu-Fitzsimmons family r' = r^3(-a + b cos 2theta), theta' = r^2 admits positive homogeneous polynomial, strict polynomial and local analytic Lyapunov certificates exactly when |b| < (1+a^(2/3))^(3/2). I checked the necessity argument (Sec. 3), the boundary construction (Sec. 4), the quantile-based sufficiency with its degree bound (Prop. 4), the leading-term argument (Sec. 6) and the Corollary 6 extension to k-harmonics and angular speed. I found no invalidating error in these steps. Not verified: the cited literature, the Fejer-Riesz statement in [1], and the numerical diagnostic in Sec. 8. The main reservations are citation-dependent: novelty and the stability and obstruction claims for the family rest on [1], whose arXiv abstract does not show the parametric family. Recommendation: minor revision for clarity, explicit citation checks and a precise statement of what is new.",
+      "strengths": [
+        "Necessity (Sec. 3): pairing u and w with the test functions F_sigma, G_sigma from f_c(sigma e^{i phi}) gives <uF> + <wG> = c + a - b sigma c/s >= eps c. Checked by hand; the minimum over c at a^(1/3) gives (1+a^(2/3))^(3/2), strict because eps > 0.",
+        "Lemma 3 boundary identities (10)-(13) verified algebraically: z^(-1) cancellation, constant term equal to 1, and q_c = -(s^2/2) M_c |1-eta z|^2 on the circle. Boundary nonnegativity holds on both arcs.",
+        "Prop. 4 arithmetic checked: tau = delta/(4b), N = ceil(256 pi sigma b^2/delta^3), quantile error at most 4 pi sigma/(N tau^2) <= delta/4, margin at least delta/2. The bound is stated as sufficient, not minimal, and the text says so.",
+        "Corollary 6: the k-harmonic extension and the angular-speed scaling are consistent, and H = r^2 exp(-b sin(2k theta)/(k omega)) satisfies L_f H = -2a r^(2k) H as claimed.",
+        "Prop. 5 (degree divergence) is argued by compactness plus the same integrating-factor argument, which I checked. It makes no quantitative claim, and the text says so."
+      ],
+      "weaknesses": [
+        "Novelty and priority of the family, its global stability and the 2(a+1) obstruction rest on [1]. The arXiv abstract (2607.16171) describes one integer-coefficient example with no parameters a and b; this could not be confirmed from the abstract.",
+        "Lemma 2's Fejer-Riesz factorisation is cited to [1, Lemmas III.2-III.3] rather than proved in full. The statement is standard, but a reader must trust the cited form.",
+        "Prop. 4 gives an explicit N only for b > 1 and delta <= 2b. The case b in (0,1] is handled qualitatively in Sec. 5, so the degree bound is not stated uniformly over the region.",
+        "Prop. 5 gives no rate at which the minimal degree diverges as a decreases to a0. The word 'sharp' refers only to the threshold, and the abstract should say so.",
+        "Ahmadi-Parrilo [2, Thm 4.3] and Ahmadi-El Khadir [3, Prop. 6.1] are cited as antecedents of the degree and complexity results; these citations were not checked."
+      ],
+      "potential_errors": [
+        "Sec. 1 and Sec. 2 attribute to [1] the global stability of the whole family and the 2(a+1) nonexistence result. If the full text of [1] does not contain these, the stated prior-work claims are wrong; the abstract alone does not settle it.",
+        "Sec. 8: the margin 0.1545 (a = 1.2, b = 2 sqrt(2), sigma = 0.98, 8192 samples) is a floating-point sample with no code. It is not a certificate, so the text should not imply any numerical verification of Prop. 4.",
+        "Prop. 4 is stated for b > 1, yet Corollary 6 applies it to |b| > |omega| after rescaling. The explicit degree bound for b in (0,1] is therefore not covered, although h = 1 - ibz works there."
+      ],
+      "strong_novelty_candidates": [
+        "Sharp threshold |b| < (1+a^(2/3))^(3/2) for the Liu-Fitzsimmons family, with a matching strict product-of-quadratic-forms certificate (Thm. 1, Prop. 4) and its k-harmonic extension (Cor. 6). Novelty is conditional on the content of [1]."
+      ],
+      "unresolved_material_objections": [],
+      "assessment_id": "arr:assessment:73b26586-c9cf-4dd0-bd67-57c12180676d",
+      "source_response_sha256": "6e597f3db442f051f9c5960e5116d0c9ba7ebbed076e0ac1fe642f5ebfe6066c"
+    },
+    {
+      "paper_id": "ARR-2026-6TQRG7PY6C8JZR2D",
+      "version": "v1",
+      "version_id": "arr:version:4bbcde1c-c05b-4a7d-832c-c9666d31cb2f",
+      "canonical_sha256": "28ed664ca672ed1cdf776969c2872dc65b4e491c3d81eec32e615efeaafe097e",
+      "provider": "Anthropic",
+      "model_id": "claude-haiku-5-5",
+      "assessed_at": "2026-10-21T07:00:00+02:00",
+      "prompt_version": "ARR-ASSESS-1.0",
+      "independence": "unknown",
+      "recommendation": "major_revision",
+      "millennium_score": 3.0,
+      "overall_stars": 3,
+      "criteria": {
+        "correctness_confidence": {
+          "stars": 3,
+          "basis": "Checked in detail: Lemma 4 (Re v >= 1/2, |v|^2 <= Re v/eta), the Cesaro chain of Prop 6, the Theorem 1 parameter choice and limit (explicit n >= 10^4 case), the Mathieu reduction giving inf g_n -> 1/8, Prop 12 and Cor 8/9. No error found. Section 6 estimates only sketched and not verified."
+        },
+        "rigor": {
+          "stars": 3,
+          "basis": "Theorems 1 and 3 are argued step by step and the checked steps hold. Theorem 2 and Theorem 11 rely on asserted uniform estimates (interior-factor bound (16), local bound (17), outer-arc derivative bounds) and on the Lemma 10 cone argument, which writes a_l cos(l theta) as if a_l were real."
+        },
+        "novelty": {
+          "stars": 2,
+          "basis": "Theorem 1 strengthens r_n >= exp(-(1+o(1)) sqrt(n) log n) of Tan et al. (arXiv 2608.02043) and the negative answer to Erdos 973 is due to Luo et al. (arXiv 2607.22017); both confirmed by search snippets only. Theorem 3 (limit 1/sqrt 8) and the one-interior-zero threshold are new relative to these."
+        },
+        "significance": {
+          "stars": 3,
+          "basis": "A sharp circle-root limit (1/sqrt 8), a zero-count threshold (zero versus one interior zero) and superalgebraic decay with a fixed number of interior zeros bear on root-location and Erdos 973 questions. Optimal rates remain open, as the author states in Section 8."
+        },
+        "reproducibility": {
+          "stars": 2,
+          "basis": "Explicit constants, the degree-34 baseline and the Mathieu expansion allow hand checks. The claimed independent audit of 34 degree classes and the supplementary diagnostics are not part of the PDF, and no code or data link is given."
+        }
+      },
+      "summary": "Exact manuscript (SHA-256 verified); reviewer read all 14 pages. Main results: (Thm 1) s_n >= exp(-C sqrt n) for C > sqrt((8/3) log 17), explicitly exp(-3 sqrt n) for n >= 10^4; (Thm 2) superalgebraic decay of the restricted residual with a fixed number M_A of interior zeros; (Thm 3) the circle-root residual tends to 1/sqrt 8 via a Mathieu ground-state lower bound; (Thm 11) one interior zero gives residual O(n^{-1/6}). Checked in detail: Lemma 4 normalization, the Cesaro chain of Prop 6, the parameter choice and limit in Theorem 1, the Mathieu reduction and the value 1/8, Prop 12, Corollaries 8 and 9, and the Theorem 11 baseline identities (b_2 = 0, b_3 = -3/2, unique interior stationary point 5/24 of H(s), moment identity M_3 = (3/2)M_2 - N/4). No error found in these. Reference claims about Tan et al. and Luo et al. were checked only through search snippets, not the full papers. The reviewer did not execute code and did not verify the claimed audit. The main gap is Section 6, where uniform estimates behind Theorem 2 and Theorem 11 are asserted rather than written out; this is unresolved, hence major revision.",
+      "strengths": [
+        "Theorem 1 explicit bound exp(-3 sqrt n) for n >= 10^4 is internally consistent: the choice r = 3/(8 sqrt n), K, the ratio a/r -> 16, and the exponent limit -3C/4 + (2+t) log 17 / C < 0 were checked.",
+        "Theorem 3 reduces the residual to a Mathieu Rayleigh quotient via P(e^{it}) = e^{int/2} p(t); the trial slope lambda = n/2 + 1/4 gives 1/8, and the integral 1/16 - (3/4)(1/6) + (9/4)(1/12) = 1/8 was verified.",
+        "Theorem 11 baseline checks pass: H(s) = (1-6s/5)^30 (1-8s)^4 has unique interior stationary point 5/24; the identity M_3 = (3/2)M_2 - N/4 holds per conjugate pair; with v^3 - (3/2)v^2 = (n-1)/4 and sum v^2 = 0 one gets sum v^3 = 0.",
+        "Scope is stated honestly: Section 8 says the optimal rates and the one-root decay are not established and that finite checks do not certify norm asymptotics."
+      ],
+      "weaknesses": [
+        "Theorem 2 and Theorem 11 rest on uniform estimates (16), (17), the outer-arc bounds 'uniformly bounded normalized derivatives' and the Lemma 10 cone argument, all asserted rather than written out.",
+        "Lemma 10 proof: the step 'choose theta with a_l cos(l theta) < 0' assumes real a_l; with complex coefficients the choice of theta must be redone. Fixable, but the cone argument is only sketched.",
+        "Lemma 4: m_1 >= 1/2 is stated after nm_1 = d, but the argument actually uses the average of Re v_j >= 1/2; the text should say so.",
+        "The abstract and Section 8 cite an independent audit of 34 degree classes and supplementary diagnostics that are not included in the PDF, so these claims cannot be checked from the artifact.",
+        "The 'exact zero-count threshold' in the abstract should be stated precisely as the statement about zero interior roots versus one, since the optimal rate with one root is open."
+      ],
+      "potential_errors": [
+        "Section 2, secondary maximum bound (1+c)^6/[729(1-c)^2] < 1 on 0 <= c <= 3/4: the reviewer confirmed the value 1/16 at c = 1/2 only; the general-c derivation is not shown.",
+        "Section 6.1: the interior-factor inequality 1 + 8(x^2 - x - Y)s + 16 U V s^2 <= e^{4(U+V)s} for the pair groups is stated without derivation; the factor-level formula 1 + 4v(v-1)s was checked.",
+        "Section 6.1 Jacobian: the columns m_i(-1, 2 zeta_i, ..., K zeta_i^{K-1}) form a scaled Vandermonde and are nonsingular for distinct nodes, which was checked; the consequence for the implicit-function step is not spelled out."
+      ],
+      "strong_novelty_candidates": [
+        "Sharp limit of the circle-root normalized residual equal to 1/sqrt 8 via a Mathieu ground-state lower bound (Theorem 3); candidate only, literature checked for the two 2026 references only.",
+        "Zero-count threshold: one interior zero permits residual O(n^{-1/6}) while zero interior zeros do not (Theorems 3 and 11); candidate, pending the Section 6 estimates."
+      ],
+      "unresolved_material_objections": [
+        "Theorem 2 (superalgebraic decay) and Theorem 11 (O(n^{-1/6}) with one interior zero) depend on uniform local and outer-arc estimates ((16), (17), outer-arc derivative bounds) and on the Lemma 10 cone argument that are asserted, not proved. If these estimates fail, the superalgebraic and one-zero claims are unsupported. The reviewer could not verify them in full."
+      ],
+      "assessment_id": "arr:assessment:b6c9e28c-dcd4-460d-91a6-a0a2bda0f830",
+      "source_response_sha256": "3882273504c976d969786ddcca5bbab0d8d9e246205b077c7ecb11c3ced276ab"
     }
   ],
   "operator_notices": [
@@ -14786,13 +14912,14 @@
     },
     {
       "notice_id": "claude-subagents-provenance-20261021-ARR-2026-6TQRG7PY6C8JZR2D",
-      "message": "Provenance and counting note, 21 October 2026, by the author's Claude research session (not independent of the author). The reports (claude-sonnet-5-5) were produced by Claude Code subagents (Sonnet 5.5 / Haiku 5.5) in an imperfect clean room: disk access, inherited project instructions, no verifiable isolation. review_context and runtime_provenance are therefore omitted; independence is recorded as unknown. Model JSON is preserved unedited under registry/assessment-evidence/2026-10-21-claude-subagents/ and each evidence.json lists the operator edits (placeholder ids filled, independence set to unknown, assessed_at set to file modification time). No cost or tokens recorded. This registry counts all reports, one per base model, regardless of the independence field; docs/OPENROUTER_ASSESSMENTS.md says otherwise, but the code and MODEL_ASSESSMENT_POLICY.md govern. The Haiku 5.5 report for this paper was rejected by the schema validator (criteria basis over 600 characters) and is not in the registry; the original is preserved in the evidence directory.",
+      "message": "Provenance and counting note, 21 October 2026, by the author's Claude research session (not independent of the author). The reports (claude-sonnet-5-5 and claude-haiku-5-5) were produced by Claude Code subagents (Sonnet 5.5 / Haiku 5.5) in an imperfect clean room: disk access, inherited project instructions, no verifiable isolation. review_context and runtime_provenance are therefore omitted; independence is recorded as unknown. Model JSON is preserved unedited under registry/assessment-evidence/2026-10-21-claude-subagents/ and each evidence.json lists the operator edits (placeholder ids filled, independence set to unknown, assessed_at set to file modification time). No cost or tokens recorded. This registry counts all reports, one per base model, regardless of the independence field; docs/OPENROUTER_ASSESSMENTS.md says otherwise, but the code and MODEL_ASSESSMENT_POLICY.md govern. The first Haiku 5.5 attempt for this paper was rejected by the schema validator (criteria basis over 600 characters); it is preserved in the evidence directory as not_imported_schema_rejected and the report was repeated.",
       "paper_id": "ARR-2026-6TQRG7PY6C8JZR2D",
       "version_id": "arr:version:4bbcde1c-c05b-4a7d-832c-c9666d31cb2f",
       "canonical_sha256": "28ed664ca672ed1cdf776969c2872dc65b4e491c3d81eec32e615efeaafe097e",
       "recorded_at": "2026-10-21T08:30:00+00:00",
       "affected_assessment_ids": [
-        "arr:assessment:04b375d6-cbf6-440e-90e9-fdc83809c5e9"
+        "arr:assessment:04b375d6-cbf6-440e-90e9-fdc83809c5e9",
+        "arr:assessment:b6c9e28c-dcd4-460d-91a6-a0a2bda0f830"
       ],
       "source_files": [
         {
@@ -14803,13 +14930,14 @@
     },
     {
       "notice_id": "claude-subagents-adjudication-20261021-ARR-2026-6TQRG7PY6C8JZR2D",
-      "message": "Adjudication dated 21 October 2026 by the author's Claude research session (not independent of the author, not a human referee). The Haiku 5.5 report (major_revision, 3.00) is not imported in this batch (see operator note); its only observation was a supposed slip, B'/B-3 written without the factor z. NOT CONFIRMED: main.tex line 245 already carries z, and exact sympy confirms B'/B-3 = -3z(z-1)^2/(z^3+1) for B=(1+z)^4(1-z+z^2). The imported Sonnet 5.5 report is unedited and raised no unresolved material objection. Revisable.",
+      "message": "Adjudication dated 21 October 2026 by the author's Claude research session (not independent of the author, not a human referee); reports unedited. Haiku 5.5 (repeated, major_revision, 3.00) raises one material objection: Theorems 2 and 11 depend on uniform estimates ((16), (17), outer-arc bounds) and on the Lemma 10 cone argument, asserted rather than proved. NOT resolved and NOT refuted: it remains an open objection (a presentation weakness or sketched proof also noted by Sonnet 5.5, 3.40, minor_revision, without a formal objection), not a demonstrated error. Its minor remark on Lemma 10 ('a_l real') is NOT a flaw: the functional lives in R^(K-1) because the columns V(zeta) are real (main.tex lines 596-621), so the a_j are real by construction. An earlier slip claim (B'/B-3 without z) from the rejected first attempt was NOT confirmed: main.tex line 245 carries z. Revisable.",
       "paper_id": "ARR-2026-6TQRG7PY6C8JZR2D",
       "version_id": "arr:version:4bbcde1c-c05b-4a7d-832c-c9666d31cb2f",
       "canonical_sha256": "28ed664ca672ed1cdf776969c2872dc65b4e491c3d81eec32e615efeaafe097e",
       "recorded_at": "2026-10-21T08:30:00+00:00",
       "affected_assessment_ids": [
-        "arr:assessment:04b375d6-cbf6-440e-90e9-fdc83809c5e9"
+        "arr:assessment:04b375d6-cbf6-440e-90e9-fdc83809c5e9",
+        "arr:assessment:b6c9e28c-dcd4-460d-91a6-a0a2bda0f830"
       ],
       "source_files": [
         {
@@ -14820,13 +14948,14 @@
     },
     {
       "notice_id": "claude-subagents-provenance-20261021-ARR-2026-7W8BK4FK779W5ADJ",
-      "message": "Provenance and counting note, 21 October 2026, by the author's Claude research session (not independent of the author). The reports (claude-sonnet-5-5) were produced by Claude Code subagents (Sonnet 5.5 / Haiku 5.5) in an imperfect clean room: disk access, inherited project instructions, no verifiable isolation. review_context and runtime_provenance are therefore omitted; independence is recorded as unknown. Model JSON is preserved unedited under registry/assessment-evidence/2026-10-21-claude-subagents/ and each evidence.json lists the operator edits (placeholder ids filled, independence set to unknown, assessed_at set to file modification time). No cost or tokens recorded. This registry counts all reports, one per base model, regardless of the independence field; docs/OPENROUTER_ASSESSMENTS.md says otherwise, but the code and MODEL_ASSESSMENT_POLICY.md govern. The Haiku 5.5 report for this paper was rejected by the schema validator (criteria basis over 600 characters) and is not in the registry; the original is preserved in the evidence directory.",
+      "message": "Provenance and counting note, 21 October 2026, by the author's Claude research session (not independent of the author). The reports (claude-sonnet-5-5 and claude-haiku-5-5) were produced by Claude Code subagents (Sonnet 5.5 / Haiku 5.5) in an imperfect clean room: disk access, inherited project instructions, no verifiable isolation. review_context and runtime_provenance are therefore omitted; independence is recorded as unknown. Model JSON is preserved unedited under registry/assessment-evidence/2026-10-21-claude-subagents/ and each evidence.json lists the operator edits (placeholder ids filled, independence set to unknown, assessed_at set to file modification time). No cost or tokens recorded. This registry counts all reports, one per base model, regardless of the independence field; docs/OPENROUTER_ASSESSMENTS.md says otherwise, but the code and MODEL_ASSESSMENT_POLICY.md govern. The first Haiku 5.5 attempt for this paper was rejected by the schema validator (criteria basis over 600 characters); it is preserved in the evidence directory as not_imported_schema_rejected and the report was repeated.",
       "paper_id": "ARR-2026-7W8BK4FK779W5ADJ",
       "version_id": "arr:version:43d33522-87d1-4a10-a9cb-85574dcb648c",
       "canonical_sha256": "bec07a6e5bb360ef1b8912959afcbf2d9d61674e728dd6ab4e612e9097dd66bc",
       "recorded_at": "2026-10-21T08:30:00+00:00",
       "affected_assessment_ids": [
-        "arr:assessment:2dea0dbd-cb03-4e3f-9b0b-5d0278b892c6"
+        "arr:assessment:2dea0dbd-cb03-4e3f-9b0b-5d0278b892c6",
+        "arr:assessment:73b26586-c9cf-4dd0-bd67-57c12180676d"
       ],
       "source_files": [
         {
@@ -14837,13 +14966,14 @@
     },
     {
       "notice_id": "claude-subagents-adjudication-20261021-ARR-2026-7W8BK4FK779W5ADJ",
-      "message": "Adjudication dated 21 October 2026 by the author's Claude research session (not independent of the author, not a human referee). The imported Sonnet 5.5 report for the Lyapunov-boundary paper (minor_revision, 3.20) is unedited and raised no unresolved material objection; nothing was adjudicated. The Haiku 5.5 report (major_revision, 3.50) is not imported in this batch (see operator note).",
+      "message": "Adjudication dated 21 October 2026 by the author's Claude research session (not independent of the author, not a human referee); reports unedited. Sonnet 5.5 (minor_revision, 3.20) and the repeated Haiku 5.5 (minor_revision, 3.40) raised no unresolved material objection, so nothing was adjudicated. Haiku notes that the novelty depends on the content of reference [1] (arXiv 2607.16171), of which only the abstract was read. Revisable.",
       "paper_id": "ARR-2026-7W8BK4FK779W5ADJ",
       "version_id": "arr:version:43d33522-87d1-4a10-a9cb-85574dcb648c",
       "canonical_sha256": "bec07a6e5bb360ef1b8912959afcbf2d9d61674e728dd6ab4e612e9097dd66bc",
       "recorded_at": "2026-10-21T08:30:00+00:00",
       "affected_assessment_ids": [
-        "arr:assessment:2dea0dbd-cb03-4e3f-9b0b-5d0278b892c6"
+        "arr:assessment:2dea0dbd-cb03-4e3f-9b0b-5d0278b892c6",
+        "arr:assessment:73b26586-c9cf-4dd0-bd67-57c12180676d"
       ],
       "source_files": [
         {
