@@ -1,0 +1,68 @@
+{
+  "paper_id": "PENDING_ARR_ID",
+  "version": "v1",
+  "version_id": "PENDING_VERSION_ID",
+  "canonical_sha256": "a6382c9eb75c5b60b877987e168e4d303f9a12b93ed6159a0aaeb11f4d3c1e3e",
+  "provider": "Anthropic",
+  "model_id": "claude-haiku-5-5",
+  "assessed_at": "2026-10-21T00:00:00+00:00",
+  "prompt_version": "ARR-ASSESS-1.0",
+  "independence": "not_involved_in_manuscript",
+  "recommendation": "major_revision",
+  "millennium_score": 2.5,
+  "overall_stars": 3,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 3,
+      "basis": "Theorem 4 vertex decomposition (Sec. 2) and Lemma 5 block identification (Sec. 3) were checked by hand and by random numerical tests (no violation, residuals about 1e-15). Lemma 2 (external) and Lemma 3 were spot-checked numerically only. Eq. (17) and the equalities in Theorem 10, eq. (18) and Corollary 11 are not established by the text."
+    },
+    "rigor": {
+      "stars": 3,
+      "basis": "Theorem 1 achievability and converse, Theorem 6 and Theorem 9 follow from Lemma 5 and Lemma 2 with no gap found in the logic. Main gaps: sketched subadditivity (17), a garbled entropy chain in its proof, and an asserted endpoint-chord identity G=J near p=1/2 used in Proposition 12."
+    },
+    "novelty": {
+      "stars": 2,
+      "basis": "The paper states it does not claim Davies dynamics, the unital case, or the Hellmund-Uhlmann flat-roof criterion. arXiv:2609.14621 (Fang, 2026) reports that the GAD classical capacity equals the one-copy Holevo quantity, which overlaps Theorem 1 on the GAD boundary and is not cited. Novelty is limited to the extension to the full Davies family and the complementary/simulation statements."
+    },
+    "significance": {
+      "stars": 2,
+      "basis": "Results concern a single-qubit phase-covariant family. The capacity formula reduces to known cases (identity, constant channel). The parallel simulation results depend on the unproven step (17), so their significance is conditional."
+    },
+    "reproducibility": {
+      "stars": 3,
+      "basis": "The capacity table in Section 8 was reproduced to about 1e-9 on a grid (a=0.10, b=0.30 with lambda^2 = 0.60, 0.50, 0.10 and a=0.02, b=0.30 with lambda^2 = 0.514624). The Proposition 12 numbers (J(1/2) = 0.704192 bits, maximizer near 0.51695 with value 0.704713) and the Corollary 11 example (0.600874 bits) were reproduced by hand. The paper states that the scripts do not certify intervals. The OpenAI reference [3] could not be located, and the Tang et al. reference [2] was located only by title."
+    }
+  },
+  "summary": "The manuscript extends the thermal block entropy inequality to the qubit Davies family with additional dephasing, and derives from it a population-resolved bound (Lemma 5, Theorem 4), a Holevo capacity formula with additivity (Theorem 1), a strong convex-roof superadditivity (Theorem 6), a complementary-channel capacity formula (Theorem 9) and parallel simulation results (Theorem 10, Corollary 11, Proposition 12). I checked the block-matrix vertex decomposition and the population/coherence identification in Lemma 5 by hand, and ran random numerical tests of Theorem 4, Lemma 5, and the external Lemma 2 and Lemma 3 (no violation). Theorem 1 capacity values in Section 8 were reproduced numerically. The chain Lemma 5 to Theorem 1 additivity and Theorem 6 is logically consistent. The unproven step is the subadditivity (17) of channel formation, which the text only sketches, and it is needed for the equalities in Theorem 10, eq. (18) and Corollary 11. The Proposition 12 separation additionally needs the lower bound G_N(p) >= J(p) near p = 1/2, which is asserted but not written out. The bibliography also has unverified items (reference [3] not found; reference [2] found by title only), and the paper does not cite arXiv:2609.14621, which overlaps Theorem 1 on the GAD boundary. Scope: this is a review of this exact PDF only, based on my reading and on numerical spot checks, not on a formal verification or on the cited sources in full.",
+  "strengths": [
+    "Lemma 5 block identification is correct: Phi(|0><1|) = lambda |0><1|, the population map gives alpha, beta, eta, delta as stated, and alpha+beta+eta+delta = 1 and alpha*delta - beta*eta = k p(1-p) >= K^2 (checked by hand and numerically).",
+    "Theorem 4 vertex argument is correct in the stated coefficient triangle (vertices A, B, C; weights w_A = beta U1/u, w_B = eta U0/u); each vertex bound follows from Lemma 2 or Lemma 3 as stated.",
+    "Random numerical tests of Theorem 4 (10010 cases), Lemma 3 (4000), Lemma 2 (4000) and Lemma 5 (3000 explicit channels) found no violation (minimum residual about -1e-15).",
+    "The Theorem 1 capacity values in the Section 8 table were reproduced on a grid (0.503934606, 0.407849860, 0.296671802, 0.436551160 bits).",
+    "Corollary 11 example (a=0.1, b=0.3, lambda^2=0.5 gives 0.600874 bits) and Proposition 12 numbers (J(1/2) = 0.704192 bits, J'(1/2) > 0, maximizer near 0.51695 with value 0.704713) were reproduced.",
+    "Proposition 14 (discretization bound) is correct: the piecewise-linear error is at most 2L theta(1-theta)/N, and convex envelopes preserve uniform error bounds.",
+    "The paper is candid about scope: it disclaims the unital, entanglement-breaking and flat-roof cases as its own, and it states what is not determined."
+  ],
+  "weaknesses": [
+    "Eq. (17), subadditivity of channel formation E^ch_F(M x L) <= E^ch_F(M) + E^ch_F(L), is argued in a few lines. The step 'choose Kraus decompositions optimal for the two marginal input states of a joint purified input' does not justify the reduction for entangled joint inputs. Theorem 10, eq. (18) and the equality in Corollary 11 depend on it.",
+    "Proposition 12 needs the lower bound G_N(p) >= J(p) near p = 1/2. The text asserts that the endpoint-chord argument gives G_N = J exactly, but the lower-bound step is not written out (only the chord value and the concavity of e_p are shown).",
+    "Corollary 11 proof: the flatness step f_p(t) = e_p(t) = g((1-x)p(1-p)) is asserted by direct substitution and not displayed.",
+    "Theorem 6 (strong convex-roof superadditivity for arbitrary N) is a strong claim. The chain from Lemma 5 is logically consistent, but the paper does not compare it with known non-additivity results in the literature.",
+    "Reference [3] (OpenAI, Sept 2026) could not be located by search. Reference [2] (Tang et al., arXiv:2609.28592) was located only by title, so the cited statements Theorem 4.2 and Section 5 are unverified. Lemma 2 is an external dependency for Theorem 4 and Theorem 1.",
+    "Novelty: arXiv:2609.14621 (Fang, 2026) reports that the GAD classical capacity equals the one-copy Holevo quantity, which overlaps Theorem 1 on the GAD boundary and is not cited.",
+    "Section 8 numerics are floating-point only and are not interval-certified, as the paper states. The sampled values in Proposition 12 are therefore not evidence for the strict inequality."
+  ],
+  "potential_errors": [
+    "Proof of eq. (17): the displayed chain 'S(BB'|IJ) <= S(B|I) + S(B'|IJ) <= S(B|I) + S(B'|J)' is garbled; the chain rule and the conditioning step need to be written explicitly.",
+    "Proof of Theorem 1: the second output marginal is written as omega-bar_B, but it is the marginal on the complementary output B' (notation).",
+    "Theorem 9 proof says the complementary phase-averaging step 'cannot decrease its output entropy'; the direction needed (average output entropy at most H_E of the mean population) holds by covariance and concavity but is not written out.",
+    "Proposition 12: 'Theorem 10 identifies the channel cost with its maximum formation' is used both for the identity and for the lower bound. The lower bound uses only product inputs, while the identity needs eq. (17); the text should separate the two."
+  ],
+  "strong_novelty_candidates": [
+    "Theorem 1 additivity for the full Davies family via Lemma 5 (checked; the GAD boundary overlaps arXiv:2609.14621).",
+    "Proposition 12 strict separation between the parallel simulation cost and the Choi-state cost, conditional on the lower bound G_N(p) >= J(p) near p = 1/2 being established."
+  ],
+  "unresolved_material_objections": [
+    "Eq. (17) (subadditivity of channel formation for arbitrary M and L) is not established by the given argument, which reduces the joint entangled-input case to marginal Kraus decompositions without justification and displays a garbled chain. The upper bounds behind Theorem 10, the identity E^par_C = max formula in eq. (18) and the equality in Corollary 11 depend on it, so these results are unproven as stated."
+  ]
+}

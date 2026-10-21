@@ -1,0 +1,63 @@
+{
+  "paper_id": "PENDING_ARR_ID",
+  "version": "v1",
+  "version_id": "PENDING_VERSION_ID",
+  "canonical_sha256": "28ed664ca672ed1cdf776969c2872dc65b4e491c3d81eec32e615efeaafe097e",
+  "provider": "Anthropic",
+  "model_id": "claude-haiku-5-5",
+  "assessed_at": "2026-10-21T00:00:00+00:00",
+  "prompt_version": "ARR-ASSESS-1.0",
+  "independence": "not_involved_in_manuscript",
+  "recommendation": "major_revision",
+  "millennium_score": 3.0,
+  "overall_stars": 3,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 3,
+      "basis": "Checked by hand: Lemma 4 (eqs. 4-6), Lemma 5 (eqs. 7-8, including F^(k-1)(1) = (-1)^(k-1)(k-1)! n m_k), Prop. 6 (Cesaro test, eqs. 9-11), the parameter limits and the explicit numerics of Sec. 4 (eq. 12, Ka >= 21/5, B < 1/(5n)), Cor. 8 (Newton identity), Thm. 3 moments (1/16 - 1/8 + 3/16 = 1/8), Thm. 11 algebra (X, Y, eq. 18, eq. 19) and the identity P'(0)=P'(1)/P(1). All of these hold. Theorem 2 was not checked beyond its outline. Minor algebra error in Sec. 2: B'/B - 3 equals -3z(z-1)^2/(z^3+1), not -3(z-1)^2/(z^3+1); this does not affect the limit. Theorem 2's upper-bound proof is a sketch, not a checked argument."
+    },
+    "rigor": {
+      "stars": 2,
+      "basis": "Theorem 1 (Prop. 6) and Cor. 8 are argued in full. Theorem 2 relies on Lemma 10 (cone argument, plausible), an implicit-function step, and 'uniform' O(.) estimates that are asserted rather than shown; the paper itself says its constants are not explicit and not uniform in K. Theorem 3 upper bound asserts the secondary-maximum inequality (1+c)^6/[729(1-c)^2] < 1 and the global outer-arc bound without derivation. Theorem 11 'uniform O(.)' local/outer estimates are sketched."
+    },
+    "novelty": {
+      "stars": 3,
+      "basis": "Thm. 1 gives s_n >= exp(-C sqrt(n)) and the explicit exp(-3 sqrt(n)) bound, which strengthens the restricted-slope bound of Tan et al. (arXiv:2608.02043, r_n >= exp(-(1+o(1)) sqrt(n) log n), confirmed from its abstract) because s_n <= r_n. Cor. 8 strengthens the Luo-Yang-Zhu result (arXiv:2607.22017: max_k |sum z_j^k| > e^(-lambda n) for every lambda > 0, confirmed from its abstract). The paper credits both. Thm. 3 (limit 1/sqrt(8) for the on-circle infimum) and Thm. 11 (one interior zero suffices) are presented as new; I did not search exhaustively for prior work on these, so novelty is not established."
+    },
+    "significance": {
+      "stars": 3,
+      "basis": "The one-interior-zero threshold and the 1/sqrt(8) on-circle barrier are clean, well-motivated results about exterior/circle-root residuals with a link to Erdos Problem 973. The superalgebraic-decay claim (Thm. 2) would be significant if fully verified, but its proof is not checked. The paper states that the optimal rates for s_n, r_n and the one-root decay are open."
+    },
+    "reproducibility": {
+      "stars": 3,
+      "basis": "The explicit constructions are given in closed form, so they can be reproduced. I ran a numerical check in my own sandbox from the text alone (not from any other file): for the Thm. 3 family P = B_t^m (1+z)^k the residual ratio goes to 0.3537 (m=1000, k=0) against the claimed 1/sqrt(8)=0.35355; for the Thm. 11 family the identities P'(0)=P'(1)/P(1), sum v^2 = 0 and sum v^3 = 0 hold to about 1e-10, and the residual decreases from 0.349 (n=341) to 0.115 (n=34001), roughly n^(-0.21) over this range. This supports the claims but does not establish the rate O(n^(-1/6)) or Thm. 2. The paper mentions supplementary diagnostics that I did not have access to."
+    }
+  },
+  "summary": "The manuscript proves (i) an explicit lower bound s_n >= exp(-3 sqrt(n)) for n >= 10^4, and s_n >= exp(-C sqrt(n)) for C > sqrt((8/3) log 17), for the residual inf over all unit-disk-root polynomials and complex slopes, via a finite Cesaro-type certificate; (ii) that the on-circle infimum tends to 1/sqrt(8) (Thm. 3); (iii) that one interior zero suffices to make the residual tend to zero, with rate O(n^(-1/6)) (Thm. 11); (iv) superalgebraic upper bounds with a fixed number of interior zeros (Thm. 2). The arithmetic of Sec. 3-4, Cor. 8, Cor. 9 and the algebra of Thm. 11 check out on inspection. The numerical check of Thm. 3 and Thm. 11 constructions supports the stated limits and identities. Theorem 2 is only outlined and its uniformity claims are asserted. The paper also has a minor algebra slip in Sec. 2 (missing factor z) and some sketched estimates in the Thm. 3 and Thm. 11 upper bounds. The novelty relative to the cited Tan et al. and Luo et al. results is as the paper claims, based on the abstracts I could read. Overall: careful, mostly checkable, with a substantive but incompletely verified Theorem 2 and sketchy estimates that need full write-up before the claims can be relied on.",
+  "strengths": [
+    "Explicit, checkable finite certificate (Lemma 4, Lemma 5, Prop. 6) giving an explicit exp(-3 sqrt(n)) lower bound; the parameter choices in Sec. 4 and the numerics of eq. (12) verify.",
+    "Thm. 3 construction P_{m,k} has exact P'(0) = n/2 + 1/4 and P'(1)/P(1) = n/2, and the limiting integral 1/16 - 3/4*1/6 + 9/4*1/12 = 1/8 checks; numerically the residual approaches 1/sqrt(8).",
+    "Thm. 11 parameter system (eqs. 18-19 and the explicit X, Y, a, c) is internally consistent: the moment identities sum v^2 = 0 and sum v^3 = 0 follow from (18)-(19) and hold numerically.",
+    "Cor. 8 correctly derives a bound on exterior power sums from the Newton identity and the projection argument.",
+    "The paper is candid about what it does not prove (no optimal rates, no uniform constants in Thm. 2, no priority certification)."
+  ],
+  "weaknesses": [
+    "Theorem 2 (superalgebraic decay with a fixed number M_A of interior zeros) is only outlined: the implicit-function and Jacobian step, the claim that the moment system is solvable for all large n, and the uniform estimates are asserted, not shown. The constants depend on K and are not explicit.",
+    "The Thm. 3 upper-bound argument asserts the secondary-maximum inequality (1+c)^6/[729(1-c)^2] < 1 and the global bound on the outer arc without derivation.",
+    "Thm. 11: the claimed rate O(n^(-1/6)) is an upper bound only; the numerics I ran suggest a rate near n^(-0.21) over n in [3.4e3, 3.4e4], which does not decide the exponent. The local and outer estimates are sketched.",
+    "Sec. 2 identity B'/B - 3 = -3(z-1)^2/(z^3+1) omits a factor z; the correct form is -3z(z-1)^2/(z^3+1). The limit is unaffected.",
+    "Sec. 2 proof of the lower bound inf_lambda g_n(lambda) = 1/8 + O(1/n) uses a window argument (minimizers near n/2) whose justification is brief.",
+    "Literature: Komarov (arXiv:1804.08918, 1807.06499) and the other citations are described but I did not verify their statements; the paper itself says exhaustive priority certification is not claimed.",
+    "The paper relies on supplementary diagnostics that were not available to me; reproducibility of the large-n estimates depends on them."
+  ],
+  "potential_errors": [
+    "Sec. 2, p. 3-4: B'_*/B_* - 3 = -3(z-1)^2/(z^3+1) should read -3z(z-1)^2/(z^3+1). Typographical/algebra slip; the limiting argument is unaffected.",
+    "Thm. 2 proof, p. 9-12: the claim that the local and outer estimates are uniform in n with constants depending only on K is asserted, not shown; treat as unverified rather than wrong."
+  ],
+  "strong_novelty_candidates": [
+    "Explicit lower bound s_n >= exp(-3 sqrt(n)) for the unrestricted-slope residual over unit-disk-root polynomials (Thm. 1 with Prop. 6), strengthening the restricted-slope bound of Tan et al. (arXiv:2608.02043) as the paper states.",
+    "The sharp on-circle limit 1/sqrt(8) for both the unrestricted and restricted-slope infima (Thm. 3), with an explicit family P_{m,k} = B_t^m (1+z)^k.",
+    "One interior zero suffices for vanishing residual, with explicit algebraic parameters (Thm. 11), together with the zero-count threshold argument that combines Thm. 3 and Thm. 11."
+  ],
+  "unresolved_material_objections": []
+}
