@@ -1,0 +1,39 @@
+RESEARCH CANDIDATE — NOT A PUBLISHED OR REVIEWED RESULT
+17 October 2026. Root agent. Natural logarithms throughout.
+
+Sources actually read: OpenAI, Classical capacity and entropy inequalities for generalized amplitude damping, 24 September 2026, pp. 1–11 and channel argument outline. Local gad.pdf SHA256 5656514823b55d5a4dbb15b284a2637952b957a451aef2e6428f3efbb88f6442. Repository URL recorded in sources.json. Theorem 2.1 is explicitly attributed there to Tang, Zhu, Bai, Wang, arXiv:2609.28592v1 Theorem 4.2. OpenAI Theorem 3.1 proves the equality case alpha*delta-beta*eta=K^2 below. Our proposed extension adds the inequality region, relying on that established triangular-block theorem and ordinary entropy concavity/SSA. No global priority assertion.
+
+PROPOSED MATRIX THEOREM
+X,Y in C^(d x e), Tr XX*=Tr YY*=1. Coefficients alpha,beta,eta,delta,K >=0, alpha+beta+eta+delta=1, alpha*delta-beta*eta >= K^2.
+T = [[alpha XX*+beta YY*, K XY*], [K YX*, eta XX*+delta YY*]].
+Let U0=alpha+beta, U1=eta+delta, u=U0 U1-K^2. Let g(u)=h((1+sqrt(1-4u))/2), h binary entropy in nats.
+Claim: S(T) >= (alpha+eta) S(XX*)+(beta+delta) S(YY*)+g(u).
+
+PROOF
+For U0 U1>0 and u>0, the hypothesis is equivalent to beta U1+eta U0 <=u. The feasible coefficient region with U0,U1,K fixed is a triangle with vertices (displayed as alpha,beta,eta,delta):
+A=(K^2/U1,u/U1,0,U1),
+B=(U0,0,u/U0,K^2/U0),
+C=(U0,0,0,U1).
+The weights are wA=beta U1/u, wB=eta U0/u, wC=1-wA-wB, nonnegative and summing to one. All vertices keep the same row masses and offdiagonal K, hence the same scalar entropy g(u). The desired weights of S(XX*),S(YY*) are affine in the coefficients.
+At A, factor T=M M* with M=[[sqrt(alpha)X,sqrt(beta)Y],[sqrt(delta)Y,0]]. The triangular entropy theorem gives alpha SXX+(beta+delta) SYY+g(beta delta), and beta delta=u. At B use the analogous row/column permutation (or interchange X,Y and block labels); the corner product is eta alpha=u.
+At C, take normalized vectorizations |X>,|Y> in B tensor E and the isometry V|0>=|0>_A|X>_BE, V|1>=|1>_A|Y>_BE. Let rho=[[U0,K],[K,U1]]. Omega=V rho V* has S(ABE)=S(rho)=g(u); Tr_E Omega=T_C. Dephasing A is a channel on the receiving system AB, so coherent information I(E>AB)=S(AB)-S(ABE) cannot increase (SSA). After dephasing, S(AB)=h(U0)+U0 SXX+U1 SYY and S(ABE)=h(U0), since each BE branch is pure. Therefore S(T_C)>=g(u)+U0 SXX+U1 SYY. Finally entropy concavity mixes the three vertex estimates.
+If a row mass is zero, K=0 and the statement reduces to entropy concavity for the remaining block. If u=0, beta=eta=0 and the C argument applies with a pure rho. Continuity also supplies all boundaries.
+
+PROPOSED CHANNEL CONSEQUENCES
+Let a,b>=0, a+b<=1, k=1-a-b, 0<=lambda^2<=k, lambda>=0. Define Phi([[1-p,z],[z*,p]])=[[1-t,lambda z],[lambda z*,t]], t=a+k p. This is generalized amplitude damping followed by extra dephasing; when k>0 take gamma=a+b, nu=a/gamma if gamma>0, coherence multiplier lambda/sqrt(k). Handle k=0 and gamma=0 directly. This is NOT every phase-covariant qubit channel (CP allows lambda^2<=k+ab).
+For pure inputs with population p, e(p)=g(v(p)), v(p)=t(p)(1-t(p))-lambda^2 p(1-p). Let f=co e, the lower convex envelope on [0,1].
+For any finite channel N and normalized |psi>=sqrt(1-p)|0>|psi0>+sqrt(p)|1>|psi1>, form Kraus-column matrices X,Y of N applied to psi0,psi1. The coefficients alpha=(1-p)(1-a), beta=p b, eta=(1-p)a, delta=p(1-b), K=lambda sqrt(p(1-p)) have alpha delta-beta eta=k p(1-p)>=K^2. Thus the matrix theorem gives
+S((Phi tensor N)(psi))>=e(p)+(1-p)S(N psi0)+p S(N psi1).
+
+Proposed capacity formula in bits:
+chi(Phi)=C(Phi)=max_p [h(a+k p)-f(p)]/ln 2.
+Proof of the one-use upper bound: refine any ensemble to pure signals, dephase the average output to upper-bound its entropy by h(t(mean p)), and use average e>=f(mean p). Attainment: the lower convex envelope at a given population is attained by a probability measure on at most two populations p0,p1 (one affine moment constraint); at each population use the equal-weight opposite-phase pair sqrt(1-p_i)|0> +/- sqrt(p_i)|1>. These at most four states have diagonal mean and average entropy f(p).
+For any pure ensemble on input Phi tensor N, apply the one-step matrix bound and subadditivity to the ensemble-average output. The conditional N outputs with weights q_l(1-p_l),q_l p_l form a valid ensemble with average exactly the N marginal. This gives chi(Phi tensor N)<=max_p[h(t(p))-f(p)]/ln 2+chi(N). Product ensembles give equality.
+Minimum output entropy: one-step bound gives >=min_p e(p)+Smin(N), with equality by products, so strong Smin additivity follows.
+For arbitrary finite N, iterate strong Holevo additivity against N^tensor n and regularize: C(Phi tensor N)=chi(Phi)+C(N). N itself need not have additive Holevo information. Mixed input signals can be refined to pure ones by entropy concavity.
+
+CLAIM LIMITATIONS AND PRIORITY TASKS
+The triangular-block entropy inequality is an external mathematical dependency, not a new theorem here. SSA/coherent-information data processing, convex envelopes and phase-paired alphabets are standard. GAD equality boundary, unital channels, entanglement-breaking region, and channels admitting a pure output are already covered by cited work. Potential new operational scope is interior nonunital thermal channels with strict extra dephasing outside EB. Check whether a known channel-composition closure or prior norm-compression inequality already covers it. Need explicit region/example, formal proof audit, full literature audit, numerical independently designed adversarial tests. No claim of quantum capacity or entanglement cost, all-qubit additivity, or new >7 result.
+
+EXPLORATORY EVIDENCE (not proof)
+test_thermal_extension.py tested 16000 random rectangular X,Y/coefficient cases; minimum target gap +8.00273991075e-7. A tempting DIFFERENT route claiming dephasing entropy gain always dominates scalar dephasing gain FAILED (minimum gap about -0.495). Do not use that route. The triangle+SSA argument above is distinct.
