@@ -13542,6 +13542,515 @@
         "basis": "platform_runtime_metadata",
         "evidence_sha256": "d1845bd2f71bab2cabf76b2b76caffc50c217a96d98287848d51643ee4d69241"
       }
+    },
+    {
+      "paper_id": "ARR-2026-5286KSE6RS984S9P",
+      "version": "v1",
+      "version_id": "arr:version:ad53b9f2-00c6-4b3c-9198-809c023d24b4",
+      "canonical_sha256": "e0581972f3882875b71c359369a09218f2b9f041551f59f2c4c09113edca439d",
+      "provider": "Anthropic",
+      "model_id": "claude-sonnet-5-5",
+      "assessed_at": "2026-10-21T06:32:23+02:00",
+      "prompt_version": "ARR-ASSESS-1.0",
+      "independence": "unknown",
+      "recommendation": "minor_revision",
+      "millennium_score": 3.5,
+      "overall_stars": 4,
+      "criteria": {
+        "correctness_confidence": {
+          "stars": 3,
+          "basis": "I re-derived by hand the constants in Theorem 1 (from (25)-(28), Lemma 15 and (27)), the Remark 9 constant (8/3)log17, the arithmetic in the proof of (3), the Jensen step, and the scaling and constant sqrt15/4^{4/3} in Prop. 14 given (22)-(23); all are consistent. I did not verify the Mathieu-based lower bound 1/sqrt8 of Thm 5, the Lemma 12 cone argument, the Theorem 13 parameter formulas (D, T, the explicit L,U,X,Y solution), or the uniformity claims, which are only sketched. No error found, but this is not full verification."
+        },
+        "rigor": {
+          "stars": 3,
+          "basis": "The finite certificate (Lemmas 6-7, Prop. 8) and the Theorem 1 / Prop. 18 proofs are explicit and checkable. The superalgebraic and one-root constructions (Sec. 6, Thm 13) compress many uniformity steps (implicit-function dependence on R, Gaussian domination, outer-arc bounds, 'for some fixed kappa') into prose. Existential, non-quantitative thresholds are stated honestly. The Lemma 12 existence proof is terse."
+        },
+        "novelty": {
+          "stars": 3,
+          "basis": "Novelty is incremental and relative to the cited arXiv:2608.02043 (Tan-Wang-Huang-Chen) and arXiv:2607.22017: removal of the log n factor in the exponent, exact threshold for interior-zero counts, a sharp circle-root limit 1/sqrt8, and a one-root n^{-1/6} construction. The paper discloses that the tools are classical and that the Erdos 973 negative answer was already known. I did not browse and could not verify the cited 2026 sources or search for antecedents; novelty is taken from the manuscript's own attributions."
+        },
+        "significance": {
+          "stars": 3,
+          "basis": "A clean, narrow classification of when polynomial differentiation residuals can be superalgebraically small under zero-location constraints, with a sharp circle-root constant. It is of interest to the niche of Schur-stable polynomial residual bounds, but it does not resolve a major open problem; the paper itself leaves the optimal rate for one interior root (exponents 1/6 vs 13/6) and fixed-budget rates open."
+        },
+        "reproducibility": {
+          "stars": 3,
+          "basis": "Constants and parameter formulas are explicit and checkable by the reader, and Section 9 describes exact and numerical diagnostics and states their limits (not interval-certified). No code or data is included in the PDF, and I executed nothing, so I cannot confirm that the described diagnostics were run or what they showed."
+        }
+      },
+      "summary": "The manuscript studies the infimum of ||P'-lambda P||_2/||P||_2 over degree-n polynomials with zeros in the closed disk, as a function of the number M of interior zeros. Main claims: (i) a finite-M lower bound (Thm 1) via a reciprocal identity, Mahler-type multiplication estimates and a Jensen estimate on a semicircle; (ii) an exact criterion that superalgebraic residual decay is possible iff the budget b_n tends to infinity (Thm 2, via the upper construction of Thm 4); (iii) a universal exp(-C sqrt n) lower bound with C > sqrt((8/3)log17), explicit exp(-3 sqrt n) for n >= 10^4 (Thm 3), built on a finite certificate; (iv) a sharp limit 1/sqrt8 for circle-only zeros (Thm 5); (v) one interior zero already gives O(n^{-1/6}) with an explicit family constant (Thm 13, Prop. 14) and a universal n^{-13/6} lower bound (Prop. 18); (vi) a polynomial barrier for a fixed root radius (Prop. 19). The paper is candid about non-optimality, non-quantitative thresholds, and its reliance on prior work. In the parts I re-derived (Thm 1 constants, Remark 9, Prop. 14 scaling, the arithmetic of (3)) I found no error; the heavy analytic constructions and the Mathieu bound are only sketched and I did not fully verify them. I did not browse or run code. Overall a competent, honest, incremental technical contribution.",
+      "strengths": [
+        "Theorem 1 gives a fully explicit, all-degree lower bound whose proof is short and checkable (reciprocal identity, Poisson-kernel positivity, restricted-arc Jensen, Lemma 15).",
+        "The finite certificate (Prop. 8) turns an asymptotic claim into explicit parameter conditions, with a concrete threshold n >= 10^4 for exp(-3 sqrt n).",
+        "Theorem 2 gives a sharp characterization (b_n -> infinity) combining an upper construction with the Theorem 1 obstruction.",
+        "Careful and honest scoping: non-sharpness, existential thresholds, prior results and the limits of numerical checks are all stated explicitly."
+      ],
+      "weaknesses": [
+        "The upper constructions (Thm 4, Thm 13, Lemma 12) are proved by compressed sketches; uniformity in n, k and the implicit-function step are asserted rather than fully quantified, so independent verification is hard.",
+        "Large gaps remain: 1/6 vs 13/6 for one interior zero, exp(-C sqrt n) vs superalgebraic bounds, and no quantitative M_A, C_A, N_A.",
+        "Novelty is relative to two very recent arXiv preprints and could not be independently checked here.",
+        "The numerical diagnostics are described but not included in the PDF, and the paper says they are not certified; the Mathieu-expansion step in Thm 5 relies on an asymptotic expansion used uniformly with only brief justification."
+      ],
+      "potential_errors": [
+        "Thm 5 lower bound: the uniform-in-lambda use of the Mathieu asymptotic E(L) = -L + sqrt(L/2) - 1/16 + O(L^{-1/2}) on the window lambda = n/2 + O(sqrt n) and the odd-degree antiperiodic case are only briefly justified; the exact limit 1/sqrt8 depends on this. Possible gap, not shown to be an error.",
+        "Lemma 12: the passage from 'dual cone is zero' to 'finite union of columns generates R^{K-1}' and the rational strictly positive kernel vector is terse; plausible but unverified.",
+        "Thm 13: the explicit solution of D(a,c) = d_n, T(a,c) = t_n and the claim that the 34 residue classes of n are handled uniformly were not re-computed by me."
+      ],
+      "strong_novelty_candidates": [],
+      "unresolved_material_objections": [],
+      "assessment_id": "arr:assessment:2a8e351e-63d5-4649-a857-bb824ccc80c8",
+      "source_response_sha256": "4d7a4aa89c240d36cacf47242ce8cf618f7bf671dc52332d1852867e4d148acf"
+    },
+    {
+      "paper_id": "ARR-2026-5286KSE6RS984S9P",
+      "version": "v1",
+      "version_id": "arr:version:ad53b9f2-00c6-4b3c-9198-809c023d24b4",
+      "canonical_sha256": "e0581972f3882875b71c359369a09218f2b9f041551f59f2c4c09113edca439d",
+      "provider": "Anthropic",
+      "model_id": "claude-haiku-5-5",
+      "assessed_at": "2026-10-21T06:38:37+02:00",
+      "prompt_version": "ARR-ASSESS-1.0",
+      "independence": "unknown",
+      "recommendation": "major_revision",
+      "millennium_score": 2.0,
+      "overall_stars": 2,
+      "criteria": {
+        "correctness_confidence": {
+          "stars": 2,
+          "basis": "Checked by hand: Theorem 1 chain (Lemmas 6, 7, 15, Prop 8, Jensen step, Cor. 16 arithmetic), the rotated quadratic form (4), the Mathieu asymptotics E(L)=a0(2L)/4, the one-zero equations (19) and their explicit solution, the B'/B identity, and the Gaussian constants in Prop. 14. Not verified: Theorem 4 (Lemma 12 cone argument, implicit-function step with n-dependent parameters), the asymptotic error bounds in Theorem 13, Prop. 18 and Prop. 19 details, and the padding step in Theorem 2. The padding step has a material gap (see objections). No code was executed."
+        },
+        "rigor": {
+          "stars": 2,
+          "basis": "Theorem 1, Prop. 8, Theorem 3 and Theorem 5 are argued in reasonable detail with explicit constants. Theorem 2 (exact-count sufficiency) and parts of Theorem 4 and Section 9 are sketched, and some claims are asserted rather than proved (dominated convergence in Prop. 14, cancellations in Theorem 4, the 'separate calculation' and 'rational checks' in Section 9)."
+        },
+        "novelty": {
+          "stars": 2,
+          "basis": "The paper says it builds on Tan-Wang-Huang-Chen (arXiv:2608.02043, restricted residual exp(-(1+o(1)) sqrt(n) log n)) and Luo-Yang-Zhu (arXiv:2607.22017) and Komarov. Theorem 3 improves the Tan et al. exponent to exp(-C sqrt(n)), which is a plausible new step, but its priority was not established here. The Theorem 13 one-interior-zero construction is new as far as I can judge, but its asymptotic rate is only an upper bound, and Corollary 10 is weaker than the Luo-Yang-Zhu result (see errors)."
+        },
+        "significance": {
+          "stars": 3,
+          "basis": "If correct, Theorem 1 (exact polynomial finite-count residual bound), Theorem 5 (1/sqrt(8) circle-root limit) and the one-interior-zero threshold give a clean picture of how interior zeros control the residual. The main superalgebraic sufficiency claim is the most significant result, but it depends on the step flagged below."
+        },
+        "reproducibility": {
+          "stars": 2,
+          "basis": "Constructions are explicit (Theorem 13 formulas, Prop. 8 parameter choices, Theorem 3 at n=10^4), which helps. Proof of Theorem 4 and the asymptotic constant in Prop. 14 depend on heuristic or unpublished steps. Supplementary computations are described but not provided to me, and the paper itself says its numerics do not certify the limits."
+        }
+      },
+      "summary": "The manuscript studies the normalized residual rho(P) = ||P' - lambda P||_2 / ||P||_2 for polynomials of degree n with all zeros in the closed unit disk and asks how the number of strictly interior zeros controls how small the residual can be. Main claims: (i) if P has exactly M interior zeros, rho_lambda(P) >= n / (2 sqrt(2) 16^M (n+2M+4)^(2M+2)) (Theorem 1), so bounded interior counts force at least polynomial residuals; (ii) unrestricted and restricted infima s_n, r_n are at least exp(-C sqrt(n)) with C_0 = sqrt((8/3) log 17) (Theorem 3); (iii) if all zeros lie on the circle, the limit of the infimum is 1/sqrt(8) (Theorem 5); (iv) one interior zero permits residual O(n^(-1/6)) (Theorem 13) with asymptotic constant sqrt(15)/4^(4/3) for that family (Proposition 14); (v) superalgebraic decay is possible iff the interior count b_n tends to infinity (Theorem 2, Theorem 4). I verified the arithmetic and logic of Theorem 1, Proposition 8 and Theorem 3 at the checked points, the circle-root quadratic form and limit, and the one-zero construction equations. The superalgebraic sufficiency in Theorem 2 with exactly b_n interior zeros is not supported as written: the padding step multiplies a superalgebraically small polynomial by a boundary factor of comparable degree, and neither the residual nor the degree bookkeeping survives that step. The 'at most b_n' version seems to follow from Theorem 4 directly, but Theorem 4 itself was not fully checked. I did not verify the Luo-Yang-Zhu, Tan et al. or Komarov results beyond their abstracts and search snippets.",
+      "strengths": [
+        "Theorem 1 is an explicit, checkable finite-degree lower bound. Its chain (Lemma 6 normalization and separation, Lemma 7 analytic estimate, Proposition 8 Cesaro-type certificate, the Jensen semicircle argument, and Lemma 15) is internally consistent, and I checked the exponent 2M+2 and the constant 2 sqrt(2) 16^M.",
+        "Proposition 8 and the explicit parameters in Section 4 (y = C sqrt(n), r = y/(8n), K = ceil((2+t)/eta)) are verified at the checked points, including the n = 10^4 numerics (e^8 > 2 sqrt(10001), e^3 > 18 > 17, B < 1/(5n) < 1/42).",
+        "Theorem 5's quadratic-form identity (4) after the phase rotation is correct, and g_n(lambda) >= (lambda - (n+1)/2)^2 - (2n+1)/4 gives the window needed for the 1/8 minimum. The Mathieu identification E(L) = a_0(2L)/4 and the expansion giving 1/8 are consistent.",
+        "Theorem 13's construction is algebraically consistent: the identities D(a,c) = -30a-4c-17 and T(a,c) = -15a/(1-a) - 2c/(1-c) match the circle-root moments, the quadratic 15UX^2 - (UL+221)X + 15L = 0 factors correctly through (UL-289)(UL-169), and the limit point (a,c) = (-2/3, 3/4) with X = 5/3, Y = 1/4 checks out.",
+        "The Gaussian constant chain in Proposition 14 (15 * 4^(-8/3) / sqrt(2 pi) divided by 1/sqrt(2 pi n)) gives sqrt(15)/4^(4/3) n^(-1/6), as stated.",
+        "The paper states its limitations explicitly (no optimal rate for one interior zero, no quantitative bounds on M_A, C_A, N_A, numerics not certified, priority not claimed)."
+      ],
+      "weaknesses": [
+        "Theorem 2, sufficiency with exactly b_n interior zeros (parts 1 and 3, and the abstract's 'exactly b_n'): Theorem 4 polynomials already have degree n with M_j interior zeros. The padding multiplies a Theorem 4 polynomial by B_6^u (1+z)^v of degree n - M_j, which produces degree about 2n. The text does not say how degree n is restored. The residual of a product is D(Q' - Q'(0)Q) + Q(D' - D'(0)D), so the residual of Q does not survive multiplication by a factor D; for circle-root factors such as D, Theorem 5 gives a residual lower bound of about 1/sqrt(8), which the text does not show is cancelled. A toy check: 1 has residual 0, but 1+z has residual 1/sqrt(2) with P(0)=1.",
+        "Theorem 4 (superalgebraic upper bound) is the core construction, and its verification is sketched. Lemma 12 (finite positive moment cone) is argued by a rational-polyhedron argument that I did not check line by line. The implicit-function step in Section 6.1 uses n-dependent parameters (t_n, u_n) and is not uniform in the stated way. The global bound (17)-(18) and the cancellation scheme are sketched.",
+        "Proposition 14 identifies the asymptotic constant of the one-zero family, but the justification is a heuristic (dominated convergence, polynomial-product tail estimates) and the numerical checks are on rounded parameters, as the paper acknowledges. The constant is a property of the family only, and the paper says so.",
+        "Corollary 10 is presented as a quantitative refinement of Luo-Yang-Zhu, but its bound M_n >= e^(-3 sqrt(n))/n is much weaker than the exp(-lambda n) statement that the search snippet attributes to arXiv:2607.22017 for every fixed lambda. This is a framing error, not just a weaker constant.",
+        "Section 9 refers to a 'separate calculation by the same involved model reviewer' covering all 34 degree classes, supplementary exact checks, and high-precision evaluations. These are not included in the artifact and cannot be verified from it. They should not be cited as evidence of correctness.",
+        "The abstract's sufficiency claim for superalgebraic decay with exactly b_n interior zeros is stronger than what Theorem 2's proof supports (see first weakness). The 'at most b_n' form is the part the proof can support."
+      ],
+      "potential_errors": [
+        "Theorem 2 part 3 / 1 implies 3 (exact count b_n with P(0)=1, real coefficients, o(n^(-A)) restricted residual): the 'padding' step as written changes degree and residual; the 'at most b_n' version (part 2) does not need padding and should be stated separately.",
+        "Corollary 10: the claim 'strengthens the scale in [1]' is fine, but 'the earlier qualitative conclusion of [2] remains fully credited' and 'quantitative refinement' of [2] conflict with the stronger exp(-lambda n) bound the snippet attributes to [2]. The corollary should be reframed as a weaker, independent bound.",
+        "Proposition 14 gives asymptotic equality rho(P_n) ~ sqrt(15)/4^(4/3) n^(-1/6). The formula is the Gaussian computation of the family, but the proof of the limit is sketched, and the displayed normalization of G_n(e^(iu/sqrt(n))) relies on lambda_n/n -> 1/2 without a stated uniform error bound."
+      ],
+      "strong_novelty_candidates": [
+        "Theorem 3: exp(-C sqrt(n)) lower bound for the unrestricted and restricted residual infima with C > sqrt((8/3) log 17) and explicit exp(-3 sqrt(n)) for n >= 10^4, improving the exp(-(1+o(1)) sqrt(n) log n) bound attributed to Tan et al. Priority was not established here; the search snippet for 2608.02043 is consistent with the attribution.",
+        "Theorem 5: for circle-root polynomials the infimum of ||P' - lambda P||/||P|| tends to 1/sqrt(8), with the restricted version also tending to 1/sqrt(8). Not checked against the literature beyond the Komarov and Erdelyi-Hardin-Saff references.",
+        "Theorem 13 and Proposition 18: one interior zero suffices for residual tending to zero (O(n^(-1/6))), and any single interior zero forces residual at least n^(-13/6)/(512 sqrt(2) e^3) at n >= 4096. The minimal interior count of one is a clean statement if the construction holds."
+      ],
+      "unresolved_material_objections": [
+        "The padding step in the proof of Theorem 2 (sufficiency with exactly b_n interior zeros, parts 1 implies 3, and the abstract's 'exactly b_n interior zeros' claim) is not supported as written. Multiplying a Theorem 4 polynomial by the boundary factor B_6^u (1+z)^v changes the degree to about 2n and the restricted residual to a value of order 1, since the residual of a product is not the residual of its factor, and the text gives no argument that restores degree n and small residual. The superalgebraic sufficiency 'with exactly b_n interior zeros' therefore needs a separate construction or a correction to the claim."
+      ],
+      "assessment_id": "arr:assessment:d17c0926-c035-44bd-a3b6-004b9174e343",
+      "source_response_sha256": "7f42e829c6626e49270512d94ef6cac325d47b3462abcdca2dc3b414c6239785"
+    },
+    {
+      "paper_id": "ARR-2026-5YJX444B6M95ZTG4",
+      "version": "v1",
+      "version_id": "arr:version:43861a4b-558a-413c-8864-386538badd98",
+      "canonical_sha256": "a6382c9eb75c5b60b877987e168e4d303f9a12b93ed6159a0aaeb11f4d3c1e3e",
+      "provider": "Anthropic",
+      "model_id": "claude-sonnet-5-5",
+      "assessed_at": "2026-10-21T06:32:38+02:00",
+      "prompt_version": "ARR-ASSESS-1.0",
+      "independence": "unknown",
+      "recommendation": "major_revision",
+      "millennium_score": 4.4,
+      "overall_stars": 4,
+      "criteria": {
+        "correctness_confidence": {
+          "stars": 3,
+          "basis": "I rechecked by hand the three-vertex decomposition of Theorem 4 (vertex coefficients, weights, determinant u, Lemma 3 entropy g(u)), the Lemma 5 parameter identification (alpha delta - beta eta = k p(1-p) >= lambda^2 p(1-p)), the Theorem 1 converse/achievability logic, and the arithmetic of Proposition 12 (reversed parameters 1/4, 1/8, 5/8, 5/48 sum correctly; 1259712 > 823543). I found no error. However the whole result rests on Lemma 2, an external 2026 inequality that I could not verify; that caps my confidence."
+        },
+        "rigor": {
+          "stars": 4,
+          "basis": "Proofs are explicit, boundary cases are treated (zero row mass, u=0, p=0,1, t=0,1), external theorems are stated precisely with their sources, and numerical results are labeled as floating-point illustrations. Some steps are terse (convex-roof concavity/continuity in Section 6, Carathéodory-type extremal-measure arguments in Prop. 8 and eq. (10)) and are asserted rather than fully worked."
+        },
+        "novelty": {
+          "stars": 4,
+          "basis": "The extension from the amplitude-damping/pure-output boundary (lambda^2=k) to the full Davies region, strong convex-roof superadditivity, complement capacity additivity, reverse-channel closure inside the Davies family and the nonunital strict Choi-cost separation appear to be new relative to the cited work; the paper is honest that the key inequality is not its own. My web searches (two queries) located arXiv 2609.28592 but gave no evidence of a prior full-Davies additivity proof; I could not read the OpenAI note or the full text of 2609.28592, so priority is unchecked."
+        },
+        "significance": {
+          "stars": 4,
+          "basis": "If correct, additivity of Holevo information and a single-letter classical capacity for all qubit Davies channels (including the complementary channel) would settle a long-standing class (generalized amplitude damping) and give a nontrivial simulation-cost result. The value is largely derivative of the Tang et al./OpenAI inequality, and the result is confined to one-qubit memoryless channels, so it is strong but not field-shaping."
+        },
+        "reproducibility": {
+          "stars": 3,
+          "basis": "Formulas are explicit and examples have exact parameters, but the scripts and supplement were not available to me, I ran no code, and the numerical tables (e.g., capacity 0.5039 bits, 4-signal optimizers) are unverified by me. The author states no interval certification was done."
+        }
+      },
+      "summary": "The manuscript extends a recent triangular block-entropy inequality (Tang et al. 2026; OpenAI 2026) from amplitude damping and generalized amplitude damping on the boundary lambda^2=k to the whole qubit Davies region 0<=lambda^2<=k, via a third vertex obtained from strong subadditivity, and derives: a population-resolved output-entropy bound, strong convex-roof superadditivity, additivity of Holevo information and classical capacity C=chi for the channel and its complement with any partner, an explicit scalar convex-envelope formula, formation entropy in the Stinespring range, and parallel simulation cost of the complementary channel via a reverse-channel closure, plus a nonunital example where simulation cost strictly exceeds Choi-state cost. My hand check of the main derivations (Thm 4, Lemma 5, Thm 1, Prop 12 arithmetic) found them consistent. The central dependence on Lemma 2, a 2026 result I could not verify, and uncertified numerics are the principal reasons for a major-revision rating; no internal error was found. I did not execute code or read supplementary files.",
+      "strengths": [
+        "Clear, honest delineation of antecedents (Tang et al., OpenAI, Hellmund-Uhlmann, Wilde, Amosov) and of what is not claimed (original channel simulation cost, quantum capacity, adaptive tasks).",
+        "Third-vertex argument in Thm 4 is short and checks out, including the sharpness remark (X=Y gives equality).",
+        "Reverse-channel closure inside the Davies family (k_p, lambda_p^2 <= k_p) is a neat, verifiable structural step enabling the simulation result.",
+        "Exact rational counterexample in Prop 12 with checkable arithmetic; careful limitation statements."
+      ],
+      "weaknesses": [
+        "All main theorems depend on Lemma 2, an external 2026 inequality not proved here; one of the sources is a non-peer-reviewed repository note.",
+        "Several steps are sketched (continuity and concavity of G_M, extremal measures with at most two/three atoms, Kraus infimum arguments, passage from Choi-state cost to reverse-channel Stinespring range).",
+        "Numerical evidence (tables, 16000 block tests, 'Astra' audits) is floating-point only, not certified, and not independent; the AI-assisted process and prior AI review are disclosed but unreviewed by humans.",
+        "Scope limited to lambda^2 <= k (not the full phase-covariant CP region lambda^2 <= k+ab), and to the complementary channel for simulation cost; original channel simulation cost remains open.",
+        "Section 8 Lipschitz constant and hull-optimizer claims use m>0 and exclude boundary cases."
+      ],
+      "potential_errors": [
+        "Prop. 12: equality G_N(p)=J(p) near p=1/2 requires the concavity condition (negative quadratic coefficient of the reversed determinant) to hold at the relevant interior reversed-population argument for p in an open interval; the manuscript states this briefly and I only checked it at p=1/2 (5/48 - 25/64 = -55/192).",
+        "Section 6: existence of a diagonal maximizer of G_{Phi^c} by phase-averaging and concavity of G_M relies on an inf-over-Kraus argument whose handling of singular inputs is only outlined.",
+        "Eq. (10)/Prop. 8: finite-support extremality (at most two or three populations) is argued by perturbation without explicit treatment of endpoint atoms and the moment constraint together.",
+        "Theorem 6 for Phi^c uses S(N^c(psi_j)) = S(N(psi_j)) for pure conditional branches; valid, but the identification of the Stinespring dilation used in Section 5 with the one in Lemma 5 is not spelled out."
+      ],
+      "strong_novelty_candidates": [
+        "Additivity of Holevo information and classical capacity (chi = C, any finite-dimensional partner) for all qubit Davies channels with extra dephasing (lambda^2 <= k), including the complementary channel.",
+        "Nonunital qubit complementary channel whose parallel simulation cost strictly exceeds the cost of its Choi state (Prop. 12), via reverse-channel closure in the Davies family.",
+        "Three-vertex extension (Thm 4) of the triangular block-entropy inequality to the thermal interior."
+      ],
+      "unresolved_material_objections": [
+        "The principal results rest on Lemma 2 (Tang et al. 2026, Thm 4.2; OpenAI 2026, Thm 2.1), an external inequality not proved in the manuscript and which I could not independently verify; if it fails in the stated generality (same finite rectangular shape, zero-weight conventions), Theorems 1, 4, 6, 9 and 10 fail."
+      ],
+      "assessment_id": "arr:assessment:d03c051d-6563-4683-9e54-004de61da9b6",
+      "source_response_sha256": "6bf0b4fb7689187a35943ffd0657b4ece76e2156cb08c63bcfc6945bfe38280c"
+    },
+    {
+      "paper_id": "ARR-2026-5YJX444B6M95ZTG4",
+      "version": "v1",
+      "version_id": "arr:version:43861a4b-558a-413c-8864-386538badd98",
+      "canonical_sha256": "a6382c9eb75c5b60b877987e168e4d303f9a12b93ed6159a0aaeb11f4d3c1e3e",
+      "provider": "Anthropic",
+      "model_id": "claude-haiku-5-5",
+      "assessed_at": "2026-10-21T06:39:26+02:00",
+      "prompt_version": "ARR-ASSESS-1.0",
+      "independence": "unknown",
+      "recommendation": "major_revision",
+      "millennium_score": 2.5,
+      "overall_stars": 3,
+      "criteria": {
+        "correctness_confidence": {
+          "stars": 3,
+          "basis": "Theorem 4 vertex decomposition (Sec. 2) and Lemma 5 block identification (Sec. 3) were checked by hand and by random numerical tests (no violation, residuals about 1e-15). Lemma 2 (external) and Lemma 3 were spot-checked numerically only. Eq. (17) and the equalities in Theorem 10, eq. (18) and Corollary 11 are not established by the text."
+        },
+        "rigor": {
+          "stars": 3,
+          "basis": "Theorem 1 achievability and converse, Theorem 6 and Theorem 9 follow from Lemma 5 and Lemma 2 with no gap found in the logic. Main gaps: sketched subadditivity (17), a garbled entropy chain in its proof, and an asserted endpoint-chord identity G=J near p=1/2 used in Proposition 12."
+        },
+        "novelty": {
+          "stars": 2,
+          "basis": "The paper states it does not claim Davies dynamics, the unital case, or the Hellmund-Uhlmann flat-roof criterion. arXiv:2609.14621 (Fang, 2026) reports that the GAD classical capacity equals the one-copy Holevo quantity, which overlaps Theorem 1 on the GAD boundary and is not cited. Novelty is limited to the extension to the full Davies family and the complementary/simulation statements."
+        },
+        "significance": {
+          "stars": 2,
+          "basis": "Results concern a single-qubit phase-covariant family. The capacity formula reduces to known cases (identity, constant channel). The parallel simulation results depend on the unproven step (17), so their significance is conditional."
+        },
+        "reproducibility": {
+          "stars": 3,
+          "basis": "The capacity table in Section 8 was reproduced to about 1e-9 on a grid (a=0.10, b=0.30 with lambda^2 = 0.60, 0.50, 0.10 and a=0.02, b=0.30 with lambda^2 = 0.514624). The Proposition 12 numbers (J(1/2) = 0.704192 bits, maximizer near 0.51695 with value 0.704713) and the Corollary 11 example (0.600874 bits) were reproduced by hand. The paper states that the scripts do not certify intervals. The OpenAI reference [3] could not be located, and the Tang et al. reference [2] was located only by title."
+        }
+      },
+      "summary": "The manuscript extends the thermal block entropy inequality to the qubit Davies family with additional dephasing, and derives from it a population-resolved bound (Lemma 5, Theorem 4), a Holevo capacity formula with additivity (Theorem 1), a strong convex-roof superadditivity (Theorem 6), a complementary-channel capacity formula (Theorem 9) and parallel simulation results (Theorem 10, Corollary 11, Proposition 12). I checked the block-matrix vertex decomposition and the population/coherence identification in Lemma 5 by hand, and ran random numerical tests of Theorem 4, Lemma 5, and the external Lemma 2 and Lemma 3 (no violation). Theorem 1 capacity values in Section 8 were reproduced numerically. The chain Lemma 5 to Theorem 1 additivity and Theorem 6 is logically consistent. The unproven step is the subadditivity (17) of channel formation, which the text only sketches, and it is needed for the equalities in Theorem 10, eq. (18) and Corollary 11. The Proposition 12 separation additionally needs the lower bound G_N(p) >= J(p) near p = 1/2, which is asserted but not written out. The bibliography also has unverified items (reference [3] not found; reference [2] found by title only), and the paper does not cite arXiv:2609.14621, which overlaps Theorem 1 on the GAD boundary. Scope: this is a review of this exact PDF only, based on my reading and on numerical spot checks, not on a formal verification or on the cited sources in full.",
+      "strengths": [
+        "Lemma 5 block identification is correct: Phi(|0><1|) = lambda |0><1|, the population map gives alpha, beta, eta, delta as stated, and alpha+beta+eta+delta = 1 and alpha*delta - beta*eta = k p(1-p) >= K^2 (checked by hand and numerically).",
+        "Theorem 4 vertex argument is correct in the stated coefficient triangle (vertices A, B, C; weights w_A = beta U1/u, w_B = eta U0/u); each vertex bound follows from Lemma 2 or Lemma 3 as stated.",
+        "Random numerical tests of Theorem 4 (10010 cases), Lemma 3 (4000), Lemma 2 (4000) and Lemma 5 (3000 explicit channels) found no violation (minimum residual about -1e-15).",
+        "The Theorem 1 capacity values in the Section 8 table were reproduced on a grid (0.503934606, 0.407849860, 0.296671802, 0.436551160 bits).",
+        "Corollary 11 example (a=0.1, b=0.3, lambda^2=0.5 gives 0.600874 bits) and Proposition 12 numbers (J(1/2) = 0.704192 bits, J'(1/2) > 0, maximizer near 0.51695 with value 0.704713) were reproduced.",
+        "Proposition 14 (discretization bound) is correct: the piecewise-linear error is at most 2L theta(1-theta)/N, and convex envelopes preserve uniform error bounds.",
+        "The paper is candid about scope: it disclaims the unital, entanglement-breaking and flat-roof cases as its own, and it states what is not determined."
+      ],
+      "weaknesses": [
+        "Eq. (17), subadditivity of channel formation E^ch_F(M x L) <= E^ch_F(M) + E^ch_F(L), is argued in a few lines. The step 'choose Kraus decompositions optimal for the two marginal input states of a joint purified input' does not justify the reduction for entangled joint inputs. Theorem 10, eq. (18) and the equality in Corollary 11 depend on it.",
+        "Proposition 12 needs the lower bound G_N(p) >= J(p) near p = 1/2. The text asserts that the endpoint-chord argument gives G_N = J exactly, but the lower-bound step is not written out (only the chord value and the concavity of e_p are shown).",
+        "Corollary 11 proof: the flatness step f_p(t) = e_p(t) = g((1-x)p(1-p)) is asserted by direct substitution and not displayed.",
+        "Theorem 6 (strong convex-roof superadditivity for arbitrary N) is a strong claim. The chain from Lemma 5 is logically consistent, but the paper does not compare it with known non-additivity results in the literature.",
+        "Reference [3] (OpenAI, Sept 2026) could not be located by search. Reference [2] (Tang et al., arXiv:2609.28592) was located only by title, so the cited statements Theorem 4.2 and Section 5 are unverified. Lemma 2 is an external dependency for Theorem 4 and Theorem 1.",
+        "Novelty: arXiv:2609.14621 (Fang, 2026) reports that the GAD classical capacity equals the one-copy Holevo quantity, which overlaps Theorem 1 on the GAD boundary and is not cited.",
+        "Section 8 numerics are floating-point only and are not interval-certified, as the paper states. The sampled values in Proposition 12 are therefore not evidence for the strict inequality."
+      ],
+      "potential_errors": [
+        "Proof of eq. (17): the displayed chain 'S(BB'|IJ) <= S(B|I) + S(B'|IJ) <= S(B|I) + S(B'|J)' is garbled; the chain rule and the conditioning step need to be written explicitly.",
+        "Proof of Theorem 1: the second output marginal is written as omega-bar_B, but it is the marginal on the complementary output B' (notation).",
+        "Theorem 9 proof says the complementary phase-averaging step 'cannot decrease its output entropy'; the direction needed (average output entropy at most H_E of the mean population) holds by covariance and concavity but is not written out.",
+        "Proposition 12: 'Theorem 10 identifies the channel cost with its maximum formation' is used both for the identity and for the lower bound. The lower bound uses only product inputs, while the identity needs eq. (17); the text should separate the two."
+      ],
+      "strong_novelty_candidates": [
+        "Theorem 1 additivity for the full Davies family via Lemma 5 (checked; the GAD boundary overlaps arXiv:2609.14621).",
+        "Proposition 12 strict separation between the parallel simulation cost and the Choi-state cost, conditional on the lower bound G_N(p) >= J(p) near p = 1/2 being established."
+      ],
+      "unresolved_material_objections": [
+        "Eq. (17) (subadditivity of channel formation for arbitrary M and L) is not established by the given argument, which reduces the joint entangled-input case to marginal Kraus decompositions without justification and displays a garbled chain. The upper bounds behind Theorem 10, the identity E^par_C = max formula in eq. (18) and the equality in Corollary 11 depend on it, so these results are unproven as stated."
+      ],
+      "assessment_id": "arr:assessment:83ca3376-8480-4bfd-885e-48dc4d10bf01",
+      "source_response_sha256": "df75137c4729d0660d4addba10fea2d2de6a6e9de6255926a11ccf3df42d09a5"
+    },
+    {
+      "paper_id": "ARR-2026-7W8BK4FK779W5ADJ",
+      "version": "v1",
+      "version_id": "arr:version:43d33522-87d1-4a10-a9cb-85574dcb648c",
+      "canonical_sha256": "bec07a6e5bb360ef1b8912959afcbf2d9d61674e728dd6ab4e612e9097dd66bc",
+      "provider": "Anthropic",
+      "model_id": "claude-sonnet-5-5",
+      "assessed_at": "2026-10-21T06:32:56+02:00",
+      "prompt_version": "ARR-ASSESS-1.0",
+      "independence": "unknown",
+      "recommendation": "minor_revision",
+      "millennium_score": 3.2,
+      "overall_stars": 3,
+      "criteria": {
+        "correctness_confidence": {
+          "stars": 4,
+          "basis": "I re-derived the necessity pairing (7)-(9) (means of F,G, skew-adjointness, minimisation at c=a^{1/3}), the factorisation/angular identity of Lemma 2, the Poisson-smoothing and quantile error bound of Prop. 4 (constants 4*pi*sigma/(N tau^2) and 256*pi*b^2/delta^3 check out), the local-analytic leading-term argument (17) and the k-harmonic scaling of Cor. 6. I also numerically checked Lemma 3 for c=0.3,1,2.5 (h_c(0)=1, Re h_c>=0 and w_c>=0 on the circle to ~1e-9). No error found; I did not check every boundary-exceptional-point detail rigorously."
+        },
+        "rigor": {
+          "stars": 3,
+          "basis": "Proofs are mostly complete but terse: Lemma 3 exceptional-point behaviour and the claim that f_c has no zero in the disc are asserted rather than shown; Prop. 5 compactness step (Fourier-degree drop) is sketched; Cor. 6 sufficiency for general k and negative omega is a brief reduction. Quantile selection is not certified."
+        },
+        "novelty": {
+          "stars": 3,
+          "basis": "Exact threshold |b|^{2/3}<1+a^{2/3} for the Liu-Fitzsimmons family (arXiv:2607.16171, which I confirmed exists and only gives a sufficient nonexistence region |b|>=2(a+1) per this paper) appears to be new relative to what I found; but tools (Fejer-Riesz, Hilbert transform, positive harmonic functions, binary-form SOS) are classical and unbounded degree is known (Ahmadi-Parrilo). I did not fully read the Liu-Fitzsimmons text, so overlap beyond their abstract is unchecked."
+        },
+        "significance": {
+          "stars": 2,
+          "basis": "Complete sharp classification for one explicit two-parameter family and its single-harmonic generalisation; useful as a clean model of the polynomial-converse failure, but it does not yield a general theorem or the minimum-degree rate, and certificate classification does not alter stability."
+        },
+        "reproducibility": {
+          "stars": 4,
+          "basis": "Argument is analytic and explicit with closed-form constants; the numerical diagnostics are described honestly as non-certified. I reproduced the key boundary identities numerically in floating point; I did not run the author's code."
+        }
+      },
+      "summary": "The manuscript proves that for the Liu-Fitzsimmons cubic family (a>0, b real) positive homogeneous polynomial weak certificates, strict ones (as products of positive quadratic forms), and local real-analytic certificates all exist exactly when |b|^{2/3}<1+a^{2/3}. Necessity uses a Hilbert-transform pairing with an explicit analytic test function; sufficiency uses an explicit limiting harmonic pair, Poisson smoothing and quantile discretisation giving an explicit degree bound O(delta^-3). Extensions to single even harmonics with angular speed and an SOS corollary are given. In my checks the main claims are correct and honestly scoped (no minimum-degree rate, no priority claim, AI assistance and non-independence of review disclosed). The result is a neat but narrow sharpening of a recent counterexample.",
+      "strengths": [
+        "Sharp, explicit and checkable threshold with strict exclusion of equality",
+        "Clean unification of polynomial, SOS and local analytic certificates",
+        "Explicit degree bound with verified constants",
+        "Honest limitations and disclosure of review status"
+      ],
+      "weaknesses": [
+        "Narrow scope: one parametric family plus single-harmonic variants",
+        "Some steps (Lemma 3 exceptional points, Prop. 5 compactness, Cor. 6 reductions) are terse",
+        "No matching degree rates; quantile construction not certified",
+        "Novelty depends on a very recent preprint; no formal verification"
+      ],
+      "potential_errors": [
+        "Lemma 3: boundary regularity at the simple zero z=eta^3... and pole of M_c is asserted briefly; I only checked numerically.",
+        "Cor. 6: claim that rotation by an angle flips b for general k and the omega<0 reduction are stated without detail (appear correct).",
+        "Cor. 7 rational-coefficient remark is only sketched."
+      ],
+      "strong_novelty_candidates": [
+        "Exact threshold |b|^{2/3}<1+a^{2/3} via the extremal harmonic problem with boundary limiting pair and its k-harmonic form |b|^{2/3}<a^{2/3}+|omega|^{2/3}"
+      ],
+      "unresolved_material_objections": [],
+      "assessment_id": "arr:assessment:2dea0dbd-cb03-4e3f-9b0b-5d0278b892c6",
+      "source_response_sha256": "7758471c8d4122f2cc640b4f689fe15b04313970162c7b1052a3570a84917911"
+    },
+    {
+      "paper_id": "ARR-2026-6TQRG7PY6C8JZR2D",
+      "version": "v1",
+      "version_id": "arr:version:4bbcde1c-c05b-4a7d-832c-c9666d31cb2f",
+      "canonical_sha256": "28ed664ca672ed1cdf776969c2872dc65b4e491c3d81eec32e615efeaafe097e",
+      "provider": "Anthropic",
+      "model_id": "claude-sonnet-5-5",
+      "assessed_at": "2026-10-21T06:32:44+02:00",
+      "prompt_version": "ARR-ASSESS-1.0",
+      "independence": "unknown",
+      "recommendation": "minor_revision",
+      "millennium_score": 3.4,
+      "overall_stars": 3,
+      "criteria": {
+        "correctness_confidence": {
+          "stars": 3,
+          "basis": "I re-derived by hand: the Cesaro test identity |1-a v_j|<=1 when a=2*eta (Prop. 6), the local estimate in Lemma 5, the parameter arithmetic for (1) and (2), P'_{m,k}(0)=n/2+1/4, D(a,c), T(a,c) and the moment identity (19), the cubic (18) for Theorem 11. All checked out. Not checked: the Mathieu uniformity in Thm 3, the outer-arc estimates and implicit-function steps of Thm 2 and 11, which are only sketched. I executed no code."
+        },
+        "rigor": {
+          "stars": 3,
+          "basis": "The lower bound (Lemmas 4-5, Prop. 6, Thm 1) is explicit and essentially complete. Theorem 3 (uniform Mathieu expansion over lambda) and the upper bounds of Thm 2 and 11 rely on phrases such as 'uniformly bounded', 'eventually', 'by compactness' without explicit constants; Lemma 10 is existence-only."
+        },
+        "novelty": {
+          "stars": 3,
+          "basis": "Removes the log n factor in exponent of the Tan-Wang-Huang-Chen bound (the abstract of arXiv:2608.02043 confirmed by me via fetch: exp(-(1+o(1)) sqrt(n) log n)) and allows arbitrary slope. The 1/sqrt8 limit via Mathieu and the interior-zero collapse appear new to me but I only did one targeted fetch, not a full literature search; no priority is established."
+        },
+        "significance": {
+          "stars": 3,
+          "basis": "Narrow, specialized problem (residual of P'-lambda P for Schur-stable polynomials, linked to Erdos Problem 973 already resolved negatively). The sharp zero-count threshold (zero vs one interior zero) is a neat structural statement; the exponent gap between sqrt(n) lower and n^-A upper bounds remains open."
+        },
+        "reproducibility": {
+          "stars": 3,
+          "basis": "Explicit constants and parameter choices make Theorem 1 checkable. Supplementary diagnostics are mentioned but not part of the PDF, so I could not inspect them; Theorems 2 and 11 give no effective constants."
+        }
+      },
+      "summary": "The manuscript proves (i) for circle-root polynomials, lim s_n = lim r_n = 1/sqrt8 via the Mathieu ground state; (ii) a stretched-exponential lower bound exp(-C sqrt n) for all disk-root polynomials with arbitrary complex slope for C > sqrt((8/3) log 17), explicit exp(-3 sqrt n) for n >= 10^4, improving a cited arXiv result by removing log n; (iii) superalgebraic upper bounds with a fixed number of interior zeros, and collapse n^{-1/6} with exactly one interior zero; (iv) a polynomial barrier if the root radius is fixed. The core lower bound is clean and my hand re-derivation of its steps and constants found no error. The upper-bound constructions are plausible, and the identities I checked are right, but they are argued at sketch level. Abstract claims match the stated theorems and limitations are honestly stated. The result is a solid specialized improvement, not field-shaping.",
+      "strengths": [
+        "Explicit, checkable finite certificate (Prop. 6) with a clever Cesaro test making |1-a v_j|<=1 exact.",
+        "Clear honest scoping: no claim of optimal rates, no claim on Erdos 973 yes/no beyond the earlier known answer, AI assistance and absence of human review disclosed.",
+        "Sharp dichotomy between zero and one interior zero, with the identities (18)-(19) correct on my check."
+      ],
+      "weaknesses": [
+        "Proofs of Theorems 2, 3 (upper/lower uniformity) and 11 are compressed; key uniform estimates are asserted rather than proved.",
+        "Lemma 10 and Theorem 2 are non-effective: no bounds on M_A, C_A, N_A.",
+        "Large gap between sqrt(n)-stretched-exponential lower bound and the upper bounds; optimal rates unresolved.",
+        "Novelty is relative to a very recent, only partially verified literature; the 2020 Komarov related text was not read in full by the author."
+      ],
+      "potential_errors": [
+        "Theorem 3: uniform-in-lambda use of the single-variable Mathieu expansion a_0(q) on the window c_n=O(sqrt n); the O(n^-1) remainder is quoted from NIST fixed-index asymptotics and its uniformity is asserted. I did not verify it.",
+        "Odd-degree argument that |p| in H^1 has the same quadratic-form values as p and passes to the periodic spectrum: stated briefly, not checked in detail.",
+        "Theorems 2 and 11: outer-arc bound 'poly(n) exp(-c n^{1/3})' and the implicit-function step rely on unstated uniformity over the 6 or 34 residue classes; not verified.",
+        "Prop. 12 uses sqrt(n+1)<=sqrt(2n) and (1+an)^K, fine, but q^K<1 and Delta>0 depend on a=1-q^2 with K=ceil(4/a); I only spot-checked."
+      ],
+      "strong_novelty_candidates": [
+        "Exact limit 1/sqrt8 of the circle-root residual (arbitrary slope and restricted) via Mathieu ground state.",
+        "Collapse of the residual with exactly one interior zero (rate n^{-1/6}), giving the exact zero-count threshold."
+      ],
+      "unresolved_material_objections": [],
+      "assessment_id": "arr:assessment:04b375d6-cbf6-440e-90e9-fdc83809c5e9",
+      "source_response_sha256": "170cf5690373a6c4bea6ad0b2bd43bf9b6900f0339e78205c8abe92c6611e903"
+    },
+    {
+      "paper_id": "ARR-2026-7W8BK4FK779W5ADJ",
+      "version": "v1",
+      "version_id": "arr:version:43d33522-87d1-4a10-a9cb-85574dcb648c",
+      "canonical_sha256": "bec07a6e5bb360ef1b8912959afcbf2d9d61674e728dd6ab4e612e9097dd66bc",
+      "provider": "Anthropic",
+      "model_id": "claude-haiku-5-5",
+      "assessed_at": "2026-10-21T06:58:51+02:00",
+      "prompt_version": "ARR-ASSESS-1.0",
+      "independence": "unknown",
+      "recommendation": "minor_revision",
+      "millennium_score": 3.4,
+      "overall_stars": 3,
+      "criteria": {
+        "correctness_confidence": {
+          "stars": 4,
+          "basis": "Hand-checked: the necessity chain (8)-(9) with u>=eps, mean(u)=1, skew-adjointness of H, and the minimisation over c at a^(1/3) giving (1+a^(2/3))^(3/2); boundary identities (10)-(13); h_c(0)=1; the Prop. 4 error bound. No gap found in the main chain. The Fejer-Riesz step in Lemma 2 relies on [1]; not re-derived."
+        },
+        "rigor": {
+          "stars": 4,
+          "basis": "Explicit analytic arguments: Lemma 2 identity and kernel positivity, Poisson smoothing (15), quantile error with sup|dK/dt| <= 2sigma/tau^2 and total 4 pi sigma/(N tau^2), and the integrating-factor argument in Prop. 5. Minor gaps: Lemma 2 factorisation is cited, not proved; explicit N is given only for b>1."
+        },
+        "novelty": {
+          "stars": 2,
+          "basis": "The sharp threshold for the family appears new, but the family, its global stability and the 2(a+1) obstruction rest on [1]. The arXiv abstract of [1] (2607.16171) describes one integer-coefficient example with no parameters a and b; the full text was not checked. Antecedents in [2] are unverified."
+        },
+        "significance": {
+          "stars": 2,
+          "basis": "Settles one explicit two-parameter family and its k-harmonic and angular-speed variants. Degree divergence (Prop. 5) is qualitative with no rate. The techniques (Fejer-Riesz, Herglotz representation, binary-form SOS) are classical, so impact on converse Lyapunov theory is limited."
+        },
+        "reproducibility": {
+          "stars": 2,
+          "basis": "Analytic constructions can be checked from the text. The numerical diagnostic (2048 factors, 8192 samples, margin about 0.1545) gives no code, data or enclosure, and the supplementary author computations are not supplied. The PDF alone does not let a reader reproduce the rational-factorization checks."
+        }
+      },
+      "summary": "The manuscript claims that the Liu-Fitzsimmons family r' = r^3(-a + b cos 2theta), theta' = r^2 admits positive homogeneous polynomial, strict polynomial and local analytic Lyapunov certificates exactly when |b| < (1+a^(2/3))^(3/2). I checked the necessity argument (Sec. 3), the boundary construction (Sec. 4), the quantile-based sufficiency with its degree bound (Prop. 4), the leading-term argument (Sec. 6) and the Corollary 6 extension to k-harmonics and angular speed. I found no invalidating error in these steps. Not verified: the cited literature, the Fejer-Riesz statement in [1], and the numerical diagnostic in Sec. 8. The main reservations are citation-dependent: novelty and the stability and obstruction claims for the family rest on [1], whose arXiv abstract does not show the parametric family. Recommendation: minor revision for clarity, explicit citation checks and a precise statement of what is new.",
+      "strengths": [
+        "Necessity (Sec. 3): pairing u and w with the test functions F_sigma, G_sigma from f_c(sigma e^{i phi}) gives <uF> + <wG> = c + a - b sigma c/s >= eps c. Checked by hand; the minimum over c at a^(1/3) gives (1+a^(2/3))^(3/2), strict because eps > 0.",
+        "Lemma 3 boundary identities (10)-(13) verified algebraically: z^(-1) cancellation, constant term equal to 1, and q_c = -(s^2/2) M_c |1-eta z|^2 on the circle. Boundary nonnegativity holds on both arcs.",
+        "Prop. 4 arithmetic checked: tau = delta/(4b), N = ceil(256 pi sigma b^2/delta^3), quantile error at most 4 pi sigma/(N tau^2) <= delta/4, margin at least delta/2. The bound is stated as sufficient, not minimal, and the text says so.",
+        "Corollary 6: the k-harmonic extension and the angular-speed scaling are consistent, and H = r^2 exp(-b sin(2k theta)/(k omega)) satisfies L_f H = -2a r^(2k) H as claimed.",
+        "Prop. 5 (degree divergence) is argued by compactness plus the same integrating-factor argument, which I checked. It makes no quantitative claim, and the text says so."
+      ],
+      "weaknesses": [
+        "Novelty and priority of the family, its global stability and the 2(a+1) obstruction rest on [1]. The arXiv abstract (2607.16171) describes one integer-coefficient example with no parameters a and b; this could not be confirmed from the abstract.",
+        "Lemma 2's Fejer-Riesz factorisation is cited to [1, Lemmas III.2-III.3] rather than proved in full. The statement is standard, but a reader must trust the cited form.",
+        "Prop. 4 gives an explicit N only for b > 1 and delta <= 2b. The case b in (0,1] is handled qualitatively in Sec. 5, so the degree bound is not stated uniformly over the region.",
+        "Prop. 5 gives no rate at which the minimal degree diverges as a decreases to a0. The word 'sharp' refers only to the threshold, and the abstract should say so.",
+        "Ahmadi-Parrilo [2, Thm 4.3] and Ahmadi-El Khadir [3, Prop. 6.1] are cited as antecedents of the degree and complexity results; these citations were not checked."
+      ],
+      "potential_errors": [
+        "Sec. 1 and Sec. 2 attribute to [1] the global stability of the whole family and the 2(a+1) nonexistence result. If the full text of [1] does not contain these, the stated prior-work claims are wrong; the abstract alone does not settle it.",
+        "Sec. 8: the margin 0.1545 (a = 1.2, b = 2 sqrt(2), sigma = 0.98, 8192 samples) is a floating-point sample with no code. It is not a certificate, so the text should not imply any numerical verification of Prop. 4.",
+        "Prop. 4 is stated for b > 1, yet Corollary 6 applies it to |b| > |omega| after rescaling. The explicit degree bound for b in (0,1] is therefore not covered, although h = 1 - ibz works there."
+      ],
+      "strong_novelty_candidates": [
+        "Sharp threshold |b| < (1+a^(2/3))^(3/2) for the Liu-Fitzsimmons family, with a matching strict product-of-quadratic-forms certificate (Thm. 1, Prop. 4) and its k-harmonic extension (Cor. 6). Novelty is conditional on the content of [1]."
+      ],
+      "unresolved_material_objections": [],
+      "assessment_id": "arr:assessment:73b26586-c9cf-4dd0-bd67-57c12180676d",
+      "source_response_sha256": "6e597f3db442f051f9c5960e5116d0c9ba7ebbed076e0ac1fe642f5ebfe6066c"
+    },
+    {
+      "paper_id": "ARR-2026-6TQRG7PY6C8JZR2D",
+      "version": "v1",
+      "version_id": "arr:version:4bbcde1c-c05b-4a7d-832c-c9666d31cb2f",
+      "canonical_sha256": "28ed664ca672ed1cdf776969c2872dc65b4e491c3d81eec32e615efeaafe097e",
+      "provider": "Anthropic",
+      "model_id": "claude-haiku-5-5",
+      "assessed_at": "2026-10-21T07:00:00+02:00",
+      "prompt_version": "ARR-ASSESS-1.0",
+      "independence": "unknown",
+      "recommendation": "major_revision",
+      "millennium_score": 3.0,
+      "overall_stars": 3,
+      "criteria": {
+        "correctness_confidence": {
+          "stars": 3,
+          "basis": "Checked in detail: Lemma 4 (Re v >= 1/2, |v|^2 <= Re v/eta), the Cesaro chain of Prop 6, the Theorem 1 parameter choice and limit (explicit n >= 10^4 case), the Mathieu reduction giving inf g_n -> 1/8, Prop 12 and Cor 8/9. No error found. Section 6 estimates only sketched and not verified."
+        },
+        "rigor": {
+          "stars": 3,
+          "basis": "Theorems 1 and 3 are argued step by step and the checked steps hold. Theorem 2 and Theorem 11 rely on asserted uniform estimates (interior-factor bound (16), local bound (17), outer-arc derivative bounds) and on the Lemma 10 cone argument, which writes a_l cos(l theta) as if a_l were real."
+        },
+        "novelty": {
+          "stars": 2,
+          "basis": "Theorem 1 strengthens r_n >= exp(-(1+o(1)) sqrt(n) log n) of Tan et al. (arXiv 2608.02043) and the negative answer to Erdos 973 is due to Luo et al. (arXiv 2607.22017); both confirmed by search snippets only. Theorem 3 (limit 1/sqrt 8) and the one-interior-zero threshold are new relative to these."
+        },
+        "significance": {
+          "stars": 3,
+          "basis": "A sharp circle-root limit (1/sqrt 8), a zero-count threshold (zero versus one interior zero) and superalgebraic decay with a fixed number of interior zeros bear on root-location and Erdos 973 questions. Optimal rates remain open, as the author states in Section 8."
+        },
+        "reproducibility": {
+          "stars": 2,
+          "basis": "Explicit constants, the degree-34 baseline and the Mathieu expansion allow hand checks. The claimed independent audit of 34 degree classes and the supplementary diagnostics are not part of the PDF, and no code or data link is given."
+        }
+      },
+      "summary": "Exact manuscript (SHA-256 verified); reviewer read all 14 pages. Main results: (Thm 1) s_n >= exp(-C sqrt n) for C > sqrt((8/3) log 17), explicitly exp(-3 sqrt n) for n >= 10^4; (Thm 2) superalgebraic decay of the restricted residual with a fixed number M_A of interior zeros; (Thm 3) the circle-root residual tends to 1/sqrt 8 via a Mathieu ground-state lower bound; (Thm 11) one interior zero gives residual O(n^{-1/6}). Checked in detail: Lemma 4 normalization, the Cesaro chain of Prop 6, the parameter choice and limit in Theorem 1, the Mathieu reduction and the value 1/8, Prop 12, Corollaries 8 and 9, and the Theorem 11 baseline identities (b_2 = 0, b_3 = -3/2, unique interior stationary point 5/24 of H(s), moment identity M_3 = (3/2)M_2 - N/4). No error found in these. Reference claims about Tan et al. and Luo et al. were checked only through search snippets, not the full papers. The reviewer did not execute code and did not verify the claimed audit. The main gap is Section 6, where uniform estimates behind Theorem 2 and Theorem 11 are asserted rather than written out; this is unresolved, hence major revision.",
+      "strengths": [
+        "Theorem 1 explicit bound exp(-3 sqrt n) for n >= 10^4 is internally consistent: the choice r = 3/(8 sqrt n), K, the ratio a/r -> 16, and the exponent limit -3C/4 + (2+t) log 17 / C < 0 were checked.",
+        "Theorem 3 reduces the residual to a Mathieu Rayleigh quotient via P(e^{it}) = e^{int/2} p(t); the trial slope lambda = n/2 + 1/4 gives 1/8, and the integral 1/16 - (3/4)(1/6) + (9/4)(1/12) = 1/8 was verified.",
+        "Theorem 11 baseline checks pass: H(s) = (1-6s/5)^30 (1-8s)^4 has unique interior stationary point 5/24; the identity M_3 = (3/2)M_2 - N/4 holds per conjugate pair; with v^3 - (3/2)v^2 = (n-1)/4 and sum v^2 = 0 one gets sum v^3 = 0.",
+        "Scope is stated honestly: Section 8 says the optimal rates and the one-root decay are not established and that finite checks do not certify norm asymptotics."
+      ],
+      "weaknesses": [
+        "Theorem 2 and Theorem 11 rest on uniform estimates (16), (17), the outer-arc bounds 'uniformly bounded normalized derivatives' and the Lemma 10 cone argument, all asserted rather than written out.",
+        "Lemma 10 proof: the step 'choose theta with a_l cos(l theta) < 0' assumes real a_l; with complex coefficients the choice of theta must be redone. Fixable, but the cone argument is only sketched.",
+        "Lemma 4: m_1 >= 1/2 is stated after nm_1 = d, but the argument actually uses the average of Re v_j >= 1/2; the text should say so.",
+        "The abstract and Section 8 cite an independent audit of 34 degree classes and supplementary diagnostics that are not included in the PDF, so these claims cannot be checked from the artifact.",
+        "The 'exact zero-count threshold' in the abstract should be stated precisely as the statement about zero interior roots versus one, since the optimal rate with one root is open."
+      ],
+      "potential_errors": [
+        "Section 2, secondary maximum bound (1+c)^6/[729(1-c)^2] < 1 on 0 <= c <= 3/4: the reviewer confirmed the value 1/16 at c = 1/2 only; the general-c derivation is not shown.",
+        "Section 6.1: the interior-factor inequality 1 + 8(x^2 - x - Y)s + 16 U V s^2 <= e^{4(U+V)s} for the pair groups is stated without derivation; the factor-level formula 1 + 4v(v-1)s was checked.",
+        "Section 6.1 Jacobian: the columns m_i(-1, 2 zeta_i, ..., K zeta_i^{K-1}) form a scaled Vandermonde and are nonsingular for distinct nodes, which was checked; the consequence for the implicit-function step is not spelled out."
+      ],
+      "strong_novelty_candidates": [
+        "Sharp limit of the circle-root normalized residual equal to 1/sqrt 8 via a Mathieu ground-state lower bound (Theorem 3); candidate only, literature checked for the two 2026 references only.",
+        "Zero-count threshold: one interior zero permits residual O(n^{-1/6}) while zero interior zeros do not (Theorems 3 and 11); candidate, pending the Section 6 estimates."
+      ],
+      "unresolved_material_objections": [
+        "Theorem 2 (superalgebraic decay) and Theorem 11 (O(n^{-1/6}) with one interior zero) depend on uniform local and outer-arc estimates ((16), (17), outer-arc derivative bounds) and on the Lemma 10 cone argument that are asserted, not proved. If these estimates fail, the superalgebraic and one-zero claims are unsupported. The reviewer could not verify them in full."
+      ],
+      "assessment_id": "arr:assessment:b6c9e28c-dcd4-460d-91a6-a0a2bda0f830",
+      "source_response_sha256": "3882273504c976d969786ddcca5bbab0d8d9e246205b077c7ecb11c3ced276ab"
     }
   ],
   "operator_notices": [
@@ -14326,6 +14835,150 @@
         {
           "path": "papers/2026/10/2X/ARR-2026-2XFZW9FFEA8SXTXF/metadata.json",
           "sha256": "e0b133f8143f93f38c72de023972f22a08ce4f0f64f49ab9e3a277e08cba84ac"
+        }
+      ]
+    },
+    {
+      "notice_id": "claude-subagents-provenance-20261021-ARR-2026-5286KSE6RS984S9P",
+      "message": "Provenance and counting note, 21 October 2026, by the author's Claude research session (not independent of the author). The reports (claude-sonnet-5-5 and claude-haiku-5-5) were produced by Claude Code subagents (Sonnet 5.5 / Haiku 5.5) in an imperfect clean room: disk access, inherited project instructions, no verifiable isolation. review_context and runtime_provenance are therefore omitted; independence is recorded as unknown. Model JSON is preserved unedited under registry/assessment-evidence/2026-10-21-claude-subagents/ and each evidence.json lists the operator edits (placeholder ids filled, independence set to unknown, assessed_at set to file modification time). No cost or tokens recorded. This registry counts all reports, one per base model, regardless of the independence field; docs/OPENROUTER_ASSESSMENTS.md says otherwise, but the code and MODEL_ASSESSMENT_POLICY.md govern.",
+      "paper_id": "ARR-2026-5286KSE6RS984S9P",
+      "version_id": "arr:version:ad53b9f2-00c6-4b3c-9198-809c023d24b4",
+      "canonical_sha256": "e0581972f3882875b71c359369a09218f2b9f041551f59f2c4c09113edca439d",
+      "recorded_at": "2026-10-21T08:30:00+00:00",
+      "affected_assessment_ids": [
+        "arr:assessment:2a8e351e-63d5-4649-a857-bb824ccc80c8",
+        "arr:assessment:d17c0926-c035-44bd-a3b6-004b9174e343"
+      ],
+      "source_files": [
+        {
+          "path": "papers/2026/10/52/ARR-2026-5286KSE6RS984S9P/metadata.json",
+          "sha256": "8b2959eb776f19fe0f95c9542d81bcc931eb4eb685ea676e48826d5068f95102"
+        }
+      ]
+    },
+    {
+      "notice_id": "claude-subagents-adjudication-20261021-ARR-2026-5286KSE6RS984S9P",
+      "message": "Adjudication dated 21 October 2026 by the author's Claude research session (not independent of the author, not a human referee) of the Haiku 5.5 report (major_revision, 2.00); report unedited. Objection: the padding step of Theorem 2 multiplies by a boundary factor and changes degree and residual. NOT CONFIRMED: main.tex lines 1236-1255; the factor B6^u(1+z)^v is already part of the polynomial (6u+v=n-M_j), conjugate pairs and real roots are moved radially inward, so degree, real coefficients and P(0) are kept and the restricted residual stays continuous; the counting (0<=q<=u, 0<=r<=4u+v, 2q+r=s) was checked exhaustively without failure. The remark that Corollary 10 is weaker than exp(-lambda n) is inverted: e^{-3 sqrt n}/n is much larger than e^{-lambda n} for large n, so the lower bound is stronger. The 2.00 score is kept. Revisable.",
+      "paper_id": "ARR-2026-5286KSE6RS984S9P",
+      "version_id": "arr:version:ad53b9f2-00c6-4b3c-9198-809c023d24b4",
+      "canonical_sha256": "e0581972f3882875b71c359369a09218f2b9f041551f59f2c4c09113edca439d",
+      "recorded_at": "2026-10-21T08:30:00+00:00",
+      "affected_assessment_ids": [
+        "arr:assessment:2a8e351e-63d5-4649-a857-bb824ccc80c8",
+        "arr:assessment:d17c0926-c035-44bd-a3b6-004b9174e343"
+      ],
+      "source_files": [
+        {
+          "path": "papers/2026/10/52/ARR-2026-5286KSE6RS984S9P/metadata.json",
+          "sha256": "8b2959eb776f19fe0f95c9542d81bcc931eb4eb685ea676e48826d5068f95102"
+        }
+      ]
+    },
+    {
+      "notice_id": "claude-subagents-provenance-20261021-ARR-2026-5YJX444B6M95ZTG4",
+      "message": "Provenance and counting note, 21 October 2026, by the author's Claude research session (not independent of the author). The reports (claude-sonnet-5-5 and claude-haiku-5-5) were produced by Claude Code subagents (Sonnet 5.5 / Haiku 5.5) in an imperfect clean room: disk access, inherited project instructions, no verifiable isolation. review_context and runtime_provenance are therefore omitted; independence is recorded as unknown. Model JSON is preserved unedited under registry/assessment-evidence/2026-10-21-claude-subagents/ and each evidence.json lists the operator edits (placeholder ids filled, independence set to unknown, assessed_at set to file modification time). No cost or tokens recorded. This registry counts all reports, one per base model, regardless of the independence field; docs/OPENROUTER_ASSESSMENTS.md says otherwise, but the code and MODEL_ASSESSMENT_POLICY.md govern.",
+      "paper_id": "ARR-2026-5YJX444B6M95ZTG4",
+      "version_id": "arr:version:43861a4b-558a-413c-8864-386538badd98",
+      "canonical_sha256": "a6382c9eb75c5b60b877987e168e4d303f9a12b93ed6159a0aaeb11f4d3c1e3e",
+      "recorded_at": "2026-10-21T08:30:00+00:00",
+      "affected_assessment_ids": [
+        "arr:assessment:d03c051d-6563-4683-9e54-004de61da9b6",
+        "arr:assessment:83ca3376-8480-4bfd-885e-48dc4d10bf01"
+      ],
+      "source_files": [
+        {
+          "path": "papers/2026/10/5Y/ARR-2026-5YJX444B6M95ZTG4/metadata.json",
+          "sha256": "73d0bcf5484e86100deca22e902c8a71fa3e8b7ef9379e1675cf96e597b25d35"
+        }
+      ]
+    },
+    {
+      "notice_id": "claude-subagents-adjudication-20261021-ARR-2026-5YJX444B6M95ZTG4",
+      "message": "Adjudication dated 21 October 2026 by the author's Claude research session (not independent of the author, not a human referee); reports unedited. Haiku 5.5 (major_revision, 2.50): subadditivity (17) is NOT CONFIRMED as an error; main.tex lines 492-510 cite Tang-Zhu-Bai-Wang (arXiv 2609.28592, Appendix C) and Lemma C.2 there states (C.4) for arbitrary finite-dimensional channels with the same entropy chain; the sketch is terse (editorial remark) but no logical gap was shown. VALID observation: arXiv 2609.14621 (Fang, 2026) claims the classical capacity of GAD channels equals the one-copy Holevo quantity, overlapping Theorem 1 on the GAD boundary, and is not cited; its proof was not read. Sonnet 5.5 (major_revision, 4.40): dependence on external Lemma 2 (Tang Thm 4.2 / OpenAI note) is material and cannot be adjudicated as an error; it remains a declared external dependence, unverified by the adjudicator. Revisable.",
+      "paper_id": "ARR-2026-5YJX444B6M95ZTG4",
+      "version_id": "arr:version:43861a4b-558a-413c-8864-386538badd98",
+      "canonical_sha256": "a6382c9eb75c5b60b877987e168e4d303f9a12b93ed6159a0aaeb11f4d3c1e3e",
+      "recorded_at": "2026-10-21T08:30:00+00:00",
+      "affected_assessment_ids": [
+        "arr:assessment:d03c051d-6563-4683-9e54-004de61da9b6",
+        "arr:assessment:83ca3376-8480-4bfd-885e-48dc4d10bf01"
+      ],
+      "source_files": [
+        {
+          "path": "papers/2026/10/5Y/ARR-2026-5YJX444B6M95ZTG4/metadata.json",
+          "sha256": "73d0bcf5484e86100deca22e902c8a71fa3e8b7ef9379e1675cf96e597b25d35"
+        }
+      ]
+    },
+    {
+      "notice_id": "claude-subagents-provenance-20261021-ARR-2026-6TQRG7PY6C8JZR2D",
+      "message": "Provenance and counting note, 21 October 2026, by the author's Claude research session (not independent of the author). The reports (claude-sonnet-5-5 and claude-haiku-5-5) were produced by Claude Code subagents (Sonnet 5.5 / Haiku 5.5) in an imperfect clean room: disk access, inherited project instructions, no verifiable isolation. review_context and runtime_provenance are therefore omitted; independence is recorded as unknown. Model JSON is preserved unedited under registry/assessment-evidence/2026-10-21-claude-subagents/ and each evidence.json lists the operator edits (placeholder ids filled, independence set to unknown, assessed_at set to file modification time). No cost or tokens recorded. This registry counts all reports, one per base model, regardless of the independence field; docs/OPENROUTER_ASSESSMENTS.md says otherwise, but the code and MODEL_ASSESSMENT_POLICY.md govern. The first Haiku 5.5 attempt for this paper was rejected by the schema validator (criteria basis over 600 characters); it is preserved in the evidence directory as not_imported_schema_rejected and the report was repeated.",
+      "paper_id": "ARR-2026-6TQRG7PY6C8JZR2D",
+      "version_id": "arr:version:4bbcde1c-c05b-4a7d-832c-c9666d31cb2f",
+      "canonical_sha256": "28ed664ca672ed1cdf776969c2872dc65b4e491c3d81eec32e615efeaafe097e",
+      "recorded_at": "2026-10-21T08:30:00+00:00",
+      "affected_assessment_ids": [
+        "arr:assessment:04b375d6-cbf6-440e-90e9-fdc83809c5e9",
+        "arr:assessment:b6c9e28c-dcd4-460d-91a6-a0a2bda0f830"
+      ],
+      "source_files": [
+        {
+          "path": "papers/2026/10/6T/ARR-2026-6TQRG7PY6C8JZR2D/metadata.json",
+          "sha256": "9f97f10b86024f420715b42fe6dd9577b72df7969085ec98ff0ee870615d9ed2"
+        }
+      ]
+    },
+    {
+      "notice_id": "claude-subagents-adjudication-20261021-ARR-2026-6TQRG7PY6C8JZR2D",
+      "message": "Adjudication dated 21 October 2026 by the author's Claude research session (not independent of the author, not a human referee); reports unedited. Haiku 5.5 (repeated, major_revision, 3.00) raises one material objection: Theorems 2 and 11 depend on uniform estimates ((16), (17), outer-arc bounds) and on the Lemma 10 cone argument, asserted rather than proved. NOT resolved and NOT refuted: it remains an open objection (a presentation weakness or sketched proof also noted by Sonnet 5.5, 3.40, minor_revision, without a formal objection), not a demonstrated error. Its minor remark on Lemma 10 ('a_l real') is NOT a flaw: the functional lives in R^(K-1) because the columns V(zeta) are real (main.tex lines 596-621), so the a_j are real by construction. An earlier slip claim (B'/B-3 without z) from the rejected first attempt was NOT confirmed: main.tex line 245 carries z. Revisable.",
+      "paper_id": "ARR-2026-6TQRG7PY6C8JZR2D",
+      "version_id": "arr:version:4bbcde1c-c05b-4a7d-832c-c9666d31cb2f",
+      "canonical_sha256": "28ed664ca672ed1cdf776969c2872dc65b4e491c3d81eec32e615efeaafe097e",
+      "recorded_at": "2026-10-21T08:30:00+00:00",
+      "affected_assessment_ids": [
+        "arr:assessment:04b375d6-cbf6-440e-90e9-fdc83809c5e9",
+        "arr:assessment:b6c9e28c-dcd4-460d-91a6-a0a2bda0f830"
+      ],
+      "source_files": [
+        {
+          "path": "papers/2026/10/6T/ARR-2026-6TQRG7PY6C8JZR2D/metadata.json",
+          "sha256": "9f97f10b86024f420715b42fe6dd9577b72df7969085ec98ff0ee870615d9ed2"
+        }
+      ]
+    },
+    {
+      "notice_id": "claude-subagents-provenance-20261021-ARR-2026-7W8BK4FK779W5ADJ",
+      "message": "Provenance and counting note, 21 October 2026, by the author's Claude research session (not independent of the author). The reports (claude-sonnet-5-5 and claude-haiku-5-5) were produced by Claude Code subagents (Sonnet 5.5 / Haiku 5.5) in an imperfect clean room: disk access, inherited project instructions, no verifiable isolation. review_context and runtime_provenance are therefore omitted; independence is recorded as unknown. Model JSON is preserved unedited under registry/assessment-evidence/2026-10-21-claude-subagents/ and each evidence.json lists the operator edits (placeholder ids filled, independence set to unknown, assessed_at set to file modification time). No cost or tokens recorded. This registry counts all reports, one per base model, regardless of the independence field; docs/OPENROUTER_ASSESSMENTS.md says otherwise, but the code and MODEL_ASSESSMENT_POLICY.md govern. The first Haiku 5.5 attempt for this paper was rejected by the schema validator (criteria basis over 600 characters); it is preserved in the evidence directory as not_imported_schema_rejected and the report was repeated.",
+      "paper_id": "ARR-2026-7W8BK4FK779W5ADJ",
+      "version_id": "arr:version:43d33522-87d1-4a10-a9cb-85574dcb648c",
+      "canonical_sha256": "bec07a6e5bb360ef1b8912959afcbf2d9d61674e728dd6ab4e612e9097dd66bc",
+      "recorded_at": "2026-10-21T08:30:00+00:00",
+      "affected_assessment_ids": [
+        "arr:assessment:2dea0dbd-cb03-4e3f-9b0b-5d0278b892c6",
+        "arr:assessment:73b26586-c9cf-4dd0-bd67-57c12180676d"
+      ],
+      "source_files": [
+        {
+          "path": "papers/2026/10/7W/ARR-2026-7W8BK4FK779W5ADJ/metadata.json",
+          "sha256": "ed44d2f94941144d9693a37c544d74661d63bd01ad9dfd0264bd833ebdbe478b"
+        }
+      ]
+    },
+    {
+      "notice_id": "claude-subagents-adjudication-20261021-ARR-2026-7W8BK4FK779W5ADJ",
+      "message": "Adjudication dated 21 October 2026 by the author's Claude research session (not independent of the author, not a human referee); reports unedited. Sonnet 5.5 (minor_revision, 3.20) and the repeated Haiku 5.5 (minor_revision, 3.40) raised no unresolved material objection, so nothing was adjudicated. Haiku notes that the novelty depends on the content of reference [1] (arXiv 2607.16171), of which only the abstract was read. Revisable.",
+      "paper_id": "ARR-2026-7W8BK4FK779W5ADJ",
+      "version_id": "arr:version:43d33522-87d1-4a10-a9cb-85574dcb648c",
+      "canonical_sha256": "bec07a6e5bb360ef1b8912959afcbf2d9d61674e728dd6ab4e612e9097dd66bc",
+      "recorded_at": "2026-10-21T08:30:00+00:00",
+      "affected_assessment_ids": [
+        "arr:assessment:2dea0dbd-cb03-4e3f-9b0b-5d0278b892c6",
+        "arr:assessment:73b26586-c9cf-4dd0-bd67-57c12180676d"
+      ],
+      "source_files": [
+        {
+          "path": "papers/2026/10/7W/ARR-2026-7W8BK4FK779W5ADJ/metadata.json",
+          "sha256": "ed44d2f94941144d9693a37c544d74661d63bd01ad9dfd0264bd833ebdbe478b"
         }
       ]
     }

@@ -1,0 +1,64 @@
+{
+  "paper_id": "ARR-2026-5YJX444B6M95ZTG4",
+  "version": "v1",
+  "version_id": "arr:version:43861a4b-558a-413c-8864-386538badd98",
+  "canonical_sha256": "a6382c9eb75c5b60b877987e168e4d303f9a12b93ed6159a0aaeb11f4d3c1e3e",
+  "provider": "Anthropic",
+  "model_id": "claude-sonnet-5-5",
+  "assessed_at": "2026-10-21T06:32:38+02:00",
+  "prompt_version": "ARR-ASSESS-1.0",
+  "independence": "unknown",
+  "recommendation": "major_revision",
+  "millennium_score": 4.4,
+  "overall_stars": 4,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 3,
+      "basis": "I rechecked by hand the three-vertex decomposition of Theorem 4 (vertex coefficients, weights, determinant u, Lemma 3 entropy g(u)), the Lemma 5 parameter identification (alpha delta - beta eta = k p(1-p) >= lambda^2 p(1-p)), the Theorem 1 converse/achievability logic, and the arithmetic of Proposition 12 (reversed parameters 1/4, 1/8, 5/8, 5/48 sum correctly; 1259712 > 823543). I found no error. However the whole result rests on Lemma 2, an external 2026 inequality that I could not verify; that caps my confidence."
+    },
+    "rigor": {
+      "stars": 4,
+      "basis": "Proofs are explicit, boundary cases are treated (zero row mass, u=0, p=0,1, t=0,1), external theorems are stated precisely with their sources, and numerical results are labeled as floating-point illustrations. Some steps are terse (convex-roof concavity/continuity in Section 6, Carathéodory-type extremal-measure arguments in Prop. 8 and eq. (10)) and are asserted rather than fully worked."
+    },
+    "novelty": {
+      "stars": 4,
+      "basis": "The extension from the amplitude-damping/pure-output boundary (lambda^2=k) to the full Davies region, strong convex-roof superadditivity, complement capacity additivity, reverse-channel closure inside the Davies family and the nonunital strict Choi-cost separation appear to be new relative to the cited work; the paper is honest that the key inequality is not its own. My web searches (two queries) located arXiv 2609.28592 but gave no evidence of a prior full-Davies additivity proof; I could not read the OpenAI note or the full text of 2609.28592, so priority is unchecked."
+    },
+    "significance": {
+      "stars": 4,
+      "basis": "If correct, additivity of Holevo information and a single-letter classical capacity for all qubit Davies channels (including the complementary channel) would settle a long-standing class (generalized amplitude damping) and give a nontrivial simulation-cost result. The value is largely derivative of the Tang et al./OpenAI inequality, and the result is confined to one-qubit memoryless channels, so it is strong but not field-shaping."
+    },
+    "reproducibility": {
+      "stars": 3,
+      "basis": "Formulas are explicit and examples have exact parameters, but the scripts and supplement were not available to me, I ran no code, and the numerical tables (e.g., capacity 0.5039 bits, 4-signal optimizers) are unverified by me. The author states no interval certification was done."
+    }
+  },
+  "summary": "The manuscript extends a recent triangular block-entropy inequality (Tang et al. 2026; OpenAI 2026) from amplitude damping and generalized amplitude damping on the boundary lambda^2=k to the whole qubit Davies region 0<=lambda^2<=k, via a third vertex obtained from strong subadditivity, and derives: a population-resolved output-entropy bound, strong convex-roof superadditivity, additivity of Holevo information and classical capacity C=chi for the channel and its complement with any partner, an explicit scalar convex-envelope formula, formation entropy in the Stinespring range, and parallel simulation cost of the complementary channel via a reverse-channel closure, plus a nonunital example where simulation cost strictly exceeds Choi-state cost. My hand check of the main derivations (Thm 4, Lemma 5, Thm 1, Prop 12 arithmetic) found them consistent. The central dependence on Lemma 2, a 2026 result I could not verify, and uncertified numerics are the principal reasons for a major-revision rating; no internal error was found. I did not execute code or read supplementary files.",
+  "strengths": [
+    "Clear, honest delineation of antecedents (Tang et al., OpenAI, Hellmund-Uhlmann, Wilde, Amosov) and of what is not claimed (original channel simulation cost, quantum capacity, adaptive tasks).",
+    "Third-vertex argument in Thm 4 is short and checks out, including the sharpness remark (X=Y gives equality).",
+    "Reverse-channel closure inside the Davies family (k_p, lambda_p^2 <= k_p) is a neat, verifiable structural step enabling the simulation result.",
+    "Exact rational counterexample in Prop 12 with checkable arithmetic; careful limitation statements."
+  ],
+  "weaknesses": [
+    "All main theorems depend on Lemma 2, an external 2026 inequality not proved here; one of the sources is a non-peer-reviewed repository note.",
+    "Several steps are sketched (continuity and concavity of G_M, extremal measures with at most two/three atoms, Kraus infimum arguments, passage from Choi-state cost to reverse-channel Stinespring range).",
+    "Numerical evidence (tables, 16000 block tests, 'Astra' audits) is floating-point only, not certified, and not independent; the AI-assisted process and prior AI review are disclosed but unreviewed by humans.",
+    "Scope limited to lambda^2 <= k (not the full phase-covariant CP region lambda^2 <= k+ab), and to the complementary channel for simulation cost; original channel simulation cost remains open.",
+    "Section 8 Lipschitz constant and hull-optimizer claims use m>0 and exclude boundary cases."
+  ],
+  "potential_errors": [
+    "Prop. 12: equality G_N(p)=J(p) near p=1/2 requires the concavity condition (negative quadratic coefficient of the reversed determinant) to hold at the relevant interior reversed-population argument for p in an open interval; the manuscript states this briefly and I only checked it at p=1/2 (5/48 - 25/64 = -55/192).",
+    "Section 6: existence of a diagonal maximizer of G_{Phi^c} by phase-averaging and concavity of G_M relies on an inf-over-Kraus argument whose handling of singular inputs is only outlined.",
+    "Eq. (10)/Prop. 8: finite-support extremality (at most two or three populations) is argued by perturbation without explicit treatment of endpoint atoms and the moment constraint together.",
+    "Theorem 6 for Phi^c uses S(N^c(psi_j)) = S(N(psi_j)) for pure conditional branches; valid, but the identification of the Stinespring dilation used in Section 5 with the one in Lemma 5 is not spelled out."
+  ],
+  "strong_novelty_candidates": [
+    "Additivity of Holevo information and classical capacity (chi = C, any finite-dimensional partner) for all qubit Davies channels with extra dephasing (lambda^2 <= k), including the complementary channel.",
+    "Nonunital qubit complementary channel whose parallel simulation cost strictly exceeds the cost of its Choi state (Prop. 12), via reverse-channel closure in the Davies family.",
+    "Three-vertex extension (Thm 4) of the triangular block-entropy inequality to the thermal interior."
+  ],
+  "unresolved_material_objections": [
+    "The principal results rest on Lemma 2 (Tang et al. 2026, Thm 4.2; OpenAI 2026, Thm 2.1), an external inequality not proved in the manuscript and which I could not independently verify; if it fails in the stated generality (same finite rectangular shape, zero-weight conventions), Theorems 1, 4, 6, 9 and 10 fail."
+  ]
+}

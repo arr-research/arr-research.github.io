@@ -1,0 +1,66 @@
+{
+  "paper_id": "PENDING_ARR_ID",
+  "version": "v1",
+  "version_id": "PENDING_VERSION_ID",
+  "canonical_sha256": "e0581972f3882875b71c359369a09218f2b9f041551f59f2c4c09113edca439d",
+  "provider": "Anthropic",
+  "model_id": "claude-haiku-5-5",
+  "assessed_at": "2026-10-21T06:33:26+02:00",
+  "prompt_version": "ARR-ASSESS-1.0",
+  "independence": "not_involved_in_manuscript",
+  "recommendation": "major_revision",
+  "millennium_score": 2.00,
+  "overall_stars": 2,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 2,
+      "basis": "Checked by hand: Theorem 1 chain (Lemmas 6, 7, 15, Prop 8, Jensen step, Cor. 16 arithmetic), the rotated quadratic form (4), the Mathieu asymptotics E(L)=a0(2L)/4, the one-zero equations (19) and their explicit solution, the B'/B identity, and the Gaussian constants in Prop. 14. Not verified: Theorem 4 (Lemma 12 cone argument, implicit-function step with n-dependent parameters), the asymptotic error bounds in Theorem 13, Prop. 18 and Prop. 19 details, and the padding step in Theorem 2. The padding step has a material gap (see objections). No code was executed."
+    },
+    "rigor": {
+      "stars": 2,
+      "basis": "Theorem 1, Prop. 8, Theorem 3 and Theorem 5 are argued in reasonable detail with explicit constants. Theorem 2 (exact-count sufficiency) and parts of Theorem 4 and Section 9 are sketched, and some claims are asserted rather than proved (dominated convergence in Prop. 14, cancellations in Theorem 4, the 'separate calculation' and 'rational checks' in Section 9)."
+    },
+    "novelty": {
+      "stars": 2,
+      "basis": "The paper says it builds on Tan-Wang-Huang-Chen (arXiv:2608.02043, restricted residual exp(-(1+o(1)) sqrt(n) log n)) and Luo-Yang-Zhu (arXiv:2607.22017) and Komarov. Theorem 3 improves the Tan et al. exponent to exp(-C sqrt(n)), which is a plausible new step, but its priority was not established here. The Theorem 13 one-interior-zero construction is new as far as I can judge, but its asymptotic rate is only an upper bound, and Corollary 10 is weaker than the Luo-Yang-Zhu result (see errors)."
+    },
+    "significance": {
+      "stars": 3,
+      "basis": "If correct, Theorem 1 (exact polynomial finite-count residual bound), Theorem 5 (1/sqrt(8) circle-root limit) and the one-interior-zero threshold give a clean picture of how interior zeros control the residual. The main superalgebraic sufficiency claim is the most significant result, but it depends on the step flagged below."
+    },
+    "reproducibility": {
+      "stars": 2,
+      "basis": "Constructions are explicit (Theorem 13 formulas, Prop. 8 parameter choices, Theorem 3 at n=10^4), which helps. Proof of Theorem 4 and the asymptotic constant in Prop. 14 depend on heuristic or unpublished steps. Supplementary computations are described but not provided to me, and the paper itself says its numerics do not certify the limits."
+    }
+  },
+  "summary": "The manuscript studies the normalized residual rho(P) = ||P' - lambda P||_2 / ||P||_2 for polynomials of degree n with all zeros in the closed unit disk and asks how the number of strictly interior zeros controls how small the residual can be. Main claims: (i) if P has exactly M interior zeros, rho_lambda(P) >= n / (2 sqrt(2) 16^M (n+2M+4)^(2M+2)) (Theorem 1), so bounded interior counts force at least polynomial residuals; (ii) unrestricted and restricted infima s_n, r_n are at least exp(-C sqrt(n)) with C_0 = sqrt((8/3) log 17) (Theorem 3); (iii) if all zeros lie on the circle, the limit of the infimum is 1/sqrt(8) (Theorem 5); (iv) one interior zero permits residual O(n^(-1/6)) (Theorem 13) with asymptotic constant sqrt(15)/4^(4/3) for that family (Proposition 14); (v) superalgebraic decay is possible iff the interior count b_n tends to infinity (Theorem 2, Theorem 4). I verified the arithmetic and logic of Theorem 1, Proposition 8 and Theorem 3 at the checked points, the circle-root quadratic form and limit, and the one-zero construction equations. The superalgebraic sufficiency in Theorem 2 with exactly b_n interior zeros is not supported as written: the padding step multiplies a superalgebraically small polynomial by a boundary factor of comparable degree, and neither the residual nor the degree bookkeeping survives that step. The 'at most b_n' version seems to follow from Theorem 4 directly, but Theorem 4 itself was not fully checked. I did not verify the Luo-Yang-Zhu, Tan et al. or Komarov results beyond their abstracts and search snippets.",
+  "strengths": [
+    "Theorem 1 is an explicit, checkable finite-degree lower bound. Its chain (Lemma 6 normalization and separation, Lemma 7 analytic estimate, Proposition 8 Cesaro-type certificate, the Jensen semicircle argument, and Lemma 15) is internally consistent, and I checked the exponent 2M+2 and the constant 2 sqrt(2) 16^M.",
+    "Proposition 8 and the explicit parameters in Section 4 (y = C sqrt(n), r = y/(8n), K = ceil((2+t)/eta)) are verified at the checked points, including the n = 10^4 numerics (e^8 > 2 sqrt(10001), e^3 > 18 > 17, B < 1/(5n) < 1/42).",
+    "Theorem 5's quadratic-form identity (4) after the phase rotation is correct, and g_n(lambda) >= (lambda - (n+1)/2)^2 - (2n+1)/4 gives the window needed for the 1/8 minimum. The Mathieu identification E(L) = a_0(2L)/4 and the expansion giving 1/8 are consistent.",
+    "Theorem 13's construction is algebraically consistent: the identities D(a,c) = -30a-4c-17 and T(a,c) = -15a/(1-a) - 2c/(1-c) match the circle-root moments, the quadratic 15UX^2 - (UL+221)X + 15L = 0 factors correctly through (UL-289)(UL-169), and the limit point (a,c) = (-2/3, 3/4) with X = 5/3, Y = 1/4 checks out.",
+    "The Gaussian constant chain in Proposition 14 (15 * 4^(-8/3) / sqrt(2 pi) divided by 1/sqrt(2 pi n)) gives sqrt(15)/4^(4/3) n^(-1/6), as stated.",
+    "The paper states its limitations explicitly (no optimal rate for one interior zero, no quantitative bounds on M_A, C_A, N_A, numerics not certified, priority not claimed)."
+  ],
+  "weaknesses": [
+    "Theorem 2, sufficiency with exactly b_n interior zeros (parts 1 and 3, and the abstract's 'exactly b_n'): Theorem 4 polynomials already have degree n with M_j interior zeros. The padding multiplies a Theorem 4 polynomial by B_6^u (1+z)^v of degree n - M_j, which produces degree about 2n. The text does not say how degree n is restored. The residual of a product is D(Q' - Q'(0)Q) + Q(D' - D'(0)D), so the residual of Q does not survive multiplication by a factor D; for circle-root factors such as D, Theorem 5 gives a residual lower bound of about 1/sqrt(8), which the text does not show is cancelled. A toy check: 1 has residual 0, but 1+z has residual 1/sqrt(2) with P(0)=1.",
+    "Theorem 4 (superalgebraic upper bound) is the core construction, and its verification is sketched. Lemma 12 (finite positive moment cone) is argued by a rational-polyhedron argument that I did not check line by line. The implicit-function step in Section 6.1 uses n-dependent parameters (t_n, u_n) and is not uniform in the stated way. The global bound (17)-(18) and the cancellation scheme are sketched.",
+    "Proposition 14 identifies the asymptotic constant of the one-zero family, but the justification is a heuristic (dominated convergence, polynomial-product tail estimates) and the numerical checks are on rounded parameters, as the paper acknowledges. The constant is a property of the family only, and the paper says so.",
+    "Corollary 10 is presented as a quantitative refinement of Luo-Yang-Zhu, but its bound M_n >= e^(-3 sqrt(n))/n is much weaker than the exp(-lambda n) statement that the search snippet attributes to arXiv:2607.22017 for every fixed lambda. This is a framing error, not just a weaker constant.",
+    "Section 9 refers to a 'separate calculation by the same involved model reviewer' covering all 34 degree classes, supplementary exact checks, and high-precision evaluations. These are not included in the artifact and cannot be verified from it. They should not be cited as evidence of correctness.",
+    "The abstract's sufficiency claim for superalgebraic decay with exactly b_n interior zeros is stronger than what Theorem 2's proof supports (see first weakness). The 'at most b_n' form is the part the proof can support."
+  ],
+  "potential_errors": [
+    "Theorem 2 part 3 / 1 implies 3 (exact count b_n with P(0)=1, real coefficients, o(n^(-A)) restricted residual): the 'padding' step as written changes degree and residual; the 'at most b_n' version (part 2) does not need padding and should be stated separately.",
+    "Corollary 10: the claim 'strengthens the scale in [1]' is fine, but 'the earlier qualitative conclusion of [2] remains fully credited' and 'quantitative refinement' of [2] conflict with the stronger exp(-lambda n) bound the snippet attributes to [2]. The corollary should be reframed as a weaker, independent bound.",
+    "Proposition 14 gives asymptotic equality rho(P_n) ~ sqrt(15)/4^(4/3) n^(-1/6). The formula is the Gaussian computation of the family, but the proof of the limit is sketched, and the displayed normalization of G_n(e^(iu/sqrt(n))) relies on lambda_n/n -> 1/2 without a stated uniform error bound."
+  ],
+  "strong_novelty_candidates": [
+    "Theorem 3: exp(-C sqrt(n)) lower bound for the unrestricted and restricted residual infima with C > sqrt((8/3) log 17) and explicit exp(-3 sqrt(n)) for n >= 10^4, improving the exp(-(1+o(1)) sqrt(n) log n) bound attributed to Tan et al. Priority was not established here; the search snippet for 2608.02043 is consistent with the attribution.",
+    "Theorem 5: for circle-root polynomials the infimum of ||P' - lambda P||/||P|| tends to 1/sqrt(8), with the restricted version also tending to 1/sqrt(8). Not checked against the literature beyond the Komarov and Erdelyi-Hardin-Saff references.",
+    "Theorem 13 and Proposition 18: one interior zero suffices for residual tending to zero (O(n^(-1/6))), and any single interior zero forces residual at least n^(-13/6)/(512 sqrt(2) e^3) at n >= 4096. The minimal interior count of one is a clean statement if the construction holds."
+  ],
+  "unresolved_material_objections": [
+    "The padding step in the proof of Theorem 2 (sufficiency with exactly b_n interior zeros, parts 1 implies 3, and the abstract's 'exactly b_n interior zeros' claim) is not supported as written. Multiplying a Theorem 4 polynomial by the boundary factor B_6^u (1+z)^v changes the degree to about 2n and the restricted residual to a value of order 1, since the residual of a product is not the residual of its factor, and the text gives no argument that restores degree n and small residual. The superalgebraic sufficiency 'with exactly b_n interior zeros' therefore needs a separate construction or a correction to the claim."
+  ]
+}

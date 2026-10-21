@@ -1,0 +1,60 @@
+{
+  "paper_id": "PENDING_ARR_ID",
+  "version": "v1",
+  "version_id": "PENDING_VERSION_ID",
+  "canonical_sha256": "bec07a6e5bb360ef1b8912959afcbf2d9d61674e728dd6ab4e612e9097dd66bc",
+  "provider": "Anthropic",
+  "model_id": "claude-haiku-5-5",
+  "assessed_at": "2026-10-21T06:58:51+02:00",
+  "prompt_version": "ARR-ASSESS-1.0",
+  "independence": "not_involved_in_manuscript",
+  "recommendation": "minor_revision",
+  "millennium_score": 3.4,
+  "overall_stars": 3,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 4,
+      "basis": "Hand-checked: the necessity chain (8)-(9) with u>=eps, mean(u)=1, skew-adjointness of H, and the minimisation over c at a^(1/3) giving (1+a^(2/3))^(3/2); boundary identities (10)-(13); h_c(0)=1; the Prop. 4 error bound. No gap found in the main chain. The Fejer-Riesz step in Lemma 2 relies on [1]; not re-derived."
+    },
+    "rigor": {
+      "stars": 4,
+      "basis": "Explicit analytic arguments: Lemma 2 identity and kernel positivity, Poisson smoothing (15), quantile error with sup|dK/dt| <= 2sigma/tau^2 and total 4 pi sigma/(N tau^2), and the integrating-factor argument in Prop. 5. Minor gaps: Lemma 2 factorisation is cited, not proved; explicit N is given only for b>1."
+    },
+    "novelty": {
+      "stars": 2,
+      "basis": "The sharp threshold for the family appears new, but the family, its global stability and the 2(a+1) obstruction rest on [1]. The arXiv abstract of [1] (2607.16171) describes one integer-coefficient example with no parameters a and b; the full text was not checked. Antecedents in [2] are unverified."
+    },
+    "significance": {
+      "stars": 2,
+      "basis": "Settles one explicit two-parameter family and its k-harmonic and angular-speed variants. Degree divergence (Prop. 5) is qualitative with no rate. The techniques (Fejer-Riesz, Herglotz representation, binary-form SOS) are classical, so impact on converse Lyapunov theory is limited."
+    },
+    "reproducibility": {
+      "stars": 2,
+      "basis": "Analytic constructions can be checked from the text. The numerical diagnostic (2048 factors, 8192 samples, margin about 0.1545) gives no code, data or enclosure, and the supplementary author computations are not supplied. The PDF alone does not let a reader reproduce the rational-factorization checks."
+    }
+  },
+  "summary": "The manuscript claims that the Liu-Fitzsimmons family r' = r^3(-a + b cos 2theta), theta' = r^2 admits positive homogeneous polynomial, strict polynomial and local analytic Lyapunov certificates exactly when |b| < (1+a^(2/3))^(3/2). I checked the necessity argument (Sec. 3), the boundary construction (Sec. 4), the quantile-based sufficiency with its degree bound (Prop. 4), the leading-term argument (Sec. 6) and the Corollary 6 extension to k-harmonics and angular speed. I found no invalidating error in these steps. Not verified: the cited literature, the Fejer-Riesz statement in [1], and the numerical diagnostic in Sec. 8. The main reservations are citation-dependent: novelty and the stability and obstruction claims for the family rest on [1], whose arXiv abstract does not show the parametric family. Recommendation: minor revision for clarity, explicit citation checks and a precise statement of what is new.",
+  "strengths": [
+    "Necessity (Sec. 3): pairing u and w with the test functions F_sigma, G_sigma from f_c(sigma e^{i phi}) gives <uF> + <wG> = c + a - b sigma c/s >= eps c. Checked by hand; the minimum over c at a^(1/3) gives (1+a^(2/3))^(3/2), strict because eps > 0.",
+    "Lemma 3 boundary identities (10)-(13) verified algebraically: z^(-1) cancellation, constant term equal to 1, and q_c = -(s^2/2) M_c |1-eta z|^2 on the circle. Boundary nonnegativity holds on both arcs.",
+    "Prop. 4 arithmetic checked: tau = delta/(4b), N = ceil(256 pi sigma b^2/delta^3), quantile error at most 4 pi sigma/(N tau^2) <= delta/4, margin at least delta/2. The bound is stated as sufficient, not minimal, and the text says so.",
+    "Corollary 6: the k-harmonic extension and the angular-speed scaling are consistent, and H = r^2 exp(-b sin(2k theta)/(k omega)) satisfies L_f H = -2a r^(2k) H as claimed.",
+    "Prop. 5 (degree divergence) is argued by compactness plus the same integrating-factor argument, which I checked. It makes no quantitative claim, and the text says so."
+  ],
+  "weaknesses": [
+    "Novelty and priority of the family, its global stability and the 2(a+1) obstruction rest on [1]. The arXiv abstract (2607.16171) describes one integer-coefficient example with no parameters a and b; this could not be confirmed from the abstract.",
+    "Lemma 2's Fejer-Riesz factorisation is cited to [1, Lemmas III.2-III.3] rather than proved in full. The statement is standard, but a reader must trust the cited form.",
+    "Prop. 4 gives an explicit N only for b > 1 and delta <= 2b. The case b in (0,1] is handled qualitatively in Sec. 5, so the degree bound is not stated uniformly over the region.",
+    "Prop. 5 gives no rate at which the minimal degree diverges as a decreases to a0. The word 'sharp' refers only to the threshold, and the abstract should say so.",
+    "Ahmadi-Parrilo [2, Thm 4.3] and Ahmadi-El Khadir [3, Prop. 6.1] are cited as antecedents of the degree and complexity results; these citations were not checked."
+  ],
+  "potential_errors": [
+    "Sec. 1 and Sec. 2 attribute to [1] the global stability of the whole family and the 2(a+1) nonexistence result. If the full text of [1] does not contain these, the stated prior-work claims are wrong; the abstract alone does not settle it.",
+    "Sec. 8: the margin 0.1545 (a = 1.2, b = 2 sqrt(2), sigma = 0.98, 8192 samples) is a floating-point sample with no code. It is not a certificate, so the text should not imply any numerical verification of Prop. 4.",
+    "Prop. 4 is stated for b > 1, yet Corollary 6 applies it to |b| > |omega| after rescaling. The explicit degree bound for b in (0,1] is therefore not covered, although h = 1 - ibz works there."
+  ],
+  "strong_novelty_candidates": [
+    "Sharp threshold |b| < (1+a^(2/3))^(3/2) for the Liu-Fitzsimmons family, with a matching strict product-of-quadratic-forms certificate (Thm. 1, Prop. 4) and its k-harmonic extension (Cor. 6). Novelty is conditional on the content of [1]."
+  ],
+  "unresolved_material_objections": []
+}
