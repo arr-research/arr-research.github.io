@@ -1,0 +1,63 @@
+{
+  "paper_id": "PENDING_ARR_ID",
+  "version": "v1",
+  "version_id": "PENDING_VERSION_ID",
+  "canonical_sha256": "bec07a6e5bb360ef1b8912959afcbf2d9d61674e728dd6ab4e612e9097dd66bc",
+  "provider": "Anthropic",
+  "model_id": "claude-haiku-5-5",
+  "assessed_at": "2026-10-21T13:20:25+02:00",
+  "prompt_version": "ARR-ASSESS-1.0",
+  "independence": "not_involved_in_manuscript",
+  "recommendation": "major_revision",
+  "millennium_score": 3.0,
+  "overall_stars": 3,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 3,
+      "basis": "Necessity chain checked: polar form (2) by hand; Lemma 2 angular identity numerically on a 2-factor example (agreement about 1e-8); f_c with zeta=(c+i)/s gives f'(0)=2ic/s and F+HG=c to 1e-12; min over c of (a+c)sqrt(1+c^2)/c equals (1+a^(2/3))^(3/2) for a=0.1 to 8. Lemma 3 identities not checkable from the text layer. Eq. (14) inconsistent as printed."
+    },
+    "rigor": {
+      "stars": 3,
+      "basis": "Necessity via harmonic pairing is short and complete given Lemma 2. Sufficiency relies on an asserted eps->1 limit at the pole of M_c, on Lemma 3, and on Poisson and quantile steps. Proposition 4's displayed error term (4/N^2) does not follow from the stated argument, which gives O(1/N). Equality exclusion is justified by an unnecessary hypothesis."
+    },
+    "novelty": {
+      "stars": 3,
+      "basis": "Exact threshold |b|^(2/3) < 1+a^(2/3) for weak, strict and local analytic certificates of the Liu-Fitzsimmons family. Prior work gives nonexistence only for |b| >= 2(a+1). Priority is self-reported. A web search found arXiv:2607.16171, but its snippet shows a different cubic field, so the family attribution is unverified by me."
+    },
+    "significance": {
+      "stars": 3,
+      "basis": "Sharpens the certificate region of one planar cubic family and extends the threshold to odd-degree single harmonics (Corollary 6). Stability is not changed, since GAS is already known. No general converse theorem and no minimum-degree rate are given, so the scope is narrow but the result is clean."
+    },
+    "reproducibility": {
+      "stars": 2,
+      "basis": "Analytic constructions are explicit, but the quantile selection and rigorous enclosures are not supplied. The floating-point diagnostic (2048 factors, 8192 samples, margin about 0.1545) and the Toeplitz solver runs come with no code or data. I did not run any author computation."
+    }
+  },
+  "summary": "Claims the exact certificate threshold for the cubic family (1): |b|^(2/3) < 1 + a^(2/3) for positive homogeneous polynomial weak certificates, strict product-of-quadratics certificates and local analytic certificates, with equality excluded. Necessity is a clean harmonic pairing argument (Lemma 2 factorization, test function f_c, minimization over c). I checked its key steps by hand and numerically. Sufficiency uses a boundary pair (Lemma 3), Poisson smoothing and quantile approximation to build a finite product of positive quadratic forms. I could not verify Lemma 3's explicit q_c and h_c from the text layer, and the eps->1 limit is asserted rather than written out. Eq. (14), as extracted (c = b^(2/3)-1), is inconsistent with a0 = c^3 and b0 = s^3 unless c = (b^(2/3)-1)^(1/2). The displayed error chain of Proposition 4 does not match its stated argument, which gives O(1/N); the existence claim does not depend on that constant. The local analytic and single-harmonic extensions follow the same template. The global stability claims rest on the Lyapunov function H, which I checked. Priority is self-reported and I could not confirm it. Verdict: plausible and substantive, but it needs corrections and a complete write-up of the boundary limit before the sufficiency direction can be accepted as checked. The PDF text layer garbled several formulas, so some readings are inferred.",
+  "strengths": [
+    "The necessity argument (Sections 2-3) is short and checkable. The Lemma 2 angular identity p'/(2Np) = Im h(e^(2i theta)) was confirmed numerically. f_c with zeta=(c+i)/s gives f'(0)=2ic/s and F+HG=c to 1e-12 at radius 0.9.",
+    "The minimization min over c>0 of (a+c)sqrt(1+c^2)/c equals (1+a^(2/3))^(3/2), with minimizer c=a^(1/3). Confirmed numerically for a = 0.1, 0.5, 1, 2 and 8.",
+    "The factor Q(x,y) has eigenvalues (1-|zeta|)^2 and (1+|zeta|)^2, so the product of the Q_j is positive definite. Checked by hand.",
+    "For Section 7, the Lyapunov function H = r^2 exp(-(b/k) sin 2k theta) satisfies L_f H = -2a r^(2k) H, checked by hand. This supports the stated global asymptotic stability of the single-harmonic family.",
+    "Limitations are stated candidly: no minimum-degree rate, no certified quantile selection, and no solver-based proof of feasibility."
+  ],
+  "weaknesses": [
+    "Lemma 3 (boundary pair, eqs. 10-13) is central to sufficiency, but its q_c and h_c formulas are not legible in the text layer. I could not check its boundary sign claims.",
+    "Eq. (14) sets c = b^(2/3)-1. Lemma 3 requires a0 = c^3 and b0 = s^3 = (1+c^2)^(3/2), which forces c = (b^(2/3)-1)^(1/2). This is probably a lost radical, but as printed the construction does not match its lemma.",
+    "The eps->1 limit in Section 3 is asserted. Near the boundary pole of M_c, f has a |.|^(-1/2) singularity, so dominated convergence should be written out.",
+    "Proposition 4's displayed error chain ends in 4/N^2. The stated argument gives 2*pi*L/N with L = 2/(1-rho)^2, since the sum of |I_j| is 2*pi and mu(I_j) = 1/N.",
+    "Equality exclusion is attributed to the positive minimum of u. Nonnegativity of u with F, G > 0 and mean(u) = 1 already suffices: a zero integral forces w = 0 and then u = 0, contradicting mean(u) = 1.",
+    "Corollary 6's necessity for k-harmonics is asserted in a few lines. The reduction from theta to phi = 2 theta with cos(k phi) is plausible but not written out.",
+    "Priority and attribution: arXiv:2607.16171 was found by search, but its snippet describes a different cubic field, so attribution of family (1) to Liu and Fitzsimmons is unverified by me."
+  ],
+  "potential_errors": [
+    "Eq. (14), c = b^(2/3)-1, is inconsistent with the Lemma 3 requirement c = (b^(2/3)-1)^(1/2) for a0 = c^3 and b0 = s^3. If read literally, the sufficiency construction for b > 1 does not match its lemma.",
+    "Proposition 4 error term: the displayed 4/N^2 is inconsistent with the quantile argument, which yields O(1/N). The explicit N bound and the abstract's O(eps^-3) degree claim need rechecking.",
+    "Section 7 header parameter (angular speed) appears as '= 0' in the text layer, which would make theta' vanish. It is probably omega != 0; check the source."
+  ],
+  "strong_novelty_candidates": [
+    "The exact threshold |b|^(2/3) < 1 + a^(2/3) as the sharp certificate region of the Liu-Fitzsimmons cubic family, with equality excluded even for weak certificates (Theorem 1). It rests on the harmonic pairing of Section 3, whose key steps I checked.",
+    "Corollary 6: the same threshold with angular speed omega for single-harmonic families r' = r^(2k+1)(-a + b cos 2k theta), theta' = omega r^(2k), for every k >= 1. The structure checks out, but the necessity argument is less detailed."
+  ],
+  "unresolved_material_objections": []
+}

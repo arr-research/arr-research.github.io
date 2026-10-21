@@ -1,0 +1,62 @@
+{
+  "paper_id": "ARR-2026-5286KSE6RS984S9P",
+  "version": "v1",
+  "version_id": "arr:version:ad53b9f2-00c6-4b3c-9198-809c023d24b4",
+  "canonical_sha256": "e0581972f3882875b71c359369a09218f2b9f041551f59f2c4c09113edca439d",
+  "provider": "Anthropic",
+  "model_id": "claude-haiku-5-5",
+  "assessed_at": "2026-10-21T13:25:53+02:00",
+  "prompt_version": "ARR-ASSESS-1.0",
+  "independence": "not_involved_in_manuscript",
+  "recommendation": "major_revision",
+  "millennium_score": 3.0,
+  "overall_stars": 3,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 3,
+      "basis": "Hand-checked, no error found: Thm 1 chain (Lemma 15, eq. 27, Prop 8 certificate, Cor. 16 arithmetic); Thm 3 explicit exponent and C0 = sqrt((8/3)log 17); Thm 5 identity (4), Mathieu reduction E(L)=a0(2L)/4 and the 1/8 Gaussian average; Prop 18 algebra. Not verified: Sec. 6 (Lemma 12, IFT system 14-16, estimate 18), outer-arc bounds of Thm 13, all numerics. No code run."
+    },
+    "rigor": {
+      "stars": 3,
+      "basis": "Finite-degree certificates are sound as checked. Gaps: the 1=>3 step of Thm 2 (Sec. 7.3) builds the final polynomial with a boundary factor B6^u(1+z)^v and degree bookkeeping '6u+v = n - M' that conflicts with Thm 4's degree-n polynomials, and no residual bound for the product is given. Sec. 6 key estimates are asserted, not shown."
+    },
+    "novelty": {
+      "stars": 3,
+      "basis": "Thm 3 improves the quantity in [1] (Tan et al.; abstract confirms r_n >= exp(-(1+o(1))sqrt(n) log n) with zeros in the closed disk), so the sqrt(n) form is new relative to it. Thm 5 and Thm 4 are plausibly new, but priority is not certified (authors say so). Cor. 10 refines [2]; the [2] abstract confirms the qualitative exclusion of exponential smallness that the paper credits."
+    },
+    "significance": {
+      "stars": 3,
+      "basis": "Settles that one interior zero permits residual -> 0 while none does (via Thm 5), with explicit C0 for exp(-C sqrt n). Whether the 1/6 rate and the superalgebraic upper bounds are sharp stays open, as the paper says. Useful sharpening of the Schur-stable residual question; moderate scope."
+    },
+    "reproducibility": {
+      "stars": 2,
+      "basis": "No code or certified numerics. Prop 14 numerics use rounded parameters and are not certifications (paper says so). Explicit constants in Thm 1 and Thm 3 are checkable by hand and I checked them. Thm 4 existence depends on IFT and Lemma 12 details not fully written out, so a reader cannot reproduce it from the text alone."
+    }
+  },
+  "summary": "Referee report on the exact paper.pdf (SHA-256 e0581972f3882875b71c359369a09218f2b9f041551f59f2c4c09113edca439d). The paper gives: (i) an explicit lower bound n/(2*sqrt(2)*16^M (n+2M+4)^(2M+2)) on residuals of degree-n polynomials with M interior zeros (Thm 1); (ii) an exact criterion for budgets b_n tending to infinity (Thm 2); (iii) exp(-C sqrt(n)) lower bounds for unrestricted interior counts with explicit C0 = sqrt((8/3)log 17) (Thm 3); (iv) a circle-only limit of 1/sqrt(8) (Thm 5); (v) an O(n^-1/6) residual with one interior zero, an explicit family with constant sqrt(15)/4^(4/3), and a universal n^-13/6 lower bound for one zero (Thms 13, 18, Prop 14); (vi) superalgebraic upper bounds (Thm 4) by a long sketch. I checked the finite certificates, the explicit constants and the moment identities, and they hold. I did not verify the Section 6 construction or the outer-arc estimates in full, and I ran no code. The main objection is the 1=>3 step of Thm 2, whose degree bookkeeping and product-residual estimate are missing; this looks repairable by moving roots of a degree-n Thm 4 polynomial, but as written it is incomplete. There is also a numerical slip in Sec. 9. Recommendation: major revision.",
+  "strengths": [
+    "Thm 1 proof chain is complete and checks: Lemma 15 numerical-radius bound, eq. (27), the Jensen argument giving ||H||_2 >= n/(sqrt(2) 4^M), and the resulting exponent; the Cor. 16 arithmetic is verified.",
+    "Thm 3 explicit constants verified: the exponent (-9/4 + (14/19)log 17) sqrt(n) + log 17 + O(n^-1/2) is negative for n >= 10^4, and C0^2 = (8/3)log 17 follows from the choice of C in Sec. 4.",
+    "Thm 5 derivation checks out: identity (4), Mathieu reduction E(L)=a0(2L)/4 with its expansion giving (c-1/4)^2+1/8, and the Gaussian moment ratio 1/8.",
+    "Thm 13 algebra verified: the baseline global bound H(s) with stationary point 5/24, identities (19)-(20), and the explicit solution a=-2/3, c=3/4 of the two target equations. Scope and optimality disclaimers are stated clearly."
+  ],
+  "weaknesses": [
+    "Sec. 6 (superalgebraic upper bound, Thm 4) is a sketch: Lemma 12 needs a compactness step to pass from the infinite family of columns to a finite set, and estimate (18) and the outer-arc bounds are asserted, not displayed.",
+    "Thm 13 and Prop 14 depend on uniform second-derivative bounds of order n and on the outer-arc tail estimate, which are stated but not written out.",
+    "The paper concedes that the Prop 14 numerics do not certify the limit; the constant is clearly stated to hold only for this family, which is correct but limits its reach.",
+    "Notation is spread out: the multiplicities nu_i, the convention for interior versus boundary zeros, and the residual definitions are introduced in different sections and should be collected in one place."
+  ],
+  "potential_errors": [
+    "Sec. 7.3: '6u+v = n - M_{j(n)}' implies the Thm 4 polynomial has degree M_{j(n)}, but Thm 4 gives degree-n polynomials. The residual of the product with B6^u(1+z)^v is not estimated.",
+    "Sec. 9, display for T_n: the stated steps (u=n/4, n! >= (n/e)^n, ||T_n||_2 >= 1) yield (n/4)(e/4)^n, not (1/4)(e/4)^n. The stated bound is probably true, but its derivation loses a factor n.",
+    "Sec. 6, Lemma 12: 'density' is invoked to pass from the infinite family of columns to a finite collection. The needed argument (Caratheodory, with 0 in the interior of the convex hull) is not stated."
+  ],
+  "strong_novelty_candidates": [
+    "Explicit C0 = sqrt((8/3)log 17) with s_n >= exp(-C sqrt(n)) (Thm 3), if priority holds relative to [1].",
+    "Circle-root limit 1/sqrt(8) via the Mathieu expansion and the exact completing-the-square identity (Thm 5).",
+    "One-interior-zero construction with O(n^-1/6) residual and explicit constant sqrt(15)/4^(4/3) (Thm 13 and Prop 14)."
+  ],
+  "unresolved_material_objections": [
+    "Sec. 7.3 (proof of 1=>3 in Thm 2): the final polynomial with exactly b_n interior zeros and residual o(n^-A) is not constructed rigorously. The stated degree bookkeeping (6u+v = n - M_{j(n)}) conflicts with the degree-n polynomials of Thm 4, and no residual estimate is given for the product with B6^u(1+z)^v. Likely repairable by moving boundary roots of a degree-n Thm 4 polynomial, but as written the step is incomplete."
+  ]
+}
