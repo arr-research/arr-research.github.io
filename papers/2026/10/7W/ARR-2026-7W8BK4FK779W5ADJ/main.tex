@@ -1,0 +1,625 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=25mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,microtype,graphicx,needspace}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}\newtheorem{remark}[theorem]{Remark}
+\newcommand{\D}{\mathbb D}
+\newcommand{\T}{\mathbb T}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+\newcommand{\Rea}{\operatorname{Re}}
+\newcommand{\Ima}{\operatorname{Im}}
+\newcommand{\avg}[1]{\left\langle #1\right\rangle}
+\newcommand{\ee}{\mathrm e}
+\title{A sharp polynomial Lyapunov threshold\\for a stable cubic family}
+\author{Lluis Eriksson}
+\date{18 October 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+We determine exactly when the globally asymptotically stable cubic
+family introduced by Liu and Fitzsimmons admits polynomial Lyapunov
+certificates. In their normalization, with damping \(a>0\) and angular
+forcing \(b\in\R\), the criterion is
+\[
+ |b|^{2/3}<1+a^{2/3}.
+\]
+The same strict inequality characterizes positive homogeneous
+polynomial certificates with weak nonpositive Lie derivative, strict
+polynomial certificates, and local real-analytic certificates.
+Equality admits none of them. Below the threshold we construct a
+certificate as a finite product of positive quadratic forms.
+The proof pairs positive harmonic functions with an explicit analytic
+square-root test and constructs a complementary limiting harmonic
+pair at the boundary. Poisson smoothing and equal-weight quantiles
+then produce a polynomial with a strict margin.
+At a fixed nonzero boundary point, an explicit sufficient degree is
+\(O_b(\delta^{-3})\), where \(\delta\) is the damping excess, while
+the minimum degree diverges; no matching degree rate is asserted.
+The threshold persists for every single even angular harmonic and
+nonzero angular speed. Classical binary-form factorization gives
+the corresponding sum-of-squares consequence without increasing the
+Lyapunov degree. The family, its global stability and the original
+counterexample to a polynomial converse theorem are prior results.
+Our classification concerns certificates, not a change in dynamical
+stability.
+\end{abstract}
+
+\section{The family and the exact certificate region}
+For \(a>0\) and \(b\in\R\), consider
+\begin{equation}\label{eq:field}
+ \begin{aligned}
+ \dot x&=-a(x^2+y^2)x+b(x^2-y^2)x-(x^2+y^2)y,\\
+ \dot y&=-a(x^2+y^2)y+b(x^2-y^2)y+(x^2+y^2)x .
+ \end{aligned}
+\end{equation}
+In polar coordinates \(x=r\cos\theta,y=r\sin\theta\), this is
+\begin{equation}\label{eq:polar}
+ \dot r=r^3(-a+b\cos2\theta),\qquad \dot\theta=r^2 .
+\end{equation}
+Liu and Fitzsimmons introduced this family and established its
+global asymptotic stability, together with nonexistence of polynomial
+and local analytic certificates in the region
+\(|b|\ge2(a+1)\) \cite{liu}. Their work already refutes the homogeneous
+polynomial Lyapunov converse. We determine the exact certificate
+region of their family.
+
+For a vector field \(f\), write \(L_fV=\nabla V\cdot f\).
+A \emph{weak certificate} means \(V(0)=0\), \(V>0\) away from the
+origin, and \(L_fV\le0\). A \emph{strict certificate} has
+\(L_fV<0\) away from the origin. For a local analytic certificate
+these conditions are required on a punctured neighborhood of zero.
+All homogeneous certificates below have positive degree.
+
+\Needspace{15\baselineskip}
+\begin{theorem}\label{thm:main}
+For \eqref{eq:field}, the following are equivalent:
+\begin{enumerate}
+\item \( |b|<(1+a^{2/3})^{3/2}\).
+\item There exists a positive definite homogeneous polynomial weak
+certificate.
+\item There exists a strict homogeneous polynomial certificate that
+is a finite product of positive definite real quadratic forms.
+\item There exists a local real-analytic weak certificate.
+\end{enumerate}
+Thus equality at the threshold is excluded even for weak certificates.
+Every system in \eqref{eq:field} is nevertheless globally
+asymptotically stable.
+\end{theorem}
+
+The stability assertion is recalled from \cite{liu}, not new.
+For orientation, its nonpolynomial certificate is
+\[
+ H(r,\theta)=r^2\exp(-b\sin2\theta),\qquad
+ L_fH=-2ar^2H.
+\]
+It is positive, coercive, continuously differentiable at the origin,
+and smooth away from it. The new assertion in Theorem~\ref{thm:main}
+is the exact algebraic and analytic threshold.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.78\textwidth]{images/phase-boundary.pdf}
+\caption{Certificate regions for the stable cubic family. All displayed
+parameters with \(a>0\) give globally asymptotically stable dynamics.
+The solid curve is excluded from the polynomial and local analytic
+certificate region. The dashed line marks the sufficient
+nonexistence condition in \cite{liu}; it is not a stability boundary.}
+\label{fig:phase}
+\end{figure}
+
+Unbounded required polynomial degree in fixed dimension and field
+degree was already established by Ahmadi and Parrilo
+\cite[Theorem 4.3]{ahmadi-parrilo}. Ahmadi and El Khadir
+\cite[Proposition 6.1]{ahmadi-khadir} also compare polynomial and
+rational certificate complexity. Our degree result concerns approach
+to the explicit boundary above. Compactness, positive harmonic
+representations, and the binary-form sum-of-squares principle are
+classical tools, not new general converse theorems.
+
+\section{Polynomial certificates as positive harmonic data}
+Use normalized circle averages
+\(\avg v=(2\pi)^{-1}\int_0^{2\pi}v(\phi)\,d\phi\).
+The circular Hilbert transform \(\mathcal H\) is normalized by
+\[
+ \mathcal H\cos(k\phi)=\sin(k\phi),\quad
+ \mathcal H\sin(k\phi)=-\cos(k\phi),\quad
+ \mathcal H1=0,\qquad k\ge1.
+\]
+On smooth real functions it is skew-adjoint for this average.
+The formulas used below can equally be verified termwise from
+Fourier series.
+
+\begin{lemma}\label{lem:harmonic}
+Let \(P\) be a positive definite real homogeneous polynomial of
+degree \(2N\), \(N\ge1\), and set
+\(p(\theta)=P(\cos\theta,\sin\theta)\).
+There exist \(\alpha_1,\ldots,\alpha_N\in\D\) such that
+\[
+ h(z)=\frac1N\sum_{j=1}^N\frac{1+\alpha_jz}{1-\alpha_jz},
+ \qquad
+ \frac{p'(\theta)}{2Np(\theta)}
+       =\Ima h(\ee^{2i\theta}).
+\]
+Here \(h(0)=1\), and \(u=\Rea h\) has a strictly positive minimum
+on the closed disk. The weak certificate condition is equivalent to
+\begin{equation}\label{eq:weak}
+ w(\phi):=a-b\cos\phi-\mathcal Hu(\phi)\ge0.
+\end{equation}
+\end{lemma}
+\begin{proof}
+The strict Fej\'er--Riesz factorization, in the form used in
+\cite[Lemmas III.2--III.3]{liu}, writes
+\[
+ p(\theta)=|C|^2\prod_{j=1}^L
+        |1-\alpha_j\ee^{2i\theta}|^2,
+ \qquad L\le N,\quad |\alpha_j|<1.
+\]
+Pad the list with zero parameters to length \(N\).
+Each kernel has real part
+\[
+ \Rea\frac{1+\alpha z}{1-\alpha z}
+       =\frac{1-|\alpha z|^2}{|1-\alpha z|^2}>0
+       \qquad(|z|\le1).
+\]
+Differentiating the logarithm of a factor gives twice the imaginary
+part of that kernel, proving the angular identity.
+The imaginary part of \(h\) is \(\mathcal Hu\) because \(h(0)=1\).
+Finally,
+\[
+ L_fP=2N r^{2N+2}p(\theta)
+       \left[-a+b\cos2\theta+
+              \frac{p'(\theta)}{2Np(\theta)}\right],
+\]
+which proves \eqref{eq:weak}.
+\end{proof}
+
+Conversely, an equal-weight average of these kernels yields a
+polynomial of degree \(2N\). Explicitly, put
+\begin{equation}\label{eq:quadratic}
+ Q_\alpha(x,y)=(1+|\alpha|^2)(x^2+y^2)
+       -2\Rea\alpha(x^2-y^2)+4\Ima\alpha\,xy.
+\end{equation}
+Its eigenvalues are \((1-|\alpha|)^2,(1+|\alpha|)^2\).
+The product \(P=\prod_jQ_{\alpha_j}\) is positive definite and
+satisfies the angular identity in Lemma~\ref{lem:harmonic}.
+A strict margin in \eqref{eq:weak} therefore gives a strict
+polynomial certificate.
+
+\section{The strict obstruction}
+Rotation by \(\pi/2\) changes the sign of \(b\), so assume \(b\ge0\).
+For \(c>0\), define
+\begin{equation}\label{eq:test}
+ \begin{gathered}
+ s=\sqrt{1+c^2},\qquad \eta=\frac{c+i}{s},\\
+ M_c(z)=c^2-1+2ic\frac{1+\eta z}{1-\eta z},
+ \qquad f_c(z)=\sqrt{M_c(z)}.
+ \end{gathered}
+\end{equation}
+The Cayley transform has positive real part on \(\D\); hence
+\(M_c\) takes values in the upper half-plane. We choose the
+analytic square root in the first quadrant. In particular,
+\begin{equation}\label{eq:fcoeff}
+ f_c(0)=c+i,\qquad f_c'(0)=\frac{2ic}{s}.
+\end{equation}
+
+For \(0<\sigma<1\), write
+\(f_c(\sigma\ee^{i\phi})=F_\sigma(\phi)+iG_\sigma(\phi)\).
+Both functions are positive and smooth. Their means and first
+coefficient give
+\begin{equation}\label{eq:testmeans}
+ \avg{F_\sigma}=c,\quad \avg{G_\sigma}=1,\quad
+ \avg{G_\sigma\cos\phi}=\frac{\sigma c}{s},\quad
+ F_\sigma+\mathcal HG_\sigma=c.
+\end{equation}
+If \(u,w\) come from a weak polynomial certificate, then
+\(\avg u=1\), \(u\ge\varepsilon>0\), and \(w\ge0\).
+Using \eqref{eq:weak} and skew-adjointness,
+\begin{align}
+ \avg{uF_\sigma+wG_\sigma}
+ &=\avg{u(F_\sigma+\mathcal HG_\sigma)}
+      +a\avg{G_\sigma}-b\avg{G_\sigma\cos\phi}\nonumber\\
+ &=c+a-\frac{b\sigma c}{s}\ge\varepsilon c.
+ \label{eq:pairing}
+\end{align}
+Every function in this computation is smooth for \(\sigma<1\);
+no singular boundary pairing is assumed.
+Letting \(\sigma\uparrow1\) yields
+\begin{equation}\label{eq:dual}
+ b\le\frac{(a+c)s}{c}-\varepsilon s
+      <\frac{(a+c)\sqrt{1+c^2}}c.
+\end{equation}
+The derivative of the last expression is
+\[
+ \frac{c^3-a}{c^2\sqrt{1+c^2}}.
+\]
+Its minimum occurs at \(c=a^{1/3}\), with value
+\((1+a^{2/3})^{3/2}\). This proves the strict necessary
+inequality, including nonexistence at equality. The positive
+minimum of \(u\), rather than mere nonnegativity, is what
+excludes the boundary.
+
+\section{An explicit limiting pair on the boundary}
+The converse needs more than a necessary moment inequality.
+We construct positive harmonic data at the critical parameters,
+then approximate them while retaining a positive margin.
+
+Fix \(c>0\), with \(s,\eta,f_c\) as above, and put
+\[
+ a_0=c^3,\qquad b_0=s^3.
+\]
+Define
+\begin{align}
+ q_c(z)&=1-c^4+\frac{b_0}{2}
+          \bigl[(c-i)z+(c+i)z^{-1}\bigr],\label{eq:q}\\
+ h_c(z)&=ia_0-\frac{ib_0}{2}(z+z^{-1})
+                    +i\frac{q_c(z)}{f_c(z)}.\label{eq:h}
+\end{align}
+
+\begin{lemma}\label{lem:critical}
+The function \(h_c\) extends analytically across zero, continuously
+to \(\overline\D\), and satisfies \(h_c(0)=1\).
+Its boundary data obey
+\[
+ u_c=\Rea h_c\ge0,\qquad
+ w_c=a_0-b_0\cos\phi-\Ima h_c(\ee^{i\phi})\ge0.
+\]
+Their positivity sets are disjoint arcs.
+\end{lemma}
+\begin{proof}
+The coefficient of \(z^{-1}\) in \eqref{eq:h} cancels because
+\(f_c(0)=c+i\). Its constant coefficient is
+\[
+ ia_0+\frac{i(1-c^4)}{f_c(0)}
+       -\frac{ib_0}{2}\frac{f_c'(0)}{f_c(0)}=1,
+\]
+by \eqref{eq:fcoeff}. No other interior singularity occurs,
+since \(f_c\) has no zero in \(\D\).
+
+Two exact rational identities determine the boundary behavior:
+\begin{align}
+ M_c(z)&=s^2\frac{\eta^2-\bar\eta z}{1-\eta z},
+       \label{eq:Mfactor}\\
+ q_c(z)&=-\frac{s^2}{2}M_c(z)
+            (1-\eta z)(1-\bar\eta/z).\label{eq:qfactor}
+\end{align}
+On the circle, \(M_c\) and \(q_c\) are real away from the
+exceptional points, and
+\[
+ q_c(z)=-\frac{s^2}{2}M_c(z)|1-\eta z|^2.
+\]
+On the arc where \(M_c>0\), the chosen boundary square root
+is real and positive; \(q_c<0\). Then \(u_c=0\) and
+\(w_c=-q_c/f_c\ge0\).
+On the complementary arc \(M_c<0\), write \(f_c=iG\), \(G>0\).
+There \(q_c>0\), so \(u_c=q_c/G\ge0\) and \(w_c=0\).
+
+For completeness, \(M_c\) has a simple boundary zero at
+\(z=\eta^3\) and a simple boundary pole at \(z=\bar\eta\).
+They are distinct for every finite \(c>0\).
+The Laurent polynomial \(q_c\) vanishes at both points.
+Thus \(q_c/f_c\) is respectively of orders \(1/2\) and \(3/2\),
+and extends continuously with value zero.
+The boundary inequalities therefore extend to both exceptional
+points. The minimum principle gives \(\Rea h_c\ge0\) on
+\(\overline\D\), strictly positive in the interior because
+\(h_c(0)=1\).
+\end{proof}
+
+This limiting pair is not a polynomial certificate at
+\((a_0,b_0)\). Its real part vanishes on an arc, unlike the
+strictly positive boundary real part in Lemma~\ref{lem:harmonic}.
+
+\section{Constructing a finite polynomial certificate}
+Suppose first \(b>1\) and \(b<(1+a^{2/3})^{3/2}\).
+Choose
+\begin{equation}\label{eq:a0}
+ c=\sqrt{b^{2/3}-1},\qquad
+ a_0=(b^{2/3}-1)^{3/2}<a,\qquad b_0=b.
+\end{equation}
+Poisson smoothing of Lemma~\ref{lem:critical} gives, for
+\(h_\sigma(z)=h_c(\sigma z)\),
+\[
+ \Ima h_\sigma(\ee^{i\phi})+b\sigma\cos\phi\le a_0.
+\]
+Consequently
+\begin{equation}\label{eq:smoothmargin}
+ \Ima h_\sigma(\ee^{i\phi})+b\cos\phi
+       \le a_0+b(1-\sigma)<a
+\end{equation}
+when \(\sigma<1\) is sufficiently close to one.
+
+For \(0\le b\le1\), instead use \(h(z)=1-ibz\).
+Its boundary real part is nonnegative, \(h(0)=1\), and
+\(\Ima h(\ee^{i\phi})+b\cos\phi=0\).
+Replacing \(z\) by \(\sigma z\) gives a strict margin whenever
+\(b(1-\sigma)<a\). This treats \(b=0\) and \(b=1\)
+without using the singular endpoint \(c=0\) in the critical formula.
+
+In both cases the unsmoothed \(h\) is analytic, continuous on the
+closed disk, has nonnegative real part and value 1 at zero.
+Poisson's formula and its harmonic conjugate imply
+\begin{equation}\label{eq:herglotz}
+ h(\sigma z)=\int_0^{2\pi}
+       \frac{1+\sigma\ee^{-it}z}{1-\sigma\ee^{-it}z}\,d\mu(t),
+ \qquad
+ d\mu(t)=\Rea h(\ee^{it})\,\frac{dt}{2\pi}.
+\end{equation}
+The measure is a probability measure. The imaginary constant is
+zero because \(h(0)=1\).
+For fixed \(\sigma<1\) the kernel is continuous jointly in \(t\)
+and \(|z|\le1\). Approximate \(\mu\) by equal-weight empirical
+measures; uniform continuity makes the resulting approximation
+uniform on the closed disk. Thus, for sufficiently large \(N\),
+\[
+ h_N(z)=\frac1N\sum_{j=1}^N
+        \frac{1+\alpha_jz}{1-\alpha_jz},
+ \qquad \alpha_j=\sigma\ee^{-it_j},
+\]
+retains the strict margin in \eqref{eq:smoothmargin}.
+The product of the quadratic forms \eqref{eq:quadratic} is
+then a strict certificate. The next proposition gives an explicit
+choice of a sufficient \(N\).
+
+\begin{proposition}[A sufficient degree bound]\label{prop:degree}
+Let \(b>1\), \(a_0\) be as in \eqref{eq:a0}, and
+\(\delta=a-a_0>0\). Set
+\[
+ \tau=\min\{1/2,\delta/(4b)\},\qquad
+ \sigma=1-\tau,\qquad
+ N=\max\left\{1,\left\lceil
+                  \frac{16\pi\sigma}{\delta\tau^2}
+                    \right\rceil\right\}.
+\]
+There is a strict polynomial certificate of degree \(2N\)
+whose normalized angular margin
+\(a-b\cos2\theta-p'/(2Np)\) is at least \(\delta/2\).
+For \(0<\delta\le2b\), one may use
+\[
+ N\le\left\lceil\frac{256\pi b^2}{\delta^3}\right\rceil.
+\]
+This is a sufficient bound, not the minimum degree.
+\end{proposition}
+\begin{proof}
+The critical measure in \eqref{eq:herglotz} is nonatomic.
+Partition \([0,2\pi]\) into \(N\) successive quantile intervals
+\(I_j\), each of mass \(1/N\), and choose \(t_j\in I_j\).
+Intervals may cross zero-density gaps; their lengths still sum
+to \(2\pi\).
+For the kernel \(K_\sigma(t,z)\) in \eqref{eq:herglotz},
+\[
+ \sup_{t,|z|\le1}|\partial_tK_\sigma(t,z)|
+       \le\frac{2\sigma}{(1-\sigma)^2}.
+\]
+The integral-minus-empirical error is therefore at most
+\[
+ \sum_j\int_{I_j}\frac{2\sigma}{\tau^2}|I_j|\,d\mu
+       =\frac{4\pi\sigma}{N\tau^2}\le\frac\delta4.
+\]
+The smoothing loss is \(b\tau\le\delta/4\), leaving margin
+at least \(\delta/2\).
+When \(\delta\le2b\), insert \(\tau=\delta/(4b)\) and
+\(\sigma\le1\) to obtain the final bound.
+\end{proof}
+
+Locating the quantiles with rigorous numerical enclosures is an
+additional computational task. Proposition~\ref{prop:degree} is an
+analytic construction and degree bound, not a claim that the
+floating-point experiment below implements a certified algorithm.
+
+\section{Local analytic certificates and degree divergence}
+We complete the equivalences of Theorem~\ref{thm:main}.
+Let \(V\) be a local real-analytic weak certificate, and let
+\(P_m\) be its first nonzero homogeneous Taylor term.
+Positivity of \(V\) implies \(P_m\ge0\), and comparison of the
+first Lie-derivative terms gives \(L_fP_m\le0\).
+On the circle its profile satisfies
+\begin{equation}\label{eq:leading}
+ p_m'(\theta)+m(-a+b\cos2\theta)p_m(\theta)\le0.
+\end{equation}
+If \(p_m(\theta_0)=0\), multiply by the positive integrating
+factor of \eqref{eq:leading}. The resulting function is
+nonnegative and nonincreasing from zero over one full turn.
+It must vanish throughout the turn, contradicting \(P_m\ne0\).
+Hence \(P_m\) is positive definite. Its degree is even, and
+the strict obstruction applies. This is the leading-term
+mechanism already used in \cite{liu}.
+Conversely, the constructed polynomial is analytic.
+Together with the preceding sections this proves
+Theorem~\ref{thm:main}.
+
+\begin{proposition}\label{prop:blowup}
+For fixed \(b>1\), the minimum degree among positive homogeneous
+polynomial weak certificates tends to infinity as
+\(a\downarrow a_0=(b^{2/3}-1)^{3/2}\).
+\end{proposition}
+\begin{proof}
+Otherwise select a sequence of certificates with bounded degrees,
+and a subsequence of one fixed even degree \(2N\).
+Normalize their circle restrictions to maximum one.
+Their Fourier coefficients are bounded, so a subsequence converges
+with its derivative to a nonnegative trigonometric polynomial
+\(p\) of maximum one. The weak inequality passes to the limit
+at \(a=a_0\). The integrating-factor argument above forces
+\(p>0\). It is the circle restriction of a homogeneous polynomial
+of degree \(2N\), even if its Fourier degree drops.
+This would give a weak certificate at the excluded boundary,
+a contradiction.
+\end{proof}
+
+This compactness method has antecedents in
+\cite[Theorem 4.3]{ahmadi-parrilo}.
+Propositions~\ref{prop:degree} and \ref{prop:blowup}
+do not give matching upper and lower degree rates.
+
+\section{Single harmonics, angular speed and sum of squares}
+The same extremal argument applies to a family in every odd degree.
+Let \(k\ge1\), \(a>0\), \(b\in\R\), and \(\omega\ne0\), and consider
+\begin{equation}\label{eq:higher}
+ \dot r=r^{2k+1}(-a+b\cos2k\theta),
+ \qquad \dot\theta=\omega r^{2k}.
+\end{equation}
+It is a polynomial vector field of degree \(2k+1\):
+\[
+ f(x,y)=
+ \bigl[-a(x^2+y^2)^k+b\Rea(x+iy)^{2k}\bigr](x,y)
+       +\omega(x^2+y^2)^k(-y,x).
+\]
+
+\begin{corollary}\label{cor:higher}
+For \eqref{eq:higher}, homogeneous polynomial weak, strict
+polynomial, and local real-analytic weak certificates exist
+exactly when
+\begin{equation}\label{eq:highercriterion}
+ |b|^{2/3}<a^{2/3}+|\omega|^{2/3}.
+\end{equation}
+All these fields are globally asymptotically stable.
+For \(|b|>|\omega|\), the degree bound of
+Proposition~\ref{prop:degree}, applied to
+\(a/|\omega|,|b|/|\omega|\), becomes \(2kN\).
+\end{corollary}
+\begin{proof}
+Positive time rescaling, reflection and rotation reduce to
+\(\omega=1\), \(b\ge0\).
+For an arbitrary certificate of degree \(2N\),
+Lemma~\ref{lem:harmonic} gives
+\(w=a-b\cos(k\phi)-\mathcal Hu\ge0\).
+Use the test \(f_c(\sigma z^k)\) in place of
+\(f_c(\sigma z)\). Its means are still \(c,1\),
+its real and imaginary parts are positive, and
+\[
+ \avg{G_\sigma\cos(k\phi)}=\frac{\sigma c}{s},
+ \qquad F_\sigma+\mathcal HG_\sigma=c.
+\]
+The pairing \eqref{eq:pairing} and its strict conclusion are
+unchanged. This necessity does not assume that the candidate
+polynomial has \(k\)-fold angular symmetry.
+
+For sufficiency take \(L\) nodes from the cubic construction and set
+\[
+ P(r,\theta)=r^{2kL}
+       \prod_{j=1}^L|1-\alpha_j\ee^{2ik\theta}|^2.
+\]
+Each factor is the positive binary form
+\[
+ |(x-iy)^k-\alpha_j(x+iy)^k|^2
+ =(1+|\alpha_j|^2)(x^2+y^2)^k
+       -2\Rea\bigl[\alpha_j(x+iy)^{2k}\bigr].
+\]
+The product has degree \(2kL\) and satisfies
+\[
+ \frac{p'(\theta)}{2kL p(\theta)}
+       =\Ima h_L(\ee^{2ik\theta}).
+\]
+Thus the strict margin persists.
+The local analytic argument is unchanged because the angular
+speed does not vanish away from zero.
+Finally,
+\[
+ H=r^2\exp\left[-\frac{b}{k\omega}\sin2k\theta\right],
+ \qquad L_fH=-2ar^{2k}H.
+\]
+Its positive bounded angular factor gives coercivity and
+\(C^1\) regularity at zero. Decrease of \(H\) bounds all
+trajectories and prevents finite-time escape; the displayed
+derivative and comparison with \(r^2\) imply global
+asymptotic stability.
+\end{proof}
+
+For \(k=1\), replacing \(b\cos2\theta\) by
+\(b\cos2\theta+d\sin2\theta\) merely rotates its phase.
+The criterion becomes
+\[
+ (b^2+d^2)^{1/3}<a^{2/3}+|\omega|^{2/3}.
+\]
+No result for \(\omega=0\) or a general sum of different
+angular harmonics follows from this argument.
+
+\begin{corollary}[Classical binary-form SOS consequence]\label{cor:sos}
+The strict certificate region in Theorem~\ref{thm:main} and
+Corollary~\ref{cor:higher} is also the region admitting a
+homogeneous certificate \(P\) such that \(P\) and \(-L_fP\)
+are positive definite sums of squares.
+The same sufficient Lyapunov degree bounds apply.
+\end{corollary}
+\begin{proof}
+Any positive definite real binary form \(U\) of degree \(2m\)
+is a sum of two squares of real forms of degree \(m\).
+Indeed \(U(x,1)\) has positive leading coefficient and no real
+roots. Splitting its roots into nonreal conjugate pairs gives
+\(U(x,1)=F(x)\overline{F(x)}\). Homogenizing \(F\) yields
+\(U=(\Rea F)^2+(\Ima F)^2\).
+Apply this classical fact separately to the strict constructed
+\(P\) and \(-L_fP\). The reverse implication is immediate.
+\end{proof}
+This binary SOS principle and broader converse results are
+discussed in \cite[Section 5 and Theorem 5.3]{ahmadi-parrilo};
+no new general SOS theorem is claimed.
+If the vector field has rational coefficients, a sufficiently
+small rational perturbation of the coefficient vector of \(P\)
+preserves both strict inequalities on the compact unit circle.
+Thus a rational-coefficient polynomial certificate exists as well.
+This does not assert a two-square decomposition over the rationals.
+
+\section{Verification and limitations}
+The proof uses explicit analytic identities and inequalities, not
+a numerical optimization result. Supplementary author computations
+check the rational factorization of the critical pair, the value
+\(h_c(0)=1\), and five boundary parameter instances.
+One finite product of 2048 quadratic factors was evaluated at
+8192 angular samples for \(a=1.2\), \(b=2\sqrt2\),
+\(\sigma=0.98\). The sampled normalized margin was about
+\(0.1545\). This is a floating-point diagnostic candidate,
+not a certified global positivity check or a minimum-degree result.
+
+A separate diagnostic solves 18 necessary finite Toeplitz
+relaxations at three damping values and six truncation orders.
+The stored field named \texttt{degree} in that exploratory program
+means moment truncation order, not Lyapunov polynomial degree.
+Nine solver results are marked \texttt{optimal\_inaccurate};
+these labels are preserved. No solver status is used as a proof
+of feasibility, nonexistence or sharpness.
+
+The same involved model reviewer separately checked the proof
+dossier and additional symbolic identities, finite Hilbert
+pairings and high-precision branch-point profiles.
+This is not blind or human peer review, an independent additional
+vote, or formal verification. No Lean build of the earlier
+source or this argument was performed.
+The quantitative construction is analytic; a rigorously enclosed
+implementation of its quantile selection is not supplied.
+
+The comparison uses the complete mathematical text of
+Liu--Fitzsimmons v1 and the cited degree-complexity and SOS portions
+of the earlier works, not complete readings of the latter.
+Targeted searches did not locate this boundary; worldwide priority
+is unconfirmed, particularly for the associated harmonic extremal
+problem. Minimum-degree asymptotics and general multiharmonic
+classification remain open here. AI tools assisted this work.
+
+\small
+\begin{thebibliography}{9}
+\bibitem{liu}
+J. Liu and M. Fitzsimmons,
+\emph{A globally asymptotically stable planar homogeneous polynomial
+vector field with no polynomial Lyapunov function},
+arXiv:2607.16171v1, 17 July 2026.
+\url{https://arxiv.org/abs/2607.16171v1}.
+\bibitem{ahmadi-parrilo}
+A. A. Ahmadi and P. A. Parrilo,
+\emph{Stability of polynomial differential equations:
+complexity and converse Lyapunov questions}, arXiv:1308.6833.
+Theorem numbering refers to the author-hosted manuscript:
+\url{https://web.mit.edu/~a_a_a/Public/Publications/Selected_Papers/dTAC.pdf}.
+\bibitem{ahmadi-khadir}
+A. A. Ahmadi and B. El Khadir,
+\emph{On algebraic proofs of stability for homogeneous vector fields},
+IEEE Trans. Automat. Control \textbf{65} (2020), 325--332.
+The comparison uses Proposition 6.1 and Lemma 6.2 of the 2018 preprint:
+\url{https://optimization-online.org/wp-content/uploads/2018/03/6502.pdf}.
+\end{thebibliography}
+\end{document}
