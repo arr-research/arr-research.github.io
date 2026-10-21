@@ -1,0 +1,60 @@
+{
+  "paper_id": "PENDING_ARR_ID",
+  "version": "v1",
+  "version_id": "PENDING_VERSION_ID",
+  "canonical_sha256": "28ed664ca672ed1cdf776969c2872dc65b4e491c3d81eec32e615efeaafe097e",
+  "provider": "Anthropic",
+  "model_id": "claude-haiku-5-5",
+  "assessed_at": "2026-10-21T13:31:10+02:00",
+  "prompt_version": "ARR-ASSESS-1.0",
+  "independence": "not_involved_in_manuscript",
+  "recommendation": "major_revision",
+  "millennium_score": 3.4,
+  "overall_stars": 3,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 4,
+      "basis": "Checked by hand: Lemma 4, Lemma 5, Proposition 6 chain, parameter choice and arithmetic for (1) and (2), Corollaries 8-9, the Theorem 3 lower-bound algebra and Theorem 11 algebra. Section 6 (Theorem 2) is only sketched and was not verified."
+    },
+    "rigor": {
+      "stars": 3,
+      "basis": "Theorems 1, 3 and 11 are argued in enough detail to follow and check. Theorem 2 depends on uniform derivative and global estimates that are asserted rather than shown, and Lemma 10 is a sketch. Explicit constants are given for (1) and (2)."
+    },
+    "novelty": {
+      "stars": 3,
+      "basis": "Theorem 1 sharpens Tan et al. (r_n >= exp(-(1+o(1)) sqrt(n) log n)) by removing the log factor, reusing their normalization and Newton identity with attribution. The 1/sqrt(8) circle-root limit and the one-interior-zero threshold are new relative to the cited work. Literature checked only via search snippets."
+    },
+    "significance": {
+      "stars": 3,
+      "basis": "Settles the circle-root limit and the zero-count threshold for a narrow extremal residual problem. The negative answer to Erdos Problem 973 is credited to Luo-Yang-Zhu and Tan et al.; the exterior power-sum corollaries are quantitative refinements."
+    },
+    "reproducibility": {
+      "stars": 3,
+      "basis": "Explicit circle-root family and one-root formulas are complete. Float64 recomputation matched the Theorem 3 family (squared restricted ratio 0.1255 at n=1200, k=0) and the Theorem 11 slope identity to six digits. Supplementary diagnostics and audit cited in Section 8 are not included."
+    }
+  },
+  "summary": "Polynomials of degree n with all zeros in the closed unit disk; residual rho(P) = ||P' - P'(0)P||_2 / ||P||_2 (unsquared). Claims: (i) for circle-root polynomials the least residual tends to 1/sqrt(8), via a Mathieu ground-state lower bound and an explicit family in every large degree; (ii) for disk-root polynomials and arbitrary slope, s_n >= exp(-C sqrt(n)) for C > sqrt((8/3) log 17), and s_n >= exp(-3 sqrt(n)) for n >= 10^4, with corollaries for exterior power sums; (iii) one interior zero permits rho = O(n^(-1/6)) by an explicit construction; (iv) for fixed A, a fixed number M_A of interior zeros permits O(n^(-A)), without effective constants. Checks: SHA-256 matched; full text read via pdftotext and page images; hand checks of Lemmas 4-5, Proposition 6, parameters for (1) and (2), Corollaries 8-9, the Theorem 3 lower-bound arithmetic (Mathieu expansion as recalled, not fetched) and the Theorem 11 algebra. Float64 checks: the circle-root family gives a squared restricted residual of 0.12548 at n=1200 (k=0); the one-root construction gives P'(0)=P'(1)/P(1) to six digits for n=35 to 1120, with squared residual falling from 0.673 (n=70) to 0.0596 (n=1120). Not verified: Section 6 proof of Theorem 2, Lemma 10, Section 8 supplementary diagnostics (not supplied), and literature beyond search snippets. Recommendation: major revision, mainly because the Theorem 2 proof cannot be checked from the text.",
+  "strengths": [
+    "Theorem 1 proof chain checks: Lemma 4 normalization and separation, Lemma 5 Cauchy bound, the Proposition 6 Cesaro test, the choice giving C0 = sqrt((8/3) log 17), and the explicit arithmetic for n >= 10^4.",
+    "Theorem 3 upper bound is confirmed numerically: P'_{m,k}(0) = n/2 + 1/4 exactly, and the squared restricted residual tends to 1/8 (0.12548 at n=1200, k=0). The lower-bound expansion gives (c-1/4)^2 + 1/8 exactly, consistent with a_0(q) = -2q + 2 sqrt(q) - 1/4.",
+    "Theorem 11 explicit one-root family: identities (18)-(19), the slope and second-moment formulas, and the quadratic branch limit X -> 5/3, Y -> 1/4 check by hand. Numerically P'(0) = P'(1)/P(1) to six digits for n=35 to 1120.",
+    "Claims are scoped honestly: non-effective constants for Theorem 2, unresolved optimal rates, and explicit credit to Tan-Wang-Huang-Chen and Luo-Yang-Zhu."
+  ],
+  "weaknesses": [
+    "Section 6 (Theorem 2) is a sketch. The outer-arc derivative bounds, the global estimate (16) and the Lemma 10 positivity argument are asserted in a line or two each, so the superalgebraic claim cannot be checked from the text.",
+    "Novelty over Tan et al. [1] is incremental: Theorem 1 keeps their maximum-point normalization and Newton identity and removes one log factor. The negative answer to Erdos Problem 973 is credited to prior work.",
+    "The residual convention changes between sections. The abstract and Theorem 3 use the unsquared ratio (limit 1/sqrt(8)), but the proofs of Theorem 3 and Section 6 work with squared quantities. The square-root step is not written out.",
+    "Supplementary diagnostics and the independent audit of all 34 degree classes (Section 8) are cited but not included, so they could not be checked. Numerically, the one-root squared residual decays faster than n^(-1/3) over n=560 to 1120, so the stated bound is not tight, which the paper does not claim."
+  ],
+  "potential_errors": [
+    "Theorem 11 is stated as rho = O(n^(-1/6)), while its proof concludes rho^2 = O(n^(-1/3)). These are consistent, but the paper should state which exponent is the claim, and the abstract should match.",
+    "Section 2 gives the squared expansion (3) for the squared residual, and Theorem 3 is stated for the unsquared ratio. The passage from g_n to the limit 1/sqrt(8) needs an explicit square-root step."
+  ],
+  "strong_novelty_candidates": [
+    "Exact limit 1/sqrt(8) for the least normalized residual over circle-root polynomials, with an explicit family attaining it in every large degree (Theorem 3).",
+    "One interior zero suffices for a polynomial-rate residual, via an explicit algebraic construction, so one interior root is the minimal count for vanishing residual (Theorem 11)."
+  ],
+  "unresolved_material_objections": [
+    "Theorem 2 (superalgebraic upper bound with fixed M_A): Section 6 asserts uniform bounds without full estimates. These include the outer-arc derivative terms being polynomial in n times a Gaussian bound, the global estimate (16) with a uniform kappa, and the positivity of the weights from Lemma 10. Unless these are verified to be uniform in n for fixed K, the claim O(n^(-A)) with fixed M_A is unsupported. The reviewer could not check this from the text."
+  ]
+}

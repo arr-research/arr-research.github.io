@@ -1,0 +1,61 @@
+{
+  "paper_id": "PENDING_ARR_ID",
+  "version": "v1",
+  "version_id": "PENDING_VERSION_ID",
+  "canonical_sha256": "a6382c9eb75c5b60b877987e168e4d303f9a12b93ed6159a0aaeb11f4d3c1e3e",
+  "provider": "Anthropic",
+  "model_id": "claude-haiku-5-5",
+  "assessed_at": "2026-10-21T13:20:08+02:00",
+  "prompt_version": "ARR-ASSESS-1.0",
+  "independence": "not_involved_in_manuscript",
+  "recommendation": "major_revision",
+  "millennium_score": 3.0,
+  "overall_stars": 3,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 3,
+      "basis": "Hand-checked without running code: Thm 4 vertex weights (nonnegative via alpha*delta - beta*eta >= K^2), marginal coefficients, Lemma 5 parameters, identity (21), Prop 14 bound, g'(m), sign of J'(1/2) in Prop 12, and min v = 5/56. No error found. Cited results (Lemma 2, Berta et al., MSW) not verified."
+    },
+    "rigor": {
+      "stars": 3,
+      "basis": "Main chain (Lemma 5 to Thm 1, Thm 6, Thm 9) is argued step by step. Only sketched: subadditivity (17) and its Kraus argument in Thm 10, the arbitrary-partner EoF step after Cor 7, the 'repeat the proof' step in Thm 9, and floating-point tables with no certified intervals."
+    },
+    "novelty": {
+      "stars": 2,
+      "basis": "Mainly extends the Tang et al. and OpenAI boundary lambda^2 = k to lambda^2 < k, plus complementary-channel consequences. The paper disclaims several results itself (Cor 7 formula, flat roof, Hellmund-Uhlmann threshold). Priority of the extension against the literature was not checked."
+    },
+    "significance": {
+      "stars": 3,
+      "basis": "Gives additivity and a simulation-cost formula for one qubit family with extra dephasing, and a strict Choi-cost separation example. Scope is memoryless use of phase-covariant qubit channels; adaptive, quantum and private capacities are excluded by the paper itself."
+    },
+    "reproducibility": {
+      "stars": 3,
+      "basis": "The main chain is explicit enough to follow. The supplement (scripts, proof dossier) was not accessed. Numerical results are floating point, as the paper states. Several steps depend on external proofs, which is the basis for the major_revision recommendation."
+    }
+  },
+  "summary": "Assessed the exact artifact paper.pdf (15 pages; SHA-256 matches SHA256.txt). The manuscript claims a population-resolved thermal inequality (Thm 4) that extends the Tang et al. / OpenAI boundary lambda^2 = k to lambda^2 < k with a third vertex. From it follow Holevo additivity with arbitrary partner for generalized amplitude damping with extra dephasing (Thm 1), strong convex-roof superadditivity and a state-cost statement (Thm 6, Cor 7), a complementary-channel parallel simulation cost (Thm 9, Thm 10), a closed form in a region (Cor 11), and a strict Choi-cost separation example (Prop 12). I checked by hand the vertex decomposition of Thm 4 against Lemma 2, the parameter map of Lemma 5, identity (21), the Prop 14 bound, and the Prop 12 arithmetic (J'(1/2) > 0; minimum of v equals 5/56). I found no error that invalidates a main claim. Limitations: the core inequality depends on Lemma 2, an external triangular entropy inequality I did not verify; eq. (17) and its Kraus argument, the arbitrary-partner EoF step, and parts of Thm 9-10 are sketched; numerical values and the supplement were not checked; no code was run and no sources were browsed. The recommendation is major_revision because of these unproven steps and the external dependence, not because of a confirmed error.",
+  "strengths": [
+    "The Thm 4 vertex decomposition is consistent: weights are nonnegative (beta*U1 + eta*U0 <= u follows from alpha*delta - beta*eta >= K^2), and the coefficients of S(XX*) and S(YY*) match alpha+eta and beta+delta.",
+    "Lemma 5 follows from Thm 4 with X = L_j psi_0 and Y = L_j psi_1. The parameters sum to 1, and alpha*delta - beta*eta = k p(1-p) >= lambda^2 p(1-p) = K^2, as required.",
+    "Identity (21) is an exact decomposition with nonnegative terms given the one-site bound and Cor 13. The Prop 14 error bound follows from the interpolation estimate and the convex-hull identity.",
+    "The paper separates cited inputs (Lemma 2, Berta et al., Hellmund-Uhlmann, MSW) from its own steps and states an explicit scope that excludes adaptive, quantum and private capacities."
+  ],
+  "weaknesses": [
+    "The new inequality is a reduction to Lemma 2, an external triangular inequality that is stated but not proved in the paper. The core chain therefore depends on a result this review could not verify.",
+    "Eq. (17), the subadditivity of channel formation used in Thm 10, is only sketched. The Kraus argument does not show explicitly that the decompositions chosen for the two marginals are admissible for the joint purified input.",
+    "The claim E_F(omega tensor tau) = E_F(omega) + E_F(tau) for every finite tau is a strong statement. Its proof is a short lift through Thm 6. The exact class of omega should be stated and compared with Matsumoto-Shimono-Winter.",
+    "The one-step bound for Phi^c in Thm 9 is obtained by 'repeating the proof' rather than written out. The multi-copy step in Thm 10 uses the complement of a tensor power, which is handled only implicitly.",
+    "Numerical values in Section 8 and the separation example are floating point and uncertified, as the paper states. They cannot by themselves support the strict-separation or closed-form claims."
+  ],
+  "potential_errors": [
+    "Possible gap: S(BB'|IJ) <= S(B|IJ) + S(B'|IJ) is used in the proof of (17). It holds for classical labels I, J, but the text states this only in passing.",
+    "Scope mismatch: the abstract speaks of every bipartite state supported on the two-dimensional Stinespring range, while Cor 7 and its proof use only states V sigma V* for Davies-family Stinespring isometries. The two statements should be aligned.",
+    "Prop 12 requires E_C(J_N) = G(1/2)/ln2 via Cor 7, and G_N(p) = J(p) on a neighbourhood of p = 1/2. The neighbourhood is argued only through the sign of a quadratic coefficient, which is not a full proof.",
+    "Cor 11 imports the flat-concurrence threshold of Hellmund-Uhlmann as a citation rather than rederiving it. The closed form inherits any error in that citation, which I did not check."
+  ],
+  "strong_novelty_candidates": [
+    "Thm 4, the population-resolved thermal inequality with extra dephasing, and its use in Lemma 5, which extends the lambda^2 = k boundary to lambda^2 < k. Candidate only, pending independent verification of Lemma 2 and the literature.",
+    "Cor 11 and Prop 12: a closed-form complementary parallel simulation cost in a region, and a strict separation from the Choi-state cost. Candidate only, pending confirmation of the simulation-cost identities."
+  ],
+  "unresolved_material_objections": []
+}
