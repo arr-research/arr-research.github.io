@@ -1,0 +1,3 @@
+No exact full-text assessment of this PDF exists; no score is claimed or entered in the public aggregate.
+
+The full computational supplement (about 1.9 GB of CNF/DRUP proofs and witness files) is NOT redistributed; supplement/SHA256SUMS.txt lists the SHA-256 of files held by the author, including g37/ and g27/ items that are not included here. Only main.tex, README_supp.txt, SHA256SUMS.txt, verify_witnesses.py and lean/ are published. Lower bounds for N=11..17 have no independent certificate (see the manuscript). No independent human peer review, formal verification, priority-search certification or editorial acceptance is claimed.
