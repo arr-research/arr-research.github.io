@@ -1,0 +1,63 @@
+{
+  "paper_id": "PENDING_ARR_ID",
+  "version": "v1",
+  "version_id": "PENDING_VERSION_ID",
+  "canonical_sha256": "452ec24cbada7e8b3ccc9d6c4198e8e89db74c2f3bb8b8c1eb1e9af0c3796d89",
+  "provider": "anthropic",
+  "model_id": "claude-haiku-5-5",
+  "assessed_at": "2026-10-22T05:02:15+02:00",
+  "prompt_version": "ARR-ASSESS-1.0",
+  "independence": "not_involved_in_manuscript",
+  "recommendation": "major_revision",
+  "millennium_score": 2.00,
+  "overall_stars": 2,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 2,
+      "basis": "Both lower-bound witnesses (n=6 length 14, n=7 length 17) re-checked by me: valid 2-increasing sequences in range. F(1)-F(4) reproduced by my own search. Upper bound F(6)<=14 has several independent checks. Upper bound F(7)<=17 rests on 407 of 425 checked DRUP proofs; 18 largest unchecked, plus an earlier cube-encoding bug."
+    },
+    "rigor": {
+      "stars": 3,
+      "basis": "Careful status table and disclosure of what was not done. Partition arithmetic and symmetry counts are consistent (84, 83, 77, 312; 471 = 425+46; 407+18=425). But Theorem 1 states F(7)=17 without the caveat that its upper bound is only partly certified. The remark 'equality only at n=4' is contradicted by F(1)=1=1^{3/2}."
+    },
+    "novelty": {
+      "stars": 2,
+      "basis": "Claims F(6)=14 and F(7)=17 are new after a limited search (Gowers-Long, a formal-conjectures file, two web searches). The paper itself makes no priority claim. I could not verify the literature, Table 1 values for n<=5, or the cited Lemma 1.7 (no access to [1]). Methods are standard SAT/CP for small extremal problems."
+    },
+    "significance": {
+      "stars": 2,
+      "basis": "The paper says it is a small computational datum that neither proves nor refutes Conjecture 1.8, and covers only n<=7. F(7)=17 sits below n^{3/2}=18.52. It gives no structural or asymptotic result, so its relevance to the open question depends on larger n, which are not addressed."
+    },
+    "reproducibility": {
+      "stars": 2,
+      "basis": "Scripts (cube.py, proofcubes.py, bnb.go, rupcheck), the Lean file and a 2.7 GB proof supplement are cited but are not in my folder, so I could not inspect or rerun them. The witnesses are printed and I re-checked them. The n=7 upper-bound pipeline cannot be reproduced from the paper text alone."
+    }
+  },
+  "summary": "Short computational note claiming F(6)=14 and F(7)=17 for the Gowers-Long 2-increasing triple problem. The lower-bound witnesses are correct (I re-checked both). The F(6)=14 upper bound has a reasonable evidence base: branch-and-bound, two SAT solvers, and a DRUP proof accepted by a second checker. The F(7)=17 upper bound is only partly certified: 18 of 425 proofs are unchecked, there is no complete certificate, and an earlier encoding bug was found. Theorem 1 does not reflect this. Recommendation: major revision.",
+  "strengths": [
+    "Lower-bound witnesses for n=6 (14) and n=7 (17) are valid 2-increasing sequences in range; I re-checked both.",
+    "A status table separates rigorous, computational and partly proof-checked claims.",
+    "F(6)<=14 is supported by an independent branch-and-bound program, CP-SAT and CaDiCaL, and a DRUP proof accepted by a second checker that also rejects five false proofs.",
+    "Symmetry reduction and partition arithmetic are internally consistent: 84 sorted first elements, 83 excluding (1,1,1), 77 second elements, 312 subcubes of (1,1,2); 471 = 425+46 and 407+18 = 425.",
+    "The paper discloses AI-assisted production, the absence of human review and the limits of its verification."
+  ],
+  "weaknesses": [
+    "The F(7)<=17 upper bound lacks checked certificates for 18 of 425 DRUP proofs, the largest ones (up to 9e6 lemmas). Only solver agreement on a coarser 160-cube split supports them.",
+    "There is no LRAT or drat-trim certificate, the RUP checkers are unverified software, and the cube splitter is a single implementation.",
+    "The paper discloses an earlier bug in the proof partition but does not say whether the 160-cube solver runs, which include cubes with two fixed elements, were repeated after the fix.",
+    "Theorem 1 and the abstract state F(7)=17 without qualification, although Table 2 marks the upper bound as only partly proof-checked.",
+    "The novelty claim rests on a limited search, and the paper's own statement that no priority is claimed weakens its significance.",
+    "Significance is limited to n<=7 with no structural or asymptotic result, and the paper says it neither proves nor refutes Conjecture 1.8."
+  ],
+  "potential_errors": [
+    "Section 2 says F(n) <= n^{3/2} holds 'with equality only at n = 4'. Table 1 gives F(1)=1=1^{3/2}, so equality also holds at n=1.",
+    "Section 1 attributes to Gowers and Long the bound F(n) >= n^{3/2} for perfect squares and Lemma 1.7. I could not verify these (no access to [1]).",
+    "Section 1 says the formal-conjectures file marks F(4)=8 as a sorry. I could not verify this (no web access, file not in my folder).",
+    "Table 1 values for n<=5 are attributed to [1]. I reproduced only n<=4 (1, 2, 4, 8) with a quick search that is not an independent check of the upper bounds."
+  ],
+  "strong_novelty_candidates": [],
+  "unresolved_material_objections": [
+    "The upper bound F(7)<=17, which Theorem 1 asserts, is not fully certified: 18 of the 471 proof jobs have no checked certificate (the largest, up to 9e6 lemmas). If any of them is wrong, F(7)=17 is unsupported; the only evidence for them is agreement between two solvers on a coarser 160-cube split.",
+    "The paper reports an earlier encoding bug in the cube partition (cubes with two fixed elements were encoded contradictorily). It does not state that the 160-cube CaDiCaL and MapleChrono runs, which include the (1,1,1) subcubes with two fixed elements, were repeated with the corrected encoding. Unless shown, the claim that all 160 cubes are unsatisfiable is not established for the corrected encoding."
+  ]
+}

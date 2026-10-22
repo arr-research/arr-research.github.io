@@ -1,0 +1,30 @@
+CONTROLES DEL REVISOR (ARR-ASSESS-1.0) — carpeta n-gl-haiku
+Fecha de la evaluación: 2026-10-22T05:02:15+02:00
+Modelo declarado en informe.json: claude-haiku-5-5 (provider: anthropic). No se usaron subagentes.
+
+1. Instrucciones, memoria y CLAUDE.md cargados al empezar
+- Mi contexto inicial ya contenía el CLAUDE.md global del usuario (C:\Users\lluis\.claude\CLAUDE.md) y bloques del entorno de la aplicación: correo del usuario, reglas de atribución de commits, lista de skills y herramientas diferidas, y una lista de sesiones vinculadas con sus nombres e identificadores. No las usé para la evaluación y no actué sobre ellas.
+- La instrucción del sistema menciona un directorio de memoria persistente. NO lo abrí ni leí ningún archivo de memoria, MEMORY.md ni TRASPASO.
+- El encargo menciona una carpeta compartida de notas de sesiones. NO la abrí.
+- Por tanto, el contexto no está limpio: no puedo verificar aislamiento de contexto. La declaración independence=not_involved_in_manuscript es la que indica el operador; no es una comprobación mía.
+
+2. Qué sabía del manuscrito antes de abrirlo
+- Solo el encargo: un paper de la carpeta, con su SHA-256 indicado en SHA256.txt. No conocía título, autor, resultados ni cita alguna.
+- Tenía conocimiento general del problema de Gowers y Long (sucesiones 2-crecientes) por entrenamiento, no por ninguna fuente consultada en esta sesión.
+
+3. Qué leí y qué hice
+- INSTRUCCIONES.md (completo), SHA256.txt y paper.pdf (4 páginas, completo).
+- Verificación de hash: certutil -hashfile paper.pdf SHA256 = 452ec24cbada7e8b3ccc9d6c4198e8e89db74c2f3bb8b8c1eb1e9af0c3796d89, igual que SHA256.txt. Coincide.
+- Comprobé con un script Python propio (en la carpeta temporal de la sesión, no en la carpeta del paper):
+  a) los dos testigos del paper: longitud 14 en [6]^3 y 17 en [7]^3, sin repeticiones y 2-crecientes: VÁLIDOS;
+  b) F(1)..F(4) = 1, 2, 4, 8 con una búsqueda DFS que solo recorre órdenes lexicográficos. No es una verificación completa (no prueba cotas superiores en general y puede subestimar) y no verifica F(5), F(6) ni F(7);
+  c) recuentos de la partición del paper: 84 triples ordenados en [7]^3, 83 sin (1,1,1), 77 segundos elementos para (1,1,1), 312 para (1,1,2). Coinciden con el texto.
+- No usé la web. No abrí nada fuera de la carpeta del paper (salvo el directorio temporal de scratchpad para mi script).
+
+4. Qué no pude verificar
+- Las cotas superiores F(6)<=14 y F(7)<=17: no ejecuté CP-SAT, CaDiCaL, Glucose, MapleChrono, ni los checkers Go/Python. No tengo los archivos del suplemento (bogus/, witness_n6.txt, witness_n7.txt, cube.py, proofcubes.py, bnb.go, rupcheck2.py, Gowers.lean, ni los CNF/DRUP).
+- La tabla de valores n<=5 atribuida a Gowers y Long [1]; el lema 1.7; la conjetura 1.8 y la cota n^{3/2} para cuadrados perfectos: no tengo acceso a [1].
+- El archivo de formal-conjectures y el sorry de F(4)=8: no verificados.
+- Los 18 DRUP no comprobados: no verificables por mí.
+- La afirmación de ausencia de prioridad en la literatura: no verificada.
+- La rigurosidad del código de partición (cube.py) y la ausencia de error tras la corrección del bug: no verificables desde el texto.
