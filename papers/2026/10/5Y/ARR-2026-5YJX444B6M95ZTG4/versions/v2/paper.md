@@ -1,0 +1,1211 @@
+# Classical capacities and complementary simulation for qubit Davies channels
+
+Extracted text; the canonical PDF controls mathematical notation.
+
+Classical capacities and complemen tary sim ulation
+for qubit Da vies c hannels
+Lluis Eriksson
+17 Octob er 2026  W orking pap er
+V ersion 2, 21 Octob er 2026
+Abstract
+W e extend the thermal blo c k en trop y estimate for generalized amplitude damping to the full
+qubit Da vies region, including additional dephasing. The pro of com bines the triangular inequalit y
+of T ang, Zh u, Bai and W ang with a con trolled-purication consequence of strong subadditivit y:
+a third v ertex completes the xed-en trop y decomp osition used for the thermal b oundary . The
+resulting p opulation-resolv ed b ound holds with ev ery nite-dimensional partner. It implies strong
+sup eradditivit y of the con v ex ro of of output en trop y , and hence arbitrary-partner additivit y of
+Holev o information and classical capacit y for b oth the Da vies c hannel and its complemen tary
+c hannel. W e giv e scalar con v ex-en v elop e form ulas for b oth capacities. Ev ery bipartite state sup-
+p orted on the t w o-dimensional Stinespring range has strongly additiv e en tanglemen t of formation,
+so its state en tanglemen t cost requires no regularization. A scalar momen t program ev aluates that
+formation functional for arbitrary input coherence. The state/c hannel corresp ondence, comple-
+men t dualit y and existing axial con v ex-ro of geometry are explicitly attributed to prior w ork. A
+normalized rev erse c hannel sta ys within the Da vies region, allo wing us also to remo v e regulariza-
+tion from the parallel en tanglemen t cost of the complemen tary c hannel. W e obtain an elemen tary
+rate in a kno wn at-ro of region and exhibit a non unital example whose sim ulation cost strictly
+exceeds the cost of its Choi state. Finite-blo c k and n umerical b ounds supp ort the results. The tri-
+angular theorem remains an external dep endency; the original c hannel's sim ulation cost, adaptiv e
+sim ulation and quan tum capacit y are not determined.
+1 Channel family , an teceden ts and result
+A qubit can relax to w ard a thermal p opulation while its coherence deca ys faster than relaxation alone
+requires. W rite the corresp onding c hannel as
+Φa,b,λ
+1−p z
+¯z p
+
+=
+1−t(p)λz
+λ¯z t(p)
+
+, t(p) =a+kp, k= 1−a−b,(1)
+where
+a, b≥0, a+b≤1,0≤λ 2 ≤k, λ≥0.(2)
+A xed phase of the coherence m ultiplier can b e remo v ed b y an output unitary . The map is completely
+p ositiv e: it is generalized amplitude damping follo w ed b y dephasing with m ultiplierλ/
+√
+kwhenk >0.
+The limiting casek= 0is a constan t diagonal-output c hannel.
+The region (2) is the closure of the usual dissipativ e qubit Da vies family , allo wing degenerate
+limits and exc hange of the energy lab els. Roga, F annes and yczk o wski c haracterized these maps
+and their single-use minim um output en trop y [1]. A t nite p ositiv e relaxation times their parameters
+satisfy
+k=e −t/T1 , λ=e −t/T2 , T 2 ≤2T 1.
+1
+
+Heretin the exp onen ts is time, whereast(p)in (1) is an output p opulation. W e use (1) as the math-
+ematical denition throughout. General phase-co v arian t qubit c hannels allo w the larger complete-
+p ositivit y regionλ 2 ≤k+ab; that en tire region is not claimed here.
+The pro of builds on t w o recen t results. T ang et al. established strong additivit y for qubit c hannels
+admitting a pure output, using a triangular blo c k en trop y inequalit y [2]. Op enAI extended that
+inequalit y to the thermal equalit y case and obtained strong additivit y for generalized amplitude
+damping [3]. In our parameters that b oundary isλ 2 =k. W e add a third v ertex to their xed-
+en trop y decomp osition, pro ving the inequalit y forλ 2 < kas w ell. The new v ertex follo ws directly
+from strong subadditivit y , and is not a new en trop y axiom. The scalar con v ex en v elop e is necessary
+b ecause extra dephasing need not preserv e con v exit y of the pure-output en trop y .
+Concurren t w ork on generalized amplitude damping.F ang [4] (arXiv:2609.14621, rst p osted
+13 Septem b er 2026, revised 6 Octob er 2026) studies generalized amplitude-damping c hannels with
+damping probabilit yγand equilibrium o ccupationN, b oth in[0,1]: the output p opulation isγN+
+(1−γ)qand the coherence is m ultiplied b y √1−γ. In the notation of (1) this isa=γN,b=
+γ(1−N),k=λ 2 = 1−γ, that is, the b oundaryλ 2 =kof (2). A ccording to its abstract and its
+Corollary 2, the classical capacit y of these c hannels equals the kno wn one-cop y Holev o information for
+allγ, N∈[0,1], so no regularization is needed and the capacit y is a scalar optimization. The pap er
+also determines the strong-con v erse exp onen t o v er the full parameter range through the sandwic hed
+Rén yi Holev o information, and pro v es additivit y of that quan tit y at ev ery order ab o v e one with a
+triangular Sc hatten-norm inequalit y , whic h it describ es as extending the log-determinan t metho d of
+T ang et al. from the en trop y to trace p o w ers. W e describ e [4] only from its abstract and the statemen ts
+in its HTML v ersion. W e ha v e not v eried its pro ofs, and w e do not compare its metho d with ours
+b ey ond this.
+Consequen tly , on the b oundaryλ 2 =kthe equalit yC(Φ) =χ(Φ)of Theorem 1, with the one-cop y
+maximization (4), is not new relativ e to [4] (nor to [3], dated 24 Septem b er 2026). What Theorem 1
+adds, as far as the statemen ts of [4] sho w, is the in terior0≤λ 2 < kwith extra dephasing, where the
+c hannel is generally not a generalized amplitude-damping c hannel; the additivit y statemen ts (5)(7)
+with an arbitrary nite-dimensional partner c hannel, whic h the abstract of [4] do es not state; and the
+complemen tary-c hannel and sim ulation results of Sections 5 and 6. W e mak e no claim ab out what
+the pro ofs in [4] con tain b ey ond what is quoted here.
+Sev eral o v erlaps are already understo o d: unital qubit c hannels [9], en tanglemen t-breaking c han-
+nels [10], the pure-output b oundary [2], and the generalized amplitude-damping b oundaryλ 2 =k
+[3, 4]. Earlier w ork treated appro ximate Holev o additivit y for damping com bined with dephasing [11];
+its ordinary damping examples no w also fall within the pure-output theorem. Our con tribution is the
+stated blo c k extension and its additivit y consequences across the thermal in terior. Roga explicitly
+listed Da vies capacit y additivit y as op en in 2011 [15, Section 6, p. 78]; this historical statemen t is
+not a certicate of presen t priorit y . W e do not claim a new description of Da vies dynamics or a new
+single-qubit minim um-en trop y optimization. The state formation and complemen tary-c hannel con-
+sequences b elo w use the established MatsumotoShimonoWin ter corresp ondence [16], complemen t
+dualit y [19], and the regularized formation c haracterization of state cost [17]. Hellm und and Uhlmann
+already analyzed the axial one-use con v ex ro ofs [20]; the new op erational step is the stated strong
+additivit y , not redisco v ery of those ro ofs.
+The sim ulation result concerns the complemen tary c hannel and the parallel diamond-norm task
+of Berta et al. [23]. Wilde already determined the cost of ep olarizing c hannels, the complemen ts of
+dep olarizing c hannels, ev en under sequen tial tests [24, Section IV.D]. More generally , the unital qubit
+case is co v ered b y the unital additivit y and co v arian t c hannel/state mac hinery [9, 16, 24]. W e do not
+claim these cases as new. The additional non unital region is useful precisely b ecause the optimizing
+2
+
+reference input need not b e a Bell pair; Section 6 giv es an exact example. The scalar ro of and the
+parallel sim ulation theorem are an teceden ts; closure of the explicit rev erse parameters lets us apply
+the Da vies range theorem to this dieren t bipartition.
+All spaces b elo w are nite dimensional. LetS(ρ) =−Trρlnρb e en trop y in nats and put
+h(p) =−plnp−(1−p) ln(1−p), g(u) =h
+1 + √1−4u
+2
+
+.
+Zero terms are in terpreted b y con tin uit y . Dene
+v(p) =t(p)(1−t(p))−λ 2p(1−p), e(p) =g(v(p)), f= coe,(3)
+wherecoeis the largest con v ex function b elo weon[0,1].
+F or a c hannelN,χ(N)denotes the maxim um ensem ble Holev o information in bits,S min(N) =
+minρ S(N(ρ)), and
+C(N) = sup
+n≥1
+1
+nχ(N⊗n)
+is its unassisted memoryless classical capacit y , with arbitrary en tangled blo c k enco dings and collectiv e
+output measuremen ts [12, 13]. No preshared en tanglemen t or feedbac k is assumed.
+Theorem 1.F or every channelΦ = Φ a,b,λ satisfying(2),
+C(Φ) =χ(Φ) = 1
+ln 2 max
+0≤p≤1
+{h(a+kp)−f(p)}.(4)
+A n ensemble with at most four pur e signals, c onsisting of at most two e qual ly weighte d opp osite-phase
+p airs within their r esp e ctive p opulations, attains the one-use maximum. F or every nite-dimensional
+channelN,
+χ(Φ⊗ N) =χ(Φ) +χ(N),(5)
+Smin(Φ⊗ N) = min
+p
+e(p) +S min(N),(6)
+C(Φ⊗ N) =χ(Φ) +C(N).(7)
+In p articularχ(Φ ⊗n) =nχ(Φ)for everyn.
+Theorem 1 states unrestricted Holev o additivit y . The stronger xed-marginal con v ex-ro of state-
+men t is pro v ed in Section 4. The partner's classical capacit y retains its regularization; w e do not
+replaceC(N)b yχ(N). F orm ula (4) is a scalar con v ex-en v elop e optimization, not a claimed elemen-
+tary closed form.
+2 The blo c k en trop y extension
+W e rst state precisely the external inequalit y used in the pro of.
+Lemma 2(T riangular en trop y inequalit y , T ang et al.).L etA, B, Chave the same nite r e ctangular
+shap e, with squar e d Hilb ertSchmidt normsx, y, zsumming to one. Then
+S
+A B
+C0
+A B
+C0
+∗
+≥xS(AA ∗/x) +yS(BB ∗/y) +zS(CC ∗/z) +g(yz).
+A zer o-weight term is omitte d.
+3
+
+This is the same-shap e rectangular case of [2, Theorem 4.2], after p erm utation of blo c k ro ws, also
+stated and pro v ed in [3, Theorem 2.1]. W e in v ok e that result; it is not pro v ed anew or attributed to
+this pap er.
+The additional v ertex uses only data pro cessing for conditional en trop y . Its t w o-lab el case also
+follo ws from Amoso v's phase-damping estimate [14, Prop osition 5], with partial trace as the partner
+c hannel. W e giv e the short purication pro of to x the direction of the en trop y inequalit y; the v ertex
+estimate itself is not claimed as new.
+Lemma 3(Con trolled purications).L etρ= (ρ ij)b e a density matrix and letX i b e matric es of the
+same shap e withTrX iX∗
+i = 1. Then
+S
+
+X
+ij
+ρij|i⟩⟨j| ⊗XiX∗
+j
+
+ ≥S(ρ) +
+X
+i
+ρiiS(XiX∗
+i ).
+Pr o of.V ectorizeX i as a normalized v ector|X i⟩BE . The mapV|i⟩=|i⟩ A|Xi⟩BE is an isometry . Th us
+Ω =V ρV∗ hasS(ABE) Ω =S(ρ), and itsABmarginal is the matrix in the statemen t. DephaseA,
+obtainingΩ ′. Strong subadditivit y implies that applying a c hannel to the conditioning systemAB
+cannot decreaseS(E|AB)[8]. Consequen tly
+S(AB)Ω −S(ABE) Ω ≥S(AB) Ω′ −S(ABE) Ω′.
+The righ t side is P
+i ρiiS(XiX∗
+i ): the classical en trop y oficancels, and eac h conditionalBEv ector
+is pure. Rearrangemen t pro v es the claim.
+Theorem 4(Thermal inequalit y with additional dephasing).L etX, Y∈C d×r satisfyTrXX ∗ =
+TrY Y∗ = 1. L etα, β, η, δ, K≥0satisfy
+α+β+η+δ= 1, αδ−βη≥K 2.
+F or
+T=
+αXX ∗ +βY Y∗ KXY ∗
+KY X∗ ηXX ∗ +δY Y∗
+
+, U 0 =α+β, U 1 =η+δ, u=U 0U1 −K 2,
+one has
+S(T)≥(α+η)S(XX ∗) + (β+δ)S(Y Y ∗) +g(u).(8)
+Pr o of.The assumptions ensure p ositivit y ofT: its coheren t part with diagonal blo c ksαXX ∗, δY Y∗
+is p ositiv e b ecauseαδ≥K 2, and the remaining diagonal blo c ks are p ositiv e.
+Assume rstU 0U1 >0andu >0. WithU 0, U1, Kxed, the constrain t b ecomes
+βU1 +ηU 0 ≤u.
+In the co ecien t order(α, β, η, δ)the feasible triangle has v ertices
+A= (K 2/U1, u/U1,0, U1),
+B= (U 0,0, u/U0, K2/U0),
+C= (U 0,0,0, U1).
+The original p oin t has resp ectiv e w eigh ts
+wA =βU 1/u, w B =ηU 0/u, w C = 1−w A −w B.
+4
+
+They are nonnegativ e. Eac h v ertex retains the same ro w masses and o-diagonal scalarK, hence the
+sameu.
+A tA, write
+TA =M AM∗
+A, M A =
+√αX √βY√
+δY0
+
+.
+Here
+√
+αδ=Kandβδ=u, so Lemma 2 giv es (8) at this v ertex. A tBuse
+MB =
+√U0X0√
+δY √ηX
+
+.
+It satisesM BM∗
+B =T B; in terc hange its blo c k ro ws to apply the triangular lemma, with corner-mass
+pro ductU 0η=u.
+A tC, apply Lemma 3 toρ=
+ U0 K
+K U1
+
+and the pairX, Y. The scalar state has determinan tuand
+en trop yg(u), giving the desired b ound. Finally , en trop y conca vit y applied toT=w ATA +w BTB +
+wCTC preserv esg(u)and the ane w eigh ts of the t w o blo c k en tropies.
+If a ro w mass v anishes,K= 0and the result is ordinary en trop y conca vit y in the remaining blo c k.
+Ifu= 0and b oth ro w masses are p ositiv e, the constrain t forcesβ=η= 0; Lemma 3 applies with a
+pureρ. This also establishes all b oundaries.
+The estimate is sharp for ev ery allo w ed scalar co ecien t tuple: settingX=Ygiv esT=ρ⊗XX ∗,
+so equalit y holds. The equalit y b oundaryαδ−βη=K 2 is exactly the t w o-v ertex thermal argumen t
+in [3, Theorem 3.1]; the third v ertex is needed to co v er the inequalit y region.
+3 P opulation-resolv ed b ound and capacit y
+Lemma 5.L etNb e any nite-dimensional channel and|ψ⟩= √1−p|0⟩|ψ 0⟩+ √p|1⟩|ψ1⟩, wher e the
+nonzer o br anches ar e normalize d. Then
+S((Φ⊗ N)(ψ))≥e(p) + (1−p)S(N(ψ 0)) +pS(N(ψ 1)).(9)
+No ortho gonality of the c onditional ve ctors is r e quir e d.
+Pr o of.F or Kraus op eratorsL j ofN, form the matrices with columnsX j =L jψ0 andY j =L jψ1.
+Their squared Hilb ertSc hmidt norms are one. The output has the form in Theorem 4, with
+α= (1−p)(1−a), β=pb, η= (1−p)a, δ=p(1−b), K=λ
+p
+p(1−p).
+Hereαδ−βη=kp(1−p)≥K 2,α+η= 1−p, andu=v(p). Apply (8). A tp= 0,1only one
+pro duct branc h remains and the form ula follo ws directly .
+F or clarit y , the con v ex en v elop e can b e written as
+f(p) = min
+0≤q,r,s≤1
+(1−s)q+sr=p
+{(1−s)e(q) +se(r)}.(10)
+Indeed the minim um of
+R
+e dµo v er probabilit y measures with meanpis attained b y compactness.
+This minim um is the lo w er con v ex en v elop e. An extreme minimizing measure has at most t w o supp ort
+p oin ts: w eigh ts on three distinct supp ort p oin ts admit a nonzero signed p erturbation preserving total
+mass and mean. Equiv alen tly , eac h lo w er supp orting line of the con v ex h ull of the graph needs at
+most t w o con tact p oin ts. Con tin uit y ofeincludes endp oin t and one-p oin t cases.
+5
+
+Pr o of of The or em 1.Rening an y signal ensem ble in to pure states do es not decrease its Holev o in-
+formation. A pure qubit with p opulationphas output en trop ye(p), indep enden tly of its phase. If
+an ensem ble has mean p opulation¯p, dephasing its a v erage output increases en trop y , and con v exit y
+off≤egiv es
+(ln 2)χ(ensem ble)≤h(a+k¯p)−
+X
+ℓ
+wℓe(pℓ)≤h(a+k¯p)−f(¯p).
+Con v ersely c ho oseq, r, sattaining (10). A t p opulationquse √1−q|0⟩± √q|1⟩, eac h with probabilit y
+(1−s)/2; at p opulationruse the analogous pair, eac h with probabilit ys/2. The a v erage is diagonal
+with p opulationp, and the a v erage output en trop y isf(p). Maximizing o v erppro v es the single-use
+form ula and the four-signal b ound.
+F or a pure ensem ble{w ℓ, ψℓ}on the input ofΦ⊗ N, apply Lemma 5 to ev ery signal. The branc h
+outputs ofNwith probabilitiesw ℓ(1−p ℓ), wℓpℓ form a v alid ensem ble of states of the output ofN;
+writeψ 0ℓ, ψ1ℓ for the conditional branc hes ofψ ℓ and¯p= P
+ℓ wℓpℓ. Its a v erage is exactly the marginal
+¯ωB′ on the output ofNof the a v erage output state¯ω. The marginal of¯ωon the output ofΦis a qubit
+state with diagonal(1−t(¯p), t(¯p)), so its en trop y is at mosth(a+k¯p). Subadditivit y therefore b ounds
+the en trop y of the full a v erage output b yh(a+k¯p)+S(¯ω B′). Subtracting the a v erage of (9), and usingP
+ℓ wℓe(pℓ)≥f(¯p)together withS(¯ω B′)− P
+ℓ wℓ[(1−p ℓ)S(N(ψ 0ℓ)) +p ℓS(N(ψ 1ℓ))]≤(ln 2)χ(N),
+yields
+(ln 2)χ(join t ensem ble)≤h(a+k¯p)−f(¯p) + (ln 2)χ(N).
+The single-use form ula and pro duct ensem bles pro v e (5). The same one-step inequalit y b ounds ev ery
+pure output en trop y b elo w b ymin p e(p) +S min(N); en trop y conca vit y handles mixed inputs, and
+pro ducts attain the b ound. This pro v es (6).
+Iteration of (5) giv esχ(Φ ⊗n ⊗ N⊗n) =nχ(Φ) +χ(N ⊗n). T aking the regularized capacit y pro v es
+(7), includingC(Φ) =χ(Φ).
+4 En tanglemen t formation in the dilation range
+F or an y nite c hannelMdene its con v ex ro of of output en trop y , in nats, b y
+bSM(ρ) = min
+ρ=P
+j wjψj
+X
+j
+wjS(M(ψj)),
+where theψ j are pure states. IfV:C 2 →B⊗Eis a Stinespring isometry ofΦ, then
+FΦ(σ) := bSΦ(σ) =E F (V σV∗).(11)
+HereE F denotes bipartite state en tanglemen t of formation in nats. Equation (11) is the standard
+c hannel/state corresp ondence [16]. Eac h pure comp onen t of a state supp orted onranVlies in that
+range and therefore pulls bac k to a pure qubit; this also giv es a direct pro of of the equalit y .
+An elemen tary observ ation strengthens the p opulation argumen t. Ev ery qubit stateσ=
+ 1−p z
+¯z p
+
+is a mixture of pure states with the same p opulationp: t w o opp osite phases, with suitably unequal
+w eigh ts, realize ev ery|z| ≤
+p
+p(1−p). Their output en tropies are alle(p). Th us
+f(p)≤F Φ(σ)≤e(p).(12)
+The upp er b ound, rather than equalit y withf, is what is needed next.
+6
+
+Theorem 6(Strong con v ex-ro of sup eradditivit y).F or every nite-dimensional channelNand every
+joint input stateρ AA′,
+bSΦ⊗N (ρ)≥ bSΦ(ρA) + bSN (ρA′).(13)
+The same assertion holds withΦr eplac e d by any c omplementary channelΦ c.
+Pr o of.F or a pureρ=ψ, Lemma 5 b ounds its output en trop y b ye(p)plus the a v erage output
+en tropies of the conditionalA ′ branc hes. By (12), the rst term is at least bSΦ(ψA). Those branc hes
+decomp oseψ A′, so their a v erage is at least bSN (ψA′). F or mixedρ, apply this to a minimizing pure
+decomp osition and use con v exit y of b oth marginal ro ofs.
+F or the complemen t, letN c b e a complemen tary c hannel toN. F or pureψ, purit y of the complete
+Stinespring output giv es
+S((Φc ⊗ N)(ψ)) =S((Φ⊗ Nc)(ψ)).
+Apply Lemma 5 to the righ t side. Its conditional branc hes are pure, soS(N c(ψj)) =S(N(ψ j)). Th us
+the same one-step inequalit y holds forΦ c. Its pure-output en trop y is againe(p), and the preceding
+argumen t applies. This use of complemen t dualit y is standard [18, Theorem 1, equations (6) and (9)];
+see also [19].
+F or a xed inputσ, the maximal ensem ble Holev o information is(S(M(σ))− bSM(σ))/ln 2.
+Subadditivit y of the mean output en trop y and (13) therefore giv e its subadditivit y at arbitrary join t
+input marginals, with equalit y at pro duct input states. This is stronger than the unconstrained
+maxim um in Theorem 1; it uses the established con v ex-ro of framew ork of [16], not an equiv alence
+asserted without its needed h yp otheses.
+Corollary 7(State en tanglemen t cost).L etω=V σV ∗. F or every nite-dimensional bip artite state
+ΩBB′EE′ withΩ BE =ω,
+EF (ΩBB′:EE′)≥E F (ωB:E ) +E F (ΩB′:E′).
+Conse quently, for every nite bip artite stateτ,
+EF (ω⊗τ) =E F (ω) +E F (τ),
+EC(ω) =F Φ(σ)/ln 2,
+EC(ω⊗τ) =F Φ(σ)/ln 2 +E C(τ).
+Her eE C is asymptotic LOCCstateentanglement c ost in ebits.
+Pr o of.P ositivit y and the supp ort of the rst marginal imply thatΩis supp orted onranV⊗B ′ ⊗E ′.
+Lift it throughVand use Theorem 6 withN= Tr E′. The three ro ofs are exactly the three formation
+quan tities displa y ed. F or pro duct states, pro duct pure decomp ositions attain the rev erse inequalit y .
+Iteration giv esE F (ω⊗n) =nE F (ω), and more generallyE F (ω⊗n ⊗τ ⊗n) =nE F (ω) +E F (τ⊗n). The
+state-cost theoremE C(ρ) = limn EF (ρ⊗n)/(nln 2)[17] pro v es b oth cost statemen ts.
+These are states in a Stinespring range, not generally Choi states. The result do es not ev aluate
+en tanglemen t cost for sim ulating the c hannel. A t the GAD b oundary the same corollary follo ws
+from Op enAI's one-step inequalit y and the standard corresp ondence; our blo c k extension supplies
+the remaining Da vies region.
+F or completeness the required one-use formation functional has a scalar momen t description. This
+is a con v enien t v ersion of the kno wn axial con v ex-ro of problem [20], not a claim that its geometry is
+new.
+7
+
+Prop osition 8.Withr(q) =
+p
+q(1−q)andσ=
+ 1−p z
+¯z p
+
+,
+FΦ(σ) = min
+µ
+Z
+e(q)dµ(q) :
+Z
+q dµ=p,
+Z
+r(q)dµ≥ |z|
+
+,(14)
+wher eµr anges over pr ob ability me asur es on[0,1]. In p articularF Φ(diag(1−p, p)) =f(p).
+Pr o of.A pure decomp osition ofσinduces a p opulation measure; the triangle inequalit y for its co-
+herences giv es the momen t constrain t. Con v ersely , giv en suc h a measure, putR=
+R
+r dµ. A t ev ery
+p opulation c ho ose the same a v erage phase factorz/R, with the sign con v en tion matc hing the upp er-
+righ t matrix en try . T w o opp osite phases with probabilities(1 +|z|/R)/2,(1− |z|/R)/2realize that
+factor and lea v e the en trop y in tegral unc hanged. IfR= 0, necessarilyz= 0and the endp oin t mixture
+suces. Compactness giv es a minimizing measure. An extreme minimizer can ha v e at most three
+p opulations: four supp orted pieces admit a nonzero signed w eigh t p erturbation preserving normal-
+ization, the p opulation momen t and the radius momen t. This also supplies a nite ensem ble. F or
+z= 0the constrain t is v acuous, reducing the program to the con v ex en v elop e.
+F orm ula (14) is an optimization form ula, not an elemen tary closed form. F or example, the
+sucien t conditionD≥0,4AD≥B 2, withv(q) =A+Bq+Dq 2, mak esecon v ex and then
+FΦ(σ) =e(p)for ev ery coherence. This is the at-ro of regime already iden tied b y Hellm und and
+Uhlmann [20, Theorem 2 and Sections IV.CD]. W e do not claim this criterion or the at ro of as
+new. F or completeness, here is a direct v erication of the con v exit y ofe(it is also what Corollary 11
+uses). IfD >0, thenv(q) =D
+ 
+q+ B
+2D
+2 + 4AD−B2
+4D is the squared Euclidean norm of the ane map
+q7→
+ √
+D q+ B
+2
+√
+D ,
+p
+(4AD−B 2)/(4D)
+
+, so √vis con v ex. IfD= 0, then4AD≥B 2 forcesB= 0
+andv≡Ais constan t. Next,G(s) =g(s 2), whic h is W o otters' function of the concurrence at2s[21], is
+con v ex and nondecreasing on[0, 1
+2]. W e v erify this directly: withg ′(u) = 2 atanh(w)/w,w= √1−4u
+(dieren tiateg(u) =φ(w),φ(w) =h( 1+w
+2 ),φ ′(w) =−atanhw), andw=
+√
+1−4s 2 = tanhywith
+y≥0, one ndsG ′(s) = 2s g′(s2) = 2y/sinhy≥0. Assincreases,wand henceydecrease, and
+y/sinhyis decreasing iny, soG ′ increases. Thereforee=G◦ √vis con v ex (nondecreasing con v ex
+function of a con v ex function), andf=e. Outside that regime, (14) retains the coherence constrain t
+ev en though additivit y still holds.
+5 Classical capacit y of the complemen tary c hannel
+The complemen tary output is the en vironmen t output of a pure Stinespring dilation, including pu-
+rication of a mixed reserv oir when necessary . It is not automatically the exp erimen tally accessible
+part of a thermal bath. Its minimal dimension is at most four. T o compute its en trop y at a diagonal
+input, c ho ose unit v ectorsu, vin an en vironmen t sector of dimension t w o, and orthogonal v ectors
+e+, e− orthogonal to that sector, with⟨v, u⟩=λ/
+p
+(1−a)(1−b). A dilation is
+V|0⟩=
+√
+1−a|0⟩|u⟩+ √a|1⟩|e+⟩,
+V|1⟩=
+√
+b|0⟩|e−⟩+
+√
+1−b|1⟩|v⟩.
+The p ositivit y constrain t mak es the prescrib ed inner pro duct feasible. If its denominator v anishes
+thenλ= 0and the irrelev an t o v erlap ma y b e c hosen arbitrarily . T racing the en vironmen t giv es (1).
+F or inputdiag(1−p, p)the en vironmen t sp ectrum is
+a(1−p), bp, w(p) +
+p
+w(p)2 −4d(p)
+2 , w(p)−
+p
+w(p)2 −4d(p)
+2 ,(15)
+8
+
+where
+w(p) = (1−a)(1−p) + (1−b)p, d(p) =p(1−p)((1−a)(1−b)−λ 2).
+Indeed the remaining blo c k is the mixture of|u⟩⟨u|and|v⟩⟨v|with the indicated trace and determi-
+nan t. LetH E(p)b e the en trop y in nats of the four probabilities in (15).
+Theorem 9.F or every qubit Davies channel in(2),
+C(Φc) =χ(Φ c) = 1
+ln 2 max
+0≤p≤1
+{HE(p)−f(p)}.
+A t most two opp osite-phase p opulation p airs attain the one-use maximum. F or every nite-
+dimensionalN,
+χ(Φc ⊗ N) =χ(Φc) +χ(N),
+C(Φc ⊗ N) =χ(Φc) +C(N),
+Smin(Φc ⊗ N) = min
+p
+e(p) +S min(N).
+Pr o of.F orU θ = diag(1, eiθ), letW θ act as the iden tit y onu, vand with phasese −iθ, eiθ one +, e−.
+ThenV U θ = (U θ ⊗W θ)V, soΦ c(UθσU∗
+θ ) =W θΦc(σ)W ∗
+θ :Φ c is phase co v arian t. Let{w ℓ, ψℓ}
+b e a pure-state ensem ble with meanσand mean p opulationp, and letZ=U π = diag(1,−1).
+ThenΦ c(ZσZ)is unitarily equiv alen t toΦ c(σ), so b y conca vit y of en trop yS(Φ c(¯σ))≥S(Φ c(σ))for
+¯σ= 1
+2(σ+ZσZ) = diag(1−p, p), andS(Φ c(¯σ)) =HE(p). F or a pure inputψ ℓ of p opulationp ℓ the
+v ectorV ψ ℓ onBEis pure, henceS(Φ c(ψℓ)) =S(Φ(ψ ℓ)) =e(p ℓ), and P
+ℓ wℓe(pℓ)≥f(p)b ecauseP
+ℓ wℓpℓ =p. Th us the Holev o quan tit y of the ensem ble is at mostH E(p)−f(p)nats. The same
+opp osite-phase ensem ble used in Theorem 1 has diagonal mean and attains b oth b ounds.
+The pro of of Theorem 6 established the full one-step inequalit y forΦ c. Rep eating the branc h-
+ensem ble pro of of Theorem 1, withH E replacingh◦t, giv es the arbitrary-partner Holev o and
+minim um-en trop y iden tities. Regularization giv es the capacit y iden tit y .
+The functionH E is conca v e, b eing en trop y along an ane family of states; thereforeH E −fis
+conca v e. A sampled lo w er h ullf N giv es the same one-sided discretization error as Prop osition 14, since
+only the error infen ters that argumen t. The limits pro vide useful c hec ks: an iden tit y c hannel has a
+constan t complemen t of capacit y zero, whereas a constan t qubit-output c hannel has complemen tary
+capacit y one bit.
+6 P arallel sim ulation of the complemen tary c hannel
+This section concerns the resources needed to sim ulateN= Φ c, with its full Stinespring output. Let
+GM(σ) =E F ((idR ⊗M)(ψσ)), E ch
+F (M) = max
+σ
+GM(σ),
+whereψ σ is a purication andE F uses nats. Reference isometries do not aect this denition. The
+parallel sim ulation costE par
+C is the asymptotic n um b er of shared ebits p er use required b y LOCC
+proto cols whose sim ulated tensor-p o w er c hannel con v erges in diamond norm; classical comm unication
+is free. The theorem of Berta et al. giv es
+Epar
+C (M) = lim
+n→∞
+Ech
+F (M⊗n)
+nln 2 .(16)
+This op erational theorem is external [23, Theorem 12]. Sequen tial or adaptiv e tests constitute a
+dieren t task [24].
+W e need t w o facts ab outG M: its conca vit y and con tin uit y , and the subadditivit y (18) b elo w.
+Both are written out in full.
+9
+
+Kraus form ula, conca vit y and con tin uit y ofG M.F orX≥0put eS(X) = TrX S(X/TrX)
+and eS(0) = 0. This function is p ositiv ely homogeneous. F or nonzeroX, Y≥0, conca vit y ofSapplied
+to X+Y
+TrX+TrY = TrX
+TrX+TrY
+X
+TrX + TrY
+TrX+TrY
+Y
+TrY giv es eS(X+Y)≥ eS(X)+ eS(Y); together, these sa y that
+eSis conca v e. A Kraus represen tationK={K i}ofM(nitely man y op erators with P
+i K∗
+i Ki = 1)
+denes
+fK(σ) =
+X
+i
+eS(KiσK∗
+i ),
+whic h is conca v e inσ, b eing a sum of conca v e functions comp osed with linear maps. Here eS(KiσK∗
+i ) =
+Tr(KiσK∗
+i )S(·/Tr)is exactly the w eigh ted term of the Kraus c haracterization.
+(i) Kr aus formula.F or ev ery stateσ, singular ones included,
+GM(σ) = inf
+K
+fK(σ),(17)
+the inm um b eing o v er all nite Kraus represen tations ofM; this is the Kraus freedom used in
+[2, (C.1)]. Pro of: x a puricationψ σ onRA, a Stinespring isometryV:A→B⊗EofM,
+and putΨ = (1 R ⊗V)ψ σ, so that(id R ⊗M)(ψσ) = Tr E ΨΨ∗. F or a pure v ector onRBthe t w o
+marginals ha v e the same nonzero sp ectrum, so the en tanglemen t en trop y of a comp onen t ma y b e
+computed onB. IfKis a Kraus represen tation, the unnormalized v ectorsϕ i = (1R ⊗K i)ψσ satisfyP
+i ϕiϕ∗
+i = (id⊗M)(ψ σ), and the marginal ofϕ i onBisK iσK∗
+i ; so this pure-state decomp osition
+has costf K(σ), whic h giv es ≤. Con v ersely , let P
+j ϕjϕ∗
+j b e an y pure-state decomp osition of the
+same state. By the Sc hrö dingerHughstonJozsaW o otters theorem [5] there are v ectorse j ∈E
+withϕ j = (1 RB ⊗ ⟨ej|)Ψand P
+j |ej⟩⟨ej|= Π, the pro jector on to the supp ort of theE-marginal
+ofΨ. A dd rank-one terms resolving1 E −Π; they pro duce zero v ectors, whic h are omitted. Then
+Kj = (1B ⊗⟨ej|)Vsatisfy P
+j K∗
+j Kj =V ∗(1⊗1 E)V= 1andϕ j = (1R ⊗Kj)ψσ, so the decomp osition
+has costf K(σ)for thisK; this giv es ≥. Because w e purifyσitself, no extension from the supp ort
+ofσis needed.
+(ii) Conc avity.F or statesσ 1, σ2,0≤µ≤1, and ev eryK,f K(µσ1 + (1−µ)σ 2)≥µf K(σ1) + (1−
+µ)fK(σ2)≥µG M(σ1) + (1−µ)G M(σ2). T aking the inm um o v erKand using (17) sho ws thatG M
+is conca v e.
+(iii) Continuity.T ak e|ψ σ⟩= (1 R ⊗ √σ) P
+i |i⟩R|i⟩A. The mapσ7→ √σis con tin uous on p ositiv e
+matrices (indeed∥
+√
+X−
+√
+Y∥ ≤ ∥X−Y∥1/2), soσ7→(id⊗M)(ψ σ)is con tin uous. En tanglemen t of
+formation is con tin uous on nite-dimensional bipartite states [6, 7], and do es not dep end on the c hosen
+purication (purications dier b y an isometry onR). HenceG M is con tin uous on the compact set
+of input states, and the maxim umE ch
+F (M)exists. This uses the con tin uit y ofE F from the literature,
+as an external fact.
+(iv) Diagonal maximizer forΦ c.WithV,W θ as in the pro of of Theorem 9 andZ= diag(1,−1),
+w e ha v eΦ c(ZσZ) =W πΦc(σ)W ∗
+π . Ifψ σ puriesσ, then(1 R ⊗Z)ψ σ puriesZσZand(id⊗Φ c)of it
+equals(1⊗W π)(id⊗Φ c)(ψσ)(1⊗W π)∗; lo cal unitaries lea v eE F unc hanged, soG Φc (ZσZ) =G Φc (σ).
+By (ii),G Φc (1
+2(σ+ZσZ))≥G Φc (σ), and 1
+2(σ+ZσZ)is the diagonal part ofσ. Hence a maximizer
+can b e tak en diagonal.
+The other fact is subadditivit y of c hannel formation, [2, App endix C, Lemma C.2]:
+Ech
+F (M ⊗ L)≤Ech
+F (M) +E ch
+F (L).(18)
+W e repro duce its pro of in full. It is the argumen t of [2, Lemma C.2]; it giv es the stronger p oin t wise
+statemen tG M⊗L(ρAA′)≤G M(ρA) +G L(ρA′)for ev ery join t inputρ AA′, correlated or en tangled.
+Pr o of of(18).Fixρ AA′ andε >0. By (17) c ho ose Kraus represen tationsK={K i}ofMwith
+fK(ρA)≤G M(ρA) +ε, andL={L j}ofLwithf L(ρA′)≤G L(ρA′) +ε. Only the t w o marginals of
+ρAA′ en ter this c hoice.
+10
+
+Step 1 (pr o duct r epr esentation).The op eratorsK i ⊗L j form a Kraus represen tation ofM ⊗ L,
+so b y the easy half of (17)
+GM⊗L(ρAA′)≤
+X
+ij
+eS(ωij), ω ij = (Ki ⊗L j)ρAA′(Ki ⊗L j)∗.
+Step 2 (classic al r e gisters).Putω IJBB ′ = P
+ij |ij⟩⟨ij| ⊗ωij with outcome registersI, Jand outputs
+B, B′. Withq ij = Trωij,S(BB ′|IJ) ω =S(IJBB ′)−S(IJ) = P
+ij qijS(ωij/qij) = P
+ij eS(ωij).
+Step 3 (mar ginals).Because P
+j L∗
+j Lj = 1,Tr B′
+P
+j(Ki ⊗L j)ρAA′(Ki ⊗L j)∗ =K iρAK∗
+i . Hence
+ωIB = P
+i |i⟩⟨i| ⊗KiρAK∗
+i andS(B|I) ω =f K(ρA). SymmetricallyS(B ′|J)ω =f L(ρA′)(trace preser-
+v ation of the other c hannel: the lo cal outcome statistics do not dep end on the other instrumen t).
+Step 4 (entr opy chain).
+S(BB ′|IJ)≤S(B|IJ) +S(B ′|IJ)≤S(B|I) +S(B ′|J).
+The rst inequalit y isI(B:B ′|IJ)≥0, i.e. strong subadditivit y; the second is monotonicit y of
+conditional en trop y under discarding conditioning systems (S(B|IJ)≤S(B|I)andS(B ′|IJ)≤
+S(B′|J)), again strong subadditivit y [8].
+Com bining Steps 14,G M⊗L(ρAA′)≤G M(ρA) +G L(ρA′) + 2ε. Letε→0and b ound the righ t
+side b yE ch
+F (M) +E ch
+F (L). Maximizing the left side o v erρ AA′ giv es (18).
+Theorem 10(Complemen tary sim ulation).F or every Davies channelΦin(2)and every nite
+channelM,
+Ech
+F (Φc ⊗ M) =Ech
+F (Φc) +E ch
+F (M),
+Epar
+C (Φc) =E ch
+F (Φc)/ln 2,
+Epar
+C (Φc ⊗ M) =Ech
+F (Φc)/ln 2 +E par
+C (M).
+A n exact sc alar formula is
+Epar
+C (Φc) = 1
+ln 2 max
+0≤p≤1
+fp(t(p)),(19)
+wher ef p is the lower c onvex envelop e of the pur e-output entr opy for the r everse d Davies p ar ameters
+ap = pb
+1−t , b p = (1−p)a
+t , k p = kp(1−p)
+t(1−t) , λ 2
+p = λ2p(1−p)
+t(1−t) , t=t(p).(20)
+Endp oint and c onstant pur e-output exc eptions ar e sp e cie d in the pr o of.
+Pr o of.F or0< p <1and0< t <1, apply the dilation of Section 5 to half of √1−p|00⟩+ √p|11⟩.
+Grouping the resulting pure v ector b y itsBoutput giv es an isometryW p from a qubit toRE:
+Wp|0⟩=
+p
+(1−p)(1−a)|0⟩|u⟩+ √pb|1⟩|e−⟩√1−t ,
+Wp|1⟩=
+p
+(1−p)a|0⟩|e +⟩+
+p
+p(1−b)|1⟩|v⟩√
+t .
+Its columns are orthonormal. T racingEgiv es a qubit c hannelΨ p with parameters (20); in particular
+1−a p −b p =k p and0≤λ 2
+p ≤k p. This is the k ey closure prop ert y . The referenceen vironmen t
+output state is exactly
+ωp = (idR ⊗Φc)(ψp) =W p diag(1−t, t)W∗
+p .
+11
+
+Corollary 7 therefore giv es strong formation additivit y forω p with ev ery nite bipartite partner, and
+GΦc (diag(1−p, p)) =f p(t).
+Cho ose a diagonal input maximizingG Φc and an optimizing puried input forM, with output
+stateτ. Pro duct inputs, together with the established state additivit y , giv e
+Ech
+F (Φc ⊗ M)≥EF (ωp ⊗τ) =E ch
+F (Φc) +E ch
+F (M).
+Equation (18) pro v es equalit y . Iteration and (16) pro v e b oth op erational iden tities and (19).
+A tp= 0,1the reference is pure andG= 0; a zero maximizing formation v alue also giv es the
+pro duct lo w er b ound b y lo cal discard. Ift= 0or1at an in teriorp, the original c hannel is constan t
+with pure output. Its complemen t is isometric,G(diag(1−p, p)) =h(p)and its cost is one ebit. Pure
+maximal en tanglemen t giv es its strong pro duct lo w er b ound. These cases dene the missing v alues
+of (19); all other b oundary cases follo w from the displa y ed construction or con tin uit y .
+This pro of uses an optimizing referenceoutput state in a dieren t Stinespring range; complemen t
+dualit y alone do es not transfer sim ulation cost. The construction is the standard normalized rev erse-
+c hannel (w eigh ted-transp ose or P etz) construction [25], with its explicit Da vies parameters v eried
+here. A t the GAD b oundary the same deduction uses the an teceden t one-step inequalit y [3]. The
+added dephasing and non unital parameters are the extension.
+Corollary 11(An elemen tary rate).Putx=λ 2 and
+c(a, b) =k+ 2ab−2
+p
+ab(k+ab).
+Ifc(a, b)≤x≤k, then
+Epar
+C (Φc) =h
+1 +λ
+2
+
+/ln 2.
+A Bel l input maximizes channel formation in this r e gion.
+Pr o of. Step 1: the r e gion is the c onvexity r e gion.In the notationv(q) =A+Bq+Dq 2 of Section 4
+(withA=a(1−a),B=k(1−2a)−x,D=x−k 2) putQ(x) = 4AD−B 2. A direct expansion
+giv esQ(x) =−x 2 +
+ 
+2k(1−2a) + 4A
+
+x−k 2 
+4A+ (1−2a) 2
+=−(x−c)(x−c ′)withc ′ =k+
+2ab+ 2
+p
+ab(k+ab): the sum of the ro ots is2k(1−2a) + 4A= 2k+ 4ab(use1−a−b=k) and
+their pro duct isk 2 (since4a(1−a) + (1−2a) 2 = 1), whic h arec+c ′ andcc ′. Moreo v erc≤k≤c ′
+(b ecause
+√
+k+ab≤
+√
+k+
+√
+ab), andc ′ =
+ p
+(1−a)(1−b) +
+√
+ab
+2 ≤1b y Cauc h ySc h w arz (use
+k+ab= (1−a)(1−b)), soc=k 2/c′ ≥k 2. Hence forc≤x≤kw e ha v eD≥0and4AD≥B 2, and
+b y the v erication in Section 4 the pure-output en trop yeis con v ex, i.e. its ro of is at:f=e. This
+coincides with the Hellm undUhlmann threshold [20, Equation (29) and Section V.B], whic h is the
+an teceden t.
+Step 2: the r everse d channel stays in the r e gion.WithL=p(1−p)/(t(1−t))the rev erse
+parameters (20) satisfyk p =Lk,a pbp =Lab,λ 2
+p =Lx. The functioncis p ositiv ely homogeneous in
+(k, ab), soc(a p, bp) =Lc(a, b), andc(a, b)≤x≤kgiv esc(a p, bp)≤λ 2
+p ≤k p. By Step 1 applied to
+(ap, bp, λ2
+p), the rev ersed ro of is at:f p =e p, andf p(t) =e p(t).
+Step 3: the substitution.W ritee p(q) =g(v p(q))withv p(q) =t p(q)(1−t p(q))−λ 2
+pq(1−q)and
+tp(q) =a p +k pq. A tq=t,
+tp(t) = pb+kp(1−p)
+1−t = p(b+k(1−p))
+1−t =p,
+b ecause1−t= 1−a−kp=b+k(1−p). Hencev p(t) =p(1−p)−Lx t(1−t) =p(1−p)−xp(1−p) =
+(1−x)p(1−p), that is,
+fp(t) =e p(t) =g
+ 
+(1−x)p(1−p)
+
+.
+12
+
+Step 4: the maximum.Asgis increasing and(1−x)p(1−p)≤(1−x)/4with equalit y only at
+p= 1/2, the maxim um in (19) isg((1−x)/4) =h
+ 1+√x
+2
+
+=h
+ 1+λ
+2
+
+, since
+p
+1−(1−x) =λ. The
+exceptional constan t pure-output case has the same v alue one (therex= 0); con tin uit y co v ers the
+remaining endp oin ts.
+The threshold itself is an an teceden t, not a new con v ex-ro of criterion or a necessary b oundary
+for en trop y atness or for this sim ulation form ula. F or example,a= 0.1, b= 0.3, λ 2 = 0.5has
+complemen tary parallel cost ab out0.600876037ebits p er use. This determines the complemen tary
+sim ulation rate, not the sim ulation cost ofΦ.
+There is also a sucien t lo w-coherence regime with a simpler optimization. Dene the classical
+conditional en trop y
+J(p) =h(p) + (1−p)h(a) +ph(b)−h(a+kp).
+Chord iden tit y .F or0< p <1and0< t=t(p)<1,
+(1−t)h(a p) +t h(bp) =J(p).(21)
+Indeed, letX, Yb e bits withP(X= 1) =p,P(Y= 1|X= 0) =a,P(Y= 1|X= 1) = 1−b.
+ThenP(Y= 1) =a(1−p) + (1−b)p=t, and the p osterior probabilities areP(X= 1|Y= 0) =
+pb/(1−t) =a p andP(X= 0|Y= 1) = (1−p)a/t=b p, soH(X|Y) = (1−t)h(a p)+th(b p). The c hain
+ruleH(X|Y) =H(X) +H(Y|X)−H(Y)giv esH(X|Y) =h(p) + (1−p)h(a) +ph(b)−h(t) =J(p).
+Sincee p(0) =g(a p(1−a p)) =h(a p)ande p(1) =g(b p(1−b p)) =h(b p), the left side of (21) is the
+v alue attof the c hord ofe p o v er[0,1]. Thereforef p(t)≤J(p)for ev eryp, andf p(t) =J(p)whenev er
+ep is conca v e on[0,1](the con v ex en v elop e of a conca v e function is its c hord).
+Ifp 0 maximizesJ, is in terior, and has0< t 0 =t(p 0)<1, then
+λ2 ≤ k2p0(1−p 0)
+t0(1−t 0) =⇒E par
+C (Φc) =J(p 0)/ln 2.(22)
+Indeed, the quadratic co ecien t of the rev ersed determinan t atp 0 isD p0 =λ 2
+p0 −k2
+p0 =L(λ 2 −Lk2)≤
+0withL=L(p 0), sov p0 is conca v e on[0,1]. Sincegis increasing and conca v e (see Section 8:
+g′(u) = 2 atanh(w)/wis p ositiv e and nonincreasing),e p0 =g◦v p0 is conca v e, sof p0 (t0) =J(p 0)b y
+(21). T ogether withf p(t(p))≤J(p)≤J(p 0)for allp, form ula (19) giv esE par
+C (Φc) =J(p 0)/ln 2.
+Equation (22) is sucien t; no complete transition diagram is asserted.
+Prop osition 12(Strict separation from Choi-state cost).F ora= 1/10, b= 3/10, λ 2 = 1/10, let
+N= Φ c and letJ N b e its normalize d Choi state. Then
+Epar
+C (N)> EC(JN ).
+In p articular a Bel l input do es not maximizeE ch
+F (N).
+Pr o of.W riteG N (p) =G N (diag(1−p, p)) =f p(t(p)), as in the pro of of Theorem 10. Herek= 3/5
+andt(p) = 1
+10 + 3
+5p∈(0,1)for0< p <1. LetL(p) =p(1−p)/(t(1−t)).
+Step 1:G N =Jon an explicit interval.A tp= 1/2the rev ersed parameters ha v ea p = 1/4,
+bp = 1/8,k p = 5/8andλ 2
+p = 5/48. The quadratic co ecien t of the rev ersed determinan t isD p =
+λ2
+p −k 2
+p =L(λ 2 −Lk 2) = 5/48−25/64 =−55/192<0. F or generalp,D p <0if and only if
+λ2t(1−t)< k 2p(1−p), whic h for these parameters reads324p 2 −312p+ 9<0, that is,p∈I= 13
+27 −
+√
+595
+54 , 13
+27 +
+√
+595
+54
+
+≈(0.0298,0.9332), an op en in terv al con taining1/2. F orp∈Ithe function
+vp is conca v e on[0,1], hencee p =g◦v p is conca v e (gis increasing and conca v e, Section 8), sof p(t)
+13
+
+is the v alue attof the c hord ofe p. By the c hord iden tit y (21) this isJ(p). Th usG N (p) =J(p)for
+allp∈I; this is the lo w er b oundG N ≥J(the upp er b oundG N ≤Jholds for ev eryp).
+Step 2: the derivative.F romJ ′(p) = ln 1−p
+p −h(a) +h(b)−kln 1−t
+t w e get, atp= 1/2where
+t= 2/5,
+J′(1/2) =h(3/10)−h(1/10)− 3
+5 ln(3/2).
+W ritingln 3
+10 = ln 3−ln 10and similarly for the other logarithms, the terms inln 10cancel and
+h(3/10) = ln 10− 3
+10 ln 3− 7
+10 ln 7,h(1/10) = ln 10− 9
+5 ln 3, so
+J′(1/2) = 9
+10 ln 3− 7
+10 ln 7 + 3
+5 ln 2 = 1
+10 ln
+2639
+77
+
+>0,
+b ecause2 639 = 1259712>823543 = 7 7. Since1/2∈IandJis dieren tiable there, there isp 1 ∈I,
+p1 >1/2, withJ(p 1)> J(1/2). By Step 1,G N (p1)> GN (1/2).
+Step 3: the c omp arison.The Choi state isJ N =ω 1/2 =W 1/2 diag(1−t, t)W ∗
+1/2, supp orted on
+the range of the Da vies Stinespring isometryW 1/2; b y Corollary 7,E C(JN ) =G N (1/2)/ln 2. On the
+other side, b y Corollary 7 applied toW p1 and induction onn,G N⊗n (σ⊗n) =E F (ω⊗n
+p1 ) =nG N (p1)
+forσ= diag(1−p 1, p1), soE ch
+F (N⊗n)≥nG N (p1), and (16) giv esE par
+C (N)≥G N (p1)/ln 2>
+GN (1/2)/ln 2 =E C(JN ). In particularE ch
+F (N)≥G N (p1)> G N (1/2), so a Bell input do es not
+maximize.
+The strict inequalit y th us uses only the pro duct-input lo w er b ound, strong additivit y ofE F on the
+Da vies Stinespring range (Corollary 7), and the external op erational form ula (16). It do es not use the
+subadditivit y (18), nor the iden tit yE par
+C (Φc) =E ch
+F (Φc)/ln 2of Theorem 10, whose upp er b ound is
+where (18) en ters. Consequen tly this c hannel cannot b e sim ulated exactly b y LOCC using one cop y of
+its o wn Choi state p er call: preparing man y suc h states at their state cost w ould con tradict the strict
+inequalit y . Other resource states are not excluded. The example hasλ 2 > aband is non unital, so it
+do es not merely restate the co v arian t ep olarizing example of [24]. Appro ximate v alues are0.704192652
+ebits at the Bell input and0.704712865nearp≈0.5169491(the grid v alue is0.516949108; a 75-digit
+computation giv es the maximizer0.516949105); the strict pro of do es not use these v alues.
+7 Finite-blo c k consequences
+The preceding result also applies to noniden tical c hannels in (2). W ritee i, fi, ti for the corresp onding
+functions of c hannelΦ i.
+Corollary 13.F or every stateρonnqubits, with mar ginal excitation pr ob abilitiesp i,
+S((Φ1 ⊗ ··· ⊗Φn)(ρ))≥
+nX
+i=1
+fi(pi).
+Pr o of.F or a pure input split at the rst site and use (9). Apply induction on eac h conditional
+remaining state and com bine its p opulations using con v exit y of eac hf i. A t the rst sitee 1 ≥
+f1. A pure-state decomp osition, en trop y conca vit y and con v exit y of thef i giv e the mixed-input
+statemen t.
+This yields an exact accoun ting of the Holev o decit. Let a pure ensem ble ha v e output statesω ℓ,
+mean¯ω, p opulationsp iℓ and means¯p i. Put
+ci = (ln 2)χ(Φi), σ=
+O
+i
+diag ¯ωi, R ℓ =S(ω ℓ)−
+X
+i
+fi(piℓ)≥0.
+14
+
+Using quan tum relativ e en trop y in nats, direct subtraction giv es
+X
+i
+ci −(ln 2)χ(ensem ble) =
+X
+i
+[ci −h(t i(¯pi)) +f i(¯pi)]
++D(¯ω∥σ) +
+X
+ℓ
+wℓRℓ (23)
++
+X
+i
+"X
+ℓ
+wℓfi(piℓ)−f i(¯pi)
+#
+.
+Ev ery term is nonnegativ e. In particular,D(¯ω∥σ) = P
+i h(ti(¯pi))−S(¯ω). The supp ort con v en tion
+is harmless: a zero marginal basis probabilit y giv es zero supp ort of¯ωon that sector. Equation (23)
+is a consequence of the p opulation b ound and standard relativ e-en trop y iden tities. It extends the
+usual nite-blo c k decit metho d, including that used for amplitude damping in [2]; it do es not imply
+uniqueness of optimizers or a uniform p ositiv e gap.
+8 Scalar computation and examples
+The en v elop e in (10) can b e ev aluated b y the lo w er con v ex h ull of the sampled curv e. The next b ound
+mak es the discretization error explicit, separately from oating-p oin t error.
+Prop osition 14.Supp oseeisL-Lipschitz on[0,1]. F or a uniform grid of mesh1/N, letf N b e the
+lower c onvex envelop e of its sample d p oints, line arly extende d b etwe en hul l vertic es. If
+CN = 1
+ln 2 max
+p
+{h(a+kp)−f N (p)},
+then
+CN ≤C(Φ)≤C N + L
+2Nln 2 .
+Pr o of.The piecewise-linear in terp olan tee N satises|ee N −e| ≤L/(2N): at relativ e p ositionθin
+a cell the error is at most2Lθ(1−θ)/N. T aking lo w er con v ex en v elop es preserv es uniform error
+b ounds. Moreo v erf N ≥f, b ecause mixtures of sampled p opulations form a subset of all mixtures;
+andcoee N =f N . Th us0≤f N −f≤L/(2N), whic h giv es the claim.
+F or parameters withm= min p v(p)>0, write
+v(p) =A+Bp+Dp 2, A=a(1−a), B=k(1−2a)−λ 2, D=λ 2 −k 2.
+The minim um is found from the endp oin ts and an y in terior v ertex of this quadratic. A v alid Lipsc hitz
+constan t is
+L= max{|B|,|B+ 2D|}g ′(m), g ′(m) = 2 atanh√1−4m√1−4m ,
+with limit2atm= 1/4. The functiong ′ is nonincreasing; this follo ws b y dieren tiatingatanhx/x.
+Whenm= 0one can instead use uniform con tin uit y; the displa y ed nite-Lb ound is not asserted at
+that b oundary .
+F ork >0, on a h ull segmen t of slop es, the maximizing p opulation is the pro jection on to that
+segmen t of
+p= (1 + exp(s/k))−1 −a
+k .
+This follo ws b y settingkln((1−t)/t) =sand using conca vit y . The casek= 0has zero capacit y .
+15
+
+A strict in terior example is
+a= 1
+10, b= 3
+10, k= 3
+5, λ 2 = 1
+2.
+It is non unital, has additional dephasing, and is not en tanglemen t breaking. In fact the Choi partial
+transp ose is p ositiv e exactly whenλ 2 ≤ab, whic h fails here. Its Choi rank is four, andminv=
+5/56>0, so it admits no pure output. The example is therefore not co v ered merely b y the unital,
+en tanglemen t-breaking, pure-output orλ 2 =kb oundary cases.
+a b λ 2 capacit y (bits, appro ximate) mean p opulation
+0.10 0.30 0.60 0.503934607 0.468332
+0.10 0.30 0.50 0.407849860 0.470350
+0.10 0.30 0.10 0.296671803 0.471876
+0.02 0.30 0.514624 0.436551160 0.441065
+These are repro ducible oating-p oin t illustrations on a grid withN= 200000, not mac hine-certied
+in terv als. Prop osition 14's exact-arithmetic error b ounds are b elo w3.8×10 −6 bits for these cases,
+b efore rounding error. The last example's sampled h ull optimizer mixes p opulation0with appro x-
+imately0.958865, illustrating wh y a single p opulation pair need not suce. No exact three-signal
+necessit y or global transition b oundary is inferred from that n umerical observ ation. F or the same
+four c hannels, a separate computation withN= 60000giv es complemen tary capacities appro xi-
+mately0.492274059,0.562095952,0.906804474and0.469017072bits. Direct Stinespring matrices
+repro duce (15) and the phase co v ariance in 500 random cases, with maxim um en try or eigen v alue
+error b elo w5.0×10 −16. These are oating-p oin t illustrations, not mac hine-certied in terv als. F or
+a= 0.02, b= 0.30, λ2 = 0.514624, a sampled v ersion of (14) atp= 0.44giv es state formation costs
+ab out0.466960ebits atz= 0,0.467338atz= 0.25, and0.469937atz= 0.45. The coherence
+constrain t matters; the scalar ro off(p)alone do es not describ e all states. The linear program uses
+20001 p opulation samples and reconstructs a feasible phase ensem ble up to n umerical tolerance; no
+con tin uous optimization certicate is claimed.
+9 V erication, dep endence and scop e
+The pro of uses Lemma 2 as an external result and giv es all subsequen t matrix and c hannel argumen ts
+explicitly . Some minim um-output-en trop y subregions are also co v ered b y F ukuda's comp osition cri-
+terion [22]; that criterion is not a generic closure theorem for unrestricted Holev o additivit y under
+comp osition. A ro ot-agen t exploratory screen tested 16000 random rectangular blo c k instances with-
+out a violation. Separately , an Astra candidate audit tested 9000 blo c k instances, their 27000 v ertex
+instances, 1200 c hannel outputs with arbitrary nite partner samples, and 300 ensem bles. Its smallest
+residual w as of order10 −14 in equalit y cases. These oating-p oin t tests are error-nding aids, not
+pro ofs.
+A tempting alternativ e argumen tthat extra dephasing m ust increase the blo c k en trop y b y at
+least the scalar en trop y increasefailed a n umerical c hec k and is not used. The v alid argumen t
+preserv es the scalar en trop y across the three v ertices and in v ok es conca vit y only after their separate
+estimates.
+The presen t family excludes the p ermitted phase-co v arian t regionλ 2 >1−a−band c hannels with
+negativ e longitudinal m ultiplier. W e determine the state costs in Corollary 7 and the complemen-
+tary parallel sim ulation cost in Theorem 10. W e do not determine the original c hannel's sim ulation
+16
+
+cost, adaptiv e sim ulation cost, quan tum or priv ate capacit y , in teracting m ultiqubit Da vies dynam-
+ics, or nite-error co ding rates. Memoryless use is essen tial to the op erational in terpretation. No
+claim of exhaustiv e literature co v erage or w orldwide priorit y accompanies the stated extension; its
+mathematical scop e is explicit and its immediate an teceden ts are iden tied.
+AI assistance and review.The author directed an AI-assisted researc h pro cess. Co dex dev el-
+op ed the extension, pro ofs, exp osition and scalar calculations. A separately dispatc hed review er
+requested as GPT-6 Astra with xhigh eort audited frozen pro of dossiers and an earlier capacit y-
+only man uscript. The review er has prior in v olv emen t and is not blind to the w ork. A subsequen t
+in tegrated v ersion w as also review ed. The presen t v ersion further adds complemen tary parallel sim-
+ulation, rev erse-c hannel closure and the strict Choi-cost separation; ev ery man uscript assessmen t
+m ust iden tify its exact input v ersion, and an earlier assessmen t do es not automatically apply to
+these additions. Mo del run time iden tit y w as not indep enden tly attested. No h uman p eer review or
+predetermined n umerical grade is claimed.
+V ersion 2.V ersion 2 (21 Octob er 2026) w as prepared b y a Claude Sonnet 5.5 session acting as
+author-reviser, after three automated assessmen ts of v ersion 1 (t w o b y Claude Sonnet 5.5, one b y
+Claude Haiku 5.5; none h uman, none indep enden t of the mo del family used for drafting). Changes:
+the concurren t pap er [4] is cited and compared with Theorem 1; the Kraus form ula with conca vit y
+and con tin uit y ofG M, and the pro of of (18), are written out; the c hord iden tit y (21), the pro of of
+Prop osition 12 and the at-ro of iden tit y in Corollary 11 are written out; the phase-a v eraging step of
+Theorem 9 is made explicit; App endix A lists what eac h script repro duces. No theorem, h yp othesis
+or n umerical v alue of v ersion 1 w as c hanged. External dep endencies that remain: Lemma 2, the
+con tin uit y ofE F [6, 7], the HughstonJozsaW o otters theorem [5], and (16).
+A v ailabilit y .The supplemen t con tains the pro of dossier, n umerical scripts and rep orts, and source-
+retriev al metadata. Original implemen tation co de is released under CC0; the man uscript is oered
+under CC BY 4.0. External pap ers retain their authorship and licences. The scalar scripts do not
+implemen t directed-rounding in terv al certication. The v ersion 2 supplemen t adds the t w o exact-
+arithmetic c hec k scripts listed in App endix A.
+A Repro ducibilit y
+The supplemen t con tains the scripts b elo w (Python with NumPy , SciPy and mpmath). On 21
+Octob er 2026 eac h w as run in a fresh writable cop y , aspython -B <script>.py, with Python 3.12.6,
+NumPy 2.2.6, SciPy 1.18.0 and mpmath 1.3.0 on Windo ws 11. The t w o indep enden t scripts b oth
+writeindependent-results.json; they m ust b e run in separate copies. All tests use oating-p oin t
+arithmetic and are error-nding aids, not pro ofs; none uses directed-rounding in terv al arithmetic.
+The table lists what eac h script computes and ho w its output compares with the gures in the text.
+17
+
+Script Computes Output compared with the text
+test_thermal_
+extension.py
+16000 random complex blo c k
+instances of (8) (shap es2×2to
+4×4, random admissible
+co ecien ts,0≤K≤ √αδ−βη)
+Minim um of LHS−RHS is+8.0×10 −7: no
+violation. It also rep orts the minim um of the
+dephasing gro wth gap,−0.495<0: this is the
+failed alternativ e argumen t of Section 9.
+capacity_scalar_
+screen.py
+Hull ev aluation of (4) for the four
+parameter sets of the table in
+Section 8,N= 200000
+0.503934607,0.407849860,0.296671803,
+0.436551160bits, and mean p opulations0.468332,
+0.470350,0.471876,0.441065, as in the table; the
+discretization b ounds are2.6×10 −6 to3.8×10 −6
+bits (<3.8×10 −6 as stated). The last example
+mixes p opulations0and0.958865.
+complement_
+formation_
+examples.py
+500 random Stinespring matrices
+(isometry , c hannel, sp ectrum (15),
+co v ariance); complemen tary
+capacities withN= 60000;
+sampled v ersion of (14)
+Maxim um errors≤5.0×10 −16. Capacities
+0.492274059,0.562095952,0.906804474,
+0.469017072bits; formation0.466960,0.467338,
+0.469937ebits atz= 0,0.25,0.45. All as in the
+text.
+check_reverse_
+channel.py
+500 random cases of the rev erse
+isometryW p and of the closure
+1−a p −b p =k p,0≤λ 2
+p ≤k p;
+sampled v alues of (19)
+Errors≤6.0×10 −15; smallest Da vies slac k
+8.7×10 −5 >0. Costs0.600876037(forλ 2 = 0.5)
+and0.704712865ebits (forλ 2 = 0.1,
+p≈0.5169491).
+check_closed_
+form.py
+60 random parameter sets in the
+regionc(a, b)≤x≤k: scaling
+c(ap, bp) =Lc(a, b), the
+determinan t iden tit y
+vp(t) = (1−x)p(1−p), and the
+sampled ro of against
+g((1−x)p(1−p))
+Errors3.3×10 −16,1.2×10 −16 and2.0×10 −10
+nats. These are the n umerical coun terparts of
+Steps 23 of the pro of of Corollary 11.
+check_nonbell_
+exact.py
+Prop osition 12 in exact rational
+arithmetic and 75-digitmpmath
+Rev ersed parameters1/4,1/8,5/8,5/48;
+D=−55/192;J ′(1/2) = 1
+10 ln(1259712/823543);
+0.704192652and0.704712865bits; unique
+maximizer0.516949105.
+independent_
+audit.py
+9000 blo c k instances, 27000 v ertex
+instances, 1200 pure inputs with
+arbitrary partners, 300 Holev o
+ensem bles
+No failure at tolerance2×10 −11; smallest residual
+−1.2×10 −14 (equalit y cases), as stated in
+Section 9.
+independent_
+cost_audit.py,
+independent_
+entanglement_
+audit.py
+F urther diagnostics (rev erse
+c hannel, P etz form, momen t
+programs, b oundary cases,
+complemen t capacities)
+Run to completion without failure. Their n um b ers
+are not quoted in the text.
+checks/verify_
+v2_steps.py(new)
+Exact (SymPy) and n umerical
+c hec ks of the steps added in
+v ersion 2
+J′(1/2)equals 1
+10 ln(2639/77)to10 −170;
+D(1/2) =−55/192; ro ots 13
+27 ±
+√
+595
+54 ;t p(t) =p;
+c hord=Jto10 −16; sampledf p(t)−J(p)b elo w
+2×10 −15 atp= 0.1, . . . ,0.9for
+(a, b, λ2) = (0.1,0.3,0.1);f p(t) =g((1−x)p(1−p))
+forx= 0.5; cost0.600876037bits.
+checks/verify_
+flat_region.py
+(new)
+Vieta iden tities of Step 1 of the
+pro of of Corollary 11
+4AD−B 2 + (x−c)(x−c ′) = 0andcc ′ =k 2
+sym b olically;k 2 ≤c≤k≤c ′ in 20000 random
+(a, b).
+The only discrepancy found b et w een the text of v ersion 1 and the scripts w as in the digits of the
+maximizer in Section 8:0.516949108is the grid v alue and0.516949105the high-precision v alue. Not
+repro ducible b y the supplemen t: the n umerical results are not in terv al-certied, and the exploratory
+screens do not establish an y theorem. The inequalit y of Lemma 2 is an external dep endency that
+none of these scripts pro v es.
+18
+
+References
+[1] W. Roga, M. F annes and K. yczk o wski,Davies maps for qubits and qutrits, Rep orts on Mathematical
+Ph ysics 66, 311329 (2010). arXiv:0911.5607v2, Sections 3.13.3.
+[2] Z. T ang, C. Zh u, G. Bai and X. W ang,Classic al c ap acity and entanglement c ost of the amplitude damping
+channel, arXiv:2609.28592v1 (2026), Theorem 4.2, Section 5 and App endix C (Lemmas C.1 and C.2).
+[3] Op enAI,Classic al c ap acity and entr opy ine qualities for gener alize d amplitude damping, 24 Septem b er
+2026, Theorems 2.1 and 3.1, Corollary 1.2. Op enAI mathematics rep ository. Retriev ed 17 Octob er 2026;
+PDF SHA256 recorded in the supplemen t.
+[4] K. F ang,The classic al c ap acity of gener alize d amplitude-damping channels and its str ong-c onverse exp o-
+nent, arXiv:2609.14621 (13 Septem b er 2026; v2, 6 Octob er 2026), abstract and Corollary 2 as stated in
+the arXiv HTML v ersion; pro ofs not c hec k ed here.
+[5] L. P . Hughston, R. Jozsa and W. K. W o otters,A c omplete classic ation of quantum ensembles having a
+given density matrix, Ph ysics Letters A 183, 1418 (1993).
+[6] M. A. Nielsen,Continuity b ounds for entanglement, Ph ysical Review A 61, 064301 (2000). arXiv:quan t-
+ph/9908086.
+[7] A. Win ter,Tight uniform c ontinuity b ounds for quantum entr opies: c onditional entr opy, r elative en-
+tr opy distanc e and ener gy c onstr aints, Comm unications in Mathematical Ph ysics 347, 291313 (2016).
+arXiv:1507.07775.
+[8] E. H. Lieb and M. B. Rusk ai,Pr o of of the str ong sub additivity of quantum-me chanic al entr opy, Journal
+of Mathematical Ph ysics 14, 19381941 (1973). doi:10.1063/1.1666274.
+[9] C. King,A dditivity for unital qubit channels, Journal of Mathematical Ph ysics 43, 46414653 (2002).
+doi:10.1063/1.1500791.
+[10] P . W. Shor,A dditivity of the classic al c ap acity of entanglement-br e aking quantum channels, Journal of
+Mathematical Ph ysics 43, 43344340 (2002). arXiv:quan t-ph/0201149.
+[11] F. Leditzky , E. Kaur, N. Datta and M. M. Wilde,Appr o aches for appr oximate additivity of the Holevo
+information of quantum channels, Ph ysical Review A 97, 012332 (2018). arXiv:1709.01111.
+[12] A. S. Holev o,The c ap acity of the quantum channel with gener al signal states, IEEE T ransactions on
+Information Theory 44, 269273 (1998). arXiv:quan t-ph/9611023.
+[13] B. Sc h umac her and M. D. W estmoreland,Sending classic al information via noisy quantum channels,
+Ph ysical Review A 56, 131138 (1997). doi:10.1103/Ph ysRevA.56.131.
+[14] G. G. Amoso v,On estimating the output entr opy of a tensor pr o duct of the quantum phase-damping chan-
+nel with an arbitr ary channel, Problems of Information T ransmission 49, 224231 (2013). arXiv:1301.2886,
+Prop osition 5.
+[15] W. Roga,Entr opy of quantum channel in the the ory of quantum information, PhD thesis,
+arXiv:1108.5065v3 (2011), Sections 5.6 and 6.
+[16] K. Matsumoto, T. Shimono and A. Win ter,R emarks on additivity of the Holevo channel c ap acity
+and of the entanglement of formation, Comm unications in Mathematical Ph ysics 246, 427442 (2004).
+arXiv:quan t-ph/0206148v4, Sections 45.
+[17] P . M. Ha yden, M. Horo dec ki and B. M. T erhal,The asymptotic entanglement c ost of pr ep aring a quantum
+state, Journal of Ph ysics A 34, 68916898 (2001). arXiv:quan t-ph/0008134, Theorem 1.
+[18] A. S. Holev o,On c omplementary channels and the additivity pr oblem, arXiv:quan t-ph/0509101v3 (2005),
+Theorem 1.
+19
+
+[19] C. King, K. Matsumoto, M. Nathanson and M. B. Rusk ai,Pr op erties of c onjugate channels with ap-
+plic ations to additivity and multiplic ativity, Mark o v Pro cesses and Related Fields 13, 391423 (2007).
+arXiv:quan t-ph/0509126v3.
+[20] M. Hellm und and A. Uhlmann,Concurr enc e and entanglement entr opy of sto chastic 1-qubit maps, Ph ys-
+ical Review A 79, 052319 (2009). arXiv:0903.1340, Sections IV.CD and V.
+[21] W. K. W o otters,Entanglement of formation of an arbitr ary state of two qubits, Ph ysical Review Letters
+80, 22452248 (1998). arXiv:quan t-ph/9709029.
+[22] M. F ukuda,Extending additivity fr om symmetric to asymmetric channels, Journal of Ph ysics A 38, L753
+L758 (2005). arXiv:quan t-ph/0505022v4.
+[23] M. Berta, F. G. S. L. Brandão, M. Christandl and S. W ehner,Entanglement c ost of quantum channels,
+IEEE T ransactions on Information Theory 59, 67796795 (2013). arXiv:1108.5357v3, Theorem 12.
+[24] M. M. Wilde,Entanglement c ost and quantum channel simulation, Ph ysical Review A 98, 042338 (2018).
+arXiv:1807.11939v3, Sections I IIV.
+[25] H. Barn um and E. Knill,R eversing quantum dynamics with ne ar-optimal quantum and classic al delity,
+Journal of Mathematical Ph ysics 43, 20972106 (2002). arXiv:quan t-ph/0004088v1, Equation (4), for the
+normalized rev ersal construction.
+20
