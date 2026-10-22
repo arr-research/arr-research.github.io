@@ -1,0 +1,617 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=26mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern,amsmath,amssymb,amsthm,mathtools,microtype,booktabs,array}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}\newtheorem{remark}[theorem]{Remark}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\Hess}{Hess}
+\DeclareMathOperator{\rank}{rank}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\one}{\mathbf 1}
+\title{Uniform ten-spin Lorentzian obstructions\\for cycle clique blowups}
+\author{Lluis Eriksson\\\small Independent researcher, Sweden}
+\date{17 October 2026\\\small Working-paper manuscript}
+\begin{document}
+\maketitle
+\begin{abstract}
+For every $m\ge4$ and $s\ge2$, we construct a strictly positive
+rational antiferromagnetic target of rank two on at most ten states
+whose partition polynomial for $C_m[K_s]$ is not Lorentzian.
+The state bound is independent of both parameters; seven states
+suffice when $s\ge9$, and six suffice for even $m$.
+The new case is an odd cycle, whose edges are critical for its
+independence number and hence fall outside the earlier
+independence-stable blowup theorem.
+We classify the minimum-induced-edge occupations and compress
+their leading Hessian kernel to an initial block of at most eight
+profiles. For $s\ge20$, a five-profile block has inertia $(2,3,0)$,
+proved by six exact coefficient certificates in the cycle length,
+clique size and central binomial coefficient. Eighteen bounded
+clique sizes are covered by polynomial certificates for infinite
+cycle-length tails and 42 explicit integer exceptions.
+We retain failures of smaller blocks and give a positive seven-state
+witness for $C_5[K_9]$. The target may depend on $m,s$; neither
+optimality nor the general connected-source characterization is claimed.
+\end{abstract}
+
+\section{The result and its scope}
+For a finite simple graph $G=(V,E)$ and a symmetric nonnegative
+$q\times q$ matrix $K$, write
+\begin{equation}
+ Z_G(\mathbf x;K)=
+ \sum_{\sigma:V\to\{0,\ldots,q-1\}}
+ \prod_{uv\in E}K_{\sigma(u),\sigma(v)}
+ \prod_{v\in V}x_{\sigma(v)}.                         \label{eq:Z}
+\end{equation}
+We call $K$ antiferromagnetic when it has at most one positive
+eigenvalue. Inertia is written in the order positive, negative, zero.
+The graph $C_m[K_s]$ replaces each vertex of a simple cycle by a
+clique of order $s$, joining all pairs across adjacent classes.
+
+For a homogeneous polynomial with strictly positive coefficients
+on the full degree simplex, Lorentzianity is equivalent to every
+quadratic partial derivative having a Hessian with at most one
+positive eigenvalue \cite[Theorem 2.25]{BH}. Positive targets in
+\eqref{eq:Z} give this full support. Lee--Oh--Seo proved that clique
+sources are Lorentzian for every antiferromagnetic target
+\cite[Theorem 3.1]{LOS}. The connected-source converse discussed
+in \cite[Section 6]{LS} asks whether only cliques have this property.
+We address one two-parameter family.
+
+\begin{theorem}\label{thm:main}
+Let $m\ge4$ and $s\ge2$ be integers. There are $q\le10$ distinct
+rational nodes $a_0,\ldots,a_{q-1}\in(-1,1)$, one of them zero,
+such that
+\[
+ K=\one\one^\top-aa^\top
+\]
+has inertia $(1,1,q-2)$ and $Z_{C_m[K_s]}(\mathbf x;K)$ is not
+Lorentzian. One may take $q\le7$ if $s\ge9$ and $q=6$ if $m$ is even.
+The matrix is strictly positive entrywise.
+\end{theorem}
+
+The parameters of $K$ may depend on both $m$ and $s$.
+Adding distinct nodes in $(-1,1)$ allows exactly ten states:
+the restriction to the old variables preserves the old Hessian
+obstruction. Combining the theorem with the clique result gives
+a characterization within this family.
+
+\begin{corollary}
+For $m\ge3$ and $s\ge2$, the polynomial
+$Z_{C_m[K_s]}(\mathbf x;K)$ is Lorentzian for every antiferromagnetic
+target $K$ if and only if $m=3$.
+\end{corollary}
+\begin{proof}
+For $m=3$ the source is $K_{3s}$, so \cite[Theorem 3.1]{LOS}
+applies. Theorem~\ref{thm:main} supplies the converse.
+\end{proof}
+
+The earlier conditioned-profile method \cite{RankTwo} and its
+six-spin refinement \cite{SixSpin} are inputs, not new claims here.
+The latter covers bases $F$ for which
+$\alpha(F-e)=\alpha(F)$ for every edge.
+Even cycles satisfy this hypothesis. An odd cycle $C_{2k+1}$ does
+not: deleting any edge gives a path with independence number
+$k+1$, whereas $\alpha(C_{2k+1})=k$.
+Thus the odd case requires a different ground-layer analysis.
+Each nontrivial clique class also contains maximum-degree true
+twins, so the earlier no-maximum-degree-twins criterion does not
+settle this family.
+
+The contribution is the uniform odd-cycle construction and the
+bound on its number of states. Turan equality, generalized
+Vandermonde invertibility and continuity of inertia are classical.
+The homomorphism inequalities for clique blowups in \cite{LOS,LS}
+concern a different assertion and are not contradicted by a failure
+of Lorentzianity of the full source partition polynomial.
+Our checks of these sources and the preceding manuscripts support
+this comparison; they do not establish exhaustive worldwide priority.
+
+\section{From an initial profile block to a small target}
+We give the transfer argument for an arbitrary number of active
+profiles, including the order of its two limiting operations.
+
+Let $n=|V(G)|$, $0\le h\le n-2$, $a_0=\ell\ne0$ and $a_1=0$.
+Put $\theta=\ell^2$. For $S\subseteq V(G)$ of size $h$, let
+$r_S(v)=|N(v)\cap S|$ for $v\notin S$.
+Let $\nu^S_r$ count such vertices of profile $r$, and let $C^S_{rt}$
+count ordered adjacent pairs of distinct outside vertices with
+profiles $r,t$. Pad $\nu^S$ by a zero in coordinate $h+1$.
+The matrix $D$ of size $(h+2)\times(h+1)$ is given by
+$De_r=e_r-e_{r+1}$. Define
+\begin{equation}
+ Q_h(\theta)=\sum_{|S|=h}(1-\theta)^{e(G[S])}
+ \left[\theta\{\nu^S(\nu^S)^\top-\diag\nu^S\}
+             -DC^SD^\top\right].                       \label{eq:Q}
+\end{equation}
+With $U_{ir}=(1-\ell a_i)^r$, direct differentiation gives
+\begin{equation}
+ \Hess\!\left(\partial_0^h\partial_1^{n-h-2}Z_G\right)
+ =\frac{h!(n-h-2)!}{\theta}\,UQ_h(\theta)U^\top.          \label{eq:H}
+\end{equation}
+Indeed, fixing the $h$ vertices assigned to the pin spin contributes
+$(1-\theta)^{e(G[S])}$. The two undifferentiated vertices give
+the profile products, and $\nu\nu^\top-\diag\nu$ counts all ordered
+distinct pairs. The edge correction is $a_i a_j$ times the ordered
+edge count; the identity $(UD)_{ir}=\ell a_i(1-\ell a_i)^r$
+produces the second term. Edges involving vertices differentiated
+in the zero-node spin have weight one. This also accounts for
+the factorials, including coincident residual spins.
+
+Set $e_0=\min_{|S|=h}e(G[S])$. The leading kernel is
+\begin{equation}
+ L=\lim_{\theta\uparrow1}\frac{Q_h(\theta)}{(1-\theta)^{e_0}}
+ =\sum_{\substack{|S|=h\\e(G[S])=e_0}}
+   \{\nu^S(\nu^S)^\top-\diag\nu^S-DC^SD^\top\}.           \label{eq:L}
+\end{equation}
+An index is \emph{active} if its row in $L$ is nonzero.
+In particular, activity is not defined just by $\nu_r>0$.
+
+\begin{lemma}[Initial-profile compression]\label{lem:compression}
+Suppose the principal submatrix of $L$ on its first $r$ active
+indices is nonsingular and has at least two positive eigenvalues.
+Then $G$ has a strictly positive rational rank-two
+antiferromagnetic obstruction on $r+2$ states.
+\end{lemma}
+\begin{proof}
+Let the first active indices be $b_1<\cdots<b_r$. For rational
+$\delta>0$, use the $r$ auxiliary nodes $a_{i+1}=-1+\delta i$,
+$i=1,\ldots,r$. At $\ell=-1$ their profile evaluation matrix
+has entries $(\delta i)^b$. Its columns on the selected indices
+form
+\[
+ V_\delta=W\diag(\delta^{b_1},\ldots,\delta^{b_r}),
+ \qquad W_{ij}=i^{b_j}.
+\]
+The matrix $W$ is invertible: a nonzero polynomial with at most
+$r$ monomials has at most $r-1$ distinct positive roots, by
+Descartes' rule of signs. For every omitted active index $b>b_r$,
+the $j$th entry of $V_\delta^{-1}((\delta i)^b)_i$ is a constant
+times $\delta^{b-b_j}$, and therefore tends to zero.
+Inactive rows contribute nothing. Congruencing the auxiliary
+restriction of $ULU^\top$ by $V_\delta^{-1}$ thus gives the selected
+block in the limit $\delta\downarrow0$.
+
+Choose rational $\delta$, with $0<\delta<1/r$, sufficiently small
+to retain its inertia. Now fix $\delta$ and put
+$\ell=-1+\varepsilon$ with $\varepsilon\downarrow0$.
+The positive normalization in \eqref{eq:H} and \eqref{eq:L}
+and continuity retain at least two positive eigenvalues for
+rational $\ell$ sufficiently close to $-1$.
+We also impose $0<\ell+1<\delta$, so the pin, zero node and
+auxiliary nodes are distinct. All nodes lie in $(-1,1)$, hence
+$K_{ij}=1-a_i a_j>0$.
+The two vectors $\one,a$ are linearly independent; Sylvester's
+law of inertia gives $(1,1,r)$ for $K$.
+The offending principal Hessian restriction proves non-Lorentzianity.
+\end{proof}
+No evaluation at a zero-entry boundary target is asserted.
+The target construction is terminating in principle by rational
+search and exact inertia, but no useful denominator bound is proved.
+
+\section{Minimum-edge occupations on an odd cycle}
+For the rest of the proof put $m=2k+1$, $k\ge2$, and
+\begin{equation}
+ n=(2k+1)s,\qquad h=ks-1,\qquad
+ e_0=\frac{(s-1)(ks-2)}2.                              \label{eq:parameters}
+\end{equation}
+Both derivative orders $h$ and $n-h-2=(k+1)s-1$ are nonnegative.
+
+An occupation vector $c=(c_0,\ldots,c_{m-1})$ records how many
+vertices of each clique class belong to $S$. Its weight, the number
+of labelled subsets it represents, is $\prod_i\binom{s}{c_i}$.
+
+\begin{lemma}\label{lem:ground}
+The minimum number of edges in an $h$-vertex induced subgraph of
+$C_m[K_s]$ is \eqref{eq:parameters}. Every minimizing subgraph is
+a union of $k$ clique components, one of size $s-1$ and the others
+of size $s$. Its occupation is either
+\begin{enumerate}
+\item one component occupying two consecutive cycle classes, with
+all other components occupying one class and all intervening gaps
+having length one; or
+\item every component occupying one class, with one gap of length
+two and all other gaps of length one.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+The independence number of the source is $k$.
+Turan's theorem applied to the complement of an induced
+$h$-vertex graph gives the minimum in \eqref{eq:parameters};
+equality requires $k$ balanced clique components \cite{Turan}.
+Selecting full classes of a maximum independent set except for
+one omitted vertex attains equality.
+Since $m\ge5$, a clique component can use at most two consecutive
+cycle classes. Different components require at least one empty
+class between them. There are $2k+1$ classes and $k$ components,
+so at most one component can occupy two classes. If there is
+one, all $k$ gaps have length one. If there is none, precisely
+one gap has length two. These conditions are also sufficient.
+\end{proof}
+
+Here is an exact summation with convenient endpoint corrections.
+Anchor a possible split at classes $0,1$ and place the other
+components at $3,5,\ldots,2k-1$.
+\begin{itemize}
+\item Type A has occupations $(t,s-1-t)$ at $0,1$ and all other
+components full, with $0\le t\le s-1$. Its weight is
+$\binom{s}{t}\binom{s}{t+1}$.
+\item Type B has occupations $(t,s-t)$ at $0,1$, with
+$0\le t\le s$, and one of the $k-1$ other components partial
+of size $s-1$. Its weight is $s\binom{s}{t}^2$.
+\end{itemize}
+Take all $m$ rotations. Strict splits occur exactly once.
+Each unsplit configuration occurs twice among the endpoints:
+one can regard either class next to its unique double gap as
+the degenerate split. Subtract one copy of all unsplit configurations.
+They are the $m$ rotations of the $k$ choices of a partial class
+in $\{0,2,\ldots,2k-2\}$, each with weight $s$.
+Thus the number of minimizing labelled subsets is
+\begin{equation}
+ N=m\left[\binom{2s}{s-1}+(k-1)s\binom{2s}{s}-ks\right]. \label{eq:N}
+\end{equation}
+The signed representation counts a positive combinatorial set
+exactly once; it does not assign negative physical weights.
+
+For an occupation define the remaining class size and its profile by
+\[
+ b_i=s-c_i,\qquad \rho_i=c_{i-1}+c_i+c_{i+1}.
+\]
+Indices are cyclic. With zero padding as needed, put
+\[
+ \nu=\sum_i b_i e_{\rho_i},\qquad
+ C=\sum_i b_i(b_i-1)e_{\rho_i}e_{\rho_i}^{\top}
+ +\sum_i b_i b_{i+1}
+ (e_{\rho_i}e_{\rho_{i+1}}^\top+e_{\rho_{i+1}}e_{\rho_i}^\top).
+\]
+The occupation contributes its weight times
+\begin{equation}
+ M(c)=\nu\nu^\top-\diag\nu- DCD^\top.                  \label{eq:occupation}
+\end{equation}
+The internal edges of an empty clique class contribute
+$s(s-1)$ ordered pairs and must be retained.
+Summing \eqref{eq:occupation} over the above types and corrections
+is an explicit formula for $L$.
+All active indices lie between $s-1$ and $2s+1$:
+the remaining part of a selected component has profile $s-1$ or
+$s$, an empty class has profile between $s-1$ and $2s$, and
+$D$ shifts upwards by at most one.
+
+\section{Five initial profiles for all large clique sizes}
+Let $B=\binom{2s}{s}$ and
+\[
+ A=(s-1,s,s+1,s+2,s+3),\qquad
+ T=L[A,A]/m.
+\]
+We describe a finite symbolic construction of $T$, rather than
+fitting its entries from numerical examples.
+For a pattern $c$, let $P(c)$ be the restriction of
+\eqref{eq:occupation} to $A$, with
+\begin{equation}
+\begin{split}
+ P(c)=\nu_A\nu_A^\top-\diag\nu_A
+ -\sum_i b_i(b_i-1)d_i d_i^\top
+ \\{}-\sum_i b_i b_{i+1}(d_i d_{i+1}^\top+d_{i+1}d_i^\top),
+ \qquad d_i=(e_{\rho_i}-e_{\rho_i+1})|_A.
+\end{split}                                           \label{eq:P}
+\end{equation}
+
+For a type A pattern, let $P_A^\circ$ be its generic projected
+matrix when the two variable boundary profiles lie outside $A$.
+The sum over all split parameters is
+\begin{align}
+ \mathcal A={sB\over s+1}P_A^\circ+
+ \sum_{j=0}^{4}\binom{s}{j}\binom{s}{j+1}
+ \bigl(P_A(j)+P_A(s-1-j)-2P_A^\circ\bigr).             \label{eq:Asum}
+\end{align}
+For a type B partial-position category $p$, the analogous sum is
+\begin{equation}
+ \mathcal B_p=sB P_{B,p}^\circ+
+ \sum_{j=0}^{4}s\binom{s}{j}^2
+ \bigl(P_{B,p}(j)+P_{B,p}(s-j)-2P_{B,p}^\circ\bigr).    \label{eq:Bsum}
+\end{equation}
+These formulas hold for $s\ge11$.
+For example, in type A the variable profiles are $s+t$ and
+$2s-1-t$. In type B they are $s+t$ and $2s-1-t$ for a nearby
+partial class, and $s+t$ and $2s-t$ for a distant partial class.
+For $k=2$ the unique partial class touches both boundaries,
+giving $s+t-1$ and $2s-1-t$ instead.
+Solving for when either $\rho$ or $\rho+1$ enters $A$ puts all
+exceptions in the two endpoint lists in \eqref{eq:Asum}--\eqref{eq:Bsum}.
+For $s\ge11$ these lists are disjoint. The weights outside
+them sum by Vandermonde's identity; the correction sums add
+the exact weighted difference from the generic matrix.
+
+For $k\ge3$ there are two near partial positions and $k-3$ far
+positions. The two near positions have equal \emph{summed} matrices
+by reflection and $t\leftrightarrow s-t$.
+For unsplit endpoint patterns there are two near partial positions
+and $k-2$ far positions. Therefore
+\begin{equation}
+ T=\mathcal A+2\mathcal B_{\rm near}
+ +(k-3)\mathcal B_{\rm far}
+ -2sP_{E,\rm near}-(k-2)sP_{E,\rm far}.                \label{eq:Tlarge}
+\end{equation}
+Representatives may be drawn on $C_9$. Extra full components
+contribute only profile $2s$, outside the projection for $s\ge11$.
+The local near pattern is valid already at $k=3$; the absent
+far B category has multiplier zero.
+For $k=2$, compute the A pattern and the single B position on
+$C_5$ and subtract its two distinct unsplit endpoint patterns.
+It is not obtained by substituting $k=2$ into \eqref{eq:Tlarge}.
+
+This defines every entry of the two rational-polynomial matrices
+in $s,k,B$. Their expanded entries and determinant factorizations
+are in \texttt{odd-initial-five-symbolic.json}.
+The first row in both branches, with the appropriate value of $k$, is
+\begin{equation}
+ \left(0,\ Bks^2,\ 2ks^4,\
+ {ks^4(s-1)^2\over2},\
+ {ks^4(s-1)^2(s-2)^2\over18}\right).                  \label{eq:firstrow}
+\end{equation}
+All four displayed couplings are positive in the domain used below.
+There are no lower profiles, so $A$ consists of the first five
+active indices.
+
+\begin{proposition}\label{prop:large}
+For every integer $s\ge20$ and $k\ge2$, $T$ has inertia $(2,3,0)$.
+\end{proposition}
+\begin{proof}
+Let $\Delta_j$ be its leading $j\times j$ determinant.
+Exact expansion of \eqref{eq:P}--\eqref{eq:Tlarge} gives
+\[
+ \Delta_2=-B^2k^2s^4<0
+\]
+in both branches, including $k=2$.
+For $\Delta_3,\Delta_4,\Delta_5$ the required signs are $+,-,-$.
+Here is the exact finite certificate for those signs.
+Take the numerator of the signed determinant, retaining its
+positive constant denominator separately. Factor out only powers
+of $s,s-1,s-2,k,B$, which are positive in the domain. Denote the
+remaining signed polynomial by $F$. Substitute
+\begin{equation}
+ B=s^8+w,\qquad k=3+v,\qquad s=20+u,                 \label{eq:shift}
+\end{equation}
+omitting $v$ in the $k=2$ branch.
+Every nonzero coefficient of the resulting six polynomials is
+positive, and every constant term is positive. The complete
+integer coefficient lists are provided, with the following counts.
+\begin{center}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Branch & $\Delta_3$ & $-\Delta_4$ & $-\Delta_5$\\
+\midrule
+$k=2$ & 56 & 64 & 80\\
+$k\ge3$ & 112 & 196 & 328\\
+\bottomrule
+\end{tabular}
+\end{center}
+These are 836 retained coefficients, not sampled values or rounded
+eigenvalues. The supplement reconstructs the matrices,
+determinants, stripped factors and all coefficients using exact
+integer and rational arithmetic.
+
+It remains to justify $w>0$ in \eqref{eq:shift}.
+At $s=20$,
+\[
+ \binom{40}{20}-20^8=112246528820>0.
+\]
+The polynomial $(4s+2)s^8-(s+1)^9$ has strictly positive
+coefficients in $s-20$, as the exact expansion in the supplement
+shows. The recurrence $B(s+1)/B(s)=(4s+2)/(s+1)$ then proves
+$B(s)>s^8$ by induction. Thus all six signed determinants are
+strictly positive for the claimed integer parameters.
+
+The initial $2\times2$ block is nonsingular with inertia $(1,1,0)$.
+The subsequent Schur pivots have signs
+$\Delta_3/\Delta_2<0$, $\Delta_4/\Delta_3<0$ and
+$\Delta_5/\Delta_4>0$, proving $(2,3,0)$.
+We do not use the zero first diagonal entry as a scalar pivot.
+\end{proof}
+
+\section{Bounded clique sizes and infinite cycle tails}
+For $2\le s\le19$, a separate exact polynomial certificate
+avoids the overlapping endpoints of the large-$s$ formula.
+For fixed $s$, the full matrix $L/m$ is polynomial in $k$ for
+$k\ge3$. To construct it, use the same A, B and endpoint categories
+as before, now retaining \emph{all} profile coordinates.
+A representative on $C_9$ is extended symbolically by
+\begin{equation}
+ \nu_{2s}\longmapsto\nu_{2s}+(k-4)s,\qquad
+ C_{2s,2s}\longmapsto C_{2s,2s}+(k-4)s(s-1).           \label{eq:extra}
+\end{equation}
+An additional full component leaves no outside vertices in its
+class; its following empty class contributes precisely the
+vertices and internal ordered edges in \eqref{eq:extra}.
+No other remaining adjacency or local profile changes.
+The multipliers of the near and far B categories are $2$ and
+$k-3$; those of the endpoint corrections are $2$ and $k-2$.
+Reflection identifies the near categories only after summing
+over $t$. At $k=3$ the far B term is absent; the other local
+patterns have the same formula with one fewer ordinary empty class.
+This is a combinatorial derivation of a polynomial matrix,
+not interpolation. The case $k=2$ is evaluated directly.
+
+For each $s$, take its first active $r$ coordinates.
+The following table gives a certified block for the infinite
+tail $k\ge N$, the largest block needed in the finitely many
+integers $3\le k<N$, and the size for $k=2$.
+\begin{center}
+\begin{tabular}{@{}rrrrr@{}}
+\toprule
+$s$ & Tail size $r$ & $N$ & Largest finite size & $k=2$ size\\
+\midrule
+2 &4&3&--&4\\
+3 &5&3&--&4\\
+4 &5&8&6&5\\
+5 &6&3&--&5\\
+6 &7&3&--&6\\
+7 &6&40&8&6\\
+8 &6&3&--&6\\
+9--19 &5&3&--&5\\
+\bottomrule
+\end{tabular}                                                     \label{tab:small}
+\end{center}
+
+For each row, the determinant of the indicated initial block
+is a nonzero polynomial $d_s(k)$.
+Its leading sign $\eta_s\in\{-1,1\}$ is chosen so that every
+coefficient of $\eta_s d_s(N+u)$ is nonnegative and its constant
+coefficient is positive. These complete coefficient lists are in
+\texttt{odd-initial-small-certificates.json}.
+Hence the block is nonsingular throughout the real interval
+$[N,\infty)$. Exact symmetric elimination at $N$ gives at least
+two positive eigenvalues. Since inertia cannot change along a
+continuous nonsingular real symmetric family, that inertia
+persists throughout the interval. The polynomial continuation
+at nonintegral $k$ need not represent a graph.
+
+There are exactly 42 exceptional integers before the thresholds:
+$k=3,\ldots,7$ for $s=4$ and $k=3,\ldots,39$ for $s=7$.
+Each is certified by rational congruence, as are all eighteen
+$k=2$ cases. The table therefore covers every $k\ge2$ for
+each $2\le s\le19$. The size never exceeds eight, and is five
+throughout $9\le s\le19$.
+
+These exceptional block sizes are substantive.
+For $s=7$ and $6\le k\le24$, the initial seven-profile block has
+inertia $(1,6,0)$, whereas the initial eight-profile block has
+inertia $(2,6,0)$. For $s=4$ and $k=3,4,5$, the five-profile
+block also fails and the six-profile block works.
+This does not prove a lower bound on the number of target
+states for other constructions.
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+If $m$ is even, deleting an edge of $C_m$ leaves its independence
+number unchanged. The six-state theorem of \cite{SixSpin} applies.
+For odd $m=2k+1$, Lemma~\ref{lem:ground} and
+\eqref{eq:occupation} give the exact leading kernel.
+Proposition~\ref{prop:large} and the bounded-size certificates
+produce a nonsingular initial block with at least two positive
+eigenvalues, of size at most eight for every $s\ge2$ and of size
+five for every $s\ge9$.
+Lemma~\ref{lem:compression} supplies at most ten and seven states,
+respectively.
+\end{proof}
+
+\section{An exact positive target and reproducible evidence}
+For $C_5[K_9]$, take seven nodes
+\begin{equation}
+ a=\left(-\frac{4095}{4096},\,0,\,
+ -\frac{15}{16},-\frac78,-\frac{13}{16},
+ -\frac34,-\frac{11}{16}\right).                       \label{eq:witness}
+\end{equation}
+The target $K=\one\one^\top-aa^\top$ is strictly positive
+and has inertia $(1,1,5)$.
+For $h=17$, the restriction to the five auxiliary variables of
+\[
+ \Hess(\partial_0^{17}\partial_1^{26}Z_{C_5[K_9]})
+\]
+has inertia $(2,3,0)$.
+This is a full finite-parameter computation using all 4335
+occupation vectors of total size 17, rather than just the
+leading layer. The supplementary certificate retains the
+rational target, scaled integer Hessian, positive normalization
+and rational elimination pivots. It is possible to check its
+inertia without any floating-point spectral calculation.
+
+The pin value matters. With the same auxiliary nodes, the
+earlier trial $\ell=-255/256$ gives auxiliary inertia $(1,4,0)$
+and fails to certify the desired obstruction. That failed
+trial is retained. Likewise, a prior noninitial four-profile
+choice fails at $(k,s)=(3,6)$; the initial seven-profile block
+used here succeeds. Neither failed trial is silently discarded
+from the reproducibility record.
+
+The supplement contains the classified-pattern kernel, symbolic
+five-profile construction, large-size coefficient certificates,
+bounded-size tail and exception certificates, exact inertia
+routine and an executable verifier. The verifier checks identities
+and sign coefficients rather than trusting stored PASS labels.
+Source-audit reports and their independently written code are
+kept separately from the author computations. The source audit
+reconstructed the six large-size certificates, their 836
+positive coefficients, all 42 exceptional integers and the
+positive target \eqref{eq:witness}. Its further finite
+cross-checks corroborate the classification; the proof of the
+infinite parameter ranges is the symbolic argument above.
+
+All exact certificates are supplementary parts of this argument.
+They do not amount to a proof-assistant formalization.
+The finite census of other bases from earlier work is not used
+to extrapolate the present theorem. The original failed trials
+and separate audit outputs remain preserved.
+
+\section{Limitations and further questions}
+The theorem concerns uniform cycle clique blowups.
+It does not establish the general connected-source conjecture,
+unequal clique sizes, an optimal state bound, a fixed target for
+the entire family, or a useful uniform denominator bound.
+The restriction $s\ge2$ is the domain of the present occupation
+argument; no statement about $s=1$ is inferred from its formulas.
+
+The proof separates two difficulties: finding an initial
+profile block with two positive eigenvalues and realizing it
+with a bounded number of spins. For odd cycles, the total number
+of possible profiles grows with $s$, but five initial profiles
+suffice once $s\ge9$. An arbitrary later principal minor would
+not alone justify this state bound.
+The eight-profile exceptions at $s=7$ suggest a specific
+optimization problem, but their inertia does not exclude
+more efficient auxiliary-node choices.
+
+\paragraph{Assistance and assessment.}
+OpenAI Codex assisted with the proofs, writing and exact computation.
+The author operates AIRR.
+The source argument received a GPT-6 Astra technical audit,
+requested at effort \texttt{xhigh}; it found no unresolved
+material mathematical objection within the stated scope.
+That source audit is not an exact-version manuscript score.
+Any subsequent assessment must identify the final PDF hash.
+Prior model participation is disclosed; runtime identity and
+technical context isolation are not independently attested.
+No human peer review, formal verification or worldwide-priority
+certificate is claimed.
+
+\begin{thebibliography}{9}
+\bibitem{BH}
+P. Br\"and\'en and J. Huh.
+\emph{Lorentzian polynomials}.
+Annals of Mathematics \textbf{192} (2020), 821--891.
+\href{https://arxiv.org/abs/1902.03719}{arXiv:1902.03719}.
+\bibitem{LOS}
+J. Lee, J. Oh and J. Seo.
+\emph{Counting homomorphisms in antiferromagnetic graphs via
+Lorentzian polynomials}.
+\href{https://arxiv.org/abs/2506.13659}{arXiv:2506.13659}, version 2.
+\bibitem{LS}
+J. Lee and J. Seo.
+\emph{Antiferromagnetic models are clique-minimizing}.
+\href{https://arxiv.org/abs/2608.17920}{arXiv:2608.17920}, version 1.
+\bibitem{RankTwo}
+L. Eriksson.
+\emph{Rank-two obstructions to Lorentzian graph partition functions}.
+AIRR, ARR-2026-7993ZVQWNC9E38P2, version 1, 17 October 2026.
+\href{https://airr.science/papers/ARR-2026-7993ZVQWNC9E38P2/versions/v1/}
+{Permanent record}. Working paper.
+\bibitem{SixSpin}
+L. Eriksson.
+\emph{Six-spin Lorentzian obstructions for clique blowups of
+independence-stable graphs}.
+AIRR, ARR-2026-0VEP5BTYB99VNSC0, version 1, 17 October 2026.
+\href{https://airr.science/papers/ARR-2026-0VEP5BTYB99VNSC0/versions/v1/}
+{Version record}. Working paper.
+\bibitem{Turan}
+P. Tur\'an.
+\emph{On an extremal problem in graph theory} (in Hungarian).
+Matematikai \'es Fizikai Lapok \textbf{48} (1941), 436--452.
+\end{thebibliography}
+\end{document}

@@ -1,0 +1,7 @@
+# Uniform ten-spin Lorentzian obstructions for cycle clique blowups
+
+For every $m\ge4$ and $s\ge2$, we construct a strictly positive rational antiferromagnetic target of rank two on at most ten states whose partition polynomial for $C_m[K_s]$ is not Lorentzian. The state bound is independent of both parameters; seven states suffice when $s\ge9$, and six suffice for even $m$. The new case is an odd cycle, whose edges are critical for its independence number and hence fall outside the earlier independence-stable blowup theorem. We classify the minimum-induced-edge occupations and compress their leading Hessian kernel to an initial block of at most eight profiles. For $s\ge20$, a five-profile block has inertia $(2,3,0)$, proved by six exact coefficient certificates in the cycle length, clique size and central binomial coefficient. Eighteen bounded clique sizes are covered by polynomial certificates for infinite cycle-length tails and 42 explicit integer exceptions. We retain failures of smaller blocks and give a positive seven-state witness for $C_5[K_9]$. The target may depend on $m,s$; neither optimality nor the general connected-source characterization is claimed.
+
+Canonical PDF: paper.pdf, 8 pages, SHA256 3903b6b67cb6642cbe2b047a43cf15169c237ff021f7c8cb8986f8dba585c11a.
+
+Supplement scripts and stored results are supplied byte-for-byte; follow their README and run in a writable copy. Review evidence and its limits: review/README.txt.

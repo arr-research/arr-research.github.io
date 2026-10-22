@@ -1,0 +1,1376 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=25mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,microtype,needspace}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{alemma}{Lemma}[section]
+\newtheorem{aprop}[alemma]{Proposition}
+\theoremstyle{remark}\newtheorem{remark}[theorem]{Remark}
+\newcommand{\D}{\mathbb D}
+\newcommand{\C}{\mathbb C}
+\newcommand{\norm}[1]{\lVert #1\rVert}
+\newcommand{\Rea}{\operatorname{Re}}
+\newcommand{\ee}{\mathrm e}
+\title{A sharp circle-root residual barrier\\and its collapse with one interior zero}
+\author{Lluis Eriksson}
+\date{18 October 2026; revised (version 2) 21 October 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+For degree-\(n\) polynomials with all zeros on the unit circle,
+the least normalized residual \(\norm{P'-\lambda P}_{H^2}/\norm P_{H^2}\)
+tends to \(1/\sqrt8\), both for arbitrary complex \(\lambda\) and
+for the restricted slope \(\lambda=P'(0)\), \(P(0)=1\).
+We prove the sharp lower limit through the classical Mathieu ground
+state and give an explicit circle-root family attaining it in every
+large degree. In contrast, exactly one zero strictly inside the
+disk, with all remaining zeros on the circle, permits restricted
+residual \(O(n^{-1/6})\), giving the exact zero-count threshold
+for collapse. More generally, for each fixed \(A>0\),
+a fixed number \(M_A\) of interior zeros permits \(O(n^{-A})\).
+Their distance and radial gap from 1 have order \(n^{-1/3}\);
+explicit algebraic parameters in the one-root case, and an
+implicit-function construction in general, correct both degree rounding
+and the exact slope. For all disk-root polynomials and arbitrary slope,
+we also prove a uniform lower bound \(\exp(-C\sqrt n)\) for every
+\(C>\sqrt{(8/3)\log17}\), explicitly \(\exp(-3\sqrt n)\) for
+\(n\ge10^4\). This refines the known residual method for exterior
+power sums; the negative answer to Erd\H{o}s Problem 973 was already
+known. The optimal disk and one-root decay rates, and small exterior
+power-sum constructions, remain unresolved.
+\end{abstract}
+
+\section{Statement and relation to previous work}
+All logarithms are natural. The measure on the unit circle is normalized
+to have mass one. Thus for \(P(z)=\sum_{j=0}^na_jz^j\),
+\[
+ \norm P_2^2=\frac1{2\pi}\int_0^{2\pi}|P(\ee^{it})|^2\,dt
+             =\sum_{j=0}^n|a_j|^2,
+ \qquad \norm P_\infty=\max_{|z|=1}|P(z)|.
+\]
+Write \(\mathcal S_n\) for the nonzero polynomials of exact degree \(n\)
+whose zeros are in \(\overline\D\), including multiplicity and boundary
+zeros. Define
+\[
+ s_n=\inf_{\substack{P\in\mathcal S_n\\\lambda\in\C}}
+          \frac{\norm{P'-\lambda P}_2}{\norm P_2}.
+\]
+There is no normalization at the origin in this definition.
+
+\begin{theorem}\label{thm:main}
+Put \(C_0=\sqrt{(8/3)\log17}\). For every \(C>C_0\) there is \(N_C\)
+such that
+\begin{equation}\label{eq:asymptotic}
+ s_n\ge \ee^{-C\sqrt n}\qquad(n\ge N_C).
+\end{equation}
+The following explicit bound also holds:
+\begin{equation}\label{eq:explicit}
+ s_n\ge \ee^{-3\sqrt n}\qquad(n\ge10^4).
+\end{equation}
+\end{theorem}
+
+For comparison, Tan, Wang, Huang and Chen \cite[Theorem 1.1]{tan}
+considered the restricted infimum
+\[
+ r_n=\inf_{\substack{P\in\mathcal S_n\\P(0)=1}}
+       \frac{\norm{P'-P'(0)P}_2}{\norm P_2}
+\]
+and proved \(r_n\ge\exp(-(1+o(1))\sqrt n\log n)\).
+For an individual normalized polynomial we write
+\(\rho(P)=\norm{P'-P'(0)P}_2/\norm P_2\).
+Theorem~\ref{thm:circle} identifies the positive limiting residual
+when every root lies on the circle. Theorem~\ref{thm:one} shows
+that one interior root suffices to make it vanish, establishing the
+minimal zero-count threshold. These statements
+concern the global weighted boundary norm, including the exact
+restricted slope.
+
+\emph{Convention on squares.} Every residual in a theorem statement,
+including the limit \(1/\sqrt8\), is the unsquared ratio
+\(\norm{P'-\lambda P}_2/\norm P_2\). The proofs below mostly bound its
+square, which is a ratio of two integrals. The passage back is the
+square root: a limit \(1/8\) for the squared ratio gives \(1/\sqrt8\),
+and \(\rho^2=O(n^{-1/3})\) is the same statement as
+\(\rho=O(n^{-1/6})\).
+
+Since \(s_n\le r_n\), Theorem~\ref{thm:main} strengthens that quantitative
+estimate and allows an arbitrary scalar slope.
+Their maximum-point normalization, segment integration and projected
+Newton identity are retained here, with attribution. The two changes
+are a local analytic bound for the logarithmic derivative and a bounded
+test polynomial. These remove the logarithmic factor in the exponent.
+
+Luo, Yang and Zhu \cite[Theorem 1.1]{luo} had already proved that exterior
+power sums cannot be exponentially small in the degree, answering
+Erd\H{o}s Problem 973 negatively. The application in Section~\ref{sec:power}
+is a quantitative refinement of that established conclusion.
+No new solution of the original yes-or-no problem is asserted.
+
+\begin{theorem}[Superalgebraic decay]\label{thm:upper}
+For every \(A>0\), there are constants \(C_A,N_A\) such that
+\[
+ r_n\le C_A n^{-A}\qquad\text{for every integer }n\ge N_A.
+\]
+The polynomials can be chosen with real coefficients, exactly
+\(M_A\) zeros strictly inside the unit disk, where \(M_A\) is
+independent of \(n\), and all other zeros on its boundary.
+The interior zeros approach 1 with distance and radial gap
+\(\Theta(n^{-1/3})\). Together with
+Theorem~\ref{thm:main}, this implies superalgebraic decay of both
+\(s_n,r_n\), while \(s_n^{1/n},r_n^{1/n}\to1\).
+\end{theorem}
+
+The proof in Section~\ref{sec:upper} fixes the cancellation order
+and finite integer multiplicities first, then lets the reciprocal root
+scale grow as \(n^{1/3}\). It provides no effective bounds on
+\(M_A,C_A,N_A\) or uniform control as \(A\) grows.
+Section~\ref{sec:radial} explains why a fixed strict root radius
+precludes superalgebraic decay of a single sequence.
+
+Approximation by logarithmic derivatives and finite moment realization
+have substantial prior history. Komarov \cite{komarovrate} obtains
+geometric approximation on each fixed subdisk by logarithmic
+derivatives of circle-root polynomials; \cite{komarovmoments}
+also realizes prescribed initial moments with unit weights.
+Those interior estimates do not supply the global weighted boundary
+norm used here, with a target slope growing with degree. For example,
+\(1+z^n\) approximates zero logarithmically on subdisks but has
+restricted residual \(n/\sqrt2\). The present contribution is the
+combination of exact slope, global concentration and correction at
+every large degree, rather than moment realization alone.
+
+
+\section{The sharp barrier when every zero is on the circle}\label{sec:circle}
+Let \(s_n^\circ\) and \(r_n^\circ\) denote the same infima as
+\(s_n,r_n\), with every zero required to lie on \(|z|=1\).
+
+\begin{theorem}\label{thm:circle}
+The unrestricted and restricted circle-root residuals satisfy
+\[
+ \lim_{n\to\infty}s_n^\circ
+ =\lim_{n\to\infty}r_n^\circ=\frac1{\sqrt8}.
+\]
+The lower asymptotic bound also holds in the larger class of
+self-inversive polynomials. No finite-degree extremizer is asserted.
+\end{theorem}
+
+\begin{proof}
+We first prove the lower bound, allowing an arbitrary complex slope.
+Rotating the variable makes this slope real and nonnegative, denoted
+\(\lambda\). Self-inversivity permits a constant phase choice such that
+\[
+ P(\ee^{it})=\ee^{int/2}p(t),\qquad p(t)\in\mathbb R,
+ \qquad p(t+2\pi)=(-1)^n p(t).
+\]
+These operations preserve the unrestricted normalized residual.
+The familiar phase derivative \(n/2\) for circle-root polynomials
+appears explicitly in \cite[(1.3)--(1.4)]{erdelyi}; here we retain
+the additional scalar subtraction. Direct differentiation gives
+\[
+ P'-\lambda P=\ee^{i(n/2-1)t}
+ \bigl[(n/2-\lambda\cos t)p-i(p'+\lambda\sin t\,p)\bigr].
+\]
+Integration of the cross term by parts is legitimate because
+\(p^2\) is periodic. Consequently the squared residual is exactly
+\begin{equation}\label{eq:circle-energy}
+ \frac{\int_0^{2\pi}\!
+ [p'^2+(n^2/4+\lambda^2-(n+1)\lambda\cos t)p^2]\,dt}
+ {\int_0^{2\pi}p^2\,dt}.
+\end{equation}
+Write \(E(L)\) for the lowest periodic eigenvalue of
+\(-d^2/dt^2-L\cos t\), for \(L\ge0\). In odd degree, \(|p|\)
+is periodic in \(H^1\) and has the same quadratic-form values as
+\(p\). Thus in both parities \eqref{eq:circle-energy} is at least
+\[
+ g_n(\lambda)=n^2/4+\lambda^2+E((n+1)\lambda).
+\]
+This is a variational lower bound, not an identification of the
+periodic and antiperiodic spectra.
+
+The change of variables \(t=2x+\pi\) gives
+\(E(L)=a_0(2L)/4\), in the standard Mathieu convention
+\(-d^2/dx^2+2q\cos(2x)\); see \cite[\S28.2]{dlmf}.
+The use of this ground state in circular variational problems is
+classical; compare \cite[\S VI.A.2]{busch}. The fixed-index expansion
+\cite[(28.8.1), \(m=0,s=1\)]{dlmf} is
+\[
+ a_0(q)=-2q+2\sqrt q-\tfrac14+O(q^{-1/2}),
+ \qquad
+ E(L)=-L+\sqrt{L/2}-\tfrac1{16}+O(L^{-1/2}).
+\]
+We must minimize uniformly over \(\lambda\), rather than applying
+this expansion only at a fixed shift. The variational principle
+gives \(E(L)\ge-L\) and Lipschitz continuity, so \(g_n\) is
+continuous and coercive, with
+\[
+ g_n(\lambda)\ge
+ (\lambda-(n+1)/2)^2-(2n+1)/4.
+\]
+The trial value \(\lambda=n/2+1/4\) gives
+\(g_n=1/8+O(n^{-1})\). Every minimizer therefore has the form
+\(n/2+c_n\), where \(c_n=O(\sqrt n)\). On this window
+\((n+1)\lambda\ge n^2/4\) for large \(n\). The displayed expansion is a
+statement about the single variable \(L\): there are \(L_0\) and \(C'\)
+with
+\(|E(L)-(-L+\sqrt{L/2}-\tfrac1{16})|\le C'L^{-1/2}\) for all \(L\ge L_0\).
+No further uniformity in \(\lambda\) is therefore needed, and on the
+window the remainder is \(O(n^{-1})\). Expanding its square
+root uniformly on the same window yields
+\[
+ g_n(n/2+c)=(c-1/4)^2+\tfrac18+O((c^2+1)/n).
+\]
+The upper bound on the minimum and absorption of the \(c_n^2/n\)
+term imply \(c_n=O(1)\). Applying the expansion again proves
+\(\inf_{\lambda\ge0}g_n(\lambda)=1/8+O(n^{-1})\).
+This supplies the required lower limit, also for the restricted slope.
+Since \eqref{eq:circle-energy} is the \emph{squared} residual, it gives
+\(s_n^\circ,r_n^\circ\ge(1/8-O(n^{-1}))^{1/2}\to1/\sqrt8\).
+
+For the upper bound, write \(n=6m+k\), \(0\le k\le5\), and for
+\(m\ge3\) choose
+\begin{align*}
+ c_{m,k}=\cos t_{m,k}&=\tfrac12+\frac{2k-1}{8m},\\
+ B_t(z)&=(1+z)^4(1-2\cos t\,z+z^2),\\
+ P_{m,k}(z)&=B_{t_{m,k}}(z)^m(1+z)^k.
+\end{align*}
+All zeros lie on the circle, \(P_{m,k}(0)=1\), and
+\[
+ P_{m,k}'(0)=n/2+1/4,\qquad
+ P_{m,k}'(1)/P_{m,k}(1)=n/2.
+\]
+The limiting factor is \(B_*=(1+z)^4(1-z+z^2)\).
+With \(s=\sin^2(\theta/2)\), its squared normalized modulus is
+\(\cos^6(\theta/2)\cos^2(3\theta/2)\), with a unique maximum at
+\(\theta=0\), and its logarithm is \(-3\theta^2+O(\theta^4)\).
+More explicitly, for the perturbed factor this modulus is
+\[
+ H_c(s)=(1-s)^4\left(1-\frac{2s}{1-c}\right)^2.
+\]
+Lemma~\ref{lem:baseline} in Appendix~\ref{sec:app} derives the
+position \(s^*=(2-c)/3\) and the value
+\((1+c)^6/[729(1-c)^2]\) of its secondary maximum, shows that this
+value is \(<1\) (indeed \(<0.631\)) for \(0\le c\le3/4\), and gives
+\(H_c(s)\le\ee^{-2s}\) on \([0,1]\), uniformly for \(|c-1/2|\le1/10\).
+All six parameter sequences eventually lie in that interval. Hence
+\(|P_{m,k}(\ee^{i\theta})/P_{m,k}(1)|^2\le\ee^{-2ms}\) on the whole
+circle. This supplies the Gaussian domination near zero (where
+\(s\) is comparable to \(\theta^2\)) and an exponentially small outer
+tail, uniformly in the six classes.
+
+For \(F_{m,k}=P_{m,k}'/P_{m,k}-P_{m,k}'(0)\), the identity
+\[
+ B_*'/B_*-3=-\frac{3z(z-1)^2}{z^3+1}
+\]
+shows, on putting \(\theta=u/\sqrt m\), that
+\[
+ F_{m,k}(\ee^{i\theta})\longrightarrow-\tfrac14+\tfrac32u^2,
+ \qquad
+ |P_{m,k}(\ee^{i\theta})/P_{m,k}(1)|^2\longrightarrow\ee^{-3u^2}.
+\]
+Indeed the constant term of \(F_{m,k}\) at 1 is exactly \(-1/4\),
+its linear term is \(O(1)\), and its quadratic term is
+\(-3m/2+O(1)\). A fixed zero-free neighborhood gives the local bound
+\(C(1+|\theta|+m\theta^2)\); after rescaling, a polynomial times
+a Gaussian dominates. On the outer interval, differentiate the
+polynomial product, removing one factor. Uniformly bounded normalized
+factor derivatives give an outer squared numerator
+\(O(m^2q^{2m-2})\), for some \(q<1\). Thus no estimate at a
+pole of the logarithmic derivative is required.
+The ratio of the complete integrals tends to
+\[
+ \frac{\int_{\mathbb R}(-1/4+3u^2/2)^2\ee^{-3u^2}\,du}
+ {\int_{\mathbb R}\ee^{-3u^2}\,du}
+ =\tfrac1{16}-\tfrac34\cdot\tfrac16+\tfrac94\cdot\tfrac1{12}
+ =\tfrac18.
+\]
+This is the limit of the squared residual, so
+\(\rho(P_{m,k})\to1/\sqrt8\).
+Uniformity over the six values of \(k\) covers every sufficiently
+large degree. This proves the upper bound for \(r_n^\circ\), and
+\(s_n^\circ\le r_n^\circ\) completes both limits.
+\end{proof}
+
+
+\section{A finite residual certificate}
+We first give conditions that can be checked at a fixed degree.
+The asymptotic and explicit choices will then be elementary.
+
+\begin{lemma}[Normalization and separation]\label{lem:normalize}
+Suppose \(P\in\mathcal S_n\), \(\lambda\in\C\), \(y>0\), and
+\[
+ \frac{\norm{P'-\lambda P}_2}{\norm P_2}\le\ee^{-y},
+ \qquad \sqrt{n+1}\,\ee^{-y}\le1.
+\]
+Set
+\begin{equation}\label{eq:eta}
+ \gamma_n=2+\log(2\sqrt{n+1}),\qquad
+ \eta=\frac{y-\gamma_n}{n}.
+\end{equation}
+If \(\eta>0\), there are numbers \(v_1,\ldots,v_n\) and moments
+\(m_k=n^{-1}\sum_jv_j^k\) such that
+\begin{equation}\label{eq:geometry}
+ m_1\in\mathbb R,\quad m_1\ge\tfrac12,\qquad
+ \Rea v_j\ge\tfrac12,\quad |v_j|^2\le\frac{\Rea v_j}{\eta}.
+\end{equation}
+They are the reciprocals \(v_j=(1-\beta_j)^{-1}\) of the complex displacements
+from the zeros to a normalized maximum point.
+\end{lemma}
+\begin{proof}
+This is the normalization and separation argument of
+\cite[Sections 2.1--2.2]{tan}, with the scalar slope left arbitrary.
+Choose \(|\tau|=1\) at a maximum of \(|P|\), and put
+\[
+ G(w)=\frac{P(\tau w)}{P(\tau)},\qquad
+ \mu=\tau\lambda,\qquad E=G'-\mu G.
+\]
+The denominator is nonzero because \(P\) is nonzero. We have
+\(G(1)=\norm G_\infty=1\), \(\norm G_2\le1\), and
+\(\norm E_2\le\ee^{-y}\).
+Differentiating \(|G(\ee^{it})|^2\) at its maximum shows that
+\(d=G'(1)\) is real. Bernstein's polynomial inequality gives
+\(|d|\le n\). The coefficient bound
+\(\norm E_\infty\le\sqrt{n+1}\norm E_2\) therefore yields
+\begin{equation}\label{eq:mu}
+ |\mu-d|=|E(1)|\le1,\qquad |\mu|\le n+1.
+\end{equation}
+
+Let \(\beta\) be any zero of \(G\), and set \(\delta=1-\Rea\beta\).
+Integrating the exact ODE along the segment from \(\beta\) to \(1\) gives
+\[
+ 1=\int_\beta^1\ee^{\mu(1-w)}E(w)\,dw.
+\]
+That segment lies in \(\overline\D\). On it,
+\(\Rea(\mu(1-w))\le n\delta+2\), using \(d\in\mathbb R\),
+\(|d|\le n\), \(|\mu-d|\le1\), and \(|1-\beta|\le2\).
+Consequently
+\[
+ 1\le 2\sqrt{n+1}\,\ee^{n\delta+2-y},
+ \qquad \delta\ge\eta.
+\]
+No zero equals \(1\), since \(G(1)=1\).
+Now let \(v=(1-\beta)^{-1}\) for a zero \(\beta\) of \(G\); the zeros of
+\(G\) are the zeros of \(P\) multiplied by \(\bar\tau\), hence lie in
+\(\overline\D\). Since \(|\beta|\le1\),
+\(|1-\beta|^2=1-2\Rea\beta+|\beta|^2\le2(1-\Rea\beta)\), and so
+\[
+ \Rea v=\frac{1-\Rea\beta}{|1-\beta|^2}\ge\tfrac12,\qquad
+ \frac{|v|^2}{\Rea v}=\frac1{1-\Rea\beta}=\frac1\delta\le\frac1\eta .
+\]
+Finally, \(G\) has exact degree \(n\) and \(G(1)=1\), so with its zeros
+\(\beta_1,\dots,\beta_n\) we have
+\(nm_1=\sum_jv_j=G'(1)/G(1)=d\). The individual numbers \(v_j\) are
+complex, but their sum \(d\) is real. Hence
+\(m_1=d/n=\Rea m_1=n^{-1}\sum_j\Rea v_j\), the average of \(n\) real
+numbers each at least \(1/2\); this gives \(m_1\in\mathbb R\) and
+\(m_1\ge1/2\).
+\end{proof}
+
+\begin{lemma}[Local analytic estimate]\label{lem:cauchy}
+With the normalization above, let \(r>0\) and suppose
+\begin{equation}\label{eq:q}
+ q=r\sqrt{n+1}\,\exp\bigl(-y+(2n+1)r\bigr)\le\tfrac12.
+\end{equation}
+Then \(G\) has no zero in \(|w-1|\le r\), and, for every integer \(k\ge2\),
+\begin{equation}\label{eq:moments}
+ |m_k|\le
+ \frac{2\sqrt{n+1}}{n}
+       \exp\bigl(-y+(2n+1)r\bigr)r^{1-k}.
+\end{equation}
+\end{lemma}
+\begin{proof}
+The disk centered at \(1\) can extend beyond \(\overline\D\);
+the needed control there comes from the coefficients.
+For \(|u|\le r\),
+\[
+ |E(1+u)|\le\sqrt{n+1}(1+r)^n\norm E_2
+            \le\sqrt{n+1}\,\ee^{-y+nr}.
+\]
+Solving the ODE from \(G(1)=1\) gives
+\[
+ G(1+u)=\ee^{\mu u}(1+h(u)),\qquad
+ h(u)=\int_0^u\ee^{-\mu s}E(1+s)\,ds.
+\]
+Using the straight segment and \eqref{eq:mu}, we obtain
+\(|h(u)|\le q\le1/2\).
+Thus \(G\) is nonzero on that closed disk and on a neighborhood of it.
+The analytic function \(F=G'/G-\mu=E/G\) satisfies
+\[
+ |F(1+u)|\le2\sqrt{n+1}\,\ee^{-y+(2n+1)r}\qquad(|u|\le r).
+\]
+Cauchy's derivative estimate and logarithmic differentiation give
+\[
+ \frac{|F^{(k-1)}(1)|}{(k-1)!}
+ \le 2\sqrt{n+1}\,\ee^{-y+(2n+1)r}r^{1-k},\qquad
+ F^{(k-1)}(1)=(-1)^{k-1}(k-1)!\,n m_k.
+\]
+This proves \eqref{eq:moments}. There is no restriction \(k\le n+1\):
+\(F\) is an analytic rational function on the specified disk.
+\end{proof}
+
+\begin{proposition}[Finite certificate]\label{prop:certificate}
+Fix \(n\ge1\), \(y,r>0\), and an integer \(K\ge2\).
+Define \(\eta\) by \eqref{eq:eta} and set \(a=2\eta\).
+Suppose \(0<\eta\le2\), \(\sqrt{n+1}\ee^{-y}\le1\), and
+\eqref{eq:q} holds. Put
+\begin{equation}\label{eq:B}
+ B=\frac{2\sqrt{n+1}\,r}{Kan}
+       \exp\left(-y+(2n+1)r+
+                       K\log\left(1+\frac ar\right)\right).
+\end{equation}
+If
+\begin{equation}\label{eq:certificate}
+ \frac1{K\eta}+B<\frac12,
+\end{equation}
+then \(s_n\ge\ee^{-y}\).
+\end{proposition}
+\begin{proof}
+Suppose an admissible \(P,\lambda\) had residual at most \(\ee^{-y}\).
+For the numbers in Lemma~\ref{lem:normalize},
+\[
+ |1-av_j|^2
+ =1-2a\Rea v_j+a^2|v_j|^2\le1.
+\]
+Use the bounded Ces\`aro test
+\begin{equation}\label{eq:test}
+ \Psi(v)=\frac{1-(1-av)^K}{Ka}
+       =v+\sum_{k=2}^K
+          \frac{(-1)^{k+1}}K\binom Kk a^{k-1}v^k.
+\end{equation}
+It has zero constant coefficient, linear coefficient one, and
+\(|\Psi(v_j)|\le2/(Ka)=1/(K\eta)\).
+By Lemma~\ref{lem:cauchy}, its remaining averaged terms have modulus
+at most
+\begin{align*}
+ &\frac{2\sqrt{n+1}\,r}{Kan}\,
+       \ee^{-y+(2n+1)r}
+       \left[\left(1+\frac ar\right)^K-1-\frac{Ka}{r}\right]
+ \le B.
+\end{align*}
+The triangle inequality and \(m_1\ge1/2\) now imply
+\[
+ \frac12\le m_1\le
+       \left|\frac1n\sum_j\Psi(v_j)\right|+B
+       \le\frac1{K\eta}+B,
+\]
+contrary to \eqref{eq:certificate}.
+Each individual residual is therefore larger than \(\ee^{-y}\);
+taking its infimum gives the asserted non-strict bound.
+\end{proof}
+
+\section{Choice of parameters}
+\begin{proof}[Proof of \eqref{eq:asymptotic}]
+Fix \(C>C_0\), and choose \(t>0\) so small that
+\[
+ C^2>\frac43(2+t)\log17.
+\]
+Set
+\[
+ y=C\sqrt n,\qquad r=\frac{y}{8n},\qquad
+ \eta=\frac{y-\gamma_n}{n},\qquad
+ K=\left\lceil\frac{2+t}{\eta}\right\rceil.
+\]
+For all sufficiently large \(n\), the preliminary conditions of
+Proposition~\ref{prop:certificate} hold:
+\(\eta\sim C/\sqrt n\), \(q\to0\), and
+\(\sqrt{n+1}\ee^{-y}\to0\).
+Also \(K\eta\ge2+t\), leaving a fixed positive margin in
+\eqref{eq:certificate}. We have
+\[
+ K\sim\frac{2+t}{C}\sqrt n,\qquad \frac ar\to16,
+\]
+and hence
+\[
+ \frac{-y+(2n+1)r+K\log(1+a/r)}{\sqrt n}
+ \longrightarrow -\frac{3C}{4}+\frac{2+t}{C}\log17<0.
+\]
+The prefactor in \eqref{eq:B} is \(O(n^{-1})\).
+Thus \(B\to0\), and the finite certificate applies.
+\end{proof}
+
+\begin{proof}[Proof of \eqref{eq:explicit}]
+Take \(n\ge10^4\) and choose
+\[
+ y=3\sqrt n,\qquad r=\frac3{8\sqrt n},\qquad
+ K=\left\lceil\frac{21}{10\eta}\right\rceil.
+\]
+First,
+\begin{equation}\label{eq:etaexplicit}
+ \gamma_n\le\frac3{20}\sqrt n,\qquad
+ \frac{19}{20}\frac yn\le\eta\le\frac yn.
+\end{equation}
+Indeed \(\gamma_n/\sqrt n\) decreases for \(n\ge10^4\), since the
+sign of its derivative is that of \(n/(n+1)-\gamma_n<0\).
+At \(n=10^4\), \(\gamma_n<10<15\):
+\(\ee^8>2^8=256>2\sqrt{10001}\) suffices for the first inequality.
+In particular \(0<\eta<2\).
+The condition \(\sqrt{n+1}\ee^{-y}<1\) is immediate, and
+\[
+ q=\frac38\sqrt{1+\frac1n}
+       \exp\left(-\frac94\sqrt n+\frac3{8\sqrt n}\right)<\frac12.
+\]
+Moreover \(K\eta\ge21/10\), so
+\[
+ \frac12-\frac1{K\eta}\ge\frac1{42}.
+\]
+
+From \eqref{eq:etaexplicit} we obtain \(a/r\le16\) and
+\(K\le(14/19)\sqrt n+1\). Using \(\log17<3\),
+\begin{align*}
+ -y+(2n+1)r+K\log(1+a/r)
+ &\le\left(-\frac94+\frac{14}{19}\log17\right)\sqrt n
+        +\log17+\frac3{8\sqrt n}\\
+ &<-\frac3{76}\sqrt n+3+\frac3{8\sqrt n}<0.
+\end{align*}
+The last expression decreases with \(n\) and is negative at \(10^4\).
+For an elementary check of \(\log17<3\), the exponential series
+through degree five gives \(\ee^3>18>17\).
+Finally \(Ka\ge21/5\), and therefore
+\[
+ \frac{2\sqrt{n+1}\,r}{Kan}
+ \le\frac5{28n}\sqrt{1+\frac1n}<\frac1{5n}.
+\]
+It follows that \(B<1/(5n)\le1/50000<1/42\).
+All conditions of Proposition~\ref{prop:certificate} are satisfied.
+\end{proof}
+
+\begin{remark}
+The constants \(3\) and \(10^4\) are convenient explicit choices.
+The same proof with \(r=sy/n\), \(0<s<1/2\), gives the sufficient
+asymptotic condition
+\[
+ C^2>\frac{2\log(1+2/s)}{1-2s}.
+\]
+We use \(s=1/8\) to state a simple constant. Neither this expression
+nor \(C_0\) is asserted to be the optimal residual constant.
+\end{remark}
+
+\section{Exterior power sums and Hardy norms}\label{sec:power}
+\begin{corollary}\label{cor:powers}
+Let \(|z_j|\ge1\), \(1\le j\le n\), and write
+\(M_n=\max_{2\le k\le n+1}|\sum_jz_j^k|\).
+Then
+\[
+ M_n\ge\frac1n\ee^{-3\sqrt n}\qquad(n\ge10^4).
+\]
+For every \(C>C_0\), uniformly over all such configurations,
+\(M_n\ge n^{-1}\ee^{-C\sqrt n}\) for all sufficiently large \(n\).
+No distinguished point \(z_1=1\) is needed.
+\end{corollary}
+\begin{proof}
+We use the projected Newton identity of
+\cite[Proposition 3.1]{tan}. Put
+\(P(t)=\prod_{j=1}^n(1-z_jt)\) and \(p_k=\sum_jz_j^k\).
+Then \(P\in\mathcal S_n\), \(P(0)=1\), and \(P'(0)=-p_1\).
+Logarithmic differentiation near zero, followed by coefficient
+projection onto degrees at most \(n\), gives exactly
+\[
+ P'-P'(0)P=-\Pi_{\le n}
+       \left[\left(\sum_{k=2}^{n+1}p_kt^{k-1}\right)P\right].
+\]
+Projection is contractive in \(H^2\), and multiplication by a
+polynomial \(S\) has \(H^2\) norm at most \(\norm S_\infty\).
+Thus
+\[
+ s_n\le\frac{\norm{P'-P'(0)P}_2}{\norm P_2}
+       \le\sum_{k=2}^{n+1}|p_k|\le nM_n.
+\]
+Apply Theorem~\ref{thm:main}.
+\end{proof}
+
+The factor \(1/n\) is retained in these finite statements.
+It can be absorbed in a leading square-root exponent with any
+strictly larger constant. This corollary strengthens the scale in
+\cite{tan}; the earlier qualitative conclusion of \cite{luo} remains
+fully credited.
+
+\begin{corollary}\label{cor:hp}
+Uniformly for \(1\le p\le\infty\), \(P\in\mathcal S_n\), and
+\(\lambda\in\C\),
+\[
+ \frac{\norm{P'-\lambda P}_{H^p}}{\norm P_{H^p}}
+       \ge\frac{\ee^{-3\sqrt n}}{\sqrt{n+1}}\qquad(n\ge10^4).
+\]
+For every \(C>C_0\), the lower bound \(\ee^{-C\sqrt n}\) holds
+for all sufficiently large \(n\), uniformly over the same parameters.
+\end{corollary}
+\begin{proof}
+Write \(R=P'-\lambda P\), of degree at most \(n\).
+For \(1\le p\le2\), bounding each Fourier coefficient by
+\(\norm R_1\) gives
+\[
+ \norm R_2\le\sqrt{n+1}\norm R_1
+       \le\sqrt{n+1}\norm R_p,\qquad
+ \norm P_2\ge\norm P_p.
+\]
+For \(p\ge2\), use
+\[
+ \norm R_2\le\norm R_p,\qquad
+ \norm P_p\le\norm P_\infty\le\sqrt{n+1}\norm P_2.
+\]
+In both cases \(\norm R_p/\norm P_p\ge
+(\norm R_2/\norm P_2)/\sqrt{n+1}\).
+For the asymptotic statement, first apply Theorem~\ref{thm:main}
+with a constant strictly between \(C_0\) and \(C\), and absorb
+\(\tfrac12\log(n+1)=o(\sqrt n)\).
+\end{proof}
+
+\section{Superalgebraic upper bounds}\label{sec:upper}
+We prove the upper statement by cancelling a prescribed finite number of
+logarithmic-derivative terms at a strict global maximum. All constants in
+this section may depend on the prescribed cancellation order \(K\).
+They are not asserted to be uniform as \(K\to\infty\).
+
+\begin{lemma}[A finite positive moment cone]\label{lem:cone}
+Fix \(K\ge3\). For a rational point \(\zeta=x+iy\), \(x>0\), \(y\ge0\),
+define the real column
+\[
+ V(\zeta)=
+ \begin{cases}
+  (\zeta^2,\ldots,\zeta^K)^T,&y=0,\\
+  (2\Rea\zeta^2,\ldots,2\Rea\zeta^K)^T,&y>0.
+ \end{cases}
+\]
+There is a finite collection of these columns whose cone is
+\(\mathbb R^{K-1}\). The collection can contain any prescribed \(K\)
+distinct positive rational real points. Its column matrix \(A_\infty\)
+admits a strictly positive rational vector \(\alpha^0\) satisfying
+\[
+ A_\infty\alpha^0=(0,3/2,0,\ldots,0)^T.
+\]
+\end{lemma}
+\begin{proof}
+All columns are real vectors in \(\mathbb R^{K-1}\), and a rational
+point has rational columns. Consider a \emph{real} linear functional
+\(a=(a_2,\ldots,a_K)\), \(a_j\in\mathbb R\) (a vector of the dual
+space, so its coordinates are real by construction), that is nonnegative
+on every column. Put
+\(h(z)=\Rea\sum_{j=2}^Ka_jz^j=\sum_ja_j\Rea z^j\). For \(y>0\),
+\(a\cdot V(\zeta)=2h(\zeta)\), and for \(y=0\), \(a\cdot V(\zeta)=h(\zeta)\);
+so \(h\ge0\) at every rational point of the open right half-plane.
+Since \(h\) is continuous and \(h(\bar z)=h(z)\), it follows that
+\(h\ge0\) on \(\Rea z>0\). Suppose \(a\ne0\) and let \(l\ge2\) be the
+largest index with \(a_l\ne0\). Because \(l\ge2\), the numbers
+\(\cos(l\theta)\), \(\theta\in(-\pi/2,\pi/2)\), take both signs, so we
+may choose \(\theta\) in this interval with \(a_l\cos(l\theta)<0\). Then
+\(h(te^{i\theta})=a_lt^l\cos(l\theta)+O(t^{l-1})<0\) for large \(t>0\),
+a contradiction. Hence the dual cone is \(\{0\}\), and the closure of the
+cone generated by all columns is \(\mathbb R^{K-1}\).
+
+For each coordinate vector \(\pm e_i\) choose a finite conical
+combination \(p_i^\pm\) of columns within distance \(\delta\) of it. For
+small \(\delta\) the \(2(K-1)\) vectors \(p_i^\pm\) positively span
+\(\mathbb R^{K-1}\) (a small perturbation of the positive spanning set
+\(\{\pm e_i\}\) keeps \(0\) in the interior of the convex hull). The
+finitely many columns used already generate the whole space; append the
+prescribed real points if necessary. Call the resulting collection
+\(s_1,\ldots,s_N\); the matrix \(A_\infty=(s_1|\cdots|s_N)\) is rational
+with full row rank.
+
+For each \(i\) the vector \(-s_i\) is a nonnegative combination of the
+columns, and the set of such coefficient vectors is a nonempty rational
+polyhedron, so it contains a rational point. Adding the relations
+\(s_i+\sum_jc_{ij}s_j=0\) over all \(i\) gives a rational kernel vector
+\(\kappa\ge1\) (every coordinate is at least \(1\)). Finally, since the
+cone is the whole space, the target \((0,3/2,0,\ldots,0)^T\) equals
+\(A_\infty\alpha'\) for a rational \(\alpha'\ge0\); the same polyhedron
+argument gives rationality. Then \(\alpha^0=\alpha'+\Theta\kappa\), for a
+large rational \(\Theta\), is strictly positive and rational, and
+\(A_\infty\alpha^0=(0,3/2,0,\ldots,0)^T\).
+\end{proof}
+
+\subsection{A fixed number of interior zeros}
+For a real reciprocal variable \(v>1\), put
+\(\beta=1-1/v\) and \(f_v(z)=1-z/\beta\). For \(v=x+iy\),
+\(y>0\), use the conjugate-pair factor
+\(f_v(z)=(1-z/\beta)(1-z/\overline\beta)\).
+Write \(\nu_v=1,2\), respectively, and define
+\[
+ M_j(v)=\begin{cases}v^j,&v\text{ real},\\2\Rea v^j,&\Im v>0,\end{cases}
+ \qquad
+ d(v)=\begin{cases}-v^2/(v-1),&v\text{ real},\\
+ 2\Rea[-v^2/(v-1)],&\Im v>0.\end{cases}
+\]
+Thus \(d(v)=f_v'(0)-f_v'(1)/f_v(1)\), and
+\(\Rea v>1/2\) is equivalent to \(|\beta|<1\).
+Use the circle-root baseline
+\[
+ B(z)=(1+z)^4(1-z+z^2),\qquad
+ b_j=\sum_{\beta:\,B(\beta)=0}(1-\beta)^{-j}.
+\]
+It has degree six, constant coefficient one,
+\(B'(0)=B'(1)/B(1)=3\), \(b_2=0\), and \(b_3=-3/2\).
+
+\begin{proof}[Proof of Theorem~\ref{thm:upper}]
+Fix \(K\ge3\). Apply Lemma~\ref{lem:cone}, with \(K\) designated
+distinct positive real nodes among the \(\zeta_i\). Clear the
+denominators of its strictly positive weights by an integer \(Q\),
+and put \(m_i=Q\alpha_i^0\). These are positive integer group
+multiplicities, fixed independently of \(n\). Set
+\[
+ M=\sum_i\nu_i m_i,\qquad S=\sum_i m_i M_1(\zeta_i)>0.
+\]
+The moments of orders \(2,\ldots,K\) are now
+\((0,3Q/2,0,\ldots,0)\).
+For every large integer \(n\), define
+\[
+ R=(n/(6Q))^{1/3},\quad \epsilon=R^{-1},\quad
+ c_n\equiv n-M\pmod6,\quad |c_n-2SR|\le3,
+ \qquad b_n=(n-M-c_n)/6.
+\]
+Choose a nearest integer in the specified congruence class; both
+\(b_n,c_n\) are positive eventually. Then
+\(t_n=c_n/R=2S+O(\epsilon)\) and
+\(u_n=b_n/R^3=Q+O(\epsilon^2)\).
+
+Let \(\xi_i\) vary near \(\zeta_i\), varying only the \(K\)
+designated real nodes. Define
+\(d_\epsilon(\xi)=-\xi^2/(\xi-\epsilon)\) for a real node,
+and twice its real part for a pair. Consider the \(K\) equations
+\begin{align}
+ 0&=t/2+\sum_i m_i d_\epsilon(\xi_i),\label{eq:defect-slope}\\
+ 0&=t\epsilon/4+\sum_i m_i M_2(\xi_i),\label{eq:defect-two}\\
+ 0&=b_j u\epsilon^{j-3}+t2^{-j}\epsilon^{j-1}
+       +\sum_i m_i M_j(\xi_i),\qquad 3\le j\le K.
+       \label{eq:defect-high}
+\end{align}
+They vanish at \((\epsilon,t,u,\xi)=(0,2S,Q,\zeta)\).
+The Jacobian in the designated real positions has columns
+\[
+ m_i(-1,2\zeta_i,3\zeta_i^2,\ldots,K\zeta_i^{K-1})^T.
+\]
+It equals \(\operatorname{diag}(-1,2,3,\ldots,K)\,[\xi_i^{\,j-1}]_{j,i}\,
+\operatorname{diag}(m_i)\), a Vandermonde matrix of distinct nodes with
+positive scalings, hence nonsingular. The left sides of
+\eqref{eq:defect-slope}--\eqref{eq:defect-high} are polynomial in
+\((\epsilon,t,u,\xi)\) except for the terms \(d_\epsilon\), which are
+real-analytic for \(\xi_i>0\) and \(|\epsilon|\) small; so they are
+\(C^1\) near the base point. The real implicit-function theorem there
+gives a \(C^1\) solution \(\xi(\epsilon,t,u)\) with
+\(\xi(0,2S,Q)=\zeta\). Since \(|t_n-2S|\le3\epsilon\) and
+\(u_n-Q=-Q(M+c_n)/n=O(\epsilon^2)\), we obtain
+\(\xi_{i,n}=\xi(\epsilon,t_n,u_n)_i=\zeta_i+O(\epsilon)\). The size of the
+neighborhood is not quantified; this is the only non-effective step apart
+from Lemma~\ref{lem:cone}. Put \(v_{i,n}=R\xi_{i,n}\) and
+\[
+ P_n(z)=B(z)^{b_n}(1+z)^{c_n}\prod_i f_{v_{i,n}}(z)^{m_i}.
+\]
+For large \(n\), its degree is exactly \(n\), its constant
+coefficient is one, and its coefficients are real. Exactly \(M\)
+zeros, counted with multiplicity, lie strictly inside the disk;
+the other \(n-M\) lie on the circle. The interior zeros satisfy
+\(|1-\beta_{i,n}|\asymp1-|\beta_{i,n}|\asymp R^{-1}\).
+Multiplying \eqref{eq:defect-slope}--\eqref{eq:defect-high} by
+\(R,R^2,\ldots,R^K\), respectively, gives the exact identities
+\[
+ \lambda_n:=P_n'(0)=P_n'(1)/P_n(1),\qquad
+ \sum_{\beta:\,P_n(\beta)=0}(1-\beta)^{-j}=0
+       \quad(2\le j\le K).
+\]
+In particular integer rounding has been corrected, and
+\(\lambda_n=3b_n+c_n/2+R\sum_i m_iM_1(\xi_{i,n})=O(n)\).
+
+We now verify the hypotheses of the master estimate,
+Proposition~\ref{prop:master} of Appendix~\ref{sec:app}, with this
+\(K\) and \(P=P_n\). Below \(C,c>0\) depend only on \(K\) and on the
+fixed data \((\zeta_i,m_i,Q)\), never on \(n\). Write \(v_j=(1-\beta_j)^{-1}\)
+for the reciprocals of the zeros of \(P_n\).
+
+\emph{(a) Slope and moment identities.}
+These are the exact identities displayed above:
+\(P_n'(0)=\sum_jv_j=\lambda_n\) and \(\sum_jv_j^k=0\) for
+\(2\le k\le K\). The polynomial has real coefficients, exact degree
+\(n\), \(P_n(0)=1\), and no zero at \(1\).
+
+\emph{(b) Sizes of the reciprocals.}
+The \(n-M\) circle zeros have \(\Rea v=\tfrac12\); for the baseline and
+for \(-1\) one finds \(|v|\le1\) (the values are \(1/2\) and
+\(\ee^{\pm i\pi/3}\)). The interior reciprocals are
+\(v_{i,n}=R\xi_{i,n}\) with \(\xi_{i,n}\to\zeta_i\), so
+\(c_1R\le|v_{i,n}|\le c_2R\). Consequently
+\(V:=\max_j|v_j|\le c_2R\),
+\(\Sigma_2:=\sum_j|v_j|^2\le n+Mc_2^2R^2\le2n\), and
+\(\Sigma_{K+1}:=\sum_j|v_j|^{K+1}\le n+Mc_2^{K+1}R^{K+1}\le CR^{K+1}\),
+because \(K\ge3\) gives \(R^{K+1}\gtrsim n\).
+
+\emph{(c) Group bounds.}
+Take the groups \(B\) (multiplicity \(b_n\)), \(1+z\) (multiplicity
+\(c_n\)) and the interior groups of Lemma~\ref{lem:interior}
+(multiplicities \(m_i\)). By Lemma~\ref{lem:baseline}(c),
+\(\rho_B^2\le\ee^{-3s}\); and \(\rho_{1+z}^2=1-s\le\ee^{-s}\). For
+\(B\) one has \(L_B\le3\), because the coefficients \(a_k\) of \(B\)
+satisfy \(\sum_kk|a_k|=48\) and \(B(1)=16\); for \(1+z\), \(L=1/2\).
+By Lemma~\ref{lem:interior} the interior groups have
+\(\tau_i\le20|v_{i,n}|^2\le CR^2\) and \(L_i\le6|v_{i,n}|^2\le CR^2\).
+Hence
+\[
+ T=-3b_n-c_n+\sum_i\tau_i\mu_i
+ \le-\tfrac12(n-M)+CR^2\le-\tfrac n3,
+ \qquad
+ \Lambda\le 3b_ne^{3/2}+c_n+CR^2\le Cn,
+\]
+for large \(n\). Here \(6b_n+c_n=n-M\) by the definition of \(b_n\), so
+\(3b_n+c_n=\tfrac12(n-M+c_n)\ge\tfrac12(n-M)\); and
+\(R^2\asymp n^{2/3}\). Also \(\lambda_n=O(n)\).
+
+\emph{(d) Conclusion.}
+Here \(\tau_0=1/(2V)\ge c/R\), which is much larger than
+\(\Sigma_2^{-1/2}\ge(2n)^{-1/2}\); so \(\tau_1=\Sigma_2^{-1/2}\ge(2n)^{-1/2}\)
+for large \(n\). Proposition~\ref{prop:master} gives
+\[
+ \rho(P_n)^2\le C\sqrt n\left[R^{2K+2}n^{-K-1/2}
+ +n^2\ee^{-cn/R^2}\right]
+ \le C_KR^{2K+2}n^{-K}\le C_Kn^{(2-K)/3},
+\]
+since \(n/R^2\asymp n^{1/3}\) makes the second term smaller than any
+power of \(n\). Hence
+\(\rho(P_n)\le C_Kn^{(2-K)/6}\), and \(r_n\le\rho(P_n)\) because
+\(P_n(0)=1\).
+
+Choose \(K\ge6A+2\). Then \(M_A=M\) is independent of \(n\),
+as required. The proof does not give effective bounds on \(M_A\),
+\(C_A\), or the starting degree as functions of \(A\).
+\end{proof}
+
+\begin{theorem}[One interior zero suffices]\label{thm:one}
+For every sufficiently large integer \(n\), there is a real
+degree-\(n\) polynomial \(P_n\), with \(P_n(0)=1\), exactly one
+zero strictly inside the unit disk and all remaining zeros on the
+circle, such that \(\rho(P_n)=O(n^{-1/6})\).
+The interior zero is real and positive, with distance and radial gap
+from 1 of order \(n^{-1/3}\). In conjunction with
+Theorem~\ref{thm:circle}, the minimum number of interior zeros
+permitting a sequence with vanishing residual is exactly one.
+No optimal rate for one interior zero is asserted.
+\end{theorem}
+\begin{proof}
+We use two adjustable circle angles in the degree-34 baseline
+\[
+ B_{a,c}(z)=(1-2az+z^2)^{15}(1-2cz+z^2)^2,
+ \qquad -1<a,c<1.
+\]
+Its slope difference and second reciprocal moment are, respectively,
+\[
+ D(a,c)=-30a-4c-17,\qquad
+ T(a,c)=-\frac{15a}{1-a}-\frac{2c}{1-c}.
+\]
+Both vanish at \((a_*,c_*)=(-2/3,3/4)\). Write
+\(n-1=34m+k\), \(0\le k\le33\), and let \(v=v_n>3/2\)
+be the unique solution of
+\begin{equation}\label{eq:single-cubic}
+ v^3-\tfrac32v^2=(n-1)/4.
+\end{equation}
+The left side is strictly increasing on this interval, and
+\(v\sim(n/4)^{1/3}\). Set \(\beta=1-1/v\in(0,1)\).
+For large \(n\), \(m>0\). Define the real targets
+\[
+ d_n=\frac{v^2/(v-1)-k/2}{m}=O(n^{-2/3}),\qquad
+ t_n=\frac{-v^2-k/4}{m}=O(n^{-1/3}).
+\]
+The following explicit formulas select circle parameters solving
+\(D(a_n,c_n)=d_n\), \(T(a_n,c_n)=t_n\):
+\begin{align*}
+ L&=(51+d_n)/2,\qquad U=17-t_n,\\
+ X&=\frac{UL+221+\sqrt{(UL-289)(UL-169)}}{30U},\\
+ Y&=(L-15X)/2,\qquad a_n=1-X,\qquad c_n=1-Y.
+\end{align*}
+Indeed these equations are equivalent to
+\(15X+2Y=L\), \(15/X+2/Y=U\); elimination gives
+\(15UX^2-(UL+221)X+15L=0\). The positive-square-root branch
+above tends to \(X=5/3,Y=1/4\), since
+\(UL\to867/2\) and the square root tends to \(391/2\).
+\emph{Uniformity over the 34 classes.}
+The map \((d,t)\mapsto(X,Y)\) is real-analytic near \((0,0)\): at that
+point \(U=17\), \(L=51/2\), \(UL=867/2\), and
+\((UL-289)(UL-169)=\tfrac{289}{2}\cdot\tfrac{529}{2}>0\) (the square root
+is \(391/2\)), while \(U>0\). Hence there are \(\delta_0,C_1\) with
+\(|X-5/3|+|Y-1/4|\le C_1(|d|+|t|)\) whenever \(|d|+|t|\le\delta_0\);
+\(\delta_0,C_1\) do not involve \(k\). Since \(0\le k\le33\),
+\(m\ge(n-34)/34\) and \(v^2/(v-1)\le2v\) for \(v\ge2\), we get
+\(|d_n|\le C(v+1)/n\) and \(|t_n|\le C(v^2+1)/n\), uniformly in \(k\);
+with \(v\asymp n^{1/3}\) both are \(O(n^{-1/3})\), indeed
+\(O(n^{-2/3})\) and \(O(n^{-1/3})\). So for \(n\) beyond a threshold
+independent of \(k\) the discriminant and denominators are positive,
+\(a_n,c_n\in(-1,1)\), and
+\(|a_n+2/3|+|c_n-3/4|\le Cn^{-1/3}\). The ``34 residue classes'' are
+therefore a finite family of sequences governed by one analytic map, and
+every ``eventually'' below is uniform over them.
+
+Put
+\[
+ P_n(z)=B_{a_n,c_n}(z)^m(1+z)^k(1-z/\beta).
+\]
+It has exactly the claimed degree, constant term and zero locations.
+The two target equations give the exact identities
+\[
+ P_n'(0)=P_n'(1)/P_n(1)=:\lambda_n,
+ \qquad \sum_{j=1}^n v_j^2=0,
+ \qquad v_j=(1-\beta_j)^{-1}.
+\]
+Here the extra roots at \(-1\) contribute \(k/2\) to the slope
+difference and \(k/4\) to the second moment; the interior root
+contributes \(-v^2/(v-1)\) and \(v^2\), respectively.
+For a conjugation-symmetric multiset of \(N\) circle roots
+avoiding 1, its reciprocal moments satisfy
+\begin{equation}\label{eq:circle-third}
+ M_3^{\circ}=\tfrac32 M_2^{\circ}-N/4.
+\end{equation}
+This follows for each pair \(1/2\pm iy\), and also for the real
+reciprocal \(1/2\). Conjugation symmetry is essential and holds
+here. Taking \(N=n-1\) and \(M_2^{\circ}=-v^2\),
+\eqref{eq:single-cubic} gives \(\sum_jv_j^3=0\) exactly.
+Moreover \(\lambda_n=(n-1)/2+v=O(n)\).
+
+We now verify the hypotheses of Proposition~\ref{prop:master} of
+Appendix~\ref{sec:app} with \(K=3\) and \(P=P_n\). All constants
+below are absolute. Let \(v_j=(1-\beta_j)^{-1}\) denote the reciprocals of
+the zeros of \(P_n\).
+
+\emph{(a) Identities.} \(P_n\) has real coefficients, exact degree
+\(n\), \(P_n(0)=1\), no zero at 1, and (shown above)
+\(P_n'(0)=\sum_jv_j=\lambda_n\), \(\sum_jv_j^2=0=\sum_jv_j^3\).
+
+\emph{(b) Sizes.} A circle zero \(e^{\pm i\varphi}\ne1\) has
+\(v=\tfrac12\pm\tfrac i2\cot(\varphi/2)\). For the baseline,
+\(\cos\varphi=a_n\to-2/3\) and \(\cos\varphi=c_n\to3/4\), so
+\(|v|\le2\) eventually; the zeros at \(-1\) have \(v=\tfrac12\), and the
+interior zero has \(v_n=v>3/2\) real. Hence \(V=v\) eventually,
+\(\Sigma_2\le4n+v^2\le5n\), and \(\Sigma_4\le16n+v^4\le Cn^{4/3}\),
+since \(v^3-\tfrac32v^2=(n-1)/4\) gives \(v\asymp n^{1/3}\).
+
+\emph{(c) Group bounds.} The groups are \(B_{a_n,c_n}\) (multiplicity
+\(m\)), \(1+z\) (multiplicity \(k\)) and \(f=1-z/\beta\) (multiplicity
+\(1\)). By Lemma~\ref{lem:baseline}(e), for large \(n\) the baseline has
+\(\rho^2\le\ee^{-6s}\), i.e. \(\tau=-6\); for \(1+z\), \(\tau=-1\) and
+\(L=1/2\); for \(f\) Lemma~\ref{lem:interior} gives
+\(\tau=4v(v-1)\) and \(L=v\). For the baseline, writing
+\(g_a=1-2az+z^2\), \(g_c=1-2cz+z^2\),
+\(B'=15g_a'g_a^{14}g_c^2+2g_c'g_a^{15}g_c\), and on the circle
+\(|g_a'|\le4\), \(|g_c'|\le4\), \(g_a(1)=2(1-a)\ge3\), \(g_c(1)=2(1-c)\ge0.4\),
+\(|g_a/g_a(1)|=|1-\alpha s|\le1\), \(|g_c/g_c(1)|=|1-\gamma s|\le9\)
+(with \(\alpha=2/(1-a)\le2\), \(\gamma=2/(1-c)\le9\)). Hence
+\(L_B\le15\cdot\tfrac43\cdot81+2\cdot10\cdot9<2000\). Therefore
+\[
+ T=-6m-k+4v(v-1)\le-\tfrac{6}{34}(n-34)+4v^2\le-\tfrac n7,
+ \qquad \Lambda\le2000\,e^{3}m+k+v\le Cn,
+\]
+for large \(n\), and \(\lambda_n=(n-1)/2+v=O(n)\).
+
+\emph{(d) Conclusion.} Here \(\tau_0=1/(2v)\gg\Sigma_2^{-1/2}\) and
+\(\tau_1=\Sigma_2^{-1/2}\ge(5n)^{-1/2}\). Proposition~\ref{prop:master}
+with \(K=3\) gives
+\[
+ \rho(P_n)^2\le C\sqrt n\left[n^{8/3}n^{-7/2}
+ +n^2\ee^{-n\tau_0^2/(7\pi^2)}\right],
+\]
+and \(n\tau_0^2=n/(4v^2)\asymp n^{1/3}\). The second term is smaller
+than every power of \(n\), and the first is \(O(n^{-1/3})\). Hence
+\(\rho(P_n)^2=O(n^{-1/3})\), as required.
+
+Finally, Theorem~\ref{thm:circle} excludes vanishing residuals with
+zero interior roots; this construction permits them with one.
+This proves the zero-count threshold, not a sharp rate or the
+superalgebraic conclusion with one root. No numerical starting
+degree or norm constant is claimed.
+\end{proof}
+
+
+\section{A fixed radial gap forces a polynomial barrier}\label{sec:radial}
+The upper construction uses the full closed disk. A fixed strict
+root radius gives a complementary obstruction, by the same local
+estimate and bounded test as the lower-bound proof.
+
+\begin{proposition}\label{prop:radial}
+For \(0\le q<1\), let \(s_n(q)\) denote the infimum defining \(s_n\)
+with all zeros restricted to \(|z|\le q\). Set
+\[
+ a=1-q^2,\quad K=\lceil4/a\rceil,\quad
+ \Delta=\frac1{1+q}-\frac{1+q^K}{Ka}>0,\qquad
+ c_q=\min\left\{\frac1{\sqrt2},
+       \frac{\Delta Ka}{2\sqrt2\ee^3(1+a)^K}\right\}.
+\]
+Then \(s_n(q)\ge c_q n^{3/2-K}\) for every \(n\ge41\).
+\end{proposition}
+\begin{proof}
+Write \(\rho\) for an admissible residual. If
+\(\rho>1/\sqrt{n+1}\), the conclusion is immediate.
+Otherwise the maximum normalization gives \(|\mu|\le n+1\).
+Take \(r=1/n\). The smallness parameter in the proof of
+Lemma~\ref{lem:cauchy} is at most \(\ee^3/n<1/2\).
+That local proof does not need the separate zero-separation
+parameter \(\eta\), and gives
+\[
+ |m_j|\le\frac{2\sqrt{n+1}}n\rho\ee^3 r^{1-j}\qquad(j\ge2).
+\]
+The exact image of \(|\beta|\le q\) under \(v=(1-\beta)^{-1}\)
+is \(|v-1/a|\le q/a\). Thus \(|1-av|\le q\) and
+\(\Rea v\ge1/(1+q)\).
+Use \(\Psi(v)=[1-(1-av)^K]/(Ka)\), whose modulus is at most
+\((1+q^K)/(Ka)\). Estimating its higher averaged terms gives
+\[
+ \Delta\le\frac{2\ee^3\sqrt{n+1}\rho}{Kan^2}
+       [(1+an)^K-1-Kan]
+ \le\frac{2\ee^3\sqrt{n+1}\rho}{Kan^2}(1+an)^K.
+\]
+Now \(\sqrt{n+1}\le\sqrt{2n}\) and \(1+an\le(1+a)n\).
+The resulting lower bound is the stated one. Finally \(Ka\ge4\),
+\(q^K<1\), and \(1/(1+q)>1/2\) ensure \(\Delta>0\).
+\end{proof}
+
+In particular, any single sequence of admissible degree-\(n\)
+polynomials with residual \(o(n^{-A})\) for every fixed \(A>0\)
+must have its maximum root modulus tending to one. Otherwise an
+infinite subsequence would satisfy a fixed polynomial lower bound.
+No sharp radial exponent is asserted.
+
+\section{Scope and verification}
+The uniform slope formulation bounds approximate eigenvectors of
+polynomial differentiation under a zero-location constraint.
+It does not describe the full unconstrained pseudospectrum.
+For example, for \(u=n/4\) and
+\(T_n(z)=\sum_{k=0}^n(uz)^k/k!\),
+\[
+ T_n'-uT_n=-\frac{u^{n+1}}{n!}z^n,\qquad
+ \frac{\norm{T_n'-uT_n}_2}{\norm{T_n}_2}
+       \le\frac n4\left(\frac{\ee}{4}\right)^n,
+\]
+using \(\norm{T_n}_2\ge1\) and \(n!\ge(n/\ee)^n\).
+Thus a root constraint is essential for a bound of our form.
+
+The lower and upper disk bounds do not match in order.
+Whether the restricted exterior power-sum minima stay bounded
+away from zero remains unresolved here, as does the optimal order
+of \(s_n\) and \(r_n\).
+The superalgebraic upper bound is not a stretched-exponential upper
+bound, and its constants are not optimized. The minimal interior-root
+count permitting collapse is one, but the optimal rate with one such
+root is not established. We do not prove superalgebraic decay with
+one interior root. The elementary radial
+barrier is a consequence of the same local method.
+We do not assert a theorem for arbitrary starting exponents,
+weighted power sums, or \(H^p\) with \(p<1\).
+The elementary norm comparison in Corollary~\ref{cor:hp} is a
+consequence of the main estimate.
+
+The analytic proof of the explicit threshold uses only the displayed
+elementary inequalities. It does not rely on optimization or sampling.
+The supplementary diagnostics check exact projected Newton identities
+over Gaussian rationals, the bounded test on admissible reciprocal
+zeros, binomial identities, and numerical instances of the finite
+certificate. Rational checks of constants and high-precision
+evaluations are included for reproducibility. The circle-root family
+is checked with complete exact coefficient Parseval ratios. The
+one-interior-root family has symbolic and high-precision checks of
+the cubic, slope, moments and circle parameters, without quadrature.
+The independent audit covers all 34 degree classes at two scales.
+These finite checks do not certify the full norm asymptotics.
+Symbolic identities support the constructions. Finite moment
+searches motivated the general construction but are not premises
+of its arbitrary-order proof.
+These checks do not establish historical priority or replace the proof.
+
+\emph{Version 2.} Appendix~\ref{sec:app} writes out the uniform
+estimates that version 1 stated without proof: the secondary maximum
+and the Gaussian gaps of the baseline factors, the interior-factor
+inequality, the local series bound, the lower bound for the
+denominator, the outer-arc bound by the polynomial product rule, and
+the resulting master estimate (Proposition~\ref{prop:master}) with
+explicit constants. Lemma~\ref{lem:cone} now makes explicit that its
+linear functionals are real. What remains non-effective or unproved:
+the implicit-function neighborhood in Theorem~\ref{thm:upper} and the
+number \(\varepsilon_0\) in Lemma~\ref{lem:baseline}(e) are existence
+statements; \(M_A\), \(C_A\) and \(N_A\) are still not computed; the
+constants of Proposition~\ref{prop:master} are far from optimal and
+are non-trivial (a bound below 1 for the one-interior-zero family) only for
+\(n\gtrsim10^{21}\); the
+odd-degree comparison in Section~\ref{sec:circle} and the external
+Mathieu expansion are used as before. The additional numerical
+checks of version 2 (exact identities in 50-digit arithmetic, and
+quadrature of the residual for the one-interior-zero family up to
+\(n=10^{12}\), where \(\rho^2n^{1/3}\) stays between \(0.37\) and \(0.46\);
+and, for Theorem~\ref{thm:upper} with \(K=3\), an explicit rational
+cone solution with \(M=114\) interior zeros, for which
+\(\rho^2n^{1/3}\approx771\) for \(10^9\le n\le10^{21}\)) illustrate
+the statements; they are not part of any proof.
+
+The comparison uses the exact primary-source versions listed below.
+A targeted search did not identify the bounds in this exact setting;
+exhaustive priority certification is not claimed. The accessible
+Komarov versions listed below were used for the stated comparison.
+A related 2020 journal text was not available in full in this review;
+no exclusion of every possible bibliographic overlap is claimed.
+AI tools assisted exploration, drafting and computational checking.
+Model review is distinct from independent human peer review and
+formal proof verification.
+
+
+\appendix
+\section{Uniform estimates behind Theorems~\ref{thm:upper} and~\ref{thm:one}}\label{sec:app}
+This appendix is new in version 2. Version 1 stated the estimates
+below in a line or two; here each is derived. Throughout,
+\(z=\ee^{i\theta}\), \(|\theta|\le\pi\), \(s=\sin^2(\theta/2)\), so that
+\(|z-1|^2=4s\), \(|z-1|\le|\theta|\), and \(s\ge\theta^2/\pi^2\).
+For a polynomial \(g\) with \(g(1)\ne0\) put
+\[
+ \rho_g(\theta)=\left|\frac{g(\ee^{i\theta})}{g(1)}\right|,\qquad
+ L_g=\sup_\theta\frac{|g'(\ee^{i\theta})|}{|g(1)|}.
+\]
+For a zero \(\beta\ne1\) put \(v=(1-\beta)^{-1}\); then
+\(z-\beta=(1+v(z-1))/v\) and, for \(g(z)=1-z/\beta\),
+\(\rho_g(\theta)=|1+v(z-1)|\).
+
+\begin{alemma}[Baseline moduli]\label{lem:baseline}
+For \(0\le c<1\) let
+\(H_c(s)=(1-s)^4\bigl(1-\tfrac{2s}{1-c}\bigr)^2\), \(0\le s\le1\).
+\begin{enumerate}
+\item[(a)] \(H_c(s)=\rho_g(\theta)^2\) for \(g=(1+z)^4(1-2cz+z^2)\).
+ It decreases on \([0,(1-c)/2]\), vanishes at \((1-c)/2\) and at \(1\),
+ and has exactly one critical point \(s^*=(2-c)/3\) in
+ \(((1-c)/2,1)\), a maximum, with value
+ \((1+c)^6/[729(1-c)^2]\).
+\item[(b)] For \(0\le c\le3/4\) this value is at most
+ \(117649/186624<0.631\).
+\item[(c)] \(H_{1/2}(s)\le\ee^{-3s}\) on \([0,1]\). In particular
+ \(\rho_B^2\le\ee^{-3s}\) for \(B=(1+z)^4(1-z+z^2)\).
+\item[(d)] If \(|c-1/2|\le1/10\), then \(H_c(s)\le\ee^{-2s}\) on \([0,1]\).
+\item[(e)] There is \(\varepsilon_0>0\) such that, for
+ \(|a+2/3|\le\varepsilon_0\), \(|c-3/4|\le\varepsilon_0\), the
+ polynomial \(B_{a,c}=(1-2az+z^2)^{15}(1-2cz+z^2)^2\) satisfies
+ \(\rho_{B_{a,c}}^2=(1-\alpha s)^{30}(1-\gamma s)^4\le\ee^{-6s}\),
+ where \(\alpha=2/(1-a)\), \(\gamma=2/(1-c)\).
+\end{enumerate}
+\end{alemma}
+\begin{proof}
+(a) On the circle \(|1+z|^2=4(1-s)\), and since \(\cos\theta=1-2s\),
+\(|1-2cz+z^2|=|z+z^{-1}-2c|=2|1-c-2s|\). Dividing by the values at
+\(z=1\) gives \(H_c\). Put \(w=2/(1-c)\); then
+\((\log H_c)'=-4/(1-s)-2w/(1-ws)\). On \([0,1/w)\) both terms are
+negative, so \(H_c\) decreases from 1 to its zero at \(1/w=(1-c)/2\).
+On \((1/w,1)\) the equation \((\log H_c)'=0\) reads
+\(-4(1-ws)-2w(1-s)=0\), i.e. \(6ws=4+2w\), whose only solution is
+\(s^*=(2+w)/(3w)=(2-c)/3\), which lies in \((1/w,1)\). As \(H_c\) is
+positive there and vanishes at both ends, \(s^*\) is its maximum. There
+\(1-s^*=(1+c)/3\) and \(1-ws^*=-(1+c)/(3(1-c))\), so
+\(H_c(s^*)=((1+c)/3)^4(1+c)^2/(9(1-c)^2)\), as claimed.
+
+(b) \((1+c)^6/(1-c)^2\) increases on \([0,1)\); at \(c=3/4\) it equals
+\((7/4)^6\cdot16\), so the value is \(7^6\cdot16/(4^6\cdot729)=
+117649/186624\).
+
+(c) Here \(s^*=1/2\) and the secondary maximum is \(1/16\). On
+\([0,1/4]\): \(0\le1-4s\le1\), so
+\(H_{1/2}\le\ee^{-4s}\ee^{-8s}\le\ee^{-3s}\). On \([1/4,7/10]\):
+\(H_{1/2}\le1/16<\ee^{-21/10}\le\ee^{-3s}\), since \(\ee^{2.1}<8.2<16\).
+On \([7/10,1]\), \(H_{1/2}\) is decreasing (as \(s>s^*\)), so
+\(H_{1/2}\le H_{1/2}(7/10)=(3/10)^4(9/5)^2<0.0263<\ee^{-3}\le\ee^{-3s}\).
+
+(d) Now \(w\in[10/3,5]\). On \([0,1/w]\), \(0\le1-ws\le\ee^{-ws}\) and
+\(1-s\le\ee^{-s}\), so \(H_c\le\ee^{-(4+2w)s}\le\ee^{-2s}\). On
+\([1/w,7/10]\), by (a) and the monotonicity in (b),
+\(H_c\le(1.6)^6/(729\cdot0.4^2)<0.144<\ee^{-7/5}\le\ee^{-2s}\). On
+\([7/10,1]\) we have \(s>s^*\) (as \(s^*\le0.54\)), hence
+\(H_c\le H_c(7/10)=(0.3)^4(0.7w-1)^2\le0.0081\cdot6.25<0.0507<\ee^{-2}\).
+
+(e) Let \(\varepsilon_0\le1/50\). Then \(\alpha\in[1.18,1.22]\) and
+\(\gamma\in[7.4,8.7]\). On \([0,1/10]\) both \(1-\alpha s\) and
+\(1-\gamma s\) are positive (note \(1/\gamma>0.11\)), and \(\log H\)
+is a sum of concave functions, hence lies below its tangent at \(0\):
+\(\log H\le-(30\alpha+4\gamma)s\le-65s\). On \([1/10,1]\), for the
+center \((a,c)=(-2/3,3/4)\) we have
+\(H_*(s)=(1-6s/5)^{30}(1-8s)^4\). It decreases on \([1/10,1/8]\), has
+the single critical point \(5/24\) on \((1/8,5/6)\) (from
+\(-36/(1-6s/5)=32/(1-8s)\)), and increases on \([5/6,1]\). Hence
+\[
+ \sup_{[1/10,1]}H_*=\max\{H_*(\tfrac1{10}),H_*(\tfrac5{24}),H_*(1)\}
+ =\max\{3.46\cdot10^{-5},\,3.53\cdot10^{-5},\,2.6\cdot10^{-18}\}
+ <4\cdot10^{-5}.
+\]
+Since \((a,c,s)\mapsto H_{a,c}(s)\) is continuous on a compact set,
+there is \(\varepsilon_0\in(0,1/50]\) with \(H_{a,c}\le10^{-3}<\ee^{-6}\le\ee^{-6s}\)
+on \([1/10,1]\) for the nearby parameters. Together with the
+bound \(\ee^{-65s}\le\ee^{-6s}\) on \([0,1/10]\) this proves (e). (A grid
+evaluation gives \(\sup H_{a,c}<1.1\cdot10^{-4}\) on \([1/10,1]\) for
+\(\varepsilon_0=1/50\); only the existence of \(\varepsilon_0\) is used.)
+\end{proof}
+
+\begin{alemma}[Interior factors]\label{lem:interior}
+Let \(v=x+iy\) with \(x>1/2\), \(\beta=1-1/v\) (so \(|\beta|<1\)).
+\begin{enumerate}
+\item[(i)] If \(y=0\) and \(g=1-z/\beta\), then
+ \(\rho_g^2=1+4x(x-1)s\le\ee^{\tau s}\) with \(\tau=4x(x-1)\), and
+ \(L_g=|v|\).
+\item[(ii)] If \(y>0\) and \(g=(1-z/\beta)(1-z/\bar\beta)\), put
+ \(Y=y^2\), \(U=|v|^2\), \(V'=|v-1|^2\). Then
+ \[
+  \rho_g^2=1+8(x^2-x-Y)s+16UV's^2\le\ee^{\tau s},\qquad\tau=4(U+V'),
+ \]
+ and for \(|v|\ge1\): \(\tau\le20|v|^2\) and \(L_g\le6|v|^2\).
+\end{enumerate}
+\end{alemma}
+\begin{proof}
+We have \(\rho=|1+v(z-1)|\) for each factor. Since
+\(\Rea(z-1)=-2s\) and \(|z-1|^2=4s\),
+\(|1+v(z-1)|^2=1+2\Rea(v(z-1))+|v|^2|z-1|^2
+=1-4xs-2y\sin\theta+4|v|^2s\).
+For \(y=0\) this is \(1+4x(x-1)s\); and \(1+u\le\ee^u\) gives (i). Also
+\(g'=-1/\beta\) and \(g(1)=-1/(v\beta)\), so \(L_g=|v|\).
+
+For (ii), the conjugate factor gives the same expression with
+\(\sin\theta\) replaced by \(-\sin\theta\), so with
+\(\sin^2\theta=4s(1-s)\),
+\[
+ \rho_g^2=(1+4(U-x)s)^2-4Y\sin^2\theta
+ =1+8(U-x-2Y)s+16[(U-x)^2+Y]s^2 .
+\]
+Here \(U-x-2Y=x^2-x-Y\), and \((U-x)^2+Y=UV'\) because
+\(V'=U-2x+1\). Moreover
+\(UV'-(x^2-x-Y)^2=(2x-1)^2Y\ge0\): with \(A=x^2-x\) one has
+\(UV'=(A+Y)^2+Y\), and \((A+Y)^2-(A-Y)^2=4AY\), so the difference is
+\(Y+4AY=(2x-1)^2Y\).
+Thus \(x^2-x-Y\le\sqrt{UV'}\) and
+\(\rho_g^2\le(1+4\sqrt{UV'}s)^2\le\ee^{8\sqrt{UV'}s}\le\ee^{4(U+V')s}\),
+using \(\sqrt{UV'}\le(U+V')/2\). If \(|v|\ge1\) then
+\(V'\le(|v|+1)^2\le4|v|^2\), so \(\tau\le20|v|^2\). Finally
+\(g'=f'_vf_{\bar v}+f_vf'_{\bar v}\) for the two factors, each factor has
+\(|f'|/|f(1)|=|v|\) and \(\rho_f\le1+|v||z-1|\le1+2|v|\le3|v|\); hence
+\(L_g\le2|v|\cdot3|v|=6|v|^2\).
+\end{proof}
+
+\begin{alemma}[Window estimates]\label{lem:window}
+Let \(P\) be a polynomial of exact degree \(n\) with real coefficients,
+\(P(1)\ne0\), and zeros \(\beta_j\in\overline\D\setminus\{1\}\), with
+\(v_j=(1-\beta_j)^{-1}\). Put \(\lambda=\sum_jv_j=P'(1)/P(1)\),
+\(V=\max_j|v_j|\), \(\Sigma_m=\sum_j|v_j|^m\), \(\tau_0=1/(2V)\).
+\begin{enumerate}
+\item[(i)] If \(\sum_jv_j^k=0\) for \(2\le k\le K\), then \(P\) has no
+ zero in \(|z-1|\le\tau_0\) and there
+ \(|P'(z)/P(z)-\lambda|\le2|z-1|^K\Sigma_{K+1}\).
+\item[(ii)] For \(|\theta|\le\tau_0\),
+ \(\rho_P(\theta)^2\ge\exp(-4\Sigma_2\theta^2)\). Consequently, with
+ \(\tau_1=\min\{\tau_0,\Sigma_2^{-1/2}\}\),
+ \(\int_{-\pi}^{\pi}\rho_P^2\,d\theta\ge2\ee^{-4}\tau_1\).
+\end{enumerate}
+\end{alemma}
+\begin{proof}
+(i) Let \(w=z-1\), \(|w|\le\tau_0\); then \(|v_jw|\le1/2\), so
+\(z-\beta_j=(1+v_jw)/v_j\ne0\) and
+\(P'/P=\sum_j1/(z-\beta_j)=\sum_jv_j/(1+v_jw)\). The identity
+\[
+ \frac v{1+vw}=\sum_{k=0}^{K-1}(-1)^kv^{k+1}w^k
+ +\frac{(-1)^Kv^{K+1}w^K}{1+vw}
+\]
+(multiply by \(1+vw\) and telescope) summed over \(j\) gives
+\(P'/P=\lambda+\sum_{k=1}^{K-1}(-1)^kw^k\sum_jv_j^{k+1}
++(-1)^Kw^K\sum_jv_j^{K+1}/(1+v_jw)\). The middle sums vanish by
+hypothesis, and \(|1+v_jw|\ge1/2\).
+
+(ii) Let \(f(\theta)=\log\rho_P^2=\sum_j[\log|z-\beta_j|^2-\log|1-\beta_j|^2]\).
+Then \(f(0)=0\), and \(f'(0)=0\) because the coefficients are real, so
+\(\rho_P(\theta)=\rho_P(-\theta)\). A direct computation gives
+\(\frac{d^2}{d\theta^2}\log|z-\beta|^2=2\Rea[z\beta/(z-\beta)^2]\), whose
+modulus is at most \(2|\beta|/|z-\beta|^2\). For \(|\theta|\le\tau_0\),
+\(|z-\beta_j|\ge|1-\beta_j|-|z-1|\ge1/|v_j|-1/(2V)\ge1/(2|v_j|)\), so
+\(f''\ge-8\Sigma_2\), and Taylor's formula gives
+\(f(\theta)\ge-4\Sigma_2\theta^2\). On \(|\theta|\le\tau_1\) this is at
+least \(-4\), and the integral bound follows.
+\end{proof}
+
+\begin{alemma}[Outer arc]\label{lem:outer}
+Let \(P=\prod_{i=1}^rg_i^{\mu_i}\) with integers \(\mu_i\ge1\),
+\(g_i(1)\ne0\), \(\rho_{g_i}^2\le\ee^{\tau_is}\) for all \(\theta\)
+(with real \(\tau_i\), of either sign) and \(L_i=L_{g_i}<\infty\). Put
+\(T=\sum_i\mu_i\tau_i\), \(\tau_i^-=\max\{0,-\tau_i\}\) and
+\(\Lambda=\sum_i\mu_iL_i\ee^{\tau_i^-/2}\). Then for all \(\theta\)
+\[
+ \rho_P\le\ee^{sT/2},\qquad
+ \frac{|P'(\ee^{i\theta})|}{|P(1)|}\le\Lambda\,\ee^{sT/2}.
+\]
+\end{alemma}
+\begin{proof}
+The first bound is the product of the factor bounds. For the second,
+\[
+P'=\sum_i\mu_ig_i'g_i^{\mu_i-1}\prod_{h\ne i}g_h^{\mu_h}
+\]
+is a sum of products of polynomials, so no quotient by a zero of \(P\)
+occurs.
+Dividing the \(i\)-th term by \(|P(1)|\), it is at most
+\[
+\mu_iL_i\prod_h\rho_{g_h}^{\mu_h-\delta_{ih}}\le
+\mu_iL_i\ee^{s(T-\tau_i)/2}\le\mu_iL_i\ee^{\tau_i^-/2}\ee^{sT/2},
+\]
+using \(0\le s\le1\).
+\end{proof}
+
+\begin{aprop}[Master estimate]\label{prop:master}
+Let \(K\ge2\), and let \(P\) be as in Lemma~\ref{lem:window} with
+\(P(0)=1\). Assume
+\begin{itemize}
+\item[(H1)] \(P'(0)=\lambda=\sum_jv_j\) and \(\sum_jv_j^k=0\) for
+ \(2\le k\le K\);
+\item[(H2)] \(P=\prod_ig_i^{\mu_i}\) as in Lemma~\ref{lem:outer}, with
+ \(T<0\).
+\end{itemize}
+With the notation of Lemmas~\ref{lem:window} and~\ref{lem:outer},
+\[
+ \rho(P)^2=\frac{\norm{P'-P'(0)P}_2^2}{\norm P_2^2}
+ \le\frac{\ee^4}{\tau_1}\left[2\Sigma_{K+1}^2\,
+ \Gamma(K+\tfrac12)\Bigl(\frac{\pi^2}{|T|}\Bigr)^{K+1/2}
+ +\pi(\Lambda+|\lambda|)^2\ee^{-|T|\tau_0^2/\pi^2}\right].
+\]
+\end{aprop}
+\begin{proof}
+Both norms carry the factor \(1/2\pi\), which cancels; we integrate over
+\([-\pi,\pi]\) and divide by \(|P(1)|^2\). On
+\(|\theta|\le\tau_0\), Lemma~\ref{lem:window}(i) gives
+\(|P'-\lambda P|=|P'/P-\lambda||P|\le2|\theta|^K\Sigma_{K+1}|P|\), and
+\(|P|^2/|P(1)|^2\le\ee^{sT}\le\ee^{-|T|\theta^2/\pi^2}\). Hence the
+local part is at most
+\(4\Sigma_{K+1}^2\int_{\mathbb R}\theta^{2K}\ee^{-|T|\theta^2/\pi^2}d\theta
+=4\Sigma_{K+1}^2\Gamma(K+\tfrac12)(\pi^2/|T|)^{K+1/2}\).
+On \(\tau_0\le|\theta|\le\pi\), Lemma~\ref{lem:outer} gives
+\(|P'-\lambda P|/|P(1)|\le(\Lambda+|\lambda|)\ee^{sT/2}\) and
+\(sT\le-|T|\tau_0^2/\pi^2\), so this part is at most
+\(2\pi(\Lambda+|\lambda|)^2\ee^{-|T|\tau_0^2/\pi^2}\). Divide by the
+lower bound \(2\ee^{-4}\tau_1\) of Lemma~\ref{lem:window}(ii).
+\end{proof}
+
+\begin{thebibliography}{9}
+\bibitem{tan}
+X. Tan, Q. Wang, W. Huang and K. Chen,
+\emph{Residual bounds for Schur-stable polynomials},
+arXiv:2608.02043v3, 8 August 2026.
+\url{https://arxiv.org/abs/2608.02043v3}.
+\bibitem{luo}
+Y. Luo, R. Yang and K. Zhu,
+\emph{Exterior power sums},
+arXiv:2607.22017v1, 24 July 2026.
+\url{https://arxiv.org/abs/2607.22017v1}.
+\bibitem{komarovrate}
+M. A. Komarov,
+\emph{Rate of approximation by logarithmic derivatives of polynomials
+whose zeros lie on a circle}, arXiv:1804.08918v1, 24 April 2018.
+\url{https://arxiv.org/abs/1804.08918v1}.
+\bibitem{komarovmoments}
+M. A. Komarov,
+\emph{Caratheodory type representation with unit weights and related
+approximation problems}, arXiv:1807.06499v1, 17 July 2018 (Russian).
+\url{https://arxiv.org/abs/1807.06499v1}.
+\bibitem{erdelyi}
+T. Erd\'elyi, D. P. Hardin and E. B. Saff,
+\emph{Inverse Bernstein inequalities and min-max-min problems on
+the unit circle}, arXiv:1307.4056v1, 15 July 2013.
+\url{https://arxiv.org/abs/1307.4056v1}.
+\bibitem{busch}
+P. Busch, J. Kiukas and R. F. Werner,
+\emph{Sharp uncertainty relations for number and angle},
+arXiv:1604.00566v2, \S VI.A.2.
+\url{https://arxiv.org/abs/1604.00566v2}.
+\bibitem{dlmf}
+NIST Digital Library of Mathematical Functions,
+\S\S28.2 and 28.8, especially Eq.~(28.8.1).
+\url{https://dlmf.nist.gov/28.2}; \url{https://dlmf.nist.gov/28.8}.
+Accessed 18 October 2026.
+\end{thebibliography}
+\end{document}
