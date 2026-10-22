@@ -1,0 +1,109 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=2.6cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{url}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black]{hyperref}
+\newtheorem{theorem}{Theorem}
+\title{Exact values for a finite Ramsey-type problem from Green's list (Problem~22):\\ $N_0(1)=9$, $N_0(2)=54$, $N_0(3)=774$}
+\author{Lluis Eriksson}
+\date{21 October 2026}
+\begin{document}
+\sloppy
+\maketitle
+
+\begin{abstract}
+For $r\ge1$ let $N_0(r)$ be the least $N$ such that every $r$-colouring of $\{1,\dots,N\}$ contains $x,y\ge3$ (not necessarily distinct) with $x+y$ and $xy$ in $\{1,\dots,N\}$ and of the same colour. This is the quantity in Problem~22 of Green's list of open problems. Using SAT solving I find $N_0(1)=9$, $N_0(2)=54$ and $N_0(3)=774$. The lower bounds $N_0(r)>N$ come from explicit colourings (given in the appendix) that are checked by independent programs, including Lean~4. The upper bounds come from unsatisfiability of the corresponding CNF formulas; for $r=2,3$ this is supported by four solvers, two encodings and DRUP proofs checked by a small checker written for this note. It is \emph{not} a formally verified proof, and the note is a small computational datum, not progress on the asymptotic question. See the ``Source disclosure'' section.
+\end{abstract}
+
+\section{The problem}
+Problem~22 in Ben Green's \emph{100 open problems} \cite{green100} reads: if $\{1,\dots,N\}$ is $r$-coloured then, for $N\ge N_0(r)$, there are integers $x,y\ge3$ such that $x+y$ and $xy$ have the same colour; find reasonable bounds for $N_0(r)$. Green comments that the existence of $N_0(r)$ follows from a theorem of Moreira \cite{moreira}, and that Green and Sawhney \cite{gs} have shown that $N_0(r)=\exp\exp(r^{50})$ is permissible.
+
+The paper of Green and Sawhney, \emph{Bounds for monochromatic solutions to $\{x+y,xy\}$} (arXiv:2511.09365, v2 of 19 Nov.\ 2025), states in its abstract and Theorem~1.1 that there is an absolute constant $r_0$ such that for $r\ge r_0$ and $N\ge\exp\exp(r^{50})$ every $r$-colouring of $[N]$ contains a monochromatic $\{x+y,xy\}$ with $x>y>2$. In a remark after the theorem they describe a colouring of $[N]$, $N=(3^r+7)/2$, obtained by colouring consecutive intervals $[a_i,a_{i+1})$, $a_i=(3^i+9)/2$, with colour $i$ (any colours on $1,2,3,4$); it has no monochromatic $\{x+y,xy\}$ with $x>y>2$, and they remark that the theorem is therefore at most one logarithm from optimal. For $r=2,3$ this gives only $N=8$ and $N=17$.
+
+The Lean formalisation of the problem in the repository \texttt{google-deepmind/formal-conjectures} (file \texttt{GreensOpenProblems/22.lean}, read on 21 Oct.\ 2026) \cite{fc} calls a colouring of $\{1,\dots,N\}$ bad if there are $x,y\ge3$ with $x+y$ and $xy$ in range and of the same colour, and defines $N_0(r)$ as the least $N$ such that every $r$-colouring of $\{1,\dots,N\}$ is bad. Here $x=y$ is allowed. I use exactly this definition:
+\begin{quote}
+$N_0(r)=\min\{N:\ \text{every } c:\{1,\dots,N\}\to\{1,\dots,r\}\ \text{admits } x,y\ge3 \text{ with } xy\le N \text{ and } c(x+y)=c(xy)\}.$
+\end{quote}
+Since $x,y\ge3$ gives $x+y\le xy$, the condition $x+y\le N$ is implied by $xy\le N$. The repository file also records the trivial bound $N_0(r)\ge9$.
+
+\paragraph{Monotonicity.} If $c$ is a colouring of $[1,N]$ with no monochromatic pair, its restriction to $[1,M]$, $M<N$, has none either, since every admissible pair in $[1,M]$ is admissible in $[1,N]$. Hence the set of $N$ admitting a good colouring is an initial segment, and $N_0(r)=1+\max\{N: \text{a good } r\text{-colouring of }[1,N]\text{ exists}\}$.
+
+\section{Results}
+\begin{theorem}
+$N_0(1)=9$, $N_0(2)=54$, $N_0(3)=774$.
+\end{theorem}
+Equivalently: there are good 2-colourings of $[1,53]$ and good 3-colourings of $[1,773]$ (witnesses in the appendix), and none of $[1,54]$, respectively $[1,774]$. For $r=1$ the statement is elementary: for $N\le8$ no $x,y\ge3$ has $xy\le N$, and for $N=9$ we have $x=y=3$ with $x+y=6$, $xy=9$.
+
+Table~\ref{tab:res} summarises the status of each claim.
+\begin{table}[h]
+\centering\small
+\begin{tabular}{@{}cp{3.2cm}p{6.6cm}l@{}}
+\toprule
+$r$ & Claim & Evidence & Strength\\
+\midrule
+2 & colouring of $[1,53]$ exists & Python checker; Lean \texttt{native\_decide}; Lean kernel (\texttt{decide +kernel}) & rigorous\\
+3 & colouring of $[1,773]$ exists & Python checker; Lean \texttt{native\_decide} & rigorous (compiler trusted)\\
+2 & no colouring of $[1,54]$ & 4 solvers; DRUP proof (1 lemma) checked; exhaustive Lean search by \texttt{native\_decide} & computational\\
+3 & no colouring of $[1,774]$ & 4 solvers; DRUP proof (2132 lemmas) checked by own RUP checker & computational\\
+\bottomrule
+\end{tabular}
+\caption{Status of the claims.}\label{tab:res}
+\end{table}
+
+For comparison with the Green--Sawhney remark: the interval construction yields good colourings only up to $8$ and $17$ for $r=2,3$, far below $53$ and $773$. I draw no conclusion about large $r$ from these small values.
+
+Under the stricter condition $x>y>2$ used in \cite{gs} the values for $r=2,3$ are the same (53 colourable and 54 not; 773 colourable and 774 not; same encoding with $y\ge x+1$). They differ for $r=1$ (the strict variant gives 12, from $x=4$, $y=3$).
+
+\section{Method and verification}
+\paragraph{Encoding.} Let $P_N=\{(x+y,xy): 3\le x\le y,\ xy\le N\}$. For $r$ colours use variables $v_{n,k}$ ($1\le n\le N$, $0\le k<r$). The clauses are $\bigvee_k v_{n,k}$ for each $n$ (at least one colour), and $\neg v_{a,k}\vee\neg v_{b,k}$ for each $(a,b)\in P_N$ and each $k$. ``At most one colour'' is not imposed (a colouring is read off by choosing any true colour), which is sound for both satisfiability and unsatisfiability. For $N=54$, $r=2$ the formula has 108 variables, 37 pairs and 128 clauses; for $N=774$, $r=3$ it has 2322 variables, 1489 pairs and 5241 clauses. When searching for the threshold the colour of $6$ was fixed to $0$ (valid, since $(3,3)$ gives the pair $(6,9)$ whenever $N\ge9$, and colours may be permuted); the formulas used for the proofs have \emph{no} symmetry breaking.
+
+\paragraph{Solvers.} Satisfiability was decided with CaDiCaL~1.5.3, Glucose~4 and MapleChrono through PySAT, and independently with OR-Tools CP-SAT using integer colour variables and no symmetry breaking (a second encoding). All four agree on the key instances ($N=53,54$ for $r=2$; $N=773,774$ for $r=3$), and bisection using monotonicity located the thresholds. A spurious debugging message (``found falsified original clause'') was printed by the PySAT CaDiCaL wrapper in some runs; the results were confirmed by the other solvers.
+
+\paragraph{DRUP proofs and the checker.} Glucose~4 was run with proof logging on the two unsatisfiable formulas (without symmetry breaking). The proofs have 1 lemma ($N=54$) and 2132 lemmas ($N=774$); deletion lines are ignored. I wrote a forward RUP checker (\texttt{rupcheck2.py}, about 70 lines, two-watched-literal unit propagation, independent of PySAT), and it accepts both proofs, ending in a conflict at decision level~0. Five deliberately false proofs are rejected: the empty clause given directly for $N=774$; the empty clause given for the satisfiable $N=53$ formula; the $N=774$ proof with its first half removed; a proof with a false lemma ``$1\;0$'' prepended; and the genuine $N=774$ proof checked against the satisfiable $N=773$ formula (rejected at lemma 1397). Three of these false proofs are in the supplement; the others are regenerated as described in its README. The checker is \textbf{not} drat-trim, not a verified checker such as cake\_lpr, and not itself formally verified; the confidence it gives rests on the shortness of the code and on the negative tests.
+
+\paragraph{Lean 4.} The file \texttt{Green22.lean} (core Lean 4.35.0, no Mathlib) contains the two witnesses as strings, a Boolean function \texttt{good} that checks that no admissible pair is monochromatic, and proofs by \texttt{native\_decide} that \texttt{good 53} and \texttt{good 773} hold for the witnesses. The 53-witness is also checked by \texttt{decide +kernel}, which does not trust the compiler. A short backtracking search (\texttt{exists\_col}) is evaluated by \texttt{native\_decide} and gives \texttt{exists\_col 2 53 = true}, \texttt{exists\_col 2 54 = false}, \texttt{exists\_col 1 8 = true}, \texttt{exists\_col 1 9 = false}. The file compiles (exit code 0, about two minutes). An attempt to check the 773-witness with \texttt{decide +kernel} (\texttt{G3k.lean}) was stopped by a 25-minute timeout (exit code 124) and gave no result.
+
+\paragraph{What is not done.} (i) There is no Lean kernel proof of unsatisfiability for $N=774$. (ii) There is no LRAT or drat-trim certificate. (iii) \texttt{native\_decide} trusts the Lean compiler, and there is no theorem linking \texttt{exists\_col} to the statement in the formal-conjectures file, so the Lean search is not a formal proof that $N_0(2)=54$; the formal definition of $N_0$ from that repository was not used. (iv) $N_0(4)$ has not been computed. (v) There has been no human review and no formal check of the whole pipeline.
+
+\section{Source disclosure}
+This is exploratory computational work carried out with AI assistance: the scripts, formulas, proof checker, Lean files and this text were produced by Claude Sonnet~5.5 agents under the direction of the author. There has been no human refereeing and no complete formal verification. The literature search for earlier values of $N_0(2)$ and $N_0(3)$ was limited (Green's list, Green--Sawhney, Moreira, the formal-conjectures file and a few web searches); I found none, but absence of evidence is not evidence of priority, and I make no claim of priority. The numerical claims are reproducible with the supplement, and the reader should rerun them rather than rely on this text.
+
+\begin{thebibliography}{9}
+\bibitem{green100} B.~Green, \emph{100 open problems}, manuscript (updated December 2025), Problem~22. \path{https://people.maths.ox.ac.uk/greenbj/papers/open-problems.pdf}
+\bibitem{gs} B.~Green and M.~Sawhney, \emph{Bounds for monochromatic solutions to $\{x+y,xy\}$}, arXiv:2511.09365 (2025).
+\bibitem{moreira} J.~Moreira, \emph{Monochromatic sums and products in $\mathbb N$}, Ann.\ of Math.\ \textbf{185} (2017), no.~3, 1069--1090.
+\bibitem{fc} Google DeepMind, \emph{formal-conjectures}, \texttt{FormalConjectures/GreensOpenProblems/22.lean}, \path{https://github.com/google-deepmind/formal-conjectures}.
+\end{thebibliography}
+
+\appendix
+\section{Witness colourings}
+The colour of $n=1,2,\dots$ is written as a string of digits (the $n$th digit is the colour of $n$; colours are $0,1$ for $r=2$ and $0,1,2$ for $r=3$). No admissible pair $(x+y,xy)$ with $x,y\ge3$ is monochromatic. The strings are also in \texttt{witness\_r2\_N53.txt} and \texttt{witness\_r3\_N773.txt}.
+
+\paragraph{$r=2$, $N=53$.}
+\begin{center}\ttfamily\small
+00000011100000000000100110110101101100110101100111110
+\end{center}
+
+\paragraph{$r=3$, $N=773$} (lines of 50 digits, last line 23).
+\begin{center}\ttfamily\small
+00000021111112222222222222222222000000000000000000\\
+00000000000000000000000000000000000000011111111111\\
+11111111111111111111111111111111111111111111111111\\
+11111111111111111111111111111111111111111111111111\\
+11111111111111111111111111111111111111111111111111\\
+11111111112002222202022022002202022222222202222022\\
+20222202220200220222222220222202202202222222200202\\
+22022220022022220222220222220220022022022220220022\\
+02222222022222222202002222222202022222022202202202\\
+22202200220202200222222222200220222202220222222202\\
+20022222022220222222020220222222222220220022220222\\
+22202202222002202202022222022222222002222202222202\\
+02222202222200220202202220222202202222220202220222\\
+22022222020022222222220022022222022222220220222022\\
+02222022022222222002222222022222002222022202202222\\
+02022200220222202202220
+\end{center}
+\end{document}

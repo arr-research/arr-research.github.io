@@ -1,0 +1,6 @@
+# Nota Green 22 (21-10-2026)
+Que es: nota corta (4 pp.) `main.tex`/`main.pdf`: N0(1)=9, N0(2)=54, N0(3)=774 para el problema 22 de Green (definicion de formal-conjectures, x=y permitido), con testigos 53 y 773 en el apendice. `supplement.zip` = scripts, CNF, .drup, testigos, Lean, README y MANIFEST.sha256.
+Citas verificadas esta sesion: Green "100 open problems" (Problema 22 leido en el PDF), Green-Sawhney arXiv:2511.09365 (abstract y observacion tras el Teorema 1.1), Moreira Ann. Math. 185 (2017) (segun la bibliografia de Green), formal-conjectures 22.lean.
+Limites declarados: UNSAT solo por 4 solvers + DRUP comprobado con comprobador propio (no drat-trim, no verificado); Lean con native_decide (confia en el compilador), sin teorema de correccion de la busqueda; decide +kernel de 773 no termino; sin revision humana; prioridad no certificada; fuente IA declarada.
+Falta: UNSAT de 774 en Lean, LRAT/drat-trim/cake_lpr, N0(4), antecedentes mas profundos, revision adversarial (G5), decidir donde publicar.
+Notas: de las 5 pruebas falsas, 3 estan como archivo y 2 (vacia contra 774; 774 contra CNF 773) se regeneran con el README. Variante estricta x>y: igual para r=2,3, pero 12 para r=1 (INFORME.md decia "identicos" sin esa salvedad). Compilado con tectonic 0.16.9.
