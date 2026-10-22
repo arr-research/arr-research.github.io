@@ -1,0 +1,33 @@
+CONTROLES DEL REVISOR (ARR-ASSESS-1.0, sesión independiente)
+
+1. Instrucciones y contexto cargados al empezar
+- Instrucciones de la tarea: INSTRUCCIONES.md de esta carpeta (leído completo), más el encargo de la sesión que me lanzó (SHA-256, nombre de archivos de salida, aviso de no leer nada fuera de la carpeta ni usar la web).
+- Contexto de sistema que llegó con la sesión, NO leído por mí como fuente de evaluación: un CLAUDE.md global del usuario (normas de rutas C:/D:, de modelos, de publicación, de cuentas de Claude, de cuadernillos y de dibujos; ninguna se refiere al manuscrito ni a la evaluación); una lista de sesiones vinculadas (nombres e identificadores de otras sesiones, sin contenido); un aviso de que existe un directorio de memoria persistente y de una carpeta compartida de notas de sesiones. Ninguno de esos ficheros lo abrí. No consulté la memoria ni la carpeta de notas compartidas: el encargo lo prohibía y no los leí.
+- Declaro que el contexto de sistema de esta sesión contiene material de otros proyectos. No puedo verificar que la sesión esté aislada de otros revisores o del historial del proyecto; lo que sí puedo afirmar es que no he abierto informes de otros revisores.
+- Identidad del modelo: Haiku 5.5 (claude-haiku-5-5), según la información de entorno de la sesión. No he podido verificar esa identidad por otra vía.
+
+2. Qué sabía del manuscrito antes de abrirlo
+- Solo el encargo: se trata de un paper del proyecto AIRR sobre polinomios de partición Lorentzianos de blowups de ciclos con cliques. No conocía su contenido, sus autores, sus resultados ni su versión antes de abrir paper.pdf.
+- No sabía si el autor participó en la redacción; el PDF declara uso de asistencia de modelos de código (OpenAI Codex) y una auditoría externa; eso consta solo en el PDF.
+
+3. Verificación del artefacto
+- SHA-256 de paper.pdf (certutil): 3903b6b67cb6642cbe2b047a43cf15169c237ff021f7c8cb8986f8dba585c11a. Coincide con SHA256.txt.
+- Leí paper.pdf completo (8 páginas).
+
+4. Qué ejecuté (cálculo propio, no del autor)
+- Script escrito por mí en la carpeta temporal de la sesión (no en esta carpeta), con Python sin paquetes externos, aritmética exacta con fracciones.
+- Validación: la reducción por clases que usé para la matriz de Hessian coincide exactamente con fuerza bruta sobre C5[K2] con 4 estados (pin, cero y dos auxiliares), con pin h=3.
+- Comprobé el witness de la sección 6 (C5[K9], 7 nodos, pin -4095/4096, h=17): K tiene entradas positivas e inercia (1,1,5); la restricción de la Hessian a las 5 variables auxiliares tiene inercia (2,3,0); el ensayo fallido con pin -255/256 da (1,4,0). Todo coincide con el texto.
+- Comprobé las fórmulas de conteo (5) y (6) por enumeración directa de subconjuntos en cuatro casos pequeños: (s,k) = (2,2), (2,3), (3,2), (2,4). Coinciden en mínimo de aristas y en número de minimizadores. No comprobé (3,3) ni casos mayores.
+- Comprobé numéricamente (exacto) que (4s+2)s^8 - (s+1)^9, en t = s-20, tiene todos sus coeficientes positivos, y que C(40,20) - 20^8 = 112246528820 > 0. La identidad B(s+1)/B(s) = (4s+2)/(s+1) la comprobé a mano (no por código).
+- El script de comprobación está en la carpeta temporal de la sesión (scratchpad), no en esta carpeta.
+
+5. Qué no pude verificar
+- Los ficheros suplementarios citados (odd-initial-five-symbolic.json, odd-initial-small-certificates.json, el verificador ejecutable y el supplement de certificados) NO están en la carpeta. No los vi ni los ejecuté. Por tanto no verifiqué los 836 coeficientes de la Proposición 5, ni las 42 excepciones, ni las tablas de bloques de la sección 5, ni la matriz T de la sección 4.
+- Las fórmulas (8)–(11) de la sección 4 se describen en el texto y no están completas en el PDF; no pude reconstruir T de forma independiente.
+- No verifiqué el criterio de Brändén–Huh [1, Thm 2.25] ni los resultados de [2], [3], [4] ni [5] (no tengo acceso a fuentes externas en esta sesión y no las usé). El caso de m par depende de [5].
+- No verifiqué la afirmación de novedad frente a la literatura ni la prioridad.
+- No ejecuté el cálculo para ningún s ≥ 9 distinto del de la sección 6, ni para s ≥ 20 en general.
+
+6. Aislamiento
+- No puedo verificar aislamiento de contexto ni de memoria. Lo declaro tal cual: la sesión tenía acceso técnico a otros directorios del equipo, aunque no los abrí.

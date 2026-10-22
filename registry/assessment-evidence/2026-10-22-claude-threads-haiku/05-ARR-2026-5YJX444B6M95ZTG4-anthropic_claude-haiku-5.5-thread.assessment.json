@@ -1,0 +1,65 @@
+{
+  "paper_id": "ARR-2026-5YJX444B6M95ZTG4",
+  "version": "v2",
+  "version_id": "arr:version:3e75f507-eed4-4cb7-8461-71b953f24929",
+  "canonical_sha256": "aef993b265fc45b1d69aff0e4d150114dcc3cea22931fea7a2d15316cd7d4651",
+  "provider": "anthropic",
+  "model_id": "claude-haiku-5-5",
+  "assessed_at": "2026-10-22T05:05:04+02:00",
+  "prompt_version": "ARR-ASSESS-1.0",
+  "independence": "not_involved_in_manuscript",
+  "recommendation": "major_revision",
+  "millennium_score": 2.7,
+  "overall_stars": 3,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 2,
+      "basis": "Checked: the Thm 4 vertex weights reproduce (alpha, beta, eta, delta), K and u, and the Lemma 5 parameters satisfy the constraint with u = v(p). Not sound as written: Lemma 3 says V|i> = |i>|X_i>> is an isometry, which holds only if the X_i are Hilbert-Schmidt orthonormal, and this is not assumed. Eq (20) misprints a_p = pb/t (should be pb/(1-t))."
+    },
+    "rigor": {
+      "stars": 3,
+      "basis": "Explicit algebra passes: Vieta roots and c' <= 1 in Cor 11; J'(1/2) = 0.0425 > 0 and the chord identity (21) at p = 1/2 (both sides 0.48811) in Prop 12. Strict separation and the Cor 7 tensor additivity depend on steps that are asserted, not shown (the reduction to Thm 6 through V)."
+    },
+    "novelty": {
+      "stars": 2,
+      "basis": "The new content is a third vertex added to the Tang et al./OpenAI triangular-entropy argument, plus extension to the nonunital interior and to complementary cost. Much is explicitly attributed to prior work (Hellmund-Uhlmann, Matsumoto-Shimono-Winter, Fang [4]). The main novelty claim depends on the Lemma 3 proof, which needs repair."
+    },
+    "significance": {
+      "stars": 3,
+      "basis": "Moderate. It gives additivity and capacity formulas for the nonunital interior of the qubit Davies family, a complementary-channel cost formula, and a strict Choi-cost separation. Impact stays within a narrow channel family, and the separation result is conditional on the state-additivity steps."
+    },
+    "reproducibility": {
+      "stars": 3,
+      "basis": "Scripts, versions and tables are described, but I did not run them and had no code access here. All numerics are floating-point and not interval-certified, and one 75-digit computation is quoted without code. Most formulas are explicit enough to recheck by hand, which I partly did."
+    }
+  },
+  "summary": "Working paper extending additivity and formula-level results for qubit Davies channels (classical capacity via a block-entropy vertex argument, plus complementary-channel simulation cost). Much of the algebra I could check holds, including the Thm 4 vertex decomposition, Lemma 5 parameters, Cor 11 and the Prop 12 derivative and chord identity. Material gaps remain: the Lemma 3 isometry step is unjustified as written, and the Cor 7 / Thm 10 / Prop 12 additivity steps rest on unspelled reductions and external preprints I could not check. Recommendation: major revision.",
+  "strengths": [
+    "Thm 4 vertex decomposition: the weights w_A, w_B, w_C reproduce the original (alpha, beta, eta, delta), the off-diagonal K and u, so the concavity step is consistent.",
+    "Lemma 5 mapping to Thm 4 satisfies alpha+beta+eta+delta = 1 and alpha*delta - beta*eta = kp(1-p) >= K^2, with u = v(p).",
+    "Cor 11 Vieta step: the roots of Q(x) have product k^2 and sum 2k+4ab; c' <= 1 by Cauchy-Schwarz, so c <= k <= c' and D >= 0 on the stated region.",
+    "Prop 12 checks: 324p^2-312p+9 has roots about 0.0298 and 0.9332; J'(1/2) = h(3/10)-h(1/10)-(3/5)ln(3/2) is about 0.0425 > 0; the chord identity (21) matches at p = 1/2.",
+    "The scope is stated openly: external dependencies (Lemma 2, Hughston-Jozsa-Wootters, continuity of E_F) and the floating-point status of the numerics are declared."
+  ],
+  "weaknesses": [
+    "Lemma 3 (controlled purification): V is claimed to be an isometry, but V^dagger V has Gram matrix <X_i|X_j>, which is the identity only if the X_i are orthonormal; the step S(ABE) = S(rho) therefore fails as written.",
+    "Cor 7 (strong superadditivity and tensor additivity of E_F for Stinespring-range states) is derived from Thm 6 through a 'lift through V' step that is not spelled out.",
+    "Thm 10 and the strict separation in Prop 12 depend on E_F(omega^{tensor n}) = n E_F(omega) from Cor 7 and on the Berta et al. formula (16); neither is verified in the text.",
+    "In the Thm 4 proof, eta and delta denote both the original coordinates and the vertex coordinates (eta_B = u/U0, delta_B = K^2/U0). 'U0 eta = u' holds only for vertex values, which makes the B-vertex check hard to follow.",
+    "The novelty of the triangular step depends on 2026 preprints (Tang et al., OpenAI, Fang [4]) that I could not check; the authors themselves say the third vertex is the only addition."
+  ],
+  "potential_errors": [
+    "Eq (20): a_p = pb/t should read pb/(1-t). As printed, at p = 1/2 the values a_p = 3/8, b_p = 1/8, k_p = 5/8 sum to 9/8, not 1. Prop 12 uses a_p = 1/4, which matches pb/(1-t).",
+    "Lemma 3 proof: 'the map V|i> = |i>|X_i> is an isometry' is false without an orthonormality hypothesis on the X_i.",
+    "Prop 12 Step 3: the strict inequality E_C^par(N) >= G(p1)/ln2 > G(1/2)/ln2 uses E_F(omega^{tensor n}) = n E_F(omega), the claim that Cor 7 must establish.",
+    "Notation: t denotes both time (in the exponents of eq. 1) and output population t(p); the paper flags this but it is easy to misread."
+  ],
+  "strong_novelty_candidates": [
+    "The vertex-augmented block-entropy inequality (Thm 4), which covers the interior 0 <= lambda^2 < k. If the Lemma 3 gap is repaired, it extends capacity additivity to the nonunital interior of the Davies family.",
+    "The scalar population-resolved formulas for the complementary channel: the capacity identity (Thm 9) and the parallel simulation cost on the region of Cor 11, including the reversed-channel closure."
+  ],
+  "unresolved_material_objections": [
+    "Lemma 3 (controlled purification) assumes that V|i> = |i>|X_i>> is an isometry, which requires Tr(X_i^* X_j) = delta_ij; that is not a hypothesis. Thm 4 at vertex C, and through it Lemma 5, Thm 6 and the interior additivity and capacity identities of Thm 1, depend on this step. As written, the interior case is not established.",
+    "Cor 7 (tensor additivity and strong superadditivity of entanglement of formation for Stinespring-range states) is asserted through an unexplained reduction to Thm 6. The additivity identities of Thm 10 and the strict separation of Prop 12 depend on it, so the complementary cost results are not established by the text."
+  ]
+}

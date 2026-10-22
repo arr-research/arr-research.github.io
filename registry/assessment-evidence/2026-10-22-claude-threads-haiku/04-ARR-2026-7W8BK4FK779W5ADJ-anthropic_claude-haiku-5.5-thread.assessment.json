@@ -1,0 +1,58 @@
+{
+  "paper_id": "ARR-2026-7W8BK4FK779W5ADJ",
+  "version": "v2",
+  "version_id": "arr:version:013291a0-94de-4d41-b1d5-0772be5a666d",
+  "canonical_sha256": "4f80dab07f7185c67bdec1a4368516ff5d65969b2ffe1454ed70016be5f1e673",
+  "provider": "anthropic",
+  "model_id": "claude-haiku-5-5",
+  "assessed_at": "2026-10-22T05:05:31+02:00",
+  "prompt_version": "ARR-ASSESS-1.0",
+  "independence": "not_involved_in_manuscript",
+  "recommendation": "minor_revision",
+  "millennium_score": 4.0,
+  "overall_stars": 4,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 4,
+      "basis": "Checked by hand: polar form (2); Lemma 3 factorization and identity p'/(2Np)=Im h; necessity chain (8)-(9) with minimum at c=a^(1/3) giving (1+a^(2/3))^(3/2); Lemma 4 signs and pole cancellation; discretization bounds in Prop. 5; Lyapunov function H in Sec. 7 (L_fH=-2ar^2H). All consistent. No code executed; supplementary scripts absent."
+    },
+    "rigor": {
+      "stars": 4,
+      "basis": "Theorem 1, Prop. 5 and Prop. 7 are explicit and quantitative. Weak spots: Lemma 6 omits the hypothesis p>=0 its proof uses (repairable via periodicity); Cor. 8 for k>=2 is argued 'verbatim' and checked numerically only for k<=3; the orders in Lemma 4 step 4 are asserted, not expanded."
+    },
+    "novelty": {
+      "stars": 3,
+      "basis": "The threshold |b|^(2/3)<1+a^(2/3) is sharper than the 2(a+1) bound attributed to Liu-Fitzsimmons, but that comparison rests on an arXiv preprint I could not consult (no web use). Priority is unconfirmed, as the authors state. The stability function H is recalled, not new."
+    },
+    "significance": {
+      "stars": 3,
+      "basis": "A sharp result for one explicit cubic family and its single even-harmonic generalizations. Degree bounds do not match (O(delta^-3) upper bound, no lower rate; Prop. 7 non-quantitative). Nothing for omega=0 or mixed harmonics. Scope is narrow."
+    },
+    "reproducibility": {
+      "stars": 2,
+      "basis": "The artifact contains no code, supplement or certified enclosure. Quantile selection is not interval-certified (admitted in Sec. 5 and 8). The cited check_v2.py, check_phase30.py and their outputs are not supplied, so I could not run them."
+    }
+  },
+  "summary": "The manuscript claims that the planar cubic family with damping a>0 and forcing b admits a homogeneous polynomial (or local analytic) weak Lyapunov certificate exactly when |b|^(2/3)<1+a^(2/3); it extends this to single even angular harmonics with nonzero angular speed and shows that the minimal certificate degree diverges at the boundary. I checked the necessity argument (Sec. 3, via test functions and skew-adjointness), the boundary pair (Sec. 4) and the sufficiency construction (Sec. 2, 5) by hand and found them internally consistent; the family's global stability is verified through H=r^2 exp(-b sin 2 theta). The main open issues are novelty relative to an unverified preprint and the lack of supplied numerical checks. I found no error that invalidates a main claim.",
+  "strengths": [
+    "The explicit Lyapunov function H=r^2 exp(-b sin 2 theta) satisfies L_fH=-2a r^2 H, which I verified and which gives global stability for every b.",
+    "The necessity argument in Sec. 3 is elementary and checkable: the identities <F>=c, <G>=1, <G cos phi>=sigma c/s and the minimum of (a+c)sqrt(1+c^2)/c at c=a^(1/3) all check out.",
+    "The sufficiency construction (Herglotz representation, quantile discretization, Prop. 5) has an explicit degree bound whose constants I re-derived.",
+    "Section 8 separates proved results from floating-point sanity checks and states what is not certified."
+  ],
+  "weaknesses": [
+    "The novelty claim against Liu-Fitzsimmons rests on the stated form of their bound, which I could not check against the preprint.",
+    "Lemma 6 is stated without p>=0, but its proof uses it; the lemma still holds by periodicity, but the text should be fixed.",
+    "Corollary 8 for k>=2 is argued by saying the k=1 computation holds 'verbatim' and is checked numerically only for k<=3.",
+    "Degree bounds do not match: Prop. 5 gives O(delta^-3) and Prop. 7 gives divergence without a rate.",
+    "Supporting scripts and outputs are referenced but not included in the artifact, so the numerical claims are not reproducible from it."
+  ],
+  "potential_errors": [
+    "Lemma 6 (Sec. 6): hypothesis p>=0 is missing from the statement but used in the proof ('rho p is nonnegative'). The conclusion survives: rho p is nonincreasing and vanishes at both ends of one period, hence p is identically zero."
+  ],
+  "strong_novelty_candidates": [
+    "The exact polynomial and local-analytic certificate region |b|^(2/3)<1+a^(2/3) for the cubic family, with the strict necessity proved by a Herglotz/Fejer-Riesz argument (Sec. 3). Candidate only: novelty depends on the unverified comparison.",
+    "Divergence of the minimal certificate degree as a decreases to the boundary value (Prop. 7), proved by compactness and the positivity Lemma 6. Candidate only."
+  ],
+  "unresolved_material_objections": []
+}

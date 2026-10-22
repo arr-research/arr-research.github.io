@@ -1,0 +1,42 @@
+CONTROLES DE LA REVISION (ARR-ASSESS-1.0)
+Fecha y hora de la revision: 2026-10-22 05:01:15 +02:00
+Modelo declarado: claude-haiku-5-5 (provider: anthropic)
+
+1. INSTRUCCIONES Y MEMORIA CARGADAS AL EMPEZAR
+- Prompt del sistema del harness de Claude Code (instrucciones de la app, reglas de herramientas, reglas de seguridad).
+- Fragmentos de contexto automatico: correo del usuario de la cuenta, regla de atribucion para commits, lista de sesiones enlazadas (no usada), listas de herramientas, agentes y habilidades.
+- Instrucciones globales del usuario: C:\Users\lluis\.claude\CLAUDE.md. Se cargaron al empezar. Contienen reglas de otros proyectos y de otras sesiones; no se aplicaron a esta revision.
+- Sistema de memoria: el prompt indica un directorio de memoria, pero no abri MEMORY.md ni ningun archivo de memoria.
+- Encargo de la sesion que me lanzo (texto de la tarea y su nota de contexto, que menciona la carpeta compartida de notas). No abri esa carpeta de notas: aparece como directorio adicional de trabajo, pero no la lei, porque el encargo prohibe leer nada fuera de esta carpeta.
+- INSTRUCCIONES.md de esta carpeta (leido completo).
+Lo que no puedo afirmar: que el contexto cargado no influya en el juicio. Estoy en la sesion principal del entorno del usuario; no hay forma de comprobar desde aqui que sea una sala limpia.
+
+2. QUE SABIA DEL MANUSCRITO ANTES DE ABRIRLO
+- Solo lo que dice el encargo: que es un articulo del proyecto investigador AIRR evaluado con ARR-ASSESS-1.0, y que el operador declara not_involved_in_manuscript.
+- No sabia el titulo, el autor, las conclusiones ni el tema concreto antes de leer el PDF.
+- El PDF declara en su seccion 4 que fue producido con agentes de Claude Sonnet 5.5 bajo la direccion del autor. No recuerdo haber participado en el; no puedo verificar que el modelo que me declara como revisor no haya tenido parte. Lo declaro tal cual, sin afirmar aislamiento que no pueda verificar.
+
+3. QUE LEI Y HICE
+- INSTRUCCIONES.md (completo).
+- SHA256.txt: 72283c31d62c199483987dbcbc1619db2cbb9e04c545ab816015433dfc73853e  paper.pdf
+- certutil -hashfile paper.pdf SHA256 sobre paper.pdf: 72283c31d62c199483987dbcbc1619db2cbb9e04c545ab816015433dfc73853e. COINCIDE con SHA256.txt.
+- paper.pdf completo (4 paginas: texto, teorema, tabla, metodo, apendice con las cadenas de colores).
+- Scripts Python propios en mi carpeta de trabajo temporal (scratchpad), no en la carpeta del encargo, ejecutados con python -I:
+  a) Comprobacion de las cadenas testigo: r=2 de longitud 53 y r=3 de longitud 773 (transcritas del PDF), contra todos los pares admisibles (x+y, xy con 3<=x<=y, xy<=N). Resultado: sin pares monocromaticos en ambos casos.
+  b) Recuento de pares: 37 para N=54 y 1489 para N=774; clausulas 5241 para N=774, r=3. Coinciden con el texto.
+  c) Busqueda exhaustiva por backtracking (con canonizacion de colores) para r=1 (N=8 existe, N=9 no) y r=2 (N=53 existe, N=54 no).
+  d) Variante estricta x>y>=3 (no x=y): r=1 con N=11 existe y N=12 no; r=2 con N=53 existe y N=54 no.
+- Comprobe si hay un solver SAT instalado localmente (pysat, pycosat, ortools): no hay ninguno. No instale nada y no use la web.
+
+4. QUE NO PUDE VERIFICAR
+- La no-coloracion de [1,774] con 3 colores (la afirmacion principal para r=3). No hay solver SAT disponible aqui, y no instale ninguno (no uso la web).
+- Las pruebas DRUP (2132 lemas y 1 lema), el checker rupcheck2.py, y los cuatro solvers mencionados.
+- Los archivos Lean (Green22.lean, G3k.lean) y el suplemento (scripts, CNF, pruebas, README): no estan en mi carpeta. No pude revisar el codigo ni recompilar.
+- La variante estricta para r=3 (afirmada sin tabla ni prueba).
+- Las citas externas: Green (100 open problems), Green y Sawhney (arXiv:2511.09365, Theorem 1.1 y la cota exp exp(r^50)), Moreira (2017), el archivo GreensOpenProblems/22.lean del repositorio formal-conjectures y su contenido. No use la web; no pude confirmar nada de ello ni la prioridad.
+- La construccion por intervalos y su coloracion en N=8 y N=17: no la comprobe mas alla de la aritmetica de (3^r+7)/2.
+- El mensaje "found falsified original clause" del wrapper de PySAT: no puedo saber en que ejecuciones aparecio.
+
+5. AISLAMIENTO
+- No puedo verificar el aislamiento de contexto. No conozco otras revisiones del mismo manuscrito y no las he leido, pero tampoco puedo garantizar que la sesion no comparta memoria ni instrucciones con el proyecto (ver seccion 1).
+- No se ha escrito, modificado ni borrado nada fuera de informe.json y controles.txt en esta carpeta, salvo los scripts de comprobacion en la carpeta temporal de trabajo.
