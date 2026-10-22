@@ -1,0 +1,59 @@
+{
+  "paper_id": "PENDING_ARR_ID",
+  "version": "v1",
+  "version_id": "PENDING_VERSION_ID",
+  "canonical_sha256": "452ec24cbada7e8b3ccc9d6c4198e8e89db74c2f3bb8b8c1eb1e9af0c3796d89",
+  "provider": "anthropic",
+  "model_id": "claude-sonnet-5-5",
+  "assessed_at": "2026-10-22T04:45:00+02:00",
+  "prompt_version": "ARR-ASSESS-1.0",
+  "independence": "not_involved_in_manuscript",
+  "recommendation": "major_revision",
+  "millennium_score": 2.2,
+  "overall_stars": 2,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 3,
+      "basis": "Lower bounds F(6)>=14, F(7)>=17 verified by me (14 and 17 distinct triples, pairwise 2-less in order). Upper bounds rest on SAT/DRUP; F(7)<=17 has 18 unchecked proofs and an unformalised S3 cube split. Plausible, not certified."
+    },
+    "rigor": {
+      "stars": 3,
+      "basis": "Honest status table; multiple solvers, independent B&B for n<=6, validation on n<=5. But F(7) upper bound lacks full proof check, checkers are author-written, no LRAT, no formal link of Lean 'good' to the definition."
+    },
+    "novelty": {
+      "stars": 2,
+      "basis": "Two new small values of a known function; the author states a limited literature search and makes no priority claim. Methods are standard SAT cube-and-conquer; no new theory."
+    },
+    "significance": {
+      "stars": 2,
+      "basis": "Modest evidence for Gowers-Long Conjecture 1.8 (F(n)<=n^{3/2}) for n<=7; does not prove or refute it, and gives no pattern or asymptotic insight. Small computational datum."
+    },
+    "reproducibility": {
+      "stars": 3,
+      "basis": "Witnesses listed in appendix; encoding and procedure described; supplement, code and DRUP proofs are claimed but were not available to me. Cannot check solver runs; 2.7 GB proofs and long runtimes."
+    }
+  },
+  "summary": "The manuscript reports F(6)=14 and F(7)=17 for the Gowers-Long 2-increasing triple-sequence function, via explicit witnesses and SAT-based unsatisfiability. I verified the witnesses and the hash only; the upper bounds are not independently checkable from the PDF. The paper is candid that F(7)<=17 is only partly proof-checked. A small, plausible datum, consistent with Conjecture 1.8, but not a certified result.",
+  "strengths": [
+    "Explicit witnesses for n=6 (14) and n=7 (17) which I confirmed are valid 2-increasing sequences in [n]^3.",
+    "Transparent disclosure of what is and is not verified, including a discarded buggy run.",
+    "Cross-checks with two SAT solvers, CP-SAT, and an independent SAT-free branch-and-bound for n<=6.",
+    "Method validated by reproducing known values for n<=5."
+  ],
+  "weaknesses": [
+    "F(7)<=17 is not fully proof-checked: 18 of 425 DRUP proofs (the largest) unchecked, and no LRAT/drat-trim certificate.",
+    "The first-element/second-element cube partition and S3 symmetry reduction are unformalised and a single implementation; a flaw would undermine completeness.",
+    "Checkers (Go RUP, cube code) are written by the author, and the Python rupcheck2 did not finish on the n=6 proof.",
+    "Literature/priority search limited; reference [2] was not read.",
+    "Little mathematical insight; no formal link between the Lean checker and the problem definition."
+  ],
+  "potential_errors": [
+    "Completeness of the cube partition for n=7 (83 first elements plus 77 subcubes of (1,1,1), 312 subcubes of (1,1,2)) depends on a symmetry argument not formalised; the 82+312+77 job count is not obviously consistent from the text alone.",
+    "Lazy cyclic-triple clauses are not consequences of pair clauses; the proofs refer to CNFs including them, so the exact CNF used matters and cannot be checked from the PDF.",
+    "Elements 1..n cubes assumed first-element non-decreasing: valid under S3 only if the first element's coordinate permutation maps the rest consistently, which is true since <_2 is S3-invariant, but is asserted without proof."
+  ],
+  "strong_novelty_candidates": [],
+  "unresolved_material_objections": [
+    "The upper bound F(7)<=17 (hence the exact value F(7)=17) is not fully certified: 18 largest DRUP proofs unchecked, the cube-splitting code and symmetry reduction are unverified, so the main claim F(7)=17 is not established rigorously."
+  ]
+}
