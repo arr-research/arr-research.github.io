@@ -403,17 +403,77 @@ def audit(event: str, submission_id: str | None = None, **detail) -> None:
     db.commit()
 
 
+def browser_expiry():
+    return now().timestamp() + current_app_config('PERMANENT_SESSION_LIFETIME').total_seconds()
+
+
+def browser_user(user_id, credential_version=None, expires_at=None):
+    if expires_at is not None and (type(expires_at) not in {int, float} or expires_at <= now().timestamp()):
+        return None
+    user = get_db().execute("SELECT * FROM users WHERE id=? AND active=1", (user_id,)).fetchone() if user_id else None
+    if user and user['role'] == 'depositor':
+        from services.intake.accounts import profile
+        account = profile(sys.modules[__name__], user['id'])
+        if account and credential_version != account['credential_version']:
+            return None
+    return user
+
+
+def complementary_browser_roles(first, second) -> bool:
+    return bool(first and second and (
+        first['role'] == 'depositor' and second['role'] in {'operator', 'independent_editor'}
+        or second['role'] == 'depositor' and first['role'] in {'operator', 'independent_editor'}
+    ))
+
+
+def start_browser_session(user, credential_version=None, *, keep_other=False) -> None:
+    """Retain only a separately authenticated, complementary account on opt-in."""
+    retained = None
+    retained_version = None
+    retained_expiry = None
+    if keep_other:
+        for candidate, version, expiry in (
+            (getattr(g, 'user', None), session.get('credential_version'), session.get('account_expires_at')),
+            (getattr(g, 'other_user', None), session.get('other_credential_version'), session.get('other_expires_at')),
+        ):
+            if complementary_browser_roles(user, candidate):
+                retained, retained_version, retained_expiry = candidate, version, expiry
+                break
+    session.clear()  # Rotate CSRF and discard unrelated capabilities on authentication.
+    session['user_id'] = user['id']
+    session['account_expires_at'] = browser_expiry()
+    if credential_version is not None:
+        session['credential_version'] = credential_version
+    if retained:
+        session['other_user_id'] = retained['id']
+        session['other_expires_at'] = retained_expiry
+        if retained_version is not None:
+            session['other_credential_version'] = retained_version
+    session.permanent = True
+    g.user, g.other_user = user, retained
+
+
 def load_user() -> None:
-    user_id = session.get("user_id")
-    g.user = get_db().execute("SELECT * FROM users WHERE id=? AND active=1", (user_id,)).fetchone() if user_id else None
+    g.user = browser_user(session.get('user_id'), session.get('credential_version'), session.get('account_expires_at'))
+    g.other_user = browser_user(session.get('other_user_id'), session.get('other_credential_version'), session.get('other_expires_at') or 0)
+    if session.get('user_id') and not g.user:
+        retained, version = g.other_user, session.get('other_credential_version')
+        if retained:
+            start_browser_session(retained, version)
+        else:
+            session.clear()
+    if not complementary_browser_roles(g.user, g.other_user):
+        session.pop('other_user_id', None)
+        session.pop('other_credential_version', None)
+        session.pop('other_expires_at', None)
+        g.other_user = None
+    if g.user:
+        session['account_expires_at'] = browser_expiry()
     if g.user and g.user['role'] == 'depositor':
         from services.intake.accounts import profile
         account = profile(sys.modules[__name__], g.user['id'])
-        if account and session.get('credential_version') != account['credential_version']:
-            session.clear()
-            g.user = None
-        elif account and account['last_seen_at'][:10] != iso()[:10]:
-            get_db().execute('UPDATE private_accounts SET last_seen_at=? WHERE user_id=?', (iso(), user_id))
+        if account and account['last_seen_at'][:10] != iso()[:10]:
+            get_db().execute('UPDATE private_accounts SET last_seen_at=? WHERE user_id=?', (iso(), g.user['id']))
             get_db().commit()
 
 
@@ -681,12 +741,30 @@ def register_routes(app: Flask) -> None:
             if not valid:
                 flash("Invalid credentials or one-time code.", "error")
             else:
-                session.clear()
-                session["user_id"] = user["id"]
-                session.permanent = True
+                start_browser_session(user, keep_other=request.form.get('keep_other_account') == 'on')
                 audit("login")
                 return redirect(url_for("pageview_dashboard" if user["role"] == "operator" else "dashboard"))
         return render_template("login.html")
+
+    @app.post('/session/switch')
+    @login_required
+    def switch_browser_account():
+        require_csrf()
+        other = g.other_user
+        if not complementary_browser_roles(g.user, other) or request.form.get('role') != other['role']:
+            abort(403)
+        previous, previous_version = g.user, session.get('credential_version')
+        previous_expiry = session.get('account_expires_at')
+        other_version = session.get('other_credential_version')
+        session['user_id'], session['other_user_id'] = other['id'], previous['id']
+        session['account_expires_at'], session['other_expires_at'] = browser_expiry(), previous_expiry
+        for key, value in (('credential_version', other_version), ('other_credential_version', previous_version)):
+            session.pop(key, None)
+            if value is not None:
+                session[key] = value
+        g.user, g.other_user = other, previous
+        audit('browser_account_switched', previous_role=previous['role'], active_role=other['role'])
+        return redirect(url_for('pageview_dashboard' if other['role'] == 'operator' else 'dashboard'))
 
     @app.post("/logout")
     @login_required

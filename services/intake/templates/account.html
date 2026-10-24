@@ -18,6 +18,7 @@
 <label><input type="checkbox" name="privacy" required> I have read the <a href="https://airr.science/privacy/">privacy notice</a>.</label>
 <p class="meta">The workspace stores your alias, protected credentials and case history. Papers can include your chosen author name. <a href="https://airr.science/privacy/#author-credit">Author credit and privacy</a>.</p>
 {% endif %}
+{% if mode=='login' and g.user and (g.user['role'] in ['operator','independent_editor'] or g.other_user) %}<label><input type="checkbox" name="keep_other_account"> Keep my editorial account signed in on this browser</label>{% endif %}
 <button>{{ 'Create workspace' if mode=='register' else 'Reset password and replace recovery code' if mode=='recover' else 'Sign in' }}</button></form>
 <p><a href="{{ url_for('account_login') }}">Workspace sign in</a> · <a href="{{ url_for('account_register') }}">Create a workspace</a> · <a href="{{ url_for('account_recover') }}">Recover access</a></p>
 <p class="meta">No password reset email is available. Keep your password and recovery code safe. Editorial accounts use the separate editor sign-in.</p>

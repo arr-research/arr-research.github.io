@@ -37,6 +37,26 @@ authorization and production checks. Every new installation still requires its
 own evidence under [`docs/INTAKE_OPERATIONS.md`](../../docs/INTAKE_OPERATIONS.md);
 this README does not open an installation or authorize publication.
 
+## Keep an author workspace and editorial account signed in
+
+When signing in to an editorial account from an authenticated author workspace,
+select **Keep my author workspace signed in on this browser**. The reverse
+option is available on workspace sign-in. Both accounts must be authenticated
+with their existing credentials; editorial sign-in still requires the second
+factor or a valid unused recovery code. No alias-to-editor link is inferred.
+
+The signed-in page offers a button to switch between the two authenticated
+accounts. Only the selected account's permissions apply to each request; this
+does not merge roles, grant editorial access to an author, or waive the
+author-editor conflict and review rules. This is one browser session containing
+two independently authenticated identities, not a permanent account link.
+Retention is opt-in; leaving the option unchecked replaces the earlier account
+as before. Signing out explicitly clears both. Workspace credential changes and
+account deactivation are checked before a saved account can be selected. Session
+expiration and the existing secure-cookie settings remain unchanged. Each
+account keeps its own idle deadline: activity as author cannot keep an unused
+editorial sign-in alive past the configured session lifetime, or vice versa.
+
 ## Local setup
 
 ```console
