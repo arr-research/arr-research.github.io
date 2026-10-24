@@ -1,0 +1,574 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=26mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,amsmath,amssymb,amsthm,booktabs,microtype}
+\usepackage[colorlinks=true,allcolors=blue]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\adj}{\operatorname{adj}}
+\newcommand{\Prob}{\mathbb P}
+\newcommand{\E}{\mathbb E}
+\title{An exact two-mean law for singleton--avoidance probabilities}
+\author{Lluis Eriksson}
+\date{24 October 2026 --- research draft}
+\begin{document}
+\maketitle
+\begin{abstract}
+We determine the infimum of $\Prob(X=1,Z=0)$ over finitely supported
+nonnegative integer-valued pairs with real-stable probability generating
+polynomial and prescribed means $(\alpha,b)$. In the positive region
+$0<\alpha<2$, $0\le b<\min(1,2-\alpha)$, the answer is the smaller of
+a degree-two value and an explicit categorical--Poisson limit. For
+$\alpha\le1$ the limiting categorical trial has no $X$ mass; for
+$\alpha>1$ and $b>0$ it necessarily has positive $X$ mass. A determinantal
+pinching preserves the coefficient and both means exactly. Three
+perturbations of a hypothetical finite global minimizer then exclude
+all intermediate Bernoulli block sizes, using an analytic estimate for
+large blocks and three elementary polynomial factorizations for the
+remaining sizes. The bound is sharp even for finite determinantal measures
+with Hermitian positive-contraction kernels, counted on two disjoint
+blocks. The formula concerns unrestricted finite
+degree and one singleton target; no application to a TSP approximation
+constant is asserted.
+\end{abstract}
+
+\paragraph{Draft status.}
+The preceding exact draft received a single-model assessment recommending
+minor revision. This corrected draft awaits a check of those changes and
+is not published. Exact algebraic checks supplement the proofs below.
+
+\section{The exact envelope}
+A real polynomial is \emph{real stable} if it is nonzero whenever all
+variables have positive imaginary parts. Let $\mathcal S(\alpha,b)$
+consist of real-stable polynomials with nonnegative coefficients,
+$P(1,1)=1$, and $\nabla P(1,1)=(\alpha,b)$. Degrees are finite but have
+no common bound. Define
+\[
+ C(\alpha,b)=\inf_{P\in\mathcal S(\alpha,b)}[xz^0]P.
+\]
+These classes are nonempty for all nonnegative means: independent
+monomials times Bernoulli factors realize every such pair.
+For the positive region put
+\begin{align}
+ \eps&=1-b,& U&=\min(\alpha,\eps),\\
+ a_1&=\min\{U,\max\{0,(2\alpha-b)/4\}\},&
+ H&=\eps\alpha-(2\alpha-b)a_1+2a_1^2.\label{eq:H}
+\end{align}
+Define $a_\infty=0$ when $\alpha\le1$. For $1<\alpha<2$, set
+\begin{equation}\label{eq:ainfty}
+ a_\infty=\frac{2b(\alpha-1)}{2-\alpha+b+
+ \sqrt{(2-\alpha+b)^2+4b(\alpha-1)}}.
+\end{equation}
+This includes $b=0$. Finally put
+\begin{equation}\label{eq:J}
+ J=e^{a_\infty-\alpha}
+ \{\eps(\alpha-a_\infty)+a_\infty(1-\alpha+a_\infty)\}.
+\end{equation}
+\begin{theorem}\label{thm:main}
+For $\alpha,b\ge0$, the envelope is zero if $\alpha=0$, $b\ge1$,
+$\alpha\ge2$, or $\alpha+b\ge2$. At every remaining point,
+\begin{equation}\label{eq:main}
+ C(\alpha,b)=\min\{H,J\}>0.
+\end{equation}
+The value $H$ is attained by a polynomial of degree at most two; $J$ is
+approached by normalized categorical--binomial products. The same
+infimum holds for disjoint-block counts of strongly Rayleigh measures,
+and even when restricted to finite determinantal measures with Hermitian
+positive-contraction kernels $0\preceq K\preceq I$.
+\end{theorem}
+The zero cases in the theorem overlap harmlessly. The positive domain
+is precisely $0<\alpha<2$, $0\le b<\min(1,2-\alpha)$.
+When $\alpha>1$, the quadratic vertex satisfies
+$(2\alpha-b)/4-(\alpha-1)=(4-2\alpha-b)/4>0$ in this domain,
+so the definition of $a_1$ also respects the lower feasibility bound
+$a\ge\alpha-1$ for the degree-two realizer.
+This domain was already covered by refined positivity estimates in
+Gurvits--Klein--Leake \cite[Theorem 5.11 and Corollary 5.13]{GKL}.
+Our question is the exact value, including the competing finite and
+limiting mechanisms. We do not claim a new positivity region.
+
+For $\alpha\le1$, the limiting branch simplifies to
+$J=\alpha(1-b)e^{-\alpha}$. For $\alpha>1$, $b>0$,
+$a_\infty\in(0,\alpha-1)$: using a pure Poisson block and a disjoint
+avoidance trial misses the smaller mixed limit. An exact finite example
+illustrating that failure is given in Section~\ref{sec:example}.
+
+The deep input is Borcea--Br\"and\'en's bivariate determinantal
+representation \cite[Corollary 6.7]{BB}. The Bernoulli equalization
+argument is classical Hoeffding theory \cite{Hoeffding}; we give the
+needed proof. Capacity productization in \cite{GL,GKL} does not by
+itself assert exact preservation of our boundary coefficient.
+These comparisons identify dependencies and scope, not worldwide
+originality. Higher targets and several simultaneous positive target
+counts remain outside the theorem.
+
+\section{Exact coefficient preservation}
+\begin{proposition}\label{prop:pinch}
+For $P\in\mathcal S(\alpha,b)$ of exact degree $D\ge1$, there is a product
+$Q=\prod_{i=1}^D(c_i+a_ix+b_iz)$ with nonnegative entries,
+$a_i+b_i+c_i=1$, and $a_i+b_i>0$, having the same means and coefficient
+$[xz^0]$ as $P$.
+\end{proposition}
+\begin{proof}
+The representation in \cite{BB} gives
+$P=\pm\det(xA+zB+C)$ with real symmetric $D$ by $D$ matrices,
+$A,B\succeq0$. The coefficient of $t^D$ in $P(t,t)$ is positive and
+is $\pm\det(A+B)$. Thus $G=A+B\succ0$ and the sign is positive.
+Since
+\[
+ P(t,t)=\det G\det(tI+G^{-1/2}CG^{-1/2})>0\quad(t>0),
+\]
+the symmetric matrix $G^{-1/2}CG^{-1/2}$ has no negative eigenvalue.
+Hence $C\succeq0$. Now $A+B+C\succ0$ has determinant one; congruence
+by its inverse square root preserves $P$ and normalizes the sum to $I$.
+Jacobi's polynomial identity yields
+\[
+ \partial_xP(1,1)=\tr A,\quad \partial_zP(1,1)=\tr B,
+ \quad [xz^0]P=\tr(\adj(C)A).
+\]
+The last identity also holds for singular $C$. Diagonalize $C$ and
+replace $A,B$ by their diagonals in that basis. This preserves both
+traces and $\tr(\adj(C)A)$, since $\adj(C)$ is diagonal. The diagonal
+entries are the required $a_i,b_i,c_i$. Their sums are one, and
+$A+B\succ0$ implies $a_i+b_i>0$. The determinant becomes $Q$.
+\end{proof}
+No inverse of $C$ is used. The proposition preserves a coefficient and
+means, not the full distribution or higher coefficients. The converse
+inclusion holds because the displayed products themselves are stable.
+
+\section{Reduction to one categorical trial and an equal block}
+Throughout this section $0<b<\min(1,2-\alpha)$ and $0<\alpha<2$.
+For $k\ge2$, $0\le a\le U$, put
+\begin{equation}\label{eq:G}
+ G_k(a)=a(1-u)^k+(\eps-a)(\alpha-a)(1-u)^{k-1},
+ \qquad u=(\alpha-a)/k.
+\end{equation}
+For $k=1$, use the same polynomial formula on
+$\max(0,\alpha-1)\le a\le U$. These values are realized by
+\begin{equation}\label{eq:realizer}
+ (ax+bz+\eps-a)(1-u+ux)^k.
+\end{equation}
+A factor with $u=0$ can be dropped.
+
+\begin{lemma}\label{lem:equal}
+Fix a finite number of Bernoulli slots, their total mean $m<2$, and
+nonnegative weights $A,C$. A minimum of
+$A\Prob(S=0)+C\Prob(S=1)$ can be chosen with all fractional Bernoulli
+parameters equal and at most one parameter equal to one.
+\end{lemma}
+\begin{proof}
+The fixed-slot feasible set is compact. Among its minimizers choose one
+with fewest fractional parameters. For two such parameters $u,v$ with
+fixed sum, the objective is affine in $uv$. A positive coefficient
+forces an endpoint, a zero coefficient permits an endpoint with fewer
+fractional entries, and a negative coefficient forces $u=v$. Thus all
+fractional entries are equal. There is at most one deterministic one
+because the total mean is less than two. Zero entries may be removed.
+\end{proof}
+The fixed number of slots is chosen \emph{before} applying compactness;
+only afterwards do we take the infimum over all finite slot counts.
+
+\begin{proposition}\label{prop:scalar}
+$C(\alpha,b)$ equals the infimum of all the values in \eqref{eq:G},
+including the stated $k=1$ domain.
+\end{proposition}
+\begin{proof}
+Use Proposition~\ref{prop:pinch}. At fixed constants $c_i$, the target
+coefficient $\sum_i a_i\prod_{j\ne i}c_j$ is linear on
+$0\le a_i\le1-c_i$, $\sum_i a_i=\alpha$. A vertex has at most one
+coordinate strictly between its bounds. Therefore a minimizing
+replacement has at most one factor containing both $x$ and $z$.
+This reasoning remains valid when some constants vanish.
+
+If there is a mixed factor, write $a$ for its $x$ mass and $t$ for the
+sum of pure $z$ masses. Merging the latter into $1-t+tz$ decreases the
+coefficient, since their constant product is at least $1-t$. The mixed
+factor becomes $ax+(b-t)z+\eps-a+t$. For the remaining pure $x$ block
+write $P_0,P_1$ for its zero and one probabilities; its mean is
+$\alpha-a<2$. The objective is
+\[
+ (1-t)\{aP_0+(\eps-a+t)P_1\},\qquad
+ \max(0,a-\eps)\le t\le b.
+\]
+This is concave in $t$, so an endpoint is no larger.
+At $t=0$, $a\le U$, and Lemma~\ref{lem:equal} gives an equal block,
+except possibly for a deterministic one. In that case $\alpha\ge1$,
+$a\le\alpha-1$, and the objective is at least
+\[
+ (\eps-a)(2-\alpha+a)\ge\delta,
+ \qquad \delta=2-\alpha-b.
+\]
+Indeed the left side is concave on $[0,\alpha-1]$ and its endpoint
+values are $\eps(2-\alpha)$ and $\delta$; their difference is
+$b(\alpha-1)\ge0$. The value $\delta=G_1(\alpha-1)$ is feasible.
+The empty block has $a=\alpha\le\eps$ and is included with $u=0$.
+
+At $t=b$, or with no mixed factor to start with, the objective is
+$\eps$ times a pure Bernoulli one-probability of mean $\alpha$.
+Equal blocks give $G_k(0)$; the deterministic alternative is at least
+$\eps(2-\alpha)\ge\delta$ when it exists.
+At the other possible endpoint $t=a-\eps>0$ one has
+$a>\eps>\alpha-1$, so $\alpha-a<1$. Then
+\begin{align*}
+ a(1-a+\eps)P_0&\ge a(1-a+\eps)(1-\alpha+a)\\
+ &\ge\eps(1-\alpha+\eps)=G_1(\eps).
+\end{align*}
+For the second inequality subtract the right side and factor:
+\[
+ (a-\eps)\{(1-a)(1-\alpha+a)+\eps\}\ge0.
+\]
+Here $a\le1$, and $\eps<a\le\alpha$ makes $G_1(\eps)$ feasible.
+All reductions are thus dominated by the scalar union. Conversely,
+\eqref{eq:realizer} realizes every scalar value.
+\end{proof}
+
+\section{The limit and the two boundaries}
+Uniformly on $a\in[0,U]$, $G_k(a)$ tends to
+\begin{equation}\label{eq:L}
+ L(a)=e^{a-\alpha}\{\eps(\alpha-a)+a(1-\alpha+a)\}.
+\end{equation}
+For example, for $k\ge4$ and $0\le\mu=\alpha-a<2$,
+\[
+ |k\log(1-\mu/k)+\mu|\le
+ \frac{\mu^2}{2k(1-\mu/k)}\le4/k.
+\]
+Together with \eqref{eq:G} this proves uniform convergence, including
+when $a$ varies with $k$. The sign of $L'(a)$ is the sign of
+\[
+ a^2+(2-\alpha+b)a-b(\alpha-1).
+\]
+It is increasing on $a\ge0$. Its minimum occurs at zero for
+$\alpha\le1$, and otherwise at \eqref{eq:ainfty}, strictly between
+zero and $\alpha-1$. Thus $\min L=J$. Also $\min G_1=H$.
+
+We will exclude any global scalar minimum below both $H$ and $J$.
+Uniform convergence ensures that such an infimum is attained in a
+finite collection of compact scalar families: the large-$k$ tail is
+separated from it by a positive gap.
+At $a=U=\alpha$ the value is $\alpha=G_1(\alpha)\ge H$.
+At $a=U=\eps$, $\mu=\alpha-\eps=1-\delta\in[0,1)$, and
+\[
+ G_k(\eps)=\eps(1-\mu/k)^k\ge\eps(1-\mu)
+ =\eps\delta=G_1(\eps)\ge H.
+\]
+To handle $a=0$, we record the classical univariate boundary explicitly.
+
+\begin{lemma}\label{lem:uni}
+For a finite sum of independent Bernoulli variables of mean $\alpha$,
+$0<\alpha<2$, the infimum of its one-probability is
+\[
+ M(\alpha)=\begin{cases}
+ \alpha e^{-\alpha},&0<\alpha\le1,\\
+ \min\{\alpha e^{-\alpha},\alpha(1-\alpha/2)\},&1<\alpha<2.
+ \end{cases}
+\]
+\end{lemma}
+\begin{proof}
+Lemma~\ref{lem:equal} reduces the objective to equal blocks or one
+deterministic success. The latter gives at least $2-\alpha$, which
+exceeds $\alpha(1-\alpha/2)$ by $(2-\alpha)^2/2$.
+Equal blocks have $q(k)=\alpha(1-\alpha/k)^{k-1}$.
+For $\alpha\le1$, $q(k)>\alpha e^{-\alpha}$ for every finite feasible
+$k$, by $\log(1-t)>-t/(1-t)$; the deterministic $k=1$ endpoint is
+separate. For $\alpha>1$, extend $k$ to real $k\ge2$ and put
+$t=\alpha/k$. Direct differentiation gives
+\[
+ (1-t)\frac{d\log q}{dk}=t^2\{R(t)-1/\alpha\},\qquad
+ R(t)=\frac{t+(1-t)\log(1-t)}{t^2}
+ =\sum_{j\ge0}\frac{t^j}{(j+1)(j+2)}.
+\]
+$R$ increases with $t$, so the derivative sign decreases as $k$
+increases. A critical point can only be a maximum. The infimum is
+therefore at $k=2$ or $k\to\infty$, as stated.
+\end{proof}
+At $a=0$, Lemma~\ref{lem:uni} excludes a value below $\min(H,J)$.
+For $\alpha\le1$ its lower bound is $J$.
+For $\alpha>1$ the Poisson bound is $L(0)\ge J$, while the quadratic
+bound $\eps\alpha(1-\alpha/2)$ is at least $H$. To check the latter,
+put $d=2-\alpha$, $\delta=d-b$. The unconstrained quadratic branch is
+\[
+ Q=\delta-(b+2\delta)^2/8=\alpha\delta/2-b^2/8;
+\]
+$H=Q$ if $b\le2\delta$, and $H=E:=\eps\delta$ otherwise.
+The differences from these two branches are respectively
+$b\alpha(\alpha-1)/2+b^2/8>0$ and
+$\eps(b-d^2/2)>0$; in the clipped branch $b\ge2d/3>d^2/2$.
+
+\section{Three variations exclude intermediate finite blocks}
+Assume a scalar value lies below $\min(H,J)$, and select an attained
+global minimum $V$ as above. It has $k\ge2$, $0<a<U$, and
+$p=(\alpha-a)/k\in(0,1)$. Lemma~\ref{lem:equal} and the deterministic
+bound in Proposition~\ref{prop:scalar} show that every finite admissible
+product with the fixed means $(\alpha,b)$ has value at least $V$.
+This applies also after changing $a$ or appending a zero Bernoulli slot;
+both types of perturbation below are therefore covered.
+Write $\mu=kp$, $q=\eps-a$, $y=(k+1)p$, and $B=2-y$.
+
+First change $a$ to $a+t$ and one pure probability $p$ to $p-t$,
+keeping $b$ fixed. This preserves the two means and is feasible for
+small $t$ of either sign. Dividing its linear and quadratic
+coefficients by the positive factor $(1-p)^{k-2}$ gives
+\[
+ S=B(a-p)-b(\mu-1)=0,\qquad B\ge0.
+\]
+If $B=0$, then $\mu=2-p>1$ and $S<0$, impossible. Set
+$\beta=b/B>0$. Stationarity gives
+\begin{align}
+ a&=p+\beta(\mu-1),& q&=(1-p)(1-\beta),\nonumber\\
+ \alpha&=y+\beta(\mu-1),&\delta&=B-\beta(1-p),\label{eq:param}\\
+ G_k&=(1-p)^k(y-\beta),&b&=\beta B.\nonumber
+\end{align}
+Second perturb two pure probabilities to $p+t,p-t$. The coefficient
+of their product is a positive factor times
+$a(1-p)+q(\mu-2)=(1-p)(\beta-B)$. Since their product decreases
+by $t^2$, minimality requires $\beta\le B$.
+Third split one probability into $p-t,t$, $0<t<p$, using a new slot.
+The exact objective change is
+\[
+ t(p-t)(1-p)^{k-2}\{a(1-p)+q(y-2)\}.
+\]
+The bracket equals $(1-p)(p-\delta)$ by stationarity, hence
+$\delta\le p$. Combining both necessary conditions gives
+\[
+ B-p\le\beta(1-p)\le B(1-p),\qquad B\le1.
+\]
+Equality $B=1$ forces $\beta=1$ and $b=1$, excluded. Thus
+\begin{equation}\label{eq:domain}
+ 0<B<1,\quad n=k+1\ge3,\quad p=(2-B)/n,\quad
+ \max(0,\ell)\le\beta\le B,\quad
+ \ell=\frac{(n+1)B-2}{n-2+B}.
+\end{equation}
+This deduction does not require $\alpha>1$.
+
+\subsection{The quadratic branch remains feasible}
+Before comparing with $H$, its branch formula must be justified also
+when the original mean is below one. At a stationary point,
+\[
+ 2\alpha-b=4-2B+\beta(2-3B-2p)>0.
+\]
+Indeed, if the coefficient of $\beta$ is negative, use $\beta\le B$
+and $p\le(2-B)/3$ to bound it below by
+$4-7B^2/3-4B/3>1/3$; the other sign is immediate.
+Thus $a_*=(2\alpha-b)/4$ is positive and at most $\alpha$.
+Furthermore $a_*-(\alpha-1)=(4-2\alpha-b)/4>0$.
+Only the constraint $a_*\le\eps$ may clip it. Consequently at these
+points
+\begin{equation}\label{eq:branches}
+ H=\begin{cases}Q,&b\le2\delta,\\E,&b\ge2\delta,\end{cases}
+ \quad Q=\delta-(b+2\delta)^2/8,\quad E=(1-b)\delta.
+\end{equation}
+The identity $Q-E=-(b-2\delta)^2/8\le0$ also proves $H\le E$
+even if the formal endpoint $a=\eps$ would
+not have been feasible before imposing the stationary conditions.
+
+\subsection{All $k\ge5$}
+The ratio $(y-\beta)/(1-\beta B)$ decreases with $\beta$; its
+derivative is $-(y-1)^2/(1-\beta B)^2$. Hence
+\[
+ \frac{G_k}{\eps}\ge A_n(y):=
+ \frac{2(1-y/n)^{n-1}}{3-y},\qquad 1<y<2.
+\]
+For $n\ge6$,
+\begin{equation}\label{eq:large}
+ A_n(y)\ge\min(y/n,2-y).
+\end{equation}
+To prove this, put $y_*=2n/(n+1)$. On $[1,y_*]$ the logarithmic
+derivative of $A_n(y)/(y/n)$ is
+$-(n-1)/(n-y)+1/(3-y)-1/y<0$.
+On $[y_*,2)$ that of $A_n(y)/(2-y)$ is
+$-(n-1)/(n-y)+1/(3-y)+1/(2-y)>0$:
+here $y_*\ge3/2$, $1/(2-y)\ge2$, and $(n-1)/(n-y)\le2$.
+The minimum ratio is at $y_*$ and equals
+\[
+ R_n=\frac{(n+1)^2}{n+3}
+ \left(\frac{n-1}{n+1}\right)^{n-1}.
+\]
+$R_6=3125/3087>1$, and for real $n\ge6$,
+\[
+ \frac{d\log R_n}{dn}
+ \ge\frac4{n+1}-\frac1{n+3}-\frac2{n-1}
+ =\frac{n^2-17}{(n-1)(n+1)(n+3)}>0,
+\]
+using $\log(1-u)\ge-u/(1-u)$. This proves \eqref{eq:large}.
+Since $\delta\le\min(p,B)$, it gives $G_k\ge\eps\delta=E\ge H$,
+contradicting the violating minimum.
+
+\subsection{The three remaining sizes}
+Under \eqref{eq:domain}, the exact factorizations in
+Appendix~\ref{app:small} prove $G_k\ge H$ for $n=3,4,5$.
+Thus no finite global minimum can lie below both $H$ and $J$.
+The uniform-convergence argument proves the lower bound everywhere.
+Conversely \eqref{eq:realizer} with $k=1,a=a_1$ attains $H$ and
+with $a=a_\infty,k\to\infty$ approaches $J$.
+This proves \eqref{eq:main} for $b>0$.
+
+\section{Zero region, boundary and determinantal sharpness}
+At $b=0$, nonnegative coefficients force $P$ to be univariate in $x$.
+Its real nonpositive roots factor it into normalized Bernoulli factors;
+Lemma~\ref{lem:uni} proves exactly \eqref{eq:main}.
+At $\alpha=0$ the target coefficient vanishes. If $b\ge1$, a factor
+$z$ ensures its vanishing, with remaining means realized independently.
+If $\alpha\ge2$, use a factor $x^2$. For $1<\alpha<2$ and
+$b\ge2-\alpha$, use
+\[
+ \bigl((\alpha/2)x+(1-\alpha/2)z\bigr)^2
+\]
+and an independent $z$-only count of mean $b-(2-\alpha)$.
+These cover the remaining zero cases. Positivity inside the stated
+region follows also from the formula: each feasible degree-two product
+has positive target value, and the limiting prefactor in \eqref{eq:J}
+is positive.
+
+Here a finite determinantal measure means one with a Hermitian kernel
+$0\preceq K\preceq I$; such measures are strongly Rayleigh
+\cite[Proposition 3.5]{BBL}.
+If a strongly Rayleigh measure counts disjoint blocks $A,B$, identifying
+the variables in each block and setting the other variables to one
+produces a bivariate stable polynomial with the same means and event.
+Conversely every categorical factor $c+ax+bz$ is realized on a two-point
+block by the determinantal kernel
+\[
+ K=\begin{pmatrix}a&\sqrt{ab}\\\sqrt{ab}&b\end{pmatrix},
+ \qquad 0\preceq K\preceq I.
+\]
+Its probabilities are $c,a,b,0$ for neither, the first point, the second
+point and both. Independent blocks realize the products in
+\eqref{eq:realizer}; one-point Bernoulli blocks suffice for pure factors.
+The upper constructions therefore belong to the determinantal class,
+which itself lies in the strongly Rayleigh class \cite{BBL}.
+This proves the sharpness assertion of Theorem~\ref{thm:main}.
+Additional avoided blocks can all be identified with $z$; only the sum
+of their expected counts is then prescribed.
+
+\section{A mixed limit and the boundary of the result}\label{sec:example}
+At $\alpha=13/10,b=3/10$, the pure-Poisson candidate is
+$(91/100)e^{-13/10}$ and the degree-two value is $199/800$.
+The valid finite product
+\[
+ \left(\frac{x}{10}+\frac{3z}{10}+\frac35\right)
+ \left(\frac{247}{250}+\frac{3x}{250}\right)^{100}
+\]
+has coefficient
+\[
+ \left(\frac{247}{250}\right)^{99}
+ \left(\frac{41}{50}-\frac3{2500}\right)
+ =0.2478080145\ldots,
+\]
+strictly below both naive candidates. The exponential comparison can
+be certified by rational Taylor bounds; this finite example is not
+used as proof of the main theorem. The correct exceptional mass is
+$a_\infty=(\sqrt{34}-5)/10$.
+A further tempting shortcut would compare $G_k(a)$ to $G_1(a)$ and
+$L(a)$ at the \emph{same} $a$; that assertion is false. For
+$\alpha=1,b=13/20,a=1/5,k=3$,
+$G_3=484/3375$ is smaller than both $G_1=4/25$ and
+$L=(8/25)e^{-4/5}$. The global quadratic minimum, however, is
+$391/3200<G_3$. The proof therefore requires a global minimizer and
+feasible perturbations, rather than a pointwise block-size comparison.
+
+The theorem does not give a fixed-degree envelope, classify all equality
+cases, preserve higher coefficients under pinching, or handle several
+positive targets simultaneously. Its limiting branch denotes an
+infimum approached by finite polynomials, not a finite polynomial
+identified with a Poisson law. The univariate ingredients are classical;
+the determinantal representation is a cited deep theorem. Neither a
+new TSP approximation ratio nor exhaustive priority is asserted.
+
+\paragraph{AI and responsibility disclosure.}
+The named author directed substantial OpenAI Codex assistance in
+derivation, writing and exact algebraic work. GPT-6 Astra xhigh audits
+used shared files and declared reused context. These checks are not
+independent human peer review or formal proof-assistant verification.
+The exact preceding draft and its single-model assessment are retained
+separately; this revision does not itself constitute a new full assessment.
+The author is responsible for the submitted text and claims.
+
+\appendix
+\section{Three exact small-block comparisons}\label{app:small}
+Here $n=3,4,5$, $p=(2-B)/n$, and the constraints are
+\eqref{eq:domain}. Write $t=\beta$ and
+\[
+ G=(1-p)^{n-1}(2-B-t),\quad \delta=B-t(1-p),\quad b=tB.
+\]
+Let $Q,E$ be as in \eqref{eq:branches}. The branch threshold is
+\[
+ T=\frac{2B}{B+2(1-p)};
+ \qquad H=Q\ (t\le T),\quad H=E\ (t\ge T).
+\]
+The identity $G-Q=(2-B)^2P_n/D_n$ holds with
+\begin{align*}
+ P_3&=t^2+4t+4-8B,&D_3&=72,\\
+ P_4&=2t^2+(6-B)t+4-8B-B^2,&D_4&=64,\\
+ P_5&=225t^2+(588-128B-8B^2)t\\
+ &\hspace{8mm}+324-656B-112B^2-8B^3,&D_5&=5000.
+\end{align*}
+Each $P_n$ increases with $t\ge0$, $0<B<1$. At $t=0$ and
+$B\le2/(n+1)$ its nonconstant-in-$B$ expression is nonnegative:
+for $n=3$ it is $4-8B$; for $n=4$ its decreasing value at $2/5$
+is $16/25$; for $n=5$ its decreasing value at $1/3$ is $2500/27$.
+For $B\ge2/(n+1)$, evaluate at $t=\ell$:
+\begin{align*}
+ (G-Q)_{n=3}&=\frac{B(2-B)^3(2B-1)}{18(B+1)^2},\\
+ (G-Q)_{n=4}&=\frac{B(2-B)^3(B^2+19B-2)}{64(B+2)^2},\\
+ (G-Q)_{n=5}&=\frac{(2-B)^3(B^4+28B^3+343B^2+60B+18)}{625(B+3)^2}.
+\end{align*}
+These are nonnegative on the respective ranges. Thus $G\ge Q$
+throughout the relaxed feasible set.
+
+For the clipped branch, $G-E$ is concave in $t$, with second derivative
+$-2B(1-p)<0$. Its feasible interval is $[\max(0,\ell,T),B]$.
+If nonempty, $T\le B$ implies $B\ge B_c=4/(n+2)$.
+At $t=B$ its values are
+\begin{align*}
+ n=3:&\quad(1-B)(B+1)(3B^2-4B+2)/9,\\
+ n=4:&\quad(1-B)(9B^3-2B^2-4B+8)/32,\\
+ n=5:&\quad(1-B)(2B^4+149B^3-17B^2-34B+162)/625.
+\end{align*}
+They are positive: complete the square in the first, and bound the
+negative terms by $6$ and $51$ respectively in the last two.
+At the lower endpoint $T$, $Q=E$ and the preceding comparison applies.
+If the lower endpoint is instead $\ell>T$, the exact values are
+\[
+ \frac{(1-B)R_n(B)}{d_n(B+n-2)},\qquad
+ (d_3,d_4,d_5)=(9,64,625),
+\]
+where
+\begin{align*}
+ R_3&=B^3+18B^2-12B-2,\\
+ R_4&=B^4+12B^3+128B^2-48B-16,\\
+ R_5&=B^5+20B^4+150B^3+1290B^2-180B-102.
+\end{align*}
+Each increases for $B\ge B_c$: the positive linear term in its
+derivative already dominates the sole negative constant.
+Their values at $B_c$ are $54/125$, $1024/81$, and
+$4143750/16807$, all positive. Concavity now gives $G\ge E$
+on the clipped interval. This proves all three remaining comparisons.
+The displayed identities are rational polynomial identities; their
+checks require no numerical minimization or sampled sign inference.
+
+\begin{thebibliography}{9}
+\bibitem{BB} J. Borcea and P. Br\"and\'en.
+Multivariate P\'olya--Schur classification problems in the Weyl algebra.
+\emph{Proc. London Math. Soc.} 101 (2010), 73--104.
+\href{https://arxiv.org/abs/math/0606360v6}{arXiv:math/0606360v6}, Corollary 6.7.
+\bibitem{BBL} J. Borcea, P. Br\"and\'en and T. M. Liggett.
+Negative dependence and the geometry of polynomials.
+\emph{J. Amer. Math. Soc.} 22 (2009), 521--567.
+\href{https://arxiv.org/abs/0707.2340}{arXiv:0707.2340}.
+\bibitem{Hoeffding} W. Hoeffding.
+On the distribution of the number of successes in independent trials.
+\emph{Ann. Math. Statist.} 27 (1956), 713--721.
+\href{https://www.jstor.org/stable/2237378}{Journal record}.
+\bibitem{GL} L. Gurvits and J. Leake.
+Capacity lower bounds via productization. \emph{STOC 2021}, 847--858.
+\href{https://eccc.weizmann.ac.il/report/2020/110/}{ECCC TR20-110}.
+\bibitem{GKL} L. Gurvits, N. Klein and J. Leake.
+From trees to polynomials and back again: New capacity bounds with
+applications to TSP. \emph{ICALP 2024}, 79:1--79:20.
+\href{https://arxiv.org/abs/2311.09072v2}{arXiv:2311.09072v2}.
+\end{thebibliography}
+\end{document}
