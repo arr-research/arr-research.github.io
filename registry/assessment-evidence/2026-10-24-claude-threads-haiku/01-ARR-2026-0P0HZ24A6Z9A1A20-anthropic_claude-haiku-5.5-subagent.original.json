@@ -1,0 +1,61 @@
+{
+  "paper_id": "PENDING_ARR_ID",
+  "version": "v1",
+  "version_id": "PENDING_VERSION_ID",
+  "canonical_sha256": "ffc62527ad7d291639c5f81ec4cf9c41d433e2df946ab8f86b106aed42a2d74e",
+  "provider": "anthropic",
+  "model_id": "claude-haiku-5-5",
+  "assessed_at": "2026-10-24T12:15:46+02:00",
+  "prompt_version": "ARR-ASSESS-1.0",
+  "independence": "unknown",
+  "recommendation": "major_revision",
+  "millennium_score": 2.4,
+  "overall_stars": 2,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 2,
+      "basis": "Checked: Lemma 1 (gap reduction) is sound, since a 3-AP of difference d<=N cannot cross a gap >N; the N=27 witness (18 elements in [0,54]) contains a 3-AP for every d<=27; the N=15 12-set of diameter 35 is valid. Theorem 1 gives m(16,3)=12, contradicting Table 1 (13). Z lower bounds for N=11..17 rest on unchecked CP-SAT status."
+    },
+    "rigor": {
+      "stars": 2,
+      "basis": "Window DRUP proofs exist for k=3 with a homemade checker (not drat-trim). Z values for N=11..17 have no certificate, yet Theorem 1 states them as exact. Problem 27 lower bounds for p=29,31 are logged but not checked. My exhaustive search reproduces Table 3 for p<=19 (3,4,5,7,7,8,9)."
+    },
+    "novelty": {
+      "stars": 2,
+      "basis": "Authors disclaim priority for Problem 27 and say they found no earlier m(N,3) values. The literature search was limited (Green's list, Green-Ruzsa, two OEIS searches, a few web searches). I did not browse, so earlier values cannot be excluded. No new theorem found in the text."
+    },
+    "significance": {
+      "stars": 2,
+      "basis": "Exact small-N values for a finite 3-AP covering problem. The paper admits no asymptotic content (section 5 item v) and makes no link to N^(1-c_k). The main content is computational at small scale."
+    },
+    "reproducibility": {
+      "stars": 2,
+      "basis": "The supplement (code, witnesses, SHA-256 of proofs, Lean files) is referenced but was not in the reviewed artifact, so I could not inspect it. The N=27 witness is printed and checks. Section 4 states no theorem links the Lean checkers to the formal-conjectures statements."
+    }
+  },
+  "summary": "The manuscript reports exact or bounded values of m(N,3) for N<=17 and window-based upper bounds up to N=27, plus a reproduction of small Problem 27 values. The reduction in Lemma 1 is correct and the stated N=27 witness is valid. Theorem 1 contradicts its own Table 1 at N=16, and the exactness claims for N=11..17 rely on solver status without a certificate. The authors disclose that there is no human review and no formal verification. Recommendation: major revision.",
+  "strengths": [
+    "Lemma 1 is a clean, correct normalization: a k-AP of difference d<=N cannot straddle a gap larger than N, so the gap-reduction preserves all required APs.",
+    "The N=27 witness (18 elements in [0,54]) contains a 3-AP for every d=1..27, as stated.",
+    "Problem 27 values for p<=19 are reproduced by my exhaustive search (3,4,5,7,7,8,9).",
+    "The window-vs-Z discrepancy at N=15 (12 in Z, 13 in the window) is stated openly and checks out via the explicit 12-set of diameter 35.",
+    "Section 5 and section 6 disclose limits honestly: no human review, no formal verification, no asymptotics, and a limited literature search."
+  ],
+  "weaknesses": [
+    "Theorem 1 lists 18 values for N=1..17 (four 12s), while Table 1 and the text give three 12s and m(16,3)=13. The abstract repeats the same list.",
+    "For N=11..17, the Z lower bounds rest on CP-SAT status with no independent certificate, but Theorem 1 presents them as proved.",
+    "CaDiCaL was run only for N=13 in Z, so the solver cross-check covers one instance.",
+    "The RUP checker is homemade and is not drat-trim or a verified checker, and the paper trusts it.",
+    "No Lean statement connects the checkers to the formal-conjectures definitions, so the 'formal' component does not link to the stated problems.",
+    "The Problem 27 lower bounds for p=29 and 31 are logged but not checked, and the paper itself marks them as unchecked."
+  ],
+  "potential_errors": [
+    "Theorem 1 and the abstract give m(16,3)=12, but Table 1 and the text (N=16 CP-SAT value equals the window value 13) give 13.",
+    "Theorem 1's list has 18 entries for N=1..17, so the list cannot be aligned with the N values without an extra or missing entry."
+  ],
+  "strong_novelty_candidates": [],
+  "unresolved_material_objections": [
+    "Main claim inconsistency: Theorem 1 (and the abstract) states m(16,3)=12, while Table 1 and the text give 13. Either the theorem or the table is wrong, and the exact value for N=16 is therefore not established as stated.",
+    "Exactness for N=11..17 in Z: Theorem 1 states m(N,3) as exact for these N, but the lower bounds rest on CP-SAT INFEASIBLE status with no independent certificate (section 4). Without a checked proof the claimed exact values are unsupported beyond solver output."
+  ]
+}
