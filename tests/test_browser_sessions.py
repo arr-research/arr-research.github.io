@@ -1,9 +1,10 @@
 """Two authenticated roles may be retained; their permissions never merge."""
 import unittest
+from datetime import timedelta
 from unittest.mock import patch
 
 import test_intake as fixtures
-from services.intake.app import get_db, totp
+from services.intake.app import get_db, now, totp
 from services.intake.workflow import digest
 
 
@@ -130,6 +131,21 @@ class BrowserSessionTests(unittest.TestCase):
         self.update_user('operator@example.org', active=0)
         self.assertEqual(self.client.get('/account').status_code, 200)
         self.assertEqual(self.client.get('/admin/statistics').status_code, 403)
+
+    def test_author_activity_does_not_extend_the_retained_editor_idle_timeout(self):
+        self.editor_login()
+        self.switch('depositor')
+        base = now()
+        with patch('services.intake.app.now', return_value=base + timedelta(hours=7)):
+            self.assertEqual(self.client.get('/account').status_code, 200)
+        with patch('services.intake.app.now', return_value=base + timedelta(hours=8, seconds=1)):
+            self.assertEqual(self.client.get('/account').status_code, 200)
+            self.assertEqual(self.switch('operator').status_code, 403)
+
+    def test_the_active_account_still_expires_after_its_idle_timeout(self):
+        self.token()
+        with patch('services.intake.app.now', return_value=now() + timedelta(hours=8, seconds=1)):
+            self.assertEqual(self.client.get('/account').status_code, 302)
 
     def test_explicit_logout_clears_both_authenticated_accounts(self):
         self.editor_login()

@@ -53,7 +53,9 @@ two independently authenticated identities, not a permanent account link.
 Retention is opt-in; leaving the option unchecked replaces the earlier account
 as before. Signing out explicitly clears both. Workspace credential changes and
 account deactivation are checked before a saved account can be selected. Session
-expiration and the existing secure-cookie settings remain unchanged.
+expiration and the existing secure-cookie settings remain unchanged. Each
+account keeps its own idle deadline: activity as author cannot keep an unused
+editorial sign-in alive past the configured session lifetime, or vice versa.
 
 ## Local setup
 

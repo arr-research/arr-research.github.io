@@ -403,7 +403,13 @@ def audit(event: str, submission_id: str | None = None, **detail) -> None:
     db.commit()
 
 
-def browser_user(user_id, credential_version=None):
+def browser_expiry():
+    return now().timestamp() + current_app_config('PERMANENT_SESSION_LIFETIME').total_seconds()
+
+
+def browser_user(user_id, credential_version=None, expires_at=None):
+    if expires_at is not None and (type(expires_at) not in {int, float} or expires_at <= now().timestamp()):
+        return None
     user = get_db().execute("SELECT * FROM users WHERE id=? AND active=1", (user_id,)).fetchone() if user_id else None
     if user and user['role'] == 'depositor':
         from services.intake.accounts import profile
@@ -424,20 +430,23 @@ def start_browser_session(user, credential_version=None, *, keep_other=False) ->
     """Retain only a separately authenticated, complementary account on opt-in."""
     retained = None
     retained_version = None
+    retained_expiry = None
     if keep_other:
-        for candidate, version in (
-            (getattr(g, 'user', None), session.get('credential_version')),
-            (getattr(g, 'other_user', None), session.get('other_credential_version')),
+        for candidate, version, expiry in (
+            (getattr(g, 'user', None), session.get('credential_version'), session.get('account_expires_at')),
+            (getattr(g, 'other_user', None), session.get('other_credential_version'), session.get('other_expires_at')),
         ):
             if complementary_browser_roles(user, candidate):
-                retained, retained_version = candidate, version
+                retained, retained_version, retained_expiry = candidate, version, expiry
                 break
     session.clear()  # Rotate CSRF and discard unrelated capabilities on authentication.
     session['user_id'] = user['id']
+    session['account_expires_at'] = browser_expiry()
     if credential_version is not None:
         session['credential_version'] = credential_version
     if retained:
         session['other_user_id'] = retained['id']
+        session['other_expires_at'] = retained_expiry
         if retained_version is not None:
             session['other_credential_version'] = retained_version
     session.permanent = True
@@ -445,8 +454,8 @@ def start_browser_session(user, credential_version=None, *, keep_other=False) ->
 
 
 def load_user() -> None:
-    g.user = browser_user(session.get('user_id'), session.get('credential_version'))
-    g.other_user = browser_user(session.get('other_user_id'), session.get('other_credential_version'))
+    g.user = browser_user(session.get('user_id'), session.get('credential_version'), session.get('account_expires_at'))
+    g.other_user = browser_user(session.get('other_user_id'), session.get('other_credential_version'), session.get('other_expires_at') or 0)
     if session.get('user_id') and not g.user:
         retained, version = g.other_user, session.get('other_credential_version')
         if retained:
@@ -456,7 +465,10 @@ def load_user() -> None:
     if not complementary_browser_roles(g.user, g.other_user):
         session.pop('other_user_id', None)
         session.pop('other_credential_version', None)
+        session.pop('other_expires_at', None)
         g.other_user = None
+    if g.user:
+        session['account_expires_at'] = browser_expiry()
     if g.user and g.user['role'] == 'depositor':
         from services.intake.accounts import profile
         account = profile(sys.modules[__name__], g.user['id'])
@@ -742,8 +754,10 @@ def register_routes(app: Flask) -> None:
         if not complementary_browser_roles(g.user, other) or request.form.get('role') != other['role']:
             abort(403)
         previous, previous_version = g.user, session.get('credential_version')
+        previous_expiry = session.get('account_expires_at')
         other_version = session.get('other_credential_version')
         session['user_id'], session['other_user_id'] = other['id'], previous['id']
+        session['account_expires_at'], session['other_expires_at'] = browser_expiry(), previous_expiry
         for key, value in (('credential_version', other_version), ('other_credential_version', previous_version)):
             session.pop(key, None)
             if value is not None:
