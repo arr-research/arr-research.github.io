@@ -1,0 +1,617 @@
+Sharp minimax losses for energy-constrained
+                        quantum reset channels
+                                           Lluis Eriksson
+
+                                          24 October 2026
+
+                     Working manuscript with AI-assisted mathematical checks.
+                    No human peer review or formal proof veriﬁcation is claimed.
+                                               Abstract
+         An unﬂagged reset channel transmits its input with probability λ and otherwise replaces
+     it by a ﬁxed state. We study its worst entanglement-assisted capacity when the input and re-
+     set have separate mean-energy budgets. A uniform estimate reduces the inﬁnite-dimensional
+     quantum minimax problem to a classical concave–convex entropy game, with absolute er-
+     ror tending to zero independently of the reset budget. For the oscillator, explicit positive
+     discrete certiﬁcates solve the ﬁxed energy-ratio limit of that game. The resulting loss curve
+     is parametrized by beta and digamma functions. An asymptotically least-favorable reset
+     family has an atom at zero below a branch junction, whereas the constructed higher-ratio
+     family is diﬀuse. At every ﬁxed interior ratio, the thermal reset is strictly less harmful than
+     the minimax reset; the limiting loss has square-root onset and quadratic contact with its
+     plateau. At reset-to-input energy ratio at least one the loss is the familiar binary entropy
+     h2 (λ). The proof uses global entropy inequalities and feasible distributions, rather than
+     an interchange of an unproved continuum limit with optimization. Finite probability-game
+     checks support the formulas but do not supply the proof. No eﬃcient coding theorem,
+     unknown-channel universal code or exact ﬁnite-energy capacity is asserted.
+
+
+1    Problem and relation to prior work
+          P
+           j≥0 j|j⟩⟨j| on ℓ (N0 ), ﬁx 0 < λ < 1, and put q = 1 − λ.
+Let H =                    2                                                 For a density operator τ
+deﬁne
+                                       Rτ (ρ) = λρ + qτ Tr ρ.
+This identity/replacement mixture is not a Gaussian thermal attenuator. The channel is mem-
+oryless, and its reset state is known when its capacity is evaluated. With unlimited prior
+entanglement and mean total input energy at most nE, the constrained coding theorem gives
+[1, Theorem 1]
+                                CEA (Rτ , E) = sup I(ρ, Rτ ).                            (1)
+                                                   Tr Hρ≤E
+The limit in blocklength is taken for each ﬁxed channel and energy allowance. A uniform
+estimate of these capacities does not produce one encoder and decoder for an unknown reset.
+    All quantum and Shannon entropies, and relative entropies, are in bits. Natural logarithms
+occur only in the explicit proﬁles and their analysis. Write
+                                                                                        j
+                                                                        1           E
+           g(E) = (E + 1) log2 (E + 1) − E log2 E,            γE (j) =                        .
+                                                                       E+1         E+1
+Gibbs’ variational principle gives S(ρ) ≤ g(E) under the input constraint. Deﬁne
+                                 K(E, M ) =       inf     CEA (Rτ , E),                                (2)
+                                               Tr Hτ ≤M
+                                 ∆(E, M ) = 2λg(E) − K(E, M ),                                         (3)
+
+
+                                                   1
+
+
+
+where M < ∞. The benchmark is the ﬂagged erasure channel: forgetting its ﬂag and preparing
+τ is a postprocessing, so ∆ ≥ 0.
+    The branch-information identity used below, its dimension-free loss bound, and entropy-
+preserving escape for each ﬁxed reset are dependencies of our earlier work [6]. The present
+argument concerns an adversary whose state can change with E. The extension of the escape
+proof to M = o(E) is short; the main additional question is the full loss at a ﬁxed positive
+ratio M/E.
+    The binary-entropy plateau itself has a direct antecedent. Bennett et al. give the ﬁnite-
+dimensional entanglement-assisted depolarizing capacity [3, Eq. (3)]. For Φd = λ id +q Tr(·)I/d,
+that formula implies
+                                2λ log2 d − CEA (Φd ) −→ h2 (λ).
+We do not claim this constant as new. Catalano et al. analyze the identity/vacuum-replacement
+case of bosonic fading, including its assisted optimization [4, Section IV and Appendix C]. Their
+vacuum special case and the mechanism of separating the two branches are prior work. Diggavi–
+Cover’s Gaussian additive-noise extremality [5] addresses a diﬀerent channel model; it does not
+make a thermal reset least favorable here. The results below prove strict suboptimality of
+thermal resets at intermediate ratios. This is not a general disproof of Gaussian extremality:
+the assumptions and functionals in Gaussian extremality theorems are speciﬁc [7]. Nonther-
+mal environments already have important eﬀects for beam-splitter attenuators [8], a diﬀerent
+operational model.
+
+
+2    A uniform reduction to a classical entropy game
+For ﬁnite-energy states put h = h2 (λ) and
+
+            F (ρ, τ ) = λS(ρ) + S(λρ + qτ ) − qS(τ ) − h,                 GE (τ ) =     sup      F (ρ, τ ).   (4)
+                                                                                       Tr Hρ≤E
+
+All entropies are ﬁnite: the output has energy at most λE + qM . Let
+
+ V (E, M ) =         P
+                    inf              sup
+                                      P            Φ(p, t),       Φ(p, t) = λH(p) + H(λp + qt) − qH(t) − h. (5)
+               tj ≥0,     tj =1 pj ≥0,
+                  P                P       pj =1
+                     jtj ≤M           jpj ≤E
+
+No exchange of inﬁmum and supremum is part of this deﬁnition.
+Theorem 2.1 (Uniform quantum-to-classical comparison). Set
+                                             1 + h/(2λ)
+                                   aE =                  ,          ϵE = h2 (qa2E ).
+                                            log2 (E + 1)
+For all suﬃciently large E with qa2E < 1/2, and every ﬁnite M ≥ 0,
+
+                                  V (E, M ) ≤ K(E, M ) ≤ V (E, M ) + ϵE .                                     (6)
+
+In particular the error is absolute o(1), uniformly in the ﬁnite reset budget. No assertion is
+made uniformly as λ approaches an endpoint.
+Lemma 2.2 (The branch remainder). For any puriﬁcation ψRB of ρ,
+                                                                                                      
+               I(ρ, Rτ ) = F (ρ, τ ) + S(Z|RB),                   0 ≤ S(Z|RB) ≤ h2 q Tr(ρ2 τ ) ,              (7)
+
+where Z is the binary classical branch in
+
+                              ωRBZ = λψRB ⊗ |T ⟩⟨T | + qρR ⊗ τB ⊗ |R⟩⟨R|.
+
+Also I(ρ, Rτ ) ≤ 2λS(ρ) and GE (τ ) ≥ 2λg(E) − h.
+
+                                                              2
+
+
+
+Proof. The reference and branch are independent. Hence I(R : BZ) = 2λS(ρ), and the
+information lost on forgetting Z is I(R : Z|B). Expanding the block entropy gives the ﬁrst
+identity in (7). The test projecting onto ψ guesses transmission on success and reset otherwise.
+Its error is e = q Tr(ρ2 τ ), without a commutation assumption. Measurement followed by binary
+Fano gives S(Z|RB) ≤ h2 (e). Since Z is classical, its conditional entropy is nonnegative.
+Finally 0 ≤ I(R : Z|B) ≤ h gives the information upper bound. Evaluating F at ρ = γE and
+using concavity of output entropy proves the lower bound on GE .
+
+Proof of Theorem 2.1. We ﬁrst compare the capacity to GE for every reset, including concen-
+trated ones. Choose an η-near-optimal input in (1). Lemma 2.2 gives
+                                                            h+η
+                                       d := g(E) − S(ρ) ≤       .
+                                                             2λ
+The exact Gibbs identity implies
+
+                            D(ρ∥γE ) = d + (Tr Hρ − E) log2 (1 + 1/E) ≤ d.
+
+If r = ∥ρ∥∞ and v is a largest-eigenvalue vector, then u = ⟨v|γE |v⟩ ≤ 1/(E + 1). Relative-
+entropy data processing for {|v⟩⟨v|, I − |v⟩⟨v|} gives
+
+                          D(ρ∥γE ) ≥ r log2 (1/u) − h2 (r) ≥ r log2 (E + 1) − 1.
+
+Thus r ≤ [1 + (h + η)/(2λ)]/ log2 (E + 1). Since e ≤ qr2 , (7), monotonicity of h2 below 1/2, and
+η ↓ 0 show
+                              GE (τ ) ≤ CEA (Rτ , E) ≤ GE (τ ) + ϵE .                          (8)
+The pointwise error need not be small for every input: the spectral bound was obtained for
+near-optimal inputs.
+   It remains to reduce the inﬁmum of GE to diagonal states. Deﬁne the skew quantum
+Jensen–Shannon divergence
+
+                                JSλ (ρ, τ ) = S(λρ + qτ ) − λS(ρ) − qS(τ ).
+
+Then F = 2λS(ρ) + JSλ (ρ, τ ) − h. Joint convexity of relative entropy makes F convex in τ with
+ρ ﬁxed, hence GE is convex in τ . Energy-preserving phase conjugations leave GE invariant.
+Moreover JS = h − S(Z|B) in a binary classical–quantum state. Winter’s conditional-entropy
+continuity bound [2, Lemma 2], with the ﬁnite system Z, gives a modulus in the trace distance
+of τ independent of ρ. The same modulus therefore controls GE .
+                                                     P −1 k        −k
+    For UN = exp(2πiH/N ), the cyclic twirls N −1 N     k=0 UN τ UN converge in trace norm to
+energy dephasing Dτ . Indeed, on any ﬁxed cutoﬀ with indices below N the twirl is exactly
+dephasing, and truncation controls the remaining trace norm by contractivity. Convexity,
+covariance and the stated continuity give GE (Dτ ) ≤ GE (τ ). This is a statement about the
+optimized GE , not about F at a ﬁxed input.
+    For diagonal τ , dephasing ρ increases both entropy terms in (4), so it cannot decrease F .
+Hence the diagonal inﬁmum of GE is exactly (5). Taking inﬁma in (8) proves (6).
+
+
+3    Explicit ﬁxed-ratio limits
+                    Rz a−1 (1 − u)b−1 du, B = B , and let ψ denote digamma. Introduce
+Write Bz (a, b) =   0 u                        1
+
+             q                                                  ψ(s∗ + 3/2) − ψ(s∗ + 1)
+     s∗ =      ,         A(s) = ψ(s + 3/2) − ψ(s),       c∗ =                           ∈ (0, 1).   (9)
+            2λ                                                           A(s∗ )
+The parameter c∗ is the junction of the explicit families below. We do not claim uniqueness of
+all asymptotically optimizing reset sequences.
+
+                                                     3
+
+
+
+Theorem 3.1 (The loss curve). For each ﬁxed c > 0, ∆(E, cE) has a limit Dλ (c). It is given
+by the following formulas.
+    For 0 < c ≤ c∗ , choose 0 < s ≤ s∗ satisfying
+                                                              
+                                            2λ     1
+                                         c=    s−      .                                             (10)
+                                             q    A(s)
+
+Such a choice exists. Then
+                                                          A(s)
+                                      Dλ (c) = 2λ log2             .                                 (11)
+                                                         B(s, 3/2)
+   For c∗ < c < 1, choose q < z < 1 and s > 0 satisfying
+
+                                         Bz (s + 1, 1/2)     q
+                                                          = ,                                        (12)
+                                           Bz (s, 3/2)       λ
+                                                         ln z − ∂s ln Bz (s + 1, 1/2)
+                 b = ln z − ∂s ln Bz (s, 3/2),      c=                                .              (13)
+                                                                       b
+These choices also exist, and
+
+                           2λ − 2λ ln[Bz (s, 3/2)/b] − (q − 2λs) ln z − b(2λs − qc)
+                Dλ (c) =                                                            .                (14)
+                                                      ln 2
+Every permitted choice gives the same value. The two formulas agree at c∗ . For c ≥ 1,
+
+                                            Dλ (c) = h2 (λ).                                         (15)
+
+3.1   The proﬁles and parameter coverage
+For the diﬀuse branch put
+
+              λbz s                  C −sbx p                              C ze−(s+1)bx
+      C=               ,   f (x) =     e      1 − ze−bx ,    tcont (x) =    √           ,   x > 0.
+           Bz (s, 3/2)               λ                                     q 1 − ze−bx
+
+The substitution u = ze−bx shows that f has mass one and mean one. Equations (12)–(13)
+make tcont have mass one and mean c. For the atomic branch set z = 1 and b = A(s). The
+same calculation gives mass 2λs/q and ﬁrst moment c for tcont . Add the atom
+
+                                                                       2λs
+                           t = wδ0 + tcont (x) dx,        w =1−            ≥ 0.                      (16)
+                                                                        q
+Below the junction a constructed optimizing sequence therefore has a nonzero limiting atom.
+                                                        √
+Near zero the continuous proﬁles behave as f (x) ≍ x and tcont (x) ≍ x−1/2 ; both have ﬁnite
+ﬁrst moments and exponentially decaying tails.
+    For completeness, the parameter choices cover their stated domains. On the atomic branch,
+A(s) > 1/s by the digamma recurrence and monotonicity, so the right side of (10) is positive
+and continuous. As s ↓ 0 it tends to zero; at s∗ it is c∗ . The intermediate value theorem suﬃces
+for existence.
+    For ﬁxed q < z < 1, the ratio in (12) is the expectation of u/(1 − u) under the density
+proportional to us−1 (1−u)1/2 on (0, z). It increases strictly with s, from zero to z/(1−z) > q/λ.
+Thus s(z) is unique and continuous. At z = 1, the complete beta identity gives s = s∗ . As
+z ↓ q, s → ∞. Writing u = ze−y , both relevant densities concentrate at y = 0 on scale 1/s.
+Their mean y is s−1 (1 + o(1)), uniformly for z near the ﬁxed q ∈ (0, 1); therefore the ratio in
+(13) tends to one. Continuity now covers every c ∈ (c∗ , 1). This coverage argument does not
+require a prior assertion of global monotonicity of the parametrization.
+
+
+                                                     4
+
+
+
+3.2    Positive discrete certiﬁcates
+We prove the limit by constructing normalized distributions with global gradient bounds. This
+also avoids using a diﬀerential entropy of an atomic reset.
+Lemma 3.2 (Discrete normalization and limits). Fix one of the parameter triples (s, b, z)
+above. For L > 0, xj = j/L and δ > 0 set
+                                         q
+                                 −sbxj                                     e−sbxj e−δ−bxj
+                        uj = e               1 − e−δ−bxj ,            vj = √              .
+                                                                             1 − e−δ−bxj
+                                                P          P                              P
+There is a unique δL > 0 with (λ/q)               j vj /       j uj   = 1. Put ZL =           j uj , pL = u/ZL and
+tL = (λ/q)v/ZL . Then
+
+                                                ZL            z −s Bz (s, 3/2)
+                            δL → − ln z,             → Ip :=                   ,                              (17)
+                                                 L                    b
+                                         µ(pL )           µ(tL )
+                                                → 1,             → c,                                         (18)
+                                           L                L
+               P
+where µ(p) =     j jpj . At z = 1, tL (0) → w from (16) and pL (0) → 0.
+
+Proof. The normalization ratio is strictly decreasing and continuous in δ: its numerator de-
+creases and its denominator increases. The j = 0 term forces it to inﬁnity as δ ↓ 0; it tends
+to zero as δ → ∞. All sums converge exponentially. For z < 1, ordinary Riemann sums,
+locally uniform for δ away from zero, identify the unique positive limiting root − ln z and prove
+(17)–(18).
+    When z = 1, the limiting ratio at any positive δ is strictly below its value 2λs/q ≤ 1 at zero.
+Consequently δL → 0. Excluding j = 0, the singular summands obey vj /L ≤ C0 L−1/2 j −1/2 for
+                                                                                  √
+j/L ≤ 1, uniformly in δ ≥ 0. The sum over 1 ≤ j ≤ aL is therefore at most C1 a. On compact
+intervals away from zero there is ordinary uniform Riemann convergence, and exponential tails
+control inﬁnity and ﬁrst moments. This proves convergence of the nonzero-level mass and
+moments to the corresponding integrals. √ Normalization supplies the remaining atom w. The
+u sum has the regular near-zero bound δ + bx and a nonzero limiting integral; its j = 0 term
+divided by L vanishes. These observations prove all the assertions.
+
+Lemma 3.3 (Global entropy inequalities). For the distributions of Lemma 3.2, let m = λpL +
+qtL . They satisfy
+                              λ                 tj     1
+                      pj mj = 2 e−2sbj/L ,          = e−δL −bj/L .
+                              ZL                mj     q
+For any ﬁnite-mean probabilities p′ , t′ ,
+                                                       2λsb
+                           Φ(p′ , tL ) ≤ Φ(pL , tL ) +        [µ(p′ ) − µ(pL )],                              (19)
+                                                       L ln 2
+                                                        qb
+                           Φ(pL , t′ ) ≥ Φ(pL , tL ) −        [µ(t′ ) − µ(tL )].                              (20)
+                                                       L ln 2
+Moreover                                                                             
+                                                        µ(pL )    µ(tL )
+                   (ln 2)Φ(pL , tL ) = 2λ ln ZL + b 2λs        −q                         − qδL .             (21)
+                                                          L         L
+Proof. The ﬁrst identities are direct substitutions. The input gradient of Φ is a constant plus
+2λsbj/(L ln 2); its reset gradient is a constant minus qbj/(L ln 2). The global input remainder
+is
+                               −λD(p′ ∥pL ) − D(λp′ + qtL ∥m) ≤ 0.
+The reset remainder is qD(t′ ∥tL ) − D(λpL + qt′ ∥m) ≥ 0 by joint convexity of relative entropy.
+The exponentially decaying, full-support reference distributions make these relative entropies
+
+                                                           5
+
+
+
+ﬁnite for ﬁnite-mean competitors. These identities prove (19)–(20), rather than merely testing
+stationarity. Finally expand the objective as
+                                 X                        X
+                  (ln 2)Φ = −λ        pj ln(pj mj ) + q       tj ln(tj /mj ) − (ln 2)h.
+                                 j                        j
+
+Substitution cancels the binary constants and gives (21).
+
+Proof of Theorem 3.1. First take 0 < c < 1 and ﬁx 0 < η < 1. Construct Lemma 3.2’s
+distributions with L = (1 − η)E. By (18) they satisfy the energy bounds E, cE eventually.
+Thus (19)–(20) give
+                                                   2λsb
+                         V (E, cE) ≤ Φ(pL , tL ) +        [E − µ(pL )],
+                                                   L ln 2
+                                                    qb
+                         V (E, cE) ≥ Φ(pL , tL ) −        [cE − µ(tL )].
+                                                   L ln 2
+These are feasible primal and global dual inequalities, with the original order of inﬁmum and
+supremum. The normalized means tend to 1, c; therefore both errors have limiting size O(η/(1−
+η)). From (21),
+                                      2λ ln[Bz (s, 3/2)/b] + (q − 2λs) ln z + b(2λs − qc)
+         Φ(pL , tL ) − 2λ log2 L −→                                                       .
+                                                              ln 2
+Take E → ∞ ﬁrst and then η ↓ 0. The extra term 2λ log2 (1 − η) vanishes, proving the game’s
+limit. At z = 1, (10) gives b(2λs − qc) = 2λ, yielding (11). Any permitted parameter choice
+squeezes the same V , so its value is unambiguous. Theorem 2.1 and g(E) = log2 E+1/ ln 2+o(1)
+transfer the limit to ∆.
+   To obtain one feasible asymptotically optimizing sequence, choose ηn ↓ 0 and increasing
+thresholds En such that feasibility and the displayed bounds for ηn hold with remaining con-
+vergence errors below 1/n whenever E ≥ En . On En ≤ E < En+1 use L = (1 − ηn )E. Include
+the proﬁle and moment convergences in this diagonal choice. The two global gaps then tend to
+zero, L/E → 1, and the rescaled reset has the announced limiting atom or diﬀuse proﬁle. An
+arbitrary unquantiﬁed choice of a rapidly decreasing η(E) is unnecessary.
+    For c ≥ 1, the game’s exact saddle is p = t = γE . For ﬁxed t = γE , every admissible p
+and its mixture λp + qγE have mean at most E. The Gibbs entropy bounds therefore give
+Φ(p, γE ) ≤ 2λg(E) − h. Conversely, Φ(γE , t) ≥ 2λg(E) − h for every t by concavity. Hence
+V (E, cE) = 2λg(E) − h and (6) proves (15). Alternatively, the thermal reset gives the sharper
+previously checked interval h − h2 (q/(E + 1)) ≤ ∆(E, cE) ≤ h for E ≥ 1.
+
+
+4    Consequences and scope
+The minimax curve is nondecreasing and concave in c. To see this directly, GE is convex in
+its reset argument, so its constrained inﬁmum V (E, M ) is convex and nonincreasing in M .
+Therefore 2λg(E) − V (E, cE) is concave and nondecreasing; its ﬁnite pointwise limit has the
+same properties and is continuous on (0, ∞). It follows by monotonicity that M (E)/E → c > 0
+gives the same loss Dλ (c).
+Corollary 4.1 (Growing-budget uniformity). For every ﬁnite nonnegative budget function
+M (E),
+                      ∆(E, M (E)) → 0 ⇐⇒ M (E) = o(E).
+Proof. For suﬃciency extend the entropy-preserving escape of [6]. Set
+                                           q                    
+                                      K=        E max{M, 1} .
+
+
+                                                  6
+
+
+
+When M = o(E), both K/E and M/K tend to zero and K < E eventually. The geometric
+state shifted by K has energy E and entropy g(E − K). A membership measurement of its
+support detects the reset branch outside that support; inside, the total reset weight is at most
+δ = q min{1, M/K}. The binary-branch bound gives
+                                                                                  
+                                                                              δ
+                0 ≤ ∆(E, M ) ≤ 2λ[g(E) − g(E − K)] + (λ + δ)h2                         → 0.
+                                                                             λ+δ
+For necessity, A(s) > 1/s > B(s, 3/2), so (11) is strictly positive at every ratio on its atomic
+branch. Monotonicity makes Dλ (c) > 0 for every c > 0. If M/E fails to tend to zero, some
+subsequence has M/E ≥ c > 0, and ∆(E, M ) ≥ ∆(E, cE) → Dλ (c) > 0 there.
+
+    The suﬃciency is a parameter extension of the prior escape mechanism. The ﬁxed-positive-
+ratio curve adds the value and explicit nonthermal adversarial proﬁles. A ﬁxed-ratio limit
+followed by c ↓ 0 must not be mistaken for a uniform two-parameter expansion for every
+vanishing M (E)/E.
+    The atomic family is a statement about reset states with diagonal probabilities tL (j) under
+rescaling j/E. Its limiting atom does not mean the ﬁnite-state model contains an extra classical
+erasure ﬂag. Nor does the construction establish uniqueness of every optimizing noise family,
+or an order of physical phase transition. The continuum proﬁles are a means to construct
+certiﬁed discrete distributions, not a replacement of the quantum operational model by an
+assumed Gaussian approximation.
+    Only entanglement-assisted classical capacity is studied here. The single-letter converse
+cannot simply be copied to regularized classical, private or quantum capacities. No eﬃcient
+encoding implementation, strong converse, or channel-independent universal code is supplied.
+The estimates ﬁx λ away from its endpoints in the sense that it does not vary with E.
+
+
+5    Strict thermal separation and endpoint laws
+We now use Theorem 3.1 and its feasible discrete certiﬁcates; no further existence hypothesis
+is introduced in this section. Put α = sb, β = b, and write t∗ = tcont (x)dx + wδ0 for its certiﬁed
+proﬁle. In this section alone, relative entropies and the functional Ψ use natural logarithms.
+With µ = dx + δ0 , deﬁne
+                                   Z
+                      Hµ (a) = −       a ln a dµ,       hn (λ) = −λ ln λ − q ln q,
+
+                     Ψ(f, t∗ ) = λHµ (f ) + Hµ (λf + qt∗ ) − qHµ (t∗ ) − hn (λ).
+The reference measure retains the atom explicitly. Theorem 3.1 and Lemma 3.2 give
+
+                             K(E, cE) − 2λ log2 E −→ Ψ(f, t∗ )/ ln 2.
+
+Their inputs pL , with L = (1 − η)E for ﬁxed 0 < η < 1, are feasible eventually; ZL /L →
+Ip > 0 and δL → − ln z. Lemma 2.2 supplies the capacity lower bound by the discrete entropy
+functional.
+
+Strict suboptimality of the thermal adversary.                 For every ﬁxed 0 < c < 1,
+                                                                     Rλ,c
+                        lim inf [CEA (RγcE , E) − K(E, cE)] ≥             > 0,                (S1)
+                        E→∞                                          ln 2
+
+where, with uc (x) = c−1 e−x/c ,
+
+                           Rλ,c = qD(uc ∥t∗ ) − D(λf + quc ∥λf + qt∗ ).                       (S2)
+
+                                                    7
+
+
+
+Relative entropies in (S2) are those of probability measures.
+   Proof. Let m∗ = λf + qt∗ and mu = λf + quc . The derivative of Ψ with respect to the reset
+on x > 0 is
+                                      t(x)
+                                q ln        = q(ln z − ln q − βx).                       (S3)
+                                     m∗ (x)
+At the atom the functional is −qw ln q, with derivative −q ln q. This equals the value of (S3)
+at zero when z = 1. When z < 1, both resets being compared have zero atomic mass. The
+aﬃne ﬁrst variation therefore vanishes, since uc , t∗ have equal mass and mean. The entropy
+Bregman identity gives
+                                   Ψ(f, uc ) − Ψ(f, t∗ ) = Rλ,c .                             (S4)
+                                                                    √
+All terms are ﬁnite: the only endpoint singularities are f (x) = O( x), t(x) = O(x−1/2 ) when
+z = 1, and the tails are exponential.
+    Apply the chain rule for relative entropy to the binary-labelled laws (λf, quc ) and (λf, qt∗ ).
+Writing Dbin for binary relative entropy, it gives
+                                  Z                                  
+                                                        λf (x)   λf (x)
+                         Rλ,c =       mu (x) Dbin                       dµ(x).                  (S5)
+                                                        mu (x)   m∗ (x)
+
+The atomic contribution is zero. For x > 0, f (x) > 0; equality in the integrand holds exactly
+when uc (x) = t(x). These densities cannot agree almost everywhere, because
+
+                                   d2              β 2 ze−βx
+                                      ln t(x) =                > 0,                             (S6)
+                                  dx2           2(1 − ze−βx )2
+
+whereas ln uc is aﬃne. Thus (S5) is strictly positive, including at the junction with z = 1, w = 0.
+    For ﬁxed 0 < η < 1, use Lemma 3.2 against γcE . The scaled laws are bounded above by
+ﬁxed exponential envelopes. On compact subsets of (0, ∞) they converge uniformly. Near zero,
+their scaled densities and hence |a ln a| are bounded; the contribution from [0, r] is O(r + L−1 ).
+Their entropy tails are bounded by an integrable exponential. These observations prove the
+required entropy Riemann limits, including the mixture. Consequently the discrete capacity
+lower bound, minus 2λ log2 E, converges to Ψ(fη , uc )/ ln 2, where fη (y) = (1 − η)−1 f (y/(1 − η)).
+Equivalently, in x = j/L coordinates the limit in nats is 2λ ln(1−η)+Ψ(f, uc/(1−η) ). Dominated
+convergence then gives Ψ(fη , uc ) → Ψ(f, uc ) as η ↓ 0. Combining Theorem 3.1, the capacity
+lower bound, and (S4), ﬁrst taking E → ∞ and then η ↓ 0, proves (S1). □
+
+Endpoint consequences of the certiﬁed branches. Deﬁne the limiting deﬁcit in bits by
+
+                                                  2λ − Ψ(f, t∗ )
+                                       Dλ (c) =                  .
+                                                      ln 2
+Theorem 3.1 identiﬁes the value of the normalized branches, including the atomic parametriza-
+tion
+             A(s) = ψ(s + 3/2) − ψ(s), β = A(s), α = sβ, z = 1,
+                 
+       2λ      1               2λs                     A(s)             q                       (S7)
+    c=    s−        , w =1−        , Dλ (c) = 2λ log2           , 0<s≤    .
+        q    A(s)               q                     B(s, 3/2)        2λ
+
+Here B is the beta function and ψ is the digamma function. Then, for ﬁxed λ, with a0 =
+2 − 2 ln 2,                        √
+                                  2 2λqa0 √
+                         Dλ (c) =            c + Oλ (c),
+                                    lns2
+                                                                                   (S8)
+                                         2λ √
+                          w(c) = 1 −          c + Oλ (c), c ↓ 0.
+                                        qa0
+
+                                                        8
+
+
+
+λq
+                       Dλ (c) = h2 (λ) −   (1 − c)2 + Oλ ((1 − c)3 ), c ↑ 1.               (S9)
+                                    2 ln 2
+The w in (S8) is the atom of this constructed branch; uniqueness of all optimizing reset limits
+is not asserted.
+    Proof of (S8). The expansions at s = 0 are
+                      A(s) = s−1 + a0 + O(s),           B(s, 3/2) = s−1 − a0 + O(s).
+It follows that c = (2λa0 /q)s2 + O(s3 ) and ln(A/B)p= 2a0 s + O(s2 ). The derivative of c(s)
+is positive for all suﬃciently small positive s, so s = qc/(2λa0 ) + O(c). Substitution in (S7)
+proves both formulas. □
+    Proof of (S9), including one-sided regularity. Put ϵ = 1 − c, δ = − ln z, and deﬁne on β ≥ 0
+            p                                                     Z            Z             Z              Z
+      −αx                           e−αx e−δ−βx
+u=e             1 − e−δ−βx ,      v=√            ,         U=         u, V =       v, U1 =       xu, V1 =        xv.
+                                      1 − e−δ−βx
+The normalization and mean equations are
+                     T (α, β, δ) = (ln(λ/q) + ln(V /U ), U1 /U, V1 /V ) = (0, 1, 1 − ϵ).                        (S10)
+At (α, β, δ) = (1, 0, − ln q) the normalized densities f = u/U , t = v/V both equal g(x) = e−x .
+    For α ≥ 1/2, δ ≥ − 21 ln q > 0, β ≥ 0 near this point, parameter derivatives of the moment
+integrands of any ﬁxed order k are dominated by Ck (1 + x)k+1 e−x/2 . Thus T is jointly C 3 up
+to β = 0, with smooth boundary coeﬃcients in α, δ. For negative β, extend T auxiliarily by its
+third-degree Taylor polynomial in β at zero, retaining the physical expression for β ≥ 0. This
+is a C 3 extension of the moments; no physical integrand is evaluated at negative β.
+    The Jacobian at the base point is
+                                                           
+                           0     −1/λ      −1/λ
+                                               
+                     J = −1    q/(2λ)      0 ,                       det J = −1/λ2 ̸= 0.
+                          −1 −(1 + λ)/(2λ)  0
+
+The implicit function theorem applied to the extension yields a C 3 local solution with
+                               α′ (0) = q/2,       β ′ (0) = λ,       δ ′ (0) = −λ.
+Since β ′ (0) > 0, the solution has β > 0, δ > 0 for suﬃciently small positive ϵ. Also q < z < 1;
+it is therefore a physical diﬀuse branch of the certiﬁed proﬁles. The entropy integrands on
+this branch have three dominated parameter derivatives as well, so its value has a third-order
+Taylor remainder bounded by O(ϵ3 ).
+    Along the branch the ﬁrst density variations are
+                                        f ′ = 0,       t′ = g(1 − x).
+At the base point the ﬁrst gradients of Ψ in f, t are 2λ(x − 1) and zero respectively. Terms
+involving f ′′ vanish because the input mass and mean remain ﬁxed. Therefore
+                                                                            Z ∞
+     Ψ(0) = 2λ − hn (λ),           Ψ′ (0) = 0,       Ψ′′ (0) = (−q 2 + q)          g(x)(1 − x)2 dx = λq.
+                                                                               0
+
+Dividing 2λ − Ψ by ln 2 proves (S9). □
+
+Scope of the limits. All constants above may depend on the ﬁxed λ, and the positive gap
+in (S1) may depend on the ﬁxed c. The endpoint expansions concern the function obtained
+after E → ∞ at ﬁxed c; they do not provide a joint rate for arbitrary c = c(E). These
+are entanglement-assisted capacity statements. They do not imply analogous assertions for
+regularized classical, private, or quantum capacities, or a universal coding theorem for an
+unknown reset.
+
+                                                       9
+
+
+
+6    Finite checks and research record
+The original computational packet is pinned at reset-minimax-lab, commit093f9d3. Its default
+replay evaluates positive stationary distributions on 0 ≤ j ≤ 40E for λ = 0.6, seven ratios and
+E ∈ {8, 32, 128, 512}. In addition to normalization and energy residuals, independent linear
+programs test both full-simplex gradient best responses. Their largest absolute gap is 4.2 ×
+10−11 . A separate internal audit reproduced all 28 cases and checked explicit aﬃne dual bounds.
+The public replay also passed all 28 cases on Windows and Linux (workﬂow40065903227).
+Floating-point residuals are not interval certiﬁcates.
+
+                     Ratio c   Finite-game deﬁcit, E = 512      Reset probability t0
+                       0.05                         0.3430864             0.4770125
+                       0.10                         0.4785035             0.2067461
+             c∗ ≃ 0.1282375                         0.5383946             0.0866700
+                       0.20                         0.6594503             0.0161982
+                       0.50                         0.8966350             0.0041339
+                       0.80                         0.9625525             0.0024542
+                       0.99                         0.9709332             0.0019690
+
+The deﬁcit column is 2λg(E) − Φ for a ﬁnite entropy game. It is not an exact quantum capacity
+or an interval enclosure of the inﬁnite game. The initial solver falsely reported convergence at
+(E, c) = (8, 0.05); the energy residual rejected it. That execution and its output are preserved,
+and a ﬁxed bounded multistart policy resolves the ﬁnite case. The continuous limit is justiﬁed
+by the analytical certiﬁcates, not by extrapolating this table.
+
+Assistance and review disclosure. This research draft was developed with AI assistance
+for algebra, proof exploration, source retrieval, code and internal mathematical checks. The
+internal checks are not human peer review or formal proof veriﬁcation. Assessments, if pub-
+lished, are separate reports tied to an exact artifact. Bibliographic searches are targeted and
+nonexhaustive; no claim to have audited every frontier manuscript is made. Any public version
+must identify its exact artifact and the scope of completed reviews.
+
+
+References
+ [1] A. S. Holevo and M. E. Shirokov, On classical capacities of inﬁnite-dimensional
+     quantum channels, Problems of Information Transmission 49, 15–31 (2013). Preprint:
+     arXiv:1210.6926v2.
+
+ [2] A. Winter, Tight uniform continuity bounds for quantum entropies: conditional en-
+     tropy, relative entropy distance and energy constraints, Communications in Mathematical
+     Physics 347, 291–313 (2016). arXiv:1507.07775v6.
+
+ [3] C. H. Bennett, P. W. Shor, J. A. Smolin, B. M. Terhal and A. V. Thapliyal, Entanglement-
+     assisted classical capacity of noisy quantum channels, arXiv:quant-ph/9904023v1 (1999).
+     The cited equation and author list refer speciﬁcally to version1.
+
+ [4] G. Catalano, M. Fanizza, F. A. Mele, G. De Palma and V. Giovannetti, Convex combina-
+     tions of bosonic pure-loss channels, arXiv:2604.26874v2 (2026).
+
+ [5] S. N. Diggavi and T. M. Cover, The worst additive noise under a covariance constraint,
+     IEEE Transactions on Information Theory 47(7), 3072–3081 (2001). Author-hosted pri-
+     mary text.
+
+                                               10
+
+
+
+[6] L. Eriksson, Constant-gap entanglement distillation and a spectral criterion for noise-
+    universal communication, AIRR Working Paper ARR-2026-58XZ9SCZA39DSRF0, ver-
+    sion1 (18 October 2026).
+
+[7] M. M. Wolf, G. Giedke and J. I. Cirac, Extremality of Gaussian quantum states, Physical
+    Review Letters 96, 080502 (2006). arXiv:quant-ph/0509154v1.
+
+[8] L. Lami, M. B. Plenio, V. Giovannetti and A. S. Holevo, Bosonic quantum communi-
+    cation across arbitrarily high loss channels, Physical Review Letters 125, 110504 (2020).
+    arXiv:2003.08895v2.
+
+
+
+
+                                            11

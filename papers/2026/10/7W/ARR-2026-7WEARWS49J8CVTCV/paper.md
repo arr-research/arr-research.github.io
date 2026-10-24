@@ -1,0 +1,803 @@
+# Constructing rational Lyapunov certificates for planar homogeneous fields
+
+> Machine-readable rendition extracted from the hash-identified canonical PDF. Mathematical typography may be degraded; cite and verify against `paper.pdf`.
+
+## Page 1
+
+```text
+Constructing rational Lyapunov certiﬁcates
+                       for planar homogeneous ﬁelds
+                                           Lluis Eriksson
+
+                                          24 October 2026
+                     Research draft 2; revised bounds and attributed lower scale
+
+
+
+                                              Abstract
+          For each ﬁxed odd degree d, we give a deterministic construction of strict rational Lya-
+      punov functions for globally asymptotically stable planar homogeneous polynomial vector
+      ﬁelds with rational coeﬃcients. If B is the dense binary input length, both the construction
+      time and the total dense output length are at most 2Cd (B+1) , for an eﬀectively computable
+      constant Cd . The output has the form P/(x2 + y 2 )r , where P is positive homogeneous of
+      degree 2r + 2; it extends continuously diﬀerentiably to the origin. The argument covers
+      nonvanishing angular velocity, angular sign changes, and angular zeros of arbitrary multi-
+      plicity. Its main ingredients are a uniform algebraic height bound for the rotational mean,
+      a mean-zero angular correction using normalized nonnegative trigonometric powers, and a
+      ﬁnite-power conversion that avoids directly approximating an exponentially large integrat-
+      ing factor. Rational converse theorems and planar stability decision are prior results. The
+      contribution is a joint coeﬃcient-dependent degree, encoding, and construction bound in
+      dimension two. An attributed consequence of a prior Fourier bound shows that exponential
+      dense output is unavoidable already for cubic ﬁelds. No general software implementation,
+      sharp constant, polynomial-certiﬁcate theorem, or higher-dimensional conclusion is asserted.
+
+
+1    The quantitative certiﬁcate question
+Consider
+                     ż = X(z),       z = (x, y),       X = (X1 , X2 ) ∈ Q[x, y]2 ,
+where both components are homogeneous of a ﬁxed odd degree d ≥ 1. Global asymptotic
+stability (GAS) means Lyapunov stability of the origin together with forward completeness and
+convergence to the origin for every initial state.
+    Ahmadi and El Khadir proved that a GAS homogeneous polynomial vector ﬁeld admits a
+rational Lyapunov function with a power of the squared Euclidean norm as denominator [1,
+Theorem 3.1]. They also asked for bounds depending on the vector-ﬁeld coeﬃcients [1, Section
+7]. The existence statement is therefore not new. In the plane, angular dynamics give stability
+criteria and decidability; the recent treatment of Korda explicitly separates this planar situation
+from higher-dimensional undecidability [2, 3].
+    The question addressed here is quantitative: how large a rationally encoded certiﬁcate
+need one construct from a rational planar input? An existence theorem alone supplies neither
+coeﬃcient-height bounds nor an algorithm with a stated running time. A search over certiﬁcates
+with an unspeciﬁed degree does not supply those bounds either.
+
+
+                                                    1
+```
+
+---
+
+## Page 2
+
+```text
+We use dense binary encoding. The input length B counts signed numerators, positive
+denominators, all Cartesian coeﬃcient positions, and ﬁnite framing. The output length counts
+every rational coeﬃcient of the expanded numerator and denominator. Redundant storage
+of a common denominator is allowed and counted. For ﬁxed d, changing ordinary framing
+conventions changes constants only. Running time is bit complexity on a deterministic Turing
+machine, using elementary integer arithmetic if desired.
+
+Theorem 1 (Quantitative planar rational certiﬁcates). For every odd d ≥ 1, there is an eﬀec-
+tively computable constant Cd and a deterministic algorithm with the following property. Given
+a homogeneous X ∈ Q[x, y]2 of degree d and dense input length B, the algorithm decides GAS.
+If the answer is positive, it constructs
+
+                           P (x, y)
+              V (x, y) =            ,   ρ = x2 + y 2 ,   r ∈ Z≥0 ,   deg P = 2r + 2,       (1)
+                              ρr
+
+with rational homogeneous P > 0 oﬀ the origin, such that LX V < 0 there. Set V (0) = 0. Then
+V is proper and C 1 on R2 . The degrees, total dense rational output length, and running time
+are all at most
+                                          2Cd (B+1) .
+
+    The dependence on d may be an arbitrarily large computable function. In particular, this
+is not a polynomial-time statement jointly in d, B, and the proof does not provide a practical
+numerical value of Cd . It does provide an eﬀective procedure for obtaining such a value from
+ﬁnite real-algebraic elimination data.
+    The distinction between polynomial and rational certiﬁcates is essential. Liu and Fitzsim-
+mons give a GAS planar homogeneous cubic with no real-analytic Lyapunov function, hence
+no polynomial Lyapunov function, while exhibiting an explicit rational one [4]. Our theorem
+supplies a bound within the rational class and does not settle the polynomial degree questions
+discussed by Ahmadi and Parrilo [5, Section 6]. Implicit algebraic Lyapunov functions, such as
+those studied by Abdelraouf, Feron and Shamma [6], form another class; the present output is
+an explicit rational quotient.
+
+Proof structure. Section 2 reduces the problem to an angular inequality. Section 3 establishes
+eﬀective separation from zero for the quantities used in the construction. Sections 4 and 5
+construct a rational trigonometric polynomial v of mean zero satisfying F + Gv < 0. Section 6
+turns its primitive into (1). Section 7 accounts for computation, expansion and veriﬁcation.
+
+
+2    Polar reduction and the certiﬁcate target
+Write x = R cos θ, y = R sin θ, with R > 0, and put ϕ = 2θ. Deﬁne
+
+                              A = xX1 + yX2 ,        C = xX2 − yX1 .
+
+On the unit circle set F = A|R=1 , G = C|R=1 , regarding both as functions of ϕ. Because d + 1
+is even, they are real trigonometric polynomials of degree at most
+
+                                         nd = (d + 1)/2
+
+
+
+                                                 2
+```
+
+---
+
+## Page 3
+
+```text
+in ϕ, with rational real and imaginary Fourier parts. Their coeﬃcient lengths are Od (B + 1).
+The polar equations are
+
+                     Ṙ = Rd F (ϕ),      θ̇ = Rd−1 G(ϕ),        ϕ̇ = 2Rd−1 G(ϕ).              (2)
+
+Every ﬁxed number of derivatives of F, G has norm 2Od (B+1) .
+   For a 2π-periodic function h, write
+                                                  Z 2π
+                                              1
+                                       hhi =             h(ϕ) dϕ.
+                                             2π    0
+
+If p > 0 is smooth and periodic, then V = R2 p(ϕ) satisﬁes
+                                                                    
+                                      LX V = 2Rd+1 F p + Gp0 .                                (3)
+
+Here and throughout, primes are derivatives with respect to ϕ.
+   We use the following necessary stability conditions. If G has no zero, a reﬂection, if needed,
+makes G > 0. Integrating d log R/dθ = F/G over a turn shows that GAS requires
+
+                                         a = − hF/Gi > 0.                                     (4)
+
+A nonnegative integral gives a noncontracting turn or a periodic orbit. If G has a zero, the
+corresponding ray is invariant. GAS then requires
+
+                                        F <0      on {G = 0}.                                 (5)
+
+If F = 0 there, a nonzero equilibrium lies on the ray; if F > 0, the radial trajectory fails to
+converge to zero. These conditions, and their suﬃciency, are classical in planar homogeneous
+stability; compare [3, Corollary 21.2]. Below we prove suﬃciency again by actually constructing
+a strict proper certiﬁcate. Thus the proof needs no unproved converse stability criterion.
+    Our intermediate target is a rational real trigonometric polynomial v and rational δ > 0 such
+that
+                            hvi = 0,     F + Gv ≤ −δ on the circle.                            (6)
+We shall ensure that the degree, norm, total coeﬃcient encoding, and δ −1 are 2Od (B+1) . The
+norm bound, in addition to an encoding bound, is important for the later conversion.
+
+
+3    Uniform algebraic separation
+We use eﬀective quantiﬁer elimination over the real numbers in ﬁxed formula size; see, for
+example, [7, Theorem 2.18]. The elementary consequence needed here is recorded with its
+uniformity requirement.
+
+Lemma 2 (Height of a single-valued semialgebraic quantity). Fix a ﬁrst-order formula over
+Q, with rational input parameters c, whose output ﬁber in the real variable u, on its domain,
+is a singleton. If the input parameters have total length at most B, every positive ﬁnite output
+satisﬁes
+                                    2−K(B+1) ≤ u ≤ 2K(B+1)
+for an eﬀectively computable constant K depending only on the formula.
+
+                                                   3
+```
+
+---
+
+## Page 4
+
+```text
+Proof. Eliminate quantiﬁers once, with c, u free, and clear the ﬁxed rational denominators of the
+resulting polynomial atoms. After substituting the rational tuple c and clearing its denominators,
+every nonzero univariate integer atom has degree at most a ﬁxed D and coeﬃcient magnitude
+at most H = 2K0 (B+1) .
+    Some such nonzero atom must vanish at the singleton output u. Otherwise all nonzero atoms
+have locally constant signs near u; atoms specialized to the zero polynomial are constant as well.
+The Boolean formula would then be constant on a neighborhood of u, contradicting its singleton
+ﬁber. This argument explicitly allows specialized atoms that vanish identically.
+    The Cauchy bound gives |u| ≤ 1 + H. Strip a power of the variable from the vanishing atom.
+If 0 < u < 1, its remaining constant coeﬃcient is a nonzero integer and hence
+                                            X
+                                            D
+                                     1≤           |aj |uj ≤ DHu.
+                                            j=1
+
+Increasing K proves both assertions. The elimination procedure and the coeﬃcient bounds are
+eﬀective.
+
+    Minima of ﬁxed-degree rational trigonometric polynomials have ﬁxed-size semialgebraic
+graphs: describe the unit circle by two real coordinates, assert a lower bound at every cir-
+cle point, and assert equality at one point. The same observation applies to a positive minimum,
+its reciprocal, and to sign tests.
+    A less immediate quantity is the rotating mean. Merely observing that this mean is algebraic
+for each input would not give Lemma 2; a uniform graph is required.
+Lemma 3 (Uniform graph for the rotating mean). For ﬁxed d, on the domain where C is strictly
+positive on the unit circle, the map
+                                      X 7−→ hF/Gi
+has an eﬀectively constructible, single-valued ﬁrst-order graph over Q, of size depending only on
+d.
+Proof. Put
+                                                      A(1, t)
+                                     H(t) =                        .
+                                                  (1 + t2 )C(1, t)
+Since C(0, 1) > 0, C(1, t) has exact degree d + 1; it has no real root. Therefore H has no real
+pole and is O(t−2 ) at inﬁnity. The substitution t = tan θ, using the π-periodicity in θ, followed
+by the residue theorem gives
+                                        Z                      X
+                                    1
+                            hF/Gi =           H(t) dt = 2i             Resz H.                 (7)
+                                    π     R                   Im z>0
+
+This is the residue normalization used in [3, Theorem 20.3]. In particular, the factor π cancels
+before any real-algebraic formula is formed.
+    The denominator has degree d + 3. Enumerate its ﬁnitely many patterns of distinct complex
+roots and their positive multiplicities. In each pattern, root real and imaginary parts, coeﬃcient
+factorization identities, pairwise distinction, and signs of imaginary parts are ﬁrst-order real
+conditions over Q. If z has multiplicity k in the unreduced denominator, its residue is
+
+                                  1     dk−1                
+                                              (t − z)k H(t)       .
+                               (k − 1)! dtk−1
+                                                              t=z
+
+
+                                                     4
+```
+
+---
+
+## Page 5
+
+```text
+After cancellation of the speciﬁed root factor, all denominator factors evaluated here are nonzero.
+These rational operations can be expressed with auxiliary product equations and nonzero-
+denominator conditions. The expression is valid also for a removable pole, whose residue is
+zero. Derivative orders and degrees depend only on d.
+    Take real and imaginary parts, sum residues in the upper half-plane, and quantify the aux-
+iliary variables. The ﬁnite disjunction over patterns gives the required graph. Relabeling roots
+does not change the sum; hence the output ﬁber is a singleton, including multiple-root and
+cancellation cases.
+
+Lemma 4 (A uniform radial penalty at angular zeros). If G has a zero and (5) holds, there is
+an integer 1 ≤ K ≤ 2Od (B+1) for which
+
+                                       F − KG2 ≤ −1/K.                                         (8)
+
+A suitable K can be chosen eﬀectively from d, B.
+
+Proof. Compactness gives a neighborhood of {G = 0} where F is bounded above by a negative
+constant. Oﬀ that neighborhood, |G| has a positive minimum. A suﬃciently large K therefore
+satisﬁes (8). Feasibility is monotone in K, since F − KG2 + 1/K decreases with K > 0, and is
+closed. The feasible set in K ≥ 1 has a least element K0 .
+    Its graph is a ﬁxed-size ﬁrst-order formula: on the circle require
+
+                                       KF − K 2 G2 ≤ −1
+
+and require that no smaller K ≥ 1 is feasible. Lemma 2 bounds K0 above by 2Od (B+1) . An integer
+upper bound, determined by the eﬀective constants in that lemma, works by monotonicity.
+
+    For later bookkeeping, compute all the ﬁxed-in-d elimination formulas just discussed, includ-
+ing the rotational sign test and the minima used below. Their ﬁnite degrees, coeﬃcient heights
+and monomial counts determine an integer kd . Enlarge it to bound the elementary Fourier
+conversion and derivative estimates. We may thus take
+
+                                          E = 2kd (B+1)                                        (9)
+
+as a common upper bound only for the basic quantities with ﬁxed-degree or ﬁxed-formula de-
+scriptions, and their positive reciprocals. Later auxiliary bounds may use ﬁxed powers of E. In
+particular, E need not bound the amplitude or mean of the high powers ψ introduced in Section
+5; those values can be doubly exponential, and Section 5 handles them by normalization. This
+is computable preprocessing depending on d, rather than advice depending noncomputably on
+the input.
+
+
+4    Nonvanishing angular velocity
+Assume G > 0 and a = − hF/Gi > 0. Let
+
+                          f = −F/G,        v0 = f − a,      g = min G.
+
+Then hv0 i = 0 and
+                                        F + Gv0 = −aG.
+
+                                                5
+```
+
+---
+
+## Page 6
+
+```text
+Lemmas 2 and 3 give a, g ≥ E −1 , with E enlarged if needed. Quotient diﬀerentiation gives
+rational bounds Q, D, T ≥ 1 on kf k∞ , kf 0 k∞ , kf 00 k∞ , all of value 2Od (B+1) and bit length
+Od (B + 1). Choose a rational H ≥ max(1, kGk∞ ) of the same size and set
+                                                      1
+                                               ε=          .
+                                                    4E 2 H
+We construct an exactly mean-zero rational approximation without having to compute the inte-
+gral a numerically.
+
+Lemma 5 (Certiﬁed rational Fourier approximation). In time 2Od (B+1) , one can construct a
+real rational trigonometric polynomial RN such that
+
+              kRN − f k∞ < ε/2,            deg RN , total coeﬃcient length ≤ 2Od (B+1) .
+
+Proof. Choose integers
+                                                                64(2N + 1)(D + N Q)
+              N ≥ max(1, 8T /ε),           M > 2N,         M≥                       .
+                                                                         ε
+
+Two integrations by parts give |fbk | ≤ T /k 2 for k 6= 0. The Fourier tail outside [−N, N ] is at
+most 2T /N ≤ ε/4.
+    Approximate each coeﬃcient in this interval by the equally spaced M -point rectangular
+quadrature. For hk (ϕ) = f (ϕ)e−ikϕ , kh0k k∞ ≤ D + N Q. Integrating the error from each left
+endpoint shows that its normalized quadrature error is at most π(D + N Q)/M . Summing over
+all 2N + 1 modes gives an error at most ε/16, since π < 4.
+    At each node, compute dyadic approximations to f and to the phase with complex absolute
+errors at most                                                 
+                                                       ε
+                              u = min 1,                          .
+                                             16(2N + 1)(Q + 2)
+Their product error is at most (Q + 2)u. Averaging and summing modes adds at most ε/16.
+Compute positive modes, deﬁne negative ones by exact conjugation, and take the real part of
+the zeroth mode. These choices preserve the same error bounds and enforce reality. The total
+is less than ε/2.
+     Here all evaluations are eﬀective bit operations. Reduce phase indices using kj mod M ; all
+trigonometric arguments then lie in a ﬁxed bounded interval. Machin’s identity
+                                                                       
+                              π = 4 4 arctan(1/5) − arctan(1/239)
+
+with alternating-series tails, and Taylor series for sine and cosine on a bounded interval, provide
+rational approximations in polynomial time in the requested precision. Evaluate F, G at these
+approximations with enough guard bits that the error in G is at most g/2, and use rational
+division for f . For an explicit error budget, enlarge the basic E ≥ 2 to bound kF k∞ and g −1 .
+Evaluate F, G with errors at most ζ = u/(16E 3 ). Then G    e ≥ 1/(2E) and
+
+                                  Fe       F
+                                       −     ≤ 2Eζ + 2E 3 ζ ≤ u/4.
+                                  e
+                                  G        G
+
+Reserve another u/4 for dyadic rounding, and approximate each phase component with error at
+most u/4. This gives the claimed sample and complex phase accuracies, with spare margin. The
+
+                                                    6
+```
+
+---
+
+## Page 7
+
+```text
+coeﬃcient and frequency bounds reduce evaluation of F, G to sine and cosine accuracy ζ/(cd E),
+for a computable constant cd . All required logarithms, including log M, log N, log(1/u), are
+Od (B + 1).
+    Round sample components to a common dyadic grid before forming products. Thus an
+averaged coeﬃcient has denominator M times a common dyadic power; unrelated sample de-
+nominators are not multiplied successively. Per-operation bit lengths are polynomial in B + 1
+for ﬁxed d. There are M (2N + 1) = 2Od (B+1) sample-mode operations, so direct summation
+already gives the stated bound. No transcendental oracle or assumed fast Fourier convergence
+is used.
+
+    Set v = RN − hRN i, subtracting the exact rational constant coeﬃcient. Since hf i = a,
+                                                                        3
+                      kv − v0 k∞ < ε,      F + Gv ≤ −aG + Hε ≤ −            .
+                                                                       4E 2
+Thus (6) holds with δ = 1/(2E 2 ). Its degree, norm and encoding have the required bounds.
+
+
+5     Angular zeros, including sign changes
+If G ≡ 0, condition (5) gives F < 0 everywhere and V = ρ suﬃces. Otherwise choose K from
+Lemma 4 and put δ0 = 1/K. Choose rational H, S ≥ 1 with
+
+                              kGk∞ ≤ H,          G0 ∞ , G00 ∞ ≤ S,
+
+of value 2Od (B+1) and bit length Od (B + 1). If hGi = 0, take v = −KG. It already has mean
+zero and satisﬁes (6) with δ = δ0 .
+    Otherwise let s = sgn(hGi). We use
+
+                                                          K hGi
+                                v = −KG + cψ,        c=         ,                            (10)
+                                                           hψi
+
+where ψ ≥ 0 is a rational trigonometric polynomial with positive mean. The mean of v is exactly
+zero. It remains to bound the harmful part of Gcψ by δ0 /2.
+
+5.1   Changing angular sign
+Let κ > 0 be a rational lower bound for − min(sG) with κ−1 = 2Od (B+1) , supplied by Lemma 2.
+A factor-two approximation is unnecessary; any such lower bound works. At a minimum point,
+an interval of circular radius
+                                     w = min(1, κ/(2S))
+satisﬁes sG ≤ −κ/2. For a positive integer N set
+
+                                        ψ = (1 − sG/H)2N .
+
+On that interval, Bernoulli’s inequality gives
+                                                                     wN κ
+                        ψ ≥ (1 + κ/(2H))2N ≥ N κ/H,          hψi ≥        .
+                                                                     πH
+
+
+
+                                                 7
+```
+
+---
+
+## Page 8
+
+```text
+Where sG ≥ 0, one has ψ ≤ 1, so
+
+                                             KH 2   πKH 3
+                                    Gcψ ≤         ≤       .
+                                             hψi     wN κ
+
+Where sG < 0, the product is nonpositive. Choosing
+
+                                                  8KH 3
+                                           N≥                                                   (11)
+                                                   δ0 wκ
+
+makes the harmful contribution less than δ0 /2. All factors and reciprocals in (11) are 2Od (B+1) ,
+so N = 2Od (B+1) is suﬃcient.
+
+5.2     One angular sign with zeros
+Here g = sG satisﬁes 0 ≤ g ≤ H, with at least one zero. At any zero ϕ0 , g 0 (ϕ0 ) = 0; hence
+
+                                       g(ϕ0 + t) ≤ St2 /2.
+
+Set                                                             s           
+                                                                      H 
+                         ψ = (1 − g/H)2N ,        w = min 1,             .
+                                                                     2SN
+
+For |t| ≤ w, g/H ≤ 1/(4N ), whence
+
+                         ψ ≥ (1 − 1/(4N ))2N ≥ 1/2,          hψi ≥ w/(2π).
+
+The elementary maximum of g(1 − g/H)2N is at most H/(2N ). It follows that
+
+                                                  πKH 2
+                                         Gcψ ≤          .
+                                                   Nw
+Since                                                s          
+                                  1        1              2S 1 
+                                    = max  ,               √    ,
+                                 Nw        N              H N
+
+it suﬃces to take                                                    !
+                                            8KH 2 128K 2 H 3 S
+                               N ≥ max           ,                       .                      (12)
+                                             δ0       δ02
+Each branch is then at most πδ0 /8 < δ0 /2. The radius w is used only in the proof; its square
+root need not be computed by the construction. This case covers every angular zero multiplicity.
+
+5.3     Coeﬃcient growth and the normalization mechanism
+In both cases ψ has degree Jψ ≤ 2N nd . Starting with a common denominator for G, H of
+Od (B + 1) bits, its power has coeﬃcient bit lengths Od (N (B + 1) + N ). Its mean is exactly
+its constant Fourier coeﬃcient. Division by that nonzero rational number in (10) preserves a
+single-exponential coeﬃcient-size bound. The total encoding is therefore 2Od (B+1) .
+
+
+
+
+                                                  8
+```
+
+---
+
+## Page 9
+
+```text
+A coeﬃcient-size bound alone would allow a doubly exponential function value. We need
+the stronger norm estimate. Nonnegativity of ψ implies
+                                                        ψ
+                               |ψbk | ≤ hψi   =⇒           ≤ 2Jψ + 1.
+                                                       hψi
+Thus
+                               kvk∞ ≤ 2KH(Jψ + 1) = 2Od (B+1) .                                (13)
+This is the reason for using a normalized nonnegative power instead of directly approximating
+an integrating factor. In all angular-zero cases, (6) now holds with δ = δ0 /2, or with the stronger
+margin when hGi = 0.
+
+
+6      Finite-power conversion
+Let v be the rational trigonometric polynomial constructed above. Its zero mean gives a rational
+real trigonometric primitive U , chosen with hU i = 0 and U 0 = v. If J = deg v, dividing Fourier
+coeﬃcients by ik gives
+                               deg U ≤ J,      kU k∞ ≤ 2J kvk∞ ,
+and single-exponential total encoding. A Fourier ℓ1 bound LU ≥ kU k∞ can be computed
+rationally, using the sum of absolute real and imaginary parts if needed. It has value 2Od (B+1) ,
+by (13) and the coeﬃcient bound |vbk | ≤ kvk∞ . Choose rational HF ≥ max(1, kF k∞ ) and an
+integer
+                                 m ≥ max(1, 2LU , 2HF LU /δ).                                (14)
+Then m = 2Od (B+1) is suﬃcient.
+    Put q = 1 + U/m ≥ 1/2 and p = q m . The following exact identity avoids an error estimate
+for a logarithmic derivative:
+                                                                δ
+           F p + Gp0 = q m−1 F q + Gv = q m−1 (F + Gv) + F U/m ≤ − q m−1 < 0.                  (15)
+                                                                  2
+If U = 0, output ρ. Otherwise take J = deg U ≥ 1. Using
+
+                                                  (x + iy)2
+                                          eiϕ =             ,
+                                                      ρ
+
+homogenize U as Uh /ρJ , with rational homogeneous Uh of degree 2J. The output is
+                                                 m
+                                     Uh                    (ρJ + Uh /m)m
+                             V =ρ 1+                   =                 .                     (16)
+                                     mρJ                       ρJm−1
+The numerator is positive oﬀ the origin and has degree 2Jm; r = Jm − 1 ≥ 0. Equations (3)
+and (15) prove strict decay.
+    For a ﬁxed input, p is smooth, periodic, positive and bounded away from zero. Therefore
+V = R2 p(2θ) is positive and proper, V = O(R2 ), and its gradient oﬀ the origin is O(R).
+Its derivative at the origin is zero, and the gradient extends continuously there. This proves
+the stated C 1 extension. Properness and strict decay give forward completeness and GAS: a
+trajectory stays in a compact sublevel set; on every compact annulus the decay is bounded away
+from zero. Thus the necessary tests of Section 2 are also suﬃcient.
+
+                                                   9
+```
+
+---
+
+## Page 10
+
+```text
+7    Algorithm, bit accounting, and veriﬁcation
+The decision procedure uses only ﬁxed-in-d circle sign tests and the graph of Lemma 3. If G is
+nonvanishing, test (4) after orientation; otherwise test (5). Reject when the applicable test fails.
+The elimination formulas can be computed once from d. Evaluating their integer polynomial
+signs at rational input uses polynomial time in B + 1, with constants and polynomial degrees
+depending on d. With elementary arithmetic, ﬁxed polynomial expressions can be evaluated in
+Od ((B + 1)2 ) after enlarging the constant. The preprocessing time is a computable function of
+d, and can be absorbed by increasing Cd .
+    For accepted inputs, Section 4 gives an explicit quadrature construction; Section 5 uses
+exact rational Laurent-polynomial powers and constant-coeﬃcient extraction. Circle sign tests
+for selecting the case remain at ﬁxed ﬁeld degree. No quantiﬁer elimination is run on the
+exponentially large ﬁnal numerator.
+    In the angular-zero case, a common input denominator prevents denominator multiplication
+at each addition. Naive polynomial multiplication to exponent 2N , even without fast exponen-
+tiation, has cost polynomial in N , the output degree, and the largest intermediate coeﬃcient bit
+length. All of these are 2Od (B+1) . The primitive, rational coeﬃcient sums, and integer choice
+(14) have the same scale. In the rotating case the explicit sample-mode bound in Lemma 5 gives
+it directly.
+    For ﬁnal expansion, J, m and the coeﬃcient bit lengths of U are each 2Od (B+1) . Homogeniza-
+tion adds binomial coeﬃcients of O(J) bits and O(J) summands. Clear a common denominator
+whose bit length is at most the sum of the coeﬃcient bit lengths, also 2Od (B+1) . If the resulting
+integer form has coeﬃcient bit length L, its m-th power has coeﬃcient bit length
+                                                            
+                                      O m(L + log(J + 1)) .
+
+It has O(Jm) coeﬃcients. The same bounds apply to the dense expansion of ρJm−1 . Products of
+a ﬁxed number of single exponentials enlarge only the constant in their exponent. Consequently,
+both the total dense encoding and naive expansion time are 2Od (B+1) , not just their individual
+coeﬃcient lengths. Undoing a reﬂection changes signs or swaps variables and preserves these
+bounds.
+
+An exact output check. For any candidate P, r, compute
+                                                                
+                                    S = − ρLX P − rP LX ρ .
+
+Then LX (P/ρr ) = −S/ρr+1 . Both P and S are homogeneous forms of even degree. A homoge-
+neous even-degree form H is positive away from zero if and only if
+
+                   H(1, 0) > 0,      H(0, 1) > 0,      H(t, 1) has no real root.
+
+Indeed the last two conditions give positivity on the aﬃne chart y 6= 0, and the ﬁrst gives the
+missing projective direction. A constant dehomogenization is tested directly, while still requiring
+H(1, 0) > 0; for example, H = y 2 must be rejected. Clear positive denominators, compute the
+square-free part, and apply a normalized subresultant/Sturm sequence with controlled coeﬃcient
+growth. The signs at the two inﬁnities follow from leading coeﬃcients and degree parities.
+The bit cost is polynomial in the degree and integer coeﬃcient length; a suitable subresultant
+construction is given by Du, Sharma and Yap [8, Theorem 2(i)]. An arbitrary unnormalized
+
+                                                10
+```
+
+---
+
+## Page 11
+
+```text
+rational remainder implementation is not being assigned this complexity guarantee; see also [9].
+With the bounds already proved this check also costs 2Od (B+1) . It checks the certiﬁcate, not the
+correctness of the general construction theorem.
+    This completes the proof of Theorem 1.
+
+
+8     The lower scale is already implicit in a prior Fourier bound
+The upper scale in Theorem 1 is accompanied by a simple lower consequence of existing work.
+We state its derivation to delimit what is new here.
+
+Proposition 6 (Consequence of Liu–Fitzsimmons). For the cubic family with integer k ≥ 1 and
+polar coeﬃcients F = −1 + k cos ϕ, G = 1, every strict certiﬁcate P/ρN −1 , with positive real
+homogeneous P of degree 2N , satisﬁes N > k/2 − 1. Taking k = 2b forces dense output length
+2Ω(B) , where B = Θ(b) is its rational input length.
+
+Proof. The family is GAS by [4, Section IV.D]. For p(ϕ) = P (cos(ϕ/2), sin(ϕ/2)), put h =
+                                                    b 1 | < N . The certiﬁcate inequality says
+(log p)0 . Lemma III.3 of [4], after ϕ = 2θ, gives |h
+w = 1 − k cos ϕ − h > 0. Since hhi = 0, hwi = 1 and |w b1 | ≤ 1. Thus k/2 ≤ |w       b 1| < 1 + N .
+                                                                             b1 | + |h
+The Cartesian ﬁeld is X = (−ρx + k(x2 − y 2 )x − ρy, −ρy + k(x2 − y 2 )y + ρx). Its input length
+is Θ(log(k + 1)), whereas dense P has 2N + 1 positions.
+
+    This is a consequence we extract from the cited lemma and family, not a lower-bound the-
+orem stated verbatim there or a separate discovery claim. For ﬁxed odd d ≥ 3, multiplication
+of this ﬁeld by ρ(d−3)/2 preserves the strict certiﬁcate condition and GAS. Accordingly, the
+single-exponential worst-case dense-output scale cannot in general be replaced by a subexpo-
+nential one. Constants in the exponent and sharper coeﬃcient-length bounds are not matched.
+The lower statement concerns this certiﬁcate class and dense storage; binary exponents and
+compressed arithmetic circuits are diﬀerent output models. The new contribution remains the
+general constructive upper bound.
+
+
+9     Exact illustrative constructions
+The ﬁrst example below is cubic; the two subsequent examples are quintic. They illustrate
+angular cases and permit exact symbolic checks, without benchmarking a general solver or
+claiming optimal degree. For the quintic examples, a prescribed pair F, G yields a polynomial
+ﬁeld by                                                    
+                                X = ρ2 F x − Gy, F y + Gx .                              (17)
+The denominators in the expressions below cancel.
+
+9.1   A nonconstant rotating angular velocity
+For an integer k ≥ 1, consider
+
+         X1 = −x3 + (2k − 3)x2 y − xy 2 − y 3 ,        X2 = 3x3 − x2 y + (2k + 1)xy 2 − y 3 .
+
+Here F = k sin ϕ − 1, G = 2 + cos ϕ > 0. With q0 = 3x2 + y 2 , exact diﬀerentiation gives
+
+                                 kρLX q0 − (k − 1)q0 LX ρ = −2ρ2 q0 .
+
+                                                  11
+```
+
+---
+
+## Page 12
+
+```text
+Consequently V = q0k /ρk−1 is a strict certiﬁcate with LX V = −2ρV . Its angular proﬁle is
+(2 + cos ϕ)k , which is positive, so properness and the C 1 extension follow as before. This is an
+illustrative closed calculation, not an implementation of the general rotating quadrature.
+
+9.2    Changing angular sign
+Take
+                         2xy                      1
+           G = sin ϕ =       ,      F = 2 sin2 ϕ − ,       v = −2 sin ϕ,       U = 2 cos ϕ.
+                          ρ                       2
+Then F + Gv = −1/2, including both zeros and signs of G. With m = 16, kF k∞ ≤ 3/2 and
+kU k∞ ≤ 2 imply
+                                                  1      3     5
+                          F (1 + U/16) + Gv ≤ − +            =− .
+                                                  2 16         16
+A certiﬁcate is therefore                                16
+                                       ρ + (x2 − y 2 )/8
+                                 V =                         .
+                                              ρ15
+Its numerator degree is 32, and its denominator degree is 30. The inner quadratic is positive
+because it is at least 7ρ/8. The input ﬁeld (17) has rational homogeneous quintic components.
+
+9.3    One angular sign with a zero
+Take g = (1 − cos ϕ)/2 = y 2 /ρ, G = g, and F = 2g 2 − 1/2. The small choice ψ = (1 − g)2 , with
+hψi = 3/8, already works:
+                      8          7       1                              7        1
+             v = −2g + (1 − g)2 = cos ϕ + cos 2ϕ,                  U=     sin ϕ + sin 2ϕ.
+                      3          3       3                              3        6
+For 0 ≤ g ≤ 1,
+                         4
+                            − g(1 − g)2 = −(g − 13 )2 (g − 34 ) ≥ 0.
+                         27
+Hence F + Gv ≤ −17/162. Since kU k∞ ≤ 5/2, m = 128 gives the strictly negative factor bound
+
+                                                        17   15
+                             F (1 + U/128) + Gv ≤ −        +    < 0.
+                                                        162 512
+Here
+                                    14      2
+                             Uh =      xyρ + xy(x2 − y 2 ),        J = 2,
+                                    3       3
+so
+                                             (ρ2 + Uh /128)128
+                                       V =                     .
+                                                   ρ255
+The numerator and denominator degrees are 512 and 510. These deliberately conservative
+degrees illustrate a veriﬁed construction, not practical degree minimization. The general bounds
+(11)–(12) are suﬃcient choices; an example may admit much smaller powers, as this one does.
+
+
+
+
+                                                  12
+```
+
+---
+
+## Page 13
+
+```text
+Reproducibility boundary. A short exact rational symbolic calculation checks the displayed
+v, U , the cancellation in (17), and, writing A0 = ρJ + Uh /m, the identity
+                                                                             
+                   mρLX A0 − (Jm − 1)A0 LX ρ = 2ρJ+3 F (1 + U/m) + Gv
+for these quintic ﬁelds. The dense numerators can also be expanded. These computations
+support the worked examples only. The general proof relies on the preceding estimates and ef-
+fective algebraic arguments. We have not implemented the complete algorithm, its precomputed
+elimination formulas, or its certiﬁed quadrature stage as a software package.
+
+
+10     Scope and further questions
+The theorem supplies a single-exponential upper bound in coeﬃcient bit length for ﬁxed ﬁeld
+degree. The coarse exponential lower scale follows already from prior work as explained in
+Section 8. A useful explicit constant, sharper degree and coeﬃcient-length orders, and an
+implementation that can compete with smaller-degree searches remain open. Improving the
+normalized angular power or exploiting structure in F, G could reduce degrees without changing
+the logical certiﬁcate class.
+    The rational representation matters: neither the numerator alone nor a power of it is asserted
+to be a polynomial Lyapunov function. Multiplying a rational certiﬁcate by its denominator
+changes its Lie derivative. No conclusion is drawn about higher dimensions, general nonhomoge-
+neous dynamics, or arbitrary weak stability. The known planar decision theory and the general
+rational converse remain antecedents, not new corollaries claimed as separate discoveries.
+    The literature comparison is bounded to the sources listed below, checked through 24 October
+2026, including their stated versions. It does not establish exhaustive priority. In particular, a
+specialist assessment of the quantitative construction bound remains necessary before assigning
+its mathematical signiﬁcance.
+
+AI assistance and review status. The author used OpenAI Codex for exploration, source
+comparison, proof development, symbolic checks and manuscript preparation. A GPT-6 Astra
+session conﬁgured with eﬀort xhigh audited earlier proof notes, including the construction-time
+extension. A separate fresh conversation reviewed the exact ﬁrst draft and identiﬁed the scope
+clariﬁcation for E incorporated here. The original draft and reports are preserved; assessments
+must identify the exact artifact they cover. These sessions share ﬁlesystem context and are
+not technically isolated, statistically independent, human, or formal proof reviews. Neither
+note-level ﬁndings nor a draft score is silently transferred to diﬀerent PDF bytes. This revision
+has not received journal peer review. Numerical grids, when used during exploration, are not
+substituted for proofs. No Lean formalization of the theorem is claimed.
+
+Example artifacts. The two original quintic example calculations and their recorded outputs
+are available in a pinned public repository snapshot. Their ﬁnite checks do not constitute a
+general solver or a formal proof of Theorem 1.
+
+
+References
+[1] A. A. Ahmadi and B. El Khadir, On Algebraic Proofs of Stability for Homogeneous Vec-
+    tor Fields, arXiv:1803.01877v4, 2018. https://arxiv.org/abs/1803.01877v4. See also
+
+                                               13
+```
+
+---
+
+## Page 14
+
+```text
+the author manuscript, Theorem 3.1 and Section 7: https://optimization-online.org/
+   wp-content/uploads/2018/03/6502.pdf.
+
+[2] M. Korda, Lyapunov stability of polynomial vector ﬁelds is undecidable, arXiv:2609.22058v2,
+    2026. https://arxiv.org/abs/2609.22058v2.
+
+[3] M. Korda, Supplement to Lyapunov stability of polynomial vector ﬁelds is undecid-
+    able, Part III, especially Theorem 20.3 and Corollary 21.2, 2026. https://homepages.
+    laas.fr/mkorda/arnold_supplement.pdf. The consulted 60-page copy has SHA-256
+    0b6090d432cb6ae175e883363246a94cc4
+    dbe3dbeb7d3d8ed2c0578e74eeccf9.
+
+[4] J. Liu and M. Fitzsimmons, A Globally Asymptotically Stable Planar Homogeneous Poly-
+    nomial Vector Field With No Polynomial Lyapunov Function, arXiv:2607.16171v1, 2026.
+    https://arxiv.org/abs/2607.16171v1.
+
+[5] A. A. Ahmadi and P. A. Parrilo, Stability of Polynomial Diﬀerential Equations: Complexity
+    and Converse Lyapunov Questions, arXiv:1308.6833, 2013. https://arxiv.org/abs/1308.
+    6833.
+
+[6] H. Abdelraouf, E. Feron and J. S. Shamma, Algebraic Lyapunov Functions for Homogeneous
+    Dynamic Systems, arXiv:2303.02185v1, 2023. https://arxiv.org/abs/2303.02185v1.
+
+[7] S. Basu, Algorithms in Real Algebraic Geometry: A Survey, arXiv:1409.1534, 2014. Au-
+    thor version, especially Theorem 2.18: https://www.math.purdue.edu/~sbasu/raag_
+    survey2011_final.pdf.
+
+[8] Z. Du, V. Sharma and C. K. Yap, Amortized Bound for Root Isolation via Sturm Se-
+    quences, author manuscript, Theorem 2(i), pp. 4–5. https://cs.nyu.edu/exact/doc/
+    sturmcomplexity.pdf.
+
+[9] S. Basu, R. Pollack and M.-F. Roy, Algorithms in Real Algebraic Geometry, second edition,
+    Algorithms and Computation in Mathematics 10, Springer, 2006. Chapters 8–11. https:
+    //doi.org/10.1007/3-540-33099-2.
+
+
+
+
+                                              14
+```
