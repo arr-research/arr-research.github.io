@@ -1,0 +1,508 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=27mm]{geometry}
+\usepackage[T1]{fontenc}\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools,booktabs,microtype}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}\newtheorem{remark}[theorem]{Remark}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\Tr}{Tr}
+\newcommand{\C}{\mathbb C}\newcommand{\Z}{\mathbb Z}
+\newcommand{\fl}[1]{\left\lfloor #1\right\rfloor}
+\newcommand{\cl}[1]{\left\lceil #1\right\rceil}
+\title{Removing the binary and ternary factors\\from cyclic Weyl rank uncertainty}
+\author{Lluis Eriksson\\\small Independent researcher, Sweden}
+\date{24 October 2026\\Working draft 2; domain clarifications}
+\begin{document}\maketitle
+\begin{abstract}
+For a nonzero complex matrix in the cyclic Weyl basis, let $u_d(s)$ be the
+minimum rank under a support budget of $s$ coefficients. We give exact
+formulas reducing $u_d$ to the profile in the part of the dimension coprime
+to $6$. Removing a factor $2^k$ uses a minimum over binary subgroup costs.
+Removing a factor $3^k$ uses products of the three costs $1,2,3$, with rank
+multipliers $3,2,1$. The lower bounds follow from residue-sector
+compressions and central Fourier blocks; the ternary two-residue case uses
+a triangular minor on two sectors of a directed three-cycle. Upper bounds
+are attained by scalar cyclic projectors and binomials, combined with the
+Chinese remainder theorem. In particular, in every even dimension whose
+only prime factors are $2$ and $3$, the exact minimum is
+$d/\max\{q:q\mid d,\ q\le s\}$. We obtain sharp uniform coefficient-erasure
+budgets for arbitrary complex low-rank matrices. Residual profiles with
+prime factors at least $5$, efficient recovery, and numerical stability
+are not determined.
+\end{abstract}
+
+\section{Profiles and the main reductions}
+Put $\omega_d=e^{2\pi i/d}$ and
+\[
+ X_de_j=e_{j+1\bmod d},\quad Z_de_j=\omega_d^je_j,\quad
+ W_d(a,b)=X_d^aZ_d^b,\qquad (a,b)\in(\Z/d)^2.
+\]
+These $d^2$ matrices are orthogonal for the Hilbert--Schmidt inner product.
+For $C\ne0$, let $s_W(C)$ count the nonzero coefficients in its unique Weyl
+expansion. For every integer $s\ge1$, define
+\[
+ u_d(s)=\min\{\rank C:C\in M_d(\C),\ C\ne0,\ s_W(C)\le s\}.
+\]
+The minimum exists: the admissible set is nonempty and its ranks form a
+nonempty subset of $\{1,\ldots,d\}$. Thus no compactness argument is needed.
+The profile is nonincreasing, $u_d(1)=d$, and $u_d(s)=1$ for $s\ge d$,
+by the diagonal rank-one projector. We use $u_1(s)=1$.
+
+\begin{theorem}[Binary transfer]\label{thm:two}
+For odd $m\ge1$, $k\ge0$ and $s\ge1$,
+\[
+ u_{2^km}(s)=
+ \min_{\substack{0\le a\le k\\2^a\le s}}
+       2^{k-a}u_m\!\left(\fl{s/2^a}\right).
+\]
+\end{theorem}
+For ternary transfer define, for $3\nmid m$,
+\[
+ F_{k,m}(s)=
+ \min_{\substack{r_1,\ldots,r_k\in\{1,2,3\}\\
+                  r_1\cdots r_k\le s}}
+ \left(\prod_{i=1}^k(4-r_i)\right)
+ u_m\!\left(\fl{s/(r_1\cdots r_k)}\right).
+\]
+The empty tuple gives $F_{0,m}(s)=u_m(s)$.
+\begin{theorem}[Ternary transfer]\label{thm:three}
+For $3\nmid m$, $m\ge1$, $k\ge0$ and $s\ge1$,
+\[
+ u_{3^km}(s)=F_{k,m}(s).
+\]
+\end{theorem}
+The unknown residual profiles are retained as functions, not replaced by
+an assumed uncertainty conjecture. All coefficients are arbitrary complex
+numbers, and sharpness means a support budget, not exactly $s$ terms.
+
+\begin{corollary}[An even residual formula]\label{cor:residual}
+Let $h=2^a3^b$ with $a\ge1$, $b\ge0$, and let $\gcd(m,6)=1$. Then
+\[
+ u_{hm}(s)=
+ \min_{\substack{q\mid h\\q\le s}} \frac hq\,
+                  u_m\!\left(\fl{s/q}\right).
+\]
+In particular, if $d=2^a3^b$ is even and
+$Q_d(s)=\max\{q:q\mid d,\ q\le s\}$, then
+\[
+                         u_d(s)=d/Q_d(s).
+\]
+\end{corollary}
+
+The scalar uncertainty profile in prime-power dimension is classical
+\cite{dvb}; Meshulam's subgroup--quotient argument explicitly uses a
+smallest occupied coset and a product constraint on support sizes
+\cite[Proposition 1.3 and Section 2]{meshulam}. We credit that architecture.
+The proposed operator contribution is the exact transfer of the rank
+profile through the noncommuting cyclic representation, using the block
+identities below. Earlier work in the author's programme covers low
+prime-power sparsity and a binary seven-term range \cite{prior,seven}.
+The present argument replaces the binary overlap classification and
+treats the ternary profile in every sparsity range.
+
+Yin studies the closely related Hermitian traceless rank-two problem in
+all cyclic dimensions, together with phase-retrieval and equality
+statements \cite{yin}. Our profile allows arbitrary complex matrices and
+all rank bounds, but does not give the stronger positivity, trace, or
+phase-retrieval classifications of that setting. The reference's
+formalization claims have not been replayed here. These comparisons are
+limited readings, not an exhaustive certificate of priority.
+The cyclic basis is not being identified with a tensor-qubit Pauli basis.
+
+\section{Compression identities and small Fourier bounds}
+Left multiplication by a Weyl unitary translates the support, up to
+nonzero phases, and preserves rank. Discrete Fourier conjugation
+interchanges the two label coordinates, up to a sign and phases.
+
+\begin{lemma}[Residue sectors]\label{lem:residue}
+Let $d=pn$ for $p=2$ or $3$ and
+$E_j=\operatorname{span}\{e_{j+pu}:u\in\Z/n\}$, $0\le j<p$.
+For $a=pA+\delta$, $0\le\delta<p$, put
+$j'=(j+\delta)\bmod p$ and $\kappa=\fl{(j+\delta)/p}$. Then
+\[
+ W_d(a,b)|_{E_j\to E_{j'}}
+       =\omega_d^{bj}X_n^{A+\kappa}Z_n^b .
+\]
+Within a fixed first-coordinate residue class, distinct labels merge
+precisely in cosets of $\langle(0,n)\rangle$.
+An occupied class gives a nonzero block somewhere. A coset with $r$
+occupied labels activates at least $p-r+1$ blocks, for $1\le r\le p$.
+\end{lemma}
+\begin{proof}
+The output index on $e_{j+pu}$ is $j'+p(u+A+\kappa)$ modulo $d$,
+and the phase is $\omega_d^{bj+ pbu}$. This is the displayed formula.
+The compressed label is $(A\bmod n,b\bmod n)$ after factoring the common
+carry. In a merging coset, write $b=\beta+n\ell$; its coefficient, after
+a nonzero common factor, is
+$\sum_{\ell=0}^{p-1}c_\ell e^{2\pi i\ell j/p}$.
+Different cosets give different compressed Weyl labels. Thus an occupied
+class cannot vanish in all blocks, by invertibility of this transform.
+
+For $p=2$, one input activates both outputs and two inputs activate at
+least one. For $p=3$, one input activates three outputs; two inputs cannot
+have just one output, because the inverse of a single Fourier spike
+has all three entries nonzero; three inputs activate at least one.
+These are precisely the claimed bounds. No assumption on coefficient
+signs or algebraicity is used.
+\end{proof}
+
+\begin{lemma}[Central blocks]\label{lem:central}
+Let $d=p^2n$, $p=2$ or $3$, and suppose the support lies in $p(\Z/d)^2$.
+The commuting unitaries $X_d^{pn},Z_d^{pn}$ are central on this support
+algebra. Their $p^2$ joint eigenspaces have dimension $n$, are invariant
+under $C$, and carry cyclic Weyl representations. Distinct cosets of
+$H=\langle(pn,0),(0,pn)\rangle$ give distinct Weyl labels in every block.
+Within an $H$-coset the coefficients transform by ordinary Fourier
+transform on $(\Z/p)^2$, apart from nonzero scalar factors.
+\end{lemma}
+\begin{proof}
+Let $\zeta_p=e^{2\pi i/p}$. For $\alpha,\beta\in\{0,\ldots,p-1\}$, the
+joint eigenspace has the orthogonal basis
+\[
+ v_t^{\alpha,\beta}=\omega_d^{-p\beta t}
+ \sum_{\ell=0}^{p-1}\zeta_p^{-\beta\ell}
+ e_{\alpha+pt+pn\ell},\qquad 0\le t<n .
+\]
+Its vectors have norm $\sqrt p$; normalizing gives orthonormal bases.
+The two eigenvalues are $\zeta_p^\beta$ and $\zeta_p^\alpha$.
+The bases exhaust $\C^d$. Direct action, including wrap-around, gives
+\begin{equation}\label{eq:central}
+ W_d(pA,pB)|_{E_{\alpha,\beta}}
+       =\omega_d^{p\beta A+p\alpha B} X_n^AZ_n^B .
+\end{equation}
+The factor $\omega_d^{p^2}$ is primitive of order $n$, also for arbitrary
+$n$. Representatives $0\le A,B<n$ label the $n^2$ distinct compressed Weyls.
+
+The labels in one coset are
+$(pA+pn\epsilon,pB+pn\eta)$, $0\le\epsilon,\eta<p$.
+By \eqref{eq:central} its compressed coefficient is
+\[
+ \omega_d^{p\beta A+p\alpha B}
+ \sum_{\epsilon,\eta=0}^{p-1}
+        c_{\epsilon,\eta}\zeta_p^{\beta\epsilon+\alpha\eta}.
+\]
+This proves both the Fourier assertion and injectivity between cosets.
+The formula remains valid when $n=1$.
+\end{proof}
+
+Put $D(r)=2^{\fl{\log_2r}}$ for $r\ge1$, and define
+\[
+ \phi_9(r)=
+ \min_{\substack{u,v\in\{1,2,3\}\\uv\le r}}(4-u)(4-v),
+ \qquad 1\le r\le9.
+\]
+\begin{lemma}[Central Fourier support]\label{lem:fourier}
+A nonzero vector on $(\Z/2)^2$ with $r$ occupied entries has at least
+$4/D(r)$ nonzero Fourier coefficients. On $(\Z/3)^2$, the corresponding
+lower bound is $\phi_9(r)$.
+\end{lemma}
+\begin{proof}
+For four entries, $r=1$ gives four outputs. For $r=2,3$, a single output
+is impossible because its inverse has all four entries nonzero. For $r=4$,
+invertibility suffices. The bound at $r=3$ is deliberately not sharpened.
+
+For nine entries, group by one coordinate. Let $v$ be the number of
+occupied fibers and $u$ the smallest fiber support; then $uv\le r$.
+Transform that fiber first: at least $4-u$ coordinate frequencies remain.
+Each such nonzero vector along the other coordinate has support at most
+$v$, and hence at least $4-v$ Fourier outputs by Lemma~\ref{lem:residue}'s
+three-point argument. Thus there are at least $(4-u)(4-v)\ge\phi_9(r)$
+outputs. This is the elementary coset argument credited above.
+\end{proof}
+
+\begin{lemma}[Two shifts on three sectors]\label{lem:cycle}
+Suppose a matrix on three equal-sized input/output sectors has exactly
+two possible block shifts. If one shift has $L$ nonzero blocks, each of
+rank at least $\rho$, then the whole matrix has rank at least
+$\min(L,2)\rho$.
+\end{lemma}
+\begin{proof}
+Permute output sectors to place the chosen shift on the diagonal. The
+other shift is a nonzero translation on $\Z/3$, a directed three-cycle.
+Any two sectors induce at most one off-diagonal direction, so their
+block submatrix is triangular after an ordering. Select a nonsingular
+minor of full rank in each of its two diagonal blocks. Together these
+give a triangular minor with nonzero determinant, even when the full
+diagonal blocks are singular. If $L=1$, use that block alone.
+\end{proof}
+
+\section{Upper bounds and attainable costs}
+For coprime $r,m$, the CRT unitary $e_j\mapsto e_{j\bmod r}\otimes
+e_{j\bmod m}$ sends
+\[
+ X_{rm}\mapsto X_r\otimes X_m,\qquad
+ Z_{rm}\mapsto Z_r^{m^{-1}\bmod r}\otimes Z_m^{r^{-1}\bmod m}.
+\]
+Consequently it bijectively identifies Weyl labels with pairs of labels.
+Tensor products multiply ranks and support sizes. A factor of dimension
+one is treated directly, without modular-inverse notation.
+
+For $q\mid N$, let
+\[
+ P_q=\sum_{\ell=0}^{q-1}Z_N^{\ell N/q}.
+\]
+It equals $q$ on diagonal positions divisible by $q$, and zero elsewhere.
+Thus it has support $q$ and rank $N/q$. This proves the upper bound in
+Theorem~\ref{thm:two} by taking $N=2^k$, $q=2^a$ and tensoring a
+matrix attaining the residual budget.
+
+For ternary transfer, two entries $r_i=r_j=2$ in the product defining
+$F_{k,m}$ may be replaced by $3,1$: cost drops from $4$ to $3$, the rank
+multiplier drops from $4$ to $3$, and the residual budget increases.
+Hence the minimum is attained with at most one $2$. It is the minimum
+of the following two families, retaining only positive residual budgets:
+\begin{align*}
+ &3^{k-a}u_m(\fl{s/3^a}),&&0\le a\le k,\quad3^a\le s,\\
+ &2\,3^{k-a-1}u_m(\fl{s/(2\,3^a)}),
+       &&0\le a<k,\quad2\,3^a\le s .
+\end{align*}
+The first is attained by $P_{3^a}$ on $N=3^k$. For the second use
+\[
+ P_{3^a}\bigl(Z_N^{N/(3\cdot3^a)}-\zeta_3 I\bigr).
+\]
+The two exponent sets are disjoint modulo $N$, giving exactly $2\,3^a$
+terms. Among the $N/3^a$ nonzero positions of $P_{3^a}$, one third
+vanish in the second factor. Its rank is $2N/(3\cdot3^a)$.
+CRT and a residual minimizer now prove the upper bound of
+Theorem~\ref{thm:three}.
+
+\section{Lower bounds by induction}
+We prove the two transfer theorems separately by induction on $k$,
+holding $m$ fixed. It suffices to treat actual support $s_0$, because
+both proposed minima are nonincreasing in the budget.
+
+\subsection{Binary transfer}
+The base $k=0$ is the definition of $u_m$. If some coordinate has both
+parities, exchange coordinates if necessary and take the smaller
+first-coordinate class. Lemma~\ref{lem:residue} gives a nonzero block
+of dimension $d/2$ with support at most $\fl{s_0/2}$. Induction bounds its
+rank by the minimum over indices $1\le a'\le k$ with $2^{a'}\le s_0$ of
+$2^{k-a'}u_m(\fl{s_0/2^{a'}})$. This is at least the desired minimum,
+which additionally permits $a'=0$.
+
+Otherwise translate the support to even labels. If $k=1$, $d=2m$,
+the two invariant sectors carry
+\[
+ W_d(2A,2B)\mapsto \omega_m^{Bj}X_m^AZ_m^{2B},
+ \qquad j=0,1.
+\]
+Multiplication by $2$ is invertible modulo $m$. The blocks are equivalent:
+conjugation by $X_m^h$ with $-2h\equiv1\pmod m$ changes the first into
+the second. Thus $\rank C\ge2u_m(s_0)$, the $a'=0$ candidate.
+For $m=1$ this case has only one label and is immediate.
+These are two equivalent representations, not two independently
+variable algebra blocks.
+
+If $k\ge2$, put $n=d/4$ and apply Lemma~\ref{lem:central}.
+Let $t$ be the number of occupied central cosets and $r$ their minimum
+occupancy, so $rt\le s_0$ and $1\le r\le4$.
+At least $4/2^\ell$ blocks are nonzero, where $\ell=\fl{\log_2r}$.
+Each has support at most $t$. Its rank is at least $u_n(t)$, and ranks
+add over invariant blocks. For every index $a$ in the inductive formula
+for $u_n(t)$, put $a'=a+\ell$. Then
+\[
+ a'\le k,\qquad 2^{a'}\le rt\le s_0,\qquad
+ \fl{t/2^a}\le\fl{s_0/2^{a'}} .
+\]
+Its scaled rank candidate is therefore at least
+$2^{k-a'}u_m(\fl{s_0/2^{a'}})$, and hence at least the desired minimum.
+All arguments of the profiles are positive. Their definition for every
+positive budget handles $t\ge n$ without an out-of-domain induction.
+This proves the lower bound of Theorem~\ref{thm:two}.
+
+\subsection{Ternary transfer}
+The base is again $k=0$. Suppose some coordinate varies modulo $3$,
+and make it the first. If all three first-coordinate residues occur,
+a smallest class has at most $\fl{s_0/3}$ terms and supplies a nonzero
+block. Thus
+\[
+ \rank C\ge F_{k-1,m}(\fl{s_0/3})\ge F_{k,m}(s_0).
+\]
+The last inequality follows by prepending $r=3$ to each eligible tuple.
+
+If exactly two residues occur, choose a smaller class of size
+$M\le\fl{s_0/2}$. Let it occupy $t$ cosets of $\langle(0,d/3)\rangle$,
+and let $r\le3$ be the smallest coset size. Then $rt\le M$.
+At least $4-r$ blocks are nonzero, each of rank at least $u_{d/3}(t)$.
+By Lemma~\ref{lem:cycle}, $r=1$ or $2$ gives
+\[
+ \rank C\ge2F_{k-1,m}(\fl{s_0/2})\ge F_{k,m}(s_0),
+\]
+by monotonicity and prepending $r=2$. If $r=3$, necessarily $s_0\ge6$,
+and a single nonzero block yields
+\[
+ \rank C\ge F_{k-1,m}(\fl{s_0/6})
+          \ge F_{k-1,m}(\fl{s_0/3})\ge F_{k,m}(s_0).
+\]
+Thus neither existence nor rank additivity for arbitrary blocks is assumed.
+
+It remains that both coordinates have fixed residues. Translate to $3G$.
+When $k=1$, $3\nmid m$, the three invariant sectors carry
+\[
+ W_d(3A,3B)\mapsto\omega_m^{Bj}X_m^AZ_m^{3B},\qquad j=0,1,2 .
+\]
+These have distinct labels, and are conjugate by $X_m^h$ with
+$-3h\equiv j\pmod m$. Their equal ranks sum to at least $3u_m(s_0)$,
+the all-$r_i=1$ candidate. The case $m=1$ is immediate.
+
+For $k\ge2$, put $n=d/9$. Lemmas~\ref{lem:central} and
+\ref{lem:fourier} give nine invariant blocks. If $t$ cosets are occupied
+and $r$ is their minimum occupancy, at least $\phi_9(r)$ blocks are nonzero.
+Thus
+\[
+                   \rank C\ge\phi_9(r)F_{k-2,m}(t),\qquad rt\le s_0.
+\]
+Choose $u,v$ attaining $\phi_9(r)$, and a tuple attaining $F_{k-2,m}(t)$
+with cost $w\le t$. The concatenated tuple is eligible for $F_{k,m}(s_0)$,
+because $uv\le r$ and $uvw\le s_0$. Also
+$\fl{t/w}\le\fl{s_0/(uvw)}$. Monotonicity of $u_m$ makes that candidate
+at most $\phi_9(r)F_{k-2,m}(t)$, proving the required bound.
+This completes Theorem~\ref{thm:three} in its entire stated domain.
+
+\section{Removing both factors and the divisor law}
+\begin{proof}[Proof of Corollary~\ref{cor:residual}]
+Apply Theorem~\ref{thm:two} with odd residual $3^bm$, then
+Theorem~\ref{thm:three}. Floor composition is exact for positive integer
+costs. Candidates without a ternary cost $2$ are
+\[
+ 2^{a-i}3^{b-j}u_m(\fl{s/(2^i3^j)}),\qquad
+ 0\le i\le a,\ 0\le j\le b .
+\]
+These are precisely the divisor candidates in the corollary.
+A candidate with a ternary cost $2$ has cost $2^{i+1}3^j$ and multiplier
+$2^{a-i+1}3^{b-j-1}$, with $j<b$.
+
+If $i<a$, replace it by the divisor candidate at cost $2^{i+1}3^j$:
+its multiplier is $2^{a-i-1}3^{b-j}$, smaller by a factor $3/4$,
+and its residual budget is unchanged. If $i=a$, use instead the divisor
+cost $q'=2^{a-1}3^{j+1}$, which is $3/4$ of the former cost.
+Its multiplier is the same, $2\,3^{b-j-1}$, and its residual budget
+is larger. Thus every additional candidate is dominated. For $m=1$
+the residual profile is constant one, and minimizing $d/q$ chooses
+the largest eligible divisor.
+\end{proof}
+
+For a purely ternary dimension $d=3^k$, the same proof also gives
+\[
+ u_d(s)=(4-c)3^{k-t-1}
+ \quad\text{when}\quad c3^t\le s<(c+1)3^t,\quad c\in\{1,2\},\ s<d,
+\]
+and $u_d(s)=1$ for $s\ge d$. For a purely binary dimension it gives
+$d/2^{\min(k,\fl{\log_2s})}$. The scalar profiles are recovered as
+operator profiles here; no scalar theorem is silently used to justify
+the noncommuting lower bound.
+
+\begin{center}
+\begin{tabular}{@{}rrrrr@{}}
+\toprule
+$d$ & budget $s$ & product bound $\cl{d/s}$ & exact $u_d(s)$ & subgroup cost\\
+\midrule
+54 & 8 & 7 & 9 & 6\\
+72 & 11 & 7 & 8 & 9\\
+108 & 8 & 14 & 18 & 6\\
+108 & 17 & 7 & 9 & 12\\
+\bottomrule
+\end{tabular}
+\end{center}
+The elementary product bound follows from
+$\|C\|_F^2=d\sum|c_g|^2$ and
+$\|C\|_{\rm op}^2\le s\sum|c_g|^2$.
+The divisor law is specific to the stated dimensions. For example,
+in dimension $10$, a degree-three polynomial in $Z_{10}^2$ with three
+distinct fifth roots as zeros has at most four Weyl terms and rank four.
+This is below $10/\max\{q\mid10:q\le4\}=5$. There is no claim of a
+divisor-step law for all composite dimensions.
+
+\section{Sharp erasure budgets}
+Let $d$ be even with only prime factors $2,3$. For an integer $R\in\{1,\ldots,d\}$, set
+\[
+ q_d(R)=\min\{q:q\mid d,\ qR\ge d\}.
+\]
+\begin{corollary}\label{cor:erase}
+The minimum support of a nonzero complex matrix of rank at most $R$ is
+$q_d(R)$. On the set of all complex matrices of rank at most $R$,
+the largest universally safe number of omitted Weyl coefficients is
+$q_d(2R)-1$ if $2R<d$, and zero if $2R\ge d$.
+\end{corollary}
+\begin{proof}
+The first statement is the inverse of the divisor profile; the witness
+$P_{q_d(R)}$ attains it. If two matrices of rank at most $R$ have the
+same retained coefficients, their difference has rank at most $2R$
+and support contained in the omissions. A nonzero difference needs at
+least $q_d(2R)$ coefficients.
+
+For failure at that number, use $P_q$, $q=q_d(2R)$, whose rank is
+$d/q\le2R$. Split its nonzero diagonal positions into two groups of
+size at most $R$. Put $A=P_q$ on the first group and $B=-P_q$ on the
+second, zero elsewhere. Then $A-B=P_q$, while both ranks are at most $R$.
+If $2R\ge d$, the same split of $I_d$ shows failure on erasing its single
+Weyl label. No omissions retains a basis and is injective.
+\end{proof}
+For $d=108$ and $R=4$, the sharp budget is $17$, with failure at $18$.
+The product bound alone guarantees $13$. This is exact noiseless
+identifiability of arbitrary complex matrices. It does not establish a
+recovery algorithm, conditioning estimate, or a positivity-constrained
+density-matrix threshold.
+
+\section{Checks, dependencies and status}
+The proof is analytic for all stated dimensions. Exact auxiliary checks
+compare root-of-unity monomial exponents, CRT label maps and the integer
+minimum identities. Finite checks do not establish the universal
+quantifiers. In particular, test residual functions used for minimum
+bookkeeping are explicitly artificial monotone functions, not asserted
+physical Weyl rank profiles.
+
+The binary and ternary transfer arguments have received dependent
+mathematical audits. A full assessment of draft~1 requested two domain
+clarifications: integer rank budgets in Corollary~\ref{cor:erase}, and
+admissible positive budgets in the binary induction. Both are explicit in
+this revision. That assessment and its findings are preserved separately;
+the revised artifact has not yet received its own assessment. An assessment
+of the earlier binary-only PDF does not apply to this text.
+
+The residual profile for dimensions with prime factors at least $5$ is
+not determined in general. The two-shift proof uses the special directed
+three-cycle on the sector labels; it is not asserted for an arbitrary
+prime number of sectors. All sharpness assertions are budget statements,
+not classifications of exact-support minimizers or of all equality cases.
+
+\paragraph{AI and responsibility disclosure.}
+The named author directed OpenAI Codex assistance in derivation, writing
+and exact checks. GPT-6 Astra xhigh audits used shared filesystem and
+declared reused task context. No runtime isolation, independent human
+review, Lean formalization, certified worldwide originality or predicted
+assessment score is claimed. Reports on other exact artifacts are
+preserved separately and their grades are not transferred.
+
+\begin{thebibliography}{9}
+\bibitem{meshulam}
+R. Meshulam, An uncertainty inequality for finite abelian groups,
+\emph{European J. Combin.} \textbf{27} (2006), 63--67.
+\url{https://arxiv.org/abs/math/0312407v1}.
+\bibitem{dvb}
+S. Delvaux and M. Van Barel, Rank-deficient submatrices of Fourier matrices,
+\emph{Linear Algebra Appl.} \textbf{429} (2008), 1587--1605.
+\href{https://doi.org/10.1016/j.laa.2008.04.043}{doi:10.1016/j.laa.2008.04.043}.
+Author report TW470 (2006):
+\url{https://www.cs.kuleuven.be/publicaties/rapporten/tw/TW470.pdf}.
+\bibitem{prior}
+L. Eriksson, \emph{Sparse cyclic Weyl operators in prime-power dimension:
+an operator extension of the scalar uncertainty law through sparsity
+$2p-1$}, AIRR.SCIENCE, ARR-2026-1KTM07SEEV968BCB, v1 (2026).
+\href{https://airr.science/papers/ARR-2026-1KTM07SEEV968BCB/versions/v1/}{Version record}.
+\bibitem{seven}
+L. Eriksson, \emph{Sparse Weyl operators: a uniform binary rank theorem
+and sharp erasure thresholds}, AIRR.SCIENCE,
+ARR-2026-161TZ0CP488XTTBN, v1 (2026).
+\href{https://airr.science/papers/ARR-2026-161TZ0CP488XTTBN/versions/v1/}{Version record}.
+\bibitem{yin}
+P. Yin, \emph{A Sharp Rank-Two Uncertainty Principle for Finite Weyl
+Transforms}, public manuscript, commit
+\texttt{39af48a5cf2e014a14f20e3d0ce836a430fea394},
+\href{https://github.com/holdonyb/weyl-stft-paper/blob/39af48a5cf2e014a14f20e3d0ce836a430fea394/research/manuscript.tex}{pinned source},
+accessed 24 October 2026.
+\end{thebibliography}
+\end{document}
