@@ -62,13 +62,10 @@ def install(app, a):
 
     def signed_in(user_id, version):
         destination = session.get('workspace_return', '')
-        session.clear()
+        user = a.get_db().execute('SELECT * FROM users WHERE id=?', (user_id,)).fetchone()
+        a.start_browser_session(user, version, keep_other=request.form.get('keep_other_account') == 'on')
         if re.fullmatch(r'/agents/authorize/[A-Za-z0-9_-]{43}', destination):
             session['workspace_return'] = destination
-        session['user_id'] = user_id
-        session['credential_version'] = version
-        session.permanent = True
-        g.user = a.get_db().execute('SELECT * FROM users WHERE id=?', (user_id,)).fetchone()
 
     @app.route('/account/register', methods=['GET', 'POST'])
     def account_register():

@@ -4,5 +4,8 @@
 <label>Email <input type="email" name="email" autocomplete="username" required></label>
 <label>Password <input type="password" name="password" autocomplete="current-password" required></label>
 <label>Editor one-time code <input name="totp" inputmode="numeric" autocomplete="one-time-code" maxlength="6"><span class="meta">Required for operators and independent editors.</span></label>
+{% if g.user and (g.user['role']=='depositor' or g.other_user) %}<label><input type="checkbox" name="keep_other_account"> Keep my author workspace signed in on this browser</label>{% endif %}
 <button>Sign in</button></form>
-<details><summary>Use a saved recovery code</summary><form class="card" method="post" action="{{ url_for('recovery_login') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><label>Email <input name="email" type="email" autocomplete="username" required></label><label>Password <input type="password" name="password" autocomplete="current-password" required></label><label>One unused recovery code <input name="recovery_code" autocomplete="off" required></label><button>Sign in using recovery code</button></form></details>{% endblock %}
+<details><summary>Use a saved recovery code</summary><form class="card" method="post" action="{{ url_for('recovery_login') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><label>Email <input name="email" type="email" autocomplete="username" required></label><label>Password <input type="password" name="password" autocomplete="current-password" required></label><label>One unused recovery code <input name="recovery_code" autocomplete="off" required></label>
+{% if g.user and (g.user['role']=='depositor' or g.other_user) %}<label><input type="checkbox" name="keep_other_account"> Keep my author workspace signed in on this browser</label>{% endif %}
+<button>Sign in using recovery code</button></form></details>{% endblock %}

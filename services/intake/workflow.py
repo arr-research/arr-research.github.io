@@ -665,9 +665,7 @@ def install(app, a):
             db.rollback()
             abort(403, 'Invalid recovery credentials.')
         db.commit()
-        session.clear()
-        session['user_id'] = user['id']
-        session.permanent = True
+        a.start_browser_session(user, keep_other=request.form.get('keep_other_account') == 'on')
         a.audit('editor_recovery_login')
         flash('A one-use recovery code was consumed. Contact the operator to restore your authenticator through the recovery procedure.', 'warning')
         return redirect(url_for('pageview_dashboard' if user['role'] == 'operator' else 'dashboard'))
