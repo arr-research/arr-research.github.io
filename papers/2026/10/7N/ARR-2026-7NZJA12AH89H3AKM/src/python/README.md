@@ -1,1 +1,1 @@
-For Python work, include `.py` sources, `pyproject.toml`, a dependency lockfile, tests, and documented reproduction commands.
+No verification source or formal proof is redistributed here. The local supplement remains with the author. No formal verification is claimed.

@@ -1,1 +1,1 @@
-For Lean 4 work, include `lean-toolchain`, `lakefile.toml` or `lakefile.lean`, `lake-manifest.json`, and all `.lean` sources.
+No verification source or formal proof is redistributed here. The local supplement remains with the author. No formal verification is claimed.

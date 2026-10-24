@@ -1,3 +1,3 @@
-# AIRR screening report
+# No public AIRR assessment recorded
 
-Use the same structure as `model-1.md` for the third evaluator.
+This file contains no assessment or pass. Screening remains not_assessed; evaluators are empty.

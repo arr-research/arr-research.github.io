@@ -1,1 +1,1 @@
-Place the complete license text for the manuscript, code, and data here. Use separate licenses when their terms differ, and keep every scope and SPDX identifier synchronized with `../LICENSES.json` and `../metadata.json`.
+Canonical manuscript and textual renditions: CC BY 4.0. Catalogue metadata: CC0 1.0. No executable code or third-party material is redistributed in this release. See ../LICENSES.json.
