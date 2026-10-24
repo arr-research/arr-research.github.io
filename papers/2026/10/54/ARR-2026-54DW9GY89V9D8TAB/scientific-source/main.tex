@@ -1,0 +1,489 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=27mm]{geometry}
+\usepackage[T1]{fontenc}\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools,booktabs,microtype}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}\newtheorem{remark}[theorem]{Remark}
+\DeclareMathOperator{\rank}{rank}\DeclareMathOperator{\Tr}{Tr}
+\newcommand{\HH}{\mathcal H}\newcommand{\K}{\mathcal K}
+\newcommand{\DD}{\mathcal D}\newcommand{\norm}[1]{\left\|#1\right\|_{\!F}}
+\title{A sharp stability transition for low-rank tomography\\with four missing Weyl coefficients}
+\author{Lluis Eriksson\\\small Independent researcher, Sweden}
+\date{24 October 2026\\Working draft 2; documentary clarifications}
+\begin{document}\maketitle
+\begin{abstract}
+Let $d=9n$ with arbitrary integer $n\ge1$, and omit the four cyclic Weyl
+coefficients associated with $X_d^{d/3}$, its adjoint, $Z_d^{d/3}$ and its
+adjoint. We determine the exact inverse Frobenius constant on differences
+of density matrices of rank at most $r$. Writing $x=r/n$, the squared
+fraction of energy that can be hidden in the missing coefficients is
+$2x/3$ for $0<x\le1$, and
+$(x+\sqrt{x^2-3x+3})/3$ for $1\le x<2$.
+The resulting inverse constant is attained by explicit orthogonally
+supported states and diverges as $\sqrt{2n/(2n-r)}$ at the exact
+nonidentifiability threshold $r=2n$. The same threshold holds when a
+rank-$r$ state must be distinguished from every positive state of
+unrestricted rank. For this stronger task we give a separate, conservative
+stability bound and a convex least-squares recovery consequence. The
+proof reduces the missing-coefficient space to additive $3$ by $3$
+spectral grids, then solves two four-dimensional symmetric matrix
+pencils. These are results for one fixed erasure pattern, not for
+arbitrary four erasures or a measurement scheme with subquadratically
+many coefficients.
+\end{abstract}
+
+\section{Question, normalization and antecedents}
+A measurement may fail to determine arbitrary quantum states while still
+determining every state below a rank threshold. In that situation a
+quantitative question remains: how much can the omitted data amplify
+errors even before injectivity fails? We solve that question exactly for
+a four-dimensional missing-coefficient space.
+
+Put $\omega_d=e^{2\pi i/d}$ and
+\[
+ X_de_j=e_{j+1\bmod d},\qquad Z_de_j=\omega_d^je_j,\qquad
+ W_d(a,b)=X_d^aZ_d^b .
+\]
+The $d^2$ Weyl matrices are orthogonal, with squared Frobenius norm $d$.
+Throughout, $d=9n$ and $n$ is a positive integer. Define
+\[
+ U=X_d^{d/3},\qquad V=Z_d^{d/3},\qquad
+ E=\{U,U^\dagger,V,V^\dagger\}.
+\]
+These are four distinct nonidentity Weyl matrices. Let $P$ be the
+Frobenius-orthogonal projection onto their complex span, and put $Q=I-P$.
+On Hermitian matrices $P$ is the projection onto the real space
+\begin{equation}\label{eq:kernel}
+ \K=\{aU+\bar a U^\dagger+bV+\bar b V^\dagger:a,b\in\mathbb C\}.
+\end{equation}
+It consists of traceless Hermitian matrices. Thus $Q\rho$ means all Weyl
+coefficients except these four, including the known trace coefficient.
+For $C=\sum_w c_wW_w$ our data norm is
+$\norm{QC}^{\,2}=d\sum_{w\notin E}|c_w|^2$.
+All constants below refer to this normalization, not directly to a
+statistical probability norm.
+
+This coefficient space can be realized by a POVM, although outcome norms
+then require a change of coordinates. Choose a real Hermitian basis
+$F_1,\ldots,F_m$ of the traceless part of $\K^\perp$, where $m=d^2-5$,
+and rescale each element so that $\|F_j\|_{\rm op}\le1$.
+The $2m$ effects $(I+F_j)/(2m),(I-F_j)/(2m)$ are positive, sum to $I$,
+and span $\K^\perp$. Their probability record determines $Q\rho$.
+The constants below do not include the conditioning of this coordinate
+conversion or the sampling error of this particular realization.
+
+Let $\DD_r=\{\rho\ge0:\Tr\rho=1,\rank\rho\le r\}$ and define
+\begin{equation}\label{eq:C}
+ C(n,r)=\sup_{\substack{\rho,\sigma\in\DD_r\\\rho\ne\sigma}}
+       \frac{\norm{\rho-\sigma}}{\norm{Q(\rho-\sigma)}} ,
+\end{equation}
+where a zero denominator gives infinity. Ranks are integers.
+
+The general kernel and inertia characterization of restricted quantum
+state determination is due to Carmeli, Heinosaari, Schultz and
+Toigo~\cite{carmeli}. Their Section 6.2, equations (12)--(13) and
+Proposition 13, also establish the relation between symmetric Weyl zero
+sets and realizable covariant POVM kernels. The elementary realization
+above is not claimed as a new measurement-design principle.
+Baldwin, Deutsch and Kalev~\cite{bdk}, especially
+Sections II--III, distinguish rank-$r$ completeness from
+rank-$r$ strict-completeness and explain the latter's relation to convex
+reconstruction and noise robustness. We use this established distinction.
+We supply direct proofs of the specialized inertia and stability claims
+rather than assert a new general criterion.
+
+Recent work of Zhu and Wang~\cite{zhu} studies spectral floors and
+conditioning for minimal rank-one Weyl--Heisenberg covariant
+measurements. Their full-space Gram-spectrum problem differs from the
+restricted state-difference constant of the singular coefficient
+projection considered here. The author's earlier Weyl rank-uncertainty
+reductions~\cite{eriksson} concern support versus arbitrary complex
+matrix rank, rather than the exact positive-state conditioning law
+proved below. Spectral rearrangement, orthogonal projection duality and
+symmetric matrix pencils are classical tools; the contribution claimed
+here is their explicit solution for the kernel~\eqref{eq:kernel}.
+This comparison is not a certification of worldwide priority.
+
+\section{Exact stability and identifiability}
+\begin{theorem}[Sharp balanced-rank stability]\label{thm:sharp}
+For $1\le r<2n$ let $x=r/n$ and
+\[
+ L(x)=
+ \begin{cases}
+  2x/3,&0<x\le1,\\[2pt]
+  \bigl(x+\sqrt{x^2-3x+3}\bigr)/3,&1\le x<2 .
+ \end{cases}
+\]
+Then
+\begin{equation}\label{eq:main}
+ C(n,r)=(1-L(r/n))^{-1/2}.
+\end{equation}
+The supremum is attained by differences of states of rank exactly $r$
+with mutually orthogonal supports. For $r\ge2n$ it is infinite.
+In particular $C(n,n)=\sqrt3$, and along integer sequences with
+$(2n-r)/n\to0$ from above,
+\[
+ C(n,r)\sim\sqrt{\frac{2n}{2n-r}}.
+\]
+\end{theorem}
+
+\begin{theorem}[Unrestricted positive competitors]\label{thm:strict}
+Every nonzero $H\in\K$ has at least $2n$ strictly positive and at least
+$2n$ strictly negative eigenvalues. Consequently $Q$ distinguishes every
+state of rank at most $r$ from every other density matrix, of any rank,
+if and only if $r<2n$. In this range, for $\rho\in\DD_r$ and any density
+matrix $\sigma$,
+\begin{equation}\label{eq:strict}
+ \norm{\rho-\sigma}\le B(n,r)\norm{Q(\rho-\sigma)},\qquad
+ B(n,r)=\sqrt{1+\frac{288n}{2n-r}} .
+\end{equation}
+The bound $B$ is conservative; it is not asserted to be the optimal
+constant for this larger competitor class.
+\end{theorem}
+
+The finite constants $C$ and $B$ have different domains. In particular,
+\eqref{eq:main} cannot be substituted into \eqref{eq:strict} merely
+because strict-completeness holds. For $n=1$ the finite range contains
+only $r=1$; the intermediate branch becomes nontrivial for $n\ge2$.
+
+\section{Spectral grids and the state-difference cone}
+The unitaries $U,V$ commute, have order three, and generate nine distinct
+Weyl labels. Every nonidentity $U^iV^j$, $0\le i,j<3$, has trace zero.
+Character orthogonality therefore shows that each of the nine joint
+eigenspaces has dimension $n$.
+
+By the real three-point Fourier transform, every $H\in\K$ has joint
+eigenvalues
+\begin{equation}\label{eq:grid}
+ h_{ij}=f_i+g_j,\qquad
+ \sum_{i=1}^3 f_i=\sum_{j=1}^3g_j=0,
+\end{equation}
+each repeated $n$ times, where $f,g$ are arbitrary real zero-mean
+triples. Conversely every such pair occurs in \eqref{eq:kernel}. In
+particular
+\begin{equation}\label{eq:gridnorm}
+ \norm H^2=3n\left(\sum_i f_i^2+\sum_jg_j^2\right).
+\end{equation}
+No restriction to dimensions that are powers of three is needed.
+
+Write $n_+(D),n_-(D)$ for the positive and negative inertias of a
+Hermitian matrix. Up to a positive scalar, the nonzero differences of
+states in $\DD_r$ are exactly
+\[
+ \mathcal C_r=\{D=D^\dagger\ne0:\Tr D=0,\ n_+(D),n_-(D)\le r\}.
+\]
+Indeed, a state difference has these inertia bounds by the min--max
+principle. Conversely the positive and negative spectral parts of such
+a $D$ have a common nonzero trace $\tau$; $D/\tau$ is the difference of
+their trace-one normalizations. Hence the key extremum is
+\begin{equation}\label{eq:energy}
+ L_*=\sup_{D\in\mathcal C_r}\frac{\norm{PD}^2}{\norm D^2}.
+\end{equation}
+Orthogonality gives $C(n,r)=(1-L_*)^{-1/2}$ whenever $L_*<1$.
+
+\begin{lemma}[A common-shift dual bound]\label{lem:dual}
+For an integer $1\le r<2n$ and $H=H^\dagger$ with eigenvalues
+$h_1\ge\cdots\ge h_d$, put
+\[
+ W_r(H)=\min_{\theta\in\mathbb R}
+       \sum_{i=1}^r\bigl[(h_i-\theta)^2+(h_{d-i+1}-\theta)^2\bigr].
+\]
+For $D\in\mathcal C_r$, $|\Tr(HD)|^2\le W_r(H)\norm D^2$. Thus
+\begin{equation}\label{eq:dual}
+ L_*\le\sup_{0\ne H\in\K}\frac{W_r(H)}{\norm H^2}.
+\end{equation}
+\end{lemma}
+\begin{proof}
+Pad the positive eigenvalues $p_i$ of $D$ and negative magnitudes $q_i$
+with zeros to length $r$, ordering both decreasingly. Their sums agree.
+Trace rearrangement bounds $\Tr(HD)$ by
+$\sum_{i\le r}h_i p_i-\sum_{i\le r}h_{d-i+1}q_i$.
+For completeness, squared overlaps of two orthonormal eigenbases give a
+doubly stochastic matrix; the extremal pairing of two ordered real
+lists bounds the trace. The same conclusion follows from weighted
+spectral variational inequalities. This argument does not require $D$
+to commute with $H$.
+
+Subtract $\theta(\sum p_i-\sum q_i)=0$ and apply Cauchy--Schwarz.
+Apply the same reasoning to $-H$ to control the absolute value, noting
+$W_r(-H)=W_r(H)$. Finally
+$\norm{PD}=\max_{H\in\K,\norm H=1}|\Tr(HD)|$, which proves
+\eqref{eq:dual}.
+\end{proof}
+
+\section{Solving the dual extremum}
+\subsection{Ranks at most one joint multiplicity}
+For $r\le n$ the extreme values of $H$ each occur at least $n$ times, so
+\[
+ W_r(H)=\frac r2(\max h-\min h)^2.
+\]
+For a zero-mean triple,
+$\operatorname{diam}(f)^2\le2\sum f_i^2$. Since
+$\operatorname{diam}(h)=\operatorname{diam}(f)+\operatorname{diam}(g)$,
+\eqref{eq:gridnorm} gives $W_r(H)/\norm H^2\le2r/(3n)$.
+
+Take $f=(1,0,-1)$ and $g=-f$. The grid has extrema $\pm2$ on spaces
+of dimension $n$, and $\norm H^2=12n$. Choose rank-$r$ projectors
+$R_+,R_-$ in those two spaces and set $D=2(R_+-R_-)$.
+Then $\Tr(HD)=\norm D^2=8r$. Projection duality yields
+\[
+ \frac{\norm{PD}^2}{\norm D^2}\ge
+ \frac{|\Tr(HD)|^2}{\norm H^2\norm D^2}
+ =\frac{2r}{3n}.
+\]
+This matches the upper bound, and $R_+/r,R_-/r$ are the required states.
+
+\subsection{Ranks between one and two joint multiplicities}
+Now $n\le r<2n$, $x=r/n$, and $z=x-1$. Sort $f,g$ decreasingly and put
+\[
+ a=f_1-f_2,\quad b=f_2-f_3,\quad c=g_1-g_2,\quad e=g_2-g_3.
+\]
+These gaps are nonnegative. Define
+\[
+ K=a^2+ab+b^2+c^2+ce+e^2,\quad
+ A=a+b+c+e,\quad u=\min(a,c),\quad v=\min(b,e).
+\]
+Then $\norm H^2=2nK$. The largest two cells are
+$h_{\max},h_{\max}-u$ and the smallest two
+$h_{\min},h_{\min}+v$, with weights $n,r-n$ at each end.
+Ties and zero gaps cause no problem: consistent cell ordering selects
+the same multiset, with partial cells of dimension $r-n$.
+
+The shift minimizing $W_r$ is
+\[
+ \theta=\frac{h_{\max}+h_{\min}}2+\frac{z(v-u)}{2x}.
+\]
+Expanding the squares gives
+\begin{equation}\label{eq:Q}
+ \frac{W_r(H)}n=
+ \frac{xA^2}2-zA(u+v)+z(u^2+v^2)-\frac{z^2(v-u)^2}{2x}.
+\end{equation}
+The single common shift is essential because the positive and negative
+parts of a state difference must have the same trace.
+
+There are four choices for the two minima; exchange of $f,g$ reduces
+them to $(u,v)=(a,b)$ and $(a,e)$. Write $w=(a,b,c,e)^T$ and
+\[
+ M=\begin{pmatrix}2&1&0&0\\1&2&0&0\\0&0&2&1\\0&0&1&2\end{pmatrix}>0.
+\]
+Then $2K=w^TMw$, and the numerator in \eqref{eq:Q} is $w^TNw$, with
+\begin{align*}
+ N_{\rm same}&=
+ \begin{pmatrix}
+ 1-\frac1{2x}&\frac1{2x}&\frac12&\frac12\\
+ \frac1{2x}&1-\frac1{2x}&\frac12&\frac12\\
+ \frac12&\frac12&\frac x2&\frac x2\\
+ \frac12&\frac12&\frac x2&\frac x2
+ \end{pmatrix},\\
+ N_{\rm cross}&=
+ \begin{pmatrix}
+ 1-\frac1{2x}&\frac12&\frac12&\frac1{2x}\\
+ \frac12&\frac x2&\frac x2&\frac12\\
+ \frac12&\frac x2&\frac x2&\frac12\\
+ \frac1{2x}&\frac12&\frac12&1-\frac1{2x}
+ \end{pmatrix}.
+\end{align*}
+Their exact pencil determinants are
+\begin{align}
+ \det(N_{\rm same}-\lambda M)
+ &=-\frac{\lambda}{x}(\lambda x-x+1)
+       [-9\lambda^2+3(x+1)\lambda-x+1],\label{eq:det1}\\
+ \det(N_{\rm cross}-\lambda M)
+ &=-\frac{\lambda}{x}(3\lambda x-2x+2)
+       [-3\lambda^2+2x\lambda-x+1].\label{eq:det2}
+\end{align}
+These identities can be checked by direct four-by-four expansion.
+As $M$ is positive definite, the largest generalized eigenvalue bounds
+the quotient even after relaxing the gap and branch inequalities.
+
+Put $\ell=(x+\sqrt{x^2-3x+3})/3$. It is the larger root of
+$3\lambda^2-2x\lambda+x-1=0$ and is at least $2/3$ for $1\le x\le2$.
+The other roots of \eqref{eq:det2} are $0$,
+$2(x-1)/(3x)\le1/3$, and the smaller quadratic root. Thus the cross
+branch has maximum generalized eigenvalue $\ell$.
+
+For the same branch the additional roots are $0$ and $(x-1)/x\le1/2$.
+With $q(\lambda)=9\lambda^2-3(x+1)\lambda+x-1$,
+\[
+ q(\ell)=(x-1)(3\ell-2)\ge0.
+\]
+Moreover $\ell$ lies to the right of the vertex $(x+1)/6\le1/2$.
+It follows that the larger root of $q$ is at most $\ell$. This proves
+$L_*\le\ell$ in all branches.
+
+\section{Extremizing states and the singular boundary}
+For $n\le r<2n$ put
+\[
+ t=1-x+\sqrt{x^2-3x+3},\qquad
+ f=\left(\frac{2+t}3,\frac{t-1}3,-\frac{1+2t}3\right),\quad g=-f .
+\]
+Here $0<t\le1$, and
+\begin{equation}\label{eq:t}
+ t^2+2(x-1)t+x-2=0.
+\end{equation}
+The grid of $H$ has eigenvalues $0$ on $3n$ dimensions and
+$\pm(1+t),\pm1,\pm t$, each listed sign repeated $n$ times.
+At $t=1$ distinct cells may share an eigenvalue; the indicated cell
+decomposition is still valid.
+
+Retain the full $n$-dimensional cells of $\pm(1+t)$, rank-$(r-n)$
+subspaces in the cells of $\pm1$, and zero elsewhere, obtaining $D$.
+Then $\Tr D=0$, $n_\pm(D)=r$, and
+\[
+ \Tr(HD)=\norm D^2=2[n(1+t)^2+(r-n)],\qquad
+ \norm H^2=2n[(1+t)^2+1+t^2].
+\]
+Using \eqref{eq:t},
+\[
+ \frac{\norm D^2}{\norm H^2}
+ =\frac{(1+t)^2+x-1}{2(1+t+t^2)}
+ =\frac{x+\sqrt{x^2-3x+3}}3=\ell.
+\]
+Projection duality forces $\norm{PD}^2/\norm D^2\ge\ell$, so equality
+holds by the previously proved upper bound. The positive and negative
+parts of $D$, divided by their common trace $n(1+t)+(r-n)$, are
+explicit orthogonally supported rank-$r$ states.
+
+At $r=2n$, the matrix
+\[
+ H_0=U+U^\dagger-V-V^\dagger
+\]
+has eigenvalues $3,-3$ each on $2n$ dimensions and zero elsewhere.
+Its positive and negative spectral parts, each divided by $6n$, are
+distinct rank-$2n$ states whose difference lies in $\K$. This proves
+failure for all $r\ge2n$. For $x<2$, $L(x)<1$, completing
+\eqref{eq:main}. Finally $L'(2^-)=1/2$, whence
+$1-L(x)\sim(2-x)/2$ and the stated asymptotic follows.
+
+\section{Strict-completeness and convex reconstruction}
+\begin{proof}[Proof of Theorem~\ref{thm:strict}]
+For a nonzero grid \eqref{eq:grid}, sort both triples and put
+$F=f_1\ge0$, $G=g_1\ge0$, $S=F+G>0$. Zero mean and ordering give
+$f_2\ge-F/2$, $g_2\ge-G/2$. The second largest cell satisfies
+\[
+ h_2=\max(F+g_2,f_2+G)
+ \ge\max(F-G/2,G-F/2)\ge S/4>0.
+\]
+Thus at least two cells, each of dimension $n$, are strictly positive.
+Apply the argument to $-H$ for the negative cells.
+
+We also have $\sum f_i^2\le6F^2$: indeed
+$f_2\in[-F/2,F]$ and the convex quadratic
+$F^2+f_2^2+(F+f_2)^2$ is at most $6F^2$ on that interval.
+Similarly $\sum g_j^2\le6G^2$. Consequently
+\[
+ \norm H^2\le18n(F^2+G^2)\le18nS^2.
+\]
+The largest $2n$ positive eigenvalues are therefore all at least
+$\norm H/\sqrt{288n}$, and the same bound holds for the $2n$ largest
+negative magnitudes.
+
+Suppose $D=D^\dagger$, $\Tr D=0$, and either $n_+(D)\le r$ or
+$n_-(D)\le r$. Set $H=PD$. If $H=0$ there is nothing to prove.
+In the first case the Hermitian eigenvalue distance inequality bounds
+$\norm{D-H}^2$ below by the sum of squares of the positive eigenvalues
+of $H$ after its $r$ largest ones. To see this, sort the eigenvalues of
+both matrices; $D$ has at most $r$ positive entries, so each subsequent
+positive eigenvalue of $H$ contributes at least its square to their
+squared Euclidean distance, which is bounded above by
+$\norm{D-H}^2$. This last comparison follows from trace rearrangement:
+if $d_i,h_i$ are the respective decreasing eigenvalue lists, then
+\[
+ \norm{D-H}^2=\norm D^2+\norm H^2-2\Tr(DH)
+ \ge\sum_i(d_i-h_i)^2.
+\]
+Hence
+\[
+ \norm{QD}^2\ge\frac{2n-r}{288n}\norm{PD}^2.
+\]
+Apply the same argument to $-D,-H$ in the second case. Pythagoras now
+gives $\norm D\le B(n,r)\norm{QD}$.
+
+If $\rho\in\DD_r$ and $\sigma$ is any density matrix, the quadratic form
+of $D=\rho-\sigma$ is nonpositive on $\ker\rho$. By min--max,
+$n_+(D)\le r$, so \eqref{eq:strict} follows. It implies uniqueness for
+$r<2n$. The states constructed from $H_0$ prove failure at and above
+$2n$.
+\end{proof}
+
+\begin{corollary}[A convex noisy-data estimator]\label{cor:noise}
+Let $1\le r<2n$, $\rho\in\DD_r$, and $y=Q\rho+e$ with
+$\norm e\le\epsilon$. Every minimizer
+\[
+ \widehat\rho\in\arg\min_{\sigma\ge0,\ \Tr\sigma=1}\norm{Q\sigma-y}
+\]
+satisfies $\norm{\widehat\rho-\rho}\le2B(n,r)\epsilon$.
+\end{corollary}
+\begin{proof}
+The density-matrix domain is nonempty, compact and convex, so a minimizer
+exists. Its residual is at most that of $\rho$, hence at most $\epsilon$.
+The triangle inequality gives
+$\norm{Q(\widehat\rho-\rho)}\le2\epsilon$, and
+Theorem~\ref{thm:strict} applies without a rank restriction on
+$\widehat\rho$.
+\end{proof}
+
+This is a deterministic guarantee in coefficient space. It supplies no
+experimental sampling bound, approximate-rank guarantee or running-time
+analysis. In particular it does not assert an improvement over compressed
+sensing protocols using many fewer measured coefficients.
+
+\section{Scope, checks and remaining questions}
+The argument depends only on the additive spectral kernel with nine
+equal-multiplicity cells. It therefore applies after arbitrary unitary
+conjugation and to any commuting order-three pair with all nine joint
+multiplicities equal to $n$. The cyclic Weyl construction realizes this
+kernel in every dimension divisible by nine.
+
+Exact symbolic checks reproduce both pencil determinants and the
+attainer identities, including a direct computation of projection energy.
+Finite exact tests additionally compare sorted spectra with the formulas
+in $2{,}400$ formula checks on $2{,}000$ distinct instances, using
+$n=1,\ldots,5$ and $80$ nonzero gap vectors. The $400$ instances at $r=n$
+are checked in both branches.
+These tests supplement the universal proofs; they do not establish
+unexamined dimensions by extrapolation.
+
+The main open quantitative question here is the optimal constant in
+\eqref{eq:strict}. Further questions concern unequal joint
+multiplicities, other erasure patterns, and error bounds for approximately
+low-rank states. The present result does not classify those problems.
+Only four coefficients are removed out of $d^2$; the theorem isolates an
+exact conditioning mechanism rather than a large measurement reduction.
+
+\paragraph{AI and responsibility disclosure.}
+The named author directed substantial OpenAI Codex assistance in
+derivation, writing and exact computational checks. GPT-6 Astra xhigh
+mathematical audits used shared filesystem and declared reused context.
+No runtime isolation, independent human review, Lean formalization,
+certified worldwide originality or predicted assessment score is claimed.
+A full assessment of draft 1 is preserved separately. This draft makes
+documentary clarifications; no new full assessment score is assigned to it.
+
+\begin{thebibliography}{9}
+\bibitem{carmeli}
+C.~Carmeli, T.~Heinosaari, J.~Schultz and A.~Toigo,
+\emph{Tasks and premises in quantum state determination},
+arXiv:1308.5502v2 (2014).
+\url{https://arxiv.org/abs/1308.5502v2}.
+\bibitem{bdk}
+C.~H.~Baldwin, I.~H.~Deutsch and A.~Kalev,
+\emph{Strictly-complete measurements for bounded-rank quantum-state
+tomography}, Physical Review A \textbf{93}, 052105 (2016).
+\url{https://doi.org/10.1103/PhysRevA.93.052105};
+arXiv:1605.02109v1.
+\bibitem{zhu}
+X.~Zhu and Y.~Wang,
+\emph{Uniformly Stable Minimal Weyl--Heisenberg Measurements Approaching
+the SIC Benchmark}, arXiv:2608.11850v1 (2026).
+\url{https://arxiv.org/abs/2608.11850v1}.
+\bibitem{eriksson}
+L.~Eriksson, \emph{Removing the binary and ternary factors from cyclic
+Weyl rank uncertainty}, AIRR.SCIENCE, ARR-2026-1QEPAQ29TN8FZRK5,
+v1 (2026).
+\url{https://airr.science/papers/ARR-2026-1QEPAQ29TN8FZRK5/versions/v1/}.
+\end{thebibliography}
+\end{document}
