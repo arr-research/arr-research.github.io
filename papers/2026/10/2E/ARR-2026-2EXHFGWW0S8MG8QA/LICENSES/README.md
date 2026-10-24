@@ -1,0 +1,1 @@
+Manuscript and scientific LaTeX source: CC BY 4.0, https://creativecommons.org/licenses/by/4.0/. Metadata: CC0 1.0, https://creativecommons.org/publicdomain/zero/1.0/. See LICENSES.json. External repositories retain their own licenses.
