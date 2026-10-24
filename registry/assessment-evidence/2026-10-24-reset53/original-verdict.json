@@ -1,0 +1,197 @@
+{
+  "schema": "private-mathematical-review-v1",
+  "official_airr_admission_json": false,
+  "editorial_decision": false,
+  "review_date": "2026-10-24",
+  "manuscript": {
+    "title": "Sharp minimax losses for energy-constrained quantum reset channels",
+    "author": "Lluis Eriksson",
+    "pages": 11,
+    "pdf_sha256": "f472a6c9380da16347a66b390d12b967a50d221e77a0c96905fb5f3d4868df7e",
+    "tex_sha256": "b73382d3e1f9ef94bb657adae5313caf5cee23e8718fec6559eaa35dd708f1e1",
+    "code_commit": "093f9d34e3cecfe63a1a6cec0ac46eafdcd68412"
+  },
+  "reviewer_context": {
+    "requested_model": "GPT-6 Astra",
+    "requested_reasoning_effort": "xhigh",
+    "runtime_independently_attested": false,
+    "fresh_context_requested": true,
+    "prior_model_family_involvement_disclosed": true,
+    "shared_filesystem": true,
+    "technical_isolation": false,
+    "human_review": false,
+    "delegation": false,
+    "development_notes_or_prior_assessments_read": false,
+    "accidental_private_notes_access_identified": false,
+    "bibliographic_lead_received_from_coordinator": "Baitenov 2024, citation and abstract scope only, no score or scientific judgment."
+  },
+  "correctness": {
+    "status": "no_material_defect_identified_under_stated_hypotheses",
+    "confidence_description": "Detailed adversarial model review; no formal certification or probability assigned. Finite floating point checks are separate from analytical reasoning.",
+    "material_defects": [],
+    "counterexample_found": false
+  },
+  "nonblocking_suggestions": [
+    {
+      "id": "A",
+      "location": "Section 5, pages 7–8, before S1 and connection used in S4",
+      "issue": "The evaluation of the mixed-measure functional at the saddle is implicit.",
+      "possible_repair": "Write Ψ(f,t*)=2λ ln[B_z(s,3/2)/b]+(q−2λs)ln z+b(2λs−qc), explicitly including atomic contribution −qw ln q.",
+      "changes_theorems": false
+    },
+    {
+      "id": "B",
+      "location": "Section 3.1, end of page 4",
+      "issue": "Parameter coverage as z decreases to q is compactly justified.",
+      "possible_repair": "Show r=sy and exponential domination of scaled moments; specify λ fixed in (0,1).",
+      "changes_theorems": false
+    },
+    {
+      "id": "C_addendum",
+      "location": "Introduction / prior work",
+      "issue": "An explicit older definition of arbitrary-state identity/replacement channels is relevant.",
+      "possible_repair": "Cite Giovannetti–Lloyd–Ruskai 2005, section IV.B, equation (34); compare Baitenov 2024 further when full text becomes accessible.",
+      "changes_theorems": false
+    }
+  ],
+  "surviving_results": [
+    {
+      "location": "Theorem 2.1; branch lemma",
+      "result": "Uniform reduction of quantum minimax to diagonal classical entropy game, including coherent inputs/adversaries and infinite-dimensional finite-energy states."
+    },
+    {
+      "location": "Theorem 3.1; Lemmas 3.2–3.3",
+      "result": "Explicit constant-loss curve for every fixed positive energy ratio, atomic/diffuse profiles, global entropy certificates, and feasible discrete approximation."
+    },
+    {
+      "location": "Consequences in Section 4",
+      "result": "Monotonicity, concavity, ratio-sequence extension, plateau, and vanishing deficit exactly for M=o(E)."
+    },
+    {
+      "location": "Section 5, S1–S7",
+      "result": "Strict positive asymptotic separation of the thermal adversary for each fixed 0<c<1."
+    },
+    {
+      "location": "Section 5, S8–S9",
+      "result": "Square-root small-c law and quadratic approach to the plateau."
+    }
+  ],
+  "adversarial_checks": [
+    "Unbounded entropy and energy escape",
+    "Coherent adversaries and dephasing limit",
+    "Largest eigenvalue bound from Gibbs relative entropy",
+    "Atomic mass and x^(-1/2) singularity",
+    "Normalization and conversion between logarithm bases",
+    "Coverage of both parameter branches",
+    "Full-support relative entropy and global inequalities",
+    "Both discrete energy constraints and order of limits",
+    "Critical boundary and c>=1 plateau",
+    "Thermal comparison with mixed reference measure",
+    "Endpoint coefficients and Jacobian",
+    "Known initial solver failure kept distinct"
+  ],
+  "prior_art_comparison": {
+    "known_components": [
+      "Energy-constrained entanglement-assisted single-letter formula",
+      "Finite-label conditional entropy continuity",
+      "Binary-branch constant h2(lambda), already visible in the depolarizing formula",
+      "Vacuum reset input optimization and related branch mechanism",
+      "Identity/replacement channel family explicitly present in finite-dimensional literature since at least 2005"
+    ],
+    "probable_specialized_advance": "Uniform reduction plus explicit full fixed-ratio minimax constant curve, atomic/diffuse optimal constructions and global discrete certificates; thermal adversary gap and endpoint laws.",
+    "distinctions": [
+      "Additive-noise Gaussian saddle is a different game",
+      "Bosonic beam-splitter attenuator with engineered environment is a different channel and objective",
+      "Thermal input suboptimality for a fixed vacuum reset differs from thermal adversary suboptimality under a reset budget"
+    ],
+    "priority_certified": false,
+    "exhaustive_search": false,
+    "unresolved_access_limit": "Baitenov 2024 full text unavailable; abstract alone does not settle detailed overlap."
+  },
+  "reproducibility": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.12.14",
+    "numpy": "2.2.6",
+    "scipy": "1.18.0",
+    "finite_replay_passed": 28,
+    "finite_replay_total": 28,
+    "max_constraint_residual": 3.674838211509268e-14,
+    "max_kkt_shape_residual": 8.526512829121202e-14,
+    "max_input_lp_gap": 1.509903313490213e-14,
+    "max_reset_lp_gap": 4.180888968363661e-11,
+    "historical_comparison_tolerance": 2e-07,
+    "initial_failed_case": {
+      "E": 8,
+      "c": 0.05,
+      "solver_success": true,
+      "passed_numerical_checks": false,
+      "constraint_residual_max": 0.04999999999999788,
+      "reset_scaled_mean": 2.1247114481032572e-15,
+      "interpretation": "Failure of active moment equations/saddle certificate, not automatically violation of the upper reset budget."
+    },
+    "independent_checks": {
+      "seed": 20261024,
+      "complex_state_pairs": 120,
+      "continuous_profiles": 30,
+      "positive_thermal_gap_checks": 30,
+      "max_quantum_identity_error": 1.5543122344752192e-15,
+      "minimum_quantum_inequality_slack": -4.0985969446990053e-16,
+      "max_profile_input_mean_error": 9.70668e-13,
+      "max_profile_mass_error": 8.55812e-11,
+      "max_profile_reset_mean_error": 4.302225e-11,
+      "minimum_tested_thermal_gap_bits": 6.093309862282318e-06,
+      "interpretation": "Floating-point corroboration, not proof, interval certification, or uniform lower bound."
+    },
+    "not_replayed": [
+      "Six large-E historical continuum cases",
+      "Linux platform",
+      "Internal audits asserted in manuscript",
+      "Repository CI workflow"
+    ],
+    "inputs_unchanged": true,
+    "selected_repository_files_unchanged": true,
+    "editor_document_modified": false
+  },
+  "recommendation": {
+    "value": "favorable_specialist_publication_with_nonblocking_expository_suggestions",
+    "scope": "Scientific recommendation on this exact candidate; private review, not editorial acceptance."
+  },
+  "quality_score": 5.5,
+  "quality_score_justification": "Between very good and excellent: convincing specialized analytical work with genuine coherence, infinite-dimensional, atomic and feasibility difficulties addressed by global certificates; methods substantially adapt established entropy tools.",
+  "importance_airr": 4.5,
+  "importance_airr_justification": "Strong specialized advance with probable new exact structure in a narrow adversarial reset problem; no demonstrated field-wide reorganization, central-problem resolution, broad coding consequence, or Millennium relevance. Separately judged, not a mean of criteria.",
+  "criteria_1_to_5": {
+    "correctness": 4,
+    "rigor_completeness": 4,
+    "novelty_against_checked_sources": 4,
+    "significance": 3,
+    "reproducibility_inspectability": 4
+  },
+  "airr_scale": {
+    "source": "https://raw.githubusercontent.com/arr-research/arr-research.github.io/main/docs/MODEL_ASSESSMENT_POLICY.md",
+    "source_sha256": "41829e068687a57afd35eaa9aa5afd99a1f09a8f651bc522dbd871f0b31ff750",
+    "anchors": {
+      "3": "publishable floor",
+      "4": "strong",
+      "5": "very good",
+      "6": "excellent",
+      "7": "exceptional",
+      "8": "potentially field-changing",
+      "9": "potentially historical",
+      "10": "Recognized unconditional Millennium solution with extraordinary independent verification; cannot be credited solely by a model review."
+    },
+    "importance_is_automatic_mean": false
+  },
+  "artifacts": {
+    "original_report": "report.txt",
+    "original_report_sha256": "512421138fe2d994648baf4150623cf249eb2015478100f860778459e26305b5",
+    "original_report_edited_after_conclusion": false,
+    "bibliographic_addendum": "addendum-sources.txt",
+    "bibliographic_addendum_sha256": "87eb7d9d92ca5c6503a5a0123534c9cac90768b92c30936bae21da8d5bfd3844",
+    "source_read_register": "sources/read-register.json",
+    "input_integrity": "input-integrity.json",
+    "manifest": "manifest.json",
+    "manifest_hash_file": "manifest-sha256.txt",
+    "copy_receipt": "copy-receipt.json"
+  }
+}
