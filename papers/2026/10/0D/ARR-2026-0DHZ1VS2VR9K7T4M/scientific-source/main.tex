@@ -1,0 +1,470 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=24mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype,amsmath,amssymb,amsthm,booktabs,needspace}
+\usepackage[hidelinks]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\ran}{\operatorname{ran}}
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\C}{\mathbb C}
+\newcommand{\F}{\mathrm F}
+\DeclareMathOperator{\rank}{rank}
+\title{Sharp positivity orders for reduction maps\\on perfect-tensor codes}
+\author{Lluis Eriksson}
+\date{25 October 2026\\\small Research manuscript, draft 2}
+\begin{document}
+\maketitle
+\begin{abstract}
+We classify positivity of tensor products of reduction maps after restriction to perfect-tensor codes. For encodings from \(\operatorname{AME}(4,d)\), the restricted Choi matrix splits into an isotropic code-output block and a completely positive complement. This gives the exact rank-constrained minimum for every \(0\le t\le1\). For every \(\operatorname{AME}(6,d)\), an operator bound obtained from five incident-error stars proves an exact simple least Choi eigenvalue and a monotone quintic complete-positivity threshold. At \(t=1/2\), its complementary output block is also completely positive, giving an exact positivity-order classification. Uniformly in the code dimension, the encoded three- and five-copy maps are respectively 8-positive and 32-positive. These uniform orders cannot be increased to 9 and 33, as shown by exact code-projector witnesses. The entire column support must lie in the code; the opposite support is free. The results do not imply positivity of unrestricted physical tensor powers or allow tensorization of merely k-positive maps. We also separate a classical low-rank PPT explanation of qutrit entanglement breaking from an explicit Weyl measure-and-prepare realization.
+\end{abstract}
+
+\section{Introduction}
+Reduction-type maps and their tensor powers connect positive-map theory, Schmidt rank and Werner distillation. We consider
+\[
+ \Phi_t(X)=\Tr(X)I_d-tX,\qquad
+ \Lambda^{(n)}_{V,t}(X)=\Phi_t^{\otimes n}(VXV^*),\quad n\in\{3,5\},
+\]
+where \(V:\C^d\to(\C^d)^{\otimes n}\) is an encoding obtained from an absolutely maximally entangled state on \(n+1\) parties. The restriction is on a whole quantum-code support. It is not a statement about arbitrary physical input subspaces or a plane containing only one code vector.
+
+The code-output block has a particularly simple form: after the encoding isometry, it is the Choi matrix of a depolarizing-type map. The other output block is completely positive throughout the three-copy parameter interval, and at the five-copy Werner endpoint. This operator decomposition lets the standard isotropic Schmidt criterion control all admissible coefficient matrices, not just operators supported on the code on both sides.
+
+For three copies we obtain an exact constrained minimum and all parameter thresholds. For five copies, pair-error subspaces need not be mutually orthogonal. We retain their possible overlaps and bound their sum by five incident stars. This proves a universal least eigenvalue without asserting a universal full spectrum. At the half parameter, a positive complement then yields the exact rank-positivity test. The uniform orders 8 and 32 are optimal over dimensions for these encoded families.
+
+\paragraph{Prior ingredients and attribution.}
+Quantum secret-sharing codes and their relation to perfect tensors are prior \cite{CGL,Helwig,Graph}. Products of the parameterized maps \(\Tr(X)I-tX\) already occur in generalized state inversion \cite{Eltschka}. Error-space orthogonality, padded partial traces, AME purities and shadow-enumerator methods are also earlier tools \cite{Huber}. Inserting code-projector purities is not a new shadow inequality. The Choi test, isotropic k-positivity and the Schmidt overlap bound are standard \cite{Choi,TH}. Our proofs identify the specific coded-output decomposition and operator bounds before applying those tools. The qutrit EB discussion explicitly credits the classical low-rank PPT criterion \cite{HLVC}; its existence conclusion is distinguished from the constructive formulas in Appendix~\ref{app:CGL}.
+
+Recent two-copy and restricted three-copy Werner results \cite{Bharti,Fraser,WuZou} provide context. Their results are not imported as premises for the proofs below. We establish neither unrestricted rank-two Werner positivity nor a new AME construction. No worldwide priority certification is asserted.
+
+\section{Conventions, privacy and the coefficient Gram}
+Let \(n=3,d\ge3\), or \(n=5,d\ge2\), and let \(\Psi\) be an \(\operatorname{AME}(n+1,d)\) unit vector with reference \(R\) and \(n\) physical sites. Every reduction on at most \((n+1)/2\) parties is maximally mixed. Write
+\begin{equation}\label{eq:encoding}
+ \Psi=d^{-1/2}\sum_{j=0}^{d-1}|j\rangle_R V|j\rangle,
+ \qquad V^*V=I_d,
+ \quad P=|\Psi\rangle\langle\Psi|,
+ \quad \Pi=VV^*,\quad W=I_d\otimes\Pi.
+\end{equation}
+Existence is assumed for the universal statements. The sharpness examples use known constructions described in Section~\ref{sec:codes}. No reality or stabilizer hypothesis is imposed. Transposition and conjugation refer to fixed product bases. Row support means \(\ran C^*\).
+
+We use unnormalized Choi matrices,
+\[
+ J^{(n)}_{V,t}=\sum_{j,l}|j\rangle\langle l|\otimes
+             \Lambda^{(n)}_{V,t}(|j\rangle\langle l|)
+       =d(\id_R\otimes\Phi_t^{\otimes n})(P).
+\]
+The Choi criterion is \(J\ge0\) if and only if the map is completely positive. Its trace multiplier is
+\begin{equation}\label{eq:trace-general}
+ \Tr\Lambda^{(n)}_{V,t}(L)=(d-t)^n\Tr L.
+\end{equation}
+Whenever complete positivity holds with \(t<d\), division by \((d-t)^n\) gives a channel.
+
+\begin{lemma}[Privacy and output support]\label{lem:privacy}
+For a physical subset \(S\) of size \(s\le(n-1)/2\) and every complex operator \(L_S\) on those sites,
+\begin{equation}\label{eq:privacy}
+ V^*(L_S\otimes I_{S^c})V=\frac{\Tr_S L_S}{d^s}I_d.
+\end{equation}
+The trace is local, before padding by identities. If this trace is zero, the error vector \((I_R\otimes L_S)\Psi\) is orthogonal to the entire range of \(W\).
+\end{lemma}
+\begin{proof}
+The marginal on \(R,S\) is \(I_R\otimes I_S/d^{s+1}\). Expansion in reference matrix units gives
+\[
+\Tr_{S^c}(V|j\rangle\langle l|V^*)=\delta_{jl}I_S/d^s,
+\]
+proving \eqref{eq:privacy}. Moreover
+\[
+ W(I_R\otimes L_S)\Psi
+ =d^{-1/2}\sum_j|j\rangle_R V[V^*L_SV]|j\rangle=0
+\]
+for a centered local operator. This proves the stronger output-support assertion, rather than only orthogonality to \(\Psi\).
+\end{proof}
+
+Define the original-slot form
+\begin{equation}\label{eq:q}
+ q_{n,t}(C)=\sum_{S\subseteq\{1,\ldots,n\}}(-t)^{|S|}
+                       \|\Tr_S C\|_{\F}^{2}.
+\end{equation}
+\begin{lemma}[Complex coefficient Gram]\label{lem:gram}
+If \(C=VB\), then its row-vectorized coefficient Gram is
+\(J^{(n)}_{\overline V,t}=\overline{J^{(n)}_{V,t}}\).
+Also \(\|VB\|_{\F}=\|B\|_{\F}\) and \(\rank(VB)=\rank B\).
+\end{lemma}
+\begin{proof}
+The one-site row-matrix-unit Gram has entries
+\[
+ Q_{(a,r),(b,u)}=\delta_{ab}\delta_{ru}-t\delta_{ar}\delta_{bu}
+                   =[\Phi_t(|a\rangle\langle b|)]_{ru}.
+\]
+Tensoring and regrouping gives \eqref{eq:q}. Compression by \(V\) gives the coefficients
+\[
+\sum_{a,b}\overline{V_{aj}}V_{bl}[\Phi_t^{\otimes n}(|a\rangle\langle b|)]_{ru},
+\]
+exactly those of the Choi matrix for \(\overline V\). All matrix-unit coefficients of \(\Phi_t\) are real. The last two identities follow because \(V\) is an isometry.
+\end{proof}
+
+\begin{lemma}[Standard Schmidt compression]\label{lem:schmidt}
+Put \(k_e=\min(k,d)\). On unit vectors of Schmidt rank at most \(k_e\), the isotropic matrix
+\(aI_{d^2}+b|\Omega_d\rangle\langle\Omega_d|\), with \(\Omega_d=\sum_j|jj\rangle\), has exact minimum \(a+k_e\min(0,b)\).
+If a Choi matrix is an output direct sum of this block and a positive semidefinite complement, its k-positivity is equivalent to nonnegativity of that number.
+\end{lemma}
+\begin{proof}
+Reshape a unit vector as a matrix \(M\), of Frobenius norm one. The standard bound \cite{TH}
+\(|\Tr M|\le\|M\|_1\le\sqrt{\rank M}\|M\|_{\F}\)
+gives squared overlap at most \(k_e\). Equality is attained by a normalized rank-\(k_e\) projection; zero overlap by a trace-zero rank-one matrix.
+
+For the direct sum, project any vector locally on the physical output to its code and complementary components. Schmidt rank cannot increase. Their squared norms add to one and there are no cross terms. This covers vectors occupying both output blocks. Finally, a map is k-positive precisely when its Choi matrix is nonnegative on Schmidt-rank-at-most-k vectors: ancillary tests are congruences \((A\otimes I)J(A^*\otimes I)\), with \(A\) having \(k\) rows. This is the standard Choi/block-positivity criterion, not a new criterion here.
+\end{proof}
+
+\section{Three copies: exact minimum and all positivity orders}
+Choose a local operator basis \(F_0=I,F_a\) with \(\Tr(F_a^*F_b)=d\delta_{ab}\) and \(\Tr F_a=0\) for \(a>0\). Let \(E_i\) project onto the span of \(F_a^{(i)}\Psi\), \(a>0\). Two-party uniformity makes these three error spaces mutually orthogonal. Flat Schmidt spectra give
+\[
+ Q_i=d(\Tr_iP)\otimes I_i=P+E_i,
+ \qquad E=\sum_iE_i,\quad Z=I-E-P.
+\]
+Identities are always reinserted in their original slots. The error projections have rank \(d^2-1\); \(Z\) has rank \(d^4-3d^2+2\). Lemma~\ref{lem:privacy} also gives \(E_iW=0\).
+
+\Needspace{8\baselineskip}
+\begin{theorem}\label{thm:three}
+For every existing \(\operatorname{AME}(4,d)\) encoding and \(0\le t\le1\), set
+\[
+ a_3=1-3t/d,\qquad b_3=3t^2/d-t^3,\qquad \eta_3=a_3+db_3.
+\]
+Then
+\begin{equation}\label{eq:threeJ}
+ J^{(3)}_{V,t}=a_3Z+(a_3+t^2)E+\eta_3P.
+\end{equation}
+Its complete spectrum has multiplicities \(d^4-3d^2+2,3(d^2-1),1\), adding coincident levels. The output-code block is \(a_3W+db_3P\), and the complementary block is \(a_3I_{\mathrm{out}}+t^2E\ge a_3I_{\mathrm{out}}\).
+
+For matrices with \(\ran C\subseteq\ran V\) and \(\rank C\le k\), the exact sharp bound is
+\begin{equation}\label{eq:m3}
+ q_{3,t}(C)\ge m_{3,k}(d,t)\|C\|_{\F}^{2},
+ \qquad m_{3,k}=a_3+k_e\min(0,b_3).
+\end{equation}
+The same holds for whole row support in the code.
+\end{theorem}
+\begin{proof}
+A Schmidt decomposition proves that \(Q_i\) is a rank-\(d^2\) projection onto local-error vectors. For different sites, the inner product of centered error vectors is \(\Tr(F_a^*)\Tr(F_b)/d^2=0\). Expanding the three maps on \(dP\), retaining respectively zero, one, two and three physical sites, gives
+\[
+ J=(1-3t/d)I+t^2\sum_iQ_i-dt^3P,
+\]
+which is \eqref{eq:threeJ}. Since centered errors are outside \(W\), the asserted output blocks follow. Both \(a_3\) and the outside block are nonnegative.
+
+Via the code isometry, the code block is \(a_3I+b_3|\Omega_d\rangle\langle\Omega_d|\). Lemma~\ref{lem:schmidt} gives its constrained minimum, at most \(a_3\). The outside block cannot lower that value. Lemma~\ref{lem:gram}, and invariance of Schmidt rank under conjugation, give \eqref{eq:m3}. Adjoint invariance gives the row version. For \(b_3<0\), equality is attained by \(C=VP_{k_e}V^*\); for \(b_3\ge0\), by a trace-zero rank-one logical matrix embedded on both sides.
+\end{proof}
+
+The exact k-positivity interval is \(0\le t\le\tau_{3,k}(d)\), the unique zero in \((0,1]\) of
+\begin{equation}\label{eq:mu3}
+ \mu_{3,k}=1-3t/d+3k_et^2/d-k_et^3.
+\end{equation}
+Indeed its derivative is
+\(-3k_e(t-1/d)^2-3(d-k_e)/d^2\), and \(\mu_{3,k}(1)=(k_e-1)(3/d-1)\le0\).
+For \(d>3\), the root follows the change of sign at \(t=3/d\), since \(\mu_{3,k}(3/d)=1-9/d^2>0\). For \(d=3\) all roots are one, as is the rank-one root in every dimension.
+
+For \(k_e=d\), this recovers the complete-positivity threshold
+\begin{equation}\label{eq:tau3}
+ \tau_{3,d}(d)=\frac{1+(d^2-1)^{1/3}}d,
+ \quad \eta_3=1-d^{-2}-d(t-d^{-1})^3.
+\end{equation}
+At \(t=1/2\), complete positivity holds for integer \(3\le d\le13\), conditional on the encoding. For \(d\ge7\), the exact constrained minimum is
+\begin{equation}\label{eq:rank3endpoint}
+ m_{3,k}(d,1/2)=\frac{(8-k_e)d+6(k_e-2)}{8d}.
+\end{equation}
+Thus the encoded maps are uniformly 8-positive. When \(d\ge8\), the rank-eight bound is \(9/(2d)>0\); the smaller dimensions are already completely positive. The uniform order cannot be increased to nine: \(d=43,k=9\) gives the ratio \(-1/344\), attained by a rank-nine code projector.
+
+The largest \emph{effective} integer level is
+\[
+ \kappa_3(d)=\begin{cases}
+ d,&3\le d\le6,\\
+ \min\{d,\lfloor(8d-12)/(d-6)\rfloor\},&d\ge7.
+ \end{cases}
+\]
+If the effective level equals \(d\), the map is completely positive and hence k-positive for every integer \(k\), not only up to \(d\).
+
+\section{Five copies: a universal minimum from incident error stars}
+Now let \(\Psi\) be any \(\operatorname{AME}(6,d)\), \(d\ge2\). Define \(E_i\) as before and \(E_{ij}\) as the span projection of the vectors \(F_a^{(i)}F_b^{(j)}\Psi\), \(a,b>0\). They have ranks \(d^2-1\) and \((d^2-1)^2\). Flat Schmidt spectra give
+\[
+ Q_i=d(\Tr_iP)\otimes I_i=P+E_i,\qquad
+ Q_{ij}=d^2(\Tr_{ij}P)\otimes I_{ij}=P+E_i+E_j+E_{ij}.
+\]
+Three-party uniformity makes each \(E_{ij}\) orthogonal to all \(E_l\), and makes \(E_{ij}\) orthogonal to \(E_{ik}\) for \(j\ne k\). It need not separate disjoint pairs. Privacy places every centered error in the output complement of \(W\). Set
+\[
+ E_1=\sum_iE_i,\qquad R_{\mathrm{out}}=I-W-E_1,\qquad
+ T=\sum_{i<j}E_{ij}.
+\]
+Each fixed-site star \(S_i=\sum_{j\ne i}E_{ij}\) is an orthogonal projection contained in \(R_{\mathrm{out}}\). Therefore the operator certificate
+\begin{equation}\label{eq:star}
+ 5R_{\mathrm{out}}-2T=\sum_{i=1}^5(R_{\mathrm{out}}-S_i)\ge0
+\end{equation}
+retains all possible overlaps of disjoint pair-error spaces.
+
+\begin{theorem}\label{thm:five}
+For every such encoding and all \(t\ge0\), the least unnormalized Choi eigenvalue is
+\begin{equation}\label{eq:eta5}
+ \eta_5(d,t)=1-5t/d+10t^2/d^2-10t^3/d+5t^4-dt^5.
+\end{equation}
+For \(t>0\) its eigenspace is exactly \(\C\Psi\). At \(t=0\), \(J=I\). The map is completely positive exactly for \(0\le t\le\tau_5(d)\), where \(\tau_5(d)\in(0,1)\) is the unique root of \(\eta_5\).
+\end{theorem}
+\begin{proof}
+Keeping zero, one or two physical sites in the expansion gives the scalar
+\(a_5(t)=1-5t/d+10t^2/d^2\). Keeping three gives \(-t^3Q_{ij}/d\) for the complementary pair, keeping four gives \(t^4Q_i\), and keeping all five gives \(-dt^5P\). Hence
+\begin{align}\label{eq:fiveJ}
+ J&=a_5I-(t^3/d)\sum_{i<j}Q_{ij}+t^4\sum_iQ_i-dt^5P\\
+  &=a_5W+(\eta_5-a_5)P+\beta E_1+a_5R_{\mathrm{out}}-(t^3/d)T,\nonumber
+\end{align}
+where \(\beta=a_5-4t^3/d+t^4\). By \eqref{eq:star}, the residual outside block is at least \(\gamma R_{\mathrm{out}}\), with \(\gamma=a_5-5t^3/(2d)\). The exact gaps are
+\begin{align*}
+ \beta-\eta_5&=(t^3/d)\bigl[(dt-2)^2+2\bigr],\\
+ \gamma-\eta_5&=(t^3/d)\bigl[(dt-5/2)^2+5/4\bigr].
+\end{align*}
+They are positive for \(t>0\); also \(a_5\ge\gamma\). Thus every component outside \(\C\Psi\) has a strictly larger expectation, while \(J\Psi=\eta_5\Psi\).
+
+Finally,
+\[
+ \eta_5'(t)=-5d(t-1/d)^4-5(d^2-1)/d^3<0,
+ \quad \eta_5(0)=1,
+\]
+and \(\eta_5(1)=-[(d-2)^3+3(d-2)+4]/d^2<0\). This proves the unique root and the exact CP interval. The proof does not determine the rest of the spectrum.
+\end{proof}
+
+At the half parameter,
+\begin{equation}\label{eq:fiveendpoint}
+ \eta_5(d,1/2)=\frac{(d-2)[360-(d-20)^2]}{32d^2}.
+\end{equation}
+It is zero at \(d=2\), positive for integers \(3\le d\le38\), and negative for \(d\ge39\). The boundary values are \(81/2888\) and \(-37/48672\) at dimensions 38 and 39. The graph construction in Section~\ref{sec:codes} supplies encodings in every integer dimension here.
+
+\subsection{Exact rank classification at the half parameter}
+Set
+\[
+ a_5=1-\frac5{2d}+\frac5{2d^2},\qquad
+ b_5=-\frac{d^2-10d+40}{32d^2}<0.
+\]
+The code-output block in \eqref{eq:fiveJ} is \(a_5W+db_5P\). The complementary block is positive definite for every \(d\ge2\):
+\begin{align*}
+ J_{\mathrm{out}}&\ge\beta E_1+\gamma R_{\mathrm{out}},\\
+ 16d^2\beta&=17(d-2)^2+20(d-2)+12>0,\\
+ 16d^2\gamma&=16(d-2)^2+19(d-2)+14>0.
+\end{align*}
+Lemma~\ref{lem:schmidt} now proves the following exact sign criterion.
+
+\begin{theorem}\label{thm:rank5}
+At \(t=1/2\), the five-copy encoded map is k-positive if and only if
+\begin{equation}\label{eq:mu5}
+ \mu_{5,k}(d)=a_5+k_eb_5
+ =\frac{(32-k_e)d^2+(10k_e-80)d+80-40k_e}{32d^2}\ge0.
+\end{equation}
+Equivalently, this is the sign condition for \eqref{eq:q} over all rank-at-most-k matrices with entire column support in the code and arbitrary opposite support. Its largest effective level is
+\[
+ \kappa_5(d)=\min\left\{d,
+ \left\lfloor\frac{32d^2-80d+80}{d^2-10d+40}\right\rfloor\right\}.
+\]
+The family is uniformly 32-positive, and cannot be uniformly 33-positive.
+\end{theorem}
+\begin{proof}
+The denominator is \((d-5)^2+15>0\). The CP complement and the isotropic code block give \eqref{eq:mu5} for all Schmidt-rank-at-most-k vectors, including vectors occupying both blocks. The negative and zero cases are attained by \(C=VP_{k_e}V^*\).
+
+For \(d\ge32\), \(\mu_{5,32}=15(d-5)/(2d^2)>0\). For \(2\le d<32\), the whole map is CP by \eqref{eq:fiveendpoint}, with the semidefinite qubit endpoint included. But at \(d=245,k=33\), the exact ratio is \(-3/384160\), attained by a rank-33 code projector. Thus 33 fails as a dimension-uniform order.
+\end{proof}
+
+This theorem is an exact rank \emph{sign classification}, not a claim that \(\mu_{5,k}\) is the sharp numerical minimum outside the code block. A valid full lower bound is \(\min\{\beta,\gamma,\mu_{5,k}\}\). We do not claim an all-t five-copy k-positivity classification.
+
+\section{Matrix witnesses, products and code constructions}\label{sec:codes}
+For either family, the code-projector coefficient matrix is \(B=P_kV^*\), where \(P_k\) is a logical rank-k projection. It has norm squared k, and
+\[
+ C=VP_kV^*,\quad \rank C=k,\quad
+ q(C)=k(a+kb).
+\]
+For \(k=d\), \(\mathrm{vec}_{\rm row}(V^*)=\sqrt d\,\overline\Psi\); the normalized coefficient vector is \(\overline\Psi\). This fixes the factors in all sharpness and negative examples.
+
+\begin{center}
+\begin{tabular}{rrr}
+\toprule
+Dimension & Three-copy effective level & Five-copy effective level\\
+\midrule
+3&3&3\\
+13&13&13\\
+14&12&14\\
+38&9&38\\
+39&9&38\\
+43&8&38\\
+245&8&32\\
+\bottomrule
+\end{tabular}
+\end{center}
+All entries refer to \(t=1/2\) and to an existing corresponding code. A capped value d means complete positivity, hence all integer positivity levels. For five copies existence holds in all dimensions; three-copy examples require an AME(4,d). The sharp uniform failures have
+\[
+ q_{3,1/2}(VP_9V^*)=-9/344\quad(d=43),\qquad
+ q_{5,1/2}(VP_{33}V^*)=-99/384160\quad(d=245).
+\]
+They are not negative rank-two witnesses.
+
+\paragraph{Products in the CP regime.}
+When the complete restricted Gram is PSD, it tensorizes over independent blocks even for coefficient matrices entangled between blocks. The sharp constants are \(\min(a_3,\eta_3)^r\) for r triples and \(\eta_5^r\) for r five-site blocks, with column support in \(\ran V^{\otimes r}\), rank at most \(d^r\). The boundary constants are zero. Outside those CP intervals, merely k-positive maps cannot be tensorized by this argument. In particular, the uniform orders 8 and 32 do not yield orders \(8^r\) or \(32^r\) for tensor products.
+
+\paragraph{Known existence constructions.}
+For odd d, the familiar encoding
+\(V|j\rangle=d^{-1/2}\sum_s|s,s+j,s+2j\rangle\)
+gives an AME(4,d): any two of the labels \(j,s,s+j,s+2j\) determine \((j,s)\) when 2 is invertible. This supplies the example at dimension 43. It is an erasure-code construction, not a new code here \cite{CGL,Helwig}.
+
+For six parties use the known wheel graph \cite{Graph}, with hub 0 and rim cycle \(1,\ldots,5\). The state
+\[
+ d^{-3}\sum_{x\in\mathbb Z_d^6}
+  \exp\left(\frac{2\pi i}{d}\sum_{\{i,j\}\text{ edge}}x_ix_j\right)|x\rangle
+\]
+is AME(6,d) for every integer \(d\ge2\). Up to permutations and complement, its three-versus-three cut matrices are
+\[
+ \begin{pmatrix}1&1&1\\0&0&1\\1&0&0\end{pmatrix},\qquad
+ \begin{pmatrix}1&1&1\\1&0&1\\1&1&0\end{pmatrix},
+\]
+both of determinant one. They are invertible over \(\mathbb Z_d\), even for composite d. In a reduced density entry, the sum over the other three variables is zero unless the retained labels agree, when it equals \(d^3\). Thus every three-party marginal is \(I/d^3\). Helwig already gives the graph and all-d existence; the integer-cut argument is included to make the dimension-245 witness unambiguous without constructing a gigantic matrix.
+
+\section{The qutrit EB conclusion and its classical explanation}
+The abstract entanglement-breaking conclusion has a classical route and should be credited accordingly. For \emph{any} AME(4,3), \eqref{eq:threeJ} at \(t=1\) gives \(J_1=E\), of rank 24. It is PPT: \(\Phi_1\circ T\) is CP, with Choi \(I-F\ge0\), and
+\(\Lambda_{V,1}\circ T=(\Phi_1\circ T)^{\otimes3}\circ\operatorname{Ad}_{\overline V}\).
+Its marginals are \(\Tr_{\rm out}J_1=8I_3\) and \(\Tr_RJ_1=I_{27}-VV^*\). The latter follows by expanding the known reductions of the code projector. Thus its minimal support is \(3\times24\), with rank 24. The low-rank PPT theorem of Horodecki, Lewenstein, Vidal and Cirac \cite{HLVC} gives separability, hence EB \cite{HSR}.
+
+Expansion of the same maps in dimension three gives
+\[
+ \Lambda_{V,t}=t^2\Lambda_{V,1}
+ +(1-t)\bigl[\Tr(\cdot)I_{27}+t^2\operatorname{Ad}_V\bigr].
+\]
+For \(0\le t\le1\), the second Choi contribution is separable. On the code block use the standard MUB identity \cite{MUB}
+\[
+ I_9+t^2|\Omega_3\rangle\langle\Omega_3|
+ =(1-t^2)I_9+t^2\sum_{b,k}\overline{P_{b,k}}\otimes P_{b,k};
+\]
+the outside contribution is \(I_3\otimes(I_{27}-VV^*)\). Therefore the normalized global map is EB for the whole interval. This application follows from classical criteria and the displayed spectral identities; it is not claimed as an independent new EB criterion. Appendix~\ref{app:CGL} retains the concrete Weyl realization for the fixed CGL code. Neither result implements the generally non-CP local maps as separate physical operations.
+
+\section{Verification and scope}
+The supplement contains author exact-arithmetic transcription checks, not a proof-assistant formalization. Complete three-copy coefficient Grams of dimensions 81 and 625 are constructed directly from partial traces. The five-copy wheel check constructs all six polynomial coefficients in dimension 64, the incident-error stars and integer cut determinants. A qubit diagnostic has \(T\) spectrum \(0(19),2(45)\); disjoint error-pair spaces are not assumed orthogonal. The proof for arbitrary perfect tensors is the operator argument above, not extrapolation from those finite controls.
+
+Complex encodings are included in the checks. The coefficient Gram is \(\overline J\), and the corresponding code projection is \(\overline W\). A non-real three-copy control gives a Gram entry \(-i/24\) whereas omitting the conjugation gives \(i/24\). Scalar scripts verify the rank-boundary identities and exact negative values. They do not construct matrices of dimension \(245^6\); witness existence and expectation are analytic. Earlier failed auxiliary multiplicity guesses and symbolic-equality checks are preserved as source snapshots and failure-summary records, with their provenance stated.
+
+The entire column or row support must lie in the code. The results do not establish global rank-two Werner positivity, a theorem for a plane containing just one code ray, a five-copy all-parameter rank classification, or tensor stability outside CP. Standard codes, QEC privacy, isotropic optimization and shadow tools are attributed prior ingredients. The source comparison is bounded; no worldwide originality or operational advantage is certified.
+
+\paragraph{AI and responsibility disclosure.}
+The named author directed OpenAI Codex assistance in derivation, writing and exact checks. Requested GPT-6 Astra xhigh audits used shared files and declared reused context. Runtime identity and effort were not independently attested. Model reports concern exact artifact versions and do not constitute independent human review or AIRR admission. A full assessment of this exact expanded manuscript has not yet been obtained.
+
+\appendix
+\section{Explicit CGL measure-and-prepare realization}\label{app:CGL}
+
+We now fix the prior CGL code \cite{CGL},
+\begin{equation}\label{eq:CGL}
+ v_j=\frac1{\sqrt3}\sum_{s=0}^2|s,s+j,s+2j\rangle ,
+ \qquad j\in\mathbb F_3.
+\end{equation}
+The following construction is specific to this encoding.
+
+Let \(\omega=e^{2\pi i/3}\), \(X_W|j\rangle=|j+1\rangle\), and
+\(Z_W|j\rangle=\omega^j|j\rangle\). The four standard Weyl bases are the eigenbases of \(Z_W,X_W,X_WZ_W,X_WZ_W^2\). Label the spectral projectors by \(W P_{W,k}=\omega^kP_{W,k}\), equivalently \(P_{W,k}=(I+\omega^{-k}W+\omega^{-2k}W^2)/3\). Write them as \(P_{b,k}\). The standard complete-MUB identity \cite{MUB} is
+\begin{equation}\label{eq:MUB}
+ \sum_{b,k}P_{b,k}\otimes P_{b,k}=I+F,\qquad
+ \sum_{b,k}\Tr(P_{b,k}L)P_{b,k}=\Tr(L)I+L .
+\end{equation}
+The second identity follows from the first by the usual matrix-unit contraction.
+
+Define nine isometries \(U_{cp}:\C^3\to(\C^3)^{\otimes3}\) by
+\[
+ U_{cp}|j\rangle=\frac1{\sqrt3}\sum_s
+   \omega^{-ps}|s,s+j,s+c-j\rangle,\qquad c,p\in\mathbb F_3.
+\]
+Their images are orthogonal and cover the physical space, and \(U_{00}=V\).
+For \(c=0,p\ne0\), set
+\[
+ D_{0p}(L)=\sum_k\Tr(P_{Z,k}L)P_{Z,k}.
+\]
+For \(c\ne0\), put \(q=p/c\) in \(\mathbb F_3\) and let
+\[
+ D_{cp}(L)=\sum_k\Tr(P_{X_WZ_W^q,k+p}L)P_{X_WZ_W^q,k}.
+\]
+The label shifts are part of the definition.
+
+\begin{lemma}\label{lem:blocks}
+For every complex \(L\in M_3(\C)\), all \(0\le t\le1\), the blocks of \(\Lambda_{V,t}(L)\) are
+\begin{align*}
+ h_{00}(L)&=(1-t)\Tr(L)I+t^2(1-t)L,\\
+ h_{cp}(L)&=(1-t)\Tr(L)I+t^2D_{cp}(L),\qquad(c,p)\ne(0,0),
+\end{align*}
+with no entries between distinct sectors.
+\end{lemma}
+\begin{proof}
+The two local stabilizers \(X_W^{\otimes3}\) and \(Z_W^{\otimes3}\) fix the code and have joint characters \((\omega^p,\omega^c)\) on \(U_{cp}\). Local unitary covariance of \(\Phi_t\) gives the sector decomposition. An explicit coefficient check is as follows. For a logical unit \(E_{ab}\), its physical image has entries
+\[
+ \frac13\sum_{s,u}\prod_{i=0}^2
+ \left[
+  \delta_{r_i,l_i}\delta_{s+ia,u+ib}
+  -t\,\delta_{r_i,s+ia}\delta_{l_i,u+ib}
+ \right].
+\]
+Insert the coefficients of \(U_{cp}\) on both sides and sum the characters of \(\mathbb F_3\). The constant and linear terms give \((1-t)\delta_{ab}I\). The quadratic term gives \(E_{ab}\) in sector \(00\), and \(D_{cp}(E_{ab})\) otherwise. The cubic term is \(-E_{ab}\) in sector \(00\), and zero otherwise. These identities on all nine complex matrix units prove the claim by complex linearity. The supplement checks the quadratic block maps and the MUB identities by exact arithmetic.
+\end{proof}
+
+\begin{theorem}\label{thm:EB}
+For the code \eqref{eq:CGL}, the map
+\[
+ {\cal N}_t=(3-t)^{-3}\Lambda_{V,t}
+\]
+is a trace-preserving entanglement-breaking channel for every \(0\le t\le1\).
+\end{theorem}
+\begin{proof}
+Each \(D_{cp}\) is explicitly a measure-and-prepare map. Put \(a=1-t\), \(b=t^2(1-t)\). Since \(0\le b\le a\), \eqref{eq:MUB} gives
+\[
+ a\Tr(L)I+bL=(a-b)\Tr(L)I
+                   +b\sum_{b',k}\Tr(P_{b',k}L)P_{b',k}.
+\]
+All coefficients are nonnegative. Thus every sector in Lemma \ref{lem:blocks} is measure-and-prepare. The fixed output isometries \(U_{cp}\) preserve that form when the sectors are assembled. Equation \eqref{eq:trace-general} supplies trace preservation after normalization. The measure-and-prepare characterization then proves entanglement breaking \cite{HSR}.
+\end{proof}
+This is a realization of the normalized global encoded map. The local reduction maps generally are not completely positive; the result does not implement those maps as separate local physical operations.
+
+
+\begingroup\small
+\begin{thebibliography}{99}
+\bibitem{CGL} R. Cleve, D. Gottesman and H.-K. Lo,
+How to share a quantum secret,
+Phys. Rev. Lett. \textbf{83}, 648--651 (1999).
+\href{https://arxiv.org/abs/quant-ph/9901025}{arXiv:quant-ph/9901025}.
+\bibitem{Helwig} W. Helwig, W. Cui, J. I. Latorre, A. Riera and H.-K. Lo,
+Absolute maximal entanglement and quantum secret sharing,
+Phys. Rev. A \textbf{86}, 052335 (2012).
+\href{https://arxiv.org/abs/1204.2289}{arXiv:1204.2289}.
+\bibitem{Eltschka} C. Eltschka, F. Huber, O. G\"uhne and J. Siewert,
+Exponentially many entanglement and correlation constraints for multipartite quantum states,
+Phys. Rev. A \textbf{98}, 052317 (2018).
+\href{https://arxiv.org/abs/1807.09165}{arXiv:1807.09165}.
+\bibitem{Huber} F. Huber, C. Eltschka, J. Siewert and O. G\"uhne,
+Bounds on absolutely maximally entangled states from shadow inequalities, and the quantum MacWilliams identity,
+J. Phys. A \textbf{51}, 175301 (2018).
+\href{https://arxiv.org/abs/1708.06298}{arXiv:1708.06298}.
+\bibitem{Choi} M.-D. Choi,
+Completely positive linear maps on complex matrices,
+Linear Algebra Appl. \textbf{10}, 285--290 (1975).
+\href{https://doi.org/10.1016/0024-3795(75)90075-0}{doi:10.1016/0024-3795(75)90075-0}.
+\bibitem{HSR} M. Horodecki, P. W. Shor and M. B. Ruskai,
+Entanglement breaking channels,
+Rev. Math. Phys. \textbf{15}, 629--641 (2003).
+\href{https://arxiv.org/abs/quant-ph/0302031}{arXiv:quant-ph/0302031}.
+\bibitem{Bharti} K. Bharti, R. Gajjala and T. Haug,
+Two-copy nondistillability of Werner states: sharp partial-trace inequalities and finite-copy extensions (2026).
+\href{https://arxiv.org/abs/2607.24479}{arXiv:2607.24479}.
+\bibitem{Fraser} T. C. Fraser, F. Huber, B. Pozsgay and I. Vona,
+On the two-copy distillability of Werner states and a new partial trace inequality (2026).
+\href{https://arxiv.org/abs/2607.24309}{arXiv:2607.24309}.
+\bibitem{WuZou} T. Wu and Q. Zou,
+Sharp Plucker Geometry for Three-Copy Werner Distillation (2026).
+\href{https://arxiv.org/abs/2608.02647}{arXiv:2608.02647}.
+
+\bibitem{Graph} W. Helwig, Absolutely Maximally Entangled Qudit Graph States (2013).
+\href{https://arxiv.org/abs/1306.2879}{arXiv:1306.2879}.
+\bibitem{TH} B. M. Terhal and P. Horodecki, A Schmidt number for density matrices (2000).
+\href{https://arxiv.org/abs/quant-ph/9911117}{arXiv:quant-ph/9911117}.
+\bibitem{HLVC} P. Horodecki, M. Lewenstein, G. Vidal and J. I. Cirac,
+Operational criterion and constructive checks for the separability of low rank density matrices,
+Phys. Rev. A \textbf{62}, 032310 (2000).
+\href{https://arxiv.org/abs/quant-ph/0002089}{arXiv:quant-ph/0002089}.
+\bibitem{MUB} A. Klappenecker and M. R\"otteler,
+Mutually Unbiased Bases are Complex Projective 2-Designs (2005).
+\href{https://arxiv.org/abs/quant-ph/0502031}{arXiv:quant-ph/0502031}.
+\end{thebibliography}
+\endgroup
+\end{document}
