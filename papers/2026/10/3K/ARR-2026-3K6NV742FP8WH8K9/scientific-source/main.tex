@@ -1,0 +1,537 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=27mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,amsmath,amssymb,amsthm,mathtools,microtype}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\Herm}{\operatorname{Herm}}
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\F}{\mathrm F}
+\newcommand{\C}{\mathbb C}
+\newcommand{\cS}{\mathcal S}
+\newcommand{\cK}{\mathcal K}
+\newcommand{\cU}{\mathcal U}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert_{\F}}
+\title{Sharp marginal-erasure bounds and positive completion\\of nonunital quantum channels}
+\author{Lluis Eriksson}
+\date{24 October 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+We determine the exact Frobenius conditioning of deleting the traceless
+part of one local matrix algebra on $\C^m\otimes\C^k$.
+For $1\le r<m$, the inverse constants are
+$\sqrt{m/(m-r)}$ for two states of rank at most $r$, and
+$\sqrt{(m+r)/(m-r)}$ for one such state against an arbitrary density
+matrix. Both are attained, independently of $k\ge2$; at rank $m$ exact
+collisions occur. The one-sided estimate follows from a scalar
+optimization combining positivity, trace control and the partial-trace
+norm. It yields a noise and spectral-tail bound for convex positive
+completion. For normalized Choi matrices, the retained coordinates are
+the action of a trace-preserving channel on traceless inputs.
+Consequently this action identifies every channel of Kraus rank below
+its input dimension among all channels, without a unitality assumption.
+For square channels we express the same conclusion through a complete
+exact unitary $2$-design of average gate fidelities. The rank threshold
+is sharp, whereas optimal conditioning within the trace-preserving
+subclass is left open. The fidelity frame identities and general
+kernel/inertia method are prior work; no compressed-sampling or new
+randomized-benchmarking noise guarantee is asserted.
+\end{abstract}
+
+\section{Question, contribution and antecedents}
+Average gate fidelities with unitary reference gates do not linearly
+determine an arbitrary quantum channel: they miss its translation, or
+action on the maximally mixed input. Positivity can nevertheless make
+that missing part unique when the channel has sufficiently small Kraus
+rank. We quantify this mechanism by first solving an unrestricted
+state-space problem exactly.
+
+Let $\cS_{m,k}$ denote the density matrices on
+$\C^m\otimes\C^k$, and set
+\[
+ \cK=\{I_m\otimes B:B\in\Herm(\C^k),\ \Tr B=0\}.
+\]
+Here $\cK$ is the traceless Hermitian part of a local algebra, not itself
+an algebra under multiplication. Let $P$ be its Frobenius-orthogonal
+projection and $Q=\id-P$. Our principal result computes the largest
+ratio $\norm{\rho-\sigma}/\norm{Q(\rho-\sigma)}$ under either one or
+two rank constraints. This distinction matters: positivity-constrained
+reconstruction usually produces a competitor with unrestricted rank.
+
+The reduction of low-rank identification to the inertia of a measurement
+kernel is classical in state tomography
+\cite{carmeli} and channel tomography \cite{gutoski}.
+In particular, Gutoski and Johnston construct small families of
+interactive observables identifying low-Kraus-rank channels among all
+channels. We do not improve their observable counts; we study the
+conditioning of a particular fixed omitted subspace.
+Kimmel et al.\ recover the unital block using randomized benchmarking
+\cite{kimmel}; their single-qubit complete-positivity lemma has a
+corrected proof \cite{erratum}. Roth et al.\ provide a unitary-design
+frame for unital trace-preserving maps and compressed recovery
+guarantees for quantum gates \cite{roth}. We use the classical
+second-moment identity explicitly and separately from our completion
+inequality.
+
+The proposed contribution is the pair of exact local-erasure constants,
+their state attainers, and the resulting quantitative completion
+statement without a unitality promise. The elementary proof is included
+in full. These comparisons delimit the claim; they do not certify
+worldwide priority.
+
+\section{Exact conditioning in state space}
+All matrix spaces below are real Hilbert spaces of Hermitian matrices
+with inner product $\Tr(XY)$. The Frobenius norm is $\norm X$.
+A zero denominator and nonzero numerator mean an infinite ratio.
+Write $\cS^{(r)}_{m,k}$ for states of rank at most $r$.
+
+\begin{theorem}[Exact local-erasure constants]\label{thm:sharp}
+Let $m\ge1$, $k\ge2$ and $r\ge1$ be integers. For $1\le r<m$,
+\begin{align}
+ \sup_{\substack{\rho,\sigma\in\cS^{(r)}_{m,k}\\\rho\ne\sigma}}
+ \frac{\norm{\rho-\sigma}}{\norm{Q(\rho-\sigma)}}
+ &=\sqrt{\frac{m}{m-r}}, \label{eq:balanced}\\
+ \sup_{\substack{\rho\in\cS^{(r)}_{m,k},\ \sigma\in\cS_{m,k}\\\rho\ne\sigma}}
+ \frac{\norm{\rho-\sigma}}{\norm{Q(\rho-\sigma)}}
+ &=C_{m,r}:=\sqrt{\frac{m+r}{m-r}}. \label{eq:one}
+\end{align}
+Both suprema are attained. For $r\ge m$ both are infinite.
+Thus $m=1$ has no finite positive-rank regime.
+\end{theorem}
+
+We first record the projection and the standard inertia reduction.
+The notation $n_+(D)$ and $n_-(D)$ counts positive and negative
+eigenvalues with multiplicity.
+
+\begin{lemma}\label{lem:projection}
+For any Hermitian $D$,
+\[
+ PD=\frac{I_m}{m}\otimes
+ \left(\Tr_A D-\frac{\Tr D}{k}I_k\right).
+\]
+In particular, for $\Tr D=0$,
+\begin{equation}\label{eq:projection}
+ PD=\frac{I_m}{m}\otimes\Tr_A D,\qquad
+ \norm{PD}^2=\frac1m\norm{\Tr_A D}^2.
+\end{equation}
+For arbitrary matrices $X$, $\norm{\Tr_A X}\le\sqrt m\,\norm X$.
+If $D=\rho-\sigma$ with $\rank\rho\le r$, then $n_+(D)\le r$.
+If also $\rank\sigma\le r$, then $n_-(D)\le r$.
+\end{lemma}
+\begin{proof}
+The proposed $PD$ belongs to $\cK$, and its difference from $D$ is
+orthogonal to every $I_m\otimes B$ with $\Tr B=0$, by the defining
+identity of partial trace. This proves the projection formula.
+For the norm estimate, in a product basis Cauchy--Schwarz gives
+\[
+ \sum_{i,j}\left|\sum_a X_{ai,aj}\right|^2
+ \le m\sum_{a,i,j}|X_{ai,aj}|^2\le m\norm X^2.
+\]
+If a positive eigenspace of $\rho-\sigma$ had dimension greater than
+$r$, it would meet $\ker\rho$ nontrivially. On that kernel its quadratic
+form is nonpositive, a contradiction. Changing sign proves the last
+claim.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:sharp}]
+Let $D\ne0$ be Hermitian with $\Tr D=0$, and write its spectral
+decomposition as $D=D_+-D_-$ with orthogonal positive parts. Set
+\[
+ \tau=\Tr D_+=\Tr D_->0,\qquad
+ a^2=\norm{D_+}^2,\quad b^2=\norm{D_-}^2.
+\]
+If $n_+(D)\le r$, then $a^2\ge\tau^2/r$. The positive matrices
+$R=\Tr_A D_+$ and $S=\Tr_A D_-$ both have trace $\tau$.
+Positivity implies $\Tr(RS)\ge0$ and
+$\norm R^2,\norm S^2\le\tau^2$. Lemma~\ref{lem:projection} also gives
+$\norm S^2\le m b^2$. Consequently
+\begin{equation}\label{eq:key}
+ \norm{\Tr_A D}^2
+ =\norm{R-S}^2
+ \le \tau^2+\min\{\tau^2,m b^2\}.
+\end{equation}
+No commutation or orthogonality of the two marginals is assumed.
+
+Put $t=b^2/\tau^2$. Equations~\eqref{eq:projection}--\eqref{eq:key} yield
+\begin{equation}\label{eq:scalar}
+ \frac{\norm{PD}^2}{\norm D^2}
+ \le \frac{1/m+\min\{1/m,t\}}{1/r+t}
+ \le \frac{2r}{m+r}.
+\end{equation}
+Indeed the middle expression is increasing for $0\le t\le1/m$ and
+decreasing for $t\ge1/m$, since $r<m$. Its maximum is at $t=1/m$.
+Orthogonality of $P$ and $Q$ now proves \eqref{eq:one} as an upper
+bound for every difference in its stated domain.
+
+For sharpness, choose a rank-$r$ input projector $R_0$ and orthogonal
+output unit vectors $u,v$. The states
+\begin{equation}\label{eq:one-attain}
+ \rho=\frac{R_0}{r}\otimes|u\rangle\langle u|,
+ \qquad
+ \sigma=\frac{I_m}{m}\otimes|v\rangle\langle v|
+\end{equation}
+have ranks $r,m$. For their difference,
+\[
+ \norm D^2=\frac1r+\frac1m,\quad
+ \norm{PD}^2=\frac2m,\quad
+ \norm{QD}^2=\frac1r-\frac1m.
+\]
+They attain \eqref{eq:one} and all bounds in \eqref{eq:scalar}.
+
+If both inertia indices are at most $r$, then
+$a^2,b^2\ge\tau^2/r$. Instead of \eqref{eq:key} use
+\[
+ \norm{\Tr_A D}^2\le2\tau^2\le r(a^2+b^2).
+\]
+The hidden fraction is at most $r/m$, which proves the upper bound in
+\eqref{eq:balanced}. It is attained by
+\[
+ \rho=\frac{R_0}{r}\otimes|u\rangle\langle u|,\qquad
+ \sigma=\frac{R_0}{r}\otimes|v\rangle\langle v|,
+\]
+for which $\norm D^2=2/r$ and $\norm{PD}^2=2/m$.
+Finally, take $R_0=I_m$ and $r=m$. These distinct rank-$m$ states
+have $QD=0$. They remain admissible for every $r\ge m$, establishing
+the infinite regime, including $m=1$.
+\end{proof}
+
+Every nonzero member of $\cK$ has at least $m$ positive and $m$
+negative eigenvalues. Thus the qualitative threshold also follows
+immediately from the classical kernel/inertia criterion. The estimates
+above quantify the angle between that kernel and the relevant
+difference cones, rather than merely showing they do not intersect.
+
+\section{Approximate rank and convex completion}
+For a density matrix $\rho$ with eigenvalues in decreasing order, define
+$\tau_r(\rho)=\sum_{i>r}\lambda_i(\rho)$.
+
+\begin{proposition}[Spectral tails]\label{prop:tail}
+For $1\le r<m$, every pair of density matrices $\rho,\sigma$ obeys
+\begin{equation}\label{eq:tail}
+ \norm{\sigma-\rho}
+ \le C_{m,r}\norm{Q(\sigma-\rho)}
+       +\sqrt2(C_{m,r}+1)\tau_r(\rho).
+\end{equation}
+Let $\mathcal F$ be any compact convex subset of density matrices
+containing $\rho$. If $y=Q\rho+e$, $\norm e\le\epsilon$, then every
+minimizer $\widehat\rho$ of $\norm{Q\sigma-y}$ over $\sigma\in\mathcal F$
+satisfies
+\begin{equation}\label{eq:recovery}
+ \norm{\widehat\rho-\rho}
+ \le2C_{m,r}\epsilon+\sqrt2(C_{m,r}+1)\tau_r(\rho).
+\end{equation}
+\end{proposition}
+\begin{proof}
+Let $s=1-\tau_r(\rho)>0$, and let $\rho_r$ be the top-$r$ spectral
+truncation of $\rho$ divided by $s$. At an eigenvalue tie any spectral
+choice is allowed. Then
+\[
+ \norm{\rho-\rho_r}^2
+ =\tau_r(\rho)^2\sum_{i\le r}\left(\frac{\lambda_i}{s}\right)^2
+   +\sum_{i>r}\lambda_i^2
+ \le2\tau_r(\rho)^2.
+\]
+Apply \eqref{eq:one} to $\rho_r,\sigma$, then use the triangle
+inequality and the contraction property of $Q$ to obtain
+\eqref{eq:tail}. A minimizer exists by compactness. Its residual is
+at most that of the feasible truth, hence
+$\norm{Q(\widehat\rho-\rho)}\le2\epsilon$.
+Substitution proves \eqref{eq:recovery}.
+\end{proof}
+
+The truncation $\rho_r$ need not belong to $\mathcal F$. The proof is
+valid because \eqref{eq:one} compares it with every density matrix.
+This detail matters for Choi matrices: normalized spectral truncation
+does not in general preserve trace preservation. For example, the
+$3\to2$ channel with Kraus operators
+\[
+ K_0=\begin{pmatrix}1&0&0\\0&1&0\end{pmatrix},\qquad
+ K_1=\begin{pmatrix}0&0&1\\0&0&0\end{pmatrix}
+\]
+has Choi eigenvalues $2/3,1/3$. Its normalized top-one truncation is
+the state of $(|00\rangle+|11\rangle)/\sqrt2$, whose input marginal is
+$\operatorname{diag}(1/2,1/2,0)$ rather than $I_3/3$.
+Convexity makes the optimization a convex problem; the proof of the
+error bound uses compactness and feasibility, without imposing a rank
+constraint on the minimizer.
+
+\section{Channel completion from the traceless-input action}
+Let $\Phi:M_m\to M_k$ be completely positive and trace preserving
+(CPTP). Use input--output tensor order and the normalized Choi matrix
+\[
+ J_\Phi=(\id\otimes\Phi)(|\Omega_m\rangle\langle\Omega_m|),\qquad
+ |\Omega_m\rangle=\frac1{\sqrt m}\sum_{a=0}^{m-1}|a,a\rangle.
+\]
+Then $J_\Phi\ge0$, $\Tr J_\Phi=1$, $\Tr_{\rm out}J_\Phi=I_m/m$,
+and $\rank J_\Phi$ is the minimum Kraus rank.
+
+Choose Frobenius-orthonormal bases $F_i$ and $G_j$ of the real
+spaces of traceless Hermitian input and output matrices. Define
+\[
+ T(\Phi)_{ji}=\Tr[G_j\Phi(F_i)].
+\]
+These bases can contain imaginary entries. The input transpose in
+\begin{equation}\label{eq:choi-coordinate}
+ \Tr[J_\Phi(F_i^{\mathsf T}\otimes G_j)]
+ =\frac1m T(\Phi)_{ji}
+\end{equation}
+is essential. It follows by expanding
+$J_\Phi=m^{-1}\sum_{a,b}|a\rangle\langle b|\otimes
+\Phi(|a\rangle\langle b|)$.
+
+For two TP maps the identity and input-only coefficients of
+$D=J_\Phi-J_\Psi$ vanish. The projection $P$ removes precisely
+the output-only traceless coefficients, so orthonormal expansion gives
+\begin{equation}\label{eq:choi-norm}
+ \norm{Q(J_\Phi-J_\Psi)}
+ =\frac1m\norm{T(\Phi)-T(\Psi)}.
+\end{equation}
+Thus $T$ is exactly the retained nonconstant Choi information. The
+omitted translation is $\Phi(I_m/m)$.
+
+\begin{theorem}[Low-Kraus-rank completion]\label{thm:channel}
+If $\rank J_\Phi\le r<m$, then for every CPTP $\Psi:M_m\to M_k$,
+\begin{equation}\label{eq:channel}
+ \norm{J_\Phi-J_\Psi}
+ \le\frac{C_{m,r}}m\norm{T(\Phi)-T(\Psi)}.
+\end{equation}
+In particular $T(\Phi)$ identifies $\Phi$ among all CPTP maps.
+The uniform rank threshold $r<m$ is sharp for every $k\ge2$.
+For $T_{\rm obs}=T(\Phi)+N$ with $\norm N\le\delta$, every least-squares
+fit over all CPTP maps satisfies, for every $1\le r<m$,
+\begin{equation}\label{eq:channel-noise}
+ \norm{J_{\widehat\Phi}-J_\Phi}
+ \le\frac{2C_{m,r}}m\delta+
+       \sqrt2(C_{m,r}+1)\tau_r(J_\Phi).
+\end{equation}
+\end{theorem}
+\begin{proof}
+Combine Theorem~\ref{thm:sharp} and \eqref{eq:choi-norm}.
+For the endpoint consider the pure-output replacers
+$\Phi_u(X)=\Tr(X)|u\rangle\langle u|$.
+Each has $T=0$ and Choi rank $m$; distinct output states give distinct
+channels with identical data.
+
+For the noisy result, the feasible Choi matrices form a compact convex
+set with marginal $I_m/m$. Insert $T_{\rm obs}/m$ into the correlation
+coordinates, together with the known identity coefficient and
+zero input-only coefficients. This is $QJ_\Phi+e$ with
+$\norm e\le\delta/m$.
+The residual problem differs from the displayed least-squares problem
+only by the factor $1/m$, so Proposition~\ref{prop:tail} applies.
+\end{proof}
+
+The state-space constants are exact; \eqref{eq:channel} is a valid upper
+bound on the smaller fixed-marginal class, not an optimal channel
+constant proved here. In \eqref{eq:one-attain} the first input marginal
+is $R_0/r$, so that attainer is not TP for $r<m$.
+For rectangular maps some rank classes are empty: $r$ Kraus operators
+of size $k$ by $m$ require $rk\ge m$. For square maps Kraus rank one
+means a unitary channel, whose translation is zero.
+
+\subsection{Why one must not impose unitality}
+For square dimensions let the conventional unital part be the
+Hermiticity-preserving TP map
+\begin{equation}\label{eq:unital}
+ \Phi^{\rm u}(X)=\Phi(X)
+       -\frac{\Tr X}{m}\bigl(\Phi(I_m)-I_m\bigr).
+\end{equation}
+It fixes $I_m$ and agrees with $\Phi$ on traceless inputs.
+
+\begin{corollary}\label{cor:unital}
+If $\Phi:M_m\to M_m$ is nonunital and has Kraus rank less than $m$,
+then $\Phi^{\rm u}$ is not completely positive.
+\end{corollary}
+\begin{proof}
+Otherwise $\Phi^{\rm u}$ would be a distinct CPTP channel with
+$T(\Phi^{\rm u})=T(\Phi)$, contradicting Theorem~\ref{thm:channel}.
+\end{proof}
+
+For a concrete family, let $m\ge3$ and
+\[
+ K_0=\operatorname{diag}(1,\ldots,1,3/5),\qquad
+ K_1=(4/5)|0\rangle\langle m-1|.
+\]
+The two linearly independent Kraus operators satisfy
+$\sum_aK_a^\dagger K_a=I_m$ and define a nonunital channel of rank two.
+Writing $B=\Phi(I_m)-I_m=(16/25)(|0\rangle\langle0|
+-|m-1\rangle\langle m-1|)$, its unital-part Choi matrix is
+$J_{\Phi^{\rm u}}=J_\Phi-I_m\otimes B/m^2$.
+For any $1\le i\le m-2$,
+\[
+ \langle i,0|J_{\Phi^{\rm u}}|i,0\rangle=-\frac{16}{25m^2}<0.
+\]
+This illustrates the failure of an unjustified unital constraint.
+It is not a claim that higher-dimensional failure of complete
+positivity was previously unknown. There is no conflict with the
+corrected qubit lemma of \cite{erratum}: below the qubit threshold
+the only square channels are unitary, and the interior index in this
+example does not exist for $m=2$.
+
+\section{Complete average-gate-fidelity data}
+In this section input and output dimensions both equal $m\ge2$.
+Let $U_1,\ldots,U_N$ be a finite exact unitary $2$-design with uniform
+weights, and put
+\[
+ f_\ell(\Phi)=F_{\rm avg}(U_\ell,\Phi)
+ =\int\langle\psi|U_\ell^\dagger
+       \Phi(|\psi\rangle\langle\psi|)U_\ell|\psi\rangle\,d\psi,
+ \qquad
+ \|z\|_{\rm rms}^2=\frac1N\sum_\ell|z_\ell|^2 .
+\]
+For a weighted design the same statements use positive weights
+$w_\ell$ with $\sum_\ell w_\ell=1$ and the matched norm
+$\|z\|_{{\rm rms},w}^2=\sum_\ell w_\ell|z_\ell|^2$.
+No random subset of this design is used.
+
+\begin{lemma}[Classical design frame, with normalization]\label{lem:agf}
+For any two CPTP maps on $M_m$,
+\begin{equation}\label{eq:frame}
+ \norm{Q(J_\Phi-J_\Psi)}
+ =(m+1)\sqrt{m^2-1}\,\|f(\Phi)-f(\Psi)\|_{\rm rms}.
+\end{equation}
+\end{lemma}
+\begin{proof}
+Set $p=m^2-1$ and use the same orthonormal traceless basis $F_i$ on
+input and output. Let $O(U)_{ji}=\Tr[F_jUF_iU^\dagger]$.
+The standard pure-state second moment
+$\int|\psi\rangle\langle\psi|^{\otimes2}d\psi
+=(I+\mathrm{SWAP})/[m(m+1)]$ gives, for a TP map,
+\begin{equation}\label{eq:favg}
+ F_{\rm avg}(U,\Phi)=\frac1m+
+ \frac{\Tr[O(U)^{\mathsf T}T(\Phi)]}{m(m+1)}.
+\end{equation}
+For completeness the design second moment follows from
+\[
+ \int(UF_iU^\dagger)\otimes(UF_bU^\dagger)\,dU
+ =\frac{\delta_{ib}}{p}\left(\mathrm{SWAP}-\frac Im\right).
+\]
+The Haar twirl lies in the span of $I$ and $\mathrm{SWAP}$; its trace
+is zero and its trace against $\mathrm{SWAP}$ is $\delta_{ib}$, which
+fixes these coefficients. Pairing against $F_j\otimes F_a$ yields
+\[
+ \frac1N\sum_\ell O(U_\ell)_{ji}O(U_\ell)_{ab}
+ =\frac{\delta_{ja}\delta_{ib}}p .
+\]
+A unitary $2$-design reproduces this polynomial moment. Apply this
+identity to $\Delta T=T(\Phi)-T(\Psi)$ in \eqref{eq:favg}:
+\[
+ \|f(\Phi)-f(\Psi)\|_{\rm rms}^2
+ =\frac{\norm{\Delta T}^2}{m^2(m+1)^2(m^2-1)}.
+\]
+Equation~\eqref{eq:choi-norm} proves the claim.
+\end{proof}
+
+The frame mechanism is the established unitary-design tomography of
+\cite{roth}, with conventions displayed to prevent a norm or dimension
+factor from being imported incorrectly.
+
+\begin{corollary}[Positive completion from complete design fidelities]
+\label{cor:agf}
+If $\Phi$ has Kraus rank at most $r<m$, then its complete exact-design
+fidelities identify it among all CPTP maps. For every such competitor,
+\[
+ \norm{J_\Phi-J_\Psi}
+ \le C_{m,r}(m+1)\sqrt{m^2-1}
+             \|f(\Phi)-f(\Psi)\|_{\rm rms}.
+\]
+If $f_{\rm obs}=f(\Phi)+e$ and $\|e\|_{\rm rms}\le\epsilon$, every
+minimizer of $\|f(\Psi)-f_{\rm obs}\|_{\rm rms}$ over all CPTP maps obeys
+\begin{align}
+ \norm{J_{\widehat\Phi}-J_\Phi}
+ \le{}&2C_{m,r}(m+1)\sqrt{m^2-1}\,\epsilon \notag\\
+ &+\sqrt2(C_{m,r}+1)\tau_r(J_\Phi). \label{eq:agf-noise}
+\end{align}
+The uniform rank threshold is sharp.
+\end{corollary}
+\begin{proof}
+The exact-rank statement follows from
+Theorem~\ref{thm:channel} and Lemma~\ref{lem:agf}.
+A residual minimizer has
+$\|f(\widehat\Phi)-f(\Phi)\|_{\rm rms}\le2\epsilon$;
+apply \eqref{eq:tail} and \eqref{eq:frame} for the approximate-rank
+statement. Replacers have rank $m$ and $f_\ell=1/m$ for every
+reference unitary, establishing the endpoint obstruction.
+\end{proof}
+
+There is no linear reconstruction of the translation in these
+fidelities. The additional conclusion is a nonlinear uniqueness and
+stability consequence of positivity and rank. The feasible set in
+Corollary~\ref{cor:agf} is all CPTP maps; imposing a unital constraint
+would discard the nonunital examples above.
+
+\section{Verification, scope and open questions}
+The analytic proofs establish statements in all declared dimensions.
+Separate finite exact-arithmetic controls check the projection,
+attainers, coherent directions, complex Hermitian basis transposes,
+rectangular channels and spectral tails. Such controls are diagnostics,
+not substitutes for the proofs. The derivation and this combined
+manuscript have different review scopes; no score from an earlier
+manuscript is assigned to this one.
+
+Three limitations are central. First, the exact constants are for
+unrestricted density matrices; optimal constants on the fixed-input-
+marginal Choi class remain open. Second, complete-design fidelities
+may be numerous. We do not show that a small random Clifford subset
+has the required uniform one-sided conditioning for arbitrary
+low-Kraus-rank nonunital channels. Third, a deterministic perturbation
+bound for calibrated fidelities is not a SPAM-robust experimental
+protocol. Noise extraction, gauge and calibration must be justified
+separately; the guarantees of \cite{kimmel,roth} do not automatically
+transfer to a larger feasible class.
+
+These distinctions suggest concrete further problems: determine the
+optimal fixed-marginal constants, find sparse fidelity frames with
+uniform positive-completion guarantees, and obtain sharper spectral-tail
+terms under additional channel structure. The present paper establishes
+the local-erasure law and its complete-data consequence only.
+
+\paragraph{AI and responsibility disclosure.}
+The named author directed OpenAI Codex assistance in derivation,
+writing and exact arithmetic. Requested GPT-6 Astra xhigh audits
+examined component arguments with reused context and shared files.
+Runtime identity and isolation were not independently attested.
+No independent human review, Lean formalization, certified worldwide
+originality or predicted assessment score is claimed. A full assessment
+of this exact combined manuscript has not yet been obtained.
+
+\begingroup\small
+\begin{thebibliography}{9}
+\bibitem{carmeli}
+C.~Carmeli, T.~Heinosaari, J.~Schultz and A.~Toigo,
+Tasks and premises in quantum state determination,
+\emph{J. Phys. A: Math. Theor.} \textbf{47}, 075302 (2014).
+\href{https://arxiv.org/abs/1308.5502}{arXiv:1308.5502}.
+
+\bibitem{gutoski}
+G.~Gutoski and N.~Johnston,
+Process tomography for unitary quantum channels,
+\emph{J. Math. Phys.} \textbf{55}, 032201 (2014).
+\href{https://doi.org/10.1063/1.4867625}{doi:10.1063/1.4867625}.
+
+\bibitem{kimmel}
+S.~Kimmel, M.~P.~da Silva, C.~A.~Ryan, B.~R.~Johnson and T.~Ohki,
+Robust extraction of tomographic information via randomized benchmarking,
+\emph{Phys. Rev. X} \textbf{4}, 011050 (2014).
+\href{https://doi.org/10.1103/PhysRevX.4.011050}{doi:10.1103/PhysRevX.4.011050}.
+
+\bibitem{erratum}
+S.~Kimmel et al.,
+Erratum: Robust extraction of tomographic information via randomized
+benchmarking, \emph{Phys. Rev. X} \textbf{6}, 029902 (2016).
+\href{https://doi.org/10.1103/PhysRevX.6.029902}{doi:10.1103/PhysRevX.6.029902}.
+
+\bibitem{roth}
+I.~Roth, R.~Kueng, S.~Kimmel, Y.-K.~Liu, D.~Gross, J.~Eisert and M.~Kliesch,
+Recovering quantum gates from few average gate fidelities,
+\emph{Phys. Rev. Lett.} \textbf{121}, 170502 (2018).
+\href{https://doi.org/10.1103/PhysRevLett.121.170502}{doi:10.1103/PhysRevLett.121.170502}.
+\end{thebibliography}
+\endgroup
+\end{document}

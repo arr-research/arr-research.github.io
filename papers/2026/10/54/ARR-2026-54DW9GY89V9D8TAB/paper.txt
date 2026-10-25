@@ -1,0 +1,444 @@
+A sharp stability transition for low-rank tomography
+                with four missing Weyl coefficients
+                                           Lluis Eriksson
+                                    Independent researcher, Sweden
+
+                                    24 October 2026
+                       Working draft 2; documentary clarifications
+
+
+                                              Abstract
+         Let d = 9n with arbitrary integer n ≥ 1, and omit the four cyclic Weyl coefficients
+                        d/3               d/3
+     associated with Xd , its adjoint, Zd and its adjoint. We determine the exact inverse
+     Frobenius constant on differences of density matrices of rank at most r. Writing x = r/n,
+     the squared fraction of√ energy that can be hidden in the missing coefficients is 2x/3 for
+     0 < x ≤ 1, and (x + x2 − 3x + 3)/3 for 1 ≤ x < 2. The resulting     pinverse constant is
+     attained by explicit orthogonally supported states and diverges as 2n/(2n − r) at the
+     exact nonidentifiability threshold r = 2n. The same threshold holds when a rank-r state
+     must be distinguished from every positive state of unrestricted rank. For this stronger
+     task we give a separate, conservative stability bound and a convex least-squares recovery
+     consequence. The proof reduces the missing-coefficient space to additive 3 by 3 spectral
+     grids, then solves two four-dimensional symmetric matrix pencils. These are results for
+     one fixed erasure pattern, not for arbitrary four erasures or a measurement scheme with
+     subquadratically many coefficients.
+
+
+1    Question, normalization and antecedents
+A measurement may fail to determine arbitrary quantum states while still determining every
+state below a rank threshold. In that situation a quantitative question remains: how much can
+the omitted data amplify errors even before injectivity fails? We solve that question exactly
+for a four-dimensional missing-coefficient space.
+    Put ωd = e2πi/d and
+
+                 Xd ej = ej+1 mod d ,       Zd ej = ωdj ej ,     Wd (a, b) = Xda Zdb .
+
+The d2 Weyl matrices are orthogonal, with squared Frobenius norm d. Throughout, d = 9n
+and n is a positive integer. Define
+                              d/3               d/3
+                      U = Xd ,           V = Zd ,         E = {U, U † , V, V † }.
+
+These are four distinct nonidentity Weyl matrices. Let P be the Frobenius-orthogonal projection
+onto their complex span, and put Q = I − P . On Hermitian matrices P is the projection onto
+the real space
+                            K = {aU + āU † + bV + b̄V † : a, b ∈ C}.                        (1)
+It consists of traceless Hermitian matrices. Thus Qρ means all Weyl coefficients except
+                                                                P
+these four, including the known trace coefficient. For C = w cw Ww our data norm is
+∥QC∥F2 = d w∈E          2
+                 / |cw | . All constants below refer to this normalization, not directly to a
+              P
+
+statistical probability norm.
+
+                                                  1
+
+
+
+This coefficient space can be realized by a POVM, although outcome norms then require
+a change of coordinates. Choose a real Hermitian basis F1 , . . . , Fm of the traceless part
+of K⊥ , where m = d2 − 5, and rescale each element so that ∥Fj ∥op ≤ 1. The 2m effects
+(I + Fj )/(2m), (I − Fj )/(2m) are positive, sum to I, and span K⊥ . Their probability record
+determines Qρ. The constants below do not include the conditioning of this coordinate
+conversion or the sampling error of this particular realization.
+    Let Dr = {ρ ≥ 0 : Tr ρ = 1, rank ρ ≤ r} and define
+
+                                                     ∥ρ − σ∥F
+                                  C(n, r) = sup                 ,                             (2)
+                                             ρ,σ∈Dr ∥Q(ρ − σ)∥F
+                                               ρ̸=σ
+
+where a zero denominator gives infinity. Ranks are integers.
+    The general kernel and inertia characterization of restricted quantum state determination
+is due to Carmeli, Heinosaari, Schultz and Toigo [1]. Their Section 6.2, equations (12)–
+(13) and Proposition 13, also establish the relation between symmetric Weyl zero sets and
+realizable covariant POVM kernels. The elementary realization above is not claimed as a
+new measurement-design principle. Baldwin, Deutsch and Kalev [2], especially Sections II–
+III, distinguish rank-r completeness from rank-r strict-completeness and explain the latter’s
+relation to convex reconstruction and noise robustness. We use this established distinction.
+We supply direct proofs of the specialized inertia and stability claims rather than assert a new
+general criterion.
+    Recent work of Zhu and Wang [3] studies spectral floors and conditioning for minimal rank-
+one Weyl–Heisenberg covariant measurements. Their full-space Gram-spectrum problem differs
+from the restricted state-difference constant of the singular coefficient projection considered
+here. The author’s earlier Weyl rank-uncertainty reductions [4] concern support versus arbitrary
+complex matrix rank, rather than the exact positive-state conditioning law proved below.
+Spectral rearrangement, orthogonal projection duality and symmetric matrix pencils are
+classical tools; the contribution claimed here is their explicit solution for the kernel (1). This
+comparison is not a certification of worldwide priority.
+
+
+2      Exact stability and identifiability
+Theorem 1 (Sharp balanced-rank stability). For 1 ≤ r < 2n let x = r/n and
+                                  
+                                  2x/3,                             0 < x ≤ 1,
+                         L(x) =          √                   
+                                   x+       x2 − 3x + 3 /3,         1 ≤ x < 2.
+
+Then
+                                   C(n, r) = (1 − L(r/n))−1/2 .                               (3)
+The supremum is attained by differences of states of rank exactly
+                                                            √     r with mutually orthogonal
+supports. For r ≥ 2n it is infinite. In particular C(n, n) = 3, and along integer sequences
+with (2n − r)/n → 0 from above,
+                                                      s
+                                                            2n
+                                      C(n, r) ∼                  .
+                                                          2n − r
+
+Theorem 2 (Unrestricted positive competitors). Every nonzero H ∈ K has at least 2n strictly
+positive and at least 2n strictly negative eigenvalues. Consequently Q distinguishes every state
+
+
+
+
+                                                  2
+
+
+
+of rank at most r from every other density matrix, of any rank, if and only if r < 2n. In this
+range, for ρ ∈ Dr and any density matrix σ,
+                                                                            s
+                                                                                       288n
+                ∥ρ − σ∥F ≤ B(n, r) ∥Q(ρ − σ)∥F ,             B(n, r) =           1+          .   (4)
+                                                                                      2n − r
+The bound B is conservative; it is not asserted to be the optimal constant for this larger
+competitor class.
+   The finite constants C and B have different domains. In particular, (3) cannot be
+substituted into (4) merely because strict-completeness holds. For n = 1 the finite range
+contains only r = 1; the intermediate branch becomes nontrivial for n ≥ 2.
+
+
+3    Spectral grids and the state-difference cone
+The unitaries U, V commute, have order three, and generate nine distinct Weyl labels. Every
+nonidentity U i V j , 0 ≤ i, j < 3, has trace zero. Character orthogonality therefore shows that
+each of the nine joint eigenspaces has dimension n.
+   By the real three-point Fourier transform, every H ∈ K has joint eigenvalues
+                                                    3
+                                                    X            3
+                                                                 X
+                             hij = fi + gj ,              fi =         gj = 0,                   (5)
+                                                    i=1          j=1
+
+each repeated n times, where f, g are arbitrary real zero-mean triples. Conversely every such
+pair occurs in (1). In particular
+                                                     
+
+                                ∥H∥2 = 3n  f 2 +
+                                           X      X
+                                     F              g2 .
+                                                       i               j                         (6)
+                                                   i             j
+
+No restriction to dimensions that are powers of three is needed.
+   Write n+ (D), n− (D) for the positive and negative inertias of a Hermitian matrix. Up to a
+positive scalar, the nonzero differences of states in Dr are exactly
+
+                     Cr = {D = D† ̸= 0 : Tr D = 0, n+ (D), n− (D) ≤ r}.
+
+Indeed, a state difference has these inertia bounds by the min–max principle. Conversely the
+positive and negative spectral parts of such a D have a common nonzero trace τ ; D/τ is the
+difference of their trace-one normalizations. Hence the key extremum is
+
+                                                    ∥P D∥F2
+                                         L∗ = sup       2 .                                      (7)
+                                                D∈Cr ∥D∥F
+
+Orthogonality gives C(n, r) = (1 − L∗ )−1/2 whenever L∗ < 1.
+Lemma 3 (A common-shift dual bound). For an integer 1 ≤ r < 2n and H = H † with
+eigenvalues h1 ≥ · · · ≥ hd , put
+                                          r
+                                          X
+                                                (hi − θ)2 + (hd−i+1 − θ)2 .
+                                                                                
+                         Wr (H) = min
+                                    θ∈R
+                                          i=1
+
+For D ∈ Cr , | Tr(HD)|2 ≤ Wr (H) ∥D∥F2 . Thus
+
+                                                      Wr (H)
+                                      L∗ ≤ sup             2 .                                   (8)
+                                                0̸=H∈K ∥H∥F
+
+
+                                                   3
+
+
+
+Proof. Pad the positive eigenvalues pi of D and negative magnitudes qi with zeros to length
+r, ordering both decreasingly. Their sums agree. Trace rearrangement bounds Tr(HD) by
+   i≤r hi pi −
+P              P
+                i≤r hd−i+1 qi . For completeness, squared overlaps of two orthonormal eigenbases
+give a doubly stochastic matrix; the extremal pairing of two ordered real lists bounds the trace.
+The same conclusion follows from weighted spectral variational inequalities. This argument
+does not require D to commute with H.
+     Subtract θ( pi − qi ) = 0 and apply Cauchy–Schwarz. Apply the same reason-
+                 P       P
+
+ing to −H to control the absolute value, noting Wr (−H) = Wr (H). Finally ∥P D∥F =
+maxH∈K,∥H∥F =1 | Tr(HD)|, which proves (8).
+
+
+4     Solving the dual extremum
+4.1   Ranks at most one joint multiplicity
+For r ≤ n the extreme values of H each occur at least n times, so
+                                            r
+                                    Wr (H) = (max h − min h)2 .
+                                            2
+For a zero-mean triple, diam(f )2 ≤ 2 fi2 . Since diam(h) = diam(f ) + diam(g), (6) gives
+                                           P
+
+Wr (H)/ ∥H∥F2 ≤ 2r/(3n).
+   Take f = (1, 0, −1) and g = −f . The grid has extrema ±2 on spaces of dimension n, and
+∥H∥F2 = 12n. Choose rank-r projectors R+ , R− in those two spaces and set D = 2(R+ − R− ).
+Then Tr(HD) = ∥D∥F2 = 8r. Projection duality yields
+
+                                    ∥P D∥F2   | Tr(HD)|2   2r
+                                        2   ≥      2   2 = 3n .
+                                     ∥D∥F     ∥H∥F ∥D∥F
+
+This matches the upper bound, and R+ /r, R− /r are the required states.
+
+4.2   Ranks between one and two joint multiplicities
+Now n ≤ r < 2n, x = r/n, and z = x − 1. Sort f, g decreasingly and put
+
+                    a = f1 − f2 ,    b = f2 − f3 ,       c = g1 − g 2 ,   e = g 2 − g3 .
+
+These gaps are nonnegative. Define
+
+    K = a2 + ab + b2 + c2 + ce + e2 ,     A = a + b + c + e,          u = min(a, c),       v = min(b, e).
+
+Then ∥H∥F2 = 2nK. The largest two cells are hmax , hmax −u and the smallest two hmin , hmin +v,
+with weights n, r − n at each end. Ties and zero gaps cause no problem: consistent cell ordering
+selects the same multiset, with partial cells of dimension r − n.
+    The shift minimizing Wr is
+
+                                         hmax + hmin z(v − u)
+                                    θ=              +         .
+                                              2         2x
+Expanding the squares gives
+
+                    Wr (H)   xA2                              z 2 (v − u)2
+                           =     − zA(u + v) + z(u2 + v 2 ) −              .                                (9)
+                      n       2                                     2x
+The single common shift is essential because the positive and negative parts of a state difference
+must have the same trace.
+
+                                                     4
+
+
+
+There are four choices for the two minima; exchange of f, g reduces them to (u, v) = (a, b)
+and (a, e). Write w = (a, b, c, e)T and
+                                                                       
+                                        2              1       0    0
+                                      1               2       0    0
+                                   M =                               > 0.
+                                                                    
+                                      0               0       2    1
+                                        0              0       1    2
+
+Then 2K = wT M w, and the numerator in (9) is wT N w, with
+                                               1                    1        1     1
+                                                                                    
+                                          1 − 2x                   2x        2     2
+                                                   1                1        1     1
+                                          
+                                                  2x           1 − 2x        2     2
+                              Nsame =                                             x ,
+                                          
+                                                   1               1         x
+                                                  2               2         2     2
+                                                   1               1         x     x
+                                                   2               2         2     2
+                                               1               1       1       1
+                                                                                    
+                                          1 − 2x               2       2      2x
+                                                  1           x       x       1     
+                              Ncross = 
+                                                  2           2       2       2     .
+                                                                                     
+                                                   1           x       x       1
+                                                  2           2       2       2     
+                                                   1           1       1         1
+                                                  2x           2       2    1 − 2x
+Their exact pencil determinants are
+                                   λ
+              det(Nsame − λM ) = − (λx − x + 1)[−9λ2 + 3(x + 1)λ − x + 1],                                    (10)
+                                   x
+                                   λ
+              det(Ncross − λM ) = − (3λx − 2x + 2)[−3λ2 + 2xλ − x + 1].                                       (11)
+                                   x
+These identities can be checked by direct four-by-four expansion. As M is positive definite,
+the largest generalized eigenvalue bounds the quotient even after relaxing the gap and branch
+inequalities.     √
+     Put ℓ = (x + x2 − 3x + 3)/3. It is the larger root of 3λ2 − 2xλ + x − 1 = 0 and is at
+least 2/3 for 1 ≤ x ≤ 2. The other roots of (11) are 0, 2(x − 1)/(3x) ≤ 1/3, and the smaller
+quadratic root. Thus the cross branch has maximum generalized eigenvalue ℓ.
+     For the same branch the additional roots are 0 and (x − 1)/x ≤ 1/2. With q(λ) =
+   2
+9λ − 3(x + 1)λ + x − 1,
+                                  q(ℓ) = (x − 1)(3ℓ − 2) ≥ 0.
+Moreover ℓ lies to the right of the vertex (x + 1)/6 ≤ 1/2. It follows that the larger root of q
+is at most ℓ. This proves L∗ ≤ ℓ in all branches.
+
+
+5    Extremizing states and the singular boundary
+For n ≤ r < 2n put
+                                                               2 + t t − 1 1 + 2t
+                       p                                                                 
+           t=1−x+          x2 − 3x + 3,           f=                ,     ,−      ,             g = −f.
+                                                                 3     3     3
+Here 0 < t ≤ 1, and
+                                   t2 + 2(x − 1)t + x − 2 = 0.                                                (12)
+The grid of H has eigenvalues 0 on 3n dimensions and ±(1+t), ±1, ±t, each listed sign repeated
+n times. At t = 1 distinct cells may share an eigenvalue; the indicated cell decomposition is
+still valid.
+     Retain the full n-dimensional cells of ±(1 + t), rank-(r − n) subspaces in the cells of ±1,
+and zero elsewhere, obtaining D. Then Tr D = 0, n± (D) = r, and
+
+        Tr(HD) = ∥D∥F2 = 2[n(1 + t)2 + (r − n)],                            ∥H∥F2 = 2n[(1 + t)2 + 1 + t2 ].
+
+                                                           5
+
+
+
+Using (12),                                               √
+                      ∥D∥F2   (1 + t)2 + x − 1   x+           x2 − 3x + 3
+                          2 =              2
+                                               =                          = ℓ.
+                      ∥H∥F      2(1 + t + t )                   3
+Projection duality forces ∥P D∥F2 / ∥D∥F2 ≥ ℓ, so equality holds by the previously proved upper
+bound. The positive and negative parts of D, divided by their common trace n(1 + t) + (r − n),
+are explicit orthogonally supported rank-r states.
+    At r = 2n, the matrix
+                                     H0 = U + U † − V − V †
+has eigenvalues 3, −3 each on 2n dimensions and zero elsewhere. Its positive and negative
+spectral parts, each divided by 6n, are distinct rank-2n states whose difference lies in K. This
+proves failure for all r ≥ 2n. For x < 2, L(x) < 1, completing (3). Finally L′ (2− ) = 1/2,
+whence 1 − L(x) ∼ (2 − x)/2 and the stated asymptotic follows.
+
+
+6    Strict-completeness and convex reconstruction
+Proof of Theorem 2. For a nonzero grid (5), sort both triples and put F = f1 ≥ 0, G = g1 ≥ 0,
+S = F + G > 0. Zero mean and ordering give f2 ≥ −F/2, g2 ≥ −G/2. The second largest cell
+satisfies
+             h2 = max(F + g2 , f2 + G) ≥ max(F − G/2, G − F/2) ≥ S/4 > 0.
+Thus at least two cells, each of dimension n, are strictly positive. Apply the argument to −H
+for the negative cells.
+     We also have fi2 ≤ 6F 2 : indeed f2 ∈ [−F/2, F ] and the convex quadratic F 2 + f22 + (F +
+                  P
+
+f2 )2 is at most 6F 2 on that interval. Similarly gj2 ≤ 6G2 . Consequently
+                                                 P
+
+                                   ∥H∥F2 ≤ 18n(F 2 + G2 ) ≤ 18nS 2 .
+                                                                     √
+The largest 2n positive eigenvalues are therefore all at least ∥H∥F / 288n, and the same bound
+holds for the 2n largest negative magnitudes.
+    Suppose D = D† , Tr D = 0, and either n+ (D) ≤ r or n− (D) ≤ r. Set H = P D. If H = 0
+there is nothing to prove. In the first case the Hermitian eigenvalue distance inequality bounds
+∥D − H∥F2 below by the sum of squares of the positive eigenvalues of H after its r largest
+ones. To see this, sort the eigenvalues of both matrices; D has at most r positive entries,
+so each subsequent positive eigenvalue of H contributes at least its square to their squared
+Euclidean distance, which is bounded above by ∥D − H∥F2 . This last comparison follows from
+trace rearrangement: if di , hi are the respective decreasing eigenvalue lists, then
+                   ∥D − H∥F2 = ∥D∥F2 + ∥H∥F2 − 2 Tr(DH) ≥
+                                                                   X
+                                                                        (di − hi )2 .
+                                                                    i
+Hence
+                                            2n − r
+                                      ∥QD∥F2 ≥     ∥P D∥F2 .
+                                             288n
+Apply the same argument to −D, −H in the second case. Pythagoras now gives ∥D∥F ≤
+B(n, r) ∥QD∥F .
+    If ρ ∈ Dr and σ is any density matrix, the quadratic form of D = ρ − σ is nonpositive on
+ker ρ. By min–max, n+ (D) ≤ r, so (4) follows. It implies uniqueness for r < 2n. The states
+constructed from H0 prove failure at and above 2n.
+Corollary 4 (A convex noisy-data estimator). Let 1 ≤ r < 2n, ρ ∈ Dr , and y = Qρ + e with
+∥e∥F ≤ ϵ. Every minimizer
+                             ρb ∈ arg   min    ∥Qσ − y∥F
+                                            σ≥0, Tr σ=1
+satisfies ∥ρb − ρ∥F ≤ 2B(n, r)ϵ.
+
+                                                  6
+
+
+
+Proof. The density-matrix domain is nonempty, compact and convex, so a minimizer exists. Its
+residual is at most that of ρ, hence at most ϵ. The triangle inequality gives ∥Q(ρb − ρ)∥F ≤ 2ϵ,
+and Theorem 2 applies without a rank restriction on ρb.
+
+    This is a deterministic guarantee in coefficient space. It supplies no experimental sampling
+bound, approximate-rank guarantee or running-time analysis. In particular it does not assert
+an improvement over compressed sensing protocols using many fewer measured coefficients.
+
+
+7    Scope, checks and remaining questions
+The argument depends only on the additive spectral kernel with nine equal-multiplicity cells.
+It therefore applies after arbitrary unitary conjugation and to any commuting order-three pair
+with all nine joint multiplicities equal to n. The cyclic Weyl construction realizes this kernel
+in every dimension divisible by nine.
+    Exact symbolic checks reproduce both pencil determinants and the attainer identities,
+including a direct computation of projection energy. Finite exact tests additionally compare
+sorted spectra with the formulas in 2,400 formula checks on 2,000 distinct instances, using
+n = 1, . . . , 5 and 80 nonzero gap vectors. The 400 instances at r = n are checked in both
+branches. These tests supplement the universal proofs; they do not establish unexamined
+dimensions by extrapolation.
+    The main open quantitative question here is the optimal constant in (4). Further questions
+concern unequal joint multiplicities, other erasure patterns, and error bounds for approximately
+low-rank states. The present result does not classify those problems. Only four coefficients are
+removed out of d2 ; the theorem isolates an exact conditioning mechanism rather than a large
+measurement reduction.
+
+AI and responsibility disclosure. The named author directed substantial OpenAI Codex
+assistance in derivation, writing and exact computational checks. GPT-6 Astra xhigh math-
+ematical audits used shared filesystem and declared reused context. No runtime isolation,
+independent human review, Lean formalization, certified worldwide originality or predicted
+assessment score is claimed. A full assessment of draft 1 is preserved separately. This draft
+makes documentary clarifications; no new full assessment score is assigned to it.
+
+
+References
+[1] C. Carmeli, T. Heinosaari, J. Schultz and A. Toigo, Tasks and premises in quantum state
+    determination, arXiv:1308.5502v2 (2014). https://arxiv.org/abs/1308.5502v2.
+
+[2] C. H. Baldwin, I. H. Deutsch and A. Kalev, Strictly-complete measurements for bounded-
+    rank quantum-state tomography, Physical Review A 93, 052105 (2016). https://doi.org/
+    10.1103/PhysRevA.93.052105; arXiv:1605.02109v1.
+
+[3] X. Zhu and Y. Wang, Uniformly Stable Minimal Weyl–Heisenberg Measurements Ap-
+    proaching the SIC Benchmark, arXiv:2608.11850v1 (2026). https://arxiv.org/abs/2608.
+    11850v1.
+
+[4] L. Eriksson, Removing the binary and ternary factors from cyclic Weyl rank uncertainty,
+    AIRR.SCIENCE, ARR-2026-1QEPAQ29TN8FZRK5, v1 (2026). https://airr.science/
+    papers/ARR-2026-1QEPAQ29TN8FZRK5/versions/v1/.
+
+
+
+
+                                               7
