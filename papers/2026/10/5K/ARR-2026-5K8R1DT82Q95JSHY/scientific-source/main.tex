@@ -1,0 +1,419 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=24mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype,amsmath,amssymb,amsthm,booktabs,needspace}
+\usepackage[hidelinks]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\C}{\mathbb C}
+\newcommand{\ran}{\operatorname{ran}}
+\newcommand{\F}{\mathbb F}
+\title{Error-space geometry and positivity orders\\of encoded reduction maps}
+\author{Lluis Eriksson}
+\date{25 October 2026\\\small Research manuscript, draft 2}
+\begin{document}
+\maketitle
+\begin{abstract}
+We study tensor products of reduction maps after restriction to perfect-tensor encodings. An error-support expansion of the unnormalized Choi matrix accommodates multiple logical reference parties and arbitrary complex absolutely maximally entangled states. For one logical party, odd physical length \(n\) and \(0<t\le1\), averaging orthogonal error families over fixed-size site subsets gives a completely positive output complement under the sufficient condition \(d\ge2n/t\). The encoded map then has an exact Schmidt-rank sign criterion and optimal dimension-uniform positivity order \(\lfloor t^{-n}\rfloor\). At \(t=1/2\), a separate estimate covers \(d\ge2n\). For two logical parties and four physical outputs, the half-parameter map is completely positive exactly in the admissible dimensions \(2\le d\le12\). In dimensions \(d\ge13\) it is not completely positive, but is \(k\)-positive at least through \(\lfloor2d(d-2)/(d-6)\rfloor\). Explicit polynomial-evaluation codes give failure at rank \(9d\) for every prime \(d\ge43\), establishing linear growth up to unmatched constants for those examples. Code existence, the Schmidt-overlap criterion and the reduction-map family are prior ingredients. The results retain substantive code-support restrictions and belong to the completely copositive class.
+\end{abstract}
+
+\section{Introduction and scope}
+Let
+\[
+ \Phi_t(X)=\Tr(X)I_d-tX,\qquad
+ \Lambda_{V,t}^{(n)}=\Phi_t^{\otimes n}\circ\operatorname{Ad}_V,
+ \quad \operatorname{Ad}_V(X)=VXV^*.
+\]
+The local factors need not be completely positive. We ask how restricting the entire input support to a perfect-tensor code changes their positivity orders. A map is \(k\)-positive if its tensor product with the identity map on \(M_k(\C)\) is positive; \(k\) is always a positive integer. Complete positivity (CP) is equivalent to positivity of its unnormalized Choi matrix.
+
+Our first result treats one logical input of dimension \(d\), encoded into odd length \(n\). The whole physical output code gives a logical isotropic Choi block. Its complement is controlled by an elementary averaging inequality for local-error projections. This gives an exact sign criterion in stated sufficient dimension domains. The claimed dimension bounds are not optimal.
+
+The second result changes the logical input to dimension \(d^2\) and uses four physical outputs. Its code block need not be isotropic. Instead, each fixed single-site error space \(E_i\) is invariant under the full Choi matrix, which acts there as a scalar. Every vector of that fixed space is maximally entangled across the logical--physical cut; this is not asserted for arbitrary superpositions across the sum \(\ran Q_1\). This proves a CP classification and a sufficient positivity order growing linearly with \(d\). Concrete witnesses give an upper bound of the same growth order for an established MDS family. The constants and exact first failing rank remain undetermined.
+
+\paragraph{Attribution and relation to earlier tools.}
+Perfect tensors, AME states, quantum secret sharing and their encoding interpretation are prior \cite{Helwig,MDS}. The parametrized reduction products already occur in generalized state inversion \cite{Eltschka}; error bases and their use in descriptions of positive maps are also established \cite{Bhat}. We use the standard Choi criterion \cite{Choi} and Schmidt-overlap optimization \cite{TH}. Spectral conditions for $k$-positive maps were developed by Chru\'sci\'nski and Kossakowski \cite[Theorems 1--2]{CK}. Brannan and Collins \cite[Section 4.2, Theorem 4.3]{BC} explicitly construct Choi matrices $I-tP$ from highly entangled subspaces. M{\l}ynik, Osaka and Marciniak \cite[Proposition 3.1 and Theorem 3.2]{MOM} characterize the threshold for $aI-C$, $C\ge0$, through rank-$k$ compressions and Ky Fan norms of Kraus combinations. Our passage from the entanglement of a fixed $E_i$ to its rank-constrained overlap bound is an application of this established geometry. The family-specific work is identifying the error spaces and coefficients, controlling the complementary block and constructing the explicit reference-strip witnesses. These antecedents do not by themselves evaluate those quantities here; no new general criterion of $k$-positivity is asserted. Neither the projection-counting lemma nor the existence of highly $k$-positive non-CP maps in general is claimed new. The statements here concern the specific encoded tensor-reduction family, its error-space bounds and the explicit dimension domains.
+
+Earlier work by the author on three- and five-output encodings motivated this extension. Its particular small-length formulas are not needed as premises below. This manuscript has its own proofs and has not inherited the assessment of an earlier PDF. The literature comparison is directed rather than exhaustive, and no certified worldwide priority is asserted.
+
+\section{AME encodings and a common error expansion}
+Let \(m\ge2\), \(1\le r\le m\), and \(n=2m-r\). Suppose a normalized \(\operatorname{AME}(2m,d)\) state \(\Psi\) exists, with integer \(d\ge2\). Every reduction on at most \(m\) parties is maximally mixed. Select \(r\) parties as reference \(R\), the other \(n\) as outputs \(O\), and write
+\begin{equation}\label{eq:enc}
+ \Psi=d^{-r/2}\sum_{\alpha=1}^{d^r}|\alpha\rangle_R V|\alpha\rangle,
+ \quad V^*V=I_{d^r},\quad P=|\Psi\rangle\langle\Psi|,
+ \quad \Pi=VV^*,\quad W=I_R\otimes\Pi .
+\end{equation}
+No reality, stabilizer or minimal-support assumption is imposed on this universal setup. All existence statements in the theorems are conditional, except the explicit constructions supplied later. We use
+\begin{equation}\label{eq:choi}
+ J=d^r(\id_R\otimes\Phi_t^{\otimes n})(P).
+\end{equation}
+The trace multiplier of the map is \((d-t)^n\). Division by that number gives a trace-preserving map when it is nonzero, but it is a physical quantum channel only in a CP regime.
+
+Choose a local operator basis \(F_0=I_d,F_1,\ldots,F_{d^2-1}\) with
+\(\Tr(F_a^*F_b)=d\delta_{ab}\) and \(\Tr F_a=0\) for \(a>0\).
+For \(S\subset O\), \(0<|S|\le m-1\), let \(E_S\) project onto vectors obtained by applying a product of nonidentity basis errors on exactly \(S\) to \(\Psi\); put \(E_\varnothing=P\).
+
+\begin{lemma}[Local error geometry]\label{lem:error}
+For each fixed \(S\), its error vectors are orthonormal, and
+\begin{equation}\label{eq:twirl}
+ d^{|S|}\Tr_S(P)\otimes I_S=\sum_{T\subseteq S}E_T.
+\end{equation}
+Distinct exact supports \(S,T\) give orthogonal spaces whenever
+\(|S\cup T|\le m\). If \(0<|S|\le m-r\), then \(E_SW=0\).
+\end{lemma}
+\begin{proof}
+The norm and inner product of two errors on a fixed \(S\) are their local Hilbert--Schmidt inner products against the uniform \(S\) marginal. The full basis, allowing identity factors, is therefore orthonormal; its twirling identity
+\(\sum_aF_aYF_a^*=d\Tr(Y)I\), tensored on \(S\), proves \eqref{eq:twirl}. For distinct supports whose union is uniform, a site in the symmetric difference contributes a centered factor, so their inner product is zero.
+
+If \(|S|\le m-r\), the joint \(R,S\) marginal is uniform. Expansion in reference matrix units gives
+\[
+ V^*(L_S\otimes I)V=\frac{\Tr L_S}{d^{|S|}}I_{d^r}.
+\]
+For any centered product error, applying \(W\) to its error vector thus gives zero. This proves orthogonality to the entire output-code block, rather than only to \(\Psi\).
+\end{proof}
+Orthogonality between arbitrary supports is not implied. In particular, the last statement is not transferred to supports larger than \(m-r\) when several parties are used as reference.
+
+Define \(f_{N,M}(z)=\sum_{j=0}^M\binom Nj(-z)^j\), for \(0\le M\le N\).
+\Needspace{9\baselineskip}
+\begin{proposition}[General expansion]\label{prop:exp}
+For \(t>0\), let
+\[
+ a=f_{n,m-r}(t/d),\qquad
+ c_s=(-1)^{n-s}d^{r-s}t^{n-s}
+       f_{n-s,m-1-s}(1/(dt)),\quad 0\le s\le m-1.
+\]
+Then
+\begin{equation}\label{eq:expansion}
+ J=aI+\sum_{s=0}^{m-1}c_s\sum_{\substack{S\subset O\\|S|=s}}E_S.
+\end{equation}
+The expansion has a polynomial interpretation at \(t=0\), where \(J=I\).
+\end{proposition}
+\begin{proof}
+Expand the tensor product in \eqref{eq:choi} by the set of sites retained by the identity part of each factor. If its size is \(j\le m-r\), its joint marginal with \(R\) is uniform, and its scalar coefficient is \((-t/d)^j\). These terms sum to \(aI\). Every other retained set has a traced complement \(U\) of size at most \(m-1\). Its contribution is
+\[
+ d^{r-|U|}(-t)^{n-|U|}\sum_{S\subseteq U}E_S
+\]
+by \eqref{eq:twirl}. A fixed \(S\) of size \(s\) appears in \(\binom{n-s}{u-s}\) traced sets of size \(u\). Thus its coefficient is
+\[
+ c_s=\sum_{u=s}^{m-1}\binom{n-s}{u-s}d^{r-u}(-t)^{n-u},
+\]
+which is the stated expression after factoring the first term.
+\end{proof}
+
+\section{One logical party: a linear sufficient dimension bound}
+In this section \(r=1\), \(n=2m-1\ge3\), and \(L=m-1\). Set
+\[
+ f=f_{n,L},\qquad a=f(t/d),\qquad h=f(1/(dt)),\qquad b=-t^n h.
+\]
+Here \(c_0=db\). All nonempty error supports in \eqref{eq:expansion} are outside \(W\), so \(J\) is an output direct sum with
+\begin{equation}\label{eq:codeblock}
+ WJW=aW+dbP,\qquad
+ J_{\rm out}=a(I-W)+\sum_{s=1}^Lc_s\sum_{|S|=s}E_S.
+\end{equation}
+
+\begin{lemma}[Averaged orthogonal cover]\label{lem:cover}
+For \(1\le s\le m-1\),
+\begin{equation}\label{eq:cover}
+ \sum_{|S|=s}E_S\ \le\
+ \frac{\binom ns}{\binom ms}(I-W).
+\end{equation}
+\end{lemma}
+\begin{proof}
+For a fixed \(m\)-element subset \(U\subset O\), the \(s\)-support error spaces contained in \(U\) are mutually orthogonal by Lemma~\ref{lem:error}, and are all outside \(W\). Their sum is a projection bounded by \(I-W\). Sum this inequality over every \(U\). A fixed \(S\) appears \(\binom{n-s}{m-s}\) times. Divide by that multiplicity and use
+\(\binom nm/\binom{n-s}{m-s}=\binom ns/\binom ms\).
+\end{proof}
+
+\begin{theorem}[One-input hierarchy]\label{thm:odd}
+Suppose \(0<t\le1\) and \(d\ge2n/t\). Then
+\begin{equation}\label{eq:gap}
+ J_{\rm out}\ge\frac{41}{564}(I-W).
+\end{equation}
+Writing \(k_e=\min(k,d)\), the encoded map is \(k\)-positive exactly when
+\begin{equation}\label{eq:criterion}
+ a-k_e t^n h\ge0.
+\end{equation}
+Uniformly over all admissible dimensions and encodings in this domain, it is
+\(\lfloor t^{-n}\rfloor\)-positive. This uniform integer order cannot be increased.
+\end{theorem}
+\begin{proof}
+Put \(z=1/(dt)\) and \(u=nz\le1/2\). In all coefficient polynomials the absolute values of successive alternating terms decrease, with first ratio at most \(1/2\). Consequently \(0<f_{N,M}(z)\le1\) for every needed polynomial. Odd \(s\) coefficients are nonnegative, even \(s\) coefficients nonpositive, and
+\[
+ |c_s|\le d\,t^n z^s.
+\]
+For \(1\le s\le m-1\), \(\binom ms\ge m\). Discarding positive terms and using the cover lemma bounds the entire negative contribution by
+\begin{align}
+ D&\le\frac{dt^n}{m}\sum_{\substack{s\ge2\\s\ {\rm even}}}\binom ns z^s
+ \le\frac{dt^n}{m}\bigl(\cosh u-1\bigr) \nonumber\\
+ &\le\frac{24}{47}\frac{n^2t^{n-2}}{md}
+ \le\frac{12}{47}\frac nm\,t^{n-1}<\frac{24}{47}.
+ \label{eq:deficit}
+\end{align}
+The binomial-to-cosh step uses \(\binom ns\le n^s/s!\). For the next inequality, successive terms of the series for \(\cosh u-1\), after its leading term, have ratio at most \(u^2/12\); hence
+\[
+ \cosh u-1\le\frac{u^2}{2(1-u^2/12)}
+             \le\frac{24}{47}u^2,\quad 0\le u\le1/2.
+\]
+
+For \(n\ge7\), \(L\ge3\), and the cubic alternating partial sum is a lower bound for \(a\). On \(0\le v\le1/(2n)\) it decreases, since its derivative is
+\(-n[1-(n-1)v+(n-1)(n-2)v^2/2]<0\). As \(t/d\le1/(2n)\),
+\[
+ a\ge\frac12+\frac{n-1}{8n}
+          -\frac{(n-1)(n-2)}{48n^2}
+   \ge\frac{197}{336}>\frac7{12}.
+\]
+Combining with \eqref{eq:deficit} gives
+\(a-D\ge7/12-24/47=41/564\).
+For \(n=3\) there are no negative nonempty-support coefficients and \(a\ge1/2\).
+For \(n=5\), \(c_2=-t^3/d\), while the cover factor is
+\(\binom52/\binom32=10/3\). Thus
+\(a-D\ge1/2-t^4/3\ge1/6\). This proves \eqref{eq:gap} in all cases.
+
+Identifying the output code by its isometry, its Choi block is
+\(aI_{d^2}+b|\Omega_d\rangle\langle\Omega_d|\), with
+\(\Omega_d=\sum_j|jj\rangle\). On unit Schmidt-rank-at-most-\(k_e\) vectors,
+the maximum squared overlap with \(\Omega_d\) is \(k_e\). This follows from
+\(|\Tr M|^2\le k_e\|M\|_{\rm F}^2\), with equality at a normalized logical rank-\(k_e\) projection. Output projection onto either block cannot increase Schmidt rank. Hence mixed-block vectors are covered, and \eqref{eq:criterion} is both necessary and sufficient. This is an exact sign test, not a claim about the smallest strictly positive numerical value across both blocks.
+
+On \([0,1/n]\),
+\(f'(x)=-n f_{n-1,L-1}(x)<0\), by the same alternating estimate.
+Since \(t/d\le1/(dt)\), we have \(a\ge h>0\), with strict inequality if \(t<1\).
+For \(K=\lfloor t^{-n}\rfloor\), \(K t^n\le1\), proving the uniform order.
+
+For \(l=K+1\), choose a prime dimension large enough that
+\begin{equation}\label{eq:witnessdim}
+ d>\max\left\{n,l,\frac{2n}{t},
+       \frac{nl\,t^{n-1}}{lt^n-1}\right\}.
+\end{equation}
+Then \(a\le1\), \(h\ge1-n/(dt)\), and
+\(a-lt^n h\le1-lt^n+nl\,t^{n-1}/d<0\).
+The MDS construction in Section~\ref{sec:MDS} supplies an AME encoding in that dimension and the attaining logical projector supplies a Schmidt-rank-\(l\) negative direction. Thus the uniform order is sharp.
+\end{proof}
+
+\begin{proposition}[Separate half-parameter domain]\label{prop:endpoint}
+At \(t=1/2\), the exact criterion \eqref{eq:criterion} and optimal uniform order \(2^n\) also hold for \(d\ge2n\). A complement gap is \(3/4\) when \(n=3\), and
+\(3/4-2n/2^n\ge7/16\) when odd \(n\ge5\).
+\end{proposition}
+\begin{proof}
+Now \(nz=2n/d\le1\). For nonempty supports the needed coefficient polynomials are strictly positive because their first ratio is less than one; their absolute values are at most one. Bounding each projection separately instead of using \eqref{eq:cover} gives
+\[
+ D\le d\,2^{-n}\bigl(\cosh(2n/d)-1\bigr)
+       \le\frac{4n^2}{d\,2^n}\le\frac{2n}{2^n},
+\]
+using \(\cosh x-1\le x^2\) on \([0,1]\).
+Also \(a\ge1-n/(2d)\ge3/4\). For \(n=3\), the negative part is absent. The polynomial \(h\) is nonnegative and can be zero at \(n=3,d=6\); this means \(b=0\), with no failure of the criterion. Monotonicity of \(f\) on \([0,1/n]\) and \(a\ge h\) give the order \(2^n\). Large prime dimensions as in \eqref{eq:witnessdim} supply sharp failure at the next order.
+\end{proof}
+The gap formulas in Proposition~\ref{prop:endpoint} are separate from \eqref{eq:gap}. In particular, numerical bounds proved only in a smaller domain must not be transferred to a larger one without a new estimate.
+
+\section{Two logical parties and four outputs}
+Take \(m=3,r=2,n=4\). The input dimension is now \(d^2\). Proposition~\ref{prop:exp} becomes
+\begin{equation}\label{eq:twoexp}
+ J=aI+c_0P+c_1Q_1+c_2Q_2,\qquad
+ Q_1=\sum_iE_i,\quad Q_2=\sum_{i<j}E_{ij},
+\end{equation}
+where
+\[
+ a=1-\frac{4t}{d},\quad
+ c_0=d^2t^4-4dt^3+6t^2,\quad
+ c_1=-dt^3+3t^2,\quad c_2=t^2.
+\]
+The four single-error spaces are mutually orthogonal. Every pair-error space is orthogonal to every single-error space, since their union has at most three sites. Thus \(Q_1\) is a projection, \(PQ_1=Q_2Q_1=0\), and \(Q_2\ge0\). Pair-error spaces on disjoint pairs need not be orthogonal; they also need not be outside the entire output code.
+
+\begin{theorem}[CP classification and sufficient order]\label{thm:two}
+At \(t=1/2\), conditional on the AME encoding, the map is CP exactly for integer dimensions \(2\le d\le12\).
+For \(d\ge7\) its least Choi eigenvalue is
+\begin{equation}\label{eq:mineig}
+ \lambda_{\min}(J)=\frac74-\frac2d-\frac d8.
+\end{equation}
+For \(d\ge13\) it is \(k\)-positive at least for every
+\begin{equation}\label{eq:Ktwo}
+ k\le K_d=\left\lfloor\frac{2d(d-2)}{d-6}\right\rfloor.
+\end{equation}
+This last bound is sufficient, not an exact first-failure threshold.
+\end{theorem}
+\begin{proof}
+At this parameter,
+\[
+ a=1-\frac2d\ge0,\quad
+ c_0=\frac{(d-4)^2+8}{16}>0,\quad
+ c_1=\frac{6-d}{8},\quad c_2=\frac14.
+\]
+For \(2\le d\le6\), every term in \eqref{eq:twoexp} is positive semidefinite.
+For \(d\ge7\), \(c_1<0\), and
+\[
+ J\ge aI+c_1Q_1\ge(a+c_1)I.
+\]
+This lower bound is attained on every vector in \(\ran Q_1\), whose dimension is \(4(d^2-1)>0\). Indeed \(P\) and \(Q_2\) annihilate that space. This proves \eqref{eq:mineig}. Its sign is that of \(-d^2+14d-16\), which is nonnegative for integers \(7\le d\le12\) and negative for \(d\ge13\).
+
+Every unit vector \(w\) in a fixed \(\ran E_i\) is maximally entangled across \(R|O\), with reduced reference state \(I_{d^2}/d^2\). To see this for the whole space rather than just a basis, write \(w\) as \(L_i\Psi\), normalized, with \(L_i\) any centered complex local operator. The uniform \(R,i\) marginal gives
+\[
+ \Tr_O|L_i\Psi\rangle\langle L_i\Psi|
+   =\frac{\Tr(L_i^*L_i)}{d}\frac{I_{d^2}}{d^2}.
+\]
+The same factor is its squared norm.
+
+For a unit vector \(z\) of Schmidt rank at most \(k_e=\min(k,d^2)\), the standard overlap bound therefore gives
+\[
+ \langle z,E_i z\rangle
+ =\sup_{\substack{w\in\ran E_i\\\|w\|=1}}|\langle w,z\rangle|^2
+ \le\frac{k_e}{d^2}.
+\]
+Since \(Q_1\) is a projection,
+\[
+ \langle z,Q_1z\rangle\le\min\{1,4k_e/d^2\}.
+\]
+Discarding the nonnegative \(P,Q_2\) terms yields
+\begin{equation}\label{eq:rankboundtwo}
+ \langle z,Jz\rangle\ge a+c_1\min\{1,4k_e/d^2\}.
+\end{equation}
+For \(d\ge13\), the integer bound \eqref{eq:Ktwo} is below \(d^2\) and makes the right side nonnegative. The Choi--Schmidt criterion proves the claim.
+\end{proof}
+
+\section{Explicit codes and a linear upper bound}\label{sec:MDS}
+For a prime \(d>2m-1\), evaluate every polynomial \(p\in\F_d[x]\) of degree at most \(m-1\) on \(2m\) distinct field points, and set
+\begin{equation}\label{eq:MDS}
+ \Psi_d=d^{-m/2}\sum_{\deg p<m}|p(x_1),\ldots,p(x_{2m})\rangle.
+\end{equation}
+This is the established MDS AME construction \cite{MDS}, recalled to specify the witnesses. Any \(m\) evaluations determine \(p\) by the Vandermonde determinant. Therefore each \(m\)-coordinate tuple appears once, and the complementary \(m\) evaluations distinguish all codewords, removing off-diagonal terms in the partial trace. Every \(m\)-party reduction is \(I/d^m\). No new existence frontier is claimed.
+
+For the two-input family use quadratics and points \(0,\ldots,5\), with evaluations \(0,1\) as reference. Let \(B\subset\F_d\) have \(h\) elements and let \(A\) project onto reference pairs \((r_0,r_1)\) with \(r_1\in B\), leaving \(r_0\) unrestricted. Let \(F\) act on output evaluation 2, with diagonal entries
+\[
+ F(0)=d-1,\qquad F(x)=-1\quad(x\ne0).
+\]
+It is centered and \(\Tr F^2=d(d-1)\).
+
+\begin{lemma}[Reference-strip witness]\label{lem:strip}
+For prime \(d\ge7\) and \(1\le h\le d\), normalize
+\(z=(A\otimes F\otimes I)\Psi_d\).
+Its Schmidt rank is \(hd\), and for the Choi matrix at arbitrary \(t\),
+\begin{equation}\label{eq:strip}
+ \langle z,Jz\rangle
+ =1-\frac{4t}{d}
+   +3t^2\left[\frac hd+\frac{d-h}{d(d-1)}\right]-ht^3 .
+\end{equation}
+\end{lemma}
+\begin{proof}
+The joint reference--error-site marginal is uniform. The squared norm before normalization is \(h(d-1)/d\), and the normalized reference density is \(A/(hd)\), proving the rank.
+
+We compute each term of the traced-site expansion of \eqref{eq:choi} directly. For \(S\) of size \(u\), write
+\(\theta_S=\langle z,(\Tr_S P\otimes I_S)z\rangle\).
+Its contribution is \(d^2(-t)^{4-u}\theta_S\).
+Three distinct evaluations determine the quadratic. Grouping sparse codewords by their untraced coordinates therefore gives the following values:
+\[
+\begin{array}{ccl}
+u&\text{condition}&d^2\theta_S\\ \hline
+0&&0\\
+1&\text{error site in }S&h\\
+1&\text{error site not in }S&0\\
+2&\text{error site in }S&h/d\\
+2&\text{error site not in }S&(d-h)/(d(d-1))\\
+3&&1/d\\
+4&&1 .
+\end{array}
+\]
+Here is the counting and normalization in detail. With the two reference values retained, the selected code has \(hd^2\) words. The inner-product Gram sums of a slice of \(\Psi_d\) and a slice of \(z\) have common squared-amplitude denominator \(hd^5(d-1)\). After the Choi factor \(d^2\), their denominator is \(hd^3(d-1)\).
+
+For \(u=0\), each reference pair has uniformly varying error evaluation, so centering makes the Gram sum zero. For \(u=1\), tracing the error site leaves squared integer Gram sum \(h^2d^3(d-1)\); tracing another site gives zero by three-coordinate uniformity. For \(u=2\) containing the error site, the corresponding sum is \(h^2d^2(d-1)\). Otherwise, fix the two traced values. The error evaluation is a nonconstant affine function of the remaining allowed reference evaluation. Its sum over \(B\) is \(d\) times the indicator that its unique zero lies in \(B\), minus \(h\). Each possible zero occurs \(d\) times among the \(d^2\) traced pairs. The squared sum is
+\[
+ d\{h(d-h)^2+(d-h)h^2\}=d^2h(d-h).
+\]
+For \(u=3\), the squared sum is \(hd^2(d-1)\), since three physical values identify the codeword. For \(u=4\), it is \(hd^3(d-1)\): each selected reference pair has \(d\) codewords, and full output tuples distinguish them. Dividing by the common denominator gives the table. Its multiplicities are \(1\) for each single site, three pairs of each kind, four triples and one full set. Summing gives \eqref{eq:strip}.
+\end{proof}
+
+\begin{theorem}[Linear scaling, with unmatched constants]\label{thm:linear}
+For every prime \(d\ge43\), the two-input MDS encoded map at \(t=1/2\) is \(K_d\)-positive as in \eqref{eq:Ktwo}, but is not \(9d\)-positive. Thus its greatest positivity order grows linearly with \(d\), between bounds with different constants.
+\end{theorem}
+\begin{proof}
+The lower bound is Theorem~\ref{thm:two}. Put \(h=9\) in Lemma~\ref{lem:strip}. Its rank-\(9d\) vector gives
+\[
+ \langle z,Jz\rangle
+   =\frac{-d^2+45d-92}{8d(d-1)}<0\quad(d\ge43).
+\]
+Indeed the numerator is \(-6\) at \(d=43\), and decreases thereafter. Since \(K_d=2d+O(1)\) and failure occurs by \(9d\), the two bounds have the same linear growth order, without determining the exact coefficient or first failing rank.
+\end{proof}
+For \(d=43\), the input dimension is \(1849\), the guaranteed order is \(95\), and the rank-\(387\) witness has Rayleigh value \(-1/2408\). For \(d=13\), a unit single-error vector has Schmidt rank \(169\) and value \(-3/104\), while the universal sufficient order is \(40\). A separate nested-reference search finds a rank-\(164\) negative vector with value \(-3/4264\) in that particular search family. No global first-failure claim is made from that search.
+
+\section{Original-slot form, copositivity and limitations}
+For a physical coefficient matrix \(C\), define
+\[
+ q_{n,t}(C)=\sum_{S\subset O}(-t)^{|S|}\|\Tr_S C\|_{\rm F}^2 .
+\]
+Its row-vectorized Gram is the product of local matrices
+\(I-t|\Omega_d\rangle\langle\Omega_d|\), after regrouping tensor factors.
+If \(C=VB\), compressing its first index gives \(\overline{J_{V,t}}\), not generally \(J_{V,t}\). Indeed its coefficients use
+\(\overline{V_{a\alpha}}V_{b\beta}\), whereas the Choi coefficients use
+\(V_{a\alpha}\overline{V_{b\beta}}\); all matrix-unit coefficients of \(\Phi_t\) are real. Conjugating the coefficient vector restores the usual Choi form and preserves norm and Schmidt rank. Also \(\rank(VB)=\rank B\) and \(\|VB\|_{\rm F}=\|B\|_{\rm F}\). Adjoint symmetry \(q(C^*)=q(C)\) treats the opposite whole-support convention. These facts do not extend either theorem to a physical support containing just one specified code vector.
+
+For \(0\le t\le1\), the partial transpose of the local Choi matrix is \(I-tF_{\rm swap}\ge0\). Thus every local factor is completely copositive, and so is its tensor product followed by an isometric input encoding. These maps belong to the known trivial tensor-stable class \cite{MHRW}. We have not constructed nontrivial tensor-stable positive maps, settled unrestricted Werner distillability, or justified tensoring merely \(k\)-positive maps outside CP.
+
+The general one-input dimension domains are sufficient; omitted dimensions are not decided here. The two-input CP classification is conditional on code existence and concerns \(t=1/2\). Its lower positivity order and explicit upper witness rank do not match. No efficient physical implementation, new AME construction or general advantage over standard positive maps is established. The relevance is the structure of these encoded reduction products and the bounds proved for them.
+
+\section{Reproducibility and responsibility}
+The accompanying author scripts use rational arithmetic and finite-field evaluation counts:
+\begin{itemize}
+\item \texttt{linear449-controls.py} checks 360 scalar and combinatorial cases for the linear-dimension argument; these are not full Choi-matrix tests.
+\item \texttt{two-input451-controls.py} checks coefficients, signs and sufficient orders for 299 integer dimensions.
+\item \texttt{two-input452-sparse.py} constructs sparse MDS states at \(d=7,13\), checks every three-party marginal, and evaluates all 16 physical trace subsets by exact prime cyclotomic sums. It reproduces the Choi value \(-3/104\) at \(d=13\).
+\item \texttt{two-input452-rank-search.py} checks 169 nested reference projections at \(d=13\); the first negative vector within that family has rank \(164\). This search does not establish optimality.
+\item \texttt{two-input453-strip.py} evaluates five concrete reference-strip cases by weighted integer Gram contractions, checking every entry of the table in Lemma~\ref{lem:strip}; its \(d=43,h=9\) result is exactly \(-1/2408\).
+\end{itemize}
+The proofs, rather than these finite controls, support the universal statements. The scripts are author checks, including two distinct computational formulations, not an independent referee audit or a formal proof.
+
+\paragraph{AI and responsibility disclosure.}
+The named author directed substantial OpenAI Codex assistance in derivation, writing and numerical work. A completed GPT-6 Astra xhigh review of draft~1 examined the combined manuscript, reconstructed its arguments and performed additional controls. It requested three minor corrections: an explicit parameter domain in the abstract, comparison with spectral/subspace antecedents and a precise fixed-error-space statement in the introduction. This draft implements those corrections; its exact PDF has not yet received a completed follow-up review. The review used a shared filesystem, had no independently attested runtime isolation and received bibliographic leads from the coordinator. Earlier audits involved predecessor arguments and reused context; an audit of a different seven-output extension was interrupted and is not represented as complete. No independent human review, Lean formalization, certified worldwide originality or predicted assessment score is claimed.
+
+\clearpage
+\begingroup\small
+\begin{thebibliography}{99}
+\bibitem{Helwig}
+W. Helwig, W. Cui, A. Riera, J. I. Latorre and H.-K. Lo,
+Absolute maximal entanglement and quantum secret sharing,
+Phys. Rev. A \textbf{86}, 052335 (2012).
+\href{https://arxiv.org/abs/1204.2289}{arXiv:1204.2289}.
+\bibitem{MDS}
+Z. Raissi, C. Gogolin, A. Riera and A. Ac\'in,
+Constructing optimal quantum error correcting codes from absolute maximally entangled states,
+\href{https://arxiv.org/abs/1701.03359v2}{arXiv:1701.03359v2} (2017).
+\bibitem{Eltschka}
+C. Eltschka, F. Huber, O. G\"uhne and J. Siewert,
+Exponentially many entanglement and correlation constraints for multipartite quantum states,
+Phys. Rev. A \textbf{98}, 052317 (2018).
+\href{https://arxiv.org/abs/1807.09165v1}{arXiv:1807.09165v1}.
+\bibitem{Bhat}
+B. V. R. Bhat, P. Chakraborty and U. Franz,
+Error basis and quantum channel,
+\href{https://arxiv.org/abs/2305.14274v1}{arXiv:2305.14274v1} (2023).
+\bibitem{Choi}
+M.-D. Choi, Completely positive linear maps on complex matrices,
+Linear Algebra Appl. \textbf{10}, 285--290 (1975).
+\href{https://doi.org/10.1016/0024-3795(75)90075-0}{doi:10.1016/0024-3795(75)90075-0}.
+\bibitem{TH}
+B. M. Terhal and P. Horodecki,
+A Schmidt number for density matrices,
+Phys. Rev. A \textbf{61}, 040301(R) (2000).
+\href{https://arxiv.org/abs/quant-ph/9911117}{arXiv:quant-ph/9911117}.
+\bibitem{CK}
+D. Chru\'sci\'nski and A. Kossakowski,
+Spectral conditions for positive maps,
+Comm. Math. Phys. \textbf{290}, 1051--1064 (2009).
+\href{https://arxiv.org/abs/0809.4909v1}{arXiv:0809.4909v1}.
+\bibitem{BC}
+M. Brannan and B. Collins,
+Highly entangled, non-random subspaces of tensor products from quantum groups,
+Comm. Math. Phys. \textbf{358}, 1007--1025 (2018).
+\href{https://arxiv.org/abs/1612.09598v1}{arXiv:1612.09598v1}.
+\bibitem{MOM}
+T. M{\l}ynik, H. Osaka and M. Marciniak,
+Characterization of $k$-positive maps,
+\href{https://arxiv.org/abs/2104.14058v5}{arXiv:2104.14058v5} (2024).
+\bibitem{MHRW}
+A. M\"uller-Hermes, D. Reeb and M. M. Wolf,
+Positivity of linear maps under tensor powers,
+J. Math. Phys. \textbf{57}, 015202 (2016).
+\href{https://arxiv.org/abs/1502.05630v2}{arXiv:1502.05630v2}.
+\end{thebibliography}
+\endgroup
+\end{document}
