@@ -1,0 +1,348 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=26mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,booktabs,microtype}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[hidelinks]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newcommand{\tr}{\operatorname{Tr}}
+\newcommand{\ran}{\operatorname{ran}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\Id}{\mathrm{Id}}
+\newcommand{\HH}{\mathcal H}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\ip}[2]{\langle#1,#2\rangle}
+\title{Bell and tripartite anchor sectors\\for finite-copy Werner witnesses}
+\author{Lluis Eriksson}
+\date{24 October 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+We establish strictly positive sectors of the Werner endpoint partial-trace form on rank-at-most-two coefficient matrices. A support plane must contain one specified vector, assembled from Bell vectors on pairs of original slots and GHZ vectors on triples of qutrit slots; the second vector and both coefficient covectors remain unrestricted. For a Bell pair we prove the required signed co-Choi comparison in every local dimension at least three, using a polynomial identity in a 24-diagram algebra with the dimension as a parameter. A separate rational certificate covers a genuinely tripartite three-qutrit GHZ block. Exact kernels and uniform nonunit spectral intervals give an explicit strict lower bound under any finite combination of these blocks, including a qutrit sector for every copy count at least two. A perturbation bound includes the actual dimension-dependent norm factor. The Schur and signed tensor-contraction mechanism is attributed to Wu and Zou; the added inputs are the two block comparisons and their quantitative kernels. The proof is computer assisted, with exact rational arithmetic and symbolic identities, not numerical spectral extrapolation. The support restriction remains substantive and no unrestricted finite-copy positivity or NPT bound-entanglement result follows.
+\end{abstract}
+
+\section{The endpoint and the support restriction}
+Let $\HH=\bigotimes_{i=1}^n\mathbb C^{d_i}$ and define
+\begin{equation}\label{eq:q}
+ q_n(C)=\sum_{S\subseteq\{1,\ldots,n\}}(-1/2)^{|S|}
+                 \norm{\tr_S C}_F^2 .
+\end{equation}
+Traces are ordinary unnormalized partial traces over the original slots. Grouping slots does not replace their map by the one-slot map in the product dimension. For equal local dimensions, the usual coefficient-matrix vectorization identifies $\rank C$ with the global Alice--Bob Schmidt rank. Nonnegativity of \eqref{eq:q} on all rank-at-most-two matrices is the endpoint Werner problem \cite{costa,bharti}. Here we restrict one vector in a left or right support plane. The resulting sectors leave the remaining planes unrestricted.
+
+Partition the slots into $p$ pairs of dimensions $(d_j,d_j)$, $d_j\ge3$, and $t$ triples, each of dimensions $(3,3,3)$, where $p+t\ge1$ and $n=2p+3t$. Set
+\begin{equation}\label{eq:anchors}
+ u_d=d^{-1/2}\sum_{i=0}^{d-1}e_i\otimes e_i,\quad
+ v=3^{-1/2}(e_{000}+e_{111}+e_{222}),\quad
+ a=\bigotimes_{j=1}^p u_{d_j}\otimes v^{\otimes t}.
+\end{equation}
+The unit vector $v$ does not factorize across any nontrivial cut of its three slots. Neither a Bell pair nor this GHZ triple is a product ray over the original slots. The coefficient matrix itself need not factorize over these blocks.
+
+\begin{theorem}\label{thm:main}
+For the unit anchor in \eqref{eq:anchors}, put
+\begin{equation}\label{eq:constants}
+ L_{p,t}=(27/8)^p(27/4)^t,\qquad
+ c_{p,t}=\frac{17}{81\,2^n(1+2L_{p,t}^2)}.
+\end{equation}
+If $\rank C\le2$ and $a\in\ran C$ or $a\in\ran C^*$, then
+\[
+ q_n(C)\ge c_{p,t}\norm C_F^2.
+\]
+The same statement holds when a tensor product of original-slot unitaries is applied to $a$, and when the slots are permuted together with their dimensions and block assignment.
+\end{theorem}
+All constants are conservative. For every integer $n\ge2$, the uniform-qutrit setting admits such a sector: take only pairs for even $n$, or one triple and the remaining pairs for odd $n$. This is an existence statement for restricted sectors at those copy counts, not a statement about every qutrit support plane.
+
+\begin{corollary}\label{cor:continuity}
+Define
+\[
+ \eta=\prod_{j=1}^p\max\{1,d_j/2-1\}^{2}.
+\]
+For unit vectors define the projective Euclidean distance by
+$d_{\rm pr}([z],[a])=\min_{\theta\in\mathbb R}\norm{e^{i\theta}z-a}$.
+If a left or right support plane of a rank-at-most-two $C$ contains a unit vector $z$ with $d_{\rm pr}([z],[a])\le\varepsilon$, then
+\[
+ q_n(C)\ge(c_{p,t}-2\eta\varepsilon)\norm C_F^2.
+\]
+In particular $\varepsilon\le c_{p,t}/(4\eta)$ gives a positive bound $c_{p,t}\norm C_F^2/2$.
+\end{corollary}
+The radius is not uniform in dimensions or copy count.
+
+\subsection{What is prior, and what is added}
+The partial-trace formulation is prior \cite{costa,bharti}. General two-copy results \cite{fu,bharti} already give nonnegativity for a single pair without our support restriction. Wu and Zou \cite[Section 7.2, Lemma 7.4 and Theorem 7.3]{wuzou} explicitly use the switched Schur complement and signed co-Choi tensorization for a fully product support ray. Their displayed tensor argument extends immediately to any finite number of such factors. Neither that extension nor the abstract tensor mechanism is claimed here.
+
+There are also direct precedents for strict subcases: \DJ okovi\'c \cite[Theorem 5.1 and Proposition 4.2]{djokovic} proves strict positivity for the pair $(I,Y)$ when $Y$ is normal and nonscalar in dimension at least three, by unitary diagonalization. His generic-pair nonsingularity statement in Conjecture 6.1 remains a conjecture in that source. Proposition 7.1 there concerns a rank-one element in a two-qutrit matrix plane; a Bell vector corresponds instead to $I_d$, of matrix rank $d$.
+
+Bharti, Gajjala and Haug \cite[Section 8]{bharti} factorize the operator itself, with a possible rank-two factor confined to at most two slots. Our assumption factorizes one support vector and permits arbitrary remaining coefficient vectors. The new inputs proposed here are the universal Bell block and the tripartite qutrit block, including their exact kernels and strict estimates. Targeted comparisons of selected primary sources did not identify equivalent full Bell or GHZ support-sector theorems. These comparisons are limited to the hypotheses and sections examined; they do not certify worldwide priority.
+
+\section{Schur identity and the attributed tensor mechanism}
+
+We temporarily allow arbitrary finite slot dimensions. Let $F_i$ exchange slot $i$ between two global copies of $\HH$, and write
+\[
+ W_n=\prod_{i=1}^n(I-F_i/2),\qquad
+ \Phi_n=\bigotimes_i\Phi_{d_i},\quad \Phi_d(X)=\tr(X)I-X/2.
+\]
+The grouped input/output order is fixed throughout. The factors of $W_n$ commute and have eigenvalues $1/2,3/2$.
+\begin{lemma}\label{lem:schur}
+For a nonzero anchor $a$, set $H_a=\Phi_n(aa^*)$. Define $K_{ab}$ by row vectorization,
+\begin{equation}\label{eq:K}
+ (K_{ab})_{rt}=\sum_{s,j}(W_n)_{(r,t),(s,j)}a_s b_j .
+\end{equation}
+There is a completely positive map $\Psi_a$ such that
+$\Psi_a(bb^*)=K_{ab}\overline H_a^{-1}K_{ab}^*$. With $\Delta_a=\Phi_n-\Psi_a$,
+\begin{align}\label{eq:square}
+ q_n(xb^*+ay^*)&=x^*\Delta_a(bb^*)x\\
+ &\quad+\norm{\overline H_a^{1/2}\overline y+
+          \overline H_a^{-1/2}K_{ab}^*x}^2.\nonumber
+\end{align}
+\end{lemma}
+\begin{proof}
+The swap contraction gives
+$q_n(ay^*)=y^*H_a y\ge2^{-n}\norm a^2\norm y^2$, so $H_a>0$. Polarization of the same contraction gives
+\[
+ q_n(xb^*+ay^*)=
+ x^*\Phi_n(bb^*)x+y^*H_a y+
+ 2\operatorname{Re}(x^*K_{ab}\overline y).
+\]
+Since $y^*H_a y=\overline y^*\overline H_a\overline y$, completing the square proves \eqref{eq:square}. The bar on $H_a$ cannot be omitted for a complex anchor.
+
+Let $V_t b$ be column $t$ of $K_{ab}$. Then
+$\Psi_a(X)=\sum_{t,v}(\overline H_a^{-1})_{tv}V_t X V_v^*$ is CP because its coefficient matrix is positive. With input index first, its Choi matrix is
+\begin{equation}\label{eq:choi}
+ C_{\Psi_a}=M_a\overline H_a^{-1}M_a^*,\qquad
+ (M_a)_{(j,r),t}=\sum_s(W_n)_{(r,t),(s,j)}a_s .
+\end{equation}
+These are identities of maps, hence apply to $bb^*$ entangled between blocks.
+\end{proof}
+
+For a map $\Lambda$, use $C_\Lambda=\sum_{ij}E_{ij}\otimes\Lambda(E_{ij})$ and let $\Gamma$ transpose its input factor. Positivity of $C_\Lambda^\Gamma$ is complete copositivity and implies positivity of $\Lambda$.
+\begin{lemma}[Signed block comparison]\label{lem:tensor}
+Suppose an anchor factors as $a=\bigotimes_j a_j$ over blocks. Let
+$A_j=C_{\Phi_{\mathrm{block}\,j}}^\Gamma>0$ and
+$B_j=C_{\Psi_{a_j}}^\Gamma$. If $-A_j\le B_j\le A_j$ for every block, then $\Delta_a$ is completely copositive.
+\end{lemma}
+\begin{proof}
+Equations \eqref{eq:K}--\eqref{eq:choi} give $H_a=\bigotimes_jH_{a_j}$ and $\Psi_a=\bigotimes_j\Psi_{a_j}$, as map identities. Each
+$T_j=A_j^{-1/2}B_jA_j^{-1/2}$ is a Hermitian contraction. Therefore $I-\bigotimes_j T_j\ge0$. Congruence gives
+\[
+ \bigotimes_j A_j-\bigotimes_j B_j\ge0,
+\]
+which, after the canonical permutation, is the co-Choi matrix of $\Delta_a$. This is the signed tensor-contraction step already present in \cite{wuzou}.
+\end{proof}
+
+
+\section{A Bell block in every dimension at least three}
+Use the unnormalized $\omega_d=\sum_i e_i\otimes e_i$, with $D=d^2$.
+Nonzero scalar rescaling leaves $\Psi_a$ unchanged. Let
+\begin{align}\label{eq:bellblock}
+ A&=(I-F_1/2)(I-F_2/2),&
+ H&=(d-1)I+\omega_d\omega_d^T/4,\\
+ H^{-1}&=I/(d-1)-\omega_d\omega_d^T/[(d-1)(5d-4)],&
+ B&=(MH^{-1}M^T)^\Gamma,\quad R=A^{-1}B.\nonumber
+\end{align}
+Here $A\ge I/4$ and $A^{-1}=(4I/3+2F_1/3)(4I/3+2F_2/3)$.
+The contraction $M$, with row $(j_1,j_2,r_1,r_2)$ and column $(t_1,t_2)$, is
+\begin{align}\label{eq:bellM}
+ M_{jr,t}&=\delta_{r_1r_2}\delta_{t_1j_1}\delta_{t_2j_2}
+ -\tfrac12\delta_{r_1j_1}\delta_{t_1r_2}\delta_{t_2j_2}\\
+ &\quad-\tfrac12\delta_{r_2j_2}\delta_{t_2r_1}\delta_{t_1j_1}
+ +\tfrac14\delta_{r_1j_1}\delta_{r_2j_2}\delta_{t_1t_2}.\nonumber
+\end{align}
+\begin{proposition}\label{prop:bell}
+For every integer $d\ge3$, $-A\le B\le A$. The matrix $R$ has eigenvalue $1$ of multiplicity exactly $d^2$; every other eigenvalue lies in $[-8/9,2/3]$. Moreover
+\[
+ \ker(A-B)=\mathbb C^{d^2}\otimes\operatorname{span}\{\omega_d\}.
+\]
+\end{proposition}
+
+\subsection{A polynomial identity with the dimension as a parameter}
+A pairing of the row and column indices denotes the product of its Kronecker deltas. Compose two pairing operators by identifying the middle indices; each closed component contributes a factor $d$. Closing each top index to the corresponding bottom index gives the trace. These rules follow by summing the repeated indices and hold in every positive integer dimension, even when different diagrams represent dependent operators.
+
+Over $\mathbb Q[d]$ construct the numerator
+\[
+ N_d=9(d-1)(5d-4)R.
+\]
+Only 24 pairings occur among $I,N_d,\ldots,N_d^8$. The verifier constructs every coefficient and checks a degree-eight relation coefficient by coefficient. Equivalently, with
+\begin{align*}
+ f_1(\lambda)&=9(d-1)\lambda+5d+1,\\
+ f_2(\lambda)&=(d-1)(5d-4)\lambda-d^2-d+4,\\
+ f_3(\lambda)&=3(d-1)(5d-4)\lambda+d^2-9d+4,\\
+ f_4(\lambda)&=3(d-1)(5d-4)\lambda+6d^2-13d+4,\\
+ f_5(\lambda)&=9(d-1)(5d-4)\lambda-d^2+19d-12,\\
+ Q_d(\lambda)&=27(d-1)(5d-4)\lambda^2
+ +(15d^2-90d+24)\lambda-(6d^2+19d+4),
+\end{align*}
+the exact operator identity is
+\begin{equation}\label{eq:annihilator}
+ (R-I)\left[\prod_{i=1}^5 f_i(R)\right]Q_d(R)=0.
+\end{equation}
+The supplement supplies the coefficient arrays and the diagram multiplication and trace algorithms. This is a symbolic identity, not interpolation from finitely many dimensions. The finite direct-index controls in dimensions $2,3,4,5$ check the transcription but are not its universal proof.
+
+\subsection{Root bounds, multiplicity and kernel}
+Let $r_i$ be the root of $f_i$. Substituting $d=s+3$, $s\ge0$, the differences $r_i+8/9$ and $2/3-r_i$ have positive denominators and the following numerators after cancellation:
+\begin{center}\small
+\begin{tabular}{cll}\toprule
+&Lower endpoint difference&Upper endpoint difference\\\midrule
+$i=1$&$s$&$11s+28$\\
+$i=2$&$49s^2+231s+248$&$7s^2+21s+20$\\
+$i=3$&$37s^2+177s+218$&$11s^2+39s+30$\\
+$i=4$&$22s^2+99s+119$&$16s^2+65s+63$\\
+$i=5$&$41s^2+155s+140$&$29s^2+139s+168$\\\bottomrule
+\end{tabular}
+\end{center}
+For $Q_d$, the leading coefficient is positive and the constant is negative. Its two real roots have opposite signs. At the proposed endpoints,
+\begin{align*}
+ Q_{s+3}(-8/9)&=262s^2/3+393s+453>0,\\
+ Q_{s+3}(2/3)&=64s^2+197s+75>0.
+\end{align*}
+Thus both roots are inside that interval. Since $R$ is similar to the Hermitian $A^{-1/2}BA^{-1/2}$, \eqref{eq:annihilator} proves the signed order and shows that $1$ is isolated from every other possible eigenvalue.
+
+Put $g_d=Q_d\prod_i f_i$. The same exact diagram trace verifies the rational identity
+\begin{equation}\label{eq:projectortrace}
+ \tr\bigl(g_d(R)/g_d(1)\bigr)=d^2.
+\end{equation}
+The root bounds ensure $g_d(1)\ne0$. The matrix in \eqref{eq:projectortrace} is the spectral projector at $1$ (not necessarily orthogonal in the original Euclidean coordinates), proving its multiplicity. To identify the kernel, use the Schur square with $x=\omega_d,y=-b$. Positivity of $\Delta$ makes both summands nonnegative and forces
+$\omega_d^*\Delta(bb^*)\omega_d=0$. In the co-Choi convention of \eqref{eq:choi},
+\[
+ (b\otimes x)^*(A-B)(b\otimes x)=x^*\Delta(bb^*)x.
+\]
+Hence positivity puts every $b\otimes\omega_d$ in the kernel; the already established nullity is exactly $d^2$. This finishes Proposition \ref{prop:bell}.
+
+The lower dimension restriction is substantive for this sufficient comparison. For $d=2$, direct rational calculation gives an eigenvalue $-11/9$. Its signed gate fails although the two-qubit endpoint form itself is nonnegative. Failure of this tool is not a negative rank-two Werner witness.
+
+\section{A genuinely tripartite qutrit block}
+Now take $a_0=e_{000}+e_{111}+e_{222}$, $D=27$, and
+\[
+ A=\prod_{i=1}^3(I-F_i/2),\quad
+ H=\Phi_3^{\otimes3}(a_0a_0^*),\quad
+ B=(MH^{-1}M^T)^\Gamma,\quad R=A^{-1}B.
+\]
+The unnormalized $a_0$ makes all entries rational. The map $\Psi$ and $B$ are unchanged when $a_0$ is replaced by $v$.
+\begin{proposition}\label{prop:ghz}
+For this block, $-A\le B\le A$. Eigenvalue $1$ of $R$ has multiplicity exactly $27$, and every other eigenvalue lies in $[-7/8,3/4]$. Moreover
+\[
+ \ker(A-B)=\mathbb C^{27}\otimes\operatorname{span}\{a_0\}.
+\]
+For the unit anchor, $\lambda_{\min}(H_v)=1/2$.
+\end{proposition}
+\begin{proof}[Computer-assisted exact proof]
+Construct $H$ directly by
+\begin{equation}\label{eq:ghzH}
+ H=\sum_{i,j=0}^2(\delta_{ij}I_3-E_{ij}/2)^{\otimes3}.
+\end{equation}
+Its spectrum is $3/2$ with multiplicity 6, $7/4$ with multiplicity 18, $9/4$ with multiplicity 2, and $15/8$ with multiplicity 1. Division by $\norm{a_0}^2=3$ gives the stated minimum. Construct $M$ from \eqref{eq:choi}, invert $H$ over the rationals, and form $B$. The verifier checks $B=B^T$ and the explicit commuting-swap inverse of $A$.
+
+The nonzero-pattern graph of $R$ partitions every one of its 729 indices into 163 invariant components. The size counts are
+\[
+\begin{array}{c|rrrrrrr}
+\text{size}&1&2&4&8&12&14&27\\\hline
+\text{count}&24&63&45&6&6&18&1.
+\end{array}
+\]
+Each component is checked individually. The complete rational characteristic polynomials, irreducible factors and multiplicities are supplied. After removing the factor for eigenvalue $1$, exact Sturm counts show that every factor has zero roots at or below $-7/8$ and at or above $3/4$. One factor has degree ten; it is retained rather than replaced by decimal roots. Total degrees equal 729 and the factor $(\lambda-1)$ has total multiplicity 27. As $R$ is similar to a Hermitian matrix, these counts prove the asserted interval for its remaining spectrum, and therefore the signed comparison.
+
+Finally the rational matrix product $(A-B)(I_{27}\otimes a_0)$ is zero. The columns span a 27-dimensional subspace; the multiplicity calculation shows that it is the entire kernel. Every check uses exact arithmetic. Floating-point probes motivated this block but do not supply its sign proof or any claim for other GHZ dimensions or lengths.
+\end{proof}
+
+\section{Tensor gap and quantitative strictness}
+For either block type write $T_j=A_j^{-1/2}B_jA_j^{-1/2}$. The map factorization and the signed tensor lemma give the co-Choi matrix
+\[
+ G=A_{\rm tot}^{1/2}\bigl(I-\bigotimes_j T_j\bigr)A_{\rm tot}^{1/2}\ge0.
+\]
+Every factor has a unit eigenspace of the required input dimension and no other eigenvalue of modulus one. A positive nonunit spectral product either has a nonnegative factor at most $3/4$, or has at least two negative factors, whose product is at most $(8/9)^2$. Thus every such product is at most $64/81$. The unit product eigenspace has dimension $\dim\HH$ and, by the same zero-operator Schur argument, $\ker G=\HH_{\rm in}\otimes\operatorname{span}\{a\}$.
+
+Since $A_{\rm tot}\ge2^{-n}I$, congruence gives
+\begin{equation}\label{eq:Ggap}
+ G\ge\frac{17}{81\,2^n}P_{(\ker G)^\perp}.
+\end{equation}
+For clarity, congruence is not treated as a unitary similarity: if $P$ projects off the kernel, the nonzero eigenvalues of $S^*PS$ are those of $PSS^*P$ on $\ran P$, and are at least $\sigma_{\min}(S)^2$. This gives the stated gap after the invertible factor $A_{\rm tot}^{1/2}$.
+
+\begin{proof}[Proof of Theorem \ref{thm:main}]
+Choose $C=xb^*+ay^*$ with $x\perp a$ and $\norm b=1$; the component along $a$ is absorbed in $y$. If the range is one-dimensional use $x=0$. The co-Choi gap implies $x^*\Delta_a(bb^*)x\ge g\norm x^2$ with $g=17/(81\,2^n)$.
+For a unit Bell anchor, the minimum of $H$ is $(d-1)/d\ge2/3$; for the GHZ block it is $1/2$. Hence
+\[
+ H_a\ge hI,\qquad h=(2/3)^p(1/2)^t.
+\]
+The contraction definition and $\norm{W_n}=(3/2)^n$ give
+\[
+ \norm{K_{ab}}_{\rm op}\le\norm{K_{ab}}_F
+ =\norm{W_n(a\otimes b)}\le(3/2)^n.
+\]
+Set $z=\overline y$, $s=\overline H_a^{-1}K_{ab}^*x$. Then $\norm s\le L_{p,t}\norm x$ and the \emph{complex} Schur square gives
+\[
+ q_n(C)\ge g\norm x^2+h\norm{z+s}^2.
+\]
+The conjugate on $y$ is essential; omitting it does not give a valid complex-vector inequality. Orthogonality yields
+\[
+ \norm C_F^2=\norm x^2+\norm y^2
+ \le(1+2L_{p,t}^2)\norm x^2+2\norm{z+s}^2.
+\]
+Consequently the lower coefficient is $\min\{g/(1+2L_{p,t}^2),h/2\}=c_{p,t}$. To see the indicated minimum, note $g/h=(17/81)(3/8)^p(1/4)^t<1/2$ when $p+t\ge1$. Adjunction preserves $q_n$ and the Frobenius norm and gives the right-support case. Conjugation of $C$ by original-slot local unitaries preserves every partial-trace norm, proving the stated local action on the anchor and slot symmetries.
+\end{proof}
+
+\begin{proof}[Proof of Corollary \ref{cor:continuity}]
+The Hilbert--Schmidt self-adjoint local superoperator $\mathcal L_d(X)=X-\tr(X)I_d/2$ has eigenvalues $1$ and $1-d/2$. Thus its norm is $\max\{1,|1-d/2|\}$ and the tensor superoperator for $q_n$ has norm $\eta$. Phase-align $z$ with $a$. A rotation in their two-dimensional span gives a global unitary $U$ with $Uz=a$ and $\norm{U-I}_{\rm op}=\norm{z-a}\le\varepsilon$. Put $D=UC$. Its rank and Frobenius norm are preserved and Theorem \ref{thm:main} applies. Continuity, rather than invariance under this global one-sided unitary, gives
+\[
+ |q_n(C)-q_n(D)|\le\eta(\norm C_F+\norm D_F)\norm{C-D}_F
+ \le2\eta\varepsilon\norm C_F^2.
+\]
+Apply adjunction for a right support plane.
+\end{proof}
+
+\section{An explicit sector beyond product rays and code planes}
+On three qutrit slots use unnormalized vectors
+\[
+ a_0=e_{000}+e_{111}+e_{222},\quad
+ x=e_{012}+e_{120}+e_{201},\quad
+ z=e_{021}+e_{102}+e_{210},
+\]
+These are the unnormalized basis vectors of the known Cleve--Gottesman--Lo qutrit secret-sharing code \cite[Eq.~(1)]{cleve}. Its constant single-share reductions and correction of one erasure are prior properties of that code. Put $C=a_0a_0^*+x(x+z)^*$. The two defining vector pairs are independent, so $\rank C=2$, with column plane $\operatorname{span}\{a_0,x\}$ and row plane $\operatorname{span}\{a_0,x+z\}$. The GHZ anchor belongs to the first plane.
+
+For each single slot, the reductions of $a_0a_0^*,xx^*,zz^*$ are $I_3$, while every cross reduction between the three displayed vectors is zero. Consequently every nonzero vector in either support plane has a one-slot reduction proportional to $I_3$. Neither plane contains a product ray over the original slots. More strongly, the column plane cannot be contained in the span of any family of product vectors that is locally orthonormal in every slot, the code hypothesis used in \cite[Appendix C.2]{wuzou}. Such a family has at most three elements. In a hypothetical code basis, the full-rank reduction of $a_0a_0^*$ forces all three coefficients of $a_0$ to be nonzero. The vanishing cross reduction of $a_0x^*$ then forces every coefficient of $x$ to vanish, a contradiction. This argument permits arbitrary changes of local bases.
+
+The matrix is nonnormal because its row and column ranges differ. Direct original-slot partial traces give squared norms $27$ without a trace, $9$ for each one-slot trace, $12$ for each two-slot trace, and $36$ for the full trace. Hence
+\[
+ \norm C_F^2=27,\qquad q_3(C)=27-\tfrac12(3\cdot9)
+                    +\tfrac14(3\cdot12)-\tfrac18(36)=18.
+\]
+Exact realignment has rank $9$ across every singleton-versus-pair slot cut, so the operator does not factorize across any proper slot cut. The executable control is included in the supplement. These are concrete distinctions between hypotheses of the cited product-ray, code-plane and operator-factorization results; they are not a proof that no other prior reduction exists.
+
+\section{Reproduction, attribution and limits}
+The supplement contains the diagram algebra, its polynomial coefficient certificate and projector-trace computation; direct index checks in dimensions 2 through 5; and every component polynomial and Sturm check for the qutrit GHZ block. The Bell certificate has a symbolic dimension parameter. The GHZ certificate is one exact finite block; it is not a claim for arbitrary tripartite dimension, GHZ length or support vector. Every downstream tensor step is analytic for all finite block counts.
+
+The programs use Python 3.12.14 and SymPy 1.14.0. No floating-point result is used to prove the spectral assertions. Development incidents and the uncorrected complex-conjugation statements in precursor proposals are retained in the research archive. The present square and kernel arguments use the corrected conjugations. Construction audits and exact-manuscript assessment remain separate tasks. The certificate is computer assisted and is not a Lean or independently kernel-checked formalization.
+
+The constants decay with block count and the perturbation radius shrinks further when dimensions increase. No optimality, positive measure uniform in dimension, operational distillation protocol, exclusion of all negative witnesses, or unrestricted finite-copy theorem is claimed. Existing two-copy nonnegativity and the signed tensor mechanism are not rebranded as new. A complete historical priority claim would require more than the targeted source comparison reported here.
+
+\paragraph{AI and responsibility disclosure.}
+The named author directed OpenAI Codex assistance in derivation, writing and exact computational work. Requested GPT-6 Astra xhigh audits used shared files and reused context; their model identity and settings were not independently attested. No runtime isolation, independent human review, Lean formalization or certified worldwide originality is claimed. The author is responsible for the manuscript and its claims. Model reports concern exact artifact versions and do not constitute AIRR admission.
+
+\begin{thebibliography}{9}
+\bibitem{costa}
+P. Costa Rico, \emph{New partial trace inequalities and distillability of Werner states},
+Letters in Mathematical Physics \textbf{115}, 47 (2025).
+\href{https://doi.org/10.1007/s11005-025-01935-y}{doi:10.1007/s11005-025-01935-y}.
+\bibitem{djokovic}
+D. \v Z. \DJ okovi\'c, \emph{On two-distillable Werner states},
+Entropy \textbf{18}(6), 216 (2016).
+\href{https://arxiv.org/abs/1003.4337v3}{arXiv:1003.4337v3};
+\href{https://doi.org/10.3390/e18060216}{doi:10.3390/e18060216}.
+\bibitem{fu}
+J. Fu, L. Gao and S.-J. Park, \emph{A solution to 2-copy distillability of Werner states},
+\href{https://arxiv.org/abs/2607.21367v3}{arXiv:2607.21367v3} (2026).
+\bibitem{bharti}
+K. Bharti, R. Gajjala and T. Haug,
+\emph{Two-copy nondistillability of Werner states: sharp partial-trace inequalities and finite-copy extensions},
+\href{https://arxiv.org/abs/2607.24479v1}{arXiv:2607.24479v1} (2026).
+\bibitem{wuzou}
+T. Wu and Q. Zou, \emph{Sharp Pl\"ucker Geometry for Three-Copy Werner Distillation},
+\href{https://arxiv.org/abs/2608.02647v1}{arXiv:2608.02647v1} (2026).
+\bibitem{cleve}
+R. Cleve, D. Gottesman and H.-K. Lo, \emph{How to share a quantum secret},
+Physical Review Letters \textbf{83}, 648--651 (1999).
+\href{https://arxiv.org/abs/quant-ph/9901025v1}{arXiv:quant-ph/9901025v1};
+\href{https://doi.org/10.1103/PhysRevLett.83.648}{doi:10.1103/PhysRevLett.83.648}.
+\end{thebibliography}
+
+\end{document}
