@@ -308,6 +308,7 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
   <footer>
     <p><strong>AIRR.SCIENCE</strong> is an open research archive operated by Lluis Eriksson, an independent researcher in Sweden. Every version is preserved and citable. Before admission, a paper is checked by named AI models and approved by the editor; this screening is not peer review. <a href="{base}/governance/">Governance and conflicts</a>.</p>
     <p><a href="{base}/catalog.json">Machine-readable catalogue (CC0)</a> · <a href="{base}/registry/model-assessments.json">Model assessments</a> · <a href="{base}/authors/index.json">Author registry (CC0)</a> · <a href="{base}/metrics.json">Activity snapshot (CC0)</a> · <a href="{base}/registry/record-timestamps.json">Exact record timestamps (CC0)</a> · <a href="{base}/protocol/">Verification protocol</a> · <a href="{base}/licensing/">Licensing</a> · <a href="{base}/privacy/">Privacy</a> · <a href="{base}/terms/">Deposit terms</a> · <a href="{base}/contact/">Contact and complaints</a> · <a href="https://github.com/arr-research/arr-research.github.io">Source (AGPL)</a></p>
+    <p class="brand-credit">Also from <a href="https://erikssonai.se/" rel="noopener"><img src="{base}/assets/eriksson-logo.svg" alt="Eriksson Lärande &amp; AI" width="107" height="27" loading="lazy"></a></p>
   </footer>
   {PAGE_COUNTER}
 </body>
@@ -1867,7 +1868,7 @@ def main() -> int:
     shutil.copy2(SITE_DIR / "search.js", OUTPUT_DIR / "assets" / "search.js")
     shutil.copy2(SITE_DIR / "reader.js", OUTPUT_DIR / "assets" / "reader.js")
     shutil.copy2(SITE_DIR / "analytics.js", OUTPUT_DIR / "assets" / "analytics.js")
-    for asset in ("subjects.js", "subject-selection.js", "lluis-eriksson.jpg", "math.js", "airr-logo-light.png", "og-image.png"):
+    for asset in ("subjects.js", "subject-selection.js", "lluis-eriksson.jpg", "math.js", "airr-logo-light.png", "og-image.png", "eriksson-logo.svg"):
         shutil.copy2(SITE_DIR / asset, OUTPUT_DIR / "assets" / asset)
     shutil.copytree(SITE_DIR / "vendor" / "katex", OUTPUT_DIR / "assets" / "katex", ignore=shutil.ignore_patterns("README.md"))
     write(OUTPUT_DIR / "assets" / "subjects.json", json.dumps(public_vocabulary(papers), ensure_ascii=False, separators=(",", ":")) + "\n")
