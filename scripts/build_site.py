@@ -308,7 +308,7 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
   <footer>
     <p><strong>AIRR.SCIENCE</strong> is an open research archive operated by Lluis Eriksson, an independent researcher in Sweden. Every version is preserved and citable. Before admission, a paper is checked by named AI models and approved by the editor; this screening is not peer review. <a href="{base}/governance/">Governance and conflicts</a>.</p>
     <p><a href="{base}/catalog.json">Machine-readable catalogue (CC0)</a> · <a href="{base}/registry/model-assessments.json">Model assessments</a> · <a href="{base}/authors/index.json">Author registry (CC0)</a> · <a href="{base}/metrics.json">Activity snapshot (CC0)</a> · <a href="{base}/registry/record-timestamps.json">Exact record timestamps (CC0)</a> · <a href="{base}/protocol/">Verification protocol</a> · <a href="{base}/licensing/">Licensing</a> · <a href="{base}/privacy/">Privacy</a> · <a href="{base}/terms/">Deposit terms</a> · <a href="{base}/contact/">Contact and complaints</a> · <a href="https://github.com/arr-research/arr-research.github.io">Source (AGPL)</a></p>
-    <p class="brand-credit">Also from <a href="https://erikssonai.se/" rel="noopener"><img src="{base}/assets/eriksson-logo.svg" alt="Eriksson Lärande &amp; AI" width="107" height="27" loading="lazy"></a></p>
+    <p class="brand-credit"><a href="https://erikssonai.se/" rel="noopener" aria-label="Eriksson Lärande &amp; AI"><img src="{base}/assets/eriksson-logo.svg" alt="Eriksson Lärande &amp; AI" width="107" height="27" loading="lazy"></a></p>
   </footer>
   {PAGE_COUNTER}
 </body>
