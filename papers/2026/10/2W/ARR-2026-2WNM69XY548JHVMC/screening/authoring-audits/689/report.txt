@@ -1,0 +1,195 @@
+AUDITORÍA TÉCNICA689 — 687,688 Y ADDENDA691,694
+26octubre2026. Informe terminal acotado, sin nota ni predicción.
+
+1. Resultado y condiciones
+
+Apoyo matemático a los cuatro resultados dentro de sus definiciones precisas. La normalización ||h||infinito<=1 debe hacerse explícita en687 antes de usar epsilon<1. Sin esa normalización, debe sustituirse1 por1/||h||infinito en la condición de epsilon. Esta omisión es reparable mediante la misma construcción del test, y aquí se repara; no refuta la existencia de mejora ni la brecha de688. No queda otro paso material abierto en el alcance auditado.
+
+Para k,r>0,0<lambda<1,q=1-lambda,s=k+r, se mantiene FIJO el canal clásico
+ W(y|x)=lambda phi_r(y-sqrt(k)x)+q phi_s(y),
+ phi_v(z)=exp(-|z|^2/v)/(pi v),
+y todos los logaritmos son naturales. C(P)=sup_{E|X|^2<=P} I(X;Y). El benchmark H_G(P) promedia J(m,V)=I_{N_R2(m,V)}(W) sobre medidas de parámetros gaussianos reales bidimensionales, con V semidefinida positiva y coste p=|m|^2+Tr V. Su etiqueta es una programación conocida y no porta el mensaje.
+
+La conclusión nueva688 queda demostrada:
+ H_G(1)<C(1).
+Es una brecha positiva EXISTENCIAL para cada triple fijo(k,r,lambda), uniforme sobre todo el conjunto de programaciones admitidas. No se calcula su valor ni se afirma uniformidad al acercarse a k=0,r=0,lambda=0 o1.
+
+Para el canal cuántico N_E=lambda Phi_(sqrt(k),rE)+q gamma_(sE)Tr, defínase, exactamente como694,
+ R_G(E)=sup_{m>=1} (1/m) sup_{ensemble: promedio cuántico gaussiano,
+                         Tr promedio sum_i n_i<=mE} chi(ensemble;N_E^tensor m).
+Con E>=2k/r,691 y694 dan
+ H_G(1)-2/(rE)<=R_G(E)
+ <=H_G(1)+[lambda ln(1+k/r)+4k/r]/E.
+El promedio puede ser desplazado, comprimido/squeezed o entrelazado entre usos, y los estados condicionales pueden ser arbitrarios. Es una cota y un límite de un FUNCIONAL HOLEVO con condición exacta sobre el promedio, no una capacidad operacional inventada para todo código llamado gaussiano.
+
+Usando únicamente el teorema de código común682 dentro de su alcance, para todas las fases desconocidas fijas durante el bloque,
+ lim_{E->infinito}[C_opt,cmp(E,todas las fases fijas)-R_G(E)]
+ =C(1)-H_G(1)>0.
+El límite de codificación se toma primero a E fijo. El supremo en m de R_G está explícito y se controla por cotas que no dependen de m. No se afirma que un libro finito sorteado con ley gaussiana tenga promedio cuántico exactamente gaussiano.
+
+2. Entradas, ampliaciones seriales y procedencia
+
+Se comprobaron manifiestos, tamaños y hashes externos antes de leer íntegramente cada candidata. Los cuatro payloads son:
+ APPLICATION687.md,3946bytes,919a5821678666fd31fa077cc374cc9ba51c59ec7677bcba88390dc29f995990.
+ GAUSSIAN688.md,6013bytes,b9fc86eeae139355ef08353c85b856d74eac38ab80e7ca39b95dd1c9baa56574.
+ GAUSSIAN-AVERAGE691.md,4849bytes,2c3270dc060cfe9c8080f3f93873077fef9d4d5c6c26d4b28316d97f6c95aa6f.
+ GAUSSIAN-LIMIT694.md,3092bytes,4416032196f448fdbda006674d11b6bdc88969d425986798d4b4c07b6d24f1dc.
+Los hashes locales de sus manifiestos son, respectivamente,db4cb5c73ecfb760b88d355d185d24fbc2783da3605d1f3d8e6ad4981009853b,789f33fde1feb1c3870d3c453c03ad0c3808ab98e5e3fd7399245d0cdb761c82,9ca804497a56087a9c68a4616d1fc3d5e5b6a14228a879e3ecc15726750d3462 y61e34222d4c487165e933ece7167c635e5b5273c97147f524e3179938126c77e.
+
+691 y694 llegaron mientras689 seguía activa y se incorporaron como entradas nuevas, sin reinicio ni modificación de687/688. El registro de691 se persistió durante la preparación de evidencia de las11:31UTC y el de694 a las11:36UTC; las comprobaciones previas a sus lecturas constan en la secuencia de herramientas. input_hash_check.json registra las horas exactas de persistencia y source_downloads.json las descargas. Ninguna lectura del borrador690 ni de otros manuscritos forma parte de esta auditoría.
+
+Se reutilizan contexto, filesystem y participación previa del mismo agente en la familia. La configuración solicitada es Astra xhigh; no se atestan de forma independiente identidad del runtime, aislamiento, ceguera o independencia entre modelos. Se mantiene la exposición histórica ya declarada a una mención numérica en candidate571 y comunicaciones de cierre, sin reproducir ni usar valoraciones. No se emitió nota, no se crearon agentes ni se contactaron otros chats, y no se editó ni publicó un manuscrito.
+
+Dependencias científicas acotadas:678 para simulación exacta y sensibilidad de ruido;673 sólo para el anulador clásico de dos momentos, reconstruido abajo;682 para aproximación finita y código común de fase desconocida. Los informes678 y682 se copiaron para fijar esas dependencias, no como pruebas de las extensiones nuevas. De673 se guarda únicamente el párrafo del test con hash del origen. Una búsqueda local por términos de momentos devolvió además pasajes adyacentes de673 sobre su argumento cuántico y bibliografía; se declara esa exposición, pero no se importan esos resultados para cerrar689.
+
+3.687: test normalizado e identidad exacta
+
+Sea F la rama señal/reset. Para X=x fijo, ambas densidades de salida son estrictamente positivas, de modo que el posterior de F está estrictamente entre0 y1 en todo y. Por ello H(x)=H(F|Y,X=x)>0 para x finito;0<H(x)<=h_2(lambda). La simetría circular hace H radial y la suavidad gaussiana, junto con dominación de colas en compactos, hace H continua.
+
+Poniendo d=sqrt(k)|x|, considérese el test que decide señal dentro de la bola de radio d/2 centrada en sqrt(k)x. El error se acota por
+ lambda exp[-d^2/(4r)]+q exp[-d^2/(4s)] ->0.
+La segunda cota usa que entrar en esa bola desde el reset exige |Y|>=d/2. Fano binario implica H(x)->0. Es un test para una entropía condicional, no un decodificador de capacidad.
+
+Bajo mu0=CN(0,1), u=|x|^2 tiene medida exp(-u)du. Elíjanse dos indicadores b1,b2 de intervalos acotados con medias condicionales de u distintas. Su matriz de momentos de órdenes0 y1 es invertible. A cualquier función acotada de soporte compacto f se le restan combinaciones de b1,b2 para anular ambos momentos. Si H fuera ortogonal a todos los tests corregidos, habría constantes A,B tales que int fH=A int f+B int uf para todo f compacto. Se seguiría H=A+Bu casi en todas partes. La acotación y el límite cero fuerzan B=A=0, en contradicción con la positividad. Existe por tanto un test con correlación no nula; se cambia su signo y SE NORMALIZA para obtener
+ ||h||infinito<=1, int h dmu0=int |x|^2h dmu0=0,
+ a=int hH dmu0>0, v=int h^2 dmu0>0.
+Normalizar multiplica a y v por factores positivos y no destruye ninguna propiedad.
+
+Para0<epsilon<1, mu_epsilon=(1+epsilon h)mu0 es una probabilidad positiva de coste exactamente1. La salida de mu0 es phi_s, porque la señal promediada tiene varianza k+r=s, igual a la rama reset. Toda perturbación con el segundo momento conservado mantiene E|Y|^2=s. Luego la identidad de entropía cruzada gaussiana da
+ h(pY_epsilon)-h(phi_s)=-D(pY_epsilon||phi_s).
+No hace falta ajustar el reset al variar la modulación. Hacer ese ajuste cambiaría el problema.
+
+Por la identidad de entropía del indicador finito,
+ h(W(.|x))=h_2(lambda)+lambda ln(pi e r)+q ln(pi e s)-H(x).
+Así la diferencia de promedios de entropía condicional es -epsilon a. Se obtiene exactamente
+ I_mu_epsilon(W)-I_mu0(W)=epsilon a-D(pY_epsilon||phi_s).
+No falta un factor lambda: H incorpora ya los pesos de las ramas.
+
+La DPI clásica para el mismo kernel W y la desigualdad ln(1+t)<=t dan
+ D(pY_epsilon||phi_s)<=D(mu_epsilon||mu0)
+ =int(1+epsilon h)ln(1+epsilon h)dmu0<=epsilon^2v.
+Las entropías y las divergencias son finitas por densidad acotada y segundo momento. Por tanto cualquier0<epsilon<min(1,a/v) da Delta=epsilon a-epsilon^2v>0 DESPUÉS de normalizar h. Si se conserva un h sin normalizar, el rango correcto es epsilon<min(1/||h||infinito,a/v). La condición literal epsilon<1 para un test meramente acotado no garantiza por sí sola positividad; ésta es la corrección de escritura necesaria.
+
+4.688: ningún gaussiano alcanza C(1)
+
+La ley de salida es lambda (sqrt(k)_#mu)*phi_r+q phi_s. Al igualar dos salidas, cancelar el reset y transformar por Fourier, el factor gaussiano nunca nulo y lambda,k>0 implican igualdad de las leyes de entrada. La transformación entrada-salida es inyectiva.
+
+En la clase de segundo momento finito, la entropía de salida es finita y estrictamente cóncava en densidades distintas. El promedio de h(W(.|x)) es afín en mu; de hecho esa función condicional está globalmente acotada por la fórmula del apartado3. Se deduce concavidad estricta de I_mu(W) sobre leyes distintas, incluidas leyes singulares.
+
+La covariancia de rotación conserva información y coste. Si un gaussiano G alcanzara C(1) y alguna rotación lo cambiara, mezclar ambos produciría información estrictamente mayor al mismo coste. Por tanto cualquier gaussiano optimizador tendría que ser circular centrado: CN(0,P),0<=P<=1. Esto también excluye medias no nulas y covarianzas anisótropas o de rango1; el caso de covarianza cero circular es la masa en0.
+
+C(P) es finita, no decreciente y cóncava. Revelar F sólo para comparar información y volver a ocultarlo muestra, con una entrada circular gaussiana de coste P,
+ C(P)>=lambda ln(1+kP/r)-h_2(lambda).
+Luego C es no acotada al crecer P. Una función finita, cóncava y no decreciente que fuera constante en un intervalo no trivial quedaría constante hacia la derecha: sus pendientes posteriores serían<=0 y>=0. Eso contradice la no acotación. Así C es estrictamente creciente y el putativo gaussiano optimizador debe tener P=1. El apartado3 mejora estrictamente ese gaussiano y lo descarta. No se ha supuesto que el supremo irrestricto C(1) se alcance.
+
+5.688: compactitud, colas y brecha uniforme del hull
+
+El espacio de parámetros T=R^2 x S_+^2 es un espacio polaco cerrado de dimensión finita. p(m,V)=|m|^2+Tr V es continua y propia: sus subniveles son compactos, porque las entradas de una matriz positiva quedan acotadas por su traza. Para las medidas eta con int p deta<=1, Markov da eta(p>R)<=1/R y por tanto tightness. Portmanteau da cierre débil de la condición int p<=1. Prokhorov implica compactitud débil. Es esencial la desigualdad<=: una condición de momento EXACTAMENTE igual a1 no sería cerrada en general.
+
+J(m,V) es continua incluso cuando V se vuelve singular. Acóplese X=m+V^(1/2)Z con Z~N_R2(0,I), usando continuidad de la raíz positiva de matrices. Sobre parámetros compactos, X tiene colas gaussianas comunes y momentos acotados; las salidas suavizadas tienen densidades acotadas y colas gaussianas. Esto da continuidad de su entropía. El término condicional es una integral de la función continua acotada del apartado3 y también converge. No se asigna una entropía diferencial a una entrada gaussiana singular: sólo a su salida suavizada.
+
+Para cada parámetro, revelar el indicador da
+ 0<=J(theta)<=lambda ln(1+k p(theta)/r).
+Sea c=k/r. La razón ln(1+cp)/p decrece para p>0. En consecuencia, para cualquier eta factible,
+ int_{p>R} J deta <= [lambda ln(1+cR)/R] int_{p>R}p deta
+ <=lambda ln(1+cR)/R ->0.
+Es una cota uniforme explícita. Una cota lineal en p no habría bastado; la sublinealidad logarítmica es la que impide que se pierda información al escapar coste hacia infinito.
+
+Con un corte continuo que vale1 para p<=R y0 para p>=2R, J cortada es continua y de soporte compacto. Sus integrales son continuas para convergencia débil de eta; la estimación anterior retira el corte uniformemente. Así eta->int J deta es continua en el conjunto compacto factible y H_G(1) se ALCANZA en alguna eta*. El argumento cubre asignaciones de coste individual no acotado y no necesita que eta* tenga soporte finito.
+
+Sea mu_bar=int G_theta deta*. Su coste es<=1. Denotemos por f_theta y f_bar las densidades de salida. Están uniformemente acotadas superiormente y además f_theta,f_bar>=q phi_s. Por ello |ln f_bar(y)|<=C+C'|y|^2; el segundo momento promedio de las salidas es finito. Las entropías h(f_theta) tienen cotas inferiores uniformes y superiores C+ln(1+p(theta)), integrables. La afinidad del término condicional y Fubini quedan justificados, sin entropía de la etiqueta continua eta. Se tiene la identidad exacta
+ I_mu_bar(W)-int J(theta)deta*
+ =int D(f_theta||f_bar)deta* >=0.
+
+Si H_G(1)=C(1), la factibilidad de mu_bar obliga a que esa diferencia sea cero. Cada divergencia es no negativa, luego f_theta=f_bar para eta*-casi todo theta. La inyectividad del apartado4 implica G_theta=mu_bar para casi todo theta. El conjunto de medida1 es no vacío; por tanto mu_bar es gaussiana y alcanza C(1), contradiciendo el apartado4. Se concluye H_G(1)<C(1), no sólo que cada gaussiano individual es peor. Compactitud y continuidad son precisamente lo que cierra ese salto de cuantificadores.
+
+La etiqueta de programación no puede llevar mensaje. Cualquier ley de entrada puede escribirse como mezcla de gaussianas degeneradas delta_x, pero el promedio de J(delta_x) es0, mientras que I de la mezcla puede ser positivo. La diferencia es la información de la etiqueta en la salida. Confundir esas dos cantidades convertiría el benchmark en otro problema e invalidaría la interpretación;688 las distingue correctamente.
+
+6.687/688: benchmark de modulación coherente gaussiana
+
+Para una letra coherente |sqrt(E)x>, la salida N_E tiene densidad positiva de preparación
+ P_E(beta|x)=E^(-1) W(beta/sqrt(E)|x).
+La cadena X->Y->|sqrt(E)Y> es exacta. No requiere la heterodina de entrada ni su coste+1; sí requiere que el componente físico esté definido, rE>=max(0,k-1). DPI de preparación da chi_mu<=I_mu(W), y en particular el benchmark circular específico de687 está acotado exactamente por I_mu0(W).
+
+Si X^m es cualquier gaussiana real multivariada sobre C^m, con correlaciones, medias y covarianzas arbitrarias admisibles, el mismo argumento da
+ chi(X^m:salida)<=I(X^m:Y^m)<=sum_i I(X_i:Y_i).
+El último paso usa independencia condicional del canal, no independencia de X_i. Todas las entropías de salida de este bloque finito son finitas. Cada marginal X_i es gaussiana, y la medida empírica de sus parámetros tiene coste medio<=1. Por ello sum_i J(theta_i)<=mH_G(1), aunque algún coste individual exceda1. La cota cubre programaciones conocidas de tales bloques al promediar sus costes por número de usos, sin introducir información de una etiqueta de programación.
+
+688, por sí sola, es una afirmación sobre Gaussian COHERENT DISPLACEMENT: los estados condicionales son productos de coherentes. No cubre letras squeezed o estados condicionales entrelazados.691 amplía el benchmark mediante una hipótesis diferente sobre el PROMEDIO, que se verifica por separado a continuación.
+
+7.691: promedio cuántico gaussiano y DPI continua
+
+Para E>=2k/r, la representación exacta678 transforma cualquier ensemble de estados de m modos en
+ J -> A^m -> B^m -> salida cuántica,
+donde A|j tiene la densidad Husimi del estado condicional, normalizada por sqrt(E), y el canal clásico intermedio tiene señal de varianza r-k/E y reset de varianza s. El reset no pierde k/E: su ganancia es cero. La preparación final es el producto de coherentes |sqrt(E)B_i>.
+
+La linealidad de Q implica que la marginal de A^m es la Husimi del estado promedio. Para un estado promedio gaussiano, esa ley es una gaussiana REAL multivariada, también con squeezing y entrelazamiento. Puede verificarse directamente multiplicando su función característica de Weyl, gaussiana, por el factor gaussiano de vacío que corresponde a heterodina. Las correlaciones entre modos no se eliminan ni se suponen ausentes. La propiedad también consta en las fuentes de medición gaussiana seleccionadas.
+
+La normalización de energía se comprueba con la identidad de orden antinormal,
+ int sum_i |alpha_i|^2 Q_rho d^{2m}alpha =Tr rho sum_i n_i+m.
+Tras dividir por E, las marginales gaussianas mu_i de A tienen costes P_i cuya media es<=1+1/E. En el vacío, Q=phi_1 tiene E|alpha|^2=1, lo que verifica el desplazamiento. Para un squeezed vacío de parámetro z real, las varianzas reales de Q son(e^(-2z)+1)/4 y(e^(2z)+1)/4; su suma es sinh^2(z)+1. Esto confirma el mismo+1 y no un+1/2. No se exige positividad P del promedio squeezed; sólo su Q gaussiana y la representación EB del CANAL.
+
+La DPI para etiquetas continuas se formula con divergencias, no con H(J). Si P_j es la ley clásica de B condicionada a j y P_bar su promedio, la preparación coherente satisface D(sigma_j||sigma_bar)<=D(P_j||P_bar). Una justificación por reducción finita consiste en tomar particiones crecientes de B y preparar el promedio coherente de cada celda bajo P_bar. Los cocientes condicionales dP_j/dP_bar se aproximan por sus esperanzas condicionadas; la convergencia L1 da convergencia en traza de los estados preparados. DPI finita y semicontinuidad inferior de la divergencia dan la desigualdad para cada j, y Tonelli permite promediarla. Es válida aunque la etiqueta tenga entropía infinita.
+
+Se obtiene entonces
+ chi(J:salida)<=I(J:B^m)<=I(A^m:B^m)<=sum_i I_{mu_i}(W_{E,-}).
+La primera desigualdad es preparación cq; la segunda es DPI clásica; la tercera es la desigualdad de canal sin memoria para entradas correlacionadas. La energía promedio finita controla la entropía de la salida cuántica. Las densidades clásicas tienen un suelo de varianza r/2, cota de densidad y momento total finito. Por tanto no se restan cantidades indeterminadas. Casi todo estado condicional tiene energía finita cuando el promedio la tiene, por positividad y Tonelli; también se puede conservar todo el razonamiento en KL.
+
+El lema integrado de ruido678, con pendiente -k en la señal y0 en el reset, longitud1/E y suelo r/2, da
+ I_{mu_i}(W_{E,-})<=J(theta_i)+4k/(rE),
+uniformemente en el coste P_i. Así chi/m<=H_G(1+1/E)+4k/(rE).
+
+Para cualquier P finito, H_G(P) es finito, no decreciente y cóncavo: se mezclan medidas de parámetros factibles, no se mezcla un mensaje adicional. H_G(0)=0. Jensen y la cota logarítmica dan H_G(P)<=lambda ln(1+kP/r). Por concavidad,
+ H_G(1+1/E)<=(1+1/E)H_G(1)
+ <=H_G(1)+lambda ln(1+k/r)/E.
+Esto prueba exactamente la cota(A) de691.
+
+Para programaciones de bloques de diferente coste individual, tómese la medida de TODOS sus parámetros marginales Husimi, ponderados por fracción de usos. Si el coste físico promedio por uso es<=E, esa medida tiene coste<=1+1/E. El mismo argumento de H_G se aplica directamente, aunque los costes por bloque no estén acotados. La pérdida de ruido se paga una vez por uso. E sigue siendo el parámetro común del canal y del ruido; no se sustituye por la energía de cada bloque. Si hay una etiqueta aleatoria de programación, se condiciona en ella y se exige independencia respecto del mensaje.
+
+691 sí permite estados condicionales arbitrarios, incluido entrelazamiento, cuando el promedio cumple la hipótesis gaussiana. Eso es más amplio que688 y fue comprobado aquí, no supuesto por continuidad verbal. No equivale a abarcar todos los códigos de letras gaussianas: éstos pueden tener promedio no gaussiano. Tampoco un libro finito obtenido sorteando letras con distribución gaussiana tiene, en general, promedio exactamente gaussiano. Ninguna aproximación de ese tipo se ha añadido silenciosamente a(A).
+
+8.694: cota inferior coincidente del funcional R_G
+
+La aproximación del hull es válida. Se puede partir de eta* o de una medida casi óptima. Para crear holgura, se mezcla con masa delta en theta0=(0,0), cuyo p y J son cero. La pérdida es delta veces la información inicial y el coste queda estrictamente bajo1. Se reemplaza después la cola p>R por theta0; no aumenta el coste y la pérdida de información tiende a0 por la cota explícita del apartado5. En el compacto restante, p y J son uniformemente continuas: una partición fina y representantes gaussianos producen una medida finita con coste e información próximos. La holgura absorbe ese error y el posterior redondeo racional de los pesos. No se ha supuesto acotación del coste de eta original ni soporte finito del optimizador.
+
+Si los pesos racionales tienen denominador m, se colocan los correspondientes parámetros en m posiciones de un bloque y se usan modulaciones gaussianas INDEPENDIENTES en esas posiciones. Ésta es una programación fija, no una mezcla probabilística de estados medios gaussianos que podría dejar de ser gaussiana. Cada promedio de una modulación gaussiana de coherentes es un estado gaussiano, incluso con una covarianza clásica singular. El producto de esos promedios es exactamente gaussiano, con función característica exponencial cuadrática por bloques. Su energía es E sum_i p(theta_i)<mE.
+
+La heterodina de las salidas produce canales W_{E,+} independientes con las correspondientes entradas independientes; su información mutua es sum_i I_{G_theta_i}(W_{E,+}). La cantidad Holevo del ensemble es al menos esa información accesible por el receptor específico, mediante DPI de medición. Las ensembles continuas están cubiertas por la definición de Holevo y tienen energía finita. El lema678 da en cada posición
+ I_{G_theta_i}(W_{E,+})>=J(theta_i)-2/(rE),
+porque ambos r y s aumentan1/E. La constante no depende del coste de esa posición. Dividiendo por m y retirando las aproximaciones con E fijo se obtiene
+ R_G(E)>=H_G(1)-2/(rE).
+Se usa el supremo explícito sobre m y ensembles de694; no se promete un código finito con promedio gaussiano exacto. Combinado con691, esto cierra(B) y R_G(E)->H_G(1).
+
+9. Separación operacional y fase desconocida
+
+Por H_G(1)<C(1), existe una ley clásica que mejora H_G(1) por una cantidad positiva. La mezcla con delta_0 crea coste estricto; la aproximación finita de682 conserva información. Se obtiene una ley FINITA mu con coste<1 e I_mu(W)>H_G(1)+delta para algún delta>0. Sus letras físicas son coherentes y su modulación es no gaussiana. No hace falta calcular el optimizador de C ni el de H_G.
+
+Su información con heterodina es>=H_G(1)+delta-2/(rE). Toda tasa estrictamente inferior es operacionalmente alcanzable con los códigos de682; no se identifica el valor de información de frontera con una tasa exactamente alcanzada. Frente a691, la diferencia de supremos de tasas/benchmarks es al menos
+ delta-[lambda ln(1+k/r)+(4k+2)/r]/E.
+Para E suficientemente grande se deja un margen positivo también al escoger una tasa estrictamente inferior. La cota del benchmark es uniforme en todos los tamaños m y en todas las ensembles/programaciones que cumplen su condición de promedio.
+
+Para fase theta, W_theta(y|x)=W_0(e^(-i theta)y|x), también en las variantes plus/minus. La información es por tanto independiente de theta para CADA ley de entrada, no sólo para leyes radiales. La familia de todas las fases es compacta y satisface las hipótesis de682; el mismo codificador y decodificador finito funcionan para toda fase desconocida fija durante el bloque. Esa construcción no conoce la fase y no se deduce sólo de la igualdad de valores.
+
+Cuánticamente N_{E,theta}=U_theta circ N_{E,0} en la salida, y el reset térmico es invariante. Cada cantidad Holevo y R_G es independiente de theta por conjugación unitaria, incluso para ensembles de bloque arbitrarias. Con el límite compuesto de682, C_opt,cmp(E)->C(1), y el límite de694, R_G(E)->H_G(1), resulta la igualdad de límites del apartado1. No se intercambian límites de energía y longitud ni se pretende una longitud uniforme en E.
+
+10. Antecedentes primarios, contraste y límites de lectura
+
+Catalano–Fanizza–Mele–De Palma–Giovannetti, Convex combinations of bosonic pure-loss channels, arXiv:2604.26874v2,30sep2026, https://arxiv.org/pdf/2604.26874v2. Lectura propia del abstract/modelo, secciónIV,páginas10–11, y pasajes del apéndiceE,páginas35–37. Ya utiliza simetrización de fase, igualdad de concavidad, inyectividad y crecimiento estricto por concavidad más no acotación para excluir gaussianos en un problema EA de fading/reset vacío. Es un antecedente metodológico directo, además de fenómeno cercano. La funcional EA y el reset difieren de los presentes. No se importan sus resultados como prueba de688 ni se reauditaron íntegramente apéndiceC, optimización numérica o capacidad cuántica.
+
+Tu–Li–Dhillon, An information-theoretic framework for vision-aided communication over memoryless on-off fading channels, npj Wireless Technology2026, DOI10.1038/s44459-026-00074-7, https://www.nature.com/articles/s44459-026-00074-7. La apertura web falló por redirección, pero la descarga HTTP pública obtuvo el HTML completo, conservado y leído en su sección gaussiana: modelo(8)–(10), potencia(9),(15), inyectividad/concavidad estricta, teoremas1–2 y sus justificaciones; se vieron también resultados contiguos sin adoptarlos. El artículo afirma discreción finita del óptimo blind y remite parte de la prueba a referencias. Su canal es real con la misma varianza en señal y reset, no nuestro reset matched de varianza k+r. Es antecedente explícito; no se certifica aquí su demostración ni se usa para cubrir un paso nuestro.
+
+Holevo, On the Classical Capacity of General Quantum Gaussian Measurement, Entropy23(3),377,21mar2021, DOI10.3390/e23030377, https://pmc.ncbi.nlm.nih.gov/articles/PMC8004196/. Lectura de definiciones de ensembles continuas, medición gaussiana(11),(19), teorema1 y observación2. Distingue expresamente promedio gaussiano de ensemble gaussiana: una mezcla de estados Fock puede tener promedio térmico. Su resultado de óptimo con promedio gaussiano corresponde a un CANAL DE MEDICIÓN GAUSSIANO, no a nuestra mezcla señal/reset no gaussiana. No se lo contradice ni se importa su teorema de optimización. Se leyeron pasajes de prueba adyacentes, sin auditar el argumento de límite central completo ni actualizar sus cuestiones abiertas históricas.
+
+Weedbrook et al., Gaussian Quantum Information, arXiv:1110.3234v1,14oct2011, https://arxiv.org/html/1110.3234v1. Pista de la raíz, cotejada en seccionesII.5 yII.5.2: resultados gaussianos de mediciones gaussianas y heterodina como POVM coherente, incluidos sistemas multimodo. Sustenta la atribución estándar de la gaussianidad de Husimi. La normalización+1 se verificó directamente en el apartado7, no se trasladó entre convenciones de cuadraturas sin comprobarla. No se leyó toda la revisión ni se toman sus problemas abiertos de2011 como estado actual. El HTML muestra una fecha de generación posterior; la versión bibliográfica utilizada es v1 de2011.
+
+Huber–König, Coherent state coding approaches the capacity of non-Gaussian bosonic channels, arXiv:1710.06734v2,9abr2018, DOI10.1088/1751-8121/aab7ff, https://arxiv.org/html/1710.06734v2. Pista posterior de la raíz; lectura propia de abstract, introducción y definición de modelos(8)–(9). Trata atenuadores con entorno general y ruido clásico aditivo; obtiene proximidad de codificación coherente con una cota de brecha independiente de energía. Es antecedente del fenómeno general. No se reauditaron sus pruebas EPI ni se dedujo de él una brecha O(1/E), una ley desconocida compuesta o el hull de promedio gaussiano presente. Tampoco se afirma que toda mezcla señal/reset pertenezca a sus clases de covariancia por desplazamientos.
+
+Las búsquedas fueron dirigidas a ventajas no gaussianas, programación gaussiana y estado medio gaussiano, no exhaustivas. No se identificó en los pasajes efectivamente leídos el conjunto exacto de688/691/694. Eso no acredita ausencia de antecedente ni prioridad. Los ingredientes de concavidad, inyectividad, compactitud, uniformidad integrable, DPI y gaussianidad de heterodina son estándar. El alcance nuevo auditado es su combinación y la separación del benchmark exactamente definido; no se propone un lema separado ni se valora un manuscrito completo.
+
+11. Falsación, correcciones y cierre
+
+Se atacaron: positividad de la perturbación; signo de su identidad; factor lambda; unidades y Jacobiano complejo; casos gaussianos singulares y medias no nulas; pérdida de momento en límites débiles; escape de costes de programación; igualdad de Jensen para medidas continuas; posible etiqueta portadora de mensaje; correlaciones de bloques; Husimi de promedios squeezed/entrelazados; coste+1 y falta de cotas por coordenada; DPI con etiqueta de entropía infinita; diferencias entre covarianza clásica y promedio cuántico; racionalización de pesos sin perder holgura; producto gaussiano exacto en694; y cuantificadores de fase, bloque y energía. La única corrección necesaria detectada es explicitar la normalización del test687, cerrada en el apartado3. Las demás obligaciones cierran con las pruebas anteriores.
+
+No se ejecutaron barridos numéricos: no se suministraron scripts nuevos y un barrido de parámetros gaussianos no demostraría una brecha sobre el hull no compacto de asignaciones. No se certifica un optimizador, una brecha numérica, prioridad, capacidad EA/cuántica, todos los protocolos gaussianos ni códigos adversariales de fase variable. El functional R_G conserva su significado Holevo; su límite no autoriza sustituirlo por una clase operacional de libros finitos de promedio aproximadamente gaussiano sin una prueba adicional de aproximación uniforme en longitud.
+
+Los originales687,688,691,694 y las auditorías anteriores permanecen intactos. El expediente se conserva en D:\Proyectos\airr-investigacion\2026-10-26_gaussian689-audit con hashes, copias exactas, fuentes seleccionadas, report.txt,verdict.json,MANIFEST689.json y CD_VERIFICATION689.json. Se retiene C:\Trabajo\airr\2026-10-26_gaussian689-audit. Estado terminal: APOYO ACOTADO CON NORMALIZACIÓN EXPLÍCITA Y COMPLETACIONES DE PRUEBA, sin nota ni certificado de prioridad.
