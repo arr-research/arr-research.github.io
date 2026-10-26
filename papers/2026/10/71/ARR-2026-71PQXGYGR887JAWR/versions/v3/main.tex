@@ -1,0 +1,1518 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=27mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,amsmath,amssymb,amsthm,microtype,booktabs}
+\usepackage[colorlinks=true,allcolors=blue]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\CEA}{C_{\mathrm{EA}}}
+\newcommand{\cmp}{\mathrm{cmp}}
+\newcommand{\PhiT}{\Phi_{\kappa,n}}
+\title{Sharp entropy-budget laws for Gaussian reset channels}
+\author{Lluis Eriksson}
+\date{26 October 2026\\\small Working draft 663}
+\begin{document}
+\maketitle
+\begin{abstract}
+An unflagged reset channel transmits through a Gaussian signal channel
+with probability \(\lambda\), and otherwise emits a fixed state whose
+entropy, but not energy or orientation, is bounded. We determine the
+complete high-energy minimax loss curves for unassisted classical
+communication, permitting arbitrary entangled block inputs and collective
+decoding. Relative to \(\lambda\) times the signal's own classical
+capacity, the absolute loss is
+\(b(\lambda,(1-\lambda)t_\alpha)+o(1)\), uniformly in every finite entropy
+budget. For Shannon entropy
+\(t_1=\min\{1,B/\log_2(E+1)\}\); for fixed finite \(\alpha>1\),
+\(t_\alpha=1-2^{-(\alpha-1)B/\alpha}\).
+The sharp regime is signal vacuum noise \(t=o(E)\).
+It covers thermal attenuation and amplification, and additive Gaussian
+noise bounded away from zero. A larger unknown fixed family has the
+same law and a common encoder/decoder, including cold and noiseless
+members. No preshared entanglement or additivity of the reset mixture
+is assumed. The converse uses causal quantum references, a summed
+Gaussian minimum-output-entropy floor and averaged Choi-order deficits.
+Selecting a fraction of good positions and using established telescopic
+relative entropy gives an error uniform in block length.
+Finite cq compound coding with exact physical types supplies the
+matching operational rate for arbitrary reset energy. A strict flag-loss
+gap at bounded signal information proves necessity.
+The assisted thermal law is also proved, relative to its own benchmark.
+The actual critical loss curve and efficient blocklength bounds remain
+open here. Working-argument audits support the thermal ingredients;
+the enlarged exact manuscript requires its own full assessment.
+\end{abstract}
+
+\section{Model, scope and theorem}
+All logarithms in information quantities are base two; \(\ln\) is natural.
+Let \(H=\sum_{j\ge0}j|j\rangle\langle j|\),
+\(g(x)=(x+1)\log_2(x+1)-x\log_2x\), and let \(h\) denote binary entropy.
+The thermal state of mean \(x\) is \(\gamma_x\).
+A thermal attenuator \(\PhiT\) mixes the input with an environment thermal
+state of mean \(n\), through a beamsplitter of photon transmissivity
+\(0<\kappa<1\). Write \(\delta=1-\kappa\), \(q=1-\lambda\), with
+\(0<\lambda<1\), and
+\[
+ {\cal N}_{\kappa,n,\tau}(\rho)=\lambda\PhiT(\rho)+q\tau\Tr\rho.
+\]
+The reset \(\tau\) has no energy or orientation restriction.
+All parameters are fixed throughout a code block. The input constraint
+is expected physical block-average energy at most \(E\), not peak energy.
+For the assisted baseline developed first, entanglement assistance is
+unlimited. Sections~\ref{sec:unassisted}--\ref{sec:generalU} remove that
+resource and permit arbitrary entangled block encoding without preshared
+entanglement. Classical error is average-message
+error. In a compound capacity one encoder and decoder serve the whole
+fixed-parameter family, with uniform error. The coding limit is taken
+at each fixed \(E,n,B\), before the energy limit.
+
+Put \({\cal T}_{\alpha,B}=\{\tau:S_\alpha(\tau)\le B\}\), where
+\(S_1=S\) and \(S_\alpha=(1-\alpha)^{-1}\log_2\Tr\tau^\alpha\).
+The established constrained Gaussian assisted capacity
+\cite{hw,hs} is
+\begin{align}
+ C_{\kappa,n}(E)&=g(E)+g(M)-g(u_l)-g(u_s),&
+ M&=\kappa E+\delta n,\tag{C}\label{eq:C}\\
+ V&=\delta E+(1+\kappa)n+1,&
+ D&=\sqrt{V^2-4\kappa n(n+1)},\nonumber\\
+ u_l&=\tfrac12[D+\delta(E-n)-1],&
+ u_s&=\tfrac12[D-\delta(E-n)-1].\nonumber
+\end{align}
+Here \(g(u_l)+g(u_s)\) is the entropy of the \emph{true two-mode}
+complement, including purification of the initial thermal environment.
+A one-mode weak complement cannot replace it.
+
+Define the known-reset and unknown-reset deficits
+\[
+\begin{split}
+ D_{\rm ind}(E,n,B)&=\lambda C_{\kappa,n}(E)-
+       \inf_{\tau\in{\cal T}_{\alpha,B}}\CEA({\cal N}_{\kappa,n,\tau},H,E),\\
+ D_{\cmp}(E,n,B)&=\lambda C_{\kappa,n}(E)-
+       \CEA^{\cmp}(\{{\cal N}_{\kappa,n,\tau}:\tau\in{\cal T}_{\alpha,B}\},H,E).
+\end{split}
+\]
+Thus \(D_{\rm ind}\le D_{\cmp}\). Let
+\[
+ b(u,v)=(u+v)h\!\left(\frac{u}{u+v}\right),\quad f(a)=b(\lambda,qa),
+\]
+\[
+ t_\alpha(E,B)=
+ \begin{cases}
+ \min\{1,B/\log_2(E+1)\},&\alpha=1,\\
+ 1-2^{-((\alpha-1)/\alpha)B},&1<\alpha<\infty .
+ \end{cases}
+\]
+Use continuous boundary values in \(b\).
+\begin{theorem}[Growing-noise law]\label{thm:main}
+Fix \(\kappa,\lambda\in(0,1)\) and \(\alpha=1\) or a fixed finite
+\(\alpha>1\). For every prescribed path \(n(E)>0\) with \(n(E)/E\to0\),
+\[
+ \sup_{0\le B<\infty}\max_{Y\in\{{\rm ind},\cmp\}}
+ \left|D_Y(E,n(E),B)-f(t_\alpha(E,B))\right|\longrightarrow0.
+ \tag{P}\label{eq:P}
+\]
+The argument below uses the scientific dependencies disclosed at the end.
+It claims neither a uniform blocklength nor uniformity over
+all asymptotic paths at a fixed energy without a common envelope.
+\end{theorem}
+This removes a sufficient \(n=o(\sqrt E)\) restriction of an earlier
+working proof, rather than establishing that restriction as a physical
+threshold. The proposed addition concerns operational quantifiers and
+uniform errors. Gaussian extremality, entropy mixing, Helstrom testing,
+telescopic relative entropy and compound coding are prior ingredients.
+
+\begin{theorem}[Sharp regime for the complete curves]\label{thm:sharp}
+Fix \(\kappa,\lambda\in(0,1)\), and either \(\alpha=1\) or a fixed finite
+\(\alpha>1\). For every finite nonnegative path \(n(E)\), the complete
+uniform-in-budget law \eqref{eq:P} holds if and only if \(n(E)=o(E)\).
+For the unknown fixed signal family
+\(\kappa\in[\kappa_0,1]\), \(n\in[0,N(E)]\), with fixed
+\(0<\kappa_0<1\) and finite \(N(E)\ge0\), its compound analogue relative
+to \(\lambda C_{\kappa_0,N(E)}(E)\) holds if and only if \(N(E)=o(E)\).
+There is no smoothness or monotonicity assumption on either path.
+\end{theorem}
+Sufficiency is Theorem~\ref{thm:main} and
+Proposition~\ref{prop:unknown}; zero-temperature subsequences use the
+previous pure-loss law \cite{previous}.
+Necessity, proved below, excludes the complete curve on a growing
+budget. It does not assert necessity for every restricted small-budget
+problem or give the actual critical-temperature loss curve.
+
+\section{A uniform Gaussian entropy estimate}
+The input/output energy bounds are
+\(S(\rho)\le g(E)\), \(S(\PhiT(\rho))\le g(M)\).
+For input mean \(x\), the true complementary entropy is bounded by
+\(g(\delta x+\kappa n)+g(n)\).
+Let \(\beta_x=\log_2(1+1/x)\) for \(x>0\).
+The complementary Gibbs logarithm pulled back to the input is a
+quadratic form \(a(E;n)H+b(E;n)I\), with
+\[
+ a(E;n)=\delta\left[\beta_{u_l}
+           +(\beta_{u_l}+\beta_{u_s})r\right],
+ \qquad r=\frac12(V/D-1).
+ \label{eq:a}
+\]
+For clarity, a direct verification uses the environment modes
+\(e'=-\sqrt\delta\,a+\sqrt\kappa\,e\) and purifier \(z\).
+With \(\cosh(2s)=V/D\), \(\sinh(2s)=2\sqrt{\kappa n(n+1)}/D\),
+the thermal normal modes are
+\(x=\cosh(s)e'-\sinh(s)z^\dagger\) and
+\(y=\cosh(s)z-\sinh(s)e'^\dagger\).
+The logarithm is a constant plus
+\(\beta_{u_l}x^\dagger x+\beta_{u_s}y^\dagger y\).
+Pullback of \(e'^\dagger e'\), \(z^\dagger z\), and
+\(e'z+e'^\dagger z^\dagger\) is respectively
+\(\delta H+\kappa nI\), \(nI\), and
+\(2\sqrt{\kappa n(n+1)}I\), giving the displayed coefficient.
+These are positive-form/finite-mean expectation identities on the number
+form domain. They are not bounded-adjoint identities for an unbounded
+logarithm. Finite Fock cutoffs and finite energy justify their limiting
+expectations. Differentiating the Gibbs cross entropy at fixed \(n\)
+also gives \(a(E;n)=\partial_E[g(u_l)+g(u_s)]\).
+
+Relative-entropy data processing with reference \(\gamma_E\) gives
+\[
+ S(\rho)-S(\PhiT^c(\rho))
+ \le g(E)-g(u_l)-g(u_s)+\zeta,\qquad
+ \zeta=E|\beta_E-a(E;n)|.
+ \tag{1}
+\]
+No optimality of thermal reverse coherent information is assumed.
+For \(0<n\le E\), the exact radical obeys
+\[
+ D\ge\delta(E+n)+1,\quad
+ \delta E\le u_l\le\delta E+\kappa n,\quad
+ \delta n\le u_s\le n,\quad
+ 0\le r\le\frac{\kappa n(n+1)}{\delta^2E^2}.
+\]
+The elementary inequalities
+\(0\le x^{-1}-\ln(1+x^{-1})\le(2x^2)^{-1}\) imply
+\[
+ \zeta\le\Xi(E,n):=
+ \frac{1+1/\delta}{2E\ln2}
+ +\frac{\kappa n}{\delta E\ln2}
+ +\frac{2\kappa(n+1)}{\delta^2E\ln2}.
+ \tag{2}
+\]
+Thus \(\Xi=o(1)\) throughout \(n=o(E)\).
+All derivatives hold \(n\) fixed; \(n'(E)\) is never used.
+
+\section{Flat Choi order and near-capacity inputs}
+\begin{lemma}[Known bounded Choi form, applied here]\label{lem:flat}
+For the reference/output state
+\(\omega=(\id\otimes\PhiT)(\psi_\rho)\) of the canonical purification,
+\[
+ \omega\le c\,\rho_R\otimes I_B,\qquad
+ c=\frac1{\delta(n+1)}.                                      \tag{3}
+\]
+\end{lemma}
+This bound is an exact specialization of Holevo's established Gaussian
+Choi norm formula \cite[Proposition~2 and the one-mode example, p.~13]{choi}.
+His amplitude parameter is \(\sqrt\kappa\) and his noise coefficient is
+\(m=\delta(n+1/2)\), so the norm is
+\([m+|\kappa-1|/2]^{-1}=c\). The following regularization argument
+also explains the application to the present purification; the Choi
+norm formula is not a new lemma of this paper.
+\begin{proof}
+Use an auxiliary thermal input of mean \(x>0\), keeping \(n\) fixed.
+Its reference/output state \(\omega_x\) has the same nonzero spectrum as
+the true Gaussian complement. Formula \eqref{eq:C} gives
+\[
+ (u_l+1)(u_s+1)
+ =\delta xn+\frac{\delta(x+n)}2+\frac{D+1}2
+ \ge\delta(n+1)(x+1).
+\]
+If \(J\) is the canonical positive Choi form and
+\(G_x=(x/(x+1))^{H/2}\), then
+\((G_x\otimes I)J(G_x\otimes I)=(x+1)\omega_x\le cI\).
+For a vector with finite input-number support, insert \(G_x^{-1}\);
+its norm converges to the original norm as \(x\to\infty\).
+The positive form therefore has bound \(cI\) on a dense domain and
+extends to a bounded positive operator. Sandwiching with
+\(\sqrt{\rho^T}\otimes I\) gives (3), first for finite truncations and
+then in trace norm. No unnormalizable Bell vector is used as a state.
+\end{proof}
+
+Put \(C=C_{\kappa,n}(E)\). At fixed \(n\),
+\[
+ 0\le\partial_E C\le\frac2{E\ln2}.                            \tag{4}
+\]
+The upper bound follows from
+\(\partial_E C=\beta_E+\kappa\beta_M-a(E;n)\) and \(a\ge0\);
+monotonicity follows from enlargement of the feasible input set.
+
+If \(w=\|\rho\|_\infty\), isolate a largest pure eigencomponent.
+Mutual information of that pure input is zero. The entropy-of-mixture
+inequality, whose general \(2h(w)\) version is prior
+\cite[Eq.~(11), Section~5.2]{shirokov}, yields
+\[
+ I(\rho,\PhiT)\le2h(w)+(1-w)C_{\kappa,n}(E/(1-w))
+ \le(1-w)C+2h(w)+2(1-w)\log_2\frac1{1-w}.
+\]
+Consequently
+\[
+ I(\rho,\PhiT)\ge C-\Delta
+ \quad\Longrightarrow\quad
+ w\le\frac{\Delta+2+2/(e\ln2)}C.                              \tag{5}
+\]
+The endpoint \(w=1\) is excluded eventually by \(C>\Delta\).
+Let \(S=c(M+1)\). Since \(u_l\le E\), \(u_s\le n\) for \(n\le E\),
+\[
+ C\ge g(M)-g(n)\ge\log_2 S+\log_2\delta-\log_2 e.
+ \tag{6}
+\]
+Thus \(C\to\infty\) whenever \(n=o(E)\).
+The established regular-channel identity \(\PhiT(I)=I/\kappa\)
+\cite[Proposition~2]{gain} gives
+\[
+ \Pr_{\PhiT(\rho)}(0)\le w/\kappa=o(1)                       \tag{7}
+\]
+on the set in (5).
+
+\section{Pinching and branch discrimination}
+Let \(\tau_a=(1-a)|0\rangle\langle0|+a\gamma_M\), \(0\le a\le1\).
+Flagging gives \(I(\rho,{\cal N}_{\kappa,n,\tau_a})
+\le\lambda I(\rho,\PhiT)\).
+Inputs below \(\lambda C-h(\lambda)-1\) already satisfy the needed
+converse because \(f(a)\le h(\lambda)\). All remaining inputs satisfy
+(5) with \(\Delta=(h(\lambda)+1)/\lambda\), independent of \(E,n,a\).
+
+Set \(\sigma_0=\rho_R\otimes I_B\), an \emph{unnormalized}
+infinite-trace operator, and
+\(D_0(\omega)=\Tr\omega(\log_2\omega-\log_2\sigma_0)
+=-H(B|R)_\omega\).
+Input/output energy ensures finite entropies and cross entropies.
+Equation (3), (6), and \(g(u_l)+g(u_s)\le g(E)+g(n)\) give
+\[
+ \log_2c-C_0\le D_0(\omega)\le\log_2c,\qquad
+ C_0=\Delta+\log_2e-\log_2\delta.                             \tag{8}
+\]
+We have not applied a normalized-state relative-entropy inequality to
+\(\sigma_0\).
+
+For \(S>1\), let \(t=\sqrt{\ln S}\), \(T=\lceil(M+1)t\rceil\),
+\(P_B=\sum_{j=1}^T|j\rangle\langle j|\), \(P=I_R\otimes P_B\),
+and \(p=\Tr P\omega\). Equations (5),(7) and Markov give
+\(p\ge1-w/\kappa-1/t\to1\).
+Define normalized good and bad blocks \(\omega_g,\omega_b\).
+For these blocks \(D_0\) always uses the original reference \(\rho_R\);
+in particular
+\[
+ D_0(\omega_g)=-H(B|R)_{\omega_g}
+                 +D(\rho_R^g\Vert\rho_R).
+\]
+It is not the negative conditional entropy computed with its own
+reference marginal alone.
+Pinching preserves the reference marginal and increases entropy by at
+most \(h(p)\). Its block formula is
+\[
+ D_0({\cal P}\omega)=pD_0(\omega_g)+(1-p)D_0(\omega_b)-h(p).
+\]
+Hence the weighted sum on the right without \(-h(p)\) is at least
+\(D_0(\omega)\). By (3),
+\(D_0(\omega_b)\le\log_2c-\log_2(1-p)\), and therefore
+\[
+ D_0(\omega_g)\ge\log_2c-\frac{C_0+h(p)}p.                   \tag{9}
+\]
+Zero-weight blocks are interpreted by continuity. Reference marginals
+are bounded by \(\rho_R/p\), \(\rho_R/(1-p)\), keeping their cross
+entropies finite. This step avoids an error of the form \(o(1)\log E\).
+
+Let \(v=\Tr P_B\gamma_M\to1\), \(r_M=M/(M+1)\), and introduce the
+\emph{normalized} comparator
+\[
+ \sigma_g=\rho_R\otimes P_B\gamma_M P_B/v,\qquad
+ L=(c/p)v(M+1)r_M^{-T}.
+\]
+The least thermal eigenvalue on this window gives \(\omega_g\le L\sigma_g\).
+Writing \(\mu_g=\Tr H_B\omega_g\ge0\), (9) gives
+\[
+\begin{split}
+ D(\omega_g\Vert\sigma_g)
+ &=D_0(\omega_g)+\log_2(M+1)+\beta_M\mu_g+\log_2v\\
+ &\ge\log_2S+\log_2v-(C_0+1)/p,\\
+ \log_2L&=\log_2S+\log_2v-\log_2p+T\beta_M
+          =\log_2S+O(\sqrt{\ln S}).
+\end{split}                                                  \tag{10}
+\]
+In particular the sign of the normalization term is \(+\log_2v\).
+
+For normalized states \(r\le Ls\), Audenaert's established telescopic
+inequality \cite[Theorem~4]{audenaert} implies
+\[
+ D(r\Vert s)\le\frac{\log_2L}{1-1/L}\,
+                    \frac12\|r-s\|_1.                      \tag{11}
+\]
+Indeed write \(s=L^{-1}r+(1-L^{-1})z\) and use that theorem, together
+with \(\tfrac12\|r-s\|_1=(1-L^{-1})\tfrac12\|r-z\|_1\).
+For infinite reference, common finite compressions with an orthogonal
+failure flag preserve normalization and operator order. Their embedded
+states converge in trace norm. Lower semicontinuity of relative entropy
+and data processing give convergence of the relative entropies, proving
+(11) in this case. Equation (10) now forces
+\(\frac12\|\omega_g-\sigma_g\|_1\to1\).
+
+The selected proof of Audenaert's Theorem~4 in v2 has a printed sign
+inconsistency on p.~10: after defining a difference proportional to
+\(\rho-\sigma\), it later uses the opposite orientation.
+Taking the auxiliary difference as \((\sigma-\rho)/
+(\tfrac12\|\rho-\sigma\|_1)\) restores that displayed identity and
+leaves the positive-part norm bound and theorem unchanged.
+The use of (11) is the established theorem, not a new inequality.
+
+A Helstrom projection \(Q\le P\) has both normalized testing errors
+tending to zero. Its acceptance on the original signal is
+\(p\Tr Q\omega_g\to1\). On the original reset it is
+\[
+ \Tr[Q(\rho_R\otimes\tau_a)]=av\Tr Q\sigma_g\to0,
+\]
+because the vacuum component is excluded. These bounds are uniform in
+\(a\) and in all relevant inputs. Binary Fano gives \(H(F|RB)=o(1)\).
+This analytical test may depend on the input; it is a converse device,
+not the common operational decoder.
+
+\section{All-input converse and the matching common code}
+The exact binary-branch chain rule is
+\[
+ I(\rho,{\cal N}_{\kappa,n,\tau})=F_\tau(\rho)+H(F|RB),
+\quad
+ F_\tau=\lambda[S(\rho)-S(\PhiT^c(\rho))]
+ +S(\lambda\PhiT(\rho)+q\tau)-qS(\tau)-h(\lambda).
+\]
+For the finite-entropy witness \(\tau_a\), entropy mixing and (1) give
+\[
+ F_{\tau_a}\le\lambda C-f(a)+\lambda\Xi
+                        +qh\!\left(\frac a{M+1}\right).
+ \tag{12}
+\]
+To see the mixing step, group the signal and thermal reset, of total
+weight \(P_a=\lambda+qa\), against the vacuum. The normalized group
+has mean at most \(M\), so its entropy is at most \(g(M)\).
+Moreover \(S(\tau_a)\ge ag(M)+h(a)-h(a/(M+1))\).
+The identity \(h(P_a)-qh(a)-h(\lambda)=-b(\lambda,qa)\)
+then gives (12).
+Combining (12) with the preceding branch test bounds \emph{every}
+admissible input. Evaluation at \(\gamma_E\) supplies the other direction:
+\[
+ f(a)-o(1)\le
+ \lambda C-\CEA({\cal N}_{\kappa,n,\tau_a},H,E)
+ \le f(a)+b(\lambda/(M+1),q).                               \tag{13}
+\]
+Uniformity in \(a\) is essential for changing budgets.
+
+Here is an explicit common error envelope for the converse.
+Let \(C_\Delta=\Delta+2+2/(e\ln2)\),
+\(H_S=\log_2S+\log_2\delta-\log_2e\), and, eventually,
+\[
+\begin{aligned}
+ w_*&=C_\Delta/H_S,& p_*&=1-w_*/\kappa-1/t,\\
+ v_*&=1-(1+\kappa E)^{-1}-e^{-t},&
+ K_*&=-\log_2p_*+(2t+1)/\ln2+(C_0+1)/p_*,\\
+ \varepsilon_*&=(Sv_*)^{-1}+K_*/\log_2(Sv_*),&
+ z_*&=\lambda(1-p_*)+\varepsilon_* .
+\end{aligned}
+\]
+These formulas are used only when \(H_S>0\), \(p_*,v_*>0\),
+\(Sv_*>1\), \(M\ge1\), and \(z_*\le1/2\), all eventual
+conditions in the joint limit. From (10),(11),
+\(1-\tfrac12\|\omega_g-\sigma_g\|_1\le\varepsilon_*\).
+Thus a valid error in the left side of (13) is
+\[
+ R_-=\lambda\Xi(E,n)+qh((1+\kappa E)^{-1})+h(z_*)\longrightarrow0.
+ \tag{13a}
+\]
+This exposes the dependence on \(E,n\), rather than assigning a common
+rate to every unspecified sublinear trajectory.
+
+For completeness the achievable bound does not use that witness.
+For \(E>1\), let
+\[
+ L_{\rm in}=\lceil4E\ln(E+1)\rceil,\quad
+ \epsilon=(1-1/E)^{L_{\rm in}}\le(E+1)^{-4}.
+\]
+Truncate \(\gamma_{E-1}\) to its first \(L_{\rm in}\) levels and normalize,
+obtaining \(\sigma\) of mean strictly below \(E\).
+To expose a uniform bound, write
+\(\gamma_{E-1}=(1-\epsilon)\sigma+\epsilon\theta\).
+The normalized tail \(\theta\) is a shifted thermal state, with
+\(S(\theta)=g(E-1)\). Mutual-information mixing and
+\(I(\theta,\PhiT)\le2S(\theta)\) give
+\[
+ C_{\kappa,n}(E-1)-I(\sigma,\PhiT)
+ \le\frac{2h(\epsilon)+2\epsilon g(E-1)}{1-\epsilon}.
+\]
+Since \(\epsilon<1/16\) for \(E>1\), this is bounded by the larger
+entropy error below. Adding (4) at the same \(n\) yields
+\[
+ I(\sigma,\PhiT)\ge C-U_E,\quad
+ U_E=3h(\epsilon)+4\epsilon[g(E)+g(E+L_{\rm in})]
+                         +2\log_2\frac E{E-1}=o(1).         \tag{14}
+\]
+The bound is uniform for \(n\le E\). It compares inputs of energies
+\(E-1,E\) at fixed channel, not \(n(E-1)\) with \(n(E)\).
+
+Apply one receiver Fock cutoff \(T_{\rm out}=\lceil E^4\rceil\)
+and replace its complement by an orthogonal failure symbol.
+The signal failure mass is at most \(E^{-3}\); no energy assumption
+is imposed on the reset. With
+\[
+ e_E=E^{-3/2}+\tfrac12E^{-3},\quad
+ W_E=2e_E\log_2L_{\rm in}
+       +(1+e_E)h(e_E/(1+e_E)),
+\]
+finite-reference continuity \cite[Lemma~2]{winter} loses at most
+\(W_E=o(1)\). The compressed signal norm is at most
+\[
+ v_E=\max\left\{\frac1{[1+\kappa(E-1)](1-\epsilon)},E^{-3}\right\}.
+\]
+A top-\(m\) reset spectral subspace has retained signal mass at most
+\((m+1)v_E\), since the failure flag increases rank by at most one.
+If \(\eta_m\) bounds its original discarded spectral mass, the binary
+observation of that subspace gives
+\[
+ H(F|B)\le b(\lambda,q\eta_m)
+       +b(\min\{\lambda,\lambda(m+1)v_E\},q).
+\]
+The branch chain rule thus yields
+\[
+ D_{\cmp}\le f(\eta_m)+R_+(E,m),\quad
+ R_+=\lambda(U_E+W_E)+
+          b(\min\{\lambda,\lambda(m+1)v_E\},q),               \tag{15}
+\]
+which vanishes if \(m/E\to0\).
+
+Here is the operational step behind (15).
+After the two fixed cuts the channel family has finite input/output
+dimension, though its reset index can be arbitrary.
+Approximate the diagonal input \(\sigma\) by rational probabilities
+while retaining strict mean-cost slack. On the exact type subspace of
+a type length \(k_{\rm type}\), every vector has total physical number
+\(k_{\rm type}\sum_j jp_j<k_{\rm type}E\).
+For completeness, let \(\pi_T\) be the maximally mixed exact-type state
+and put \(d_k=D(\pi_T\Vert\sigma_p^{\otimes k})
+=kH(p)-S(\pi_T)=O(\log k)\). Its one-site marginals equal \(\sigma_p\).
+Data processing bounds the output total correlation by \(d_k\), while
+complementary entropy is subadditive. Thus
+\[
+ I(\pi_T,{\cal M}^{\otimes k})
+ \ge kI(\sigma_p,{\cal M})-2d_k
+\]
+uniformly in every finite channel \({\cal M}\).
+This type estimate is also given in \cite[Lemma~3]{previous};
+it is distinct from the compound achievability result of
+\cite[Lemma~9]{compound}.
+Apply the finite-dimensional compound assisted coding theorem
+\cite[Theorem~1]{compound} on this subspace. First fix the type and
+all cuts for a rate slack, then take the outer coding length to infinity;
+only subsequently optimize the finite choices and take \(E\to\infty\).
+This preserves physical expected cost and provides a single encoder
+and decoder for all resets. It supplies no uniform blocklength or
+efficient code. These are uses of established coding results, not
+a new coding theorem.
+
+\section{Budget normalization and unknown signal envelopes}
+For Shannon entropy,
+\(\eta_m\le\min\{1,B/\log_2(m+1)\}\).
+Choose \(m=\lfloor E/\ln(E+1)\rfloor\).
+Its clipping curve differs uniformly from \(t_1(E,B)\) by \(o(1)\).
+For the converse choose
+\[
+ a_B=\operatorname{clip}_{[0,1]}\frac{B-1}{g(M)}.
+\]
+The witness is feasible because \(S(\tau_a)\le h(a)+ag(M)\);
+the clipped endpoints are feasible separately.
+Since \(\kappa E\le M\le E\),
+\(\log_2\kappa\le g(M)-\log_2(E+1)\le\log_2e\).
+It follows that \(\sup_B|a_B-t_1(E,B)|=o(1)\).
+For fixed \(\alpha>1\), choose
+\(a_B=1-2^{-((\alpha-1)/\alpha)B}\) and \(m=\lfloor\sqrt E\rfloor\).
+The witness obeys \(\Tr\tau_a^\alpha\ge(1-a)^\alpha\), hence is feasible.
+The established spectral-tail estimate gives
+\(\eta_m\le\min\{1,a_B+(m+1)^{(1-\alpha)/\alpha}\}\).
+Since \(f\) is increasing and concave, with
+\(|f(x)-f(y)|\le f(|x-y|)\), (13),(15) give (P).
+Resets of infinite von Neumann entropy can occur for \(\alpha>1\);
+their achievability is evaluated only after finite output compression.
+Uncompressed reset entropies are subtracted only for the finite-entropy
+witness.
+
+\begin{proposition}[Common code for unknown signal]\label{prop:unknown}
+Let known \(0<\kappa_0<1\) and \(N(E)>0\) satisfy \(N(E)=o(E)\).
+Suppose \(\kappa\in[\kappa_0,1]\), \(n\in[0,N(E)]\), and
+\(\tau\in{\cal T}_{\alpha,B}\) are all unknown and fixed throughout
+the block. Then the compound deficit relative to
+\(\lambda C_{\kappa_0,N(E)}(E)\) is \(f(t_\alpha(E,B))+o(1)\),
+uniformly in finite \(B\). The zero-envelope case is the earlier
+pure-loss result, not a substitution in singular thermal logarithms.
+\end{proposition}
+\begin{proof}
+For signal channels only, add receiver Gaussian noise of mean
+\((1-\kappa)(N-n)\), raising the environment parameter to \(N\).
+Then compose with a thermal attenuator of transmissivity
+\(\kappa_0/\kappa\) and environment occupation \(N\).
+Its resulting noise is \((1-\kappa_0)N\), so the composition is
+\(\Phi_{\kappa_0,N}\).
+Thus mutual information of the same input \(\sigma\) for every original
+signal is at least its value for that worst pair.
+The cuts, \(U_E,W_E\), and the signal-norm bound in (14),(15) are
+uniform with \(\kappa\ge\kappa_0,n\le E\), replacing \(\kappa\) by
+\(\kappa_0\) in the norm bound. Apply the finite-family-independent
+coding step to the entire signal/reset index set.
+For the converse choose the worst pair and its witness.
+Do not degrade the full reset mixture: receiver processing could change
+the reset entropy and leave the budget class.
+\end{proof}
+
+\section{A strict flag-loss gap at bounded signal information}
+The following combines established binary-ensemble inequalities.
+In particular the purification/Gram bound in its proof is already
+explicit in \cite[Corollary~4, Lemma~5]{roga} and
+\cite[Eqs.~(3)--(6)]{fannes}; it is not a new lemma claimed here.
+Use root fidelity \(F(r,s)=\|\sqrt r\sqrt s\|_1\), rather than its
+square, and Bures distance \(d_B(r,s)=\sqrt{2(1-F(r,s))}\).
+
+\begin{lemma}[Strict loss bound]\label{lem:strict}
+Let \(\omega_{RB}\) be normalized on separable spaces, with
+\(c=I(R:B)_\omega<\infty\). For an arbitrary state \(\tau_B\), put
+\(\sigma=\omega_R\otimes\tau\), \(z=\lambda\omega+q\sigma\) and
+\(\epsilon_\lambda(x)=2\lambda q\,2^{-x}/(3\ln2)\). Then
+\[
+ 0\le \lambda c-I(R:B)_z
+ \le h(\lambda)-\epsilon_\lambda(c).                 \tag{16}
+\]
+No energy or entropy condition on \(\tau\) is required.
+\end{lemma}
+\begin{proof}
+Adjoin the binary branch flag \(X\). The two branches have the same
+reference marginal, so \(I(R:X)=0\), \(I(R:BX)=\lambda c\).
+Writing \(\chi_{RB}=I(X:RB)\), \(\chi_B=I(X:B)\), the loss \(L\) obeys
+\[
+ L=\chi_{RB}-\chi_B,\qquad
+ h(\lambda)-L=\chi_B+H(X|RB).                         \tag{17}
+\]
+All flag quantities are finite. These are chain-rule identities, not
+subtractions of possibly infinite reset or output entropies.
+
+The established bound \(D(r\Vert s)\ge-2\log_2 F(r,s)\)
+\cite{renyi} gives
+\(D(r\Vert s)\ge d_B(r,s)^2/\ln2\).
+With \(m=\lambda\omega_B+q\tau\) and \(d=d_B(\omega_B,\tau)\),
+weighted Cauchy--Schwarz and the Bures triangle inequality yield
+\[
+ \chi_B\ge\frac{\lambda d_B(\omega_B,m)^2+
+                     q d_B(\tau,m)^2}{\ln2}
+          \ge\frac{\lambda q d^2}{\ln2}.              \tag{18}
+\]
+Let \(f_0=F(\omega,\sigma)\). Uhlmann purifications of these states
+have overlap arbitrarily close to \(f_0\). Holevo information cannot
+increase under partial trace, whence the known Gram bound is
+\[
+ \chi_{RB}\le S(G),\qquad
+ G=\begin{pmatrix}\lambda&\sqrt{\lambda q}f_0\\
+                 \sqrt{\lambda q}f_0&q\end{pmatrix}.
+\]
+Since \(G\) has diagonal \((\lambda,q)\), qubit Pinsker gives
+\[
+ H(X|RB)\ge h(\lambda)-S(G)
+       =D(G\Vert\operatorname{diag}(\lambda,q))
+       \ge\frac{2\lambda q f_0^2}{\ln2}.              \tag{19}
+\]
+Set \(a=F(\omega,\omega_R\otimes\omega_B)\).
+Choose purifications of this pair with overlap approaching \(a\),
+and a purification of \(\sigma\) at vector distance approaching \(d\)
+from the second one. Their overlaps show
+\(f_0\ge(a-d)_+\). Also \(a^2\ge2^{-c}\).
+Consequently (17)--(19) and the scalar inequality
+\[
+ d^2+2(a-d)_+^2\ge\tfrac23a^2
+\]
+prove (16). For \(d\le a\) the remainder is
+\(3(d-2a/3)^2\); for \(d\ge a\) it follows from \(d^2\ge a^2\).
+
+The infinite-dimensional steps do not require finite separate entropies.
+For completeness, finite-dimensional \(D\ge-2\log_2 F\) follows by
+spectral Jensen, followed by
+\(\operatorname{Tr}\sqrt r\sqrt s\le\|\sqrt r\sqrt s\|_1\).
+Common finite-rank compression with an overflow flag, data processing
+for \(D\), and trace-norm continuity of fidelity give the separable
+version, including singular supports by limits. The Gram matrix
+always has dimension two, and approximate purifications suffice.
+The flag chain rules are well-defined because \(c\) is finite and
+the flag is finite. Thus no infinity-minus-infinity expression occurs.
+\end{proof}
+
+\begin{proposition}[Operational gap for all fixed resets]\label{prop:gap}
+For each fixed \(E>0\) and finite \(n\ge0\), the full compound reset
+family, and hence every entropy-budget subfamily, has capacity at least
+\[
+ \lambda C_{\kappa,n}(E)-h(\lambda)
+          +\epsilon_\lambda(C_{\kappa,n}(E)).        \tag{20}
+\]
+The same bound holds for every known reset.
+For unknown fixed signal parameters
+\(\kappa\in[\kappa_0,1]\), \(n\in[0,N]\), it holds with
+\(C_{\kappa_0,N}(E)\), for every finite \(E,N\), even \(N\gg E\).
+\end{proposition}
+\begin{proof}
+Write \(C_*=C_{\kappa,n}(E)\), or \(C_{\kappa_0,N}(E)\) for the
+envelope, and \(G_\lambda(x)=\lambda x+\epsilon_\lambda(x)\).
+It is strictly increasing for \(x\ge0\), since
+\(G_\lambda'(x)=\lambda-(2\lambda q/3)2^{-x}>0\).
+Pointwise application of the state lemma alone is insufficient to
+establish a common operational code, so we give that step explicitly.
+
+Fix an error in rate \(\eta>0\). Start with
+\(\gamma_{E-s}\), where \(s>0\) leaves physical energy slack.
+Condition it on input levels \(0,\ldots,J-1\), giving \(\sigma_J\)
+of mean at most \(E-s\). Its purifications converge to those of the
+thermal state. Lower semicontinuity of mutual information and thermal
+optimality at energy \(E-s\) imply
+\(I(\sigma_J,\Phi_*)\to C_*(E-s)\).
+Choose \(s,J\) with \(I(\sigma_J,\Phi_*)\ge C_*-\eta/2\).
+The signal degradation used in Proposition~\ref{prop:unknown}
+compares this same input with every signal in the envelope, for
+arbitrary finite \(N\), not just \(N\le E\).
+
+Now apply the physical output cutoff \({\cal D}_T\), retaining levels
+\(0,\ldots,T\) and sending the rest to an orthogonal flag.
+All signal outputs have mean at most \(E+N\).
+Their cutoff tail is at most \(p_T=(E+N)/(T+1)\).
+After insertion into a common space the trace distance is at most
+\(e_T=\sqrt{p_T}+p_T/2\).
+With the fixed reference dimension \(J\), Winter's conditional-entropy
+bound \cite[Lemma~2]{winter} bounds the information error by
+\[
+ 2e_T\log_2 J+(1+e_T)h(e_T/(1+e_T))\longrightarrow0.
+\]
+Thus one finite \(T\) gives signal information at least \(C_*-\eta\)
+for all signals. The output entropy of the reset was never bounded.
+Each effective mixture is finite-dimensional and has arbitrary reset
+\({\cal D}_T(\tau)\). Lemma~\ref{lem:strict} and monotonicity of
+\(G_\lambda\) give the same information lower bound
+\(G_\lambda(C_*-\eta)-h(\lambda)\) for every channel, taking
+\(\eta<C_*\).
+
+For clarity, the cost-preserving type step can be made exact.
+Approximate the Fock probabilities of \(\sigma_J\) by a type \(p_l\)
+with mean at most \(E\), and let \(\pi_l\) be uniform on that exact
+type subspace. Put \(\rho_l=\operatorname{diag}(p_l)\) and
+\(d_l=D(\pi_l\Vert\rho_l^{\otimes l})\le J\log_2(l+1)\).
+For any effective finite channel \(M\), its output and complementary
+total correlations \(D_{\rm out},D_{\rm env}\) satisfy
+\[
+ I(\pi_l,M^{\otimes l})
+ =lI(\rho_l,M)-d_l-D_{\rm out}+D_{\rm env}
+ \ge lI(\rho_l,M)-2d_l .
+\]
+Here \(D_{\rm out}\le d_l\) by data processing; both relative entropies
+are finite by domination of the type state by its product state.
+Finite reference dimension makes
+\(I(\rho_l,M)\to I(\sigma_J,M)\) uniform in \(M\).
+Apply the arbitrary-index finite compound coding theorem
+\cite[Theorem~1, Lemma~9]{compound} on this same type subspace.
+The classical assisted rate is twice its quantum assisted rate by
+superdense coding. Every encoded state has mean physical cost at most
+\(E\) per use. First take the outer coding limit at fixed cuts and type;
+then optimize the finite type, cuts and slack. This proves (20).
+The cutoff is implemented at the receiver of the original channel.
+No uniform blocklength in \(E,N\), or changing channel within a block,
+is asserted.
+\end{proof}
+
+\section{Necessity of the sublinear thermal regime}
+\begin{proof}[Proof of necessity in Theorem~\ref{thm:sharp}]
+For fixed \(r>0\), put \(n=rE\). In (C), \(M/E\to\kappa+\delta r\) and
+\[
+ D/E\to d_r=\sqrt{[\delta+(1+\kappa)r]^2-4\kappa r^2},
+ \qquad
+ u_{l,s}/E\to\tfrac12[d_r\mathbin{\pm}\delta(1-r)].
+\]
+The identity \(d_r^2-\delta^2(1-r)^2=4\delta r>0\)
+shows that both complementary occupations grow linearly with
+positive coefficients and \(u_lu_s/E^2\to\delta r\).
+The expansion \(g(x)=\log_2x+\log_2e+o(1)\) therefore yields
+\[
+ C_{\kappa,rE}(E)\longrightarrow
+ K_r=\log_2\left(1+\frac{\kappa}{\delta r}\right).     \tag{21}
+\]
+If \(n(E)\) is not \(o(E)\), there are \(r>0\) and an unbounded
+subsequence on which \(n(E)\ge rE\).
+Receiver Gaussian-noise order and (21) give
+\(C_{\kappa,n(E)}(E)\le K_r+1\) eventually there.
+Proposition~\ref{prop:gap} implies, uniformly over every budget,
+\[
+ D_Y(E,n(E),B)
+ \le h(\lambda)-\epsilon_\lambda(K_r+1),
+ \qquad Y\in\{{\rm ind},\cmp\}.                     \tag{22}
+\]
+Take \(B(E)=\log_2(E+1)\). The target curve is exactly \(h(\lambda)\)
+for Shannon, and tends to it for every fixed finite \(\alpha>1\).
+The positive constant in (22) prevents the complete uniform law.
+This also covers bounded signal benchmarks larger than the flag
+entropy, where nonnegativity of capacity alone would not suffice.
+
+For the envelope use the same reasoning at the worst signal
+\((\kappa_0,N(E))\), with the compound version of (20).
+Its construction was valid at every finite \(E,N\).
+If \(N/E\) fails to vanish there is the same positive subsequential
+separation. The preceding sublinear proof, including pure-loss
+subsequences, supplies the other implication.
+\end{proof}
+
+\section{The complete unassisted thermal curves}
+\label{sec:unassisted}
+This section changes the operational resource: no preshared entanglement
+is supplied. Unrestricted block inputs may be entangled across uses;
+the constructive lower bound uses local mixed preparations and a
+collective quantum receiver. All other cost, error and fixed-channel
+conventions remain as above. Define \(C_{\rm cl}\) to be this unassisted
+classical capacity and put
+\[
+ G_{\kappa,n}(E)=g(\kappa E+t)-g(t),\qquad t=(1-\kappa)n.
+\]
+This established signal capacity is attained by a Gaussian coherent
+ensemble \cite{gaussiancl}. Its multimode minimum-output-entropy theorem
+is imported, not reproved here. Replace \(\CEA\) by \(C_{\rm cl}\) and
+the benchmark \(C\) by \(G\) in the individual and compound deficits;
+write the results \(D^U_Y\). For an unknown signal envelope use
+\(G_\star=G_{\kappa_0,N}(E)\).
+
+\begin{theorem}[Complete unassisted thermal curves]
+\label{thm:unassisted}
+Fix the interior parameters and entropy orders above.
+For every nonnegative thermal path \(n(E)\), both
+\[
+ \sup_{B\ge0}|D^U_Y(E,n(E),B)-f(t_\alpha(E,B))|\longrightarrow0,
+ \qquad Y\in\{{\rm ind},\cmp\},
+\]
+hold if and only if \(n(E)=o(E)\).
+For the unknown fixed family
+\(\kappa\in[\kappa_0,1]\), \(n\in[0,N(E)]\), the analogous complete
+curves hold if and only if \(N(E)=o(E)\).
+Zero, bounded and oscillating baths are included. Known \(\kappa\)
+and worst-family \(\kappa_0\) stay strictly below one.
+There is no uniform blocklength claim.
+\end{theorem}
+
+\subsection{Same-input transfer and the Gaussian gap}
+Let \(\omega_{RB}\) be the signal state with a fixed finite-entropy
+reference \(\rho_R\), and let a measurement \(R\to X\) prepare an
+ensemble. Write \(I_s=I(R:B)_\omega\), \(J_s=I(X:B)_\omega\), and use
+\(I_z,J_z\) for the corresponding quantities after the reset mixture.
+For the branch flag \(F\), independent of \(R,X\), chain rules give
+\[
+ I_z=\lambda I_s-L_R,\quad J_z=\lambda J_s-L_X,\qquad
+ L_R=I(R:F|B),\quad L_X=I(X:F|B).
+\]
+Data processing is on \(R\), not on the conditioning system \(B\);
+thus \(0\le L_X\le L_R\) and
+\begin{equation}
+ 0\le I_z-J_z\le\lambda(I_s-J_s).          \tag{U1}\label{eq:transferU}
+\end{equation}
+These are finite relative-entropy informations bounded by
+\(2S(\rho_R)\); the losses are at most \(h(\lambda)\).
+There is no subtraction of infinite reset entropies.
+Infinite-dimensional CMI and its data processing are established
+\cite[Section6.1, Theorem2]{cmiinf}. For continuous heterodyne outcomes,
+use nested finite Borel partitions generating the outcome sigma-algebra.
+Relative-entropy information increases to its continuous-ensemble value,
+so the inequalities pass to the limit; differential entropy is not used.
+
+For a purification of \(\gamma_E\), reference heterodyne has amplitude
+variance \(E+1\) and prepares coherent input amplitude
+\(\sqrt{E/(E+1)}\,\overline{\alpha}\), of variance \(E\).
+Thus \(I_s=C\), \(J_s=G\). The emitter prepares the resulting coherent
+states locally; it need not share or measure the analytical reference.
+Equation \eqref{eq:transferU} compares this input and ensemble, not the
+optimized assisted and unassisted capacities for arbitrary resets.
+
+For \(E,t>0\), set \(A=\delta(E+n)+1\). Direct algebra gives
+\[
+ D^2-A^2=4\kappa Et,\qquad
+ u_lu_s=Et\left(1-\frac{2\kappa}{D+A}\right),\qquad
+ \frac{2\kappa}{D+A}\le\frac1{t+1}.
+\]
+The expansion
+\[
+ g(x)=\log_2x+\log_2e+r(x),\quad
+ r(x)=\frac1{\ln2}\int_0^1\ln(1+s/x)\,ds,\quad
+ 0\le r(x)\le\frac1{2x\ln2}
+\]
+then yields the uniform bound
+\begin{equation}
+ 0\le\Delta_{\kappa,n}(E):=C_{\kappa,n}(E)-G_{\kappa,n}(E)
+ \le\log_2(1+1/t)+\frac{1/E+1/t}{2\ln2}.   \tag{U2}\label{eq:gapU}
+\end{equation}
+Negative remainders from \(g(u_l),g(u_s)\) only improve this upper
+bound. Nonnegativity is reference-measurement data processing.
+The bound needs \(t>0\) but no \(n=o(E)\); for \(t\ge cE\) it is
+\(O(E^{-1})\) uniformly even when \(\kappa\) approaches one.
+At \(\kappa=1\), treat \(t=0\) separately:
+\(G=g(E)\), \(C=2g(E)\).
+
+\subsection{A common unassisted code with physical cost}
+Here are the operational steps behind the lower bound; pointwise
+Holevo information alone would not suffice. At fixed finite \(E,N\),
+start with the coherent Gaussian ensemble of mean \(E'=E-s<E\).
+Condition its amplitude on \(|\beta|^2\le L\). The discarded probability
+is \(\varepsilon=e^{-L/E'}\), its conditional mean cost is \(L+E'\),
+and the Holevo loss for every output channel is at most
+\[
+ h(\varepsilon)+\varepsilon g(L+E').
+\]
+This follows by retaining the disk indicator and applying data processing
+to its tail ensemble at the input. The retained average obeys
+\(\rho_L\le\gamma_{E'}/(1-\varepsilon)\).
+Partition the disk into finitely many cells of diameter \(d\).
+Each letter is the conditional mixed coherent preparation in its cell,
+preserving the average and cost exactly. After displacement by a cell
+representative its mean energy is at most \(d^2\); forgetting its internal
+position loses at most \(g(d^2)\) information through any channel.
+The letter support need not have finite Fock dimension.
+
+Cut the receiver output at \(T\) with an orthogonal overflow flag.
+The signal average energy is at most \(E+N\), so its overflow probability
+is at most \((E+N)/(T+1)\). With \(J\) letters, finite-reference
+continuity \cite[Lemma2]{winter} controls its Holevo loss uniformly by
+\[
+ W(e,J)=2e\log_2J+(1+e)h(e/(1+e)),\qquad
+ e\le\sqrt{p_T}+p_T/2.
+\]
+The reset is not approximated uniformly in trace norm. Its original
+top-\(m\) part is mapped to a support of rank at most \(m+1\), including
+overflow, capturing at least \(1-\eta_m\) reset mass. The compressed
+signal mass there is at most \((m+1)\nu\), where
+\[
+ \nu=\max\left\{\frac1{(1+\kappa_0E')(1-\varepsilon)},p_T\right\}.
+\]
+The induced flag-entropy bound is
+\[
+ H(F|B_{\rm cut})\le f(\eta_m)
+       +b(\min\{\lambda,\lambda(m+1)\nu\},q).
+\]
+The support test estimates this entropy; it is not the common decoder.
+It uses the reset's original spectral tail, without asserting preservation
+of its entropy budget by compression.
+
+Approximate the \(J\) probabilities by a rational type with strict cost
+slack. Every word has the same expected physical cost. For a type of
+length \(\ell\), uniform type-word preparation has Holevo information
+\[
+ \chi_{\rm type}=\ell\chi(p_\ell,W)
+       -D(\omega_\ell\Vert W(p_\ell)^{\otimes\ell}),\qquad
+ D(\omega_\ell\Vert W(p_\ell)^{\otimes\ell})
+       \le d_\ell\le J\log_2(\ell+1).
+\]
+The first identity uses its identical one-site marginals; the inequality
+is input type divergence followed by data processing. There is only one
+\(d_\ell\) loss. Apply the arbitrary-index finite cq compound coding
+theorem \cite[Theorem3.1 and direct Theorem5.10]{cqcompound} to the finite
+superalphabet of these words and the finite output. Its unknown index
+includes \(\kappa,n,\tau\); encoder and decoder are common. The outer
+code concatenates type words and hence preserves the physical cost of
+each message. Fix all cuts, letters and types before taking its coding
+limit, then optimize these finite choices.
+
+For explicit budget uniformity take \(E'=E-1\), make the disk, cell and
+continuity errors at most \(E^{-2}\), and choose \(p_T\le E^{-3}\).
+The benchmark cost loss is at most \(\log_2(E/(E-1))\), obtained by
+integrating its derivative with signal noise fixed. For Shannon choose
+\(m=\lfloor E/\ln(E+1)\rfloor\), and for fixed \(\alpha>1\) choose
+\(m=\lfloor\sqrt E\rfloor\). The spectral-tail bounds and continuity of
+\(f\) used above then give
+\begin{equation}
+ C_{{\rm cl},\cmp}\ge\lambda G_\star-f(t_\alpha(E,B))-o(1),
+                                                 \tag{U3}\label{eq:cqU}
+\end{equation}
+uniformly all finite budgets, whenever \(N=o(E)\).
+For a known signal use its \(G\). This lower construction itself does
+not need a diverging bath.
+
+\subsection{Diverging-bath comparison and necessity}
+An unassisted code is an admissible assisted code. Therefore
+\[
+ D^U_Y\ge D^{\rm EA}_Y-\lambda(C_\star-G_\star).
+\]
+For known \(n\to\infty\), or the worst envelope \(N\to\infty\),
+\eqref{eq:gapU} makes this gap vanish. The earlier assisted curve and
+\eqref{eq:cqU} sandwich both unassisted deficits. Only the worst-pair
+gap is needed; it is not assumed small in each cold family member.
+This supplies an alternative sufficiency proof for a diverging bath.
+The block argument below removes that premise; neither route assumes
+additivity of the mixed reset channel.
+
+For necessity the strict state inequality above and
+\eqref{eq:transferU} give, for the same coherent ensemble,
+\[
+ J_z\ge\lambda G-h(\lambda)+\epsilon_\lambda(C).
+\]
+To obtain a uniform code at any fixed finite \(E,N\), not only in a
+sublinear envelope, compress the thermal reference analytically onto
+levels \(0,\ldots,J_R-1\) with a failure flag. Its tail mass is
+\(\varepsilon_R=(E/(E+1))^{J_R}\); its normalized tail entropy is \(g(E)\).
+Recording and discarding the binary sector, then collapsing its tail,
+costs at most
+\[
+ A_{J_R}=2h(\varepsilon_R)+2\varepsilon_Rg(E)
+\]
+mutual information, uniformly for every signal. With that finite
+reference, the physical output cutoff has information error at most
+\[
+ 0\le I_i-I_i^T
+ \le A_{J_R}+W(\sqrt{p_T}+p_T/2,J_R+1).
+\]
+First take \(J_R\) large, then \(T\) large, at fixed \(E,N\).
+For the coherent ensemble its Holevo loss is at most this information
+loss by CMI data processing on \(R\to X\) in an isometric dilation of
+the cutoff. Apply the transfer and strict inequalities to the same
+effective signal and compressed reset. Subsequent disk, cell and type
+steps yield a common operational strict rate. One can start at mean
+\(E\): conditioning on a finite disk creates the strict slack for types.
+This proves a known-signal deficit at most
+\(h(\lambda)-\epsilon_\lambda(C)\) for every budget.
+If \(n/E\) fails to vanish, the earlier critical benchmark limit bounds
+\(C\) on a subsequence and the gap stays positive.
+
+For an unknown envelope with \(N/E\) nonvanishing along a subsequence,
+write \(G_\star\le C_\star\le K<\infty\) there. The common thermal input
+has \(G_i\ge G_\star\). Members with \(G_i\ge G_\star+1\) already give
+gain at least \(\lambda\) above \(\lambda G_\star-h(\lambda)\).
+In the other stratum \(G_i<K+1\), use
+\[
+ G_i\ge\log_2\left(1+\frac{\kappa_iE}{t_i+1}\right),\qquad
+ t_i\ge\frac{\kappa_0E}{2^{K+1}-1}-1 .
+\]
+Equation \eqref{eq:gapU} gives \(C_i-G_i=O(E^{-1})\) uniformly,
+so \(C_i\le K+2\) eventually and the gain is at least
+\(\epsilon_\lambda(K+2)>0\). The identity signal lies in the first
+stratum. The uniform cutoff argument preserves one common code, not
+one code per stratum or member. At the saturating budget
+\(B(E)=\log_2(E+1)\), this positive separation excludes both complete
+curves as in the assisted proof, proving necessity.
+
+\subsection{A converse uniform in block length}
+\label{sec:blockU}
+Fix the same finite-energy witness
+\(\tau_a=(1-a)|0\rangle\langle0|+a\gamma_M\), \(a\in[0,1]\),
+throughout each block. Write
+\({\cal N}={\cal D}_{\tau_a}\circ\Phi\), with
+\({\cal D}_{\tau_a}=\lambda\id+q\tau_a\Tr\).
+Consider any finite ensemble \(\{p_x,\rho_x^{(m)}\}\) of \(m\)-mode
+inputs, possibly entangled across uses, of total mean cost at most \(mE\).
+Its Holevo information is \(J_{\cal N}^{(m)}\).
+All entropies below are finite at each finite \(m,E,n\): labels, input
+mean energy and witness energy are finite. Other admissible resets
+are not assumed to have finite energy or entropy.
+
+At use \(j\), let \(R_j=XB_{<j}\), with past outputs processed by
+\({\cal N}\), and let \(\omega_j\) be this reference and the current
+signal output before its reset mixture. Its branch flag \(F_j\) is
+independent of \(R_j\). Put \(K_j=S(B_j|R_j)_{\omega_j}\) and
+\(H_j=H(F_j|R_jB_j)\). The exact causal entropy chain rule is
+\begin{equation}
+ J_{\cal N}^{(m)}=S(B^m)_{\rm av}
+       -\lambda\sum_jK_j-mqS(\tau_a)-mh(\lambda)+\sum_jH_j .
+ \tag{U4}\label{eq:causalU}
+\end{equation}
+The reference includes the message and quantum past; it is not a
+receiver supplied with the message. Degrading the all-signal past by
+\({\cal D}_{\tau_a}\) increases conditional entropy. The established
+tensor-power minimum-output theorem
+\cite[Eq.(2)]{gaussiancl}\cite[Proposition4, Sections6--7]{optimizer} gives
+\begin{equation}
+ \sum_jK_j\ge S(B^m|X)_{\Phi^{\otimes m}}\ge m g(t).
+ \tag{U5}\label{eq:summedU}
+\end{equation}
+This is a summed floor; individual \(K_j\) may be negative.
+The flat Choi order extends from purifications to mixed quantum
+references by reference processing. Hence
+\[
+ \omega_j\le c\rho_{R_j}\otimes I,\quad
+ c=(t+1-\kappa)^{-1},\qquad d_j=\log_2c+K_j\ge0.
+\]
+
+Blocks with \(J_{\cal N}^{(m)}/m<\lambda G-h(\lambda)-1\) already
+satisfy the desired converse. Consider all others.
+Let \(\mu_j,S_j\) be the mean and entropy of the average signal marginal.
+The cost gives \(\sum_j\mu_j\le mM\), not an individual bound
+\(\mu_j\le M\). Group signal and thermal reset against vacuum, of weight
+\(P_a=\lambda+qa\), then use concavity after summing positions:
+\[
+ S(B^m)_{\rm av}\le m[h(P_a)+P_ag(M)],\quad
+ S(\tau_a)\ge h(a)+ag(M)-h(a/(M+1)).
+\]
+Equation \eqref{eq:causalU} therefore yields
+\begin{equation}
+ J_{\cal N}^{(m)}
+ \le m\lambda G-mf(a)-\lambda\left(\sum_jK_j-mg(t)\right)
+              +\sum_jH_j+mqh(a/(M+1)).          \tag{U6}\label{eq:blockboundU}
+\end{equation}
+Using \(H_j\le h(\lambda)\) and the near-capacity assumption gives
+\[
+ \frac1m\sum_jd_j\le C_d,\qquad
+ C_d=\log_2e-\log_2(1-\kappa)
+                  +\frac{2h(\lambda)+1+q}{\lambda}.
+\]
+Here \(g(t)+\log_2c\le\log_2e-\log_2(1-\kappa)\).
+The constant is independent of block length, noise, reset weight,
+message count and energy sharing.
+
+The alternative bound
+\(S(B^m)_{\rm av}\le\sum_j[\lambda S_j+qS(\tau_a)+h(\lambda)]\)
+shows that \(\sum_jS_j\ge mg(M)-mC_s\),
+\(C_s=(2h(\lambda)+1)/\lambda\).
+With the common thermal comparator \(\gamma_M\) and
+\(\beta_M=\log_2(1+1/M)\),
+\[
+ \sum_jD((\omega_j)_{B_j}\Vert\gamma_M)
+ =mg(M)-\sum_jS_j+\beta_M\left(\sum_j\mu_j-mM\right)\le mC_s.
+\]
+Binary vacuum/rest data processing bounds its average vacuum mass by
+\[
+ \frac1m\sum_j w_j\le\frac{C_s+1}{\log_2(M+1)}.
+\]
+No individual near-thermal output assumption is needed.
+
+Set \(S=c(M+1)\), \(u=\sqrt{\ln S}\),
+\(T=\lceil(M+1)u\rceil\), \(P_B=\sum_{r=1}^T|r\rangle\langle r|\),
+\(p_j=\Tr(I_{R_j}\otimes P_B)\omega_j\), \(v=\Tr P_B\gamma_M\).
+For \(n=o(E)\), \(M,S\to\infty\) and \(v\to1\). The total-energy
+tail bound gives
+\[
+ \frac1m\sum_j(1-p_j)\le
+ A_E:=\frac{C_s+1}{\log_2(M+1)}+\frac1u\longrightarrow0.
+\]
+Let \(\ell_E=\log_2S\), \(\varepsilon_E=\sqrt{A_E}\).
+Call a position good when \(p_j\ge1-\varepsilon_E\) and
+\(d_j\le\sqrt{\ell_E}\). Markov bounds the fraction of bad positions:
+\begin{equation}
+ \frac{\#\{\text{bad }j\}}m
+ \le\sqrt{A_E}+\frac{C_d}{\sqrt{\ell_E}}\longrightarrow0.
+ \tag{U7}\label{eq:badU}
+\end{equation}
+This uses no union bound over the block.
+
+For each good position use the original reference \(\rho_{R_j}\)
+in the earlier pinching argument. With the normalized window state
+\(\omega_{jg}\) and
+\(\sigma_{jg}=\rho_{R_j}\otimes P_B\gamma_MP_B/v\), it gives
+\[
+ D_0(\omega_{jg})\ge\log_2c-\frac{d_j+h(p_j)}{p_j},\quad
+ L_j=(S/p_j)v(M/(M+1))^{-T},\quad \omega_{jg}\le L_j\sigma_{jg},
+\]
+\[
+ D(\omega_{jg}\Vert\sigma_{jg})
+ \ge\ell_E+\log_2v-\frac{d_j+1}{p_j},\quad
+ \log_2L_j=\ell_E+\log_2v-\log_2p_j+T\beta_M .
+\]
+The functional \(D_0\) includes
+\(D(\rho_{R_j}^g\Vert\rho_{R_j})\); it is not posterior conditional
+entropy alone. Common finite compressions with a normalized overflow
+flag preserve order and converge in trace norm. Data processing and
+lower semicontinuity extend normalized TRE to this separable reference
+with the same dimension-independent constant.
+
+An explicit error is obtained by defining
+\[
+ D_-=\ell_E+\log_2v-\frac{\sqrt{\ell_E}+1}{1-\varepsilon_E},
+ \quad L_+=\ell_E-\log_2(1-\varepsilon_E)+T\beta_M,\quad
+ r_E=1-\frac{(1-1/(Sv))D_-}{L_+}.
+\]
+These formulas are used eventually when \(D_->0\), \(Sv>1\)
+and \(\varepsilon_E<1/2\); \(r_E\to0\).
+TRE gives \(\tfrac12\|\omega_{jg}-\sigma_{jg}\|_1\ge1-r_E\).
+A Helstrom test supported on the nonvacuum window has summed normalized
+errors at most \(r_E\). On the original signal its failure is at most
+\(\varepsilon_E+r_E\); on the reset its acceptance is
+\(av\Tr Q_j\sigma_{jg}\). The binary branch error is at most
+\(\varepsilon_E+r_E\). For large energy Fano and \eqref{eq:badU} yield
+\begin{equation}
+ \frac1m\sum_jH_j
+ \le h(\varepsilon_E+r_E)
+       +h(\lambda)\left(\sqrt{A_E}+\frac{C_d}{\sqrt{\ell_E}}\right)
+ =:\eta_E\longrightarrow0.                    \tag{U8}\label{eq:flagmeanU}
+\end{equation}
+The tests bound already-conditioned entropies, not an operational code.
+
+Equations \eqref{eq:summedU}, \eqref{eq:blockboundU} and
+\eqref{eq:flagmeanU} now imply for every block ensemble and length
+\[
+ J_{\cal N}^{(m)}/m\le
+       \lambda G-f(a)+qh(a/(M+1))+\eta_E.
+\]
+The error is uniform in length, message count, entanglement, energy sharing
+and \(a\). Holevo--Fano bounds the regularized operational capacity by
+the same expression, taking its coding limit before the energy limit.
+The admissible Shannon witness is the clipped choice from Section6;
+for fixed \(\alpha>1\), choose \(a=t_\alpha\) exactly, since
+\(\Tr\tau_a^\alpha\ge(1-a)^\alpha\).
+Together with \eqref{eq:cqU}, this proves sufficiency without bath
+divergence. For the unknown family the converse selects only its worst
+signal; the lower code remains common. The preceding necessity finishes
+both equivalences, without assuming additivity of the mixed channel.
+
+\section{Amplification, additive noise and a larger unknown family}
+\label{sec:generalU}
+The unassisted argument has a wider signal class. Let \(\Psi_{\kappa,t}\)
+be a centered phase-insensitive gauge-covariant Gaussian channel with
+\[
+ \chi_{\rm out}(z)=\chi_{\rm in}(\sqrt\kappa z)
+       e^{-[t+(1-\kappa)/2]|z|^2},\qquad
+ \kappa>0,\quad t\ge(\kappa-1)_+ .
+\]
+Its vacuum output is \(\gamma_t\), its output mean for input mean \(e\)
+is \(\kappa e+t\), and its established unassisted signal capacity is
+\(G_{\kappa,t}(E)=g(\kappa E+t)-g(t)\)
+\cite[Eqs.(24)--(29)]{gaussiancl}\cite[Section7]{optimizer}.
+The tensor-power minimum output entropy is \(m g(t)\), including
+entangled finite-energy inputs.
+For \(0<\kappa<1\), \(t=(1-\kappa)n\) is thermal loss;
+for \(\kappa>1\), \(t=(\kappa-1)(n+1)\) is thermal amplification;
+for \(\kappa=1\), \(t\) is additive classical Gaussian noise.
+These Gaussian formulas are antecedents, not new signal-capacity claims.
+Use the same reset mixture and unassisted operational conventions,
+and define its deficits relative to \(\lambda G_{\kappa,t}\).
+For fixed \(0<\kappa_0<1\le\kappa_+<\infty\), write
+\[
+ {\cal F}_{E,T,B}=
+ \left\{\lambda\Psi_{\kappa,t}+q\tau\Tr:
+  \kappa_0\le\kappa\le\kappa_+,\ 
+  (\kappa-1)_+\le t\le T,\ \tau\in{\cal T}_{\alpha,B}\right\}.
+\]
+The two unknown-family deficits mean, explicitly,
+\[
+\begin{split}
+ D^U_{{\rm ind},{\cal F}}(E,T,B)
+ &=\lambda G_{\kappa_0,T}(E)
+       -\inf_{{\cal M}\in{\cal F}_{E,T,B}}C_{\rm cl}({\cal M},H,E),\\
+ D^U_{\cmp,{\cal F}}(E,T,B)
+ &=\lambda G_{\kappa_0,T}(E)
+       -C_{{\rm cl},\cmp}({\cal F}_{E,T,B},H,E).
+\end{split}
+\]
+The infimum in the first line allows a different optimal code for every
+fully known channel, including its reset. The second line requires one
+encoder and decoder, with uniform error over the joint unknown index.
+All coding limits are taken at fixed finite \(E,T,B\).
+
+\begin{theorem}[Complete curves for covariant Gaussian signals]
+\label{thm:generalU}
+For every fixed \(\kappa\ne1\), the two complete entropy-budget
+curves equal \(f(t_\alpha)+o(1)\), uniformly all finite budgets,
+if and only if \(t(E)=o(E)\).
+For fixed \(\kappa=1\), the same equivalence holds under an eventual
+lower bound \(t(E)\ge t_0>0\).
+
+Fix \(0<\kappa_0<1\) and finite \(\kappa_+\ge1\). For the unknown
+fixed family of all physically admissible pairs
+\[
+ \kappa\in[\kappa_0,\kappa_+],\qquad
+ (\kappa-1)_+\le t\le T(E),
+\]
+the corresponding two deficit curves relative to
+\(\lambda G_{\kappa_0,T}(E)\) hold if and only if \(T(E)=o(E)\).
+This includes bounded, zero and oscillating envelopes. Pure loss and
+identity may be members; amplifiers are included whenever the physical
+noise bound permits them.
+\end{theorem}
+
+\begin{proof}
+We give the exact changes to the preceding proof rather than assume
+that all Gaussian channels have the same operational constraints.
+The established Choi/reference order is
+\[
+ \omega_{RB}\le c\,\rho_R\otimes I,\qquad
+ c=\frac1{t+(1-\kappa)_+}.
+\]
+For \(\kappa\ne1\), Holevo's amplitude is \(\sqrt\kappa\) and noise
+coefficient is \(m_H=t+(1-\kappa)/2\); his norm is
+\([m_H+|1-\kappa|/2]^{-1}\)
+\cite[Proposition2 and p.13 example]{choi}.
+For \(\kappa=1,t>0\), use that source's separate Case3 on p.11:
+\(\Delta_K=0,\mu=tI\), with norm \(1/t\).
+Its nondegenerate-symplectic proposition is not invoked at \(\kappa=1\).
+
+The averaged-entropy argument of Section~\ref{sec:blockU} only requires
+this order, the linear mean, the thermal average and the tensor-power
+minimum-output theorem. Its constant \(C_d\) is replaced by
+\[
+ \frac{2h(\lambda)+1+q}{\lambda}+
+ \begin{cases}
+  \log_2e-\log_2(1-\kappa),&\kappa<1,\\
+  \log_2e+\log_2(1+1/(\kappa-1)),&\kappa>1,\\
+  \log_2e+\log_2(1+1/t_0),&\kappa=1.
+ \end{cases}
+\]
+These upper-bound \(g(t)+\log_2c\) using
+\(g(t)\le\log_2[e(t+1)]\) and the physical noise floors.
+They are fixed along each allowed path. When \(t=o(E)\),
+\(M=\kappa E+t\to\infty\) and \(S=c(M+1)\to\infty\).
+Thus the same good-position selection and uniform-in-length converse
+apply to the fixed witness. The Shannon normalization still holds since
+\(g(M)/\log_2(E+1)\to1\).
+
+For the lower code, a truncated coherent Gaussian average satisfies
+\(\rho_L\le\gamma_{E'}/(1-\varepsilon)\), so every member's average
+signal norm is at most \(1/[(1+\kappa_0E')(1-\varepsilon)]\).
+The output mean is at most \(\kappa_+E+T\).
+These replace the two signal-specific constants in the disk, cell,
+output-cut and exact-type cq construction. The same coherent ensemble
+has signal Holevo \(G_{\kappa,t}\ge G_{\kappa_0,T}\):
+the formula increases with \(\kappa\) and decreases with \(t\).
+This is an information comparison of signals, not an order imposed on
+their reset mixtures. For the unknown-family converse choose only the
+allowed worst-pair attenuator \((\kappa_0,T)\).
+
+For necessity a different standard Gaussian decomposition avoids a new
+assisted-capacity radical formula:
+\[
+ \Psi_{\kappa,t}={\cal A}_{t+1,0}\circ{\cal L}_{\eta,0},
+ \qquad \eta=\frac{\kappa}{t+1}\le1 .
+\]
+The quantum-limited amplifier has gain \(t+1\) and vacuum noise \(t\);
+gain multiplication and characteristic noise recover exactly
+\(\Psi_{\kappa,t}\). For the thermal input,
+signal-output processing bounds its reference information by the
+pure-loss assisted expression
+\[
+ I_s\le g(E)+g(\eta E)-g((1-\eta)E)
+       \le g(\eta E)-\log_2(1-\eta),\qquad \eta<1 .
+\]
+If \(t/E\ge r>0\) on a subsequence, \(\eta E\le\kappa/r\) and
+\(\eta=O(E^{-1})\), so \(I_s\le g(\kappa/r)+1\) eventually.
+The strict state gain and the common cq transfer then separate the
+deficit from \(h(\lambda)\) at the saturating budget.
+
+For the unknown family on \(T/E\ge r\), \(G_\star\) is bounded by
+\(\log_2(1+\kappa_0/r)\). Stratify as before.
+The high-\(G_i\) stratum gives gain at least \(\lambda\).
+In the other stratum \(G_i\le K+1\), use
+\[
+ G_i\ge\log_2(1+\kappa_iE/(t_i+1))
+       =\log_2(1+\eta_iE).
+\]
+Thus \(\eta_iE\le2^{K+1}-1\), \(\eta_i=O(E^{-1})\), and
+\(I_i\le g(2^{K+1}-1)+1\) uniformly eventually.
+The uniform finite-noise cutoff proof applies at each fixed \(E,T\),
+with mean bound \(\kappa_+E+T\); it supplies one common strict code
+over both strata. This proves necessity without a bath-divergence or
+EB premise. It does not determine the critical loss curve.
+\end{proof}
+
+The additive boundary \(t\to0\), including an exactly noiseless
+\(\kappa=1,t=0\) signal by itself, is not covered by this particular
+uniform-order argument. Nor does the theorem include phase-sensitive
+squeezing, unbounded gain, unknown phase, or within-block channel
+variation. No additivity or Gaussian optimizer is asserted for the
+generally non-Gaussian reset mixture.
+
+\section{Evidence, dependencies and remaining problems}
+Several nearby model classes precede this work. Finite-dimensional
+identity/replacer combinations appear in
+Giovannetti--Lloyd--Ruskai \cite[SectionIV.B, Eq.(34)]{glr}.
+Convex combinations of bosonic pure-loss channels, including the
+loss/vacuum endpoint, are studied by Catalano et al.\ \cite{fading}.
+Energy-constrained Gaussian cq compound channels with unknown noise,
+phase or attenuation are treated by Cacioppo--N\"otzel--Rosati
+\cite{energycompound}. These contextual antecedents are distinct from
+claiming new Gaussian signal formulas or a new compound coding theorem.
+The editorial abstract of Baitenov \cite{baitenov} concerns a one-shot
+capacity of shifted depolarizing channels. Its full text was not obtained;
+detailed overlap remains unverified. Literature comparison here is
+directed and does not certify worldwide priority.
+
+The strict-gap constant is not claimed optimal. The actual
+critical-regime minimax curve, quantitative uniform blocklength bounds
+and arbitrary within-block variation remain outside this result.
+Neither (21) nor (22) determines the critical loss curve.
+
+The current numerical evidence consists of 90 high-precision scalar
+controls for the earlier \(o(\sqrt E)\) working argument and 72
+noncommuting finite-state controls for the pinching/order bookkeeping.
+The latter test generic finite matrices, not the infinite Gaussian Choi
+form or an operational capacity. Neither set proves the asymptotic
+theorem. Tests, frozen inputs and reports are retained separately.
+An additional 1080 generic finite-state controls of the strict-loss
+inequalities were reproduced byte for byte during technical audit627.
+They corroborate only finite diagnostics; the state and operational
+arguments above are the proof, conditional on the cited dependencies.
+The earlier supplement provides three programs: check612 (90 scalar
+cases), check614 (72 matrix cases), and check625c (1080 strict-gap
+cases), with expected outputs, dependencies and replay records.
+The unassisted working argument adds check641 (540 finite-state and
+150 Gaussian cases); its supplied outputs were reproduced during
+technical audit644. These computations do not prove the cq theorem,
+the continuum limit or the Gaussian optimizer.
+The new check653 program tests 120 finite two- and three-use causal
+chains and a negative individual conditional-entropy example.
+The check658 program tests 360 Gaussian parameter bounds and an exact
+loss/amplifier characteristic-function identity.
+Neither program proves a block converse or capacity. The six programs
+and their expected outputs are enumerated in the supplement.
+The package does not implement an operational code or certify an
+infinite-dimensional optimizer.
+
+\appendix
+\section{Model assessments and review context}
+The named author directed substantial OpenAI Codex assistance in
+derivation, writing and numerical work.
+Requested GPT-6 Astra xhigh working-argument audits supported the
+fixed-temperature and \(o(\sqrt E)\) versions with their stated limits.
+They used shared files and reused context.
+Audit615 of the frozen broader working argument614 has since closed
+with mathematical support and minor attribution/notation clarifications,
+including the Choi form, fixed-reference pinching, infinite-reference
+limit, full two-sided minimax bounds and unknown-signal extension.
+This revision incorporates those clarifications and the exact Holevo
+Choi antecedent. That audit did not assess this exact PDF, certify
+importance or independently prove every imported coding theorem.
+Full requested-model review620 examined the preceding exact eight-page
+draft and supported its main results with a minor correction to the
+pinpoint type-bound attribution. This revision corrects that attribution
+and supplies the type and input-tail derivations explicitly.
+The original report and its objections are retained.
+It used reused context and shared files and disclosed incidental exposure
+to an older paper's public assessment during a literature search;
+no blindness or independence is claimed.
+No full assessment or numerical grade of this revised exact PDF exists.
+Full review634 of the earlier eleven-page PDF supported its assisted
+results, with optional inventory and historical-citation suggestions.
+It did not assess the unassisted section added here. This revision
+clarifies the program inventory; the earlier binary purification
+antecedent of Jain and Nayak \cite[Lemma3.7, Corollary3.8]{jainnayak}
+is also credited alongside the existing Gram references.
+Technical audit627 of the frozen strict-gap argument supported its
+state inequality, common-code transfer at finite \(E,N\), critical
+signal limit and necessity for the complete curves.
+It assigned no score, did not assess this combined manuscript and did
+not certify priority. It reused context from earlier technical audits,
+shared files and disclosed earlier assessment exposure; runtime
+independence was not attested. Its original report is retained.
+Technical audit644 supported the unassisted working argument641,
+including the finite-noise uniform cutoff and exact physical-cost
+cq code. It imports the earlier assisted and strict-gap arguments;
+it is not a full assessment of this exact combined PDF and assigned
+no numerical grade. Shared context and prior participation remain
+declared. Intermediate audit649 supported a bounded-bath EB witness route;
+its original scope and report remain retained. Technical audit654
+subsequently supported the thermal all-block argument653 without EB
+or bath divergence, including its mixed quantum references and
+dimension-independent error uniform in block length.
+It assigned no grade and did not assess this combined PDF.
+The amplification/additive-noise and enlarged-family section is a
+further authorial extension658; it was not audited in654 and must be
+examined in the full assessment of this exact manuscript.
+The preceding public entropy/optical manuscript has its own preserved
+assessment; its grade is not transferred to this draft.
+No independently attested runtime isolation or model identity,
+independent human review, Lean verification, worldwide originality,
+editorial acceptance, or predicted importance is claimed.
+Literature reading has been directed: specified Gaussian/coding
+passages, Shirokov's mixture bound, and Audenaert's Theorem4, Corollary1
+and selected proof pages. It is not an exhaustive literature sweep
+or an audit of all dependencies.
+
+\begin{thebibliography}{99}\small
+\bibitem{glr} V. Giovannetti, S. Lloyd and M. B. Ruskai,
+\emph{Conditions for the multiplicativity of maximal \(l_p\)-norms of
+channels for fixed integer \(p\)},
+\href{https://arxiv.org/abs/quant-ph/0408103v3}
+{arXiv:quant-ph/0408103v3} (2005), SectionIV.B, Eq.(34).
+\bibitem{fading} G. Catalano, M. Fanizza, F. A. Mele,
+G. De Palma and V. Giovannetti,
+\emph{Convex combinations of bosonic pure-loss channels},
+\href{https://arxiv.org/abs/2604.26874v2}{arXiv:2604.26874v2}
+(2026), selected model and optical endpoints.
+\bibitem{energycompound} A. Cacioppo, J. N\"otzel and M. Rosati,
+\emph{Compound Channel Capacities under Energy Constraints and Application},
+\href{https://arxiv.org/abs/2105.04274v1}{arXiv:2105.04274v1}
+(2021), contextual energy-constrained cq coding antecedent.
+\bibitem{baitenov} E. L. Baitenov,
+\emph{On Jensen Gap and Capacity of a Shifted Depolarizing Quantum Channel},
+Proc. Steklov Inst. Math.\ \textbf{324}, 33--43 (2024),
+\href{https://doi.org/10.1134/S0081543824010048}
+{doi:10.1134/S0081543824010048}. Editorial abstract only;
+full text not obtained.
+\bibitem{optimizer} V. Giovannetti, A. S. Holevo and R. Garc\'ia-Patr\'on,
+\emph{A solution of the Gaussian optimizer conjecture},
+\href{https://arxiv.org/abs/1312.2251v1}{arXiv:1312.2251v1}
+(2013), Proposition4, Eqs.(25)--(26), Sections6--7; finite second moments.
+\bibitem{gaussiancl} V. Giovannetti, R. Garc\'ia-Patr\'on,
+N. J. Cerf and A. S. Holevo,
+\emph{Ultimate communication capacity of quantum optical channels by solving the Gaussian minimum-entropy conjecture},
+\href{https://arxiv.org/abs/1312.6225v1}{arXiv:1312.6225v1}
+(2013), selected capacity derivation and Eq.(25).
+\bibitem{cqcompound} I. Bjelakovi\'c and H. Boche,
+\emph{Classical Capacities of Averaged and Compound Quantum Channels},
+\href{https://arxiv.org/abs/0710.3027v2}{arXiv:0710.3027v2}
+(2009 revision; first submitted 2007), Theorem3.1 and direct Theorem5.10.
+\bibitem{cmiinf} M. E. Shirokov,
+\emph{Measures of quantum correlations in infinite-dimensional systems},
+\href{https://arxiv.org/abs/1506.06377v2}{arXiv:1506.06377v2},
+Section6.1, Theorem2 and selected extension proof.
+\bibitem{jainnayak} R. Jain and A. Nayak,
+\emph{Accessible versus Holevo Information for a Binary Random Variable}
+(2007), Lemma3.7 and Corollary3.8.
+\href{https://www.math.uwaterloo.ca/~anayak/papers/JainN07.pdf}
+{Author-hosted manuscript}.
+\bibitem{hw} A.~S. Holevo and R.~F. Werner,
+\emph{Evaluating capacities of Bosonic Gaussian channels},
+\href{https://arxiv.org/abs/quant-ph/9912067v1}
+{arXiv:quant-ph/9912067v1} (1999), selected Sections IV.C, V.A.
+\bibitem{hs} A.~S. Holevo and M.~E. Shirokov,
+\emph{On the entanglement-assisted classical capacity of
+infinite-dimensional quantum channels},
+\href{https://arxiv.org/abs/1210.6926v2}{arXiv:1210.6926v2}
+(2013), Theorem1.
+\bibitem{gain} A.~S. Holevo,
+\emph{The entropy gain of infinite-dimensional quantum channels},
+\href{https://arxiv.org/abs/1003.5765v1}{arXiv:1003.5765v1}
+(2010), Proposition2.
+\bibitem{winter} A. Winter,
+\emph{Tight uniform continuity bounds for quantum entropies:
+conditional entropy, relative entropy distance and energy constraints},
+\href{https://arxiv.org/abs/1507.07775v6}{arXiv:1507.07775v6}
+(2016), Lemma2.
+\bibitem{compound} M. Berta, H. Gharibyan and M. Walter,
+\emph{Entanglement-assisted capacities of compound quantum channels},
+\href{https://arxiv.org/abs/1603.02282v2}{arXiv:1603.02282v2}
+(2017), Theorem1, Lemma9 and assisted-capacity equivalence.
+\bibitem{shirokov} M.~E. Shirokov,
+\emph{Convergence conditions for the quantum relative entropy and other
+applications of the generalized quantum Dini lemma},
+\href{https://arxiv.org/abs/2205.09108v2}{arXiv:2205.09108v2}
+(2022), selected Eq.(11), Section5.2.
+\bibitem{choi} A.~S. Holevo,
+\emph{On the Choi-Jamiolkowski Correspondence in Infinite Dimensions},
+\href{https://arxiv.org/abs/1004.0196v3}{arXiv:1004.0196v3}
+(2011), Proposition2 and one-mode example on p.13.
+\bibitem{audenaert} K.~M.~R. Audenaert,
+\emph{Telescopic Relative Entropy},
+\href{https://arxiv.org/abs/1102.3040v2}{arXiv:1102.3040v2}
+(2011), Theorem4 and Corollary1.
+\bibitem{previous} L. Eriksson,
+\emph{Sharp entropy budgets for communication with unknown resets and
+optical loss}, AIRR.SCIENCE ARR-2026-7SWAJZ0X278GJ9NK, v1
+(2026), Working paper.
+\url{https://airr.science/papers/ARR-2026-7SWAJZ0X278GJ9NK/versions/v1/}.
+\bibitem{roga} W. Roga, M. Fannes and K. \.{Z}yczkowski,
+\emph{Universal bounds for the Holevo quantity, coherent information
+and the Jensen--Shannon divergence},
+\href{https://arxiv.org/abs/1004.4782v1}{arXiv:1004.4782v1}
+(2010), Corollary4 and Lemma5.
+\bibitem{fannes} M. Fannes, F. de Melo, W. Roga and K. \.{Z}yczkowski,
+\emph{Matrices of fidelities for ensembles of quantum states and
+the Holevo quantity},
+\href{https://arxiv.org/abs/1104.2271v1}{arXiv:1104.2271v1}
+(2011), Eqs.(3)--(6); that source uses squared fidelity.
+\bibitem{renyi} M. M\"uller-Lennert, F. Dupuis, O. Szehr,
+S. Fehr and M. Tomamichel,
+\emph{On quantum R\'enyi entropies: a new generalization and some
+properties},
+\href{https://arxiv.org/abs/1306.3142v4}{arXiv:1306.3142v4}
+(2013), order-one-half fidelity identity and Theorem7.
+\end{thebibliography}
+\end{document}
