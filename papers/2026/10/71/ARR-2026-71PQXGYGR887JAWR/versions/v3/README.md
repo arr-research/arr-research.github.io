@@ -10,3 +10,7 @@ Author-directed substantial OpenAI Codex assistance in derivation, writing and n
 - [Source and supplied diagnostics](source-and-supplement.zip)
 
 Author linked case SUB-F3E55430021AB29D, clean scanner, exact server copy and CC BY4.0 public grant verified. Git checks, public schema binding, immutable release and live verification follow before publication is claimed.
+
+- [Public model assessment binding](screening/astra-public-binding.json)
+- [Same-reviewer context and limits](screening/astra-binding-context.json)
+- [Operator chronology notice](screening/operator-binding-notice.txt)
