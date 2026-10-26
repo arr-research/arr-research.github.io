@@ -1,0 +1,695 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=27mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,amsmath,amssymb,amsthm,booktabs,microtype}
+\usepackage[colorlinks=true,allcolors=blue]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\CEA}{C_{\mathrm{EA}}}
+\newcommand{\Rcal}{\mathcal R}
+\newcommand{\Tcal}{\mathcal T}
+\newcommand{\comp}{\mathrm{cmp}}
+\title{Sharp entropy budgets for communication\\with unknown resets and optical loss}
+\author{Lluis Eriksson}
+\date{26 October 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+A memoryless reset channel transmits the input with fixed probability
+\(0<\lambda<1\) and otherwise prepares a state \(\tau\).
+We investigate recovery of its flagged-erasure capacity benchmarks when
+only an entropy budget on the reset is available, with no bound on its
+energy or orientation. For oscillator input energy \(E\), and each fixed
+finite R\'enyi order \(\alpha>0\), the sharp conditions for uniform absolute
+entanglement-assisted recovery are \(2^{B(E)}/E\to0\) for \(\alpha<1\),
+\(B(E)/\log_2(E+1)\to0\) for \(\alpha=1\), and \(B(E)\to0\) for
+\(\alpha>1\). The sufficient conditions recover four benchmarks even with
+one encoder and decoder for the entire compound channel class.
+For Shannon and fixed super-Shannon order we further determine the full
+bounded entanglement-assisted minimax loss, uniformly over every budget:
+\(b(\lambda,q\min\{1,B/\log_2(E+1)\})\) and
+\(b(\lambda,q[1-2^{-((\alpha-1)/\alpha)B}])\), respectively, up to
+absolute \(o(1)\), where \(q=1-\lambda\) and
+\(b(u,v)=(u+v)h(u/(u+v))\).
+Known-noise and unknown-fixed-noise minimax losses coincide asymptotically.
+The same loss curves hold with a quantum-limited attenuator in the
+transmitted branch, uniformly over transmissivities bounded away from
+zero, relative to its attenuated flagged benchmark. One common assisted
+code handles an unknown fixed reset and an unknown fixed transmissivity.
+A fixed finite output compression, spectral branch-information bounds and
+exact type-subspace blocking preserve the physical input constraint.
+A vacuum--thermal mixture supplies the converse through a finite-flag
+continuity argument. Finite-codimension energy avoidance also gives uniform
+pointwise recovery of two-way benchmarks. Spectral approximation estimates
+and compound coding theorems are established ingredients; the claimed
+addition concerns their operational entropy-budget quantifiers and the
+matching uniform loss curves.
+The noise is fixed throughout a code block. No error-exponent, arbitrarily
+varying-channel or universal two-way coding result is asserted.
+\end{abstract}
+
+\section{Model and the distinction between two kinds of uniformity}
+Let \(\mathcal H=\ell^2(\mathbb N_0)\), let
+\(H=\sum_{j\ge0}j|j\rangle\langle j|\), and put \(q=1-\lambda\), with
+\(0<\lambda<1\) fixed. The channel is
+\[
+ \Rcal_\tau(\rho)=\lambda\rho+q\tau\Tr\rho .
+\]
+The reset is a density operator on \(\mathcal H\). Its eigenvectors need
+not have finite energy. Write
+\[
+ g(E)=(E+1)\log_2(E+1)-E\log_2E,\qquad
+ h(x)=-x\log_2x-(1-x)\log_2(1-x).
+\]
+All information quantities are in bits. The six capacity conventions and
+their erasure coefficients are
+\[
+\begin{array}{c|cccccc}
+ X&C&\CEA&Q&P&Q_2&K_2\\ \hline
+ r_X&\lambda&2\lambda&(2\lambda-1)_+&(2\lambda-1)_+&\lambda&\lambda .
+\end{array}                                                    \tag{1}
+\]
+The input constraint is expected block-average physical energy at most
+\(E\). Entanglement assistance is unlimited in \(\CEA\).
+For \(Q_2,K_2\), local operations are countably decomposable LOCC with
+free authenticated public discussion and no initial entanglement or key;
+the energy accounting includes source copies consumed to create a seed.
+Security includes a full channel environment and the public transcript.
+These are the conventions of \cite{prior,dsw}. Local output preparation
+is not charged as channel input energy.
+
+For a class \(\Tcal_E\) define the pointwise uniform deficit
+\[
+ \Delta_X(E,\Tcal_E)=
+ \sup_{\tau\in\Tcal_E}\{r_Xg(E)-X(\Rcal_\tau,H,E)\}.              \tag{2}
+\]
+Here the code may depend on \(\tau\).
+In contrast, \(X_\comp(E,\Tcal_E)\), for \(X=C,\CEA,Q,P\), denotes the
+compound capacity: both users know the class, neither knows \(\tau\),
+and one coding sequence must have error tending to zero uniformly for
+all its members. The same \(\tau\) is used on every channel use.
+Classical error uses the average-message convention; private communication
+requires trace secrecy for a uniform message against the full environment,
+uniformly in the reset. Trace secrecy means one half of the trace norm
+between the actual message--environment state and the product of its
+uniform-message marginal with its actual average environment marginal.
+The construction below also permits vanishing
+unnormalized Holevo leakage. \(Q\) uses entanglement transmission.
+Compound capacities are bounded
+above by every individual capacity. Reset is receiver postprocessing of
+flagged erasure, so all quantities are at most \(r_Xg(E)\)
+\cite{prior,dsw}. In particular \(Q=P=0\) if \(\lambda\le1/2\).
+We always take the coding limit at fixed \(E\) first.
+
+For fixed finite \(\alpha>0\), let \(S_\alpha\) be the R\'enyi entropy,
+with \(S_1=S\), and set
+\[
+ \Tcal_{\alpha,B}(E)=\{\tau:S_\alpha(\tau)\le B(E)\},\qquad
+ S_\alpha(\tau)=\frac{\log_2\Tr\tau^\alpha}{1-\alpha}
+ \quad(\alpha\ne1).                                           \tag{3}
+\]
+The budget is any finite nonnegative function. The class is nonempty
+and includes arbitrary pure states.
+
+\begin{theorem}[Entropy-budget classification]\label{thm:main}
+For fixed \(0<\lambda<1\) and fixed finite \(\alpha>0\), the following
+are equivalent as \(E\to\infty\):
+\begin{enumerate}
+\item The corresponding condition in this table holds:
+\[
+\begin{array}{c|c}
+ \text{order}&\text{condition}\\ \hline
+ 0<\alpha<1&2^{B(E)}/E\longrightarrow0\\
+ \alpha=1&B(E)/\log_2(E+1)\longrightarrow0\\
+ 1<\alpha<\infty&B(E)\longrightarrow0 .
+\end{array}                                                    \tag{4}
+\]
+\item \(\Delta_{\CEA}(E,\Tcal_{\alpha,B}(E))\to0\).
+\item \(\CEA^{\comp}(E,\Tcal_{\alpha,B}(E))=2\lambda g(E)+o(1)\).
+\item All four compound capacities \(C,\CEA,Q,P\) equal their respective
+benchmarks \(r_Xg(E)+o(1)\).
+\end{enumerate}
+These conditions also imply \(\Delta_X(E,\Tcal_{\alpha,B}(E))\to0\)
+for all six entries of (1).
+\end{theorem}
+
+Necessity is asserted through \(\CEA\), and thus for simultaneous
+recovery; it is not asserted separately for every unassisted capacity.
+No uniformity near \(\alpha=1\), near an endpoint of \(\lambda\), or in
+the blocklength required at changing \(E\) is claimed.
+
+The finite-dimensional identity/replacement family appears explicitly in
+\cite[Eq.~(34)]{glr}; its output-norm multiplicativity question differs
+from the constrained capacity problem here. The erasure comparison is also
+a prior ingredient. Our earlier work \cite{prior} supplied pointwise spectral
+recovery and a finite-state distillation estimate.
+The energy-budget minimax problem in \cite{minimax} constrains a different
+reset class. Its phase-twirling reduction cannot simply be used here:
+dephasing an equal-amplitude pure superposition on a finite support
+raises every finite-order R\'enyi entropy
+from zero to the logarithm of its support size.
+R\'enyi spectral-tail control is an established approximation tool
+\cite{vc}, and qualitative differences among entropy orders already
+occur in matrix-product approximation \cite{schuch}.
+The compound coding theorems used below are likewise prior results
+\cite{cq,quantumcompound,eacompound}.
+The vacuum-replacement special case is an established binary fading
+model, with a finite-energy input optimization in
+\cite[Section IV and Appendix C]{catalano}. Thermal inputs need not be
+optimal there. Our capacity converses do not assume that they are.
+The present statements do not claim those ingredients or a generic
+entropy-order distinction as discoveries.
+Energy-constrained compound cq theory also exists \cite[Theorem 5]{cnr}.
+Its uniform output-energy and effective-projection hypotheses do not hold
+for our full reset classes: for any finite-rank output projection a pure
+reset can lie orthogonally to it, leaving reset mass \(q\) outside.
+Our fixed output processing is not claimed to approximate every physical
+output in trace norm; it directly preserves the information bounds needed
+for coding.
+
+\section{A fixed input and output compression}
+Write the decreasing eigenvalues of \(\tau\) as \(p_j(\tau)\), indexed
+from one, and define
+\[
+ \eta_m(\Tcal)=\sup_{\tau\in\Tcal}
+       \left(1-\sum_{j=1}^m p_j(\tau)\right).
+\]
+A spectral-tail condition does not imply trace-norm compactness when
+all eigenvector orientations are allowed.
+
+Fix \(E>2\), put \(E'=E-1\), \(r=E'/(E'+1)\), and choose
+\[
+ L=\lceil4E\ln(E+1)\rceil,\quad \epsilon=r^L,\quad
+ P_L=\sum_{j=0}^{L-1}|j\rangle\langle j|.
+\]
+Let \(\sigma\) be the thermal state of mean \(E'\), truncated and
+normalized on \(P_L\). It is independent of the reset. Direct summation gives
+\begin{align}
+ \Tr H\sigma&=E'-\frac{L\epsilon}{1-\epsilon}<E,\notag\\
+ \|\sigma\|_\infty&=\frac{1}{E(1-\epsilon)},\notag\\
+ s_E:=S(\sigma)&=g(E')+\log_2(1-\epsilon)
+       -\frac{L\epsilon}{1-\epsilon}\log_2(1/r).                 \tag{5}
+\end{align}
+Since \(\epsilon\le(E+1)^{-4}\), \(g(E)-s_E\to0\).
+
+The fixed receiver channel
+\[
+ D_L(X)=P_LXP_L\ \oplus\ \Tr[(I-P_L)X]|f\rangle\langle f|
+\]
+has output dimension \(L+1\).
+Identify the logical input with \(P_L\mathcal H\); then the decoded reset
+channel is
+\[
+ N_\tau(\rho)=\lambda\rho+q\nu_\tau\Tr\rho,\qquad
+ \nu_\tau=D_L(\tau).                                          \tag{6}
+\]
+The physical and logical transmit state in (6) agree on the first block.
+
+\begin{lemma}[Compression and branch information]\label{lem:branch}
+For each integer \(m\ge1\), the spectral tail of \(\nu_\tau\) after rank
+\(m+1\) is at most the tail of \(\tau\) after rank \(m\).
+Set
+\[
+ z_E=\frac{\lambda(m+1)}{E(1-\epsilon)}
+                    +q\eta_m(\Tcal_E).                        \tag{7}
+\]
+If \(z_E\le1/2\), uniformly for \(\tau\in\Tcal_E\),
+\begin{align}
+ I(\sigma,N_\tau)&\ge2\lambda s_E-h(z_E),\notag\\
+ I_c(\sigma,N_\tau)&\ge(2\lambda-1)s_E-h(z_E),\notag\\
+ \chi(\{p_j,N_\tau(|j\rangle\langle j|)\})&
+                 \ge\lambda s_E-h(z_E),                       \tag{8}
+\end{align}
+where \(p_j\) are the diagonal probabilities of \(\sigma\).
+\end{lemma}
+\begin{proof}
+Let \(\tau_m\) be a top-\(m\) spectral truncation. Then
+\(0\le D_L(\tau_m)\le\nu_\tau\), its trace is at least
+\(1-\eta_m\), and its rank is at most \(m+1\). Its support therefore
+witnesses the claimed tail bound by the variational characterization
+of the largest eigenvalue sum.
+
+Introduce a classical transmit/reset register \(F\), of probabilities
+\(\lambda,q\). A hypothetical measurement onto a subspace of rank at most \(m+1\)
+carrying its largest spectral mass guesses reset on success. Its error is at most (7):
+the transmit contribution is bounded by
+\(\lambda(m+1)\|\sigma\|_\infty\), and the reset contribution by \(q\eta_m\).
+Binary Fano and measurement data processing give \(H(F|B)\le h(z_E)\).
+
+For a purification of \(\sigma\), \(I(R:BF)=2\lambda s_E\);
+the reference is independent of \(F\).
+The loss on forgetting the flag is
+\(I(R:F|B)\le H(F|B)\), since \(F\) is classical and
+\(H(F|RB)\ge0\). Subtracting \(S(R)=s_E\) gives the coherent-information
+bound. For the classical Fock ensemble the same chain rule starts from
+\(I(X:BF)=\lambda s_E\). All systems here are finite dimensional.
+\end{proof}
+The hypothetical test depends on \(\tau\) only to bound information.
+It is not the implemented decoder. The actual common decoder comes
+from compound coding after the fixed \(D_L\).
+
+\section{Compound coding with an exact physical energy constraint}
+An unconstrained finite-dimensional capacity formula by itself does not
+prove a physical input-cost statement. The following block construction
+supplies that step.
+
+\begin{lemma}[Exact type-subspace blocking]\label{lem:type}
+Let \(p\) be a rational distribution on finitely many energy eigenvectors,
+with mean energy strictly below \(E\), and let \(\sigma_p\) be its diagonal
+state. At blocklength \(k\) with integral counts \(kp_j\), let \(T\)
+be its exact type subspace and \(\pi_T\) its uniform state. Put
+\[
+ d_k=kH(p)-\log_2\dim T=O(\log k)
+\]
+with the input alphabet fixed. Every vector in \(T\) has total energy
+\(k\sum_jjp_j<kE\). For every finite-dimensional channel \(N\),
+\begin{align}
+ I(\pi_T,N^{\otimes k})&\ge kI(\sigma_p,N)-2d_k,\notag\\
+ I_c(\pi_T,N^{\otimes k})&\ge kI_c(\sigma_p,N)-d_k.              \tag{9}
+\end{align}
+The uniform ensemble of Fock strings in \(T\) has Holevo information
+at least \(k\chi(p,N)-d_k\).
+\end{lemma}
+\begin{proof}
+Each one-site marginal of \(\pi_T\) is \(\sigma_p\), and
+\(D(\pi_T\Vert\sigma_p^{\otimes k})=d_k\).
+Relative-entropy data processing bounds output total correlation by
+\(d_k\); hence the output entropy is at least
+\(kS(N(\sigma_p))-d_k\).
+The complementary-output entropy is at most
+\(kS(N^c(\sigma_p))\) by subadditivity.
+Together with \(S(\pi_T)=kH(p)-d_k\), these prove (9).
+A finite Stinespring environment suffices.
+For the classical assertion, the average output is \(N^{\otimes k}(\pi_T)\),
+while the averaged conditional output entropy is exactly
+\(k\sum_jp_jS(N(|j\rangle\langle j|))\).
+The energy assertion holds throughout the type subspace, including
+superpositions.
+\end{proof}
+
+\begin{proposition}[Uniform compound sufficient criterion]\label{prop:compound}
+If integers \(m(E)\ge1\) satisfy
+\[
+ m(E)/E\longrightarrow0,\qquad
+ \eta_{m(E)}(\Tcal_E)\longrightarrow0,                          \tag{10}
+\]
+then all four compound benchmarks in Theorem~\ref{thm:main} are recovered
+with absolute error tending to zero.
+For \(z_E\le1/2\), a sufficient deficit bound is
+\[
+ r_X[g(E)-s_E]+h(z_E),\qquad X=C,\CEA,Q,P,                      \tag{11}
+\]
+with the zero \(Q,P\) cases treated separately.
+\end{proposition}
+\begin{proof}
+At fixed \(E,L\), approximate the distribution in (5) by rational
+distributions with strict mean-cost slack.
+All information quantities converge uniformly over the decoded class:
+input and output dimensions are fixed, and finite-dimensional entropy
+continuity has constants independent of the channel.
+For each rational distribution apply Lemma~\ref{lem:type}.
+
+For \(C\), use the compound cq coding theorem
+\cite[Theorems III.1 and V.10]{cq} on the alphabet of exact-type Fock
+strings, with its uniform distribution.
+For \(Q\), the finite-dimensional compound result
+\cite[Section 6.1, Lemma 16]{quantumcompound} applies directly to the
+maximally mixed subspace input \(\pi_T\), giving its infimum coherent
+information as an achievable rate with one encoder and recovery.
+For \(\CEA\), use
+\cite[Theorem 1 and Lemma 9]{eacompound}, together with its equivalence
+between entanglement-assisted classical and quantum transmission.
+These theorems allow arbitrary index sets and uninformed users.
+
+Every encoder of the restricted block channel takes values in tensor
+powers of \(T\). The energy constraint is therefore automatic for every
+physical input, not merely for its average over random code constructions.
+Divide rates by \(k\), let the type blocklength grow to remove \(d_k/k\),
+and then take the rational approximation limit.
+Equations (8) give (11).
+For privacy, let \(\varepsilon_n\) be the worst entanglement infidelity
+of the common quantum code. Uhlmann's theorem and contraction of trace
+distance, followed by measurement of the reference in the message basis,
+give uniform-message trace secrecy at most \(2\sqrt{\varepsilon_n}\)
+relative to the actual average environment state. The decoder's basis
+measurement has average success at least its entanglement fidelity.
+Include the physical environment and all systems discarded by \(D_L\)
+and the decoder in that environment. No extra assistance is used.
+For unnormalized Holevo secrecy one can choose net radius \(n^{-6}\)
+in the proof of \cite[Lemma 16 and Eq.~(34)]{quantumcompound}, at fixed
+\(E,p,k\) and fixed rate backoff. The net size is polynomial; its coding
+term decays exponentially, and tensor-product transfer costs at most
+\(n\,n^{-6}\). Thus \(\varepsilon_n=O(n^{-5})\).
+Since the message alphabet size \(M_n\) has \(\log M_n=O(n)\),
+finite-message conditional-entropy continuity \cite[Lemma 2]{winter}
+also makes the Holevo leakage vanish. This does not assert a uniform
+error exponent as \(E\) grows. No shared randomness or channel knowledge
+is imported into \(C,Q,P\).
+Finally (5), (7), and (10) make the right side vanish.
+\end{proof}
+For any fixed rate slack, choose finite type blocklength and rational
+distribution first, and then take the outer coding blocklength to infinity.
+Taking suprema over those finite choices gives the displayed rate bound.
+The finite-block coding theorems are used as existing results, not
+reproved here. The type-space estimates address the extra energy issue.
+They do not control the resulting blocklength or reliability exponent.
+The distinction matters: universal error exponents need not equal
+channel-aware exponents \cite{reliability}.
+
+\section{Entropy budgets give the sufficient spectral condition}
+For \(0<\alpha<1\), ordering the eigenvalues and putting
+\(R=\sum_jp_j^\alpha\) gives \(p_j\le(R/j)^{1/\alpha}\).
+Summation bounded by an integral yields
+\[
+ \eta_m\le
+ \min\left\{1,\frac{\alpha}{1-\alpha}
+       \left(\frac{2^B}{m}\right)^{(1-\alpha)/\alpha}\right\}.    \tag{12}
+\]
+R\'enyi control of spectral approximation tails is prior work
+\cite[Lemma 2]{vc}; (12) is a convenient nonsharp elementary form.
+If \(2^{B(E)}/E\to0\), choose
+\(m=\lfloor\sqrt{E\,2^{B(E)}}\rfloor\). Then both parts of (10) hold.
+
+For Shannon entropy, \(p_j\le1/j\) gives
+\[
+ \eta_m\le\min\{1,B/\log_2(m+1)\}.                              \tag{13}
+\]
+Choose \(m=\lfloor\sqrt E\rfloor\) under the middle condition of (4).
+For \(\alpha>1\),
+\[
+ \sum_jp_j^\alpha\le p_1^{\alpha-1},\qquad
+ \eta_1\le1-2^{-B}.                                           \tag{14}
+\]
+Thus \(m=1\) suffices when \(B\to0\).
+These proofs are for each fixed order, with constants allowed to depend
+on it. They establish the compound sufficiency in Theorem~\ref{thm:main}.
+
+\section{A converse that excludes improved input states}
+It is not enough to show a positive loss for one input.
+We show that a vacuum--thermal reset also prevents all near-entropy-optimal
+inputs from removing that loss.
+
+For any \(\rho,\tau\), choose a purification \(\psi_\rho\) and define
+\[
+ \Omega_{JRB}=
+ \lambda|0\rangle\langle0|_J\otimes\psi_\rho+
+ q|1\rangle\langle1|_J\otimes\rho_R\otimes\tau_B,\qquad
+ e_\tau(\rho)=I(J:R|B)_\Omega .
+\]
+Relative-entropy definitions make this well defined and
+\(0\le e_\tau(\rho)\le h(\lambda)\).
+For finite input entropy,
+\[
+ I(\rho,\Rcal_\tau)=2\lambda S(\rho)-e_\tau(\rho).              \tag{15}
+\]
+This is the established finite-branch identity of \cite{prior}.
+For finite-energy input the entropy is finite.
+
+Fix \(0<a<1\), let \(\gamma_E\) be the thermal state of mean \(E\), set
+\(p_0=1/(E+1)\), and choose
+\[
+ \tau_{E,a}=(1-a)|0\rangle\langle0|+a\gamma_E,\qquad
+ b_0=(\lambda+qa)h\left(\frac{\lambda}{\lambda+qa}\right)>0.     \tag{16}
+\]
+At input \(\gamma_E\), diagonal observation outside the vacuum has fixed
+branch ratio \(\lambda:qa\). Hence \(H(J|B)\ge(1-p_0)b_0\).
+The test onto its purification has false-transmit probability
+\(q\Tr(\gamma_E^2\tau_{E,a})\le qp_0^2\), and never misses transmission.
+For large \(E\), binary Fano therefore gives
+\[
+ e_{\tau_{E,a}}(\gamma_E)\ge(1-p_0)b_0-h(qp_0^2)
+                          \longrightarrow b_0.               \tag{17}
+\]
+
+\begin{lemma}[Uniform finite-branch continuity]\label{lem:continuity}
+For input trace distance \(t=\|\rho-\gamma\|_1/2\), uniformly in \(\tau\),
+\[
+ |e_\tau(\rho)-e_\tau(\gamma)|\le
+ \omega(\min\{1,\sqrt{2t}\}),\quad
+ \omega(s)=4s+2(1+s)h\left(\frac{s}{1+s}\right).                \tag{18}
+\]
+No entropy or energy constraint on the conditioning systems is required.
+\end{lemma}
+\begin{proof}
+Choose Uhlmann purifications in a common reference space.
+Their trace distance is at most \(\sqrt{2t}\); the reference marginals
+are no further apart. The two branch states with the same \(\tau\)
+therefore have that distance bound.
+Use \(e=H(J|B)-H(J|RB)\) and apply the finite-system
+conditional-entropy continuity inequality twice, with \(\dim J=2\)
+\cite[Lemma 2]{winter}. This inequality permits arbitrary conditioning
+dimension. Conditional entropy here is \(H(J)-I(J:C)\), not a difference
+of two infinite entropies.
+Explicitly, compress the conditioning system onto increasing finite
+subspaces plus a failure flag. Data processing and relative-entropy
+lower semicontinuity show that its mutual information with \(J\)
+converges to the original, bounded by \(H(J)\).
+Apply the finite-dimensional bound and pass to the limit.
+\end{proof}
+
+For any admissible input set \(d=g(E)-S(\rho)\).
+The Gibbs identity and Pinsker in bits give
+\[
+ D(\rho\Vert\gamma_E)
+ =d+(\Tr H\rho-E)\log_2(1+1/E)\le d,\qquad
+ \tfrac12\|\rho-\gamma_E\|_1\le\sqrt{(\ln2)d/2}.                \tag{19}
+\]
+Consequently (18) is bounded by
+\(\omega(\min\{1,(2\ln2\,d)^{1/4}\})\).
+Choose \(d_*>0\) so this modulus at \(d_*\) is less than \(b_0/4\).
+For all sufficiently large \(E\), (17) is at least \(b_0/2\).
+Using (15), every input then has benchmark deficit at least
+\[
+ \min\{2\lambda d_*,b_0/4\}>0:                                \tag{20}
+\]
+if \(d\ge d_*\) use its entropy deficit; otherwise use (18).
+The constrained entanglement-assisted capacity formula
+\cite[Theorem 1]{hs} now bounds the capacity itself below the benchmark
+by (20). No optimizer is assumed to exist.
+
+It remains to fit this same witness into each failed budget condition.
+For Shannon entropy,
+\(S(\tau_{E,a})\le h(a)+ag(E)\).
+If \(B/\log_2(E+1)\not\to0\), choose a subsequence
+\(B\ge c\log_2(E+1)\) and a fixed \(0<a<\min\{c,1\}\).
+The witness is eventually admissible there.
+For \(\alpha\ne1\), with \(r=E/(E+1)\), the exact power sum is
+\[
+ \Tr\tau_{E,a}^\alpha
+ =(1-a+ap_0)^\alpha+
+       \frac{a^\alpha p_0^\alpha r^\alpha}{1-r^\alpha}.         \tag{21}
+\]
+For \(\alpha<1\) it gives
+\[
+ S_\alpha(\tau_{E,a})
+ =\log_2E+\frac{\alpha\log_2a-\log_2\alpha}{1-\alpha}+o(1).
+\]
+If \(2^B/E\not\to0\), a subsequence has \(B\ge\log_2E-C\).
+Choose fixed \(a\) small enough that the constant offset is less than
+\(-C-1\). For \(\alpha>1\), (21) instead gives
+\[
+ S_\alpha(\tau_{E,a})\longrightarrow
+            -\frac{\alpha}{\alpha-1}\log_2(1-a).
+\]
+If \(B\not\to0\), take a subsequence \(B\ge c>0\) and make this limit
+less than \(c/2\).
+Thus (20) obstructs uniform individual \(\CEA\) recovery in all failed
+regimes. Compound capacity cannot be larger.
+Together with Proposition~\ref{prop:compound}, this proves the four
+equivalences in Theorem~\ref{thm:main}.
+
+\section{Pointwise two-way recovery without an energy bound on noise}
+For completeness we identify the separate mechanism needed for the
+last two entries of (1). It does not supply a common two-way code.
+
+\begin{lemma}[Finite-codimension energy avoidance]\label{lem:minmax}
+For a discrete Hamiltonian with eigenvalues
+\(e_0\le e_1\le\cdots\), let \(M\) be the orthogonal complement of at
+most \(m\) vectors, which may themselves have infinite energy.
+Any finite distribution \(p_0,\ldots,p_{L-1}\) can be realized by a
+state supported in \(M\), with entropy \(H(p)\) and cost at most
+\(\sum_{j=0}^{L-1}p_je_{j+m}\).
+\end{lemma}
+\begin{proof}
+Intersect \(M\) with the span of the first \(L+m\) energy vectors.
+Its dimension is at least \(L\). The \(j\)th lowest eigenvalue of the
+finite compression of \(H\) is at most \(e_{j+m}\): intersecting
+instead with the first \(j+m+1\) vectors supplies a subspace of
+dimension at least \(j+1\) for the min-max principle.
+Put weights \(p_j\) on its first \(L\) eigenvectors.
+All chosen vectors lie in a finite energy window; no projection onto
+an infinite-energy vector is used to define an input state.
+\end{proof}
+
+Avoid the top \(m\) reset eigenvectors and use finite strict-cost
+approximants to the oscillator tail entropy \(g(E-m)\), for \(E>m\).
+For fixed \(E,m\), first choose \(m<E\prime<E\) with
+\(g(E\prime-m)\) as close to \(g(E-m)\) as desired. Upper truncation
+of the shifted geometric distribution lowers its mean and converges in
+entropy. The resulting finite probability vector has strict cost slack.
+Lemma~\ref{lem:minmax} uses that same vector for every forbidden
+subspace, so its cost and entropy errors are uniform over orientations. With physical isometry \(V\), logical cost
+\(G=V^*HV\) is a bounded finite matrix, diagonal in the constructed basis.
+Projection onto \(\supp V\) plus failure flag accepts reset weight
+\(\delta\le q\eta_m\).
+The dimension-free finite-state recovery estimate in
+\cite[Section 2, theorem ``An arbitrary noisy maximally correlated
+component'']{prior} gives
+\[
+ Q_2,K_2\ge
+ [\lambda S(\sigma)-b(\lambda,\delta)-\delta\log_2 5]_+,\quad
+ b(\lambda,\delta)=(\lambda+\delta)
+                 h\left(\frac{\lambda}{\lambda+\delta}\right). \tag{22}
+\]
+This is an inherited distillation/coding theorem, not established by
+the min-max lemma alone. Its seed comes from copies of the same
+strictly admissible finite input; their number and energy are counted.
+The decoder's larger environment includes the physical environment,
+so its security guarantee retains the public transcript.
+The prior proof and the erasure bounds use the LOCC/cost conventions
+stated in Section 1, not a bound on energy of local operations.
+For the inherited upper bounds, see the proposition on erasure upper
+bounds in Section 6 of \cite{prior}, and the lemma ``Erasure with a single
+finite partition sum'' in its spectral-criterion section. The common-code
+four-capacity argument of Sections 2--3 above does not use the two-way
+distillation theorem.
+
+Taking capacity suprema removes finite-approximation errors. Monotonicity
+of \(b\) in \(\delta\) gives the uniform deficit bound
+\[
+ \Delta_X(E,\Tcal_E)\le
+ \lambda[g(E)-g(E-m)]+b(\lambda,q\eta_m)+q\eta_m\log_2 5,
+ \qquad X=Q_2,K_2.                                           \tag{23}
+\]
+The choices (12)--(14) have \(m/E\to0\) and \(\eta_m\to0\);
+\(g(E)-g(E-m)\le m\log_2(1+1/(E-m))\to0\).
+This completes the six-benchmark sufficient assertion.
+
+\input{curves592.tex}
+
+\input{optics595.tex}
+
+\section{Limits, evidence and responsibility}
+The zero-loss classification and the unassisted and two-way conclusions
+concern the identity/replacement model. Section~\ref{sec:optics} extends
+the assisted minimax curves to a quantum-limited attenuator/replacement
+model. Its environment is vacuum and its transmissivity is bounded away
+from zero. No thermal-loss or arbitrary memory channel is covered.
+The vacuum--thermal resets are asymptotically least favorable for the
+entanglement-assisted curves of Section~\ref{sec:curves}; no exact
+finite-energy optimizer or uniqueness is proved. No nonzero-loss curve
+is supplied for \(\alpha<1\). R\'enyi order and transmission
+probability remain fixed. Efficient encoders, finite-block resource
+estimates, universal two-way codes and peak-cost/local-energy constraints
+are outside the conclusions.
+
+The six supplementary programs, listed with their outputs in the
+supplement's README, execute deterministic finite diagnostics in a writable
+copy of their folder, using Python, NumPy, SciPy and mpmath.
+They check interlacing,
+noncommuting finite-code information bounds, spectral compression,
+type-subspace information comparisons. The R\'enyi geometric/asymptotic
+rows are evaluations of the displayed closed form, not independent
+geometric-series equality assertions.
+The additional minimax controls check noncommuting finite-support inputs
+with exactly summed thermal tails; the scalar bound controls use 220-digit
+arithmetic to resolve their largest energy scale. They do not optimize an
+operational capacity or construct a universal code. The optical diagnostics
+add finite-dimensional dilation, entropy-difference, branch-test and
+thermal-truncation checks; their signal-array entries are bound slacks,
+not capacity estimates.
+They are corroboration, not proofs of an infinite-dimensional coding
+limit. The analytical proof uses the explicitly cited coding and
+distillation dependencies. Literature comparisons were directed and
+selective, with no certification of worldwide priority.
+
+\section*{Model assessments and review context}
+\paragraph{AI and responsibility disclosure.}
+The named author directed substantial OpenAI Codex assistance in derivation,
+writing and numerical work. Requested GPT-6 Astra xhigh preparatory audits
+examined the spectral/R\'enyi derivations and, in a separate subsequent
+check, the compound-code extension, using shared files and reused context.
+Those working-text audits were unscored and did not assess this combined
+PDF. Inputs and public search results exposed historical evaluations of
+other papers; no earlier score is adopted here.
+No runtime isolation, independently attested model identity, independent
+human review, Lean formalization, certified worldwide originality or
+predicted assessment score is claimed. A full requested-model assessment
+of the preceding frozen draft required a local correction to the
+dephasing example. This revision makes that correction and clarifies
+secrecy normalization, dependencies and the numerical evidence scope.
+A further unscored working-argument audit examined the full minimax
+loss derivation now included in Section~\ref{sec:curves}, with reused
+context and shared files. It was not a full assessment of this PDF.
+Another unscored working-argument audit examined the optical extension
+of Section~\ref{sec:optics}, including the finite-rank branch test and
+uniform transmissivity and budget remainders. It reused context and
+shared files, and was not a full assessment of this combined PDF.
+The preceding assessment and its objections are retained; its scores
+are not transferred to this revised PDF. No full assessment of this exact
+revised PDF has yet been obtained.
+
+\begin{thebibliography}{99}
+\small
+\setlength{\itemsep}{1.5pt}
+\bibitem{prior} L. Eriksson, \emph{Constant-gap entanglement distillation and
+a spectral criterion for noise-universal communication},
+AIRR.SCIENCE ARR-2026-58XZ9SCZA39DSRF0, v1 (2026), Working paper.
+\url{https://airr.science/papers/ARR-2026-58XZ9SCZA39DSRF0/versions/v1/}.
+\bibitem{minimax} L. Eriksson, \emph{Sharp minimax losses for energy-constrained
+quantum reset channels}, AIRR.SCIENCE ARR-2026-2EXHFGWW0S8MG8QA,
+v1 (2026), Working paper.
+\url{https://airr.science/papers/ARR-2026-2EXHFGWW0S8MG8QA/versions/v1/}.
+\bibitem{vc} F. Verstraete and J. I. Cirac, \emph{Matrix product states
+represent ground states faithfully}, \href{https://arxiv.org/abs/cond-mat/0505140v6}
+{arXiv:cond-mat/0505140v6} (2006).
+\bibitem{schuch} N. Schuch, M. M. Wolf, F. Verstraete and J. I. Cirac,
+\emph{Entropy scaling and simulability by Matrix Product States},
+\href{https://arxiv.org/abs/0705.0292v2}{arXiv:0705.0292v2} (2008).
+\bibitem{cq} I. Bjelakovi\'c and H. Boche,
+\emph{Classical Capacities of Compound and Averaged Quantum Channels},
+\href{https://arxiv.org/abs/0710.3027v2}{arXiv:0710.3027v2} (2009).
+\bibitem{quantumcompound} I. Bjelakovi\'c, H. Boche and J. N\"otzel,
+\emph{Entanglement transmission and generation under channel uncertainty:
+Universal quantum channel coding},
+\href{https://arxiv.org/abs/0811.4588v3}{arXiv:0811.4588v3} (2009).
+\bibitem{eacompound} M. Berta, H. Gharibyan and M. Walter,
+\emph{Entanglement-assisted capacities of compound quantum channels},
+\href{https://arxiv.org/abs/1603.02282v2}{arXiv:1603.02282v2} (2017).
+\bibitem{winter} A. Winter, \emph{Tight uniform continuity bounds for quantum
+entropies: conditional entropy, relative entropy distance and energy constraints},
+\href{https://arxiv.org/abs/1507.07775v6}{arXiv:1507.07775v6} (2016).
+\bibitem{hs} A. S. Holevo and M. E. Shirokov,
+\emph{On the entanglement-assisted classical capacity of infinite-dimensional
+quantum channels}, \href{https://arxiv.org/abs/1210.6926}{arXiv:1210.6926} (2012).
+\bibitem{dsw} N. Davis, M. E. Shirokov and M. M. Wilde,
+\emph{Energy-constrained two-way assisted private and quantum capacities of
+quantum channels}, \href{https://arxiv.org/abs/1801.08102v3}{arXiv:1801.08102v3}
+(2018).
+\bibitem{reliability} K. Watanabe, M. Hayashi, T. Matsuura and H.-C. Cheng,
+\emph{Universality Sacrifices Reliability in Classical-Quantum Channel Coding},
+\href{https://arxiv.org/abs/2610.01941v1}{arXiv:2610.01941v1} (2026).
+\bibitem{glr} V. Giovannetti, S. Lloyd and M. B. Ruskai,
+\emph{Conditions for the multiplicativity of maximal $\ell_p$-norms of
+channels for fixed integer $p$},
+\href{https://arxiv.org/abs/quant-ph/0408103v3}{arXiv:quant-ph/0408103v3} (2005).
+\bibitem{cnr} A. Cacioppo, J. N\"otzel and M. Rosati,
+\emph{Compound Channel Capacities under Energy Constraints and Application},
+\href{https://arxiv.org/abs/2105.04274v1}{arXiv:2105.04274v1} (2021).
+\bibitem{catalano} G. Catalano, M. Fanizza, F. A. Mele, G. De Palma and
+V. Giovannetti, \emph{Convex combinations of bosonic pure-loss channels},
+\href{https://arxiv.org/abs/2604.26874v2}{arXiv:2604.26874v2} (2026).
+\bibitem{hw} A. S. Holevo and R. F. Werner,
+\emph{Evaluating capacities of Bosonic Gaussian channels},
+\href{https://arxiv.org/abs/quant-ph/9912067v1}
+{arXiv:quant-ph/9912067v1} (1999), Sections IV.C and V.A.
+\bibitem{gain} A. S. Holevo,
+\emph{The entropy gain of infinite-dimensional quantum channels},
+\href{https://arxiv.org/abs/1003.5765v1}{arXiv:1003.5765v1} (2010).
+\end{thebibliography}
+\end{document}

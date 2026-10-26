@@ -1,0 +1,199 @@
+\section{An unknown optical attenuation in the transmitted branch}
+\label{sec:optics}
+Let \(\mathcal A_\kappa\) be the quantum-limited attenuator with photon
+transmissivity \(0<\kappa\le1\); its environment is in the vacuum.
+Consider
+\[
+ \mathcal N_{\kappa,\tau}(\rho)
+      =\lambda\mathcal A_\kappa(\rho)+q\tau\Tr\rho,\qquad
+ c_\kappa(E)=g(E)+g(\kappa E)-g((1-\kappa)E).                  \tag{32}
+\]
+The channel parameters are fixed throughout each block. Its flagged
+entanglement-assisted benchmark is \(\lambda c_\kappa(E)\).
+The expression \(c_\kappa\) is the established attenuator assisted
+capacity \cite{hw}; the entropy bound below also verifies its optimizer.
+The vacuum-reset special case is the erasure-lossy fading channel in
+\cite[Appendix F, Eq.~(F2)]{catalano}. We do not claim that model as new.
+
+For the reset class \(\Tcal_{\alpha,B}=\{\tau:S_\alpha(\tau)\le B\}\),
+define the fixed-\(\kappa\) deficits
+\[
+ \begin{aligned}
+ D_{\kappa,{\rm known}}(E,B)
+   &=\sup_{\tau\in\Tcal_{\alpha,B}}
+          [\lambda c_\kappa(E)-\CEA(\mathcal N_{\kappa,\tau},H,E)],\\
+ D_{\kappa,\comp}(E,B)
+   &=\lambda c_\kappa(E)-\CEA^\comp
+             (E,\{\mathcal N_{\kappa,\tau}:\tau\in\Tcal_{\alpha,B}\}).
+ \end{aligned}                                                 \tag{33}
+\]
+
+\begin{theorem}[Uniform optical-loss extension]\label{thm:optics}
+Fix \(0<\lambda<1\), \(0<\kappa_0\le1\), and \(\alpha=1\) or a
+fixed finite \(\alpha>1\). With \(f,t_\alpha\) from Theorem~\ref{thm:curves},
+\[
+ \sup_{\substack{0\le B<\infty\\\kappa_0\le\kappa\le1}}
+ \max_{Y\in\{{\rm known},\comp\}}
+ |D_{\kappa,Y}(E,B)-f(t_\alpha(E,B))|\longrightarrow0.           \tag{34}
+\]
+If \(\kappa\) is also unknown and belongs to the entire interval
+\([\kappa_0,1]\), one common coding sequence for both unknown parameters
+has deficit
+\[
+ \lambda c_{\kappa_0}(E)-\CEA^\comp
+ (E,\{\mathcal N_{\kappa,\tau}:\kappa\in[\kappa_0,1],
+                             \tau\in\Tcal_{\alpha,B}\})
+       = f(t_\alpha(E,B))+o(1),                               \tag{35}
+\]
+uniformly in finite \(B\ge0\).
+\end{theorem}
+
+This theorem concerns assisted communication only. Its benchmark is not
+\(2\lambda g(E)\) when \(\kappa<1\). No thermal environment, uniform
+limit as \(\kappa_0\downarrow0\), or varying transmissivity within a
+codeword is asserted.
+
+\subsection{A finite-energy entropy difference}
+For mean \(\mu\le M\), relative-entropy data processing under
+\(\mathcal A_t\), which sends \(\gamma_M\) to \(\gamma_{tM}\), gives
+\[
+ \begin{aligned}
+ S(\rho)-S(\mathcal A_t(\rho))
+ &\le \log_2\frac{M+1}{tM+1}
+  +\mu\left[\log_2(1+1/M)-t\log_2(1+1/(tM))\right]\\
+ &\le g(M)-g(tM),\qquad 0<t\le1 .
+ \end{aligned}                                                 \tag{36}
+\]
+The bracket is nonnegative: \(x\log(1+1/(xM))\) increases in \(x>0\),
+as its derivative is \(\log(1+y)-y/(1+y)>0\).
+For \(t=0\) the same conclusion is \(S(\rho)\le g(M)\).
+This is a Gibbs/data-processing estimate, not an assumption of a Gaussian
+input. Its unrestricted entropy-gain analogue is prior work \cite{gain}.
+
+The complementary pure-loss output is unitarily equivalent to
+\(\mathcal A_{1-\kappa}(\rho)\). Equation (36) and the output entropy
+bound \(S(\mathcal A_\kappa(\rho))\le g(\kappa E)\) give
+\(I(\rho,\mathcal A_\kappa)\le c_\kappa(E)\), with equality at
+\(\gamma_E\). The constrained assisted coding theorem \cite{hs}
+identifies this maximum with capacity.
+For \(\kappa\ge1/2\), applying (36) to the degraded output with
+transmissivity \((1-\kappa)/\kappa\) also gives
+\[
+ S(\mathcal A_\kappa(\rho))-S(\mathcal A_{1-\kappa}(\rho))
+ \le K_\kappa(E):=[g(\kappa E)-g((1-\kappa)E)]_+ .
+\]
+For \(\kappa\le1/2\) the upper bound is zero by antidegradability and
+weak monotonicity, so the displayed inequality holds throughout.
+
+\subsection{A finite-rank test for a mixed transmitted state}
+For a witness let \(\tau_{\kappa,E,a}=(1-a)|0\rangle\langle0|
+                                       +a\gamma_{\kappa E}\).
+The transmitted reference/receiver state
+\(\omega_\rho=(\id\otimes\mathcal A_\kappa)(\psi_\rho)\) is mixed;
+the purification-projector argument for an identity signal is unavailable.
+The exact branch functional now is
+\[
+ F_\kappa(\rho,\tau)
+ =\lambda[S(\rho)-S(\mathcal A_{1-\kappa}(\rho))]
+      +S(\lambda\mathcal A_\kappa(\rho)+q\tau)-qS(\tau)-h(\lambda).
+\]
+It satisfies \(I(\rho,\mathcal N)=F_\kappa+H(F|RB)\).
+Using (36) and the same three-weight entropy argument as in Section~7
+gives, for every input,
+\[
+ F_\kappa(\rho,\tau_{\kappa,E,a})
+ \le\lambda c_\kappa(E)-f(a)+q h\!\left(\frac{a}{1+\kappa E}\right).
+                                                               \tag{37}
+\]
+
+Put \(D_0=\log_2(1/\kappa_0)+h(\lambda)/\lambda\).
+Flagging gives \(I(\rho,\mathcal N)\le\lambda[S(\rho)+K_\kappa(E)]\).
+Uniformly for \(\kappa\ge\kappa_0\),
+\(g(E)-c_\kappa(E)+K_\kappa(E)\le\log_2(1/\kappa_0)\):
+above \(1/2\) the left side is zero; below it, use
+\(g((1-\kappa)E)-g(\kappa E)\le\log_2((1-\kappa)/\kappa)\).
+If \(d=g(E)-S(\rho)>D_0\), the input already loses at least
+\(h(\lambda)\ge f(a)\) from the flagged benchmark.
+For the remaining inputs the earlier spectral argument gives
+\(r=\|\rho\|_\infty\le\bar r_E=\min\{1,(D_0+1)/\log_2(E+1)\}\).
+
+Write pure-loss Kraus vectors as
+\(|v_\ell\rangle=(I\otimes K_\ell)|\psi_\rho\rangle\), indexed by
+the number \(\ell\) of lost photons. Their mean index is
+\((1-\kappa)\Tr H\rho\).
+Set \(t_E=\sqrt{\ln(E+1)}\), \(K=\lceil t_E(1-\kappa)E\rceil\).
+Keeping \(\ell\le K\) loses mass at most \(1/t_E\) by Markov's bound;
+for \(\kappa=1\) only \(\ell=0\) occurs.
+First project these vectors onto receiver non-vacuum and let \(Q\) be
+the support projection of their span. Its rank is at most \(K+1\).
+The signal vacuum probability obeys
+\[
+ \Tr[|0\rangle\langle0|\mathcal A_\kappa(\rho)]
+   =\Tr[(1-\kappa)^H\rho]\le r/\kappa .
+\]
+Positivity of the truncated Kraus sum and the support definition yield
+\(\Tr(Q\omega_\rho)\ge1-1/t_E-r/\kappa\).
+Under reset, the vacuum term is orthogonal to \(Q\), and
+\(\Tr[Q(\rho_R\otimes\tau_{\kappa,E,a})]
+   \le a(K+1)r/(1+\kappa E)\).
+The resulting branch decision error is bounded uniformly by
+\[
+ z_E=\lambda\left(\frac1{t_E}+\frac{\bar r_E}{\kappa_0}\right)
+       +q\bar r_E\left(\frac{t_E}{\kappa_0}
+                              +\frac2{1+\kappa_0 E}\right)\to0 .
+                                                               \tag{38}
+\]
+For large \(E\), binary Fano bounds \(H(F|RB)\le h(z_E)\).
+Writing \(p_*=1/(1+\kappa_0 E)\), (37)--(38) prove the all-input
+capacity converse; thermal input gives the opposite bound:
+\[
+ f(a)-q h(p_*)-h(z_E)
+ \le\lambda c_\kappa(E)-\CEA(\mathcal N_{\kappa,\tau_{\kappa,E,a}},H,E)
+ \le f(a)+b(\lambda p_*,q).                                  \tag{39}
+\]
+It holds for all sufficiently large \(E\), uniformly in \(a,\kappa\).
+The low-entropy inputs were treated before applying the finite-rank test.
+
+\subsection{Uniform common codes and budget matching}
+Use the input \(\sigma_E\) and window \(L\) of (5). Pure loss preserves
+that finite window, so the fixed output decoding \(D_L\) acts exactly
+on its transmitted branch. Positivity gives
+\[
+ \|\mathcal A_\kappa(\sigma_E)\|_\infty
+ \le\frac1{[1+\kappa_0(E-1)](1-\epsilon)} .
+\]
+The three entropies in its mutual information differ from their thermal
+values by a uniform amount tending to zero. Explicitly, the discarded
+input tail has mass \(\epsilon\) and conditional mean \(E-1+L\);
+source, receiver and complementary means are no larger than this.
+Entropy of mixing bounds each entropy difference by
+\(h(\epsilon)+\epsilon[g(E-1+L)+g(E-1)]\).
+Changing mean \(E-1\) to \(E\) costs at most
+\(2\log_2(1+1/(E-1))\) in \(c_\kappa\). Thus a valid uniform mutual
+information error is
+\(3\{h(\epsilon)+\epsilon[g(E-1+L)+g(E-1)]\}
+     +2\log_2(1+1/(E-1))\to0\).
+The sharper receiver branch bound (27) now applies with the displayed
+transmitted operator norm. The rational/type construction of Section~3
+works for the full finite channel index set \((\kappa,\tau)\), enforcing
+the same physical input cost on every encoder output.
+
+For Shannon budgets take \(m=\lfloor E/\ln(E+1)\rfloor\).
+The matching witness weight is
+\(a=\min\{1,\max\{0,(B-1)/g(\kappa E)\}\}\).
+It is admissible by entropy of mixing, but need not lie below the
+target \(t=\min\{1,B/\log_2(E+1)\}\).
+With \(C_0=\max\{\log_2(1/\kappa_0),\log_2 e\}\), the absolute bound
+\[
+ |a-t|\le\min\left\{1,\frac1{g(\kappa_0 E)}
+                              +\frac{C_0}{\log_2(E+1)}\right\}\to0
+\]
+is uniform in \(B,\kappa\). Use the modulus for \(f\) and the same
+spectral tail as before. For fixed \(\alpha>1\), the exactly admissible
+weight \(a=1-2^{-((\alpha-1)/\alpha)B}\) and \(m=\lfloor\sqrt E\rfloor\)
+give the same matching, without a clipping error. Equation (39) and the
+common-code lower bound prove (34).
+Additional pure loss is receiver postprocessing, so \(c_\kappa\) increases
+in \(\kappa\). Taking its infimum over the unknown parameter gives
+\(c_{\kappa_0}\); a witness at \(\kappa_0\) matches that benchmark.
+This proves (35).
