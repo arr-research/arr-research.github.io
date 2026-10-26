@@ -1,0 +1,214 @@
+AUDITORÍA TÉCNICA716 — PROPOSITION715
+26 octubre 2026. Disposición terminal acotada, sin nota ni predicción.
+
+1. Resultado, separado por afirmación
+
+A queda demostrada con la constante escrita. Basta formular la información mutua mediante entropía relativa y reglas de cadena, no como una resta posiblemente indefinida de entropías diferenciales. La cota requiere un coste finito de las dos leyes, ganancia acotada y suelo de ruido positivo. No exige un techo de ruido para esta afirmación particular.
+
+B queda demostrada, incluida la perspectiva que elimina los costes individuales no acotados. Hay una completación necesaria de la prueba: de TV(Q_rho,Q_sigma)<=delta no se puede pasar al módulo escrito por simple monotonía, porque su término h2 no es monótono en todo [0,1]. Se escoge en cambio una parte común de masa1-delta, aunque no sea la parte común maximal. Esta construcción prueba exactamente la cota propuesta; no es necesario aumentar su constante.
+
+C no era un teorema definido en el paquete. Aquí se define y demuestra una versión típica precisa: E fijo, conjunto FINITO y fijo de leyes gaussianas de desplazamiento, programación determinista conocida, amplitudes independientes entre mensajes y coordenadas, mensajes equiprobables y M_m>=exp(Rm), R>0. Casi seguramente, las distancias de TODOS los marginales empíricos a sus propias gaussianas con momentos empíricos coincidentes tienden a cero. Por tanto también lo hace su promedio. Se permite anisotropía, desplazamiento y covarianza singular. El coste se cumple eventualmente con holgura de diseño; sin holgura, se necesita una corrección explícita o una condición de factibilidad. Una reescala común que tiende a1 lo corrige, conserva la convergencia y, bajo las condiciones aquí fijadas, altera en o(1) el error de cualquier decodificador. Esto es un teorema de libros típicos y un converse condicionado a fiabilidad, NO una demostración de que cualquier libro tenga un buen decodificador, ni un teorema sobre todo protocolo llamado gaussiano.
+
+Se refutan dos inferencias auxiliares que sería incorrecto añadir: (i) cercanía en traza más energía acotada no implica cercanía a la gaussiana con los mismos momentos; (ii) saturar el presupuesto solamente en la esperanza sobre libros no hace que un libro sin corregir cumpla el presupuesto con probabilidad tendiente a1. Se dan contraejemplos exactos en las secciones5 y8.
+
+No hay refutación de A ni B. C recibe apoyo únicamente con los cuantificadores y correcciones expresos de las secciones6–9; no recibe apoyo genérico por inferencia de A/B.
+
+2. Custodia, lectura y participación
+
+Antes de leer el contenido se verificó el MANIFEST715.json externo:
+5b721a9365d1a45ac40a4b8861ed5e2e73787b196f1ca04afdae9fcf992253b4.
+Los tres payloads, tamaños y hashes coincidieron; el espejo C fue idéntico:
+ PROPOSITION715.txt:5633bytes,ed254baf607c6183180cac49aa7f2ccb4a2ff9b309bb2ac7218416635f4d5074.
+ background700.tex:35194bytes,d6ef393d7039093b76a537555bd6a7f6c97a3311ff659513761e8619b4838d4f.
+ CONTEXT715.json:463bytes,271739be67915d98a45c2d760222deab8b6fe336d669def90793ef6dab7724b0.
+Se leyeron íntegramente estos tres archivos. El hash de PDF700 aparece como dato de contexto en el paquete; no se abrió ni se verificó ese PDF, ni se leyó701 o su valoración. No se importa una evaluación de700/701. El texto700 se usa como dependencia científica delimitada para la simulación, el cambio de ruido y las definiciones del ejemplo, comprobando aquí los pasos nuevos. No se emite voto sobre el manuscrito.
+
+Se reutilizan contexto y filesystem; el mismo agente participó previamente en689 y en la familia de investigación, como ya estaba declarado. Configuración solicitada: GPT-6 Astra xhigh. Identidad efectiva, esfuerzo del runtime, independencia, aislamiento o ceguera NO están atestados. La exposición histórica a una mención numérica antigua en571 permanece declarada, sin reproducirla ni utilizarla. Los mensajes de coordinación sobre cierre de revisiones no constituyen evidencia matemática. No se consultó estado raíz, otros chats o notas prohibidas. No hubo agentes nuevos, otros modelos, servicios pagados, publicación ni modificación de manuscritos. Los originales715 quedan intactos; C se conserva y todo el expediente se copia a D.
+
+3. Prueba completa de A, con finitud
+
+Sea Z_i=(a_i,v_i) la rama independiente del mensaje y de X^m; |a_i|^2<=K y v_i>=ell>0. Condicionada a Z^m=z^m, la transición es producto de canales complejos gaussianos, Y_i=a_iX_i+G_{v_i}. Sea c_i=E|X_i|^2 y sum_i c_i<=mP. Para cada z^m, las densidades gaussianamente suavizadas tienen entropías finitas: el ruido da una cota de densidad y el segundo momento es finito para cada v_i finito. Subaditividad y máximo de entropía con segundo momento dan
+ I(X^m;Y^m|Z^m=z^m)<=sum_i log(1+|a_i|^2 c_i/v_i)
+ <=sum_i log(1+Kc_i/ell)<=m log(1+KP/ell).
+Al integrar en las ramas y usar su independencia de X^m,
+ 0<=I(X^m;Y^m)<=I(X^m;Y^m,Z^m)
+ =I(X^m;Y^m|Z^m)<=m log(1+KP/ell).             (A1)
+Estas son identidades/desigualdades de KL y reglas de cadena en espacios estándar Borel. Si la mezcla tiene ruido sin techo, h(Y) podría ser infinito; (A1) sigue siendo válida y finita. No se resta h(Y)-h(Y|X) después de mezclar. En el modelo700 hay además techo de ruido, pero no hace falta para esta prueba de A.
+
+Sea t=TV(Q,G), con TV=mitad de la norma de variación. Para0<t<1, tome la submedida común maximal min(dQ,dG), respecto de Q+G, de masa1-t. Su normalización R permite
+ Q=(1-t)R+tS, G=(1-t)R+tT.
+Por positividad del coste, S,T tienen coste total<=mP/t; R tiene coste<=mP/(1-t). Todos sus MI son finitos por(A1). Construyendo el indicador binario B de esta mezcla, B->X^m->Y^m y la regla de cadena dan EXACTAMENTE
+ I_Q=(1-t)I_R+tI_S+I_Q(B;Y^m),
+ I_G=(1-t)I_R+tI_T+I_G(B;Y^m).
+Cada último término pertenece a[0,h2(t)]. Puesto que0<=I_S,I_T<=m log(1+KP/(ell t)),
+ |I_Q-I_G|<=h2(t)+mt log(1+KP/(ell t)).          (A2)
+Hay UN h2, no dos: la diferencia de dos números de[0,h2] tiene valor absoluto<=h2. También se usa el rango no negativo de I_S,I_T, no una suma de sus cotas. Para t=0 las leyes coinciden; para t=1,(A1) prueba directamente(A2). El límite t log(1+c/t)=0 define el extremo0. Si P=0, las leyes están concentradas en cero.
+
+Versión indispensable para B: (A2) vale también con CUALQUIER t<=delta<=1 en lugar de t. Si t<1 y delta<1, multiplique la submedida común maximal por(1-delta)/(1-t), obteniendo una submedida común de masa1-delta. Los residuos positivos tienen masa delta y coste<=mP/delta. Repita la prueba. Para delta=1 use(A1); para t=delta=0 use igualdad. Esta es una justificación constructiva, no monotonía del lado derecho.
+
+Todas las cotas usan K,ell,P comunes, por lo que son uniformes en la ley de mezcla. Para una familia cualquiera de estas leyes,
+ |inf_nu I_Q(W_nu^m)-inf_nu I_G(W_nu^m)|<=la misma cota.
+Esto NO intercambia supremo sobre entradas con ínfimo sobre canales. A tampoco afirma que una distribución empírica discreta se acerque en TV a una gaussiana continua: tal TV es1. Para C se usan estados cuánticos empíricos y sus Husimi suavizadas.
+
+4. Prueba de B y costes no acotados por coordenada
+
+Sea rho_i un marginal promedio con e_i=Tr rho_i n<infinito. Con q=(a+a*)/sqrt2 y p=(a-a*)/(i sqrt2), [q,p]=i y n=(q^2+p^2-1)/2. Los primeros momentos y la covarianza simetrizada V_i son finitos por Cauchy–Schwarz y por e_i<infinito. La desigualdad de incertidumbre V_i+iOmega/2>=0 asegura la existencia de la única gaussiana sigma_i con esos primeros momentos y V_i. Tiene exactamente energía e_i. Esto admite marginales originalmente no gaussianos, correlaciones globales arbitrarias y energías e_i tan grandes como mE; no se supone e_i<=E.
+
+La simulación de700 para E>=2k/r tiene ruido de señal r-k/E>=r/2 y reset de varianza s=k+r, con ganancia cero. Su variable normalizada de entrada es A=alpha/sqrt E, donde alpha es Husimi. Linealidad y marginalización dan como leyes marginales Q_{rho_i,E}; su momento es
+ P_i=(e_i+1)/E,
+y el de Q_{sigma_i,E} coincide exactamente. La ley de comparación es una gaussiana real planar. La contracción de la distancia traza por heterodina implica
+ TV(Q_{rho_i,E},Q_{sigma_i,E})<=delta_i=D_tr(rho_i,sigma_i).
+La versión no maximal de(A2), con m=1,K=k,ell=r/2, da el error
+ b(delta_i,P_i)=h2(delta_i)+delta_i log(1+2kP_i/(r delta_i)). (B1)
+El valor en delta_i=0 es0. NO se usa monotonía en delta_i. De hecho, para c>0,
+ d/dd [h2(d)+d log(1+c/d)]
+ =log((1-d)/d)+log(1+c/d)-c/(d+c),
+que tiende a menos infinito cuando d sube a1. Esto identifica exactamente el atajo inválido y por qué la construcción de parte común lo evita.
+
+Para cualquier ensemble, incluida una continua, la preparación y DPI dan
+ chi(J:salida)<=I(J:B^m)<=I(A^m;B^m)
+ <=sum_i I_{Q_{rho_i,E}}(W_{E,-}).                         (B2)
+La primera desigualdad puede formularse integrando
+D(salida_j||salida_promedio)<=D(P_{B|j}||P_B), sin H(J). El argumento por particiones finitas y semicontinuidad está en background700. Los MI de(B2) son finitos por(A1) y coste total finito. La última desigualdad es la regla KL para canal producto y divergencia de las salidas respecto del producto de marginales; no presupone entrada producto. En el ejemplo, el coste finito y el ruido finito también acotan la energía de salida, y por tanto sus entropías cuánticas. No aparece una resta infinito menos infinito.
+
+Tras(B1), el cambio de ruido establecido en700 cuesta4k/(rE) por coordenada, UNIFORME en P_i. Para las gaussianas comparadoras, la definición del hull con ley empírica de parámetros y coste medio da
+ (1/m)sum_i I_{Q_{sigma_i,E}}(W_0)<=H_G(Pbar),
+ Pbar=(1/m)sum_i P_i<=1+1/E.
+H_G(P) es finito, no decreciente y cóncavo, con H_G(0)=0; por ello
+ H_G(1+1/E)<=H_G(1)+H_G(1)/E
+ <=H_G(1)+lambda log(1+k/r)/E.
+Se obtiene exactamente B con c0=lambda log(1+k/r)+4k/r.
+
+La función f(d,p)=d log(1+(2k/r)p/d), extendida por f(0,p)=0, es conjuntamente cóncava en d,p>=0: es la perspectiva de log(1+(2k/r)p). Aplicar Jensen a f y a h2, y luego monotonía en p, prueba
+ chi/m<=H_G(1)+c0/E+h2(d)
+       +d log(1+2k(1+1/E)/(rd)),                         (B3)
+ d=(1/m)sum_i delta_i.
+No se requiere una cota individual de P_i. Una coordenada con coste del orden m se incorpora por la perspectiva, no mediante un máximo de costes. Si d=0, todos los delta_i=0; se usa el límite. Para E fijo, la corrección de(B3) tiende a0 cuando d tiende a0, sin restricción adicional sobre cómo se distribuye la energía entre modos.
+
+Definición nueva que evita cambiar silenciosamente R_G:
+ R_marg(E)=sup_{m>=1}(1/m)sup_{ensembles: cada marginal de su promedio
+                 es gaussiano, Tr promedio sum_i n_i<=mE} chi.
+Su promedio global puede ser no gaussiano. B con d=0 da la cota superior de700; la construcción inferior de producto de modulaciones gaussianas de700 pertenece a esta clase. Por tanto
+ H_G(1)-2/(rE)<=R_marg(E)<=H_G(1)+c0/E.                   (B4)
+Es un funcional Holevo explícito más amplio. No se identifica automáticamente con una capacidad operacional. Para una clase con d<=epsilon_m->0, aplique(B3) a su d efectivo: la continuidad del módulo en0 asegura que el supremo de la corrección sobre0<=d<=epsilon_m tiende a0. No hace falta afirmar monotonía global de ese módulo.
+
+5. Falsador: distancia traza y energía acotada no controlan moment matching
+
+Para enteros L>=2,
+ rho_L=(1-1/L)|0><0|+(1/L)|L><L|.
+Su energía es exactamente1 y D_tr(rho_L,|0><0|)=1/L. Sus primeros momentos son cero y su covarianza es isotrópica con energía1, así que su gaussiana con momentos coincidentes es siempre gamma_1. Por continuidad de la distancia en traza,
+ D_tr(rho_L,gamma_1)->D_tr(|0><0|,gamma_1)=1/2.
+Así ni siquiera una cota de energía uniforme convierte proximidad a una gaussiana prescrita en proximidad a la gaussiana de momentos coincidentes. La función energía no es continua en la norma traza bajo su sola acotación. El ejemplo no refuta B: su delta pertinente no tiende a0. Refuta una deducción incompleta de C basada sólo en el truncado/concentración del estado. Para los libros gaussianos de C hace falta, y abajo se prueba, concentración independiente de los momentos.
+
+6. C: definición precisa del experimento típico
+
+Fije E>0, y para aplicar B además E>=2k/r. Fije una lista FINITA de gaussianas reales en C, G_l=N_2(u_l,V_l), l=1,...,L0, con V_l>=0 y p_l=|u_l|^2+Tr V_l<infinito. La lista y E no dependen de m. Se permiten medias no nulas, anisotropía, degeneración e individuales p_l>1. Sea l_m(i) una programación determinista conocida, i=1,...,m. No porta información del mensaje. Suponga que el coste de diseño
+ P_m=(1/m)sum_i p_{l_m(i)}<=1-eta
+para algún eta>0 y todo m grande. La versión con P_m<=1 sin holgura se trata en8.
+
+Tome M_m>=exp(Rm), R>0. Genere X_{ji} independientemente entre mensajes j y coordenadas i, con ley G_{l_m(i)}, y use el libro de estados coherentes producto
+ rho_j=otimes_i |sqrt E X_{ji}><sqrt E X_{ji}|,
+con mensajes equiprobables. La media del libro tiene marginales
+ hat rho_i=M_m^{-1}sum_j |sqrt E X_{ji}><sqrt E X_{ji}|.
+Sea tau_l=int |sqrt E x><sqrt E x| dG_l(x) la gaussiana de diseño. Sea hat sigma_i la gaussiana con los momentos de hat rho_i, no necesariamente tau_{l_m(i)}.
+
+Afirmación típica probada: en cualquier espacio de probabilidad que soporte estos experimentos para todos m (sin necesitar independencia entre diferentes m), casi seguramente
+ max_{1<=i<=m} D_tr(hat rho_i,hat sigma_i)->0,
+y eventualmente el coste medio sobre los mensajes es<=mE. En particular d_m->0 y(B3) se aplica. Los límites son primero m a infinito con E y lista fijos. No se afirma uniformidad en E o en listas cuyo tamaño o energía crezcan con m.
+
+7. Prueba de convergencia típica, incluidos momentos empíricos
+
+7.1. Concentración del estado promedio.
+Sea Pi_L la proyección sobre números de fotones0,...,L, de rango d_L=L+1. Si N_*=E max_l p_l, la cola de cada tau_l satisface
+ Tr tau_l(I-Pi_L)<=N_*/(L+1).
+La desigualdad de truncado no normalizado
+ ||rho-Pi_L rho Pi_L||_1<=2 sqrt(Tr rho(I-Pi_L))
+se aplica a hat rho_i y tau_l. Su esperanza para hat rho_i usa Jensen y la misma cola. Para Y_j=Pi_L|sqrt E X_{ji}><sqrt E X_{ji}|Pi_L, la independencia entre mensajes y el cálculo de varianza Hilbert–Schmidt dan
+ E||M^{-1}sum_j(Y_j-EY_j)||_2^2
+ =M^{-1}(ETr Y_j^2-Tr(EY_j)^2)<=1/M.
+El rango es d_L, por lo que E||promedio-Ymedio||_1<=sqrt(d_L/M). En conjunto,
+ E||hat rho_i-tau_l||_1
+ <=4 sqrt(N_*/(L+1))+sqrt((L+1)/M).                     (C1)
+No se requiere un photon cutoff de cada palabra ni una hipótesis de energía acotada en cada realización individual. Se usa la cola del estado de diseño y luego la esperanza del truncado empírico.
+
+Elija L+1 del orden sqrt M. Entonces(C1)<=C_E M^{-1/4}, uniforme en i y en la lista finita. Con umbral M_m^{-1/8}, Markov y unión sobre m coordenadas dan probabilidad<=C_E m M_m^{-1/8}, sumable en m. Borel–Cantelli prueba
+ max_i D_tr(hat rho_i,tau_{l_m(i)})->0 casi seguramente.
+Ésta es convergencia de estados, no TV entre la medida empírica discreta de amplitudes y su ley continua.
+
+7.2. Primeros y segundos momentos, por separado.
+Escriba x como vector real bidimensional y defina
+ hat u_i=M^{-1}sum_j X_{ji},
+ hat T_i=M^{-1}sum_j X_{ji}X_{ji}^T,
+ hat V_i=hat T_i-hat u_i hat u_i^T.
+Son los momentos empíricos con denominador M; hat V_i>=0. La lista finita de gaussianas tiene un máximo finito de cuartos momentos. Por cálculo de varianzas,
+ E|hat u_i-u_l|^2<=C/M,
+ E||hat T_i-(V_l+u_lu_l^T)||_F^2<=C/M.                 (C2)
+Con umbral M_m^{-1/8}, la unión de las probabilidades de fallo se acota por C m M_m^{-3/4}, otra serie sumable. Casi seguramente, para todos los i y todo m grande, los errores de(C2) son<=M_m^{-1/8} (ajustando constantes irrelevantes). En consecuencia max_i||hat V_i-V_l||_F->0. También los costes empíricos individuales Tr hat T_i convergen uniformemente a p_l. Esto es el control ausente en la inferencia refutada en5.
+
+7.3. La gaussiana correcta y su distancia.
+El estado hat rho_i es una mezcla clásica de coherentes. Su gaussiana moment-matched es precisamente la mezcla coherente con ley N_2(hat u_i,hat V_i). En convenciones [q,p]=i, la media cuántica es sqrt(2E)hat u_i y la covarianza es I/2+2Ehat V_i. Esto prueba existencia y energía coincidente directamente para los libros de C, incluso cuando hat V_i es singular.
+
+Acople dos gaussianas clásicas mediante el mismo Z~N_2(0,I). La distancia traza de coherentes puros cumple
+ D_tr(|alpha><alpha|,|beta><beta|)
+ =sqrt(1-exp(-|alpha-beta|^2))<=|alpha-beta|.
+Por convexidad e integración del acoplamiento,
+ D_tr(tau(u,V),tau(u',V'))
+ <=sqrt E [|u-u'|^2+||sqrt V-sqrt V'||_F^2]^{1/2}.      (C3)
+La raíz positiva matricial es continua en toda la matriz semidefinida positiva, incluido su borde. No hace falta invertir V. Para una demostración elemental de esta continuidad, en un intervalo espectral compacto aproxime sqrt x uniformemente por polinomios; la evaluación de cada polinomio es continua en matrices y el error de norma se controla por el error uniforme. Las matrices empíricas permanecen eventualmente en un compacto por(C2), y los puntos de diseño son finitos.
+
+(C2) y(C3) implican max_i D_tr(hat sigma_i,tau_l)->0 casi seguramente. Junto con(C1) y la desigualdad triangular, prueban la afirmación de6 para las gaussianas con MOMENTOS EMPÍRICOS. El argumento no importa un teorema de continuidad cuántica de momentos sin comprobar sus hipótesis; (C3) usa que estas gaussianas son mezclas de coherentes. Para B general con estados squeezed sólo se necesitaba existencia del comparador, no(C3).
+
+8. Coste: holgura, falsador en el borde y reparación
+
+El coste normalizado real del libro es
+ hat P_m=(mM_m)^{-1}sum_{i,j}|X_{ji}|^2
+         =(1/m)sum_i Tr hat T_i.
+(C2) implica |hat P_m-P_m|=O(M_m^{-1/8}) casi seguramente, eventualmente. Con P_m<=1-eta, el libro satisface hat P_m<=1 eventualmente. Ésta es la restricción media sobre mensajes del modelo; no se ha probado ni usado un límite de energía para cada mensaje, ni un cutoff de número de fotones.
+
+Falsador de factibilidad automática sin holgura: para una sola ley CN(0,1), mM_m hat P_m es suma de mM_m exponenciales independientes de media1. Por el teorema central del límite,
+ Pr(hat P_m<=1)->1/2.
+Así el enunciado «el diseño tiene coste1 y los libros cumplen el presupuesto con probabilidad tendiente a1» es falso para libros sin ajustar. Una esperanza sobre la elección del libro no equivale a su coste físico una vez fijado el código.
+
+Reparación opcional si P_m<=1: ponga
+ t_m=min(1,hat P_m^{-1/2}), con t_m=1 cuando hat P_m=0,
+y sustituya cada X_{ji} por t_m X_{ji}. La reescala es la misma para todos los mensajes y modos de ese libro, y se fija con el código. Su coste queda<=1 exactamente. Por(C2), 1-t_m=O(M_m^{-1/8}) casi seguramente. Las medias/covarianzas empíricas reescaladas son t_m hat u_i,t_m^2 hat V_i; vuelven a converger uniformemente a los datos de diseño. Las distancias de los marginales empíricos antes/después satisfacen
+ D_tr(hat rho_i',hat rho_i)
+ <=sqrt E |1-t_m|sqrt(Tr hat T_i)->0
+uniformemente en i. Aplicando(C3) a sus comparadores, la propiedad d_m->0 se conserva. El libro ajustado deja de ser estrictamente iid en su distribución conjunta; se describe como un libro iid gaussiano seguido de esta corrección común explícita, no se oculta ese cambio.
+
+La reparación tampoco tiene por qué destruir una fiabilidad ya demostrada del libro original. Para los estados producto de cada mensaje, el solapamiento coherente da
+ M^{-1}sum_j D_tr(rho_j',rho_j)
+ <=|1-t_m|sqrt(mE hat P_m)
+ =O(sqrt(mE)M_m^{-1/8})->0 a E fijo.
+Por contracción de la norma traza, el cambio de error medio de CUALQUIER canal y decodificador es a lo sumo esta cantidad. La cota es uniforme en el canal, también en una familia de fases. Esto transfiere fiabilidad SI ésta se había probado por separado; no la crea. Es precisamente la velocidad exponencial de M_m la que permite afirmar este último control de bloque con la estimación usada. Sin velocidad suficiente, sólo t_m->1 no bastaría para un control de error de bloque.
+
+9. Consecuencia operacional admitida y límites
+
+Considere cualquier secuencia de códigos con coste medio<=mE, mensajes equiprobables y promedio marginal con d_m->0. Si existe un decodificador cuyo error medio epsilon_m->0, Holevo y Fano implican
+ (1-epsilon_m)(log M_m)/m-h2(epsilon_m)/m
+ <=chi_m/m<=H_G(1)+c0/E+o(1).
+Por tanto su tasa límite superior es<=H_G(1)+c0/E. La cota vale para todo decodificador colectivo y no requiere que las palabras sean producto o gaussianas. Para los libros típicos definidos en6, con holgura o ajuste de8, la hipótesis d_m->0 está probada. Esta es una extensión operacional de la cota más allá de promedio global exactamente gaussiano; no es sólo la evaluación de una ensemble ideal continua.
+
+Para fase desconocida fija, el converse vale al fijar cualquier fase; si el error es uniforme en fases, en particular tiende a cero en esa fase. La rotación unitaria de salida mantiene además la misma chi. C no prueba un common decoder ni tasas alcanzables para el libro aleatorio. El código común no gaussiano que supera H_G para E grande sigue siendo una dependencia del teorema de background700, no una consecuencia nueva de la concentración. Si se usa ese resultado previo, el converse aquí desarrollado hace aplicable la separación a estas secuencias típicas gaussianas, bajo los cuantificadores expresos.
+
+No se cubre toda realización determinista, selección adversarial de un libro, postselección arbitraria, mensajes con pesos arbitrarios, covarianzas que porten mensaje, listas cuyo tamaño o energía diverjan con m, ni todo protocolo denominado gaussiano. No se afirma que los estados promedio globales de los libros sean próximos en traza a un producto gaussiano: basta la aproximación marginal probada. No se intercambia el límite m->infinito con E->infinito. No se demuestra aquí una capacidad operacional exacta de la clase de códigos marginalmente gaussianos ni su achievability coincidente con R_marg. B4 es un funcional Holevo; la desigualdad de esta sección es un converse operacional separado.
+
+10. Antecedentes primarios: versiones y profundidad efectiva
+
+Winter, arXiv:1507.07775v6,12enero2016, "Tight uniform continuity bounds for quantum entropies: conditional entropy, relative entropy distance and energy constraints". PDF12p, SHA2562024fd6eda7d5388dff99bff86364ac3910eb73336041cb3f7c7c6014961f89a. Lectura propia: abstract; Lemma2 y su prueba completa en pp2–3; hipótesis Gibbs del apartado energético; Proposition14 y Lemma15 con pruebas en pp7–8. Su Lemma2 usa una mezcla común auxiliar mediante partes positivas y una cota de casi afinidad; Lemma15 usa Gibbs a energía inflada por el inverso de la distancia. Son antecedentes claros del método de continuidad y del precio energético de componentes excepcionales. No se atribuye a ese artículo la constante específica de(A2). Su hipótesis cuántica discreta/Gibbs no se identifica sin más con un registro clásico de amplitud continua y coste multiplicativo. No se leyó todo el artículo ni se importa su prueba de entanglement cost.
+URL exacta:https://arxiv.org/pdf/1507.07775v6.
+
+Shirokov, arXiv:1610.08870v5,3noviembre2018, "Uniform continuity bounds for information characteristics of quantum channels depending on input dimension and on input energy". PDF33p, SHA256c9ffde096a5058cfcc1c5f5b7e24b2c3e27b859bc6dec765af8f2ce7cf758553. Lectura propia: abstract; relación(10),Lemma2; hipótesis energéticas(11),(14),(15) y contexto de funciones localmente casi afines; introducción de Section6; Section6.2 completa, Propositions7/8 y sus pruebas escritas. Prop7 exige distancias de ENSEMBLES DK/D0/D* y energía de sus promedios; trata ensembles continuas por aproximación. La prueba discreta se remite a otro artículo, que no se auditó aquí. No permite sustituir directamente proximidad de promedios marginales por proximidad de ensembles. Tampoco convierte proximidad en traza en control de momentos. Su método es antecedente general pertinente; no es una prueba automática de B o C. Las hipótesis oscilador se cumplen en su contexto, pero aquí A tiene una prueba clásica directa y B usa la simulación específica.
+URL exacta:https://arxiv.org/pdf/1610.08870v5.
+
+Un barrido adicional dirigido buscó continuidad de MI con coste/TV y concentración de estados empíricos coherentes. No identificó en los resultados consultados un enunciado exacto de715; esto no prueba ausencia ni prioridad. Apareció "Learning quantum states of continuous-variable systems" (Nature Physics2025) como pista sobre continuidad de estados gaussianos respecto de momentos. Sólo se vio el extracto de búsqueda; la apertura de PMC devolvió comprobación de navegador/CAPTCHA. No se intentó resolverla ni se importó ese resultado. Se registra como pista no verificada, no como dependencia. Otros resultados de búsqueda no se adoptan como pruebas.
+
+La extensión analítica es una aplicación técnica de herramientas conocidas: mezcla común, cota de coste, perspectiva cóncava, corte de fotones, varianza finita y Borel–Cantelli. Su consecuencia elimina una restricción real de promedio global en el converse, pero esta auditoría no certifica prioridad, importancia ni necesidad de un artículo separado. El teorema típico está escrito aquí para cerrar C sin atribuirle una generalidad mayor.
+
+11. Inventario de comprobaciones y cierre
+
+Comprobaciones analíticas: extremosdelta0/1; un único h2; finitud con ruido de cola no acotada; parte común no maximal; covarianza cuántica y energía exacta; Husimi photon+1; DPI para ensembles continuas; costes por coordenada arbitrarios y perspectiva; distinción de nuevo funcional; contraejemplo de energía no continua; truncado sin normalizar y rango; varianza Hilbert–Schmidt; Borel–Cantelli con M exponencial; momentos empíricos y covarianza singular; coste saturado con límite1/2; reescala y error de bloque; Holevo/Fano antes del límite de energía.
+
+No se suministró ni ejecutó un diagnóstico numérico como prueba. Los dos falsadores son analíticos. No se cambió ningún archivo de entrada. La custodia incluye originales copiados, lecturas primarias con hashes, contexto, este informe y veredicto estructurado, con manifiesto de payloads y comparación byte a byte C/D. La finalización del archivo se registra por separado de la terminación matemática.
+
+Disposición final: A/B apoyadas con completaciones explícitas; C apoyada como teorema típico preciso y converse condicionado a fiabilidad, con coste tratado. Refutadas las dos inferencias auxiliares identificadas; ninguna conclusión genérica sobre todos los códigos gaussianos. Sin nota, sin evaluación de700/701 y sin atestación de independencia.
