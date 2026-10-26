@@ -1,0 +1,1120 @@
+Classical limits and learning gaps
+for compound bosonic fading channels
+Lluis Eriksson
+26 October 2026
+Abstract
+We study classical communication over noisy mixtures of phase-insensitive bosonic
+Gaussian channels. Both thermal noise and photon budget scale with an energy parameter.
+An explicit measure–prepare representation converts every quantum block code, including
+entangled codewords and collective receivers, into a classical code with identical error and
+an exactly quantified cost increment. The same simulation works for an unknown fixed
+mixing law. A Gaussian-smoothing estimate and a uniform finite-alphabet reduction give
+an explicit O(E−1) comparison with a classical compound variational value. This value
+optimizes one input distribution before taking the worst mixing law. We also prove a strict
+separation between classical optimal modulation and the time-sharing hull of Gaussian
+coherent modulations for a matched-reset example. Matching bounds determine the high-
+energy limit of a regularized Holevo functional with Gaussian average marginals. A block-
+uniform, energy-controlled continuity modulus removes both exact marginal Gaussianity
+and Gaussianity of the full average state. We prove that almost every product coherent
+Gaussian random codebook from a fixed finite deterministic schedule has the required
+approximate marginals, controlling empirical moments separately.
+Strict cost slack or
+an explicit common rescaling enforces physical feasibility.
+This yields an operational
+converse for reliable sequences in the defined typical class, below an unrestricted non-
+Gaussian common-code rate at suﬀiciently large energy. It does not assert a good decoder
+for every random book or cover every protocol described as Gaussian. The same explicit
+classical comparison extends to free prior entanglement. For a finite compound family
+with classical feedback the limiting value instead optimizes after the worst law is fixed.
+A matched-reset/AWGN pair has a strict learning gap: one feedback bit after a zero-
+photon pilot eventually outperforms arbitrary prior entanglement without feedback. The
+Gaussian, coding and continuity tools used in the argument have established antecedents.
+1
+Model and operational statement
+All logarithms are natural, and h2 denotes binary Shannon entropy.
+Write ϕv(z) = (πv)−1e−|z|2/v, so that E|Gv|2 = v. A thermal state γt has mean pho-
+ton number t.
+Let Φa,t be the phase-insensitive channel sending a coherent input |z⟩to
+D(az)γtD(az)∗. Its characteristic function is
+χΦa,t(ρ)(ξ) = χρ(¯aξ)e−[t+(1−|a|2)/2]|ξ|2.
+Physicality requires t ≥max(0, |a|2 −1).
+Fix K < ∞, 0 < v∗≤v∗< ∞, and the compact parameter space
+Θ = {(a, v) ∈C × R : |a|2 ≤K,
+v∗≤v ≤v∗}.
+Let Γ be a nonempty weakly closed set of probability laws on Θ. For ν ∈Γ define
+NE,ν =
+Z
+Θ
+Φa,vE dν(a, v),
+Wν(y|x) =
+Z
+Θ
+ϕv(y −ax) dν(a, v).
+1
+
+
+The unknown law ν is fixed throughout each code; conditional on it, branches are sampled
+independently in different uses. Neither party receives the branch label or the unknown law.
+This is a compound memoryless model, not an arbitrarily varying channel.
+A quantum code with M equally likely messages has m-mode states ρj, a single decoding
+POVM {Dj}, and expected photon cost
+M−1 X
+j
+Tr ρj
+m
+X
+i=1
+ni ≤mE.
+The average message error must tend to zero uniformly over ν ∈Γ. Write Copt(E, Γ) for its
+supremum of rates. It is an unassisted classical capacity of a quantum channel, not a capacity
+for transmitting qubits.
+For a law µ on C, write Iµ(Wν) = I(X; Y ), and set
+VΓ(P) =
+sup
+µ:
+∫
+|x|2dµ≤P
+inf
+ν∈Γ Iµ(Wν).
+It is essential that the input optimization precede the worst-law operation. This is generally
+different from the worst separately optimized capacity.
+Theorem 1 (Uniform classical comparison). For E > 0, E ≥2K/v∗, the preceding model
+obeys
+VΓ(1) −
+2
+v∗E
+≤Copt(E, Γ) ≤VΓ(1) + log(1 + K/v∗) + 4K/v∗
+E
+.
+(1)
+For K = 0 both operational capacities are zero. The constants are independent of Γ; K, v∗, v∗
+stay fixed.
+Coding length tends to infinity at fixed E, before energy tends to infinity. No uniform
+blocklength, eﬀicient optimizer, fixed-error strong converse or positivity for every family is
+asserted. In particular, a family containing a completely replacing channel has value zero. If
+Γ = ΓE changes between energy levels, (1) compares to VΓE(1); it does not assert that this
+sequence converges.
+2
+An exact simulation preserving the common decoder
+Put k = |a|2. For t ≥k, the heterodyne measure–prepare representation is
+Φa,t(ρ) =
+Z
+C
+Qρ(α)D(aα)γt−kD(aα)∗d2α,
+Qρ(α) = π−1⟨α|ρ|α⟩.
+(2)
+This is a specialization of the established Gaussian entanglement-breaking representation [1, 2].
+Indeed, the characteristic function of the heterodyne outcome is χρ(η)e−|η|2/2; multiplying it
+by the preparation factor e−(t−k+1/2)|ξ|2, at η = ¯aξ, gives the characteristic function in Section
+1. Thus the noise subtraction in (2) is k, and
+Z
+|α|2Qρ(α) d2α = Tr ρn + 1.
+(3)
+The identity extends to correlated m-mode Husimi outcomes, with total cost Tr ρ P
+i ni + m.
+For t > k, refine the prepared thermal state by its positive coherent-state representation.
+For every quantum code this gives the classical Markov chain
+J −→Am −→Bm −→bJ,
+P( bJ = j|Bm = βm) = ⟨βm|Dj|βm⟩.
+(4)
+2
+
+
+Given Am, the middle transition is a product of mixtures with variance vE −k. Both the
+stochastic Husimi encoder and the final Born decision kernel are independent of ν. Equation
+(4) reproduces the error of the quantum code for every law, with its correlations intact. The
+hidden Bm is a converse simulation variable, not an observation supplied to the physical
+receiver.
+Normalize X = A/
+√
+E, Y = B/
+√
+E. Define
+WE,−,ν(y|x) =
+Z
+ϕv−k/E(y −ax) dν,
+WE,+,ν(y|x) =
+Z
+ϕv+1/E(y −ax) dν.
+The lower channel is realized by coherent input |
+√
+Ex⟩and heterodyne reception. The upper
+simulation has mean cost at most 1 + 1/E, by (3). Consequently the operational classical
+compound capacities satisfy the exact sandwich
+Ccmp(WE,+, Γ, 1) ≤Copt(E, Γ) ≤Ccmp(WE,−, Γ, 1 + 1/E).
+(5)
+No additivity or Gaussian optimizer of the quantum mixture is used. For continuous ν, the
+state integrals are trace-norm Bochner integrals; probabilities and nonnegative moments also
+permit Tonelli.
+3
+Uniform information estimates
+Lemma 2 (Entropy continuity). Suppose planar densities fn, f ≤L < ∞converge in L1 and
+their second moments are at most M < ∞. Then h(fn) →h(f).
+Proof. On a fixed ball use the uniform continuity of −u log u on [0, L]. Outside radius R, let δ
+be the mass. The restricted, normalized density has second moment at most M/δ. Gaussian
+maximum entropy therefore gives
+−δ log L ≤−
+Z
+|y|>R
+f log f ≤δ log(πeM/δ2).
+Here δ ≤M/R2; both bounds tend uniformly to zero as R →∞, with value zero when δ = 0.
+This also proves finiteness of the entropies in the assertion.
+Lemma 3 (Noise sensitivity). Fix any input law of finite second moment and any mixture of
+bounded gains. If component variances follow vθ = v0 + θd ∈[ℓ, U], ℓ> 0, with |d| ≤D, then
+|Iµ(Wθ1) −Iµ(Wθ0)| ≤2D
+ℓ|θ1 −θ0|.
+(6)
+The constant is independent of the input peak, its cost and the mixing law.
+Proof. First take a compactly supported input. Let fa,v = (a#µ) ∗ϕv, f =
+R
+fa,vdν, and J =
+R
+d ∇fa,vdν. Complex variance v means real-coordinate variance v/2, hence ∂vϕv = ∆ϕv/4.
+Differentiation and integration by parts yield
+∂θh(f) = 1
+4
+Z
+J · ∇log f.
+The Gaussian score conditional-expectation identity and Jensen give F(fa,v) ≤4/v ≤4/ℓ,
+where F(f) =
+R
+|∇f|2/f is planar Fisher information. Weighted Cauchy–Schwarz gives
+F(f) ≤4/ℓ,
+Z
+|J|2/f ≤4D2/ℓ.
+3
+
+
+Thus |∂θh(f)| ≤D/ℓ. To justify the differentiations, bounded centers and variances give com-
+mon Gaussian upper tails, a Gaussian lower density bound, and polynomial-times-Gaussian
+bounds for derivatives; boundary terms vanish. These bounds hold uniformly over atoms or
+continuous mixtures.
+For a general input, replace its tail outside radius R by zero. The coupled outputs converge
+in L1, are bounded by (πℓ)−1, and have second moment at most KE|X|2 + U. Lemma 2
+passes the integrated entropy inequality to the limit. This does not require differentiability
+for the untruncated heavy-tailed input.
+For a fixed letter x, the same entropy bound is
+independent of x. Conditional entropies are integrable, bounded below by a constant and
+above by log[πe(K|x|2 +U)]. Integrate the conditional bound and subtract it from the output
+bound to obtain (6).
+Revealing the independent branch only for an information upper bound gives
+0 ≤Iµ(Wν) ≤
+Z
+log(1 + |a|2P/v) dν ≤log(1 + KP/v∗).
+(7)
+No branch is revealed to the actual decoder. The function VΓ is finite, nondecreasing and
+concave, and VΓ(0) = 0.
+Indeed input concavity holds simultaneously for every law and
+survives the infimum. In particular
+VΓ(1 + u) ≤(1 + u)VΓ(1).
+(8)
+4
+One code for a continuous compound family
+We supply the reduction to the established finite-alphabet compound coding mechanism [3, 4];
+a finite-output theorem alone does not justify continuous observations or physical costs.
+Proposition 4. For the Gaussian-smoothed family above and P > 0,
+Ccmp(W, Γ, P) = VΓ(P).
+(9)
+The same holds for either family in (5) at fixed admissible E.
+Proof. For the converse, Fano and data processing applied to a common stochastic encoder
+give, for each ν,
+(1 −ϵ) log M −h2(ϵ) ≤I(J; Y m
+ν ) ≤
+X
+i
+Iµi(Wν) ≤mI¯µ(Wν),
+¯µ = m−1 X
+i
+µi.
+The law ¯µ has cost at most P and is independent of ν. Taking the infimum over ν, then
+optimizing feasible ¯µ, gives the required order. The block inequality can be proved without
+subtracting infinite differential entropies: the KL chain rule with product output marginals
+gives
+X
+i
+I(Xi; Yi) = I(Xm; Y m) + D(PY m∥Q
+i PYi).
+All terms are finite in our bounded-noise regime by (7).
+For achievability choose a feasible input near VΓ(P). Mixing it with a small mass at zero
+makes its cost strictly below P; concavity loses arbitrarily little information uniformly in ν by
+(7). Truncate its tail to zero, then quantize a bounded input ball. The Gaussian kernel has
+the global input-gradient bound
+√
+2K/(π√e v3/2
+∗
+). Thus their density difference is at most
+this constant times E|Xl −X|. Under this coupling the output densities converge uniformly
+on every output ball, uniformly in ν, and have common density and second-moment bounds.
+4
+
+
+The proof of Lemma 2, split into that ball and its complement, gives uniform output entropy
+convergence. The conditional entropy is jointly continuous on compact input and parameter
+domains and is bounded by a constant plus log(1 + |x|2). Its tail integral under the fixed
+input vanishes. Thus one finite input alphabet with strict cost slack approximates all the
+information quantities simultaneously.
+For this finite input law choose nested finite output partitions: expanding dyadic boxes,
+their refined cells, and one exterior cell.
+They generate the Borel sigma algebra.
+Their
+mutual informations increase to the continuous-output information by posterior martingale
+convergence; the posterior entropy is bounded by the finite input entropy. Each partition
+information is continuous in ν: Gaussian kernels depend continuously on (a, v) in L1, so every
+Borel cell probability is continuous, including the unbounded exterior cell. The limit is also
+continuous: bounded means and compact positive variances give common Gaussian tails and
+local density convergence. Dini’s theorem on compact Γ now supplies one finite partition with
+uniformly small loss. This partition is fixed before code length.
+For completeness, let A, B be these finite alphabets, and let R < infW I(p, W). Choose
+constant-composition types pn →p on its positive support, retaining strict cost slack. Draw
+M = ⌈enR⌉codewords uniformly and independently from their type class. Decode a unique
+codeword whose empirical mutual information with the output exceeds R+η, with η > 0 below
+the rate slack. This decoder is independent of W. Hoeffding bounds for output counts within
+each input-symbol class, followed by finite-alphabet entropy continuity, make the transmitted
+word fail the threshold with probability e−cn, uniformly in W. For any fixed output word a
+random competing codeword crosses the threshold with probability at most poly(n)e−n(R+η):
+a conditional type class has size at most enH(X|Y ), whereas the input type class has size at
+least (n+1)−|A|enH(pn). Sum over the polynomial number of joint types and over competitors.
+To choose one deterministic codebook, cover the finite stochastic-matrix family in per-row
+total variation by a net of radius n−2, of cardinality at most (Cn2)|A||B|. Choose its points from
+the family; all retain the rate slack. The expected sum of average errors on this net tends
+to zero, so a deterministic codebook has uniformly vanishing net error.
+Product-channel
+total variation changes every decoder error by at most nn−2. Therefore its error vanishes
+over the whole family. There is no exchange of an expected supremum with a supremum of
+expectations.
+Each word has exact additive cost n P
+x pn(x)|x|2 < nP. Mapping x to |
+√
+Ex⟩enforces
+physical expected photon cost E P
+i |xi|2 for every message. Fix the slack and finite approx-
+imations first, let n →∞, then remove those approximations. Equivalently, for each rate
+strictly below the variational value, choose all finite approximations once before taking the
+coding limit. If that value is zero, the converse already settles the zero-rate case. The result
+asserts no uniform coding length or eﬀicient search.
+Proof of Theorem 1. For the plus family use (6) with D = 1, ℓ= v∗, over an interval of length
+1/E. For the minus family use D = K, ℓ= v∗/2, valid when E ≥2K/v∗. The bounds survive
+infima and suprema over the same laws and input constraints. Consequently
+VE,+,Γ(1) ≥VΓ(1) −2/(v∗E),
+VE,−,Γ(P) ≤VΓ(P) + 4K/(v∗E).
+Apply (9) in (5), then (8) and (7).
+This gives (1).
+The optimized coherent-modulation
+heterodyne rate is within [log(1+K/v∗)+(4K+2)/v∗]/E of the unrestricted quantum rate.
+5
+A matched-reset application: a strict Gaussian-hull gap
+Fix k, r > 0, 0 < λ < 1, q = 1 −λ, s = k + r, and
+Wθ(y|x) = λϕr(y −
+√
+keiθx) + qϕs(y).
+5
+
+
+For µ0 = CN(0, 1), the average output is exactly ϕs. Let F denote the signal/reset flag and
+H(x) = H(F|Y, X = x). It is radial, bounded, positive at finite x, and tends to zero at
+infinity. The last assertion follows by separating the two widely separated Gaussian clouds
+and applying binary Fano. It follows that H is not aﬀine in |x|2.
+There exists a compactly supported bounded radial h, normalized by ∥h∥∞≤1, with
+Z
+h dµ0 =
+Z
+|x|2h dµ0 = 0,
+a0 =
+Z
+hH dµ0 > 0.
+(10)
+Indeed, if all such moment-annihilating tests annihilated H, two fixed radial moment correc-
+tors would imply that H equals an aﬀine function of |x|2 on every bounded radial domain,
+hence globally almost everywhere. Boundedness and decay would make it zero, contradicting
+positivity. Reverse the sign and normalize a nonzero test. The moment-corrector matrix is
+invertible by taking two disjoint annuli with distinct conditional squared radii.
+For µϵ = (1 + ϵh)µ0, (10) preserves mass and cost. Since the output second moment stays
+s, Gaussian cross entropy and the binary flag identity give
+Iµϵ(W0) −Iµ0(W0) = ϵa0 −D(pY,ϵ∥ϕs) ≥ϵa0 −ϵ2
+Z
+h2 dµ0.
+(11)
+The last inequality is KL data processing and log(1 + u) ≤u. A fixed suﬀiciently small ϵ > 0
+gives a positive, non-numerical improvement.
+Let Gϑ range over all real two-dimensional Gaussian laws on C, including displaced,
+anisotropic and singular laws.
+Write ϑ = (m, V ), p(ϑ) = |m|2 + Tr V , J(ϑ) = IGϑ(W0),
+and define
+HG =
+sup
+η:
+∫
+p dη≤1
+Z
+J dη.
+(12)
+Here the time-sharing setting is known to both parties and does not itself carry a message.
+Proposition 5 (Strict Gaussian scheduling gap). For this matched-reset channel, HG < C(1),
+where C(P) = supµ:E|X|2≤P Iµ(W0).
+Proof. The symmetry, injectivity and strict-growth strategy has nearby antecedents in fading
+problems [8, 7]; we check it directly for the present channel and Gaussian scheduling class. The
+output-law map is injective: subtract qϕs and Fourier transform the remaining convolution,
+whose Gaussian factor is nowhere zero. Thus output entropy, and hence mutual information,
+is strictly concave in the input law.
+If a Gaussian law attained C(1), rotation covariance and strict concavity would force it
+to be circular CN(0, P). The finite concave nondecreasing capacity C(P) is unbounded, since
+revealing the independent flag costs at most h2(λ) and gives
+C(P) ≥λ log(1 + kP/r) −h2(λ).
+Such a function is strictly increasing: a flat interval would, by concavity and monotonicity,
+force all subsequent slopes to vanish. Therefore P = 1, contradicted by (11). No Gaussian
+law attains C(1).
+The parameter sublevel sets of p are compact.
+Laws η with
+R
+p dη ≤1 are tight and
+weakly closed, hence compact. Gaussian smoothing and Lemma 2 show that J is continuous,
+including at singular covariance matrices. Furthermore
+0 ≤J(ϑ) ≤λ log(1 + kp(ϑ)/r).
+The upper bound is sublinear in p, so its tails over p > R are uniformly integrable under the
+mean-cost constraint. Compactly supported continuous truncation then makes η 7→
+R
+J dη
+continuous. The supremum (12) is attained.
+6
+
+
+For an attaining η∗, the barycenter ¯µ =
+R
+Gϑ dη∗has cost at most one. To justify averaging
+entropies, every output density is bounded below by qϕs and above by a common constant.
+Thus | log pY,¯µ(y)| ≤C + C′|y|2, and the average output second moment is finite. Individual
+output entropies have integrable bounds by constants and by C+log(1+p(ϑ)); the conditional
+entropy of W(.|x) is bounded through its binary flag identity. Fubini therefore gives the exact
+identity
+I¯µ(W0) −HG =
+Z
+D(pY,ϑ∥pY,¯µ) dη∗≥0.
+If HG = C(1), equality forces almost all output laws to coincide. Injectivity makes almost all
+Gaussian input laws identical to ¯µ, which would be a Gaussian maximizer. This contradiction
+proves the strict gap. Its size and its optimizer are not computed.
+For any correlated multivariate Gaussian modulation on product coherent states with total
+cost mE, positive thermal preparation gives exactly
+χ(Xm : N⊗m
+E,θ ) ≤I(Xm : Y m) ≤
+X
+i
+Iµi(Wθ) ≤mHG.
+(13)
+The first inequality uses the preparation chain Xm →Y m →|
+√
+EY m⟩, valid for coherent
+letters without the input heterodyne cost increment. Here NE,θ = λΦ√
+keiθ,rE + qγsE Tr; we
+may take E ≥2k/r, which also ensures physicality and the hypotheses of Theorem 1. The last
+uses Gaussian marginals and their average cost, allowing individual costs above one. Known,
+non-message-bearing time sharing of such blocks is also covered. This does not bound squeezed
+or entangled Gaussian quantum signal states, message-bearing covariance selection, or every
+protocol described as Gaussian.
+Choose a finite input law of strict cost below one whose information exceeds HG by a
+fixed amount, using Proposition 4’s approximation argument. Heterodyne reception loses at
+most 2/(rE) by (6), so it eventually beats the entire benchmark (13). For an unknown fixed
+phase, Wθ(y|x) = W0(e−iθy|x) implies Iµ(Wθ) = Iµ(W0) for every input law. The common
+code, rather than this equality alone, is supplied by (9). No phase oracle is assumed.
+5.1
+Ensembles with Gaussian average quantum states
+Consider any ensemble {pj, ρj} on m modes with average state ¯ρ = P
+j pjρj Gaussian and
+Tr ¯ρ P
+i ni ≤mE. The average state may be displaced, squeezed or entangled across uses;
+the conditional states need not be Gaussian. Continuous ensembles use the relative-entropy
+definition of Holevo information. Then
+1
+mχ
+ {pj, N ⊗m
+E,θ (ρj)}
+
+≤HG + λ log(1 + k/r) + 4k/r
+E
+.
+(14)
+The simulation in (4) implies
+χ(J : output) ≤I(J; Bm) ≤I(Am; Bm) ≤
+X
+i
+Iµi(WE,−,θ).
+For continuous labels, the first inequality is D(σj∥¯σ) ≤D(PB|j∥PB), integrated in j, without
+subtracting an entropy of the label. To justify it, approximate the density ratios by conditional
+expectations on increasing finite partitions of B, preparing the average coherent state in each
+cell. Finite-partition data processing, L1 convergence of the ratios, trace-norm convergence
+of the prepared states, and lower semicontinuity of relative entropy pass to the limit. Tonelli
+averages the inequalities. The remaining steps are classical data processing and the block KL
+chain rule. Linearity of the Husimi function makes its average law Q¯ρ, which is multivariate
+7
+
+
+Gaussian for any Gaussian quantum state: heterodyne is a Gaussian measurement [9]. Its
+normalized marginals µi are real planar Gaussian laws, with average cost at most 1 + 1/E.
+Correlations in Am are allowed in the displayed block inequality. The noise-sensitivity bound,
+uniform in each marginal cost, gives
+Iµi(WE,−,θ) ≤Iµi(W0) + 4k
+rE .
+Writing HG(P) for (12) at cost P, the sum is therefore at most mHG(1+1/E)+4mk/(rE). The
+hull is finite, nondecreasing and concave in cost, with HG(0) = 0; mix its parameter probability
+laws to see concavity. Thus HG(1+1/E) ≤HG+HG/E. Revealing the independent signal flag
+and applying Jensen in cost also yields HG ≤λ log(1+k/r), proving (14). All output entropies
+are finite under the photon constraint and the uniform preparation-noise floor. Known time
+sharing among such blocks is covered by summing their marginal costs before applying HG(P).
+By Proposition 5, a fixed finite strict-cost law can have Iµ(W0) ≥HG + δ for some δ > 0.
+Its coherent-modulation heterodyne rate exceeds the supremum of (14), over all block lengths,
+by at least
+δ −λ log(1 + k/r) + (4k + 2)/r
+E
+,
+(15)
+which is positive for suﬀiciently large E. The common unknown-phase decoder is again sup-
+plied by (9).
+Equation (14) uses the global Gaussian-average condition. Its distinction from a Gaussian
+ensemble is standard; see [12, Remark 2], where a thermal average of Fock states gives an
+example. That work concerns Gaussian measurement channels, not the present non-Gaussian
+signal/reset mixture. Finite codebooks generally do not have an exactly Gaussian average.
+Section 6 gives a quantitative bound under approximately Gaussian average marginals and
+proves that a precisely defined typical Gaussian random-codebook class satisfies it. Message-
+dependent covariance choices and arbitrary deterministic books are not automatically covered.
+5.2
+A matching limit for the ensemble benchmark
+Define the regularized Gaussian-average Holevo functional
+RG(E) = sup
+m≥1
+1
+m
+sup
+{pj,ρj}: ¯ρ Gaussian
+Tr ¯ρ ∑
+i ni≤mE
+χ
+ {pj, N ⊗m
+E,0 (ρj)}
+
+.
+(16)
+Corollary 6 (Gaussian-average Holevo limit). For E ≥2k/r, the functional (16) satisfies
+HG −2
+rE ≤RG(E) ≤HG + λ log(1 + k/r) + 4k/r
+E
+.
+(17)
+In particular RG(E) →HG.
+Proof. The upper bound is (14).
+For the lower, take a parameter probability law nearly
+optimal in (12). Mixing it with a small mass at the zero-cost point Gaussian creates strict
+cost slack with arbitrarily small loss of its average J. Replace its high-cost tail by that point.
+The information loss tends to zero since J(ϑ) ≤λ log(1 + kp(ϑ)/r) = o(p(ϑ)). On a compact
+parameter sublevel, continuity of p, J permits finite quantization; rational approximation of
+the resulting weights retains the cost slack. Thus rational finite time-sharing laws approximate
+HG from below with strict mean cost below one.
+For weights with denominator m, use m independent coherent Gaussian modulations in
+their respective parameter settings. Their average quantum input is a product Gaussian state,
+of photon cost E P
+i p(ϑi) < mE. Heterodyne information adds over these independent modes,
+8
+
+
+and Holevo information is at least the information of that physical measurement. Lemma 3
+gives at least P
+i J(ϑi)−2m/(rE). Divide by m and remove the finite approximations at fixed
+E. This proves the lower bound in (17) without claiming a finite-message code with exactly
+Gaussian average.
+The quantum channels satisfy NE,θ = Uθ◦NE,0, where Uθ rotates the output and leaves the
+thermal reset invariant. Consequently (16) is phase independent even for arbitrary conditional
+input states. For the compact family of unknown fixed phases, the classical compound value
+is C(1), by the output-rotation identity. Equations (1), (17) and Proposition 5 give the exact
+limiting separation
+lim
+E→∞
+
+Copt(E, all fixed phases) −RG(E)
+
+= C(1) −HG > 0.
+(18)
+The common decoder in the operational term comes from (9), whereas RG remains the explic-
+itly defined Holevo functional. Its block supremum is not silently replaced by an operational
+constrained-code capacity. The positive constant in (18) is not numerically evaluated.
+6
+Robust marginal bounds and typical Gaussian codebooks
+The full-block Gaussian condition in (16) can be weakened substantially. Write Dtr(ρ, σ) =
+1
+2∥ρ −σ∥1.
+The following classical estimate makes the cost of an approximation explicit,
+uniformly in block length. Common-mixture and inflated-energy continuity methods have
+established antecedents [13, 14]; we give a direct proof with the particular channel cost needed
+here.
+Lemma 7 (Information continuity with an explicit cost). Let W be a memoryless mixture
+of complex Gaussian channels with |a|2 ≤K and component variance at least ℓ> 0. If laws
+Q, G on Cm both have total second moment at most mP, and TV(Q, G) ≤d ≤1, then
+|IQ(W ⊗m) −IG(W ⊗m)| ≤h2(d) + md log
+
+1 + KP
+ℓd
+
+.
+(19)
+The product notation refers to independent branches of the same mixture. The correction at
+d = 0 is defined as zero. An upper noise bound is not required for this lemma. The estimate
+is uniform in the mixing law.
+Proof. For any input with coordinate costs ci, reveal the independent branch vector Zm only to
+obtain an information upper bound. Conditioned on a finite-variance branch vector, Gaussian
+maximum entropy, subadditivity and Jensen give
+0 ≤I(Xm; Y m) ≤I(Xm; Y m, Zm) = I(Xm; Y m|Zm) ≤
+X
+i
+log(1+Kci/ℓ) ≤m log(1+KP/ℓ).
+These are relative-entropy chain rules. Conditional Gaussian smoothing has bounded density
+and finite second moment, so the conditional calculations are finite. After integrating the
+branch bound, mutual information stays finite even when the mixed output entropy is infinite;
+no subtraction of those mixed differential entropies is used.
+For 0 < d < 1, a common positive submeasure of Q, G of mass 1 −d exists: shrink their
+maximal common submeasure if their actual total variation is less than d. Normalize it to R,
+and write Q = (1 −d)R + dS, G = (1 −d)R + dT. Both exceptional laws have cost at most
+mP/d. A binary mixture label B, followed by the channel, gives exactly
+IQ = (1 −d)IR + dIS + IQ(B; Y m),
+IG = (1 −d)IR + dIT + IG(B; Y m).
+9
+
+
+The last terms lie in [0, h2(d)], and IS, IT lie in [0, m log(1 + KP/(ℓd))].
+Subtract their
+common parts to prove (19), with one binary entropy. The endpoints follow from equality or
+the preceding cost bound. This common-submeasure proof is essential: the right side is not
+globally monotone in d. A uniform bound on differences also bounds differences of the infima
+over a channel family; it does not interchange an input supremum and a channel infimum.
+For the matched-reset channel, let ¯ρi denote the average input marginal of mode i. Finite
+photon energy ensures finite first moments and symmetrized quadrature covariance.
+The
+uncertainty inequality Vi + iΩ/2 ≥0 defines its unique moment-matched Gaussian state σi,
+with exactly the same energy ei = Tr ¯ρin. This comparison allows squeezing. Set
+di = Dtr(¯ρi, σi),
+d = m−1 X
+i
+di,
+Pi = (ei + 1)/E,
+c0 = λ log(1 + k/r) + 4k/r.
+Theorem 8 (Robust marginal-Gaussian converse). For E ≥2k/r, any m-mode ensemble
+of average total photon cost at most mE, with arbitrary conditional states and arbitrary
+correlations in its average, satisfies
+χ(J : N⊗m
+E,θ )
+m
+≤HG + c0
+E + h2(d) + d log
+
+1 + 2k(1 + 1/E)
+rd
+
+.
+(20)
+The last two terms vanish at d = 0 and tend to zero as d →0, uniformly in m. No bound
+ei ≤E is imposed on individual modes. The same conclusion holds for continuous ensembles.
+Proof. The simulation and continuous-label data processing used for (14) give
+χ ≤
+X
+i
+IQ¯ρi,E(WE,−,θ).
+Here heterodyne contraction bounds the total variation to Qσi,E by di, and both laws have
+second moment Pi. Lemma 7, with noise floor r/2, therefore bounds each replacement by
+h2(di) + di log(1 + 2kPi/(rdi)).
+The nonmaximal common part in its proof justifies using di, without a false monotonicity
+assertion.
+The comparison Husimi marginal is real planar Gaussian. Noise sensitivity costs at most
+4k/(rE) per mode, uniformly in its cost. The Gaussian hull combines all those costs before
+concavity is applied, giving HG(1 + 1/E) ≤HG + λ log(1 + k/r)/E. Finally (u, p) 7→u log(1 +
+(2k/r)p/u), extended by zero when u = 0, is jointly concave: it is the perspective of log(1 +
+(2k/r)p). Jensen for this function and for h2, and m−1 P
+i Pi ≤1 + 1/E, prove (20). All
+mutual informations are finite by the cost estimate in Lemma 7; output quantum energy is
+finite in the stated model. Thus no entropy ambiguity is hidden in the chain rules.
+Define a distinct, larger functional Rmarg(E) by replacing the global Gaussianity condition
+in (16) by Gaussianity of every one-mode average marginal. The joint average need not be
+Gaussian. Theorem 8 at d = 0 and the same product-Gaussian lower construction used for
+(17) imply
+HG −2
+rE ≤Rmarg(E) ≤HG + c0
+E .
+(21)
+This is a Holevo functional, not an asserted operational capacity. For approximately Gaussian
+marginals with d ≤ϵm →0, continuity at zero of the correction in (20) suﬀices for its uniform
+vanishing; global monotonicity of that correction is unnecessary.
+10
+
+
+6.1
+A precise typical-codebook class
+A discrete empirical distribution of amplitudes has total variation one from a continuous
+Gaussian. We instead control the empirical quantum states and their moments separately.
+Fix E > 0, a finite list of real planar Gaussian laws Gl = N2(ul, Vl), Vl ≥0, with pl =
+|ul|2 + Tr Vl < ∞, and a deterministic known schedule lm(i), 1 ≤i ≤m. This schedule carries
+no message; the list and E are fixed before m →∞. Let Mm ≥eRm, R > 0. Independently
+over messages and coordinates, draw Xji ∼Glm(i) and use equiprobable product coherent
+words N
+i |
+√
+EXji⟩. Independence between experiments at different lengths is not required.
+Set Pm = m−1 P
+i plm(i).
+Proposition 9 (Typical marginal Gaussianity and physical cost). For the preceding experi-
+ment, almost surely
+max
+i≤m Dtr(bρi, bσi) −→0,
+where bρi is the empirical average marginal and bσi its own moment-matched Gaussian.
+If
+Pm ≤1−η eventually for a fixed η > 0, the physical average cost is at most mE almost surely
+eventually. If only Pm ≤1, the common correction below gives exact feasible cost, preserves
+the displayed convergence, and changes the average error of any given channel/decoder by o(1),
+uniformly in the channel. No existence of a reliable decoder is asserted by this proposition.
+Proof. Let τl =
+R
+|
+√
+Ex⟩⟨
+√
+Ex| dGl(x) and N∗= E maxl pl.
+Projection ΠL onto photon
+numbers 0, . . . , L has rank L+1 and Tr τl(I−ΠL) ≤N∗/(L+1). The nonnormalized truncation
+estimate ∥ρ−ΠLρΠL∥1 ≤2
+p
+Tr ρ(I −ΠL) and Jensen control both empirical and design tails
+in expectation.
+For projected independent rank-one samples, Hilbert–Schmidt variance is
+at most 1/M, so their mean trace fluctuation is at most
+p
+(L + 1)/M. Consequently, with
+M = Mm,
+E∥bρi −τlm(i)∥1 ≤4
+r
+N∗
+L + 1 +
+r
+L + 1
+M
+.
+Choose L + 1 of order
+√
+M. Markov at threshold M−1/8, then a union bound over m modes,
+gives failure probability at most CEmM−1/8
+m
+, summable in m. Borel–Cantelli proves uniform
+convergence to the design states.
+That alone does not control moment matching. Separately put bui = M−1 P
+j Xji, bTi =
+M−1 P
+j XjiXT
+ji, and bVi = bTi −buibuT
+i . The finite Gaussian list has uniformly finite fourth
+moments, hence
+E|bui −ul|2 ≤C/M,
+E∥bTi −(Vl + uluT
+l )∥2
+F ≤C/M.
+Chebyshev and a union bound at threshold M−1/8
+m
+give failure bounds CmM −3/4
+m
+, summable
+in m. Almost surely, means and raw second moments converge uniformly with error O(M−1/8
+m
+).
+Thus covariances converge uniformly, even at a singular design covariance.
+The moment-matched quantum Gaussian is the coherent mixture with displacement law
+N2(bui, bVi). For [q, p] = i, its mean is
+√
+2Ebui and covariance is I/2 + 2E bVi. Coupling two
+Gaussian laws by the same standard real Gaussian vector and using the coherent overlap
+gives
+Dtr(τ(u, V ), τ(u′, V ′)) ≤
+√
+E
+ |u −u′|2 + ∥
+√
+V −
+√
+V ′∥2
+F
+1/2.
+The positive matrix square root is continuous on positive semidefinite matrices, including the
+boundary: uniformly approximate the scalar square root by polynomials on a compact spectral
+interval. The empirical covariances stay eventually in such an interval. The last display and
+the triangle inequality prove convergence to the empirical moment-matched states, rather
+than merely to the design states.
+11
+
+
+The empirical cost is bPm = (mMm)−1 P
+ij |Xji|2 = m−1 P
+i Tr bTi. Its difference from Pm
+is O(M−1/8
+m
+) almost surely. Fixed slack therefore proves eventual feasibility. For Pm ≤1
+without slack put
+tm = min(1, bP −1/2
+m
+),
+X′
+ji = tmXji,
+with tm = 1 at zero cost.
+This is a common correction fixed with the codebook, not a
+message-bearing operation. Its cost is exactly feasible and 1 −tm = O(M−1/8
+m
+) almost surely.
+The rescaled empirical means/covariances and their Gaussian states converge to the same
+design values. Moreover coherent overlap and Jensen bound the average whole-block trace
+perturbation by
+M−1
+m
+X
+j
+Dtr(ρ′
+j, ρj) ≤|1 −tm|
+q
+mE bPm = O(
+√
+mEM −1/8
+m
+) = o(1).
+Trace-distance contraction controls the change in average decoding error for any channel and
+any fixed decoder, uniformly over channels. This transfers reliability if it was already proved;
+it does not create it. The corrected random book is no longer iid, and is described explicitly
+as the iid design followed by this common adjustment.
+Corollary 10 (Operational consequence). At fixed E ≥2k/r, any reliable equiprobable-
+message sequence with cost mE and average marginal distances dm →0 obeys
+lim sup
+m→∞
+log Mm
+m
+≤HG + c0
+E .
+(22)
+This applies almost surely to the feasible typical books in Proposition 9, if they have vanishing
+average error.
+It includes collective decoders and the unknown-fixed-phase problem.
+For
+suﬀiciently large E, an unrestricted non-Gaussian common code from (9) has a rate strictly
+above the right side of (22).
+Proof. For error ϵm, Holevo and Fano give
+(1 −ϵm) log Mm/m −h2(ϵm)/m ≤χm/m.
+Use (20) and then take the block limit at fixed E. For uniform error over phases, fix any phase
+for the converse. The non-Gaussian strict-cost rate used in (15) is at least HG + δ −2/(rE);
+it exceeds (22) when E > (c0 + 2/r)/δ, with the earlier admissibility conditions. Its common
+decoder is provided by (9), not by the random-book theorem.
+6.2
+Two necessary cautions
+Trace closeness alone does not control the moment-matched Gaussian, even with uniformly
+bounded energy. Indeed ρL = (1−1/L)|0⟩⟨0|+(1/L)|L⟩⟨L| has energy one and trace distance
+1/L to vacuum, while its Gaussian with the same moments is always γ1. Thus Dtr(ρL, γ1) →
+1/2, not zero. This is why the empirical moments above were controlled separately. Also,
+for a saturated circular design CN(0, 1), the actual cost is the average of mMm independent
+unit-mean exponentials, so Pr( bPm ≤1) →1/2 by the central limit theorem. Design cost in
+expectation does not imply typical feasibility without slack or correction.
+No theorem here covers every deterministic realization named Gaussian, arbitrary post-
+selection, arbitrary message weights, message-bearing covariance schedules, or design lists
+growing with block length. No trace approximation of the whole average to a product Gaus-
+sian is claimed or needed. Equation (21) remains a functional statement; (22) is a separate
+converse for a defined operational code class, not a proof of its exact capacity or random-code
+achievability.
+12
+
+
+7
+Entanglement assistance and learning feedback
+The common-input comparison also admits a resource extension. Free prior entanglement does
+not remove its limiting minimax restriction; feedback can instead change which input law is
+selected after learning the channel. The minimax and training mechanisms have established
+antecedents [15, 16, 17]. We prove the energy-controlled bosonic extension directly rather
+than importing a finite-dimensional theorem.
+An assisted code starts with a message-independent, law-independent shared state of arbi-
+trary finite dimension per block. Its dimension may grow without a rate bound. The receiver
+may retain bosonic quantum memory and perform joint decoding. Feedback, when allowed,
+is noiseless classical communication only from receiver to sender; there is no free forward side
+channel. For an adaptive protocol the expected photon budget, averaged over messages and
+all protocol randomness, is at most mE separately under every actual ν. Denote these capaci-
+ties by CEA(E, Γ) and CEA,FB(E, Γ), and the unassisted feedback capacity by CFB(E, Γ). All
+are vanishing-error classical communication capacities. Put
+A = log(1 + K/v∗) + 4K/v∗,
+B = 2/v∗,
+Cν(P) =
+sup
+µ:E|X|2≤P
+Iµ(Wν).
+Lemma 11 (A reference-preserving classical bottleneck). The exact minus-channel represen-
+tation in Section 2 remains valid with an arbitrary retained reference.
+Let M, R, X, Y be
+its joint state, where X, Y are classical and Y is produced by WE,−,ν independently of MR
+conditional on X. At finite input cost,
+I(M; RY ) −I(M; R) = I(M; Y |R) = I(MR; Y ) −I(R; Y ) ≤I(X; Y ).
+(23)
+These are quantum mutual informations, defined by relative entropy; M is finite. Preparing the
+actual output from Y preserves the same upper bound for the receiver’s information increment.
+Proof. Heterodyne the channel input, put X = α/
+√
+E, apply WE,−,ν, and prepare |
+√
+EY ⟩.
+The operator-valued conditional measure of MR given X is retained. Its nonselective marginal
+is unchanged, although its conditional states generally are steered.
+The measure–prepare
+identity is an equality of normal channels on all inputs, hence a complete identity on references.
+The positive thermal preparation variance is vE −|a|2; the condition E ≥2K/v∗gives minus
+noise at least v∗/2.
+Applying the preparation channel x 7→ρx
+MR to the classical joint law of X, Y and using
+relative-entropy data processing gives I(MR; Y ) ≤I(X; Y ). Revealing the independent mix-
+ture branch for an upper bound yields I(X; Y ) ≤log(1 + 2KP/v∗) for E|X|2 ≤P < ∞.
+Thus I(MR; Y ) and I(R; Y ) are finite, while message information is at most H(M). The
+relative-entropy chain rule therefore justifies (23) without subtracting infinite marginal en-
+tropies, even for bosonic receiver memory. Finally prepare the quantum output and use data
+processing while retaining R. This is not an inequality for increments of optimized accessible
+information.
+Theorem 12 (Uniform assisted comparisons). For E > 0, E ≥2K/v∗, the no-feedback model
+obeys
+VΓ(1) −B/E ≤Copt(E, Γ) ≤CEA(E, Γ) ≤VΓ(1) + A/E.
+(24)
+If Γ is finite, then
+inf
+ν∈Γ Cν(1) −B/E ≤CFB(E, Γ) ≤CEA,FB(E, Γ) ≤inf
+ν∈Γ Cν(1) + A/E.
+(25)
+The upper feedback bound holds without the finiteness restriction. In particular, prior entan-
+glement can improve the no-feedback rate by at most (A + B)/E in the stated scaling. This is
+not a claim of zero entanglement advantage at finite energy or at fixed signal energy.
+13
+
+
+Proof. Without feedback, trace-preserving encoding on the sender’s half leaves the message
+independent of the receiver’s initial reference. Joint heterodyne on the encoded block has one
+law independent of ν, including any preshared randomness. Lemma 11 gives I(M; BmR) ≤
+I(Xm; Y m). The exact memoryless identity
+X
+i
+I(Xi; Yi) = I(Xm; Y m) + D(PY m∥N
+i PYi)
+and input concavity bound this by mI¯µ(WE,−,ν), where ¯µ = m−1 P
+i µi is common to all laws
+and has cost at most 1 + 1/E. The extra cost is exactly one heterodyne photon per mode.
+Fano with the worst-law error implies CEA ≤VE,−,Γ(1 + 1/E). The noise sensitivity and cost
+concavity used in Theorem 1 give (24); its unassisted lower bound is still an allowed assisted
+code.
+For feedback fix the actual ν. Before forward use i, retain all receiver memory and tran-
+script copies in Ri. Sender-local trace-preserving operations, including message- and feedback-
+controlled operations, do not change its joint marginal with M. Apply the complete repre-
+sentation to this actual next input only. Equation (23) bounds the actual quantum mutual
+information increment by I(Xi; Yi). The receiver’s local instrument, retaining its outcome, is
+a channel on its previous memory; copying and sending that classical outcome back cannot
+increase its information about M. Hence
+I(M; Rﬁnal) ≤
+X
+i
+I(Xi; Yi) ≤
+X
+i
+CE,−,ν(Pi(ν)) ≤mCE,−,ν(1 + 1/E).
+Here Pi(ν) = Eν|Xi|2 may depend on the actual law through feedback. The per-law physical
+budget gives P
+i Pi(ν) ≤m(1+1/E); no per-use or per-history bound is assumed. Nonnegative
+costs make every term finite. Apply Fano and the same uniform noise/cost estimates at this
+fixed law, and then take its infimum. This proves the upper part of (25).
+For the finite-family direct part fix E first. Group identical coherent/heterodyne kernels.
+Each pair of distinct kernels is separated by some finite-cost input probe and a Borel output
+bin. Finitely many pairs need only finitely many such experiments. Use positive fractions
+of tm independent, message-independent probes, with tm →∞, tm/m →0. Their bounded
+empirical bin frequencies identify the finite kernel index with vanishing worst-index error. Feed
+the estimate back once. For each index choose a known-law coherent/heterodyne payload
+code, with the same message count and rate strictly below minν CE,+,ν(1 −δ), using fixed
+slack δ > 0. Proposition 4 supplies the required finite-alphabet physical codes. Every selected
+book obeys that budget, including when the estimate is wrong. Selection is independent of
+the message. If the finite pilot’s mean normalized cost is Q, then tmQ + (m −tm)(1 −δ) ≤m
+eventually. Estimation error plus the matching payload error tends uniformly to zero. After
+the block limit, remove δ by continuity of each finite concave capacity at one, and apply the
+plus-noise bound. This gives the lower part of (25). No uniform coding length in E, eﬀicient
+identification, or direct theorem for an infinite feedback family is asserted.
+Proposition 13 (A learning gap that prior entanglement cannot close). There is a two-law
+family in the present optical model such that, for all suﬀiciently large E, unassisted classical
+feedback achieves a strictly higher classical rate than arbitrary prior entanglement without
+feedback. One feedback bit after a zero-photon pilot suﬀices for the achievability assertion.
+Proof. Use the matched-reset kernel of Section 5 at phase zero, with k, r > 0, 0 < λ < 1,
+q = 1 −λ, s = k + r, and let its unit-cost capacity be C1. It is positive and finite, and (11)
+shows G1 = ICN (0,1)(W1) < C1. Define
+b2 = r(eC1 −1),
+W2(y|x) = ϕr(y −bx),
+Γ2 = {λδ(
+√
+k,r) + qδ(0,s), δ(b,r)}.
+14
+
+
+The flag upper bound gives 0 < b2 ≤r[(1 + k/r)λ −1] < k. Thus both laws belong to one
+rectangle with K = k, v∗= r, v∗= s. The AWGN kernel has capacity log(1 + b2/r) = C1,
+uniquely attained by CN(0, 1): equality in the output entropy bound requires the centered
+circular Gaussian output with full available variance, and deconvolution by its nonvanishing
+Gaussian characteristic function uniquely determines the input.
+We justify strictness rather than infer it from noncoincident formal optimizers.
+Input
+laws of second moment at most one form a weakly compact set, by tightness and lower semi-
+continuity of the moment. Under weak convergence their output densities converge point-
+wise, since each fixed Gaussian kernel is bounded continuous in the input. Scheffe’s lemma
+then gives total-variation convergence. Output densities have one common upper bound and
+second-moment bound. Lemma 2, including its uniform tail estimate, makes their differential
+entropies continuous. For W1, conditional entropy is a fixed weighted Gaussian entropy plus
+h2(λ) −H(F|Y, X = x), a bounded continuous function of x; for W2 it is constant. Both
+mutual informations are therefore continuous on this weakly compact cost set. In particular
+C1 and the common-input maximum are attained. Equality of that maximum with C1 would
+force its input to maximize W2, hence to be CN(0, 1), which gives only G1 < C1 on W1.
+Consequently
+∆= C1 −VΓ2(1) > 0.
+(26)
+For a concrete zero-cost pilot send vacuum repeatedly and heterodyne. Put uE = r +1/E,
+wE = s + 1/E. The bit Z = 1{|Y |2 ≤uE} has probabilities
+p2 = 1−e−1,
+p1 = λ(1−e−1)+q(1−e−uE/wE),
+dE = p2 −p1 = q(e−uE/wE −e−1) > 0.
+The midpoint test on t empirical bits has each conditional error at most exp(−td2
+E/2), by
+the one-sided Hoeffding inequality. Its transmitted photon cost is zero. For fixed E, take
+t = ⌈a log m⌉with any fixed a > 0, and send the resulting index bit back. The payload
+construction in the preceding proof now applies. With A0 = log(1 + k/r) + 4k/r, B0 = 2/r,
+Theorem 12 yields
+CFB(E, Γ2) −CEA(E, Γ2) ≥∆−(A0 + B0)/E.
+(27)
+It is positive when E ≥2k/r and E > (A0 + B0)/∆. Neither C1, ∆, nor this existential
+threshold is numerically evaluated. This compares different resources under a fixed unknown
+law, not entanglement and feedback for a known Gaussian channel.
+8
+Prior work, limits and verification context
+Gaussian measure–prepare structure, the single Gaussian classical limit, data processing, Fano,
+heat-flow score methods, and type coding are prior tools [1, 2, 3, 4]. Recent general Gaussian-
+encoding optimality results for single-mode Gaussian channels are given by Adesso, Lami and
+Giovannetti [11]. Their Gaussian-channel hypothesis excludes the generic mixtures studied
+here; a mixture of Gaussian components is not in general a Gaussian channel. Their fixed-
+error energy-rescaling formula is not imported into our compound average-error problem.
+Uniform quantization using compactness and Dini-type arguments is also explicit in earlier
+compound-channel work [5, 6]. The Mitran–Devroye–Tarokh operational model assumes that
+the channel parameter is known to the receiver; its theorem is therefore not a substitute for our
+decoder without that side information. Our use of its quantization mechanism is separately
+justified above. Classical on/off fading already motivates non-Gaussian input optimization [7].
+Non-Gaussian advantages in entanglement-assisted quantum fading are also prior research [8].
+Near-capacity coherent modulation for non-Gaussian attenuator environments and additive
+classical noise is also established [10]. Those bounds depend on the environment and are
+independent of input energy at fixed channel. Our joint scaling and unknown-law comparison
+15
+
+
+must be distinguished from that earlier setting; coherent near-optimality itself is not new. Our
+example therefore does not discover the broad non-Gaussian phenomenon. Common-mixture
+continuity methods and exceptional-energy penalties have antecedents in Winter [13] and
+Shirokov [14]. Winter’s energy-constrained bounds use Gibbs hypotheses; Shirokov’s ensemble
+distances do not simply become distances between average marginals. Neither attribution
+replaces our direct proofs of (19)–(22). The contribution here is the quantitative common
+simulation, Gaussian-hull separation, and robust marginal converse for the stated joint scaling,
+including the defined typical books and their physical cost correction. These tools and that
+consequence are distinguished from a general Gaussian-protocol impossibility theorem or an
+exact Gaussian-code capacity.
+The results do not cover within-block changes of the unknown law, channel memory,
+unbounded gains, a vanishing normalized noise floor, or arbitrary nonclassical reset states.
+The feedback direct theorem requires a finite family; the assistance convention is arbitrary
+finite-dimensional prior entanglement per block, with unbounded growth allowed. No sep-
+arate theorem for a differently defined infinite-resource assistance model is claimed.
+The
+compound minimax change and training mechanisms are prior results [15, 16, 17].
+Con-
+strained entanglement-assisted capacity is longstanding theory [18]; its general formula is not
+substituted for the direct energy-controlled argument. Single Gaussian-channel entanglement-
+assisted formulas already give related simultaneous high-energy limits [19]. They do not by
+themselves prove a uniform compound-mixture comparison. Finite-energy entanglement ad-
+vantages, including noisy optical experiments [20], are consistent with the stated limit. The
+additional resource result is quantitative and specific; standalone significance and worldwide
+priority are not established.
+Expected photon cost is not a deterministic photon-number
+bound. A directed primary-source search is not an exhaustive literature audit. The proof
+does not identify the general classical fading optimizer.
+AI and responsibility disclosure.
+The named author directed substantial OpenAI Codex
+assistance in derivation and writing. Technical audits requested GPT-6 Astra xhigh, with
+shared filesystem and reused context declared. Runtime identity, effort, isolation and sta-
+tistical independence are not independently attested. No independent human review, Lean
+formalization, certified worldwide originality or predicted assessment score is claimed. As-
+sessment reports must be read with their exact artifact hashes, declared participation and
+limitations.
+The unscored technical audit716 examined the marginal and typical-book ar-
+guments.
+Unscored audit745 examined the resource extension and matched-reset/AWGN
+construction, including the explicit vacuum pilot. Its quantum-mutual-information correction,
+reference-memory and finiteness requirements, per-law cost and limiting-order conditions, and
+antecedent/priority reservations are incorporated here. Both are authoring assistance with
+shared files and declared context, not independent votes or manuscript assessments.
+The
+exact combined PDF of this revision has not yet received a complete assessment. Published
+v1 and v2 and their own exact-artifact reports remain separate and unchanged; their scores
+are not assigned to this revision. No target grade is used.
+References
+[1] A. S. Holevo, Entanglement-breaking channels in infinite dimensions, arXiv:0802.0235v1
+(2008).
+[2] A. S. Holevo and V. Giovannetti, Quantum channels and their entropic characteristics,
+arXiv:1202.6480v1 (2012), especially Sections 3.4–3.5 and 4.3.
+16
+
+
+[3] I. Csiszár, The method of types, IEEE Transactions on Information Theory 44,
+2505–2523 (1998), doi:10.1109/18.720546.
+[4] I. Bjelaković and H. Boche, Classical capacities of averaged and compound quantum
+channels, arXiv:0710.3027v2 (2009), Section II for the classical finite-alphabet
+formulation.
+[5] P. Mitran, N. Devroye and V. Tarokh, On compound channels with side-information at
+the transmitter, author draft, 20 December 2005, Lemmas 3–5. Published in IEEE
+Transactions on Information Theory 52, 1745–1755 (2006),
+doi:10.1109/TIT.2006.871044. The cited draft is not identified as the final published
+byte version.
+[6] R. F. Schaefer and S. Loyka, The secrecy capacity of compound Gaussian MIMO
+wiretap channels, arXiv:1509.02182v1 (2015), Section III for common quantization; its
+secrecy model and Gaussian optimizer are not imported here.
+[7] Tu, Li and Dhillon, An information-theoretic framework for vision-aided
+communication over memoryless on-off fading channels, npj Wireless Technology 2, 80
+(2026), doi:10.1038/s44459-026-00074-7.
+[8] G. Catalano, M. Fanizza, F. A. Mele, G. De Palma and V. Giovannetti, Convex
+combinations of bosonic pure-loss channels, arXiv:2604.26874v2 (2026), selected
+discussion of entanglement-assisted fading and non-Gaussian inputs. Version 2, revised
+30 September 2026.
+[9] C. Weedbrook, S. Pirandola, R. García-Patrón, N. J. Cerf, T. C. Ralph, J. H. Shapiro
+and S. Lloyd, Gaussian quantum information, arXiv:1110.3234v1 (2011), Sections II.E
+and II.E.2 in the PDF (II.5 and II.5.2 in numeric HTML) for Gaussian measurement
+outcomes and heterodyne.
+[10] S. Huber and R. König, Coherent state coding approaches the capacity of non-Gaussian
+bosonic channels, arXiv:1710.06734v2 (2018), Theorem 1. Journal of Physics A 51,
+184001, doi:10.1088/1751-8121/aab7ff.
+[11] G. Adesso, L. Lami and V. Giovannetti, Classical capacity of single-mode bosonic
+Gaussian channels, arXiv:2610.22308v1 (15 October 2026), Section IV and Theorem 2
+for the Gaussian-channel scope.
+[12] A. Holevo, On the classical capacity of general quantum Gaussian measurement,
+Entropy 23, 377 (2021), doi:10.3390/e23030377, Theorem 1 and Remark 2 for the
+distinction between Gaussian average and Gaussian ensemble; its
+Gaussian-measurement optimization is not imported here.
+[13] A. Winter, Tight uniform continuity bounds for quantum entropies: conditional entropy,
+relative entropy distance and energy constraints, arXiv:1507.07775v6 (12 January 2016),
+Lemma 2 and the energy-constrained discussion, Proposition 14 and Lemma 15.
+[14] M. E. Shirokov, Uniform continuity bounds for information characteristics of quantum
+channels depending on input dimension and on input energy, arXiv:1610.08870v5 (3
+November 2018), Section 6.2, Propositions 7–8 for ensemble-distance continuity; those
+hypotheses are not identified with marginal closeness.
+[15] M. Berta, H. Gharibyan and M. Walter, Entanglement-assisted capacities of compound
+quantum channels, arXiv:1603.02282v1 (7 March 2016), Section II Theorems 1, 3–4 and
+Section VI for finite-dimensional compound and feedback antecedents.
+17
+
+
+[16] H. Boche, G. Janßen and S. Kaltenstadler, Entanglement-assisted classical capacities of
+compound and arbitrarily varying quantum channels, arXiv:1606.09314v3 (25 January
+2017), Theorem 3.1 and Section 4.1 Remark 2 for the common-input converse and
+growing finite assistance dimensions.
+[17] B. Shrader and H. Permuter, Feedback capacity of the compound channel,
+arXiv:0711.0705v1 (5 November 2007), Section VII for classical training and inf–sup.
+[18] A. S. Holevo, Entanglement-assisted capacity of constrained quantum channel,
+arXiv:quant-ph/0211170v2 (4 January 2003), Proposition 4 under its entropy
+hypotheses.
+[19] H. Shi, Z. Zhang and Q. Zhuang, Practical route to entanglement-assisted
+communication over noisy bosonic channels, arXiv:1909.11112v4 (12 March 2020),
+Section III equations (2)–(4). Phys. Rev. Applied 13, 034029 (2020).
+[20] S. Hao, H. Shi, W. Li, Q. Zhuang and Z. Zhang, Entanglement-assisted communication
+surpassing the ultimate classical capacity, arXiv:2101.07482v1 (19 January 2021),
+optical experimental context.
+18
