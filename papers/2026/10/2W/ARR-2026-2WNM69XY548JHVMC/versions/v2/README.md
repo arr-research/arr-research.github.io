@@ -15,3 +15,7 @@ The named author directed substantial OpenAI Codex assistance in derivation and 
 - [Immutable v1 and its own review](https://airr.science/papers/ARR-2026-2WNM69XY548JHVMC/versions/v1/#model-assessments)
 
 Linked author case SUB-B1200159AD099909, parentSUB-87C015D124742367, clean scanner, exact author PDF and CC BY4.0 release permission verified. Public release, Git checks and live verification follow.
+
+- [Public assessment binding](screening/astra-public-binding.json)
+- [Binding chronology and context](screening/astra-binding-context.json)
+- [Operator notice](screening/operator-binding-notice.txt)
