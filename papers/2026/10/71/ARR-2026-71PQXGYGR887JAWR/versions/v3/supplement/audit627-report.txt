@@ -1,0 +1,171 @@
+AUDITORIA TECNICA 627 — TARGET 625C
+Estado terminal: soporte matematico acotado. Sin nota ni objetivo de nota.
+Fecha: 2026-10-26. No es una revision de manuscrito o de PDF.
+
+1. DICTAMEN
+
+La desigualdad vigente de proof625c.txt se sostiene:
+ 0<=L=lambda I(R:B)_omega-I(R:B)_z
+      <=h(lambda)-[2lambda(1-lambda)/(3 ln2)]2^(-I(R:B)_omega),
+para estados normalizados sobre espacios separables, I(R:B)_omega finita y tau arbitrario, incluso con energia y entropia infinitas. Los signos, la fidelidad raiz, el cuadrado de la fidelidad en la constante y los factores de ln2 son correctos. No uso las constantes mas debiles de 625 o 625B.
+
+El paso operacional tambien cierra. Para cada E>0 y temperatura finita fija, la cota inferior estricta de capacidad vale para TODOS los resets y para un unico codigo compuesto sobre la clase completa de resets fijos desconocidos. La prueba requiere los cortes fisicos fijos y el bloqueo en subespacios de tipo exacto que detallo en las secciones 7-8; no basta evaluar informacion en la entrada termica.
+
+La misma cota compuesta vale para k en [k0,1], n en [0,N], con 0<k0<1 y E,N finitos conocidos, aunque N sea mucho mayor que E. Los parametros y el reset permanecen fijos durante cada codigo. El benchmark en esa familia es lambda C_(k0,N)(E). El argumento de orden se aplica solamente a la senal y a la MISMA entrada; no transforma la familia de resets para trasladar artificialmente su presupuesto.
+
+Junto con la suficiencia cientifica ya auditada en 615, el resultado establece la necesidad y suficiencia de n(E)=o(E), y de N(E)=o(E) para las envolventes, para la ley COMPLETA uniforme sobre todos los presupuestos de Shannon o de Renyi de cada orden fijo finito alpha>1. La necesidad usa un presupuesto creciente que llega a la meseta de la curva. No afirma necesidad para cada problema restringido de presupuesto pequeno, ni determina la curva del regimen critico.
+
+No he encontrado una objecion material o un contraejemplo dentro de este alcance. Las dependencias de codificacion EA finita y los resultados gaussianos previos siguen siendo dependencias cientificas explicitas. No se audito ni leyo la revision 620 o sus notas. No se certifican prioridad, constante optima, novedad autonoma de un lema, ni calidad de un manuscrito posterior.
+
+2. CUSTODIA, LECTURA Y PARTICIPACION
+
+Antes de leer el objetivo se verificaron los diez payloads y el manifiesto: once archivos en total. MANIFEST625C.json SHA256=282e28f0dfeb4be26053ae2a560d00a1d01b9e609677c34c81aaf2f8255711ad. proof625c.txt SHA256=746f0804b4bead0d8ad72fb06fa69187cd4a7f16d317e0d8b1a7b02cb9e2b1df.
+
+Se leyeron integramente proof625c.txt, candidate625.txt para sus consecuencias operativas, check625c.py y source-pins625c.json. Los archivos 625B y los programas/resultados antiguos se verificaron y conservan como evolucion, pero no se tratan como prueba vigente ni se reejecutan. Los 1080 casos de check625c.py se reprodujeron exclusivamente en C:/Trabajo/airr/2026-10-26_strict627-audit/rerun625c. Todos pasaron, con min_slack=0.027435268597643947; el resultado es identico byte a byte al congelado. Son controles finitos no conmutativos, no prueba asintotica ni de capacidad. Cinco identidades algebraicas adicionales se comprobaron exactamente con SymPy; su alcance limitado figura en own_exact_checks.json.
+
+Se reutilizan el contexto de la misma familia de trabajo y el filesystem compartido de las auditorias anteriores, incluida 615. Configuracion solicitada: Astra xhigh. No hay atestacion independiente de identidad del modelo, runtime, aislamiento, revision ciega o independencia de participacion. Se conserva la divulgacion historica de exposicion a una valoracion numerica anterior en candidate571 y al fragmento cualitativo de una ficha propia que una busqueda devolvio en 615; no se repiten ni usan esas valoraciones. En 627 no se leyeron informes/notas 620, otros chats ni estado de raiz. La mencion de 619/620 dentro de los inputs autorizados es solo metadato contextual, no una lectura de esos documentos.
+
+No se han creado otros agentes, invocado otro modelo, gastado dinero, publicado, modificado originales ni borrado C. El trabajo vivo y las reejecuciones estan en C; el archivo final con fuentes, inputs, informe, verdict, manifiesto y comparacion de bytes esta en el nuevo directorio D:/Proyectos/airr-investigacion/2026-10-26_strict627-audit.
+
+3. IDENTIDADES DE FLAG SIN RESTAR ENTROPIAS INFINITAS
+
+Denotemos por X el flag binario para no confundirlo con la fidelidad. Sea
+ Omega_XRB=lambda |0><0| tensor omega_RB+q |1><1| tensor(omega_R tensor tau),
+ q=1-lambda, z=Tr_X Omega.
+Las dos ramas tienen el mismo marginal R; por eso I(R:X)=0 e I(R:BX)=lambda c, c=I(R:B)_omega. Por procesamiento y la regla de cadena, 0<=I(R:B)_z<=lambda c y
+ L=I(R:X|B)=chi_RB-chi_B.
+Aqui chi_RB=I(X:RB) y chi_B=I(X:B) son cantidades de Holevo definidas mediante el flag finito. Cada una esta entre cero y h(lambda). En consecuencia
+ h(lambda)-L=chi_B+H(X|RB),
+con H(X|RB)=h(lambda)-chi_RB finita y no negativa. Estas identidades no son restas de S(tau), S(z_B) o S(z_RB) cuando esas entropias son infinitas. La informacion total I(R:BX)=lambda c finita hace bien definida la diferencia de la regla de cadena.
+
+Una comprobacion alternativa por cortes locales tambien es posible: comprimir R y B mediante proyeccion mas flag preserva el hecho de que la segunda rama es el producto del marginal R de la primera por el reset procesado. Las informaciones mutuas de las dos ramas mixtas convergen al valor original por semicontinuidad inferior, convergencia en traza y procesamiento. Como c y la informacion de z son finitas, las diferencias convergen. Esto no importa la referencia fija no normalizada del pinching de 614: aqui todos los estados son normalizados y se usan sus marginales reales.
+
+4. FIDELIDAD Y COTA DE chi_B
+
+La convencion vigente es F(r,s)=||sqrt(r)sqrt(s)||_1, sin cuadrado, T(r,s)=||r-s||_1/2 y d_B(r,s)=sqrt(2(1-F(r,s))). El antecedente Fannes-de Melo-Roga-Zyczkowski1104.2271v1 usa F_src=F^2. Su matriz binaria contiene sqrt(F_src), es decir, exactamente F en nuestra convencion. No se debe sustituir F^2 en el elemento no diagonal de G_f.
+
+El bound D(r||s)>=-2log2 F(r,s) es correcto en dimension infinita. Una derivacion finita independiente de su aplicacion es la siguiente. Con descomposiciones espectrales y w_ij=|<i|j>|^2, D(r||s) es el promedio de log2(p_i/q_j) bajo P_ij=p_i w_ij. Jensen da
+ D(r||s)>=-2log2[sum_ij sqrt(p_i q_j) w_ij]
+            >=-2log2 ||sqrt(r)sqrt(s)||_1.
+Las singularidades se tratan por soporte o limite; si D es infinito, la desigualdad no ofrece dificultad. Para espacios separables, un canal comun C_m de compresion a rango finito mas flag conserva normalizacion. Procesamiento da D(r||s)>=D(C_m r||C_m s); estas dos salidas convergen en traza, al insertarlas en el espacio original, y su fidelidad converge a F(r,s). El limite de la desigualdad finita demuestra la version infinita, incluido F=0. No se necesita continuidad superior de D, ni energia, ni entropias separadas finitas. Los resultados conocidos de orden 1/2 y monotonia de la entropia relativa de Renyi de 1306.3142v4 corroboran el mismo bound, con esta convencion raiz.
+
+De -ln x>=1-x se sigue D(r||s)>=d_B(r,s)^2/ln2. Para m=lambda omega_B+q tau, ambos D(omega_B||m) y D(tau||m) son finitos, ya que m domina lambda omega_B y q tau. Si u=d_B(omega_B,m), v=d_B(tau,m), d=d_B(omega_B,tau), entonces
+ chi_B>= [lambda u^2+q v^2]/ln2
+       >=lambda q(u+v)^2/ln2>=lambda q d^2/ln2.
+La segunda desigualdad tiene resto (lambda u-q v)^2; la tercera es la desigualdad triangular de Bures. No se infiere esta cota solo de Pinsker en distancia de traza, lo que cambiaria la potencia de la distancia.
+
+5. GRAM BINARIO, PINSKER Y CONSTANTE DE 625C
+
+Escribase sigma=omega_R tensor tau y f=F(omega,sigma). Uhlmann permite purificaciones con solapamiento f o arbitrariamente proximo. La informacion de Holevo no aumenta al trazar el purificador. La mezcla de dos purificaciones puras tiene el espectro no nulo de
+ G_f=[[lambda,sqrt(lambda q)f],[sqrt(lambda q)f,q]].
+Por tanto chi_RB<=S(G_f), con el limite de aproximacion si hace falta. Su rango es a lo sumo dos incluso cuando R y B son infinitos. Esta cota binaria es un antecedente exacto: Roga-Fannes-Zyczkowski1004.4782v1, Corollary4 y Lemma5/Eqs23-25; tambien Fannes et al.1104.2271v1 Eqs3-6 y Audenaert1304.5935v2 Eq72. La candidata ya excluye reivindicarla como lema nuevo, y esa atribucion debe mantenerse.
+
+Con G_0=diag(lambda,q),
+ h(lambda)-S(G_f)=D(G_f||G_0).
+La igualdad vale porque los dos diagonales coinciden. La diferencia G_f-G_0 tiene autovalores +/-sqrt(lambda q)f, de modo que T(G_f,G_0)=sqrt(lambda q)f. Pinsker en bits, que aqui es una desigualdad ordinaria de dimension dos, da
+ H(X|RB)>=h(lambda)-S(G_f)>=2lambda q f^2/ln2.
+No hay aqui una dependencia de H_min o de la identidad de probabilidad de adivinacion. Los controles heredados del programa todavia comprueban algunas de esas desigualdades antiguas, pero no son necesarias para la prueba 625C.
+
+Sea a=F(omega,omega_R tensor omega_B). El bound anterior de entropia relativa da a^2>=2^(-c). Para verificar f>=(a-d)_+, se eligen una purificacion de omega y otra del producto de sus marginales con solapamiento arbitrariamente proximo a a. Se elige a continuacion una purificacion de sigma proxima a la del producto, a distancia de vectores arbitrariamente proxima a d, por Uhlmann. Tensorizar el mismo omega_R preserva la fidelidad y la distancia de Bures. La desigualdad triangular para los solapamientos da f>=a-d despues del limite, y f>=0 completa la expresion. Esto vale en espacios separables mediante purificaciones aproximadas; no presupone un maximo unitario alcanzado sin ampliar el purificador.
+
+Finalmente
+ h(lambda)-L>=lambda q[d^2+2f^2]/ln2
+              >=lambda q[d^2+2(a-d)_+^2]/ln2
+              >=2lambda q a^2/(3ln2)
+              >=[2lambda q/(3ln2)]2^(-c).
+Si d<=a, el resto de la tercera desigualdad es exactamente 3(d-2a/3)^2; si d>=a, basta d^2>=a^2. La constante vigente lleva 2^(-c), NO 2^(-2c). Es positiva para c acotado y lambda fijo interior, sin afirmacion de optimalidad. Todos los usos de entropia relativa y fidelidad en este paso son entre estados normalizados.
+
+6. DE ESTADOS A TASAS: POR QUE HACE FALTA LA PARTE OPERACIONAL
+
+Definase epsilon_lambda(x)=[2lambda q/(3ln2)]2^(-x) para x>=0 y g_lambda(x)=lambda x+epsilon_lambda(x). Se verifica
+ g_lambda'(x)=lambda-(2lambda q/3)2^(-x)
+             >=lambda(1-2q/3)>0.
+Para cualquier entrada sigma y senal Phi, si su informacion es c_sigma finita, el estado lema da I(sigma,lambda Phi+q tau Tr)>=g_lambda(c_sigma)-h(lambda), uniformemente en tau. Para la entrada termica optimizadora gamma_E de la senal conocida se obtiene el valor g_lambda(C(E;n))-h(lambda).
+
+Esa evaluacion es una desigualdad informacional; por si sola no demuestra un codigo comun ni resuelve una posible dificultad operacional por salida de entropia infinita. La construccion que sigue prueba directamente la tasa mediante canales efectivos finitos. Tambien evita tener que presuponer una formula operacional de capacidad infinita para cada reset patológico.
+
+7. CORTES FISICOS FIJOS Y UN MISMO INPUT
+
+Fijese primero E>0 y n finito, o E>0, N finito y 0<k0<1 para la familia de senales desconocidas. No hay en esta etapa un supuesto N<=E. Sea Phi_* la senal conocida, o el peor par Phi_(k0,N) en el caso compuesto. Para cualquier tolerancia eta>0, se toma una termica gamma_(E-s) con s>0, dejando slack de energia. Por continuidad del benchmark en E a parametros fijos, s puede hacer C_*(E-s) tan proximo a C_*(E) como se necesite.
+
+Se condiciona esa termica a numeros 0,...,J-1, obteniendo sigma_J diagonal de dimension J, con media <=E-s. Sus purificaciones convergen en norma a la termica. Para el canal peor, la informacion mutua converge a C_*(E-s): la semicontinuidad inferior proporciona el liminf, y la optimalidad termica bajo coste E-s proporciona el limsup, ya que cada sigma_J tiene ese coste. Asi se puede elegir un J FINITO con I(sigma_J,Phi_*)>=C_*(E)-eta/2. No se necesita una estimacion de salida de reset para este paso.
+
+Para la envolvente, el orden de senales compara la MISMA sigma_J. Si k>=k0,n<=N, ruido gaussiano aditivo de receptor con media (1-k)(N-n) lleva Phi_(k,n) a Phi_(k,N). Componer con Phi_(k0/k,N) da Phi_(k0,N). El coeficiente de ruido satisface (k0/k)(1-k)+(1-k0/k)=1-k0. DPI implica I(sigma_J,Phi_(k,n))>=I(sigma_J,Phi_*). Este orden se usa como desigualdad, no como decoder que conozca k,n, y no se aplica a una mezcla completa de reset.
+
+Ahora se fija el mapa fisico D_T que conserva los numeros de salida 0,...,T y envia lo demas a un flag ortogonal. Toda senal de la envolvente, con esta misma entrada, tiene media <=E+N. Su cola fuera del corte es <=p_T=(E+N)/(T+1). En la senal conocida se usa su media finita correspondiente. La distancia de traza entre el estado referencia-senal y la salida decodificada insertada en un espacio comun es <=e_T=sqrt(p_T)+p_T/2. A J fijo, Winter Lemma2 da la perdida uniforme
+ W_T<=2e_T log2 J+(1+e_T)h(e_T/(1+e_T)) ->0.
+La referencia no cambia por D_T. Se elige T FINITO, dependiente de E,N,J,eta, que hace I(sigma_J,D_T Phi_i)>=C_*(E)-eta para todas las senales de la familia. Cuando N>>E, simplemente puede hacer falta un T mayor; no se reclama uniformidad de longitud ni un corte polinomial solo en E.
+
+Cada mezcla efectiva finita es
+ N_(i,tau)^fin=lambda D_T Phi_i|A_J+q D_T(tau) Tr.
+La desigualdad de estados se aplica a este canal y a sigma_J, para CUALQUIER D_T(tau), sin imponerle energia o entropia. No importa que el corte cambie el presupuesto del reset: la cota vale sobre todas las densidades de la salida finita. Con eta<C_*(E), monotonia de g_lambda da
+ inf_(i,tau) I(sigma_J,N_(i,tau)^fin)
+       >=g_lambda(C_*(E)-eta)-h(lambda).
+Se puede usar max(0,C_*(E)-eta) si no se exige eta<C_*(E). Si esta tasa es negativa, la tasa cero da la cota de capacidad de todos modos. El input y el corte son comunes, conocidos y fijos antes de codificar; no se aproximaron uniformemente los resets infinitos por energia.
+
+8. TIPOS EXACTOS Y TEOREMA COMPUESTO FINITO
+
+La aplicacion finita requiere que la energia no se viole por un encoder obtenido sin restriccion de coste. Esto se cierra mediante bloques de tipo exacto, como sigue.
+
+Sea p el vector de probabilidades de sigma_J en la base de Fock. Elijanse tipos racionales p_l=(n_0,...,n_(J-1))/l que convergen a p. Por el slack, sum_j j p_l(j)<=E para l suficientemente grande. Sea pi_l el estado uniforme del subespacio de secuencias con esos numeros de ocupacion. Cada vector de ese subespacio tiene energia total EXACTA l sum_j j p_l(j), y su marginal de cada sitio es rho_l=diag(p_l).
+
+Sea d_l=D(pi_l||rho_l^tensor l)=l S(rho_l)-S(pi_l). La probabilidad de ese tipo bajo su propia distribucion satisface la cota multinomial habitual, dando 0<=d_l<=J log2(l+1). Para cualquier canal finito M de la familia, DPI da D_out<=d_l. Usando los marginales de cada sitio se obtiene exactamente
+ I(pi_l,M^tensor l)=l I(rho_l,M)-d_l-D_out+D_env
+                 >=l I(rho_l,M)-2d_l.
+Aqui D_out=D(M^tensor l(pi_l)||(M(rho_l))^tensor l) y D_env se define igual para un complemento finito. Ambos son no negativos y finitos; su finitud tambien se sigue de la dominacion del estado de tipo por rho_l^tensor l dividida por su probabilidad de tipo. La identidad no necesita que las salidas conmuten. La cota 2d_l es uniforme sobre todos los canales de la familia.
+
+Las purificaciones de rho_l convergen a la de sigma_J. La continuidad de entropia de referencia y de entropia condicional con dimension J hace I(rho_l,M)->I(sigma_J,M) uniformemente en M. No se selecciona un tipo diferente para cada canal: se usa el mismo p_l y la misma desigualdad para todos.
+
+Con l fijo, se restringe el canal de l usos a ese subespacio y se aplica el teorema EA compuesto de Berta-Gharibyan-Walter1603.02282v2, Theorem1/Lemma9. Sus espacios de entrada y salida son ahora finitos y su indice puede ser arbitrario; incluye el indice continuo de senal y toda la familia de resets procesados. La tasa clasica EA es el doble de la tasa cuantica EA por superdense coding, con recursos de entrelazamiento gratuitos propios de este modelo. El encoder exterior tiene toda su salida en productos del subespacio de tipo; por tanto respeta la energia para todo mensaje, incluso con codificacion coherente o entrelazamiento previo.
+
+Primero crece la longitud del codigo exterior para el bloque l y cortes J,T fijos. Se optimiza despues sobre l, J,T y el slack. Los restos 2d_l/l y la continuidad de rho_l desaparecen. Se implementa D_T fisicamente en el receptor del canal original; las tasas del canal efectivo son alcanzables en el canal original. Se pueden completar longitudes no multiplos de l con vacios, sin aumentar coste. El resultado es
+ C_EA,compound(E;familia completa de resets y senales)
+       >=lambda C_*(E)-h(lambda)+epsilon_lambda(C_*(E)).
+En particular, cualquier subfamilia de resets de presupuesto de Shannon o Renyi tiene al menos esa tasa. La misma cota vale para cada reset conocido. No se ha intercambiado max e inf ni inferido codigo comun de un maximizador dependiente del reset. No hay afirmacion sobre parametros que cambien entre usos.
+
+9. LIMITE TERMICO CRITICO Y NECESIDAD
+
+Fijense 0<k<1 y r>0, delta=1-k. Para n=rE, M/E->m=k+delta r. Las formulas gaussianas previas dan
+ D/E -> d_r=sqrt([delta+(k+1)r]^2-4kr^2),
+ u_l/E -> [d_r+delta(1-r)]/2,
+ u_s/E -> [d_r-delta(1-r)]/2.
+La identidad d_r^2-delta^2(1-r)^2=4delta r>0 muestra que AMBAS ocupaciones son lineales en E con coeficientes positivos y que u_l u_s/E^2->delta r. Usando g(x)=log2 x+log2 e+o(1) en los cuatro terminos del benchmark,
+ C_(k,rE)(E)=g(E)+g(M)-g(u_l)-g(u_s)
+       ->K_r=log2[(k+delta r)/(delta r)]
+             =log2[1+k/(delta r)].
+No se deriva n(E), y no se descarta una ocupacion complementaria como si fuera fija. La identidad algebraica del producto se comprobo tambien exactamente.
+
+Si n(E)/E no tiende a cero, existe r>0 y una subsucesion que tiende a infinito con n(E)>=rE. Aumentar n es postprocesar la senal mediante ruido gaussiano aditivo; por ello C_(k,n(E))(E)<=C_(k,rE)(E)<=K_r+1 eventualmente en esa subsucesion. La cota operacional anterior da para el deficit de peor reset conocido y el deficit compuesto
+ D_known(E,B), D_comp(E,B)
+       <=h(lambda)-epsilon_lambda(C_(k,n(E))(E))
+       <=h(lambda)-epsilon_lambda(K_r+1),
+uniformemente en TODO presupuesto B. La diferencia positiva epsilon_lambda(K_r+1) es fija a lo largo de la subsucesion, aunque pueda ser pequena.
+
+Para Shannon, tomar B(E)=log2(E+1) hace que la curva antigua f(min{1,B/log2(E+1)}) sea exactamente h(lambda). Para cada alpha>1 fijo finito, el mismo presupuesto hace que f(1-2^-((alpha-1)B/alpha)) tienda a h(lambda). La cota estricta impide la convergencia absoluta a esas curvas por una cantidad positiva. Asi falla la ley COMPLETA uniforme en presupuestos cuando n no es o(E). Esta conclusion es mas fuerte que el antiguo ejemplo donde lambda C ya era menor que h(lambda), porque tambien excluye benchmarks acotados superiores a h(lambda).
+
+El argumento de necesidad para la envolvente es igual con k=k0 y n=N(E). La seccion 7-8 vale a cada E,N finito, incluso si N/E no es pequeno. Si N/E no tiende a cero, el benchmark peor permanece acotado en una subsucesion y aparece la misma separacion positiva. Si N/E->0, la suficiencia ya auditada en 615 aplica, usando el caso de perdida pura en las subsecuencias N=0. Para el problema de temperatura conocida se combina del mismo modo con la suficiencia 615. El 'si y solo si' resultante se refiere a las leyes completas de deficit y a sus convenciones de codificacion; no a la recuperacion de cada tasa bajo cada presupuesto pequeno.
+
+10. ANTECEDENTES, PROFUNDIDAD Y ALCANCE DE LA CONTRIBUCION
+
+La construccion de 625C combina desigualdades establecidas de forma corta. La cota binaria de Gram es EXACTAMENTE anterior; no debe presentarse como nueva. El paso cuadratico y la constante elegida son una consecuencia elemental de esos ingredientes. El resultado operacional utiliza un teorema compuesto existente y el bloqueo de energia ya empleado en esta familia. La consecuencia sobre el regimen termico es una extension tecnica de la ley previa, no una nueva teoria general de codificacion ni una solucion de la curva critica. Una busqueda dirigida no certifica prioridad ni exclusividad de la combinacion.
+
+Lecturas primarias nuevas y verificadas contra los pins cuando existen:
+- Audenaert1304.5935v2, https://arxiv.org/pdf/1304.5935v2 : Eq72 y discusion binaria contigua, p.fisica29; referencias12 y29 para seguir la atribucion. SHA256 e930d2a4f7908e393457958e062ee46509bfdb4f08cbd4e18edd67be4b77789f. No lectura integral del articulo.
+- Fannes-de Melo-Roga-Zyczkowski1104.2271v1, https://arxiv.org/pdf/1104.2271v1 : pp.2-4, construccion por purificaciones, Eqs3-6 y convencion cuadrada de fidelidad; no la teoria posterior de ensembles mayores. SHA256 7599d0d8dcf18a5cc803fccfb4a66a2ad6a0b72ea2c19334111d12e2c42c682a.
+- Roga-Fannes-Zyczkowski1004.4782v1, https://arxiv.org/pdf/1004.4782v1 : Prop.2 y contexto seleccionado, Corollary4/Lemma5 y prueba corta, Eqs23-25 de p.fisica4. Antecedente original exacto localizado en la busqueda. SHA256 fa553e4a1d4b7bd18d0ec02fdd16b3c49a00376aaf68b79b45eecea9380a4ec8. No se auditaron todos los resultados del articulo.
+- Mueller-Lennert-Dupuis-Szehr-Fehr-Tomamichel1306.3142v4, https://arxiv.org/pdf/1306.3142v4 : definicion y soporte, Theorem5 limite a1, identidad de orden1/2 en p.9, Theorem7 monotonia y demostracion seleccionada de Lemma19/Theorem7 pp.22-23. No todas sus pruebas/dependencias. SHA256 71d3b35755a66328f20103a53bea10d11439c17a59c9631b312da37718741dcd. El paso a dimension infinita se justifica en este informe, no se atribuye sin verificar a un enunciado finito de esa fuente.
+
+Dependencias cientificas previas conservadas, con lectura seleccionada adicional donde corresponde:
+- Berta-Gharibyan-Walter1603.02282v2, https://arxiv.org/html/1603.02282v2 : releidos Theorem1, Lemma9 con el paso de redes finitas a indice arbitrario y cierre de su prueba, y la equivalencia EA por superdense coding/teleportacion. Los detalles completos de decoupling no se reauditan. Copia HTML SHA256 755228c692830af6fb2c177d2d13310014267d8730757b0199c80c45a5aa4ccd.
+- Winter1507.07775v6, https://arxiv.org/pdf/1507.07775v6 : se retiene la lectura seleccionada previa de Lemma2/prueba, aplicable por la dimension finita de R tras el corte de input. SHA256 2024fd6eda7d5388dff99bff86364ac3910eb73336041cb3f7c7c6014961f89a.
+- Holevo-Werner quant-ph/9912067v1, https://arxiv.org/pdf/quant-ph/9912067v1 : se retienen formulas Gaussianas/EA/complemento y metodo extremal ya seleccionados en auditorias anteriores; el limite critico se recalcula aqui. SHA256 48c1ec30e78b2fae58cfb683ad06eb87d215c2de1dfbbc5fe1a8a95f5b18cfeb.
+
+0807.1338v2 figura en los pins historicos autorizados pero no se necesita ni se relee para 625C. No se afirmo una lectura integral de fuentes o exclusion exhaustiva de antecedentes. Las busquedas se limitaron a la cota binaria de Gram/fidelidad y posibles coincidencias de perdida estricta por reset/informacion; algunas consultas no devolvieron coincidencias. No se usaron resultados secundarios ni evaluaciones como evidencia.
+
+11. CIERRE Y LIMITACIONES EXPLICITAS
+
+No hay una nueva objecion material pendiente que obligue a abandonar las consecuencias operativas de 625C. La prueba vigente y la transferencia compuesta quedan justificadas con los desarrollos de este informe. Su validez depende de los teoremas gaussianos y de codificacion EA citados con su alcance real, no de los 1080 controles finitos. La constante no se declara optima, ni se propone o predice una puntuacion.
+
+El modelo exige lambda,k interiores fijos (o k0 interior fijo para la envolvente), E>0, N finito en cada problema de codificacion y parametros/reset constantes dentro del bloque. No se afirma uniforme longitud de codigo, tasa de convergencia conjunta independiente de la envolvente, ruido arbitrariamente variable, capacidad de dos vias, necesidad en todo problema de pequeno presupuesto ni ley critica minimax explicita. La informacion del estado lema puede ser cualquier c finita; tau no tiene restricciones de energia/entropia.
+
+Los inputs, informe, verdict, programas y resultados, fuentes seleccionadas y procedencia se cubren por MANIFEST-AUDIT627.json. CD_COMPARISON.json registra la igualdad exacta de las copias C/D y se verifica aparte para evitar un ciclo de hashes. C y todos los antecedentes permanecen conservados. Los informes anteriores y los manuscritos no fueron modificados.
