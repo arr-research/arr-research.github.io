@@ -1,0 +1,177 @@
+\section{Full entanglement-assisted minimax losses}\label{sec:curves}
+The classification has a sharper form for Shannon and super-Shannon
+budgets. Put
+\[
+ b(u,v)=(u+v)h\!\left(\frac{u}{u+v}\right),\qquad
+ f(t)=b(\lambda,qt),\qquad 0\le t\le1,
+\]
+with continuous boundary values. For a scalar budget \(B\ge0\), write
+\[
+ \begin{aligned}
+ D_{\rm known}(E,B)&=\Delta_{\CEA}(E,\{\tau:S_\alpha(\tau)\le B\}),\\
+ D_{\comp}(E,B)&=2\lambda g(E)-\CEA^{\comp}
+                  (E,\{\tau:S_\alpha(\tau)\le B\}).
+ \end{aligned}
+                                                               \tag{24}
+\]
+The order \(\alpha\) is implicit in these two quantities.
+Always \(D_{\rm known}\le D_{\comp}\).
+
+\begin{theorem}[Uniform minimax loss curves]\label{thm:curves}
+Fix \(0<\lambda<1\). For \(\alpha=1\), or any fixed finite
+\(\alpha>1\), set
+\[
+ t_\alpha(E,B)=
+ \begin{cases}
+ \min\{1,B/\log_2(E+1)\},&\alpha=1,\\
+ 1-2^{-((\alpha-1)/\alpha)B},&\alpha>1.
+ \end{cases}                                                   \tag{25}
+\]
+Then
+\[
+ \sup_{0\le B<\infty}\max_{Y\in\{{\rm known},\comp\}}
+ \left|D_Y(E,B)-f(t_\alpha(E,B))\right|\longrightarrow0.
+                                                               \tag{26}
+\]
+In particular the difference between the known-noise and compound
+deficits vanishes uniformly in the budget. Vacuum--thermal mixtures
+are uniformly asymptotically least favorable. No finite-energy
+optimality or uniqueness of the reset is asserted.
+\end{theorem}
+
+The result is not obtained by evaluating a single input and calling its
+deficit a capacity converse. The next argument controls all inputs. It
+uses the branch functional and spectral estimate of \cite{minimax}; the
+new matching concerns the entropy-constrained adversary and common code.
+
+\subsection{A branch estimate without the small-error cutoff}
+For the fixed decoded channel in (6), take a top-\((m+1)\) reset
+projection as in Lemma~\ref{lem:branch}. Write
+\(x=\lambda\Tr(P\sigma)\) and
+\(\delta=q\Tr((I-P)\nu_\tau)\). Its binary observation \(Y\) has
+\[
+ H(F|Y)=b(\lambda-x,\delta)+b(x,q-\delta)
+ \le b(\lambda,q\eta_m)+b(\bar x,q),\quad
+ \bar x=\min\left\{\lambda,
+             \frac{\lambda(m+1)}{E(1-\epsilon)}\right\}.        \tag{27}
+\]
+Here \(\eta_m\) is the supremum tail of the class. The partial
+derivatives of \(b(u,v)\) are \(\log_2(1+v/u)\) and
+\(\log_2(1+u/v)\), hence both arguments are increasing, with continuous
+extensions at zero. Data processing gives \(H(F|B)\le H(F|Y)\).
+The same branch chain rule and type-space compound coding as in
+Section~3 therefore imply
+\[
+ D_{\comp}(E,B)\le b(\lambda,q\eta_m)+R_+(E,m),\qquad
+ R_+(E,m)=2\lambda[g(E)-s_E]+b(\bar x,q).                       \tag{28}
+\]
+For \(m/E\to0\), \(R_+\to0\). The hypothetical observation still only
+bounds information; it is not the operational common decoder. Capacity
+suprema at each fixed energy remove the rational/type approximation
+slacks before taking the energy limit.
+
+\subsection{A uniformly sharp witness against every input}
+For \(0\le a\le1\), let \(\tau_{E,a}=(1-a)|0\rangle\langle0|+a\gamma_E\),
+and put \(p_0=1/(E+1)\). The flagged receiver output at input \(\gamma_E\)
+has conditional entropy
+\[
+ (1-p_0)b(\lambda,qa)+
+ b\bigl(\lambda p_0,q(1-a+ap_0)\bigr)
+ \le f(a)+b(\lambda p_0,q).
+\]
+The branch information lost is no larger. This proves the capacity
+lower bound needed for the right side of (29) below.
+
+For arbitrary \(\rho\) of mean at most \(E\), define the inherited functional
+\[
+ F(\rho,\tau)=\lambda S(\rho)+S(\lambda\rho+q\tau)
+                         -qS(\tau)-h(\lambda).
+\]
+The exact identity is \(I(\rho,\Rcal_\tau)=F(\rho,\tau)+H(F|RB)\),
+where the last \(F\) is the classical branch register. All entropies
+in this witness argument are finite.
+Write \(P=\lambda+qa\) and \(\chi=(\lambda\rho+qa\gamma_E)/P\).
+Its mean is at most \(E\). Entropy of mixing and maximal thermal entropy give
+\(S(\lambda\rho+q\tau)\le h(q(1-a))+Pg(E)\).
+A vacuum measurement of the witness's mixture flag has error \(ap_0\), so
+\(S(\tau)\ge h(a)+ag(E)-h(ap_0)\).
+Using
+\(h(\lambda)+qh(a)=h(q(1-a))+P h(\lambda/P)\) yields
+\[
+ F(\rho,\tau_{E,a})\le2\lambda g(E)-f(a)+q h(ap_0).
+\]
+
+Put \(d=g(E)-S(\rho)\), \(r=\|\rho\|_\infty\).
+The Gibbs identity (19), followed by measurement in a largest-eigenvalue
+vector, gives
+\(r\log_2(E+1)-1\le D(\rho\Vert\gamma_E)\le d\).
+The purification-projector test has error
+\(q\Tr(\rho^2\tau)\le qr^2\).
+Always guessing reset has error \(\lambda\). Choosing the better test and
+applying binary Fano bounds the conditional branch entropy by
+\(h(\min\{\lambda,qr^2\})\); the displayed argument is at most \(1/2\).
+
+If \(d\ge h(\lambda)/(2\lambda)\), the flagged bound
+\(I\le2\lambda S(\rho)\) already implies
+\(I\le2\lambda g(E)-h(\lambda)\le2\lambda g(E)-f(a)\).
+Otherwise let
+\[
+ \bar r_E=\min\left\{1,
+       \frac{1+h(\lambda)/(2\lambda)}{\log_2(E+1)}\right\},\quad
+ J_E=h(\min\{\lambda,q\bar r_E^2\}),\quad
+ R_-(E)=q h(p_0)+J_E .
+\]
+For \(E\ge2\), \(h(ap_0)\le h(p_0)\). The global functional bound and
+\(r\le\bar r_E\) consequently give, for all \(a\in[0,1]\),
+\[
+ f(a)-R_-(E)\le
+ 2\lambda g(E)-\CEA(\Rcal_{\tau_{E,a}},H,E)
+ \le f(a)+b(\lambda p_0,q).                                  \tag{29}
+\]
+Both errors vanish independently of \(a\). The capacity supremum needs
+neither an optimizer nor an interchange of near-optimal-input limits.
+
+\subsection{Matching every budget}
+The function \(f\) is increasing, concave and zero at zero; its derivative
+on \((0,1]\) is \(q\log_2(1+\lambda/(qt))\).
+Integrating the decreasing derivative gives
+\( |f(x)-f(y)|\le f(|x-y|)\) for \(x,y\in[0,1]\).
+This endpoint modulus avoids an invalid bounded-derivative assumption.
+
+For Shannon entropy set \(A=\log_2(E+1)\), \(G=g(E)\),
+\(m=\lfloor E/\ln(E+1)\rfloor\), \(L_m=\log_2(m+1)\),
+\(d_+=1-L_m/A\) and \(d_-=(G-A+1)/G\), for \(E\ge2\).
+The ordered-spectrum bound is \(\eta_m\le\min\{1,B/L_m\}\).
+The admissible witness has
+\(a=\min\{1,\max\{0,(B-1)/G\}\}\): below budget 1 use the pure vacuum,
+in the middle use \(S(\tau)\le1+aG\), and above \(G+1\) use \(\gamma_E\).
+With \(t=\min\{1,B/A\}\), the two clipped ratios differ by at most
+\(d_+\), while \(0\le t-a\le d_-\), for every \(B\ge0\).
+Thus (28)--(29) imply the explicit budget-independent sandwich
+\[
+ f(t)-f(d_-)-R_-\le D_{\rm known}\le D_{\comp}
+       \le f(t)+f(d_+)+R_+(E,m).                              \tag{30}
+\]
+All remainders tend to zero.
+
+For fixed \(\alpha>1\), put \(R=2^{(1-\alpha)B}\),
+\(m=\lfloor\sqrt E\rfloor\), \(t_m=(m+1)^{1-\alpha}\).
+If \(w_m\) is the mass of the first \(m\) eigenvalues, then
+\(R\le\sum_jp_j^\alpha\le w_m^\alpha+t_m\).
+Hence
+\[
+ \eta_m\le1-(R-t_m)_+^{1/\alpha},\qquad
+ 0\le R^{1/\alpha}-(R-t_m)_+^{1/\alpha}\le t_m^{1/\alpha}.
+\]
+The witness with \(a=1-R^{1/\alpha}\) is exactly admissible because
+\(\Tr\tau_{E,a}^\alpha\ge(1-a)^\alpha=R\).
+Writing \(d_\alpha=t_m^{1/\alpha}\), the matching sandwich is
+\[
+ f(a)-R_-\le D_{\rm known}\le D_{\comp}
+       \le f(a)+f(d_\alpha)+R_+(E,m).                         \tag{31}
+\]
+This includes \(R\le t_m\), \(B=0\), and unbounded growing budgets.
+General admissible resets may have infinite Shannon entropy and energy;
+(28) only uses their finite decoded states. The converse only uses the
+finite-energy witness. No subtraction of infinite entropies is involved.
+Equations (30)--(31) prove Theorem~\ref{thm:curves}.

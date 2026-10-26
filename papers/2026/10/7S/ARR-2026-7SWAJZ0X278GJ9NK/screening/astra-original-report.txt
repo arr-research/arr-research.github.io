@@ -1,0 +1,160 @@
+FULL FROZEN-MANUSCRIPT MATHEMATICAL REFEREE REPORT
+26 October 2026
+
+Manuscript: Sharp entropy budgets for communication with unknown resets and optical loss
+Author: Lluis Eriksson
+Reviewed PDF SHA-256: 0b6572379ef56dd2d667cb52c768d55bd89ee7991545c3c186be92776aeb07c3
+PDF: 14 pages, 453900 bytes.
+Frozen packet: D:\Entregas\airr\2026-10-26_entropy-budgets\draft-3
+Conserved review: D:\Proyectos\airr-investigacion\2026-10-26_entropy598-referee
+
+VERDICT
+
+Recommendation: minor_revision (minor documentary and expository revisions, not a mathematical major revision).
+Unresolved material mathematical objections: NONE IDENTIFIED in the coverage described below.
+This is a qualified technical recommendation, not a correctness certificate or editorial acceptance.
+
+AIRR research-importance score: 4.5/10.
+Technical-contribution score: 5.5/10.
+Overall AIRR score: 4.5/10.
+
+I used the supplied AIRR scale: 3 is the publication baseline, 5 a very good research contribution, 6 excellence, and higher values require substantially broader exceptional importance. These are not percentages or probabilities. The overall mark is not an arithmetic average of diagnostic marks. The technically strongest result is the uniform all-budget assisted minimax law, including the optical extension and the common-code quantifier. The importance mark is lower than the technical mark because the model is narrow, the result is asymptotic, and several main mechanisms and the coding theorems are established or inherited. I do not see evidence of field-changing importance, an efficient protocol, or a general solution of bosonic capacity optimization. Conversely, this is more than a repackaging of a known vacuum-reset formula: the orientation-unrestricted entropy class and matching uniform operational bounds require additional arguments.
+
+Diagnostic marks, on 1--5:
+  Correctness confidence: 4.0. The main proofs survived substantive checks of quantifiers, endpoints, all-input converses, and applicability of the cited coding results. This is not formal verification and does not recursively reprove all antecedent theorems.
+  Rigor: 4.2. The finite-dimensional reduction, physical cost accounting, and uniform remainder control are explicit. The two-way conclusion has a substantial separately cited working-paper dependency.
+  Novelty: 3.6. The operational entropy-budget minimax theorem and the mixed-signal test appear distinct from the directly checked antecedents. The channel family, Gaussian pure-loss benchmark, spectral-tail tools, and compound capacity theorems are not new.
+  Significance: 3.4. A useful focused contribution to asymptotic communication under restricted uncertainty; practical blocklengths and broader noise models remain open.
+  Reproducibility: 4.4. Exact source and supplement hashes verified; all six programs replayed with byte-identical outputs. No actual universal encoder is supplied or numerically tested, and the mathematical proof remains essential.
+
+1. SCOPE, INVOLVEMENT, AND EVIDENCE HYGIENE
+
+I acted as a referee of this one exact frozen manuscript, not as its author. I read the complete three-file source (main.tex, curves592.tex, optics595.tex), the exact PDF on all 14 rendered pages, the supplement README and all six programs, and the relevant theorem/proof passages of the primary references listed below. I checked all 35 files covered by the supplied MANIFEST.json; every size/hash checked matched. The PDF and supplementary ZIP match the advertised SHA-256 values. I did not alter the submitted manuscript, publish a score, contact authors, use private credentials, or start another reviewer.
+
+This review was requested as GPT-6 Astra at xhigh effort. The dispatch request is not independent runtime/model attestation. I have no basis to certify model identity, runtime isolation, memory independence, or institutional independence. This was a subagent working with shared filesystem access. I did not participate in the manuscript's derivation or editing in this review session. The reviewed manuscript itself discloses prior AI work and audits, so that history was visible as part of the manuscript. I did not open earlier drafts, earlier review reports or grades, other chats, private research histories, or sibling directories. No previous score was imported.
+
+A broad public literature search incidentally returned a verification-status snippet for a cited antecedent, including 'not assessed'; it contained no numerical assessment. It was not used as mathematical evidence or in scoring. Subsequent searches excluded AIRR. This exposure is recorded rather than claiming an artificial informational clean room.
+
+The primary downloads are private audit snapshots with hashes, not a republished corpus. Provenance distinguishes proof passages actually read from abstract-only context. Literature searching was directed and selective, not an exhaustive originality certification. I did not independently rebuild the TeX source; the source-to-PDF check consisted of reading the supplied sources and all pages of the supplied exact PDF. I observed no substantive source/PDF mismatch or obstructive rendering defect.
+
+2. MAIN CLAIMS AND WHY THEY SURVIVE THE REVIEW
+
+The manuscript treats fixed memoryless channel parameters, first taking the coding limit at each fixed E. This order is indispensable. There is no claim of a code working against a reset that changes within a block, a uniform reliability exponent as E grows, or a universal two-way code. I assessed the stated theorems with those restrictions.
+
+Theorem 1, pages 2--8: entropy-order classification.
+
+The sharp conditions are internally consistent: 2^B/E -> 0 for fixed alpha<1; B/log2(E+1) -> 0 for alpha=1; and B -> 0 for fixed alpha>1. The sufficiency proof reduces these to a rank m=o(E) with uniformly vanishing spectral tail. The elementary ordered-spectrum estimates (12)--(14) have the correct inequality directions and constants for the use made of them. In particular, for alpha>1, Tr tau^alpha >= 2^{-(alpha-1)B} together with Tr tau^alpha <= p1^{alpha-1} yields p1 >= 2^{-B}. For alpha<1 the integrated power-law tail has the advertised exponent. No limit uniform in alpha near 1 is inferred.
+
+Compression in Lemma 2 is a genuine information-preserving device for this purpose, not a claimed trace-norm approximation of all physical outputs. Compressing a subnormalized top-m part of tau produces a positive operator below D_L(tau), of rank at most m+1 and the same trace. Its support witnesses the required eigenvalue-sum estimate. The transmitted input has norm 1/[E(1-epsilon)], so a rank-(m+1) test incurs only the stated transmitted error. The test may depend on tau because it proves an information lower bound; it is not asserted to be the common receiver decoder. Binary conditional entropy loses at most h(z_E), without a growing output-dimension factor. This is a crucial valid distinction.
+
+The common truncated thermal input has strict physical mean-cost slack, entropy g(E)-o(1), and an E-dependent but finite alphabet. The exact type subspace in Lemma 3 consists entirely of vectors with the same total energy. The relative-entropy identity for pi_T bounds output total correlation by d_k; complementary subadditivity supplies the other side. This gives the stated 2d_k and d_k penalties for mutual and coherent information. It also gives the Holevo bound since each type has identical letter counts. All dimensions are fixed while the outer coding limit is taken.
+
+I checked the precise finite-dimensional compound coding results invoked in Proposition 4. They admit arbitrary index sets and genuinely uninformed users. Applying them to a channel whose input Hilbert space is T forces every encoded state to lie in tensor powers of T. Thus the physical cost does not depend on an uncontrolled random-coding average or on a channel-dependent encoder. Taking a finite rational approximation and finite type block first, then outer blocklength, and finally suprema over those finite choices is legitimate. No compactness of the uncompressed reset class is needed. Classical coding can even use the maximizing distribution over the type alphabet: each alphabet element already has exactly the same energy.
+
+The private rate inherited from the quantum code uses the full environment. Entanglement fidelity implies decoupling from every discarded system in a dilation, including D_L and decoding discards. Measuring the reference gives uniform-message trace secrecy with the advertised bound relative to the actual average environmental state. A mesh of n^{-6} is permitted in the cited quantum compound proof: at fixed dimensions its cardinality is polynomial, the finite-net coding term is exponentially small, and tensor transfer adds O(n^{-5}). The resulting O(n^{-5/2}) trace error times O(n) message entropy tends to zero, which also justifies unnormalized Holevo secrecy. This does not yield a uniform-in-E exponent.
+
+The converse is not merely a calculation on thermal input. For the vacuum--thermal witness the branch loss on gamma_E is positive. The Gibbs identity gives D(rho||gamma_E) <= g(E)-S(rho), with the correct sign of the energy correction. Pinsker and finite-flag continuity then handle every input with small entropy deficit; the remaining inputs already lose through 2 lambda S(rho). The conditional entropies use a two-dimensional classical flag, avoiding subtraction of infinite conditioning entropies. The cited infinite-dimensional assisted coding formula has the necessary generality. The exact power sum (21) places a fixed positive a witness in each failed regime on an appropriate subsequence. This proves necessity through assisted capacity, as stated; it does not prove a separate necessary threshold for each unassisted capacity.
+
+Pointwise two-way part, pages 7--8.
+
+The finite-codimension lemma avoids a common domain mistake: it works inside a finite energy window and never requires projecting an input through an infinite-energy reset eigenvector. The min-max/intersection argument supplies e_{j+m}. With oscillator energies, the loss is controlled by g(E)-g(E-m), uniformly over forbidden orientations. The accepted reset mass is at most q eta_m.
+
+The conversion to Q2 and K2 does require the separately cited distillation theorem. I read the relevant finite-state theorem and its stopped-classification/seed argument in ARR-2026-58XZ9SCZA39DSRF0-v1, rather than treating its title as proof. Its arbitrary noise component covers the finite decoded state used here, and it pays for the initial entanglement reserve from source copies. For this application all source copies use the same strictly admissible finite input, so accounting for seed copies does not violate the cost constraint. The lower bound (22) then gives (23). This is a pointwise construction whose bases can depend on tau; it is not the compound decoder used for C, CEA, Q, P.
+
+The upper bounds are applied to flagged erasure before reset postprocessing. The oscillator satisfies the all-temperature Gibbs hypothesis, and erasure has finite output entropy under the input constraint even when the physical reset does not. I checked the DSW cost convention, finite-output-entropy hypothesis, and adaptive two-way upper-bound proof. They are used on the correct channel. The auxiliary general-Hamiltonian result in the author's earlier paper is stronger than needed for this oscillator manuscript.
+
+Theorem 7, pages 8--10: all-budget minimax curves.
+
+This is the strongest identity/reset result. The sharpened binary observation bound (27) is valid for all tail masses; it avoids incorrectly extending small-error Fano to a large-error region. Monotonicity of both arguments of b yields the upper bound in (28). The extra transmitted term tends to zero when m/E does.
+
+For the converse, the functional F is expanded only on the finite-energy witness, where all required entropies are finite. Splitting the output into the vacuum branch and the lambda rho + qa gamma_E branch gives the global thermal-entropy upper bound. The witness entropy lower bound follows by measuring vacuum to estimate its mixing flag. The three-weight entropy identity gives precisely f(a), with no Gaussian optimality assumption about the reset mixture.
+
+The remainder H(flag|RB) is controlled for all capacity-relevant inputs. If d >= h(lambda)/(2 lambda), flagged information alone suffices. Otherwise measurement in a largest-eigenvalue vector gives r log2(E+1)-1 <= D(rho||gamma_E) <= d. The purification-projector test has error at most q r^2. Taking the better of that test and always guessing reset puts the Fano argument below 1/2, including lambda on either side of 1/2. The resulting R_-(E) is independent of a. Equation (29) is consequently a capacity converse, not a proposed optimizer evaluated at one input.
+
+Budget matching is genuinely uniform. For Shannon entropy the clipped upper tail bound and the admissible clipped witness have discrepancies bounded by d_+ and d_-, independently of B, including B=0, B near the crossover, and arbitrarily large finite B. The endpoint modulus |f(x)-f(y)| <= f(|x-y|) is essential: a global bounded derivative would be false at zero. For fixed alpha>1, the ordered-spectrum estimate R <= w_m^alpha+(m+1)^{1-alpha} and the Holder modulus of the 1/alpha power produce an error independent of R. The witness a=1-R^{1/alpha} is exactly admissible even when R is extremely small. Thus (30)--(31) imply the claimed supremum over all finite budgets. No interchange of an unproved optimizer limit with a minimax is needed.
+
+Theorem 8, pages 10--12: optical extension.
+
+The benchmark lambda c_kappa(E) is correct, and it is an established pure-loss assisted benchmark. Equation (36) follows directly from relative-entropy contraction against thermal reference states. The coefficient of the actual mean mu is nonnegative, so replacing mu by E is legitimate. At t=0 one uses the entropy bound separately. This finite-energy inequality handles kappa near 1 without an uncontrolled log(1-kappa) remainder.
+
+The all-input split is valid. Above kappa=1/2 the coherent-information upper bound follows by degradation and (36); below 1/2 it follows from antidegradability and weak monotonicity. The loss in using S(rho)+K_kappa(E) instead of c_kappa(E) is bounded by log2(1/kappa_0). Hence every input with entropy deficit greater than D0 already loses at least h(lambda); the rest have r=O(1/log E), uniformly in kappa. This split precedes use of the branch test.
+
+The mixed-signal detector withstands the main potential objection. The signal reference/output state is mixed, so a projection onto an input purification would not suffice. Here the test is the span of the first K+1 Kraus vectors after receiver-vacuum removal. If Pi is receiver non-vacuum, then each retained vector's Pi component lies in Q; therefore its expectation against Q is exactly the squared norm of that Pi component. Summing the positive retained Kraus terms gives signal acceptance at least one minus the discarded loss-index mass minus the vacuum mass. The latter is <= r/kappa because Tr(1-kappa)^H=1/kappa. The reset vacuum component is annihilated, and the thermal component contributes at most rank(Q) r/(1+kappa E). With K=ceil(t_E(1-kappa)E), the two error contributions are O(1/t_E) and O(r t_E), uniformly for kappa>=kappa_0. Choosing t_E=sqrt(ln(E+1)) makes both vanish. At kappa=1, K=0 and only the no-loss Kraus vector remains; the argument still works. No full-rank transmitted-support assumption has slipped in.
+
+The entropy functional bound (37) and this detector establish (39) for every admissible input through the high-/low-entropy split. Thermal input supplies the opposite inequality but is never asserted to optimize the mixed channel. Infinite output entropy of a general admissible reset is irrelevant to this witness converse.
+
+For achievability, pure loss keeps the finite input window invariant, so D_L is exact on its transmitted branch. Thermal-tail decomposition gives uniform continuity estimates for source, receiver, and complementary entropies without dimensions blowing up. Positivity supplies the uniform transmitted operator-norm bound. The same type-space method applies to the entire finite-dimensional channel family indexed by (kappa,tau); its compactness for coding comes from finite input/output dimensions, not from energy compactness of resets.
+
+Finally, the Shannon witness need not have a<=t; the text correctly uses an absolute clipping discrepancy and a uniform bound on |g(kappa E)-log2(E+1)|. The alpha>1 witness is exactly admissible. Monotonicity of the pure-loss benchmark follows from receiver postprocessing; a witness at kappa_0 supplies the converse for the interval compound class. It is not necessary to assert an entropy-preserving degradation map between every two reset classes. Equations (34) and (35), with their full B and kappa quantifiers, follow.
+
+3. NOVELTY AND IMPORTANCE, SEPARATED FROM CORRECTNESS
+
+Directly checked antecedents already contain the following: the finite-dimensional identity/replacement channel; vacuum reset as binary bosonic fading; an optical transmitted branch plus vacuum replacement; the Gaussian pure-loss assisted benchmark; Renyi-controlled low-rank approximation; and universal coding for arbitrary finite-dimensional compound sets. These are not discoveries of the submitted paper. The manuscript generally credits them accurately.
+
+Catalano et al. is particularly close in model but different in theorem: its Section IV and Appendix C analyze the finite-energy optimization for identity/vacuum replacement, while Appendix F explicitly includes pure loss mixed with vacuum replacement. That work prevents any novelty claim for those channels or for a blanket thermal optimizer. The submitted proof respects that limitation. Neither the passages read there nor the other directly compared primary results state the submitted orientation-unrestricted entropy-budget minimax curves, equality of known-noise and uninformed compound losses uniformly over all B, or the uniform kappa extension with the mixed-signal test above.
+
+The author's earlier spectral paper supplies important operational infrastructure, particularly two-way distillation. The earlier energy-budget minimax paper supplies the branch functional and the near-optimal-input spectral bound. Their reuse lowers the amount of wholly new machinery in this manuscript. The energy-constrained adversary, however, is a different feasible set: phase averaging can increase the reset's Renyi entropy, so that earlier classical minimax reduction cannot simply establish this result. The uniform upper and lower entropy-budget matches still have to be proved here.
+
+Cacioppo--Notzel--Rosati gives relevant infinite-dimensional compound cq theory, but its common effective-projection and output-energy hypotheses fail for a class containing pure resets in arbitrary orientations. The present fixed receiver processing therefore addresses a real obstruction to a direct use of that theorem. It does not establish a general infinite-dimensional compound-capacity theorem.
+
+The operational minimax addition is publishable in scope, subject to normal specialist review. Its importance should not be inflated by counting every recovered benchmark as an independent new capacity theorem, nor by equating an absolute high-energy o(1) result with useful finite-energy performance. The optical bound can converge very slowly for small fixed kappa_0; no practical coding resources are bounded. These are limitations on significance, not counterexamples to the asymptotic statements.
+
+4. UNRESOLVED COMMENTS AND REQUIRED ACTIONS
+
+MATERIAL OBJECTIONS: none identified. In particular, I am not leaving an unresolved all-input converse, an unknown-decoder gap, a physical-cost gap, or a kappa=1 gap while recommending minor revision.
+
+R1 (minor, documentary). Pin the Holevo--Shirokov reference to the exact version used. The manuscript's unversioned arXiv:1210.6926 resolves in this audit to v2, dated 28 May 2013; the bibliography labels the work 2012. This does not invalidate Theorem 1, whose scope is sufficient, but a frozen reproducibility packet should specify v2 or distinguish first-submission date from version date.
+
+R2 (minor, reproducibility). Record the Python, NumPy, SciPy and mpmath versions used for the supplied outputs. The scripts reproduced exactly in the audit environment, but the README currently specifies only library names. Preserve the distinction between the script named independent_checks.py and independently attested human or isolated-model verification; the current manuscript largely makes this distinction already.
+
+R3 (minor, exposition). Consider collecting the optical error envelope into one displayed bound immediately before the conclusion of Theorem 8: the thermal-truncation term, b(rank times transmitted norm,q), the Shannon clipping modulus or super-Shannon tail modulus, and q h(p_*)+h(z_E). All ingredients are already present and I verified their uniformity, so this is not a missing lemma. It would make the strongest quantifier in the paper considerably easier for a reader to audit.
+
+No revision of the manuscript was made in this review. These comments remain attached to the exact reviewed PDF. Future versions require a separate binding of their claims and evidence; this report must not silently be presented as a review of a different PDF.
+
+5. PRIMARY SOURCES: ACTUAL READING DEPTH
+
+URLs below identify the precise public documents. SHA-256, sizes, page counts and local snapshot paths are in primary-downloads.json and provenance.json. I did not read every page of every antecedent. 'Proof passages' means the relevant displayed argument was read; it does not mean all its earlier cited dependencies were independently re-established.
+
+1. Holevo--Werner, quant-ph/9912067v1, https://arxiv.org/pdf/quant-ph/9912067v1 . Sections IV.C and V.A, PDF pp.8--10: Gaussian mutual-information optimization argument and attenuation/exchange-entropy formulas. Proof passages and formulas read, not merely abstract. Used for the known pure-loss benchmark, not for optimizing a non-Gaussian channel mixture.
+
+2. Holevo, 1003.5765v1, https://arxiv.org/pdf/1003.5765v1 . Proposition 1 and its relative-entropy proof; Gaussian entropy-gain specialization, PDF pp.3--7. Proof passages read. This is an antecedent for entropy gain; the finite-energy inequality (36) was checked directly in the submitted manuscript, not imported from an inapplicable unrestricted asymptotic bound.
+
+3. Berta--Gharibyan--Walter, 1603.02282v2, https://arxiv.org/pdf/1603.02282v2 . Theorem 1, uninformed-user definitions, Lemma 9 and its net/AEP proof, PDF pp.2,6--7; classical/quantum assisted equivalence also inspected. Actual arbitrary-index achievability proof read. The finite-dimensional input/output hypothesis is met after restricting type blocks and D_L.
+
+4. Holevo--Shirokov, 1210.6926v2, https://arxiv.org/pdf/1210.6926v2 . Theorem 1 and its constrained coding proof, PDF pp.6--9, with relevant conditional-entropy definitions. Theorem and proof read. This version was the resolution of the manuscript's unversioned citation. It covers general positive constraint observables and does not require finite reset output entropy for the capacity formula.
+
+5. Catalano et al., 2604.26874v2, https://arxiv.org/pdf/2604.26874v2 . Section IV (PDF pp.10--11), Appendix C (pp.28--30), Appendix F.2/Eq.(F2) (p.38), and adjoining interpretation. The finite-energy vacuum-reset optimization derivation was read. The numerical generalizations were read only to establish model overlap and scope, not to certify all their optimizations. No worldwide novelty conclusion follows from this comparison.
+
+6. Cacioppo--Notzel--Rosati, 2105.04274v1, https://arxiv.org/pdf/2105.04274v1 . Effective-dimension definition and Theorem 5 (p.2), direct proof passage (pp.4--5). Statement and proof mechanism read. It supplies prior energy-constrained compound cq theory with additional hypotheses; it is not used as a substitute for the submitted fixed-processing argument.
+
+7. Bjelakovic--Boche, 0710.3027v2, https://arxiv.org/pdf/0710.3027v2 . Theorem 3.1 (p.3), Theorem 5.10 and beginning of its direct proof (p.7 onward). The theorem's arbitrary compound class and finite alphabet/output conditions were checked; not every preceding hypothesis-testing lemma was re-proved. This supplies common classical codes.
+
+8. Bjelakovic--Boche--Notzel, 0811.4588v3, https://arxiv.org/pdf/0811.4588v3 . Lemmas 10--11, Theorem 12's error estimate (34)--(35), net construction/Lemma 15, and Lemma 16 with proof, PDF pp.21--23,25--28. Relevant proof and dimension-uniform constants inspected. The n^{-6} choice is consistent with the proof's mesh conditions. This supplies one encoder/recovery and supports the secrecy decay refinement.
+
+9. Winter, 1507.07775v6, https://arxiv.org/pdf/1507.07775v6 . Lemma 2 and the shared-mixture proof, PDF pp.2--3. Statement, constants and proof read. The finite system is the branch flag or finite message register; no large conditioning dimension enters the modulus.
+
+10. Davis--Shirokov--Wilde, 1801.08102v3, https://arxiv.org/pdf/1801.08102v3 . Eq.(101), Condition 1, Proposition 1 proof, Theorem 4 and Eq.(141), PDF pp.10--14. Definitions and adaptive converse proof read. Applied to erasure, whose hypotheses hold; not directly to an arbitrary infinite-entropy reset output.
+
+11. Verstraete--Cirac, cond-mat/0505140v6, https://arxiv.org/pdf/cond-mat/0505140v6 . Lemma 2 and its ordered-spectrum extremal argument, PDF pp.4--5. Proof passage read. Supports prior provenance of Renyi tail approximation, not the operational threshold theorem.
+
+12. Schuch et al., 0705.0292v2, https://arxiv.org/pdf/0705.0292v2 . Entropy-order/MPS approximation discussion and associated spectral truncation arguments, PDF pp.2--3, plus opening scope. Proof passages read selectively. Generic qualitative differences between entropy orders are prior; the communication result is a different assertion.
+
+13. Giovannetti--Lloyd--Ruskai, quant-ph/0408103v3, https://arxiv.org/pdf/quant-ph/0408103v3 . Eq.(34) and surrounding discussion, PDF p.7. Channel definition and stated problem read. Multiplicativity proof not audited, since it is not used in the submitted proofs.
+
+14. Watanabe et al., 2610.01941v1, https://arxiv.org/pdf/2610.01941v1 . Abstract and introduction only. Used only to check the contextual warning that capacity universality does not imply equality of reliability exponents. Its technical reliability theorems were not audited and are not a dependency of the reviewed capacity proof.
+
+15. Eriksson, ARR-2026-58XZ9SCZA39DSRF0-v1, https://airr.science/papers/ARR-2026-58XZ9SCZA39DSRF0/versions/v1/ARR-2026-58XZ9SCZA39DSRF0-v1.pdf . Section 2, Lemma 1, Theorems 2 and 4 and their proofs (PDF pp.2--6); Proposition 15 (p.12); Theorem 17 application (pp.13--14); Lemma 22 and the relevant part of the spectral-criterion application (pp.17--18). Required theorem/proof passages read, including seed payment. This is an inherited working-paper dependency, not an independently accepted theorem inferred from an assessment. Unrelated later results were not audited.
+
+16. Eriksson, ARR-2026-2EXHFGWW0S8MG8QA-v1, https://airr.science/papers/ARR-2026-2EXHFGWW0S8MG8QA/versions/v1/ARR-2026-2EXHFGWW0S8MG8QA-v1.pdf . Sections 1--2, Theorem 2.1 and Lemma 2.2 with proofs (PDF pp.1--3). Branch functional, all-near-optimal-input spectral estimate, and phase-twirl scope read. The separate beta/digamma fixed-energy-ratio solution is not needed here and was not audited. No assessment report was read.
+
+6. REPRODUCTION AND ARCHIVE
+
+All six supplied programs were inspected before execution and run in a new writable C: copy. All returned status success. Their six JSON outputs are byte-identical to the frozen packet. This verifies replay, not theorems or operational capacities.
+
+Observed counts: geometry 60 interlacing and 36 branch cases; Renyi 72 tail and 72 largest-eigenvalue checks plus 72 recorded asymptotic evaluations; compound 24 type and 72 compression cases; minimax 144 noncommuting input, 54 thermal, 96 tail and 24 clipping cases; scalar bounds 240 cases at 220 digits; optical program 84 signal, 336 entropy-DPI, 756 branch, 2664 detector, 15 thermal-truncation and 280 uniform-clipping cases, with 260-digit scalar arithmetic. These finite diagnostics neither optimize a capacity nor construct a common code. In particular, closed-form evaluations of the Renyi series are not an independent equality test of that series.
+
+The archive contains report.txt, verdict.json, provenance.json, packet-verification.json, primary-downloads.json, replay-results.json, the private primary snapshots, exact reviewed source/PDF snapshots, rendered pages, and the replay folder. MANIFEST.json hashes the conserved files; conservation-verification.json records C:/D: equality checks. The temporary C: workspace is removed only after verification; the complete evidence remains on D:. No paper source or public assessment was edited.
+
+FINAL ASSESSMENT
+
+The exact manuscript supports its stated entropy-order thresholds and the uniform assisted minimax loss curves, within the restrictions and inherited dependencies identified above. The optical proof contains an appropriate mixed-state detector and a valid all-input split; the compound proof contains an appropriate physical-energy argument. I found no material unresolved objection that would justify a major_revision or reject recommendation. The contribution merits a positive but bounded research-importance assessment: overall 4.5/10 on the supplied AIRR scale, with the minor revisions and limitations retained in this report.

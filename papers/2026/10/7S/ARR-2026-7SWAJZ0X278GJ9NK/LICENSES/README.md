@@ -1,0 +1,1 @@
+Manuscript, original supplementary diagnostics and accompanying original report text: CC BY 4.0. Catalogue metadata: CC0. Code/data paths are specified in LICENSES.json and metadata.json. Cited external papers retain their own rights; no external full-text corpus is included.
