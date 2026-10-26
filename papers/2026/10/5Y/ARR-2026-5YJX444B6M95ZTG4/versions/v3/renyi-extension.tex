@@ -1,0 +1,264 @@
+\section{Filtered output norms and strong-converse exponents}\label{sec:renyi}
+This section strengthens the order-one conclusions for the original Davies
+channel. It does not assert the corresponding filtered-norm or exponent
+identities for its complementary channel. The triangular Schatten inequality
+below is Fang's theorem, not a result proved here. The coefficient triangle
+is the one used in Section~2. The additional ingredient at its third vertex
+is a standard consequence of Araki--Lieb--Thirring.
+
+For a finite-dimensional completely positive map $\Psi$, not necessarily
+trace preserving, define
+\[
+ \nu_p(\Psi)=\max_{\rho\ge0,\,\Tr\rho=1}\|\Psi(\rho)\|_p,
+ \qquad 1\le p\le\infty.
+\]
+The maximum exists by compactness. For $H\ge0$ write
+$\Phi_H(X)=H\Phi(X)H$.
+
+\begin{lemma}[External triangular norm compression]\label{lem:fangnorm}
+For every $r\ge2$ and compatible rectangular blocks,
+\[
+ \left\|\begin{pmatrix}U&0\\V&W\end{pmatrix}\right\|_r
+ \le
+ \left\|\begin{pmatrix}\|U\|_r&0\\\|V\|_r&\|W\|_r\end{pmatrix}\right\|_r.
+\]
+\end{lemma}
+This is \cite[Theorem~3]{fang}, including its rectangular and operator-norm
+endpoints. Its trace-power convexity argument is an external dependency of
+the present extension.
+
+\begin{lemma}[Controlled block factors]\label{lem:altnorm}
+Let $C\ge0$ be an $n\times n$ scalar matrix and let $X_i$ be $d\times r$
+matrices with $\|X_i\|_{2p}=1$, where $1\le p<\infty$. Then
+\[
+ \left\|\sum_{ij}C_{ij}|i\rangle\langle j|\otimes X_iX_j^*\right\|_p
+ \le\|C\|_p.
+\]
+The analogous statement holds for $p=\infty$ with $\|X_i\|_\infty=1$.
+\end{lemma}
+\begin{proof}
+Set $D=\operatorname{diag}(X_1,\ldots,X_n)$,
+$A=C\otimes I_r$ and $B=D^*D$. The matrix on the left is $DAD^*$,
+whose nonzero eigenvalues are those of $B^{1/2}AB^{1/2}$. The standard
+Araki--Lieb--Thirring inequality \cite[Theorem~1]{alt} gives
+\begin{align*}
+ \Tr\bigl[(DAD^*)^p\bigr]
+ &\le\Tr B^{p/2}A^p B^{p/2}\\
+ &=\sum_i(C^p)_{ii}\Tr\bigl[(X_i^*X_i)^p\bigr]=\Tr C^p.
+\end{align*}
+Rectangular factors add zero eigenvalues and do not change this argument.
+For $p=\infty$, $D$ is a contraction, so $\|DAD^*\|\le\|A\|=\|C\|$.
+\end{proof}
+
+\begin{theorem}[Three-vertex block norm bound]\label{thm:normblock}
+Let $\|X\|_{2p}=\|Y\|_{2p}=1$, $1\le p<\infty$, and let
+$\alpha,\beta,\eta,\delta,K\ge0$ satisfy
+$\alpha\delta-\beta\eta\ge K^2$. No trace normalization is imposed.
+For
+\[
+ T=\begin{pmatrix}
+ \alpha XX^*+\beta YY^*&KXY^*\\
+ KYX^*&\eta XX^*+\delta YY^*
+ \end{pmatrix},\quad
+ C=\begin{pmatrix}\alpha+\beta&K\\K&\eta+\delta\end{pmatrix},
+\]
+one has $\|T\|_p\le\|C\|_p$. The corresponding statement holds at
+$p=\infty$ with operator-normalized $X,Y$. The constant one is sharp.
+\end{theorem}
+\begin{proof}
+Write $U_0=\alpha+\beta$, $U_1=\eta+\delta$, and
+$u=U_0U_1-K^2$. For positive row masses and $u>0$, use precisely the
+vertices $A,B,C$ and weights $w_A,w_B,w_C$ in the proof of
+Theorem~\ref{thm:block}. The condition is equivalent to
+$\beta U_1+\eta U_0\le u$, so all three weights are nonnegative.
+Their convex combination is the original coefficient tuple, while the
+scalar comparator $C$ is unchanged at every vertex.
+
+At vertex $A$, its factor is
+\[
+ M_A=\begin{pmatrix}(K/\sqrt{U_1})X&\sqrt{u/U_1}\,Y\\
+                         \sqrt{U_1}\,Y&0\end{pmatrix}.
+\]
+The scalar matrix of its block $2p$-norms has Gram matrix $C$.
+Permuting a block row or column reduces it to Lemma~\ref{lem:fangnorm}.
+Since $\|M_AM_A^*\|_p=\|M_A\|_{2p}^2$, the desired bound follows.
+At vertex $B$ use
+\[
+ M_B=\begin{pmatrix}\sqrt{U_0}\,X&0\\
+                (K/\sqrt{U_0})Y&\sqrt{u/U_0}\,X\end{pmatrix};
+\]
+its compressed Gram matrix is again $C$. At the third vertex,
+$T_C=\operatorname{diag}(X,Y)(C\otimes I_r)\operatorname{diag}(X,Y)^*$,
+so Lemma~\ref{lem:altnorm} applies. The triangle inequality for the
+Schatten norm combines these three bounds.
+
+If $u=0$ and both row masses are positive, the coefficient condition
+forces $\beta=\eta=0$ and the third-vertex argument applies directly.
+If a row mass vanishes, $K=0$ and the remaining row is bounded by the
+triangle inequality. These arguments include zero scalar coefficients.
+The same proof uses the norm endpoints for $p=\infty$. Taking $X=Y$
+to be a rank-one matrix of unit Schatten norm gives
+$T=C\otimes XX^*$ and equality, proving sharpness.
+\end{proof}
+
+\begin{theorem}[Diagonal-filter multiplicativity]\label{thm:filterednorm}
+Let $\Phi=\Phi_{a,b,\lambda}$ satisfy \eqref{eq:region}. For every
+nonnegative diagonal $H$, every finite-dimensional completely positive
+map $\Psi$, and every $1\le p\le\infty$,
+\[
+ \nu_p(\Phi_H\otimes\Psi)=\nu_p(\Phi_H)\nu_p(\Psi).
+\]
+The partner may have arbitrary input/output dimensions and need not
+preserve trace.
+\end{theorem}
+\begin{proof}
+For finite $p$, norm convexity reduces to a normalized pure input
+$|0\rangle|u\rangle+|1\rangle|v\rangle$. Complete positivity yields a
+factorization
+\[
+ (\operatorname{id}\otimes\Psi)(\psi)
+ =\begin{pmatrix}XX^*&XY^*\\YX^*&YY^*\end{pmatrix}.
+\]
+Put $x=\|X\|_{2p}^2$, $y=\|Y\|_{2p}^2$, $m=x+y$ and $q=y/m$.
+Suppose first $xy>0$, and normalize $X$ and $Y$ by $\sqrt{x}$ and
+$\sqrt{y}$. The output before filtering, divided by $m$, has the
+coefficients
+\[
+ \alpha=(1-q)(1-a),\quad\beta=qb,\quad
+ \eta=(1-q)a,\quad\delta=q(1-b),\quad
+ K=\lambda\sqrt{q(1-q)}.
+\]
+They obey
+$\alpha\delta-\beta\eta-K^2=(k-\lambda^2)q(1-q)\ge0$.
+For $H=\operatorname{diag}(h_0,h_1)$, multiply $\alpha,\beta$ by
+$h_0^2$, $\eta,\delta$ by $h_1^2$, and $K$ by $h_0h_1$.
+The determinant gap is multiplied by $h_0^2h_1^2$ and remains
+nonnegative, including singular filters. Theorem~\ref{thm:normblock}
+therefore gives
+\[
+ \|(\Phi_H\otimes\Psi)(\psi)\|_p
+ \le m\|\Phi_H(\psi_q^+)\|_p,
+ \quad |\psi_q^+\rangle=\sqrt{1-q}|0\rangle+\sqrt q|1\rangle.
+\]
+Finally,
+\begin{align*}
+ m&=\|\Psi(uu^*)\|_p+\|\Psi(vv^*)\|_p\\
+ &\le(\|u\|^2+\|v\|^2)\nu_p(\Psi)=\nu_p(\Psi).
+\end{align*}
+If $m=0$ the output vanishes; if exactly one block norm is zero,
+the input after $\operatorname{id}\otimes\Psi$ has a single basis
+branch and the same estimate follows directly. Maximization proves the
+upper bound and product inputs prove the reverse bound. The finite-dimensional
+limit $p\to\infty$ gives the remaining endpoint.
+\end{proof}
+
+\subsection{Renyi radii and their scalar evaluation}
+In the rest of this section logarithms are to base two. For $\alpha>1$
+define
+\[
+ \widetilde\chi_\alpha(\mathcal N)=
+ \inf_\sigma\sup_\rho\frac1{\alpha-1}
+ \log_2\Tr\left[\left(\sigma^{\frac{1-\alpha}{2\alpha}}
+ \mathcal N(\rho)\sigma^{\frac{1-\alpha}{2\alpha}}\right)^\alpha\right].
+\]
+The standard support convention gives infinity if an output is not
+supported in $\sigma$. The ensemble-radius identity and product-ensemble
+superadditivity used below are external results \cite{mo,beigi}.
+
+\begin{corollary}\label{cor:renyiadd}
+For every channel $\mathcal N$ and every $\alpha>1$,
+\[
+ \widetilde\chi_\alpha(\Phi\otimes\mathcal N)
+ =\widetilde\chi_\alpha(\Phi)+\widetilde\chi_\alpha(\mathcal N).
+\]
+In particular, the $n$-use quantity is exactly
+$n\widetilde\chi_\alpha(\Phi)$ for every positive integer $n$.
+\end{corollary}
+\begin{proof}
+Phase covariance and data processing under discarding a uniform binary
+phase flag show that dephasing a reference state cannot increase its
+worst-output radius; this is the argument in \cite[Eq.~(37)]{fang}.
+Thus diagonal references suffice for $\Phi$. Strictly positive references
+suffice by approximation with $(1-\epsilon)\sigma+\epsilon I/d$;
+the uniform radius penalty is at most $-\log_2(1-\epsilon)$.
+For a fixed full-rank reference, the supremum is
+$\alpha/(\alpha-1)$ times the logarithm of the maximum output
+$\alpha$-norm of the corresponding sandwiched map.
+Use a product reference for $\Phi\otimes\mathcal N$ and apply
+Theorem~\ref{thm:filterednorm} with the sandwiched partner, which is a
+completely positive map. Optimizing the two references proves the upper
+bound. Product-ensemble superadditivity \cite{beigi}, with the
+ensemble-radius identity \cite{mo}, proves the reverse bound.
+\end{proof}
+
+For a direct scalar formula set $\sigma_s=\operatorname{diag}(1-s,s)$,
+$0<s<1$, $h_0=(1-s)^{(1-\alpha)/(2\alpha)}$,
+$h_1=s^{(1-\alpha)/(2\alpha)}$, and $t=a+kq$. Define
+\[
+ B_{\alpha,s}(q)=\begin{pmatrix}
+ h_0^2(1-t)&h_0h_1\lambda\sqrt{q(1-q)}\\
+ h_0h_1\lambda\sqrt{q(1-q)}&h_1^2t
+ \end{pmatrix}.
+\]
+If $L_\pm(\alpha,s,q)$ are its two eigenvalues, then
+\begin{equation}\label{eq:renyiscalar}
+ \widetilde\chi_\alpha(\Phi)=
+ \inf_{0<s<1}\max_{0\le q\le1}
+ \frac{\log_2(L_+^\alpha+L_-^\alpha)}{\alpha-1}.
+\end{equation}
+Indeed pure inputs suffice by norm convexity, and phase covariance
+makes their eigenvalues depend only on $q$. No minimax interchange
+or single-orbit optimal-ensemble assertion is made in this formula.
+
+\subsection{The exact exponent above capacity}
+Let $P_{\rm s}^{\star}(n,R;\Phi)$ be the best average success probability
+for unassisted classical communication using $n$ copies, at least
+$\lceil2^{nR}\rceil$ messages, arbitrary entangled input codewords and a
+collective output measurement. The channel is memoryless; feedback and
+preshared entanglement are excluded.
+
+\begin{corollary}\label{cor:exponent}
+For every $R\ge0$ the limit defining the optimal strong-converse exponent
+exists and equals
+\begin{equation}\label{eq:strongexponent}
+ \lim_{n\to\infty}-\frac1n\log_2 P_{\rm s}^{\star}(n,R;\Phi)
+ =\sup_{\alpha>1}\frac{\alpha-1}{\alpha}
+       [R-\widetilde\chi_\alpha(\Phi)].
+\end{equation}
+The right side is positive for $R>C(\Phi)$. Every finite-block code obeys
+the upper success bound obtained by exponentiating $-n$ times the right
+side of \eqref{eq:strongexponent}. Product input codewords with collective
+decoding attain the optimal asymptotic exponent.
+\end{corollary}
+\begin{proof}
+The classical Arimoto converse bounds every code at each $\alpha>1$ by
+$2^{-n(\alpha-1)(R-\widetilde\chi_\alpha(\Phi))/\alpha}$ after
+Corollary~\ref{cor:renyiadd}. Optimizing $\alpha$ gives the finite-block
+statement. Equality of the asymptotic exponent follows from the general
+regularized exponent theorem \cite[Theorem~5 and Appendix~E]{ct}, since
+Corollary~\ref{cor:renyiadd} removes its regularization at every order.
+For product-codeword attainment, apply the classical-quantum coding
+exponent theorem \cite[Section~VI]{mo} to the channel with alphabet all
+pure qubit input states. Its optimized radius equals that of $\Phi$
+by norm convexity; the finite-dimensional output permits finite
+approximating alphabets. This gives the same exponent with product
+codewords. This coding theorem is an external operational dependency,
+not a construction of a particular finite-block decoder in this paper.
+\end{proof}
+
+The new norm proof extends Fang's GAD boundary to the full region
+$0\le\lambda^2\le k$. The standard unital, entanglement-breaking and
+zero-temperature overlaps are not claimed as new. For example,
+$a=1/10,b=3/10,\lambda^2=2/5$ is nonunital, has strict extra dephasing
+because $2/5<k=3/5$, and is not entanglement breaking because
+$\lambda^2>ab$. The CP-allowed strip $k<\lambda^2\le k+ab$ is not
+covered. Neither the general two-row norm-compression conjecture nor
+any qutrit-ladder capacity statement follows from these results.
+Integer-order filtered multiplicativity is already covered by the
+entrywise-positive-map theorem of King, Nathanson and Ruskai
+\cite{knr}. Without filtering, the general qubit results of King and
+Koldan \cite{koldan} already cover $p=2$ and $p\ge4$.
+The extension here must therefore be read with these overlaps, in
+particular the real noninteger orders and the filtered nonunital,
+non-entanglement-breaking interior, rather than as a new result for
+every individual parameter and order in the theorem.
