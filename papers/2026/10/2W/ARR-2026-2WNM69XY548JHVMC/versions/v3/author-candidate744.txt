@@ -1,0 +1,164 @@
+Technical candidate744: classicalization with entanglement assistance, feedback and a learning gap
+26 October2026. Root's unreviewed analytical proposal, no manuscript score or priority claim.
+
+Standing model/dependencies: exact published14-page v2 at
+D:/Proyectos/airr-investigacion/2026-10-26_robust722-input/main.tex
+and its PDF SHA2566a00b8bf9079766cae02e1e050fb2d7c224dde24568d5a3ad5d68ca238ac7f45.
+The source filename may need listing; authoritative working copy:
+C:/Trabajo/airr/2026-10-26_uniform-classical-limits690/main.tex.
+Previously model-audited comparison, entropy/noise lemmas, coding lemma and
+matched-reset non-Gaussian gap are dependencies, not re-proved or new here.
+This note must not inherit its manuscript score. No independent runtime/identity claim.
+
+Research move: remove the UNASSISTED restriction from the uniform classical
+comparison; distinguish free prior entanglement from feedback that learns a
+fixed unknown law. This is NOT an unrestricted strong converse or a claim that
+entanglement never helps an entanglement-breaking quantum channel.
+
+MODEL
+As v2: compact Theta, |a|^2<=K, ell<=v<=U with ell>0; unknown law nu fixed
+throughout code, iid branches conditional on it. N_E,nu=integral Phi_{a,vE}dnu.
+E>=2K/ell. Cost is expected photons averaged over equally likely messages,
+at most mE. With adaptive feedback impose this bound separately for EVERY nu.
+Unlimited noiseless classical feedback is only Bob-to-Alice; no free forward
+communication. Fixed block length, vanishing worst-law average message error.
+Free pre-shared entanglement sigma_{A0 R0} independent of message and law.
+Start with finite-dimensional pre-shared states of arbitrary size per block
+(dimensions may grow arbitrarily with block length); no uniform dimension cap.
+Bosonic signal and channel outputs are unrestricted. Receiver quantum memory
+and joint decoding allowed. No quantum feedback or cost-free forward side link.
+Let V_Gamma(P)=sup_mu:cost<=P inf_nu I_mu(W_nu),
+W_nu(y|x)=integral phi_v(y-a x)dnu. C_nu(P)=sup_mu I_mu(W_nu).
+
+PROPOSED LEMMA A: A CLASSICAL BOTTLENECK RETAINS THE REFERENCE
+Exact representation with arbitrary reference R: heterodyne Alice's channel
+input, outcome alpha, put X=alpha/sqrt(E); pass through
+W^-_{E,nu}(y|x)=integral phi_{v-|a|^2/E}(y-a x)dnu; then prepare |sqrt(E)y>.
+The heterodyne conditional R states (steering) are retained, not discarded.
+For correlated m-mode inputs, joint heterodyne has total normalized cost
+sum_i E|X_i|^2=(total photon number + m)/E.
+This is a complete channel identity, hence valid on entangled references.
+
+For any state of M,R,X with X classical and Y produced by a classical kernel
+independently of MR given X, data processing gives I(MR;Y)<=I(X;Y).
+The chain rule then gives
+ I(M;RY)-I(M;R)=I(M;Y|R)
+               =I(MR;Y)-I(R;Y)<=I(X;Y).
+This holds without independence of M and R, important for adaptive use.
+For finite-valued M all relevant message information is finite; I(MR;Y)
+is finite by the input cost/channel noise bound, so subtraction is justified.
+Preparing quantum output and receiver local operations can only reduce the
+information used by this upper bound. Beware: this does not assert that
+arbitrary measurements or entanglement-breaking channels have no EA gain;
+the classical bottleneck bound includes heterodyne's +1 photon cost.
+
+PROPOSED THEOREM B: ENTANGLEMENT DOES NOT REMOVE THE COMMON-INPUT MINIMAX
+For no feedback, after Alice's message-dependent CPTP encoding,
+M and receiver R remain independent, by no-signalling. Applying A to the
+whole block bounds I(M;B^m R)<=I(X^m;Y^m). The input law of X^m is independent
+of nu. Memorylessness and concavity give I(X^m;Y^m)<=sum_i I(X_i;Y_i)
+<=m I_{mu_bar}(W^-_{E,nu}), with cost(mu_bar)<=1+1/E.
+Fano uniformly in nu, then choose the worst nu after the common input:
+ C_EA,noFB(E,Gamma)<=V^-_{E,Gamma}(1+1/E).
+Unassisted coherent/heterodyne coding remains an allowed lower bound.
+The v2 noise and concavity bounds therefore give the SAME explicit interval:
+ V_Gamma(1)-2/(ell E) <= C_unassisted <= C_EA,noFB
+ <= V_Gamma(1)+[log(1+K/ell)+4K/ell]/E.
+Thus the extra rate from arbitrary free finite-per-block prior entanglement
+is at most [log(1+K/ell)+(4K+2)/ell]/E, uniformly over Gamma, in this scaling.
+No claim of equality or no EA benefit at finite E.
+
+PROPOSED THEOREM C: FINITE FAMILY, FREE CLASSICAL FEEDBACK
+For any fixed nu, run the exact simulation sequentially through an arbitrary
+adaptive EA protocol. Before the i-th use retain all Bob memory R_i; Alice's
+operations alone do not change its joint marginal with M. Replacing the
+channel by the bottleneck increases Bob's accessible information by at most
+I(X_i;Y_i), by A. Bob local instruments and copying/sending classical
+feedback cannot increase his information about M. Telescope:
+ I(M;Bob_final)<=sum_i I(X_i;Y_i)
+ <= m C^-_{E,nu}(1+1/E).
+Here X_i laws may depend on nu through feedback; only the fixed-law upper
+bound is used. Cost at most mE under each actual nu is essential.
+Then Fano and the same noise/cost estimates imply
+ C_EA,FB(E,Gamma)<=inf_nu C_nu(1)+[log(1+K/ell)+4K/ell]/E.
+
+For the lower bound restrict Gamma to finitely many distinct classical
+plus kernels W^+_{E,nu}. Identical kernels can be grouped: their actual
+coherent/heterodyne data channel and its capacities coincide. For each pair
+of distinct kernels there is a finite-cost input probe x and an output
+measurable bin separating their probabilities. Continuity permits a finite
+list of probes, used in fixed proportions, to distinguish all finitely many
+kernels with error ->0 (e.g. bin frequencies and Hoeffding). Pilot length
+t_m grows and t_m/m->0, for each FIXED E. Bob sends the estimated index back
+once. Alice then uses a known-law coherent/heterodyne code for that index,
+with photon cost <=(m-t_m) E(1-delta) for EVERY index, on the same number of
+messages with rate below min_nu C^+_{E,nu}(1-delta). Pilot is message-independent;
+wrong-estimate probability ->0, conditional correct-law code error ->0.
+All selected codebooks satisfy the budget, even on the wrong estimate.
+Pilot cost is o(mE); fixed delta>0 absorbs it. Take m->infinity, then delta->0.
+Result:
+ inf_nu C_nu(1)-2/(ell E) <= C_unassisted,FB
+ <= C_EA,FB <= inf_nu C_nu(1)+[log(1+K/ell)+4K/ell]/E.
+No uniform coding length in E, feedback rate theorem, infinite-Gamma direct,
+efficient identification or native quantum capacity statement is claimed.
+
+PROPOSED PROPOSITION D: A STRICT LEARNING GAP INSIDE THE BOSONIC FAMILY
+Choose k,r>0 and 0<lambda<1, q=1-lambda, s=k+r, and the matched-reset
+classical kernel W1(y|x)=lambda phi_r(y-sqrt(k)x)+q phi_s(y).
+Its C1=sup_cost<=1 I(W1) is finite, positive and attained; v2 proves that
+CN(0,1) does NOT maximize it. Let G1=I_CN(0,1)(W1)<C1.
+Set b^2=r(exp(C1)-1)>0 and W2(y|x)=phi_r(y-bx).
+This AWGN channel has C2=C1, with unique maximizing input CN(0,1).
+The flag-revealed bound C1<=lambda log(1+k/r) implies b^2<=k.
+Both W1 and W2 are in the same compact Gaussian-mixture parameter family:
+gains bounded by sqrt(k), noises between r and s. Distinctness of the two
+classical plus kernels for each fixed E is straightforward (one is a nontrivial
+two-branch mixture with reset component, the other Gaussian).
+
+Claim D1: V_{1,2}(1)=sup_cost<=1 min(I_mu(W1),I_mu(W2)) < C1.
+The cost ball of input laws is tight and weakly closed. Gaussian convolution
+implies output total-variation convergence along weak input convergence;
+the uniform second-moment bound and the v2 entropy lemma imply entropy
+continuity. Conditional entropy for W1 is bounded continuous in x by its
+binary flag identity, and for W2 it is constant. Thus I1 and I2 are continuous
+on this weakly compact cost ball, so the compound supremum is attained.
+If equality held, its maximizer would maximize W2 and must be CN(0,1),
+contradicting G1<C1. This is an existential strict gap, not a numerical value.
+
+Combining B,C,D: for the two-law family, unlimited free prior entanglement
+without feedback cannot close the positive limiting minimax/learning gap;
+one feedback index after sublinear training suffices to attain the larger
+high-energy limit C1, even with no entanglement. Therefore for sufficiently
+large E, unassisted feedback-assisted classical capacity strictly exceeds
+entanglement-assisted capacity without feedback. This compares DIFFERENT
+resources, not feedback vs EA under known-channel conditions. The general
+minimax order change is classical prior knowledge, not new here.
+
+ANTECEDENTS / NOVELTY LIMITS
+Berta-Gharibyan-Walter arXiv1603.02282v1 treats EA compound quantum channels
+including feedback; its introduction discusses the classical minimax gap.
+Boche-Janssen-Kaltenstadler1606.09314v3 gives EA classical compound capacities.
+Shrader-Permuter0711.0705 gives classical feedback compound capacity min-sup.
+These must be compared before any novelty claim. The candidate's proposed
+new content is only the uniform bosonic energy/noise estimates for these
+resources and the embedded matched-reset/AWGN separation. Exact prior
+equivalents or a simple standard corollary may defeat standalone significance.
+Hao et al2101.07482 shows EA advantage for lossy noisy bosonic communication;
+our scaling does not refute finite-energy/photon-starved advantages.
+
+FALSIFIERS / REQUIRED AUDIT
+1. Check whether complete simulation and steering really imply Lemma A and
+   the noFB common-input bound; do not discard R or replace Bob with a classical decoder.
+2. Check the adaptive amortization, expected costs under each law, free feedback
+   directions, chain-rule identities and any hidden finite-dimension assumptions.
+3. Check the finite-family training construction at fixed E, wrong-estimate
+   cost, payload slack, common message count and order of limits.
+4. Check compactness/entropy continuity and uniqueness in D, and parameters
+   of the reset noise s=k+r (not r) and b^2<=k.
+5. Literature comparison: is the purported extension genuinely additional,
+   a useful quantitative corollary, or already stated? No target grade.
+6. Keep separate technical validity, dependence on audited v2, literature
+   novelty and standalone importance. This is NOT a full manuscript review.
+
+CONFIDENCE: formal none; literature the scoped cited statements; heuristic
+this author-generated proof; speculative all proposed theorems until audited.
