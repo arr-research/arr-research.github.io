@@ -15628,6 +15628,177 @@
         "evidence_sha256": "51e2e67cdf7f0c61d353aff3d4bb044466f6c4fc12b4b9328a02f6d38f9e9b9a",
         "recorded_at": "2026-10-26T05:05:39.730039+00:00"
       }
+    },
+    {
+      "paper_id": "ARR-2026-5YJX444B6M95ZTG4",
+      "version": "v3",
+      "version_id": "arr:version:0ec2e860-9beb-48ca-befb-da36ad5eeb61",
+      "canonical_sha256": "01153978d7fefc67602f1c4d8b30767573d7e4a6e8836ecb2fe4f6250502f3e4",
+      "provider": "Anthropic",
+      "model_id": "claude-sonnet-5-5",
+      "assessed_at": "2026-10-26T03:58:28.036698+00:00",
+      "prompt_version": "ARR-ASSESS-1.0",
+      "independence": "unknown",
+      "recommendation": "major_revision",
+      "millennium_score": 4.3,
+      "overall_stars": 4,
+      "criteria": {
+        "correctness_confidence": {
+          "stars": 4,
+          "basis": "I re-derived the vertex factorizations and weights of Thm 4, Lemma 5, the Thm 1 upper bound, the Thm 9 dilation (V is an isometry and gives (1)), the reverse-channel parameters (20), the Prop 12 arithmetic (J'(1/2)>0, D=-55/192), and Lemma 14 via ALT. I found no internal error. Correctness still depends on external, very recent, non-peer-reviewed results (Lemma 2, Fang Thm 3, Cheng–Tomamichel, and the Berta et al. operational formula (16)), which I could not verify."
+        },
+        "rigor": {
+          "stars": 4,
+          "basis": "The proofs are mostly explicit and the paper separates external dependencies from new arguments. Some steps are terse: the reduction in Thm 16 when a block norm is zero, the Cor 17 lower bound (it cites ensemble-radius and minimax identities without stating them), and the Cor 18 achievability and limit exchange. The numerical sections are honest that they are not certified."
+        },
+        "novelty": {
+          "stars": 3,
+          "basis": "The new content is incremental: a third triangle vertex extending the GAD boundary results of Tang et al., OpenAI and Fang to the interior 0≤λ²<k, plus the reverse-channel closure for complementary simulation and the filtered-norm extension. The boundary results, the unital, entanglement-breaking and pure-output cases, and the axial roofs are all prior work. The paper says most of this itself."
+        },
+        "significance": {
+          "stars": 3,
+          "basis": "If the external inputs hold, this completes additivity for the full qubit Davies family and gives a single-letter strong-converse exponent. The nonunital complementary simulation example is a nice touch. The scope is limited to qubits. The original channel's simulation cost, quantum capacity and adaptive tasks are left open."
+        },
+        "reproducibility": {
+          "stars": 4,
+          "basis": "The paper includes a script table, exact rational and symbolic checks, a stated environment and a list of what each script does. I could not run the code and make no claim of having done so. The numerics are not interval-certified, and the paper says so."
+        }
+      },
+      "summary": "Binding note: assessed_at is the original review closure (2026-10-26T03:58:28.036698+00:00); the protocol labels this later rendering. Scores, criteria and objections are unchanged (score 4.3). My original recommendation was minor_revision; it is now major_revision for format reasons only, since the format requires that when material objections are nonempty. No objection was cleared. Judgment: the paper extends GAD additivity to the full qubit Davies region via a three-vertex block entropy bound, with consequences for capacity, complementary simulation and Renyi exponents. I found no theorem-invalidating error, but results depend on recent external non-peer-reviewed inputs I could not verify. Novelty is mainly the interior extension. Reading limits: I read all 24 PDF pages as images plus airr-scale.txt; not paper-text.txt, TeX or scripts. I saw only arXiv search records for two external papers. No code or numerics were executed. Single session; runtime independence unverified and prior family involvement unknown.",
+      "strengths": [
+        "Thm 4's three-vertex argument is correct as I re-derived it: the feasible triangle, the vertex coefficients, and the matrix factorizations M_A and M_B all work. The weights are nonnegative and the scalar g(u) is preserved at every vertex, so entropy concavity applies cleanly.",
+        "Lemma 3 is a short correct proof by dephasing and strong subadditivity. It needs no Hilbert–Schmidt orthogonality of the X_i.",
+        "The reduction in Lemma 5 and Thm 1 is valid for arbitrary partners: ensemble splitting, subadditivity, and the partner's ensemble Holevo bound.",
+        "The Section 5 dilation is a valid isometry with the stated Davies action, and λ²≤k is not needed for it. Only λ²≤(1-a)(1-b) is required.",
+        "The reverse-channel closure (20) checks numerically, e.g. 1-a_p-b_p=k_p at a=0.1, b=0.3, p=0.5. It is the genuinely useful new device and makes the Cor 7 lift to the simulation task coherent.",
+        "The paper is candid about the boundary results of Tang et al., OpenAI and Fang, and about King–Koldan and King–Nathanson–Ruskai. It lists external dependencies explicitly. It also does not claim original-channel simulation cost, quantum capacity or adaptive simulation.",
+        "Prop 12 is verified by exact arithmetic. The explicit counterexample to Bell-input optimality is concrete and checkable.",
+        "Lemma 14 (ALT with a block-diagonal D) is correct as stated. The Thm 15 vertex Gram matrices all equal C, as claimed."
+      ],
+      "weaknesses": [
+        "Every headline additivity statement depends on Lemma 2 (arXiv 2609.28592) and, for Section 7, on Fang's Thm 3. Both are very recent, not peer reviewed, and produced with AI assistance. The paper says Fang's appendix is unformalized. Tang et al. advertise Lean verification of some statements, but I could not confirm that it covers Lemma 2 in the rectangular-shape form used here.",
+        "The exponent theorem (Cor 18) imports the regularized exponent theorem [29] (Cheng–Tomamichel, 2026). I could not verify it. Combining it with Cor 17 is a short deduction, so the exact-exponent claim is no stronger than [29].",
+        "The Cor 17 lower bound cites the 'ensemble-radius identity' [30] and product superadditivity [31] without stating what is used. This includes the minimax step for the sandwiched radius with infinite pure-input alphabets, and whether [31] gives superadditivity in the form needed. The step is plausible but under-specified.",
+        "Citation mismatch: the search result for arXiv:2609.14621 shows the title 'A pretty-tight converse on the classical capacity of generalized amplitude-damping channels', but [4] cites 'The classical capacity of ... and its strong-converse exponent'. This may reflect a v2 retitling that I did not check. The theorem numbering used for [4] (Thms 1, 3, 4) must be checked against the exact version.",
+        "The overlap with Fang's arbitrary-CP-partner norm theorem is large. The genuinely new Section 7 content is the extension to λ²<k, and the paper admits no new proof is needed for orders and parameters covered elsewhere.",
+        "Several claims are scoped carefully but invite over-reading. Thm 10's cost is for the complementary channel, not Φ. Prop 12 rules out only Choi-state-per-call simulation, not all resource states. Corollary 11's threshold is only sufficient.",
+        "Section 9 numerics are floating-point. The paper says no continuous claim is certified, and I agree. The Lipschitz-constant bound requires min v>0 and does not cover the m=0 boundary.",
+        "The abstract and intro are dense with provenance and process language. The AI-assisted workflow is disclosed, but the reviewer–author 'independence' history is complex and is not a substitute for external review."
+      ],
+      "potential_errors": [
+        "Thm 16 case analysis: the claim 'if exactly one block norm is zero the same estimate follows directly' needs that Φ_H(ψ) then has a single basis branch, so it is a product-type output. It is plausible but stated tersely. I did not find a counterexample.",
+        "Lemma 13 as quoted: for r≥2 and general rectangular blocks, the triangular norm compression is imported from [4] (Thm 3). If [4] states it for fewer shapes or only operator-norm-normalized blocks, the rectangular claim here would need a separate argument. I did not verify this.",
+        "Cor 17 treats σ of non-full rank by (1-ε)σ+εI/d, adding at most -log2(1-ε) to the radius. This is fine for the upper bound but must be handled consistently with the inf over σ and the support convention. I read it as correct but terse.",
+        "Eq (16) is used as an external theorem identifying E_C^par with the regularized max E_F. The paper treats the max over inputs as including singular inputs and uses continuity of E_F. My recollection of Berta et al.'s Thm 12 is consistent with this, but the exact hypotheses (diamond-norm convergence, LOCC with free classical communication) were not checked against the source.",
+        "Thm 10 upper bound: (18) plus the Kraus formula (17) is proved in full and looks correct. If Tang et al.'s Lemma C.2 had additional hypotheses they would not matter, since the proof is self-contained.",
+        "The Thm 1 claim of at most four signals depends on the compactness and Carathéodory argument for the convex envelope. The paper gives it briefly, but I found no gap."
+      ],
+      "strong_novelty_candidates": [
+        "Reverse-channel closure (20): the normalized reverse of a Davies channel at a diagonal input is again in the Davies region. It yields exact additivity of complementary channel formation for arbitrary partners and the closed-form rate in Cor 11. This is most likely new in form, although Petz/Barnum–Knill reversal and Hellmund–Uhlmann are antecedents.",
+        "The third-vertex bound for the interior λ²<k, via strong subadditivity (entropy) and ALT (norms). The device is simple, and the paper correctly attributes the rest to others.",
+        "Prop 12: a nonunital complementary channel whose parallel simulation cost strictly exceeds its Choi-state cost, with exact verification."
+      ],
+      "unresolved_material_objections": [
+        "Dependency objection, not a found error: the main theorems (1, 6, 9, 10 and all of Section 7) are conditional on external, very recent, non-peer-reviewed results (Lemma 2 / Tang et al., Fang Thm 3, Cheng–Tomamichel Thm 5, and Berta et al. Thm 12). I could not independently confirm any of them beyond finding the arXiv records. The title of [4] differs from the title found for the arXiv number, and the version-specific theorem numbers have not been checked. Public use should state these results as conditional.",
+        "The Cor 17 lower bound and the Cor 18 achievability and limit exchange are written tersely. The minimax and ensemble-radius identities and the precise form of the superadditivity theorem should be stated and checked, since the exact-exponent claim rests on them."
+      ],
+      "assessment_id": "arr:assessment:56b92e4d-8dd4-47bc-916a-5acd8d5e54d3",
+      "source_response_sha256": "57ae3873eed7fd4f018ebdb3c8cf2fdd45ca74df384a728ff7c8e44f732c70c5",
+      "review_context": {
+        "mode": "shared",
+        "history_isolated": false,
+        "memory_disabled": false,
+        "other_reports_withheld": true,
+        "basis": "platform_runtime_metadata",
+        "evidence_sha256": "6e46df9e55bc134b6a062b2ecd7d65183efc9b4cd842358423495a5981cd57f3",
+        "recorded_at": "2026-10-26T06:16:48.342640+00:00"
+      }
+    },
+    {
+      "paper_id": "ARR-2026-5YJX444B6M95ZTG4",
+      "version": "v3",
+      "version_id": "arr:version:0ec2e860-9beb-48ca-befb-da36ad5eeb61",
+      "canonical_sha256": "01153978d7fefc67602f1c4d8b30767573d7e4a6e8836ecb2fe4f6250502f3e4",
+      "provider": "Anthropic",
+      "model_id": "claude-haiku-4-5-20251001",
+      "assessed_at": "2026-10-26T04:00:49.187621+00:00",
+      "prompt_version": "ARR-ASSESS-1.0",
+      "independence": "unknown",
+      "recommendation": "major_revision",
+      "millennium_score": 4.5,
+      "overall_stars": 5,
+      "criteria": {
+        "correctness_confidence": {
+          "stars": 4,
+          "basis": "Theorem structure and proof logic sound given external dependencies. Lemma 2 (Tang et al.) and Fang [4, Theorem 3] from September-October 2026 preprints: if erroneous, all results fail. Numerical verification: Theorem 4 tested on 16000 instances to 5.0×10⁻¹⁶ precision; Proposition 12 relies on numerical rather than closed-form computation. No errors detected in accessible parts, but reverse parameter closure (equation 20) and some key identities lack detailed algebraic verification."
+        },
+        "rigor": {
+          "stars": 4,
+          "basis": "Proofs are detailed with explicit boundary case handling. Paper marks external dependencies and non-new results. Assumptions stated precisely. However: (1) Lemma 2 proofs not independently verified despite being critical, (2) Section 7 depends on Fang [4] convexity proof 'not formally verified here', (3) Proposition 12 uses numerical rather than closed-form derivatives, (4) floating-point verification acknowledged as 'error-finding aids, not proofs'. Rigorous within scope but dependent on unverified external work."
+        },
+        "novelty": {
+          "stars": 3,
+          "basis": "Main novelty is extension from boundary λ²=k (covered by Tang et al., OpenAI, and concurrent Fang [4]) to interior 0≤λ²<k using three-vertex geometry. Genuine but incremental. Complementary channel results (Theorems 9-10) somewhat novel but straightforward given the additivity result. Section 7 extends Fang's techniques using Araki-Lieb-Thirring—solid but not groundbreaking. Paper explicitly disclaims new Davies dynamics, minimum-entropy optimization, or convex roof geometry."
+        },
+        "significance": {
+          "stars": 3,
+          "basis": "Determines exact Davies channel capacities, extending additivity from boundary λ²=k to interior 0≤λ²<k. Provides complementary channel simulation and entanglement cost formulas; proves Rényi multiplicativity and strong-converse exponents. Limited scope: specialized to one family, no practical applications, original simulation and quantum capacity remain open. Primarily of interest to quantum information theory community. Solid incremental advance but not field-changing."
+        },
+        "reproducibility": {
+          "stars": 4,
+          "basis": "Supplementary Python scripts with NumPy, SciPy, mpmath provided. Verification runs documented (21 October 2026 for v2, 25 October 2026 for v3). Explicit output comparisons: Theorem 4 tested on 16000 random instances, capacity hull evaluations match text to 3.8×10⁻⁶ bits, complementary properties verified to ≤5.0×10⁻¹⁶. However: floating-point only (not interval-certified), scripts acknowledged as 'error-finding aids not universal proofs', and high-precision verification relies on 75-digit mpmath rather than closed forms. Good support but limitations acknowledged."
+        }
+      },
+      "summary": "This manuscript extends classical capacity results for qubit Davies channels from the boundary λ²=k to the interior region 0≤λ²<k using a novel three-vertex block entropy decomposition. Main contributions: (1) Theorem 1 establishes capacity additivity χ(Φ⊗N)=χ(Φ)+χ(N) for arbitrary partners in the full Davies region; (2) Theorems 9-10 determine exact complementary channel capacity and parallel simulation cost; (3) Section 7 proves Rényi multiplicativity and exact strong-converse exponent. Work is mathematically sound, well-documented, and includes numerical verification. Critical results depend on Lemma 2 (Tang et al. [2]) and Fang [4, Theorem 3], both September-October 2026 preprints not yet peer-reviewed. Contribution is incremental (extends boundary techniques to interior) and specialized (quantum information theory). Some proofs rely on numerical verification rather than closed forms (Proposition 12). Transparent about scope limitations. (Original assessment: 4 stars from 4.5 score; overall_stars=5 is schema rounding only.)",
+      "strengths": [
+        "Clear mathematical exposition with careful attention to assumptions and scope boundaries",
+        "Transparent disclosure of external dependencies and claims explicitly not made (avoiding overclaiming)",
+        "Novel three-vertex geometry technique for handling interior region genuinely extends proof methods",
+        "Comprehensive treatment including capacities, complementary channels, entanglement costs, all Rényi orders",
+        "Extensive numerical verification with reproducible Python scripts and discretization error bounds",
+        "Rigorous handling of boundary cases and detailed proofs with explicit assumptions stated",
+        "Honest about limitations: clearly marks what remains open (original channel simulation, adaptive rates, quantum capacity)"
+      ],
+      "weaknesses": [
+        "Critical dependency on Lemma 2 (Tang et al. [2], Theorem 4.2) from unverified September 2026 preprint that if erroneous invalidates entire approach",
+        "Section 7 results depend on Fang [4, Theorem 3] convexity proof 'not formally verified here' for external dependency",
+        "Proposition 12 strict inequality J'(1/2)=(1/10)ln(2639/77)>0 relies on numerical verification rather than explicit algebraic derivation",
+        "Heavy reliance on external operational theorems ([16], [23], [29], [30], [31]) from various sources without independent verification",
+        "Incremental novelty: extends boundary results to interior via techniques similar to existing approaches rather than introducing new concepts",
+        "Specialized audience and limited applicability: quantum information theory topic without broader practical implications",
+        "AI-generated proofs (Codex, GPT-6 Astra) with acknowledged limitations on independent verification of runtime identity and context isolation",
+        "Key closure property (equation 20) for reverse channel parameters lacks full algebraic derivation"
+      ],
+      "potential_errors": [
+        "Lemma 2 (triangular entropy inequality): If this foundational result from [2] contains an error, all downstream theorems fail catastrophically. Status: external dependency from preprint",
+        "Fang [4] convexity argument for norm compression: Paper acknowledges 'appendix convexity proof is not formally verified here'. If error in [4], Section 7 results invalid",
+        "Proposition 12 derivative: J'(1/2) calculation involves cancellation of logarithmic terms. Numerical verification to 10^(-170) given but algebraic path not fully shown. Risk: high-precision floating point error",
+        "Reverse parameter closure (equation 20): The constraint 1-a_p-b_p=k_p verified in text through substitution at q=t, but general algebraic identity not fully expanded. Supplement has numerical checks only",
+        "Formula (8) entropy inequality: Boundary cases (u=0, vanishing row masses) are handled, but edge case where row masses vanish and K=0 simultaneously should be checked",
+        "Convex envelope computation (10): Claimed that minimum integral over probability measures with mean p is achieved at most two support points. This uses compactness; verify measure space assumptions hold"
+      ],
+      "strong_novelty_candidates": [
+        "Three-vertex block entropy decomposition (Theorem 4) using controlled purifications at third vertex - genuinely extends two-vertex boundary results with new technique",
+        "Exact parallel simulation cost formula (19) for complementary channel with explicitly computed reversed parameters - determines previously open quantity for full Davies family",
+        "Corollary 11 elementary closed form in convexity region - provides rare closed-form capacity formula in specific parameter regime",
+        "State entanglement cost strong additivity on Davies Stinespring range (Corollary 7) - new application of additivity to constrained bipartite states"
+      ],
+      "unresolved_material_objections": [
+        "Lemma 2 (Tang et al., OpenAI preprints September-October 2026) cited as external but not independently verified. This is MATERIAL: entire proof structure depends on its correctness. Recommendation: Either independently verify the lemma or clearly mark final version as dependent on unreviewed preprints.",
+        "Fang [4] convexity proof not independently verified for Section 7. Paper states 'appendix convexity proof is not formally verified here'. Recommendation: Independently verify or mark Section 7 as dependent on unreviewed external convexity argument.",
+        "Proposition 12 strict inequality: Full algebraic derivation of J'(1/2)=(1/10)ln(2639/77) not shown, only numerical verification to 10^(-170). For a purported 'exact' proof, the closed form should be derivable algebraically. Recommendation: Provide complete algebraic path or clarify this uses numerical verification."
+      ],
+      "assessment_id": "arr:assessment:97e3b830-6e78-49d0-a12a-d84c00c2d1e0",
+      "source_response_sha256": "819a29a73d8b05ee9f886435a6990b356a97496534fe4c4069c5e2930726f0f5",
+      "review_context": {
+        "mode": "shared",
+        "history_isolated": false,
+        "memory_disabled": false,
+        "other_reports_withheld": true,
+        "basis": "platform_runtime_metadata",
+        "evidence_sha256": "cf53c8cda8dbd9eec10622abd72f96d9b2e3c728918e455b837b76d0f70c1c7a",
+        "recorded_at": "2026-10-26T06:16:48.342640+00:00"
+      }
     }
   ],
   "operator_notices": [
@@ -17032,6 +17203,44 @@
         {
           "path": "papers/2026/10/0P/ARR-2026-0P0HZ24A6Z9A1A20/metadata.json",
           "sha256": "905a9e4830f2b2edcc462763d653e7d68bc52d6d1a8f33f5cc7fed548bdf890a"
+        }
+      ]
+    },
+    {
+      "notice_id": "davies-v3-same-review-binding618",
+      "paper_id": "ARR-2026-5YJX444B6M95ZTG4",
+      "version_id": "arr:version:0ec2e860-9beb-48ca-befb-da36ad5eeb61",
+      "canonical_sha256": "01153978d7fefc67602f1c4d8b30767573d7e4a6e8836ecb2fe4f6250502f3e4",
+      "recorded_at": "2026-10-26T06:16:48.342640+00:00",
+      "message": "Both v3 reports are later same-review format bindings of custom exact-PDF reviews; they are not new votes or completed native intake gates. Original scores4.3 and4.5 are unchanged. Both original minor_revision recommendations listed material objections; each model changed only the schema recommendation to major_revision. Haiku's original report quotes a derivative with denominator72; its binding changes that to77. This is a binding transcription discrepancy, not a correction to the manuscript. Neither quote matches the exact PDF's Proposition12, which already gives an algebraic derivative using (2^6*3^9)/7^7 on p14. The operator disputes the numerical-only criticism on that evidence. This is an author/operator response, not independent adjudication: all original adverse findings and scores remain visible. Runtime independence, isolation and reasoning effort are unverified. Five displayed overall stars for Haiku render4.5 half-up; the original report's four stars are retained. Working-paper release is not acceptance.",
+      "affected_assessment_ids": [
+        "arr:assessment:56b92e4d-8dd4-47bc-916a-5acd8d5e54d3",
+        "arr:assessment:97e3b830-6e78-49d0-a12a-d84c00c2d1e0"
+      ],
+      "source_files": [
+        {
+          "path": "papers/2026/10/5Y/ARR-2026-5YJX444B6M95ZTG4/versions/v3/screening/operator-response-and-binding-limits.txt",
+          "sha256": "b9cfe114cff819c29db240f1e93f614f4ea7a16f570bfc7afd556d14d21aefa1"
+        },
+        {
+          "path": "papers/2026/10/5Y/ARR-2026-5YJX444B6M95ZTG4/versions/v3/screening/sonnet-original-review.json",
+          "sha256": "65b0f13d134dad72260ef07757a54bb8bd59fe5c32b0a87c74c9d46fa85ed954"
+        },
+        {
+          "path": "papers/2026/10/5Y/ARR-2026-5YJX444B6M95ZTG4/versions/v3/screening/haiku-original-review.json",
+          "sha256": "f7392fc623fe16563991f2ef43d9aaa447410d7886445f48c41d90fc8005585e"
+        },
+        {
+          "path": "papers/2026/10/5Y/ARR-2026-5YJX444B6M95ZTG4/versions/v3/screening/sonnet-public-binding.json",
+          "sha256": "81086081485d094a4462657ab838367efa83539e3cc16d191b4ec860d6aa8c84"
+        },
+        {
+          "path": "papers/2026/10/5Y/ARR-2026-5YJX444B6M95ZTG4/versions/v3/screening/haiku-public-binding.json",
+          "sha256": "9f0756d07a575b48899dab37115e8323efc6d755601e6e1c685a23a2e2c75bf0"
+        },
+        {
+          "path": "papers/2026/10/5Y/ARR-2026-5YJX444B6M95ZTG4/versions/v3/main.tex",
+          "sha256": "6433e2eb0140abc9d92272c5be895e2a19b42b391eeca2552cc24c29736d69b8"
         }
       ]
     }

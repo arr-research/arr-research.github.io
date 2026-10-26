@@ -1,0 +1,75 @@
+{
+  "paper_id": "ARR-2026-5YJX444B6M95ZTG4",
+  "version": "v3",
+  "version_id": "arr:version:0ec2e860-9beb-48ca-befb-da36ad5eeb61",
+  "canonical_sha256": "01153978d7fefc67602f1c4d8b30767573d7e4a6e8836ecb2fe4f6250502f3e4",
+  "provider": "Anthropic",
+  "model_id": "claude-haiku-4-5-20251001",
+  "assessed_at": "2026-10-26T04:00:49.187621+00:00",
+  "prompt_version": "ARR-ASSESS-1.0",
+  "independence": "unknown",
+  "recommendation": "major_revision",
+  "millennium_score": 4.5,
+  "overall_stars": 5,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 4,
+      "basis": "Theorem structure and proof logic sound given external dependencies. Lemma 2 (Tang et al.) and Fang [4, Theorem 3] from September-October 2026 preprints: if erroneous, all results fail. Numerical verification: Theorem 4 tested on 16000 instances to 5.0×10⁻¹⁶ precision; Proposition 12 relies on numerical rather than closed-form computation. No errors detected in accessible parts, but reverse parameter closure (equation 20) and some key identities lack detailed algebraic verification."
+    },
+    "rigor": {
+      "stars": 4,
+      "basis": "Proofs are detailed with explicit boundary case handling. Paper marks external dependencies and non-new results. Assumptions stated precisely. However: (1) Lemma 2 proofs not independently verified despite being critical, (2) Section 7 depends on Fang [4] convexity proof 'not formally verified here', (3) Proposition 12 uses numerical rather than closed-form derivatives, (4) floating-point verification acknowledged as 'error-finding aids, not proofs'. Rigorous within scope but dependent on unverified external work."
+    },
+    "novelty": {
+      "stars": 3,
+      "basis": "Main novelty is extension from boundary λ²=k (covered by Tang et al., OpenAI, and concurrent Fang [4]) to interior 0≤λ²<k using three-vertex geometry. Genuine but incremental. Complementary channel results (Theorems 9-10) somewhat novel but straightforward given the additivity result. Section 7 extends Fang's techniques using Araki-Lieb-Thirring—solid but not groundbreaking. Paper explicitly disclaims new Davies dynamics, minimum-entropy optimization, or convex roof geometry."
+    },
+    "significance": {
+      "stars": 3,
+      "basis": "Determines exact Davies channel capacities, extending additivity from boundary λ²=k to interior 0≤λ²<k. Provides complementary channel simulation and entanglement cost formulas; proves Rényi multiplicativity and strong-converse exponents. Limited scope: specialized to one family, no practical applications, original simulation and quantum capacity remain open. Primarily of interest to quantum information theory community. Solid incremental advance but not field-changing."
+    },
+    "reproducibility": {
+      "stars": 4,
+      "basis": "Supplementary Python scripts with NumPy, SciPy, mpmath provided. Verification runs documented (21 October 2026 for v2, 25 October 2026 for v3). Explicit output comparisons: Theorem 4 tested on 16000 random instances, capacity hull evaluations match text to 3.8×10⁻⁶ bits, complementary properties verified to ≤5.0×10⁻¹⁶. However: floating-point only (not interval-certified), scripts acknowledged as 'error-finding aids not universal proofs', and high-precision verification relies on 75-digit mpmath rather than closed forms. Good support but limitations acknowledged."
+    }
+  },
+  "summary": "This manuscript extends classical capacity results for qubit Davies channels from the boundary λ²=k to the interior region 0≤λ²<k using a novel three-vertex block entropy decomposition. Main contributions: (1) Theorem 1 establishes capacity additivity χ(Φ⊗N)=χ(Φ)+χ(N) for arbitrary partners in the full Davies region; (2) Theorems 9-10 determine exact complementary channel capacity and parallel simulation cost; (3) Section 7 proves Rényi multiplicativity and exact strong-converse exponent. Work is mathematically sound, well-documented, and includes numerical verification. Critical results depend on Lemma 2 (Tang et al. [2]) and Fang [4, Theorem 3], both September-October 2026 preprints not yet peer-reviewed. Contribution is incremental (extends boundary techniques to interior) and specialized (quantum information theory). Some proofs rely on numerical verification rather than closed forms (Proposition 12). Transparent about scope limitations. (Original assessment: 4 stars from 4.5 score; overall_stars=5 is schema rounding only.)",
+  "strengths": [
+    "Clear mathematical exposition with careful attention to assumptions and scope boundaries",
+    "Transparent disclosure of external dependencies and claims explicitly not made (avoiding overclaiming)",
+    "Novel three-vertex geometry technique for handling interior region genuinely extends proof methods",
+    "Comprehensive treatment including capacities, complementary channels, entanglement costs, all Rényi orders",
+    "Extensive numerical verification with reproducible Python scripts and discretization error bounds",
+    "Rigorous handling of boundary cases and detailed proofs with explicit assumptions stated",
+    "Honest about limitations: clearly marks what remains open (original channel simulation, adaptive rates, quantum capacity)"
+  ],
+  "weaknesses": [
+    "Critical dependency on Lemma 2 (Tang et al. [2], Theorem 4.2) from unverified September 2026 preprint that if erroneous invalidates entire approach",
+    "Section 7 results depend on Fang [4, Theorem 3] convexity proof 'not formally verified here' for external dependency",
+    "Proposition 12 strict inequality J'(1/2)=(1/10)ln(2639/77)>0 relies on numerical verification rather than explicit algebraic derivation",
+    "Heavy reliance on external operational theorems ([16], [23], [29], [30], [31]) from various sources without independent verification",
+    "Incremental novelty: extends boundary results to interior via techniques similar to existing approaches rather than introducing new concepts",
+    "Specialized audience and limited applicability: quantum information theory topic without broader practical implications",
+    "AI-generated proofs (Codex, GPT-6 Astra) with acknowledged limitations on independent verification of runtime identity and context isolation",
+    "Key closure property (equation 20) for reverse channel parameters lacks full algebraic derivation"
+  ],
+  "potential_errors": [
+    "Lemma 2 (triangular entropy inequality): If this foundational result from [2] contains an error, all downstream theorems fail catastrophically. Status: external dependency from preprint",
+    "Fang [4] convexity argument for norm compression: Paper acknowledges 'appendix convexity proof is not formally verified here'. If error in [4], Section 7 results invalid",
+    "Proposition 12 derivative: J'(1/2) calculation involves cancellation of logarithmic terms. Numerical verification to 10^(-170) given but algebraic path not fully shown. Risk: high-precision floating point error",
+    "Reverse parameter closure (equation 20): The constraint 1-a_p-b_p=k_p verified in text through substitution at q=t, but general algebraic identity not fully expanded. Supplement has numerical checks only",
+    "Formula (8) entropy inequality: Boundary cases (u=0, vanishing row masses) are handled, but edge case where row masses vanish and K=0 simultaneously should be checked",
+    "Convex envelope computation (10): Claimed that minimum integral over probability measures with mean p is achieved at most two support points. This uses compactness; verify measure space assumptions hold"
+  ],
+  "strong_novelty_candidates": [
+    "Three-vertex block entropy decomposition (Theorem 4) using controlled purifications at third vertex - genuinely extends two-vertex boundary results with new technique",
+    "Exact parallel simulation cost formula (19) for complementary channel with explicitly computed reversed parameters - determines previously open quantity for full Davies family",
+    "Corollary 11 elementary closed form in convexity region - provides rare closed-form capacity formula in specific parameter regime",
+    "State entanglement cost strong additivity on Davies Stinespring range (Corollary 7) - new application of additivity to constrained bipartite states"
+  ],
+  "unresolved_material_objections": [
+    "Lemma 2 (Tang et al., OpenAI preprints September-October 2026) cited as external but not independently verified. This is MATERIAL: entire proof structure depends on its correctness. Recommendation: Either independently verify the lemma or clearly mark final version as dependent on unreviewed preprints.",
+    "Fang [4] convexity proof not independently verified for Section 7. Paper states 'appendix convexity proof is not formally verified here'. Recommendation: Independently verify or mark Section 7 as dependent on unreviewed external convexity argument.",
+    "Proposition 12 strict inequality: Full algebraic derivation of J'(1/2)=(1/10)ln(2639/77) not shown, only numerical verification to 10^(-170). For a purported 'exact' proof, the closed form should be derivable algebraically. Recommendation: Provide complete algebraic path or clarify this uses numerical verification."
+  ]
+}
