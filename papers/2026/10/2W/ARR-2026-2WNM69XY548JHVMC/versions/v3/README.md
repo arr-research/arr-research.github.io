@@ -16,3 +16,8 @@ The named author directed substantial OpenAI Codex assistance in derivation, wri
 - [Prior v2 and its own assessment](https://airr.science/papers/ARR-2026-2WNM69XY548JHVMC/versions/v2/#model-assessments)
 
 Linked author case SUB-EFB9CFDBA859C294, parent SUB-B1200159AD099909. Ordinary author quota, clean scanner, exact server PDF, author release grant and founder disclosure verified. Native gate remains pending and no author-editor acceptance has occurred. The private review manifest inventories the full archive; selected original own review records are reproduced here, excluding third-party primary PDFs.
+
+- [Public assessment binding](screening/astra-public-binding.json)
+- [Binding chronology and context](screening/astra-binding-context.json)
+- [Operator binding notice](screening/operator-binding-notice.txt)
+- [Bibliographic-name correction to original review](screening/operator-bibliographic-correction.txt)
