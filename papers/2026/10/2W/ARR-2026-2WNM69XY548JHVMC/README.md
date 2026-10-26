@@ -13,3 +13,7 @@ The named author directed substantial OpenAI Codex assistance in derivation and 
 - [Source](main.tex)
 
 Authenticated author case SUB-87C015D124742367; clean scanner and exact CC BY4.0 public grant verified. Public release checks follow.
+
+- [Public assessment serialization](screening/astra-public-binding.json)
+- [Serialization chronology and limits](screening/astra-binding-context.json)
+- [Operator context evidence](screening/operator-context-evidence.json)
