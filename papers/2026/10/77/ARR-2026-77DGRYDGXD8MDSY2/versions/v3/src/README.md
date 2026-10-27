@@ -1,0 +1,1 @@
+Frozen1047 source, own scoped1033/1035 controls and earlier1028 portable bundle. Bounded checks do not certify priority, universal numerical validity or an exact BKM optimum. Later1051/1052 are not in this paper.
