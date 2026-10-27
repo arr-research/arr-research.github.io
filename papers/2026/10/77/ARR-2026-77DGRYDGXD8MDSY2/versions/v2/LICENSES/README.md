@@ -1,0 +1,1 @@
+Canonical manuscript and original research supplements: CC BY4.0; catalogue metadata: CC0. See ../LICENSES.json. Attribution: Lluis Eriksson and this immutable AIRR version. Original review provenance and objections remain visible.

@@ -1,0 +1,148 @@
+AUDITORÍA TÉCNICA1025 — 27 de octubre de2026
+Nuevos insumos1021 y1024. Sin manuscrito, nota, voto ni objetivo de evaluación.
+
+DICTAMEN POR OBJETO
+
+1021: se sostiene la exactitud del coeficiente COMPLETO de pares con igual referencia para SLD, chi_min² y Petz triangular, con
+ C_kappa(lambda)=lambda² kappa/[1+lambda(kappa-1)],
+ d>=2, 1<kappa<=L_d=d(d+1)/2, -1/(d²-1)<=lambda<=1.
+La reconstrucción general de Gram, planos, Sylvester y límites fieles no encontró un fallo. Un certificado racional de matrices completas confirma una mejora estricta sobre el límite de la familia Bell anterior. Esto no certifica prioridad mundial, necesidad de no conmutatividad ni exactitud fuera del intervalo.
+
+1024: se sostiene la misma igualdad para CADA generador Petz operator-convexo no afín normalizado f(1)=0 cuando1<kappa<=d²/2, incluyendo el extremo mediante bases fieles. También se sostiene el corolario qubit: el coeficiente de pares SEP y PPT es exactamente2lambda²/(1+lambda), con referencia arbitraria en el upper y testigos separables de referencia qubit en el lower. Para1<kappa<=2, el perfil restringido ya se alcanza dentro de SEP. Son razones de pares, no MI real.
+
+Los dos dictámenes son distintos. Para d²/2<kappa<=L_d,1021 prueba exactitud de tres cantidades y optimalidad de una cota común a los Petz, porque triangular la alcanza. NO prueba exactitud para cada f. El lower de1024 no permite ese salto. En particular d=2 tiene límite Bell2 y límite SLD/triangular3.
+
+INTEGRIDAD Y PROCEDENCIA
+
+Se reutilizan expresamente el contexto1018 y el filesystem compartido. No se afirma independencia, aislamiento ni identidad/esfuerzo efectivos atestados. Configuración solicitada: GPT-6 Astra xhigh. Se releen instrucciones globales y D:\LEEME.md.1018 queda terminal e intacto. No se leyó ningún borrador de manuscrito del proyecto, ni se crearon agentes/chats, ni se modificó Git/estado raíz, ni se publicó ni se contactó a autores.
+
+Antes de auditar se verificaron los siete payloads combinados y ambos manifiestos:
+1021:226f7b4548ce801ade74186d65a9cc77f4f07431e4d6fd8b81bbd41a126f227f.
+1024:80520dde3e6fa4719c074dfdb5325b5662cc5f47eac4b325ecb4d4c02692c049.
+Se leyeron completos PROOF1021, PROOF1024, los dos checkers, sus salidas y seal1021. Las verificaciones inicial y final se guardan separadas.1021 solo había recibido una verificación de identidad en1018; su matemática se audita AHORA.
+
+Incidencia preventiva: check1024.py tiene efectos posteriores de escritura de manifiesto y copia aD. No se ejecutó ese archivo entero ni en el original. Se ejecutó en la carpeta propia un prefijo que mantiene idénticas todas las operaciones matemáticas y la escritura de CHECK, excluyendo únicamente la cola de sellado/copia. Se conservan código ejecutado, hashes y diferencia de alcance. check1021 se ejecutó como copia byte a byte. Ambos CHECK resultantes son idénticos a los congelados. Ningún sellador de entrada se ejecutó.
+
+1. DEFINICIÓN COMÚN Y UPPER
+
+E(X)=I_d/d tensor Tr_A X; N_lambda=lambda id+(1-lambda)E. Para cada referencia finita, rho,sigma son fieles y distintas, tienen Tr_A rho=Tr_A sigma y satisfacen AMBAS x<=kappa E(x). Así B=E(rho)=E(sigma)>0 y D=rho-sigma cumple E(D)=0. El coeficiente completo es el supremo adicional sobre referencias finitas. El upper vale para cada referencia; el lower puede elegir una referencia finita particular. No se afirma igualdad para cada referencia fijada.
+
+Se mantienen los falsadores1018. Para d3,R1,lambda1/2,kappa4, todos los estados ya están bajo3E; el upper3/8 descarta la supuesta igualdad2/5 conR1. El índice tampoco implica sharpness: el pinching de dos bloques tiene índice completo2, pero coeficiente igual-proyección lambda², menor que C_kappa para kappa>1 y0<lambda<1. Estos falsadores de lecturas más fuertes permanecen válidos; no refutan los nuevos enunciados correctamente definidos.
+
+De x<=kappa B se deduce N(x)>=c x con c=lambda+(1-lambda)/kappa. En1021,
+ 1+lambda(kappa-1)>=1-(L_d-1)/(d²-1)=d/[2(d+1)]>0.
+En el rango Bell también es positivo. No se invierten comparaciones con c<=0. Como N(D)=lambda D, el orden positivo de L_Nrho+sR_Nsigma sobre Hilbert-Schmidt y la antitonicidad de la inversa dan lambda²/c para cada resolvente s>=0. El extremo cuadrático R_sigma^-1 y J_sigma=(L_sigma+R_sigma)/2 obedecen la misma comparación. El upper para f se obtiene mediante integración positiva. Se comparan superoperaciones, no productos de matrices que no conmutan.
+
+Las convenciones son g_sigma(D)=<D,J_sigma^-1D>, chi_min²(rho,sigma)=g_sigma(rho-sigma), y H_triangle(rho,sigma)=<D,(L_rho+R_sigma)^-1D>. Alrededor de sigma, el triangular es t²g_sigma(D)/2+o(t²); no se identifica el valor finito con chi_min. La normalización f(1)=0 o el centrado explícito son necesarios. Para kappa1 no hay pares distintos con igual referencia; no se asigna a esa clase vacía el límite lambda². Lambda0 y1 dan0 y1 en las clases no vacías.
+
+2.1021: CONSTRUCCIÓN COMPLETA Y PLANOS
+
+Póngase m=d-1,q=1+m e²,e>0. Los dos vectores a_i del texto tienen coordenada principal(i,i) y centros((i+k) mod d,k+1),1<=k<=m. En cada vector los índicesA recorren todos los valores y los índicesR son distintos. Entre los dos vectores los centros de un mismoR tienen índicesA distintos. Las dos coordenadas principales usanR0 yR1, ausentes de los centros. Por tanto los soportes son disjuntos, los vectores ortogonales y ambos tienen norma²q.
+
+sigma=(a0a0*+a1a1*)/(2q) tiene traza1,rango2 y P=2sigma es proyector. Su marginal es diagonal:1/(2q) enR0,R1 y e²/q en cadaR2,...,Rd. La identidad exacta
+ A*B^-1 A/(2q)=[d+dm/2]I2=L_d I2
+prueba el espectro blanqueadoL_d,L_d y ceros. La cuenta no confunde el valor de orden de esta familia con el índice completo del canal, que sigue siendo d².
+
+EscribiendoF para la matriz de columnas b_i, la tangente D=AF*+FA* es hermítica. Todos sus términos fuera de diagonal cambianA: principal-centro porque k!=0 mod d, y centro-centro porque k!=ell. Los términos diagonales centrales+2e y-2e se cancelan para cada índiceR. Así Tr_A D=0 exactamente. También (I-P)D(I-P)=0. El valor de soporte del SLD en sigma=P/2 es
+ 4TrD²-2Tr(PDP)²=16m q.
+Cada bloque contribuye8m q; no se ha perdido un factor2 ni invertido una matriz singular.
+
+Cada uno de los dos soportes tiene dimensiónd. B es escalar sobre susm coordenadas centrales. Por ello el plano generado por la coordenada principal y la superposición uniforme de los centros es invariante para sigma,B yD. En su base ortonormal, s_p=(1-p)B+p sigma yD son precisamente W_p y±T de1021. Los m-1 modos centrales ortogonales tienen autovalor e²(1-p)/(dq) y tangente0. Fuera de los dos soportes quedan d(d-1) coordenadas diagonales, con s_p=(1-p)B y tangente0. La suma de dimensiones es4+2(d-2)+d(d-1)=d(d+1).
+
+La reconstrucción propia evitó depender del solver de componentes conexas: verificó matrices completas y usó primero bases no normalizadas para el plano, con Gramdiag(1,m). La conjugación por la normalización produce el sqrt(m) de1021. Esto controla tanto la invariancia como la escala de la tangente.
+
+El determinante del plano es
+ e²(1-p)[1+(L_d-1)p]/(2d²q²).
+Para p=theta y p=lambda theta es positivo: theta<1 y lambda_min=-1/(d²-1)>-1/(L_d-1). Los modos no alineados también son positivos. No se necesita CP en una dimensión errónea de referencia; N_lambda actúa localmente enA y su rango CP depende ded, no ded(d+1).
+
+Para el Sylvester se utilizó la identidad2x2
+ Y=[T+det(W)W^-1 T W^-1]/TrW,
+que satisface WY+YW=2T por Cayley-Hamilton. El G_e(p)=TrTY resultante coincide con el impreso enCHECK1021 y da
+ lim_(e->0) G_e(p)=8m L_d/[1+(L_d-1)p].
+La forma total es2G_e(p), una por cada plano. El chequeo completo144x144 reproduce exactamente ambos valores, no solo su cociente.
+
+La cancelación de(1-p) es legal a p fijo<1. No establece convergencia uniforme cuando theta->1 simultáneamente. Para el lower se elige primero theta<(kappa-1)/(L_d-1), que hace estrictamente positivos s_theta y kappa B-s_theta. Entonces |t|<min(lambda_min(s_theta),lambda_min(kappa B-s_theta))/||D|| preserva fidelidad y ambos órdenes de rho_t=s_theta+tD. La marginal permanece exactamente igual. Para triangular,t->0 va primero; después e->0 y por último theta sube al extremo. Cada elemento de la secuencia es fiel. Los parámetros pueden depender sucesivamente de una tolerancia y del generador escogido; no se necesita un tamaño uniforme de perturbación al borde.
+
+3. CERTIFICADO FINITO MÁS ALLÁ DE LA FAMILIA BELL
+
+Se reconstruyó desde sus coordenadas, con matrices completas12x12 y Sylvester racional144x144, el caso
+ d3,R4,e=1/10,theta=79/100,kappa5,lambda=-1/8,t=1/10^8.
+El SLD es2037211/13505112. La familia Bell de983, llevada hasta su límiteK=d²/2, solo llega aquí a1/8. El gap SLD es exactamente43634/1688139>0. El triangular FINITO también excede1/8; su gap racional completo está enEXACT1025.json ySCALE1025.json. Ambos quedan bajo el upper5/32. Las matrices de entrada, salida y ambas holguras tienen factorizaciones LDL racionales con todos los pivotes positivos. Los residuales del Sylvester completo son exactamente cero.
+
+Esto prueba que el lower1021 no es solo una reparametrización del Bell983: cubre un intervalo adicional y da testigos finitos superiores al límite de ESA familia. No demuestra que toda otra familia conmutativa sea insuficiente. Tampoco demuestra queR=d+1 sea mínimo.
+
+Los intervalos deben mostrarse así:
+ d2: Bell<=2; tres cantidades1021<=3.
+ d3: Bell<=9/2; tres cantidades1021<=6.
+ d4: Bell<=8; tres cantidades1021<=10.
+ d5: Bell<=25/2; tres cantidades1021<=15.
+El intervalo1017<=d+1 sigue siendo consecuencia de983 para d>=3, como objetó1018.1021 añade solo la franja que realmente no cubre Bell, d²/2<kappa<=d(d+1)/2; las pruebas se solapan en el resto. Para d2 recupera1011. L_d es límite del lower certificado, no una demostración de que cualquier upper de orden deja de ser válido más allá: la comparación de orden sigue siendo aplicable cuando c>0, pero no se afirma sharpness allí.
+
+4.1024: CADA GENERADOR Y EL BORDE BELL
+
+Sean n=d² y P0,P1 proyectores Bell ortogonales con la misma marginalI_d/d. Para1<K<min(kappa,n/2), a=K/n,b=(1-2a)/(n-2)>0, sigma=bI+(a-b)(P0+P1) yD=P0-P1. Se tiene a>b, traza1, E(sigma)=I_n/n, Tr_A D=0 y sigma D=aD. La restricción|t|<min(a,b,(kappa-K)/n) basta para fidelidad y ambos órdenes. Todas estas identidades se refieren a las marginales reales.
+
+La salida comparte los autovectores y tiene a_lambda=lambda a+(1-lambda)/n en los dos rayos modificados. La divergencia Petz de los pares conmutativos se reduce exactamente a
+ a[f(1+t/a)+f(1-t/a)]
+y la expresión análoga cona_lambda,lambda t. Los otros autovalores no contribuyen porquef(1)=0. No se ha sustituido indebidamente una cuasientropía no conmutativa por una divergencia clásica: en ESTA familia sí hay conmutación.
+
+La representación positiva del generador da
+ f''(1)=2c+2 integral_[0,infinito) (1+s)^-1 dmu(s).
+Es finita y estrictamente positiva para f no afín; si fuese cero, c=0 ymu=0, quedando solo un término afín. Así Taylor a t fijo que tiende a0 elimina el término impar y da el cociente lambda²a/a_lambda. Esta justificación de f'' no es un test sobre una lista de generadores. El cuantificador correcto es CADA f fijo: no se afirma una tasa uniforme sobre toda la clase de funciones.
+
+Tomando K->kappa por debajo se alcanza C_kappa para1<kappa<=n/2. En el extremo b->0, pero t se toma suficientemente pequeño en cada base fiel antes de moverK; por ejemplo se puede imponer además t=o(b). No se invierte la base singular final. En48 comprobaciones a90 dígitos de trabajo, seis generadores concretos (triangular,Umegaki,inversa Umegaki,cuadrático,Hellinger,resolvente7),d2..5 ylambda negativo/positivo reprodujeron el límite. Son controles de orientación/normalización; la prueba de todosf es analítica.
+
+1024 es explícitamente una síntesis de983 y1018. No se atribuye novedad independiente a la geometría Bell, al upper de orden ni al principio de Taylor clásico. Su alcance adicional respecto del texto1017 es organizar correctamente el intervalo completo Bell y los cuantificadores por generador.
+
+5. QUIBIT SEP/PPT: PRUEBA CONSTRUCTIVA Y UPPER CON REFERENCIA ARBITRARIA
+
+Para los Bell elegidos en los controles(Phi+,Psi+), rho_t tiene correlaciones Pauli
+ (c1,c2,c3)=(K-1,-2t,2t).
+Si K<kappa<=2 y|t|<(kappa-K)/4, entoncesS=|c1|+|c2|+|c3|=K-1+4|t|<1. La descomposición
+ rho_t=(1-S)I4/4+sum_j |c_j|[I4+sign(c_j) sigma_j tensor sigma_j]/4
+es una mezcla separable explícita. Cada sumando de eje es la mezcla equiprobable de dos estados producto con autovalores iguales u opuestos del mismo Pauli. Para sigma se toma t0. La identidad se verificó exactamente, además de la positividad estricta de ambas transpuestas parciales, para K149/100 y199/100 y presupuestos3/2 y2.
+
+El upper PPT no necesita PPT=SEP en2xr. Para un qubitA,
+ I_A tensor rho_R-rho=(sigma_y tensor I)rho^(T_A)(sigma_y tensor I).
+Por tanto PPT implica rho<=2E(rho), para CUALQUIER referencia finita. SEP implicaPPT. Aplicar el upper normalizado conkappa2 a ambos estados y el lower separable de referencia qubit demuestra igualdad del supremo completo de SEP yPPT para cada f, C2=2lambda²/(1+lambda). La condiciónPPT=SEP solo es necesaria si se quiere deducir separabilidad desde el testPPT de las matrices2x2; aquí también se dispone de la descomposición propia. No se usa tal equivalencia en dimensiones generales.
+
+Al acercarse K a2 también hay que mantener4|t|<2-K. La holgura de orden ya garantiza esto. La positividadCP del canal local, incluso enlambda=-1/3, preserva los estados producto y las mezclas separables. La pareja de comparación sigma no es el producto de las marginales de rho; el lower no es un lower de MI real.
+
+6. NO TRANSFERIR LA EXACTITUD DE TODOSf A LA FRANJA1021
+
+La tangente de1021 puede saturar SLD sin saturar otra métrica. Se reconstruyó un contraste concreto: en cada plano, para p<1 fijo y e->0, la formaBKM tiene término dominante
+ [8d(d-1)/(1+(d-1)p)] log(1/e).
+Los términos diagonales son acotados; la divergencia viene de los dos términos cruzados entre el autovalor de orden1 y el de ordene². Por tanto el cociente BKM de ESTA tangente tiende a
+ lambda²[1+(d-1)theta]/[1+(d-1)lambda theta],
+que para0<lambda<1,theta>0 es menor que el límiteSLD conL_d-1. Para d3,theta.79,lambda.5, los límites son aproximadamente.360335 y.415966. El diagnóstico numérico a e=1e-35 aún converge lentamente(logarítmicamente) y da.358209 paraBKM; no se confunde precisión de trabajo con certificado de todas sus cifras.
+
+Este contraste invalida el argumento de transferir AUTOMÁTICAMENTE el lower de1021 a cada f. No es un upper del coeficienteBKM optimizado ni un contraejemplo a una posible igualdad futura. La cota Petz común sigue siendo óptima en la franja por la presencia del triangular. No se resuelve la conjetura qubit971 ni se promueve una igualdad deMI.
+
+7. ANTECEDENTES: LECTURA DIRIGIDA Y DEPENDENCIAS
+
+READINGS1025 distingue lecturas nuevas, reutilización y simples pistas. Hiai–Ruskai1508.03551v1,Prop2.1, proporciona la representación positiva usada paraf; Theorem6.1 trata mapas unitales ordinarios de qubit, sin el supremo ancillary igual-marginal de aquí. Se revisaron sus hipótesis, no se afirma auditoría global. Horodecki quant-ph/9605038v2,Theorem3 y su prueba enp8, establece el criterioPPT suficiente en2x2/2x3; es antecedente, no novedad.
+
+Se reutiliza con procedencia explícita la lectura primaria de Gao–Zhao2608.19685v1 hecha en1018: su razón respecto deE(rho), el índice global y su testigo puro no equivalen al perfil de dos estados bajo un presupuesto. Permanece el falsador de pinching al atajo del índice. Los pasajes allí leídos no son un teorema cubriente literal de1021/1024; esto no afirma que todo el resto de esa obra o de la literatura carezca de resultados relacionados.
+
+Una pista nueva fue SisiZhou2402.18765v2. Se leyeron el abstract y los enunciados/argumento de la página4 sobre controles restringidos y coeficienteQFI, sin auditar su suplemento completo. Ese pasaje no enuncia el perfil igual-marginal de orden de1021. No se infiere ausencia de cobertura a partir de búsquedas vacías. Búsqueda limitada, primaria y dirigida; no exhaustiva ni certificado de prioridad mundial.
+
+8. LÍMITES, CONTROLES E INCIDENTES
+
+El proyectorQ_i de cada soporte conmuta con la base de1021 peroTr(Q_iD)=±2e(d-1). En un soporte con signo no nulo, esto descarta D=-i[H,s_theta] incluso paraH global. Bell también cambia poblaciones de subespacios invariantes. Son familias estadísticas generales, no protocolos demostrados de fase/Hamiltoniano fijo. No se demuestra una aplicación experimentalNPT/SEP sin certificación de entrada, capacidad, tensorización, ruido no unital ni optimum irrestricto end>2.
+
+Controles propios conservados: identidad Sylvester simbólica por Cayley-Hamilton; matrices completas d2..6 para Gram, marginal, soporte, planos y modos ortogonales; inversas144x144 exactas con LDL, escalas y gaps positivos; dos parejas Bell qubit con descomposiciónSEP exacta, PPT y holguras; formas triangulares completas16x16 conlambda negativo/positivo;48 límites de generadores y diagnósticoBKM. Se reprodujeron los cuatro pares suministrados1021 y los seis1024 mediante sus controles, con las precauciones de copia descritas. La construcción universal se sostiene por las identidades generales, no por estos casos finitos. No se usó un asistente formal de demostraciones.
+
+No apareció un fallo matemático ni de ejecución en los controles nuevos de1025. La cola con efectos laterales de1024 se detectó antes de ejecutarla. Las incidencias de serialización/matriz inmutable de1018 quedan conservadas en aquella entrega terminal y no se reescriben como éxito inicial. No se reinició la auditoría para favorecer un resultado. Los originales permanecen iguales a sus hashes iniciales.
+
+LISTO PARA FORMULAR, CON SUS DEPENDENCIAS
+- Tres coeficientes completos exactos en1<kappa<=d(d+1)/2, bajo las hipótesis precisas de1021.
+- Cada Petz normalizado no afín exacto en1<kappa<=d²/2, con atribución a983/1018 y límites fieles de1024.
+- Perfil qubitSEP para1<kappa<=2 y coeficientes completosSEP/PPT=C2 para cada f, sin identificarPPT ySEP en2xr general.
+- Certificado finito que supera la familiaBell y delimitación de que no descarta toda alternativa conmutativa.
+
+NO ESTABLECIDO / NO LISTO
+- Cada f exacto en la franja d²/2<kappa<=d(d+1)/2; aún menos fuera deL_d.
+- Igualdad para cadaR fijado, sharpness por índice solo, optimalidad global irrestricta end>2, referencia mínima.
+- Necesidad de no conmutatividad, novedad mundial, protocolo unitario,MI real o resolución971.
+
+La entrega completa incluye veredictos separados, procedencia, lecturas, recibos, scripts, salidas y manifiesto. No es una evaluación de manuscrito.
