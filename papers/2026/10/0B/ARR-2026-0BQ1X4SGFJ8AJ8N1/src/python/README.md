@@ -1,1 +1,1 @@
-For Python work, include `.py` sources, `pyproject.toml`, a dependency lockfile, tests, and documented reproduction commands.
+Own exact controls and component audits are in the immutable public supplement linked from the record README; no Tardos implementation is claimed.

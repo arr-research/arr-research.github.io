@@ -15,3 +15,7 @@ The named author directed substantial OpenAI Codex assistance in derivation, wri
 - [Original component evidence and controls](https://github.com/lluiseriksson/physmath-knowledge-tree/tree/620dfafc054a813834943f069fd9864693402f7e/integrations/research-radar/evidence/2026-10-27-rigidity834)
 
 The public model-assessment binding will serialize the original report without a new scientific vote. Native gate completion is not claimed. The source manuscript is unchanged; bibliographic and wording recommendations remain visible outside the PDF. Foreign primary-source bodies are not redistributed.
+
+- [Native score-bearing serialization of the same review](screening/binding846-model-response.json)
+- [Serialization provenance and original chronology](screening/binding846-binding-context.json)
+- [Operator binding notice](screening/operator-binding-notice.txt)
