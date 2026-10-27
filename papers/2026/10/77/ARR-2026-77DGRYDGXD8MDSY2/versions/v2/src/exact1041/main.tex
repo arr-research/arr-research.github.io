@@ -1,0 +1,234 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,booktabs,microtype}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdftitle={Complete contraction of unital qubit channels and order-constrained depolarization},pdfauthor={Lluis Eriksson},pdfsubject={Complete equal-reference contraction, random-unitary channels, and Petz divergences},pdfkeywords={quantum information, contraction coefficient, SLD, Petz divergence, depolarizing channel}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\Ad}{\operatorname{Ad}}
+\newcommand{\E}{\mathcal E}
+\newcommand{\N}{\mathcal N}
+\newcommand{\ip}[2]{\langle #1,#2\rangle}
+\newcommand{\Dtri}{D_{\triangle}}
+\newcommand{\gmin}{g^{\mathrm{SLD}}}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\title{Complete contraction of unital qubit channels and order-constrained depolarization}
+\author{Lluis Eriksson}
+\date{27 October 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+We determine the complete equal-reference contraction coefficients of the minimal quantum Fisher metric, its quadratic chi-square divergence and the finite triangular Petz divergence for every unital qubit channel. For a faithful normalized Choi state $J$, all three equal $1-16/\Tr(J^{-1})$; for singular $J$ they equal one. An explicit qubit--qutrit lower family matches a harmonic-weight upper bound and gives the exact stabilization envelope, including a maximal factor of nine between coefficient suprema. For depolarization in dimension $d$, a commuting Bell family matches the order bound $\lambda^2\kappa/[1+\lambda(\kappa-1)]$ for each normalized nonaffine operator-convex Petz generator when $1<\kappa\le d^2/2$. A rank-two ladder extends SLD and triangular sharpness to $\kappa\le d(d+1)/2$, with the budget taken against the actual reference marginal. In the qubit case we identify exact classical-reference and separable/PPT restrictions over the full physical noise range. A localized rational counterexample addresses one printed Doeblin equivalence. These results do not determine unrestricted BKM, relative-entropy, actual-mutual-information or capacity coefficients; the lower constructions are not unitary phase models. Faithful limits, adverse controls, prior-work dependencies and model-review limits are explicit.
+\end{abstract}
+\paragraph{Revision status.} Corrective major-revision draft of~\cite{VersionOne}, following the minor revisions requested in review1031 of its pre-correction PDF. This exact corrected artifact has no inherited grade; no publication of this draft is claimed.
+
+\section{Quantities and scope}
+Let \(A\) and \(R\) be finite-dimensional systems. All local maps below are tensored with \(\id_R\), whether or not this is written. A state is faithful if it is positive definite. We use the Hilbert--Schmidt inner product
+\(\ip{X}{Y}=\Tr X^\dagger Y\) on the \emph{complex} Hilbert space of matrices. Define
+\(L_a(X)=aX\) and \(R_b(X)=Xb\).
+For faithful \(a,b\), these are commuting positive invertible superoperators. This statement concerns positivity on Hilbert--Schmidt space, not preservation of the cone of positive matrices.
+
+For a faithful state \(\sigma\) and a Hermitian tangent \(Z\), set
+\begin{equation}\label{eq:sld}
+ \gmin_\sigma(Z)=
+ \ip{Z}{\bigl[(L_\sigma+R_\sigma)/2\bigr]^{-1}Z}.
+\end{equation}
+This is the minimal monotone, or symmetric logarithmic derivative (SLD), quantum Fisher quadratic form. Its associated finite chi-square divergence is
+\begin{equation}\label{eq:chi}
+ \chi^2_{\min}(\rho\Vert\sigma)=\gmin_\sigma(\rho-\sigma).
+\end{equation}
+For a nonaffine operator-convex \(f:(0,\infty)\to\mathbb R\), \(f(1)=0\), the Petz divergence is
+\begin{equation}\label{eq:petz}
+ D_f(\rho\Vert\sigma)=
+ \ip{\sigma^{1/2}}{f(L_\rho R_\sigma^{-1})\sigma^{1/2}}.
+\end{equation}
+We will also use the distinct finite divergence
+\begin{equation}\label{eq:triangle}
+ f_\triangle(x)=\frac{(x-1)^2}{x+1},\qquad
+ \Dtri(\rho\Vert\sigma)=D_{f_\triangle}(\rho\Vert\sigma).
+\end{equation}
+Although \eqref{eq:chi} and \eqref{eq:triangle} have proportional local forms, they are not the same finite divergence. Nor do we identify either with the Bures distance or its geodesic contraction.
+
+For a local channel \(\N\), define the complete equal-reference coefficient
+\begin{equation}\label{eq:complete}
+ \eta_f^c(\N)=\sup_{\substack{|R|<\infty,\ \rho,\sigma>0\\
+ \rho\ne\sigma,\ \Tr_A\rho=\Tr_A\sigma}}
+ \frac{D_f(\N(\rho)\Vert\N(\sigma))}
+      {D_f(\rho\Vert\sigma)}.
+\end{equation}
+Define its SLD analogue by optimizing
+\(\gmin_{\N(\sigma)}(\N(Z))/\gmin_\sigma(Z)\)
+over faithful \(\sigma\), nonzero Hermitian \(Z\) with \(\Tr_AZ=0\), and all finite \(R\).
+It is also the coefficient of \eqref{eq:chi}: every such tangent is realized by a sufficiently small faithful pair.
+
+These restrictions matter. Actual mutual information compares a state with the product of \emph{its own} marginals. Conditional coefficients can instead subtract a divergence between unequal reference marginals. Fixed-point entropy decay compares a state with a conditional expectation. We do not replace one optimization by another.
+
+
+\section{Known representation and a cancellation bound}
+The positive resolvent representation of operator-convex functions, and the resulting representation of Petz divergences, are established facts; see Hiai--Ruskai \cite{HR}, Proposition 2.1 and equations (12)--(13). After removing an affine term, any nonaffine operator-convex \(f\) as above has
+\begin{equation}\label{eq:representation}
+ f(x)=f'(1)(x-1)+c(x-1)^2+
+ \int_{[0,\infty)}\frac{(x-1)^2}{x+t}\,d\mu(t),
+\end{equation}
+where \(c\ge0\), \(\mu\) is positive and
+\(\int(1+t)^{-1}\,d\mu(t)<\infty\).
+Writing \(Z=\rho-\sigma\), for states of the same trace this gives
+\begin{equation}\label{eq:resolvent}
+ D_f(\rho\Vert\sigma)=
+ c\,\Tr Z^2\sigma^{-1}+
+ \int_{[0,\infty)}
+ \ip{Z}{(L_\rho+tR_\sigma)^{-1}Z}\,d\mu(t).
+\end{equation}
+We do not claim this representation as a contribution.
+
+\begin{lemma}\label{lem:inverse}
+For positive definite \(Q\), the inverse quadratic form
+\(F(Q,Z)=\ip{Z}{Q^{-1}Z}\) is jointly convex in \(Q,Z\), for arbitrary complex vectors \(Z\).
+\end{lemma}
+\begin{proof}
+Use the variational identity
+\[
+ F(Q,Z)=\sup_Y\{2\operatorname{Re}\ip{Z}{Y}-\ip{Y}{QY}\}.
+\]
+Each expression inside the supremum is affine in \(Q,Z\).
+The same identity also shows that for any trial \(Y\), with \(e=Z-QY\),
+\begin{equation}\label{eq:residual}
+ F(Q,Z)=2\operatorname{Re}\ip{Z}{Y}-\ip{Y}{QY}
+       +\ip{e}{Q^{-1}e}.
+\end{equation}
+\end{proof}
+
+\begin{theorem}[Harmonic cancellation]\label{thm:harmonic}
+Let \(U_1,\ldots,U_m\) be local unitaries, \(m\ge2\), and let
+\[
+ \E=\frac1m\sum_{j=1}^m\Ad_{U_j},\qquad
+ \N_w=\sum_{j=1}^m w_j\Ad_{U_j},\qquad
+ w_j>0,\quad \sum_jw_j=1.
+\]
+For faithful states \(\rho,\sigma\) satisfying \(\E(\rho)=\E(\sigma)\),
+and every nonaffine operator-convex \(f\) with \(f(1)=0\),
+\begin{equation}\label{eq:harmonic}
+ D_f(\N_w(\rho)\Vert\N_w(\sigma))
+ \le h(w)D_f(\rho\Vert\sigma),\qquad
+ h(w)=1-\frac{m^2}{\sum_jw_j^{-1}}.
+\end{equation}
+The same \(h(w)\) applies for every finite \(R\).
+It also bounds the SLD metric ratio for tangents \(Z\) with \(\E(Z)=0\).
+\end{theorem}
+\begin{proof}
+For a resolvent term in \eqref{eq:resolvent}, let
+\(Q=L_\rho+tR_\sigma\), \(Z=\rho-\sigma\), and write
+\(Q_j=\Ad_{U_j}Q\Ad_{U_j}^\dagger\), \(Z_j=U_jZU_j^\dagger\).
+The constraint gives \(\sum_jZ_j=0\).
+For every real \(a\),
+\[
+ \N_w(Z)=\sum_j(w_j-a)Z_j
+        =\sum_jw_j\frac{w_j-a}{w_j}Z_j.
+\]
+Since the output superoperator is \(\sum_jw_jQ_j\), Lemma \ref{lem:inverse}, quadratic homogeneity and unitary covariance give
+\[
+ F\left(\sum_jw_jQ_j,\N_w(Z)\right)
+ \le \sum_j\frac{(w_j-a)^2}{w_j}F(Q,Z).
+\]
+The scalar factor is
+\(1-2ma+a^2\sum_jw_j^{-1}\); its minimum occurs at
+\(a=m/\sum_jw_j^{-1}\) and equals \(h(w)\).
+The convex weights here are the positive \(w_j\). Negative tangent multipliers do not constitute negative convex weights on states.
+
+For the quadratic endpoint in \eqref{eq:resolvent}, use \(Q=R_\sigma\); its inverse quadratic form is \(\Tr Z^2\sigma^{-1}\).
+Integrate the nonnegative resolvent inequalities. Affine terms vanish by equal traces, and the positive representation justifies this passage.
+For the SLD metric, use \(Q=(L_\sigma+R_\sigma)/2\) directly.
+No argument depends on a bound on \(|R|\).
+\end{proof}
+
+Cauchy--Schwarz gives \(\sum_jw_j^{-1}\ge m^2\), so \(0\le h(w)<1\).
+A useful exact control is an involution \(U=U^\dagger\), \(U^2=I\), with both eigenspaces nonzero. For \(\E=(\id+\Ad_U)/2\) and
+\(\N=w\id+(1-w)\Ad_U\), the bound is \((2w-1)^2\).
+It is sharp for each of the Petz generators under consideration: take
+\(\sigma=I/n\), a nonzero Hermitian \(Z\) connecting the two eigenspaces, and
+\(\rho_\epsilon=\sigma+\epsilon Z\).
+Then \(\N(Z)=(2w-1)Z\), and the scalar second-order expansion of \eqref{eq:petz} gives the stated limiting ratio. At \(w=1/2\), the two outputs coincide.
+
+\begin{remark}[Relative entropy at the boundary]\label{rem:kl}
+For \(f(x)=x\log x\), \eqref{eq:harmonic} also holds for nonfaithful pairs with finite relative entropy. Mix both states with the same maximally mixed state. The equal-\(\E\) constraint is preserved. Joint convexity and lower semicontinuity imply convergence of both finite divergences, and the faithful inequality passes to the limit before division. We do not assert a boundary extension for every \(f\) without specifying its boundary conventions.
+\end{remark}
+
+
+\input{sections/qubit}
+\input{sections/order}
+\input{sections/context}
+\small
+\begin{thebibliography}{99}
+\bibitem{HR}
+F. Hiai and M. B. Ruskai,
+\emph{Contraction coefficients for noisy quantum channels},
+arXiv:1508.03551v1 (2015).
+\url{https://arxiv.org/abs/1508.03551v1}.
+
+\bibitem{CL}
+Y. Cao and J. Lu,
+\emph{Tensorization of the strong data processing inequality for quantum chi-square divergences},
+Quantum \textbf{3}, 199 (2019).
+\url{https://doi.org/10.22331/q-2019-10-28-199}.
+
+\bibitem{Doeblin}
+I. George, C. Hirche, T. Nuradha and M. M. Wilde,
+\emph{Quantum Doeblin Coefficients: Interpretations and Applications},
+Quantum \textbf{10}, 2115 (2026), arXiv:2503.22823v3.
+\url{https://arxiv.org/abs/2503.22823v3}.
+
+\bibitem{Reverse}
+P. Belzig, L. Gao, G. Smith and P. Wu,
+\emph{Reverse-type Data Processing Inequality},
+arXiv:2411.19890v3 (2025).
+\url{https://arxiv.org/abs/2411.19890v3}.
+
+\bibitem{Conditional}
+C. Hirche, I. George, T. Nuradha and M. M. Wilde,
+\emph{Conditional contraction coefficients and their applications to quantum networks},
+arXiv:2608.27171v1 (2026).
+\url{https://arxiv.org/abs/2608.27171v1}.
+
+\bibitem{GZ}
+L. Gao and L. Zhao,
+\emph{Tight Entropy Contraction of Generalized Quantum Depolarization},
+arXiv:2608.19685v1 (2026).
+\url{https://arxiv.org/abs/2608.19685v1}.
+\bibitem{GT}
+I. George and M. Tomamichel,
+\emph{A Unified Approach to Quantum Contraction and Correlation Coefficients},
+arXiv:2505.15281v3 (2026).
+\url{https://arxiv.org/abs/2505.15281v3}.
+
+\bibitem{HRF}
+C. Hirche, C. Rouz\'e and D. Stilck Fran\c{c}a,
+\emph{On contraction coefficients, partial orders and approximation of capacities for quantum channels},
+Quantum \textbf{6},862 (2022),arXiv:2011.05949v4.
+\url{https://arxiv.org/abs/2011.05949v4}.
+\bibitem{RSW}
+M. B. Ruskai, S. Szarek and E. Werner,
+\emph{An Analysis of Completely-Positive Trace-Preserving Maps on $2\times2$ Matrices},
+arXiv:quant-ph/0101003v2. \url{https://arxiv.org/abs/quant-ph/0101003v2}.
+\bibitem{HHH}
+M. Horodecki, P. Horodecki and R. Horodecki,
+\emph{Separability of mixed states: necessary and sufficient conditions},
+arXiv:quant-ph/9605038v2. \url{https://arxiv.org/abs/quant-ph/9605038v2}.
+\bibitem{CB}
+F. Chapeau-Blondeau,
+\emph{Optimized entanglement for quantum parameter estimation from noisy qubits},
+International Journal of Quantum Information \textbf{16},1850056 (2018),
+primary preprint arXiv:1904.01904v1.
+\url{https://arxiv.org/abs/1904.01904v1}.
+\bibitem{VersionOne}
+L. Eriksson,
+\emph{Sharp reference-assisted contraction for the minimal quantum Fisher metric},
+AIRR.SCIENCE,ARR-2026-77DGRYDGXD8MDSY2,v1 (2026),Working paper.
+\url{https://airr.science/papers/ARR-2026-77DGRYDGXD8MDSY2/versions/v1/}.
+\end{thebibliography}
+
+\end{document}

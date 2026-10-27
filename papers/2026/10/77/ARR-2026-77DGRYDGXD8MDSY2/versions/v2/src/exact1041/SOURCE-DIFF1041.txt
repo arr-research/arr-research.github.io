@@ -1,0 +1,61 @@
+--- 1030/main.tex
++++ 1041/main.tex
+@@ -25,7 +25,7 @@
+ \begin{abstract}
+ We determine the complete equal-reference contraction coefficients of the minimal quantum Fisher metric, its quadratic chi-square divergence and the finite triangular Petz divergence for every unital qubit channel. For a faithful normalized Choi state $J$, all three equal $1-16/\Tr(J^{-1})$; for singular $J$ they equal one. An explicit qubit--qutrit lower family matches a harmonic-weight upper bound and gives the exact stabilization envelope, including a maximal factor of nine between coefficient suprema. For depolarization in dimension $d$, a commuting Bell family matches the order bound $\lambda^2\kappa/[1+\lambda(\kappa-1)]$ for each normalized nonaffine operator-convex Petz generator when $1<\kappa\le d^2/2$. A rank-two ladder extends SLD and triangular sharpness to $\kappa\le d(d+1)/2$, with the budget taken against the actual reference marginal. In the qubit case we identify exact classical-reference and separable/PPT restrictions over the full physical noise range. A localized rational counterexample addresses one printed Doeblin equivalence. These results do not determine unrestricted BKM, relative-entropy, actual-mutual-information or capacity coefficients; the lower constructions are not unitary phase models. Faithful limits, adverse controls, prior-work dependencies and model-review limits are explicit.
+ \end{abstract}
+-\paragraph{Revision status.} Internal major-revision draft of~\cite{VersionOne}. The stated components have completed technical audits; this exact combined manuscript is unassessed and has no assigned grade. No publication of this draft is claimed.
++\paragraph{Revision status.} Corrective major-revision draft of~\cite{VersionOne}, following the minor revisions requested in review1031 of its pre-correction PDF. This exact corrected artifact has no inherited grade; no publication of this draft is claimed.
+ 
+ \section{Quantities and scope}
+ Let \(A\) and \(R\) be finite-dimensional systems. All local maps below are tensored with \(\id_R\), whether or not this is written. A state is faithful if it is positive definite. We use the Hilbert--Schmidt inner product
+--- 1030/assemble.py
++++ 1041/assemble.py
+@@ -11,7 +11,7 @@
+ abstract=r'''\begin{abstract}
+ We determine the complete equal-reference contraction coefficients of the minimal quantum Fisher metric, its quadratic chi-square divergence and the finite triangular Petz divergence for every unital qubit channel. For a faithful normalized Choi state $J$, all three equal $1-16/\Tr(J^{-1})$; for singular $J$ they equal one. An explicit qubit--qutrit lower family matches a harmonic-weight upper bound and gives the exact stabilization envelope, including a maximal factor of nine between coefficient suprema. For depolarization in dimension $d$, a commuting Bell family matches the order bound $\lambda^2\kappa/[1+\lambda(\kappa-1)]$ for each normalized nonaffine operator-convex Petz generator when $1<\kappa\le d^2/2$. A rank-two ladder extends SLD and triangular sharpness to $\kappa\le d(d+1)/2$, with the budget taken against the actual reference marginal. In the qubit case we identify exact classical-reference and separable/PPT restrictions over the full physical noise range. A localized rational counterexample addresses one printed Doeblin equivalence. These results do not determine unrestricted BKM, relative-entropy, actual-mutual-information or capacity coefficients; the lower constructions are not unitary phase models. Faithful limits, adverse controls, prior-work dependencies and model-review limits are explicit.
+ \end{abstract}
+-\paragraph{Revision status.} Internal major-revision draft of~\cite{VersionOne}. The stated components have completed technical audits; this exact combined manuscript is unassessed and has no assigned grade. No publication of this draft is claimed.
++\paragraph{Revision status.} Corrective major-revision draft of~\cite{VersionOne}, following the minor revisions requested in review1031 of its pre-correction PDF. This exact corrected artifact has no inherited grade; no publication of this draft is claimed.
+ '''
+ bib=source[source.index('\\small\n\\begin{thebibliography}'):source.index('\\end{document}')]
+ bib=bib.replace('\\begin{thebibliography}{9}','\\begin{thebibliography}{99}')
+--- 1030/sections/order.tex
++++ 1041/sections/order.tex
+@@ -78,7 +78,7 @@
+ \begin{equation}\label{eq:general-limit}
+  \lim_{e\downarrow0}\frac{G_e(p)}{8m}=\frac{L_d}{1+(L_d-1)p}.
+ \end{equation}
+-For completeness, put \(A=1+(d-1)p\), \(B=dp\sqrt m\), \(C=2+(dm-2)p\). The limiting system for the off-diagonal unknown and the scaled diagonal has matrix \(\left(\begin{smallmatrix}A&B\\B&C\end{smallmatrix}\right)\). Its determinant is \(2(1-p)[1+(L_d-1)p]\); the numerator from the direction \((\sqrt m,m)\) is \(m[C-2dmp+Am]=m(m+2)(1-p)\). This proves \eqref{eq:general-limit} at every fixed \(p<1\), without assuming uniform convergence at \(p=1\).
++For completeness, put \(A=1+(d-1)p\), \(B=dp\sqrt m\), \(C=2+(dm-2)p\). The limiting system for the off-diagonal unknown and the scaled diagonal has matrix \(\left(\begin{smallmatrix}A&B\\B&C\end{smallmatrix}\right)\). Its determinant is \(2(1-p)[1+(L_d-1)p]\); the numerator from the direction \((\sqrt m,m)\) is \(m[C-2dmp+Am]=m(m+2)(1-p)\). This proves \eqref{eq:general-limit} at every fixed \(-1/(L_d-1)<p<1\), without assuming uniform convergence at \(p=1\).
+ 
+ Both blocks have the same retention ratio. Therefore, at fixed \(\theta<1\), the ratio tends to
+ \[
+@@ -117,4 +117,4 @@
+  \text{SEP/PPT family}:\frac13,\qquad
+  \text{unrestricted quantum family}:1.
+ \]
+-Retention above \(2\lambda^2/(1+\lambda)\) is a sufficient certificate that the input base is NPT. This mathematical implication is a contrapositive of the prior reduction criterion plus the quantitative upper; it is not an experimentally demonstrated protocol.
++SLD retention (or minimal-chi-square retention with base \(\sigma\)) above \(2\lambda^2/(1+\lambda)\) is a sufficient certificate that that input base is NPT. For a general finite Petz pair, the proved implication is only that exceeding this threshold excludes both input states being PPT; it does not identify which state is NPT. This mathematical implication is a contrapositive of the prior reduction criterion plus the quantitative upper; it is not an experimentally demonstrated protocol.
+--- 1030/sections/context.tex
++++ 1041/sections/context.tex
+@@ -1,9 +1,9 @@
+ \section{A localized Doeblin counterexample}\label{sec:doeblin}
+ We record a discrepancy in a specific printed statement, rather than infer a failure of the surrounding theory. In the convention of George et al.~\cite[Definition~4, Eq.~(3.1)]{Doeblin}, the ordinary quantum Doeblin coefficient has the primal form
+ \[
+- \alpha(\N)=\max\{\Tr X:\ X\succeq0,\ I_A\otimes X\preceq\Gamma_{AB}^{\N}\},
++ \alpha(\N)=\sup\{\Tr X:\ X=X^\dagger,\ I_A\otimes X\preceq\Gamma_{AB}^{\N}\},
+ \]
+-where \(\Gamma\) is the unnormalized Choi matrix. Its dual admits \(Y\succeq0\) with \(\Tr_A Y\succeq I_B\), minimizing \(\Tr\Gamma Y\). Equality in the partial-trace constraint suffices for our certificate.
++where \(\Gamma\) is the unnormalized Choi matrix. Its dual in Proposition~3 admits \(Y\succeq0\) with \(\Tr_A Y=I_B\), minimizing \(\Tr\Gamma Y\). Requiring \(X\succeq0\) instead defines the different coefficient \(\alpha_+\) of Definition~7, Eq.~(3.25); the two optimization problems must not be identified.
+ 
+ Consider \(\N=(\id+\Ad_X+\Ad_Y)/3\). Its Bloch matrix is \(\operatorname{diag}(1,1,-1)/3\), so its \emph{ordinary trace-distance} contraction coefficient is exactly \(1/3\). Direct calculation gives
+ \[
+@@ -53,4 +53,6 @@
+ \section{Model assessments and review context}\label{sec:assessment}
+ The named author directed substantial OpenAI Codex assistance in derivation, writing and numerical work. Technical audits988,1012 and1018 were requested with GPT-6 Astra at xhigh effort, using reused conversational contexts and a shared filesystem. Requested configuration does not attest effective model identity, effort, isolation, blinding or independence. Audit1012 supports the qubit components with the normalization and domain precisions incorporated here. Audit1018 supports the earlier general-dimensional interval but identifies its dependence on our previous Bell family; that objection is retained in Proposition~\ref{prop:bell}. It verified only the identity of the post-start rank-two supplement, not its mathematics. Technical audit1025 subsequently examined the rank-two and strengthened Bell/SEP statements, supporting them within the distinct ranges stated here. It reconstructed the invariant planes and faithful limits and verified a rational finite pair strictly beyond the limit of the specified Bell family. This comparison does not exclude all commuting constructions. Its BKM diagnostic also shows that the displayed rank-two tangent does not automatically transfer sharpness to each Petz generator; this objection is retained. It supplies no manuscript score or priority certification and explicitly reuses audit1018 context.
+ 
+-No completed full assessment of this exact combined manuscript has yet been obtained. The earlier completed review1006 concerns only the exact eight-page first-version PDF, not this text; none of its scores transfers here. Component audits, arithmetic replay, formal verification, human peer review and editorial acceptance are distinct. No predicted score, independent-human review, Lean proof of these analytic theorems or certified worldwide originality is claimed. The author remains responsible for attribution, claims and any publication decision.
++Full review1031 examined the exact twelve-page pre-correction draft and recommended minor revision. Its PDF SHA256 is:
++\begin{center}\small\texttt{50db4efe067fb88a0bef955d4e5b5779bc31a6afe4c1b78b0c16c9f518b89ab3}\end{center}
++ It required the Hermitian Doeblin primal/equality dual and an explicit SLD/minimal-chi-square scope for the NPT inference. Both are corrected here, with the positive domain of the aligned limit stated. The full adverse report and reused-context limitations are retained. This corrected PDF awaits exact-artifact verification at freezing; no score is inherited from1031 or from review1006 of the eight-page first version. Component audits, arithmetic replay, formal verification, human peer review and editorial acceptance are distinct. No predicted score, independent-human review, Lean proof of these analytic theorems or certified worldwide originality is claimed. The author remains responsible for attribution, claims and any publication decision.
