@@ -1,0 +1,447 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,booktabs,microtype}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdftitle={Sharp reference-assisted contraction for the minimal quantum Fisher metric},pdfauthor={Lluis Eriksson},pdfsubject={Complete equal-reference contraction, random-unitary channels, and Petz divergences},pdfkeywords={quantum information, contraction coefficient, SLD, Petz divergence, depolarizing channel}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\Ad}{\operatorname{Ad}}
+\newcommand{\E}{\mathcal E}
+\newcommand{\N}{\mathcal N}
+\newcommand{\ip}[2]{\langle #1,#2\rangle}
+\newcommand{\Dtri}{D_{\triangle}}
+\newcommand{\gmin}{g^{\mathrm{SLD}}}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\title{Sharp reference-assisted contraction for the minimal quantum Fisher metric}
+\author{Lluis Eriksson}
+\date{27 October 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+We derive a harmonic-weight contraction bound for random-unitary channels on pairs with the same uniform-twirl image. It applies to every operator-convex Petz divergence on faithful states and is uniform over finite quantum reference systems. For a qubit depolarizing channel with retained amplitude \(0<\lambda<1\), we identify the exact complete equal-reference contraction coefficient of both the minimal quantum Fisher metric and the triangular Petz divergence:
+\(3\lambda^2/(1+2\lambda)\).
+The lower bound uses an explicit qubit--qutrit ladder state, a partial-trace-zero tangent, and an ordered faithful regularization. Thus the general Petz upper bound is sharp as a bound uniform over that family. At \(\lambda=1/2\) it equals \(3/8\). This does not determine the relative-entropy or mutual-information coefficient. We include a finite rational triangular-divergence witness above \(1/3\), explain a limitation of scalar-centering proofs, and preserve failed auxiliary variance and numerical routes.
+\end{abstract}
+
+\section{Quantities and scope}
+Let \(A\) and \(R\) be finite-dimensional systems. All local maps below are tensored with \(\id_R\), whether or not this is written. A state is faithful if it is positive definite. We use the Hilbert--Schmidt inner product
+\(\ip{X}{Y}=\Tr X^\dagger Y\) on the \emph{complex} Hilbert space of matrices. Define
+\(L_a(X)=aX\) and \(R_b(X)=Xb\).
+For faithful \(a,b\), these are commuting positive invertible superoperators. This statement concerns positivity on Hilbert--Schmidt space, not preservation of the cone of positive matrices.
+
+For a faithful state \(\sigma\) and a Hermitian tangent \(Z\), set
+\begin{equation}\label{eq:sld}
+ \gmin_\sigma(Z)=
+ \ip{Z}{\bigl[(L_\sigma+R_\sigma)/2\bigr]^{-1}Z}.
+\end{equation}
+This is the minimal monotone, or symmetric logarithmic derivative (SLD), quantum Fisher quadratic form. Its associated finite chi-square divergence is
+\begin{equation}\label{eq:chi}
+ \chi^2_{\min}(\rho\Vert\sigma)=\gmin_\sigma(\rho-\sigma).
+\end{equation}
+For an operator-convex \(f:(0,\infty)\to\mathbb R\), \(f(1)=0\), the Petz divergence is
+\begin{equation}\label{eq:petz}
+ D_f(\rho\Vert\sigma)=
+ \ip{\sigma^{1/2}}{f(L_\rho R_\sigma^{-1})\sigma^{1/2}}.
+\end{equation}
+We will also use the distinct finite divergence
+\begin{equation}\label{eq:triangle}
+ f_\triangle(x)=\frac{(x-1)^2}{x+1},\qquad
+ \Dtri(\rho\Vert\sigma)=D_{f_\triangle}(\rho\Vert\sigma).
+\end{equation}
+Although \eqref{eq:chi} and \eqref{eq:triangle} have proportional local forms, they are not the same finite divergence. Nor do we identify either with the Bures distance or its geodesic contraction.
+
+For a local channel \(\N\), define the complete equal-reference coefficient
+\begin{equation}\label{eq:complete}
+ \eta_f^c(\N)=\sup_{\substack{|R|<\infty,\ \rho,\sigma>0\\
+ \rho\ne\sigma,\ \Tr_A\rho=\Tr_A\sigma}}
+ \frac{D_f(\N(\rho)\Vert\N(\sigma))}
+      {D_f(\rho\Vert\sigma)}.
+\end{equation}
+Define its SLD analogue by optimizing
+\(\gmin_{\N(\sigma)}(\N(Z))/\gmin_\sigma(Z)\)
+over faithful \(\sigma\), nonzero Hermitian \(Z\) with \(\Tr_AZ=0\), and all finite \(R\).
+It is also the coefficient of \eqref{eq:chi}: every such tangent is realized by a sufficiently small faithful pair.
+
+These restrictions matter. Actual mutual information compares a state with the product of \emph{its own} marginals. Conditional coefficients can instead subtract a divergence between unequal reference marginals. Fixed-point entropy decay compares a state with a conditional expectation. We do not replace one optimization by another.
+
+\section{Known representation and a cancellation bound}
+The positive resolvent representation of operator-convex functions, and the resulting representation of Petz divergences, are established facts; see Hiai--Ruskai \cite{HR}, Proposition 2.1 and equations (12)--(13). After removing an affine term, any nonaffine operator-convex \(f\) as above has
+\begin{equation}\label{eq:representation}
+ f(x)=f'(1)(x-1)+c(x-1)^2+
+ \int_{[0,\infty)}\frac{(x-1)^2}{x+t}\,d\mu(t),
+\end{equation}
+where \(c\ge0\), \(\mu\) is positive and
+\(\int(1+t)^{-1}\,d\mu(t)<\infty\).
+Writing \(Z=\rho-\sigma\), for states of the same trace this gives
+\begin{equation}\label{eq:resolvent}
+ D_f(\rho\Vert\sigma)=
+ c\,\Tr Z^2\sigma^{-1}+
+ \int_{[0,\infty)}
+ \ip{Z}{(L_\rho+tR_\sigma)^{-1}Z}\,d\mu(t).
+\end{equation}
+We do not claim this representation as a contribution.
+
+\begin{lemma}\label{lem:inverse}
+For positive definite \(Q\), the inverse quadratic form
+\(F(Q,Z)=\ip{Z}{Q^{-1}Z}\) is jointly convex in \(Q,Z\), for arbitrary complex vectors \(Z\).
+\end{lemma}
+\begin{proof}
+Use the variational identity
+\[
+ F(Q,Z)=\sup_Y\{2\operatorname{Re}\ip{Z}{Y}-\ip{Y}{QY}\}.
+\]
+Each expression inside the supremum is affine in \(Q,Z\).
+The same identity also shows that for any trial \(Y\), with \(e=Z-QY\),
+\begin{equation}\label{eq:residual}
+ F(Q,Z)=2\operatorname{Re}\ip{Z}{Y}-\ip{Y}{QY}
+       +\ip{e}{Q^{-1}e}.
+\end{equation}
+\end{proof}
+
+\begin{theorem}[Harmonic cancellation]\label{thm:harmonic}
+Let \(U_1,\ldots,U_m\) be local unitaries, \(m\ge2\), and let
+\[
+ \E=\frac1m\sum_{j=1}^m\Ad_{U_j},\qquad
+ \N_w=\sum_{j=1}^m w_j\Ad_{U_j},\qquad
+ w_j>0,\quad \sum_jw_j=1.
+\]
+For faithful states \(\rho,\sigma\) satisfying \(\E(\rho)=\E(\sigma)\),
+and every nonaffine operator-convex \(f\) with \(f(1)=0\),
+\begin{equation}\label{eq:harmonic}
+ D_f(\N_w(\rho)\Vert\N_w(\sigma))
+ \le h(w)D_f(\rho\Vert\sigma),\qquad
+ h(w)=1-\frac{m^2}{\sum_jw_j^{-1}}.
+\end{equation}
+The same \(h(w)\) applies for every finite \(R\).
+It also bounds the SLD metric ratio for tangents \(Z\) with \(\E(Z)=0\).
+\end{theorem}
+\begin{proof}
+For a resolvent term in \eqref{eq:resolvent}, let
+\(Q=L_\rho+tR_\sigma\), \(Z=\rho-\sigma\), and write
+\(Q_j=\Ad_{U_j}Q\Ad_{U_j}^\dagger\), \(Z_j=U_jZU_j^\dagger\).
+The constraint gives \(\sum_jZ_j=0\).
+For every real \(a\),
+\[
+ \N_w(Z)=\sum_j(w_j-a)Z_j
+        =\sum_jw_j\frac{w_j-a}{w_j}Z_j.
+\]
+Since the output superoperator is \(\sum_jw_jQ_j\), Lemma \ref{lem:inverse}, quadratic homogeneity and unitary covariance give
+\[
+ F\left(\sum_jw_jQ_j,\N_w(Z)\right)
+ \le \sum_j\frac{(w_j-a)^2}{w_j}F(Q,Z).
+\]
+The scalar factor is
+\(1-2ma+a^2\sum_jw_j^{-1}\); its minimum occurs at
+\(a=m/\sum_jw_j^{-1}\) and equals \(h(w)\).
+The convex weights here are the positive \(w_j\). Negative tangent multipliers do not constitute negative convex weights on states.
+
+For the quadratic endpoint in \eqref{eq:resolvent}, use \(Q=R_\sigma\); its inverse quadratic form is \(\Tr Z^2\sigma^{-1}\).
+Integrate the nonnegative resolvent inequalities. Affine terms vanish by equal traces, and the positive representation justifies this passage.
+For the SLD metric, use \(Q=(L_\sigma+R_\sigma)/2\) directly.
+No argument depends on a bound on \(|R|\).
+\end{proof}
+
+Cauchy--Schwarz gives \(\sum_jw_j^{-1}\ge m^2\), so \(0\le h(w)<1\).
+A useful exact control is an involution \(U=U^\dagger\), \(U^2=I\), with both eigenspaces nonzero. For \(\E=(\id+\Ad_U)/2\) and
+\(\N=w\id+(1-w)\Ad_U\), the bound is \((2w-1)^2\).
+It is sharp for each of the Petz generators under consideration: take
+\(\sigma=I/n\), a nonzero Hermitian \(Z\) connecting the two eigenspaces, and
+\(\rho_\epsilon=\sigma+\epsilon Z\).
+Then \(\N(Z)=(2w-1)Z\), and the scalar second-order expansion of \eqref{eq:petz} gives the stated limiting ratio. At \(w=1/2\), the two outputs coincide.
+
+\begin{remark}[Relative entropy at the boundary]\label{rem:kl}
+For \(f(x)=x\log x\), \eqref{eq:harmonic} also holds for nonfaithful pairs with finite relative entropy. Mix both states with the same maximally mixed state. The equal-\(\E\) constraint is preserved. Joint convexity and lower semicontinuity imply convergence of both finite divergences, and the faithful inequality passes to the limit before division. We do not assert a boundary extension for every \(f\) without specifying its boundary conventions.
+\end{remark}
+
+\section{Depolarization and the exact minimal-metric coefficient}
+For a \(d\)-dimensional unitary error basis, \(m=d^2\), the uniform twirl is the local replacer
+\(\E_A(X)=I_A/d\otimes\Tr_AX\).
+With
+\(w_0=[1+(m-1)\lambda]/m\) and
+\(w_j=(1-\lambda)/m\) for \(j\ne0\),
+Theorem \ref{thm:harmonic} gives
+\begin{equation}\label{eq:dim}
+ h_d(\lambda)=\frac{(d^2-1)\lambda^2}{1+(d^2-2)\lambda}.
+\end{equation}
+Equal twirl images are precisely equal reference marginals.
+For qubits, \eqref{eq:dim} is sharp for the minimal metric and \eqref{eq:triangle}.
+
+\begin{theorem}[Exact complete coefficients for a qubit]\label{thm:exact}
+Let \(0<\lambda<1\) and
+\(\N_\lambda(X)=\lambda X+(1-\lambda)I_A/2\otimes\Tr_AX\), with \(|A|=2\).
+Then
+\begin{equation}\label{eq:exact}
+ \eta_{\mathrm{SLD}}^c(\N_\lambda)
+ =\eta_{\chi^2_{\min}}^c(\N_\lambda)
+ =\eta_{\triangle}^c(\N_\lambda)
+ =\frac{3\lambda^2}{1+2\lambda}.
+\end{equation}
+A reference of dimension three suffices to approach these suprema.
+No assertion is made that three is the smallest sufficient dimension.
+\end{theorem}
+\begin{proof}
+The upper bounds follow from Theorem \ref{thm:harmonic} with the four Pauli conjugations and their depolarizing weights. It remains to prove the lower bounds.
+
+In the ordered basis
+\((|00\rangle,|01\rangle,|02\rangle,|10\rangle,|11\rangle,|12\rangle)\),
+fix \(e>0\) and define
+\[
+ a=(1,0,0,0,e,0)^T,\quad
+ b=(0,e,0,0,0,1)^T,\quad
+ \sigma_e=\frac{aa^\dagger+bb^\dagger}{2(1+e^2)}.
+\]
+The vectors are orthogonal and have the same norm, so
+\(P_e=2\sigma_e\) is a rank-two projection.
+Let \(Z_e\) and \(J\) be
+\[
+ Z_e=\begin{pmatrix}0&-1\\-1&-2e\end{pmatrix},
+ \qquad J=\begin{pmatrix}0&1\\1&0\end{pmatrix}.
+\]
+Define the Hermitian \(6\times6\) matrix \(\Delta_e\) by its two nonzero blocks:
+\(Z_e\) on indices \((0,4)\) and
+\(-JZ_eJ=\bigl(\begin{smallmatrix}2e&1\\1&0\end{smallmatrix}\bigr)\)
+on \((1,5)\). All other entries vanish.
+Direct multiplication gives
+\begin{align}
+ \Tr_A\Delta_e&=0,&
+ (I-P_e)\Delta_e(I-P_e)&=0,\label{eq:kernel}\\
+ \Tr\Delta_e^2&=4+8e^2,&
+ \Tr(P_e\Delta_eP_e)^2&=8e^2.\label{eq:traces}
+\end{align}
+The SLD form at this nonfaithful base is understood by retaining the support--support and support--kernel terms; the kernel--kernel terms vanish by \eqref{eq:kernel}. The two positive eigenvalues are \(1/2\), so \eqref{eq:traces} yields
+\begin{equation}\label{eq:input}
+ \gmin_{\sigma_e}(\Delta_e)
+ =4\Tr\Delta_e^2-2\Tr(P_e\Delta_eP_e)^2
+ =16(1+e^2).
+\end{equation}
+
+The reference marginal is
+\[
+ \sigma_{e,R}=\frac{\operatorname{diag}(1,2e^2,1)}{2(1+e^2)}.
+\]
+On indices \((0,4)\), the output base is
+\begin{equation}\label{eq:block}
+ W_e=\frac1{4(1+e^2)}
+ \begin{pmatrix}1+\lambda&2\lambda e\\2\lambda e&2e^2\end{pmatrix}.
+\end{equation}
+On \((1,5)\) it is \(JW_eJ\).
+The other two singleton directions have zero tangent.
+For \(e>0\) and \(0<\lambda<1\), the output is faithful:
+the block determinant is positive because
+\(1+\lambda-2\lambda^2=(1-\lambda)(1+2\lambda)>0\),
+and the singleton entries are positive.
+
+Solving the two-dimensional Sylvester equation
+\(W_eY+YW_e=2Z_e\), and using the two mirrored blocks, gives
+\begin{equation}\label{eq:output}
+ \gmin_{\N_\lambda(\sigma_e)}(\lambda\Delta_e)
+ =
+ \frac{16\lambda^2(1+e^2)
+ (4e^2\lambda+2e^2+3\lambda+3)}
+ {(2\lambda+1)(2e^2+\lambda+1)}.
+\end{equation}
+This is a \(2\times2\) linear calculation, not an optimization claim.
+Dividing by \eqref{eq:input} gives
+\begin{equation}\label{eq:ratio}
+ R_e(\lambda)=
+ \frac{\lambda^2(4e^2\lambda+2e^2+3\lambda+3)}
+ {(2\lambda+1)(2e^2+\lambda+1)}.
+\end{equation}
+In particular,
+\begin{equation}\label{eq:gap}
+ \frac{3\lambda^2}{1+2\lambda}-R_e(\lambda)
+ =
+ \frac{4e^2\lambda^2(1-\lambda)}
+ {(2\lambda+1)(2e^2+\lambda+1)}
+ \longrightarrow0 \quad(e\downarrow0).
+\end{equation}
+
+We now realize the limits through faithful inputs. For fixed \(e>0\), set
+\(\sigma_{e,\xi}=(1-\xi)\sigma_e+\xi I_6/6\), \(0<\xi<1\).
+Its eigenspaces are those of \(\sigma_e\).
+Equation \eqref{eq:kernel} implies that its input SLD form converges to
+\eqref{eq:input} as \(\xi\downarrow0\); there are no diverging kernel--kernel contributions.
+The output tends to the faithful \(\N_\lambda(\sigma_e)\), so its SLD form converges by finite-dimensional continuity.
+Consequently faithful tangent ratios approach \(R_e(\lambda)\).
+Sending \(e\downarrow0\) afterwards proves the SLD lower bound.
+The equality with the complete chi-square coefficient follows from the exact quadratic dependence in \eqref{eq:chi} and sufficiently small faithful perturbations.
+
+For the triangular Petz divergence, at each fixed faithful \(\sigma_{e,\xi}\) choose
+\(\rho_t=\sigma_{e,\xi}+t\Delta_e\).
+For sufficiently small nonzero real \(t\), this is a faithful density matrix with the same reference marginal.
+Its resolvent representation gives
+\[
+ \lim_{t\to0}\frac{\Dtri(\rho_t\Vert\sigma_{e,\xi})}{t^2}
+ =
+ \ip{\Delta_e}{(L_{\sigma_{e,\xi}}+R_{\sigma_{e,\xi}})^{-1}\Delta_e}
+ =\frac12\gmin_{\sigma_{e,\xi}}(\Delta_e),
+\]
+and the corresponding output limit is analogous.
+Thus take \(t\to0\), then \(\xi\downarrow0\), and finally \(e\downarrow0\).
+This supplies the lower supremum over faithful finite pairs in \eqref{eq:complete}.
+There is no exchange of these limits and no assumed uniform continuity at a singular reference.
+\end{proof}
+
+\begin{corollary}\label{cor:uniform}
+For the qubit depolarizing channel, \(3\lambda^2/(1+2\lambda)\) is the smallest bound valid uniformly over all nonaffine operator-convex Petz generators and faithful equal-reference pairs.
+\end{corollary}
+\begin{proof}
+Theorem \ref{thm:harmonic} gives the uniform upper; the member \(f_\triangle\) attains the supremum in Theorem \ref{thm:exact}.
+This does not assert that every generator has that coefficient.
+\end{proof}
+
+At \(\lambda=1/2\), \eqref{eq:exact} equals \(3/8\).
+The ordinary unital-qubit contraction coefficient is \(\lambda^2\), by Hiai--Ruskai \cite{HR}, Theorem 6.1. At \(\lambda=1/2\), the ordinary value is \(1/4\), compared with the complete equal-reference value \(3/8\).
+The stabilization considered here retains equal reference marginals and optimizes over their quantum correlations.
+
+\section{A limitation of changing the unitary decomposition}
+A narrow method limitation helps distinguish the remaining relative-entropy problem from a representation search.
+
+\begin{proposition}\label{prop:barrier}
+Fix \(0<\lambda<1\) and let \(E(X)=\Tr(X)I/d\).
+Represent \(E=\sum_{j=1}^nq_j\Ad_{U_j}\) as a finite convex combination, with \(q_j\ge0\) and \(\sum_jq_j=1\); discard zero-weight atoms. Consolidate all identity conjugations into an atom of total weight \(r\); if absent, take \(r=0\).
+Use the induced common representation of
+\(N=\lambda\id+(1-\lambda)E\).
+Among all such representations, a single scalar cancellation of the form
+\(w_j-aq_j\), optimized by inverse-quadratic convexity, cannot give an upper smaller than \eqref{eq:dim}.
+An error basis attains that method-family minimum.
+\end{proposition}
+\begin{proof}
+The scalar minimum is
+\(1-1/S\), \(S=\sum_jq_j^2/w_j\), because
+\(\sum_j(w_j-aq_j)^2/w_j=1-2a+a^2S\).
+The induced weights are \(w_0=\lambda+(1-\lambda)r\) and
+\(w_j=(1-\lambda)q_j\) otherwise. Hence
+\[
+ S=\frac{r^2}{\lambda+(1-\lambda)r}+\frac{1-r}{1-\lambda},
+ \qquad
+ h(r)=\frac{\lambda^2(1-r)}{\lambda+(1-2\lambda)r}.
+\]
+Using normalized Choi states, \(J(E)=I_{d^2}/d^2\) and
+\(J(\id)=|\Omega\rangle\langle\Omega|\).
+Positivity of the other Choi terms gives
+\(J(E)-r|\Omega\rangle\langle\Omega|\succeq0\), so \(r\le1/d^2\).
+On this interval,
+\[
+ h'(r)=-\frac{\lambda^2(1-\lambda)}
+ {[\lambda+(1-2\lambda)r]^2}<0.
+\]
+The smallest possible scalar bound therefore occurs at \(r=1/d^2\) and equals \eqref{eq:dim}, attained by a unitary error basis.
+\end{proof}
+This concerns the specified common-representation scalar method. It does not exclude other representations, state-dependent cancellations, stronger operator inequalities, or a smaller true coefficient for relative entropy.
+
+\section{Finite certificates, failures, and unresolved questions}
+The accompanying evidence distinguishes analytical arguments from finite diagnostics.
+The exact symbolic checks verify the projector and partial-trace identities in \eqref{eq:kernel}--\eqref{eq:traces}, the channel block \eqref{eq:block}, the Sylvester equation, and the rational ratio and gap.
+Nine faithful finite pairs were also evaluated at 75 decimal digits. They are controls on the construction, not the proof of its universal upper or sharp supremum.
+
+A separate finite rational certificate at \(\lambda=1/2\) gives faithful qubit--qutrit states with the same reference marginal and
+\begin{equation}\label{eq:finite}
+ \frac{\Dtri(\N(\rho)\Vert\N(\sigma))}
+ {\Dtri(\rho\Vert\sigma)}>0.348913969797>\frac13.
+\end{equation}
+The certificate stores the matrices and rational trial Sylvester solutions.
+If \(Q\succeq cI\), \eqref{eq:residual} bounds the remainder by
+\(\|e\|_2^2/c\).
+Exact rational input/output intervals then certify \eqref{eq:finite}, without treating a floating-point eigenvalue as a certificate.
+
+We also preserve a failed route through conditional variance. For
+\[
+ V_\sigma(H)=\inf_{B=B^\dagger}\Tr\sigma(H-I_A\otimes B)^2,
+ \qquad \Tr_AH=0,
+\]
+a proposed sufficient inequality was
+\(V_\sigma(H)\le2\Tr[E_A(\sigma)H^2]\).
+A rational qubit--qutrit certificate instead proves a ratio greater than \(2.99311283224\).
+The minimizer solves a reference Sylvester equation, and the same residual method certifies the violation.
+This refutes the auxiliary inequality; it does not directly refute an SLD channel coefficient or the relative-entropy conjecture.
+
+Exploration included fixed-budget local optimizations, some terminating at their limits or abnormally, and unsuccessful simpler families.
+These outcomes are retained. The reversed ladder and the proof above replace reliance on optimized values.
+No exhaustive computational search or independently certified computational campaign is claimed.
+
+The relative-entropy complete coefficient at \(\lambda=1/2\) is not determined here.
+In particular, the triangular example cannot be transferred to BKM by comparing the sizes of their metrics: ordering metrics does not order their contraction ratios.
+Our results identify an obstruction to a bound \emph{uniform over all Petz generators}, while leaving a generator-specific relative-entropy improvement open.
+No capacity, tensorization, optimal statistical protocol, geodesic-distance contraction or attained singular maximum is asserted.
+
+
+\paragraph{Evidence availability and replay.}
+A \href{https://github.com/lluiseriksson/physmath-knowledge-tree/tree/f0b3642b196b9de6d51b31cca49a69818522ee91/integrations/research-radar/evidence/2026-10-27-pauli-audit}{version-pinned public supplement}
+contains the scripts, rational certificates, complete component report and retained objections.
+Its \texttt{MANIFEST1001.json} binds the LF transport files to their sealed-original hashes.
+Copy the files to a temporary directory, install the pinned \texttt{requirements.txt}, and run
+\texttt{python symbolic993.py}, \texttt{python verify993.py}, and
+\texttt{python verify-certificates991.py}. These programs write their reports beside the scripts.
+The later, explicitly speculative Pauli extension in the same research collection is outside the claims and assessment of this manuscript.
+
+\section{Relation to prior work}
+Hiai--Ruskai \cite{HR} develop contraction comparisons, monotone metrics and ordinary qubit formulas. Their resolvent representation is the starting tool here.
+Cao--Lu \cite{CL} study quantum chi-square SDPIs, tensorization with specified product reference states and ordinary qubit examples. Those hypotheses are distinct from optimization over arbitrary quantum references in \eqref{eq:complete}.
+George et al. \cite{Doeblin} formulate equal-reference coefficients and bound complete trace-distance contraction through quantum Doeblin coefficients. George--Tomamichel \cite{GT} treat fixed-base and ordinary optimized chi-square coefficients and associated spectral algorithms. Their fixed-base optimization does not itself determine the supremum over correlated bases and all reference dimensions under \(\Tr_A Z=0\). The unrestricted ordinary coefficient of \(\N\otimes\id_R\) can instead equal one because a tangent may reside solely in \(R\); it is not the coefficient in \eqref{eq:complete}.
+Belzig et al. \cite{Reverse} distinguish ordinary channel comparisons from quantum-reference mutual-information questions.
+Hirche et al. \cite{Conditional} distinguish mutual-information, complete equal-reference and conditional coefficients; these distinctions prevent interpreting our triangular result as a relative-entropy or mutual-information solution.
+Gao--Zhao \cite{GZ} concern entropy contraction toward a conditional expectation, another important nearby optimization that is not identified with \eqref{eq:complete}.
+
+These references are included to delimit the quantities and established machinery, not to suggest that the surrounding literature was exhaustively audited.
+The bibliographic search was directed. Certified worldwide originality, independent human review and formal proof verification are not claimed.
+
+\section{Model assessments and review context}
+The named author directed substantial OpenAI Codex assistance in derivation, writing and numerical work.
+Technical audit 988 and full-draft review 998 were requested with GPT-6 Astra at xhigh effort in reused conversational contexts and a shared filesystem. Requested configuration does not attest effective runtime identity, isolation or independence. Review 998 evaluated the earlier exact seven-page draft; the present corrections address its supplement, bibliography and hypothesis-precision objections. Its score is not automatically assigned to this corrected PDF.
+Component checks do not constitute a full assessment of this exact manuscript.
+Any actual reports must identify their exact input hashes, retained objections, context reuse and scope.
+No score from an earlier manuscript is transferred to this text; no predicted assessment score is claimed.
+The author remains responsible for the claims, attribution and publication decision.
+This section distinguishes AI assessment, arithmetic replay, formal verification, human peer review and editorial acceptance.
+
+\small
+\begin{thebibliography}{9}
+\bibitem{HR}
+F. Hiai and M. B. Ruskai,
+\emph{Contraction coefficients for noisy quantum channels},
+arXiv:1508.03551v1 (2015).
+\url{https://arxiv.org/abs/1508.03551v1}.
+
+\bibitem{CL}
+Y. Cao and J. Lu,
+\emph{Tensorization of the strong data processing inequality for quantum chi-square divergences},
+Quantum \textbf{3}, 199 (2019).
+\url{https://doi.org/10.22331/q-2019-10-28-199}.
+
+\bibitem{Doeblin}
+I. George, C. Hirche, T. Nuradha and M. M. Wilde,
+\emph{Quantum Doeblin Coefficients: Interpretations and Applications},
+Quantum \textbf{10}, 2115 (2026), arXiv:2503.22823v3.
+\url{https://arxiv.org/abs/2503.22823v3}.
+
+\bibitem{Reverse}
+P. Belzig, L. Gao, G. Smith and P. Wu,
+\emph{Reverse-type Data Processing Inequality},
+arXiv:2411.19890v3 (2025).
+\url{https://arxiv.org/abs/2411.19890v3}.
+
+\bibitem{Conditional}
+C. Hirche, I. George, T. Nuradha and M. M. Wilde,
+\emph{Conditional contraction coefficients and their applications to quantum networks},
+arXiv:2608.27171v1 (2026).
+\url{https://arxiv.org/abs/2608.27171v1}.
+
+\bibitem{GZ}
+L. Gao and L. Zhao,
+\emph{Tight Entropy Contraction of Generalized Quantum Depolarization},
+arXiv:2608.19685v1 (2026).
+\url{https://arxiv.org/abs/2608.19685v1}.
+\bibitem{GT}
+I. George and M. Tomamichel,
+\emph{A Unified Approach to Quantum Contraction and Correlation Coefficients},
+arXiv:2505.15281v3 (2026).
+\url{https://arxiv.org/abs/2505.15281v3}.
+
+\end{thebibliography}
+\end{document}
