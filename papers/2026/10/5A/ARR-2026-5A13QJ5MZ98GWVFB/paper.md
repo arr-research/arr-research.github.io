@@ -1,0 +1,431 @@
+# Nilpotent noise and complete reverse data processing
+
+Machine-readable extraction of canonical paper.pdf, eight pages, SHA256 96d340e882102bc26c35e3085d99ce9b8e985ef0895ef7d5b2ae63d91d5362c0. The PDF controls mathematical layout.
+
+PAGE 1
+Nilpotent noise and complete reverse data processing
+Lluis Eriksson
+Working draft, 27 October 2026
+Not deposited; manuscript assessment pending
+Abstract
+We give a sufficient criterion for a reverse relative-entropy comparison that remains
+valid after adjoining any finite-dimensional quantum reference. The criterion combines a
+completely positive, trace-nonincreasing nilpotent noise map, complete-positive domination
+on the image of a channel, and an invertible positive output filter. A finite polynomial inverse
+replaces a small-perturbation assumption and gives an explicit dimension-independent
+coefficient. Applications include comparisons between qubit amplitude-damping channels
+and a three-level finite-height noise family. We also construct a rational sequence of
+separable two-qubit states showing that the complete mutual-information contraction
+coefficient of every nonconstant amplitude-damping channel equals one, despite its strict
+ordinary relative-entropy contraction.
+The latter obstruction prevents an automatic
+capacity application based on a strict complete contraction gap. The reverse coefficient is
+not asserted sharp, and no capacity-additivity theorem is inferred.
+1
+Introduction and scope
+A reverse data-processing comparison asks how much distinguishability one channel preserves
+relative to another. Ordinary comparisons optimize over states on the input system. Retaining
+an arbitrary quantum reference is a different requirement. Belzig, Gao, Smith and Wu [1]
+introduce relative expansion coefficients, explain why complete-positive order alone does not
+control the operator argument of the Bogoliubov–Kubo–Mori (BKM) metric, and formulate
+complete comparisons using mutual information. Han and Li [2] give an exact ordinary
+amplitude-damping expansion coefficient; that scalar formula is not a contribution of this
+paper. Iyer, Wu, Belzig and Smith [3] study a wider family of ordinary Riemannian coefficients.
+Reverse comparisons after prior noise also relate to the robustness questions of LaRacuente
+and Smith [6].
+Our criterion handles both the metric base point and its operator argument. The key
+assumptions are an image domination QM ≤cp cM and finite nilpotency Qk = 0. The inverse
+of id +aQ is then a finite polynomial, even when a√c ≥1. The conditions are finite-dimensional
+map conditions: complete-positive domination can be checked on Choi operators. They are
+not an assumed entropy estimate on unbounded reference dimensions.
+We separately distinguish the complete mutual-information coefficient from ordinary
+relative-entropy contraction and from other stabilized coefficients [4, 1]. Hirche, George,
+Nuradha and Wilde [5] identify this mutual-information coefficient with a product-reference
+relative-entropy coefficient; that equivalence is prior work. It differs from coefficients with
+merely equal reference marginals and from conditional coefficients that subtract reference
+distinguishability. A single-qubit reference in a separable two-qubit state suffices for the
+amplitude-damping obstruction below. This does not mean that a fixed nonzero amount of
+information is preserved perfectly: the information in our witnessing sequence tends to zero.
+1
+
+
+PAGE 2
+All Hilbert spaces are finite-dimensional. All logarithms are natural. We do not claim
+a solution of general nonunital-qubit additivity, a sharp complete reverse coefficient, or a
+nondegradable channel with additive quantum capacity.
+2
+Metric comparisons on the positive cone
+For S > 0 and Y = Y ∗define
+gS(Y ) =
+Z ∞
+0
+Tr
+
+Y (S + tI)−1Y (S + tI)−1
+dt,
+∥Y ∥S = gS(Y )1/2.
+(1)
+Neither Tr S = 1 nor Tr Y = 0 is required. For a semidefinite S the form is taken on its support
+when supp Y ⊆supp S. We use the associated real Hilbert norm on Hermitian operators.
+Lemma 1 (Monotonicity and order). Let Φ be completely positive and trace preserving. Then
+gΦ(S)(Φ(Y )) ≤gS(Y ) for every Hermitian Y . The same inequality holds for a completely
+positive trace-nonincreasing map, with the support convention above. If U ≤bV , b > 0, then
+gU(Y ) ≥b−1gV (Y ).
+(2)
+Proof. For a trace-one S, write Y = tS+Y0 with Tr Y0 = 0. The identities gS(S, Y0) = Tr Y0 = 0
+and gS(S) = 1 separate the trace component. Differentiating relative-entropy data processing
+proves monotonicity on Y0; a trace-preserving map preserves the separated trace component.
+Homogeneity handles arbitrary Tr S > 0. For a trace-nonincreasing map append a failure flag
+of weight Tr[(I −Φ∗(I))S] to obtain a channel. The BKM form on its direct-sum output is
+the desired form plus a nonnegative failure-block term. Writing E = I −Φ∗(I), the channel is
+T 7→Φ(T) ⊕Tr(ET). If Tr(ES) = 0, the bound −dS ≤Y ≤dS forces Tr(EY ) = 0, so the
+zero failure block is omitted without a 0/0 term. This construction applies on the entire joint
+space when a reference is present. For full-rank S, −dS ≤Y ≤dS for some d, so Φ(Y ) is
+supported in Φ(S).
+For the order statement use (U + tI)−1 ≥(bV + tI)−1 and substitute t = bu. The required
+integrand comparison does not assume commutation: for positive A ≥B,
+AT ⊗A −BT ⊗B = (AT −BT) ⊗A + BT ⊗(A −B) ≥0.
+Vectorization therefore gives Tr(Y AY A) ≥Tr(Y BY B). For singular U, assume Y is supported
+in U (hence in V ). Compare U + δI ≤bV + δI, integrate, and let δ ↓0. The spectral formula
+for the BKM form gives precisely the support-restricted limits. These are the singular cases
+used below.
+Lemma 2 (Positive congruence). If F > 0 and F 2 ≥mI, then
+gFSF (FY F) ≥m gS(Y ).
+(3)
+Proof. The integrand on the left of (3) is
+Tr
+
+Y (S + tF −2)−1Y (S + tF −2)−1
+.
+Since F −2 ≤m−1I, the integrand is at least its counterpart with S + (t/m)I, by the same
+tensor-order argument as above. Integration gives the factor m. This is a comparison for an
+unnormalized filter; it is not an application of channel data processing to AdF .
+2
+
+
+PAGE 3
+3
+A complete reverse comparison
+We write AdF (X) = FXF for F > 0. The order Φ ≤cp Ψ means that Ψ −Φ is completely
+positive.
+Theorem 3 (Nilpotent image criterion). Let M, N : L(A) →L(B) be channels with M(IA) >
+0. Let Q : L(B) →L(B) be completely positive and trace-nonincreasing, with Qk = 0 for an
+integer k ≥1. Suppose a ≥0, c > 0, F > 0 and m > 0 satisfy
+QM ≤cp cM,
+F 2 ≥mIB,
+N = AdF (id +aQ)M.
+(4)
+Set
+Pk =
+k−1
+X
+j=0
+(a√c)j,
+λ =
+m
+(1 + ac)P 2
+k
+.
+(5)
+For every finite reference R and density operators ρ, σ on A ⊗R with supp ρ ⊆supp σ,
+D((N ⊗idR)(ρ)∥(N ⊗idR)(σ)) ≥λD((M ⊗idR)(ρ)∥(M ⊗idR)(σ)).
+(6)
+Proof. First take a full-rank σ.
+Suppress tensor identities and put S = M(σ) > 0 and
+Y = M(X). Strict positivity follows from σ ≥ϵIA⊗R and M(IA) > 0. For any Hermitian Z,
+complete-positive domination and Lemma 1 give
+gS(QZ) ≤c gQ(S)(QZ) ≤c gS(Z).
+(7)
+Thus ∥Q∥S→S ≤√c, including on nontraceless arguments. Nilpotency supplies the exact
+identity
+(id +aQ)−1 =
+k−1
+X
+j=0
+(−aQ)j.
+Writing Z = (id +aQ)Y , the triangle inequality yields
+∥Y ∥S ≤Pk∥Z∥S.
+(8)
+No convergent infinite Neumann series is used.
+At the base point,
+N(σ) = F(S + aQ(S))F ≤(1 + ac)FSF,
+N(X) = FZF.
+Lemmas 1 and 2, then (8), imply
+gN(σ)(N(X)) ≥
+1
+1 + ac gFSF (FZF)
+≥
+m
+1 + ac gS(Z) ≥λgM(σ)(M(X)).
+(9)
+All map hypotheses and constants survive tensoring with idR. The argument does not impose
+a bound on dim R.
+For full-rank ρ, σ, let X = ρ −σ and σt = σ + tX. The Hessian formula
+D(ρ∥σ) =
+Z 1
+0
+(1 −t)gσt(X) dt
+also holds after either channel. Integrating (9) proves (6). Finally regularize both inputs with
+the same full-rank state. Output relative entropies are finite under the stated input support
+inclusion. Joint convexity gives the matching upper limit for the regularized pairs, while lower
+semicontinuity gives the lower limit. This passes (6) to the original pair.
+3
+
+
+PAGE 4
+Remark 4. The domination in (4) remains a hypothesis of this criterion. Strict positivity of
+M(I) alone is not a reverse data-processing hypothesis. Nor is complete-positive order by
+itself a comparison of the BKM operator arguments. The finite inverse in (8) supplies that
+separate step.
+For channels N, M with the same input, define the complete mutual-information expansion
+coefficient by
+ˇηcb
+MI(N, M) =
+inf
+R,ρAR
+I(R;BM)>0
+I(R; BN)
+I(R; BM).
+(10)
+The corresponding contraction coefficient uses the supremum. These are the mutual-information
+quantities of [1, Definition 7.1]; they are not all interchangeable with stabilized two-state
+coefficients.
+Corollary 5. Under Theorem 3, ˇηcb
+MI(N, M) ≥λ.
+Proof. Apply (6) to ρAR and σ = ρA ⊗ρR. The latter support contains that of ρAR. Each
+output relative entropy is its corresponding mutual information.
+4
+Amplitude damping and a three-level example
+The amplitude-damping channel has Kraus operators
+K0(p) = diag(1,
+p
+1 −p),
+K1(p) = √p |0⟩⟨1|.
+For 0 < p1 < p2 < 1 write si = 1 −pi and d = p2 −p1.
+Corollary 6. For every finite reference and every supported input pair, Theorem 3 holds with
+M = Ap1, N = Ap2 and
+λAD = p1s2
+p2s1
+
+1 +
+d
+√p1s1
+−2
+> 0.
+(11)
+The same lower bound holds in (10).
+Proof. Use
+Q(X) = |0⟩⟨1|X|1⟩⟨0|,
+F = diag(1,
+p
+s2/s1),
+a = d/s1,
+c = s1/p1,
+m = s2/s1.
+Then Q2 = 0 and Q is trace-nonincreasing. On all matrix units, Ap2 = AdF (id +aQ)Ap1.
+Moreover,
+cAp1 −QAp1 = c AdK0(p1)
+is completely positive. Substitution into (5) gives (11).
+For p1 = 1/4, p2 = 1/2 the coefficient is 1 −
+√
+3/2. For p1 = 1/10, p2 = 9/10 it is 1/1089,
+although a√c = 8/3 > 1. Neither endpoint p1 = 0 nor p2 = 1 is included. Han and Li’s
+ordinary coefficient [2, Theorem 4] is p1s2/(p2s1) without the extra denominator. We make no
+assertion that (11) is sharp after adjoining a reference.
+For a three-level example let
+J = |0⟩⟨1| + |1⟩⟨2|,
+Q = AdJ,
+Q3 = 0.
+For b > 0 set
+Db = diag
+ 1, (1 + b)−1/2, (1 + b + b2)−1/2
+,
+Mb = (id +bQ + b2Q2) AdDb .
+4
+
+
+PAGE 5
+The Kraus operators Db,
+√
+bJDb, bJ2Db make Mb a channel, and Mb(I) > 0. The identity
+b−1Mb −QMb = b−1 AdDb
+verifies image domination. For 0 < a < 1 define
+Fa = diag(1,
+√
+1 −a,
+p
+1 −a + a2),
+N = AdFa(id +aQ)Mb.
+This is a channel because F 2
+a + aJ∗F 2
+a J = I. Theorem 3 gives the complete coefficient
+1 −a
+(1 + a/b)(1 + a/
+√
+b + a2/b)2 .
+(12)
+At b = 1/100, a = 1/2, this is 1/98022 and a√c = 5. This example demonstrates finite-height
+noise beyond the qubit case, without claiming an optimal comparison or any capacity formula.
+5
+No strict complete mutual-information contraction for am-
+plitude damping
+The positive reverse comparison above does not imply a strict complete contraction relative to
+the identity.
+Theorem 7. For every 0 < p < 1,
+ηcb
+MI(Ap, id) = 1.
+(13)
+A sequence of rational, full-rank separable states on two qubits attains ratios tending to one.
+Its reference is not classical in any basis.
+Proof. Data processing gives the upper bound one. Let X = σx ⊗σx and, for integers n ≥3,
+put
+xn = 1/n,
+rn = 2−n2,
+ϵn = rn/n2,
+Sn = diag(1 −xn, xn) ⊗diag(1 −rn, rn),
+ρn = Sn + ϵnX.
+All entries are rational, both marginal states are unchanged, and λmin(Sn) = rn/n. Since
+∥X∥∞= 1,
+(1 −1/n)Sn ≤ρn ≤(1 + 1/n)Sn.
+(14)
+In particular ρn is a full-rank state.
+For positive numbers write ℓ(a, b) = (log a −log b)/(a −b), with ℓ(a, a) = 1/a. At the
+product base Sx,r = diag(1 −x, x) ⊗diag(1 −r, r), let s = 1 −p, u = 1 −sx and v = sx. Direct
+evaluation of (1) gives
+gin = 2{ℓ((1 −x)(1 −r), xr) + ℓ((1 −x)r, x(1 −r))},
+(15)
+gout = 2s{ℓ(u(1 −r), vr) + ℓ(ur, v(1 −r))}.
+(16)
+The factor s comes from Ap(σx) = √s σx.
+For fixed x, letting r ↓0 in these forms gives the ratio (1 −x)/(1 −sx). For the particular
+joint sequence xn, rn, the same limit to one is seen directly. Put Tn = n2 log 2 and, for fixed
+d > 0, q = d/n. The sum of the two log means at base populations (1 −q, q) is
+Hn(q) = Tn + log((1 −q)/q) + log(1 −rn)
+1 −q −rn
++ Tn −log((1 −q)/q) + log(1 −rn)
+q −rn
+.
+5
+
+
+PAGE 6
+Since log((1 −q)/q) = log n −log d + Od(n−1), the first term is O(Tn) and the second is
+(n/d)Tn(1 + o(1)). Taking d = 1 and d = s shows
+gin(xn, rn) ∼2n3 log 2,
+gout(xn, rn) ∼2n3 log 2
+for each fixed 0 < s < 1.
+It remains to control the finite mutual informations, rather than merely their Hessians.
+The bounds (14) hold along the segment from Sn to ρn and after applying the channel. Metric
+order and the Hessian integral imply, at input and at output,
+ϵ2
+n
+2(1 + 1/n)g ≤D(ρn∥Sn) ≤
+ϵ2
+n
+2(1 −1/n)g,
+using the appropriate output pair and form in the output expression. These relative entropies
+are the mutual informations because the marginal states are unchanged. Their ratio is at least
+1 −1/n
+1 + 1/n
+gout(xn, rn)
+gin(xn, rn) −→1.
+This proves (13) without interchanging an uncontrolled Taylor approximation and a boundary
+limit.
+To prove separability, abbreviate x = xn, r = rn, ϵ = ϵn and set
+DA = diag(
+√
+1 −x, √x),
+DR = diag(
+√
+1 −r, √r),
+t =
+ϵ
+p
+x(1 −x)r(1 −r)
+∈(0, 1).
+Then
+ρn = (DA ⊗DR)(I4 + t σx ⊗σx)(DA ⊗DR).
+If Pa denotes the σx eigenprojector with eigenvalue a ∈{−1, 1}, the middle operator equals
+P
+a,b(1 + tab)Pa ⊗Pb. All coefficients are positive. Local filtering preserves the separable
+positive cone, giving a separable decomposition of the normalized state. Finally the reference
+marginal has distinct eigenvalues and [ρn, I ⊗(ρn)R] ̸= 0. Every state classical on R commutes
+with its reference marginal, so ρn is not classical on R in any basis.
+Remark 8 (Small information, not perfect transmission). The input mutual information in
+this sequence tends to zero; the above bounds give I(A; R)ρn ∼(log 2) 2−2n2/n. The theorem
+concerns a supremum of ratios. It is not a claim of noiseless transmission of a fixed amount of
+information. At p = 1 the output is constant and the mutual-information coefficient is zero, so
+that endpoint is not part of Theorem 7.
+Ordinary contraction is different: the bound η(Ap) ≤√1 −p < 1 is given in [1, Lemma 6.3].
+For a classical auxiliary the mutual information is an average of relative entropies, so the same
+strict ordinary coefficient controls its contraction. Theorem 7 shows that separable nonclassical
+references can invalidate that strict coefficient.
+For a degradable amplitude-damping main channel with damping γ ∈(0, 1/2), its degrading
+map has damping (1 −2γ)/(1 −γ) ∈(0, 1). Its complete mutual-information contraction
+coefficient is therefore one. Consequently the factor 1 −ηcb
+MI in the sufficient construction
+discussed in [1, Section 7] vanishes. Our positive relative-expansion bound alone does not
+establish the informationally degradable nondegradable example sought by that criterion.
+6
+Verification, limits and review context
+The proofs use finite map identities, BKM monotonicity, operator order and relative-entropy
+data processing. Algebraic checks verify the amplitude and three-level map identities, positivity
+6
+
+
+PAGE 7
+of selected rational witnesses, and the stated example constants. Numerical checks at selected
+correlated base states examine whole finite Hermitian tangent spaces, including nontraceless
+arguments. Neither kind of finite check is a replacement for the universal arguments or a
+certificate of worldwide novelty.
+The standard ordinary coefficient formulas are attributed to their sources. The image
+domination, nilpotency, full-output-support and positive-filter hypotheses of Theorem 3 remain
+restrictions. The result does not address all pairs of channels, arbitrary infinite-dimensional
+references, or a sharp value of the complete coefficient. It does not solve the separate non-GAD
+output-entropy target considered in the author’s earlier working notes.
+Model assessments and review context
+A separate mathematical component audit (audit917, 27 October 2026) was requested with
+configuration GPT-6 Astra, reasoning effort xhigh, on a hash-bound version of the underlying
+argument and checker. Its terminal report found the structural theorem, both channel examples
+and the separable mutual-information obstruction valid under the stated hypotheses, with no
+fatal proof error found. It assigned no numerical grade. The complete report is retained with
+SHA-256 e5ca2f4dc39ca5de352d72e7751bafdb159a2acf359121fb40f650c743444259. The
+audit required broader prior-art attribution, explicit singular-support and failure-flag details,
+and careful separation of coefficient definitions. Those points are incorporated here. Its
+reservations remain: novelty is unresolved; ordinary amplitude-damping positivity and exact
+coefficients are prior work; the complete lower bound is not proved optimal; no capacity
+or additivity theorem follows. A local algebraic issue reported in the rendered proof of an
+antecedent is not used to discredit that antecedent’s proposition or establish priority. The
+requested model identity and effort are not externally attested; the context was separate but
+the filesystem was shared. Independence and runtime isolation are unverified. A component
+audit is not an assessment of this exact PDF. Any subsequent manuscript evaluation must
+be read with its exact-PDF hash, full report, objections and context; no numerical grade is
+asserted here.
+AI and responsibility disclosure
+The named author directed substantial OpenAI Codex assistance in derivation, writing and
+numerical work. The requested component audit used a separate conversational context with
+a shared filesystem. Effective model identity, effort, runtime isolation and independence have
+not been independently attested. No independent human review, Lean formalization, certified
+worldwide originality or predicted assessment score is claimed.
+References
+[1] P. Belzig, L. Gao, G. Smith and P. Wu, Reverse-type Data Processing Inequality,
+arXiv:2411.19890v3 (2025). https://arxiv.org/abs/2411.19890v3.
+[2] J. Han and Y. Li, Convergence Analysis of the Quantum Blahut–Arimoto Algorithm and
+the Contraction Coefficient of Qubit Amplitude-Damping Channels, arXiv:2610.29373v1
+(2026). https://arxiv.org/abs/2610.29373v1.
+[3] S. Iyer, P. Wu, P. Belzig and G. Smith, Quantum f-divergences and Their Local Behaviour:
+An Analysis via Relative Expansion Coefficients, arXiv:2510.06183v2 (2025). https://
+arxiv.org/abs/2510.06183v2.
+7
+
+
+PAGE 8
+[4] C. Hirche, C. Rouz´e and D. Stilck Fran¸ca, On contraction coefficients, partial orders
+and approximation of capacities for quantum channels, Quantum 6, 862 (2022). https:
+//doi.org/10.22331/q-2022-11-28-862.
+[5] C. Hirche, I. George, T. Nuradha and M. M. Wilde, Conditional contraction coefficients
+and their applications to quantum networks, arXiv:2608.27171v1 (2026). https://arxiv.
+org/abs/2608.27171v1.
+[6] N. LaRacuente and G. Smith, Information Fragility or Robustness Under Quantum Chan-
+nels, arXiv:2312.17450v1 (2023). https://arxiv.org/abs/2312.17450v1.
+8
