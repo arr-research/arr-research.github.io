@@ -1,0 +1,183 @@
+AUDITORÍA TÉCNICA 1115 — RÉGIMEN FIJO1110, CONEXIÓN1112, CONTROL1113 Y FRONTERA BINARIA1108
+27 de octubre de 2026. Reconstrucción y falsación; sin evaluación de manuscrito.
+
+0. Alcance, procedencia y dictamen principal
+
+Esta única auditoría examina cuatro paquetes nuevos e inmutables. No evalúa un manuscrito, no asigna nota o voto y no recomienda publicación. No se han creado agentes o chats, leído otros chats, contactado autores, publicado, alterado Git o estado raíz ni modificado los originales o revisiones anteriores. Se reutilizan expresamente contexto y participación942/1077/1093/1100 y el filesystem compartido. Configuración solicitada: GPT-6 Astra xhigh. Modelo, identidad, esfuerzo, independencia e aislamiento efectivos no están atestados. Los controles nuevos no convierten al evaluador ni a su biblioteca heredada en independientes.
+
+Resultado principal: el régimen1110 es correcto para cada n>=3 FIJO y enteros k>=n que tienden a infinito. Las tres divergencias orientadas D_input, D_output y D_binary convergen a log(2), y la retención binaria con denominador CUÁNTICO de entrada tiende a uno. El supremo medido correspondiente es uno, con referencia de dimensión n fija, inputs CQ fieles y separables y una medición binaria sin postselección. No se deduce una igualdad finita, preparación robusta o ventaja de capacidad.
+
+La consecuencia algebraica1112 también es correcta: Phi=N_exclusion tensor id_3 en M_9 no admite una constante estrictamente menor que uno para TODOS los pares fieles con el mismo E. Phi no es primitiva, aunque N sola sí lo es. La lectura natural uniforme en omega del Problem7.3 de Gao-Rouzé queda contradicha por esos pares, pero NO se valida una presentación como resolución nueva de un problema todavía abierto: el texto tiene una ambigüedad real de símbolos, y la afirmación amplia de contracción uniforme en un paso ya tiene contraejemplos clásicos anteriores. Cohen y colaboradores1993, Theorem4.2 y Remark4.3, son un antecedente directo. Además, dentro del propio proyecto, la ausencia de constante uniforme ya seguía del coeficiente H=1 de1100;1110 agrega la lectura binaria y el límite no nulo de divergencia.
+
+1108: la extensión a columnas binarias no negativas es válida con filas totalmente nulas eliminadas, outputs interpretados en su soporte activo, supremo sobre 0<x<1 y límites fieles ordenados. No se conserva una afirmación general de máximo interior o concavidad estricta. La comparación extrema de exclusión ya estaba cubierta por1100 y no es una novedad adicional.
+
+Hallazgos adversos conservados: n=3,k=3 y k=4 no separan del comparador clásico; n=k destruye el límite de retención uno; reemplazar el proyector por su límite da divergencia cero; elegir la orientación contraria pierde el término dominante. El paquete1110 no conserva los bytes malformados que su relato histórico dice conservar: first-control es idéntico al JSON final. Esa discrepancia de procedencia no cambia las fórmulas ni los resultados matemáticos.
+
+1. Entradas, verificación y dependencias
+
+Se verificaron inicialmente los 19 archivos C/D, incluidos cuatro manifiestos, sus tamaños, hashes e inventarios exactos:
+1110 MANIFEST: 87e208b77f4718006224dc70087d049ade3fd844f44d1f6abd3a576711966749.
+1112 MANIFEST: e48f5820911c6a3d10389dfed74950ca3c74e466c9ea0d2c7c094f88d0302578.
+1113 MANIFEST: 0bd4d52299b3ad1234bbe5539c06d9fc7716435f35e3237da00c77f89ed75e5a.
+1108 MANIFEST: 88911553c8448be83440ce5b59c5154d1dca0b800cc878de2ae07f0f17d8aa84.
+PROOF1110: 19cde03492a41b9af2e66045ebaa1301d1050097de74c948e97aae3a9cf5d2b0.
+
+Los recibos INPUT_INITIAL1115 y INPUT_FINAL1115 identifican todos los payloads. check1110 y full1113 se ejecutaron sin cambios en copias propias y regeneraron JSON idénticos. check1108 verificó sus48 filas copiadas sin generar un nuevo archivo. full1113 conserva una lectura absoluta de1110, sólo de lectura. No se ejecutó ningún generador dentro de un paquete congelado. El cierre vuelve a comprobar inputs y copia íntegra C/D.
+
+La geometría simplex, el cálculo de planos, la orientación de la medición y las herramientas Petz/DPI son dependencias reutilizadas de1100/1101. El NUEVO régimen es beta=1/(4nk), delta=2^-k, epsilon=beta delta a n fijo. No se obtiene sustituyendo sin prueba el límite de z fijo y n creciente de1101. La biblioteca entera1077 es una dependencia propia anterior, hash6888e17a28c57aee3a7d99f21c10aad3ccc2115493ced999fcb97fd097fbb853; se declara su linaje compartido.
+
+2. Reconstrucción exacta de los estados, marginales y espectros
+
+Fijar n>=3 y k>=n. En R=C^n, f=(1,...,1)/sqrt(n), F=ff*, P=I-F, psi_i=sqrt(n/(n-1))(e_i-f/sqrt(n)), Pi_i=psi_i psi_i*. Entonces sum psi_i=0, ||psi_i||=1 y sum Pi_i=nP/(n-1). Las fórmulas usan una base ortonormal en cada plano span(psi_i,f), no coordenadas no normalizadas.
+
+Con beta=1/(4nk), delta=2^-k, epsilon=beta delta,
+ alpha=1/n-(n-2)epsilon-beta,
+ c^2=alpha beta(1-delta),
+los bloques subnormalizados son
+ s_i^+/-=alpha Pi_i+epsilon(P-Pi_i)+beta F +/- c(psi_i f*+f psi_i*).
+Cada bloque tiene traza alpha+(n-2)epsilon+beta=1/n. El plano activo tiene determinante alpha beta delta>0; los modos inactivos valen epsilon>0. Puesto que delta<=1/2 y k>=n,
+ alpha >= [1-n/(8k)]/n >=7/(8n)>0.
+También alpha>epsilon. No es válido el primer intento informal de positividad para cualquier k>=1 y cualquier n: n=10,k=1 da alpha=-1/40. El paquete final ya restringe k>=n y reconoce el error; se conserva como antecedente del control, no como un fallo del dominio final.
+
+Los estados rho_+/-=diag_i(s_i^+/-) son normalizados, fieles y separables A:R. La marginal de A es uniforme. La referencia real común se simplifica a
+ r_k=(1-1/(4k))P/(n-1)+(1/(4k))F.
+No es constante en k, ni es un estado puro. Su mínimo es 1/(4k) y su condición exacta es (4k-1)/(n-1) en el dominio usado. La diferencia de las hipótesis suma cero en R porque sum psi_i=0. El unitario I-2F en R intercambia las hipótesis; es una fase pi generada por F de norma uno sobre LA REFERENCIA, no sobre el alfabeto clásico ruidoso.
+
+La canal N dephasa A y aplica K(j|i)=(1-delta_ji)/(n-1). Por tanto el bloque de salida j es (r_k-s_j)/(n-1). Su plano activo tiene diagonales
+ a'=[alpha+n(n-2)epsilon]/(n-1)^2, beta,
+y coherencia +/-lambda c, lambda=-1/(n-1). El modo inactivo es
+ e'=[n alpha+(n^2-3n+1)epsilon]/(n-1)^2>0.
+Su determinante activo es exactamente
+ a'beta-lambda^2 c^2 = beta delta[alpha+n(n-2)beta]/(n-1)^2 >0.
+
+Los modos mínimos y máximos se controlan globalmente. Para h_in>l_in, l_in=alpha beta delta/h_in<epsilon, porque h_in>alpha. Así l_in es el mínimo global y h_in el máximo. En salida, el polinomio característico evaluado en epsilon es
+ (a'-epsilon)(beta-epsilon)-lambda^2 c^2=-epsilon beta(1-delta)/(n-1)^2<0,
+de modo que l_out<epsilon<h_out. Además
+ e'-(a'+beta)=(alpha-epsilon)/(n-1)-beta>0
+para k>=n. Por ello l_out es también mínimo global, y e' es mayor que h_out. Seleccionar los n autovectores mínimos de la matriz completa de salida equivale aquí al proyector activo de cada etiqueta; esto no debe generalizarse sin comprobar el orden de modos.
+
+Para un plano W_+/-=[[a,+/-c],[+/-c,b]], el logaritmo es una combinación de I y W con coeficiente ell=(log h-log l)/(h-l). La diferencia de signos da D(W_+||W_-)=4c^2 ell. Sumando n bloques subnormalizados, sin descartar ni renormalizar complementos,
+ D_in=4nc^2 log(h_in/l_in)/(h_in-l_in),
+ D_out=4n lambda^2 c^2 log(h_out/l_out)/(h_out-l_out).
+Los modos inactivos coinciden entre hipótesis y no aportan divergencia. Las trazas totales son iguales; no falta un término de normalización. Estos D cuánticos son simétricos para este par particular por conjugación unitaria, aunque Umegaki no lo sea en general.
+
+3. Efecto binario y límites a n fijo
+
+En la etiqueta de salida j se elige el proyector E_j del autovalor menor del bloque MENOS. Es (h_out Q_j-W_j^-)/(h_out-l_out), Q_j=Pi_j+F, extendido por cero fuera del plano. La medición completa tiene efectos E=diag_j E_j e I-E. Es una operación local sobre R controlada por la etiqueta clásica de salida, realizable con comunicación clásica en un sentido, sin postselección ni operación entrelazante A:R. Se conocen de antemano el par, n y k; no se conoce el signo de la hipótesis.
+
+Con la orientación rho_+||rho_-,
+ q=Tr(E N(rho_-))=n l_out,
+ p=Tr(E N(rho_+))=n[l_out+4lambda^2c^2/(h_out-l_out)].
+Los complementos son 1-q y1-p sobre TODA la matriz. D_bin=p log(p/q)+(1-p)log((1-p)/(1-q)). No se reemplaza l_out por q, ni se usa un denominador clásico distinto de D_in. El canal y la medición satisfacen D_bin<=D_out<=D_in. La medición sólo de A o sólo de R tiene divergencia cero por las marginales iguales.
+
+A n fijo, alpha->1/n, beta~1/(4nk), c^2~1/(4n^2k), epsilon=beta delta. Los gaps activos permanecen alejados de cero:
+ h_in,g_in ->1/n; h_out,g_out ->1/[n(n-1)^2].
+Usando l=det/h, l_in/(beta delta)->1 y l_out/(beta delta)->1. En particular,
+ log(h_in/l_in)=k log2+log(4k)+o(1),
+ log(h_out/l_out)=k log2+log(4k)-2log(n-1)+o(1).
+Los prefactores satisfacen
+ k(4nc^2/g_in)->1 y k(4n lambda^2c^2/g_out)->1.
+Multiplicar estas expresiones demuestra D_in->log2 y D_out->log2. Las correcciones de orden1/k en prefactores no alteran el límite; no se requiere intercambiar límites ni evaluar un logaritmo singular.
+
+También kp->1 y (4k2^k)q->1, por lo que
+ log(p/q)=k log2+log4+o(1).
+Entonces p log(p/q)->log2 y el término complementario de Bernoulli, O(p), tiende a cero. Se obtiene D_bin->log2, D_bin/D_in->1 y D_bin/D_out->1. Todo ocurre en dimensión n^2 fija. La referencia n fija basta; no se demuestra su minimalidad.
+
+Definiendo el coeficiente medido como el supremo de D(M N(rho)||M N(sigma))/D(rho||sigma), sobre pares fieles con igual R y mediciones binarias, DPI da upper1 y la familia da lower arbitrariamente cercano a1. Por tanto el supremo es1. El mismo lower está en la clase CQ separable. No se afirma un maximizador fiel ni que un único efecto independiente de k alcance el supremo. Tampoco se modifica el teorema dimensional de1101, donde las divergencias sí desaparecían.
+
+4. Recursos, falsadores y cambios ilegítimos de límites
+
+La condición de entrada es h_in/l_in~4k2^k. La condición de salida usa e', no h_out: e'->1/(n-1)^2 y cond(output)~4nk2^k/(n-1)^2. La condición de la referencia crece sólo linealmente en k. La distancia de traza semiajustada es exactamente TV_quantum,input=2nc~k^-1/2 y TV_quantum,output=2nc/(n-1). La TV de los resultados binarios es p-q~1/k. Todas tienden a cero, mientras sus divergencias orientadas tienden a log2. No contradice Pinsker: una cota inferior por TV^2 no es una continuidad uniforme superior cerca de estados singulares.
+
+La medición depende de k. Aunque E_j converge al flag F, reemplazarla por ese límite produce p=q=n beta=1/(4k) y D_bin=0 EXACTAMENTE. La proximidad operatorial del efecto no conserva una probabilidad exponencialmente pequeña. La cancelación que produce q es esencial. Si se escoge el menor autovector de la hipótesis PLUS pero se conserva la orientación PLUS||MINUS, se intercambian las dos probabilidades: D(Ber(q)||Ber(p))~1/k y su razón con D_in tiende a cero. El intercambio simultáneo de efecto e hipótesis sería otro protocolo, no ese error de orientación.
+
+El límite NO es uniforme en n. Una secuencia permitida como conjunto de parámetros pero ajena al teorema de n fijo es n=k->infinito. Entonces beta~1/(4n^2), h_out~beta, en lugar de n^-3; el prefactor de salida es ~4/n^2. Se obtiene D_in->log2, D_out~4log2/n y D_bin~4log2/n, y la retención medida tiende a cero. Los controles n=k=10,32,100,300 conservan este deterioro; en n=k=300 la retención es0.012565670669... . No se usa el mero hecho k>=n para afirmar cercanía uniforme auno.
+
+La escala exponencial delta también importa. Si a n fijo se pusiera delta=k^-s y epsilon=beta delta, s>0 fijo, las mismas fórmulas dan D_in~(s+1)log k/k, D_out con el mismo término principal y D_bin~s log k/k. Las divergencias desaparecen y la retención medida tiende a s/(s+1), no auno. Este es un falsador analítico de una sustitución libre de regularización, no un contraejemplo a delta=2^-k.
+
+Los nueve casos originales superan el comparador1/(n-1). Eso no vale para todos los k>=n pequeños: los nuevos intervalos dan, para n=3,k=3, retención0.426840702479415...<1/2 y, para k=4,0.473044683999334...<1/2. k=5 sí da0.511585279273244... . No se reivindica un umbral general demostrado a partir de esa lista. Se mantienen los negativos.
+
+En n=3,k=256, se certifican D_in=0.719523712124522874..., D_out=0.712039140956854833..., D_bin=0.691946754790154613... y retención0.961673316848804960... . A k=768 la retención es0.984891445481220558... . Son razones físicas, no notas. Los extremos enteros, y no estos decimales de presentación, certifican los signos.
+
+La probabilidad q~2^-k/(4k) exige cautela operacional. Estimar q directamente con precisión relativa por frecuencias tiene escala de espera1/q; observar el evento bajo PLUS tiene escala1/p~k. Esto NO prueba que toda estrategia de discriminación necesite un número exponencial de copias. La precisión de preparación y del proyector, las hipótesis conocidas y la certificación del denominador cuántico siguen siendo recursos. No se prueba complejidad óptima. Un límite de divergencia no nulo no equivale a un protocolo de un solo disparo con error pequeño cuando la TV desaparece, ni autoriza intercambiar k con el número de copias de un teorema de Stein. No hay aumento de capacidad, información mutua ordinaria, código de tasa positiva ni robustez experimental demostrada.
+
+5. Phi en M_9 y alcance exacto de la conexión1112
+
+Para n=3, N sobre A admite Kraus |y><x|/sqrt2, x!=y. Amplificando por I_R se obtiene Phi sobre M_9, CPTP, unital y autoadjunta en HS. Es GNS-simétrica para I_9/9. Con Pin la dephasación de A,
+ E(T)=I_A/3 tensor Tr_A T, Q=Pin-E, O=I-Pin,
+son proyecciones ortogonales en HS y Phi=E-Q/2. Así su espectro y multiplicidades son1:9, -1/2:18, 0:54. Se comprobaron literalmente las matrices HS81x81 y el Choi, cuyo espectro no nulo es3/2 con multiplicidad6 (convención Choi no normalizado). Phi^2=E+Q/4 y Phi^m->E.
+
+El álgebra preservada es I_A tensor M_R. Es también el dominio multiplicativo: para una canal unital con traza fiel preservada, igualdad en Schwarz implica igualdad de norma HS; los únicos modos isométricos aquí son los de eigenvalor1. Phi NO es primitiva. N sobre M_3 sí es primitiva: su segunda potencia envía todo estado no nulo a una diagonal estrictamente positiva. No se debe llamar primitiva a Phi por una propiedad de N.
+
+Los pares1110 satisfacen E(rho_+)=E(rho_-)=I_A/3 tensor r_k y producen D(Phi rho_+||Phi rho_-)/D(rho_+||rho_-)->1. Por tanto es falso que exista alpha(Phi)<1 para TODOS esos pares de referencia común, uniformemente en el segundo estado y su marginal. El canal y el espacio son fijos; no se escapa mediante dimensión creciente. La E común varía con k y se acerca al borde. La secuencia no mantiene fijo un segundo estado fiel omega, un piso espectral de los estados, ni un valor E común fiel fijo. No refuta por sí sola una afirmación restringida a esos dominios para esta Phi.
+
+No hay contradicción con contracción hacia E(rho): esa comparación usa otro segundo argumento. Tampoco hay contradicción con contracción de potencias. Para Phi^2, la canal clásica tiene lambda=1/4; por1100, H_3(1/4)=1/10 para los pares con el mismo E, con lower en la misma referencia3. Una constante de un paso igual auno es compatible con una de dos pasos estrictamente menor.
+
+El artículo publicado de Gao-Rouzé2022 pregunta en Problem7.3 (pp228-229) por una constante uniforme; el preprint2102.04146v3 lo numera Problem8.3 (p59). Ambos pasajes mezclan rho,sigma y omega. El Theorem4.1 leído sí compara rho con omega fiel y exige E(rho)=E(omega); su control depende de la referencia y del orden relativo. La interpretación coherente es uniformizar esa comparación al variar omega. Con esa lectura,1110 es un contraejemplo válido. La redacción literal del problema no fija inequívocamente la relación de sigma con omega; no se basa una proclamación de resolución en explotar esa errata. Una lectura que fija el segundo estado completo no queda resuelta por esta secuencia.
+
+Pero el enunciado AMPLIO de ausencia de contracción uniforme en un paso no es nuevo. Cohen et al1993 prueban que el coeficiente clásico estricto equivale a ser scrambling; su Remark4.3 da matrices primitivas con coeficienteuno. El argumento consiste en columnas de soporte disjunto y regularización fiel. Para conservar además simetría GNS, esta auditoría comprueba un ejemplo propio elemental: la caminata simétrica en el ciclo de5vértices, C_ij=1/2 si i-j=+/-1 mod5. C^4 es estrictamente positiva, de modo que la extensión cuántica dephasante sobre M_5 es primitiva, unital y HS-simétrica. Las columnas0 y1 tienen soportes disjuntos. Las distribuciones p=(3/4,1/4,0,0,0), q=(1/4,3/4,0,0,0) conservan exactamente D=(log3)/2 bajo C. Mezclar ambas con la misma distribución uniforme positiva y dejar su peso tender a cero da pares fieles de retención tendiendo auno. Su E es el reemplazo uniforme, igual para todos los estados.
+
+Ese ejemplo clásico de OTRA canal muestra por qué no puede venderse la afirmación amplia como primera resolución, ni siquiera por añadir primitividad o simetría sin otra hipótesis de un paso. NO significa que1110 haya probado algo sobre una Phi primitiva: la Phi1112 sigue siendo no primitiva. Tampoco es un falsador de una cota para la Phi específica con referencia fija. La distinción se mantiene entre el ejemplo clásico anterior y la construcción nueva auditada.
+
+Lo que no cubre automáticamente el ejemplo clásico es la combinación específica: N_exclusion tiene coeficiente ordinario1/2 en n=3, todas sus subcanales binarias también1/2, y sin embargo una referencia cuántica común permite la retención medida cercana auno. El antecedente reduce el alcance de novedad de1112, pero no sustituye el análisis de1110. No se afirma que el Problem7.3 siga abierto en2026, ni primera resolución, ni cobertura bibliográfica exhaustiva.
+
+6. Extensión binaria1108, incluidos soportes y endpoints
+
+Sea K de dos entradas, columnas a_y,b_y>=0 con sum a=sum b=1. Eliminar filas a_y=b_y=0 es restringir al soporte de salida común; no se pierde divergencia. Para estados fieles CQ de dos bloques con referencia igual, las diferencias son Delta y -Delta. En un resolvente Petz, escribir A=L_rho0+uR_sigma0, B=L_rho1+uR_sigma1. Son definidos positivos en TODO HS complejo; para el endpoint cuadrático se usan R_sigma0,R_sigma1, y para SLD sus operadores J. Si a_y+b_y>0, a_y A+b_y B es definido positivo, aunque uno de los coeficientes sea cero.
+
+Con C=A+B y X=C^(-1/2) A C^(-1/2), se tiene0<X<I. El input es la forma de X^-1+(I-X)^-1 sobre Z=C^-1/2 Delta. El output es la forma de
+ sum_y (a_y-b_y)^2[b_y I+(a_y-b_y)X]^-1.
+Ambas funciones del mismo X se diagonalizan simultáneamente; ninguna exigencia de conmutación de los estados se ha introducido. El cociente escalar en un eigenvalor0<x<1 está acotado por
+ c(K)=sup_(0<x<1) x(1-x) sum_active_y (a_y-b_y)^2/[b_y+(a_y-b_y)x].
+Esto prueba el upper operatorial para los resolventes y extremos. La representación positiva de f conserva c(K). El mismo razonamiento cubre SLD/minchi. Se dephasa la entrada general antes de aplicar la prueba CQ.
+
+El lower usa referencia escalar, una fuente binaria fiel x y una perturbación local fiel. Para cada x interior, todos los outputs activos son positivos. El desarrollo de cualquier f operator-convexa normalizada no afín tiene f''(1)>0 y reproduce F(x). Primero se toma el límite de perturbación, después el supremo de x. Así se obtiene igualdad para CADA f de esa clase, además de SLD/minchi. Este enunciado es binario y no se traslada a tres columnas ni al lower1110 para todos los Petz.
+
+Para inputs no fieles con divergencia positiva finita, comprimir R al soporte de su marginal común r y usar rho_e=(1-e)rho+e(I_A/2 tensor r), sigma_e=(1-e)sigma+e(I_A/2 tensor r). Son fieles en ese soporte y conservan la referencia. Convexidad conjunta da limsup D_in,e<=D_in y semicontinuidad inferior da la desigualdad inversa. Aplicando el upper a cada e y semicontinuidad a la salida se obtiene el upper en el borde. Nunca se divide infinito/infinito o cero/cero. La extensión singular de chi mínimo se trata como la perspectiva cuadrática semicontinua; el enunciado métrico SLD se mantiene sobre bases fieles salvo definir explícitamente su dominio tangente singular.
+
+En dos salidas, con columnas(a,1-a) y(b,1-b), la fórmula previa
+ c=(sqrt(a(1-b))-sqrt(b(1-a)))^2
+continúa hasta0<=a,b<=1. Los bordes se comprueban directamente: b=0 da c=a y F(x)=a(1-x)/(1-ax), cuyo supremo para0<a<1 sólo se aproxima al ir x->0. a=1 da c=1-b; a=b da0; a=1,b=0 da1 con F constante. La frase informal «endpoint1» debe entenderse en este último borde perfecto, no como c=1 para cualquier a=1. No se reutiliza concavidad estricta ni máximo interior. En particular(.9,.2) sigue dando1/2, no el valor local49/99.
+
+La restricción binaria de la exclusión conserva exactamente D_out=D_in/(n-1) para pares CQ con referencia común: dos outputs contienen los bloques individuales escalados y los demás contienen r/(n-1) bajo ambas hipótesis. Es homogeneidad y suma directa; ya estaba reconstruido en1100. Esta parte no depende de la extensión general con ceros ni del límite1110. La etiqueta binaria de hipótesis U en Hirche et al es distinta del número de símbolos de entrada A.
+
+7. Lecturas primarias y límites bibliográficos
+
+READINGS1115 registra URLs, versiones, hashes cuando los bytes fueron obtenidos y niveles efectivos de lectura. Sólo se conservan síntesis propias, controles y recibos, no corpus extranjero. Búsqueda dirigida; ningún resultado vacío se usa como prueba de prioridad.
+
+Gao-Rouzé: publicación DOI10.1007/s00205-022-01785-1, pasajes de pp206-210 y228-229 consultados mediante extracción web (no lectura íntegra de todas esas páginas), y preprint2102.04146v3,69p, SHA dbed458476506cf97c9f48f6096282c98cb9df77056c3320ae55f44b36d06219. Se leyeron directamente en v3 pp14,15,22-24,59: definiciones, parte de Lemma2.5, Theorem4.1 y prueba, Corollary4.3 y Problem8.3. No se auditó todo el artículo. La descarga local del PDF publicado devolvió429; el intento de imagen de la página también falló429. No se inventa hash del PDF publicado ni se eluden controles. La lectura paralela HTML/PDF-text y v3 conserva la ambigüedad de símbolos; no se afirma comprobación visual de la página.
+ https://d-nb.info/1265446733/34
+ https://link.springer.com/article/10.1007/s00205-022-01785-1
+ https://arxiv.org/pdf/2102.04146v3
+
+Cohen-Iwasa-Rautu-Ruskai-Seneta-Zbaganu1993, Relative Entropy Under Mappings by Stochastic Matrices, LAA179:211-235, DOI10.1016/0024-3795(93)90331-H. PDF de autor25p, SHA26b9106ddb2484d7576505ce847d885a148db95e0502fb5736857bdbe6584ebd. Se leyeron pp212-214,220-221: definiciones, Theorems4.1/4.2 y prueba de4.2, Remark4.3. La matriz impresa del ejemplo de4.3 no se reconstruyó desde su extracción deteriorada; la prueba general de soportes disjuntos sí fue legible y el ciclo5 de esta auditoría se verificó aparte. Cubre la obstrucción clásica amplia a contracción estricta de un paso y la distinción respecto de primitividad. No cubre por sí solo referencia cuántica común para la canal de exclusión.
+ https://lab.rockefeller.edu/cohenje/assets/file/205CohenIwasaRautuRuskaiSenetaZbaganuRelativeEntropyMappingsStochasticMatricesLAA1993.pdf
+
+Tan-Tomamichel-George2605.06452v1,7p, SHA7755bdf0191fcd0fb6a2edb6edefd85f13e8264934ef820d6d7cd9ea97b90cb9. Lectura efectiva pp1-4, incluida Definition3, Definition8, Proposition1 y Theorem5 con prueba; Theorem9 enunciado y comienzo de prueba. El intento de mostrar las siete páginas se truncó: no se declara lectura completa de las partes no visibles. Su resultado controla tasas asintóticas de POTENCIAS de una canal primitiva respecto de su punto fijo fiel. No es el cociente de un paso entre dos estados variables de1110, y Phi1112 no es primitiva. No se usa esa diferencia como certificado de novedad.
+ https://arxiv.org/pdf/2605.06452v1
+
+Se reutilizan las lecturas1100/1093/1077: Gao-Junge-LaRacuente-Li2025 Definition5.1 y Theorem4.8, comparación contra E(rho); Hirche-George-Nuradha-Wilde2608.27171v1, definiciones completas/condicionales, Theorem2 y Corollary2, equivalencia con hipótesis binaria y ejemplo qubit; Berta-Fawzi-Tomamichel1512.02615v2 Proposition5 y prueba, desigualdad estricta medida<Umegaki para pares fieles no conmutantes; Hiai-Ruskai1508.03551v1, representación Petz y endpoints; Makur-Zheng1510.01844v4 y Ordentlich-Polyanskiy, antecedentes clásicos. Las lecturas son seleccionadas y su procedencia reutilizada se explicita. No se afirma una lectura nueva integral de todos esos textos. Lee-Makur2024 continúa sin lectura completa de fórmula/prueba en este encargo.
+
+Las preguntas históricas no se certifican abiertas hoy. La conexión1112 debe presentarse como comparación de dominios y una obstrucción concreta, sin proclamar resolución original. El contenido específico superviviente de1110 es una realización explícita y acotada en dimensión de la combinación de referencia cuántica, canal clásica de coeficiente ordinario<1, lectura binaria y divergencias no nulas. Es una nueva elección de escalas sobre identidades ya disponibles en el estudio, no un nuevo DPI, principio de medida, fenómeno general de discontinuidad ni teorema clásico. No se identificó un antecedente que cubra literalmente toda esa combinación en los pasajes leídos; eso no demuestra ausencia ni prioridad.
+
+8. Controles, incidentes y auditabilidad
+
+REPLAY1115 reproduce los nueve intervalos1110 y tres controles1113 de9x9 a400decimales con salidas idénticas; verifica las48 filas1108. Estas últimas son comprobaciones escalares de exclusión y por sí solas NO prueban la extensión binaria general.
+
+EXACT1115 incorpora cinco identidades simbólicas generales, el mapa HS81x81 y Choi de Phi9, el ciclo clásico5 con C^4>0 y columnas disjuntas, y36 controles operatoriales EXACTOS en HS complejo4-dimensional. Se usaron seis canales binarias (constante, perfecta con fila nula, dos Z, erasure y(.9,.2)), cuatro resolventes más endpoint cuadrático y SLD. Se comprobaron todos los menores principales de la diferencia operatorial, no sólo una dirección tangente real. Hay bloques no conmutantes y coherencias imaginarias. Los casos de igualdad se conservaron como matrices de gap cero. Estos controles no sustituyen la demostración general de la sección6.
+
+INTERVAL1115 recomputa a2048bits/1200términos los nueve originales; los cuatro valores comparados por caso están contenidos en los intervalos sellados. Incluye once casos adicionales fijados en el script: k pequeños, k768 y n=k. Se conservan dos negativos. La biblioteca usa aritmética entera dirigida, raíces isqrt y serie atanh con resto; sólo se cambiaron explícitamente precisión y número de términos respecto1077. No es una implementación independiente ni prueba universal.
+
+AMBIENT1115 construye matrices completas COMPLEJAS9x9 y16x16 a210dígitos, con una rotación unitaria racional de R. Cinco casos: (n,k)=(3,3),(3,8),(3,256),(4,4),(4,16). Calcula logaritmos matriciales completos y el efecto desde los n autovectores menores de la salida completa, sin usar la fórmula de plano para construirlo. Se comprueban marginales, trazas, idempotencia, positividad, orientación y coincidencias con errores <10^-115. Incluye el adverso3,3. Es diagnóstico de precisión alta, no certificado de intervalos independiente.
+
+Procedencia histórica1110: la entrada afirma que conservó una salida inicial con un literal backslash-n erróneo. El análisis de bytes prueba que first-control1110.json.txt es IDÉNTICO a CONTROL1110.json, SHA68074cbf58cf3daf1fe560a1a0683cd0ac9e688af4ce1e363b774b097d828c01, y ambos son JSON válidos. La diferencia entre los dos scripts sellados es únicamente eliminar except_placeholder=0; ambos ya serializan el salto de línea correctamente. Por tanto el relato del incidente se conserva, pero los bytes malformados originales no están acreditados por el paquete. HISTORY1115 y HISTORY_DIFF1115 documentan esa discrepancia, sin modificar inputs ni inventar su causa.
+
+Otros incidentes: HTTP429 para el PDF publicado y para la captura de página; truncamiento de una salida extensa de literatura, corregido por lectura seleccionada posterior y niveles explícitos; el bound inicial para todo k fue restringido antes del sellado. No hubo fallo matemático en los nuevos scripts ejecutados, ni cambio de parámetros tras los dos casos adversos. No hubo reinicio para favorecer el resultado.
+
+9. Afirmaciones técnicamente disponibles y afirmaciones no avaladas
+
+Disponibles con el dominio expreso: construcción fiel1110 para n>=3 fijo,k>=n; las tres divergencias ->log2; coeficiente binario medido con denominador cuántico igual auno como supremo; separabilidad y feedforward sin postselección; costes espectrales y probabilidades; Phi9 con espectro y E declarados; inexistencia de una constante uniforme de un paso para todos sus pares de E igual; compatibilidad con contracción hacia E y Phi^2 de coeficiente1/10; extensión binaria1108 con ceros, soporte activo, supremo y regularización común.
+
+No avaladas: un máximo fiel; efecto fijo independiente de k; uniformidad en n o escalas arbitrarias; separación para todo k>=n; refutación por1110 de un resultado con segundo estado fijo o piso espectral fijo; llamar primitiva a Phi9; contradicción a teoremas de potencias/punto fijo; igualdad1110 para todos los Petz; costes experimentales óptimos o gratuitos; capacidad o MI ordinaria; presentar la obstrucción amplia a contracción como nueva o como primera solución del Problem7.3; afirmar que dicho problema sigue abierto; prioridad del resultado específico a partir de búsquedas vacías; afirmar conservación de bytes históricos ausentes.
+
+La entrega incluye verdict1115 por componentes, controles, lecturas, procedencia, incidentes y manifiesto. El estado terminal sólo se comunica tras la segunda verificación de entradas y la igualdad recursiva de todos los archivos C/D, incluido el recibo de cierre. Se conserva la copia C por el requisito explícito de entrega idéntica; nada queda únicamente allí.

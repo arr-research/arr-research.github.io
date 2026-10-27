@@ -1,0 +1,1 @@
+The complete224-file exact1127 packet is preserved byte-for-byte. Run exact1127/reproduce.py with a new external work directory. Original manifests include all original files. Reviewer-specific controls and failure records are in ../screening/review1128.

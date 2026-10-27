@@ -1,0 +1,30 @@
+from pathlib import Path
+import sympy as s,json
+P=Path(__file__).parent;n,l,xi=s.symbols('n lambda xi',positive=True);Q=s.Rational
+w0=(1+(n-1)*l)/n;w=(1-l)/n;H=(n-1)*l*l/(1+(n-2)*l);B=n*l*l/(2+(n-2)*l)
+a=(1-xi)/n+xi/n**2;b=xi/n**2;ap=(1-xi)*(1+(n-2)*l)/(n*(n-1))+b
+assert s.factor(1-n*n/(1/w0+(n-1)/w)-H)==0
+assert s.factor(ap-l*l*a-((1-xi)*(1-l)*(1+(n-1)*l)/(n*(n-1))+b*(1-l*l)))==0
+R=l*l*(a+b)/(ap+b);ep=s.factor(R.subs(l,-1/(n-1)))
+assert s.limit(ep,n,s.oo)==0
+c=s.symbols('c',positive=True);assert s.limit(ep.subs(xi,c/n),n,s.oo)==1/(1+2*c)
+# Threshold for triangular finite separation at the exclusion endpoint.
+gap=s.factor(ep-1/(n-1));threshold=s.solve(s.together(gap),xi)[0]
+# Independent regularization geometry scalar identities.
+al,be,ee,de=s.symbols('alpha beta epsilon delta',positive=True);lam=-1/(n-1);apo=(al+n*(n-2)*ee)/(n-1)**2;epo=(n*al+(n*n-3*n+1)*ee)/(n-1)**2;co2=al*be*(1-de)
+assert s.factor(apo*be-lam**2*co2-lam**2*be*(al*de+n*(n-2)*ee))==0
+assert s.factor((n-1)*epo-(n*(al+(n-2)*ee)/(n-1)-ee))==0
+rows=[]
+for N in (3,4,5):
+ I=s.eye(N);u=s.ones(N,1);U=I.copy();U[:2,:2]=s.Matrix([[Q(3,5),4*s.I/5],[4*s.I/5,Q(3,5)]]);assert U.conjugate().T*U==I
+ f=U*u/s.sqrt(N);F=f*f.conjugate().T;PP=I-F;vs=[U*(I[:,j]-u/N) for j in range(N)];psis=[s.sqrt(Q(N,N-1))*v for v in vs]
+ assert s.simplify(sum(vs,s.zeros(N,1)))==s.zeros(N,1)
+ assert s.simplify(sum((v*v.conjugate().T for v in vs),s.zeros(N))-PP)==s.zeros(N)
+ assert s.simplify(sum((v*v.conjugate().T for v in psis),s.zeros(N))-Q(N,N-1)*PP)==s.zeros(N)
+ X=Q(1,100);T=Q(1,1000);S=[(1-X)*v*v.conjugate().T/(N-1)+X*I/N**2 for v in vs];Ds=[U*u*v.conjugate().T+v*(U*u).conjugate().T for v in vs]
+ assert s.simplify(sum(Ds,s.zeros(N)))==s.zeros(N)
+ for M in [a+T*d for a,d in zip(S,Ds)]+[a-T*d for a,d in zip(S,Ds)]:
+  assert M==M.conjugate().T and all(s.simplify(M[:k,:k].det())>0 for k in range(1,N+1))
+ rows.append({'n':N,'complex_rotation_unitary':True,'simplex_frame_exact':True,'common_reference_exact':True,'faithful_inputs_exact':True})
+result={'harmonic_identity':True,'output_positivity_factorization':str(s.factor(ap-l*l*a)),'finite_endpoint_ratio':str(ep),'finite_endpoint_gap':str(gap),'triangular_endpoint_threshold_xi':str(threshold),'fixed_xi_limit':0,'xi_c_over_n_limit':'1/(1+2c)','measurement_determinant_identity':True,'complex_geometry':rows,'correction1101':{'false_wording':'epsilon much smaller than beta is needed','counter':'z=1/2 gives epsilon/beta=n^(1/2), yet statedfixed-z asymptotics remainvalid','sufficient_condition_for_mainoutputconstants':'n(n-2)epsilon=o(alpha*delta), equivalently epsilon=o(n^(-z-3)) in these scales','not_sufficient':'z4,epsilon=n^-6 <<beta=n^-5 gives output/input->5/8,measured/input->3/8, not3/4 and1/2'},'passed':True}
+(P/'SYMBOLIC1100.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8');print('Symbolic and3complexgeometry controls passed;threshold',threshold)

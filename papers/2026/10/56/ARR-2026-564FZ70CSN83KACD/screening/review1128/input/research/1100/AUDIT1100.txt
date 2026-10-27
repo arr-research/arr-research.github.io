@@ -1,0 +1,242 @@
+AUDITORÍA TÉCNICA 1100 — ESTUDIO CONECTADO SIMPLEX 1096 / 1099 / 1101
+27 de octubre de 2026. Informe de falsación y reconstrucción por componentes.
+
+0. Encargo, procedencia y resultado principal
+
+Esta es una auditoría técnica de tres paquetes congelados, no una evaluación de manuscrito, una recomendación editorial, un voto ni una nota. No se leyó ni modificó el manuscrito 1083, 1060 u otro manuscrito para este encargo. No hubo agentes nuevos, otras auditorías en paralelo, contactos con autores, publicación ni cambios de Git o estado raíz.
+
+Se reutilizan expresamente el contexto de participación 942/1077/1093 y el filesystem compartido con ROOT. La configuración solicitada fue GPT-6 Astra xhigh; no se dispone de atestación de identidad, modelo, esfuerzo, independencia o aislamiento efectivos. La aritmética de intervalos desciende de la biblioteca propia 1077: no constituye una implementación independiente de esa biblioteca. Los controles ambientales nuevos usan otra construcción matricial, pero eso no implica independencia del evaluador.
+
+Los 21 archivos de entrada, incluyendo los tres manifiestos, fueron verificados en C y D antes del trabajo. Los recibos inicial/final identifican cada payload, longitud y SHA256. Se ejecutaron copias propias de los tres checkers sin alterar sus bytes; los tres JSON resultantes son idénticos a los sellados. Los originales permanecen intactos. La entrega incluye un manifiesto y un recibo de cierre C/D; la condición terminal exige su igualdad verificada.
+
+Resultado: la reconstrucción sostiene el núcleo matemático de 1096 en el dominio declarado: el coeficiente completo con referencia igual es
+
+ H_n(lambda)=(n-1)lambda^2/[1+(n-2)lambda]
+
+para SLD, chi-cuadrado mínimo, Petz triangular, BKM y Umegaki. La cota superior H vale para cada generador Petz operator-convexo normalizado no afín; no se deduce de ello igualdad para todos esos generadores. El argumento funciona para cualquier referencia finita y la familia inferior utiliza dimensión n. El resultado clásico B_n es previo.
+
+La construcción finita y la medición de 1101 son correctas. Los límites para cada z>0 FIJO también sobreviven. Hay una corrección sustantiva de redacción matemática: la frase «epsilon much smaller than beta is needed» es falsa como necesidad y no da una condición suficiente. Debe sustituirse por la comparación relevante entre las dos contribuciones al determinante de salida, especificada en la sección 7. La corrección no invalida la familia declarada ni sus nueve certificados.
+
+No se encontró un falsador del upper o de las igualdades principales. Se conservaron tres pares Umegaki originales que NO separan del coeficiente clásico, tres casos adversos adicionales de medición, un fallo propio de control simbólico y los límites de acceso/lectura. Se refutan extensiones sobre escalas intercambiables, uniformidad en z y separación automática de cada par finito. No se ha establecido prioridad ni una ausencia de teoremas cubrientes.
+
+1. Entradas y definición literal del problema
+
+1096: MANIFEST1096 c3d1846c3291390de2e5d76f81a1538ce8a19ef1947c52122c8bb4f434d80b34;
+PROOF1096 72afb9a1c90aa3009f13d4ab528b1ecae557a46abce33dc02e7df9d5ffd7251c.
+1099: MANIFEST1099 303ae24473ca2a0d163aa86ab42e7eee6365c17cfd5f69f628eb74f91e6a9686.
+1101: MANIFEST1101 2dbb209682c8cc39f2c618f504c36e3b8f2da81dc773913ed6aab93d815bb18d.
+Rutas de entrada: C:\Trabajo\airr y D:\Proyectos\airr-investigacion, con los nombres registrados en INPUT_INITIAL1100.json. 1099 y 1101 son suplementos conectados identificados separadamente, no bytes atribuidos retroactivamente a 1096.
+
+Sea n entero >=2, -1/(n-1)<=lambda<=1. K_lambda(y|x)=lambda delta_xy+(1-lambda)/n. La extensión cuántica DEPHASA primero A en la base clásica especificada y aplica K, conservando R. No es el canal depolarizante cuántico sobre todas las coherencias de A. Se optimizan pares fieles normalizados rho,sigma sobre A tensor R, con Tr_A rho=Tr_A sigma, divergencia de entrada positiva y finita, y R de dimensión finita arbitraria.
+
+Para Petz se usa Q_f(rho||sigma)=<sigma^(1/2), f(L_rho R_sigma^(-1)) sigma^(1/2)>_HS, f(1)=0, f operator-convexa no afín en (0,infinito). Una suma afín a f no altera la divergencia normalizada. Umegaki corresponde a f(x)=x log x. La orientación rho||sigma no se cambia silenciosamente. La triangular corresponde a (x-1)^2/(x+1). Chi-cuadrado mínimo significa <rho-sigma,J_sigma^(-1)(rho-sigma)>, J_sigma=(L_sigma+R_sigma)/2. El coeficiente SLD es la razón métrica g_Nsigma(ND)/g_sigma(D), con D hermítico y Tr_A D=0; BKM se define análogamente con la derivada de log. No se mezcla este coeficiente local con una supuesta divergencia SLD finita diferente.
+
+El orden de cuantificadores importa: para cada n y lambda fijos se obtiene el supremo sobre pares fieles; el lower usa regularización dependiente del par. No se afirma un máximo fiel, referencia mínima, uniformidad de preparación ni paso de n al infinito con todos los demás parámetros fijos.
+
+La restricción de referencia igual es esencial, no decorativa. Si se permite rho=I_A/n tensor r_1 y sigma=I_A/n tensor r_2 con r_1!=r_2 fieles, la canal deja ambas hipótesis invariantes y el cociente es uno, incluso a lambda=0 cuando H=0. Es un falsador exacto de una ampliación del dominio sin esa restricción.
+
+Los denominadores de H y B son positivos en todo el intervalo físico: sus mínimos son 1/(n-1) y n/(n-1), respectivamente. n=1 está excluido. A lambda=0 ambos coeficientes son cero; H/B no es un cociente definido allí. A lambda=1 ambos son uno. Para n=2, incluyendo lambda=-1, H=B=lambda^2.
+
+2. Reconstrucción del upper armónico, sin reducir a matrices reales
+
+La dephasación conserva la referencia y la salida del canal, y reduce cada divergencia Petz. Basta probar el upper para pares CQ. Sea T_j la conjugación por el desplazamiento cíclico de las n etiquetas, amplificado por id_R. Para Delta=rho-sigma, la condición de referencia igual da sum_j T_j Delta=0. Los pesos de la mezcla son
+
+ w_0=[1+(n-1)lambda]/n,   w_j=(1-lambda)/n para j!=0.
+
+En el interior son estrictamente positivos. Para un núcleo resolvente f_u(x)=(x-1)^2/(x+u), u>=0, la divergencia es
+
+ q_u=<Delta,(L_rho+u R_sigma)^(-1)Delta>_HS.
+
+Aquí L_rho X=rho X y R_sigma X=X sigma. En vectorización por columnas el operador es I tensor rho + u sigma^T tensor I: el transpuesto pertenece al operador derecho, no se intercambia rho con sigma. El núcleo u=0 y el término cuadrático final se mantienen por separado. En este último, q_quad=<Delta,R_sigma^(-1)Delta>. Estos son operadores positivos en TODO el espacio HS complejo.
+
+Escribiendo Omega_j=T_j Omega T_j^*, Z_j=T_j Delta, todos los valores <Z_j,Omega_j^(-1)Z_j> son q_in. La suma de los Z_j es cero y
+
+ Z_out=sum_j w_j Z_j=sum_j(w_j-c)Z_j,   Omega_out=sum_j w_j Omega_j.
+
+La desigualdad cuadrática, obtenida por Cauchy-Schwarz operatorial o por minimizar sum_j <Y_j,(w_j Omega_j)^(-1)Y_j> sujeto a sum Y_j=Z_out, da
+
+ <Z_out,Omega_out^(-1)Z_out> <= sum_j ((w_j-c)^2/w_j) q_in.
+
+No requiere conmutación de los bloques, entradas reales ni una restricción de dimensión de R. El mínimo escalar se alcanza en c=n/(sum_j 1/w_j), y el factor es 1-n^2/(sum_j 1/w_j)=H_n(lambda). Esta identidad fue simplificada simbólicamente además de reconstruirse analíticamente.
+
+La representación integral positiva de los generadores operator-convexos normalizados incorpora los resolventes y el endpoint cuadrático. El término afín cancela por igualdad de trazas. La integración conserva el mismo upper H; para estados fieles finitos no aparece una integral de signo indeterminado ni una inversión de orden no justificada. La existencia de esta representación y la convexidad son antecedentes, no novedades del paquete.
+
+El resultado para SLD sigue por expansión local de la triangular; para BKM por expansión local de Umegaki. También puede hacerse la misma desigualdad directamente en los operadores métricos. La dephasación de entradas coherentes queda cubierta por DPI antes de la mezcla. Las pruebas numéricas complejas de la sección 9 comprueban implementaciones, no reemplazan este paso para R arbitraria.
+
+En lambda=-1/(n-1) y lambda=1 hay pesos cero: NO se evalúa 1/w_j. DPI da upper 1, igual a H en ambos extremos. En lambda=0 la mezcla uniforme borra Delta exactamente. Los outputs de inputs fieles son fieles también en los extremos: cada bloque de salida es una combinación no nula de bloques definidos positivos.
+
+3. Lower simplex, marginal real y pares fieles
+
+En R=C^n, u=(1,...,1), P=I-uu*/n, v_i=e_i-u/n. Se verifican sum v_i=0, ||v_i||^2=(n-1)/n y sum v_i v_i*=P. La base CQ singular sigma_i=v_i v_i*/(n-1) tiene traza total uno y marginal P/(n-1). El tangente D_i=u v_i*+v_i u* tiene suma cero y, por tanto, preserva exactamente la referencia.
+
+La regularización sigma_xi=(1-xi)sigma+xi I_(n^2)/n^2, 0<xi<1, exige recomputar la marginal:
+ r_xi=(1-xi)P/(n-1)+xi I_n/n.
+No se conserva ficticiamente la marginal singular original. En la base ortonormal de v_i y u, los dos autovalores relevantes son
+ alpha=(1-xi)/n+xi/n^2, beta=xi/n^2,
+y D_i tiene coherencia sqrt(n-1), sin componente kernel-kernel. La salida conserva beta y sustituye alpha por
+ alpha'=(1-xi)[1+(n-2)lambda]/[n(n-1)]+xi/n^2.
+El resto del espacio no contribuye al tangente y tiene autovalores positivos.
+
+Con J_sigma=(L_sigma+R_sigma)/2 se obtiene g_sigma_xi(D)=4n(n-1)/(alpha+beta), luego
+ R_xi=lambda^2(alpha+beta)/(alpha'+beta) -> H_n(lambda)
+cuando xi baja a cero a n,lambda fijos. El chi-cuadrado mínimo para rho=sigma_xi+tD es exactamente cuadrático; el cociente R_xi se realiza con t no nulo suficientemente pequeño.
+
+Para rho_+=sigma_xi+tD y rho_-=sigma_xi-tD basta t^2(n-1)<alpha beta. Ambos son fieles y tienen la misma marginal r_xi. La positividad de salida también se comprueba por
+ alpha'-lambda^2 alpha = (1-xi)(1-lambda)(1+(n-1)lambda)/[n(n-1)] + beta(1-lambda^2) >=0.
+No se toma un inverso de una matriz singular como si fuera un inverso ordinario.
+
+En cada plano activo, el resolvente triangular evaluado sobre la coherencia tiene denominador alpha+beta incluso para el par finito simétrico. La divergencia por bloque es 8t^2(n-1)/(alpha+beta). Sumando los n bloques SUBNORMALIZADOS se obtiene exactamente R_xi para la razón triangular. No se condiciona sobre el plano ni se descarta masa de los modos inactivos.
+
+La razón BKM es lambda^2 ell(alpha',beta)/ell(alpha,beta), ell(a,b)=(log a-log b)/(a-b), con extensión continua si a=b. Cuando xi->0, alpha y alpha' convergen a constantes positivas, también en el extremo negativo; el log divergente común de beta cancela y queda H. Para Umegaki finito se toma primero t->0 con xi fijo, utilizando D(sigma_xi+tD||sigma_xi)=t^2 g_BKM/2+o(t^2), y sólo después xi->0. La condición Tr_A D=0 permanece exacta. Esto produce pares fieles con cociente arbitrariamente próximo a H. No permite sustituir la secuencia por un par singular ni permutar esos límites.
+
+La familia es CQ y separable entre A y R. El recurso es la referencia cuántica con bloques condicionales no conmutantes, no el entrelazamiento. Si todos los bloques de ambas hipótesis admiten una misma base clásica de R, la divergencia se descompone por esa etiqueta y la cota ordinaria B se aplica a cada sumando. Esa clase completamente clásica no produce la mejora.
+
+4. Comparador clásico y TODAS las restricciones binarias
+
+El coeficiente global clásico previo es B_n=n lambda^2/[2+(n-2)lambda]. No se reivindica su descubrimiento. Su reconstrucción anterior y la equivalencia clásica global de Makur-Zheng no implican igualdad completa con referencia cuántica. Ordentlich-Polyanskiy reduce la optimización clásica a dos etiquetas comunes; su prueba es escalar y no demuestra una reducción de bloques operatoriales.
+
+Para n>2 y lambda físico distinto de 0,1:
+ H/B - 1 = (n-2)(1-lambda)/[n(1+(n-2)lambda)] >0.
+En la exclusión lambda=-1/(n-1), H=1 y B=1/(n-1). El factor n-1 es una razón de coeficientes, no una tasa absoluta de información ni una afirmación a ruido fijo cuando n cambia.
+
+En el interior cada restricción a dos columnas tiene entradas estrictamente positivas. El resultado binario 1093, reutilizado con sus hipótesis, iguala su coeficiente completo con el clásico. Por simetría todas las parejas de columnas son equivalentes; el teorema clásico de soporte binario identifica su supremo con B_n.
+
+El extremo con ceros requiere otra prueba y no queda resuelto citando literalmente 1093. Para dos etiquetas a,b en el canal de exclusión, la salida a revela exclusivamente la entrada b con peso 1/(n-1), y la salida b revela exclusivamente a con ese peso. Cada una de las otras n-2 salidas contiene el mismo bloque r/(n-1) en ambas hipótesis, pues sus referencias son iguales. Por aditividad de suma directa y homogeneidad,
+ Q_f(output)=Q_f(input)/(n-1)
+para pares CQ soportados en esas dos etiquetas, con f(1)=0. Las salidas comunes no contribuyen. La misma cuenta vale para SLD, chi mínimo y BKM. Una entrada coherente se dephasa primero, dando el upper correspondiente. Esto cubre los ceros sin un falso supuesto de columnas positivas. La fidelidad puede entenderse en el soporte de la subcanalización; al incrustar en n etiquetas se añade masa común pequeña en las no usadas y se toma el límite, sin cambiar el upper. lambda=1 y lambda=0 se tratan directamente.
+
+Así, para n>2 y ruido no trivial, TODAS las subcanales clásicas de dos columnas tienen coeficiente completo B_n, mientras el canal completo tiene H_n>B_n para las cinco cantidades especificadas. La reducción a dos etiquetas comunes falla con referencia cuántica. Esto no contradice Ordentlich-Polyanskiy, no afirma que toda canal ternaria active una referencia y no extiende la igualdad H a cada f.
+
+5. Pares finitos originales y resultados adversos
+
+Los ocho casos triangulares exactos, 18 diagnósticos BKM y ocho diagnósticos Umegaki de 1096 se reprodujeron sin cambiar parámetros. 1099 certifica los signos de los ocho últimos mediante intervalos enteros y agrega dos fases menores declaradas. Los diez intervalos fueron recomputados a 1152 bits/700 términos; todos están contenidos en los intervalos originales de 1024 bits/600 términos. No se sustituyó una evaluación decimal por una prueba universal.
+
+Los tres pares originales no separadores de Umegaki se mantienen:
+ n=3,xi=1/100,t=1/100,lambda=1/2: razón 0.28902979961456... < B=3/10;
+ n=4,xi=1/10,t=1/100,lambda=1/2: razón 0.32315423683859... < B=1/3;
+ n=5,xi=1/10,t=1/100,lambda=1/2: razón 0.31570162325486... < B=5/14.
+Las cifras sólo muestran intervalos certificados; los extremos enteros están conservados. Un par que separa la triangular puede no separar Umegaki. Las dos fases adicionales t=1/1000 en n=3,xi=1/100,lambda=+/-1/2 sí separan; no borran los resultados previos.
+
+Otro falsador explícito de una lectura uniforme: en el extremo negativo,
+ R_xi=[n(1-xi)+2xi]/[n(1-xi)+2xi(n-1)^2].
+Con xi fijo positivo tiende a cero como 1/n; con xi=c/n tiende a 1/(1+2c). Para n>2 la separación triangular finita de B equivale exactamente a xi<n/(3n-2). Es independiente de t mientras se respete la positividad. Este umbral no es un criterio de separación Umegaki finita.
+
+6. Geometría y medición finita de 1101
+
+Ahora n>=3 y z>0 fijo. Es una regularización nueva, identificada separadamente de sigma_xi. Sean f=u/sqrt(n), F=ff*, psi_i=sqrt(n/(n-1))v_i y Pi_i=psi_i psi_i*. Entonces sum psi_i=0 y sum Pi_i=nP/(n-1). Definiendo
+ beta=n^-5, epsilon=n^(-z-4), delta=n^-z,
+ alpha=1/n-(n-2)epsilon-beta, c^2=alpha beta(1-delta),
+los bloques son alpha Pi_i+epsilon(P-Pi_i)+beta F +/- c(psi_i f*+f psi_i*).
+
+La traza de cada bloque es 1/n, alpha>epsilon>0, y el determinante activo es alpha beta delta>0. Las matrices completas son fieles, normalizadas y separables. La marginal real común es
+ r=n[alpha+(n-2)epsilon]P/(n-1)+n beta F.
+La marginal clásica es uniforme. El unitario I-2F intercambia las hipótesis, conserva r y puede escribirse como fase pi con Hamiltoniano F de norma uno EN LA REFERENCIA. No se convierte por ello en una estimación de fase sobre el registro clásico ruidoso ni en el antiguo tangente real de otras familias.
+
+En la exclusión, el bloque de salida es (r-s_j)/(n-1). En el plano Pi_j+F sus diagonales son
+ a'=[alpha+n(n-2)epsilon]/(n-1)^2 y beta,
+su coherencia es +/-lambda c, y el autovalor inactivo es
+ e'=[n alpha+(n^2-3n+1)epsilon]/(n-1)^2.
+Estas fórmulas se obtienen sumando los bloques de las otras etiquetas; no por una sustitución de un canal depolarizante cuántico.
+
+Si h,l son los autovalores de un bloque [[a,c],[c,b]], la fórmula de log y la inversión del signo de c dan D(W_+||W_-)=4c^2(log h-log l)/(h-l). Al sumar todos los bloques completos, D_in y D_out son las expresiones de 1101. Los términos de traza se cancelan y los modos inactivos son idénticos bajo las dos hipótesis. No hay normalización condicional del plano.
+
+La medición elige, según la etiqueta clásica de salida j, el proyector de autovalor MENOR del bloque de la hipótesis MENOS. E_j=(h_out Q_j-W_j^-)/(h_out-l_out), Q_j=Pi_j+F, extendido por cero. E=diag_j E_j es un proyector de rango n en dimensión n^2; el otro efecto es I-E. La orientación fija
+ q=n l_out,
+ p=n[l_out+4lambda^2 c^2/(h_out-l_out)],
+y D_bin=D(Ber(p)||Ber(q)), con complementos 1-p y 1-q. No se confunde l_out con una probabilidad global ni se intercambia p con q.
+
+Es una medición local sobre R controlada por el resultado clásico j: una comunicación clásica en un sentido. No requiere una operación entrelazante entre A y R, pero tampoco es una medición fija de R ignorando j. Se presupone conocido el par y sus parámetros. No hay postselección. Registrar j además del resultado binario no cambia aquí la divergencia, porque las probabilidades condicionales y la distribución uniforme de j son iguales por simetría. A sola y R sola tienen exactamente cero capacidad de distinguir estas hipótesis.
+
+Los nueve certificados originales se reprodujeron y se recomputaron a mayor precisión entera. Para n=3,z=4, D_in=0.424056744796524... y D_bin/D_in=0.515769103625434... >1/2. El gap certificado es 0.015769103625434... . D_out=0.342867566101543... y 0<D_bin<D_out<D_in. El cálculo completo complejo de dimensión nueve coincide con las fórmulas y el proyector, sin construirlo desde la fórmula reducida. La desigualdad del cociente usa el denominador CUÁNTICO de entrada; no se afirma que un cociente clásico/clásico exceda su SDPI.
+
+7. Límites de 1101, modos mínimos y corrección necesaria
+
+A z>0 fijo, alpha~n^-1 y c^2~n^-6. Los autovalores activos de entrada cumplen h_in~n^-1 y l_in~n^(-z-5). Además l_in=alpha beta delta/h_in<=beta delta=epsilon/n<epsilon, de modo que l_in es el mínimo GLOBAL, no sólo el de un bloque. alpha>epsilon garantiza que h_in es el máximo global. Por tanto cond(input)~n^(z+4).
+
+El determinante activo de salida es exactamente
+ lambda^2 beta[alpha delta+n(n-2)epsilon].
+Para la escala declarada, n(n-2)epsilon/(alpha delta)~1/n. Así h_out~n^-3, l_out~n^(-z-5), y h_out-l_out~n^-3. Los otros modos no se pueden ignorar para una condición global: e'~n^-2 es mayor que h_out. De hecho e'-(a'+beta)=(alpha-epsilon)/(n-1)-beta>0 para esta familia. Luego cond(output)~n^(z+3), mientras cond(reference)~n^3. Son precisiones adicionales, no una afirmación de optimalidad de recursos.
+
+Se sigue
+ log(h_in/l_in)~(z+4)log n,
+ log(h_out/l_out)~(z+2)log n,
+ D_in~4(z+4)log n/n^4, D_out~4(z+2)log n/n^4,
+ q~n^(-z-4), p~4/n^4.
+El término complementario de Bernoulli es O(p); p log(p/q) tiene término principal 4z log n/n^4 porque z es fijo positivo. Por tanto
+ D_out/D_in -> (z+2)/(z+4),
+ D_bin/D_in -> z/(z+4),
+ D_bin/D_out -> z/(z+2).
+No se intercambia este límite dimensional con el lower ordenado de 1096. Cada enunciado tiene sus propios cuantificadores.
+
+CORRECCIÓN: la frase que exige epsilon mucho menor que beta debe retirarse. En la propia familia, epsilon/beta=n^(1-z): vale uno a z=1 y crece a infinito para 0<z<1. Pese a ello, la comparación de determinantes anterior es válida para todo z>0 fijo. Una condición suficiente relevante para las constantes anunciadas es n(n-2)epsilon=o(alpha delta), equivalente en estas escalas a epsilon=o(n^(-z-3)). No se declara que sea necesaria para cualquier posible familia.
+
+Tampoco basta epsilon<<beta. Conservando z=4, beta=n^-5 y delta=n^-4, pero usando epsilon=n^-6, el determinante de salida pasa a estar dominado por el término inactivo. Ahora l_out~n^-8, por lo que la retención cuántica tiende a 5/8 y la medida a 3/8, frente a 3/4 y 1/2 de la familia original. Si epsilon=beta=n^-5, esos límites son 1/2 y 1/4. Se han certificado cuatro dimensiones para cada alternativa, hasta n=10^6. Son falsadores de sustituciones de escala, no del teorema con epsilon=n^-8 cuando z=4.
+
+Los controles z=1/2 usan n=4,16,256,65536, con epsilon/beta=2,4,16,256. Confirman la validez de la geometría y la aproximación a los límites pese a epsilon>beta. El caso n=4 tiene retención medida 0.144529652402417...<1/3. Para z=1,n=3, la retención 0.247172362900248...<1/2 también es adversa. La separación sólo se afirma para los nueve pares declarados y, para cada z fijo, eventualmente al crecer n; no para todo par pequeño.
+
+Otra falsación de uniformidad: tomar z_n=log(2)/log n, delta=1/2 y epsilon=1/(2n^4), conserva z_n>0 pero sale del régimen de z fijo. Entonces
+ q~(1/2)n^-4, p~(5/2)n^-4,
+ D_in~8log n/n^4,
+ D_bin~[(5/2)log5-2]/n^4.
+La razón entre la retención verdadera y la fórmula z_n/(z_n+4) tiende a [(5/2)log5-2]/(2log2), aproximadamente 1.4597, no uno. Los cuatro controles enteros conservan esta discrepancia, y el de n=10 no supera 1/(n-1). No se ha escondido como un fallo numérico. Invertir la orientación Bernoulli también pierde el término logarítmico dominante a z fijo: D(Ber(q)||Ber(p))/D(Ber(p)||Ber(q))->0.
+
+8. Alcance operacional y costes
+
+Hay una consecuencia concreta: una prueba binaria finita con lectura clásica seguida de una medición de R conserva más divergencia, normalizada por la divergencia cuántica inicial, que el máximo ordinario de la canal clásica. El ejemplo n=3,z=4 tiene una entrada de divergencia no diminuta y un gap certificado. No es sólo un cociente local infinitesimal ni requiere entrelazamiento A:R. Su denominador requiere conocer o acotar el par cuántico preparado; las probabilidades de salida por sí solas no certifican experimentalmente ese denominador.
+
+Para la secuencia dimensional, la información absoluta, la semidistancia de traza y las probabilidades útiles se deterioran. La semidistancia de entrada es 2nc~2/n^2; la de salida se divide por n-1. p~4/n^4 es un evento raro, q aún más raro. La dimensión de R es n y crece también el alfabeto clásico. Polinomios en n pueden ser exponenciales en log2 n qubits. La precisión de preparación/medición, el conocimiento de parámetros y las copias necesarias no son gratuitos. No se obtiene complejidad experimental óptima ni robustez uniforme a perturbaciones.
+
+lambda=-1/(n-1) cambia con n y se acerca a la canal de reemplazo. El benchmark 1/(n-1) desaparece simultáneamente. La ganancia relativa creciente no es información absoluta creciente, ventaja a ruido fijo, capacidad, tasa de código, información mutua ordinaria ni rendimiento de una memoria sin coste. La medición propuesta no está demostrada óptima entre todas las POVM, y no es una afirmación de Fisher absoluto máximo. El acceso a R es un recurso cuántico, aunque los inputs sean separables y el feedforward sea clásico.
+
+9. Evidencia propia, replay e incidentes
+
+REPLAY1100: check1096.py, certify1099.py y measure1101.py se copiaron a carpetas propias; cada salida coincide byte a byte. No se ejecutó un generador dentro del paquete congelado. El script 1099 conserva una lectura absoluta del CONTROL1096 de D; no lo escribe.
+
+SYMBOLIC1100: identidad general de H, positividad de salida, razón extrema, umbral xi y determinante de medición; además frame, marginal y fidelidad exactos para n=3,4,5 tras una rotación unitaria racional COMPLEJA en R. La primera versión del control falló al comparar estructuralmente expresiones SymPy no simplificadas para hermiticidad. Se conserva el script inicial y su traceback. La corrección fue simplificar M-M*, sin cambiar estados, parámetros ni menores positivos. No fue un falsador matemático que se borrase.
+
+AMBIENT1100: matrices completas complejas a 90 dígitos, logaritmos matriciales por descomposición espectral y proyectores obtenidos de autovectores de los bloques de salida completos. Cuatro casos de medición (3,4),(3,12),(4,1/2),(4,4), incluyendo el adverso, y cuatro casos triangulares en dimensiones 9 y 16, lambda positivo/negativo/extremo 1. Se comprobaron referencia, normalización, idempotencia, orientación, probabilidades, fórmulas de divergencia y desigualdades. Errores de identidad <10^-75; son controles de alta precisión, no intervalos ni prueba para dimensión arbitraria.
+
+INTERVAL1100: 1152 bits, 700 términos de la serie atanh con resto explícito e isqrt para raíces. Los nueve certificados 1101 y diez 1099 están contenidos en los originales. Veinte controles adicionales examinan z<=1, regularización alternativa y z variable. Tres de esos veinte no separan y se preservan. La biblioteca 1077 fue copiada y sus dos parámetros de precisión cambiados explícitamente; el hash de origen se conserva. No hay flotantes en la decisión de signos. El control ambiental y la prueba general justifican la reducción a planos; la aritmética por sí sola no lo hace.
+
+RANDOM1100: semilla fija 110020261027; 40 pares fieles complejos coherentes con referencia igual, n=2,3,4,5 y R=2 o3. Siete ruidos por par, incluyendo ambos extremos y cero; ocho generadores Petz (Umegaki y reversa, triangular, dos endpoints cuadráticos, Hellinger y dos resolventes). 280 puntos, 2240 razones. No se halló violación de H fuera del residuo numérico permitido; exceso máximo observado ~1.61e-26 en aritmética float64. No es una búsqueda exhaustiva, prueba universal ni evidencia de exactitud para todos los f.
+
+Incidentes de entrada conservados: el primer checker1096 terminó los cálculos y falló sólo en su resumen al sumar BooleanAtoms de SymPy; la corrección de impresión no cambió parámetros. El relato inicial contó 27 diagnósticos BKM, pero el bucle genera 18; el campo histórico I1 aún dice 27 y I2 explica la rectificación. La cuenta auditada es 18. En esta auditoría también hubo una lectura fallida por pedir INCIDENTS1096.txt cuando el nombre real es .json y una salida de consola demasiado extensa al mostrar extremos enteros; los archivos completos no fueron truncados. No hubo reinicio para obtener un resultado favorable.
+
+10. Fuentes primarias, coberturas y límites de prioridad
+
+READINGS1100.json registra versiones, SHA de bytes consultados, páginas y nivel de lectura. Sólo se guardan síntesis propias y recibos; no se conserva corpus extranjero. Búsqueda dirigida, no exhaustiva. Una diferencia entre definiciones no prueba novedad; tampoco una búsqueda sin coincidencia.
+
+Wang-Gohari, arXiv:2610.29576v1: se leyeron de nuevo Definition7, Theorem17/Remark4 y la prueba constructiva de AppendixD, páginas18,19,35,36. Se reutiliza la lectura 1093 de otros pasajes, incluida Proposition5/AppendixF. Su SDPI de matriz-Phi fija la fuente y usa una función matricial F; para Phi=tlogt corresponde a comparar un estado CQ con el producto de la fuente y su marginal. En 1096/1101 el segundo estado es otra hipótesis correlacionada arbitraria, no ese producto. Theorem17 usa una fuente de cuatro letras y otra Phi, con Phi''=sqrt(1+t^2)/t, a partir de un fallo de subaditividad conjunta. No cubre literalmente el coeficiente Petz de dos estados de este paquete ni justifica proclamar resuelta su Remark4. Los conceptos de información cuántica auxiliar y dependencia matricial ya son anteriores.
+ https://arxiv.org/pdf/2610.29576v1
+
+Gao-Zhao, arXiv:2608.19685v1: páginas1-4,14,15,17; Definition3.7, enunciados principales y prueba seleccionada de Lemma3.12. Su cociente usa E(rho) como segundo estado, y la familia de ruido tratada en el pasaje relevante tiene parámetro positivo. No se traslada su optimización restringida al par arbitrario con E(rho)=E(sigma), ni al extremo negativo por omisión de hipótesis. El índice, sus cotas y la representación de entropía son antecedentes cercanos, no un certificado de prioridad del simplex.
+ https://arxiv.org/pdf/2608.19685v1
+
+Gao-Junge-LaRacuente-Li, Forum of Mathematics Sigma13:e31(2025), DOI10.1017/fms.2024.117: el primer acceso web al HTML falló por tamaño; posteriormente se obtuvo el PDF OFICIAL de51 páginas en memoria, SHA b09ec31b423805372e9cea9b0c879f29b11fcc6abec4cc50acce1e961a0dbd66. Se leyeron páginas1-3,29-30,33-36,48-49: Definition5.1, Corollary5.2 y su argumento, Theorem4.8 con su prueba remitida y Lemmas4.6/4.7, más contexto. No se auditó íntegramente la cadena Haagerup ni todo el artículo. Su alpha_c amplifica la comparación rho frente a E_*(rho), no dos estados correlacionados arbitrarios. De hecho, para la cadena de exclusión con n>2 su mezcla primitiva permite una constante <1 en aquella comparación restringida, mientras H=1 aquí: no hay contradicción. Sus resultados son antecedentes de contracción completa y orden CP; no se deduce que la fórmula exacta arbitraria de pares esté publicada ni que no lo esté. Las preguntas abiertas de la versión2025 se identifican como históricas, no se certifica su estado actual.
+ https://www.cambridge.org/core/services/aop-cambridge-core/content/view/7270B6BBA7891B612C00FAB066F1A380/S2050509424001178a.pdf/complete-positivity-order-and-relative-entropy-decay.pdf
+
+Se reutilizaron con niveles de lectura explícitos: Hiai-Ruskai1508.03551v1 (representación integral/endpoints y prueba ordinaria QC, no upper completo automático); Makur-Zheng1510.01844v4 (equivalencia clásica global y pruebas seleccionadas); Ordentlich-Polyanskiy2010.01987v1 y versión de autor de dos páginas, leídas completas en1093 (reducción clásica, no operatorial); Hirche-George-Nuradha-Wilde2608.27171v1 (definiciones completa/condicional y AppendixA sobre referencia clásica, no entrada clásica con referencia cuántica); Berta-Fawzi-Tomamichel1512.02615v2, Proposition5 y prueba leídas en1077 (distinción entre divergencia medida y Umegaki para pares no conmutantes). Los hashes y la procedencia de estas lecturas previas quedan en READINGS1100. No se finge una lectura nueva completa.
+
+La fórmula clásica y la tecnología DPI/Petz/BKM/logaritmo matricial, el frame simplex, la fase local, la hipótesis cuántica y el feedforward son herramientas previas. La aportación candidata que sobrevive es la combinación explícita upper/lower que determina el coeficiente de pares con referencia igual para esta familia clásica, su fallo de reducción binaria y una realización medida con costes. No se identificó en los pasajes seleccionados un teorema que cubra literalmente esa combinación. Esto no autoriza prioridad mundial, importancia editorial, un artículo independiente por cada refinamiento ni una nota. Lee-Makur2024 sigue sin lectura completa de fórmula/prueba por esta auditoría; la limitación se mantiene y el comparador se trata como previo.
+
+Precisión añadida tras leer directamente las páginas18-21 de Hirche et al2608.27171v1: Theorem2 y su prueba, Corollary2/Eq3.51 y la separación qubit de Eqs3.63-3.66 sí establecen antecedentes de interpretación mediante información mutua asistida por referencia. Allí U binario es la ETIQUETA DE HIPÓTESIS; no restringe A a dos símbolos. Por tanto, el fallo de reducción a dos símbolos A de la sección4 no contradice ni reemplaza aquel teorema. Tampoco se puede presentar la equivalencia entre pares y ese coeficiente asistido como una novedad. Su ejemplo explícito leído de separación usa un depolarizante cuántico qubit; no certifica cobertura ni prioridad de la fórmula clásica simplex. La Eq3.69 permite marginales diferentes y da un supremo trivial uno: no es el dominio de referencia igual del presente estudio.
+
+Suplemento ROOT1108: el aviso de su existencia llegó después de haber reconstruido aquí la identidad de bloques del extremo de exclusión. Sus archivos y su manifiesto no se incorporaron a las entradas ni se leyeron para atribuirles cobertura. La sección4 cubre esa identidad por su propia derivación en esta auditoría; la extensión binaria general propuesta en1108 a columnas con ceros queda fuera de lo auditado. No se modifica1093 ni se le atribuye retroactivamente ese alcance.
+
+Suplemento ROOT1110: anunciado al terminar la redacción, con otro régimen a n fijo. No se abrió ni se verificó ese paquete y no se auditan aquí sus límites o certificados. Las conclusiones dimensionales de1101 permanecen restringidas a su propia escala y no describen todas las preparaciones posibles.1110 no forma parte del input ni de los dictámenes1100.
+
+11. Dictámenes por dependencia y afirmaciones utilizables
+
+1096-upper: sostenido por reconstrucción en HS complejo, dephasación, representación positiva y extremos tratados aparte. Dependencia: herramientas Petz/DPI y cancelación armónica ya trabajadas en el proyecto.
+1096-lower: sostenido para SLD/chi mínimo/triangular/BKM/Umegaki, referencia n, pares fieles y límites ordenados. Dependencia: geometría simplex y cálculo espectral reconstruidos. No extensión de igualdad a todos los f.
+1099: los diez signos certificados se reproducen; incluye exactamente tres negativos originales y dos positivos adicionales. No se selecciona sólo la evidencia favorable.
+Binary-reduction: deducción sostenida usando1093 sólo en el interior y prueba directa de borrado/etiqueta en el extremo con ceros.
+1101-finite: geometría, normalización, positividad, orientación, medición y nueve separaciones certificadas sostenidas. La lectura es una prueba binaria de hipótesis con denominador cuántico conocido.
+1101-asymptotic: límites a z fijo sostenidos; frase epsilon<<beta requiere corrección. No uniforme en z, regularizadores ni dimensión.
+Antecedentes/prioridad: cobertura clásica y de herramientas reconocida; cobertura exacta completa no establecida por la lectura dirigida; prioridad sin certificar.
+
+Listo técnicamente, con las definiciones explícitas de este informe: fórmula H para las cinco cantidades; upper H para todos los Petz especificados; n suficiente; comparación estricta H>B y factor extremo; imposibilidad de reducir a dos etiquetas comunes; nueve ejemplos medidos; límites de 1101 para cada z fijo con condición correcta y costes declarados.
+
+No listo o no demostrado: igualdad H para cada Petz; un maximizador fiel; dimensión mínima; todo par finito separador; sustituir epsilon por cualquier ruido uniforme; epsilon<<beta como necesidad/suficiencia; uniformidad z=z_n; optimalidad de medición o recursos; ventaja de capacidad/MI/Fisher absoluto/experimento; mayor información absoluta a ruido fijo; solución a problemas de matriz-Phi o MLSI; prioridad mundial o evaluación editorial.
+
+El cierre de archivos se verifica por INPUT_FINAL1100.json, MANIFEST1100.json, SHA256SUMS1100.txt y CLOSURE1100.json. La copia C se conserva explícitamente porque el encargo exige entrega idéntica C/D; nada queda únicamente en C.
