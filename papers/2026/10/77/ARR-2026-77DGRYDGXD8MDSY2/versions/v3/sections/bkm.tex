@@ -1,0 +1,85 @@
+\section{A complete equal-reference relative-entropy lower bound}\label{sec:bkm}
+Write \(P_d=d(d-1)\), distinct from \(M_d=d(2d-1)/2\). Define
+\[
+ g^{\mathrm{BKM}}_s(D)=\Tr D\,\mathrm{D}(\log)_s[D],\qquad
+ D_{\mathrm U}(\rho\Vert\sigma)=\Tr\rho(\log\rho-\log\sigma).
+\]
+Their complete equal-reference coefficients use exactly the state/tangent restrictions of Section~1. They do not optimize actual mutual information. The BKM kernel, faithful local expansion and relative-entropy/BKM comparison mechanisms are prior~\cite{HR,Reverse,HanLi}.
+
+\begin{theorem}[Principal-rich BKM and Umegaki lower]\label{thm:bkm}
+For depolarization on dimension \(d\ge2\) throughout its physical range,
+\[
+ \eta^c_{\mathrm{BKM}}(\N_\lambda)\ge C_{P_d}(\lambda),\qquad
+ \eta^c_{\mathrm U}(\N_\lambda)\ge C_{P_d}(\lambda).
+\]
+With both actual-marginal order budgets at \(\kappa>1\), put
+\[
+ K_*(\kappa)=1+(P_d-1)\min\left\{\frac{\kappa-1}{M_d-1},1\right\}.
+\]
+Both constrained coefficients are at least
+\[
+ \max\{C_{\min(\kappa,d^2/2)}(\lambda),\ C_{K_*(\kappa)}(\lambda)\}.
+\]
+These are lower bounds, not proposed exact optima. The second construction uses a reference of dimension \(2d-1\).
+\end{theorem}
+\begin{proof}
+Use the bases and tangent in \eqref{eq:principal-plane}. Let \(w_+\ge w_->0\) be the eigenvalues of \(W_p\), and \(Z\) the matrix of \(T\) in that eigenbasis. At fixed \(-1/(M_d-1)<p<1\),
+\[
+ w_+=\frac{A_p}{2da}+O(e^2),\qquad
+ w_-=\frac{(1-p)[1+(M_d-1)p]}{daA_p}e^2+O(e^4).
+\]
+The leading coefficient of \(w_-\) is positive. The eigenvector rotation is \(dp\sqrt a\,e/A_p+O(e^3)\), whence
+\[
+ Z_{++}=\frac{2dpa}{A_p}e+O(e^3),\quad
+ Z_{--}=\frac{2(1-p)}{A_p}e+O(e^3),\quad
+ Z_{+-}=\sqrt a+O(e^2).
+\]
+The BKM form for one plane is
+\[
+ H_e(p)=\frac{Z_{++}^2}{w_+}+\frac{Z_{--}^2}{w_-}
+  +2|Z_{+-}|^2\frac{\log w_+-\log w_-}{w_+-w_-}.
+\]
+The diagonal terms are bounded, whereas the logarithmic term yields
+\begin{equation}\label{eq:bkm-log}
+ H_e(p)=\frac{8da^2}{1+(P_d-1)p}\log(1/e)+O(1).
+\end{equation}
+The full form is \(2H_e(p)\); all remaining modes have zero tangent. Therefore, with \(\theta<1\) fixed,
+\[
+ \lim_{e\downarrow0}\lambda^2\frac{H_e(\lambda\theta)}{H_e(\theta)}
+ =\lambda^2\frac{1+(P_d-1)\theta}{1+\lambda(P_d-1)\theta}.
+\]
+Taking \(\theta\uparrow1\) gives the unrestricted lower; taking it up to the budget endpoint gives \(C_{K_*}\). The domain also contains the negative physical endpoint. The cases \(\lambda=0,1\) are direct. No uniform remainder in \(\theta\uparrow1\) is asserted.
+
+For each fixed faithful \(e,\theta\), choose the same admissible small perturbations as in Theorem~\ref{thm:order}. The prior local identity is
+\[
+ D_{\mathrm U}(s_{e,\theta}+tD\Vert s_{e,\theta})
+ =\tfrac12t^2g^{\mathrm{BKM}}_{s_{e,\theta}}(D)+o(t^2).
+\]
+Take \(t\to0\) first, then \(e\downarrow0\), then \(\theta\) to its allowed endpoint. This proves the finite-pair lower in the stated orientation. The first bound inside the maximum follows from the Bell family of Proposition~\ref{prop:bell}, since \(x\log x\) is operator convex; for larger budgets retain its endpoint lower by approximation from below. It can be stronger than \(C_{K_*}\) at smaller budgets and must not be discarded.
+\end{proof}
+
+For \(d\ge3\), \(P_d>d^2/2\) and
+\(\partial_KC_K=\lambda^2(1-\lambda)/[1+\lambda(K-1)]^2\).
+Thus, except at \(\lambda=0,1\), the new unrestricted lower strictly exceeds the endpoint supplied by the specific preceding Bell family. At the negative physical endpoint this reads
+\[
+ C_{P_d}\!\left(-\frac1{d^2-1}\right)=\frac1{d+1},\qquad
+ C_{d^2/2}\!\left(-\frac1{d^2-1}\right)=\frac1{d^2-1}.
+\]
+The ratio of these two lower bounds is \(d-1\). This dimension-dependent comparison is not a claim of a worldwide-best bound, an exact coefficient or an operational advantage. For \(d=2\), \(P_d=2\): it recovers the Bell lower and does not settle unrestricted qubit relative-entropy contraction.
+
+\paragraph{Finite certified comparisons.}
+For \(e=10^{-30}\), \(t=10^{-90}\), \(\theta=99/100\), the actual finite pairs above, with budget \(M_d\), yield the following rigorous interval locations of their gaps over the specified Bell endpoint:
+\begin{center}
+\begin{tabular}{ccc}
+\toprule
+\(d\)&\(\lambda\)&gap interval (outward decimal bounds)\\
+\midrule
+3&\(-1/8\)&\((0.11255711780015,\ 0.11255711780017)\)\\
+3&\(1/2\)&\((0.00593846351695,\ 0.00593846351696)\)\\
+4&\(-1/15\)&\((0.11934942272408,\ 0.11934942272410)\)\\
+4&\(1/2\)&\((0.00238915978275,\ 0.00238915978276)\)\\
+\bottomrule
+\end{tabular}
+\end{center}
+The exact binary/rational interval endpoints, rather than rounded midpoints, are retained in the supplement. Audit1044 reproduced positivity and both budgets exactly, and enclosed all four calculations with a separate integer interval implementation. Subblocks must not be normalized separately: their opposite linear trace terms cancel only in the global divergence. The input divergences are of order \(10^{-177}\), with cancelling block terms of order \(10^{-120}\). Such severe conditioning precludes an inference of laboratory robustness from these mathematical certificates.
+
