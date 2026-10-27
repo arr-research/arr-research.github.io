@@ -1,0 +1,103 @@
+1021. Rank-two improvement of the general-d order-budget ladder.
+Parent derivation27October2026; not externally audited or graded.
+Post-start candidate outside the immutable1017 input to audit1018.
+
+Same setting and definitions as PROOF1017, with normalized f(1)=0, faithful
+equal-reference states, E=I_d/d tensorTr_A, physical depolarizing range
+-1/(d²-1)<=lambda<=1 and1<kappa. This candidate increases the proved lower
+construction range fromkappa<=d+1 to
+ 1<kappa<=L_d=d(d+1)/2.
+The candidate exact SLD, chi²_min and triangular coefficient remains
+ lambda² kappa/[1+lambda(kappa-1)].
+It is the same order upper, sharp uniformly over normalized operator-convex
+Petz generators because triangular attains it. It does not assert equality
+for everyf, BKM/MI, generalSEP/PPT, nonunital noise, an unrestricted d>2
+coefficient, tensorization or operational phase/protocol advantages.
+
+CONSTRUCTION. Set m=d-1, |R|=d+1, A indices modulo d. For i=0,1 use
+ a_i=|i,i>+e sum_(k=1)^(d-1)|i+k mod d,k+1>.
+They have disjoint supports and norm²q=1+m e². Set
+ sigma=(a_0a_0*+a_1a_1*)/(2q).
+Its marginal has peripheral masses1/(2q) onR0,R1 and masses e²/q on
+each centerR2,...,Rd. Thus B=E(sigma)>0. Whitened normalized a_i are
+orthogonal and each has norm²d+dm/2=L_d. Consequently
+ B^(-1/2)sigma B^(-1/2) has eigenvaluesL_d,L_d,0,...,0.
+This follows from the full two-column Gram matrix, for every integerd>=2.
+
+Let b_0=sum_k |k,k+1>, b_1=-sum_k |1+k mod d,k+1> and
+ D=sum_i (b_i a_i*+a_i b_i*).
+The main/center off-diagonal entries change A because1<=k<=d-1, and
+distinct center terms also have distinct A, so partial tracing removes
+every off-diagonal contribution. Each center diagonal contribution+2e
+from the first vector cancels-2e from the second. ThereforeTr_A D=0.
+P=2sigma is a projection and(I-P)D(I-P)=0. Each support block contributes
+8m q to the boundarySLD form, hence the total is16m q. No inverse of a
+singular matrix is taken.
+
+For0<=theta<1 set s_theta=(1-theta)B+theta sigma. This is faithful and
+its conditional order constant is1+(L_d-1)theta. Choose
+ theta<(kappa-1)/(L_d-1)<=1.
+The base andkappa B-base have strictly positive slack. For each finite
+e,theta, rho_t=s_theta+tD preserves positivity, the actual R marginal
+and both order bounds for sufficiently small nonzero realt of either sign.
+N_lambda(s_theta)=s_(lambda theta).
+
+BLOCK REDUCTION. Each vector's d-dimensional support is invariant under
+s_p, and the supports are disjoint. On the uniform superposition of its
+m center coordinates and its main coordinate the block is
+ W_p=[[1+(d-1)p,dp e sqrt(m)],
+      [dp e sqrt(m),[2+(dm-2)p]e²]]/(2d q).
+The tangent on this plane is plus or minus
+ T=[[0,sqrt(m)],[sqrt(m),2em]].
+The m-1 orthogonal center modes have positive eigenvalue
+e²(1-p)/(d q), and D vanishes on them. The remaining coordinates also
+have positive diagonal replacement contributions and zero tangent.
+The aligned determinant is
+ e²(1-p)[1+(L_d-1)p]/(2d²q²).
+For p=theta orlambda theta it is positive: theta<1 and the smallest
+physical lambda is greater than-1/(L_d-1). This latter inequality follows
+fromL_d-1<d²-1 for d>1. Thus no singular output inverse enters the proof.
+
+Write G_e(p)=Tr(TY) where W_pY+YW_p=2T. Direct symbolic elimination in
+check1021.py gives, with d left symbolic,
+ lim_(e->0) G_e(p)/(8m) = L_d/[1+(L_d-1)p].
+One can see the cancellation without a radical solver: in the scaled
+limit let A=1+(d-1)p, B=dp sqrt(m), C=2+(dm-2)p. Then
+ AC-B²=2(1-p)[1+(L_d-1)p],
+ and the numerator from v=(sqrt(m),m) is
+ m[C-2dmp+Am]=m(m+2)(1-p).
+Together with the scale2d this yields the displayed formula. The limit
+is at fixed p<1. The vanishing factor1-p is cancelled analytically;
+it is not an assumption of uniform convergence up to a singular endpoint.
+
+Both input/output planes have the same ratio. Thus the SLD retention
+at the faithful base tends to
+ lambda²[1+(L_d-1)theta]/[1+(L_d-1)lambda theta].
+Send theta up to(kappa-1)/(L_d-1) aftere->0 to match the order upper.
+For minimalchi² use its exact quadratic dependence on the finite
+perturbationt. For triangularPetz take t->0 FIRST at each fixede,theta,
+where its local form isSLD/2, thene->0 andtheta to its endpoint.
+This keeps every finite pair faithful and constrained. Atlambda0,1 use
+the trivial zero and identity actions; kappa1 has no distinct finite pair.
+
+The upper c=lambda+(1-lambda)/kappa is positive in the whole claimed
+range: its minimum numerator is1-(L_d-1)/(d²-1)>0. No negative raw order
+bound is minimized against a harmonic expression outside its valid domain.
+
+LIMITS. Ford2 this is the original qubit ladder andL2=3. Ford3 the new
+range extends tokappa6 instead of4; ford4 tokappa10 instead of5. These
+are order budgets, not manuscript grades. This removes a further range
+restriction but proves no upper beyondL_d. A larger-order or unrestricted
+sharp coefficient remains open, even if harmonic bounds are available.
+The block-projector obstruction persists: Q_i commutes with the base but
+Tr(Q_iD)=plus/minus2em, so this lower is not a unitary encoding for anyH.
+No minimal reference dimension, finite-error robustness or worldwide
+novelty is claimed. Covering prior theorems defeat novelty even when the
+algebra is correct. The standard order upper and convexity machinery are prior.
+
+CHECKS. Two symbolic-d identities (determinant and completeSLD limit), full
+matrix partial trace/support/Gram checks ford2,3,4, plus four exact rational
+faithful finite pairs ford3,4 with both order slacks and negativeCPboundary,
+passed on first execution. The finite solver derives connected blocks from
+the full matrices, not the displayed reduced2x2 basis. These are bounded
+inspection controls, not a formal universal certificate or external audit.

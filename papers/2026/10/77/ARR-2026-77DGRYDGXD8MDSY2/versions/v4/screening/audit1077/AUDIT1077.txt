@@ -1,0 +1,140 @@
+AUDITORÍA TÉCNICA INCREMENTAL1077 — 27 de octubre de2026
+Medición binaria1070 y controles ambientales1073
+
+DICTAMEN
+
+El proyector y las probabilidades de1070 son correctos cuando se define el proyector en el plano activo y se extiende por cero al resto del espacio. La orientación es D(Ber(p0)||Ber(q0)), con q0 del estado base. La masa complementaria es1-p0 y1-q0; no se renormaliza el bloque. Para t>0 y beta>1 FIJOS, los límites D_bin/D_U(salida)->1 y d D_bin/D_U(entrada)->(beta-1)/[(1+t)(beta+3)] son válidos. Los36 certificados se reproducen, sus12 casos adversos se conservan y quedan contenidos en intervalos propios más estrechos.1073 comprueba correctamente sus tres matrices ambientales, pero no constituye por sí solo una prueba asintótica.
+
+Hay dos precisiones sustantivas. Primero, el resultado es un cociente de información medida de salida respecto de información CUÁNTICA de entrada. No es un nuevo coeficiente de contracción de un canal clásico obtenido midiendo también la entrada. Segundo, la advertencia sobre el vector límite es correcta, pero no implica necesidad de diagonalizar exactamente el estado base para obtener el límite: un proyector dependiente de d construido con el núcleo del bloque en theta=1 conserva la misma constante. Este último es un control adicional derivado en esta auditoría, separado de los inputs sellados.
+
+La igualdad es asintótica, no finita. La medición conjunta no elimina la rareza, la precisión requerida, el conocimiento del modelo, los costes dimensionales ni la desaparición de información absoluta. Se mantiene lambda_d=-1/(d²-1), que cambia con d. DPI, entropía relativa medida, Stein y la posibilidad general de mediciones binarias no son novedades. La aportación comprobada es una realización explícita de la constante principal en esta familia, mediante un argumento espectral de dos dimensiones bastante directo. No se establece prioridad ni un óptimo general.
+
+1. Alcance y procedencia
+
+Reutilización explícita del contexto1054/1058/1068 y de la cadena anterior, con filesystem compartido e implicación previa del agente. Configuración solicitada GPT-6 Astra xhigh; identidad/esfuerzo efectivos, independencia y aislamiento no atestados. Una sola auditoría científica activa. No nuevos agentes/chats, publicaciones, contactos con autores ni modificaciones de Git, estado raíz, manuscrito1060 o inputs. No se leyó ni evaluó un manuscrito, ni se asignó nota, voto o recomendación editorial. Las instrucciones globales AGENTS y D:\LEEME.md se mantienen desde la lectura completa del turno1068.
+
+Se verificaron los hashes externos solicitados, los seis payloads, sus tamaños y la identidad C/D antes de analizar:
+  MANIFEST1070:6d25ae4d4495deb96a118ab9cec0daf9f8e5681853eb4cbfe4031a76320a9b84
+  MANIFEST1073:fcd7f81ca8922e17ff2248886a146b14d10d757f70aa8d2675426027398cc3ff
+  PROOF1070:e009b8371845789ac77ce86da72fb9d3f9f44a7ac5d3b67723c8d00a76bc4c3d
+No hay archivos no listados. Las rutas, todos los hashes y la comprobación final de inmutabilidad figuran en INPUT_VERIFIED1077 e INPUT_FINAL1077. Se leyó PROOF1070 y ambos generadores completos; los JSON se analizaron y compararon íntegramente por replay, sin afirmar lectura manual de cada dígito.
+
+Los scripts originales crean carpetas, sellan y copian. Solo se ejecutaron secciones computacionales extraídas, con salidas en replay1070 y replay1073 de esta carpeta; se omitieron esos efectos laterales y la escritura de la prueba. Ambos resultados coinciden en todos los campos excepto utc. REPLAY1077 conserva hashes y adaptaciones: es reproducción del cálculo adaptado, no ejecución inalterada del generador ni prueba independiente.
+
+2. Objeto y probabilidades exactas
+
+Se usa la familia auditada1068: a=d-1, x=e²=t/d, q=a+x, delta=d^-beta, theta=1-delta, nu=beta+3, lambda=-1/(d²-1). El marginal real es r=diag(x,1,...,1)/q, B=I/d tensor r y S=delta B+theta vv*/q, con v=sqrt(x)|00>+sum_{j>0}|jj>. La fase pi procede de H_A=diag(0,1,...,1), norma uno; rho=U_pi S U_pi*. Las entradas y salidas son fieles en cada dimensión y comparten la referencia. Esta dependencia respecto de1051/1054/1066/1068 no se sustituye por una afirmación de independencia.
+
+En la base u=a^(-1/2)sum_{j>0}|jj>,|00>, el bloque base de salida es W=[[A,b],[b,C]], con valores h>l>0 y g=h-l. Su fase conjugada cambia b a-b. Sea Q el proyector ambiental sobre ese plano. La definición correcta es
+  Pi_-=(h Q-Q sigma_out Q)/g,
+con acción cero en Q_perp. En coordenadas del plano equivale a(hI_2-W)/g. Por el polinomio característico, Pi_- es hermítico, idempotente y de traza uno. Por tanto{Pi_-,I-Pi_-} es una POVM proyectiva válida en todo A tensor R.
+
+q0=Tr(Pi_- sigma_out)=l. Las entradas fuera de la diagonal de Pi_- son-b/g; la diferencia rho_out-sigma_out tiene entradas fuera de la diagonal-2b. Así
+  p0-q0=Tr[Pi_-(rho_out-sigma_out)]=4b²/g.
+No hay factor dos perdido ni inversión de estados. La positividad fiel ambiental da0<q0<p0<1. De hecho, si k=4b²/g², entonces0<k<=1 y p0=l+kg<=h<T=h+l<1. Las probabilidades del segundo resultado son exactamente1-q0 y1-p0: incluyen el otro vector del plano y TODOS los modos externos.
+
+Sustituir I_2 por I_ambient en la fórmula, sin la extensión por cero, produce un operador con valor h/g>1 fuera del plano; su complemento no sería positivo. Es un falsador exacto de esa implementación errónea, no de la definición1070.
+
+3. Bernoulli y límite dimensional
+
+La divergencia observada es
+  D_bin=p0 log(p0/q0)+(1-p0)log[(1-p0)/(1-q0)].
+Los límites1068, válidos para t,beta fijos, dan
+  h~(1+t)d^-3,
+  l~[t/(1+t)]d^-(beta+2),
+  b²~t d^-6.
+Luego p0~[4t/(1+t)]d^-3, q0/p0->0 y
+  log(p0/q0)=(beta-1)logd+log4+o(1).
+Para p0,q0->0, el término complementario vale q0-p0+O(p0²+q0²). Una cota elemental de log(1-z)+z justifica la expansión y muestra que es O(p0), menor que p0 logd. Por tanto
+  D_bin~[4t(beta-1)/(1+t)]log(d)/d³.
+La divergencia cuántica exacta de salida es4b² log(h/l)/g y tiene la misma constante. La entrada cumple D_U(entrada)~4t(beta+3)log(d)/d². Se concluye
+  D_bin/D_U(salida)->1,
+  d D_bin/D_U(entrada)->(beta-1)/[(1+t)(beta+3)].
+Todo se refiere a d->infinito con t,beta fijos. No se intercambia con límites de perturbación a dimensión fija ni con un límite en número de copias.
+
+El mecanismo puede describirse sin la notación específica de despolarización: T=h+l->0, h/l->infinito y k=4b²/g²->4t/(1+t)²>0. Entonces p0=l+kg y el término p0 log(p0/l) recupera la constante de kg log(h/l), mientras el complemento cuesta O(h). Esto explica tanto el resultado como su fragilidad al permitir k tender a cero demasiado rápido. Es un cálculo espectral elemental una vez fijada la familia; no una nueva versión de Stein.
+
+La desigualdad finita es estricta para esta medición. Refinarla a tres resultados{Pi_-,Q-Pi_-,I-Q} da probabilidades(p0,T-p0,1-T) y(q0,T-q0,1-T). Como p0!=q0 y1-T>0, fusionar los dos últimos resultados pierde divergencia estrictamente por la desigualdad log-suma. DPI implica D_bin<D_3<=D_U(salida). Este argumento no exige que los dos estados no conmuten; cuando sí son no conmutantes, el antecedente de Berta–Fawzi–Tomamichel da además D_medida_sup<D_U. No hay conflicto con el cociente que tiende a uno.
+
+4. Denominador y normalización: dos falsadores importantes
+
+La comparación Bell usa D_U(entrada) como denominador. Para cualquier par diagonal en una misma base ortonormal máximamente entrelazada, la cota previa es D_U(salida)<=D_U(entrada)/(d²-1). Una medición de salida cualquiera solo puede reducir el numerador. Por eso el cociente propuesto es una comparación válida con esa clase, incluso permitiendo mediciones distintas para distintos pares. No cubre todos los pares conmutantes, separables o PPT ni constituye un test general de entrelazamiento.
+
+Si se aplica Pi_- también a la entrada, se obtiene otro denominador. Para t,beta fijos, ese Bernoulli de entrada tiene D_cl,in~8t/d², frente a D_U,in~4t(beta+3)logd/d². La diferencia es un factor logarítmico. En los cuatro controles ambientales se calcularon ambos denominadores y los cocientes distintos, sin sustituir uno por otro.
+
+Tampoco se obtiene automáticamente un canal clásico binario global. Para esos dos estados, las probabilidades satisfacen z_out=lambda z_in+(1-lambda)r_B, con r_B=Tr(Pi_-B). Pero la supuesta transición para z_in=1 sería lambda+(1-lambda)r_B, que es NEGATIVA en los cuatro controles propios: aproximadamente-0.20894,-0.03511,-0.04858,-0.01582. En general su término principal es-1/[(1+t)d²]. La fórmula afín sobre estas dos probabilidades no define una matriz estocástica en todo el intervalo[0,1]. Medir primero altera las coherencias; no cabe invocar un coeficiente clásico nuevo ni contradecir Makur/Lee.
+
+Por otra parte, renormalizar W por su traza T cambia p0,q0 por p0/T,q0/T. La divergencia condicional resultante puede ser mucho mayor que la divergencia cuántica ambiental: en los controles propios, los factores son aproximadamente1.71,9.00,30.01 y49.60. No es violación de DPI: se ha eliminado el coste de postselección. La medición refinada de tres resultados tiene divergencia T D_Ber(p0/T||q0/T), pues el exterior conserva masa1-T en ambos estados; esa sí es una magnitud ambiental legítima. La medición binaria original agrega las masas de modo diferente y también es legítima. Se deben mantener separados ambos experimentos.
+
+5. Vector límite, orientación y falta de uniformidad
+
+La advertencia de1070 sobre sustituir el vector exacto por su límite tiene contenido real. En el plano activo, el vector límite tiene coeficientes(sqrt(t),1)/sqrt(1+t). Para delta=0 y x=t/d, su probabilidad en el estado base es exactamente
+  q_lim,0=t(1-sqrt(1-1/d))²/[(1+t)(d²-1)q]
+          ~[t/(4(1+t))]d^-5.
+Al añadir delta=d^-beta aparece también el término~[t/(1+t)]d^-(beta+2). El evento bajo la fase sigue siendo~[4t/(1+t)]d^-3. Por ello el cociente entre la divergencia de esta medición límite y la divergencia cuántica de salida tiende a
+  min(beta-1,2)/(beta-1).
+Para beta<=3 conserva la constante; para beta=4 queda2/3 y para beta=6 queda2/5. Los intervalos a d=2^32,t=1 dan respectivamente0.679156... y0.410848..., compatibles con esas constantes y lejos de uno. Esto no refuta1070, que usa el proyector exacto.
+
+Invertir la orientación también destruye la conclusión: D(Ber(q0)||Ber(p0))~p0, sin el factor logd. Su cociente respecto de D_U(salida) tiende a cero. La divergencia cuántica de la fase pi es simétrica por la involución, pero la medición escogida del estado base no preserva ambas orientaciones simultáneamente. No puede intercambiarse p0 y q0 por conveniencia.
+
+La uniformidad en t es falsa. Tomando t_d=1/d y beta=2 se tiene x=d^-2. Los límites racionales dan h~d^-3,l~d^-5,b²~d^-7,p0~4d^-4,q0~d^-5. Por tanto
+  D_bin~4log(d)/d^4,
+  D_U(salida)~8log(d)/d^4,
+  D_U(entrada)~24log(d)/d³.
+Así D_bin/D_U(salida)->1/2 y dD_bin/D_U(entrada)->1/6, en lugar de1 y del1/5 obtenido de una sustitución indebida en la fórmula de t fijo. Los controles certificados a d=256 y65536 conservan este resultado adverso; en el segundo punto el primer cociente es0.517416... y el segundo0.172465... . El supuesto t fijo es indispensable.
+
+6. Control adicional propio: no es necesaria la diagonalización exacta para la constante principal
+
+Este apartado es una deducción propia posterior al inicio1077, no parte de los bytes1070/1073 ni de la auditoría1068. Manténgase esa procedencia si se utiliza.
+
+Sea K_d el proyector sobre el vector(sqrt(a x),1)/sqrt(1+a x) en el mismo plano, extendido por cero fuera. Es el núcleo EXACTO del bloque de salida para theta=1, con d y x finitos. No es el vector límite del apartado5. No depende de beta y evita raíces de autovalores. El cálculo matricial exacto da, para la preparación fiel theta=1-delta:
+  q_K=delta x/[q(1+a x)],
+  p_K=q_K+4theta a x/[(d²-1)q(1+a x)].
+Para x=t/d y delta=d^-beta con t,beta fijos, estas probabilidades tienen las mismas constantes que q0 y p0. En consecuencia su Bernoulli también cumple D_K/D_U(salida)->1 y el mismo límite de retención medida/entrada cuántica.
+
+SYMBOLIC1077 demuestra las identidades y los cuatro controles ambientales las comprueban sin utilizar el proyector1070. INTERVAL1077 compara además ambos proyectores en las mismas dimensiones. Esto limita cualquier lectura de «proyector exacto necesario»: el proyector1070 es necesario para SU fórmula finita p0=l+4b²/g; no es necesario como única elección para el teorema asintótico. No se atribuye novedad a esta simplificación ni se afirma optimalidad finita de ninguno de los dos proyectores.
+
+7. Costes y alcance operacional
+
+La medición es conjunta en A y R, con un efecto de rango uno entangled en general, dependiente de parámetros conocidos. Dos resultados no significa medición local, LOCC, fácil, de precisión fija ni de coste constante. La simplificación anterior reduce la dependencia de la base de medición a d,x para ese control, pero no demuestra implementabilidad o tolerancia al error.
+
+En el proyector exacto, una rotación de ángulo epsilon dentro del plano de autovectores cambia la probabilidad base a l+(h-l)sin²epsilon. Como(h-l)/l~[(1+t)²/t]d^(beta-1), una condición suficiente para error relativo o(1) en q0 es epsilon=o(d^(-(beta-1)/2)). Es un diagnóstico del error angular dentro de ese plano, no una cota universal de precisión para cualquier aparato o protocolo. La filtración a modos externos puede tener otra escala. Un error angular fijo puede borrar la ganancia logarítmica.
+
+p0 es de orden d^-3 y q0 de orden d^-(beta+2). En repeticiones iid de ESTE experimento, los tiempos medios hasta un resultado raro son1/p0 y1/q0; este dato elemental no es un teorema de complejidad óptima de discriminación. Estimar frecuencias pequeñas, conocer el estado y certificar el denominador cuántico tienen costes que no quedan resueltos aquí. No hay un test tomográfico no circular de entrelazamiento ni una ventaja experimental demostrada.
+
+Se heredan los recursos1068: referencia d, orden casi d², condicionamiento~d^(beta+3)/t, información de entrada~4t(beta+3)log(d)/d² y salida medida~[4t(beta-1)/(1+t)]log(d)/d³. Para d=2^m, estas pequeñas probabilidades y condiciones tienen escalas exponenciales en m. lambda_d cambia con la dimensión y tiende al reemplazo. El factor relativo frente a Bell crece, pero la retención medida y la información absoluta desaparecen. Nada afirma ruido fijo, MI, capacidad, máxima Fisher absoluta ni un límite óptimo irrestricto.
+
+8. Controles y fallos preservados
+
+El replay adaptado reproduce36 intervalos1070 y las tres matrices completas1073 de dimensiones4,9,16. Los12 casos adversos1070 son:
+  t=1,beta=2: d=2,3,4,8;
+  t=1,beta=4: d=2,3,4;
+  t=1/4,beta=2: d=2,3,4;
+  t=1/4,beta=4: d=2,3.
+No se eliminan ni se convierten en un umbral válido para todos los d restantes.
+
+El control propio ambiental usa dimensiones4,9,16,25, con casos distintos. Construye primero los estados completos y el proyector a partir del vector(-b,A-l), no a partir de(hQ-W)/g. Verifica exactamente idempotencia, soporte, probabilidades, masa complementaria y la alternativa K_d; luego calcula logaritmos ambientales a100 dígitos, ambos denominadores y los falsadores de normalización/transición. El respaldo universal es algebraico; estas matrices son controles de orientación e implementación.
+
+INTERVAL1077 contiene57 casos: los36 originales,18 casos grandes en t=1,1/4 y beta=2,4,6 hasta d=2^32, un caso beta=3 y dos con t variable. Los36 intervalos originales contienen los propios para las seis cantidades comparadas. Se certifica además D_bin<D_U(salida) en los57 casos. La aritmética dirigida usa enteros de1024 bits,600 términos de atanh y cola<=4/[3(1201)2^1200], con autovalor pequeño calculado como det/h. Proviene de las primitivas propias1054/1058/1068; no se afirma una segunda biblioteca independiente. Los decimales mostrados son solo presentación de extremos racionales.
+
+Los controles matemáticos propios1077 pasaron. Hubo un incidente de lectura: un localizador ad hoc de PDF intentó imprimir Unicode por cp1252 y falló. Se conservó PRIMARY_LOCATOR_FAILURE1077; se corrigió la salida a UTF8 y se repitió la localización, seguida de lectura completa de los pasajes pertinentes. No se ocultaron fallos de controles anteriores: permanecen en sus entregas selladas.
+
+9. Fuentes primarias y lo que cubren
+
+Berta–Fawzi–Tomamichel, arXiv:1512.02615v2, versión final publicada2017, https://arxiv.org/pdf/1512.02615v2. SHA256 ea9783f7fdafb2dcd96a08d3f40106b7303a3adcafd5b65b054d99b39a461632. Se leyeron páginas1–4 y7–8: definición medida, Lemma1, Theorem2 y Proposition5 con sus pruebas pertinentes. La supremización sobre POVMs coincide con la proyectiva; para estados fieles la igualdad con Umegaki exige conmutación. Esto prohíbe vender una igualdad finita general y no contradice el límite1070. No proporciona por sí solo el proyector ni las tasas de esta sucesión. La lectura supera el abstract señalado posteriormente por el coordinador; no se auditó todo el artículo.
+
+Ogawa–Nagaoka, quant-ph/9906090v1, https://arxiv.org/pdf/quant-ph/9906090v1. SHA256 ff95d23c83d72e074e22016d18f7b4a70f7916da747779b1a9185a37bdae5bbd. Se leyeron páginas1–5: modelo de hipótesis, errores, Lemma1, Theorem1 con prueba y Theorem2/argumento. Se trata de estados fijos y número n de copias creciente, con pruebas conjuntas en H^tensor n; no del límite de una sola copia por dimensión variable. Se utiliza la interpretación estándar con0<epsilon<1. El texto v1 incluye literalmente epsilon=0 en su enunciado; no se transmite ese extremo: para un estado nulo fiel, error tipoI cero fuerza el test identidad y error tipoII uno. Se preserva la observación sin atribuirla a una revisión del artículo publicado o contactar a autores.
+
+Ogawa–Hayashi, quant-ph/0110125v1, https://arxiv.org/pdf/quant-ph/0110125v1. SHA256 784c1fa277b32cfea167593a2770e99ef4106bd1872891f4bcb8b27c527fd937. Se leyeron páginas1–2: modelo y Theorems1–2, incluyendo la reformulación del resultado de Hiai–Petz como divergencia medida regularizada sobre copias. Su mecanismo asintótico y cuantificadores son distintos de1070. No se atribuye lectura de su prueba completa.
+
+Hiai–Petz1991, https://doi.org/10.1007/BF02100287: solo se leyó el abstract y los metadatos públicos de Springer. El cuerpo estaba tras suscripción/compra; no se compró ni eludió acceso. La formulación citada se leyó en la fuente primaria posterior de Ogawa–Hayashi, no en el original1991. Su recibo HTML con hash está conservado. No se presenta DPI, Stein o achievability regularizada como descubrimiento de esta investigación.
+
+Las búsquedas dirigidas sobre medición binaria, despolarización, fase y vector límite no identificaron otro teorema primario con exactamente esta sucesión y sus recursos. Hubo resultados ajenos o secundarios que no se usaron para fundamentar la matemática. Esto no establece ausencia ni prioridad, y no es una búsqueda exhaustiva. El benchmark clásico de Makur/Lee conserva las atribuciones y límites ya auditados1058. Se guardaron solo síntesis, URLs, versiones, hashes y recibos propios; no PDFs ni corpus ajeno persistente.
+
+10. Afirmaciones utilizables y límites finales
+
+Utilizables: el proyector ambiental1070 con soporteQ; q0=l y p0=l+4b²/g; orientación Bernoulli y complemento completo; los dos límites para t,beta fijos; preservación de la constante principal de salida, no igualdad finita; comparación medida-salida/entrada-cuántica contra pares comunes-Bell; certificados y adversos; y, como deducción adicional de esta auditoría con procedencia separada, el proyector K_d y sus probabilidades exactas que conservan el mismo límite.
+
+No justificadas: igualdad finita medida=Umegaki, optimalidad finita de Pi_-, necesidad universal de diagonalización exacta, uniformidad en t,beta, reemplazo por el vector límite para todo beta, orientación invertida, renormalización gratuita del bloque, denominador clásico intercambiable, matriz binaria estocástica inducida sobre todas las probabilidades, una mejora clásica del benchmark Makur/Lee, implementación local/LOCC o eficiente, precisión fija, complejidad óptima de muestras, test general de entrelazamiento, ruido fijo, ventaja absoluta, MI/capacidad, prioridad o nueva versión de DPI/Stein.
+
+Se conserva la entrega completa e idéntica en C:\Trabajo\airr\2026-10-27_binary1077-audit y D:\Proyectos\airr-investigacion\2026-10-27_binary1077-audit, con dictámenes, fuentes, procedencia, incidentes, scripts, resultados, verificaciones de inputs y manifiesto SHA256.

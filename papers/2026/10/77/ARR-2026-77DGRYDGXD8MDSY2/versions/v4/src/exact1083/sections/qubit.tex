@@ -1,0 +1,105 @@
+\section{Exact contraction of every unital qubit channel}\label{sec:qubit}
+For the Pauli matrices \(P_j\), \(j=0,x,y,z\), write
+\(\N_w=\sum_jw_j\Ad_{P_j}\), \(w_j\ge0\), \(\sum_jw_j=1\).
+The uniform Pauli twirl is \(\E_A(X)=I_2/2\otimes\Tr_AX\).
+
+\begin{theorem}[Complete unital-qubit classification]\label{thm:pauli}
+The complete equal-reference coefficients of SLD, \(\chi^2_{\min}\) and the finite triangular Petz divergence coincide. For positive Pauli weights their common value is
+\begin{equation}\label{eq:pauli-exact}
+ h(w)=1-\frac{16}{\sum_{j=0,x,y,z}w_j^{-1}}.
+\end{equation}
+If any Pauli weight is zero, the common value is one. A reference of dimension three suffices for each supremum. No assertion of minimal reference dimension or of a faithful maximizing pair is made.
+
+Consequently, for an arbitrary unital qubit CPTP channel with normalized Choi state \(J=(\N\otimes\id)(|\Omega\rangle\langle\Omega|)\), \(|\Omega\rangle=(|00\rangle+|11\rangle)/\sqrt2\), the common value is
+\begin{equation}\label{eq:choi}
+ \eta^c(\N)=\begin{cases}1-16/\Tr(J^{-1}),&J>0,\\1,&J\text{ singular}.\end{cases}
+\end{equation}
+For every normalized nonaffine operator-convex Petz generator this is an upper bound. Equality for each individual generator is not asserted.
+\end{theorem}
+
+\begin{proof}
+Theorem~\ref{thm:harmonic} proves the upper for positive weights. We give the matching lower, including its faithful realization. Put
+\[
+ A=w_0+w_z,\ B=w_x+w_y=1-A,\ u=w_0-w_z,\ v=w_x-w_y,\ z=A-B,
+\]
+\[
+ U=u^2/A,\quad V=v^2/B,\quad k=1-U-V=4w_0w_z/A+4w_xw_y/B>0.
+\]
+In the basis \((00,01,02,10,11,12)\), let
+\[
+ a=(1,0,0,0,e,0)^T,\quad b=(0,e,0,0,0,1)^T,\quad
+ \sigma_e=\frac{aa^*+bb^*}{2(1+e^2)},\qquad e>0.
+\]
+Define the real Hermitian tangent by
+\[
+ D_{04}=D_{40}=1,\quad D_{44}=2e,\quad D_{11}=-2e,\quad D_{15}=D_{51}=-1,
+\]
+with all other entries zero. Then \(\Tr_AD=0\), \(P=2\sigma_e\) is a projection and \((I-P)D(I-P)=0\). The support/kernel limit of the SLD form is
+\begin{equation}\label{eq:boundary-input}
+ g_{\sigma_e}^{\rm SLD}(D)=4\Tr D^2-2\Tr(PDP)^2=16(1+e^2).
+\end{equation}
+Here and below a boundary form denotes this finite limit, not the ordinary inverse of a singular matrix.
+
+The two output blocks on coordinates \((0,4,2)\) and \((3,1,5)\) are \(W\) and \(JWJ\), where \(J\) reverses three coordinates and
+\[
+ W=\frac{M}{2(1+e^2)},\quad M=\begin{pmatrix}A&ue&0\\ue&e^2&ve\\0&ve&B\end{pmatrix}.
+\]
+Their tangent blocks are \(T\) and \(-JTJ\), with
+\[
+ T=\begin{pmatrix}0&u&0\\u&2ez&-v\\0&-v&0\end{pmatrix}.
+\]
+The central Schur complement is \(e^2k\), so both output blocks are positive definite.
+Let \(Y=Y^T\) solve \(MY+YM=4(1+e^2)T\), and put \(x=Y_{12}\), \(y=Y_{23}\), \(c=eY_{22}\). Eliminating the other three entries gives
+\[
+ K_e\begin{pmatrix}x\\y\\c\end{pmatrix}=4(1+e^2)\begin{pmatrix}u\\-v\\z\end{pmatrix},\quad
+ K_e=\begin{pmatrix}
+ A+e^2(1-u^2/A-v^2)&-e^2uv&u\\
+ -e^2uv&B+e^2(1-v^2/B-u^2)&v\\u&v&1
+ \end{pmatrix}.
+\]
+Since \(\det K_0=ABk>0\), the scaled unknowns converge to the nonsingular limiting solution
+\[
+ c_0=4(z-U+V)/k,\quad x_0=u(4-c_0)/A,\quad y_0=v(-4-c_0)/B.
+\]
+Both blocks contribute equally to the SLD form. Thus
+\begin{equation}\label{eq:pauli-lower}
+ \lim_{e\downarrow0}\frac{g_{\N_w(\sigma_e)}^{\rm SLD}(\N_w(D))}{16(1+e^2)}
+ =U+V+\frac{(z-U+V)^2}{k}
+ =1-\frac{16}{\sum_jw_j^{-1}}.
+\end{equation}
+The last equality is a rational identity using \(A+B=1\).
+
+For each fixed \(e>0\), replace the input by
+\(\sigma_{e,\xi}=(1-\xi)\sigma_e+\xi I_6/6\), \(0<\xi<1\).
+The kernel--kernel tangent vanishes, so its input form tends to \eqref{eq:boundary-input}; the output is already faithful and its inverse is continuous. Take \(\xi\downarrow0\) before \(e\downarrow0\).
+Every finite tangent is realized by \(\rho_t=\sigma_{e,\xi}+tD\) for sufficiently small nonzero real \(t\). For triangular Petz take \(t\to0\) first; its local form is \(g^{\rm SLD}/2\). Minimal chi-square is exactly quadratic in \(t\). These ordered limits prove all three lower suprema. The uniform-weight channel has zero output tangent and coefficient zero; no division by that coefficient is used.
+
+For boundary weights set \(w_j(\gamma)=(1-\gamma)w_j+\gamma/4\).
+Since \(\N_\gamma=(1-\gamma)\N_w+\gamma\E_A\), joint convexity and equal reference give, for each of the three quantities, output at \(\N_\gamma\) at most \((1-\gamma)\) times output at \(\N_w\). Consequently
+\(\eta^c(\N_w)\ge h(w(\gamma))/(1-\gamma)\to1\). The upper one is data processing. Faithful inputs have faithful outputs under any Pauli mixture.
+
+Finally use the prior signed singular-value normal form of unital qubit channels~\cite{RSW}: pre/post unitary conjugations reduce the Bloch matrix to a physical Pauli diagonal map. Both rotations must lie in \(SO(3)\); erasing all singular-value signs is not legitimate. These conjugations preserve the equal-reference constraint, the three ratios and the normalized Choi spectrum. This proves \eqref{eq:choi}. The normal-form reduction itself is not new. For the unnormalized Choi matrix \(\Gamma=2J\), the coefficient would instead read \(1-8/\Tr\Gamma^{-1}\).
+\end{proof}
+
+\section{The exact stabilization envelope}\label{sec:envelope}
+Let \(s=\|T\|_\infty\in[0,1]\) for the real Bloch matrix of a unital qubit channel. The ordinary coefficient for these metrics/divergences is \(s^2\), by the prior result of Hiai--Ruskai~\cite[Theorem~6.1]{HR}.
+
+\begin{theorem}\label{thm:envelope}
+At fixed \(s\), the possible complete coefficients in Theorem~\ref{thm:pauli} fill precisely \([s^2,F(s)]\), where
+\[
+ F(s)=\begin{cases}3s^2/(1-2s),&0\le s\le1/3,\\1,&1/3\le s\le1.\end{cases}
+\]
+For \(s>0\) the ratio between complete and ordinary coefficients is at most nine, and nine is attained as a ratio of channel coefficient suprema. It is undefined at \(s=0\), where both coefficients vanish.
+\end{theorem}
+\begin{proof}
+After the signed normal form write \(T=\operatorname{diag}(t_1,t_2,t_3)\). The Pauli weights are the four affine functions \((1\pm t_1\pm t_2\pm t_3)/4\) with an even number of minus signs. For \(s<1/3\), the cube \([-s,s]^3\) is inside the positive-weight CP tetrahedron. The reciprocal sum \(S=\sum_j1/w_j\) is convex, so its maximum occurs at a vertex. The two values there are
+\[
+ S_+=\frac4{1+3s}+\frac{12}{1-s},\qquad S_-=\frac4{1-3s}+\frac{12}{1+s},
+\]
+and \(S_--S_+=192s^3/[(1-9s^2)(1-s^2)]\ge0\). Since \(1-16/S\) increases with \(S\), the upper is achieved by \(T=-sI\) and equals \(F(s)\). For \(s\ge1/3\), DPI gives one, achieved by the CP boundary map
+\(\operatorname{diag}(-s,-(1-s)/2,-(1-s)/2)\).
+
+The map \(\operatorname{diag}(-s,0,0)\) realizes the lower \(s^2\). A straight segment to the corresponding upper example remains CP and keeps norm \(s\). The formula in Theorem~\ref{thm:pauli} extends continuously to the simplex boundary, with value one there. The intermediate value theorem therefore gives every value of the interval; no monotonicity along the segment is assumed. Dividing \(F(s)\) by \(s^2\) proves the factor-nine statement.
+\end{proof}
+
+At \(T=-I/3\), the channel chooses a Pauli axis uniformly, measures it and prepares the opposite eigenstate. It is therefore entanglement breaking. Nevertheless its complete coefficient is one, while its ordinary coefficient is \(1/9\). This does not say that all entanglement-breaking channels have complete coefficient one, nor that a faithful input attains the supremum exactly.

@@ -1,0 +1,170 @@
+AUDITORÍA TÉCNICA INCREMENTAL 1068 — 27 de octubre de 2026
+1063 / 1064 / 1066: sucesiones dimensionales de la órbita local de fase
+
+DICTAMEN
+
+Los cuatro límites de 1063 y los cuatro de 1066 son correctos con sus cuantificadores: d entero tiende a infinito; en 1066, t>0 y beta>1 son constantes independientes de d. La prueba se reconstruye directamente desde las matrices de la familia 1051/1054. No se necesita intercambiar un límite a dimensión fija con d->infinito. Los certificados 1064 y 1066 son reproducibles; los 40 intervalos originales contienen los intervalos propios más estrechos de esta auditoría. No se encontró un falsador de las afirmaciones correctamente acotadas.
+
+El valor del refinamiento es cuantificar una sucesión finita por dimensión y sus costes, en vez de invocar límites ordenados a dimensión fija. Una vez disponible la fórmula exacta de 1051/1054, los nuevos límites son un análisis algebraico y logarítmico bastante directo; no constituyen una nueva familia física, una frontera óptima de recursos ni un gran descubrimiento autónomo. La búsqueda primaria dirigida no establece prioridad. Los antecedentes leídos se distinguen por sus hipótesis; la comparación clásica Bell y sus equivalencias entre f son maquinaria previa.
+
+La separación creciente es RELATIVA: lambda_d=-1/(d²-1) cambia con d y tiende a cero, el benchmark Bell cae como d^-2 y la retención de esta familia cae como alpha/d. La información absoluta de entrada y salida se desvanece. Polinómico en d significa exponencial en m cuando d=2^m. No hay aquí ruido fijo, ventaja absoluta de estimación, eficiencia en qubits, robustez experimental ni una cota superior cuántica irrestricta.
+
+1. Procedencia, integridad y límites del encargo
+
+Se reutilizan explícitamente el contexto 1018/1025/1044/1054/1058 y el filesystem compartido. Este agente participa en la cadena previa. Configuración solicitada: GPT-6 Astra xhigh; identidad/esfuerzo efectivos, independencia y aislamiento no atestados. No se afirma auditoría independiente. Una sola revisión científica activa; sin agentes ni chats nuevos, contacto con autores, publicación, modificación de Git o del estado raíz. No se leyó ni evaluó manuscrito alguno ni se dio nota, voto o recomendación editorial. El manuscrito 1060, revisión 1048 y la posterior propuesta 1070 de medición binaria quedaron fuera. Se releyeron las instrucciones globales AGENTS y D:\LEEME.md antes de crear esta entrega.
+
+Se verificaron antes de auditar los diez payloads y los tres manifiestos, sus tamaños, SHA256 y la identidad C/D. No hay archivos extra en ninguno de los tres paquetes. Los hashes de manifiesto no vinieron externamente en el encargo; se calcularon al inicio:
+  1063 MANIFEST: 861c7fd439a6bc061b8039a2d316e5944a712d8c275a1c0b35b40585cb1c5488
+  1064 MANIFEST: 6d737da9296d0e4f06843fe81479eb12b9a2f10f569a3ef8e4d68cfd5e9ce01f
+  1066 MANIFEST: 5deb2f7dda96ec7407711582c62fa2e727baf796e1400c5230de868d08efe195
+  PROOF1063: 178a8e628812aa5b56e60f0e1762d3d3d65fc19c5b71be8adeeacf3cc1c32efc
+  PROOF1066: 70b42c93eebaa3ae7dd7e7fc42f677e80442d8cd6b3ddc8fa0b6836ffe432a5c
+Las rutas exactas y la verificación final están en INPUT_VERIFIED1068.json e INPUT_FINAL1068.json. Se leyeron completos los dos textos y los tres generadores; se analizaron los JSON y se compararon íntegramente por replay, sin afirmar lectura manual de todos sus dígitos.
+
+Los generadores originales crean carpetas, escriben pruebas, sellan y copian a D. No se ejecutaron como programas completos. Se extrajeron únicamente sus secciones de cálculo, dirigidas a replay1063/1064/1066 dentro de esta auditoría. El registro conserva los hashes y las transformaciones. Los tres resultados coinciden en todos los campos salvo utc. Esto es reproducción adaptada del cálculo, no ejecución inalterada del generador ni una prueba independiente. Los originales permanecen intactos y se vuelven a verificar al cierre.
+
+2. Reconstrucción física y matricial común
+
+Escribo x=e²>0, delta=1-theta en (0,1), a=d-1, q=a+x, d>=2. Sea
+  v=sqrt(x)|0,0>+sum_{j=1}^{d-1}|j,j>,
+  sigma=vv*/q,
+  r=Tr_A sigma=diag(x,1,...,1)/q,
+  B=I_A/d tensor r,
+  S=delta B+(1-delta)sigma.
+Tr S=1 y r es el marginal real, no un marginal sustituido por el uniforme. H_d=diag(0,1,...,1) actúa solo en A; su norma y diámetro espectral son uno. H_d se mantiene fijo a lo largo de cada órbita y para sus parámetros de preparación; al cambiar d cambia naturalmente el espacio y se usa la correspondiente familia H_d. U_phi=exp(-i phi H_d) tensor I_R deja B invariante y no cambia el marginal R. Rho=U_pi S U_pi* es fiel y de igual referencia. La despolarización local conmuta con esta órbita y transforma S en S_p=(1-p)B+p sigma, p=lambda theta.
+
+La positividad de la salida en el extremo negativo no se presupone por una extrapolación formal. B^{-1/2} sigma B^{-1/2} es positivo, de rango uno y traza d². Por tanto el espectro del estado blanqueado S_p es 1-p, salvo un valor 1+(d²-1)p. Para p=-theta/(d²-1), este último es delta>0. Para la entrada, el orden mínimo exacto respecto de B es
+  K=1+(d²-1)theta.
+La conjugación local preserva este orden. Ambos pares son fieles para cada dimensión y para todos los parámetros positivos declarados.
+
+El plano activo tiene base u=a^(-1/2)sum_{j=1}^{d-1}|j,j> y |0,0>. La compresión, sin renormalizar su traza, es
+  W_p=1/(d q) [[1+(d a-1)p, d p sqrt(a x)],
+               [d p sqrt(a x), (1+a p)x]].
+Fuera del plano hay d-1 modos con valor (1-p)x/(dq) y d²-d-1 modos con valor (1-p)/(dq). Las multiplicidades sumadas a dos dan d². No se han perdido modos del marginal ni masas de bloques.
+
+De ahí se obtienen identidades exactas para TODOS los parámetros, que son la base de la auditoría. Poniendo A=d(d-1)-1+(d-1)x:
+  T_in=Tr W_theta=1-delta A/(d q),
+  D_in^det=det W_theta=x delta [d²-(d²-1)delta]/(d²q²),
+  T_out=[d(1+(d-1)x)+delta A]/[(d²-1)dq],
+  D_out^det=x delta (d²-delta)/[(d²-1)d²q²].
+En este informe D^det significa determinante; no debe confundirse con la divergencia Umegaki.
+
+3. Modos mínimos, máximos y orientación de la información
+
+Para la entrada, el mínimo EXACTO general es
+  lambda_min(S)=delta min(1,x)/(d q).
+La desigualdad S>=delta B da el lower y un vector |i,j> con i!=j y una etiqueta R de peso mínimo lo alcanza. Si x<=1, sirve |i,0>, i!=0. Si x>1, sirve una etiqueta no nula. El mayor autovalor es w_+(theta), en el plano activo: su diagonal ya alcanza o excede los dos niveles inactivos y es al menos theta. En particular theta<=lambda_max<=1. La fase preserva todo el espectro.
+
+Para p<0, el menor autovalor de la salida es w_-(p) del plano activo. Su mínimo es menor que ambos niveles inactivos por comparación de las diagonales del plano. El mayor autovalor de salida es exactamente (1-p)max(1,x)/(d q): S_p<=(1-p)B y los modos fuera del soporte de v alcanzan ese máximo. Estas fórmulas de salida son controles adicionales propios, no una hipótesis de los candidatos.
+
+La advertencia de 1066 para x>1 es necesaria. Por ejemplo d=3,t=6,beta=2 da x=2, delta=1/9: el mínimo es 1/108, mientras que usar sin condición delta x/(d q) produciría 1/54. Este ejemplo no refuta el texto, que limita correctamente esa fórmula a dimensiones suficientemente grandes.
+
+Sea c=theta sqrt(a x)/q y ell(W)=(log w_+-log w_-)/(w_+-w_-). La identidad de esta órbita es
+  D_U(U_pi S U_pi* || S)=4c² ell(W_theta),
+  R_U=lambda² ell(W_lambda theta)/ell(W_theta).
+La orientación rho||S es la especificada. Las entropías de S y U S U* coinciden; el cálculo se reduce a Tr[(S-rho)log S], con las coherencias opuestas y los bloques restantes iguales. Por ello los bloques subnormalizados se pueden usar directamente: cualquier contribución escalar de log de su masa se cancela por igualdad de trazas. No se añade una normalización artificial del plano. La tangente física es -i[H,S], imaginaria, y su BKM es 2c²ell(W_theta); la divergencia de fase pi es dos veces ese BKM en esta familia. No se afirma esa igualdad para órbitas generales: el falsador previo sigue vigente.
+
+4. Límite 1063: e=1/d y delta=1/d
+
+Sustituir x=d^-2 en las identidades exactas da
+  T_in->1, d^5 D_in^det->1,
+  d³ T_out->2, d^7 D_out^det->1.
+Si T>0 y D/T²->0, las raíces de z²-Tz+D obedecen w_+/T->1 y w_-/(D/T)->1; esto sigue de sqrt(1-4D/T²)->1 y w_-=D/w_+. Aplicándolo:
+  w_+(in)->1, w_-(in)~d^-5,
+  w_+(out)~2d^-3, w_-(out)~(1/2)d^-4.
+En particular log(w_+/w_-)_in/log d->5, mientras que el logaritmo de salida es log d+log4+o(1). Como la diferencia de raíces de salida es ~2d^-3,
+  ell_in/log d->5,
+  ell_out/(d³log d)->1/2.
+Junto a d^4lambda²->1, se obtiene dR_U->1/10. Este es un argumento sobre una sucesión concreta; no se intercambia e->0 a d fijo con un límite en d.
+
+Además c²~d^-3, mínimo de entrada~d^-5 y máximo->1. Así:
+  D_U(entrada)~20log(d)/d³,
+  condicion(entrada)~d^5,
+  distancia_traza(rho,S)=1/2||rho-S||_1=2|c|~2d^-3/2.
+El orden exacto es d²-d+1/d. Como control derivado, D_U(salida)~2log(d)/d^4 y la condición de salida~2d². Los cuatro límites reclamados son válidos.
+
+5. Límite 1066: x=t/d y delta=d^-beta
+
+Fijar t>0 y beta>1, nu=beta+3>4. Para justificar el cuantificador continuo beta, sin inferirlo de los cuatro casos del checker, se hace u=1/d y y=d delta=d^(1-beta). Los siete cocientes racionales
+  T_in, d³D_in^det/delta, d³T_out, d^5D_out^det/delta,
+  d²c², d³[delta x/(dq)]/delta, d^4lambda²
+se vuelven funciones racionales de u,y,t con denominadores no nulos en (u,y)=(0,0), para cada t fijo positivo. Su límite conjunto es
+  1, t, 1+t, t, t, t, 1.
+Se verifican sus identidades exactas en SYMBOLIC1068. Esta continuidad conjunta justifica el camino y=d^(1-beta), también para beta no entero. No es una extrapolación de beta=2,4 ni un intercambio de límites independientes.
+
+Por tanto w_+(in)->1, w_-(in)~t d^-nu y ell_in/log d->nu. En la salida D_out^det/T_out²~[t/(1+t)²]d^(4-nu)->0, y
+  w_+(out)~(1+t)d^-3,
+  w_-(out)~[t/(1+t)]d^-(nu-1),
+  log(w_+/w_-)_out/log d->nu-4.
+De aquí ell_out/(d³log d)->(nu-4)/(1+t), y finalmente
+  dR_U -> alpha=(nu-4)/[(1+t)nu].
+No se ha reemplazado un logaritmo de matriz por el logaritmo de un cociente de trazas. Las raíces positivas, su separación y el coeficiente del logaritmo están controlados explícitamente.
+
+c²~t/d² y, eventualmente x<=1, el mínimo de entrada~t d^-nu. Se siguen
+  D_U(entrada)~4t nu log(d)/d²,
+  condicion(entrada)~d^nu/t,
+  distancia_traza~2sqrt(t)/d.
+El orden exacto es d²-d^(2-beta)+d^-beta. Como consecuencias derivadas, D_U(salida)~[4t(nu-4)/(1+t)]log(d)/d³ y condicion(salida)~[(1+t)/t]d^beta.
+
+Para t=1,beta=2 se mantiene alpha=1/10 y condicion~d^5, y la información de entrada mejora por un factor asintótico d respecto de 1063. Se paga un orden mayor: d²-1+d^-2 frente a d²-d+d^-1. Por ello no es dominación a presupuesto de orden fijo. El tradeoff descrito es una familia de compromisos alcanzables, no una frontera Pareto ni un teorema de necesidad de esos exponentes.
+
+6. Cuantificadores y falsadores de extensiones indebidas
+
+No se halló un contraejemplo de 1063 o de 1066 con sus hipótesis. Sí se produjeron o conservaron controles adversos útiles:
+
+• t no puede convertirse silenciosamente en t_d. Si t_d=1/d y beta=2, entonces x=d^-2. Las identidades racionales dan raíces de entrada de órdenes 1,d^-6 y de salida d^-3,d^-5. El límite real es dR_U->1/3, no el 1/5 que resultaría de insertar t_d en la fórmula de t fijo y luego tomar d->infinito. La información de entrada es ~24log(d)/d³, no ~20log(d)/d³. Hay controles certificados a d=256 y65536; el segundo da dR_U=0.3333191453... . La falta de uniformidad en t es sustantiva.
+
+• beta=1 está fuera de 1066. En esa frontera, d³T_out->2+t, no 1+t; las dos raíces tienen orden d^-3 y dR_U->0. La prueba de separación con nu>4 no puede usarse sin cambios. No se refuta 1063, que también usa delta=d^-1 pero tiene x=d^-2, otro régimen.
+
+• El mínimo delta x/(dq) falla para x>1, como se mostró en el apartado3. La salvedad original de 1066 está justificada.
+
+• Para una fracción objetivo 0<alpha0<1 se necesita elegir t con alpha0(1+t)<1 y
+  nu>4/[1-alpha0(1+t)],
+  beta>4/[1-alpha0(1+t)]-3.
+La segunda condición no se reduce a beta>1. La frase abreviada del texto sobre beta debe entenderse como implicación y definición de nu, no equivalencia de todas las desigualdades. Para objetivos no positivos la existencia es trivial. La afirmación existencial principal es correcta. Por ejemplo t=1/100,beta=42,nu=45 da alpha=820/909>0.9, pero condicion~100d^45. No hay un exponente uniforme cuando alpha0 se aproxima a uno, ni se alcanza alpha=1 con t>0,nu finito.
+
+Los pequeños d adversos no se eliminaron. 1064 conserva gaps negativos en d=2,3,4. Los nuevos intervalos completan d=5,6,7 y también son negativos; en d=7 el gap es aproximadamente -0.0000550601200, mientras que en d=8 es +0.00208632327. No se infiere de esta lista que todos los enteros d>=8 tengan gap positivo; el límite demuestra positividad eventual, sin un umbral universal explícito obtenido aquí.
+
+1066 tiene nueve combinaciones adversas de las 32 originales: (t=1,beta=2,d=2,3,4); (1,4,2,3); (1/4,2,2,3,4); (1/4,4,2). No hay intervalos originales de signo incierto. Estos hechos son compatibles con la conclusión asintótica y limitan cualquier promesa finita uniforme.
+
+7. Recursos y significado de la comparación
+
+El benchmark exacto común-Bell-diagonal en este extremo es 1/(d²-1), por el resultado clásico ya auditado en 1058. Así R_U/[1/(d²-1)]~alpha d, con alpha=1/10 en1063. Al mismo tiempo R_U->0. El canal cambia con d, lambda_d->0; esta no es una ventaja que crece bajo un canal de ruido fijo. Ambas informaciones absolutas se anulan a las tasas dadas arriba. El mensaje posterior del coordinador subrayando este alcance se incorporó sin alterar los inputs.
+
+La dimensión de A y R es d y la ambiente es d²; el orden crece casi hasta d². Si d=2^m, A y R requieren m qubits cada uno en una codificación binaria. En 1063, condicion~2^(5m), información de entrada~20(m log2)2^(-3m), e=2^-m y delta=2^-m. En1066, condicion~2^(nu m)/t, información~4t nu(m log2)2^(-2m), x=t2^-m y delta=2^(-beta m). Estos son costes y pequeñas escalas exponenciales en m. La representación simbólica compacta de los estados no demuestra coste experimental, preparación eficiente o precisión de control suficiente.
+
+Local significa aquí H_A tensor I_R. No se ha demostrado localidad de pocos cuerpos en una realización de A por m qubits, ni complejidad de implementación o tolerancia a ruido. Tampoco se ha demostrado que sean imposibles: simplemente no se siguen de ||H||=1. El Hamiltoniano sí es una órbita física legítima con norma y fase acotadas en el modelo matemático.
+
+Como comprobación de la distinción entre retención y cantidad absoluta, la fórmula SLD de esta misma órbita da F_in=4c²/T_in: ~4/d³ en1063 y ~4t/d² en1066. No se obtiene Fisher absoluto creciente. Este dato no es una comparación metrológica óptima ni una afirmación nueva sobre mediciones. La propuesta1070 de medición binaria no fue consultada.
+
+8. Controles propios y preservación de incidentes
+
+SYMBOLIC1068 reconstruye las cuatro expresiones racionales generales, siete límites1063 y los siete límites conjuntos de1066 para t,beta fijos, además de los falsadores de cuantificadores. El tratamiento analítico de raíces y logaritmos consta en este informe; los límites universales no se deducen de una tabla numérica.
+
+AMBIENT1068 construye primero matrices completas de tamaño d², sin usar el solver de bloques del input. Siete casos en d=2,3,4,5 cubren ambas familias y x>1. Se verifican exactamente trazas parciales, normalización, blanqueo/orden, covariancia de la fase y los polinomios característicos completos con todas las multiplicidades. Después se calculan logaritmos desde eigensistemas ambientales a90 dígitos y D_U(rho||S), D_U(Nrho||NS), y el BKM de -i[H,S]. El error relativo frente a la identidad del plano es menor que10^-70. Es un control distinto de implementación, no atestación de independencia del agente o de la construcción matemática.
+
+El primer intento de este control falló: eo[-1] en un vector matriz de mpmath devolvía cero, no el último autovalor. Se conservan ambient1068_initial.py, AMBIENT_FAILURE1068.json y el diagnóstico mínimo que exhibe ese comportamiento. La reparación fue sustituirlo por eo[n-1]; no cambió parámetros ni la afirmación matemática. Los siete casos pasaron después. No se borró el fallo.
+
+INTERVAL1068 contiene57 casos certificados con enteros: los40 intervalos originales, los11 puntos diagnósticos1063, dimensiones adicionales5,6,7, tres puntos con beta=3/2, seis dimensiones grandes hasta2^64 y dos ejemplos de t variable; hay solapamiento entre esas categorías. Todos los40 intervalos originales de cociente, gap, información de entrada y condición contienen los intervalos propios. Se conservaron todas las combinaciones adversas. Por ejemplo para t=1,beta=2,d=2^64 se obtiene dR_U=0.10312499999999..., aún por encima del límite0.1: la convergencia logarítmica es lenta, no evidencia de otra constante.
+
+La aritmética reutiliza primitivas propias1054/1058, elevadas a1024 bits y600 términos de la serie atanh, con cola positiva acotada por4/[3(1201)2^1200]. Multiplicación, recíproco, raíz y suma se redondean hacia fuera usando enteros; los decimales son solo visualización. Los logaritmos se calculan tras reducción de rango. El autovalor pequeño se obtiene como determinante/autovalor grande, evitando la resta de raíces cercanas. El linaje compartido de estas primitivas se declara; la reproducción no aporta una segunda biblioteca independiente. Se revisaron la cota de la cola y las orientaciones de redondeo. Los extremos exactos se guardan en JSON.
+
+9. Fuentes primarias dirigidas y alcance de la novedad
+
+Gao–Zhao, Tight Entropy Contraction of Generalized Quantum Depolarization, arXiv:2608.19685v1, https://arxiv.org/pdf/2608.19685v1. SHA256 9f3000d679d6be4f7483c91cf19aa8b50942cc7b35a6202eece158023f88243c. Se leyeron páginas PDF2–4 y16–17: definiciones, Teorema1.2/Corolario1.3, Proposición3.11 con prueba y Lemma3.12/Teorema3.13. Allí se comparan estados con su proyección E(rho), se usa0<p<1 y se obtienen asintóticos de índice para p fijo. La prueba del testigo de índice y su reducción binaria no proporcionan directamente esta órbita no conmutante, el canal negativo dependiente de d ni estos costes de información/condición. Es un antecedente cercano e importante; los pasajes leídos no son un teorema cubriente de los mismos cuantificadores. No se auditó todo el artículo ni se interpreta su ausencia de una fórmula como prueba de prioridad.
+
+Chapeau-Blondeau, arXiv:1904.01904v1, https://arxiv.org/pdf/1904.01904v1. SHA256 cb0716f339793d78ee21229de6810b8fda7ff77c9ce96915d5075ca0dbff5ae4. Se leyeron abstract y páginas1–4, incluyendo el modelo de fase y ruido que conmuta con ella. Es antecedente directo de fase unitaria bajo ruido y de optimizar recursos de entrelazamiento. Su objeto es Fisher SLD de qubits/probes y precisión de estimación, no el cociente Umegaki finito y el tradeoff dimensional concreto que se verifica aquí. Se leyó el modelo, no se auditó toda su optimización; no cabe vender la idea general de fase/ancilla bajo ruido como nueva.
+
+Frey–Collins–Gerlach, arXiv:1008.1557v1, https://arxiv.org/pdf/1008.1557v1. SHA256 ca619694802c9d0c6e50cc0a8462bcbccc617099f943db12d3b9136270900c7d. Se leyeron páginas1–2: abstract, problema de identificación del canal, definiciones de SLD y restricción de su estudio a0<=theta<=1. Se estima el parámetro de despolarización y se comparan esquemas de sondas; aquí se retiene la información de una fase y se cambia el canal con la dimensión. No se infiere cobertura de la presente fórmula ni novedad genérica de usar ancillas o de contabilizar costes.
+
+Las búsquedas dirigidas adicionales sobre condición, fase, contracción y dimensión no produjeron otro teorema primario identificado que cubra literalmente este tradeoff. Algunos resultados fueron secundarios y se usaron solo como localizadores; una búsqueda vacía no es prueba de ausencia. No se declara búsqueda exhaustiva, prioridad mundial ni novedad garantizada. La equivalencia clásica de Makur–Zheng y el antecedente Lee–Makur conservan el alcance y la incertidumbre específica ya documentados en1058; no se reabrió ni atribuyó novedad a ese benchmark.
+
+No se guardó corpus ajeno: solo URLs, versiones, hashes, recibos y síntesis propias. Los PDFs se leyeron en memoria. READINGS1068 distingue abstracts, modelos, enunciados, pruebas seleccionadas y referencias heredadas.
+
+10. Afirmaciones listas y no justificadas
+
+Listas con las precisiones expresadas: los límites1063; los límites1066 para t,beta fijos y beta>1; normalización y referencia real; positividad fiel por dimensión y orden exacto; min/max espectrales y recursos especificados; separación relativa eventual contra la clase común-Bell-diagonal en lambda_d negativo; el aumento de escala de información1066 frente a1063 con el coste adicional de orden; existencia de cualquier fracción fija menor que uno respecto de la escala inferior conocida1/d, pagando constantes/exponentes dependientes del objetivo; los certificados finitos con sus signos adversos.
+
+No justificadas: uniformidad en t,beta o en la fracción objetivo; todos los d>=8 por la tabla; ruido fijo; ventaja absoluta, número de qubits eficiente, preparación eficiente o robustez; frontera óptima de condición/información; dominación a orden fijo; upper o igualdad irrestricta cuántica; extensión del lower a cada f Petz; todos los pares conmutantes, separables o PPT; MI, capacidad o una implementación/medición de1070; prioridad o descubrimiento autónomo de la idea general. La cadena1051/1054 y el benchmark previo son dependencias sustantivas.
+
+La entrega completa en C:\Trabajo\airr\2026-10-27_phase-tradeoff1068-audit se conserva idéntica en D:\Proyectos\airr-investigacion\2026-10-27_phase-tradeoff1068-audit. Incluye dictámenes por componente, procedencia, lecturas, incidentes, replay adaptado, controles y salidas propias, verificaciones de inputs y manifiesto SHA256. El fallo inicial y todos los resultados adversos quedan incluidos en el cierre.
