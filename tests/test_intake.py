@@ -469,10 +469,33 @@ class IntakeTests(unittest.TestCase):
 
         self.assertEqual(len(sent), 1)
         body = sent[0].get_content()
+        self.assertIn("Author Example", str(sent[0]["Subject"]))
+        self.assertIn("Authors (as submitted): Author Example\n", body)
+        self.assertNotIn("direct-author", body)
         self.assertIn(f"https://intake.example.org/admin/submission/{submission_id}", body)
         self.assertNotIn("A" * 80, body)
         self.assertNotIn("%PDF", body)
         self.assertNotIn("attachment", str(sent[0].get_content_disposition()))
+
+    def test_operator_email_marks_missing_author_credit_as_anonymous(self) -> None:
+        self.app.config.update(SMTP_HOST="smtp.example.org", SMTP_FROM="arr@example.org")
+        with patch("services.intake.app.send_mail", return_value=True) as sending:
+            self.upload(fields={"authors": ""})
+        message = sending.call_args.args[0]
+        self.assertIn("Anonymous", str(message["Subject"]))
+        self.assertIn("Authors (as submitted): Anonymous\n", message.get_content())
+        self.assertNotIn("direct-author", str(message))
+
+    def test_operator_email_author_credit_cannot_add_headers_and_body_is_complete(self) -> None:
+        self.app.config.update(SMTP_HOST="smtp.example.org", SMTP_FROM="arr@example.org")
+        credit = "Érika Example; " + "Coauthor " * 15 + "\r\nBcc: injected@example.org"
+        with patch("services.intake.app.send_mail", return_value=True) as sending:
+            self.upload(fields={"authors": credit})
+        message = sending.call_args.args[0]
+        self.assertIsNone(message["Bcc"])
+        self.assertIn("Érika Example", str(message["Subject"]))
+        self.assertIn("Authors (as submitted): " + " ".join(credit.split()) + "\n", message.get_content())
+        self.assertEqual(str(message["From"]), "arr@example.org")
 
     def test_declined_pdf_is_erased_on_schedule(self) -> None:
         submission_id = self.upload()
