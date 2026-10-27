@@ -17,3 +17,9 @@ Original report files are byte-preserved. The archived whole-review manifest als
 ## Reproducibility
 
 The supplied checker and independent-context reviewer checkers are in src/python. They require numpy, sympy and mpmath and produce bounded diagnostics; successful samples do not prove the universal theorem. No new Lean formalization or foreign full text is distributed. Source-and-review.zip and MANIFEST.sha256 bind the public files.
+
+Binding935 is representation of the same923 review, not another vote. major_revision is a later format clarification because the original report had no native recommendation; the later timestamp/prompt label are not reconstructed original provenance.
+
+- [Native same-review projection](screening/binding935-model-response.json)
+- [Exact chronology and provenance](screening/binding935-BINDING935.json)
+- [Operator binding notice](screening/operator-binding935-notice.txt)
