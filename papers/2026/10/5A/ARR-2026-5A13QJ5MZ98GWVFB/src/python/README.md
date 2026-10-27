@@ -1,0 +1,1 @@
+Run check915.py with an explicit --output path to save original bounded controls. controls923.py and supports923.py are separate reviewer diagnostics; inspect their output paths before running. Require numpy, sympy and mpmath. No sample establishes novelty or uniform reference dimension.

@@ -1,0 +1,1 @@
+The author-authorized manuscript and its own code/control supplements are CC-BY-4.0; exact scopes are in LICENSES.json and metadata.json. Catalogue metadata is CC0. Original model reports and their objections accompany this exact version. No foreign full-text research corpus is redistributed.
