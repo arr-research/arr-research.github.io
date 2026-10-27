@@ -649,7 +649,7 @@ def find_or_create_submitter(email: str, display_name: str) -> sqlite3.Row:
     return db.execute("SELECT * FROM users WHERE email=?", (email,)).fetchone()
 
 
-def notify_operator(submission_id: str, title: str, submitter_email: str, scan_status: str) -> bool:
+def notify_operator(submission_id: str, title: str, submitter_email: str, scan_status: str, *, authors: str = "") -> bool:
     host = str(current_app_config("SMTP_HOST"))
     sender = str(current_app_config("SMTP_FROM"))
     if not host or not sender:
@@ -657,7 +657,8 @@ def notify_operator(submission_id: str, title: str, submitter_email: str, scan_s
         return False
     message = EmailMessage()
     safe_title = title.replace("\r", " ").replace("\n", " ")
-    message["Subject"] = f"[AIRR private submission] {submission_id}: {safe_title[:120]}"
+    author_credit = " ".join(authors.split()) or "Anonymous"
+    message["Subject"] = f"[AIRR private submission] {submission_id}: {author_credit[:80]} — {safe_title[:120]}"
     message["From"] = sender
     message["To"] = current_app_config("OPERATOR_EMAIL")
     if submitter_email and not submitter_email.endswith('@accounts.invalid'):
@@ -666,6 +667,7 @@ def notify_operator(submission_id: str, title: str, submitter_email: str, scan_s
         "A new manuscript was submitted to AIRR's private quarantine.\n\n"
         f"Case: {submission_id}\n"
         f"Title: {title}\n"
+        f"Authors (as submitted): {author_credit}\n"
         f"Scanner status: {scan_status}\n"
         f"Review after signing in: {current_app_config('PUBLIC_ORIGIN')}/admin/submission/{submission_id}\n\n"
         "The manuscript is not attached to this email and has not been published."

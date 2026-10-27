@@ -66,6 +66,6 @@ def receive(app, a, upload, data, reserve=None):
     a.audit('submission_received', case_id, sha256=checksum, size_bytes=size, channel=data.get('channel','human'))
     row = db.execute('SELECT * FROM submissions WHERE id=?', (case_id,)).fetchone()
     scan_status, _ = a.scan_submission(row)
-    a.notify_operator(case_id, data['title'], data['email'], scan_status)
+    a.notify_operator(case_id, row['title'], data['email'], scan_status, authors=row['authors'])
     app.extensions['editorial']['received'](case_id)
     return db.execute('SELECT * FROM submissions WHERE id=?', (case_id,)).fetchone()
