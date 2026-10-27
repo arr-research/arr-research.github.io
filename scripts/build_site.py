@@ -980,7 +980,14 @@ def render_input_notices(paper, notices: list[dict], base: str) -> str:
     return "".join(
         f'<details class="assessment-input-notice"><summary>Review input clarification</summary><p>{esc(n["message"])}</p>'
         f'<p><small>Operator record · {exact_time(n["recorded_at"])} · '
-        f'<a href="{base}/registry/model-assessments.json">Source files and affected reports</a></small></p></details>'
+        f'<a href="{base}/registry/model-assessments.json">Source files and affected reports</a></small></p>'
+        '<ul class="assessment-source-files">'
+        + "".join(
+            f'<li><a href="https://github.com/arr-research/arr-research.github.io/blob/main/{quote(source["path"], safe="/")}">{esc(Path(source["path"]).name)}</a> '
+            f'· SHA-256 <code>{esc(source["sha256"])}</code></li>'
+            for source in n["source_files"]
+        )
+        + '</ul></details>'
         for n in matching
     )
 

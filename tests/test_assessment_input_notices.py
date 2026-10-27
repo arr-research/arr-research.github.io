@@ -26,6 +26,9 @@ class AssessmentInputNoticeTests(unittest.TestCase):
         rendered = render_input_notices(self.paper, registry["operator_notices"], "/preview")
         self.assertIn("Review input clarification", rendered)
         self.assertIn("/preview/registry/model-assessments.json", rendered)
+        for source in self.notice["source_files"]:
+            self.assertIn("https://github.com/arr-research/arr-research.github.io/blob/main/" + source["path"], rendered)
+            self.assertIn(source["sha256"], rendered)
 
     def test_notice_cannot_cross_pdf_or_version_boundaries(self):
         for field, value in (("canonical_sha256", "f" * 64), ("version_id", "arr:version:11111111-2222-4333-8444-555555555555")):
