@@ -1,0 +1,231 @@
+{
+  "scope": "Small canonical context retrieved before synthesis; no proximity-to-proof inference",
+  "nodes": [
+    {
+      "id": "domain.quantum_information_theory",
+      "kind": "domain",
+      "title": "Quantum information theory",
+      "summary": "Studies quantum states, channels, entropies, correlations, recovery, error correction and operational constraints such as no-signalling, with explicit attention to uniform channels and preservation of reference-system entanglement.",
+      "confidence": "literature",
+      "tags": [
+        "quantum-information",
+        "channels",
+        "entropy",
+        "recovery"
+      ],
+      "lean": {
+        "imports": [
+          "Mathlib"
+        ],
+        "declarations": [],
+        "targets": [
+          "Formalize finite matrix channels, Kraus completeness and a no-signalling calculation.",
+          "Represent the quantifier distinction between one uniform recovery map and state-dependent recovery maps."
+        ]
+      },
+      "questions": [
+        "Which finite recovery statements transfer to operator-algebraic or split AQFT settings without assuming a tensor factorization?"
+      ],
+      "references": [
+        {
+          "label": "M. A. Nielsen and I. L. Chuang \u2014 Quantum Computation and Quantum Information",
+          "url": "https://www.cambridge.org/highereducation/books/quantum-computation-and-quantum-information/01E10196D0A682A6AEFFEA52D53BE9AE",
+          "type": "book",
+          "scope": "claim"
+        },
+        {
+          "label": "O. Fawzi and R. Renner \u2014 Quantum conditional mutual information and approximate Markov chains",
+          "url": "https://arxiv.org/abs/1410.0664",
+          "type": "paper",
+          "scope": "claim"
+        },
+        {
+          "label": "Depth-1 expanders on the unitary group and applications (v1, reviewed 2026-09-09; context only)",
+          "url": "https://arxiv.org/abs/2609.01605v1",
+          "type": "paper",
+          "scope": "context"
+        },
+        {
+          "label": "Quantum speed limits based on quantifiers of quantum-state texture (v1, reviewed 2026-09-09; context only)",
+          "url": "https://arxiv.org/abs/2609.08752v1",
+          "type": "paper",
+          "scope": "context"
+        }
+      ]
+    },
+    {
+      "id": "bridge.local_operations_no_signalling",
+      "kind": "bridge",
+      "title": "Local complete operations preserve spacelike statistics",
+      "summary": "For Kraus operators in one local algebra that commute with a distant observable, a complete nonselective operation leaves the distant expectation unchanged: completeness moves through the observable and collapses the sum to the identity. Postselection does not satisfy this conclusion without classical outcome information.",
+      "confidence": "formal",
+      "tags": [
+        "no-signalling",
+        "kraus-operators",
+        "microcausality",
+        "channels"
+      ],
+      "lean": {
+        "imports": [
+          "Mathlib",
+          "PhysMathKnowledgeTree.Formal.Microtheorems"
+        ],
+        "declarations": [
+          "nonselectiveExpectationCollapse"
+        ],
+        "targets": [
+          "Prove the finite matrix identity sum_i omega(K_i\u2020 Y K_i) = omega(Y) from commutation and sum_i K_i\u2020K_i = 1."
+        ]
+      },
+      "questions": [
+        "Which operator-algebraic hypotheses are sufficient for the same proof with infinite Kraus families or normal completely positive maps?"
+      ],
+      "references": [
+        {
+          "label": "D. Beckman et al. \u2014 Causal and localizable quantum operations",
+          "url": "https://arxiv.org/abs/quant-ph/0102043",
+          "type": "paper",
+          "scope": "claim"
+        },
+        {
+          "label": "M. A. Nielsen and I. L. Chuang \u2014 Quantum Computation and Quantum Information",
+          "url": "https://www.cambridge.org/highereducation/books/quantum-computation-and-quantum-information/01E10196D0A682A6AEFFEA52D53BE9AE",
+          "type": "book",
+          "scope": "claim"
+        }
+      ]
+    },
+    {
+      "id": "bridge.conditional_mutual_information_recovery",
+      "kind": "bridge",
+      "title": "Conditional mutual information to uniform recovery",
+      "summary": "Small quantum conditional mutual information controls reconstruction of a tripartite state from a marginal by a channel acting on the conditioning system. The useful research discipline is the uniform quantifier order: one recovery map should work for every state in the chosen code or extension class.",
+      "confidence": "literature",
+      "tags": [
+        "conditional-mutual-information",
+        "recovery-map",
+        "markov-chain",
+        "uniformity"
+      ],
+      "lean": {
+        "imports": [
+          "Mathlib"
+        ],
+        "declarations": [],
+        "targets": [
+          "State a finite-dimensional recovery interface with an explicit reference system and uniform channel quantifiers.",
+          "Keep any split/type-III AQFT extension conditional until its operator-algebraic recovery inequality is sourced."
+        ]
+      },
+      "questions": [
+        "Can a collar-conditioned recovery channel be made uniform over a finite low-energy code while preserving entanglement with a reference?"
+      ],
+      "references": [
+        {
+          "label": "D. Sutter, O. Fawzi and R. Renner \u2014 Universal recovery map for approximate Markov chains",
+          "url": "https://arxiv.org/abs/1504.07251",
+          "type": "paper",
+          "scope": "claim"
+        },
+        {
+          "label": "O. Fawzi and R. Renner \u2014 Quantum conditional mutual information and approximate Markov chains",
+          "url": "https://arxiv.org/abs/1410.0664",
+          "type": "paper",
+          "scope": "claim"
+        },
+        {
+          "label": "A quantum oracle separation between QMA(2) and QMA (v1, reviewed 2026-09-09; context only)",
+          "url": "https://arxiv.org/abs/2609.02865v1",
+          "type": "paper",
+          "scope": "context"
+        },
+        {
+          "label": "Semidefinite extension complexity of the separable set, with applications to approximate disentanglers (v1, reviewed 2026-09-09; context only)",
+          "url": "https://arxiv.org/abs/2609.09033v1",
+          "type": "paper",
+          "scope": "context"
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge.qinfo.no_signalling",
+      "source": "domain.quantum_information_theory",
+      "target": "bridge.local_operations_no_signalling",
+      "relation": "uses",
+      "confidence": "literature",
+      "mechanism": "Quantum channel and Kraus formalisms make the distinction between conditioned branches and complete operations explicit.",
+      "references": [
+        {
+          "label": "D. Beckman et al. \u2014 Causal and localizable quantum operations",
+          "url": "https://arxiv.org/abs/quant-ph/0102043",
+          "type": "paper",
+          "scope": "claim"
+        },
+        {
+          "label": "M. A. Nielsen and I. L. Chuang \u2014 Quantum Computation and Quantum Information",
+          "url": "https://www.cambridge.org/highereducation/books/quantum-computation-and-quantum-information/01E10196D0A682A6AEFFEA52D53BE9AE",
+          "type": "book",
+          "scope": "claim"
+        }
+      ]
+    },
+    {
+      "id": "edge.qinfo.cmi_recovery",
+      "source": "domain.quantum_information_theory",
+      "target": "bridge.conditional_mutual_information_recovery",
+      "relation": "uses",
+      "confidence": "literature",
+      "mechanism": "Conditional mutual information quantifies approximate quantum Markov structure and controls recovery from a marginal.",
+      "references": [
+        {
+          "label": "O. Fawzi and R. Renner \u2014 Quantum conditional mutual information and approximate Markov chains",
+          "url": "https://arxiv.org/abs/1410.0664",
+          "type": "paper",
+          "scope": "claim"
+        }
+      ]
+    }
+  ],
+  "move": [
+    {
+      "id": "move.deform",
+      "title": "Deform",
+      "description": "Study a family instead of a single object, then analyze limits, degenerations or stability.",
+      "good_for": [
+        "problem.birch_swinnerton_dyer",
+        "problem.hodge_conjecture",
+        "domain.pde"
+      ],
+      "output": "family, parameter space, degeneration or stability invariant",
+      "risks": [
+        "The special fiber may not preserve the desired property."
+      ],
+      "lean_test": "Represent a finite family and prove a property is stable under a simple deformation."
+    },
+    {
+      "id": "move.find_barrier",
+      "title": "Find the barrier",
+      "description": "Identify why standard methods fail and encode the failure as an invariant or obstruction.",
+      "good_for": [
+        "problem.p_vs_np",
+        "problem.navier_stokes",
+        "problem.riemann_hypothesis",
+        "bridge.target_erasure_diagnostic"
+      ],
+      "output": "barrier statement, obstruction invariant or no-go lemma",
+      "risks": [
+        "The named barrier may be sociological rather than mathematical."
+      ],
+      "lean_test": "Formalize the simplest version of the obstruction."
+    }
+  ],
+  "canonical_before": {
+    "graph/index.json": "78617d9f38de1b7af949226aabe8ff884a842a3e5f517a295711f71412cd981f",
+    "graph/nodes/core.json": "d9d284363730558ecf3dd095b11d6f2cfacd113519ef832ae61535ea48a2b6c1",
+    "graph/edges.json": "308897f439d817cbdadc51b8bf9e42299d806fa1f663c5ffcf794ba93ca74dfe",
+    "graph/research_moves.json": "2ba1f8730ceeb97cb71c770c34ce24bf6d61737ce004b07809528bcdcd111c38",
+    "graph/collections.json": "b8020e9248d75e0c2a6e9ff659128a1e7454ef761121fb4d799a9e79c76165b5"
+  }
+}

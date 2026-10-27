@@ -1,0 +1,119 @@
+\section{A fixed local Hamiltonian and finite phase}\label{sec:phase}
+The nonunitary ladder tangent used above has a genuine obstruction to a Hamiltonian interpretation. The following different family removes that particular restriction while paying a larger order budget. Its base state and Schmidt-support decomposition have direct antecedents in Frey--Collins--Gerlach~\cite{FCG}; phase estimation with noisy probes and inactive ancillas, and the SLD calculation of a coherence block, are prior~\cite{CB}. We claim neither a new preparation family nor optimal absolute metrological information.
+
+Put $a=d-1$, $q=a+e^2$, $e>0$, and on $A_dR_d$ set
+\[
+ v=\sum_{j=1}^{d-1}|j,j\rangle+e|0,0\rangle,\quad
+ s=vv^*/q,\quad r=\Tr_A s=\operatorname{diag}(e^2,1,\ldots,1)/q,
+ \quad B=I_d/d\otimes r.
+\]
+Here $s$ is a pure preparation state, whereas the states used below are faithful mixtures. Define $s_p=(1-p)B+ps$ and the fixed local Hamiltonian
+\[
+ H=\operatorname{diag}(0,1,\ldots,1),\quad
+ U_\phi=e^{-i\phi H}\otimes I_R,\quad
+ \rho_\phi=U_\phi s_\theta U_\phi^*,\qquad 0<\theta<1.
+\]
+Both the norm and the spectral diameter of $H$ are one, independently of $e,\theta$ and the channel parameter.
+
+\begin{theorem}[Finite-phase realization]\label{thm:phase}
+For every $d\ge2$ and physical depolarizing parameter $-1/(d^2-1)\le\lambda\le1$, the pair $(\rho_\phi,s_\theta)$ is faithful with common reference marginal $r$, and each state's exact actual-marginal order is
+\[
+ K_\theta=1+(d^2-1)\theta.
+\]
+Let $W_p$ be the subnormalized two-dimensional block
+\[
+ W_p=\frac1{dq}\begin{pmatrix}
+ A_p&dp e\sqrt a\\dp e\sqrt a&F_pe^2
+ \end{pmatrix},\qquad A_p=1+(da-1)p,\quad F_p=1+ap,
+\]
+and let $\ell(W)=(\log w_+-\log w_-)/(w_+-w_-)$ for its positive eigenvalues, with its continuous extension when they coincide. For $\phi\notin2\pi\mathbb Z$, write $c=\theta e\sqrt a/q$. Then
+\begin{align}
+ D_{\mathrm U}(\rho_\phi\Vert s_\theta)
+   &=2c^2\ell(W_\theta)(1-\cos\phi),\label{eq:phase-entropy}\\
+ D_{\triangle}(\rho_\phi\Vert s_\theta)
+   &=\frac{4c^2(1-\cos\phi)}{\Tr W_\theta}.\label{eq:phase-triangle}
+\end{align}
+Consequently the finite Umegaki retention is exactly
+\[
+ \lambda^2\frac{\ell(W_{\lambda\theta})}{\ell(W_\theta)},
+\]
+equal to the BKM retention of the physical phase tangent. Triangular retention equals the SLD retention
+\[
+ \lambda^2\frac{\Tr W_\theta}{\Tr W_{\lambda\theta}}.
+\]
+For each fixed allowed $\lambda$, first letting $e\downarrow0$ at fixed $\theta$, and then $\theta\uparrow1$, makes these retentions approach $C_{P_d}(\lambda)$, $P_d=d(d-1)$. In particular, the phase may remain fixed at $\pi$ throughout. This establishes a realization of a lower bound, not a matching upper or an optimum over Hamiltonians.
+\end{theorem}
+\begin{proof}
+The sole nonzero eigenvalue of $B^{-1/2}sB^{-1/2}$ is $v^*B^{-1}v/q=d^2$. Thus $s_p$ is faithful for $-1/(d^2-1)<p<1$, and whitening gives the asserted exact order. Since $U_\phi$ commutes with $B$, it preserves the order and marginal; local depolarization takes $s_p$ to $s_{\lambda p}$ and commutes with the conjugation. All these states remain faithful at the negative channel endpoint because $\theta<1$.
+
+The uniform principal Schmidt vector and $|0,0\rangle$ span $W_p$. Its determinant is
+\[
+ \det W_p=\frac{e^2(1-p)[1+(d^2-1)p]}{d^2q^2}>0.
+\]
+The remaining $d-2$ Schmidt modes and $d^2-d$ off-diagonal-coordinate modes are phase independent. The physical tangent on the active block is $(\theta e/q)T$, with
+\[
+ T=\begin{pmatrix}0&-i\sqrt a\\i\sqrt a&0\end{pmatrix}.
+\]
+For real symmetric $W$, $WT+TW=(\Tr W)T$. The Sylvester formula therefore gives phase SLD information $4c^2/\Tr W$. A real orthogonal diagonalization leaves $T$ unchanged up to sign and gives BKM information $2c^2\ell(W)$.
+
+Unitary invariance cancels the entropy term in $D_{\mathrm U}(U_\phi s_\theta U_\phi^*\Vert s_\theta)$. Functional calculus gives $(\log W)_{01}=\ell(W)W_{01}$, so the two changed coherences yield~\eqref{eq:phase-entropy}. The two-block spectral overlap formula for $f_\triangle$ gives $\Tr(\rho_\phi-s_\theta)^2/\Tr W_\theta$, which is~\eqref{eq:phase-triangle}. Other modes contribute zero. Blocks are never normalized separately. Substitution of $\lambda\theta$ proves the retentions.
+
+At fixed faithful $p$, $w_+=A_p/(da)+O(e^2)$ and $w_-=k_pe^2+O(e^4)$ with $k_p>0$. Hence $\ell(W_p)=(2da/A_p)\log(1/e)+O(1)$ and $\Tr W_p\to A_p/(da)$. Both retentions tend to $\lambda^2A_\theta/A_{\lambda\theta}=C_{1+(P_d-1)\theta}(\lambda)$. The final ordered limit gives the claim; $\lambda=0,1$ also follow directly.
+\end{proof}
+
+\paragraph{The resource tradeoff and nonuniform limits.}
+This realization uses reference dimension $d$ instead of $2d-1$, but order tending to $d^2$ rather than $M_d$. At a common budget $1<\kappa\le d^2$, its limiting lower is only $C_{1+(P_d-1)(\kappa-1)/(d^2-1)}$. It does not improve the earlier ladder's budget profile. At $\phi=\pi$, the trace distance is $2|c|=O(e)$, SLD information is $O(e^2)$ and Umegaki/BKM information is $O(e^2\log(1/e))$. A finite angle therefore does not keep the states a fixed distance apart. The order of limits is essential: for $0<\lambda<1$ and fixed $e>0$, sending $\theta\uparrow1$ first gives Umegaki retention zero, not $C_{P_d}$. This family does not settle unrestricted qubit BKM or actual-MI contraction.
+
+\begin{proposition}[The entire common-Bell class, throughout the noise range]\label{prop:allbell-endpoint}
+For every $-1/(d^2-1)\le\lambda\le1$, the global contraction coefficient of each normalized nonaffine operator-convex Petz divergence, restricted to pairs diagonal in one common orthonormal maximally entangled basis of $A_dR_d$, is exactly
+\[
+ b_{d^2}(\lambda)=\frac{\lambda^2}{\lambda+2(1-\lambda)/d^2}
+                =C_{d^2/2}(\lambda).
+\]
+The same value holds on the union of these classes over the common basis. For $d\ge3$ and each fixed physical $\lambda\ne0,1$, the phase lower $C_{P_d}(\lambda)$ is strictly larger; hence finite faithful phase pairs separating from this whole class exist. At the negative endpoint the ratio of the lower to this exact benchmark is $d-1$. This states a supremum and finite existence, not one finite parameter choice uniform in $\lambda$ or saturation by one finite pair for every generator.
+\end{proposition}
+\begin{proof}
+We give an elementary reconstruction of a classical benchmark, without claiming classical novelty. For the symmetric channel $Kr=\lambda r+c\mathbf1$ on $n\ge2$ symbols, put $c=(1-\lambda)/n$, $h=\lambda+2c>0$. Its stochastic range is $-1/(n-1)\le\lambda\le1$. For positive probability $r$ and real $z$ with $\sum z_i=0$, the Fisher upper is
+\[
+ \lambda^2\sum_i\frac{z_i^2}{\lambda r_i+c}
+ \le\frac{\lambda^2}{h}\sum_i\frac{z_i^2}{r_i}.
+\]
+For $\lambda=0,1$ this is direct. Otherwise rearrangement reduces it to nonnegativity of
+\[
+ \sum_i\frac{(1-2r_i)z_i^2}{r_i(\lambda r_i+c)}.
+\]
+If all $r_i\le1/2$, every term is nonnegative. Otherwise $r_1>1/2$ is unique. Set $S=1-r_1$ and $\varphi(x)=x(\lambda x+c)/(1-2x)$. Since $(\varphi(x)/x)'=h/(1-2x)^2>0$, $\sum_{i>1}\varphi(r_i)\le\varphi(S)$. Cauchy and $\sum z_i=0$ bound the positive terms below by $z_1^2/\varphi(S)$. This cancels the sole negative term because
+\[
+ r_1(\lambda r_1+c)-S(\lambda S+c)
+ =(2r_1-1)(\lambda+c)\ge0.
+\]
+For the resolvent generator $(x-1)^2/(x+u)$, put $z=\rho-\sigma$ and $r=(\rho+u\sigma)/(1+u)$. The divergence is $(1+u)^{-1}\sum z_i^2/r_i$; the Fisher upper applies after $K$ with the same factor. Include $u=0$, the separate quadratic endpoint and the positive representation~\eqref{eq:representation}; affine terms vanish. This gives the upper for every stated $f$. Common uniform regularization of both distributions extends the inequality to the standard boundary convention when the input divergence is finite and positive. The lower follows from two equal masses $a<1/2$, tangent $(1,-1,0,\ldots,0)$, first a faithful local perturbation, then $a\uparrow1/2$: the ratio is $\lambda^2a/(\lambda a+c)$ before the last limit. For $n=2$ use the uniform base directly. Each $f''(1)>0$ supplies a cancelling common Fisher factor. At the binary negative endpoint $K$ is a permutation and the formula is one; no endpoint denominator vanishes.
+
+For $n=d^2$, a common maximally entangled basis has shared marginal $I/d$, and local depolarization transforms its probabilities by this $K$. Petz divergences reduce to the classical expressions. Finally $\partial_K C_K=\lambda^2(1-\lambda)/[1+\lambda(K-1)]^2>0$ away from $\lambda=0,1$, and $P_d>d^2/2$ for $d\ge3$. Theorem~\ref{thm:phase} then gives finite existence for each fixed noise parameter. At the negative endpoint $C_{P_d}=1/(d+1)$ and $b_{d^2}=1/(d^2-1)$.
+\end{proof}
+
+The equivalence of global coefficients for nonlinear operator-convex generators is explicitly prior in Makur--Zheng~\cite[Proposition~6]{MZ}; Dobrushin theory~\cite{PW} already gives the negative-endpoint upper directly. Lee--Makur~\cite{LM} is a particularly close symmetric-channel antecedent: its author-provided conference abstract announces closed KL formulas for product symmetric channels. We have not obtained its formula, complete hypotheses or proof, and therefore do not assert precise coverage of the negative range or novelty of the formula. The reconstruction above supplies a benchmark for the quantum comparison, not a claimed classical discovery. A variable reference distribution in this global classical coefficient must not be replaced by a fixed uniform source.
+
+\paragraph{Certified finite separation and falsified extension.}
+At $\phi=\pi$, $\theta=.99$ and the negative CP endpoint, audit1054 gives the following outward interval enclosures for the Umegaki retention minus the entire Bell-class benchmark:
+\begin{center}
+\begin{tabular}{ccc}
+\toprule
+$d$&$e$&strict gap enclosure\\
+\midrule
+3&$.01$&$(.06388352285582,.06388352285583)$\\
+3&$.001$&$(.07668420592533,.07668420592535)$\\
+4&$.01$&$(.06782712362496,.06782712362498)$\\
+4&$.001$&$(.08088908969722,.08088908969723)$\\
+\bottomrule
+\end{tabular}
+\end{center}
+The certificates use directed integer intervals; the displayed wider decimal enclosures are not midpoint tests. For $d=3,e=.01$, the actual order is $8.92$, input Umegaki divergence about $.0030030759$ and condition number about $5.95\cdot10^6$. For $d=4,e=.01$, they are $15.85$, $.0021105849$ and $1.189\cdot10^7$. These are finite mathematical examples, not well-conditioned preparation claims. Fourteen of the original twenty-four diagnostic cases did not exceed their compared Bell endpoint and remain in the evidence. The comparison does not bound all commuting or separable quantum pairs, nor isolate entanglement or noncommutativity as its sole causal resource.
+
+At positive noise $\lambda=1/2$, audit1058 separately encloses two phase-pi examples with $e=10^{-30}$ and $\theta=.99$: in $d=3$, retention lies in $(.41495890226843,.41495890226844)$, strictly above $9/22$; in $d=4$, it lies in $(.44684466269731,.44684466269733)$, above $4/9$. Their input divergences are about $2.8492\cdot10^{-58}$ and $1.9117\cdot10^{-58}$, with condition numbers about $5.95\cdot10^{62}$ and $1.189\cdot10^{63}$. The common-Bell comparison is thus finite for both noise signs, but these positive-noise examples give no robustness evidence. Their geometry and interval arithmetic have declared1051/1054 dependencies; they are not independent physical constructions.
+
+The equality of finite Umegaki and local BKM retention is special to this block family. A certified counterexample to its extension to arbitrary unitary orbits is $R=1,d=3,\lambda=1/2$, $H=\operatorname{diag}(0,1/2,1)$, $\phi=\pi$, and
+\[
+ s=\begin{pmatrix}1/2&1/10&1/20\\1/10&3/10&1/25\\1/20&1/25&1/5\end{pmatrix}.
+\]
+The finite retention lies in $(.2585764702077098,.2585764702077101)$, while its local BKM retention lies in $(.2579634718941141,.2579634718941153)$. Audit1054 bounds the matrix-logarithm and Frechet-derivative tails rationally, rather than inferring this separation from floating point. The original ladder's nonunitary obstruction remains valid.

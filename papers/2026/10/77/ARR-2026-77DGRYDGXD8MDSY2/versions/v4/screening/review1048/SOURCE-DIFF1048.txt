@@ -1,0 +1,303 @@
+--- 1041/main.tex
++++ 1047/main.tex
+@@ -23,9 +23,9 @@
+ \begin{document}
+ \maketitle
+ \begin{abstract}
+-We determine the complete equal-reference contraction coefficients of the minimal quantum Fisher metric, its quadratic chi-square divergence and the finite triangular Petz divergence for every unital qubit channel. For a faithful normalized Choi state $J$, all three equal $1-16/\Tr(J^{-1})$; for singular $J$ they equal one. An explicit qubit--qutrit lower family matches a harmonic-weight upper bound and gives the exact stabilization envelope, including a maximal factor of nine between coefficient suprema. For depolarization in dimension $d$, a commuting Bell family matches the order bound $\lambda^2\kappa/[1+\lambda(\kappa-1)]$ for each normalized nonaffine operator-convex Petz generator when $1<\kappa\le d^2/2$. A rank-two ladder extends SLD and triangular sharpness to $\kappa\le d(d+1)/2$, with the budget taken against the actual reference marginal. In the qubit case we identify exact classical-reference and separable/PPT restrictions over the full physical noise range. A localized rational counterexample addresses one printed Doeblin equivalence. These results do not determine unrestricted BKM, relative-entropy, actual-mutual-information or capacity coefficients; the lower constructions are not unitary phase models. Faithful limits, adverse controls, prior-work dependencies and model-review limits are explicit.
++We determine the complete equal-reference contraction coefficients of the minimal quantum Fisher metric, its quadratic chi-square divergence and the finite triangular Petz divergence for every unital qubit channel. For a faithful normalized Choi state $J$, all three equal $1-16/\Tr(J^{-1})$; for singular $J$ they equal one. An explicit qubit--qutrit lower family matches a harmonic-weight upper bound and gives the exact stabilization envelope, including a maximal factor of nine between coefficient suprema. For depolarization in dimension $d$, a commuting Bell family matches the order bound $\lambda^2\kappa/[1+\lambda(\kappa-1)]$ for each normalized nonaffine operator-convex Petz generator when $1<\kappa\le d^2/2$. A principal-rich rank-two ladder extends SLD and triangular sharpness to $\kappa\le d(2d-1)/2$, with the budget taken against the actual reference marginal. A separate logarithmic analysis gives the complete equal-reference BKM and finite relative-entropy lower bound $\lambda^2P/[1+\lambda(P-1)]$, $P=d(d-1)$; for $d\ge3$ it improves the endpoint of the specified Bell family. In the qubit case we identify exact classical-reference and separable/PPT restrictions over the full physical noise range. A localized rational counterexample addresses one printed Doeblin equivalence. These results do not determine unrestricted BKM, relative-entropy, actual-mutual-information or capacity coefficients; the lower constructions are not unitary phase models. Faithful limits, adverse controls, prior-work dependencies and model-review limits are explicit.
+ \end{abstract}
+-\paragraph{Revision status.} Corrective major-revision draft of~\cite{VersionOne}, following the minor revisions requested in review1031 of its pre-correction PDF. This exact corrected artifact has no inherited grade; no publication of this draft is claimed.
++\paragraph{Revision status.} Expanded continuation of the same evolving contraction problem. Technical audit1044 supports the new scoped statements; this combined manuscript awaits a full exact-PDF assessment and inherits no grade.
+ 
+ \section{Quantities and scope}
+ Let \(A\) and \(R\) be finite-dimensional systems. All local maps below are tensored with \(\id_R\), whether or not this is written. A state is faithful if it is positive definite. We use the Hilbert--Schmidt inner product
+@@ -161,9 +161,12 @@
+ 
+ \input{sections/qubit}
+ \input{sections/order}
++\input{sections/bkm}
+ \input{sections/context}
++\clearpage
+ \small
+ \begin{thebibliography}{99}
++\setlength{\itemsep}{1pt}
+ \bibitem{HR}
+ F. Hiai and M. B. Ruskai,
+ \emph{Contraction coefficients for noisy quantum channels},
+@@ -224,6 +227,10 @@
+ International Journal of Quantum Information \textbf{16},1850056 (2018),
+ primary preprint arXiv:1904.01904v1.
+ \url{https://arxiv.org/abs/1904.01904v1}.
++\bibitem{HanLi}
++J. Han and Y. Li,
++\emph{Convergence Analysis of the Quantum Blahut-Arimoto Algorithm and the Contraction Coefficient of Qubit Amplitude-Damping Channels},
++arXiv:2610.29373v1 (2026). \url{https://arxiv.org/abs/2610.29373v1}.
+ \bibitem{VersionOne}
+ L. Eriksson,
+ \emph{Sharp reference-assisted contraction for the minimal quantum Fisher metric},
+--- 1041/sections/order.tex
++++ 1047/sections/order.tex
+@@ -30,62 +30,69 @@
+ 
+ This is a reparametrization of the Bell family already present in our earlier component work, not an independent invention of Bell-assisted contraction. In particular, when \(d\ge3\), the interval \(\kappa\le d+1\) is contained in \(\kappa\le d^2/2\); the rank-\(d\) ladder previously considered on that interval is an alternative proof. A conditional-expectation index alone does not imply sharpness: the pinching \(\E=(\id+\Ad_Z)/2\) has index two, but its equal-\(\E\) contraction is \(\lambda^2\), rather than the larger raw order comparison, for \(0<\lambda<1\).
+ 
+-\begin{theorem}[Rank-two controlled order profile]\label{thm:order}
+-For \(d\ge2\) and \(1<\kappa\le L_d=d(d+1)/2\), the SLD, minimal-chi-square and finite triangular-Petz contraction coefficients under \eqref{eq:order-class} equal
++\begin{theorem}[Principal-rich rank-two order profile]\label{thm:order}
++For \(d\ge2\), set \(M_d=d(2d-1)/2\). For \(1<\kappa\le M_d\), the complete SLD, minimal-chi-square and finite triangular-Petz contraction coefficients under \eqref{eq:order-class} equal
+ \begin{equation}\label{eq:profile}
+  C_\kappa(\lambda)=\frac{\lambda^2\kappa}{1+\lambda(\kappa-1)}.
+ \end{equation}
+-A reference of dimension \(d+1\) suffices for each lower supremum. The same expression is an upper for every nonaffine operator-convex Petz generator normalized by \(f(1)=0\), and is sharp as a bound uniform over that family. No exact higher-dimensional coefficient beyond the stated order range is asserted.
++The complete supremum is over finite reference systems; a reference of dimension \(2d-1\) supplies the lower. The same expression is an upper for each normalized nonaffine operator-convex Petz generator, sharp uniformly over that class. Equality for each generator outside the Bell range, or for every fixed reference dimension, is not asserted.
+ \end{theorem}
++\begin{proof}
++For each admissible state, the prior order comparison gives
++\(\N_\lambda(\sigma)\succeq c\sigma\), where
++\(c=\lambda+(1-\lambda)/\kappa>0\).
++Indeed \(1+\lambda(M_d-1)\ge d/[2(d^2-1)]>0\).
++An equal-reference difference obeys \(\N_\lambda(D)=\lambda D\). Inverse antitonicity for \((L_\sigma+R_\sigma)/2\), or for \(L_\rho+uR_\sigma\) using both state budgets, gives the factor \(\lambda^2/c\). Include the quadratic endpoint and the positive integral in \eqref{eq:resolvent}. The new lower, rather than this comparison machinery, is the point of the construction.
+ 
+-\begin{proof}
+-The standard order comparison gives, for each admissible state,
++Put \(a=d-1\), \(r=2a+1\), \(q=a+e^2\), \(e>0\), and use the reference labels \(0,\ldots,2a\). Define
+ \[
+- \N_\lambda(\sigma)\succeq c\sigma,\qquad c=\lambda+(1-\lambda)/\kappa>0.
++ v_0=\sum_{j=0}^{a-1}|j+1,j\rangle+e|0,2a\rangle,\qquad
++ v_1=\sum_{j=0}^{a-1}|j,a+j\rangle+e|d-1,2a\rangle.
+ \]
+-The positivity follows from \(1+\lambda(\kappa-1)\ge1-(L_d-1)/(d^2-1)>0\).
+-On equal-reference differences \(\N_\lambda(D)=\lambda D\). Apply inverse antitonicity to \((L_\sigma+R_\sigma)/2\), or to \(L_\rho+tR_\sigma\) using the order for both states. The quadratic endpoint and positive integral in \eqref{eq:resolvent} give the upper \(\lambda^2/c\). This comparison machinery is prior; the matching lower is the construction below.
++Let \(b_0=|0,2a\rangle\), \(b_1=|d-1,2a\rangle\), and
++\[
++ \sigma_e=\frac{v_0v_0^*+v_1v_1^*}{2q},\qquad
++ D=v_0b_0^*+b_0v_0^*-v_1b_1^*-b_1v_1^*.
++\]
++The supports are disjoint, \(\|v_i\|^2=q\), and \(Q=2\sigma_e\) is a projection. All principal--center cross terms change the A index. The two diagonal center derivatives cancel in the same reference label. Thus \(\Tr_AD=0\).
+ 
+-Put \(m=d-1\), \(q=1+me^2\), and give \(R\) the labels \(0,\ldots,d\). With A indices modulo \(d\), set
++The actual reference marginal has mass \(1/(2q)\) on its \(2a\) principal labels and \(e^2/q\) on the center. Consequently \(B_e=\E_A(\sigma_e)>0\) and
+ \[
+- a_i=|i,i\rangle+e\sum_{k=1}^{d-1}|i+k,k+1\rangle\quad(i=0,1),\qquad
+- \sigma_e=\frac{a_0a_0^*+a_1a_1^*}{2q}.
++ \frac{[v_0,v_1]^*B_e^{-1}[v_0,v_1]}{2q}
++ =d(a+1/2)I_2=M_d I_2.
+ \]
+-The two vectors have disjoint supports and squared norm \(q\), so \(P=2\sigma_e\) is a projection. The reference marginal has mass \(1/(2q)\) on labels zero and one, and mass \(e^2/q\) on each remaining label. Hence \(B_e=\E_A(\sigma_e)>0\).
+-The whitened normalized vectors are orthogonal and have squared norm
+-\(d+d(d-1)/2=L_d\); consequently \(B_e^{-1/2}\sigma_e B_e^{-1/2}\) has two eigenvalues \(L_d\) and all others zero.
++This proves that the whitened state has two nonzero eigenvalues \(M_d\). Also \((I-Q)D(I-Q)=0\); its boundary SLD form, evaluated spectrally without inverting the singular base, is \(16q\).
+ 
+-Let \(b_0=\sum_{k=1}^{d-1}|k,k+1\rangle\), \(b_1=-\sum_{k=1}^{d-1}|1+k,k+1\rangle\) and
+-\(D=\sum_{i=0}^1(b_i a_i^*+a_i b_i^*)\). All off-diagonal partial-trace terms vanish because their A indices differ. At each center reference label the opposite diagonal derivatives cancel. Thus \(\Tr_AD=0\), \((I-P)D(I-P)=0\), and the finite boundary SLD form is \(16mq\).
++Set \(s_{e,p}=(1-p)B_e+p\sigma_e\). Each support has an invariant plane spanned by its uniform principal vector and center coordinate. In orthonormal coordinates the two base blocks are
++\begin{equation}\label{eq:principal-plane}
++ W_p=\frac1{2dq}
++ \begin{pmatrix}A_p&dpe\sqrt a\\dpe\sqrt a&C_pe^2\end{pmatrix},
++ \quad T=\begin{pmatrix}0&\sqrt a\\\sqrt a&2e\end{pmatrix},
++\end{equation}
++where \(A_p=1+(da-1)p\), \(C_p=2+(d-2)p\); the tangent blocks are \(T,-T\).
++Each support has \(a-1\) additional principal modes with eigenvalue \((1-p)/(2dq)\) and zero tangent. Outside these supports the remaining \(d(2d-1)-2d\) coordinates are diagonal replacement modes with zero tangent. This accounts for the full dimension.
++The aligned determinant is
++\[
++ \det W_p=\frac{e^2(1-p)[1+(M_d-1)p]}{2d^2q^2}>0
++ \qquad\left(-\frac1{M_d-1}<p<1\right).
++\]
++Both \(p=\theta\) and \(p=\lambda\theta\) lie in this domain for \(0<\theta<1\) and the entire physical range of \(\lambda\).
+ 
+-For \(0\le\theta<1\), define \(s_{e,\theta}=(1-\theta)B_e+\theta\sigma_e\). Its whitened eigenvalues are \(1+(L_d-1)\theta\) twice and \(1-\theta\) otherwise. It is faithful and has exactly that order constant. Moreover
+-\(\N_\lambda(s_{e,\theta})=s_{e,\lambda\theta}\).
++For \(W_pY+YW_p=2T\), the two-dimensional identity
++\[
++ Y=\frac{T+\det(W_p)W_p^{-1}TW_p^{-1}}{\Tr W_p}
++\]
++follows by Cayley--Hamilton and direct substitution. Inserting \eqref{eq:principal-plane} and taking the limit at fixed admissible \(p\) gives
++\begin{equation}\label{eq:general-limit}
++ \lim_{e\downarrow0}\Tr(TY)=\frac{8aM_d}{1+(M_d-1)p}.
++\end{equation}
++The full ambient SLD form is twice this quantity. At fixed \(\theta<1\), its retention therefore tends to
++\(\lambda^2[1+(M_d-1)\theta]/[1+\lambda(M_d-1)\theta]\).
+ 
+-Each vector's \(d\)-dimensional support is an invariant block. On the main coordinate and the uniform center superposition its base and tangent reduce to
+-\[
+- W_p=\frac1{2dq}\begin{pmatrix}
+- 1+(d-1)p&dpe\sqrt m\\dpe\sqrt m&[2+(dm-2)p]e^2
+- \end{pmatrix},\quad
+- T=\begin{pmatrix}0&\sqrt m\\\sqrt m&2em\end{pmatrix},
+-\]
+-with opposite signs for the two tangent blocks. The other \(m-1\) center modes have base eigenvalue \(e^2(1-p)/(dq)\) and zero tangent. All remaining coordinates are positive diagonal replacement contributions with zero tangent. The aligned determinant is
+-\[
+- \det W_p=\frac{e^2(1-p)[1+(L_d-1)p]}{2d^2q^2}>0
+-\]
+-for the values \(p=\theta,\lambda\theta\) used here.
++Choose \(0<\theta<(\kappa-1)/(M_d-1)\). Both \(s_{e,\theta}\) and \(\kappa B_e-s_{e,\theta}\) are positive definite, so sufficiently small bilateral perturbations \(\rho_t=s_{e,\theta}+tD\) preserve faithfulness, the actual marginal and both budgets. For triangular divergence take \(t\to0\) first; for minimal chi-square the ratio is exactly quadratic. Then take \(e\downarrow0\) at fixed \(\theta\), finally \(\theta\uparrow(\kappa-1)/(M_d-1)\). This reaches \eqref{eq:profile} as a supremum. The endpoints \(\lambda=0,1\) are immediate. No exchange of singular limits or finite faithful maximizer is needed.
++\end{proof}
+ 
+-Let \(G_e(p)=\Tr(TY)\), where \(W_pY+YW_p=2T\). Scaling the second diagonal unknown by \(e\), or eliminating it directly, gives
+-\begin{equation}\label{eq:general-limit}
+- \lim_{e\downarrow0}\frac{G_e(p)}{8m}=\frac{L_d}{1+(L_d-1)p}.
+-\end{equation}
+-For completeness, put \(A=1+(d-1)p\), \(B=dp\sqrt m\), \(C=2+(dm-2)p\). The limiting system for the off-diagonal unknown and the scaled diagonal has matrix \(\left(\begin{smallmatrix}A&B\\B&C\end{smallmatrix}\right)\). Its determinant is \(2(1-p)[1+(L_d-1)p]\); the numerator from the direction \((\sqrt m,m)\) is \(m[C-2dmp+Am]=m(m+2)(1-p)\). This proves \eqref{eq:general-limit} at every fixed \(-1/(L_d-1)<p<1\), without assuming uniform convergence at \(p=1\).
+-
+-Both blocks have the same retention ratio. Therefore, at fixed \(\theta<1\), the ratio tends to
+-\[
+- \lambda^2\frac{1+(L_d-1)\theta}{1+(L_d-1)\lambda\theta}.
+-\]
+-Choose \(\theta<(\kappa-1)/(L_d-1)\). Both \(s_{e,\theta}\) and \(\kappa B_e-s_{e,\theta}\) are strictly positive. For each finite \(e,\theta\), the pair \(\rho_t=s_{e,\theta}+tD\), \(\sigma=s_{e,\theta}\) stays faithful with both order bounds for sufficiently small nonzero real \(t\). Its reference marginal stays fixed. For triangular Petz take \(t\to0\) first; for minimal chi-square the ratio is exactly quadratic. Then take \(e\downarrow0\) and finally \(\theta\uparrow(\kappa-1)/(L_d-1)\). This proves \eqref{eq:profile}. The cases \(\lambda=0,1\) are the zero-on-differences and identity endpoints.
+-\end{proof}
++The earlier rank-two allocation achieved the smaller cap \(L_d=d(d+1)/2\) with reference dimension \(d+1\). The principal-rich allocation raises the cap by \(d(d-2)/2\), at the cost of reference dimension \(2d-1\); for \(d=2\) they coincide. This is a development of the same mechanism, not an independently invented theory or a free reference-size improvement.
+ 
+ \begin{remark}[The empty endpoint and the domain of the order bound]
+ At \(\kappa=1\), positivity and equal traces force \(\rho=\E_A(\rho)\) and \(\sigma=\E_A(\sigma)\); equal reference then forces equality. There are no distinct finite pairs, so \eqref{eq:profile} is not assigned to that empty optimization. The base-only SLD problem with unrestricted tangents at a product base is a different problem. Likewise the expression \(\lambda^2/c\) must never be used when \(c\le0\); for example \(\lambda=-1/3,\kappa=5\) gives a negative raw expression in dimension two, not a contraction bound.
+@@ -104,7 +111,7 @@
+ \]
+ Thus PPT bases obey the order-two bound, as do separable bases. The exact complete SLD/minimal-chi-square/triangular coefficient restricted to PPT or separable models is
+ \(2\lambda^2/(1+\lambda)\). For finite Petz both states must belong to the class.
+-To prove the matching lower, use the qubit ladder above with \(s_{e,\theta}\) and \(\theta<1/2\). Its partial transpose has two blocks with determinant
++To prove the matching lower, use the qubit ladder above (equivalent under a local basis swap to the earlier allocation) with \(s_{e,\theta}\) and \(\theta<1/2\). Its partial transpose has two blocks with determinant
+ \(e^2(1-\theta-2\theta^2)/[8(1+e^2)^2]>0\) and two positive singletons. Small bilateral perturbations stay PPT. In dimension \(2\times3\), the prior Horodecki theorem~\cite{HHH} converts these pairs to separable ones. This uses PPT=SEP only for the lower in \(2\times3\), not for arbitrary references or larger local dimensions.
+ 
+ For \emph{each} normalized nonaffine operator-convex Petz generator, the SEP/PPT pair coefficient is also exactly \(2\lambda^2/(1+\lambda)\). Indeed, the order-two comparison gives the upper, while the qubit Bell family of Proposition~\ref{prop:bell}, with \(K<2\), has all Bell probabilities \(p_j\) strictly below \(1/2\). The partial-transpose eigenvalues are \(1/2-p_j\). Both the base and sufficiently small finite perturbations are strictly PPT, hence separable in \(2\times2\), and approach the stated lower. The same gives the budget profile inside SEP/PPT for \(1<\kappa\le2\). This restricted-pair statement includes Umegaki but does not determine the unrestricted coefficient or actual MI, whose second state has an additional product-marginal requirement.
+@@ -117,4 +124,4 @@
+  \text{SEP/PPT family}:\frac13,\qquad
+  \text{unrestricted quantum family}:1.
+ \]
+-SLD retention (or minimal-chi-square retention with base \(\sigma\)) above \(2\lambda^2/(1+\lambda)\) is a sufficient certificate that that input base is NPT. For a general finite Petz pair, the proved implication is only that exceeding this threshold excludes both input states being PPT; it does not identify which state is NPT. This mathematical implication is a contrapositive of the prior reduction criterion plus the quantitative upper; it is not an experimentally demonstrated protocol.
++SLD retention (or minimal-chi-square retention with base \(\sigma\)) above \(2\lambda^2/(1+\lambda)\) is a sufficient certificate that the input base is NPT. For a general finite Petz pair, the proved implication is only that exceeding this threshold excludes both input states being PPT; it does not identify which state is NPT. This mathematical implication is a contrapositive of the prior reduction criterion plus the quantitative upper; it is not an experimentally demonstrated protocol.
+--- 1041/sections/context.tex
++++ 1047/sections/context.tex
+@@ -21,11 +21,11 @@
+ Some tempting literal extensions are false. Without centering \(f(1)\), the generator \(f(x)=(x-1)^2/(x+1)+1\), input \(\rho=\operatorname{diag}(3/4,1/4)\), \(\sigma=I_2/2\) and \(\lambda=0\) give ratio \(15/17\), not zero. The requirement \(f(1)=0\) is substantive. The negative raw order bound and classical-base-only shortcut were excluded explicitly above. The original rational certificate refuting an auxiliary factor-two conditional-variance bound is also retained; it does not settle the Umegaki coefficient.
+ 
+ \paragraph{No unitary-encoding interpretation of the displayed lower.}
+-Let \(Q_i\) project onto one ladder support block. It commutes with the base and its replacement mixture, but \(\Tr Q_iD=\pm2em\ne0\). For every Hermitian \(H\),
++Let \(Q_i\) project onto one ladder support block. It commutes with the base and its replacement mixture, but \(\Tr Q_iD=\pm2e\ne0\). For every Hermitian \(H\),
+ \(\Tr Q_i(-i[H,\sigma])=-i\Tr([\sigma,Q_i]H)=0\).
+ Thus this tangent is not a unitary-encoding direction even for a global Hamiltonian. This rules out that interpretation of our construction, not all other unitary families or known ancilla advantages.
+ 
+-The NPT implication in Section~\ref{sec:resources} would require an output-QFI lower and an input-QFI upper obtained without assuming the entanglement conclusion. Two observed classical Fisher informations do not supply those two directions of inequality. Full tomography already permits a direct PPT test. No noncircular experimental advantage, fixed-Hamiltonian optimum, capacity or quantum-error-correction protocol is established here. Neither an order between metrics nor local SLD exactness determines a BKM, Umegaki or actual-mutual-information coefficient. For the rank-two tangent at fixed $\theta$, audit1025 finds the BKM limit
++The NPT implication in Section~\ref{sec:resources} would require an output-QFI lower and an input-QFI upper obtained without assuming the entanglement conclusion. Two observed classical Fisher informations do not supply those two directions of inequality. Full tomography already permits a direct PPT test. No noncircular experimental advantage, fixed-Hamiltonian optimum, capacity or quantum-error-correction protocol is established here. Neither an order between metrics nor local SLD exactness determines a BKM, Umegaki or actual-mutual-information coefficient. For the earlier center-rich rank-two tangent at fixed $\theta$, audit1025 finds the BKM limit
+ \[
+  \lambda^2\frac{1+(d-1)\theta}{1+(d-1)\lambda\theta},
+ \]
+@@ -34,7 +34,7 @@
+ \paragraph{Evidence availability.}
+ The published first version~\cite{VersionOne} and its exact-PDF report remain immutable. The
+ \href{https://github.com/lluiseriksson/physmath-knowledge-tree/tree/f4c3e3f66afcac612ee33ee650857584e046a213/integrations/research-radar/evidence/2026-10-27-pauli-components}{version-pinned component supplement}
+-contains the complete1012 report, verdict, controls, source-reading scopes and incidents. Its \texttt{TRANSPORT1019.json} separates original C/D hashes from LF repository hashes; embedded original manifests describe the original dossiers. The public1017 construction in that snapshot is an earlier, weaker general-dimensional candidate, not the rank-two range in Theorem~\ref{thm:order}. The latter has a separate frozen1021 proof and exact controls, technically examined in audit1025 together with the Bell/SEP synthesis1024. The
++contains the complete1012 report, verdict, controls, source-reading scopes and incidents. Its \texttt{TRANSPORT1019.json} separates original C/D hashes from LF repository hashes; embedded original manifests describe the original dossiers. The public1017 construction in that snapshot is an earlier, weaker general-dimensional candidate, not the principal-rich range in Theorem~\ref{thm:order}. The earlier rank-two cap has a separate frozen1021 proof and exact controls, technically examined in audit1025 together with the Bell/SEP synthesis1024. The
+ \href{https://github.com/lluiseriksson/physmath-knowledge-tree/tree/ce7f93cbdf6f28ea7342d7d63cb50c5755fe26fc/integrations/research-radar/evidence/2026-10-27-contraction-supplement}{immutable expanded supplement}
+ contains the full1018/1025 technical reports, selected controls, both proofs and a portable bundle of five fixed symbolic/rational checks. All65 source-head files checked, including the unchanged canonical graph files, matched their remote bytes. The repository-transport bundle manifest has SHA256
+ \texttt{73b09af49fc3155f02c5e80e53489d258404ba9e47951f75b172e428743b877a}.
+@@ -44,15 +44,16 @@
+ The resolvent representation, inverse-quadratic convexity and ordinary unital-qubit coefficient are prior~\cite{HR}. Signed Bloch normal form and local-unitary Choi covariance are prior~\cite{RSW}. The \(2\times3\) PPT criterion used in the separable lower is prior~\cite{HHH}; it is not extended to higher-dimensional bipartitions.
+ Cao--Lu~\cite{CL} study chi-square contraction and tensorization with stated product-reference hypotheses. Hirche--Rouz\'e--Stilck Fran\c{c}a~\cite{HRF} develop channel orders, generalized contraction and Weyl-covariant comparisons; Section~8.1 also records the full physical depolarizing range. These are relevant prior tools, not new consequences of the present formulas. George--Tomamichel~\cite{GT} give fixed-base and ordinary optimized spectral methods. Neither optimization should be silently identified with a complete equal-reference optimization over arbitrary correlated bases. The unrestricted coefficient of \(\N\otimes\id_R\) can instead be one simply because a direction is stored in \(R\).
+ 
+-Gao--Zhao~\cite{GZ} study relative entropy to a conditional expectation, order/index parameters and index witnesses. Those constructions and the order-comparison machinery are close prior tools. Theorem~\ref{thm:order} concerns two faithful equal-reference states, their individual actual-marginal order budgets and the specified SLD/triangular quantities. A source covering those same quantifiers would affect novelty; selected reading does not certify its absence. Belzig et al.~\cite{Reverse} and Hirche et al.~\cite{Conditional} further distinguish reference-assisted information quantities.
++Gao--Zhao~\cite{GZ} study relative entropy to a conditional expectation, order/index parameters and index witnesses. Those constructions and the order-comparison machinery are close prior tools. Theorem~\ref{thm:order} concerns two faithful equal-reference states, their individual actual-marginal order budgets and the specified SLD/triangular quantities. A source covering those same quantifiers would affect novelty; selected reading does not certify its absence. Belzig et al.~\cite[Section~4.1, Lemma~4.1]{Reverse} prove the prior ordinary relative-entropy/BKM equivalence; Han--Li~\cite[Section~2.2, Lemma~1]{HanLi} use and attribute it. Their statements must not be repackaged as our discovery. The faithful segment/local method preserves the present convex budget class, but does not compute its optimum. Hirche et al.~\cite{Conditional} further distinguish reference-assisted information quantities.
+ 
+ Ancilla-assisted metrology under depolarization is prior; Chapeau-Blondeau~\cite{CB} considers unitary-phase probe families. Our nonunitary state model is not a claimed improvement over such protocols. The bibliographic comparison has been directed, with abstract-only access for one additional2017 metrology source and selected primary passages for the cited2018 work. It is not an exhaustive audit of frontier literature or a worldwide originality certificate.
+ 
+-The unrestricted higher-dimensional coefficient, optimal range beyond \(L_d\), minimal sufficient reference dimension, nonunital classification, unrestricted BKM/Umegaki and actual-MI coefficients, tensorization and practical robustness remain open in this manuscript. Proposition~\ref{prop:bell} gives generator-specific equality only in its stated budget range; it is not transferred to the larger rank-two range. The qubit classification and order-budget results belong to one evolving contraction problem; we do not count each corollary or adverse control as a separate paper.
++Theorem~\ref{thm:bkm} supplies lower bounds but no matching general BKM upper. The unrestricted higher-dimensional coefficient, optimal range beyond \(M_d\), minimal sufficient reference dimension, nonunital classification, unrestricted BKM/Umegaki and actual-MI coefficients, tensorization and practical robustness remain open in this manuscript. Proposition~\ref{prop:bell} gives generator-specific equality only in its stated budget range; it is not transferred to the larger rank-two range. The qubit classification and order-budget results belong to one evolving contraction problem; we do not count each corollary or adverse control as a separate paper.
++
++\paragraph{New component evidence.}
++The \href{https://github.com/lluiseriksson/physmath-knowledge-tree/tree/34400956487e21509b5196884caa320907b26f58/integrations/research-radar/evidence/2026-10-27-principal-bkm}{version-pinned supplement} contains the 1033/1035 derivations, fixed replay scripts and original interval certificates with transport hashes. Technical audit1044 separately reconstructed the geometry, logarithmic coefficient and ordered limits; solved an ambient rational225-by225 Sylvester system; checked Umegaki orientation without normalizing subblocks; and verified four finite gaps using directed integer intervals. Its full report, controls, incidents and primary-reading scope are retained with the working dossier and must accompany any later publication. The original interval solver and this separate implementation support bounded certificates, not universal numerical or novelty claims. The frozen1037 grid found no violation of a hypothetical upper in270 fixed points; that inconclusive diagnostic supplies no upper and is not used in a proof.
+ 
+ \section{Model assessments and review context}\label{sec:assessment}
+-The named author directed substantial OpenAI Codex assistance in derivation, writing and numerical work. Technical audits988,1012 and1018 were requested with GPT-6 Astra at xhigh effort, using reused conversational contexts and a shared filesystem. Requested configuration does not attest effective model identity, effort, isolation, blinding or independence. Audit1012 supports the qubit components with the normalization and domain precisions incorporated here. Audit1018 supports the earlier general-dimensional interval but identifies its dependence on our previous Bell family; that objection is retained in Proposition~\ref{prop:bell}. It verified only the identity of the post-start rank-two supplement, not its mathematics. Technical audit1025 subsequently examined the rank-two and strengthened Bell/SEP statements, supporting them within the distinct ranges stated here. It reconstructed the invariant planes and faithful limits and verified a rational finite pair strictly beyond the limit of the specified Bell family. This comparison does not exclude all commuting constructions. Its BKM diagnostic also shows that the displayed rank-two tangent does not automatically transfer sharpness to each Petz generator; this objection is retained. It supplies no manuscript score or priority certification and explicitly reuses audit1018 context.
++The named author directed substantial OpenAI Codex assistance in derivation, writing and numerical work. Full review1031 and corrective continuation1042 examined the predecessor drafts; both reports, all objections and their exact-PDF hashes are retained. Their scores do not evaluate this expanded combined manuscript. Technical audits1018/1025 and1044 were requested as GPT-6 Astra xhigh, with reused conversational context and a shared filesystem. Effective model identity, effort, runtime isolation, blinding and independence are unattested. No independent second voice or human peer review is claimed.
+ 
+-Full review1031 examined the exact twelve-page pre-correction draft and recommended minor revision. Its PDF SHA256 is:
+-\begin{center}\small\texttt{50db4efe067fb88a0bef955d4e5b5779bc31a6afe4c1b78b0c16c9f518b89ab3}\end{center}
+- It required the Hermitian Doeblin primal/equality dual and an explicit SLD/minimal-chi-square scope for the NPT inference. Both are corrected here, with the positive domain of the aligned limit stated. The full adverse report and reused-context limitations are retained. This corrected PDF awaits exact-artifact verification at freezing; no score is inherited from1031 or from review1006 of the eight-page first version. Component audits, arithmetic replay, formal verification, human peer review and editorial acceptance are distinct. No predicted score, independent-human review, Lean proof of these analytic theorems or certified worldwide originality is claimed. The author remains responsible for attribution, claims and any publication decision.
++Audit1044 supports the principal-rich exact SLD/minimal-chi-square/triangular range and the separate BKM/Umegaki lower, with the distinction between M and P, complete versus fixed-reference quantifiers, increased reference cost and no unitary-tangent interpretation preserved. It supplies no manuscript grade or editorial recommendation. Its directed prior-art comparisons do not certify priority. A full exact-PDF assessment of this combined version has not been obtained at freezing; no predicted score, Lean proof of the analytic theorems or worldwide originality certificate is claimed. Publication as a Working paper would not constitute editorial acceptance. The author remains responsible for attribution and claims.
+--- 1041/sections/bkm.tex
++++ 1047/sections/bkm.tex
+@@ -0,0 +1,85 @@
++\section{A complete equal-reference relative-entropy lower bound}\label{sec:bkm}
++Write \(P_d=d(d-1)\), distinct from \(M_d=d(2d-1)/2\). Define
++\[
++ g^{\mathrm{BKM}}_s(D)=\Tr D\,\mathrm{D}(\log)_s[D],\qquad
++ D_{\mathrm U}(\rho\Vert\sigma)=\Tr\rho(\log\rho-\log\sigma).
++\]
++Their complete equal-reference coefficients use exactly the state/tangent restrictions of Section~1. They do not optimize actual mutual information. The BKM kernel, faithful local expansion and relative-entropy/BKM comparison mechanisms are prior~\cite{HR,Reverse,HanLi}.
++
++\begin{theorem}[Principal-rich BKM and Umegaki lower]\label{thm:bkm}
++For depolarization on dimension \(d\ge2\) throughout its physical range,
++\[
++ \eta^c_{\mathrm{BKM}}(\N_\lambda)\ge C_{P_d}(\lambda),\qquad
++ \eta^c_{\mathrm U}(\N_\lambda)\ge C_{P_d}(\lambda).
++\]
++With both actual-marginal order budgets at \(\kappa>1\), put
++\[
++ K_*(\kappa)=1+(P_d-1)\min\left\{\frac{\kappa-1}{M_d-1},1\right\}.
++\]
++Both constrained coefficients are at least
++\[
++ \max\{C_{\min(\kappa,d^2/2)}(\lambda),\ C_{K_*(\kappa)}(\lambda)\}.
++\]
++These are lower bounds, not proposed exact optima. The second construction uses a reference of dimension \(2d-1\).
++\end{theorem}
++\begin{proof}
++Use the bases and tangent in \eqref{eq:principal-plane}. Let \(w_+\ge w_->0\) be the eigenvalues of \(W_p\), and \(Z\) the matrix of \(T\) in that eigenbasis. At fixed \(-1/(M_d-1)<p<1\),
++\[
++ w_+=\frac{A_p}{2da}+O(e^2),\qquad
++ w_-=\frac{(1-p)[1+(M_d-1)p]}{daA_p}e^2+O(e^4).
++\]
++The leading coefficient of \(w_-\) is positive. The eigenvector rotation is \(dp\sqrt a\,e/A_p+O(e^3)\), whence
++\[
++ Z_{++}=\frac{2dpa}{A_p}e+O(e^3),\quad
++ Z_{--}=\frac{2(1-p)}{A_p}e+O(e^3),\quad
++ Z_{+-}=\sqrt a+O(e^2).
++\]
++The BKM form for one plane is
++\[
++ H_e(p)=\frac{Z_{++}^2}{w_+}+\frac{Z_{--}^2}{w_-}
++  +2|Z_{+-}|^2\frac{\log w_+-\log w_-}{w_+-w_-}.
++\]
++The diagonal terms are bounded, whereas the logarithmic term yields
++\begin{equation}\label{eq:bkm-log}
++ H_e(p)=\frac{8da^2}{1+(P_d-1)p}\log(1/e)+O(1).
++\end{equation}
++The full form is \(2H_e(p)\); all remaining modes have zero tangent. Therefore, with \(\theta<1\) fixed,
++\[
++ \lim_{e\downarrow0}\lambda^2\frac{H_e(\lambda\theta)}{H_e(\theta)}
++ =\lambda^2\frac{1+(P_d-1)\theta}{1+\lambda(P_d-1)\theta}.
++\]
++Taking \(\theta\uparrow1\) gives the unrestricted lower; taking it up to the budget endpoint gives \(C_{K_*}\). The domain also contains the negative physical endpoint. The cases \(\lambda=0,1\) are direct. No uniform remainder in \(\theta\uparrow1\) is asserted.
++
++For each fixed faithful \(e,\theta\), choose the same admissible small perturbations as in Theorem~\ref{thm:order}. The prior local identity is
++\[
++ D_{\mathrm U}(s_{e,\theta}+tD\Vert s_{e,\theta})
++ =\tfrac12t^2g^{\mathrm{BKM}}_{s_{e,\theta}}(D)+o(t^2).
++\]
++Take \(t\to0\) first, then \(e\downarrow0\), then \(\theta\) to its allowed endpoint. This proves the finite-pair lower in the stated orientation. The first bound inside the maximum follows from the Bell family of Proposition~\ref{prop:bell}, since \(x\log x\) is operator convex; for larger budgets retain its endpoint lower by approximation from below. It can be stronger than \(C_{K_*}\) at smaller budgets and must not be discarded.
++\end{proof}
++
++For \(d\ge3\), \(P_d>d^2/2\) and
++\(\partial_KC_K=\lambda^2(1-\lambda)/[1+\lambda(K-1)]^2\).
++Thus, except at \(\lambda=0,1\), the new unrestricted lower strictly exceeds the endpoint supplied by the specific preceding Bell family. At the negative physical endpoint this reads
++\[
++ C_{P_d}\!\left(-\frac1{d^2-1}\right)=\frac1{d+1},\qquad
++ C_{d^2/2}\!\left(-\frac1{d^2-1}\right)=\frac1{d^2-1}.
++\]
++The ratio of these two lower bounds is \(d-1\). This dimension-dependent comparison is not a claim of a worldwide-best bound, an exact coefficient or an operational advantage. For \(d=2\), \(P_d=2\): it recovers the Bell lower and does not settle unrestricted qubit relative-entropy contraction.
++
++\paragraph{Finite certified comparisons.}
++For \(e=10^{-30}\), \(t=10^{-90}\), \(\theta=99/100\), the actual finite pairs above, with budget \(M_d\), yield the following rigorous interval locations of their gaps over the specified Bell endpoint:
++\begin{center}
++\begin{tabular}{ccc}
++\toprule
++\(d\)&\(\lambda\)&gap interval (outward decimal bounds)\\
++\midrule
++3&\(-1/8\)&\((0.11255711780015,\ 0.11255711780017)\)\\
++3&\(1/2\)&\((0.00593846351695,\ 0.00593846351696)\)\\
++4&\(-1/15\)&\((0.11934942272408,\ 0.11934942272410)\)\\
++4&\(1/2\)&\((0.00238915978275,\ 0.00238915978276)\)\\
++\bottomrule
++\end{tabular}
++\end{center}
++The exact binary/rational interval endpoints, rather than rounded midpoints, are retained in the supplement. Audit1044 reproduced positivity and both budgets exactly, and enclosed all four calculations with a separate integer interval implementation. Subblocks must not be normalized separately: their opposite linear trace terms cancel only in the global divergence. The input divergences are of order \(10^{-177}\), with cancelling block terms of order \(10^{-120}\). Such severe conditioning precludes an inference of laboratory robustness from these mathematical certificates.
++
