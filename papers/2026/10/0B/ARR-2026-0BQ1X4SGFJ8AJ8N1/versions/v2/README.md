@@ -21,3 +21,5 @@ The named author directed substantial OpenAI Codex assistance in derivation, wri
 - [Post-review18 LP certificates](src/python/LP-CERTIFICATES865.json) and [checker](src/python/lp_certificates865.py)
 
 The LP example is later author evidence, outside the original861 assessment. Full original review and context files are byte-preserved; their archived whole-review manifest also names private working evidence not redistributed here. The public version manifest binds the exact public selection. Foreign source bodies are not redistributed.
+
+- [Operator notice and scope of binding](screening/operator-binding-notice.txt)
