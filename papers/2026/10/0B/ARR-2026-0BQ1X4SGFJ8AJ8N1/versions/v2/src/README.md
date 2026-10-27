@@ -1,0 +1,1 @@
+Original circuit/equality controls are in the immutable public supplement linked in the version README. The LP example here is post-review author evidence; it is not a Tardos implementation or additional scored review.

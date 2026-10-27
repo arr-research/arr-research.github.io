@@ -1,0 +1,275 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=27mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,booktabs,microtype}
+\usepackage[T1]{fontenc}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newcommand{\Z}{\mathbb Z}\newcommand{\R}{\mathbb R}\newcommand{\C}{\mathbb C}
+\DeclareMathOperator{\Newt}{Newt}\DeclareMathOperator{\conv}{conv}
+\title{Positive circuit obstructions and rigidity\\for lattice-fiber log-concavity}
+\author{Lluis Eriksson}
+\date{Second-version manuscript, 27 October 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+We characterize the full-row-rank integer matrices whose lattice-point counts satisfy midpoint log-concavity in every fixed integer coordinate box. Under the promise that all three integer fibers are nonempty, the property holds exactly for equimodular matrices: their nonzero maximal minors have one common magnitude. The same classification holds for coefficientwise nonnegativity and positive external fields. Necessity has an explicit certificate: a primitive minimal kernel circuit with a coefficient of magnitude at least two gives counts \((1,1,2)\) in one box, supported on at most \(r+1\) coordinates. The defect is one negative monomial, so it violates the inequality at every positive field. If empty fibers are allowed for arbitrary ambient integral right-hand sides, the common minor magnitude must additionally be odd. Classical circuit and lattice-normalization results supply the structural tools; sufficiency uses Leake--Mohammadi Yekta's coefficientwise inequality. We also characterize equality through integral translations, using squarefreeness of complete lattice-point enumerators, and decide it with \(6n\) linear optimizations. The equality result transfers to equimodular matrices on their column lattice. We retain the rational-box boundary and distinguish midpoint classification from the open global Jensen question. Finite exact controls and their byte-preserving reproduction supplement accompany the analytic proofs.
+\end{abstract}
+
+\section{Setting and dependence on prior work}
+Let \(M\in\Z^{r\times n}\) have full row rank, with every nonzero maximal minor equal to \(+1\) or \(-1\). This is the rectangular \emph{unimodular} convention used here. Fix finite \emph{integer} bounds \(\ell,u\in\Z^n\) and define
+\[
+\begin{gathered}
+P_b=\{x\in\R^n:Mx=b,\ \ell\le x\le u\},\\
+F_b(z)=\sum_{x\in P_b\cap\Z^n}z^x.
+\end{gathered}
+\]
+Vector inequalities are coordinatewise; exponents may be negative. We use the ring
+\[\mathcal L_n=\C[z_1^{\pm1},\ldots,z_n^{\pm1}].\]
+An external field is \(w\in\R_{>0}^n\).
+
+For \(b_-,b_0,b_+\in\Z^r\) satisfying \(b_-+b_+=2b_0\), the essential input is Leake--Mohammadi Yekta~\cite[Theorem 3.1]{LMY}:
+\begin{equation}\label{eq:input}
+D(z)=F_{b_0}(z)^2-F_{b_-}(z)F_{b_+}(z)
+\quad\text{has nonnegative coefficients.}
+\end{equation}
+Their Lemma 3.4 gives integrality of these box fibers. We use their coefficientwise theorem directly, not a new proof of that inequality. Equality is distinct from their open global Jensen question~\cite[Question 1.7]{LMY}.
+
+The main addition in this substantive extension of our earlier Working paper~\cite{V1} is a sharp universal matrix classification with an explicit positive circuit obstruction. The equivalence between equimodularity and unit circuit coefficients, lattice normalization, and recognition are classical~\cite{Heller,BS,CGR}; they are not claimed as discoveries here. The possible specific converse is a common-box failure with all three counts positive, rather than only an empty central section. The earlier equality characterization and optimization reduction are retained and extended by the classical normalization. Scoped source comparison does not certify worldwide priority. Csikvári--Imolay~\cite{CI} already study equality between Eulerian orientation and half-graph counts; their pair-decomposition methods are antecedents of the source argument. That comparison concerns different combinatorial objects rather than the three fixed-matrix fibers here. Tardos's algorithm~\cite{Tardos} is an existing optimization tool.
+
+\input{classification-section.tex}
+
+\section{Squarefreeness and multiplicative rigidity}
+For a nonempty lattice polytope \(P\), let
+\(E_P(z)=\sum_{a\in P\cap\Z^n}z^a\).
+All lattice points, including boundary points, occur with coefficient one.
+Squarefree means no repeated nonunit irreducible factor in \(\mathcal L_n\). Laurent monomials are units.
+
+\begin{lemma}\label{lem:edge}
+If polytopes \(Q,R\) are given and \(e\) is an edge of \(Q\), there is a functional \(v\) such that \(Q^v=e\), \(R^v\) is a vertex or an edge parallel to \(e\), and \((2Q+R)^v\) is an edge. Superscripts denote maximizing faces.
+\end{lemma}
+\begin{proof}
+Work in the direction space of \(Q+R\), of dimension \(d\), translating the summands. The normal cone of \(e\) has dimension \(d-1\). Choose \(v\) in its relative interior. Exclude normal cones of faces of \(R\) of dimension at least two; they have dimension at most \(d-2\). Also exclude intersections with normal cones of edges \(f\) not parallel to \(e\): these lie in \(e^\perp\cap f^\perp\), again of dimension at most \(d-2\). Finitely many such sets cannot cover the relative interior of the edge cone. The remaining face \(R^v\) is a vertex or a parallel edge. Maximizing faces commute with Minkowski addition. For \(d=1\), use the zero functional: the nonpoint summands are parallel segments. Passing to the direction space removes common normal lineality and covers lower-dimensional polytopes.
+\end{proof}
+
+Newton polytopes of products and face-factor methods are classical. Abu Salem--Gao--Lauder~\cite{ASGL} use edge polynomials in polyhedral factorization algorithms. Averkov--Langfeld~\cite[Section 2 and Problem 2.3]{AL} study lattice-set enumerators and Laurent/group-ring factorization in covariogram reconstruction. Our use of complete coefficient-one support forces a squarefree edge polynomial; no origin claim for the Newton-face mechanism, worldwide priority certificate, or general reconstruction theorem is intended.
+
+\begin{theorem}\label{thm:sf}
+The complete lattice-point enumerator \(E_P\) of any nonempty lattice polytope is squarefree in \(\mathcal L_n\).
+\end{theorem}
+\begin{proof}
+A point gives a unit. Suppose otherwise that \(E_P=G^2H\), with \(G\) a nonunit Laurent polynomial. Newton polytopes satisfy
+\(P=2Q+R\), where \(Q=\Newt(G)\) and \(R=\Newt(H)\).
+The nonunit \(G\) has at least two exponent vectors, so \(Q\) has an edge \(e\).
+Lemma~\ref{lem:edge} gives a functional whose face in \(P\) is the edge \(2e+R^v\).
+Let \(a\) be an endpoint and \(q\in\Z^n\) its primitive integer direction. The lattice points of that edge are exactly \(a,a+q,\ldots,a+mq\) for an integer \(m\ge1\). Its face polynomial is
+\[
+\operatorname{in}_v(E_P)=z^a(1+t+\cdots+t^m),\qquad t=z^q.
+\]
+Face products also give
+\(\operatorname{in}_v(E_P)=\operatorname{in}_v(G)^2\operatorname{in}_v(H)\).
+Up to a Laurent monomial, \(\operatorname{in}_v(G)\) is a nonconstant polynomial \(g(t)\) with nonzero constant coefficient: its edge endpoint terms are present. Thus \(g(t)^2\) divides \(1+t+\cdots+t^m\) in \(\C[t^{\pm1}]\).
+But \((t^{m+1}-1)/(t-1)\) has only simple nonzero roots in characteristic zero, a contradiction. The primitive direction makes the univariate edge Laurent representation injective.
+\end{proof}
+
+Both complete support and coefficient one matter. For instance,
+\[
+1+x+x^3+x^4=(1+x)^2(1-x+x^2)
+\]
+omits the lattice point \(2\) of its Newton segment and has a repeated factor, despite having only zero or one coefficients. The full-support polynomial \((1+x)^2\) instead has a coefficient different from one. Theorem~\ref{thm:sf} is not a statement about Ehrhart or \(h^*\)-polynomials.
+
+\begin{theorem}[Multiplicative rigidity]\label{thm:mult}
+For nonempty lattice polytopes \(P_1,\ldots,P_k,Q\) and \(k\ge2\),
+\[
+\prod_{i=1}^kE_{P_i}=E_Q^k
+\]
+if and only if \(P_i=Q+h_i\) for integral vectors \(h_i\) with \(\sum_i h_i=0\).
+\end{theorem}
+\begin{proof}
+The Laurent ring is a unique factorization domain. Every irreducible factor of \(E_Q\) has multiplicity \(k\) on the right. Each of the \(k\) squarefree enumerators on the left contributes at most once, so every one contributes once. No other factor can appear. Hence
+\(E_{P_i}=c_i z^{h_i}E_Q\).
+Coefficient one forces \(c_i=1\). Supports and then convex hulls give \(P_i=Q+h_i\); cancellation gives \(\sum_i h_i=0\). Monomial enumerators cause no exception. The converse follows directly from translation.
+\end{proof}
+
+\section{The equality characterization}
+\begin{theorem}\label{thm:main}
+In the setting of Section 1, suppose the three fibers are nonempty. The following are equivalent:
+\begin{enumerate}
+\item \(F_{b_0}(w)^2=F_{b_-}(w)F_{b_+}(w)\) for some \(w\in\R_{>0}^n\);
+\item \(F_{b_0}^2=F_{b_-}F_{b_+}\) as Laurent polynomials;
+\item for an \(h\in\Z^n\),
+\(P_{b_+}=P_{b_0}+h\) and \(P_{b_-}=P_{b_0}-h\).
+\end{enumerate}
+Equality therefore holds at every positive field or the inequality is strict at every positive field.
+\end{theorem}
+\begin{proof}
+A nonzero Laurent polynomial with nonnegative coefficients evaluates positively at every positive field. Thus \eqref{eq:input} proves \(1\Rightarrow2\).
+
+Each box fiber is a lattice polytope. Indeed, at a vertex select \(n-r\) independent active coordinate constraints complementary to the row equations. These coordinates are at integer bounds. The remaining coordinates solve a system with a nonsingular \(r\)-column submatrix of \(M\), of determinant \(\pm1\); they are integers. Boundedness now gives
+\(P_b=\conv(P_b\cap\Z^n)\).
+
+Apply Theorem~\ref{thm:mult} with \(k=2\) to obtain \(2\Rightarrow3\).
+Translations give the polynomial identity and equality at every positive field. If equality fails, the nonzero defect in \eqref{eq:input} is positive at every such field.
+\end{proof}
+
+\begin{corollary}\label{cor:equal}
+Unweighted equality for three nonempty fibers forces their three lattice-point counts to be equal.
+\end{corollary}
+\begin{proof}
+Use Theorem~\ref{thm:main} at \(w=\mathbf1\); integral translation preserves lattice-point counts.
+\end{proof}
+Thus a nonconstant geometric progression of three counts cannot be an equality case. Positive fields are essential. With negative Laurent exponents, evaluation at a zero coordinate can be undefined; when all exponents are nonnegative, zero weights can erase a nonzero coefficient defect.
+
+Equality need not mean singleton fibers. For \(M=[1\ \ 0]\), box \([0,2]^2\), and RHS \(0,1,2\), each fiber has three lattice points and
+\(F_b(z)=z_1^b(1+z_2+z_2^2)\). The fibers are symmetric translates, so equality holds in every positive field; the three weighted values need not themselves coincide.
+
+\section{An equality algorithm using linear optimization}
+Let \(m_{s,i}\) and \(U_{s,i}\) be the minimum and maximum of coordinate \(i\) on \(P_{b_s}\), for \(s=-,0,+\). These extrema are integers.
+
+\begin{theorem}\label{thm:alg}
+Equality can be decided by \(6n\) linear optimizations without evaluating any lattice-point count. Set \(h=m_+-m_0\). The decision is equality precisely when
+\begin{equation}\label{eq:test}
+Mh=b_+-b_0,\quad U_+=U_0+h,\quad
+m_-=m_0-h,\quad U_-=U_0-h.
+\end{equation}
+Under the integer-input and nonempty-unimodular promises above, the decision admits a strongly polynomial number of rational arithmetic operations, with intermediate encoding lengths polynomial in total input length.
+\end{theorem}
+\begin{proof}
+The effective bounds describe each fiber exactly:
+\[
+P_{b_s}=\{x:Mx=b_s,\ m_s\le x\le U_s\}.
+\]
+One inclusion is the definition of the extrema; the other uses \(m_s\ge\ell\) and \(U_s\le u\).
+Translation must shift every minimum and maximum by the same vector, uniquely fixing \(h=m_+-m_0\). The exact effective-box descriptions show that \eqref{eq:test} is necessary and sufficient for the two symmetric translations. Here \(b_--b_0=-(b_+-b_0)\).
+Apply Theorem~\ref{thm:main}.
+
+For the complexity bound select a nonsingular column basis \(B\) of \(M\). By Cramer's rule every entry of \(A=B^{-1}M\) is in \(\{0,\pm1\}\): each numerator is a maximal minor and \(\det B=\pm1\). Basis selection, inversion and RHS transformation take polynomially many rational arithmetic operations with polynomial intermediate encoding lengths.
+Replace \(Mx=b_s\) by \(Ax=B^{-1}b_s\).
+The inequality matrix \([A;-A;I;-I]\) has constant-sized entries. Tardos's theorem~\cite{Tardos} bounds the number of arithmetic operations polynomially in this matrix's encoding length, independently of the RHS and objective encodings. That length is polynomial in \(r,n\). Apply it to the \(6n\) coordinate optimizations and then perform the tests. This is the strongly polynomial arithmetic model, not a bit-time claim independent of input lengths.
+\end{proof}
+
+The field \(w\) need not be an algorithm input: the decision applies simultaneously to all positive fields. We promise nonempty fibers and unimodularity rather than claiming a new recognition algorithm. Standard exact primal--dual LP certificates can verify the extrema and comparisons without enumerating lattice points or expanding the defect polynomial. The finite controls below do not implement Tardos's algorithm.
+
+\section{Strictness and the boundary of the hypotheses}
+\begin{corollary}\label{cor:binary}
+For an integer box with \(u_i-\ell_i\le1\), distinct feasible endpoint right-hand sides with integral midpoint have strict midpoint inequality at every positive field.
+\end{corollary}
+\begin{proof}
+Equality would provide an integer central point \(x\) and an integral \(h\) with \(x-h,x,x+h\) all in the same box. Thus \(2|h_i|\le1\), forcing \(h=0\) and equal endpoint right-hand sides.
+\end{proof}
+
+\begin{corollary}\label{cor:ehrhart}
+Let \(P=\{x\ge0:Mx=b\}\) be nonempty and bounded for integral \(b\) and full-row-rank unimodular \(M\).
+If \(d=\dim P>0\), then for all integers \(t\ge1\),
+\[
+|tP\cap\Z^n|^2>
+|(t-1)P\cap\Z^n|\,|(t+1)P\cap\Z^n|.
+\]
+For a point \(P\), all these counts are one.
+\end{corollary}
+\begin{proof}
+Boundedness and nonemptiness make the nonnegative recession cone \(\{x\ge0:Mx=0\}\) equal to \(\{0\}\). Hence the fiber at RHS \(tb\) is \(tP\), also for \(t=0\). For any fixed \(t\), choose a common finite integer box containing the three scaled polytopes. Equality would make \(tP\) and \((t+1)P\) translates by Theorem~\ref{thm:main}. Their relative volumes are \(t^d\) and \((t+1)^d\) times the positive relative volume of \(P\), which differ when \(d>0\). Integrality handles the point case. The weak inequality is already~\cite[Corollary 3.5]{LMY}.
+\end{proof}
+
+The translation claim is false for arbitrary rational \emph{real} fibers.
+Take \(M=[1\ \ 1]\), bounds \(0\le x\le1/2\), \(0\le y\le2\), and RHS \(0,1,2\). The integer-point enumerators are \(1,z_y,z_y^2\), satisfying equality identically. The first real fiber is a point; the other two are segments. They cannot be symmetric translates. This counterexample arose in component review and refutes an ambiguous rational-input extension in our original memo.
+
+For finite rational bounds a different, valid interface is to round them first to \(\lceil\ell\rceil,\lfloor u\rfloor\). Integer-point sets are unchanged, and the theorem concerns the rounded fibers, not the original real ones. Use feasibility LPs to handle empty rounded fibers. If the central fiber is empty, both endpoints cannot be nonempty: their average would make the integral central polytope nonempty. Equality is then \(0=0\). If the center is nonempty and an endpoint is empty, the inequality is strict. Otherwise use Theorem~\ref{thm:alg}. This gives a polynomial bit-complexity decision for finite rational boxes. Rational rounding is not included in our strongly polynomial arithmetic assertion for integer input.
+
+\section{A variable-wise log-concave array excluded by rigidity}
+Define \(f\) on \(\{-1,0,1\}^2\), with rows indexed by the first coordinate, by
+\[
+(f(i,j))=
+\begin{pmatrix}6/5&5/6&1/10\\5/6&1&6/5\\1/10&6/5&5/6\end{pmatrix},
+\qquad p(x,y)=\sum_{i,j=-1}^1f(i,j)x^iy^j.
+\]
+It satisfies variable-wise log-concavity~\cite[Definition 2.1]{LMY}.
+Each coefficient slice is log-concave without internal zeros. After \(y=t>0\), let \(A_-,A_0,A_+\) be the three coefficients in \(x\). Exactly,
+\[
+900t^2(A_0^2-A_-A_+)=517+129t+891t^2+1427t^3+1221t^4>0.
+\]
+Symmetry handles evaluations of \(x\); extractions outside the support are zero, as allowed by the source convention.
+
+The points \(v_1=(-1,-1),v_2=(1,0),v_3=(0,1)\) have mean zero and coefficients \(6/5>f(0)=1\). Thus this class alone does not imply global Jensen. The distinction between line and global concavity is already explicit in~\cite{LMY}; that distinction is not a new discovery claimed here.
+
+\begin{proposition}\label{prop:obstruction}
+The exact array cannot be the weighted counts at one positive field of a single fixed integer-box unimodular family whose right-hand sides depend affinely on the two array indices, even after common positive scaling and exponential output rescaling.
+\end{proposition}
+\begin{proof}
+For each \(i\), \(f(v_i)f(-v_i)=f(0)^2=1\).
+Theorem~\ref{thm:main} would therefore give
+\(P_{v_i}=P_0+h_i\) and \(P_{-v_i}=P_0-h_i\) for integral shifts.
+The RHS parametrization may be affine, with auxiliary RHS coordinates fixed; it must preserve the indicated barycenters.
+
+By convexity of the common box and linearity of the constraints,
+\[
+\frac{P_{v_1}+P_{v_2}+P_{v_3}}3
+=P_0+\frac{h_1+h_2+h_3}3\subseteq P_0.
+\]
+A bounded nonempty polytope cannot contain a nonzero translate of itself: maximize the functional in that translation direction. Thus \(\sum_i h_i=0\).
+The corresponding enumerator translations imply \(\prod_i F_{v_i}(w)=F_0(w)^3\), contradicting \((6/5)^3>1\). Common scaling and exponential output rescaling cancel at these barycenters.
+\end{proof}
+This excludes the exact array, not nearby strictly perturbed arrays, and does not answer the global Jensen question for unimodular fibers.
+
+\section{Controls, review context and limitations}
+Six explicitly supplied unimodular matrices, in boxes of widths one, two and three, gave \(1{,}160\) nontrivial midpoint triples. All nonzero maximal minors were checked. Polynomial equality, symmetric support translation and the extrema criterion agreed in all cases, including \(72\) equalities. All coefficient defects were nonnegative. These finite enumerations are controls, not a general proof or an LP implementation.
+
+A separate exact rational-polynomial check covered all \(213\) distinct lattice polytopes with vertices in \(\{0,1,2\}^2\): nine points, \(36\) segments and \(168\) polygons. After clearing monomial units, the gcd with the two partial derivatives was constant in every case. The nonsaturated negative control \(1+x+x^3+x^4\) gave gcd \(x+1\) with its derivative. This supplies finite arithmetic checks, not higher-dimensional or proof-assistant verification.
+
+\subsection*{Model assessments and review context}
+The original component audits822/824 examined the rational-array calculation and equality argument. Audit824 required the integer-box restriction and refuted an extension to the original rational real fibers; the counterexample remains explicit above. A full assessment of the unchanged earlier version~\cite{V1} examined its remaining rounded-fiber, strictness and finite-polytope claims. Its report belongs to that earlier exact PDF and is not a grade for this extension.
+
+The new classification proof was examined in one fresh component audit840, which received its frozen proof and controls without prior reports or numeric targets. It found no invalidating mathematical defect, conditional on the cited LMY inequality, and explicitly identified the classical circuit/normalization antecedents. It did not assign a manuscript score or certify priority. The positive negative-monomial identity was also checked. Context isolation, effective model identity and independence are not attested.
+
+The \href{https://github.com/lluiseriksson/physmath-knowledge-tree/tree/faf47d98835980706de360a939fa79757dbd86fc/integrations/research-radar/evidence/2026-10-27-circuit857}{immutable reproduction supplement} contains the original controls839/840, their native hashes and expected outputs, and a wrapper that runs copies without changing frozen evidence. It reproduces every mathematical result field and the byte hash of all \(16{,}828\) positive certificates; declared UTC and elapsed fields naturally differ. The controls additionally cover \(127{,}608\) nonempty coefficientwise triples and \(46{,}362\) binary centers. They are finite falsification checks, not the proof of the universal theorem. The observed successful reproduction used Python3.12.14 and SymPy1.14.0. The source bundle accompanying this manuscript contains the same supplement and command instructions. Earlier equality controls are preserved in the \href{https://github.com/lluiseriksson/physmath-knowledge-tree/tree/620dfafc054a813834943f069fd9864693402f7e/integrations/research-radar/evidence/2026-10-27-rigidity834}{immutable first-version evidence}.
+
+At the time this second-version draft was prepared, no full assessment of its exact combined PDF had been obtained. Any later importance score must accompany its complete report, objections and context and bind this new exact PDF. No earlier version's score or component audit can substitute for that assessment.
+
+\paragraph{AI and responsibility disclosure.}
+The named author directed substantial OpenAI Codex assistance in derivation, writing and numerical work. GPT-6 Astra xhigh was requested for the audits. Earlier audits reused context and a shared filesystem; audit840 received a fresh scoped input, still with a shared filesystem. Effective runtime identity, effort and independence are not independently attested. No runtime isolation, independent human peer review, Lean formalization, certified worldwide originality or predicted assessment score is claimed. Responsibility remains with the named author.
+
+\paragraph{Limits.}
+The coefficientwise midpoint inequality is a cited input. The universal classification allows fixed coordinates and requires integer, not merely real, nonemptiness where stated. Equimodular normalization preserves regular kernel geometry; it is not a theorem for arbitrary configurations. Our algorithm does not count general fibers or produce a fixed positive numerical gap uniform over unbounded fields. No solution of global Jensen is claimed. Strong polynomiality is an arithmetic operation bound under integer-box promises, with input-dependent bit costs. Significance and antecedent overlap require full-manuscript review.
+
+\begin{thebibliography}{9}
+\raggedright
+\bibitem{LMY} J. Leake and M. Mohammadi Yekta,
+\emph{Log-concavity and Approximate Counting for Totally Unimodular Polytopes},
+arXiv:2609.39917v1 (30 September 2026).
+\url{https://arxiv.org/html/2609.39917v1}.
+\bibitem{Tardos} \'E. Tardos,
+\emph{A Strongly Polynomial Algorithm to Solve Combinatorial Linear Programs},
+Operations Research \textbf{34}(2) (1986),250--256.
+\href{https://doi.org/10.1287/opre.34.2.250}{doi:10.1287/opre.34.2.250}.
+\bibitem{CI} P. Csikv\'ari and A. Imolay,
+\emph{Covers, orientations and factors},
+Electronic Journal of Combinatorics \textbf{27}(3) (2020), Paper 3.25;
+arXiv:1905.06678v5.
+\url{https://arxiv.org/abs/1905.06678v5}.
+\bibitem{Heller} I. Heller,
+\emph{On linear systems with integral valued solutions},
+Pacific Journal of Mathematics \textbf{7}(3) (1957),1351--1364.
+\url{https://msp.org/pjm/1957/7-3/pjm-v7-n3-p07-p.pdf}.
+\bibitem{BS} D. I. Bernstein and S. Sullivant,
+\emph{Unimodular binary hierarchical models}, arXiv:1502.06131v2 (2016),
+Definition 1.1 and Section 2.
+\url{https://arxiv.org/pdf/1502.06131v2}.
+\bibitem{CGR} P. Chervet, R. Grappe and L.-H. Robert,
+\emph{Box-total dual integrality, box-integrality, and equimodular matrices},
+Mathematical Programming \textbf{188} (2021),319--349; online 20 May 2020.
+\href{https://doi.org/10.1007/s10107-020-01514-0}{doi:10.1007/s10107-020-01514-0}.
+\bibitem{ASGL} F. Abu Salem, S. Gao and A. G. B. Lauder,
+\emph{Factoring polynomials via polytopes}, author version 7 January 2004.
+\href{https://people.maths.ox.ac.uk/lauder/papers/AbuSalemGaoLauderISSAC2004Jan7.pdf}{Author's PDF at Oxford}.
+\bibitem{AL} G. Averkov and B. Langfeld,
+\emph{On the reconstruction of planar lattice-convex sets from the covariogram},
+arXiv:1011.5530v3 (2012).
+\url{https://arxiv.org/html/1011.5530v3}.
+\bibitem{V1} L. Eriksson,
+\emph{Rigidity and strongly polynomial equality tests for unimodular fiber counts},
+AIRR.SCIENCE, ARR-2026-0BQ1X4SGFJ8AJ8N1, v1 (27 October 2026), Working paper.
+\url{https://airr.science/papers/ARR-2026-0BQ1X4SGFJ8AJ8N1/versions/v1/}.
+\end{thebibliography}
+\end{document}
