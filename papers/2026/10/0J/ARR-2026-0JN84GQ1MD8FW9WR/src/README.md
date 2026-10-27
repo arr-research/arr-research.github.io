@@ -1,0 +1,1 @@
+Frozen exact957 input and finite diagnostics. Do not treat unrestricted diagnostic conjectures as proved claims. No new Lean formalization. See complete original review958 controls for all failed attempts and their diagnosis.

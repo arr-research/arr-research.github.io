@@ -1,0 +1,1 @@
+The exact manuscript and original research supplements are licensed CC BY4.0; catalogue metadata CC0. Scope and canonical legal-code URLs are in ../LICENSES.json and ../metadata.json. Attribution: Lluis Eriksson, title and exact AIRR version. Original assistance and review provenance remain visible. No foreign paper full text is included.

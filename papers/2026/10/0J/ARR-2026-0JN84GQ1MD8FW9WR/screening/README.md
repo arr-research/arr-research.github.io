@@ -1,0 +1,1 @@
+Full original exact-PDF review958 and all objections. Requested Astra xhigh, effective identity and independence unverified. No previous-version score is imported. See original verdict for distinct importance4.0/global4.5/technical8.5 scales.

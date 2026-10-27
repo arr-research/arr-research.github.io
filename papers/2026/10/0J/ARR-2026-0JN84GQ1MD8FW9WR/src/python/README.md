@@ -1,0 +1,1 @@
+Supplied checkers are in ../exact957; reviewer diagnostics are in ../../screening/review958/controls. All are bounded diagnostics, not universal proofs, novelty certificates or a claimed computational campaign.

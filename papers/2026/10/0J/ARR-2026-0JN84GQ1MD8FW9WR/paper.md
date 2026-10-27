@@ -1,0 +1,481 @@
+# Sharp separable information contraction for reset dynamics
+
+Machine-readable rendition of canonical paper.pdf. The exact nine-page PDF controls mathematical layout, SHA256 5542d2507f1dea4bf09ffa69353a3643e211ea92eb07de4c4d75fb463c363d10.
+
+    Sharp separable information contraction for reset dynamics
+                                           Lluis Eriksson
+                                       Independent researcher
+
+                                Working draft, 27 October 2026
+
+
+                                              Abstract
+         We determine the exact mutual-information retention supremum of a channel that mixes
+     the identity with replacement by an arbitrary finite-dimensional state. For separable in-
+     puts, PPT inputs, and inputs satisfying a unilateral reduction inequality, the same sharp
+     coefficient is λ2 /[λ + (1 − λ)λmin (τ )], uniformly over every finite quantum reference. A
+     rational separable family with a single-qubit reference approaches the bound, with a si-
+     multaneous estimate controlling finite relative entropy. This separates quantum-reference
+     retention from its classical-reference counterpart without requiring input entanglement. For
+     serial mixtures of unitary transmission and pure replacement, the coefficient depends exactly
+     on the smallest eigenvalue of accumulated replacement noise. Fewer than d stages cannot
+     improve the worst-input coefficient below the product transmission weight; an explicit d-
+     stage schedule attains the optimum at fixed product weight. For continuous Hamiltonian
+     dynamics with a fixed pure reset target, the same coefficient is determined by a weighted
+     orbit Gramian; strict improvement below the transmission weight is equivalent to cyclicity of
+     the reset vector. An exact qubit formula shows that increasing the constant drive can worsen
+     worst-input correlation erasure at fixed reset rate and observation time. We also give nec-
+     essary Schmidt-number thresholds and exact finite examples where entangled inputs exceed
+     the sharp separable benchmark even for entanglement-breaking noise. These are normalized
+     correlation-retention results, not capacity formulas or claims of positive-rate information
+     preservation. Novelty beyond the explicitly compared antecedents remains provisional.
+
+
+1    Question, contribution and comparison with antecedents
+A local quantum channel cannot increase the mutual information between its input and a re-
+tained reference. A quantitative version asks for the largest fraction that can remain. The
+answer depends on which input correlations are allowed: a classical reference, a separable quan-
+tum reference, or an entangled reference are different restrictions. It also depends on whether
+a divergence comparison uses the actual product of marginals or arbitrary states with equal
+reference marginals. We keep those distinctions explicit.
+    For A = Cd , d ≥ 2, fix a state τ and 0 < λ < 1. Write p = 1 − λ and
+
+                                    Nλ,τ (X) = λX + p Tr(X)τ.                                        (1)
+
+The main result is a sharp formula for three constrained input classes. Its proof combines es-
+tablished Bogoliubov–Kubo–Mori (BKM) comparisons with a saturating family whose reference
+marginal becomes very uneven. The family is explicitly separable; its nonclassical reference
+correlations do not require entanglement. A second result converts the formula into an exact
+resource count for a specified discrete pure-reset model.
+    The ingredients have direct antecedents. Gao–Rouzé give the BKM order and integration
+tools used below [1]. Reduction and Schmidt-number inequalities come from the positive-map lit-
+erature [2, 3]. Hirche et al. distinguish the product-reference MI coefficient from equal-marginal
+and conditional coefficients [4]; their reported depolarizing examples are not optimized sharp
+
+
+                                                  1
+separable bounds. Reeb–Kastoryano–Wolf study cone and projective-metric contraction, includ-
+ing generalized depolarization [6]. Their Appendix B concerns base-norm/projective quantities
+and global fixed-state replacement, whereas here a local channel preserves the reference and the
+comparison product uses its actual marginal. The depolarizing entanglement-assisted spectrum
+and unbounded assisted advantages are already known [7]. We do not claim those phenomena
+as discoveries.
+    Our candidate contribution is the exact constrained MI coefficient and its consequences with
+the stated quantifiers. Selected primary-source comparisons do not certify worldwide priority. In
+particular, the elementary algebra of replacement mixtures, rank subadditivity, and the Schmidt
+hierarchy are not themselves new claims.
+
+
+2    Definitions and the metric argument
+All Hilbert spaces are finite-dimensional, and all logarithms are natural. A channel acts on A,
+and R is retained. Set
+                                 I(A : R)ρ = D(ρAR ∥ρA ⊗ ρR ).
+We consider separable states, states with positive partial transpose on A (PPT), and the larger
+unilateral-reduction class
+                                 Cred = {ρAR : ρAR ≤ IA ⊗ ρR }.                             (2)
+Here IA is the unnormalized identity. For one of these classes C, define
+                                                        I(B : R)(N ⊗id)(ρ)
+                               ηC (N ) =           sup                     .                             (3)
+                                           dim R<∞, ρ∈C    I(A : R)ρ
+                                              I(A:R)ρ >0
+
+The supremum includes arbitrary finite references; no infinite-reference statement is intended.
+For a trivial reference there are no positive-denominator inputs.
+   For W > 0 and Hermitian X, the BKM form is
+
+                                       gW (X) = Tr[X D logW (X)].
+
+In an eigenbasis of W ,
+                      X                                              log u − log v
+           gW (X) =         |Xij |2 ℓ(wi , wj ),         ℓ(u, v) =                 ,   ℓ(u, u) = u−1 .   (4)
+                                                                         u−v
+                      i,j
+
+We include the short comparison proof to fix the orientation and normalization.
+Lemma 1 (BKM base comparison and relative-entropy remainder). If W ≥ cV > 0, then
+gW (X) ≤ c−1 gV (X). Also gcV (X) = c−1 gV (X). For faithful states ρ, σ and ∆ = ρ − σ,
+                                         Z 1
+                               D(ρ∥σ) =      (1 − t)gσ+t∆ (∆) dt.                       (5)
+                                                    0
+
+Proof. On Hilbert–Schmidt space let LW (Y ) = W Y and RW (Y ) = Y W . Formula (4) gives
+                                     Z 1
+                          D logW =       [(1 − s)LW + sRW ]−1 ds.
+                                               0
+
+Base order implies order of the positive operators inside this integral. Inversion reverses it,
+proving the first assertion without a commutativity assumption. Scaling proves the second.
+Finally, apply Taylor’s integral remainder to f (t) = Tr[(σ+t∆) log(σ+t∆)]. Its second derivative
+is the BKM form; the linear remainder equals relative entropy because Tr ∆ = 0. The weight is
+1 − t, not t.
+
+                                                           2
+3      Exact contraction on separable and PPT inputs
+Theorem 2 (Sharp constrained coefficient). Let a = λmin (τ ) in (1). Then
+                                                                          λ2
+                         ηSEP (Nλ,τ ) = ηPPT (Nλ,τ ) = ηred (Nλ,τ ) =          .                 (6)
+                                                                        λ + pa
+A single-qubit reference and explicitly separable states suffice to approach this value. This is a
+supremum statement; no nonzero lower bound on witnessing input information is asserted.
+Upper bound and boundary states. Put S = ρA ⊗ ρR , ∆ = ρ − S and St = S + t∆. If (2) holds,
+both ρ and S are at most IA ⊗ ρR , so the whole segment has that bound. With T = τ ⊗ ρR ,
+
+                        T ≥ aSt ,     (N ⊗ id)(St ) = λSt + pT ≥ (λ + pa)St .
+
+Since TrA ∆ = 0, its output is λ∆. Lemma 1 and (5) give the desired upper bound. The output
+of S is exactly the product of the output marginals.
+    For singular states, replace ρ by (1 − ϵ)ρ + ϵα ⊗ β with faithful product state. Reduction is
+preserved by linearity of the reference marginal and α ≤ IA . Recompute both true marginals
+and their product after mixing: the average of the two old products would generally be incorrect.
+The output is faithful because λ > 0, even if a = 0. Continuity of finite-dimensional MI allows
+the inequality, before division, to pass to the limit. No estimate uniform in reference dimension
+is needed for this step.
+    Separable states satisfy reduction by summing αj ≤ IA in a product decomposition. For
+PPT states use the reduction map R(X) = Tr(X)IA − X. Its composition with transposition is
+completely positive, with Choi operator I − F ≥ 0. Thus PPT implies the unilateral reduction
+inequality [2].
+
+3.1     A finite-divergence saturating family
+Choose orthogonal eigenvectors |0⟩, |1⟩ of τ with eigenvalues a, b. Embed the following two-level
+input into A and let R = C2 . For integers n ≥ 3, set
+                         2
+      x = n−1 ,   r = 2−n ,   e = r/n2 ,   S = diag(1 − x, x) ⊗ diag(1 − r, r),    ρ = S + eE,   (7)
+
+where E = |00⟩⟨11| + |11⟩⟨00|. Both partial traces of E vanish, so S is the actual product of
+marginals. Since min spec(S) = r/n on its support and ∥E∥ = 1,
+
+                                    (1 − 1/n)S ≤ ρ ≤ (1 + 1/n)S.                                 (8)
+
+In particular, Iin > 0 and ρ is faithful on its two-level
+                                                 √        support.     √
+                                                          √                   √
+    Separability is explicit. Write DA = diag( 1 − x, x) and DR = diag( 1 − r, r). Then
+                                                                   e
+                  ρ = (DA ⊗ DR )(I + tE)(DA ⊗ DR ),      t= p                 < 1.
+                                                             x(1 − x)r(1 − r)
+For Pauli matrices X, Y , E = (X ⊗ X − Y ⊗ Y )/2, and
+
+                        I + tE = (1 − t)I + 2t (I + X ⊗ X) + 2t (I − Y ⊗ Y ).
+
+Each positive term is separable in a product eigenbasis; local filtering preserves the separable
+cone. For d > 2 the zero embedding preserves it too. The nonzero commutator [ρ, IA ⊗ ρR ]
+shows that the joint state is not classical on R.
+   The orders (8) hold along the full segment from S to ρ and survive application of the channel.
+Lemma 1 consequently bounds each finite divergence by
+                                        e2 g           e2 g
+                                               ≤D≤            ,                                  (9)
+                                    2(1 + 1/n)     2(1 − 1/n)
+
+                                                   3
+where the output form already includes the factor λ in the tangent. The two forms are
+
+                 gin = 2ℓ((1 − x)(1 − r), xr),
+                gout = 2λ2 ℓ(u(1 − r), vr),       u = λ(1 − x) + pa,          v = λx + pb.
+
+Other output levels have zero tangent and contribute nothing to these quadratic forms.
+   Let Tn = n2 log 2. The input logarithmic numerator is Tn + O(log n) and its denominator
+tends to one. At output, u → λ + pa > 0 and log(u/v) = O(log n), also when b = 0. Hence
+
+                                                                 2λ2 Tn
+                                  gin ∼ 2Tn ,           gout ∼          .
+                                                                 λ + pa
+
+Equation (9) gives a finite-MI ratio at least (n − 1)gout /[(n + 1)gin ]. Together with the upper
+bound, this proves (6) in all three classes. The simultaneous limit is controlled rather than
+inferred from separate infinitesimal and boundary limits. In fact
+                                                          2
+                                   Iin ∼ (log 2) 2−2n /n2 −→ 0.
+
+Corollary 3 (Quantum-reference advantage without entanglement). For qubit depolarization
+τ = I2 /2, the constrained quantum-reference coefficient is 2λ2 /(1 + λ). The classical-reference
+coefficient is the known ordinary relative-entropy coefficient λ2 [5, 4]. Their ratio is 2/(1+λ) > 1.
+
+    This is a sharp separation within the separable input class. It does not establish the unre-
+stricted MI coefficient, nor equality with the coefficient for arbitrary equal-marginal state pairs.
+
+
+4    An exact depth threshold for discrete pure resets
+Consider the specified stages
+
+                  Tj (X) = λj Uj XUj∗ + (1 − λj ) Tr(X)|vj ⟩⟨vj |,            0 < λj < 1.       (10)
+
+There is no feedback, postselection or extra output memory. Define the budget L = m
+                                                                                   Q
+                                                                                     j=1 λj .
+This is an algebraic transmission weight, not an elapsed-time, energy or thermodynamic-cost
+budget.
+
+Theorem 4 (Pure-reset depth and fixed-budget optimum). For (10), let Vj = Uj · · · U1 , S0 = 0
+and
+                          Sj = λj Uj Sj−1 Uj∗ + (1 − λj )|vj ⟩⟨vj |.
+The exact coefficient in each class of Theorem 2 is
+
+                                                             L2
+                                  ηC (Tm · · · T1 ) =                  .                        (11)
+                                                        L + λmin (Sm )
+
+If m < d, it equals L. At fixed L, the smallest possible coefficient over all such sequences is
+
+                                                  dL2
+                                                           ,                                    (12)
+                                              1 + (d − 1)L
+
+and depth d attains it. Stage retentions may be chosen freely subject to their product.
+
+Proof. Induction on matrix arguments, not only states, gives
+                                                                              Y
+                       Tj · · · T1 (X) = Lj Vj XVj∗ + Tr(X)Sj ,        Lj =         λℓ .
+                                                                              ℓ≤j
+
+
+
+                                                    4
+Moreover Sj ≥ 0, Tr Sj = 1 − Lj and rank Sj ≤ j. The final channel is NL,Sm /(1−L) ◦ AdVm .
+A local unitary bijects each admissible input class and preserves MI. Theorem 2 therefore gives
+(11), with the unnormalized Sm in its denominator. If m < d, that matrix is singular.
+   For every positive S of trace 1 − L, its least eigenvalue is at most (1 − L)/d, proving the
+lower bound (12) on the worst-input coefficient. To attain it, put w = (1 − L)/d, take Uj = I,
+orthonormal reset vectors ej , and
+                                     L + (j − 1)w
+                              λj =                ,            j = 1, . . . , d.
+                                       L + jw
+                                                                                         Q
+The product telescopes to L. The final weight of each reset is (1 − λj )                     ℓ>j λℓ = w.   Thus
+Sd = wIA , and equality follows.
+
+    A qubit example at L = 1/4 uses two orthogonal pure resets with λ1 = 2/5 and λ2 = 5/8.
+Their accumulated weights are both 3/8 and the exact coefficient is 1/10. One pure-reset stage
+at the same budget has coefficient 1/4.
+    The partial-reset component channels already occur explicitly in Guha–Roy–Chiribella [8],
+Eq. (6), in a study of coherently controlled configurations. Their retained control system changes
+the communication problem. Our theorem concerns ordinary fixed-order composition on the
+system alone; it neither bounds those controlled protocols nor claims the component channels
+as new.
+    This is Pa threshold in the discrete mixture model. If the reset states have ranks rj , only
+rank Sm ≤ j rj remains; a single mixed reset may already have full rank. A continuous physi-
+cal interval with Hamiltonian evolution can accumulate multiple reset orientations, so it must not
+be counted as one stage of (10) without proving that representation. Coherent control systems
+that are retained at the output are also outside the model. The rank observation and compo-
+sition algebra are elementary; the claim here is their exact correlation-retention consequence,
+dependent on Theorem 2.
+
+
+5    Continuous Hamiltonian reset dynamics
+The preceding depth theorem counts discrete rank-one source terms. A physical time interval
+can contain many reset orientations. We now treat that situation directly, using the standard
+renewal solution rather than identifying it with one stage of (10). Quantum dynamics with
+stochastic resetting and its renewal formulas have direct antecedents [9, 10]; those solution
+methods are not new claims here.
+    Fix a Hermitian H, a rate γ > 0, and a pure reset target τ = |ψ⟩⟨ψ| that is fixed indepen-
+dently of the input. Let
+                   L(X) = −i[H, X] + γ(Tr(X)τ − X),                      Tt = etL ,   t > 0.
+Selecting the reset target from an unknown encoded input would not define this fixed channel.
+Set Ut = e−itH , λ = e−γt and            Z        t
+                                     St = γ           e−γu Uu τ Uu∗ du.                                    (13)
+                                              0
+Theorem 5 (Sharp coefficient and cyclicity criterion). For every class in Theorem 2,
+                                                           λ2
+                                      ηC (Tt ) =                     .                                     (14)
+                                                      λ + λmin (St )
+Moreover
+                            rank St = dim span{ψ, Hψ, . . . , H d−1 ψ}.
+Thus the coefficient is strictly below λ exactly when ψ is cyclic for H. A proper Krylov span
+gives equality with λ at every positive time.
+
+                                                       5
+Proof. The renewal/Duhamel formula, or direct differentiation on matrix arguments, gives
+
+                         Tt (X) = λUt XUt∗ + Tr(X)St ,                  Tr St = 1 − λ.
+
+Apply Theorem 2 after the local-unitary change of input. For the support statement, positivity
+gives                                    Z          t
+                                ⟨z, St z⟩ = γ           e−γu |⟨z, Uu ψ⟩|2 du.
+                                                0
+This vanishes precisely when the continuous integrand vanishes on the whole interval. Analyt-
+icity then makes every derivative at zero vanish, equivalently z ⊥ H k ψ for every k. Cayley–
+Hamilton truncates this span at d − 1. The criterion follows from (14). This is the usual
+positive-Gramian/Krylov support mechanism, not a new controllability-rank principle.
+
+    A cyclic pure reset requires a simple spectrum and nonzero amplitude in every energy eigen-
+vector. Mere noncommutativity is insufficient in higher dimension. This also explains why a
+single physical interval can have full-rank accumulated replacement: it is not generally a rank-
+one stage of the discrete model.
+
+5.1   An explicit qubit formula and drive nonmonotonicity
+Discard a scalar part of H and write H = (ω/2)n · σ, ω ≥ 0. Let θ be the angle of its axis with
+the pure reset Bloch vector. With W = 1 − λ, define
+
+                                              γ 2 sin2 θ
+                         rt2 = W 2 cos2 θ +              1 + λ2 − 2λ cos(ωt) .
+                                                                            
+                                                2      2
+                                                                                                (15)
+                                              γ +ω
+
+Integrating the longitudinal component and the transverse complex exponential in (13) gives
+St = (W I + v t · σ)/2, |v t | = rt . Therefore
+
+                                                            2λ2
+                                       ηC (Tt ) =                   .                           (16)
+                                                         1 + λ − rt
+For a commuting reset or zero drive, rt = W and the coefficient is λ. For ω > 0 and sin θ ̸= 0,
+strict triangle inequality for the rotating Bloch vector gives rt < W . At fixed nonzero ω, γ, t, the
+transverse choice θ = π/2 minimizes rt and the coefficient. This is not a general optimal-control
+or thermodynamic-cost theorem.
+    Even within transverse constant driving, a larger drive need not erase correlations faster.
+Fix γt = log 2 and compare ω2 t = 2π with ω3 t = 3π. For b = log 2,
+                                     b                               3b
+                             r2 = √          ,               r3 = √          .
+                                 2 b2 + 4π 2                     2 b2 + 9π 2
+
+The exact inequality 9(b2 +4π 2 )−(b2 +9π 2 ) = 8b2 +27π 2 > 0 gives r3 > r2 , hence η(ω3 ) > η(ω2 ).
+The parameter held fixed is reset rate and observation time, not drive energy. This compares
+worst-input normalized MI within the stated classes, not every observable or state.
+    In contrast, for ordinary state differences ∆ with trace zero, Tt (∆) = λUt ∆Ut∗ . Every uni-
+tarily invariant pair-norm contraction ratio is exactly λ, independent of H. That ordinary norm
+comparison cannot distinguish the two drives. It is not an unrestricted-reference distinguisha-
+bility statement. Renewal, coherent oscillations and Gramian rank are prior methods; novelty
+of their particular sharp MI consequence still requires a covering-source search.
+
+
+
+
+                                                         6
+6    Necessary resource thresholds and finite examples
+Proposition 6 (Order parameter and Schmidt number). If ρ ≤ κIA ⊗ ρR , then
+
+                                                                  λ2 κ
+                                Iout ≤ c(κ)Iin ,       c(κ) =           .                       (17)
+                                                                λκ + pa
+In particular, SN(ρ) ≤ k implies the upper bound c(k). For a > 0 and Iin > 0, write q = Iout /Iin .
+The minimum admissible parameter satisfies
+                             pa q                          −1/2             −1/2
+                    κ∗ ≥            ,      κ∗ := (IA ⊗ ρR         )ρ(IA ⊗ ρR       )       ,    (18)
+                           λ(λ − q)                                                    ∞
+
+with the inverse restricted to support. Strict exceedance q > c(k) certifies SN(ρ) > k; no converse
+or sharpness for k > 1 is asserted.
+Proof. Tracing out R gives ρA ≤ κIA , so the product and the full segment have the same order
+bound. Now τ ⊗ ρR ≥ (a/κ)St and the previous BKM proof applies. Tracing the premise
+gives κ ≥ 1/d; regularization with IA /d ⊗ IR / dim R preserves that same bound even for κ < 1.
+Recompute true marginals before taking limits.
+    The known generalized reduction inequality for Schmidt number [3] can be seen directly:
+whitening a pure state’s reference marginal makes its vector have squared norm equal to its
+Schmidt rank s, so its projector is at most sI on support. Undo the filter and sum a Schmidt-
+rank-≤ k decomposition. This proves a necessary inequality, not a characterization. The same
+reasoning makes d admissible for every state, hence κ∗ ≤ d and q ≤ c(d) < λ when a > 0.
+Inversion of (17) proves (18). Arbitrarily larger admissible values of κ need not be at most
+d.
+
+    For the standard maximally entangled Φd and depolarization toward Id /d, the known output
+eigenvalues are [1 + (d2 − 1)λ]/d2 and (1 − λ)/d2 repeated d2 − 1 times [7]. A diagonal Hessian
+estimate from the uniform state gives
+
+                                    Iout         λ2 (d2 − 1)
+                                         ≥                         .                            (19)
+                                     Iin   4 log d [1 + (d2 − 1)λ]
+
+Indeed the output divergence from I/d2 has Hessian at least (d2 − 1)/[1 + (d2 − 1)λ] along the
+segment; integrate with its Taylor weight and divide by Iin = 2 log d.
+    At d = 16, λ = 1/1000, the elementary bound log 16 < 3 makes the right-hand side strictly
+greater than 17/1004000, whereas the sharp separable coefficient is 2/126875. Their difference
+is 1191/1019060000 > 0. This channel is entanglement breaking because λ < 1/(d + 1), a known
+threshold. The diagnostic certifies a property of the input, not surviving output entanglement
+or positive quantum capacity.                              P8
+    At d = 128, λ = 128−3 , log 128 < 5 is certified by            j
+                                                              j=0 5 /j! = 1115309/8064 > 128.
+Equation (19) then exceeds the k = 6 threshold by at least the strictly positive rational gap
+                                             1906309377
+                                                              .
+                                        185976497736620441600
+Thus the input is certified to have Schmidt number at least seven. This deliberately uses a
+known maximally entangled input whose actual Schmidt number is already 128; it demonstrates
+nonvacuity, not a new determination of that input’s resource.
+   For λ = d−3 , the entangled/separable retention-ratio advantage is asymptotic to d/(4 log d).
+Input thresholds k(d) ≤ (1 − δ)d/(4 log d) are crossed for sufficiently large d for each fixed δ > 0.
+A vanishing margin at the boundary would need an additional estimate. The retained infor-
+mation itself is asymptotic to 1/(2d4 ) and vanishes. Generic unlimited entanglement-assisted
+capacity advantage is prior work [7]; these comparisons do not replace it with a new rate theorem.
+
+                                                   7
+7    Finite certificate and verification boundary
+For qubit depolarization with λ = 1/2, take n = 20 in (7). Then r = 2−400 , u = 29/40,
+v = 11/40. The metric ratio is
+                         1 19/20 − r 400 log 2 + log(29/11) + log(1 − r)
+                                                                         .
+                         4 29/40 − r 400 log 2 + log 19 + log(1 − r)
+The numerator logarithmic correction is positive, the denominator is below 405 log 2, and the
+rational factor exceeds 38/29. Equation (9) proves the exact finite certificate
+                           Iout   19 1 38 400   14440           1
+                                >             =       > 0.2881 > .
+                            Iin   21 4 29 405   49329           4
+A high-precision diagnostic gives approximately 0.32527718584 with Iin ≈ 2.76 · 10−244 . The
+rational inequality, not the decimal computation, is the certificate. Its tiny information scale
+prevents reading it as an established practical estimation protocol. Exceeding explicit examples
+in [4] does not compare their optimized coefficients.
+
+Model assessments and review context
+Preliminary component audits were requested as GPT-6 Astra with xhigh effort in separate con-
+versations sharing a filesystem. Their complete reports, objections and failed technical attempts
+are retained separately. One examined the constrained-coefficient and Schmidt arguments; an-
+other examined the discrete reset application conditionally on the supplied sharp-coefficient
+lemma. The second explicitly excluded the subsequently derived continuous application. Neither
+report assessed this combined PDF or assigned it a manuscript grade. The minimum-parameter
+and fixed-margin wording clarifications from the first have been incorporated here.
+    At this manuscript’s freeze, no full assessment of its exact combined PDF had been obtained.
+Later reports must be bound to its exact bytes and distinguished from the preliminary compo-
+nent records. Effective model identity/effort, independence, runtime isolation and strict blinding
+are not externally attested. Finite numerical and exact checks detect particular mistakes; they
+do not establish universal truth, novelty or scientific importance. No Lean formalization, inde-
+pendent human review, worldwide originality certificate, predicted grade or editorial acceptance
+is claimed.
+
+AI and responsibility disclosure
+The named author directed substantial OpenAI Codex assistance in derivation, writing and
+numerical work. Model-assisted mathematical audits and their limits are disclosed above. This
+manuscript makes no claim to the unrestricted qubit MI upper bound 1/3, a sharp coefficient for
+Schmidt number greater than one, a capacity-additivity theorem or a finite-sample experimental
+implementation. Those questions are not resolved by the results proved here.
+
+
+References
+ [1] L. Gao and C. Rouzé, Complete Entropic Inequalities for Quantum Markov Chains, Arch.
+     Ration. Mech. Anal. 245 (2022), 183–238. arXiv:2102.04146v3.
+
+ [2] M. Horodecki and P. Horodecki, Reduction criterion of separability and limits for a class
+     of protocols of entanglement distillation, Phys. Rev. A 59 (1999), 4206–4216. arXiv:quant-
+     ph/9708015v3.
+
+ [3] B. M. Terhal and P. Horodecki, Schmidt number for density matrices, Phys. Rev. A 61
+     (2000), 040301. arXiv:quant-ph/9911117v4.
+
+                                                8
+ [4] C. Hirche, I. George, T. Nuradha and M. M. Wilde, Conditional contraction coefficients
+     and their applications to quantum networks, arXiv:2608.27171v1 (2026).
+
+ [5] C. Hirche, C. Rouzé and D. Stilck França, On contraction coefficients, partial or-
+     ders and approximation of capacities for quantum channels, Quantum 6 (2022), 862.
+     arXiv:2011.05949v4.
+
+ [6] D. Reeb, M. J. Kastoryano and M. M. Wolf, Hilbert’s projective metric in quantum infor-
+     mation theory, J. Math. Phys. 52 (2011), 082201. arXiv:1102.5170v2.
+
+ [7] C. H. Bennett, P. W. Shor, J. A. Smolin and A. V. Thapliyal, Entanglement-Assisted
+     Classical Capacity of Noisy Quantum Channels, Phys. Rev. Lett. 83 (1999), 3081–3084.
+     arXiv:quant-ph/9904023v5.
+
+ [8] T. Guha, S. Roy and G. Chiribella, Quantum networks boosted by entanglement with a con-
+     trol system, Phys. Rev. Research 5 (2023), 033214. doi:10.1103/PhysRevResearch.5.033214.
+
+ [9] B. Mukherjee, K. Sengupta and S. N. Majumdar, Quantum dynamics with stochastic reset,
+     Phys. Rev. B 98 (2018), 104309. arXiv:1806.00019v2.
+
+[10] D. C. Rose, H. Touchette, I. Lesanovsky and J. P. Garrahan, Spectral properties
+     of simple classical and quantum reset processes, Phys. Rev. E 98 (2018), 022129.
+     doi:10.1103/PhysRevE.98.022129.
+
+
+
+
+                                             9
+

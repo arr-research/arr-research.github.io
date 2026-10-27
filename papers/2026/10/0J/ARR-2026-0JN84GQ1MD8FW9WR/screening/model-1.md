@@ -1,0 +1,1 @@
+Native admission screening is not complete. These template slots are not model votes or pass reports. The one actual exact-PDF review is preserved in review958/REVIEW958.txt and verdict958.json with its original recommendation, distinct score scales and objections. Working paper only; the two-distinct-model admission gate remains pending.
