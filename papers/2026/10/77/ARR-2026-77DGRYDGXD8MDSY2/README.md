@@ -22,3 +22,5 @@ The current PDF is byte-identical to the author-deposited, licensed and reviewed
 - [Operator context](screening/operator-context1009.txt)
 
 The current projection is one vote. The earlier998 report evaluated another PDF. Native accept is a model recommendation; this record remains a Working paper.
+
+- [Published binding payload scope and omitted archival duplicates](screening/PUBLISHED-BINDING-SCOPE1009.json)
