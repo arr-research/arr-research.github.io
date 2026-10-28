@@ -1,0 +1,1 @@
+Own manuscript and supplementary research material CC BY4.0; catalogue metadata CC0. External sources retain their own licenses. Native exact-version permission and founder handoff are documented in screening/native-release-context1176.txt. Working paper, not Accepted.

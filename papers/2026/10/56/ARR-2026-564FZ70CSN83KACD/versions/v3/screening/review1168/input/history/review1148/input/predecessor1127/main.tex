@@ -1,0 +1,400 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,amsmath,amssymb,amsthm,mathtools,booktabs,microtype}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\widowpenalty=10000
+\clubpenalty=10000
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}\newtheorem{remark}[theorem]{Remark}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\D}{\mathsf D}
+\newcommand{\N}{\mathcal N}
+\newcommand{\HS}{\mathrm{HS}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\ket}[1]{\lvert#1\rangle}
+\newcommand{\bra}[1]{\langle#1\rvert}
+\title{Quantum reference activation of classical symmetric channels}
+\author{Lluis Eriksson}
+\date{27 October 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+We determine the complete equal-reference contraction coefficients of a classical symmetric channel with an arbitrary finite quantum reference. For an alphabet of size $n$ and stochastic parameter $-1/(n-1)\leq\lambda\leq1$, the coefficients for the SLD metric, minimal chi-square divergence, triangular Petz divergence, BKM metric and Umegaki relative entropy equal $(n-1)\lambda^2/[1+(n-2)\lambda]$. A cyclic harmonic bound supplies the upper estimate and a separable classical--quantum simplex supplies matching faithful limits. The ordinary classical coefficient is $n\lambda^2/[2+(n-2)\lambda]$. Every restriction to two input symbols retains that ordinary coefficient even with a quantum reference, so classical binary-support reduction fails in the complete setting. At the exclusion endpoint, the complete coefficient is one although every two-symbol restriction has coefficient $1/(n-1)$. A family of actual binary measurements, controlled by the classical output, witnesses near-unit retention for a fixed three-symbol channel and a fixed three-dimensional reference. Input, quantum output and measured output relative entropies all tend to $\log2$. Conditioning grows exponentially and the useful probabilities become rare; no robust communication or capacity advantage is claimed. Adverse finite examples and review-context limitations are retained.
+\end{abstract}
+
+\section{Problem and relation to prior work}
+A classical noisy channel acts on probability distributions, but its input may be correlated with a quantum memory that remains available after transmission. The relevant comparison is then between two joint states with the \emph{same} memory marginal. This constraint rules out the trivial strategy of putting all distinguishing information in an untouched memory. It still permits noncommuting conditional memory states, even when the input and memory are separable.
+
+For ordinary classical strong data processing, optimizing over a large input alphabet can be reduced to a pair of input symbols, by Ordentlich and Polyanskiy~\cite{OP}. Our question is whether that reduction remains valid when the unchanged reference is quantum. We answer it for a full symmetric channel family: two-symbol restrictions obey their ordinary classical bound, whereas the complete alphabet can do strictly better.
+
+The definitions of complete and conditional contraction coefficients are prior; we use the equal-reference complete convention described by Hirche, George, Nuradha and Wilde~\cite{HGNW}. Their characterization using a binary hypothesis label is distinct from restricting the \emph{input alphabet} to two symbols. We do not claim a new correspondence between divergence and reference-assisted information measures. Hiai and Ruskai~\cite{HR} provide the operator-convex divergence and metric framework. Classical equivalence of global contraction coefficients is treated by Makur and Zheng~\cite{MZ}. The classical symmetric-channel formula below is a benchmark, not a novelty claim; Lee and Makur~\cite{LM} is an additional relevant classical reference whose full proof has not been inspected in our directed audit.
+
+Complete entropy decay toward a conditional expectation~\cite{GR,GJLL} uses a different restriction on the second state. Those estimates do not automatically bound two arbitrary correlated hypotheses with equal reference. Conversely, our pair constructions do not contradict decay toward a fixed-point state. Recent asymptotic contraction bounds for primitive channels with a fixed faithful stationary state~\cite{TTG} concern that different quantifier regime. The source-fixed matrix-$\Phi$ framework of Wang and Gohari~\cite{WG} is also distinct; we do not claim to resolve its open questions. Generic failure of strict one-step contraction, even for primitive classical channels, already appears in Cohen et al.~\cite{Cohen}. The issue studied here is the exact complete coefficient and the quantum-reference enhancement of a classical channel whose ordinary coefficient is strictly below one. Our literature search is directed and does not certify worldwide priority.
+
+\section{Definitions and a harmonic upper bound}
+Let $A=\mathbb C^n$ be equipped with its stated classical basis, and define
+\begin{equation}\label{eq:channel}
+ K_\lambda(y\mid x)=\lambda\delta_{xy}+\frac{1-\lambda}{n},
+ \qquad -\frac1{n-1}\leq\lambda\leq1.
+\end{equation}
+The quantum channel $\N_\lambda$ first dephases $A$ in this basis and then applies $K_\lambda$ to its diagonal. It is not the quantum depolarizing channel on arbitrary coherences. We suppress $\id_R$ from notation.
+
+For a divergence $Q$, write
+\begin{equation}\label{eq:complete}
+ \eta_Q^c(\N)=\sup_{\substack{\dim R<\infty,\ \rho,\sigma>0\\
+ \Tr\rho=\Tr\sigma=1,\ \rho_R=\sigma_R\\0<Q(\rho\Vert\sigma)<\infty}}
+ \frac{Q(\N\rho\Vert\N\sigma)}{Q(\rho\Vert\sigma)}.
+\end{equation}
+The supremum is over faithful normalized states; no faithful maximizer is asserted. The ordinary coefficient omits $R$. All logarithms are natural.
+
+For operator-convex $f:(0,\infty)\to\mathbb R$ with $f(1)=0$, the Petz divergence is
+\begin{equation}\label{eq:petz}
+ Q_f(\rho\Vert\sigma)=
+ \langle\sigma^{1/2},f(L_\rho R_\sigma^{-1})\sigma^{1/2}\rangle_{\HS}.
+\end{equation}
+Here $L_a X=aX$, $R_b X=Xb$ and $\langle X,Y\rangle_{\HS}=\Tr X^*Y$. The relevant generators include $f(t)=t\log t$ and $f_\triangle(t)=(t-1)^2/(t+1)$. We distinguish $Q_{f_\triangle}$ from the finite minimal chi-square divergence
+\[
+ \chi_{\min}^2(\rho,\sigma)=
+ \langle\rho-\sigma,J_\sigma^{-1}(\rho-\sigma)\rangle_{\HS},
+ \qquad J_\sigma=(L_\sigma+R_\sigma)/2.
+\]
+The SLD metric uses the same quadratic form on a Hermitian tangent $D$. The BKM metric uses the derivative of the matrix logarithm. Complete metric coefficients optimize over faithful base states and nonzero tangents with $\Tr_A D=0$; normalization factors common to input and output cancel.
+
+\begin{lemma}[Cyclic harmonic cancellation]\label{lem:harmonic}
+Let $T_j$, $0\leq j<n$, be the cyclic permutations of a classical register, amplified by an identity on a finite reference. Suppose $\sum_jT_j(\rho-\sigma)=0$ and $w_j>0$, $\sum_jw_j=1$. The channel $\sum_jw_jT_j$ contracts every normalized operator-convex Petz divergence by at most
+\[
+ h(w)=1-\frac{n^2}{\sum_jw_j^{-1}}.
+\]
+The same bound holds for the SLD and BKM metrics on tangents annihilated by the uniform twirl.
+\end{lemma}
+\begin{proof}
+For the resolvent generator $g_u(t)=(t-1)^2/(t+u)$, $u\geq0$, put $Z=\rho-\sigma$ and $\Omega=L_\rho+uR_\sigma$. Set $Z_j=T_jZ$ and $\Omega_j=T_j\Omega T_j^*$. They satisfy $\sum_jZ_j=0$ and $\langle Z_j,\Omega_j^{-1}Z_j\rangle=q$, independent of $j$. For any real $c$, the output difference is $\sum_j(w_j-c)Z_j$. The inverse quadratic-form inequality gives
+\begin{align*}
+ \left\langle\sum_j(w_j-c)Z_j,
+ \left(\sum_jw_j\Omega_j\right)^{-1}
+ \sum_j(w_j-c)Z_j\right\rangle
+ &\leq\sum_j\frac{(w_j-c)^2}{w_j}\,q.
+\end{align*}
+One proof minimizes $\sum_j\langle Y_j,(w_j\Omega_j)^{-1}Y_j\rangle$ subject to a fixed sum $\sum_jY_j$, and substitutes $Y_j=(w_j-c)Z_j$. Minimizing the scalar coefficient over $c$ gives $c=n/\sum_jw_j^{-1}$ and $h(w)$.
+
+All operators act on the full complex Hilbert--Schmidt space. In column vectorization $R_\sigma$ contains $\sigma^T$, with no assumption that the states are real or commuting. The positive integral representation~\cite{HR}
+\[
+ f(t)=a(t-1)+b(t-1)^2+
+ \int_{[0,\infty)}\frac{(t-1)^2}{t+u}\,d\mu(u),\qquad b\geq0,
+\]
+transfers this upper bound to every such $f$, with $\mu$ positive and $\int(1+u)^{-1}\,d\mu(u)<\infty$. The affine part cancels by equal traces. The quadratic endpoint is proved by the same argument with $\Omega=R_\sigma$, so it is not discarded. Positivity of the measure justifies the integration. Local expansion of the triangular and Umegaki cases gives the metric bounds.
+\end{proof}
+
+For CQ states, $\sum_jT_j(\rho-\sigma)=0$ is exactly the equal-reference constraint. The channel~\eqref{eq:channel} is a mixture of cyclic shifts with
+\[
+ w_0=\frac{1+(n-1)\lambda}{n},\qquad
+ w_j=\frac{1-\lambda}{n}\quad(j\ne0).
+\]
+The lemma therefore gives
+\begin{equation}\label{eq:H}
+ H_n(\lambda)=\frac{(n-1)\lambda^2}{1+(n-2)\lambda}.
+\end{equation}
+At the two stochastic endpoints a weight may vanish. We use ordinary data processing to obtain the upper bound one, not a singular evaluation of $1/w_j$. At $\lambda=0$ the output difference vanishes exactly. Dephasing before the cyclic mixture preserves the common reference and cannot increase the input divergence, so the upper applies to general quantum inputs as well.
+
+\section{Exact complete coefficients}
+\begin{theorem}\label{thm:exact}
+For every $n\geq2$ and physical $\lambda$ in~\eqref{eq:channel}, the complete coefficients for SLD, $\chi_{\min}^2$, $Q_{f_\triangle}$, BKM and Umegaki relative entropy are all $H_n(\lambda)$. A reference of dimension $n$ suffices for their suprema. For every normalized nonaffine operator-convex Petz generator, $H_n$ is an upper bound; equality for every generator is not asserted.
+\end{theorem}
+\begin{proof}
+Only matching lower bounds remain. In $R=\mathbb C^n$ put
+\[
+ u=(1,\ldots,1)^T,\quad P=I-uu^*/n,\quad v_i=e_i-u/n.
+\]
+Then $\sum_iv_i=0$, $\|v_i\|^2=(n-1)/n$ and $\sum_iv_iv_i^*=P$. Define the CQ blocks
+\[
+ \sigma_i=\frac{v_iv_i^*}{n-1},\qquad D_i=uv_i^*+v_iu^*,\qquad
+ \sigma=\diag_i\sigma_i,\quad D=\diag_iD_i.
+\]
+They give $\Tr\sigma=1$, $\Tr_A\sigma=P/(n-1)$ and $\Tr_A D=0$. Use the common faithful regularization
+\[
+ \sigma_\xi=(1-\xi)\sigma+\xi I_{n^2}/n^2,
+ \qquad 0<\xi<1.
+\]
+Its actual reference marginal is $(1-\xi)P/(n-1)+\xi I_n/n$. In the plane spanned by $v_i$ and $u$, the block eigenvalues and tangent coherence are
+\[
+ \alpha=\frac{1-\xi}{n}+\frac\xi{n^2},\quad
+ \beta=\frac\xi{n^2},\quad |(D_i)_{12}|=\sqrt{n-1}.
+\]
+The output preserves $\beta$, replaces $\alpha$ by
+\begin{equation}\label{eq:alphaout}
+ \alpha'=\frac{(1-\xi)[1+(n-2)\lambda]}{n(n-1)}+\frac\xi{n^2},
+\end{equation}
+and replaces $D$ by $\lambda D$. Therefore the SLD ratio is
+\begin{equation}\label{eq:Rxi}
+ R_\xi=\lambda^2\frac{\alpha+\beta}{\alpha'+\beta}
+ \longrightarrow H_n(\lambda)\quad(\xi\downarrow0).
+\end{equation}
+Indeed $g_{\sigma_\xi}(D)=4n(n-1)/(\alpha+\beta)$. The finite pair $\rho=\sigma_\xi+tD$, $\sigma=\sigma_\xi$ realizes the same ratio for minimal chi-square whenever $t\ne0$ is sufficiently small.
+
+For the triangular divergence choose $\rho_\pm=\sigma_\xi\pm tD$, where $t^2(n-1)<\alpha\beta$. These are faithful normalized states with identical reference. To evaluate a subnormalized active block, write $W_\pm=\diag(a,b)\pm cS$, where $S=\left(\begin{smallmatrix}0&1\\1&0\end{smallmatrix}\right)$. Then $W_+S+SW_-=(a+b)S$, so
+\[
+ (L_{W_+}+R_{W_-})^{-1}(W_+-W_-)=\frac{2c}{a+b}S,
+ \qquad Q_{f_\triangle}(W_+\Vert W_-)=\frac{8c^2}{a+b}.
+\]
+With $c=t\sqrt{n-1}$ this gives $8t^2(n-1)/(\alpha+\beta)$ per input block. At output the coherence is multiplied by $\lambda$ and the denominator is $\alpha'+\beta$, so the exact finite ratio is again~\eqref{eq:Rxi}. Positivity also follows from
+\[
+ \alpha'-\lambda^2\alpha=
+ \frac{(1-\xi)(1-\lambda)[1+(n-1)\lambda]}{n(n-1)}
+ +\beta(1-\lambda^2)\geq0.
+\]
+No active plane is renormalized or postselected.
+
+For BKM put $\ell(a,b)=(\log a-\log b)/(a-b)$, with its continuous extension. The local ratio is
+\[
+ \lambda^2\frac{\ell(\alpha',\beta)}{\ell(\alpha,\beta)}.
+\]
+At fixed $n,\lambda$, the two first arguments tend to positive constants and $\beta\downarrow0$. Their common divergent logarithm cancels, leaving $H_n(\lambda)$. For finite Umegaki, first take $t\to0$ in
+\[
+ \D(\sigma_\xi+tD\Vert\sigma_\xi)
+ =\tfrac12t^2g^{\rm BKM}_{\sigma_\xi}(D)+o(t^2)
+\]
+with $\xi$ fixed, and only then take $\xi\downarrow0$. This produces faithful finite pairs arbitrarily close to the same coefficient. Singular inverses and an interchange of limits are not needed.
+\end{proof}
+
+These preparations are CQ and therefore separable across $A:R$. Their conditional reference blocks generally do not commute. If the reference were classical in one common basis for both hypotheses, the divergence would decompose into classical terms and the ordinary coefficient would bound each term. The advantage concerns quantum correlations without requiring entanglement.
+
+\section{Why two input symbols no longer suffice}
+We include the binary upper argument to identify exactly the boundary crossed by Theorem~\ref{thm:exact}.
+\begin{proposition}\label{prop:binary}
+Let a finite binary-input classical channel have nonnegative columns $a_y,b_y$. Discard outputs with $a_y=b_y=0$, which are outside its active output support. For every normalized nonaffine operator-convex Petz divergence, and for SLD and minimal chi-square, its complete equal-reference coefficient is the ordinary classical coefficient
+\begin{equation}\label{eq:binary}
+ c(K)=\sup_{0<x<1}x(1-x)\sum_y
+ \frac{(a_y-b_y)^2}{b_y+(a_y-b_y)x}.
+\end{equation}
+\end{proposition}
+\begin{proof}
+After input dephasing write $\rho=\diag(\rho_0,\rho_1)$, $\sigma=\diag(\sigma_0,\sigma_1)$, with common sum $r$ and differences $Z,-Z$. For a resolvent set $A=L_{\rho_0}+uR_{\sigma_0}$, $B=L_{\rho_1}+uR_{\sigma_1}$, both positive on complex HS. Each active pencil $a_yA+b_yB$ is positive definite because $a_y+b_y>0$, even if one coefficient vanishes. With $S=A+B$ and $X=S^{-1/2}AS^{-1/2}$, we have $0<X<I$ and
+\begin{align*}
+ A^{-1}+B^{-1}&=S^{-1/2}[X^{-1}+(I-X)^{-1}]S^{-1/2},\\
+ \sum_y(a_y-b_y)^2(a_yA+b_yB)^{-1}
+ &=S^{-1/2}\left[\sum_y\frac{(a_y-b_y)^2}
+ {b_yI+(a_y-b_y)X}\right]S^{-1/2}.
+\end{align*}
+The scalar bound~\eqref{eq:binary} applies to every eigenvalue of $X$; congruence preserves operator order. Evaluating on $Z$ gives the divergence upper. Positive integration and the quadratic endpoint give Petz, and using $A=J_{\sigma_0},B=J_{\sigma_1}$ gives SLD/minimal chi-square. No simultaneous diagonalization of $A,B$ is used. For each fixed $0<x<1$, every active scalar output probability is positive. Faithful scalar input pairs approaching that $x$ give the lower by the positive local Fisher factor $f''(1)/2$; nonaffinity and the positive integral representation ensure $f''(1)>0$. Take this local limit first, then the supremum in $x$. An optimum need not be attained in the interior when entries vanish. This is a global optimization over the base state, not a fixed-uniform-source claim.
+\end{proof}
+
+For the symmetric family the prior classical coefficient is
+\begin{equation}\label{eq:B}
+ B_n(\lambda)=\frac{n\lambda^2}{2+(n-2)\lambda}.
+\end{equation}
+For completeness its scalar reconstruction is short. On two input columns the only informative output rows have probabilities $b+\lambda x$ and $b+\lambda(1-x)$, where $b=(1-\lambda)/n$; all other rows have identical columns. The expression in~\eqref{eq:binary} is
+\[
+ \frac{\lambda^2(2b+\lambda)x(1-x)}
+ {b(b+\lambda)+\lambda^2x(1-x)}.
+\]
+In the strict stochastic interior it is maximized at $x=1/2$ and equals~\eqref{eq:B}. Classical binary-support reduction~\cite{OP}, together with the classical equivalence~\cite{MZ}, gives the full ordinary benchmark. This is a reconstruction of a classical quantity, not a claim of first discovery.
+
+All pairs of columns are equivalent and Proposition~\ref{prop:binary} identifies their complete coefficients with $B_n$. BKM follows by local Umegaki expansion. At exclusion, $\lambda=-1/(n-1)$, a direct calculation also makes the boundary transparent. On two inputs $i,j$, output $i$ is the input block at $j$ divided by $n-1$, output $j$ is the block at $i$ divided by $n-1$, and every remaining output is the common block $r/(n-1)$. Direct-sum additivity and homogeneity yield exactly
+\[
+ Q_f(K\rho\Vert K\sigma)=\frac1{n-1}Q_f(\rho\Vert\sigma)
+\]
+for CQ pairs. The metric identities follow likewise. The cases $\lambda=0,1$ are immediate.
+
+\begin{corollary}\label{cor:failure}
+For $n>2$ and $\lambda\ne0,1$ in the physical range, complete optimization for the five quantities in Theorem~\ref{thm:exact} cannot be reduced to two common input symbols. Every two-symbol restriction has coefficient $B_n$, whereas the full coefficient is $H_n>B_n$. At exclusion $H_n/B_n=n-1$.
+\end{corollary}
+\begin{proof}
+For $\lambda\ne0$,
+\[
+ \frac{H_n}{B_n}-1=\frac{(n-2)(1-\lambda)}{n[1+(n-2)\lambda]}>0.
+\]
+Use the preceding subchannel analysis. At $\lambda=0$ no ratio of zeros is taken.
+\end{proof}
+This statement concerns a support restriction on $A$, not a restriction to two hypotheses. It leaves the prior binary-hypothesis characterizations in~\cite{HGNW} intact.
+
+\section{A fixed channel and an actual binary readout}
+\subsection{Faithful CQ hypotheses and their output}
+Write $f=u/\sqrt n$, $F=ff^*$, $P=I-F$,
+$\psi_i=\sqrt{n/(n-1)}(e_i-u/n)$ and $\Pi_i=\psi_i\psi_i^*$. Thus $\sum_i\psi_i=0$ and $\sum_i\Pi_i=nP/(n-1)$. For positive $\alpha,\beta,\eps$ and $0<\delta<1$ satisfying
+\[
+ \alpha+(n-2)\eps+\beta=1/n,
+ \qquad c^2=\alpha\beta(1-\delta),
+\]
+define blocks
+\begin{equation}\label{eq:blocks}
+ s_i^\pm=\alpha\Pi_i+\eps(P-\Pi_i)+\beta F
+ \pm c(\psi_if^*+f\psi_i^*),\qquad \rho^\pm=\diag_i s_i^\pm.
+\end{equation}
+Every block has trace $1/n$, active determinant $\alpha\beta\delta>0$, and inactive eigenvalue $\eps>0$. Both hypotheses are faithful and normalized, their $A$ marginals are uniform, and their common reference marginal is
+\[
+ r=\frac{n[\alpha+(n-2)\eps]}{n-1}P+n\beta F.
+\]
+A phase flip $I-2F$ on the reference exchanges the hypotheses. It does not encode a phase on the noisy classical input.
+
+Fix the exclusion channel. Its output block at $j$ is $(r-s_j^\pm)/(n-1)$. In the plane $\Pi_j+F$ it has diagonals
+\[
+ a'=\frac{\alpha+n(n-2)\eps}{(n-1)^2},\qquad\beta,
+\]
+coherence $\pm\lambda c$, $\lambda=-1/(n-1)$, and inactive eigenvalue
+\[
+ e'=\frac{n\alpha+(n^2-3n+1)\eps}{(n-1)^2}>0.
+\]
+Let $h_i>l_i$ and $h_o>l_o$ be the two active input and output eigenvalues. The full relative entropies, without active-plane normalization, are
+\begin{equation}\label{eq:finiteD}
+ D_i=4nc^2\frac{\log(h_i/l_i)}{h_i-l_i},\qquad
+ D_o=4n\lambda^2c^2\frac{\log(h_o/l_o)}{h_o-l_o}.
+\end{equation}
+Indeed the logarithm of a positive $2\times2$ matrix has offdiagonal entry $c\log(h/l)/(h-l)$; changing the sign of $c$ and taking the trace gives the stated formula. Inactive modes are identical and contribute zero.
+
+For output label $j$, let $Q_j=\Pi_j+F$ and $W_j^-=Q_j(\N\rho^-)_{j}Q_j$. Measure
+\[
+ E_j=\frac{h_oQ_j-W_j^-}{h_o-l_o},\qquad
+ E=\diag_jE_j,\quad I-E.
+\]
+The rank-one projector $E_j$ is extended by zero off its plane. This is a binary measurement with one-way classical feedforward: read $j$, then measure its specified reference projector. The effect is fixed by the known pair, not by the unknown sign. With orientation $\rho^+\Vert\rho^-$ its probabilities are exactly
+\begin{equation}\label{eq:pq}
+ q=nl_o,\qquad p=n\left(l_o+\frac{4\lambda^2c^2}{h_o-l_o}\right).
+\end{equation}
+For example, the offdiagonal entry of $E_j$ is $\lambda c/(h_o-l_o)$; pairing it with the output difference $2\lambda cS$ gives the increment $4\lambda^2c^2/(h_o-l_o)$ in each block. This verifies the orientation and the increment in~\eqref{eq:pq}. The complementary probabilities are $1-q,1-p$ on the entire state. Thus
+\[
+ D_b=p\log(p/q)+(1-p)\log\frac{1-p}{1-q}\leq D_o\leq D_i.
+\]
+There is no postselection, replacement of the quantum input denominator, or label-blind reference measurement. Each individual marginal carries zero distinguishing information.
+
+\subsection{Fixed-alphabet limit}
+\begin{theorem}\label{thm:fixed}
+Fix $n\geq3$. For integers $k\geq n$, choose
+\begin{equation}\label{eq:scaling}
+ \beta=\frac1{4nk},\quad\delta=2^{-k},\quad
+ \eps=\beta\delta,\quad\alpha=\frac1n-(n-2)\eps-\beta.
+\end{equation}
+For the faithful hypotheses~\eqref{eq:blocks} and measurement~\eqref{eq:pq},
+\[
+ D_i\longrightarrow\log2,\quad D_o\longrightarrow\log2,\quad
+ D_b\longrightarrow\log2,\quad D_b/D_i\longrightarrow1.
+\]
+The channel and both system dimensions remain fixed. The input condition number is asymptotic to $4k2^k$, its trace semidistance to $k^{-1/2}$, and $p\sim1/k$, $q\sim2^{-k}/(4k)$.
+\end{theorem}
+\begin{proof}
+The restriction $k\geq n$ gives $\alpha\geq7/(8n)>0$. The exact output determinant is
+\[
+ a'\beta-\lambda^2c^2=
+ \frac{\beta\delta[\alpha+n(n-2)\beta]}{(n-1)^2}>0.
+\]
+At fixed $n$, $\alpha\to1/n$, $h_i\to1/n$ and $h_o\to1/[n(n-1)^2]$. Using $l=\det/h$, both $l_i/(\beta\delta)$ and $l_o/(\beta\delta)$ tend to one. Consequently
+\begin{align*}
+ \log(h_i/l_i)&=k\log2+\log(4k)+o(1),\\
+ \log(h_o/l_o)&=k\log2+\log(4k)-2\log(n-1)+o(1).
+\end{align*}
+The two prefactors in~\eqref{eq:finiteD}, multiplied by $k$, tend to one. This proves the two quantum relative-entropy limits. Formula~\eqref{eq:pq} gives $kp\to1$ and $4k2^kq\to1$. Therefore $\log(p/q)=k\log2+\log4+o(1)$, so $p\log(p/q)\to\log2$. The complementary Bernoulli term is $O(p)$ and tends to zero, proving the measured limit.
+
+The input minimum eigenvalue is $l_i=\alpha\beta\delta/h_i<\beta\delta=\eps$, whereas the maximum tends to $1/n$. This gives $\kappa_i\sim4k2^k$. Finally $\tfrac12\|\rho^+-\rho^-\|_1=2nc\sim k^{-1/2}$. All these limits are at fixed $n$; there is no uniformity assertion in $n,k$.
+\end{proof}
+
+The common reference in this scaling is explicitly
+\[
+ r_k=\frac{1-1/(4k)}{n-1}P+\frac1{4k}F,
+ \qquad \kappa(r_k)=\frac{4k-1}{n-1}.
+\]
+It is identical for the two hypotheses at each $k$, but varies with $k$ and approaches rank deficiency. Its condition grows linearly; the exponentially growing condition in the theorem belongs to the joint input states.
+
+For clarity define the binary-measured complete coefficient by
+\[
+ \eta_{D,2\mathrm m}^c(\N)=
+ \sup_{R,\rho,\sigma,M_2}
+ \frac{\D(M_2\N\rho\Vert M_2\N\sigma)}{\D(\rho\Vert\sigma)},
+\]
+where the input domain is the faithful equal-reference domain of~\eqref{eq:complete} and $M_2$ is a two-outcome measurement on the joint output and reference.
+\begin{corollary}
+For every exclusion channel with $n\geq3$, $\eta_{D,2\mathrm m}^c(\N_{-1/(n-1)})=1$. Dimension $n$ of the reference, separable CQ inputs and classical feedforward to a local reference measurement suffice for this supremum.
+\end{corollary}
+\begin{proof}
+Data processing bounds the coefficient by one. Theorem~\ref{thm:fixed} provides admissible measured ratios tending to one with a positive input divergence limit.
+\end{proof}
+This already uses $n=3$, whose ordinary coefficient is $1/2$. The finite positive limit of relative entropy is compatible with vanishing trace distance because the states approach a singular boundary; relative entropy is not uniformly continuous there. The exponentially rare $q$ event and exponentially bad conditioning are essential limitations of this explicit construction.
+
+The measurement depends on $k$. Although $E_j\to F$, replacing $E_j$ by $F$ gives $p=q=n\beta=1/(4k)$ and zero binary divergence. Thus the limiting effect cannot replace the parameter-dependent measurement. Likewise reversing only the Bernoulli orientation loses the leading term: $D(\mathrm{Ber}(q)\Vert\mathrm{Ber}(p))/D_i\to0$. No fixed effect or uniformity as $n$ varies is claimed.
+
+\subsection{A distinct dimensional regime and a corrected scale condition}
+The same finite formulas also apply to
+\[
+ \beta=n^{-5},\quad\delta=n^{-z},\quad\eps=n^{-(z+4)},\quad z>0\text{ fixed},
+\]
+with $n\to\infty$. The same spectral calculation gives
+\[
+ \frac{D_o}{D_i}\to\frac{z+2}{z+4},\quad
+ \frac{D_b}{D_i}\to\frac{z}{z+4},\quad
+ D_i\sim\frac{4(z+4)\log n}{n^4}.
+\]
+Here absolute divergence vanishes and the channel changes with $n$. This is distinct from~\eqref{eq:scaling}. The relevant sufficient comparison for these constants is $n(n-2)\eps=o(\alpha\delta)$. In this family $\eps/\beta=n^{1-z}$ can grow while that determinant comparison remains valid. Thus $\eps\ll\beta$ is neither the necessary comparison nor by itself sufficient. For example, with $z=4$ and $\eps=n^{-6}$ in place of $n^{-8}$, the same determinant formula gives limits $D_o/D_i\to5/8$ and $D_b/D_i\to3/8$, instead of $3/4$ and $1/2$. The source supplement retains the earlier incorrect necessity claim and its audit correction.
+
+\section{Certified finite evidence and limitations}
+For the fixed-alphabet construction, nine cases were declared before evaluation. Directed integer interval arithmetic at 1024 bits uses integer square roots and a range-reduced logarithm with an explicit atanh-series remainder. No floating-point number establishes an inequality sign. The arithmetic library is reused from earlier work and is not an independent implementation. Table~\ref{tab:finite} displays selected values only; integer endpoints and all nine cases are preserved in the supplement. A component audit recomputed the nine cases at 2048 bits and added eleven adversarial controls without changing the originals.
+
+Three separate full $9\times9$ constructions at $k=8,16,32$, using 400-digit eigendecomposition and a projector obtained from the full output spectrum, agree with six corresponding interval quantities each. These are numerical cross-checks, not new interval proofs or independent reviewers. The general theorem requires its analytical argument, not extrapolation from the table.
+
+\begin{table}[ht]
+\centering
+\caption{Rounded displays of certified fixed-alphabet values. All rows shown have $n=3$ and ordinary benchmark $1/2$.}\label{tab:finite}
+\begin{tabular}{rrrr}
+\toprule
+$k$ & $D_i$ & $D_b$ & $D_b/D_i$\\
+\midrule
+8 & 1.0909434742 & 0.6511496162 & 0.5968683361\\
+32 & 0.8384165205 & 0.6834417750 & 0.8151578103\\
+256 & 0.7195237121 & 0.6919467548 & 0.9616733168\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Adverse results are retained. In the fixed-alphabet family, $n=3,k=3$ and $k=4$ give certified measured retentions about $0.4268407$ and $0.4730447$, both below $1/2$. Among eight earlier symmetric pairs tested with finite Umegaki divergence, three do not beat the classical comparator, although their triangular ratios can do so. Further dimensional-regime examples at small $n,z$ also fail to separate. Changing the regularizer changes the limiting constants, and allowing $z$ to vary with $n$ invalidates the fixed-$z$ formula in general. Along $n=k\to\infty$, the fixed-alphabet preparation instead has measured retention asymptotic to $4/n$, tending to zero. None of these cases is discarded or treated as evidence that every finite pair separates.
+
+This study does not determine minimal reference dimension, an optimal tradeoff between measurement, preparation and precision, a faithful maximizer, complete equality for every Petz generator, ordinary mutual-information optima, or classical/quantum capacity. The memory, known-pair measurement and tail precision are resources. No optimal bound on experimental copy complexity is proved. Direct frequency estimation of the exponentially small $q$ probability and discrimination of the hypotheses are different tasks; no exponential lower bound for every discrimination strategy is inferred. The fixed-alphabet construction removes vanishing input relative entropy from one family; it does not remove conditioning and rare-event costs or imply small one-shot error when trace distance vanishes.
+
+\section{Fixed-point decay and the scope of a uniform bound}
+Set $n=3$ and regard $\Phi=\N_{-1/2}\otimes\id_3$ as one fixed channel on $M_9$. It is unital and Hilbert--Schmidt selfadjoint, and its powers converge to
+\[
+ \mathcal E(T)=I_A/3\otimes\Tr_A T.
+\]
+Its spectrum consists of $1$ on $I_A\otimes M_R$, $-1/2$ on traceless diagonal $A\otimes M_R$, and zero on offdiagonal $A\otimes M_R$. Thus $\Phi$ is \emph{not primitive}, although the three-symbol channel without the reference is primitive.
+
+There is a precise distinction between one step and two steps in Theorem~\ref{thm:exact}, independently of the nonvanishing-divergence limit. Composition of the classical symmetric channels multiplies their parameters, so
+\[
+ \N_{-1/2}^{\,2}=\N_{1/4},\qquad
+ \eta_D^c(\N_{-1/2})=1,\qquad
+ \eta_D^c(\N_{-1/2}^{\,2})=H_3(1/4)=\frac1{10}.
+\]
+Consequently the equal-reference coefficient can be one after one step and strictly below one after two steps for the same primitive classical dynamics. This concerns arbitrary paired hypotheses; it is not an entropy-to-fixed-point coefficient.
+
+The constructed pairs satisfy $\mathcal E\rho_k^+=\mathcal E\rho_k^-$ with relative-entropy retention tending to one. No single constant less than one therefore bounds all such equal-$\mathcal E$ pairs for this fixed $\Phi$. Their common $\mathcal E$ value varies with $k$ and approaches rank deficiency. This is not a counterexample to a bound with a fixed faithful second state, a fixed spectral floor, contraction toward $\mathcal E\rho$, or eventual contraction of powers.
+
+The generic failure of strict one-step contraction is classical prior art: Cohen et al.~\cite[Theorem 4.2 and Remark 4.3]{Cohen} characterize it through scrambling and give primitive channels with coefficient one. Their support-disjointness argument and faithful limiting construction already prevent treating a general one-step obstruction as a new resolution of the uniformity question discussed in~\cite{GR}. No claim that a historical problem is still open or first resolved here is made. The specific distinction in the present example is that the exclusion channel has ordinary coefficient $1/2$, and that it is the common quantum reference which raises its complete and binary-measured suprema to one.
+
+\clearpage
+\appendix
+\section{Model assessments and review context}
+This manuscript asserts no numerical model grade. Any assessment must be bound to its exact PDF and exposed with its full report and context; grades attached to other PDFs do not apply. A technical component audit is distinct from a manuscript assessment, human peer review and editorial acceptance. None implies either of the others.
+
+The named author directed substantial OpenAI Codex assistance in derivation, writing and numerical work. Completed component audits reconstructed the binary and simplex arguments and preserved both favorable and adverse controls. The requested reviewer configuration was GPT-6 Astra xhigh. The reused evaluator had prior participation, reused context and shared filesystem access. Effective model identity, effort, runtime isolation and independence were not attested. These component audits are not independent votes and do not constitute human peer review, Lean formalization or certified worldwide originality.
+
+Completed component audits reconstructed the binary extension, the exact simplex coefficients, the fixed-$z$ regime with its corrected scale condition, and the fixed-alphabet construction. They also identified the classical antecedent for generic one-step noncontraction and the dependence of the measurement on its preparation parameter. Full original objections and adverse controls are retained rather than replaced by this summary. The supplements identify exact file hashes, frozen inputs, reports, checker incidents and reading levels. A full manuscript assessment cannot be inherited from a component proof.
+
+The preserved research dossiers are: binary argument and audit 1092/1093; simplex proof and controls 1096; finite logarithm certificates 1099; controlled measurement 1101; technical audit 1100; endpoint supplement 1108; fixed-alphabet derivation 1110; source comparison 1112; full-matrix checks 1113; and technical audit 1115. Their identifiers are reproducibility references, not independent votes. Portable replay of seven core checkers reproduces six generated outputs byte for byte and verifies 48 stored rational boundary rows. Two historical dependency paths are adapted only in disposable execution copies, with original and executed hashes logged. Own derivations, code, reports and source metadata form the supplement; third-party paper corpora and private credentials are excluded.
+
+A provenance correction is retained explicitly: an earlier incident narrative claimed preservation of malformed serialization bytes, but the saved first-control file is a valid JSON identical to the final one. Those malformed historical bytes are not evidenced. The original narrative, unchanged files, auditor objection and correction are all preserved; this discrepancy does not change the mathematical parameters or certified results.
+
+\clearpage
+\begin{thebibliography}{10}
+\bibitem{HR} F. Hiai and M. B. Ruskai, \emph{Contraction coefficients for noisy quantum channels}, arXiv:1508.03551v1 (2015), \href{https://doi.org/10.1063/1.4936215}{doi:10.1063/1.4936215}.
+\bibitem{MZ} A. Makur and L. Zheng, \emph{Linear bounds between contraction coefficients for $f$-divergences}, arXiv:1510.01844v4 (2018); related published treatment: \emph{Comparison of contraction coefficients for $f$-divergences}, Problems of Information Transmission 56 (2020), 103--156.
+\bibitem{OP} O. Ordentlich and Y. Polyanskiy, \emph{Strong data processing constant is achieved by binary inputs}, arXiv:2010.01987. The two-page author version and its classical reduction proof were inspected.
+\bibitem{LM} D. Lee and A. Makur, \emph{Contraction coefficients of product symmetric channels}, Allerton (2024), 1--8, \href{https://doi.org/10.1109/ALLERTON63246.2024.10735307}{doi:10.1109/ALLERTON63246.2024.10735307}. Bibliographic record consulted; full text not audited.
+\bibitem{HGNW} C. Hirche, I. George, T. Nuradha and M. M. Wilde, \emph{Conditional contraction coefficients and their applications to quantum networks}, \href{https://arxiv.org/abs/2608.27171v1}{arXiv:2608.27171v1} (2026).
+\bibitem{GR} L. Gao and C. Rouz\'e, \emph{Complete entropic inequalities for quantum Markov chains}, Archive for Rational Mechanics and Analysis 245 (2022), 183--238, \href{https://doi.org/10.1007/s00205-022-01785-1}{doi:10.1007/s00205-022-01785-1}.
+\bibitem{GJLL} L. Gao, M. Junge, N. LaRacuente and H. Li, \emph{Complete positivity order and relative entropy decay}, Forum of Mathematics, Sigma 13 (2025), e31, \href{https://doi.org/10.1017/fms.2024.117}{doi:10.1017/fms.2024.117}.
+\bibitem{WG} C. Wang and A. Gohari, \emph{Matrix $\Phi$-entropic measures of dependence}, \href{https://arxiv.org/abs/2610.29576v1}{arXiv:2610.29576v1} (2026). Selected definitions, theorem and proof passages consulted; no claim to resolve its distinct source-fixed problem.
+\bibitem{TTG} M. S. Tan, M. Tomamichel and I. George, \emph{Tight contraction rates for primitive channels under quantum $f$-divergences}, \href{https://arxiv.org/abs/2605.06452v1}{arXiv:2605.06452v1} (2026). Abstract, Theorem 1 statement and Definition 3 inspected; the full proof was not audited.
+\bibitem{Cohen} J. E. Cohen, Y. Iwasa, Gh. Rautu, M. B. Ruskai, E. Seneta and Gh. Zb\u aganu, \emph{Relative entropy under mappings by stochastic matrices}, Linear Algebra and its Applications 179 (1993), 211--235, \href{https://doi.org/10.1016/0024-3795(93)90331-H}{doi:10.1016/0024-3795(93)90331-H}. Theorem 4.2 and its proof and Remark 4.3 were inspected in the author PDF.
+\end{thebibliography}
+\end{document}

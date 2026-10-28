@@ -1,0 +1,168 @@
+AUDITORÍA TÉCNICA1136 — CRITERIO DE SOPORTE1134
+27–28 de octubre de2026. Sin manuscrito, nota, voto ni recomendación editorial.
+
+0. Dictamen y procedencia
+
+El «si y sólo si» propuesto se sostiene en el dominio declarado: para un canal clásico finito K con n>=2 entradas, el coeficiente completo de Umegaki entre estados con referencia igual satisface eta_c(K)=1 exactamente cuando d(K)=sum_y min_i K(y|i)=0. La dirección d>0 es la cota de Doeblin conocida. La dirección d=0 queda reconstruida aquí con cotas explícitas, no sólo con expansión formal o doce ejemplos. La familia fiel CQ, con R=C^n y marginal A uniforme, admite una medición binaria controlada por y tal que D_input,D_output,D_binary ->ln2. El límite original solicitado tiene n y K fijos. Una aclaración posterior dentro de esta auditoría permite explicitar además el corolario uniforme en K con n fijo de la sección5; no es un cambio a1134 ni exige nuevos controles.
+
+No se encontró un falsador del enunciado. Sí se encontraron límites sustantivos de los controles y extensiones: maximizar el solapamiento con f no selecciona siempre la rama correcta a k finito; alterar epsilon puede cambiar el límite o convertir el mínimo global en un modo inactivo; el primer control con filas de soporte completo pierde la retención y permanece conservado. El iff no es una fórmula eta_c=1-d para todo K. El ejemplo binario(.9,.2), ya reconstruido en1115, tiene eta_c=1/2 y1-d=7/10.
+
+Las lecturas primarias seleccionadas cubren la definición completa, la cota Doeblin, propiedades de contracción y el criterio clásico de scrambling. No identifican literalmente el nuevo recíproco completo para todo K clásico ni su test binario con divergencias no nulas. Eso NO certifica prioridad. La construcción es una generalización algebraica corta del mecanismo simplex1110/1115/1127; no es una invención independiente de esa cadena ni un nuevo DPI o concepto de Doeblin. Su contribución técnica superviviente es el criterio completo de soporte y el test explícito. No hay motivo técnico para inflar su dificultad ni para tratar una búsqueda dirigida como un estudio exhaustivo.
+
+Contexto942/1077/1093/1100/1115 y participación reutilizados; filesystem compartido. Configuración solicitada GPT-6 Astra xhigh; identidad, modelo, esfuerzo, independencia y aislamiento efectivos no atestados. No se crearon agentes/chats ni se contactaron autores. No se alteraron Git, estado raíz, publicación, manuscritos o auditorías anteriores. El PDF1127 no se abrió ni evaluó: la familia se reconstruyó desde1134 y la dependencia1110/1115 ya declarada. No se atribuye cobertura a bytes del PDF no inspeccionados en este encargo.
+
+1. Entrada y reproducción
+
+Se verificaron antes del análisis los siete archivos de1134 en C y D, tamaños, inventarios y SHA256. MANIFEST1134: d0484d62d5e8f4de29736ad3734e2f9271d0e2c1d9026c9bdee4e3ec340fd67b. PROOF1134: 7eed813d8791980cd1b7199d13ddd691e80c7a0c098b2b41887930c100e259a4. INPUT_INITIAL1136 y INPUT_FINAL1136 contienen el recibo completo. Se releen D:\LEEME.md y las instrucciones globales; trabajo vivo en C y archivo idéntico en D.
+
+Los dos scripts originales se copiaron a carpetas propias y se ejecutaron sin cambiar sus bytes. Los12 casos de cada ejecución coinciden con su JSON original salvo el campo utc, generado de nuevo por diseño. CONTROL-FIRST1134 no fue reemplazado por el control corregido. En la copia de replay-first, el script original escribe CONTROL1134.json; ese archivo se compara expresamente contra CONTROL-FIRST1134.json del input, no contra el resultado corregido. No se ejecutó código dentro del paquete congelado.
+
+2. Definición y dirección conocida
+
+K es column-estocástico, con entradas reales no negativas, n>=2 y finitas salidas. Se suprimen sólo filas idénticamente cero, que representan un bloque nulo bajo ambas hipótesis. El cociente se define con denominador Umegaki estrictamente positivo y finito. El supremo es sobre referencias cuánticas finitas y pares CQ normalizados fieles rho=sum_i|i><i| tensor rho_i, sigma=sum_i|i><i| tensor sigma_i, con sum_i rho_i=sum_i sigma_i. No es una condición de fuente fija ni de comparación contra el producto de las marginales. n=1 queda excluido: en ese caso referencia igual fuerza rho=sigma y no hay denominador admisible, salvo adoptar una convención de coeficiente vacío cero.
+
+Si se define K como un canal cuántico que dephasa A antes de aplicar la matriz, permitir inputs cuánticos generales no cambia este coeficiente. Dephasar conserva R, no cambia el output y disminuye el denominador por DPI. Cuando el denominador después de dephasar es cero, el numerador también lo es. Así basta CQ. La cota siguiente también es directamente válida para inputs cuánticos generales y cualquier R finito.
+
+Sea a_y=min_iK(y|i), d=sum_y a_y. Para0<d<1,
+ K=d Q+(1-d)L,
+donde Q tiene todas las columnas a_y/d y L es otro canal clásico. Con referencia común r, Q(rho)=Q(sigma)=diag(a/d) tensor r. Convexidad conjunta y DPI dan
+ D(Krho||Ksigma)<= (1-d)D(Lrho||Lsigma)<= (1-d)D(rho||sigma).
+Para d=1, K es reemplazo y el numerador es cero. Por tanto d>0 implica eta_c<1. Este mecanismo está cubierto por los antecedentes primarios descritos abajo. No se necesita identidad espectral, búsqueda numérica ni una hipótesis de positividad estricta de todas las columnas.
+
+3. Geometría, normalización y límite de entrada
+
+Para cada entero k>=n definir beta=1/(4nk), delta=2^-k, epsilon=beta delta y alpha=1/n-(n-2)epsilon-beta. La fórmula SELLADA es epsilon=beta delta. No se sustituye por otra escala en la demostración principal.
+
+En R=C^n, f=ones/sqrt(n), F=ff*, P=I-F, psi_i=sqrt(n/(n-1))(e_i-ones/n), Pi_i=psi_i psi_i*. Se tiene sum psi_i=0, sum Pi_i=nP/(n-1) y ||psi_i||=1. Los bloques son
+ s_i^+/-=alpha Pi_i+epsilon(P-Pi_i)+beta F +/-c(psi_i f*+f psi_i*),
+ c^2=alpha beta(1-delta).
+Traza de cada bloque1/n; determinante del plano activo alpha beta delta>0; restantes eigenvalores epsilon>0. Para k>=n, alpha>=7/(8n)>0 y alpha-epsilon>0. En n=2 no hay modos inactivos, pero las mismas fórmulas y el argumento siguen siendo válidos.
+
+Ambas marginales de A son I/n y ambas marginales de R son exactamente
+ r_k=(1-1/(4k))P/(n-1)+(1/(4k))F.
+Por tanto r_k es fiel para cada k, pero varía y se acerca al borde. Los estados son CQ y separables, y el input total tiene dimensión n^2 fija. No se necesita entrelazamiento. La conjugación por I-2F en R cambia el signo; esto no convierte K en una dinámica unitaria del registro clásico A.
+
+Sean h,l los eigenvalores del plano [[alpha,c],[c,beta]], g=h-l. Los logaritmos de los bloques subnormalizados dan exactamente
+ D_input=4nc^2 log(h/l)/g.
+Se usa l=alpha beta delta/h, evitando una resta inestable. A n fijo, h,g->1/n, l/(beta delta)->1, log(h/l)=k ln2+ln(4k)+o(1) y k(4nc^2/g)->1. Así D_input->ln2. No hay expansión de un denominador divergente sin control, normalización postseleccionada ni intercambio con n->infinito.
+
+4. Lema de soporte y rama espectral: reconstrucción con cotas
+
+d=0 equivale a que cada fila no nula tenga soporte propio S, de tamaño1<=m<=n-1. Fijar una fila w_i=K(y|i), t=sum w_i>0 y V=span{psi_i:i en S}. Su Gram es
+ G=B*B=[n I_m-ones_m ones_m*]/(n-1),
+con eigenvalores n/(n-1) sobre ones perpendicular y (n-m)/(n-1) sobre ones. Es positivo. Por tanto B tiene columnas independientes, dim V=m. Definir T=BWB*, z=BW ones, W=diag(w_i)>0. T es invertible SOLAMENTE en V. El vector
+ v=B G^-1 ones
+satisface Tv=z, y por ello
+ z*T_V^-1z=t,
+ ||T_V^-1z||^2=ones*G^-1ones=m(n-1)/(n-m)<= (n-1)^2.
+La segunda identidad es útil: no contiene el menor peso positivo de la fila. Aplicar una inversa en todo P cuando m<n-1 sería erróneo; no se hace.
+
+En V más f, el bloque MINUS de salida es
+ M_-=[[A,-g_y],[-g_y*,b]],
+ A=(alpha-epsilon)T+epsilon t I_V,
+ g_y=c z, b=beta t.
+En P perpendicular a V, ambos outputs son epsilon t I. Su masa permanece en el estado y en el complemento de la medición. T<=t I_V, luego A>=alpha T y A>epsilon t I_V.
+
+Para0<=x<=epsilon t, definir
+ H(x)=b-x-g_y*(A-x I)^-1g_y.
+Entonces H(0)>=beta t delta>0, porque z*A^-1z<=t/alpha. La identidad restringida da el valor EXACTO
+ H(epsilon t)=-t beta epsilon(1-delta)/(alpha-epsilon)<0.
+Además H'(x)=-1-|| (A-x I)^-1g_y ||^2<0. Existe una única raíz ell_y en(0,epsilon t). Por interlacing, las otras m eigenvalores del bloque activo son mayores que epsilon t. Los modos inactivos valen exactamente epsilon t. Por tanto, para ESTA escala epsilon=beta delta, ell_y es de hecho el mínimo GLOBAL único de la fila. La advertencia del candidato de no suponerlo sin prueba es correcta; esta auditoría aporta la prueba. El hecho no se conserva al cambiar arbitrariamente epsilon.
+
+Como A-x I=(alpha-epsilon)T+(epsilon t-x)I es función positiva de T,
+ ||(A-x I)^-1g_y||^2 <= c^2||T^-1z||^2/(alpha-epsilon)^2 <= C_nk,
+ C_nk=c^2(n-1)^2/(alpha-epsilon)^2.
+Integrando -H' entre0 y ell_y y usando H(0)>=beta t delta se obtiene el encierro
+ beta t delta/(1+C_nk) <= ell_y < beta t delta.
+Para un eigenvector normalizado u=(x,s) de M_- con s real positivo,
+ x=(A-ell_y I)^-1g_y s,
+ 1/(1+C_nk)<=s^2<=1.
+Así se reconstruyen ell_y=beta t delta(1+O(1/k)) y s^2=1+O(1/k) a n fijo. El signo del término de la derivada es negativo; escribir -1+O(beta) en el original es compatible, pero las desigualdades anteriores son más informativas.
+
+Estas cotas evitan depender de un número de condición de T. Son válidas para los pesos positivos reales de cualquier fila de soporte propio, incluidos pesos muy pequeños. Al sumar, sólo se usa sum_y t_y=n. En particular, los errores de este encierro son controlables por n y k, sin dividir por min w_i y sin depender del número finito de salidas. La demostración solicitada para cada K fijo queda cubierta y conduce al corolario uniforme siguiente; no se extrapola a n variable, espectros con piso fijo, ni estabilidad experimental del cálculo del efecto.
+
+5. Medición, probabilidades y límite completo
+
+Elegir E_y=uu* para la rama anterior de M_-, extendido por cero en los modos inactivos. El efecto total E=directsum_y E_y satisface0<=E<=I, con segundo efecto I-E. Es una medición binaria en R controlada por la etiqueta clásica y. Retiene TODAS las filas y la masa complementaria; no es postselección. El efecto puede depender de K,n,k y del par conocido, pero no del signo desconocido de la hipótesis. Medir solamente y o solamente R no distingue el par: sus marginales coinciden.
+
+Con orientación PLUS||MINUS,
+ q_y=Tr(E_y M_-)=ell_y,
+ p_y-q_y=4s^2 g_y*(A-ell_y I)^-1g_y=4s^2(beta t-ell_y).
+La última igualdad es la ecuación de Schur. De ella siguen las cotas racionales
+ q_L=n beta delta/(1+C_nk) <=q<=q_U=n beta delta,
+ p_L=q_L+4n beta(1-delta)/(1+C_nk) <=p<=p_U=q_U+4n beta.
+Como C_nk=O_n(1/k), q=delta/(4k)(1+O_n(1/k)), p=1/k(1+O_n(1/k)). Por tanto log(p/q)=k ln2+ln4+o(1), p log(p/q)->ln2 y el término (1-p)log((1-p)/(1-q)) tiende a cero. Así D_binary->ln2. DPI da D_binary<=D_output<=D_input, de donde D_output->ln2 y ambas retenciones->1.
+
+Esto prueba el recíproco para el supremo de coeficientes completos y también para el coeficiente con una medición binaria a la salida y denominador CUÁNTICO de entrada. R de dimensión n y marginal A uniforme bastan. No se prueba minimalidad de R, un efecto fijo independiente de k, un maximizador fiel universal, ni igualdad para todos los generadores Petz. Algunos canales con d=0 ya tienen pares clásicos de igualdad finita; no se afirma que ningún canal pueda alcanzar el supremo. El test de esta familia es una secuencia dependiente de parámetros.
+
+Corolario uniforme propio de1136, explicitado tras la aclaración del encargo: fijar n>=2 y usar la MISMA preparación rho_+/-(n,k) para todo K finito con n entradas y d(K)=0. Cuando p_L>q_U, definir
+ L_nk=KL(Ber(p_L)||Ber(q_U))/D_input(n,k),
+y, en los otros puntos, L_nk=0. Se tiene L_nk->1. Para cada K y k, construir E_y(K,k) como arriba. La monotonía de KL en p y q para p>q da, simultáneamente para TODOS esos K,
+ D_binary(K,k)/D_input(n,k) >= L_nk,
+ D_output(K,k)/D_input(n,k) >= L_nk.
+Ambas razones están acotadas por1. Por tanto la convergencia es uniforme en K a n fijo. También D_binary y D_output convergen uniformemente a ln2, pues están entre el mismo lower KL(Ber(p_L)||Ber(q_U))->ln2 y el mismo upper D_input->ln2. Esto admite una secuencia arbitraria K_k, con soportes, pesos y número finito de salidas variables en k, siempre que cada K_k tenga n entradas y d(K_k)=0. No se requiere un mínimo peso positivo común.
+
+El alcance de este corolario es matemático y explícito: preparación independiente de K, pero efectos dependientes de K,k; referencia n fija; número de resultados de la medición igual a dos. No es un único efecto fijo para todos los K, ni un algoritmo con estabilidad o coste uniforme. El soporte debe conocerse exactamente para elegir el efecto. No hay uniformidad en n. La afirmación se deduce de las desigualdades ya demostradas; no se infiere de un grid, no añade resampling y no se atribuye a los bytes congelados de1134.
+
+6. Falsadores, filas completas y límites que no deben transferirse
+
+Para una fila con TODOS los pesos positivos, las n columnas simplex son dependientes. Entonces, sobre P,
+ z*T_P^-1z=t-n^2/(sum_i 1/w_i)<t.
+No se puede usar la identidad t del soporte propio. El Schur complement contiene un término de orden beta con coeficiente positivo, y no de orden beta delta. Los cinco controles exactos de soporte completo verifican este déficit. El caso de reemplazo tiene z=0 y las dos hipótesis de esa fila coinciden.
+
+En el canal marcado con reemplazo0.1, la primera implementación mide también el flag de esa fila común. Añade un q de orden1/k y destruye el gran logaritmo. La retención binaria tiende a cero. Su fallo es real, aunque no contradice la proposición d=0, pues ese canal tiene d=0.1. El segundo protocolo pone E_y=0 en esa fila; su masa íntegra queda en I-E. Para este canal, D_output es exactamente0.9 veces el de la parte base y el nuevo p,q son0.9 veces los de la base. Por tanto D_binary->0.9 ln2 y la retención->0.9. Es una consecuencia elemental del flag, no sólo una conjetura a partir de doce decimales. No demuestra una fórmula1-d para un canal arbitrario.
+
+Más generalmente, omitir filas de soporte completo da, para este test, un límite medido T_propio/n, donde T_propio es la suma de t_y en filas propias. La demostración usa las mismas cotas fila a fila; si T_propio=0, el efecto omitido es cero y no hay señal. Esto no es una fórmula para eta_c. En una fila de soporte completo medida por la rama cercana a f, q es de orden beta y p/q permanece acotado a K fijo; por tanto el término binario es O(beta). Así se explica el control completamente positivo cuya retención medida desaparece. Esa familia no optimiza necesariamente el coeficiente.
+
+Falsador propio de selección: para exclusión n=16,k=16, en la escala ORIGINAL, el eigenvector mínimo tiene menor solapamiento con f que otra rama. El procedimiento «maximizar solapamiento con f» usado por los checkers da retención0.006904997105..., mientras el mínimo correcto da0.145102743328... . No es un falsador del límite ni del efecto matemático definido en PROOF1134; sí lo es de usar esa regla numérica como selector universal a k finito. La rama de mayor solapamiento coincide eventualmente para cada n fijo, pero no debe suponerse en todos los puntos.
+
+Falsadores propios de regularización en el ciclo clásico4, cuyo soporte de cada fila tiene tamaño2:
+— Con epsilon=beta delta^(1/2), el término beta epsilon domina beta delta y el logaritmo relevante tiene escala k ln2/2. La retención medida tiende a1/2, no auno. El control k128 da0.5275640774... . La entrada sigue siendo fiel y D_input->ln2: la alteración afecta a la salida.
+— Con epsilon=beta delta^2, el mínimo global pasa al modo inactivo epsilon t, que lleva la misma probabilidad bajo ambas hipótesis. Medir ese mínimo da D_binary=0 exacto. La rama activa correcta aún da una retención elevada,0.8897631613... en k64. El residuo numérico -6.15e-163 del primer cociente se conserva como redondeo de cero, no como divergencia negativa.
+— Incluso sin cambiar epsilon, reemplazar E_y por su límite F da probabilidades iguales beta t_y en ambas hipótesis y divergencia binaria cero. Convergencia del operador no basta para preservar una probabilidad exponencialmente pequeña.
+
+n=2 es válido: d=0 equivale a columnas de soporte disjunto y ya hay no contracción clásica. Se verificaron identidad binaria con fila cero y erasure binario. El criterio para n>=3 no exige columnas disjuntas: exclusión y el ejemplo asimétrico3 son scrambling y tienen contracción clásica estricta. No debe confundirse «cada fila tiene algún cero» con «algún par de columnas tiene soportes disjuntos». Tampoco todo canal con d=0 ofrece ventaja respecto del coeficiente ordinario: cuando ya existen columnas disjuntas, ese coeficiente clásico también es uno.
+
+No hay convergencia uniforme en n por el mero requisito k>=n. La dependencia C_nk~(n-1)^2/(4k) ya lo advierte. El análisis1115 de exclusión n=k da retención~4/n->0; no se reinicia aquí esa investigación. No se elimina el coste de condición~4k2^k de entrada, TV_input~k^-1/2, p~1/k, q~2^-k/(4k), precisión del proyector y preparación. D no nulo con TV->0 cerca del borde no es una ventaja de un disparo, capacidad, información mutua ordinaria o estabilidad experimental. Estimar por frecuencias una q rara no equivale a demostrar una cota óptima de complejidad para toda estrategia.
+
+7. Antecedentes primarios y cobertura efectiva
+
+READINGS1136 identifica versiones, hashes, páginas efectivamente leídas y limitaciones. No se guarda corpus extranjero: los PDFs se procesaron en memoria; sólo se conservan recibos y síntesis propias. Resultados secundarios y resultados del propio proyecto aparecidos en buscadores no se usan como validación independiente. Búsqueda dirigida, no exhaustiva.
+
+George–Hirche–Nuradha–Wilde, arXiv2503.22823v3, Quantum10,2115(2026): Definition11 coincide con el coeficiente completo de referencia igual. Se leyeron Prop29–31 y Corollary7 con sus pruebas en pp40–43. Prop30 trata distancia de traza; Cor7 trata divergencias construidas por hockey-stick. No se confunden con una equivalencia universal de todos los Petz. Las páginas51–52 contienen un criterio de qubit para traza, que no es el iff clásico completo de Umegaki aquí. No se usa ese Theorem5 como fundamento ni se reaudita su problema previo. La cota por reemplazo y el lenguaje completo son antecedentes explícitos.
+ https://arxiv.org/pdf/2503.22823v3
+
+Hirche–George–Nuradha–Wilde, arXiv2608.27171v1: Definition2 y Remark2 precisan referencia igual y denominadores finitos positivos; Lemma3 y Proposition2 prueban la cota Doeblin para divergencias conjuntamente convexas. Ese upper cubre directamente la dirección conocida, incluso en un marco condicional mayor. Sus pasajes sobre potencias y mezcla no son un recíproco de un paso. La lectura seleccionada no identifica el iff1134. La etiqueta binaria de hipótesis U y la referencia clásica o cuántica no se confunden con dos símbolos de entrada.
+ https://arxiv.org/pdf/2608.27171v1
+
+Cohen–Iwasa–Rautu–Ruskai–Seneta–Zbaganu1993, Theorems4.1/4.2 y Remark4.3, pp220–221, leídos con la prueba de4.2: el coeficiente CLÁSICO es estrictamente menor que uno exactamente para matrices scrambling. El criterio usa solapamiento por cada PAR de columnas;1134 usa una fila común a TODAS las columnas para contracción completa. Coinciden para dos entradas, pero difieren en exclusión n>=3. La obstrucción clásica amplia no es nueva; el recíproco con referencia cuántica no sigue de ese teorema sin el argumento adicional.
+ https://lab.rockefeller.edu/cohenje/assets/file/205CohenIwasaRautuRuskaiSenetaZbaganuRelativeEntropyMappingsStochasticMatricesLAA1993.pdf
+
+Lee–Lu–Makur–Singh, arXiv2606.19859v1, pp1–3: abstract, introducción, contexto, definición del componente común y enunciado de acoplamiento. Trata curvas clásicas multivía; no se leyó su cuerpo de pruebas ni se afirma descartada toda cobertura indirecta. No es por esas páginas un teorema completo Umegaki con referencia cuántica.
+ https://arxiv.org/pdf/2606.19859v1
+
+Buscemi, arXiv1511.08893v2: pp3,9–10, definición de min-entropía y Corollary3 con prueba clásica por minimax. Su equivalencia con degradación usa guessing/min-entropía; no permite sustituirla sin prueba por Umegaki de pares con referencia común. La prueba cuántica posterior sólo se inició, no se leyó íntegra.
+ https://arxiv.org/pdf/1511.08893v2
+
+Hirche–Rouzé–Stilck França, arXiv2011.05949v4, pp6–7 y9: orden completamente menos ruidoso, Lemma2.1 con prueba sobre referencia clásica y Proposition2.3 enunciado/prueba remitida. Son antecedentes de información lateral y equivalencias de orden; la prueba remitida no se auditó aquí. No se deduce que «complete» implique automáticamente degradación de erasure o el iff1134. No se usa ninguna pregunta histórica como certificada abierta hoy.
+ https://arxiv.org/pdf/2011.05949v4
+
+La cobertura bibliográfica que sí está acreditada obliga a reconocer todos esos mecanismos previos. La ausencia de un teorema literalmente cubriente en esta selección no demuestra originalidad mundial, ni necesidad de un artículo separado. El resultado puede presentarse técnicamente como una extensión de soporte del estudio existente, con atribuciones y alcance explícitos.
+
+8. Controles propios, errores y auditabilidad
+
+EXACT1136:15 casos de soporte propio para n2..6 y todos sus tamaños m, con pesos racionales; verifican Gram, solución de la inversa restringida, norma exacta, Schur en0 y en epsilon t. Cinco casos de soporte completo verifican el déficit n^2/sum(1/w). Son controles de la orientación de las identidades, no pruebas universales por muestreo; la demostración general está en las secciones3–5.
+
+INTERVAL1136: nueve casos con aritmética entera dirigida a1024bits y600 términos. La biblioteca procede de1077 sin cambio, SHA6888e17a28c57aee3a7d99f21c10aad3ccc2115493ced999fcb97fd097fbb853; no es una implementación independiente. Certifica logaritmos y raíces para D_input, y cotas Bernoulli usando p_L,p_U,q_L,q_U racionales. Cuando p_L>q_U, KL es creciente en p y decreciente en q, de modo que KL(p_L||q_U) es un lower riguroso del test. Para el ejemplo asimétrico3, la cota clásica Dobrushin es exactamente3/4. Los lower certificados de retención son0.886018949443... en k64 y0.932848075402... en k128, ambos mayores que3/4. Los casos con bounds menores se conservan; no se ajustó k para ocultarlos. Estos certificados no se infieren de las cifras de1134 ni de un solver de eigenvalores.
+
+AMBIENT1136: diez casos predefinidos a160dígitos, todos con una rotación unitaria compleja racional de R. Incluyen n2, filas nulas, erasure, pesos10^-40, reemplazo marcado, soporte completo, ciclo4 y exclusión16. Un caso reconstruye matrices completas9x9, logaritmos y efecto, con coincidencias inferiores a10^-110. Los demás usan matrices físicas completas de cada bloque; nunca se normaliza un bloque para eliminar masa. Todos pasan DPI y el upper1-d. Los controles con otra regularización se rotulan como falsadores de extrapolación, no como inputs1134. No hay búsqueda aleatoria ni resampling.
+
+Errores propios preservados: dos lecturas PDF fallaron por salida cp1252; se guardó el lector inicial y se corrigió UTF-8, sin cambiar fuentes. Una comprobación de suma exactamente uno falló después de convertir el canal de exclusión16 a mpmath; se corrigió para sumar las fracciones racionales ANTES de convertir. El JSON de fallo con nueve casos ya completados se conserva. La primera versión de ese script se reconstruye desde el cambio de una sola línea y se etiqueta RECONSTRUIDA, no como captura original. Se conserva el residuo numérico negativo de una divergencia exactamente nula, un fallo de lectura de wildcard literal y un truncamiento de salida bibliográfica; Cohen p11 se releyó separadamente. Ningún error se elimina ni se interpreta como prueba de fallo del teorema.
+
+9. Afirmaciones disponibles y límites finales
+
+Disponibles: iff para eta_c Umegaki y canales clásicos finitos n>=2; upper conocido1-d; lower CQ separable y R=n con marginal A uniforme; límite de las tres divergencias ln2; corolario propio uniforme sobre K con n fijo y efectos E(K,k); test binario controlado con denominador cuántico; tratamiento de filas nulas y soporte propio; selección de la rama mínima correcta en la escala sellada; encierros racionales que justifican el límite y dos separaciones finitas certificadas; explicación del fallo de1134-first y del arreglo de la fila marcada sin postselección.
+
+No disponibles: eta_c=1-d para todo K; minimalidad de R; maximizador o efecto fijo universal; cualquier regularización equivalente; selector de máximo solapamiento válido para todo k; uniformidad en n; eficacia robusta o gratuita; MI ordinaria/capacidad; exactitud para cada Petz; prioridad, primera resolución histórica o barrido bibliográfico exhaustivo. Los12 controles originales no se convierten retroactivamente en certificados de intervalos.
+
+La entrega sólo es terminal después de verificar de nuevo los siete archivos de entrada y la igualdad recursiva C/D de todos los archivos de auditoría, incluido el recibo de cierre. Se conserva C por el requisito expreso de copias idénticas; nada queda únicamente allí.

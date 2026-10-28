@@ -1,0 +1,364 @@
+AUDITORÍA TÉCNICA 1157 — candidato CQ1152
+Fecha: 28 de octubre de 2026. Informe sin nota, voto ni evaluación de manuscrito.
+
+1. Dictamen y procedencia
+
+El criterio principal resiste esta auditoría y tiene una demostración reconstruida:
+para un canal CQ finito N con salidas tau_i, n>=2, el coeficiente completo de
+Umegaki para pares con la misma referencia es uno si y sólo si la intersección
+de los soportes de todas las tau_i es cero. Basta referencia de dimensión n,
+preparaciones CQ fieles con marginal A uniforme y una medición binaria conjunta
+dependiente del canal y de k. Los tres numeradores/denominador considerados
+D_in, D_out y D_bin convergen a ln(2). Se trata de un supremo; no de una igualdad
+finita ni de una afirmación de alcanzabilidad con un par interior fijo.
+
+Hay una corrección matemática concreta en PROOF1152: es falsa su explicación
+de que, para dos estados puros distintos que se aproximan, el menor autovalor
+positivo del Gram blanqueado tiende a cero. Para n=2 ese Gram es I_B. La pérdida
+de uniformidad proviene aquí del condicionamiento de S y de A^{-1}Z. La
+corrección no afecta al argumento para cada canal fijo. También hay una laguna
+de documentación: no se identificó en los 22 archivos un recibo del proceso
+simbólico detenido, aunque el texto afirma que se conserva. Sí se conserva su
+script y la narración; el posterior fallo de igualdad estructural tiene traceback
+y ha sido reproducido. No se debe presentar el recibo ausente como verificado.
+
+Los controles propios añaden un límite operacional: un efecto de la construcción
+tiene transpuesta parcial no positiva. La separabilidad de los estados de entrada
+y salida no convierte esa medición conjunta en LOCC o lectura local controlada.
+El candidato no afirma tal implementación; esta restricción evita importar una
+propiedad de la construcción clásica anterior.
+
+Esta es una auditoría técnica incremental, con contexto 942/1077/1115/1136 y
+participación previa reutilizados, filesystem compartido y conocimiento de los
+resultados de ROOT. No es fresca, ciega ni de independencia atestada. La
+configuración solicitada es GPT-6 Astra xhigh; identidad, modelo y esfuerzo
+efectivos no han sido atestados. No hubo delegación, agentes nuevos ni contacto
+con autores. No se leyó ni evaluó para nota un manuscrito 1147/1155/1148; tampoco
+se cambió Git, estado raíz, publicaciones ni otros dossiers.
+
+Entrada única congelada: C:/Trabajo/airr/2026-10-28_cq1152 y su copia D.
+MANIFEST1152 SHA256:
+3157deb948f01e9915bd124037765be5533c5ccd19f61597642f4d994279ec11
+PROOF1152 SHA256:
+d700ab5edf4e2b20e2c27a55aa9450cd740aef8473d0a86dabaf0ee99ddb1133
+Se verificaron inicialmente los 21 payloads y el manifiesto, inventario exacto,
+tamaños, hashes y coincidencia C/D. La verificación final y el cierre archivado
+son registros separados. Los originales permanecen intactos.
+
+2. Definición, dirección previa y dominio
+
+Se usa D(rho||sigma)=Tr rho(log rho-log sigma), log natural, para estados
+normalizados fieles y denominador estrictamente positivo y finito. El supremo
+incluye cualquier referencia finita y exige rho_R=sigma_R. No es el coeficiente
+con referencia producto, una constante con sigma fijada, ni el cociente de
+información mutua ordinaria. La referencia común r_k varía con k.
+
+Comprimir B a supp S, S=sum_i tau_i, es obligatorio antes de invertir S o G.
+S es estrictamente positivo allí y Tr S=n. No se requiere tau_i>0 ni igualdad
+de rangos. Los soportes se intersecan como subespacios, no como intersección de
+listas de elementos no nulos en una base.
+
+alpha_+=max{Tr X: 0<=X<=tau_i para todo i}. El máximo existe por compacidad.
+Un X positivo no nulo tiene soporte en cada soporte tau_i. Recíprocamente, si
+v pertenece a todos, t vv*<=tau_i para todo i tomando t>0 suficientemente pequeño:
+para v unitario basta t<=min_i 1/<v,tau_i^+v>. Por tanto alpha_+>0 equivale a
+intersección no nula. Para 0<alpha_+<1, N es la mezcla de un reemplazo positivo
+de peso alpha_+ y otro canal CQ; convexidad conjunta y DPI, con referencias
+iguales, dan eta_c^D<=1-alpha_+<1. Si alpha_+=1 todas las salidas coinciden y
+el coeficiente es cero. Esta dirección y las definiciones son antecedentes.
+
+Si N se considera sobre M_n mediante N(X)=sum_i X_ii tau_i, la desfasación
+de entrada deja intacta la salida, conserva la marginal R y disminuye el
+denominador. El supremo para ese canal CQ coincide con el restringido a pares
+CQ. Esto no convierte el criterio en un teorema para canales de entrada
+cuántica arbitrarios que no tengan esa forma.
+
+3. Factorización, rangos y la inversa correcta
+
+Sean f=(1,...,1)/sqrt(n), F=ff*, P=I-F,
+psi_i=sqrt(n/(n-1))(e_i-ones/n), Pi_i=psi_i psi_i*.
+Los psi_i son unitarios, suman cero y su única relación escalar es la suma.
+En P R tensor B:
+ T=sum_i Pi_i tensor tau_i,
+ Z=sum_i psi_i tensor tau_i,
+ G=I_P tensor S.
+Cada Pi_i<=I_P, por lo que 0<=T<=G. No se afirma que T sea invertible.
+
+Sobre H=direct_sum_i supp(tau_i), defínanse
+ W(v_i)=sum_i psi_i tensor sqrt(tau_i)v_i,
+ U(v_i)=sum_i sqrt(tau_i)v_i.
+Entonces T=WW*, Z=WU*, S=UU*. Aplicando funcionales al factor simplex,
+Wv=0 equivale a que todos sqrt(tau_i)v_i sean el mismo vector w.
+Este w pertenece a todos los soportes, y cada v_i queda determinado por w
+mediante la inversa restringida. Así dim ker W=dim intersección de soportes.
+En particular, W es inyectivo exactamente cuando esa intersección es cero.
+No se necesita que W sea sobreyectivo: puede sobrar un núcleo en P R tensor B.
+Con intersección cero,
+ W*(WW*)^+W=I_H,
+ Z*T^+Z=U U*=S,
+y range Z está contenido en range T.
+
+El argumento también prueba que, con intersección no nula, el defecto
+S-Z*T^+Z=U P_{ker W} U* es positivo no nulo: sobre ker W, Uv=nw.
+Los controles exactos propios incluyen rangos mixtos 1/2/1, salidas repetidas,
+un núcleo de T de dimensión 3 y un caso con intersección de dimensión 1.
+No apareció una excepción por complejidad de coordenadas o multiplicidades.
+
+La identidad después de blanquear no se obtiene aplicando una regla falsa
+de congruencia a la pseudoinversa. Se reemplaza W por G^{-1/2}W, todavía
+inyectivo. Para T0=G^{-1/2}TG^{-1/2}, Z0=G^{-1/2}Z, se obtiene de nuevo
+ Z0*T0^+Z0=S, range Z0 subset range T0, 0<=T0<=I.
+Todas estas son identidades sobre el soporte comprimido correcto.
+
+4. Preparación, fidelidad y cálculo del denominador
+
+Para k entero>=max(n,2), beta=1/(4nk), delta=2^{-k}, epsilon=beta delta,
+alpha=1/n-(n-2)epsilon-beta y c²=alpha beta(1-delta), se toma
+ s_i^+/-=alpha Pi_i+epsilon(P-Pi_i)+beta F
+          +/-c(psi_i f*+f psi_i*).
+alpha está acotado inferiormente por una constante positiva dependiente de n.
+Cada bloque tiene traza 1/n. Sus dos autovalores del plano psi_i,f son h,l>0,
+con h+l=alpha+beta y hl=alpha beta delta; los otros n-2 autovalores son epsilon.
+Para n=2 no existe ese sector adicional, y no se debe introducir una falsa
+condición sobre él. El denominador no se altera por normalizar por separado
+un bloque: los bloques subnormalizados se suman tal como están.
+
+Sum_i s_i^+=sum_i s_i^-=r_k,
+ r_k=(1-1/(4k))P/(n-1)+(1/(4k))F.
+La marginal clásica A es I/n. Las entradas son estados CQ normalizados fieles
+y separables. Cada salida sum_i s_i^+/- tensor tau_i sigue siendo separable.
+El denominador exacto, en la orientación +||-, es
+ D_in=4n c² log(h/l)/(h-l).
+Como h~1/n, l~beta delta y log(h/l)=k ln2+ln(4k)+o(1), mientras
+4n c²/(h-l)~1/k, resulta D_in->ln2. Es positivo y finito en cada k.
+El autovalor menor de toda la entrada es l<=epsilon y su condición es
+h/l~4k2^k. La distancia de traza entre entradas es 2nc~1/sqrt(k).
+No se está tomando un límite con suelo espectral fijo.
+
+5. Resolvente acotado a canal fijo y salida
+
+En el orden (P R tensor B) direct_sum (f tensor B), la salida es
+ M_+/-=[[A,+/-cZ],[+/-cZ*,beta S]],
+ A=alpha T+epsilon(G-T)>0.
+Sea Be=Z*A^{-1}Z. En el soporte positivo de T0, mu pertenece a (0,1], y
+el resolvente relevante es [alpha mu+epsilon(1-mu)]^{-1}. Los vectores Z0
+no tienen componente en ker T0. De ahí Be<=S/alpha, sin invertir T en su núcleo.
+
+Para hacer explícita la dependencia escondida en O(epsilon), fije el canal,
+mu_*=menor autovalor positivo de T0 y a0<=alpha. Son constantes positivas.
+Se puede tomar
+ K1=||G^{-1/2}|| ||Z0||/(a0 mu_*),
+ K2=||Z0||²/(a0² mu_*²).
+Entonces ||A^{-1}Z||<=K1 y
+ 0<=S/alpha-Be,  ||S/alpha-Be||<=K2 epsilon.
+La segunda desigualdad se obtiene restando los dos resolventes escalares,
+o derivando respecto de epsilon con alpha fijado. Estas cotas son uniformes
+en alpha>=a0 para el canal fijo, por lo que permiten alpha=alpha(k).
+No hay un paso ilegítimo de inversa singular ni intercambio de límites.
+G^{-1/2}, Z0 y mu_* dependen del canal; no hay uniformidad sobre tau_i.
+
+El Schur complement Q=beta S-c²Be satisface Q>=beta delta S>0.
+Así M_- es fiel sobre R tensor supp S; M_+ es su conjugado por diag(I,-I).
+Su traza total es uno. El término en ker T se regulariza por epsilon G,
+y la acotación del producto A^{-1}Z sigue siendo válida aunque A^{-1} solo
+tenga norma divergente. Los controles ambientales propios verifican este caso.
+
+6. Efecto binario, orientación y límite
+
+Póngase X=cA^{-1}Z, H=[X;I_B], C=(I+X*X)^{-1}, E=HCH*.
+H tiene rango columna completo, por lo que E=E*=E², 0<=E<=I y rango(E)=dim B.
+No hace falta seleccionar una rama de autovectores ni un mínimo global.
+La normalización C no puede eliminarse: HH* no es en general un efecto.
+La orientación necesaria es q=Tr(E M_-), p=Tr(E M_+). Exactamente,
+ H*M_-H=Q,
+ H*M_+H=Q+4c²Be,
+ q=Tr(CQ), p-q=4c²Tr(CBe).
+No se conmuta C con S o Be: las fórmulas sólo usan ciclicidad de la traza.
+
+Con R_e=S/alpha-Be>=0, Q=beta delta S+c²R_e. Las cotas anteriores dan,
+por ejemplo,
+ n beta delta/(1+c²K1²) <= q
+ <= n beta delta+(dim B)c²K2 epsilon.
+Como epsilon=beta delta, c²=O(beta) y C=I+O(beta), se deduce
+ q=n beta delta(1+O(beta)),
+ p-q=4n beta(1+O(beta)+O(delta)).
+Por tanto p~1/k y q~2^{-k}/(4k). El complemento tiene probabilidades 1-p,1-q:
+no se descarta ninguna masa ni hay postselección. El término p log(p/q)
+converge a ln2 y el término del complemento converge a cero. Así
+ D_bin=D(Ber(p)||Ber(q))->ln2.
+El DPI da D_bin<=D_out<=D_in. Esta cadena, con D_in->ln2>0, prueba ambos
+cocientes ->1 y el criterio propuesto. Todo esto mantiene n y tau_i fijos.
+
+Invertir p y q en el numerador binario cambia sustancialmente el resultado;
+su límite es cero en esta escala. Reemplazar E por F tensor I da exactamente
+p=q=n beta y elimina toda señal. El denominador del cociente auditado es
+Umegaki cuántico de la entrada, no una divergencia clásica de su marginal.
+
+7. Ataques propios, hallazgos adversos y límites
+
+7.1 Error del Gram binario y no uniformidad.
+Para tau0=|0><0| y tau1=|(1,t)><(1,t)|/(1+t²), t>0, sea D=tau0-tau1.
+En n=2 se tiene T=G=S y T0=I, mientras
+ J=S^{-1}D=[[1,0],[-2/t,-1]], D S^{-1}D=S.
+Esto refuta literalmente la explicación de frontera del texto sellado.
+Con r=c²/alpha²,
+ h0=Tr[(I+rJ*J)^{-1}S]=2t²(1+r)/[t²(1+r)²+4r],
+ q=beta delta h0, p=beta(4-3delta)h0.
+Para t fijo, h0->2, como exige el teorema. Para t_k=1/k, r~1/(4k),
+h0~2/k y la retención de ESTE efecto tiende a cero. Ello refuta una
+convergencia uniforme de esta construcción sobre canales variables, sin
+afirmar que el coeficiente optimizado de cada uno deje de ser uno.
+Los intervalos propios para k16/64/256 dan aproximadamente
+0.04489322, 0.01384651 y 0.00375656. La preparación sigue siendo válida.
+
+7.2 Certificado finito complejo y distinción frente a traza.
+Con tau1 puro proporcional a (1,2i/3), n=2,k=16, las probabilidades exactas son
+ p=7696491479061/142416973893184,
+ q=29360121/142416973893184.
+La matriz de salida es positiva por cuatro menores principales racionales
+positivos; E es exactamente un proyector de rango2. Los intervalos enteros
+certifican retención entre 0.6619961747743801 y 0.6619961747743802.
+Para k64/128 se certifican aproximadamente 0.8663709517061761 y
+0.9222164456553498. Son pruebas finitas, no extrapolaciones de floats.
+
+En un canal binario CQ, una diferencia de bloques con referencia igual es
+(Delta,-Delta), y su salida es Delta tensor (tau0-tau1). Por multiplicatividad
+de la norma traza, eta_c^Tr=||tau0-tau1||_1/2. En el ejemplo vale 2/sqrt(13),
+aproximadamente 0.5547001962252291. El caso k16 ya supera estrictamente ese
+número. alpha_H=1-eta_c^Tr es positivo, mientras alpha_+=0. Así queda refutado
+el traslado del upper Hermitiano/de traza a Umegaki. No se contradicen los
+antecedentes: la cancelación de referencia para diferencias no se extiende
+sin más a rho-gamma sigma con gamma distinto de uno.
+
+7.3 Medición conjunta, no certificado LOCC.
+En ese mismo caso exacto, det(E^{T_B}) es
+ -379198357755215264698242663046681136177401036800 /
+ 24520375593929253018522589845522864250466367834721 <0.
+La base P,f en R difiere sólo por un unitario local de la base física; el
+resultado NPT es invariante. Este efecto no es separable ni implementable por
+LOCC. No se prueba que TODO efecto que alcance el límite deba ser no local;
+se prueba que la construcción auditada no permite afirmar lectura LOCC general.
+
+7.4 Intersección no cero y regularización alternativa.
+El control propio con tres estados rango2 que comparten una línea tiene
+defecto S-Z*T^+Z=diag(0,0,3/2), y admite reemplazo positivo de peso al menos1/2.
+En k64 la retención cuántica es aproximadamente0.487094 y la de este efecto
+0.0100247: no es un testigo del teorema de intersección cero. La salida
+idéntica del input sellado da exactamente cero; ese adverso se conserva.
+En otro control n3 de rangos1/2/1, cambiar epsilon de beta delta a beta/k
+reduce la retención binaria en k64 de0.853688 a0.162117. No demuestra por sí
+solo un límite universal para escalas alternativas; sí impide borrar la
+regularización específica sin nueva prueba. No se alteró el candidato.
+
+7.5 Recursos y alcance.
+La familia es separable, pero requiere estado de referencia cuántico, inversas
+y efecto dependientes de tau_i y k, preparación con condición~4k2^k y resolución
+de probabilidades q exponencialmente pequeñas. No hay control uniforme de
+ángulos/menor autovalor de S, ni demostración de estabilidad experimental.
+No es capacidad, transmisión perfecta, robustez, coeficiente con referencia
+común fija, información mutua ordinaria, fórmula eta=1-alpha_+ en general,
+ni igualdad para todos los generadores Petz. No se deriva un teorema para
+canales cuánticos arbitrarios. La demostración usa sólo Umegaki y su DPI.
+
+8. Reproducción y calidad de la evidencia
+
+Los scripts sellados se copiaron a carpetas propias antes de ejecutarse.
+No se ejecutaron selladores, generadores de cambio ni archivadores del input.
+Replay semántico idéntico, salvo la fecha UTC: check-first1152 (9casos),
+check1152 (12casos), exact1152 (4casos) y negative1152 (2adversos).
+Los 9casos primeros son subconjunto del control12, no21 casos independientes.
+Se reprodujo además el AssertionError estructural de exact-second1152.
+No se volvió a ejecutar el algoritmo Moore-Penrose lento detenido.
+
+Evidencia nueva:
+- EXACT_OWN1157: seis casos de rangos/complejos y una matriz finita exacta;
+  identidad binaria simbólica, menores de Sylvester y NPT del efecto.
+- AMBIENT_OWN1157: siete controles deterministas a170dígitos, construidos
+  directamente en R tensor B con base Helmert explícita. Incluyen compresión
+  de S singular, núcleo de T, rangos mezclados, duplicados, soporte común y
+  epsilon alternativa. Error máximo observado inferior a4e-152. No intervalos.
+- INTERVAL_OWN1157: siete casos con aritmética entera de intervalos dirigidos
+  a1024bits, logs por600términos de atanh con resto explícito. Incluye tres
+  positivos, tres canales variables y el adverso original casi idéntico.
+  El último certifica aproximadamente1.692852624924708e-37 en k64.
+  La librería propia1077 se reutiliza con hash; no se presenta como verificación
+  independiente de sus primitivas. Los extremos enteros, no los decimales
+  redondeados que pueden coincidir visualmente, constituyen el encierro.
+
+Incidente propio conservado: la primera escritura de exact_own1157 contenía
+un paréntesis faltante y no llegó a ejecutar matemática. Se preserva ese archivo
+y el error; la corrección fue sólo sintáctica. No hubo cambio de casos, búsqueda
+selectiva de puntuación ni reinicio para favorecer resultados. Los errores
+originales y adversos permanecen visibles. Un resultado de lectura combinado
+se truncó; las páginas relevantes se volvieron a pedir por separado.
+
+9. Antecedentes primarios y cobertura real
+
+Se conserva READINGS1157.json con versiones, hashes, páginas efectivamente
+leídas y límites. Los PDF se procesaron en memoria, sin archivo/caché persistente
+de corpus ajeno. Las búsquedas fueron dirigidas, no exhaustivas; resultados
+secundarios, reseñas automáticas y páginas propias no se usan como validación.
+
+George--Hirche--Nuradha--Wilde, arXiv2503.22823v3:
+https://arxiv.org/pdf/2503.22823v3
+Se leyeron Definition7/Eq3.25, Definitions11-12, Proposition30 y31 con pruebas,
+Corollary7 con prueba, y Proposition34/Remarks8-9/Corollary10 con pruebas,
+además de las páginas enumeradas en el registro. alpha_H CQ es un máximo
+sobre X Hermitiano, no X positivo; su identificación binaria con distancia de
+traza es previa. alpha_+ restringe X>=0. Corollary7 usa la familia integral
+hockey-stick que allí define; no autoriza identificar todos los f-divergences
+de Petz. Las definiciones, el upper positivo y el comparator de traza están
+cubiertos. Los pasajes leídos no contienen el lower CQ de intersección cero.
+
+Hirche et al., arXiv2608.27171v1:
+https://arxiv.org/pdf/2608.27171v1
+Lectura nueva pp8-11: definiciones y dominio de denominadores, Lemmas1-3,
+Propositions1-2 y prueba del upper por reemplazo. Esta fuente cubre de manera
+directa la dirección fácil del criterio. Una cota superior trivial cuando
+alpha_+=0 no prueba la existencia del testigo que satura uno. No se convierte
+su etiqueta binaria de hipótesis en restricción a dos símbolos de entrada.
+
+Hirche, arXiv2610.03706v1:
+https://arxiv.org/pdf/2610.03706v1
+Se leyó abstract/introducción y pp8-11,13-14: restricciones de observables,
+órdenes completos, enunciado Theorem3.2 y su demostración local, y
+Proposition3.5 con prueba completa del bloque coherente y su integral.
+La parte de Theorem3.2 remitida a AppendixA.1 NO se ha auditado. El marco de
+órdenes y la realización coherente son antecedentes relevantes, pero no
+aparece en esos pasajes el iff de soportes CQ ni se ha identificado una
+deducción inmediata que sustituya la construcción aquí examinada. No se leyó
+la totalidad del artículo ni se atribuye una ausencia global al documento.
+
+Se reutiliza explícitamente la lectura1136 de Cohen et al.1993, Theorem4.2 y
+prueba/Remark4.3, y los registros de órdenes/degradación de ese dossier.
+El criterio ordinario clásico de scrambling trata solapamiento de pares de
+columnas y no establece este coeficiente con referencia cuántica. La separación
+de definiciones evita una falsa aplicación, pero NO prueba novedad histórica.
+No se redemuestra ni se reclama como nuevo el Doeblin clásico/cuántico, simplex,
+factorización de Gram, complemento de Schur, proyector de grafo, DPI o ln2 de
+la preparación heredada.
+
+No se encontró en los pasajes primarios realmente leídos un teorema que cubra
+literalmente la nueva dirección CQ. Esto deja prioridad/precedencia ABIERTA:
+no es un certificado de novedad mundial, ni una justificación de artículo
+independiente. La aportación matemática auditada es la combinación concreta
+de la factorización inyectiva y el efecto de grafo para estas salidas, utilizando
+la familia anterior. Es una extensión conectada, no invención independiente.
+
+10. Afirmaciones utilizables y no utilizables
+
+Utilizables tras corregir la frase de frontera y la procedencia del recibo:
+el iff CQ finito para Umegaki completo; referencia n y marginal A uniforme;
+fidelidad en cada k y compresión B; identidad cuadrática y manejo de ker T;
+proyector binario conjunto normalizado; orientación +||-; límites de los tres
+D a ln2 para canal fijo; distinción alpha_+/alpha_H y ejemplo finito certificado.
+
+No listas: uniformidad sobre salidas/ángulos, relato de Gram binario degenerado,
+recibo de proceso no localizado, medición LOCC general, efecto fijo independiente
+de k, escalas epsilon arbitrarias, robustez/floor espectral, all-Petz, capacidad,
+MI ordinaria, fórmula completa1-alpha_+ ni canales generales. Prioridad y mérito
+editorial no quedan certificados. No se asigna ni recomienda nota alguna.
+
+El cierre terminal sólo procede después de INPUT_FINAL1157, manifiesto y
+verificación de igualdad integral C/D. CLOSURE1157 registra esa comprobación;
+su exclusión del manifiesto evita una autorreferencia de hashes.
