@@ -1,0 +1,1 @@
+Manuscript and own supplements CC BY4.0; catalogue metadata CC0. Author Lluis Eriksson. External cited sources retain their own licenses. Preserve exactversion and complete assessment context. See ../LICENSES.json.

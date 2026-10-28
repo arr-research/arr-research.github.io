@@ -1,0 +1,139 @@
+\section{A support criterion for arbitrary classical channels}\label{sec:support}
+The symmetric family is not required for the boundary value one. We now let $K=(K(y\mid i))$ be any finite column-stochastic matrix with $n\geq2$ inputs. Its quantum extension first dephases $A$ and retains the same finite quantum reference as before. Put
+\[
+ d(K)=\sum_y\min_i K(y\mid i).
+\]
+This is the classical Doeblin common-component coefficient. The decomposition giving the upper bound below is prior~\cite{GHNW,HGNW}; the converse is the issue addressed here.
+
+\begin{theorem}[Strict complete contraction and common support]\label{thm:support}
+For every such $K$, with the faithful equal-reference Umegaki domain of~\eqref{eq:complete},
+\[
+ \eta_D^c(K)<1\quad\Longleftrightarrow\quad d(K)>0.
+\]
+Equivalently, $\eta_D^c(K)=1$ exactly when each nonzero output row has a zero entry. The same criterion holds for $\eta_{D,2\mathrm m}^c(K)$, whose denominator remains quantum. When $d(K)=0$, dimension $n$ of the reference and separable CQ hypotheses with uniform classical marginal suffice. The hypotheses can be chosen independently of $K$: for fixed $n$, their input, output and binary-measured relative entropies tend to $\log2$, uniformly over all finite $K$ with $n$ inputs and $d(K)=0$. The output measurement is allowed to depend on $K$ and the preparation parameter.
+\end{theorem}
+
+A common row of positive entries is a stronger support condition than pairwise column overlap. The latter characterizes strict \emph{ordinary} relative-entropy contraction through scrambling~\cite[Theorems~4.1--4.2]{Cohen}. Thus the theorem distinguishes two support tests, rather than claiming a new definition of complete contraction or of Doeblin minorization. For $n=2$ the tests coincide. No claim of strict quantum-reference enhancement is made for channels whose ordinary coefficient is already one.
+
+\subsection{The known upper and the proper-support inverse}
+If $0<d<1$, set $a_y=\min_iK(y\mid i)$ and write
+\[
+ K=dQ+(1-d)L,\qquad Q(y\mid i)=a_y/d,
+\]
+where $L$ is stochastic and $Q$ is replacement. Equal reference marginals give $Q\rho=Q\sigma$. Joint convexity and data processing imply
+\begin{equation}\label{eq:doeblin-upper}
+ D(K\rho\Vert K\sigma)\leq(1-d)D(L\rho\Vert L\sigma)
+ \leq(1-d)D(\rho\Vert\sigma).
+\end{equation}
+For $d=1$, $K$ itself is replacement and the coefficient is zero. Consequently $d>0$ implies strict contraction for every finite reference, including the binary-measured coefficient. General quantum inputs reduce to CQ by dephasing, as in Section~2.
+
+For the converse use exactly the hypotheses~\eqref{eq:blocks} and scale~\eqref{eq:scaling}; these also define valid states for $n=2$, with no inactive input modes. Their construction and their input divergence do not depend on $K$. The input calculation in Theorem~\ref{thm:fixed} proves $D_i\to\log2$ also for $n=2$; the exclusion-specific output calculation is not needed.
+
+Discard an identically zero output row only as a common null support. If $d=0$, every remaining row $w_i=K(y\mid i)$ has a proper support $S$, with $1\leq m=|S|\leq n-1$. Write
+\[
+ t=\sum_iw_i>0,\quad V=\operatorname{span}\{\psi_i:i\in S\},\quad
+ T=\sum_iw_i\Pi_i,\quad z=\sum_iw_i\psi_i.
+\]
+All inverses involving $T$ below are restricted to $V$.
+\begin{lemma}\label{lem:support-inverse}
+The space $V$ has dimension $m$, $T|_V>0$, and
+\[
+ z^*T_V^{-1}z=t,\qquad
+ \|T_V^{-1}z\|^2=\frac{m(n-1)}{n-m}\leq(n-1)^2.
+\]
+\end{lemma}
+\begin{proof}
+Let $B$ have columns $\psi_i$, $i\in S$, and $W=\diag(w_i:i\in S)>0$. The Gram matrix is
+\[
+ G=B^*B=\frac{nI_m-\mathbf1_m\mathbf1_m^*}{n-1}>0.
+\]
+Its eigenvalue on $\mathbf1_m$ is $(n-m)/(n-1)$, and its other eigenvalues are $n/(n-1)$. Thus $B$ has full column rank. Since $T=BWB^*$ and $z=BW\mathbf1_m$, the vector $v=BG^{-1}\mathbf1_m$ satisfies $Tv=z$. It follows that $z^*v=t$ and $\|v\|^2=\mathbf1_m^*G^{-1}\mathbf1_m=m(n-1)/(n-m)$. In particular this norm bound has no reciprocal minimum weight.
+\end{proof}
+
+\subsection{A controlled eigenvalue, with bounds independent of the row}
+On $V\oplus\mathbb Cf$, the minus output block is
+\[
+ M_- = \begin{pmatrix}A&-g_y\\-g_y^*&b\end{pmatrix},\quad
+ A=(\alpha-\eps)T+\eps t I_V,\quad g_y=cz,\quad b=\beta t.
+\]
+On $P\ominus V$, both output blocks equal $\eps t I$. These common modes remain in the physical state. Since $T\leq tI_V$, we have $A\geq\alpha T$ and $A>\eps t I_V$. Also $\alpha-\eps>0$ for~\eqref{eq:scaling}.
+
+For $0\leq x\leq\eps t$, define the Schur function
+\[
+ H(x)=b-x-g_y^*(A-xI_V)^{-1}g_y.
+\]
+Lemma~\ref{lem:support-inverse} yields
+\begin{align*}
+ H(0)&\geq\beta t\delta>0,\\
+ H(\eps t)&=-\frac{t\beta\eps(1-\delta)}{\alpha-\eps}<0,\\
+ H'(x)&=-1-\|(A-xI_V)^{-1}g_y\|^2<0.
+\end{align*}
+There is a unique root $\ell_y\in(0,\eps t)$. Interlacing places the other active eigenvalues above $\eps t$; inactive eigenvalues equal $\eps t$. Therefore $\ell_y$ is the unique global minimum eigenvalue of this nonzero output block for the stated scale. This conclusion is proved here, rather than inferred from a numerical selector.
+
+The operators $A-xI_V$ and $T$ commute, and
+\[
+ A-xI_V=(\alpha-\eps)T+(\eps t-x)I_V.
+\]
+Consequently
+\[
+ \|(A-xI_V)^{-1}g_y\|^2\leq C_{nk},\qquad
+ C_{nk}=\frac{c^2(n-1)^2}{(\alpha-\eps)^2}.
+\]
+Integrating $-H'$ from zero to $\ell_y$ gives
+\begin{equation}\label{eq:ell-bound}
+ \frac{\beta t\delta}{1+C_{nk}}\leq\ell_y<\beta t\delta.
+\end{equation}
+For a normalized minimum eigenvector $u_y=(x_y,s_y)$ of $M_-$, with $s_y>0$, the eigenvalue equation gives
+\[
+ x_y=(A-\ell_y I_V)^{-1}g_y s_y,\qquad
+ \frac1{1+C_{nk}}\leq s_y^2\leq1.
+\]
+These estimates are independent of $S$, the positive row weights and the number of output rows. They do not assert a well-conditioned eigenvector computation.
+
+\subsection{One binary readout and the uniform limit}
+Choose $E_y=u_yu_y^*$ on $V\oplus\mathbb Cf$, extended by zero on the inactive subspace, and measure $E=\diag_yE_y$, $I-E$. This is a two-outcome measurement implemented by classical feedforward to a reference measurement. It uses the known hypotheses and $K$, not the unknown sign. For the orientation plus versus minus,
+\[
+ q_y=\Tr(E_yM_-)=\ell_y,\qquad
+ p_y-q_y=4s_y^2g_y^*(A-\ell_y I_V)^{-1}g_y
+          =4s_y^2(\beta t-\ell_y).
+\]
+Summing uses only $\sum_yt_y=n$. Thus, with $p=\sum_yp_y$, $q=\sum_yq_y$,
+\begin{align}\label{eq:uniform-pq}
+ q_L=\frac{n\beta\delta}{1+C_{nk}}&\leq q\leq q_U=n\beta\delta,\\
+ p_L=q_L+\frac{4n\beta(1-\delta)}{1+C_{nk}}
+ &\leq p\leq p_U=q_U+4n\beta.\notag
+\end{align}
+The complement probabilities are $1-p$, $1-q$ on the full normalized states. There is no active-subspace normalization or postselection.
+
+At fixed $n$, $C_{nk}=O_n(1/k)$. These scalar bounds imply, uniformly in the channel,
+\[
+ p=k^{-1}(1+O_n(k^{-1})),\qquad
+ q=\frac{2^{-k}}{4k}(1+O_n(k^{-1})).
+\]
+Therefore $\log(p/q)=k\log2+\log4+o(1)$ and $p\log(p/q)\to\log2$, while $(1-p)\log[(1-p)/(1-q)]\to0$. This proves $D_b\to\log2$. The inequalities $D_b\leq D_o\leq D_i$, with $D_i\to\log2$, prove the output limit and both ratios. Data processing supplies the upper bound one, establishing Theorem~\ref{thm:support}.
+
+More explicitly, when $p_L>q_U$, put
+\[
+ L_{nk}=\frac{D(\mathrm{Ber}(p_L)\Vert\mathrm{Ber}(q_U))}{D_i(n,k)},
+\]
+and put $L_{nk}=0$ otherwise. Monotonicity of Bernoulli KL in $p$ and $q$ for $p>q$ gives simultaneously
+\[
+ L_{nk}\leq\frac{D_b(K,k)}{D_i(n,k)}\leq
+ \frac{D_o(K,k)}{D_i(n,k)}\leq1,\qquad L_{nk}\longrightarrow1.
+\]
+Hence the same input preparation works for a sequence $K_k$ with changing supports, weights and finite output cardinalities, provided $n$ is fixed and $d(K_k)=0$. The effects $E_y(K_k,k)$ change with the channel. This is neither a channel-independent effect nor uniformity of measurement precision, computational cost, a spectral floor or growing $n$.
+
+\subsection{A certified asymmetric separation and falsifiers}
+For example, consider the fixed channel
+\[
+ K=\begin{pmatrix}
+ 0&1/3&2/5\\3/4&0&3/5\\1/4&2/3&0
+ \end{pmatrix}.
+\]
+Its Doeblin coefficient is zero, while its classical Dobrushin coefficient is $3/4$; hence its ordinary Umegaki coefficient is at most $3/4$. Directed integer bounds from~\eqref{eq:uniform-pq} certify $D_b/D_i>0.8860189$ at $k=64$ and $D_b/D_i>0.9328480$ at $k=128$. These certificates establish finite separations, not the general theorem.
+
+The rule ``choose the eigenvector of maximal overlap with $f$'' is not a universal finite-$k$ implementation of the minimum eigenprojector. In exclusion with $n=k=16$ it chooses a different branch: the measured ratios are about $0.006905$ for that rule and $0.145103$ for the correct minimum. Both original numerical controls and this falsifier are retained. The proof and readout definition use the minimum established by~\eqref{eq:ell-bound}.
+
+The scale condition is also substantive. In a four-input cycle with two inputs in each output support, replacing $\eps=\beta\delta$ by $\eps=\beta\delta^{1/2}$ changes the measured limiting retention to $1/2$. Replacing it by $\eps=\beta\delta^2$ can instead make a common inactive mode the global minimum; measuring that mode gives zero divergence. These tests do not refute the sealed scale and do not justify an arbitrary small-regularizer substitution.
+
+Finally, the theorem does not give $\eta_D^c=1-d$ away from $d=0$. The binary channel with columns $(0.9,0.1)$ and $(0.2,0.8)$ has complete coefficient $1/2$, whereas $1-d=7/10$. The known upper can be strict. Likewise, appending a marked replacement outcome of mass $0.1$ to a zero-Doeblin channel invalidates measuring a near-$f$ event on every output: that common outcome masks the rare probability. Setting its effect to zero retains its entire mass in the complement and gives a measured limit $0.9\log2$ for this marked example. The failed first protocol remains in the supplement. No formula for a general positive-$d$ optimum, robust communication advantage, capacity or optimal copy complexity is inferred.
