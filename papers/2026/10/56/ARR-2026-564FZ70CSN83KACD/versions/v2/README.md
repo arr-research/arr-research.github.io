@@ -17,3 +17,5 @@ Exact corrected15-page PDF1155 SHA256 5cf3e9a66c6d86063d68b92bb0494bb5186a73506d
 - [Native exact permission handoff](screening/release-handoff1158.json)
 
 These exact own dossiers retain their original manifests and all failures. The1155small delta packet depends on the full1147scientific packet, included here; the scientific controls did not change. External fulltexts/corpora are absent. V1 and its assessment remain immutable and are not current-version votes.
+
+The pending-assessment sentence retained in the frozen manuscript originated before review1148. The public evidence now consists of full1148 on PDF203d... plus limited corrective1156 on PDF5cf3...; this is not a newly repeated full review of the corrected PDF.
