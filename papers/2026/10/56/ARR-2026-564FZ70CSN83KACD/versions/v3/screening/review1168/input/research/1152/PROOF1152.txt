@@ -1,0 +1,132 @@
+CQ1152: candidate extension to classical-input/quantum-output channels
+Root derivation, 2026-10-28. Not yet technically audited or reviewed as a manuscript.
+No scientific-importance score, priority certificate, Lean proof or independent review.
+This is a later candidate, OUTSIDE frozen manuscript1147 and review1148.
+
+SETUP
+Finite CQ channel N(|i><i|)=tau_i, i=1,...,n, n>=2, tau_i density matrices.
+Restrict B to supp S, S=sum_i tau_i, so S>0. Finite dimensions throughout.
+Define a_+=max{Tr X: 0<=X<=tau_i for every i}.
+Then a_+>0 iff intersection_i supp(tau_i) is nonzero:
+any nonzero feasible X has range in that intersection; conversely for nonzero v
+in the intersection, t|v><v|<=tau_i for all i for sufficiently small t>0
+(using each support inverse and finiteness of the family).
+Known prior Doeblin replacement and joint-convexity argument yields eta_c^D<=1-a_+.
+Here eta_c is equal-reference Umegaki contraction; faithful normalized inputs,
+finite positive input denominator, any finite reference, correct channel action.
+
+PROPOSED CRITERION
+eta_c^D(N)=1 iff intersection_i supp(tau_i)={0}.
+The converse witness also uses a binary output effect and reference dimension n,
+separable CQ inputs with a uniform classical marginal. No output commutativity.
+No claim about arbitrary quantum-input channels, fixed resources, uniformity over
+tau_i, capacity, or all Petz generators.
+
+PROOF CANDIDATE FOR THE NEW DIRECTION
+Let f=ones/sqrt(n), F=ff*, P=I-F and
+psi_i=sqrt(n/(n-1)) (e_i-ones/n), Pi_i=psi_i psi_i*.
+On P R tensor B set
+ T=sum_i Pi_i tensor tau_i,
+ Z=sum_i psi_i tensor tau_i (map B -> P R tensor B),
+ G=I_(P R) tensor S.
+We have 0<=T<=G and range Z subset range T.
+
+Key quadratic identity, assuming the common support is zero:
+ Z* T^+ Z = S.
+To see this let domain H=direct_sum_i supp(tau_i), and
+ W(v_i)=sum_i psi_i tensor tau_i^(1/2) v_i,
+ U(v_i)=sum_i tau_i^(1/2) v_i.
+Then T=WW*, Z=WU*, S=UU*.
+The only linear relation among the simplex vectors psi_i is the all-equal one.
+Thus Wv=0 iff all tau_i^(1/2)v_i equal one common vector w.
+If the common support is zero, w=0 and, on the chosen domain, all v_i=0.
+Hence W is injective, W*(WW*)^+ W=I_H, proving the identity.
+The range and identity are independent of the choice of orthonormal P basis.
+
+Take the EXACT sealed preparation from1134/1147:
+ For integers k>=max(n,2),
+ beta=1/(4 n k), delta=2^-k, epsilon=beta delta,
+ alpha=1/n-(n-2)epsilon-beta, c^2=alpha beta (1-delta).
+ s_i^+/-=alpha Pi_i+epsilon(P-Pi_i)+beta F
+           +/- c(psi_i f*+f psi_i*).
+They are strictly positive, trace1/n, have equal total reference r_k, and
+D_in=sum_i D(s_i^+||s_i^-)->ln2 (the already established two-by-two input calculation).
+The output states, ordered P R tensor B then f tensor B, are
+ M_+/-=[[ A, +/-c Z],[+/-c Z*, beta S]],
+ A=alpha T+epsilon(G-T)=(alpha-epsilon)T+epsilon G>0.
+
+Write B_epsilon=Z*A^-1 Z. Since 0<=T<=G,
+ 0<=B_epsilon<=S/alpha.
+Whiten by G: T0=G^-1/2 T G^-1/2, Z0=G^-1/2 Z.
+T0 has fixed finitely many strictly positive eigenvalues on its support;
+range Z0 subset range T0. Its positive eigenvalues lie in(0,1].
+Therefore as epsilon->0 with alpha bounded away from zero,
+ B_epsilon=S/alpha+O(epsilon),
+ ||A^-1 Z||=O(1).
+All constants may depend on the fixed channel! These follow directly by applying
+1/(alpha mu+epsilon(1-mu)) to each positive mu; no inverse on ker T is taken.
+The identity Z0*T0^+Z0=S is equivalently obtained from the same injective
+factorization after replacing W by G^-1/2 W.
+
+Let X=c A^-1 Z and H=[X;I_B]. Use the orthogonal graph projector
+ E=H (I+X*X)^-1 H*.
+It is a binary effect, 0<=E<=I, and depends on N and k. No eigenbranch selector.
+Set q=Tr(E M_-), p=Tr(E M_+), C=(I+X*X)^-1.
+Direct multiplication gives EXACTLY
+ Q=beta S-c^2 B_epsilon,
+ q=Tr(C Q),
+ p-q=4c^2 Tr(C B_epsilon).
+Since B_epsilon<=S/alpha, Q>=beta delta S>0. Conversely the O(epsilon)
+expansion and epsilon=beta delta give
+ Q=beta delta S+O(beta epsilon)=beta delta(S+O(beta)).
+Also X=O(sqrt(beta)), C=I+O(beta). Since Tr S=n,
+ q=n beta delta(1+O(beta)),
+ p-q=4n beta(1+O(beta)+O(delta)),
+ p=(1/k)(1+O(1/k)), q=(2^-k/(4k))(1+O(1/k)).
+Thus D(Ber(p)||Ber(q))->ln2. Data processing sandwiches this binary divergence
+below D(M_+||M_-) and D_in, whose limit is ln2. Both retained ratios tend to1.
+M_- and M_+ are faithful: A>0 and Q>0, and sign change is unitary.
+This proves the candidate converse if all domain/quantifier steps survive audit.
+
+DEPENDENCIES / NOVELTY CHECK
+- Quantum Doeblin positive replacer upper is prior, not a new result.
+  George--Hirche--Nuradha--Wilde2503.22823v3 Eq3.25/Cor7 and
+  conditional2608.27171v1 Proposition2 are relevant. Hermitian alpha differs
+  from positive alpha_+; trace bounds cannot be silently applied to Umegaki.
+- Input simplex family and ln2 limit reused from1134/1147, not independently new.
+- New move here: injective operator-valued simplex Gram factorization and a graph
+  projector instead of output eigenbranch selection. It removes output commutativity.
+- Selected current search and source passages do not certify novelty. A covering
+  prior complete-CQ Umegaki iff theorem defeats the claim of novelty.
+
+DECISIVE BOUNDARIES / FALSIFIERS
+- Identical prepared states have nonzero common support; the channel is a replacer
+  and the complete coefficient is zero, not one.
+- Two distinct nonorthogonal pure states have zero common support. Proposed complete
+  Umegaki coefficient1 is compatible with trace contraction<1: hockey-stick scaled
+  differences do not satisfy the same equal-reference constraint. No trace-to-Umegaki
+  inequality is inferred merely from an equal-reference trace coefficient.
+- No uniformity over prepared states: two distinct pure states approaching equality
+  make the smallest positive whitened Gram eigenvalue vanish. The preparation can
+  stay common but the asymptotic resource threshold and graph effects depend on N.
+- This does NOT prove alpha_+=0 iff eta_c=1 for arbitrary quantum-input channels.
+- A single fixed effect, arbitrary epsilon scaling, condition-number floor, unknown
+  channel or bounded measurement precision are different unproved claims.
+- Fixed finite floating-point controls below are not interval certificates.
+
+CONTROLS
+check-first1152.py and CONTROL-FIRST1152.json preserve the original nine passing
+180-digit ambient cases: two nonorthogonal pure states, three real pure states,
+and three complex pure states, each k16/64/128. All check faithful outputs and
+binary<=quantum-output<=input divergence. None is a model grade.
+check1152.py adds three rank-two noncommuting-output cases (n=d=3) to make12.
+exact1152.py passes four rational/complex linear-solve quadratic checks, including
+nonzero residual for identical full-rank prepared states. The initial Moore-Penrose
+algorithm was deliberately stopped after sustained symbolic computation; its script
+and process receipt are preserved. The next linear-solve structural-equality
+assertion failed; its script and captured traceback remain. Simplified exact
+residual checks then passed, without changing mathematical cases.
+negative1152.py gives exactly zero for identical full-rank preparations. At fixed
+k64 with pure-state angle parameter2^-64 the measured ratio is1.69e-37. Thus the
+fixed-channel asymptotic cannot be read as uniform over prepared states.
+No full review or new PDF was requested for this candidate while1148 remains live.

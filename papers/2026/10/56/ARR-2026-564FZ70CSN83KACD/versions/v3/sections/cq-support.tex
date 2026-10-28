@@ -1,0 +1,186 @@
+\section{Noncommuting prepared outputs and common support}\label{sec:cq}
+The classical output assumption can be removed if the convergence is required for each fixed channel. Let
+\[
+ \mathcal N(X)=\sum_{i=1}^{n}\langle i|X|i\rangle\tau_i,
+ \qquad n\geq2,
+\]
+where the $\tau_i$ are density operators on a finite-dimensional output space. Write $S=\sum_i\tau_i$ and compress the output space to $B=\operatorname{supp}S$, so that $S>0$ on $B$. All inverses below use that compressed space. Define the positive common-component weight
+\[
+ a_+(\mathcal N)=\max\{\Tr X:0\leq X\leq\tau_i\text{ for every }i\}.
+\]
+This is the positive-replacer coefficient, not the optimization over Hermitian, possibly nonpositive, operators in the other quantum Doeblin coefficient of~\cite{GHNW}.
+
+\begin{theorem}\label{thm:cq-support}
+For the finite classical--quantum channel above,
+\[
+ \eta_{\D}^{c}(\mathcal N)=1
+ \quad\Longleftrightarrow\quad
+ \bigcap_{i=1}^{n}\operatorname{supp}\tau_i=\{0\}.
+\]
+If the intersection is nonzero, the known estimate is $\eta_{\D}^{c}(\mathcal N)\leq1-a_+(\mathcal N)<1$. If the intersection is zero, a single family of faithful separable CQ inputs, independent of the prepared states, suffices with reference dimension $n$ and uniform classical marginal. For each fixed channel it admits channel-dependent joint binary effects with
+\[
+ D_i\longrightarrow\log2,\qquad
+ D_o\longrightarrow\log2,\qquad
+ D_b\longrightarrow\log2.
+\]
+The common reference marginal and the effect vary with the preparation parameter. This is a pointwise statement in the prepared states; no uniform resource bound over such states is asserted. The effects are joint measurements on $R\otimes B$ and need not be implementable by local operations and classical communication (LOCC).
+\end{theorem}
+
+\subsection{The known direction and the operator-valued simplex}
+The maximum defining $a_+$ exists by compactness. If a nonzero $X$ is feasible, its range lies in every support. Conversely, a unit vector $v$ in the common support gives $t vv^*\leq\tau_i$ for all $i$ when
+\[
+ 0<t\leq\min_i\langle v,\tau_i^+v\rangle^{-1},
+\]
+where $\tau_i^+$ is its support inverse. Thus $a_+>0$ exactly when the intersection is nonzero. The positive-replacer decomposition, joint convexity and DPI give the stated upper~\cite{GHNW,HGNW}. If $a_+=1$, all prepared states coincide and the coefficient is zero. These facts are prior; the converse below supplies the witness when the upper becomes trivial.
+
+Use $f,F,P,\psi_i,\Pi_i$ from Section~5. On $PR\otimes B$ set
+\[
+ T=\sum_i\Pi_i\otimes\tau_i,\qquad
+ Z=\sum_i\psi_i\otimes\tau_i,\qquad
+ G=I_{PR}\otimes S.
+\]
+Here $Z$ maps $B$ to $PR\otimes B$, $0\leq T\leq G$, and $T$ may have a kernel.
+
+\begin{lemma}\label{lem:cq-gram}
+If the common support is zero, then
+\[
+ \operatorname{ran}Z\subseteq\operatorname{ran}T,
+ \qquad Z^*T^+Z=S.
+\]
+For $T_0=G^{-1/2}TG^{-1/2}$ and $Z_0=G^{-1/2}Z$, the corresponding identities hold with $T_0,Z_0$ in place of $T,Z$, and $0\leq T_0\leq I$.
+\end{lemma}
+\begin{proof}
+On $\mathcal H=\bigoplus_i\operatorname{supp}\tau_i$ define
+\[
+ W(v_i)=\sum_i\psi_i\otimes\sqrt{\tau_i}v_i,
+ \qquad U(v_i)=\sum_i\sqrt{\tau_i}v_i.
+\]
+Then $T=WW^*$, $Z=WU^*$ and $S=UU^*$. The only linear relation among the simplex vectors has all coefficients equal. Applying its coordinate functionals shows that $W(v_i)=0$ exactly when all $\sqrt{\tau_i}v_i$ are one common vector $w$. Such a vector belongs to every support. With zero intersection it is zero, hence all $v_i=0$ on their restricted domains. Thus $W$ is injective, although it need not be onto, and
+\[
+ W^*(WW^*)^+W=I_{\mathcal H}.
+\]
+This gives $Z^*T^+Z=UU^*=S$ and the range inclusion. For the whitened statement apply the same argument to $G^{-1/2}W$, which is still injective. No general congruence rule for a Moore--Penrose inverse is used.
+\end{proof}
+If the intersection is nonzero, $\ker W$ consists of the corresponding common vectors and $U(v_i)=nw$ there. Consequently $S-Z^*T^+Z=U P_{\ker W}U^*$ is positive and nonzero. The zero-intersection hypothesis is substantive.
+
+\subsection{Faithful inputs and a resolvent on the correct range}
+For integers $k\geq\max(n,2)$ take
+\[
+ \beta=\frac1{4nk},\quad\delta=2^{-k},\quad\eps=\beta\delta,
+ \quad\alpha=\frac1n-(n-2)\eps-\beta,
+ \quad c^2=\alpha\beta(1-\delta),
+\]
+and the blocks $s_i^\pm$ of~\eqref{eq:blocks}. The same formula also works for $n=2$, where the inactive sector is absent. In this range $\alpha\geq1/(2n)$. Each block has trace $1/n$, active determinant $\alpha\beta\delta>0$ and $n-2$ common inactive eigenvalues $\eps$. The equal reference marginal is
+\[
+ r_k=\frac{1-1/(4k)}{n-1}P+\frac1{4k}F.
+\]
+The two active input eigenvalues satisfy $h+l=\alpha+\beta$, $hl=\alpha\beta\delta$, and
+\[
+ D_i=4nc^2\frac{\log(h/l)}{h-l}\longrightarrow\log2.
+\]
+Indeed $h\sim1/n$, $l\sim\beta\delta$, the logarithm equals $k\log2+\log(4k)+o(1)$, and the prefactor is asymptotic to $1/k$. This calculation includes $n=2$ directly and does not import a theorem restricted to larger alphabets.
+
+In the decomposition $(PR\otimes B)\oplus(f\otimes B)$ the outputs are
+\[
+ M_\pm=\begin{pmatrix}A&\pm cZ\\\pm cZ^*&\beta S\end{pmatrix},
+ \qquad A=\alpha T+\eps(G-T)>0.
+\]
+Put $B_\eps=Z^*A^{-1}Z$. Let $\mu_*>0$ be the smallest positive eigenvalue of $T_0$, and take $a_0=1/(2n)$. The range statement of Lemma~\ref{lem:cq-gram} removes the kernel from the resolvent
+\[
+ [\alpha T_0+\eps(I-T_0)]^{-1}Z_0.
+\]
+For $0<\mu\leq1$ its scalar denominator is $\alpha\mu+\eps(1-\mu)$. Therefore, for this fixed channel,
+\begin{align*}
+ \|A^{-1}Z\|&\leq K_1
+   :=\frac{\|G^{-1/2}\|\,\|Z_0\|}{a_0\mu_*},\\
+ 0\leq S/\alpha-B_\eps,\qquad
+ \|S/\alpha-B_\eps\|&\leq K_2\eps,
+ \quad K_2:=\frac{\|Z_0\|^2}{a_0^2\mu_*^2}.
+\end{align*}
+The second estimate follows by subtracting the two scalar resolvents on the positive spectrum, using $Z_0^*T_0^+Z_0=S$. The constants depend on the channel, including the conditioning of $S$. Boundedness of the product $A^{-1}Z$ does not assert boundedness of $A^{-1}$ on the kernel sector.
+
+The Schur complement satisfies
+\[
+ Q=\beta S-c^2B_\eps\geq\beta\delta S>0.
+\]
+Thus both output states are faithful on $R\otimes B$, even when $T$ is singular; their trace is one. The inputs and outputs remain separable, since they are sums of positive products with the classical input flag or with $\tau_i$.
+
+\subsection{A joint binary graph projector}
+Define
+\[
+ X=cA^{-1}Z,\qquad H=\begin{pmatrix}X\\I_B\end{pmatrix},
+ \qquad C=(I_B+X^*X)^{-1},\qquad E=HCH^*.
+\]
+This is an orthogonal projector of rank $\dim B$, so $E,I-E$ is a physical binary measurement. In particular, the normalizer $C$ cannot be dropped. Direct multiplication, without commuting $C$ with other matrices, gives
+\[
+ q=\Tr(EM_-)=\Tr(CQ),\qquad
+ p-q=\Tr(E(M_+-M_-))=4c^2\Tr(CB_\eps).
+\]
+Both probabilities and their complements are strictly between zero and one. With $R_\eps=S/\alpha-B_\eps\geq0$ we have $Q=\beta\delta S+c^2R_\eps$, hence, writing $d=\dim B$,
+\[
+ \frac{n\beta\delta}{1+c^2K_1^2}\leq q
+ \leq n\beta\delta+d c^2K_2\eps.
+\]
+Since $c^2=O(\beta)$ and $\eps=\beta\delta$, this yields
+\[
+ q=n\beta\delta(1+O(\beta)),\qquad
+ p-q=4n\beta(1+O(\beta)+O(\delta)).
+\]
+All errors here are for the fixed channel. Consequently $p\sim1/k$, $q\sim2^{-k}/(4k)$, and $D_b\to\log2$. The complement term is retained and tends to zero; the dominant term is $p\log(p/q)$. Finally
+\[
+ D_b\leq D_o\leq D_i\longrightarrow\log2
+\]
+proves Theorem~\ref{thm:cq-support}. Dephasing a general quantum input preserves its reference and output while decreasing its input divergence, so the CQ calculation also gives the complete coefficient of the stated dephasing channel.
+
+\subsection{Two nonorthogonal pure outputs: a certified separation}
+Let $n=2$ and
+\[
+ \tau_0=|0\rangle\langle0|,\qquad
+ \tau_1=|v\rangle\langle v|,\qquad
+ v=\frac{(1,2i/3)^T}{\sqrt{1+4/9}}.
+\]
+Their support intersection is zero although the states are not orthogonal. The complete equal-reference trace-distance coefficient is
+\[
+ \eta_{\operatorname{Tr}}^c(\mathcal N)
+  =\tfrac12\|\tau_0-\tau_1\|_1=\frac2{\sqrt{13}}<0.55470020.
+\]
+Indeed equal-reference CQ differences have blocks $\Delta,-\Delta$, so the output difference is $\Delta\otimes(\tau_0-\tau_1)$. Multiplicativity of trace norm and dephasing give the upper, attained by faithful binary scalar pairs. This observation does not transfer a trace upper to Umegaki with equal quantum reference.
+
+At $k=16$ the graph effect gives exactly
+\[
+ p=\frac{7696491479061}{142416973893184},\qquad
+ q=\frac{29360121}{142416973893184}.
+\]
+Directed integer intervals for the full quantum input denominator and binary numerator certify the following outward coarsenings:
+\begin{center}
+\begin{tabular}{rrr}\toprule
+$k$ & lower bound for $D_b/D_i$ & upper bound for $D_b/D_i$\\\midrule
+16 & $0.66199617$ & $0.66199618$\\
+64 & $0.86637095$ & $0.86637096$\\
+128 & $0.92221644$ & $0.92221645$\\\bottomrule
+\end{tabular}
+\end{center}
+Already the first faithful finite case exceeds the complete trace coefficient. The Hermitian common-component coefficient and the positive coefficient $a_+$ therefore cannot be interchanged in a Umegaki upper. Their distinction and the trace comparator are prior~\cite{GHNW}; the present example does not contradict that source. The reference cancellation for $\rho-\sigma$ does not extend without an argument to $\rho-\gamma\sigma$.
+
+There is also a limitation on implementation. For this $k=16$ effect, an exact partial-transpose calculation gives
+\[
+ \det(E^{T_B})=
+ -\frac{379198357755215264698242663046681136177401036800}
+ {24520375593929253018522589845522864250466367834721}<0.
+\]
+A local change of reference basis preserves this sign. This effect is not separable and hence not LOCC. Separable input and output states do not remove the joint-readout requirement. This is not a proof that every alternative effect approaching the supremum must be nonlocal.
+
+\subsection{Why the pointwise qualifier matters}
+For real pure outputs proportional to $(1,0)$ and $(1,t)$, $t>0$, the binary case has $T=G=S$, so $T_0=I_B$ for every $t$. It is incorrect to attribute this example's loss of uniformity to a vanishing positive eigenvalue of $T_0$. Instead
+\[
+ S^{-1}(\tau_0-\tau_1)=\begin{pmatrix}1&0\\-2/t&-1\end{pmatrix}
+\]
+can diverge with the conditioning of $S$. If $r=c^2/\alpha^2$, direct algebra gives
+\[
+ h_0=\Tr[(I+rJ^*J)^{-1}S]
+   =\frac{2t^2(1+r)}{t^2(1+r)^2+4r},
+ \quad J=S^{-1}(\tau_0-\tau_1),
+\]
+with $q=\beta\delta h_0$, $p=\beta(4-3\delta)h_0$. At fixed $t$, $h_0\to2$. For $t_k=1/k$, however, $h_0\sim2/k$, so the binary retention of this graph construction tends to zero. Each fixed channel still has optimized coefficient one. The example refutes a uniform rate for the specified construction, not every possible preparation or readout.
+
+The exact derivations, seven directed interval cases, mixed-rank/kernel controls and adverse measurements are retained in dossier1157. High-precision ambient controls are diagnostics, not interval certificates. The input condition grows as $4k2^k$, the effect depends on $\tau_i,k$, and rare probabilities require increasing precision. No optimal resource bound, stable experimental advantage, capacity formula or extension to arbitrary quantum-input channels is established. The classical uniform result below is stronger in its channel quantifier and requires its separate weight-independent argument.
