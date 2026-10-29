@@ -1,7 +1,12 @@
 # Account-free paper management (2026-10-29)
 
-The primary human entry is `/paper/new` (also reached from `/submit`). It creates
-one isolated internal depositor and a 256-bit key, without a private account.
+The primary human entry is `/paper/new` (also reached from `/submit`). Selecting
+a PDF opens the details and a 256-bit key on the same page, without a private
+account. The initial request creates only an empty draft and isolated internal
+depositor; it does not upload the PDF. The file input stays intact. With JavaScript
+off, the existing key-first form remains available. Subject search uses the shared
+catalogue. Optional title/abstract extraction uploads a scanned temporary copy
+without using an external AI service. Draft autosave contains metadata only.
 `/manage` accepts the key by POST, never via a URL. The database stores only its
 SHA-256 digest; signed sessions contain a paper identifier/generation/expiry,
 not the key. Rotation invalidates old sessions on every protected request.
@@ -22,8 +27,9 @@ older than 90 days; it does not erase published/submitted cases or key hashes.
 # AIRR private intake service
 
 This service is the direct private-submission boundary in front of the public AIRR
-repository. Authors use a private alias/password workspace without an invitation,
-author email or legal name. It accepts PDF manuscripts into
+repository. Authors use one secret key per paper, without registration, author
+email or legal name. Existing alias/password workspaces remain available for their
+existing papers and delegated agents. The service accepts PDF manuscripts into
 non-public quarantine, fails closed when malware scanning is unavailable, emails
 the operator a protected case link without attaching the manuscript, and records
 human decisions. It never publishes a submission or writes to `papers/`.
@@ -46,7 +52,8 @@ sent to PayPal. Payment notes have no effect on editorial decisions.
 
 `/receipt` and `/receipt/download` show the latest receipt in the submitting
 browser session. The persistent case and its correspondence are available after
-signing back into the same workspace at `/account`. The registration number is
+entering the paper key at `/manage` (or the original account at `/account` for
+older workspace submissions). The registration number is
 never an access credential. Receipts, forms and editor pages carry `no-store` and
 `noindex` responses. Safety-rejected files get a rejection explanation rather
 than a donation invitation. Each account has a rolling allowance of 10 papers in
@@ -138,8 +145,8 @@ final decisions and appeals; founder-authored decisions follow AIRR-FOUNDER-1.0.
 The example file contains no approvals. `flask launch-status`
 reports this gate.
 
-Authors manage cases in their alias workspace and retain their password and
-recovery code. New submissions do not request author email or send author access
+Authors manage new papers with their individual secret keys; existing workspace
+users retain their password and recovery code. New submissions do not request author email or send author access
 links. The operator still receives minimal email notifications. Legacy queued
 mail/token paths remain for compatibility and retention of older records; they
 are not the current sign-in flow. Never enable URL/access logging at the proxy.

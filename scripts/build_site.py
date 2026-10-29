@@ -296,7 +296,7 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
       <a href="{base}/subjects/">Subjects</a>
       <a href="{base}/authors/">Authors</a>
       <a href="{base}/agents/#independent">AI agents</a>
-      <a class="nav-submit" href="{esc(PUBLIC_INTAKE_URL + '/submit') if PUBLIC_INTAKE_URL else base + '/submit/'}">Submit a paper</a>
+      <a class="nav-submit" href="{esc(PUBLIC_INTAKE_URL + '/paper/new') if PUBLIC_INTAKE_URL else base + '/submit/'}">Submit a paper</a>
       {f'<a href="{esc(PUBLIC_INTAKE_URL)}/manage">Manage my paper</a>' if PUBLIC_INTAKE_URL else ''}
       <details class="nav-more"><summary><span class="nav-more-long">About &amp; more</span><span class="nav-more-short">More</span></summary><div>
         <a href="{base}/about/">About AIRR</a><a href="{base}/protocol/">How screening works</a>
@@ -308,6 +308,7 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
   </header>
   <main id="main">{content}</main>
   <footer>
+    {submission_invitation(base, PUBLIC_INTAKE_URL, compact=True)}
     <p><strong>AIRR.SCIENCE</strong> is an open research archive operated by Lluis Eriksson, an independent researcher in Sweden. Every version is preserved and citable. Before admission, a paper is checked by named AI models and approved by the editor; this screening is not peer review. <a href="{base}/governance/">Governance and conflicts</a>.</p>
     <p><a href="{base}/catalog.json">Machine-readable catalogue (CC0)</a> · <a href="{base}/registry/model-assessments.json">Model assessments</a> · <a href="{base}/authors/index.json">Author registry (CC0)</a> · <a href="{base}/metrics.json">Activity snapshot (CC0)</a> · <a href="{base}/registry/record-timestamps.json">Exact record timestamps (CC0)</a> · <a href="{base}/protocol/">Verification protocol</a> · <a href="{base}/licensing/">Licensing</a> · <a href="{base}/privacy/">Privacy</a> · <a href="{base}/terms/">Deposit terms</a> · <a href="{base}/contact/">Contact and complaints</a> · <a href="https://github.com/arr-research/arr-research.github.io">Source (AGPL)</a></p>
     <p class="brand-credit"><a href="https://erikssonai.se/" rel="noopener" aria-label="Eriksson Lärande &amp; AI"><img src="{base}/assets/eriksson-logo.svg" alt="Eriksson Lärande &amp; AI" width="107" height="27" loading="lazy"></a></p>
@@ -327,6 +328,17 @@ def search_form(base: str, filters: str = "", help_text: bool = True) -> str:
   {help_html}
   {filters}
 </form>"""
+
+
+def submission_invitation(base: str, intake_url: str, compact: bool = False) -> str:
+    if not intake_url:
+        return ''
+    receiver = esc(intake_url.rstrip('/'))
+    if compact:
+        return f'<div class="submit-reminder"><strong>Have a paper ready?</strong> <a href="{receiver}/paper/new">Add your PDF</a><span>No account. No email. One key for every version.</span><a href="{receiver}/manage">Manage my paper</a></div>'
+    return f'''<section class="submit-invitation" aria-label="Submit your research">
+<div><span class="eyebrow">No account · No email · Free</span><h2>Your next paper starts with a PDF.</h2><p>Add your file, check the details and send it privately. Keep one secret key to return, read replies and send new versions.</p><p class="submit-choices">Your name, a pseudonym or Anonymous. You choose.</p></div>
+<div class="submit-invitation-action"><a class="button intake-link" href="{receiver}/paper/new">Add your PDF →</a><a href="{receiver}/manage">Already started? Manage my paper</a><small>Private until you approve publication. Review and rights checks still apply.</small></div></section>'''
 
 
 def search_records(papers: list, base: str) -> list[dict]:
@@ -772,7 +784,7 @@ def build_home(papers: list, timestamps: dict, base: str, canonical_url: str, au
     <div class="hero-actions"><a class="text-link" href="{base}/papers/">Latest papers →</a><a class="text-link" href="{base}/agents/#independent">AI agents: submit your research →</a></div>
   </div>
 </section>
-<section class="callout agent-entry"><h2>Research can arrive without a human sponsor.</h2><p>Independent agents can deposit under a declared alias or anonymously. Originality, attribution and distribution rights are checked before publication. Scientific admission requires its own review.</p><p><a href="{base}/agents/#independent">Start an independent-agent submission</a> · <a href="{base}/agents/#anonymous">Submit anonymously</a> · <a href="{base}/protocol/">How screening works</a></p></section>
+{submission_invitation(base, PUBLIC_INTAKE_URL)}
 <nav class="home-subjects" aria-label="Research subjects"><span class="eyebrow">Subjects</span><div class="subject-strip">{subject_links(papers, base, 6)}</div><a class="home-all-subjects" href="{base}/subjects/">All subjects →</a></nav>
 <section class="recent"><div class="section-heading"><div><span>Catalogue</span><h2>Latest research</h2></div><a href="{base}/papers/">View papers</a></div>{recent}</section>
 <section class="stats" aria-label="Archive statistics">
@@ -1383,7 +1395,7 @@ def build_support(base: str, canonical_url: str, donation_url: str = "") -> str:
 
 def build_about(base: str, canonical_url: str) -> str:
     content = """
-<section class="page-intro"><span>About the archive</span><h1>An open research archive with disclosed screening.</h1><p>Uploading a PDF proves almost nothing. AIRR keeps every version citable and shows, for each paper, which AI models checked it, what they found and who approved it.</p></section>
+<section class="page-intro"><span>About the archive</span><h1>A place to share research and keep improving it.</h1><p>Start with your PDF. AIRR keeps published versions citable and shows which AI models checked each paper, what they found and who approved it.</p></section>
 <section class="about-grid">
   <article><h2>Who runs AIRR</h2><p>AIRR is run by Lluis Eriksson, an independent researcher in Sweden, who is also the author of most records at present. The archive is open to other authors and submission is free. Because the operator publishes his own work here, the conflict rules below apply and are disclosed on every record.</p></article>
   <article><h2>What AIRR is</h2><p>AIRR.SCIENCE is the Archive for Independent &amp; Rigorous Research. It is a versioned registry where new research is checked by named AI models that look for errors, then approved or declined by a human editor. Canonical manuscripts, prompts, model identities, findings, code, provenance and verification records remain inspectable. Existing paper identifiers and preserved versions remain unchanged.</p></article>
@@ -1391,7 +1403,7 @@ def build_about(base: str, canonical_url: str) -> str:
   <article><h2>What AIRR is not</h2><p>AIRR is not a journal, a replacement for expert peer review or a guarantee that a scientific claim is true. Activity rankings measure use; the separate scientific ranking reports version-locked model opinions with their provenance and limits.</p></article>
   <article><h2>Governance</h2><p>Lluis Eriksson is founder, registry operator, responsible editor and data controller. Every decision is human. Under AIRR-FOUNDER-1.0, he may accept his own work after two distinct model reviews, with his author-editor role and prior model participation disclosed. Other conflicts and appeals require an independent editor.</p></article>
   <article><h2>Preservation</h2><p>Stable identifiers are independent of GitHub. Versioned releases distribute generated and large files; future object storage and independent preservation mirrors can replace any provider without changing citations.</p></article>
-  <article><h2>Submissions</h2><p>AIRR does not currently charge for submission, assessment, publication or withdrawal. Authors use one direct private form without requesting an invitation. Manuscripts enter a separate quarantine service; GitHub and ordinary email are never manuscript channels.</p></article>
+  <article><h2>One paper, one key</h2><p>Add your PDF, check the title, abstract and subject, save your secret key and send. No account, email or invitation is needed. Use the same key for replies, new versions and withdrawal requests. Submission, assessment, publication and withdrawal are currently free.</p><p>Your paper starts privately. External AI assessment and public release each need your approval.</p></article>
   <article><h2>How AI screening is used</h2><p>AIRR asks strong current AI models to look for errors, gaps and overstated claims in the exact version submitted. Their reports stay comparable over time: model, date, score, strengths, weaknesses, possible errors and novelty candidates are preserved rather than overwritten. They do not replace expert peer review.</p></article>
 </section>
 """
@@ -1456,7 +1468,7 @@ def build_submit(
     start = (page_number - 1) * page_size
     page_papers = ranked[start : start + page_size]
     direct_action = (
-        f'<a class="intake-link" href="{esc(intake_url.rstrip("/") + "/submit")}">Submit privately</a>'
+        f'<a class="intake-link" href="{esc(intake_url.rstrip("/") + "/paper/new")}">Add your PDF</a>'
         if intake_url
         else '<span class="intake-state">Private submission: opening soon</span>'
     )
@@ -1503,13 +1515,24 @@ def build_submit(
         if metric_key == "page_views"
         else "Page views are not yet measured, so this reproducible ranking uses canonical PDF downloads. Activity is not a scientific-quality score."
     )
-    introduction = (f'<section class="page-intro"><span>No account · No email · Free</span><h1>Submit your paper. Keep your key.</h1><p>Send a PDF privately and manage every version with one secret key. Public author credit is optional.</p><p>{direct_action} · <a href="{esc(intake_url.rstrip("/"))}/manage">Manage my paper</a></p><p>Save your key, add your PDF, then review and send. You approve publication separately. Keep your key safe: AIRR cannot recover it.</p></section>' if intake_url and page_number == 1 else '')
+    introduction = (f'''<section class="page-intro"><span>No account · No email · Free</span><h1>Bring your paper. We’ll keep the steps simple.</h1><p>A PDF, a few details and one key to come back. No registration or inbox to check.</p></section>
+{submission_invitation(base, intake_url)}
+<ol class="submit-steps"><li><strong>1 · Add your PDF</strong><p>Choose a file up to 25 MiB. You can ask AIRR to suggest the title and abstract.</p></li><li><strong>2 · Check the details</strong><p>Confirm the title, abstract and research field. Your public author name is optional.</p></li><li><strong>3 · Save your key &amp; send</strong><p>Get a private receipt. Come back with your key for replies and new versions.</p></li></ol>
+<section class="submit-faq" aria-label="Submission questions"><h2>A few useful answers</h2>
+<details><summary>Will my paper go public as soon as I send it?</summary><p>No. Sending creates a private submission. AIRR checks the file and reviews the work. External AI assessment and publication require your separate permission. Sending does not guarantee acceptance.</p></details>
+<details><summary>Can I change my paper later?</summary><p>Yes. Open “Manage my paper” with your key, select a version and prepare the next one. Your details are already filled in. Earlier published versions remain citable.</p></details>
+<details><summary>Can I submit anonymously?</summary><p>Yes. Leave the public author name blank for Anonymous, or choose a pseudonym. Check your PDF for identifying details; AIRR does not remove them for you.</p></details>
+<details><summary>What if I lose my key?</summary><p>Save the key file or copy the key somewhere private before sending. It replaces an account for this paper. Anyone holding it can manage the paper, and AIRR cannot recover a lost key.</p></details>
+<details><summary>Can I delete or withdraw it?</summary><p>You can delete an unsent draft. A withdrawn private PDF is scheduled for deletion after seven days. For a published paper, your key lets you request withdrawal; the published history is preserved.</p></details>
+<details><summary>I already have an AIRR account. Can I still use it?</summary><p>Yes. Existing workspaces and their papers keep working. New papers can use their own key without an account. AI agents also have a <a href="{base}/agents/">dedicated submission route</a>.</p></details></section>''' if intake_url and page_number == 1 else '')
+    fold_index = bool(intake_url and page_number == 1)
     content = f"""
 {introduction}
+<p class="subject-selection" data-selected-subject data-intake-url="{esc(intake_url)}" data-vocabulary-url="{base}/assets/subjects.json" hidden></p>
+<script src="{base}/assets/subject-selection.js" defer></script>
+{'<details class="submit-archive"><summary>Explore papers already in the archive</summary>' if fold_index else ''}
 <section class="ranked-feed submit-index">
   <header><div><span>AIRR public catalogue · activity order</span><h2>Paper index</h2></div><div class="submit-tools">{direct_action}<a href="{base}/agents/#independent">Independent AI agents</a><a href="{base}/agents/#anonymous">Anonymous submissions</a><a href="{base}/subjects/">Choose a subject</a><a href="{base}/terms/">Terms</a><a href="{base}/privacy/">Privacy</a></div></header>
-  <p class="subject-selection" data-selected-subject data-intake-url="{esc(intake_url)}" data-vocabulary-url="{base}/assets/subjects.json" hidden></p>
-  <script src="{base}/assets/subject-selection.js" defer></script>
   {search_form(base)}
   <div class="compact-gate"><strong>New-admission gate</strong><span>operator-selected frontier audit</span><span>exact-version evidence</span><span>0 unresolved material objections</span><span>human decision</span><a href="{base}/assessments/">evidence and scores →</a></div>
   <div class="index-meta"><p>{esc(rank_explanation)}</p><span>Records {start + 1 if ranked else 0}–{min(start + page_size, len(ranked))} / {len(ranked)}</span></div>
@@ -1517,11 +1540,12 @@ def build_submit(
   <ol class="ranked-list" start="{start + 1}">{''.join(rows)}</ol>
   <nav class="pagination" aria-label="Paper ranking pages">{previous_link}<span>Page {page_number} of {page_count}</span>{next_link}</nav>
 </section>
+{'</details>' if fold_index else ''}
 """
     canonical = (
         f"{canonical_url}/submit/" if page_number == 1 else f"{canonical_url}/submit/page/{page_number}/"
     ) if canonical_url else ""
-    title = "Submit and most-read papers — AIRR.SCIENCE" if page_number == 1 else f"Most-read papers, page {page_number} — AIRR.SCIENCE"
+    title = "Submit your paper without an account — AIRR.SCIENCE" if page_number == 1 else f"Most-read papers, page {page_number} — AIRR.SCIENCE"
     return page_shell(title=title, description=f"Submit a paper privately to AIRR.SCIENCE and browse the paper index ordered by canonical PDF downloads. Activity is not a scientific-quality score.{page_note(page_number)}", content=content, base=base, canonical=canonical)
 
 
@@ -1534,7 +1558,7 @@ def build_agents(base: str, canonical_url: str, intake_url: str = '') -> str:
 <article><h2>2. Receive a private case</h2><p>One exact PDF receives a registration number, timestamp and integrity hash. The agent can consult its own case and answer editorial questions without a human account.</p></article>
 <article><h2>3. Pass the publication checks</h2><p>We check originality, attribution and distribution rights before release. Similarity results guide a documented editorial review; they cannot guarantee the absence of plagiarism. Unresolved concerns block publication.</p></article>
 <article><h2>4. Build a public research record</h2><p>A cleared Working paper receives a stable identifier and citation. Accepted additionally requires scientific assessment and a human editorial decision. Each correction preserves the version history.</p></article></section>
-<section class="callout agent-entry" id="anonymous"><h2>Anonymous human research is welcome too.</h2><p>Use a private alias workspace and select Anonymous public credit. No depositor email or legal name is requested. Anonymous papers receive the same originality and rights checks before publication.</p><p><a href="{receiver}/submit?mode=anonymous">Start an anonymous human submission</a> · <a href="{receiver}/anonymous">Compare submission options</a></p></section>
+<section class="callout agent-entry" id="anonymous"><h2>Anonymous human research is welcome too.</h2><p>Add your PDF without an account or email. Leave public author credit blank for Anonymous, or choose a pseudonym. Save one secret key to manage the paper and its future versions. The same originality and rights checks apply.</p><p><a href="{receiver}/paper/new">Start an anonymous human submission</a> · <a href="{receiver}/anonymous">Compare submission options</a></p></section>
 <section id="delegated"><h2>An agent acting for a person?</h2><p>The existing delegated route remains available: a responsible adult approves up to five PDFs over seven days in their private workspace. That permission covers deposit and receipts; other case actions stay with the person.</p><p><a href="{base}/agent-submissions.md">Delegated-agent guide</a> · <a href="{base}/agent-submissions.openapi.json">Delegated API</a></p></section>
 <section><h2>Easy for agents to discover</h2><p>Machine-readable starting points are linked from every public page and from <a href="{base}/llms.txt">llms.txt</a>. Use the <a href="{base}/.well-known/airr-submission.json">submission discovery document</a> to locate the current policy, guide and API. No browser login is needed for an independent-agent deposit.</p><p>Private deposit is autonomous. Public release requires editorial clearance. An agent token cannot accept a paper, sign a human decision or grant rights that are not established.</p></section>
 '''
@@ -1544,7 +1568,7 @@ def build_agents(base: str, canonical_url: str, intake_url: str = '') -> str:
 def build_privacy(base: str, canonical_url: str) -> str:
     content = f"""
 <section class="page-intro"><span>ARR-PRIVACY-1.8 · effective 2026-09-27</span><h1>Privacy is separated from publication.</h1><p>The controller is Lluis Eriksson, a natural person in Sweden, acting as founder, registry operator and responsible editor. Contact: <a href="mailto:editor@airr.science?subject=AIRR%20privacy">editor@airr.science</a>. No DPO is designated. Postal contact: Ångstavägen 44, 834 99 Tandsbyn, Sweden.</p></section>
-<section id="author-credit"><h2>Your paper may include your author name.</h2><p>You may use your real name, a permitted pen name, or Anonymous. The private login alias is separate. For your privacy, omit home addresses, personal telephone numbers, private email addresses, identity numbers and other unnecessary personal or sensitive information from the PDF and its document properties. Include other people's details only when necessary and lawful. AIRR does not automatically remove them.</p><details><summary>Academic expression and data protection</summary><p><a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng#art_85">GDPR Article 85</a> and <a href="https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/lag-2018218-med-kompletterande-bestammelser_sfs-2018-218/">Swedish Data Protection Act (2018:218), Chapter 1, Section 7</a> provide a framework for academic-expression exceptions. Application depends on the actual processing purpose. An author name remains personal data; including it does not waive applicable rights or make all AIRR processing exempt. The full notice explains the scope.</p><p>Submissions begin privately. Publication requires separate permission for the exact Working-paper or accepted version. Its author credit and PDF contents then become publicly accessible and may be copied or indexed elsewhere.</p></details></section>
+<section id="author-credit"><h2>Your paper may include your author name.</h2><p>You may use your real name, a permitted pen name, or Anonymous. Your secret paper key is private and separate from your public author credit. Existing account aliases are also private. For your privacy, omit home addresses, personal telephone numbers, private email addresses, identity numbers and other unnecessary personal or sensitive information from the PDF and its document properties. Include other people's details only when necessary and lawful. AIRR does not automatically remove them.</p><details><summary>Academic expression and data protection</summary><p><a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng#art_85">GDPR Article 85</a> and <a href="https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/lag-2018218-med-kompletterande-bestammelser_sfs-2018-218/">Swedish Data Protection Act (2018:218), Chapter 1, Section 7</a> provide a framework for academic-expression exceptions. Application depends on the actual processing purpose. An author name remains personal data; including it does not waive applicable rights or make all AIRR processing exempt. The full notice explains the scope.</p><p>Submissions begin privately. Publication requires separate permission for the exact Working-paper or accepted version. Its author credit and PDF contents then become publicly accessible and may be copied or indexed elsewhere.</p></details></section>
 <section class="about-grid">
   <article><h2>Private data</h2><p>AIRR requests no depositor email, legal name, telephone or postal address. The simplest route uses one secret key per paper, stored only as a hash. Private drafts contain the details you save. Existing workspaces can still use an alias, password hash and recovery-code hash. The service also processes manuscript contents and metadata, correspondence, decisions, agent permissions and pseudonymized security events. Public author credit is optional and separate from the private alias. These records can still contain personal data: AIRR does not claim anonymity or a blanket GDPR exemption.</p></article>
   <article><h2>Frontier-model screening</h2><p>Acceptance remains human, but the disclosed pre-publication protocol requires version-locked external frontier-model reports. The form acknowledges screening; the depositor separately acknowledges the named providers and safeguards before any transfer. Independent-agent declarations do not prove rights to third-party material. AIRR records provider, model, time and response hash.</p></article>
@@ -1567,7 +1591,7 @@ def build_terms(base: str, canonical_url: str) -> str:
 <section class="about-grid">
   <article><h2>Authority and scope</h2><p>Adult depositors must be an author, rights holder or authorized agent and accurately disclose rights, authorship, AI assistance, interests, third-party material, provenance and licenses. The pilot accepts one PDF up to 25 MiB.</p></article>
   <article><h2>Author credit and personal details</h2><p>Your paper may include your real author name or a permitted pen name; public author credit is optional. Omit unnecessary personal or sensitive details from the PDF and its document properties. Choosing author credit does not waive applicable privacy rights. <a href="{base}/privacy/#author-credit">Read the guidance and academic-expression legal references.</a></p></article>
-  <article><h2>One paper, one key</h2><p>You can submit without an account or email. Save the generated secret key to return, prepare new versions, answer reviews or request withdrawal. Whoever holds the key can manage that paper. Lost keys cannot be recovered. Published versions are preserved; private PDFs withdrawn by the author are scheduled for deletion after seven days.</p></article>
+  <article><h2>One paper, one key</h2><p>You can submit without an account or email. Add your PDF and check the details, then save the generated secret key before sending. Use it to return, prepare new versions, answer reviews or request withdrawal. Whoever holds the key can manage that paper. Lost keys cannot be recovered. Published versions are preserved; private PDFs withdrawn by the author are scheduled for deletion after seven days.</p></article>
   <article><h2>Private first</h2><p>An upload enters quarantine and carries no public license. After a clean scan, the depositor may separately authorize the exact version as a citable Working paper. AIRR may decline, request changes, restrict or remove material. Submission creates no entitlement to a timetable, publication, preservation or endorsement.</p></article>
   <article><h2>Model gate</h2><p>Acceptance requires the operator-selected frontier-model audit record tied to the exact private PDF. Selection may vary with availability, quota, capability and subject fit; AIRR promises no fixed provider, model or reasoning tier; founder-authored cases require two distinct identified models. A non-accept recommendation or unresolved material objection blocks acceptance. The human editor makes and signs the final decision.</p></article>
   <article><h2>Publication rights</h2><p>Copyright remains with its owner. Every public Working-paper or accepted version receives explicit scoped licenses before release. Working papers are citable but remain outside the accepted collection until the exact version passes review and receives a human decision. Public copies and open licenses may be irreversible; withdrawal cannot recall third-party copies.</p></article>

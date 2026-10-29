@@ -1,4 +1,5 @@
 {% extends 'base.html' %}{% block title %}My submissions — AIRR intake{% endblock %}{% block content %}
-<h1>My private submissions</h1><p>Read decisions, reply to the editor and submit revisions here. No email notifications are sent to depositors; check this workspace for updates.</p><p><a href="{{ url_for('submit') }}">Start a submission</a>. Uploading does not publish the work.</p>
+<h1>My private submissions</h1><p>Read decisions, reply to the editor and submit revisions here. No email notifications are sent to depositors; check this workspace for updates.</p><p><a href="{{ url_for('submit') }}">Send from this account</a>. Uploading does not publish the work.</p>
+<section class="card"><h2>Want a separate key for your next paper?</h2><p>You can also send a new paper without this account. Save its key and use “Manage my paper” to return. Papers already in this workspace stay here.</p><a href="{{ url_for('paper_new') }}">Add a PDF with its own key</a></section>
 {% for s in submissions %}<article><h2>{{ s['title'] }}</h2><p class="status">{{ s['status']|replace('_',' ') }}</p><p class="meta">{{ s['id'] }} · scanner: {{ s['scan_status'] }} · received {{ s['created_at'] }}</p><p><a class="button" href="{{ url_for('author_view',submission_id=s['id']) }}">Open private case</a></p></article>{% else %}<p>No submissions.</p>{% endfor %}
 {% endblock %}
