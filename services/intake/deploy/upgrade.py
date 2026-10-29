@@ -186,10 +186,13 @@ def main():
             for table in ('users', 'recovery_codes'):
                 assert live.execute('SELECT * FROM ' + table + ' ORDER BY rowid').fetchall() == old.execute('SELECT * FROM ' + table + ' ORDER BY rowid').fetchall(), 'Existing credentials changed'
         for path, expected in {'/login':200, '/account/login':200, '/account/recover':200,
-                               '/account/register':503, '/submit':503, '/agents':200}.items():
+                               '/account/register':503, '/submit':503, '/paper/new':503,
+                               '/manage':200, '/agents':200}.items():
             assert status(path) == expected, path
         with sqlite3.connect(database) as db:
             assert db.execute("SELECT 1 FROM sqlite_master WHERE name='private_accounts'").fetchone()
+            assert db.execute("SELECT 1 FROM sqlite_master WHERE name='paper_keys'").fetchone()
+            assert db.execute("SELECT 1 FROM sqlite_master WHERE name='paper_drafts'").fetchone()
             assert 'owner_user_id' in {row[1] for row in db.execute('PRAGMA table_info(agent_grants)')}
         proof = {'commit':args.commit, 'previous_commit':previous.name, 'source_archive_sha256':archive_hash,
                  'preserved_counts':before, 'migration_verified':True, 'readiness':200,

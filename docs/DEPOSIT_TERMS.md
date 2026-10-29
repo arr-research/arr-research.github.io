@@ -199,3 +199,28 @@ otherwise apply. Disputes should first use the complaint procedure; competent
 courts and authorities remain available. The version accepted at upload governs
 that private submission. A material new version requires notice and, where it
 changes the agreement, affirmative acceptance.
+
+
+## Paper-key access supplement — AIRR-PAPER-KEY-1.0 (2026-10-29)
+
+The account-free route requests no email, login alias or password. One randomly
+generated secret key controls a single paper and its versions. Only its hash is
+stored. A key is not identity or authorship verification. The holder must save it;
+AIRR cannot recover a lost key. Replacing a key invalidates the previous key and
+its sessions. Key access expires after eight hours; the saved key can reopen it.
+
+Draft text is saved privately on AIRR. The PDF is selected again when returning
+to a draft. Optional title/abstract suggestions send a temporary PDF to AIRR's
+scanner and local text extractor; this temporary copy is deleted after the
+request. No external model receives it. Suggestions require author review.
+Publication, named-provider authorization, rights/originality and scientific
+checks retain their existing separate requirements for each exact version.
+
+The key opens case messages without email notices. Authors can initiate revisions
+without an editor's changes request. Prior versions are not overwritten. Drafts
+can be deleted; private submissions can be withdrawn, with PDF erasure scheduled
+after seven days under the existing retention rules. Public withdrawal requests
+require AIRR to update the public archive and do not recall third-party copies.
+Legal holds and pending appeals retain their existing protections. Draft text
+that has never been submitted expires after 90 days; essential case/audit records
+follow the existing retention policy. Existing account access remains available.

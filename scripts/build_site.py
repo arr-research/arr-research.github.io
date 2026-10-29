@@ -49,6 +49,7 @@ AUTHORS_FILE = ROOT / "registry" / "authors.json"
 SITE_NAME = "AIRR.SCIENCE"
 # An empty collection in the menu reads as an abandoned section; main() sets this.
 NOTES_PUBLISHED = False
+PUBLIC_INTAKE_URL = ""
 SITE_FULL_NAME = "Archive for Independent & Rigorous Research"
 
 
@@ -295,7 +296,8 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
       <a href="{base}/subjects/">Subjects</a>
       <a href="{base}/authors/">Authors</a>
       <a href="{base}/agents/#independent">AI agents</a>
-      <a class="nav-submit" href="{base}/submit/">Submit</a>
+      <a class="nav-submit" href="{esc(PUBLIC_INTAKE_URL + '/submit') if PUBLIC_INTAKE_URL else base + '/submit/'}">Submit a paper</a>
+      {f'<a href="{esc(PUBLIC_INTAKE_URL)}/manage">Manage my paper</a>' if PUBLIC_INTAKE_URL else ''}
       <details class="nav-more"><summary><span class="nav-more-long">About &amp; more</span><span class="nav-more-short">More</span></summary><div>
         <a href="{base}/about/">About AIRR</a><a href="{base}/protocol/">How screening works</a>
         <a href="{base}/assessments/">Model screening reports</a><a href="{base}/governance/">Governance</a>
@@ -1501,9 +1503,11 @@ def build_submit(
         if metric_key == "page_views"
         else "Page views are not yet measured, so this reproducible ranking uses canonical PDF downloads. Activity is not a scientific-quality score."
     )
+    introduction = (f'<section class="page-intro"><span>No account · No email · Free</span><h1>Submit your paper. Keep your key.</h1><p>Send a PDF privately and manage every version with one secret key. Public author credit is optional.</p><p>{direct_action} · <a href="{esc(intake_url.rstrip("/"))}/manage">Manage my paper</a></p><p>Save your key, add your PDF, then review and send. You approve publication separately. Keep your key safe: AIRR cannot recover it.</p></section>' if intake_url and page_number == 1 else '')
     content = f"""
+{introduction}
 <section class="ranked-feed submit-index">
-  <header><div><span>AIRR public catalogue · activity order</span><h1>Paper index</h1></div><div class="submit-tools">{direct_action}<a href="{base}/agents/#independent">Independent AI agents</a><a href="{base}/agents/#anonymous">Anonymous submissions</a><a href="{base}/subjects/">Choose a subject</a><a href="{base}/terms/">Terms</a><a href="{base}/privacy/">Privacy</a></div></header>
+  <header><div><span>AIRR public catalogue · activity order</span><h2>Paper index</h2></div><div class="submit-tools">{direct_action}<a href="{base}/agents/#independent">Independent AI agents</a><a href="{base}/agents/#anonymous">Anonymous submissions</a><a href="{base}/subjects/">Choose a subject</a><a href="{base}/terms/">Terms</a><a href="{base}/privacy/">Privacy</a></div></header>
   <p class="subject-selection" data-selected-subject data-intake-url="{esc(intake_url)}" data-vocabulary-url="{base}/assets/subjects.json" hidden></p>
   <script src="{base}/assets/subject-selection.js" defer></script>
   {search_form(base)}
@@ -1542,7 +1546,7 @@ def build_privacy(base: str, canonical_url: str) -> str:
 <section class="page-intro"><span>ARR-PRIVACY-1.8 · effective 2026-09-27</span><h1>Privacy is separated from publication.</h1><p>The controller is Lluis Eriksson, a natural person in Sweden, acting as founder, registry operator and responsible editor. Contact: <a href="mailto:editor@airr.science?subject=AIRR%20privacy">editor@airr.science</a>. No DPO is designated. Postal contact: Ångstavägen 44, 834 99 Tandsbyn, Sweden.</p></section>
 <section id="author-credit"><h2>Your paper may include your author name.</h2><p>You may use your real name, a permitted pen name, or Anonymous. The private login alias is separate. For your privacy, omit home addresses, personal telephone numbers, private email addresses, identity numbers and other unnecessary personal or sensitive information from the PDF and its document properties. Include other people's details only when necessary and lawful. AIRR does not automatically remove them.</p><details><summary>Academic expression and data protection</summary><p><a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng#art_85">GDPR Article 85</a> and <a href="https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/lag-2018218-med-kompletterande-bestammelser_sfs-2018-218/">Swedish Data Protection Act (2018:218), Chapter 1, Section 7</a> provide a framework for academic-expression exceptions. Application depends on the actual processing purpose. An author name remains personal data; including it does not waive applicable rights or make all AIRR processing exempt. The full notice explains the scope.</p><p>Submissions begin privately. Publication requires separate permission for the exact Working-paper or accepted version. Its author credit and PDF contents then become publicly accessible and may be copied or indexed elsewhere.</p></details></section>
 <section class="about-grid">
-  <article><h2>Private data</h2><p>AIRR requests no depositor email, legal name, telephone or postal address. Private workspaces use an alias, password hash and recovery-code hash. The service also processes manuscript contents and metadata, correspondence, decisions, agent permissions and pseudonymized security events. Public author credit is optional and separate from the private alias. These records can still contain personal data: AIRR does not claim anonymity or a blanket GDPR exemption.</p></article>
+  <article><h2>Private data</h2><p>AIRR requests no depositor email, legal name, telephone or postal address. The simplest route uses one secret key per paper, stored only as a hash. Private drafts contain the details you save. Existing workspaces can still use an alias, password hash and recovery-code hash. The service also processes manuscript contents and metadata, correspondence, decisions, agent permissions and pseudonymized security events. Public author credit is optional and separate from the private alias. These records can still contain personal data: AIRR does not claim anonymity or a blanket GDPR exemption.</p></article>
   <article><h2>Frontier-model screening</h2><p>Acceptance remains human, but the disclosed pre-publication protocol requires version-locked external frontier-model reports. The form acknowledges screening; the depositor separately acknowledges the named providers and safeguards before any transfer. Independent-agent declarations do not prove rights to third-party material. AIRR records provider, model, time and response hash.</p></article>
   <article><h2>Retention</h2><p>Malware bytes are erased immediately, withdrawn PDFs after 7 days, declined PDFs after 30 days, and accepted private copies 30 days after verified public release. A minimal decision record is retained for three years, subject to narrowly reviewed legal hold.</p></article>
   <article><h2>Optional public-site statistics</h2><p>When enabled, AIRR asks before counting public-page views and PDF opens. Allow or Decline; change your choice through Statistics preferences in the footer. Your choice is stored in your browser for 180 days. Consenting views and PDF opens become daily page and per-version PDF totals on our Netcup server, retained for 400 days, plus up to seven days in encrypted backups. No visitor IDs, IP addresses, referrers, search terms or private pages are stored in these statistics. Only the operator sees these totals. GitHub PDF-download counters remain a separate public metric. See the full notice below for consent, hosting and retention details.</p></article>
@@ -1563,6 +1567,7 @@ def build_terms(base: str, canonical_url: str) -> str:
 <section class="about-grid">
   <article><h2>Authority and scope</h2><p>Adult depositors must be an author, rights holder or authorized agent and accurately disclose rights, authorship, AI assistance, interests, third-party material, provenance and licenses. The pilot accepts one PDF up to 25 MiB.</p></article>
   <article><h2>Author credit and personal details</h2><p>Your paper may include your real author name or a permitted pen name; public author credit is optional. Omit unnecessary personal or sensitive details from the PDF and its document properties. Choosing author credit does not waive applicable privacy rights. <a href="{base}/privacy/#author-credit">Read the guidance and academic-expression legal references.</a></p></article>
+  <article><h2>One paper, one key</h2><p>You can submit without an account or email. Save the generated secret key to return, prepare new versions, answer reviews or request withdrawal. Whoever holds the key can manage that paper. Lost keys cannot be recovered. Published versions are preserved; private PDFs withdrawn by the author are scheduled for deletion after seven days.</p></article>
   <article><h2>Private first</h2><p>An upload enters quarantine and carries no public license. After a clean scan, the depositor may separately authorize the exact version as a citable Working paper. AIRR may decline, request changes, restrict or remove material. Submission creates no entitlement to a timetable, publication, preservation or endorsement.</p></article>
   <article><h2>Model gate</h2><p>Acceptance requires the operator-selected frontier-model audit record tied to the exact private PDF. Selection may vary with availability, quota, capability and subject fit; AIRR promises no fixed provider, model or reasoning tier; founder-authored cases require two distinct identified models. A non-accept recommendation or unresolved material objection blocks acceptance. The human editor makes and signs the final decision.</p></article>
   <article><h2>Publication rights</h2><p>Copyright remains with its owner. Every public Working-paper or accepted version receives explicit scoped licenses before release. Working papers are citable but remain outside the accepted collection until the exact version passes review and receives a human decision. Public copies and open licenses may be irreversible; withdrawal cannot recall third-party copies.</p></article>
@@ -1815,6 +1820,8 @@ def write_llm_guides(papers: list, canonical_url: str) -> None:
 
 def main() -> int:
     args = parse_args()
+    global PUBLIC_INTAKE_URL
+    PUBLIC_INTAKE_URL = args.intake_url.rstrip("/")
     base = clean_base_path(args.base_path)
     canonical_url = args.canonical_url.rstrip("/")
     all_versions = discover_papers()

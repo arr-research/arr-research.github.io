@@ -1,0 +1,8 @@
+{% extends 'base.html' %}{% block content %}
+<p class="eyebrow">Step 1 · Save your access</p><h1>Keep this key.</h1>
+<p>This key opens your paper and all its versions. No account or email is needed. Anyone with the key can manage the paper. AIRR cannot recover a lost key.</p>
+<label>Your secret paper key<input id="paper-secret" readonly value="{{ secret }}" autocomplete="off" spellcheck="false"></label>
+<p><button type="button" id="copy-paper-key">Copy key</button> <button type="button" id="download-paper-key">Download key</button></p><p id="key-feedback" role="status"></p>
+{% if rotating %}<p>Your current key still works until you activate this replacement.</p><form method="post" action="{{ url_for('paper_activate_key') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="new_key" value="{{ secret }}"><label><input type="checkbox" name="saved" required> I have saved the replacement key.</label><button>Activate replacement key</button></form>{% else %}<p><a class="button" href="{{ next_url }}">I have saved my key — continue</a></p>{% endif %}
+<p class="meta">This key is shown only here. Keep the downloaded file somewhere private. Return through “Manage my paper”.</p>
+<script src="{{ url_for('static', filename='paper-key.js') }}" defer></script>{% endblock %}

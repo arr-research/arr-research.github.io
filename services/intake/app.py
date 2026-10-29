@@ -319,6 +319,8 @@ def create_app(test_config: dict | None = None) -> Flask:
     app.before_request(load_user)
     register_routes(app)
     register_commands(app)
+    from services.intake.paper_keys import install as install_paper_keys
+    install_paper_keys(app, sys.modules[__name__])
     from services.intake.workflow import install
     install(app, sys.modules[__name__])
     from services.intake.agents import install as install_agents
@@ -391,10 +393,12 @@ def init_db() -> None:
     migrate_originality(db)
     from services.intake.independent_agents import migrate as migrate_independent_agents
     migrate_independent_agents(db)
+    from services.intake.paper_keys import migrate as migrate_paper_keys
+    migrate_paper_keys(db)
 
 
 def audit(event: str, submission_id: str | None = None, **detail) -> None:
-    actor = g.user["id"] if getattr(g, "user", None) else None
+    actor = getattr(g, 'paper_actor', None) or (g.user["id"] if getattr(g, "user", None) else None)
     db = get_db()
     db.execute(
         "INSERT INTO audit_log(occurred_at,actor_user_id,event,submission_id,detail_json) VALUES(?,?,?,?,?)",
@@ -779,7 +783,7 @@ def register_routes(app: Flask) -> None:
     @app.get("/")
     def dashboard():
         if not g.user:
-            return redirect(url_for('account_login'))
+            return redirect(url_for('paper_manage') if app.extensions['paper_keys']['access']() else url_for('paper_new'))
         if g.user["role"] in {"operator", "independent_editor"}:
             query = "SELECT s.*,u.email,u.display_name FROM submissions s JOIN users u ON u.id=s.user_id"
             parameters = ()
@@ -808,7 +812,7 @@ def register_routes(app: Flask) -> None:
         if not g.user or g.user['role'] != 'depositor' or not app.extensions['accounts']['profile'](g.user['id']):
             if request.method == 'POST':
                 abort(401, 'Sign in to your private workspace first.')
-            return redirect(url_for('account_login'))
+            return redirect(url_for('paper_new'))
         if request.method == "POST":
             require_csrf()
             enforce_rate("submit", SUBMISSION_ATTEMPTS_PER_CONNECTION, SUBMISSION_WINDOW_SECONDS)
@@ -867,6 +871,8 @@ def register_routes(app: Flask) -> None:
             abort(404)
         row = get_db().execute("SELECT * FROM submissions WHERE id=?", (submission_id,)).fetchone()
         if row is None:
+            abort(404)
+        if app.extensions['paper_keys']['owner'](row['user_id']) and not app.extensions['paper_keys']['owns'](row):
             abort(404)
         return row
 
@@ -1189,6 +1195,7 @@ def register_commands(app: Flask) -> None:
             db.execute("DELETE FROM mail_outbox WHERE submission_id=?", (row["id"],))
             db.execute("DELETE FROM agent_submissions WHERE submission_id=?", (row["id"],))
             db.execute("DELETE FROM historical_revisions WHERE submission_id=?", (row["id"],))
+            db.execute("UPDATE paper_drafts SET data_json='{}' WHERE submitted_id=?", (row['id'],))
             db.execute("UPDATE originality_reviews SET evidence_json='{}' WHERE submission_id=?", (row['id'],))
             db.execute("UPDATE originality_scans SET result_json='{}' WHERE submission_id=?", (row['id'],))
             # Retain only the exact-hash release decision; erase its private narrative.
