@@ -21,6 +21,8 @@ import urllib.request
 
 MONITOR = 'airr-intake-monitor'
 BACKGROUND = ['airr-intake-' + name for name in ('mail', 'maintenance', 'backup', 'offsite')]
+# The public archive also contains PDFs that are not extracted for the receiver.
+MAX_SOURCE_BYTES = 512 * 1024 * 1024
 
 
 def deployable_path(relative):
@@ -95,8 +97,8 @@ def main():
     assert values.get('ARR_INTAKE_OPEN', '0').strip().strip('"\'') == '0', 'Pause intake before upgrading'
     url = 'https://codeload.github.com/arr-research/arr-research.github.io/tar.gz/' + args.commit
     with urllib.request.urlopen(url, timeout=90) as response:
-        archive = response.read(128 * 1024 * 1024 + 1)
-    assert len(archive) <= 128 * 1024 * 1024, 'Source archive exceeds deployment limit'
+        archive = response.read(MAX_SOURCE_BYTES + 1)
+    assert len(archive) <= MAX_SOURCE_BYTES, 'Source archive exceeds deployment limit'
     archive_hash = hashlib.sha256(archive).hexdigest()
     release.mkdir(mode=0o755)
     release.chmod(0o755)
