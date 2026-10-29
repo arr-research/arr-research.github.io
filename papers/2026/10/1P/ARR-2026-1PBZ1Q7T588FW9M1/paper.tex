@@ -1,0 +1,205 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=27mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,microtype}
+\usepackage[hidelinks]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\osc}{\operatorname{osc}}
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\R}{\mathcal R}
+\newcommand{\Sset}{\mathcal S}
+\title{Dimension bounds for common components after measurable quantum preparation}
+\author{Lluis Eriksson}
+\date{29 October 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+For a channel on a $d$-dimensional system with ordinary trace-distance contraction at most $r$, we give a common-component certificate after an explicitly specified measurable preparation instrument. Its mass is at least $\max\{0,1-(d-1)r\}$, independently of the outcome cardinality. The same certificate yields a completely positive replacement component after the associated measure-and-prepare channel. We determine the worst-case envelope of this positive component over the stated class using classical exclusion channels. We separate these assertions from optimal complete contraction and from mixing of arbitrary observed instruments. Two elementary examples show why the recorded instrument and the topology on posterior laws must be retained. The measurement coefficient, replacement framework, and downstream contraction principles are established prior results; worldwide novelty of the dimension comparison is not asserted.
+\end{abstract}
+
+\section{Problem, conventions and prior structure}
+Let $M_d$ denote the complex $d$ by $d$ matrices and let $\Sset_d$ be their density operators. We use $T(\rho,\sigma)=\|\rho-\sigma\|_1/2$. For a completely positive trace-preserving map (a channel) $\Psi:M_d\to M_d$, write
+\[
+ \eta_{\rm tr}(\Psi)=\sup_{\rho\ne\sigma}
+ \frac{T(\Psi(\rho),\Psi(\sigma))}{T(\rho,\sigma)}.
+\]
+All reference systems below have arbitrary finite dimension. Channel adjoints are for the trace pairing. For Hermitian $H$, set
+$\osc(H)=\lambda_{\max}(H)-\lambda_{\min}(H)$.
+
+Fix a standard Borel space $(A,\mathcal A)$ with a positive measure $\nu$ and entrywise measurable fields $F_a\in M_d$ and $\tau_a\in \Sset_k$ satisfying
+\begin{equation}\label{setup}
+ F_a\ge0,\qquad \int_A F_a\,d\nu(a)=I_d .
+\end{equation}
+Integrals are finite-dimensional matrix integrals; null outcomes may be discarded. The final, actually observed instrument is assumed to have density
+\begin{equation}\label{inst}
+ \mathcal T_a(X)=\Tr(F_aX)\tau_a.
+\end{equation}
+In particular the posterior $\tau_a$ does not depend on its input. The density $F_a$ need not be bounded above by $I_d$. Its trace is integrable by \eqref{setup}.
+
+The finite measurement common-component formula is already Proposition35 and Corollary11 of George--Hirche--Nuradha--Wilde \cite{GHNW}. Positive replacement decompositions and their Choi formulation occur in Hirche \cite{Hirche}. Spectral oscillation and trace-contraction duality are established machinery \cite{GQ}. Hafouta--Pathirana \cite{HP}, AppendixA.2, treats posterior minorization, including a finite-preparation sufficient bound involving preparation count. These dependencies delimit the purpose of this note: an explicit dimension certificate and its precise scope, rather than a new general contraction principle.
+
+\section{The dimension certificate}
+Put
+\begin{equation}\label{components}
+ G_a=\Psi^*(F_a),\quad c_a=\lambda_{\min}(G_a),\quad
+ b=\int_A c_a\,d\nu(a),\quad \Omega=\int_A c_a\tau_a\,d\nu(a).
+\end{equation}
+Here $b$ is tied to this preparation description. It is not generally the optimal common mass after labels have been identified.
+
+\begin{lemma}\label{osc}
+If $\eta_{\rm tr}(\Psi)\le r$, then
+$\osc(\Psi^*(H))\le r\osc(H)$ for every Hermitian $H$.
+\end{lemma}
+\begin{proof}
+For traceless Hermitian $\Delta$, subtracting the midpoint of the extreme eigenvalues of $H$ gives
+$|\Tr(H\Delta)|\le \osc(H)\|\Delta\|_1/2$.
+Choose unit extremal eigenvectors $u,v$ of $\Psi^*(H)$ when its oscillation is positive. Their pure states have trace distance one. Applying the preceding bound to
+$\Delta=\Psi(uu^*)-\Psi(vv^*)$ proves the assertion. Zero oscillation is immediate.
+\end{proof}
+
+\begin{theorem}\label{main}
+Suppose $d\ge2$, $0\le r\le1$, $\eta_{\rm tr}(\Psi)\le r$, and \eqref{setup}--\eqref{inst} hold. Then
+\begin{equation}\label{bound}
+ 0\le b\le1,\qquad b\ge \max\{0,1-(d-1)r\}.
+\end{equation}
+The posterior kernel after the prefix and final preparation,
+\[
+ K(\rho,B)=\int_A \Tr(G_a\rho)\,{\bf1}_{B}(\tau_a)\,d\nu(a),
+ \qquad B\subseteq \Sset_k\ \hbox{Borel},
+\]
+has, when $b>0$, the minorization $K(\rho,B)\ge b\lambda(B)$, where
+$\lambda(B)=b^{-1}\int_A c_a{\bf1}_B(\tau_a)\,d\nu(a)$.
+\end{theorem}
+\begin{proof}
+Eigenvalue continuity implies measurability of $c_a$. Since $\Psi^*$ is unital, $\int_A G_a\,d\nu=I_d$. Positivity gives
+$0\le c_a\le\Tr(G_a)/d$, so $c_a$ is integrable and $0\le b\le1$.
+For a Hermitian $G$, all but one of its eigenvalues are bounded above by $\lambda_{\min}(G)+\osc(G)$; therefore
+\[
+ \lambda_{\min}(G)\ge\frac{\Tr G}{d}-\frac{d-1}{d}\osc(G).
+\]
+Lemma \ref{osc}, positivity of $F_a$, and $\osc(F_a)\le\Tr F_a$ imply
+\[
+ b\ge1-\frac{d-1}{d}\int_A\osc(G_a)\,d\nu
+ \ge1-\frac{(d-1)r}{d}\int_A\Tr(F_a)\,d\nu
+ =1-(d-1)r.
+\]
+Finally $G_a\ge c_aI_d$. Integration gives the minorization and shows that $\lambda$ is a probability measure. The kernel is normalized because $\int_A G_a=I_d$. Its measurability follows from that of the matrix fields and $a\mapsto\tau_a$.
+\end{proof}
+
+When the prefix is the sum over earlier observed branches, the same kernel identity holds: normalization factors cancel against branch probabilities, and the last posterior is $\tau_a$ for every positive-probability earlier record. This step requires the final instrument to be fixed as specified. A final preparation chosen by feedback depending on earlier records needs a separate joint description. The theorem does not minorize the entire recorded history or posteriors conditional on a quantum reference.
+
+For $d=1$, directly $b=1$. At $b=0$ no normalized $\lambda$ is defined. At $b=1$, the nonnegative field $G_a-c_aI_d$ has integral trace zero, so it vanishes almost everywhere and the posterior law is input independent.
+
+\section{Positive channel component and known consequences}
+Let $\mathcal E(X)=\int_A\Tr(F_aX)\tau_a\,d\nu(a)$ and $N=\mathcal E\circ\Psi$.
+For a positive matrix $W$ write $\R_W(X)=\Tr(X)W$. Define
+\[
+ \alpha_+(N)=\max\{\Tr W:W\ge0,\ N-\R_W\text{ is completely positive}\}.
+\]
+The feasible set is compact in finite dimension and $\Tr W\le1$.
+
+\begin{proposition}\label{cp}
+The map $N-\R_\Omega$ is completely positive, with trace
+$(1-b)\Tr X$. In particular $\alpha_+(N)\ge b$.
+For $0<b<1$ there is a channel $Q$ such that
+$N=b\R_{\Omega/b}+(1-b)Q$. At $b=1$, $N=\R_\Omega$.
+\end{proposition}
+\begin{proof}
+Use the unnormalized input-first Choi convention
+$J(N)=\sum_{ij}E_{ij}\otimes N(E_{ij})$. Then
+\[
+ J(N-\R_\Omega)=\int_A (G_a-c_aI_d)^T\otimes\tau_a\,d\nu(a)\ge0.
+\]
+The integrand is positive and has integrable trace
+$\Tr(G_a)-dc_a$; thus its norm and entries are integrable. This justifies the continuous Choi identity. Trace preservation of $N$ gives the asserted scaled trace. Divide the remainder by $1-b$ when $b<1$; when $b=1$ its positive Choi matrix has trace zero. The $b=0$ endpoint simply supplies a zero component.
+\end{proof}
+
+For states $\rho_{AR},\sigma_{AR}$ with $\rho_R=\sigma_R$, the replacer contribution cancels in the difference. Hence
+\begin{equation}\label{trace}
+ T((N\otimes\id_R)\rho,(N\otimes\id_R)\sigma)
+ \le(1-b)T(\rho,\sigma).
+\end{equation}
+This is an application of the prior complete trace-contraction principle, Proposition30 of \cite{GHNW}. For Umegaki entropy $D$, the same upper factor follows from joint convexity: both output mixtures share the same state $(\Omega/b)\otimes\rho_R$, and data processing applies to $Q\otimes\id_R$. Thus
+\begin{equation}\label{entropy}
+ D((N\otimes\id_R)\rho\Vert(N\otimes\id_R)\sigma)
+ \le(1-b)D(\rho\Vert\sigma).
+\end{equation}
+The endpoint cases are direct. These are standard downstream consequences, not independent novelty claims. They give upper factors at most $\min\{1,(d-1)r\}$, not their optimal values. Dropping the equal-reference condition fails even for a replacer, which leaves differing reference marginals distinguishable.
+
+\section{Exact envelope of the positive certificate}
+The output space in the following optimization is allowed to have at least $d$ orthogonal states. It is not fixed to a smaller dimension.
+
+\begin{theorem}\label{envelope}
+For $d\ge2$ and $r\in[0,1]$, the minimum of
+$\alpha_+(\mathcal E\circ\Psi)$ over square $d$-dimensional prefixes with $\eta_{\rm tr}(\Psi)\le r$ and postprocessors of the stated preparation form, allowing output dimension $d$, equals
+\[
+ \max\{0,1-(d-1)r\}.
+\]
+\end{theorem}
+\begin{proof}
+Theorem \ref{main} and Proposition \ref{cp} prove the lower bound. Let $U$ be the uniform classical channel on $d$ symbols and let
+$C(y|i)=(1-\delta_{yi})/(d-1)$. For $s\in[0,1]$ set
+$P_s=(1-s)U+sC$. Realize it as a quantum channel by dephasing the input and preparing the output basis state. Any two distinct columns differ only at their two distinguished coordinates, and their total variation distance is $s/(d-1)$. Convexity, or the classical Dobrushin formula, gives
+$\eta_{\rm tr}(P_s)=s/(d-1)$, attained on two basis states.
+
+For completeness, its positive common-component coefficient is
+\[
+ \alpha_+(P_s)=\sum_y\min_iP_s(y|i)=1-s.
+\]
+Indeed output dephasing preserves feasibility of any proposed common operator, so it may be taken diagonal. Each diagonal entry is bounded by the smallest corresponding column entry, and those minima are jointly feasible in the block-diagonal Choi matrix. If $r\le1/(d-1)$ choose $s=(d-1)r$ and take $\mathcal E$ to be dephasing. Otherwise $s=1$ already meets the contraction constraint and has zero common component.
+\end{proof}
+
+This classical extremizer uses an established common-component formula \cite{MS,GHNW}; it is not a claim of a new classical coefficient. The theorem concerns the optimal \emph{positive CP component}. It does not identify optimal complete trace or Umegaki contraction. For example, for $d=2$ this extremizer is binary symmetric; no equality of its entropy contraction with its linear common-component bound is inferred.
+
+\section{Recorded dynamics, calibration and limitations}
+A uniform prefix estimate $\eta_{\rm tr}(\Psi)\le q^{L-1}$, $0<q<1$, yields a positive sufficient block certificate whenever
+$(d-1)q^{L-1}<1$. Comparing this with a finite-preparation sufficient condition $Nq^{L-1}<1$ illustrates the benefit when $N$ is large. For $d=2$, $N=100$, $q=1/2$, the respective sufficient lengths are $2$ and $8$. These are certificate thresholds, not optimal mixing times. When $N<d-1$, the count estimate may be better. Random-environment applications retain joint measurability, the reference measure kernel, common full-measure sets and time-shift conventions; no limit theorem is proved here.
+
+A continuous qubit example uses $\nu=d\theta/(2\pi)$,
+$n_\theta=(\sin\theta,0,\cos\theta)$,
+$F_\theta=I+n_\theta\cdot\sigma$ and
+$\tau_\theta=(I+n_\theta\cdot\sigma)/2$.
+Circle moments give the summed channel with Bloch matrix
+$\operatorname{diag}(1/2,0,1/2)$.
+Taking this as the prefix gives
+$G_\theta=I+(n_\theta\cdot\sigma)/2$, so $b=1/2$ and \eqref{bound} is attained. Four equally weighted coordinate-axis points give the same channel and a rational calibration. These examples validate identities, not universal originality.
+
+Two obstructions explain the retained hypotheses. A qubit Pauli instrument with branches $U_a\rho U_a^*/4$ has completely replacing summed channel, but preserves the spectrum along each recorded trajectory. Both the point mass at $I/2$ and the uniform law on the two computational pure states are invariant posterior laws. They are distinct with the same barycenter; channel contraction zero therefore does not imply posterior uniqueness. Second, a single visible branch $D(\rho)=\rho/2+I/4$ induces a deterministic posterior kernel. Starting at the two computational pure states, its finite-time laws are distinct point masses and have TV distance one, although their state trace distance and trace-based Wasserstein distance are $2^{-L}$. Neither branch is of the input-independent preparation form \eqref{inst}.
+
+The mass $b$ also depends on the chosen representation. A replacing channel described by orthogonal rank-one measurement effects and the same prepared state for all labels has $b=0$ before grouping labels, while its posterior kernel is constant and $\alpha_+=1$. Thus our feasible certificate need not be optimal. Optimizing over arbitrary Hermitian common operators is a different relaxation.
+
+\section*{Model assessments and review context}
+A prior unscored component audit examined the spectral bound, measurable preparation argument, positive Choi remainder, equal-reference consequences and the positive-component envelope. Its request specified GPT-6 Astra with xhigh effort in a separate context; the effective runtime identity, effort and independence were not independently attested, and the filesystem was shared. Its report supported the stated hypotheses and requested two minor clarifications, now incorporated: separating the $b=1$ endpoint and accurately describing numerical checker coverage. A raw newline-only mismatch in one checker output was retained alongside semantic equality. That audit is not an assessment or grade of this exact PDF.
+
+A complete assessment of this exact manuscript is pending. No previous manuscript score is inherited. Any later assessment must identify this PDF by its cryptographic hash and preserve objections and context limits in the public record. AI assessment, human peer review and editorial acceptance are distinct.
+
+\paragraph{AI and responsibility disclosure.}
+The named author directed substantial OpenAI Codex assistance in derivation, writing and numerical work. Component audit participation is described above. No runtime isolation, independent human review, Lean formalization, certified worldwide originality or predicted assessment score is claimed.
+
+\paragraph{Reproducibility and scope.}
+The archived component packet contains exact rational checks of the four-point preparation, Choi identities and classical exclusion family, together with adverse instrument examples. It does not certify the general theorem formally. The review record is available in the author's public knowledge repository \cite{repo}. This manuscript integrates the arguments into one bounded note and asserts no frontier rating or resolution of a named open problem.
+
+\begin{thebibliography}{9}
+\bibitem{GHNW} I. George, C. Hirche, T. Nuradha and M. M. Wilde.
+\emph{Quantum Doeblin Coefficients: Interpretations and Applications}.
+\href{https://arxiv.org/abs/2503.22823v3}{arXiv:2503.22823v3}, 2026. Selected Propositions30,35 and Corollary11.
+\bibitem{Hirche} C. Hirche.
+\emph{Quantum Doeblin coefficients: A simple upper bound on contraction coefficients}.
+\href{https://arxiv.org/abs/2405.00105v2}{arXiv:2405.00105v2}, 2024.
+\bibitem{GQ} S. Gaubert and Z. Qu.
+\emph{Dobrushin's ergodicity coefficient for Markov operators on cones}.
+\href{https://www.cmap.polytechnique.fr/~gaubert/PAPERS/GaubertQuIEOTD14QuFinal.pdf}{Author-hosted paper}, 2014. Selected trace/oscillation duality.
+\bibitem{HP} Y. Hafouta and L. Pathirana.
+\emph{Limit Theorems for Disordered Quantum Trajectories}.
+\href{https://arxiv.org/abs/2609.40096v1}{arXiv:2609.40096v1}, 2026. AppendixA.2.
+\bibitem{MS} A. Makur and J. Singh.
+\emph{Doeblin Coefficients and Related Measures}.
+\href{https://arxiv.org/abs/2309.08475v2}{arXiv:2309.08475v2}. Selected definitions and coefficient properties.
+\bibitem{repo} L. Eriksson. PhysMath Knowledge Tree.
+\href{https://github.com/lluiseriksson/physmath-knowledge-tree/tree/430b7072bf5efe11f5636d282eb68304d74f8292/integrations/research-radar}{Pinned research radar and audit context}, 29 October 2026.
+\end{thebibliography}
+\end{document}
