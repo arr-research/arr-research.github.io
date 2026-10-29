@@ -54,6 +54,40 @@ class PaperKeyTests(unittest.TestCase):
             self.assertEqual(db.execute('SELECT COUNT(*) FROM private_accounts').fetchone()[0], 1)
             init_db()  # idempotent migration, preserves key and case
 
+    def test_inline_start_creates_only_a_draft_and_preserves_selected_subject(self):
+        response = self.client.get('/submit?subject=airr-quantum-information')
+        self.assertIn('subject=airr-quantum-information', response.location)
+        page = self.client.get(response.location)
+        self.assertIn(b'Choose your PDF', page.data)
+        self.assertIn(b'value="airr-quantum-information" selected', page.data)
+        response = self.client.post('/paper/new', headers={'X-Paper-Start':'1'},
+                                    data={'csrf_token':self.token(self.client), 'subject':'airr-quantum-information'})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.headers['Cache-Control'], 'no-store')
+        key, draft_url = response.json['key'], response.json['draft_url']
+        self.assertRegex(key, r'^AIRR-[A-Za-z0-9_-]{43}$')
+        with self.client.session_transaction() as state:
+            self.assertNotIn(key, str(dict(state)))
+        with self.app.app_context():
+            db = get_db()
+            self.assertEqual(db.execute('SELECT COUNT(*) FROM submissions').fetchone()[0], 0)
+            self.assertEqual(db.execute('SELECT COUNT(*) FROM publication_permissions').fetchone()[0], 0)
+            draft = db.execute('SELECT * FROM paper_drafts').fetchone()
+            self.assertEqual(json.loads(draft['data_json'])['primary_subject'], 'airr-quantum-information')
+        self.assertEqual(list(Path(self.app.config['QUARANTINE']).iterdir()), [])
+        self.assertEqual(self.app.test_client().get(draft_url).status_code, 401)
+        sent = self.send(draft_url.rsplit('/',1)[-1])
+        self.assertEqual(sent.status_code, 302)
+        returning = self.app.test_client()
+        returning.post('/manage', data={'csrf_token':self.token(returning), 'key':key})
+        self.assertEqual(returning.get(sent.location).status_code, 200)
+
+    def test_inline_start_does_not_bypass_csrf_or_closed_intake(self):
+        self.assertEqual(self.client.post('/paper/new', headers={'X-Paper-Start':'1'}).status_code, 400)
+        token = self.token(self.client)
+        self.app.config['INTAKE_OPEN'] = False
+        self.assertEqual(self.client.post('/paper/new', headers={'X-Paper-Start':'1'}, data={'csrf_token':token}).status_code, 503)
+
     def test_cross_paper_isolation_login_rotation_and_expiration(self):
         key, draft = self.create()
         case = self.send(draft).location

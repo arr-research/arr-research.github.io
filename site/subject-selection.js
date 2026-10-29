@@ -14,8 +14,9 @@
     root.textContent = `Selected subject: ${term.path}. `;
     const intake = root.dataset.intakeUrl;
     if (intake) {
-      const link = document.querySelector(".intake-link");
-      if (link) {const url = new URL(link.href);url.searchParams.set("subject", id);link.href = url.href;}
+      for (const link of document.querySelectorAll(".intake-link, .nav-submit")) {
+        const url = new URL(link.href);url.searchParams.set("subject", id);link.href = url.href;
+      }
       root.append("The private form will keep this selection. Registration remains subject to approval.");
     } else root.append("Private uploads are not open yet. Keep this page to carry the subject into the form when intake opens. No manuscript has been registered.");
   }).catch(() => {root.textContent = "The subject could not be loaded. You can choose it again from the subject directory.";});

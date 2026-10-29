@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}Submission registered — AIRR.SCIENCE{% endblock %}
-{% block content %}<p><a class="button" href="{{ url_for('author_view',submission_id=submission['id']) }}">Open private case</a> · <a href="{{ url_for('dashboard') }}">My submissions</a></p>
+{% block content %}{% set key_paper = paper_access and submission['user_id']==paper_access['user_id'] %}<p><a class="button" href="{{ url_for('author_view',submission_id=submission['id']) }}">Open private case</a> · <a href="{{ url_for('paper_manage') if key_paper else url_for('dashboard') }}">{{ 'Manage my paper' if key_paper else 'My submissions' }}</a></p>
 <p class="eyebrow">Private submission receipt</p>
 <h1>{{ 'File rejected by safety checks' if submission['scan_status'] == 'infected' else 'Your paper has been registered.' }}</h1>
 {% include 'historical-revision.html' %}
@@ -23,7 +23,7 @@
   <p><strong>Pending approval.</strong> AIRR will consider this submission for assessment and approval. Registration does not mean that the paper has been accepted or published.</p>
   {% endif %}
   {% if submission['scan_status'] != 'clean' %}<p class="flash warning">Safety checks are still pending. The file stays in private quarantine until they succeed.</p>{% endif %}
-  <p>Keep this reference for correspondence about the paper. Read editorial responses and reply inside your private workspace. No author email is requested. A published paper receives its final archive identifier separately.</p>
+  <p>Keep this reference for correspondence about the paper. {% if key_paper %}Return through “Manage my paper” with your saved key to read replies or send a new version.{% else %}Read editorial responses and reply inside your private workspace.{% endif %} No author email is requested. A published paper receives its final archive identifier separately.</p>
   {% endif %}
   <p><a class="button" href="{{ url_for('download_receipt') }}">Download your receipt</a></p>
   <details><summary>Manuscript fingerprint</summary><p class="fingerprint">SHA-256: {{ submission['sha256'] }}</p></details>
@@ -44,5 +44,5 @@
 </section>
 <script src="{{ url_for('static', filename='receipt.js') }}" defer></script>
 {% endif %}
-<p><a href="https://airr.science/" rel="noreferrer">Return to AIRR</a> · <a href="{{ url_for('submit') }}">Register another paper</a></p>
+<p><a href="https://airr.science/" rel="noreferrer">Return to AIRR</a> · <a href="{{ url_for('paper_new') }}">Add another paper</a></p>
 {% endblock %}

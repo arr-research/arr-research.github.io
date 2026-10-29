@@ -97,7 +97,8 @@ def install(app, a):
         if not opened():
             return render_template('closed.html'), 503
         if request.method == 'GET':
-            return render_template('paper-start.html')
+            return render_template('paper-start.html', starting=True, draft=None,
+                                   values={'primary_subject': request.args.get('subject', '')})
         a.require_csrf()
         a.enforce_rate('paper-create', 10, 86400)
         a.enforce_rate('paper-create-global', 500, 86400, 'all')
@@ -109,9 +110,15 @@ def install(app, a):
         user = db.execute("INSERT INTO users(email,display_name,password_hash,role,active,created_at) VALUES(?,?,?,'depositor',1,?)",
                           ('paper-' + ident + '@accounts.invalid', 'Paper key holder', '!', a.iso()))
         db.execute('INSERT INTO paper_keys(id,user_id,key_hash,created_at) VALUES(?,?,?,?)', (ident, user.lastrowid, digest(raw), a.iso()))
-        db.execute('INSERT INTO paper_drafts(id,paper_id,created_at) VALUES(?,?,?)', (draft_id, ident, a.iso()))
+        initial = {'primary_subject': request.form.get('subject', '')[:200]}
+        db.execute('INSERT INTO paper_drafts(id,paper_id,data_json,created_at) VALUES(?,?,?,?)',
+                   (draft_id, ident, json.dumps(initial), a.iso()))
         db.commit()
         sign_in(db.execute('SELECT * FROM paper_keys WHERE id=?', (ident,)).fetchone())
+        if request.headers.get('X-Paper-Start') == '1':
+            # Only an empty draft is created here. The selected PDF stays in the
+            # browser until the author requests extraction or confirms sending.
+            return jsonify(key=raw, draft_url=url_for('paper_draft', draft_id=draft_id))
         return render_template('paper-key.html', secret=raw, next_url=url_for('paper_draft', draft_id=draft_id))
 
     @app.route('/manage', methods=['GET', 'POST'])

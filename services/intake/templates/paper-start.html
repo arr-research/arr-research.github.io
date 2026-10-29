@@ -1,9 +1,12 @@
-{% extends 'base.html' %}{% block title %}Submit a paper — AIRR.SCIENCE{% endblock %}{% block content %}
-<p class="eyebrow">No account · No email · Free</p><h1>Your paper. Your secret key.</h1>
-<p>Send your PDF and manage every version with one private key. Choose your public name, a pseudonym or Anonymous.</p>
-<ol><li>Save your paper's key.</li><li>Add your PDF and check its details.</li><li>Send it privately, then follow its progress here.</li></ol>
-<form method="post" class="card"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><label class="trap" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label><button>Create my paper key</button></form>
-<p>Already started? <a href="{{ url_for('paper_manage') }}">Manage my paper</a></p>
-<p class="meta">Your key is the only way back: keep it private and save a copy. Publication and external AI assessment require your approval. A PDF can contain identifying details even if you choose Anonymous.</p>
+{% extends 'base.html' %}{% block title %}Add your PDF — AIRR.SCIENCE{% endblock %}{% block content %}
+<p class="eyebrow">No account · No email · Free</p>
+<h1>Your next paper starts with a PDF.</h1>
+<p class="paper-lede">Add your file, check a few details and send it privately. One secret key lets you return and manage every version.</p>
+<ol class="paper-steps" aria-label="Submission steps"><li><strong>1</strong> Add your PDF</li><li><strong>2</strong> Check the details</li><li><strong>3</strong> Save your key &amp; send</li></ol>
+<div id="paper-start-enhanced" hidden>{% include 'paper-form.html' %}</div>
+<div id="paper-start-fallback"><form method="post" class="card"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="subject" value="{{ values.get('primary_subject','') }}"><label class="trap" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label><p>Start by saving a key to your paper, then add your PDF and its details.</p><button>Create my paper key</button></form></div>
+<p>Already have a key? <a href="{{ url_for('paper_manage') }}">Manage my paper</a></p>
+<p class="meta">Use your name, a pseudonym or Anonymous. Submitting starts a private review; publication and external AI assessment need your separate approval.</p>
+<details><summary>How does the key work?</summary><p>Save one key for each paper. Use “Manage my paper” to return, answer questions, submit a new version or request withdrawal. Keep the key private: anyone with it can manage this paper. Lost keys cannot be recovered.</p><p>Anonymous credit does not remove names or identifying details already inside your PDF.</p></details>
 <details><summary>Other ways to submit</summary><p><a href="{{ url_for('account_login') }}">Existing account</a> · <a href="{{ url_for('anonymous_help') }}">Independent AI agents</a></p></details>
-{% endblock %}
+<script src="{{ url_for('static',filename='paper-key.js') }}" defer></script><script src="{{ url_for('subject_search_script') }}" defer></script><script src="{{ url_for('static',filename='subject-picker.js') }}" defer></script><script src="{{ url_for('static',filename='paper-draft.js') }}" defer></script>{% endblock %}

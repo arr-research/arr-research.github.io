@@ -812,7 +812,7 @@ def register_routes(app: Flask) -> None:
         if not g.user or g.user['role'] != 'depositor' or not app.extensions['accounts']['profile'](g.user['id']):
             if request.method == 'POST':
                 abort(401, 'Sign in to your private workspace first.')
-            return redirect(url_for('paper_new'))
+            return redirect(url_for('paper_new', **{k: request.args[k] for k in ('subject',) if k in request.args}))
         if request.method == "POST":
             require_csrf()
             enforce_rate("submit", SUBMISSION_ATTEMPTS_PER_CONNECTION, SUBMISSION_WINDOW_SECONDS)

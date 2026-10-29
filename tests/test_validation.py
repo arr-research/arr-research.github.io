@@ -575,9 +575,10 @@ class PaperValidationTests(unittest.TestCase):
 
     def test_public_submit_page_links_directly_to_private_receiver(self) -> None:
         page = build_site.build_submit("", "https://arr.example", "https://intake.example")
-        self.assertIn('href="https://intake.example/submit"', page)
+        self.assertIn('href="https://intake.example/paper/new"', page)
         self.assertIn("Paper index", page)
-        self.assertIn("Submit privately", page)
+        self.assertIn("Add your PDF", page)
+        self.assertIn('href="https://intake.example/manage"', page)
         self.assertNotIn('class="submit-hero"', page)
         self.assertNotIn("Request an invitation", page)
         self.assertNotIn("mailto:lluiseriksson@gmail.com?subject=AIRR%20invitation", page)
