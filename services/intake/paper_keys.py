@@ -62,6 +62,7 @@ def install(app, a):
 
     def sign_in(row):
         # A paper key does not establish an account/editor session.
+        session.pop('paper_pending_key_hash', None)
         session['paper_access'] = {'id': row['id'], 'generation': row['generation'],
                                    'expires': a.browser_expiry()}
         session.permanent = True
