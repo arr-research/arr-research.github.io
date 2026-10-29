@@ -1,3 +1,24 @@
+# Account-free paper management (2026-10-29)
+
+The primary human entry is `/paper/new` (also reached from `/submit`). It creates
+one isolated internal depositor and a 256-bit key, without a private account.
+`/manage` accepts the key by POST, never via a URL. The database stores only its
+SHA-256 digest; signed sessions contain a paper identifier/generation/expiry,
+not the key. Rotation invalidates old sessions on every protected request.
+
+Draft text is saved on the server. Submission reservation and revision links are
+committed with the PDF record, preventing duplicate retries and parallel forks.
+Previously published/reviewed versions and their approvals are never inherited
+or overwritten. Private withdrawal uses the existing seven-day retention sweep;
+public withdrawal creates an editorial request. No automatic public deletion or
+public release is claimed. No test upload is needed in production.
+
+Deployment: deploy the intake first with `init-db`, check `/paper/new`, `/manage`,
+`/readyz`, and the isolated tests, then deploy GitHub Pages. Do not deploy the
+new public promise while the receiver still runs the old code. The migration is
+additive. Run `paper-draft-sweep` daily to expire never-submitted draft details
+older than 90 days; it does not erase published/submitted cases or key hashes.
+
 # AIRR private intake service
 
 This service is the direct private-submission boundary in front of the public AIRR

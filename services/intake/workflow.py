@@ -132,11 +132,13 @@ def install(app, a):
 
     def author_case(case_id):
         row = case(case_id)
+        if app.extensions['paper_keys']['owns'](row):
+            return row
         if getattr(g, 'user', None) and g.user['role'] == 'depositor' and row['user_id'] == g.user['id']:
             return row
         # Legacy links remain scoped to pre-workspace deposits only. Password
         # recovery must not leave a bypass for a new workspace's cases.
-        if app.extensions['accounts']['profile'](row['user_id']):
+        if app.extensions['accounts']['profile'](row['user_id']) or app.extensions['paper_keys']['owner'](row['user_id']):
             abort(404)
         access = session.get("author_case") or {}
         if access.get("id") != case_id or access.get("expires", "") < a.iso():
@@ -148,7 +150,7 @@ def install(app, a):
 
     def enqueue(row, subject, body, access=True):
         db = a.get_db()
-        if app.extensions['accounts']['profile'](row['user_id']):
+        if app.extensions['accounts']['profile'](row['user_id']) or app.extensions['paper_keys']['owner'](row['user_id']):
             db.execute('INSERT INTO correspondence(submission_id,kind,body,actor_user_id,created_at) VALUES(?,?,?,?,?)',
                        (row['id'], 'editor_notice', subject + '\n\n' + body,
                         g.user['id'] if getattr(g, 'user', None) and g.user['role'] in {'operator','independent_editor'} else None, a.iso()))
@@ -375,7 +377,7 @@ def install(app, a):
         row = a.get_db().execute('SELECT * FROM access_links WHERE token_hash=? AND used_at IS NULL AND expires_at>?', (digest(token), a.iso())).fetchone()
         if not row:
             abort(404, 'This link is expired or already used. Request a new link from AIRR.')
-        if app.extensions['accounts']['profile'](case(row['submission_id'])['user_id']):
+        if app.extensions['accounts']['profile'](case(row['submission_id'])['user_id']) or app.extensions['paper_keys']['owner'](case(row['submission_id'])['user_id']):
             abort(404)
         if request.method == 'POST':
             a.require_csrf()
@@ -414,6 +416,8 @@ def install(app, a):
                 db.commit()
                 a.audit('author_response_received', submission_id)
             elif action == 'withdraw':
+                if app.extensions['paper_keys']['owner'](row['user_id']):
+                    abort(409, 'Use the withdrawal confirmation at the bottom of this paper page.')
                 if row['status'] in {'accepted_for_publication', 'legal_hold', 'removed', 'withdrawn', 'superseded'}:
                     abort(409)
                 db.execute("UPDATE submissions SET status='withdrawn',updated_at=?,delete_after=? WHERE id=?", (a.iso(), a.iso(a.now() + timedelta(days=7)), submission_id))

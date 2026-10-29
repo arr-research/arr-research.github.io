@@ -21,6 +21,8 @@ import urllib.request
 
 MONITOR = 'airr-intake-monitor'
 BACKGROUND = ['airr-intake-' + name for name in ('mail', 'maintenance', 'backup', 'offsite')]
+# The public archive also contains PDFs that are not extracted for the receiver.
+MAX_SOURCE_BYTES = 512 * 1024 * 1024
 
 
 def deployable_path(relative):
@@ -95,8 +97,8 @@ def main():
     assert values.get('ARR_INTAKE_OPEN', '0').strip().strip('"\'') == '0', 'Pause intake before upgrading'
     url = 'https://codeload.github.com/arr-research/arr-research.github.io/tar.gz/' + args.commit
     with urllib.request.urlopen(url, timeout=90) as response:
-        archive = response.read(128 * 1024 * 1024 + 1)
-    assert len(archive) <= 128 * 1024 * 1024, 'Source archive exceeds deployment limit'
+        archive = response.read(MAX_SOURCE_BYTES + 1)
+    assert len(archive) <= MAX_SOURCE_BYTES, 'Source archive exceeds deployment limit'
     archive_hash = hashlib.sha256(archive).hexdigest()
     release.mkdir(mode=0o755)
     release.chmod(0o755)
@@ -186,10 +188,13 @@ def main():
             for table in ('users', 'recovery_codes'):
                 assert live.execute('SELECT * FROM ' + table + ' ORDER BY rowid').fetchall() == old.execute('SELECT * FROM ' + table + ' ORDER BY rowid').fetchall(), 'Existing credentials changed'
         for path, expected in {'/login':200, '/account/login':200, '/account/recover':200,
-                               '/account/register':503, '/submit':503, '/agents':200}.items():
+                               '/account/register':503, '/submit':503, '/paper/new':503,
+                               '/manage':200, '/agents':200}.items():
             assert status(path) == expected, path
         with sqlite3.connect(database) as db:
             assert db.execute("SELECT 1 FROM sqlite_master WHERE name='private_accounts'").fetchone()
+            assert db.execute("SELECT 1 FROM sqlite_master WHERE name='paper_keys'").fetchone()
+            assert db.execute("SELECT 1 FROM sqlite_master WHERE name='paper_drafts'").fetchone()
             assert 'owner_user_id' in {row[1] for row in db.execute('PRAGMA table_info(agent_grants)')}
         proof = {'commit':args.commit, 'previous_commit':previous.name, 'source_archive_sha256':archive_hash,
                  'preserved_counts':before, 'migration_verified':True, 'readiness':200,
