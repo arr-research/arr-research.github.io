@@ -1,0 +1,363 @@
+Temporal adjoints and injectivity lengths
+in stationary quantum processes
+Lluis Eriksson
+29 October 2026
+Version 2: revised proof and source conventions
+Abstract
+Taking local matrix adjoints along a forward random process does not reverse its
+temporal order. We give finite, ergodic qubit examples in which first and eventual
+Kraus-span injectivity lengths change under this operation. The failure persists for
+bistochastic, two-sided faithful local channels; a three-phase example also changes the onset
+distribution. These examples contradict the pointwise adjoint-length identity in Lemma
+A.1 of arXiv:2607.01446v1, without providing a counterexample to that manuscript’s main
+parent-Hamiltonian or spectral-gap theorems. We state a corrected inverse-base identity. It
+preserves fixed-block distributions, and, under local and dual faithfulness, preserves first and
+eventual onset laws. We also replace an invalid common-kernel step in the source appendix
+by a Choi-rank convergence argument, recovering its eventual-strict-positivity/injectivity
+implication under the cited ergodic convergence theorem. The required normalization and
+endpoint shift are explicit. Fixed-block, first-occurrence, eventual, and pathwise assertions
+remain distinct.
+1 Definitions and the assertion being tested
+Let (Ω,F, µ, T) be an invertible probability-preserving system. A measurable tuple S(ω) =
+(A1(ω), . . . , Ag(ω)) defines
+Φω(a) =
+gX
+i=1
+Ai(ω)aAi(ω)∗.
+Forσ= (i 1, . . . , in), put
+Πn(ω;σ) =A in(Tn−1ω)···A i1 (ω), W n(ω) = spanC{Πn(ω;σ) :σ∈[g] n}.
+Thus later matrices multiply on the left. Define, with inf∅=∞,
+ℓ0(ω) = inf{n≥1 :W n(ω) =M d(C)},
+ℓ(ω) = inf{n≥1 :W m(ω) =M d(C) for everym≥n}.
+These are the site-count conventions in Appendix A of [ 1]; an interval-endpoint convention
+can differ by one.
+Write S∗(ω) = ( Ai(ω)∗)g
+i=1. In this notation S∗ is still driven by theforwardbase T.
+Lemma A.1 of [ 1], version v1, PDF page 34, asserts equality almost surely of both ℓ0(S) and
+ℓ(S) with their S∗ counterparts. Its proposed reversal of Kraus labels does not reverse the
+time arguments:
+ΠS∗
+n (ω;σ) =A in(Tn−1ω)∗ ···A i1 (ω)∗,
+ΠS
+n(ω; revσ)∗ =A in(ω)∗ ···A i1 (Tn−1ω)∗.
+1
+
+The autonomous case is different: when the matrices do not depend on the site, label reversal
+does give the desired identity.
+For calculations we use the unnormalized Choi matrix
+J(Φ) =
+dX
+a,b=1
+Φ(|a⟩⟨b|)⊗ |a⟩⟨b|.
+Its rank is the dimension of the Kraus span. In particular Wn = Md(C) precisely when the
+Choi matrix of the corresponding block channel is positive definite.
+2 Bistochastic counterexamples
+LetP 0 =|0⟩⟨0|,P 1 =|1⟩⟨1|and
+H= 1√
+2
+1 1
+1−1
+
+, D(a) =P 0aP0 +P 1aP1, U= Ad H .
+WriteL(a) = Tr(a)I 2/2. Direct multiplication gives
+DUD=L, D 2 =D, U 2 = id.(1)
+All the channels in this section are trace preserving and unital, as are their Hilbert–Schmidt
+adjoints. A positive map Ψ is called faithful if Ψ( a) = 0 with a≥ 0 implies a = 0. These
+channels and their adjoints are faithful: for a positive map Φ in finite dimensions, faithfulness
+of Φ is equivalent to Φ ∗(I) > 0. Also Φ L = L for a unital Φ, so an exact depolarizing block
+persists under further forward steps.
+Theorem 1.There is an invertible ergodic two-point system of bistochastic qubit channels,
+with both local and dual faithfulness and finite eventual injectivity, for which
+(ℓ0(S), ℓ(S)) = ((3,2),(3,2)),(ℓ 0(S∗), ℓ(S∗)) = ((2,3),(2,3)).
+The displayed pairs list the values at phases0,1.
+Proof. Use the uniform measure on {0, 1} and T(p) = p + 1 mod 2. This transformation is
+ergodic, although it is not mixing. At phase 0 choose the Kraus tuple ( P0, P1), and at phase
+1 choose (HP0, HP1). The forward channels are D, UD; the pointwise adjoints on the same
+base areD, DU.
+For the original process, phase 0 has block channels D, UD, Lat lengths 1 , 2, 3. Phase
+1 has UD, Lat lengths 1 , 2. In the adjoint process, phase 0 has D, L, while phase 1 has
+DU, DU, L. A dephasing channel preceded or followed by a unitary has Choi rank 2, whereas
+J(L) = I4/2 has rank 4. Equation (1) proves these identities exactly. Persistence of L proves
+the assertions for all later lengths. Both Kraus normalizations are I2 in each phase, so all
+stated normalization and faithfulness hypotheses hold.
+Theorem 1 refutes the pointwise equalities, but its two onset distributions happen to agree.
+That observation cannot be promoted to a distributional repair on the unchanged forward
+base.
+Theorem 2.A uniform three-cycle of bistochastic qubit channels has
+ℓ0(S) =ℓ(S) = (4,3,2), ℓ 0(S∗) =ℓ(S ∗) = (2,2,2).
+Consequently the first and eventual onset distributions can also differ.
+2
+
+Proof.On Ω ={0,1,2}, with uniform measure andT(p) =p+ 1 mod 3, take
+Φ0 =D,Φ 1 =UD,Φ 2 =D X :=UDU.
+The last map has Kraus operators HP0H, HP1H. All channels are bistochastic. Before the
+first depolarizing block, the original channel sequences are
+0 D, UD, UD, L
+1 UD, UD, L
+2 DX, L.
+These identities follow from (1). The pointwise-adjoint local channels are D, DU, DX. Every
+consecutive two-step product in this forward three-cycle is L. Each one-step channel has Choi
+rank 2, andLpersists. Thus the stated lengths hold at every phase. In particular
+µ{ℓ0(S)≤2}= 1
+3 , µ{ℓ 0(S∗)≤2}= 1.
+3 The correctly reversed process
+Let bT=T −1 and
+bAi(ω) =A i(T−1ω)∗.
+Both the inverse base and the one-step shift in this definition matter. This is an algebraic
+inverse-base adjoint construction; outside the bistochastic case its local maps need not be trace
+preserving, so it is not automatically a physical reverse channel.
+Proposition 3.For every fixedn≥1,
+bΠn(ω;σ) = Π n(T−nω; revσ)∗, cWn(ω) =W n(T−nω)∗.
+Therefore dim cWn and dimW n have the same distribution. This fixed-block assertion does not
+require ergodicity, trace preservation, unitality, or faithfulness.
+Proof.The reversed word is
+Ain(T−nω)∗ ···A i1 (T−1ω)∗,
+which is the adjoint of the indicated original word. Label reversal is a bijection on [ g]n, and
+matrix adjunction preserves the complex dimension of a span. FinallyT −n preservesµ.
+The shift in Proposition 3 depends on n. Put En = {Wn = Md(C)}. Then bEn = TnEn,
+but
+{ℓ0 ≤N}=
+[
+n≤N
+En,{ bℓ0 ≤N}=
+[
+n≤N
+TnEn.
+Equality of the probabilities of individual events does not identify these unions, or the analogous
+eventual-event intersections.
+Theorem 4.SupposeΦ ω andΦ ∗
+ω are faithful almost surely. Then, on a common full-measure
+set, ℓ = ℓ0 for the original and genuinely reversed processes. Their first-onset laws agree, as
+do their eventual-onset laws, including any mass at infinity. Equality at the same base point is
+not asserted.
+3
+
+Proof. Intersect the full-measure faithfulness set over all integer shifts. For a local Kraus tuple
+write
+F=
+X
+i
+AiA∗
+i = Φ(I), G=
+X
+i
+A∗
+i Ai = Φ∗(I).
+Both are positive definite. Thus
+spani AiMd =M d,span i MdAi =M d.
+Indeed, for anyY,
+Y=
+X
+i
+Ai(A∗
+i F−1Y) =
+X
+i
+(Y G−1A∗
+i )Ai.
+This full-span persistence is the established ingredient in [ 1, Lemma A.3], presented here in
+direct Kraus algebra. In particular a full Kraus span stays full when a later map with Φ( I) > 0
+is added on the left. The same property applies to the reversed process, whose local maps are
+shifted original adjoints. Hence the events En and bEn are increasing in n. First and eventual
+full-span times coincide, and
+µ{ℓ0 ≤n}=µ(E n) =µ( bEn) =µ{ bℓ0 ≤n}.
+These equalities determine the laws onN∪ {∞}.
+In the three-cycle of Theorem 2, genuine reversal has first and eventual lengths (4 , 2, 3).
+Its law agrees with (4 , 3, 2), while the values differ at phases 1 , 2. This also separates Theorem
+4 from a pathwise assertion.
+4 Why persistence cannot be omitted
+The following example supplies an explicit obstruction to inferring onset laws from fixed-block
+laws alone. On a uniform two-cycle use
+R= (E 10, E11), B=
+ 1 0
+0 1/2
+
+,
+√
+3
+2 E01
+!
+, E ab =|a⟩⟨b|.
+Both local channels are trace preserving. The reset channel is Φ R(a) = Tr(a)E11 and its
+adjoint is not faithful.
+Let V = span{E10, E11} and Q = span{diag(1, 1/2), E01}. Direct subspace multiplication
+yields QV = M2, VM 2 = V , and V Q= V . Starting in phase 0, forward spans alternate
+between dimension 2 at odd lengths and 4 at even lengths. Starting in phase 1, the first span
+has dimension 2, even lengths have dimension 2, and odd lengths at least 3 have dimension 4.
+Thus
+ℓ0(S) = (2,3), ℓ(S) = (∞,∞).
+For genuine reversal, the local tuples are B∗, R∗ at phases 0, 1. With C = span{E01, E11} one
+hasCQ ∗ =M 2,Q ∗M2 =M 2,Q ∗C=C, andCC=C. It follows that
+bℓ0 = bℓ= (2,∞).
+At each fixed length n≥ 2, the original and reversed full-span probabilities are both 1 /2. Nev-
+ertheless their first-onset laws differ, and their eventual-finiteness probabilities are respectively
+0 and 1/2. This does not contradict Proposition 3: the joint behavior over lengths matters.
+4
+
+5 A Choi-rank convergence lemma
+In this section only, the base need be neither invertible nor ergodic. All spaces have fixed finite
+dimension. For a complex-linear map Ψ write
+∥Ψ∥1→1 = sup
+∥a∥1=1
+∥Ψ(a)∥1,∆ z(a) = Tr(a)z.
+The norm is taken over all complex matrices. A stationary family means that its local map at
+timejis Φ Tjω.
+Theorem 5.Let T preserve a probability measure and let ω7→ Φω be a measurable family of
+completely positive maps onM d(C). Supposez ω >0is measurable,Trz ω = 1, and
+en(ω) :=∥Φ (n)
+ω −∆ zTnω ∥1→1 −→0almost surely,Φ (n)
+ω = ΦTn−1ω ···Φ ω.(2)
+Then there is a measurable N(ω) <∞ almost surely such that Wn(ω) = Md(C)for every
+n≥N(ω). No exponential rate or deterministic positive lower bound forz ω is required.
+Proof.Putf(ω) =λ min(zω)>0. With the output-first Choi convention fixed above,
+J(∆z) =z⊗I d,∥J(Ψ)∥ ∞ ≤d 2∥Ψ∥1→1.
+The second inequality follows by expanding in matrix units, using ∥Eab∥1 = 1, and applying
+the triangle inequality; sharpness of the constant is irrelevant. Thus
+an(ω) :=∥J(Φ (n)
+ω )−z Tnω ⊗I d∥∞ ≤d 2en(ω)−→0.
+We first derive the local condition needed for persistence. Let
+B={ω: Φ ω(Id) is singular}, g(ω) = 1 B(ω)f(Tω).
+If Φθ(Id) is singular, every local Kraus matrix at θ has range in the same proper output
+subspace: a vector in the kernel of P
+i AiA∗
+i is annihilated by every A∗
+i . Consequently any
+composition ending in this map has a singular Choi matrix, regardless of its earlier prefix. A
+unit vector in the Choi kernel gives
+0≤g(T n−1ω)≤a n(ω).
+This pointwise norm bound requires no measurable selection of kernel vectors. Its left-hand
+side converges to zero almost surely and hence in probability. By stationarity, for each ε >0,
+µ{g > ε}=µ{g◦T n−1 > ε} −→0.
+Therefore g = 0 almost surely. Since f◦T > 0 almost surely, µ(B) = 0, so Φω(Id) > 0 almost
+surely. A countable intersection of forward pullbacks makes this true at every later site of
+almost every trajectory.
+For each k≥ 1 set Ak = {f≥ 1/k}. These sets cover a full-measure set. Poincar´ e
+recurrence says that almost every point of each Ak returns to it infinitely often. Removing
+the countable union of exceptional sets, each remaining ω therefore has some k = k(ω) and
+arbitrarily largenfor whichf(T nω)≥1/k. Choose such annaftera n <1/(2k). Then
+J(Φ(n)
+ω )≥
+ 
+f(T nω)−a n(ω)
+
+Id2 >0.
+The random recurrent floor is sufficient; it need not be uniform inωor in all times.
+Finally, ifJ(Φ (n)
+ω )≥ηI d2 >0, complete positivity gives
+J(Φ(n+1)
+ω ) = (ΦTnω ⊗id)J(Φ (n)
+ω )≥ηΦ Tnω(Id)⊗I d >0.
+Induction proves persistence. The first index with positive smallest Choi eigenvalue is a mea-
+surable finite N, because every finite-time matrix is measurable. All full-measure intersections
+used are countable. The same proof applies whend= 1.
+5
+
+Remark 6.The CP wording in Theorem 5 is not an extension to arbitrary normalized,
+non-trace-preserving cocycles. Its strongunnormalizedhypothesis already forces local trace
+preservation. On a common set where (2) holds at ω and Tω , the identityΦ (n+1)
+ω = Φ(n)
+T ωΦω
+andTrz= 1imply, for everya,
+|Tr Φω(a)−Tra| ≤
+ 
+en(Tω)∥Φ ω∥1→1 +e n+1(ω)
+
+∥a∥1.
+Letting n→ ∞proves the claim. In particular, normalization of a general CP product cannot
+be discarded when invoking(2).
+The finite-dimensional faithful-limit mechanism has an autonomous antecedent in [ 3,
+Proposition 3(c)⇒(b)]. The role of stationarity and recurrence here is to handle a moving
+positive state without a deterministic spectral floor. This argument supplies a scoped proof
+repair, not a claim of a new general mixing theorem.
+6 Repairing the eventual-strict-positivity implication
+Return to an invertible ergodic probability-preserving base and suppose the local maps are
+trace preserving. Define
+q(ω) = inf{n≥1 : Φ (m)
+ω (a)>0 for everym≥nand every 0̸=a≥0}.
+The following is the statement of [1, Proposition A.9], with a replacement proof of the nontrivial
+implication.
+Corollary 7.Under these hypotheses, q <∞ almost surely if and only if ℓ <∞ almost surely.
+Proof. If J(Φ) > 0, then Φ is strictly positive: testing the partial-trace formula against rank-
+one input and output vectors gives a strictly positive quadratic form. Thus q≤ℓ pointwise,
+and one direction follows.
+For the other direction assume q <∞ almost surely. This is the eventual strict positivity
+assumption used in [2]. We invoke its Theorems 1 and 2 under their standing invertible, ergodic
+hypotheses; we do not reprove those theorems. The endpoint convention and normalization
+are as follows. Write the local map at site j as ϕj = ΦTjω. Then our length- n block is their
+Ψn−1,0. For trace-preserving maps,
+Tr[Ψ∗
+n−1,0(Id)] =d, z ′
+0 =I d/d, P n−1,0(a) = Tra
+d zMS
+Tn−1ω.
+Herez MS >0 is their stationary density field. Putez ω =z MS
+T−1ω. Multiplying their normalized
+estimate byd, forn≥2 with source endpointsa= 0,b=n−1,x= 0, yields
+∥Φ(n)
+ω −∆ ezTnω ∥1→1 ≤dC r,0(ω)rn−1,0< r <1,(3)
+with Cr,0 <∞ almost surely. The initial length does not affect convergence. Theorem 5 applies
+and givesℓ <∞almost surely.
+The original forward proof on PDF page 37 of [ 1] infers a nonzero common right-kernel
+projection from failure of the Kraus span to fill Md(C). That inference is invalid: the single
+Kraus matrix I2 has a proper span but zero kernel. In fact a trace-preserving tuple satisfiesP
+i K∗
+i Ki = Id, so it cannot have a nonzero common right-kernel vector. The proof above
+instead uses singularity of theChoi matrixand convergence to a faithful replacement. It
+avoids both that kernel inference and the route through Lemmas A.1, A.8 and A.6 of [ 1]. Their
+downstream uses of A.1 are therefore not relied upon in this proof. It does not assert that the
+statement of A.9 was false.
+6
+
+7 Scope, reproducibility and review context
+The counterexamples invalidate the specific local-adjoint identity in [ 1, Lemma A.1]. Corollary
+7 repairs a separate appendix proof using the cited convergence theorem with its actual
+assumptions. Neither correction refutes or certifies the main parent-Hamiltonian construction,
+spectral-gap criteria, or a classification of gapped ergodic matrix product states. Inspection
+of selected primary statements and proof passages is not a whole-paper audit of either cited
+source.
+The all-length conclusions rest on algebraic proofs, not extrapolation from finite ranks.
+The earlier scripts are:
+check bistochastic1221.py
+check three phase1222.py
+check reverse1223.py.
+They are fixed in PhysMath Knowledge Tree at the immutable commit and directory
+de24e4e461fb35bda8336cf248fe85bb5c3e2f61
+integrations/research-radar/evidence/2026-10-29-temporal-audit-context/.
+Copy them to a writable scratch directory and run each with Python; the recorded environment
+is Python 3.12.14 with SymPy 1.14.0. The version-specific source bundle also supplies
+check repair1237 pure.py, a self-contained extraction of the original repair-control prefix.
+It checks singular-last-output support and the nonstationary-target/nonfaithful-limit boundary
+examples. The earlier combined script’s unrelated prior-task-reading suffix was excluded by
+the reviewer; that packaging defect and the original frozen script remain recorded, rather than
+retrospectively altered. These controls do not prove the general convergence theorem. No
+Lean formalization or certified worldwide originality is claimed.
+Model assessments and review context.This revision adds the scoped proof repair in
+Sections 5–6; it is a different PDF from the published first version. Two unscored component
+audits examined, respectively, the counterexamples/reversal and the conditional Choi-rank
+repair. They are not assessments of this complete revised manuscript. The latter audit
+retained the dimension/index matching, the trace-preservation consequence of the convergence
+hypothesis, the control-script packaging defect, known autonomous antecedents and provenance
+limitations. Original reports and all objections are preserved. Requested configuration was
+GPT-6 Astra with xhigh effort in separately initiated contexts; effective model identity, effort,
+runtime isolation, prior model-level participation and independence were unattested. The
+filesystem was shared. Any full assessment of this frozen revised PDF must have its own
+exact-hash public record and full report; no score from a component audit or an earlier PDF
+transfers to it.
+AI and responsibility disclosure.Lluis Eriksson directed OpenAI Codex assistance
+in mathematical development, writing and exact computation and is responsible for the
+manuscript. The audits were AI-assisted under the limitations stated above. No independent
+human review, full formal verification, guaranteed priority, predicted assessment score or
+editorial admission is claimed.
+References
+[1] O. Ekblad, E. Moreno-Nadales, E. B. Roon and J. H. Schenker,Parent Hamiltonians of
+Ergodic Matrix Product States, arXiv:2607.01446v1, 1 July 2026. https://arxiv.org/
+abs/2607.01446v1.
+7
+
+[2] R. Movassagh and J. Schenker,An ergodic theorem for quantum processes with applications
+to matrix product states, Communications in Mathematical Physics395(2022), 1175–1196.
+Version consulted:https://arxiv.org/abs/1909.11769v4.
+[3] M. Sanz, D. P´ erez-Garc´ ıa, M. M. Wolf and J. I. Cirac,A quantum version of Wielandt’s
+inequality, IEEE Transactions on Information Theory56(2010), 4668–4673. Version
+consulted:https://arxiv.org/abs/0909.5347v2.
+8

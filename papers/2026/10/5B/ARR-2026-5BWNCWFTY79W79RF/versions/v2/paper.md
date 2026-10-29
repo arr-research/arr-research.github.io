@@ -1,0 +1,5 @@
+# Temporal adjoints and injectivity lengths in stationary quantum processes
+
+Canonical manuscript: paper.pdf. Working paper, not editorial acceptance.
+
+One full exact-PDF AI assessment REVIEW1242: official overall4.20/10, criteria4/4/3/3/4 stars; supplementary technical8.30/10 and importance3.70/10 are separate descriptive scales, not official criteria or inputs to overall. Recommendation minor revision; no material mathematical error found in reported checks. AllM1-M6 and L1-L4 preserved with accompanying clarifications, assessed8pagePDF unchanged. Requested GPT-6 Astra xhigh in separately initiated fork-none context; effective identity, effort, isolation and independence unattested; shared filesystem, author-directed Codex development and earlier unscored component audits disclosed. No prior-version score transferred. No independent human peer review, native gate pass, founder-review quorum, editorial admission, global priority or main parent-Hamiltonian/gap theorem validation is claimed.
