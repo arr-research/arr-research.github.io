@@ -1,0 +1,214 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=27mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,booktabs,microtype}
+\usepackage[hidelinks]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\M}{\mathbb M_d(\mathbb C)}
+\newcommand{\Span}{\operatorname{span}}
+\newcommand{\Ad}{\operatorname{Ad}}
+\newcommand{\tr}{\operatorname{Tr}}
+\newcommand{\id}{\operatorname{id}}
+\title{Temporal adjoints and injectivity lengths\\in stationary quantum processes}
+\author{Lluis Eriksson}
+\date{29 October 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+Taking local matrix adjoints along a forward random process does not reverse its temporal order. We give finite, ergodic qubit examples in which first and eventual Kraus-span injectivity lengths change under this operation. The failure persists for bistochastic, two-sided faithful local channels; a three-phase example also changes the onset distribution. These examples contradict the pointwise adjoint-length identity in Lemma A.1 of arXiv:2607.01446v1, without providing a counterexample to that manuscript's main parent-Hamiltonian or spectral-gap theorems. We state a corrected inverse-base identity. It preserves fixed-block distributions, and, under local and dual faithfulness, preserves first and eventual onset laws. The distinction between fixed-block, first-occurrence, eventual, and pathwise assertions is essential.
+\end{abstract}
+
+\section{Definitions and the assertion being tested}
+Let $(\Omega,\mathcal F,\mu,T)$ be an invertible probability-preserving system. A measurable tuple
+$S(\omega)=(A_1(\omega),\ldots,A_g(\omega))$ defines
+\[
+ \Phi_\omega(a)=\sum_{i=1}^g A_i(\omega)aA_i(\omega)^*.
+\]
+For $\sigma=(i_1,\ldots,i_n)$, put
+\[
+ \Pi_n(\omega;\sigma)=A_{i_n}(T^{n-1}\omega)\cdots A_{i_1}(\omega),
+ \qquad W_n(\omega)=\Span_{\mathbb C}\{\Pi_n(\omega;\sigma):\sigma\in[g]^n\}.
+\]
+Thus later matrices multiply on the left. Define, with $\inf\varnothing=\infty$,
+\begin{align*}
+ \ell_0(\omega)&=\inf\{n\geq1:W_n(\omega)=\M\},\\
+ \ell(\omega)&=\inf\{n\geq1:W_m(\omega)=\M\text{ for every }m\geq n\}.
+\end{align*}
+These are the site-count conventions in Appendix A of \cite{EMPS}; an interval-endpoint convention can differ by one.
+
+Write $S^*(\omega)=(A_i(\omega)^*)_{i=1}^g$. In this notation $S^*$ is still driven by the \emph{forward} base $T$. Lemma A.1 of \cite{EMPS}, version v1, PDF page 34, asserts equality almost surely of both $\ell_0(S)$ and $\ell(S)$ with their $S^*$ counterparts. Its proposed reversal of Kraus labels does not reverse the time arguments:
+\begin{align*}
+ \Pi_n^{S^*}(\omega;\sigma)
+ &=A_{i_n}(T^{n-1}\omega)^*\cdots A_{i_1}(\omega)^*,\\
+ \Pi_n^S(\omega;\operatorname{rev}\sigma)^*
+ &=A_{i_n}(\omega)^*\cdots A_{i_1}(T^{n-1}\omega)^*.
+\end{align*}
+The autonomous case is different: when the matrices do not depend on the site, label reversal does give the desired identity.
+
+For calculations we use the unnormalized Choi matrix
+\[
+ J(\Phi)=\sum_{a,b=1}^d |a\rangle\langle b|\otimes\Phi(|a\rangle\langle b|).
+\]
+Its rank is the dimension of the Kraus span. In particular $W_n=\M$ precisely when the Choi matrix of the corresponding block channel is positive definite.
+
+\section{Bistochastic counterexamples}
+Let $P_0=|0\rangle\langle0|$, $P_1=|1\rangle\langle1|$ and
+\[
+ H=\frac1{\sqrt2}\begin{pmatrix}1&1\\1&-1\end{pmatrix},\qquad
+ D(a)=P_0aP_0+P_1aP_1,\qquad U=\Ad_H.
+\]
+Write $L(a)=\tr(a)I_2/2$. Direct multiplication gives
+\begin{equation}\label{depol}
+ DUD=L,\qquad D^2=D,\qquad U^2=\id.
+\end{equation}
+All the channels used below are trace preserving and unital, as are their Hilbert--Schmidt adjoints. They and their adjoints are faithful: for a positive map $\Phi$ in finite dimensions, faithfulness of $\Phi$ is equivalent to $\Phi^*(I)>0$. Also $\Phi L=L$ for a unital $\Phi$, so an exact depolarizing block persists under further forward steps.
+
+\begin{theorem}\label{two}
+There is an invertible ergodic two-point system of bistochastic qubit channels, with both local and dual faithfulness and finite eventual injectivity, for which
+\[
+ (\ell_0(S),\ell(S))=((3,2),(3,2)),\qquad
+ (\ell_0(S^*),\ell(S^*))=((2,3),(2,3)).
+\]
+The displayed pairs list the values at phases $0,1$.
+\end{theorem}
+\begin{proof}
+Use the uniform measure on $\{0,1\}$ and $T(p)=p+1\bmod2$. This transformation is ergodic, although it is not mixing. At phase $0$ choose the Kraus tuple $(P_0,P_1)$, and at phase $1$ choose $(HP_0,HP_1)$. The forward channels are $D,UD$; the pointwise adjoints on the same base are $D,DU$.
+
+For the original process, phase $0$ has block channels $D,UD,L$ at lengths $1,2,3$. Phase $1$ has $UD,L$ at lengths $1,2$. In the adjoint process, phase $0$ has $D,L$, while phase $1$ has $DU,DU,L$. A dephasing channel preceded or followed by a unitary has Choi rank $2$, whereas $J(L)=I_4/2$ has rank $4$. Equation \eqref{depol} proves these identities exactly. Persistence of $L$ proves the assertions for all later lengths. Both Kraus normalizations are $I_2$ in each phase, so all stated normalization and faithfulness hypotheses hold.
+\end{proof}
+
+Theorem \ref{two} refutes the pointwise equalities, but its two onset distributions happen to agree. That observation cannot be promoted to a distributional repair on the unchanged forward base.
+
+\begin{theorem}\label{three}
+A uniform three-cycle of bistochastic qubit channels has
+\[
+ \ell_0(S)=\ell(S)=(4,3,2),\qquad
+ \ell_0(S^*)=\ell(S^*)=(2,2,2).
+\]
+Consequently the first and eventual onset distributions can also differ.
+\end{theorem}
+\begin{proof}
+On $\Omega=\{0,1,2\}$, with uniform measure and $T(p)=p+1\bmod3$, take
+\[
+ \Phi_0=D,\qquad \Phi_1=UD,\qquad \Phi_2=D_X:=UDU.
+\]
+The last map has Kraus operators $HP_0H,HP_1H$. All channels are bistochastic. Before the first depolarizing block, the original channel sequences are
+\[
+ \begin{array}{c|l}
+ 0&D,\ UD,\ UD,\ L\\
+ 1&UD,\ UD,\ L\\
+ 2&D_X,\ L .
+ \end{array}
+\]
+These identities follow from \eqref{depol}. The pointwise-adjoint local channels are $D,DU,D_X$. Every consecutive two-step product in this forward three-cycle is $L$. Each one-step channel has Choi rank $2$, and $L$ persists. Thus the stated lengths hold at every phase. In particular
+\[
+ \mu\{\ell_0(S)\leq2\}=\tfrac13,\qquad
+ \mu\{\ell_0(S^*)\leq2\}=1.
+\]
+\end{proof}
+
+\section{The correctly reversed process}
+Let $\widehat T=T^{-1}$ and
+\[
+ \widehat A_i(\omega)=A_i(T^{-1}\omega)^*.
+\]
+Both the inverse base and the one-step shift in this definition matter.
+
+\begin{proposition}\label{fixed}
+For every fixed $n\geq1$,
+\[
+ \widehat\Pi_n(\omega;\sigma)
+ =\Pi_n(T^{-n}\omega;\operatorname{rev}\sigma)^*,\qquad
+ \widehat W_n(\omega)=W_n(T^{-n}\omega)^*.
+\]
+Therefore $\dim\widehat W_n$ and $\dim W_n$ have the same distribution. This fixed-block assertion does not require ergodicity, trace preservation, unitality, or faithfulness.
+\end{proposition}
+\begin{proof}
+The reversed word is
+\[
+ A_{i_n}(T^{-n}\omega)^*\cdots A_{i_1}(T^{-1}\omega)^*,
+\]
+which is the adjoint of the indicated original word. Label reversal is a bijection on $[g]^n$, and matrix adjunction preserves the complex dimension of a span. Finally $T^{-n}$ preserves $\mu$.
+\end{proof}
+
+The shift in Proposition \ref{fixed} depends on $n$. Put $E_n=\{W_n=\M\}$. Then
+$\widehat E_n=T^nE_n$, but
+\[
+ \{\ell_0\leq N\}=\bigcup_{n\leq N}E_n,\qquad
+ \{\widehat\ell_0\leq N\}=\bigcup_{n\leq N}T^nE_n.
+\]
+Equality of the probabilities of individual events does not identify these unions, or the analogous eventual-event intersections.
+
+\begin{theorem}\label{law}
+Suppose $\Phi_\omega$ and $\Phi_\omega^*$ are faithful almost surely. Then, on a common full-measure set, $\ell=\ell_0$ for the original and genuinely reversed processes. Their first-onset laws agree, as do their eventual-onset laws, including any mass at infinity. Equality at the same base point is not asserted.
+\end{theorem}
+\begin{proof}
+Intersect the full-measure faithfulness set over all integer shifts. For a local Kraus tuple write
+\[
+ F=\sum_i A_iA_i^*=\Phi(I),\qquad G=\sum_i A_i^*A_i=\Phi^*(I).
+\]
+Both are positive definite. Thus
+\[
+ \Span_i A_i\mathbb M_d=\mathbb M_d,\qquad
+ \Span_i\mathbb M_dA_i=\mathbb M_d.
+\]
+Indeed, for any $Y$,
+\[
+ Y=\sum_i A_i(A_i^*F^{-1}Y)
+   =\sum_i(YG^{-1}A_i^*)A_i.
+\]
+In particular a full Kraus span stays full when a later faithful-range map is added on the left. The same property applies to the reversed process, whose local maps are shifted original adjoints. Hence the events $E_n$ and $\widehat E_n$ are increasing in $n$. First and eventual full-span times coincide, and
+\[
+ \mu\{\ell_0\leq n\}=\mu(E_n)=\mu(\widehat E_n)
+ =\mu\{\widehat\ell_0\leq n\}.
+\]
+These equalities determine the laws on $\mathbb N\cup\{\infty\}$.
+\end{proof}
+
+In the three-cycle of Theorem \ref{three}, genuine reversal has first and eventual lengths $(4,2,3)$. Its law agrees with $(4,3,2)$, while the values differ at phases $1,2$. This also separates Theorem \ref{law} from a pathwise assertion.
+
+\section{Why persistence cannot be omitted}
+The following example supplies an explicit obstruction to inferring onset laws from fixed-block laws alone. On a uniform two-cycle use
+\[
+ R=(E_{10},E_{11}),\qquad
+ B=\left(\begin{pmatrix}1&0\\0&1/2\end{pmatrix},
+                 \frac{\sqrt3}{2}E_{01}\right),
+ \qquad E_{ab}=|a\rangle\langle b|.
+\]
+Both local channels are trace preserving. The reset channel is
+$\Phi_R(a)=\tr(a)E_{11}$ and its adjoint is not faithful.
+
+Let $V=\Span\{E_{10},E_{11}\}$ and
+$Q=\Span\{\operatorname{diag}(1,1/2),E_{01}\}$. Direct subspace multiplication yields
+$QV=\mathbb M_2$, $V\mathbb M_2=V$, and $VQ=V$.
+Starting in phase $0$, forward spans alternate between dimension $2$ at odd lengths and $4$ at even lengths. Starting in phase $1$, the first span has dimension $2$, even lengths have dimension $2$, and odd lengths at least $3$ have dimension $4$. Thus
+\[
+ \ell_0(S)=(2,3),\qquad \ell(S)=(\infty,\infty).
+\]
+For genuine reversal, the local tuples are $B^*,R^*$ at phases $0,1$. With $C=\Span\{E_{01},E_{11}\}$ one has $CQ^*=\mathbb M_2$, $Q^*\mathbb M_2=\mathbb M_2$, $Q^*C=C$, and $CC=C$. It follows that
+\[
+ \widehat\ell_0=\widehat\ell=(2,\infty).
+\]
+At each fixed length $n\geq2$, the original and reversed full-span probabilities are both $1/2$. Nevertheless their first-onset laws differ, and their eventual-finiteness probabilities are respectively $0$ and $1/2$. This does not contradict Proposition \ref{fixed}: the joint behavior over lengths matters.
+
+\section{Scope, reproducibility and review context}
+The counterexamples concern the specific adjoint identity of Lemma A.1 in \cite{EMPS}, v1. They do not demonstrate failure of its main parent-Hamiltonian construction, its spectral-gap criteria, or its eventual-strict-positivity equivalence under the additional hypotheses of that proposition. An invalid helper identity is not itself a counterexample to a main theorem. The results here do not classify gapped ergodic matrix product states.
+
+The all-length conclusions above follow from symbolic channel and subspace identities. Exact-arithmetic finite checks support them but are not used as extrapolations to infinite length. Code and scoped evidence are maintained in the author's \href{https://github.com/lluiseriksson/physmath-knowledge-tree}{PhysMath Knowledge Tree}; the source-audit snapshot is \href{https://github.com/lluiseriksson/physmath-knowledge-tree/pull/177}{PR177}. Later declared two- and three-phase supplements must be bound to their actual evidence versions rather than inferred to be in that earlier snapshot. No Lean formalization or certified worldwide originality is claimed.
+
+\paragraph{Model assessments and review context.}
+One component audit, completed on 29 October 2026, examined the source definitions, the original reset control, the two declared bistochastic supplements, and the corrected reversal identity. It supported the scoped counterexamples and retained the limitation concerning the main theorems. It supplied no numerical score and was not an assessment of this complete manuscript. Requested configuration was GPT-6 Astra with xhigh effort in a separately initiated context. Effective model identity, effective effort, runtime isolation and reviewer independence were unattested; the filesystem was shared and supplemental inputs were declared. The original report and objections are preserved. Any subsequent assessment of the full frozen PDF belongs to its exact version-specific public review record, and must not be inherited from this component audit.
+
+\paragraph{AI and responsibility disclosure.}
+The named author directed OpenAI Codex assistance in mathematical development, writing and exact computation. The component audit was AI-assisted under the context limitations above. The named author is responsible for the manuscript; no independent human review, full formal verification, guaranteed priority or predicted assessment score is claimed.
+
+\begin{thebibliography}{9}
+\bibitem{EMPS}
+O.~Ekblad, E.~Moreno-Nadales, E.~B.~Roon and J.~H.~Schenker,
+\emph{Parent Hamiltonians of Ergodic Matrix Product States},
+arXiv:2607.01446v1, 1 July 2026.
+\url{https://arxiv.org/abs/2607.01446v1}.
+\end{thebibliography}
+\end{document}
