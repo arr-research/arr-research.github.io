@@ -573,7 +573,7 @@ def assessment_badge(paper, assessments: list[dict], href: str = "#model-assessm
                         if aggregate["material_objection_report_ids"] else "")
     return (
         f'<a class="assessment-compact" href="{esc(href)}">{star_row(aggregate["stars"])}'
-        f'<span>{aggregate["score"]:.2f}/10 · {esc(aggregate["tier"])} · n={aggregate["count"]} · {rating_backing(aggregate)}</span>{objection_notice}</a>'
+        f'<span>{aggregate["score"]:.2f} · {esc(aggregate["tier"])} · n={aggregate["count"]} · {rating_backing(aggregate)}</span>{objection_notice}</a>'
     )
 
 
@@ -720,8 +720,20 @@ def card_assessments() -> list[dict]:
 def card_rating(paper, base: str) -> str:
     reports = card_assessments()
     href = f'{base}/{record_route(paper.metadata)}/{quote(paper.id)}/#model-assessments'
-    badge = assessment_badge(paper, reports, href)
-    return f'<div class="paper-card-rating"><span>Model assessment</span>{badge}</div>'
+    aggregate = paper_rating(paper, reports)
+    if aggregate is None:
+        return '<div class="paper-card-rating"><span>Model assessment · Not yet rated</span></div>'
+    objection = ('<p class="assessment-objection">Material objections recorded · editorial review needed</p>'
+                 if aggregate["material_objection_report_ids"] else "")
+    return f'''<section class="paper-card-rating" aria-label="Model assessment">
+  <a class="paper-card-assessment-link" href="{esc(href)}">Model assessment →</a>
+  <div class="assessment-summary">
+    <div>{star_row(aggregate['stars'])}<strong>{aggregate['score']:.2f} / 10.00</strong><span>{esc(aggregate['tier'])}</span></div>
+    <dl><div><dt>Distinct models</dt><dd>{aggregate['count']}</dd></div><div><dt>Range</dt><dd>{aggregate['minimum']:.2f}–{aggregate['maximum']:.2f}</dd></div><div><dt>Method</dt><dd>bounded capability-weighted mean · exact version only</dd></div></dl>
+    <p>{rating_backing(aggregate)}. This is an evidence description, not a probability of correctness.</p>
+    <p>{esc("; ".join(aggregate["evidence_reasons"]))}</p>{objection}
+  </div>
+</section>'''
 
 
 def paper_card(
