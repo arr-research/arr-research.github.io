@@ -718,22 +718,16 @@ def card_assessments() -> list[dict]:
 
 
 def card_rating(paper, base: str) -> str:
-    reports = card_assessments()
-    href = f'{base}/{record_route(paper.metadata)}/{quote(paper.id)}/#model-assessments'
-    aggregate = paper_rating(paper, reports)
+    aggregate = paper_rating(paper, card_assessments())
     if aggregate is None:
-        return '<div class="paper-card-rating"><span>Model assessment · Not yet rated</span></div>'
-    objection = ('<p class="assessment-objection">Material objections recorded · editorial review needed</p>'
-                 if aggregate["material_objection_report_ids"] else "")
-    return f'''<section class="paper-card-rating" aria-label="Model assessment">
-  <a class="paper-card-assessment-link" href="{esc(href)}">Model assessment →</a>
-  <div class="assessment-summary">
-    <div>{star_row(aggregate['stars'])}<strong>{aggregate['score']:.2f} / 10.00</strong><span>{esc(aggregate['tier'])}</span></div>
-    <dl><div><dt>Distinct models</dt><dd>{aggregate['count']}</dd></div><div><dt>Range</dt><dd>{aggregate['minimum']:.2f}–{aggregate['maximum']:.2f}</dd></div><div><dt>Method</dt><dd>bounded capability-weighted mean · exact version only</dd></div></dl>
-    <p>{rating_backing(aggregate)}. This is an evidence description, not a probability of correctness.</p>
-    <p>{esc("; ".join(aggregate["evidence_reasons"]))}</p>{objection}
-  </div>
-</section>'''
+        return ""
+    href = f'{base}/{record_route(paper.metadata)}/{quote(paper.id)}/#model-assessments'
+    return (
+        f'<a class="paper-card-rating" href="{esc(href)}" '
+        f'aria-label="Model assessment: {aggregate["stars"]} of 10 stars. View assessment details" '
+        f'title="Model assessment · View the scale and assessment details">'
+        f'{star_row(aggregate["stars"])}</a>'
+    )
 
 
 def paper_card(
@@ -758,8 +752,7 @@ def paper_card(
     return f"""
 <article class="paper-card">
   <div class="paper-card-header"><div class="paper-meta">{type_badge(metadata)}{status_badge(metadata['status'])}<span>{esc(metadata['id'])} · {esc(metadata['version'])}</span></div><span class="paper-date">{chronology_label} {display_date(paper_chronology(metadata, timestamp))}</span></div>
-  <h3><a href="{base}/{record_route(metadata)}/{quote(metadata['id'])}/">{esc(metadata['title'])}</a></h3>
-  {rating_html}
+  <h3><a href="{base}/{record_route(metadata)}/{quote(metadata['id'])}/">{esc(metadata['title'])}</a> {rating_html}</h3>
   <div class="paper-byline"><p class="authors">{authors}</p><a class="paper-card-cite" href="{base}{version_path(metadata)}#cite">Cite this version</a></div>
   <p class="paper-summary">{esc(metadata['abstract'])}</p>
   {working_note}
