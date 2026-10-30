@@ -2,7 +2,8 @@
 
 ## 1. Publish a citable working paper
 
-A clean manuscript may enter the public catalogue as `working_paper` after the
+A clean manuscript meeting the [minimum publication standards](TAKEDOWN_POLICY.md)
+may enter the public catalogue as `working_paper` after the
 depositor authorizes worldwide release of that exact SHA-256 version and chooses
 its manuscript license. The record immediately receives its stable AIRR identifier,
 immutable version URL and BibTeX, RIS, CSL JSON and plain-text citations. Every
@@ -14,6 +15,14 @@ impersonation or clearly unlawful-content checks may block publication. Scientif
 objections lead to `changes_requested` and a new immutable version, not silent
 replacement. Withdrawal leaves a public tombstone because open copies may already
 exist.
+
+Working-paper status does not exempt a manuscript from minimum scholarly
+relevance, clarity, evidence and integrity requirements. AIRR may decline release,
+request corrections, withdraw a published paper or restrict access to its files
+when those minimum standards are not met. The editor records the reason, normally
+preserves a withdrawal notice and version history, and follows the existing appeal
+procedure. This minimum threshold is separate from admission to the accepted
+collection; a request for scientific revision alone does not require withdrawal.
 
 ## 2. Prepare a candidate
 
