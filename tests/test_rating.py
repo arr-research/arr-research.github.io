@@ -201,6 +201,7 @@ class RatingTests(unittest.TestCase):
         page=build_site.build_papers_index([accepted],timestamps,"","https://example.test")
         self.assertIn("Model assessment",page)
         self.assertIn("★",page)
+        self.assertIn('<span class="paper-card-tier">VERY GOOD</span>',page)
         self.assertNotIn("4.55 / 10.00",page)
         self.assertNotIn('class="assessment-summary"',page)
         self.assertNotIn("Limited evidence",page)

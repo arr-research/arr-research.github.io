@@ -724,9 +724,9 @@ def card_rating(paper, base: str) -> str:
     href = f'{base}/{record_route(paper.metadata)}/{quote(paper.id)}/#model-assessments'
     return (
         f'<a class="paper-card-rating" href="{esc(href)}" '
-        f'aria-label="Model assessment: {aggregate["stars"]} of 10 stars. View assessment details" '
+        f'aria-label="Model assessment: {aggregate["stars"]} of 10 stars. {esc(aggregate["tier"])}. View assessment details" '
         f'title="Model assessment · View the scale and assessment details">'
-        f'{star_row(aggregate["stars"])}</a>'
+        f'{star_row(aggregate["stars"])}<span class="paper-card-tier">{esc(aggregate["tier"].upper())}</span></a>'
     )
 
 
