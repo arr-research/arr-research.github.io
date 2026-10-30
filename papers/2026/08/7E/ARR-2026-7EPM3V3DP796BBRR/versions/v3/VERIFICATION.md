@@ -1,0 +1,11 @@
+# Exact artifact verification and limitations
+
+Canonical PDF: c9de923a66038ed66c3f68ecf8256b3f738a3ccf27e41f77e470bf7dc3efb5b9; 362292 bytes; 13 pages. The preserved public PDF source is THE-ERIKSSON-PROGRAMME commit ba71e81cb07cd35578de9aac11d0992ff78061b5, papers/flat-coarse-rank/v3-candidate/flat_coarse_rank.pdf. The LaTeX source is pinned at 794afd87d24f6f3284722a3aeb9471e316f19623; its LF SHA-256 is 4a86a5630f9f72a40b29d1e58db58671f4a82c8a8c5d8b08c99ba05c21a9361e.
+
+Owned Linux Colab render034 completed eight steps with exit zero and produced a 33-entry manifest, all checked. The preparing agent inspected all 13 rendered pages of this exact PDF. No clipping or overlap was observed; pages 11 and 13 are sparse, a retained minor layout limitation. The render ZIP SHA-256 is 1f3aad78397e239bf01afae9c7cf04050dbe25c1932976b4c442ecbfc9692abf. The full render evidence, scripts and per-page images remain in the author's preserved reproducibility delivery; render034-validation.json records the observation. This is preparing-agent QA, not independent certification.
+
+The source and claim audit is preserved in preparing-agent-mathematical-audit.md and declaration-map.json. Formal operator and full-space tangent results have separately pinned, matching fresh Colab reproductions as described there and in the manuscript. Imported Mathlib uses its pinned cache. This is not an independent reconstruction of all dependencies from source. The exact nonlinear regular-sector extension is analytic in this PDF; later proofs do not retrospectively change its review or evidence context.
+
+Mathematical correctness, originality and physical relevance are distinct. The principal mechanisms are classical. No new exact-v3 external assessment, numerical score, scientific independence, human peer review or acceptance is asserted. Site metadata deliberately leaves bibliography, overall reproducibility and Lean screening not_assessed rather than transferring earlier version assessments.
+
+Scope remains finite flat unit-spacing forms, genuine quadratic energy, actual local upper-quadratic penalty and the stated regularity/rank assumptions. The continuum and interacting physical mass-gap problems remain open. PR29's ledger stays 20/41, TermSource=0.
