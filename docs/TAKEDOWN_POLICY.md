@@ -2,6 +2,27 @@
 
 AIRR preserves the scholarly record while responding to law, safety, privacy, and integrity concerns.
 
+## Minimum publication standards — clarified 2026-10-30
+
+Every paper, including a Working paper, must meet minimum standards of scholarly
+relevance, clarity, evidence and integrity: a coherent research question or
+contribution, intelligible reasoning, support proportionate to its claims,
+accurate attribution and explicit limitations. Rights and safety checks also apply.
+
+AIRR reserves the right to decline publication, request corrections, withdraw
+published work or restrict access to its files when these minimum standards are
+not met or later cease to be met. Working-paper status is not an exemption and
+creates no entitlement to continued hosting or admission to the accepted collection.
+The minimum publication threshold is separate from the full acceptance process;
+an unresolved scientific question or a request for revision does not by itself
+require withdrawal of an otherwise eligible Working paper.
+
+The editor records the evidence and reason for the decision. Withdrawal normally
+leaves the notice and history described below; it does not silently rewrite the
+manuscript or recall copies already held elsewhere. The existing notice and
+editorial-appeal procedure remains available. This clarification describes
+editorial discretion; existing deposits retain their recorded terms.
+
 ## Normal correction
 
 A substantive correction creates a new immutable version and records `supersedes_version_id`. Published assets and manifests are not overwritten.
