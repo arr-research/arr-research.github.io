@@ -11,6 +11,7 @@ from unittest.mock import patch
 
 import test_intake as fixtures
 from services.intake.app import get_db, iso, now
+from scripts import airr_submit as agent_client
 
 
 class AgentIntakeTests(unittest.TestCase):
@@ -111,6 +112,47 @@ class AgentIntakeTests(unittest.TestCase):
             self.assertEqual(get_db().execute('SELECT COUNT(*) FROM submissions').fetchone()[0],1)
             self.assertEqual(get_db().execute('SELECT uses FROM agent_grants').fetchone()[0],1)
         self.assertEqual(len(list(Path(self.app.config['QUARANTINE']).glob('*.pdf'))),1)
+
+    def test_downloadable_client_recovers_a_lost_success_response_end_to_end(self):
+        grant = self.request_grant()
+        self.approve(grant)
+        folder = Path(self.temp.name) / 'client-job'
+        folder.mkdir()
+        pdf = folder / 'paper.pdf'
+        pdf.write_bytes(b'%PDF-1.7\nsynthetic end-to-end client fixture\n%%EOF')
+        metadata = folder / 'metadata.json'
+        metadata.write_text(json.dumps({
+            'title': 'Client end-to-end fixture', 'authors': 'Test author', 'abstract': 'A' * 120,
+            'primary_subject': 'airr-matrix-analysis', 'secondary_subjects': [], 'specific_topic': '',
+            'ai_disclosure': 'Synthetic integration test; no real paper is deposited.',
+            'operator_conflict': False, 'rights_confirmed': True}))
+        job = folder / 'job.json'
+        agent_client.prepare(pdf, metadata, job)
+        lose_response = True
+
+        def real_local_api(method, path, token=None, data=None, headers=None):
+            nonlocal lose_response
+            request_headers = {**(headers or {}), 'Authorization': 'Bearer ' + token}
+            response = self.client.open(path, method=method, data=data, headers=request_headers)
+            if method == 'POST':
+                response.request.environ['wsgi.input'].close()
+            self.assertIn(response.status_code, (200, 201), response.data)
+            if method == 'POST' and lose_response:
+                lose_response = False
+                raise agent_client.ClientError('Lost success response, retry the same job.')
+            return response.get_json()
+
+        with patch.object(agent_client, 'load_credential', return_value=grant), patch.object(agent_client, 'call', side_effect=real_local_api), patch('services.intake.app.scan_file', return_value=('clean', 'fixture scanner')):
+            with self.assertRaisesRegex(agent_client.ClientError, 'Lost success'):
+                agent_client.submit(job, folder / 'credential')
+            result = agent_client.submit(job, folder / 'credential')
+        self.assertEqual(result['sha256'], hashlib.sha256(pdf.read_bytes()).hexdigest())
+        self.assertEqual(result['size_bytes'], pdf.stat().st_size)
+        self.assertFalse(result['published'])
+        self.assertTrue(Path(str(job) + '.receipt.json').exists())
+        with self.app.app_context():
+            self.assertEqual(get_db().execute('SELECT COUNT(*) FROM submissions').fetchone()[0], 1)
+            self.assertEqual(get_db().execute('SELECT uses FROM agent_grants').fetchone()[0], 1)
 
     def test_revoke_works_while_intake_is_paused_and_cannot_be_undone_by_replay(self):
         grant = self.request_grant()

@@ -27,6 +27,8 @@ class IndependentDiscoveryTests(unittest.TestCase):
             self.assertIn(link, page)
         self.assertIn('id="independent"', page)
         self.assertIn('id="anonymous"', page)
+        self.assertIn('/preview/airr-submit.py', page)
+        self.assertIn('a browser file picker is not required', page)
         self.assertIn('A human sponsor is not required', page)
         self.assertIn('does not mean intake is currently open', page)
         self.assertNotIn('only archive', page.lower())
