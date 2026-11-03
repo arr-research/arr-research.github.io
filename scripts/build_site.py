@@ -41,6 +41,7 @@ from assessmentlib import (
     validate_highlights,
     validate_public_assessments,
 )
+from legacyreviewlib import load_preserved_reviews, read_preserved_review, validate_preserved_reviews
 
 
 SITE_DIR = ROOT / "site"
@@ -998,6 +999,51 @@ def published_input_notices() -> list[dict]:
     return load_assessment_registry().get("operator_notices", [])
 
 
+@lru_cache(maxsize=1)
+def published_preserved_reviews() -> list[dict]:
+    return load_preserved_reviews()["reviews"]
+
+
+def render_preserved_reviews(paper, records: list[dict], base: str = "") -> str:
+    rendered = []
+    for record in records:
+        if (record["paper_id"] != paper.id or record["version_id"] != paper.metadata["version_id"]
+                or record["canonical_sha256"] != assessment_artifact_sha256(paper)):
+            continue
+        native = read_preserved_review(record, paper)
+        links = "".join(
+            f'<li><a href="https://github.com/arr-research/arr-research.github.io/blob/main/{quote(source["path"], safe="/")}">{esc(role)}</a>'
+            f' · SHA-256 <code>{esc(source["sha256"])}</code></li>'
+            for role, source in record["sources"].items()
+        )
+        provenance = native["provenance"]
+        limits = "".join(f'<li>{esc(limit)}</li>' for limit in native["scope_limits"])
+        comments = "".join(f'<li>{esc(c["id"])} · {esc(c["location"])}: {esc(c["comment"])}</li>' for c in native.get("optional_comments", []))
+        objections = findings_block("Native material objections", native["material_objections"])
+        corrections = findings_block("Native required corrections", native["required_corrections"])
+        rendered.append(
+            '<details class="model-report historical-model-report"><summary>Preserved historical exact-PDF report</summary>'
+            f'<p>Original review date: {esc(native["date"])} (day precision). Original scientific importance: '
+            f'<strong>{native["importance_airr"]["score"]:.2f} / 10</strong>. '
+            f'Technical quality is a separate native measure: {native["technical_quality"]["score"]:.2f} / 10.</p>'
+            '<p>This historical report is not included in the current aggregate or ranking. It has not been rewritten '
+            'as a modern assessment response, re-reviewed or assigned a new score.</p>'
+            f'<p>Requested configuration: {esc(provenance.get("requested_configuration", "not recorded"))}. '
+            'Actual model identity, effort and independence are not authenticated. '
+            'Prior participation and reused context are disclosed in the original verdict and full report.</p>'
+            f'<p>Original model recommendation: {esc(native["recommendation"])}. This is not editorial acceptance or peer review.</p>'
+            f'<p>{esc(native["importance_airr"]["basis"])}</p><h4>Native scope limits</h4><ul>{limits}</ul>'
+            f'{objections}{corrections}<h4>Optional comments retained</h4><ul>{comments}</ul>'
+            f'<p>Exact PDF SHA-256: <code>{esc(record["canonical_sha256"])}</code>.</p>'
+            f'<ul>{links}</ul></details>'
+        )
+    if not rendered:
+        return ""
+    return ('<section id="historical-model-reports"><h3>Historical reports outside the current aggregate</h3>'
+            + "".join(rendered)
+            + f'<p><a href="{base}/registry/preserved-model-reviews.json">Machine-readable historical evidence record</a></p></section>')
+
+
 def render_input_notices(paper, notices: list[dict], base: str) -> str:
     matching = [n for n in notices if n["paper_id"] == paper.id
                 and n["version_id"] == paper.metadata["version_id"]
@@ -1020,8 +1066,11 @@ def render_input_notices(paper, notices: list[dict], base: str) -> str:
 def paper_assessment_section(paper, assessments: list[dict], highlight: dict | None, base: str) -> str:
     items = assessments_for(assessments, paper)
     aggregate = paper_rating(paper, assessments)
+    historical = render_preserved_reviews(paper, published_preserved_reviews(), base)
     if aggregate is None:
         summary = '<div class="assessment-summary unrated"><strong>Not yet rated</strong><p>No supported exact-version report is published for this exact version. Missing evidence is not scored as zero.</p></div>'
+        if historical:
+            summary = '<div class="assessment-summary unrated"><strong>Not yet rated in the current aggregate</strong><p>A historical exact-PDF report is preserved below. Its native format has not been converted into a modern assessment response and contributes no headline score.</p></div>'
     else:
         weight_rows = "".join(f'<tr><td>{esc(" · ".join(w["model"]))}</td><td>{w["score"]:.2f}</td><td>{w["weight"]:.3f}</td><td>{esc(w["reason"])}</td></tr>' for w in aggregate["weights"])
         summary = f"""
@@ -1082,7 +1131,7 @@ def paper_assessment_section(paper, assessments: list[dict], highlight: dict | N
     return f"""
 <section class="model-assessments" id="model-assessments">
   <header><div><span>Longitudinal frontier-model record</span><h2>Model assessments and review context</h2></div><a href="{base}/assessments/#scale">Read the scale and limits</a></header>
-  {summary}{render_input_notices(paper, published_input_notices(), base)}{highlight_html}<div class="model-report-list">{history}</div>
+  {summary}{render_input_notices(paper, published_input_notices(), base)}{highlight_html}<div class="model-report-list">{history}</div>{historical}
   <p class="protocol-note">A model assessment is not peer review or a correctness certificate. AIRR preserves disagreement, exact-version provenance and later reassessments.</p>
 </section>"""
 
@@ -1896,6 +1945,7 @@ def main() -> int:
         print(f"Cannot build site: {error}", file=sys.stderr)
         return 1
     assessment_errors = validate_public_assessments(assessment_registry, all_versions)
+    assessment_errors.extend(validate_preserved_reviews(load_preserved_reviews(), all_versions))
     highlight_errors = validate_highlights(highlight_registry, all_versions)
     if assessment_errors or highlight_errors:
         print("Cannot build site: assessment registry validation failed.", file=sys.stderr)
@@ -1958,6 +2008,7 @@ def main() -> int:
     (OUTPUT_DIR / "registry").mkdir(parents=True)
     shutil.copy2(ROOT / "registry" / "record-timestamps.json", OUTPUT_DIR / "registry" / "record-timestamps.json")
     shutil.copy2(ROOT / "registry" / "model-assessments.json", OUTPUT_DIR / "registry" / "model-assessments.json")
+    shutil.copy2(ROOT / "registry" / "preserved-model-reviews.json", OUTPUT_DIR / "registry" / "preserved-model-reviews.json")
     shutil.copy2(ROOT / "registry" / "editorial-highlights.json", OUTPUT_DIR / "registry" / "editorial-highlights.json")
     shutil.copytree(ROOT / "registry" / "benchmarks", OUTPUT_DIR / "registry" / "benchmarks")
     rating_snapshot = {"policy": "AIRR-RATING-1.0", "papers": [{"paper_id":p.id, "version_id":p.metadata["version_id"], "sha256":assessment_artifact_sha256(p), "editorial_status":p.metadata["status"], "rating":paper_rating(p,assessments)} for p in papers]}

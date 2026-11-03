@@ -87,6 +87,22 @@ not a fabricated ARR-ASSESS response. Validation checks both the raw bytes and a
 lossless reconstruction against the public file. No new review, runtime identity,
 context isolation or editorial decision is asserted by the import.
 
+### Historical reports without a compatible response format
+
+An original historical verdict may lack a protocol identifier, exact review time,
+or fields required by the current response schema. Do not invent those fields or
+ask for a repeated review merely to populate them. Preserve the original verdict,
+full report and sealed receipt as public exact-PDF evidence. The separate
+`registry/preserved-model-reviews.json` records their public paths and byte hashes;
+validation checks the matching version, PDF and receipt bindings.
+
+These reports appear in the matching paper's review-context section, outside the
+current aggregate and ranking. The display retains the original date precision,
+native scientific-importance score, separately labelled technical-quality score,
+comments, objections and provenance limits. Publishing historical evidence is not
+a new assessment, a new score, a conversion into ARR-ASSESS-1.0, or an editorial
+decision. It cannot satisfy the modern assessment requirement for admission.
+
 ## Prior participation, separate review context and aggregation
 
 Current public `accepted` and `corrected` versions must have at least one genuine,
