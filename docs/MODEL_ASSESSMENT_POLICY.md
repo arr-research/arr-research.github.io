@@ -103,6 +103,14 @@ comments, objections and provenance limits. Publishing historical evidence is no
 a new assessment, a new score, a conversion into ARR-ASSESS-1.0, or an editorial
 decision. It cannot satisfy the modern assessment requirement for admission.
 
+Bounded correction follow-ups retain their narrower scope. An explicitly
+reconfirmed score for a changed PDF is displayed as such, together with its
+reliance on the earlier audit; it is not a new full or independent review. A
+follow-up that issues no score retains empty scores and cannot borrow a
+predecessor's grade. These formats additionally require the original artifact
+manifest, its receipt digest, and the manifest's bindings to the unchanged report
+and verdict. A seal timestamp is not substituted for a missing review date.
+
 ## Prior participation, separate review context and aggregation
 
 Current public `accepted` and `corrected` versions must have at least one genuine,

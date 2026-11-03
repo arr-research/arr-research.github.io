@@ -41,7 +41,7 @@ from assessmentlib import (
     validate_highlights,
     validate_public_assessments,
 )
-from legacyreviewlib import load_preserved_reviews, read_preserved_review, validate_preserved_reviews
+from legacyreviewlib import load_preserved_reviews, read_preserved_review, validate_preserved_reviews, preserved_review_family
 
 
 SITE_DIR = ROOT / "site"
@@ -1004,6 +1004,49 @@ def published_preserved_reviews() -> list[dict]:
     return load_preserved_reviews()["reviews"]
 
 
+def render_bounded_review(record: dict, native: dict, links: str) -> str:
+    family = preserved_review_family(native)
+    if family == "bounded_reconfirmation":
+        ratings, reliance = native["ratings"], native["reliance"]
+        title = "Bounded correction review with explicit score reconfirmation"
+        date_text = "Review date is not recorded as a verdict field; the original seal time is retained in the receipt."
+        score_text = (f'Original scientific importance explicitly reconfirmed for this PDF: '
+                      f'<strong>{ratings["importance_airr_0_to_10"]:.2f} / 10</strong>. '
+                      f'Technical quality is a separate native measure: {ratings["technical_quality_0_to_10"]:.2f} / 10.')
+        scope = (f'This bounded correction review relies on audit {esc(reliance["previous_audit_id"])} '
+                 f'for predecessor PDF <code>{esc(reliance["previous_pdf_sha256"])}</code>. '
+                 'It is not a new full or independent review, and the score reconfirmation was explicit rather than automatic.')
+        comments = [f'{key} · {c["status"]} · {c["location"]}: {c["evidence"]}' for key, c in native["comments"].items()]
+        objections = native["new_material_objections"]
+        recommendation = native["editorial_recommendation"]
+        configuration = native["provenance"].get("requested_model_configuration", "not recorded")
+    else:
+        title = "Bounded correction follow-up without a score"
+        date_text = f'Original review date: {esc(native["review_date"])} (day precision).'
+        score_text = '<strong>No score issued.</strong> No numerical assessment was reassessed or carried forward from the predecessor.'
+        scope = ('This is a bounded correction follow-up reusing the earlier proof audit. '
+                 'It is not a new full or independent review. The original score fields remain empty.')
+        comments = [f'{c["id"]} · {c["status"]} · {c["location"]}: {c["evidence"]}' for c in native["prior_objections"]]
+        comments += [f'{n["id"]} · {n["location"]}: {n["finding"]}' for n in native["nonblocking_notes"]]
+        objections = native["pending_required_scientific_objections"]
+        recommendation = native["recommendation"]
+        provenance = native["provenance"]
+        configuration = " · ".join(str(provenance[k]) for k in ("requested_model", "requested_reasoning_effort") if k in provenance)
+    comment_html = "".join(f'<li>{esc(c)}</li>' for c in comments)
+    return (
+        f'<details class="model-report historical-model-report"><summary>{title}</summary>'
+        f'<p>{date_text}</p><p>{score_text}</p><p>{scope}</p>'
+        '<p>This historical evidence is not included in the current aggregate or ranking. '
+        'It has not been rewritten as a modern assessment response.</p>'
+        f'<p>Requested configuration: {esc(configuration)}. Actual model identity, effort and independence '
+        'are not authenticated; reused context and prior participation remain disclosed in the original report.</p>'
+        f'<p>Original model recommendation: {esc(recommendation)}. This is not editorial acceptance or peer review.</p>'
+        f'{findings_block("Native pending material objections", objections)}'
+        f'<h4>Native corrections and notes</h4><ul>{comment_html}</ul>'
+        f'<p>Exact PDF SHA-256: <code>{esc(record["canonical_sha256"])}</code>.</p><ul>{links}</ul></details>'
+    )
+
+
 def render_preserved_reviews(paper, records: list[dict], base: str = "") -> str:
     rendered = []
     for record in records:
@@ -1016,6 +1059,9 @@ def render_preserved_reviews(paper, records: list[dict], base: str = "") -> str:
             f' · SHA-256 <code>{esc(source["sha256"])}</code></li>'
             for role, source in record["sources"].items()
         )
+        if preserved_review_family(native) != "full":
+            rendered.append(render_bounded_review(record, native, links))
+            continue
         provenance = native["provenance"]
         limits = "".join(f'<li>{esc(limit)}</li>' for limit in native["scope_limits"])
         comments = "".join(f'<li>{esc(c["id"])} · {esc(c["location"])}: {esc(c["comment"])}</li>' for c in native.get("optional_comments", []))

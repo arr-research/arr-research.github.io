@@ -8,7 +8,7 @@ from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 from arrlib import discover_papers
 from assessmentlib import load_assessment_registry, aggregate_assessments, assessments_for
-from legacyreviewlib import load_preserved_reviews, read_preserved_review, validate_preserved_reviews
+from legacyreviewlib import load_preserved_reviews, read_preserved_review, validate_preserved_reviews, preserved_review_family
 from build_site import render_preserved_reviews
 
 
@@ -59,6 +59,48 @@ class PreservedReviewTests(unittest.TestCase):
             rendered = render_preserved_reviews(self.paper, [self.record])
         self.assertIn("&lt;script&gt;", rendered)
         self.assertNotIn("<script>", rendered)
+
+    def bounded_case(self, paper_id):
+        record = next(r for r in self.registry["reviews"] if r["paper_id"] == paper_id)
+        paper = next(p for p in self.papers if p.id == paper_id and p.metadata["version_id"] == record["version_id"])
+        return record, paper
+
+    def test_bounded_reconfirmation_is_explicit_and_not_a_second_full_review(self):
+        record, paper = self.bounded_case("ARR-2026-16NB5DD5M18TTBET")
+        native = read_preserved_review(record, paper)
+        self.assertEqual(preserved_review_family(native), "bounded_reconfirmation")
+        self.assertTrue(native["ratings"]["explicitly_reconfirmed_for_this_pdf"])
+        self.assertFalse(native["ratings"]["automatic_transfer_from_draft1"])
+        rendered = render_preserved_reviews(paper, [record])
+        for text in ("5.00 / 10", "separate native measure: 9.00", "relies on audit 390", "not a new full or independent review", "Review date is not recorded", "C1", "C2", "C3"):
+            self.assertIn(text, rendered)
+        self.assertIsNone(aggregate_assessments(assessments_for(load_assessment_registry()["assessments"], paper)))
+
+    def test_scoreless_followup_preserves_empty_scores_and_correction_scope(self):
+        record, paper = self.bounded_case("ARR-2026-5K8R1DT82Q95JSHY")
+        native = read_preserved_review(record, paper)
+        self.assertEqual(preserved_review_family(native), "scoreless_followup")
+        self.assertIsNone(native["airr_importance_0_10"])
+        self.assertIsNone(native["technical_quality_0_10"])
+        self.assertFalse(native["prior_scores_transferred"])
+        rendered = render_preserved_reviews(paper, [record])
+        for text in ("No score issued", "2026-10-25 (day precision)", "O1", "O2", "O3", "N1"):
+            self.assertIn(text, rendered)
+        for text in ("3.80", "8.50", "0.00 / 10"):
+            self.assertNotIn(text, rendered)
+        self.assertIsNone(aggregate_assessments(assessments_for(load_assessment_registry()["assessments"], paper)))
+
+    def test_bounded_reports_require_the_original_manifest_and_matching_receipt(self):
+        for paper_id in ("ARR-2026-16NB5DD5M18TTBET", "ARR-2026-5K8R1DT82Q95JSHY"):
+            record, paper = self.bounded_case(paper_id)
+            incomplete = copy.deepcopy(record)
+            del incomplete["sources"]["manifest"]
+            with self.assertRaises(ValueError):
+                read_preserved_review(incomplete, paper)
+            swapped = copy.deepcopy(record)
+            swapped["sources"]["receipt"] = self.record["sources"]["receipt"]
+            with self.assertRaises(ValueError):
+                read_preserved_review(swapped, paper)
 
 
 if __name__ == "__main__":
