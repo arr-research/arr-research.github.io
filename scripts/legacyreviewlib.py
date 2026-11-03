@@ -30,7 +30,7 @@ def read_preserved_review(record: dict, paper) -> dict:
         raise ValueError("preserved review must match the exact version and PDF")
     parse_exact_timestamp(record["recorded_at"])
     sources = record["sources"]
-    if not isinstance(sources, dict) or set(sources) != {"verdict", "report", "receipt"}:
+    if not isinstance(sources, dict) or set(sources) not in ({"verdict", "report", "receipt"}, {"verdict", "report", "receipt", "manifest"}):
         raise ValueError("verdict, full report and sealed receipt are required")
     payload = {}
     for role, source in sources.items():
@@ -49,6 +49,10 @@ def read_preserved_review(record: dict, paper) -> dict:
     receipt = json.loads(payload["receipt"])
     if not isinstance(native, dict) or not isinstance(receipt, dict) or not payload["report"].strip():
         raise ValueError("native verdict, sealed receipt and full report are required")
+    family = preserved_review_family(native)
+    if family != "full":
+        validate_bounded_review(record, payload, native, receipt, family)
+        return native
     if native.get("kind") != "private_full_exact_version_scientific_review":
         raise ValueError("unsupported historical verdict format")
     if (native["artifact"]["pdf_sha256"] != record["canonical_sha256"]
@@ -81,6 +85,84 @@ def read_preserved_review(record: dict, paper) -> dict:
                    for c in native["optional_comments"])):
         raise ValueError("invalid native comments")
     return native
+
+
+def preserved_review_family(native: dict) -> str:
+    if native.get("kind") == "private_full_exact_version_scientific_review":
+        return "full"
+    if native.get("type") == "bounded draft2 correction review with explicit rating reconfirmation":
+        return "bounded_reconfirmation"
+    if native.get("review_status") == "complete_bounded_followup":
+        return "scoreless_followup"
+    raise ValueError("unsupported historical verdict format")
+
+
+def validate_bounded_review(record: dict, payload: dict, native: dict, receipt: dict, family: str) -> None:
+    """Bind bounded formats through their ORIGINAL manifest, never a new response."""
+    if "manifest" not in payload:
+        raise ValueError("bounded evidence requires its original sealed manifest")
+    sources = record["sources"]
+    if receipt["manifest_sha256"] != sources["manifest"]["sha256"]:
+        raise ValueError("sealed receipt does not bind the original manifest")
+    manifest = json.loads(payload["manifest"])
+    entries = {entry["path"]: entry for entry in manifest["files"]}
+    for role in ("report", "verdict"):
+        name = Path(sources[role]["path"]).name
+        if entries[name]["sha256"] != sources[role]["sha256"]:
+            raise ValueError("original manifest does not bind the native report and verdict")
+    if family == "bounded_reconfirmation":
+        if (native["artifact"]["pdf_sha256"] != record["canonical_sha256"]
+                or receipt["pdf_reviewed_sha256"] != record["canonical_sha256"]
+                or native["audit_id"] != receipt["audit_id"]
+                or receipt["report_sha256"] != sources["report"]["sha256"]
+                or receipt["verdict_sha256"] != sources["verdict"]["sha256"]):
+            raise ValueError("bounded reconfirmation does not match the sealed exact PDF")
+        parse_exact_timestamp(receipt["sealed_at_utc"])
+        ratings = native["ratings"]
+        if (ratings["explicitly_reconfirmed_for_this_pdf"] is not True
+                or ratings["automatic_transfer_from_draft1"] is not False
+                or receipt["closure"]["explicit_reconfirmation_for_new_pdf"] is not True
+                or native["reliance"]["new_independent_full_review"] is not False):
+            raise ValueError("native bounded reconfirmation and reliance must be explicit")
+        for key, receipt_key in (("importance_airr_0_to_10", "importance_airr"), ("technical_quality_0_to_10", "technical_quality")):
+            score = ratings[key]
+            if (isinstance(score, bool) or not isinstance(score, (int, float))
+                    or not math.isfinite(score) or not 0 <= score <= 10
+                    or score != receipt["closure"][receipt_key]):
+                raise ValueError("native reconfirmed score does not match its receipt")
+        if not isinstance(native["comments"], dict) or not isinstance(native["new_material_objections"], list):
+            raise ValueError("native correction findings must be retained")
+        for comment in native["comments"].values():
+            if not isinstance(comment, dict) or any(not isinstance(comment.get(k), str) for k in ("status", "location", "evidence")):
+                raise ValueError("invalid native correction comment")
+        if (not isinstance(native["editorial_recommendation"], str)
+                or not isinstance(native["reliance"]["previous_audit_id"], int)
+                or not isinstance(native["reliance"]["previous_pdf_sha256"], str)):
+            raise ValueError("native bounded recommendation and predecessor must be retained")
+    else:
+        if (native["pdf"]["sha256"] != record["canonical_sha256"]
+                or receipt["pdf_sha256"] != record["canonical_sha256"]
+                or native["review_id"] != receipt["operation"]
+                or receipt["status"] != "SEALED_COMPLETE_BOUNDED_FOLLOWUP"):
+            raise ValueError("scoreless followup does not match the sealed exact PDF")
+        date.fromisoformat(native["review_date"])
+        for obj in (native, receipt):
+            if obj["scores_reassessed"] is not False or obj["prior_scores_transferred"] is not False:
+                raise ValueError("scoreless followup cannot reassess or transfer prior scores")
+        if native["technical_quality_0_10"] is not None or native["airr_importance_0_10"] is not None:
+            raise ValueError("scoreless native verdict must retain null scores")
+        if not isinstance(native["pending_required_scientific_objections"], list):
+            raise ValueError("pending native findings must be retained")
+        if not isinstance(native["prior_objections"], list) or not isinstance(native["nonblocking_notes"], list) or not isinstance(native["recommendation"], str):
+            raise ValueError("native followup recommendation and findings must be retained")
+        for comment in native["prior_objections"]:
+            if not isinstance(comment, dict) or any(not isinstance(comment.get(k), str) for k in ("id", "status", "location", "evidence")):
+                raise ValueError("invalid native followup comment")
+        for note in native["nonblocking_notes"]:
+            if not isinstance(note, dict) or any(not isinstance(note.get(k), str) for k in ("id", "location", "finding")):
+                raise ValueError("invalid native followup note")
+    if not isinstance(native.get("provenance"), dict):
+        raise ValueError("native bounded provenance must be retained")
 
 
 def validate_preserved_reviews(registry: object, papers) -> list[str]:
