@@ -11,7 +11,7 @@ from flask import Blueprint, abort, g, redirect, render_template, request, sessi
 from werkzeug.exceptions import HTTPException
 
 from services.intake.storage import receive
-from services.intake import historical_revisions
+from services.intake import historical_revisions, programme_delegations
 
 MAX_UPLOADS = 5
 SCHEMA = '''
@@ -40,6 +40,7 @@ def digest(value):
 def migrate(db):
     db.executescript(SCHEMA)
     historical_revisions.migrate(db)
+    programme_delegations.migrate(db)
     columns = {row[1] for row in db.execute('PRAGMA table_info(submissions)')}
     for name, default in (('submission_channel', 'human'), ('agent_provenance_json', '{}')):
         if name not in columns:
@@ -109,6 +110,7 @@ def install(app, a):
             abort(403, 'A current private workspace must own this delegation.')
         if grant['terms_version'] != a.TERMS_VERSION or grant['privacy_version'] != a.PRIVACY_VERSION:
             abort(403, 'New terms require a new delegation.')
+        programme_delegations.check_child(app, a, grant['id'])
 
     @api.post('/agent-requests')
     def create_request():
@@ -138,10 +140,11 @@ def install(app, a):
     def authorization_status():
         grant = credential()
         revision = historical_revisions.binding_for(a.get_db(), grant["id"])
+        child = programme_delegations.artifact_for(a.get_db(), grant['id'])
         a.enforce_rate('agent-status',120,3600,grant['id'])
         expiry = grant['expires_at'] or grant['request_expires_at']
         return {'request_id':grant['id'],'state':grant['state'] if expiry > a.iso() else 'expired',
-                'expires_at':expiry,'uploads_remaining':max(0,(1 if revision else MAX_UPLOADS)-grant['uses']),
+                'expires_at':expiry,'uploads_remaining':max(0,(1 if revision or child else MAX_UPLOADS)-grant['uses']),
                 'scope':['revision:create' if revision else 'submission:create','submission:receipt'],'intake_open':opened()}
 
     def receipt(row):
@@ -197,6 +200,7 @@ def install(app, a):
             value[field] = text(value[field],minimum,maximum)
         value['authors'] = value['authors'] or 'Anonymous'
         binding = historical_revisions.check_current(app, revision) if revision else None
+        child = programme_delegations.check_child(app, a, grant['id'], value)
         if binding and (value.get('sha256') != binding['sha256'] or value['authors'] != app.config['HISTORICAL_OPERATOR_AUTHOR'] or value.get('operator_conflict') is not True):
             abort(400, 'PDF, operator author and conflict must match the revision authorization.')
         if value['rights_confirmed'] is not True or type(value['operator_conflict']) is not bool:
@@ -214,15 +218,16 @@ def install(app, a):
         if existing:
             if existing['request_hash'] != request_hash:
                 abort(409, 'This Idempotency-Key already belongs to different metadata or PDF bytes.')
-            if binding and hashlib.sha256(request.files['manuscript'].read(a.MAX_PDF_BYTES + 1)).hexdigest() != binding['sha256']:
+            if (binding or child) and hashlib.sha256(request.files['manuscript'].read(a.MAX_PDF_BYTES + 1)).hexdigest() != (binding or child)['sha256']:
                 abort(400, 'Retry PDF differs from the authorized artifact.')
             return receipt(a.get_db().execute('SELECT * FROM submissions WHERE id=?',(existing['submission_id'],)).fetchone())
         a.enforce_rate('submit-account',a.SUBMISSIONS_PER_ACCOUNT,a.SUBMISSION_WINDOW_SECONDS,str(grant['owner_user_id']))
         a.enforce_rate('agent-submit-ip',a.SUBMISSION_ATTEMPTS_PER_CONNECTION,a.SUBMISSION_WINDOW_SECONDS)
         def reserve(db,case_id):
+            programme_delegations.check_child(app, a, grant['id'], value)
             changed = db.execute('''UPDATE agent_grants SET uses=uses+1 WHERE id=? AND state='approved'
                 AND expires_at>? AND uses<? AND terms_version=? AND privacy_version=?''',
-                (grant['id'],a.iso(),1 if binding else MAX_UPLOADS,a.TERMS_VERSION,a.PRIVACY_VERSION)).rowcount
+                (grant['id'],a.iso(),1 if binding or child else MAX_UPLOADS,a.TERMS_VERSION,a.PRIVACY_VERSION)).rowcount
             if changed != 1:
                 abort(403, 'Delegation is expired, revoked or exhausted.')
             try:
@@ -311,4 +316,5 @@ def install(app, a):
         return render_template('agent-verify.html',grant=grant)
 
     historical_revisions.install(app, a, require_open)
+    programme_delegations.install(app, a, api, require_open)
     app.register_blueprint(api)

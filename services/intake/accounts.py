@@ -138,6 +138,7 @@ def install(app, a):
                 abort(409, 'This recovery code has already been used.')
             db.execute('UPDATE users SET password_hash=? WHERE id=?', (generate_password_hash(password), row['user_id']))
             db.execute("UPDATE agent_grants SET state='revoked' WHERE owner_user_id=?", (row['user_id'],))
+            db.execute("UPDATE programme_delegations SET state='revoked' WHERE owner_user_id=?", (row['user_id'],))
             db.commit()
             signed_in(row['user_id'], row['credential_version'] + 1)
             a.audit('private_workspace_recovered')
@@ -148,6 +149,7 @@ def install(app, a):
     @require_account
     def account_settings():
         return render_template('account-settings.html', account=profile(a, g.user['id']),
+            programmes=a.get_db().execute('SELECT id,state,created_at FROM programme_delegations WHERE owner_user_id=? ORDER BY created_at DESC', (g.user['id'],)).fetchall(),
             grants=a.get_db().execute('SELECT id,agent_name,state,expires_at FROM agent_grants WHERE owner_user_id=? ORDER BY created_at DESC', (g.user['id'],)).fetchall())
 
     @app.post('/account/password')
@@ -170,6 +172,7 @@ def install(app, a):
             abort(409, 'Credentials changed. Sign in again.')
         db.execute('UPDATE private_accounts SET recovery_hash=?,credential_version=credential_version+1 WHERE user_id=?', (digest(recovery), g.user['id']))
         db.execute("UPDATE agent_grants SET state='revoked' WHERE owner_user_id=?", (g.user['id'],))
+        db.execute("UPDATE programme_delegations SET state='revoked' WHERE owner_user_id=?", (g.user['id'],))
         db.commit()
         signed_in(g.user['id'], account['credential_version'] + 1)
         a.audit('private_workspace_password_changed')
@@ -184,6 +187,18 @@ def install(app, a):
             abort(404)
         db.commit()
         a.audit('agent_delegation_revoked', grant_id=grant_id)
+        return redirect(url_for('account_settings'))
+
+    @app.post('/account/programmes/<programme_id>/revoke')
+    @require_account
+    def account_revoke_programme(programme_id):
+        a.require_csrf()
+        db = a.get_db()
+        if db.execute("UPDATE programme_delegations SET state='revoked' WHERE id=? AND owner_user_id=?", (programme_id, g.user['id'])).rowcount != 1:
+            abort(404)
+        db.execute("UPDATE agent_grants SET state='revoked' WHERE id IN (SELECT grant_id FROM programme_artifact_grants WHERE programme_id=?)", (programme_id,))
+        db.commit()
+        a.audit('programme_delegation_revoked', programme_id=programme_id)
         return redirect(url_for('account_settings'))
 
     @app.context_processor
