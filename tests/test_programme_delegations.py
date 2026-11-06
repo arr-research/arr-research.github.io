@@ -146,6 +146,25 @@ class ProgrammeDelegationTests(HistoricalRevisionTests):
             get_db().execute("UPDATE agent_grants SET expires_at='2000-01-01T00:00:00+00:00' WHERE id=?", (grant['request_id'],))
             get_db().commit()
         self.assertEqual(self.child(controller).status_code, 409)
+        renewed = self.child(controller, renew_expired_unused=True)
+        self.assertEqual(renewed.status_code, 200, renewed.data)
+        self.assertEqual(renewed.get_json()['request_id'], grant['request_id'])
+
+    def test_changed_agent_identity_cannot_duplicate_same_pdf(self):
+        controller = self.controller()
+        self.assertEqual(self.child(controller).status_code, 200)
+        self.assertEqual(self.child(controller, agent_version='Changed identity').status_code, 409)
+
+    def test_owner_can_revoke_from_normal_workspace_and_other_owner_cannot(self):
+        controller = self.controller()
+        grant = self.child(controller).get_json()
+        page = self.client.get('/account')
+        self.assertIn(controller['programme_id'].encode(), page.data)
+        self.assertEqual(self.client.post('/account/programmes/'+controller['programme_id']+'/revoke', data={}).status_code, 400)
+        response = self.client.post('/account/programmes/'+controller['programme_id']+'/revoke', data={'csrf_token': 'csrf-for-tests'})
+        self.assertEqual(response.status_code, 302, response.data)
+        self.assertEqual(self.child(controller).status_code, 403)
+        self.assertEqual(self.send_revision(grant).status_code, 403)
 
     def test_existing_account_quota_is_still_enforced(self):
         controller = self.controller()

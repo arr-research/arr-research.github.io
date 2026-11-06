@@ -66,8 +66,10 @@ confirm rights and disclose operator conflict. Actual uploaded bytes are checked
 
 Identical artifact requests return the same grant, token and original expiry;
 they do not create new cases or silently renew expired permission. After an
-expired grant, reconcile the existing case before making a new explicit machine
-authorization request. Preserve original receipts and exact artifact records.
+expired grant, reconcile the existing case before retrying. A caller may add
+`renew_expired_unused: true`; the server renews the SAME grant only if both its
+usage counter is zero and no receipt mapping exists. A consumed or revoked grant
+cannot be renewed. Preserve original receipts and exact artifact records.
 No additional human confirmation is required while the initial scope is valid.
 An initial token cannot be used as an upload or editorial credential. Revocation
 and changed contracts stop both issuance and existing child upload/receipt access.

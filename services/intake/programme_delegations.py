@@ -153,8 +153,12 @@ def install(app, a, api, require_open):
         if request.content_length is None or request.content_length > 16000:
             abort(413, 'Artifact request exceeds 16 KiB.')
         value = request.get_json(silent=True)
-        if not isinstance(value, dict) or set(value) != {'sha256', 'kind', 'binding', 'agent_name', 'agent_version'}:
+        fields = {'sha256', 'kind', 'binding', 'agent_name', 'agent_version'}
+        if not isinstance(value, dict) or set(value) not in (fields, fields | {'renew_expired_unused'}):
             abort(400, 'Supply exact hash, intake kind, binding and actual agent identity.')
+        renew = value.pop('renew_expired_unused', False)
+        if type(renew) is not bool:
+            abort(400, 'Explicit unused-grant renewal flag must be boolean.')
         if not isinstance(value['sha256'], str) or not re.fullmatch('[a-f0-9]{64}', value['sha256']):
             abort(400, 'Exact lowercase PDF SHA-256 required.')
         for key in ('agent_name', 'agent_version'):
@@ -181,10 +185,22 @@ def install(app, a, api, require_open):
             current(app, a, db.execute('SELECT * FROM programme_delegations WHERE id=?', (programme['id'],)).fetchone())
             old = db.execute('SELECT g.* FROM agent_grants g JOIN programme_artifact_grants p ON p.grant_id=g.id WHERE p.programme_id=? AND p.request_sha256=?', (programme['id'], request_hash)).fetchone()
             if old:
-                if old['state'] != 'approved' or old['expires_at'] <= a.iso():
-                    abort(409, 'Existing exact grant is expired/revoked; reconcile its receipt before explicit renewal.')
-                identity, expiry = old['id'], old['expires_at']
+                if old['state'] != 'approved':
+                    abort(409, 'Existing exact grant is revoked; no renewal.')
+                if old['expires_at'] <= a.iso():
+                    used = db.execute('SELECT 1 FROM agent_submissions WHERE grant_id=?', (old['id'],)).fetchone()
+                    if not renew or old['uses'] or used:
+                        abort(409, 'Existing exact grant is expired; reconcile receipt before explicit unused-grant renewal.')
+                    expiry = a.iso(a.now()+timedelta(hours=24))
+                    db.execute('UPDATE agent_grants SET approved_at=?,expires_at=? WHERE id=?', (a.iso(), expiry, old['id']))
+                    identity = old['id']
+                else:
+                    identity, expiry = old['id'], old['expires_at']
             else:
+                prior = db.execute("SELECT 1 FROM programme_artifact_grants WHERE programme_id=? AND json_extract(artifact_json,'$.sha256')=?", (programme['id'], value['sha256'])).fetchone()
+                received = db.execute('SELECT 1 FROM submissions WHERE user_id=? AND sha256=?', (programme['owner_user_id'], value['sha256'])).fetchone()
+                if prior or received:
+                    abort(409, 'Exact PDF already has a grant/case; reconcile original artifact, do not create a duplicate.')
                 identity = 'AGT-'+secrets.token_hex(12).upper()
                 expiry = a.iso(a.now()+timedelta(hours=24))
                 db.execute("INSERT INTO agent_grants(id,claim_hash,setup_hash,agent_name,agent_version,purpose,state,created_at,request_expires_at,approved_at,expires_at,terms_version,privacy_version,owner_user_id) VALUES(?,?,?,?,?,?,'approved',?,?,?,?,?,?,?)", (identity, hashlib.sha256(claim.encode()).hexdigest(), hashlib.sha256(secrets.token_bytes(32)).hexdigest(), value['agent_name'], value['agent_version'], 'One exact PDF under initial programme author instruction.', a.iso(), expiry, a.iso(), expiry, a.TERMS_VERSION, a.PRIVACY_VERSION, programme['owner_user_id']))
@@ -196,7 +212,7 @@ def install(app, a, api, require_open):
         except BaseException:
             db.rollback()
             raise
-        a.audit('programme_artifact_grant_issued', programme_id=programme['id'], grant_id=identity, sha256=value['sha256'], initial_instruction_sha256=programme['evidence_sha256'])
+        a.audit('programme_artifact_grant_issued', programme_id=programme['id'], grant_id=identity, sha256=value['sha256'], explicit_unused_renewal=renew, initial_instruction_sha256=programme['evidence_sha256'])
         response = app.response_class(json.dumps({'request_id': identity, 'agent_token': claim, 'expires_at': expiry, 'uploads_remaining': max(0, 1-(old['uses'] if old else 0)), 'scope': ['revision:create' if value['kind'] == 'revision' else 'submission:create', 'submission:receipt'], 'programme_id': programme['id'], 'initial_instruction_sha256': programme['evidence_sha256']}), mimetype='application/json')
         response.headers['Cache-Control'] = 'no-store'
         return response
