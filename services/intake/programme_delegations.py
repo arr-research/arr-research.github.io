@@ -135,8 +135,11 @@ def install(app, a, api, require_open):
         db.commit()
         g.user = db.execute('SELECT * FROM users WHERE id=?', (actor['id'],)).fetchone()
         a.audit('programme_delegation_authorized', programme_id=identity, evidence_sha256=evidence_hash)
+        scopes = ['exact-intake-grant:create']
+        if evidence['publication_status'] == 'working_paper':
+            scopes.append('working-paper-permission:create')
         click.echo(json.dumps({'programme_id': identity, 'controller_token': token,
-                              'scope': ['exact-intake-grant:create', 'working-paper-permission:create'], 'expires_at': None,
+                              'scope': scopes, 'expires_at': None,
                               'revocable': True, 'human_instruction_sha256': evidence_hash}))
 
     @app.cli.command('revoke-programme')
@@ -224,6 +227,8 @@ def install(app, a, api, require_open):
     @api.post('/programme-working-paper-permissions')
     def working_paper_permission():
         db, programme, evidence, _ = controller()
+        if (evidence['pdf_license'], evidence['metadata_license'], evidence['publication_status']) != ('CC-BY-4.0','CC0-1.0','working_paper'):
+            abort(403, 'The initial instruction authorizes private intake only, not public licensing or release.')
         a.enforce_rate('programme-public-permission', 120, 3600, programme['id'])
         if request.content_length is None or request.content_length > 1024:
             abort(413, 'Exact working-paper permission request exceeds 1 KiB.')

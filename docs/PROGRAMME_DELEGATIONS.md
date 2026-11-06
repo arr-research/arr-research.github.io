@@ -35,6 +35,8 @@ For private preparation and intake only, use JSON null for both `pdf_license` an
 `metadata_license`, and `publication_status: "private"`. No public licence or
 release permission is thereby granted. Private programmes can issue the same
 exact-PDF intake grants without asking the controller to license private work.
+Their controller response lists only `exact-intake-grant:create`, and the
+Working-paper-permission endpoint rejects them with 403 before any write.
 If the initial instruction separately includes public Working-paper scope, use
 `CC-BY-4.0`, `CC0-1.0`, `working_paper`. Mixed private/public tuples are rejected.
 This route does not turn a standing licence instruction into editorial acceptance

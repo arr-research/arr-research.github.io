@@ -91,11 +91,16 @@ class ProgrammeDelegationTests(HistoricalRevisionTests):
         controller = self.controller({'pdf_license':None,'metadata_license':None,
                                       'publication_status':'private',
                                       'author_instruction':'I authorize continuous preparation and private deposit of my own exact PDFs. I give no public licence, model transfer consent or publication permission.'})
+        self.assertEqual(controller['scope'],['exact-intake-grant:create'])
         issued = self.child(controller,'submission')
         self.assertEqual(issued.status_code,200,issued.data)
         received = self.send_revision(issued.get_json(),path='/api/v1/submissions')
         self.assertEqual(received.status_code,201,received.data)
         self.assertFalse(received.get_json()['published'])
+        denied = self.client.post('/api/v1/programme-working-paper-permissions',
+            json={'submission_id':received.get_json()['registration_number'],'sha256':self.binding['sha256']},
+            headers={'Authorization':'Bearer '+controller['controller_token']})
+        self.assertEqual(denied.status_code,403,denied.data)
         with self.app.app_context():
             evidence=json.loads(get_db().execute('SELECT evidence_json FROM programme_delegations').fetchone()[0])
             self.assertIsNone(evidence['pdf_license'])
