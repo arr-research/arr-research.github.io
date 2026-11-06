@@ -74,6 +74,17 @@ def check_child(app, a, grant_id, metadata=None):
 
 
 def install(app, a, api, require_open):
+    def controller():
+        require_open()
+        header = request.headers.get('Authorization', '')
+        if not re.fullmatch(r'Bearer [A-Za-z0-9_-]{43}', header):
+            abort(401, 'A programme controller token is required.')
+        db = a.get_db()
+        programme = db.execute('SELECT * FROM programme_delegations WHERE token_hash=?', (hashlib.sha256(header[7:].encode()).hexdigest(),)).fetchone()
+        if not programme:
+            abort(401, 'Invalid programme token.')
+        return db, programme, current(app, a, programme), header[7:]
+
     @app.cli.command('authorize-programme')
     @click.argument('evidence_file', type=click.Path(exists=True, dir_okay=False))
     def authorize_programme(evidence_file):
@@ -124,7 +135,7 @@ def install(app, a, api, require_open):
         g.user = db.execute('SELECT * FROM users WHERE id=?', (actor['id'],)).fetchone()
         a.audit('programme_delegation_authorized', programme_id=identity, evidence_sha256=evidence_hash)
         click.echo(json.dumps({'programme_id': identity, 'controller_token': token,
-                              'scope': ['exact-intake-grant:create'], 'expires_at': None,
+                              'scope': ['exact-intake-grant:create', 'working-paper-permission:create'], 'expires_at': None,
                               'revocable': True, 'human_instruction_sha256': evidence_hash}))
 
     @app.cli.command('revoke-programme')
@@ -140,15 +151,7 @@ def install(app, a, api, require_open):
 
     @api.post('/programme-artifact-grants')
     def issue_artifact():
-        require_open()
-        header = request.headers.get('Authorization', '')
-        if not re.fullmatch(r'Bearer [A-Za-z0-9_-]{43}', header):
-            abort(401, 'A programme controller token is required.')
-        db = a.get_db()
-        programme = db.execute('SELECT * FROM programme_delegations WHERE token_hash=?', (hashlib.sha256(header[7:].encode()).hexdigest(),)).fetchone()
-        if not programme:
-            abort(401, 'Invalid programme token.')
-        evidence = current(app, a, programme)
+        db, programme, evidence, token = controller()
         a.enforce_rate('programme-grant', 120, 3600, programme['id'])
         if request.content_length is None or request.content_length > 16000:
             abort(413, 'Artifact request exceeds 16 KiB.')
@@ -179,7 +182,7 @@ def install(app, a, api, require_open):
         request_hash = hashlib.sha256(canonical.encode()).hexdigest()
         # Deterministic per request and bearer: response retries recover the SAME
         # secret without storing a plaintext token or silently renewing expiry.
-        claim = base64.urlsafe_b64encode(hmac.new(header[7:].encode(), ('artifact:'+request_hash).encode(), hashlib.sha256).digest()).decode().rstrip('=')
+        claim = base64.urlsafe_b64encode(hmac.new(token.encode(), ('artifact:'+request_hash).encode(), hashlib.sha256).digest()).decode().rstrip('=')
         db.execute('BEGIN IMMEDIATE')
         try:
             current(app, a, db.execute('SELECT * FROM programme_delegations WHERE id=?', (programme['id'],)).fetchone())
@@ -216,3 +219,52 @@ def install(app, a, api, require_open):
         response = app.response_class(json.dumps({'request_id': identity, 'agent_token': claim, 'expires_at': expiry, 'uploads_remaining': max(0, 1-(old['uses'] if old else 0)), 'scope': ['revision:create' if value['kind'] == 'revision' else 'submission:create', 'submission:receipt'], 'programme_id': programme['id'], 'initial_instruction_sha256': programme['evidence_sha256']}), mimetype='application/json')
         response.headers['Cache-Control'] = 'no-store'
         return response
+
+    @api.post('/programme-working-paper-permissions')
+    def working_paper_permission():
+        db, programme, evidence, _ = controller()
+        a.enforce_rate('programme-public-permission', 120, 3600, programme['id'])
+        if request.content_length is None or request.content_length > 1024:
+            abort(413, 'Exact working-paper permission request exceeds 1 KiB.')
+        value = request.get_json(silent=True)
+        if not isinstance(value, dict) or set(value) != {'submission_id', 'sha256'}:
+            abort(400, 'Supply the exact programme receipt ID and PDF hash.')
+        if not isinstance(value['submission_id'], str) or not re.fullmatch(r'SUB-[A-F0-9]{16}', value['submission_id']) or not isinstance(value['sha256'], str) or not re.fullmatch('[a-f0-9]{64}', value['sha256']):
+            abort(400, 'Invalid receipt ID or exact PDF hash.')
+        db.execute('BEGIN IMMEDIATE')
+        try:
+            current(app, a, db.execute('SELECT * FROM programme_delegations WHERE id=?', (programme['id'],)).fetchone())
+            row = db.execute('''SELECT s.* FROM submissions s JOIN agent_submissions m ON m.submission_id=s.id
+                JOIN programme_artifact_grants p ON p.grant_id=m.grant_id
+                WHERE s.id=? AND s.user_id=? AND p.programme_id=?''',
+                (value['submission_id'], programme['owner_user_id'], programme['id'])).fetchone()
+            if not row:
+                abort(404)
+            if row['sha256'] != value['sha256'] or row['authors'] != evidence['author'] or not row['operator_conflict'] or row['publication_mode'] != 'standard':
+                abort(409, 'Exact sole-author standard programme manuscript required.')
+            if row['scan_status'] != 'clean' or row['status'] not in {'eligible', 'under_assessment', 'changes_requested', 'awaiting_independent_decision'}:
+                abort(409, 'Only a clean, current working-paper case qualifies; no acceptance is granted.')
+            path = Path(app.config['QUARANTINE'])/row['stored_name']
+            if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != row['sha256']:
+                abort(409, 'Stored exact manuscript integrity mismatch.')
+            from services.intake.originality import require_ready
+            require_ready(db, row)
+            permission = db.execute('SELECT * FROM publication_permissions WHERE submission_id=?', (row['id'],)).fetchone()
+            if permission:
+                if permission['manuscript_sha256'] != row['sha256'] or permission['license'] != evidence['pdf_license']:
+                    abort(409, 'An existing different publication permission cannot be replaced.')
+            else:
+                db.execute('INSERT INTO publication_permissions VALUES(?,?,?,?)', (row['id'], row['sha256'], evidence['pdf_license'], a.iso()))
+            db.commit()
+        except BaseException:
+            db.rollback()
+            raise
+        a.audit('publication_permission_recorded', row['id'], license=evidence['pdf_license'],
+                sha256=row['sha256'], public_status='working_paper',
+                method='standing_programme_instruction', programme_id=programme['id'],
+                initial_instruction_sha256=programme['evidence_sha256'],
+                initial_recorded_at=evidence['recorded_at'])
+        return {'submission_id': row['id'], 'sha256': row['sha256'],
+                'publication_permission_recorded': True, 'public_status': 'working_paper',
+                'license': evidence['pdf_license'], 'metadata_license': evidence['metadata_license'],
+                'initial_instruction_sha256': programme['evidence_sha256'], 'published': False}
