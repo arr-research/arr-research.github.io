@@ -6,6 +6,7 @@ import sys
 from arrlib import discover_papers, validate_collection, validate_record_timestamps
 from assessmentlib import load_assessment_registry, validate_public_assessments
 from legacyreviewlib import load_preserved_reviews, validate_preserved_reviews
+from reviewnotelib import load_review_note
 
 
 def main() -> int:
@@ -17,6 +18,8 @@ def main() -> int:
         try:
             assessment_errors = validate_public_assessments(load_assessment_registry(), papers)
             assessment_errors.extend(validate_preserved_reviews(load_preserved_reviews(), papers))
+            for paper in papers:
+                load_review_note(paper)
         except (OSError, ValueError) as error:
             assessment_errors = [str(error)]
     if failures or timestamp_errors or assessment_errors:
