@@ -47,6 +47,41 @@ class ProgrammeDelegationTests(HistoricalRevisionTests):
         return self.client.post('/api/v1/programme-artifact-grants', json=data,
                                 headers={'Authorization': 'Bearer '+controller['controller_token']})
 
+    def test_client_generated_secret_can_stay_on_client(self):
+        # Synthetic fixture only; a real client uses 32 random bytes, stored
+        # in its platform credential store before conveying this fingerprint.
+        token = 'A'*43
+        fingerprint = hashlib.sha256(token.encode()).hexdigest()
+        path = Path(self.temp.name)/'client-authority.json'
+        path.write_text(json.dumps(self.evidence))
+        with patch('services.intake.programme_delegations.secrets.token_urlsafe', side_effect=AssertionError('Unexpected secret generation')):
+            result = self.app.test_cli_runner().invoke(args=['authorize-programme', str(path), '--controller-token-sha256', fingerprint])
+        self.assertEqual(result.exit_code, 0, result.output)
+        response = json.loads(result.output)
+        self.assertNotIn('controller_token', response)
+        self.assertNotIn(token, result.output)
+        self.assertEqual(response['controller_token_sha256'], fingerprint)
+        self.assertTrue(response['client_secret_not_transmitted'])
+        controller = {**response, 'controller_token': token}
+        self.assertEqual(self.child(controller).status_code, 200)
+        self.assertEqual(self.child({**controller, 'controller_token': 'B'*43}).status_code, 401)
+        with self.app.app_context():
+            stored = get_db().execute('SELECT token_hash,evidence_json FROM programme_delegations WHERE id=?', (response['programme_id'],)).fetchone()
+            self.assertEqual(stored['token_hash'], fingerprint)
+            self.assertEqual(json.loads(stored['evidence_json']), self.evidence)
+        revoked = self.app.test_cli_runner().invoke(args=['revoke-programme', response['programme_id']])
+        self.assertEqual(revoked.exit_code, 0, revoked.output)
+        self.assertEqual(self.child(controller).status_code, 403)
+
+    def test_invalid_client_fingerprint_creates_no_programme(self):
+        path = Path(self.temp.name)/'client-authority.json'
+        path.write_text(json.dumps(self.evidence))
+        for value in ('', 'z'*64, 'f'*63, 'F'*64, 'f'*65):
+            result = self.app.test_cli_runner().invoke(args=['authorize-programme', str(path), '--controller-token-sha256', value])
+            self.assertNotEqual(result.exit_code, 0, value)
+        with self.app.app_context():
+            self.assertEqual(get_db().execute('SELECT COUNT(*) FROM programme_delegations').fetchone()[0], 0)
+
     def test_one_initial_instruction_multiple_exact_pdfs_no_new_human_reply(self):
         controller = self.controller()
         self.assertIsNone(controller['expires_at'])

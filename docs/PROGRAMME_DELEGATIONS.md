@@ -50,6 +50,16 @@ can revoke it in their normal private workspace, or an authenticated host operat
 can run `revoke-programme PRG-...`. Password changes and account recovery revoke it
 as well. Inactive/erased workspaces cannot issue or use child grants.
 
+For a desktop client, the secret can instead be generated and protected there
+before initial authorization: generate 32 cryptographically random bytes as an
+unpadded base64url token (43 characters), store that token in the current user's
+credential store, and send only SHA256 of its ASCII representation to the host.
+Add `--controller-token-sha256 LOWERCASE_64_HEX` to the same initial CLI command.
+This mode creates no replacement secret and returns only its fingerprint, programme
+ID and scopes; `controller_token` is absent. The evidence, MFA/operator, ownership,
+feature flag, quotas and revocation checks are unchanged. This is an alternative
+initial enrollment, not a renewal, authorization bypass or credential migration.
+
 ## Per-artifact machine step
 
 `POST /api/v1/programme-artifact-grants`, HTTPS Bearer controller token:
