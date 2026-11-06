@@ -117,3 +117,36 @@ def install(app, a, case):
         db.commit()
         a.audit('publication_permission_recorded',row['id'],license=value['license'],sha256=row['sha256'],public_status='accepted',method='operator_recorded_external_instruction',evidence=value,evidence_sha256=digest)
         click.echo(json.dumps({'submission_id':row['id'],'publication_permission_recorded':True,'published':False,'evidence_sha256':digest}))
+
+    @app.cli.command('record-external-working-publication')
+    @click.argument('evidence_file', type=click.Path(exists=True, dir_okay=False))
+    def record_working_publication(evidence_file):
+        """Record actual author instruction without pretending to accept a paper."""
+        value, digest = evidence(evidence_file, {'license', 'metadata_license', 'rights_confirmed', 'founder_authorship_confirmed'})
+        db = a.get_db()
+        actor = db.execute("SELECT * FROM users WHERE email=? AND role='operator' AND active=1 AND totp_secret IS NOT NULL", (app.config['OPERATOR_EMAIL'],)).fetchone()
+        row = case(value['submission_id'])
+        owner = db.execute("SELECT 1 FROM users u JOIN private_accounts p ON p.user_id=u.id WHERE u.id=? AND u.active=1 AND u.role='depositor' AND p.identity_kind='human'", (row['user_id'],)).fetchone()
+        if not actor or not owner or value['human_name'] != actor['display_name'] or row['authors'] != value['human_name']:
+            raise click.ClickException('Real active owner and configured sole-author MFA operator required.')
+        if value['rights_confirmed'] is not True or value['founder_authorship_confirmed'] is not True or value['license'] != 'CC-BY-4.0' or value['metadata_license'] != 'CC0-1.0':
+            raise click.ClickException('Actual exact Working-paper licence, rights and founder declaration required.')
+        if row['status'] not in {'eligible', 'under_assessment', 'changes_requested', 'awaiting_independent_decision'} or row['scan_status'] != 'clean' or row['publication_mode'] != 'standard' or row['other_operator_conflict']:
+            raise click.ClickException('A clean current standard Working-paper case is required; this cannot accept a paper.')
+        if row['sha256'] != value['manuscript_sha256'] or hashlib.sha256((Path(app.config['QUARANTINE'])/row['stored_name']).read_bytes()).hexdigest() != row['sha256']:
+            raise click.ClickException('Exact stored manuscript hash mismatch.')
+        from services.intake.originality import require_ready
+        require_ready(db, row)
+        previous = db.execute('SELECT * FROM publication_permissions WHERE submission_id=?', (row['id'],)).fetchone()
+        if previous and (previous['manuscript_sha256'] != row['sha256'] or previous['license'] != value['license']):
+            raise click.ClickException('An existing different public permission cannot be replaced.')
+        if row['founder_authored'] and row['founder_declared_by'] != actor['id']:
+            raise click.ClickException('Existing founder declaration must be reconciled.')
+        g.user = actor
+        if not previous:
+            db.execute('INSERT INTO publication_permissions VALUES(?,?,?,?)', (row['id'], row['sha256'], value['license'], a.iso()))
+        if not row['founder_authored']:
+            db.execute('UPDATE submissions SET founder_authored=1,operator_conflict=1,founder_declared_by=?,founder_declared_at=?,updated_at=? WHERE id=?', (actor['id'], a.iso(), a.iso(), row['id']))
+        db.commit()
+        a.audit('publication_permission_recorded', row['id'], license=value['license'], sha256=row['sha256'], public_status='working_paper', method='operator_recorded_external_instruction', evidence=value, evidence_sha256=digest)
+        click.echo(json.dumps({'submission_id': row['id'], 'sha256': row['sha256'], 'publication_permission_recorded': True, 'public_status': 'working_paper', 'founder_authored': True, 'accepted': False, 'published': False, 'evidence_sha256': digest}))
