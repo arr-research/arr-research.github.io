@@ -42,6 +42,7 @@ from assessmentlib import (
     validate_public_assessments,
 )
 from legacyreviewlib import load_preserved_reviews, read_preserved_review, validate_preserved_reviews, preserved_review_family
+from reviewnotelib import load_review_note
 
 
 SITE_DIR = ROOT / "site"
@@ -1111,12 +1112,15 @@ def render_input_notices(paper, notices: list[dict], base: str) -> str:
 
 def paper_assessment_section(paper, assessments: list[dict], highlight: dict | None, base: str) -> str:
     items = assessments_for(assessments, paper)
+    narrative = load_review_note(paper)
     aggregate = paper_rating(paper, assessments)
     historical = render_preserved_reviews(paper, published_preserved_reviews(), base)
     if aggregate is None:
         summary = '<div class="assessment-summary unrated"><strong>Not yet rated</strong><p>No supported exact-version report is published for this exact version. Missing evidence is not scored as zero.</p></div>'
         if historical:
             summary = '<div class="assessment-summary unrated"><strong>Not yet rated in the current aggregate</strong><p>A historical exact-PDF report is preserved below. Its native format has not been converted into a modern assessment response and contributes no headline score.</p></div>'
+        if narrative:
+            summary = '<div class="assessment-summary unrated"><strong>Narrative exact-PDF assessment available</strong><p>The original AI-only score and complete review are preserved below. No missing criterion stars are invented, and this different rubric is excluded from the AIRR weighted aggregate.</p></div>'
     else:
         weight_rows = "".join(f'<tr><td>{esc(" · ".join(w["model"]))}</td><td>{w["score"]:.2f}</td><td>{w["weight"]:.3f}</td><td>{esc(w["reason"])}</td></tr>' for w in aggregate["weights"])
         summary = f"""
@@ -1174,6 +1178,11 @@ def paper_assessment_section(paper, assessments: list[dict], highlight: dict | N
   <div class="report-body">{source_note}<p class="report-recommendation">Recommendation: <strong>{esc(item['recommendation'].replace('_', ' ').title())}</strong> · Material objections: <strong>{len(material)}</strong></p><p>{esc(item['summary'])}</p><dl class="criterion-grid">{criteria}</dl><div class="findings-grid">{findings_block('Strengths', item['strengths'])}{findings_block('Weaknesses', item['weaknesses'])}{findings_block('Potential errors', item['potential_errors'])}{findings_block('Strong novelty candidates', item['strong_novelty_candidates'])}{findings_block('Unresolved material objections', material)}</div><p class="assessment-provenance">{esc(item['assessment_id'])} · prompt {esc(item['prompt_version'])}{runtime_note} · response SHA-256 <code>{esc(item['source_response_sha256'])}</code> · canonical PDF SHA-256 <code>{esc(item['canonical_sha256'])}</code></p></div>
 </details>""")
     history = "".join(reports) if reports else '<p class="assessment-empty">No model reports are published for this version.</p>'
+    if narrative:
+        source_root = paper.path.relative_to(ROOT).as_posix()
+        links = ''.join(f'<li><a href="https://github.com/arr-research/arr-research.github.io/blob/main/{quote(source_root+"/"+s["path"], safe="/")}">{esc(s["label"])}</a> · SHA-256 <code>{esc(s["sha256"])}</code></li>' for s in narrative['report_files'])
+        note_html = f'<article class="model-report"><h3>{esc(narrative["provider"])} · {esc(narrative["ui_label"])}</h3><p><strong>Original AI-only score: {narrative["score"]:g} / 10</strong> · {esc(narrative["scale"])}</p><p>{esc(narrative["recommendation"])}</p><p>{esc(narrative["summary"])}</p><p>Backend identity: unknown. {esc(narrative["context"])}</p><p>Report captured {exact_time(narrative["recorded_at"])} · Exact PDF SHA-256 <code>{esc(narrative["canonical_sha256"])}</code></p><ul>{links}</ul></article>'
+        history = (''.join(reports) if reports else '') + note_html
     return f"""
 <section class="model-assessments" id="model-assessments">
   <header><div><span>Longitudinal frontier-model record</span><h2>Model assessments and review context</h2></div><a href="{base}/assessments/#scale">Read the scale and limits</a></header>
