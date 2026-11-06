@@ -3,6 +3,8 @@ import hashlib
 import json
 from pathlib import Path
 import tempfile
+import subprocess
+import sys
 import unittest
 from unittest.mock import patch
 
@@ -23,6 +25,14 @@ class ProgrammeClientTests(unittest.TestCase):
         self.data = {'pdf': str(self.pdf), 'metadata': {'sha256': self.digest, 'authors': 'Fixture author'},
                      'idempotency_key': 'programme-client-fixture-001'}
         intake.atomic_json(self.job, self.data)
+
+    def test_direct_script_help_outside_repository_import_context(self):
+        before = {p.name for p in self.root.iterdir()}
+        result = subprocess.run([sys.executable, str(Path(client.__file__).resolve()), '--help'],
+                                cwd=self.root, capture_output=True, text=True, timeout=20)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn('initialize', result.stdout)
+        self.assertEqual({p.name for p in self.root.iterdir()}, before)
 
     def test_initialize_reuses_protected_secret_and_exposes_only_fingerprint(self):
         first = client.initialize(self.credential)

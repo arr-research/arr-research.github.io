@@ -10,9 +10,9 @@ import re
 import secrets
 from datetime import datetime, timezone
 
-try:
-    from scripts import airr_submit as intake
-except ModuleNotFoundError:
+if __package__:
+    from . import airr_submit as intake
+else:
     import airr_submit as intake
 
 
