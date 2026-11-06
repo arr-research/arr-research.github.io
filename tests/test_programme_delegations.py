@@ -211,3 +211,64 @@ class ProgrammeDelegationTests(HistoricalRevisionTests):
             response = self.client.post('/api/v1/submissions', headers={'Authorization': 'Bearer '+grant['agent_token'], 'Idempotency-Key': 'wrong-author-001'}, data={'metadata': json.dumps(metadata), 'manuscript': (io.BytesIO(self.pdf), 'paper.pdf')})
         response.request.environ['wsgi.input'].close()
         self.assertEqual(response.status_code, 400)
+
+    def permit_working(self, controller, case, sha=None):
+        return self.client.post('/api/v1/programme-working-paper-permissions',
+                                headers={'Authorization': 'Bearer '+controller['controller_token']},
+                                json={'submission_id': case, 'sha256': sha or self.binding['sha256']})
+
+    def test_standing_working_permission_is_exact_separate_and_does_not_publish(self):
+        controller = self.controller()
+        grant = self.child(controller).get_json()
+        case = self.send_revision(grant).get_json()['registration_number']
+        with self.app.app_context():
+            self.assertEqual(get_db().execute('SELECT COUNT(*) FROM publication_permissions').fetchone()[0], 0)
+        response = self.permit_working(controller, case)
+        self.assertEqual(response.status_code, 200, response.data)
+        self.assertFalse(response.get_json()['published'])
+        self.assertEqual(response.get_json()['public_status'], 'working_paper')
+        self.assertEqual(self.permit_working(controller, case).get_json(), response.get_json())
+        with self.app.app_context():
+            db = get_db()
+            self.assertEqual(db.execute('SELECT COUNT(*) FROM publication_permissions').fetchone()[0], 1)
+            row = db.execute('SELECT * FROM submissions WHERE id=?', (case,)).fetchone()
+            self.assertEqual(row['status'], 'eligible')
+            self.assertIsNone(row['public_released_at'])
+            self.assertIsNone(row['decision_by'])
+            audit = json.loads(db.execute("SELECT detail_json FROM audit_log WHERE event='publication_permission_recorded' ORDER BY id DESC").fetchone()[0])
+            self.assertEqual(audit['initial_recorded_at'], self.evidence['recorded_at'])
+            self.assertEqual(audit['method'], 'standing_programme_instruction')
+
+    def test_public_permission_rejects_other_programme_wrong_hash_and_blocked_case(self):
+        controller = self.controller()
+        other = self.controller()
+        case = self.send_revision(self.child(controller).get_json()).get_json()['registration_number']
+        self.assertEqual(self.permit_working(other, case).status_code, 404)
+        self.assertEqual(self.permit_working(controller, case, '0'*64).status_code, 409)
+        for status in ('declined', 'withdrawn', 'removed', 'legal_hold', 'accepted_for_publication'):
+            with self.app.app_context():
+                get_db().execute('UPDATE submissions SET status=? WHERE id=?', (status, case))
+                get_db().commit()
+            self.assertEqual(self.permit_working(controller, case).status_code, 409)
+        with self.app.app_context():
+            db = get_db()
+            db.execute("UPDATE submissions SET status='eligible',scan_status='error' WHERE id=?", (case,))
+            db.commit()
+        self.assertEqual(self.permit_working(controller, case).status_code, 409)
+        with self.app.app_context():
+            db = get_db()
+            db.execute("UPDATE submissions SET scan_status='clean' WHERE id=?", (case,))
+            db.commit()
+            row = db.execute('SELECT * FROM submissions WHERE id=?', (case,)).fetchone()
+            (Path(self.app.config['QUARANTINE'])/row['stored_name']).write_bytes(b'changed')
+        self.assertEqual(self.permit_working(controller, case).status_code, 409)
+
+    def test_public_permission_does_not_overwrite_existing_license_and_respects_revocation(self):
+        controller = self.controller()
+        case = self.send_revision(self.child(controller).get_json()).get_json()['registration_number']
+        with self.app.app_context():
+            get_db().execute('INSERT INTO publication_permissions VALUES(?,?,?,?)', (case, self.binding['sha256'], 'CC-BY-SA-4.0', iso()))
+            get_db().commit()
+        self.assertEqual(self.permit_working(controller, case).status_code, 409)
+        self.app.test_cli_runner().invoke(args=['revoke-programme', controller['programme_id']])
+        self.assertEqual(self.permit_working(controller, case).status_code, 403)
