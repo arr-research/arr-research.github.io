@@ -10,16 +10,6 @@ from scripts import airr_submit as client
 
 
 class AgentClientTests(unittest.TestCase):
-    def test_standing_delegation_reuses_existing_protected_credential(self):
-        self.cred.write_bytes(b'protected-existing-credential')
-        with patch.object(client,'load_credential',return_value=self.permission), \
-             patch.object(client,'call',return_value={**self.state,'uploads_remaining':None,'standing_delegation':True}) as api, \
-             patch.object(client,'save_credential') as save:
-            result=client.authorize(self.cred)
-        self.assertTrue(result['reused'])
-        self.assertEqual(api.call_count,1)
-        save.assert_not_called()
-
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)

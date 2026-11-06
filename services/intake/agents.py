@@ -1,12 +1,11 @@
 """Workspace-approved, revocable machine deposit; never editorial access."""
 import hashlib
 import json
-from datetime import datetime, timedelta
+from datetime import timedelta
 from pathlib import Path
 import re
 import secrets
 import sqlite3
-import click
 
 from flask import Blueprint, abort, g, redirect, render_template, request, session, url_for
 from werkzeug.exceptions import HTTPException
@@ -31,11 +30,6 @@ CREATE TABLE IF NOT EXISTS agent_submissions (
 CREATE TABLE IF NOT EXISTS agent_mail (
  grant_id TEXT NOT NULL REFERENCES agent_grants(id), mail_id INTEGER UNIQUE NOT NULL REFERENCES mail_outbox(id)
 );
-CREATE TABLE IF NOT EXISTS standing_agent_delegations (
- grant_id TEXT PRIMARY KEY REFERENCES agent_grants(id) ON DELETE CASCADE,
- authorized_by INTEGER NOT NULL REFERENCES users(id), created_at TEXT NOT NULL,
- evidence_sha256 TEXT NOT NULL, evidence_json TEXT NOT NULL
-);
 '''
 
 
@@ -59,8 +53,7 @@ def sweep(a):
     stale = db.execute('''SELECT id FROM agent_grants WHERE
         ((state IN ('pending','awaiting_email') AND request_expires_at<?)
          OR (COALESCE(expires_at,request_expires_at)<?))
-        AND NOT EXISTS(SELECT 1 FROM agent_submissions s WHERE s.grant_id=agent_grants.id)
-        AND NOT EXISTS(SELECT 1 FROM standing_agent_delegations p WHERE p.grant_id=agent_grants.id)''',
+        AND NOT EXISTS(SELECT 1 FROM agent_submissions s WHERE s.grant_id=agent_grants.id)''',
         (a.iso(),cutoff)).fetchall()
     for row in stale:
         mail_ids = [x[0] for x in db.execute('SELECT mail_id FROM agent_mail WHERE grant_id=?',(row['id'],))]
@@ -73,67 +66,6 @@ def sweep(a):
 
 def install(app, a):
     api = Blueprint('agent_api', __name__, url_prefix='/api/v1')
-
-    def standing(grant):
-        # Only a separately evidenced host-operator policy may extend an
-        # ordinary delegation. Historical exact-artifact grants never inherit it.
-        return bool(not historical_revisions.binding_for(a.get_db(), grant['id']) and
-                    a.get_db().execute('SELECT 1 FROM standing_agent_delegations WHERE grant_id=?',
-                                       (grant['id'],)).fetchone())
-
-    @app.cli.command('record-standing-agent-delegation')
-    @click.argument('evidence_file', type=click.Path(exists=True, dir_okay=False))
-    def record_standing(evidence_file):
-        """Record a real external operator instruction; never simulate a web signature."""
-        raw = Path(evidence_file).read_bytes()
-        if len(raw) > 20000:
-            raise click.ClickException('Evidence exceeds 20 KB.')
-        try:
-            value = json.loads(raw)
-            if not isinstance(value, dict) or set(value) != {
-                'grant_id','human_name','human_instruction','source_reference','recorded_at','scope'}:
-                raise ValueError('Exact external-instruction schema required.')
-            if value['scope'] != ['submission:create','submission:receipt']:
-                raise ValueError('Standing delegation covers ordinary deposits and receipts only.')
-            for key, minimum in [('human_name',3),('human_instruction',40),('source_reference',15)]:
-                if not isinstance(value[key],str) or not minimum <= len(value[key].strip()) <= 6000:
-                    raise ValueError('Missing actual human evidence: ' + key)
-            stamp = datetime.fromisoformat(value['recorded_at'].replace('Z','+00:00'))
-            if stamp.tzinfo is None or not a.now()-timedelta(days=7) <= stamp <= a.now():
-                raise ValueError('Recent offset-aware evidence timestamp required.')
-            if not isinstance(value['grant_id'],str) or not re.fullmatch(r'AGT-[A-F0-9]{24}',value['grant_id']):
-                raise ValueError('An existing exact grant ID is required.')
-        except (TypeError, KeyError, AttributeError, ValueError) as error:
-            raise click.ClickException(str(error)) from error
-        db = a.get_db()
-        actor = db.execute("SELECT * FROM users WHERE email=? AND role='operator' AND active=1 AND totp_secret IS NOT NULL",
-                           (app.config['OPERATOR_EMAIL'],)).fetchone()
-        if not actor or value['human_name'] != actor['display_name']:
-            raise click.ClickException('The actual configured MFA operator must be named.')
-        grant = db.execute('SELECT * FROM agent_grants WHERE id=?',(value['grant_id'],)).fetchone()
-        if not grant or grant['state'] != 'approved' or not grant['owner_user_id']:
-            raise click.ClickException('A previously approved, non-revoked, workspace-owned grant is required.')
-        owner = db.execute("SELECT 1 FROM users u JOIN private_accounts p ON p.user_id=u.id WHERE u.id=? AND u.active=1 AND u.role='depositor'",
-                           (grant['owner_user_id'],)).fetchone()
-        if not owner or historical_revisions.binding_for(db,grant['id']):
-            raise click.ClickException('An active ordinary private workspace is required; historical grants are excluded.')
-        if grant['terms_version'] != a.TERMS_VERSION or grant['privacy_version'] != a.PRIVACY_VERSION:
-            raise click.ClickException('The workspace must acknowledge the current terms first.')
-        sha = hashlib.sha256(raw).hexdigest()
-        previous = db.execute('SELECT evidence_sha256 FROM standing_agent_delegations WHERE grant_id=?',
-                              (grant['id'],)).fetchone()
-        if previous:
-            if previous['evidence_sha256'] != sha:
-                raise click.ClickException('Standing evidence is immutable; preserve the existing record.')
-            click.echo(json.dumps({'grant_id':grant['id'],'standing':True,'reused':True}))
-            return
-        g.user = actor
-        db.execute('INSERT INTO standing_agent_delegations VALUES(?,?,?,?,?)',
-                   (grant['id'],actor['id'],a.iso(),sha,raw.decode('utf-8')))
-        db.commit()
-        a.audit('standing_agent_delegation_recorded',grant_id=grant['id'],evidence_sha256=sha,
-                policy='AIRR-STANDING-DELEGATION-1.0',method='operator_recorded_external_instruction')
-        click.echo(json.dumps({'grant_id':grant['id'],'standing':True,'scope':value['scope']}))
 
     @api.before_request
     def separate_machine_identity():
@@ -171,8 +103,7 @@ def install(app, a):
         return grant
 
     def approved(grant):
-        if grant['state'] != 'approved' or (not standing(grant) and
-                (not grant['expires_at'] or grant['expires_at'] <= a.iso())):
+        if grant['state'] != 'approved' or not grant['expires_at'] or grant['expires_at'] <= a.iso():
             abort(403, 'The responsible controller must approve an active delegation in their private workspace.')
         if not grant['owner_user_id'] or not a.get_db().execute('SELECT 1 FROM users WHERE id=? AND active=1 AND role=\'depositor\'', (grant['owner_user_id'],)).fetchone():
             abort(403, 'A current private workspace must own this delegation.')
@@ -209,12 +140,8 @@ def install(app, a):
         revision = historical_revisions.binding_for(a.get_db(), grant["id"])
         a.enforce_rate('agent-status',120,3600,grant['id'])
         expiry = grant['expires_at'] or grant['request_expires_at']
-        persistent = standing(grant)
-        state = grant['state'] if persistent or expiry > a.iso() or grant['state'] == 'revoked' else 'expired'
-        return {'request_id':grant['id'],'state':state,
-                'expires_at':None if persistent else expiry,
-                'uploads_remaining':None if persistent else max(0,(1 if revision else MAX_UPLOADS)-grant['uses']),
-                'standing_delegation':persistent,
+        return {'request_id':grant['id'],'state':grant['state'] if expiry > a.iso() else 'expired',
+                'expires_at':expiry,'uploads_remaining':max(0,(1 if revision else MAX_UPLOADS)-grant['uses']),
                 'scope':['revision:create' if revision else 'submission:create','submission:receipt'],'intake_open':opened()}
 
     def receipt(row):
@@ -293,14 +220,9 @@ def install(app, a):
         a.enforce_rate('submit-account',a.SUBMISSIONS_PER_ACCOUNT,a.SUBMISSION_WINDOW_SECONDS,str(grant['owner_user_id']))
         a.enforce_rate('agent-submit-ip',a.SUBMISSION_ATTEMPTS_PER_CONNECTION,a.SUBMISSION_WINDOW_SECONDS)
         def reserve(db,case_id):
-            # Recheck the extension in the same write transaction as the use
-            # counter. Revocation, terms and ownership checks remain effective.
-            persistent = standing(grant)
             changed = db.execute('''UPDATE agent_grants SET uses=uses+1 WHERE id=? AND state='approved'
-                AND (expires_at>? OR ?=1) AND (uses<? OR ?=1)
-                AND terms_version=? AND privacy_version=?''',
-                (grant['id'],a.iso(),int(persistent),1 if binding else MAX_UPLOADS,int(persistent),
-                 a.TERMS_VERSION,a.PRIVACY_VERSION)).rowcount
+                AND expires_at>? AND uses<? AND terms_version=? AND privacy_version=?''',
+                (grant['id'],a.iso(),1 if binding else MAX_UPLOADS,a.TERMS_VERSION,a.PRIVACY_VERSION)).rowcount
             if changed != 1:
                 abort(403, 'Delegation is expired, revoked or exhausted.')
             try:
