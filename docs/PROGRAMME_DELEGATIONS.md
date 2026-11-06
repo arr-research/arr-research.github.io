@@ -31,8 +31,16 @@ Use the real active human depositor ID, configured sole operator-author, origina
 instruction and its real source. Initial `recorded_at` is offset-aware, no more
 than seven days old. Rights/authorship attestations must actually be true. Use an
 explicit list of existing AIRR paper IDs and boolean permission for new manuscripts.
-This route supports `CC-BY-4.0`, `CC0-1.0`, `working_paper` only. It does not turn a
-standing licence instruction into editorial acceptance. Never invent a fresh human
+For private preparation and intake only, use JSON null for both `pdf_license` and
+`metadata_license`, and `publication_status: "private"`. No public licence or
+release permission is thereby granted. Private programmes can issue the same
+exact-PDF intake grants without asking the controller to license private work.
+Their controller response lists only `exact-intake-grant:create`, and the
+Working-paper-permission endpoint rejects them with 403 before any write.
+If the initial instruction separately includes public Working-paper scope, use
+`CC-BY-4.0`, `CC0-1.0`, `working_paper`. Mixed private/public tuples are rejected.
+This route does not turn a standing licence instruction into editorial acceptance
+or publish an artifact. Never invent a fresh human
 assent on renewal. Changed terms/privacy require an updated initial instruction.
 
 Capture stdout privately: it contains `programme_id` and `controller_token`. Store
