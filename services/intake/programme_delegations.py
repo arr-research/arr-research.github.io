@@ -87,11 +87,15 @@ def install(app, a, api, require_open):
 
     @app.cli.command('authorize-programme')
     @click.argument('evidence_file', type=click.Path(exists=True, dir_okay=False))
-    def authorize_programme(evidence_file):
-        """Authenticated host only; stdout contains the controller secret once."""
+    @click.option('--controller-token-sha256', default=None,
+                  help='Bind an already securely stored client-generated token by its SHA256; never transmit its secret to this CLI.')
+    def authorize_programme(evidence_file, controller_token_sha256):
+        """Authenticated host only; optionally bind a client-held token hash."""
         require_open()
         if not enabled(app):
             raise click.ClickException('Programme delegation is disabled.')
+        if controller_token_sha256 is not None and not re.fullmatch(r'[0-9a-f]{64}', controller_token_sha256):
+            raise click.ClickException('Client token fingerprint must be lowercase SHA256 hex.')
         raw = Path(evidence_file).read_bytes()
         try:
             if len(raw) > 20000:
@@ -128,19 +132,25 @@ def install(app, a, api, require_open):
         except (ValueError, TypeError, KeyError, UnicodeError) as error:
             raise click.ClickException(str(error)) from error
         identity = 'PRG-'+secrets.token_hex(12).upper()
-        token = secrets.token_urlsafe(32)
+        token = secrets.token_urlsafe(32) if controller_token_sha256 is None else None
+        token_hash = controller_token_sha256 or hashlib.sha256(token.encode()).hexdigest()
         evidence_hash = hashlib.sha256(raw).hexdigest()
         db.execute('INSERT INTO programme_delegations VALUES(?,?,?,?,?,?,?,?)',
-                   (identity, hashlib.sha256(token.encode()).hexdigest(), evidence['owner_user_id'], actor['id'], 'active', raw.decode(), evidence_hash, a.iso()))
+                   (identity, token_hash, evidence['owner_user_id'], actor['id'], 'active', raw.decode(), evidence_hash, a.iso()))
         db.commit()
         g.user = db.execute('SELECT * FROM users WHERE id=?', (actor['id'],)).fetchone()
         a.audit('programme_delegation_authorized', programme_id=identity, evidence_sha256=evidence_hash)
         scopes = ['exact-intake-grant:create']
         if evidence['publication_status'] == 'working_paper':
             scopes.append('working-paper-permission:create')
-        click.echo(json.dumps({'programme_id': identity, 'controller_token': token,
-                              'scope': scopes, 'expires_at': None,
-                              'revocable': True, 'human_instruction_sha256': evidence_hash}))
+        result = {'programme_id': identity, 'scope': scopes, 'expires_at': None,
+                  'revocable': True, 'human_instruction_sha256': evidence_hash}
+        if token is None:
+            result['controller_token_sha256'] = token_hash
+            result['client_secret_not_transmitted'] = True
+        else:
+            result['controller_token'] = token
+        click.echo(json.dumps(result))
 
     @app.cli.command('revoke-programme')
     @click.argument('programme_id')

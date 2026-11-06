@@ -50,6 +50,28 @@ can revoke it in their normal private workspace, or an authenticated host operat
 can run `revoke-programme PRG-...`. Password changes and account recovery revoke it
 as well. Inactive/erased workspaces cannot issue or use child grants.
 
+For a desktop client, the secret can instead be generated and protected there
+before initial authorization: generate 32 cryptographically random bytes as an
+unpadded base64url token (43 characters), store that token in the current user's
+credential store, and send only SHA256 of its ASCII representation to the host.
+Add `--controller-token-sha256 LOWERCASE_64_HEX` to the same initial CLI command.
+This mode creates no replacement secret and returns only its fingerprint, programme
+ID and scopes; `controller_token` is absent. The evidence, MFA/operator, ownership,
+feature flag, quotas and revocation checks are unchanged. This is an alternative
+initial enrollment, not a renewal, authorization bypass or credential migration.
+
+`python scripts/airr_programme.py initialize` prepares that protected client
+credential and prints only its fingerprint; it grants no server access. Repeating
+it preserves the same secret. Windows uses CurrentUser DPAPI in the separate
+`%LOCALAPPDATA%/AIRR/programme-access/tep.dpapi`, leaving ordinary intake grants alone.
+After the actual initial host authorization, use its `prepare`, `grant`, `submit`
+and `working-permission` commands (see `--help`). A linked revision passes the
+complete historical binding with `grant --binding`; its immutable job, exact child
+credential and verified receipt are retained separately. Retries preserve the
+same job/key, cached receipts avoid a second upload, and changed bytes, identities
+or returned predecessor bindings fail closed. Working-paper permission is a
+separate machine step, never acceptance or automatic public release.
+
 ## Per-artifact machine step
 
 `POST /api/v1/programme-artifact-grants`, HTTPS Bearer controller token:
