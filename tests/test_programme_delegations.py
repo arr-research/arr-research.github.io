@@ -87,6 +87,26 @@ class ProgrammeDelegationTests(HistoricalRevisionTests):
         self.assertEqual(self.send_revision(grant, path='/api/v1/submissions', pdf=b'%PDF-different').status_code, 400)
         self.assertEqual(self.send_revision(grant, path='/api/v1/submissions', key='exhausted-child-001').status_code, 403)
 
+    def test_private_programme_intake_needs_no_public_licence(self):
+        controller = self.controller({'pdf_license':None,'metadata_license':None,
+                                      'publication_status':'private',
+                                      'author_instruction':'I authorize continuous preparation and private deposit of my own exact PDFs. I give no public licence, model transfer consent or publication permission.'})
+        issued = self.child(controller,'submission')
+        self.assertEqual(issued.status_code,200,issued.data)
+        received = self.send_revision(issued.get_json(),path='/api/v1/submissions')
+        self.assertEqual(received.status_code,201,received.data)
+        self.assertFalse(received.get_json()['published'])
+        with self.app.app_context():
+            evidence=json.loads(get_db().execute('SELECT evidence_json FROM programme_delegations').fetchone()[0])
+            self.assertIsNone(evidence['pdf_license'])
+            self.assertIsNone(evidence['metadata_license'])
+            self.assertEqual(evidence['publication_status'],'private')
+            self.assertEqual(get_db().execute('SELECT COUNT(*) FROM publication_permissions').fetchone()[0],0)
+
+    def test_private_and_public_licence_scopes_cannot_be_mixed(self):
+        self.controller({'publication_status':'private'},success=False)
+        self.controller({'pdf_license':None,'metadata_license':None},success=False)
+
     def test_controller_is_not_an_upload_or_editorial_credential(self):
         controller = self.controller()
         fake_child = {'agent_token': controller['controller_token']}

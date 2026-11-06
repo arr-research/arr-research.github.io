@@ -105,8 +105,9 @@ def install(app, a, api, require_open):
             stamp = datetime.fromisoformat(evidence['recorded_at'])
             if stamp.tzinfo is None or stamp > a.now() or stamp < a.now()-timedelta(days=7):
                 raise ValueError('Record a recent actual initial instruction, not a renewed human assent.')
-            if (evidence['pdf_license'], evidence['metadata_license'], evidence['publication_status']) != ('CC-BY-4.0', 'CC0-1.0', 'working_paper'):
-                raise ValueError('This scope supports only CC-BY working papers with CC0 metadata.')
+            release_scope = (evidence['pdf_license'], evidence['metadata_license'], evidence['publication_status'])
+            if release_scope not in (('CC-BY-4.0', 'CC0-1.0', 'working_paper'), (None, None, 'private')):
+                raise ValueError('Choose explicit CC-BY/CC0 Working-paper scope or private intake with null public licences.')
             db = a.get_db()
             actor = db.execute("SELECT id FROM users WHERE email=? AND role='operator' AND active=1 AND totp_secret IS NOT NULL", (app.config['OPERATOR_EMAIL'],)).fetchone()
             if not actor:
