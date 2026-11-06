@@ -79,6 +79,24 @@ several grants does not obtain extra upload capacity. Exhaustion is a queue stat
 not a reason to create another account or bypass the limit. Existing receipt,
 malware, publication-permission and Working-paper release procedures remain in force.
 
+## Exact Working-paper permission without a second human reply
+
+After the actual receipt and clean scan, a separate machine step can record the
+licence permission already covered by the initial instruction:
+`POST /api/v1/programme-working-paper-permissions`, Bearer controller token, JSON
+`{"submission_id":"SUB-...","sha256":"exact lowercase PDF hash"}`.
+It only accepts this programme's own child-grant case, the exact stored bytes,
+sole author and operator conflict, standard publication mode, current clean
+working-paper state and originality checks. It rejects declined/withdrawn/held,
+accepted or other-programme cases. Existing different licences cannot be replaced.
+Retries preserve the same permission. The audit links the original instruction
+and its original timestamp, without inventing another human reply.
+
+The result explicitly says `published: false`. This is an author licence
+permission, not an editorial decision, release, model-transfer authorization or
+acceptance. The normal editorial release checks and public hash verification
+still apply. No acceptance or model review is fabricated to increase throughput.
+
 ## Deployment
 
 Follow the existing deployment runbook: consistent encrypted backup and verified
