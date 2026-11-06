@@ -151,7 +151,8 @@ def authorize(path, replace=False, name='AIRR research assistant', version='user
             if error.status != 401 or not replace:
                 raise
             state = {'state': 'unrecognized'}
-        if state['state'] in ('pending', 'approved') and state.get('uploads_remaining', 1) > 0:
+        remaining = state.get('uploads_remaining', 1)
+        if state['state'] in ('pending', 'approved') and (remaining is None or remaining > 0):
             return {'request_id': previous['request_id'], 'state': state['state'],
                     'authorization_url': previous['authorization_url'], 'reused': True}
         if not replace:
