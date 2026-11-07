@@ -27,7 +27,7 @@ def added_metadata(base, root=ROOT):
     if base == '0' * 40:
         command = ['git', 'ls-files', '-z', '--', 'papers/**/metadata.json']
     else:
-        command = ['git', 'diff', '--name-only', '-z', '--diff-filter=AM', base,
+        command = ['git', 'diff', '--name-only', '-z', '--diff-filter=AMR', base,
                    'HEAD', '--', 'papers/**/metadata.json']
     raw = subprocess.check_output(command, cwd=root).decode('utf-8')
     candidates = [p for p in raw.split('\0') if p]
