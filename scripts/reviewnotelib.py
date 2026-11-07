@@ -17,14 +17,16 @@ def load_review_note(paper):
     required = {'schema_version', 'version_id', 'canonical_sha256', 'provider',
                 'ui_label', 'backend_identity', 'recorded_at', 'score', 'scale',
                 'recommendation', 'context', 'summary', 'report_files'}
-    if not isinstance(note, dict) or set(note) != required or note['schema_version'] != '1.0':
+    if not isinstance(note, dict) or set(note) != required or note['schema_version'] not in {'1.0', '1.1'}:
         raise ValueError('Narrative exact-PDF review fields do not match the contract.')
     if note['version_id'] != paper.metadata['version_id'] or note['canonical_sha256'] != paper.metadata['integrity']['canonical_sha256']:
         raise ValueError('Narrative review must identify this exact version and PDF hash.')
     if note['backend_identity'] is not None:
         raise ValueError('This narrative adapter is for unexposed backend identities; do not fabricate one.')
-    if type(note['score']) not in (int, float) or not math.isfinite(note['score']) or not 0 <= note['score'] <= 10:
-        raise ValueError('Original AI-only score must lie within 0–10.')
+    if note['score'] is None and note['schema_version'] != '1.1':
+        raise ValueError('Qualitative reports without a numerical score require narrative format 1.1.')
+    if note['score'] is not None and (type(note['score']) not in (int, float) or not math.isfinite(note['score']) or not 0 <= note['score'] <= 10):
+        raise ValueError('Original AI-only score must be null or lie within 0–10.')
     for key in ('provider', 'ui_label', 'scale', 'recommendation', 'context', 'summary'):
         if not isinstance(note[key], str) or not 3 <= len(note[key].strip()) <= 4000:
             raise ValueError('Explicit original review identity, scope and context are required.')
@@ -43,3 +45,10 @@ def load_review_note(paper):
         if hashlib.sha256(target.read_bytes()).hexdigest() != source['sha256']:
             raise ValueError('Retained original narrative review source hash mismatch.')
     return note
+
+
+def review_note_score_text(note):
+    """Preserve an absent grade rather than manufacturing one for display."""
+    if note['score'] is None:
+        return 'No numerical score assigned by the model.'
+    return f"Original AI-only score: {note['score']:g} / 10"

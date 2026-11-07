@@ -8,7 +8,7 @@ from types import SimpleNamespace
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'scripts'))
-from reviewnotelib import load_review_note
+from reviewnotelib import load_review_note, review_note_score_text
 
 
 class NarrativeReviewTests(unittest.TestCase):
@@ -38,6 +38,22 @@ class NarrativeReviewTests(unittest.TestCase):
         self.assertEqual(result['score'], 7.6)
         self.assertIsNone(result['backend_identity'])
         self.assertNotIn('criteria', result)
+        self.assertEqual(review_note_score_text(result), 'Original AI-only score: 7.6 / 10')
+
+    def test_qualitative_report_retains_no_grade_and_all_exact_artifact_checks(self):
+        self.note['score'] = None
+        self.note['scale'] = 'Qualitative assessment; model assigned no numerical grade'
+        self.write()
+        with self.assertRaises(ValueError):
+            load_review_note(self.paper)
+        self.note['schema_version'] = '1.1'
+        self.write()
+        result = load_review_note(self.paper)
+        self.assertIsNone(result['score'])
+        self.assertEqual(review_note_score_text(result), 'No numerical score assigned by the model.')
+        (self.root/'original.txt').write_text('changed qualitative report')
+        with self.assertRaises(ValueError):
+            load_review_note(self.paper)
 
     def test_rejects_inherited_pdf_and_version_identity(self):
         for key, bad in [('version_id', 'another version'), ('canonical_sha256', 'b'*64), ('backend_identity', 'invented backend'), ('score', True)]:
