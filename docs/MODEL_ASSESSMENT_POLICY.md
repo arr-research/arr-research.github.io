@@ -38,6 +38,19 @@ or an assessment of a different version.
 
 ## Administrator workflow
 
+**Owner instruction, 7 November 2026: numerical stars before publication.**
+Every newly added public manuscript version, including a Working paper,
+must carry at least one genuine exact-PDF numerical assessment with the
+overall star rating and all five criterion ratings. The PR validation gate
+checks added version metadata against the bound, validated original model
+response. A qualitative-only report or a score for an ancestor cannot
+satisfy this requirement. Existing historical records remain transparent;
+this prospective gate never backfills missing scores. A low score or an
+adverse recommendation is retained, not repeatedly sampled for improvement.
+An unknown model configuration retains its factual label and neutral
+weight; it does not establish an identified-model admission quorum.
+Publication as a Working paper and editorial admission remain distinct.
+
 1. Generate the locked prompt with
    `python scripts/prepare_model_assessment.py ARR-ID --version vN`.
 2. Before the round, select the frontier service or services available and suitable
@@ -118,8 +131,9 @@ valid exact-version PDF assessment from which a score can be calculated. Record
 validation and the site build enforce this coverage requirement. A report for a
 private candidate or predecessor cannot satisfy it. The rule does not generate
 missing grades, remove adverse findings, waive the applicable review quorum, or
-make an editorial decision. Historical predecessor pages and working papers may
-remain unrated. Bind an already-public intake source explicitly to each authorized
+make an editorial decision. Historical predecessor pages and Working papers
+published before the prospective 7 November2026 gate may remain unrated.
+Bind an already-public intake source explicitly to each authorized
 version using the lossless import procedure above.
 
 Each report identifies whether that model was involved in producing the manuscript.
