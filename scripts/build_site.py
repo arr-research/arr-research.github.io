@@ -42,7 +42,7 @@ from assessmentlib import (
     validate_public_assessments,
 )
 from legacyreviewlib import load_preserved_reviews, read_preserved_review, validate_preserved_reviews, preserved_review_family
-from reviewnotelib import load_review_note
+from reviewnotelib import load_review_note, review_note_score_text
 
 
 SITE_DIR = ROOT / "site"
@@ -1120,7 +1120,10 @@ def paper_assessment_section(paper, assessments: list[dict], highlight: dict | N
         if historical:
             summary = '<div class="assessment-summary unrated"><strong>Not yet rated in the current aggregate</strong><p>A historical exact-PDF report is preserved below. Its native format has not been converted into a modern assessment response and contributes no headline score.</p></div>'
         if narrative:
-            summary = '<div class="assessment-summary unrated"><strong>Narrative exact-PDF assessment available</strong><p>The original AI-only score and complete review are preserved below. No missing criterion stars are invented, and this different rubric is excluded from the AIRR weighted aggregate.</p></div>'
+            if narrative['score'] is None:
+                summary = '<div class="assessment-summary unrated"><strong>Qualitative exact-PDF assessment available</strong><p>The complete review is preserved below. The model assigned no numerical grade; no score or criterion stars are inferred, and this report contributes no weighted aggregate.</p></div>'
+            else:
+                summary = '<div class="assessment-summary unrated"><strong>Narrative exact-PDF assessment available</strong><p>The original AI-only score and complete review are preserved below. No missing criterion stars are invented, and this different rubric is excluded from the AIRR weighted aggregate.</p></div>'
     else:
         weight_rows = "".join(f'<tr><td>{esc(" · ".join(w["model"]))}</td><td>{w["score"]:.2f}</td><td>{w["weight"]:.3f}</td><td>{esc(w["reason"])}</td></tr>' for w in aggregate["weights"])
         summary = f"""
@@ -1181,7 +1184,7 @@ def paper_assessment_section(paper, assessments: list[dict], highlight: dict | N
     if narrative:
         source_root = paper.path.relative_to(ROOT).as_posix()
         links = ''.join(f'<li><a href="https://github.com/arr-research/arr-research.github.io/blob/main/{quote(source_root+"/"+s["path"], safe="/")}">{esc(s["label"])}</a> · SHA-256 <code>{esc(s["sha256"])}</code></li>' for s in narrative['report_files'])
-        note_html = f'<article class="model-report"><h3>{esc(narrative["provider"])} · {esc(narrative["ui_label"])}</h3><p><strong>Original AI-only score: {narrative["score"]:g} / 10</strong> · {esc(narrative["scale"])}</p><p>{esc(narrative["recommendation"])}</p><p>{esc(narrative["summary"])}</p><p>Backend identity: unknown. {esc(narrative["context"])}</p><p>Report captured {exact_time(narrative["recorded_at"])} · Exact PDF SHA-256 <code>{esc(narrative["canonical_sha256"])}</code></p><ul>{links}</ul></article>'
+        note_html = f'<article class="model-report"><h3>{esc(narrative["provider"])} · {esc(narrative["ui_label"])}</h3><p><strong>{esc(review_note_score_text(narrative))}</strong> · {esc(narrative["scale"])}</p><p>{esc(narrative["recommendation"])}</p><p>{esc(narrative["summary"])}</p><p>Backend identity: unknown. {esc(narrative["context"])}</p><p>Report captured {exact_time(narrative["recorded_at"])} · Exact PDF SHA-256 <code>{esc(narrative["canonical_sha256"])}</code></p><ul>{links}</ul></article>'
         history = (''.join(reports) if reports else '') + note_html
     return f"""
 <section class="model-assessments" id="model-assessments">

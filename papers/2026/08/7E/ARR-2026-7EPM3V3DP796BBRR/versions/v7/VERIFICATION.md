@@ -1,0 +1,9 @@
+# Verification of exact v7
+
+The canonical58page PDF is unchanged from integrated revision171:663701bytes,SHA2569070f806e9069fd4b1fa54ec24527bc0cfcc03ddfce91b1206ed9358f6ce70c6. Its Linux build and58page render are retained verbatim in tep-render171.zip, with pinned source package tep-source171.zip. The original visual review and manifest are supplied; no Windows scientific/Lean/TeX execution or new PDF compilation accompanies this publication.
+
+One new Codex scientific model report is bound to these exact bytes. The reviewer read all58pages, checked64source/render hashes and examined targeted primary literature. Its configured model wasgpt-6-astra, but actually served backend/effort were unexposed. Same chat/account/provider and ancestor involvement prevent an independence claim; historical scores visible in this PDF prevent a blind-review claim. No numerical grade was assigned. All seven findings remain in the original report. Separate preparing-agent clarifications address a quotient-domain convention and stale predecessor wording; no model verdict was rewritten or rerun.
+
+The actual native linked receiptSUB-C8DD32E38006234C is clean/eligible and was separately read back by HTTPS with matching full binding, hash and size. Native exact-PDF Working-paper licence permission was recorded from the real continuous author instruction and activation confirmation. Deposit, licence, model assessment, release, peer review and editorial acceptance remain separate. Actual public release and final served-byte verification follow the protected release workflow; the receipt is not itself publication.
+
+The general critical rectangular question, independent complete dependency audit and originality priority remain open. No interacting/continuum Yang-Mills mass gap follows. PR29 remains20/41,TermSource0. Existing immutablev6 and report154 are preserved with their own distinct hashes and historical scope.

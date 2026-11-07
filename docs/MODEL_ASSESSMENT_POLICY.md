@@ -320,3 +320,7 @@ When a canonical PDF is also a replay input, include the same verified published
 bytes at that genuine source location; never substitute another PDF or create an
 unverified path to force a check to succeed. Check both included-file integrity
 and the scope of omitted scientific dependencies before dispatch.
+
+### Qualitative exact-PDF narrative notes
+
+Narrative evidence format1.1 permits `score:null` when the actual model assigned no numerical grade. The public page states that explicitly and retains the complete original report, exact PDF/version binding, source hashes, identity limits and context. Numeric format1.0 reports retain their original scores and display. A missing grade is neither zero nor an inferred rubric. Neither format contributes to the modern weighted aggregate or substitutes for the identified-model admission quorum, editorial decision or human peer review. All original objections remain visible.
