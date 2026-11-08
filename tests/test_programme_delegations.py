@@ -414,3 +414,22 @@ class ProgrammeDelegationTests(HistoricalRevisionTests):
         response=self.client.post('/api/v1/programme-scope-extensions',json={'paper_ids':[self.binding['paper_id']]},headers={'Authorization':'Bearer '+controller['controller_token']})
         self.assertEqual(response.status_code,404)
         self.assertEqual(self.child(controller).status_code,400)
+
+    def test_scope_extension_personal_instruction_is_redacted_with_inactive_account(self):
+        controller=self.controller({'paper_ids':[]})
+        result=self.scope_extension(controller)
+        self.assertEqual(result.exit_code,0,result.output)
+        with self.app.app_context():
+            db=get_db();old=iso(a.now()-timedelta(days=181))
+            db.execute('UPDATE users SET created_at=? WHERE id=?',(old,self.owner))
+            db.execute('UPDATE private_accounts SET last_seen_at=? WHERE user_id=?',(old,self.owner))
+            db.commit()
+        swept=self.app.test_cli_runner().invoke(args=['retention-sweep'])
+        self.assertEqual(swept.exit_code,0,swept.output)
+        with self.app.app_context():
+            db=get_db()
+            original=db.execute('SELECT state,evidence_json FROM programme_delegations').fetchone()
+            self.assertEqual(original['state'],'revoked')
+            self.assertEqual(original['evidence_json'],'{}')
+            self.assertEqual(db.execute('SELECT evidence_json FROM programme_scope_extensions').fetchone()[0],'{}')
+        self.assertEqual(self.child(controller).status_code,403)
