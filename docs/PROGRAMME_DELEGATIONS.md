@@ -170,3 +170,8 @@ still apply. Private original scope remains private. Account erasure redacts the
 extension's personal instruction evidence together with the original evidence.
 There is no controller HTTP endpoint for scope expansion. After the host records
 an extension, retry the original exact-PDF job through the normal native routes.
+
+A newly issued historical child grant for an added paper pins the supporting
+extension evidence hashes in its private native authorization record, together
+with the unchanged original instruction hash and actual original timestamp.
+This is machine provenance, not another human reply.

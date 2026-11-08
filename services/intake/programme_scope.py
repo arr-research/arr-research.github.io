@@ -40,6 +40,20 @@ def effective_evidence(db, programme, initial):
     return {**initial, 'paper_ids': sorted(papers)}
 
 
+def extension_hashes_for(db, programme, paper):
+    """Pin the actual extension evidence supporting a later child grant."""
+    if paper in json.loads(programme['evidence_json'])['paper_ids']:
+        return []
+    hashes=[]
+    for row in db.execute('SELECT evidence_json,evidence_sha256 FROM programme_scope_extensions WHERE programme_id=? ORDER BY id',(programme['id'],)):
+        evidence=json.loads(row['evidence_json'])
+        if evidence['initial_instruction_sha256']==programme['evidence_sha256'] and paper in evidence['paper_ids']:
+            hashes.append(row['evidence_sha256'])
+    if not hashes:
+        raise ValueError('No recorded extension supports this paper.')
+    return hashes
+
+
 def install(app, a, require_open, current):
     @app.cli.command('extend-programme-papers')
     @click.argument('evidence_file', type=click.Path(exists=True, dir_okay=False))

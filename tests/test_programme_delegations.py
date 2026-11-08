@@ -350,6 +350,11 @@ class ProgrammeDelegationTests(HistoricalRevisionTests):
         # Same evidence retry must be idempotent even after a grant was issued.
         issued=self.child(controller)
         self.assertEqual(issued.status_code,200,issued.data)
+        with self.app.app_context():
+            provenance=json.loads(get_db().execute('SELECT authorization_json FROM historical_revision_grants').fetchone()[0])
+            self.assertEqual(provenance['extension_instruction_sha256'],[output['extension_instruction_sha256']])
+            self.assertEqual(provenance['initial_instruction_sha256'],original['evidence_sha256'])
+            self.assertEqual(provenance['initial_recorded_at'],self.evidence['recorded_at'])
         repeat=self.scope_extension(controller,{'recorded_at':json.loads((Path(self.temp.name)/'scope-extension.json').read_text())['recorded_at']})
         self.assertEqual(repeat.exit_code,0,repeat.output)
         self.assertTrue(json.loads(repeat.output)['already_recorded'])
