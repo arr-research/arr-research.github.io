@@ -1,0 +1,69 @@
+SCIENTIFIC REVIEW - ONE DECLARED EXACT-PDF ROUND
+Assessment timestamp: 2026-11-08T15:20:00+00:00
+Prompt: ARR-ASSESS-1.0
+
+REFERENT AND VERDICT
+Paper: A Weighted Turan Unit-Step Inequality for Modified Bessel Functions and Its Determinant Corollary, Lluis Eriksson, 8 November 2026, revision v2.
+paper_id: ARR-2026-72G1SSCNNG8YDVC2
+version_id: arr:version:bd6d0362-c5cc-4ef6-a35d-87ae6fd4aa51
+Exact PDF SHA-256: 9656985cce8bfb46e961acf9e4e6efbc8ee8114c5259ccf0d27e4f33ea1843f6
+The local PDF hash was checked and matches locked.json. I read the complete designated extraction and visually inspected page-1.png, page-2.png, page-3.png, page-4.png, page-5.png and page-6.png individually. The mathematical displays are legible; the visual pages resolve extraction artifacts in parentheses, exponents and sums.
+
+Recommendation: MINOR REVISION.
+Scientific importance: 3.10/10, a substantive but specialized contribution. This is an importance scale, not a probability of truth or a school grade. Rounded overall stars: 3.
+Criteria (separate 1-5 scale): correctness confidence 5, rigor 4, novelty 3, significance 2, reproducibility 3.
+No unresolved objection identified here invalidates a main proved claim. No demonstrated mathematical error was found. These statements express this AI review's judgment, not human acceptance, formal verification, or verified independence.
+
+MATHEMATICAL AUDIT
+1. Domains and analytic inputs.
+For x > 0 and m >= 1 all orders actually divided by are nonnegative. Positivity follows directly from the standard positive defining series. The recurrences are correctly indexed: I_(m-1)/I_m = rho_m + 2m/x and rho_(m+1) = 1/rho_m - 2(m+1)/x. DLMF 10.29.1 supplies the recurrence, and DLMF 10.25.2 supplies the series:
+https://dlmf.nist.gov/10.29
+https://dlmf.nist.gov/10.25
+The phrase "valid for all real orders" is harmless in the actual proof but should distinguish a recurrence for I from a divided identity whose denominator must be nonzero.
+
+Crucially, the cited upper bound is correctly shifted. Ruiz-Antolin and Segura, Theorem 2, bound I_nu/I_(nu-1) by x/[nu-1/2 + sqrt((nu-1/2)^2+x^2)] for nu >= 1/2. Setting nu=m+1 gives precisely equation (3), throughout the required domain. This removes any need to inspect the companion manuscript to establish the input.
+Primary source: https://arxiv.org/pdf/1606.02008 , Theorem 2, printed page 5.
+The calibration is algebraic, not a new Bessel theorem.
+
+2. Elimination and exact identity.
+Clearing m(m+1) in phi_(m+1)-phi_m gives exactly the displayed Delta_m. Direct term collection yields coefficients +2m(m+1) for 1/u^2, -2m(m+1) for u^2, linear term -4m(m+1)c[(m-1)u+(m+2)/u], and quadratic term 8m(m+1)(2m+1)c^2. Dividing by 2m(m+1) therefore produces the displayed half-difference. Substituting (m-1)u+(m+2)/u = [(2m+1)S+3P]/2 gives
+PS-(2m+1)cS-3cP+4(2m+1)c^2,
+which is the asserted product plus (2m+1)c^2. The constants, factor of two, and signs agree.
+
+3. Strict positivity and quantifiers.
+For U=x/(a+sqrt(a^2+x^2)), a=m+1/2, rationalization gives 1/U-U=2a/x. Since u<U and t -> 1/t-t decreases strictly, P>(2m+1)c. Also sqrt(a^2+x^2)>a, hence u<x/(2m+1), so S>1/u>(2m+1)c>=3c. Both product factors and the remaining term are strictly positive. This proves the asserted inequality for every real m>=1, with no integer-only step hidden in the proof. It proves unit-step monotonicity, not continuous monotonicity in order; the manuscript does not claim the latter.
+
+Analytic counterexample attempts included the boundary m=1, small x, and the case u approaching the calibration threshold from below. At m=1 the zero weight removes the lower-order summand; no division by m-1 occurs. For fixed m>1 the defining series gives phi_m ~ 4m(m-1)/x^2 as x tends to zero, with positive leading next-step difference; m=1 separately has phi_1=2rho_1^2 tending to zero. At the calibration threshold itself the product vanishes but the residual positive term remains. None gives a counterexample. These are pencil-and-paper checks, not numerical executions.
+
+4. Determinant corollary.
+Dividing A_k by B_k cancels r_(k-1)^2, leaving [(k-1)I_(k-1)^2+(k+1)I_(k+1)^2]/[k I_k^2]. For k=1 only j=1 remains, giving 2I_2^2/I_1^2, exactly phi_1. B_k>0. Iterating the proven unit step over integer indices proves the strict determinant sign. No stronger lattice-gauge conclusion follows solely from this algebra.
+
+5. Convergence and parity rewriting.
+For nonnegative integer j, (j+h)!>=j! gives the stated factorial majorant from the defining series. At fixed beta, shifts by finitely many indices, finite products and polynomial factors preserve summability of all fixed polynomial moments of A and B. The bound |c_mn|<=A_m B_n+A_n B_m and a trigonometric bracket bound 2(m+n) produce a summable product-of-moments majorant, uniform over real t. This establishes Lemma 5 without claiming beta-uniform convergence.
+
+Putting p=n-m and q=n+m into t=pi-epsilon gives sin(qt)=(-1)^(q+1)sin(q epsilon) and sin(pt)=(-1)^(p+1)sin(p epsilon). Since p and q have the same parity, multiplication by the negative c_mn yields precisely the displayed rewritten series. When 0<p epsilon<q epsilon<=pi, strict decrease of sinc on that interval proves positivity of q sin(p epsilon)-p sin(q epsilon). Outside that interval this argument supplies no sign. The paper correctly identifies an unresolved alternating-parity sum and does not promote determinant ordering or convergence into proof of W<0. The open problem was neither solved nor disproved here.
+
+NOVELTY AND RELEVANCE
+The credible new contribution is narrow: the particular weighted statistic, its factorization and the determinant specialization. The ingredients are classical. Baricz and Ponnusamy explicitly discuss equivalences between classical Turan and logarithmic-derivative inequalities and order log-concavity:
+https://arxiv.org/pdf/1010.3346 , printed pages 1-2.
+Baricz's Turanian paper discusses established bounds and ratio/order monotonicity:
+https://arxiv.org/pdf/1202.4853 , Section 2.
+The passages inspected do not themselves establish the displayed weighted unit-step theorem. That is not a proof that no equivalent result exists. My primary-source comparison was targeted, not an exhaustive literature search. General web queries for the weighted expression and weighted modified-Bessel-square monotonicity did not settle priority. Search-result absence is not used as a priority argument.
+
+Minor revision requested: briefly identify what existing ratio/Turan statements control and what extra weighted expression is established here, without implying that a new algebraic formulation alone establishes priority. Remark 3's proposed "structural invariant" is an interpretation, not a theorem, and should be toned down or explicitly labeled a heuristic observation. These are presentation and attribution refinements, not a demand for a new mathematical proof.
+
+The coefficient arrays constitute an exact algebraic application. Their motivation in a gauge-theory programme does not establish an observable, Griffiths positivity, a continuum limit, or a Millennium resolution. The manuscript expressly limits those implications. The open sign problem makes broad physical significance prospective. An importance score near 3 is warranted for a useful specialized lemma; stronger field-level importance is not demonstrated.
+
+FORMAL AND REPRODUCIBILITY SCOPE
+The PDF describes historical Lean declarations, a compiler version, Mathlib revision, source commit and command, while expressly stating that no replay occurred for this revision. I did not inspect the Lean file, archived log, package provenance record, repository, or external programme manuscripts, and did not authenticate those historical assertions. No Lean, build, scientific code, numerical calculation, symbolic execution or runtime experiment was performed. A listed standard-axiom set and a reported exit code are not independently verified evidence in this assessment.
+
+The analytic proof is self-contained given the cited classical inputs and can be checked without Lean. The formal statement is described as an ordered-field implication assuming recurrences and the Amos bound; it is not a formal construction of analytic Bessel functions or a proof of the physical programme. The reproducibility criterion therefore reflects good readable analytic evidence with unverified computational provenance, rather than a failed computation. No numerical results remain as scientific evidence for the theorem or open sign question.
+
+REVIEW CONTEXT AND LIMITS
+I am an OpenAI Codex agent described in the exposed developer context as based on GPT-6. Exact served model/backend, detailed reasoning-effort setting, seed and sampling settings were not exposed. Product labels do not establish these. Prior participation is UNKNOWN. I cannot certify independence or context isolation.
+
+This designated task received parent instructions specifying a single exact-PDF review without a target grade, artifact paths and exclusions. The visible inherited user content comprised global storage instructions and environment context; this review was not supplied prior numerical grades, prior reports, or author responses. The manuscript itself disclosed Codex preparation/orchestration, a prior v1 review, and historical computation, without a numerical v1 score. I did not read the predecessor manuscript or open AIRR predecessor review pages.
+
+Unavoidable search exposure: one broad novelty query returned an AIRR author-listing snippet naming this paper's historical v1 record and mentioning another programme claim and an audit caveat. I did not open that result, follow its links, or use its scientific assertions. Other general-search snippets included unrelated Bessel papers and research aggregation pages; only the primary sources listed above support external scientific claims in this report. No numerical prior assessment rating was exposed in the material read. The complete transcript, infrastructure-level history and possible prior participation are not independently observable.
+
+One declared review round was completed, with no inbound author response or post-verdict coaching used. No paper or Git changes were made. Native identifiers are artifact bindings and do not demonstrate platform admission or editorial acceptance. This is AI assessment only.
