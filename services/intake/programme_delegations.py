@@ -18,6 +18,7 @@ import click
 from flask import abort, g, request
 
 from services.intake import historical_revisions as historical
+from services.intake import programme_scope
 
 
 def migrate(db):
@@ -36,6 +37,7 @@ def migrate(db):
         UNIQUE(programme_id,request_sha256)
       );
     ''')
+    programme_scope.migrate(db)
 
 
 def enabled(app):
@@ -54,7 +56,7 @@ def current(app, a, programme):
         abort(403, 'Original author workspace/operator is no longer active.')
     if evidence['terms_version'] != a.TERMS_VERSION or evidence['privacy_version'] != a.PRIVACY_VERSION:
         abort(403, 'Changed terms/privacy require an updated initial instruction.')
-    return evidence
+    return programme_scope.effective_evidence(db, programme, evidence)
 
 
 def artifact_for(db, grant_id):
@@ -74,6 +76,7 @@ def check_child(app, a, grant_id, metadata=None):
 
 
 def install(app, a, api, require_open):
+    programme_scope.install(app, a, require_open, current)
     def controller():
         require_open()
         header = request.headers.get('Authorization', '')

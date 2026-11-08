@@ -137,3 +137,36 @@ Do not claim continuous execution or release before checking the public PDF byte
 Repository tests cover multiple exact artifacts under one unchanged instruction,
 retry identity, normal new deposits, wrong authors/bytes, scope separation,
 revocation, disabled feature, stale catalogue, changed terms, expiry and quota.
+
+## Adding already-authorized existing papers without rewriting the initial instruction
+
+An initial `paper_ids` list is explicit, even when the author's prose describes
+an entire programme. It must not be silently treated as every existing paper.
+A missing trusted catalogue entry and an out-of-scope paper are separate blockers.
+A catalogue correction alone cannot expand the original ten-paper instruction.
+
+The authenticated host can record a real later owner instruction using:
+
+```
+flask --app services.intake.app extend-programme-papers /private/actual-extension.json
+```
+
+The evidence has exactly `programme_id`, `initial_instruction_sha256`, `paper_ids`,
+`author_instruction`, `source_reference`, `recorded_at`, `rights_confirmed`, and
+`operator_authorship_confirmed`. Preserve the actual owner text, source and actual
+recent offset-aware instruction time. Do not date an old instruction as a new
+reply. Both attestations must be true. IDs must be unique and the union of the
+initial and added paper lists cannot exceed 100. The trusted installed catalogue
+must already identify each added paper as solely authored by the original author.
+Catalogue reconciliation follows its own verified-public-byte and backup rules.
+
+This host-only command appends an extension evidence row and audit event tied to
+the original instruction hash. It leaves the original evidence bytes, timestamp,
+controller token, owner, operator, licences, new-submission scope and contracts
+unchanged. Identical evidence retries are idempotent. It creates no child grant,
+case, receipt, quota, model consent, publication or acceptance. The original
+revocation, current terms/privacy, active human account and MFA operator checks
+still apply. Private original scope remains private. Account erasure redacts the
+extension's personal instruction evidence together with the original evidence.
+There is no controller HTTP endpoint for scope expansion. After the host records
+an extension, retry the original exact-PDF job through the normal native routes.
