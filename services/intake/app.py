@@ -1229,6 +1229,7 @@ def register_commands(app: Flask) -> None:
         for user in inactive:
             db.execute("UPDATE agent_grants SET state='revoked' WHERE owner_user_id=?", (user['id'],))
             db.execute("UPDATE programme_delegations SET state='revoked',evidence_json='{}' WHERE owner_user_id=?", (user['id'],))
+            db.execute("UPDATE programme_scope_extensions SET evidence_json='{}' WHERE programme_id IN (SELECT id FROM programme_delegations WHERE owner_user_id=?)", (user['id'],))
             db.execute("UPDATE independent_agents SET state='revoked',name='[erased]',version='[erased]',purpose='[erased]' WHERE user_id=?", (user['id'],))
             db.execute('DELETE FROM private_accounts WHERE user_id=?', (user['id'],))
             db.execute(

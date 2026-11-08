@@ -312,3 +312,129 @@ class ProgrammeDelegationTests(HistoricalRevisionTests):
         self.assertEqual(self.permit_working(controller, case).status_code, 409)
         self.app.test_cli_runner().invoke(args=['revoke-programme', controller['programme_id']])
         self.assertEqual(self.permit_working(controller, case).status_code, 403)
+
+
+    def scope_extension(self, controller, changes=None):
+        initial = {**self.evidence, 'paper_ids': []}
+        evidence = {
+            'programme_id':controller['programme_id'],
+            'initial_instruction_sha256':hashlib.sha256(json.dumps(initial).encode()).hexdigest(),
+            'paper_ids':[self.binding['paper_id']],
+            'author_instruction':'I explicitly extend my existing sole-author programme instruction to this existing paper, retaining all original terms, licences, quotas, revocation and per-artifact checks.',
+            'source_reference':'Actual later owner instruction fixture; not an invented per-PDF reply',
+            'recorded_at':iso(),'rights_confirmed':True,'operator_authorship_confirmed':True}
+        evidence.update(changes or {})
+        path=Path(self.temp.name)/'scope-extension.json'
+        path.write_text(json.dumps(evidence))
+        return self.app.test_cli_runner().invoke(args=['extend-programme-papers',str(path)])
+
+    def test_scope_extension_retains_original_controller_evidence_and_child_route(self):
+        controller=self.controller({'paper_ids':[]})
+        self.assertEqual(self.child(controller).status_code,400)
+        with self.app.app_context():
+            original=dict(get_db().execute('SELECT * FROM programme_delegations').fetchone())
+        catalogue_before=self.catalog.read_bytes()
+        result=self.scope_extension(controller)
+        self.assertEqual(result.exit_code,0,result.output)
+        output=json.loads(result.output)
+        self.assertFalse(output['grant_created'])
+        self.assertFalse(output['published'])
+        self.assertNotIn('controller_token',output)
+        with self.app.app_context():
+            db=get_db()
+            self.assertEqual(dict(db.execute('SELECT * FROM programme_delegations').fetchone()),original)
+            self.assertEqual(db.execute('SELECT count(*) FROM programme_scope_extensions').fetchone()[0],1)
+            self.assertEqual(db.execute('SELECT count(*) FROM agent_grants').fetchone()[0],0)
+            self.assertEqual(db.execute('SELECT count(*) FROM submissions').fetchone()[0],0)
+        self.assertEqual(self.catalog.read_bytes(),catalogue_before)
+        # Same evidence retry must be idempotent even after a grant was issued.
+        issued=self.child(controller)
+        self.assertEqual(issued.status_code,200,issued.data)
+        with self.app.app_context():
+            provenance=json.loads(get_db().execute('SELECT authorization_json FROM historical_revision_grants').fetchone()[0])
+            self.assertEqual(provenance['extension_instruction_sha256'],[output['extension_instruction_sha256']])
+            self.assertEqual(provenance['initial_instruction_sha256'],original['evidence_sha256'])
+            self.assertEqual(provenance['initial_recorded_at'],self.evidence['recorded_at'])
+        repeat=self.scope_extension(controller,{'recorded_at':json.loads((Path(self.temp.name)/'scope-extension.json').read_text())['recorded_at']})
+        self.assertEqual(repeat.exit_code,0,repeat.output)
+        self.assertTrue(json.loads(repeat.output)['already_recorded'])
+        self.assertEqual(self.child(controller).get_json(),issued.get_json())
+        received=self.send_revision(issued.get_json())
+        self.assertEqual(received.status_code,201,received.data)
+        self.assertFalse(received.get_json()['published'])
+        with self.app.app_context():
+            self.assertEqual(get_db().execute('SELECT count(*) FROM programme_scope_extensions').fetchone()[0],1)
+        revoked=self.app.test_cli_runner().invoke(args=['revoke-programme',controller['programme_id']])
+        self.assertEqual(revoked.exit_code,0,revoked.output)
+        self.assertEqual(self.child(controller).status_code,403)
+        self.assertNotEqual(self.scope_extension(controller).exit_code,0)
+
+    def test_scope_extension_rejects_contract_and_authority_mutations_atomically(self):
+        controller=self.controller({'paper_ids':[]})
+        for changes in ({'initial_instruction_sha256':'f'*64},
+                        {'programme_id':'PRG-'+'F'*24},
+                        {'rights_confirmed':False},
+                        {'operator_authorship_confirmed':False},
+                        {'paper_ids':[]},
+                        {'paper_ids':[self.binding['paper_id']]*2},
+                        {'paper_ids':['ARR-2026-'+'Z'*16]},
+                        {'paper_ids':True},
+                        {'recorded_at':iso(a.now()+timedelta(days=1))},
+                        {'recorded_at':iso(a.now()-timedelta(days=8))},
+                        {'pdf_license':'CC0-1.0'},
+                        {'author_instruction':'invented'}):
+            with self.subTest(changes=changes):
+                result=self.scope_extension(controller,changes)
+                self.assertNotEqual(result.exit_code,0,result.output)
+                with self.app.app_context():
+                    self.assertEqual(get_db().execute('SELECT count(*) FROM programme_scope_extensions').fetchone()[0],0)
+        self.assertEqual(self.child(controller).status_code,400)
+
+    def test_scope_extension_requires_trusted_sole_authorship_and_current_initial_scope(self):
+        controller=self.controller({'paper_ids':[]})
+        self.catalog.write_text(json.dumps({self.binding['paper_id']:{**self.parent,'authors':['Operator Author','Other Author']}}))
+        self.assertNotEqual(self.scope_extension(controller).exit_code,0)
+        self.catalog.write_text(json.dumps({self.binding['paper_id']:self.parent}))
+        with self.app.app_context():
+            get_db().execute("UPDATE programme_delegations SET evidence_json=?",(json.dumps({**self.evidence,'paper_ids':[],'terms_version':'old-terms'}),))
+            get_db().commit()
+        self.assertNotEqual(self.scope_extension(controller).exit_code,0)
+        with self.app.app_context():
+            self.assertEqual(get_db().execute('SELECT count(*) FROM programme_scope_extensions').fetchone()[0],0)
+
+    def test_scope_extension_cannot_turn_private_initial_instruction_into_public_permission(self):
+        changes={'paper_ids':[],'publication_status':'private','pdf_license':None,'metadata_license':None}
+        controller=self.controller(changes)
+        with self.app.app_context():
+            digest=get_db().execute('SELECT evidence_sha256 FROM programme_delegations').fetchone()[0]
+        result=self.scope_extension(controller,{'initial_instruction_sha256':digest})
+        self.assertEqual(result.exit_code,0,result.output)
+        received=self.send_revision(self.child(controller).get_json())
+        self.assertEqual(received.status_code,201,received.data)
+        response=self.client.post('/api/v1/programme-working-paper-permissions',json={'submission_id':received.get_json()['registration_number'],'sha256':self.binding['sha256']},headers={'Authorization':'Bearer '+controller['controller_token']})
+        self.assertEqual(response.status_code,403,response.data)
+
+    def test_scope_extension_has_no_controller_http_expansion_endpoint(self):
+        controller=self.controller({'paper_ids':[]})
+        response=self.client.post('/api/v1/programme-scope-extensions',json={'paper_ids':[self.binding['paper_id']]},headers={'Authorization':'Bearer '+controller['controller_token']})
+        self.assertEqual(response.status_code,404)
+        self.assertEqual(self.child(controller).status_code,400)
+
+    def test_scope_extension_personal_instruction_is_redacted_with_inactive_account(self):
+        controller=self.controller({'paper_ids':[]})
+        result=self.scope_extension(controller)
+        self.assertEqual(result.exit_code,0,result.output)
+        with self.app.app_context():
+            db=get_db();old=iso(a.now()-timedelta(days=181))
+            db.execute('UPDATE users SET created_at=? WHERE id=?',(old,self.owner))
+            db.execute('UPDATE private_accounts SET last_seen_at=? WHERE user_id=?',(old,self.owner))
+            db.commit()
+        swept=self.app.test_cli_runner().invoke(args=['retention-sweep'])
+        self.assertEqual(swept.exit_code,0,swept.output)
+        with self.app.app_context():
+            db=get_db()
+            original=db.execute('SELECT state,evidence_json FROM programme_delegations').fetchone()
+            self.assertEqual(original['state'],'revoked')
+            self.assertEqual(original['evidence_json'],'{}')
+            self.assertEqual(db.execute('SELECT evidence_json FROM programme_scope_extensions').fetchone()[0],'{}')
+        self.assertEqual(self.child(controller).status_code,403)

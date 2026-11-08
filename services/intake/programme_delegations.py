@@ -18,6 +18,7 @@ import click
 from flask import abort, g, request
 
 from services.intake import historical_revisions as historical
+from services.intake import programme_scope
 
 
 def migrate(db):
@@ -36,6 +37,7 @@ def migrate(db):
         UNIQUE(programme_id,request_sha256)
       );
     ''')
+    programme_scope.migrate(db)
 
 
 def enabled(app):
@@ -54,7 +56,7 @@ def current(app, a, programme):
         abort(403, 'Original author workspace/operator is no longer active.')
     if evidence['terms_version'] != a.TERMS_VERSION or evidence['privacy_version'] != a.PRIVACY_VERSION:
         abort(403, 'Changed terms/privacy require an updated initial instruction.')
-    return evidence
+    return programme_scope.effective_evidence(db, programme, evidence)
 
 
 def artifact_for(db, grant_id):
@@ -74,6 +76,7 @@ def check_child(app, a, grant_id, metadata=None):
 
 
 def install(app, a, api, require_open):
+    programme_scope.install(app, a, require_open, current)
     def controller():
         require_open()
         header = request.headers.get('Authorization', '')
@@ -223,7 +226,8 @@ def install(app, a, api, require_open):
                 db.execute("INSERT INTO agent_grants(id,claim_hash,setup_hash,agent_name,agent_version,purpose,state,created_at,request_expires_at,approved_at,expires_at,terms_version,privacy_version,owner_user_id) VALUES(?,?,?,?,?,?,'approved',?,?,?,?,?,?,?)", (identity, hashlib.sha256(claim.encode()).hexdigest(), hashlib.sha256(secrets.token_bytes(32)).hexdigest(), value['agent_name'], value['agent_version'], 'One exact PDF under initial programme author instruction.', a.iso(), expiry, a.iso(), expiry, a.TERMS_VERSION, a.PRIVACY_VERSION, programme['owner_user_id']))
                 db.execute('INSERT INTO programme_artifact_grants VALUES(?,?,?,?)', (identity, programme['id'], request_hash, canonical))
                 if value['kind'] == 'revision':
-                    authorization = json.dumps({'method': 'standing_programme_instruction', 'programme_id': programme['id'], 'initial_instruction_sha256': programme['evidence_sha256'], 'initial_recorded_at': evidence['recorded_at'], 'artifact_recorded_at': a.iso()}, sort_keys=True)
+                    extension_hashes = programme_scope.extension_hashes_for(db, programme, value['binding']['paper_id'])
+                    authorization = json.dumps({'method': 'standing_programme_instruction', 'programme_id': programme['id'], 'initial_instruction_sha256': programme['evidence_sha256'], 'initial_recorded_at': evidence['recorded_at'], 'artifact_recorded_at': a.iso(), **({'extension_instruction_sha256': extension_hashes} if extension_hashes else {})}, sort_keys=True)
                     db.execute('INSERT INTO historical_revision_grants VALUES(?,?,?,?,?,?)', (identity, json.dumps(value['binding'], sort_keys=True), catalog_hash, authorization, hashlib.sha256(authorization.encode()).hexdigest(), programme['authorized_by']))
             db.commit()
         except BaseException:
