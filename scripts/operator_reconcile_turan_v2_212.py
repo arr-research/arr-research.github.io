@@ -52,7 +52,7 @@ def main():
             or meta['integrity']['canonical_sha256'] != DIGEST
             or meta['supersedes_version_id'] != OLD['version_id']):
         raise ValueError('Immutable published identity/author/predecessor mismatch')
-    pdf = public('https://airr.science/papers/' + PID + '/versions/v2/paper.pdf', 1000000)
+    pdf = public('https://airr.science/papers/' + PID + '/versions/v2/' + PID + '-v2.pdf', 1000000)
     if len(pdf) != 303006 or hashlib.sha256(pdf).hexdigest() != DIGEST:
         raise ValueError('Exact public AIRR PDF mismatch')
     path = Path('/srv/airr-private/historical-revisions/catalogue.json').resolve()
