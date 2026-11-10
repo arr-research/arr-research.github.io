@@ -307,7 +307,8 @@ def install(app, a):
     def workflow_context():
         def details(case_id):
             db = a.get_db()
-            return dict(plan=current_plan(case_id),
+            from .submission_permissions import get as get_permissions
+            return dict(upfront_permission=get_permissions(db, case(case_id)), plan=current_plan(case_id),
                         available_editors=db.execute("SELECT id,display_name FROM users WHERE role='independent_editor' AND active=1").fetchall() if g.user and g.user['role']=='operator' else [],
                         assigned_editors=db.execute('SELECT u.display_name FROM case_editors c JOIN users u ON u.id=c.user_id WHERE c.submission_id=?', (case_id,)).fetchall(),
                         reports=db.execute('SELECT * FROM model_reviews WHERE submission_id=? ORDER BY id', (case_id,)).fetchall(),
@@ -361,13 +362,19 @@ def install(app, a):
         if not 80 <= len(notice) <= 6000:
             abort(400, 'Explain the named services, confidentiality, retention and transfer safeguards (80–6000 characters).')
         db = a.get_db()
-        db.execute('INSERT INTO assessment_plans(submission_id,manuscript_sha256,providers_json,notice,created_by,created_at) VALUES(?,?,?,?,?,?)',
-                   (submission_id, row['sha256'], json.dumps(providers), notice, g.user['id'], a.iso()))
+        from .submission_permissions import get as get_permissions, permits
+        upfront = get_permissions(db, row)
+        if upfront and not permits(upfront, providers):
+            abort(409, 'Select providers covered by the permissions accepted at submission.')
+        proof = digest(upfront['policy_json'] + notice + json.dumps(providers) + row['sha256']) if upfront else None
+        db.execute('INSERT INTO assessment_plans(submission_id,manuscript_sha256,providers_json,notice,created_by,created_at,authorized_at,authorization_hash) VALUES(?,?,?,?,?,?,?,?)',
+                   (submission_id, row['sha256'], json.dumps(providers), notice, g.user['id'], a.iso(), upfront['authorized_at'] if upfront else None, proof))
         db.commit()
-        enqueue(row, f'AIRR assessment authorization: {submission_id}',
-                f'Please review the proposed assessment services in your private case and authorize them before we transfer the manuscript.\n\n{notice}')
-        a.audit('assessment_plan_declared', submission_id)
-        flash('Plan recorded. The author authorization request is queued.', 'success')
+        if not upfront:
+            enqueue(row, f'AIRR assessment authorization: {submission_id}',
+                    f'Please review the proposed assessment services in your private case and authorize them before we transfer the manuscript.\n\n{notice}')
+        a.audit('assessment_plan_declared', submission_id, authorization_source='submission' if upfront else 'pending_author')
+        flash('Plan recorded under the permissions granted at submission.' if upfront else 'Plan recorded. The author authorization request is queued.', 'success')
         return redirect(url_for('submission_detail', submission_id=submission_id))
 
     @app.route('/case/access/<token>', methods=['GET', 'POST'])

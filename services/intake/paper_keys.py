@@ -36,6 +36,8 @@ def migrate(db):
     CREATE UNIQUE INDEX IF NOT EXISTS one_open_paper_draft ON paper_drafts(paper_id)
       WHERE submitted_id IS NULL;
     ''')
+    from .submission_permissions import migrate as migrate_permissions
+    migrate_permissions(db)
     db.commit()
 
 
@@ -90,7 +92,8 @@ def install(app, a):
 
     @app.context_processor
     def context():
-        return {'paper_access': access(), 'paper_editable': EDITABLE}
+        from .submission_permissions import policy
+        return {'paper_access': access(), 'paper_editable': EDITABLE, 'submission_permission_policy': policy()}
 
     @app.route('/paper/new', methods=['GET', 'POST'])
     def paper_new():
@@ -272,6 +275,8 @@ def install(app, a):
                     raise ValueError('Choose either a new PDF or reuse the previous PDF, not both.')
                 if not reuse and (not upload or not upload.filename):
                     raise ValueError('Choose your paper PDF.')
+                from .submission_permissions import validate_agreement
+                permission = validate_agreement(request.form)
                 key = require_key()
                 a.enforce_rate('paper-upload', 10, 86400, key['id'])
                 a.enforce_rate('paper-upload-ip', 20, 86400)
@@ -294,6 +299,8 @@ def install(app, a):
                     connection.execute('INSERT INTO audit_log(occurred_at,actor_user_id,event,submission_id,detail_json) VALUES(?,?,?,?,?)',
                                        (a.iso(), key['user_id'], 'paper_key_submission_confirmed', case_id,
                                         json.dumps({'policy': 'AIRR-PAPER-KEY-1.0', 'key_saved': True, 'agreement': True})))
+                    from .submission_permissions import record
+                    record(connection, case_id, key['user_id'], permission, a.iso())
                     if values['change_summary']:
                         connection.execute('INSERT INTO correspondence(submission_id,kind,body,created_at) VALUES(?,?,?,?)',
                                            (case_id, 'author_revision', values['change_summary'], a.iso()))
@@ -374,12 +381,11 @@ def install(app, a):
         if row['public_release_url']:
             db.execute('INSERT INTO correspondence(submission_id,kind,body,created_at) VALUES(?,?,?,?)',
                        (submission_id, 'withdrawal_requested', 'The key holder requests withdrawal of this published version.', a.iso()))
-            message = 'Withdrawal requested. AIRR must update the public archive; existing citations and downloaded copies may remain.'
+            message = 'Withdrawal requested. AIRR will mark the public record as withdrawn; PDFs, reports, versions and citation links remain preserved.'
         else:
-            db.execute("UPDATE submissions SET status='withdrawn',delete_after=?,updated_at=? WHERE id=?",
-                       (a.iso(a.now() + timedelta(days=7)), a.iso(), submission_id))
-            db.execute('UPDATE paper_drafts SET data_json=\'{}\' WHERE submitted_id=?', (submission_id,))
-            message = 'Private submission withdrawn. Its PDF is scheduled for deletion in 7 days.'
+            db.execute("UPDATE submissions SET status='withdrawn',delete_after=NULL,updated_at=? WHERE id=?",
+                       (a.iso(), submission_id))
+            message = 'Submission marked withdrawn. Its PDF, details, reports and version history are preserved; review has stopped.'
         db.commit()
         a.audit('paper_removal_requested', submission_id)
         flash(message, 'success')

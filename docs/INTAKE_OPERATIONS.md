@@ -302,3 +302,31 @@ with the existing pinned-commit upgrade and encrypted rollback procedure;
 preserve accounts, MFA, grants, receipts and existing case decisions. Verify the
 authenticated panel and CSV, unauthenticated redirect, readiness and worker
 resumption before recording completion.
+
+## One agreement at paper-key submission — AIRR-SEND-1.0
+
+New paper-key uploads atomically store the displayed policy snapshot, actor, PDF
+hash, license and time in submission_permissions and publication_permissions.
+Draft saves and failed uploads grant nothing. Each revision has its own record.
+A later editorial assessment plan is authorized from that immutable record when
+all named providers are covered; no author message or extra permission click is
+queued. Exact models and actual service safeguards must still be documented.
+Providers outside the recorded scope are rejected. No legacy grants are backfilled.
+Decisions, reasons and requests remain available to the saved-key holder without
+email. Deploy the receiver before publishing the updated terms on the public site.
+
+### Withdrawal preserves submitted versions
+
+Paper-key holders can request a public withdrawal or stop private review, but
+cannot erase a submitted PDF, report, metadata or version history through that
+action. A private withdrawal sets no erasure deadline and preserves the submitted
+record; a public withdrawal retains the version files, assessments and stable
+citation links with a withdrawal notice. The current paper page identifies the
+latest published version; pending drafts do not replace it. Ordinary security,
+legal/privacy remedies and other documented retention rules remain separate.
+Unsubmitted drafts may still be deleted. This replaces the earlier seven-day
+self-withdrawal erasure language for the paper-key route.
+
+Clean paper-key submissions, reports and their key access are excluded from routine
+private-case erasure and inactive-account removal. Legacy non-key deposits retain
+their recorded schedules; security and legal/privacy handling remain separate.
