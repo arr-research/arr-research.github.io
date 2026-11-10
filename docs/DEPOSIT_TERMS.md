@@ -272,3 +272,5 @@ self-withdrawal erasure language for the paper-key route.
 Clean paper-key submissions, reports and their key access are excluded from routine
 private-case erasure and inactive-account removal. Legacy non-key deposits retain
 their recorded schedules; security and legal/privacy handling remain separate.
+
+Sending a paper with the submission agreement constitutes direct authorization from the author or authorized representative for the operations described in that agreement: intake, disclosed assessment, worldwide publication of the exact PDF and reports, and preservation of its version and citation history. No additional confirmation is required within the recorded scope.
