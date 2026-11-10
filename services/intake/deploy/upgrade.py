@@ -86,19 +86,24 @@ def main():
     if not re.fullmatch('[0-9a-f]{40}', args.commit):
         parser.error('Supply the full commit identifier')
     os.umask(0o077)
-    assert os.geteuid() == 0
-    assert os.path.ismount('/srv/airr-private')
+    if not (os.geteuid() == 0):
+        raise AssertionError
+    if not (os.path.ismount('/srv/airr-private')):
+        raise AssertionError
     current = Path('/opt/airr-intake/current')
     previous = current.resolve()
     release = Path('/opt/airr-intake/releases') / args.commit
-    assert previous != release and not release.exists()
+    if not (previous != release and not release.exists()):
+        raise AssertionError
     values = {key.strip(): value for line in Path('/etc/airr-intake/intake.env').read_text().splitlines()
               if '=' in line and not line.lstrip().startswith('#') for key, value in [line.split('=', 1)]}
-    assert values.get('ARR_INTAKE_OPEN', '0').strip().strip('"\'') == '0', 'Pause intake before upgrading'
+    if not (values.get('ARR_INTAKE_OPEN', '0').strip().strip('"\'') == '0'):
+        raise AssertionError('Pause intake before upgrading')
     url = 'https://codeload.github.com/arr-research/arr-research.github.io/tar.gz/' + args.commit
     with urllib.request.urlopen(url, timeout=90) as response:
         archive = response.read(MAX_SOURCE_BYTES + 1)
-    assert len(archive) <= MAX_SOURCE_BYTES, 'Source archive exceeds deployment limit'
+    if not (len(archive) <= MAX_SOURCE_BYTES):
+        raise AssertionError('Source archive exceeds deployment limit')
     archive_hash = hashlib.sha256(archive).hexdigest()
     release.mkdir(mode=0o755)
     release.chmod(0o755)
@@ -111,11 +116,13 @@ def main():
             if not deployable_path(relative):
                 continue
             target = release / relative
-            assert target.resolve().is_relative_to(release)
+            if not (target.resolve().is_relative_to(release)):
+                raise AssertionError
             if member.isdir():
                 target.mkdir(parents=True, exist_ok=True, mode=0o755)
             elif member.isfile():
-                assert member.size <= 16 * 1024 * 1024
+                if not (member.size <= 16 * 1024 * 1024):
+                    raise AssertionError
                 target.parent.mkdir(parents=True, exist_ok=True, mode=0o755)
                 with source.extractfile(member) as stream, target.open('wb') as output:
                     shutil.copyfileobj(stream, output)
@@ -123,8 +130,10 @@ def main():
             else:
                 raise RuntimeError('Source archive contains an unsupported link')
     for filename in ('app.py', 'accounts.py', 'agents.py', 'workflow.py', 'pageviews.py', 'independent_agents.py', 'originality.py'):
-        assert (release / 'services/intake' / filename).is_file()
-    assert any((release / 'papers').glob('**/paper.txt')), 'Public originality corpus must accompany this release'
+        if not ((release / 'services/intake' / filename).is_file()):
+            raise AssertionError
+    if not (any((release / 'papers').glob('**/paper.txt'))):
+        raise AssertionError('Public originality corpus must accompany this release')
     # The public-path allowlist is generated, not part of Git. Preserve the last
     # verified manifest; the collector's existing refresh mechanism updates it.
     manifest = previous / 'site/analytics-pages.json'
@@ -141,7 +150,8 @@ def main():
     (rollback / 'previous-release.txt').write_text(str(previous) + '\n')
     def switch(path):
         temporary = current.with_name('current-next')
-        assert not temporary.exists() and not temporary.is_symlink()
+        if not (not temporary.exists() and not temporary.is_symlink()):
+            raise AssertionError
         temporary.symlink_to(path)
         temporary.replace(current)
 
@@ -151,7 +161,8 @@ def main():
 
     def counts():
         with sqlite3.connect(database) as db:
-            assert db.execute('PRAGMA integrity_check').fetchone()[0] == 'ok'
+            if not (db.execute('PRAGMA integrity_check').fetchone()[0] == 'ok'):
+                raise AssertionError
             return {table: db.execute('SELECT COUNT(*) FROM ' + table).fetchone()[0]
                     for table in ('users', 'submissions', 'recovery_codes', 'mail_outbox')}
 
@@ -166,7 +177,8 @@ def main():
               if unit_state(unit + '.timer') == 'active']
     saved = False
     try:
-        assert status('/submit') == 503, 'Public reception must be paused'
+        if not (status('/submit') == 503):
+            raise AssertionError('Public reception must be paused')
         pause_background(timers)
         run('systemctl', 'stop', 'airr-intake.service')
         before = counts()
@@ -174,7 +186,8 @@ def main():
         saved = True
         switch(release)
         pre = subprocess.check_output(['systemctl', 'show', 'airr-intake.service', '-p', 'ExecStartPre'], text=True)
-        assert 'init-db' in pre
+        if not ('init-db' in pre):
+            raise AssertionError
         run('systemctl', 'start', 'airr-intake.service')
         for _ in range(30):
             try:
@@ -183,19 +196,26 @@ def main():
             except OSError:
                 pass
             time.sleep(1)
-        assert status('/readyz') == 200 and counts() == before
+        if not (status('/readyz') == 200 and counts() == before):
+            raise AssertionError
         with sqlite3.connect(database) as live, sqlite3.connect(rollback / 'intake.sqlite3') as old:
             for table in ('users', 'recovery_codes'):
-                assert live.execute('SELECT * FROM ' + table + ' ORDER BY rowid').fetchall() == old.execute('SELECT * FROM ' + table + ' ORDER BY rowid').fetchall(), 'Existing credentials changed'
+                if not (live.execute('SELECT * FROM ' + table + ' ORDER BY rowid').fetchall() == old.execute('SELECT * FROM ' + table + ' ORDER BY rowid').fetchall()):
+                    raise AssertionError('Existing credentials changed')
         for path, expected in {'/login':200, '/account/login':200, '/account/recover':200,
                                '/account/register':503, '/submit':503, '/paper/new':503,
                                '/manage':200, '/agents':200}.items():
-            assert status(path) == expected, path
+            if not (status(path) == expected):
+                raise AssertionError(path)
         with sqlite3.connect(database) as db:
-            assert db.execute("SELECT 1 FROM sqlite_master WHERE name='private_accounts'").fetchone()
-            assert db.execute("SELECT 1 FROM sqlite_master WHERE name='paper_keys'").fetchone()
-            assert db.execute("SELECT 1 FROM sqlite_master WHERE name='paper_drafts'").fetchone()
-            assert 'owner_user_id' in {row[1] for row in db.execute('PRAGMA table_info(agent_grants)')}
+            if not (db.execute("SELECT 1 FROM sqlite_master WHERE name='private_accounts'").fetchone()):
+                raise AssertionError
+            if not (db.execute("SELECT 1 FROM sqlite_master WHERE name='paper_keys'").fetchone()):
+                raise AssertionError
+            if not (db.execute("SELECT 1 FROM sqlite_master WHERE name='paper_drafts'").fetchone()):
+                raise AssertionError
+            if not ('owner_user_id' in {row[1] for row in db.execute('PRAGMA table_info(agent_grants)')}):
+                raise AssertionError
         proof = {'commit':args.commit, 'previous_commit':previous.name, 'source_archive_sha256':archive_hash,
                  'preserved_counts':before, 'migration_verified':True, 'readiness':200,
                  'public_intake_closed':True, 'rollback':str(rollback)}

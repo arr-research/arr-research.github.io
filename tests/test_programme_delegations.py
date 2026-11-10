@@ -12,6 +12,127 @@ from test_historical_revisions import HistoricalRevisionTests
 
 
 class ProgrammeDelegationTests(HistoricalRevisionTests):
+    def grant_tables_snapshot(self):
+        with self.app.app_context():
+            db = get_db()
+            return {table: [dict(row) for row in db.execute('SELECT * FROM ' + table + ' ORDER BY rowid')]
+                    for table in ('agent_grants', 'historical_revision_grants',
+                                  'programme_artifact_grants', 'agent_submissions', 'submissions')}
+
+    def expire_fixture_grant(self, grant, *, state='approved', uses=None):
+        with self.app.app_context():
+            db = get_db()
+            db.execute("UPDATE agent_grants SET expires_at='2000-01-01T00:00:00+00:00',state=? WHERE id=?",
+                       (state, grant['request_id']))
+            if uses is not None:
+                db.execute('UPDATE agent_grants SET uses=? WHERE id=?', (uses, grant['request_id']))
+            db.commit()
+
+    def change_fixture_catalogue_under_writer_lock(self, *, predecessor=False):
+        # Test-only cooperative writer: actual SQLite lock and global drain
+        # check. No native case/publication or real catalogue is involved.
+        with self.app.app_context():
+            db = get_db()
+            db.execute('BEGIN IMMEDIATE')
+            try:
+                active = db.execute("SELECT count(*) FROM historical_revision_grants h JOIN "
+                                    "agent_grants g ON h.grant_id=g.id WHERE g.state='approved' "
+                                    "AND g.uses=0 AND julianday(g.expires_at)>julianday('now')").fetchone()[0]
+                self.assertEqual(active, 0)
+                entries = json.loads(self.catalog.read_bytes())
+                if predecessor:
+                    entries[self.binding['paper_id']]['canonical_sha256'] = 'b' * 64
+                else:
+                    entries['unrelated-fixture-paper'] = {'sentinel': 'only unrelated entry changes'}
+                temporary = self.catalog.with_suffix('.next')
+                temporary.write_text(json.dumps(entries))
+                temporary.replace(self.catalog)
+                db.commit()
+            except BaseException:
+                db.rollback()
+                raise
+
+    def test_expired_unused_renewal_after_unrelated_catalogue_change_is_refused(self):
+        controller = self.controller()
+        grant = self.child(controller).get_json()
+        self.expire_fixture_grant(grant)
+        before = self.grant_tables_snapshot()
+        self.change_fixture_catalogue_under_writer_lock()
+        self.assertEqual(json.loads(self.catalog.read_bytes())[self.binding['paper_id']], self.parent)
+        response = self.child(controller, renew_expired_unused=True)
+        self.assertEqual(response.status_code, 409, response.data)
+        self.assertIn(b'reconcile original authorization', response.data)
+        self.assertEqual(self.grant_tables_snapshot(), before)
+        with self.app.app_context():
+            self.assertEqual(get_db().execute("SELECT count(*) FROM agent_grants WHERE "
+                                             "state='approved' AND uses=0 AND "
+                                             "julianday(expires_at)>julianday('now')").fetchone()[0], 0)
+
+    def test_cached_unexpired_consumed_grant_after_catalogue_change_is_refused(self):
+        controller = self.controller()
+        grant = self.child(controller).get_json()
+        received = self.send_revision(grant)
+        self.assertEqual(received.status_code, 201, received.data)
+        before = self.grant_tables_snapshot()
+        self.change_fixture_catalogue_under_writer_lock()
+        for renewal in (False, True):
+            response = self.child(controller, renew_expired_unused=renewal)
+            self.assertEqual(response.status_code, 409, response.data)
+            self.assertIn(b'reconcile original authorization', response.data)
+            self.assertEqual(self.grant_tables_snapshot(), before)
+
+    def test_changed_predecessor_cannot_renew_expired_grant(self):
+        controller = self.controller()
+        grant = self.child(controller).get_json()
+        self.expire_fixture_grant(grant)
+        before = self.grant_tables_snapshot()
+        self.change_fixture_catalogue_under_writer_lock(predecessor=True)
+        self.assertEqual(self.child(controller, renew_expired_unused=True).status_code, 400)
+        self.assertEqual(self.grant_tables_snapshot(), before)
+
+    def test_consumed_or_receipt_bearing_grant_cannot_be_renewed(self):
+        controller = self.controller()
+        grant = self.child(controller).get_json()
+        received = self.send_revision(grant)
+        self.assertEqual(received.status_code, 201, received.data)
+        for uses in (1, 0):
+            # Zero counter with retained receipt is a synthetic inconsistency;
+            # the existing independent receipt guard must still refuse renewal.
+            self.expire_fixture_grant(grant, uses=uses)
+            before = self.grant_tables_snapshot()
+            self.assertEqual(self.child(controller, renew_expired_unused=True).status_code, 409)
+            self.assertEqual(self.grant_tables_snapshot(), before)
+
+    def test_revoked_expired_grant_cannot_be_renewed(self):
+        controller = self.controller()
+        grant = self.child(controller).get_json()
+        self.expire_fixture_grant(grant, state='revoked')
+        before = self.grant_tables_snapshot()
+        self.assertEqual(self.child(controller, renew_expired_unused=True).status_code, 409)
+        self.assertEqual(self.grant_tables_snapshot(), before)
+
+    def test_unchanged_catalogue_explicit_renewal_keeps_binding_and_is_usable(self):
+        controller = self.controller()
+        grant = self.child(controller).get_json()
+        self.expire_fixture_grant(grant)
+        before = self.grant_tables_snapshot()
+        response = self.child(controller, renew_expired_unused=True)
+        self.assertEqual(response.status_code, 200, response.data)
+        self.assertEqual(response.get_json()['request_id'], grant['request_id'])
+        self.assertEqual(response.get_json()['agent_token'], grant['agent_token'])
+        after = self.grant_tables_snapshot()
+        self.assertEqual(len(after['agent_grants']), 1)
+        for table in ('historical_revision_grants', 'programme_artifact_grants'):
+            self.assertEqual(after[table], before[table])
+        received = self.send_revision(response.get_json())
+        self.assertEqual(received.status_code, 201, received.data)
+
+    def test_programme_snapshot_excludes_concurrent_catalogue_writer(self):
+        from catalogue_lock_fixtures import contend_during_grant_snapshot
+        controller = self.controller()
+        response = contend_during_grant_snapshot(self, lambda: self.child(controller))
+        self.assertEqual(response.status_code, 200, response.data)
+
     def setUp(self):
         super().setUp()
         self.app.config['PROGRAMME_DELEGATIONS_ENABLED'] = True
