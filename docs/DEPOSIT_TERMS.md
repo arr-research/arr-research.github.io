@@ -268,3 +268,7 @@ latest published version; pending drafts do not replace it. Ordinary security,
 legal/privacy remedies and other documented retention rules remain separate.
 Unsubmitted drafts may still be deleted. This replaces the earlier seven-day
 self-withdrawal erasure language for the paper-key route.
+
+Clean paper-key submissions, reports and their key access are excluded from routine
+private-case erasure and inactive-account removal. Legacy non-key deposits retain
+their recorded schedules; security and legal/privacy handling remain separate.

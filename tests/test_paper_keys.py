@@ -281,3 +281,22 @@ class PaperKeyTests(unittest.TestCase):
             self.assertIn(expected,page.data)
             self.assertIn(b'Please provide the dataset',page.data)
             self.assertIn(b'Respond to the editor',page.data)
+
+    def test_retention_cannot_erase_clean_key_versions_or_disable_their_key(self):
+        key,draft=self.create();case=self.send(draft).location
+        case_id=case.rsplit('/',1)[-1]
+        with self.app.app_context():
+            db=get_db();row=db.execute('SELECT * FROM submissions WHERE id=?',(case_id,)).fetchone()
+            pdf=Path(self.app.config['QUARANTINE'])/row['stored_name']
+            db.execute("UPDATE submissions SET status='withdrawn',delete_after='2000-01-01T00:00:00+00:00',updated_at='2000-01-01T00:00:00+00:00' WHERE id=?",(case_id,))
+            db.execute("UPDATE users SET created_at='2000-01-01T00:00:00+00:00' WHERE id=?",(row['user_id'],))
+            db.execute("UPDATE private_accounts SET last_seen_at='2000-01-01T00:00:00+00:00' WHERE user_id=?",(row['user_id'],))
+            db.execute('INSERT INTO correspondence(submission_id,kind,body,created_at) VALUES(?,?,?,?)',(case_id,'editor_notice','Preserve this editorial history','2000-01-01T00:00:00+00:00'));db.commit()
+        result=self.app.test_cli_runner().invoke(args=['retention-sweep'])
+        self.assertEqual(result.exit_code,0,result.output)
+        self.assertTrue(pdf.is_file())
+        returning=self.app.test_client()
+        returning.post('/manage',data={'csrf_token':self.token(returning),'key':key})
+        page=returning.get(case)
+        self.assertEqual(page.status_code,200)
+        self.assertIn(b'Preserve this editorial history',page.data)

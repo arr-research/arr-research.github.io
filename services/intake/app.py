@@ -1026,7 +1026,7 @@ def register_routes(app: Flask) -> None:
             new_status = "declined"
         else:
             new_status = "changes_requested"
-        delete_after = iso(now() + timedelta(days=30)) if new_status == "declined" else None
+        delete_after = iso(now() + timedelta(days=30)) if new_status == "declined" and not app.extensions["paper_keys"]["owner"](row["user_id"]) else None
         db = get_db()
         db.execute(
             """UPDATE submissions SET status=?,updated_at=?,decided_at=?,decision_by=?,
@@ -1125,7 +1125,7 @@ def register_commands(app: Flask) -> None:
         if not release_ready(get_db(), row, permission):
             raise click.ClickException('Independent-agent distribution authority is not evidenced by an editor')
         public_status = "accepted" if row["status"] == "accepted_for_publication" else "working_paper"
-        delete_after = iso(now() + timedelta(days=30)) if public_status == "accepted" else None
+        delete_after = iso(now() + timedelta(days=30)) if public_status == "accepted" and not app.extensions["paper_keys"]["owner"](row["user_id"]) else None
         get_db().execute(
             """UPDATE submissions SET public_release_url=?,public_released_at=?,updated_at=?,
                delete_after=? WHERE id=?""",
@@ -1182,7 +1182,8 @@ def register_commands(app: Flask) -> None:
         from services.intake.pageviews import sweep as sweep_pageviews
         sweep_pageviews(get_db(), now().date())
         rows = get_db().execute(
-            "SELECT * FROM submissions WHERE delete_after IS NOT NULL AND delete_after<=? AND status!='legal_hold'",
+            """SELECT * FROM submissions s WHERE delete_after IS NOT NULL AND delete_after<=? AND status!='legal_hold'
+               AND NOT (scan_status='clean' AND EXISTS(SELECT 1 FROM paper_keys k WHERE k.user_id=s.user_id))""",
             (iso(),),
         ).fetchall()
         db = get_db()
@@ -1221,6 +1222,7 @@ def register_commands(app: Flask) -> None:
         inactive = db.execute(
             """SELECT u.id FROM users u WHERE u.role='depositor' AND u.created_at<?
                AND u.email NOT LIKE 'erased-user-%@invalid.local'
+               AND NOT EXISTS(SELECT 1 FROM paper_keys k WHERE k.user_id=u.id)
                AND NOT EXISTS(SELECT 1 FROM private_accounts p WHERE p.user_id=u.id AND p.last_seen_at>=?)
                AND NOT EXISTS(SELECT 1 FROM submissions s WHERE s.user_id=u.id AND
                (s.updated_at>=? OR s.status NOT IN ('declined','withdrawn','removed','accepted_for_publication')))""",

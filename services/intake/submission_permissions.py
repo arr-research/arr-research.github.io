@@ -15,7 +15,8 @@ NOTICE = ("AIRR may send this manuscript to OpenAI, Anthropic, Google or OpenRou
           "as a Working paper or Accepted record under the selected manuscript license. "
           "Metadata is CC0. Third-party material retains its own rights. Submission does not "
           "guarantee acceptance or publication. Check decisions and requests with your secret key; "
-          "no email or further permission click is required within this scope.")
+          "no email or further permission click is required within this scope. Submitted PDFs, "
+          "reports and citation history are preserved; withdrawal changes status without erasure.")
 LICENSES = {'CC-BY-4.0', 'CC-BY-SA-4.0', 'CC0-1.0'}
 
 
