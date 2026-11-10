@@ -330,3 +330,5 @@ self-withdrawal erasure language for the paper-key route.
 Clean paper-key submissions, reports and their key access are excluded from routine
 private-case erasure and inactive-account removal. Legacy non-key deposits retain
 their recorded schedules; security and legal/privacy handling remain separate.
+
+For new paper-key submissions, sending with the agreement constitutes direct authorization from the author or authorized depositor for intake, disclosed AI assessment, publication of the exact PDF and reports, and preservation of versions/citations. Treat the recorded upfront grant as direct authority; do not request it again for covered operations.
