@@ -1,5 +1,25 @@
 # Continuous author programme delegation
 
+## Recorded legacy contract compatibility — 2026-11-10
+
+The `ARR-DEPOSIT-2.1` / `ARR-PRIVACY-1.9` amendment changes the paper-key
+submission route and expressly preserves legacy delegated scope. An already
+stored continuous programme instruction under `ARR-DEPOSIT-2.0` /
+`ARR-PRIVACY-1.8` therefore continues to govern its exact-hash legacy children
+and their receipts during this one documented version transition. The original
+instruction bytes, source, timestamp and hash remain unchanged. Child grants and
+new submissions record that actual older agreement; they do not claim a new
+human answer, acceptance of paper-key permissions or authority to use extra models.
+
+This is a narrow, published compatibility rule, not a terms-version wildcard.
+New enrolments cannot present the older agreement; the stored instruction must
+exist and retain its original hash. Other version pairs and future changes still
+fail closed pending applicable authority. Ordinary and single-PDF historical
+grants keep their existing current-version checks. Active owner/operator, token,
+revocation, expiry, quota, exact PDF, predecessor, rights, screening and separate
+Working-paper permission checks remain mandatory. No case or permission is
+created administratively and no stored instruction or grant is migrated.
+
 An authenticated host operator can record **one actual initial author instruction**
 for a named, sole-author programme. That instruction remains active until revoked.
 The agent can then request exact-PDF intake permissions without claiming that the

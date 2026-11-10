@@ -73,6 +73,100 @@ class ProgrammeDelegationTests(HistoricalRevisionTests):
         self.assertEqual(revoked.exit_code, 0, revoked.output)
         self.assertEqual(self.child(controller).status_code, 403)
 
+    def legacy_controller(self):
+        old = {'terms_version': 'ARR-DEPOSIT-2.0', 'privacy_version': 'ARR-PRIVACY-1.8'}
+        with patch.multiple(a, TERMS_VERSION=old['terms_version'], PRIVACY_VERSION=old['privacy_version']):
+            controller = self.controller(old)
+        return controller, old
+
+    def test_existing_legacy_instruction_survives_paper_key_only_amendment(self):
+        controller, old = self.legacy_controller()
+        with self.app.app_context():
+            before = dict(get_db().execute('SELECT * FROM programme_delegations').fetchone())
+        issued = self.child(controller)
+        self.assertEqual(issued.status_code, 200, issued.data)
+        grant = issued.get_json()
+        result = self.send_revision(grant)
+        self.assertEqual(result.status_code, 201, result.data)
+        case = result.get_json()['registration_number']
+        headers = {'Authorization': 'Bearer '+grant['agent_token']}
+        self.assertEqual(self.client.get('/api/v1/submissions/'+case, headers=headers).status_code, 200)
+        self.assertEqual(self.send_revision(grant).status_code, 200)
+        self.assertEqual(self.send_revision(grant, key='legacy-used-again').status_code, 403)
+        with self.app.app_context():
+            db = get_db()
+            after = dict(db.execute('SELECT * FROM programme_delegations').fetchone())
+            self.assertEqual(after, before)
+            for table in ('agent_grants', 'submissions'):
+                row = db.execute('SELECT terms_version,privacy_version FROM '+table).fetchone()
+                self.assertEqual(tuple(row), (old['terms_version'], old['privacy_version']))
+            self.assertEqual(db.execute('SELECT uses FROM agent_grants').fetchone()[0], 1)
+            self.assertIsNone(db.execute('SELECT public_released_at FROM submissions').fetchone()[0])
+        revoked = self.app.test_cli_runner().invoke(args=['revoke-programme', controller['programme_id']])
+        self.assertEqual(revoked.exit_code, 0, revoked.output)
+        self.assertEqual(self.client.get('/api/v1/submissions/'+case, headers=headers).status_code, 403)
+
+    def test_legacy_transition_does_not_authorize_new_old_contract_instructions(self):
+        self.controller({'terms_version':'ARR-DEPOSIT-2.0','privacy_version':'ARR-PRIVACY-1.8'}, success=False)
+        with self.app.app_context():
+            self.assertEqual(get_db().execute('SELECT COUNT(*) FROM programme_delegations').fetchone()[0], 0)
+
+    def test_legacy_transition_rejects_unknown_changes_and_child_contract_tamper(self):
+        controller, _ = self.legacy_controller()
+        grant = self.child(controller).get_json()
+        for changes in ({'TERMS_VERSION':'ARR-DEPOSIT-2.2'}, {'PRIVACY_VERSION':'ARR-PRIVACY-2.0'}):
+            with patch.multiple(a, **changes):
+                self.assertEqual(self.child(controller).status_code, 403)
+                self.assertEqual(self.send_revision(grant).status_code, 403)
+        with self.app.app_context():
+            db = get_db()
+            db.execute('UPDATE agent_grants SET terms_version=? WHERE id=?', ('ARR-DEPOSIT-2.1',grant['request_id']))
+            db.commit()
+        self.assertEqual(self.send_revision(grant).status_code, 403)
+
+    def test_historical_old_contract_grant_is_not_programme_compatibility(self):
+        with patch.multiple(a, TERMS_VERSION='ARR-DEPOSIT-2.0', PRIVACY_VERSION='ARR-PRIVACY-1.8'):
+            grant = self.issue()
+        self.assertEqual(self.send_revision(grant).status_code, 403)
+
+    def test_pre_transition_child_receipt_keeps_original_recorded_agreement(self):
+        old = {'terms_version':'ARR-DEPOSIT-2.0','privacy_version':'ARR-PRIVACY-1.8'}
+        with patch.multiple(a, TERMS_VERSION=old['terms_version'], PRIVACY_VERSION=old['privacy_version']):
+            controller = self.controller(old)
+            grant = self.child(controller).get_json()
+            received = self.send_revision(grant)
+            self.assertEqual(received.status_code, 201, received.data)
+        case = received.get_json()['registration_number']
+        response = self.client.get('/api/v1/submissions/'+case, headers={'Authorization':'Bearer '+grant['agent_token']})
+        self.assertEqual(response.status_code, 200, response.data)
+        self.assertEqual(response.get_json()['sha256'], self.binding['sha256'])
+        with self.app.app_context():
+            self.assertEqual(tuple(get_db().execute('SELECT terms_version,privacy_version FROM submissions').fetchone()), tuple(old.values()))
+
+    def test_legacy_corrupted_initial_evidence_and_privacy_tamper_have_no_upload_side_effects(self):
+        controller, _ = self.legacy_controller()
+        grant = self.child(controller).get_json()
+        with self.app.app_context():
+            db = get_db()
+            db.execute('UPDATE agent_grants SET privacy_version=? WHERE id=?', ('ARR-PRIVACY-1.9',grant['request_id']))
+            db.commit()
+        self.assertEqual(self.send_revision(grant).status_code, 403)
+        with self.app.app_context():
+            db = get_db()
+            db.execute('UPDATE agent_grants SET privacy_version=? WHERE id=?', ('ARR-PRIVACY-1.8',grant['request_id']))
+            row = db.execute('SELECT evidence_json FROM programme_delegations').fetchone()
+            changed = json.loads(row[0]);changed['author_instruction'] += ' Tampered fixture.'
+            db.execute('UPDATE programme_delegations SET evidence_json=?', (json.dumps(changed),))
+            db.commit()
+        self.assertEqual(self.child(controller).status_code, 403)
+        self.assertEqual(self.send_revision(grant).status_code, 403)
+        with self.app.app_context():
+            db = get_db()
+            self.assertEqual(db.execute('SELECT COUNT(*) FROM submissions').fetchone()[0], 0)
+            self.assertEqual(db.execute('SELECT uses FROM agent_grants').fetchone()[0], 0)
+            self.assertEqual(db.execute('SELECT COUNT(*) FROM publication_permissions').fetchone()[0], 0)
+        self.assertEqual(list(Path(self.app.config['QUARANTINE']).iterdir()), [])
+
     def test_invalid_client_fingerprint_creates_no_programme(self):
         path = Path(self.temp.name)/'client-authority.json'
         path.write_text(json.dumps(self.evidence))

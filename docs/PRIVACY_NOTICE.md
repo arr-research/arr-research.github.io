@@ -31,6 +31,13 @@ Existing deposits retain their actual recorded agreement and permissions: no
 permission is backdated or inferred for a prior upload. Legacy account/delegated
 and independent-agent procedures keep their recorded scope.
 
+Existing continuous author-programme instructions retain their recorded legacy
+agreement for covered delegated children and receipts during this paper-key-only
+amendment, as specified in [Programme delegations](PROGRAMME_DELEGATIONS.md).
+Original evidence is preserved; no fresh human response, new provider permission,
+or paper-key processing scope is inferred. Other contract changes still require
+their applicable authority.
+
 
 **Effective for new submissions after deployment:** 2026-11-10
 **Provider references clarified before opening:** 2026-09-08

@@ -45,6 +45,26 @@ def enabled(app):
                           os.environ.get('AIRR_PROGRAMME_DELEGATIONS_ENABLED') == '1')
 
 
+def recorded_contract_is_current_or_compatible(a, programme, evidence):
+    recorded = (evidence['terms_version'], evidence['privacy_version'])
+    deployed = (a.TERMS_VERSION, a.PRIVACY_VERSION)
+    if recorded == deployed:
+        return True
+    # The 10 November amendment changes the paper-key route only. Its public
+    # notice preserves legacy delegated scope. Recognize that single transition
+    # for an existing immutable instruction, never for a new CLI enrolment probe.
+    if (recorded, deployed) != (('ARR-DEPOSIT-2.0', 'ARR-PRIVACY-1.8'),
+                                ('ARR-DEPOSIT-2.1', 'ARR-PRIVACY-1.9')):
+        return False
+    if 'id' not in programme.keys() or 'evidence_sha256' not in programme.keys():
+        return False
+    if hashlib.sha256(programme['evidence_json'].encode()).hexdigest() != programme['evidence_sha256']:
+        return False
+    return a.get_db().execute(
+        'SELECT 1 FROM programme_delegations WHERE id=? AND evidence_sha256=?',
+        (programme['id'], programme['evidence_sha256'])).fetchone() is not None
+
+
 def current(app, a, programme):
     if not enabled(app) or not programme or programme['state'] != 'active':
         abort(403, 'Programme delegation is unavailable or revoked.')
@@ -54,7 +74,7 @@ def current(app, a, programme):
     actor = db.execute("SELECT 1 FROM users WHERE id=? AND email=? AND active=1 AND role='operator' AND totp_secret IS NOT NULL", (programme['authorized_by'], app.config['OPERATOR_EMAIL'])).fetchone()
     if not owner or not actor or evidence['author'] != app.config.get('HISTORICAL_OPERATOR_AUTHOR'):
         abort(403, 'Original author workspace/operator is no longer active.')
-    if evidence['terms_version'] != a.TERMS_VERSION or evidence['privacy_version'] != a.PRIVACY_VERSION:
+    if not recorded_contract_is_current_or_compatible(a, programme, evidence):
         abort(403, 'Changed terms/privacy require an updated initial instruction.')
     return programme_scope.effective_evidence(db, programme, evidence)
 
@@ -63,11 +83,13 @@ def artifact_for(db, grant_id):
     return db.execute('SELECT * FROM programme_artifact_grants WHERE grant_id=?', (grant_id,)).fetchone()
 
 
-def check_child(app, a, grant_id, metadata=None):
+def check_child(app, a, grant_id, metadata=None, grant=None):
     child = artifact_for(a.get_db(), grant_id)
     if child:
         programme = a.get_db().execute('SELECT * FROM programme_delegations WHERE id=?', (child['programme_id'],)).fetchone()
         evidence = current(app, a, programme)
+        if grant is not None and (grant['terms_version'], grant['privacy_version']) != (evidence['terms_version'], evidence['privacy_version']):
+            abort(403, 'Exact child contract does not match its recorded programme instruction.')
         artifact = json.loads(child['artifact_json'])
         if metadata is not None and (metadata['sha256'] != artifact['sha256'] or metadata['authors'] != evidence['author'] or metadata['rights_confirmed'] is not True or metadata['operator_conflict'] is not True):
             abort(400, 'Exact PDF, sole author, rights and conflict must match programme authority.')
@@ -223,7 +245,7 @@ def install(app, a, api, require_open):
                     abort(409, 'Exact PDF already has a grant/case; reconcile original artifact, do not create a duplicate.')
                 identity = 'AGT-'+secrets.token_hex(12).upper()
                 expiry = a.iso(a.now()+timedelta(hours=24))
-                db.execute("INSERT INTO agent_grants(id,claim_hash,setup_hash,agent_name,agent_version,purpose,state,created_at,request_expires_at,approved_at,expires_at,terms_version,privacy_version,owner_user_id) VALUES(?,?,?,?,?,?,'approved',?,?,?,?,?,?,?)", (identity, hashlib.sha256(claim.encode()).hexdigest(), hashlib.sha256(secrets.token_bytes(32)).hexdigest(), value['agent_name'], value['agent_version'], 'One exact PDF under initial programme author instruction.', a.iso(), expiry, a.iso(), expiry, a.TERMS_VERSION, a.PRIVACY_VERSION, programme['owner_user_id']))
+                db.execute("INSERT INTO agent_grants(id,claim_hash,setup_hash,agent_name,agent_version,purpose,state,created_at,request_expires_at,approved_at,expires_at,terms_version,privacy_version,owner_user_id) VALUES(?,?,?,?,?,?,'approved',?,?,?,?,?,?,?)", (identity, hashlib.sha256(claim.encode()).hexdigest(), hashlib.sha256(secrets.token_bytes(32)).hexdigest(), value['agent_name'], value['agent_version'], 'One exact PDF under initial programme author instruction.', a.iso(), expiry, a.iso(), expiry, evidence['terms_version'], evidence['privacy_version'], programme['owner_user_id']))
                 db.execute('INSERT INTO programme_artifact_grants VALUES(?,?,?,?)', (identity, programme['id'], request_hash, canonical))
                 if value['kind'] == 'revision':
                     extension_hashes = programme_scope.extension_hashes_for(db, programme, value['binding']['paper_id'])
