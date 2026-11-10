@@ -156,7 +156,9 @@ class PaperKeyTests(unittest.TestCase):
             db=get_db()
             row=db.execute('SELECT * FROM submissions WHERE id=?',(case,)).fetchone()
             self.assertEqual(row['status'], 'withdrawn')
-            self.assertIsNotNone(row['delete_after'])
+            self.assertIsNone(row['delete_after'])
+            self.assertTrue((Path(self.app.config['QUARANTINE']) / row['stored_name']).is_file())
+            self.assertIn('A test paper',db.execute('SELECT data_json FROM paper_drafts WHERE submitted_id=?',(case,)).fetchone()[0])
             db.execute("UPDATE submissions SET status='legal_hold' WHERE id=?",(case,)); db.commit()
         self.assertEqual(self.client.post('/paper/remove/' + case, data={'csrf_token':self.token(self.client), 'confirm':'on'}).status_code, 409)
 

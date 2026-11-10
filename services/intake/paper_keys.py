@@ -381,12 +381,11 @@ def install(app, a):
         if row['public_release_url']:
             db.execute('INSERT INTO correspondence(submission_id,kind,body,created_at) VALUES(?,?,?,?)',
                        (submission_id, 'withdrawal_requested', 'The key holder requests withdrawal of this published version.', a.iso()))
-            message = 'Withdrawal requested. AIRR must update the public archive; existing citations and downloaded copies may remain.'
+            message = 'Withdrawal requested. AIRR will mark the public record as withdrawn; PDFs, reports, versions and citation links remain preserved.'
         else:
-            db.execute("UPDATE submissions SET status='withdrawn',delete_after=?,updated_at=? WHERE id=?",
-                       (a.iso(a.now() + timedelta(days=7)), a.iso(), submission_id))
-            db.execute('UPDATE paper_drafts SET data_json=\'{}\' WHERE submitted_id=?', (submission_id,))
-            message = 'Private submission withdrawn. Its PDF is scheduled for deletion in 7 days.'
+            db.execute("UPDATE submissions SET status='withdrawn',delete_after=NULL,updated_at=? WHERE id=?",
+                       (a.iso(), submission_id))
+            message = 'Submission marked withdrawn. Its PDF, details, reports and version history are preserved; review has stopped.'
         db.commit()
         a.audit('paper_removal_requested', submission_id)
         flash(message, 'success')
