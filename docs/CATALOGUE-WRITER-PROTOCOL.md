@@ -20,6 +20,11 @@ back on every failure. Existing author, operator, contract, rights, exact bindin
 one-use and quota checks continue to apply. Scope-extension authorization already
 reads its catalogue inside the same transaction. Inspection/preparation reads
 alone do not authorize a grant; the issuing operation revalidates under the lock.
+Before any cached historical-grant response or expired-grant renewal, compare its
+stored whole-catalogue hash with that locked current snapshot. A missing/stale
+binding is HTTP 409 requiring reconciliation of the original authorization; leave
+expiry, stored binding and evidence unchanged. An unrelated catalogue change also
+counts. Do not silently rebind or issue another grant to evade this refusal.
 
 ## Catalogue writers
 

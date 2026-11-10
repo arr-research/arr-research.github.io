@@ -231,6 +231,10 @@ def install(app, a, api, require_open):
             if old:
                 if old['state'] != 'approved':
                     abort(409, 'Existing exact grant is revoked; no renewal.')
+                if value['kind'] == 'revision':
+                    recorded = historical.binding_for(db, old['id'])
+                    if not recorded or recorded['catalogue_sha256'] != catalog_hash:
+                        abort(409, 'Existing historical grant catalogue changed; reconcile original authorization before reuse or renewal.')
                 if old['expires_at'] <= a.iso():
                     used = db.execute('SELECT 1 FROM agent_submissions WHERE grant_id=?', (old['id'],)).fetchone()
                     if not renew or old['uses'] or used:
