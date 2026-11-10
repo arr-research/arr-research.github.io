@@ -72,13 +72,15 @@ def main():
     if len(pdf) != 419361 or hashlib.sha256(pdf).hexdigest() != DIGEST:
         raise ValueError('Exact authoritative official-release PDF mismatch')
     path = Path('/srv/airr-private/historical-revisions/catalogue.json').resolve()
-    raw = path.read_bytes()
-    data = json.loads(raw)
-    if data.get(PID) not in (OLD, NEW):
-        raise ValueError('Unexpected existing entry; do not overwrite')
     db = sqlite3.connect('/srv/airr-private/instance/intake.sqlite3', timeout=15)
     try:
         db.execute('BEGIN IMMEDIATE')
+        # Mandatory shared writer protocol; see docs/CATALOGUE-WRITER-PROTOCOL.md.
+        # No grant issuer or supported catalogue writer may cross this lock.
+        raw = path.read_bytes()
+        data = json.loads(raw)
+        if data.get(PID) not in (OLD, NEW):
+            raise ValueError('Unexpected existing entry; do not overwrite')
         case = db.execute('SELECT sha256,public_release_url,public_released_at '
                           'FROM submissions WHERE id=?', (args.case,)).fetchone()
         if not case or case[0] != DIGEST or case[1] != RELEASE or not case[2]:

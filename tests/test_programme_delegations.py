@@ -12,6 +12,12 @@ from test_historical_revisions import HistoricalRevisionTests
 
 
 class ProgrammeDelegationTests(HistoricalRevisionTests):
+    def test_programme_snapshot_excludes_concurrent_catalogue_writer(self):
+        from catalogue_lock_fixtures import contend_during_grant_snapshot
+        controller = self.controller()
+        response = contend_during_grant_snapshot(self, lambda: self.child(controller))
+        self.assertEqual(response.status_code, 200, response.data)
+
     def setUp(self):
         super().setUp()
         self.app.config['PROGRAMME_DELEGATIONS_ENABLED'] = True

@@ -207,15 +207,7 @@ def install(app, a, api, require_open):
             if not isinstance(value[key], str) or not 2 <= len(value[key].strip()) <= 100:
                 abort(400, 'Actual bounded agent identity required.')
         catalog_hash = None
-        if value['kind'] == 'revision':
-            try:
-                entries, catalog_hash = historical.catalogue(app)
-                historical.validate_binding(value['binding'], entries, evidence['author'])
-                if value['binding']['paper_id'] not in evidence['paper_ids'] or value['binding']['sha256'] != value['sha256']:
-                    raise ValueError('Revision lies outside initial programme scope.')
-            except (ValueError, OSError, TypeError, KeyError) as error:
-                abort(400, str(error))
-        elif value['kind'] != 'submission' or not evidence['allow_new_submissions'] or value['binding'] is not None:
+        if value['kind'] != 'revision' and (value['kind'] != 'submission' or not evidence['allow_new_submissions'] or value['binding'] is not None):
             abort(400, 'Intake kind is not authorized by initial instruction.')
         canonical = json.dumps(value, sort_keys=True, separators=(',', ':'))
         request_hash = hashlib.sha256(canonical.encode()).hexdigest()
@@ -224,7 +216,17 @@ def install(app, a, api, require_open):
         claim = base64.urlsafe_b64encode(hmac.new(token.encode(), ('artifact:'+request_hash).encode(), hashlib.sha256).digest()).decode().rstrip('=')
         db.execute('BEGIN IMMEDIATE')
         try:
-            current(app, a, db.execute('SELECT * FROM programme_delegations WHERE id=?', (programme['id'],)).fetchone())
+            evidence = current(app, a, db.execute('SELECT * FROM programme_delegations WHERE id=?', (programme['id'],)).fetchone())
+            # Shared catalogue-writer protocol: read/validate the snapshot and
+            # insert its grant under the SAME intake.sqlite3 writer lock.
+            if value['kind'] == 'revision':
+                try:
+                    entries, catalog_hash = historical.catalogue(app)
+                    historical.validate_binding(value['binding'], entries, evidence['author'])
+                    if value['binding']['paper_id'] not in evidence['paper_ids'] or value['binding']['sha256'] != value['sha256']:
+                        raise ValueError('Revision lies outside initial programme scope.')
+                except (ValueError, OSError, TypeError, KeyError) as error:
+                    abort(400, str(error))
             old = db.execute('SELECT g.* FROM agent_grants g JOIN programme_artifact_grants p ON p.grant_id=g.id WHERE p.programme_id=? AND p.request_sha256=?', (programme['id'], request_hash)).fetchone()
             if old:
                 if old['state'] != 'approved':

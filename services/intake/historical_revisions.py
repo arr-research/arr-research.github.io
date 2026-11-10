@@ -112,24 +112,33 @@ def install(app, a, require_open):
                 raise ValueError('Authorization evidence must be recent and offset-aware.')
             if evidence['terms_version']!=a.TERMS_VERSION or evidence['privacy_version']!=a.PRIVACY_VERSION:
                 raise ValueError('Current deposit terms/privacy acknowledgment required.')
-            entries, catalog_hash=catalogue(app)
-            validate_binding(evidence['binding'],entries,app.config.get('HISTORICAL_OPERATOR_AUTHOR',''))
         except (ValueError,KeyError,TypeError,OSError) as error:
             raise click.ClickException(str(error)) from error
         db=a.get_db()
-        actor=db.execute("SELECT * FROM users WHERE email=? AND role='operator' AND active=1 AND totp_secret IS NOT NULL",(app.config['OPERATOR_EMAIL'],)).fetchone()
-        owner=db.execute("SELECT u.* FROM users u JOIN private_accounts p ON p.user_id=u.id WHERE u.id=? AND u.role='depositor' AND u.active=1",(evidence['owner_user_id'],)).fetchone()
-        if not actor or not owner:
-            raise click.ClickException('Active configured MFA operator and real private workspace required.')
-        claim,setup=secrets.token_urlsafe(32),secrets.token_urlsafe(32)
-        grant_id='AGT-'+secrets.token_hex(12).upper()
-        expiry=a.iso(a.now()+timedelta(hours=24))
-        binding=json.dumps(evidence['binding'],sort_keys=True)
-        db.execute('INSERT INTO agent_grants(id,claim_hash,setup_hash,agent_name,agent_version,purpose,state,created_at,request_expires_at,approved_at,expires_at,terms_version,privacy_version,owner_user_id) VALUES(?,?,?,?,?,?,\'approved\',?,?,?,?,?,?,?)',
-                   (grant_id,hashlib.sha256(claim.encode()).hexdigest(),hashlib.sha256(setup.encode()).hexdigest(),evidence['agent_name'],evidence['agent_version'],'One exact historical revision; external operator-recorded authorization.',a.iso(),expiry,a.iso(),expiry,a.TERMS_VERSION,a.PRIVACY_VERSION,owner['id']))
-        evidence_hash=hashlib.sha256(raw).hexdigest()
-        db.execute('INSERT INTO historical_revision_grants VALUES(?,?,?,?,?,?)',(grant_id,binding,catalog_hash,raw.decode(),evidence_hash,actor['id']))
-        db.commit()
+        db.execute('BEGIN IMMEDIATE')
+        try:
+            # Same writer lock as catalogue reconcilers, before snapshot read.
+            entries, catalog_hash=catalogue(app)
+            validate_binding(evidence['binding'],entries,app.config.get('HISTORICAL_OPERATOR_AUTHOR',''))
+            actor=db.execute("SELECT * FROM users WHERE email=? AND role='operator' AND active=1 AND totp_secret IS NOT NULL",(app.config['OPERATOR_EMAIL'],)).fetchone()
+            owner=db.execute("SELECT u.* FROM users u JOIN private_accounts p ON p.user_id=u.id WHERE u.id=? AND u.role='depositor' AND u.active=1",(evidence['owner_user_id'],)).fetchone()
+            if not actor or not owner:
+                raise click.ClickException('Active configured MFA operator and real private workspace required.')
+            claim,setup=secrets.token_urlsafe(32),secrets.token_urlsafe(32)
+            grant_id='AGT-'+secrets.token_hex(12).upper()
+            expiry=a.iso(a.now()+timedelta(hours=24))
+            binding=json.dumps(evidence['binding'],sort_keys=True)
+            db.execute('INSERT INTO agent_grants(id,claim_hash,setup_hash,agent_name,agent_version,purpose,state,created_at,request_expires_at,approved_at,expires_at,terms_version,privacy_version,owner_user_id) VALUES(?,?,?,?,?,?,\'approved\',?,?,?,?,?,?,?)',
+                       (grant_id,hashlib.sha256(claim.encode()).hexdigest(),hashlib.sha256(setup.encode()).hexdigest(),evidence['agent_name'],evidence['agent_version'],'One exact historical revision; external operator-recorded authorization.',a.iso(),expiry,a.iso(),expiry,a.TERMS_VERSION,a.PRIVACY_VERSION,owner['id']))
+            evidence_hash=hashlib.sha256(raw).hexdigest()
+            db.execute('INSERT INTO historical_revision_grants VALUES(?,?,?,?,?,?)',(grant_id,binding,catalog_hash,raw.decode(),evidence_hash,actor['id']))
+            db.commit()
+        except (ValueError,KeyError,TypeError,OSError) as error:
+            db.rollback()
+            raise click.ClickException(str(error)) from error
+        except BaseException:
+            db.rollback()
+            raise
         g.user=actor
         a.audit('historical_revision_delegation_authorized',grant_id=grant_id,evidence_sha256=evidence_hash,scope=evidence['scope'],method='operator_recorded_external_instruction')
         click.echo(json.dumps({'request_id':grant_id,'agent_token':claim,'expires_at':expiry,'scope':evidence['scope'],'uploads_remaining':1}))

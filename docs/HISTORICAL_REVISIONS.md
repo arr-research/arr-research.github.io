@@ -15,6 +15,14 @@ any subsequent change invalidates unconsumed revision bindings until authorized
 again. This is a trusted operator-installed snapshot, not live proof of ownership
 or a cryptographically signed public registry.
 
+Every live catalogue installer and historical grant issuer must follow the
+[shared catalogue-writer transaction protocol](CATALOGUE-WRITER-PROTOCOL.md).
+Catalogue validation and grant insertion share the intake database writer lock;
+live catalogue replacement retains that lock through exact comparison and
+readback and refuses active unused historical grants. Initial installation below
+is while the feature is disabled; it is not permission for uncoordinated live
+file replacement. Deploy both corrected grant issuers before reconciliation.
+
 Only records whose sole author equals configured `AIRR_HISTORICAL_OPERATOR_AUTHOR`
 qualify. The configured MFA operator explicitly attests authorship and assigns
 their real private depositor workspace. This is an operator-recorded external

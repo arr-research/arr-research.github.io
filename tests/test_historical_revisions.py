@@ -10,6 +10,44 @@ from services.intake.app import get_db, iso
 
 
 class HistoricalRevisionTests(fixtures.IntakeTests):
+    def test_standalone_snapshot_excludes_concurrent_catalogue_writer(self):
+        from catalogue_lock_fixtures import contend_during_grant_snapshot
+        contend_during_grant_snapshot(self, self.issue)
+
+    def test_standalone_failed_binding_rolls_back_writer_transaction(self):
+        import sqlite3
+        self.binding['record_id'] = 'wrong predecessor'
+        self.issue(expected=1)
+        with self.app.app_context():
+            db = get_db()
+            self.assertFalse(db.in_transaction)
+            self.assertEqual(db.execute('SELECT COUNT(*) FROM agent_grants').fetchone()[0], 0)
+        other = sqlite3.connect(self.app.config['DATABASE'], timeout=0)
+        try:
+            other.execute('BEGIN IMMEDIATE')
+        finally:
+            other.rollback()
+            other.close()
+
+    def test_standalone_failure_after_first_insert_rolls_back_both_grant_tables(self):
+        original = hashlib.sha256
+
+        def fail_evidence_hash(raw=b''):
+            if raw.startswith(b'{'):
+                # The catalogue is hashed before inserts too; distinguish the
+                # actual evidence object by its fixed contract field.
+                value = json.loads(raw)
+                if 'author_instruction' in value:
+                    raise RuntimeError('Injected failure after agent_grants insert')
+            return original(raw)
+
+        with patch('services.intake.historical_revisions.hashlib.sha256', side_effect=fail_evidence_hash):
+            self.issue(expected=1)
+        with self.app.app_context():
+            db = get_db()
+            self.assertEqual(db.execute('SELECT COUNT(*) FROM agent_grants').fetchone()[0], 0)
+            self.assertEqual(db.execute('SELECT COUNT(*) FROM historical_revision_grants').fetchone()[0], 0)
+
     def setUp(self):
         super().setUp()
         self.pdf=b'%PDF-1.7\nnew exact revision'
