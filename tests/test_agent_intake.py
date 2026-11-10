@@ -99,6 +99,14 @@ class AgentIntakeTests(unittest.TestCase):
         own = self.client.get(response.headers['Location'],headers={'Authorization':'Bearer ' + grant['agent_token']})
         self.assertEqual(own.status_code,200)
 
+    def test_ordinary_old_pair_does_not_inherit_programme_contract_compatibility(self):
+        with patch.multiple('services.intake.app', TERMS_VERSION='ARR-DEPOSIT-2.0', PRIVACY_VERSION='ARR-PRIVACY-1.8'):
+            grant = self.request_grant()
+            self.approve(grant)
+        self.assertEqual(self.upload(grant).status_code, 403)
+        with self.app.app_context():
+            self.assertEqual(get_db().execute('SELECT COUNT(*) FROM submissions').fetchone()[0], 0)
+
     def test_retries_do_not_create_duplicate_papers_or_consume_another_permission(self):
         grant = self.request_grant()
         self.approve(grant)

@@ -45,7 +45,7 @@ def enabled(app):
                           os.environ.get('AIRR_PROGRAMME_DELEGATIONS_ENABLED') == '1')
 
 
-def recorded_contract_is_current(a, programme, evidence):
+def recorded_contract_is_current_or_compatible(a, programme, evidence):
     recorded = (evidence['terms_version'], evidence['privacy_version'])
     deployed = (a.TERMS_VERSION, a.PRIVACY_VERSION)
     if recorded == deployed:
@@ -74,7 +74,7 @@ def current(app, a, programme):
     actor = db.execute("SELECT 1 FROM users WHERE id=? AND email=? AND active=1 AND role='operator' AND totp_secret IS NOT NULL", (programme['authorized_by'], app.config['OPERATOR_EMAIL'])).fetchone()
     if not owner or not actor or evidence['author'] != app.config.get('HISTORICAL_OPERATOR_AUTHOR'):
         abort(403, 'Original author workspace/operator is no longer active.')
-    if not recorded_contract_is_current(a, programme, evidence):
+    if not recorded_contract_is_current_or_compatible(a, programme, evidence):
         abort(403, 'Changed terms/privacy require an updated initial instruction.')
     return programme_scope.effective_evidence(db, programme, evidence)
 
