@@ -32,3 +32,5 @@ No reviewer scientific replay, all-size machine certification or two-clone repro
 Exact working-paper PDF SHA256 c99f59936f7ac58dc4af25443d3a3a17932d6b1651542285feb65d6781f3814e; source ddd2cf605c1715a03d2e87991e920c0ec760e527.
 Native clean eligible case SUB-C6B6719FF911993F and CC-BY-4.0/CC0 permission verified.
 Source/reports/13TeX/222finite evidence and nested licensedv12 packet in tep-integrated223-source-licensed.zip. Original render ZIP retains101page images. Run scientific/render scripts only in owned Colab Linux, prepare disconnected, release/read back after work.
+
+AIRR scale mapping: native scientific-importance4/10 displays4/10stars. The original reviewer separately assigned overall-quality6/10; both original values and every finding are retained. See ASSESSMENT-PROJECTION223.json. No new evaluation or altered scientific score.

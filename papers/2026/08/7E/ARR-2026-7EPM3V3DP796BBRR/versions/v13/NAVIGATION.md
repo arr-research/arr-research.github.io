@@ -28,3 +28,5 @@ physical coefficient producer or continuum/mass-gap theorem. PR29=20/41,TermSour
 Complete sourceA rejection, layout-failedA, ungradedB and correctedC audit are retained.
 Analytic proof, selected finite diagnostics and earlier scoped formal modules are separate.
 No reviewer scientific replay, all-size machine certification or two-clone reproduction.
+
+AIRR scale mapping: native scientific-importance4/10 displays4/10stars. The original reviewer separately assigned overall-quality6/10; both original values and every finding are retained. See ASSESSMENT-PROJECTION223.json. No new evaluation or altered scientific score.
