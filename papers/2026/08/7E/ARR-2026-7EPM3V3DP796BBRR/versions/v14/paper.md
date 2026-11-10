@@ -1,0 +1,1057 @@
+# Rectangular observations for finite matrix gradients: critical budgets and the weak endpoint
+
+Canonical source: paper.pdf. Text extraction may lose layout. Read complete original assessment and dated author response.
+
+           Rectangular observations for finite matrix gradients:
+                 critical budgets and the weak endpoint
+                                              Lluis Eriksson
+
+           10 November 2026 — manuscript 226C, corrected preparation version
+
+                                                 Abstract
+          For a finite periodic lattice and arbitrary finite symmetric matrices acting on its actual
+      forward gradient stack, we construct a partition into integer rectangles whose scaled component
+      means restore coercivity. The output dimension is OD (h(1 + Fc (A))) for h real components
+      and capped local eigenchannel budget Fc (A). The product order hFc (A) is necessary in
+      worst-case joint growth for common partitions retaining all component means. The quadratic
+      penalty is finite and may depend on the coefficient profile, including its negative spectral depth.
+      The proof combines positive spectral replacement, an arbitrary-positive-scalar balanced-ring
+      construction, and singleton refinement at every affected start and forward endpoint. We give
+      the full scalar BV, weighted-gap and compressed-tree proof in an appendix. For positive scalar
+      coefficients with exact mean µ, a weak inverse-D/2 distribution bound gives a logarithmic
+      upper bound on observation dimension. An explicit family of actual flat coexact fields forces
+      the same worst-case logarithmic order for every centered differentiable observation with a
+      finite locally quadratic upper penalty. The mechanisms are classical; historical priority and
+      non-equivalence to the closest predecessors remain unestablished. All results concern specified
+      finite component-gradient forms.
+
+
+1     Objects, principal results and scope
+A small number of spatial averages can restore coercivity even when local coefficients are very
+small or have negative channels. Two issues must be kept separate: how many averages are
+needed, and how large a penalty must be placed on them. We control the first by a capped
+coefficient budget while allowing the second to depend on the entire finite profile. At the scalar
+weak endpoint a logarithmic loss in the coefficient scale is unavoidable in the worst case.
+
+1.1   The actual finite form and observation rows
+Throughout, D ≥ 3, n ≥ 1 and h ≥ 1 are integers, c > 0,
+                      X = (Z/nZ)D ,          V = nD ,        P = D/2,         r = Dh.
+We represent X by the fixed chart {0, . . . , n − 1}D . For u : X → Rh the forward stack is
+                                                                D
+                                  du(x) = u(x + ei ) − u(x) i=1 ∈ Rr .
+All additions in this expression are periodic. Given a finite real symmetric r × r matrix A(x) at
+each original start x, define
+                                                              ∥u∥2V = V −1
+                              X                                              X
+                   QA (u) =         du(x)T A(x)du(x),                             ∥u(x)∥2 .                 (1)
+                              x∈X                                             x
+
+
+                                                      1
+No common eigenbasis or sign assumption is imposed on A(x). For a scalar profile a > 0 we
+write                               X
+                           Qa (u) =   a(x)∥u(x + ei ) − u(x)∥2 .
+                                            x,i
+
+In particular, the coefficient is always evaluated at the forward start; it is never moved to the
+endpoint or averaged over an edge.
+    An integer rectangle is a nonempty product of consecutive intervals in the fixed chart. It
+need not be a periodic rectangle crossing the chart boundary. For such a rectangle B define the
+vector row                                               q
+                      qB (u) = V −1/2 |B|−1/2
+                                              X
+                                                  u(x) = |B|/V meanB u.                        (2)
+                                                  x∈B
+
+For a partition R put CR u = (qB (u))B∈R , with the Euclidean product norm. Its output dimension
+is h#R; on the full field space its rows are independent, so its rank equals that dimension. A
+coefficient-only partition is fixed by the coefficient profile and deterministic geometric conventions
+before the field u is chosen.
+
+1.2   An arbitrary symmetric matrix theorem
+The constants used below are intentionally conservative:
+
+                        b = 2D ,     J = 2D,      Cext = 1 + J{2J(1 + 12J) + 1},
+                     GD = 22D+10 D2 Cext
+                                     2
+                                         ,            BD = (2b + 3)bGPD ,                          (3)
+                                           D−1  D
+                            D        D                3
+                                
+                     αD =                                     .
+                            2       D−2               4
+Here GD is the scalar weighted-gap constant and BD is the resulting tree-count constant. Let
+λj (x), 1 ≤ j ≤ r, be the eigenvalues of A(x), counted with multiplicity. Let ν0 count all its
+nonpositive local eigenvalues over all x. Define
+
+                                                          min{1, αD cP λj (x)−P }.
+                                                  X
+                          Fc (A) = ν0 +                                                            (4)
+                                           x,j:λj (x)>0
+
+These are local coefficient eigenvalues, not the eigenvalues of the global operator associated with
+QA .
+
+Theorem 1.1 (Capped-budget rectangular observations). For every profile A in (1) there is a
+coefficient-only partition R into integer rectangles such that
+                                              BD
+                                                                                  
+                       h#R ≤ 2Dh 1 + BD + max    , D + 1 Fc (A) .                                  (5)
+                                              αD
+
+There is a finite coefficient-dependent K such that, simultaneously for all u : X → Rh ,
+
+                                    V −1 QA (u) + K∥CR u∥2 ≥ c∥u∥2V .                              (6)
+
+One may take K = c + 4DL, with L explicitly defined in (22). Neither the partition nor K
+depends on u.
+
+
+
+                                                          2
+    The budget caps the cost of each sufficiently small positive channel at one and assigns the
+same unit cost to each nonpositive channel. Its count thus does not grow with negative depth.
+The penalty K can grow with that depth; (6) makes no assertion that K = c for signed forms.
+The elementary singleton partition has hV outputs and also admits a finite penalty for every
+finite symmetric form. One may choose whichever of that partition and Theorem 1.1 has fewer
+outputs. No optimal dimension, sharp coefficient, or efficient implementation is asserted.
+
+1.3   The cost of a common full-vector partition
+The dimension in Theorem 1.1 concerns a common partition with all h component means on
+each spatial member. The following refinement shows why this measurement class can require a
+product of h and the budget.
+
+Theorem 1.2 (Necessary product order for common partitions). Fix D ≥ 3 and c > 0. For every
+pair of integers m, h ≥ 1 there is an actual positive diagonal matrix profile on Xn , n = 3m + 3,
+with exactly 2Dm weak direction-labelled channels and
+
+                                        2Dm ≤ Fc (A) ≤ 2Dm + 1.
+
+If a common partition R outputs all h means (2) and satisfies (6) for every general field
+u : Xn → Rh with any finite quadratic penalty coefficient, then
+
+                                                              hFc (A)
+                                   rank CR = h#R ≥ hm ≥               .                        (7)
+                                                              2D + 1
+Thus no bound CD (h + Fc (A)) holds uniformly in h in this class: setting h = m makes the ratio of
+necessary rank to h + Fc (A) diverge. Together with Theorem 1.1, this gives matching worst-case
+hFc (A) order, up to dimensional constants, in joint h, Fc (A) growth. The lower family consists
+of general vector fields and is not claimed to be coexact or divergence-free. It does not address
+component-dependent partitions, channel-adapted means, or postprocessed measurement classes.
+
+1.4   The scalar endpoint and the precise lower-bound domain
+For a positive scalar profile let
+
+                        µ = V −1
+                                    X
+                                        a(x),          Y (x) = µ/a(x),
+                                    x
+                                                                                               (8)
+                 W (a, µ) = sup τ PX (Y > τ ), T (n, µ) = max{1, nD /(1 + µ)P },
+                                    P
+                            τ >0
+
+where PX is normalized counting probability. The strict superlevel convention in this definition
+is used throughout.
+
+Theorem 1.3 (Weak endpoint upper bound). Suppose 1 ≤ a ≤ 2µ and W (a, µ) ≤ Mw , with µ
+the actual arithmetic mean. For every h ≥ 1 there is a coefficient-only rectangular partition with
+                                        n                             o
+                       h#R ≤ 2Dh 1 + 2P cP BD [1 + P Mw log µ] T (n, µ)                        (9)
+
+and
+                         V −1 Qa (u) + c∥CR u∥2 ≥ c∥u∥2V      (u : X → Rh ).                  (10)
+
+
+                                                   3
+    To state the lower bound without an unspecified Hodge domain, fix g ≥ 1. A flat one-cochain
+is U = (U1 , . . . , UD ) with Uj : X → Rg ; we regard it as an h = Dg component field in Qa . For
+antisymmetric two-cochains Bij = −Bji : X → Rg , define
+
+Di− f (x) = f (x)−f (x−ei ),                        Di− Bij ,
+                                               X
+                                   (δB)j = −                       Hcoex (X) = {δB : B antisymmetric}.
+                                                i
+                                                                                                     (11)
+                       P    −
+Backward divergence      j Dj Uj vanishes on this space by commutation and antisymmetry. The
+energy on it is precisely the scalar component-gradient Qa (U ), with all its original forward starts;
+no weighted curl identity is used to define or replace that energy.
+Theorem 1.4 (Weak endpoint obstruction and worst-case order). Fix D ≥ 3, c > 0 and g ≥ 1.
+For every integer m ≥ 1 there are nm , a profile am with actual mean µm , and an m-dimensional
+real subspace Em ⊂ Hcoex (Xnm ) such that
+
+            1 ≤ am ≤ 2µm ,         W (am , µm ) ≤ 1,
+                                                          X
+                                       Qam (U ) ≤ (c/4)         ∥U (x)∥2   (U ∈ Em ),                (12)
+                                                            x
+                                                                                          m
+                                   T (nm , µm ) ≤ C(D, c),          EX (µm /am )P ≥              .
+                                                                                        2P 16D
+Suppose an observation C from a neighborhood of zero in Hcoex (Xnm ) to a finite-dimensional
+real normed space F is differentiable at zero and C(0) = 0. Suppose also that Φ(y) ≤ K∥y∥2
+near zero for some finite K, and that locally
+                                   X
+                               c       ∥U (x)∥2 ≤ Qam (U ) + Φ(C(U )).                               (13)
+                                   x
+
+Then DC(0)|Em is injective and dim F ≥ m. For this fixed-parameter sequence m is comparable
+to 1 + log µm for large m. Thus the logarithmic loss in Theorem 1.3 has matching worst-case
+order. This is not a claim of optimal rank for every individual profile.
+    The centered, differentiable and local quadratic assumptions are part of the lower theorem.
+Its penalty need not have a uniform bound as m varies. A common division of energy and
+squared field norm by V gives the same rank conclusion. The full critical moment grows along
+the lower family, so this family does not contradict the strong-moment scalar theorem.
+
+1.5   Relationship to earlier work and proof roadmap
+This manuscript is a proposed linked successor to the AIRR record ARR-2026-7EPM3V3DP796BBRR,
+version 13. It combines the complete arbitrary-positive-scalar construction from that predecessor
+with the subsequent matrix and weak-endpoint arguments. It is a new source artifact; prior
+judgments do not transfer to it.
+    The closest constructive predecessors are dyadic-ring approximation and compressed-tree
+arguments in Brudnyi [2], Sections 1–2 and Appendices I–II, and the bivariate BV approximation
+setting of Cohen–DeVore–Petrushev–Xu [3]. Their approximation spaces and objectives differ
+from the specified finite coefficient-only observation problem here. This comparison is not a proof
+that the present statements are absent from, or inequivalent to, the classical theory. In particular,
+ring decomposition, boundary-touching holes, BV/Sobolev estimates and tree compression are
+classical principles. The appendix spells out their finite integer implementation, including heavy
+atoms and the original edge weights.
+
+                                                     4
+    Frank [1], Theorems 2.1 and 3.1, supplies the relevant classical Cwikel/CLR and operator-
+valued spectral context. A weak multiplier hypothesis in such a theorem must be distinguished
+from replacing the strong coefficient moment in the present problem by a weak spatial distribution
+hypothesis. Our matrix proof uses elementary local spectral calculus and a scalar minimum
+eigenvalue bound; it does not invoke a global CLR estimate. The particular positive normalization
+αD in (3) fixes the cap threshold and numerical constants; the argument works with any fixed
+positive cap normalization after corresponding changes. Spectral replacement, scalar domination,
+rectangle refinement, layer cake and disjoint low-mode rank arguments are classical. No new
+general spectral principle or historical priority is claimed.
+    Section 2 proves Theorem 1.1 using the fully proved scalar theorem in Appendix A. Section 3
+proves the common-partition product lower bound. Section 4 gives the layer-cake upper bound
+and the complete compact-bump coexact lower construction. The appendix proves the scalar BV
+extension, actual weighted ring gap, heavy-chain count and rectangular mean inequality without
+an assumed geometric or local-gap certificate.
+    All assertions concern finite unit-spacing component-gradient forms. No interacting or
+covariant coefficient producer, variable-weight curl replacement, continuum theorem or Yang–
+Mills solution follows. The programme context PR29=20/41, TermSource 0, is unchanged.
+
+
+2     Positive replacement and exact rectangular refinement
+We prove Theorem 1.1. Every step uses the actual matrix profile on the forward stack in (1). In
+particular, positivity is used to discard wrap terms only after replacing the signed profile.
+
+2.1   The spectral split and scalar inverse moment
+Set
+            1/P                                                X
+      σ = αD c,       Sx = 1(−∞,σ] (A(x))Rr ,             N=       dim Sx ,   I = {x : Sx ̸= {0}}.
+                                                               x
+
+Here 1(−∞,σ] (A(x)) is the spectral projector. A degenerate eigenspace at the cutoff is selected in
+full, so no choice of basis within it enters the construction. Every nonpositive channel is selected.
+A positive selected channel contributes exactly one to the capped budget, and an unselected
+channel contributes its uncapped inverse power. Consequently
+
+                                                 λj (x)−P ,
+                                      X
+             Fc (A) = N + αD cP                                0 ≤ N ≤ Fc (A),    |I| ≤ N.           (14)
+                                  x,j:λj (x)>σ
+
+Equality λ = σ is included in N .
+    Put T = σ + c(1 + N ) > σ. Replace every selected eigenvalue by T , leaving all unselected
+eigenvalues and every local spectral subspace unchanged, and denote the resulting positive
+definite matrix by AT (x). For N = 0 this changes nothing. With aT (x) = λmin (AT (x)) > 0,
+pointwise matrix positivity gives
+                                     QAT (u) ≥ QaT (u).                                   (15)
+This controls the complete stacked vector, including all directional and internal mixing. It
+requires no commutation between distinct matrices. Moreover, the largest eigenvalue of AT (x)−P
+
+
+
+                                                      5
+is at most its trace, hence
+
+                                  aT (x)−P ≤ cP             tr(AT (x)−P )
+                              X                        X
+                        cP
+                              x                         x
+                                                                  λj (x)−P + N (c/T )P
+                                                         X
+                                                   P
+                                              =c                                                (16)
+                                                       λj (x)>σ
+                                                   Fc (A) − N
+                                              ≤               + 1.
+                                                       αD
+
+The last inequality uses T ≥ c(1 + N ) and N/(1 + N )P ≤ 1 for P ≥ 1. When N = 0 the extra
+one is harmless.
+
+2.2   The scalar partition is derived, not assumed
+Theorem A.1 in Appendix A applies to every finite positive aT , without an arithmetic-mean,
+lower-envelope or upper-envelope condition. Its partition R0 , combined with (15), satisfies
+
+                                   c∥u∥2V ≤ V −1 QAT (u) + c∥CR0 u∥2 ,                          (17)
+
+by summing the same scalar inequality over all h real components. If R0 = #R0 , its exact count
+and (16) yield
+                                         "                                                 #
+                                                                                      −P
+                                                                         X
+                                                                     P
+                          R0 ≤ 2D 1 + (2b + 3)b(cGD )                        aT (x)
+                                                                         x
+                                                           Fc (A) − N
+                                                                           
+                                  ≤ 2D 1 + BD           1+                        .             (18)
+                                                               αD
+There is no auxiliary local-gap or extension hypothesis in this application: the scalar construction
+and its gap are proved in the appendix.
+
+2.3   Isolating every affected endpoint
+Let
+                                  D
+                                  [
+                     Z=I∪             (I + ei ),        |Z| ≤ (D + 1)|I| ≤ (D + 1)N,            (19)
+                                  i=1
+where the translations are periodic. We refine R0 so that each z ∈ Z is a singleton member.
+Order Z lexicographically in the fixed chart. If z is not already a singleton, let R be its current
+rectangle. Partition R \ {z} according to the first coordinate in which a point differs from z,
+and according to whether it is smaller or larger in that coordinate. Earlier coordinates are fixed
+to those of z, later coordinates range over their original intervals, and the differing coordinate
+ranges below or above z. Each nonempty piece is an integer rectangle. There are at most 2D
+such pieces. Adding {z} replaces one rectangle by at most 2D + 1, increasing the count by at
+most 2D. Earlier isolated points lie in disjoint singleton members and remain intact. Thus the
+final partition R satisfies
+
+                         R := #R ≤ R0 + 2D|Z| ≤ R0 + 2D(D + 1)N.                                (20)
+
+A wrapping forward endpoint is simply its chart representative in Z; this causes no alteration of
+the rectangle argument.
+
+                                                            6
+   For each original parent B and its final pieces Bk ,
+                                  Xq                                    X
+                       qB (u) =           |Bk |/|B| qBk (u),                 |Bk |/|B| = 1.
+                                  k                                      k
+
+Hilbert-space Cauchy with these exact weights proves
+
+                                                          V −1
+                                                                  X
+                      ∥CR0 u∥2 ≤ ∥CR u∥2 ,                             ∥u(z)∥2 ≤ ∥CR u∥2 .             (21)
+                                                                 z∈Z
+
+The second assertion holds because each z ∈ Z contributes the singleton row V −1/2 u(z). The
+remaining rows are still only component means on rectangles; no gradient or nonrectangular
+observation has been introduced.
+
+2.4    Charging the complete signed correction
+Define the finite number
+                                      
+                                      0,                                    N = 0,
+                              L=                                                                       (22)
+                                            max         (T − λj (x)),       N > 0.
+                                          x,j:λj (x)≤σ
+
+The spectral construction gives 0 ≤ AT (x) − A(x) ≤ LI, with zero difference for x ∈  / I. This
+is an operator inequality on all r coordinates; in particular it bounds all rotated off-diagonal
+contributions together. It does not assign signs to individual cross terms. Therefore
+                                                   X
+                  0 ≤ QAT (u) − QA (u) ≤ L                ∥du(x)∥2
+                                                   x∈I
+                                                            "                                      #
+                                                     X                        X
+                                              ≤ 2L              D∥u(x)∥2 +         ∥u(x + ei )∥2       (23)
+                                                     x∈I                       i
+                                                          X
+                                              ≤ 4DL             ∥u(z)∥2 .
+                                                          z∈Z
+
+Indeed each site has its own bad-start multiplicity at most D and at most D incoming direction-
+labelled starts. All their endpoints belong to Z. This counts parallel edges at period two
+separately, as required by the actual form. At n = 1 every difference vanishes and the estimate
+remains valid. No periodic term has been dropped from the signed correction.
+   Insert (23) into (17), divide the point sum by V , and use (21). This proves (6) with
+K = c + 4DL. The count is
+                                           BD
+                                                                                          
+                       hR ≤ 2Dh 1 + BD +      (Fc (A) − N ) + (D + 1)N
+                                           αD
+                           ≤ 2Dh [1 + BD + max{BD /αD , D + 1}Fc (A)] ,
+
+using the nonnegativity of both N and Fc (A) − N . This completes the proof of Theorem 1.1.
+
+Remark 2.1 (What the cap does and does not control). The only use of the budget after the
+local spectral split is the exact identity (14). In particular its control of observation number is
+compatible with arbitrarily negative selected eigenvalues, since the penalty absorbs the actual finite
+correction. When N = 0, the correction vanishes and K = c. For a positive scalar profile the
+
+                                                           7
+sharper direct scalar construction also has K = c without selecting or replacing any channels.
+For completeness, choose M = max{0, maxx [−λmin (A(x))]}, so M ≥ 0 and A(x) ≥ −M I for all
+x. Then QA (u) ≥ −4DM x ∥u(x)∥2 , because x ∥du(x)∥2 ≤ 4D x ∥u(x)∥2 . For the singleton
+                          P                    P                  P
+
+partition ∥CR u∥2 = ∥u∥2V , so K = c + 4DM proves its asserted finite-penalty alternative. The
+matrix construction establishes an existence bound with explicit constants, rather than a sharp
+spectral rank formula.
+
+
+3     Necessary product order for full-vector common partitions
+We prove Theorem 1.2 by an explicit positive diagonal family. The proof concerns all vector
+fields, as in Theorem 1.1, rather than the smaller coexact domain of the endpoint lower theorem.
+It uses only local fields and finite-dimensional rank-nullity.
+
+3.1    The coefficient family and every local channel
+Let n = 3m + 3 and choose centers
+
+                               xj = (3j + 1, 1, . . . , 1),    0 ≤ j < m.
+                                                                      1/P
+They lie away from the periodic wrap boundary. With σ = αD c, define
+
+                  a0 = min{c/(8D), σ/2} > 0,              M = rnD ,         H = σM > σ.
+
+In the canonical direction/component basis (i, k) of RDh let A(x) be diagonal, with entries
+                                  (
+                                  a0 , k = 1 and x ∈ {xj , xj − ei } for some j,
+                     λi,k (x) =                                                                    (24)
+                                  H, otherwise.
+
+At a center all D direction channels for component one are weak; at an incoming start only
+its specified direction/component channel is weak. All eigenvalues are positive. For each fixed
+direction the starts xj and xj − ei are distinct. Across centers their first coordinates lie in disjoint
+sets {3j, 3j + 1}. Channels with different direction labels remain distinct even when they share a
+start. There are therefore exactly 2Dm weak channels.
+    Since a0 ≤ σ/2, each weak channel has capped cost one in (4). Every other channel has
+capped cost αD cP H −P = M −P . Thus, including all strong channels,
+
+               Fc (A) = 2Dm + (M − 2Dm)M −P ,                 2Dm ≤ Fc (A) ≤ 2Dm + 1.              (25)
+
+Indeed 0 ≤ M − 2Dm ≤ M and P > 1, so the tail is at most M 1−P ≤ 1. Increasing h increases
+H and keeps this strong tail bounded; it introduces no uncontrolled h-sized budget contribution.
+The choice of H is permitted by the arbitrary finite profile hypothesis.
+
+3.2    The actual low space and the restriction rank
+Let Uj (x) = 1{xj } (x)e1 , where e1 ∈ Rh is the first canonical unit vector. These fields are
+orthonormal in counting units. Their only nonzero direction-labelled forward differences are −e1
+at xj and +e1 at xj − ei , for each direction i. Both original starts are assigned coefficient a0 by
+(24); there are no further wrap contributions. Consequently
+
+                                        QA (Uj ) = 2Da0 ≤ c/4.
+
+                                                      8
+No nearest-neighbor edge joins distinct centers, and their gradient-start supports are disjoint.
+Hence the quadratic cross terms vanish and
+                                                                              X
+    Lm = spanR {U0 , . . . , Um−1 },      dim Lm = m,       QA (U ) ≤ (c/4)       ∥U (x)∥2   (U ∈ Lm ).   (26)
+                                                                              x
+
+These are general vector functions. No divergence or coexact property is asserted for them.
+   For any common partition R into R nonempty rectangles, its actual rows on this space are
+                                                                
+                                              −1/2     −1/2
+                                 X                            X
+                             qB  tj Uj  = V      |B|         tj  e1 .
+                                      j                             j:xj ∈B
+
+Each rectangle supplies at most one scalar functional on Lm , so rank(CR |Lm ) ≤ R. If R < m,
+rank-nullity gives a nonzero U ∈ Lm with CR U = 0. Coercivity with any finite quadratic penalty,
+after multiplication by V , would imply
+                                  X                                X
+                              c       ∥U (x)∥2 ≤ QA (U ) ≤ (c/4)        ∥U (x)∥2 ,
+                                  x                                 x
+
+a contradiction. Thus every successful common partition has R ≥ m. The same argument works
+for any penalty on these linear observations with Φ(0) = 0, without a differentiability assumption
+on that penalty.
+    The full field-space rank is exactly hR, not merely a padded output
+                                                                    p      dimension. To see this,
+for each B choose a site z ∈ B. A field supported at z with value V |B| ek has observation ek
+in row B and zero in every other row. These fields show surjectivity onto all hR row coordinates.
+Therefore necessary genuine rank is at least hm. Since Fc (A) ≤ 2Dm + 1 ≤ (2D + 1)m, this
+proves (7).
+
+3.3     Joint growth and the measurement-class restriction
+Set h = m. The necessary rank is at least m2 , while h + Fc (A) ≤ (2D + 1)m + 1. Their ratio
+tends to infinity for fixed D, c. Thus a dimension-only CD (h + Fc (A)) bound fails for these
+common full-vector partitions, even with arbitrary finite penalty. The product lower bound and
+Theorem 1.1 have matching hFc (A) order along this family, since Fc (A) ≥ 2Dm makes 1 + Fc (A)
+comparable to Fc (A). Sharp coefficients, additive constants and per-profile optimality are not
+determined.
+    The extra factor h measures the cost of retaining every component mean on every common
+partition member; it does not count h independent tests of the one-component low space. The
+argument does not apply to distinct componentwise partitions, projected or channel-adapted
+rows, or compressed postprocessed outputs. It requires no external theorem about the rank of
+those broader observation classes. These elementary rank and local-field arguments carry no
+claim of historical priority, a new general principle, formal verification, or physical transfer.
+
+
+4     The weak critical endpoint
+The positive and negative results use the same scalar original-start energy. The positive estimate
+holds on every component field. The negative estimate is already forced on the precisely defined
+coexact subspace (11).
+
+
+                                                        9
+4.1    Finite layer cake and the upper estimate
+Since a ≥ 1, its actual mean obeys µ ≥ 1 and 0 < Y ≤ µ. For each value y in this finite
+distribution,                         Z                     µ
+                                          yP = P                τ P −1 1{τ <y} dτ.
+                                                        0
+Summing over X proves the exact identity
+                                         Z µ
+                       EX Y   P
+                                  =P           τ P −1 PX (Y > τ ) dτ ≤ 1 + P Mw log µ.              (27)
+                                          0
+
+The contribution on (0, 1) is at most one, and on [1, µ] we use PX (Y > τ ) ≤ Mw τ −P . At µ = 1
+the second integral is zero; in fact the actual mean and a ≥ 1 then force a ≡ 1. Atoms at strict
+cutoffs change no ordinary integral. The envelope a ≤ 2µ is retained in the theorem but is not
+needed for this step.
+   Corollary A.2 in the appendix, with the actual moment M = EX Y P , gives
+
+                                      h#R ≤ 2Dh[1 + 2P cP BD M ]T (n, µ),
+
+and the normalized inequality (10) with penalty c. Substitution of (27) proves Theorem 1.3. Its
+geometry and gap are supplied by the complete scalar construction, rather than by a separate
+assumed certificate.
+
+4.2    A compact product bump on the actual coexact domain
+We now prove Theorem 1.4. Fix a unit vector e ∈ Rg . Define a globally C 1 function
+                                                 (
+                                                   s2 (1 − s)2 , 0 ≤ s ≤ 1,
+                                        β(s) =
+                                                   0,            s∈/ [0, 1].
+
+We use β for the bump to distinguish it from the critical exponent P . Both β and β ′ vanish at
+the endpoints. On [0, 1],
+
+                      β ′ (s) = 2s(1 − s)(1 − 2s),                    β ′′ (s) = 2 − 12s + 12s2 .
+
+Thus 0 ≤ β ≤ 1, |β ′ | ≤ 2, and β ′ is globally 2-Lipschitz: its interior second derivative has absolute
+value at most two, and the zero extension has no derivative jump.
+    For an integer L ≥ 16 divisible by 16, put
+                                                  D
+                                                  Y
+                                       ψL (x) =         β(xi /L),           x ∈ ZD ,
+                                                  i=1
+
+and define the one-cochain
+
+                     U1 = D2− ψL e,              U2 = −D1− ψL e,               Uj = 0    (j ≥ 3).   (28)
+
+Taking B12 = ψL e, B21 = −ψL e and all other Bij = 0 in (11) gives exactly (28), including its
+signs. Therefore U = δB and
+
+                                      Dj− Uj = D1− D2− ψL e − D2− D1− ψL e = 0.
+                              X
+
+                                  j
+
+
+                                                                10
+Every component has zero mean by telescoping. The same identities hold exactly on any torus
+large enough to contain this support away from wraps.
+    The one-dimensional lattice sequence f (t) = β(t/L) is supported at t = 1, . . . , L − 1, and
+D− f is supported at t = 1, . . . , L. It follows from the product formula that U is supported in
+{0, . . . , L}D and vanishes on every lower coordinate face xi = 0. If Di+ Uj (x) ̸= 0, its original
+start belongs to this same box. Indeed the only potentially external incoming start is xi = −1;
+its next endpoint is on the zero lower face, so both field values vanish. Upper outgoing starts
+xi = L can contribute and are included. In all other coordinates an external coordinate makes
+both terms zero. This verifies the boundary-start condition needed below with no interior-only
+energy convention.
+                                                                       +        2    D
+Lemma 4.1 (Finite bump constants). Let E1 (U ) =               x,i,j ∥Di Uj (x)∥ on Z . Then
+                                                            P
+
+
+                        E1 (U ) ≤ UD LD−4 ,                      UD = 32D 2D ,
+                 X                                                           9
+                      ∥U (x)∥2 ≥ ηD LD−2 ,                       ηD = D+12           .                (29)
+                  x                                                   2    2562(D−1)
+
+In particular, with KD = UD /ηD ,
+                                                           X
+                                     E1 (U ) ≤ (KD /L2 )       ∥U (x)∥2 .                             (30)
+                                                           x
+
+Proof. The Lipschitz bound on β ′ bounds each same-coordinate second finite difference by 2/L2 .
+For different coordinates the product of two first differences is bounded by 4/L2 . All unused
+factors have magnitude at most one. At most 2D component/direction pairs are nonzero; each
+has at most (L + 1)D ≤ 2D LD original starts by the support analysis. The common squared
+bound 16/L4 gives the first line of (29), including the upper outgoing starts.
+     For the norm, take x2 = L/8 + 1, . . . , L/4, exactly L/8 sites, and xi ∈ [L/4, 3L/4] for every
+i ̸= 2, at least L/2 sites each. On each backward step in coordinate two, the mean-value point
+belongs to [1/8, 1/4], where β ′ ≥ 3/32. On the other coordinates β ≥ 1/256 on [1/4, 3/4]. Hence
+                                                       3
+                                         ∥U1 (x)∥ ≥       256−(D−1)
+                                                      32L
+on all these sites. Squaring and multiplying by (L/8)(L/2)D−1 gives the stated ηD . It is strictly
+positive, so division yields (30).
+
+4.3   Geometric scales, exact mean and the weak distribution
+Choose an integer k ≥ 0 such that ε = 4−k satisfies εKD ≤ c/4. This choice depends on D, c
+and is fixed while m varies. Put
+
+       L0 = 2max{4,k} ,     Lj = 2j L0 (0 ≤ j < m),        L∗ = Lm−1 ,      n = 16L∗ ,   H = εL2∗ .   (31)
+
+Every Lj is divisible by 16, and εL20 ≥ 1. Place boxes
+
+         Bj = qj + {0, . . . , Lj }D ,   q0,1 = 1,    qj+1,1 = qj,1 + Lj + 3,    qj,i = 1 (i ≥ 2).
+
+Their first-coordinate intervals have two unused sites between successive boxes. The rightmost
+endpoint is j Lj + 3m − 2. Since j Lj < 2L∗ and m ≤ 2m−1 ≤ L∗ /16, this is less than
+             P                         P
+
+
+                                                      11
+3L∗ + 1 < n. Other coordinates also lie strictly inside the chart. Thus no support or gradient-
+start support collides periodically. Translate (28) into each Bj , obtaining U (j) . Their field
+supports and their complete original gradient-start supports are disjoint.
+    Define the actual scalar coefficient by
+                                                 (
+                                                     εL2j , x ∈ Bj ,
+                                       a(x) =                                                            (32)
+                                                            x∈
+                                                                S
+                                                     H,       / j Bj .
+
+The boxes are disjoint and the top box has the same coefficient as the background. In particular
+1 ≤ a ≤ H. Define its mean by its actual sum:
+
+                           µ = V −1       a(x) = H − V −1
+                                      X                           X
+                                                                       |Bj |(H − εL2j ).                 (33)
+                                      x                            j
+
+This is not a freely adjusted normalization. With
+
+                                                           2D
+                                               Cvol =           ,
+                                                        1 − 2−D
+
+the geometric series and (Lj + 1)D ≤ 2D LD
+                                         j imply
+
+
+                                                     V −1
+                      X                                     X
+                           |Bj | ≤ Cvol LD
+                                         ∗ ,                     |Bj | ≤ Cvol /16D < 1/2.
+                       j                                     j
+
+It follows that
+                           H/2 ≤ µ ≤ H,           µ ≥ 1,           1 ≤ a ≤ H ≤ 2µ.                       (34)
+The separate inequality µ ≥ 1 follows directly from a ≥ 1, including when H/2 < 1.
+    We check W (a, µ) ≤ 1 with strict cutoffs. If 0 < τ ≤ µ/H, then τ ≤ 1 and τ P PX (Y > τ ) ≤ 1.
+If τ > µ/H, the background and top box are absent. The boxes contributing to Y > τ satisfy
+εL2j < µ/τ . If there is any such box, let j be the largest qualifying index. They form an initial
+segment and have total volume at most Cvol LD   j . Consequently
+
+                                τ P PX (Y > τ ) ≤ Cvol (µ/ε)P /V
+                                                  ≤ Cvol LD         D
+                                                          ∗ /(16L∗ ) < 1.                                (35)
+
+If no box qualifies the probability is zero. Equality at a coefficient atom excludes that box under
+the strict criterion and cannot increase the bound. This proves the weak distribution assertion
+for every m, including m = 1.
+
+4.4   The low space and every finite local quadratic penalty
+Every nonzero gradient of U (j) has its original start in Bj , where (32) has coefficient εL2j . All
+wrap terms vanish for these nonwrapping supports. Thus the complete energy, not merely its
+interior contribution, is
+                                                      X                            X
+              Qa (U (j) ) = εL2j E1 (U (j) ) ≤ εKD          ∥U (j) (x)∥2 ≤ (c/4)        ∥U (j) (x)∥2 .   (36)
+                                                        x                           x
+
+
+
+
+                                                        12
+The norm bound in Lemma 4.1 makes every U (j) nonzero. Disjoint field supports give norm
+orthogonality; disjoint gradient-start supports give vanishing quadratic-energy cross terms. The
+same inequality therefore holds on
+                 Em = spanR {U (0) , . . . , U (m−1) } ⊂ Hcoex (X),               dim Em = m.
+This proves an actual low subspace, with no local eigenfunction or gap assumption. From (31)
+and (34),
+                                                           q        D
+                                         T (n, µ) ≤ 16 2/ε                .                       (37)
+
+The right side is independent of m.
+   For clarity the finite-dimensional obstruction is proved directly. If DC(0)|Em has a nonzero
+kernel vector U , differentiability and C(0) = 0 imply C(tU ) = o(t). For sufficiently small t, the
+assumed upper bound on the penalty gives
+                                 Φ(C(tU )) ≤ K∥C(tU )∥2 = o(t2 ).
+Apply (13) to tU , use the low-space inequality, and divide by t2 . Letting t → 0 would imply
+                                     X                          X
+                                 c       ∥U (x)∥2 ≤ (c/4)            ∥U (x)∥2 ,
+                                     x                           x
+
+a contradiction. Therefore the derivative is injective on Em and dim F ≥ rank(DC(0)|Em ) = m.
+No uniformity of K between profiles was used. Positivity or differentiability of Φ is unnecessary;
+only its stated finite quadratic upper bound is used. Common normalization of energy and field
+norm changes none of this finite-dimensional argument.
+    Finally, disjoint boxes, |Bj | ≥ LD
+                                      j and µ ≥ H/2 give
+
+                                          m−1
+                                                            !P
+                             P       −1
+                                          X           µ               m(µ/ε)P    m
+                   EX (µ/a) ≥ V                 LD
+                                                 j               =            ≥ P D.              (38)
+                                          j=0
+                                                     εL2j               V      2 16
+
+This establishes every part of (12) and explains why the strong-moment theorem is not contra-
+dicted.
+
+4.5   The matching order and its quantifiers
+For fixed D, c, ε and L0 remain fixed. Equations (31) and (34) imply
+                 log µ = 2(m − 1) log 2 + log(εL20 ) + θm ,                   − log 2 ≤ θm ≤ 0.   (39)
+Thus m/(1 + log µ) → 1/(2 log 2). The lower bound just proved forces output dimension at least
+a positive fixed-parameter multiple of 1 + log µ for large m. Theorem 1.3, with h = Dg, Mw = 1
+and (37), gives an upper bound of the same order on these profiles. In particular, no bound
+proportional to T (n, µ) o(log µ) can hold uniformly over the weak-bound class for the centered
+differentiable/local-quadratic observations under discussion. This proves the final assertion of
+Theorem 1.4.
+    The conclusion is a worst-case comparison across profiles. It does not state that each profile
+needs a logarithm or identify its minimal rank. The lower construction also does not cover a
+nonzero observation baseline with an unrelated positive penalty at that baseline, nondifferentiable
+encodings, or penalties outside the stated local quadratic class. Those assumptions matter to
+the argument rather than merely to its presentation.
+
+                                                     13
+5    Model assessments and review context
+Lluis Eriksson is the named author. This manuscript was drafted with assistance from Codex,
+exposed as an OpenAI system based on GPT-6. The exact served backend and reasoning-effort
+setting are unknown. This drafting assistance is distinct from the involved AI source-audit roles
+described below.
+     At preparation, this exact manuscript has not yet been numerically assessed. Its predecessor’s
+judgments do not transfer to these source bytes or to a future compiled PDF. The preparation
+includes the complete scalar source proof and uses the listed prior source audits of the weak-
+endpoint, capped-matrix and common-partition rank arguments. Those audits involved AI roles
+in the same agent system, with parent framing and shared-context limits; the true backend
+identities are unknown. They are not represented as blind, independent or human reviews. The
+author of this manuscript is not its source auditor or numerical reviewer.
+     The complete unit 224 original and logarithmic-addendum, unit 225 and unit 227 source-audit
+reports, and the complete manuscript 226B source rejection report, remain unchanged external
+companions. These listed reports, their adverse findings and context disclosures are identified by
+raw-byte hashes in the source-input manifest; no separate original scalar-audit report is identified
+there. The earlier unit 224, 225 and 227 qualified acceptances concern the named arguments
+and do not certify priority, practical complexity, physical transfer, optimal constants, all-size
+execution, or this manuscript’s presentation. No numerical grade is inferred from them. This
+manuscript requires its own review of the exact source and any exact PDF produced from it.
+     A complete source audit rejected the exact preparation 226B because its optional singleton-
+partition derivation omitted the necessary condition M ≥ 0. For example, its former conditional
+allowed n = 1, A = I, M = −1 and a nonzero constant field, for which the asserted auxiliary
+lower bound is false. That report found no load-bearing defect in the principal theorems.
+Preparation 226C explicitly chooses a nonnegative spectral depth in that auxiliary derivation and
+narrows the report-identification wording. The original rejection is preserved in full, including
+its editorial finding; it is not replaced by this author’s correction. This exact corrected source
+awaits a fresh whole-source audit, and its first exact numerical assessment remains absent. No
+result of a render of 226B is assumed here.
+     The selected diagnostics recorded for unit 224 used owned Colab Linux runs in normal
+and optimized modes: six direct tensor-sum cases, one actual D = 3, L = 16 coexact case,
+fifteen profiles and three rejected real negative controls. Unit 225 recorded seven finite matrix
+families, 131 actual fields and four rejected real controls, including endpoint, normalization and
+full off-diagonal correction mutations. The normal and optimized outputs were recorded as
+identical with zero actual exits. These are selected diagnostics, not an all-size formal proof or a
+two-fresh-clone replay of the construction. Their runtimes were released and read back inactive;
+billed compute units are unknown. The mathematical proofs above and below do not depend on
+these diagnostic counts.
+
+Source identity and external evidence
+The scalar appendix transcribes the complete mathematical portion of balanced-rings223.tex
+at programme commit
+                          ddd2cf605c1715a03d2e87991e920c0ec760e527.
+
+Its raw Git-blob SHA-256, without checkout conversion or normalization, is
+
+
+                                                14
+                              6877841cde546f8920c39b98a5dfef8a
+                              f385b1a2d5a4842f95a9dd36985b3dc2.
+
+Changes to that mathematical portion are notation and context adaptations: arbitrary h real
+components are obtained by summing the same scalar inequality; normalized and counting
+rows are distinguished; cross-references are internal to this manuscript. The original extended
+operational and assessment history is retained externally rather than interleaved with the proof.
+   The full subsequent analytical sources are the unit 224 draft and its logarithmic addendum,
+and the unit 225 capped-matrix draft. Their raw-byte SHA-256 digests, respectively, are
+                              7a94460f2cbbaf6ac291d64981a7ae6e7
+                               9590067f315923b615f842d6a0b211c
+                              0720cedc459361539c9cedf95b7b1868
+                              31a6ab9414ea27c859918203a39fb059
+                              a9c4bcbc3b8764b2e2cf84b7906ae5fe9
+                               ed3fa96c5f5ae22c68eb665a0f7d448.
+
+The related unit 227 draft and complete source-only audit are also included by identity in the
+external manifest. Its audit returned a qualified acceptance for the stated common-full-vector
+measurement class. No unit 227 diagnostics are claimed in this preparation; its lower proof uses
+no external spectral h + F theorem.
+   The accompanying SOURCE-INPUTS.json names the exact source files, the listed audit reports,
+context disclosures and unit result records with their raw-file hashes. All prior reports remain
+unchanged. This evidence identifies the inputs; it does not turn their recorded finite checks into
+an executable proof for every size.
+
+
+A     Coefficient-selected rectangular means for arbitrary scalar
+      profiles
+This appendix gives the complete scalar construction used in the main proofs. It uses the original
+positive-start scalar coefficient and retains the edges crossing rectangular observation pieces
+inside a ring. It does not identify a variable-weight curl/divergence form with that gradient
+form. The balanced-ring, BV and tree mechanisms are classical; historical originality of this
+finite specialization is unestablished.
+
+A.1    Statement and actual observations
+Let integers D ≥ 3, n ≥ 1, and c > 0 be fixed, and put X = {0, . . . , n − 1}D . For any finite
+scalar profile a(x) > 0 define
+
+ P = D/2,    b = 2D ,   J = 2D,      Cext = 1 + J{2J(1 + 12J) + 1},        GD = 22D+10 D2 Cext
+                                                                                            2
+                                                                                               .
+
+Write S(A) = x∈A a(x)−P and t = (cGD )−P /b. Every internal edge below keeps its original
+               P
+
+positive start, and all sums and norms initially use counting measure. Here Ea (f ; Ω) denotes
+the sum over every chart-internal edge with both endpoints in Ω, weighted by its original
+positive-start value a(x); E1 has unit weights. Thus the counting row qbB used at the end of this
+appendix equals V 1/2 qB in the normalized notation of (2).
+
+
+                                               15
+Theorem A.1. There is a partition R of X into nonempty axis-aligned integer rectangles,
+determined by a and fixed geometric conventions alone, such that
+                                     #R ≤ 2D{1 + (2b + 3)S(X)/t},
+and, simultaneously for every real field f ,
+               X                                            X    1 X        2   X
+                           a(x)|f (x + ei ) − f (x)|2 + c               f (x) ≥ c     |f (x)|2 .   (40)
+          i,x: x,x+ei ∈X                                    B∈R
+                                                                |B| x∈B           x∈X
+
+The original periodic energy also satisfies this inequality, by adding its nonnegative wrap terms.
+For every integer h ≥ 1 real components the same partition has output dimension h#R and
+penalty Φ(y) = c∥y∥2 .
+Corollary A.2. For any reference value µ ≥ 1, if n−D x (µ/a(x))D/2 ≤ M , the actual
+                                                                        P
+
+normalized rectangular means have output dimension at most Crect T (n, µ), with K = c and
+                                Crect = 2Dh{1 + (2b + 3)b(cGD )P 2P M }.
+The exact arithmetic mean and envelope 1 ≤ a ≤ 2µ are unnecessary for this sufficiency. The
+inverse-moment hypothesis is still assumed; it is not deduced from an arithmetic mean.
+Proof. S(X) ≤ M nD µ−P ≤ 2P M max{1, nD /(1 + µ)P }, since µ ≥ 1. Insert 1/t = b(cGD )P into
+the theorem. Apply its scalar inequality to each of the h real components.pDividing energy
+and squared norms by V = nD gives observation rows V −1/2 |B|−1/2 B f = |B|/V meanB f .
+                                                                        P
+
+The all-field inequality restricts to divergence-zero fields, and linear means with the displayed
+quadratic penalty supply the original local data.
+
+A.2    Balanced integer nodes and actual collars
+Split every coordinate interval with at least two sites into its floor/ceiling halves; a singleton
+remains unchanged. Use coordinate order 1, . . . , D, lower before upper, and lexicographic order
+on children. Each node has at most b children, and all side lengths differ by at most one. At
+global depth k the nonempty intervals have lengths hk or hk + 1, until they are singletons, where
+hk = max{1, ⌊n/2k ⌋}.
+     Consider a proper descendant I of an ancestor Q, at global depth k, and set h0 = hk . Every
+side of I belongs to [h0 , 2h0 ]. Every positive clearance from I to the boundary of Q is a union
+of depth-k intervals, so is at least h0 . This uses the global h0 , not the smallest side of this
+particular I: at odd sizes that substitution can be false. If every side of Q is at least two, a
+proper descendant is shorter in every direction, so each axis has at least one positive clearance.
+If the smallest side of Q is one, every side is one or two; each proper descendant is a corner
+singleton. That small case is treated separately below.
+     For the large case put Ω = Q\I. Expand I by exactly h0 on every face with positive clearance,
+leaving a boundary-touching face unchanged, and call the resulting rectangle B. Its side lengths
+ℓi lie in [2h0 , 4h0 ]. The collar A = B \ I is covered by the actual positive-clearance face slabs:
+normal width h0 and all other sides those of B. There are between D and J = 2D slabs, each
+contained in Ω. For slabs Si , Sj with distinct normals, direct product counting gives
+                                     |Si |     ℓj               |Si |   ℓj
+                                             =    ≤ 4,                =    ≤ 2.                    (41)
+                                  |Si ∩ Sj |   h0               |Sj |   ℓi
+Choose the first slab as root; attach every distinct-normal slab directly to it, and its opposite
+slab, if present, through the first slab with a different normal. This tree has depth at most two.
+
+                                                      16
+A.3       An unweighted BV extension, with every hole-crossing edge
+                                                                                                                 S |f − meanS f |
+                                                                                                            P
+For a finite product rectangle S of longest side at most 4h0 , write V1 (S) =
+and let TVS (f ) be the sum of |df | over its actual internal edges. Then
+
+                                            V1 (S) ≤ 2h0 TVS (f ).                                                           (42)
+
+Indeed on an interval with m sites, averaging pair paths bounds the coefficient of its rth edge by
+2r(m − r)/m ≤ m/2. Commuting coordinate-average projections contract L1 ; telescoping their
+product and applying this interval inequality fibrewise proves (42), without an additional factor
+D.
+   Let mi be the mean on Si and let c0 be the root mean. Averaging on the actual intersection
+and using (41) gives |Si ||mi − mj | ≤ 4{V1 (Si ) + V1 (Sj )}. For a depth-two path i, p, r, the second
+edge costs the volume ratio |Si |/|Sp | ≤ 2, so
+                                                                                            X
+                     |Si ||mi − mr | ≤ 4V1 (Si ) + 12V1 (Sp ) + 8V1 (Sr ) ≤ 12                       V1 (Sj ).
+                                                                                                 j
+
+Direct paths satisfy the same safe upper bound. Covering A and counting each actual edge at
+most J times yields, with PD = 2J(1 + 12J),
+                           X                            X
+                                |f − c0 | ≤ (1 + 12J)          V1 (Sj ) ≤ PD h0 TVA (f ).                                    (43)
+                            A                             j
+
+    At each positive-clearance hole face take the adjacent outside layer of width h0 , with tangential
+sides those of I. It is contained in A. On a normal fibre its nearest value satisfies
+
+                                |f (first) − c0 | ≤ h−1
+                                                          X                     X
+                                                     0            |f − c0 | +           |df |.
+                                                          fibre                 fibre
+
+Sum over all actual faces and use (43). The sum of hole-crossing jumps to the constant c0 is at
+most J(PD + 1)TVA (f ). Fill I by c0 and leave f unchanged on Ω, obtaining fe on Q. Internal
+hole differences vanish; the added variation consists precisely of these crossing faces. Therefore
+
+                                          TVQ (fe) ≤ Cext TVΩ (f ).                                                          (44)
+
+Boundary-touching faces create no exterior edge; at h0 = 1 the fibre gradient sum is zero. No
+coefficient is extended, reflected, averaged or reassigned. In particular (44) makes no weighted
+quadratic trace-extension claim.
+
+A.4       Actual critical Sobolev and weighted gap on a ring
+Here are the finite details needed to pass from BV to the original energy. For T ⊂ {0, . . . , m−1}D
+with |T | ≤ mD /2, the occupied-fibre argument and the discrete projection inequality give
+
+                                                                                                     ciso = D(1−2−1/D ) ≥ 12 .
+          X
+|∂T | ≥        |πi T |−D|T |/m ≥ D|T |(D−1)/D −D|T |/m ≥ ciso |T |(D−1)/D ,
+           i
+
+Each occupied nonfull fibre supplies an edge, while full fibres number at most |T |/m. The
+projection inequality |T |D−1 ≤ i |πi T | is the finite Loomis–Whitney inequality; it follows from
+                               Q
+
+
+
+
+                                                          17
+iterated Hölder. A singleton cube has only zero variance. Median parts, finite coarea and
+Minkowski consequently imply
+
+                                        inf ∥u − z∥D/(D−1) ≤ (2/ciso )TV(u)
+                                        z
+
+on the cube. On a rectangle of aspect at most two, fold a cube of its longest side onto it: in
+each coordinate first visit the interval in order, repeat its final endpoint and reflect until the
+prescribed length. Every vertex and edge has at most two preimages per coordinate; the initial
+product block maps identically onto the rectangle. Restriction and the variation multiplicity at
+most 2D give the safe constant Cfull = 2D+1 /ciso for that rectangle, still unweighted.
+    Apply this bound and (44) to an indicator on Ω. For every real z, ∥1T −z∥s,Ω ≥ 12 min{|T |, |Ω\
+T |}1/s , where s = D/(D − 1). Thus Ω has relative edge isoperimetric constant
+
+                                                cΩ = ciso /(2D+2 Cext ).
+
+Coarea gives ∥g∥s ≤ c−1
+                     Ω TVΩ (g) for nonnegative g supported on at most half the vertices. With
+a median mf of f , take w = (f − mf )+ or (mf − f )+ and put
+
+                  α = 2(D − 1)/D,                 q = 2D/(D + 2),                 q ′ = 2D/(D − 2).
+
+Then αs = 2 and (α − 1)q ′ = 2. The power-difference inequality, Hölder and degree at most 2D
+yield
+                                                ′
+                              TV(wα ) ≤ 2αD1/q ∥dw∥q ∥w∥2α−1 .
+                                                                                    ′
+In fact the q ′ th power of the endpoint factor sums to at most 2q D x w(x)2 . Divide only when
+                                                                                        P
+
+w ̸= 0. The positive and negative truncated q-edge energies sum to at most the original one;
+since 2/q ≥ 1, their squared bounds combine to give
+                X                                   X                 2/q                     ′
+                    |f − meanΩ f |2 ≤ KΩ2                     |df |q          ,   KΩ = 2αD1/q /cΩ .       (45)
+                Ω                                   Ω edges
+
+Only now use weights, on the original retained positive-start edges:
+           X            2/q        X                      2/D
+                |df |q          ≤             a(start)−D/2          Ea (f ; Ω) ≤ {DS(Ω)}2/D Ea (f ; Ω).
+                                    Ω edges
+
+Here q/(2 − q) = D/2, and at most D retained edges start at one vertex. Since α ≤ 2, ciso ≥ 1/2
+and 2/q ′ + 2/D = 1, KΩ2 D2/D ≤ 22D+10 DCext  2 ≤ G . Full balanced rectangles obey the same
+                                                     D
+safe bound without removing a hole.
+    For the small nodes with a singleton direction, Q, or Q minus a corner, is a connected graph
+with at most b vertices whenever nonempty. Pair paths of length at most b − 1 give variance at
+most b2 E1 . Each internal edge satisfies a(start)−D/2 ≤ S(Ω), so E1 ≤ S(Ω)2/D Ea . As GD ≥ b2 ,
+this proves in every case
+                                    X
+                                        |f − meanΩ f |2 ≤ GD S(Ω)2/D Ea (f ; Ω).                          (46)
+                                    Ω
+
+A singleton has zero variance. Empty groups are never output.
+
+
+
+                                                          18
+A.5    Coefficient-only heavy-chain compression and complete count
+Give each vertex mass a(x)−P and call a tree node heavy if its mass is strictly greater than t. If
+the root is light, output it. Otherwise let L be the number of terminal heavy nodes and Bh the
+number with at least two heavy children. Terminal heavy nodes are disjoint, so L ≤ S(X)/t.
+Finite tree counting gives Bh ≤ L − 1. After contracting unary paths, there are at most Bh + L − 1
+skeleton edges and possibly a root-leading chain; hence at most Bh + L ≤ 2L − 1 maximal unary
+chains. The bound is on chains, not their unrestricted total length.
+    At a unary node Q → Q′ the increment Q \ Q′ is the union of at most b − 1 light children, of
+mass at most (b−1)t. Traverse a maximal chain from ancestor toward descendant, closing a group
+when the cumulative mass first reaches t. A closed group is a balanced ancestor ring Qi \ Qj of
+mass in [t, bt); a residual is output only if nonempty, and has mass less than t. Across all chains
+the disjoint closed groups number at most S(X)/t, while residuals number at most 2L − 1. At
+branching or terminal heavy internal nodes output each light child; at a heavy singleton terminal
+output the singleton. Such cubes/singletons number at most b(Bh + L) ≤ b(2L − 1).
+    These groups partition X: a unary ring excludes the endpoint heavy subtree, which is then
+handled at the endpoint; branching processing recurses into every heavy child and outputs all
+remaining children. Thus their total number is at most
+
+                     S(X)/t + (2L − 1) + b(2L − 1) ≤ 1 + (2b + 3)S(X)/t.
+
+Each nonsingleton group has mass at most bt = (cGD )−D/2 , so (46) gives residual gap at least c.
+Heavy singleton mass may exceed this threshold, but its variance is zero and its mean captures
+its entire norm.
+
+A.6    Rectangular rows while retaining intra-ring interfaces
+Partition Q \ I by the first coordinate outside I: preceding coordinates belong to I, the current
+coordinate is below or above I, and later coordinates fill Q. This gives at most 2D nonempty
+integer rectangles. Cubes and singletons require one rectangle. With qbA (f ) = |A|−1/2 A f ,
+                                                                                           P
+
+Cauchy gives qbΩ (f )2 ≤ B⊂Ω qbB (f )2 . The actual regional gap therefore implies
+                        P
+
+                                                 X
+                                Ea (f ; Ω) + c         qbB (f )2 ≥ c∥f ∥2Ω .
+                                                 B⊂Ω
+
+Crucially Ea (f ; Ω) retains all edges between rectangular pieces of this same ring; no separate gap
+is asserted for each piece. Distinct regions are disjoint, so summing discards only nonnegative
+edges between different regions. The full energy dominates their internal sum. The count of
+rectangles is at most 2D times the region count, proving Theorem A.1. The retained intra-ring
+interfaces are part of the regional energy throughout.
+
+
+References
+[1] R. L. Frank, Cwikel’s theorem and the CLR inequality, arXiv:1206.3325v1 (2012), Theorems 2.1
+    and 3.1. https://arxiv.org/abs/1206.3325v1.
+
+[2] Yu. Brudnyi, Nonlinear Piecewise Polynomial Approximation and Multivariate BV spaces
+    of a Wiener–L. Young Type. I, arXiv:1511.03971v1 (2015). https://arxiv.org/abs/1511.
+    03971v1.
+
+                                                   19
+[3] A. Cohen, R. DeVore, P. Petrushev and H. Xu, Nonlinear approximation and the space
+    BV (R2 ), American Journal of Mathematics 121 (1999), 587–628. Author PDF: https:
+    //people.math.sc.edu/pencho/Publications/BV9707.pdf.
+
+
+
+
+                                         20
+
