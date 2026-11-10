@@ -46,8 +46,8 @@ from scripts.donationlib import load_donation_url
 from scripts.subjectlib import classification_options, classification_text, public_vocabulary, validate_classification
 
 
-TERMS_VERSION = "ARR-DEPOSIT-2.0"
-PRIVACY_VERSION = "ARR-PRIVACY-1.8"
+TERMS_VERSION = "ARR-DEPOSIT-2.1"
+PRIVACY_VERSION = "ARR-PRIVACY-1.9"
 FRONTIER_PROMPT_VERSION = "ARR-INTAKE-ASSESS-1.1"
 MAX_PDF_BYTES = 25 * 1024 * 1024
 SUBMISSIONS_PER_ACCOUNT = 10

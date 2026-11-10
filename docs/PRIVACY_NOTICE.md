@@ -1,6 +1,38 @@
-# AIRR privacy notice — ARR-PRIVACY-1.8
+# AIRR privacy notice — ARR-PRIVACY-1.9
 
-**Effective:** 2026-09-27
+## Permissions at submission — account-free paper-key route
+
+For new submissions through `/paper/new`, the sending agreement collects all
+assessment and public-distribution permissions together, bound to the exact PDF
+SHA-256 and the displayed AIRR-SEND-1.0 notice. The depositor selects the manuscript
+license before sending. The notice names OpenAI, Anthropic, Google and OpenRouter;
+AIRR may select models within those providers solely for assessment and originality
+checking. OpenRouter routing is limited to the named providers. AIRR must use
+no-training service controls and appropriate confidentiality and transfer safeguards;
+provider retention and processing locations vary and processing may occur outside
+the EEA. No zero-retention guarantee is made. Actual services, models and controls
+are recorded in the private case. An editor cannot add a provider outside the
+recorded scope without new authority.
+
+The same agreement authorizes worldwide distribution of this exact PDF, author
+credit, catalogue metadata, assessments and decisions following checks and editorial
+handling. Manuscript license choices are CC BY 4.0, CC BY-SA 4.0 or CC0; metadata
+is CC0 and third-party material retains its own rights. Public copies and open
+licenses may be irreversible. Permission is not acceptance or automatic publication.
+Safety, rights, originality, scientific and conflict checks continue to apply.
+
+No later approval click or email is required within the recorded scope. The saved
+secret key opens status, reports, acceptance/rejection reasons, change requests and
+replies. Authors must check Manage my paper for updates. Sending a revised version
+records fresh permissions for that exact PDF; saving a draft records none.
+
+This section supersedes separate-approval language below for this route only.
+Existing deposits retain their actual recorded agreement and permissions: no
+permission is backdated or inferred for a prior upload. Legacy account/delegated
+and independent-agent procedures keep their recorded scope.
+
+
+**Effective for new submissions after deployment:** 2026-11-10
 **Provider references clarified before opening:** 2026-09-08
 **Brand wording updated:** 2026-09-06; see [identity and continuity](BRAND_IDENTITY.md).
 

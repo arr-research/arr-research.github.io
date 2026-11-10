@@ -5,8 +5,12 @@
 <section class="card"><h2>Your next step</h2>
 {% if submission['public_release_url'] %}<p>This version is published. <a href="{{ submission['public_release_url'] }}">View public paper</a>.</p>
 {% elif submission['status'] in ['withdrawn','removed'] %}<p>This version is no longer active.</p>
+{% elif submission['status']=='declined' %}<p>AIRR declined this version. Read the editorial reason below. You can respond or appeal from this page.</p>
+{% elif submission['status']=='changes_requested' %}<p>The editor requests changes. Read the comments below, respond here and use Prepare a new version to send a corrected PDF.</p>
+{% elif submission['status']=='accepted_for_publication' %}<p>AIRR accepted this version. {{ 'Your permissions are already recorded; the editor is preparing publication.' if wf.permission else 'Review the publication permission below.' }}</p>
 {% elif submission['status']=='quarantined' %}<p>AIRR is checking your file. No action is needed from you now.</p>
 {% elif wf.plan and not wf.plan['authorized_at'] %}<p>Review the assessment services below and decide whether to authorize them.</p>
+{% elif wf.upfront_permission %}<p>Your assessment and publication permissions were recorded when you sent this PDF. AIRR is reviewing it; no permission action is needed. Check this page for reports, decisions and requested changes.</p>
 {% elif wf.permission %}<p>Your publication permission is recorded. AIRR must now complete the release checks and create the public record.</p>
 {% elif submission['scan_status']=='clean' %}<p>You can approve this version for publication below, or prepare a new version.</p>
 {% else %}<p>AIRR is processing this version. Check this page for updates.</p>{% endif %}

@@ -35,6 +35,8 @@ class PaperKeyTests(unittest.TestCase):
         data = dict(csrf_token=self.token(client), title='A test paper', abstract='A' * 100,
                     primary_subject='airr-quantum-information', agreement='on', key_saved='on', action='send',
                     manuscript=(io.BytesIO(b'%PDF-1.7\nprivate manuscript'), 'paper.pdf'))
+        from services.intake.submission_permissions import policy
+        data.update(permission_policy=policy()['hash'], publication_license='CC-BY-4.0')
         data.update(fields)
         with patch('services.intake.app.scan_file', return_value=('clean', 'Clean')):
             return client.post('/paper/draft/' + draft, data=data)
@@ -114,7 +116,7 @@ class PaperKeyTests(unittest.TestCase):
         self.assertEqual(self.client.get('/receipt').status_code, 404)
         self.assertEqual(self.client.get('/receipt/download').status_code, 404)
 
-    def test_revision_is_prefilled_keeps_predecessor_and_requires_new_permissions(self):
+    def test_revision_is_prefilled_keeps_predecessor_and_records_new_permissions(self):
         _, draft = self.create()
         case = self.send(draft, authors='A pseudonym').location
         r = self.client.post('/paper/revise/' + case.split('/')[-1], data={'csrf_token':self.token(self.client)})
@@ -129,7 +131,7 @@ class PaperKeyTests(unittest.TestCase):
             self.assertEqual(rows[1]['revision_number'], 2)
             self.assertEqual(rows[0]['status'], 'eligible')
             self.assertIsNone(rows[0]['delete_after'])
-            self.assertEqual(get_db().execute('SELECT COUNT(*) FROM publication_permissions').fetchone()[0], 0)
+            self.assertEqual(get_db().execute('SELECT COUNT(*) FROM publication_permissions').fetchone()[0], 2)
 
     def test_csrf_closed_intake_invalid_pdf_and_draft_persistence(self):
         self.assertEqual(self.client.post('/paper/new').status_code, 400)
@@ -225,3 +227,55 @@ class PaperKeyTests(unittest.TestCase):
             db=get_db();db.execute("UPDATE paper_drafts SET created_at='2000-01-01T00:00:00+00:00'");db.commit()
         self.assertEqual(self.app.test_cli_runner().invoke(args=['paper-draft-sweep']).exit_code,0)
         self.assertEqual(self.client.get(case).status_code,200)
+
+    def test_all_permissions_are_atomic_exact_pdf_and_policy_bound(self):
+        _, draft = self.create()
+        for fields in ({'permission_policy':''}, {'permission_policy':'stale'}, {'publication_license':'made-up'}, {'agreement':''}):
+            self.assertEqual(self.send(draft, **fields).status_code, 400)
+        with self.app.app_context():
+            self.assertEqual(get_db().execute('SELECT COUNT(*) FROM submission_permissions').fetchone()[0], 0)
+        response = self.send(draft)
+        case_id = response.location.rsplit('/',1)[-1]
+        with self.app.app_context():
+            db = get_db()
+            permission = db.execute('SELECT * FROM submission_permissions').fetchone()
+            row = db.execute('SELECT * FROM submissions WHERE id=?',(case_id,)).fetchone()
+            self.assertEqual(permission['manuscript_sha256'],row['sha256'])
+            self.assertEqual(permission['actor_user_id'],row['user_id'])
+            self.assertEqual(permission['license'],'CC-BY-4.0')
+            self.assertIn('OpenAI',permission['policy_json'])
+            self.assertEqual(db.execute('SELECT manuscript_sha256 FROM publication_permissions').fetchone()[0],row['sha256'])
+        self.assertIn(b'no permission action is needed',self.client.get(response.location).data)
+
+    def test_upfront_plan_needs_no_reply_and_rejects_other_providers(self):
+        _, draft = self.create()
+        case_id = self.send(draft).location.rsplit('/',1)[-1]
+        editor = self.app.test_client()
+        with self.app.app_context():
+            operator = get_db().execute("SELECT id FROM users WHERE role='operator'").fetchone()[0]
+        with editor.session_transaction() as state:
+            state.update(user_id=operator,credential_version=1,csrf_token='editor-csrf')
+        data=dict(csrf_token='editor-csrf',provider_1='OpenAI',model_1='test-model',notice='Actual service controls documented for the selected assessment service, including confidentiality, retention and transfer safeguards.')
+        response=editor.post('/admin/submission/'+case_id+'/plan',data=data)
+        self.assertEqual(response.status_code,302,response.data)
+        with self.app.app_context():
+            db=get_db(); plan=db.execute('SELECT * FROM assessment_plans WHERE submission_id=?',(case_id,)).fetchone()
+            self.assertIsNotNone(plan['authorized_at'])
+            self.assertIsNotNone(plan['authorization_hash'])
+            self.assertEqual(db.execute("SELECT COUNT(*) FROM correspondence WHERE submission_id=? AND body LIKE '%Please review the proposed%'",(case_id,)).fetchone()[0],0)
+            self.assertEqual(db.execute('SELECT COUNT(*) FROM mail_outbox').fetchone()[0],0)
+        data['provider_1']='Unlisted provider'
+        self.assertEqual(editor.post('/admin/submission/'+case_id+'/plan',data=data).status_code,409)
+
+    def test_status_and_editorial_feedback_reachable_with_key_without_email(self):
+        key,draft=self.create(); case=self.send(draft).location
+        returning=self.app.test_client()
+        returning.post('/manage',data={'csrf_token':self.token(returning),'key':key})
+        for status,expected in [('declined',b'AIRR declined'),('changes_requested',b'The editor requests changes'),('accepted_for_publication',b'AIRR accepted')]:
+            with self.app.app_context():
+                db=get_db();db.execute('UPDATE submissions SET status=?,decision_reason=?,decision_note=? WHERE id=?',(status,'Evidence needed','Please provide the dataset',case.rsplit('/',1)[-1]));db.commit()
+            page=returning.get(case)
+            self.assertEqual(page.status_code,200)
+            self.assertIn(expected,page.data)
+            self.assertIn(b'Please provide the dataset',page.data)
+            self.assertIn(b'Respond to the editor',page.data)

@@ -302,3 +302,15 @@ with the existing pinned-commit upgrade and encrypted rollback procedure;
 preserve accounts, MFA, grants, receipts and existing case decisions. Verify the
 authenticated panel and CSV, unauthenticated redirect, readiness and worker
 resumption before recording completion.
+
+## One agreement at paper-key submission — AIRR-SEND-1.0
+
+New paper-key uploads atomically store the displayed policy snapshot, actor, PDF
+hash, license and time in submission_permissions and publication_permissions.
+Draft saves and failed uploads grant nothing. Each revision has its own record.
+A later editorial assessment plan is authorized from that immutable record when
+all named providers are covered; no author message or extra permission click is
+queued. Exact models and actual service safeguards must still be documented.
+Providers outside the recorded scope are rejected. No legacy grants are backfilled.
+Decisions, reasons and requests remain available to the saved-key holder without
+email. Deploy the receiver before publishing the updated terms on the public site.
