@@ -21,9 +21,10 @@ if time.tzinfo is None or not timedelta(0)<=datetime.now(timezone.utc)-time<time
 if len(value['instruction'])<80 or len(value['source_reference'])<40:
  raise SystemExit('Preserve the actual instruction and source.')
 with app.app_context():
- db=get_db();row=db.execute('SELECT * FROM submissions WHERE id=?',(value['submission_id'],)).fetchone()
+ db=get_db();db.execute('BEGIN IMMEDIATE');row=db.execute('SELECT * FROM submissions WHERE id=?',(value['submission_id'],)).fetchone()
  actor=db.execute("SELECT * FROM users WHERE email=? AND role='operator' AND active=1 AND totp_secret IS NOT NULL",(app.config['OPERATOR_EMAIL'],)).fetchone()
- if not row or not actor or actor['display_name']!=value['operator_name']:
+ owner=db.execute("SELECT 1 FROM users WHERE id=? AND role='depositor' AND active=1",(row['user_id'],)).fetchone() if row else None
+ if not row or not owner or not actor or actor['display_name']!=value['operator_name']:
   raise SystemExit('Existing exact case and configured MFA operator required.')
  if row['sha256']!=value['manuscript_sha256'] or row['scan_status']!='clean' or row['status'] not in {'eligible','under_assessment','changes_requested'} or row['other_operator_conflict'] or row['submission_channel']=='independent_agent':
   raise SystemExit('Clean current human case without unresolved operator conflicts required.')
@@ -34,7 +35,8 @@ with app.app_context():
  if previous and (previous['manuscript_sha256']!=row['sha256'] or previous['license']!=value['license']):
   raise SystemExit('Existing different permission cannot be replaced.')
  if args.apply and not previous:
-  db.execute('INSERT INTO publication_permissions VALUES(?,?,?,?)',(row['id'],row['sha256'],value['license'],iso()));db.commit()
-  g.user=actor
-  audit('publication_permission_recorded',row['id'],sha256=row['sha256'],license=value['license'],method='editor_recorded_external_author_authorization',evidence=value,evidence_sha256=hashlib.sha256(raw).hexdigest(),public_status='working_paper')
+  db.execute('INSERT INTO publication_permissions VALUES(?,?,?,?)',(row['id'],row['sha256'],value['license'],iso()))
+  detail=dict(sha256=row['sha256'],license=value['license'],method='editor_recorded_external_author_authorization',evidence=value,evidence_sha256=hashlib.sha256(raw).hexdigest(),public_status='working_paper')
+  db.execute('INSERT INTO audit_log(occurred_at,actor_user_id,event,submission_id,detail_json) VALUES(?,?,?,?,?)',(iso(),actor['id'],'publication_permission_recorded',row['id'],json.dumps(detail)))
+  db.commit()
  print(json.dumps({'submission_id':row['id'],'permission_recorded':bool(previous or args.apply),'already_recorded':bool(previous),'sha256':row['sha256'],'accepted':False,'published':False}))

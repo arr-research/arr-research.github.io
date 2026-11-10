@@ -1,1 +1,1 @@
-Place the complete license text for the manuscript, code, and data here. Use separate licenses when their terms differ, and keep every scope and SPDX identifier synchronized with `../LICENSES.json` and `../metadata.json`.
+Manuscript rights are retained by the author; see LicenseRef-Author-Retained.txt. Public catalogue metadata is CC0. No manuscript reuse or third-party blanket license is inferred.
