@@ -9,7 +9,7 @@ import shutil
 from flask import abort
 
 
-def receive(app, a, upload, data, reserve=None):
+def receive(app, a, upload, data, reserve=None, recorded_contract=None):
     if shutil.disk_usage(app.config['QUARANTINE']).free < a.MAX_PDF_BYTES * 4:
         abort(503, 'Private storage is temporarily full; no manuscript was registered.')
     original = Path((upload.filename or 'manuscript.pdf').replace('\\', '/')).name[:200]
@@ -41,6 +41,10 @@ def receive(app, a, upload, data, reserve=None):
         if not submitter:
             abort(403, 'A private workspace must own this submission.')
         conflict = int(data['email'] == app.config['OPERATOR_EMAIL'] or bool(data.get('operator_conflict')))
+        # Only server-side authenticated callers supply this pair. Browser
+        # routes retain their current form agreement; delegated intake preserves
+        # the actual validated grant agreement, not a fabricated fresh assent.
+        terms, privacy = recorded_contract or (a.TERMS_VERSION, a.PRIVACY_VERSION)
         db.execute('BEGIN IMMEDIATE')
         db.execute('''INSERT INTO submissions(
             id,user_id,title,authors,abstract,original_filename,stored_name,sha256,size_bytes,
@@ -48,7 +52,7 @@ def receive(app, a, upload, data, reserve=None):
             privacy_version,created_at,updated_at,classification_json,submission_channel,agent_provenance_json)
             VALUES(?,?,?,?,?,?,?,?,?,'pending','Awaiting approved scanner.','quarantined',?,1,?,?,?,?,?,?,?)''',
             (case_id,submitter['id'],data['title'][:500],data['authors'][:1000],data['abstract'][:5000],
-             original,stored,checksum,size,conflict,data.get('deposit_policy', a.TERMS_VERSION),a.PRIVACY_VERSION,a.iso(),a.iso(),
+             original,stored,checksum,size,conflict,data.get('deposit_policy', terms),privacy,a.iso(),a.iso(),
              json.dumps(data['classification'],ensure_ascii=False),data.get('channel','human'),
              json.dumps(data.get('agent_provenance',{}),ensure_ascii=False)))
         if reserve:

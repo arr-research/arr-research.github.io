@@ -108,9 +108,9 @@ def install(app, a):
             abort(403, 'The responsible controller must approve an active delegation in their private workspace.')
         if not grant['owner_user_id'] or not a.get_db().execute('SELECT 1 FROM users WHERE id=? AND active=1 AND role=\'depositor\'', (grant['owner_user_id'],)).fetchone():
             abort(403, 'A current private workspace must own this delegation.')
-        if grant['terms_version'] != a.TERMS_VERSION or grant['privacy_version'] != a.PRIVACY_VERSION:
+        programme_child = programme_delegations.check_child(app, a, grant['id'], grant=grant)
+        if not programme_child and (grant['terms_version'] != a.TERMS_VERSION or grant['privacy_version'] != a.PRIVACY_VERSION):
             abort(403, 'New terms require a new delegation.')
-        programme_delegations.check_child(app, a, grant['id'])
 
     @api.post('/agent-requests')
     def create_request():
@@ -224,10 +224,10 @@ def install(app, a):
         a.enforce_rate('submit-account',a.SUBMISSIONS_PER_ACCOUNT,a.SUBMISSION_WINDOW_SECONDS,str(grant['owner_user_id']))
         a.enforce_rate('agent-submit-ip',a.SUBMISSION_ATTEMPTS_PER_CONNECTION,a.SUBMISSION_WINDOW_SECONDS)
         def reserve(db,case_id):
-            programme_delegations.check_child(app, a, grant['id'], value)
+            programme_delegations.check_child(app, a, grant['id'], value, grant=grant)
             changed = db.execute('''UPDATE agent_grants SET uses=uses+1 WHERE id=? AND state='approved'
                 AND expires_at>? AND uses<? AND terms_version=? AND privacy_version=?''',
-                (grant['id'],a.iso(),1 if binding or child else MAX_UPLOADS,a.TERMS_VERSION,a.PRIVACY_VERSION)).rowcount
+                (grant['id'],a.iso(),1 if binding or child else MAX_UPLOADS,grant['terms_version'],grant['privacy_version'])).rowcount
             if changed != 1:
                 abort(403, 'Delegation is expired, revoked or exhausted.')
             try:
@@ -244,7 +244,8 @@ def install(app, a):
                 'operator_conflict':value['operator_conflict'],'expected_sha256':value['sha256'],'channel':'agent',
                 'agent_provenance':{'name':grant['agent_name'],'version':grant['agent_version'],
                                     'disclosure':value['ai_disclosure'],'source':'depositor declaration',
-                                    **({'historical_revision':binding} if binding else {})}},reserve)
+                                    **({'historical_revision':binding} if binding else {})}},reserve,
+                recorded_contract=(grant['terms_version'], grant['privacy_version']))
         except ValueError as error:
             abort(400,str(error))
         response = app.json.response(receipt(row))

@@ -31,6 +31,14 @@ Existing deposits retain their actual recorded agreement and permissions: no
 permission is backdated or inferred for a prior upload. Legacy account/delegated
 and independent-agent procedures keep their recorded scope.
 
+For an existing continuous author-programme instruction, the legacy
+`ARR-DEPOSIT-2.0` / `ARR-PRIVACY-1.8` agreement remains the recorded agreement
+for covered exact-hash delegated children and receipts during this paper-key-only
+amendment. Its original evidence is not rewritten and no paper-key provider or
+publication scope is inferred. The narrow transition and unchanged safeguards
+are specified in [Programme delegations](PROGRAMME_DELEGATIONS.md). New
+instructions and other contract changes do not receive this compatibility rule.
+
 
 **Founder-authored amendment: 2026-09-09 — AIRR-FOUNDER-1.0.**
 
