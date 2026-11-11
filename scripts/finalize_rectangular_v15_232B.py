@@ -156,6 +156,11 @@ def check_candidate(record=RECORD):
               and receipt['all_three_material_objections_open'] is True
               and receipt['rescore'] is False and receipt['publication'] is False,
               'Exact generated normalization receipt; no partial or fabricated state')
+        registry = load(ROOT / 'registry/model-assessments.json', max_bytes=16 * 1024 * 1024)
+        actual = [item for item in registry['assessments'] if item.get('version_id') == VID
+                  or (item.get('paper_id') == PID and item.get('version') == 'v15')]
+        check(len(actual) == 1 and receipt['assessment_id'] == actual[0]['assessment_id'],
+              'Receipt assessment ID must equal actual unique registry assessment ID')
         from public_payload_privacy import canonical_relative
         recorded = {}
         for line in actual_files[MANIFEST].read_text(encoding='utf-8').splitlines():
@@ -242,6 +247,9 @@ def main():
     reconstructed = {key: value for key, value in report.items()
                      if key not in {'assessment_id', 'source_response_sha256'}}
     require(reconstructed == bound, 'Normalization may add only native assessment ID/source hash')
+    require((RECORD / RECEIPT).is_file(), 'Actual generated normalization receipt required')
+    require(load(RECORD / RECEIPT)['assessment_id'] == report['assessment_id'],
+            'Receipt assessment ID must equal actual unique registry assessment ID')
     errors = validate_assessment(report, [Paper(RECORD, meta)]) + validate_paper(Paper(RECORD, meta))
     require(not errors, 'Native paper/report validation: ' + '; '.join(errors))
     print(json.dumps(dict(status='exact_v15_native_normalization_and_validation_complete',

@@ -30,3 +30,27 @@ The Markdown companion now carries the complete existing text extraction with
 its typography caveat. The later bibliography companion is bibliography-only and
 makes no241 proof claim. Neither changes the exact PDF, ten scientific TeX sources,
 first4.10 assessment, native major_revision or three OPEN material objections.
+
+## Correction C: ordinary retained logs and exact normalized identity
+
+The separate8d8b gate also returned REJECT. Its complete original outputs are
+retained byte-exact in publication-source-audit8d8b and its source commit remains.
+It found a false positive on immutable [colab] text and JSON-report-plus-CLI logs,
+and an incomplete link between generated receipt UUID and actual registry UUID.
+No actual leak, scientific error, normalizer/test run or grade change was found.
+
+The successor requires complete JSON for declared .json files; ordinary text is
+not falsely declared whole-file JSON. Bounded recognizable JSON values within text
+are still inspected, with independent credential-key/value checks (even malformed
+credential fragments), alongside the unchanged filename/archive/bounds checks.
+Actual archived CLI and JSON-plus-CLI members supply a positive regression; mixed
+text credential controls prevent a broad text bypass. No original log/archive is
+edited or omitted. Generated receipt assessment_id must equal the actual UNIQUE
+registry assessment_id before accepting existing/completed state and before main
+reports completion. Its mutation control refreshes the manifest and uses the actual
+normalization result, not a fabricated assessment fixture or a scientific rescore.
+
+All24 previous method names/controls remain. Three methods are added: real historical
+positive, actual receipt UUID mismatch, and mixed-text credential negatives. Thus
+27 test methods are planned (2positive,25negative; the mixed-text method has two
+subcases). No executed result is claimed; the new exact source needs its own gate.

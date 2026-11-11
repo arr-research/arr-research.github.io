@@ -41,9 +41,10 @@ class Publication232BTests(unittest.TestCase):
             inventory_path = target / 'PACKAGE-INPUTS232B.json'
             inventory = json.loads(inventory_path.read_text())
             entries = [item for item in inventory['files'] if item['path'] == relative]
-            self.assertEqual(len(entries), 1)
-            entries[0]['bytes'] = path.stat().st_size
-            entries[0]['sha256'] = hashlib.sha256(path.read_bytes()).hexdigest()
+            self.assertEqual(len(entries), 0 if relative == 'NORMALIZATION-RECEIPT232B.json' else 1)
+            if entries:
+                entries[0]['bytes'] = path.stat().st_size
+                entries[0]['sha256'] = hashlib.sha256(path.read_bytes()).hexdigest()
             inventory_path.write_text(json.dumps(inventory, ensure_ascii=False, indent=2) + '\n')
             self.refresh_fixture_manifest(target)
             with self.assertRaisesRegex(ValueError, expected):
@@ -226,3 +227,34 @@ class Publication232BTests(unittest.TestCase):
     def test_json_string_encoded_object_cannot_hide_private_keys(self):
         hidden = json.dumps({'log': json.dumps({'agent_token': 'SYNTHETIC-NEGATIVE-CONTROL'})}).encode()
         self.reject_added_archive([('results.json', hidden)], 'Private credential/operational JSON key')
+
+    def test_actual_historical_cli_and_json_plus_cli_logs_are_accepted(self):
+        from public_payload_privacy import PrivacyBudget
+        with zipfile.ZipFile(producer.RECORD / 'rectangular_matrix232B-assessed-package.zip') as archive:
+            session = archive.read('evidence/runtime232A-backend-readback.txt')
+            execution = archive.read('production-attempt-b/execution232.log')
+        self.assertTrue(session.startswith(b'[colab]'))
+        text = execution.decode('utf-8-sig').lstrip()
+        _, end = json.JSONDecoder().raw_decode(text)
+        self.assertTrue(text[end:].strip(), 'Actual retained JSON-plus-CLI log must include trailing text')
+        budget = PrivacyBudget()
+        budget.inspect(session, 'runtime232A-backend-readback.txt')
+        budget.inspect(execution, 'execution232.log')
+        self.assertEqual(budget.files, 2)
+
+    def test_actual_receipt_uuid_mismatch_is_rejected_with_refreshed_manifest(self):
+        receipt = producer.RECORD / 'NORMALIZATION-RECEIPT232B.json'
+        self.assertTrue(receipt.is_file(), 'Run actual native normalization before this integration control')
+        original = json.loads(receipt.read_text())['assessment_id']
+        wrong = 'arr:assessment:00000000-0000-4000-8000-000000000000'
+        if original == wrong:
+            wrong = 'arr:assessment:11111111-1111-4111-8111-111111111111'
+        self.reject_changed_field('NORMALIZATION-RECEIPT232B.json',
+                                  lambda value: value.update(assessment_id=wrong),
+                                  'Receipt assessment ID must equal actual unique registry assessment ID')
+
+    def test_mixed_cli_text_cannot_bypass_credential_checks(self):
+        for raw in [b'[colab] prefix\n{"access_token":"SYNTHETIC-NEGATIVE-CONTROL"}\n[colab] done',
+                    b'[colab] prefix\n{"access_token":"SYNTHETIC-NEGATIVE-CONTROL"']:
+            with self.subTest(complete=raw.endswith(b'done')):
+                self.reject_added_archive([('trace.log', raw)], 'Private credential/operational JSON key')

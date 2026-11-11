@@ -31,6 +31,14 @@ FORBIDDEN_KEYS = {'agenttoken', 'controllertoken', 'accesstoken', 'refreshtoken'
                   'setuptoken', 'idempotencykey', 'token', 'credentials'}
 BEARER = re.compile(rb'\bBearer[ \t]+[A-Za-z0-9._~+/-]{16,}={0,2}', re.IGNORECASE)
 PRIVATE_KEY = re.compile(rb'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----')
+TEXT_CREDENTIAL_KEY = re.compile(
+    rb'(?<!\\)"(?:agent[_ -]*token|controller[_ -]*token|access[_ -]*token|refresh[_ -]*token|'
+    rb'id[_ -]*token|client[_ -]*secret|private[_ -]*key|password(?:[_ -]*hash)?|'
+    rb'totp[_ -]*secret|recovery[_ -]*(?:codes|hash)|setup[_ -]*token|idempotency[_ -]*key|credentials|token)"\s*:',
+    re.IGNORECASE)
+JSON_START = re.compile(r'[\[{](?=\s*(?:"|\{|\[|\]|\}|-|[0-9]|true\b|false\b|null\b))')
+MAX_EMBEDDED_ATTEMPTS = 20000
+MAX_EMBEDDED_SCAN_BYTES = 512 * 1024 * 1024
 
 
 def require(condition, message):
@@ -136,6 +144,40 @@ class PrivacyBudget:
         self.bytes = 0
         self.files = 0
         self.json_nodes = 0
+        self.embedded_attempts = 0
+        self.embedded_scan_bytes = 0
+
+    def inspect_text_json(self, raw):
+        # Ordinary CLI logs are not declared JSON. Parse recognizable bounded
+        # JSON values within them, including a report followed by CLI lines.
+        # Raw credential syntax is checked independently, even in malformed text.
+        require(not TEXT_CREDENTIAL_KEY.search(raw), 'Private credential/operational JSON key in text')
+        try:
+            text = raw.decode('utf-8-sig')
+        except UnicodeError:
+            return  # Non-text binaries still passed filename/value/container checks.
+        decoder = json.JSONDecoder(object_pairs_hook=unique_object)
+        position = 0
+        while True:
+            match = JSON_START.search(text, position)
+            if match is None:
+                return
+            start = match.start()
+            window = text[start:start + MAX_JSON_BYTES]
+            self.embedded_attempts += 1
+            self.embedded_scan_bytes += len(window.encode('utf-8'))
+            require(self.embedded_attempts <= MAX_EMBEDDED_ATTEMPTS
+                    and self.embedded_scan_bytes <= MAX_EMBEDDED_SCAN_BYTES,
+                    'Embedded public JSON attempt/scan bound')
+            try:
+                value, end = decoder.raw_decode(window)
+            except json.JSONDecodeError:
+                position = start + 1
+                continue  # E.g. mathematical [0,n] or ordinary [colab] prose.
+            except RecursionError as error:
+                raise ValueError('Embedded public JSON nesting bound') from error
+            self.inspect_json(value)
+            position = start + end
 
     def inspect_json(self, value, depth=0):
         self.json_nodes += 1
@@ -211,13 +253,15 @@ class PrivacyBudget:
                         self.inspect(data, member_name, depth + 1)
             except (zipfile.BadZipFile, RuntimeError, NotImplementedError, OSError) as error:
                 raise ValueError('Malformed/unsupported public archive') from error
-        elif name.casefold().endswith('.json') or raw.lstrip(b'\xef\xbb\xbf \t\r\n').startswith((b'{', b'[')):
+        elif name.casefold().endswith('.json'):
             require(len(raw) <= MAX_JSON_BYTES, 'Public JSON exceeds bounded size')
             try:
                 value = json.loads(raw.decode('utf-8-sig'), object_pairs_hook=unique_object)
             except (UnicodeError, json.JSONDecodeError, RecursionError) as error:
                 raise ValueError('Malformed or excessively nested public JSON') from error
             self.inspect_json(value)
+        else:
+            self.inspect_text_json(raw)
 
 
 def scan_files(actual):
