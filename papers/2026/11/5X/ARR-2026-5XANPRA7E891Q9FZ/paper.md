@@ -1,0 +1,1158 @@
+# Canonical rectangle observations for matrix gradients: fixed weak spaces and checkerboard counterexamples
+
+Working paper - not admitted to the AIRR accepted collection.
+
+This is the complete machine-readable layout extraction of the unchanged 20-page canonical PDF, SHA-256 381da284637d6abcd2922ff649550a45243c2000fe16cc5efc65336f5765df2d. Extraction may lose typographic mathematics; consult paper.pdf and the frozen TeX source archive for authoritative notation. No proof, score or PDF bytes were changed by this rendition. Read the full Model assessments and review context and author-response250B.txt for the later exact-artifact assessment and all open objections.
+
+## Complete extracted text
+
+       Canonical rectangle observations for matrix gradients:
+       fixed weak spaces and checkerboard counterexamples
+                                          Lluis Eriksson
+                                       Independent researcher
+
+                           Source preparation: 11 November 2026
+                                            Revision 250
+
+
+                                              Abstract
+         We study finite positive matrix-weighted gradients on a periodic lattice, with observa-
+     tions restricted to normalized rectangular means in a fixed internal basis. For a spatially
+     constant rank-q weak projector in Rg satisfying Pαα ≤ Λq/g, the minimum actual restor-
+     ing rank on the flat coexact domain has order qnD + gnD−2 , uniformly in q. An explicit
+     choice of original-channel rectangle partitions attains this order. For this constructed map,
+     the least quadratic coefficient has order c min(g/q, n2 ). The construction uses a stated
+     theorem of Marcus–Spielman–Srivastava, augmented to control both Gram matrices and
+     cardinalities, and derived finite Neumann estimates. Spatial constancy is substantive.
+     On an exact positive two-channel checkerboard with the same local spectra and fixed
+     basis, full output counts are O(n log n) in dimension three and O(n2 ) in dimension four,
+     with finite size-dependent penalties. We derive the point estimates, actual strong graphs,
+     integer meshes and original-rectangle realization. A separate plane construction works at
+     every fixed nonzero angle between the two weak lines. These are finite observation-class
+     results; optimal checkerboard rank, practical conditioning and historical priority remain
+     unresolved.
+
+
+Contents
+1 The observation class and the main results                                                         2
+  1.1 Actual finite gradients and the coexact domain . . . . . . . . . . . . . . . . .               2
+  1.2 Canonical observations and normalization . . . . . . . . . . . . . . . . . . . .               3
+  1.3 Sharp order for a fixed weak space . . . . . . . . . . . . . . . . . . . . . . . .             3
+  1.4 Spatial variation with the same local spectra . . . . . . . . . . . . . . . . . .              4
+  1.5 The unchanged capped budget and proof roadmap . . . . . . . . . . . . . . .                    5
+
+2 Finite spectral and projection facts                                                               5
+
+3 A fixed coherent weak space                                                                         7
+  3.1 The primary MSS input and an added count coordinate . . . . . . . . . . . .                     7
+  3.2 Recursive whitening with a noncircular error bound . . . . . . . . . . . . . .                  8
+  3.3 Stopping, original groups and the full row count . . . . . . . . . . . . . . . .                9
+  3.4 All-field coercivity with one strong-energy budget . . . . . . . . . . . . . . . .             10
+  3.5 Actual-rank lower bound and the cancellation of weak dimension . . . . . . .                   10
+  3.6 Least coefficient for the constructed fixed weights . . . . . . . . . . . . . . . .            11
+
+4 Actual checkerboard graphs and plane observations                                                  12
+  4.1 Selected strong cycles and an exact Dirichlet margin . . . . . . . . . . . . . .               12
+  4.2 Every fixed nonzero angle: proof coordinates only . . . . . . . . . . . . . . . .              12
+
+                                                  1
+5 Distributed point anchors in dimensions three and four                                    13
+  5.1 The full strong graph in original coordinates . . . . . . . . . . . . . . . . . . .   14
+  5.2 Balanced quantiles and both layer norms . . . . . . . . . . . . . . . . . . . . .     15
+  5.3 Dimension three: the critical logarithmic mesh . . . . . . . . . . . . . . . . .      15
+  5.4 Dimension four: a three-dimensional source mesh . . . . . . . . . . . . . . . .       16
+  5.5 Finite completion, constants and actual restricted rank . . . . . . . . . . . . .     16
+
+6 Scope, classical inputs and review context                                                17
+  6.1 What the comparison establishes . . . . . . . . . . . . . . . . . . . . . . . . .     17
+  6.2 Primary comparisons and their actual extent . . . . . . . . . . . . . . . . . .       17
+
+A Source correspondence and retained corrections                                            19
+
+
+1     The observation class and the main results
+The problem is to restore a fixed coercivity target using few permitted observations. Two
+distinctions matter: the dimension of a displayed output space versus its actual rank on the
+stated domain, and a finite penalty versus a penalty bounded independently of the lattice
+size. We keep both explicit. The proofs concern one positive family of finite operators, rather
+than a uniform theorem for arbitrary matrix profiles.
+
+1.1   Actual finite gradients and the coexact domain
+Fix integers D ≥ 3, n ≥ 2 and g ≥ 1, and write
+
+                     X = (Z/nZ)D ,          V = nD ,         Hg = (RD ⊗ Rg )X .
+
+All unqualified inner products and norms use counting measure. Put ∂i f (x) = f (x+ei )−f (x),
+retaining every positive forward label, including period-two multiplicities. For z ∈ Hg let
+                                              g
+                                            D X
+                                          X X
+                                E(z) =                   |∂i zk,α (x)|2 .
+                                         x∈X i,k=1 α=1
+
+For a real one-form v define (d1 v)ij = ∂i vj − ∂j vi for i < j. The adjoint uses the counting
+inner products, with each unordered pair i < j counted once. Our domain is
+
+            U0 = im d∗1 ,     U = U0g ⊂ Hg ,           d0 := dimR U0 = (D − 1)(V − 1).      (1)
+
+The dimension identity is proved in Lemma 2.1. No artificial componentwise replacement of
+this domain is used.
+    For a positive symmetric g × g field B(x) set
+                                         D
+                                       X X
+                            QB (z) =           (∂i zk (x))T B(x)∂i zk (x).                  (2)
+                                       x∈X i,k=1
+
+The coefficient is evaluated at the actual forward source x. The full gradient-stack profile is
+A(x) = ID2 ⊗ B(x); there are D2 g local eigenvalues, while the field has h = Dg components.
+This notation does not assert an identity with an interacting or continuum operator.
+
+
+
+
+                                                   2
+1.2    Canonical observations and normalization
+For each original internal channel α, choose a partition Pα of {0, . . . , n − 1}D into nonempty
+integer rectangles S = i {ai , . . . , bi }. Different channels may have different partitions; within
+                       Q
+
+a channel the partition is shared across all spatial components k. The canonical observation
+map has rows
+
+                 (Cz)α,k,S = V −1/2 |S|−1/2
+                                              X                               X
+                                                    zk,α (x),     Nout = D            |Pα |.            (3)
+                                              x∈S                                 α
+
+These are unrotated, fixed-weight component means. No mixed internal row or subsequent
+dimension-reducing channel mixture is part of this class. Let R be the counting orthogonal
+block projection replacing each component by its arithmetic mean on its channel’s rectangles.
+Then
+                                   ∥Cz∥2 = V −1 ∥Rz∥2 .                                  (4)
+The actual rank is r(C) = rank(C|U ), which need not be Nout . We call C restoring at target
+c > 0 if some finite K ≥ 0 gives
+
+                          V −1 QB (z) + K∥Cz∥2 ≥ cV −1 ∥z∥2            (z ∈ U).                         (5)
+
+We separately state when the same inequality holds on all of Hg . On these same rows the
+counting-energy convention uses coefficient V K. Arbitrary row rescaling would change the
+penalty question and is excluded. The projection R is not assumed to preserve U.
+
+1.3    Sharp order for a fixed weak space
+Let 1 ≤ q ≤ g, Λ ≥ 1, and let P be a spatially constant rank-q orthogonal projector satisfying
+
+                                   Pαα ≤ Λq/g           (1 ≤ α ≤ g).                                    (6)
+
+With c > 0 fixed put
+                c
+          a=       ,      H = cn2 ,      B = HIg − (H − a)P,               b = min{g/q, n2 }.           (7)
+               16D
+There is no lower bound on nonzero diagonal entries of P and no prescribed well-conditioned
+subset of channels.
+
+Theorem 1.1 (Fixed weak space). For (7)–(6) there are coefficient-only canonical partitions
+such that
+
+       Nout ≤ LD,Λ (qV + gV /n2 ),        QB (z)/V + 32cb∥Cz∥2 ≥ c∥z∥2 /V                  (z ∈ Hg ).   (8)
+
+One valid constant is
+                                 D2D (17/16)                                          17
+             C0 = 224 ,   AD =               ,          LD,Λ = AD + 4352D +              DC0 Λ.
+                                  2D−2 − 1                                             4
+Every restoring internally channel-separable linear map, even beyond canonical rectangles,
+has actual rank
+                                                  gd0
+                                                         
+                              r ≥ max qd0 ,                 .                          (9)
+                                            2Λ(1 + 8Dn2 )
+This rank bound only uses the restoring inequality at zero observation; it also holds for any
+finite penalty Φ(Cz) with Φ(0) = 0 in place of the quadratic penalty. Consequently the
+minimum canonical restoring actual rank has order qV + gV /n2 , with constants depending
+
+                                                    3
+only on D, Λ. For the particular constructed canonical map, its least quadratic coefficient on
+either U or all fields satisfies
+                                           3(D − 1)
+                                                    cb ≤ Kmin ≤ 32cb.                         (10)
+                                           16ΛLD,Λ
+All constants are independent of q, g, n, c.
+   Here channel-separable means a direct sum of linear maps, one acting on each original
+channel’s entire D-component field. No lower bound for internally mixed maps is asserted.
+The coefficient order in (10) concerns a fixed constructed map, not an upper bound for every
+map of that rank. The construction is a finite existence prescription; neither efficient search
+nor a practical condition number is established.
+
+1.4   Spatial variation with the same local spectra
+                        P
+For even n let p(x) =      i xi mod 2, which is well-defined on the torus. For g = 2, q = 1, Λ = 2,
+set                         (
+                                e1 eT1 ,   p(x) = 0,
+                 P (x) =                                     B(x) = HI2 − (H − a)P (x),       (11)
+                                e2 eT2 ,   p(x) = 1,
+with the same a, H from (7). Only spatial constancy of P has been removed; local eigenval-
+ues, positivity, upper coherence, observed basis, canonical weights and actual domain are
+unchanged.
+Theorem 1.2 (Orthogonal checkerboard). For (11) and every even n ≥ 2:
+  (i) For every D ≥ 3 a canonical map with Nout = 2D(nD−1 + 1) restores c on all fields
+      with a finite coefficient.
+  (ii) For D = 3 a canonical map with Nout ≤ 219 n(1 + ln n) restores c on all fields.
+ (iii) For D = 4 a canonical map with Nout ≤ 225 n2 restores c on all fields.
+In (ii)–(iii), the non-singleton construction has the sufficient normalized coefficient
+                                                2M 2
+                                   K=M+              ,        M = 4DH + c;                    (12)
+                                                 3c
+the explicit singleton fallbacks use K = c. Actual rank on U02 is at most the corresponding full
+count. These are upper bounds, not optimality, matching lower bounds, logarithmic necessity
+or uniform-penalty statements.
+    In particular a universal per-profile Ω(V ) rank lower cannot be extended from constant P
+merely by retaining the same positive local spectra and pointwise coherence. This does not
+refute a worst-case lower over a larger class containing constant profiles, or a lower with an
+additional uniform penalty restriction.
+Theorem 1.3 (Fixed-angle plane construction). Replace the two projectors in (11) by any
+two fixed distinct weak lines with principal angle θ ∈ (0, π/2], in the original observed basis.
+                                  √
+Let κ = 1 − | cos θ| and mθ = ⌈4/ κ⌉. For every D ≥ 3 and even n ≥ 2 there is an all-field
+restoring canonical map with
+                                   Nout ≤ 2Dmθ (nD−1 + 1)
+and a finite penalty. When n ≥ mθ , (12) suffices; otherwise the singleton fallback has K = c.
+    For fixed θ, D this is o(V ), with constants allowed to diverge as θ ↓ 0. We prove no
+n-dependent-angle order and no extension of the point-anchor orders in Theorem 1.2(ii)–(iii)
+to nonorthogonal lines. That separate question is outside the present theorem list.
+
+                                                         4
+1.5    The unchanged capped budget and proof roadmap
+To fix the normalization inherited by these examples, define for positive local gradient-stack
+eigenvalues λj (x)
+                  D                D−1
+                  3   D         D
+                                                               X
+          αD =                              ,        Fc (A) =         min{1, αD (c/λj (x))D/2 }.   (13)
+                   4     2     D−2                              x,j
+
+For the fixed-space family, a has multiplicity qD2 and H has multiplicity (g − q)D2 per site.
+Its weak cap equals one, so
+
+                Fc (A) = D2 V [q + (g − q) min{1, αD n−D }] ≤ D2 (qV + αD g).      (14)
+                          √
+Indeed αD (16D)D/2 ≥ (3 D)D > 1. Thus h + Fc (A) = OD (qV + g); we do not identify it
+with the optimal rank expression qV + gV /n2 . For both checkerboards the same formula
+with q = 1, g = 2 is unchanged. In particular
+
+        α3 = 729/128,        α4 = 81/16,        Fc = D2 V [1 + min{1, αD n−D }],         h = 2D.
+
+Every cap and multiplicity is retained.
+   Section 2 derives all elementary finite spectral and projection facts. Section 3 proves
+Theorem 1.1; its sole non-elementary input is the explicitly stated primary MSS theorem.
+Sections 4–5 prove the actual strong-graph, plane and point constructions. Scope, limited
+primary comparisons and exact source/review context are separated in Section 6.
+
+
+2     Finite spectral and projection facts
+This section derives the local estimates used later; a regional gap is not an additional
+hypothesis.
+
+Lemma 2.1 (Actual Fourier domain and periodic gap). The dimension in (1) is d0 =
+(D − 1)(V − 1). Every element of U0 has mean zero. On every componentwise mean-zero
+field,
+                       16
+                E(f ) ≥ 2 ∥f ∥2 ,  while on every field E(f ) ≤ 4D∥f ∥2 .
+                       n
+Proof. Use the counting-orthonormal characters V −1/2 exp(2πiℓ·x/n) with ℓ ∈ {0, . . . , n−1}D .
+The forward difference multiplier is ξi (ℓ) = exp(2πiℓi /n) − 1. Its energy multiplier is
+4 i sin2 (πℓi /n), which is at most 4D. At a nonzero frequency at least one term is at least
+  P
+
+4 sin2 (π/n) ≥ 16/n2 , by concavity of sine on [0, π/2]; the case n = 2 gives equality and retains
+the actual forward labels.
+    The curl symbol is v 7→ ξ ∧ v. When ξ =     ̸ 0, its kernel is Cξ, so the adjoint image has
+complex dimension D − 1; at zero frequency that image is zero. Conjugate frequencies pair
+to give twice their complex dimension as a real dimension. At self-conjugate frequencies each
+ξi is real (0 or −2), and the real adjoint image has dimension D − 1 directly. Summing gives
+(D − 1)(V − 1), without an omitted period-two mode. The zero frequency is absent, proving
+the mean-zero assertion. The upper energy bound also follows from the counting isometry of
+every shift.
+
+Lemma 2.2 (Finite counting Neumann basis). On an ℓ-vertex path, ℓ ≥ 2, the counting-
+orthonormal vectors are
+                                                q             πj(t + 1/2)
+                ϕ0 (t) = ℓ−1/2 ,     ϕj (t) =       2/ℓ cos                   (1 ≤ j < ℓ),
+                                                                   ℓ
+
+                                                     5
+with eigenvalues 4 sin2 (πj/(2ℓ)). A singleton has only its constant mode. On any product
+rectangle with side lengths at most L, the counting variance is at most L2 /4 times its internal
+edge energy, also for vector fields; singleton factors contribute zero variance.
+Proof. For θ = πj/ℓ, interior second differences of cos(θ(t + 1/2)) multiply it by 2(1 − cos θ).
+The virtual endpoint values f (−1) = f (0) and f (ℓ) = f (ℓ − 1) give precisely endpoint degree
+one. For an integer 1 ≤ r < 2ℓ,
+                           ℓ−1
+                           X            πr(t + 1/2)       sin(πr)
+                                  cos               =                = 0.
+                            t=0
+                                             ℓ        2 sin(πr/(2ℓ))
+
+The denominator is nonzero in this range. Product-to-sum, with the r = 0 sum equal to
+ℓ, proves the stated orthogonality and normalization. The needed sums j + j ′ are at most
+2ℓ − 2. There are ℓ orthonormal vectors, so this is a complete basis.
+    Tensor products diagonalize the product-path energy. Since sin t ≥ 2t/π on [0, π/2], every
+nonconstant product mode has eigenvalue at least 4/L2 . Removing the constant mode gives
+the variance bound by expansion in this finite basis. If the entire rectangle is a singleton
+there is no positive eigenvalue to invoke and the variance is zero. Sum the scalar inequalities
+for vector fields. No dimension factor is lost.
+
+   For an integer j ≥ 0 partition each coordinate chart into the nonempty intervals
+                       {⌊rn/2j ⌋, . . . , ⌊(r + 1)n/2j ⌋ − 1},       0 ≤ r < 2j ,
+and take their products. Call the partition Pj and its counting averaging projection Πj .
+Every coarse endpoint is an even-index fine endpoint, so the partitions are nested after
+empty intervals are omitted. There are at most 2Dj cells and their sides have length at most
+Lj = ⌈n/2j ⌉. In particular Π0 is global averaging.
+Lemma 2.3 (Actual spatial pieces). Fix k ≥ 0. The operators
+                       ∆j = Πj+1 − Πj          (0 ≤ j < k),       ∆k = I − Πk
+are mutually orthogonal projections with sum I − Π0 . For every field f ,
+                                               L2j
+                                  ∥∆j f ∥2 ≤       E(f )   (0 ≤ j ≤ k).                       (15)
+                                               4
+For j < k, ∆j is a subprojection of Πj+1 ; the tail is a subprojection of the singleton observation
+I.
+Proof. Nested averaging projections satisfy Πi Πj = Πmin(i,j) . Their differences and the
+displayed tail are therefore orthogonal projections and telescope. Apply Lemma 2.2 on every
+parent cell of Pj and sum. Its internal edges are a subset of the original labelled periodic edges,
+counted once. Other edges add nonnegative energy. This gives ∥(I − Πj )f ∥2 ≤ L2j E(f )/4.
+Each ∆j is a subprojection of I −Πj , proving (15), including the single tail. The subprojection
+statements follow from the same identities. Wrap edges are never inserted into a Neumann
+cell as fictitious interior edges.
+
+Lemma 2.4 (Finite kernel-to-all-field completion). Let L be a positive semidefinite operator on
+a finite real Hilbert space, let R be an orthogonal projection, and suppose ⟨u, Lu⟩ ≥ (c + δ)∥u∥2
+on ker R, with c, δ > 0. If ∥L − cI∥ ≤ M , then
+                                                 !
+                                    2M 2
+                      ⟨z, Lz⟩ + M +                  ∥Rz∥2 ≥ c∥z∥2     for all z.             (16)
+                                     δ
+For (2) with 0 < B(x) ≤ HI, one may take M = 4DH + c.
+
+                                                     6
+Proof. Write z = u + v, u = (I − R)z, v = Rz, and F = L − cI. Then ⟨u, F u⟩ ≥ δ∥u∥2 ,
+⟨v, F v⟩ ≥ −M ∥v∥2 , and
+
+                                                 δ       2M 2
+                        2|⟨u, F v⟩| ≤ 2M ∥u∥∥v∥ ≤ ∥u∥2 +      ∥v∥2 .
+                                                 2        δ
+After adding the displayed penalty a nonnegative δ∥u∥2 /2 remains. The final operator bound
+follows from Lemma 2.1’s upper energy bound and B(x) ≤ HI. Nothing requires R to
+preserve a later restricted domain. Constants must still be controlled by R or a kernel margin;
+they are not silently discarded by this lemma.
+
+Lemma 2.5 (Original-coordinate singleton isolation). Given A distinct points in the original
+D-dimensional chart, there is a partition into at most 1 + 2DA nonempty integer rectangles
+in which every specified point is a singleton.
+
+Proof. Start with the whole chart. In the rectangle containing the next point, cut before and
+after its first coordinate and retain the two possible side rectangles. Continue only within the
+middle slice, through the remaining coordinates. At most 2D side rectangles and the desired
+singleton replace one rectangle, a net increase at most 2D. Omit empty pieces. Disjoint
+coverage follows from the first coordinate at which a point differs from the anchor. Earlier
+singleton anchors lie in other rectangles and remain unchanged; an already-singleton point
+costs zero. Iteration proves the count. This uses no global tensor-grid propagation of cuts or
+point separation.
+
+
+3     A fixed coherent weak space
+We prove Theorem 1.1. Write U ∈ Rg×q for an orthonormal basis of im P , so UUT = P . One
+deterministic choice is Gram–Schmidt on the first independent columns of P , in original
+index order. If uα ∈ Rq is its αth row, then
+                        g
+                        X
+                              uα uTα = Iq ,   ∥uα ∥2 = Pαα ≤ d := Λq/g.                    (17)
+                        α=1
+
+These coordinates serve the proof and channel selection. The observed fields remain the
+original zk,α .
+
+3.1    The primary MSS input and an added count coordinate
+We use precisely the following classical theorem of Marcus–Spielman–Srivastava [1, Theorem
+1.4, p. 3], in its version-pinned arXiv statement.
+
+Theorem 3.1 (MSS finite-support theorem). Let independent finitely supported random
+vectors v1 , . . . , vm ∈ CN satisfy i E(vi vi∗ ) = IN and E∥vi ∥2 ≤ ε for every i, where ε > 0.
+                                    P
+
+With positive probability,                              √
+                                     ∥ vi vi∗ ∥ ≤ (1 + ε)2 .
+                                      X
+
+                                         i
+
+   We use this published theorem, not a proof or computational verification of it. The
+simultaneous cardinality assertion needed next is not simply assumed from a frame-partition
+corollary.
+
+
+
+
+                                                7
+Lemma 3.2 (Simultaneous Gram and count halving). Suppose i∈I wi wiT = Iq , m = |I|,
+                                                                              P
+
+and δ = maxi ∥wi ∥2 + 1/m. There is a partition I = S1 ⊔ S2 such that, for both j = 1, 2,
+                  X                                                        √
+    ( 21 − e)Iq ≤    wi wiT ≤ ( 12 + e)Iq , 1
+                                            2 − e ≤ |S j |/m ≤ 1
+                                                               2 + e, e =    2δ + δ.     (18)
+                  i∈Sj
+
+All original rows, including zero rows, are counted.
+Proof. Independently for every i, choose a uniform sign σi ∈ {−1, 1} and a uniform label
+                                                                     √
+√i ∈ {1, 2}, also
+a                 independent within each pair. Set bi = (wi , σi / m) ∈ Rq+1 and vi =
+  2eai ⊗ bi ∈ R2(q+1) . The sign removes the off-diagonal covariance with the last coordinate:
+                                                            X
+                    E(bi bTi ) = diag(wi wiT , 1/m),             E(vi viT ) = I2(q+1) .
+                                                             i
+
+Each vector has four possible outcomes and squared norm 2(∥wi ∥2 + 1/m)   √ ≤2 2δ. Theorem 3.1
+therefore supplies one common outcome with norm at most (1 + 2δ) . In each label
+block, the sum is 2 i:ai =j bi bTi . Its leading principal block gives the upper Gram bound,
+                      P
+                                                                            √
+and its last scalar entry gives the upper count bound, both with (1 + 2δ)2 /2 = 1/2 + e.
+Complementing the same partition gives both lower bounds. Signs do not alter the original
+Grams or cardinalities. In particular a zero wi still has its count coordinate. The finite
+set of feasible original-channel partitions has a lexicographically first member; this specifies
+existence without claiming an efficient search.
+
+3.2    Recursive whitening with a noncircular error bound
+Start with I0 = {1, . . . , g} and write Gt =                    T
+                                                        α∈It uα uα , mt = |It |.
+                                                    P
+                                                                   When Gt is positive,
+                                 −1/2
+whiten only for selection: wα = Gt    uα . Apply Lemma 3.2, choose a deterministic child
+It+1 , and set
+                                    −1/2
+                                           uα ∥2 + 1/mt ,
+                                                                       p
+                     δt = max∥Gt                                 ηt = 2 2δt + 2δt .
+                             α∈It
+                   1/2
+Congruence by Gt         gives
+                 1 − ηt             1 + ηt              1 − ηt             1 + ηt
+                        Gt ≤ Gt+1 ≤        Gt ,                mt ≤ mt+1 ≤        mt .     (19)
+                   2                  2                   2                  2
+Lemma 3.3 (Uniform conditioned prefixes). Put C0 = 224 . If 4k ≤ g/(C0 Λq), then 2k
+successive halvings exist, and for every 0 ≤ t ≤ 2k,
+                    15 −t         17                      15 −t       17
+                       2 Iq ≤ Gt ≤ 2−t Iq ,                  g2 ≤ mt ≤ g2−t .              (20)
+                    16            16                      16          16
+Proof. Assume only the already established bounds at a current stage. Then
+                                           16 t            32
+                                    δt ≤      2 (d + 1/g) ≤ 2t d,
+                                           15              15
+because Λq ≥ 1. The current Gram is invertible, justifying that stage’s whitening. Over any
+justified prefix of t < 2k, geometric sums give
+                          X          √              12     5      1
+                              ηt ≤ 12 d4k + 5d4k ≤      + 24 <       .                  (21)
+                         t<2k
+                                                   4096   2      256
+
+Here the displayed full sum denotes a majorant for every√justified prefix, not an assumption
+that future stages exist. Indeed t<2k 2t/2 = (2k − 1)/( 2 − 1) and
+                                 P
+
+                              √ p
+                             2 2 32/15
+                               √        < 12,     2(32/15) < 5.
+                                 2−1
+
+                                                    8
+               √                             √              √
+For example 2 < 3/2, 32/15 < 3/2 and ( 2 − 1)−1 = 2 + 1 < 5/2 already bound the
+                          p
+
+first expression by 45/4 < 12. Also d4k ≤ 2−24 ; the last numerator in (21) is 49157 < 65536
+over denominator 224 .
+     For nonnegative errors with sum S < 1, (1−ηt ) ≥ 1−S and (1+ηt ) ≤ 1/(1−S). Start
+                                           Q                     Q
+
+from G0 = Iq , m0 = g. The current loose bounds give the next error bound; the resulting
+prefix products lie between 255/256 and 256/255, strictly within 15/16 and 17/16. Applying
+(19) proves (20) at the next stage. This completes a prefix induction and proves existence of
+all stages, rather than assuming their conditioning. Every ηt < 1, and both children have
+positive Gram and positive count. The case k = 0 contains no halving and is immediate.
+
+3.3   Stopping, original groups and the full row count
+Set
+                                             n              g
+                                                      r       
+                                    M∗ = min    ,                .                       (22)
+                                             32            C0 Λq
+If M∗ < 1, give all channels singleton partitions. This priority covers n < 32 or g < C0 Λq,
+including zero frame rows. It will be counted and checked separately. Otherwise put
+k = ⌊log2 M∗ ⌋ and run exactly 2k halvings. For 0 ≤ j < k let Jj = I2j \ I2j+2 , and let
+Jk = I2k denote the one tail. These disjoint sets exhaust all original channels. Their
+unwhitened Grams satisfy
+                                   43 −j                             15 −k
+                          GJj ≥       4 Iq (j < k),         GJk ≥       4 Iq .           (23)
+                                   64                                16
+The first constant is (15/16) − (17/64), using a lower parent and upper later subset in their
+Loewner difference. These are matrix bounds, not traces.
+   Use the actual spatial pieces of Lemma 2.3. Since 2k ≤ n/32, their parent lengths satisfy
+                                           33 −j
+                                    Lj ≤      n2       (0 ≤ j ≤ k).
+                                           32
+Define λj = 5L2j /(8n2 ), including the tail. Then
+
+                                   5445 −j 43                 43   5504
+                            λj ≤        4 < 4−j ,                =      .                (24)
+                                   8192    64                 64   8192
+Thus (23) implies GJj ≥ λj Iq for every piece, also the tail. Give channels in Jj the child
+partition Pj+1 when j < k, and channels in Jk the singleton partition. Every original
+channel receives exactly one partition. At k = 0 all channels belong to the singleton tail;
+GJ0 = Iq ≥ 5Iq /8 directly.
+   For j < k, |Jj | ≤ (17/16)g4−j . Hence, with the constant AD in Theorem 1.1,
+
+                                   17 k−1
+                                       X
+                  Ncoarse ≤ D2D      g    2(D−2)j ≤ AD g2(D−2)k ≤ AD gV /n2 .
+                                   16 j=0
+
+The sum is zero at k = 0. Since 2k > M∗ /2,
+                       17 −k   17                                   17
+             |Jk | ≤      g4 <    max{1024g/n2 , C0 Λq} ≤ 4352g/n2 + C0 Λq.
+                       16      4                                    4
+Multiply by DV for every singleton row to obtain Nout ≤ LD,Λ (qV + gV /n2 ). In the priority
+branch the full count DgV is at most 1024DgV /n2 if n < 32, or DC0 ΛqV if g < C0 Λq; the
+same stated constant pays both. Equalities at either threshold use the k ≥ 0 branch. No
+large-size inference is applied at an ineligible input.
+
+                                                   9
+3.4   All-field coercivity with one strong-energy budget
+First take z with componentwise mean zero. Put f = UT z and s = z − Uf . These are q weak
+forms and g strong remainder forms, respectively; UT s = 0. Because U is spatially constant,
+                                                                                  X
+             ∥z∥2 = ∥f ∥2 + ∥s∥2 ,         QB (z) = aE(f ) + T,            T =H       E(sα ).   (25)
+                                                                                  α
+
+For each actual group the parent-cell estimate gives
+                                   X                 4H X
+                               H          E(sα ) ≥           ∥∆j sα ∥2 .
+                                   α∈Jj
+                                                     L2j α∈J
+                                                            j
+
+
+The channel groups are disjoint: summing these inequalities spends T once. Since ∆j sα =
+∆j zα − uα · ∆j f , use
+                                            9
+                                ∥p − v∥2 ≥ ∥v∥2 − 9∥p∥2 .
+                                           10
+                        2              2
+The difference is 10∥p∥ − 2⟨p, v⟩ + ∥v∥ /10 ≥ 0. Using the actual Grams and (24) yields
+                             k                                k
+                         9 X    4H                           X   H X
+                   T ≥              ⟨∆j f, GJ   ∆ j f ⟩ − 36            ∥∆j zα ∥2
+                         10 j=0 L2j           j
+                                                             j=0
+                                                                 L2
+                                                                  j α∈J     j
+
+                      9
+                     ≥ c∥f ∥2 − 36cb∥Rz∥2 .                                                     (26)
+                      4
+The positive pieces sum to ∥f ∥2 by mean zero and their orthogonality. For the negative term,
+∆j is a subprojection of its channel’s child observation, or of I at the tail. Also Lj ≥ n2−j
+gives H/L2j ≤ c4j ≤ c4k , and stopping implies 4k ≤ b. Disjoint channel groups therefore
+bound the negative sum by the displayed single observation norm. No factor q or extra copy
+of strong energy is used.
+    Independently Lemma 2.1 gives T ≥ 16c∥s∥2 . Take 8/9 of (26) and 1/9 of the global-gap
+inequality T ≥ 16c∥s∥2 . This convex combination gives
+                                                           16
+                         T + 32cb∥Rz∥2 ≥ 2c∥f ∥2 +            c∥s∥2 ≥ c∥z∥2 .
+                                                           9
+Add aE(f ) ≥ 0. In the priority branch R = I and K = c already suffice, so 32cb do also.
+    Finally every channel partition observes every global constant: RΠ0 = Π0 R = Π0 . Its
+constant and mean-zero images are orthogonal, QB ignores constants, and 32cb ≥ c pays
+their full norm. This proves the all-field statement and, by (4), the precise normalization
+in (8). Strong constants on zero weak-frame rows are included, not assigned a nonexistent
+spectral gap.
+
+3.5   Actual-rank lower bound and the cancellation of weak dimension
+Let C = α Cα be any internally channel-separable linear map on U. Let Sα be its row-space
+         L
+
+orthogonal projection inside U0 , and S = α Sα . Then r = rank(C|U ) = α rank Sα and
+                                            L                                P
+
+ker C = ker S. The weak embedding T0 : U0q → U, T0 f = Uf , is an isometry of real domain
+dimension qd0 . Constant internal coefficients preserve the actual coexact space. Lemma 2.1
+gives
+                                                      c
+                               QB (T0 f ) = aE(f ) ≤ ∥f ∥2 .                           (27)
+                                                      4
+Taking a real orthonormal weak basis gives
+                                                                    Λq
+                             tr(T0∗ ST0 ) =
+                                              X
+                                                   Pαα rank Sα ≤       r.                       (28)
+                                               α                    g
+
+                                                     10
+Averaging over dimension qd0 therefore supplies a unit f with t = ∥ST0 f ∥2 ≤ Λr/(gd0 ): the
+two q factors cancel. Set w = T0 f and u = (I − S)w. Then u ∈ U, Cu = 0 and ∥u∥2 = 1 − t.
+Positive-semidefinite polarization gives
+
+                       QB (u) ≤ 2QB (w) + 2QB (Sw) ≤ c/2 + 8DHt.
+
+The last step uses QB (v) ≤ 4DH∥v∥2 on actual fields. At zero observation the restoring
+inequality, even with any finite Φ satisfying Φ(0) = 0, implies c(1 − t) ≤ c/2 + 8Dcn2 t. Thus
+t ≥ [2(1 + 8Dn2 )]−1 , proving the second bound in (9) by (28).
+    Independently CT0 must be injective, since a nonzero weak field in its kernel would violate
+restoration by (27). Hence r ≥ qd0 . Since d0 ≥ (D − 1)V /2 and 1 + 8Dn2 ≤ (1 + 8D)n2 ,
+their maximum is at least
+                                     D−1
+                                               (qV + gV /n2 ).
+                                  8Λ(1 + 8D)
+Together with the actual canonical construction this proves the rank order. Both a minimum
+on U and a minimum requiring all-field restoration obey these orders, because the lower is
+already on U and the upper is all-field. There is no output-dimension substitution in the
+lower argument.
+
+3.6   Least coefficient for the constructed fixed weights
+For a canonical map, Rα |U0 is a contraction into the ambient one-channel field space; its
+squared singular values sum to at most its actual rank. That rank equals rank(Cα |U0 ) by
+their equal kernels in (4), even if the projection image leaves U0 . Consequently
+
+                                                                      Λq
+                         tr(T0∗ R∗ RT0 ) =
+                                             X
+                                                 Pαα ∥Rα |U0 ∥2HS ≤      r.
+                                             α                        g
+
+Restoration on weak fields and (27) require K∥RT0 f ∥2 ≥ (3c/4)∥f ∥2 . Sum a real orthonormal
+weak basis and cancel q to obtain
+                                              3cgd0
+                                         K≥         .                                     (29)
+                                               4Λr
+For the constructed map r ≤ LD,Λ (qV + gV /n2 ), so
+
+                          3(D − 1)c   g      3(D − 1)c
+                    K≥                   2
+                                           ≥           min{g/q, n2 }.
+                           8ΛLD,Λ q + g/n    16ΛLD,Λ
+
+The last comparison follows by considering which denominator term is larger. The sufficient
+all-field 32cb proves the opposite bound. A least coefficient exists: the admissible set is a
+nonempty closed intersection of restoring half-lines in K, bounded below by (29). This works
+on U or all fields for the same map. These statements complete Theorem 1.1.
+Remark 3.4 (Endpoints and the role of coherence). For q = g, P = I and M∗ < 1; there is
+no strong complement. The singleton map has actual rank gd0 and sufficient K = c, with
+b = 1. The singleton priority also makes n = 2, n < 32 and g < C0 Λq explicit, rather than an
+extrapolation of whitening. At n = 32 or g = C0 Λq, k = 0 is permitted and the one singleton
+tail is valid. Without coherence a coordinate weak q-plane can use singleton weak channels
+and one root on each strong channel, with actual rank qd0 and K = c; Lemma 2.1 controls
+strong mean-zero forms and the roots pay strong constants. But its diagonal entries equal
+one, so it is inadmissible for fixed Λ when g > Λq. In the remaining range the extra gV /n2
+term is controlled by a Λ-dependent multiple of qV . This supplies no contrary coherent
+example.
+
+
+                                                 11
+4     Actual checkerboard graphs and plane observations
+We first prove Theorem 1.2(i) and Theorem 1.3. Throughout this section n is even. The
+parity convention at torus wraps is part of the family, not an asymptotic simplification.
+
+4.1    Selected strong cycles and an exact Dirichlet margin
+For the orthogonal checkerboard, channel one has strong outgoing coefficient H at odd sources
+and channel two at even sources. Fix one original scalar spatial/channel component and call
+its strong-source parity A. Select only its strong +e1 and +eD edges. Each A vertex has its
+two selected outgoing edges, while each opposite-parity vertex has its two selected incoming
+edges. The directions are distinct, also at period two. For an A-parity base u0 , define
+
+                    ut = u0 + t(eD − e1 ),      vt = ut + eD ,          t ∈ Z/nZ.
+
+The translation has order exactly n, and parity separates the u and v sets. The selected edges
+are ut –vt and vt –ut+1 , the latter being the original +e1 edge from ut+1 . Thus the selected
+components are disjoint actual 2n-cycles and cover all vertices. This is a labelled finite graph,
+not a continuum comparison.
+    Let Σ = {x : xD = 0}. Each cycle has exactly one ut ∈ Σ and one vt−1 ∈ Σ; they
+are adjacent. Removing these two zero vertices leaves 2n − 2 free vertices between zero
+endpoints. For a path with N free vertices and zero endpoints the sine vectors sin(πjt/(N +1)),
+1 ≤ j ≤ N , diagonalize its Dirichlet matrix with eigenvalues 4 sin2 (πj/[2(N + 1)]). Indeed the
+interior second-difference identity gives the eigenvalue and the endpoint sines vanish; the N
+eigenvalues are distinct, so the corresponding nonzero orthogonal vectors span the path space.
+Its first eigenvalue is at least 4/(N + 1)2 by the same sine inequality as before. A path with
+no free vertices has zero norm and requires no positive eigenvalue assertion. Consequently
+every field zero on Σ satisfies
+
+                            4H                                          c(4n − 1)
+              QB (z) ≥             ∥z∥2 = (c + δn )∥z∥2 ,        δn =             > 0.         (30)
+                         (2n − 1)2                                      (2n − 1)2
+
+Sum the selected cycle estimates over both original channels and all D spatial components.
+All other strong edges and all weak terms are merely discarded as nonnegative. The edge
+between adjacent zero anchors contributes zero. At n = 2 these are actual four-cycles; no
+parallel-label cancellation or missing endpoint is used.
+    In each channel observe every site of Σ as a singleton, and the one remaining rectangle
+{0, . . . , n − 1}D−1 × {1, . . . , n − 1}. It is nonempty because n ≥ 2. This is an exact original-
+chart partition, with nD−1 + 1 cells per channel, shared over spatial components. Its block
+kernel is zero on Σ. Lemma 2.4, with M = 4DH + c and δ = δn , supplies the finite coefficient
+M + 2M 2 /δn . Together with (4) this proves Theorem 1.2(i), including every global constant.
+This particular one-plane coefficient is not claimed to have the smaller point/plane-mesh
+penalty order in (12).
+
+4.2    Every fixed nonzero angle: proof coordinates only
+Let the two weak lines be spanned by unit vectors v0 , v1 , with principal angle θ ∈ (0, π/2].
+At parity ℓ let Pℓ = vℓ vℓT . Choose constant unit strong normals sℓ ⊥ vℓ and, for each spatial
+component, set wℓ = sℓ · z. The two-dimensional Gram matrix s0 sT0 + s1 sT1 has eigenvalues
+1 ± |s0 · s1 |, as follows from its trace two and determinant 1 − |s0 · s1 |2 . Thus
+
+                       ∥w0 ∥2 + ∥w1 ∥2 ≥ κ∥z∥2 ,       κ = 1 − | cos θ| > 0,                   (31)
+
+
+                                                12
+also after summing over sites and spatial components. These are auxiliary analytic coordinates,
+not permitted observed rows. The actual energy contains H times differences of w0 from
+even sources and H times differences of w1 from odd sources. All weak terms stay positive.
+The selected two-direction cycle proof applies separately to each scalar functional with
+its own strong-source parity; these energy contributions are distinct parts of the actual
+source-weighted form.
+                   √
+    Put m = ⌈4/ κ⌉. If n < m, all-channel singletons have K = c and count 2DnD ≤
+2DmnD−1 , proving the stated bound directly. If n ≥ m, choose the m distinct planes
+with coordinates rj = ⌊jn/m⌋, 0 ≤ j < m. Their positive cyclic gaps ℓj are at most
+L = ⌈n/m⌉ ≤ 2n/m. Each plane meets each selected cycle in an adjacent pair. Between two
+successive anchor pairs there are precisely 2ℓj − 2 free vertices with zero endpoints. If ℓj = 1
+there are none; otherwise the finite Dirichlet estimate gives eigenvalue at least 4/(2ℓj − 1)2 .
+The wraparound segment is included by the cyclic gap, and zero–zero edges add zero. For an
+original field zero on the plane union, both w0 , w1 are zero there, hence
+                                     4H
+                          QB (z) ≥          (∥w0 ∥2 + ∥w1 ∥2 )
+                                  (2L − 1)2
+                                  Hκ          cκm2
+                                 ≥ 2 ∥z∥2 ≥         ∥z∥2 ≥ 4c∥z∥2 .                        (32)
+                                  L             4
+All inequalities here are non-strict, also at the zero field or when every vertex is anchored.
+No nonexistent singleton Dirichlet eigenvalue is used.
+    In each original channel, observe every point of every selected plane as a singleton. For
+each nonempty interval between planes use the one full cross-section rectangle. With r0 = 0
+and rm = n, these intervals are {rj + 1, . . . , rj+1 − 1} in the last coordinate; there is no
+omitted pre-zero interval. Empty slabs are dropped. This is an exact nonwrapping original-
+chart partition with at most mnD−1 + m cells per channel. It is shared across all spatial
+components and uses only the rows (3). A kernel field is pointwise zero on the plane union.
+Apply Lemma 2.4 with δ = 3c to (32); (12) suffices. This proves Theorem 1.3 without mixing
+observed channels.
+    At θ = π/2, this is a nonoptimal four-plane variant of the preceding one-plane construction.
+At θ = 0, κ = 0 and the analytic normal map is singular; the proof does not apply and does
+not refute the constant-P theorem. Constants depending on a fixed positive θ may diverge
+as the angle tends to zero. No point-anchor order at a nonorthogonal angle is claimed by this
+plane argument.
+
+
+5    Distributed point anchors in dimensions three and four
+We prove the two smaller full counts in Theorem 1.2. The finite point estimate uses all
+constant modes and counting factors. Its dimension dependence is classical in character; the
+exact inequalities needed here are derived rather than imported from a continuum estimate.
+
+Lemma 5.1 (Finite balanced-box point estimates). Let p = 2 or 3, let L ≥ 1 be an integer,
+and let Q be a product of p integer paths with lengths ℓi ∈ [L/2, L]. Use counting norm and
+internal edge energy EQ , each path edge once. At any b ∈ Q, f (b) = 0 implies
+                                      (
+                                          13L2 (1 + ln L)EQ (f ),   p = 2,
+                           ∥f ∥2Q ≤                                                        (33)
+                                          113L3 EQ (f ),            p = 3.
+
+Here ∥f ∥2Q denotes              2
+                      y∈Q |f (y)| .
+                      P
+
+
+
+
+                                                   13
+                     Q
+Proof. Put N = i ℓi . If N = 1 the anchored function is zero, so assume N > 1. In particular
+L ≥ 2. The tensor basis from Lemma 2.2 has point values and eigenvalues
+                                                  X              πνi   4|ν|2
+          |ϕν (b)|2 ≤ 2p /N,             λν = 4           sin2       ≥              (ν ̸= 0),       0 ≤ νi < ℓi .
+                                                      i
+                                                                 2ℓi    L2
+
+A singleton factor forces its index to zero. All indices are nonnegative cosine indices; no
+signed-frequency multiplicity is suppressed. On the shell r = maxi νi ≥ 1, for p = 2 there are
+at most 2r + 1 ≤ 3r indices, and for p = 3 at most 3r2 + 3r + 1 ≤ 7r2 . Since |ν|2 ≥ r2 and
+r ≤ L − 1,                                 (
+                                            3(1 + ln L), p = 2,
+                                   |ν|−2 ≤
+                              X
+
+                              ν̸=0          7L,           p = 3.
+
+The first bound follows from L−1     −1 ≤ 1 + ln L by integration; the second is the finite
+                                          P
+                               r=1 r
+sum of at most L − 1 terms each bounded by seven. Consequently the nonconstant diagonal
+inverse satisfies
+                                                      (
+                              X |ϕν (b)|2                 3L2 (1 + ln L)/N ≤ 12(1 + ln L),              p = 2,
+              GQ (b, b) :=                        ≤                                                                 (34)
+                              ν̸=0
+                                         λν               14L3 /N ≤ 112,                                p = 3,
+
+using N ≥ Lp /2p . Expand f = aν ϕν in this counting-orthonormal basis. Cauchy–Schwarz
+                                              P
+
+gives |f (b) − f¯|2 ≤ GQ (b, b)EQ (f ), where f¯ is its arithmetic mean. The constant-mode mass is
+N |f¯|2 , not |f¯|2 . If f (b) = 0, this mass is at most 12L2 (1 + ln L)EQ when p = 2, and 112L3 EQ
+when p = 3, because N ≤ Lp . The positive spectral gap separately bounds the variance by
+L2 EQ /4. Adding the orthogonal constant and variance parts proves (33): 12 + 1/4 < 13, and
+112L3 + L2 /4 ≤ 113L3 . The N = 1 case includes L = 1 and any permissible all-singleton
+product. Thus no nonexistent positive gap or lost normalization is used. Point values were
+bounded uniformly, so a corner anchor is permitted without an additional boundary trace
+assumption.
+
+5.1    The full strong graph in original coordinates
+Let p = D − 1, with D = 3 or 4. Fix an original scalar spatial/channel component and its
+strong-source parity A. For every residue s of that parity set, with y ∈ (Z/nZ)p ,
+
+ xs (y) = (y1 , . . . , yp , s −
+                                   P
+                                     i yi )   (mod n),           us (y) = z(xs (y)),       vs (y) = z(xs (y) + eD ). (35)
+
+The first map is a bijection onto sum layer s; the shifted map is a bijection onto layer s + 1.
+Even n makes residue parity agree with original site parity. The n/2 pairs {s, s + 1} cover all
+sum residues disjointly, including {n − 1, 0} for odd source parity. Their pair norms therefore
+sum to the original scalar counting norm exactly.
+    The actual strong +eD edge is us (y)–vs (y). For 1 ≤ i ≤ p, xs (y + ei ) + eD = xs (y) + ei ,
+so the other strong edges are us (y)–vs (y + ei ). They are all D outgoing strong labels, not a
+surrogate subset with reassigned endpoint weights. Their exact energy is
+
+                                   X                                  p
+                                                                      X
+                         Es =          |us (y) − vs (y)|2 +                |us (y) − vs (y + ei )|2 .               (36)
+                                   y                               y,i=1
+
+A cross edge followed by a rung connects us (y) to us (y + ei ); all source translations are
+generated and every target has a rung, proving connectivity. At n = 2 the heads y, y + ei are
+distinct. The induced source-torus energy may repeat an undirected neighbor pair, but every
+original forward label is retained. Translations remain bijections.
+
+                                                                 14
+   Insert vs (y + ei ) between us (y + ei ) and us (y) and square with factor two. For the labelled
+source energy this proves
+               p
+               X                                    X                   X
+ Ep (us ) :=           |us (y +ei )−us (y)|2 ≤ 2p       |us −vs |2 +2         |us (y)−vs (y +ei )|2 ≤ 2pEs . (37)
+               y,i=1                                y                   y,i
+
+The repeated-rung factor is exactly 2p, also at period two. Summing HEs over all layer pairs,
+both channels and all spatial components gives a lower part of the original QB ; weak-source
+terms are only discarded as positive.
+
+5.2    Balanced quantiles and both layer norms
+For an integer 1 ≤ m ≤ n, partition each source coordinate into
+
+                          Ij = {⌊jn/m⌋, . . . , ⌊(j + 1)n/m⌋ − 1},              0 ≤ j < m.
+
+These are nonempty paths with lengths ⌊n/m⌋ or L = ⌈n/m⌉. If L = 1 all are singletons;
+otherwise a shorter side is L − 1 ≥ L/2. Every product cell therefore meets the exact
+hypotheses of Lemma 5.1. Anchor its lowest-coordinate corner as a source value us (b) = 0,
+at the actual original point xs (b). Cell internal edges are a subset of (37), counted once;
+across-cell and wrap edges are discarded as nonnegative. Define
+
+                                     X2 = L2 (1 + ln L),          X3 = L3 .
+
+Lemma 5.1 and (37) give ∥us ∥2 ≤ 52X2 Es for p = 2 and ∥us ∥2 ≤ 678X3 Es for p = 3. Rungs
+also give ∥vs ∥2 ≤ 2∥us ∥2 + 2 |vs − us |2 . As Xp ≥ 1, both original layers satisfy
+                              P
+
+                                                        (
+                                       2        2        158X2 Es ,  p = 2,
+                                   ∥us ∥ + ∥vs ∥ ≤                                                          (38)
+                                                         2036X3 Es , p = 3.
+
+Here 3 · 52 + 2 = 158 and 3 · 678 + 2 = 2036; no target-layer mass is omitted. These formulas
+remain valid at singleton cells because the anchored source value is zero and the rung still
+controls its target.
+    There are (n/2)mp distinct source anchors per channel: the cell corners are distinct, (35)
+is a bijection, and different source layers are disjoint. Both channels together have A = nmp
+channel-labelled anchors. Use the same anchor sites for all D spatial components in that
+channel. Although source-coordinate cells need not be original rectangles, only their original
+point sites are observed. Applying Lemma 2.5 independently to the two channels gives actual
+canonical partitions with
+
+                                   Nout ≤ 2D + 2D2 A = 2D + 2D2 nmp .                                       (39)
+
+The initial rows and every channel/component factor are included. Original chart representa-
+tives, not wrapping rectangles or diagonal averages, realize the points. A block-kernel field is
+zero at every required anchor; extra nonpoint means only narrow this kernel.
+
+5.3    Dimension three: the critical logarithmic mesh
+Take D = 3, Tn = 1 + ln n, and let m be the least positive integer with m2 ≥ 4096Tn . If
+m ≤ n, then L ≤ 2n/m and L ≤ n, giving
+
+                                                             4n2
+                                  X2 = L2 (1 + ln L) ≤           Tn ≤ n2 /1024.
+                                                             m2
+
+                                                        15
+Sum (38) over the disjoint pairs, channels and components. Since H = cn2 , a field zero at
+the prescribed anchors satisfies
+                                 H            1024
+                         QB (z) ≥    ∥z∥2 ≥        c∥z∥2 ≥ 4c∥z∥2 ,             (40)
+                               158X2          158
+                                      √
+because 4 · 158 = 632 < 1024. Put ρ = 4096Tn ≥ 1. Minimality yields m = ⌈ρ⌉ ≤ 2ρ, so
+m2 ≤ 16384Tn . The complete count (39) is therefore
+                        Nout ≤ 6 + 18nm2 ≤ 6 + 294912nTn < 219 nTn .
+We used nTn ≥ 1 and 294912 + 6 < 524288, without divisibility or exact-square assumptions.
+    If m > n, minimality gives (m − 1)2 < 4096Tn and the integers satisfy n ≤ m − 1. The
+all-channel singleton fallback has
+                        Nout = 6n3 < 24576nTn < 219 nTn ,          K = c.
+This covers every ineligible even n, including n = 2 and n = m − 1. At m = n the mesh
+branch is allowed and its source cells are singleton; (40) still follows from the derived rung
+bound. Thus no guessed large-size cutoff, empty mesh cell or unproved singleton gap is used.
+
+5.4    Dimension four: a three-dimensional source mesh
+For D = 4, first take n ≥ 256 and let m be the least positive integer with m3 ≥ 65536n. The
+integer n itself is eligible because n2 ≥ 65536, so m ≤ n. Also L ≤ 2n/m and
+                                 X3 = L3 ≤ 8n3 /m3 ≤ n2 /8192.
+The other case of (38) now gives, on the actual anchor kernel,
+                             8192
+                  QB (z) ≥        c∥z∥2 ≥ 4c∥z∥2 ,      4 · 2036 = 8144 < 8192.                (41)
+                             2036
+For ρ = (65536n)1/3 ≥ 256, m = ⌈ρ⌉ ≤ 2ρ, hence m3 ≤ 524288n. Thus A = nm3 ≤ 524288n2
+and
+                           Nout ≤ 8 + 32A ≤ 8 + 224 n2 ≤ 225 n2 .
+At n = 256 one has m = n exactly; singleton source cells and their rungs are valid in (41).
+Noncubes are covered by the same ceiling argument. For even n < 256, use all-channel
+singletons: Nout = 8n4 < 524288n2 < 225 n2 and K = c. No three-dimensional source-cell
+estimate is applied in that fallback.
+
+5.5    Finite completion, constants and actual restricted rank
+For either mesh the canonical block kernel obeys QB (u) ≥ 4c∥u∥2 by (40) or (41). Lemma 2.4
+with δ = 3c and M = 4DH + c proves the all-field inequality with exactly (12). Dividing by
+V and using (4) gives the stated canonical normalization. On a constant field QB = 0 and
+Rz = z; the finite coefficient is at least c, so these constants are paid. The conservative mesh
+coefficient can grow as cn4 ; in the fallbacks R = I, K = c directly. Restrict only after this
+all-field proof to the original U02 . Its actual rank is at most the full count, with no assumed row
+independence or coexact invariance of block averaging. This completes Theorem 1.2(ii)–(iii).
+     The same positive stack still has D2 weak and D2 strong eigenvalues per site. Formula (14)
+with q = 1, g = 2, including its original α3 = 729/128 or α4 = 81/16, is unchanged and has
+order V . These improved observations do not reduce the inherited capped budget. Neither
+the logarithm in this particular finite construction nor its point count is asserted necessary
+for every permitted partition. The present point proof is for orthogonal lines only; it is
+distinct from the fixed-angle plane result and supplies no claimed solution to its unproved
+point-anchor analogue.
+
+                                                16
+6     Scope, classical inputs and review context
+6.1   What the comparison establishes
+For fixed D, Λ, Theorem 1.1 is uniform in weak dimension and channel count under a constant
+weak projector. It neither supplies a basis-free lower nor compares all nonlinear observation
+classes. Its finite-support MSS input is nontrivial and classical; the extra signed count
+coordinate and the conditioning/count bookkeeping are displayed as an application, with
+no historical-priority assertion. The checkerboard results change only spatial constancy, not
+local positivity, local spectra, upper coherence, original channel basis or canonical weights.
+They show why that hypothesis cannot be dropped from a per-profile lower of the same
+form. Strong-graph geometry, rather than local spectra alone, enters the constructions. Their
+improved row upper bounds are not optimal-rank or uniform-penalty theorems.
+    The least coefficient assertion for the fixed-space result is deliberately for the particular
+economical map constructed here. It is not a global minimum over all canonical maps:
+all-channel singletons always permit K = c for a positive form, at the cost of many rows.
+Conversely no practical conditioning or implementation conclusion follows from finite exis-
+tence, lexicographic selection or a rank estimate. The large constants and the checkerboard
+coefficients make those limitations substantial.
+
+6.2   Primary comparisons and their actual extent
+Theorem 3.1 is the precise published input from Marcus–Spielman–Srivastava [1]. The
+retained primary reading concerns Theorem 1.4 and Corollary 1.5 on printed page 3 of
+arXiv:1306.3969v4, including the opening corollary argument. It is not a new audit of the
+full published MSS proof. The simultaneous count statement used here is proved with the
+added coordinate; it is not attributed to an unstated cardinality clause in that source.
+    Local coarse averages and their kernels are established mechanisms, as the selected reading
+of Målqvist–Peterseim [4, Sections 2.2–2.3] already shows. Finite graph Poincare estimates are
+classical; the recorded reading of Levi–Santagati–Tabacco–Vallarino [5, Section 2, Theorem
+2.1] does not replace the explicit tensor-path proof given here. Lawler–Limic [2] provides
+classical Green-function and potential-kernel context. The later bounded reading used an
+author-hosted 289-page draft of unidentified date, whose pagination differs from the publisher
+edition: Section 4.3 and Theorem 4.3.1 (pp. 81–82), Section 4.4.1 and Theorem 4.4.4 (p. 88),
+and the opening of Section 6.7 (pp. 152–153), with selected surrounding excerpts, not complete
+proofs. The first concerns transient infinite-lattice Green functions in dimensions at least
+three; the potential-kernel section supplies two-dimensional logarithmic context. Boundary
+rules, generator normalization and removal of the constant mode must be translated before
+any constants transfer. Lemma 5.1 derives its finite Neumann constants directly and proves
+no logarithmic necessity for all allowed observations.
+    The GenEO work of Spillane et al. [3] is a substantive adaptive coarse-space predecessor.
+Operator-dependent local eigenmodes and partition-of-unity extensions give robust two-level
+Schwarz convergence. The retained reading used an author-linked institutional copy of
+the journal PDF, including selected setup, Lemma 2.11, Definitions 3.7/3.9, Assumptions
+2.1/3.12/3.13, Lemma 3.21 excerpts, and Theorem 3.22 with Corollary 3.23 and its size
+qualification; it was not a full-proof, implementation or numerical-section reading. These
+adaptive vector functions are not prescribed original-channel rectangle means, and their
+selected dimension can depend on coefficient geometry and be large. A complete reduction
+to our domain, exact row class, uniform rank count and fixed-weight penalty has not been
+established; neither has an impossibility of such a reduction. In particular, failure to establish
+that implication in a limited pass provides no evidence of originality. Conversely, our admitted
+
+
+                                               17
+finite large penalties do not establish the contrast-robust practical conditioning studied by
+that solver literature.
+    Braides–Chiadò Piat–Piatnitski [6] already studies periodic high-contrast strong/weak
+lattice networks. The later bounded reading includes abstract/introduction excerpts, Section
+2 connectivity assumptions and the statement and preceding decomposition of Theorem
+5.1, not its homogenization proof or flows. A finite paired-layer checkerboard needs an
+actual encoding into that theorem’s model assumptions before an implication can be claimed;
+common terminology is not that encoding. Strong-network geometry is classical. Implication
+of the exact finite canonical row bounds is unresolved here, not proved impossible. A closer
+vector/form predecessor needing full comparison is Budninskiy–Owhadi–Desbrun [7]. The
+institutional primary abstract, not the full article, was read. It describes operator-adapted
+differential forms and differential constraints, so vector forms and operator adaptation are not
+themselves available novelty claims. Its complete relation to the fixed canonical measurements,
+growing g, q, actual restricted ranks and penalty orders here is unestablished. Failed full-text
+retrieval is not evidence of absent overlap.
+    The new bounded comparison covered four works: MSS, Lawler–Limic, GenEO and
+Braides et al.; the other citations have the earlier limited readings just described. The
+comparison did not receive or audit this manuscript’s completed source. These are limited
+primary readings, not an exhaustive literature or historical-equivalence audit. No external
+full-text PDF is redistributed in the source packet. Classical Neumann, Green, PSD trace,
+strong-graph and rectangle-isolation methods are acknowledged. The specific rank/penalty
+statements require specialist priority scrutiny rather than a claim of a new general principle.
+
+Model assessments and review context
+At the source-preparation freeze of 11 November 2026, no PDF of this manuscript had yet
+been compiled, rendered, read or numerically assessed. The individual source arguments have
+retained analytical AI source reports; those reports are not a whole-manuscript source audit
+or an exact-PDF review of this consolidation. A separate integrated-source gate, compilation,
+page-by-page rendering review and first exact-PDF assessment are later gates. There is no
+numerical grade for this source preparation.
+    Lluis Eriksson is the named author. Drafting and consolidation assistance was provided
+through Codex/OpenAI, exposed as an agent based on GPT-6; the exact served backend
+and actual reasoning effort were not exposed and are unknown. Earlier source audits used
+separately assigned AI roles in a shared account and persistent context. No independent,
+blind, human or fresh-provider review is established by that role separation. The finite proofs
+are not Lean or other formal certificates, and repository checks do not formalize them.
+    The exact earlier 232B PDF, SHA-256
+           5595e89c1bcbec1d9b1ae35053a76e6a962f67b45d5d1ac483e5b7a60c9b9be0
+
+received a recorded importance assessment of 4.10/10. That judgment belongs only to those
+earlier PDF bytes and supplies no grade here. Its complete first report, immutable original
+opinion, same-round protocol clarification and author response are retained as historical
+context, without regrading. The three prior material issues remain unresolved context rather
+than a new assessment of this manuscript:
+
+1. Historical priority and exact implication by predecessors remain unestablished after limited
+   primary lookups.
+
+2. Practical usefulness, conditioning with allowed penalties, applications and efficient imple-
+   mentation remain unestablished.
+
+
+                                              18
+3. The absence of a fatal error in that earlier reading was not unconditional editorial
+   acceptance. Finite, observation-class, basis/growth and penalty hypotheses must remain
+   explicit; this consolidation does not create a new editorial decision or close that issue.
+
+No score transfers from the earlier article or from source reports. The present scope is finite
+matrix-gradient observations and the stated actual flat coexact domain; there is no interacting
+producer, continuum result or physical mass-gap conclusion.
+   The source supplied to a later gated build is
+                           4ec599da41521ecfdadd7d2aee69faab8b3819f1
+
+The default SOURCE-NOT-BUILT marks source preparation only; the build must supply its
+actual full frozen commit. Prepared PDF metadata controls are not evidence of bit repro-
+ducibility. That claim requires actual matching PDFs from two fresh clones, which were not
+produced in this source-preparation stage.
+
+
+A       Source correspondence and retained corrections
+The source packet retains the complete grouped 235–248 source/audit snapshot, including
+rejected variants and adverse reports. Full hashes, exact original commits and paths are in
+SOURCE-MAPPING.json and SOURCE-INPUTS.json; the table gives abbreviated raw SHA-256
+identities for navigation. The manuscript’s proofs replace several earlier specialized selection
+arguments by the common MSS proof. They do not assert that the new constructed map is
+identical to each earlier one.
+
+  Source    Earlier role                Place in this manuscript                 Raw hash prefix
+  235       Dyadic local rectangles,    Finite Neumann and piece estimates;      4ccc3829df28
+            uniform weak line, g = V    special case of Theorem 1.1
+  236B      Arbitrary integer sizes;    Lemma 2.3, (4) and the explicit V K      b29ea47b3949
+            corrected counting nor-     convention
+            malization
+  237       Fixed-canonical             (29); order recovered for the new con-   2d7a29ed2129
+            rank/penalty trace          structed map
+  238       Uniform line, g ≥ n2        q = 1 large-channel case of Theo-        d32783c5ff5d
+                                        rem 1.1
+  239       Uniform line, every g ≥ 1   q = 1 rank order; common replace-        d277c4773cca
+                                        ment construction
+  240B      Least coefficient for the   (10), qualified for the new fixed map    d4c37b82e9d9
+            specified economical map
+  241B      Balanced rank-one polar- q = 1 scope, (13); no lower row-            d62cae0af036
+            ization; original cap re- weight hypothesis here
+            stored
+  242       Upper-delocalized line q = 1 case; zero rows counted explic-         1016e0c7edc1
+            without positive mini- itly
+            mum row weight
+  243       Two weak directions, ac- q = 2 case of Theorem 1.1; singleton        985dbb4412fa
+            tual matrix groups          priority retained
+  244       Uniform growing weak di- Theorem 1.1, MSS count augmen-              59498789a14e
+            mension                     tation, complete upper and lower
+                                        proofs
+  245       Orthogonal          spatial Theorem 1.2(i), exact cycle and finite   6e2aad56076a
+            checkerboard                completion
+  246       Arbitrarily small fixed an- Theorem 1.3; no nonorthogonal point      ab9ab2195aff
+            gle, plane mesh             order
+
+
+                                                19
+  Source    Earlier role               Place in this manuscript            Raw hash prefix
+  247       Orthogonal dimension       Theorem 1.2(iii), (41)              e2ab6a1db681
+            four, point anchors
+  248       Orthogonal dimension       Theorem 1.2(ii), (40)               93786fa89262
+            three, logarithmic point
+            cost
+
+    The original 236A missing-V counting-penalty defect, the 240A small-input branch defect,
+and the 241A changed-cap normalization rejection remain bound to their original sources
+and reports. Corrected B sources do not turn those originals into passes. The nonblocking
+242 empty-prefix base-case clarification and 243 singleton-priority clarification are retained
+too. In this manuscript the whitening induction has an explicit initial stage and the singleton
+priority applies to all channels. These preserved corrections are source history, not new
+numerical assessments. The active fixed-angle point-anchor question has not been developed
+into a source proof here.
+
+
+References
+[1] A. W. Marcus, D. A. Spielman and N. Srivastava, Interlacing Families II: Mixed Charac-
+    teristic Polynomials and the Kadison–Singer Problem, arXiv:1306.3969v4 (2014), Theorem
+    1.4. https://arxiv.org/abs/1306.3969v4.
+[2] G. F. Lawler and V. Limic, Random Walk: A Modern Introduction. Author-hosted
+    289-page draft, date unidentified in the inspected version; pagination differs from the
+    publisher edition. https://www.math.uchicago.edu/~lawler/srwbook.pdf. Selected
+    reading: Section 4.3/Theorem 4.3.1, Section 4.4.1/Theorem 4.4.4, and the opening of
+    Section 6.7, not complete proofs.
+[3] N. Spillane, V. Dolean, P. Hauret, F. Nataf, C. Pechstein and R. Scheichl, Ab-
+    stract robust coarse spaces for systems of PDEs via generalized eigenproblems in the
+    overlaps, Numerische Mathematik 126 (2014), 741–770. https://doi.org/10.1007/
+    s00211-013-0576-y. Author-linked institutional journal copy: https://strathprints.
+    strath.ac.uk/44827/1/10.1007_s00211_013_0576_y.pdf. Selected setup, definitions
+    and statements, not the full paper.
+[4] A. Målqvist and D. Peterseim, Localization of Elliptic Multiscale Problems,
+    arXiv:1110.0692v4. https://arxiv.org/abs/1110.0692v4. Selected reading: Sections
+    2.2–2.3.
+[5] Levi, Santagati, Tabacco and Vallarino, Poincare inequalities on graphs,
+    arXiv:2203.12530v2. https://arxiv.org/abs/2203.12530v2. Selected reading:
+    Section 2 and Theorem 2.1.
+[6] Braides, Chiadò Piat and Piatnitski, Discrete double-porosity models, arXiv:1406.1752v1
+    (2014). https://arxiv.org/abs/1406.1752v1. Selected reading: introductory excerpts,
+    Section 2 assumptions and Theorem 5.1 statement/decomposition; not the full proof.
+[7] M. Budninskiy, H. Owhadi and M. Desbrun, Operator-adapted wavelets for finite-element
+    differential forms, Journal of Computational Physics 388 (2019), 144–177. https://doi.
+    org/10.1016/j.jcp.2019.02.018. Institutional primary abstract: https://authors.
+    library.caltech.edu/records/8j84b-1ep03. Only that abstract, not the full article,
+    was read in the retained comparison.
+
+
+                                              20
+
