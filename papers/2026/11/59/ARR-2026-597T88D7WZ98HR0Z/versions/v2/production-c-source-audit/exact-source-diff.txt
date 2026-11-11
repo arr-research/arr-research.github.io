@@ -1,0 +1,73 @@
+--- production-b/build260.py
++++ production-c/build260.py
+@@ -4,12 +4,12 @@
+ import os,sys,json,hashlib,subprocess,traceback,zipfile,re,shutil
+ from pathlib import Path
+ from datetime import datetime,timezone
+-SOURCE='9caf0935ed63b830552b8ae7bdf3768c81bacb5b'
++SOURCE='fb3ba8d2c0ae52d4a2e909b0fb2df02b2f953bc4'
+ BRANCH='codex/tep-consolidation260-20261111'
+-TEX_SHA='62f79bff38c526427f4cc7baa41b601995837a3260a2b91de7dc616a0603e948'
++TEX_SHA='9c24b70685a5a7ae9301555170fa84acafd9f17524734775b1e9bca7cce822d9'
+ PAPER='papers/flat-coarse-rank/research-consolidation/revision260-preparation'
+-ROOT=Path('/content/tep260-build-b');OUT=ROOT/'evidence'
+-ARCHIVE=Path('/content/tep260-build-b-results.zip')
++ROOT=Path('/content/tep260-build-c');OUT=ROOT/'evidence'
++ARCHIVE=Path('/content/tep260-build-c-results.zip')
+ def require(ok,msg):
+     if not ok:raise ValueError(msg)
+ def sha(b):return hashlib.sha256(b).hexdigest()
+--- production-b/readback_after_stop.ps1
++++ production-c/readback_after_stop.ps1
+@@ -1,9 +1,9 @@
+ Set-StrictMode -Version Latest
+ $ErrorActionPreference='Stop'
+ . (Join-Path $PSScriptRoot 'capture_cli_atomic.ps1')
+-$out=Join-Path $PSScriptRoot 'attempt-b'
++$out=Join-Path $PSScriptRoot 'attempt-c'
+ if(-not(Test-Path -LiteralPath (Join-Path $out 'release.exit'))){throw 'Actual stop capture required first'}
+-$command='export GOOGLE_APPLICATION_CREDENTIALS=/mnt/c/Users/lluis/AppData/Roaming/gcloud/application_default_credentials.json; exec /home/lluis/.local/bin/colab --auth adc --config /home/lluis/.config/colab-cli/tep260-build-b-sessions.json sessions'
++$command='export GOOGLE_APPLICATION_CREDENTIALS=/mnt/c/Users/lluis/AppData/Roaming/gcloud/application_default_credentials.json; exec /home/lluis/.local/bin/colab --auth adc --config /home/lluis/.config/colab-cli/tep260-build-c-sessions.json sessions'
+ $code=Invoke-CapturedWsl -Name 'backend-readback' -ShellCommand $command -OutputDirectory $out
+ if($code -ne 0){throw 'Actual backend readback nonzero'}
+ Get-Content -LiteralPath (Join-Path $out 'backend-readback.log')
+--- production-b/run_owned_after_gate.ps1
++++ production-c/run_owned_after_gate.ps1
+@@ -1,7 +1,7 @@
+ param([Parameter(Mandatory=$true)][ValidatePattern('^[a-f0-9]{64}$')][string]$ApprovedManifestSha256)
+ Set-StrictMode -Version Latest
+ $ErrorActionPreference='Stop'
+-$source='9caf0935ed63b830552b8ae7bdf3768c81bacb5b'
++$source='fb3ba8d2c0ae52d4a2e909b0fb2df02b2f953bc4'
+ . (Join-Path $PSScriptRoot 'capture_cli_atomic.ps1')
+ $manifest=Join-Path $PSScriptRoot 'RUNNER-HASHES.json'
+ if((Get-FileHash -LiteralPath $manifest).Hash.ToLowerInvariant() -cne $ApprovedManifestSha256){throw 'Parent exact runner gate pin required'}
+@@ -10,21 +10,21 @@
+  if((Get-Item -LiteralPath $file).Length -ne $entry.bytes -or (Get-FileHash -LiteralPath $file).Hash.ToLowerInvariant() -cne $entry.sha256){throw ('Frozen runner input differs: '+$entry.path)}
+ }
+ $authority=Get-Content -LiteralPath (Join-Path $PSScriptRoot 'parent-authority-relay.json') -Raw|ConvertFrom-Json
+-if($authority.source -cne $source -or $authority.runner_manifest_sha256 -cne $ApprovedManifestSha256 -or $authority.manuscript_tex_sha256 -cne '62f79bff38c526427f4cc7baa41b601995837a3260a2b91de7dc616a0603e948' -or $authority.parent_full_mathematical_report_read -ne $true -or $authority.parent_full_engineering_report_read -ne $true){throw 'Both actual parent gates must be read and relayed before allocation'}
++if($authority.source -cne $source -or $authority.runner_manifest_sha256 -cne $ApprovedManifestSha256 -or $authority.manuscript_tex_sha256 -cne '9c24b70685a5a7ae9301555170fa84acafd9f17524734775b1e9bca7cce822d9' -or $authority.parent_full_mathematical_report_read -ne $true -or $authority.parent_full_engineering_report_read -ne $true){throw 'Both actual parent gates must be read and relayed before allocation'}
+ if($authority.mathematical_accepted -ne $true -or $authority.engineering_accepted -ne $true){throw 'Actual accepted source gates required'}
+ foreach($kind in @('mathematical','engineering')){
+  $pathField=$kind+'_report_path';$hashField=$kind+'_report_sha256'
+  $reportPath=[string]$authority.$pathField;$reportHash=[string]$authority.$hashField
+  if(-not[regex]::IsMatch($reportHash,'\A[a-f0-9]{64}\z') -or (Get-FileHash -LiteralPath $reportPath).Hash.ToLowerInvariant() -cne $reportHash){throw 'Original full report hash binding differs'}
+ }
+-$out=Join-Path $PSScriptRoot 'attempt-b'
++$out=Join-Path $PSScriptRoot 'attempt-c'
+ if(Test-Path -LiteralPath $out){throw 'Preserve previous attempt; no blind retry'}
+ New-Item -ItemType Directory -Path $out|Out-Null
+-$prefix='export GOOGLE_APPLICATION_CREDENTIALS=/mnt/c/Users/lluis/AppData/Roaming/gcloud/application_default_credentials.json; exec /home/lluis/.local/bin/colab --auth adc --config /home/lluis/.config/colab-cli/tep260-build-b-sessions.json'
+-$session='tep260-build-b-own-cpu'
+-$remote='/content/tep260-build-b-results.zip'
+-$local='/mnt/d/Datos/the-eriksson-programme/autonomia/evidencia-260/production-b/attempt-b/tep260-build-b-results.zip'
+-$script='/mnt/d/Datos/the-eriksson-programme/autonomia/evidencia-260/production-b/build260.py'
++$prefix='export GOOGLE_APPLICATION_CREDENTIALS=/mnt/c/Users/lluis/AppData/Roaming/gcloud/application_default_credentials.json; exec /home/lluis/.local/bin/colab --auth adc --config /home/lluis/.config/colab-cli/tep260-build-c-sessions.json'
++$session='tep260-build-c-own-cpu'
++$remote='/content/tep260-build-c-results.zip'
++$local='/mnt/d/Datos/the-eriksson-programme/autonomia/evidencia-260/production-c/attempt-c/tep260-build-c-results.zip'
++$script='/mnt/d/Datos/the-eriksson-programme/autonomia/evidencia-260/production-c/build260.py'
+ $attempted=$false;$exits=[ordered]@{};$caught=$null
+ [IO.File]::WriteAllText((Join-Path $out 'runtime-open-requested.txt'),[DateTime]::UtcNow.ToString('o')+"`n")
+ try{
