@@ -1,0 +1,388 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+from __future__ import annotations
+
+import hashlib
+import json
+import re
+import uuid
+from datetime import datetime
+from decimal import Decimal, InvalidOperation
+from pathlib import Path
+from typing import Any, Iterable
+
+from arrlib import Paper, group_paper_versions, parse_exact_timestamp, select_paper, sha256
+from ratinglib import aggregate_ratings
+
+
+ROOT = Path(__file__).resolve().parents[1]
+ASSESSMENTS_PATH = ROOT / "registry" / "model-assessments.json"
+HIGHLIGHTS_PATH = ROOT / "registry" / "editorial-highlights.json"
+PROMPT_VERSION = "ARR-ASSESS-1.0"
+INTAKE_PROMPT_VERSION = "ARR-INTAKE-ASSESS-1.1"
+CRITERIA = ("correctness_confidence", "rigor", "novelty", "significance", "reproducibility")
+RECOMMENDATIONS = {"accept", "minor_revision", "major_revision", "reject"}
+INDEPENDENCE = {"not_involved_in_manuscript", "involved_in_manuscript", "unknown"}
+REASONING_EFFORTS = {"none", "minimal", "low", "medium", "high", "xhigh", "max", "ultra"}
+RUNTIME_PROVENANCE_BASES = {"platform_runtime_metadata", "author_verified_ui", "operator_verified_ui"}
+ASSESSMENT_ID = re.compile(r"^arr:assessment:[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$")
+
+
+def canonical_json(value: object) -> bytes:
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+
+
+def source_hash(value: object) -> str:
+    return hashlib.sha256(canonical_json(value)).hexdigest()
+
+
+def assessment_artifact_sha256(paper: Paper) -> str | None:
+    """The reviewed PDF, which is distinct from canonical TeX in source-first records."""
+    integrity = paper.metadata.get("integrity", {})
+    if paper.metadata.get("source_of_truth") in {"paper.pdf", "external_pdf"}:
+        digest = integrity.get("canonical_sha256")
+    else:
+        digest = integrity.get("pdf_sha256")
+        local_pdf = paper.path / "paper.pdf"
+        if local_pdf.is_file():
+            raw = local_pdf.read_bytes()
+            if not raw.startswith(b"%PDF-"):
+                raise ValueError("The review artifact is not a PDF")
+            observed = hashlib.sha256(raw).hexdigest()
+            if digest and digest != observed:
+                raise ValueError("The review PDF does not match its recorded digest")
+            digest = observed
+    return digest if isinstance(digest, str) and re.fullmatch(r"[0-9a-f]{64}", digest) else None
+
+
+def load_assessment_registry(path: Path = ASSESSMENTS_PATH) -> dict[str, Any]:
+    value = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(value, dict) or value.get("schema_version") != "1.0" or value.get("protocol") != PROMPT_VERSION or value.get("license") != "CC-BY-4.0" or not isinstance(value.get("assessments"), list):
+        raise ValueError(f"{path}: invalid assessment registry envelope")
+    return value
+
+
+def load_highlight_registry(path: Path = HIGHLIGHTS_PATH) -> dict[str, Any]:
+    value = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(value, dict) or value.get("schema_version") != "1.0" or value.get("license") != "CC-BY-4.0" or not isinstance(value.get("highlights"), list):
+        raise ValueError(f"{path}: invalid editorial-highlight registry envelope")
+    return value
+
+
+def expected_stars(score: float) -> int:
+    return max(1, min(10, int(Decimal(str(score)) + Decimal("0.5"))))
+
+
+def tier_label(stars: int) -> str:
+    return {
+        1: "Critical concerns",
+        2: "Substantial revision needed",
+        3: "Acceptable",
+        4: "Strong",
+        5: "Very good",
+        6: "Excellent",
+        7: "Exceptional",
+        8: "Potentially field-shaping",
+        9: "Potentially historic",
+        10: "Millennium-resolution benchmark",
+    }[stars]
+
+
+def _text_list(value: object, field: str, errors: list[str]) -> None:
+    if not isinstance(value, list) or len(value) > 12:
+        errors.append(f"{field}: must be an array of at most 12 findings")
+        return
+    for index, item in enumerate(value):
+        if not isinstance(item, str) or not 8 <= len(item.strip()) <= 800:
+            errors.append(f"{field}[{index}]: must contain 8..800 characters")
+
+
+def validate_assessment(value: object, papers: Iterable[Paper]) -> list[str]:
+    errors: list[str] = []
+    if not isinstance(value, dict):
+        return ["assessment: expected one JSON object"]
+    required = {
+        "assessment_id", "paper_id", "version", "version_id", "canonical_sha256", "provider", "model_id",
+        "assessed_at", "prompt_version", "independence", "recommendation", "millennium_score", "overall_stars",
+        "criteria", "summary", "strengths", "weaknesses", "potential_errors", "strong_novelty_candidates",
+        "unresolved_material_objections", "source_response_sha256",
+    }
+    optional = {"runtime_provenance", "review_context", "intake_source"}
+    unknown = set(value) - required - optional
+    missing = required - set(value)
+    if unknown:
+        errors.append(f"assessment: unknown fields: {', '.join(sorted(unknown))}")
+    if missing:
+        errors.append(f"assessment: missing fields: {', '.join(sorted(missing))}")
+        return errors
+    if not isinstance(value["assessment_id"], str) or not ASSESSMENT_ID.fullmatch(value["assessment_id"]):
+        errors.append("assessment_id: must be an AIRR UUIDv4 assessment identifier")
+    try:
+        paper = select_paper(papers, value["paper_id"], value["version"])
+    except (KeyError, ValueError) as exc:
+        errors.append(f"paper: {exc}")
+        paper = None
+    if paper is not None:
+        if value["version_id"] != paper.metadata.get("version_id"):
+            errors.append("version_id: does not match the selected AIRR version")
+        if not assessment_artifact_sha256(paper) or value["canonical_sha256"] != assessment_artifact_sha256(paper):
+            errors.append("canonical_sha256: does not match the selected canonical artifact")
+    for field, maximum in (("provider", 100), ("model_id", 160)):
+        if not isinstance(value[field], str) or not 2 <= len(value[field].strip()) <= maximum:
+            errors.append(f"{field}: invalid length")
+    runtime = value.get("runtime_provenance")
+    if runtime is not None:
+        runtime_fields = {"provider", "model_id", "reasoning_effort", "basis", "evidence_sha256"}
+        if not isinstance(runtime, dict) or set(runtime) != runtime_fields:
+            errors.append("runtime_provenance: must contain exactly provider, model_id, reasoning_effort, basis, and evidence_sha256")
+        else:
+            for field, maximum in (("provider", 100), ("model_id", 160)):
+                if not isinstance(runtime[field], str) or not 2 <= len(runtime[field].strip()) <= maximum:
+                    errors.append(f"runtime_provenance.{field}: invalid length")
+            if runtime["reasoning_effort"] not in REASONING_EFFORTS:
+                errors.append("runtime_provenance.reasoning_effort: invalid value")
+            if runtime["basis"] not in RUNTIME_PROVENANCE_BASES:
+                errors.append("runtime_provenance.basis: invalid value")
+            if not isinstance(runtime["evidence_sha256"], str) or not re.fullmatch(r"[0-9a-f]{64}", runtime["evidence_sha256"]):
+                errors.append("runtime_provenance.evidence_sha256: must be a lowercase SHA-256 digest")
+    context = value.get("review_context")
+    if context is not None:
+        required_context = {"mode", "history_isolated", "memory_disabled", "other_reports_withheld", "basis", "evidence_sha256", "recorded_at"}
+        if not isinstance(context, dict) or set(context) != required_context:
+            errors.append("review_context: incorrect operator evidence fields")
+        else:
+            if context["mode"] not in {"fresh_blind", "shared", "unknown"}:
+                errors.append("review_context.mode: invalid value")
+            flags = [context[k] for k in ("history_isolated", "memory_disabled", "other_reports_withheld")]
+            if any(type(x) is not bool for x in flags):
+                errors.append("review_context: isolation flags must be booleans")
+            if context["mode"] == "fresh_blind" and not all(x is True for x in flags):
+                errors.append("review_context: fresh_blind requires all three verified isolation controls")
+            if context["basis"] not in RUNTIME_PROVENANCE_BASES:
+                errors.append("review_context.basis: requires operator or platform evidence")
+            if not isinstance(context["evidence_sha256"],str) or not re.fullmatch(r"[0-9a-f]{64}",context["evidence_sha256"]):
+                errors.append("review_context.evidence_sha256: invalid digest")
+            try:
+                parse_exact_timestamp(context["recorded_at"])
+            except (ValueError,TypeError):
+                errors.append("review_context.recorded_at: needs exact timestamp")
+    try:
+        parse_exact_timestamp(value["assessed_at"])
+    except (TypeError, ValueError):
+        errors.append("assessed_at: must be an offset-aware ISO-8601 timestamp")
+    is_intake = value["prompt_version"] == INTAKE_PROMPT_VERSION
+    if value["prompt_version"] not in {PROMPT_VERSION, INTAKE_PROMPT_VERSION}:
+        errors.append("prompt_version: unsupported native protocol")
+    if is_intake != ("intake_source" in value):
+        errors.append("intake_source: required exactly for an intake report projection")
+    if value["independence"] not in INDEPENDENCE:
+        errors.append("independence: invalid value")
+    if value["recommendation"] not in RECOMMENDATIONS:
+        errors.append("recommendation: invalid value")
+    score = value["millennium_score"]
+    try:
+        if isinstance(score, bool) or not isinstance(score, (int, float)):
+            raise InvalidOperation
+        decimal_score = Decimal(str(score))
+        if not Decimal("0") <= decimal_score <= Decimal("10") or decimal_score.as_tuple().exponent < -2:
+            raise InvalidOperation
+    except (InvalidOperation, ValueError):
+        errors.append("millennium_score: must be 0.00..10.00 with at most two decimals")
+    else:
+        if not isinstance(value["overall_stars"], int) or value["overall_stars"] != expected_stars(float(decimal_score)):
+            errors.append("overall_stars: must be the nearest whole-star rendering of millennium_score (minimum 1)")
+    criteria = value["criteria"]
+    if not isinstance(criteria, dict) or set(criteria) != set(CRITERIA):
+        errors.append(f"criteria: must contain exactly {', '.join(CRITERIA)}")
+    else:
+        for name in CRITERIA:
+            criterion = criteria[name]
+            if not isinstance(criterion, dict) or set(criterion) != {"stars", "basis"}:
+                errors.append(f"criteria.{name}: must contain stars and basis")
+                continue
+            if not isinstance(criterion["stars"], int) or not 1 <= criterion["stars"] <= 5:
+                errors.append(f"criteria.{name}.stars: must be 1..5")
+            if not isinstance(criterion["basis"], str) or not 15 <= len(criterion["basis"].strip()) <= 600:
+                errors.append(f"criteria.{name}.basis: must contain 15..600 characters")
+    if not isinstance(value["summary"], str) or not 40 <= len(value["summary"].strip()) <= 1600:
+        errors.append("summary: must contain 40..1600 characters")
+    for field in ("strengths", "weaknesses", "potential_errors", "strong_novelty_candidates", "unresolved_material_objections"):
+        _text_list(value[field], field, errors)
+    material = value["unresolved_material_objections"]
+    if isinstance(material, list) and material and value["recommendation"] in {"accept", "minor_revision"}:
+        errors.append("recommendation: unresolved material objections require major_revision or reject")
+    if value["recommendation"] == "accept" and (float(score) < 3 or value["overall_stars"] < 3):
+        errors.append("recommendation: accept requires the public acceptable floor of 3.00 / three stars")
+    if not isinstance(value["source_response_sha256"], str) or not re.fullmatch(r"[0-9a-f]{64}", value["source_response_sha256"]):
+        errors.append("source_response_sha256: must be a lowercase SHA-256 digest")
+    else:
+        original_response = {
+            key: item for key, item in value.items()
+            if key not in {"assessment_id", "source_response_sha256", "runtime_provenance", "review_context", "intake_source"}
+        }
+        if is_intake:
+            source = value.get("intake_source")
+            if not isinstance(source, dict) or set(source) != {"path", "file_sha256", "submission_id"}:
+                errors.append("intake_source: invalid public native report binding")
+                return errors
+            for key in ("paper_id", "version", "version_id", "canonical_sha256"):
+                original_response.pop(key, None)
+            original_response["manuscript_sha256"] = value["canonical_sha256"]
+            original_response["submission_id"] = source["submission_id"]
+            try:
+                native_path = (ROOT / source["path"]).resolve()
+                if paper is None or not native_path.is_relative_to((paper.path / "screening").resolve()) or native_path.suffix != ".json":
+                    raise ValueError("Native report must belong to this public version's screening directory")
+                raw = native_path.read_bytes()
+                if hashlib.sha256(raw).hexdigest() != source["file_sha256"] or json.loads(raw) != original_response:
+                    raise ValueError("Native report bytes or content do not match the projection")
+            except (OSError, ValueError, TypeError) as exc:
+                errors.append(f"intake_source: {exc}")
+        if source_hash(original_response) != value["source_response_sha256"]:
+            errors.append("source_response_sha256: does not match the structured model response")
+    return errors
+
+
+def normalize_model_response(value: object) -> dict[str, Any]:
+    if not isinstance(value, dict):
+        raise ValueError("Expected one JSON object")
+    forbidden = {"assessment_id", "source_response_sha256", "runtime_provenance", "review_context", "intake_source"} & set(value)
+    if forbidden:
+        raise ValueError("The model response must not set operator-controlled fields: " + ", ".join(sorted(forbidden)))
+    normalized = dict(value)
+    normalized["assessment_id"] = f"arr:assessment:{uuid.uuid4()}"
+    normalized["source_response_sha256"] = source_hash(value)
+    return normalized
+
+
+def validate_registry(registry: object, papers: Iterable[Paper]) -> list[str]:
+    if not isinstance(registry, dict) or registry.get("schema_version") != "1.0" or registry.get("protocol") != PROMPT_VERSION or registry.get("license") != "CC-BY-4.0" or not isinstance(registry.get("assessments"), list):
+        return ["assessment registry: invalid envelope"]
+    errors: list[str] = []
+    ids: set[str] = set()
+    hashes: set[str] = set()
+    for index, item in enumerate(registry["assessments"]):
+        for error in validate_assessment(item, papers):
+            errors.append(f"assessments[{index}].{error}")
+        if isinstance(item, dict):
+            assessment_id = item.get("assessment_id")
+            response_hash = item.get("source_response_sha256")
+            if assessment_id in ids:
+                errors.append(f"assessments[{index}].assessment_id: duplicate")
+            if response_hash in hashes:
+                errors.append(f"assessments[{index}].source_response_sha256: duplicate response")
+            ids.add(assessment_id)
+            hashes.add(response_hash)
+    notices = registry.get("operator_notices", [])
+    if not isinstance(notices, list):
+        return errors + ["operator_notices: must be a list"]
+    reports = {item.get("assessment_id"): item for item in registry["assessments"] if isinstance(item, dict)}
+    notice_ids = set()
+    required = {"notice_id", "paper_id", "version_id", "canonical_sha256", "recorded_at", "message", "affected_assessment_ids", "source_files"}
+    for index, notice in enumerate(notices):
+        prefix = f"operator_notices[{index}]"
+        if not isinstance(notice, dict) or set(notice) != required:
+            errors.append(f"{prefix}: invalid operator notice fields")
+            continue
+        if not isinstance(notice["notice_id"], str) or not notice["notice_id"] or notice["notice_id"] in notice_ids:
+            errors.append(f"{prefix}.notice_id: missing or duplicate")
+        else:
+            notice_ids.add(notice["notice_id"])
+        if not isinstance(notice["message"], str) or not 40 <= len(notice["message"]) <= 1800:
+            errors.append(f"{prefix}.message: invalid length")
+        try:
+            parse_exact_timestamp(notice["recorded_at"])
+        except (TypeError, ValueError):
+            errors.append(f"{prefix}.recorded_at: invalid timestamp")
+        affected = notice["affected_assessment_ids"]
+        if not isinstance(affected, list) or not affected or any(not isinstance(a, str) for a in affected):
+            errors.append(f"{prefix}.affected_assessment_ids: invalid report references")
+        else:
+            for assessment_id in affected:
+                report = reports.get(assessment_id)
+                if report is None or any(notice[key] != report.get(key) for key in ("paper_id", "version_id", "canonical_sha256")):
+                    errors.append(f"{prefix}: referenced report does not match the exact paper and PDF")
+        sources = notice["source_files"]
+        if not isinstance(sources, list) or not sources:
+            errors.append(f"{prefix}.source_files: missing evidence")
+        else:
+            for source in sources:
+                if not isinstance(source, dict) or set(source) != {"path", "sha256"} or not isinstance(source.get("path"), str):
+                    errors.append(f"{prefix}.source_files: invalid source record")
+                    continue
+                path = Path(source["path"])
+                if path.is_absolute() or ".." in path.parts or not source["path"].startswith("papers/") or notice["paper_id"] not in path.parts or not re.fullmatch(r"[0-9a-f]{64}", str(source["sha256"])):
+                    errors.append(f"{prefix}.source_files: invalid public path or hash")
+                elif not (ROOT / path).is_file() or sha256(ROOT / path) != source["sha256"]:
+                    errors.append(f"{prefix}.source_files: public evidence bytes do not match")
+    return errors
+
+
+def assessments_for(assessments: Iterable[dict[str, Any]], paper: Paper) -> list[dict[str, Any]]:
+    return sorted(
+        [item for item in assessments if item["paper_id"] == paper.id and item["version_id"] == paper.metadata["version_id"] and item["canonical_sha256"] == assessment_artifact_sha256(paper)],
+        key=lambda item: parse_exact_timestamp(item["assessed_at"]),
+        reverse=True,
+    )
+
+
+def aggregate_assessments(items: Iterable[dict[str, Any]], *, applicable: bool = True) -> dict[str, Any] | None:
+    result = aggregate_ratings(items, applicable=applicable)
+    if result is None:
+        return None
+    stars = expected_stars(result["score"])
+    return {**result, "stars": stars, "tier": tier_label(stars)}
+
+
+def validate_public_assessments(registry: object, papers: Iterable[Paper]) -> list[str]:
+    """Require real usable ratings for every currently approved public version."""
+    paper_list = list(papers)
+    errors = validate_registry(registry, paper_list)
+    if errors:
+        return errors
+    for versions in group_paper_versions(paper_list).values():
+        paper = versions[-1]
+        if paper.metadata.get("status") not in {"accepted", "corrected"}:
+            continue
+        prefix = f"{paper.id} {paper.version} ({paper.metadata['status']})"
+        try:
+            rating = aggregate_assessments(assessments_for(registry["assessments"], paper))
+        except ValueError as error:
+            errors.append(f"{prefix}: cannot calculate a valid rating: {error}")
+            continue
+        if rating is None:
+            errors.append(f"{prefix}: publish a genuine assessment for this exact version and PDF before release")
+    return errors
+
+
+def validate_highlights(registry: object, papers: Iterable[Paper]) -> list[str]:
+    if not isinstance(registry, dict) or registry.get("schema_version") != "1.0" or registry.get("license") != "CC-BY-4.0" or not isinstance(registry.get("highlights"), list):
+        return ["editorial highlight registry: invalid envelope"]
+    errors: list[str] = []
+    seen: set[tuple[str, str]] = set()
+    paper_list = list(papers)
+    required = {"paper_id", "version", "headline", "why_it_matters", "strengths", "caveats", "signed_by", "updated_at"}
+    for index, item in enumerate(registry["highlights"]):
+        prefix = f"highlights[{index}]"
+        if not isinstance(item, dict) or set(item) != required:
+            errors.append(f"{prefix}: fields do not match the highlight schema")
+            continue
+        try:
+            select_paper(paper_list, item["paper_id"], item["version"])
+        except (KeyError, ValueError) as exc:
+            errors.append(f"{prefix}.paper: {exc}")
+        key = (item["paper_id"], item["version"])
+        if key in seen:
+            errors.append(f"{prefix}: duplicate paper version")
+        seen.add(key)
+        for field, low, high in (("headline", 10, 180), ("why_it_matters", 40, 1600), ("signed_by", 2, 120)):
+            if not isinstance(item[field], str) or not low <= len(item[field].strip()) <= high:
+                errors.append(f"{prefix}.{field}: invalid length")
+        for field, minimum in (("strengths", 1), ("caveats", 0)):
+            values = item[field]
+            if not isinstance(values, list) or not minimum <= len(values) <= 8 or any(not isinstance(v, str) or not 8 <= len(v.strip()) <= 500 for v in values):
+                errors.append(f"{prefix}.{field}: invalid findings")
+        try:
+            parse_exact_timestamp(item["updated_at"])
+        except (TypeError, ValueError):
+            errors.append(f"{prefix}.updated_at: invalid timestamp")
+    return errors
