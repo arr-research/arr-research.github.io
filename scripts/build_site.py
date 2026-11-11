@@ -1266,7 +1266,7 @@ def build_paper_page(
     evaluators = "".join(
         f'<li><strong>{esc(item["model_id"])}</strong><span>{esc(item["provider"])}' +
         (f' · reasoning effort {esc(item["reasoning_effort"])}' if item.get("reasoning_effort") else '') +
-        ' · pass' +
+        f' · {esc(item.get("outcome", "not_assessed"))}' +
         (' · creation conflict declared' if item.get("involved_in_creation") else '') +
         '</span></li>'
         for item in metadata["screening"]["evaluators"]
