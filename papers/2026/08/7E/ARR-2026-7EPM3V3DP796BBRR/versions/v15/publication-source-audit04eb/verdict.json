@@ -1,0 +1,61 @@
+{
+  "verdict": "reject",
+  "gate": "public_v15_technical_source_payload_privacy_policy",
+  "source_commit": "04eb3e26dbceaf4f1660e12802c2cfaf08b3df4d",
+  "base_commit": "aa3fac26d52df621679fa0d8be71483afc3c82a1",
+  "paper_id": "ARR-2026-7EPM3V3DP796BBRR",
+  "version": "v15",
+  "version_id": "arr:version:ec7f4fe6-6e9a-4618-bfbe-dcda3daa8fbe",
+  "canonical_sha256": "5595e89c1bcbec1d9b1ae35053a76e6a962f67b45d5d1ac483e5b7a60c9b9be0",
+  "canonical_bytes": 505936,
+  "blocking_findings": [
+    {
+      "id": "M1",
+      "severity": "material",
+      "title": "Unlisted public files escape privacy validation and enter manifest",
+      "evidence": [
+        "scripts/finalize_rectangular_v15_232B.py:124",
+        "scripts/finalize_rectangular_v15_232B.py:133",
+        "scripts/finalize_rectangular_v15_232B.py:134",
+        "scripts/finalize_rectangular_v15_232B.py:146"
+      ],
+      "analytical_counterexample": "Add unlisted native-grant232B.json containing agent_token. The exact listed files and both inspected projections remain unchanged; check_candidate has no predicate rejecting the extra file; manifest recursively includes it.",
+      "counterexample_executed": false,
+      "actual_disclosure_found": false,
+      "required_correction": "Enforce exact unique canonical public-file inventory closure and privacy checks across all allowed payloads/archives; add extra-file and archive negative controls."
+    }
+  ],
+  "nonblocking_findings": [
+    "N1: six tests total comprise one positive and five negative controls; no execution established",
+    "N2: resolving before is_symlink loses in-record symlink identity",
+    "N3: first-repository commit/time is caller-supplied and syntactically validated, not Git-attested",
+    "N4: registry/timestamp/receipt/manifest writes are not transactional; concurrency and interruption untested",
+    "N5: archived wrapper retains local path strings, without credential files/values"
+  ],
+  "observed_snapshot": {
+    "public_files": 153,
+    "inventory_payloads": 152,
+    "inventory_hash_checks_passed": true,
+    "historical_and_source_pin_checks": 24,
+    "retained_original_file_checks": 44,
+    "nested_archive_instances": 5,
+    "archive_manifest_payload_instances": 319,
+    "archive_member_instances": 324,
+    "privacy_findings": [],
+    "private_sensitive_values_compared_without_output": 2,
+    "current_payload_clean_within_static_scope": true
+  },
+  "execution": {
+    "normalizer_run": false,
+    "tests_run": false,
+    "optimized_tests_run": false,
+    "build_run": false,
+    "publish_run": false,
+    "native_database_or_api_access": false
+  },
+  "scientific_review": false,
+  "new_grade": null,
+  "independence_claim": false,
+  "human_review_claim": false,
+  "report": "fullreport.txt"
+}

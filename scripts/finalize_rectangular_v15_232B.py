@@ -15,6 +15,7 @@ import sys
 
 from arrlib import ROOT, Paper, parse_exact_timestamp, validate_paper
 from assessmentlib import normalize_model_response, source_hash, validate_assessment
+from public_payload_privacy import exact_inventory, load_bounded_json, scan_files, MANIFEST, RECEIPT
 
 PID = 'ARR-2026-7EPM3V3DP796BBRR'
 VID = 'arr:version:ec7f4fe6-6e9a-4618-bfbe-dcda3daa8fbe'
@@ -45,8 +46,8 @@ def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def load(path):
-    return json.loads(path.read_text(encoding='utf-8'))
+def load(path, *, max_bytes=2 * 1024 * 1024):
+    return load_bounded_json(path, max_bytes=max_bytes)
 
 
 def write(path, value):
@@ -54,6 +55,7 @@ def write(path, value):
 
 
 def check_candidate(record=RECORD):
+    inputs, actual_files = exact_inventory(record)
     checks = []
 
     def check(condition, message):
@@ -131,20 +133,49 @@ def check_candidate(record=RECORD):
         return True
 
     check(no_private_keys(authority) and no_private_keys(decision), 'Only non-secret native/decision projections')
-    inputs = load(record / 'PACKAGE-INPUTS232B.json')
     check(inputs['source_commit'] == SOURCE and inputs['canonical_sha256'] == PDF
           and inputs['native_version_id'] == VID and len(inputs['files']) >= 148, 'Complete fixed public input inventory')
+    privacy = scan_files(actual_files)
+    check(privacy['inspected_file_instances'] >= len(actual_files), 'Bounded recursive JSON/archive privacy completed')
     for item in inputs['files']:
-        path = (record / item['path']).resolve()
-        check(path.is_relative_to(record.resolve()) and path.is_file() and not path.is_symlink()
-              and path.stat().st_size == item['bytes'] and sha(path) == item['sha256'],
+        path = actual_files[item['path']]
+        check(path.stat().st_size == item['bytes'] and sha(path) == item['sha256'],
               'Exact public input: ' + item['path'])
+    if RECEIPT in actual_files:
+        receipt = load(actual_files[RECEIPT])
+        check(set(receipt) == {'actual_library', 'library_sha256', 'bound_response_raw_sha256', 'assessment_id',
+                              'source_response_sha256', 'exact_pdf_sha256', 'actual_version_id', 'recommendation',
+                              'all_three_material_objections_open', 'rescore', 'publication', 'note'}
+              and receipt['actual_library'] == 'scripts/assessmentlib.py:normalize_model_response'
+              and receipt['library_sha256'] == sha(ROOT / 'scripts/assessmentlib.py')
+              and receipt['bound_response_raw_sha256'] == sha(record / 'bound-model-response232B.json')
+              and receipt['source_response_sha256'] == source_hash(bound)
+              and bool(re.fullmatch(r'arr:assessment:[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}', receipt['assessment_id']))
+              and receipt['exact_pdf_sha256'] == PDF and receipt['actual_version_id'] == VID
+              and receipt['recommendation'] == 'major_revision'
+              and receipt['all_three_material_objections_open'] is True
+              and receipt['rescore'] is False and receipt['publication'] is False,
+              'Exact generated normalization receipt; no partial or fabricated state')
+        from public_payload_privacy import canonical_relative
+        recorded = {}
+        for line in actual_files[MANIFEST].read_text(encoding='utf-8').splitlines():
+            match = re.fullmatch(r'([a-f0-9]{64})  (.+)', line)
+            check(match is not None, 'Canonical generated manifest line')
+            name = canonical_relative(match[2])
+            check(name not in recorded, 'Unique generated manifest entry')
+            recorded[name] = match[1]
+        check(set(recorded) == set(actual_files) - {MANIFEST}, 'Generated manifest exact file-set closure')
+        check(all(recorded[name] == sha(actual_files[name]) for name in recorded), 'Generated manifest exact byte hashes')
     check(len(checks) >= 170, 'Explicit completed acceptance-check count')
     return meta, bound, checks
 
 
 def manifest(record):
-    paths = sorted(path for path in record.rglob('*') if path.is_file() and path != record / 'MANIFEST.sha256')
+    # Never sweep arbitrary rglob extras into a public manifest. Recheck the exact
+    # inventory and privacy after the receipt write and before generating it.
+    _, actual = exact_inventory(record, generating_manifest=True)
+    scan_files(actual)
+    paths = [actual[name] for name in sorted(actual) if name != MANIFEST]
     (record / 'MANIFEST.sha256').write_text(''.join(sha(path) + '  ' + path.relative_to(record).as_posix() + '\n'
                                                    for path in paths), encoding='utf-8')
 
@@ -158,13 +189,31 @@ def main():
     require(sys.platform.startswith('linux'), 'Sanctioned owned Linux runtime only')
     meta, bound, checks = check_candidate()
     registry_path = ROOT / 'registry/model-assessments.json'
-    registry = load(registry_path)
+    # Existing repository-wide registries are distinct from bounded per-record
+    # JSON; they are already about 2 MiB and grow by one preserved report.
+    registry = load(registry_path, max_bytes=16 * 1024 * 1024)
     matches = [item for item in registry['assessments'] if item.get('version_id') == VID
                or (item.get('paper_id') == PID and item.get('version') == 'v15')]
     require(len(matches) <= 1, 'Duplicate v15 assessments must not be appended')
     if args.normalize:
         require(re.fullmatch('[a-f0-9]{40}', args.deposit_commit or ''), 'Actual first repository commit required')
         parse_exact_timestamp(args.deposit_recorded_at)
+        # Preflight the timestamp before any append. The actual first-commit/time
+        # is separately Git-attested by the owned runner/caller, not this parser.
+        dates_path = ROOT / 'registry/record-timestamps.json'
+        dates = load(dates_path, max_bytes=16 * 1024 * 1024)
+        expected = dict(id=PID, version='v15', deposit_recorded_at=args.deposit_recorded_at,
+                        deposit_timestamp_basis='first_repository_commit', deposit_commit=args.deposit_commit,
+                        publication_state='pending')
+        found = [item for item in dates['records'] if item['id'] == PID and item['version'] == 'v15']
+        require(not found or found == [expected], 'Existing timestamp must not be fabricated or overwritten')
+        if matches:
+            existing = matches[0]
+            reconstructed = {key: value for key, value in existing.items()
+                             if key not in {'assessment_id', 'source_response_sha256'}}
+            require(reconstructed == bound and existing['source_response_sha256'] == source_hash(bound),
+                    'Existing normalized report differs; do not mutate or append')
+            require(not validate_assessment(existing, [Paper(RECORD, meta)]), 'Existing normalized report is invalid')
         if not matches:
             normalized = normalize_model_response(bound)  # Native normalizer ONCE.
             errors = validate_assessment(normalized, [Paper(RECORD, meta)])
@@ -172,13 +221,8 @@ def main():
             registry['assessments'].append(normalized)
             write(registry_path, registry)
             matches = [normalized]
-        dates_path = ROOT / 'registry/record-timestamps.json'
-        dates = load(dates_path)
-        expected = dict(id=PID, version='v15', deposit_recorded_at=args.deposit_recorded_at,
-                        deposit_timestamp_basis='first_repository_commit', deposit_commit=args.deposit_commit,
-                        publication_state='pending')
-        found = [item for item in dates['records'] if item['id'] == PID and item['version'] == 'v15']
-        require(not found or found == [expected], 'Existing timestamp must not be fabricated or overwritten')
+        # These are sequential filesystem writes, NOT one transaction. A failed
+        # run/partial generated pair is retained and must never be published.
         if not found:
             dates['records'].append(expected)
             write(dates_path, dates)
@@ -191,6 +235,7 @@ def main():
             all_three_material_objections_open=True, rescore=False, publication=False,
             note='Normalization/binding only. No new reviewer identity, verified isolation, grade or acceptance.'))
         manifest(RECORD)
+        meta, bound, checks = check_candidate()
     require(len(matches) == 1, 'One genuine native-normalized v15 report required')
     report = matches[0]
     require(report['source_response_sha256'] == source_hash(bound), 'Native structured source-response hash')
