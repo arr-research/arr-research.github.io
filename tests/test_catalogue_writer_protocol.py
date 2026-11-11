@@ -27,6 +27,7 @@ WRITERS = {
     'operator_reconcile_integrated_v13_223.py',
     'operator_reconcile_matrix_v14_226C.py',
     'operator_reconcile_matrix_v14_official_release_226C.py',
+    'operator_reconcile_rectangular_v15_232B.py',
 }
 
 

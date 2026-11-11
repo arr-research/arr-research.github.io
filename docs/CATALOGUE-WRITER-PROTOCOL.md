@@ -54,6 +54,7 @@ The supported live-writer inventory at the 226C race-fix freeze is:
 * `operator_reconcile_integrated_v13_223.py`
 * `operator_reconcile_matrix_v14_226C.py` (original mirror gate, unchanged)
 * `operator_reconcile_matrix_v14_official_release_226C.py`
+* `operator_reconcile_rectangular_v15_232B.py` (v15: both official asset and AIRR mirror)
 
 These scripts use the same database path and retain the transaction across the
 final file comparison, replacement and readback. The regression inventory check
@@ -81,3 +82,10 @@ The official-release witness does not pass, replace or alter the original AIRR
 website mirror criterion. It creates no grant, scope, receipt, permission,
 publication decision, quota exception or acceptance. All original release hashes,
 author identities, native-case and publication gates remain in force.
+
+
+The v15 successor requires BOTH actual official v15 release-asset membership/bytes
+and exact AIRR mirror bytes; it cannot use the v14 pending-mirror route. Exact
+v15 published case, 93 unrelated entries and global zero active unused historical
+grants are required even for its already-current no-op. Actual asset ID and immutable
+metadata commit come from the completed public release; no new authority is created.
