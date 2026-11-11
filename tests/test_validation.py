@@ -573,6 +573,32 @@ class PaperValidationTests(unittest.TestCase):
             self.assertIn("Preliminary", page)
             self.assertIn(f'https://example.test/notes/{paper.id}/', page)
 
+    def test_evaluator_labels_preserve_concerns_and_fail_in_public_page(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            paper = self.make_paper(root)
+            paper.metadata["status"] = "working_paper"
+            timestamp = {"deposit_recorded_at": "2026-08-13T10:15:20+02:00", "publication_state": "pending"}
+            evaluator = {"provider": "Fixture provider", "model_id": "Fixture evaluator", "involved_in_creation": True}
+            paper.metadata["screening"].update(status="fail", critical_objections_unresolved=1, evaluators=[evaluator])
+            for outcome in ("concerns", "fail", "pass", None):
+                with self.subTest(outcome=outcome):
+                    evaluator.pop("outcome", None)
+                    if outcome is not None:
+                        evaluator["outcome"] = outcome
+                    with patch.object(build_site, "ROOT", root):
+                        page = build_site.build_paper_page(
+                            paper, timestamp, [], {paper.id: "papers"},
+                            [dict(timestamp, id=paper.id, version=paper.version)],
+                            {paper.version: paper}, paper.version, False, "", "https://example.test", "",
+                        )
+                    section = page.split('<section class="screening-record">', 1)[1].split('</section>', 1)[0]
+                    expected = outcome if outcome is not None else "not_assessed"
+                    self.assertIn(f'Fixture provider · {expected} · creation conflict declared', section)
+                    self.assertIn('Status: <strong>fail</strong>', section)
+                    if outcome != "pass":
+                        self.assertNotIn(' · pass', section)
+
     def test_public_submit_page_links_directly_to_private_receiver(self) -> None:
         page = build_site.build_submit("", "https://arr.example", "https://intake.example")
         self.assertIn('href="https://intake.example/paper/new"', page)
