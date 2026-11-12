@@ -1,0 +1,57 @@
+import json,hashlib
+from pathlib import Path
+from datetime import datetime,timezone
+b=Path(r'D:\Datos\the-eriksson-programme\autonomia\evidencia-274');old=b/'assessment274B-first-round';out=b/'assessment274B-identifier-correction'
+def h(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def snap(d):return {p.relative_to(d).as_posix():{'bytes':p.stat().st_size,'sha256_raw':h(p)} for p in sorted(d.rglob('*')) if p.is_file()}
+before=snap(old)
+if out.exists():raise RuntimeError('Existing correction; refuse overwrite')
+r=json.loads((old/'response-native.json').read_text(encoding='utf-8'))
+ids=json.loads((b/'native-public-identifiers274.json').read_text(encoding='utf-8'))
+if h(old/'response-native.json')!='96afe99fd6e3c073ded9d58abb59ccc9b4517f305edec2d6985298c0fb6f148c':raise RuntimeError('Unexpected original response')
+if ids['id']!='ARR-2026-451FW8N5MC8KYV5S' or ids['version_id']!='arr:version:3b0e3775-52ac-4272-968a-0af507ae26d6' or ids['version']!='v1':raise RuntimeError('Unexpected generator identifiers')
+corrected=dict(r);corrected['paper_id']=ids['id'];corrected['version_id']=ids['version_id']
+diff=[k for k in r if r[k]!=corrected[k]]
+if set(diff)!={'paper_id','version_id'} or len(r)!=19:raise RuntimeError('Unexpected diff')
+out.mkdir()
+def put(name,s):
+ p=out/name;p.parent.mkdir(parents=True,exist_ok=True)
+ with p.open('x',encoding='utf-8',newline='\n') as f:f.write(s)
+def js(n,v):put(n,json.dumps(v,ensure_ascii=False,indent=2)+'\n')
+assignment='''FORMAT-ONLY IDENTIFIER CORRECTION, expressly NOT reassessment/rescoring or a second scientific round. Parent read FULLoriginalscientificreport/response/context and accepts alloriginal3.50/overall4,criteria4/4/2/2/4,minor_revision,4minoritems,noOPENmaterial. ActualAIRR template requires native scripts/new_record.py generator, so parent NOW executed that ordinarymetadata generator in C:\\Trabajo\\airr-science\\paper274-20261112. Exact rawstdout D evidencia274/native-public-record-generator-response.txt and native-public-identifiers274.json establish official candidate ARR-2026-451FW8N5MC8KYV5S,v1,version_id arr:version:3b0e3775-52ac-4272-968a-0af507ae26d6. Originalprivatecandidate IDsARR-2026-62YN... were never public; retain immutablegenerationcontext/round. PDF IDENTICAL359042B63a303bb47c16d5c1877ef37d9dd3511e3064ebafa274e1041afbd998606a9da, nativecaseSUB-C43B923E4EE9B956 alreadyclean actualgrant/receipt/workingpermission, no acceptance. Please copy ORIGINAL19-key response exactly except ONLYpaper_id andversion_id to actualnativeidentifiers, preservingversionv1 and EVERYscientificfield, originalassessed_at/model/context/score/findings byte-values. No PDFre-read/scientificre-evaluation/browsing/runtime/network/grade. Save response-native.json, COMPLETE formatclarification/context/assignment/rawcapturesoforiginalresponse+generatoroutputs+originalreview bindings+manifest under D evidencia274/assessment274B-identifier-correction. Checkdiff keysEXACT2 and originalroundunchanged. Explain ARR-ASSESS1.0originalprompt was actuallycanonicalbodywithprivateIDs, metadata-onlycorrectionbinds sameexactPDF to true generatedpublicrecord, notclaimnewhuman/nativepermission/review. ActualidentityCodex/OpenAI oldroundbackendunavailable; user's newrootAstraHigh statement doesNOT retrospectivelyidentifythis oldreview backend. No editsoriginalround/PDF/source/branch/state/otherchat/agent/publication. No inboundfromme.'''
+put('assignment.txt',assignment+'\n')
+js('response-native.json',corrected)
+now=datetime.now(timezone.utc).isoformat()
+put('format-clarification.txt','''IDENTIFIER-ONLY CORRECTION OF THE IMMUTABLE FIRST274B ASSESSMENT
+
+This packet corrects two metadata fields, paper_id and version_id, to identifiers returned by the ordinary native record generator reported by the parent and captured in native-public-identifiers274.json and native-public-record-generator-response.txt. Old private candidate ARR-2026-62YNH5ZJP38FP8F6 / arr:version:3fe5faf6-2101-4ebf-94c2-93a161437d55 is mapped to generated candidate ARR-2026-451FW8N5MC8KYV5S / arr:version:3b0e3775-52ac-4272-968a-0af507ae26d6. The original private identifiers were not a public record. The parent reports the generator ran in C:\\Trabajo\\airr-science\\paper274-20261112. This task read the exact retained generator outputs, not the generator's runtime or network state.
+
+The canonical PDF binding remains exactly SHA25663a303bb47c16d5c1877ef37d9dd3511e3064ebafa274e1041afbd998606a9da,359042bytes,9pages, versionv1. The original ARR-ASSESS-1.0 prompt was actually the canonical prompt body instantiated with the original private identifiers; it remains preserved unchanged with its generation context. The corrected response binds that SAME assessed artifact and original judgment to the native generated identifiers. This is not a newly executed prompt, new assessment, second scientific round, calibration, regrading or scientific opinion. No PDF re-read, source review, browsing, mathematical computation, compiler or runtime execution occurred in this correction.
+
+Every other response value is preserved exactly, including assessed_at, provider, model_id, independence, prompt_version, canonical_sha256, version, importance3.50, overall4, criteria4/4/2/2/4, minor_revision, all findings/arrays and no OPEN material objections. The original four minor items remain in the complete original report. Comparison checks require exactly the two identifier keys to differ. Values are preserved via JSON loading and serialization, with string/number/list/object equality checked; original raw response bytes are captured unchanged. The corrected document is a new JSON serialization, not a claim that its entire byte stream equals the original two-field-different file.
+
+Actual assessment identity remains Codex/OpenAI with exact served backend/version/effort unavailable, involved inherited programme/author/prior-history context, not blind and not independently established. A subsequent root-session AstraHigh statement does not retrospectively establish this old assessment's backend. No model label has been changed or inferred. Full inherited-chat export remains unavailable. No independent or human peer review is claimed.
+
+Parent reports native case SUB-C43B923E4EE9B956 has actual working-paper grant/receipt/permission, with no acceptance. This bounded correction neither inspects nor creates nor substitutes for any grant, receipt, permission, human assent, editorial acceptance or publication. A generated record identifier is not proof of public release. Nothing in this packet claims those actions occurred here. No assessment_id, source_response_sha256, runtime_provenance, review_context or intake_source operator field is added to the response.
+
+The complete original review, original response, prompt, prompt-generation context, original review context/assignment, original bindings and manifest are captured verbatim. The original round's complete before/after file maps are checked equal. The new packet contains the full actual assignment, correction context, exact changed-key record and self-excluding raw SHA256 manifest. This operation does not mutate the original round, PDF, source, branch, programme state, another chat/agent, automation or public record. Downstream users should retain this clarification alongside the immutable original report and correction mapping.
+''')
+refs=[]
+for p in [old/n for n in ['response-native.json','scientific-review.txt','prompt.txt','prompt-generation-context.json','review-context.json','assignment.txt','subject-bindings.json','raw-manifest.json']]+[b/'native-public-record-generator-response.txt',b/'native-public-identifiers274.json']:
+ rel=Path('captures')/('original-round' if p.parent==old else 'generator')/p.name;q=out/rel;q.parent.mkdir(parents=True,exist_ok=True)
+ with q.open('xb') as f:f.write(p.read_bytes())
+ refs.append({'source_path':str(p),'retained_path':rel.as_posix(),'bytes':p.stat().st_size,'sha256_raw':h(p)})
+js('source-references.json',refs)
+js('format-context.json',{'created_at':now,'kind':'identifier-only correction; no scientific reassessment','original_assessed_at':r['assessed_at'],'original_response_sha256_raw':h(old/'response-native.json'),'corrected_response_sha256_raw':h(out/'response-native.json'),'changed_keys':diff,'changes':{k:{'old':r[k],'new':corrected[k]} for k in diff},'every_other_response_value_identical':True,'actual_identity_unchanged':r['model_id'],'independence_unchanged':r['independence'],'new_root_model_statement_not_retrospective_provenance':True,'canonical_prompt_body_originally_used':True,'same_PDF_binding':True,'original_round_preserved':True,'new_scientific_round':False,'new_permission_receipt_assent_acceptance_publication_claim':False,'parent_case_reference_only':'SUB-C43B923E4EE9B956'})
+with (out/'correction-writer.py').open('xb') as f:f.write(Path(__file__).read_bytes())
+after=snap(old)
+if before!=after:raise RuntimeError('Original round mutated')
+js('original-round-immutability-check.json',{'unchanged':True,'before':before,'after':after})
+js('raw-manifest.json',{'algorithm':'SHA-256 raw bytes','self_excluded':'raw-manifest.json','files':snap(out)})
+manifest=json.loads((out/'raw-manifest.json').read_text(encoding='utf-8'))
+for n,v in manifest['files'].items():
+ p=out/n
+ if p.stat().st_size!=v['bytes'] or h(p)!=v['sha256_raw']:raise RuntimeError(n)
+parsed=json.loads((out/'response-native.json').read_text(encoding='utf-8'))
+if [k for k in parsed if parsed[k]!=r[k]]!=diff or len(parsed)!=19:raise RuntimeError('Serialized diff mismatch')
+print(json.dumps({'directory':str(out),'changed_keys':diff,'original_round_unchanged':True,'response_sha256_raw':h(out/'response-native.json'),'clarification_sha256_raw':h(out/'format-clarification.txt'),'manifest_sha256_raw':h(out/'raw-manifest.json'),'manifest_members':len(manifest['files'])},indent=2))
