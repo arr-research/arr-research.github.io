@@ -1,0 +1,66 @@
+import json,hashlib,subprocess
+from pathlib import Path
+from datetime import datetime,timezone
+r=Path(r'C:\Trabajo\the-eriksson-programme\solenoidal-layers275-20261112');b=Path(r'D:\Datos\the-eriksson-programme\autonomia\evidencia-284');p=r/'_tmp/production284-a';d=b/'production-a';o=b/'production-a-source-audit';expected='4d55ce32f54983977aac175f89e80e9cd0b64278'
+def h(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def head():return subprocess.check_output(['git','-C',str(r),'rev-parse','HEAD']).decode().strip()
+if head()!=expected or h(p/'RUNNER-HASHES.json')!='f4744fbc7120b7abb2231b5371c89f9c77f20715148122a06099c1aeeb081e05':raise RuntimeError('Frozen gate mismatch')
+entries=json.loads((p/'RUNNER-HASHES.json').read_text());before={}
+for v in entries:
+ q=p/v['path']
+ if q.stat().st_size!=v['bytes'] or h(q)!=v['sha256'] or q.read_bytes()!=(d/v['path']).read_bytes():raise RuntimeError('runner bytes mismatch')
+ before[v['path']]=h(q)
+paper=r/'papers/checkerboard-response';tex=paper/'manuscript284B.tex';inputs=json.loads((paper/'SOURCE-INPUTS.json').read_text())['files']
+if h(tex)!='11869a9c1a23d9283eb8650d1dd35d0d1422cfa6dc28102f8aa51578e499f733' or len(inputs)!=85:raise RuntimeError('paper input binding')
+for v in inputs:
+ q=paper/v['path']
+ if not q.resolve().is_relative_to(paper.resolve()) or q.stat().st_size!=v['bytes'] or h(q)!=v['raw_sha256']:raise RuntimeError('paper input differs')
+if o.exists():raise RuntimeError('No overwrite')
+o.mkdir()
+def put(n,t):
+ q=o/n;q.parent.mkdir(parents=True,exist_ok=True)
+ with q.open('x',encoding='utf-8',newline='\n') as f:f.write(t)
+def js(n,v):put(n,json.dumps(v,indent=2)+'\n')
+put('assignment.txt','''Unit284 separate engineering source audit mandated CLAUDE. Frozen worktree C:\\Trabajo\\the-eriksson-programme\\solenoidal-layers275-20261112 HEAD4d55ce32f54983977aac175f89e80e9cd0b64278. Audit exact four operative files _tmp\\production284-a {build284.py,capture_cli_atomic.ps1,run_owned_after_gate.ps1,readback_after_stop.ps1}, RUNNER-HASHES.json SHA f4744fbc7120b7abb2231b5371c89f9c77f20715148122a06099c1aeeb081e05. D identical frozen copy E284\\production-a. Root adapted proven274B via _tmp/prepare_production284.py; no runtime allocated. Check hashes/paths, pinned branch+HEAD+TeX11869a9c1a23d9283eb8650d1dd35d0d1422cfa6dc28102f8aa51578e499f733, frozen85inputmanifest, exact child-exit capture and failures/nativeTeX preservation, two fresh clones, source injection, deterministic PDF comparison, all-page renders, cleanup boundary, own Colab Linux runtime + stop finally + independent backendreadback, credentials never exposed, root relay requires BOTH actual source+engineering full reports. No math/Lean/localcompile/runtime yourself, no assessment grade; read-only engineering source gate only. Separate fabricator sourceagent production260 and manuscript auditor grouped260; root wrote adaptation. Freeze subjects/HEAD and strict no-inbound audit (I send nothing until full report returned). Save ALL report/objections, assignment/context actual identity, raw subjects/hashmanifest/stability in D:\\Datos\\the-eriksson-programme\\autonomia\\evidencia-284\\production-a-source-audit. Read applicable CLAUDE/charter. Disclose involved context, unavailable exact model backend; never infer. Return exact report+manifest hash and accept/reject blockers.\n''')
+put('full-report.txt','''284A ENGINEERING SOURCE GATE — FULL REPORT
+
+VERDICT: ACCEPT EXACT FOUR-FILE RUNNER FOR THE PROPOSED BOUNDED PDF-PRODUCTION UNIT, WITH THE RETURNED-EVIDENCE CONDITIONS BELOW. No blocking source/path/hash defect found. This is not authorization relayed by the auditor, an executed production success, manuscript mathematical acceptance, exact-PDF review, grade or publication.
+
+REFERENT/READING
+HEAD4d55ce32f54983977aac175f89e80e9cd0b64278. Runner manifest rawSHA256f4744fbc7120b7abb2231b5371c89f9c77f20715148122a06099c1aeeb081e05. Entire build284.py, capture_cli_atomic.ps1, run_owned_after_gate.ps1 and readback_after_stop.ps1 read, together with adaptation helper. Freshly read operative CLAUDE environment/sentinel rules and charter first135lines; charter no-inbound/cleanup/hash scope rules read in this session and remain applicable. Exact operative file sizes/hashes match manifest and D frozen copy; source/head/manifest remain unchanged before/after. Manuscript TeX rawSHA25611869a9c1a23d9283eb8650d1dd35d0d1422cfa6dc28102f8aa51578e499f733 matches actual bytes. All85manifest input byte lengths/rawhashes/path containment checked locally as file integrity only. No reviewed production code executed.
+
+1. SOURCE AND INPUT IDENTITY
+Inner SOURCE and BRANCH are the assigned exactSHA and codex/tep-solenoidal275-20261112. Fresh shallow clone branch HEAD must equal SOURCE before checkout; later branch movement fails closed rather than silently building a new revision. Sparse path papers/checkerboard-response matches actual target. Both modes verify exactTeX and every frozen SOURCE-INPUTS entry; parent-side hash verification confirms85actual inputs. Inputmanifest content is fixed by commit, not a mutable external assumption. Git-tracked source capture occurs before generated files, and postbuild tracked-diff checks reject source mutation. A branch moved after source freeze may make this recipe inexecutable; preserve that failure rather than adapt source or invent a receipt.
+
+2. REAL CHILD STATUS AND FAILURE RETENTION
+Python run waits for actual Popen completion; timeouts kill/wait, flush both native streams and save real exit via closed/fsynced exact decimal temporary sentinel and atomic rename/readback. Nonzero or timeout raises. Popen startup failure yields absent status, not fabricatedzero. Explicit require checks, no acceptanceassert. NativeTeX files are harvested in a finally for EACH pass before propagation/cleanup/later pass; retention records preexisting artifacts and actual observed child result, so a stale PDF is not represented as newly successful. Both first/second passes and both clones have separate semantic log/exit names. Outer PowerShell captures real wsl.exe Process.ExitCode after output-drain completion; atomic sentinel is flushed, closed, exact-integer parsed and renamed without overwrite. Neither mere sentinel existence nor an output file means success.
+
+3. TWO FRESH BUILDS/DETERMINISM/CONTENT/RENDERS
+Each clone is independently created under own freshROOT, detached at sameSOURCE; same committed epoch sets SOURCE_DATE_EPOCH,FORCE_SOURCE_DATE,TZ,LC_ALL. CurrentTeX suppresses creation-date/trailer-id/ptex variability and SourceCommit is explicitly injected on pdflatex commandline, then expected in extracted output. Two actual PDF raw hashes/lengths must match; mismatch preserves both raw PDFs/logs and cannot become successful status. Each build runs twice; no local compilation is used. Selected PDF is a copy of clone-a after equality, not regenerated. Actualpdfinfo bounds pages1..60; extraction expects actual sourceSHA and currentsection titles, noSLOT/SOURCE-NOT-BUILT, minimum length; source heading reads confirm expected strings. These are content-presence guards, not mathematical or semantic-honesty certification. pdftoppm returns actual individual full-pagePNGs and count must matchpdfinfo. Contacts are secondary previews; lexicographic PNG order can placepage10beforepage2 in sheets, but labeled originals remain available and must EACH be visually reviewed before PDF approval. No automatic layout or scientific assessment is claimed by runner status.
+
+4. OWN EXECUTION PLANE/STOP/READBACK
+Only Linux /content inner execution is allowed. Windows wrapper performs WSLColabCLI orchestration, not localTeX/math. Named own session tep284-build-a-own-cpu and private config tep284-build-a-sessions.json isolate this unit; highmem requested and noGPU requested. Actual allocation/runtime characteristics must still be recorded from returned service evidence. Attempt directory must not already exist, avoiding blind retry/overwrite. Execution has CLI timeout3600 and individual child limits. Nonzero execution still permits download of preserved failure archive. finally attempts ownstop even after allocation failure, then retains lifecycle evidence. Independent readback script issues a separate sessions query using the same own config; it deliberately does NOT equate queryexit0 with inactivity. Parent must inspect literal returned state/logs, not infer success from release.exit existence. Parent must stop/remediate any residual own session on failure; this source review creates none.
+
+5. CLEANUP, PATHS AND AUTHORITY
+Inner disposable cleanup resolves only two explicit ROOT children clone-a/clone-b. Each result records removed status; failure sets FAILED_PRESERVED and emits literal CLEANUP-PENDING path separately. No junction/sharedcache manipulation is introduced. D attempt/archive paths agree between run/download/readback; local production script path correctly points to C worktree. Source/clone evidence is retained before deletion. The only credential-related text is an existing ADC filepath in the operational environment; code does not read/print token contents or transmit secrets to the manuscript/review. No credential inspection occurred here.
+Parent relay requires matching source/runner/TeX, both full-report-read booleans, bothaccepted flags and actual full-report paths/rawhash matches before allocation. That is evidence binding plus parent declaration, not a security certificate that prose was cognitively read; parent remains responsible to read complete reports. This engineering report cannot supply or substitute for the separate mathematical manuscript gate. No relay was created by me.
+
+NONBLOCKING FAILURE/REVIEW CONDITIONS (ALL RETAIN)
+N1: deterministic environment controls and two clones provide within-runtime reproduction; apt packages are not fully versionlocked and can vary or fail externally. Returned logs/version outputs and exact bytes govern, not template heritage.
+N2: if stop invocation itself throws, PowerShell finally may exit before writing outer-report/timestamp. Its rawlogs/absent or nonzero sentinel then signify incomplete lifecycle; never infer stopped state. Separate literal backend readback and manual ownsession repair remain required. No source claim of guaranteed completion is accepted.
+N3: if archive/manifest finalization or filesystem writes fail, download may be absent/partial. Parent must verify archive members/hashes, all actualchild exits, retained nativeTeX and failures before disposition. OuterCLIzero alone does not certify inner success. The two-build mismatch path can lack populated report.builds because assignment occurs after equality; both saved rawPDFs and logs remain the evidence.
+N4: overfull warnings are retained, not automatically rejected; all page originals must be inspected. Pagecount/text tokens/contact sheets never replace exactPDF visual/scientific review. Successful builds do not establish correctness/novelty or transfer earlier grades.
+No mandatory pre-run source correction found under these bounded conditions. Runtime availability/quota/actualCLI compatibility were not tested. Billing isnull; operational timestamps do not constitute billedunits. No PR/body assigned: capture/hashN/A. No clone/session allocated by auditor; cleanupN/A. No no-inbound violation occurred during this gate.
+''')
+put('context.txt','Codex/OpenAI same involved child context with shared programme/author/prior audit history. Exact served backend/version/effort unavailable, not inferred. Separate engineering role is not provider independence, blind/human review or mathematical manuscript acceptance. No inbound messages during audit. File/Git reads, hash comparisons and raw copies only; no reviewed script import, compiler, mathprogram, runtime or external service. No prior274B verdict inherited; exact284bytes examined.\n')
+paths=[p/v['path'] for v in entries]+[p/'RUNNER-HASHES.json',r/'_tmp/prepare_production284.py',tex,paper/'SOURCE-INPUTS.json',r/'CLAUDE.md',r/'docs/OPERATIONAL-GOVERNANCE-CHARTER.md'];refs=[]
+for i,q in enumerate(paths):
+ dest=o/'subjects'/('%02d-'%i+q.name);dest.parent.mkdir(exist_ok=True)
+ with dest.open('xb') as f:f.write(q.read_bytes())
+ refs.append({'path':dest.relative_to(o).as_posix(),'origin':str(q),'bytes':q.stat().st_size,'sha256':h(q),'representation':'exact raw bytes, no normalization'})
+js('subject-bindings.json',refs)
+if head()!=expected or any(h(p/n)!=v for n,v in before.items()):raise RuntimeError('Source changed')
+js('stability.json',{'HEAD_before_after':expected,'runner_manifest_sha256_raw':h(p/'RUNNER-HASHES.json'),'operativefiles_unchanged':True,'D_frozen_copy_equal':True,'frozen_inputs_verified':85,'TeX_sha256_raw':h(tex),'no_inbound':True,'finished_at':datetime.now(timezone.utc).isoformat()})
+with (o/'retention-writer.py').open('xb') as f:f.write(Path(__file__).read_bytes())
+js('raw-hashmanifest.json',{'algorithm':'SHA256 raw bytes no normalization','self_excluded':'raw-hashmanifest.json','files':[{'path':q.relative_to(o).as_posix(),'bytes':q.stat().st_size,'sha256':h(q)} for q in sorted(o.rglob('*')) if q.is_file()]})
+print(json.dumps({'report':h(o/'full-report.txt'),'manifest':h(o/'raw-hashmanifest.json')},indent=2))
