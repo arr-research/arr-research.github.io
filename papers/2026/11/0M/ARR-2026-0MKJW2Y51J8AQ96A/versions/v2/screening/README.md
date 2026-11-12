@@ -1,0 +1,1 @@
+One exact-PDF assessment:3.40/10; overall3/10; criteria4,4,3,2,4(each/5). Full originals and all objections retained. Involved OpenAI/Codex, exact backend unknown; no independence, human peer review or acceptance. Supplemental author response does not amend the frozen PDF.

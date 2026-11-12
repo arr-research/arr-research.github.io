@@ -1,0 +1,15 @@
+Before final audit delivery, metadata inspection found that the packet writer
+excluded every basename raw-hashmanifest.json rather than only its own root
+manifest. That omitted the unchanged nested A manifest from the NEW B packet
+inventory, although the complete A bytes had been copied. Other nested
+manifests with that same basename were also omitted by the filter. The
+copied historical A packet used the same basename exclusion; it remains
+unchanged. All85 original input bindings were independently checked by
+size/hash, and the NEW final B inventory includes every actual copied A
+file, including nested manifests absent from the historical A inventory.
+Original initial
+writer and134-member manifest are preserved beside this notice. The final
+inventory excludes only its own root manifest and hashes the nested A
+manifest and all correction-history files. No reviewed runner/source/A
+report or prospective engineering verdict was changed, and no runtime or
+test was executed. This is packet-retention metadata correction only.
