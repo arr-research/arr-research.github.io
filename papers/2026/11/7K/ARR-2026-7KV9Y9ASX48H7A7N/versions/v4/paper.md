@@ -18,4 +18,4 @@ Rebuild on Linux at the exact source commit above using TeX Live base/recommende
 
 ## Rights and provenance
 
-Manuscript CC-BY-4.0; metadata CC0-1.0; build source AGPL-3.0-or-later. Real linked native receipt, exact Working-paper permission and separate clean case observation are bound in publication-authority.json. Intake permission, AI assessment, public release and editorial acceptance are separate events. Prior artifacts and failed attempts remain preserved.
+Manuscript CC-BY-4.0; metadata CC0-1.0; all deposited executable source AGPL-3.0-or-later. Supporting-material scopes, archive-member coverage, third-party exclusions and complete license texts are in [LICENSES/README.md](LICENSES/README.md). Real linked native receipt, exact Working-paper permission and separate clean case observation are bound in publication-authority.json. Intake permission, AI assessment, public release and editorial acceptance are separate events. Prior artifacts and failed attempts remain preserved.
