@@ -1,0 +1,40 @@
+diff --git "a/D:\\Datos\\the-eriksson-programme\\autonomia\\evidencia-308\\collect308.py" "b/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\collect314.py"
+index 95af5da..34a0dbb 100644
+--- "a/D:\\Datos\\the-eriksson-programme\\autonomia\\evidencia-308\\collect308.py"
++++ "b/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\collect314.py"
+@@ -1,7 +1,7 @@
+ from pathlib import Path
+ import json,hashlib,zipfile,shutil
+-E=Path(r'D:\Datos\the-eriksson-programme\autonomia\evidencia-308')
+-A=E/'production-a/attempt-a';Z=A/'tep308-build-a-results.zip';R=A/'returned'
++E=Path(r'D:\Datos\the-eriksson-programme\autonomia\evidencia-314')
++A=E/'production-a/attempt-a';Z=A/'tep314-build-a-results.zip';R=A/'returned'
+ def h(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+ def require(ok,msg):
+  if not ok:raise ValueError(msg)
+@@ -18,18 +18,18 @@ for r in rows:
+  p=R/r['path'];require(p.resolve().is_relative_to(R.resolve()),'Unsafe manifest member')
+  require(p.stat().st_size==r['bytes'] and h(p)==r['sha256'],'Raw member differs '+r['path'])
+ report=json.loads((B/'report.json').read_bytes())
+-require(report['source']=='8ac81a6f3f70aa552cc957d45abaf3f0fab90e65','Source differs')
++require(report['source']=='b72cfbcb74275ff7f80b6c262cb003c5cc6ea8eb','Source differs')
+ require(report['status']=='TWO_FRESH_MATCHING_PDFS_RENDERED_PENDING_ALL_PAGE_VISUAL_AND_FIRST_EXACT_PDF_ASSESSMENT','Inner production failed')
+ require(len(report['commands'])==27 and all(c['actual_exit']==0 and not c['timed_out'] for c in report['commands']),'Native children incomplete')
+ require(len(report['cleanup'])==2 and all(c['removed'] for c in report['cleanup']),'Disposable clone cleanup incomplete')
+-pdf=B/'manuscript308A.pdf'
++pdf=B/'manuscript314A.pdf'
+ require(h(pdf)==h(B/'clone-a.pdf')==h(B/'clone-b.pdf'),'Actual PDFs differ')
+-require(all(x['input_files_verified']==727 and x['pdf_sha256']==h(pdf) for x in report['builds']),'Input/build binding differs')
+-delivery=Path(r'D:\Entregas\the-eriksson-programme\2026-11-13_critical-tail308')
+-captures=Path(r'D:\Capturas\the-eriksson-programme\2026-11-13_critical-tail308')
++require(all(x['input_files_verified']==940 and x['pdf_sha256']==h(pdf) for x in report['builds']),'Input/build binding differs')
++delivery=Path(r'D:\Entregas\the-eriksson-programme\2026-11-13_attained-cutoff314')
++captures=Path(r'D:\Capturas\the-eriksson-programme\2026-11-13_attained-cutoff314')
+ delivery.mkdir(exist_ok=False);captures.mkdir(exist_ok=False)
+-for f in [pdf,B/'source-capture/manuscript308A.tex',B/'manuscript308A.txt',Z]:shutil.copy2(f,delivery/f.name)
++for f in [pdf,B/'source-capture/manuscript314A.tex',B/'manuscript314A.txt',Z]:shutil.copy2(f,delivery/f.name)
+ for f in list(B.glob('page-*.png'))+list(B.glob('contact-*.jpg')):shutil.copy2(f,captures/f.name)
+ v={'source':report['source'],'PDF_sha256':h(pdf),'PDF_bytes':pdf.stat().st_size,'pages':report['pages'],'archive_sha256':h(Z),'raw_members_verified':len(rows),'actual_native_commands':27,'all_native_exit_zero':True,'two_matching_fresh_clones':True,'clones_removed':True,'visual_review_complete':False,'exact_PDF_assessment':None,'backend_inactivity_readback':'pending separate query','billing_units':None}
+-(A/'parent-return-validation308.json').write_bytes((json.dumps(v,indent=2)+'\n').encode())
++(A/'parent-return-validation314.json').write_bytes((json.dumps(v,indent=2)+'\n').encode())
+ print(json.dumps(v))
