@@ -1,0 +1,39 @@
+import os,sys,base64,hashlib,json,subprocess,zipfile,datetime
+from pathlib import Path
+root=Path('/content/tep318-validator-c-tests');archive=Path('/content/tep318-validator-c-tests.zip')
+if os.name!='posix' or not Path('/content').is_dir() or root.exists() or archive.exists():raise RuntimeError('Fresh own Colab only')
+root.mkdir();results=[]
+def put(name,value):
+    with (root/name).open('x',encoding='utf-8') as f:json.dump(value,f,indent=2)
+started=datetime.datetime.now(datetime.timezone.utc).isoformat();failure=None
+try:
+    pins={'validate_return318.py':'011fb0272961e01912f7c62d8b2559ad4724ad0066479af715fcc77920908a46','test_validate_return318.py':'61750d25fd620ad772e54b4c6f31efd43f61db13b935e043867693523da25556'}
+    for name,payload in PAYLOADS.items():
+        raw=base64.b64decode(payload)
+        if hashlib.sha256(raw).hexdigest()!=pins[name]:raise RuntimeError('Frozen test payload differs')
+        with (root/name).open('xb') as f:f.write(raw)
+    for mode,flags in [('normal',[]),('optimized',['-O'])]:
+        with (root/(mode+'.stdout')).open('xb') as so,(root/(mode+'.stderr')).open('xb') as se:
+            child=subprocess.Popen([sys.executable,*flags,'test_validate_return318.py'],cwd=root,stdout=so,stderr=se)
+            timed_out=False
+            try:actual=child.wait(timeout=30)
+            except subprocess.TimeoutExpired:timed_out=True;child.kill();actual=child.wait()
+        temp=root/(mode+'.exit.tmp');final=root/(mode+'.exit')
+        with temp.open('x',encoding='ascii',newline='\n') as f:f.write(str(actual)+'\n');f.flush();os.fsync(f.fileno())
+        if temp.read_bytes()!=str(actual).encode()+b'\n':raise RuntimeError('Actual exit capture')
+        os.rename(temp,final)
+        entry={'mode':mode,'actual_exit':actual,'timed_out':timed_out};results.append(entry)
+        if actual!=0 or timed_out:raise RuntimeError('Actual test child failure '+mode)
+        value=json.loads((root/(mode+'.stdout')).read_bytes())
+        if value['accepted']!=4 or value['rejected']!=30 or len(value['cases'])!=34:raise RuntimeError('Actual counters')
+except Exception as exc:
+    failure=repr(exc)
+finally:
+    put('report.json',{'started':started,'finished':datetime.datetime.now(datetime.timezone.utc).isoformat(),'failure':failure,'children':results,'scope':'Synthetic field-derived predicate tests, not mathematical tests or production validation','python':sys.version})
+    files=[p for p in sorted(root.iterdir()) if p.is_file()]
+    put('manifest.json',[{'path':p.name,'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in files])
+    with zipfile.ZipFile(archive,'x',zipfile.ZIP_DEFLATED) as z:
+        for p in sorted(root.iterdir()):
+            if p.is_file():z.write(p,p.name)
+print(json.dumps({'archive':str(archive),'bytes':archive.stat().st_size,'sha256':hashlib.sha256(archive.read_bytes()).hexdigest(),'failure':failure,'children':results}))
+if failure is not None:raise RuntimeError(failure)

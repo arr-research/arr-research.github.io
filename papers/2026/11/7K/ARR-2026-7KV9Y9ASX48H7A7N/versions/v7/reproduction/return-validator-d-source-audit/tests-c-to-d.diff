@@ -1,0 +1,23 @@
+diff --git "a/_tmp\\test_validate_return318.py" "b/_tmp\\test_validate_return318D.py"
+index 8f517a7af..439d53f2e 100644
+--- "a/_tmp\\test_validate_return318.py"
++++ "b/_tmp\\test_validate_return318D.py"
+@@ -1,7 +1,7 @@
+ """Synthetic predicate regressions from collector318 auditor B1-B3; not production evidence."""
+ import copy, json, tempfile
+ from pathlib import Path
+-import validate_return318 as v
++import validate_return318D as v
+ 
+ accepted=0;rejected=0;cases=[]
+ def good(name, fn):
+@@ -48,5 +48,8 @@ with tempfile.TemporaryDirectory() as d:
+     p.write_bytes(b'ORIGINAL');bad('B2-existing-output',lambda:v.fresh([p]))
+     if p.read_bytes()!=b'ORIGINAL':raise RuntimeError('Prior output changed')
+     bad('B2-repeated-destination',lambda:v.fresh([Path(d)/'new',Path(d)/'new']))
+-if accepted!=4 or rejected!=30:raise RuntimeError(f'Unexpected counters {accepted}/{rejected}')
++good('C1-exact-single-line-zero',lambda:v.check_zero(b'0\n'))
++for name,raw in [('leading-blank',b'\n0\n'),('trailing-blank',b'0\n\n'),('leading-space',b' 0\n'),('empty',b''),('noninteger',b'x\n'),('nonzero',b'1\n')]:
++    bad('C1-'+name,lambda raw=raw:v.check_zero(raw))
++if accepted!=5 or rejected!=36:raise RuntimeError(f'Unexpected counters {accepted}/{rejected}')
+ print(json.dumps({'scope':'Synthetic field-derived predicate regression only, not a production return or execution certificate','accepted':accepted,'rejected':rejected,'cases':cases}))

@@ -1,0 +1,6 @@
+Primary documentation consulted by read-only web search during static review, 2026-11-13. These are auditor notes plus short search-result excerpts, not captured full-page HTML or executable tests.
+https://docs.python.org/3.12/library/pathlib.html
+Path.is_symlink and Path.is_junction are distinct API predicates; the latter explicitly identifies Windows junctions. Inference for candidate lines23-25: checking is_symlink alone does not establish absence of junction/reparse traversal. No local junction test was executed.
+https://learn.microsoft.com/en-gb/windows/win32/fileio/naming-a-file
+Search-result excerpt: "Windows recognizes the 8-bit ISO/IEC 8859-1 superscript digits ¹, ², and ³ as digits".
+The primary naming documentation also lists COM/LPT device names with these superscript digits as reserved. Candidate safe_names only lists ASCII1..9. This matters for a generic Windows-name validator, but no such name was found in the exact pinned source-input manifest and other accepted artifact paths are fixed ASCII patterns. Therefore this is a general helper limitation, not a demonstrated bypass of the complete pinned artifact universe.

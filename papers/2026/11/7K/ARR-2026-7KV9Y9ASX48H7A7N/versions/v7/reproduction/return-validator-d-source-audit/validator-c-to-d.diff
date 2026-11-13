@@ -1,0 +1,22 @@
+diff --git "a/_tmp\\validate_return318.py" "b/_tmp\\validate_return318D.py"
+index 04fa7c464..b82206184 100644
+--- "a/_tmp\\validate_return318.py"
++++ "b/_tmp\\validate_return318D.py"
+@@ -17,6 +17,8 @@ def require(ok, message):
+ 
+ def digest(raw): return hashlib.sha256(raw).hexdigest()
+ 
++def check_zero(raw): require(raw == b'0\n', 'Exact single-line zero sentinel required')
++
+ def fresh(paths):
+     require(len(paths)==len(set(map(str, paths))), 'Repeated destination')
+     for path in paths:
+@@ -77,7 +79,7 @@ def validate(archive, attempt, source_manifest, destinations):
+     fresh(destinations)
+     outer=json.loads((attempt/'outer-report.json').read_bytes());check_outer(outer)
+     for name in ('allocation','execution','download','release'):
+-        require((attempt/(name+'.exit')).read_bytes().strip()==b'0', 'Outer raw exit')
++        check_zero((attempt/(name+'.exit')).read_bytes())
+         require((attempt/(name+'.log')).is_file(), 'Missing outer log')
+     announcements=[]
+     for line in (attempt/'execution.log').read_text(encoding='utf-8-sig').splitlines():
