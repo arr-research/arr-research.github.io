@@ -1,0 +1,7 @@
+# Additional primary-source checks
+
+- [Miclo, On hyperboundedness and spectrum of Markov operators](https://perso.math.univ-toulouse.fr/miclo/files/2012/04/hyperboundedness.pdf): Theorem 1 has the self-adjoint, Markov, ergodic and hyperbounded hypotheses reported in the manuscript. Proposition 11 supplies examples with an arbitrary small positive gap at fixed fourth power of the L2-to-L4 operator norm at least two. This supports the manuscript's warning against obtaining a general uniform quantitative gap from hyperboundedness alone.
+- [Wang, Criteria of Spectral Gap for Markov Operators, v6](https://arxiv.org/pdf/1305.4460v6): Theorem 1.1 concerns an ergodic Markov operator in its invariant probability space and equivalent tail-type conditions for the gap of its additive symmetrization. The manuscript's comparison is appropriately limited; it does not identify the uniform cube density with a Perron stationary density.
+- [Glueck, Spectral gaps for hyperbounded operators, v6](https://arxiv.org/abs/1802.09422v6): the author abstract includes a uniform essential spectral-radius bound under quantitative hypotheses. Such a bound does not by itself bound the second eigenvalue of the finite matrices considered here. Only the abstract and metadata were newly inspected, not the complete proof.
+
+The prior source audit directly checked MOS equation (1.1) with tensorization and Gross Theorem 2.2. Their conclusions remain applicable after transcription. None of these checks establishes external priority or exhaustive novelty clearance.
