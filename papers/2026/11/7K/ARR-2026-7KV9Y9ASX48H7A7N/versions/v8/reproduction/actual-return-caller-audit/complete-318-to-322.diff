@@ -1,0 +1,74 @@
+diff --git "a/C:\\Trabajo\\the-eriksson-programme\\_tmp\\actual-return322-caller-audit\\subjects\\baseline-validate318_actual_colab.py" "b/C:\\Trabajo\\the-eriksson-programme\\_tmp\\actual-return322-caller-audit\\subjects\\validate322_actual_colab.py"
+index 639e1bf..a2bf559 100644
+--- "a/C:\\Trabajo\\the-eriksson-programme\\_tmp\\actual-return322-caller-audit\\subjects\\baseline-validate318_actual_colab.py"
++++ "b/C:\\Trabajo\\the-eriksson-programme\\_tmp\\actual-return322-caller-audit\\subjects\\validate322_actual_colab.py"
+@@ -1,11 +1,11 @@
+ """Read-only validation of an actual returned production packet on owned Colab."""
+ import os,sys,json,zipfile,hashlib,time,resource
+ from pathlib import Path
+-root=Path('/content/tep318-actual-return-validation')
+-bundle=Path('/content/tep318-actual-return-inputs.zip')
++root=Path('/content/tep322-actual-return-validation')
++bundle=Path('/content/tep322-actual-return-inputs.zip')
+ if os.name!='posix' or not Path('/content').is_dir() or root.exists():raise RuntimeError('Fresh owned Colab required')
+ root.mkdir();start=time.perf_counter()
+-expected={'production.zip','source-manifest.json','validate_return318D.py','outer-report.json'}
++expected={'production.zip','source-manifest.json','validate_return322A.py','outer-report.json'}
+ expected|={n+ext for n in ('allocation','execution','download','release','backend-readback') for ext in ('.log','.stderr.log','.exit')}
+ with zipfile.ZipFile(bundle) as z:
+     names=z.namelist()
+@@ -13,10 +13,10 @@ with zipfile.ZipFile(bundle) as z:
+     for name in names:
+         with (root/name).open('xb') as f:f.write(z.read(name))
+ def h(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+-if h(root/'validate_return318D.py')!='88c13dbd8fe535250754329eed9ac793c880b2873372d2aa7cf6986675fb30e8':raise RuntimeError('Validator pin')
+-if h(root/'source-manifest.json')!='ab5048598f630629f4c4ed7d9419508a2a85dc45d0202b24798492506be61fa4':raise RuntimeError('Source manifest pin')
+-sys.path.insert(0,str(root));import validate_return318D as v
++if h(root/'validate_return322A.py')!='20d0def8bf9ead4f646224b9f8659d659d35e7eee7c1c420a3b123a5a7cfb006':raise RuntimeError('Validator pin')
++if h(root/'source-manifest.json')!='8a68c29cdce5d1d7ad75b899322bb7de3dc32b996f804d8c5e91a17a9225b8b6':raise RuntimeError('Source manifest pin')
++sys.path.insert(0,str(root));import validate_return322A as v
+ result=v.validate(root/'production.zip',root,root/'source-manifest.json',[root/'uncreated-extraction',root/'uncreated-delivery',root/'uncreated-captures',root/'uncreated-parent.json'])
+-result.update(input_bundle_sha256=h(bundle),validator_sha256=h(root/'validate_return318D.py'),wall_seconds=time.perf_counter()-start,max_rss_kib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,execution_environment='Owned Colab Linux',mathematical_test=False,visual_inspection=False,backend_inactivity='Parent must separately inspect actual production and this validation runtime readbacks')
++result.update(input_bundle_sha256=h(bundle),validator_sha256=h(root/'validate_return322A.py'),wall_seconds=time.perf_counter()-start,max_rss_kib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,execution_environment='Owned Colab Linux',mathematical_test=False,visual_inspection=False,backend_inactivity='Parent must separately inspect actual production and this validation runtime readbacks')
+ with (root/'result.json').open('x',encoding='utf-8') as f:json.dump(result,f,indent=2)
+ print(json.dumps(result))
+diff --git "a/C:\\Trabajo\\the-eriksson-programme\\_tmp\\actual-return322-caller-audit\\subjects\\baseline-run_actual_validation318.ps1" "b/C:\\Trabajo\\the-eriksson-programme\\_tmp\\actual-return322-caller-audit\\subjects\\run_actual_validation322.ps1"
+index 8ff5d95..102e815 100644
+--- "a/C:\\Trabajo\\the-eriksson-programme\\_tmp\\actual-return322-caller-audit\\subjects\\baseline-run_actual_validation318.ps1"
++++ "b/C:\\Trabajo\\the-eriksson-programme\\_tmp\\actual-return322-caller-audit\\subjects\\run_actual_validation322.ps1"
+@@ -1,27 +1,27 @@
+ param([Parameter(Mandatory=$true)][ValidatePattern('^[a-f0-9]{64}$')][string]$ExpectedBundleSha256,[Parameter(Mandatory=$true)][ValidatePattern('^[a-f0-9]{64}$')][string]$ExpectedScriptSha256)
+ Set-StrictMode -Version Latest
+ $ErrorActionPreference='Stop'
+-$helper=Join-Path $PSScriptRoot 'production318-b\capture_cli_atomic.ps1'
++$helper=Join-Path $PSScriptRoot 'production322-a\capture_cli_atomic.ps1'
+ if((Get-FileHash -LiteralPath $helper).Hash.ToLowerInvariant() -cne '4fe3fc65796ee55dc5db5bc52c924b5401b72699f56eac8dc73ceb2c53da2b7b'){throw 'Helper drift'}
+ . $helper
+-$e='D:\Datos\the-eriksson-programme\autonomia\evidencia-318'
+-$bundle=Join-Path $e 'actual-return-inputs318.zip'
+-$script=Join-Path $PSScriptRoot 'validate318_actual_colab.py'
++$e='D:\Datos\the-eriksson-programme\autonomia\evidencia-322'
++$bundle=Join-Path $e 'actual-return-inputs322.zip'
++$script=Join-Path $PSScriptRoot 'validate322_actual_colab.py'
+ if((Get-FileHash -LiteralPath $bundle).Hash.ToLowerInvariant() -cne $ExpectedBundleSha256 -or (Get-FileHash -LiteralPath $script).Hash.ToLowerInvariant() -cne $ExpectedScriptSha256){throw 'Actual input/script pin mismatch'}
+ $out=Join-Path $e 'actual-return-validation-attempt-a'
+ if(Test-Path -LiteralPath $out){throw 'Preserve prior validation attempt'}
+ New-Item -ItemType Directory -Path $out|Out-Null
+-$prefix='export GOOGLE_APPLICATION_CREDENTIALS=/mnt/c/Users/lluis/AppData/Roaming/gcloud/application_default_credentials.json; exec /home/lluis/.local/bin/colab --auth adc --config /home/lluis/.config/colab-cli/tep318-actual-return-d-sessions.json'
+-$session='tep318-actual-return-d-own-cpu'
++$prefix='export GOOGLE_APPLICATION_CREDENTIALS=/mnt/c/Users/lluis/AppData/Roaming/gcloud/application_default_credentials.json; exec /home/lluis/.local/bin/colab --auth adc --config /home/lluis/.config/colab-cli/tep322-actual-return-a-sessions.json'
++$session='tep322-actual-return-a-own-cpu'
+ $exits=[ordered]@{};$failure=$null;$attempted=$false
+ [IO.File]::WriteAllText((Join-Path $out 'runtime-open-requested.txt'),[DateTime]::UtcNow.ToString('o')+"`n")
+ try{
+  $attempted=$true
+  $exits.allocation=Invoke-CapturedWsl -Name 'allocation' -ShellCommand ($prefix+' new -s '+$session+' --high-mem') -OutputDirectory $out
+  if($exits.allocation -ne 0){throw 'Allocation failed'}
+- $exits.upload=Invoke-CapturedWsl -Name 'upload' -ShellCommand ($prefix+' upload -s '+$session+' /mnt/d/Datos/the-eriksson-programme/autonomia/evidencia-318/actual-return-inputs318.zip /content/tep318-actual-return-inputs.zip') -OutputDirectory $out
++ $exits.upload=Invoke-CapturedWsl -Name 'upload' -ShellCommand ($prefix+' upload -s '+$session+' /mnt/d/Datos/the-eriksson-programme/autonomia/evidencia-322/actual-return-inputs322.zip /content/tep322-actual-return-inputs.zip') -OutputDirectory $out
+  if($exits.upload -ne 0){throw 'Upload failed'}
+- $exits.execution=Invoke-CapturedWsl -Name 'execution' -ShellCommand ($prefix+' exec -s '+$session+' -f /mnt/c/Trabajo/the-eriksson-programme/prefix-rank290-20261113/_tmp/validate318_actual_colab.py --timeout 180') -OutputDirectory $out
++ $exits.execution=Invoke-CapturedWsl -Name 'execution' -ShellCommand ($prefix+' exec -s '+$session+' -f /mnt/c/Trabajo/the-eriksson-programme/prefix-rank290-20261113/_tmp/validate322_actual_colab.py --timeout 180') -OutputDirectory $out
+ }catch{$failure=$_.Exception.ToString()}
+ finally{
+  if($attempted){try{$exits.release=Invoke-CapturedWsl -Name 'release' -ShellCommand ($prefix+' stop -s '+$session) -OutputDirectory $out}catch{$failure=[string]$failure+' STOP_CAPTURE: '+$_.Exception.ToString()}}
