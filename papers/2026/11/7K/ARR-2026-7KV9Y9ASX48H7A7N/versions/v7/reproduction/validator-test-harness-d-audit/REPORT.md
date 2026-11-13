@@ -1,0 +1,49 @@
+# Bounded static engineering update: validator318 harness D
+
+Verdict: ACCEPT THE EXACT HARNESS D DELTA FOR THE BOUNDED SYNTHETIC TEST LIFECYCLE, under the unchanged conditions of the full harness C engineering report and those restated here. No tests ran and no PASS of the validator or regression suite is issued. The parent reports strict-validator C separately failed C1 (multiline outer-zero acceptance) and remains unexecuted; this engineering report does not override that failure. Separate validator D acceptance and actual parent full-report readings remain prerequisites. Production318 remains gated independently.
+
+## Exact subject and payload bindings
+
+Live preparation root: C:\Trabajo\the-eriksson-programme\prefix-rank290-20261113\_tmp. Mirrors: D:\Datos\the-eriksson-programme\autonomia\evidencia-318\return-validator-d. All hashes below are SHA-256 of exact raw bytes without text normalization:
+
+- run_validator318D_tests_colab.py:23122 bytes; e38553fe1a90551861e3f878f7fe3bd5ade87ebe00a15da37518ad8295e1a447.
+- run_validator318D_tests.ps1:2850 bytes; 1b41c4198dba383058a829f58efef1f87bdc2afd2414eed9d63b11d1c2a3d14a.
+- validate_return318D.py:10906 bytes; 88c13dbd8fe535250754329eed9ac793c880b2873372d2aa7cf6986675fb30e8.
+- test_validate_return318D.py:4139 bytes; 489211d37f46753c51b86a61bf4d69755e48d6d50c471b45e119c185064a1ef1.
+- production318-b/capture_cli_atomic.ps1:2607 bytes; 4fe3fc65796ee55dc5db5bc52c924b5401b72699f56eac8dc73ceb2c53da2b7b, unchanged.
+
+Both mirrors match the live files. The entire literal PAYLOADS assignment is exactly the two named external files encoded in base64, with no additional dictionary key or executable expression. Both payload values were decoded as data and their raw lengths and hashes equal the external pins above. Decoded copies are retained. The Python harness's pin table and test subprocess filename agree with those exact payloads. No Python import or execution was used to obtain this finding.
+
+The earlier full harness C report is copied as prior-C-REPORT.md,13352 bytes, raw SHA-256 de525601b9b3eed3eb03f32933d27aa880724c46f0b8acaefd45e36643507728. Its manifest SHA-256 remains014d29667568fe1af384fa3db0854228c16bca37373215922c4a8830991bc291; all16 original members verify. CONTEXT.md records the actual reading scope and substantial prior involvement. The original C scripts and audit were not edited; the separate C failure was not reopened or amended.
+
+## Complete bounded comparison
+
+The complete D PowerShell wrapper equals the complete frozen C wrapper after only these replacements: run_validator318_tests_colab.py to run_validator318D_tests_colab.py; old Python harness pin to e38553fe...; tep318-validator-c to tep318-validator-d; return-validator-c to return-validator-d. No lifecycle branch, timeout, actual-exit capture, finally stop, download or backend-readback behavior changes.
+
+The complete Python non-payload body equals C after only validator/test filenames, their two pins, tep318-validator-c to tep318-validator-d, accepted4 to5, rejected30 to36 and case-count34 to41 replacements. The independently exact dictionary comparison binds the excluded payload text rather than assuming it. No other harness text changes. delta-verification.json and literal-payload-dictionary-verification.json retain these whole-body results.
+
+The D fixture imports validate_return318D and preserves the old synthetic tests, adding one exact-single-line-zero positive and six negatives: leading blank, trailing blank, leading space, empty, noninteger and nonzero. Its explicit totals become5 accepted and36 rejected, with41 case records expected by the harness. The full test-file read/diff establishes invocation and expected fixture count, not correctness of the validator or sufficiency of tests. The parent states the new validator replaces whitespace-stripped outer-zero acceptance with exact b'0\n'. Its payload is exactly bound here; disposition of that predicate and the field-derived regressions belongs to the separately assigned validator D auditor. No developing report was read or anticipated.
+
+## Unchanged lifecycle and material limits
+
+The new remote root/archive are /content/tep318-validator-d-tests and /content/tep318-validator-d-tests.zip. The session/config are tep318-validator-d-tests-own-cpu and /home/lluis/.config/colab-cli/tep318-validator-d-tests-sessions.json. Local evidence is return-validator-d/test-attempt-a. The wrapper is intended to run from C:, where its relative production318-b helper exists; its D: copy is archival. Parent must verify the exact new config/session is unused and exclusively owned before allocation. Distinct naming and absence of local attempts do not prove backend ownership. No config/backend was queried in this audit. Preparation remains disconnected.
+
+Fresh POSIX/content/root/archive checks and exclusive file creation remain unchanged. The actual sys.executable child runs first without an added optimization flag, then with -O, with30-second child waits and180-second remote exec transport timeout. Actual child exits follow wait/termination; closed mode-specific stdout/stderr and decimal temporary sentinels are retained. Sentinel bytes are flushed/fsynced, closed, checked against the actual integer encoding and atomically renamed. Explicit acceptance raises survive -O; no removable assert decides acceptance. A failed first mode aborts the second and is incomplete/failed evidence, not both-mode success.
+
+The ordinary successful expected archive still consists of9 raw manifest members (2 payload files,4 mode logs,2 sentinels and report) plus manifest as the10th ZIP member. Import-cache directories are not claimed in the top-level-file inventory. Parent must verify the actual archive hash/length, exact member set, manifest raw hashes, both child exits/logs and all41 per-mode cases after execution. No archive exists under this audit and synthetic output never certifies a production return.
+
+Inherited limitations remain: Python sentinel rename lacks a no-replace primitive/final readback; fresh trusted root and fixed names are the ordinary collision boundary, not protection from hostile concurrent writers. Python child logs close without explicit fsync. Timeout kill targets the direct child, not a process group. The pinned fixture does not spawn a further process. The normal invocation does not clear PYTHONOPTIMIZE and the report records sys.version rather than sys.flags; normal optimization level is not independently attested. The parent expressly acknowledges this. Summary counters alone do not establish each case's identity or correctness. Complete logs and separate validator review remain required.
+
+Ordinary caught Python failures preserve report, observed child status and attempted manifest/archive; startup errors before try, catastrophic interruption, process/capture or storage failures and errors in finally may prevent complete preservation. The test TemporaryDirectory fixture is not guaranteed to clean up after abrupt kill. No clone is created, and the retained root/archive are evidence. Perfect recovery or cleanup is not promised.
+
+The hash-bound outer helper still captures actual WSL exits/logs, closes/flushed streams and publishes validated no-overwrite decimal sentinels with readback. The wrapper still attempts download after a returned nonzero execution exit. Exceptions may bypass download. finally attempts stop after allocation has been attempted; a stop capture exception may prevent final report/timestamp. A completed stop capture or zero exit is not proof of backend inactivity. The helper has no independent wait timeout beyond the invoked CLI's behavior.
+
+Crucial unchanged readback condition: the aggregate lifecycle failure check precedes the automatic sessions query. Thus ANY allocation/execution/download/release failure skips automatic backend readback even when finally attempted stop. The parent explicitly commits to a separate same-owned-config backend query on every failed path; that is a mandatory retained operational condition. A successful zero lifecycle runs the query after stop, but parent must still read its actual log and stop evidence to establish inactivity. Neither this audit nor a zero query alone establishes inactivity or connected time.
+
+The wrapper does not enforce parent-report acceptance via an authority-relay file. Actual accepted separate validator D review, this full engineering report read, and operational ownership verification are parent prerequisites. The separate C predicate failure cannot be waived by reusing C's lifecycle verdict or by source CI. Old C/earlier collectors remain unexecuted under the assignment; this report does not authorize them. Production318 document, integration, owned-runtime, returned-evidence, all-page and exact-PDF gates are unchanged.
+
+## Disposition and preservation
+
+Initial/final file observations are retained with raw subjects, decoded payloads, full C report/context/assignment/manifest copies, literal new assignment and this complete bounded report. The new audit manifest covers these files except itself and its detached verification. C and D local test-attempt directories were absent at inspection; no execution/allocation occurred. Final subject/mirror and helper hashes match initial values. C's16 original audit members and original C script mirrors remain unchanged. No previous report or failed criterion was modified.
+
+This accepts exactly the inspected pin/name/count delta and inherited lifecycle. It is not another predicate audit, no actual5/36 result, no model-independence claim, no mathematics, no production clearance, no visual/PDF assessment, no score and no publication. Parent must read both complete reports and preserve the failed C record before considering the separately owned bounded D test unit.
