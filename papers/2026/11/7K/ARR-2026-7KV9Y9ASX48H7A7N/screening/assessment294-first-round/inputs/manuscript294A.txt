@@ -1,0 +1,360 @@
+            Product Marginals and Exponentially Slow Spectra
+                    of Positive Ising Transfer Kernels
+                                               Lluis Eriksson
+                                            Independent researcher
+
+                                            13 November 2026
+
+
+                                                  Abstract
+         Fix a positive Ising coupling. We construct strictly positive weights on Boolean cubes whose
+     labelled marginals on every set of at most a fixed positive fraction of the coordinates equal the
+     uniform product marginals, while exponentially many normalized eigenvalues of the weighted
+     transfer kernel approach one exponentially fast in the number of coordinates. The stationary law
+     of the Perron Doob transform has exactly the same marginals as well. The unweighted product
+     kernel has a dimension-independent gap. The construction combines binary codes with positive
+     primal and dual distances, a positive product admixture, and a finite block-norm estimate.
+     We prove the coding input by a direct entropy union bound and give explicit finite spectral
+     constants. As a negative control, we calculate the full transfer spectrum of a single positive
+     parity tilt: unlike its single-site heat-bath gap, its transfer gap stays uniformly positive at fixed
+     coupling. The ingredients are classical; the contribution considered here is their joint transfer
+     and stationary-marginal conclusion, whose external priority is not established. The weights allow
+     global many-body dependence and exponentially small probabilities. No fixed-range Gibbs or
+     local-dynamics claim follows.
+
+
+1    The question and the transfer convention
+Local marginal agreement and rapid relaxation are different kinds of information. The distinction
+is familiar in limited independence and Markov-chain theory, but a comparison must specify the
+dynamics: a slow single-site heat-bath chain does not automatically give a slow transfer operator.
+We make this distinction within a single fixed-coupling transfer family and require exact, rather
+than approximate, agreement of marginal input.
+    Let ΩL = FL                                                             −2β . Our unweighted
+                 2 , with Hamming distance d(x, y). Fix β > 0 and put q = e
+kernel is
+                                                                 L
+                                                                      !
+                           Mβ (x, y) = q d(x,y) = e−βL exp β
+                                                                 X
+                                                                       (−1)xi +yi .                          (1)
+                                                                 i=1
+
+For a strictly positive probability law µ on ΩL , define
+                                                √          √
+                                      Aµ = diag( µ)Mβ diag( µ).                                              (2)
+                                             
+The kernel Mβ is a tensor power of 1q 1q and is positive definite. The same is true of Aµ , which
+also has strictly positive entries. Write its eigenvalues in decreasing order as λ1 > λ2 ≥ · · · > 0,
+counting multiplicities, and set
+                                       gap(Aµ ) = 1 − λ2 /λ1 .
+
+
+                                                      1
+Perron–Frobenius strictness gives a positive gap at each finite L; a bound uniform in L is a separate
+matter. Multiplying either kernel by a positive scalar does not change any eigenvalue ratio.
+   Let uL = Unif(ΩL ). Tensorization gives
+                                                        1−q
+                                λ2 (AuL )/λ1 (AuL ) =       = tanh β.                             (3)
+                                                        1+q
+For a law ν, the literal marginal input of order r is
+                                  Mr (ν) = (νS : S ⊆ [L], |S| ≤ r),                               (4)
+where coordinate labels are retained. Full conditional distributions, entrywise weight bounds, and
+the transfer matrix itself are not included in this tuple.
+Theorem 1. For each fixed β > 0 there are constants α, R, γ > 0 such that, for all sufficiently
+large integers L, a strictly positive law µL on ΩL has the following properties. Put rL = ⌊αL⌋ and
+mL = 2⌈RL⌉ .
+    1. MrL (µL ) = MrL (uL ).
+    2. For every 2 ≤ j ≤ mL ,
+                                   0 < 1 − λj (AµL )/λ1 (AµL ) ≤ 7e−γL .                          (5)
+
+    3. Let v > 0 be the unit Euclidean Perron vector of AµL . The reversible Perron Doob chain
+                                              AµL (x, y)vy
+                                PL (x, y) =                ,   πL (x) = vx2 ,                     (6)
+                                                 λ1 vx
+      has MrL (πL ) = MrL (uL ) and the same normalized spectrum as AµL .
+One admissible choice is
+                     1 − h(1/4)      β
+                                         
+             R = min            ,         ,      h(α) < R/2,    γ = β/2 − R log 2 ≥ β/4,          (7)
+                          2       4 log 2
+with 0 < α < 1/2 and binary entropy h(p) = −p log2 p − (1 − p) log2 (1 − p).
+    There are at least mL − 1 slow nonleading modes in this statement. We do not assert that their
+eigenvalues coincide. The positivity and strict gap at each finite size are compatible with their
+exponentially small separation from the Perron root. The theorem does not impose a uniform lower
+bound on the weights or a bounded interaction range.
+
+
+2     Codes with two distance conditions
+We include the coding argument to make all hypotheses of the spectral construction explicit.
+Simultaneously good primal and dual codes are classical; stronger algorithmic constructions are
+available [2]. The relation between code projections and limited independence is standard background
+for the marginal comparison [1].
+Lemma 2. Suppose 0 < α, δ < 1/2 and h(α) < R < 1 − h(δ). Put k = ⌈RL⌉. If k < L and
+                                   2k−L(1−h(δ)) + 2−k+Lh(α) < 1,                                  (8)
+there is a binary linear code C ⊆ FL
+                                   2 of dimension k such that every nonzero codeword has weight at
+                ⊥
+least δL and C has no nonzero word of weight at most ⌊αL⌋. Every coordinate projection of C
+onto at most ⌊αL⌋ coordinates is surjective. The displayed conditions hold for all sufficiently large
+L.
+
+                                                    2
+Proof. Choose a uniformly random binary k × L matrix G. For each fixed nonzero row vector
+z ∈ Fk2 , the word zG is uniform in FL2 . The probability that some such zG has weight less than δL
+is at most                                         !
+                                            X L
+                                   2k 2−L            ≤ 2k−L(1−h(δ)) .
+                                           j≤δL
+                                                 j
+
+Failure of full row rank is included in this event, since it produces a zero word from a nonzero
+message. For a fixed nonzero column vector w ∈ FL                                     k
+                                                     2 , the vector Gw is uniform in F2 . Thus the
+probability of a nonzero dual word with weight at most ⌊αL⌋ is at most
+                                                         !
+                                       −k            L
+                                                             ≤ 2−k+Lh(α) .
+                                             X
+                                   2
+                                            1≤j≤αL
+                                                     j
+
+Their sum is less than one, so both failures can be avoided simultaneously.
+   For the entropy estimate, if 0 < p < 1/2, set z = p/(1 − p) < 1. Since z j ≥ z pL for j ≤ pL, the
+binomial theorem gives                   !
+                                 X L
+                                           ≤ z −pL (1 + z)L = 2Lh(p) .
+                                j≤pL
+                                       j
+
+This bound applies to the inclusive sums and hence to the strict-weight failure event as well. No
+integrality assumption on δL is needed.
+    If the columns indexed by S were dependent, their relation would give a nonzero word of
+C ⊥ supported in S. Consequently GS has rank |S| whenever |S| ≤ ⌊αL⌋. Uniform messages
+therefore give uniform projections onto FS2 . Finally, the exponents in (8) tend to minus infinity,
+since k = RL + O(1) and both entropy inequalities are strict.
+
+
+3    A finite positive concentration estimate
+The spectral step needs only the size and minimum distance of the code. The dual distance will
+enter through the marginal statement.
+
+Proposition 3. Let C ⊆ FL   2 be a binary linear code with size m ≥ 2 and minimum nonzero weight
+dC . Suppose its coordinate projections onto sets of size at most r are surjective. For 0 < η ≤ 1/2,
+let
+                        µ = (1 − η) Unif(C) + ηuL ,      s = (m − 1)e−2βdC .                     (9)
+Then µ is strictly positive, Mr (µ) = Mr (uL ), and every 2 ≤ j ≤ m satisfies
+                                                               √
+                           0 < 1 − λj (Aµ )/λ1 (Aµ ) ≤ 2s + 2m( η + η).                         (10)
+
+Proof. Uniform codewords have uniform projections by surjectivity, and a mixture of two laws with
+the same marginals has those same marginals. The positive product part gives strict positivity at
+every configuration.
+   Every codeword has probability
+
+                                 a = (1 − η)/m + η/2L ≥ 1/(2m).
+
+The principal block of Aµ indexed by C is aMCC . Its diagonal is a, and the off-diagonal row sums
+of MCC are at most s: distinct codewords differ by a nonzero codeword of weight at least dC . Thus
+
+
+
+                                                     3
+all eigenvalues of MCC lie in [1 − s, 1 + s]. For example, the norm of its symmetric off-diagonal part
+is bounded by the maximum absolute row sum. Principal interlacing gives
+
+                            λj (Aµ ) ≥ λm (Aµ ) ≥ a(1 − s)          (1 ≤ j ≤ m).                     (11)
+
+Independently, a coordinate Rayleigh vector gives λ1 (Aµ ) ≥ a.
+   Write Aµ in C, C c blocks. The outside principal block is positive semidefinite, and its trace is
+                   L
+  C c µ = η(1 − m/2 ) ≤ η, so its norm is at most η. For the rectangular cross block B, all entries
+P
+
+of Mβ are at most one, and therefore
+                                                                !            !
+                                                    X               X
+                                   2
+                               ∥B∥     ≤ ∥B∥2F ≤            µ            µ       ≤ η.
+                                                        C           Cc
+
+The symmetric block matrix with off-diagonal blocks B, B ∗ and zero diagonal has norm ∥B∥.
+Consequently
+                                           √                                            √
+                 Aµ − diag(aMCC , 0) ≤         η + η,           λ1 (Aµ ) ≤ a(1 + s) +       η + η.
+
+Subtract (11), divide by λ1 ≥ a, and use a ≥ 1/(2m) to obtain (10). Perron strictness proves the
+strict lower inequality. The upper bound is valid even when it is larger than one; no small-size
+success is claimed.
+
+Proof of Theorem 1, parts one and two. Use (7) and Lemma 2 with δ = 1/4. The choice of R
+satisfies 0 < R < 1 − h(1/4) and R log 2 ≤ β/4. Choose codes for sufficiently large L, and put
+
+                                  m = 2⌈RL⌉ ,           η = e−2βL /m2 .
+
+This number lies in (0, 1/4]. Since dC ≥ L/4 and m ≤ 2eR(log 2)L ,
+
+                            2(m − 1)e−2βdC ≤ 4e−(β/2−R log 2)L = 4e−γL .
+
+Also, using m ≥ 2 and γ ≤ β,
+                          √
+                       2m( η + η) = 2e−βL + 2e−2βL /m ≤ 3e−βL ≤ 3e−γL .
+
+Proposition 3 now proves both claims. The condition k < L ensures m < 2L , so every asserted
+eigenvalue index exists.
+
+
+4    Stationary marginals survive the Perron transform
+The weighting law in a transfer congruence need not equal the stationary law of its associated
+Markov chain. Matching the former alone would leave a significant interpretive gap. Code symmetry
+pays the latter exactly.
+
+Lemma 4. For the mixture (9), the Perron stationary law π(x) = vx2 satisfies Mr (π) = Mr (uL ).
+
+Proof. For every c ∈ C, translation x 7→ x + c preserves µ, Hamming distance, and hence Aµ . The
+corresponding permutation commutes with Aµ and takes a positive unit Perron vector to another
+such vector. Uniqueness forces vx+c = vx , so π is invariant under translations by C. If |S| ≤ r,
+every translation on FS2 lifts to some c ∈ C by the assumed surjectivity. The S-marginal of π is
+therefore invariant under all translations and must be uniform.
+
+                                                    4
+Completion of Theorem 1. The Perron eigenvector equation gives row sums one for (6). Symmetry
+gives detailed balance:
+                              π(x)PL (x, y) = vx Aµ (x, y)vy /λ1 = π(y)PL (y, x).
+Conjugation by diag(v) shows that PL is similar to Aµ /λ1 . It has strictly positive entries and the
+claimed spectrum. Apply Lemma 4 to obtain its stationary marginal assertion. For the uniform
+weight, the Perron vector and stationary law are uniform, and (3) supplies the comparison chain.
+
+
+5    An exact parity control with different dynamics
+The positive parity family
+                                                                                      P
+                                                                                            xi
+                  µt (x) = 2−L (1 + tχ[L] (x)),         |t| < 1,      χS (x) = (−1)   i∈S        ,   (12)
+has all proper marginals equal to product marginals. Its single-site heat-bath gap tends to zero as
+|t| → 1 at fixed size and positive site rates [4]. Nevertheless, its transfer ratio at fixed β is bounded
+uniformly away from one, as follows.
+Proposition 5. Let L ≥ 2, ρ = tanh β, and |t| < 1. Up to a common positive scalar, the spectrum
+of Aµt is the union over unordered complement pairs {S, S c } of the two roots
+                          p
+                   zs ±   zs2 − 4∆
+                                   ,      zs = ρs + ρL−s ,     s = |S|,   ∆ = (1 − t2 )ρL .          (13)
+                          2
+The Perron root is the upper root at s = 0, and the second eigenvalue is the upper root at s = 1. In
+particular,
+                               λ2 (Aµt )   ρ + ρL−1
+                                         ≤          ≤ tanh(2β) < 1.                             (14)
+                               λ1 (Aµt )    1 + ρL
+The last bound is sharp as a supremum over L ≥ 2 and |t| < 1.
+Proof.
+    q
+       The row-normalized product transfer Pβ = Mβ /(1 + q)L acts on χS by ρ|S| . Write Dt =
+diag 1 + tχ[L] . The weighted congruence, apart from a common scalar, is Dt Pβ Dt , which is similar
+to Pβ Dt2 since Dt is invertible. Multiplication by χ[L] exchanges χS and χS c . The coefficient block
+on that ordered pair is                                   !
+                                               ρs    tρs
+                                                            .
+                                             tρL−s ρL−s
+Its trace is zs and its determinant is ∆, yielding (13). The 2L−1 complement pairs exhaust the
+character basis, with repetitions counted as usual.
+    The largest zs is z0 = 1 + ρL , and the largest among proper pairs is z1 = ρ + ρL−1 . The upper
+root increases with zs . The lower root in the empty/full pair is at most ρL , whereas the upper root
+for s = 1 is at least ρ. Every other lower root is no larger than its own upper root. This identifies
+the two largest eigenvalues.
+    For fixed ∆ > 0, the upper root divided by z is
+                                                   p
+                                              1+       1 − 4∆/z 2
+                                                                  ,
+                                                         2
+                           √
+which increases with z ≥ 2 ∆. Comparing z1 ≤ z0 proves the first inequality in (14). For the
+second, write b = ρL−2 ≤ 1; the ratio is ρ(1 + b)/(1 + ρ2 b), increasing in b. Its maximum is
+2ρ/(1 + ρ2 ) = tanh(2β). For L = 2 and t → 1, ∆ → 0, so equality is approached.
+
+                                                         5
+    This control rules out a tempting shortcut: the known parity heat-bath obstruction cannot be
+transferred by changing the name of the operator. The code construction uses a different geometric
+ingredient, a set of exponentially many mutually separated configurations while retaining surjective
+coordinate projections.
+
+
+6    What marginal certificates cannot establish
+Corollary 6. Fix the constants of Theorem 1. Suppose F is a valid lower bound on the transfer
+gap for every strictly positive weight, and factors through the tuple
+
+                                      (L, β, MrL (µ), MrL (π)).
+
+At the product input and for all sufficiently large L, its value is at most 7e−γL . The same conclusion
+holds if only one of the two marginal tuples is supplied.
+
+Proof. At the same L and β, the constructed weight and its stationary law supply exactly the same
+input as the uniform weight and uniform stationary law. A function of that input takes the same
+value on both. Validity on the constructed example and (5) for j = 2 force the asserted bound.
+
+    The corollary does not assert that every such functional is zero or that the product chain is slow.
+Its actual gap is 1 − tanh β. Nor does it concern a certificate using full conditionals, uniform density
+bounds, the operator entries, or code membership: those are additional information. In particular,
+the weights here can have exponentially small probabilities and global many-body interactions. The
+theorem says nothing against a result restricted to uniformly controlled, fixed-range Gibbs weights.
+The Perron Doob chain updates a full configuration and is not a local single-site dynamics. We make
+no claim about continuum Yang–Mills, a physical mass gap, entropy tensorization, or a specified
+spatial mixing rate. The many-mode conclusion is spectral; no separate theorem about metastable
+sets is implicit.
+
+
+7    Relation to predecessors and reproducibility
+The congruence analysis in [3] permits positive weights concentrating on an antipodal pair, with
+a transfer ratio tending to one as volume grows. Such a pair fails to preserve pair marginals.
+The parity analysis in [4] preserves every proper marginal but concerns a heat-bath generator;
+Proposition 5 shows precisely why it does not supply the transfer conclusion. The present synthesis
+obtains linear-order marginal matching for both the weight and the Perron stationary law, together
+with exponentially many slow transfer modes.
+    The code ingredients and the matrix methods are classical. In particular, Lemma 2 is an
+elementary existence argument, not a new code construction and not an efficient encoding claim.
+Work on simultaneously good primal and dual codes, including [2], is stronger in algorithmic aspects.
+Our targeted primary-source check did not identify the exact joint conclusion above; this is not
+proof of historical priority. External originality and the importance of this specialization remain
+unestablished.
+    All proofs are finite-dimensional and analytical. No numerical experiment or formal verification
+is needed or claimed. A source package retains the preregistered proof checks, complete analytical
+audit, source hashes and this manuscript. Document reproduction is a separate check of exact bytes
+and layout, not an independent proof of the theorems.
+
+
+
+                                                   6
+Model assessments and review context
+OpenAI/Codex assisted the mathematical synthesis and manuscript preparation. The fabrication
+session is involved in the work. A distinct involved Codex/OpenAI session audits the frozen
+mathematical source; exact served backend versions and reasoning settings are not exposed, so no
+particular model version or provider independence is asserted. Analytical source review is not human
+peer review and supplies no inherited PDF rating. Any assessment attached to this manuscript must
+identify the exact final PDF hash, its actual review context, complete report, scores and objections.
+The manuscript does not incorporate a grade from another version or paper. The author owns and
+administers AIRR. A working-paper deposit is not an editorial acceptance or evidence of human
+peer review.
+Reproducible source commit:
+f4d66763d3fe3eccfc9e5eafba37d17dbe519f6b
+
+
+References
+[1] N. Alon, O. Goldreich and Y. Mansour, Almost k-wise independence versus k-wise independence,
+    Information Processing Letters 88 (2003), 107–110. Author manuscript.
+
+[2] M. Brehm and N. Resch, Linear Time Encodable Binary Code Achieving GV Bound with Linear
+    Time Encodable Dual Achieving GV Bound, ITCS 2026, LIPIcs 362, article 28. Publisher
+    version.
+
+[3] L. Eriksson, Congruence Rigidity and the Fusion Bound: What a Positive Weight Can and
+    Cannot do to the Spectrum of a Transfer Kernel, AIRR, ARR-2026-7S1XA3PZEB9QM8FQ,
+    version 1. Public record.
+
+[4] L. Eriksson, Strictly Positive Parity Laws and the Limits of Marginal Certificates: Exact Heat-
+    Bath Spectrum and Optimal Variance Tensorization, AIRR, ARR-2026-5HRC3PS9HZ9WDAA5,
+    version 2 (2026). Public working paper.
+
+
+
+
+                                                 7
+
