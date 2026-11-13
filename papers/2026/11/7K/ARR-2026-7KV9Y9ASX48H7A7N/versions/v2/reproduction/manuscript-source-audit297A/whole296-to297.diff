@@ -1,0 +1,276 @@
+--- corrected296A
++++ 297A
+@@ -18,7 +18,7 @@
+ \newcommand{\wt}{\operatorname{wt}}
+ \newcommand{\Unif}{\operatorname{Unif}}
+ \providecommand{\SourceCommit}{SOURCE-NOT-BUILT}
+-\title{Product Marginals, Density Moments and Slow Spectra\\of Ising Transfer Kernels}
++\title{Product Marginals and Density-Moment Thresholds\\for Ising Transfer Kernels}
+ \author{Lluis Eriksson\\\small Independent researcher}
+ \date{13 November 2026}
+ \begin{document}
+@@ -37,13 +37,14 @@
+ finite spectral constants. As a negative control, we calculate the full
+ transfer spectrum of a single positive parity tilt: unlike its single-site
+ heat-bath gap, its transfer gap stays uniformly positive at fixed coupling.
+-Conversely, finite density moments of sufficiently high order give an
+-explicit dimension-independent transfer gap, without pointwise upper or
+-positive lower bounds, even allowing zero weights. Strictly positive
+-rare-spike densities with bounded lower-order moments can nevertheless
+-have exponentially collapsing gaps for this same operator. We give
+-explicit constants for both regimes; the interval between them and its
+-endpoints remain unresolved. The ingredients are classical and external
++Conversely, for the Boolean noise parameter $0<\rho<1$, density moments
++of order $s>(1+\rho)/(1-\rho)$ give an explicit dimension-independent
++transfer gap, without pointwise upper or positive lower bounds and even
++allowing zero weights. For every $1<s<(1+\rho)/(1-\rho)$ and every
++$B>1$, we construct normalized densities with $\|r_L\|_s\le B$ and
++$r_L\ge1/B$ whose gaps collapse exponentially. Two antipodal product
++tilts and a Gram-matrix comparison supply this converse. The critical
++exponent itself remains unresolved. The ingredients are classical and external
+ priority of these joint conclusions is not established. Global many-body
+ weights are allowed; no fixed-range Gibbs or local-dynamics claim follows.
+ \end{abstract}
+@@ -534,7 +535,7 @@
+ about this transfer family, not single-site heat-bath dynamics.
+ The constants are not claimed optimal.
+ 
+-\section{Finite density moments: a sufficient regime and an obstruction}
++\section{Density-moment threshold: the two strict regimes}
+ \label{sec:finite-moment}
+ A pointwise density cap is stronger than necessary. We next replace it
+ by a dimension-independent finite moment. A second construction shows why
+@@ -619,89 +620,140 @@
+ $\lambda_2=0$ and is already covered. No step divides by $r$.
+ \end{proof}
+ 
+-\begin{theorem}\label{thm:spikes}
+-Fix $0<\rho<1$, $B>1$ and
+-\[
+- 1<s<s_{\rm point}:=\frac{\log2}{\log(2/(1+\rho))}.
+-\]
+-There are strictly positive normalized densities $r_L$ for every $L\ge1$
+-with $\|r_L\|_s\le B$ whose actual transfer gaps tend to zero
+-exponentially. Explicitly put $\varepsilon=(B-1)/2^{1/s}$ and
+-\[
+- z_L=\varepsilon2^{L/s},\qquad
+- r_L(x)=\frac{1+z_L(\mathbf1_{\{0^L\}}(x)+\mathbf1_{\{1^L\}}(x))}{Z_L},
+- \qquad Z_L=1+2\varepsilon2^{-L(1-1/s)}.
+-\]
+-Write $a=(1+\rho)/2$, $b=(1-\rho)/2$, $v=(1+\rho^2)/2$ and
+-\[
+- \kappa=2^{1/s}a,\qquad
+- \eta=2^{-1/(2s)}\frac{\sqrt v}{a},\qquad \zeta=b/a.
+-\]
+-Then $\kappa>1$, $0<\eta,\zeta<1$, and
+-\begin{equation}\label{eq:spikegap}
+- \gap(T_{r_L})\le2\zeta^L+\frac{1+2\varepsilon}{\varepsilon}\kappa^{-L}
+-                      +\sqrt{2/\varepsilon}\,\eta^L.
+-\end{equation}
++\begin{theorem}\label{thm:tilts}
++Fix $0<\rho<1$, $1<s<s_c:=(1+\rho)/(1-\rho)$ and $B>1$.
++There are strictly positive mean-one densities $r_L$, for every $L\ge1$,
++with $\|r_L\|_s\le B$ and $r_L\ge1/B$, and constants
++$\kappa>1$ and $0<\omega<\kappa$, independent of $L$, such that
++\[
++ 0<\gap(T_{r_L})\le
++ 2(\omega/\kappa)^L+\varepsilon^{-1}\kappa^{-L},
++ \qquad \varepsilon=(B-1)/2.
++\]
++Thus a uniform positive lower density does not prevent exponential gap
++collapse throughout the strict subcritical moment regime.
+ \end{theorem}
+ \begin{proof}
+-The antipodes are distinct for every $L\ge1$. The formula for $Z_L$
+-is their exact normalization, so $\mathbb E r_L=1$ and $r_L>0$.
+-The $L^s$ triangle inequality gives
+-\[
+- \|1+z_L(\mathbf1_{\{0^L\}}+\mathbf1_{\{1^L\}})\|_s
+- \le1+z_L(2/2^L)^{1/s}=B.
+-\]
+-Division by $Z_L\ge1$ proves the moment bound for all $L$.
+-
+-Use the Euclidean matrix of $T_{r_L}$; the common normalization of the
+-$L^2(u_L)$ coordinate basis leaves this matrix unchanged. Split the two
+-antipodes $C$ from their complement. The $C$ principal block is
+-\[
+- D_L\begin{pmatrix}1&\zeta^L\\\zeta^L&1\end{pmatrix},
+- \qquad D_L=(1+z_L)a^L/Z_L.
+-\]
+-Principal interlacing gives $\lambda_2\ge D_L(1-\zeta^L)$, and a
+-coordinate Rayleigh vector gives $\lambda_1\ge D_L$. The complementary
+-block is $Z_L^{-1}$ times a principal submatrix of the positive
+-contraction $P_\rho$, so its norm is at most one. For the rectangular
+-cross block $K$, each full squared row sum of $P_\rho$ is
+-$(a^2+b^2)^L=v^L$. Therefore
+-\[
+- \|K\|^2\le\|K\|_{\rm F}^2\le2(1+z_L)v^L/Z_L^2.
+-\]
+-The symmetric off-diagonal block has norm $\|K\|$. Consequently
+-$\lambda_1\le D_L(1+\zeta^L)+1+\|K\|$, which implies
+-\[
+- \gap(T_{r_L})\le2\zeta^L+D_L^{-1}+\|K\|/D_L.
+-\]
+-Since $Z_L\le1+2\varepsilon$ and $1+z_L\ge\varepsilon2^{L/s}$,
+-\[
+- D_L^{-1}\le\frac{1+2\varepsilon}{\varepsilon}\kappa^{-L},
+- \qquad \frac{\|K\|}{D_L}\le\sqrt{2/\varepsilon}\,\eta^L.
+-\]
+-This proves~\eqref{eq:spikegap}. The strict condition on $s$ says
+-$\kappa>1$. Also $\eta^2=v/(a\kappa)<v/a<1$, since $\rho^2<\rho$.
+-Thus all three terms decay exponentially. At $L=1$ the complementary
+-block is empty; the same bounds remain valid. The estimate need not be
+-informative at small $L$.
+-\end{proof}
+-
+-These regimes leave a genuine interval open. With
+-$t_0=(1-\rho)/(1+\rho)\in(0,1)$, strict concavity gives
+-$\log(1+t_0)>t_0\log2$, hence
+-\[
+- 1<s_{\rm point}<s_c:=\frac{1+\rho}{1-\rho}.
+-\]
+-Neither the intermediate interval nor either endpoint is settled here;
+-no sharp threshold is claimed. At $B=1$, Jensen forces $r=1$ and the
+-actual gap is $1-\rho$, displaying the weakness of the sufficient bound.
+-The spike family does not claim product marginals for its weighting or
+-stationary law. It isolates a finite-moment obstruction for the same
+-transfer operator, whereas Theorem~\ref{thm:main} isolates the distinct
+-marginal-information obstruction. Both are compatible with
+-Theorems~\ref{thm:density} and~\ref{thm:moment}.
++Relabel the cube as $\{-1,1\}^L$. For a fixed tilt $0<\delta<1$, put
++\[
++ n=\left(\frac{(1+\delta)^s+(1-\delta)^s}{2}\right)^{1/s},
++ \qquad w_\pm(x)=\frac{1\pm\delta x}{n},\qquad m=n^{-1}.
++\]
++Strict convexity gives $n>1$, while $\|w_\pm\|_s=1$ and
++$\mathbb E w_\pm=m$. Define $R_{\pm,L}(x)=\prod_i w_\pm(x_i)$ and
++\[
++ Z_L=1+2\varepsilon m^L,\qquad
++ r_L=\frac{1+\varepsilon(R_{+,L}+R_{-,L})}{Z_L}.
++\]
++Product integration gives $\|R_{\pm,L}\|_s=1$ and
++$\mathbb E R_{\pm,L}=m^L$. Hence $r_L>0$, $\mathbb E r_L=1$,
++$\|r_L\|_s\le(1+2\varepsilon)/Z_L\le B$, and
++$r_L\ge1/Z_L\ge1/B$.
++
++Write $Q=P_{\sqrt\rho}$. Since $Q^2=P_\rho$, the matrices
++$T_{r_L}=AA^*$ and $S_L=A^*A$, with $A=M_{\sqrt{r_L}}Q$,
++have identical spectra, including multiplicities. Here $M_f$ denotes
++multiplication by $f$. Direct expansion gives
++\[
++ Z_L S_L=P_\rho+\varepsilon(X_L+Y_L),\qquad
++ X_L=H_+^{\otimes L},\quad Y_L=H_-^{\otimes L},
++\]
++where the one-site matrices, in the orthonormal Walsh basis $(1,x)$, are
++\[
++ H_\pm=\frac1n
++ \begin{pmatrix}1&\pm\delta\sqrt\rho\\
++                 \pm\delta\sqrt\rho&\rho\end{pmatrix}.
++\]
++They are positive definite and conjugate by $\diag(1,-1)$. Their common
++simple top eigenvalue is
++\[
++ \kappa(\delta)=
++ \frac{1+\rho+\sqrt{(1-\rho)^2+4\rho\delta^2}}{2n(\delta)}.
++\]
++At zero, $\kappa(0)=1$, $(\log\kappa)'(0)=0$, and differentiation yields
++\[
++ (\log\kappa)''(0)=\frac{2\rho}{1-\rho}-(s-1)>0.
++\]
++All functions are smooth near zero. Taylor's theorem therefore gives
++$\kappa>1$ for every sufficiently small positive $\delta$. Fix one such
++$\delta<1$. This choice depends on $\rho,s$ and is independent of $L$;
++no uniform exponential rate as $s\uparrow s_c$ is asserted.
++
++Set $\omega=\|H_+^{1/2}H_-^{1/2}\|$. Positive definiteness and
++submultiplicativity give $0<\omega\le\kappa$. If equality held, norm
++attainment at a unit vector $v$ would force equality in both steps of
++\[
++ \|H_+^{1/2}H_-^{1/2}v\|
++ \le\sqrt\kappa\,\|H_-^{1/2}v\|\le\kappa.
++\]
++The second equality makes $v$ a top eigenvector of $H_-$; the first
++then makes it a top eigenvector of $H_+$. But $H_+-H_-$ has zero
++diagonal and nonzero equal off-diagonal entries, so is invertible.
++It cannot annihilate their common top eigenvector. Thus $\omega<\kappa$.
++
++For $N=2^L\ge2$, use the $N$-by-$2N$ matrix
++$C=[\sqrt{X_L},\sqrt{Y_L}]$. Its two Gram matrices satisfy
++\[
++ CC^*=X_L+Y_L,\qquad
++ C^*C=\begin{pmatrix}
++ X_L&\sqrt{X_L}\sqrt{Y_L}\\
++ \sqrt{Y_L}\sqrt{X_L}&Y_L
++ \end{pmatrix}.
++\]
++The block diagonal part has its two largest eigenvalues equal to
++$\kappa^L$. Tensorization of positive square roots and of operator
++norms gives $\|\sqrt{X_L}\sqrt{Y_L}\|=\omega^L$, which is also the
++norm of the self-adjoint off-diagonal perturbation. The variational
++eigenvalue bound consequently gives
++\[
++ \lambda_1(X_L+Y_L)\le\kappa^L+\omega^L,\qquad
++ \lambda_2(X_L+Y_L)\ge\kappa^L-\omega^L>0.
++\]
++Indeed $C^*C$ and $CC^*$ have the same $N$ positive eigenvalues,
++with $N$ additional zeros only in $C^*C$, so both leading bounds
++transfer even when $L=1$. Also $X_L+Y_L\ge X_L$ gives
++$\lambda_1(X_L+Y_L)\ge\kappa^L$.
++
++Finally $P_\rho$ is positive semidefinite of norm one. For
++$F_L=Z_L S_L$, the variational principle and norm bound imply
++\[
++ \lambda_1(F_L)\le\varepsilon(\kappa^L+\omega^L)+1,
++ \qquad \lambda_2(F_L)\ge\varepsilon(\kappa^L-\omega^L),
++ \qquad \lambda_1(F_L)\ge\varepsilon\kappa^L.
++\]
++Subtracting and dividing gives the claimed upper bound. The scalar
++$Z_L$ cancels from the ratio, and $S_L$ and the actual $T_{r_L}$
++have the same spectrum. Its entrywise positivity gives strict Perron
++separation at every finite $L$. Both terms in the upper bound decay
++exponentially, although the bound can exceed one at small $L$.
++\end{proof}
++
++Theorems~\ref{thm:moment} and~\ref{thm:tilts} separate the two strict
++regimes at the same value $s_c$. The critical case $s=s_c$ remains open
++here. At $B=1$, Jensen forces $r=1$ and the actual gap is $1-\rho$;
++the sufficient lower bound is not claimed optimal. The tilted family
++does not claim product marginals for its weighting or stationary law.
++It isolates the moment obstruction for the same transfer operator,
++whereas Theorem~\ref{thm:main} isolates the marginal-information
++obstruction. The earlier two-point-spike construction in the retained
++analytical sources covers the narrower interval
++$1<s<\log2/\log(2/(1+\rho))$; it remains valid but is superseded here
++by the product-tilt construction.
++
+ 
+ \section{Comparison with hyperbounded and perturbation results}
++The value $s_c$ is the classical Boolean hypercontractive boundary,
++not a new integrability scale. Indeed, for $a_s=2s/(s+1)$, the
++norm-one estimate $\|P_{\sqrt\rho}f\|_2\le\|f\|_{a_s}$ holds
++when $s\ge s_c$ by the standard inequality recalled in~\cite{MOS}.
++Its local sharpness is seen from $f=1+ux$ on one bit:
++$\|P_{\sqrt\rho}f\|_2^2=1+\rho u^2$, whereas
++$\|f\|_{a_s}^2=1+(a_s-1)u^2+o(u^2)$.
++Tensorization amplifies a violated one-bit norm bound. Such top-norm
++growth alone does not imply a closing normalized spectral gap;
++Theorem~\ref{thm:tilts} adds two antipodal channels and their Gram
++comparison to obtain a near-degenerate second eigenvalue.
++
+ The inequalities and matrix arguments used above are classical. Related
+ literature already supplies both qualitative gap criteria and, under
+ different hypotheses, dimension-independent quantitative perturbation
+@@ -725,7 +777,12 @@
+ manifolds with a base logarithmic Sobolev inequality and suitable moments
+ of both $e^V$ and $e^{-V}$. We have not identified that additive operator
+ with the logarithm of this discrete transfer congruence. Our moment
+-hypothesis supplies no inverse-density moment and permits zeros.
++hypothesis in Theorem~\ref{thm:moment} supplies no inverse-density moment
++and permits zeros. In contrast, the counterexample in
++Theorem~\ref{thm:tilts} has $r\ge1/B$ and therefore bounded inverse
++moments. For that family, missing inverse control is not a distinction
++from Gross; the operator/form and exponent correspondences are the
++unestablished steps.
+ Gl\"uck~\cite{Gluck} gives hyperboundedness criteria and uniform essential
+ spectral-radius estimates; those estimates alone do not control the
+ second eigenvalue of a finite matrix. These differences do not prove
