@@ -1,0 +1,265 @@
+diff --git "a/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production318-b\\build318.py" "b/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production322-a\\build322.py"
+index 6f77f8a..6bf35f8 100644
+--- "a/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production318-b\\build318.py"
++++ "b/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production322-a\\build322.py"
+@@ -4,12 +4,12 @@ No scientific test, grading, deposit, permission or publication is performed.
+ import os,sys,json,hashlib,subprocess,traceback,zipfile,re,shutil
+ from pathlib import Path
+ from datetime import datetime,timezone
+-SOURCE='d7e35107e2826d7a9342bdce30b50a3a725ec3dc'
+-BRANCH='codex/tep-sharp-tail318-20261113'
+-TEX_SHA='1ea3598636d490e6d3d542557301c61dbd6219b2927ed98357de7b248f30d2fd'
++SOURCE='5d477f992e2070d106fd92600ca136519ae12859'
++BRANCH='codex/tep-marginal-moment322-20261113'
++TEX_SHA='73073a786fdc65206b716f0cd44c47b31043258fc68477c41917763c6518b545'
+ PAPER='papers/marginal-transfer'
+-ROOT=Path('/content/tep318-build-b');OUT=ROOT/'evidence'
+-ARCHIVE=Path('/content/tep318-build-b-results.zip')
++ROOT=Path('/content/tep322-build-a');OUT=ROOT/'evidence'
++ARCHIVE=Path('/content/tep322-build-a-results.zip')
+ def require(ok,msg):
+     if not ok:raise ValueError(msg)
+ def sha(b):return hashlib.sha256(b).hexdigest()
+@@ -48,9 +48,9 @@ try:
+         run('sparse-init-'+mode,['git','sparse-checkout','init','--cone'],clone)
+         run('sparse-set-'+mode,['git','sparse-checkout','set',PAPER],clone)
+         run('checkout-'+mode,['git','checkout','--detach',SOURCE],clone,timeout=900)
+-        paper=clone/PAPER;tex=paper/'manuscript318A.tex'
++        paper=clone/PAPER;tex=paper/'manuscript322B.tex'
+         require(sha(tex.read_bytes())==TEX_SHA,'Exact audited manuscript differs')
+-        inputs=json.loads((paper/'SOURCE-INPUTS318.json').read_bytes())['files']
++        inputs=json.loads((paper/'SOURCE-INPUTS322.json').read_bytes())['files']
+         for row in inputs:
+             f=paper/row['path'];require(f.resolve().is_relative_to(paper.resolve()),'Unsafe input path')
+             raw=f.read_bytes();require(len(raw)==row['bytes'] and sha(raw)==row['raw_sha256'],'Frozen input differs '+row['path'])
+@@ -63,37 +63,37 @@ try:
+         epoch=run('epoch-'+mode,['git','show','-s','--format=%ct',SOURCE],clone).strip()
+         require(re.fullmatch(r'[0-9]+',epoch) is not None,'Actual source epoch missing')
+         env=dict(os.environ,SOURCE_DATE_EPOCH=epoch,FORCE_SOURCE_DATE='1',TZ='UTC',LC_ALL='C.UTF-8')
+-        arg='\\def\\SourceCommit{'+SOURCE+'}\\input{manuscript318A.tex}'
++        arg='\\def\\SourceCommit{'+SOURCE+'}\\input{manuscript322B.tex}'
+         for passno in (1,2):
+             name='tex-'+mode+'-pass'+str(passno)
+-            prior={f.name:{'bytes':f.stat().st_size,'sha256':sha(f.read_bytes())} for f in paper.glob('manuscript318A*') if f.is_file() and not f.is_symlink()}
++            prior={f.name:{'bytes':f.stat().st_size,'sha256':sha(f.read_bytes())} for f in paper.glob('manuscript322B*') if f.is_file() and not f.is_symlink()}
+             try:
+-                run(name,['pdflatex','-interaction=nonstopmode','-halt-on-error','-file-line-error','-jobname=manuscript318A',arg],paper,timeout=600,env=env)
++                run(name,['pdflatex','-interaction=nonstopmode','-halt-on-error','-file-line-error','-jobname=manuscript322B',arg],paper,timeout=600,env=env)
+             finally:
+                 # Harvest the actual native files before failure propagates, cleanup,
+                 # or a later pass overwrites them. Never regenerate a failed output.
+                 dest=OUT/'native-tex'/name;dest.mkdir(parents=True,exist_ok=False)
+                 saved=[]
+-                for f in sorted(paper.glob('manuscript318A*')):
++                for f in sorted(paper.glob('manuscript322B*')):
+                     require(not f.is_symlink(),'Unexpected native build symlink')
+                     if f.is_file():
+                         raw=f.read_bytes();(dest/f.name).write_bytes(raw)
+                         saved.append({'path':f.name,'bytes':len(raw),'sha256':sha(raw)})
+                 observed=[c for c in commands if c['name']==name]
+                 put(dest/'retention.json',{'attempt':name,'actual_child_result':observed[-1] if observed else None,'files_before_attempt':prior,'files_saved_after_attempt':saved,'meaning':'Saved files may include preexisting output from an earlier pass; file presence is never proof of a successful or new PDF. Use actual child exit/log.'})
+-        pdf=paper/'manuscript318A.pdf';raw=pdf.read_bytes();require(raw.startswith(b'%PDF'),'No actual PDF')
++        pdf=paper/'manuscript322B.pdf';raw=pdf.read_bytes();require(raw.startswith(b'%PDF'),'No actual PDF')
+         (OUT/('clone-'+mode+'.pdf')).write_bytes(raw)
+-        log=(paper/'manuscript318A.log').read_bytes();(OUT/('clone-'+mode+'-latex.log')).write_bytes(log)
++        log=(paper/'manuscript322B.log').read_bytes();(OUT/('clone-'+mode+'-latex.log')).write_bytes(log)
+         diff=run('tracked-diff-'+mode,['git','diff','--exit-code',SOURCE,'--',PAPER],clone)
+         require(not diff.strip(),'Tracked source changed during build')
+         builds.append({'mode':mode,'source':actual,'epoch':epoch,'pdf_bytes':len(raw),'pdf_sha256':sha(raw),'input_files_verified':len(inputs),'overfull_lines':[l for l in log.decode(errors='replace').splitlines() if 'Overfull' in l]})
+     require(builds[0]['pdf_sha256']==builds[1]['pdf_sha256'] and builds[0]['pdf_bytes']==builds[1]['pdf_bytes'],'Two fresh same-source PDFs differ; preserve both')
+-    report['builds']=builds;pdf=OUT/'manuscript318A.pdf';pdf.write_bytes((OUT/'clone-a.pdf').read_bytes())
++    report['builds']=builds;pdf=OUT/'manuscript322B.pdf';pdf.write_bytes((OUT/'clone-a.pdf').read_bytes())
+     info=run('pdfinfo',['pdfinfo',str(pdf)]);report['pdfinfo']=info
+     match=re.search(r'(?m)^Pages:\s+(\d+)\s*$',info);require(match is not None,'Actual page count missing');count=int(match.group(1));require(1<=count<=60,'Unexpected page count')
+-    run('extract',['pdftotext','-layout',str(pdf),str(OUT/'manuscript318A.txt')])
+-    text=(OUT/'manuscript318A.txt').read_text();normal=' '.join(text.split())
+-    for token in (SOURCE,'Model assessments and review context','Codes with two distance conditions','A finite positive concentration estimate','Stationary marginals survive the Perron transform','An exact parity control with different dynamics','Auxiliary critical estimates and an explicit rate','The exact critical moment budget','The escaped critical-moment boundary','The fixed-cutoff endpoint','Optimized finite backgrounds below cutoff one','Scalar background tail optimum','Attaining the constructive cutoff budget','The exact scalar envelope at a strict cutoff','The universal strict-tail threshold'):
++    run('extract',['pdftotext','-layout',str(pdf),str(OUT/'manuscript322B.txt')])
++    text=(OUT/'manuscript322B.txt').read_text();normal=' '.join(text.split())
++    for token in (SOURCE,'Model assessments and review context','Codes with two distance conditions','A finite positive concentration estimate','Stationary marginals survive the Perron transform','An exact parity control with different dynamics','Auxiliary critical estimates and an explicit rate','The exact critical moment budget','The escaped critical-moment boundary','The fixed-cutoff endpoint','Optimized finite backgrounds below cutoff one','Scalar background tail optimum','Attaining the constructive cutoff budget','The exact scalar envelope at a strict cutoff','The universal strict-tail threshold','Quantitative rigidity at a sublinear marginal order'):
+         require(token in normal,'Actual PDF missing expected content '+token)
+     require('[SLOT]' not in text and 'SOURCE-NOT-BUILT' not in text,'Unresolved manuscript placeholder')
+     require(len(text)>12000,'Unexpectedly short extraction')
+diff --git "a/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production318-b\\run_owned_after_gate.ps1" "b/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production322-a\\run_owned_after_gate.ps1"
+index 94ff181..aced989 100644
+--- "a/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production318-b\\run_owned_after_gate.ps1"
++++ "b/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production322-a\\run_owned_after_gate.ps1"
+@@ -1,7 +1,7 @@
+ param([Parameter(Mandatory=$true)][ValidatePattern('^[a-f0-9]{64}$')][string]$ApprovedManifestSha256)
+ Set-StrictMode -Version Latest
+ $ErrorActionPreference='Stop'
+-$source='d7e35107e2826d7a9342bdce30b50a3a725ec3dc'
++$source='5d477f992e2070d106fd92600ca136519ae12859'
+ . (Join-Path $PSScriptRoot 'capture_cli_atomic.ps1')
+ $manifest=Join-Path $PSScriptRoot 'RUNNER-HASHES.json'
+ if((Get-FileHash -LiteralPath $manifest).Hash.ToLowerInvariant() -cne $ApprovedManifestSha256){throw 'Parent exact runner gate pin required'}
+@@ -10,21 +10,21 @@ foreach($entry in (Get-Content -LiteralPath $manifest -Raw|ConvertFrom-Json)){
+  if((Get-Item -LiteralPath $file).Length -ne $entry.bytes -or (Get-FileHash -LiteralPath $file).Hash.ToLowerInvariant() -cne $entry.sha256){throw ('Frozen runner input differs: '+$entry.path)}
+ }
+ $authority=Get-Content -LiteralPath (Join-Path $PSScriptRoot 'parent-authority-relay.json') -Raw|ConvertFrom-Json
+-if($authority.source -cne $source -or $authority.runner_manifest_sha256 -cne $ApprovedManifestSha256 -or $authority.manuscript_tex_sha256 -cne '1ea3598636d490e6d3d542557301c61dbd6219b2927ed98357de7b248f30d2fd' -or $authority.parent_full_mathematical_report_read -ne $true -or $authority.parent_full_engineering_report_read -ne $true){throw 'Both actual parent gates must be read and relayed before allocation'}
++if($authority.source -cne $source -or $authority.runner_manifest_sha256 -cne $ApprovedManifestSha256 -or $authority.manuscript_tex_sha256 -cne '73073a786fdc65206b716f0cd44c47b31043258fc68477c41917763c6518b545' -or $authority.parent_full_mathematical_report_read -ne $true -or $authority.parent_full_engineering_report_read -ne $true){throw 'Both actual parent gates must be read and relayed before allocation'}
+ if($authority.mathematical_accepted -ne $true -or $authority.engineering_accepted -ne $true){throw 'Actual accepted source gates required'}
+ foreach($kind in @('mathematical','engineering')){
+  $pathField=$kind+'_report_path';$hashField=$kind+'_report_sha256'
+  $reportPath=[string]$authority.$pathField;$reportHash=[string]$authority.$hashField
+  if(-not[regex]::IsMatch($reportHash,'\A[a-f0-9]{64}\z') -or (Get-FileHash -LiteralPath $reportPath).Hash.ToLowerInvariant() -cne $reportHash){throw 'Original full report hash binding differs'}
+ }
+-$out='D:\Datos\the-eriksson-programme\autonomia\evidencia-318\production-b\attempt-a'
++$out='D:\Datos\the-eriksson-programme\autonomia\evidencia-322\production-a\attempt-a'
+ if(Test-Path -LiteralPath $out){throw 'Preserve previous attempt; no blind retry'}
+ New-Item -ItemType Directory -Path $out|Out-Null
+-$prefix='export GOOGLE_APPLICATION_CREDENTIALS=/mnt/c/Users/lluis/AppData/Roaming/gcloud/application_default_credentials.json; exec /home/lluis/.local/bin/colab --auth adc --config /home/lluis/.config/colab-cli/tep318-build-b-sessions.json'
+-$session='tep318-build-b-own-cpu'
+-$remote='/content/tep318-build-b-results.zip'
+-$local='/mnt/d/Datos/the-eriksson-programme/autonomia/evidencia-318/production-b/attempt-a/tep318-build-b-results.zip'
+-$script='/mnt/c/Trabajo/the-eriksson-programme/prefix-rank290-20261113/_tmp/production318-b/build318.py'
++$prefix='export GOOGLE_APPLICATION_CREDENTIALS=/mnt/c/Users/lluis/AppData/Roaming/gcloud/application_default_credentials.json; exec /home/lluis/.local/bin/colab --auth adc --config /home/lluis/.config/colab-cli/tep322-build-a-sessions.json'
++$session='tep322-build-a-own-cpu'
++$remote='/content/tep322-build-a-results.zip'
++$local='/mnt/d/Datos/the-eriksson-programme/autonomia/evidencia-322/production-a/attempt-a/tep322-build-a-results.zip'
++$script='/mnt/c/Trabajo/the-eriksson-programme/prefix-rank290-20261113/_tmp/production322-a/build322.py'
+ $attempted=$false;$exits=[ordered]@{};$caught=$null
+ [IO.File]::WriteAllText((Join-Path $out 'runtime-open-requested.txt'),[DateTime]::UtcNow.ToString('o')+"`n")
+ try{
+diff --git "a/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production318-b\\readback_after_stop.ps1" "b/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production322-a\\readback_after_stop.ps1"
+index 89ff61a..2314b49 100644
+--- "a/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production318-b\\readback_after_stop.ps1"
++++ "b/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production322-a\\readback_after_stop.ps1"
+@@ -1,9 +1,9 @@
+ Set-StrictMode -Version Latest
+ $ErrorActionPreference='Stop'
+ . (Join-Path $PSScriptRoot 'capture_cli_atomic.ps1')
+-$out='D:\Datos\the-eriksson-programme\autonomia\evidencia-318\production-b\attempt-a'
++$out='D:\Datos\the-eriksson-programme\autonomia\evidencia-322\production-a\attempt-a'
+ if(-not(Test-Path -LiteralPath (Join-Path $out 'release.exit'))){throw 'Actual stop capture required first'}
+-$command='export GOOGLE_APPLICATION_CREDENTIALS=/mnt/c/Users/lluis/AppData/Roaming/gcloud/application_default_credentials.json; exec /home/lluis/.local/bin/colab --auth adc --config /home/lluis/.config/colab-cli/tep318-build-b-sessions.json sessions'
++$command='export GOOGLE_APPLICATION_CREDENTIALS=/mnt/c/Users/lluis/AppData/Roaming/gcloud/application_default_credentials.json; exec /home/lluis/.local/bin/colab --auth adc --config /home/lluis/.config/colab-cli/tep322-build-a-sessions.json sessions'
+ $code=Invoke-CapturedWsl -Name 'backend-readback' -ShellCommand $command -OutputDirectory $out
+ if($code -ne 0){throw 'Actual backend readback nonzero'}
+ Get-Content -LiteralPath (Join-Path $out 'backend-readback.log')
+diff --git "a/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\validate_return318D.py" "b/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production322-a\\validate_return322A.py"
+index b822061..ce75b6a 100644
+--- "a/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\validate_return318D.py"
++++ "b/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production322-a\\validate_return322A.py"
+@@ -2,8 +2,8 @@
+ from pathlib import Path, PurePosixPath
+ import json, hashlib, re, zipfile
+ 
+-SOURCE = 'd7e35107e2826d7a9342bdce30b50a3a725ec3dc'
+-TEX = '1ea3598636d490e6d3d542557301c61dbd6219b2927ed98357de7b248f30d2fd'
++SOURCE = '5d477f992e2070d106fd92600ca136519ae12859'
++TEX = '73073a786fdc65206b716f0cd44c47b31043258fc68477c41917763c6518b545'
+ STATUS = 'TWO_FRESH_MATCHING_PDFS_RENDERED_PENDING_ALL_PAGE_VISUAL_AND_FIRST_EXACT_PDF_ASSESSMENT'
+ COMMANDS = ['apt-update','apt-install','tex-version','poppler-version','git-version']
+ for mode in ('a','b'):
+@@ -54,7 +54,7 @@ def check_report(report):
+     builds=report['builds']
+     require(len(builds)==2 and [x['mode'] for x in builds]==['a','b'], 'Two unique builds required')
+     for b in builds:
+-        require(b['source']==SOURCE and type(b['input_files_verified']) is int and b['input_files_verified']==1045, 'Build inputs/source')
++        require(b['source']==SOURCE and type(b['input_files_verified']) is int and b['input_files_verified']==1133, 'Build inputs/source')
+         require(type(b['pdf_bytes']) is int and b['pdf_bytes']>0 and re.fullmatch('[0-9a-f]{64}',b['pdf_sha256']) is not None, 'Build PDF')
+         require(isinstance(b['epoch'],str) and re.fullmatch('[0-9]+',b['epoch']) is not None, 'Build epoch')
+     require(all(builds[0][k]==builds[1][k] for k in ('epoch','pdf_bytes','pdf_sha256')), 'Different builds')
+@@ -63,7 +63,7 @@ def check_report(report):
+         require(type(c['actual_exit']) is int and c['actual_exit']==0 and c['timed_out'] is False, 'Native exit/timeout')
+         require(isinstance(c['argv'],list) and c['argv'] and all(isinstance(x,str) for x in c['argv']), 'Native argv')
+     cleanup=report['cleanup']
+-    require(len(cleanup)==2 and [c['path'] for c in cleanup]==['/content/tep318-build-b/clone-a','/content/tep318-build-b/clone-b'], 'Exact cleanup paths')
++    require(len(cleanup)==2 and [c['path'] for c in cleanup]==['/content/tep322-build-a/clone-a','/content/tep322-build-a/clone-b'], 'Exact cleanup paths')
+     require(all(c['removed'] is True and 'error' not in c for c in cleanup), 'Cleanup failure')
+     require(type(report['pages']) is int and 1<=report['pages']<=60, 'Page count')
+ 
+@@ -88,10 +88,10 @@ def validate(archive, attempt, source_manifest, destinations):
+             if 'archive_sha256' in value: announcements.append(value)
+     require(len(announcements)==1, 'Actual archive announcement')
+     ann=announcements[0]
+-    require(ann['archive']=='/content/tep318-build-b-results.zip' and ann['status']==STATUS, 'Remote archive identity')
++    require(ann['archive']=='/content/tep322-build-a-results.zip' and ann['status']==STATUS, 'Remote archive identity')
+     require(archive.stat().st_size==ann['archive_bytes'] and digest(archive.read_bytes())==ann['archive_sha256'], 'Transport archive bytes')
+     expected=json.loads(source_manifest.read_bytes())['files']
+-    safe_names([r['path'] for r in expected]);require(len(expected)==1045, 'Frozen input inventory')
++    safe_names([r['path'] for r in expected]);require(len(expected)==1133, 'Frozen input inventory')
+     with zipfile.ZipFile(archive) as z:
+         infos=z.infolist();names=[i.filename for i in infos];safe_names(names)
+         require(0<len(names)<5000 and sum(i.file_size for i in infos)<512_000_000, 'Archive bounds')
+@@ -103,12 +103,12 @@ def validate(archive, attempt, source_manifest, destinations):
+             require(len(raw)==row['bytes'] and digest(raw)==row['sha256'], 'Raw member mismatch '+row['path'])
+         r=json.loads(z.read('evidence/report.json'));check_report(r)
+         captured={n.removeprefix('evidence/source-capture/') for n in names if n.startswith('evidence/source-capture/')}
+-        require(captured=={x['path'] for x in expected}|{'SOURCE-INPUTS318.json'}, 'Exact captured source inventory')
+-        require(z.read('evidence/source-capture/SOURCE-INPUTS318.json')==source_manifest.read_bytes(), 'Pinned manifest differs')
++        require(captured=={x['path'] for x in expected}|{'SOURCE-INPUTS322.json'}, 'Exact captured source inventory')
++        require(z.read('evidence/source-capture/SOURCE-INPUTS322.json')==source_manifest.read_bytes(), 'Pinned manifest differs')
+         for row in expected:
+             raw=z.read('evidence/source-capture/'+row['path'])
+             require(len(raw)==row['bytes'] and digest(raw)==row['raw_sha256'], 'Captured source differs')
+-        require(digest(z.read('evidence/source-capture/manuscript318A.tex'))==TEX, 'Captured TeX')
++        require(digest(z.read('evidence/source-capture/manuscript322B.tex'))==TEX, 'Captured TeX')
+         for c in r['commands']:
+             require(z.read('evidence/'+c['name']+'.exit')==b'0\n', 'Actual native exit')
+             for ext in ('.stdout','.stderr'): require('evidence/'+c['name']+ext in names, 'Missing native log')
+@@ -116,7 +116,7 @@ def validate(archive, attempt, source_manifest, destinations):
+             require(z.read('evidence/head-'+mode+'.stdout').decode().strip()==SOURCE, 'Actual source head')
+             require(z.read('evidence/epoch-'+mode+'.stdout').decode().strip()==r['builds'][0]['epoch'], 'Actual source epoch')
+             require(not z.read('evidence/tracked-diff-'+mode+'.stdout').strip(), 'Tracked source changed')
+-        pdf=z.read('evidence/manuscript318A.pdf')
++        pdf=z.read('evidence/manuscript322B.pdf')
+         require(pdf.startswith(b'%PDF-') and len(pdf)==r['builds'][0]['pdf_bytes'] and digest(pdf)==r['builds'][0]['pdf_sha256'], 'Canonical PDF')
+         require(all(z.read('evidence/clone-'+m+'.pdf')==pdf for m in ('a','b')), 'Actual PDFs differ')
+         info=z.read('evidence/pdfinfo.stdout').decode();match=re.search(r'(?m)^Pages:\s+(\d+)\s*$',info)
+@@ -126,9 +126,9 @@ def validate(archive, attempt, source_manifest, destinations):
+         contacts={n for n in names if re.fullmatch(r'evidence/contact-[0-9]+\.jpg',n)}
+         require(contacts=={f'evidence/contact-{i:02d}.jpg' for i in range(1,(r['pages']+3)//4+1)}, 'Contact inventory')
+         require(all(z.read(n).startswith(b'\x89PNG\r\n\x1a\n') for n in pages), 'Actual PNG headers')
+-        require(SOURCE in z.read('evidence/manuscript318A.txt').decode(), 'PDF source marker')
++        require(SOURCE in z.read('evidence/manuscript322B.txt').decode(), 'PDF source marker')
+         require('evidence/failure.txt' not in names and 'evidence/cleanup-pending.txt' not in names, 'Recorded failure/debt')
+-        universe={'evidence/'+n for n in ('report.json','manifest.json','manuscript318A.pdf','manuscript318A.txt','clone-a.pdf','clone-b.pdf','clone-a-latex.log','clone-b-latex.log')}
++        universe={'evidence/'+n for n in ('report.json','manifest.json','manuscript322B.pdf','manuscript322B.txt','clone-a.pdf','clone-b.pdf','clone-a-latex.log','clone-b-latex.log')}
+         universe |= {'evidence/'+c+ext for c in COMMANDS for ext in ('.exit','.stdout','.stderr')}
+         universe |= {'evidence/source-capture/'+n for n in captured} | pages | contacts
+         for mode in ('a','b'):
+@@ -137,12 +137,12 @@ def validate(archive, attempt, source_manifest, destinations):
+                 retention=json.loads(z.read(prefix+'retention.json'))
+                 require(retention['attempt']==name and retention['actual_child_result']==next(c for c in r['commands'] if c['name']==name), 'Native retention child binding')
+                 saved=retention['files_saved_after_attempt'];safe_names([x['path'] for x in saved])
+-                require({x['path'] for x in saved}=={'manuscript318A'+ext for ext in ('.tex','.pdf','.log','.aux','.out')}, 'Native retained inventory')
++                require({x['path'] for x in saved}=={'manuscript322B'+ext for ext in ('.tex','.pdf','.log','.aux','.out')}, 'Native retained inventory')
+                 for item in saved:
+                     raw=z.read(prefix+item['path'])
+                     require(len(raw)==item['bytes'] and digest(raw)==item['sha256'], 'Native retained bytes')
+-                require(digest(z.read(prefix+'manuscript318A.tex'))==TEX, 'Native TeX')
+-                if passno==2: require(z.read(prefix+'manuscript318A.pdf')==pdf, 'Final native PDF')
++                require(digest(z.read(prefix+'manuscript322B.tex'))==TEX, 'Native TeX')
++                if passno==2: require(z.read(prefix+'manuscript322B.pdf')==pdf, 'Final native PDF')
+                 universe |= {prefix+x['path'] for x in saved} | {prefix+'retention.json'}
+         require(set(names)==universe, 'Unexpected/missing archive artifact')
+-    return {'source':SOURCE,'PDF_sha256':digest(pdf),'PDF_bytes':len(pdf),'pages':r['pages'],'archive_sha256':digest(archive.read_bytes()),'raw_members_verified':len(rows),'source_input_members_verified':1045,'scope':'Exact raw declared inventories, bindings and exits checked; parent must read native logs/argv/retention, verify runtime inactivity, inspect all pages and assess exact PDF. Not independent proof of execution or mathematics.'}
++    return {'source':SOURCE,'PDF_sha256':digest(pdf),'PDF_bytes':len(pdf),'pages':r['pages'],'archive_sha256':digest(archive.read_bytes()),'raw_members_verified':len(rows),'source_input_members_verified':1133,'scope':'Exact raw declared inventories, bindings and exits checked; parent must read native logs/argv/retention, verify runtime inactivity, inspect all pages and assess exact PDF. Not independent proof of execution or mathematics.'}
+diff --git "a/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\test_validate_return318D.py" "b/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production322-a\\test_validate_return322A.py"
+index 439d53f..e4c7fb0 100644
+--- "a/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\test_validate_return318D.py"
++++ "b/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production322-a\\test_validate_return322A.py"
+@@ -1,7 +1,7 @@
+-"""Synthetic predicate regressions from collector318 auditor B1-B3; not production evidence."""
++"""Synthetic predicate regressions from collector322 auditor B1-B3; not production evidence."""
+ import copy, json, tempfile
+ from pathlib import Path
+-import validate_return318D as v
++import validate_return322A as v
+ 
+ accepted=0;rejected=0;cases=[]
+ def good(name, fn):
+@@ -14,8 +14,8 @@ def bad(name, fn):
+         rejected+=1;cases.append({'case':name,'expected':'reject','observed':'reject'});return
+     raise RuntimeError('False acceptance: '+name)
+ 
+-build={'source':v.SOURCE,'input_files_verified':1045,'pdf_bytes':10,'pdf_sha256':'0'*64,'epoch':'123'}
+-report={'source':v.SOURCE,'tex_raw_sha256':v.TEX,'status':v.STATUS,'builds':[dict(build,mode=m) for m in ('a','b')],'commands':[{'name':n,'actual_exit':0,'timed_out':False,'argv':['fixture']} for n in v.COMMANDS],'cleanup':[{'path':'/content/tep318-build-b/clone-'+m,'removed':True} for m in ('a','b')],'pages':2}
++build={'source':v.SOURCE,'input_files_verified':1133,'pdf_bytes':10,'pdf_sha256':'0'*64,'epoch':'123'}
++report={'source':v.SOURCE,'tex_raw_sha256':v.TEX,'status':v.STATUS,'builds':[dict(build,mode=m) for m in ('a','b')],'commands':[{'name':n,'actual_exit':0,'timed_out':False,'argv':['fixture']} for n in v.COMMANDS],'cleanup':[{'path':'/content/tep322-build-a/clone-'+m,'removed':True} for m in ('a','b')],'pages':2}
+ outer={'source':v.SOURCE,'failure':None,'actual_cli_exits':dict.fromkeys(('allocation','execution','download','release'),0)}
+ good('report-positive-synthetic',lambda:v.check_report(report))
+ good('outer-positive-synthetic',lambda:v.check_outer(outer))

@@ -1,0 +1,235 @@
+diff --git "a/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\papers\\marginal-transfer\\manuscript322A.tex" "b/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\papers\\marginal-transfer\\manuscript322B.tex"
+index 42aa9e5..59f5a34 100644
+--- "a/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\papers\\marginal-transfer\\manuscript322A.tex"
++++ "b/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\papers\\marginal-transfer\\manuscript322B.tex"
+@@ -1,4 +1,4 @@
+-% DOCUMENT322 draft: grouped growing marginal order and critical moment rigidity; new exact-PDF assessment pending.
++% DOCUMENT322B: includes audited323 quadratic deficit; final document/production/exact-PDF gates remain separate.
+ \documentclass[11pt]{article}
+ \usepackage[margin=1in]{geometry}
+ \usepackage[T1]{fontenc}
+@@ -25,56 +25,39 @@
+ \begin{document}
+ \maketitle
+ \begin{abstract}
+-Fix a positive Ising coupling. We construct strictly positive Boolean
+-weights whose labelled marginals on every set of at most a fixed positive
+-fraction of coordinates equal uniform product marginals, while exponentially
+-many normalized transfer eigenvalues approach one exponentially fast.
+-The Perron stationary law has the same marginals. Binary codes with positive
+-primal and dual distances, a positive product admixture, and finite block
+-estimates supply the construction. An exact parity spectrum distinguishes
+-transfer relaxation from single-site heat-bath relaxation.
+-Conversely, for Boolean noise parameter $0<\rho<1$, density moments of order
+-$s>(1+\rho)/(1-\rho)$ imply a dimension-independent normalized transfer gap,
+-even allowing zero weights. Below this exponent, every norm budget $B>1$
+-admits positive densities with exponentially collapsing gaps.
+-At the critical exponent $s=(1+\rho)/(1-\rho)$ the exact worst-case norm
+-boundary is $B_*=2^{1/s}$: smaller budgets give a positive gap, whereas
+-at $B_*$ and above collapse is possible with any prescribed density floor
+-below one. We also identify the sharp worst-case boundary for the
+-asymptotic escaped critical moment
+-$\Theta=\lim_{K\to\infty}\sup_L\mathbb E[r_L^s\mathbf1_{r_L>K}]$.
+-The condition $\Theta<1$ gives an explicit uniform gap, while a collapsing
+-family has $\Theta=1$. More strongly, a single collapsing family has tail moment above one
+-at most one and total moment at most two in every dimension; it meets
+-the same tail cap simultaneously at every larger cutoff. For fixed
+-$0\le K<1$, this tail cap instead guarantees a positive gap. Nevertheless stable one-vertex spikes realize every
+-finite $\Theta>0$, so critical-power uniform integrability is sufficient
+-but not necessary. These conclusions use classical hypercontractivity,
+-sign compression, balanced product tilts and rank-one perturbations.
+-For $k_s=(s-1)/s<K<1$, finite parity backgrounds also give collapse
+-at the attained tail budget $1+C_s(1-K)K^{s-1}<2$,
+-with density floor exactly at least $K$, where
+-$C_s=s^s/(s-1)^{s-1}$. We prove that this is the exact universal
+-strict-tail threshold: every smaller budget yields an explicit uniform
+-gap for arbitrary nonnegative densities, without a density floor.
+-The proof combines reverse hypercontractivity, normalized sign compression
+-and truncation; a sharp scalar total-moment envelope supplies a simpler
+-intermediate bound. We additionally connect exact weighting-law marginals to the critical moment
+-budget. For every $0<\alpha<1/2$, positive densities with prescribed floor
+-below one retain exactly uniform marginals through $\lfloor L^\alpha\rfloor$
+-and norm at most $2^{1/s}$ while their first two eigenvalues tend to one.
+-Conversely, at any bounded critical norm, matching through every fixed
+-positive linear fraction forces operator-norm convergence to the unweighted
+-noise operator and normalized gap $1-\rho$. This implication uses the published
+-homogeneous moment bound of Kirshner and Samorodnitsky. Critical-power uniform
+-integrability supplies a separate rigidity criterion at any diverging marginal
+-order. The intervening sublinear threshold remains unresolved.
+-External priority is unestablished. Global many-body weights are allowed;
++We compare exact marginal agreement and density-moment control for finite
++Boolean Ising transfer operators. Positive code-based weights can preserve
++uniform labelled marginals on a fixed positive fraction of coordinates while
++exponentially many normalized transfer eigenvalues approach one; their Perron
++stationary law has the same marginals. An exact parity spectrum distinguishes
++this transfer behavior from single-site heat-bath relaxation.
++
++For noise parameter $0<\rho<1$, the critical density exponent is
++$s=(1+\rho)/(1-\rho)$. Supercritical moment bounds force a uniform
++normalized gap, while subcritical bounds allow collapse at every norm budget
++above one. At the critical exponent the exact worst-case norm boundary is
++$2^{1/s}$, and the escaped critical-moment boundary is one. We also determine
++the universal strict-tail threshold for $(s-1)/s<K<1$ using reverse
++hypercontractivity, sign compression and a sharp scalar moment envelope.
++The critical-norm endpoint construction can retain any prescribed density floor below one.
++
++Our joint marginal--moment result gives positive densities at the exact
++critical norm cap with uniform weighting-law marginals through
++$\lfloor L^\alpha\rfloor$, for every fixed $0<\alpha<1/2$, whose first
++two transfer eigenvalues tend to one. Conversely, any bounded critical norm
++and exact matching through order $k_L$ with
++$k_L^2/(L\log(L+1))\to\infty$ force operator-norm convergence to the
++unweighted noise operator, and normalized gap $1-\rho$. The quantitative
++bound follows from an explicit quadratic expansion of the published
++Kirshner--Samorodnitsky homogeneous moment formula. Critical-power uniform
++integrability gives rigidity at any diverging matching order.
++A sharp square-root transition and necessity of the logarithmic factor remain
++open. External priority is unestablished. Global weights are allowed;
+ no fixed-range Gibbs, local-dynamics or physical-gap conclusion follows.
+ \end{abstract}
+ 
+ 
+-Section~\ref{sec:growing-marginals} connects exact weighting-law marginal matching and the critical moment budget in a single family, and proves rigidity for positive linear matching fractions.
++Section~\ref{sec:growing-marginals} connects exact weighting-law marginal matching and the critical moment budget in a single family, and proves quantitative rigidity above square-root logarithmic marginal order.
+ 
+ The constructions serve different conclusions. The code family in
+ Theorem~\ref{thm:main} preserves labelled marginals and produces many slow
+@@ -2604,13 +2587,112 @@ top-two limits, including when $r_L$ has zeros, and the common spectrum
+ of $S_{r_L},T_{r_L}$ supplies the asserted gap limit.
+ \end{proof}
+ 
++\begin{theorem}[Quantitative rigidity at a sublinear marginal order]
++\label{thm:quadratic-marginal-rigidity}
++Keep $\rho,s,p,Q$ fixed as above. There exists $c_p>0$ such that, if
++$r_L\geq0$, $\mathbb E r_L=1$, $\|r_L\|_s\leq B$, and the weighting
++law has exactly uniform marginals through integer order $0\leq k_L\leq L$,
++then
++\begin{equation}\label{eq:quadratic-marginal-rate}
++ \|S_{r_L}-P_\rho\|
++ \leq 2(B+1)\sqrt{L+1}\exp\!\left(-\frac{c_p k_L^2}{4L}\right).
++\end{equation}
++Consequently, if $k_L^2/(L\log(L+1))\to\infty$, the two leading
++eigenvalues of $T_{r_L}$ tend to $1,\rho$ and its normalized gap tends
++to $1-\rho$. The constant depends on the fixed noise parameter; no
++uniformity as $\rho$ approaches an endpoint is asserted.
++\end{theorem}
++
++\begin{proof}
++We derive a quantitative modulus from Proposition~2.6 of
++\cite{kirshner-samorodnitsky}, rather than infer one from strict concavity.
++Its parameterization, with binary entropy $H_2$, is
++\begin{align*}
++ \psi(p,x)&=(p-1)+\log_2((1-\delta)^p+\delta^p)
++       -\tfrac p2 H_2(x)-px\log_2(1-2\delta),\\
++ x&=(\tfrac12-\delta)
++ \frac{(1-\delta)^{p-1}-\delta^{p-1}}{(1-\delta)^p+\delta^p}.
++\end{align*}
++Put $z=1-2\delta$, $A(z)=((1+z)^p+(1-z)^p)/2$ and
++$h(x)=-x\log x-(1-x)\log(1-x)$. The constants cancel exactly, giving
++\begin{equation}\label{eq:323-parameterization}
++ (\log2)\psi(p,x)=\log A(z)-\tfrac p2h(x)-px\log z,
++ \qquad x=\frac{zA'(z)}{pA(z)}.
++\end{equation}
++For every fixed real $p>2$, $A$ is positive and even analytic near zero.
++The binomial expansion followed by the logarithm gives
++\[
++ \log A(z)=\frac{p(p-1)}2z^2+b_4z^4+O(z^6),\qquad
++ b_4=-\frac{p(p-1)(p^2+p-3)}{12}.
++\]
++Indeed the fourth coefficient before simplification is
++$p(p-1)(p-2)(p-3)/24-p^2(p-1)^2/8$.
++Write $v=z^2$, $a=p-1$ and $b=4b_4/p$. Then
++$x=av+bv^2+O(v^3)$. Since $a>0$, the analytic inverse theorem yields
++\begin{align*}
++ v&=x/a-bx^2/a^3+O(x^3),\\
++ \log v&=\log x-\log a-bx/a^2+O(x^2),\\
++ \log A&=(p/2)x-b_4x^2/a^2+O(x^3).
++\end{align*}
++Using $h(x)=-x\log x+x-x^2/2+O(x^3)$ in
++\eqref{eq:323-parameterization} cancels the $x\log x$ terms. Thus
++\begin{align*}
++ (\log2)\psi(p,x)
++ &=\tfrac p2\log(p-1)x+
++       \left(\tfrac p4+\frac{b_4}{(p-1)^2}\right)x^2+O(x^3)\\
++ &=\tfrac p2\log(p-1)x-
++       \frac{p^2(p-2)}{12(p-1)}x^2+O(x^3),
++\end{align*}
++and hence
++\begin{equation}\label{eq:323-quadratic-deficit}
++ \Delta_p(x)=\frac{p(p-2)}{12(p-1)}x^2+O(x^3).
++\end{equation}
++All remainders are for fixed $p$ as $x\downarrow0$. In particular their
++positive leading coefficient is not uniform at $p=2$, which is excluded.
++This expansion is an elementary consequence of the cited formula; no
++originality of the moment bound or of its parameterization is claimed.
++
++The function $a_p$ in the preceding proof is positive on $(0,1]$.
++Equation~\eqref{eq:323-quadratic-deficit} shows that $a_p(x)/x^2$ extends
++to a continuous positive function on $[0,1]$, with value
++$p(p-2)/(12(p-1))$ at zero. Let $c_p>0$ be its minimum. This is an
++existence constant; its global value is not asserted to equal the value
++at zero. The homogeneous estimate, including the parity reduction for
++$j>L/2$, now gives
++\[
++ \|Qf_j\|_p\leq \exp(-c_p j^2/L)\|f_j\|_2.
++\]
++For $m=\lfloor k_L/2\rfloor$, $\Pi$ the projection onto degrees at most
++$m$, and $H=I-\Pi$, summing the orthogonal levels gives
++\[
++ \|QH\|_{2\to p}\leq
++ \sqrt{L+1}\exp(-c_p(m+1)^2/L).
++\]
++The exact identity $\Pi QM_{r_L-1}Q\Pi=0$ still holds. The two
++H\"older block estimates in the preceding proof therefore yield
++\[
++ \|S_{r_L}-P_\rho\|\leq
++ 2(B+1)\sqrt{L+1}\exp(-c_p(m+1)^2/L)
++ \quad(k_L<L).
++\]
++If $k_L=L$, all nonconstant Walsh coefficients of $r_L$ vanish, so
++$r_L=1$ and the norm difference is zero. Otherwise $m+1\geq k_L/2$
++gives~\eqref{eq:quadratic-marginal-rate}. Its logarithm is at most
++$\log(2(B+1))+\frac12\log(L+1)-c_pk_L^2/(4L)$, which tends to
++minus infinity under the stated condition. The same self-adjoint
++perturbation and square-product spectral identity give the actual
++ordered eigenvalue and normalized gap limits, including zero densities.
++\end{proof}
++
+ \paragraph{Scope of the separation.}
+-Theorems~\ref{thm:growing-collapse} and~\ref{thm:linear-marginal-rigidity}
+-operate at the same critical cap $B_*$. Their conclusions do not locate a
+-sharp growth threshold between sub-square-root powers and linear order.
+-In particular qualitative strict concavity does not provide a uniform
+-quadratic deficit near zero, and the constant $a_\gamma$ above is fixed
+-only for fixed $\gamma>0$. No shrinking-cutoff rate is inferred.
++Theorems~\ref{thm:growing-collapse} and~\ref{thm:quadratic-marginal-rigidity}
++operate at the same critical cap $B_*$. Collapse is possible for every fixed
++sub-square-root power, whereas $k_L^2/(L\log(L+1))\to\infty$ suffices
++for rigidity. These conclusions do not locate a sharp square-root threshold,
++prove that the logarithmic factor is necessary, or decide the regime
++$k_L$ comparable to $\sqrt L$. Qualitative concavity alone supplies no
++shrinking-cutoff rate; the explicit expansion
++\eqref{eq:323-quadratic-deficit} pays for the new quantitative conclusion.
+ Theorem~\ref{thm:marginal-ui} supplies a separate sufficient condition at
+ arbitrary diverging marginal order. All statements concern finite Boolean
+ transfer operators with global weights. They imply no fixed-range Gibbs,
+@@ -2619,8 +2701,18 @@ The classical marginal/Fourier criterion and coefficient erasure are prior
+ methods; the homogeneous moment improvement is explicitly attributed.
+ Historical priority for their joint spectral application remains unestablished.
+ 
+-
+ \section*{Model assessments and review context}
++The quantitative sublinear theorem received an exact-source analytical
++AI audit in a different involved Codex session whose prior role was
++engineering review. The complete report, prior involvement and fixed checks
++are retained. The audit checked the real-exponent expansion and the full
++operator estimate, but did not establish historical priority, a sharp
++threshold, formal verification or reviewer independence. A typographic sign
++inconsistency in an intermediate derivative display of the primary v1 HTML
++is recorded in that report; the final derivative and the explicit expansion
++used here have the correct sign. The earlier322A document audit is also
++retained as a source-translation assessment, not as a rating of this PDF.
++
+ OpenAI/Codex assisted the mathematical synthesis and manuscript preparation.
+ The fabrication session is involved in the work. A distinct involved
+ Codex/OpenAI session audits the frozen mathematical source; exact served
