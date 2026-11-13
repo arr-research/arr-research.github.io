@@ -1,0 +1,1 @@
+Place the complete license text for the manuscript, code, and data here. Use separate licenses when their terms differ, and keep every scope and SPDX identifier synchronized with `../LICENSES.json` and `../metadata.json`.
