@@ -1,0 +1,7 @@
+# Public integration correction
+
+The first candidate d1c6fd63e8ead3b0309ba987bb484e021e7d3878 received HOLD and failed the actual Linux collection check. Its complete report, context, objections and failed-step log are retained here. The original full audit packet, including its archived candidate, remains durably preserved outside this record; MANIFEST.json here identifies that original packet and is not a claim that all its members are duplicated in this directory.
+
+The subsequent change renames the five license files from licenses/ to the case-sensitive required LICENSES/ without altering their bytes, fixes the README link and regenerates the current record manifest. It adds only the missing timestamp row, with the actual first repository commit d1c6fd63e8ead3b0309ba987bb484e021e7d3878 at2026-11-14T05:01:24+01:00, publication state pending. No publication date is invented. The earlier frozen candidate remains in Git and the adverse report is unchanged.
+
+The canonical PDF, first scientific report and assessment registry row are unchanged. Full collection/combined-assessment CI and the separate delta audit must pass on the repaired exact commit before integration. This is a package repair, not a repeated scientific assessment. The first report's4.20/10 remains the model's own overall judgment, not a recalculated criterion average or a new weighted score.

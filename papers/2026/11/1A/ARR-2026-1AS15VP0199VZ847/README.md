@@ -28,6 +28,6 @@ Actual production348D evidence and its bounded audit are supplied under reproduc
 
 Page9's phrase “even an accepted version of this section” is historical provisional wording. Theorem6 and its proof are already included in the assessed artifact. “Accepted” there does not claim acceptance into the AIRR collection. This clarification is external to the unchanged PDF; see [author response F2](author-response.md).
 
-Native permission and its separate safe readback appear in `authority`; private credentials, case-access receipts and controller tokens are excluded. Read [license scopes](licenses/README.md) and the complete license texts. Author Lluis Eriksson owns/administers AIRR; no independent editorial admission is claimed.
+Native permission and its separate safe readback appear in `authority`; private credentials, case-access receipts and controller tokens are excluded. Read [license scopes](LICENSES/README.md) and the complete license texts. Author Lluis Eriksson owns/administers AIRR; no independent editorial admission is claimed.
 
 Historical engineering finding348E concerned direct publication of exit sentinels. It was addressed by the separately audited348F atomic wrapper, whose actual Linux outcomes and separate no-active-runtime readback are now retained. Historical preparation documents continue to state their original pending or HOLD status; those are preserved chronology, not the current validation status.
