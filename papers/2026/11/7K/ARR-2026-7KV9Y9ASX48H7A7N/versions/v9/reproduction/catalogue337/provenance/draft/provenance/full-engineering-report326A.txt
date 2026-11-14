@@ -1,0 +1,110 @@
+SHA 795d0b3c9ccdac65f1dbafc3b7c9f22e2a00c459 | raw Git/LF source SHA-256 5aeef7b54ac2e39e2774969928138d85275a6e505fee67240e1cf1d0cea2c1c9 | PR273 normalized body SHA-256 95021ae9b30751e3742f9912bc22fe9dc4312d09f905474f13caef347007f999
+
+TERMINAL ENGINEERING-ONLY SOURCE AUDIT 326A
+
+VERDICT
+PARAMETER-ONLY ADAPTATION: PASS.
+STATIC GUARD REVIEW: QUALIFIED; inherited limitations below remain open.
+HOST OPERATIONAL READINESS: NOT ESTABLISHED BY THIS AUDIT.
+No helper execution, service action, database access, remote-host mutation, public-release verification, or new scientific assessment occurred. The previous exact322B scientific report and score were not changed. This verdict is bound to the exact commit and body above, not to a mutable branch name. It is not permission, a receipt, a publication event or a runtime-success claim.
+
+BINDING AND REPRESENTATION
+Repository: lluiseriksson/THE-ERIKSSON-PROGRAMME.
+PR: https://github.com/lluiseriksson/THE-ERIKSSON-PROGRAMME/pull/273 .
+Base: b1ddd830d54de7ad7cecdaaf48c99ad66083912b.
+Head: 795d0b3c9ccdac65f1dbafc3b7c9f22e2a00c459.
+Changed repository file: research/catalogue326/reconcile_catalogue326.py, 95 lines, 6890 raw Git-blob/LF bytes.
+Candidate SHA-256: 5aeef7b54ac2e39e2774969928138d85275a6e505fee67240e1cf1d0cea2c1c9.
+Predecessor retained helper SHA-256: 65545c9ef13148fece730607f99e3cee33b13fee97dc929f8a7d92cce2c2163c.
+
+The Git blob was read via git cat-file with redirected binary stdout, rather than by a line-ending-converting text pipe, and hashed with SHA-256. Its bytes/hash match the supplied retained326 copy. The local checkout HEAD matches the frozen head. Git diff from the frozen base shows exactly one added file; no other committed change is in this PR. Untracked _drafts/ and _tmp/ were visible and left untouched, not interpreted as part of the audited commit.
+
+Assigned body capture method: gh JSON decode; replace CRLF with LF; TrimEnd; append one LF; encode UTF-8 without BOM. Assigned result: 842 bytes, SHA-256 95021ae9b30751e3742f9912bc22fe9dc4312d09f905474f13caef347007f999.
+Actual reviewer cross-check: GitHub connector get_pr_info returned the current decoded body and exact head/base. The same CRLF-to-LF, trailing-whitespace trim, one-LF and UTF-8-without-BOM transformation yielded the same 842-byte digest. The retained gh JSON capture and normalized body were also inspected. I did not claim to have executed gh myself. The connector snapshot and normalized body are retained in this audit directory. The PR was open and unmerged in that snapshot; the server's prospective merge_commit_sha is not the audit target.
+
+EXACT MECHANICAL COMPARISON
+Both source texts have 95 content lines plus the terminal LF. The only differing line numbers are 5, 6, 10, 11, 12, 13, 44 and 46. Every other line is identical. I read the whole predecessor and candidate and inspected the textual diff; no AST parser, Python import, compile, test or interpreter execution was used.
+
+Line 5: PREVIOUS advances from exact v6 to exact v7:
+ record_id remains arr:record:f3da7c95-67a4-444e-a3d7-814279e5f7cd;
+ version_id becomes arr:version:a96788cf-8f70-4ddf-b94c-175b0b843f8f;
+ version becomes v7;
+ canonical_sha256 becomes ad708fafb3de9fc83cd2dc05443f34b2792da94a20d0bf1b1cd7b8ca41b9340c;
+ author list remains ['Lluis Eriksson'].
+Line 6: ENTRY advances from exact v7 to exact v8:
+ same record_id and author list;
+ version_id arr:version:ecce318a-932c-4452-a1a3-0f202a524568;
+ version v8;
+ canonical_sha256 a4d0449b973b657a741ab4d48693d9c270320c5e8b9750ef6ad437e987927359.
+Whitespace around dictionary punctuation is also compacted on these two constant lines. This is formatting, not a control-flow change.
+Lines 10–13: the backup, temp, result and attempt-log path suffixes change tep320 to tep326. Catalogue, database and base directory remain unchanged. The new host paths are:
+ /srv/airr-private/tep326-catalogue-before.json
+ /srv/airr-private/historical-revisions/catalogue.json.tep326.tmp
+ /srv/airr-private/tep326-catalogue-result.json
+ /srv/airr-private/tep326-catalogue-attempt.json
+Line 44: URL changes from the v7 PDF path to the corresponding exact v8 PDF path.
+Line 46: required byte length changes 547362 to 575735. Its hash comparison still uses ENTRY['canonical_sha256'].
+
+The PID, imports, checks, SQL, permissions handling, control flow, exception handling, restart logic, serialization and outcome predicates are otherwise unchanged. PREVIOUS exactly matches the predecessor's ENTRY semantically. No extra change to authority or publication scope was found.
+
+GUARD-BY-GUARD REVIEW
+
+1. Explicit invocation and environment: lines 14–15 and 34–43.
+All acceptance predicates use require raising RuntimeError, not Python assert, so the source does not lose these guards under -O. Exact arguments must be ['--apply']; effective UID must be zero. Fixed paths must be physical regular files/directories with non-symlink, non-group/world-writable ancestor directories. Existing backup/temp/result/log artifacts, including dangling symlinks, cause rejection. The resolved working directory must equal the deployed current checkout. Imported app configuration must resolve to the named DB and catalogue and declare the intended author and enabled revision feature. The unit must initially be active and use KillMode=control-group. These guards are retained unchanged. They are checks on an already trusted native host, not authentication of a user or attestation of the service checkout's source. See inherited limitations F3 and F4.
+
+2. Public-v8 prerequisite: lines 44–48.
+The code fetches the intended public v8 PDF over HTTPS and requires both exact byte length 575735 and exact SHA-256 a4d0449b973b657a741ab4d48693d9c270320c5e8b9750ef6ad437e987927359 before creating the attempt log or stopping the service. The bounded 1 MiB read is larger than the required PDF length; an oversized response will not pass the exact length check. A missing or different public PDF fails before catalogue mutation. This is an actual content predicate, not merely a version-string check. It does not create the public version or its receipt. I did not fetch that live PDF in this audit, and no assertion that v8 is already public follows from this source review.
+
+3. Quiescence and grant exclusion: lines 50–61.
+service_stop_attempted is set before calling systemctl stop. On the normal path, the script checks inactive and MainPID=0 after stop, rechecks the physical paths and then obtains a SQLite BEGIN IMMEDIATE write reservation. It reads the catalogue after the reservation and requires exact PREVIOUS object equality, including version/hash/author. The SQL count covers all historical-revision grants joined to an agent grant with state approved, uses=0 and future expiry, not merely this PID; any counted row aborts. This avoids silently consuming or deleting unused grants. A missing table/query failure aborts. No SQL INSERT, UPDATE or DELETE is in the helper. The reservation is held through the replacement and final readback. Its protection covers cooperative SQLite writers, not arbitrary direct catalogue writers or unsupervised alternative issuers. See F3/F4.
+
+4. Backup and unrelated entries: lines 21–25 and 62–66.
+The backup is exclusively created with mode 0600, flushed, fsynced, its parent directory synced, and raw bytes/owner/mode read back. Failure precedes mutation of the catalogue. The only in-memory assignment changes data[PID]. The script compares every other parsed entry and the number of entries before serializing. It re-reads the original catalogue immediately before creating the replacement temp and rejects a detected intervening byte change. Preservation is semantic for all unrelated JSON values, not byte preservation of their whitespace or key ordering; the whole object is reserialized. The exact original bytes remain in the backup. This is consistent with a single-entry catalogue update, subject to trusted valid JSON and no external writers.
+
+5. Atomic replacement and durability: lines 67–76.
+The temp is a sibling of the catalogue, exclusively created and initially private, written/flushed/fsynced and read back. It receives the original POSIX mode and owner/group, is fsynced again, and is atomically renamed onto the catalogue with os.replace on the same directory/filesystem. The parent directory is synced after rename. The final bytes and uid/gid/mode are compared with the intended values before db.commit and success fields. These are appropriate normal-path controls for an atomic file replacement. The SQLite transaction does not make the JSON rename transactional; there is no SQL data write to roll back the file. Existing ACLs, extended attributes, security labels and hard-link relationships are not preserved or checked by this code. No new326 regression was introduced here.
+
+6. Failures, restart and retained result: lines 77–95.
+Main-body exceptions are recorded with traceback and FAILED_PRESERVED, followed by a restart attempt if a stop was attempted. A restart error is caught and gives a failed result; the final exit is nonzero if error is set. Successful exit requires replacement and restarted status. The recovery message correctly says that SQL rollback cannot undo a rename and that the actual catalogue and backup require inspection before any further mutation. There is no automatic JSON rollback, no deletion of existing evidence and no grant consumption.
+
+The restart and result-retention paths are not fully exception-contained: db.close and the final catalogue hash read lie outside their own protective try blocks. Thus the code does not guarantee restart or a complete structured result under every cleanup/I/O failure. These inherited issues are explained below; predecessor success is not a proof that the failure paths work. ActiveState='active' is the only post-start success check; application-level/native-context readback still has to occur externally.
+
+INHERITED FINDINGS AND BOUNDARIES
+
+F1 — P2, concrete cleanup/reporting fault-containment gap, unchanged from320.
+Locations: line 80 and line 87.
+If db.close() raises while unwinding the main operation, execution leaves this finally block before the systemctl start at line 83 and before OUT is written. Independently, P.is_file()/P.read_bytes() at line 87 can raise after a restart, bypassing finished_at, OUT and the final print. For example, a read error encountered at the main final-readback step can recur in line 87 and suppress the structured failure report. The process would fail, but complete result retention would not be guaranteed. The initial attempt log and earlier backup may remain; they must not be mistaken for a terminal result. This is a static control-flow finding, not an observed host failure. A later hardening revision should isolate cleanup and actual-byte observation failures so restart is independently attempted and an OUT failure record can still be emitted. Do not change the currently frozen source during this audit.
+
+F2 — P2 operational recovery boundary, intentionally inherited; not a new parameter defect.
+Locations: lines 72–89.
+After os.replace succeeds, subsequent fsync/readback/commit/result errors can leave the new catalogue installed. FAILED_PRESERVED does not mean the catalogue was unchanged or rolled back. The finally block attempts to restart even after post-rename verification failed, so the service is not guaranteed to remain quiescent until an operator resolves that failure. This is consistent with the source's explicit no-automatic-rollback message, but it is not an all-fault fail-closed deployment transaction. An actual nonzero outcome requires inspection of actual bytes, preserved backup, service status and native context before further mutation. If policy requires keeping service down after failed final validation, this exact source does not implement that policy. No such new guarantee should be inferred from the PR's use of 'guarded'.
+
+F3 — P2 preflight assumptions not verified here, inherited.
+Locations: physical() lines 26–30, source/config checks 38–43, quiescence 52–57, pre-rename check66 and rename72.
+physical() rejects unsafe parent modes and symlinks but does not require P/DB themselves to be owned by a particular account or disallow their group/world write bits. It checks no ACL, hard-link count or trusted owner for each ancestor. The service is stopped, but there is no filesystem lock against an unrelated writer, no mask against an external service start, and no atomic compare-and-swap between line66 and line72. The SQLite reservation cannot prevent direct JSON writes. These are acceptable only under a protected-host/no-out-of-band-writer assumption established by native-context inspection. The present source review did not inspect the host or prove those assumptions. The same assumptions existed in320.
+
+F4 — P2 semantic completeness of the grant predicate is a host/schema dependency, not independently established.
+Location: line60.
+The query is exactly unchanged and correctly rejects the rows it selects. It relies on the service's meaning of approved, uses=0, future parseable expiry and a matching historical-grant join. SQL rows with an unparseable/NULL expiry, absent join partner or another state/uses convention are not selected. The service/schema source and installed data validity were not included in this audit scope, so I cannot claim that the predicate independently validates all malformed or alternative active-grant states. The native-context inspection must establish the expected schema/invariants. This does not allege such malformed rows actually exist or recommend deleting any grant.
+
+F5 — LOW, status and metadata claims need their literal scope.
+Locations: lines68,74,83–95 and PR body.
+uid/gid/POSIX mode preservation is checked; full filesystem metadata preservation is not. ActiveState active is checked; application readiness, loaded catalogue content and native post-restart context are not. The helper contains no direct SQL data mutation or permission/publication creation, but importing services.intake.app at line39 can have application-defined side effects not audited here. Therefore the PR's narrow implementation description is supported; a blanket assertion of no possible import/runtime side effect or of completed end-to-end reconciliation is not. The unchanged error string 'Live public predecessor bytes differ' names v8 as predecessor for future revisions; it is potentially confusing but does not alter its exact-byte predicate.
+
+F6 — LOW, early failure evidence is external.
+Locations: lines34–48.
+Failures before LOG is created have no structured local attempt/result record from this helper. The command wrapper must retain stdout/stderr and the real exit status. The predecessor observation describes such an external exit-capture mechanism, but326's wrapper was not supplied or run. This audit cannot certify it.
+
+PREDECESSOR EVIDENCE
+The retained host320-observation.json states actual_exit_code=0, service_restarted=true, separate_systemctl='active', active_unused_grants=0, exact v7 entry, 547362 public PDF bytes, and 96 unrelated entries preserved. Its helper digest matches the predecessor file actually compared. The record explicitly says it is a parent transcription of observed console; raw host logs are retained on the host and not exported. I read and retained the observation but did not inspect those raw logs or reproduce the execution. It is evidence of a reported successful320 operation, not coverage of every inherited failure path and not a326 result.
+
+WHAT WAS AND WAS NOT VERIFIED
+Verified by read/hash/diff: exact frozen head/base; one-file PR scope; raw Git/LF candidate digest and retained predecessor digest; exact live normalized PR-body digest; eight expected parameter-line changes only; full static source and exception-flow review; alignment of previous/successor IDs, hashes, length, URL and unique paths.
+Not run: Python helper/import/compile, normal or -O tests, failure injection, unit/integration tests, SQL queries, native service inspection, systemctl, public-v8 fetch, SSH, Colab, build, Lean, remote mutation or publication.
+No test pass, execution success or actual v8 public state is fabricated. The code's explicit checks are statically optimization-safe; actual normal/-O tests were not performed. The ordinary git diff exit convention and its LF/CRLF warning were not treated as helper failures.
+
+EVIDENCE-WRITING FAILURE
+One large PowerShell command intended solely to write this report, context and diff was rejected at process creation with 'blocked by policy'. No specific reason was supplied and that command did not run. The report was subsequently retained through the file-editing tool. This was a report-writing tool failure, not a helper execution or source-test failure, and it changes no scientific or engineering finding.
+
+FINAL DISPOSITION
+The exact adaptation is genuinely parameter-only and preserves the predecessor's guards and failure boundaries; no added control-flow/security-scope regression was found. This supports the parameter-only source verdict for the frozen commit/body. It does not erase F1–F6, certify unconditional fail-closed recovery, establish current host readiness, or authorize execution. Before host use, the already specified external prerequisites remain: actual verified public v8, exact installed source checksum, trustworthy native configuration/data/path state, proper absence of competing activity, and a wrapper retaining the real exit code and complete observations. Any source repair changes the audited SHA and needs a separately bound audit; this terminal record remains unchanged.

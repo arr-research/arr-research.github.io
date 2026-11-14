@@ -1,0 +1,30 @@
+$ErrorActionPreference='Stop'
+Set-StrictMode -Version Latest
+$helper=Join-Path $PSScriptRoot 'capture_cli_atomic.ps1'
+if((Get-FileHash -LiteralPath $helper).Hash.ToLowerInvariant() -cne '4fe3fc65796ee55dc5db5bc52c924b5401b72699f56eac8dc73ceb2c53da2b7b'){throw 'Capture helper drift'}
+. $helper
+$script=Join-Path $PSScriptRoot 'run_validator340A_tests_colab.py'
+if((Get-FileHash -LiteralPath $script).Hash.ToLowerInvariant() -cne 'cdb2a04fea124acc8996401b69b34596908fff92b41d446f0bf8c94a37d8c042'){throw 'Frozen harness drift'}
+$out='D:\Datos\the-eriksson-programme\autonomia\evidencia-340\return-validator-a\test-attempt-a'
+if(Test-Path -LiteralPath $out){throw 'Preserve prior test attempt'}
+New-Item -ItemType Directory -Path $out|Out-Null
+$prefix='export GOOGLE_APPLICATION_CREDENTIALS=/mnt/c/Users/lluis/AppData/Roaming/gcloud/application_default_credentials.json; exec /home/lluis/.local/bin/colab --auth adc --config /home/lluis/.config/colab-cli/tep340-validator-a-tests-sessions.json'
+$session='tep340-validator-a-tests-own-cpu'
+$exits=[ordered]@{};$failure=$null;$attempted=$false
+[IO.File]::WriteAllText((Join-Path $out 'runtime-open-requested.txt'),[DateTime]::UtcNow.ToString('o')+"`n")
+try{
+ $attempted=$true
+ $exits.allocation=Invoke-CapturedWsl -Name 'allocation' -ShellCommand ($prefix+' new -s '+$session+' --high-mem') -OutputDirectory $out
+ if($exits.allocation -ne 0){throw 'Allocation failed'}
+ $exits.execution=Invoke-CapturedWsl -Name 'execution' -ShellCommand ($prefix+' exec -s '+$session+' -f /mnt/c/Trabajo/the-eriksson-programme/prefix-rank290-20261113/_tmp/production340-a/run_validator340A_tests_colab.py --timeout 180') -OutputDirectory $out
+ $exits.download=Invoke-CapturedWsl -Name 'download' -ShellCommand ($prefix+' download -s '+$session+' /content/tep340-validator-a-tests.zip /mnt/d/Datos/the-eriksson-programme/autonomia/evidencia-340/return-validator-a/test-attempt-a/tep340-validator-a-tests.zip') -OutputDirectory $out
+}catch{$failure=$_.Exception.ToString()}
+finally{
+ if($attempted){try{$exits.release=Invoke-CapturedWsl -Name 'release' -ShellCommand ($prefix+' stop -s '+$session) -OutputDirectory $out}catch{$failure=[string]$failure+' STOP_CAPTURE: '+$_.Exception.ToString()}}
+ [IO.File]::WriteAllText((Join-Path $out 'runtime-release-finished.txt'),[DateTime]::UtcNow.ToString('o')+"`n")
+ [ordered]@{actual_cli_exits=$exits;failure=$failure;scope='Actual test transport only, requires raw child logs and separate backend readback'}|ConvertTo-Json -Depth 8|Set-Content -LiteralPath (Join-Path $out 'outer-report.json') -Encoding utf8NoBOM
+}
+$readback=Invoke-CapturedWsl -Name 'backend-readback' -ShellCommand ($prefix+' sessions') -OutputDirectory $out
+if($readback -ne 0){throw 'Actual backend query failed'}
+if($null -ne $failure -or $exits.Count -ne 4 -or @($exits.Values|Where-Object{$_ -ne 0}).Count -ne 0){throw 'Actual test lifecycle failed; preserve'}
+$exits|ConvertTo-Json

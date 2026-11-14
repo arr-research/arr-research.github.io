@@ -1,0 +1,36 @@
+diff --git "a/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production343-a\\provenance\\baseline340\\run_actual_validation340.ps1" "b/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production343-a\\run_actual_validation343.ps1"
+index 2d101b9..8a6119c 100644
+--- "a/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production343-a\\provenance\\baseline340\\run_actual_validation340.ps1"
++++ "b/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production343-a\\run_actual_validation343.ps1"
+@@ -4,24 +4,24 @@ $ErrorActionPreference='Stop'
+ $helper=Join-Path $PSScriptRoot 'capture_cli_atomic.ps1'
+ if((Get-FileHash -LiteralPath $helper).Hash.ToLowerInvariant() -cne '4fe3fc65796ee55dc5db5bc52c924b5401b72699f56eac8dc73ceb2c53da2b7b'){throw 'Helper drift'}
+ . $helper
+-$e='D:\Datos\the-eriksson-programme\autonomia\evidencia-340'
+-$bundle=Join-Path $e 'actual-return-inputs340.zip'
+-$script=Join-Path $PSScriptRoot 'validate340_actual_colab.py'
++$e='D:\Datos\the-eriksson-programme\autonomia\evidencia-343'
++$bundle=Join-Path $e 'actual-return-inputs343.zip'
++$script=Join-Path $PSScriptRoot 'validate343_actual_colab.py'
+ if((Get-FileHash -LiteralPath $bundle).Hash.ToLowerInvariant() -cne $ExpectedBundleSha256 -or (Get-FileHash -LiteralPath $script).Hash.ToLowerInvariant() -cne $ExpectedScriptSha256){throw 'Actual input/script pin mismatch'}
+ $out=Join-Path $e 'actual-return-validation-attempt-a'
+ if(Test-Path -LiteralPath $out){throw 'Preserve prior validation attempt'}
+ New-Item -ItemType Directory -Path $out|Out-Null
+-$prefix='export GOOGLE_APPLICATION_CREDENTIALS=/mnt/c/Users/lluis/AppData/Roaming/gcloud/application_default_credentials.json; exec /home/lluis/.local/bin/colab --auth adc --config /home/lluis/.config/colab-cli/tep340-actual-return-a-sessions.json'
+-$session='tep340-actual-return-a-own-cpu'
++$prefix='export GOOGLE_APPLICATION_CREDENTIALS=/mnt/c/Users/lluis/AppData/Roaming/gcloud/application_default_credentials.json; exec /home/lluis/.local/bin/colab --auth adc --config /home/lluis/.config/colab-cli/tep343-actual-return-a-sessions.json'
++$session='tep343-actual-return-a-own-cpu'
+ $exits=[ordered]@{};$failure=$null;$attempted=$false
+ [IO.File]::WriteAllText((Join-Path $out 'runtime-open-requested.txt'),[DateTime]::UtcNow.ToString('o')+"`n")
+ try{
+  $attempted=$true
+  $exits.allocation=Invoke-CapturedWsl -Name 'allocation' -ShellCommand ($prefix+' new -s '+$session+' --high-mem') -OutputDirectory $out
+  if($exits.allocation -ne 0){throw 'Allocation failed'}
+- $exits.upload=Invoke-CapturedWsl -Name 'upload' -ShellCommand ($prefix+' upload -s '+$session+' /mnt/d/Datos/the-eriksson-programme/autonomia/evidencia-340/actual-return-inputs340.zip /content/tep340-actual-return-inputs.zip') -OutputDirectory $out
++ $exits.upload=Invoke-CapturedWsl -Name 'upload' -ShellCommand ($prefix+' upload -s '+$session+' /mnt/d/Datos/the-eriksson-programme/autonomia/evidencia-343/actual-return-inputs343.zip /content/tep343-actual-return-inputs.zip') -OutputDirectory $out
+  if($exits.upload -ne 0){throw 'Upload failed'}
+- $exits.execution=Invoke-CapturedWsl -Name 'execution' -ShellCommand ($prefix+' exec -s '+$session+' -f /mnt/c/Trabajo/the-eriksson-programme/prefix-rank290-20261113/_tmp/production340-a/validate340_actual_colab.py --timeout 180') -OutputDirectory $out
++ $exits.execution=Invoke-CapturedWsl -Name 'execution' -ShellCommand ($prefix+' exec -s '+$session+' -f /mnt/c/Trabajo/the-eriksson-programme/prefix-rank290-20261113/_tmp/production343-a/validate343_actual_colab.py --timeout 180') -OutputDirectory $out
+ }catch{$failure=$_.Exception.ToString()}
+ finally{
+  if($attempted){try{$exits.release=Invoke-CapturedWsl -Name 'release' -ShellCommand ($prefix+' stop -s '+$session) -OutputDirectory $out}catch{$failure=[string]$failure+' STOP_CAPTURE: '+$_.Exception.ToString()}}

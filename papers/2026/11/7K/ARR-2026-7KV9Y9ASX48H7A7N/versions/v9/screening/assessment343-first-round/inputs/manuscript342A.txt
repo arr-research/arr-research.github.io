@@ -1,0 +1,2888 @@
+           Product Marginals and Density-Moment Thresholds
+                      for Ising Transfer Kernels
+                                             Lluis Eriksson
+                                         Independent researcher
+
+                                          14 November 2026
+
+
+                                                Abstract
+         We compare exact marginal agreement and density-moment control for finite Boolean Ising
+     transfer operators. Positive code-based weights can preserve uniform labelled marginals on a
+     fixed positive fraction of coordinates while exponentially many normalized transfer eigenvalues
+     approach one; their Perron stationary law has the same marginals. An exact parity spectrum
+     distinguishes this transfer behavior from single-site heat-bath relaxation.
+         For noise parameter 0 < ρ < 1, the critical density exponent is s = (1+ρ)/(1−ρ). Supercritical
+     moment bounds force a uniform normalized gap, while subcritical bounds allow collapse at every
+     norm budget above one. At the critical exponent the exact worst-case norm boundary is 21/s ,
+     and the escaped critical-moment boundary is one. We also determine the universal strict-tail
+     threshold for (s − 1)/s < K < 1 using reverse hypercontractivity, sign compression and a sharp
+     scalar moment envelope. The critical-norm endpoint construction can retain any prescribed
+     density floor below one.
+         Our joint marginal–moment result gives positive densities at√the exact critical norm cap
+     with uniform weighting-law marginals through every order kL = o( L), whose first two transfer
+     eigenvalues tend
+                   √ to one. Conversely, bounded critical norm and exact matching through order
+     kL with kL / L → ∞ force SrL = P√ρ MrL P√ρ to converge in operator norm to Pρ and
+     the normalized transfer gap to 1 − ρ. This norm statement does not hold in general for
+     the isospectral operator TrL = M√rL Pρ M√rL . An entropy-deficit calculation and truncation
+     argument remove the previous logarithmic loss. For the   √ endpoint high-degree
+                                                                                   √ noise norm itself
+     we prove that convergence to zero is equivalent to mL / L → ∞; at mL = o( L) the norm tends
+     to one. Its signed witnesses do not establish sharpness for nonnegative densities. Critical-power
+     uniform
+          √ integrability gives rigidity at any diverging matching order. At the exact critical cap,
+     kL / L → C ∈ (0, ∞) forces a uniformly positive asymptotic normalized gap. The proof reserves
+     one unit of critical moment for the mean-one bounded part and controls all low/high couplings
+     through a three-block decomposition. Together with an explicit attained profile from odd
+     Fourier erasure and a one-sided positivity estimate, this gives quadratic order for the infimum of
+     asymptotic gaps as C ↓ 0, with the dimension limit taken first. The optimal constants and exact
+     finite-C infimum remain open. External priority is unestablished. Global weights are allowed; no
+     fixed-range Gibbs, local-dynamics or physical-gap conclusion follows.
+
+    Section 18 joins marginal matching and moment control. Section 19 contains the strengthened
+sufficient condition and the exact endpoint operator threshold, with complete proofs and a distinction
+between operator sharpness and density necessity. Section 20 supplies the complementary sub-
+square-root density construction and an attained finite-ratio profile. Section 21 proves the universal
+positive finite-ratio lower bound at the critical cap; comparison with the attained profile gives the
+secondary small-ratio quadratic-order conclusion.
+    The constructions serve different conclusions. The code family in Theorem 1 preserves labelled
+marginals and produces many slow transfer modes. The product tilts in Theorems 10 and 13
+
+                                                     1
+establish the moment-budget boundary, without the code family’s marginal matching. The critical-
+tail section gives a sufficient tail condition, stable counterexamples to its necessity, and collapse at
+the finite-cutoff endpoint in Theorem 17. Section 12 then optimizes finite parity backgrounds to
+extend the sub-two tail-budget collapse region below cutoff one. Section 13 attains the constructive
+budget and allows the floor to equal the cutoff. Theorem 22 gives the exact scalar total-moment
+envelope. Theorem 23 then proves necessity of the constructed tail budget for every collapsing family.
+Readers interested in this sharp tail classification can start at Sections 14–15, using Theorem 21 for
+the matching endpoint. These are separate families; their properties are not asserted jointly.
+
+
+1     The question and the transfer convention
+Local marginal agreement and rapid relaxation are different kinds of information. The distinction
+is familiar in limited independence and Markov-chain theory, but a comparison must specify the
+dynamics: a slow single-site heat-bath chain does not automatically give a slow transfer operator.
+We make this distinction within a single fixed-coupling transfer family and require exact, rather
+than approximate, agreement of marginal input.
+    Let ΩL = FL                                                             −2β . Our unweighted
+                 2 , with Hamming distance d(x, y). Fix β > 0 and put q = e
+kernel is
+                                                              L
+                                                                      !
+                          Mβ (x, y) = q d(x,y) = e−βL exp β
+                                                              X
+                                                                    (−1)xi +yi .                    (1)
+                                                              i=1
+For a strictly positive probability law µ on ΩL , define
+                                               √          √
+                                     Aµ = diag( µ)Mβ diag( µ).                                      (2)
+                                          
+The kernel Mβ is a tensor power of 1q 1q and is positive definite. The same is true of Aµ , which
+also has strictly positive entries. Write its eigenvalues in decreasing order as λ1 > λ2 ≥ · · · > 0,
+counting multiplicities, and set
+                                       gap(Aµ ) = 1 − λ2 /λ1 .
+Perron–Frobenius strictness gives a positive gap at each finite L; a bound uniform in L is a separate
+matter. Multiplying either kernel by a positive scalar does not change any eigenvalue ratio.
+   Let uL = Unif(ΩL ). Tensorization gives
+                                                        1−q
+                                λ2 (AuL )/λ1 (AuL ) =       = tanh β.                               (3)
+                                                        1+q
+For a law ν, the literal marginal input of order r is
+
+                                  Mr (ν) = (νS : S ⊆ [L], |S| ≤ r),                                 (4)
+
+where coordinate labels are retained. Full conditional distributions, entrywise weight bounds, and
+the transfer matrix itself are not included in this tuple.
+Theorem 1. For each fixed β > 0 there are constants α, R, γ > 0 such that, for all sufficiently
+large integers L, a strictly positive law µL on ΩL has the following properties. Put rL = ⌊αL⌋ and
+mL = 2⌈RL⌉ .
+    1. MrL (µL ) = MrL (uL ).
+
+    2. For every 2 ≤ j ≤ mL ,
+                                    0 < 1 − λj (AµL )/λ1 (AµL ) ≤ 7e−γL .                           (5)
+
+                                                   2
+    3. Let v > 0 be the unit Euclidean Perron vector of AµL . The reversible Perron Doob chain
+                                                  AµL (x, y)vy
+                                PL (x, y) =                    ,       πL (x) = vx2 ,              (6)
+                                                     λ1 vx
+      has MrL (πL ) = MrL (uL ) and the same normalized spectrum as AµL .
+One admissible choice is
+                     1 − h(1/4)      β
+                                             
+             R = min            ,         ,          h(α) < R/2,        γ = β/2 − R log 2 ≥ β/4,   (7)
+                          2       4 log 2
+with 0 < α < 1/2 and binary entropy h(p) = −p log2 p − (1 − p) log2 (1 − p).
+    There are at least mL − 1 slow nonleading modes in this statement. We do not assert that their
+eigenvalues coincide. The positivity and strict gap at each finite size are compatible with their
+exponentially small separation from the Perron root. The theorem does not impose a uniform lower
+bound on the weights or a bounded interaction range.
+
+
+2     Codes with two distance conditions
+We include the coding argument to make all hypotheses of the spectral construction explicit.
+Simultaneously good primal and dual codes are classical; stronger algorithmic constructions are
+available [5]. The relation between code projections and limited independence is standard background
+for the marginal comparison [4].
+Lemma 2. Suppose 0 < α, δ < 1/2 and h(α) < R < 1 − h(δ). Put k = ⌈RL⌉. If k < L and
+
+                                   2k−L(1−h(δ)) + 2−k+Lh(α) < 1,                                   (8)
+
+there is a binary linear code C ⊆ FL
+                                   2 of dimension k such that every nonzero codeword has weight at
+least δL and C ⊥ has no nonzero word of weight at most ⌊αL⌋. Every coordinate projection of C
+onto at most ⌊αL⌋ coordinates is surjective. The displayed conditions hold for all sufficiently large
+L.
+Proof. Choose a uniformly random binary k × L matrix G. For each fixed nonzero row vector
+z ∈ Fk2 , the word zG is uniform in FL
+                                     2 . The probability that some such zG has weight less than δL
+is at most                                        !
+                                           X L
+                                    k −L
+                                   2 2              ≤ 2k−L(1−h(δ)) .
+                                          j≤δL
+                                                j
+Failure of full row rank is included in this event, since it produces a zero word from a nonzero
+message. For a fixed nonzero column vector w ∈ FL                                     k
+                                                     2 , the vector Gw is uniform in F2 . Thus the
+probability of a nonzero dual word with weight at most ⌊αL⌋ is at most
+                                                          !
+                                       −k             L
+                                                              ≤ 2−k+Lh(α) .
+                                             X
+                                   2
+                                            1≤j≤αL
+                                                      j
+
+Their sum is less than one, so both failures can be avoided simultaneously.
+   For the entropy estimate, if 0 < p < 1/2, set z = p/(1 − p) < 1. Since z j ≥ z pL for j ≤ pL, the
+binomial theorem gives                   !
+                                 X L
+                                           ≤ z −pL (1 + z)L = 2Lh(p) .
+                                j≤pL
+                                       j
+
+                                                        3
+This bound applies to the inclusive sums and hence to the strict-weight failure event as well. No
+integrality assumption on δL is needed.
+    If the columns indexed by S were dependent, their relation would give a nonzero word of
+C ⊥ supported in S. Consequently GS has rank |S| whenever |S| ≤ ⌊αL⌋. Uniform messages
+therefore give uniform projections onto FS2 . Finally, the exponents in (8) tend to minus infinity,
+since k = RL + O(1) and both entropy inequalities are strict.
+
+
+3    A finite positive concentration estimate
+The spectral step needs only the size and minimum distance of the code. The dual distance will
+enter through the marginal statement.
+Proposition 3. Let C ⊆ FL   2 be a binary linear code with size m ≥ 2 and minimum nonzero weight
+dC . Suppose its coordinate projections onto sets of size at most r are surjective. For 0 < η ≤ 1/2,
+let
+                        µ = (1 − η) Unif(C) + ηuL ,      s = (m − 1)e−2βdC .                     (9)
+Then µ is strictly positive, Mr (µ) = Mr (uL ), and every 2 ≤ j ≤ m satisfies
+                                                                 √
+                             0 < 1 − λj (Aµ )/λ1 (Aµ ) ≤ 2s + 2m( η + η).                        (10)
+
+Proof. Uniform codewords have uniform projections by surjectivity, and a mixture of two laws with
+the same marginals has those same marginals. The positive product part gives strict positivity at
+every configuration.
+   Every codeword has probability
+
+                                 a = (1 − η)/m + η/2L ≥ 1/(2m).
+
+The principal block of Aµ indexed by C is aMCC . Its diagonal is a, and the off-diagonal row sums
+of MCC are at most s: distinct codewords differ by a nonzero codeword of weight at least dC . Thus
+all eigenvalues of MCC lie in [1 − s, 1 + s]. For example, the norm of its symmetric off-diagonal part
+is bounded by the maximum absolute row sum. Principal interlacing gives
+
+                            λj (Aµ ) ≥ λm (Aµ ) ≥ a(1 − s)   (1 ≤ j ≤ m).                        (11)
+
+Independently, a coordinate Rayleigh vector gives λ1 (Aµ ) ≥ a.
+   Write Aµ in C, C c blocks. The outside principal block is positive semidefinite, and its trace is
+                   L
+  C c µ = η(1 − m/2 ) ≤ η, so its norm is at most η. For the rectangular cross block B, all entries
+P
+
+of Mβ are at most one, and therefore
+                                                       !              !
+                                                   X         X
+                                   2
+                               ∥B∥     ≤ ∥B∥2F ≤       µ          µ       ≤ η.
+                                                   C         Cc
+
+The symmetric block matrix with off-diagonal blocks B, B ∗ and zero diagonal has norm ∥B∥.
+Consequently
+                                     √                                √
+              Aµ − diag(aMCC , 0) ≤ η + η,       λ1 (Aµ ) ≤ a(1 + s) + η + η.
+
+Subtract (11), divide by λ1 ≥ a, and use a ≥ 1/(2m) to obtain (10). Perron strictness proves the
+strict lower inequality. The upper bound is valid even when it is larger than one; no small-size
+success is claimed.
+
+                                                   4
+Proof of Theorem 1, parts one and two. Use (7) and Lemma 2 with δ = 1/4. The choice of R
+satisfies 0 < R < 1 − h(1/4) and R log 2 ≤ β/4. Choose codes for sufficiently large L, and put
+
+                                    m = 2⌈RL⌉ ,        η = e−2βL /m2 .
+
+This number lies in (0, 1/4]. Since dC ≥ L/4 and m ≤ 2eR(log 2)L ,
+
+                             2(m − 1)e−2βdC ≤ 4e−(β/2−R log 2)L = 4e−γL .
+
+Also, using m ≥ 2 and γ ≤ β,
+                           √
+                        2m( η + η) = 2e−βL + 2e−2βL /m ≤ 3e−βL ≤ 3e−γL .
+
+Proposition 3 now proves both claims. The condition k < L ensures m < 2L , so every asserted
+eigenvalue index exists.
+
+
+4    Stationary marginals survive the Perron transform
+The weighting law in a transfer congruence need not equal the stationary law of its associated
+Markov chain. Matching the former alone would leave a significant interpretive gap. Code symmetry
+pays the latter exactly.
+
+Lemma 4. For the mixture (9), the Perron stationary law π(x) = vx2 satisfies Mr (π) = Mr (uL ).
+
+Proof. For every c ∈ C, translation x 7→ x + c preserves µ, Hamming distance, and hence Aµ . The
+corresponding permutation commutes with Aµ and takes a positive unit Perron vector to another
+such vector. Uniqueness forces vx+c = vx , so π is invariant under translations by C. If |S| ≤ r,
+every translation on FS2 lifts to some c ∈ C by the assumed surjectivity. The S-marginal of π is
+therefore invariant under all translations and must be uniform.
+
+Completion of Theorem 1. The Perron eigenvector equation gives row sums one for (6). Symmetry
+gives detailed balance:
+
+                           π(x)PL (x, y) = vx Aµ (x, y)vy /λ1 = π(y)PL (y, x).
+
+Conjugation by diag(v) shows that PL is similar to Aµ /λ1 . It has strictly positive entries and the
+claimed spectrum. Apply Lemma 4 to obtain its stationary marginal assertion. For the uniform
+weight, the Perron vector and stationary law are uniform, and (3) supplies the comparison chain.
+
+
+5    An exact parity control with different dynamics
+The positive parity family
+                                                                                 P
+                                                                                       xi
+                  µt (x) = 2−L (1 + tχ[L] (x)),    |t| < 1,      χS (x) = (−1)   i∈S        ,       (12)
+
+has all proper marginals equal to product marginals. Its single-site heat-bath gap tends to zero as
+|t| → 1 at fixed size L ≥ 2 and fixed finite positive site rates [7]. Nevertheless, its transfer ratio at
+fixed β is bounded uniformly away from one, as follows.
+
+
+
+
+                                                   5
+Proposition 5. Let L ≥ 2, ρ = tanh β, and |t| < 1. Up to a common positive scalar, the spectrum
+of Aµt is the union over unordered complement pairs {S, S c } of the two roots
+                          p
+                   zs ±   zs2 − 4∆
+                                   ,   zs = ρs + ρL−s ,     s = |S|,   ∆ = (1 − t2 )ρL .           (13)
+                          2
+The Perron root is the upper root at s = 0, and the second eigenvalue is the upper root at s = 1. In
+particular,
+                               λ2 (Aµt )   ρ + ρL−1
+                                         ≤          ≤ tanh(2β) < 1.                             (14)
+                               λ1 (Aµt )    1 + ρL
+The last bound is sharp as a supremum over L ≥ 2 and |t| < 1.
+
+Proof.
+    q
+       The row-normalized product transfer Pβ = Mβ /(1 + q)L acts on χS by ρ|S| . Write Dt =
+diag 1 + tχ[L] . The weighted congruence, apart from a common scalar, is Dt Pβ Dt , which is similar
+to Pβ Dt2 since Dt is invertible. Multiplication by χ[L] exchanges χS and χS c . The coefficient block
+on that ordered pair is                                   !
+                                               ρs    tρs
+                                                            .
+                                             tρL−s ρL−s
+
+Its trace is zs and its determinant is ∆, yielding (13). The 2L−1 complement pairs exhaust the
+character basis, with repetitions counted as usual.
+    The largest zs is z0 = 1 + ρL , and the largest among proper pairs is z1 = ρ + ρL−1 . The upper
+root increases with zs . The lower root in the empty/full pair is at most ρL , whereas the upper root
+for s = 1 is at least ρ. Every other lower root is no larger than its own upper root. This identifies
+the two largest eigenvalues.
+    For fixed ∆ > 0, the upper root divided by z is
+                                                p
+                                           1+       1 − 4∆/z 2
+                                                               ,
+                                                      2
+                           √
+which increases with z ≥ 2 ∆. Comparing z1 ≤ z0 proves the first inequality in (14). For the
+second, write b = ρL−2 ≤ 1; the ratio is ρ(1 + b)/(1 + ρ2 b), increasing in b. Its maximum is
+2ρ/(1 + ρ2 ) = tanh(2β). For L = 2 and t → 1, ∆ → 0, so equality is approached.
+
+    This control rules out a tempting shortcut: the known parity heat-bath obstruction cannot be
+transferred by changing the name of the operator. The code construction uses a different geometric
+ingredient, a set of exponentially many mutually separated configurations while retaining surjective
+coordinate projections.
+
+
+6    What marginal certificates cannot establish
+Corollary 6. Fix the constants of Theorem 1. Suppose F is a valid lower bound on the transfer
+gap for every strictly positive weight, and factors through the tuple
+
+                                       (L, β, MrL (µ), MrL (π)).
+
+At the product input and for all sufficiently large L, its value is at most 7e−γL . The same conclusion
+holds if only one of the two marginal tuples is supplied.
+
+
+
+                                                      6
+Proof. At the same L and β, the constructed weight and its stationary law supply exactly the same
+input as the uniform weight and uniform stationary law. A function of that input takes the same
+value on both. Validity on the constructed example and (5) for j = 2 force the asserted bound.
+
+    The corollary does not assert that every such functional is zero or that the product chain is slow.
+Its actual gap is 1 − tanh β. Nor does it concern a certificate using full conditionals, uniform density
+bounds, the operator entries, or code membership: those are additional information. In particular,
+the weights here can have exponentially small probabilities and global many-body interactions. The
+theorem says nothing against a result restricted to uniformly controlled, fixed-range Gibbs weights.
+The Perron Doob chain updates a full configuration and is not a local single-site dynamics. We make
+no claim about continuum Yang–Mills, a physical mass gap, entropy tensorization, or a specified
+spatial mixing rate. The many-mode conclusion is spectral; no separate theorem about metastable
+sets is implicit.
+
+
+7    Upper density control without a lower bound
+The obstruction above allows the maximum density relative to product to increase with dimension.
+A uniform upper bound changes the conclusion; a positive lower bound is not required. Write
+ρ = tanh β and let Pρ be the Boolean noise operator in L2 (uL ), whose Walsh multipliers are ρ|S| .
+For a nonnegative density r with EuL r = 1, put
+                                              √         √
+                                  Tr = diag( r)Pρ diag( r).
+
+Since Pρ = Mβ /(1 + e−2β )L , for µ = 2−L r we have Aµ = 2−L (1 + e−2β )L Tr . Thus the eigenvalue
+ratios agree. Here zeros of r are allowed; we keep the zero eigenvalues outside its support in the full
+2L -dimensional list.
+
+Theorem 7. Let L ≥ 1, 0 < ρ < 1, B ≥ 1, and 0 ≤ r ≤ B with EuL r = 1. Set
+
+                                     1 + ρ2
+                             eρ =            ,   c(B, ρ) = B −1 (2B)−2eρ .
+                                    (1 − ρ)2
+
+The two largest eigenvalues of Tr satisfy 1 − λ2 /λ1 ≥ c(B, ρ) > 0, independently of L. In particular,
+no positive lower bound on r is needed.
+
+Proof. All norms and scalar products use uL . The noise operator is positive semidefinite, fixes
+                                                                           √
+constants and is a contraction. Hence λ1 ≤ B. The unit vector r has Rayleigh quotient
+⟨r, Pρ r⟩ ≥ (Er)2 = 1, by Walsh expansion, so 1 ≤ λ1 ≤ B. On S = {r > 0} the matrix is strictly
+positive; its Perron vector is positive on S and its leading eigenvalue is simple.
+    We use two classical Boolean hypercontractive inequalities. Put q∗ = 1 + ρ−2 and p∗ = 1 − ρ.
+Then
+                       ∥Pρ f ∥q∗ ≤ ∥f ∥2 ,   ⟨f, Pρ g⟩ ≥ ∥f ∥p∗ ∥g∥p∗ (f, g ≥ 0).           (15)
+For clarity about conventions, equations (1.1)–(1.2) and tensorization in [10] use time t = − log ρ for
+the uniform Boolean semigroup. For the second inequality set p′∗ = p∗ /(p∗ − 1) = −(1 − ρ)/ρ. Then
+1            ′
+2 log((1 − p∗ )/(1 − p∗ )) = − log ρ. The reverse inequality gives ∥Pρ g∥p∗ ≥ ∥g∥p∗ ; reverse Hölder
+                                                                           ′
+
+gives the displayed bilinear bound. This is first applied to positive functions, then to f + ε, g + ε
+and the limit ε ↓ 0. Finite sums and p∗ > 0 justify that limit; we do not take a negative moment of
+a function with zeros.
+
+
+
+                                                   7
+    If λ2 < λ1 /2, the gap exceeds 1/2. Otherwise λ2 ≥ 1/2. Choose a real unit second eigenvector
+w orthogonal to the Perron vector. It vanishes off S and has both signs. Write w = sh+ − th− ,
+where s, t > 0, s2 + t2 = 1, and h+ , h− are nonnegative orthonormal functions with disjoint supports.
+Positivity and the eigenrelation give pointwise λ2 h± ≤ Tr h± : on the corresponding sign support
+this follows from the eigenrelation, and elsewhere from positivity. Integration against the unit h±
+             √         √                  √
+gives λ2 ≤ ⟨ rh± , Pρ rh± ⟩. For f± = r h± this yields
+
+                                                   B
+               λ2 f± ≤ rPρ f± ,        ∥f± ∥q∗ ≤      ∥f± ∥2 ,          ∥f± ∥22 ≥ ⟨f± , Pρ f± ⟩ ≥ λ2 .
+                                                   λ2
+The middle inequality uses the first part of (15). No division by r occurs.
+    Let θ = p∗ (q∗ −2)/(2(q∗ −p∗ )). Ordinary Hölder applied to powers of f gives ∥f ∥2 ≤ ∥f ∥θp∗ ∥f ∥1−θ
+                                                                                                      q∗ ,
+since 1/2 = θ/p∗ + (1 − θ)/q∗ . This does not require a normed space at exponent p∗ < 1: the Hölder
+weights 2θ/p∗ and 2(1 − θ)/q∗ are positive and sum to one. Thus each sign part satisfies
+
+                                                               1−θ   q∗ (2 − p∗ )
+                                       λ2 (B/λ2 )−eρ ,
+                                   p
+                       ∥f± ∥p∗ ≥                                   =              = eρ .
+                                                                θ    p∗ (q∗ − 2)
+
+By the second part of (15), the cross entry obeys
+
+                            d = ⟨h+ , Tr h− ⟩ = ⟨f+ , Pρ f− ⟩ ≥ λ2 (B/λ2 )−2eρ .
+
+The compression of Tr to the basis (h+ , h− ) is ad db . Its eigenvector (s, −t) has eigenvalue λ2 , giving
+                                                           
+
+a − λ2 = dt/s and b − λ2 = ds/t. Its other eigenvalue is λ2 + d/(st), because s2 + t2 = 1. The
+variational principle and st ≤ 1/2 now imply λ1 − λ2 ≥ d/(st) ≥ 2d. Consequently
+
+                                    λ2   2λ2
+                              1−       ≥     (B/λ2 )−2eρ ≥ B −1 (2B)−2eρ .
+                                    λ1   λ1
+This does not deteriorate when one sign part has small norm. In the previously omitted case,
+c(B, ρ) ≤ 1/4 < 1/2, since eρ ≥ 1. If the support has one point, λ2 = 0 and the gap is one, so that
+case is included as well.
+
+Corollary 8. At fixed ρ, suppose a sequence has gap(TrL ) ≤ Ke−γL , with K, γ > 0. Then
+                                                         !1/(2eρ +1)
+                                                2−2eρ
+                                  max rL ≥                             eγL/(2eρ +1) .
+                                                 K
+
+Proof. Apply Theorem 7 with B = max rL ≥ 1 and rearrange.
+
+    For Theorem 1, take K = 7 and its positive γ. The code mixture has maximum density
+2L (1 − η)/|C| + η, consistent with this necessary growth. Upper density growth alone is not asserted
+to be sufficient for collapse. Tiny minimum density alone cannot cause collapse under a uniform
+maximum-density bound. These are statements about this transfer family, not single-site heat-bath
+dynamics. The constants are not claimed optimal.
+    The moment analysis separates universal guarantees from adverse examples. The two strict
+exponent regimes are followed by auxiliary critical estimates and an explicit rate, then the exact
+critical-budget theorem. The final critical-tail section gives the sharp escaped-moment and fixed-
+cutoff boundaries, and a stable counterexample to necessity of uniform integrability. Earlier partial
+estimates are retained for their explicit rate and proof dependencies; they are not additional
+independent discoveries.
+
+                                                          8
+8    Density-moment threshold: the two strict regimes
+A pointwise density cap is stronger than necessary. We next replace it by a dimension-independent
+finite moment. A second construction shows why one cannot simply assume that any finite moment
+suffices. All norms in this section use the uniform probability law uL ; the operator is the same Tr
+as in Section 7.
+Theorem 9. Fix 0 < ρ < 1, s > (1 + ρ)/(1 − ρ) and B ≥ 1. For every L ≥ 1 and density r ≥ 0
+with Er = 1 and ∥r∥s ≤ B,
+                                                                            2ρs
+               gap(Tr ) ≥ min{1/2, (2B)−2e } > 0,           e=                             .
+                                                                 (1 − ρ)(s(1 − ρ) − 1 − ρ)
+Neither a pointwise upper bound nor a positive lower bound is assumed.
+Proof. Set A = 1 + ρ, p = 1 − ρ, t = 1 + 1/ρ and
+                                                 st    s(1 + ρ)
+                                         Q=         =            .
+                                                s+t   sρ + 1 + ρ
+The condition on s is exactly Q > A, so Q > A > 1 > p > 0. Ordinary Boolean hypercontractivity
+gives
+                                 ∥P√ρ f ∥2 ≤ ∥f ∥A ,     ∥Pρ f ∥t ≤ ∥f ∥A .
+                                                  p                      √         p
+Indeed the noise thresholds are respectively (A − 1)/(2 − 1) = ρ and (A − 1)/(t − 1) = ρ.
+The reverse bilinear inequality in (15) applies at exponent p.
+                                        √                                                 √
+    As before, testing the unit vector r gives λ1 ≥ 1. For any real unit vector h, put f = r h and
+A0 = 2s/(s + 1) > A. Hölder and probability-space monotonicity give
+                                                                   √
+                      ⟨h, Tr h⟩ = ∥P√ρ f ∥22 ≤ ∥f ∥2A ≤ ∥f ∥2A0 ≤ ∥ r∥22s ∥h∥22 ≤ B,
+
+where 1/A0 = 1/(2s) + 1/2. Thus 1 ≤ λ1 ≤ B without using a maximum-density estimate.
+    If λ2 < λ1 /2, the gap is greater than 1/2. Otherwise λ2 ≥ 1/2. On the nonempty support of r the
+matrix has strictly positive entries. A real unit second eigenvector vanishes off this support and has
+both signs, by orthogonality to the positive Perron vector. Write it as w = ch+ − dh− with c, d > 0,
+c2 + d2 = 1 and nonnegative orthonormal disjoint sign parts. Positivity and the eigenrelation imply
+                                                                   √                          √
+λ2 h± ≤ Tr h± pointwise, including their zero sets. For either f = r h± , multiplication by r gives
+λ2 f ≤ rPρ f . Hölder with 1/Q = 1/s + 1/t yields
+
+                                             ∥f ∥Q ≤ (B/λ2 )∥f ∥A .
+
+Integration against the unit sign part also gives λ2 ≤ ⟨f, Pρ f ⟩ ≤ ∥f ∥2A . Let 0 < θ < 1 solve
+1/A = θ/p + (1 − θ)/Q. Hölder applied to powers, with positive weights Aθ/p and A(1 − θ)/Q
+summing to one, gives ∥f ∥A ≤ ∥f ∥θp ∥f ∥1−θ
+                                         Q . No triangle inequality at exponent p < 1 is used.
+Combining these bounds,
+                                               1−θ   Q(A − p)              2ρs
+                        λ2 (B/λ2 )−e ,
+                    p
+          ∥f ∥p ≥                        e=        =          =                           .
+                                                θ    p(Q − A)   (1 − ρ)(s(1 − ρ) − 1 − ρ)
+Reverse hypercontractivity now bounds the cross entry by D = ⟨h+ , Tr h− ⟩ ≥ λ2 (B/λ2 )−2e . The two-
+dimensional compression, exactly as in the proof of Theorem 7, has eigenvalues λ2 and λ2 + D/(cd).
+Since cd ≤ 1/2, the variational principle gives
+                                             2D   2λ2
+                                gap(Tr ) ≥      ≥     (B/λ2 )−2e ≥ (2B)−2e .
+                                             λ1   λ1
+
+                                                       9
+Here 2λ2 /λ1 ≥ 1 and λ2 ≥ 1/2. Combining the two cases proves the claim. One-point support has
+λ2 = 0 and is already covered. No step divides by r.
+
+Theorem 10. Fix 0 < ρ < 1, 1 < s < sc := (1 + ρ)/(1 − ρ) and B > 1. There are strictly positive
+mean-one densities rL , for every L ≥ 1, with ∥rL ∥s ≤ B and rL ≥ 1/B, and constants κ > 1 and
+0 < ω < κ, independent of L, such that
+
+                       0 < gap(TrL ) ≤ 2(ω/κ)L + ε−1 κ−L ,                   ε = (B − 1)/2.
+
+Thus a uniform positive lower density does not prevent exponential gap collapse throughout the strict
+subcritical moment regime.
+
+Proof. Relabel the cube as {−1, 1}L . For a fixed tilt 0 < δ < 1, put
+                                                1/s
+                          (1 + δ)s + (1 − δ)s                               1 ± δx
+                      
+                 n=                                    ,         w± (x) =          ,      m = n−1 .
+                                   2                                          n
+
+Strict convexity gives n > 1, while ∥w± ∥s = 1 and Ew± = m. Define R±,L (x) =
+                                                                                                 Q
+                                                                                                      i w± (xi ) and
+
+                                                                  1 + ε(R+,L + R−,L )
+                             ZL = 1 + 2εmL ,               rL =                       .
+                                                                         ZL
+
+Product integration gives ∥R±,L ∥s = 1 and ER±,L = mL . Hence rL > 0, ErL = 1, ∥rL ∥s ≤
+(1 + 2ε)/ZL ≤ B, and rL ≥ 1/ZL ≥ 1/B.
+    Write Q = P√ρ . Since Q2 = Pρ , the matrices TrL = AA∗ and SL = A∗ A, with A = M√rL Q, have
+identical spectra, including multiplicities. Here Mf denotes multiplication by f . Direct expansion
+gives
+                                                             ⊗L            ⊗L
+                      ZL SL = Pρ + ε(XL + YL ),      XL = H+    , YL = H−     ,
+where the one-site matrices, in the orthonormal Walsh basis (1, x), are
+                                                     √ !
+                                            1   1  ±δ ρ
+                                       H± =     √        .
+                                            n ±δ ρ   ρ
+
+They are positive definite and conjugate by diag(1, −1). Their common simple top eigenvalue is
+                                                            p
+                                              1+ρ+            (1 − ρ)2 + 4ρδ 2
+                                    κ(δ) =                                     .
+                                                              2n(δ)
+
+At zero, κ(0) = 1, (log κ)′ (0) = 0, and differentiation yields
+                                                            2ρ
+                                    (log κ)′′ (0) =            − (s − 1) > 0.
+                                                           1−ρ
+All functions are smooth near zero. Taylor’s theorem therefore gives κ > 1 for every sufficiently
+small positive δ. Fix one such δ < 1. This choice depends on ρ, s and is independent of L; no
+uniform exponential rate as s ↑ sc is asserted.
+               1/2 1/2
+    Set ω = ∥H+ H− ∥. Positive definiteness and submultiplicativity give 0 < ω ≤ κ. If equality
+held, norm attainment at a unit vector v would force equality in both steps of
+                                        1/2     1/2          √    1/2
+                                    ∥H+ H− v∥ ≤               κ ∥H− v∥ ≤ κ.
+
+
+                                                            10
+The second equality makes v a top eigenvector of H− ; the first then makes it a top eigenvector of
+H+ . But H+ − H− has zero diagonal and nonzero equal off-diagonal entries, so is invertible. It
+                                                  √ ω<
+cannot annihilate their common top eigenvector. Thus     √ κ.
+   For N = 2L ≥ 2, use the N -by-2N matrix C = [ XL , YL ]. Its two Gram matrices satisfy
+                                                                 √ √ !
+                         ∗                 ∗      √    X√
+                                                        L         XL YL
+                     CC = XL + YL ,      C C=                              .
+                                                     YL XL          YL
+
+The block diagonal part has its two largest
+                                      √ √   eigenvalues equal to κL . Tensorization of positive square
+roots and of operator norms gives ∥ XL YL ∥ = ω L , which is also the norm of the self-adjoint
+off-diagonal perturbation. The variational eigenvalue bound consequently gives
+
+                     λ1 (XL + YL ) ≤ κL + ω L ,     λ2 (XL + YL ) ≥ κL − ω L > 0.
+
+Indeed C ∗ C and CC ∗ have the same N positive eigenvalues, with N additional zeros only in C ∗ C,
+so both leading bounds transfer even when L = 1. Also XL + YL ≥ XL gives λ1 (XL + YL ) ≥ κL .
+    Finally Pρ is positive semidefinite of norm one. For FL = ZL SL , the variational principle and
+norm bound imply
+
+              λ1 (FL ) ≤ ε(κL + ω L ) + 1,    λ2 (FL ) ≥ ε(κL − ω L ),        λ1 (FL ) ≥ εκL .
+
+Subtracting and dividing gives the claimed upper bound. The scalar ZL cancels from the ratio,
+and SL and the actual TrL have the same spectrum. Its entrywise positivity gives strict Perron
+separation at every finite L. Both terms in the upper bound decay exponentially, although the
+bound can exceed one at small L.
+
+    Theorems 9 and 10 separate the two strict regimes at the same value sc . The next two sections
+treat the critical exponent s = sc : first quantitative bounds in two budget ranges, then the
+exact budget boundary including equality. At B = 1, Jensen forces r = 1 and the actual gap
+is 1 − ρ; the sufficient lower bound is not claimed optimal. The tilted family does not claim
+product marginals for its weighting or stationary law. It isolates the moment obstruction for the
+same transfer operator, whereas Theorem 1 isolates the marginal-information obstruction. The
+earlier two-point-spike construction in the retained analytical sources covers the narrower interval
+1 < s < log 2/ log(2/(1 + ρ)); it remains valid but is superseded here by the product-tilt construction.
+
+
+9    Auxiliary critical estimates and an explicit rate
+At s = sc = (1 + ρ)/(1 − ρ) the size of the moment budget matters. We give a sufficient stability
+condition near B = 1 and a counterexample for every B > 2. These preliminary bounds are retained
+for their quantitative content. Section 10 then resolves the intervening budget range and the exact
+boundary. All norms in this section use the uniform probability measure uL .
+Theorem 11 (Small critical budgets). Fix 0 < ρ < 1 and s = sc . For any L ≥ 1 and any density
+r ≥ 0 with Er = 1 and ∥r∥s ≤ B, B ≥ 1,
+                                                        
+                                                        
+                                                        (B s − 1)1/s ,
+                                                        s                                   s ≥ 2,
+    gap(Tr ) ≥ max{0, 1 − ρ − ds (B)},       ds (B) =       2(B s − 1)
+                                                                         (B + 1)(2−s)/2 ,   1 < s < 2.
+                                                             s(s − 1)
+                                                        
+                                                        
+
+In particular, each fixed ρ admits a nontrivial interval of budgets B > 1 with a positive dimension-
+independent gap. No pointwise density bounds are required.
+
+                                                  11
+Proof. Put Q = P√ρ and Sr = QMr Q, which has the spectrum of Tr . Ordinary Boolean
+hypercontractivity, recalled in [10, Eq. (1.1)], gives ∥Qf ∥q ≤ ∥f ∥2 for q = 2s/(s − 1), since
+ρ = (s − 1)/(s + 1) = 1/(q − 1). Hölder’s inequality with exponents s, q, q yields
+
+                    |⟨f, QMr−1 Qg⟩| ≤ ∥r − 1∥s ∥Qf ∥q ∥Qg∥q ≤ ∥r − 1∥s ∥f ∥2 ∥g∥2 .
+
+Thus ∥Sr − Pρ ∥ ≤ ∥r − 1∥s and λ2 (Sr ) ≤ ρ + ∥r − 1∥s . Also λ1 (Sr ) ≥ ⟨1, Sr 1⟩ = 1. It remains to
+show ∥r − 1∥s ≤ ds (B).
+   Define ϕs (t) = ts − 1 − s(t − 1) for t ≥ 0, so that Eϕs (r) ≤ B s − 1. For s ≥ 2 and u ≥ 0,
+                                                  Z u
+                                 ϕs (1 + u) = s         ((1 + v)s−1 − 1) dv ≥ us ,
+                                                   0
+
+using (1+v)s−1 ≥ 1+v s−1 . For 0 ≤ u ≤ 1, the derivative of ϕs (1−u)−us is s[1−(1−u)s−1 −us−1 ] ≥ 0
+and its value at zero is zero. Hence ϕs (t) ≥ |t − 1|s , proving the first estimate by integration. For
+1 < s < 2, the integral Taylor remainder gives
+                                                           Z 1
+                         ϕs (t) = s(s − 1)(t − 1)      2
+                                                                 (1 − v)[1 + v(t − 1)]s−2 dv
+                                                        0
+                                     s(s − 1)   (t − 1)2
+                                 ≥                       .
+                                         2    (t + 1)2−s
+
+At t = 0 the identity follows by continuity; the integral is finite for s > 1. For W = (r−1)2 /(r+1)2−s ,
+Hölder gives
+                                E|r − 1|s ≤ (EW )s/2 (E(r + 1)s )(2−s)/2 .
+Use EW ≤ 2(B s − 1)/(s(s − 1)) and ∥r + 1∥s ≤ B + 1. Both formulas for ds (B) tend to zero as
+B ↓ 1. Positive semidefiniteness supplies the trivial zero lower bound.
+
+Theorem 12 (Balanced critical tilt). Fix 0 < ρ < 1, s = sc , and B > 2. There are constants
+c, d > 0, independent of L, and strictly positive densities rL , for every L ≥ 1, such that
+                                                                         √           2 1/3
+             ErL = 1, ∥rL ∥s ≤ B, rL ≥ 1/B,           0 < gap(TrL ) ≤ 2 B − 1 e−cd L .
+
+Proof. For a uniform sign x ∈ {−1, 1} and |δ| < 1 define
+                                                  1/s
+                            (1 + δ)s + (1 − δ)s                               1 + δx
+                        
+               n(δ) =                                      ,       wδ (x) =          ,    m(δ) = n(δ)−1 .
+                                     2                                         n(δ)
+The one-site matrix is
+                                              √ !
+                                     1    1  δ ρ
+                             H(δ) =       √       ,                           D = diag(1, ρ).
+                                    n(δ) δ ρ  ρ
+
+It is positive definite with top eigenvalue
+                                                               p
+                                               1+ρ+              (1 − ρ)2 + 4ρδ 2
+                                      κ(δ) =                                      .
+                                                                 2n(δ)
+
+For τ (δ) = ∥D1/2 H(δ)1/2 ∥, the square is the top eigenvalue of D1/2 H(δ)D1/2 , so
+
+                                               1 + ρ2 +
+                                                               p
+                                        2                        (1 − ρ2 )2 + 4ρ2 δ 2
+                                     τ (δ) =                                          .
+                                                                 2n(δ)
+
+                                                               12
+These positive functions have even analytic logarithms near zero. Taylor expansion with bounded
+fourth derivative gives, at s = sc ,
+                                                 ρ 2
+                                   log n(δ) =        δ + O(δ 4 ),
+                                               1−ρ
+                                   log κ(δ) = O(δ 4 ),
+                                                     ρ
+                                   log τ (δ) = −            δ 2 + O(δ 4 ).
+                                                 2(1 − ρ2 )
+Indeed, the respective square-root numerators divided by two are 1 + ρδ 2 /(1 − ρ) + O(δ 4 ) and
+1 + ρ2 δ 2 /(1 − ρ2 ) + O(δ 4 ). Consequently there are 0 < δ∗ < 1, C ≥ 1 and c > 0 such that, for
+|δ| ≤ δ∗ ,
+                                  | log κ(δ)| ≤ Cδ 4 , log τ (δ) ≤ −cδ 2 .
+For example, c = ρ/[4(1 − ρ2 )] works after reducing δ∗ . Choose a fixed 0 < d ≤ δ∗ with Cd4 ≤
+log(B − 1), possible because B > 2. Put
+                                            L
+                                                                                              1 + aL RL
+   δL = dL−1/3 ,   aL = κ(δL )−L ,
+                                            Y
+                                     RL =         wδL (xi ),   ZL = 1 + aL m(δL )L ,   rL =             .
+                                            i=1
+                                                                                                 ZL
+
+The coefficient balances the two top block eigenvalues exactly. Since | log aL | ≤ Cd4 L−1/3 ≤
+log(B − 1), we have aL ≤ B − 1 and aL → 1. Product measure gives ∥RL ∥s = 1 and ERL = m(δL )L ,
+with 0 < m(δL ) < 1. Therefore ErL = 1, ∥rL ∥s ≤ (1 + aL )/ZL ≤ B, and rL ≥ 1/ZL ≥ 1/B for every
+L ≥ 1.
+     Let XL = H(δL )⊗L . Spectral equivalence gives FL = ZL SrL = Pρ + aL XL . Both summands
+                                                           1/2 √      1/2
+have top eigenvalue one. For the N by 2N matrix CL = [Pρ , aL XL ], N = 2L , the Gram matrix
+CL∗ CL has those summands on its diagonal and off-diagonal block of norm
+                                   √              √             2 1/3
+                               ηL = aL τ (δL )L ≤ B − 1 e−cd L .
+Its block diagonal has two leading eigenvalues exactly one. The off-diagonal self-adjoint perturbation
+has norm ηL , whence λ1 ≤ 1 + ηL and λ2 ≥ 1 − ηL . The N positive eigenvalues of CL CL∗ = FL
+are precisely the positive eigenvalues of CL∗ CL ; the latter has N additional zeros. Thus the bounds
+apply to the first two eigenvalues of FL , including at L = 1. Since FL ≥ Pρ , λ1 (FL ) ≥ 1 and
+gap(FL ) ≤ 2ηL . Scalar normalization and AA∗ /A∗ A preserve the ratio. Strict entrywise positivity
+of TrL gives its strictly positive finite-dimensional gap.
+
+    The uniform component is a spectral channel here, rather than an additive error to discard. At
+the critical exponent the tilted top eigenvalue has zero quadratic variation, while its cross norm with
+the uniform channel has negative quadratic variation. The dimension-dependent tilt separates these
+orders, and balancing removes the residual diagonal mismatch. The small-budget estimate uses
+classical hypercontractivity and elementary perturbation theory; the large-budget family asserts
+neither matching marginals nor fixed-range interactions. The sufficient budget B > 2 is not optimal;
+the next section identifies the exact threshold without claiming a rate there.
+
+
+10     The exact critical moment budget
+The preceding balanced construction has a sharper limiting moment than the triangle inequality
+used to obtain its all-dimension rate bound. Combining that limit with a sign decomposition of a
+second eigenvector identifies the entire critical budget boundary. Throughout this section, all norms
+and expectations use uniform probability on {−1, 1}L .
+
+                                                     13
+Theorem 13 (Exact critical budget). Fix 0 < ρ < 1, s = (1 + ρ)/(1 − ρ), and B∗ = 21/s . For every
+L ≥ 1 and r ≥ 0 with Er = 1,
+                                       2λ2 (Tr )s ≤ Ers .                                    (16)
+Consequently ∥r∥s ≤ B < B∗ implies
+
+                                           gap(Tr ) ≥ 1 − B/B∗ > 0.
+
+For each fixed b ∈ (0, 1) there are strictly positive densities reL , for every L ≥ 1, such that
+
+                     EreL = 1,       ∥reL ∥s ≤ B∗ ,          reL ≥ b,    gap(TerL ) −→ 0.
+
+Thus the infimum of the gap over all dimensions and densities with ∥r∥s ≤ B is positive exactly
+for 1 ≤ B < B∗ . The same classification holds with any prescribed fixed floor r ≥ b, 0 < b < 1.
+The positive lower bound displayed above is not asserted optimal; no convergence rate at B = B∗ is
+asserted.
+Proof. Two sign regions. Put Q = P√ρ and p = 1 + ρ = 2s/(s + 1). Endpoint Boolean hypercon-
+tractivity gives ∥Qg∥2 ≤ ∥g∥p . For h supported on C, Hölder’s inequality gives
+                                            √
+                             ⟨h, Tr h⟩ = ∥Q( r h)∥22
+                                          √                  1/s
+                                       ≤ ∥ r h∥2p ≤ E[rs 1C ]     ∥h∥22 .              (17)
+
+Indeed, before raising to 2/p, the conjugate exponents are 2/(2 − p) and 2/p, and p/(2 − p) = s.
+    On its nonempty active support A = {r > 0}, the matrix Tr is strictly entrywise positive. It has
+a simple positive Perron root and a Perron vector strictly positive on A. Its other coordinates form
+a zero block. If λ2 = 0, (16) is immediate. Otherwise a real second eigenvector f vanishes off A
+and is orthogonal to the Perron vector. Both its positive and negative parts f+ , f− are therefore
+nonzero, including when λ2 has multiplicity greater than one. Entrywise positivity gives
+
+                           λ2 ∥f+ ∥22 = ⟨f+ , Tr f+ ⟩ − ⟨f+ , Tr f− ⟩ ≤ ⟨f+ , Tr f+ ⟩.
+
+Applying (17) on {f > 0} yields λs2 ≤ E[rs 1{f >0} ]. The negative part gives the analogous bound on
+{f < 0}. Adding over these disjoint regions proves (16). No mean-zero condition under uniform
+                                  √
+measure is imposed on f . Finally r is a unit vector and
+
+                                         λ1 (Tr ) ≥ ⟨r, Pρ r⟩ ≥ (Er)2 = 1
+
+by the nonnegative Walsh eigenvalues. This proves the positive gap bound below B∗ . At B = 1,
+strict Jensen forces r = 1 and the actual gap is 1 − ρ.
+    The balanced family’s exact moment. Use the single-site quantities n, w, m, H, κ, τ from Theo-
+rem 12, with any sufficiently small fixed d > 0 and δL = dL−1/3 . This step does not impose the
+earlier condition involving B > 2. Define
+                                   L
+         aL = κ(δL )−L ,
+                                   Y
+                           RL =          wδL (xi ),   ZL = 1 + aL m(δL )L ,     rL = (1 + aL RL )/ZL .
+                                   i=1
+
+The critical expansions already proved give aL → 1 and m(δL )L → 0, hence ZL → 1. For the
+latter limit, log m(δ) = −(s − 1)δ 2 /2 + O(δ 4 ) and LδL2 → ∞, whereas LδL4 → 0. The overlap
+      √
+ηL = aL τ (δL )L tends to zero. More explicitly, the quadratic coefficient of log τ is
+                                      "                   #
+                                   1  ρ2     s−1        ρ
+                                         2
+                                           −     =−            .
+                                   2 1−ρ      2     2(1 − ρ2 )
+
+                                                        14
+The same Gram comparison, now without a prescribed all-L budget, gives 1 ≤ λ1 (SL ) ≤ 1 + ηL
+and λ2 (SL ) ≥ 1 − ηL for SL = Pρ + aL H(δL )⊗L . For large L, the second bound is positive, so it
+corresponds to a nonzero eigenvalue rather than an added Gram zero. Since QMrL Q = SL /ZL ,
+both of its top eigenvalues tend to one. They are the actual eigenvalues of TrL : for X = M√rL Q,
+the square matrices X ∗ X and XX ∗ have identical spectra, including zeros and multiplicities.
+   For each fixed 0 < t < s, direct single-site expansion yields
+                                                    t(t − s) 2
+                                       log Ewδt =           δ + O(δ 4 ).
+                                                        2
+Thus ERLt → 0, while ERs = 1 exactly. The remainders may depend on fixed t; no uniformity near
+                         L
+the endpoints is needed. Set θ = min{1, s/2}. Both θ and s − θ belong to (0, s), and
+                           0 ≤ (1 + y)s − 1 − y s ≤ s2s−1 y θ + y s−θ ,
+                                                                      
+                                                                             y ≥ 0.              (18)
+For 0 ≤ y ≤ 1, the mean-value theorem bounds the left side by s2s−1 y ≤ s2s−1 y θ . For y ≥ 1, apply
+that bound to 1/y and multiply by y s , obtaining s2s−1 y s−1 ≤ s2s−1 y s−θ . The lower bound follows
+from s > 1. Substitute y = aL RL in (18) and take expectations. The two interior moments vanish
+and aL → 1, so
+                              E(1 + aL RL )s = 1 + asL + o(1) −→ 2.
+Dividing by ZLs → 1 proves BL := ∥rL ∥s → 21/s = B∗ .
+   The exact boundary and a prescribed floor. Each rL is nonconstant, so BL > 1. Put
+                       (
+                       0,                   B L ≤ B∗ ,
+                εL =                                                reL = (1 − εL )rL + εL .
+                       (BL − B∗ )/(BL − 1), BL > B∗ ,
+The only denominator used is positive. Since BL → B∗ > 1, we have 0 ≤ εL < 1 and εL → 0.
+Normalization and positivity persist, and Minkowski gives
+                                      ∥reL ∥s ≤ (1 − εL )BL + εL ≤ B∗ .
+Because ZL > 1, both rL and 1 are at least 1/ZL , so the mixture has that same floor.
+    For signed h, the dual endpoint estimate ∥Qf ∥q ≤ ∥f ∥2 , q = 2s/(s − 1), and Hölder with
+1/s + 2/q = 1 give ∥QMh Q∥ ≤ ∥h∥s . Hence
+                            ∥QMerL −rL Q∥ ≤ εL ∥1 − rL ∥s ≤ εL (1 + BL ) −→ 0.
+Weyl’s bound and the exact X ∗ X/XX ∗ spectral identity imply that both top eigenvalues of TerL still
+tend to one. Its normalized gap therefore tends to zero. This argument requires neither pointwise
+upper control nor a square-root multiplier estimate.
+     Given fixed 0 < b < 1, eventually 1/ZL ≥ b. Replace the finite initial segment by the constant
+density 1. Every stated constraint then holds for every L ≥ 1, with the same limiting gap. The
+same sequence is admissible for all B ≥ B∗ . Each finite transfer matrix remains strictly positive, so
+its individual gap is positive; only the dimension-free infimum vanishes. A floor b = 1 would force
+the uniform density and is explicitly excluded.
+
+    The sign-region argument is classical. In the additive lattice setting, Biskup and König [3,
+Lemma 4.5 and Eq. (4.29)] bound the second eigenvalue using the two sign regions and split a
+potential budget between them. Here endpoint hypercontractivity gives the restricted s-moment
+estimate, while the balanced construction and vanishing dilution attain the boundary asymptotically.
+This comparison credits the mechanism; it does not establish historical priority of the exact
+multiplicative-cube classification. The new family makes no matching-marginal or fixed-range
+interaction claim.
+
+                                                       15
+11     The escaped critical-moment boundary
+Fix 0 < ρ < 1 and s = (1 + ρ)/(1 − ρ) throughout this section. Expectations and norms refer to the
+uniform Boolean measure. Write Q = P√ρ and Tr = M√r Pρ M√r . We also use gap(r) := gap(Tr )
+when the density shorthand is convenient. Here r ≥ 0 and Er = 1. For a family indexed by L ≥ 1,
+define
+                                   s
+                  H(K) = sup E[rL    1rL >K ],  Θ = lim H(K) = inf H(K).
+                                L                          K→∞                 K≥1
+
+The nonnegative monotone limit is allowed to be infinite. Uniform integrability of the critical powers
+is the special case Θ = 0.
+
+Theorem 14 (Finite cutoff with tail budget below one). Suppose K ≥ 1, 0 ≤ τ < 1, and
+E[rs 1r>K ] ≤ τ . Put
+                                         1+t          1−t
+                   t = τ 1/(2s) ,   m=       ,   d=       ,       BK = (K s−1 + τ )1/s .
+                                          2            2
+Then                                         (                2       2
+                                                                          )
+                                                     2d2s K 1−s
+                                                       2
+                              gap(Tr ) ≥ min 1 − m ,                          > 0.
+                                                         BK
+In particular, Θ < 1 implies a dimension-independent positive gap. No optimality is claimed for the
+displayed positive constant.
+
+Proof. For w ≥ 0 and ∥h∥2 = 1, Hölder and forward hypercontractivity, with p = 1 + ρ and
+p/(2 − p) = s, give             √         √
+                             ∥Q wh∥22 ≤ ∥ wh∥2p ≤ ∥w∥s .
+Since rs 1r≤K ≤ K s−1 r, the total moment is at most K s−1 + τ . Thus λ1 (Tr ) ≤ BK . The unit vector
+√
+  r also gives λ1 ≥ ⟨r, Pρ r⟩ ≥ 1 by the nonnegative Walsh spectrum. If the active support has one
+point, λ2 = 0 and the gap is one. If λ2 < m2 , the gap is greater than 1 − m2 .
+    Otherwise choose a real second eigenvector, orthogonal to the positive active Perron vector.
+Write it as uh+ − vh− , with u, v > 0, u2 + v 2 = 1, and disjointly supported nonnegative unit
+vectors h+ , h− . Their uniform means need not be equal. Set D = ⟨h+ , Tr h− ⟩ > 0. The eigenvector
+equations give
+
+                 A+ = λ2 + (v/u)D,          A− = λ2 + (u/v)D,             A± = ⟨h± , Tr h± ⟩.
+                          √
+For each sign split f =    rh± at r = K. Then ∥Qf ∥2 ≥ m and ∥Qfhigh ∥2 ≤ t, so
+                                                                   √
+                          ∥Qflow ∥2 ≥ d,  ∥flow ∥p ≥ d,  ∥flow ∥2 ≤ K.
+
+For a = 1−ρ and θ = s−2 the identity 1/p = θ/a+(1−θ)/2 and power-Hölder give ∥g∥p ≤ ∥g∥θa ∥g∥1−θ2 .
+This applies ordinary Hölder to powers and requires no quasi-norm triangle inequality. The
+positive lower p-norm permits division; hence ∥flow ∥a ≥ d1/θ K −(1−θ)/(2θ) . Positivity and reverse
+hypercontractivity yield
+                                                              2     2
+                               D ≥ ⟨f+,low , Pρ f−,low ⟩ ≥ d2s K 1−s .
+The sign compression has eigenvalues λ2 and λ2 + D/(uv). Its largest eigenvalue is at most λ1 ,
+so λ1 − λ2 ≥ 2D. Dividing by λ1 ≤ BK proves the bound, including repeated second eigenvalues.
+Finally, if Θ < 1, choose Θ < τ < 1 and a single finite K with H(K) ≤ τ . The same constants then
+apply to every L.
+
+
+                                                  16
+   Uniform integrability is sufficient but stronger than needed. For example, a bound
+                                              s
+                                       sup E[rL ψ(rL )] ≤ C < ∞
+                                        L
+
+with a nonnegative nondecreasing function ψ diverging at infinity implies H(K) ≤ C/ψ(K) when
+ψ(K) > 0. This is a weighted-moment condition; an arbitrary such ψ need not be a Young function
+                                                                                            s+ε
+or define a Luxemburg norm. A fixed s + ε moment bound also implies H(K) ≤ K −ε supL ErL        .
+Neither condition follows from a mere critical-moment bound.
+    A total bound supL ∥rL ∥s ≤ B does imply
+
+                                              Θ ≤ B s − 1.                                              (19)
+
+Indeed E[rL 1rL >K ] ≤ B s K 1−s , while Jensen for XL = rL 1rL ≤K gives EXLs ≥ (1 − B s K 1−s )s+ .
+Subtraction and the limit K → ∞ prove (19). For B < 21/s this recovers a positive gap. The direct
+exact-budget theorem already gives the stronger explicit lower bound 1 − B/21/s .
+Proposition 15 (Escaped moment with a stable gap). For any M > 1, B > M 1/s , and 0 < b < 1,
+there are densities rL with ErL = 1, rL ≥ b, ∥rL ∥s ≤ B, and
+                         s                   s
+                       ErL → M,           E[rL 1rL >K ] → M − 1     (K > 1 fixed),
+
+while gap(TrL ) → 1 − ρ and gap(TrL ) ≥ (1 − ρ)/2 for every L ≥ 1.
+Proof. Set N = 2L , c = (M − 1)1/s , choose a vertex zL , and first put
+
+                                   1 + cN 1/s 1zL
+                            qL =                  ,        ZL = 1 + cN 1/s−1 .
+                                        ZL
+These densities have mean one, lower bound 1/ZL → 1, and moments
+
+                                  1 − N −1 + (N −1/s + c)s
+                         EqLs =                            −→ 1 + cs = M.
+                                            ZLs
+For each fixed K > 1 only the exceptional vertex eventually exceeds K, and its contribution tends
+to cs = M − 1.
+    The operators TqL and SL = QMqL Q are isospectral, including multiplicities,                ∗
+       ∗                                               2
+                                                                          √ since they are AA
+and A A for A = M√qL Q. In probability-normalized L , the vector ez = N 1zL is a unit vector
+and M1zL = |ez ⟩⟨ez |. Therefore
+                                                                                               L
+                 Pρ + cN 1/s Q|ez ⟩⟨ez |Q                                                1+ρ
+                                                                                     
+            SL =                          ,       ∥Q|ez ⟩⟨ez |Q∥ = ⟨ez , Pρ ez ⟩ =                  .
+                          ZL                                                              2
+It follows that ∥SL − Pρ ∥ ≤ δL , where
+
+                               cdL     L
+                                 ρ + caρ                                  1+ρ
+                        δL =             ,    dρ = 2−(1−1/s) ,    aρ =               .
+                                   ZL                                    22ρ/(1+ρ)
+Both bases lie strictly between zero and one. For aρ , strict convexity of t log t on [1, 2] gives
+(1 + ρ) log(1 + ρ) < 2ρ log 2.
+    The largest two eigenvalues of Pρ are 1 and ρ, counting multiplicity. The min-max principle
+bounds the changes in both by δL . Also ⟨1, SL 1⟩ = 1, so λ1 (SL ) ≥ 1. Consequently
+                                       λ2 (SL )
+                                                − ρ ≤ (1 + ρ)δL .
+                                       λ1 (SL )
+
+                                                      17
+Choose L0 so that for every L ≥ L0 the floor and norm bounds hold and c(dL   L
+                                                                         ρ +aρ ) ≤ (1−ρ)/(2(1+ρ)).
+Existence uses B s > M and the strict exponential contractions. Finally set rL = 1 for L < L0 and
+rL = qL otherwise. The prefix has gap 1 − ρ; the tail has the asserted common bound. All limits
+persist.
+
+Proposition 16 (Sharpness and nonnecessity of the tail criterion). The universal guarantee Θ < 1
+cannot be extended to Θ ≤ 1: the exact-budget family of Theorem 13 has Θ = 1 and gaps tending to
+zero. For every finite Θ0 > 0, there are nevertheless families with Θ = Θ0 and a uniform positive
+gap, even with an arbitrarily prescribed density floor below one. Thus Θ ≥ 1 is necessary for collapse,
+but not sufficient.
+
+Proof. First suppose rL → 1 in probability and ErL    s → M < ∞. For each fixed K > 1, the function
+
+FK (x) = xs 1x≤K is bounded and continuous at one, so EFK (rL ) → 1. This follows by splitting
+a neighborhood of one from its probability-small complement and works on the varying cubes.
+Therefore the tail moments tend to M − 1 for every such K, giving Θ ≥ M − 1. For the upper
+bound fix ε > 0 and K0 > 1. For all sufficiently large L, the total moment is at most M + ε and
+EFK0 (rL ) ≥ 1 − ε. For every K ≥ K0 their tail moments are then at most M − 1 + 2ε. A larger
+cutoff kills the tails of the finitely many remaining finite functions. Taking the supremum over all L,
+then K → ∞ and ε ↓ 0, proves Θ = M − 1. This finite-prefix step is required; the fixed-K limit
+alone would not justify exchanging the supremum and cutoff limit.
+    The diluted balanced family of Theorem 13 satisfies rL → 1 in probability: its tilt has every
+smaller positive moment tending to zero, while the balancing and dilution parameters tend to one
+and zero, respectively. Also λ2 (TrL ) → 1 and 2λs2 ≤ ErL   s ≤ 2, so the critical moment tends to two.
+
+Hence Θ = 1, while that family’s gap tends to zero. Finally apply Proposition 15 with M = 1 + Θ0 .
+Its densities converge to one in probability, have critical moment tending to M , and keep the positive
+gap there proved. Thus Θ = Θ0 . Its strict total-budget slack and finite-prefix replacement remain
+part of the construction.
+
+Theorem 17 (The fixed-cutoff endpoint). For every 0 < b < 1, there is a single family of densities
+rL with
+                                               s              s
+                   ErL = 1,     rL ≥ b,      ErL ≤ 2,     E[rL  1rL >1 ] ≤ 1
+                                                                                 s → 2, and Θ = 1.
+for every L ≥ 1, but λ1 (TrL ), λ2 (TrL ) → 1. Moreover rL → 1 in probability, ErL
+Thus the finite-cutoff guarantee in Theorem 14 cannot include τ = 1 for K ≥ 1, even under the
+exact total moment cap and a prescribed positive floor. The same family satisfies the tail cap at
+every K ≥ 1 simultaneously; it depends on ρ and b, but not on K.
+
+Proof. Use the undiluted product tilt RL from the proof of Theorem 13. It satisfies
+                                       s                 t
+                        RL > 0,      ERL = 1,          ERL −→ 0   (0 < t < s).
+
+Write mL = ERL ≤ 1. The same proof supplies coefficients βL → 1 such that wL = (1 + βL RL )/ZL ,
+with ZL = 1+βL mL → 1, has both leading eigenvalues tending to one. Here βL denotes the balancing
+coefficient previously called aL ; the new coefficient below is different. The product definition gives
+additional information at its own mean. For δL = dL−1/3 and the single-site normalizer n(δL ),
+mL = n(δL )−L > 0, so exactly
+
+                     L
+                                                                                      !L
+                RL   Y                                      (1 + δL )t + (1 − δL )t
+                   =   (1 + δL xi ),       E(RL /mL )t =                                   .
+                mL i=1                                                 2
+
+
+
+                                                  18
+Fix 0 < t < 1. The logarithm of the bracket is an even smooth function on any fixed compact
+interval |δ| ≤ d < 1. Taylor’s theorem, with bounded fourth derivative there, yields
+                                  (1 + δ)t + (1 − δ)t   t(t − 1) 2
+                            log                       =         δ + Ot,d (δ 4 ).
+                                           2                2
+After multiplication by L, the leading term tends to minus infinity as L1/3 and the remainder tends
+to zero. Markov’s inequality gives P(RL > mL ) ≤ E(RL /mL )t → 0. This relative-mean estimate
+does not follow from RL → 0 alone. Set
+            pL = P(RL > mL )1/s ,       aL = 1 − pL ,        AL = 1 − aL mL ,   qL = AL + aL RL .
+All three coefficients belong to [0, 1], EqL = 1, and aL , AL → 1, whence qL → 1 in probability. The
+identity qL − 1 = aL (RL − mL ) shows that EL = {qL > 1} equals {RL > mL } when aL > 0 and is
+empty when aL = 0. In both cases the event inclusion holds. Minkowski gives
+                       ∥qL 1EL ∥s ≤ AL P(EL )1/s + aL ∥RL 1EL ∥s ≤ pL + aL = 1.
+No division by aL occurs; its zero endpoint gives qL = 1.
+   Put S(v) = QMv Q. Endpoint forward hypercontractivity maps L2 to L2s/(s−1) with norm at
+most one. Hölder therefore gives ∥QMh Q∥ ≤ ∥h∥s for every real h. In particular, ∥QMRL Q∥ ≤ 1,
+and
+                     ∥S(qL ) − S(wL )∥ ≤ |AL − ZL−1 | + |aL − βL /ZL | −→ 0.
+The square matrices S(v) and Tv are X ∗ X and XX ∗ for X = M√v Q, so are isospectral with
+multiplicities. The min-max perturbation bound thus transfers both actual leading eigenvalue limits
+to TqL .
+     We next prove ML := EqLs → 2. The lower bound is ML ≥ AsL + asL ERL   s → 2. For a fixed T > 0,
+
+qLs 1RL ≤T converges in probability to one and is bounded by (1 + T )s , so its expectation tends to
+one. On RL > T , qLs ≤ (1 + 1/T )s RL
+                                    s . Consequently lim sup M ≤ 1 + (1 + 1/T )s . Letting T → ∞
+                                                            L   L
+proves the claim. This auxiliary truncation is used only for the moment limit.
+     Set εL = 0 when ML ≤ 2, and otherwise set εL = (ML − 2)/(ML − 1). Then 0 ≤ εL < 1 and
+εL → 0. The mean-one density vL = (1 − εL )qL + εL satisfies, by convexity,
+                                       EvLs ≤ (1 − εL )ML + εL ≤ 2.
+Since εL < 1, the events vL > 1 and qL > 1 coincide. On this event vL ≤ qL , so pointwise
+vLs 1vL >1 ≤ qLs 1qL >1 . The strict tail cap at one is preserved. Also S(vL )−S(qL ) = εL (Pρ −S(qL )) → 0
+in operator norm, since ∥S(qL )∥ → 1. Both eigenvalue limits persist, as does convergence in
+probability to one. The two-sign estimate (16) gives 2λ2 (TvL )s ≤ EvLs ≤ 2, and hence the critical
+moment tends to two.
+     Since vL ≥ AL → 1, replace a finite initial segment by rL = 1 and use rL = vL thereafter to
+impose rL ≥ b in every dimension. The prefix has empty strict tail above one, and all limits are
+unchanged. For every K ≥ 1, the tail integrand is pointwise at most the one at cutoff one. Thus
+this same family works simultaneously for all such K. For each fixed J > 1, the bounded truncation
+ s1
+rL   rL ≤J has expectation tending to one. Thus the J-tail tends to one, giving H(J) ≥ 1. The
+all-dimension tail bound at one also gives H(J) ≤ 1 for every J > 1. Therefore H(J) = 1 for every
+J > 1 and Θ = 1.
+
+    Each finite matrix in this construction has a positive Perron gap; the gaps tend to zero with
+dimension. The two moment caps are inequalities in each dimension, with total moment equality
+asserted only in the limit. The mean-relative probability coefficient resolves the cutoff-one case
+without a dimension-dependent cutoff.
+
+                                                        19
+Corollary 18 (Cutoffs below one). For 0 ≤ K < 1, a nonnegative mean-one density satisfying
+E[rs 1r>K ] ≤ 1 has
+                                                                 !1/s
+                                                   1 + K s−1
+                                 gap(Tr ) ≥ 1 −                         > 0.
+                                                       2
+
+Proof. Pointwise rs 1r≤K ≤ K s−1 r, including K = 0. Thus Ers ≤ 1 + K s−1 < 2. The two-sign
+bound and λ1 ≥ 1 give λ2 /λ1 ≤ λ2 ≤ (Ers /2)1/s .
+
+    No optimality is claimed for this lower constant or for a general tail-budget threshold below cutoff
+one. The displayed bound is uniform in dimension for fixed K < 1, not uniform as K approaches
+one.
+    These are worst-case statements about a specialized fixed Boolean congruence. Scalar tails under
+the base measure are not the operator-tail functionals under a Perron invariant measure in [14]. The
+cutoff bound refines the same sign-truncation proof; it is not an independent method or a claim of
+historical priority. The qualitative boundary is sharp, while the positive constant is not optimized.
+
+
+12     Optimized finite backgrounds below cutoff one
+Fix 0 < ρ < 1 and, throughout this section, set
+                               1+ρ                s−1                       ss
+                          s=       ,      ks =        ,         Cs =               .
+                               1−ρ                 s                    (s − 1)s−1
+
+The cutoff-one result does not classify a fixed cutoff K < 1 with a tail budget greater than one. We
+now combine long parities with the balanced critical tilt to give a sub-two collapse region. The
+sharp optimization below concerns a scalar background law, not the optimal spectral boundary
+among all densities.
+
+Proposition 19 (Scalar background tail optimum). For s > 1 and 0 < K < 1, among nonnegative
+random variables A with EA = 1,
+                                                          (
+                    s                                         1,                   0 < K ≤ ks ,
+             inf E[A 1A>K ] = ms (K),        ms (K) =
+                                                              Cs (1 − K)K s−1 ,    ks < K < 1.
+
+For K ≤ ks the constant law A = 1 attains the infimum. For K > ks an attaining law has values K
+and v∗ = sK/(s − 1), with high probability p∗ = (s − 1)(1 − K)/K. Replacing the strict event by
+A ≥ K leaves the infimum unchanged, but that infimum is not attained when K > ks .
+
+Proof. For K ≤ ks , convexity gives y s ≥ 1 + s(y − 1). If y ≤ K, the right side is nonpositive. Hence
+y s 1y>K ≥ 1 + s(y − 1) everywhere. Taking expectations gives the lower bound one, attained by
+A = 1. The affine minorant is integrable even if the left side has infinite expectation.
+     For K > ks , the derivative of y s /(y − K) on y > K has the sign of (s − 1)y − sK. Its unique
+minimum is at v∗ and its value is c = Cs K s−1 . Thus
+
+                                  y s 1y>K ≥ c(y − K)           (y ≥ 0).
+
+Integration gives c(1 − K). The stated probabilities lie in (0, 1), have mean K + p∗ (v∗ − K) = 1, and
+put mass only at the two equality points of the minorant. At K = ks this law degenerates to A = 1.
+    For the non-strict event the same lower bound holds. When K > ks , choose u < K tending to
+K with u > ks , high value su/(s − 1), and high probability (s − 1)(1 − u)/u. The high value exceeds
+
+                                                   20
+K eventually, and the cost tends to Cs (1 − K)K s−1 . Thus the infimum is unchanged. Equality
+in the affine minorant for the non-strict integrand is possible only at v∗ : below K its right side is
+strictly negative, and at K its left side is K s > 0. Concentration at v∗ > 1 cannot have mean one,
+proving nonattainment. For K ≤ ks , A = 1 still attains one.
+
+   This is an elementary instance of classical moment optimization by pointwise affine bounds; see
+Bertsimas and Popescu [1] for the general moment-duality setting. Neither that method nor the
+formula’s external priority is claimed as new here.
+Theorem 20 (Sub-two tail budgets with finite parity backgrounds). Fix ks < K < 1, 0 < b < K,
+and
+                              1 + Cs (1 − K)K s−1 < τ < 2.
+There are strictly positive densities rL on every Boolean cube of integer dimension L ≥ 1 satisfying
+                                                                     s
+                             ErL = 1,         rL ≥ b,             E[rL 1rL >K ] ≤ τ,
+
+such that both leading eigenvalues of TrL tend to one and gap(rL ) → 0. The densities use global
+interactions. No marginal matching, locality, equality-budget attainability or optimal universal
+spectral threshold is asserted.
+Proof. A fixed dyadic background. Write g(u) = Cs (1 − u)us−1 . On (ks , 1),
+
+                                    g ′ (u) = Cs us−2 ((s − 1) − su) < 0,
+
+and its endpoint values are one and zero. Strict budget slack permits a fixed max(b, ks ) < u < K
+with 1 + g(u) < τ . The optimal high probability at lower value u is pu = (s − 1)(1 − u)/u. For
+p ∈ (0, 1) define v(p) = u + (1 − u)/p. The mean (1 − p)u + pv(p) is exactly one and pv(p)s is
+continuous in p. Choose a fixed dyadic p = j/2k sufficiently close to pu that
+
+                   1 + pv s < τ,        v = v(p) > 1 > K,              k ≥ 1,     1 ≤ j < 2k .
+
+On k unbiased signs choose a function F equal to v at j patterns and equal to u elsewhere. Then
+EF = 1. Replace each sign by the parity of a disjoint block of M unbiased bits, obtaining aM on
+kM bits. Those parities are independent unbiased signs, so aM has exactly the same two-point law.
+All u, v, p, k are fixed before the dimension grows.
+    An operator-norm estimate for every character. Let Qd = P√ρ,d and let χU be a Walsh character.
+For any Walsh basis vector χS ,
+
+                      Qd MχU Qd χS = ρ(|S|+|S△U |)/2 χS△U = ρ|U |/2+|S\U | χS△U .
+
+This is a weighted permutation of an orthonormal basis. Its norm is exactly ρ|U |/2 , attained for
+S ⊂ U . Writing the finite Walsh expansion F = 1 + I̸=∅ Fb (I)χI and putting DF = I̸=∅ |Fb (I)|,
+                                                  P                                  P
+
+block substitution gives
+
+                                                         |Fb (I)|ρM |I|/2 ≤ DF ρM/2 −→ 0.
+                                                   X
+                  ∥QkM MaM QkM − Pρ,kM ∥ ≤                                                           (20)
+                                                  I̸=∅
+
+Large fixed amplitudes or coefficients do not obstruct this limit.
+   The inherited critical family and actual eigenvalues. Use the balanced critical family in Theo-
+rem 13: with fixed small d > 0, δn = dn−1/3 and
+                                                       1/s                      n
+                                 (1 + δ)s + (1 − δ)s                               1 + δn yi
+                                                                                Y
+                   N (δ) =                                    ,       Rn (y) =                   ,
+                                          2                                      i=1
+                                                                                       N (δn )
+
+                                                       21
+put
+                      p
+               1+ρ+   (1 − ρ)2 + 4ρδ 2                                                     1 + βn Rn
+      κ(δ) =                           ,    βn = κ(δn )−n ,     Zn = 1 + βn ERn ,   wn =             .
+                      2N (δ)                                                                  Zn
+The established balanced Gram estimates give the actual limits λ1 (Twn ), λ2 (Twn ) → 1, not merely
+two trial-vector bounds. Also βn , Zn → 1, ERns = 1, and ERnt → 0 for every fixed 0 < t < s. The
+latter follows from the one-site expansion
+                                               t
+                                      1 + δY            t(t − s) 2
+                                      
+                                log E               =           δ + O(δ 4 ),
+                                       N (δ)                2
+
+since nδn2 → ∞ and nδn4 → 0.
+    For sufficiently large L take M = ⌊L/(2k)⌋ and n = L − kM . Both tend to infinity. On the two
+independent blocks set
+                                                aM (x) + βn Rn (y)
+                                    rL (x, y) =                    .
+                                                       Zn
+Its mean is one and its minimum is at least u/Zn , eventually greater than b. The matrices
+Sr = QL Mr QL and Tr have the same full spectrum by the AA∗ and A∗ A identity with A = M√r QL .
+Linearity and tensorization show
+
+                             ∥SrL − Pρ,kM ⊗ Swn ∥ ≤ DF ρM/2 /Zn −→ 0.
+
+The tensor comparison has largest eigenvalue λ1 (Swn ) and second eigenvalue between λ2 (Swn ) and
+λ1 (Swn ): use the constant background eigenvector and the first two tilt eigenvectors for the lower
+bound. Positivity and the fact that the top background eigenvalue is one give the upper bound.
+Both leading eigenvalues therefore tend to one. The self-adjoint eigenvalue perturbation inequality
+transfers both limits to SrL and hence TrL . Each finite matrix remains strictly positive, with a
+simple Perron root.
+    Noninteger moments and the moving strict cutoff. Let θ = min(1, s/2). For c > 0, z ≥ 0,
+
+                           0 ≤ (c + z)s − cs − z s ≤ s2s−1 cs−θ z θ + cθ z s−θ .
+                                                                               
+                                                                                                         (21)
+
+To prove this, divide by cs and put y = z/c. For y ≤ 1, the mean value theorem bounds (1+y)s −1−y s
+by s2s−1 y ≤ s2s−1 y θ . For y ≥ 1 interchange c and z. Nonnegativity follows from convexity. Both
+powers θ, s − θ lie strictly between zero and s. For z = βn Rn , the mixed expectations vanish and
+Ez s → 1. Thus E(c + βn Rn )s → cs + 1.
+    In the high sector, v/Zn > K eventually, so the entire sector contributes and its conditional tail
+moment tends to v s + 1. In the low sector the event is exactly Rn > cn , where cn = (KZn − u)/βn →
+K − u > 0. Fix positive finite c− , c+ containing these thresholds eventually. For 0 < t < s,
+
+                  P(Rn > cn ) ≤ c−t  t
+                                 − ERn → 0,              E[Rns 1Rn ≤cn ] ≤ cs−t t
+                                                                            + ERn → 0.
+
+Consequently the strict event retains asymptotic s-moment one. In (21) restricted to this event, the
+constant term vanishes with its probability, and the mixed terms are bounded by their vanishing
+unrestricted expectations. After normalization, the low-sector tail moment tends to one. Averaging
+the fixed sector probabilities,
+                             s
+                          E[rL 1rL >K ] −→ (1 − p) + p(v s + 1) = 1 + pv s < τ.
+
+This calculation does not infer moment convergence from convergence in probability. Indeed the full
+moment tends to 1 + (1 − p)us + pv s > 2, by strict Jensen for the nonconstant background.
+
+                                                    22
+    Choose a common L0 beyond which both blocks are positive, the floor holds and the tail cost is
+at most τ . For 1 ≤ L < L0 set rL = 1. Its tail cost is one and its floor is valid since b < K < 1.
+This finite replacement preserves all limits and proves the assertion in every dimension. No effective
+value of L0 is claimed.
+
+Comparison of sufficient and exact spectral thresholds
+The half-parity background with low value approaching K and high value approaching 2 − K has
+limiting scalar cost (2 − K)s /2. It gives collapse whenever
+
+                  2 − 21/s < K < 1,      0 < b < K,           1 + (2 − K)s /2 < τ < 2.
+
+This is a specialization of the same proof with p = 1/2 and u < K chosen with strict slack.
+Proposition 19 shows that the optimized cost is no larger. Equality occurs only when 2 − K =
+sK/(s − 1), that is K = 2(s − 1)/(2s − 1); outside this isolated value the cost improvement is strict.
+Strict convexity of 2t below its chord on 0 < t < 1 gives 21/s < 1 + 1/s. Hence the new interval
+ks < K < 1 strictly extends the half-parity sub-two interval.
+    On the other hand, any mean-one density with tail budget at most τ obeys Ers ≤ K s−1 + τ ,
+since rs 1r≤K ≤ K s−1 r1r≤K . The established total-moment estimate therefore gives
+                                                   !1/s
+                                       K s−1 + τ
+                       gap(r) ≥ 1 −                       >0    if τ < 2 − K s−1 .
+                                           2
+
+This sufficient estimate alone does not identify the universal spectral threshold. The construction
+justifies adding an escaped unit to the scalar optimum only for that particular family. Theorem 21
+attains this budget with floor b = K, while the separate necessary estimate in Theorem 23 proves its
+universal optimality. For K < b < 1 the event contains every point and reduces to the total-moment
+condition. At b = 1 mean one forces r = 1 and gap 1 − ρ; at b > 1 the class is empty. The earlier
+source309A omitted b < 1 in its additional comparison; its failed gate and the corrected309B report
+remain preserved, not relabelled.
+
+
+13     Attaining the constructive cutoff budget
+The preceding fixed-background argument uses strict slack in both the floor and the tail budget.
+We now remove both restrictions. The cutoff event remains strictly r > K; mass exactly at K is
+essential.
+
+Theorem 21. Fix 0 < ρ < 1, s = (1 + ρ)/(1 − ρ), and
+
+                           s−1                                 ss
+                    ks =       < K < 1,         g(K) =                (1 − K)K s−1 .
+                            s                              (s − 1)s−1
+
+For every integer L ≥ 1 there is a strictly positive density rL on the uniform Boolean cube such that
+                                                           s
+                        ErL = 1,      rL ≥ K,           E[rL 1rL >K ] ≤ 1 + g(K),
+
+and λ1 (TrL ) → 1, λ2 (TrL ) → 1. Consequently gap(TrL ) → 0. The same family meets every prescribed
+floor 0 < b ≤ K and every budget τ ≥ 1 + g(K). This is an attained constructive upper budget, not
+a claim that 1 + g(K) is the optimal threshold over all collapsing families.
+
+
+                                                   23
+Proof. All expectations below use normalized uniform probability. Write Qd = P√ρ,d . For positive
+r, the full spectra of Tr = M√r Pρ,d M√r and Sr = Qd Mr Qd agree, by the AA∗ /A∗ A identity with
+A = M √r Qd .
+    The inherited balanced tilt. Use the explicit family in the proof of Theorem 13. Fix a sufficiently
+small d > 0 and set
+                                                                       1/s                        n 
+                                                 (1 + δ)s + (1 − δ)s                                   1 + δn yi
+                                                                                                                
+                   −1/3
+                                                                                                   Y
+         δn = dn          ,        N (δ) =                                    ,         Rn (y) =                     .
+                                                          2                                        i=1
+                                                                                                         N (δn )
+
+In particular, the normalization is applied to every product factor. Define
+                                                   p
+                                         1+ρ+       (1 − ρ)2 + 4ρδ 2
+Hn = Qn MRn Qn ,              κ(δ) =                                 ,            bn = κ(δn )−n ,        Fn = Pρ,n + bn Hn .
+                                                    2N (δ)
+The earlier proof gives
+
+             bn → 1,          ∥Hn ∥ = κ(δn )n → 1,          λ1 (Fn ) → 1,         λ2 (Fn ) → 1,      ERns = 1.             (22)
+
+These are conclusions for that explicit family, not additional hypotheses. For completeness, its
+interior moments have the exact expression
+                                                                        !n
+                                             (1 + δn )t + (1 − δn )t
+                    an (t) := ERnt =                                          −→ 0             (0 < t < s).
+                                                   2N (δn )t
+
+Indeed their logarithm is n[t(t − s)δn2 /2 + O(δn4 )]. At the critical exponent, log κ(δ) = O(δ 4 ). The
+block Gram comparison proved earlier has two diagonal top eigenvalues one and an off-diagonal
+norm tending to zero; it controls the actual two leading eigenvalues of Fn . Its second lower bound is
+eventually positive, so it is not an added zero of the Gram matrix.
+   Growing finite background laws. The scalar optimizer from Proposition 19 has
+                           sK                           (s − 1)(1 − K)
+                   v∗ =       > 1,               p∗ =                  ∈ (0, 1),               p∗ v∗s = g(K).
+                          s−1                                 K
+For sufficiently large L choose
+                                  L                                               ⌊2k p∗ ⌋                         1−K
+                                   
+    k = ⌊L1/3 ⌋,     M=              ,    n = L − kM,              p = pL =                ,      v = vL = K +         .
+                                  2k                                                2k                              p
+Then p ∈ [p∗ /2, p∗ ], p → p∗ , v → v∗ and v ≤ V := 2v∗ . Also k, M, n → ∞, n ≥ L/2 and M/k → ∞.
+Choose exactly 2k p patterns in {−1, 1}k , and let fL take value v there and K elsewhere. Replace
+its k signs by the parities of k disjoint blocks of M bits. Call the resulting background AL , with
+high-sector indicator IL . Independent unbiased parities give
+
+                               EIL = p,           AL = K + (v − K)IL ,                 EAL = 1.
+
+For a nonempty Walsh support U ,
+
+                                          Qd MχU Qd χS = ρ|U |/2+|S\U | χS△U .
+
+Thus this weighted permutation has norm exactly ρ|U |/2 . Each Walsh coefficient of fL has absolute
+value at most EfL = 1, and there are at most 2k − 1 nonconstant ones. Every substituted support
+has size at least M , so
+
+                                  ∥QkM MAL QkM − Pρ,kM ∥ ≤ (2k − 1)ρM/2 −→ 0.                                              (23)
+
+                                                              24
+The limit follows from k log 2 + (M/2) log ρ → −∞. In particular, the growing number of coefficients
+is explicitly controlled. The scalar affine minorant gives
+
+                                     dL := pL vLs − g(K) ≥ 0,              dL → 0.                           (24)
+
+No uniform finite cube is assumed to realize a non-dyadic p∗ exactly.
+     Clipping, exact mean, and the amplitude reserve. Put θ = min(1, s/2), so both θ and s − θ lie in
+(0, s). For n = nL define
+
+                       cn = an (θ)1/(2θ) ,            Un = (Rn − cn )+ ,          m′n = EUn .
+
+Then cn → 0, m′n ≤ an (1) → 0, and
+                                               q
+                          P(Un > 0) ≤              an (θ),         ∥Qn MUn −Rn Qn ∥ ≤ cn .                   (25)
+
+The first inequality is Markov’s inequality at cn ; the second uses 0 ≤ Rn − Un ≤ cn and ∥Qn ∥ = 1.
+Equality Rn = cn is in the complement of the strict event.
+   For real s > 1, c > 0 and z ≥ 0, the mixed-power bound is
+
+                   0 ≤ (c + z)s − cs − z s ≤ Bs cs−θ z θ + cθ z s−θ ,                Bs = s2s−1 .
+                                                                              
+                                                                                                             (26)
+
+To see the upper bound, divide by cs . For z/c ≤ 1 the mean value theorem bounds the difference
+by Bs (z/c), which is at most Bs (z/c)θ . For z/c ≥ 1 exchange c, z. The lower bound follows by
+integrating a positive derivative. Thus this estimate does not require an integer exponent. Set
+                                     q
+                                 s
+                      EL = K          an (θ)
+                                + Bs (K s−θ + V s−θ )an (θ) + (K θ + V θ )an (s − θ) ,
+                                                                                            
+
+                       eL = dL + EL .
+
+Both are nonnegative and tend to zero. Eventually eL < 1/2 and m′n < 1 − K. On that range let
+
+                                               βL m′n
+          βL = (1 − eL )1/s ,        γL =             ,        rL (x, y) = AL (x) − γL IL (x) + βL Un (y).   (27)
+                                                pL
+
+Here 0 < βL ≤ 1, βL → 1 and γL → 0. The mean is exactly 1 − pL γL + βL m′n = 1. The low sector
+has density K + βL Un ≥ K; on the high sector,
+
+                                                             1 − K − βL m′n
+                                     vL − γL = K +                          > K.
+                                                                  pL
+Thus mean compensation has not lowered the floor. It acts only on the high sector, and no global
+normalization is applied.
+    On the low sector the strict event is precisely Un > 0. Apply (26) with c = K and z = βL Un ,
+restricted to that event. Its constant contribution is at most K s P(Un > 0). The high sector is
+entirely above K; discarding the nonnegative subtraction γL gives an upper bound from (26) with
+c = vL . Averaging these bounds with probabilities 1 − pL , pL , the coefficient of βLs EUns is exactly
+one. Use Un ≤ Rn , vL ≤ V , βL ≤ 1, ERns = 1, and (25). The two mixed terms are bounded by
+those defining EL . Hence
+                s
+             E[rL 1rL >K ] ≤ pL vLs + βLs + EL = g(K) + dL + 1 − eL + EL = 1 + g(K).                         (28)
+
+
+                                                              25
+The reserve pays for the dyadic excess and every retained tail error. No convergence of s-moments
+was inferred from convergence in probability.
+   The actual leading eigenvalues. Write Pb = Pρ,kM , Pt = Pρ,n and similarly Qb , Qt . By linearity
+and tensorization,
+
+                   SrL = (Qb MAL Qb − γL Qb MIL Qb ) ⊗ Pt + βL Pb ⊗ (Qt MUn Qt ).
+
+Compare with BL = Pb ⊗ Fn . Since 0 ≤ IL ≤ 1, (23) and (25) imply
+
+                  ∥SrL − BL ∥ ≤ (2k − 1)ρM/2 + γL + βL cn + |βL − bn |∥Hn ∥ −→ 0.
+
+All four errors vanish by the established limits. Both tensor factors of BL are positive definite and
+λ1 (Pb ) = 1. Therefore
+
+                         λ1 (BL ) = λ1 (Fn ),     λ2 (Fn ) ≤ λ2 (BL ) ≤ λ1 (Fn ).
+
+The lower bound uses two actual product eigenvectors with constant background factor. In view of
+(22), both leading eigenvalues of BL tend to one. Weyl’s self-adjoint perturbation bound transfers
+both limits to SrL , and the full-spectrum identity transfers them to TrL . This controls the top
+eigenvalue as well as the second; two trial vectors alone would not suffice.
+    Choose one L0 so that every eventual condition above holds for all L ≥ L0 . For 1 ≤ L < L0
+set rL = 1. Its floor is at least K, its mean is one, and its strict K-tail cost is 1 ≤ 1 + g(K). This
+supplies every dimension without changing the limits. No effective estimate of L0 is asserted.
+
+    For the non-strict event rL ≥ K, every point contributes and the tail becomes the total moment.
+The theorem therefore cannot be relabeled with a non-strict event. The scalar optimization, clipping
+and perturbation tools are classical; this construction and its source audit do not establish external
+priority. The next two sections improve the sufficient estimate and prove that the constructed upper
+budget is the exact universal strict-tail threshold. No marginal matching, locality, heat-bath gap or
+physical conclusion is added to the separate families proved earlier.
+
+
+14     The exact scalar envelope at a strict cutoff
+This section sharpens the elementary sufficient estimate above. It is useful for explicit bounds,
+but scalar optimality alone does not settle the spectral question. Section 15 supplies that step.
+Throughout these two sections fix 0 < ρ < 1, s = (1 + ρ)/(1 − ρ), ks = (s − 1)/s < K < 1, and put
+
+                                                    ss                                       (a + Kp)s
+     a = 1 − K,    p∗ = (s − 1)a/K,      Cs =              ,   g = Cs aK s−1 ,      h(p) =             .
+                                                (s − 1)s−1                                      ps−1
+
+Then 0 < p∗ < 1 and 0 < g < 1. For τ ≥ g let pτ be the unique solution of h(pτ ) = τ in (0, p∗ ], and
+set U (τ ) = τ + K s (1 − pτ ).
+
+Theorem 22. Among nonnegative random variables on arbitrary probability spaces with Er = 1 and
+E[rs 1r>K ] ≤ τ , the class is empty for τ < g. For τ ≥ g the maximum of Ers is U (τ ), attained by
+the law with value K of probability 1 − pτ and value K + a/pτ of probability pτ . At τ = g this is the
+unique admissible law; a uniform L-cube realizes it precisely when 2L p∗ is integral. For τ > g, the
+supremum over all finite uniform Boolean cubes is U (τ ), approached by positive mean-one densities
+with floor K and strict tail at most τ .
+
+
+
+                                                    26
+Proof. Logarithmic differentiation gives
+                                          h′ (p)   Kp − (s − 1)a
+                                                 =               .
+                                          h(p)      p(a + Kp)
+Thus h decreases from infinity to h(p∗ ) = g on (0, p∗ ], then increases to h(1) = 1. For an admissible
+r, write p = P(r > K) > 0 and m = E[r1r>K ]. The complementary mean is at most K(1 − p), so
+m ≥ a + Kp. Conditional Jensen yields
+                                   τ ≥ E[rs 1r>K ] ≥ ms /ps−1 ≥ h(p) ≥ g.
+It also forces p ≥ pτ . Consequently
+                                       Ers ≤ τ + K s (1 − p) ≤ U (τ ).
+The stated two-point law has mean one, strict tail h(pτ ) = τ and total moment U (τ ), proving
+attainment. If τ = g, every inequality above is equality: p = p∗ , the lower value is almost surely
+K, and strict convexity forces a constant upper value. This proves uniqueness and the finite-cube
+integrality condition. For τ > g, choose pL = (⌊2L pτ ⌋ + 1)/2L . Eventually pτ < pL < p∗ and
+pL → pτ . Assign value K + a/pL to exactly 2L pL vertices and K to the others. Its mean is one and
+its strict tail h(pL ) < τ , whereas its total moment tends to U (τ ). Exact attainment on a specified
+cube requires the high probability pτ to be realizable there; no irrational probability is assigned to a
+finite uniform event.
+
+     The earlier sign compression, 2λs2 ≤ Ers and λ1 ≥ 1, now gives
+                            gap(Tr ) ≥ 1 − [U (τ )/2]1/s > 0       (U (τ ) < 2).
+There is a unique q0 ∈ (0, p∗ ) with h(q0 )+K s (1−q0 ) = 2, since this expression decreases strictly from
+infinity to a value below two. Its tail budget τc = 2 − K s (1 − q0 ) satisfies 2 − K s−1 < 2 − K s < τc < 2;
+U (τ ) < 2 exactly when g ≤ τ < τc . For s = 2 direct expansion gives
+                                     (1 − K)2                          K2
+                            q0 =                ,      τc = 2 −                .
+                                   2 − 2K + K 2                   2 − 2K + K 2
+In particular K = 3/4 gives τc = 25/17, improving the elementary 5/4. This is only a sufficient
+spectral bound: a scalar extremizer with total moment two need not saturate the two eigenvalue
+inequalities. The moment optimization is an application of classical conditional Jensen and extremal-
+law reasoning; see [1] for the general method, without an assertion of priority for this formula.
+
+
+15      The universal strict-tail threshold
+The missing link is a necessary escaping-moment estimate for an arbitrary collapsing family. Reverse
+hypercontractivity forces one normalized sign part of a second eigenvector to have a small low quasi-
+norm. Truncation then forces its energy into the high-density region. This proves the additional
+unit of tail cost, without assuming the constructed density floor or an a priori decomposition into
+background and tilt.
+Theorem 23. Fix the parameters above. For every g ≤ τ < 1 + g there is an explicit constant
+γ0 > 0, depending only on ρ, K, τ , such that every nonnegative mean-one density on every finite
+uniform Boolean cube with E[rs 1r>K ] ≤ τ satisfies gap(Tr ) > γ0 . No positive lower bound on r is
+required. For τ < g the class is empty. At τ = 1 + g, and hence at every larger budget, Theorem 21
+gives a positive family with floor K and gap tending to zero. Thus 1 + g is the exact universal
+strict-tail collapse threshold for ks < K < 1.
+
+                                                     27
+Proof. Write B = τ + K s , p = 1 − ρ, q = 1 + ρ and θ = 1/s2 . Classical forward and reverse Boolean
+hypercontractivity [8, Theorem 3.1 and Corollary 3.3] give
+
+                                ⟨F, Pρ F ⟩ = ∥P√ρ F ∥22 ≤ ∥F ∥2q ,                               (29)
+                                ⟨F, Pρ G⟩ ≥ ∥F ∥p ∥G∥p        (F, G ≥ 0).                        (30)
+                                                         p
+The reverse inequality has parameter condition ρ ≤ (1 − p)(1 − p), with equality here, and permits
+zeros. The quantities at exponent p < 1 are quasi-norms; no triangle inequality for them will be
+used. Hölder with q/(2 − q) = s gives
+                                 √
+                                ∥ z h∥2q ≤ (Ez s )1/s ∥h∥22 (z ≥ 0).
+                                                         √
+Since Ers ≤ B, this implies λ1 ≤ B 1/s . The unit vector r has Rayleigh quotient ⟨r, Pρ r⟩ ≥ (Er)2 =
+1, so λ1 ≥ 1.
+    Put γ = 1 − λ2 /λ1 . If λ2 = 0, the gap is one and the assertion is immediate. Otherwise work
+on the active set {r > 0}. The restricted matrix has strictly positive entries and a strictly positive
+Perron vector. A normalized real second eigenvector vanishes off this set, is orthogonal to the Perron
+vector, and therefore has both signs. Write it as v = f+ − f− , with disjoint nonnegative parts,
+a = ∥f+ ∥2 > 0, b = ∥f− ∥2 > 0, a2 + b2 = 1, and c = ⟨f+ , Tr f− ⟩ > 0. The eigenvector equation
+implies
+                          ⟨f+ , Tr f+ ⟩ = λ2 a2 + c,  ⟨f− , Tr f− ⟩ = λ2 b2 + c.
+The compression to the orthonormal pair u = f+ /a, w = f− /b is
+                                                                  !
+                                               a−2    (ab)−1
+                                     λ2 I + c      −1        .
+                                              (ab)     b−2
+
+Its upper eigenvalue is λ2 + c/(a2 b2 ) ≤ λ1 . Thus the normalized cross term obeys
+
+                         d = ⟨u, Tr w⟩ = c/(ab) ≤ (λ1 − λ2 )ab ≤ B 1/s γ/2.
+                                                            √          √
+Both sign Rayleigh quotients are at least λ2 . Apply (30) to r u and r w. Choose the sign vector
+                                                          √             √
+h with the smaller p quasi-norm after multiplication by r. For F = r h we obtain
+
+                         ∥F ∥p ≤ (B 1/s γ/2)1/2 ,        ⟨F, Pρ F ⟩ ≥ λ2 ≥ 1 − γ.                (31)
+
+The argument tolerates arbitrarily unbalanced sign norms a, b.
+   Fix M > K, let F0 = F 1r≤M , F1 = F 1r>M , and HM = E[rs 1r>M ]. One checks 1/q =
+θ/p + (1 − θ)/2. Ordinary Hölder applied to Z q = (Z p )θq/p (Z 2 )(1−θ)q/2 proves
+
+                                          ∥Z∥q ≤ ∥Z∥θp ∥Z∥1−θ
+                                                          2 .
+
+The two powers are positive and sum
+                                  √ to one, so this use of Hölder has exponents greater than one
+even though p < 1. Since ∥F0 ∥2 ≤ M and ∥F0 ∥p ≤ ∥F ∥p , (29) and (31) yield
+
+                               E0 := ⟨F0 , Pρ F0 ⟩ ≤ M 1−θ (B 1/s γ/2)θ .
+                                                                            1/s
+The same forward estimate and Hölder yield E1 := ⟨F1 , Pρ F1 ⟩ ≤ HM . The Hilbert-space triangle
+                        q            √     √
+after applying P√ρ gives ⟨F, Pρ F ⟩ ≤ E0 + E1 . Consequently
+                                    hp                                      i2s
+                            HM ≥         1 − γ − M (1−θ)/2 (B 1/s γ/2)θ/2         .              (32)
+                                                                             +
+
+
+                                                    28
+For a collapsing family with fixed B, this implies lim inf HM ≥ 1 for each fixed M .
+   Put A = Cs K s−1 , so g = A(1 − K). The pointwise scalar inequality
+
+                                    z s 1z>K ≥ A(z − K)       (z ≥ 0)
+
+holds because its right side is nonpositive below K, whereas z s /(z − K) has its global minimum
+A at z = sK/(s − 1) above K. Apply it to z = r1r≤M on the original probability space. Since
+E[r1r>M ] ≤ B/M s−1 , the middle strict tail costs at least g − AB/M s−1 . It is disjoint from the high
+tail, so
+                                    τ ≥ HM + g − AB/M s−1 .                                        (33)
+For any collapsing family, first fix M , use (32), and then send M → ∞ in (33). This gives τ ≥ 1 + g.
+No density floor or exchange of moment limits is involved.
+   For an explicit positive bound, let ε = 1 + g − τ ∈ (0, 1] and
+
+                             M = max{K + 1, (4AB/ε)1/(s−1) },
+                             D = 1 − (1 − 3ε/4)1/(2s) ,
+                             γ0 = min{D/4, 2B −1/s (D/4)2/θ M −(1−θ)/θ }.
+
+These constants are finite and positive, with γ0 < 1. If γ ≤ γ0 , the subtracted core term in (32) is
+                 √
+at most D/4 and 1 − γ ≥ 1 − γ ≥ 1 − D/4. Hence
+
+                             HM ≥ (1 − D/2)2s > (1 − D)2s = 1 − 3ε/4.
+
+But (33) gives HM ≤ τ − g + ε/4 = 1 − 3ε/4, a contradiction. Thus γ > γ0 . The empty regime
+τ < g was proved in Theorem 22; equality τ = g is included whenever the finite-cube class exists.
+Finally Theorem 21 uses exactly this ρ, s, K and strict event, and supplies collapse at 1 + g with
+floor K. This completes the sharpness assertion.
+
+    For s = 2, ρ = 1/3 and K = 3/4, the exact threshold is 1 + 4(1/4)(3/4) = 7/4. The
+intermediate scalar bound 25/17 remains valid and can be numerically much simpler than the
+conservative explicit constant above. Neither scalar optimality nor the construction alone proved
+the universal threshold: the necessary escape estimate (32) closes that gap. External priority of
+this specific synthesis is unestablished. Its inputs are classical; related transmission of log-Sobolev
+and spectral-gap inequalities for perturbed diffusion measures is studied, for example, in [9]. Those
+generator/measure results are not silently identified with the finite transfer-matrix statement here.
+This theorem does not add marginal matching, finite-range interactions or a physical interpretation.
+
+
+16     Comparison with hyperbounded and perturbation results
+The value sc is the classical Boolean hypercontractive boundary, not a new integrability scale. Indeed,
+for as = 2s/(s + 1), the norm-one estimate ∥P√ρ f ∥2 ≤ ∥f ∥as holds when s ≥ sc by the standard
+inequality recalled in [10]. Its local sharpness is seen from f = 1 + ux on one bit: ∥P√ρ f ∥22 = 1 + ρu2 ,
+whereas ∥f ∥2as = 1 + (as − 1)u2 + o(u2 ). Tensorization amplifies a violated one-bit norm bound.
+Such top-norm growth alone does not imply a closing normalized spectral gap; Theorem 10 adds
+two antipodal channels and their Gram comparison to obtain a near-degenerate second eigenvalue.
+    The inequalities and matrix arguments used above are classical. Related literature already
+supplies both qualitative gap criteria and, under different hypotheses, dimension-independent
+quantitative perturbation bounds. Miclo’s Theorem 1 in [13] gives a gap for ergodic self-adjoint
+
+                                                    29
+hyperbounded Markov operators. Section 6 and Proposition 11 also discuss a norm-budget transition
+at two for the fourth power of an L2 -to-L4 Markov norm; this is an important precedent for budget
+thresholds, not the raw density norm used here. Hyperboundedness alone does not give a general
+quantitative gap. Wang’s Theorem 1.1 in [14] gives a tail-norm criterion for the gap of an invariant
+Markov operator’s symmetrization. These fixed-space conclusions must not be confused with a
+bound uniform over a family of increasing dimensions.
+    Here Tr is generally not Markov in uL . Its Perron Doob transform is Markov in its own
+stationary law, which generally differs from ruL . The ground-state multiplication is an L2 isometry
+between these spaces, but does not automatically identify their higher norms uniformly in L.
+Thus an implication from a qualitative hyperboundedness theorem would still need a quantitative
+change-of-measure argument.
+    Gross’s Theorem 2.2 in [11] does give dimension-independent gaps for additive Schrödinger
+perturbations on Riemannian probability manifolds with a base logarithmic Sobolev inequality and
+suitable moments of both eV and e−V . We have not identified that additive operator with the
+logarithm of this discrete transfer congruence. Our moment hypothesis in Theorem 9 supplies no
+inverse-density moment and permits zeros. In contrast, the counterexamples in Theorems 10 and 12
+have r ≥ 1/B and therefore bounded inverse moments. For these families, missing inverse control is
+not a distinction from Gross; the operator/form and exponent correspondences are the unestablished
+steps. Glück [12], especially Theorem 5.1, gives hyperboundedness criteria and uniform essential
+spectral-radius estimates; those estimates alone do not control the second eigenvalue of a finite
+matrix. These differences do not prove originality or exclude a stronger implication. Aida’s directly
+accessible author preprint [2] uses an additive Schrödinger form with a derivation and chain-rule
+hypotheses, together with ground-state and weak-Poincaré inputs. Its setup and Theorem 10 were
+read in a targeted comparison; no identification of those hypotheses with this multiplicative Boolean
+transfer congruence has been established. No external priority, improvement over this literature, or
+exhaustive novelty clearance is asserted.
+
+
+17     Relation to predecessors and reproducibility
+The congruence analysis in [6] permits positive weights concentrating on an antipodal pair, with
+a transfer ratio tending to one as volume grows. Such a pair fails to preserve pair marginals.
+The parity analysis in [7] preserves every proper marginal but concerns a heat-bath generator;
+Proposition 5 shows precisely why it does not supply the transfer conclusion. The present synthesis
+obtains linear-order marginal matching for both the weight and the Perron stationary law, together
+with exponentially many slow transfer modes.
+    The code ingredients and the matrix methods are classical. In particular, Lemma 2 is an
+elementary existence argument, not a new code construction and not an efficient encoding claim. The
+citation to [4] supplies general limited-independence background, not a direct historical attribution
+for the dual-distance projection equivalence proved here. Work on simultaneously good primal and
+dual codes, including [5], is stronger in algorithmic aspects. Our targeted primary-source check
+did not identify the exact joint conclusion above; this is not proof of historical priority. External
+originality and the importance of this specialization remain unestablished.
+    All proofs are finite-dimensional and analytical. No numerical experiment or formal verification is
+needed or claimed. A source package retains the preregistered proof checks, complete analytical audit,
+source hashes and this manuscript. The permanent source tree is papers/marginal-transfer at the
+source commit below. The earlier spike proof is retained there in evidence296/finite-moment296A.
+txt; the balanced critical proof and its complete source audit are retained in evidence298. The
+
+
+                                                 30
+exact-budget proof, registered checks and full analytical source audit are retained in evidence299.
+The full analytical reports, contexts, assignments and source bindings for the grouped tail results
+are in evidence305 and evidence307. Their public-subset manifests explicitly identify private
+reference PDFs and an unrelated local directory index omitted from the original audit manifests;
+no redistribution of these files is implied. The exact v4 PDF assessment is preserved there solely
+as historical evidence, with all seven objections and a separate author response. Historical partial
+results and exact-PDF reviews keep their original artifact identities; this revision neither changes
+those reports nor inherits their grades. The new background construction is grouped with these
+results because it uses the same transfer operator, critical exponent and balanced tilt. The complete
+source309A failure, corrected309B audit and source310 audit are retained in evidence311, with
+their original contexts and manifests. Three full third-party source captures from audit310 remain
+private and are explicitly excluded from the public subset; their original hashes are retained without
+implying redistribution rights. The original v5 PDF and its complete first exact-PDF assessment,
+including all six reservations, are historical evidence only. The expanded scalar attainment discussion
+follows the recorded source310 audit clarification. No v5 score is transferred to this manuscript. The
+attained-cutoff construction is retained as source313, with its complete analytical report, assignment,
+context and byte manifests in evidence314. It removes two restrictions of the preceding construction
+by clipping the tilt, compensating its mean only on the high sector, and reserving amplitude for
+finite tail errors. The source311 document and production-runner audits are also retained; that
+intermediate manuscript was not compiled or given a PDF score. A redundant complete frozen311
+source archive remains private on D; the public subset declares its exact hash and original Git source,
+while retaining the full reports and original manifest. No report is shortened. The sharp scalar
+envelope (source315) and reverse-hypercontractive necessity argument (source317) are grouped here
+with the attained construction. Their complete source reports, contexts and fixed judges are retained
+in evidence318. The earlier exact v6 PDF, its full first-round assessment and all six reservations
+are historical evidence, not a rating of this revision. Its two explicitly forced equation numbers are
+replaced by ordinary sequential numbering; the corresponding mathematical displays are unchanged.
+The previous claim that the universal strict-tail interval was unresolved is superseded by Theorem 23.
+Document reproduction is a separate check of exact bytes and layout, not an independent proof of
+the theorems.
+
+
+18     Growing marginal order at the critical moment budget
+The preceding marginal and moment constructions need not describe the same weights. We now
+impose both requirements on one weighting law. Throughout this section, uL is uniform probability
+on {−1, 1}L , 0 < ρ < 1 is fixed, and
+               1+ρ
+          s=       ,      B∗ = 21/s ,     Q = P √ρ ,     Sr = QMr Q,     Tr = M√r Pρ M√r .
+               1−ρ
+
+Here Pt χA = t|A| χA . For r ≥ 0 with Er = 1, Sr and Tr have the same eigenvalues, including zero
+multiplicities: they are AA∗ and A∗ A for the square matrix A = QM√r . Also ⟨1, Sr 1⟩ = 1, so
+λ1 (Tr ) ≥ 1. Exact uniform marginals of the weighting law ruL through order k mean E[rχA ] = 0
+for 1 ≤ |A| ≤ k. This classical Fourier characterization and low-coefficient correction are prior
+methods[16, 17]. The statement here concerns the weighting law; no Perron stationary marginal
+assertion is made in this section.
+    Two different regimes result. At every fixed power Lα with α < 1/2, exact matching is
+compatible with collapse at B∗ . At every fixed positive linear fraction of L, a bounded critical
+
+
+                                                  31
+moment instead forces convergence to the unweighted noise spectrum. The proof of the latter
+statement uses the homogeneous moment inequality of Kirshner and Samorodnitsky [15], not a
+new hypercontractive inequality. The quantitative
+                                         √            theorem below settles part of the sublinear
+regime; Section 19 strengthens it to kL / L → ∞. Section 20 constructs collapse throughout the
+sub-square-root regime; Section 21 proves a universal positive asymptotic gap at every fixed positive
+finite ratio, at the exact critical cap.
+Theorem 24 (Collapse with growing exact marginals). Fix 0 < α < 1/2 and 0 < b < 1. There are
+mean-one densities rL , for every integer L ≥ 1, such that
+
+                      rL ≥ b,      ∥rL ∥s ≤ B∗ ,         E[rL χA ] = 0     (1 ≤ |A| ≤ ⌊Lα ⌋),
+
+while λ1 (TrL ) → 1, λ2 (TrL ) → 1 and gap(TrL ) → 0. Thus growing matching of these orders does
+not raise the worst-case critical norm boundary B∗ .
+Proof. Choose a = 3/8 − α/4, so 1/4 < a < (1 − α)/2, and fix a sufficiently small d ∈ (0, 1). Set
+δ = dL−a and
+                                            1/s                  L
+                      (1 + δ)s + (1 − δ)s                           1 + δxi
+                  
+                                                                                    mL = ERL = n(δ)−L .
+                                                                  Y
+         n(δ) =                                    ,   RL (x) =                ,
+                               2                                  i=1
+                                                                        n(δ)
+
+The one-coordinate matrix and its largest eigenvalue are
+                                   √ !                                         p
+                          1    1  δ ρ                               1+ρ+           (1 − ρ)2 + 4ρδ 2
+                  H(δ) =       √       ,                   κ(δ) =                                   .
+                         n(δ) δ ρ  ρ                                               2n(δ)
+
+Writing D = diag(1, ρ) and τ (δ) = ∥D1/2 H(δ)1/2 ∥, direct diagonalization gives
+
+                                              1 + ρ2 +
+                                                          p
+                                       2                    (1 − ρ2 )2 + 4ρ2 δ 2
+                                   τ (δ) =                                       .
+                                                            2n(δ)
+At the fixed critical exponent the Taylor expansions are
+                       s−1 2                                                               ρδ 2
+         log n(δ) =       δ + O(δ 4 ),        log κ(δ) = O(δ 4 ),       log τ (δ) = −              + O(δ 4 ).
+                        2                                                               2(1 − ρ2 )
+
+Here Lδ 4 = d4 Lα−1/2 → 0, whereas Lδ 2 = d2 L1/4+α/2 → ∞. Consequently cL = κ(δ)−L → 1,
+mL → 0, and ZL = 1 + cL mL → 1.
+   For vL = (1 + cL RL )/ZL , the unnormalized operator is FL = Pρ + cL H(δ)⊗L . Both summands
+have top eigenvalue one. Form the Gram matrix of their positive square roots. Its diagonal blocks
+                                                                √
+are these two summands and its cross-block norm is ηL = cL τ (δ)L → 0. The block diagonal
+matrix has its first two eigenvalues exactly one. Operator-norm perturbation puts the first two
+Gram eigenvalues in [1 − ηL , 1 + ηL ]. For large L these are positive; the nonzero Gram spectrum is
+the spectrum of FL . Division by ZL therefore proves that the actual first two eigenvalues of SvL
+tend to one.
+   We also have ERL  s = 1. For each fixed 0 < t < s,
+
+
+                                      t        t(s − t) 2
+                                log ERL =−             Lδ + O(Lδ 4 ) −→ −∞.
+                                                   2
+With θ = min(1, s/2), the mean-value theorem for y ≤ 1 and reciprocal substitution for y ≥ 1 give
+
+                            0 ≤ (1 + y)s − 1 − y s ≤ s2s−1 (y θ + y s−θ )          (y ≥ 0).
+
+                                                          32
+Both exponents lie strictly between zero and s. Applying this inequality to cL RL yields E(1 +
+cL RL )s → 2, hence ∥vL ∥s → B∗ .
+    Put kL = ⌊Lα ⌋ and erase the nonconstant low levels:
+
+                                                                     1 + cL (RL − pL )
+                                            δ |A| χA ,
+                                   X
+                       pL = mL                                wL =                     .
+                                 1≤|A|≤kL
+                                                                             ZL
+
+The exact expansion RL = mL
+                                  P      |A| χ
+                                    Aδ           A proves that wL has mean one and the required zero
+coefficients. Moreover
+                                             kL
+                                                 !
+                                             X  L j
+                            ∥pL ∥∞ ≤ mL                   δ ≤ mL kL LkL −→ 0.
+                                             j=1
+                                                     j
+
+Indeed log mL = −(s−1)d2 L1/4+α/2 /2+O(Lδ 4 ), and log kL +kL log L = o(L1/4+α/2 ). It follows that
+wL ≥ (1−cL ∥pL ∥∞ )/ZL → 1 in this lower-bound sense, so eventually wL ≥ b. Also ∥wL −vL ∥∞ → 0,
+∥wL ∥s → B∗ , and ∥SwL − SvL ∥ ≤ ∥wL − vL ∥∞ → 0. The uniform baseline, together with this
+sup-norm bound, supplies the positivity that an unrestricted Fourier erasure would not preserve.
+    Finally let BL = ∥wL ∥s , and set εL = 0 when BL ≤ B∗ , otherwise εL = (BL − B∗ )/(BL − 1). On
+the latter event the denominator is positive, 0 < εL < 1, and εL → 0. Then rL = (1 − εL )wL + εL
+retains the exact marginals, mean, and eventual floor. Minkowski gives ∥rL ∥s ≤ B∗ . Endpoint
+hypercontractivity and Hölder, with p = 2s/(s − 1) = 1 + 1/ρ, imply for every real signed f that
+
+                                 ∥QMf Q∥ ≤ ∥f ∥s ,             ∥Q∥2→p ≤ 1.                               (34)
+
+Thus ∥SrL − SwL ∥ ≤ εL (BL + 1) → 0. The actual leading eigenvalues still tend to one. Replace
+the finitely many densities before all positivity and floor conditions hold by rL = 1. Every stated
+constraint then holds in every dimension. The positive kernel has a simple Perron root in each
+dimension, while its normalized gap tends to zero. Below B∗ the earlier sign-compression bound
+2λs2 ≤ Ers already supplies a uniform gap.
+
+Theorem 25 (Rigidity from critical-power uniform integrability). Suppose kL → ∞, rL ≥ 0,
+ErL = 1, and the weighting laws have uniform marginals through order kL . If
+                                                 s
+                                      lim sup E[rL 1rL >M ] = 0,
+                                      M →∞ L
+                                                                                   p
+then ∥SrL − Pρ ∥ → 0 and gap(TrL ) → 1 − ρ. For ρ < σ < 1, put t =                     ρ/σ, mL = ⌊kL /2⌋, and
+ηM = supL ∥rL 1rL >M ∥s . More precisely,
+
+                               ∥SrL − Pρ ∥ ≤ 2(M + 1)tmL +1 + 2ηM .
+
+Proof. Let Π project onto Walsh degrees at most mL . With h = rL − 1, the (A, C) entry of QMh Q
+is ρ(|A|+|C|)/2 h(A
+                 b    △ C). Since |A △ C| ≤ 2mL ≤ kL on this block, including the zero constant
+coefficient, ΠQMh QΠ = 0.
+     Split h = hb + ht , with hb = rL 1rL ≤M − 1 and ht = rL 1rL >M . Write Qσ = P√σ and Dt = Pt . For
+Bb = QMhb Q we have Bb = Dt Ab Dt , Ab = Qσ Mhb Qσ , ∥Ab ∥ ≤ M + 1, and ∥Dt (I − Π)∥ ≤ tmL +1 .
+The identity Bb − ΠBb Π = (I − Π)Bb + ΠBb (I − Π) bounds its norm by 2(M + 1)tmL +1 . For
+Bt = QMht Q, (34) gives ∥Bt − ΠBt Π∥ ≤ 2ηM . Since Π(Bb + Bt )Π = 0, addition proves the estimate.
+First send L → ∞ at fixed M , then M → ∞. Self-adjoint perturbation and the actual spectrum
+1, ρ, . . . of Pρ give the first two eigenvalue limits 1, ρ and the gap limit.
+
+
+                                                         33
+    For comparison, a strictly higher moment gives an explicit rate without truncation. If q > s,
+∥rL ∥q ≤ B, and ρ < σ ≤ (q − 1)/(q + 1), the same factorization gives
+
+                                ∥SrL − Pρ ∥ ≤ 2(B + 1)(ρ/σ)(⌊kL /2⌋+1)/2 .
+
+Here Qσ MrL −1 Qσ has norm at most B + 1 by Hölder and hypercontractivity. The corresponding
+low block vanishes exactly. This estimate and the preceding theorem are sufficient conditions, not
+characterizations of all stable families.
+
+Theorem 26 (Rigidity for every positive linear marginal fraction). Suppose rL ≥ 0, ErL = 1,
+∥rL ∥s ≤ B < ∞, and every marginal through order kL ≤ L is uniform. If lim inf L kL /L > 0, then
+∥SrL − Pρ ∥ → 0. In particular the two leading eigenvalues of TrL tend to 1, ρ, and gap(TrL ) → 1 − ρ.
+No density floor, uniform integrability, or supercritical moment assumption is required.
+
+Proof. Set p = 2s/(s − 1) = 1 + 1/ρ > 2. We use Theorem 1.3 and Proposition 2.7 of the version-
+pinned primary source [15]. In uniform probability normalization, its continuous function ψ(p, x)
+on [0, 1/2] bounds every real homogeneous degree-j Walsh polynomial, j ≤ L/2, by
+
+                                       ∥fj ∥p ≤ 2Lψ(p,j/L)/p ∥fj ∥2 .
+
+For fixed p, ψ(p, 0) = 0, the right derivative at zero is (p/2) log2 (p − 1), and the function is strictly
+concave. These are attributed external mathematical inputs. Strict concavity gives
+
+                                 x log(p − 1) log 2
+                      ∆p (x) =               −      ψ(p, x) > 0         (0 < x ≤ 1/2).
+                                       2        p
+
+For completeness, if f (0) = 0 is strictly concave with right derivative d, then
+
+                                      f (x)/x < f (x/2)/(x/2) ≤ d.
+
+This also handles the upper endpoint. Natural logarithms are used except for the displayed log2 .
+   For x ∈ [0, 1] let y = min(x, 1 − x) and
+
+                            x log(p − 1) log 2                    (x − y) log(p − 1)
+                 ap (x) =               −      ψ(p, y) = ∆p (y) +                    .
+                                  2        p                               2
+
+This is continuous and strictly positive for every x > 0, including ap (1) = log(p − 1)/2. For each
+fixed 0 < γ ≤ 1, compactness gives aγ = minx∈[γ,1] ap (x) > 0. For j ≤ L/2 the published inequality
+and ρ = 1/(p − 1) imply
+                                    ∥Qfj ∥p ≤ e−Lap (j/L) ∥fj ∥2 .
+For j > L/2, multiplication by the full parity character maps the entire degree-j level to degree L − j
+while preserving all Lq norms. Applying the preceding homogeneous inequality there and retaining
+the original factor ρj/2 gives the same bound. This does not assert that parity multiplication
+commutes with Q.
+   Let Hγ project onto degrees j ≥ γL. Triangle inequality, then Cauchy–Schwarz over at most
+L + 1 orthogonal levels, give                      √
+                                    ∥QHγ ∥2→p ≤ L + 1 e−Laγ .                                      (35)
+Take fixed 0 < c < lim inf kL /L and put γ = c/2. For all sufficiently large L, the complement
+H = I −Π of degrees at most mL = ⌊kL /2⌋ has degrees j ≥ mL +1 ≥ kL /2 ≥ γL. For B = QMrL −1 Q,
+
+
+                                                    34
+exact marginals give ΠBΠ = 0, hence B = HB + ΠBH. For real unit vectors u, v, Hölder with
+1/s + 2/p = 1 yields
+                                                               √
+                  |⟨u, HBv⟩| ≤ ∥rL − 1∥s ∥QHu∥p ∥Qv∥p ≤ (B + 1) L + 1 e−Laγ .
+
+The other term uses QΠu and QHv. Since Π is an L2 contraction, ∥QΠ∥2→p ≤ 1; no Lp contraction
+property of Π is needed. Thus
+                                                    √
+                              ∥SrL − Pρ ∥ ≤ 2(B + 1) L + 1 e−Laγ .
+
+This tends to zero. The ordered-eigenvalue perturbation bound applies in the same finite dimensional
+space for each L. It gives the actual top-two limits, including when rL has zeros, and the common
+spectrum of SrL , TrL supplies the asserted gap limit.
+
+Theorem 27 (Quantitative rigidity at a sublinear marginal order). Keep ρ, s, p, Q fixed as above.
+There exists cp > 0 such that, if rL ≥ 0, ErL = 1, ∥rL ∥s ≤ B, and the weighting law has exactly
+uniform marginals through integer order 0 ≤ kL ≤ L, then
+                                                                           !
+                                                       √      cp k 2
+                            ∥SrL − Pρ ∥ ≤ 2(B + 1) L + 1 exp − L               .                   (36)
+                                                               4L
+
+Consequently, if kL2 /(L log(L + 1)) → ∞, the two leading eigenvalues of TrL tend to 1, ρ and its
+normalized gap tends to 1 − ρ. The constant depends on the fixed noise parameter; no uniformity as
+ρ approaches an endpoint is asserted.
+
+Proof. We derive a quantitative modulus from Proposition 2.6 of [15], rather than infer one from
+strict concavity. Its parameterization, with binary entropy H2 , is
+
+                ψ(p, x) = (p − 1) + log2 ((1 − δ)p + δ p ) − p2 H2 (x) − px log2 (1 − 2δ),
+                                      (1 − δ)p−1 − δ p−1
+                      x = ( 21 − δ)                      .
+                                        (1 − δ)p + δ p
+
+Put z = 1 − 2δ, A(z) = ((1 + z)p + (1 − z)p )/2 and h(x) = −x log x − (1 − x) log(1 − x). The
+constants cancel exactly, giving
+                                                                                   zA′ (z)
+                    (log 2)ψ(p, x) = log A(z) − p2 h(x) − px log z,      x=                .       (37)
+                                                                                   pA(z)
+For every fixed real p > 2, A is positive and even analytic near zero. The binomial expansion
+followed by the logarithm gives
+
+                           p(p − 1) 2                                 p(p − 1)(p2 + p − 3)
+              log A(z) =           z + b4 z 4 + O(z 6 ),     b4 = −                        .
+                              2                                                12
+Indeed the fourth coefficient before simplification is p(p − 1)(p − 2)(p − 3)/24 − p2 (p − 1)2 /8. Write
+v = z 2 , a = p − 1 and b = 4b4 /p. Then x = av + bv 2 + O(v 3 ). Since a > 0, the analytic inverse
+theorem yields
+
+                                       v = x/a − bx2 /a3 + O(x3 ),
+                                 log v = log x − log a − bx/a2 + O(x2 ),
+                                log A = (p/2)x − b4 x2 /a2 + O(x3 ).
+
+
+                                                      35
+Using h(x) = −x log x + x − x2 /2 + O(x3 ) in (37) cancels the x log x terms. Thus
+
+                                                                    b4
+                                                                           
+                     (log 2)ψ(p, x) = p2 log(p − 1)x +       p
+                                                             4 + (p − 1)2       x2 + O(x3 )
+
+                                                         p2 (p − 2) 2
+                                   = p2 log(p − 1)x −              x + O(x3 ),
+                                                         12(p − 1)
+
+and hence
+                                               p(p − 2) 2
+                                    ∆p (x) =             x + O(x3 ).                                 (38)
+                                               12(p − 1)
+All remainders are for fixed p as x ↓ 0. In particular their positive leading coefficient is not uniform
+at p = 2, which is excluded. This expansion is an elementary consequence of the cited formula; no
+originality of the moment bound or of its parameterization is claimed.
+    The function ap in the preceding proof is positive on (0, 1]. Equation (38) shows that ap (x)/x2
+extends to a continuous positive function on [0, 1], with value p(p − 2)/(12(p − 1)) at zero. Let
+cp > 0 be its minimum. This is an existence constant; its global value is not asserted to equal the
+value at zero. The homogeneous estimate, including the parity reduction for j > L/2, now gives
+
+                                    ∥Qfj ∥p ≤ exp(−cp j 2 /L)∥fj ∥2 .
+
+For m = ⌊kL /2⌋, Π the projection onto degrees at most m, and H = I − Π, summing the orthogonal
+levels gives                             √
+                            ∥QH∥2→p ≤ L + 1 exp(−cp (m + 1)2 /L).
+The exact identity ΠQMrL −1 QΠ = 0 still holds. The two Hölder block estimates in the preceding
+proof therefore yield
+                                        √
+                  ∥SrL − Pρ ∥ ≤ 2(B + 1) L + 1 exp(−cp (m + 1)2 /L) (kL < L).
+
+If kL = L, all nonconstant Walsh coefficients of rL vanish, so rL = 1 and the norm difference is zero.
+Otherwise m + 1 ≥ kL /2 gives (36). Its logarithm is at most log(2(B + 1)) + 12 log(L + 1) − cp kL2 /(4L),
+which tends to minus infinity under the stated condition. The same self-adjoint perturbation and
+square-product spectral identity give the actual ordered eigenvalue and normalized gap limits,
+including zero densities.
+
+Scope of the separation. Theorems 24 and 27 operate at the      √ same critical cap B∗ . Theorem 32
+below strengthens the fixed-power construction to every kL = o( L). The quantitative bound above
+is valid but is strengthened in Corollary 30, which removes√ its logarithmic loss. Those two results
+alone do not decide the density gap at kL comparable to L; Theorem 34 below proves positivity
+there at the critical cap, without asserting convergence to the unweighted gap. The endpoint
+operator threshold of Theorem 28 is sharp in its own signed-function class. Qualitative concavity
+alone supplies no shrinking-cutoff rate; the explicit expansion (38) proves the earlier bound, and
+the next section proves the stronger estimate. Theorem 25 supplies a separate sufficient condition
+at arbitrary diverging marginal order. All statements concern finite Boolean transfer operators
+with global weights. They imply no fixed-range Gibbs, local-dynamics, physical-gap, continuum, or
+Yang–Mills result. The classical marginal/Fourier criterion and coefficient erasure are prior methods;
+the homogeneous moment improvement is explicitly attributed. Historical priority for their joint
+spectral application remains unestablished.
+
+
+
+                                                   36
+19     Endpoint noise tails and the square-root scale
+This section removes the logarithmic loss in the preceding sufficient condition and determines the
+exact vanishing scale of the operator norm used in its proof. The two conclusions have different
+scopes: sharpness for an operator norm is not necessity for nonnegative weighting densities. All
+norms below use uniform probability measure on the Boolean cube. Fix 0 < ρ < 1, put q0 = 1 + ρ,
+p0 = q0 /(q0 − 1) = 1 + 1/ρ, and write Q = P√ρ . Let Hm be the orthogonal Walsh projection onto
+degrees at least m, with Hm = 0 if m > L.
+
+Theorem 28 (Endpoint tail bound and exact vanishing scale). There is Cρ > 0, depending only on
+the fixed parameter ρ, such that, for 1 ≤ m ≤ L,
+
+                                                                             (− log ρ)(q0 − 1)
+     NL (m) := ∥QHm ∥2→p0 ≤ ρm/4 + e−cm + exp(−Cρ c2 m2 /L),            c=                     .   (39)
+                                                                               8(1 − q0 /2)
+
+For every sequence of positive integers mL ,
+                                                             √
+                              NL (mL ) −→ 0     ⇐⇒       mL / L −→ ∞.
+                       √
+More precisely, if mL / L → C ∈ [0, ∞), then
+                                                                    !
+                                                         1 − ρ2 2
+                                lim inf NL (mL ) ≥ exp −       C .                                 (40)
+                                 L→∞                      12ρ
+                                       √
+In particular NL (mL ) → 1 when mL = o( L). No equality for the positive-C transition profile is
+asserted.
+
+   We first establish the quantitative modulus needed for the upper bound. Our external input is
+the distribution-sensitive hypercontractive theorem of Kirshner and Samorodnitsky, Theorem 1.8
+                                                                               √
+and Lemma 2.14 in https://arxiv.org/html/1909.11929v1. With ϵ = (1 − ρ)/2 and x =
+L−1 log2 (∥f ∥q0 /∥f ∥1 ), their theorem gives
+
+                                       ∥Qf ∥2 ≤ 2Lη(x,ϵ) ∥f ∥q0 .                                  (41)
+
+Its argument belongs to [0, (q0 − 1)/q0 ]. Their function is continuous there and strictly negative for
+positive argument. We use this attributed inequality; we do not claim a new proof of that theorem.
+
+Lemma 29 (Quadratic modulus of the concentration deficit). For the fixed parameters above there
+is Cρ > 0 such that
+
+                      − log(2)η(x, ϵ) ≥ Cρ (log(2)x)2      (0 ≤ x ≤ (q0 − 1)/q0 ).
+
+The continuous quotient at zero has value (2 − q0 )/(3q0 (q0 − 1)) > 0. The global constant is not
+claimed to equal this local value, or to be uniform as ρ approaches either endpoint.
+
+Proof. Write d = (1 − ρ)/2 = 2ϵ(1 − ϵ) and consider signs (X, Y ) with probabilities q0 /4 on each
+equal pair and (2 − q0 )/4 on each unequal pair. All four probabilities are positive. For σ = (1 − t)/2,
+any joint table with both negative-sign marginals equal to σ has entries
+
+           ν(−−) = σ − z,     ν(−+) = ν(+−) = z,        ν(++) = 1 − σ − z,       0 ≤ z ≤ σ.
+
+
+
+                                                  37
+For t ≥ 0, its base-two entropy is H2 (σ) + σH2 (z/σ) + (1 − σ)H2 (z/(1 − σ)), with boundary values
+understood by continuity. Thus
+
+                    −D2 (ν∥P ) = H2 (σ) − 1 + σH2 (z/σ) + (1 − σ)H2 (z/(1 − σ))
+                                     + (1 − 2z) log2 (1 − d) + 2z log2 d.
+
+Maximizing this expression over z is exactly the definition of ϕ(σ, d) in Section 2.1.6 of the cited
+source. Consequently ϕ(σ, d) = −I(t, t)/ log 2, where I(t, t) is the minimum natural relative entropy
+subject to the two mean constraints. This is an identity between finite probability tables, requiring
+no asymptotic identification of a large-deviation
+                                                  rate.
+                                       1ρ
+    Near zero, the covariance matrix ρ 1 is positive definite. The analytic inverse function theorem
+applied to the gradient of the joint log moment-generating function produces a unique small tilt
+realizing means (t, t). If Pλ denotes that tilt, the identity
+
+                         D(ν∥P ) = D(ν∥Pλ ) + λ1 t + λ2 t − log EP eλ1 X+λ2 Y
+
+proves that it minimizes entropy. Swap symmetry and local uniqueness give λ1 = λ2 = λ. Therefore,
+with natural logarithms,
+                      q0            2 − q0
+                                                 
+           K(λ) = log    cosh(2λ) +        ,               I(t, t) = 2tλ − K(λ),       K ′ (λ) = 2t.
+                      2               2
+
+Writing b = q0 /3 − q02 /2, analytic expansion and inversion give
+
+                              K(λ) = q0 λ2 + bλ4 + O(λ6 ),
+                                    λ = t/q0 − 2bt3 /q04 + O(t5 ),
+                              I(t, t) = t2 /q0 + (q0 /2 − 1/3)t4 /q03 + O(t6 ).
+
+Also I1 (t) = log 2[1 − H2 ((1 − t)/2)] = t2 /2 + t4 /12 + O(t6 ). The definition of η in Section 2.1.7 of
+the cited source has 1 − H2 (σ) = q0 x/(q0 − 1). Hence, setting u = (log 2)x,
+                            q0 − 1
+                       u=          I1 (t),     − log 2 η(x, ϵ) = 12 I(t, t) − I1 (t)/q0 .
+                              q0
+
+The first relation has an analytic inverse in t2 near zero. Substitution in the second gives
+
+                                    (q0 − 1)(2 − q0 ) 4             2 − q0
+                − log 2 η(x, ϵ) =            3       t + O(t6 ) =              u2 + O(u3 ).
+                                          12q0                    3q0 (q0 − 1)
+
+Continuity and strict negativity of η away from zero, supplied by the cited definition and lemma,
+now make the quotient a positive continuous function on a compact interval. Its positive minimum
+proves the assertion.
+
+Proof of Theorem 28. Self-adjointness, commutation and finite-dimensional duality give NL (m) =
+∥Hm Q∥q0 →2 . Normalize ∥f ∥q0 = 1 and put a = (− log ρ)/[4(1 − q0 /2)], M = eam , so c = a(q0 − 1)/2.
+Decompose f = b+t according to |f | ≤ M and |f | > M . The bounded part satisfies ∥b∥2 ≤ M 1−q0 /2 ,
+whence
+                                ∥Hm Qb∥2 ≤ ρm/2 M 1−q0 /2 = ρm/4 .
+Here the projection is used only in L2 , with its spectral multiplier; no Lp0 contraction of a Fourier
+cutoff is assumed.
+
+                                                      38
+    For the tail, ∥t∥1 ≤ e−a(q0 −1)m and ∥t∥q0 ≤ 1. If ∥t∥q0 ≤ e−cm , ordinary endpoint hypercontrac-
+tivity bounds ∥Hm Qt∥2 by e−cm . Otherwise log(∥t∥q0 /∥t∥1 ) ≥ cm, and (41) with Lemma 29 bounds
+it by exp(−Cρ c2 m2 /L). For signed functions, the positive kernel gives |Qt| ≤ Q|t|, so the same
+refined estimate applies. A zero tail is harmless; a case forcing a concentration argument √ above
+its admissible interval is empty. Adding the two possible tail bounds yields (39). If mL / L → ∞,
+each displayed term vanishes on indices mL ≤ L, while the other indices give the zero operator.
+    For the converse, for 0 < t < 1 define the unit L2 product
+                                                       L
+                                                       Y 1 + txi
+                                          fL,t (x) =         √            .
+                                                       i=1       1 + t2
+
+Its Walsh coefficient at A is t|A| /(1 + t2 )L/2 , so exactly
+
+                           ∥(I − Hm )fL,t ∥22 = Pr{Bin(L, t2 /(1 + t2 )) < m}.
+
+Ordinary endpoint hypercontractivity and the triangle inequality imply
+                                                 q
+                        NL (m) ≥ ∥QfL,t ∥p0 −       Pr{Bin(L, t2 /(1 + t2 )) < m}.                 (42)
+
+In particular the projection, not the original positive product, is the high-degree witness. It may be
+signed.
+    Product factorization gives log ∥QfL,t ∥p0 = LFρ (t), where
+                                          √               √
+                               1     (1 + ρ t)p0 + (1 − ρ t)p0       1
+                     Fρ (t) =    log                              − log(1 + t2 ).
+                              p0                  2                  2
+Both bases are positive near zero, so this is even analytic also for noninteger p0 . Expanding
+E(1 + zX)p0 = 1 + Az 2 + Bz 4 + O(z 6 ) with A = p0 (p0 − 1)/2 and B = p0 (p0 − 1)(p0 − 2)(p0 − 3)/24
+gives
+                1                       p0 − 1 2 (p0 − 1)(p20 + p0 − 3) 4
+                   log E(1 + zX)p0 =          z −                       z + O(z 6 ).
+                p0                         2                 12
+The quadratic terms cancel since (p0 − 1)ρ = 1, and thus Fρ (t) = −dρ t4 + Oρ (t6 ), where dρ =
+(1 − ρ2 )/(12ρ) > 0.
+                   √                                         √
+    Suppose mL / L → C < ∞. Fix A > C and set t2L = A/ L. Then Lt4L = A2 and Lt6L → 0,
+                                         2                              √            √
+so the first term in (42) tends to e−dρ A . The binomial √
+                                                         mean is µL = A L/(1 + A/ L) and its
+variance is at most µL . For large L, µL − mL ≥ (A − C) L/2; Chebyshev’s inequality bounds the
+low-tail probability by µL /(µL − mL )2 = OA,C (L−1/2 ). Taking the lower limit in (42), then the
+supremum over fixed A > C, proves (40). There is no interchange of nonuniform limits.
+                                                                                 √      At C = 0,
+the endpoint upper bound NL (m) ≤ 1 proves convergence to one. Finally, if mL / L fails to tend
+to infinity, it has a bounded subsequence and then a subsequence converging to a finite C. The
+positive lower bound on that subsequence precludes NL (mL ) → 0.
+
+Corollary 30 (Marginal rigidity without the logarithmic loss). Let rL ≥ 0, ErL = 1, and ∥rL ∥s ≤ B
+for s = (1 + ρ)/(1 − ρ) and fixed
+                                √ finite B. Assume all weighting-law marginals on at most kL
+coordinates are uniform. If kL / L → ∞, then
+
+           ∥SrL − Pρ ∥2→2 → 0,         λ1 (TrL ) → 1,        λ2 (TrL ) → ρ,   gap(TrL ) → 1 − ρ.
+
+The norm conclusion concerns SrL = QMrL Q; it does not assert ∥TrL − Pρ ∥ → 0 for TrL =
+M√rL Pρ M√rL .
+
+                                                       39
+Proof. Put d = ⌊kL /2⌋, let Π project onto degrees at most d, and let H = I − Π = Hd+1 . With
+h = rL − 1 and D = QMh Q, exact matching gives ΠDΠ = 0: the Walsh entry uses h(A     b    △ C) with
+|A △ C| ≤ 2d ≤ kL . Consequently D = HD + ΠDH. Since 1/s + 2/p0 = 1, Hölder’s inequality and
+endpoint hypercontractivity bound each block by (B + 1)NL (d + 1); for the projected low factor
+use ∥QΠf ∥p0 ≤ ∥Πf ∥2 ≤ ∥f ∥2 . Thus ∥D∥ ≤ 2(B + 1)NL (d + 1) → 0. If kL = L, exact matching
+already forces rL = 1. Self-adjoint eigenvalue perturbation yields the top two limits for SrL . With
+A = QM√rL we have SrL = AA∗ and TrL = A∗ A; their full finite spectra agree, including zeros.
+This proves the asserted eigenvalue and normalized-gap limits even when the densities vanish.
+
+Scope and relation to earlier results. The new sufficient condition supersedes the logarithmic
+scale of Theorem 27; that earlier bound remains valid. Section 20 closes the entire sub-square-root
+collapse regime and gives an attained finite-C profile. Section 21 supplies the universal positive
+finite-C lower bound at the critical cap, while the exact density infimum remains open. The signed
+witness in (42) does not supply a nonnegative mean-one density with exact marginals and a collapsing
+transfer gap. Nor does equality of spectra of Sr , Tr give equality of their distances to Pρ . For
+example, r = 1 + tχ[L] , 0 < t < 1, has uniform proper marginals and bounded critical norm. Writing
+√
+   r = a + bχ[L] gives 2ab = t, so the {1, χ[L] } off-diagonal entry of Tr − Pρ is t(1 + ρL )/2 ≥ t/2,
+whereas ∥Sr − Pρ ∥ = tρL/2 → 0. These distinctions correct the ambiguous norm wording of the
+previous version without changing its formally stated Sr theorem.
+     Endpoint hypercontractivity, Fourier projections, entropy tilting and product norm factorization
+are classical inputs. The refined inequality is attributed explicitly above. Existing tail-space
+literature also contains square-root phenomena; this fact alone neither identifies nor excludes an
+antecedent of this precise endpoint operator theorem. Historical originality remains unestablished.
+These are finite-cube results with global weights, not fixed-range Gibbs, local-dynamics, physical-gap
+or continuum results.
+
+
+20     One-sided erasure and the density transition
+We retain the probability-cube conventions of Section 18. Fix 0 < ρ < 1, put s = (1 + ρ)/(1 − ρ)
+and B∗ = 21/s , and write Q = P√ρ , Sr = QMr Q and Tr = M√r Pρ M√r . All marginal assertions
+below refer to the weighting density r, not a Perron stationary law.
+    The obstacle in a direct coefficient erasure is positivity: a small Ls correction can be large at
+individual points. A global absolute bound is stronger than needed. We prove a one-sided bound on
+the remainder of an odd Taylor truncation, and combine it with an Ls bound on the correction.
+Both estimates are derived explicitly.
+
+Lemma 31 (Odd erasure with two different controls). Let m be a positive odd integer, m + 1 ≤ L,
+u = Lδ 2 ≥ 4m and 0 < δ < 1. Define
+                                                  1/s                      L 
+                         (1 + δ)s + (1 − δ)s                                    1 + δxi
+                                                                                       
+                                                                                                      µ = n−L .
+                                                                            Y
+               n=                                          ,       R(x) =                      ,
+                                  2                                         i=1
+                                                                                   n
+          P
+For z =     i xi , write
+
+                                                          L
+                                                          X                            m
+                                                                                       X
+                                                                        j
+     gz (t) = (1 + t)   (L+z)/2
+                                  (1 − t)   (L−z)/2
+                                                      =         Kj (z)t ,   qm (z) =         Kj (z)δ j ,   p = µ(qm − 1).
+                                                          j=0                          j=0
+
+
+
+
+                                                                   40
+Then p has mean zero and exactly the nonconstant Fourier coefficients of R through degree m. With
+Cs = max{1, s − 1},
+                                                     m/2
+                                        eCs u
+                                            
+                              ∥p∥s ≤ µm                     ,                                          (43)
+                                         m
+                                                                                     !       m
+                                                                    m2                    u
+                     R(x) − p(x) ≥ −η,              η = µm exp 2m +                                .   (44)
+                                                                    2u                    m
+The second bound does not assert that ∥p∥∞ is small.
+                                                P
+                                          |A|=j χA (x), so R = µgz (δ) and the mean and matching
+Proof. The coefficient identity is Kj (z) =
+                                                    1/2
+assertions follow. Orthogonality gives ∥Kj ∥2 = Lj       . If 1 < s ≤ 2, norm comparison on a
+                              s              2
+probability space bounds its L norm by its L norm. If s > 2, Boolean hypercontractivity applied
+to the homogeneous degree-j polynomial gives ∥Kj ∥s ≤ (s − 1)j/2 ∥Kj ∥2 . Consequently
+                                                      m
+                                                      X (Cs u)j/2
+                                           ∥p∥s ≤ µ             √         .
+                                                      j=1
+                                                                    j!
+                                                                                 p
+The terms increase through m, since their successive ratios are Cs u/j ≥ 2. Bound the sum by
+m times its last term and use m! ≥ (m/e)m to obtain (43). No contractivity of a sharp Fourier
+projection on Ls is used.
+    For (44), first suppose |z| ≤ 2Lδ and set r0 = m/(Lδ) = δm/u < 1. On the complex circle
+|t| = r0 , applying log(1 + y) ≤ y to the positive squared moduli of 1 + t and 1 − t yields
+                                                           Lr02          Lr2
+                                 log |gz (t)| ≤ z Re t +        ≤ |z|r0 + 0 .
+                                                            2             2
+Cauchy’s coefficient bound and δ/r0 = u/m ≥ 1 give
+                                                                    !
+                                                   m2
+                              |p(x)| ≤ µm exp 2m +                       (u/m)m = η.
+                                                   2u
+As R ≥ 0, the required lower bound follows in this central region.
+                                                                                     (j)
+   For z = −w ≤ −2Lδ, the identity (1 − t2 )gz′ = (z − Lt)gz gives, with Aj = (−1)j gz (0),
+                       A0 = 1,      A1 = w,      Aj+1 = wAj − j(L − j + 1)Aj−1 .
+Here superscripts in parentheses denote derivatives. Since w2 ≥ 4Lu ≥ 4mL, induction gives
+Aj /Aj−1 ≥ w/2 > 0 through j = m: the next ratio is at least w − 2jL/w ≥ w/2. Therefore the
+terms Bj = δ j Aj /j! increase, as Bj /Bj−1 ≥ δw/(2j) ≥ u/m ≥ 1. The odd parity of m allows the
+pairing
+                       qm = (B0 − B1 ) + (B2 − B3 ) + · · · + (Bm−1 − Bm ) ≤ 0.
+It follows that R − p = R − µqm + µ ≥ 0 in this region.
+    For z ≥ 2Lδ, fix any t ∈ [0, δ] and put d = 1 − t2 > 0. Differentiating the same identity j times
+gives exactly
+                         dgz(j+1) = [z − (L − 2j)t]gz(j) − j(L − j + 1)gz(j−1) .                  (45)
+We have gz (t) > 0, gz′ /gz = (z − Lt)/d ≥ z/(2d), z − (L − 2j)t ≥ z/2, and z 2 ≥ 4Lu ≥ 16mL. If
+ (j) (j−1)
+gz /gz     ≥ z/(4d) > 0, then (45) implies
+                          (j+1)
+                         gz           z/2 − 4jLd/z    z
+                           (j)
+                                  ≥                ≥    >0                    (1 ≤ j ≤ m).
+                          gz                d        4d
+
+                                                      41
+       (m+1)
+Thus gz      is positive throughout [0, δ]. Taylor’s integral remainder gives gz (δ) − qm ≥ 0, and
+hence R − p ≥ µ > 0. The three regions cover the cube, including their boundaries. No root-location
+theorem for the coefficient polynomials has been assumed.
+
+Theorem 32 (Collapse throughout the sub-square-root regime).
+  For every integer sequence 1 ≤ kL ≤ L satisfying
+                                                √
+                                        kL = o( L),
+
+and every fixed 0 < b < 1, there are densities satisfying, in every dimension,
+
+               rL ≥ b,     ErL = 1,       ∥rL ∥s ≤ B∗ ,      E[rL χA ] = 0   (1 ≤ |A| ≤ kL ),
+
+such that λ1 (TrL ) → 1 and λ2 (TrL ) → 1. In particular gap(TrL ) → 0.
+Proof. For large L, let m be the smallest odd integer at least kL and set
+                                q √                q
+                           u=     m L,        δ=      u/L,     as = (s − 1)/2.
+             √                               √
+Then m = o( L), u/m → ∞, u → ∞, u/ L → 0, and Lδ 4 = u2 /L → 0. All conditions of
+Lemma 31 hold eventually. The scalar expansion gives log µ = −as u + Os (u2 /L). The logarithms of
+the bounds in (43) and (44) are respectively at most
+                                                  m
+                                −as u + log m +     log(eCs u/m) + o(1),
+                                                  2
+                                              m2
+                           −as u + log m + 2m +   + m log(u/m) + o(1).
+                                               2u
+Both tend to minus infinity, since m/u → 0 and log(u/m)/(u/m) → 0. Thus ∥p∥s → 0 and η → 0.
+   For completeness, carry the spectral and norm closures through this new scale. In the one-site
+Walsh basis, put
+                                                               √ !
+                                                    1    1    δ ρ
+                            D = diag(1, ρ),    H=       √          .
+                                                    n δ ρ      ρ
+
+The largest eigenvalue κ of H, and τ = ∥D1/2 H 1/2 ∥, satisfy
+                                                  p
+                                        1+ρ+   (1 − ρ)2 + 4ρδ 2
+                                   κ=                           ,                                     (46)
+                                                2n
+                                      1 + ρ2 + (1 − ρ2 )2 + 4ρ2 δ 2
+                                              p
+                                   2
+                                  τ =                               .                                 (47)
+                                                  2n
+Expansion at fixed ρ yields log κ = Oρ (δ 4 ) and log τ = −ρδ 2 /[2(1 − ρ2 )] + Oρ (δ 4 ). Take c = κ−L → 1
+and Z = 1 + cµ → 1. The two positive summands of F = Pρ + cH ⊗L each have largest eigenvalue
+                         1/2 √
+exactly one. For V = [Pρ , c (H 1/2 )⊗L ], the Gram operator V ∗ V differs from their block diagonal
+                                        √
+by an off-diagonal operator of norm c τ L → 0. The block diagonal’s first two eigenvalues are
+1, 1. Min-max gives the same limits for V ∗ V ; these two eigenvalues are eventually positive, so the
+nonzero square-product identity identifies them as the actual first two of V V ∗ = F , rather than
+extra Gram zeros. Hence v = (1 + cR)/Z has λ1 (Sv ), λ2 (Sv ) → 1.
+     Exactly ERs = 1, whereas for every fixed 0 < t < s,
+                                           t(s − t)
+                             log ERt = −            u + Os,t (u2 /L) −→ −∞.
+                                               2
+
+                                                      42
+For θ = min{1, s/2}, the elementary mixed-power inequality
+
+                       0 ≤ (1 + y)s − 1 − y s ≤ s2s−1 (y θ + y s−θ )   (y ≥ 0)
+
+follows by the mean-value bound on [0, 1] and reciprocal substitution above one. Both powers are
+strictly between zero and s. Applied to cR, it proves E(1 + cR)s → 2 and ∥v∥s → B∗ .
+    Set w = (1 + c(R − p))/Z. It has mean one and the exact required Fourier zeros. Its lower
+bound (1 − cη)/Z → 1 ensures w ≥ b eventually, while ∥w − v∥s = c∥p∥s /Z → 0. In particular
+BL = ∥w∥s → B∗ . For any signed function f , Holder’s inequality and endpoint hypercontractivity
+give
+                                                      1      2
+                            ∥QMf Q∥2→2 ≤ ∥f ∥s ,        +         = 1.                      (48)
+                                                      s 1 + 1/ρ
+Indeed apply Holder to E[f (Qg)(Qh)] and use ∥Qg∥1+1/ρ ≤ ∥g∥2 . Thus the erasure preserves both
+ordered eigenvalue limits.
+   If BL ≤ B∗ , put ε = 0; otherwise put ε = (BL − B∗ )/(BL − 1) ∈ (0, 1). Then ε → 0, and
+r = (1 − ε)w + ε has the exact finite cap by Minkowski. Mean, floor and Fourier zeros persist,
+while (48) bounds the final perturbation by ε(BL + 1) → 0. Finally Sr = AA∗ and Tr = A∗ A for
+A = QM√r , so their full finite spectra agree, including zeros. For the finitely many excluded initial
+dimensions take r = 1. This also covers bounded or oscillating admissible kL .
+
+Theorem 33 (An attained profile at finite square-root order). Write as = (s − 1)/2, Cs =
+max{1, s − 1} and
+                                 s(s2 − 1)    ρ(1 + ρ)
+                           γρ =            =           > 0.
+                                     24      6(1 − ρ)3
+Choose one finite K ≥ 4 such that
+                                       1
+                         as K > 2 +      + log K,       as K > 12 log(eCs K).                    (49)
+                                      2K
+                                                                            √
+Such a K depends only on ρ. For every integer sequence 1 ≤ kL ≤ L with kL / L → C ∈ (0, ∞)
+and every 0 < b < 1, there are mean-one densities rL ≥ b with ∥rL ∥s ≤ B∗ and all nonconstant
+Fourier coefficients through kL zero, such that
+                                                                       2   2
+                          λ1 (TrL ) → 1,     λ2 (TrL ) → max{ρ, e−γρ K C }.
+
+The attained gap limit is therefore
+                                               2   2
+                         min{1 − ρ, 1 − e−γρ K C } ≤ min{1 − ρ, γρ K 2 C 2 }.                    (50)
+
+This gives an upper bound on the infimum of achievable limiting gaps, not a lower bound for every
+admissible density.
+Proof. The left sides in (49) grow linearly in K and the right sides logarithmically, so both strict
+inequalities can hold with one fixed K, independent of C, L, b. Let m be the smallest odd integer at
+least kL , put u = Km and δ 2 = u/L, and use the products and correction in Lemma 31. Now
+                    √
+                 m/ L → C, Lδ 4 → K 2 C 2 , Lδ 6 → 0, log µ = −as Km + O(1).
+
+In particular the quartic total does not vanish. Equations (43) and (44) give bounds whose logarithms
+are at most, respectively,
+
+                              m[−as K + 12 log(eCs K)] + log m + O(1)
+
+                                                   43
+and
+                          m[−as K + 2 + 1/(2K) + log K] + log m + O(1).
+Both tend to minus infinity by the fixed strict margins. Thus ∥p∥s → 0 and η → 0 also when
+u/m = K stays finite. The lemma’s sign estimates require only u ≥ 4m, not a diverging ratio.
+   Retain the quartic term in (46). Its numerator before division by n is
+
+                                        ρ 2       ρ2
+                               ℓ=1+        δ −          δ 4 + Oρ (δ 6 ).
+                                       1−ρ     (1 − ρ)3
+
+Using ρ = (s − 1)/(s + 1) and expanding the logarithms gives
+
+                                 s − 1 2 (s − 1)2 (s + 2) 4
+                          log ℓ =     δ −                δ + Os (δ 6 ),
+                                   2            8
+                                 s − 1 2 (s − 1)(s2 + s − 3) 4
+                         log n =      δ −                   δ + Os (δ 6 ).
+                                   2              12
+For the latter, expand the binomial average to fourth order and apply log(1 + x) = x − x2 /2 + O(x3 )
+                                                                                                   2 2
+before dividing by s. Subtracting yields log κ = −s(s2 − 1)δ 4 /24 + Os (δ 6 ), so κL → tC = e−γρ K C ∈
+(0, 1). Equation (47) still gives
+
+                                               ρKm
+                               L log τ = −              + O(1) −→ −∞.
+                                             2(1 − ρ2 )
+
+This cross-block estimate needs only a bounded quartic remainder; the precise κL limit needed the
+vanishing sixth-order remainder.
+    Use no balancing coefficient c in this construction. Put Z = 1 + µ and v = (1 + R)/Z, so
+Sv = (Pρ + H ⊗L )/Z. The associated Gram operator is within τ L of diag(Pρ , H ⊗L ). The first block
+starts with 1, ρ; the second has largest eigenvalue κL → tC < 1. Eventually its norm is less than one.
+Thus the block diagonal’s true first two eigenvalues are exactly 1 and max{ρ, κL }. Min-max and
+the nonzero square-product spectrum give the same limits for Pρ + H ⊗L . Both limits are positive,
+so extra Gram zeros do not enter. This includes tC = ρ without a simplicity assumption. Division
+by Z → 1 preserves the limits.
+    Exactly ERs = 1, while for 0 < t < s, log ERt = −t(s − t)Km/2 + O(1) → −∞. The mixed-
+power inequality in the preceding proof gives ∥v∥s → B∗ . For w = (1 + R − p)/Z, mean and Fourier
+zeros are exact, w ≥ (1 − η)/Z → 1 as a uniform lower bound, and ∥w − v∥s → 0. Therefore w ≥ b
+eventually and BL = ∥w∥s → B∗ . Equation (48) preserves the two spectral limits. Use precisely
+the preceding ε interpolation to impose the exact cap; it preserves mean, floor and Fourier zeros
+and changes the sandwich by at most ε(BL + 1) → 0. The full square-product identity transfers
+the conclusion to Tr . Set r = 1 in any excluded initial dimensions. The gap formula follows, and
+1 − e−x ≤ x gives its displayed bound.
+
+
+21     A positive gap at every fixed positive square-root ratio
+The attained profile in Theorem 33 is an upper bound on an infimum. We now obtain a lower
+bound for every admissible density at the same critical cap. The new step is to decouple the entire
+low/high cross block, using a third, fixed degree cutoff. A strict bound on the high block alone
+would not justify a gap for the full operator.
+
+
+
+                                                  44
+   Keep 0 < ρ < 1, s = (1 + ρ)/(1 − ρ), B∗ = 21/s and p0 = 1 + 1/ρ. With the constants of
+Theorem 28, set αρ = Cρ c2 > 0 and
+                                                      2
+                  FL (m) = ρm/4 + e−cm + e−αρ m /L ,             ∥QHm ∥2→p0 ≤ FL (m).            (51)
+
+The constant Cρ is the global positive modulus in Lemma 29, not its local Taylor coefficient.
+This is an application of the endpoint estimate already proved above with its attributed Kirshner–
+Samorodnitsky input.
+
+Theorem 34 (Uniform positivity at finite square-root ratio). Fix b > 0. Suppose rL ≥ b, ErL = 1,
+ErLs ≤ 2, and the weighting law has exactly uniform marginals through integer order 0 ≤ k ≤ L. If
+    √                                                                                    L
+kL / L → C ∈ (0, ∞), then
+
+                                   λ1 (TrL ) −→ 1,                                               (52)
+                                                                           −αρ C 2 /2
+                    ρ ≤ lim inf λ2 (TrL ) ≤ lim sup λ2 (TrL ) ≤ max{ρ, e                }.       (53)
+                           L                     L
+
+Consequently
+                                                                            2
+                    lim inf gap(TrL ) ≥ Gρ (C) := min{1 − ρ, 1 − e−αρ C /2 } > 0.                (54)
+                       L
+
+The estimates are uniform over the admissible densities.
+                                                √        More concretely, for every C0 > 0 there
+is L0 (ρ, C0 ) such that, whenever L ≥ L0 and C0 L ≤ k ≤ L, every density with the stated mean,
+moment cap, floor and exact matching satisfies
+
+                                           gap(Tr ) ≥ 12 Gρ (C0 ).                               (55)
+
+The dimension cutoff need not be uniform as ρ approaches an endpoint or as C0 ↓ 0. No optimality
+of Gρ is claimed.
+
+    The substantive floor range is 0 < b < 1: for b = 1 the mean forces r = 1, while for b > 1 there
+is no admissible density. The proof uses nonnegativity in the estimates and strict positivity for the
+finite Perron interpretation; its constants do not depend on the numerical value of b.
+
+Lemma 35 (One remaining unit of tail moment). For any r ≥ 0 with Er = 1 and Ers ≤ 2, set
+rb = r1r≤M , rt = r1r>M , where M > 0, and
+                               h                      i1/s
+                       BM = 2 − (1 − 2M 1−s )s+              ,   x+ = max{x, 0}.
+
+Then ∥rt ∥s ≤ BM and BM → 1 as M → ∞. For each fixed 1 < v < s, also
+
+                                           ∥rt ∥v ≤ 21/v M 1−s/v .                               (56)
+
+All these estimates are uniform in dimension and density.
+
+Proof. On the tail, r ≤ M 1−s rs , so Ert ≤ 2M 1−s and Erb ≥ (1 − 2M 1−s )+ . Jensen on the entire
+probability space gives Erbs ≥ (1 − 2M 1−s )s+ . The two pieces have disjoint support. Thus
+
+                               Erts = Ers − Erbs ≤ 2 − (1 − 2M 1−s )s+ .
+
+For the second assertion, rv ≤ M v−s rs on {r > M }; integrating and taking the vth root proves (56).
+This does not assert that the tail’s critical moment tends to zero.
+
+
+                                                     45
+Lemma 36 (Three-block decoupling). For mean-one nonnegative densities with ∥r∥s ≤ B∗ and
+exact matching through order k, let d = ⌊k/2⌋, m = d + 1, Π be the projection onto degrees at most
+d, and H = I − Π = Hm . Then
+                                          ΠSr Π = ΠPρ Π.                                      (57)
+Moreover, whenever k → ∞, ∥ΠSr H∥ → 0, uniformly over these densities. Specifically, fix
+v = (1 + s)/2, z = 2v/(v − 1) > 2, and an integer n ≥ 0. For d ≥ n,
+
+                     Dn (M ) = 21/v M 1−s/v (z − 1)n ,                                          (58)
+                                             q               q
+                    ∥ΠSr H∥ ≤ en,M (m) :=        B∗ ρn+1 +       B∗ Dn (M ) + M ρm/2 .          (59)
+
+Proof. The Walsh matrix entry of Sr − Pρ at A, D is ρ(|A|+|D|)/2 (r
+                                                                  \ − 1)(A △ D). For |A|, |D| ≤ d
+its coefficient vanishes since |A △ D| ≤ 2d ≤ k, including the degree-zero coefficient by the mean
+condition. This proves (57).
+    For any positive semidefinite operator U and orthogonal projections E, F , factor EU F =
+(EU 1/2 )(U 1/2 F ) to obtain                q
+                                   ∥EU F ∥ ≤      ∥EU E∥ ∥F U F ∥.                              (60)
+Here “orthogonal” means self-adjoint projections; their ranges need not be mutually orthogonal.
+Also ∥Sr ∥ ≤ ∥r∥s ≤ B∗ by (48).
+   Let En project onto degrees at most n and put J = Π−En . By exact compression, JSr J = JPρ J
+and ∥JSr J∥ ≤ ρn+1 , including J = 0. Thus (60) gives
+                                                    q
+                                       ∥JSr H∥ ≤         B∗ ρn+1 .
+
+To control En Sr H, split Sr = Sb + St with Sb = QMrb Q, St = QMrt Q. Since 0 ≤ rb ≤ M ,
+
+                            ∥En Sb H∥ ≤ M ∥En Q∥∥QH∥2→2 ≤ M ρm/2 .
+
+This uses only the L2 spectral multiplier bound.
+   For the tail, the degree-n hypercontractive bound is
+
+                                    ∥QEn h∥z ≤ (z − 1)n/2 ∥h∥2 .
+
+To see its dimension independence, for a polynomial   √ of degree at most n multiply each degree-j
+coefficient by (z − 1)j/2 , and then apply noise 1/ z − 1. Ordinary hypercontractivity bounds the
+resulting Lz norm by the new L2 norm, which is at most (z − 1)n/2 times the original L2 norm.
+Apply this to QEn h; Q and En commute and contract L2 . Holder with 1/v + 2/z = 1, followed
+by (56), gives
+                                 ∥En St En ∥ ≤ ∥rt ∥v (z − 1)n ≤ Dn (M ).
+                                                                     p
+Since St ≥ 0 and ∥St ∥ ≤ ∥rt ∥s ≤ B∗ , (60) yields ∥En St H∥ ≤ B∗ Dn (M ). Addition proves (59).
+    Given a tolerance, choose n first to reduce the first term, then M to reduce the second term at
+that fixed n, then m to reduce the third term at those fixed n, M . The exponent 1 − s/v is negative.
+These choices are uniform in r, L and prove convergence when k → ∞. The factor (z − 1)n is not
+uniform in n: replacing n by the growing d while keeping M fixed would not prove the assertion.
+
+Proof of Theorem 34. Use d, m, Π, H as in Lemma 36. The same amplitude split, Lemma 35, and
+Holder give
+                          ∥HSr H∥ ≤ hM,L,k := M ρm + BM FL (m)2 .                       (61)
+
+                                                   46
+Indeed the bounded term is at most M ∥QH∥22→2 = M ρm . The tail        √ quadratic form is at√most
+           2
+∥rt ∥s ∥QH∥2→p0 ; the square of the endpoint norm is essential. If kL / L → C > 0, then m/ L →
+                                                                                               2
+C/2. At each fixed M , the first two terms of FL (m) vanish and its last term tends to e−αρ C /4 .
+Therefore
+                                                               2
+                                 lim sup ∥HSrL H∥ ≤ BM e−αρ C /2 .
+                                     L
+
+Letting M → ∞ after this limit proves
+                                                                   2
+                             lim sup ∥HSrL H∥ ≤ βρ (C) := e−αρ C /2 < 1.                            (62)
+                                L
+
+This and the cross-block convergence are compatible: for any error choose n first and then one M
+large enough for both its fixed-n tail coupling and BM − 1 to be small; taking L last pays both
+bounded-part terms. No incompatible dimension-dependent truncations have been used.
+    On Ran Π ⊕ Ran H, set
+
+                                AL = (ΠPρ Π)|Ran Π ⊕ (HSrL H)|Ran H .
+
+Exact compression makes SrL − AL the off-diagonal operator with blocks ΠSrL H and its adjoint.
+Its norm is exactly ∥ΠSrL H∥ → 0. Eventually d ≥ 1 and the high-block norm is less than one. The
+low block starts with 1, ρ, so
+
+                           λ1 (AL ) = 1,     λ2 (AL ) = max{ρ, ∥HSrL H∥}.
+
+Both blocks are positive semidefinite. Min-max perturbation gives λ1 (SrL ) → 1 and the upper bound
+in (53). Restricting the two-dimensional variational problem to the constant and one singleton Walsh
+character gives λ2 (SrL ) ≥ ρ. Also λ1 (SrL ) ≥ ⟨1, SrL 1⟩ = 1 exactly. For U = QM√rL , U U ∗ = SrL
+and U ∗ U = TrL have identical full finite spectra, including zeros. This proves the assertions for the
+actual transfer eigenvalues. The limit of the first eigenvalue gives (54); equivalently, positivity and
+λ1 ≥ 1 give gap(Tr ) ≥ 1 − λ2 (Tr ) directly.
+    For the finite uniform form, take d ≥ max{n, 1}. Whenever hM,L,k < 1, the same block
+comparison gives
+                              gap(Tr ) ≥ 1 − max{ρ, hM,L,k } − en,M (m).                            (63)
+                                                                    √                    √
+This bound contains no density-dependent term. For k ≥ C0 L, m > k/2 ≥ C0 L/2, so the
+decaying terms in (59) and (61) vanish uniformly in these k, and lim supL supk≥C0 √L FL (m) ≤
+      2
+e−αρ C0 /4 . Let g = Gρ (C0 ) > 0 and β = βρ (C0 ). Choose n first, then M , so that the sum of the first
+       √ in (59) is less than g/8 and (BM − 1)β < g/8. Choose L last, large enough that, uniformly
+two terms
+for C0 L ≤ k ≤ L, d ≥ max{n, 1}, hM,L,k ≤ β + g/4 and en,M (m) ≤ g/4. Since g ≤ 1 − β, we have
+hM,L,k < 1. Also max{ρ, β + g/4} ≤ max{ρ, β} + g/4 = 1 − 3g/4. Equation (63) is therefore at
+least g/2, proving (55).
+
+Remark 37 (Why high-block contraction is insufficient). The direct comparison ∥Sr − Pρ ∥ ≤
+2(B∗ + 1)FL (m) gives no positive gap for all small positive C. Nor may one discard the cross block
+after proving (62). For example,
+                           √ T a positive matrix with low block diag(1, 1/2), high block (3/4),
+and cross column (0, 1/(2 2)) has eigenvalues 1, 1, 1/4. Its high-block norm and nonconstant low
+eigenvalue are both less than one, yet its full gap is zero. This is a block-matrix obstruction to that
+shortcut, not a Boolean density counterexample. Lemma 36 supplies the missing coupling control.
+
+
+
+
+                                                   47
+Corollary 38 (Quadratic order of the small-ratio infimum). Fix 0 < ρ < 1 and 0 < b < 1. For
+C > 0 let Γρ,b (C) be the infimum of lim inf L→∞ gap(TrL ) over all sequences of mean-one densities
+rL ≥ b with Er   s
+               √ L ≤ 2 and exactly uniform weighting marginals through some integer orders kL
+satisfying kL / L → C. Then, for any one fixed K satisfying (49),
+                                        2                                       2   2
+                  min{1 − ρ, 1 − e−αρ C /2 } ≤ Γρ,b (C) ≤ min{1 − ρ, 1 − e−γρ K C }.               (64)
+
+In particular, for all sufficiently small positive C,
+                                     αρ 2
+                                       C ≤ Γρ,b (C) ≤ γρ K 2 C 2 .
+                                     4
+This is quadratic order, not an optimal coefficient or an exact profile.
+
+Proof. Theorem 34 bounds every sequence in the infimum. Theorem 33 supplies an admissible
+sequence attaining the right side, with the same fixed K independent of C, b, L. Thus the class
+is nonempty and (64) follows. For the explicit lower estimate chooseR C small enough that x =
+αρ C 2 /2 ≤ min{1, 1 − ρ}. Then 1 − e−x ≤ x ≤ 1 − ρ and 1 − e−x = 0x e−t dt ≥ x − x2 /2 ≥ x/2.
+The upper estimate follows from 1 − e−y ≤ y at y = γρ K 2 C 2 . In the definition of Γ the dimension
+limit inferior is taken for each fixed positive C before the infimum and the subsequent small-C
+comparison. No joint L, C limit or exchange of the infimum and dimension limit is asserted.
+
+What is settled and what remains open. Theorem 32 removes the restriction to fixed√powers
+Lα , α < 1/2, in Theorem 24.√ Together with Corollary 30, it constructs collapse for every kL / L → 0
+and proves rigidity for kL / L → ∞, at the same critical norm cap. Theorem 34 adds a universal
+                                      √ gap at every fixed positive finite C, and a uniform finite-
+positive lower limit for the normalized
+dimensional lower bound for k ≥ C0 L once L is large enough. It does not assert that every such
+family’s gap has a limit or equals the unweighted gap. Theorem 33 gives a particular attained
+profile; Corollary 38 compares the two bounds to determine quadratic order of the infimum as C ↓ 0,
+after taking the dimension limit inferior at each fixed C. The exact finite-C infimum, its optimal
+small-C coefficient, and optimization of K remain open. No interchange of limits is asserted.
+    Coefficient erasure and positivity repair are classical: Alon et al., Fact 2.3 and Theorem 3.1 [16],
+correct Fourier coefficients and repair positivity to control statistical distance from k-wise inde-
+pendence. Here the specialized odd product truncation supplies a one-sided bound together with
+critical Ls control, followed by a transfer-spectrum calculation. This describes the different proved
+conclusions; it does not establish historical priority or a separation from all prior methods. Hy-
+percontractivity, Cauchy’s coefficient bound, Taylor’s theorem and min-max are credited classical
+inputs. These remain finite-cube results with global weights, not a fixed-range Gibbs, local-dynamics,
+continuum or physical Yang–Mills gap theorem.
+
+
+Model assessments and review context
+The finite-ratio lower bound in Section 21 is translated here from the complete source334 fabrication
+record, including its failed direct estimate and cross-block shortcut. Its separate analytical audit
+subsequently returned PASS on all twelve fixed checks, bound to the exact source and frozen
+commit. The coordinator read the terminal report and accepted that analytical input; this fabricator
+then read the full report and actual audit context. The complete audit payload, including all
+five residual limitations, is retained with the fabrication record. The positive global constant is
+existential, no numerical dimension cutoff is supplied, and the proof depends on exact matching
+
+
+                                                   48
+and the critical budget. The audit establishes neither historical priority nor formal verification. The
+auditor had substantial prior related source and document involvement. Source acceptance alone
+does not establish manuscript or PDF acceptance; their exact-artifact assessments are recorded
+separately. The same involved Codex/OpenAI context fabricated source334 and this translation and
+had earlier performed the v8 exact-PDF and source331 assessments, among other recorded source
+assignments. Shared provider, filesystem and prior context do not establish independence, blindness
+or technical isolation. Exact served backend version and reasoning effort are not attested. The
+complete fabrication record, source identities, failures and context are retained. No later assessment
+outcome or hash is presumed in this preparation. This text supplies no numerical rating, formal
+proof, priority finding or human peer review.
+    The one-sided erasure and finite-ratio profile received exact-source analytical audits at their
+respective frozen commits, with twelve fixed adverse checks each. The source330 reader had earlier
+source/document involvement; the source331 reader had performed the v8 exact-PDF and source329
+assessments. These are distinct assignments with shared provider, filesystem and prior context, not
+independent or blind reviews. The actual served backend and reasoning effort were not attested.
+Complete reports, context and source identities are retained. Their nonblocking requests to bracket
+normalized product factors and to state the finite-ratio result as an attained gap and an upper
+bound on an infimum are incorporated here. Neither source audit supplies a PDF score or clears
+historical novelty. An intermediate manuscript327 PDF was produced twice with identical bytes
+before these two results were integrated. Its layout inspection found an overlong historical hash
+line; it was not submitted for a numerical PDF assessment or published. That output and its build
+evidence are preserved; the present version fixes the line break and requires its own exact-PDF
+assessment. No score is inherited or resampled.
+    The endpoint theorem combines the complete analytical sources324 and325, each read against
+its own frozen source and pull-request body by a distinct involved Codex/OpenAI audit context.
+Their terminal reports, prior context, fixed adverse checks and limitations are retained. Repository
+checks passed; these facts do not constitute a Lean proof of the new analysis, historical priority,
+human peer review or independently established reviewer isolation. The manuscript translation and
+this revision’s eventual exact PDF require their own assessment; no numerical grade is inherited.
+    The previous v8 PDF, with SHA-256
+      a4d0449b973b657a741ab4d48693d9c27032
+      0c5e8b9750ef6ad437e987927359
+
+received one involved AI assessment of 5.25/10, with recommendation minor revision. Its full report
+and all five objections are retained. Its O1 ambiguity concerning Tr versus Sr is corrected explicitly
+in the abstract and in Corollary 30, with the parity counterexample written out. Its O2 stale
+sublinear-regime statement is corrected. Its originality, length/navigation and scope reservations
+remain disclosed rather than represented as new approval. The exact served backend and reviewer
+independence were not established. That historical score applies only to the unchanged v8 PDF; it
+is not a rating of this revision.
+     The quantitative sublinear theorem received an exact-source analytical AI audit in a different
+involved Codex session whose prior role was engineering review. The complete report, prior
+involvement and fixed checks are retained. The audit checked the real-exponent expansion and the
+full operator estimate, but did not establish historical priority, a sharp threshold, formal verification
+or reviewer independence. A typographic sign inconsistency in an intermediate derivative display of
+the primary v1 HTML is recorded in that report; the final derivative and the explicit expansion used
+here have the correct sign. The earlier322A document audit is also retained as a source-translation
+assessment, not as a rating of this PDF.
+
+                                                   49
+    OpenAI/Codex assisted the mathematical synthesis and manuscript preparation. The fabrication
+session is involved in the work. A distinct involved Codex/OpenAI session audits the frozen
+mathematical source; exact served backend versions and reasoning settings are not exposed for these
+source audits, so no particular model version or provider independence is asserted. Analytical source
+review is not human peer review and supplies no inherited PDF rating. The tail audits300–303 used
+one distinct auditor context with its earlier readings retained, not four blind or provider-independent
+reviews. The cutoff-one source306 received a separate fresh-assignment AI audit; shared provider
+and filesystem do not establish technical isolation or independence. The historical v4 PDF review
+records a requested configuration separately from what was actually exposed; its rating applies only
+to its original PDF. Source309’s first audit found a missing upper restriction on a floor parameter
+in an additional comparison; that failed version remains unchanged. Its corrected version was
+reread in the same involved auditor context. Source310 received a separate fresh-assignment source
+audit; shared provider and filesystem again preclude an independence claim. The v5 exact-PDF
+review requested gpt-6-astra with high reasoning effort, but the served backend and effort were
+not independently attested. Its full report and six reservations remain bound to its original PDF,
+not this revision. No numerical assessment of the present revision has yet been incorporated or
+inherited. Source313 received a separate fresh-assignment analytical audit. Its reader checked
+the inherited explicit balanced family rather than relying on previous acceptance labels. The
+shared provider and filesystem again do not establish independence. Its minor request to bracket
+each normalized product factor is incorporated here. The prior311 document audit’s notation
+and navigation observations are also addressed, with all twenty-one prior proofs and twenty prior
+statement environments preserved. None of these source checks is an exact-PDF assessment or
+human review. The scalar-envelope and universal-tail source checks use a distinct involved auditor
+context with prior source313 readings retained. They are not blind or provider-independent reviews.
+The historical v6 PDF review requested gpt-6-astra with high reasoning effort, with served backend
+and effort not independently attested. Its full report remains bound to its original PDF. The new
+mathematical claims require assessment on this revision’s exact final PDF and do not inherit its
+numerical rating. The grouped growing-marginal construction and linear-fraction rigidity argument
+received separate exact-source analytical audits in an involved Codex/OpenAI context, with prior
+readings and a shared filesystem. The Kirshner–Samorodnitsky inequality is a credited external
+input, not reproved here. Full reports, fixed checks and source identities are retained with this
+revision. The v7 exact-PDF assessment and all five reservations remain historical evidence bound
+to PDF SHA-256 ad708fafb3de9fc83cd2dc05443f34b2792da94a20d0bf1b1cd7b8ca41b9340c. Its
+page-22 reference to an unrelated equation is repaired here by a symbolic reference to the mixed-
+power inequality. Neither the old numerical grade nor an independent-review claim is transferred to
+this revised manuscript. Any assessment attached to this manuscript must identify the exact final
+PDF hash, its actual review context, complete report, scores and objections. The manuscript does
+not incorporate a grade from another version or paper. The author owns and administers AIRR. A
+working-paper deposit is not an editorial acceptance or evidence of human peer review.
+Reproducible source commit:
+28640cd82e5b2ae9a6da8c78ca772bc41134c0c6
+
+
+References
+ [1] D. Bertsimas and I. Popescu, Optimal Inequalities in Probability Theory: A Convex Optimiza-
+     tion Approach, SIAM Journal on Optimization 15(3) (2005), 780–804. Publisher version.
+
+
+
+                                                  50
+ [2] S. Aida, An estimate of the gap of spectrum of Schrödinger operators which generate hyper-
+     bounded semigroup, author preprint, 9 February 2001. Author preprint.
+
+ [3] M. Biskup and W. König, Eigenvalue order statistics for random Schrödinger operators with
+     doubly-exponential tails, author manuscript, 21 April 2015, Lemma 4.5 and Eq. (4.29). Author
+     manuscript.
+
+ [4] N. Alon, O. Goldreich and Y. Mansour, Almost k-wise independence versus k-wise independence,
+     Information Processing Letters 88 (2003), 107–110. Author manuscript.
+
+ [5] M. Brehm and N. Resch, Linear Time Encodable Binary Code Achieving GV Bound with Linear
+     Time Encodable Dual Achieving GV Bound, ITCS 2026, LIPIcs 362, article 28. Publisher
+     version.
+
+ [6] L. Eriksson, Congruence Rigidity and the Fusion Bound: What a Positive Weight Can and
+     Cannot do to the Spectrum of a Transfer Kernel, AIRR, ARR-2026-7S1XA3PZEB9QM8FQ,
+     version 1. Public record.
+
+ [7] L. Eriksson, Strictly Positive Parity Laws and the Limits of Marginal Certificates: Exact Heat-
+     Bath Spectrum and Optimal Variance Tensorization, AIRR, ARR-2026-5HRC3PS9HZ9WDAA5,
+     version 2 (2026). Public working paper.
+
+ [8] E. Mossel, R. O’Donnell, O. Regev, J. E. Steif and B. Sudakov, Non-interactive correlation
+     distillation, inhomogeneous Markov chains, and the reverse Bonami-Beckner inequality, Israel
+     Journal of Mathematics 154 (2006), 299–336. Author manuscript.
+
+ [9] P. Cattiaux, Hypercontractivity for perturbed diffusion semigroups, Annales de la Faculté des
+     Sciences de Toulouse 14(4) (2005), 609–628. Publisher archive.
+
+[10] E. Mossel, K. Oleszkiewicz and A. Sen, On Reverse Hypercontractivity, arXiv:1108.1210v5
+     (2012). Primary manuscript.
+
+[11] L. Gross, Invariance of intrinsic hypercontractivity under perturbation of Schrödinger operators,
+     arXiv:2412.20282v2 (2025). Primary manuscript.
+
+[12] J. Glück, Spectral gaps for hyperbounded operators, arXiv:1802.09422v6 (2019). Primary
+     manuscript.
+
+[13] L. Miclo, On hyperboundedness and spectrum of Markov operators. Author manuscript.
+
+[14] F.-Y. Wang, Criteria of Spectral Gap for Markov Operators, arXiv:1305.4460v6 (2013). Primary
+     manuscript.
+
+[15] N. Kirshner and A. Samorodnitsky, A moment ratio bound for polynomials and some ex-
+     tremal properties of Krawchouk polynomials and Hamming spheres, arXiv:1909.11929v1 (2019),
+     Theorem 1.3 and Proposition 2.7. Version-pinned primary source.
+
+[16] N. Alon, A. Andoni, T. Kaufman, K. Matulef, R. Rubinfeld and N. Xie, Testing k-wise and
+     Almost k-wise Independence, Proceedings of STOC (2007). Author manuscript, Fact 2.3 and
+     Section 3.
+
+[17] R. Rubinfeld and N. Xie, Testing Non-uniform k-wise Independent Distributions over Product
+     Spaces, author manuscript, Appendix A.2. Primary source.
+
+
+                                                 51
+

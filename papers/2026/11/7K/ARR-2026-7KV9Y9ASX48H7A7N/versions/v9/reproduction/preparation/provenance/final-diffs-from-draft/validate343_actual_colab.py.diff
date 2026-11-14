@@ -1,0 +1,21 @@
+diff --git "a/D:\\Datos\\the-eriksson-programme\\autonomia\\evidencia-343\\preparation-draft-a\\validate343_actual_colab.py" "b/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production343-a\\validate343_actual_colab.py"
+index 2a9abc0..477ff78 100644
+--- "a/D:\\Datos\\the-eriksson-programme\\autonomia\\evidencia-343\\preparation-draft-a\\validate343_actual_colab.py"
++++ "b/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production343-a\\validate343_actual_colab.py"
+@@ -1,5 +1,4 @@
+ """Read-only validation of an actual returned production packet on owned Colab."""
+-raise RuntimeError('DRAFT343_NOT_RUNNABLE: future342 pins and fixed count pending')
+ import os,sys,json,zipfile,hashlib,time,resource
+ from pathlib import Path
+ root=Path('/content/tep343-actual-return-validation')
+@@ -14,8 +13,8 @@ with zipfile.ZipFile(bundle) as z:
+     for name in names:
+         with (root/name).open('xb') as f:f.write(z.read(name))
+ def h(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+-if h(root/'validate_return343A.py')!='56f49f1d2c632f530cb8e3c62a8c03141afc90332505052d270bfbed44a19de9':raise RuntimeError('Validator pin')
+-if h(root/'source-manifest.json')!='PENDING_MANIFEST342_SHA256':raise RuntimeError('Source manifest pin')
++if h(root/'validate_return343A.py')!='ecd7b6d62713f59a04e951f269ebdef40f3647d3e641a67542a465f5ffdeda75':raise RuntimeError('Validator pin')
++if h(root/'source-manifest.json')!='c6b2ece9cc308805ebdd6d39e193168fe307e17a97a951288c09cf20074ae0f9':raise RuntimeError('Source manifest pin')
+ sys.path.insert(0,str(root));import validate_return343A as v
+ result=v.validate(root/'production.zip',root,root/'source-manifest.json',[root/'uncreated-extraction',root/'uncreated-delivery',root/'uncreated-captures',root/'uncreated-parent.json'])
+ result.update(input_bundle_sha256=h(bundle),validator_sha256=h(root/'validate_return343A.py'),wall_seconds=time.perf_counter()-start,max_rss_kib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,execution_environment='Owned Colab Linux',mathematical_test=False,visual_inspection=False,backend_inactivity='Parent must separately inspect actual production and this validation runtime readbacks')

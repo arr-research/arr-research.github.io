@@ -1,0 +1,100 @@
+param([Parameter(Mandatory=$true)][ValidatePattern('^[a-f0-9]{64}$')][string]$ApprovedManifestSha256)
+Set-StrictMode -Version Latest
+$ErrorActionPreference='Stop'
+if([IO.Path]::GetFullPath($PSScriptRoot) -ine 'C:\Trabajo\the-eriksson-programme\prefix-rank290-20261113\_tmp\production343-b'){throw 'Run the hash-bound C recovery preparation, not its archival copy'}
+$source='28640cd82e5b2ae9a6da8c78ca772bc41134c0c6'
+$helper=Join-Path $PSScriptRoot 'capture_cli_atomic.ps1'
+if((Get-FileHash -LiteralPath $helper).Hash.ToLowerInvariant() -cne '4fe3fc65796ee55dc5db5bc52c924b5401b72699f56eac8dc73ceb2c53da2b7b'){throw 'Capture helper drift'}
+. $helper
+$manifest=Join-Path $PSScriptRoot 'RUNNER-HASHES.json'
+if((Get-FileHash -LiteralPath $manifest).Hash.ToLowerInvariant() -cne $ApprovedManifestSha256){throw 'Parent exact recovery runner pin required'}
+foreach($entry in (Get-Content -LiteralPath $manifest -Raw|ConvertFrom-Json)){
+ $file=Join-Path $PSScriptRoot $entry.path
+ if((Get-Item -LiteralPath $file).Length -ne $entry.bytes -or (Get-FileHash -LiteralPath $file).Hash.ToLowerInvariant() -cne $entry.sha256){throw ('Frozen recovery input differs: '+$entry.path)}
+}
+$authority=Get-Content -LiteralPath (Join-Path $PSScriptRoot 'parent-authority-relay.json') -Raw|ConvertFrom-Json
+if($authority.source -cne $source -or $authority.runner_manifest_sha256 -cne $ApprovedManifestSha256 -or $authority.manuscript_tex_sha256 -cne '194bd05eb72c6b5c8b2869feae44a6af21188c82d3e5e4c6f677068f9b072a46' -or $authority.parent_full_mathematical_report_read -ne $true -or $authority.parent_full_engineering_report_read -ne $true){throw 'Original full source and engineering gates must be read and bound'}
+if($authority.mathematical_accepted -ne $true -or $authority.engineering_accepted -ne $true -or $authority.parent_full_recovery_report_read -ne $true -or $authority.recovery_accepted -ne $true){throw 'Actual accepted original and recovery gates required'}
+foreach($kind in @('mathematical','engineering','recovery')){
+ $pathField=$kind+'_report_path';$hashField=$kind+'_report_sha256'
+ $reportPath=[string]$authority.$pathField;$reportHash=[string]$authority.$hashField
+ if(-not[regex]::IsMatch($reportHash,'\A[a-f0-9]{64}\z') -or (Get-FileHash -LiteralPath $reportPath).Hash.ToLowerInvariant() -cne $reportHash){throw 'Original full report hash binding differs'}
+}
+$a='D:\Datos\the-eriksson-programme\autonomia\evidencia-343\production-a\attempt-a'
+if($authority.parent_attempt_a_backend_inactive_read -ne $true -or [IO.File]::ReadAllText((Join-Path $a 'backend-readback.exit')) -cne "0`n" -or (Get-FileHash -LiteralPath (Join-Path $a 'backend-readback.log')).Hash.ToLowerInvariant() -cne $authority.attempt_a_backend_readback_sha256){throw 'Parent must read and bind actual inactive attempt-A backend evidence'}
+$out='D:\Datos\the-eriksson-programme\autonomia\evidencia-343\production-a\attempt-b'
+if(Test-Path -LiteralPath $out){throw 'Preserve prior B attempt; no blind retry'}
+New-Item -ItemType Directory -Path $out|Out-Null
+$config='/home/lluis/.config/colab-cli/tep343-build-b-sessions.json'
+$session='tep343-build-b-own-cpu'
+$cli='/home/lluis/.local/bin/colab --auth adc --config '+$config
+$remote='/content/tep343-build-a-results.zip'
+$local='/mnt/d/Datos/the-eriksson-programme/autonomia/evidencia-343/production-a/attempt-b/tep343-build-a-results.zip'
+$script='/mnt/c/Trabajo/the-eriksson-programme/prefix-rank290-20261113/_tmp/production343-b/build343.py'
+$probe='/mnt/c/Trabajo/the-eriksson-programme/prefix-rank290-20261113/_tmp/production343-b/connection_preflight343b.py'
+$attempted=$false;$buildAttempted=$false;$exits=[ordered]@{};$errors=[Collections.Generic.List[string]]::new()
+$configCode=$null;$preflightCode=$null;$backendCode=$null;$preflightValidated=$false;$commands=[Collections.Generic.List[object]]::new()
+function Write-NewText {
+ param([string]$Name,[string]$Text)
+ $raw=[Text.UTF8Encoding]::new($false).GetBytes($Text)
+ $stream=[IO.FileStream]::new((Join-Path $out $Name),[IO.FileMode]::CreateNew,[IO.FileAccess]::Write,[IO.FileShare]::Read)
+ try{$stream.Write($raw,0,$raw.Length);$stream.Flush($true)}finally{$stream.Dispose()}
+}
+function Invoke-BoundedColab {
+ param([string]$Name,[string]$Arguments,[int]$Seconds)
+ $command='export GOOGLE_APPLICATION_CREDENTIALS=/mnt/c/Users/lluis/AppData/Roaming/gcloud/application_default_credentials.json; exec /usr/bin/timeout --signal=TERM --kill-after=15s '+$Seconds+'s '+$cli+' '+$Arguments
+ $commands.Add([ordered]@{name=$Name;supervisor_seconds=$Seconds;kill_after_seconds=15;shell_command=$command})
+ return (Invoke-CapturedWsl -Name $Name -ShellCommand $command -OutputDirectory $out)
+}
+try{
+ # Do not stop/query a preexisting config: reject it before allocation is attempted.
+ $check='/usr/bin/timeout --signal=TERM --kill-after=5s 15s /bin/sh -c '+"'test ! -e "+$config+' && test ! -L '+$config+"'"
+ $commands.Add([ordered]@{name='config-preflight';supervisor_seconds=15;kill_after_seconds=5;shell_command=$check})
+ $configCode=Invoke-CapturedWsl -Name 'config-preflight' -ShellCommand $check -OutputDirectory $out
+ if($configCode -ne 0){throw 'Dedicated B config already exists or absence check failed; no allocation'}
+ Write-NewText 'runtime-open-requested.txt' ([DateTime]::UtcNow.ToString('o')+"`n")
+ $attempted=$true
+ $exits.allocation=Invoke-BoundedColab -Name 'allocation' -Arguments ('new -s '+$session+' --high-mem') -Seconds 240
+ if($exits.allocation -ne 0){throw 'Actual B allocation failed; preserve and close own attempt'}
+ $preflightCode=Invoke-BoundedColab -Name 'connection-preflight' -Arguments ('exec -s '+$session+' -f '+$probe+' --timeout 30') -Seconds 120
+ if($preflightCode -ne 0){throw 'Actual connection preflight nonzero; no build invocation'}
+ $announcements=@(foreach($line in [IO.File]::ReadAllLines((Join-Path $out 'connection-preflight.log'))){
+  if($line.TrimStart().StartsWith('{')){
+   try{$value=$line|ConvertFrom-Json}catch{continue}
+   if($null -ne $value.PSObject.Properties['kind'] -and $value.kind -ceq 'TEP343B_CONNECTION_PREFLIGHT'){$value}
+  }
+ })
+ if($announcements.Count -ne 1){throw 'Exactly one actual connection readiness announcement required'}
+ $ready=$announcements[0]
+ if($ready.source -cne $source -or $ready.cwd -cne '/content' -or $ready.os_name -cne 'posix' -or $ready.builder_root_absent -isnot [bool] -or $ready.builder_root_absent -ne $true -or $ready.builder_archive_absent -isnot [bool] -or $ready.builder_archive_absent -ne $true){throw 'Actual readiness fields differ'}
+ $preflightValidated=$true
+ Write-NewText 'connection-preflight-observed.json' (($ready|ConvertTo-Json -Depth 6)+"`n")
+ # One build call only. A later connection loss is still possible after this probe.
+ $buildAttempted=$true
+ try{$exits.execution=Invoke-BoundedColab -Name 'execution' -Arguments ('exec -s '+$session+' -f '+$script+' --timeout 3600') -Seconds 4200}
+ finally{
+  # Preserve any archive from a failed/timeout execution; never retry the build.
+  try{$exits.download=Invoke-BoundedColab -Name 'download' -Arguments ('download -s '+$session+' '+$remote+' '+$local) -Seconds 300}catch{$errors.Add('DOWNLOAD_CAPTURE: '+$_.Exception.ToString())}
+ }
+}catch{$errors.Add($_.Exception.ToString())}
+finally{
+ if($attempted){
+  try{$exits.release=Invoke-BoundedColab -Name 'release' -Arguments ('stop -s '+$session) -Seconds 180}catch{$errors.Add('STOP_CAPTURE: '+$_.Exception.ToString())}
+  # Separate query is attempted even when stop or previous transport failed.
+  try{$backendCode=Invoke-BoundedColab -Name 'backend-readback' -Arguments 'sessions' -Seconds 180}catch{$errors.Add('BACKEND_CAPTURE: '+$_.Exception.ToString())}
+ }
+ # Both closure attempts precede result writes, so report I/O cannot skip them.
+ if(-not $preflightValidated){$errors.Add('Connection readiness was not validated; no successful production candidate')}
+ if($exits.Count -ne 4 -or @($exits.Values|Where-Object{$_ -ne 0}).Count -ne 0){$errors.Add('Incomplete/nonzero actual bounded lifecycle')}
+ if($backendCode -ne 0){$errors.Add('No zero actual backend query; inspect/recover owned B runtime')}
+ $caught=if($errors.Count -eq 0){$null}else{$errors -join "`n"}
+ Write-NewText 'runtime-release-finished.txt' ([DateTime]::UtcNow.ToString('o')+"`n")
+ if($null -ne $caught){Write-NewText 'outer-failure.txt' ($caught+"`n")}
+ # Canonical successful schema remains four keys. Additional checks live separately.
+ $outer=[ordered]@{actual_cli_exits=$exits;failure=$caught;status='Actual transport capture only; require returned inner logs/hash gate, stop readback and all-page review';source=$source;native_submit=$false}
+ Write-NewText 'outer-report.json' (($outer|ConvertTo-Json -Depth 8)+"`n")
+ $recovery=[ordered]@{config_preflight_exit=$configCode;connection_preflight_exit=$preflightCode;connection_preflight_validated=$preflightValidated;allocation_attempted=$attempted;build_invocations=([int]$buildAttempted);backend_readback_exit=$backendCode;failures=$errors.ToArray();commands=$commands.ToArray();exit_semantics='Real WSL child status of GNU timeout supervisor; on ordinary completion equals CLI status. Timeout/signal statuses are not a claimed CLI exit or proof of backend closure.';backend_semantics='Parent must inspect actual separate readback; zero alone is not inactivity';predicate_corpus_rerun=$false}
+ Write-NewText 'recovery-transport.json' (($recovery|ConvertTo-Json -Depth 9)+"`n")
+}
+$exits|ConvertTo-Json
+if($errors.Count -ne 0){throw 'Recovery B incomplete/failed; preserve all files, no blind retry'}

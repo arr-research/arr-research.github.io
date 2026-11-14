@@ -1,0 +1,34 @@
+diff --git "a/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production343-a\\provenance\\baseline340\\validate340_actual_colab.py" "b/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production343-a\\validate343_actual_colab.py"
+index 1ba7fc0..477ff78 100644
+--- "a/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production343-a\\provenance\\baseline340\\validate340_actual_colab.py"
++++ "b/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production343-a\\validate343_actual_colab.py"
+@@ -1,11 +1,11 @@
+ """Read-only validation of an actual returned production packet on owned Colab."""
+ import os,sys,json,zipfile,hashlib,time,resource
+ from pathlib import Path
+-root=Path('/content/tep340-actual-return-validation')
+-bundle=Path('/content/tep340-actual-return-inputs.zip')
++root=Path('/content/tep343-actual-return-validation')
++bundle=Path('/content/tep343-actual-return-inputs.zip')
+ if os.name!='posix' or not Path('/content').is_dir() or root.exists():raise RuntimeError('Fresh owned Colab required')
+ root.mkdir();start=time.perf_counter()
+-expected={'production.zip','source-manifest.json','validate_return340A.py','outer-report.json'}
++expected={'production.zip','source-manifest.json','validate_return343A.py','outer-report.json'}
+ expected|={n+ext for n in ('allocation','execution','download','release','backend-readback') for ext in ('.log','.stderr.log','.exit')}
+ with zipfile.ZipFile(bundle) as z:
+     names=z.namelist()
+@@ -13,10 +13,10 @@ with zipfile.ZipFile(bundle) as z:
+     for name in names:
+         with (root/name).open('xb') as f:f.write(z.read(name))
+ def h(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+-if h(root/'validate_return340A.py')!='e59385d076eb8e9e0197b06a13c955fffee72e8cfe65ba85f37b075cb2797297':raise RuntimeError('Validator pin')
+-if h(root/'source-manifest.json')!='005c26134f3678201faf878d0b98593cc2f5a149a5996671775a33ec53d9ff67':raise RuntimeError('Source manifest pin')
+-sys.path.insert(0,str(root));import validate_return340A as v
++if h(root/'validate_return343A.py')!='ecd7b6d62713f59a04e951f269ebdef40f3647d3e641a67542a465f5ffdeda75':raise RuntimeError('Validator pin')
++if h(root/'source-manifest.json')!='c6b2ece9cc308805ebdd6d39e193168fe307e17a97a951288c09cf20074ae0f9':raise RuntimeError('Source manifest pin')
++sys.path.insert(0,str(root));import validate_return343A as v
+ result=v.validate(root/'production.zip',root,root/'source-manifest.json',[root/'uncreated-extraction',root/'uncreated-delivery',root/'uncreated-captures',root/'uncreated-parent.json'])
+-result.update(input_bundle_sha256=h(bundle),validator_sha256=h(root/'validate_return340A.py'),wall_seconds=time.perf_counter()-start,max_rss_kib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,execution_environment='Owned Colab Linux',mathematical_test=False,visual_inspection=False,backend_inactivity='Parent must separately inspect actual production and this validation runtime readbacks')
++result.update(input_bundle_sha256=h(bundle),validator_sha256=h(root/'validate_return343A.py'),wall_seconds=time.perf_counter()-start,max_rss_kib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,execution_environment='Owned Colab Linux',mathematical_test=False,visual_inspection=False,backend_inactivity='Parent must separately inspect actual production and this validation runtime readbacks')
+ with (root/'result.json').open('x',encoding='utf-8') as f:json.dump(result,f,indent=2)
+ print(json.dumps(result))

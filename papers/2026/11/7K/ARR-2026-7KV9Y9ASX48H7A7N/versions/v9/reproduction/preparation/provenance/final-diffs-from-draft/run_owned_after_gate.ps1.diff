@@ -1,0 +1,23 @@
+diff --git "a/D:\\Datos\\the-eriksson-programme\\autonomia\\evidencia-343\\preparation-draft-a\\run_owned_after_gate.ps1" "b/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production343-a\\run_owned_after_gate.ps1"
+index 0aac97a..83f3ef8 100644
+--- "a/D:\\Datos\\the-eriksson-programme\\autonomia\\evidencia-343\\preparation-draft-a\\run_owned_after_gate.ps1"
++++ "b/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production343-a\\run_owned_after_gate.ps1"
+@@ -1,8 +1,7 @@
+ param([Parameter(Mandatory=$true)][ValidatePattern('^[a-f0-9]{64}$')][string]$ApprovedManifestSha256)
+ Set-StrictMode -Version Latest
+ $ErrorActionPreference='Stop'
+-throw 'DRAFT343_NOT_RUNNABLE: future342 pins and fixed count pending'
+-$source='PENDING_SOURCE342_HEAD'
++$source='28640cd82e5b2ae9a6da8c78ca772bc41134c0c6'
+ . (Join-Path $PSScriptRoot 'capture_cli_atomic.ps1')
+ $manifest=Join-Path $PSScriptRoot 'RUNNER-HASHES.json'
+ if((Get-FileHash -LiteralPath $manifest).Hash.ToLowerInvariant() -cne $ApprovedManifestSha256){throw 'Parent exact runner gate pin required'}
+@@ -11,7 +10,7 @@ foreach($entry in (Get-Content -LiteralPath $manifest -Raw|ConvertFrom-Json)){
+  if((Get-Item -LiteralPath $file).Length -ne $entry.bytes -or (Get-FileHash -LiteralPath $file).Hash.ToLowerInvariant() -cne $entry.sha256){throw ('Frozen runner input differs: '+$entry.path)}
+ }
+ $authority=Get-Content -LiteralPath (Join-Path $PSScriptRoot 'parent-authority-relay.json') -Raw|ConvertFrom-Json
+-if($authority.source -cne $source -or $authority.runner_manifest_sha256 -cne $ApprovedManifestSha256 -or $authority.manuscript_tex_sha256 -cne 'PENDING_TEX342_SHA256' -or $authority.parent_full_mathematical_report_read -ne $true -or $authority.parent_full_engineering_report_read -ne $true){throw 'Both actual parent gates must be read and relayed before allocation'}
++if($authority.source -cne $source -or $authority.runner_manifest_sha256 -cne $ApprovedManifestSha256 -or $authority.manuscript_tex_sha256 -cne '194bd05eb72c6b5c8b2869feae44a6af21188c82d3e5e4c6f677068f9b072a46' -or $authority.parent_full_mathematical_report_read -ne $true -or $authority.parent_full_engineering_report_read -ne $true){throw 'Both actual parent gates must be read and relayed before allocation'}
+ if($authority.mathematical_accepted -ne $true -or $authority.engineering_accepted -ne $true){throw 'Actual accepted source gates required'}
+ foreach($kind in @('mathematical','engineering')){
+  $pathField=$kind+'_report_path';$hashField=$kind+'_report_sha256'

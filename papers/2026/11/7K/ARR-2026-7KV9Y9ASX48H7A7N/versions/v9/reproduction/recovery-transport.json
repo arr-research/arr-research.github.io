@@ -1,0 +1,56 @@
+{
+  "config_preflight_exit": 0,
+  "connection_preflight_exit": 0,
+  "connection_preflight_validated": true,
+  "allocation_attempted": true,
+  "build_invocations": 1,
+  "backend_readback_exit": 0,
+  "failures": [],
+  "commands": [
+    {
+      "name": "config-preflight",
+      "supervisor_seconds": 15,
+      "kill_after_seconds": 5,
+      "shell_command": "/usr/bin/timeout --signal=TERM --kill-after=5s 15s /bin/sh -c 'test ! -e /home/lluis/.config/colab-cli/tep343-build-b-sessions.json && test ! -L /home/lluis/.config/colab-cli/tep343-build-b-sessions.json'"
+    },
+    {
+      "name": "allocation",
+      "supervisor_seconds": 240,
+      "kill_after_seconds": 15,
+      "shell_command": "export GOOGLE_APPLICATION_CREDENTIALS=/mnt/c/Users/lluis/AppData/Roaming/gcloud/application_default_credentials.json; exec /usr/bin/timeout --signal=TERM --kill-after=15s 240s /home/lluis/.local/bin/colab --auth adc --config /home/lluis/.config/colab-cli/tep343-build-b-sessions.json new -s tep343-build-b-own-cpu --high-mem"
+    },
+    {
+      "name": "connection-preflight",
+      "supervisor_seconds": 120,
+      "kill_after_seconds": 15,
+      "shell_command": "export GOOGLE_APPLICATION_CREDENTIALS=/mnt/c/Users/lluis/AppData/Roaming/gcloud/application_default_credentials.json; exec /usr/bin/timeout --signal=TERM --kill-after=15s 120s /home/lluis/.local/bin/colab --auth adc --config /home/lluis/.config/colab-cli/tep343-build-b-sessions.json exec -s tep343-build-b-own-cpu -f /mnt/c/Trabajo/the-eriksson-programme/prefix-rank290-20261113/_tmp/production343-b/connection_preflight343b.py --timeout 30"
+    },
+    {
+      "name": "execution",
+      "supervisor_seconds": 4200,
+      "kill_after_seconds": 15,
+      "shell_command": "export GOOGLE_APPLICATION_CREDENTIALS=/mnt/c/Users/lluis/AppData/Roaming/gcloud/application_default_credentials.json; exec /usr/bin/timeout --signal=TERM --kill-after=15s 4200s /home/lluis/.local/bin/colab --auth adc --config /home/lluis/.config/colab-cli/tep343-build-b-sessions.json exec -s tep343-build-b-own-cpu -f /mnt/c/Trabajo/the-eriksson-programme/prefix-rank290-20261113/_tmp/production343-b/build343.py --timeout 3600"
+    },
+    {
+      "name": "download",
+      "supervisor_seconds": 300,
+      "kill_after_seconds": 15,
+      "shell_command": "export GOOGLE_APPLICATION_CREDENTIALS=/mnt/c/Users/lluis/AppData/Roaming/gcloud/application_default_credentials.json; exec /usr/bin/timeout --signal=TERM --kill-after=15s 300s /home/lluis/.local/bin/colab --auth adc --config /home/lluis/.config/colab-cli/tep343-build-b-sessions.json download -s tep343-build-b-own-cpu /content/tep343-build-a-results.zip /mnt/d/Datos/the-eriksson-programme/autonomia/evidencia-343/production-a/attempt-b/tep343-build-a-results.zip"
+    },
+    {
+      "name": "release",
+      "supervisor_seconds": 180,
+      "kill_after_seconds": 15,
+      "shell_command": "export GOOGLE_APPLICATION_CREDENTIALS=/mnt/c/Users/lluis/AppData/Roaming/gcloud/application_default_credentials.json; exec /usr/bin/timeout --signal=TERM --kill-after=15s 180s /home/lluis/.local/bin/colab --auth adc --config /home/lluis/.config/colab-cli/tep343-build-b-sessions.json stop -s tep343-build-b-own-cpu"
+    },
+    {
+      "name": "backend-readback",
+      "supervisor_seconds": 180,
+      "kill_after_seconds": 15,
+      "shell_command": "export GOOGLE_APPLICATION_CREDENTIALS=/mnt/c/Users/lluis/AppData/Roaming/gcloud/application_default_credentials.json; exec /usr/bin/timeout --signal=TERM --kill-after=15s 180s /home/lluis/.local/bin/colab --auth adc --config /home/lluis/.config/colab-cli/tep343-build-b-sessions.json sessions"
+    }
+  ],
+  "exit_semantics": "Real WSL child status of GNU timeout supervisor; on ordinary completion equals CLI status. Timeout/signal statuses are not a claimed CLI exit or proof of backend closure.",
+  "backend_semantics": "Parent must inspect actual separate readback; zero alone is not inactivity",
+  "predicate_corpus_rerun": false
+}

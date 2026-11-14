@@ -1,0 +1,88 @@
+diff --git "a/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production343-a\\provenance\\baseline340\\validate_return340A.py" "b/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production343-a\\validate_return343A.py"
+index 2d218fd..81320e2 100644
+--- "a/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production343-a\\provenance\\baseline340\\validate_return340A.py"
++++ "b/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production343-a\\validate_return343A.py"
+@@ -2,9 +2,9 @@
+ from pathlib import Path, PurePosixPath
+ import json, hashlib, re, zipfile
+ 
+-EXPECTED_INPUT_COUNT = 490
+-SOURCE = '39a41634cd77814b9ccf1fb108cbcf7f97cad499'
+-TEX = 'c9b98d8ca0da266bb0a8032870350f69ec899e9f9b7384b0fe489fb461c92c77'
++EXPECTED_INPUT_COUNT = 498
++SOURCE = '28640cd82e5b2ae9a6da8c78ca772bc41134c0c6'
++TEX = '194bd05eb72c6b5c8b2869feae44a6af21188c82d3e5e4c6f677068f9b072a46'
+ STATUS = 'TWO_FRESH_MATCHING_PDFS_RENDERED_PENDING_ALL_PAGE_VISUAL_AND_FIRST_EXACT_PDF_ASSESSMENT'
+ COMMANDS = ['apt-update','apt-install','tex-version','poppler-version','git-version']
+ for mode in ('a','b'):
+@@ -64,7 +64,7 @@ def check_report(report):
+         require(type(c['actual_exit']) is int and c['actual_exit']==0 and c['timed_out'] is False, 'Native exit/timeout')
+         require(isinstance(c['argv'],list) and c['argv'] and all(isinstance(x,str) for x in c['argv']), 'Native argv')
+     cleanup=report['cleanup']
+-    require(len(cleanup)==2 and [c['path'] for c in cleanup]==['/content/tep340-build-a/clone-a','/content/tep340-build-a/clone-b'], 'Exact cleanup paths')
++    require(len(cleanup)==2 and [c['path'] for c in cleanup]==['/content/tep343-build-a/clone-a','/content/tep343-build-a/clone-b'], 'Exact cleanup paths')
+     require(all(c['removed'] is True and 'error' not in c for c in cleanup), 'Cleanup failure')
+     require(type(report['pages']) is int and 1<=report['pages']<=60, 'Page count')
+ 
+@@ -89,7 +89,7 @@ def validate(archive, attempt, source_manifest, destinations):
+             if 'archive_sha256' in value: announcements.append(value)
+     require(len(announcements)==1, 'Actual archive announcement')
+     ann=announcements[0]
+-    require(ann['archive']=='/content/tep340-build-a-results.zip' and ann['status']==STATUS, 'Remote archive identity')
++    require(ann['archive']=='/content/tep343-build-a-results.zip' and ann['status']==STATUS, 'Remote archive identity')
+     require(archive.stat().st_size==ann['archive_bytes'] and digest(archive.read_bytes())==ann['archive_sha256'], 'Transport archive bytes')
+     declared=json.loads(source_manifest.read_bytes())['files']
+     prefix='papers/marginal-transfer/'
+@@ -107,12 +107,12 @@ def validate(archive, attempt, source_manifest, destinations):
+             require(len(raw)==row['bytes'] and digest(raw)==row['sha256'], 'Raw member mismatch '+row['path'])
+         r=json.loads(z.read('evidence/report.json'));check_report(r)
+         captured={n.removeprefix('evidence/source-capture/') for n in names if n.startswith('evidence/source-capture/')}
+-        require(captured=={x['path'] for x in expected}|{'SOURCE-INPUTS339.json'}, 'Exact captured source inventory')
+-        require(z.read('evidence/source-capture/SOURCE-INPUTS339.json')==source_manifest.read_bytes(), 'Pinned manifest differs')
++        require(captured=={x['path'] for x in expected}|{'SOURCE-INPUTS342.json'}, 'Exact captured source inventory')
++        require(z.read('evidence/source-capture/SOURCE-INPUTS342.json')==source_manifest.read_bytes(), 'Pinned manifest differs')
+         for row in expected:
+             raw=z.read('evidence/source-capture/'+row['path'])
+             require(len(raw)==row['bytes'] and digest(raw)==row['raw_sha256'], 'Captured source differs')
+-        require(digest(z.read('evidence/source-capture/manuscript339A.tex'))==TEX, 'Captured TeX')
++        require(digest(z.read('evidence/source-capture/manuscript342A.tex'))==TEX, 'Captured TeX')
+         for c in r['commands']:
+             require(z.read('evidence/'+c['name']+'.exit')==b'0\n', 'Actual native exit')
+             for ext in ('.stdout','.stderr'): require('evidence/'+c['name']+ext in names, 'Missing native log')
+@@ -120,7 +120,7 @@ def validate(archive, attempt, source_manifest, destinations):
+             require(z.read('evidence/head-'+mode+'.stdout').decode().strip()==SOURCE, 'Actual source head')
+             require(z.read('evidence/epoch-'+mode+'.stdout').decode().strip()==r['builds'][0]['epoch'], 'Actual source epoch')
+             require(not z.read('evidence/tracked-diff-'+mode+'.stdout').strip(), 'Tracked source changed')
+-        pdf=z.read('evidence/manuscript339A.pdf')
++        pdf=z.read('evidence/manuscript342A.pdf')
+         require(pdf.startswith(b'%PDF-') and len(pdf)==r['builds'][0]['pdf_bytes'] and digest(pdf)==r['builds'][0]['pdf_sha256'], 'Canonical PDF')
+         require(all(z.read('evidence/clone-'+m+'.pdf')==pdf for m in ('a','b')), 'Actual PDFs differ')
+         info=z.read('evidence/pdfinfo.stdout').decode();match=re.search(r'(?m)^Pages:\s+(\d+)\s*$',info)
+@@ -130,9 +130,9 @@ def validate(archive, attempt, source_manifest, destinations):
+         contacts={n for n in names if re.fullmatch(r'evidence/contact-[0-9]+\.jpg',n)}
+         require(contacts=={f'evidence/contact-{i:02d}.jpg' for i in range(1,(r['pages']+3)//4+1)}, 'Contact inventory')
+         require(all(z.read(n).startswith(b'\x89PNG\r\n\x1a\n') for n in pages), 'Actual PNG headers')
+-        require(SOURCE in z.read('evidence/manuscript339A.txt').decode(), 'PDF source marker')
++        require(SOURCE in z.read('evidence/manuscript342A.txt').decode(), 'PDF source marker')
+         require('evidence/failure.txt' not in names and 'evidence/cleanup-pending.txt' not in names, 'Recorded failure/debt')
+-        universe={'evidence/'+n for n in ('report.json','manifest.json','manuscript339A.pdf','manuscript339A.txt','clone-a.pdf','clone-b.pdf','clone-a-latex.log','clone-b-latex.log')}
++        universe={'evidence/'+n for n in ('report.json','manifest.json','manuscript342A.pdf','manuscript342A.txt','clone-a.pdf','clone-b.pdf','clone-a-latex.log','clone-b-latex.log')}
+         universe |= {'evidence/'+c+ext for c in COMMANDS for ext in ('.exit','.stdout','.stderr')}
+         universe |= {'evidence/source-capture/'+n for n in captured} | pages | contacts
+         for mode in ('a','b'):
+@@ -141,12 +141,12 @@ def validate(archive, attempt, source_manifest, destinations):
+                 retention=json.loads(z.read(prefix+'retention.json'))
+                 require(retention['attempt']==name and retention['actual_child_result']==next(c for c in r['commands'] if c['name']==name), 'Native retention child binding')
+                 saved=retention['files_saved_after_attempt'];safe_names([x['path'] for x in saved])
+-                require({x['path'] for x in saved}=={'manuscript339A'+ext for ext in ('.tex','.pdf','.log','.aux','.out')}, 'Native retained inventory')
++                require({x['path'] for x in saved}=={'manuscript342A'+ext for ext in ('.tex','.pdf','.log','.aux','.out')}, 'Native retained inventory')
+                 for item in saved:
+                     raw=z.read(prefix+item['path'])
+                     require(len(raw)==item['bytes'] and digest(raw)==item['sha256'], 'Native retained bytes')
+-                require(digest(z.read(prefix+'manuscript339A.tex'))==TEX, 'Native TeX')
+-                if passno==2: require(z.read(prefix+'manuscript339A.pdf')==pdf, 'Final native PDF')
++                require(digest(z.read(prefix+'manuscript342A.tex'))==TEX, 'Native TeX')
++                if passno==2: require(z.read(prefix+'manuscript342A.pdf')==pdf, 'Final native PDF')
+                 universe |= {prefix+x['path'] for x in saved} | {prefix+'retention.json'}
+         require(set(names)==universe, 'Unexpected/missing archive artifact')
+     return {'source':SOURCE,'PDF_sha256':digest(pdf),'PDF_bytes':len(pdf),'pages':r['pages'],'archive_sha256':digest(archive.read_bytes()),'raw_members_verified':len(rows),'source_input_members_verified':EXPECTED_INPUT_COUNT,'scope':'Exact raw declared inventories, bindings and exits checked; parent must read native logs/argv/retention, verify runtime inactivity, inspect all pages and assess exact PDF. Not independent proof of execution or mathematics.'}

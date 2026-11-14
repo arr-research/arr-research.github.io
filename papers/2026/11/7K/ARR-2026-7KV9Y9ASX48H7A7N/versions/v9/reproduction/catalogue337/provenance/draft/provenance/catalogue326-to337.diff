@@ -1,0 +1,44 @@
+diff --git "a/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\catalogue337-a\\provenance\\reconcile_catalogue326.py" "b/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\catalogue337-a\\reconcile_catalogue337.py"
+index fafc7c5..b00acca 100644
+--- "a/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\catalogue337-a\\provenance\\reconcile_catalogue326.py"
++++ "b/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\catalogue337-a\\reconcile_catalogue337.py"
+@@ -2,15 +2,21 @@
+ from pathlib import Path
+ import hashlib,json,os,sqlite3,stat,urllib.request,datetime,subprocess,sys,traceback
+ PID='ARR-2026-7KV9Y9ASX48H7A7N'
+-PREVIOUS={'record_id':'arr:record:f3da7c95-67a4-444e-a3d7-814279e5f7cd','version_id':'arr:version:a96788cf-8f70-4ddf-b94c-175b0b843f8f','version':'v7','canonical_sha256':'ad708fafb3de9fc83cd2dc05443f34b2792da94a20d0bf1b1cd7b8ca41b9340c','authors':['Lluis Eriksson']}
+-ENTRY={'record_id':'arr:record:f3da7c95-67a4-444e-a3d7-814279e5f7cd','version_id':'arr:version:ecce318a-932c-4452-a1a3-0f202a524568','version':'v8','canonical_sha256':'a4d0449b973b657a741ab4d48693d9c270320c5e8b9750ef6ad437e987927359','authors':['Lluis Eriksson']}
++PREVIOUS={'record_id':'arr:record:f3da7c95-67a4-444e-a3d7-814279e5f7cd','version_id':'arr:version:ecce318a-932c-4452-a1a3-0f202a524568','version':'v8','canonical_sha256':'a4d0449b973b657a741ab4d48693d9c270320c5e8b9750ef6ad437e987927359','authors':['Lluis Eriksson']}
++ENTRY={'record_id':'arr:record:f3da7c95-67a4-444e-a3d7-814279e5f7cd','version_id':'arr:version:e29c767c-1a5c-418b-a711-04a34ae18e74','version':'v9','canonical_sha256':'PENDING_V9_PUBLIC_PDF_SHA256','authors':['Lluis Eriksson']}
+ P=Path('/srv/airr-private/historical-revisions/catalogue.json')
+ DB=Path('/srv/airr-private/instance/intake.sqlite3')
+ BASE=Path('/srv/airr-private')
+-BACK=BASE/'tep326-catalogue-before.json'
+-TMP=P.with_name('catalogue.json.tep326.tmp')
+-OUT=BASE/'tep326-catalogue-result.json'
+-LOG=BASE/'tep326-catalogue-attempt.json'
++BACK=BASE/'tep337-catalogue-before.json'
++TMP=P.with_name('catalogue.json.tep337.tmp')
++OUT=BASE/'tep337-catalogue-result.json'
++LOG=BASE/'tep337-catalogue-attempt.json'
++EXPECTED_PUBLIC_PDF_BYTES = None # PENDING_V9_PUBLIC_PDF_BYTES: exact future released PDF length
++# Draft pin gate is before any service import, URL fetch, file write or host operation.
++if (type(EXPECTED_PUBLIC_PDF_BYTES) is not int or EXPECTED_PUBLIC_PDF_BYTES <= 0
++    or len(ENTRY['canonical_sha256']) != 64
++    or any(c not in '0123456789abcdef' for c in ENTRY['canonical_sha256'])):
++ raise RuntimeError('DRAFT337_NOT_RUNNABLE: exact released v9 PDF SHA256 and byte count pending')
+ def require(ok,msg):
+  if not ok:raise RuntimeError(msg)
+ def sha(raw):return hashlib.sha256(raw).hexdigest()
+@@ -41,9 +47,9 @@ require(Path(app.config['DATABASE']).resolve(strict=True)==DB and Path(app.confi
+ require(app.config.get('HISTORICAL_OPERATOR_AUTHOR')=='Lluis Eriksson' and app.config.get('HISTORICAL_REVISIONS_ENABLED'),'Operator/config mismatch')
+ require(ctl('show','airr-intake','--property=ActiveState','--value')=='active','Service not initially active')
+ require(ctl('show','airr-intake','--property=KillMode','--value')=='control-group','Unexpected service drain semantics')
+-url='https://airr.science/papers/'+PID+'/versions/v8/'+PID+'-v8.pdf'
++url='https://airr.science/papers/'+PID+'/versions/v9/'+PID+'-v9.pdf'
+ with urllib.request.urlopen(url,timeout=25) as response:rawpdf=response.read(1048576)
+-require(len(rawpdf)==575735 and sha(rawpdf)==ENTRY['canonical_sha256'],'Live public predecessor bytes differ')
++require(len(rawpdf)==EXPECTED_PUBLIC_PDF_BYTES and sha(rawpdf)==ENTRY['canonical_sha256'],'Live public predecessor bytes differ')
+ result={'started_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'entry':ENTRY,'catalogue_replaced':False,'service_stop_attempted':False,'service_restarted':False,'creates_grant_receipt_scope_or_publication':False,'status':'STARTED'}
+ private_file(LOG,(json.dumps(result,indent=2)+'\n').encode())
+ db=None;error=None;raw=None

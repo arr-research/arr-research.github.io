@@ -1,0 +1,26 @@
+diff --git "a/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production343-b\\provenance\\prepare_public343-parent-unmodified.py" "b/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production343-b\\provenance\\prepare_public343-attempt-b-PROPOSAL.py"
+index 278fba4..2754035 100644
+--- "a/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production343-b\\provenance\\prepare_public343-parent-unmodified.py"
++++ "b/C:\\Trabajo\\the-eriksson-programme\\prefix-rank290-20261113\\_tmp\\production343-b\\provenance\\prepare_public343-attempt-b-PROPOSAL.py"
+@@ -1,7 +1,7 @@
+ """Assemble exact reviewed v9 and real native evidence; metadata/file operations only."""
+ from pathlib import Path
+ import json,hashlib,shutil,datetime,sys
+-R=Path(__file__).parent;E=Path(r'D:\Datos\the-eriksson-programme\autonomia\evidencia-343');A=E/'production-a/attempt-a';B=E/'raw-return-a/evidence';Q=E/'assessment343-first-round'
++R=Path(__file__).parent;E=Path(r'D:\Datos\the-eriksson-programme\autonomia\evidencia-343');A=E/'production-a/attempt-b';B=E/'raw-return-b/evidence';Q=E/'assessment343-first-round'
+ def read(p):return json.loads(p.read_text(encoding='utf-8-sig'))
+ def h(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+ def write(p,v):
+@@ -29,6 +29,12 @@ shutil.copy2(E/'parent-authority-relay.json',P/'reproduction/parent-authority-re
+ for name in ['parent-visual-and-production343.json','parent-exact-assessment343-acceptance.json','source-pr-merged.json','other-programmes-readonly-reconciliation.json']:shutil.copy2(E/name,P/'reproduction'/name)
+ for name in ['parent-return-validation343.json','parent-complete-production-validation343.json','allocation.log','allocation.stderr.log','allocation.exit','execution.log','execution.stderr.log','execution.exit','download.log','download.stderr.log','download.exit','release.log','release.stderr.log','release.exit','backend-readback.log','backend-readback.stderr.log','backend-readback.exit','outer-report.json']:shutil.copy2(A/name,P/'reproduction'/name)
+ shutil.copytree(Q,P/'screening/assessment343-first-round');shutil.copy2(E/'author-response343.md',P/'screening/author-response.md');shutil.copy2(E/'author-response343.md',P/'ERRATA.md')
++# PROPOSED FUTURE PATHS: parent must supply actual recovery report/relay before use.
++for src,name in [(E/'recovery-preparation-b','recovery-preparation-b'),(E/'parent-recovery-engineering-audit-b','parent-recovery-engineering-audit-b'),(E/'production-a/attempt-a','failed-production-attempt-a')]:shutil.copytree(src,P/'reproduction'/name)
++for name in ['parent-failure-disposition343A.json','parent-recovery-authority-relay-b.json']:shutil.copy2(E/name,P/'reproduction'/name)
++for name in ['config-preflight.log','config-preflight.stderr.log','config-preflight.exit','connection-preflight.log','connection-preflight.stderr.log','connection-preflight.exit','connection-preflight-observed.json','recovery-transport.json','runtime-open-requested.txt','runtime-release-finished.txt']:shutil.copy2(A/name,P/'reproduction'/name)
++for name in ['backend-readback-recovery.log','backend-readback-recovery.stderr.log','backend-readback-recovery.exit','outer-failure.txt']:
++ if (A/name).exists():shutil.copy2(A/name,P/'reproduction'/name)
+ # Exact actual-return callers and their complete report are already copied above.
+ context={'recorded_at':now,'tool':'collaboration.spawn_agent','task':'/root/exact343_pdf_assessment','requested_fork_turns':'none','actual_response_raw_sha256':h(Q/'outputs/native-response.json'),'configured_model':'gpt-6-astra','configured_reasoning_effort':'high','separate_earlier_reports_supplied':False,'historical_scores_visible_in_manuscript':True,'no_inbound_during_review':True,'technical_workspace_isolation_verified':False,'disabled_memory_verified':False,'backend_identity_or_effort_attested':False,'conservative_label':'unknown','basis':'Curated exact-artifact packet; no inherited turns requested; shared filesystem/provider. Manuscript itself discloses historical review context and scores, explicitly bound to earlier PDFs. No separate earlier numerical report or target grade was supplied.'};write(P/'screening/operator-review-context.json',context)
+ sys.path.insert(0,str(R/'scripts'));from assessmentlib import normalize_model_response
