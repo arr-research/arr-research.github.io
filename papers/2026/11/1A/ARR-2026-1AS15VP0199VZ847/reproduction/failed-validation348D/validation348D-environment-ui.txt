@@ -1,0 +1,11 @@
+import platform, shutil
+from datetime import datetime, timezone
+probe=[]
+for mode,args in [('normal',[]),('optimized',['-O'])]:
+    child=subprocess.run([sys.executable,*args,'-c','import sys;print(sys.flags.optimize)'],capture_output=True,text=True)
+    probe.append({'mode':mode,'argv':[sys.executable,*args,'-c','import sys;print(sys.flags.optimize)'],'actual_exit':child.returncode,'stdout':child.stdout,'stderr':child.stderr})
+obs={'observed_at':datetime.now(timezone.utc).isoformat(),'hostname':platform.node(),'platform':platform.platform(),'python':sys.version,'notebook_optimize':sys.flags.optimize,'PYTHONOPTIMIZE':os.environ.get('PYTHONOPTIMIZE'),'node_path':shutil.which('node'),'probes':probe}
+with (ROOT/'environment.observation.json').open('x',encoding='utf-8') as stream: json.dump(obs,stream,indent=2)
+print(json.dumps(obs))
+if obs['PYTHONOPTIMIZE'] is not None or obs['notebook_optimize']!=0 or not obs['node_path'] or any(p['actual_exit']!=0 or p['stderr'] or p['stdout']!=str(i)+'\n' for i,p in enumerate(probe)): raise RuntimeError('Environment modes invalid; preserve and stop')
+{"observed_at": "2026-11-14T03:12:12.652876+00:00", "hostname": "b87b30dab7ee", "platform": "Linux-6.6.159+-x86_64-with-glibc2.39", "python": "3.13.18 (main, Oct 26 2026, 15:28:15) [GCC 13.3.0]", "notebook_optimize": 0, "PYTHONOPTIMIZE": null, "node_path": "/tools/node/bin/node", "probes": [{"mode": "normal", "argv": ["/usr/bin/python3", "-c", "import sys;print(sys.flags.optimize)"], "actual_exit": 0, "stdout": "0\n", "stderr": ""}, {"mode": "optimized", "argv": ["/usr/bin/python3", "-O", "-c", "import sys;print(sys.flags.optimize)"], "actual_exit": 0, "stdout": "1\n", "stderr": ""}]}

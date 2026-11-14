@@ -1,0 +1,29 @@
+{
+  "argv": [
+    "/usr/bin/python3",
+    "-c",
+    "\nimport ctypes, os, re\nfrom pathlib import Path\n\ndef publish_exit(prefix, actual, before_publish=None):\n    if type(actual) is not int: raise ValueError('Actual integer child exit required')\n    temporary=prefix.with_suffix('.exit.tmp'); final=prefix.with_suffix('.exit')\n    if final.exists() or final.is_symlink(): raise FileExistsError(final)\n    with temporary.open('x',encoding='ascii',newline='\\n') as stream:\n        stream.write(str(actual)+'\\n');stream.flush();os.fsync(stream.fileno())\n    raw=temporary.read_bytes()\n    if re.fullmatch(rb'-?[0-9]+\\n',raw) is None or int(raw)!=actual:\n        raise ValueError('Closed child exit sentinel differs')\n    if before_publish is not None: before_publish()\n    libc=ctypes.CDLL(None,use_errno=True)\n    rename=libc.renameat2\n    rename.argtypes=[ctypes.c_int,ctypes.c_char_p,ctypes.c_int,ctypes.c_char_p,ctypes.c_uint]\n    rename.restype=ctypes.c_int\n    if rename(-100,os.fsencode(temporary),-100,os.fsencode(final),1)!=0:\n        code=ctypes.get_errno();raise OSError(code,os.strerror(code),str(final))\n    if final.read_bytes()!=raw or temporary.exists(): raise ValueError('Published sentinel readback')\n\n\nimport json, tempfile\nfrom pathlib import Path\nchecks=[]\ndef require_check(ok,label):\n    if not ok:raise ValueError(label)\n    checks.append(label)\nwith tempfile.TemporaryDirectory() as folder:\n    root=Path(folder)\n    p=root/'successful';publish_exit(p,0)\n    require_check(p.with_suffix('.exit').read_bytes()==b'0\\n','successful-zero')\n    p=root/'failed';publish_exit(p,7)\n    require_check(p.with_suffix('.exit').read_bytes()==b'7\\n','nonzero-retained')\n    try:publish_exit(p,0)\n    except FileExistsError:pass\n    else:raise ValueError('Duplicate final accepted')\n    require_check(p.with_suffix('.exit').read_bytes()==b'7\\n','duplicate-preserved')\n    p=root/'interrupted'\n    def interrupt():raise RuntimeError('deliberate prepublication interruption')\n    try:publish_exit(p,0,interrupt)\n    except RuntimeError:pass\n    else:raise ValueError('Interruption absent')\n    require_check(not p.with_suffix('.exit').exists() and p.with_suffix('.exit.tmp').read_bytes()==b'0\\n','interrupted-not-published')\n    p=root/'racing'\n    def race():p.with_suffix('.exit').write_bytes(b'9\\n')\n    try:publish_exit(p,0,race)\n    except FileExistsError:pass\n    else:raise ValueError('Racing destination overwritten')\n    require_check(p.with_suffix('.exit').read_bytes()==b'9\\n','racing-destination-preserved')\n    p=root/'boolean'\n    try:publish_exit(p,False)\n    except ValueError:pass\n    else:raise ValueError('Boolean accepted')\n    require_check(not p.with_suffix('.exit').exists(),'boolean-rejected')\nif len(checks)!=6:raise ValueError('Sentinel regression count')\nprint(json.dumps({'sentinel_regressions':checks,'count':len(checks)}))\n"
+  ],
+  "hostname": "dcb224119ddd",
+  "started_at": "2026-11-14T03:43:06.442092+00:00",
+  "actual_exit": 0,
+  "timed_out": false,
+  "error": null,
+  "finished_at": "2026-11-14T03:43:06.562455+00:00",
+  "wall_seconds": 0.12037416599991957,
+  "children_max_rss_kib_cumulative": 108404,
+  "files": {
+    ".stdout": {
+      "bytes": 182,
+      "sha256": "abcb44bebd6d8dad8ea0db484497a9bebf5dfb0cf8fd2a7124e9f3445946b3be"
+    },
+    ".stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".exit": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    }
+  }
+}

@@ -1,0 +1,547 @@
+Stationary marginals and bottleneck restrictions for Boolean Doob
+                            kernels
+                                              Lluis Eriksson
+
+                                            14 November 2026
+
+
+                                                 Abstract
+         We study positive multiplicative transforms of the Boolean noise kernel whose actual station-
+     ary density has exact low-order marginals. A finite-exponent moment bound gives quantitative
+     convergence of the smoothed potential, the Perron normalization, and the weighting density in
+     Hellinger distance. This conclusion cannot be strengthened to uniform convergence of the po-
+     tential: a product of block majorities yields an admissible counterexample even with a bounded
+     stationary density. At the critical moment exponent and square-root matching scale, a compar-
+     ison of cut energies shows that every sufficiently low-conductance cut has exponentially small
+     stationary mass. The comparison uses a previously proved weighting-density theorem only on
+     an auxiliary operator; it does not identify that operator with the actual Doob kernel. A sepa-
+     rate bound excludes almost-unit killed modes on exponentially small-cardinality supports in an
+     explicit noise range, without requiring marginal matching. The dimension-uniform stationary
+     spectral-gap question remains open. We give full proofs of these linked results and state the
+     external and programme dependencies explicitly.
+
+
+1    The model and the theorem map
+Let µ be uniform probability on ΩL = {−1, 1}L , L ≥ 1. The noise operator Pt has Walsh multipliers
+t|S| . Fix 0 < ρ < 1, and write P = Pρ , Q = P√ρ , so Q2 = P . All unqualified norms and expectations
+use µ. Given h > 0, rescale it so that
+
+                                            EhP h = ∥Qh∥22 = 1.
+
+Define
+                  g = P h,      π = hg,     a = Eh,   u = h/g,     N = Eu,      r = u/N.
+Both π and r have mean one. The actual Markov kernel, stationary probability, and symmetric
+edge weights are
+
+                              h(y)
+         K(x, y) = P (x, y)        ,      ν(x) = µ(x)π(x),       W (x, y) = µ(x)P (x, y)h(x)h(y).
+                              g(x)
+
+The rows of K sum to one and ν(x)K(x, y) = W (x, y) = W (y, x). For Td = M√d P M√d , the
+                                                   √
+matrix Au = M√u P M√u has positive eigenvector π with eigenvalue one. It is similar to K
+                         √
+through multiplication by π. Positivity and positive semidefiniteness imply that this is its simple
+Perron eigenvalue and that its spectrum is nonnegative. Thus
+
+                                                                       λ2 (Tr )
+                              Tr = Au /N,       γ = 1 − λ2 (K) = 1 −            .
+                                                                       λ1 (Tr )
+
+                                                      1
+The density π is stationary; r is the weighting density of the symmetric transfer operator. They
+are not interchangeable.
+    Exact degree-k matching means
+
+                              E[πχS ] = 0       (1 ≤ |S| ≤ k),     0 ≤ k ≤ L.                     (1)
+
+Equivalently, every labelled marginal on at most k coordinates is uniform. The remaining question
+fixes ρ, b, C > 0 and asks whether
+                                  1+ρ                                 √
+                            s=        ,    π ≥ b,     Eπ s ≤ 2,   kL / L −→ C                     (2)
+                                  1−ρ
+together with (1) forces a uniformly positive γ, or permits an admissible family with γ → 0. The
+nontrivial floor range is 0 < b < 1: b > 1 is infeasible and b = 1 forces π = h = 1, by the scaling
+lemma below. No limit uniform in ρ → 0, 1, b → 0, or C → 0 is asserted.
+   The results address four different parts of this question.
+    1. Theorem 1 controls finite-exponent potentials, normalization, Hellinger distance and fixed-
+       degree compressions, without a stationary floor. It does not give exact matching or a critical
+       moment bound for r.
+
+    2. Theorem 3 satisfies every condition in (2) and refutes uniform convergence P h → 1. It does
+       not produce a collapsing spectral gap.
+
+    3. Theorem 5 applies to the actual cut flux and excludes low-conductance cuts above an explicit
+       exponentially small stationary-mass threshold. It does not control all smaller cuts.
+
+    4. Theorem 6 bounds actual transition probabilities and killed spectra on small-cardinality sup-
+       ports without matching, with an explicit asymptotic range 0 < ρ ≤ 1/4. Small stationary
+       mass does not imply that cardinality restriction.
+These results consolidate programme sources341,344,345,346. They are analytical statements about
+finite Boolean kernels, with no claimed physical or continuum spectral-gap consequence.
+
+
+2     Quantitative rigidity of the smoothed potential
+Theorem 1. Suppose (1) holds and ∥π∥p ≤ B for a finite p > 1 + ρ and B ≥ 1. Put
+                           p               q
+                   p′ =       ,      η=        ρ max{1, (p − 1)−1 } < 1,    ε = Bη k+1 .
+                          p−1
+Then
+                                                                                     ε2
+                          a2 ≥ (1 + ε2 )−1 ,                         ∥Qh − a∥22 ≤        ,        (3)
+                                                                                  1 + ε2
+                ∥Qh − 1∥2 ≤ ε,                                        ∥g − 1∥p′ ≤ ε,              (4)
+                                                                    √    √
+                           1 ≤ λ1 (Tr ) ≤ 1 + ε2 ,                    r − π 2 ≤ ε,                (5)
+                  ∥r − π∥1 ≤ 2ε,                                     ∥h/a − π∥1 ≤ ε.              (6)
+
+In particular every marginal of r on at most k coordinates is within total variation ε of uniform,
+where total variation is half the L1 distance. At the critical exponent in (2), one may take
+
+                              B = 21/s ,         η 2 = max{ρ, (1 − ρ)/2} < 1.                     (7)
+
+                                                       2
+Proof. Write v = 1 − a2 = ∥Qh − a∥22 . Let Π>k project onto Walsh degrees greater than k. We
+first show                                            √
+                                     ∥Π>k g∥p′ ≤ η k+1 v.                                 (8)
+For p′ ≤ 2, this follows from monotonicity of probability norms and the high-degree Q multiplier
+                                                                        √
+ρ(k+1)/2 . For p′ > 2, factor Q = Pt Pβ with t = (p′ − 1)−1/2 and β = ρ/t = η < 1. Boolean hyper-
+contractivity gives ∥Pt f ∥p′ ≤ ∥f ∥2 ; applying it to Pβ Π>k Qh proves (8). Projections commute with
+                         ′
+noise operators. No Lp norm bound for the projection itself is used. The scalar hypercontractive
+inequality used here is ∥Pt f ∥v ≤ ∥f ∥w when 1 < w ≤ v and t2 ≤ (w − 1)/(v − 1); see [1].
+                                                                                         √
+    Matching gives EπΠ≤k g = a. Consequently Hölder and (8) imply Eπg ≤ a + ε v. Cauchy–
+Schwarz under the finite measure h dµ gives
+
+                                1 = (Ehg)2 ≤ (Eh)(Ehg 2 ) = aEπg.
+             √                            √
+Hence v/a ≤ ε v. If v > 0, division yields v ≤ aε, proving (3); if v = 0 the same conclusions are
+immediate. Also
+                       ∥Qh − 1∥22 = 2(1 − a) ≤ 2 1 − (1 + ε2 )−1/2 ≤ ε2 .
+                                                                 
+
+                                                                               ′
+The last elementary inequality follows by differentiation. Since Q : L2 → Lp is contractive under
+the same parameters (or by norm monotonicity if p′ ≤ 2), g − 1 = Q(Qh − 1) proves (4). If k = L,
+the actual tail is zero, so v = 0 and invertibility of Q gives h = 1.
+    For completeness, the normalization estimate uses positivity in an essential direction. Set
+X = M√u Q. Then XX ∗ = Au has Perron root one and is positive semidefinite. The positive
+operator X ∗ X = QMu Q has the same spectrum, so its Rayleigh quotient at the unit vector 1 gives
+
+                                        N = E[h/(P h)] ≤ 1.                                      (9)
+
+With z = 1/g, Eπ z = a and Eπ z 2 = N . Thus a2 ≤ N ≤ 1, and λ1 (Tr ) = 1/N proves the first part
+of (5). Because r = πz 2 /N ,
+               √          √             √    √ 2            √
+             E rπ = a/ N ≥ a,            r − π 2 = 2(1 − a/ N ) ≤ 2(1 − a) ≤ ε2 .
+                 √    √ √         √
+Factor r − π = ( r − π)( r + π) and use Cauchy–Schwarz to obtain the first bound in (6).
+Finally                                            √            √
+                                                     N − a2       1 − a2
+                     ∥h/a − π∥1 = Eπ |z/a − 1| ≤             ≤            ≤ ε.
+                                                       a            a
+Marginalization contracts total variation. Substitution of p = s gives (7); indeed s > 1 + ρ.
+                                                              Pm   L
+   For Vm the degree-at-most-m Walsh space, put DL,m =         j=0 j . If 2m ≤ k, then
+
+            ∥Π≤m (Mr − I)Π≤m ∥ ≤ 2εDL,m ,         ∥Π≤m (QMr Q − P )Π≤m ∥ ≤ 2εDL,m .             (10)
+                p
+Indeed ∥f ∥∞ ≤ DL,m ∥f ∥2 on Vm , and matching gives Eπf1 f2 = Ef1 f2 . Thus |E(r − 1)f1 f2 | ≤
+2εDL,m ∥f1 ∥2 ∥f2 ∥2 . The
+                        √ second bound follows by inserting the contraction Q, which preserves Vm .
+For fixed m and k ≍ L both bounds vanish. This controls a compression, not the full operator
+or its cross blocks. Exact nonzero weighting marginals, such as those in source338, are compatible
+with this estimate.
+
+
+
+
+                                                 3
+3    An admissible failure of uniform convergence
+We first record a classical finite scaling fact, with a proof to make the construction explicit. Exis-
+tence and uniqueness of finite positive Schrödinger scaling are classical; [3, Theorem3 and Lemma1]
+give a Hilbert-metric treatment. The lemma is not a novelty claim.
+Lemma 2. Let P be a reversible finite Markov matrix with positive stationary probabilities µx and
+positive diagonal entries. For every strictly positive density π with Eµ π = 1, there exists a unique
+positive h satisfying hP h = π.
+Proof. Set Rxy = µx Pxy = Ryx , wx = µx πx > 0, and
+                                                X                     X
+                                   J(z) = 21          Rxy ezx +zy −       wx z x .
+                                                x,y                   x
+
+Its gradient has entries µx (ezx (P ez )x − πx ), and its Hessian quadratic form is
+                                   X
+                               1
+                               2         Rxy ezx +zy (vx + vy )2 > 0      (v ̸= 0),
+                                   x,y
+
+by the diagonal terms. To verify existence rather than merely strict convexity, write M = max zx ,
+m = min zx , c0 = 21 min Rxx > 0, w∗ = min wx > 0. Since wx = 1,
+                                                         P
+
+
+                          J(z) ≥ c0 e2M − M,              J(z) ≥ w∗ (M − m) − M.
+
+On a sublevel J ≤ A, the first bound gives M ≥ −A and an upper bound M ≤ MA , since
+c0 e2M − M → ∞ as M → ∞. The second then gives m ≥ −A − (A + MA )/w∗ . Sublevels are
+compact, so a unique minimizer exists. Its zero gradient gives h = ez and hP h = π, which also
+yields energy one. The bounds here need not be uniform in dimension.
+
+Theorem
+    √      3. Fix 0 < ρ < 1, 0 < b < 1, C > 0, and any integer sequence 0 ≤ kL ≤ L with
+kL / L → C. There exist hL > 0 with energy one such that their actual stationary densities satisfy
+(1) and (2), and
+                                                                            (                       )
+                                          t                                     1 − b 21/s − 1 1
+               lim inf ∥Pρ hL − 1∥∞ ≥           > 0,             t = min             ,        ,         .
+                L→∞                   2(3 + 2t)                                   2      2      4
+
+The densities may be chosen to obey 1 − t ≤ πL ≤ 1 + t pointwise.
+                                     m = kL + 1 ≤
+Proof. For sufficiently large L, let √           √ L and choose the largest odd integer n ≤ L/m.
+Thus L/m − 2 < n ≤ L/m, m ∼ C L, and n ∼ L/C. Choose m disjoint blocks of n coordinates.
+On block i, let ϕi be the sign of the coordinate sum, and put F = m
+                                                                   Q
+                                                                     i=1 ϕi . Odd block size makes
+each ϕi balanced and {−1, 1}-valued. Each nonzero Fourier term of F uses a nonempty subset of
+every block, hence has degree at least m. Therefore
+
+                                                   π = 1 + tF
+
+has mean one and exact matching through degree kL . The chosen t gives π ≥ 1 − t ≥ b and
+π s ≤ (1 + t)s < 2. Lemma 2 supplies its unique h > 0 with hP h = π. For any finite exceptional
+dimensions with m > L, use π = h = 1 instead.
+    At the all-plus point, the noised bits in a block have mean ρ. If Sn is their sum, Chernoff’s
+bound with parameter arctanh ρ gives
+                                                                      q
+                                                −(arctanh ρ)Sn                            2
+                    qn = Pr(Sn < 0) ≤ Ee                         = ( 1 − ρ2 )n ≤ e−ρ n/2 .
+
+                                                          4
+Independence of blocks implies P F (+) = (1 − 2qn )m → 1, since mqn → 0. Hence eventually
+P π(+) − 1 ≥ t/2.
+   Put δ = ∥g − 1∥∞ . If δ < 1/2, then h = π/g gives ∥h − π∥∞ ≤ 2(1 + t)δ. The Markov L∞
+contraction yields ∥g − P π∥∞ ≤ 2(1 + t)δ, and consequently
+
+                                    t/2 ≤ P π(+) − 1 ≤ (3 + 2t)δ.
+
+If δ ≥ 1/2, the same stated lower bound is automatic. This proves the liminf claim.
+
+   Theorem 1 still gives N → 1 on this family. Since r/π = 1/(N g 2 ), uniform convergence r/π → 1
+would imply g → 1 uniformly and is also ruled out. Neither critical-moment divergence for r nor
+spectral-gap collapse has been proved by this construction.
+
+
+4    The imported weighting theorem and its exact role
+The next result is a programme dependency, not a theorem proved anew here. Its source, constants
+and raw identity are included in the accompanying dependency manifest.
+
+Imported theorem 4 (Source334, using source324). Fix ρ ∈ (0, 1) and b > 0. Let √ d ≥ b, Ed = 1,
+Eds ≤ 2, and EdχS = 0 for 1 ≤ |S| ≤ k. There is αρ > 0 such that, whenever kL / L → C > 0,
+                                                                                   2
+             λ1 (Td ) → 1,      ρ ≤ lim inf λ2 (Td ) ≤ lim sup λ2 (Td ) ≤ max{ρ, e−αρ C /2 }.
+                                                                                         √
+More precisely, its finite estimates give, uniformly over all admissible d and all C0 L ≤ k ≤ L,
+                                                                                       2
+      λ1 (Td ) = 1 + o(1),     λ2 (Td ) ≤ 1 − G + o(1),    G = min{1 − ρ, 1 − e−αρ C0 /2 } > 0.
+
+The eventual bounds depend only on ρ, C0 and the requested error tolerance, not on d or the nu-
+merical floor b.
+
+   For an exact specification of the attributed endpoint input, if Hm projects onto degrees at least
+m, source324 supplies
+                                                              2
+                   ∥QHm ∥2→1+1/ρ ≤ ρm/4 + e−cρ m + e−αρ m /L ,        1 ≤ m ≤ L.                  (11)
+
+Here q0 = 1 + ρ, aρ = (− log ρ)/[4(1 − q0 /2)], cρ = aρ (q0 − 1)/2, and αρ = Cρ c2ρ , where Cρ >
+0 is source324’s global entropy-deficit modulus derived using the refined inequality of Kirshner–
+Samorodnitsky [2]. It is not a local Taylor coefficient or an evaluated number. Hm = 0 if m > L.
+    Source334 reserves moment for the mean: for dt = d1d>M ,
+
+                             ∥dt ∥s ≤ BM = [2 − (1 − 2M 1−s )s+ ]1/s −→ 1.
+
+Indeed Edt ≤ 2M 1−s , while Jensen forces the bounded part to carry at least (1 − 2M 1−s )s+ of the
+moment. Its proof then chooses a fixed low-degree cutoff, next an amplitude cutoff, and only then
+dimension. Exact compression below ⌊k/2⌋, a vanishing cross block, and (11) yield Theorem 4.
+This description is not a replacement proof of that imported theorem. Its complete source proof,
+including uniform finite estimates, is an explicit dependency. In what follows it is applied to
+d = π, whose weighting hypotheses hold. It is never applied to the actual r without proof of those
+hypotheses.
+
+
+
+                                                   5
+5    Actual cut capacities above the rare-mass threshold
+For A ⊂ ΩL , let                                             X
+                              q = ν(A),         J(A) =                W (x, y).
+                                                           x∈A,y ∈A
+                                                                 /
+
+This is one-sided flux; the Dirichlet form uses half the full directed sum.
+
+Theorem 5. Fix 0 < ρ < 1, C0 > 0, and a stationary floor b > 0. Suppose √  (1), π ≥ b and Eπ s ≤ 2
+hold, with s = (1 + ρ)/(1 − ρ). For every sufficiently large L and every C0 L ≤ k ≤ L, uniformly
+in h and A with 0 < q ≤ 1/2,
+
+                             J(A) ≥ cq − 2 Bq ε − Bε2 ,
+                                             p
+                                                                       c = G/4,                        (12)
+
+where G is from Theorem 4, and B, η, ε = Bη k+1 are as in (7). In particular, for M0 = 1024B/G2 ,
+
+                                  q ≥ M0 ε2 =⇒ J(A)/q ≥ G/8.
+
+If γ < G2 /128, there exists a cut with
+
+                                                     1024B 3 2(k+1)                 1024B 3 2(k+1)
+          0 < q ≤ 1/2,   J(A)/q < G/8,         q<           η       ,      µ(A) <          η       .
+                                                       G2                             bG2
+Proof. For every real f , symmetry and the row sums of W give the exact identity
+
+                     ∥Q(hf )∥22 = Eπf 2 − 12
+                                               X
+                                                     W (x, y)(f (x) − f (y))2 ≤ Eπf 2 .                (13)
+                                               x,y
+
+                                                                                                          ′
+At the critical exponent, 2s′ = 1 + 1/ρ and endpoint hypercontractivity gives Q : L2 → L2s
+contractively. Theorem 1 thus implies
+
+                               ∥g − 1∥2s′ ≤ ε,          Eπ(g − 1)2 ≤ Bε2 .
+
+Since h − π = h(1 − g), applying (13) with f = (1 − g)1A yields
+                                                       √
+                                    ∥Q((h − π)1A )∥2 ≤ B ε.                                            (14)
+
+This is an absolute indicator-energy error, not a relative estimate at arbitrary small q.
+   Consider the auxiliary Tπ . Write its top two eigenvalues as λ1 , λ2 , D = λ1 − λ2 > 0, and
+                                                                 √
+d1 = λ1 − 1. Let w be its positive unit Perron vector, and ψ = π. Since ∥ψ∥2 = 1 and
+
+                                       ⟨ψ, Tπ ψ⟩ = ⟨π, P π⟩ ≥ 1,
+
+we have λ1 ≥ 1. The common nonzero spectrum of Tπ and QMπ Q, together with endpoint hyper-
+contractivity, gives λ1 ≤ B. Put z = ⟨w, ψ⟩ > 0. Spectral decomposition gives
+
+                            1 ≤ λ1 z 2 + λ2 (1 − z 2 ),    1 − z 2 ≤ d1 /D.
+                                                                     √
+The difference of the rank-one projectors ww∗ and ψψ ∗ has norm 1 − z 2 : on their two-dimensional
+span its trace is zero and determinant is −(1 − z 2 ); if z = 1 it is zero. Therefore
+
+                                   Tπ ≤ λ2 I + Dψψ ∗ +
+                                                              p
+                                                                  Dd1 I.
+
+
+
+                                                       6
+             √
+Testing on       π1A gives
+
+                             Iπ (A) := ∥Q(π1A )∥22 ≤ λ1 q 2 + λ2 q(1 − q) +
+                                                                                     p
+                                                                                       Dd1 q.
+
+The uniform estimates in Theorem 4 permit a common L0 such that
+                                                                          p
+                                     λ2 ≤ 1 − 3G/4,                d1 +   Bd1 ≤ G/8.
+
+As D ≤ B and q ≤ 1/2, it follows that Iπ (A) ≤ (1 − G/4)q = (1 − c)q. In particular we have not
+             √
+assumed that π itself is the auxiliary Perron vector.
+   Now Ih (A) := ∥Q(h1A )∥22 and J(A) = q − Ih (A). By (14),
+                                       q           √      2
+                                                               ≤ (1 − c)q + 2 Bq ε + Bε2 ,
+                                                                                 p
+                          Ih (A) ≤      Iπ (A) +       Bε
+
+which proves (12). If q ≥ 64Bε2 /c2 , the two relative errors are at most c/4 and c2 /64. Thus
+J/q ≥ 47c/64 ≥ c/2 = G/8. Since 64B/c2 = 1024B/G2 , the asserted threshold follows.
+    We include the finite conductance step. Let Φ = min0<ν(A)≤1/2 J(A)/ν(A), and take a real
+second eigenfunction f of K. Choose its sign so that v = f+ has support of stationary mass at
+most one half. For the Dirichlet bilinear form E, disjoint nonnegative parts satisfy E(f+ , f− ) ≤ 0.
+Hence
+                                  E(v, v) ≤ E(v, f ) = γ ∥v∥2L2 (ν) .
+For At = {v 2 > t}, finite layer cake and Cauchy–Schwarz give
+                                  Z ∞
+                                        ν(At ) dt = ∥v∥2L2 (ν) ,
+                                 Z 0∞                    X
+                                        J(At ) dt = 12         W (x, y)|v(x)2 − v(y)2 |
+                                   0                     x,y
+                                                      q
+                                                  ≤      2E(v, v) ∥v∥2L2 (ν) .
+                                                                                          √
+The last factor uses (v(x) + v(y))2 ≤ 2v(x)2 + 2v(y)2 . The definition of Φ implies Φ ≤ 2γ. If
+γ < G2 /128, a minimizing cut has J/q < G/8, and the contrapositive of the threshold bound gives
+q < M0 ε2 . Finally q ≥ bµ(A) proves the base-mass bound.
+                                                       √
+    The threshold is exponentially small in k. At k ≍ L it does not reach the atom scale b2−L .
+The absolute comparison error in (14) can dominate q below the threshold. No claim is made that
+every second eigenfunction is supported on such a cut, or that the existence of such a cut suffices
+for gap collapse.
+
+
+6    Small supports without a marginal matching assumption
+The next estimate uses the actual hP h relation, stationary floor and critical cap. It requires no
+marginal matching, and its proof is independent of the preceding rigidity and capacity results. The
+asymptotic exclusion is restricted to the displayed noise and cardinality ranges.
+
+Theorem 6. Let 0 < ρ < 1, h > 0, EhP h = 1, π = hP h ≥ b > 0 and Eπ s ≤ 2, where
+s = (1 + ρ)/(1 − ρ). Write
+
+             B = 21/s ,    a0 = (1 + ρ)/2,        d = aL
+                                                       0,          θ = 1 − 1/(2s),   κ = 21/s a0 (1 + ρ3 ).
+
+
+                                                               7
+For every nonempty A of cardinality m with md < 1, put
+                                            √
+                                              B mθ κL/2
+                                   RL (m) =              .
+                                             b (1 − md)2
+
+Then for every x, K(x, A) ≤ RL (m)/(1 + RL (m)). The killed kernel KA has spectral radius at most
+this bound, and
+                                     J(A)          1
+                                            ≥            .
+                                      ν(A)    1 + RL (m)
+If κ < 1 and 0 < τ < min{− log a0 , − log κ/(2θ)}, these estimates give uniformly RL (m) → 0 for
+m ≤ eτ L . In the explicit range 0 < ρ ≤ 1/4 and m ≤ eρL/1920 ,
+                                                 √
+                                                9 B −ρL/640
+                                       RL (m) ≤     e        .
+                                                 b
+Proof. The maximal entry and every diagonal entry of P equal d. Thus π(y) ≥ dh(y)2 , and, with
+α0 = 2−L ,
+                                          X                       √ Xq
+                              Ix (A) :=         P (x, y)h(y) ≤     d   π(y)
+                                          y∈A                            y∈A
+                                          √                    −1/(2s)
+                                      ≤       Bd m1−1/(2s) α0            .
+
+The last inequality is finite-sum Hölder and y π(y)s ≤ 2/α0 . This upper bound alone cannot
+                                                       P
+
+control the normalized transition, since its denominator may also be small.
+                                                / P (x, y)h(y), use h ≥ b/g. Since P (x, A) ≤ md,
+                                             P
+   For the outside contribution Ox (A) = y∈A
+Cauchy–Schwarz with weights P (x, y) on Ac gives
+                                                                                         
+                            X P (x, y)          X                                X P (x, y)
+           (1 − md)2 ≤                              P (x, y)g(y) ≤                        (P 2 h)(x).
+                            y ∈A
+                              /
+                                   g(y)         y ∈A
+                                                  /                            y ∈A
+                                                                                 /
+                                                                                      g(y)
+
+Therefore Ox (A) ≥ b(1 − md)2 /(P 2 h)(x). The semigroup gives P 2 h = Pρ3/2 Qh. Point evaluation
+of Pρ3/2 on uniform L2 has squared norm
+
+                                          Pρ3 (x, x)
+                                                     = (1 + ρ3 )L .
+                                             α0
+
+Because ∥Qh∥2 = 1, we obtain (P 2 h)(x) ≤ (1 + ρ3 )L/2 . Dividing the upper bound on Ix by the
+lower bound on Ox yields Ix /Ox ≤ RL (m), exactly with the stated κ. Now K(x, A) = Ix /(Ix + Ox ),
+proving the pointwise bound.
+    Every row sum of KA is at most R/(1 + R), so its spectral radius is at most that number. Sum-
+ming K(x, Ac ) ≥ 1/(1 + R) over x ∈ A against ν proves the flux bound. Equivalently, reversibility
+gives the same upper Rayleigh bound for functions supported on A in L2 (ν).
+    If m ≤ eτ L in the specified range, then md → 0 and mθ κL/2 → 0, uniformly. For the explicit
+subrange,
+                                        2ρ
+                         log κ = −          log 2 + log(1 + ρ) + log(1 + ρ3 )
+                                      1+ρ
+                                        17 8
+                                                   
+                                   ≤ρ      − log 2 < −ρ/240,
+                                        16 5
+
+                                                           8
+using log 2 > 2/3. As θ < 1, mθ κL/2 ≤ e−ρL/640 . Moreover
+
+                                   md ≤ [(5/8)e1/7680 ]L ≤ (2/3)L ,
+
+because log(16/15) ≥ 1/16 > 1/7680. Thus (1 − md)−2 ≤ 9, completing the estimate.
+
+     √ κ = 1, the formula still gives a positive uniform escape bound for singletons, at least
+    At
+[1 + B/(b(1 − a0 )2 )]−1 . For κ > 1 the criterion can become asymptotically uninformative even
+for singletons: at ρ = 1/2, κ = 27 21/3 /32 > 1 because 39366 > 32768. This is a limitation of
+the estimate, not an admissible collapsing example. Small stationary mass need not imply small
+cardinality, so even an accepted version of this section would not close the original gap question or
+transfer a critical moment bound to r.
+
+
+7    Classical scaling and the unresolved comparison
+The relation hP h = π is a symmetric finite Schrödinger scaling. General finite scaling existence
+is classical, and Lemma 2 supplies an elementary specialization rather than a new existence prin-
+ciple. Georgiou–Pavon [3] obtain a finite-dimensional contraction through a projective diameter.
+Duan–Lyu–Powell [4, Theorems2.1–2.5] distinguish coupling stability from potential stability; their
+discrete supremum estimate requires entrywise relative margin closeness and a conditioning pa-
+rameter. Our hypothesis is exact low-order matching, not entrywise closeness of the full margin.
+These results are contextual comparisons, not premises for a dimension-uniform conclusion here.
+The cited passages were checked; no complete priority survey is claimed.
+    Theorem 1 narrows the obstruction to the original gap question: Perron normalization and a
+persistent total-variation mismatch are controlled. Theorem 3 prevents resolving the remaining
+problem by assuming uniform potential convergence. Theorem 5 gives direct actual-kernel control
+above a shrinking mass scale; Theorem 6 excludes certain small supports directly. These restrictions
+                                                                                              √
+do not exhaust the remaining sets: from the floor, |A| ≤ 2L ν(A)/b, which at ν(A) of order e−c L still
+permits cardinality far above eρL/1920 . What remains is relative energy control for the uncovered
+stationary sets, or a fully admissible collapsing family. In particular, no bound on Ers , no exact
+matching for r, and no full operator perturbation estimate has been derived. The supplement
+records the failed routes so that these gaps are not hidden inside new hypotheses.
+
+
+8    Model assessments and review context
+This is a grouped working-paper manuscript prepared with OpenAI/Codex assistance. Sources341,
+344, 345, 346 received separate-role analytical AI audits and were accepted within their stated
+programme scope; the same involved auditor reviewed those sources. The fabrication and audit
+roles shared a provider, session lineage, and filesystem. Exact serving model variants and backend
+identities were not independently attested. No human peer review, cross-provider or statistical
+independence, formal verification, or historical-priority certification is claimed.
+    At original source preparation, this manuscript had not yet undergone a separate manuscript
+audit, PDF build or visual review. Source347A subsequently received a separate-role analytical
+AI audit and programme acceptance. Assessment of the exact PDF produced from this editorial
+revision remains pending; earlier source verdicts and assessments of other PDFs do not transfer to
+it. Full reports, objections, context, raw source hashes and the imported334/324 dependency map
+are retained in the accompanying evidence package. Source346 was initially prepared as an isolated
+provisional section and was included only after its actual separate report and parent acceptance
+
+                                                  9
+were received and read. Publication, deposit, acceptance, collection screening, and peer review
+remain distinct statuses.
+
+
+References
+[1] A. Ben-Aroya, O. Regev and R. de Wolf, A Hypercontractive Inequality for Matrix-Valued
+    Functions with Applications to Quantum Computing. Classical scalar inequality, introduction
+    Eq.(1). https://homepages.cwi.nl/~rdewolf/publ/qc/matrixbeckner.pdf.
+
+[2] N. Kirshner and A. Samorodnitsky, A moment ratio bound for polynomials and some extremal
+    properties of Krawchouk polynomials and Hamming spheres, arXiv:1909.11929v1. Attributed
+    refined endpoint input through source324. https://arxiv.org/abs/1909.11929v1.
+
+[3] T. T. Georgiou and M. Pavon, Positive contraction mappings for classical and quantum
+    Schrödinger systems, arXiv:1405.6650v2 (2014), SectionIII.4, Theorem3 and Lemma1. https:
+    //arxiv.org/abs/1405.6650v2.
+
+[4] D. Duan, H. Lyu and W. Powell, Scaling limit of Sinkhorn-rescaled Random Matrices via
+    Stability of Static Schrödinger Bridges, arXiv:2604.23461v1 (2026), Theorems2.1–2.5. https:
+    //arxiv.org/abs/2604.23461v1.
+
+[5] L. Eriksson, The Eriksson Programme, exact sources324,334,341,344,345,346. The accompany-
+    ing dependency manifest identifies the immutable source commits, paths, SHA256 values, and
+    proof scope. Repository: https://github.com/lluiseriksson/THE-ERIKSSON-PROGRAMME.
+
+
+
+
+                                              10
+

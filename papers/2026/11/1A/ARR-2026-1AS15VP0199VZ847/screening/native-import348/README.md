@@ -1,0 +1,7 @@
+# Native assessment registration
+
+The unchanged AIRR native `record_model_assessment.py` ran in an isolated, owned Linux CPU/high-RAM Colab session against this exact PDF and the disclosed schema projection. Normal and optimized validation exited0 without changing the isolated registry. One native publish operation then produced assessment8ccf8661-d8fc-474f-a706-1a0ffc17038a with canonical source hash847731dd83ec03bc3c6012452f62ed2b8a54ac20bf6588d4d414608e29480cef. The native row preserves every projected model field unchanged. This is schema registration, not a new scientific review, score or public release.
+
+Full raw outputs, real exit sentinels, input hashes and returned registry are retained here. The isolated import validated this one assessment; it did not validate all pre-existing AIRR records. The parent appended its actual returned row to the existing registry only after checking the old registry SHA2563f7d7c4c47dc5ccb818a2c0afaa482803fe10f3dbfc16002a1247a2214ee340f. Mandatory repository CI validates the combined registry and full physical public record before merge.
+
+Owned host7dfaa941a471 was closed after receipt recovery. Colab's first session-list close produced a tunnelEndpoint error, preserved verbatim; reloading the same own notebook and using its runtime-disconnect action succeeded. Separate no-active-session readback and lifecycle are retained. No compute-unit consumption figure is inferred.

@@ -1,0 +1,46 @@
+# REQUIRED real-return checks in both modes, after mandatory synthetic preflight.
+outcomes=[]
+for mode in ('normal','optimized'):
+    argv=[sys.executable]+(['-O'] if mode=='optimized' else [])+[str(ROOT/'validate348_ui_actual_colab.py'),observed_bundle_sha256]
+    ok=run_captured('actual-validation-'+mode,argv,600)
+    outcomes.append({'mode':mode,'completed_zero_without_timeout':ok})
+if all(row['completed_zero_without_timeout'] for row in outcomes):
+    a=json.loads((ROOT/'actual-normal'/'result.json').read_bytes())
+    b=json.loads((ROOT/'actual-optimized'/'result.json').read_bytes())
+    for key in ('source','PDF_sha256','PDF_bytes','pages','archive_sha256','raw_members_verified','source_input_members_verified'):
+        if a[key]!=b[key]: raise RuntimeError('Normal/optimized real return results differ: '+key)
+with (ROOT/'actual-validation-summary.json').open('x',encoding='utf-8') as stream:
+    json.dump({'runs':outcomes,'scope':'Actual structural inner-return checks only. No visual/PDF assessment or runtime closure inferred.'},stream,indent=2)
+if not all(row['completed_zero_without_timeout'] for row in outcomes):
+    print('FAILED OR INCOMPLETE actual validation. Preserve logs and report; no production acceptance.')
+{"argv": ["/usr/bin/python3", "/content/ui-validation348D/validate348_ui_actual_colab.py", "b74ab3e6e1d349aafe5ed42d984270e0ae1ee86ac158a1d9738dc6274f1b6e4b"], "actual_exit": 1, "timeout_or_interruption": false, "scope": "Actual Linux child process only; no allocation/download/release CLI status"}
+
+Traceback (most recent call last):
+  File "/content/ui-validation348D/validate348_ui_actual_colab.py", line 51, in <module>
+    result=v.validate(root/'production.zip',root,sources,[root/'uncreated-extraction',root/'uncreated-delivery'])
+  File "/content/ui-validation348D/validate_return348D.py", line 154, in validate
+    require(c['argv']==['pdflatex','-no-shell-escape','-interaction=nonstopmode','-halt-on-error',
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        '-file-line-error','-jobname=production348',TEX_ARG], 'Exact native TeX argv')
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/content/ui-validation348D/validate_return348D.py", line 26, in require
+    if not ok: raise ValueError(message)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: Exact native TeX argv
+
+{"argv": ["/usr/bin/python3", "-O", "/content/ui-validation348D/validate348_ui_actual_colab.py", "b74ab3e6e1d349aafe5ed42d984270e0ae1ee86ac158a1d9738dc6274f1b6e4b"], "actual_exit": 1, "timeout_or_interruption": false, "scope": "Actual Linux child process only; no allocation/download/release CLI status"}
+
+Traceback (most recent call last):
+  File "/content/ui-validation348D/validate348_ui_actual_colab.py", line 51, in <module>
+    result=v.validate(root/'production.zip',root,sources,[root/'uncreated-extraction',root/'uncreated-delivery'])
+  File "/content/ui-validation348D/validate_return348D.py", line 154, in validate
+    require(c['argv']==['pdflatex','-no-shell-escape','-interaction=nonstopmode','-halt-on-error',
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        '-file-line-error','-jobname=production348',TEX_ARG], 'Exact native TeX argv')
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/content/ui-validation348D/validate_return348D.py", line 26, in require
+    if not ok: raise ValueError(message)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: Exact native TeX argv
+
+FAILED OR INCOMPLETE actual validation. Preserve logs and report; no production acceptance.
