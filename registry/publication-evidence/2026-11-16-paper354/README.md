@@ -1,0 +1,11 @@
+# Verified public release of paper354
+
+The existing AIRR release workflow43927843578 published ARR-2026-4T35VQ6MZB8F99F4 v1 on16 November2026 at18:21:31Z from the unchanged audited commit5538f138a05f3fd0813824551b4a27b154ea901c. PR457 was integrated by an ordinary server-accepted fast-forward, preserving the reviewed commit. The requested merge commit had been rejected under existing linear-history protection; no protection or setting was changed.
+
+Anonymous public downloads verified the canonical370582-byte PDF SHA256fbd2b9784d11740cef74c85f870dff27e4b97158210388cf3ae355eb4ffcbcf3, all1198 packaged source/evidence members, complete original first report and response, errata, author response, metadata and release-manifest hashes. The prior successful C file-validation run and final exact-commit audit are preserved. Final publication CI passed702 general and107 optimized tests plus metadata/catalogue/discovery/security checks.
+
+This is a Working paper with the unchanged first AI assessment4.20/10, not human peer review or collection acceptance. No paper bytes, first assessment or existing timestamp record are revised here. Only the new record's pending publication timestamp is reconciled with the actual release. No fabricated native mark-published receipt is supplied; native case reconciliation is distinct from this public release.
+
+The repository describes its versioned publication route as immutable in policy. Actual GitHub release API observation reports immutable=false. These artifacts are pinned by commit, version and independently checked hashes; platform-enforced release immutability is NOT claimed, and no repository setting was changed to create that claim.
+
+This external receipt record does not modify the already released paper package. Full audit/release records accompany this receipt. Factual metadata/receipt text is CC0-1.0 to the extent rights apply; owned audit/explanatory prose is CC-BY-4.0; third-party GitHub/software output retains its original rights. No new human assent, scientific grade or backend identity is inferred.
