@@ -1,0 +1,9 @@
+# Actual production and return-validation status
+
+16 November 2026. Production354D returned the unchanged canonical PDF, with reports of two fresh-clone matching builds and retained runtime closure. This is separate from the later validation run.
+
+Validation354B failed before validating the actual production return: preflight354A.py called validate_bytes on the nominal good fixture; validate354A.py parsed a line as JSON and raised JSONDecodeError (Expecting property name enclosed in double quotes, line 1 column 2). The runner exited 1 and preserved FAILED_PRESERVED with an empty results object. Neither actual normal-mode validation nor optimized-mode validation succeeded. Materialization exit zero is not validation success.
+
+The actual B return archives and runtime closure are under reproduction/actual-validation354B. The runtime was disconnected on 14 November at 05:29:22.024Z and no active sessions were recorded at 05:29:48.666Z. Exact allocation time and billed consumption units are not known. No estimate is substituted.
+
+Repair354C was prepared in a separate role and received the parent engineering delta audit on 16 November 2026: acceptable for a new owned Colab attempt, NOT an executed PASS. The full audit is retained under reproduction/return-validation-audit354C. Its transport still requires separate audit, followed by actual authorized-runtime execution in normal and optimized modes. Its preparation does not alter B's failure. This assembly performed file copies, hashing, JSON projection and documentation only; it executed no candidate, validator, Python, Lean or build code. No new runtime was allocated.

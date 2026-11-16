@@ -1,0 +1,42 @@
+# Transport only. Do not Run all; no runtime, validator or test is started here.
+import base64,hashlib,json,os,platform,re,sys,subprocess,signal,time,traceback,zipfile,io
+from pathlib import Path
+from datetime import datetime,timezone
+SOURCE='8e452190b8f7d3f7382ba2e6c05d0f14fa9c3dc5'
+BASE=Path('/content/return-validation354B')
+UI=Path('/content/validation-ui354B')
+def need(ok,msg):
+    if not ok:raise RuntimeError(msg)
+def digest(raw):return hashlib.sha256(raw).hexdigest()
+def now():return datetime.now(timezone.utc).isoformat()
+def put(path,obj):
+    with path.open('xb') as f:
+        f.write((json.dumps(obj,indent=2)+'\n').encode());f.flush();os.fsync(f.fileno())
+need(os.name=='posix' and Path('/content').is_dir(),'Own Colab Linux only')
+need(not BASE.exists() and not BASE.is_symlink() and not UI.exists() and not UI.is_symlink(),'Fresh own namespaces required')
+PAYLOADS=<EXACT_128_BASE64_PAYLOADS_IN_ORIGINAL_CELL; see EMBEDDED-B-INPUTS.json>
+need(len(PAYLOADS)==128,'Exact frozen B packet count')
+raws={}
+for row in PAYLOADS:
+    name=row['path']
+    need(isinstance(name,str) and name and not name.startswith('/') and '\\' not in name
+         and all(x not in ('','.','..') for x in name.split('/')) and name not in raws,'Safe unique fixed payload')
+    raw=base64.b64decode(row['base64'],validate=True)
+    need(type(row['bytes']) is int and len(raw)==row['bytes'] and digest(raw)==row['sha256'],'Frozen payload bytes')
+    raws[name]=raw
+need(digest(raws['MANIFEST354A.json'])=='9823701685b4e3dd26d3e645457e222983f63126c8496393aed4c17066967b79','Exact B manifest despite retained internal A filename')
+m=json.loads(raws['MANIFEST354A.json']);seen=set()
+for row in m['payloads']:
+    need(row['path'] not in seen and row['path'] in raws,'Manifest membership');seen.add(row['path'])
+    need(len(raws[row['path']])==row['bytes'] and digest(raws[row['path']])==row['sha256'],'B manifest binding')
+need(seen==set(raws)-{'MANIFEST354A.json'} and len(seen)==127,'Exact B universe')
+BASE.mkdir();UI.mkdir()
+for name,raw in raws.items():
+    path=BASE/name;path.parent.mkdir(parents=True,exist_ok=True)
+    need(path.resolve().is_relative_to(BASE) and not path.is_symlink(),'Materialization boundary')
+    with path.open('xb') as f:f.write(raw)
+    need(path.read_bytes()==raw,'Exact materialized bytes')
+put(UI/'materialization354B.json',dict(source=SOURCE,actual_hostname=platform.node(),observed_at=now(),
+    original_B_files=128,manifest_sha256=digest(raws['MANIFEST354A.json']),candidate_executed=False,
+    runtime_ownership_observed=False,files=[dict(path=n,bytes=len(b),sha256=digest(b)) for n,b in sorted(raws.items())]))
+print(json.dumps(dict(materialized=True,actual_hostname=platform.node(),next='STOP for real own-session, closure, delta-review and UI-review observations; no Run all')))

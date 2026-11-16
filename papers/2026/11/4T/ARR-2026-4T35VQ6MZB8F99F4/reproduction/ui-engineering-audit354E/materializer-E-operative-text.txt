@@ -1,0 +1,51 @@
+# Materialization only: no marker, producer, test or runtime creation.
+import base64, ctypes, hashlib, json, os, platform, re, signal, subprocess, sys, time, traceback, zipfile
+from pathlib import Path, PurePosixPath
+from datetime import datetime, timezone
+SOURCE='8e452190b8f7d3f7382ba2e6c05d0f14fa9c3dc5'
+P=Path('/content/production354D-preparation')
+UI=Path('/content/tep354E-notebook-01')
+def need(ok,msg):
+    if not ok: raise RuntimeError(msg)
+def sha(raw): return hashlib.sha256(raw).hexdigest()
+def now(): return datetime.now(timezone.utc).isoformat()
+def put(path,obj):
+    with path.open('xb') as f:
+        f.write((json.dumps(obj,indent=2)+'\n').encode('utf-8')); f.flush(); os.fsync(f.fileno())
+def safe(name):
+    need(isinstance(name,str) and name and '\\' not in name and not PurePosixPath(name).is_absolute()
+         and all(x not in ('','.','..') for x in name.split('/')), 'Unsafe embedded path')
+    return name
+need(os.name=='posix' and Path('/content').is_dir(),'Own Colab Linux required')
+need(not P.exists() and not P.is_symlink() and not UI.exists() and not UI.is_symlink(),
+     'New paths required: preserve prior attempts')
+need(len(preparation)==100 and len(gate_attachments)==15,'Exact embedded counts')
+prepared={}; attached={}
+for rows,dest in ((preparation,prepared),(gate_attachments,attached)):
+    for row in rows:
+        name=safe(row['path']); need(name not in dest,'Duplicate input')
+        raw=base64.b64decode(row['base64'],validate=True)
+        need(type(row['bytes']) is int and len(raw)==row['bytes'] and sha(raw)==row['sha256'],'Embedded bytes changed: '+name)
+        dest[name]=raw
+need(not(set(prepared)&set(attached)) and all(n.startswith('gate-evidence/') for n in attached),'Disjoint gate namespace')
+need(sha(prepared['PREPARATION-MANIFEST.json'])=='a00396adb63fce545d8ab675c13865efdb5f192ac7088f859ba23f612149d459','Preparation freeze')
+m=json.loads(prepared['PREPARATION-MANIFEST.json']); seen=set()
+for row in m['payloads']:
+    name=safe(row['path']);need(name not in seen and name in prepared,'Frozen manifest membership');seen.add(name)
+    need(len(prepared[name])==row['bytes'] and sha(prepared[name])==row['sha256'],'Frozen payload changed')
+need(seen==set(prepared)-{'PREPARATION-MANIFEST.json'} and len(seen)==99,'Exact frozen preparation universe')
+need(sha(prepared['build354D.py'])=='b3323cb6ba8b6cccba95e7cb7a87a1e4cfecae0ea0fc854980e4c38e5e3d90e7','Builder freeze')
+need(sha(prepared['launch354D.py'])=='0891ccf573894f3f94463af89b40b9456b402ac2f1c721bea1267db996fe9845','Launcher freeze')
+P.mkdir();UI.mkdir()
+for name,raw in {**prepared,**attached}.items():
+    target=P/name;target.parent.mkdir(parents=True,exist_ok=True)
+    need(target.resolve().is_relative_to(P) and not target.is_symlink(),'Materialization boundary')
+    with target.open('xb') as f:f.write(raw)
+    need(target.read_bytes()==raw,'Materialized readback')
+materialization={'source':SOURCE,'hostname':platform.node(),'observed_at':now(),
+ 'preparation_files':100,'gate_attachment_files':15,'producer_executed':False,
+ 'runtime_ownership_observed':False,'runtime_type_observed':False,
+ 'files':[{'path':n,'bytes':len(r),'sha256':sha(r)} for n,r in sorted({**prepared,**attached}.items())]}
+put(UI/'materialization.json',materialization)
+print(json.dumps({'materialized':True,'actual_hostname':platform.node(),'observed_at':materialization['observed_at'],
+ 'next':'STOP: independent notebook review and actual own CPU session observation are required; no Run all.'}))

@@ -1,0 +1,11 @@
+# Dated related-work addendum (R1)
+
+16 November 2026. Applies to the unchanged 13-page PDF SHA256 fbd2b9784d11740cef74c85f870dff27e4b97158210388cf3ae355eb4ffcbcf3. This author-side supplement was prepared after the first assessment; it is not represented as text present in that PDF or as a further assessment.
+
+Khot and Naor, *Nonembeddability theorems via Fourier analysis*, Lemma 3.3, proves that a function invariant under the dual code has no nonconstant Fourier coefficients below the original code's minimum distance. The proof uses translation by a dual vector with opposite character sign. This Fourier-support mechanism is classical. [Author-hosted primary manuscript, printed pp.7–8](https://web.math.princeton.edu/~naor/homepage%20files/nonembed-final.pdf).
+
+Kapralov and Panigrahy, *NNS lower bounds via metric expansion for l-infinity and EMD*, Lemma 7, Claim 6 and Lemma 8, use Boolean noise on a dual-code quotient and the Fourier tail to control mixing between sets. Thus the use of a code quotient with Boolean noise is also prior work. [Author-hosted primary manuscript, printed pp.10–11](https://theory.epfl.ch/kapralov/papers/nns.pdf).
+
+The claimed additional conclusion of Sections 4–6 of 354 concerns the full Doob chain for every strictly positive quotient potential, uniformly without an amplitude bound, under the stated code condition. Its proof retains all affine Fourier cosets; the nontrivial signed-sector comparison and singleton Rayleigh bound are necessary to reach that conclusion. The quotient sector alone does not prove it. This comparison is an author-side inference from the cited passages, not a priority determination. No first-discovery or established-frontier claim is made.
+
+Reading scope: the assembly role inspected the stated Khot–Naor lemma/proof and Kapralov–Panigrahy lemma and adjacent Fourier/noise discussion through primary-source web extraction on 16 November. The complete historical overlap notes and their narrower original reading scopes remain in related-work-original-notes. In particular, the earlier statement that the original Khot–Naor source had not yet been read is retained as history and superseded only by the explicitly dated later note. The separate Samorodnitsky lead was abstract-only; no full-paper comparison is claimed.
