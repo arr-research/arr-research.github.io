@@ -17,6 +17,7 @@ import stat
 import re
 import subprocess
 import urllib.request
+from urllib.parse import urlsplit
 
 PID = 'ARR-2026-4T35VQ6MZB8F99F4'
 RECORD = 'arr:record:9a197773-53eb-43d2-9791-9c2d49ea5b17'
@@ -33,6 +34,10 @@ NEW = {'record_id': RECORD,
        'version': 'v1', 'canonical_sha256': DIGEST,
        'authors': ['Lluis Eriksson']}
 APP_CONFIG_SHA256 = '7db0f6910059aa77eb6adceef0760d3d5a2128a571828af2b6bcb2df7f3977ce'
+ISSUER_SOURCE_SHA256 = {
+    'services/intake/programme_delegations.py': '459a854d2a19745ac5a9783c3ea023d3383727e49d7b797d45b4afb833d8d815',
+    'services/intake/historical_revisions.py': '26c3ddf0abe9ad847ac8667917e809c4e573a86181b71e0e2d601b0b880d780b',
+}
 
 
 def verify_live_service():
@@ -60,13 +65,34 @@ def verify_live_service():
     # Do not call create_app here: startup chmod/mkdir are not read-only checks.
     if hashlib.sha256((cwd / 'services/intake/app.py').read_bytes()).hexdigest() != APP_CONFIG_SHA256:
         raise ValueError('Unreviewed live configuration factory; reconcile before use')
-    if (not (Path(env['ARR_INTAKE_INSTANCE']) / 'intake.sqlite3').samefile(
-                '/srv/airr-private/instance/intake.sqlite3')
-            or not Path(env['AIRR_HISTORICAL_REVISION_CATALOGUE']).samefile(
-                '/srv/airr-private/historical-revisions/catalogue.json')
-            or env['AIRR_HISTORICAL_OPERATOR_AUTHOR'] != 'Lluis Eriksson'):
+    if any(hashlib.sha256((cwd / name).read_bytes()).hexdigest() != digest
+           for name, digest in ISSUER_SOURCE_SHA256.items()):
+        raise ValueError('Unreviewed live grant issuers; reconcile deployment before use')
+    instance = Path(env['ARR_INTAKE_INSTANCE'])
+    catalogue = Path(env['AIRR_HISTORICAL_REVISION_CATALOGUE'])
+    if not instance.is_absolute() or not catalogue.is_absolute():
+        raise ValueError('Absolute live configuration paths required')
+    for configured, canonical in (
+            (instance / 'intake.sqlite3', Path('/srv/airr-private/instance/intake.sqlite3')),
+            (catalogue, Path('/srv/airr-private/historical-revisions/catalogue.json'))):
+        if (configured.resolve(strict=True) != canonical.resolve(strict=True)
+                or not configured.samefile(canonical)
+                or not (proc / 'root' / str(configured).lstrip('/')).samefile(canonical)):
+            raise ValueError('Live canonical path or mount mismatch')
+    if env['AIRR_HISTORICAL_OPERATOR_AUTHOR'] != 'Lluis Eriksson':
         raise ValueError('Live database/catalogue/sole-author configuration mismatch')
-    return pid
+    # Field22 is starttime; comm may contain spaces and closing parentheses.
+    starttime = (proc / 'stat').read_text().rsplit(')', 1)[1].split()[19]
+    return (pid, starttime, catalogue, proc / 'root' / str(catalogue).lstrip('/'))
+
+
+def unique_object(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError('Duplicate JSON key')
+        result[key] = value
+    return result
 
 
 def public(url, limit, accept=None):
@@ -77,6 +103,14 @@ def public(url, limit, accept=None):
     with urllib.request.urlopen(req, timeout=30) as response:
         if response.status != 200 or not response.url.startswith('https://'):
             raise ValueError('Public HTTPS200 required')
+        requested, final = urlsplit(url), urlsplit(response.url)
+        allowed = {requested.hostname}
+        if requested.hostname == 'api.github.com' and accept == 'application/octet-stream':
+            allowed.update({'release-assets.githubusercontent.com', 'objects.githubusercontent.com'})
+        if (requested.hostname not in {'airr.science', 'api.github.com', 'raw.githubusercontent.com'}
+                or final.hostname not in allowed or final.username or final.password
+                or final.port not in (None, 443)):
+            raise ValueError('Public witness redirect origin mismatch')
         raw = response.read(limit + 1)
     if len(raw) > limit:
         raise ValueError('Oversized public artifact')
@@ -103,7 +137,7 @@ def main():
     base = ('https://raw.githubusercontent.com/arr-research/arr-research.github.io/'
             + args.metadata_commit + '/papers/2026/11/4T/' + PID)
     metadata_raw = public(base + '/metadata.json', 100000)
-    meta = json.loads(metadata_raw)
+    meta = json.loads(metadata_raw, object_pairs_hook=unique_object)
     if (meta['id'] != PID or meta['authors'] != [{'name': 'Lluis Eriksson',
                                                 'affiliation': 'Independent researcher'}]
             or any(meta[k] != NEW[k] for k in ('record_id', 'version_id', 'version'))
@@ -111,7 +145,8 @@ def main():
             or meta['integrity']['canonical_sha256'] != DIGEST
             or meta.get('supersedes_version_id') is not None):
         raise ValueError('Immutable published identity/author/predecessor mismatch')
-    release = json.loads(public(RELEASE_API, 1000000, 'application/vnd.github+json'))
+    release = json.loads(public(RELEASE_API, 1000000, 'application/vnd.github+json'),
+                         object_pairs_hook=unique_object)
     if (release.get('tag_name') != TAG or release.get('html_url') != RELEASE
             or release.get('draft') is not False or not release.get('published_at')
             or not isinstance(release.get('assets'), list)):
@@ -133,13 +168,14 @@ def main():
     if len(mirror_pdf) != PDF_BYTES or hashlib.sha256(mirror_pdf).hexdigest() != DIGEST:
         raise ValueError('Exact public AIRR mirror PDF mismatch')
     path = Path('/srv/airr-private/historical-revisions/catalogue.json').resolve()
-    db = sqlite3.connect('/srv/airr-private/instance/intake.sqlite3', timeout=15)
+    database = Path('/srv/airr-private/instance/intake.sqlite3')
+    db = sqlite3.connect(database.as_uri() + '?mode=rw', uri=True, timeout=15)
     try:
         db.execute('BEGIN IMMEDIATE')
         # Mandatory shared writer protocol; see docs/CATALOGUE-WRITER-PROTOCOL.md.
         # No grant issuer or supported catalogue writer may cross this lock.
         raw = path.read_bytes()
-        data = json.loads(raw)
+        data = json.loads(raw, object_pairs_hook=unique_object)
         if not isinstance(data, dict):
             raise ValueError('Catalogue must be an object')
         if PID in data and data[PID] != NEW:
@@ -175,8 +211,7 @@ def main():
         if verify_live_service() != service_pid:
             raise ValueError('Service restarted during preparation; inspect before retry')
         backup = Path('/srv/airr-private/tep-catalogue-before354-v1-two-witnesses.json')
-        with backup.open('xb') as stream:
-            os.chmod(backup, 0o600)
+        with os.fdopen(os.open(backup, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600), 'wb') as stream:
             stream.write(raw)
             stream.flush()
             os.fsync(stream.fileno())
@@ -187,14 +222,15 @@ def main():
         new = (json.dumps(data, sort_keys=True, indent=2) + '\n').encode()
         tmp = path.with_name('catalogue.354-v1-two-witnesses.tmp')
         mode = path.stat()
-        with tmp.open('xb') as stream:
+        with os.fdopen(os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600), 'wb') as stream:
             stream.write(new)
             stream.flush()
+            os.fchown(stream.fileno(), mode.st_uid, mode.st_gid)
+            os.fchmod(stream.fileno(), stat.S_IMODE(mode.st_mode))
             os.fsync(stream.fileno())
-        os.chmod(tmp, stat.S_IMODE(mode.st_mode))
-        os.chown(tmp, mode.st_uid, mode.st_gid)
         os.replace(tmp, path)
-        if path.read_bytes() != new:
+        if (path.read_bytes() != new or service_pid[2].read_bytes() != new
+                or service_pid[3].read_bytes() != new):
             raise ValueError('Catalogue readback mismatch')
         db.commit()
         result.update(status='reconciled_verified_public_v1', mutated=True,

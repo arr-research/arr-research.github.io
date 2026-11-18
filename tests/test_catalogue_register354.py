@@ -8,6 +8,7 @@ import hashlib
 import importlib.util
 import io
 import json
+import os
 from pathlib import Path
 import sqlite3
 import stat
@@ -20,6 +21,7 @@ ROOT = Path(__file__).resolve().parents[1]
 CONNECT = sqlite3.connect
 READ = Path.read_bytes
 OPEN = Path.open
+OS_OPEN = os.open
 REPLACE = __import__('os').replace
 HELPER = ROOT / 'scripts/operator_register_window_predecessor354.py'
 
@@ -53,7 +55,7 @@ class Fixture:
                         'draft': False, 'published_at': 'fixture-published-time', 'assets': [self.asset]}
         self.asset_bytes = self.mirror_bytes = self.pdf
         self.requests, self.sql, self.connections = [], [], []
-        self.live_service = lambda: '1234'
+        self.live_service = lambda: ('1234', '1000', self.catalogue, self.catalogue)
         self.args = ['helper', '--case', self.h.CASE, '--metadata-commit', 'a' * 40,
                      '--asset-id', str(self.asset_id)]
         db = CONNECT(self.database)
@@ -87,15 +89,16 @@ class Fixture:
 
     def host_path(self, value):
         allowed = {'/srv/airr-private/historical-revisions/catalogue.json': self.catalogue,
+                   '/srv/airr-private/instance/intake.sqlite3': self.database,
                    '/srv/airr-private/tep-catalogue-before354-v1-two-witnesses.json': self.backup}
         if str(value) not in allowed:
             raise AssertionError('Unexpected host path: ' + str(value))
         return allowed[str(value)]
 
     def connect(self, value, **kwargs):
-        if value != '/srv/airr-private/instance/intake.sqlite3':
+        if value != self.database.as_uri() + '?mode=rw' or kwargs.get('uri') is not True:
             raise AssertionError('Unexpected database')
-        db = CONNECT(self.database, **kwargs)
+        db = CONNECT(value, **kwargs)
         db.set_trace_callback(self.sql.append)
         self.connections.append(db)
         return db
@@ -255,16 +258,16 @@ class CatalogueReconcile354Tests(unittest.TestCase):
                     with self.assertRaisesRegex(ValueError, 'PDF mismatch'):
                         f.run(apply=True)
                     self.unchanged(f)
-        for status, url, body, expected in [(404, 'https://example.test/', b'', 'HTTPS200'),
+        for status, url, body, expected in [(404, 'https://airr.science/', b'', 'HTTPS200'),
                                              (200, 'http://example.test/', b'', 'HTTPS200'),
-                                             (200, 'https://example.test/', b'12345', 'Oversized')]:
+                                             (200, 'https://airr.science/', b'12345', 'Oversized')]:
             with self.subTest(status=status, url=url), self.fixture() as f:
                 response = type('Response', (), {'status': status, 'url': url,
                            '__enter__': lambda this: this, '__exit__': lambda *args: False,
                            'read': lambda this, size: body[:size]})()
                 with patch.object(f.h.urllib.request, 'urlopen', return_value=response):
                     with self.assertRaisesRegex(ValueError, expected):
-                        f.h.public('https://example.test/', 4)
+                        f.h.public(f.h.MIRROR_PDF, 4)
                 self.unchanged(f)
 
     def test_08_conflicting_catalogue_entry_and_invalid_json_refused(self):
@@ -323,16 +326,18 @@ class CatalogueReconcile354Tests(unittest.TestCase):
                 if path == f.catalogue and not observations:
                     self.assertTrue(f.connections[0].in_transaction)
                     compete('snapshot')
+                elif path == f.catalogue and json.loads(raw).get(f.h.PID) == f.new and 'readback' not in observations:
+                    compete('readback')
                 return raw
 
             def opened(path, *args, **kwargs):
                 if path == f.backup:
                     compete('after_final_compare')
-                return OPEN(path, *args, **kwargs)
+                return OS_OPEN(path, *args, **kwargs)
 
-            with patch.object(Path, 'read_bytes', read), patch.object(Path, 'open', opened):
+            with patch.object(Path, 'read_bytes', read), patch.object(f.h.os, 'open', opened):
                 f.run(apply=True)
-            self.assertEqual(observations, ['snapshot', 'after_final_compare'])
+            self.assertEqual(observations, ['snapshot', 'after_final_compare', 'readback'])
             other = CONNECT(f.database, timeout=0)
             try:
                 other.execute('BEGIN IMMEDIATE')
@@ -424,7 +429,8 @@ class CatalogueReconcile354Tests(unittest.TestCase):
                         raise ValueError('fixture live config mismatch')
                     f.live_service = fail
                 else:
-                    replies = iter(['1234', '5678'])
+                    replies = iter([('1234', '1000', f.catalogue, f.catalogue),
+                                    ('1234', '2000', f.catalogue, f.catalogue)])
                     f.live_service = lambda: next(replies)
                 with self.assertRaisesRegex(ValueError, 'config mismatch|Service restarted'):
                     f.run(apply=True)
@@ -436,17 +442,28 @@ class CatalogueReconcile354Tests(unittest.TestCase):
             source = READ(ROOT / 'services/intake/app.py')
             self.assertNotIn(b'\r', source)  # Linux CI uses the Git LF representation.
             self.assertEqual(hashlib.sha256(source).hexdigest(), f.h.APP_CONFIG_SHA256)
+            for name, digest in f.h.ISSUER_SOURCE_SHA256.items():
+                self.assertEqual(hashlib.sha256(READ(ROOT / name)).hexdigest(), digest)
 
     def test_16_live_guard_reads_process_config_without_importing_factory(self):
-        for defect in ('none', 'pid', 'command', 'factory', 'database', 'catalogue', 'author', 'release'):
+        for defect in ('none', 'pid', 'command', 'factory', 'database', 'catalogue', 'author', 'release',
+                       'relative-db', 'relative-catalogue', 'hardlink-db', 'hardlink-catalogue', 'mount', 'issuers'):
             with self.subTest(defect=defect), self.fixture() as f:
                 release = f.root / 'release'
                 (release / 'services/intake').mkdir(parents=True)
                 app_bytes = b'fixture-not-executed-factory'
                 (release / 'services/intake/app.py').write_bytes(app_bytes)
+                issuer_bytes = b'fixture-not-executed-grant-issuer'
+                (release / 'services/intake/programme_delegations.py').write_bytes(issuer_bytes)
+                (release / 'services/intake/historical_revisions.py').write_bytes(issuer_bytes)
                 proc = f.root / 'proc'
                 (proc / '1234').mkdir(parents=True)
                 (proc / '1234/cwd').symlink_to(release, target_is_directory=True)
+                (proc / '1234/stat').write_text('1234 (gunicorn worker) ' + ' '.join(['0'] * 19 + ['1000']))
+                mounted = proc / '1234/root' / str(f.root).lstrip('/')
+                mounted.mkdir(parents=True)
+                (mounted / 'intake.sqlite3').symlink_to(f.database)
+                (mounted / 'catalogue.json').symlink_to(f.database if defect == 'mount' else f.catalogue)
                 command = b'gunicorn\0services.intake.app:create_app()\0'
                 (proc / '1234/cmdline').write_bytes(b'wrong' if defect == 'command' else command)
                 env = {'ARR_INTAKE_INSTANCE': str(f.root),
@@ -459,9 +476,24 @@ class CatalogueReconcile354Tests(unittest.TestCase):
                     env['AIRR_HISTORICAL_REVISION_CATALOGUE'] = str(f.database)
                 if defect == 'author':
                     env['AIRR_HISTORICAL_OPERATOR_AUTHOR'] = 'Other author'
+                if defect == 'relative-db':
+                    env['ARR_INTAKE_INSTANCE'] = '.'
+                if defect == 'relative-catalogue':
+                    env['AIRR_HISTORICAL_REVISION_CATALOGUE'] = 'catalogue.json'
+                if defect == 'hardlink-db':
+                    alternate = f.root / 'alternate'
+                    alternate.mkdir()
+                    os.link(f.database, alternate / 'intake.sqlite3')
+                    env['ARR_INTAKE_INSTANCE'] = str(alternate)
+                if defect == 'hardlink-catalogue':
+                    alternate = f.root / 'catalogue-alias.json'
+                    os.link(f.catalogue, alternate)
+                    env['AIRR_HISTORICAL_REVISION_CATALOGUE'] = str(alternate)
                 (proc / '1234/environ').write_bytes(b'\0'.join(
                     (k+'='+v).encode() for k, v in env.items()))
-                paths = {'/proc': proc, '/opt/airr-intake/current': release}
+                paths = {'/proc': proc, '/opt/airr-intake/current': release,
+                         '/srv/airr-private/instance/intake.sqlite3': f.database,
+                         '/srv/airr-private/historical-revisions/catalogue.json': f.catalogue}
                 if defect == 'release':
                     paths['/opt/airr-intake/current'] = f.root
                 samefile = Path.samefile
@@ -479,16 +511,97 @@ class CatalogueReconcile354Tests(unittest.TestCase):
                     stack.enter_context(patch.object(Path, 'samefile', mapped_samefile))
                     stack.enter_context(patch.object(f.h, 'APP_CONFIG_SHA256',
                         '0'*64 if defect == 'factory' else hashlib.sha256(app_bytes).hexdigest()))
+                    stack.enter_context(patch.object(f.h, 'ISSUER_SOURCE_SHA256', {
+                        name: ('0'*64 if defect == 'issuers' else hashlib.sha256(issuer_bytes).hexdigest())
+                        for name in f.h.ISSUER_SOURCE_SHA256}))
                     stack.enter_context(patch.object(f.h.subprocess, 'check_output',
                         return_value='0\n' if defect == 'pid' else '1234\n'))
                     output = stack.enter_context(redirect_stdout(io.StringIO()))
                     if defect == 'none':
-                        self.assertEqual(f.h.verify_live_service(), '1234')
+                        self.assertEqual(f.h.verify_live_service(),
+                                         ('1234', '1000', f.catalogue, mounted / 'catalogue.json'))
                     else:
                         with self.assertRaises((ValueError, FileNotFoundError)):
                             f.h.verify_live_service()
                     self.assertEqual(output.getvalue(), '')
                 self.unchanged(f)
+
+
+    def test_17_private_files_are_created_0600_even_with_permissive_umask(self):
+        with self.fixture() as f:
+            observed = []
+            def opened(path, flags, mode=0o777, **kwargs):
+                fd = OS_OPEN(path, flags, mode, **kwargs)
+                if path in (f.backup, f.tmp):
+                    observed.append(path)
+                    self.assertEqual(stat.S_IMODE(os.fstat(fd).st_mode), 0o600)
+                    self.assertEqual(os.fstat(fd).st_size, 0)
+                    self.assertTrue(flags & os.O_EXCL)
+                return fd
+            previous_umask = os.umask(0)
+            try:
+                with patch.object(f.h.os, 'open', opened):
+                    f.run(apply=True)
+            finally:
+                os.umask(previous_umask)
+            self.assertEqual(observed, [f.backup, f.tmp])
+
+    def test_18_duplicate_json_keys_refused_without_losing_original_bytes(self):
+        for kind in ('paper', 'unrelated', 'nested'):
+            with self.subTest(kind=kind), self.fixture() as f:
+                if kind == 'paper':
+                    raw = ('{"' + f.h.PID + '":{"wrong":true},"' + f.h.PID + '":' + json.dumps(f.new) + '}').encode()
+                elif kind == 'unrelated':
+                    raw = b'{"other":{"a":1},"other":{"a":2}}'
+                else:
+                    raw = b'{"other":{"a":1,"a":2}}'
+                f.catalogue.write_bytes(raw)
+                with self.assertRaisesRegex(ValueError, 'Duplicate JSON key'):
+                    f.run(apply=True)
+                self.unchanged(f, raw)
+
+    def test_19_transport_preserves_distinct_public_witness_origins(self):
+        for requested, final, accept, succeeds in (
+                ('https://airr.science/a.pdf', 'https://airr.science/a.pdf', None, True),
+                ('https://airr.science/a.pdf', 'https://release-assets.githubusercontent.com/a.pdf', None, False),
+                ('https://raw.githubusercontent.com/a', 'https://api.github.com/a', None, False),
+                ('https://api.github.com/a', 'https://release-assets.githubusercontent.com/a', 'application/vnd.github+json', False),
+                ('https://api.github.com/a', 'https://release-assets.githubusercontent.com/a', 'application/octet-stream', True),
+                ('https://api.github.com/a', 'https://objects.githubusercontent.com/a', 'application/octet-stream', True),
+                ('https://airr.science/a.pdf', 'https://airr.science.evil.test/a.pdf', None, False),
+                ('https://airr.science/a.pdf', 'https://user@airr.science/a.pdf', None, False),
+                ('https://airr.science/a.pdf', 'https://airr.science:444/a.pdf', None, False)):
+            with self.subTest(requested=requested, final=final), self.fixture() as f:
+                # Even correct bytes cannot turn the official asset into a mirror witness.
+                response = type('Response', (), {'status': 200, 'url': final,
+                           '__enter__': lambda this: this, '__exit__': lambda *args: False,
+                           'read': lambda this, size: f.pdf[:size]})()
+                with patch.object(f.h.urllib.request, 'urlopen', return_value=response):
+                    if succeeds:
+                        self.assertEqual(f.h.public(requested, len(f.pdf), accept), f.pdf)
+                    else:
+                        with self.assertRaisesRegex(ValueError, 'redirect origin mismatch'):
+                            f.h.public(requested, len(f.pdf), accept)
+                self.unchanged(f)
+
+    def test_20_missing_database_is_not_created(self):
+        with self.fixture() as f:
+            f.database.unlink()
+            with self.assertRaises(sqlite3.OperationalError):
+                f.run(apply=True)
+            self.assertFalse(f.database.exists())
+            self.assertEqual(READ(f.catalogue), f.before)
+            self.assertFalse(f.backup.exists())
+            self.assertFalse(f.tmp.exists())
+
+    def test_21_identity_constants_match_existing_public_metadata(self):
+        with self.fixture() as f:
+            meta = json.loads(READ(ROOT / 'papers/2026/11/4T/ARR-2026-4T35VQ6MZB8F99F4/metadata.json'))
+            self.assertEqual(f.h.PID, meta['id'])
+            self.assertEqual(f.h.DIGEST, meta['integrity']['canonical_sha256'])
+            for key in ('record_id', 'version_id', 'version'):
+                self.assertEqual(f.h.NEW[key], meta[key])
+            self.assertEqual(f.h.NEW['authors'], [a['name'] for a in meta['authors']])
 
 
 if __name__ == '__main__':

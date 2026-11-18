@@ -58,6 +58,17 @@ The supported live-writer inventory at the 226C race-fix freeze is:
 * `operator_register_window_predecessor354.py` (absent v1: exact native published case,
   official asset and AIRR mirror; verifies the running service's actual configuration)
 
+The v1 window helper requires absolute, equal canonical configured paths and
+the same process mount view, not merely hard-linked file identities. It opens
+only an existing database, rejects duplicate JSON keys at every depth, creates
+private backup and temporary files with initial mode 0600, and reads back through
+the configured service paths while retaining the writer lock. The AIRR mirror
+must finish on the AIRR origin; an official-asset redirect cannot stand in for it.
+The running release factory and both corrected grant-issuer source files are
+pinned. These checks do not prove loaded worker state: the operator must verify
+the effective unit/options and immutable deployment, with no concurrent deploy,
+before applying. A PID plus process start time detects ordinary process replacement.
+
 These scripts use the same database path and retain the transaction across the
 final file comparison, replacement and readback. The regression inventory check
 must be extended for any new supported writer. Deployment must include both
