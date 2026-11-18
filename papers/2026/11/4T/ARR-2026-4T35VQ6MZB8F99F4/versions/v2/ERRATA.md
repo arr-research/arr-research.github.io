@@ -1,0 +1,1 @@
+No change to the assessed PDF is made in this release. Editorial observations (dense notation and locally reused symbols) and the two harmless overfull-line warnings are preserved in the original review and visual QA report.
