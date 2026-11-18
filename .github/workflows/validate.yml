@@ -45,6 +45,10 @@ jobs:
         env:
           ARR_SESSION_SECRET: ci-only-secret-ci-only-secret-ci-only-secret-ci-only-secret
         run: python -O -m unittest discover -s tests -p test_programme_delegations.py -v
+      - name: Test exact predecessor writer and lock guards with optimization enabled
+        run: |
+          python -O -m unittest discover -s tests -p test_catalogue_register354.py -v
+          python -O -m unittest discover -s tests -p test_catalogue_writer_protocol.py -v
       - name: Validate AIRR records
         run: python scripts/validate_papers.py
       - name: Build static catalogue

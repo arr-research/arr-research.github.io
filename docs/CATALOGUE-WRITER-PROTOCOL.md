@@ -55,6 +55,8 @@ The supported live-writer inventory at the 226C race-fix freeze is:
 * `operator_reconcile_matrix_v14_226C.py` (original mirror gate, unchanged)
 * `operator_reconcile_matrix_v14_official_release_226C.py`
 * `operator_reconcile_rectangular_v15_232B.py` (v15: both official asset and AIRR mirror)
+* `operator_register_window_predecessor354.py` (absent v1: exact native published case,
+  official asset and AIRR mirror; verifies the running service's actual configuration)
 
 These scripts use the same database path and retain the transaction across the
 final file comparison, replacement and readback. The regression inventory check
