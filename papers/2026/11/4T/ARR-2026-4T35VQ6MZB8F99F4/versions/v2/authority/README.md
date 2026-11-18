@@ -1,0 +1,1 @@
+Public projections of the real native receipt and continuous-author working-paper permission. The private original responses are retained separately. These record deposition and author permission, not editorial acceptance or independent peer review. The initial instruction is unchanged.
