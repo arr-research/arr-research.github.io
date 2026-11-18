@@ -1,0 +1,1 @@
+The authored manuscript and assessment are supplied under CC-BY-4.0. The metadata uses CC0-1.0 and the build cell AGPL-3.0-or-later. Existing third-party rights in quoted package diagnostics remain with their owners.
