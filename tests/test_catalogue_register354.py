@@ -147,6 +147,60 @@ class CatalogueReconcile354Tests(unittest.TestCase):
         self.assertFalse(any(s.lstrip().upper().startswith(('INSERT', 'UPDATE', 'DELETE', 'REPLACE', 'CREATE', 'DROP'))
                              for s in f.sql), f.sql)
 
+    def test_v2_requires_exact_v1_and_native_revision(self):
+        with self.fixture() as f:
+            h = f.h
+            parent = f.new
+            f.pdf = b'G' * 398180
+            v2 = {**h.V2, 'canonical_sha256': hashlib.sha256(f.pdf).hexdigest()}
+            tag = h.PID + '-v2'
+            name = tag + '.pdf'
+            release = h.RELEASE.removesuffix(h.TAG) + tag
+            mirror = 'https://airr.science/papers/' + h.PID + '/versions/v2/' + name
+            api = h.RELEASE_API.removesuffix(h.TAG) + tag
+            metadata = {**f.metadata, **v2, 'authors': f.metadata['authors'],
+                        'integrity': {'canonical_sha256': v2['canonical_sha256']},
+                        'supersedes_version_id': parent['version_id']}
+            asset = {**f.asset, 'name': name, 'size': len(f.pdf),
+                     'browser_download_url': f.asset['browser_download_url'].replace(h.TAG, tag)}
+            endpoints = {api: json.dumps({**f.release, 'tag_name': tag, 'html_url': release,
+                                          'assets': [asset]}).encode(), mirror: f.pdf,
+                         'https://api.github.com/repos/arr-research/arr-research.github.io/releases/assets/'
+                         + str(f.asset_id): f.pdf,
+                         'https://raw.githubusercontent.com/arr-research/arr-research.github.io/'
+                         + 'a' * 40 + '/papers/2026/11/4T/' + h.PID + '/versions/v2/metadata.json':
+                         json.dumps(metadata).encode()}
+            f.public = lambda url, *args: endpoints[url]
+            f.args[2] = h.V2_CASE
+            f.change_db('UPDATE submissions SET id=?,sha256=?,public_release_url=?',
+                        (h.V2_CASE, v2['canonical_sha256'], release))
+            f.change_db('CREATE TABLE historical_revisions(submission_id,version_id,binding_json)')
+            binding = {'paper_id': h.PID, 'record_id': h.RECORD, 'version': 'v2',
+                       'version_id': v2['version_id'], 'sha256': v2['canonical_sha256'],
+                       'parent_sha256': parent['canonical_sha256'], 'supersedes_version_id': parent['version_id']}
+            paths = f.host_path
+            backup = f.root / 'v2-backup.json'
+            f.host_path = lambda value: backup if str(value).endswith('before354-v2-two-witnesses.json') else paths(value)
+            with patch.object(h, 'V2', v2):
+                with self.assertRaisesRegex(ValueError, 'Unexpected existing entry'):
+                    f.run(apply=True)
+                f.write_catalogue(parent)
+                old = READ(f.catalogue)
+                with self.assertRaisesRegex(ValueError, 'Native revision identity'):
+                    f.run(apply=True)
+                f.change_db('INSERT INTO historical_revisions VALUES(?,?,?)',
+                            (h.V2_CASE, v2['version_id'], json.dumps({**binding, 'parent_sha256': '0' * 64})))
+                with self.assertRaisesRegex(ValueError, 'binding mismatch'):
+                    f.run(apply=True)
+                self.assertEqual(READ(f.catalogue), old)
+                self.assertFalse(backup.exists())
+                f.change_db('UPDATE historical_revisions SET binding_json=?', (json.dumps(binding),))
+                self.assertFalse(f.run()['mutated'])
+                self.assertTrue(f.run(apply=True)['mutated'])
+                self.assertEqual(READ(backup), old)
+                self.assertEqual(json.loads(READ(f.catalogue)), {**f.others, h.PID: v2})
+                self.assertFalse(f.run(apply=True)['mutated'])
+
     def test_01_default_readonly_has_both_witnesses_and_no_mutation(self):
         with self.fixture() as f:
             out = f.run()
