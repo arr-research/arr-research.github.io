@@ -37,6 +37,15 @@ V2_CASE = 'SUB-973BC089595D6A26'
 V2 = {**NEW, 'version': 'v2',
       'version_id': 'arr:version:c6363401-35d3-4d12-ac51-6210cd61d288',
       'canonical_sha256': 'd617dc40ae813e50894dede5ea8f73c113f20e7d52b218c74ee9cc3656bae014'}
+SHELL_CASE = 'SUB-15AB00123A598331'
+SHELL_ID = 'ARR-2026-2B2W1WQ7DF9N5VW7'
+SHELL_COMMIT = 'f4bbc6f50afef4337b76175312c84284891a2fef'
+SHELL_PDF_ASSET = 762639932
+SHELL_V1 = {'record_id': 'arr:record:4b1703cb-9daf-4d4b-be1c-825c4243ecbb',
+            'version_id': 'arr:version:2523e2c1-9b71-4986-be81-931bf48e2ea4',
+            'version': 'v1',
+            'canonical_sha256': '32dc8014a45b981f7adff96cb8a6946923a8c093bf7ab8375d55347032d56bcd',
+            'authors': ['Lluis Eriksson']}
 APP_CONFIG_SHA256 = '7db0f6910059aa77eb6adceef0760d3d5a2128a571828af2b6bcb2df7f3977ce'
 ISSUER_SOURCE_SHA256 = {
     'services/intake/programme_delegations.py': '459a854d2a19745ac5a9783c3ea023d3383727e49d7b797d45b4afb833d8d815',
@@ -152,7 +161,19 @@ def main():
     parser.add_argument('--asset-id', required=True, type=int,
                         help='Actual PDF asset ID belonging to the published v1 tag')
     args = parser.parse_args()
-    if args.case == V2_CASE:
+    paper_id, record_id, shard, backup_key = PID, RECORD, '4T', '354'
+    if args.case == SHELL_CASE:
+        target, predecessor = SHELL_V1, None
+        paper_id, record_id, shard, backup_key = SHELL_ID, target['record_id'], '2B', 'shell-trap'
+        tag = paper_id + '-v1'
+        asset_name, pdf_bytes = tag + '.pdf', 311003
+        release_url = RELEASE.removesuffix(TAG) + tag
+        release_api = RELEASE_API.removesuffix(TAG) + tag
+        mirror = 'https://airr.science/papers/' + paper_id + '/versions/v1/' + asset_name
+        metadata_path = '/metadata.json'
+        if args.metadata_commit != SHELL_COMMIT or args.asset_id != SHELL_PDF_ASSET:
+            raise ValueError('Published shell v1 metadata commit and PDF asset required')
+    elif args.case == V2_CASE:
         target, predecessor = V2, NEW
         tag = PID + '-v2'
         asset_name = tag + '.pdf'
@@ -176,10 +197,10 @@ def main():
         raise ValueError('Existing AIRR Linux host only')
     service_pid = verify_live_service()
     base = ('https://raw.githubusercontent.com/arr-research/arr-research.github.io/'
-            + args.metadata_commit + '/papers/2026/11/4T/' + PID)
+            + args.metadata_commit + '/papers/2026/11/' + shard + '/' + paper_id)
     metadata_raw = public(base + metadata_path, 100000)
     meta = json.loads(metadata_raw, object_pairs_hook=unique_object)
-    if (meta['id'] != PID or meta['authors'] != [{'name': 'Lluis Eriksson',
+    if (meta['id'] != paper_id or meta['authors'] != [{'name': 'Lluis Eriksson',
                                                 'affiliation': 'Independent researcher'}]
             or any(meta[k] != target[k] for k in ('record_id', 'version_id', 'version'))
             or meta.get('status') != 'working_paper'
@@ -219,8 +240,8 @@ def main():
         data = json.loads(raw, object_pairs_hook=unique_object)
         if not isinstance(data, dict):
             raise ValueError('Catalogue must be an object')
-        expected_parent = (data.get(PID) == predecessor if predecessor else PID not in data)
-        if data.get(PID) != target and not expected_parent:
+        expected_parent = (data.get(paper_id) == predecessor if predecessor else paper_id not in data)
+        if data.get(paper_id) != target and not expected_parent:
             raise ValueError('Unexpected existing entry; do not overwrite')
         case = db.execute('SELECT sha256,public_release_url,public_released_at '
                           'FROM submissions WHERE id=?', (args.case,)).fetchone()
@@ -232,7 +253,7 @@ def main():
             if not row or row[0] != target['version_id']:
                 raise ValueError('Native revision identity mismatch')
             binding = json.loads(row[1], object_pairs_hook=unique_object)
-            expected = {'paper_id': PID, 'record_id': RECORD, 'version': target['version'],
+            expected = {'paper_id': paper_id, 'record_id': record_id, 'version': target['version'],
                         'version_id': row[0], 'sha256': target['canonical_sha256'],
                         'parent_sha256': predecessor['canonical_sha256'],
                         'supersedes_version_id': predecessor['version_id']}
@@ -243,13 +264,13 @@ def main():
                             "AND g.uses=0 AND julianday(g.expires_at)>julianday('now')").fetchone()[0]
         if active:
             raise ValueError('Live unused historical grant; reconcile before changing catalogue')
-        if data.get(PID) == target:
+        if data.get(paper_id) == target:
             print(json.dumps({'status': 'already_reconciled', 'mutated': False,
                               'active_unused_grants': active, 'unrelated_entries_preserved': len(data)-1,
                               'official_release_verified': True, 'AIRR_mirror_verified': True}))
             return
         result = {'status': 'verified_public_successor' if predecessor else 'verified_absent_public_predecessor', 'mutated': False,
-                  'active_unused_grants': active, 'unrelated_entries_preserved': len(data) - int(PID in data),
+                  'active_unused_grants': active, 'unrelated_entries_preserved': len(data) - int(paper_id in data),
                   'old_sha256': hashlib.sha256(raw).hexdigest(), 'entry': target,
                   'creates_permission_or_publication': False,
                   'public_witness': 'official_GitHub_release_exact_asset_' + str(args.asset_id),
@@ -264,17 +285,17 @@ def main():
             raise ValueError('Concurrent catalogue change')
         if verify_live_service() != service_pid:
             raise ValueError('Service restarted during preparation; inspect before retry')
-        backup = Path('/srv/airr-private/tep-catalogue-before354-' + target['version'] + '-two-witnesses.json')
+        backup = Path('/srv/airr-private/tep-catalogue-before' + backup_key + '-' + target['version'] + '-two-witnesses.json')
         with os.fdopen(os.open(backup, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600), 'wb') as stream:
             stream.write(raw)
             stream.flush()
             os.fsync(stream.fileno())
         previous = dict(data)
-        data[PID] = target
-        if any(data[k] != value for k, value in previous.items() if k != PID):
+        data[paper_id] = target
+        if any(data[k] != value for k, value in previous.items() if k != paper_id):
             raise ValueError('Unrelated entry changed')
         new = (json.dumps(data, sort_keys=True, indent=2) + '\n').encode()
-        tmp = path.with_name('catalogue.354-' + target['version'] + '-two-witnesses.tmp')
+        tmp = path.with_name('catalogue.' + backup_key + '-' + target['version'] + '-two-witnesses.tmp')
         mode = path.stat()
         with os.fdopen(os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600), 'wb') as stream:
             stream.write(new)
