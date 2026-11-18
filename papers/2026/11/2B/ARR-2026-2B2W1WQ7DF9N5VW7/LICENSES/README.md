@@ -1,0 +1,1 @@
+The manuscript and authored scientific text are CC-BY-4.0. Catalogue metadata are CC0-1.0. The build script is AGPL-3.0-or-later. Third-party package names and diagnostic notices retain their original rights. No third-party software binaries are redistributed.
