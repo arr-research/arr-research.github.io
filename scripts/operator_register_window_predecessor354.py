@@ -40,6 +40,18 @@ ISSUER_SOURCE_SHA256 = {
 }
 
 
+def mount_points(raw):
+    points = set()
+    for line in raw.splitlines():
+        fields = line.split()
+        if len(fields) < 10 or '-' not in fields:
+            raise ValueError('Invalid mount namespace evidence')
+        points.add(re.sub(r'\\([0-7]{3})', lambda m: chr(int(m[1], 8)), fields[4]))
+    if not points:
+        raise ValueError('Missing mount namespace evidence')
+    return points
+
+
 def verify_live_service():
     """Check the running immutable factory and its actual configuration inputs.
 
@@ -72,13 +84,24 @@ def verify_live_service():
     catalogue = Path(env['AIRR_HISTORICAL_REVISION_CATALOGUE'])
     if not instance.is_absolute() or not catalogue.is_absolute():
         raise ValueError('Absolute live configuration paths required')
+    own_mounts = mount_points(Path('/proc/self/mountinfo').read_text())
+    service_mounts = mount_points((proc / 'mountinfo').read_text())
     for configured, canonical in (
             (instance / 'intake.sqlite3', Path('/srv/airr-private/instance/intake.sqlite3')),
             (catalogue, Path('/srv/airr-private/historical-revisions/catalogue.json'))):
+        service_path = proc / 'root' / str(configured).lstrip('/')
         if (configured.resolve(strict=True) != canonical.resolve(strict=True)
                 or not configured.samefile(canonical)
-                or not (proc / 'root' / str(configured).lstrip('/')).samefile(canonical)):
+                or not service_path.samefile(canonical)
+                or not service_path.parent.samefile(canonical.parent)):
             raise ValueError('Live canonical path or mount mismatch')
+        # A file bind mount can retain an old catalogue inode after replace or
+        # give SQLite a different journal/WAL directory despite matching inodes.
+        names = {str(configured), str(canonical), str(canonical.resolve(strict=True))}
+        if canonical.name == 'intake.sqlite3':
+            names |= {name + suffix for name in tuple(names) for suffix in ('-journal', '-wal', '-shm')}
+        if names & (own_mounts | service_mounts):
+            raise ValueError('Individual database/catalogue/sidecar mount is unsupported')
     if env['AIRR_HISTORICAL_OPERATOR_AUTHOR'] != 'Lluis Eriksson':
         raise ValueError('Live database/catalogue/sole-author configuration mismatch')
     # Field22 is starttime; comm may contain spaces and closing parentheses.

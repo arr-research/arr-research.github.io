@@ -447,7 +447,8 @@ class CatalogueReconcile354Tests(unittest.TestCase):
 
     def test_16_live_guard_reads_process_config_without_importing_factory(self):
         for defect in ('none', 'pid', 'command', 'factory', 'database', 'catalogue', 'author', 'release',
-                       'relative-db', 'relative-catalogue', 'hardlink-db', 'hardlink-catalogue', 'mount', 'issuers'):
+                       'relative-db', 'relative-catalogue', 'hardlink-db', 'hardlink-catalogue', 'mount', 'issuers',
+                       'parent', 'file-mount', 'own-file-mount', 'sidecar-mount'):
             with self.subTest(defect=defect), self.fixture() as f:
                 release = f.root / 'release'
                 (release / 'services/intake').mkdir(parents=True)
@@ -461,9 +462,22 @@ class CatalogueReconcile354Tests(unittest.TestCase):
                 (proc / '1234/cwd').symlink_to(release, target_is_directory=True)
                 (proc / '1234/stat').write_text('1234 (gunicorn worker) ' + ' '.join(['0'] * 19 + ['1000']))
                 mounted = proc / '1234/root' / str(f.root).lstrip('/')
-                mounted.mkdir(parents=True)
-                (mounted / 'intake.sqlite3').symlink_to(f.database)
-                (mounted / 'catalogue.json').symlink_to(f.database if defect == 'mount' else f.catalogue)
+                mounted.parent.mkdir(parents=True)
+                if defect in ('parent', 'mount'):
+                    mounted.mkdir()
+                    (mounted / 'intake.sqlite3').symlink_to(f.database)
+                    (mounted / 'catalogue.json').symlink_to(f.database if defect == 'mount' else f.catalogue)
+                else:
+                    mounted.symlink_to(f.root, target_is_directory=True)
+                baseline_mount = '1 0 0:1 / / rw - ext4 /dev/root rw\n'
+                own_mountinfo = f.root / 'own-mountinfo'
+                own_mountinfo.write_text(baseline_mount)
+                (proc / '1234/mountinfo').write_text(baseline_mount)
+                if defect in ('file-mount', 'own-file-mount', 'sidecar-mount'):
+                    target = str(f.catalogue) if defect != 'sidecar-mount' else str(f.database) + '-wal'
+                    extra = '2 1 0:1 / ' + target + ' rw - ext4 /dev/root rw\n'
+                    chosen = own_mountinfo if defect == 'own-file-mount' else proc / '1234/mountinfo'
+                    chosen.write_text(baseline_mount + extra)
                 command = b'gunicorn\0services.intake.app:create_app()\0'
                 (proc / '1234/cmdline').write_bytes(b'wrong' if defect == 'command' else command)
                 env = {'ARR_INTAKE_INSTANCE': str(f.root),
@@ -492,6 +506,7 @@ class CatalogueReconcile354Tests(unittest.TestCase):
                 (proc / '1234/environ').write_bytes(b'\0'.join(
                     (k+'='+v).encode() for k, v in env.items()))
                 paths = {'/proc': proc, '/opt/airr-intake/current': release,
+                         '/proc/self/mountinfo': own_mountinfo,
                          '/srv/airr-private/instance/intake.sqlite3': f.database,
                          '/srv/airr-private/historical-revisions/catalogue.json': f.catalogue}
                 if defect == 'release':
@@ -599,9 +614,30 @@ class CatalogueReconcile354Tests(unittest.TestCase):
             meta = json.loads(READ(ROOT / 'papers/2026/11/4T/ARR-2026-4T35VQ6MZB8F99F4/metadata.json'))
             self.assertEqual(f.h.PID, meta['id'])
             self.assertEqual(f.h.DIGEST, meta['integrity']['canonical_sha256'])
+            self.assertEqual(f.h.NEW['canonical_sha256'], meta['integrity']['canonical_sha256'])
             for key in ('record_id', 'version_id', 'version'):
                 self.assertEqual(f.h.NEW[key], meta[key])
             self.assertEqual(f.h.NEW['authors'], [a['name'] for a in meta['authors']])
+
+    def test_22_mountinfo_escaping_and_invalid_evidence(self):
+        with self.fixture() as f:
+            self.assertEqual(f.h.mount_points(r'1 0 0:1 / /with\040space\134slash rw - ext4 /dev/root rw'),
+                             {'/with space\\slash'})
+            for raw in ('', 'invalid', '1 0 0:1 / / rw ext4 /dev/root rw'):
+                with self.assertRaises(ValueError):
+                    f.h.mount_points(raw)
+
+    def test_23_service_view_readback_failure_is_not_reported_as_success(self):
+        with self.fixture() as f:
+            stale = f.root / 'service-stale.json'
+            stale.write_bytes(f.before)
+            f.live_service = lambda: ('1234', '1000', f.catalogue, stale)
+            with self.assertRaisesRegex(ValueError, 'Catalogue readback mismatch'):
+                f.run(apply=True)
+            self.assertEqual(json.loads(READ(f.catalogue)), {f.h.PID: f.new, **f.others})
+            self.assertEqual(READ(stale), f.before)
+            self.assertEqual(READ(f.backup), f.before)
+            self.no_authority_writes(f)
 
 
 if __name__ == '__main__':

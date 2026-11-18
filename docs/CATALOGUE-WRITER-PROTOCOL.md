@@ -60,6 +60,8 @@ The supported live-writer inventory at the 226C race-fix freeze is:
 
 The v1 window helper requires absolute, equal canonical configured paths and
 the same process mount view, not merely hard-linked file identities. It opens
+only after checking shared parent directories and rejecting individual mounts
+of either file or SQLite journal/WAL/SHM sidecars in both mount namespaces. It opens
 only an existing database, rejects duplicate JSON keys at every depth, creates
 private backup and temporary files with initial mode 0600, and reads back through
 the configured service paths while retaining the writer lock. The AIRR mirror
