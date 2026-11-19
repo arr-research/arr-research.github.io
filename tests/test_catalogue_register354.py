@@ -709,7 +709,7 @@ class CatalogueReconcile354Tests(unittest.TestCase):
                                     h.SHELL_PDF_ASSET, h.SHELL_V1)
 
     def test_boolean_v1_predecessors(self):
-        for case in ('SUB-48EF3BDD79BBA4B0', 'SUB-E8772979C782BC39'):
+        for case in ('SUB-48EF3BDD79BBA4B0', 'SUB-E8772979C782BC39', 'SUB-89DC4655B42EC065'):
             with self.subTest(case=case), self.fixture() as f:
                 pin = f.h.BOOLEAN_V1[case]
                 self.check_published_v1(f, pin['paper'], case, pin['commit'], pin['asset'], pin['entry'])
