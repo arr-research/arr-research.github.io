@@ -47,7 +47,15 @@ SHELL_V1 = {'record_id': 'arr:record:4b1703cb-9daf-4d4b-be1c-825c4243ecbb',
             'canonical_sha256': '32dc8014a45b981f7adff96cb8a6946923a8c093bf7ab8375d55347032d56bcd',
             'authors': ['Lluis Eriksson']}
 # Pins from the immutable first releases and their original intake receipts.
-BOOLEAN_V1 = {
+PINNED_V1 = {
+    'SUB-ACCEA0EE2952069D': {
+        'paper': 'ARR-2026-2FDKAKD7CC9G4BNQ', 'commit': 'c0094bed56c7daa7e53e8d9091d0f3161d3d7784',
+        'asset': 768718565, 'bytes': 243849,
+        'entry': {'record_id': 'arr:record:4f6cd536-9d8c-4c08-bade-2c4386d1315a',
+                  'version_id': 'arr:version:90163fc0-6fd6-46db-aa53-6bdf377600c9',
+                  'canonical_sha256': '6705413f1da5f3bc8fdf325d2c6e2ed2fc0ce1b920827b885c8eba170b2fcb61',
+                  'version': 'v1', 'authors': ['Lluis Eriksson']},
+    },
     'SUB-89DC4655B42EC065': {
         'paper': 'ARR-2026-54GRS2WX6182EVEB', 'commit': '4b74a6d7b726c83cae36d23ffd5f64e1da33b2ca',
         'asset': 766435224, 'bytes': 295919,
@@ -189,10 +197,10 @@ def main():
                         help='Actual PDF asset ID belonging to the published v1 tag')
     args = parser.parse_args()
     paper_id, record_id, shard, backup_key = PID, RECORD, '4T', '354'
-    if args.case in BOOLEAN_V1:
-        expected = BOOLEAN_V1[args.case]
+    if args.case in PINNED_V1:
+        expected = PINNED_V1[args.case]
         if args.metadata_commit != expected['commit'] or args.asset_id != expected['asset']:
-            raise ValueError('Expected the immutable Boolean v1 metadata and PDF asset')
+            raise ValueError('Expected the immutable v1 metadata and PDF asset')
         paper_id, target, predecessor = expected['paper'], expected['entry'], None
         record_id = target['record_id']
         shard = paper_id.split('-')[-1][:2]
