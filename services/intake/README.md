@@ -175,3 +175,11 @@ own password, prove possession of their authenticator, and save eight one-use
 recovery codes. Do not open the setup page on their behalf or copy its secrets.
 The command cannot replace active credentials. `workflow-sweep` expires setup and
 access links and erases delivered email bodies after seven days.
+
+### Programme release reconciliation
+
+The operator can run the host-only command `flask --app services.intake.programme_release_sync:create_cli reconcile-programme-publications` from the deployed release with the service environment loaded. Its public work list is `registry/programme-release-queue.json` on AIRR main. Append one item after verifying the programme working paper, using the native receipt and hashes of the canonical PDF and complete original assessment. The month is the catalogue directory month.
+
+The reader verifies the tagged metadata, receipt, original review, GitHub release asset and public AIRR PDF. It rechecks the current delegation and exact permission under the database write lock, then invokes the existing operator command. Repeated runs skip an already matching release. A missing mirror or invalid item defers that item while other records progress.
+
+For unattended operation deploy the tested service revision through the normal intake upgrade procedure, then install the supplied `airr-programme-release-sync.service` and `airr-programme-release-sync.timer` in the system unit directory, reload systemd and enable the timer. Stop and disable that dedicated timer to suspend reconciliation. The first run can be verified with a separate authenticated read of the original receipt. Merging the public repository alone does not deploy the private service.

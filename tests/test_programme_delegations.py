@@ -8,10 +8,58 @@ from unittest.mock import patch
 
 from services.intake import app as a
 from services.intake.app import get_db, iso
+from services.intake.programme_delegations import current
+from services.intake.programme_release_sync import install as install_receipt_sync
 from test_historical_revisions import HistoricalRevisionTests
 
 
 class ProgrammeDelegationTests(HistoricalRevisionTests):
+    def test_host_reconciles_once_after_public_readback_and_preserves_permissions(self):
+        install_receipt_sync(self.app, a, current)
+        controller = self.controller()
+        case = self.send_revision(self.child(controller).get_json()).get_json()['registration_number']
+        self.assertEqual(self.permit_working(controller, case).status_code, 200)
+        item = {'paper': self.binding['paper_id'], 'version': 'v2', 'month': '11',
+                'submission': case, 'sha256': self.binding['sha256'], 'report_sha256': '9' * 64}
+        queue = json.dumps([item]).encode()
+        args = ['reconcile-programme-publications']
+        with patch('services.intake.programme_release_sync.fetch', return_value=queue):
+            with patch('services.intake.programme_release_sync.public_evidence',
+                       side_effect=ValueError('Mirror mismatch')):
+                self.assertNotEqual(self.app.test_cli_runner().invoke(args=args).exit_code, 0)
+            with self.app.app_context():
+                db = get_db()
+                self.assertIsNone(db.execute('SELECT public_release_url FROM submissions WHERE id=?', (case,)).fetchone()[0])
+            with patch('services.intake.programme_release_sync.public_evidence',
+                       return_value=self.binding['version_id']) as evidence:
+                for _ in range(2):
+                    result = self.app.test_cli_runner().invoke(args=args)
+                    self.assertEqual(result.exit_code, 0, (result.output, result.exception))
+                self.assertEqual(evidence.call_count, 1)
+        with self.app.app_context():
+            db = get_db()
+            self.assertEqual(db.execute("SELECT COUNT(*) FROM audit_log WHERE event='public_release_verified' AND submission_id=?", (case,)).fetchone()[0], 1)
+            self.assertEqual(db.execute('SELECT COUNT(*) FROM publication_permissions WHERE submission_id=?',(case,)).fetchone()[0],1)
+            self.assertEqual(db.execute('SELECT status FROM submissions WHERE id=?', (case,)).fetchone()[0], 'eligible')
+
+    def test_host_rechecks_revocation_after_public_readback(self):
+        install_receipt_sync(self.app, a, current)
+        controller = self.controller()
+        case = self.send_revision(self.child(controller).get_json()).get_json()['registration_number']
+        self.assertEqual(self.permit_working(controller, case).status_code, 200)
+        item = {'paper': self.binding['paper_id'], 'version': 'v2', 'month': '11',
+                'submission': case, 'sha256': self.binding['sha256'], 'report_sha256': '9' * 64}
+        def revoke(*args):
+            db = get_db()
+            db.execute("UPDATE programme_delegations SET state='revoked'")
+            db.commit()
+            return self.binding['version_id']
+        with patch('services.intake.programme_release_sync.fetch', return_value=json.dumps([item]).encode()), \
+             patch('services.intake.programme_release_sync.public_evidence', side_effect=revoke):
+            self.assertNotEqual(self.app.test_cli_runner().invoke(args=['reconcile-programme-publications']).exit_code,0)
+        with self.app.app_context():
+            self.assertIsNone(get_db().execute('SELECT public_release_url FROM submissions WHERE id=?', (case,)).fetchone()[0])
+
     def grant_tables_snapshot(self):
         with self.app.app_context():
             db = get_db()
