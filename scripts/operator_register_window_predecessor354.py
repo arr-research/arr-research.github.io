@@ -48,6 +48,14 @@ SHELL_V1 = {'record_id': 'arr:record:4b1703cb-9daf-4d4b-be1c-825c4243ecbb',
             'authors': ['Lluis Eriksson']}
 # Pins from the immutable first releases and their original intake receipts.
 BOOLEAN_V1 = {
+    'SUB-89DC4655B42EC065': {
+        'paper': 'ARR-2026-54GRS2WX6182EVEB', 'commit': '4b74a6d7b726c83cae36d23ffd5f64e1da33b2ca',
+        'asset': 766435224, 'bytes': 295919,
+        'entry': {'record_id': 'arr:record:a486322e-74c1-409d-b72c-97a4ac7fe9c5',
+                  'version_id': 'arr:version:13fea17f-561a-46c6-92ea-81c47c8b815e',
+                  'canonical_sha256': '834b1c5312f6060514c0c1465564138534e3574707f6db41f044a46e50c2fd41',
+                  'version': 'v1', 'authors': ['Lluis Eriksson']},
+    },
     'SUB-48EF3BDD79BBA4B0': {
         'paper': 'ARR-2026-2SH3CGGBHG9Q5BYN', 'commit': 'f5b5519265af1a600ad8b69b599c4d205704d205',
         'asset': 766198128, 'bytes': 438313,
