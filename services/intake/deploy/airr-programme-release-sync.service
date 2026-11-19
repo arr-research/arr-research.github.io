@@ -1,0 +1,21 @@
+[Unit]
+Description=Reconcile public AIRR programme releases with existing private receipts
+After=network-online.target airr-intake.service
+[Service]
+Type=oneshot
+User=airr-intake
+Group=airr-intake
+WorkingDirectory=/opt/airr-intake/current
+EnvironmentFile=/etc/airr-intake/intake.env
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/opt/airr-intake/venv/bin/flask --app services.intake.app reconcile-programme-publications
+TimeoutStartSec=10min
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/srv/airr-private/instance
+CapabilityBoundingSet=
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+UMask=0077

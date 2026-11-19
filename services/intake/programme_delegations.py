@@ -98,6 +98,8 @@ def check_child(app, a, grant_id, metadata=None, grant=None):
 
 
 def install(app, a, api, require_open):
+    from services.intake import programme_release_sync
+    programme_release_sync.install(app, a, current)
     programme_scope.install(app, a, require_open, current)
     def controller():
         require_open()
