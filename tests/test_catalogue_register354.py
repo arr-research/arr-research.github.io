@@ -673,35 +673,50 @@ class CatalogueReconcile354Tests(unittest.TestCase):
                 self.assertEqual(f.h.NEW[key], meta[key])
             self.assertEqual(f.h.NEW['authors'], [a['name'] for a in meta['authors']])
 
+    def check_published_v1(self, f, paper, case, commit, asset_id, entry):
+        h = f.h
+        record = ROOT / 'papers/2026/11' / paper.split('-')[-1][:2] / paper
+        meta = json.loads(READ(record / 'metadata.json'))
+        pdf = READ(record / 'paper.pdf')
+        tag = paper + '-v1'
+        name = tag + '.pdf'
+        url = h.RELEASE.removesuffix(h.TAG) + tag
+        endpoint = h.RELEASE_API.removesuffix(h.TAG) + tag
+        mirror = 'https://airr.science/papers/' + paper + '/versions/v1/' + name
+        f.asset = {**f.asset, 'name': name, 'id': asset_id, 'size': len(pdf),
+                   'browser_download_url': f.asset['browser_download_url'].replace(h.TAG, tag)}
+        endpoints = {endpoint: json.dumps({**f.release, 'assets': [f.asset], 'html_url': url,
+                                            'tag_name': tag}).encode(),
+                     'https://api.github.com/repos/arr-research/arr-research.github.io/releases/assets/'
+                     + str(asset_id): pdf, mirror: pdf,
+                     'https://raw.githubusercontent.com/arr-research/arr-research.github.io/'
+                     + commit + '/papers/2026/11/' + paper.split('-')[-1][:2] + '/' + paper + '/metadata.json':
+                     json.dumps(meta).encode()}
+        f.change_db('INSERT INTO submissions VALUES(?,?,?,?)',
+                    (case, hashlib.sha256(pdf).hexdigest(), url, 'fixture-publication'))
+        f.args = ['helper', '--case', case, '--metadata-commit', commit,
+                  '--asset-id', str(asset_id)]
+        f.public = lambda url, *args: endpoints[url]
+        result = f.run(apply=False)
+        self.assertEqual(result['entry'], entry)
+        self.assertFalse(result['mutated'])
+        self.assertEqual(READ(f.catalogue), f.before)
+
     def test_shell_v1_uses_only_its_published_case_and_witnesses(self):
         with self.fixture() as f:
             h = f.h
-            record = ROOT / 'papers/2026/11/2B' / h.SHELL_ID
-            meta = json.loads(READ(record / 'metadata.json'))
-            pdf = READ(record / 'paper.pdf')
-            tag = h.SHELL_ID + '-v1'
-            name = tag + '.pdf'
-            url = h.RELEASE.removesuffix(h.TAG) + tag
-            endpoint = h.RELEASE_API.removesuffix(h.TAG) + tag
-            mirror = 'https://airr.science/papers/' + h.SHELL_ID + '/versions/v1/' + name
-            f.asset = {**f.asset, 'name': name, 'id': h.SHELL_PDF_ASSET, 'size': len(pdf),
-                       'browser_download_url': f.asset['browser_download_url'].replace(h.TAG, tag)}
-            endpoints = {endpoint: json.dumps({**f.release, 'assets': [f.asset], 'html_url': url,
-                                                'tag_name': tag}).encode(),
-                         'https://api.github.com/repos/arr-research/arr-research.github.io/releases/assets/'
-                         + str(h.SHELL_PDF_ASSET): pdf, mirror: pdf,
-                         'https://raw.githubusercontent.com/arr-research/arr-research.github.io/'
-                         + h.SHELL_COMMIT + '/papers/2026/11/2B/' + h.SHELL_ID + '/metadata.json':
-                         json.dumps(meta).encode()}
-            f.change_db('INSERT INTO submissions VALUES(?,?,?,?)',
-                        (h.SHELL_CASE, hashlib.sha256(pdf).hexdigest(), url, 'fixture-publication'))
-            f.args = ['helper', '--case', h.SHELL_CASE, '--metadata-commit', h.SHELL_COMMIT,
-                      '--asset-id', str(h.SHELL_PDF_ASSET)]
-            f.public = lambda url, *args: endpoints[url]
-            result = f.run(apply=False)
-            self.assertEqual(result['entry'], h.SHELL_V1)
-            self.assertFalse(result['mutated'])
-            self.assertEqual(READ(f.catalogue), f.before)
+            self.check_published_v1(f, h.SHELL_ID, h.SHELL_CASE, h.SHELL_COMMIT,
+                                    h.SHELL_PDF_ASSET, h.SHELL_V1)
+
+    def test_boolean_v1_predecessors(self):
+        for case in ('SUB-48EF3BDD79BBA4B0', 'SUB-E8772979C782BC39'):
+            with self.subTest(case=case), self.fixture() as f:
+                pin = f.h.BOOLEAN_V1[case]
+                self.check_published_v1(f, pin['paper'], case, pin['commit'], pin['asset'], pin['entry'])
+                f.args[-1] = str(pin['asset'] + 1)
+                with self.assertRaisesRegex(ValueError, 'immutable Boolean v1'):
+                    f.run()
+                self.assertEqual(READ(f.catalogue), f.before)
 
     def test_22_mountinfo_escaping_and_invalid_evidence(self):
         with self.fixture() as f:

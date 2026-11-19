@@ -46,6 +46,25 @@ SHELL_V1 = {'record_id': 'arr:record:4b1703cb-9daf-4d4b-be1c-825c4243ecbb',
             'version': 'v1',
             'canonical_sha256': '32dc8014a45b981f7adff96cb8a6946923a8c093bf7ab8375d55347032d56bcd',
             'authors': ['Lluis Eriksson']}
+# Pins from the immutable first releases and their original intake receipts.
+BOOLEAN_V1 = {
+    'SUB-48EF3BDD79BBA4B0': {
+        'paper': 'ARR-2026-2SH3CGGBHG9Q5BYN', 'commit': 'f5b5519265af1a600ad8b69b599c4d205704d205',
+        'asset': 766198128, 'bytes': 438313,
+        'entry': {'record_id': 'arr:record:5988d908-2e30-4dca-bf54-0a2eb715db2d',
+                  'version_id': 'arr:version:0a812b4d-a488-4467-9cb7-6c1a0438ea66',
+                  'canonical_sha256': '382c71a1e7c1a07cbd78520dd9bf135d4cdbb3c0c2ed08841e23796850febcec',
+                  'version': 'v1', 'authors': ['Lluis Eriksson']},
+    },
+    'SUB-E8772979C782BC39': {
+        'paper': 'ARR-2026-56MSF5D1YA8QDAXM', 'commit': 'b4e16557daf300d006501b9f2367e2a9e19a37f7',
+        'asset': 766053026, 'bytes': 288851,
+        'entry': {'record_id': 'arr:record:a6a65e56-87ca-45da-aed2-30a41cf46ee0',
+                  'version_id': 'arr:version:d970fce2-faf5-451b-abff-ce4a5cbc68ac',
+                  'canonical_sha256': '8d020090d405db8f5db806b0ac7f61561325cb9ceb585972a1bd5a3e0b6ce828',
+                  'version': 'v1', 'authors': ['Lluis Eriksson']},
+    },
+}
 APP_CONFIG_SHA256 = '7db0f6910059aa77eb6adceef0760d3d5a2128a571828af2b6bcb2df7f3977ce'
 ISSUER_SOURCE_SHA256 = {
     'services/intake/programme_delegations.py': '459a854d2a19745ac5a9783c3ea023d3383727e49d7b797d45b4afb833d8d815',
@@ -162,7 +181,21 @@ def main():
                         help='Actual PDF asset ID belonging to the published v1 tag')
     args = parser.parse_args()
     paper_id, record_id, shard, backup_key = PID, RECORD, '4T', '354'
-    if args.case == SHELL_CASE:
+    if args.case in BOOLEAN_V1:
+        expected = BOOLEAN_V1[args.case]
+        if args.metadata_commit != expected['commit'] or args.asset_id != expected['asset']:
+            raise ValueError('Expected the immutable Boolean v1 metadata and PDF asset')
+        paper_id, target, predecessor = expected['paper'], expected['entry'], None
+        record_id = target['record_id']
+        shard = paper_id.split('-')[-1][:2]
+        backup_key = paper_id.lower()
+        tag = paper_id + '-v1'
+        asset_name, pdf_bytes = tag + '.pdf', expected['bytes']
+        release_url = RELEASE.removesuffix(TAG) + tag
+        release_api = RELEASE_API.removesuffix(TAG) + tag
+        mirror = 'https://airr.science/papers/' + paper_id + '/versions/v1/' + asset_name
+        metadata_path = '/metadata.json'
+    elif args.case == SHELL_CASE:
         target, predecessor = SHELL_V1, None
         paper_id, record_id, shard, backup_key = SHELL_ID, target['record_id'], '2B', 'shell-trap'
         tag = paper_id + '-v1'
