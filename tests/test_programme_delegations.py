@@ -8,11 +8,14 @@ from unittest.mock import patch
 
 from services.intake import app as a
 from services.intake.app import get_db, iso
+from services.intake.programme_delegations import current
+from services.intake.programme_release_sync import install as install_receipt_sync
 from test_historical_revisions import HistoricalRevisionTests
 
 
 class ProgrammeDelegationTests(HistoricalRevisionTests):
     def test_host_reconciles_once_after_public_readback_and_preserves_permissions(self):
+        install_receipt_sync(self.app, a, current)
         controller = self.controller()
         case = self.send_revision(self.child(controller).get_json()).get_json()['registration_number']
         self.assertEqual(self.permit_working(controller, case).status_code, 200)
@@ -40,6 +43,7 @@ class ProgrammeDelegationTests(HistoricalRevisionTests):
             self.assertEqual(db.execute('SELECT status FROM submissions WHERE id=?', (case,)).fetchone()[0], 'eligible')
 
     def test_host_rechecks_revocation_after_public_readback(self):
+        install_receipt_sync(self.app, a, current)
         controller = self.controller()
         case = self.send_revision(self.child(controller).get_json()).get_json()['registration_number']
         self.assertEqual(self.permit_working(controller, case).status_code, 200)

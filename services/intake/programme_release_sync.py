@@ -114,6 +114,14 @@ def public_evidence(entry, author, byte_count):
     return record["version_id"]
 
 
+def create_cli():
+    """Load the existing receiver only in the dedicated operator process."""
+    from services.intake import app as receiver
+    from services.intake.programme_delegations import current
+    install(receiver.app, receiver, current)
+    return receiver.app
+
+
 def install(app, a, current):
     def check_native(db, item):
         row = db.execute("""SELECT s.*, p.id AS programme_key, c.artifact_json AS exact_artifact

@@ -178,7 +178,7 @@ access links and erases delivered email bodies after seven days.
 
 ### Programme release reconciliation
 
-The operator can run the host-only Flask command `reconcile-programme-publications` from the deployed release with the service environment loaded. Its public work list is `registry/programme-release-queue.json` on AIRR main. Append one item after verifying the programme working paper, using the native receipt and hashes of the canonical PDF and complete original assessment. The month is the catalogue directory month.
+The operator can run the host-only command `flask --app services.intake.programme_release_sync:create_cli reconcile-programme-publications` from the deployed release with the service environment loaded. Its public work list is `registry/programme-release-queue.json` on AIRR main. Append one item after verifying the programme working paper, using the native receipt and hashes of the canonical PDF and complete original assessment. The month is the catalogue directory month.
 
 The reader verifies the tagged metadata, receipt, original review, GitHub release asset and public AIRR PDF. It rechecks the current delegation and exact permission under the database write lock, then invokes the existing operator command. Repeated runs skip an already matching release. A missing mirror or invalid item defers that item while other records progress.
 
