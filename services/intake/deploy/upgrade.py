@@ -21,6 +21,9 @@ import urllib.request
 
 MONITOR = 'airr-intake-monitor'
 BACKGROUND = ['airr-intake-' + name for name in ('mail', 'maintenance', 'backup', 'offsite')]
+# This optional worker can write to the same receipt database during an upgrade.
+if Path('/etc/systemd/system/airr-programme-release-sync.service').is_file():
+    BACKGROUND.append('airr-programme-release-sync')
 # The public archive also contains PDFs that are not extracted for the receiver.
 MAX_SOURCE_BYTES = 512 * 1024 * 1024
 

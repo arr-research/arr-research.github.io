@@ -3,6 +3,7 @@
 import hashlib
 import json
 import re
+import sqlite3
 from urllib.parse import urlsplit
 from urllib.request import HTTPRedirectHandler, Request, build_opener
 
@@ -170,7 +171,7 @@ def install(app, a, current):
                 require(latest == native, "Native case changed during public readback")
                 click.get_current_context().invoke(app.cli.commands["mark-published"],
                     submission_id=item["submission"], release_url=release_url(item))
-            except (HTTPException, OSError, KeyError, TypeError, ValueError, click.ClickException) as error:
+            except (HTTPException, OSError, KeyError, TypeError, ValueError, sqlite3.OperationalError, click.ClickException) as error:
                 db.rollback()
                 failed += 1
                 click.echo(f"Release deferred ({type(error).__name__}).", err=True)
