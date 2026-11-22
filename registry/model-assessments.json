@@ -21350,6 +21350,488 @@
         "evidence_sha256": "d9787ced8f80a7d906f8c9b7c3501cb9d52148cd43213e1d8a543ebdfcc8a4dc",
         "recorded_at": "2026-11-20T02:35:03+00:00"
       }
+    },
+    {
+      "assessed_at": "2026-11-22T12:08:20+00:00",
+      "canonical_sha256": "cb17dff7dd149534f3be05fc28c6b543eaf4a00d8409fcc80eb555946ec17452",
+      "criteria": {
+        "correctness_confidence": {
+          "basis": "I re-derived the product-to-sum collapse, the antisymmetrization step and the factor 2 by hand, and recomputed Proposition 4 (F_b factorization, all values at t=2π/3, W=3√3/2) and the (1,2,3,4)/(1,1,1,1) example (W=4 at π/2). All are correct. The Bessel-array numerics and Lean check were not inspected.",
+          "stars": 5
+        },
+        "novelty": {
+          "basis": "The identity is a routine Lagrange/Wronskian-type rewriting of an antisymmetric double sum, and the paper itself calls the proof two lines. The counterexample is a small finite array. No citation-dependent novelty is claimed, and the conjecture is not new mathematics beyond restating the companion problem.",
+          "stars": 1
+        },
+        "reproducibility": {
+          "basis": "The algebraic claims are checkable by hand. The Lean file, mpmath scripts and companion notes are cited by a GitHub URL, but they were not available in the PDF and I did not inspect them. The Lean version and Mathlib commit are given. The numerical claims depend on the companion note.",
+          "stars": 3
+        },
+        "rigor": {
+          "basis": "Theorem 1 and Proposition 4 are proved cleanly. The infinite-array case omits an explicit justification for rearranging the absolutely convergent double sum. The Remark 5 'parity barrier' analogy is rhetorical, and the claims about the global sign and the e^{-cβ} cancellation rest on unpublished numerics.",
+          "stars": 3
+        },
+        "significance": {
+          "basis": "The reduction is only an equivalence with an unproved conjecture, and it needs the unproved F_B>0 on (0,π). The negative result concerns a naive analogy that no one had established. The impact is limited to the author's own programme and does not advance the actual surface-positivity problem.",
+          "stars": 2
+        }
+      },
+      "independence": "unknown",
+      "millennium_score": 1.8,
+      "model_id": "anthropic/claude-sonnet-5.5",
+      "overall_stars": 2,
+      "paper_id": "ARR-2026-5FKM2GGK348CPTE9",
+      "potential_errors": [
+        "Abstract and Remark 2 say the surface problem is 'equivalent' to strict monotonicity of the ratio F_A/F_B. That holds only where F_B≠0. F_B vanishes at t=0 and t=π, so positivity of F_B near π is itself an unproved extra hypothesis (Conjecture 3(i)).",
+        "The proof of Theorem 1 for infinite arrays does not state that absolute convergence of Σ(m+n)|a_m b_n| justifies the rearrangement. This follows from the Σ m(|a_m|+|b_m|)<∞ hypothesis but is left implicit.",
+        "The displayed proof line is truncated at the right margin in the PDF (the final cos(nt) term is cut off), which is a typesetting defect.",
+        "The Bessel-case summability argument cites I_k~(β/2)^k/k! for decay of r_k. That is correct for fixed β as k→∞, but the sentence 'hence so do A_m and B_m' should state the super-exponential rate explicitly."
+      ],
+      "prompt_version": "ARR-ASSESS-1.0",
+      "provider": "OpenRouter",
+      "recommendation": "minor_revision",
+      "strengths": [
+        "The identity and the hand-checkable counterexample are verified correct. The limited claims are stated honestly, with explicit statements that nothing more is claimed.",
+        "The reformulation of the sign question as a Wronskian is clean and division-free, and it handles zeros of F_b.",
+        "The counterexample is explicit and verifiable, and it rules out a tempting but false shortcut to the conjecture.",
+        "The paper discloses a working-precision warning for the numerics and gives a public Lean/script trail."
+      ],
+      "strong_novelty_candidates": [],
+      "summary": "The note proves a Wronskian identity for antisymmetrized sine double sums, a short and correct manipulation that I re-derived by hand. It then reformulates a companion Bessel surface-positivity problem as monotonicity of F_A/F_B on (0,π), stated as a conjecture supported only by numerics. It gives a small explicit counterexample (a=(3,4,3), b=(3,2,1)) to a Biernacki–Krzyż-type sine-series analogue, and I verified the values exactly. The results are correct but elementary, and the main open problem remains untouched. Claims are modest and honestly scoped. The Lean check and the numerics were not independently inspected.",
+      "unresolved_material_objections": [],
+      "version": "v1",
+      "version_id": "arr:version:89c61422-9427-4328-af26-7e6fbf9d2a40",
+      "weaknesses": [
+        "The core theorem is a trivial identity with little independent mathematical content.",
+        "The counterexample is not of Bessel type, so it only rules out a general principle, not a route specific to the actual arrays. A counterexample respecting more structure, such as log-concavity or decay rate, would be more informative.",
+        "The conjecture, the global negativity and the cancellation constant c≈2.1 rest on numerics at four β values on a coarse grid. This is no evidence of a proof route, and the proposed routes (kernel representation, total positivity) are only gestured at.",
+        "The 'parity barrier' analogy to ref. [5] is loose, and the self-citations (companion note, Master Map) carry the context and the key coefficient-ratio result."
+      ],
+      "assessment_id": "arr:assessment:1e98122d-1c53-49aa-877a-82c5ce06815a",
+      "source_response_sha256": "1f28b24a963aec5bd92507838859b0e525fbea7db1c57b0874e478b046dba0b1",
+      "runtime_provenance": {
+        "provider": "Anthropic",
+        "model_id": "claude-sonnet-5.5",
+        "reasoning_effort": "high",
+        "basis": "platform_runtime_metadata",
+        "evidence_sha256": "2eee700f3157dd442aaf606821dba5ae75fb6a1da04f86cc8f45f9a25e8a039c"
+      },
+      "review_context": {
+        "mode": "unknown",
+        "history_isolated": true,
+        "memory_disabled": false,
+        "other_reports_withheld": true,
+        "basis": "platform_runtime_metadata",
+        "evidence_sha256": "2eee700f3157dd442aaf606821dba5ae75fb6a1da04f86cc8f45f9a25e8a039c",
+        "recorded_at": "2026-11-22T12:09:00.942708+00:00"
+      }
+    },
+    {
+      "assessed_at": "2026-11-22T12:08:20.592977+00:00",
+      "canonical_sha256": "cb17dff7dd149534f3be05fc28c6b543eaf4a00d8409fcc80eb555946ec17452",
+      "criteria": {
+        "correctness_confidence": {
+          "basis": "The Wronskian identity, its sign and normalization, and both exact counterexample evaluations check out. The claimed equivalence between strict decrease and an everywhere negative derivative does not, and the global-to-boundary reformulation has no proved converse.",
+          "stars": 3
+        },
+        "novelty": {
+          "basis": "The Bessel-specific reformulation and the positive-denominator example are useful in context. The identity follows directly from product-to-sum and antisymmetry; the cited literature does not establish priority for the example or the reformulation.",
+          "stars": 2
+        },
+        "reproducibility": {
+          "basis": "The identity and counterexamples are reproducible from the text. Lean version, Mathlib commit and declaration names are reported, but the check was not independently run. The numerical sign and cancellation claims lack a complete in-text protocol.",
+          "stars": 3
+        },
+        "rigor": {
+          "basis": "Weighted absolute summability justifies differentiation and regrouping. The proof is sound, but the conjecture and acknowledgements conflate strict monotonicity, strict derivative sign, and local versus global assertions.",
+          "stars": 3
+        },
+        "significance": {
+          "basis": "The note gives a useful reduction and rules out a shortcut under explicit side conditions. It does not prove the Bessel Wronskian sign even near π, and it establishes no gauge-theory result.",
+          "stars": 2
+        }
+      },
+      "independence": "unknown",
+      "millennium_score": 2.7,
+      "model_id": "openai/gpt-6.2-sol",
+      "overall_stars": 3,
+      "paper_id": "ARR-2026-5FKM2GGK348CPTE9",
+      "potential_errors": [
+        "Proposition 4's coefficient ratios are strictly increasing on the three supported indices; they are undefined at the subsequent 0/0 entries. State the finite-support convention explicitly.",
+        "The power-series comparison needs a common interval of convergence and a nonzero denominator there. The example defeats an unrestricted coefficient-order rule, not every possible sine-series analogue with additional hypotheses.",
+        "Section 4's K=7 result is described as exact rational substitution but reported as a 40-digit residual. Exact inputs do not make the residual check exact; distinguish this check from the symbolic ones.",
+        "Relative cancellation of e^(−cβ) corresponds to about cβ/ln(10) lost decimal digits. The stated 2.2β+20 working-digit rule may be conservative, but the manuscript does not justify the claim that lower precision produces pure rounding noise."
+      ],
+      "prompt_version": "ARR-ASSESS-1.0",
+      "provider": "OpenRouter",
+      "recommendation": "major_revision",
+      "strengths": [
+        "The trigonometric bracket is 2G with G antisymmetric. Pairing the two ordered terms for each m<n gives the stated factor of two. The bound |G(m,n)|≤m+n gives a summable uniform majorant, and the derivative series converge uniformly under the same hypothesis.",
+        "At 2π/3 the three-term example gives the unscaled Wronskian 3√3/2, with F_b strictly positive throughout (0,π). The ratio also has negative derivative near zero, so the example exhibits genuine nonmonotonicity. The four-term example correctly gives unscaled Wronskian 4 at a denominator zero.",
+        "For fixed β, the factorial decay of I_m(β) suffices for the reduction and makes the Bessel sine series entire in t. The companion coefficient-order result motivates the failed shortcut but is not needed for the identity or either counterexample."
+      ],
+      "strong_novelty_candidates": [],
+      "summary": "The core mathematics in v1 survives: the identity is correct, the weighted hypothesis suffices, and the exact examples rule out a general coefficient-order shortcut even with a positive denominator. The Bessel sign problem remains open in the manuscript. Revise the framing: strict decrease does not by itself give a strictly negative Wronskian at every point, and the global conjecture strengthens rather than merely restates the near-π problem. The assessment uses the supplied four-page transcription; the PDF bytes and hash, external sources, Lean and numerical runs were not independently verified. The timestamp is taken from the request and is not clock-verified.",
+      "unresolved_material_objections": [
+        "Conjecture 3 claims strict decrease is equivalent to W<0 everywhere. The quotient rule gives W<0 exactly when the ratio derivative is negative. Even finite sine series give a counterexample: F_b=sin t and F_a=(sin 2t)/4+(sin 4t)/8 give the strictly decreasing ratio cos³t, with W=0 at π/2. For the analytic Bessel ratio, W≤0 and W not identically zero is the correct strict-monotonicity criterion, assuming F_B>0. The stronger pointwise assertion needs its own proof.",
+        "The acknowledgements claim equivalence to the original near-π problem, but no local-to-global implication is proved. It cannot follow from the generic side conditions: take a=(6,10,24), b=(6,5,2). With y=cos t, F_b/sin t=4+10y+8y²>0, the coefficient ratios increase, and the numerator of d(F_a/F_b)/dy is 260+1056y+800y². It is positive at y=−1 and negative at y=−1/2, giving W<0 near π but W>0 at 2π/3. This does not refute a Bessel-specific converse; it shows that one must be proved or the equivalence withdrawn."
+      ],
+      "version": "v1",
+      "version_id": "arr:version:89c61422-9427-4328-af26-7e6fbf9d2a40",
+      "weaknesses": [
+        "The reported grids are evidence only at sampled (β,t), not across the continuum or in the unsampled endpoint neighborhoods. Give the grid spacing, truncation and convergence checks, and the ε and normalization used for each cancellation figure.",
+        "The link to the companion surface problem and its coefficient-order theorem is citation-dependent. A self-contained statement of the matching sign, normalization and β/ε quantifiers, with a pinned companion version, would make the exact scope of the reduction auditable.",
+        "Denominator positivity can be proved directly. With normalized circle convolution and f(t)=e^(β cos t), F_B=−(f^{*4})′/(2I_1(β)^4). If h is even and strictly decreases with circular distance from 0, the derivative of f*h is the integral over 0<s<π of f′(s)[h(t−s)−h(t+s)]/(2π). For 0<t<π the bracket is positive because cos(t−s)>cos(t+s), so the derivative is negative. Iterate from h=f."
+      ],
+      "assessment_id": "arr:assessment:12e4d9fa-1a45-4655-97f5-0142e29e8cb3",
+      "source_response_sha256": "310ea26f6e7d9aa069d0ced75e0c195fb5215fea054a24775b26ab8dd18e5985",
+      "runtime_provenance": {
+        "provider": "OpenAI",
+        "model_id": "gpt-6.2-sol",
+        "reasoning_effort": "high",
+        "basis": "platform_runtime_metadata",
+        "evidence_sha256": "9cc1468f5cd3197fb0cd88368b12c2700e5cc079eb3ff226ca8670a7266797bb"
+      },
+      "review_context": {
+        "mode": "unknown",
+        "history_isolated": true,
+        "memory_disabled": false,
+        "other_reports_withheld": true,
+        "basis": "platform_runtime_metadata",
+        "evidence_sha256": "9cc1468f5cd3197fb0cd88368b12c2700e5cc079eb3ff226ca8670a7266797bb",
+        "recorded_at": "2026-11-22T12:09:12.918879+00:00"
+      }
+    },
+    {
+      "assessed_at": "2026-11-22T12:08:20+00:00",
+      "canonical_sha256": "b931d93d770bbc01649150ab2a040782c01834147fe2f4d38e86c6806723649a",
+      "criteria": {
+        "correctness_confidence": {
+          "basis": "The claims are modest and honestly bounded: no continuum limit and no Clay claim. But the Lean claims (zero sorry, standard axioms only) cannot be checked from a 6-page PDF. I did not run any code. Whether the formal statements are non-vacuous and match the prose is also unverified.",
+          "stars": 3
+        },
+        "novelty": {
+          "basis": "A Lean 4 formalization of Kotecký–Preiss, Mayer–Ursell and Penrose, plus lattice area laws, is plausibly new as formalization. The underlying mathematics is classical. The negative obstructions may be new but are only named here, with no statements or proofs.",
+          "stars": 3
+        },
+        "reproducibility": {
+          "basis": "Strong in design: pinned Lean toolchain and mathlib commit, a clone-and-build recipe, an oracle script and a CI guard. Not verified by me. Several indexed items are 'pending deposit', and the recipe depends on an external repository whose state may change.",
+          "stars": 4
+        },
+        "rigor": {
+          "basis": "The paper contains no theorem statements, definitions or proofs, only summaries and pointers to files. The textual guard is a comment-aware scanner, not a semantic check. Hypotheses are carried in theorem premises, so the 'no axioms' claim depends on which premises are assumed. Rigor cannot be judged from the PDF alone.",
+          "stars": 2
+        },
+        "significance": {
+          "basis": "Reusable verified infrastructure for constructive QFT and documented dead ends could help later formalization work. The Yang–Mills mass gap is untouched, since the programme stands at roughly 0% of the Clay problem by its own account. Significance is limited to the formalization niche.",
+          "stars": 2
+        }
+      },
+      "independence": "unknown",
+      "millennium_score": 1.2,
+      "model_id": "anthropic/claude-sonnet-5.5",
+      "overall_stars": 1,
+      "paper_id": "ARR-2026-7DYZAEKGJP8FPTJ1",
+      "potential_errors": [
+        "'Zero project axioms' and 'headline declarations depend only on three axioms' may still hold for statements whose hypotheses are vacuous or unsatisfiable. The paper gives no non-vacuity witnesses for the area-law and clustering theorems.",
+        "The 'explicit non-empty coupling window' for plaquette-correlation decay is not quantified. For SU(N) it may be a tiny strong-coupling regime and may depend on N and the dimension.",
+        "The axiom scanner covers only the listed source directories. Declarations outside them, such as the standalone R1/R2 cylinder evidence, are not covered by the stated guarantee.",
+        "The headline label 'complete Osterwalder–Seiler chain' is for Z2 only, which is a much easier abelian setting. The abstract's phrase 'ZN' and the item list could be read as implying broader coverage.",
+        "Table 2 includes the Z2 'os-chain-z2' and 'wronskian-reduction' items as pending deposits, yet the abstract says all preprints are indexed in one citable record."
+      ],
+      "prompt_version": "ARR-ASSESS-1.0",
+      "provider": "OpenRouter",
+      "recommendation": "major_revision",
+      "strengths": [
+        "Scope boundaries are stated clearly, and the paper avoids claiming a solution to the Millennium problem.",
+        "A concrete reproduction recipe is given, with pinned toolchain, pinned mathlib commit and an axiom-oracle step.",
+        "The paper documents negative results and open frontiers (hRpoly, R1/R2, continuum limit), which is useful to others.",
+        "Machine-checked Bessel/Amos ratio bounds and polymer expansions are plausibly reusable.",
+        "The paper openly discloses AI assistance and the author's administration of the AIRR archive."
+      ],
+      "strong_novelty_candidates": [
+        "Formalized Kotecký–Preiss/Mayer–Ursell/Penrose cluster-expansion engine in Lean 4 with a volume-uniform area law, if the formal statements are non-vacuous.",
+        "Machine-checked global ratio monotonicity for killed von Mises bridges, and the Amos-type Bessel ratio bounds at real order.",
+        "Certified negative obstructions: block-Poincaré coercivity walls, flat Hodge rank walls and parity barriers. These are named only, with no statements given."
+      ],
+      "summary": "This is an archival index and handoff note for a Lean 4 Yang–Mills formalization repository. It claims machine-verified strong-coupling lattice results (cluster expansion, area laws, Z2 reflection positivity, Bessel bounds) plus negative obstruction results. It explicitly disclaims any continuum limit, OS/Wightman reconstruction or mass-gap solution. The PDF has no theorem statements, proofs or definitions, so none of the core claims can be checked from it. The Lean build and axiom claims are plausible but unverified by me. Its value is as infrastructure and documentation, not as a contribution to the Millennium problem.",
+      "unresolved_material_objections": [
+        "The manuscript's central claims (zero sorry, standard axioms only, non-vacuous area laws and clustering) cannot be assessed from the artifact because it contains no formal statements, hypotheses or proofs. The reader is referred to an external repository whose contents are not part of the reviewed PDF.",
+        "The 'every headline declaration' guarantee is not accompanied by a list of the exact theorem statements, so non-vacuity (non-trivial gauge group, genuine coupling window, non-degenerate scalings) is unestablished within the document."
+      ],
+      "version": "v1",
+      "version_id": "arr:version:64a53117-7d87-451a-99fc-396c68cf9726",
+      "weaknesses": [
+        "The PDF is a self-referential index with no mathematical content that can be checked. All substantive claims are deferred to a repository and to 40 or more companion records.",
+        "No precise statements of the area-law constants, coupling windows, volume-uniformity or N-dependence are given.",
+        "The negative results are only named. The one concrete example, Biernacki–Krzyż with a=(3,4,3), b=(3,2,1), is stated without verification.",
+        "Significance is limited. All verified physics is strong-coupling or Z2, far from the continuum SU(N) problem. The 'Clay-distance ~0%' shorthand is an informal metric.",
+        "There is a conflict-of-interest and self-citation structure: the author administers the AIRR archive that hosts the indexed records, and several referenced items are pending.",
+        "Authorship by an LLM-assisted workflow, together with an unresolved prior-involvement status for this reviewer, limits independence."
+      ],
+      "assessment_id": "arr:assessment:e1e30a3f-fcab-4273-98ef-5b69a0f8f6bb",
+      "source_response_sha256": "71d16859f37aa1418c2d9efcb267dff6f1177cd907b8d954b1c09f0b445866d5",
+      "runtime_provenance": {
+        "provider": "Anthropic",
+        "model_id": "claude-sonnet-5.5",
+        "reasoning_effort": "high",
+        "basis": "platform_runtime_metadata",
+        "evidence_sha256": "a1513d1bfd6523fa4ed66ac42bf8b099df3fcf155d6b81db0dfb51a7f8ce59ee"
+      },
+      "review_context": {
+        "mode": "unknown",
+        "history_isolated": true,
+        "memory_disabled": false,
+        "other_reports_withheld": true,
+        "basis": "platform_runtime_metadata",
+        "evidence_sha256": "a1513d1bfd6523fa4ed66ac42bf8b099df3fcf155d6b81db0dfb51a7f8ce59ee",
+        "recorded_at": "2026-11-22T12:08:42.658039+00:00"
+      }
+    },
+    {
+      "assessed_at": "2026-11-22T12:08:20.588970+00:00",
+      "canonical_sha256": "b931d93d770bbc01649150ab2a040782c01834147fe2f4d38e86c6806723649a",
+      "criteria": {
+        "correctness_confidence": {
+          "basis": "The sine-series counterexample checks directly. The headline lattice claims are plausible in standard formulations, but the note does not expose the theorem statements needed to check their physical definitions, hypotheses, or quantifiers.",
+          "stars": 2
+        },
+        "novelty": {
+          "basis": "A reusable Lean cluster-expansion library and precise formal no-go results are credible novelty candidates. The note does not distinguish new mathematics, first formalizations, and implementations of known results through specific comparisons with prior work.",
+          "stars": 2
+        },
+        "reproducibility": {
+          "basis": "The release tag, toolchain pin, mathlib revision, and commands give readers a concrete starting point. The note lacks an immutable release commit and a claim-to-declaration manifest tying the advertised results to the build and axiom checks.",
+          "stars": 3
+        },
+        "rigor": {
+          "basis": "The distinction between axioms and explicit hypotheses is sound, but an axiom audit does not show that the hypotheses are discharged in the stated model. Directory names and theorem summaries are insufficient to audit the main dependency chains.",
+          "stars": 2
+        },
+        "significance": {
+          "basis": "If substantiated, the reusable fixed-spacing Lean infrastructure and sharply scoped obstruction results would be useful. The note does not establish a continuum construction, a physical SU(N) transfer gap, or a Millennium-problem advance.",
+          "stars": 3
+        }
+      },
+      "independence": "unknown",
+      "millennium_score": 2.7,
+      "model_id": "openai/gpt-6.2-sol",
+      "overall_stars": 3,
+      "paper_id": "ARR-2026-7DYZAEKGJP8FPTJ1",
+      "potential_errors": [
+        "A Wilson area law cannot cover arbitrary loop words at β=0. For a simple SU(2) rectangle C, Haar holonomy gives E[Tr(U_C²)/2] = −1/2, independent of the rectangle's area. This tests the scope of the prose; it does not refute a theorem restricted to once-traversed rectangles.",
+        "Nonzero representation N-ality alone does not force a contractible fundamental Wilson loop to vanish. In a one-plaquette Wilson model, the expectation of the real fundamental trace has strictly positive derivative at β=0. The selection rule must identify the action-preserving centre transformation and the observable's charge under it.",
+        "Strictly positive matrix entries do not imply reflection positivity: the symmetric matrix with diagonal 1 and off-diagonal 2 has eigenvalue −1. Nor does finite-extent Perron isolation alone imply a uniform gap. The manuscript acknowledges the latter limit; the former is a dependency check for the claimed Z2 chain.",
+        "The phrase 'marginal-coupling 4D summability' needs the actual scale sum and hypotheses. For example, an O(1/j) bound per scale does not imply absolute summability over scales. The filename alone is not evidence of an error."
+      ],
+      "prompt_version": "ARR-ASSESS-1.0",
+      "provider": "OpenRouter",
+      "recommendation": "major_revision",
+      "strengths": [
+        "The note expressly disclaims continuum existence, physical SU(N) reconstruction, and a Clay solution. It also identifies the real-sequence nature of the clustering-to-gap assembly lemmas and labels the finite SU(2) cylinder work as standalone.",
+        "The reported pins, build target, audit commands and companion-record index provide useful handoff information. The hRpoly checkpoint names specific missing inputs rather than presenting the conditional RG assembly as closed.",
+        "The explicit sine-series counterexample is checkable from the text. With c = cos x, the ratio of the two sine sums is (12c²+8c)/(4c²+4c+2); its derivative with respect to c is 16(c²+3c+1)/(4c²+4c+2)² and changes sign on (−1,1), despite strictly increasing coefficient ratios."
+      ],
+      "strong_novelty_candidates": [
+        "A reusable Lean KP/Mayer–Ursell and Penrose library connected to an exact Wilson-action polymer representation and volume-uniform estimates. The integration is the candidate, not the classical cluster-expansion results by themselves.",
+        "Formal rank, kernel, and spatial-coupling obstructions that identify exactly when proposed coercivity or transfer arguments fail, provided the hypotheses match the intended operators.",
+        "A formal route from real-order modified-Bessel ratio estimates to global killed von Mises bridge ratio monotonicity, if the terminal theorem, domain, and distinction from prior results are documented."
+      ],
+      "summary": "This six-page note is a useful archive index and handoff, not yet an auditable certification of its headline results. Its strongest prospective contribution is reusable Lean infrastructure for fixed-spacing lattice gauge theory, together with precise negative results. The note properly disclaims a continuum or Clay result, and its sine-series counterexample can be checked from the text. But the central Wilson, cluster-expansion, and Z2 transfer claims are described mainly by topic and directory, leaving it unclear which physical statements the audited declarations actually prove. Major revision should add a compact claim-to-theorem manifest and state the decisive domains and hypotheses. I assessed only the supplied parsed text; I did not independently hash the PDF, inspect the repository or companion records, or run Lean.",
+      "unresolved_material_objections": [
+        "The headline kernel-certification claim is not traceable from the note: §2 gives directories, not fully qualified declarations and statements. For each headline result, identify the immutable commit, imported definitions, explicit hypotheses, and axiom output, and distinguish built, audited, and standalone declarations. A standard-axiom readout alone cannot rule out a conditional or degenerate surrogate.",
+        "The fixed-spacing SU(N) claims lack the scope needed to distinguish the advertised results from narrower statements. Give the exact-action observable insertion and polymer identification, the KP smallness bound and nonempty β window, N and dimension ranges, loop and boundary classes, the distance and uniformity in clustering, and the exhaustion and observable class for the thermodynamic limit.",
+        "The 'complete' Z2 chain needs the theorem-level link from the physical crossing-plaquette Gibbs form to the reflected positive form, null-space quotient, and induced transfer operator. State the geometry and whether each conclusion concerns positivity, self-adjointness, a finite-extent gap, or an extent-uniform gap. A Perron theorem for an abstract kernel cannot supply those identifications.",
+        "The claimed Poincaré and factorized-penalty walls need their exact operator class, block-map restrictions, quotient or gauge-sector assumptions, and volume quantifiers. The phrase 'every penalty factored through a block map' cannot be assessed without knowing which maps leave the counterexample modes undetected, or whether those modes survive the stated quotient."
+      ],
+      "version": "v1",
+      "version_id": "arr:version:64a53117-7d87-451a-99fc-396c68cf9726",
+      "weaknesses": [
+        "The Lean build, 8,466-job count, scanner results, and PR checkpoint counts are reported, not evidenced by pinned logs in the note. Add an archive commit, keyed audit output, and a cache-free build option; a release tag and a lexical scanner alone do not establish coverage.",
+        "The Bessel and killed-bridge synopsis omits the real-order range, positivity of denominators, boundary or killing conditions, and whether monotonicity is strict or weak. The paper titles are not enough to check the implication between those results.",
+        "Distinguish an open task for this Lean archive from an open mathematical problem, particularly for fixed-spacing Wilson-action reflection positivity. Explain what is specific to the proposed SU(N) geometry or gap target and compare it with classical lattice results.",
+        "The 'Clay-distance' percentage has no defined metric. The named missing UV, IR, and reconstruction inputs convey the scope more accurately than a numerical estimate."
+      ],
+      "assessment_id": "arr:assessment:beb10d6f-3440-4934-96a7-e7566bccc1ea",
+      "source_response_sha256": "fddc7a14cab5f2113c4b011a6e4cbbbca9ab818aaa0f45d67fdab5951d82c77a",
+      "runtime_provenance": {
+        "provider": "OpenAI",
+        "model_id": "gpt-6.2-sol",
+        "reasoning_effort": "high",
+        "basis": "platform_runtime_metadata",
+        "evidence_sha256": "4c068bb2a1400fba6d0d47dd42150c1bf59e31cf2761e7d8f487beebf90606b0"
+      },
+      "review_context": {
+        "mode": "unknown",
+        "history_isolated": true,
+        "memory_disabled": false,
+        "other_reports_withheld": true,
+        "basis": "platform_runtime_metadata",
+        "evidence_sha256": "4c068bb2a1400fba6d0d47dd42150c1bf59e31cf2761e7d8f487beebf90606b0",
+        "recorded_at": "2026-11-22T12:08:48.137018+00:00"
+      }
+    },
+    {
+      "assessed_at": "2026-11-22T12:08:20+00:00",
+      "canonical_sha256": "8b52725dfa42a40b119b4dc4a34dd4b5b326fc11bca2cd008dfa384f3675f3c4",
+      "criteria": {
+        "correctness_confidence": {
+          "basis": "I re-derived the mathematics by hand and it is correct: kernel k^n = (e^b+e^-b)^n T^n, Z_n = 2(e^b+e^-b)^n, E_n[AB] = (1/2)<A,T^n B>, T-|Ω><Ω| = (a-b)P_perp, and the two-point function is tanh^n β. I did not inspect or build the Lean code. A minor slip: 1-tanh β is called the gap for every β, but for β<0 the gap is 1-|tanh β|.",
+          "stars": 4
+        },
+        "novelty": {
+          "basis": "The author states there is no new theorem. The Ising-chain transfer matrix and its tanh^n two-point function are classical. The only claimed contribution is a Lean composition of known facts. I cannot assess whether it is a first formalisation.",
+          "stars": 1
+        },
+        "reproducibility": {
+          "basis": "The paper gives a pinned commit, a public repository, build and oracle counts, only standard axioms, zero sorry, a theorem-to-artifact map and a non-circularity check on the definitions. I did not run any of it. Dependence on companion viXra preprints [4,5] and on internal charter and ledger documents weakens independent auditability.",
+          "stars": 4
+        },
+        "rigor": {
+          "basis": "Formal verification is strong in principle, and the paper is candid about its limits and keeps the gap, spectral gap and mass distinct. However, the Lean statements are not reproduced, so fidelity of the formal definitions to the claims cannot be judged from the PDF. The OS pairing, reflection positivity and the operator are not connected by any proved theorem, and the claim of completeness is not matched by what is formalised.",
+          "stars": 3
+        },
+        "significance": {
+          "basis": "A 2x2 transfer matrix, with no spatial extent, no volume uniformity and no degenerate pairing. The author acknowledges it gives no evidence about SU(N) or the Yang-Mills mass gap. Its value is as a small formalisation exemplar and a template for interface checks.",
+          "stars": 1
+        }
+      },
+      "independence": "unknown",
+      "millennium_score": 1.4,
+      "model_id": "anthropic/claude-sonnet-5.5",
+      "overall_stars": 1,
+      "paper_id": "ARR-2026-7PRDH0DHH280HRKH",
+      "potential_errors": [
+        "Remark 4.4 says 1-tanh β is the spectral gap and is strictly positive for every β. For β<0 the non-vacuum eigenvalue is negative, so the true gap is 1-|tanh β|, and 1-tanh β>1 is not a gap. Theorem 4.3 is restricted to β≥0, so this is a scope inconsistency rather than a flaw in the proofs.",
+        "Remark 6.3 identifies the n=0 instance of Theorem 5.1 with the OS pairing. The OS pairing is <θA,B> for half-space functions under a reflection. n=0 gives a one-slice pairing E_0[Ā B], and the reflection structure is not shown to be tied to it.",
+        "The measure has free boundary conditions on a finite chain of n+1 slices. The identification is E_n[A(σ0)B(σn)] = <AΩ,T^n BΩ>, which is a matrix identity. It is not a statement that T implements time translation on a reconstructed Hilbert space of a reflection-positive measure.",
+        "'Mass' -log(tanh β) is defined via T=e^{-H}. The mass is infinite at β=0, where tanh β=0, and the paper restricts mass positivity to β>0. Lean's convention log 0 = 0 could mask a degenerate case if the formal statements are not read carefully."
+      ],
+      "prompt_version": "ARR-ASSESS-1.0",
+      "provider": "OpenRouter",
+      "recommendation": "major_revision",
+      "strengths": [
+        "Scope is stated candidly: no volume uniformity, no SU(N), no mass-gap claim, and the trivial GNS quotient is admitted.",
+        "The mathematics is correct, and I verified the identification, Z_n, the norm bound and the tanh^n result by hand.",
+        "The measure-side and operator-side definitions are kept independent, with a dependency-closure check that guards against circular identification.",
+        "The paper explicitly separates tanh β, the spectral gap and the mass, and explains the retained legacy identifier names.",
+        "Verification data are well documented: pinned commit, standard axioms only, zero sorry and a theorem-to-artifact map."
+      ],
+      "strong_novelty_candidates": [],
+      "summary": "The manuscript reports a Lean 4/mathlib formalisation, for a one-variable-per-slice Z2 chain (effectively the 1D Ising chain), of the identification E_n[A(σ0)B(σn)] = <AΩ,T^n BΩ> and of the exact two-point function tanh^n β. It then draws a gap and mass from that. The mathematics is correct and elementary, and the author honestly says the result is neither new nor evidence about volume-uniform or SU(N) gauge theory. Weaknesses: the operator is read off the bond kernel rather than constructed through OS reconstruction, so the title's 'complete OS chain' overstates what is verified. The GNS step is trivial, and reflection positivity from the companion work plays no role in the proofs. The system is a spin chain, not a gauge theory. I could not inspect the Lean code. Significance and novelty are minimal.",
+      "unresolved_material_objections": [
+        "The title and abstract claim a complete machine-checked Osterwalder-Seiler chain. By the paper's own Remark 6.3, the operator is not the descent of time translation to the GNS quotient of a reflection-positive pairing. It is a transfer matrix read from the bond kernel and matched to the measure, so reflection positivity and GNS construction are not logically used in the proof of the endpoint. The 'complete reconstruction' claim is therefore not supported by the formalised content as described, and the wording needs to be narrowed to a verified Ising transfer-matrix identification."
+      ],
+      "version": "v1",
+      "version_id": "arr:version:392f80db-eec8-4cab-8d9d-0ba76536e6a4",
+      "weaknesses": [
+        "The system is the 1D Ising chain with site spins and no gauge structure. Calling it a 'Z2 lattice gauge chain' is misleading, and the 2x2 matrix makes every interface trivial.",
+        "The claim of a complete OS chain overreaches. The GNS quotient is the identity, the operator is not derived from the reconstruction, and reflection positivity is not used downstream.",
+        "Novelty is essentially nil, as the author concedes. No new mathematical insight is provided, and Remark 6.2 admits the machinery is not needed.",
+        "Key evidence rests on unreviewed viXra companion papers and internal documents (charter amendments, ledger addenda) rather than on independently checkable text.",
+        "The Lean statements are not shown in the PDF, so fidelity of the formal definitions to the prose claims cannot be assessed from the manuscript.",
+        "Remark 5.3 admits the general induction is not abstracted, so reuse for larger systems is only promised, not demonstrated."
+      ],
+      "assessment_id": "arr:assessment:7e11b951-1f34-4853-a8c7-71260e4b8297",
+      "source_response_sha256": "5049d6a0a36703af729facf5b02056add9f27bf6fd115fcbc10e6448aaf1fe16",
+      "runtime_provenance": {
+        "provider": "Anthropic",
+        "model_id": "claude-sonnet-5.5",
+        "reasoning_effort": "high",
+        "basis": "platform_runtime_metadata",
+        "evidence_sha256": "c54b79014b38e50178891f70aa53cd8133d7864b64ec4ab63db38a3c4cf4411b"
+      },
+      "review_context": {
+        "mode": "unknown",
+        "history_isolated": true,
+        "memory_disabled": false,
+        "other_reports_withheld": true,
+        "basis": "platform_runtime_metadata",
+        "evidence_sha256": "c54b79014b38e50178891f70aa53cd8133d7864b64ec4ab63db38a3c4cf4411b",
+        "recorded_at": "2026-11-22T12:08:55.069548+00:00"
+      }
+    },
+    {
+      "assessed_at": "2026-11-22T12:08:20.589975+00:00",
+      "canonical_sha256": "8b52725dfa42a40b119b4dc4a34dd4b5b326fc11bca2cd008dfa384f3675f3c4",
+      "criteria": {
+        "correctness_confidence": {
+          "basis": "The partition function, transfer eigenvalues, and real sign correlation follow from the two-state kernel. Theorem 5.1 is false as written for complex observables, and the claimed identification with the reflected reconstruction is not established.",
+          "stars": 2
+        },
+        "novelty": {
+          "basis": "The mathematics is classical. A Lean formalization connecting independently defined Gibbs expectations and transfer matrix elements is a credible technical contribution, but neither priority nor the advertised end-to-end reconstruction is established by the supplied text.",
+          "stars": 2
+        },
+        "reproducibility": {
+          "basis": "The source commit, build root, oracle file, and declaration map are useful. Aggregate audit counts do not show the exact statements or dependency paths needed to resolve the prose discrepancies. I did not inspect the repository or run Lean.",
+          "stars": 3
+        },
+        "rigor": {
+          "basis": "The finite-path sum and two-dimensional spectral calculation are explicit. The proof conflates bilinear and Hermitian pairings, and the reconstruction argument does not distinguish the time-zero algebra from the full positive-time domain.",
+          "stars": 2
+        },
+        "significance": {
+          "basis": "A verified finite-model example could serve as a useful regression test for future formalizations. It does not test the nontrivial reflection quotient, spatial growth, or volume-uniform estimates.",
+          "stars": 2
+        }
+      },
+      "independence": "unknown",
+      "millennium_score": 2.3,
+      "model_id": "openai/gpt-6.2-sol",
+      "overall_stars": 2,
+      "paper_id": "ARR-2026-7PRDH0DHH280HRKH",
+      "potential_errors": [
+        "Theorem 5.1 fails with the usual Hermitian convention conjugating the first slot: at n = 0, take A identically i and B identically 1. The expectation is i and the inner product is −i. The opposite convention gives a counterexample by interchanging A and B. A bilinear form, a conjugated insertion, or real observables would repair the statement.",
+        "Remark 6.3 proves at most definiteness on time-zero observables. For the usual site reflection on the positive-time algebra, F = f(σ₁) − tanh(β) f(σ₀) is nonzero for finite β but has conditional mean zero given σ₀. Conditional independence across the reflection site then gives F zero reflected norm.",
+        "Remark 7.1 is algebraically false: with P the vacuum projection and r = a − b, Tβ = P + r(I − P) = rI + (1 − r)P. Defining Tβ from the Gibbs coefficients is a different construction, but it does not put the resulting operator outside the stated family.",
+        "The non-vacuum spectral radius and norm decay rate are |tanh β|, not tanh β on unrestricted real β. The signed eigenvalue and exact sign correlation remain valid for negative β. At β = 0 the correlation vanishes for n > 0, and no finite Hamiltonian on the full C² exponentiates to the rank-one transfer operator.",
+        "For a general finite symmetric kernel K, the path induction yields Zₙ = 1ᵀKⁿ1. The power formula for Zₙ and the uniform vacuum require constant row sums, not symmetry alone. State this extra hypothesis wherever the normalization argument is presented as portable."
+      ],
+      "prompt_version": "ARR-ASSESS-1.0",
+      "provider": "OpenRouter",
+      "recommendation": "major_revision",
+      "strengths": [
+        "The partition function is computed explicitly: each bond sum contributes the same row sum e^β + e^−β, and the initial spin contributes a factor of two. This checks the normalization independently of the spectral calculation.",
+        "The uniform and sign vectors diagonalize the stated 2×2 transfer matrix. This supports the exact real sign correlation and, for β > 0, the stated Hamiltonian mass.",
+        "The paper explicitly disclaims new Ising-chain mathematics, spatial extent, volume-uniform bounds, and implications for the continuum Yang–Mills problem.",
+        "The commit, named declarations, and audit entry points give a subsequent reviewer concrete targets for checking the formal claims."
+      ],
+      "strong_novelty_candidates": [
+        "A reusable Lean example proving the normalized finite-path Gibbs sum equals a transfer matrix element, without defining the expectation by the transfer matrix. Its value is as a checked interface; priority and linkage to the imported reflection-positive reconstruction remain unverified."
+      ],
+      "summary": "The free-boundary two-state Gibbs calculation and the real sign correlation are sound on inspection. The all-complex identification is false as printed, and definiteness on time-zero observables does not establish that the usual Osterwalder–Seiler quotient is trivial. The paper also does not show that the imported Wilson reflection-positivity result concerns the same measure and pairing. The manuscript could make a useful Lean case study after correcting the theorem statement and either proving the reconstruction links or narrowing the claim. I assessed the supplied parsed text only; I did not verify the PDF digest, inspect cited sources, or execute Lean. The timestamp uses the request's example because no runtime clock was available.",
+      "unresolved_material_objections": [
+        "Correct Theorem 5.1 and give the exact Lean statement of z2_identification, including the scalar field, the inner-product convention, and any conjugation. The printed theorem is false even at n = 0, and that instance is used again to identify the reconstruction pairing.",
+        "Exhibit a checked dependency from the companion reflection-positivity result to the specific Gibbs law, reflection, observable domain, and pairing in this paper. Prove that the induced time shift agrees with Tβ, accounting for the full positive-time null space, or narrow the result to a time-zero transfer-matrix representation.",
+        "Justify the gauge-theory designation by specifying gauge variables and a checked reduction or equivalence to the stated spin law. An ordinary pure-link gauge theory on an open one-dimensional chain has no plaquettes and all link configurations are gauge-equivalent. Without a bridge, the displayed law establishes an Ising-chain result, not the gauge reconstruction advertised in the title."
+      ],
+      "version": "v1",
+      "version_id": "arr:version:392f80db-eec8-4cab-8d9d-0ba76536e6a4",
+      "weaknesses": [
+        "Section 7 names an abstract clustering criterion, but the printed proof of the main endpoint uses the explicit sign eigenvector instead. Show the actual checked application and distinguish an additional corollary from a dependency of the endpoint.",
+        "The audit counts do not establish which headline declarations were checked or what they say. Supply reproducible commands and per-declaration statements and axiom outputs, particularly for reflection positivity, translation descent, and the spectral and Hamiltonian interpretations.",
+        "The definition audit can rule out defining the measure through the operator. It does not establish the stronger claim that sharing a primitive bond-kernel definition would make the identification circular.",
+        "The paper should separate uniformity in time separation n, which the exact identity gives for the family of open chains, from uniformity in spatial volume, which this model does not address."
+      ],
+      "assessment_id": "arr:assessment:4a9e75ab-6b43-487e-9098-3db6a2dab4a3",
+      "source_response_sha256": "e24919dcdda806cddf9fd1dc1a06aef06fa44451daf879ca8c425d71fd37673c",
+      "runtime_provenance": {
+        "provider": "OpenAI",
+        "model_id": "gpt-6.2-sol",
+        "reasoning_effort": "high",
+        "basis": "platform_runtime_metadata",
+        "evidence_sha256": "2fad9e09c4e70076c85562d6c50e4c57622125f60ee4a85d8bfc4b5d5953f14d"
+      },
+      "review_context": {
+        "mode": "unknown",
+        "history_isolated": true,
+        "memory_disabled": false,
+        "other_reports_withheld": true,
+        "basis": "platform_runtime_metadata",
+        "evidence_sha256": "2fad9e09c4e70076c85562d6c50e4c57622125f60ee4a85d8bfc4b5d5953f14d",
+        "recorded_at": "2026-11-22T12:08:51.678562+00:00"
+      }
     }
   ],
   "operator_notices": [
