@@ -1,0 +1,358 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.05in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs,longtable,array}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue,citecolor=blue]{hyperref}
+\usepackage{xurl}
+\sloppy
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\emergencystretch=3em
+\tolerance=2000
+
+\newcommand{\lean}[1]{\texttt{#1}}
+\newcommand{\anchor}{bd2c18394ce8a55ec73413c11a9f311bbf002248}
+\newcommand{\osline}[3]{%
+  \href{https://github.com/lluiseriksson/THE-ERIKSSON-PROGRAMME/blob/\anchor/YangMills/OS/#1.lean\#L#2}{\nolinkurl{#3}}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\SU}{\mathrm{SU}}
+\newcommand{\Om}{\Omega}
+\newcommand{\inn}[2]{\langle #1,\, #2\rangle_{\C}}
+\newcommand{\Ex}{\mathbb{E}}
+\newcommand{\ket}[1]{|#1\rangle}
+\newcommand{\bra}[1]{\langle #1|}
+
+\title{From the Gibbs Weight to the Spectral Gap:\\
+A Machine-Checked Transfer-Matrix Identification and Spectral-Gap Chain\\
+for the Open $\Z_2$ Ising Chain\\
+\large Verbatim Lean~4 signatures, non-circular measure/operator separation,\\
+and exact scope boundaries}
+\author{Lluis Eriksson}
+\date{23 November 2026 (v2)}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We report a complete formal verification in Lean~4 with \texttt{mathlib} of the
+transfer-matrix identification and spectral-gap chain for the one-dimensional
+open-boundary $\Z_2$ Ising spin chain (one $\Z_2$ variable per time slice, $2\times 2$
+transfer operator): from the Boltzmann path weight
+$W_\beta(\sigma)=\prod_{t=0}^{n-1} e^{\beta s(\sigma_t,\sigma_{t+1})}$ and an
+independently defined normalized transfer operator $T_\beta$ on $\C^2$, through the
+exact partition function $Z_n = 2(e^\beta+e^{-\beta})^n$ and the Hermitian identification
+theorem $\Ex_n[\overline{A(\sigma_0)}\,B(\sigma_n)] = \inn{A\Om}{T_\beta^n (B\Om)}$
+(using Mathlib's inner product conjugate-linear in the first slot), to the exact two-point
+correlation $\Ex_n[f(\sigma_0)f(\sigma_n)] = (\tanh\beta)^n$ of the sign observable $f$.
+For $\beta \ge 0$, the non-vacuum spectral radius is $\tanh\beta$, the transfer-operator
+spectral gap is $1 - \tanh\beta > 0$, and for $\beta > 0$ the Hamiltonian mass is
+$-\log(\tanh\beta) > 0$. For $\beta < 0$, the signed eigenvalue remains $\tanh\beta$
+while the contraction rate is $|\tanh\beta|$ and the true spectral gap is $1 - |\tanh\beta|$;
+at $\beta = 0$, $T_0 = \ket{\Om}\bra{\Om}$ is rank-one and no finite Hamiltonian satisfies
+$T_0 = e^{-H}$.
+
+This v2 revision answers every material objection raised against v1
+(\texttt{ARR-2026-7PRDH0DHH280HRKH} v1). We print the verbatim Lean~4 definitions and
+theorem signatures so the complex conjugation in Theorem~\ref{thm:ident} and every
+hypothesis can be audited directly from the PDF. We narrow the title and claims explicitly:
+the formalized model is the 1D open Ising spin chain (not a pure-link 1D gauge theory,
+which has no plaquettes and is gauge-trivial), and the companion reflection-positivity
+result (\texttt{ARR-2026-10JJK0VCCS87VTQH}) is \emph{not} a logical dependency of
+\lean{z2\_identification} or \lean{z2\_two\_point\_tanh}. Moreover,
+\lean{z2\_pairing\_nondegenerate} proves definiteness only on time-zero single-slice
+observables; on the full positive-time algebra, nonzero observables such as
+$F(\sigma_0,\sigma_1) = f(\sigma_1) - (\tanh\beta)f(\sigma_0)$ have zero reflected norm,
+so the full Osterwalder--Seiler GNS quotient is genuinely nontrivial and is treated
+separately (\texttt{ARR-2026-2TBRDN2DE598KSXD}). Nothing here is a claim about $\SU(N)$,
+spatial-volume uniformity, the continuum limit, or the Yang--Mills mass gap.
+\end{abstract}
+
+\section{Introduction and scope correction (v2)}
+
+Constructive lattice field theory specifies a Euclidean probability measure, whereas a
+mass gap is a spectral property of a self-adjoint transfer operator. Connecting the two
+requires an \emph{identification theorem} expressing Euclidean expectations in the measure
+as matrix elements of powers of the transfer operator, proved without circularity (i.e.,
+without defining the measure from the operator).
+
+\subsection{Exact model and what is proved}
+
+For the open-boundary 1D $\Z_2$ Ising spin chain on $n+1$ time slices
+$\sigma : \{0,\dots,n\} \to \{0,1\}$, we define solely from $\exp$ and the bond sign
+$s(i,j) = +1$ ($i=j$), $-1$ ($i \neq j$):
+\begin{align*}
+  W_\beta(\sigma) &= \prod_{t=0}^{n-1} e^{\beta s(\sigma_t,\sigma_{t+1})},
+  \qquad
+  Z_n(\beta) = \sum_{\sigma} W_\beta(\sigma), \\
+  \Ex_n\bigl[\overline{A(\sigma_0)}\,B(\sigma_n)\bigr]
+  &= \frac{1}{Z_n(\beta)}\sum_{\sigma}\overline{A(\sigma_0)}\,B(\sigma_n)\,W_\beta(\sigma).
+\end{align*}
+Independently, on $\C^2$ with Mathlib's Euclidean inner product $\inn{x}{y} = \sum_i \overline{x_i} y_i$
+(conjugate-linear in the first slot, linear in the second), we define
+\[
+  T_\beta = a(\beta)\,\mathbf{1} + b(\beta)\,S,
+  \qquad
+  a(\beta) = \frac{e^{\beta}}{e^{\beta}+e^{-\beta}},\quad
+  b(\beta) = \frac{e^{-\beta}}{e^{\beta}+e^{-\beta}},
+\]
+where $S$ swaps the two coordinates. The verified chain establishes:
+\begin{enumerate}
+  \item $Z_n(\beta) = 2(e^\beta + e^{-\beta})^n$ (computed by induction, not cancelled symbolically);
+  \item $T_\beta\Om = \Om$ for $\Om = 2^{-1/2}(1,1)$, as a consequence of $a+b=1$;
+  \item $\|T_\beta - \ket{\Om}\bra{\Om}\| \le a(\beta)-b(\beta) = \tanh\beta < 1$ for $\beta \ge 0$;
+  \item the exact Hermitian identification
+        $\Ex_n[\overline{A(\sigma_0)}\,B(\sigma_n)] = \inn{A\Om}{T_\beta^n (B\Om)}$ for all
+        $\beta \in \R$, $n \in \mathbb{N}$, and $A,B : \{0,1\} \to \C$;
+  \item the exact sign-observable correlation $\Ex_n[f(\sigma_0)f(\sigma_n)] = (\tanh\beta)^n$
+        and vanishing one-point function $\Ex_n[f(\sigma_0)] = 0$;
+  \item time-zero pairing non-degeneracy: $\Ex_0[\overline{A(\sigma_0)}A(\sigma_0)] = 0 \implies A = 0$;
+  \item an additional corollary (\lean{z2\_clustering\_of\_transfer}) feeding $T_\beta$ into
+        the abstract operator-gap-to-clustering criterion \lean{connCorrC\_le\_of\_gap}.
+\end{enumerate}
+
+\subsection{Explicit boundaries and clarifications over v1}
+
+\begin{enumerate}
+  \item \textbf{Spin chain, not 1D pure-link gauge theory.} An open one-dimensional
+  pure-link gauge theory has no plaquettes and every link configuration is gauge-equivalent.
+  The formalized law is the 1D open $\Z_2$ Ising spin chain (equivalently, a 1+1D ladder
+  gauge strip in temporal gauge, though no gauge-fixing reduction is formalized in this
+  module). The v1 title ``$\Z_2$ Lattice Gauge Chain'' has been corrected accordingly.
+  \item \textbf{Transfer-matrix identification, not full positive-time OS reconstruction.}
+  The companion reflection-positivity theorem \lean{z2Wilson\_reflectionPositive}
+  (\texttt{ARR-2026-10JJK0VCCS87VTQH}) is \emph{not} imported or logically consumed by
+  \lean{Z2Identification.lean}. What is machine-checked here is a non-circular
+  time-zero transfer-matrix identification and spectral-gap chain.
+  \item \textbf{Temporal vs.\ spatial uniformity.} The exact identity $(\tanh\beta)^n$
+  holds uniformly across all temporal separations $n \in \mathbb{N}$ for the family of open
+  chains, whereas spatial-volume uniformity does not arise because each spatial slice is a
+  single site ($\dim \C^2 = 2$).
+  \item \textbf{Mathematics is textbook.} The 1D Ising transfer matrix is classical
+  \cite{Simon}; the contribution is a zero-\texttt{sorry}, zero-project-axiom Lean~4
+  verification demonstrating clean non-circular interface separation. Nothing here bears on
+  $\SU(N)$, continuum limits, or the Clay Yang--Mills problem \cite{Clay}.
+\end{enumerate}
+
+\section{Verbatim Lean~4 definitions and signatures}\label{sec:verbatim}
+
+To make fidelity between prose and formalization directly auditable from this PDF, we quote
+verbatim the core declarations in \texttt{YangMills/OS/Z2Identification.lean} and
+\texttt{YangMills/OS/Z2Transfer.lean} at checkpoint \texttt{\anchor}:
+
+\begin{small}
+\begin{verbatim}
+-- YangMills/OS/Z2Identification.lean (measure side; no transfer operator imported)
+def z2Sign (i j : Fin 2) : Real := if i = j then 1 else -1
+noncomputable def z2Bond (beta : Real) (i j : Fin 2) : Real :=
+  Real.exp (beta * z2Sign i j)
+noncomputable def z2PathWeight (beta : Real) {n : Nat}
+    (sigma : Fin (n + 1) -> Fin 2) : Real :=
+  Finset.prod Finset.univ fun t : Fin n =>
+    z2Bond beta (sigma t.castSucc) (sigma t.succ)
+noncomputable def z2Partition (beta : Real) (n : Nat) : Real :=
+  Finset.sum Finset.univ fun sigma : Fin (n + 1) -> Fin 2 =>
+    z2PathWeight beta sigma
+noncomputable def z2PathSum (beta : Real) (n : Nat) (A B : Fin 2 -> Complex) : Complex :=
+  Finset.sum Finset.univ fun sigma : Fin (n + 1) -> Fin 2 =>
+    (starRingEnd Complex) (A (sigma 0)) * B (sigma (Fin.last n))
+      * ((z2PathWeight beta sigma : Real) : Complex)
+noncomputable def z2Expect (beta : Real) (n : Nat) (A B : Fin 2 -> Complex) : Complex :=
+  z2PathSum beta n A B / ((z2Partition beta n : Real) : Complex)
+
+-- Dictionary & main theorems
+noncomputable def z2Obs (A : Fin 2 -> Complex) : EuclideanSpace Complex (Fin 2) :=
+  ((invSqrtTwo : Real) : Complex) • WithLp.toLp 2 A
+
+theorem z2_identification (beta : Real) (n : Nat) (A B : Fin 2 -> Complex) :
+    z2Expect beta n A B = inner Complex (z2Obs A) (((z2TransferOp beta) ^ n) (z2Obs B))
+
+theorem z2_two_point_tanh (beta : Real) (n : Nat) :
+    z2Expect beta n z2SignObs z2SignObs = ((Real.tanh beta : Real) : Complex) ^ n
+
+theorem z2_one_point_sign_eq_zero (beta : Real) (n : Nat) :
+    z2Expect beta n z2SignObs (fun _ => (1 : Complex)) = 0
+
+theorem z2_pairing_nondegenerate (beta : Real) {A : Fin 2 -> Complex}
+    (h : z2Expect beta 0 A A = 0) : A = fun _ => 0
+
+-- YangMills/OS/Z2Transfer.lean (spectral bounds & abstract clustering corollary)
+theorem z2TransferOp_gap {beta : Real} (hbeta : 0 <= beta) :
+    ||z2TransferOp beta - vacuumProj z2Vac|| <= z2A beta - z2B beta
+theorem z2_spectral_gap_pos (beta : Real) : 0 < 1 - Real.tanh beta
+theorem z2_mass_pos {beta : Real} (hbeta : 0 < beta) : 0 < -Real.log (Real.tanh beta)
+theorem z2_clustering_of_transfer {beta : Real} (hbeta : 0 <= beta)
+    (v : EuclideanSpace Complex (Fin 2)) :
+    Exists fun C : Real => forall n : Nat,
+      ||connCorrC (z2TransferOp beta) z2Vac v n|| <= C * (z2A beta - z2B beta) ^ n
+\end{verbatim}
+\end{small}
+
+\begin{remark}[Non-circularity check]
+The measure-side dependency closure is
+$\texttt{z2Expect} \to \{\texttt{z2PathSum}, \texttt{z2Partition}\} \to
+\texttt{z2PathWeight} \to \texttt{z2Bond} \to \{\exp, \texttt{z2Sign}\}$,
+containing no reference to \lean{z2TransferOp}, $a(\beta)$, or $b(\beta)$. The two sides
+meet at a single bridge lemma \osline{Z2Identification}{118}{z2Bond\_eq} expressing
+$k_\beta(i,j) = (e^\beta+e^{-\beta})(a\delta_{ij} + b(1-\delta_{ij}))$.
+(Sharing a primitive bond kernel would not automatically be circular, but keeping the
+definition closures strictly disjoint makes non-circularity checkable by printing six
+definitions.)
+\end{remark}
+
+\section{Spectral quantities across $\beta \in \R$}
+
+\begin{theorem}[Vacuum invariance and non-vacuum norm bound]\label{thm:gap}
+For every $\beta \in \R$, $T_\beta \Om = \Om$ where $\Om = 2^{-1/2}(1,1)$
+(\osline{Z2Transfer}{189}{z2TransferOp\_fix}), and
+$(T_\beta - \ket{\Om}\bra{\Om}) = (\tanh\beta)(\mathbf{1} - \ket{\Om}\bra{\Om})$.
+In particular:
+\begin{enumerate}
+  \item For $\beta \ge 0$, $\|T_\beta - \ket{\Om}\bra{\Om}\| \le \tanh\beta < 1$
+  (\osline{Z2Transfer}{261}{z2TransferOp\_gap}), and the transfer-operator spectral gap is
+  $1 - \tanh\beta > 0$ (\osline{Z2Transfer}{331}{z2\_spectral\_gap\_pos}).
+  \item For $\beta > 0$, $0 < \tanh\beta < 1$, so $T_\beta = e^{-H}$ with strictly positive
+  Hamiltonian mass $m(\beta) = -\log(\tanh\beta) > 0$ (\osline{Z2Transfer}{348}{z2\_mass\_pos}).
+  \item For $\beta < 0$, the non-vacuum eigenvalue is $\tanh\beta < 0$: the non-vacuum
+  spectral radius (contraction rate) is $|\tanh\beta| = -\tanh\beta < 1$, and the true
+  spectral gap of $T_\beta$ is $1 - |\tanh\beta| \in (0,1)$ (whereas $1 - \tanh\beta > 1$,
+  proved positive for all $\beta$ in \lean{z2\_spectral\_gap\_pos}, is \emph{not} the
+  spectral gap when $\beta < 0$).
+  \item At $\beta = 0$, $\tanh 0 = 0$, $T_0 = \ket{\Om}\bra{\Om}$ is rank-one, correlations
+  vanish identically for all $n \ge 1$, and no finite Hermitian $H$ on $\C^2$ satisfies
+  $T_0 = e^{-H}$ (the mass diverges to $+\infty$). Restricting \lean{z2\_mass\_pos} to
+  $\beta > 0$ avoids Lean's junk value \lean{Real.log 0 = 0}.
+\end{enumerate}
+\end{theorem}
+
+\section{The identification theorem and exact correlation}\label{sec:ident}
+
+\begin{theorem}[Hermitian transfer-matrix identification]\label{thm:ident}
+For every $\beta \in \R$, every $n \in \mathbb{N}$, and all $A, B : \{0,1\} \to \C$,
+\[
+  \Ex_n\bigl[\overline{A(\sigma_0)}\,B(\sigma_n)\bigr]
+  \;=\; \inn{A\Om}{\,T_\beta^{\,n}(B\Om)},
+\]
+where $\inn{x}{y} = \sum_{i\in\{0,1\}} \overline{x_i}\,y_i$ is Mathlib's Euclidean inner
+product, conjugate-linear in the first argument (\osline{Z2Identification}{269}{z2\_identification}).
+\end{theorem}
+
+\begin{proof}[Proof, as formalized]
+Split the sum over $\sigma : \mathrm{Fin}(n+1) \to \mathrm{Fin}\,2$ at the first spin
+$\sigma = (s,\tau)$. Factoring out the first bond $k_\beta(s,\tau_0) = (e^\beta+e^{-\beta})
+(T_\beta)_{s,\tau_0}$ and using self-adjointness of $T_\beta$ yields by induction on $n$
+(\osline{Z2Identification}{171}{z2PathSum\_succ}):
+\[
+  \sum_{\sigma} \overline{A(\sigma_0)}\,B(\sigma_n)\,W_\beta(\sigma)
+  = (e^\beta + e^{-\beta})^n\,\inn{A}{T_\beta^n B}.
+\]
+Setting $A = B \equiv 1$ and using $T_\beta\mathbf{1} = \mathbf{1}$ gives
+$Z_n(\beta) = 2(e^\beta + e^{-\beta})^n$ (\osline{Z2Identification}{221}{z2Partition\_eq}).
+Dividing cancels $(e^\beta+e^{-\beta})^n$ and leaves
+$\tfrac{1}{2}\inn{A}{T_\beta^n B} = \inn{2^{-1/2}A}{T_\beta^n(2^{-1/2}B)} = \inn{A\Om}{T_\beta^n(B\Om)}$.
+(Without the complex conjugate on $A(\sigma_0)$, the identity would already fail at $n=0$
+for $A \equiv i$, $B \equiv 1$, where $\Ex_0[i\cdot 1] = i \neq -i = \inn{i\Om}{\Om}$.)
+\end{proof}
+
+\begin{corollary}[Exact sign two-point function]\label{thm:endpoint}
+For $f(0) = +1$, $f(1) = -1$ (real-valued, so $\overline{f} = f$), every $\beta \in \R$,
+and every $n \in \mathbb{N}$,
+\[
+  \Ex_n\bigl[f(\sigma_0)f(\sigma_n)\bigr] = (\tanh\beta)^n,
+  \qquad
+  \Ex_n\bigl[f(\sigma_0)\bigr] = 0
+\]
+(\osline{Z2Identification}{346}{z2\_two\_point\_tanh},
+\osline{Z2Identification}{352}{z2\_one\_point\_sign\_eq\_zero}).
+\end{corollary}
+
+\begin{remark}[Portability to general finite kernels]
+For a general finite symmetric kernel $K$, path induction yields $Z_n = \mathbf{1}^\top K^n \mathbf{1}$.
+The power formula $Z_n = |S|\,\lambda^n$ and the uniform vacuum $\Om = |S|^{-1/2}\mathbf{1}$
+require \emph{constant row sums} ($K\mathbf{1} = \lambda\mathbf{1}$), not symmetry alone.
+\end{remark}
+
+\section{Time-zero definiteness, the positive-time OS quotient, and the abstract criterion}
+
+\begin{remark}[Time-zero definiteness vs.\ the full positive-time OS quotient]\label{rem:quotient}
+The $n=0$ instance of Theorem~\ref{thm:ident} gives
+$\Ex_0[\overline{A(\sigma_0)}A(\sigma_0)] = \|A\Om\|^2$, so
+\osline{Z2Identification}{417}{z2\_pairing\_nondegenerate} proves that the pairing is
+strictly positive definite on \emph{time-zero single-slice observables} $A(\sigma_0)$.
+This does \emph{not} mean that the standard Osterwalder--Seiler reflection pairing on the
+full positive-time algebra $\{\sigma_0, \sigma_1, \dots\}$ is definite: under site
+reflection across $t=0$, the nonzero positive-time observable
+$F(\sigma_0,\sigma_1) := f(\sigma_1) - (\tanh\beta)f(\sigma_0)$ satisfies
+$\Ex[F \mid \sigma_0] = 0$ for every finite $\beta$, hence has zero reflected norm
+$\Ex[\overline{(\theta F)} F] = 0$ by Markov conditional independence across $\sigma_0$.
+Thus the full positive-time GNS quotient is nontrivial even for the 1D Ising chain (which
+is why a nontrivial degenerate GNS quotient is formalized separately in
+\texttt{ARR-2026-2TBRDN2DE598KSXD}).
+\end{remark}
+
+\begin{remark}[Algebraic structure of $T_\beta$ and role of the abstract clustering criterion]
+With $P = \ket{\Om}\bra{\Om}$ and $r = \tanh\beta = a-b$, algebraically
+$T_\beta = P + r(\mathbf{1}-P) = r\mathbf{1} + (1-r)P$ (correcting an erroneous algebraic
+claim in v1's Remark~7.1). The distinction from earlier toy witnesses is \emph{constructive},
+not algebraic: $T_\beta$ is built from the Boltzmann bond weights $e^{\pm\beta}$ rather
+than taking a target rate $r$ as input. Finally, \lean{z2\_two\_point\_tanh} is proved
+directly from the eigenfunction $T_\beta f = (\tanh\beta)f$; the separate corollary
+\osline{Z2Transfer}{301}{z2\_clustering\_of\_transfer} feeds $T_\beta$ into the abstract
+dense-family clustering criterion \lean{connCorrC\_le\_of\_gap} (\texttt{ARR-2026-31ED4MTKC18JPSDE})
+for arbitrary $v \in \C^2$ and $\beta \ge 0$, rather than serving as a dependency of
+Corollary~\ref{thm:endpoint}.
+\end{remark}
+
+\section{Reproducibility and verification}
+
+All Lean files live in \url{https://github.com/lluiseriksson/THE-ERIKSSON-PROGRAMME}
+(archival release \texttt{yang-mills-archive-v1.0}, Lean \texttt{v4.29.0-rc6}, pinned
+Mathlib \texttt{07642720480157414db592fa85b626dafb71355b}; original module freeze
+\texttt{\anchor}). Reproduce and inspect the axiom readout of every declaration in
+Section~\ref{sec:verbatim} via:
+\begin{verbatim}
+git clone -c core.longpaths=true \
+  https://github.com/lluiseriksson/THE-ERIKSSON-PROGRAMME.git
+cd THE-ERIKSSON-PROGRAMME && git checkout yang-mills-archive-v1.0
+lake exe cache get && lake build YangMillsCore && lake env lean oracle_check.lean
+\end{verbatim}
+GitHub Actions (\texttt{lean-build.yml} and \texttt{ci.yml}) verifies continuously that
+\texttt{YangMillsCore} compiles with zero \texttt{sorry}, zero project axioms, and
+\texttt{\#print axioms} restricted to \texttt{[propext, Classical.choice, Quot.sound]}.
+
+\subsection*{Disclosure}
+Large language models assisted Lean~4 formalization and manuscript editing under author
+supervision; every theorem in Section~\ref{sec:verbatim} is checked by the Lean~4 kernel.
+Author Lluis Eriksson administers AIRR (\url{https://airr.science/}); no independent
+editorial admission or human peer review is claimed.
+
+\begin{thebibliography}{9}\small
+\bibitem{OsterwalderSeiler}
+K.~Osterwalder and E.~Seiler, \emph{Gauge field theories on a lattice},
+Annals of Physics \textbf{110} (1978), 440--471.
+
+\bibitem{Simon}
+B.~Simon, \emph{The Statistical Mechanics of Lattice Gases, Volume I},
+Princeton University Press, 1993.
+
+\bibitem{Clay}
+A.~Jaffe and E.~Witten, \emph{Quantum Yang--Mills theory},
+Clay Mathematics Institute Millennium Prize Problem description, 2000.
+
+\bibitem{Lean4}
+L.~de~Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language},
+CADE-28, LNCS 12699 (2021), 625--635.
+\end{thebibliography}
+
+\end{document}

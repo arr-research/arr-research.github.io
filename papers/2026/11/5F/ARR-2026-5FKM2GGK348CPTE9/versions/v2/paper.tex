@@ -1,0 +1,439 @@
+\documentclass[11pt]{article}
+\usepackage{cmap}
+\usepackage[margin=1.05in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\input{glyphtounicode}
+\pdfgentounicode=1
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{xurl}
+\usepackage[htt]{hyphenat}
+\sloppy
+\definecolor{linkblue}{rgb}{0.1,0.2,0.55}
+\hypersetup{colorlinks=true,linkcolor=linkblue,citecolor=linkblue,urlcolor=linkblue}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\title{A Wronskian Identity for Antisymmetrized Sine Sums:\\
+\large unconditional denominator positivity via circular convolution,\\
+sharp monotonicity distinctions, and counterexamples to naive sine-series principles}
+\author{Lluis Eriksson}
+\date{23 November 2026 (v2)}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+For real arrays $(a_m)_{m\ge 1}$ and $(b_m)_{m\ge 1}$ that are finitely supported, or
+summable with $\sum_{m\ge 1} m(|a_m|+|b_m|) < \infty$, we prove the exact Wronskian identity
+\[
+\sum_{1 \le m < n} (a_m b_n - a_n b_m)
+\bigl[(m-n)\sin((m+n)t) + (m+n)\sin((n-m)t)\bigr]
+\;=\; 2\,\bigl[F_a'(t)\,F_b(t) - F_a(t)\,F_b'(t)\bigr],
+\]
+where $F_x(t) = \sum_{m\ge 1} x_m \sin(mt)$, with explicit Fubini justification of the
+rearrangement in the infinite-series case. Applying this identity to the modified-Bessel
+coefficient arrays $(A_m, B_m)$ from a companion two-dimensional lattice gauge theory
+surface-positivity problem, we first prove \emph{unconditionally} for every $\beta > 0$
+that $F_B(t) = -(f^{*4})'(t)/(2 I_1(\beta)^4) > 0$ on $(0,\pi)$, where
+$f(t)=e^{\beta\cos t}$ and $f^{*4}$ is its fourfold normalized circular convolution
+(Theorem~\ref{thm:denom-pos}), closing part~(i) of v1's Conjecture~3 without numerics.
+We then distinguish precisely between: (a) strict decrease of the real-analytic ratio
+$F_A/F_B$ on $(0,\pi)$ (equivalent to $W \le 0$ and $W \not\equiv 0$), (b) strict
+pointwise negativity $W(t) < 0$ on $(0,\pi)$ (strictly stronger, as shown by the finite
+example $F_b=\sin t$, $F_a = \frac{1}{4}\sin 2t + \frac{1}{8}\sin 4t$ with
+$F_a/F_b = \cos^3 t$ and $W(\pi/2)=0$), and (c) local negativity near $t=\pi$ (which is
+strictly weaker under generic side conditions, as shown by the finite counterexample
+$a=(6,10,24)$, $b=(6,5,2)$). We also retain the hand-checkable counterexample
+$a=(3,4,3)$, $b=(3,2,1)$ refuting any unrestricted sine-series analogue of the
+Biernacki--Krzy\.z principle even when $a_m/b_m$ is strictly increasing on the support
+and $F_b > 0$ on $(0,\pi)$. The finite Wronskian identity (arbitrary $K$) is
+machine-checked in Lean~4/Mathlib (\texttt{WronskianIdentity.lean}, zero \texttt{sorry},
+standard axioms only), and every counterexample is an exact algebraic evaluation. The
+global Bessel sign conjecture $W(t) < 0$ on $(0,\pi)$ remains open.
+\end{abstract}
+
+\section{The Wronskian identity}
+
+\begin{theorem}[Wronskian identity]
+\label{thm:wronskian}
+Let $(a_m)_{m\ge 1}$ and $(b_m)_{m\ge 1}$ be real sequences satisfying
+$\sum_{m\ge 1} m(|a_m| + |b_m|) < \infty$ (in particular, any finitely supported sequences).
+Set $F_a(t) = \sum_{m\ge 1} a_m \sin(mt)$ and $F_b(t) = \sum_{m\ge 1} b_m \sin(mt)$.
+Then $F_a, F_b \in C^1(\mathbb{R})$ with termwise derivatives
+$F_a'(t) = \sum_{m\ge 1} m a_m \cos(mt)$ and $F_b'(t) = \sum_{m\ge 1} m b_m \cos(mt)$,
+the double series below converges absolutely and uniformly on $\mathbb{R}$, and for all
+$t \in \mathbb{R}$,
+\begin{equation}
+\label{eq:wronskian}
+\sum_{1 \le m < n} (a_m b_n - a_n b_m)
+\bigl[(m-n)\sin((m+n)t) + (m+n)\sin((n-m)t)\bigr]
+= 2\,\bigl[F_a'(t) F_b(t) - F_a(t) F_b'(t)\bigr].
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Since $|a_m \sin(mt)| \le |a_m| \le m|a_m|$ and $|m a_m \cos(mt)| \le m|a_m|$, the
+Weierstrass $M$-test yields uniform convergence of $F_a, F_b, F_a', F_b'$ on $\mathbb{R}$
+and validates termwise differentiation. For any $m,n \ge 1$, the product-to-sum identities
+give
+\begin{align*}
+(m-n)\sin((m+n)t) &+ (m+n)\sin((n-m)t) \\
+&= 2\,\bigl[m\cos(mt)\sin(nt) - n\sin(mt)\cos(nt)\bigr] =: 2\,G(m,n).
+\end{align*}
+Note that $|G(m,n)| \le m+n$, $G(n,m) = -G(m,n)$, and $G(n,n) = 0$. Moreover,
+\[
+\sum_{m,n \ge 1} |a_m b_n|\,(m+n)
+= \Bigl(\sum_{m\ge 1} m|a_m|\Bigr)\Bigl(\sum_{n\ge 1} |b_n|\Bigr)
++ \Bigl(\sum_{m\ge 1} |a_m|\Bigr)\Bigl(\sum_{n\ge 1} n|b_n|\Bigr)
+< \infty,
+\]
+so every double sum below is absolutely convergent and may be rearranged freely by Fubini's
+theorem. Using the joint antisymmetry of $(a_m b_n - a_n b_m)$ and $G(m,n)$ together with
+$G(n,n)=0$,
+\begin{align*}
+\sum_{1\le m < n} (a_m b_n - a_n b_m)\, 2G(m,n)
+&= \sum_{m,n \ge 1} (a_m b_n - a_n b_m)\, G(m,n)
+ = 2 \sum_{m,n \ge 1} a_m b_n\, G(m,n) \\
+&= 2\Bigl[\Bigl(\sum_{m\ge 1} m a_m \cos(mt)\Bigr)\Bigl(\sum_{n\ge 1} b_n \sin(nt)\Bigr) \\
+&\qquad\quad - \Bigl(\sum_{m\ge 1} a_m \sin(mt)\Bigr)\Bigl(\sum_{n\ge 1} n b_n \cos(nt)\Bigr)\Bigr] \\
+&= 2\,\bigl[F_a'(t) F_b(t) - F_a(t) F_b'(t)\bigr]. \qedhere
+\end{align*}
+\end{proof}
+
+\begin{remark}
+Wherever $F_b(t) \neq 0$, the quotient rule gives
+\[
+W(t) := 2\bigl[F_a'(t) F_b(t) - F_a(t) F_b'(t)\bigr]
+= 2\,F_b(t)^2\,\frac{d}{dt}\!\left(\frac{F_a(t)}{F_b(t)}\right).
+\]
+Thus on any open interval $I$ where $F_b \neq 0$, pointwise strict negativity $W(t) < 0$
+on $I$ is equivalent to $(F_a/F_b)'(t) < 0$ on $I$, which is \emph{strictly stronger} than
+strict decrease of $F_a/F_b$ on $I$ (see Proposition~\ref{prop:strict-vs-neg}).
+\end{remark}
+
+\section{The Bessel arrays and unconditional denominator positivity}
+\label{sec:surface}
+
+We recall the modified-Bessel coefficient arrays from the companion note \cite{PhiLemma}
+(AIRR record \texttt{ARR-2026-72G1SSCNNG8YDVC2}; programme context in \cite{MasterMap}).
+For $\beta > 0$, let $I_\mu(\beta) = \sum_{j=0}^\infty \frac{(\beta/2)^{\mu+2j}}{j!\,\Gamma(\mu+j+1)}$
+be the modified Bessel function of the first kind, set $r_k = I_{k+1}(\beta)/I_1(\beta)$ for
+$k \ge 0$, and define for $k \ge 1$,
+\[
+A_k = r_{k-1}^2 \!\!\sum_{j \in \{k-2,\,k\},\, j \ge 0}\!\! (j+1) r_j^2,
+\qquad
+B_k = k\, r_{k-1}^4 = k\,\frac{I_k(\beta)^4}{I_1(\beta)^4},
+\qquad
+c_{mn} = A_m B_n - A_n B_m .
+\]
+
+\begin{lemma}[Non-asymptotic super-exponential decay]
+\label{lem:bessel-decay}
+For every $\beta > 0$ and every integer $k \ge 0$,
+\[
+0 < I_k(\beta) \le \frac{(\beta/2)^k}{k!}\,I_0(\beta).
+\]
+Consequently $r_{k-1} \le \frac{I_0(\beta)}{I_1(\beta)}\frac{(\beta/2)^k}{k!}$, both $A_m$
+and $B_m$ decay at least as $O\bigl(((\beta/2)^m/m!)^4\bigr)$ (up to a polynomial factor
+in $m$), and $\sum_{m\ge 1} m(A_m + B_m) < \infty$ for every $\beta > 0$. Moreover, $F_A$
+and $F_B$ extend to entire (hence real-analytic on $\mathbb{R}$) $2\pi$-periodic odd
+functions.
+\end{lemma}
+
+\begin{proof}
+Since $\binom{k+j}{j} = \frac{(k+j)!}{k!\,j!} \ge 1$ for all $k,j \ge 0$, we have
+$(k+j)! \ge k!\,j!$, whence
+\[
+I_k(\beta) = \sum_{j=0}^\infty \frac{(\beta/2)^{k+2j}}{j!\,(k+j)!}
+\le \frac{(\beta/2)^k}{k!}\sum_{j=0}^\infty \frac{(\beta/2)^{2j}}{(j!)^2}
+= \frac{(\beta/2)^k}{k!}\,I_0(\beta).
+\]
+Positivity follows termwise for $\beta > 0$. Substituting into $A_m$ and $B_m$ gives the
+stated factorial-fourth-power bound, which implies $\sum_{m\ge 1} m^r (A_m + B_m) < \infty$
+for every $r \ge 0$ and absolute convergence of the complex trigonometric series on all of
+$\mathbb{C}$ (since $|\sin(mz)| \le e^{m|\operatorname{Im} z|}$).
+\end{proof}
+
+We now prove unconditionally that $F_B(t) > 0$ on $(0,\pi)$ for every $\beta > 0$, closing
+part~(i) of v1's Conjecture~3 analytically.
+
+\begin{lemma}[Circular convolution preserves even strict decrease]
+\label{lem:conv-dec}
+Let $g, h \in C^1(\mathbb{R})$ be $2\pi$-periodic and even, and suppose $g'(s) < 0$ and
+$h'(s) < 0$ for all $s \in (0,\pi)$. Define their normalized circular convolution
+\[
+(g * h)(t) := \frac{1}{2\pi}\int_{-\pi}^{\pi} g(s)\,h(t-s)\,ds.
+\]
+Then $g * h \in C^1(\mathbb{R})$ is $2\pi$-periodic, even, and satisfies
+$(g * h)'(t) < 0$ for all $t \in (0,\pi)$.
+\end{lemma}
+
+\begin{proof}
+Periodicity and evenness follow by the substitution $s \mapsto -s$. By periodicity we may
+write $(g*h)(t) = \frac{1}{2\pi}\int_{-\pi}^{\pi} g(t-u)\,h(u)\,du$, differentiate under the
+integral sign, and change variables back to $s = t-u$:
+\[
+(g*h)'(t) = \frac{1}{2\pi}\int_{-\pi}^{\pi} g'(s)\,h(t-s)\,ds
+= \frac{1}{2\pi}\int_{0}^{\pi} g'(s)\,\bigl[h(t-s) - h(t+s)\bigr]\,ds,
+\]
+using $g'(-s) = -g'(s)$ because $g$ is even. Because $h$ is $2\pi$-periodic, even, and
+strictly decreasing on $[0,\pi]$, there is a strictly increasing function
+$\tilde{h} : [-1,1] \to \mathbb{R}$ such that $h(\theta) = \tilde{h}(\cos\theta)$ for all
+$\theta \in \mathbb{R}$. For any $t, s \in (0,\pi)$,
+\[
+\cos(t-s) - \cos(t+s) = 2\sin t\,\sin s > 0,
+\]
+so $h(t-s) - h(t+s) = \tilde{h}(\cos(t-s)) - \tilde{h}(\cos(t+s)) > 0$. Together with
+$g'(s) < 0$ on $(0,\pi)$, the integrand is strictly negative on all of $(0,\pi)$, giving
+$(g*h)'(t) < 0$.
+\end{proof}
+
+\begin{theorem}[Unconditional denominator positivity]
+\label{thm:denom-pos}
+For every $\beta > 0$ and every $t \in (0,\pi)$,
+\[
+F_B(t) = \sum_{k=1}^\infty k\,\frac{I_k(\beta)^4}{I_1(\beta)^4}\,\sin(kt)
+= -\frac{(f^{*4})'(t)}{2\,I_1(\beta)^4} \;>\; 0,
+\]
+where $f(t) := e^{\beta\cos t}$ and $f^{*4} := (f*f)*(f*f)$.
+\end{theorem}
+
+\begin{proof}
+By the Jacobi--Anger expansion \cite[10.35.2]{DLMF}, $f(t) = e^{\beta\cos t} = \sum_{k\in\mathbb{Z}} I_k(\beta) e^{ikt}$
+with $I_{-k}(\beta) = I_k(\beta)$, converging uniformly on $\mathbb{R}$. Under normalized
+circular convolution, Fourier coefficients multiply, so the $k$-th Fourier coefficient of
+$f^{*4}$ is $I_k(\beta)^4$:
+\[
+f^{*4}(t) = I_0(\beta)^4 + 2\sum_{k=1}^\infty I_k(\beta)^4 \cos(kt).
+\]
+By Lemma~\ref{lem:bessel-decay}, termwise differentiation is justified uniformly on
+$\mathbb{R}$ and yields
+\[
+-(f^{*4})'(t) = 2\sum_{k=1}^\infty k\,I_k(\beta)^4\sin(kt) = 2\,I_1(\beta)^4\,F_B(t).
+\]
+For $\beta > 0$, $f \in C^\infty(\mathbb{R})$ is $2\pi$-periodic, even, and satisfies
+$f'(t) = -\beta\sin t\,e^{\beta\cos t} < 0$ on $(0,\pi)$. Applying
+Lemma~\ref{lem:conv-dec} to $(f,f)$ yields $f^{*2}$ even, $2\pi$-periodic, $C^\infty$,
+and strictly decreasing on $(0,\pi)$; applying Lemma~\ref{lem:conv-dec} once more to
+$(f^{*2}, f^{*2})$ gives $(f^{*4})'(t) < 0$ on $(0,\pi)$. Dividing by
+$2 I_1(\beta)^4 > 0$ gives $F_B(t) > 0$ on $(0,\pi)$.
+\end{proof}
+
+\section{Sharp monotonicity distinctions and the global conjecture}
+\label{sec:conjecture}
+
+Let $W(t) := 2[F_A'(t)F_B(t) - F_A(t)F_B'(t)]$ be the Wronskian of Theorem~\ref{thm:wronskian}
+at $(a,b)=(A,B)$. In the companion note \cite{PhiLemma}, the surface-positivity problem
+asks for $W(t) < 0$ in a left neighborhood of $t = \pi$, and proves that the coefficient
+ratio $\varphi_m = A_m/B_m$ is strictly increasing ($c_{mn} < 0$ for all $m < n$).
+By Theorem~\ref{thm:denom-pos}, $F_A/F_B$ is real-analytic and well-defined on all of
+$(0,\pi)$, with $(F_A/F_B)' = W/(2F_B^2)$.
+
+We clarify two logical distinctions that were blurred in v1. First, strict decrease of
+$F_a/F_b$ is \emph{not} equivalent to pointwise strict negativity $W < 0$.
+
+\begin{proposition}[Strict decrease allows isolated zeros of $W$]
+\label{prop:strict-vs-neg}
+For $F_b(t) = \sin t$ (positive on $(0,\pi)$) and
+$F_a(t) = \tfrac{1}{4}\sin(2t) + \tfrac{1}{8}\sin(4t)$, we have
+\[
+\frac{F_a(t)}{F_b(t)} = \cos^3 t,
+\]
+which is strictly decreasing on $(0,\pi)$, yet
+$W(t) = 2\sin^2 t \cdot (-3\cos^2 t \sin t) = -6\sin^3 t\cos^2 t$ vanishes at $t = \pi/2$.
+In general, for real-analytic $F_A, F_B$ with $F_B > 0$ on $(0,\pi)$, strict decrease of
+$F_A/F_B$ on $(0,\pi)$ is equivalent to $W(t) \le 0$ on $(0,\pi)$ with $W \not\equiv 0$,
+whereas $W(t) < 0$ on all of $(0,\pi)$ is the strictly stronger assertion that
+$(F_A/F_B)'(t) < 0$ everywhere on $(0,\pi)$.
+\end{proposition}
+
+\begin{proof}
+Using $\sin(2t) = 2\sin t\cos t$ and $\sin(4t) = 4\sin t\cos t(2\cos^2 t - 1)$,
+\[
+\frac{F_a(t)}{\sin t}
+= \tfrac{1}{2}\cos t + \tfrac{1}{2}\cos t(2\cos^2 t - 1) = \cos^3 t.
+\]
+Hence $(F_a/F_b)'(t) = -3\cos^2 t\sin t \le 0$ with unique zero at $t = \pi/2$ in $(0,\pi)$,
+so $F_a/F_b$ is strictly decreasing while $W(\pi/2)=0$. For real-analytic $F_A/F_B$ on the
+connected interval $(0,\pi)$, if $W \le 0$ and $W \not\equiv 0$ then the zeros of
+$(F_A/F_B)'$ are isolated, so $F_A/F_B$ is strictly decreasing; conversely, strict decrease
+forces $(F_A/F_B)' \le 0$ and $(F_A/F_B)' \not\equiv 0$.
+\end{proof}
+
+Second, global negativity on $(0,\pi)$ strictly implies near-$\pi$ negativity, and no
+reverse local-to-global implication follows from the generic side conditions alone (see
+Proposition~\ref{prop:local-global} below). We therefore state the global conjecture as a
+strengthening of the original near-$\pi$ problem, not as an equivalence:
+
+\begin{conjecture}[Global Wronskian negativity for the Bessel arrays]
+\label{conj:main}
+For every $\beta > 0$:
+\begin{enumerate}
+  \item[(a)] (\emph{Weak/strict-decrease form}) $W(t) \le 0$ for all $t \in (0,\pi)$ and
+  $W \not\equiv 0$ (equivalently, by Theorem~\ref{thm:denom-pos} and real-analyticity,
+  $F_A/F_B$ is strictly decreasing on $(0,\pi)$).
+  \item[(b)] (\emph{Strong/pointwise form}) $W(t) < 0$ for all $t \in (0,\pi)$
+  (equivalently, $(F_A/F_B)'(t) < 0$ everywhere on $(0,\pi)$).
+\end{enumerate}
+\end{conjecture}
+
+\section{Counterexamples to naive sine-series monotonicity and local-to-global lifting}
+\label{sec:counter}
+
+For power series with positive coefficients converging on a common interval $(0,R)$ with
+nonvanishing denominator, the Biernacki--Krzy\.z principle \cite{BK} asserts that
+monotonicity of $a_m/b_m$ transfers to monotonicity of $\sum a_m x^m / \sum b_m x^m$.
+No unrestricted analogue holds for sine series, even on finite supports where $b_m > 0$
+decreases, $a_m/b_m$ strictly increases on the support $\{1,\dots,K\}$, and $F_b > 0$ on
+$(0,\pi)$.
+
+\begin{proposition}[Counterexample to unrestricted sine-series Biernacki--Krzy\.z]
+\label{prop:counter}
+Let $a = (3, 4, 3)$ and $b = (3, 2, 1)$ on indices $m \in \{1,2,3\}$ (with $a_m = b_m = 0$
+for $m \ge 4$). On the support $\{1,2,3\}$, $b_m$ is strictly decreasing and the coefficient
+ratio $a_m/b_m = (1,2,3)$ is strictly increasing; moreover
+\[
+F_b(t) = 3\sin t + 2\sin 2t + \sin 3t
+= 2\sin t\,(2\cos^2 t + 2\cos t + 1) > 0 \qquad \forall t \in (0,\pi),
+\]
+since $2y^2 + 2y + 1 = 2(y + \tfrac{1}{2})^2 + \tfrac{1}{2} > 0$. Yet at $t = 2\pi/3$,
+\[
+F_a = -\tfrac{\sqrt{3}}{2},\quad
+F_b = \tfrac{\sqrt{3}}{2},\quad
+F_a' = \tfrac{7}{2},\quad
+F_b' = -\tfrac{1}{2},
+\qquad
+F_a' F_b - F_a F_b' = \tfrac{3\sqrt{3}}{2} > 0,
+\]
+so $W(2\pi/3) = 3\sqrt{3} > 0$ and $F_a/F_b$ is strictly \emph{increasing} at $t = 2\pi/3$.
+\end{proposition}
+
+\begin{proof}
+At $t = 2\pi/3$: $\sin t = \tfrac{\sqrt{3}}{2}$, $\sin 2t = -\tfrac{\sqrt{3}}{2}$,
+$\sin 3t = 0$; $\cos t = -\tfrac{1}{2}$, $\cos 2t = -\tfrac{1}{2}$, $\cos 3t = 1$.
+Hence $F_a = (3-4)\tfrac{\sqrt{3}}{2} = -\tfrac{\sqrt{3}}{2}$,
+$F_b = (3-2)\tfrac{\sqrt{3}}{2} = \tfrac{\sqrt{3}}{2}$,
+$F_a' = -\tfrac{3}{2} - 4 + 9 = \tfrac{7}{2}$, and
+$F_b' = -\tfrac{3}{2} - 2 + 3 = -\tfrac{1}{2}$.
+(Mere coefficient decrease does not in general force sine positivity, e.g.\
+$\sin t + \sin 2t < 0$ near $\pi$; see \cite{AskeySteinig} for Vietoris-type criteria,
+which is why we verify $F_b > 0$ directly by factorization.)
+\end{proof}
+
+\begin{proposition}[Near-$\pi$ negativity does not force global negativity]
+\label{prop:local-global}
+Let $a = (6, 10, 24)$ and $b = (6, 5, 2)$ on indices $m \in \{1,2,3\}$ (zero for $m \ge 4$).
+Then on $\{1,2,3\}$, $b_m$ is strictly decreasing, $a_m/b_m = (1, 2, 12)$ is strictly
+increasing, and
+\[
+F_b(t) = 6\sin t + 5\sin 2t + 2\sin 3t
+= \sin t\,(8\cos^2 t + 10\cos t + 4) > 0 \qquad \forall t \in (0,\pi),
+\]
+since $10^2 - 4\cdot 8\cdot 4 = -28 < 0$. Near $t = \pi$, setting $t = \pi - \varepsilon$
+yields $W(\pi - \varepsilon) = -8\varepsilon^3 + O(\varepsilon^5) < 0$ for all
+sufficiently small $\varepsilon > 0$. Nevertheless, at $t = 2\pi/3$,
+$W(2\pi/3) = 51\sqrt{3} > 0$. Thus any proof of Conjecture~\ref{conj:main} from near-$\pi$
+negativity must invoke Bessel-specific structure beyond these generic side conditions.
+\end{proposition}
+
+\begin{proof}
+Using $\sin 2t = 2\sin t\cos t$ and $\sin 3t = \sin t(4\cos^2 t - 1)$ gives
+$F_b(t)/\sin t = 6 + 10\cos t + 2(4\cos^2 t - 1) = 8\cos^2 t + 10\cos t + 4 > 0$.
+Similarly $F_a(t)/\sin t = 96\cos^2 t + 20\cos t - 18$. Writing $y = \cos t \in (-1,1)$,
+the quotient $q(y) = F_a/F_b = (96y^2 + 20y - 18)/(8y^2 + 10y + 4)$ has derivative
+\[
+q'(y) = \frac{2(400 y^2 + 528 y + 130)}{(8y^2 + 10y + 4)^2}
+= \frac{4(200 y^2 + 264 y + 65)}{(8y^2 + 10y + 4)^2}.
+\]
+Since $dy/dt = -\sin t < 0$, the sign of $W(t) = 2 F_b(t)^2 q'(\cos t)(-\sin t)$ is
+opposite to the sign of $p(y) := 200 y^2 + 264 y + 65$. At $y = -1$ ($t = \pi$),
+$p(-1) = 1 > 0$, confirming $W(\pi-\varepsilon) = -8\varepsilon^3 + O(\varepsilon^5) < 0$
+for small $\varepsilon > 0$. At $t = 2\pi/3$ ($y = -1/2$), $p(-1/2) = 50 - 132 + 65 = -17 < 0$,
+and $F_b(2\pi/3) = (\sqrt{3}/2)(2-5+4) = \sqrt{3}/2$, giving
+$W(2\pi/3) = 2\cdot\frac{3}{4}\cdot\frac{4(-17)}{1^2}\cdot\bigl(-\frac{\sqrt{3}}{2}\bigr)
+= 51\sqrt{3} > 0$.
+\end{proof}
+
+\begin{remark}[Structural moral and numerical precision]
+\label{rem:moral}
+Propositions~\ref{prop:counter} and \ref{prop:local-global} show that coefficient-ratio
+monotonicity and denominator positivity alone cannot certify the sign of $W$, nor lift
+local near-$\pi$ negativity to $(0,\pi)$. Quantitatively, high-precision scans of the
+Bessel arrays (archived at \texttt{docs/BF2-ATTACK-NOTES.md}) display parity-mirror
+cancellation between even- and odd-index sums of relative magnitude $\approx e^{-c\beta}$
+($c \approx 2.1$, corresponding to roughly $c\beta/\ln 10 \approx 0.91\beta$ lost decimal
+digits; e.g.\ $W \approx -2.9\cdot 10^{-8}$ at $\beta=8$ and $-5.0\cdot 10^{-29}$ at
+$\beta=32$ on sampled grids). Maintaining $\ge \beta + 20$ (conservatively $2.2\beta+20$)
+working digits prevents catastrophic cancellation on tested grids, though grid samples
+never constitute a continuum proof. Theorem~\ref{thm:denom-pos} already realizes $F_B$ as
+an exact circle-convolution derivative; a corresponding positive kernel representation of
+$-W$ (or total positivity of $(A;B)$ against the sine kernel) remains the natural
+analytic route to Conjecture~\ref{conj:main}.
+\end{remark}
+
+\section{Verification}
+
+Theorem~\ref{thm:wronskian} (finite form, arbitrary $K$) is machine-checked in Lean~4 /
+Mathlib (\texttt{WronskianIdentity.lean}, accompanying \texttt{papers/wronskian-reduction}
+in \url{https://github.com/lluiseriksson/THE-ERIKSSON-PROGRAMME}): declarations
+\texttt{bracket\_eq\_two\_G}, \texttt{double\_sum\_eq\_wronskian},
+\texttt{pair\_sum\_eq\_double\_sum}, and \texttt{wronskian\_identity}, each with zero
+\texttt{sorry} and axiom readout \texttt{[propext, Classical.choice, Quot.sound]}.
+Symbolically, Theorem~\ref{thm:wronskian} was checked in SymPy for generic arrays at
+$K \le 5$ (exact algebraic zero after trigonometric expansion), numerically evaluated at
+$K = 7$ at rational inputs with $40$-digit precision (residual $< 10^{-35}$, a high-precision
+numerical check rather than exact rational arithmetic), and compared against the direct
+Bessel double sum at $K = 90$, $\beta = 8$, $t \in \{0.5, 1.5, 2.6, \pi - 0.1\}$.
+Propositions~\ref{prop:strict-vs-neg}, \ref{prop:counter}, and \ref{prop:local-global} are
+exact algebraic evaluations (also cross-checked in SymPy), and the convolution identity in
+Theorem~\ref{thm:denom-pos} was independently cross-checked by $30$-digit numerical
+quadrature at $\beta \in \{0.5, 2.0\}$.
+
+\subsection*{Scope and Disclosure}
+This v2 revision addresses all material objections raised by v1's independent assessments
+(\texttt{ARR-2026-5FKM2GGK348CPTE9} v1). Conjecture~\ref{conj:main} remains open, and no
+claim is made regarding four-dimensional gauge theory or a Yang--Mills mass gap. Large
+language models assisted manuscript preparation under author supervision; author Lluis
+Eriksson administers AIRR (\url{https://airr.science/}), so no independent editorial
+admission is claimed.
+
+\begin{thebibliography}{9}\small
+\bibitem{BK}
+M.~Biernacki and J.~Krzy\.z,
+\emph{On the monotonity of certain functionals in the theory of analytic functions},
+Ann. Univ. Mariae Curie-Sk{\l}odowska Sect. A \textbf{9} (1955), 135--147.
+
+\bibitem{AskeySteinig}
+R.~Askey and J.~Steinig,
+\emph{Some positive trigonometric sums},
+Trans. Amer. Math. Soc. \textbf{187} (1974), 295--307.
+
+\bibitem{DLMF}
+F.~W.~J. Olver et al.,
+\emph{NIST Digital Library of Mathematical Functions},
+\S\S10.35, 10.41; \url{https://dlmf.nist.gov/10.35}, \url{https://dlmf.nist.gov/10.41}.
+
+\bibitem{PhiLemma}
+L.~Eriksson,
+\emph{A weighted Tur\'an-type monotonicity lemma for modified Bessel functions via the
+calibrated Amos bound, with an application to the ordering of a surface expansion in
+two-dimensional lattice gauge theory},
+AIRR \texttt{ARR-2026-72G1SSCNNG8YDVC2} (2026).
+
+\bibitem{MasterMap}
+L.~Eriksson,
+\emph{The Eriksson Programme (Yang--Mills): Machine-Checked Lattice Gauge Foundations,
+Certified Obstructions, and the Open Frontier},
+AIRR \texttt{ARR-2026-7DYZAEKGJP8FPTJ1} (2026), and
+\url{https://github.com/lluiseriksson/THE-ERIKSSON-PROGRAMME}.
+\end{thebibliography}
+
+\end{document}
