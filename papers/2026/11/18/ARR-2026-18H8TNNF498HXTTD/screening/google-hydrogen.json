@@ -1,0 +1,58 @@
+{
+  "assessed_at": "2026-11-25T16:55:54Z",
+  "canonical_sha256": "3d2e60d784d45449a5bc947331f74ced0a526b0cde4dbdf4feae08e6131bfa99",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All mathematical invariants in Section 2—the K2+K1 complete-multipartite dichotomy, 41-graph census (14+3+12+12), Edmonds weak duality (Eq. 1), shifted-weight telescoping (Eq. 2), PSI 5m locking, and 4*min(c_i) <= sum c_i—are mathematically sound, and scope limits are stated honestly; Lean type signatures are not printed in the PDF.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "The manuscript contributes the first Lean 4 formalization and exact-integer primal-dual certificate auditor for the structural dichotomy, matroid-intersection duality, WSAT series-parallel, and {2,1} K_{1,*} gadget invariants of Kern, Firbas, and Sorge [3], rather than proving new complexity separations.",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "Reports exact Lean 4.35.0 tooling, zero external Lean dependencies, deterministic experiment/verification scripts, 39 SHA-256 manifest checks, and all 16 certificate witnesses/latencies in Table 2, though full Lean source, formulas F1-F4, and adversarial tests reside in the external repository rather than the PDF.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "The work reports an 18-theorem zero-dependency Lean 4.35.0 kernel (0 sorry, 0 Classical.choice, 5 axiom-free theorems) plus a pure-stdlib exact-Z verifier auditing YES/NO witnesses across 4 modes and rejecting 57/57 adversarial forgeries, though Eq. (2) conflates general spanning trees with budget-feasible w(c) <= lambda.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Provides an independent machine-checked verification layer and YES/NO witness auditor for reconfigurable connectivity switching, bridging graph dichotomies, matroid duality, and parameterized reductions, though full NP/W[1]/ETH hardness and polynomial-time matroid intersection algorithms remain unformalized.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.65,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-18H8TNNF498HXTTD",
+  "potential_errors": [
+    "Duplicate theorem label: 'Theorem 1' is used both in Section 2 (quoting Kern, Firbas, and Sorge [3]) and in Section 3 ('Constructive Connectivity Switching Kernel'), while Section 3 simultaneously refers to Table 1's theorems as 'Theorems 1-4', 'Theorems 5-10', and 'Theorems 11-18'.",
+    "Abstract vs. Section 5.1 count mismatch: the Abstract cites '128-assignment WSAT checks' (the size of F4 alone), whereas Contributions and Section 5.1 report '224-assignment Lemma 4 sweeps' (16+16+64+128 = 224 across F1-F4).",
+    "Quantifier imprecision in Eq. (2): Section 2 states that 'every spanning tree T in G_hat o c obeys the exact telescoping bound ... <= w(c) <= lambda', whereas w(c) <= lambda only holds when c is a budget-feasible configuration.",
+    "Minor typographical omission in the Figure 1 caption: '12L3,1' is missing a space between '12' and 'L3,1'."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Clean, explicitly scoped zero-dependency Lean 4.35.0 formalization (18 theorems, 0 sorry, 0 Classical.choice, 0 Lean.ofReduceBool, 5 zero-axiom theorems) covering the combinatorial, primal-dual, and reduction-invariant core of Kern, Firbas, and Sorge [3].",
+    "Exact-integer (zero floating-point) certificate auditor SWITCH-GRAPH-CONN-CERT-1.0 with strict JSON AST type enforcement covering both YES witnesses (spanning trees, transition paths, WSAT assignments, 4x gadgets) and NO witnesses (4-vertex induced obstructions, Edmonds rank-obstruction covers r1(A)+r2(B) <= n-2).",
+    "Exact combinatorial verification of the 4-vertex dichotomy census (all 41 labeled graphs without isolated vertices out of 64: 14 complete multipartite, 3 K2+K2, 12 P4, 12 L3,1) and exhaustive 224-assignment truth-table checks for Lemma 4.",
+    "Strong internal numerical consistency across Table 1, Table 2 (all 16 certificates, 4 per mode, 0.030-0.160 ms), Figure 1, Figure 2, and Figure 3, alongside 57/57 adversarial forgery rejections."
+  ],
+  "strong_novelty_candidates": [
+    "Machine-checked constructive Lean 4 kernel (0 Classical.choice, zero external libraries) combined with an exact-Z primal-dual YES/NO certificate architecture (SWITCH-GRAPH-CONN-CERT-1.0) for connectivity switching in switch graphs."
+  ],
+  "summary": "This 4-page manuscript presents a machine-checked Lean 4.35.0 formalization and exact-integer certificate auditor for the structural dichotomy, Edmonds matroid-intersection duality, shifted-weight telescoping, series-parallel WSAT semantics, Partitioned Subgraph Isomorphism 5|E(H)| tightness, and {1,1}-to-{2,1} K_{1,*} gadget invariants established by Kern, Firbas, and Sorge (arXiv:2611.32927). All mathematical invariants stated in Section 2 and combinatorial counts in Section 5 (such as the 41-graph 4-vertex census: 14+3+12+12) are sound, scope exclusions regarding NP/W[1]/ETH hardness and asymptotic runtime are transparently stated, and no material objections invalidate the main results, though the PDF omits the formal Lean type signatures and contains minor presentation inconsistencies.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:57abf36f-ff3c-4806-88d9-9686c9017579",
+  "weaknesses": [
+    "The 4-page PDF lists theorem names and informal descriptions in Table 1 and Section 3 without displaying the actual Lean 4 definitions or theorem type signatures, preventing independent verification from the manuscript alone that the formalized abstractions (e.g., matroid rank or transition paths) faithfully match the graph-theoretic definitions in [3].",
+    "As explicitly noted by the author, the core complexity-theoretic hardness reductions (NP, W[1], W[SAT], ETH) and polynomial-time matroid-intersection algorithm are outside the Lean 4 formalization scope, leaving mainly structural, algebraic, and weak-duality invariants proved in Lean.",
+    "Empirical details for formulas F1-F4, the 16 canonical instances, and the 57 adversarial test vectors are summarized only at a high level in the PDF and require inspecting the external repository."
+  ]
+}

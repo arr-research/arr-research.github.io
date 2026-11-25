@@ -1,0 +1,57 @@
+{
+  "assessed_at": "2026-11-25T16:55:54Z",
+  "canonical_sha256": "31787fb1871d76e6ddb51cc8d7b1e29f44e85c43b1e4a141cb6c683f81c9c00a",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All algebraic identities (k(t), m(t), 2*C(t,2)=t(t-1)), 2D/3D orthogonal matrices ((3,4,5)/5, (8,15,17)/17, (2,3,6)/7), exhaustive 4^3=64-tuple fractions (7/8, 63/64, 25/32, 45/64), Table 1 axiom counts (3 none, 0 sorry/Classical.choice), and Table 2 parameters match cleanly. Minor ambiguity exists only in the unstated saturation axiom for U on Z^k in Theorem 1(2).",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "Applies zero-dependency Lean 4 formalization and exact-rational certification to the finite algebraic and geometric sub-components of Randall Shaw (2026) [6] via a 4-mode schema (CANONICAL-GALLAI-CERT-1.0). The mathematical ingredients (Pythagorean rotations, Brahmagupta-Fibonacci identity, kernel checks) are classical and the main Ramsey core [3] is unformalized.",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "Reports deterministic generation, SHA-256 manifest checks (39/39), exact certificate parameters in Table 2, and a GitHub URL. However, the PDF omits the formal Lean 4 type signatures of the 18 theorems, the JSON schema of CANONICAL-GALLAI-CERT-1.0, and the 57 adversarial test payloads, so independent verification requires external artifacts.",
+      "stars": 3
+    },
+    "rigor": {
+      "basis": "Lean 4.35.0 kernel is zero-dependency and audited against Classical.choice and ofReduceBool, and the Python verifier enforces exact Fraction/int AST typing with 57 adversarial rejections. Rigor is tempered by lacking a formal Lean probability space for union-bound survival and omitting exact Lean theorem statements from the manuscript text.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Delivers a clean zero-float witness checker and red-team audit suite preventing floating-point illusions in finite rational instances of the canonical Euclidean Gallai proof. Broader mathematical impact is modest because DGPV [3], similarity-alignment transfer, and irrational S in R^d are excluded and no conditional end-to-end theorem is assembled in Lean.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.4,
+  "model_id": "hydrogen",
+  "overall_stars": 3,
+  "paper_id": "ARR-2026-2A7A1Z3VY68K0SN8",
+  "potential_errors": [
+    "Theorem 1(2) describes unique_bad_coefficient_subspace over a 'closure-axiomatized vector subspace predicate U : (Fin k -> Z) -> Prop' without stating the required scalar-saturation/divisibility axiom (c*v in U and c != 0 implies v in U); a bare Z-submodule closure predicate on Z^k would fail for U = 2Z, d = 1, c_1 = 0, c_2 = 2 (though ker(H) intersect Z^k does satisfy saturation).",
+    "Definition 1 Mode 2 states that every unrotated homothety is trapped in c in [2, t-1] colours under functional w != 0, which implicitly restricts to non-degenerate homotheties (scale s != 0) and colourings injective in w(x) rather than arbitrary colourings or zero scaling.",
+    "The Lean kernel is described as certifying 'inductive union-bound survival' via bad_collision_sum_list_bound and union_bound_rainbow_strict_pos, which establish a deterministic list-sum bound and (P+1)-P=1 over Nat rather than a formal probability space over {0,...,P}^P."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Transparent and explicit scoping in both Section 1 and Section 6, clearly distinguishing the verified finite algebraic/geometric core from the unformalized DGPV Ramsey theorem [3] and irrational configurations in R^d.",
+    "Complete numerical and algebraic consistency across the abstract, main text, Tables 1-2, and Figures 1-3 (including k(t), m(t), 2D/3D orthogonal similarity matrices, 64-tuple rainbow fractions, and 3D cube edge/diagonal counts).",
+    "Zero-dependency Lean 4.35.0 kernel with explicit axiom audit (0 sorry, 0 Classical.choice, 0 ofReduceBool, 3 zero-axiom theorems) paired with a pure-stdlib zero-float Python verifier enforcing strict JSON AST checks.",
+    "Thorough empirical and adversarial verification reported across 16 certificates spanning 4 modes, exhaustive 4^3 rainbow checks, 3D cube isometry cross-checks, and 57 live adversarial forgery rejections."
+  ],
+  "strong_novelty_candidates": [
+    "A four-mode exact-rational certificate architecture (CANONICAL-GALLAI-CERT-1.0) combining strict JSON AST anti-float validation with exhaustive Key Uniqueness Lemma sweeps over the single-pair active coordinate block k = P*t."
+  ],
+  "summary": "The manuscript presents a zero-dependency 18-theorem Lean 4.35.0 formalization and a pure-stdlib exact-rational Python certificate verifier (CANONICAL-GALLAI-CERT-1.0) covering the finite algebraic, similarity-geometric, subspace-equivalence, and collision-counting components of Benedict Randall Shaw's proof (arXiv:2611.33136) of the canonical Euclidean Gallai theorem. All algebraic identities, matrix orthogonality checks, dimension counts, exhaustive 4^3 rainbow probabilities, and table/figure summaries visible in the PDF are internally consistent, and the authors explicitly disclaim formalizing the ambient DGPV partition theorem [3] or irrational real point sets. While the mathematical depth of the 18 Lean lemmas is modest, exact theorem type signatures and JSON schemas are omitted from the 4-page body, and the subspace saturation axiom on Z^k is left implicit in prose, there are no material errors invalidating the scoped claims.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:d2aba3a1-55df-4270-812c-baf626ae2d04",
+  "weaknesses": [
+    "The 18 Lean 4 theorems consist mostly of elementary algebraic identities and small-case checks (e.g., k(2..5), Pythagorean (3,4,5) arithmetic, 2*C(t,2)=t(t-1), subspace equivalence axioms) and are not composed into a conditional end-to-end formalization of Randall Shaw's main theorem even for rational S given DGPV.",
+    "Lack of self-contained formal specifications in the PDF: neither the Lean 4 type signatures of Table 1's 18 theorems nor the formal JSON schema of CANONICAL-GALLAI-CERT-1.0 or the 57 adversarial test descriptions are shown in the manuscript.",
+    "The Lean 4 kernel lacks a formal finite probability space for the union bound over {0,...,P}^P, reducing the probabilistic argument in Lean to deterministic Nat list bounds."
+  ]
+}

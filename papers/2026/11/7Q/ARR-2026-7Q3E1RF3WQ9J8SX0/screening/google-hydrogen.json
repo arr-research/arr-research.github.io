@@ -1,0 +1,55 @@
+{
+  "assessed_at": "2026-11-25T16:55:54Z",
+  "canonical_sha256": "75f29166fc2b3fbf2301ea8c071bc25157829c3d85ab87bb5de01f20f450b450",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "Equations (1)-(2), parity shifts (M - R_F even, M - R_T odd), Fig 2 scaling (N^2 - (2tN+1) = 3N-1; x=8k), 2x2 NoGo normal/misere winners, and Table 1-2/Fig 3 counts all check out, but Lean theorem types are not printed in the PDF.",
+      "stars": 3
+    },
+    "novelty": {
+      "basis": "Mechanizes finite algebraic, truth-table, parity, and degree invariants of Burke-Davies-Tennenhouse [2] alongside small-board exact minimax certificates; does not formalize new complexity results or full PSPACE reductions.",
+      "stars": 2
+    },
+    "reproducibility": {
+      "basis": "Cites a GitHub repository and reports exact artifact counts and latency bounds, but the PDF omits formal Lean 4 theorem signatures, board/graph payloads, and minimax pruning rules needed for standalone verification.",
+      "stars": 2
+    },
+    "rigor": {
+      "basis": "Explicitly scopes out Turing-machine reductions and planar routing, reports 0 sorry and 0 Classical.choice across 18 Lean theorems, and uses zero-float integer checks, though formal definitions and solver details are absent from the text.",
+      "stars": 3
+    },
+    "significance": {
+      "basis": "Provides a timely, cleanly scoped machine-checked finite core and exact-integer certificate suite supporting Burke, Davies, and Tennenhouse [2], serving as a verified finite foundation for future full-reduction formalization.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.25,
+  "model_id": "hydrogen",
+  "overall_stars": 3,
+  "paper_id": "ARR-2026-7Q3E1RF3WQ9J8SX0",
+  "potential_errors": [
+    "Figure 1(a) plots a normal-vs.-misere winner flip on 2x5 (W normal vs. B misere), yet the Figure 1 caption, Section 1 item 3, and Section 5 prose state grid flips occur on 2x2 and 2x4 while omitting 2x5.",
+    "Figure 1 caption describes the sweep as '2 x 2 through 2 x 5', whereas the plotted x-axis includes 3x3 between 2x4 and 2x5.",
+    "In Section 2, the symbol k is overloaded in adjacent clauses for both clause literal count (2k - 1 entries) and an unrelated odd string total (M = 2k + 1)."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Transparent scope framing: Section 1 and Section 6 clearly delineate the verified finite algebraic/combinatorial/minimax core from unformalized PSPACE reductions, planar grid routing, and asymptotic circuit constructions.",
+    "All explicit algebraic and numerical identities in the PDF are internally consistent: Eq. (1) and x = 8k with 7k + 1 White reserve holes, Eq. (2) with quadratic safety margin N^2 - (2tN + 1) = 3N - 1 (181 < 225 at t = 6, N = 15), and Lemma 4.1 odd/even cut-parity arithmetic.",
+    "Table 1 (18 Lean theorems, 9 with axiom footprint 'none') and Table 2 / Fig. 3 (16 certificates in 0.060-6.495 ms; 10+12+12+12+14 = 60/60 adversarial rejections) are numerically consistent across text, tables, and plots."
+  ],
+  "strong_novelty_candidates": [],
+  "summary": "This 4-page paper presents a scoped formalization in Lean 4.35.0 (18 theorems in NoGoPSPACE.lean, 9 zero-axiom, 0 Classical.choice) and a pure-stdlib exact-integer minimax/reachability auditor (NOGO-PSPACE-CERT-1.0) covering the finite budget, truth-table, parity, rope-width separation, degree-invariant, and small-instance minimax core of Burke, Davies, and Tennenhouse (arXiv:2611.33127) on normal/misere grid NoGo, Coins-are-Lava, and subcubic bipartite Graph NoGo. All visible equations, parity calculations, and table/figure tallies are consistent, though the PDF omits formal Lean theorem statements and minimax pruning details and has a minor inconsistency omitting the 2x5 winner flip plotted in Figure 1(a).",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:b60703c8-35c4-407c-aba2-61c497acb5f6",
+  "weaknesses": [
+    "None of the 18 Lean 4 theorem statements, type signatures, or underlying game-rule definitions are printed in the PDF (only identifier names and axiom footprints in Table 1), preventing PDF-only audit of quantifier fidelity or non-vacuity.",
+    "The mathematical content of the mechanized core consists primarily of elementary finite arithmetic, parity, and small truth-table checks rather than the PSPACE-completeness reductions themselves, and the exact minimax tests cover only small boards (<= 12 empty cells) and graphs (<= 8 vertices).",
+    "Exact minimax 'states evaluated' in Figure 1 (e.g., 8 vs. 12 on 2x2; 533 vs. 918 on 3x3) are reported without specifying the search algorithm details (alpha-beta pruning, move ordering, symmetry reduction, or transposition caching).",
+    "Section 2 states that x + 1 - a White reserve holes yield x - a waiting moves without noting that 1 final liberty must remain unfilled to avoid illegal self-capture in NoGo."
+  ]
+}

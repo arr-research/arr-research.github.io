@@ -1,0 +1,55 @@
+{
+  "assessed_at": "2026-11-25T16:55:54Z",
+  "canonical_sha256": "1ef78dd52c20085c4ab9115df0c5be05597eb52ed86e80a9ea182a5aee6ac696",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "Explicit identities in Sec 2–5 (e.g. (1-r^2)+r(r-s)=1-rs, marginal 2/k!, term counts 1,2,5,8,13, Fig 1–2) are mathematically consistent. Minor issues: Table 2 reports |f|=8,12 for 4/5-dir switches while Sec 5.2/Fig 2(b) report |f|=6,8 for unit steps without stating differing step sizes c_j, and Abstract/Def 1 write degree <= k-1 where deg_r=deg_s=k-1 is meant.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "Provides the first machine-checked Lean 4 foundational kernel and zero-float Q[r,s] symbolic auditor for the finite algebraic and Legendre cross-polytope coupling core of Keevash and Lim (arXiv:2611.33120, Nov 24, 2026). The underlying theorems are from [4] and the verification methodology is standard, making this a timely verification contribution.",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "Specifies Lean 4.35.0, file paths (ReconfigurationPolyDecomp.lean, AuditAxioms.lean, src/reconfig_certifier.py, scripts/run_all_experiments.py, scripts/verify_all.py), 16 named certificates, 39 SHA-256 manifest checks, and a public repository, though the PDF omits Lean theorem signatures and explicit T_1..T_4 formulas.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Enforces zero-sorry, zero-Classical.choice Lean 4.35.0 proofs audited via AuditAxioms.lean (Table 1) alongside strict zero-float JSON AST typing and 57 adversarial forgery tests in Mode 1–4. However, arbitrary-k Theorem 1.6 integrals (k<=5) are checked in unverified Python rather than proved in Lean 4.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Machine-checks elementary discrete tomography, moment-cancellation, and low-degree Legendre primitives and symbolically audits all 15 (k,l) pairs of Theorem 1.6 up to k=5. Impact is bounded because the full general-k Theorem 1.6 proof, randomized-rounding absorption, Theorem 1.1, and Theorem 1.2 O(m+n) constant remain unformalized.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.85,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-2FNF76TQBF8W0SRK",
+  "potential_errors": [
+    "Table 2 lists |f| = 8 for xray_switch_4dir_queens and |f| = 12 for xray_switch_5dir_knight, whereas Section 5.2 and Figure 2(b) state |f| = 6 and |f| = 8 for the 4-direction queens and 5-direction knight unit-step switches; the step multipliers c_j used in Table 2 are not specified.",
+    "The Abstract and Definition 1 (Mode 3) describe the collapsed R_l(r,s) as having 'degree <= k - 1', which is imprecise because total degree is up to 2k - 2 (e.g., (1 - rs)/2 for k = 2 has total degree 2); Section 5.1 clarifies that the individual degrees deg_r = deg_s = k - 1 collapse.",
+    "Section 2 states divisibility of pi_{v_k}(f)(z) by prod_{j=1}^{k-1} (z^{m_{j,k}} - 1) without explicitly requiring nonzero integer step multipliers c_j != 0 and clarifying Laurent polynomial Z[z, z^{-1}] vs Z[z] normalization in Mode 2."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Transparently scopes what is formalized in Lean 4 (finite algebraic, tomography, moment-uniqueness, low-degree Legendre, and k=2 coupling lemmas) versus symbolically audited in Python (k <= 5) versus omitted (randomized rounding, O(m+n) constant, Theorem 1.1).",
+    "Strong Lean 4.35.0 axiom discipline: zero external library dependencies, 0 sorry, 0 warnings, 0 Classical.choice, 0 Lean.ofReduceBool, and 3 zero-axiom theorems, explicitly documented per theorem in Table 1.",
+    "Exact zero-float symbolic auditing over Z[x] and Q[r,s] with strict JSON AST validation, Murphy-vs-Rodrigues Legendre cross-checks, exhaustive verification of all 15/15 pairs (k,l) for 1 <= k <= 5, and 57/57 adversarial forgery rejections.",
+    "Internal numerical consistency across Table 2 latencies (0.056-6.095 ms), Figure 1(a)-(b) degree drops and marginals 2/k! in {2, 1, 1/3, 1/12, 1/60}, and the even-symmetric bivariate monomial counts 1, 2, 5, 8, 13 for deg_r = deg_s = k - 1."
+  ],
+  "strong_novelty_candidates": [],
+  "summary": "The manuscript presents a machine-checked Lean 4.35.0 kernel (18 constructive theorems, zero external dependencies, 0 sorry, 0 Classical.choice) and a zero-floating-point exact-rational Python certificate auditor (POLY-RECONFIG-CERT-1.0) targeting the finite algebraic, discrete-tomography, moment-cancellation, and Legendre cross-polytope coupling core of Keevash and Lim (arXiv:2611.33120). Within its explicitly delineated scope—excluding the randomized-rounding absorption iteration, the asymptotic O(m+n) constant of Theorem 1.2, and the entropy-maximization Theorem 1.1—the paper verifies 16 canonical certificates, all 15 pairs (k,l) for 1 <= k <= 5 of Theorem 1.6, and 57 adversarial forgery tests. While the Lean kernel itself only covers foundational primitives, low-degree L0-L2 Legendre identities, and the k=2 case of Theorem 1.6 (with k<=5 symbolic integrals residing in Python), and there are minor presentation ambiguities (an unexplained |f| difference between Table 2 and Figure 2(b) and total-vs-marginal degree phrasing in the Abstract), no material errors invalidate the claims.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:940db8ca-1de0-4772-b11a-48ba6ada5721",
+  "weaknesses": [
+    "The Lean 4 formalization covers only foundational lemmas, L_0..L_2 Legendre identities, and the k=2 cancellation of Theorem 1.6; general-k Theorem 1.6 identities and concrete decomposition witnesses are verified only for bounded k (k <= 4 or 5) in unverified Python code.",
+    "The PDF omits the actual Lean 4 theorem type signatures as well as the explicit formulas for T_1, T_2, T_3, T_4 and how the index l enters Eq. (3), making line-by-line verification of those definitions dependent on external repository inspection.",
+    "Inconsistent reporting of switch L1-norms |f| for 4-dir queens and 5-dir knight between Table 2 (|f|=8, 12) and Figure 2(b)/Section 5.2 (|f|=6, 8) due to undocumented step-multiplier choices."
+  ]
+}
