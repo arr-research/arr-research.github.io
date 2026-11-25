@@ -1,0 +1,282 @@
+--- Page 1 ---
+Algebraic Lean 4 Lemmas and Exact-Rational Instance
+Verification for Five-Agent Envy-Free Cake-Cutting
+Lluis Eriksson∗
+November 25, 2026
+Abstract
+Aris Filos-Ratsikas, Alexandros Hollender, Mohamad Lat-
+ifian, and Giannis Tyrovolas (arXiv:2611.33149, Nov.
+2026) resolved the polylogarithmic query-complexity prob-
+lem for five-agent contiguousε-envy-free cake cutting un-
+der monotone Lipschitz valuations, achievingO(log3(1/ε))
+value queries and a purely intermediate-value-theorem exis-
+tence proof. Their construction parameterizes four retained
+pieces P1,P2,P3,P4 plus two potential gapsL,R around
+an anchor cut m∈ [0,1]subject to maximal feasibility
+(ℓ1 + ℓ2 = m or ℓ3 + ℓ4 = 1 −m), leaving-agent Hall
+robustness, softmax weight balancing (Wj = 5/4, non-
+favourite cap2−5 = 1/32), quantitative stability (3γ−3δ)
+and Lipschitz continuity (13γ−3), and spanning-tree bisec-
+tion (O(log3(1/ε))vs. O(log5(1/ε))). We present a compan-
+ion verification stack combining two explicitly separated
+layers: (i) a standalone, zero-dependencyLean 4.35.0
+module (EnvyFreeCake5.lean) formalizing the 18 under-
+lying cleared-integer / natural-number algebraic, counting,
+pigeonhole, ceiling-margin, and triangle-inequality lem-
+mas (0 sorry, 0 warnings, 0Classical.choice; 2 zero-
+axiom, 16[propext, Quot.sound]), and (ii) a pure-stdlib
+exact-Q instance verifier (EF-CAKE5-CERT-1.0) checking
+concrete finite rational witnesses for Hall robustness, soft-
+max balance, non-zero stability/Lipschitz perturbations,
+and complete 8-edge spanning-tree allocations. Across 16
+canonical certificates (0.246–0.934 ms, total7 .80 ms), all
+finite invariants replay identically overQ while rejecting
+60/60 live adversarial forgeries.
+1 Introduction
+Contiguous envy-free cake cutting guarantees that every
+agent receives a single interval of[0,1]and weakly prefers
+her own piece to any other [6, 7]. For monotone 1-Lipschitz
+interval valuations, prior polylogarithmic-query algorithms
+reached three agents inO(log2(1/ε))queries [2] and four
+agents inO(log3(1/ε))queries [4]. Filos-Ratsikas et al. [3]
+resolved five agents inO(log3(1/ε))value queries (Theo-
+rem 2) via four interlocking pillars:
+∗Independent Researcher. Code, Lean 4 proofs, and certifi-
+cates: MIT License; manuscript and figures: CC-BY-4.0. Pre-
+pared with transparent AI coding, formalization, and drafting as-
+sistance from Google Antigravity; all Lean 4 lemmas, exact- Q
+verifiers, and adversarial tests were independently compiled and
+verified locally. Repository: https://github.com/lluiseriksson/
+envy-free-cake5-certificates
+1.Anchor Cut & Maximal Leaving-Agent Robust-
+ness (Defs. 3.1–3.3, Lemmas 3.4–3.5):For an-
+chor m∈ [0,1], retained pieces P1 = [0,ℓ1],P2 =
+[m−ℓ 2,m],P3 = [m,m + ℓ3],P4 = [1−ℓ4,1]leave gaps
+L= [ℓ1,m−ℓ 2]and R = [m+ ℓ3,1 −ℓ4]; maximality
+enforces L= ∅or R= ∅. Leaving-agentδ-robustness [5]
+holds iff Hall’s condition holds after removing any agent
+i∈[5]inG δ(m,ℓ), forcingG δ(m,ℓ)to be connected.
+2. Softmax Weight Balancing (Lemmas 3.7 & 3.9):
+With wij ∝2(5/δ)vi(Pj ) (∑ 4
+j=1 Wj = 5), balancingWj =
+5/4bounds non- δ-favourite weights by2 −5 = 1/32,
+yielding ⌈5
+4 |P|− 1 −4|P|2−5⌉= ⌈(9|P|− 8)/8⌉≥|P|
+for all|P|∈{1,2,3,4}.
+3. Stability & Lipschitz Continuity (Lemmas 3.17
+& 3.18):Under γ-strong hungriness, any maximal
+δ-robust tuple satisfies ∥ℓ−ℓ ∗(m)∥∞ ≤ 3γ−3δ and
+m↦→ℓ∗(m)is(13γ −3)-Lipschitz.
+4. Spanning-Tree Bisection (Lemmas 4.2–4.4,
+Thm. 2):Enumerating 8-edge spanning trees
+T⊆G 0(ℓ∗(m))reduces five nested binary searches
+(O(log5(1/ε))) toO(log3(1/ε))queries, with outer bisec-
+tion toleranceεγ3/156and strong-hungriness transfer
+γ=δ=ε/3 =⇒δ+ 2γ=ε.
+Contributions and Explicit Scope.All existence,
+continuity, and query-complexity theorems belong to [3].
+We explicitly separate our two verification layers:
+(i) lean/EnvyFreeCake5.lean formalizesonlythe 18 un-
+derlying cleared-integer / natural-number algebraic, count-
+ing, pigeonhole, ceiling-margin, and triangle-inequality
+lemmas in Lean 4.35.0 [1] (it doesnotformalize bipar-
+tite graphs, Hall’s theorem, continuous valuations, span-
+ning trees, or Python verifier soundness inside Lean 4);
+(ii) EF-CAKE5-CERT-1.0 independently checks concrete fi-
+nite rational cake-cutting instances across all four algo-
+rithmic pillars (piecewise-constant densities defining 1-
+Lipschitz valuations over Q, leaving-agent Hall match-
+ings, BFS connectivity, softmax weights, non-zero stabil-
+ity/Lipschitz perturbations, and 8-edge spanning trees),
+tested on 16 canonical certificates and 60 live adversarial
+forgeries with 41-artifact SHA-256 manifest enforcement.
+1
+
+--- Page 2 ---
+2 Constructive Lean 4.35.0 Alge-
+braic Lemma Kernel
+The standalone modulelean/EnvyFreeCake5.lean builds
+cleanly under Lean 4.35.0 with zero external dependencies,
+zero warnings, and zerosorry. Auditing all 18 declarations
+via #print axioms (AuditAxioms.lean) confirms 2 zero-
+axiomtheorems( none), 16using[propext, Quot.sound],
+and0using Classical.choice or Lean.ofReduceBool
+(Table 1).
+Proposition 1(Machine-Checked Arithmetic & Counting
+Lemmas).The 18 Lean 4.35.0 lemmas in Table 1 certify
+the cleared-denominator arithmetic behind [3]:
+1. Partition, Connectivity, Softmax Margin & Uniqueness
+(Thms. 1–9):Zero-gap maximality, six-piece partition
+sum D, triangle transferδ+ 2γ (and γ = δ= ε/3), 5-
+agent/4-piece connectivity contradiction, total weight5,
+Hall margin8( k−1) <9k−8for k∈{ 1,2,3,4}, and
+uniqueness pigeonhole(5−a)−1<4−s.
+2. Stability, Lipschitz & Bisection Constants (Thms. 10–
+18):Over N (0 ≤g≤G ), G3 + G2g+ Gg2 ≤3G3,
+g3 + 12G3 ≤13G3, andg2 + gG+ G2 ≤3G2; overZ,
+2d→ 4d shift robustness andh→ 2h favourite transfer;
+plus13 ·12 = 156,3·3 = 9, andL3 <L5 for all L≥ 2.
+3 Exact-Q Instance Verifier
+(EF-CAKE5-CERT-1.0)
+The verifier EF-CAKE5-CERT-1.0
+(src/cake5_certifier.py, src/cake5_exact.py)
+uses Python fractions.Fraction exclusively (source-
+audited for zero float(, math., or numpy), enforcing
+strict JSON typing, boolean list validation, nesting-depth
+cap32, anchored canonical rationals (\A...\Z, reduced
+denominators≥2), exact key sets, and 2048-bit caps:
+Definition 1( EF-CAKE5-CERT-1.0 Acceptance Predi-
+cates).Each finite instance specifies 1-Lipschitz valuations
+vi([a,b]) =
+∫b
+a di(x) dx defined by piecewise-constant densi-
+ties di(x) ∈[0,1]∩Q on rational breakpoints0 =t0 <···<
+tr = 1. A payload is accepted iff it matches one of four
+exact modes (mirroring the corresponding lemmas of [3]
+and Table 1):
+1. Mode 1 (Hall Robustness & Connectivity;
+Thms. 1–2, 5):RecomputesP1..P4,L,R , verifies max-
+imal feasibility (|L|= 0∨|R| = 0), constructsGδ(m,ℓ ),
+checks Hall’s condition for all 5 departing agents and
+all 16 subsets, checks BFS connectivity, and verifies 5
+explicit leaving-agent perfect matchings.
+2. Mode 2 (Softmax Weight Balance; Thms. 6–8):
+Verifies wij ≥0, ∑
+jwij = 1,Wj = 5/4, non-favourite
+cap ≤1/32, exhaustive Hall counts across all 15 non-
+empty piece subsets, and induced leaving-agent robust-
+ness.
+3. Mode 3 (Stability & Lipschitz; Thms. 10–12):
+Enforces γ-strong hungriness (di ≥γ > 0), verifies 0-
+robustness ofℓ∗(m),ℓ ∗(m′)and δ-robustness ofℓδ(m),
+Figure 1: (a) Exact Lemma 3.9 Hall-margin lower bound
+(9|P|−8)/8strictly exceeding|P|−1for all|P|∈{ 1,2,3,4}.
+(b) Unit-constant query-complexity scalingL3 (Theorem 2
+spanning-tree enumeration) vs.L5 (5-nested bisection) and
+2L = 1/ε.
+and independently recomputes∥ℓδ −ℓ ∗∥∞≤3γ−3δ and
+∥ℓ∗(m)−ℓ ∗(m′)∥∞≤13γ −3|m−m ′|.
+4. Mode 4 (Complete EF5 Allocation; Thms. 1–4,
+13–17):Verifies complete 5-piece contiguous cover-
+age of[0 ,1](inactive gap empty), exact additive envy
+maxi,P(vi(P) −vi(Ai)) ≤ε across all 25 agent-piece
+pairs, and an explicit acyclic connected 8-edge spanning
+treeT⊆G ε(m,ℓ).
+4 Empirical Atlas and Red-Team
+Audit
+Running run_all_experiments.py (Windows 11,
+Python 3.13) generates 16 canonical certificates (Ta-
+ble 2) and four exact-Q studies, audited end-to-end by
+verify_all.py with SHA-256 enforcement across all 41
+tracked artifacts.
+Hall Margins, Softmax Balance, and Non-Zero
+Stability/Lipschitz Witnesses (Figs. 1–2).Mode 1
+(0.396–0.411 ms) certifies maximal leaving-agent robust-
+ness and connectivity across both-gaps-empty (m= 1/2),
+right-gap (m= 2/5), left-gap (m= 3/5), and perturbed
+δ = 1/25instances. Mode 2 (0 .339–0.445 ms) certifies
+uniform, sharp non-favourite boundary (1/32), minimal
+8-edge tree (1/64), and asymmetric-degree softmax bal-
+ances achieving Wj = 5/4. Mode 3 (0 .622–0.934 ms)
+certifies fourstrictly non-zeroperturbation and anchor-
+shift witnesses acrossγ∈{ 1,1/2,3/4}, with exact stabil-
+ity ratios1 /6 ≈0.167(C9, C10),1 /24 ≈0.042(C11),
+and3 /32 ≈ 0.094(C12), and exact Lipschitz ratios
+1/26 ≈ 0.038(C9, C10),1 /208 ≈ 0.0048(C11), and
+27/1664 ≈0.0162(C12) plotted on a log scale in Fig. 2(a).
+Mode 4 (0.246–0.591 ms) certifies three exact0-envy com-
+plete allocations plus a bisected witness with exact max
+envy3 /200 = 0.015 <ε = 1/25 = 0.040(Fig. 2(b)), each
+paired with a verified 8-edge spanning tree.
+Replay Latency and 60/60 Red-Team Audit
+(Fig. 3).All 16 canonical certificates replay in
+0.246–0.934 ms (total7 .80 ms). The live adversarial
+2
+
+--- Page 3 ---
+Table 1: All 18 Lean 4.35.0 algebraic/counting lemmas in EnvyFreeCake5.lean (0 sorry, 0 warnings,
+0 Classical.choice), showing exact formalized statements, domains (N vs. Z), references to [3], and axiom foot-
+prints.
+# Lean 4 Theorem Identifier Exact Formalized Statement (with Explicit Domain) Ref. [3] Axioms
+1def31_maximality_zero_gap(N)ℓ 1+ℓ2 =m∨ℓ3+ℓ4 =D−m⇒m−(ℓ1+ℓ2) = 0∨(D−m)−(ℓ3+ℓ4) = 0Def. 3.1[p, Q]
+2def31_six_pieces_sum_to_cake(N)m≤D∧ℓ 1+ℓ2≤m∧ℓ3+ℓ4≤D−m⇒ℓ1+(m−(ℓ1+ℓ2))+ℓ2+ℓ3+((D−m)−(ℓ3+ℓ4))+ℓ4 =DDef. 3.1[p, Q]
+3strong_hungriness_envy_transfer(Z)v ′
+Ai ≤vAi+γ∧vAj ≤v′
+Aj+γ∧v′
+Aj ≤v′
+Ai+δ⇒vAj ≤vAi+ (δ+ 2γ)Sec. 2[p, Q]
+4theorem2_eps_third_split(N)e+ 2e= 3e Thm. 2[p, Q]
+5lemma35_disconnected_contradiction(N) 1≤s≤4∧s≤n1 ∧5−s≤n2 ∧n1+n2 ≤4⇒⊥Lem. 3.5[p, Q]
+6lemma37_total_weight_five(N)D+D+D+D+D= 5D∧4(5D) = 5(4D)Lem. 3.7[p, Q]
+7lemma39_softmax_hall_margin(N) 1≤k≤4⇒8(k−1)<10k−8−kLem. 3.9[p, Q]
+8lemma39_hall_all_four_sizes ⋀4
+k=1(36k−32>32(k−1))(4>0,40>32,76>64,112>96) Lem. 3.9none
+9lemma315_uniqueness_pigeonhole(N) 1≤s≤3∧s+ 1≤a≤5⇒5−a≤4−s∧(5−a)−1<4−sLem. 3.15[p, Q]
+10lemma317_three_interval_gap_bound(N) 0≤g≤G⇒G3 +G2g+Gg2 ≤3G3 Lem. 3.17[p, Q]
+11lemma318_lipschitz_13_gamma_neg3(N) 0≤g≤G⇒g3 + 12G3 ≤13G3 Lem. 3.18[p, Q]
+12lemma318_shift_4d_robust(Z)v Q ≤vP ∧vP−2d≤v′
+P ∧v′
+Q ≤vQ+2d⇒v′
+Q ≤v′
+P + 4dLem. 3.18[p, Q]
+13lemma42_tree_depth3_error(N) 0≤g≤G⇒g 2 +gG+G2 ≤3G2 Lem. 4.2[p, Q]
+14lemma42_maximality_3delta(N)d+ 2d= 3d∧6·1 = 2·3Lem. 4.2[p, Q]
+15lemma43_stability_factor_nine(N) 3(3p) = 9p Lem. 4.3[p, Q]
+16lemma44_outer_bisection_constants(13·12 = 156)∧(3·4 = 12)∧(2·3 = 6)∧(6·2 = 12)Lem. 4.4none
+17lemma44_favourite_to_eps_favourite(Z)vPa ≤vRa∧vRa−h≤vRb∧vPb ≤vPa+h⇒vPb ≤vRb+ 2hLem. 4.4[p, Q]
+18theorem2_log3_beats_log5(N)L≥2⇒L 3 <L5 Thm. 2[p, Q]
+Axiom key:none= zero axioms (2);[p, Q]=[propext, Quot.sound](16). Note: all variables inN-tagged lemmas are non-negative (≥0).
+Figure 2: (a) Exact strictly non-zero ratios
+∥ℓ−ℓ ∗∥∞/(3γ−3δ)(0 .042–0.167) and ∥ℓ∗(m) −
+ℓ∗(m′)∥∞/(13γ−3d)(0 .0048–0.038) on log scale across
+C9–C12 (γ∈ {1,1/2,3/4}), well below the theoretical
+ceiling1. (b) Mode 4 certified exact additive envy vs.
+target ε (showing green envy= 3/200 = 0.015vs. orange
+ε= 1/25 = 0.040on C16).
+suite (tests/test_suite.py) tests 60 targeted forgery
+payloads—12 global schema/type/rational/newline/depth
+attacks plus 12 domain attacks per mode—achieving60/60
+(100%)rejection.
+5 Conclusion
+We delivered a two-layer, zero-floating-point verifica-
+tion companion to Filos-Ratsikas et al. [3], combining
+18 zero-sorry, zero-Classical.choice Lean 4.35.0 alge-
+braic/counting lemmas with the exact-Q finite-instance
+verifier EF-CAKE5-CERT-1.0, 16 canonical certificates (in-
+cluding strictly non-zero Mode 3 perturbation/Lipschitz
+witnesses), and 60/60 live adversarial forgery rejections.
+Figure 3: (a) Exact zero-float replay latency (0 .246–
+0.934 ms) across all 16 canonicalEF-CAKE5-CERT-1.0 cer-
+tificates. (b) Live adversarial red-team audit rejecting
+60/60 forged payloads across all five categories.
+References
+[1] Leonardo de Moura and Sebastian Ullrich. The Lean 4
+theorem prover and programming language. InAuto-
+mated Deduction – CADE 28, pages 625–635. Springer,
+2021.
+[2] Xiaotie Deng, Qi Qi, and Amin Saberi. Algorithmic so-
+lutions for envy-free cake cutting.Operations Research,
+60(6):1461–1476, 2012.
+[3] Aris Filos-Ratsikas, Alexandros Hollender, Mohamad
+Latifian, and Giannis Tyrovolas. Envy-free cake-cutting
+for five agents. arXiv:2611.33149 [cs.GT], 2026.
+[4] Alexandros Hollender and Aviad Rubinstein. Envy-
+free cake-cutting for four agents.Journal of the ACM,
+72(5):34:1–34:54, 2025.
+[5] Frédéric Meunier and Francis Edward Su. Multilabeled
+versions of Sperner’s and Fan’s lemmas and applica-
+tions.SIAM Journal on Applied Algebra and Geometry,
+3(3):391–411, 2019.
+3
+
+--- Page 4 ---
+Table 2: All 16 canonical exact-QEF-CAKE5-CERT-1.0
+certificates (zero floats, total7.80 ms).
+ID Certificate Stem Exact Certified Witness ms
+C1m1_hall_exact_0rob_cycle_hubm=12, both empty,δ=0, 12 edges 0.396C2m1_hall_exact_0rob_right_gapm=25,L=∅,δ=0, 12 edges 0.403C3m1_hall_exact_0rob_left_gapm=35,R=∅,δ=0, 12 edges 0.404C4m1_hall_delta_rob_perturbedm=25,ℓ=(1150,950,15,15),δ=125 0.411C5m2_softmax_uniform_exactwij=14,Wj=54, non-fav00.445C6m2_softmax_sharp_cap_1_32Wj=54, sharp non-fav cap132 0.355C7m2_softmax_minimal_8edge_treeWj=54, 8-edge star+4, cap164 0.339C8m2_softmax_asymmetric_degreesWj=54, degrees(3,2,2,2,4)0.341C9m3_stab_lip_uniform_g1γ=1, stab1100/350=16, lip150/1325=126 0.622C10m3_stab_lip_uniform_shift_1_20γ=1, stab1100/350=16, lip140/1320=126 0.700C11m3_stab_lip_gamma_1_2γ=12, stab1100/625=124, lip140/265=1208 0.721C12m3_stab_lip_right_tight_g3_4γ=34, stab1100/875=332, lip140/208135=271664 0.934C13m4_ef5_exact_0envy_right_gapgapR, exact envy0, 8-edge tree 0.591C14m4_ef5_exact_0envy_left_gapgapL, exact envy0, 8-edge tree 0.422C15m4_ef5_exact_0envy_uniformuniform, exact envy0, 8-edge tree 0.246C16m4_ef5_approx_eps_1_25_bisectgapR, envy3200<ε=125, 8-edge tree 0.467
+[6] Walter Stromquist. How to cut a cake fairly.The
+American Mathematical Monthly, 87(8):640–644, 1980.
+[7] Francis Edward Su. Rental harmony: Sperner’s lemma
+in fair division.The American Mathematical Monthly,
+106(10):930–942, 1999.
+4

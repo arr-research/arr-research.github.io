@@ -1,0 +1,60 @@
+{
+  "assessed_at": "2026-11-25T19:36:25Z",
+  "canonical_sha256": "83fbbfdad2e8f77f2a65c1ca90e64678e54b1c50c8a97fdee5f05baa685a071b",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All 18 Lean 4 statements in Table 1 and finite invariants (Eqs. 2-3, cantor2 bounds) are mathematically sound, though Fig. 2(a) mislabels/misplots (2,2,1) as 16 (2^(2+1)=8) and Def. 2 Mode 1 writes an implication instead of a conjunction.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "Provides the first Lean 4 mechanization and exact certificate suite for the finite combinatorial core of Hirsch (arXiv:2611.33126), including division-free cantor2 and CertifiedAgainst, while all complexity-class collapses remain Hirsch's [4].",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "Specifies exact Lean 4.35.0 module/audit files, zero external dependencies, pure-stdlib Python 3.13 scripts, SHA-256 checks across 41 files, and concrete sweep bounds (q=2..8, h=4..12, |Pi_out|=1..6), though source code is external to the PDF.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Uses zero-dependency Lean 4.35.0 (0 sorry, 0 Classical.choice, 11 zero-axiom theorems with explicit Dec hypotheses) and zero-float truth-table verification, though Turing machines and the Lean-to-Python correspondence are not formalized.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Independently audits the finite mechanisms behind OUH, Krentel lex-max OGTD, dot-operator collapse, loose promise elimination, and SOUP tagging across 16 certificates and 60 red-team tests, though asymptotic hierarchy impact awaits TM mechanization.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.75,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-68VR3XCP679YZVAR",
+  "potential_errors": [
+    "Figure 2(a) labels the third bar as (n,p,r) = (2,2,1) with candidate pair count 16, whereas the caption formula 2^(p+r) yields 2^(2+1) = 8 (the value 16 corresponds to p+r = 4, e.g., (2,2,2)).",
+    "Definition 2 Mode 1 states the acceptance condition as 'S ⊆ C_m ∧ |S| = |C_m| ⇒ S = C_m'; written as an implication rather than a conjunction, this clause would be vacuously satisfied whenever S is not a subset of C_m or |S| ≠ |C_m|.",
+    "Table 1 claims to list 'exact formal signatures and statements' for all 18 Lean 4 theorems, yet several rows (e.g., rows 4, 5, 8, 9, 10, 11, 12, 14, 16, 17) abbreviate arguments or omit outer universal quantifiers and slice anchors.",
+    "Definition 1 defines SOUP as having a 'length-n witness w_n' instead of a length-dependent polynomial-length witness w_n ∈ {0,1}^{p(n)}."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Honest, explicit scoping in the Abstract, Section 1, and Section 6 clearly separates the finite combinatorial core verified in Lean 4 from Hirsch's asymptotic complexity-class inclusions [4].",
+    "Zero-dependency Lean 4.35.0 kernel with 18 constructive theorems, 0 sorry, 0 Classical.choice, 0 Lean.ofReduceBool, and 11 zero-axiom theorems verified via explicit Dec(P) decidability hypotheses (Table 1).",
+    "Clean, division-free constructive formalizations of doubled Cantor pairing (cantor2(a,b) = (a+b)(a+b+1)+2b < k(k+1) for a+b < k) and Krentel adaptive query tree prefix soundness via CertifiedAgainst.",
+    "Zero-float exact finite verifier OUH-CERT-1.0 with explicit rejection of type confusion and 60/60 live adversarial forgery rejections across all four verification modes and global schema checks (Table 2)."
+  ],
+  "strong_novelty_candidates": [
+    "Division-free doubled Cantor pairing (cantor2) and constructive Krentel adaptive-query certification (CertifiedAgainst) yielding zero-Classical.choice Lean 4 proofs for the finite core of OUH/OUH-bullet collapses.",
+    "Exact zero-float truth-table certificate specification (OUH-CERT-1.0) bridging tally census, Krentel lex-max OGTD, fixed-pair dot-operator collapse, and single-query loose-oracle / SOUP tagging audits."
+  ],
+  "summary": "The manuscript presents a standalone, zero-dependency Lean 4.35.0 formalization of 18 finite combinatorial, order-theoretic, and oracle-consistency theorems underlying Edward A. Hirsch's input-oblivious unambiguous hierarchy collapses (arXiv:2611.33126), together with an exact, zero-float pure-Python finite verifier (OUH-CERT-1.0) audited over 16 canonical certificates, four parameter sweeps, and 60 adversarial forgery tests. The paper is notably disciplined about scope: it explicitly disclaims formalizing polynomial-time oracle Turing machines or asymptotic complexity classes, focusing strictly on the finite mechanisms (tally census and bit extraction, Krentel lex-max transcripts, fixed-pair dot-operator collapse, single loose-query promise containment, and SOUP shared-witness tagging). All 18 Lean theorem summaries and algebraic invariants in the PDF are sound and internally consistent in theorem/axiom counts (11 zero-axiom, 2 [propext], 5 [propext, Quot.sound]). Minor non-material issues include a label/value mismatch in Figure 2(a) where (2,2,1) is plotted with 16 candidate pairs instead of 2^(2+1)=8, an implication-vs-conjunction phrasing slip in Definition 2 Mode 1, abbreviated Lean signatures in Table 1, and the lack of a formal mechanized bridge from the Python verifier to the Lean kernel.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:093d46ee-9b6b-42c4-a81b-8e87d1812436",
+  "weaknesses": [
+    "Neither polynomial-time oracle Turing machines nor asymptotic complexity-class inclusions are formalized in Lean 4, and several of the 18 Lean lemmas (e.g., #9, #13, #14, #15, #17) are elementary propositional or first-order tautologies.",
+    "There is no formal refinement or extraction proof linking the Python OUH-CERT-1.0 implementation to the Lean 4 kernel, and the Lean source code and JSON certificates are external to the PDF.",
+    "Mode 4's loose-oracle consistency condition assumes V^{O_0}(x,w) = V^{O_1}(x,w) for all (x,w) across extensions whenever q(x,w) ∉ Π_YES ∪ Π_NO, without deriving from machine semantics whether loose prOUP consistency could otherwise allow extension-dependent witnesses.",
+    "Minor presentation and plotting defects in the manuscript: Figure 2(a) shows 16 for (2,2,1) instead of 8; Definition 2 Mode 1 uses '⇒' in place of '∧'; and Table 1 omits quantifiers/arguments in several entries."
+  ]
+}
