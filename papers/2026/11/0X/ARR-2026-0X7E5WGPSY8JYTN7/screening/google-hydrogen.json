@@ -1,0 +1,62 @@
+{
+  "assessed_at": "2026-11-25T16:23:44Z",
+  "canonical_sha256": "bf6c3ad06c95b54b61199c779670490b9074a83bd2ff45c9290207c53f942eef",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All core algebraic proofs (Theorems 3.1, 3.3, 3.4, 3.5), Casimir-binomial simplifications, even-n>=4 Hodge-chiral equipartition vs. n=2 Pfaffian splitting, U(1) block asymptotics, and reported exact-Q fractions in Tables 2-3 (e.g., 19/7605, 96/30685, 1292/1879725393, 24/245, 4/2205, 32/567) verify analytically without error.",
+      "stars": 5
+    },
+    "novelty": {
+      "basis": "Extends Lie-algebraic variance formulas of Ragone et al. [7], Fontana et al. [4], and Xie et al. [11] to an exact multiplicity-free Ad_G-irrep Casimir-Weingarten identity outside ig, uncovering the SO(2n) k=2/k=4 vs. k=n poly-vs-exp transition, the even-n Hodge-chiral 2x/0x selection rule, and U(1) filling-fraction/commutant blind spots.",
+      "stars": 4
+    },
+    "reproducibility": {
+      "basis": "Provides explicit closed-form rational formulas, 12 concrete certificate benchmarks with exact fractions and runtimes, 12,000-sample Haar Monte Carlo cross-checks (max |z|=1.24), and detailed Lean 4 theorem catalog, though exact operator specifications for three table entries (so2n_n12_multisector_k2_k4, U1_n4_w2_SU6, SU8_n3_unstructured) are omitted from the text.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Analytical proofs cleanly handle real-irrep Schur's lemma via symmetric second-moment eigenspaces and boundary cases (n=2 non-simple so(4), w in {0,n}). However, the Lean 4 formalization covers only the combinatorial/scalar layer rather than Schur's lemma or representation-theoretic traces, and the certifier checks necessary purity constraints conditioned on user-supplied norms.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Sharpens Lie-algebraic barren-plateau theory by proving polynomial DLA dimension is neither necessary (k=4 outside iso(2n)) nor sufficient (k=n inside quadratic so(2n)) for observable-agnostic trainability, and identifies chiral/commutant blind spots, though restricted to exact G-2-designs and multiplicity-free subspaces.",
+      "stars": 4
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 5.25,
+  "model_id": "hydrogen",
+  "overall_stars": 5,
+  "paper_id": "ARR-2026-0X7E5WGPSY8JYTN7",
+  "potential_errors": [
+    "Inconsistent adversarial test count across the manuscript: the Abstract (p. 1) and Section 5 (p. 11) report 49/49 attacks rejected, whereas the Summary of Contributions (p. 3) reports 48/48 live adversarial attacks.",
+    "Page 11 states '49 targeted forgery attempts across six attack classes' but enumerates only five classes labeled (i) through (v).",
+    "Page 6 refers to the lower bound Var(k=2)/Var(k=n) >= 4(n-1)2^n / (n^2(2n-1)(2n+1)) as an 'exact separation ratio', whereas it is a lower bound derived from 2^n binom(n,m) <= (2n+1) binom(2n,n).",
+    "In Theorem 3.5 Part 2, the statement requires Var(g_hat_{r,j} | U_L, U_R) >= B pointwise, whereas the proof defines B = E[sigma_shot^2] and applies Jensen's inequality E[sigma_shot^4] >= B^2; both yield N >= 4B^2/tau^2, but the definition of B shifts slightly between statement and proof."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Theorem 3.1 cleanly generalizes exact Lie-algebraic variance formulas to arbitrary multiplicity-free Ad_G-invariant subspaces W subset C_G^perp (including observables M not in ig), rigorously applying Schur's lemma to real symmetric second-moment operators.",
+    "Theorem 3.3 establishes an exact Casimir-binomial identity for matchgate circuits and proves a sharp poly-vs-exp separation (Theta(n^-2) at k=2 and Theta(n^-3) at k=4 outside iso(2n) vs. Theta(2^-n) at k=n) within a strictly quadratic-dimensional DLA so(2n).",
+    "The even-n >= 4 Hodge-chiral selection rule (2x amplification on M_+ vs. exact 0-variance blind spot on M_-) is proved via an elegant Majorana index-toggling argument (|S Delta S^c|=2n >= 8 > 4) and sharply contrasted with Pfaffian cross-terms at the non-simple n=2 boundary.",
+    "Theorem 3.4 provides exact closed-form block variance laws for U(1) Hamming-weight-conserving circuits, separating w=1,2 polynomial trainability from w=n/2 half-filling barren plateaus and characterizing scalar-block commutant blind spots.",
+    "Independent numerical validation via 12,000-sample Haar Monte Carlo matches exact rational predictions across all 9 benchmarks within 1.24 sigma, and all displayed exact fractions in Tables 2 and 3 are algebraically consistent."
+  ],
+  "strong_novelty_candidates": [
+    "Exact closed-form rational Casimir-Weingarten identity on multiplicity-free real Ad_G-irrep subspaces W subset C_G^perp valid for observables M not in ig (Theorem 3.1).",
+    "Exact Majorana Casimir-binomial law ||ad_H|_{Lambda^k}||_HS^2 = 2 E_H binom(2n-2, k-1) and demonstration of a Theta(2^-n) barren plateau at k=n alongside Theta(n^-3) trainability at k=4 outside iso(2n) within quadratic-DLA matchgate circuits (Theorem 3.3).",
+    "Even-n >= 4 SO(2n) Hodge-chiral 2x / 0x selection rule on |0>^otimes n and proof of universal chiral Casimir equipartition via Majorana Hamming-distance separation (Theorem 3.3.3)."
+  ],
+  "summary": "This paper establishes an exact rational Adjoint-Irrep Casimir-Weingarten variance identity (Theorem 3.1) for compact Lie-group 2-design circuits on any multiplicity-free Ad_G-invariant subspace containing the non-commutant part of rho or M, extending exactness beyond the dynamical Lie algebra (DLA). Using it, the authors prove three structural results: (1) for matchgate SO(2n) circuits, an exact Casimir-binomial law yielding Theta(n^-2) (k=2) and Theta(n^-3) (k=4, outside iso(2n)) trainability alongside a Theta(2^-n) barren plateau at k=n within quadratic-dimensional so(2n); (2) an even-n >= 4 Hodge-star chiral splitting yielding a 2x variance boost for M_+ and a 0-variance blind spot for M_- on |0>^otimes n (contrasted with n=2); and (3) an exact U(1) Hamming-weight block variance law separating w=1,2 trainability from Theta(sqrt(n) 2^-n) half-filling barren plateaus and gate-commutant blind spots. The combinatorial/algebraic kernel is verified in zero-dependency Lean 4 (18 theorems) and paired with an exact-Q verifier and 12,000-sample Haar Monte Carlo checks. All main mathematical and numerical claims in the PDF are sound, with only minor editorial inconsistencies and transparent scope caveats.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:d31113d6-fad6-49e1-83c6-8d3d2472f471",
+  "weaknesses": [
+    "The Lean 4 formalization covers only the 18 combinatorial identities, scalar chiral prefactor/orthogonality algebra, and Chebyshev sample-complexity bounds; the core representation-theoretic and continuous steps—Haar integration, Schur's lemma, SO(2n) Majorana index-toggling equipartition for n>=4, and SU(d) completeness—remain unformalized analytical proofs (acknowledged in Remark 4.1).",
+    "LIE-TRAIN-CERT-1.0 audits algebraic aggregation and necessary purity/multiplicity inequalities given user-supplied rational projection norms, rather than certifying physical realizability of rho, M, and H from explicit circuit/state/Hamiltonian descriptions; thus, fake rational norm inputs satisfying the coarse purity bounds are not ruled out by the verifier alone.",
+    "Exact benchmark specifications (choice of H, rho, and M/normalization) for so2n_n12_multisector_k2_k4 (Table 2) and U1_n4_w2_SU6, SU8_n3_unstructured (Table 3) are not explicitly written in the manuscript text, requiring reference to external certificate JSONs for full standalone reproduction of those three rows.",
+    "Minor editorial inconsistencies (48/48 vs. 49/49 adversarial attacks, 'six attack classes' vs. five enumerated items (i)-(v), and calling a separation lower bound an 'exact separation ratio')."
+  ]
+}
