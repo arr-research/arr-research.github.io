@@ -1,0 +1,54 @@
+{
+  "assessed_at": "2026-11-25T21:05:55Z",
+  "canonical_sha256": "5e27f657c240df5f369e79a6a768c7d12a4ebc7389323589ee958075a4a9bbb4",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All 18 Lean 4 theorem statements in Table 1, Eq. (1) sign-flip rules, Sec. 3 Fig. 2 algebraic identities (p_k, y_0, envelope step), and Sec. 4 / Fig. 2(a) 4-line fan KKT multipliers and DAG edges verify by direct inspection. Lean/Python execution outputs are self-reported.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "Mathematical constructions and theorems are credited to Dury [3]; the manuscript contributes a companion verification stack whose Lean 4 kernel formalizes elementary single-coordinate sign poset and cleared integer projections rather than general arrangement geometry.",
+      "stars": 2
+    },
+    "reproducibility": {
+      "basis": "Table 1 gives exact Lean 4 theorem signatures and axioms, Table 2 details all 16 certificate dimensions/parameters, and Sec. 4 lists full coordinates, KKT vectors, and flag layers for the 4-line fan; actual Lean/Python scripts reside in an external repository not verifiable from PDF alone.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Honest Two-Layer Scope Calibration (Sec. 1) explicitly separates universal Lean 4 scalar/combinatorial projections from finite exact-Q witness checks in ARRANGEMENT-TRAVERSAL-CERT-1.0 and non-formalized geometry in [3]; axiom footprints and 66 red-team tests are cleanly itemized.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Delivers a clean, zero-float exact-Q verification harness and explicit worked benchmarks (including the L=3 4-line central fan DAG and N=4..16 Fig. 2 truncations) validating Dury [3] on concrete instances, though general multi-dimensional proofs remain unformalized.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.6,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-422KRPSP0Q96DTVT",
+  "potential_errors": [
+    "Mode 4 checks a 3-tuple potential proxy (lambda, dim F, S) which is exact only for r <= 2; on the r = 3 octant certificate (#16) this suffices only because all 7 targets jump immediately to lambda = infinity, and for Certificate #10 (d=3, dim F=0, r=3) Table 2 displays only a single scalar S^F transition 0 -> 1 rather than the full (r-1)-component slice vector.",
+    "Sec. 1 'Explicit non-claims' lists Theorems 1-8 and 13-18 when summarizing the algebraic projections, omitting Theorems 9-12 (the Figure 2 counterexample laws) from that sentence even though they are included in Table 1.",
+    "Claims regarding 0-sorry/0-warning Lean compilation, 0.110-1.003 ms replay latencies, and 66/66 adversarial test rejections depend on external repository artifacts that cannot be executed or independently audited from the PDF alone."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Transparent scope calibration: Section 1 ('Honest Two-Layer Scope Calibration' and 'Explicit non-claims') clearly delineates what is universally proved in Lean 4 vs. checked on finite exact-Q witnesses vs. left to Dury [3].",
+    "Complete algebraic and KKT consistency: Every theorem in Table 1 holds mathematically, the Figure 2 identities (p_k in H_k cap H_{k-1}, envelope step, y_0 in [-1, 0), and 2^{-N} gaps) are exact, and all sign vectors, strict-complementarity KKT duals, flag layers, and DAG edges in the 8-chamber 4-line central fan (Sec. 4, Fig. 2(a)) check out exactly.",
+    "Consistent numerical reporting across text, tables, and figures: Axiom counts (5 none, 1 propext, 12 [propext, Quot.sound]), replay latencies (0.110-1.003 ms across 16 certificates), and red-team counts (12+13+12+14+15 = 66/66) align throughout."
+  ],
+  "strong_novelty_candidates": [],
+  "summary": "This 4-page companion paper presents a two-layer formal and exact-rational verification stack for Brennan Dury's objective-driven acyclic chamber digraph framework [3]. Layer 1 is a standalone 18-theorem Lean 4.35.0 kernel (HyperplaneTraversal.lean, 0 sorry, 0 Classical.choice) proving single-coordinate sign-closure poset axioms, sign-flip counting/distinctness properties, cleared integer laws for Section 2 Figure 2's quasipolyhedral non-attainment counterexample, and scalar/3-tuple algebraic projections of Frame slice and DAG bounds. Layer 2 is a pure-Python zero-floating-point exact-Q verifier (ARRANGEMENT-TRAVERSAL-CERT-1.0) checking 16 canonical certificates across four modes (Theorem 2 flag targets up to d=4, r=4; Figure 2 truncations up to N=16; Frame slices; and KKT chamber DAGs including an explicit 8-chamber 4-line central fan with L=3) and rejecting 66/66 adversarial forgeries. All visible algebraic identities, KKT witnesses, sign vectors, axiom tallies, and cross-table statistics in the PDF are internally consistent and accurately scoped, with no unresolved material objections.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:43a2b1d6-4fba-4a51-8352-265429fb8301",
+  "weaknesses": [
+    "Elementary mathematical depth of the Lean 4 kernel: Many of the 18 theorems in Table 1 are single-line integer/natural-number arithmetic identities or basic enum case analyses (e.g., #5, #7, #8, #9, #10, #12, #13, #15, #16, #17, #18), while general d-dimensional arrangement geometry, LP duality, compactness, and graph acyclicity remain unformalized.",
+    "Small scale of finite certificates: The Mode 4 DAG atlas covers low-dimensional instances (d <= 4, at most 9 chambers in 2D and 8 in 3D) and relies on a 3-tuple potential proxy (exact only for r <= 2) rather than the general (r+1)-component potential P*_F.",
+    "Figure 2(b) merely plots the linear tautology L_max = k - 1 and L = L_max + 1 = k across k = 1..8, offering minimal empirical or analytical value beyond the one-line bound in the text."
+  ]
+}

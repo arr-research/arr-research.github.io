@@ -1,0 +1,408 @@
+# Constructive Lean 4 Kernel and Exact-Rational Certificates for Google Research Cogentic's O(r^(1/2 - 5e-6)) Log-Rank Conjecture Proof
+
+**Author:** Lluis Eriksson  
+**AIRR Identifier:** `ARR-2026-16CA0GVRBP95WSCZ` (v1)  
+**License:** CC-BY-4.0 (manuscript), MIT (verification repository)  
+**Verification Repository:** https://github.com/lluiseriksson/cogentic-logrank-certificates (`v1.0.0`)  
+**Canonical PDF SHA-256:** `38f443c16938f8c16a0dc3c20e5cebba62a7102479abe6891660ad7e4c272d7f`
+
+## Abstract
+
+Google Research's Cogentic framework (Nov. 25, 2026) broke the sqrt(r) barrier for the Lovasz-Saks Log-Rank Conjecture, proving that every rank-r Boolean matrix M in {0,1}^{X x Y} has a monochromatic rectangle of density >= 2^{-C r^{1/2-eps}} and deterministic communication complexity D_cc(M) <= C' r^{1/2-eps} with eps = 5e-6, C = 238, and C' = 750 C = 178,500. We deliver an explicitly scoped, standalone, zero-floating-point verification stack for the deterministic algebraic, third-moment spectral-tensor, Bregman-divergence, monochromatic rank-split, and quantitative Nisan-Wigderson recursion pillars of this breakthrough. Layer 1 (CogenticLogRank.lean) proves 18 constructive Lean 4.35.0 theorems (zero sorry, zero axiom, zero Classical.choice, zero warnings; 4 zero-axiom and 14 [propext, Quot.sound]) mechanizing Eq. (1.6) pointwise Booleanity, the degree-1 AM-GM barrier vs. degree-2 cosh-tilt lambda^2-cancellation, Eq. (1.7) variational penalty concavity/slope, scalar/eigenvalue Eq. (2.2) Bregman nonnegativity, the 2x2 commutator trace identity, inductive Lemma 2.1(1) leverage defect, universal 2D Hermite c_2 covariance, and every discrete step of Proposition A.3 (2^11 < 3^7, 3*29^4 < 4*27^4, rank-split floor(3k/4), 750 C_0). Layer 2 (LOGRANK-COGENTIC-CERT-1.0) is a pure-stdlib Python Fraction auditor across four modes that certifies 16 canonical witnesses in 0.099-16.937 ms—including an exact isospectral separation between Boolean S = J_4 - 2I_4 (E_3 = 3/2, hollow slice energy 3/32) and the Rademacher barrier A_Rad (E_3 = 0, hollow energy 0)—and rejects 62/62 live adversarial forgeries with exact branch assertions (66/66 pytest checks).
+
+## Full Extracted Text
+
+--- Page 1 ---
+Constructive Lean 4 Kernel and Exact-Rational Certificates
+for Google Research Cogentic’sO(r1/2−5×10−6
+)Log-Rank
+Conjecture Proof
+Lluis Eriksson∗
+November 25, 2026
+Abstract
+Google Research’s Cogentic framework (Nov. 25, 2026)
+broke the√r barrier for the Lovász–Saks Log-Rank Con-
+jecture, proving that every rank-r Boolean matrix M∈
+{0,1}X×Y has a monochromatic rectangle of density≥
+2−Cr1/2−ε
+and deterministic communication complexity
+Dcc(M) ≤C ′r1/2−ε with ε = 5 ×10−6, C = 238, and
+C′= 750C = 178,500. We deliver an explicitly scoped, stan-
+dalone, zero-floating-point verification stack for the deter-
+ministic algebraic, third-moment spectral-tensor, Bregman-
+divergence, monochromatic rank-split, and quantitative
+Nisan–Wigderson recursion pillars of this breakthrough.
+Layer 1 (CogenticLogRank.lean ) proves 18 construc-
+tive Lean 4.35.0 theorems (zerosorry, zero axiom, zero
+Classical.choice, zero warnings; 4 zero-axiom and 14
+[propext, Quot.sound]) mechanizing Eq. (1.6) pointwise
+Booleanity, the degree-1 AM–GM barrier vs. degree-2cosh-
+tilt λ2-cancellation, Eq. (1.7) variational penalty concav-
+ity/slope, scalar/eigenvalue Eq. (2.2) Bregman nonneg-
+ativity, the2 ×2commutator trace identity, inductive
+Lemma 2.1(1) leverage defect, universal 2D Hermitec2
+covariance, and every discrete step of Proposition A.3
+(211 < 37,3 ·294 < 4 ·274, rank-split ⌊3k/4⌋,750 C0).
+Layer 2 (LOGRANK-COGENTIC-CERT-1.0 ) is a pure-stdlib
+Python Fraction auditor across four modes that certifies
+16 canonical witnesses in0.099–16.937 ms—including an
+exact isospectral separation between BooleanS = J4 −2I4
+(E3 = 3/2, hollow slice energy3/32) and the Rademacher
+barrier ARad (E3 = 0, hollow energy0)—and rejects 62/62
+live adversarial forgeries with exact branch assertions (66/66
+pytest checks).
+1 Introduction and Scope Calibra-
+tion
+Lovász and Saks [ 4] conjectured that Dcc(M) ≤
+(log2 rankR(M))O(1) for every Boolean matrix M∈
+{0,1}X×Y . Via Nisan–Wigderson rank-halving [ 6], up-
+∗Independent Researcher. Code, Lean 4 proofs, and certificates:
+MIT License; manuscript and figures: CC-BY-4.0. Prepared with
+transparent AI coding, formalization, and drafting assistance via
+Google Antigravity; all Lean 4 theorems, exact-Q verifiers, and adver-
+sarial tests were independently compiled and verified locally. Reposi-
+tory: github.com/lluiseriksson/cogentic-logrank-certificates.
+per bounds progressed fromO(√rlogr )[ 5] toO(√r)[ 7],
+where γ2-norm and discrepancy methods hit a natural√r barrier. On November 25, 2026, Google Research’s
+Cogentic system [3, 1] proved Theorem 1.1: Dcc(M) ≤
+750 ·238 r1/2−5×10−6
+by exploiting pointwise Booleanity
+S(x,y) 2 = 1of the sign matrixS=±(2M−J):
+−2s1u1(x)v1(y)A⊥(x,y) =A ⊥(x,y) 2 +s2
+1u1(x)2v1(y)2 −1,
+(1.6)
+where S = s1u1v⊤
+1 + ∑m
+k=1 σkakb⊤
+k is the µ-normalized
+SVD (s1 ≥σ 1 ≥ ··· ≥σm > 0). Projecting (1.6)
+against bk expresses singular coordinates as quadratic forms
+in third-moment tensors( ˆMY
+k )i,j = (σiσj)1/2EµY [bkbibj]
+(which vanish for the Rademacher barrierARad(x,y) =
+µ0 +
+√
+(1−µ 2
+0)/r⟨x,y⟩), unlocking a degree-2cosh Gaus-
+sian tilt whoseλ2 cancels against KL cost.
+Honest Two-Layer Verification Scope.We separate
+explicitly what is proved universally in Lean 4 vs. verified
+on finite rational witnesses vs. left in [3]:
+1. Layer 1 (Lean 4.35.0 Kernel, Universal Algebraic
+& Inductive Proofs):lean/CogenticLogRank.lean
+proves 18 zero-dependency theorems (Table 1), cov-
+ering Eq. (1.6), degree-1 AM–GM vs. degree-2 λ2-
+cancellation, Eq. (1.7) penaltyg(t) = 2(1 −t)−1
+4 (1−t)2,
+scalar/eigenvalue Eq. (2.2) Bregman nonnegativity,2×2
+commutator trace identity, inductive Lemma 2.1(1) AM–
+GM defect, universal 2D Hermitec2 covariance, and the
+complete discrete algebra of Proposition A.3.
+2. Layer 2 (Exact-Q Multi-Dimensional Auditor):
+LOGRANK-COGENTIC-CERT-1.0 audits finite exact-Q
+SVDs (s1 ≥σ 1 ≥... ), Eq. (1.6) projections, third-
+moment energies E3 = ∑
+k∥ˆMY
+k ∥2
+F, hollow quadratic
+slices ˚L(w)
+y , exact symmetric positive-semidefinite ma-
+trix square rootsR⪰ 0( R2 = P) andq×q Eq. (2.2)
+Dsr(P∥Σ2), monochromatic rank-splitr1 + r2 ≤r + 1,
+and Proposition A.3 orbits.
+3. Explicit Non-Claims:We donotformalize in
+Lean 4 the continuous variational existence of the
+equilibrium measure µ, level-1 Efron–Stein Bernoulli
+thinning (Sec. 4), self-normalized matrix Khintchine
+/(3 ,3,3)-Hölder tensor-power lifting (Sec. 5), or
+Slepian/Pisier/Bonami–Beckner Gaussian hypercontrac-
+tivity (Sec. 6); those analytic pillars remain in [3].
+1
+
+--- Page 2 ---
+2 Constructive Lean 4.35.0 Kernel
+lean/CogenticLogRank.lean compiles standalone in2.5 s
+under Lean 4.35.0 [2] with zero external imports, zero
+warnings, zero sorry, and zeroClassical.choice. Au-
+diting via AuditAxioms.lean confirms 4 zero-axiom the-
+orems (none: #1, #12, #16, #18) and 14 [propext,
+Quot.sound]theorems (Table 1).
+Proposition 1(Constructive Scope of
+CogenticLogRank.lean ).All 18 statements in Ta-
+ble 1 compile constructively under Lean 4.35.0 without
+external libraries or Classical.choice. In particular,
+Theorem 8 proves the exact symmetric2×2trace commu-
+tator identitytr(H2L2 −HLHL ) = 1
+2 ∥HL−LH∥ 2
+F ≥0
+universally overZ6, Theorem 9 proves the leverage-centered
+AM–GM defect by list induction over arbitrary length,
+Theorem 10 proves the universal 2D Gaussian Hermitec2
+covariance identity overZ4, and Theorems 11–18 verify
+every discrete combinatorial inequality of Proposition A.3’s
+explicit750C 0 Nisan–Wigderson reduction.
+3 Exact-QCertificate Auditor
+The modules logrank_exact.py and logrank_cert
+ifier.py (under src/) use exclusively Pythonint and
+fractions.Fraction (statically audited for zerofloat(,
+math., numpy, ornp.). Raw JSON ingestion rejects IEEE-
+754 decimals,NaN/Infinity, and duplicate object keys via
+parse_float, parse_constant, andobject_pairs_hook,
+followed by a strict AST whitelist, nesting-depth cap (20),
+and canonical ASCII-digit lowest-terms rational parsing
+(len≤2000).
+Definition 1(LOGRANK-COGENTIC-CERT-1.0 Acceptance
+Predicates).A certificate with schema="LOGRANK-COGEN
+TIC-CERT-1.0" is accepted iff every claimed summary
+matches exact recomputation and its mode predicate holds:
+• Mode 1 (boolean_sign_third_moment_cert):Given
+S∈Q m×n, full-support µX,µY, and exact rationalµ-
+normalized SVD( s1,u1,v1; {σk,ak,bk})with s1 ≥σ1 ≥
+···≥σ r >0, checks exactµ-orthonormality, exact SVD
+reconstruction, exact Gaussian rankrankQ(S), and exact
+third-moment energyE3 := ∑
+k,i,j σiσj(EµY [bkbibj])2 =∑
+k∥ˆMY
+k ∥2
+F. For Boolean sign matrices (Sxy ∈{±1}),
+checks zero Eq.(1.6) residual at every(x,y)and verifies
+every L2(µY)projection against bk; for Rademacher
+barrier witnesses, verifies unit row/columnL2 norms
+andE 3 = 0.
+• Mode 2 ( q u a d r a t i c _ s l i c e _ b r e g m a n _ c e rt):
+Computes exact doubly-centeredAdc, total bulk vari-
+ance τw = EµX [∥w∥2
+2], hollow quadratic slice matri-
+ces( ˚L(w)
+y )a,b = (1 −δab)EµX [Adc(x,y)wa(x)wb(x)], and
+mean-square energyEµY [∥˚L(w)
+y ∥2
+F]. Verifies exact ratio-
+nal symmetric positive-semidefinite matrix square root
+R⪰ 0(via exact rational diagonal-pivoted congruence
+reduction) withR2 = P, checks both sides of Eq. (2.2)
+Dsr(P∥Σ2) = tr(Σ) −tr (R) + 1
+2 tr(Σ−1(P− Σ2)) =
+Figure 1:(a)Exact Boolean third-moment energy E3 =
+4(n−1)(n−2)/n2 →4onS=J n −2In (n= 2 b) vs. identi-
+cally zeroE3 ≡0on the Rademacher barrierARad.(b)Ex-
+act Eq. (1.7) strictly concave penaltyg(t) = 2(1−t)−1
+4 (1−
+t)2 and slopeg′(t)≤−1on[−1,1].
+Figure 2:(a)Exact Prop. A.3 rank-halving orbit lengths
+(k↦→⌊3k/4⌋) and balanced protocol depth2⌈log3/2 r⌉up to
+r= 109.(b)Polynomial gain r−ε (ε= 5 ×10−6) breaking
+Sudakov–Tomon’sO( √r)barrier.
+1
+2 ∥Σ−1/2(R−Σ)∥2
+F ≥0, and checkstr(H2L2−HLHL) =
+1
+2 ∥HL−LH∥ 2
+F ≥0for symmetricq×qmatricesH,L.
+• Mode 3 (monochromatic_rank_split_cert ):Given
+Boolean M∈{ 0,1}m×n and monochromatic rectangle
+A×B , verifies exact monochromaticity, exact Gaussian
+ranks r,r1 = rankQ(M|A×Bc),r2 = rankQ(M|Ac×B),
+Prop. A.3 rank-splitr1 + r2 ≤r + 1and min(r1,r2) ≤
+⌊3r/4⌋, density ≥ 2−238, and exact balanced depth
+2⌈log3/2 L⌉.
+• Mode 4 (nw_recursion_and_penalty_cert):Verifies
+Eq. (1.7)g′(t) = −(3 + t)/2 ≤−1and exact midpoint
+concavity g(ti+tj
+2 ) −g(ti)+g(tj)
+2 = 1
+16 (ti −tj)2 > 0on
+strictly increasingt-probes in[ −1,1], checks2 11 < 37,
+3 ·294 < 4 ·274, C′ = 750C0, and exact rank-halving
+orbit lengthsk↦→⌊3k/4⌋down to1.
+4 Exact Findings, Atlas, and Red-
+Team Audit
+All experiments ran locally on Windows 11 (Python 3.12.6,
+Lean 4.35.0; 7-run exact means after warm-up).
+1. Exact Isospectral Separation Between Boolean-
+ity and the Rademacher Barrier (Fig. 1(a)).Choos-
+ing µ0 = 1 /2and r = 3in Cogentic’s Eq. (1.4) yields
+2
+
+--- Page 3 ---
+Table 1: Complete inventory of all 18 constructive Lean 4.35.0 theorems inlean/CogenticLogRank.lean (zero sorry,
+zero axiom, zeroClassical.choice, zero warnings;none for #1, #12, #16, #18 and[propext, Quot.sound] (P,Q)
+for the remaining 14).
+# Theorem Identifier Ref. [3] Exact Machine-Checked Statement & Hypotheses Ax.
+1sign_matrix_booleanity_identitySec. 1.2m∈{0,1}=⇒(2m−1) 2 = 1∧(−(2m−1)) 2 = 1.none
+2eq16_pointwise_boolean_quadraticEq. (1.6)(s 1u1v1+A⊥)2=1 =⇒ −2s1u1v1A⊥=A2
+⊥+ (s1u1v1)2 −1.P,Q
+3sec12_degree1_amgm_barrierSec. 1.2∀λ,T,d∈Z,4(λ 2d)T2 ≤(λ2d+T 2)2 (degree-1 √rcap).P,Q
+4sec12_degree2_cosh_lambda_cancelSec. 1.2λ̸= 0 =⇒
+(
+Nλ2τ≤λ 2FTD⇐⇒Nτ≤FTD
+)
+(degree-2 escape).P,Q
+5eq17_variational_penalty_concavityEq. (1.7) Clearedg( t1+t2
+2 )− g(t1)+g(t2)
+2 equals2(t 1−t2)2 ≥0,= 0⇐⇒t 1=t2.P,Q
+6eq17_variational_penalty_slopeEq. (1.7)−1≤s≤t=⇒ −(3+t)≤−2(g ′≤−1) and4g(t)≤4g(s).P,Q
+7eq22_bregman_sqrt_nonnegEq. (2.2)∀σ,r∈Z,2σ(σ−r) + (r 2−σ2) = (r−σ)2 ≥0,= 0⇐⇒r=σ.P,Q
+8sec21_commutator_trace_identity_2x2Sec. 2.1∀2×2symm.H,L∈Z 2×2,tr(H 2L2 −HLHL) = comm2 ≥0.P,Q
+9lemma21_leverage_amgm_defectLem. 2.1 Universal list induction:|x|=|y|=⇒2⟨x,y⟩≤∥x∥ 2 +∥y∥2.P,Q
+10sec21_hermite_c2_variance_identitySec. 2.1∀v 1,v2,w1,w2 ∈Z ,2 v2
+1w2
+1+4v1v2w1w2+2v2
+2w2
+2 = 2( v1w1+v2w2)2 and
+2(v2
+1+v2
+2)2 ≥0.
+P,Q
+11propa3_heavy_child_split_boundsProp. A.3L≥2, L<3L v ≤2L=⇒1≤L−L v ∧3(L−Lv)<2L.P,Q
+12propa3_log2_three_halves_boundProp. A.32 11 = 2048<2187 = 37 (log2
+3
+2 > 4
+7 ) and2·7<4·5.none
+13propa3_protocol_depth_inductionProp. A.32L≤3L b ∧2 kLb ≤3 k =⇒2 k+1L≤3 k+1 (balancing step).P,Q
+14propa3_rank_split_min_le_three_quartersProp. A.3k≥ 2, rM ≤k, r1+r2 ≤r M+1 = ⇒min (r1,r2) ≤ ⌊
+rM+1
+2 ⌋ ≤ ⌊3k
+4 ⌋and
+⌊3k
+4 ⌋≥1.
+P,Q
+15propa3_leaf_recurrence_inductionProp. A.3A 1 ≤1, A2 ≤Lk, A3 ≤s(1+Lk) =⇒A 1+A2+A3 ≤(s+1)(1+Lk).P,Q
+16propa3_geometric_ratio_boundProp. A.33·29 4 = 2,121,843<2,125,764 = 4·27 4 (certifying(3/4) 1/4 <27/29).none
+17propa3_nissan_wigderson_constant_750Prop. A.3C 0,R≥ 1 = ⇒ 2C0+145C0R≤ 147C0R < 150C0R,5(150 C0R)=750C0R
+(C′=178,500).
+P,Q
+18thm11_subsqrt_exponent_strictly_beats_halfThm. 1.199999·2<200000( 1
+2 −5·10 −6 < 1
+2 ),4≤200000,750·238 = 178,500.none
+√
+(1−µ 2
+0)/3 = 1 /2 ∈Q , producing anexact integer-
+valued8 ×8Rademacher barrier matrix ARad(x,y) =
+1
+2 + 1
+2 ⟨x,y⟩∈{− 1,0,1,2}on {−1,+1}3 with rank4, bias
+1/2, unit row/columnL2(µ)norms, and singular spectrum
+(1/2,1/2,1/2,1/2). Comparing this directly against the
+4 ×4Boolean Equality sign matrixS = J4 −2I4—which
+has theexact samerank4, bias1 /2, and singular spec-
+trum(1 /2,1/2,1/2,1/2)—certifies in exactQ why point-
+wise Booleanity breaks the√r barrier: S achieves zero
+Eq. (1.6) residual, third-moment energy E3 = 3 /2 > 0
+(generalizing toE3 = 4(n−1)(n−2)/n2 →4on Jn −2In,
+e.g.21 /8at n = 8), and hollow quadratic slice energy
+3/32 >0(Mode 2), whereas ARad has max Eq.(1.6) resid-
+ual3,E 3 = 0, and hollow slice energy0!
+2. Exact Matrix Square-Root Bregman, Rank-
+Split, and Prop. A.3 Audits (Fig. 2).Mode 2 cer-
+tifies exact rational matrix square rootsR2 = P across
+q∈{ 2,3,4}with exact Bregman divergencesDsr(P∥Σ2) ∈
+{0,1/4,1,17/16}and symmetric commutator trace gaps
+{0,1,13,18}. Mode3verifiesmonochromaticrectanglesand
+exact Prop. A.3 rank-splits acrossEQ8 (4 + 4 ≤9), DISJ3
+(4 + 4 ≤9), a12 ×12 1-monochromatic block (4 + 4≤13),
+and GT4 (7 + 7 ≤16). Mode 4 audits Eq. (1.7) strict con-
+cavity up to a 17-point grid (min midpoint excess1/1024)
+and Prop. A.3 rank-halving orbits up tor= 109 (69 steps).
+3. 16-Certificate Atlas & 66-Test Red-Team Audit
+(Table 2, Fig. 3).Table 2 lists all 16 canonical certifi-
+cates verified in0.099–16.937 ms. tests/test_suite.py
+executes 66 pytest functions (passing in0.12 s): 1 aggre-
+gate test replaying all 16 canonical certificates, 3 raw-
+JSON parser checks (IEEE-754 float,NaN, duplicate keys),
+and 62 parametrized live adversarial forgery tests (12
+schema/parser, 13 Mode 1 incl. top-singular-mode swap
+s1 <σ1, 13 Mode 2 incl. negative-definite rootR= −Σ, 12
+Figure 3:(a)Mean exact-Q verification latency across all 16
+canonical certificates (0.099–16.937 ms, log scale).(b)Live
+adversarial red-team audit rejecting 62/62 forgeries across
+five attack classes with exact error-branch assertions.
+Mode 3, 12 Mode 4), each asserting an exact regex match on
+the expected rejection branch.scripts/verify_all.py
+enforces all 5 gates including a strict axiom whitelist and
+41-file SHA-256 manifest.
+5 Conclusion
+We delivered an independent, explicitly scoped, zero-
+floating-point verification stack for Google Research Cogen-
+tic’sO(r1/2−5×10−6
+)Log-Rank Conjecture breakthrough [3],
+pairing 18 constructive Lean 4.35.0 theorems (zerosorry,
+zero Classical.choice, 4 zero-axiom theorems) with the
+pure-Fraction auditor LOGRANK-COGENTIC-CERT-1.0 , 16
+canonical witnesses demonstrating the exact isospectral
+third-moment and hollow-slice separation between Boolean
+sign matrices and the Rademacher barrier, and 62/62 live
+adversarial forgery rejections.
+3
+
+--- Page 4 ---
+Table 2: Canonical 16-certificateLOGRANK-COGENTIC-CER
+T-1.0 atlas (results/exp1_certificate_atlas.json ;
+all 16 verified).
+Certificate ID M Exact Certified Witness Summary ms
+m1_bool_eq4_third_momentM1EQ 4: rk4,µ0=1
+2,E3=3
+2, res0, 12 proj. 1.285
+m1_bool_eq8_third_momentM1EQ 8: rk8,µ0=3
+4,E3=21
+8 , res0, 56 proj. 16.937
+m1_bool_hadamard4_asym_u1M1H 4: rk4,µ0=1
+4,E3=3
+2, res0, 12 proj. 1.280
+m1_rademacher_barrier_8x8M1A Rad: rk4,µ0=1
+2,E3=0, res3, unitL2 2.150
+m2_slice_bregman_eq4_nonzeroM2EQ4 (q=2):τ=3
+4, hol3
+32,Dsr=1
+4, gap10.425
+m2_slice_bregman_eq8_3x3M2EQ 8 (q=3):τ=1
+4, hol 3
+1024,Dsr=17
+16, gap181.687
+m2_slice_bregman_rademacher_zeroM2ARad(q=2):τ=3
+4, hol0,Dsr=0, gap00.999
+m2_slice_bregman_hadamard4_4x4M2H4 (q=4):τ=3
+4, hol9
+128,Dsr=1, gap130.901
+m3_rect_eq8_zero_blockM3EQ 8:4+4≤9,ρ= 1
+4,L=15→d≤140.099
+m3_rect_disj3_8x8M3DISJ 3:4+4≤9,ρ= 1
+4,L=27→d≤180.293
+m3_rect_one_block_12x12M31-block12×12:4+4≤13,ρ= 1
+9,d≤220.299
+m3_rect_gt4_16x16M3GT 4: rk15,7+7≤16,ρ=1
+4,d≤181.729
+m4_nw_cogentic_thm11_canonicalM4C′=178,500,g′≤−1, ex1
+256, orb1..450.323
+m4_nw_fine_penalty_grid_17ptsM417-pt grid:C′=178,500, ex1
+1024, orb3..261.846
+m4_nw_high_rank_orbit_1e9M4 High-rank103..109: ex1
+64, orb21..690.127
+m4_nw_unit_C0_propa3_exactM4 UnitC0=1:C′=750, ex1
+36, orb1..290.119
+References
+[1] Yang Cai, Vineet Gupta, Yanchen Jiang, Christopher
+Liaw, Aranyak Mehta, Grigoris Velegkas, and Di Wang.
+Cogentic: Multi-agent orchestration for automated
+proof discovery. arXiv preprint arXiv:2609.40324, 2026.
+[2] Leonardo de Moura and Sebastian Ullrich. The Lean 4
+theorem prover and programming language. InAuto-
+mated Deduction – CADE 28, volume 12699 ofLNCS,
+pages 625–635. Springer, 2021.
+[3] Google Research Cogentic. Breaking the square-root
+barrier for the log-rank conjecture. Preprint,https:
+//github.com/google-research/google-research/
+tree/master/cogentic_research_papers, November
+2026.
+[4] László Lovász and Michael Saks. Lattices, Möbius func-
+tions and communication complexity.Journal of Com-
+puter and System Sciences, 47(2):322–349, 1993.
+[5] Shachar Lovett. Communication is bounded by root of
+rank.Journal of the ACM, 63(1):1:1–1:9, 2016.
+[6] Noam Nisan and Avi Wigderson. On rank vs. com-
+munication complexity.Combinatorica, 15(4):557–565,
+1995.
+[7] Benny Sudakov and István Tomon. Matrix discrepancy
+and the log-rank conjecture.Mathematical Program-
+ming, 2025.
+4

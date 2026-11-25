@@ -1,0 +1,59 @@
+{
+  "assessed_at": "2026-11-25T21:05:55Z",
+  "canonical_sha256": "38f443c16938f8c16a0dc3c20e5cebba62a7102479abe6891660ad7e4c272d7f",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All 18 Table 1 theorem statements, Eq. (1.6)-(2.2) algebraic identities, E3 = 4(n-1)(n-2)/n^2 on Jn-2In, the 8x8 A_Rad spectrum (1/2,1/2,1/2,1/2) and E3=0, Mode 3 rank-splits (EQ8, DISJ3, GT4), and Mode 4 orbit step counts (21 for 10^3, 69 for 10^9) check out exactly against independent derivation. Only external [3] equation numbering and Mode 2 w-vectors are outside the PDF.",
+      "stars": 5
+    },
+    "novelty": {
+      "basis": "Builds on Cogentic [3] rather than proving new complexity bounds; the distinct contributions are the standalone zero-dependency Lean 4 kernel for the algebraic/discrete steps, the pure-Fraction exact-Q certificate auditor across 4 modes, and the crisp exact-Q isospectral separation between S = J4-2I4 and A_Rad.",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "Exact machine-checked theorem statements (Table 1), exact mathematical definitions for Modes 1-4 (Def. 1), exact rational witness summaries across 16 certificates (Table 2), and software versions (Python 3.12.6, Lean 4.35.0) are clearly documented; full replay of Mode 2 w-vectors and Lean proofs requires the cited external repository.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Explicitly separates universal Lean proofs (no sorry, no Classical.choice, 4 zero-axiom) from finite exact-Q audits and explicit non-claims, with strict zero-float Fraction parsing and 62/62 adversarial rejection assertions; tempered by Lean theorems being over Z / 2x2 matrices rather than full qxq or end-to-end Prop. A.3 induction.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Provides a clean, trustworthy formal and exact-rational verification artifact for the algebraic, Bregman, spectral-tensor, and Nisan-Wigderson recursion components of [3], though its impact is bounded by omitting the core analytic pillars (equilibrium measure, Efron-Stein, matrix Khintchine, hypercontractivity) of [3].",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 4.25,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-16CA0GVRBP95WSCZ",
+  "potential_errors": [
+    "Definition 1 Mode 1 (p. 2) denotes the remaining singular values as sigma_1 >= ... >= sigma_r > 0 alongside s_1 while referencing exact Gaussian rank_Q(S); with s_1 > 0 included, r such sigma_k terms correspond to rank r+1 rather than r (unlike m in Eq. (1.6) on p. 1).",
+    "Table 1 Theorem 5 (eq17_variational_penalty_concavity) states 'Cleared g((t1+t2)/2) - (g(t1)+g(t2))/2 equals 2(t1-t2)^2' without specifying the clearing multiplier (32, since the uncleared identity in Mode 4 has coefficient 1/16).",
+    "Definition 1 Mode 3 (p. 2) writes balanced depth 2*ceil(log_{3/2} L) without defining L in the predicate, and Table 2 omits L in the m3_rect_one_block_12x12 and m3_rect_gt4_16x16 rows while reporting d <= 22 and d <= 18.",
+    "Minor identifier typo in Table 1 Theorem 17: propa3_nissan_wigderson_constant_750 spells 'Nisan' as 'nissan'."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Transparent and disciplined two-layer scope calibration (Sec. 1) explicitly distinguishing universal Lean 4 algebraic/inductive proofs, finite exact-Q witness verification, and unformalized analytic pillars in [3].",
+    "Zero-dependency constructive Lean 4.35.0 formalization (Table 1) with zero sorry, zero Classical.choice, and 4 zero-axiom theorems, with every stated integer identity and inequality mathematically sound.",
+    "Sharp, completely exact-rational isospectral separation witness (Sec. 4.1, Fig. 1(a), Table 2) contrasting Boolean S = J4 - 2I4 (rank 4, bias 1/2, spectrum (1/2,1/2,1/2,1/2), E3 = 3/2, hollow slice energy 3/32) against 8x8 Rademacher A_Rad (identical rank, bias, unit L^2(mu) norms, and spectrum, yet E3 = 0 and hollow energy 0), plus exact closed form E3 = 4(n-1)(n-2)/n^2 on Jn - 2In.",
+    "Rigorous zero-floating-point Python Fraction auditor design (Sec. 3) rejecting IEEE-754 floats, NaN/Infinity, and duplicate JSON keys, backed by 62/62 exact-branch adversarial forgery rejections (Sec. 4.3)."
+  ],
+  "strong_novelty_candidates": [
+    "Exact-Q isospectral Boolean vs. Rademacher barrier witness pair (S = J4 - 2I4 vs. 8x8 A_Rad(x,y) = 1/2 + 1/2 <x,y>) isolating third-moment energy E3 = 3/2 vs. 0 and hollow slice energy 3/32 vs. 0 at identical rank, bias, and singular spectrum."
+  ],
+  "summary": "This manuscript presents an explicitly scoped, two-layer zero-floating-point verification stack for the algebraic, spectral-tensor, Bregman-divergence, and Nisan-Wigderson recursion components of Google Research Cogentic's O(r^(1/2 - 5e-6)) Log-Rank Conjecture proof [3]. Layer 1 provides 18 constructive Lean 4.35.0 theorems (zero sorry, zero Classical.choice; 4 zero-axiom and 14 [propext, Quot.sound]) covering Eq. (1.6) Booleanity, elementary AM-GM and cosh-tilt cancellation inequalities, Eq. (1.7) penalty concavity/slope, scalar Eq. (2.2) Bregman nonnegativity, the 2x2 commutator trace identity, list-inductive leverage defect, 2D Hermite covariance, and discrete Proposition A.3 arithmetic/induction steps. Layer 2 (LOGRANK-COGENTIC-CERT-1.0) implements a pure-Fraction auditor across four modes, certifying 16 canonical witnesses—highlighted by an exact-Q isospectral separation between S = J4 - 2I4 and the 8x8 Rademacher matrix A_Rad—and rejecting 62/62 adversarial forgeries. Every identity, rational witness calculation, rank-split, and orbit length visible in the PDF checks out independently, and heavy analytic pillars in [3] are honestly excluded. Despite elementary Lean scope and minor notation slips, there are no unresolved material objections.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:b7b0c8df-f08f-4545-bd0b-235dd6048844",
+  "weaknesses": [
+    "The 18 Lean 4 theorems are mathematically elementary (polynomial identities and integer inequalities over Z, list induction, and 2x2 Z-matrices) and do not formalize the general qxq matrix Bregman divergence (Eq. 2.2), general qxq commutator trace identity, or an end-to-end Lean theorem composing Proposition A.3's lemmas into a global depth bound.",
+    "As explicitly acknowledged, the deep analytic pillars of [3] (existence of equilibrium measure mu, Efron-Stein thinning, self-normalized matrix Khintchine / tensor-power lifting, and Gaussian hypercontractivity) are not verified by either layer.",
+    "Witness matrices/vectors for Mode 2 (e.g. test matrices w in Q^{|X|xq}) and alignment with exact numbering in the external preprint [3] cannot be independently checked from the PDF alone without consulting external repository files.",
+    "Table 1 Theorem 18 includes '4 <= 200000' without explaining its role in the surrounding text."
+  ]
+}

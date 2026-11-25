@@ -1,0 +1,59 @@
+{
+  "assessed_at": "2026-11-25T21:05:55Z",
+  "canonical_sha256": "c9be147fe73d39ba5aa8deff103ede096d0d3a2dfee4d9edc74f398063be9152",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All 18 Lean 4 statements in Theorem 2.1 and Table 1 are algebraically sound with explicit nonnegativity guards (r_u, r_v >= 0; 0 <= t <= k), Mode 1 strict CCW half-plane convexity prevents star/CW polygons, and Table 2 numerical witnesses check out; PDF-only review cannot execute the repository code.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "Underlying mathematics (Euclid triples, 2D Lagrange identity, CCW convexity, similarity norm scaling, W=P/2) is classical; novelty lies in packaging an exact-Q, zero-float dual-layer verification harness tailored to geometric primitives from OpenAI's Nov 24, 2026 preprint [1].",
+      "stars": 2
+    },
+    "reproducibility": {
+      "basis": "Specifies exact Lean 4.35.0 toolchain and axiom footprint ([propext], [propext, Quot.sound]), pure-stdlib Python Fraction runner, concrete witness parameters (e.g., strassen_barrier_k4), all 16 certificate summaries in Table 2, and public repo link.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Zero-float exact-Q verification across both Lean 4.35.0 (0 sorry, 0 Classical.choice) and pure-stdlib Python Fraction, paired with explicit Non-Claims in Section 1 and 58 adversarial rejections; limited by no formal Lean-to-Python soundness bridge and trivial scalar projections in Theorems 7-11 and 14-18.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Provides a clean, fast (0.071-0.313 ms) exact-Q certificate auditor and standalone Lean 4 algebraic kernel for planar rational-distance geometry, though significance is bounded because tensors, Strassen spectra, convex hulls, reflections, and general contractions remain unformalized.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.4,
+  "model_id": "hydrogen",
+  "overall_stars": 3,
+  "paper_id": "ARR-2026-6KYEM760529VAR7T",
+  "potential_errors": [
+    "Figure 1(b) labels the first witness as (3,4,5) with exterior excess Delta W = 2, whereas an unscaled (3,4,5) right triangle has (3+4-5)/2 = 1; Table 2 indicates collinear_vs_ext_345 actually uses d_uv = 10 (a 2x-scaled (6,8,10) triangle) to obtain Delta W = 2.",
+    "Figure 1(a) includes Euclid generator (m,n) = (5,6) where m < n, yielding m^2 - n^2 = -11; geometrically the side length uses |m^2 - n^2| = 11 (since squared edge length matches in pythagorean_triple_param), though standard Euclid generation assumes m > n > 0.",
+    "Mode 3 and Theorems 12-13 cover only orientation-preserving 2D scaled rotations L(x,y) = (cx - sy, sx + cy) (det L >= 0), omitting reflections and anisotropic contractions ||L||_op <= 1 such as orthogonal projections."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Transparent and disciplined scope calibration: Section 1 ('Explicit Non-Claims') clearly states that tensors, Strassen spectral points, convex hulls, general linear contractions, port graphs, and diagonalization constructions are not formalized and remain in [1].",
+    "Mathematically sound Lean 4.35.0 Euclidean core (Theorems 1-6, 12-13) with explicit nonnegativity hypotheses (r_u, r_v >= 0 in Theorem 5; r >= 0 and 0 <= t <= k in Theorem 6) and minimal constructive axioms ([propext], [propext, Quot.sound], 0 Classical.choice, 0 sorry).",
+    "Well-specified zero-float SPEC-GEOM-CERT-1.0 auditor (Definition 3.1): global strict CCW half-plane convexity (v_{i+1}-v_i) x (v_j-v_i) > 0 for all j not in {i, i+1} cleanly rules out clockwise, degenerate, and self-intersecting star polygons.",
+    "Consistent exact arithmetic across all 16 Table 2 certificates, explicit strassen_barrier_k4 parameters, Figure 1(a) bar heights, and Figure 3 latencies (0.071-0.313 ms), supplemented by 4096-angle Cauchy-Crofton cross-checks and 58 rejected adversarial forgeries."
+  ],
+  "strong_novelty_candidates": [
+    "Zero-float exact-Q certification architecture (SPEC-GEOM-CERT-1.0) combining global strict CCW half-plane polygon auditing, collinear vs. exterior excess verification, and 2D similarity contraction replay in sub-millisecond pure-stdlib Python Fraction arithmetic."
+  ],
+  "summary": "This 3-page paper presents a two-layer, zero-floating-point verification stack motivated by geometric primitives in OpenAI's November 24, 2026 preprint on Euclidean geometry in Strassen's asymptotic spectrum of tensors [1]. Layer 1 (lean/AsymptoticSpectrumGeometry.lean, Lean 4.35.0, 18 theorems, 0 sorry, 0 Classical.choice) proves exact 2D integer Euclidean laws (Euclid's parametrization, translation/homogeneity invariance, Lagrange's 2D Cauchy-Schwarz, rational-length triangle inequality, segment-restricted collinear zero-excess, and 2D scaled-rotation isometry/contraction) plus elementary integer/list projections. Layer 2 (SPEC-GEOM-CERT-1.0, pure-stdlib Python Fraction) audits exact-Q certificates across four modes (strict CCW convex polygons with W = P/2, collinear vs. exterior triangle gaps, 2D similarity contractions, and finite arithmetic barrier witnesses), replaying 16 certificates in 0.071-0.313 ms, cross-checking W = P/2 against 4096-angle Cauchy-Crofton integration, and rejecting 58/58 adversarial forgeries. All visible algebraic statements, witnesses, and figures are consistent and honestly scoped; main limitations are modest mathematical novelty, trivial scalar/list content in Theorems 7-11 and 14-18, and no formal Lean-to-Python soundness bridge.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:d1e10345-c8dd-4421-b6de-1b56fb70c9aa",
+  "weaknesses": [
+    "Ten of the 18 Lean theorems (Theorems 7-11 and 14-18) are one-line scalar or list-sum inequalities (e.g., h < 2h, integer distributivity, 2^k < 2^{k+1}, and linear list-sum domination d_i <= C e_i => sum d_i <= C sum e_i) whose theorem identifiers (such as matmul_triangle_sharing_bound, strassen_semiring_distributivity, cube_exclusion_dim_jump, port_graph_quadratic_domination, and diagonal_price_contradiction) sound far more substantial than their mathematical content, even though Section 1 and Theorem 2.1(4) acknowledge their elementary nature.",
+    "There is no formal verification bridge between Layer 1 (Lean 4 over Z) and Layer 2 (Python Fraction over Q): Lean 4 does not prove the soundness of SPEC-GEOM-CERT-1.0, does not formalize the Mode 1 CCW convexity-to-simple-polygon theorem, and does not prove Cauchy's planar mean-width identity W(S) = P/2 (which relies on [2] and numerical 4096-angle integration).",
+    "Mode 4 (strassen_borrowed_wire_barrier_exact) audits decoupled synthetic scalar/list inequalities on manually supplied rationals (e.g., h_I, e_1, e_2, prem, h_err, margin) rather than verifying any actual tensor rank, circuit, or port-graph construction.",
+    "Mode 1 global strict CCW half-plane check is O(m^2) and rules out polygons with three collinear boundary vertices, restricting certified polygons to strictly convex rational-edge-length polygons.",
+    "This PDF-only assessment cannot independently execute the Lean 4.35.0 kernel, Python verification scripts, or 58-case adversarial suite reported from the author's repository."
+  ]
+}
