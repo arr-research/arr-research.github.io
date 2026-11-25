@@ -1,0 +1,55 @@
+{
+  "assessed_at": "2026-11-25T06:32:00+00:00",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "Core identities and asymptotics in Theorems 2.1, 2.3, 3.1, 4.1, and 5.1(a) check out under independent derivation, including the O(c2*s^-2) cancellation and h^(4) = 6*c2*alpha1*(alpha1+1)/s1^6 matching; minor technical gaps appear in Theorem 5.1(b) and Theorem 4.1's log_Q^ub details, and external Lean/Python artifacts were not executed.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "The exact covariance-boundary law (Thm 2.1), two-order O(tau^-2) bias cancellation in the shift-invariant cumulant pair (Thm 2.3), and the cumulant-matched Le Cam two-point construction (Thm 5.1(a)) are genuine original contributions; Thms 3.1 and 4.1 adapt classical asymptotics and Stieltjes-Hankel moment theory.",
+      "stars": 4
+    },
+    "reproducibility": {
+      "basis": "Explicit benchmark models, parameter values, and a symbol-level Lean 4 manifest (Table 1) are documented in the manuscript; however, this review inspected only main.pdf and did not run the referenced repository scripts or Lean kernel.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Analytical proofs of Theorems 2.1, 2.3, 3.1, 4.1, and 5.1(a) are well-structured with explicit assumptions; Theorem 5.1(b) omits clipping/truncation needed to prevent undefined log(F_hat) or division by zero under Gaussian noise and uses an oracle tau*(sigma) depending on unknown Delta.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Substantially improves finite-tau continuum-edge estimation over [6] and clarifies information-theoretic limits under additive noise, though practical utility of Delta_hat_SI is limited to high SNR (sigma <= 10^-6) or deterministic simulations and Hankel bounds certify only upper limits.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "manuscript_sha256": "5ad9f81ae15957930b0516dc99a5c0024c612d4f4ee012fc0c54f65d8f1811a3",
+  "millennium_score": 5.2,
+  "model_id": "hydrogen",
+  "overall_stars": 5,
+  "potential_errors": [
+    "Unclipped Gaussian noise in Theorem 5.1(b) creates a tiny nonzero-probability event where F_hat <= 0.",
+    "Eq. (11) writes strict '>' for geometric tail enclosure of log((1+t)/(1-t)) which is equality at t=0."
+  ],
+  "prompt_version": "ARR-INTAKE-ASSESS-1.1",
+  "provider": "Google",
+  "recommendation": "minor_revision",
+  "strengths": [
+    "Theorem 2.1 establishes a clean, exact non-asymptotic identity for Delta_hat_VF(tau) - Delta.",
+    "Theorem 2.3(b) identifies exact O(c2*s^-2) cancellation jumping directly to O(tau^-3) bias.",
+    "Theorem 5.1(a) yields matching poly-logarithmic Le Cam minimax lower bounds.",
+    "Section 6 and Table 1 transparently scope the 16 Lean 4 core algebraic lemmas."
+  ],
+  "strong_novelty_candidates": [
+    "Exact covariance-boundary representation for Delta_hat_VF(tau) - Delta (Theorem 2.1).",
+    "Shift-invariant cumulant estimators with exact O(c2*s^-2) cancellation (Theorem 2.3).",
+    "Asymptotic-window Le Cam minimax lower bounds via fourth-order cumulant matching (Theorem 5.1(a))."
+  ],
+  "submission_id": "SUB-F9BA19FD317EDE8C",
+  "summary": "The manuscript addresses finite-imaginary-time bias, assumption-free certification, and additive-noise resolution limits when extracting continuum spectral gaps Delta and threshold exponents alpha from imaginary-time evolution decay functions F(tau). The main mathematical claims are sound, with several minor technical and expositional issues requiring clarification.",
+  "unresolved_material_objections": [],
+  "weaknesses": [
+    "In Theorem 5.1(b), unclipped Gaussian noise needs truncation/regularization event for strict RMSE finiteness.",
+    "Abstract wording on 1D/3D gains omits that 3D gain in Table 2 is 142x."
+  ]
+}

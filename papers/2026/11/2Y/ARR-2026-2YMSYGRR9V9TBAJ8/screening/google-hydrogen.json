@@ -1,0 +1,60 @@
+{
+  "assessed_at": "2026-11-25T06:34:10+00:00",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "Proofs of Theorems 2.1, 2.4, 2.5, 3.1, 4.1 and Proposition 4.2, plus the 3-design variance formula (11) and Experiment 4(i) numerical check, are mathematically sound; minor inaccuracies appear in the p. 2 matchgate O(sqrt(N) log N) remark for k >= 1 and Table 2's strict monotonicity wording, and Lean/Python artifacts were not executed.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "Original elementary Grassmannian holomorphicity characterization for equivariant NQS (Theorem 2.1), sharp Mixed-Energy Variational-Boost Law (Theorem 3.1), and linear-moment-only Block Hausdorff ground-state/visible-gap certificates without quadratic c_k measurements (Theorem 4.1).",
+      "stars": 4
+    },
+    "reproducibility": {
+      "basis": "Exact model parameters, rational certificate filenames, exact-Q margins, shot budgets, and Lean 4 symbol mappings (Table 3) are clearly specified in the manuscript; independent execution of Lean/Python scripts was not performed in this PDF-only review.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Self-contained proofs (Sherman-Morrison, single-variable Liouville, Schur complement, conic-dual spectral measure, Weingarten 3-design, Chebyshev/Hoeffding) with explicit quantifiers, sharpness conditions (Theorem 3.1), and transparent formal-vs-prose boundaries (Table 3).",
+      "stars": 5
+    },
+    "significance": {
+      "basis": "Directly diagnoses non-holomorphic mixed-estimator bias in equivariant QC-QMC surrogates and gives non-asymptotic spectral bounds, though practical scaling from global Haar shadows on D <= 36 Hubbard models to large matchgate-shadow systems remains open.",
+      "stars": 4
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "manuscript_sha256": "7347d7cf703b6f9c7ff6a541f128be70ecf374509e9360be3d8c2439395fc09b",
+  "millennium_score": 4.4,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "potential_errors": [
+    "Page 2, third bullet ('Literature positioning and explicit boundaries'): Claims that extending the Median-of-Means interface to Clifford matchgate shadows [10] 'simply replaces the exact complex-safe 3-design variance bound 4a_{2k} with the matchgate shadow variance bound O(sqrt(N) log N).' This is inaccurate for moments k >= 1 because |u_k> = T^k |Psi_sur> is generally a correlated multi-determinant state rather than a single Slater determinant, so both classical postprocessing cost and matchgate shadow variance depend on the determinant/Majorana expansion norm of T^k |Psi_sur>.",
+    "Page 7 vs. Section 4 / Theorem 4.1: The text calls Theorem 3.1 'the degree-0 instance' of Section 4's hierarchy, but Theorem 3.1 uses full complex |d_H|^2 whereas Section 4 restricts (P, Q, R) to real symmetric PSD matrices and thus only uses b_k^re (losing the Im(d_H)^2 contribution for general complex states unless Hermitian PSD dual matrices are used).",
+    "Page 11 (Experiment 3) vs. Table 2: The text states that at d=2 and eps_b >= 0.002 the exact-Q anchored bound 'is strictly monotone in eps_b', whereas Table 2 displays identical values (-1.918107) and identical exact-Q margins (-3.20 x 10^-9) at both eps_b = 0.002 and eps_b = 0.005 (indicating zero dual weight on b_k at the classical Krylov floor rather than strict monotonicity across those rows).",
+    "Page 1 (Abstract): Phrases the equivalence in Theorem 2.1 as 'G^{\\bar{\\partial}}(\\Phi) vanishes identically', whereas G^{\\bar{\\partial}} is only defined on the nonvanishing locus {f != 0} (as correctly stated in Theorem 2.1(ii)(b))."
+  ],
+  "prompt_version": "ARR-INTAKE-ASSESS-1.1",
+  "provider": "Google",
+  "recommendation": "minor_revision",
+  "strengths": [
+    "Theorem 2.1 provides a self-contained, elementary proof (via Sherman-Morrison, single-variable Liouville on three affine line families, and Jacobi's complementary minor identity) that C^1 GL(eta, C)-equivariant surrogates for 1 <= eta < N are physical iff anti-holomorphic derivatives vanish, cleanly explaining both left-projector collapse (Remark 2.3) and non-holomorphic mixed-estimator bias below E_0 (Theorem 2.5, Table 1).",
+    "Theorem 2.4 gives an exact, derivative-free Plücker-kernel witness eta_Pl(f; S) = ||(I_m - S S^+) f_S^*||_2 with rigorous complex conjugation handling for complex walkers and exact variational restoration via |Psi_f^proj>.",
+    "Theorem 3.1 establishes a sharp, unconditional 2x2 Schur-complement variational upper bound from linear mixed energy residuals d_H without requiring <Psi_T|H|Psi_T> or variationality of E_mix.",
+    "Theorem 4.1 generalizes Theorem 3.1 to single-edge and oracle-free two-edge visible spectral-gap certificates using only classical moments a_k and linear cross-moments Re(b_k), treating unmeasured c_k in [0, 1] adversarially.",
+    "Section 4.1 derives exact dimension-free global 3-design variance (D+2)/(D+3)(3 a_{2k} + |b_k|^2) <= 4 a_{2k} (matching the numerical 4-site Hubbard check in Exp. 4(i) to 3 significant figures) and pairs it cleanly with distribution-free Median-of-Means boxes and unbiased PPI walker debiasing (Proposition 4.2).",
+    "Table 3 and Section 7 transparently delineate which claims are formally mechanized vs. proved in prose, avoiding overclaiming."
+  ],
+  "strong_novelty_candidates": [
+    "Elementary, chart-based complex-analytic proof (Theorem 2.1) characterizing physical representability of GL(eta, C)-equivariant NQS overlap surrogates via vanishing anti-holomorphic Green's defect and Plücker linearity, together with exact distance-floor and mixed-estimator bias theorems (Theorems 2.4-2.5).",
+    "Sharp universal Mixed-Energy Variational-Boost Law (Theorem 3.1) and its degree-d Surrogate-Anchored Block Hausdorff extension (Theorem 4.1) certifying ground-state upper bounds and oracle-free two-edge visible spectral gaps from linear shadow cross-moments alone without quadratic c_k measurements."
+  ],
+  "submission_id": "SUB-405F1872B2764D01",
+  "summary": "The manuscript addresses two foundational mathematical gaps in machine-learned quantum-classical quantum Monte Carlo (QC-QMC): (1) when a GL(eta, C)-equivariant overlap surrogate represents a physical fermionic state, and (2) how to obtain finite-sample, distribution-free certified spectral bounds from noisy linear quantum-shadow cross-moments without measuring quadratic quantum moments c_k. All core proofs in the PDF—including the elementary Grassmannian holomorphicity characterization (Theorem 2.1), Plücker-kernel distance floor and projection restoration (Theorem 2.4), mixed-estimator bias decomposition (Theorem 2.5), sharp 2x2 Mixed-Energy Variational-Boost Law (Theorem 3.1), Surrogate-Anchored Block Hausdorff conic-dual soundness (Theorem 4.1), exact 3-design shadow variance (Eq. 11), and Median-of-Means/PPI guarantees (Proposition 4.2)—check out mathematically. However, the finite-sample shadow protocol uses exponentially scaling global Haar 3-design shadows on small Hubbard models (D <= 36), and the introduction's remark that extending to Clifford matchgate shadows simply replaces 4a_{2k} with O(sqrt(N) log N) overlooks that T^k |Psi_sur> for k >= 1 is not a single Slater determinant. Minor revision is recommended to correct this scaling statement and minor text/table discrepancies. Note: this review assessed only the PDF; neither the referenced Lean 4 formalization nor the Python scripts/rational certificates were executed.",
+  "unresolved_material_objections": [],
+  "weaknesses": [
+    "The shadow protocol in Section 4.1 and Experiment 4 relies on global Haar 3-design unitaries on C|0> + H_D, which scale exponentially in system size and differ from the polynomial-cost Clifford matchgate shadows used in the motivating 40-qubit workflow [6].",
+    "All numerical demonstrations are restricted to small exact-diagonalization Hubbard models (2-site D=6 and 4-site D=36); moreover, as noted in Experiment 4(ii), the conservative Median-of-Means confidence radii require > 31,000 shots even on D=6 to improve upon RHF.",
+    "Evaluating classical moments a_k = <Psi_sur|T^k|Psi_sur> for k >= 2 on general 2-body electronic Hamiltonians at large N (as needed for d >= 1 certificates) is not analyzed in terms of classical complexity and error propagation.",
+    "The external Lean 4.35.0 development, Python verification scripts, and rational LDL^T certificates referenced in Sections 5-6 were not executed or inspected under this PDF-only assessment protocol."
+  ]
+}
