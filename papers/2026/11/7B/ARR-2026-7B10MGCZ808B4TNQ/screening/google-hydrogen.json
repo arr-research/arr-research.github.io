@@ -1,0 +1,58 @@
+{
+  "assessed_at": "2026-11-25T16:45:54Z",
+  "canonical_sha256": "1008243ea6df73665665f4abcdabdcc9a313123a3e45af5c7bf8d584da76aac8",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All explicit identities in Prop. 1, Eqs. (3)-(6), critical-cusp moments (2,7,30,143,728,3876), truncation errors at lambda=1, Table 2 Mode 1-4 exact rational witnesses, and the 3-qubit loop-free/4-loop Pauli examples check out exactly. Lean 4 and Python code are summarized rather than included in full.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "Applies zero-float exact-Q certification and a zero-dependency Lean 4 kernel to the newly proposed sparse-Pauli free-probability paradigm of [3], including an O(m^2) symplectic 4-loop collision check. The underlying non-crossing combinatorics are classical and the Lean proofs are finite algebraic checks.",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "Reports deterministic generation, SHA-256 manifest checks over 39 files, exact rational witnesses across 16 certificates (Table 2), and explicit 3-qubit test sets ({XXI,ZYX,IZY,YIX} and {XII,IXI,IIX,XXX}). Only the Fig. 1(a) ensemble sampling size/seed count is under-specified in the PDF.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Scope disclaimers in Sec. 1 and Sec. 6 honestly exclude Stieltjes inversion and random-matrix concentration, and the Lean 4 axiom audit reports 0 sorry and 0 Classical.choice. However, Lean covers only orders <=8 and elementary inequalities, Prop. 1's trace proof is unformalized, and Fig. 1(a) omits sample counts and error bars.",
+      "stars": 3
+    },
+    "significance": {
+      "basis": "Delivers a sub-3 ms exact-Q auditing schema (FREE-PROB-HAM-CERT-1.0) that prevents floating-point masking of 4-loops and catastrophic cancellation in alternating-sign cumulant sums. Impact is bounded by the lack of verified code extraction and omission of the main asymptotic guarantees of [3].",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.4,
+  "model_id": "hydrogen",
+  "overall_stars": 3,
+  "paper_id": "ARR-2026-7B10MGCZ808B4TNQ",
+  "potential_errors": [
+    "Theorem 1.4 (p. 3) states (Ck)^r < m^r whenever Ck < m and r >= 1 without explicitly stating Ck >= 0 (or Ck >= 1 as in Mode 4, p. 4); for negative Ck with |Ck| > m and even r, the inequality fails unless Ck is constrained to Nat.",
+    "Abstract claims brute-force 2^n x 2^n matrix trace matching 'on loop-free 3-qubit ensembles' (plural), whereas Section 5 (p. 4-5) explicitly describes only one 4-term set {XXI, ZYX, IZY, YIX}.",
+    "Figure 1(a) (p. 4) reports 'exact mean |kappa_4(H)|' for n=16 ensembles without specifying the number of sampled ensembles per m, the sampling distribution, or variance/error bars."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Every explicit algebraic formula and numerical witness in the PDF is mathematically exact: Prop. 1 fourth-moment/cumulant brackets, Eq. (5)-(6) expansions, critical-cusp moments (2,7,30,143,728,3876), lambda in {1/2, 3/2, 2} rational moments (e.g., 1807665/4096, 133630881/4096, 222900), Fig. 2(a) truncation errors, and Table 2 Mode 1-4 entries all verify identically.",
+    "Clear, honest scoping in Contributions (p. 2) and Section 6 (p. 5), explicitly distinguishing finite-order algebraic identities and combinatorial witnesses from the unformalized Stieltjes inversion and random-matrix concentration proofs of [3].",
+    "Sound, zero-float certificate auditing design (FREE-PROB-HAM-CERT-1.0) with strict AST rejection of floats/booleans/Decimal/unreduced fractions, O(m^2) symplectic XOR 4-loop collision detection, and 54/54 live adversarial rejection tests.",
+    "Clean zero-dependency Lean 4.35.0 formalization audit (18 theorems, 0 sorry, 0 Classical.choice, 5 zero-axiom theorems) reported transparently in Table 1."
+  ],
+  "strong_novelty_candidates": [
+    "Integration of O(m^2) symplectic XOR 4-loop-freeness certification with exact-rational non-crossing cumulant inversion and spiked-Pauli phase-transition witnesses in a zero-float auditing format (FREE-PROB-HAM-CERT-1.0)."
+  ],
+  "summary": "This manuscript presents a finite-order formal verification and exact-rational certification framework targeting the algebraic backbone of Ding, King, and Schuster's free-probability algorithms for sparse random Pauli Hamiltonians [3]. It combines an 18-theorem, zero-dependency Lean 4.35.0 kernel (216 lines, covering Catalan numbers, order-4/6/8 non-crossing inversion, Bernoulli spike and lambda=1 critical-cusp moments up to order 8, symplectic Pauli commutation bounds, and elementary decay/tail/barrier inequalities) with a pure-stdlib Python exact-Q certificate auditor (FREE-PROB-HAM-CERT-1.0) supporting four verification modes up to order 20 and n <= 64. All explicit identities, exact rational witnesses in Table 2, truncation error curves in Figure 2, and 3-qubit Pauli examples visible in the PDF are mathematically exact, and the paper is candid about not formalizing Stieltjes inversion or random-matrix concentration. Its main limitations are the elementary finite-order nature of the Lean 4 theorems, the lack of a verified bridge between the Lean kernel and the Python auditor, and minor reporting omissions such as ensemble sample counts in Figure 1(a).",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:eafb8ed3-37e6-4a18-b781-ba5172c0e509",
+  "weaknesses": [
+    "Lean 4 kernel (Table 1, 216 lines) only proves fixed low-order polynomial identities (<= order 8) and elementary arithmetic/list lemmas; neither the general Speicher non-crossing bijection for arbitrary 2r, nor Prop. 1's 2^n x 2^n Pauli trace identity, nor the Python verifier itself is formally verified in Lean 4.",
+    "No verified code extraction connects FreeProbHamiltonians.lean to src/free_prob_certifier.py, leaving the actual order-20 bijection and O(m^2) 4-loop checks dependent on unverified Python code and self-reported test suites.",
+    "Several Lean theorems (e.g., free_additive_cumulant_k4_shift, cumulant_decay_monotone_step, truncated_resummation_err_list, classical_runtime_beats_exp) are elementary ring/arithmetic inequalities rather than substantive free-probability or complexity theorems.",
+    "Experimental methodology for Figure 1(a) omits ensemble sample sizes and error bars, and references to Eqs. (2), (5), (11), (12) and Theorem 2 of [3] (a Nov 24, 2026 preprint) cannot be cross-checked within the PDF alone."
+  ]
+}

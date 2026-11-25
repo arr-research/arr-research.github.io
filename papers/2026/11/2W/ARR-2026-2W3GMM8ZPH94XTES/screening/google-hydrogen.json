@@ -1,0 +1,59 @@
+{
+  "assessed_at": "2026-11-25T16:45:54Z",
+  "canonical_sha256": "87b7756252794e5b471cb795817439647720ba0148258f8d0856b9fab4be3086",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All stated algebraic identities (eq. (1) length conservation, eq. (2) gamma-hungry transfer bound delta+2*gamma, eq. (3) Lemma 3.9 margin 9p-8 > 8(p-1), K_{5,4} tree count 5^3*4^4=32000, and b^3 < 2^b for b >= 10) and numerical ratios (2.37x, 16.0x, 1213.6x, 131072x) are exact, and Table 2, Figures 1-3, and the text are mutually consistent.",
+      "stars": 5
+    },
+    "novelty": {
+      "basis": "First machine-checked Lean 4 formalization and exact-Q certificate schema (ENVY-FREE-5-CERT-1.0) covering four audit modes for the five-agent protocol of Filos-Ratsikas et al. (2026). Novelty is bounded because the algorithmic breakthrough belongs to [2] and the Lean kernel covers finite combinatorial/algebraic invariants rather than continuous IVT or query termination.",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "Deterministic end-to-end generation and verification pipeline (Lean 4.35.0 zero external libraries, pure-stdlib Python verifier, pytest suite, and 39 SHA-256 manifest checks), with all 16 exact-Q witness parameters and latencies reported in Table 2. Actual Lean source code and benchmark density tables reside externally and are not embedded in the 5-page PDF.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Combines an 18-theorem zero-dependency Lean 4.35.0 kernel (0 sorry, 0 Classical.choice, 0 Lean.ofReduceBool) with a strict zero-float Python fractions.Fraction verifier, independent midpoint integration, proportionality checks, and 54 rejected adversarial forgeries. Deducted 1 star because exact Lean theorem signatures and the 54 attack vectors are not printed in the PDF.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Provides sub-millisecond (0.115-1.020 ms) float-free auditability that eliminates numerical rounding hazards in nested-bisection and softmax-balancing witnesses for five-agent cake cutting. Impact is focused on piecewise-constant rational instances and finite invariants, leaving real-analytic IVT and protocol termination in Lean 4 as future work.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 4.3,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-2W3GMM8ZPH94XTES",
+  "potential_errors": [
+    "Section 2 eq. (3) writes 'forcing the integer ceiling ceil((9/8)p - 1) >= p strictly', which slightly conflates the strict inequality (9/8)p - 1 > p - 1 with the resulting weak integer inequality ceil((9/8)p - 1) >= p (where equality actually holds for all p in {1,2,3,4}).",
+    "Figure 1(a) highlights only the first zero-crossing root m* = 27/64 in the right-gap regime, while the text notes the gap advantage crosses back up to +0.46123 at m = 15/16 without noting or marking the symmetric second root in the left-gap regime.",
+    "In Table 1 and Theorem 1, the 206-line Lean file lists theorem identifiers and axiom footprints but omits formal type signatures, leaving unclear whether #8 (bipartite_k54_spanning_tree_count) and #9 (bipartite_k54_tree_edge_count) prove graph-theoretic enumeration or evaluate closed-form arithmetic expressions."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Clear decoupling of untrusted numerical witness discovery (nested bisection and softmax balancing) from exact rational Q verification, directly eliminating floating-point rounding hazards in Hall-matching and gap-closure checks.",
+    "Clean, zero-dependency 18-theorem Lean 4.35.0 kernel (0 sorry, 0 Classical.choice, 0 Lean.ofReduceBool, 4 zero-axiom theorems) covering anchor length conservation, gap closure, Lemma 3.5 connectivity contradiction, Lemma 3.9 Hall margins, gamma-hungry envy transfer, 5-agent proportionality, and b^3 < 2^b for b >= 10.",
+    "Exact numerical and algebraic consistency across the abstract, main text, Table 2 (16 exact-Q certificates across 4 modes and 4 benchmarks), and Figures 1-3, with sub-millisecond replay latencies (0.115-1.020 ms) and transparent scope boundaries.",
+    "Independent validation layers including strict JSON AST type checks, breakpoint-refined midpoint integration matching exact piecewise evaluation, 5-agent proportionality verification, and rejection of 54/54 adversarial forgeries."
+  ],
+  "strong_novelty_candidates": [
+    "Decoupled exact-Q certificate schema (ENVY-FREE-5-CERT-1.0) with four audit modes covering anchor delta-robustness plus explicit 8-edge spanning trees, contiguous 5-agent allocations, gamma-strongly-hungry transfers, and Lemma 3.9 weight/query barriers.",
+    "Zero-dependency Lean 4 formalization of the finite combinatorial, geometric, and algebraic invariants of Filos-Ratsikas et al. (arXiv:2611.33149) for five-agent envy-free cake cutting."
+  ],
+  "summary": "The manuscript presents a machine-checked Lean 4.35.0 kernel (18 theorems, 206 lines, zero external dependencies, 0 sorry, 0 Classical.choice) and an exact-rational (zero-float) certificate schema and Python verifier (ENVY-FREE-5-CERT-1.0) for auditing finite combinatorial, geometric, and algebraic invariants of the five-agent contiguous epsilon-envy-free cake-cutting protocol of Filos-Ratsikas et al. (arXiv:2611.33149). Across 16 canonical certificates spanning four piecewise-constant rational benchmarks (including asymmetric, bimodal-conflict, and zero-density non-hungry instances), verification completes in 0.115-1.020 ms, passes independent midpoint integration and proportionality checks, and rejects 54/54 adversarial forgeries. All stated identities, thresholds, speedup ratios, tables, and figures are internally consistent, and the paper accurately scopes its claims by explicitly excluding real-analytic IVT existence over arbitrary Lipschitz black-box oracles and general query-termination proofs.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:8cf3a8f8-63c1-43df-ab06-678a5d04f530",
+  "weaknesses": [
+    "Formal Lean 4 type signatures and definitions for the 18 theorems are omitted from the PDF, making it impossible to inspect from the manuscript alone how objects like K_{5,4} spanning trees, G_delta, and Lemma 4.2/4.4 statements are encoded within 206 lines without external libraries.",
+    "The Mode 3 gamma-hungry transfer certificates in Table 2 all use delta = 0 (epsilon = 2*gamma) with zero final envy rather than also exercising non-zero delta + 2*gamma transfers as in the worst-case epsilon/3 split.",
+    "The 54-case adversarial forgery suite and the exact piecewise-constant density specifications of the four benchmark instances are summarized only at a high level in the PDF rather than tabulated in an appendix.",
+    "Scope is explicitly restricted to finite piecewise-constant rational instances and finite combinatorial/algebraic lemmas rather than formalizing continuous IVT existence or nested-bisection query termination."
+  ]
+}

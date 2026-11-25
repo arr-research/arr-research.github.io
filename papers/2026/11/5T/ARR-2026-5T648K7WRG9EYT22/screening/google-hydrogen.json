@@ -1,0 +1,60 @@
+{
+  "assessed_at": "2026-11-25T16:45:54Z",
+  "canonical_sha256": "6b433fb34cde652e39abdcddc8916cf2fc9db6eae0fdcf54516464eeda4cf863",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "Algebraic proofs in Theorems 2.1 and 2.3 (rank-d simple-vertex completeness, projective inverse via recession-ray bound c^T y < h, doubly-stochastic identities, and LP bounds) check out, and all Table 2 and Figures 1-3 numerical values (5/18..4/9, 15/64..55/192, spreads 0.1042 to 0.0033, Klee-Minty ratios) match exactly. Minor edge-case hypotheses (|V|>=1 in Thm 2.1; x(t_0)<=L_1 in Thm 2.2(2)) are omitted.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "The core disproof, clock-scheduler construction, fold-bending obstruction, and projective doubly-stochastic packing map (Corollary 14.3) are attributed to OpenAI [4] and classical Klee-Minty [2]/Santos [5] work. The manuscript's contribution is packaging 18 elementary Lean 4 integer/list lemmas with a pure-stdlib exact-Q certificate schema (POLYTOPE-DIAM-CERT-1.0) tested on small (<=64 vertex) witnesses.",
+      "stars": 2
+    },
+    "reproducibility": {
+      "basis": "Table 1 lists exact Lean 4 v4.35.0 theorem names and axioms, Table 2 details all 16 certificates with parameters, bounds, and timings (0.080-10.640 ms), and Section 4 describes 52 adversarial test cases. However, neither the Lean 4 file nor the Python verifier/certificates are embedded in the PDF, so external code execution and repository contents remain unverified from the PDF alone.",
+      "stars": 3
+    },
+    "rigor": {
+      "basis": "Exact rational arithmetic and zero-float rejection are well motivated, and Section 5 candidly states scope boundaries (not mechanizing [4]'s clock scheduler; MAX_VERTICES=256). However, Lean 4 formalizes only integer/list skeletons (Table 1) rather than Balinski connectivity, face-lattice isomorphism, recession rays, or det(B_0)!=0 uniqueness, and Theorem 2.2(2) relies on an unstated initial-position bound x(t_0)<=L_1 (while Lean Theorem 8 assumes t_1^+<=t_2^-).",
+      "stars": 3
+    },
+    "significance": {
+      "basis": "Provides a clean, modular exact-Q certification specification (Modes 1-4) and adversarial test methodology for explicit small-to-medium rational polytope diameter witnesses, projective packing bijections, and monotone simplex-pivot paths, though its MAX_VERTICES=256 cap limits Mode 1 to small prototypes rather than asymptotic or high-dimensional Hirsch counterexamples.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.4,
+  "model_id": "hydrogen",
+  "overall_stars": 3,
+  "paper_id": "ARR-2026-5T648K7WRG9EYT22",
+  "potential_errors": [
+    "Theorem 2.1 omits the non-emptiness hypothesis |V| >= 1 (if V is empty, condition (ii) holds vacuously while V != V(P)), and its phrasing cites G_1(P) connectivity/d-regularity of a 'bounded simple d-polytope' before proving V = V(P) and hence simplicity (though general polytope 1-skeleton connectivity suffices and makes the deduction non-circular).",
+    "Theorem 2.2(2) omits the endpoint/starting-position hypothesis (e.g., x(t_start) <= L_1 and x(t_end) >= R_m): without assuming the walk starts to the left of R_1, an undirected walk starting at L_2, visiting R_2, and then backtracking to cross [L_1, R_1] satisfies the stated wording yet yields t_1^+ > t_2^-. Moreover, Lean 4 Theorem 8 takes t_1^+ <= t_2^- as a hypothesis rather than proving it from continuity.",
+    "In Theorem 2.3(3), the uniqueness of the global maximum d at 1 when det(B_0) != 0 is proved in the text rather than in Lean 4 Theorems 15-16 (which Table 1 shows establish only the cleared-denominator inequality bounds 0 <= sum y_i and H sum y_i <= dH).",
+    "Theorem 2.2(1) states the affine fold-bending obstruction for real/rational polyhedra Q, whereas Lean 4 Theorem 7 formalizes the integer-coordinate case (Int) as noted in the proof."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Theorem 2.3 gives a self-contained, algebraically verified exact-Q proof of OpenAI Corollary 14.3's projective doubly-stochastic packing map Phi(x) = hx/(1 + c^T x), including the non-trivial boundedness/recession-ray argument proving h - c^T y > 0 on P_y and exact face-lattice preservation.",
+    "Theorem 2.1 cleanly prevents missing-vertex shortcut loopholes in explicit rational polytope certificates by combining rank-d non-degenerate basis checks with d-regular neighbor completeness and a 1-Lipschitz integer potential sandwich.",
+    "Internal numerical consistency across Table 2, Section 4, and Figures 1-3 is exact (e.g., 3-cube B_0 bounds [5/18, 4/9], 4D skew B_0 bounds [15/64, 55/192] matching Figure 2(a) at M=4 and spreads 0.1042 at M=2 to 0.0033 at M=64, and Klee-Minty ratios 1.5x, 2.3x, 3.8x, 6.2x, 10.5x).",
+    "Section 5 states clear, honest scope boundaries, explicitly noting that the asymptotic clock-scheduler construction of [4] is not mechanized and that Mode 1 is capped at MAX_VERTICES = 256."
+  ],
+  "strong_novelty_candidates": [
+    "Mode 1 exact-Q d-regular vertex-completeness + 1-Lipschitz potential sandwich protocol (POLYTOPE-DIAM-CERT-1.0) eliminating BFS trust and missing-vertex shortcuts for explicit rational polytopes.",
+    "Adversarial red-teaming test suite structure targeting zero-float type safety and canonical rational serialization in polytope certificates (all mathematical constructions themselves are attributed to [2, 4, 5])."
+  ],
+  "summary": "The manuscript presents a Lean 4 algebraic/combinatorial kernel (18 zero-dependency theorems over Nat/Int/List Int) paired with a pure-stdlib exact-Q Python verifier (POLYTOPE-DIAM-CERT-1.0) designed to certify small explicit rational polytope s-move diameters, projective doubly-stochastic packing isomorphisms (from OpenAI Corollary 14.3 [4]), disjoint fold-cell traversal lower bounds, and Klee-Minty monotone simplex-pivot paths. The algebraic proofs in Theorems 2.1 and 2.3 and all reported numerical figures across Table 2 and Figures 1-3 are internally consistent. At the same time, the main mathematical constructions originate in [4] and classical literature, the Lean 4 kernel verifies only elementary discrete/cleared-denominator skeletons rather than the full geometric/topological arguments, the benchmarks are restricted to small instances (<=64 vertices, Mode 1 capped at 256), and minor boundary hypotheses are omitted in Theorems 2.1 and 2.2(2).",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:039a03df-fb4f-4518-aab7-f3be1bb82fef",
+  "weaknesses": [
+    "Substantial gap between the full polytope/topological claims in Section 2 and what is actually mechanized in Lean 4 (Table 1): Balinski connectivity, simple-vertex face dimension equivalence, continuous path traversal ordering, the recession-ray bound c^T y < h, and invertibility uniqueness at 1 are proved only in prose.",
+    "Empirical validation is limited to small textbook/synthetic instances (<=32 vertices in Table 2 and 64 vertices for d=6 Klee-Minty), and Mode 1's MAX_VERTICES = 256 cap precludes certifying large or superpolynomial Hirsch counterexamples; Mode 3 certifies abstract disjoint interval parameters rather than verifying that polytope constraints force B interior bends.",
+    "Because the Lean 4 source, Python verifier, and 16 JSON certificates reside in an external repository not embedded in the PDF, execution timings, 0-sorry build status, and 52/52 adversarial attack rejections cannot be independently verified from the manuscript alone.",
+    "Theorem 18 (2^{r^2} > (2^r)^k) and Figure 1(a) model an illustrative superpolynomial function rather than OpenAI's actual asymptotic diameter bound from [4]."
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "assessed_at": "2026-11-25T16:45:54Z",
+  "canonical_sha256": "b9ab870809f7fc0e212782dec7a5a1a605a458422c418c966f02a73d83e8aca8",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All algebraic identities (Eqs. 1-3, Frobenius commutator norm 1/2 |r0 x r1|^2), off-center chord witnesses (r_lin=1/10, |x|^2=256/625, chi=0.170878, C=0.349978), qutrit erasure values (chi=0.360964, R_blind=1.360964 at e=1/2), and Caratheodory bounds (9,33,73,129) verify exactly against the PDF. Only minor specification/citation notes appear in Mode 2 and Theorem 1.3.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "Timely application of zero-dependency Lean 4 algebraic verification and zero-float exact-rational auditing (KOASHI-IMOTO-CERT-1.0) to Polloreno's Nov 2026 Koashi-Imoto visible compression criterion, though the underlying algebraic primitives (rational LDL^T, commutant linear systems, Bloch Lagrange identity) are standard.",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "The manuscript supplies exact rational Bloch vectors, mixing defects, Caratheodory counts, timing bounds (0.075-0.655 ms across 16 certificates), and explicit Lean theorem names/axiom footprints. Full source replay relies on the cited repository rather than embedded code listings.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Strong exact-rational methodology (strict JSON AST validation, LDL^T PSD checks, rational Gaussian elimination for trivial commutants) with transparent scoping in Sections 1 and 6, tempered by the fact that Lean Theorems 12-18 prove algebraic wrapper identities rather than entropy or coding theorems.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Delivers a clean, sub-millisecond, adversarial-tested verification pipeline preventing floating-point pathologies on finite-dimensional KI witnesses, though applicability is bounded by the restriction to real-symmetric rational matrices in Modes 2-3 and unformalized asymptotic converses.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 4.0,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-1YD5GXKHN68H0ASP",
+  "potential_errors": [
+    "Definition 1 Mode 2 specifies checking dim_Q{X : [X, rho_x^j] = 0 for all x} = 1 for every mixed occupied sector; restricting the inner quantifier to occupied signals (p(j|x) > 0) is necessary so unoccupied matrices with p(j|x) = 0 cannot mask commuting occupied cores.",
+    "Theorem 1.3 (p. 2) refers to 'Eq. (12) excess' without explicitly citing '[5]', whereas the manuscript itself contains only Eqs. (1)-(3)."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Exact, self-consistent mathematical and numerical derivations across all checked examples: Bloch projectors from |psi_+-> = (3, +-1)^T, t_0 = 1/6 off-center chord rates (chi = 0.170878, min(C, S(bar{omega})) = 0.349978, r_lin = 1/10, |r_0 x r_1|^2 = 256/625), qutrit erasure separation at e = 1/2 (chi = 0.360964, R_blind = 1.360964), and Frobenius commutator identity Tr([M_0, M_1]^dagger [M_0, M_1]) = 1/2 |r_0 x r_1|^2.",
+    "Sound zero-floating-point verification design in KOASHI-IMOTO-CERT-1.0 combining strict JSON AST canonicalization, exact rational LDL^T PSD verification, square-root-free rational rank-1 projectors, and field-invariant rational Gaussian elimination to verify trivial complex commutants on real-symmetric mixed sectors.",
+    "Transparent and well-calibrated scoping in Sections 1 and 6, explicitly separating the formalized finite-dimensional algebraic core from the unformalized Fawzi-Renner converse, von Neumann entropy continuity bounds, and complex-valued Mode 2/3 density matrices."
+  ],
+  "strong_novelty_candidates": [
+    "Zero-floating-point exact-rational certificate architecture (KOASHI-IMOTO-CERT-1.0) uniting rational LDL^T PSD checks, exact Kronecker direct-sum reconstruction, and trivial-commutant Gaussian elimination to certify Koashi-Imoto visible compression regimes without floating-point brittleness."
+  ],
+  "summary": "This paper presents a zero-dependency 18-theorem Lean 4 algebraic kernel (KoashiImotoHolevo.lean) and a pure-stdlib exact-rational certificate auditor (KOASHI-IMOTO-CERT-1.0) targeting the finite-dimensional algebraic structure of Polloreno's Koashi-Imoto criterion for Holevo-rate visible quantum source compression. All numerical witnesses, Bloch geometry formulas, qutrit erasure gaps, and Caratheodory bounds visible in the manuscript check out cleanly, and the authors appropriately scope out asymptotic converses and entropy continuity. Minor issues are limited to the elementary algebraic-wrapper nature of Lean Theorems 12-18 (due to lacking real analysis/entropy definitions in a zero-dependency kernel) and an imprecise 'for all x' quantifier in Definition 1 Mode 2's commutant check.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:87a78e06-8370-4794-879d-d49c041835d4",
+  "weaknesses": [
+    "Because KoashiImotoHolevo.lean uses zero external libraries (no Mathlib, reals, logarithms, or von Neumann entropy), Theorems 12-18 and Mode 4 formalize elementary algebraic/order identities on abstract variables and lists (including Nat positivity |X|d^2 + 1 >= 2) rather than the underlying information-theoretic coding or entropy inequalities.",
+    "Modes 2 and 3 restrict to real-symmetric rational density matrices (d_W <= 8 in Mode 2), excluding complex off-diagonal phases and irrational algebraic amplitudes/eigenvalues outside Mode 1.",
+    "The linear-entropy defect r_lin serves only as a zero/nonzero indicator for r_mix = 0 and does not quantitatively upper- or lower-bound r_mix in the compression rate sandwich.",
+    "The Lean 4 kernel source, Python verifier, and 57 adversarial forgery tests reside in an external repository and cannot be directly audited from the PDF alone."
+  ]
+}
