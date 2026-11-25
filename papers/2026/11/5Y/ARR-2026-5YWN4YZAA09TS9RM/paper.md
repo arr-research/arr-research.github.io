@@ -1,0 +1,334 @@
+# Exact-Q Graph State-Sum Contraction Evaluators and Machine-Checked Algebraic Kernel for Paths, Binary Trees, and Square Grids
+
+**Author:** Lluis Eriksson  
+**AIRR Identifier:** `ARR-2026-5YWN4YZAA09TS9RM` (v1)  
+**License:** CC-BY-4.0 (manuscript), MIT (verification repository)  
+**Verification Repository:** https://github.com/lluiseriksson/valiant-hierarchy-certificates (`v3.0.0`)  
+**Canonical PDF SHA-256:** `517f5ade663b8f9141aea2d0ced3ecee39398b32016290aec851004d213a380e`
+
+## Abstract
+
+Motivated by graph state-sum polynomial witnesses Z_{G,q}(X) on paths, binary trees, and square grids in algebraic complexity theory, we present an explicitly scoped, standalone, zero-floating-point verification stack pairing two layers. Layer 1 (ValiantHierarchy.lean, Lean 4.35.0; 18 theorems, 0 sorry, 0 Classical.choice, 0 warnings, 2 zero-axiom theorems) machine-checks four fixed q=2 small-graph contraction identities over Z (3-vertex path P_3 brute-force vs. x^T M z, 4-vertex path P_4 sequential/midpoint/bisection associativity, an 8-term 3-edge 4-vertex degree-3 rooted tree DP factorization, and a 16-term C_4 cycle transfer-matrix trace Tr(ABCD)) alongside 14 elementary integer/Nat/List arithmetic lemmas (q^d <= q^4, list-sum budgets, exponential growth q^{n+1} > q^n, characteristic-free 1- and 2-bit Boolean table selectors, det_2 embedding, integer exponent inequalities n^k < n^{s_1} < n^{s_2} < n^{s_3}, and graph size counts). Layer 2 (VALIANT-HIER-CERT-1.0, pure-stdlib Python Fraction) provides a fully specified four-mode auditor that evaluates general finite-order path ABP/bisection, complete binary-tree bottom-up DP, and square-grid transfer-matrix state sums over Q without floats, replays 16/16 canonical certificates in 0.049-4.319 ms (contracting 5x5 grids over 2^40 states in 4.806 ms), cross-checks all evaluators against brute-force q^E summation, and rejects 54/54 live adversarial attacks.
+
+## Full Extracted Text
+
+--- Page 1 ---
+Exact-QGraph State-Sum Contraction Evaluators and
+Machine-Checked Algebraic Kernel for Paths, Binary Trees,
+and Square Grids
+Lluis Eriksson∗
+November 25, 2026
+Abstract
+Motivated by graph state-sum polynomial witnesses
+ZG,q(X) =∑
+a∈[q]E
+∏
+v∈V Xv,a|E(v) on paths, binary trees,
+and square grids in algebraic complexity theory, we
+present an explicitly scoped, standalone, zero-floating-
+point verification stack pairing two layers. Layer 1
+(ValiantHierarchy.lean, Lean 4.35.0; 18 theorems,
+0 sorry,0 Classical.choice,0warnings, 2 zero-axiom
+theorems) machine-checks four fixedq = 2small-graph con-
+traction identities overZ (3-vertex pathP3 brute-force vs.
+(x⊤M)z,4-vertex path P4 sequential/midpoint/bisection
+associativity, an8-term3-edge4-vertex degree-3rooted tree
+DP factorization, and a16-termC4 cycle transfer-matrix
+trace Tr(ABCD)) alongside 14 elementary integer/N/list
+arithmetic lemmas (qd ≤q 4, list-sum budgets, exponen-
+tial growth qn+1 > qn, characteristic-free1- and2-bit
+Boolean selectors,det2 embedding, integer exponent chains
+nk < ns1 < ns2 < ns3 , and graph size counts). Layer 2
+(VALIANT-HIER-CERT-1.0, pure-stdlib PythonFraction)
+provides a fully specified four-mode auditor that evaluates
+general finite-order path ABP/bisection, complete binary-
+tree bottom-up DP, and square-grid transfer-matrix state
+sums overQ without floats, replays16/16canonical cer-
+tificates in0 .049–4.319 ms (contracting5 ×5grids over
+240 edge states in4 .806 ms), cross-checks all evaluators
+against brute-forceqE summation, and rejects54/54live
+adversarial attacks.
+1 Introduction and Scope Calibra-
+tion
+Valiant’s algebraic complexity classes [5, 1, 2] classify mul-
+tivariate polynomial families into formulas (VF), algebraic
+branching programs (VBP), polynomial-size circuits (VP),
+and exponential-sum projections (VNP). For any finite
+graph G = (V, E)and alphabet[ q] = {0, . . . , q−1}, the
+graph state-sum polynomial
+ZG,q(X) :=
+∑
+a∈[q]E
+∏
+v∈V
+Xv,a|E(v) (1)
+∗Independent researcher (Sweden). Manuscript and figures: CC-
+BY-4.0; code, Lean 4 proofs, and exact-Q certificates: MIT. Prepared
+with transparent AI assistance via Google Antigravity. Repository:
+https://github.com/lluiseriksson/valiant-hierarchy-certifi
+cates.
+maps directly to linear-algebraic contractions once incident
+edges at each vertexv are ordered: on a d-vertex path
+Pd (E = {e1, . . . , ed−1}), endpoint tables x, z∈Q q and
+interior degree-2vertex tables M(i)
+a,b := Xvi,(a,b) ∈Q q×q
+giveZPd,q = x⊤M(1) ···M (d−2)z; on a4-cycleC4 (the2 ×2
+square grid), degree-2vertex tablesA, B, C, D∈Qq×q give
+ZC4,q = Tr(ABCD); on a complete binary treeTL of L
+levels (2L−1vertices), leaf vectorsu∈Q q, internal degree-3
+tensors Ta,b,c ∈Q q×q×q , and the degree-2root matrixR∈
+Qq×q contract bottom-up inO(2L−1q3)operations. These
+three families motivate the border-complexity separation
+hierarchy proposed in [3, 4] (citing asymptotic exponents
+ln lnn,
+√
+ln lnn, and(lnn) 1/12).
+Honest Two-Layer Scope Calibration.All formal
+results and exact-Q algorithms in this paper are completely
+self-contained and do not rely on unrefereed external proofs:
+1. Layer 1 (Lean 4.35.0 Kernel, Table 1):Theorems 1–
+4 prove exact algebraic contraction identities for four
+fixed q = 2small graphs (P3, P4 associativity, a3-edge
+4-vertex degree-3rooted tree, and C4). Theorems 5–
+18 prove elementaryZ/N/List arithmetic inequalities,
+graph counts, and1-/2-bit Boolean selectors.
+2. Layer 2 (VALIANT-HIER-CERT-1.0 Auditor, Defini-
+tion 3.1):Evaluates general finite-order (d≤ 64, L≤
+6, r×c≤ 5 ×5) path, complete binary-tree, and
+square-grid state sums over exact Q without floats,
+cross-checked against brute-force qE summation in
+tests/test_suite.py.
+3. Explicit Non-Claims:Our Lean 4 kernel doesnotfor-
+malize general graphs, arbitrary(d, L, n, q)state sums,
+ABPs, circuits, formulas, or Valiant’s complexity classes
+(VF,VBP,VP,VNP ), nor does it formalize the border-
+complexity lower bounds of [3, 4]. Note also that
+Lean Theorem 2 proves P4 parenthesization associa-
+tivity(( x⊤A)B)z = (x⊤A)(Bz) = (x⊤(AB))z, while
+equivalence with brute-forceqE enumeration ford≥ 4
+is checked in Python.
+1
+
+--- Page 2 ---
+2 Machine-Checked Lean 4.35.0
+Kernel
+lean/ValiantHierarchy.lean compiles standalone un-
+der Lean 4.35.0 with0external dependencies,0 sorry,
+0 Classical.choice, and0warnings: 2 zero-axiom the-
+orems (none: #5, #9) and 16 [propext, Quot.sound]
+theorems (Table 1).
+3 Specification of
+VALIANT-HIER-CERT-1.0
+The pure-stdlib zero-float verifier
+src/valiant_certifier.py enforces strict JSON
+typing and canonical reduced rationals across four modes:
+Definition 3.1( VALIANT-HIER-CERT-1.0 Acceptance
+Predicates).A certificate is accepted iff its schema, mode,
+and exact rational fields satisfy:
+1. Mode 1 (path_abp_vs_bisection_exact):Given d∈
+[3, 64], q∈ [2, 8], endpoint vectorsx, z∈Q q, andd−2
+interior transition matrices M(1), . . . , M(d−2) ∈Q q×q
+(having( d−2)q2 interior matrix entries, plus2q endpoint
+boundary weights), independently evaluatesZPd,q by
+left-to-right sequential ABP multiplication and divide-
+and-conquer binary matrix-product bisection, requiring
+exact equality withclaimed_state_sum.
+2. Mode 2 (binary_tree_circuit_dp_exact):Given
+complete binary tree depth L∈ [2, 6](2 L−1 leaves,
+2L−1 −2non-root internal nodes,2 L −1total vertices),
+q∈ [2, 5], leaf vectors∈Q q, internalq×q×q tensors,
+and root matrix∈Q q×q (whose non-leaf DP vertex-table
+entry count isq2 +(2L−1 −2)q3, distinct from arithmetic
+gate count which counts both multiplications and addi-
+tions per entry), computes exact bottom-up DP contrac-
+tion and checks equality withclaimed_state_sum.
+3. Mode 3 (grid_transfer_vnp_exact):Given r, c∈
+[2, 5], q∈ [2, 3], and vertex tablesX(i,j) ∈Q qdeg(i,j)
+for
+all rc vertices (deg≤ 4), contracts column-by-column
+over theqr-dimensional boundary frontier and verifies
+exact equality withclaimed_state_sum.
+4. Mode 4 (hierarchy_separation_barrier_exact ):
+Verifies the characteristic-free2-bit selector identity on
+a4-entry rational table[ t00, t01, t10, t11], computes exact
+grid edge count2 n(n− 1)and complete tree vertex
+count2 L −1for supplied( n, L), and checks a finite
+synthetic integer exponent proxy chain1 ≤k < s1 <
+s2 < s3 ≤24satisfying bk < bs1 < bs2 < bs3 (with b∈
+[2, 64]). As shown in Fig. 1(a), overlog2 n∈ [16, 1024]
+the three transcendental reference curves from [3] behave
+differently relative to k = 2: ln lnn already exceeds
+2across the entire domain (2.406 →6.565),
+√
+ln lnn
+crosses2at log2 n = e4/ln 2 ≈78.8(1 .551 →2.562), and
+only( lnn )1/12 remains below2(1 .222 →1.728, crossing
+2at lnn = 212 = 4096, i.e.,log2 n≈ 5909). Mode 4 does
+not evaluate those irrational exponents; it strictly audits
+Figure 1: (a) Reference exponents from [3] vs.k = 2for
+log2 n∈ [16, 1024]: ln lnn∈ [2.41, 6.57] > 2throughout,√
+ln lnn crosses2near log2 n≈ 78.8, and( lnn )1/12 ∈
+[1.22, 1.73]crosses2at log2 n≈ 5909. (b) Grid edge assign-
+ments2 2n(n−1) vs. exact transfer-matrix frontier2n.
+Figure 2: (a) Matched-vertex exact-Q replay latency for
+paths and complete binary trees (q = 3). (b) Exponential
+transfer-frontier cost onn×n square grids (2×2 →5×5, q=
+2).
+finite integer monotonicity chainsbk < bs1 < bs2 < bs3
+matching Lean Theorems 15–16.
+4 Experiments, Atlas, and Red-
+Team Audit
+All experiments (scripts/run_all_experiments.py) re-
+produce via python scripts/verify_all.py. Table 2
+lists all16canonical certificates—including the ex-
+act unrounded rational values of path_d24_q5 and
+tree_L5_q3—replayed in0.049–4.319 ms (with5 ×5grids
+over2 40 = 1,099,511,627,776edge assignments contract-
+ing in4 .806 ms). Figures 1–3 illustrate asymptotic expo-
+nent curves, grid state-space growth vs. frontier dimen-
+sion2 n, matched-vertex replay scaling, and atlas latencies.
+tests/test_suite.py cross-checks all evaluators against
+brute-force qE summation (P5, T2, T3,Grid 2×3,Grid 3×3 up
+to4096states including degree-4interior vertices) and
+rejects54/54live adversarial forgeries.
+5 Worked Exact-Q Witnesses and
+Red-Team Taxonomy
+To enable direct hand verification from the manuscript
+alone, we reproduce one complete canonical input witness
+per mode from results/certificates/ alongside the
+2
+
+--- Page 3 ---
+Table 1: Complete 18-theorem Lean 4.35.0 kernel inlean/ValiantHierarchy.lean (0 sorry,0 Classical.choice,
+0warnings;P,Qabbreviates[propext, Quot.sound]).
+# Lean 4 Theorem Identifier Exact Machine-Checked Statement & Hypotheses Axioms
+1path3_state_sum_bilinearFixedq=2,P 3: brute-force4-term edge sumZ P3,2(x, M, z) = (x⊤M)zoverZ.P,Q
+2path4_abp_bisection_assocFixedq=2,P 4:((x ⊤A)B)z= (x⊤(AB))z∧(x ⊤A)(Bz) = (x⊤(AB))zoverZ.P,Q
+3tree_state_sum_dp_factorization Fixed q=2,3-edge4-vertex degree-3rooted tree:8-term edge sum=factored DP over
+Z.
+P,Q
+4grid2x2_state_sum_traceFixedq=2,C 4 (2×2cycle):16-term edge sum= Tr(ABCD)overZ.P,Q
+5grid_vertex_table_degree_bound∀q, d∈N, q≥1∧d≤4 =⇒q d ≤q 4 (arithmetic power monotonicity).none
+6path3_multilinearity_scaleFixedq=2,P 3: scaling middle matrixMbyk∈ZscalesZ P3,2 byk.P,Q
+7disconnected_state_sum_product∀a i, bi, ci, di ∈Z , a0b0c0d0+a0b0c1d1+a1b1c0d0+a1b1c1d1 =
+(a0b0+a1b1)(c0d0+c1d1)(Z K2⊔K2,2).
+P,Q
+8abp_layer_edge_budget_listInductiveList Nat:Lentries each≤q 2 =⇒
+∑
+≤Lq 2.P,Q
+9formula_bisection_power_step∀q, k∈N, q k+1 =q·q k ∧2 k+1 = 2·2 k.none
+10tree_circuit_gate_budget_listInductiveList Nat:Ventries each≤q 3 =⇒
+∑
+≤V q3.P,Q
+11grid_transfer_space_exp_growth∀q, n∈N, q≥2 =⇒q n+1 > qn.P,Q
+12vnp_char_free_1bit_selector∀b∈{0,1}, t 0, t1 ∈Z,(1−b)t 0 +bt 1 = (ifb= 0thent 0 elset 1).P,Q
+13vnp_char_free_2bit_selector∀b 0, b1 ∈{0,1}, t 00..11 ∈Z, bilinear selector recovers exact table entrytb0b1 .P,Q
+14det2_signed_path_embedding∀a ij ∈Z, signed2-path contraction equalsa 00a11 −a 01a10.P,Q
+15hierarchy_strict_exp_chain∀n≥2, s 1 < s2 < s3 ∈N, n s1 < ns2 ∧n s2 < ns3 .P,Q
+16superpoly_beats_fixed_poly∀n≥2, s > k∈N, n s > nk (elementary integer exponent monotonicity).P,Q
+17grid_edge_count_exact∀n∈N, n(n−1) +n(n−1) = 2n(n−1)(n×ngrid edge count).P,Q
+18binary_tree_vertex_recurrence∀L∈N,2(2 L −1) + 1 = 2L+1 −1(complete binary tree vertex count).P,Q
+Table 2: Atlas of16exact- QVALIANT-HIER-CERT-1.0
+certificates (results/exp1_certified_atlas.json; all 16
+verified).
+Certificate File M Certified Exact-QWitness Summary ms
+path_d4_q2M1P 4, q=2(8 int. entries,+4end):Z=−271/20.095
+path_d8_q3M1P 8, q=3(54 int. entries,+6end):Z=−26737/160.333
+path_d16_q4M1P 16, q=4(224 int. entries):−214025144665/5121.419
+path_d24_q5M1P 24, q=5(550 int.):265230714110774371/2564.319
+tree_L2_q2M2T 2, q=2(3 verts, 4 DP entries):Z=−670.050
+tree_L3_q2M2T 3, q=2(7 verts, 20 DP entries):Z=−463/20.134
+tree_L4_q3M2T 4, q=3(15 verts, 171 DP entries):65190677/320.605
+tree_L5_q3M2T 5, q=3(31 verts, 387 DP):−188739623287773875/327681.059
+grid_2x2_q2M32×2, q=2(4 edges, frontier 4):Z=20.104
+grid_3x3_q2M33×3, q=2(12 edges, frontier 8):Z=3760.374
+grid_4x4_q2M34×4, q=2(24 edges, frontier 16):Z=2366881.420
+grid_3x3_q3M33×3, q=3(12 edges, frontier 27):Z=−27092.183
+hier_barrier_n4M4 Proxy(n=4, L=4):E=24, V=15,2<3<5<80.058
+hier_barrier_n8M4 Proxy(n=8, L=6):E=112, V=63,3<5<8<120.056
+hier_barrier_n16M4 Proxy(n=16, L=8):E=480, V=255,4<6<10<150.049
+hier_barrier_n32M4 Proxy(n=32, L=10):E=1984, V=1023,5<8<13<200.063
+54-attack taxonomy intests/test_suite.py:
+1. Mode 1 (path_d4_q2 ): x = (−3,−4)⊤, M(1) =(3 2
+−1−3
+)
+, M(2) =
+(2 1/2
+−3−4
+)
+, z = (2, 3)⊤. SequentialABP:
+x⊤M(1) = (−5, 6),( −5, 6)M(2) = (−28,−53/2), inner
+product withz gives −56 −159/2 =−271/2. Bisection:
+M(1)M(2) =
+(0−13/2
+7 23/2
+)
+,x ⊤(M(1)M(2))z=−271/2.
+2. Mode 2 (tree_L2_q2 ):Leaves u0 = (−4, 2)⊤, u1 =
+(−1,−3)⊤, root matrix R =
+(−3−4
+2 1/2
+)
+, empty inter-
+nal tensors. Exact DP: u⊤
+0 Ru1 = (−4)(−3)(−1) +
+(−4)(−4)(−3) + (2)(2)(−1) + (2)(1/2)(−3) = −12 −
+48−4−3 =−67.
+3. Mode 3 (grid_2x2_q2):2 ×2grid (q = 2, 4 edges) with
+vertex tables indexed by ordered incident edges (up, left,
+down, right): X0,0 = [2, 0,−2, 1], X0,1 = [−1, 2, 0,−2],
+X1,0 = [−2, 1,−1, 2], X1,1 = [0,−2, 1,−1]. Exact 16-
+term sum / column transfer contraction yieldsZ= 2.
+4. Mode 4 (hier_barrier_n4 ):2-bit selector table
+[t00, t01, t10, t11] = [3,−5, 7, 11],( n, L) = (4, 4)giving
+E = 2·4·3 = 24andV = 24−1 = 15, baseb = 4, andinte-
+ger chain4 2 = 16<4 3 = 64<4 5 = 1024<4 8 = 65536.
+Figure 3: (a) Zero-float replay latencies across all
+16 VALIANT-HIER-CERT-1.0 certificates (0.049–4.319 ms).
+(b) Balanced 4-per-mode coverage.
+Adversarial Red-Team Taxonomy (54/54 Rejected).
+tests/test_suite.py exercises five live forgery classes:
+Group A (16 schema/type/rational attacks):non-
+dict root, wrong schema, unknown mode, extra/missing
+keys, float/bool/Decimal/complex/tuple injection, non-
+string key, unreduced fraction ("2/4"), denominator-1
+("1/1"), negative zero ("-0"), non-string/empty name;
+Group B (10 Mode 1): d < 3or d > 64,
+q < 2or q > 8, wrong matrix/vector counts or
+shapes, forgedclaimed_state_sum, tampered matrix en-
+try;Group C (10 Mode 2): L < 2or L > 6, q < 2,
+wrong leaf/internal/root shapes, forged sum, tampered
+leaf/internal/root entry;Group D (9 Mode 3):r <2,
+c < 2, q /∈[2, 3], missing/extra vertex key, wrong table
+length, forged sum, tampered table value;Group E (9
+Mode 4):wrong selector length, n < 2, L < 2, b < 2,
+k = 0, non-strict chain (s1 ≤k , s2 ≤s 1, s3 ≤s 2), and
+s3 >24.
+6 Conclusion
+We delivered an explicitly scoped 18-theorem Lean 4.35.0
+kernel for fixed q = 2small-graph contraction
+3
+
+--- Page 4 ---
+identities and elementary arithmetic bounds, paired
+with the fully specified zero-float state-sum evaluator
+VALIANT-HIER-CERT-1.0, 16 canonical certificates with ex-
+act rational outputs (four worked explicitly by hand in
+Section 5), brute-forceqE cross-checks, and 54/54 live ad-
+versarial rejections.
+References
+[1] Peter Bürgisser.Completeness and Reduction in Alge-
+braic Complexity Theory. Springer, 2000.
+[2] Noam Nisan. Lower bounds for non-commutative com-
+putation. InProceedings of the 23rd Annual ACM
+Symposium on Theory of Computing (STOC), pages
+410–418, 1991.
+[3] OpenAI. Paths, treesandgridsseparateValiant’shierar-
+chy. OpenAI Math Preprint (openai/math), November
+24, 2026.
+[4] OpenAI. VP and VNP are different. OpenAI Math
+Preprint (openai/math), November 23, 2026.
+[5] Leslie G. Valiant. Completeness classes in algebra. In
+Proceedings of the 11th Annual ACM Symposium on
+Theory of Computing (STOC), pages 249–261, 1979.
+4

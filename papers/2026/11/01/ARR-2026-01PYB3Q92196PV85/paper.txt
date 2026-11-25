@@ -1,0 +1,396 @@
+--- Page 1 ---
+Constructive Lean 4 Kernel and Exact Zero-Float Certificates
+for Google Research Cogentic’s Linear-Density Edge
+Reconstruction Theorem
+Lluis Eriksson∗
+November 25, 2026
+Abstract
+Google Research’s Cogentic framework (Nov. 25, 2026)
+proved unconditionally that every finite simple undirected
+graph G0 on n0 ≥ 4vertices with m = |E(G0)| ≥
+1000 n0 edges (or minimum degree δ(G0) ≥ 2000) is
+uniquely determined up to isomorphism by its edge-deck
+DE(G0) = {{[G0 −e] : e∈E (G0)}}, lowering Vladimír
+Müller’s five-decade m > n0 log2 n0 threshold to linear
+edge density with no logarithmic or iterated-logarithmic
+factors. We present an explicitly scoped, standalone, zero-
+floating-point verification stack for the discrete, struc-
+tural, algebraic, and group-theoretic pillars of this theorem.
+Layer 1 (CogenticEdgeRecon.lean ) proves 18 construc-
+tive Lean 4.35.0 theorems (zerosorry, zero axiom, zero
+Classical.choice, zero warnings; 5 zero-axiomnone and
+13 [propext, Quot.sound]) mechanizing Corollary 1.2,
+Theorem 1.1 vacuity on n0 ≤ 2000, universal Müller
+2 ·n! < nn, Remark 1.3’s¯d= 8spanning-tree barrier, in-
+ductive DecTree Kraft bounds, Lemma 2.4 rational bounds,
+Lemma 3.1 bridge counts and0.15m margin, Lemma 3.3
+geometric sums and10 −34 tail, Theorem 4.2 t=1ratio
+decay and 2-variable shift-invariant duality, Lemma 4.3 pi-
+geonhole isolation, Lemma 5.1 Chebyshev primorials and
+universal Legendre valuations, Proposition 8.42/5-sampling
+and degree-excess conservation, and Section 9 final contra-
+diction closure. Layer 2 (EDGERECON-COGENTIC-CERT-1
+.0) is a pure-stdlib Pythonint/Fraction auditor across
+four modes that verifies 16 canonical witnesses in0.192–
+28.989 ms (including Harary’s sharpm≤ 3pairs, multi-
+scale Kruskal trees, 120-term Vandermonde band isola-
+tion, wreath-product bridge groups, and super-exponential
+n0 = 21005 beyond Müller) and rejects 62/62 live adver-
+sarial forgeries with exact branch assertions (66/66 pytest
+checks).
+∗Independent Researcher. Code, Lean 4 proofs, and certificates:
+MIT License; manuscript and figures: CC-BY-4.0. Prepared with
+transparent AI coding, formalization, and drafting assistance via
+Google Antigravity; all Lean 4 theorems, exact zero-float verifiers,
+and adversarial tests were independently compiled and verified locally.
+Repository: github.com/lluiseriksson/cogentic-edge-reconstru
+ction-certificates.
+1 Introduction and Scope Calibra-
+tion
+Harary’s 1964 Edge Reconstruction Conjecture [4] asserts
+that every finite simple undirected graphG0 with m≥ 4
+edges is determined up to isomorphism by its edge-deck
+DE(G0)(sharp at m≤ 3via2 K2 vs. K1,2 ⊔K1 and K3 ⊔K1
+vs. K1,3). Following Lovász [5] (m> 1
+2
+(n
+2
+)
+) and Müller [6]
+(2m−1 >n!, hencem>nlog 2 n), the general density bound
+stood atnlog 2 nfor 49 years until Google Research’s Cogen-
+tic monograph [2] proved Theorem 1.1 (m≥ 1000 n0) and
+Corollary 1.2 (δ(G0) ≥2000) via three coupled mechanisms:
+1. Single Kruskal MST multi-scale reduction
+(Sec. 3):A single lexicographic degree-ordered Kruskal
+MST( T,≺V)across dyadic cutoffs∆ k = 2k⌈2¯d/16⌉re-
+stricts simultaneously to a spanning forest onG[V<∆k ],
+bounds bridges |B∆k | ≤ |Hk|− 1, assigns a canoni-
+cal parent u(T)per non-bridge class T ∈ Fk, yields
+|Aut(G)|≥ ∏
+k
+∏
+T ˜wT!, and forces>0.15m bits of low-
+multiplicity entropy.
+2. Shift-invariant polynomial decay & bridge rigidity
+(Sec. 4–5):Charlier duality bounds ∥P∥1/|[yv]P|≥
+(t+ 1)N0/(200t) (and(2 /
+√
+3)N0 at t=1) whenDI(P) ≡0,
+paired with Lemma 4.3 band isolation and Lemma 5.1
+bridge rigidity|QD|≤(16∆) |WD\S|.
+3.Pillars I–III contraction &2/5-sampling (Sec. 6–
+9):Gap-freeΦ ∆(F) = ∑
+xmax(0,dF(x)−∆+1)internal-
+edge polynomials, twin-quotient orbit freezing, and Pil-
+lar III2 /5-sampling with exact degree-excess conserva-
+tion ∑
+u∈Hk−1
+(dG(u) −dK0 (u)) = r|W0|drive all three
+entropy budgets below10−59m, contradicting0.15m.
+Honest Two-Layer Verification Scope.
+1. Layer 1 (Lean 4.35.0 Kernel):lean/CogenticEdgeR
+econ.lean proves 18 standalone constructive theorems
+(Table 1) covering Corollary 1.2, Theorem 1.1 vacuity,
+universal Müller2 ·n! <nn, Remark 1.3’s¯d= 8barrier,
+inductive DecTree Kraft leaf bounds, Lemma 3.1 bridge
+counts, Lemma 3.3 dyadic series, Theorem 4.2t=1ratio
+and 2-variable duality, Lemma 4.3 pigeonhole isolation,
+Lemma 5.1 Chebyshev primorials and universal Legendre
+valuations, Proposition 8.4 sampling/conservation, and
+Section 9 contradiction closure.
+1
+
+--- Page 2 ---
+2. Layer 2 (Exact Zero-Float Auditor):EDGERECON-C
+OGENTIC-CERT-1.0 certifies finite exact graph pairs,
+multi-scale Kruskal MSTs, Q-rational shift-invariant
+polynomials/Charlier coefficients/band isolations, exact
+bridge restriction groupsQD, Pillar III slices, and Theo-
+rem 1.1 vs. Müller regimes.
+3. Explicit Non-Claims:We donotformalize in
+Lean 4 Greenwell’s edge-to-vertex deck theorem [3],
+van der Corput oscillatory integrals/BesselJu estimates
+(Lemma 4.1(2)–(3)), the Lie-bracket commutator in-
+duction on internal-edge polynomials (Section 6), twin-
+quotient cumulative-base chains (Section 7), or proba-
+bilisticChebyshevhubpruning(Section8); thoseanalytic
+and global combinatorial pillars remain in [2].
+2 Constructive Lean 4.35.0 Kernel
+lean/CogenticEdgeRecon.lean compiles in2 .4 sunder
+Lean 4.35.0 [1] with zero external imports, zero warnings,
+zero sorry, and zero Classical.choice. Auditing via
+AuditAxioms.lean confirms 5 zero-axiom theorems (none:
+#4, #6, #8, #10, #16) and 13[propext, Quot.sound]
+theorems (P,Q; Table 1).
+Proposition 1(Constructive Lean 4 Kernel Scope).All
+18 statements in Table 1 compile constructively under
+Lean 4.35.0 without external libraries or classical ax-
+ioms (Classical.choice). Notably, Theorem 3 proves
+2 ·n! < nn universally for alln≥ 4, Theorem 5 proves
+leafCountt≤maxWeightt by structural induction on ar-
+bitrary finite branching trees, Theorem 13 proves the exact
+List Nat pigeonhole-equality lemma underlying Lemma 4.3
+band isolation, and Theorem 15 proves(p−1) ordp(R!) ≤R
+universally for allp≥2and truncation depthss∈N.
+3 Exact Zero-Float Certificate Au-
+ditor
+The modules edgerecon_exact.py and edgerecon_
+certifier.py (under src/) use exclusively Python
+int, fractions.Fraction, and exact integer math.
+comb/factorial (statically audited viaast.walk for zero
+float/complex literals and zero floating-point imports).
+Raw JSON loading enforces strict duplicate-key rejection
+(object_pairs_hook), rejects floats and NaN/Infinity
+(parse_float/parse_constant), caps nesting depth at 16,
+and validates ASCII-only integer/rational strings.
+Definition 1( EDGERECON-COGENTIC-CERT-1.0 Predi-
+cates).A certificate with schema_version="EDGERECON-
+COGENTIC-CERT-1.0" is accepted iff every claimed invari-
+ant matches exact recomputation and its mode predicate
+holds:
+• Mode 1 (edge_deck_hypomorphism_and_kelly):Val-
+idates simple graphs G,H (4 ≤n≤ 10, no
+loops/duplicates), computes exact|Aut(G)|, |Aut(H)|,
+exact edge-deckDE and vertex-deckDmultiset equality
+Figure 1:(a)Average-degree thresholds2 m/n: Müller
+(2 log2 n) vs. Cogentic (¯d≥ 2000), crossing at log2 n =
+1000.(b)Remark 1.3 spanning-tree barrier: d/2−1crosses
+log2(d−1)atd ∗≈7.32andlog 2 dat exact rootd= 8.
+via 1-WL-pruned backtracking isomorphism, enforces ver-
+dict semantics (NON_ISOMORPHIC_COUNTEREXAMPLE only
+at m≤ 3, ISOMORPHIC_DECK_MATCH with verified bijec-
+tion φ, orDECK_MISMATCH), checks Greenwell’s isolate-
+free reduction, verifies exactZ edge-Kelly and vertex-
+Kelly sums across all listed patterns, and audits Müller’s
+2m−1 >n!.
+• Mode 2 (kruskal_multiscale_rigidity_cert):Ver-
+ifies degree-monotone vertex order≺V, independently
+computes the unique lexicographic Kruskal MST(T,≺V
+), audits at every scale∆ k Lemma 3.1(1a) span-
+ning forest on G[Bk], (1b) |B∆k| ≤ |Hk|− 1and
+|E(Tcore[∆k])|≤ 2|Hk|−2, (1c) canonical parentu(C) =
+min≺V (NG(C) ∩Hk), exact2 Hk-labeled class multiplic-
+ities ˜wT, Lemma 3.1(2) subgroup product ∏ ˜wT! |
+|Aut(G)|, and Lemma 6.1(1) exact dropsΦ ∆(G) −
+Φ∆(G−e) =|e∩H k|.
+• Mode 3 ( shift_invariant_charlier_band_cert):
+Parses sparse exact-Q homogeneous P∈Q [y1,...,y M]
+of degreeN0, certifies exact shift-invarianceDI(P) ≡0,
+verifies exact ratio ρ = ∥P∥1/|[yv]P| against Theo-
+rem 4.2 (ρ200t ≥(t+ 1)N0 and ρ23N0 ≥4N0 at t=1),
+verifies Lemma 4.1(1) exact rational Charlier bound
+|Id,k(r; 1/(2r))|≤ 1 −11d
+24r for0 ≤k≤k max, and op-
+tionally executes Lemma 4.3 band isolation Fmid =
+C−1
+const[yγhi
+Ihi ]Hw(P), certifying Ilo-independence, coeffi-
+cient preservation,∥Fmid∥1 ≤∥P∥1, andDImid (Fmid) ≡
+0.
+• Mode 4 ( bridge_rigidity_and_density_audit):
+Computes the exact bridge restriction group QD ≤
+Sym(WD \S )of Lemma 5.1(2) ( |WD \S| ≤8), ver-
+ifying every prime p| |Q D| satisfies p < ∆and
+|QD|≤ (16∆)R; audits Theorem 1.1 regimes (VACUOUS_
+SIMPLE_GRAPH_CAP, ACTIVE_LINEAR_DENSITY, BELOW_
+1000N_THRESHOLD) and exact2 m0−1 vs. nn0
+0 ; and op-
+tionally audits Pillar III twin classes of size∈{1,2}with
+r< ∆k−1 and pairwise-distinct open neighborhoods (≥
+3/8selected), half-degree preservation2 dK0 (x) ≥dG(x),
+and exact degree-excess conservation∑
+u∈Hk−1
+(dG(u) −
+dK0 (u)) =r|W0|.
+2
+
+--- Page 3 ---
+Table 1: Complete inventory of all 18 constructive Lean 4.35.0 theorems inlean/CogenticEdgeRecon.lean (zero sorry,
+zero axiom, zeroClassical.choice, zero warnings;none for #4, #6, #8, #10, #16 and[propext, Quot.sound] (P,Q)
+for the remaining 13).
+# Theorem Identifier Ref. [2] Exact Machine-Checked Statement & Hypotheses Ax.
+1cor12_min_degree_implies_linear_densityCor. 1.2∀ds:List Nat,AllGe2000ds=⇒2000·ds.length≤sumNatds.P,Q
+2thm11_vacuous_small_nThm. 1.1∀n 0 ∈N,1≤n 0 ∧n0 ≤2000 =⇒n 0(n0 −1)/2<1000n 0.P,Q
+3lem22_muller_factorial_boundLem. 2.2∀n≥4,2·n!<n n (universal induction onk=n−4).P,Q
+4rem13_spanning_tree_barrier_at_d8Rem. 1.32 3 = 8,2 d−2 <d2 ford∈{3,4,5,6,7}, and9 2 <2 7 (exact ¯d= 8root).none
+5lem24_decision_tree_kraft_inductiveLem. 2.4 Structural induction onDecTree:∀t,leafCountt≤maxWeightt.P,Q
+6lem24_numerical_e_ln2_pi_rationalLem. 2.4 271·60 <163·100,1631 ·100 <272·600,693 ·1215 <842·103,311 ·648 <2020·100,
+1684 <8·10 8,4 3 >2·3 3,2 10 >4·3 5.
+none
+7lem31_bridge_count_boundLem. 3.11≤h, e core =h+b−1,2b≤e core =⇒b≤h−1∧e core ≤2h−2.P,Q
+8lem31_nonbridge_entropy_marginLem. 3.1 1000−252−10−160 = 578,578 −250−20 = 308 > 150,47 ·100 < 16·300,
+300·272<100·1024.
+none
+9lem33_dyadic_sum_geometricLem. 3.3∀d 0 ≥1, r∈N,dyadicSumd 0 r+d 0 = 2(d02r)∧dyadicSumd 0 r<2(d 02r).P,Q
+10lem33_tail_error_10_neg_34Lem. 3.34·127<2 9,10 3 <2 10, and10 34 <2 116 (exact tail-error domination).none
+11lem42_t1_charlier_ratio_decayThm. 4.2∀k≥2,(2k+ 1) 2 <3(2k−1) 2 (certifying(2k+ 1)/((2k−1)
+√
+3)<1).P,Q
+12lem42_charlier_duality_2varThm. 4.2 2c0+c1 = 0∧c1+2c2 = 0 =⇒c 1 = −2c0, c2 = c0, annihilates allau1+bu2+d. P,Q
+13lem43_band_localization_partitionLem. 4.3 Pointwise u≥w with equal sums
+∑
+u =
+∑
+w =⇒u = w (exact List Nat
+induction).
+P,Q
+14lem51_chebyshev_primorial_stepLem. 5.1∀k∈N,4 k+1 ·4 k = 42k+1 ∧6 4 <12 3.P,Q
+15lem51_legendre_valuation_boundLem. 5.1∀p≥2, s,R∈N,(p−1)·
+∑s
+j=1⌊R/pj⌋≤R(universal induction).P,Q
+16prop84_chebyshev_sampling_3_8Prop. 8.42·8−1 = 3·5(2/5−1/40 = 3/8),384·40<40000,800<3·92·3.none
+17prop84_degree_excess_conservationProp. 8.4∀r,n W ∈N,
+∑
+replicate(nW ,r) =rn W and10 6 <8·200·693.P,Q
+18sec9_final_contradiction_closureSec. 9m≥ 4000, 15m·1032 < (S1+S2)1034, S1,E3,Wsum < m/1034, S2 ≤
+m
+1034 +E3+Wsum =⇒ ⊥.
+P,Q
+Figure 2:(a)Exact rational Charlier profiles |Id,k|peaking
+at k= dstrictly below Lemma 4.1(1)’s bound1−11d/(24r).
+(b)Lemma 5.1 prime sum∑
+p≤∆ ln(p)/(p−1)vs. ln(16∆)
+across∆∈[2,2000].
+4 Exact Findings, Worked Wit-
+nesses, and Audit
+All experiments ran locally on Windows 11 (Python 3.12.6,
+Lean 4.35.0; 7-run means after warm-up).
+1. Linear-Density Crossover, Remark 1.3 Barrier &
+Charlier/Bridge Bounds (Figs. 1–2).Theorem 1.1 is
+vacuous forn0 ≤2000(
+(2000
+2
+)
+= 1,999,000 <2,000,000), ac-
+tivates at n0 = 2001( K2001 has exact m0 = 2,001,000),
+and strictly beats Müller’s n0 log2 n0 for all log2 n0 >
+1000—certified verbatim atn0 = 21005,m0 = 1000 n0 (C16,
+where2 m0−1 <nn0
+0 yet Theorem 1.1 holds). Exact rational
+Charlier profiles (Fig. 2a) confirm tight positive margins
+across( d,r) ∈{(1,6),(2,8),(3,10),(4,12),(5,16),(7,20)},
+e.g., at( d,r) = (1 ,6)peaking at |I1,1| = 11 /12 =
+0.91667 < 133/144 = 0 .92361, and at(7 ,20)peaking at
+|I7,7|= 0 .83147 < 403/480 = 0 .83958. The Lemma 5.1
+prime sum grows from0.69315(∆ = 2, slack2 .77259) to
+7.04814<ln 32000 = 10.37349(∆ = 2000, slack3.32535).
+Figure 3:(a)Mean zero-float verification latency across
+all 16 canonical certificates (0.192–28.989 ms, log scale).
+(b)Live adversarial red-team audit rejecting 62/62 forgeries
+across five attack classes with exact error-branch assertions.
+2. Hand-Verifiable Worked Exact Witnesses (One
+per Mode).To ensure complete standalone auditability
+directly from this manuscript:
+• Mode 1 (C02, m=3Harary pair): G = K3 ⊔K1
+(EG = {(0,1),(1,2),(0,2)}, degs(0 ,2,2,2), |Aut|= 6)
+vs.H = K1,3 (EH = {(0,1),(0,2),(0,3)}, degs(1,1,1,3),
+|Aut| = 6). Deleting any edge yields K1,2 ⊔K1, so
+DE(G) = DE(H)while D(G) ̸= D(H); edge-Kelly gives
+(3 −1) ·s(K2,G) = 6 = ∑
+e2and(3 −2) ·s(P3,G) =
+3 = ∑
+e1.
+• Mode 2 (C05, n=12,m= 15):Triangle hubs {0,1,2}
+(all deg 5), three twinK2-pendants {(3,4),(5,6),(7,8)}
+attached to hub 0, and three degree-2 twins{9,10,11}
+adjacent to{1,2}. At∆ 0 = 3( H0 = {0,1,2}), Kruskal
+selects {9}as the sole bridge (1≤|H 0|− 1 = 2, core
+edges3 ≤4), leaving 3 twinK2-pendants on hub 0 (3!)
+and 2 non-bridge{1,2}-twins (2!), certifying3!·2! = 12 |
+72 =|Aut(G)|, with 3 internalΦ3-zero-drop edges.
+• Mode 3 ( C11, 4-var Vandermonde): P =∏
+0≤i<j≤3(yi−yj)has N0 = 6, 24 terms (±1), DI(P) ≡
+3
+
+--- Page 4 ---
+Table 2: Canonical 16-certificateEDGERECON-COGENTIC-C
+ERT-1.0 atlas (results/exp1_certificate_atlas.json;
+all 16 verified).
+Certificate ID M Exact Certified Witness Summary ms
+m1_harary_m2_counterexampleM12K2 vs.K1,2⊔K1:DE=,D̸=,|Aut|=8,20.384
+m1_harary_m3_counterexampleM1K3 ⊔K1 vs.K1,3:DE=,D̸=,|Aut|=6,60.743
+m1_muller_dense_n6_iso_kellyM1n=6,m=11:210>6!, 5 KellyZ-ids ok 28.989
+m1_harary_m5_deck_distinguishedM1C5 vs. lollipop (m=5):DE̸=, 4 Kelly ok 2.730
+m2_kruskal_n12_hub_twins_exact_autM2n=12,m=15:∏˜w!=12|72,Φ3: 3 int. 0.761
+m2_kruskal_n14_two_tier_dyadicM2n=14,m=17: 2 scales,12|96,Φ3: 4 int. 0.827
+m2_kruskal_n24_three_tier_dyadicM2n=24,m=31: 3 scales,∏˜w!=1728,Φ6 ok 0.697
+m2_kruskal_n20_dual_cliques_bridgesM2n=20,m=32: 2 scales,∏˜w!=576,Φ3 ok 0.532
+m3_shift_t1_multilinear_n2M3M=4,N0=2,t=1:ρ=4,|I1,1|=11/120.204
+m3_shift_t1_multilinear_n4M3M=8,N0=4,t=1:ρ=16,|I3,3|<69/800.558
+m3_vandermonde4_lemma43_bandM3V4 (N0=6): band[1,2]→deg-1,∥Fmid∥1=20.763
+m3_vandermonde5_lemma43_bandM3V5 (N0=10): band[1,3]→deg-3,∥Fmid∥1=62.362
+m4_bridge_d4_wreath48_vacuous2000M4∆=4,R=6,|QD|=48;n0=2000vacuous 0.218
+m4_bridge_d5_pillar3_r2_active2001M4∆=5,|QD|=6; P3r=2, exc. 8;n0=20010.192
+m4_bridge_d6_pillar3_r3_active1e6M4∆=6,|QD|=24; P3r=3, exc. 12;n0=106 0.387
+m4_bridge_d6_beyond_muller_2pow1005M4∆=6,|QD|=6;n0=21005beats Müller! 0.249
+0, target v = (3 ,2,1,0), ∥P∥1/|cv| = 24. Band
+[t0,t1] = [1,2]gives Ilo = {3}, Imid = {1,2}, Ihi = {0},
+Cconst =
+(3
+1
+)(2
+1
+)(1
+1
+)
+= 6, and Fmid(y1,y2) = y1 −y 2
+(∥Fmid∥1 = 2≤24,D Imid (Fmid)≡0).
+• Mode 4 (C13 & C14):In C13, K6 hubs {0..5}at-
+tach to D = {6,7,8,9} ⊂V<4 (root v0 = 6, leaves
+7 →{0,1},8 →{2,3},9 →{4,5}); QD ∼= S2 ≀S3 has ex-
+act order48 = 2 4 ·3(primes {2,3}< 4,48 ≤646).
+In C14 (∆ = 5, K6 hubs + 4 degree-2 twin classes
+{[11,12],[13,14],[15],[16,17]}), selecting 2/4 classes (≥
+3/8) gives W0 = {11,12,13,14}, preserves2 dK0 (x) ≥
+dG(x), and satisfies ∑
+u∈H5
+(dG(u) −d K0 (u)) = 8 =
+2·|W 0|.
+3. 16-Certificate Atlas & 66-Test Red-Team Audit
+(Table 2, Fig. 3).Table 2 summarizes all 16 canonical
+certificates (0.192–28.989 ms). tests/test_suite.py runs
+66 pytest functions: 1 full replay of all 16 certificates, 3
+raw-JSON parser guards (IEEE-754 float,NaN, duplicate
+keys), and 62 parametrized live adversarial forgeries (12
+schema/parser + 12 each for Modes 1–3 + 14 for Mode 4,
+covering self-loops, non-monotone Kruskal orderings, forged
+MST edges, non-shift-invariant polynomials, non-uniform
+Lemma 4.3 partitions, disconnected bridge subsets, bro-
+ken open-twin classes,r≥ ∆k−1 leaf-stratum violations,
+split size-4 twin classes,< 3/8sampling ratios, and half-
+degree violations), each asserting an exact regex match on
+its intendedCertificateError branch. scripts/verify_
+all.py enforces all 5 gates including strict axiom whitelist-
+ing and a 40-file SHA-256 manifest.
+5 Conclusion
+We built an independent, explicitly scoped, zero-
+floating-point verification stack for Google Research
+Cogentic’s unconditional linear-density edge reconstruc-
+tion theorem ( m≥ 1000 n0) [ 2], uniting 18 con-
+structive Lean 4.35.0 theorems (zero sorry, zero
+Classical.choice), the pure-int/Fraction 4-mode au-
+ditor EDGERECON-COGENTIC-CERT-1.0, 16 canonical exact
+witnesses spanning Harary’sm≤ 3boundary to n0 = 21005
+beyond Müller, and 62/62 live adversarial forgery rejections.
+References
+[1] Leonardo de Moura and Sebastian Ullrich. The Lean 4 theorem
+prover and programming language. InAutomated Deduction –
+CADE 28, volume 12699 ofLNCS, pages 625–635. Springer, 2021.
+[2] Google Research Cogentic. Unconditional edge reconstruction
+of simple graphs of linear density. Google Research Cogentic
+Monograph (Gemini 4), November 2026. Proves unconditional
+edge reconstructibility for all simple graphs onn0 ≥ 4vertices
+withm≥1000n 0 edges.
+[3] D. L. Greenwell. Reconstructing graphs.Proceedings of the
+American Mathematical Society, 30(3):431–433, 1971.
+[4] Frank Harary. On the reconstruction of a graph from a collection of
+subgraphs. InTheory of Graphs and Its Applications (Smolenice,
+1963), pages47–52.PublishingHouseoftheCzechoslovakAcademy
+of Sciences, 1964.
+[5] László Lovász. A note on the line reconstruction problem.Journal
+of Combinatorial Theory, Series B, 13(3):309–310, 1972.
+[6] Vladimír Müller. The edge reconstruction hypothesis is true for
+graphs with more thannlog2 nedges.Journal of Combinatorial
+Theory, Series B, 22(3):281–283, 1977.
+4
