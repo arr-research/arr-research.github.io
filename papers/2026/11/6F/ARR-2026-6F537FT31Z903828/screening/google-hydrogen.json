@@ -1,0 +1,60 @@
+{
+  "assessed_at": "2026-11-25T17:21:33Z",
+  "canonical_sha256": "803394e2d9a09ae42ab8cf9e6be7f798ca6a256d8aa5c04e174964ba88139010",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All 18 identities in Prop. 1 and numerical encodings in Sec. 4/Fig. 1a/Fig. 2a verify cleanly, with minor prose omissions (undefined blank symbol s in Sec. 1; nonnegativity hypotheses in Prop. 1.2) and a Mode 4 min-latency mismatch (18.112 ms in text vs. 16.67 ms in Fig. 2b/3a).",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "All four mathematical gadgets and the NEXPTIME-hardness theorem belong to Sälzer [5]; novelty lies in the independent zero-dependency Lean 4.35.0 mechanization of the 18 core invariants and the exact-Q four-mode certifier.",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "Specifies exact Lean 4.35.0 toolchain, zero external libraries, deterministic zero-float Python verifier, exact module/test paths, 41-artifact SHA-256 manifest, and MIT repository, though full proofs and NTM witnesses reside outside the 3-page PDF.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Clear scope separation between Lean 4.35.0 invariants and unformalized complexity reductions, #print axioms audit (0 sorry, 0 Classical.choice), zero-float Fraction verifier, and 62/62 red-team suite; limited by 3-page summary omitting full Lean signatures.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Provides independent machine-checked and exact-rational confidence in the algebraic and neural machinery behind a recent AI-assisted complexity proof [5], though empirical MPNN witnesses remain small (h <= 3, <= 8 NTM steps).",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.7,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-6F537FT31Z903828",
+  "potential_errors": [
+    "Section 4 reports Mode 4 latency as 18.112-114.497 ms, which omits the lower 16.67 ms (h=2, 7 nodes, out=1) runtime shown in Figure 2(b) and C14 in Figure 3(a).",
+    "Proposition 1.2 states minReluList(acc, vs) >= 0 with = 0 <-> acc = 0 or exists v in vs, v = 0 universally over Int and List Int without stating the required nonnegativity hypotheses (acc >= 0 and all v in vs >= 0).",
+    "Section 1 item 1 uses the symbol s in enc(a_1 ... a_m) = sum a_i b^{-i} + s/((b-1)b^m) without defining s (e.g., blank symbol in {1,...,k}).",
+    "Figure 1(b) labels the 2^h curve up to h = 12 (4096 steps) as 'Verified NTM run length 2^h', whereas empirical Mode 2 and Mode 4 verification only runs up to h = 3 (8 steps)."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Standalone, zero-dependency Lean 4.35.0 formalization of 18 core algebraic, polyhedral, ReLU-min, and tree-degree invariants with zero sorry, zero warnings, zero Classical.choice, and zero Lean.ofReduceBool verified via #print axioms.",
+    "Zero-floating-point exact-Q verifier (MPNN-DEGBSAT-CERT-1.0 using Python fractions.Fraction) executing all four reduction stages, including full (h+2)-layer M_w message passing on degree-<=3 graphs up to h = 3 (15 nodes, 56-dim).",
+    "Transparent scope statement in Section 1 explicitly distinguishing the verified algebraic/neural invariants from unformalized Turing-machine time hierarchies and complexity-class reductions.",
+    "Systematic 62/62 adversarial forgery rejection across global schema/rational checks and all four domain modes, backed by a 41-artifact SHA-256 manifest."
+  ],
+  "strong_novelty_candidates": [
+    "Zero-dependency, zero-Classical.choice Lean 4.35.0 mechanization of the 18 core algebraic, ReLU-min, and degree-3 binary-tree invariants underlying Sälzer's NEXPTIME-hardness proof [5].",
+    "Zero-floating-point exact-Q four-mode certificate verifier (MPNN-DEGBSAT-CERT-1.0) for full (h+2)-layer local-sum MPNN execution and 62/62 adversarial forgery detection."
+  ],
+  "summary": "This 3-page paper presents a formal-verification and exact-rational auditing companion stack for Sälzer's recent NEXPTIME-hardness proof for degree-<=3 local-sum ReLU MPNN satisfiability [5]. It combines (i) 18 zero-sorry, zero-Classical.choice Lean 4.35.0 theorems covering cleared-denominator tape encoding/pop disambiguation, polyhedron counts, ReLU-min polyhedral union exactness, and binary-tree degree/dimension/acceptance identities, with (ii) an exact-Q Python verifier (MPNN-DEGBSAT-CERT-1.0) tested on 16 canonical certificates (up to h=3, 8 NTM steps) and 62 adversarial forgery attacks (62/62 rejected). All stated algebraic identities and plotted exact-rational profiles (Fig. 1a, Fig. 2a, Mode 1 fractions, and 62/62 attack counts) check out mathematically, with only minor presentation/numerical discrepancies (notably Mode 4's 16.67 ms h=2 latency in Fig. 2b/3a omitted from the 18.112-114.497 ms text range) and an overstated title relative to the explicitly scoped non-complexity Lean formalization.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:bf06f409-0b90-4427-a206-6a3f9facce4b",
+  "weaknesses": [
+    "The title ('Certified Verification of NEXPTIME-Hardness...') overstates the scope of the Lean 4 formalization, which explicitly excludes complexity-class reductions, NTM semantics, and time hierarchies.",
+    "Lean 4.35.0 proofs are proved over cleared-denominator N, Z, and List Int rather than directly over Q, leaving the rational bridge and full NTM/MPNN execution to the unmechanized Python verifier.",
+    "The 3-page summary omits the exact Lean theorem signatures, concrete polyhedron matrices, and NTM transition tables (e.g., the Mode 4 soundness witness yielding error 3/5 from a +1/5 perturbation), limiting full standalone auditability from the PDF alone.",
+    "Section 3's rational parsing rule ('reduced denominators >= 2') is slightly ambiguous regarding how integer constants (such as 0 and 1 in polyhedra and MPNN outputs) are encoded in JSON payloads."
+  ]
+}

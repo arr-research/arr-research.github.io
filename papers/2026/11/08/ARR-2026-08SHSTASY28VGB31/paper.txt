@@ -1,0 +1,297 @@
+--- Page 1 ---
+Certified Verification of Communication Complexity
+Disambiguations of Gap Hamming Distance
+Lluis Eriksson∗
+November 25, 2026
+Abstract
+Dahiya, Göös, Harms, Hatami, Hatami, Lovett, and
+Yuan (arXiv:2611.32837, Nov. 2026) proved that ev-
+ery total disambiguation of γ-Gap Hamming Distance
+(γ-GHDn) requires randomized communication complex-
+ityΩ( n2/3), establishing anO(1)versusΩ( n2/3)separa-
+tion between randomized and pseudo-deterministic com-
+munication complexity and improving Gavinsky’sΩ(√n)
+parity decision tree bound toΩ(n2/3)—via an iterative
+Marton-coupling and leaf-rectangle restoration argument
+initially discovered by an AI model. Because such AI-
+originated multi-round entropy-deficit arguments hinge on
+delicate numerical constants (69/400 <1/5,27 /100 >1/4,
++7,+3, and2∆ T + mT ≤γn ), independent formal
+verification is essential. We provide a zero-dependency
+Lean 4.35.0formalization of 18 core structural, cou-
+pling, leaf-restoration, and exponent-balance theorems
+(zero sorry, zero warnings, zero Classical.choice)
+paired with a zero-floating-point exact- Q certificate
+verifier (GHD-DISAMBIG-CERT-1.0) across four modes:
+Lemma 3.1 Marton sequential coupling and col(Z) ≤
+∥µ∥∞, Lemma 4.2/Remark 4.3 leaf-rectangle restoration,
+γ-GHD XOR-lift planted contradictions, and Theorem 1.1
+multi-round recurrence trajectories. Across 16 canonical
+certificates (0.104–2.537 ms), all invariants replay exactly
+over Q while rejecting 63/63 live adversarial forgery at-
+tacks.
+1 Introduction
+A central question in communication complexity asks how
+much overhead is incurred by forcing a randomized proto-
+col for a promise problem to bepseudo-deterministic[3],
+i.e., to output a canonical answer with high probability
+on every input—equivalently, to compute a total Boolean
+disambiguationF:{0,1} n ×{0,1}n →{0,1}. Forγ-Gap
+Hamming Distance (γ-GHDn, with constantγ∈ (0,1/2)),
+the promise problem hasO(1)randomized communication
+complexity via public-coin sampling, whereas Dahiya et
+al. [1] proved that every total disambiguation requires
+∗Independent Researcher. Code, Lean 4 proofs, and certificates:
+MIT License; manuscript and figures: CC-BY-4.0. Prepared with AI
+coding, formalization, and drafting assistance from Google Antigrav-
+ity; all proofs, exact-Q verifiers, and adversarial tests were indepen-
+dently compiled and verified locally. Repository:https://github.
+com/lluiseriksson/gap-hamming-disambiguation-certificates
+Ω(n2/3)bits of randomized communication (Theorem 1.1)
+and, via the XOR-lift reduction from γ-Gap Majority,
+Ω(n2/3)randomized parity decision tree depth (Corol-
+lary 1.3), beating Gavinsky’s priorΩ(√n)bound [4] and
+strengthening the parity-tree toolkit of [5].
+Notably, the authors report that the core proof strategy
+of [1] was initially discovered by an AI model. Their
+argument alternates two delicate rounds:
+1. Marton Sequential Coupling and Coordinate
+Planting (Lemma 3.1 & Lemma 4.1):Given a
+product distributionµt ×νt on remaining coordinates
+with min-entropy deficit≤D t and E[F] ≥1/2, Mar-
+ton’s uniform coupling [6] yieldsE[dist(X,U)]2 ≤mD
+and collision bound col(Z) ≤ ∥µ∥∞ (Eq. 5). Fix-
+ing a ρ-fraction of coordinates drops remaining vari-
+ables by(1 −ρ/2)while controlling union-bound error
+2(1/20 + 1/32) + 1/100 = 69/400 <1/5, retaining ex-
+pectation >1/4, and increasing min-entropy deficit by
+at most+7.
+2. Leaf Rectangle Restoration (Lemma 4.2 & Re-
+mark 4.3):A d-bit protocol with error≤1/100parti-
+tions the matrix into≤2d monochromatic rectangles;
+flipping any1-leaf with conditional expectation<1/2
+strictly lowers error and guarantees a1-leafA∗×B∗
+of mass≥2−d/5with conditional expectation ≥1/2,
+restoringE[F] ≥1/2at marginal blowup≤5·2d <2d+3
+(total round deficit incrementd+ 10).
+After T = O(ρ−1)rounds until mT ≤γn/ 2, every pair
+(x,y)in the final support satisfiesdist(x,y) ≤2∆T+mT ≤
+γn, forcingF≡ 0and contradicting E[F] ≥1/2whenever
+d=o(n 2/3).
+Contributions and Scope.We do not re-formalize
+continuous binary-entropy calculus or measure-theoretic
+concentration inside Lean 4; rather, we construct an end-
+to-end machine-checked audit stack directly targeting the
+exact discrete, rational, and algebraic bottlenecks of [1]:
+(i) 18 zero-sorry constructiveLean 4.35.0[ 2] theorems
+in GapHammingDisambig.lean (zero Classical.choice,
+zero warnings); (ii) the exact-Q four-mode certificate
+verifier GHD-DISAMBIG-CERT-1.0 with zero floating-point
+arithmetic; (iii) 16 canonical certificates and 4 exact em-
+pirical studies verifying Marton coupling tightness, multi-
+round trajectories, andΩ( n2/3)vs.Ω( √n)scaling; and
+(iv) a 63-attack live adversarial red-team suite with 41-
+artifact SHA-256 manifest enforcement.
+1
+
+--- Page 2 ---
+Table 1: All 18 machine-checked Lean 4.35.0 theo-
+rems in GapHammingDisambig.lean (zero sorry, zero
+Classical.choice).
+# Lean Theorem Identifier Paper Ref. Axioms
+1hamming_dist_triangle_boolSec. 1p, Q
+2hamming_dist_xor_lift_exactSec. 1 Eq. 2p
+3disambig_complement_expectation_ge_halfSec. 2p, Q
+4parity_tree_to_comm_factor_twoCor. 1.3p, Q
+5marton_marginal_prob_eqSec. 3p, Q
+6lemma31a_cauchy_schwarz_hammingLem. 3.1(a)p, Q
+7lemma31b_collision_case_not_in_ILem. 3.1(b)p, Q
+8lemma31b_collision_case_in_ILem. 3.1(b)p, Q
+9lemma31b_markov_tail_2_neg_sLem. 3.1(b)p
+10lemma41_union_bound_strict_lt_fifthLem. 4.1none
+11lemma41_conditioning_min_boundLem. 4.1p, Q
+12lemma41_deficit_plus_7Lem. 4.1none
+13lemma42_leaf_flip_reduces_errorLem. 4.2p, Q
+14lemma42_leaf_mass_lower_boundLem. 4.2p, Q
+15remark43_deficit_plus_3_and_total_10Rem. 4.3none
+16theorem11_final_contradiction_distThm. 1.1p, Q
+17theorem11_two_thirds_exponent_balanceThm. 1.1none
+18two_thirds_beats_gavinsky_halfThm. 1.1p, Q
+Axiom key: none = zero axioms (4);p = [propext] (2); p, Q = [propext, Quot.sound] (12).
+2 Constructive Lean 4.35.0 Kernel
+The standalone modulelean/GapHammingDisambig.lean
+compiles cleanly under Lean 4.35.0 with zero external
+dependencies, zero warnings, and zerosorry. Auditing
+all 18 theorems via#print axioms (AuditAxioms.lean)
+confirms 4 zero-axiom theorems (none), 2 using only
+[propext], 12 using[propext, Quot.sound], and0us-
+ing Classical.choice or Lean.ofReduceBool (Table 1).
+Proposition 1(Machine-Checked Core Identities).The
+Lean 4.35.0 kernel establishes the following cleared-
+denominator and structural identities universally overN
+andList Bool:
+1. XOR-Lift and Triangle Inequality (Thms. 1–2):For
+all equal-length x,y,a∈List Bool , dist(x,y) ≤
+dist(x,a) + dist(y,a)anddist(x,y) =|x⊙y|.
+2. Marton Collision Induction (Thms. 7–8):Ifp0 +p1 = D
+and pi ·col i ≤D·µ max for i∈{ 0,1}, then p2
+0col0 +
+p2
+1col1 ≤D2µmax (1 /∈I) andp0col0+p1col1 ≤2Dµmax
+(1∈I).
+3. Lemma 4.1/4.2 Constants & Deficit+10(Thms. 10–15):
+40 + 25 + 4 = 69,69 ·5 < 400,(47 −20) ·4 > 100;
+D3 < 4αβe with α,β,e≤D forces D <4α,4β,4e;
+4·25 = 27 = 128,5 <23,7+3 = 10; and num_leaves≤
+2d, sum_mass≤num_leaves·max_leaf , D≤ 5 ·
+sum_massimplyD≤5·2 d ·max_leaf.
+4. Final Contradiction &Ω(n2/3)Balance (Thms. 16–18):
+distxy ≤dist xK + distyK +mT with distxK,dist yK ≤
+∆T and2∆ T + mT ≤γn forcesdistxy ≤γn ; forn≥ 1,
+n2d3 ≤n 4 =⇒d 3 ≤n 2; and for n≥ 2, n3 < n4
+(n1/2 <n2/3).
+3 Exact-QVerifier
+The verifier GHD-DISAMBIG-CERT-1.0
+(src/ghd_certifier.py, src/ghd_exact.py) uses
+Python fractions.Fraction exclusively (source-audited
+for zerofloat(, math., ornumpy). Every payload under-
+goes strict JSON type enforcement with nesting-depth cap
+32, anchored canonical rational parsing (\A...\Z, reduced
+denominators ≥ 2, no -0), exact key-set matching,
+2048-bit integer caps, and length limits across four
+independent modes:
+1. Mode 1 (Lemma 3.1 Marton Coupling & Col-
+lision):Rebuilds the exact2 m ×2m sequential
+Marton coupling( X,U)from µ alone, checks exact
+marginals X∼µ and U∼U m, certifies2 m∥µ∥∞ ≤
+2D, E[dist(X,U)]2 ≤mD , exact collision inequality
+col(Z) ≤∥µ∥∞, and exact Markov tailPr[νUI (X¯I) >
+2D+s/2m−|I|]≤2 −s.
+2. Mode 2 (Lemma 4.2 & Remark 4.3 Leaf Restora-
+tion):Checks Eµ×ν[F] ≥1/4, disjointness and full
+coverage of ≤ 2d leaf rectangles, total protocol er-
+ror ≤ 1/100, witness leaf A∗×B ∗ output1, mass
+≥ 2−d/5, conditional expectation ≥ 1/2, and Re-
+mark 4.3 marginal blowups1/µ(A∗),1/ν(B∗)≤5·2 d.
+3. Mode 3 (Sec. 1–2γ-GHD XOR-Lift Contradic-
+tion):Audits all2 n truth-table entries off against
+the γ-Gap Majority promise, checksE[F] = E[f] ≥
+1/2, verifies2∆ T + mT ≤γn , |A|,|B| ≥ 2, and
+dist(x|K,a|K),dist (y|K,a|K) ≤∆T, and exhaustively
+verifies dist(x,y) ≤γn and F(x,y) = 0on every
+(x,y)∈A×B.
+4. Mode 4 (Theorem 1.1 Iterative Recurrence Au-
+dit):Enforces Theorem 1.1’s correlation scaling4ρ2d≤
+1(i.e., ρ≤ 1/(2
+√
+d)) and replays exact rational se-
+quences( mt,Dt,∆t)T
+t=0, checking initial state(n,0,0),
+per-round precondition ρmt−1 ≥100, monotone con-
+servative envelopes(1 −ρ/ 2)mt−1 ≤m t ≤m t−1,
+Dt ≥Dt−1 + d+ 10,(∆ t −∆t−1)2 ≥400ρ2mt−1Dt−1,
+stopping conditionmT ≤γn/ 2, and terminal contra-
+diction2∆ T +mT ≤γn.
+4 Empirical Atlas and Red-Team
+Audit
+Executing run_all_experiments.py generates 16 canon-
+ical certificates (4 per mode) and four exact-Q datasets,
+audited end-to-end byverify_all.py with SHA-256 ver-
+ification across all 41 tracked repository artifacts.
+Marton Headroom and Recurrence Trajectories
+(Fig. 1).Mode 1 (0 .336–2.537 ms) evaluates exact ra-
+tional couplings on m∈ {3,4,5}distributions: biased
+(m = 3 ,D = 1, col(Z)/∥µ∥∞ = 1 /2), correlated (m =
+4,D = 2, ratio0 .303), even-parity (m = 4 ,D = 1,
+achieving exact equality col(Z) = ∥µ∥∞ = 1 /8, prov-
+ing Lemma 3.1(b) Eq. (5) is sharp), and Hamming ball
+(m= 5,D = 2, ratio0 .285). Mode 4 (0.292–0.509 ms) cer-
+tifies four full Theorem 1.1 contradiction trajectories across
+n∈{ 5×108,2×109,5×109}, γ∈{ 1/3,1/4,2/5}, andd∈
+{4,9,16}with ρ= 1/(2
+√
+d), halting inT∈{ 14,16,21,25}
+rounds with exact rational contradiction margins strictly
+belowγn.
+2
+
+--- Page 3 ---
+Figure 1: (a) Exact Lemma 3.1 ratioscol(Z)/∥µ∥∞≤1
+and E[dist]2/(mD) ≤1across 4 distributions (saturating
+col(Z)/∥µ∥∞ = 1on even-parity m = 4). (b) Certified
+Theorem 1.1 recurrence trajectory forn= 5×108, γ = 1/3,
+d= 4, ρ= 1/4, crossing(2∆ t + mt)/n< 1/3at t= 9and
+halting atT= 14with0.187<1/3.
+Figure 2: (a) Unit-constant asymptotic scaling of Dahiya et
+al.’sΩ( n2/3)disambiguation bound vs. Gavinsky’sΩ(n1/2)
+bound and O(1)randomized promise GHD for n = 64p
+(p= 1 ... 6). (b) Mode 2 certified witness leaf masses vs.
+the Lemma 4.2 lower bound2−d/5.
+Leaf Restoration and XOR-Lift Witnesses (Fig. 2).
+Mode 2 (0 .105–0.188 ms) certifies exact2 d-leaf par-
+titions (4 ×4,6 ×6,8 ×8, d∈ { 2,3}), including
+a sharp boundary instance with exact protocol error
+1/100( m2_leaf_4x4_d2_sharp_err_1_100, witness mass
+9/25 > 1/20, E[F|A ∗×B ∗] = 1). Mode 3 (0 .104–
+0.398 ms) certifies totalγ-GHD disambiguations forn∈
+{4,5,6}(both symmetric and non-symmetric), verifying
+exact uniform expectations11 /16,1/2,21/32alongside
+planted contradiction supportsA×BattainingF≡0.
+Replay Latency and 63/63 Red-Team Audit
+(Fig. 3).All 16 canonical certificates replay in
+0.104–2.537 ms (total7 .29 ms). The live adversarial
+suite (tests/test_suite.py) tests 63 targeted forgery
+payloads—13 global schema/type/rational/depth attacks
+(float leaks, booleans as ints, unreduced fractions, -0,
+1200-char strings, 3000-bit integers, depth-40 JSON re-
+cursion DoS) plus 12–13 domain attacks per mode (neg-
+ative/unnormalized µ, deficit underestimation, overlap-
+ping/incomplete leaf partitions, protocol error> 1/100,
+promise violations, singleton supports, planted-distance
+violations, invalidρ> 1/(2
+√
+d), premature stopping, and
+underestimated Dt or∆ t)—achieving63/63 (100%)re-
+jection.
+Figure 3: (a) Exact zero-float replay latency (0 .104–
+2.537 ms) across all 16 canonicalGHD-DISAMBIG-CERT-1.0
+certificates. (b) Live adversarial red-team audit rejecting
+63/63 forged payloads across all five categories.
+5 Conclusion
+We delivered a self-contained, zero-floating-point verifica-
+tion framework for theΩ(n2/3)Gap Hamming Distance
+disambiguation lower bound of Dahiya et al. [1], combin-
+ing 18 zero-sorry, zero-Classical.choice Lean 4.35.0
+theorems with the exact-QGHD-DISAMBIG-CERT-1.0 ver-
+ifier, 16 sub-3ms canonical certificates, and 63/63 live
+adversarial forgery rejections. This demonstrates how
+AI-discovered complexity proofs can be systematically de-
+composed into auditable, machine-checked mathematical
+artifacts.
+References
+[1] Yogesh Dahiya, Mika Göös, Nathaniel Harms, Hamed
+Hatami, Pooya Hatami, Shachar Lovett, and Weiqiang
+Yuan. Communication complexity of disambiguations
+of Gap Hamming Distance. arXiv:2611.32837 [cs.CC],
+2026.
+[2] Leonardo de Moura and Sebastian Ullrich. The Lean 4
+theorem prover and programming language. InAuto-
+mated Deduction – CADE 28, pages 625–635. Springer,
+2021.
+[3] Eran Gat and Shafi Goldwasser. Probabilistic search al-
+gorithms with unique answers and their cryptographic
+applications. Technical Report TR11-136, Electronic
+Colloquium on Computational Complexity (ECCC),
+2011.
+[4] Dmytro Gavinsky. Unambiguous parity-query complex-
+ity.Random Structures & Algorithms, 66(3):e70010,
+2025.
+[5] Uma Girish, Makrand Sinha, Avishay Tal, and Kewen
+Wu. Fourier growth of communication protocols for
+XOR functions. InProceedings of the 64th Annual
+IEEE Symposium on Foundations of Computer Science
+(FOCS), pages 721–732, 2023.
+[6] Katalin Marton. A simple proof of the blowing-up
+lemma.IEEE Transactions on Information Theory,
+32(3):445–446, 1986.
+3

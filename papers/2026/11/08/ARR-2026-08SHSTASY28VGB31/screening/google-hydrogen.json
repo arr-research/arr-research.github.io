@@ -1,0 +1,56 @@
+{
+  "assessed_at": "2026-11-25T17:21:33Z",
+  "canonical_sha256": "e701c48913f71f72bec40797ea9d6620e717dd0c133cf99b1ac9529095aa2ce8",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All 18 identities in Proposition 1 (e.g., 69*5 < 400, (47-20)*4 > 100, cleared-denominator Marton collision inequalities, and n^2 d^3 <= n^4 => d^3 <= n^2), Table 1 axiom counts (4 none, 2 propext, 12 propext+Quot.sound), Mode 1 m=4 even-parity saturation col(Z)=||mu||_infty=1/8, Mode 3 expectations (11/16, 1/2, 21/32), and Mode 4 Fig. 1(b) trajectory (T=14, (2*Delta_T+m_T)/n = 0.187 < 1/3) are mathematically accurate and internally consistent.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "No new communication complexity bounds are proved, as all theoretical results derive from Dahiya et al. [1]; novelty lies in packaging an exact-Q 4-mode certificate auditor and concrete sharpness witnesses (such as m=4 even-parity equality in Lemma 3.1(b) Eq. 5 and the 1/100 sharp-error leaf instance) for an AI-discovered proof.",
+      "stars": 2
+    },
+    "reproducibility": {
+      "basis": "Manuscript specifies exact Lean version (4.35.0), all 18 theorem names and axiom profiles (Table 1), strict JSON/rational parsing rules, parameter settings across all 16 certificates and 63 red-team attacks, and a 41-artifact SHA-256 manifest, though results are not independently executed in this PDF-only review.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Zero-sorry, zero-Classical.choice Lean 4.35.0 proofs paired with strict zero-float fractions.Fraction parsing, conservative recurrence envelopes ((1-rho/2)m_{t-1} <= m_t), and 63/63 adversarial rejection tests demonstrate disciplined engineering; however, Lean only proves elementary arithmetic/algebraic fragments and is not formally linked to the Python verifier or full proof of [1].",
+      "stars": 3
+    },
+    "significance": {
+      "basis": "Provides a concrete, machine-auditable sanity check of delicate constants (69/400 < 1/5, 27/100 > 1/4, +10 deficit) and explicit finite witnesses for [1], though impact is bounded because neither the general Omega(n^{2/3}) lower bound nor Marton's inequality is formalized end-to-end in Lean 4.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.2,
+  "model_id": "hydrogen",
+  "overall_stars": 3,
+  "paper_id": "ARR-2026-08SHSTASY28VGB31",
+  "potential_errors": [
+    "In Proposition 1.3 and the Abstract, the constant 47 in (47 - 20) * 4 > 100 and 27/100 > 1/4 appears without deriving 47/100 from the surrounding text of Section 1 (which only mentions E[F] >= 1/2, error <= 1/100, and union-bound loss 69/400 < 1/5).",
+    "In Section 1 and Section 3 (Mode 1), the random variable Z in the collision bound col(Z) <= ||mu||_infty (referencing Eq. (5) of [1]) is not defined inline, forcing readers to consult [1].",
+    "Section 1 characterizes Fig. 2(a) as one of '4 exact empirical studies verifying ... Omega(n^{2/3}) vs. Omega(sqrt(n)) scaling', whereas Fig. 2(a) only plots the elementary closed-form curves n^{2/3}, n^{1/2}, and 1 for n = 64^p."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Transparent and mathematically sound Proposition 1: every cleared-denominator inequality, Hamming XOR-lift identity, and exponent-balance lemma proved in Lean 4.35.0 is explicitly listed alongside exact axiom footprints in Table 1 (4 zero-axiom, 2 [propext], 12 [propext, Quot.sound], 0 Classical.choice).",
+    "Sound conservative recurrence design in Mode 4: enforcing (1 - rho/2)m_{t-1} <= m_t <= m_{t-1}, D_t >= D_{t-1} + d + 10, and (Delta_t - Delta_{t-1})^2 >= 400 rho^2 m_{t-1} D_{t-1} prevents certificates from underestimating worst-case progress or deficit/distance blowup; the Fig. 1(b) trajectory (n = 5*10^8, gamma = 1/3, d = 4, rho = 1/4, T = 14, (2*Delta_T + m_T)/n = 0.187 < 1/3) checks out numerically.",
+    "Exact-Q finite witnesses yield genuine mathematical sanity checks, including proving sharpness of Lemma 3.1(b) Eq. (5) via an m = 4 even-parity distribution achieving col(Z) = ||mu||_infty = 1/8 (Fig. 1(a)), a sharp err = 1/100 leaf-restoration witness in Mode 2 (Fig. 2(b)), and exact XOR-lift expectations 11/16, 1/2, 21/32 for n in {4,5,6} in Mode 3.",
+    "Disciplined verification engineering in GHD-DISAMBIG-CERT-1.0 (pure fractions.Fraction with zero float/math/numpy, canonical rational regex, depth/bit-length caps, and 63/63 adversarial rejection across 5 attack categories totaling 13+12+12+13+13 = 63 payloads in Fig. 3(b))."
+  ],
+  "strong_novelty_candidates": [],
+  "summary": "This 3-page manuscript presents a machine-checked audit stack for the Omega(n^{2/3}) randomized communication complexity lower bound of Dahiya et al. [1] on total disambiguations of gamma-Gap Hamming Distance. It combines 18 constructive, zero-sorry Lean 4.35.0 theorems (Propositions 1.1-1.4, Table 1) with an exact-rational Python certificate verifier (GHD-DISAMBIG-CERT-1.0) across four operational modes, 16 canonical finite certificates, and a 63-payload adversarial red-team test suite. All stated inequalities, axiom counts, Mode 1-4 numerical invariants, and plotted values in Figs. 1-3 are mathematically accurate and internally consistent. However, the formalization does not prove [1]'s communication complexity lower bound, Marton's inequality, or the correctness of the Python verifier inside Lean 4; rather, Lean checks elementary arithmetic and algebraic bottlenecks while the Python verifier audits concrete finite instances. Within the explicitly stated scope disclaimer, there are no unresolved material objections, yielding an accept recommendation with modest scientific depth.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:b33cab8d-3053-43fb-aea5-fa3e648e326e",
+  "weaknesses": [
+    "Substantial gap between the broad title/framing ('18 core structural, coupling, leaf-restoration, and exponent-balance theorems') and the modest mathematical depth of the Lean 4 kernel: many of the 18 Lean theorems verify elementary arithmetic or 2-line inequalities (e.g., 40+25+4=69 and 69*5 < 400; 7+3=10; n^3 < n^4 for n >= 2; dist_xy <= dist_xK + dist_yK + m_T) rather than information-theoretic or protocol-partition arguments.",
+    "Complete formal decoupling between Lean 4 and GHD-DISAMBIG-CERT-1.0: the Python exact-Q verifier is not proven sound in Lean, and its four modes only certify concrete finite instances (m in {3,4,5}, up to 8x8 matrices, n in {4,5,6}, and 4 specific recurrence trajectories) rather than the universal Omega(n^{2/3}) theorem for all n and protocols.",
+    "No new mathematical theorems or complexity bounds are established; the contribution is solely a verification and finite-certificate auditing suite for [1].",
+    "Self-containedness is limited by the 3-page format: several definitions from [1] (such as Z in col(Z), nu_{U_I}, and the origin of 47/100) are not explicitly defined inline."
+  ]
+}
