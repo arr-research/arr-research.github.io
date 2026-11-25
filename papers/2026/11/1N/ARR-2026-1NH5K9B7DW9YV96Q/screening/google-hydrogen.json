@@ -1,0 +1,55 @@
+{
+  "assessed_at": "2026-11-25T21:05:55Z",
+  "canonical_sha256": "d957dbce4d0735c50b93976c89517fdfdf2d5906b470ef0d8a5d2617453d7e28",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All 18 Lean 4 statements in Table 1 and all exact-Fp/Z identities in Sec 1 and Def 3.1—including Cartier semilinearity, cancelling-pole residue extraction z = Res(A^p eta) Res(eta)^(p-2) mod p, pin-eigenvector linearity, and hinge/det2/exponent inequalities—are mathematically valid; only the abstract omits u >= k+1 in 2^(u^5) > (2^(u^4))^k.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "The underlying identities—Cartier semilinearity [4], Fermat's little theorem, scalar pole cancellation, 2x2 triangle bounds, and elementary arithmetic—are standard or elementary, and the complexity framing comes from [2,3]. The contribution is a scoped engineering synthesis pairing a small Lean integer kernel with a zero-float Fp/Z certificate checker.",
+      "stars": 2
+    },
+    "reproducibility": {
+      "basis": "Table 1 enumerates all 18 Lean theorem statements, Def 3.1 specifies all four Fp/Z acceptance predicates, and Table 2 details all 16 canonical certificates (0.024-0.305 ms). However, the PDF omits Lean/Python source listings and certificate JSONs, making independent re-execution of the 54/54 adversarial suite and 0-sorry build impossible from the PDF alone.",
+      "stars": 3
+    },
+    "rigor": {
+      "basis": "Sec 1 explicitly states non-claims, and Table 1/Def 3.1 specify exact quantifiers and axioms (propext, Quot.sound). However, Lean only proves elementary Z/N and 2x2 facts, Layer 1 does not formally verify the Python Layer 2 auditor, and border-complexity objects (e.g., Lemma 5.1 in Fig 2b, hinge parameters) from [2,3] are left undefined.",
+      "stars": 3
+    },
+    "significance": {
+      "basis": "Provides a clean, zero-float witness auditor for characteristic-p Laurent pole cancellation and residue-pin checks motivated by [2,3], but its narrow scope—omitting general Fp, Laurent rings, d>=3 matrices in Lean, and any proof of border lower bounds—limits broader impact in formal mathematics or algebraic complexity.",
+      "stars": 2
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.15,
+  "model_id": "hydrogen",
+  "overall_stars": 3,
+  "paper_id": "ARR-2026-1NH5K9B7DW9YV96Q",
+  "potential_errors": [
+    "Abstract and Section 1 summarize Theorem 17 as inductive 2^(u^5) > (2^(u^4))^k over u, k in N while omitting the required hypothesis u >= k + 1 (e.g., false at u = k = 1), though Section 2, Table 1, and Definition 3.1 Mode 4 state u >= k + 1 explicitly.",
+    "Figure 2(b) title references 'Lemma 5.1' and Figure 1(b) legend references 'OpenAI Thm. 1.1' without defining either statement in the paper; likewise complexity-theoretic parameters D, m, w, l, t, Q, d_max in Mode 4 are not formally connected to border circuits inside the manuscript.",
+    "Table 1 Theorem 14 uses variable g where Section 2 and Definition 3.1 Mode 4 write gap."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Transparent scope calibration in Section 1 ('Explicit Non-Claims') avoids overclaiming formalization of general finite fields, Laurent series rings, d>=3 Hadamard bounds, or curve-slicing Zariski geometry from [3].",
+    "All 18 Lean 4.35.0 theorem statements in Table 1 and all algebraic identities underlying Modes 1-4 in Definition 3.1—including C_p(A^p eta) = A C_p(eta), Res(A^p eta) = z Res(eta) for pole order <= p, and inverse recovery z = Res(A^p eta) Res(eta)^(p-2) mod p—are mathematically sound.",
+    "Internal numerical consistency across Table 2, Figure 1(b) (log_2(exp((ln n)^(5/4))) reaching ~5285 at log_2 n = 1024 vs 2048 and 4096 for n^2 and n^4), and Figure 3 (16 certificates in 0.024-0.305 ms, 4 per mode)."
+  ],
+  "strong_novelty_candidates": [],
+  "summary": "This 3-page paper presents a two-layer, zero-floating-point verification stack motivated by characteristic-p Cartier-operator boundary extraction and residue-pin arguments in border algebraic complexity [2,3]. Layer 1 is a standalone 18-theorem Lean 4.35.0 integer kernel covering elementary arithmetic/index identities, Frobenius defects for p in {2,3,5}, Fermat's little theorem for p in {3,5}, 2x2 integer eigenvector linearity, hinge-shortening gap amplification, list-sum query budgets, a 2x2 entrywise determinant bound, and inductive 2^(u^5) > (2^(u^4))^k (for u >= k + 1). Layer 2 (BORDER-VPVNP-CERT-1.0) is a pure-stdlib Python exact-Fp/Z certificate auditor specifying four modes across primes p in [2,97], reporting verification of 16 canonical certificates (0.024-0.305 ms) and rejection of 54/54 adversarial forgeries. All stated mathematical identities are sound and the scope is honestly calibrated, though the Lean theorems are elementary, Layers 1 and 2 are formally disconnected, and code/certificates reside outside the PDF.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:2effd626-bf28-4b0d-94cd-0506f307b829",
+  "weaknesses": [
+    "The 18 Lean 4 theorems are mathematically elementary integer/natural-number identities (several one-line ring/rewrite facts such as Theorem 10 and Theorem 18) and do not formalize F_p, Laurent differentials, Cartier operators, or d>=3 matrices.",
+    "Layer 1 (Lean 4) and Layer 2 (Python verifier) are formally disconnected: the Lean proofs do not verify the Python implementation or extract certified code, leaving the core F_p[t,t^-1] and d x d checks in unverified Python.",
+    "The discrete inequality 2^(u^5) > (2^(u^4))^k (Theorem 17) is not explicitly linked in the text to the continuous crossover exp((ln n)^(5/4)) vs n^k (Figure 1b), and border-complexity terms from [2,3] are left undefined in the PDF.",
+    "Neither the Lean source file, the Python verifier, nor sample JSON certificates are included in the PDF, so claims of 0 sorry, timings, and 54/54 adversarial rejections cannot be independently audited from the manuscript alone."
+  ]
+}
