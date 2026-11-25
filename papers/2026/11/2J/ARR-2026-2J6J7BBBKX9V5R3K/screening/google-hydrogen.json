@@ -1,0 +1,57 @@
+{
+  "assessed_at": "2026-11-25T23:12:55Z",
+  "canonical_sha256": "3fe4e239e627690faa8a8890e11407e73f61326033a4e9186de89fce9fb7d82d",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All 18 Lean sub-lemma statements in Table 1, axiom counts (1 none, 2 propext, 15 propext+Quot.sound), Weierstrass counts (p=2,3,5,7), |AGL_N(F_q0)| vs |S_{q0^N}| ratios, 38-bit composite M factorization, and Theorem 1.2(2) B>=4 onset thresholds (ell_2=25088, 25344) verify algebraically and arithmetically; Explicit Non-Claims prevent overclaiming.",
+      "stars": 5
+    },
+    "novelty": {
+      "basis": "Serves as an independent verification companion to preprint [4] rather than an original DLP algorithm; the 18 Lean lemmas formalize elementary discrete/inductive steps, while the primary new finding is the exact non-dyadic onset characterization (ell_2=25,088/25,344) of Theorem 1.2(2) and the zero-float 4-mode auditor.",
+      "stars": 2
+    },
+    "reproducibility": {
+      "basis": "Reports exact tool versions (Lean 4.35.0, Python 3.12.6), strict JSON/AST zero-float acceptance predicates across 4 modes, all 16 canonical witness summaries in Table 2, and a 65-test adversarial suite breakdown, though all claims are assessed strictly from the PDF without external code execution.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Zero-sorry, zero-Classical.choice constructive Lean 4 kernel paired with zero-float pure-int auditing and transparent Section 1.3 Explicit Non-Claims; slightly tempered by Table 1 omitting explicit Lean domain types (Nat vs Int) in #10/#13-#15 and importing several symbols from [4] without local definitions.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Provides solid, trustworthy discrete-algebraic scaffolding and finite-instance validation for Cogentic's claimed sub-quasi-polynomial DLP algorithm [4], though broader mathematical significance is constrained because all deep analytic and arithmetic-geometric pillars of [4] remain unverified.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.4,
+  "model_id": "hydrogen",
+  "overall_stars": 3,
+  "paper_id": "ARR-2026-2J6J7BBBKX9V5R3K",
+  "potential_errors": [
+    "Table 1 summarizes Lean 4 theorem statements without displaying explicit Lean variable types (e.g., #13 lem51_castelnuovo_induction_step requires n_1 >= 0 and #14 lem62_recursion_tree_bound requires T_loc >= 0, which hold if typed over Nat in Lean but are unstated in the table).",
+    "Table 1 #11 (lem41_waterhouse_interval_coprime) lists hypotheses n >= 5 and q >= 16 n^2 that are not used by the truncated inequalities shown in the table summary (they appear needed for Hasse-interval membership in [4] rather than the stated inequalities).",
+    "Figure 2(a) sets the horizontal axis out to ell_3 = 22 while the plotted B(ell_2) curves terminate around ell_3 = 16."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Explicit, disciplined scoping ('Honest Two-Layer Verification Scope' and 'Explicit Non-Claims' in Section 1.3) clearly distinguishes elementary verified sub-lemmas from unverified analytic and arithmetic-geometric pillars of [4].",
+    "All 18 algebraic, inductive, and arithmetic statements in Table 1 are mathematically sound, with exact axiom accounting (1 none, 2 [propext], 15 [propext, Quot.sound]) summing to 18.",
+    "All numerical values reported in the PDF verify independently: canonical ordinary elliptic curve point counts and traces across p in {2,3,5,7} (Section 4.1), |AGL_N(F_{q_0})| orders and monodromy compression ratios (12.61x at q_0=4,N=3; 34,507.6x at q_0=8,N=6), CRT splits and non-membership exponents in Table 2, 38-bit composite M = 17*257*65537*13*37 = 137,725,284,593, and exact Theorem 1.2(2) onset calculations (B=0,1,2 at dyadic ell_2=2^{10..14}, first B>=4 at ell_2=25,088 for p in {2,3} and 25,344 for p in {5,7} with cofactor ratio 0.75).",
+    "Zero-floating-point auditor design (DLP-COGENTIC-CERT-1.0) includes strict JSON/AST rejection of floats, NaN/Infinity, and duplicate keys, and details 65 pytest checks including 61 adversarial forgery cases with exact branch assertions."
+  ],
+  "strong_novelty_candidates": [
+    "Exact non-dyadic onset characterization of Theorem 1.2(2)'s degree-reduction threshold B >= 4 at ell_2 = 25,088 (p in {2,3}) and ell_2 = 25,344 (p in {5,7}), correcting naive expectations at dyadic ell_2 = 2^{10..14} where B <= 2."
+  ],
+  "summary": "This 4-page manuscript presents a two-layer, zero-floating-point verification companion for Google Research Cogentic's November 2026 preprint [4] on sub-quasi-polynomial discrete logarithms in fixed characteristic. Layer 1 (CogenticDiscreteLog.lean) provides 18 standalone constructive Lean 4.35.0 sub-lemmas with zero Classical.choice and zero sorry, while Layer 2 (DLP-COGENTIC-CERT-1.0) provides a pure-int Python auditor across four modes (DLP/CRT, ordinary elliptic Lang presentations, sparse Moore linearized pencils, and factoring-free SL2(Z) elimination + Theorem 1.2(2) tuples), illustrated by 16 canonical witnesses, 61 adversarial forgery tests, and an exact onset analysis showing B >= 4 first activates at non-dyadic ell_2 = 25,088 (p in {2,3}) and 25,344 (p in {5,7}). Every mathematical identity, count, factorization, and numerical threshold visible in the PDF is internally consistent and verified, and the paper is commendably transparent that the deep analytic and arithmetic-geometric pillars of [4] remain unverified. Its scientific scope and mathematical depth are those of a substantive, carefully scoped verification artifact rather than a standalone theoretical breakthrough.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:87c725cf-f9ab-44a1-92c1-93c4575b36c3",
+  "weaknesses": [
+    "Several of the 18 Lean 4 theorems are mathematically elementary or ground arithmetic checks (e.g., #18 thm12_parameter_asymptotic_guards checks five concrete numerical inequalities, #2 lem31_moore_det_2x2_identity is a 2x2 scalar substitution, and #7 lem33_cocycle_coboundary_vanish is a one-step ring rearrangement), while none of the deep theorems of [4] (Waterhouse/Ruck existence, general N x N Moore determinants, H^1(GL(V),V)=0, function-field theorems, Artin-Schreier/Kummer indecomposability, Wan's Dirichlet theorem, or bit complexity) are formalized.",
+    "Several notations imported from [4] are used without self-contained definitions in this manuscript (e.g., \\tilde{x}_P(I_0) and \\tau_{Q+\\phi_q(P)} in Eq. (1), c_j(Z), b_j(Z), d_0(Z), S_{N_R} in Eq. (2), A_0, A_1, L_0, L_1, \\Delta_2 in Mode 3, and (e^{(g)}, e^{(h)}) in Mode 4).",
+    "Mode 2 finite witnesses use n = 5 and q in {7,9,16,25} (below q >= 16 n^2 = 400), and Mode 4 evaluates small unfactored composites (M_L <= 406,901) bundled separately with asymptotic Theorem 1.2(2) tuples rather than end-to-end asymptotic-scale instances, while intentionally leaving ord(gamma) = M_L unverified without factoring M_L."
+  ]
+}

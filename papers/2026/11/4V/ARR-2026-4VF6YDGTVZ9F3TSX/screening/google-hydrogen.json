@@ -1,0 +1,55 @@
+{
+  "assessed_at": "2026-11-25T23:12:55Z",
+  "canonical_sha256": "85709d32321c5b9ee9e71deffbc450e4c21086c0c90fc15b0df96c1454ee536d",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All 18 Lean 4 statements in Table 1 are mathematically sound, and all worked numerical/algebraic checks in Section 4.1-4.2, Table 2, and Figures 1-2 (e.g., 1024^(9/4) ceiling 5931642, D*(1,1,5)=72/11, D*(1,1,100)=20402/201, and C10 Tag(2,2)) are algebraically exact.",
+      "stars": 5
+    },
+    "novelty": {
+      "basis": "The contribution is a scoped verification companion to preprint [5] rather than new complexity-theoretic theorems; the symbolic dual-number circuit auditor over F_p[X,Y][u,v]/(u^2,v^2) and 2^N Tag(h,h) replay harness provide modest methodological novelty.",
+      "stars": 2
+    },
+    "reproducibility": {
+      "basis": "Specifies exact toolchain versions (Lean 4.35.0, Python 3.12.6), standalone zero-import compilation, 16 canonical certificates, 76 pytest checks, and a 41-file SHA-256 manifest in a public MIT-licensed repository (not externally executed during PDF-only review).",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Zero-float static AST verification, strict JSON parser guards, exact F_p[X,Y][u,v]/(u^2,v^2) symbolic evaluation, and 70/70 adversarial forgery tests demonstrate high engineering rigor, though Lean proofs cover isolated scalar sub-lemmas rather than general inductive theorems.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Provides an independent, reproducible check of the discrete algebraic, tight-support, and tripod AM-HM components of [5] and refutes Sun's n=256 bound assuming [5]'s main rank bound, while explicitly leaving the CAT(0) and tensor-compression pillars unverified.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.3,
+  "model_id": "hydrogen",
+  "overall_stars": 3,
+  "paper_id": "ARR-2026-4VF6YDGTVZ9F3TSX",
+  "potential_errors": [
+    "In Section 1 (\"Honest Two-Layer Verification Scope\", item 1), the prose summary of sources for the 18 Lean sub-lemmas omits Prop. 8.1 and Cor. 11.1, even though Table 1 includes #13 (prop81_balanced_tripod_nine_fourths) and #15 (cor111_maximal_wire_equality_rigidity).",
+    "Proposition 1 describes Theorems 14-15 as proving tripod AM-HM inequality and equality rigidity (a1=a2=a3) without noting in the prose that Table 1 formalizes them only over Z (a_i >= 0 / a_i >= 1), whereas Mode 4 and C14 apply them to positive rationals such as (3/8, 3/8, 3/8)."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Scrupulous scope calibration (\"Explicit Non-Claims\", Sec. 1) that clearly separates the verified discrete/algebraic sub-lemmas from the unverified CAT(0), Gauss-lift, fermionic sphere-tensor, and tensor-power compression pillars of [5].",
+    "Every theorem statement in Table 1 (18 Lean 4.35.0 sub-lemmas) and every worked numerical/symbolic example in Section 4, Table 2, and Figures 1-2 is internally consistent and algebraically exact.",
+    "Well-designed exact zero-float auditor (OMEGA94-LB-CERT-1.0), notably Mode 2's full 1+2s^2+s^4 symbolic evaluation of arithmetic circuits (including division) over F_p[X,Y][u,v]/(u^2,v^2) and Mode 3's exhaustive 2^N signed-sum Tag(h,h) checks, backed by 70/70 targeted adversarial forgery rejections."
+  ],
+  "strong_novelty_candidates": [
+    "Exact zero-float symbolic dual-number arithmetic circuit verifier over F_p[X,Y][u,v]/(u^2,v^2) tracking all 1+2s^2+s^4 coordinates for circuits with division (Mode 2)."
+  ],
+  "summary": "The manuscript presents an explicitly scoped, two-layer verification companion for discrete algebraic, symbolic dual-number bilinearization, tight-support, tagged-permutation, and tripod AM-HM sub-lemmas from OpenAI's unrefereed November 2026 omega_F = 9/4 lower-bound preprint [5]. Layer 1 compiles 18 standalone constructive Lean 4.35.0 sub-lemmas without Classical.choice or sorry, while Layer 2 provides a pure-int/Fraction Python auditor (OMEGA94-LB-CERT-1.0) verifying 16 finite certificates and rejecting 70 adversarial forgeries. All statements, identities, and worked figures in the PDF are exact and internally consistent, though the Lean kernel formalizes elementary scalar identities rather than the general inductive theorems (e.g., Lemma 2.4 or Section 4.1's N-fold product factorization) and leaves [5]'s core geometric/analytic pillars unverified.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:d6458729-ff7e-4136-a67d-94808a242b71",
+  "weaknesses": [
+    "Most of the 18 Lean 4 sub-lemmas (#2, #5, #7-#13, #17) are elementary 1-line ring, boolean, or concrete integer identities; in particular, #7-#8 only check scalar addition rearrangement rather than formalizing Lemma 2.4's circuit induction over F[X,Y][u,v]/(u^2,v^2), and #9 only checks a single boolean factor rather than Section 4.1's N-fold product factorization.",
+    "The Lean tripod AM-HM theorems (#14-#15) are proved only over Z rather than Q_{>0} (the domain used by Mode 4 certificates such as C14), though the sum-of-squares argument extends trivially by clearing denominators.",
+    "Layer 2 certificates only audit finite instances (n <= 4096, s <= 4, h <= 3) and rely on an unrefereed companion preprint [5] for the asymptotic complexity relevance of the sub-lemmas."
+  ]
+}

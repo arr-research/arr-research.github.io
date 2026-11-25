@@ -1,0 +1,59 @@
+{
+  "assessed_at": "2026-11-25T23:12:55Z",
+  "canonical_sha256": "ff64e8fb21fa42f3ab8795a85a4fed8a3f1594a978d5ca08192a8f64f124761d",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All 18 Lean 4 sub-lemma formulas in Table 1 (under Nat typing for #7), all 4 worked witnesses (C01, C05, C09, C13), Table 2 factorizations, and Theorem 1.1 contraction bounds (e.g., 21.15+82.55=103.70<104<105) verify by exact arithmetic; code itself is external.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "Timely independent constructive Lean 4 and pure-int/Fraction certificate audit targeting the discrete-algebraic engines of the Nov 2026 Cogentic L_N[1/3, 105] preprint [6]; uses established formal-verification and exact-auditing techniques rather than new theory.",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "Exact worked witnesses (C01, C05, C09, C13), all 18 theorem names/statements (Table 1), all 16 certificate summaries (Table 2), exact environment versions, and repository reference are given; full Lean/Python source files are external to the PDF.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Strong scope discipline with explicit non-claims for [6]'s analytic sieves, zero-Classical.choice constructive Lean kernel, strict AST/JSON zero-float guards, and 68 branch-asserted red-team rejections; tempered by Table 1 omitting Nat/Int types and tail's definition.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Provides concrete, machine-checkable algebraic sub-lemmas and exact finite witnesses for a high-profile claimed unconditional L_N[1/3, 105] factoring algorithm while clearly delineating the unverified analytic sieve bottlenecks in [6].",
+      "stars": 4
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.85,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-5WM59DHC7V9J3R1D",
+  "potential_errors": [
+    "Table 1 #7 (prop23_alternating_sign_nonneg) fails over Z when s < 2*r0 (e.g., s = -2, r0 = 2, M = 1, Q = 2, K = 1, j = 0 yields 24 <= 20, false) unless variables are Nat (with truncated subtraction) or s >= 2*r0 is assumed; ambient types should be stated explicitly in Table 1.",
+    "Table 1 #11 (lem42_laplace_layer_cake_telescope) uses tail(z, a, m) without defining it in the PDF (consistency with the identity requires tail(z, a, m) = (2a+1)z^a + 2*sum_{k=1}^m z^{a+k}).",
+    "Figure 1(a) plots a curve labeled 'Det. O(exp(3(ln N)^{3/4}))' without citation or explanation in the text (standard unconditional deterministic factorization stands at O(N^{1/5+o(1)}))."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Honest, disciplined scope calibration: Section 1 ('Explicit Non-Claims') explicitly disclaims formalizing the analytic sieve, Siegel-zero, Chebotarev/Landau-Page, AKS, and Turing-machine bit-cost pillars of the unrefereed companion preprint [6].",
+    "All 18 algebraic, lattice, 3-adic Hensel, F_2^2 pigeonhole, and strong-induction contraction statements in Table 1 hold mathematically (under standard Nat typing where applicable), and all exact integer/cube inequalities in #17-#18 check out.",
+    "All four hand-verifiable worked exact witnesses (C01, C05, C09, C13) and all Mode 4 factorizations in Table 2 are completely exact: e.g., C01 has |det B_lat| = 10403, valid (3/4)-LLL reduction, and 1982*21 = 10 (mod 10403); C05 gives f(33,1)/23 = 11*41*881; C09 matches beta_hat(X) = -14X^2 - 17X - 27 mod 6561; C13 yields gcd(160 - 27, 323) = 19.",
+    "Clean zero-floating-point verification engineering: static AST checks against float/complex/true-division, strict JSON parsing rejecting floats/NaN/duplicate keys, 13-base Miller-Rabin exact below 3.317e24 (including regression against the 12-base Sorenson-Webster strong pseudoprime), and 68/68 branch-targeted adversarial forgery rejections."
+  ],
+  "strong_novelty_candidates": [
+    "Constructive zero-Classical.choice Lean 4.35.0 formalization of 18 algebraic/arithmetic sub-lemmas extracted from the Cogentic L_N[1/3, 105] factorization framework [6], including exact rational strong-induction contraction bounds (#17-#18) and quadratic 3-adic Hensel steps (#12-#14).",
+    "Exact zero-float 4-mode finite-witness certificate protocol (L13FACT-COGENTIC-CERT-1.0) bridging mod-N LLL/Lagrange-Gauss ratio splits, mod-3-pinned forms, 3-adic Newton-Hensel square-root traces, and blinded Dixon unsealing."
+  ],
+  "summary": "This paper presents a clearly scoped, zero-floating-point verification companion to an unrefereed November 2026 preprint [6] claiming unconditional Las Vegas integer factorization in expected time L_N[1/3, 105] and deterministic space L_N[1/3, 40]. Rather than verifying [6]'s analytic sieve pillars—which the authors explicitly disclaim—the paper pairs 18 standalone constructive Lean 4.35.0 sub-lemmas (zero sorry, zero Classical.choice) with a pure-int/Fraction 4-mode certificate auditor (L13FACT-COGENTIC-CERT-1.0) covering 16 finite witnesses (N <= 100,160,063) and 68 adversarial forgery rejections. Every algebraic identity, worked witness (C01, C05, C09, C13), contraction bound, and Table 2 factorization visible in the PDF verifies exactly. The primary limitations are that the Lean 4 kernel formalizes elementary algebraic inequalities rather than full soundness of the LLL, Lagrange-Gauss, Hensel, or Dixon algorithms (which are audited at finite instances in Python), Table 1 omits ambient Nat/Int types and helper definitions such as tail(z, a, m), and the external repository artifacts cannot be executed from the PDF alone.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:c34b6f35-9dd4-4a61-8cfd-f14080201b08",
+  "weaknesses": [
+    "Wide formalization gap between the Lean 4 kernel and the Python auditor: Table 1's 18 Lean theorems prove isolated arithmetic/algebraic inequalities and small fixed identities (e.g., #1 power-of-2 inequality, #15 linear dependence of 3 vectors in F_2^2, #17-#18 concrete cube inequalities) rather than end-to-end soundness of LLL reduction, Lagrange-Gauss reduction, 3-adic Hensel lifting, or Dixon splitting.",
+    "All finite certificates cover small toy parameters (N <= 100,160,063 in Mode 1, N <= 10,403 in Mode 2, N <= 64,507 in Mode 4) that do not probe asymptotic L_N[1/3, 105] behavior, and the companion preprint [6] remains unrefereed with its analytic core unverified.",
+    "Table 1 omits ambient domain types (Nat vs Int) on #1-#7, #14, and #16, and leaves tail(z, a, m) undefined in #11; Table 2 uses lambda_1^2 without explicitly noting it denotes ||v_1||_2^2 of the 2D Lagrange-Gauss lattice L_z rather than the n-dimensional mod-N LLL basis.",
+    "Neither the Lean 4 source code nor the Python auditor/test suite is included in an appendix, preventing standalone inspection of proof scripts and test definitions from the PDF alone."
+  ]
+}
