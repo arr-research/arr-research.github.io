@@ -1,0 +1,57 @@
+{
+  "assessed_at": "2026-11-25T23:12:55Z",
+  "canonical_sha256": "8f3aa75e082b87ea55f361c9e39dd811a730148b28e5602fa1508c1126867ba2",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All 18 Lean 4 theorem statements in Table 1, crossover arithmetic (ln N = 50,625; log2 N = 73,036.4; 38,091 vs 52,429), Gauss norm checks (d=43, d=2), and worked witness arithmetic in C01, C04, C05, C09, and C13 (including the ApproxSqrt(13,3,32) bracket ns=8,940,687,389 and L_idx=232,792,560) verify cleanly; minor table shorthand leaves f implicit in #16.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "The underlying factoring and QNR algorithms come from the unrefereed companion preprint [4]. The contribution here is a dedicated verification companion pairing constructive Lean 4.35.0 sub-lemmas with a zero-float Python certificate schema and 66-case adversarial forgery suite, which is solid engineering rather than a mathematical advance.",
+      "stars": 2
+    },
+    "reproducibility": {
+      "basis": "Complete Lean theorem signatures and axiom footprints (Table 1), deterministic 13-base Miller-Rabin bounds, 16-certificate atlas parameters (Table 2), 72-test pytest breakdown, and a public repository with a 40-file SHA-256 manifest are documented, though full replay of C05/C09/C13 requires reading JSON artifacts outside the PDF.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Exceptionally disciplined scoping: Explicit Non-Claims (Sec. 1) clearly separate verified finite/algebraic steps from unverified analytic pillars of [4]. Zero Classical.choice, AST-audited float-free Python int/Fraction arithmetic, strict JSON parsing, and 66/66 live forgery rejections demonstrate high verification hygiene, tempered by the elementary/2D/K=2 scope of the Lean proofs.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Provides a trustworthy, zero-floating-point finite-witness and algebraic-kernel sanity check for an extraordinary unrefereed complexity claim [4], preventing floating-point artifacts in small-instance testing (N <= 4,028,033), though it cannot validate the asymptotic O(exp(3(ln N)^(3/4))) or QNR complexity claims themselves.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.45,
+  "model_id": "hydrogen",
+  "overall_stars": 3,
+  "paper_id": "ARR-2026-4RHFZFBVBA886AX3",
+  "potential_errors": [
+    "Table 1 #16 (lem81_base_m_polynomial_eval) states `N | f_0(m) ==> f_0(m) + P_0 l (m - m) g(m) = f_0(m) /\\ N | f(m)` without explicitly printing the definition `f(x) = f_0(x) + P_0 l (x - m) g(x)` inside the table row, leaving `f` unbound in the printed summary.",
+    "Table 1 #4 (lem22_approx_log_recurrence_error) omits type quantifiers (`in N`); if variables were arbitrary negative integers with S < 0, `e < 2S` and `f < S` would not imply `ep^2 + fq^2 < 2Sq^2`, so natural-number positivity (as explicitly written in #5) is implicitly required.",
+    "In Section 4.2 Mode 2 (C05), writing `(N = -1)` for the fundamental unit norm `N(\\varepsilon) = -1` overloads the symbol `N` used throughout the paper for the composite integer being factored (whereas Section 4.1 writes `N(\\varepsilon) = +1`).",
+    "Section 4.1 refers to \"24 tested squarefree discriminants 2 <= d <= 61\", whereas there are 37 squarefree integers (and 26 with d = 2, 3 mod 4) in [2, 61], without specifying the exact selection criterion for the 24 tested discriminants."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Unusually candid and well-calibrated scope (Sec. 1 Explicit Non-Claims): explicitly declines to assume endorsement of the unrefereed companion preprint's [4] analytic pillars (Minkowski, Chebyshev, 4D LLL walks, 16th-moment Burgess bounds, Landau-Page/Montgomery, centered Gram peeling) and isolates exactly what is and is not verified.",
+    "Constructive Lean 4.35.0 kernel (Table 1): 18 self-contained theorems compiling with zero external imports, zero sorry, zero Classical.choice, and verified axiom audit (3 none, 15 [propext, Quot.sound]).",
+    "Strict zero-float Python verification architecture (DETFACT-COGENTIC-CERT-1.0): AST-audited for zero float literals/imports, strict JSON guards against floats/NaN/duplicate keys/deep nesting, exact 13-base deterministic Miller-Rabin (exact below 3.317e24), 16 certified canonical witnesses, and 66/66 live adversarial forgery rejections with exact CertificateError regex assertions.",
+    "All numerical crossover calculations (ln N = 15^4 = 50,625; log2 N = 73,036.4; 38,091 vs 52,429 at log2 N = 262,144), Gauss unit norms, and worked exact-witness arithmetic in C01, C04, C05, C09 (notably ApproxSqrt(13, 3, 32) = 8,940,687,389), and C13 (L_idx = 232,792,560) are mathematically exact and internally consistent."
+  ],
+  "strong_novelty_candidates": [],
+  "summary": "This 4-page verification companion paper provides an explicitly scoped, zero-floating-point verification harness for the finite algebraic, congruence, fixed-point, and combinatorial mechanisms of an unrefereed companion preprint [4] proposing deterministic subexponential factoring and prime quadratic nonresidue (QNR) construction. It combines 18 constructive Lean 4.35.0 sub-lemmas (zero sorry, zero Classical.choice) with a pure int/Fraction Python 4-mode auditor (DETFACT-COGENTIC-CERT-1.0) certifying 16 finite instances (N <= 4,028,033) and rejecting 66/66 adversarial forgeries. Every theorem statement, crossover calculation, and worked witness number visible in the PDF is mathematically sound and internally consistent, and the paper is unusually honest about leaving all analytic pillars of [4] unverified. Its main limitations are that the Lean 4 lemmas cover only isolated elementary, 2D, K=2, and constant-inequality steps rather than general-dimension proofs, and the finite certificates operate far below the asymptotic crossover regime (log2 N ~ 73,036.4).",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:b901a3cd-7da0-4bb1-91ae-d073f883d389",
+  "weaknesses": [
+    "The Lean 4 formalization covers only isolated local algebraic/arithmetic steps (several being single-step constant checks such as #3 `81 < 4D => 21 <= D`, #8, #13, and #18) and restricts Walsh-Hadamard orthogonality (#12) to K=2 and bordered adjugates (#14) to 2x2 matrices, leaving general-K, general-m HNF, general-k block adjugate, and all analytic pillars outside Lean.",
+    "Certified finite instances only reach N <= 4,028,033 (Table 2), orders of magnitude below the calculated asymptotic crossover against Harvey's N^(1/5) at log2 N ~ 73,036.4 (Sec. 4.1), so the certificates validate small-scale algebraic mechanics rather than asymptotic regime behavior.",
+    "Although Section 4.2 labels the worked examples \"Hand-Verifiable\", several underlying witness inputs—such as the explicit polynomials f_1, f_2 in C13, the 2D lattice basis giving det = 180 in C09, and the definition/terms of \\Psi = 3 and \\sum b_0 = 35 in C05—are omitted from the PDF and reside only in the external JSON atlas/preprint [4].",
+    "The paper validates sub-components of a same-day unrefereed preprint [4] without establishing any independent algorithmic or complexity-theoretic breakthrough of its own."
+  ]
+}
