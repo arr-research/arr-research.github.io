@@ -1,0 +1,300 @@
+--- Page 1 ---
+Machine-Checked Exact-Integer Certificates for Normal
+and Mis` ere Grid NoGo, Coins-are-Lava, and Subcubic
+Bipartite Graph NoGo PSPACE-Completeness
+Lluis Eriksson*
+November 25, 2026
+Abstract
+Kyle Burke, Alfie Davies, and Craig Tennenhouse
+(arXiv:2611.33127, November 24, 2026) resolved
+the open problem of Burke and Hearn (2019),
+proving thatNoGois PSPACE-complete on posi-
+tions reachable from an emptyn×nsquare grid
+under both normal play and mis` ere play (Theo-
+rem 1.1) via direct square-grid Bounded Two-Player
+Constraint Logic (B2CL) reductions, and proving
+thatGraph NoGoremains PSPACE-complete un-
+der normal play on connected bipartite subcubic
+(∆≤3) graphs (Theorem 1.2) via a newCoins-
+are-Lavaedge-removal game (Lemma 4.1). We
+present a machine-checked, zero-floating-point for-
+malization and exact combinatorial game-tree audi-
+tor for the finite budget, truth-table, reachability,
+rope-majority, and parity-win core of these results.
+First, an 18-theorem zero-dependency Lean 4 kernel
+(NoGoPSPACE.lean, Lean 4.35.0; 0sorry, 0 warn-
+ings, 0Classical.choice, 9 zero-axiom theorems)
+formalizes the B2CL move budgetx=a+ 2b+c+
+d+ 3e, White reserve hole capacity, empty-board al-
+ternating parity, game-tree depth bounds, normal-
+vs.-mis` ere terminal and wire-signal duality, exact
+AND/OR/SPLIT/CHOICE truth tables, Lemma 4.1
+clause/formula majorities, odd-parity cut shifts,
+rope-width separation 2tw+ 1<(2t+ 3)w, and sub-
+cubic bipartiteness. Second,NOGO-PSPACE-CERT-1.0
+audits four exact modes—empty-board reachability
+replay, normal/mis` ere grid minimax,Coins-are-
+Lavaminimax, and connected bipartite subcubic
+Graph NoGo—replaying 16 canonical certificates in
+0.060–6.495 ms and rejecting 60/60 live adversarial
+* Independent researcher; manuscript prepared with trans-
+parent AI assistance via Google Antigravity. Source code,
+Lean 4 proofs, and exact certificates:https://github.com/
+lluiseriksson/nogo-pspace-certificates.
+forgeries.
+1 Introduction
+NoGois the two-player combinatorial placement
+game derived fromGoby forbidding both captures
+(including self-captures) and passes [3, 6]. Fol-
+lowing the PSPACE-completeness of planarGraph
+NoGo[3] andDots & Boxes[1], Burke, Davies,
+and Tennenhouse [2] settled two major open ques-
+tions:
+1.Square-grid normal & mis` ere play (Theorem 1.1):
+Realizing B2CL gadgets (Goal,Variable,Or,
+And/Split,Choice) directly onn×ngrids
+with insulated White wires, frozen liberties, and
+a checkerboard White reserve yields PSPACE-
+completeness on positions reachable from the
+empty grid under both normal and mis` ere play.
+2.Subcubic bipartite graphs (Theorem 1.2 &
+Lemma 4.1):IntroducingCoins-are-Lava(a
+Strings-and-Coins [5] variant forbidding isolating
+any coin), proving its PSPACE-completeness
+from Schaefer’s positive-CNF game via odd rope
+widthsN= 2t+ 3, and reducing to connected
+bipartite graphs of maximum degree ∆≤3.
+Contributions and Scope.We formally verify
+and audit the finite combinatorial, algebraic, truth-
+table, parity, and exact minimax core of [2]. We
+explicitly scope our Lean 4 kernel away from full
+Turing-machine PSPACE reductions, planar grid lay-
+out routing, and asymptotic polynomial-size circuit
+constructions:
+1.Zero-dependency Lean 4 kernel (§3):18
+constructive theorems inNoGoPSPACE.lean
+(Lean 4.35.0 [4]), 0sorry, 0 warnings,
+0Classical.choice, and9 zero-axiom
+1
+
+--- Page 2 ---
+theorems.
+2.Pure-stdlib exact game verifier (§4):
+NOGO-PSPACE-CERT-1.0, auditing grid reachabil-
+ity, normal/mis` ere minimax,Coins-are-Lava,
+and subcubic bipartite Graph NoGo with zero
+floats.
+3.Empirical atlas & red-team audit (§5):
+16 canonical certificates (0.060–6.495 ms), exact
+normal-vs.-mis` ere winner flips on grids (2×2,2×
+4) and subcubic bipartite graphs (K 3,3, Q3, L8),
+rope-separation scaling, and 60/60 rejected live
+adversarial forgeries.
+2 Budget, Rope-Width, and Par-
+ity Invariants
+In Section 2 of [2], a B2CL circuit withaVariable,
+bOr,cAnd,dSplit, andeChoicegadgets pre-
+scribes
+x=a+ 2b+c+d+ 3e(1)
+Black moves; a checkerboard White reserve withx+
+1−anon-adjacent holes yieldsx−awaiting moves
+alongside White’saVariableplays, so Black wins
+going first iff Black claims the extraGoalmove (x+
+1> x). In Section 4 (Lemma 4.1), a positive-CNF
+formula withcclauses andnvariables is encoded
+into 2c−1 rows (eachk-literal clause padded byk−1
+copies of 1 to 2k−1 entries) joined by ropes of widths
+1, N, N2, N3, N4 with oddN= 2t+ 3. At every
+widthw, at most 2tw+1 lower-level cuts occur before
+completion, strictly belowNw:
+2tw+ 1<(2t+ 3)w=Nw,(2)
+and from an odd initial string totalM= 2k+ 1, a
+False chosen entry leaves an odd countR F = 2(c+
+n+ 1) + 1 (even cuts, White wins), whereas a True
+entry allows one extra cut to groundg, leavingR T =
+2(c+n+ 1) (odd cuts, Black wins).
+3 Zero-Dependency Lean 4 Kernel
+We formalize 18 constructive theorems in
+lean/NoGoPSPACE.lean(Lean 4.35.0, zero external
+dependencies), audited vialean/AuditAxioms.lean
+with 0 warnings, 0sorry, 0Classical.choice, and
+0Lean.ofReduceBool(Table 1).
+Proposition 1(Constructive NoGo PSPACE Ker-
+nel).
+Table 1: Complete 18-theorem Lean 4.35.0 ker-
+nel inNoGoPSPACE.lean(0sorry, 0 warnings,
+0Classical.choice, 9 zero-axiom theorems).
+# Lean 4 Theorem Identifier Axiom Footprint
+1normalplaymovebudgetexact [propext]
+2white reserveholecapacity [propext, Quot.sound]
+3empty boardreachabilityparity [propext]
+4nogo gametreedepthbound [propext, Quot.sound]
+5normalvsmisereterminalduality none
+6normalvsmiserewireinversion none
+7b2cl andgatetruthtable none
+8b2cl orgatetruthtable none
+9b2cl splitgateduality none
+10b2cl choicegateexclusivity none
+11misereorandgateexact none
+12coins arelavaclausemajority [propext]
+13coins arelavaformulamajority none
+14coins arelavaoddparityshift [propext]
+15coins arelavaropemajoritywin [propext]
+16subcubicbipartitedegreebound [propext, Quot.sound]
+17legal cutdegreeinvariant [propext, Quot.sound]
+18nogo gadgetbudgetconcretecheck none
+1.Normal-play budget & reachability (Theorems 1–
+4):Exact B2CL move balancea+ (x−a) =x <
+x+ 1, White reserve capacity, even empty-board
+alternating parity(|B|+|W|)≡0 (mod 2), and
+game-tree depth≤ |V| −s0.
+2.Normal/mis` ere duality & B2CL gates (Theo-
+rems 5–11):Terminal outcome duality, wire-
+signal inversion, exactAnd,Or,Split, and
+Choicetruth tables, and mis` ereOr/Andmove-
+saving implication.
+3.Coins-are-Lava& subcubic graphs (Theo-
+rems 12–18):Clause and formula strict majori-
+ties, odd-to-even parity flip(2), rope-width sep-
+aration2tw+ 1<(2t+ 3)w, subcubic bipar-
+tite degree/coloring invariant, legal cut invariant
+deg(u),deg(v)≥2, and concrete Figure 6 / Sec-
+tion 4 sanity checks.
+4 Exact Game-Tree Verifier
+NOGO-PSPACE-CERT-1.0(src/nogo certifier.py)
+is a pure-stdlib zero-float verifier enforcing strict
+JSON types and exact BFS group-liberty rules across
+four modes:
+1.Mode 1 (nogo board legality
+and reachability):Replays an even-length
+alternating sequence from an emptyr×cgrid,
+verifying no capture/suicide at every ply and
+exact Black/White legal move counts.
+2.Mode 2 (b2cl gadget minimax
+2
+
+--- Page 3 ---
+Figure 1: (a) Exact normal vs. mis` ere minimax state
+counts and B/W winners across empty grids (2×2
+through 2×5), showing winner flips on 2×2 and
+2×4. (b) Theorem 1.2 connected bipartite subcubic
+(∆≤3) Graph NoGo atlas, showing winner flips on
+K3,3,Q 3, andL 8.
+normal misere):Solves exact normal or mis` ere
+minimax on grid NoGo positions (≤12 empty
+cells) and verifies the winning first move preserves
+the winning strategy.
+3.Mode 3 (coins are lava exact minimax):
+Solves exactCoins-are-Lavaminimax on
+multigraphs (up to 16 coins, 18 strings), enforcing
+deg(u),deg(v)≥2 on every cut and verifying the
+winning first cut.
+4.Mode 4 (subcubic bipartite graph nogo):
+Verifies graph simplicity, connectivity, 2-
+colorability, and ∆≤3, then solves exact
+normal-playGraph NoGominimax and verifies
+the winning move.
+5 Empirical Atlas and Red-Team
+Audit
+Runningscripts/run all experiments.pygener-
+ates 16 canonical certificates (4 per mode) and
+four exact game-tree sweeps, verified end-to-end
+byscripts/verify all.pywith SHA-256 manifest
+checks across all 41 tracked artifacts.
+Grid Minimax and Subcubic Bipartite Atlas
+(Fig. 1).On empty square/rectangular grids, ex-
+act minimax reveals sharp normal-vs.-mis` ere rever-
+sals: on 2×2, Black wins normal play (8 states)
+while White wins mis` ere (12 states); on 2×4, White
+wins normal (310 states) while Black wins mis` ere
+(385 states); on 3×3, Black wins both (533 states,
+4.979 ms normal; 918 states, 6.495 ms mis` ere) but
+the winning opening move shifts from corner ver-
+tex 0 to center vertex 4. Across six connected bi-
+Figure 2: (a) Exact Lemma 4.1 rope-width separa-
+tion 2tN+ 1< N 2 forN= 2t+ 3 (t= 1. . .6),
+guaranteeing safety margin 3N−1>0. (b) Exact
+Section 2 B2CL move budgetx=a+ 2b+c+d+ 3e,
+White reserve holesx+ 1−a, and Black’s +1 Goal
+margin.
+Figure 3: (a) Exact zero-float replay latency across
+all 16 canonicalNOGO-PSPACE-CERT-1.0certificates
+(0.060–6.495 ms). (b) Red-team adversarial audit re-
+jecting 60/60 live forgery attacks.
+partite subcubic graphs (P6, C6, K3,3, C8, Q3, L8), ex-
+act normal-vs.-mis` ere winners flip on 3/6 graphs, in-
+cluding non-planarK 3,3 (Black normal, 30 states vs.
+White mis` ere, 54 states) and 3-cubeQ3 (Black nor-
+mal, 155 states vs. White mis` ere, 212 states).
+Reachability, Coins-are-Lava, and B2CL Bud-
+gets (Fig. 2).Mode 1 replays balanced empty-
+board alternating sequences (6–12 plies, 0.071–
+0.117 ms) constructing a Figure 6 frozen liberty on
+4×4, White reserve holes on 5×5, and an insulated
+White wire channel on 6×6. Mode 3 solves four
+Coins-are-Lavamultigraphs (0.060–1.138 ms), in-
+cluding an 8-coin, 13-string mini positive-CNF board
+(321 states, White wins via even-cut parity) and
+a 6-coin rope-majority gadget (158 states, Black
+wins). Figure 2 quantifies the quadratic safety mar-
+ginN 2 −(2tN+ 1) = 3N−1 (181<225 at
+t= 6, N= 15) and the exact linear B2CL budget
+scaling (x= 8k, 7k+ 1 White reserve holes).
+3
+
+--- Page 4 ---
+Table 2: Summary of all 16 canonical
+NOGO-PSPACE-CERT-1.0certificates and 60/60
+live adversarial red-team audit.
+Verification Mode Certs Latency (ms) Attacks Rejected
+Mode 1: Grid Legality & Reachability 4 0.071–0.117 12/12Mode 2: Normal/Mis` ere Grid Minimax 4 0.472–6.495 12/12Mode 3:Coins-are-LavaMinimax 4 0.060–1.138 12/12Mode 4: Subcubic Bipartite Graph NoGo 4 0.239–1.489 14/14Global Schema / Type / Board – – 10/10
+Total 16 0.060–6.495 60/60
+Replay Atlas and Red-Team Audit (Fig. 3,
+Table 2).All 16 canonical certificates replay in
+0.060–6.495 ms with zero floats. Our adversarial
+suite (tests/test suite.py) tests 60 live forgery
+attacks—including illegal zero-liberty boards, mid-
+play captures, odd reachability sequences, flipped
+normal/mis` ere winners, non-winning claimed first
+moves, isolatedCoins-are-Lavacoins, odd-cycle
+non-bipartite graphs (C 5), degree-4 non-subcubic
+stars (K 1,4), and disconnected graphs—achieving
+60/60 rejectionswith zero bypasses.
+6 Conclusion
+We delivered an 18-theorem zero-dependency
+Lean 4 kernel (9 zero-axiom theorems,
+0Classical.choice) and the exact combina-
+torial game-tree auditorNOGO-PSPACE-CERT-1.0for
+the finite core of Burke, Davies, and Tennenhouse’s
+PSPACE-completeness proofs for normal/mis` ere grid
+NoGoand subcubic bipartiteGraph NoGo[2].
+Mechanizing complete planar gadget-embedding
+coordinates and full B2CL-to-grid compiler verifi-
+cation in Lean 4 remains an exciting next step for
+formalized combinatorial game theory.
+References
+[1] Kevin Buchin, Mart Hagedoorn, Irina Kostit-
+syna, and Max van Mulken. Dots & Boxes is
+PSPACE-complete. In46th International Sympo-
+sium on Mathematical Foundations of Computer
+Science (MFCS 2021), volume 202, pages 25:1–
+25:18, 2021.
+[2] Kyle Burke, Alfie Davies, and Craig Tennen-
+house. Winning and losing NoGo is PSPACE-
+complete.arXiv preprint arXiv:2611.33127,
+2026.
+[3] Kyle Burke and Robert A. Hearn. PSPACE-
+complete two-color planar placement games.In-
+ternational Journal of Game Theory, 48(2):393–
+410, 2019.
+[4] Leonardo de Moura and Sebastian Ullrich. The
+Lean 4 theorem prover and programming lan-
+guage. InAutomated Deduction – CADE 28,
+pages 625–635. Springer, 2021.
+[5] Erik D. Demaine and Jenny Diomidova. Strings-
+and-coins and nimstring are PSPACE-complete.
+Integers, 21B:A7, 2021.
+[6] Robert A. Hearn and Erik D. Demaine.Games,
+Puzzles, and Computation. A K Peters, Ltd.,
+2009.
+4

@@ -1,0 +1,57 @@
+{
+  "assessed_at": "2026-11-25T16:55:54Z",
+  "canonical_sha256": "02120731393992fd33b34c291a5da1c0e81f74f8099220872b0a631fa482c7d7",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All visible equations—Eq. (1) reciprocal sum, Eq. (2) Corollary 3 chain, s=2t exponents 12t^2 and 32t^3, blow-up edge counts (27, 32, 108, 80), Corollary 3 ratios (64/77 > 2/3, 616/705 > 3/4), and the 57-bit denominator at h=5, N=200, t=6—verify exactly; Lean type signatures are external to the PDF.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "Provides the first machine-checked finite core and exact-Q certificate auditor (HYPERGRAPH-BLOWUP-CERT-1.0) for Mubayi's Nov 2026 hypergraph blow-up breakthrough [6], though the mathematical arguments themselves originate in [6] and the formalized Lean kernel handles fixed-parameter finite slices (h=3,4; k=3,4).",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "Specifies Lean 4.35.0, exact file and theorem names (Table 1), deterministic parameters (N, s, h, k, t), SHA-256 tracking across 41 artifacts, and replay timings (0.032-4.136 ms), though independent verification of Lean signatures and certificates requires inspecting the external repository.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Table 1 reports 18 Lean 4.35.0 theorems with 0 sorry, 0 Classical.choice, and 6 zero-axiom theorems, paired with zero-float exact-Q verification and 60/60 adversarial rejections (Table 2). Scope is explicitly restricted to finite algebraic/combinatorial pieces away from real-analytic Holder integrals and Chernoff bounds.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Establishes a clean, reusable exact-rational auditing baseline and constructive finite kernel for extremal hypergraph blow-up witnesses and Corollary 3 density checks, but leaves the general-parameter link-copying induction, supersaturation, and asymptotic/probabilistic steps unformalized.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.85,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-5YWR6ZMHE98PQBAM",
+  "potential_errors": [
+    "In Section 1, Eq. (1) writes the sum over realized patterns as <= Q without explicitly defining rho(J) = n_J / |X| (under which the sum equals Q exactly, as reflected by the overlapping curves in Fig. 1(a)), and leaves the threshold parameter p in Q^{-1/p} undefined in prose prior to Section 4's concrete values p = 4/9 and p = 9/16.",
+    "Section 1 and Fig. 1(a) refer to 'Eq. (10)' and 'Eq. (12)' from Mubayi [6], whereas the manuscript displays only Eq. (1) and Eq. (2), creating minor cross-reference ambiguity for readers without [6] in hand.",
+    "The 4-page PDF summarizes the 18 Lean theorems only by identifier and prose (Proposition 1, Table 1) without printing their formal type signatures, and reports Mode 1/Mode 4 witness tests (e.g., S densities 13/15 and 32/35) without displaying the underlying finite hypergraphs or colorings in the text."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Transparent and honest scoping: explicitly separates the formalized finite algebraic, link-copying, pattern-entropy, and cleared-rational core from unformalized real-analytic Holder/AM-GM integrals, asymptotic supersaturation, and Chernoff upper bounds.",
+    "Exact numerical and algebraic consistency across all visible derivations, tables, and plots, including Eq. (2) Corollary 3 chains (64/77 > 2/3 and 616/705 > 3/4), blow-up edge counts (27, 32, 108, 80), Mode 1 exponents (12t^2 and 32t^3), and the 57-bit denominator at h=5, N=200, t=6.",
+    "Strong axiom hygiene in the reported Lean 4.35.0 kernel (18 theorems, 0 sorry, 0 warnings, 0 Classical.choice, 0 Lean.ofReduceBool, 6 completely axiom-free theorems) coupled with a zero-float exact-Q auditor (16 canonical certificates replayed in 0.032-4.136 ms and 60/60 live adversarial forgery rejections)."
+  ],
+  "strong_novelty_candidates": [
+    "Exact-rational (zero-float) certificate auditing framework HYPERGRAPH-BLOWUP-CERT-1.0 across link-copying Holder telescoping, explicit H[t] blow-up witnesses, Appendix A distinct-vertex union bounds, and Corollary 3 almost-monochromatic colorings with adversarial rejection testing.",
+    "Zero-dependency constructive Lean 4 kernel isolating the finite combinatorial and cleared-integer/rational skeleton of Mubayi's optimal 1/(k-1) hypergraph blow-up engine."
+  ],
+  "summary": "This concise 4-page manuscript presents a machine-checked Lean 4.35.0 formalization (18 theorems, zero external dependencies, 0 sorry, 0 Classical.choice, 6 zero-axiom theorems) and a pure-stdlib exact-rational certificate verifier (HYPERGRAPH-BLOWUP-CERT-1.0) covering the finite combinatorial, link-copying, pattern-entropy, distinct-vertex union-bound, and Corollary 3 density core of Mubayi's November 2026 hypergraph blow-up theorem (arXiv:2611.33108). All algebraic identities, inequality chains, blow-up edge counts, Corollary 3 rational bounds, bit-width figures, and table/plot summaries visible in the PDF are mathematically sound and internally consistent, and the paper is candid about scoping out real-analytic integrals, asymptotic supersaturation, and probabilistic bounds. Its primary limitation is that only finite, fixed-parameter slices are formalized and exact Lean theorem statements and certificates remain in the external repository rather than in a manuscript appendix.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:56e98079-af3e-4261-8bfe-ba73a03ac300",
+  "weaknesses": [
+    "The Lean 4 formalization covers fixed-parameter finite instantiations (3- and 4-partite link-copying collapse; Corollary 3 cleared inequalities for k=3,4) and cleared integer/rational lemmas rather than an arbitrary-(h,k) inductive formalization or end-to-end proof of Theorem 1 and Corollaries 2-3 of [6].",
+    "Self-contained auditability from the PDF alone is limited because the Lean theorem statements (types/quantifiers), the exact definitions of the 60 red-team forgery tests, and the explicit Mode 1/Mode 4 finite hypergraph witnesses are hosted externally rather than included in an appendix.",
+    "Minor notational compression in Section 1 (unwritten definition of rho(J) and p, and mixing external equation numbers Eq. (10)/(12) from [6] with internal Eq. (1)/(2))."
+  ]
+}

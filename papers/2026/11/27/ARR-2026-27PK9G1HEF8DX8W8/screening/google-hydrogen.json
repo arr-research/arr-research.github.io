@@ -1,0 +1,57 @@
+{
+  "assessed_at": "2026-11-25T16:55:54Z",
+  "canonical_sha256": "e967cace54d0b1e8f60aa88defe964bcc44aca1a6e959abbe59c5593c1675cf3",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All closed-form B_k(n) counts (k=1..5), L_S counter lengths N_k (k=2^b-1), finite witness j_k = 2^ceil(L/M^i) values, and Table 2/Figures 1-3 metrics verify exactly. Deducted for misstating j_k = Theta(log N_k / (log log N_k)^i) in the Intro (confusing e with j_k = 2^e), omitting k>=1 in Eq. (2) and positivity preconditions in Theorem 1, and omitting Lean type signatures.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "Serves as a rapid formalization and exact-rational certificate-auditing companion to Say (arXiv:2611.32633) rather than establishing new quantum complexity bounds. The Lean 4 kernel explicitly scopes out both Remscrim's spectral-gap Markov-chain theory and Say's QTM simulation reductions, certifying only the finite combinatorial and inequality backbone.",
+      "stars": 2
+    },
+    "reproducibility": {
+      "basis": "Documents a deterministic pipeline (16 canonical certificates, 0.013-4.440 ms replay, 39 SHA-256 hashes, 57 adversarial rejections) backed by a public repository. Within the PDF alone, however, Lean theorem signatures, the 57 attack cases, and Mode 4 witness parameters (a_0, b_0, d_2, S) for Table 2 are omitted.",
+      "stars": 3
+    },
+    "rigor": {
+      "basis": "Uses a zero-dependency Lean 4.35.0 kernel (0 sorry, 0 Classical.choice, 1 zero-axiom theorem) and a zero-float Python fractions.Fraction verifier with strict JSON AST typing. However, Lean formalizes only elementary arithmetic/list lemmas and k=1..3 balls, leaving general-k Eq. (1), Eq. (2), and unary-encoding injectivity to finite Python checks.",
+      "stars": 3
+    },
+    "significance": {
+      "basis": "Demonstrates bit-exact verification across regimes where IEEE floats fail (k=2,049 at n=512; 2^31 vs. 100*2^20 at L=2^20) and supplies a reusable 4-mode certificate auditor. Impact is bounded by the elementary level of the 18 formalized lemmas relative to the unformalized analytic and quantum-automata core.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.3,
+  "model_id": "hydrogen",
+  "overall_stars": 3,
+  "paper_id": "ARR-2026-27PK9G1HEF8DX8W8",
+  "potential_errors": [
+    "Introduction (p. 1) states the lower-track palindrome length is j_k = Theta(log N_k / (log log N_k)^i), whereas Theorem 3 and Mode 3/Table 2/Fig. 2(a) define j_k = 2^e with e = ceil(L / M^i); if j_k itself were Theta(log N_k / (log log N_k)^i), then 2^{j_k/2} would be subpolynomial for i >= 1 and could not yield the double-exponential superpolynomial barrier. Theorem 3 (p. 2) repeats this ambiguity via the parenthetical '(e = ceil(L/M^i) on finite witnesses, asymptotically Theta(L/M^i))' attached to j_k = 2^e.",
+    "Eq. (2) in Theorem 3 states 2^L <= N_k <= 2^{2L} without requiring k >= 1; for k = 0, L = |bin(0)| = 1 and N_0 = 1 < 2 = 2^L.",
+    "Theorem 1 (pp. 2-3) omits positivity preconditions in prose summaries: u = c(2r)^4 d^2 >= 16 requires c, r, d >= 1; 2 * 2^{e-1} = 2^e requires e >= 1 (false at e=0 under truncated Nat subtraction); and 2^h >= 2 requires h >= 1.",
+    "In Theorem 1(3) (p. 3), 'strict barrier subtraction expF - b_0 S > c L' (double_exp_beats_poly_exponent) is summarized without showing its Lean type signature, leaving unclear whether expF is bound to 2^{floor(F)} inside that theorem or passed as an abstract variable satisfying an inequality hypothesis."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Transparently scopes the formalization away from Remscrim's spectral-gap Markov-chain bounds and Say's QTM simulation reductions, avoiding overclaiming.",
+    "Zero-dependency Lean 4.35.0 kernel of 18 constructive theorems with explicit axiom audit (0 sorry, 0 warnings, 0 Classical.choice, 0 Lean.ofReduceBool, 1 zero-axiom theorem).",
+    "All closed-form L_1-ball formulas (1D, 2D, 3D) and numerical values in Section 5, Table 2, and Figures 1-3 (including B_k(n) up to k=5, n=12, N_k for k=2^b-1, j_k ceiling steps at L=7->8, and 0.013-4.440 ms latency bounds) are internally consistent and algebraically exact.",
+    "Strict zero-float JSON AST typing in QUANTUM-SPACE-LB-CERT-1.0 (rejecting floats, booleans, unreduced fractions, and '-0') paired with 16 canonical certificates, brute-force cross-checks, and 57 adversarial forgery tests."
+  ],
+  "strong_novelty_candidates": [],
+  "summary": "This manuscript presents a Lean 4.35.0 formalization (18 zero-dependency theorems) and a pure-Python exact-rational certificate auditor (QUANTUM-SPACE-LB-CERT-1.0) covering the finite combinatorial, algebraic, and inequality backbone of A. C. Cem Say's polynomial-time quantum space lower bounds (arXiv:2611.32633). All closed-form L_1-ball counts, binary-counter lengths N_k, finite witness palindrome lengths j_k = 2^ceil(L/M^i), and Table 2 / Figures 1-3 metrics are algebraically and numerically consistent, and the paper is candid that it does not formalize the analytic quantum Markov-chain or QTM simulation arguments. Its mathematical depth is modest—the Lean kernel proves elementary arithmetic, list-reversal, and k=1..3 L_1-ball identities while leaving general-k Eq. (1), Eq. (2), and unary-encoding injectivity to finite Python checks—and the text contains a misstatement of j_k's asymptotic scaling in the Introduction/Theorem 3 summary alongside omitted preconditions and Lean signatures.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:0031c995-a1b7-49b4-983c-36642469b0dd",
+  "weaknesses": [
+    "Formal coverage gap: Eq. (1) for general k, Eq. (2) (2^L <= N_k <= 2^{2L}), and injectivity of the unary encoding kappa_k are not proved in Lean 4 and are checked only on small finite ranges in Python.",
+    "The PDF omits the actual Lean 4 theorem signatures (listing only identifiers in Table 1 and prose summaries in Theorem 1) as well as the Mode 4 witness parameters (a_0, b_0, d_2, S) in Table 2, preventing a reader of the PDF alone from independently verifying exact Lean hypotheses or Eq. (3) arithmetic for Table 2's barrier entries.",
+    "The 57 adversarial forgery test cases are only briefly categorized in Section 5.3 rather than itemized in an appendix or table.",
+    "Several finite checks (e.g., B_k(n) brute-force enumeration for k=1..4, N_k bounds for k=4..128, unary injectivity on length-<=2 words in Z^3) cover only small parameter regimes compared to the asymptotic claims of Theorems 2 and 3."
+  ]
+}

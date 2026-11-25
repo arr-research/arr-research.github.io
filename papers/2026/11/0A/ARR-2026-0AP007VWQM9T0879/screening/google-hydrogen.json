@@ -1,0 +1,57 @@
+{
+  "assessed_at": "2026-11-25T16:55:54Z",
+  "canonical_sha256": "55c20bf7955acedcc93a14d83d5aadcf5b5dedf291e1868aca7c89304f65c5fc",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All formulas in Eqs. (1)-(2), Theorem 6.1 dimension sequences (s=(1,1,1), (3,2), (2,1,2), (2,2,2)), Table 2 Koszul alternating sums, and Figure 2(a) defect grid values are algebraically consistent; scope explicitly excludes Theorems 5.1 and 1.1.",
+      "stars": 5
+    },
+    "novelty": {
+      "basis": "Provides formal verification and exact-rational certificate auditing for Smithline (arXiv:2611.33113) rather than new mathematical theorems; introduces a clean Farkas dual framing (Eq. 2) for non-gap-free strictness failures and strict AST-typed certificates.",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "Deterministic pipeline (run_all_experiments.py, verify_all.py), SHA-256 manifest checks, strict JSON AST typing, and Table 2 witness summaries support replay, though the PDF omits Lean theorem type signatures and explicit v_k parameters.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Combines a constructive zero-Classical.choice Lean 4.35.0 kernel (18 theorems, Table 1) with zero-float exact-Q Gaussian elimination, Farkas dual witnesses, and 57 adversarial forgery tests, though Lean proofs cover only grade-2/3 d^2=0 and conditional telescoping.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Establishes bit-exact verification for finite Koszul resolutions, cumulative Eulerian counts, and Remark A.1 counterexamples in Multicolor Permutation Wordle, though restricted to small dimensions and s_k in {1,2} for rational V(J_n) evaluation matrices.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.6,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-0AP007VWQM9T0879",
+  "potential_errors": [
+    "In Table 2, the Mode 1 entry `koszul_exact_n3_m2_gapfree` omits the color vector s=(2,1) from its Key Exact Witness column (recoverable only from the listed dimension vector [36, 14, 0] -> 22).",
+    "In Figure 2(b), the x-axis labels mix color vectors (`s=(1,1,1)`, `s=(3,2)`) for the first two bars with unlabeled multidegree tuples (`(2,3,2)`, `(3,4)`) for the last two bars.",
+    "The manuscript does not list the explicit rational values v_1,...,v_M used in the Mode 1, Mode 3, and Mode 4 certificate instances (though exactness and rank properties are invariant over distinct rational v_k > 0)."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Mathematically accurate and internally consistent across all equations, figures, and tables: Eq. (1) alternating sums, Theorem 6.1 generating-function sequences (e.g., 1,5,6,6; 1,4,8,11,12,12; 1,7,17,23,24; 1,8,24,40,47,48), and the 16-point Figure 2(a) defect grid (including GAP def=0 at (1,3) and (3,1)) all verify cleanly.",
+    "Candid and precise scoping: explicitly states in the Abstract, Section 1, and Section 6 that the general-(N,M) mapping-cone induction (Theorem 5.1) and game-theoretic strategy reduction (Theorem 1.1) of Smithline [5] are not formalized in Lean 4.",
+    "Eliminates floating-point rank ambiguity via exact rational Gaussian elimination and strict JSON AST validation across 4 verification modes, 16 canonical certificates, and 57 adversarial forgery checks.",
+    "Zero-dependency constructive Lean 4.35.0 kernel with 0 sorry, 0 warnings, 0 Classical.choice, and 4 zero-axiom theorems, including inductive Euler-characteristic telescoping (`koszul_exactness_euler_char_list`) and the even-vs.-odd parity obstruction for Remark A.1 (`s=(2,2), b=(2,4)`)."
+  ],
+  "strong_novelty_candidates": [
+    "Exact-Q Farkas dual certification (w^T delta_1 = 0, w^T Z != 0) coupled with strict AST-typed homological certificate auditing for filtered Koszul complexes."
+  ],
+  "summary": "This 4-page manuscript presents a machine-checked Lean 4.35.0 kernel (18 constructive theorems, zero external dependencies, 0 sorry, 0 Classical.choice) and a zero-floating-point exact-rational certificate verifier (KOSZUL-WORDLE-CERT-1.0) auditing the finite homological, Euler-characteristic, counterexample, and zero-set evaluation-rank core of Smithline (2026, arXiv:2611.33113) on Multicolor Permutation Wordle. All algebraic identities, generating-function dimension counts, Koszul alternating sums, parity obstructions, and strictness-defect grid values reported in the PDF are mathematically sound and mutually consistent, and the authors honestly scope out the general mapping-cone induction (Theorem 5.1) and game-theoretic construction (Theorem 1.1). While modest in theoretical scope and missing printed Lean theorem type signatures in the PDF, the work is solid, rigorous, and free of material errors.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:82293ed4-294f-46c1-b55e-ebba481e0871",
+  "weaknesses": [
+    "The Lean 4 formalization covers only grade-2 and grade-3 Koszul differential square-zero properties and conditional Euler-characteristic telescoping rather than arbitrary-grade Koszul complexes or concrete instance exactness inside Lean (exactness of concrete complexes is verified only by the Python auditor).",
+    "Because the 4-page PDF reports only theorem identifiers and axiom footprints (Table 1) without printing the formal Lean 4 type signatures or quantifiers, an external reader of the PDF alone cannot inspect the exact formal definitions underlying identifiers such as `koszul_exactness_euler_char_list` or `feasible_history_dim_bound`.",
+    "Empirical evaluation in Mode 4 is restricted to s_k in {1,2} (to keep V(J_n) rational) and small problem sizes (up to |V|=48, 48x64 matrices)."
+  ]
+}
