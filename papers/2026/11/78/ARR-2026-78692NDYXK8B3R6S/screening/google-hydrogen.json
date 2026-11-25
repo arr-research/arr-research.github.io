@@ -1,0 +1,56 @@
+{
+  "assessed_at": "2026-11-25T18:16:37Z",
+  "canonical_sha256": "b5dd01c7537f98deff88bbf03713c9485703f16e3b7ff0f3d9441ba4ee967b5c",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All fully stated identities in Table 1 (#1, #4-#6, #9, #11-#18), the C1 spline psi(1/5)-psi(1/3)=22/225, the Bernstein identity in Prop 1, and all exact-Q witnesses in Table 2 (M1 peaks/W, M2 u/D, M3 exponents, M4 margins and DKW fractions) check out exactly; only Fig 1(a) has a plotting convention inconsistency.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "Applies established constructive Lean 4 (zero Classical.choice) and pure-Q exact-rational certificate auditing to the deterministic algebraic pillars of Jin et al. [4] (arXiv:2611.31982), offering solid verification engineering rather than new theoretical tradeoffs or probabilistic proofs.",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "Documents exact certificate stems, rational witness values (Table 2), harmonic sums (Fig 2(a)), 60-attack red-team breakdown (Fig 3(b)), and repository/script structure, though neither the Lean 4 source nor the Python auditor is inlined in the 4-page PDF.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Enforces zero-sorry, zero-Classical.choice Lean 4.35.0 axiom auditing ([propext, Quot.sound]) alongside a zero-float AST/Unicode-hardened Python Fractions verifier with 60/60 adversarial rejections, tempered by abbreviated antecedents in several Table 1 summaries.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Provides a clean, sub-millisecond machine-checked algebraic companion for [4], though significance is bounded by explicitly excluding all measure-theoretic probability, concentration inequalities, and algorithmic convergence arguments from the formalization.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.6,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-78692NDYXK8B3R6S",
+  "potential_errors": [
+    "Figure 1(a) mixes Pareto frontier conventions: MHR (corner (3/2, 2)) and Quasi-MHR (segment (1, 3) to (2, 2)) are drawn with rays going up and right (lower-left boundary of an upper-right feasible set), whereas Regular and Quasi-Regular are drawn horizontally along beta=3 for alpha in [0, 3], causing MHR's vertical wall at alpha=1.5 to appear above Regular for alpha < 1.5 despite MHR subset Regular, and contradicting MHR solvability at alpha >= 3/2 without beta >= 2 queries.",
+    "Table 1 omits required antecedent hypotheses in several compressed rows: Row 2 (quasi_regular_quantile_cutoff_retention) does not introduce Q_{\\tilde{p}}, p, or \\tilde{Q}_{\\tilde{p}} in the antecedent; Row 7 (quasi_regular_weighted_kl_aggregation) does not introduce W or T in the antecedent; Row 8 (regular_concave_ternary_discard_bound) leaves concavity and trisection-ratio inequalities informal; Row 10 omits the definitions of B, u, Q_0, Q_1.",
+    "Table 2 Mode 4 lists negative DKW exponent witnesses (-15/16, -375/1568, -375/6208, -375/24704) without stating the underlying parameter choice (nq = 125 and epsilon' in {1/8, 1/16, 1/32, 1/64}) in the table or caption, though the values verify identically under those parameters."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Every fully specified algebraic identity and inequality in Proposition 1 and Table 1 checks out cleanly, including the cleared-denominator density bound (#6), the ternary revenue guarantee 1/16 + 11/1000 = 147/2000 (#9), the C1 hazard bump psi(1/5) - psi(1/3) = 22/225 and 100((22-16)/225) = 8/3 (#15-#16), and the multiplicative DKW Bernstein quadratic cancellation (#18).",
+    "All 16 canonical witness entries in Table 2 are mutually consistent and numerically exact: M1 peaks (4K+1)/(4K) and harmonic sums W; M2 values u=(1-6*eps)/(6*eps) and D=eps/4000; M3 pairs (2-c, 2+c); M4 margins (8/3)*(d^2/100) and DKW exponents -nq*(eps')^2/(2*(1+eps'/3)) with nq=125; and latency sum 6.413 ms matching the reported 6.41 ms total and 0.298-0.663 ms range.",
+    "Transparent scope statement in Section 1 clearly delineates that probabilistic concentration bounds (Bernstein/Chernoff/Doob/DKW convergence) and Median Elimination belong to [4] rather than the Lean 4 formalization.",
+    "Strong adversarial input validation design for REV-TRADEOFF-CERT-1.0, explicitly enumerating AST/Unicode/IEEE-754/NaN/nesting-depth checks with 16 global + 44 mode-specific (60/60) red-team rejections."
+  ],
+  "strong_novelty_candidates": [],
+  "summary": "The manuscript presents a 4-page constructive Lean 4.35.0 formalization (18 zero-sorry, zero-Classical.choice theorems) and a pure-Q/Z exact-rational certificate verifier (REV-TRADEOFF-CERT-1.0, 16 canonical certificates, 60-attack red-team suite) auditing the deterministic algebraic, convexity, continuity, separation, chi^2-divergence, and exponent-conservation pillars of Jin, Tang, Wang, and Zhang [4] (arXiv:2611.31982). All fully stated algebraic identities, C^1 spline calculations, Bernstein cancellations, harmonic sums, and Table 2 exact-rational witnesses are internally consistent and verify cleanly, and the exclusion of probabilistic/measure-theoretic proofs is transparently scoped. Minor presentation defects remain: Figure 1(a) mixes inconsistent Pareto frontier conventions across valuation families, Table 1 omits antecedent hypotheses in a few abbreviated theorem rows, and the underlying Lean/Python source code is external to the PDF.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:dcde92d0-3f20-4cd1-a677-34fc9011f8c5",
+  "weaknesses": [
+    "Several Table 1 theorems (#11, #13, #14, #17) reduce to elementary integer arithmetic or constant definitions (e.g., 400 <= 900, 15*10^4 = A, (2-c)+(2+c)=4), limiting the formalization's depth relative to the full sample/query complexity theorems of [4].",
+    "Table 1 compresses several theorem statements (#2, #7, #8, #10) to the point where key antecedent hypotheses are omitted from the printed implication, preventing a reader of the PDF alone from checking their exact formal signatures.",
+    "Figure 1(a) uses an inconsistent visual convention between MHR/Quasi-MHR (upper-right feasible corner) and Regular/Quasi-Regular (horizontal boundary at beta=3 for alpha <= 3), creating a misleading visual crossing at alpha < 1.5.",
+    "Neither the Lean 4 proofs nor the Python verifier code appears in the PDF, so external artifact compilation and replay cannot be audited from the manuscript alone."
+  ]
+}

@@ -1,0 +1,307 @@
+# Certified Verification of Input-Oblivious Unambiguous Hierarchies
+
+**Author:** Lluis Eriksson  
+**AIRR Identifier:** `ARR-2026-55XADDGK3Q8TES2E` (v1)  
+**License:** CC-BY-4.0 (manuscript), MIT (verification repository)  
+**Verification Repository:** https://github.com/lluiseriksson/oblivious-unambiguous-hierarchies-certificates (`v2.0.0`)  
+**Canonical PDF SHA-256:** `bf6340cff6ab394fb863ef9af53cce9dfbe4d262d7a0f8c965cbe5e5ef69b8b0`
+
+## Abstract
+
+Edward A. Hirsch (arXiv:2611.33126, Nov 2026) analyzed input-oblivious unambiguous complexity hierarchies built from OUP, proving that OUH <= P^{TALLY cap NP} <= P^{ONP}_|| (Thm. 4.1), the loose promise-oracle hierarchy satisfies OUH^bullet <= OGTD[NP] = OUGTD[FP^{ONP}, co-ONP, P] = P/OptP <= OUM cap P^{ONP} (Lem. 3.1, Thm. 5.1), the alternating oblivious unambiguous dot-operator hierarchy collapses to OUP cup co-OUP at level 2 (Thm. 6.2, Cor. 6.3), single loose promise queries reduce to language queries (Thm. 6.5), and SOUP = OUP cap co-OUP (Prop. 6.6). We construct a standalone zero-dependency Lean 4.35.0 formalization of 18 core lexicographic-advice, Mahaney-census, Cantor-pairing, loose-tower descent, dot-operator collapse, guardedness, and SOUP theorems (zero sorry, zero warnings, zero Classical.choice) paired with an exact discrete four-mode certificate verifier (OUH-CERT-1.0). Across 16 canonical certificates (0.033-0.210 ms, total 1.64 ms), all invariants replay identically while rejecting 60/60 live adversarial forgery attacks.
+
+## Full Extracted Text
+
+--- Page 1 ---
+Certified Verification of Input-Oblivious Unambiguous
+Hierarchies
+Lluis Eriksson∗
+November 25, 2026
+Abstract
+Edward A. Hirsch (arXiv:2611.33126, Nov. 2026) ana-
+lyzed input-oblivious unambiguous complexity hierarchies
+built fromOUP, proving that the language-oracle hierarchy
+satisfies OUH⊆ PTALLY∩NP ⊆PONP
+∥ (Thm. 4.1), the loose
+promise-oracle hierarchy satisfiesOUH•⊆OGTD [NP] =
+OUGTD[FPONP,co-ONP, P] =P /OptP⊆OUM∩ PONP
+(Lem. 3.1, Thm. 5.1), the alternating oblivious unambigu-
+ous dot-operator hierarchy collapses at level 2 toOUP∪
+co-OUP (Thm. 6.2, Cor. 6.3), single loose promise queries
+reduce to language queries (OUPprOUP[1] = OUPOUP[1],
+Thm. 6.5), andSOUP = OUP∩co-OUP (Prop. 6.6). We
+construct a standalone zero-dependencyLean 4.35.0
+formalization of 18 core lexicographic-advice, Mahaney-
+census, Cantor-pairing, loose-tower descent, dot-operator
+collapse, guardedness, andSOUP theorems (zerosorry,
+zerowarnings, zeroClassical.choice)pairedwithazero-
+floating-point finite-combinatorial verifier (OUH-CERT-1.0).
+Across 16 canonical certificates (0 .033–0.210 ms, total
+1.64 ms), all generator traces, census checksums, loose-
+promise tower simulations, and Section 6 collapses replay
+exactly while rejecting 65/65 live adversarial forgery at-
+tacks.
+1 Introduction
+Input-oblivious complexity classes restrict nondetermin-
+istic witnesses to depend only on input lengthn [7], pro-
+viding a uniform bridge towardP/poly and Karp–Lipton
+collapses [6]. Extending the loose unambiguous hierarchy
+prUH• of Hirsch and Sokolov [5], Hirsch [4] established
+four structural pillars for the input-oblivious unambiguous
+hierarchiesOUHandOUH •:
+1. Canonical Lex-Max Advice (Lem. 3.1, Cor. 3.2):
+Adapting Krentel [9] and Köbler–Thierauf [8], the
+lexicographically largest feasible run encoding an is
+unique, recoverable bit-by-bit byFPONP prefix search,
+and uniquely certified by a co-ONP tester, proving
+OGTD[NP] =OUGTD[FPONP,co-ONP,P] =P/OptP.
+∗Independent Researcher. Code, Lean 4 proofs, and cer-
+tificates: MIT License; manuscript and figures: CC-BY-4.0.
+Prepared with AI coding, formalization, and drafting assis-
+tance from Google Antigravity; all proofs, exact discrete veri-
+fiers, and adversarial tests were independently compiled and ver-
+ified locally. Repository: https://github.com/lluiseriksson/
+oblivious-unambiguous-hierarchies-certificates
+2. Mahaney Census & Tally Extraction (Lem. 2.8,
+Thm. 4.1):Knowing the exact tally census cm =
+|Cm|eliminates tally NP oracles via Cantor pairing
+π(a,b) = (a+b)(a+b+1)/2+b(instantiated at(m,cm)),
+enabling bit-by-bit oblivious witness extraction and
+provingOUH⊆P TALLY∩NP ⊆P ONP
+∥ .
+3. Loose Promise-Oracle Tower Generator
+(Thm. 5.1):Generalizing Hartmanis–Hemachandra [3]
+and Spakowski–Tripathi [ 10] to non-robust loose
+promise towers of depth d with query lengths
+m∈ {0,...,h} , maintaining candidate witness sets
+S = (Si,m)forces every disagreement round to uncover
+at least one missing true oblivious witnesswi,m among
+the d(h+ 1)target( i,m)slots, terminating within
+d(h+1)rounds (specializing todrounds in single-length
+finite towers withh = 0, i.e., one witness length per
+level) and placingOUH•⊆OGTD [NP] ⊆OUM∩ PONP.
+4. Dot-Operator Collapse, Single Queries, &SOUP
+(Sec. 6):Probing(0 n,0p)and(0 n,1p)collapses
+∃ou ·co-OUP = OUP∪co-OUP (Thm. 6.2, Cor. 6.3);
+single loose queries are guarded whenever their answer
+matters [1] (Lem. 6.4, Thm. 6.5); and testing0n yields
+SOUP=OUP∩co-OUP(Prop. 6.6).
+Contributions and Scope.We do not formalize
+polynomial-time Turing-machine runtime bounds in-
+side Lean 4; instead, we machine-check every ex-
+act structural, combinatoric, inductive-descent, and
+uniqueness invariant of [4]: (i) 18 zero- sorry, zero-
+Classical.choice Lean 4.35.0[ 2] theorems in
+ObliviousUnambiguous.lean; (ii) the exact discrete veri-
+fier OUH-CERT-1.0; (iii) 16 canonical certificates across all
+four modes; and (iv) a 65-attack live red-team suite with
+40-artifact SHA-256 manifest enforcement.
+2 Constructive Lean 4.35.0 Kernel
+The standalone module ObliviousUnambiguous.lean
+(in lean/) compiles cleanly under Lean 4.35.0 in un-
+der one second with zero external dependencies, zero
+warnings, and zero sorry. Auditing all 18 the-
+orems via #print axioms (AuditAxioms.lean) con-
+firms 8 zero-axiom theorems ( none), 4 using only
+[propext], 6 using[propext, Quot.sound], and0using
+Classical.choiceorLean.ofReduceBool(Table 1).
+1
+
+--- Page 2 ---
+Table 1: All 18 machine-checked Lean 4.35.0 theorems in ObliviousUnambiguous.lean (0 sorry, 0 warnings,
+0Classical.choice), showing exact formalized statements, references to Hirsch [4], and#print axiomsfootprints.
+# Lean 4 Theorem Identifier Exact Formalized Statement / Inductive Type Ref. [4] Axioms
+1lex_lt_irrefl_and_asymm∀a,b:List Bool,lexLtaa= false∧(lexLtab→¬lexLtba)Sec. 2.1, 3p
+2canonical_advice_unique|a|=|b|,R(a) =R(b) = true,both lex-max⇒a=bLem. 3.1p
+3prefix_search_bit_recovery lexGe(pref+ + (b::rest),buildPrefixProbepref|rest|)↔b= trueLem. 3.1p
+4co_onp_tester_singletonR(a n)∧lex-max(an)⇒∀x(|x|=|an|→(T(x)↔x=a n))Lem. 3.1p
+5mahaney_census_exact_subset countPred(λx.C(x)∧x∈ b S)U=countPredC U⇒∀x∈U, C(x)→x∈b SLem. 2.8p, Q
+6cantor_pairing_injective∀a 1,b1,a2,b2 :N, π(a1,b1) =π(a2,b2)⇒a1 =a2 ∧b1 =b2 Sec. 2.1p, Q
+7oblivious_witness_bit_extraction(∃x,V xw n)∧uniq(wn)⇒(∃xw,V xw∧bitiw)↔bitiw n Thm. 4.1none
+8oblivious_empty_slice_default_zero(∀xw,V xw= false)⇒¬∃xw, V xw∧bitiwThm. 4.1none
+9loose_tower_round_boundrounds≤found∧found≤d(h+ 1)⇒rounds≤d(h+ 1)Thm. 5.1p, Q
+10loose_tower_disagreement_descent¬Wrong(0)∧(∀j,Wrong(j+1)→Miss(j+1)∨Wrong(j))⇒Wrong(d)→∃j∈[1,d],Miss(j)Thm. 5.1p, Q
+11loose_generator_set_growth_monotone1≤h1 ≤h2 ∧M1 ≤M2 ⇒1≤h1(M1 + 1)≤h2(M2 + 1)Thm. 5.1p, Q
+12dot_op_co_oup_probe_refutationp≥1∧at-most-1(R 0)⇒R0(0p) = false∨R0(1p) = falseThm. 6.2p, Q
+13dot_op_collapse_unique_pairUnique inner probev N + outerwn ⇒Acc(x,(w,v))↔(L(x)∧w=wn ∧v=vN)Thm. 6.2none
+14dot_op_hierarchy_idempotenceOn 4-elementDotClass:∃ ou·coOUP = Union,∃ou∀ou∃ouc=∀ou∃oucCor. 6.3none
+15single_loose_query_guardedV ans(false)̸=Vans(true)∧neg-corr∧pos-uniq⇒FalseLem. 6.4none
+16input_tagging_preserves_obliviousnessqlen(xw) = lenMap(tlen(xw))∧uniq-on-T⇒sametlen =⇒w1 =w2 Thm. 6.5none
+17soup_unique_bit_witnessUniquew Y ifL0, uniquewZ if¬L0 ⇒∃!(b0,w0)for combined probe Prop. 6.6none
+18class_containment_chain_completeReflexive-transitive closureFig1Subof the 9 abstract edges in [4] Fig. 1 Fig. 1 [4]none
+Axiom key:none= zero axioms (8);p=[propext](4);p, Q=[propext, Quot.sound](6). Theorem 18 formalizes the finite reachability closure over the 8-node inductive type
+Fig1Classand 9 directed edgesFig1Edgeof Hirsch [4] Fig. 1 (without Turing-machine semantics).
+Proposition 1(Machine-Checked Structural Theorems).
+The Lean 4.35.0 kernel establishes all 18 universal invari-
+ants summarized in Table 1:
+1. Lex-Max Advice, Mahaney Census, & Pairing
+(Thms. 1–6):Over inductive List Bool, lexLt is
+irreflexive, asymmetric, and trichotomous; any lex-
+max feasible string an is unique, recovered bit-by-
+bit by buildPrefixProbe, and uniquely accepted
+by the co-ONP tester T. By the indicator split
+countPredC U = countPred(C∧ ∈b S) U +
+countPred(C∧/∈b S) U, equality of the filtered
+count countPred(λx.C(x) ∧memNatx S ) U =
+countPredC U (which intrinsically restricts counting
+to elements ofU satisfying bothC and x∈S , avoid-
+ing overcounting duplicates or false positives) forces
+memNatxS = true for everyx∈U with C(x) =true.
+Cantor pairing π(a,b) = (a+ b)(a+ b+ 1)/2 +b is
+globally injective onN2.
+2. Oblivious Bit Extraction & Loose-Tower Round Cap
+(Thms. 7–9):On any nonempty unambiguous slice with
+witness wn, existential bit queries matchbitiw n iden-
+tically; on empty slices every query returnsfalse (yield-
+ing default0p(n)). In a depth-dtower over query lengths
+0..h, uncovering≥1of the d(h+ 1)target witnesses
+per round caps termination at≤d(h+ 1)rounds (spe-
+cializing to ≤d rounds when each level uses a single
+witness length,h= 0).
+3. Tower Descent, Section 6 Collapses, & Abstract Inclu-
+sion Closure (Thms. 10–18):Structural induction on
+depth d proves any wrong level-d answer hits a miss-
+ing witness at some level1 ≤j≤d , with monotone
+branching h(M + 1). Forp≥ 1,0 p ̸= 1p forces a fixed
+probe to refute R0, yielding a unique( wn,vN)pair
+and collapsing the 4-class inductive latticeDotClass
+at level 2; any mattering single loose query cannot ad-
+mit both consistent answers; length-regular tagging pre-
+serves obliviousness; testing0n yields a uniqueSOUP
+pair( b0,w0); and Fig1Sub derives all six transitive
+inclusions in Hirsch [4] Fig. 1.
+3 Exact Discrete Verifier
+The verifier OUH-CERT-1.0 (src/ouh_certifier.py,
+src/ouh_exact.py) uses pure Python integers, booleans,
+and bitstrings exclusively (source-audited for zerofloat(,
+math., or numpy). Every payload enforces strict JSON
+typing (rejecting floats, int-as-bool, bool-as-int), nesting-
+depth cap32, control-character filtering, 2048-bit integer
+caps, and exact key sets across four modes:
+1. Mode 1 (Lem. 3.1 Canonical Advice):In-
+dependently runs the L-step FPONP prefix search
+over feasible_encodings, verifies exact step-by-step
+probes and bits, checks an = maxlex, and verifies
+|AccT |= 1for theco-ONPtester.
+2. Mode 2 (Lem. 2.8 / Thm. 4.1 Mahaney Census
+& OUP):Verifies tally censuscm, Cantor pairingπ(a,b)
+evaluated at(a,b) = (m,cm)and query-code injectivity,
+strict oblivious unambiguity across all accepted(x,w)
+pairs, and bit-by-bit witness extraction (defaulting to
+0p on empty slices).
+3. Mode 3 (Thm. 5.1 Loose Promise Tower):Enu-
+merates every consistent oracle at levels0..d to verify
+loose prOUP semantics and out-of-promise invariance
+of M, executes Hirsch’s exact round-by-roundFPNP
+generator from S(0) = ∅, verifies every round adds a
+missing true witness within the single-length (h = 0)
+specialization ≤d (0 + 1) =d rounds, and certifies
+D(x,S∗) =MAd (x)on every input.
+4. Mode 4 (Sec. 6 Collapses, Tagging, &SOUP):
+Exhaustively audits truth tables across three submodes:
+dot_op_collapse (Thm. 6.2 probes(0 n,0p)/(0n,1p)
+and unique pair( wn,vN)), single_loose_query
+(Lem. 6.4 guardedness onT and Thm. 6.5 tagged lan-
+guage A), andsoup_intersection (Prop. 6.6 unique
+(b∗,w∗)decidingL).
+2
+
+--- Page 3 ---
+Figure 1: (a) Lemma 3.1FPONP prefix-search query count
+(= L) versus feasible encoding sets across bit-lengthsL∈
+{2,..., 8}. (b) Zero-collision Cantor census pairing across
+tally length boundsh∈[4,32].
+Figure 2: (a) Theorem 5.1 loose promise-tower generator
+rounds and final witness-set sizes|S|across depths d∈
+{1,2,3}(single-length h= 0towers, so thed(h+ 1)cap
+equals dand every round uncovers a missing true witness).
+(b) Exhaustive truth-table verification counts across all
+four Section 6 certificates.
+4 Empirical Atlas and Red-Team
+Audit
+Running run_all_experiments.py generates 16 canon-
+ical certificates (4 per mode) and four exact datasets,
+audited end-to-end byverify_all.py with SHA-256 ver-
+ification across all 40 tracked artifacts.
+Canonical Advice & Mahaney Census (Fig. 1).
+Mode 1 (0.058–0.149 ms) certifies prefix-search recovery
+and singletonco-ONP testing acrossL∈{ 4,5,6,8}, recov-
+ering an ∈{1010,01101,110011,11011100} respectively.
+Mode 2 (0.033–0.062 ms) certifies Mahaney census check-
+sums and oblivious witness extraction across nonempty
+slices (wn ∈{1011,11010,111111} ) and the Theorem 4.1
+empty-slice default (0000).
+Loose Promise Towers & Section 6 Collapses
+(Fig. 2).Mode 3 (0 .126–0.210 ms) simulates four fi-
+nite loose promise towers of depths1,2,3, including ex-
+plicit out-of-promise queries accepting spurious witnesses;
+every tower terminates in exactlyd rounds with exact
+decoder match D(x,S∗) = MAd (x). Mode 4 (0 .072–
+0.118 ms) exhaustively certifies both probe regimes of
+Theorem 6.2, Lemma 6.4/Theorem 6.5 single-query in-
+put tagging (|T|= 3,|A|= 2), and Proposition 6.6SOUP
+Figure 3: (a) Exact zero-float replay latency across all 16
+canonical OUH-CERT-1.0 certificates. (b) Live adversarial
+red-team audit rejecting 65/65 forged payloads across all
+five categories.
+intersection (unique pair(0,11)).
+Replay Latency and 65/65 Red-Team Audit
+(Fig. 3).All 16 canonical certificates replay in sub-
+millisecond time (0.033–0.210 ms, total1 .64 ms). The
+live adversarial suite (tests/test_suite.py) tests 65
+targeted forgeries—13 global schema/type/depth/control-
+char attacks plus 52 domain attacks across Modes 1–4
+(non-maximal an, broken prefix probes, non-oblivious
+two-witness slices, overlapping promise sets, strict con-
+tainer/boolean typing, out-of-promise-dependent top ma-
+chines, unguarded mattering queries, and brokenSOUP
+pairs)—achieving65/65 (100%)rejection.
+5 Conclusion
+We delivered a self-contained, zero-floating-point veri-
+fication framework for Hirsch’s input-oblivious unam-
+biguous hierarchies [4], combining 18 zero-sorry, zero-
+Classical.choice Lean 4.35.0 theorems with the exact
+discrete verifierOUH-CERT-1.0, 16 sub-millisecond canon-
+ical certificates, and 65/65 live adversarial forgery rejec-
+tions.
+References
+[1] Jin-Yi Cai, Lane A. Hemachandra, and Josef Vyskoč.
+Promises and fault-tolerant database access. In
+K. Ambos-Spies, S. Homer, and U. Schöning, edi-
+tors,Complexity Theory: Current Research, pages
+101–146. Cambridge University Press, 1993.
+[2] Leonardo de Moura and Sebastian Ullrich. The Lean
+4 theorem prover and programming language. In
+Automated Deduction – CADE 28, volume 12699 of
+Lecture Notes in Computer Science, pages 625–635.
+Springer, 2021.
+[3] Juris Hartmanis and Lane A. Hemachandra. Robust
+machines accept easy sets.Theoretical Computer
+Science, 74(2):217–225, 1990.
+3
+
+--- Page 4 ---
+[4] Edward A. Hirsch. A note on input-oblivious unam-
+biguous hierarchies. arXiv:2611.33126 [cs.CC], Novem-
+ber 2026.
+[5] Edward A. Hirsch and Dmitry Sokolov. On the prob-
+abilistic closure of the loose unambiguous hierarchy.
+Information Processing Letters, 115(9):725–730, 2015.
+[6] Edward A. Hirsch and Ilya Volkovich. The ulti-
+mate Karp–Lipton collapse. arXiv:2611.16096 [cs.CC],
+2026.
+[7] Edward A. Hirsch, Ilya Volkovich, and Ryan Williams.
+Input-oblivious complexity classes in the second level
+of the polynomial hierarchy. Technical Report TR26-
+250, revision 2, Electronic Colloquium on Computa-
+tional Complexity (ECCC), 2026.
+[8] Johannes Köbler and Thomas Thierauf. Complexity-
+restricted advice functions.SIAM Journal on Com-
+puting, 23(2):261–275, 1994.
+[9] Mark W. Krentel. The complexity of optimization
+problems.Journal of Computer and System Sciences,
+36(3):490–509, 1988.
+[10] Holger Spakowski and Rahul Tripathi. On the power
+of unambiguity in alternating machines.Theory of
+Computing Systems, 41(2):291–326, 2007.
+4
