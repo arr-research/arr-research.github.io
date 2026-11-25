@@ -43,6 +43,7 @@ from assessmentlib import (
 )
 from legacyreviewlib import load_preserved_reviews, read_preserved_review, validate_preserved_reviews, preserved_review_family
 from reviewnotelib import load_review_note, review_note_score_text
+from externalcitationlib import REGISTRY_FILE as EXTERNAL_CITATIONS_FILE, citations_by_paper, load_external_citations, validate_external_citations
 
 
 SITE_DIR = ROOT / "site"
@@ -53,6 +54,11 @@ SITE_NAME = "AIRR.SCIENCE"
 NOTES_PUBLISHED = False
 PUBLIC_INTAKE_URL = ""
 SITE_FULL_NAME = "Archive for Independent & Rigorous Research"
+# Documents outside AIRR whose reference lists cite an AIRR record; main() fills both.
+# EXTERNAL_CITED maps (paper id, version) to the title, route and local-PDF flag of the cited version.
+EXTERNAL_CITATIONS: list[dict] = []
+EXTERNAL_CITED: dict[tuple[str, str], dict] = {}
+HOME_CITATION_LIMIT = 3
 
 
 def parse_args() -> argparse.Namespace:
@@ -302,7 +308,7 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
       {f'<a href="{esc(PUBLIC_INTAKE_URL)}/manage">Manage my paper</a>' if PUBLIC_INTAKE_URL else ''}
       <details class="nav-more"><summary><span class="nav-more-long">About &amp; more</span><span class="nav-more-short">More</span></summary><div>
         <a href="{base}/about/">About AIRR</a><a href="{base}/protocol/">How screening works</a>
-        <a href="{base}/assessments/">Model screening reports</a><a href="{base}/governance/">Governance</a>
+        <a href="{base}/assessments/">Model screening reports</a>{f'<a href="{base}/citations/">Papers citing AIRR</a>' if EXTERNAL_CITATIONS else ''}<a href="{base}/governance/">Governance</a>
         {f'<a href="{base}/notes/">Technical notes</a>' if NOTES_PUBLISHED else ''}<a href="{base}/support/">Support AIRR</a>
         <a href="{base}/contact/">Contact</a>
       </div></details>
@@ -312,7 +318,7 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
   <footer>
     {submission_invitation(base, PUBLIC_INTAKE_URL, compact=True)}
     <p><strong>AIRR.SCIENCE</strong> is an open research archive operated by Lluis Eriksson, an independent researcher in Sweden. Every version is preserved and citable. Before admission, a paper is checked by named AI models and approved by the editor; this screening is not peer review. <a href="{base}/governance/">Governance and conflicts</a>.</p>
-    <p><a href="{base}/catalog.json">Machine-readable catalogue (CC0)</a> · <a href="{base}/registry/model-assessments.json">Model assessments</a> · <a href="{base}/authors/index.json">Author registry (CC0)</a> · <a href="{base}/metrics.json">Activity snapshot (CC0)</a> · <a href="{base}/registry/record-timestamps.json">Exact record timestamps (CC0)</a> · <a href="{base}/protocol/">Verification protocol</a> · <a href="{base}/licensing/">Licensing</a> · <a href="{base}/privacy/">Privacy</a> · <a href="{base}/terms/">Deposit terms</a> · <a href="{base}/contact/">Contact and complaints</a> · <a href="https://github.com/arr-research/arr-research.github.io">Source (AGPL)</a></p>
+    <p><a href="{base}/catalog.json">Machine-readable catalogue (CC0)</a> · <a href="{base}/registry/model-assessments.json">Model assessments</a> · {f'<a href="{base}/citations/">Papers citing AIRR</a> · ' if EXTERNAL_CITATIONS else ''}<a href="{base}/authors/index.json">Author registry (CC0)</a> · <a href="{base}/metrics.json">Activity snapshot (CC0)</a> · <a href="{base}/registry/record-timestamps.json">Exact record timestamps (CC0)</a> · <a href="{base}/protocol/">Verification protocol</a> · <a href="{base}/licensing/">Licensing</a> · <a href="{base}/privacy/">Privacy</a> · <a href="{base}/terms/">Deposit terms</a> · <a href="{base}/contact/">Contact and complaints</a> · <a href="https://github.com/arr-research/arr-research.github.io">Source (AGPL)</a></p>
     <p class="brand-credit"><a href="https://erikssonai.se/" rel="noopener" aria-label="Eriksson Lärande &amp; AI"><img src="{base}/assets/eriksson-logo.svg" alt="Eriksson Lärande &amp; AI" width="107" height="27" loading="lazy"></a></p>
   </footer>
   {PAGE_COUNTER}
@@ -761,6 +767,102 @@ def paper_card(
 </article>"""
 
 
+def plain_day(value: str) -> str:
+    year, month, day = (int(part) for part in value.split("-"))
+    return f'<time datetime="{esc(value)}">{day} {("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")[month - 1]} {year}</time>'
+
+
+def cited_record_links(cited: dict, base: str) -> tuple[str, str, str]:
+    """Title, version-page URL and exact-PDF URL ('' when AIRR serves no PDF) of a cited AIRR version."""
+    known = EXTERNAL_CITED.get((cited["paper_id"], cited["version"]), {})
+    route = known.get("route", "papers")
+    page = f"{base}/{route}/{quote(cited['paper_id'])}/versions/{quote(cited['version'])}/"
+    pdf = f"{page}{quote(cited['paper_id'])}-{quote(cited['version'])}.pdf" if known.get("pdf") else ""
+    return known.get("title", cited["paper_id"]), page, pdf
+
+
+def external_citation_card(item: dict, base: str) -> str:
+    authors = esc(", ".join(author["name"] for author in item["authors"]))
+    records = ""
+    for cited in item["cites"]:
+        title, page, _ = cited_record_links(cited, base)
+        results = " · ".join(cited.get("results_cited", []))
+        records += f'<li><span>Cites</span> <a href="{esc(page)}">{esc(title)}</a> <small>{esc(cited["paper_id"])} · {esc(cited["version"])}{" · " + esc(results) if results else ""}</small></li>'
+    return f"""
+<article class="paper-card citing-card">
+  <div class="paper-card-header"><div class="paper-meta"><span class="badge citing-badge">Independent citation</span><span>{esc(item['identifier'])}</span></div><span class="paper-date">Posted {plain_day(item['date'])}</span></div>
+  <h3><a href="{esc(item['url'])}" rel="external noopener">{esc(item['title'])}</a></h3>
+  <div class="paper-byline"><p class="authors">{authors}</p><a class="paper-card-cite" href="{base}/citations/#{esc(item['id'])}">Citation details</a></div>
+  <ul class="citing-records">{records}</ul>
+</article>"""
+
+
+def external_citations_home(base: str) -> str:
+    if not EXTERNAL_CITATIONS:
+        return ""
+    cards = "".join(external_citation_card(item, base) for item in EXTERNAL_CITATIONS[:HOME_CITATION_LIMIT])
+    return f'<section class="recent cited-in-literature"><div class="section-heading"><div><span>Cited in the literature</span><h2>Recent papers citing AIRR records</h2></div><a href="{base}/citations/">All citations</a></div>{cards}<p class="citing-method">Listed only after the citing paper’s own reference list has been checked against the exact AIRR record. A citation is not an endorsement.</p></section>'
+
+
+def paper_cited_by(paper_id: str, base: str) -> str:
+    pairs = citations_by_paper({"citations": EXTERNAL_CITATIONS}).get(paper_id, [])
+    if not pairs:
+        return ""
+    rows = "".join(
+        f'<li><a href="{esc(item["url"])}" rel="external noopener"><strong>{esc(item["title"])}</strong></a>'
+        f'<span>{esc(", ".join(author["name"] for author in item["authors"]))} · {esc(item["identifier"])} · {plain_day(item["date"])}. '
+        f'Cites {esc(cited["version"])}{": " + esc(", ".join(cited["results_cited"])) if cited.get("results_cited") else ""}. '
+        f'<a href="{base}/citations/#{esc(item["id"])}">Citation details</a></span></li>'
+        for item, cited in pairs
+    )
+    return f'<section class="related-records cited-by" id="cited-by"><h2>Cited by</h2><ul>{rows}</ul><p class="citing-method">Independent documents whose reference lists were checked against this record. A citation is not an endorsement.</p></section>'
+
+
+def build_citations(base: str, canonical_url: str) -> str:
+    entries = ""
+    for item in EXTERNAL_CITATIONS:
+        authors = "".join(f'<li><strong>{esc(author["name"])}</strong>{"<span>" + esc(author["affiliation"]) + "</span>" if author.get("affiliation") else ""}</li>' for author in item["authors"])
+        source_links = f'<a class="button" href="{esc(item["url"])}" rel="external noopener">Open the citing paper</a>' + "".join(
+            f'<a class="text-link" href="{esc(link["url"])}" rel="external noopener">{esc(link["label"])}</a>' for link in item.get("links", [])
+        )
+        cited_blocks = ""
+        for cited in item["cites"]:
+            title, page, pdf = cited_record_links(cited, base)
+            results = "".join(f"<li>{esc(result)}</li>" for result in cited.get("results_cited", []))
+            original = f'<a class="button secondary" href="{esc(page)}">AIRR record · {esc(cited["version"])}</a>' + (f'<a class="text-link" href="{esc(pdf)}">Original PDF of the cited version</a>' if pdf else "") + f'<a class="text-link" href="{esc(page)}#cite">How to cite it</a>'
+            cited_blocks += f"""
+    <div class="citing-detail">
+      <h3>Cited AIRR record</h3>
+      <p class="citing-target"><a href="{esc(page)}">{esc(title)}</a> <small>{esc(cited['paper_id'])} · {esc(cited['version'])}</small></p>
+      <dl class="record">
+        <div><dt>Where it is cited</dt><dd>{esc(cited['location'])}</dd></div>
+        {f'<div><dt>Results cited</dt><dd><ul class="citing-results">{results}</ul></dd></div>' if results else ''}
+        <div><dt>What the citing paper uses</dt><dd>{esc(cited['summary'])}</dd></div>
+        <div><dt>Reference as printed</dt><dd>{esc(cited['reference'])}</dd></div>
+      </dl>
+      <div class="download-row">{original}</div>
+    </div>"""
+        entries += f"""
+<article class="citing-entry" id="{esc(item['id'])}">
+  <div class="paper-meta"><span class="badge citing-badge">Independent citation</span><span>{esc(item['identifier'])} · {esc(item['source_version'])} · posted {plain_day(item['date'])}</span></div>
+  <h2><a href="{esc(item['url'])}" rel="external noopener">{esc(item['title'])}</a></h2>
+  <ul class="citing-authors">{authors}</ul>
+  <p class="citing-venue">{esc(item['venue'])}</p>
+  <div class="download-row">{source_links}</div>
+  {cited_blocks}
+  <p class="citing-method">Reference list checked by the AIRR editor on {plain_day(item['verified_on'])}. None of the citing authors is an author of the cited record.</p>
+</article>"""
+    if not entries:
+        entries = '<section class="empty-state"><h2>No verified citation yet.</h2><p>Entries appear here once an outside document’s reference list has been checked against an AIRR record.</p></section>'
+    content = f"""
+<section class="page-intro"><span>Cited in the literature</span><h1>Papers that cite AIRR records</h1><p>Research published elsewhere whose reference list names an AIRR record. Each entry links to the citing paper at its source, states which results it cites and where, and links to the exact AIRR version that was cited.</p></section>
+<section class="citing-list">{entries}</section>
+<section class="callout citing-policy"><h2>How this list is kept</h2><p>An entry is added by hand after the citing document itself has been read: the reference must name the AIRR identifier, and no citing author may be an author of the cited record, so self-citations are not listed. Nothing is harvested from citation indexes. A citation shows that a result was used or compared; it is not peer review of the AIRR record and not an endorsement of the archive. <a href="{base}/registry/external-citations.json">Machine-readable list</a> · <a href="{base}/contact/">Report a citation or a correction</a>.</p></section>
+"""
+    canonical = f"{canonical_url}/citations/" if canonical_url else ""
+    return page_shell(title="Papers citing AIRR records — AIRR.SCIENCE", description="Independent research papers whose reference lists cite AIRR records, with the results cited, the source and the exact AIRR version.", content=content, base=base, canonical=canonical, math=False)
+
+
 def archive_counts(items: list[tuple[int, str]]) -> str:
     # Empty categories add nothing for a reader and look like an abandoned archive.
     return "".join(f"<div><strong>{count:,}</strong><span>{esc(label)}</span></div>" for count, label in items if count)
@@ -799,6 +901,7 @@ def build_home(papers: list, timestamps: dict, base: str, canonical_url: str, au
 {submission_invitation(base, PUBLIC_INTAKE_URL)}
 <section class="archive-responsibility" aria-label="Scholarly standards"><h2>A scholarly record carries responsibility.</h2><p>AIRR provides citable records and metadata for discovery by services such as Google Scholar. Help protect the archive’s reputation: submit serious research, support your claims, cite accurately and state limitations. Indexing is decided by each service and does not imply scientific endorsement.</p><p><strong>Minimum standards apply to every paper.</strong> AIRR reserves the right to decline publication or withdraw published work that fails its minimum standards of scholarly relevance, clarity, evidence or integrity, including Working papers. <a href="{base}/protocol/#minimum-standards">Read the publication and withdrawal standards →</a></p></section>
 <nav class="home-subjects" aria-label="Research subjects"><span class="eyebrow">Subjects</span><div class="subject-strip">{subject_links(papers, base, 6)}</div><a class="home-all-subjects" href="{base}/subjects/">All subjects →</a></nav>
+{external_citations_home(base)}
 <section class="recent"><div class="section-heading"><div><span>Catalogue</span><h2>Latest research</h2></div><a href="{base}/papers/">View papers</a></div>{recent}</section>
 <section class="stats" aria-label="Archive statistics">
   {archive_counts([(accepted_papers, "screened papers"), (working_papers, "working papers"), (archived_papers, "historical imports"), (accepted_notes, "technical notes")])}
@@ -1411,6 +1514,7 @@ def build_paper_page(
   </div>
   {note_section}
   {related_section}
+  {paper_cited_by(metadata['id'], base)}
   <section class="disclosure" id="disclosures"><h2>AI assistance statement</h2><p>{disclosure_text(metadata['ai_assistance']['statement'])}</p></section>
   <section class="screening-record"><h2>Frontier-model screening</h2><p>Status: <strong>{esc(metadata['screening']['status'])}</strong>. Any listed reports correspond to this exact version under {esc(metadata['screening']['protocol'])}; no absent assessment is represented as a pass.</p><ul>{evaluators}</ul></section>
   {paper_assessment_section(paper, assessments, highlight, base)}
@@ -1854,6 +1958,7 @@ def write_sitemaps(papers: list, groups: dict, profiles: list[dict], canonical_u
         f"{canonical_url}/authors/",
         f"{canonical_url}/rankings/",
         f"{canonical_url}/assessments/",
+        f"{canonical_url}/citations/",
         f"{canonical_url}/protocol/",
         f"{canonical_url}/submit/",
         f"{canonical_url}/agents/",
@@ -1938,6 +2043,7 @@ def write_llm_guides(papers: list, canonical_url: str) -> None:
         f"- [Sitemap]({canonical_url}/sitemap.xml)",
         f"- [Verification protocol]({canonical_url}/protocol/)",
         f"- [Model assessments]({canonical_url}/registry/model-assessments.json)",
+        f"- [Verified external citations of AIRR records]({canonical_url}/registry/external-citations.json)",
         f"- [Agent submission guide]({canonical_url}/agents/)",
         f"- [Agent API contract]({canonical_url}/agent-submissions.openapi.json)",
         f"- [Complete agent instructions]({canonical_url}/agent-submissions.md)",
@@ -2010,6 +2116,19 @@ def main() -> int:
         for error in assessment_errors + highlight_errors:
             print(error, file=sys.stderr)
         return 1
+    try:
+        citation_registry = load_external_citations()
+    except (OSError, ValueError) as error:
+        print(f"Cannot build site: external-citations.json: {error}", file=sys.stderr)
+        return 1
+    citation_errors = validate_external_citations(citation_registry, all_versions)
+    if citation_errors:
+        print("Cannot build site: external citation registry validation failed.", file=sys.stderr)
+        for error in citation_errors:
+            print(error, file=sys.stderr)
+        return 1
+    global EXTERNAL_CITATIONS
+    EXTERNAL_CITATIONS = sorted(citation_registry["citations"], key=lambda item: (item["date"], item["id"]), reverse=True)
     assessments = assessment_registry["assessments"]
     highlights = highlight_registry["highlights"]
     highlight_lookup = {(item["paper_id"], item["version"]): item for item in highlights}
@@ -2090,6 +2209,12 @@ def main() -> int:
         (OUTPUT_DIR / record_route(version.metadata) / version.id / filename).write_bytes(data)
         local_pdfs.add((version.id, version.version))
     print(f"Prepared same-directory PDFs for {len(local_pdfs)} version(s).")
+    EXTERNAL_CITED.clear()
+    for version in all_versions:
+        EXTERNAL_CITED[(version.id, version.version)] = {"title": version.metadata["title"], "route": record_route(version.metadata), "pdf": (version.id, version.version) in local_pdfs}
+    if EXTERNAL_CITATIONS_FILE.is_file():
+        shutil.copy2(EXTERNAL_CITATIONS_FILE, OUTPUT_DIR / "registry" / "external-citations.json")
+    write(OUTPUT_DIR / "citations" / "index.html", build_citations(base, canonical_url))
 
     write(OUTPUT_DIR / "index.html", build_home(papers, timestamps, base, canonical_url, author_lookup, metrics, len(profiles), args.google_site_verification, args.bing_site_verification))
     research_count = sum(paper.record_type == "research_paper" for paper in papers)
