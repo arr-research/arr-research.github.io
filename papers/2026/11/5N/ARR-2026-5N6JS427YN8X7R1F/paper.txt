@@ -1,0 +1,482 @@
+--- Page 1 ---
+Constructive Lean 4 Formalization and Exact-Rational
+Certificates for Polynomial-Time1/5-Approximate Nash
+Equilibria
+Lluis Eriksson∗
+November 25, 2026
+Abstract
+Google Research Cogentic (Nov. 25, 2026) introduced
+MaximinKiteNE, a deterministic polynomial-time algorithm
+computing an exact rational1/5-approximate Nash equi-
+librium (δ = 0) in any[0 ,1]-normalized rational bima-
+trix game, breaking the1 /3 + δ barrier. Because that
+preprint is accompanied by neither machine-checked for-
+malizations nor executable exact-rational verifiers and
+the halting proof rests on a delicate chain of exact ra-
+tional inequalities—froms-kite best-response mixing and
+the7 /4welfare cap to the Stage 4 functional bound
+H(z,c1,c2) ≤ −1/3000 <− 2−14—independent formal
+verification is essential. We deliver an open, zero-
+dependency, zero-floating-point verification stack pairing:
+(i) MaximinKiteNash.lean, 18 constructive Lean 4.35.0
+theorems (zerosorry, zeroaxiom, zeroClassical.choice,
+kernel axioms strictly [propext, Quot.sound]) mecha-
+nizing the deterministic algebraic, primal-dual, simplex-
+rounding, square-completion, shifted-cubic, and contradic-
+tion pillars; and (ii)KITE-NASH-CERT-1.0, a pure-stdlib
+Python fractions.Fraction auditor across four modes.
+We certify 16 canonical witnesses in0.104–2.564 ms, in-
+dependently verify H(z,c1,c2) ≤ −1/1280 ≤ −1/3000
+across a13 3 = 2,197-point exact rational grid on[1/4,4]3,
+reject 60/60 live adversarial forgeries plus raw IEEE-
+754/NaN/duplicate-key tokens, and enforce a 40-file SHA-
+256 manifest.
+1 Introduction and Scope Calibra-
+tion
+Computing anε-approximate Nash equilibrium (ε-NE) in
+a two-player bimatrix game(R,C) ∈([0,1] ∩Q )m×n has
+progressed from ε = 1 /2[ 2],(3 −
+√
+5)/2 ≈0.38197[ 3],
+0.36392[ 1], and0 .3393[ 7] to1 /3 + δ [5]. On Novem-
+ber 25, 2026, Google Research Cogentic [ 6] presented
+MaximinKiteNE, achieving exact polynomial-time1/5-NE
+∗Independent Researcher. Code, Lean 4 proofs, and certificates:
+MIT License; manuscript and figures: CC-BY-4.0. Prepared with
+transparent AI coding, formalization, and drafting assistance via
+Google Antigravity; all Lean 4 theorems, exact-Q verifiers, and adver-
+sarial tests were independently compiled and verified locally. Reposi-
+tory: github.com/lluiseriksson/cogentic-maximin-kite-nash-c
+ertificates.
+(δ= 0) via four stages: (1) exact zero-sum minimax screen-
+ing( vR,vC); (2) primal-dual1 /5-kite queries anchored
+at weight1 /4to xmm across a K1 = 3 ·256 = 768-
+scale discrete filter bank; (3) continuous-time Volterra
+interpolation and Plancherel/FTC scale-lag estimates forc-
+ing H(z,c1,c2) ≥ −2−14 on[1 /4,4]3 if the loop never
+halts; and (4) exact rational algebraic certification proving
+H(z,c1,c2)≤−1/3000<−2 −14 everywhere on[1/4,4] 3.
+Honest Two-Layer Verification Scope.We strictly
+separate what is machine-checked from what remains ex-
+ternal to our Lean kernel:
+1. Layer 1 (Lean 4.35.0 Kernel, Universal Alge-
+braic & Structural Pillars):MaximinKiteNash.lean
+proves 18 zero-dependency integer and inductive-list the-
+orems (Table 1) covering Lem. 2.3(a)–(b)s-kite mix-
+ing, the7 /4welfare cap, Lem. 2.2 minimax regret
+screening, weak duality, dual weight ratioa∈ [1/4,4],
+Lem. 2.1(b) simplex rounding L1/remainder bounds,
+1/4-maximin anchoring, Sec. 2.3 step-parameter arith-
+metic, Lem. 5.2 Eq. (5.7) square completion, Lem. 5.1(3)
+Eq. (5.3) shifted-cubic identity, Subcase 1(b) univer-
+sal discriminant polynomial identity, Eq. (5.8) margin
+−613/97280 <−1/3000, Sec. 5.3 high-gate breakpoint
+ordering, and−1/3000<−2 −14.
+2. Layer 2 (Exact- Q Certificate Auditor):
+KITE-NASH-CERT-1.0 replays concrete finite bimatrix
+games, minimax saddle points, simplex roundings, and
+exact Stage 4H(z,c1,c2)evaluations over Q without
+floating-point arithmetic.
+3. Explicit Non-Claims:We donotformalize strong LP
+duality, polynomial-time ellipsoid/interior-point solvers,
+the continuous-time Volterra interpolation, Plancherel’s
+theorem, or the full continuum cell-cover proof of Lem-
+mas 5.2–5.4 inside Lean 4; those analytical steps remain
+in [6].
+2 Exact Stage 4 Rational Func-
+tional
+To guarantee self-contained auditability solely from this
+manuscript, we record the exact piecewise-rational formu-
+las of [6] (Eqs. (4.1)–(4.8) and Lem. 5.1(1)) implemented
+1
+
+--- Page 2 ---
+verbatim insrc/kite_exact.py. For( z,c1,c2) ∈[1/4,4]3
+andu + := max(u,0):
+f(z) :=
+
+
+
+1, z∈[ 1
+4 ,1],
+4z+1
+5 , z∈(1,2],
+9
+5 , z∈(2,4],
+(1)
+λK(z,y) := f(z)
+128 min
+(
+1,8(z−7
+8 )+
+)
+×
+(
+1 + min(1,4(y−z) +)
+)
+,
+Λ(z,y) := f(z)
+8 + 3(y+f(z)z)+(y+f(z)z−2f(z)) +
+32
++ 4(y−f(z)z) +
+32 −(y−z)+
+8 −f(z)z
+5 +λK(z,y).(2)
+Writing f0 = f(z), A := ( c2 + f0c1 −2f0)/2, and
+B := (c2 −f0c1)/2, the closed-form integralJ(f0; c1,c2)
+and its piecewise-linear envelope Jmid satisfy J≤J mid
+(Prop. 4.1(1)) with equality wheneverAB≥0:
+J(f0;c1,c2) =
+
+
+
+0, A≤0, B≤0,
+c2−f0
+16 , A≥0, B≥0,
+(c2+f0c1−2f0)2
+64f0(c1−1) , A>0>B,
+(c2−f0c1)2
+64f0(1−c1) , A<0<B,
+(3)
+Jmid := (c2+f0c1−2f0)++2(c2−f0)++(c2−f0c1)+
+64 , and
+F(f0;c1,c2) := f0c1−c2
+8 +
+3(c2+f0c1)2+(c2+f0c1−2f0)2
++
+64f0
+−
+4(c2−f0c1)2
++
+64f0
++J+
+(c2−c1)2
++
+16 −f0c2
+1+c2
+2
+10 .
+(4)
+Finally, with variance term Evar(z; c1,c2)equal to
+min
+(5
+1536 , 5
+162 (c1+c2
+2 −1
+4 )3
++
+)
+when z≤ 3
+4 and c1 + c2 ≤2,
+equal to 5
+1536 on the rest ofz≤ 7
+8 , and 5f(z)
+6144 for z >7
+8 , the
+Stage 4 functional is
+H(z,c1,c2) :=F(f 0;c1,c2)−Λ(z,c 2)(c1 −z)
+−
+(
+1
+8 −c2
+80
+)
+(z−c 2) +Evar.(5)
+Replacing J by Jmid yields the Lemma 5.1(2) upper bound
+Hup =Gmid(z,c2) +hcomb(c1) +Evar ≥H.
+3 Constructive Lean 4.35.0 Kernel
+lean/MaximinKiteNash.lean compiles standalone in3.2 s
+under Lean 4.35.0 [4] with zero Mathlib or external im-
+ports. Table 1 lists the exact formalized statement of every
+theorem.
+Proposition 1(Machine-Checked Kernel Soundness).Ev-
+ery theorem in Table 1 compiles under Lean 4.35.0 without
+external dependencies,sorry, customaxiom declarations,
+or Classical.choice. In particular: (1) Theorems 1–4
+and 7–8 certify the exacts-kite dichotomy (in-kite mix-
+ing to exacts-NE vs. escaped welfare capX + Y <7/4
+and dual weight ratioa∈ [1/4,4]at s = 1/5); (2) Theo-
+rems 5–6 and 9–11 certify the minimax regret screen, weak
+duality, denominator-D simplex roundingL1 and remain-
+der bounds, and1 /4-maximin anchoring; and (3) Theo-
+rems 12–18 certify the Sec. 2.3 step-parameter arithmetic
+and the core Stage 4 rational algebraic identities forcing
+−1/3000<−2 −14.
+4 Exact-Q Auditor
+KITE-NASH-CERT-1.0
+src/kite_exact.py and src/kite_certifier.py use ex-
+clusively Pythonint and fractions.Fraction, statically
+checked byscripts/verify_all.py for zero occurrences
+of float(, math., numpy, ornp.. Raw JSON parsing uses
+parse_float, parse_constant, andobject_pairs_hook
+rejecting all decimal literals,NaN/Infinity, and duplicate
+object keys, followed by a strict AST type whitelist, nesting-
+depth cap (20), ASCII-digit canonical lowest-terms rational
+parsing (len≤ 2000, rejecting leading zeros,-0, +, and
+unreduced fractions), and duplicate probe rejection.
+Definition 1( KITE-NASH-CERT-1.0 Accep-
+tance Predicates).A JSON witness with
+schema="KITE-NASH-CERT-1.0" is accepted iff all claimed
+exact rational/integer summaries match recomputed values
+and its mode predicate holds:
+• Mode 1 (kite_best_response_and_welfare_cert):
+Given s∈ (0,1/2), R,C∈ ([0,1] ∩Q )m×n, and
+x∈ ∆m,y∈ ∆n, computes exact( uR,uC,r1,r2). In
+in_kite, enforces(1 −s)r1 + sr2 ≤s , sr1 + (1−s)r2 ≤
+s, exact Lem. 2.3(a) mixing( xout,yout)via verified
+pure best-response index, and max(r′
+1,r′
+2) ≤s . In
+escaped_welfare_cap, enforces escape of at least one
+kite face, strict capuR + uC <2 −s/(1 −s), dual mul-
+tipliers θ1,θ2 ≥0( θ1 + θ2 = 1) satisfying Cogentic’s
+Lem. 2.3(b) dual separationθ1((1−s)r1 + sr2) +θ2(sr1 +
+(1−s)r2) = (1−λ∗)r1 + λ∗r2 >s, λ∗= sθ1 + (1−s)θ2 ∈
+[s,1−s], anda=λ ∗/(1−λ∗)∈[s/(1−s),(1−s)/s].
+• Mode 2 (minimax_screen_and_rounding_cert):Ver-
+ifies exact zero-sum saddle points minj(xT
+mmR)j ≥
+vR ≥max i(Rymm)i and mini(Cycol)i ≥v C ≥
+maxj(xT
+guardC)j; checks denominator-D simplex round-
+ing ck ∈ {⌊Dpk⌋,⌊Dpk⌋+ 1}, ∑ ck = D, r = D−∑⌊Dpk⌋ ∈ {0,...,d− 1}, and ∥ˆp−p∥1 ≤d/D ; en-
+forces eitherearly_halt (max(vR,vC) ≤s , i.e., vR ≤
+s∧v C ≤s , with exact Lem. 2.2 minimax profile
+(halt_x,halt_y) = (xguard,ymm)having regret ≤s) or
+anchored_continue (Row-oriented after Step 2:vR >
+s∧vR ≥vC, ˜x= 1
+4 xmm+ 3
+4 ¯x, andminj(˜xTR)j ≥vR/4 >
+s/4).
+• Mode 3 (stage4_H_algebraic_cert):For a non-
+empty, duplicate-free list of triples( z,c1,c2) ∈
+[1/4,4]3 obeying the declared regime (low_gate_z_le_1,
+high_gate_mid_1_to_2, high_gate_top_2_to_4, or
+mixed_cube), evaluates Eqs. (1)–(5) exactly inQ and
+checks: (i) J≤J mid with equality when AB≥ 0;
+(ii) H≤H up = Gmid + hcomb + Evar; (iii)H(z,c1,c2) ≤
+−1/3000 <−2−14; and(iv)Eq.(5.7)for z≤ 1, high-gate
+2
+
+--- Page 3 ---
+Table 1: Complete inventory of all 18 constructive Lean 4.35.0 theorems inlean/MaximinKiteNash.lean (zero sorry,
+zero axiom, zeroClassical.choice; every theorem audits strictly to[propext, Quot.sound] via lake env lean -j
+1 AuditAxioms.lean).
+# Theorem Identifier Ref. [6] Exact Machine-Checked Statement (Cleared Integers / Inductive Lists)
+1kite_best_response_mixing_rowLem. 2.3(a)sr 2 + (r1−s)D≤sr 1 ⇐⇒(D−s)r 1 +sr2 ≤sD(∀D,s,r 1,r2 ∈Z).
+2kite_best_response_mixing_colLem. 2.3(a)sr 1 + (r2−s)D≤sr 2 ⇐⇒sr 1 + (D−s)r2 ≤sD(∀D,s,r 1,r2 ∈Z).
+3kite_escape_welfare_cap_generalLem. 2.3(b)2r<D, X,Y≤Dand escaping eitherr-kite face=⇒(D−r)(X+Y)<D(2D−3r).
+4kite_one_fifth_welfare_cap_7_4Sec. 1.3X,Y≤Dand4(D−X) + (D−Y)>D(or symm.)=⇒4(X+Y)<7D.
+5zero_sum_minimax_regret_screenLem. 2.20≤u R,uC,M 1 ≤vR ≤s,M 2 ≤vC ≤s=⇒M 1−uR ≤s∧M 2−uC ≤s.
+6zero_sum_weak_duality_sumLem. 2.2/2.3 Inductive list theorem:∀xs: List(Z×Z),AllNonnegPairs(xs) =⇒0≤dotInt(xs).
+7kite_dual_lambda_boundsLem. 2.3(b)2r<D,t 1,t2 ≥0,t 1 +t2 =D=⇒rD≤rt 1 + (D−r)t2 ≤(D−r)D.
+8dual_weight_ratio_range_1_4_to_4Sec. 1.3D≤5λ≤4D=⇒D−λ≤4λ∧λ≤4(D−λ)(i.e.a= λ
+1−λ ∈[ 1
+4 ,4]).
+9simplex_rounding_l1_error_boundLem. 2.1(b) Inductive list theorem:∀es: ListZ,AllLe(step,es) =⇒sumList(es)≤|es|·step.
+10simplex_rounding_remainder_boundsLem. 2.1(b) Inductive list theorem: S >0,AllInRange (S,fs) =⇒ 0 ≤sumList (fs)and ( fs̸=
+[] =⇒sumList(fs)<|fs|·S).
+11anchored_query_convex_combinationSec. 2.3s MM =D, sBar =D,5v R >D=⇒s MM + 3sBar = 4D∧20vR >4D.
+12stage2_universal_step_parametersSec. 2.3 0 < S1,ε−1, T1 = 40S1ε−1+1 =⇒ 0 < T1 ∧40S1ε−1 < T1 ∧3 ·256 = 768∧224 =
+16777216.
+13stage4_low_gate_square_completion_5_7Eq. (5.7)21(17(z−c 2)2 + 4c2
+2) = (21c2−17z)2 + 68z2 ≥68z2 (∀z,c2 ∈Z).
+14stage4_cubic_Q_bound_eq5_3Eq. (5.3) 27Q((4+u)/3) =−36 −60u−219u2 −60u3 (∀u∈Z ) and28 ·477 = 13356<13400 =
+536·25.
+15stage4_subcase1b_discriminant_negativeLem. 5.2∀s,D∈Z, 204(16(D−s)2−D2) −14(10D−17s)2 = 2(830D2−884Ds−391s2); at 10
+17
+equals 2970
+119 >0.
+16stage4_subcase1c_margin_eq5_8Eq. (5.8) 5 ·95 −17 ·64 =−613,1024 ·95 = 1520·64 = 97280<613 ·3000( − 613
+97280 <− 1
+3000 ).
+17stage4_high_gate_breakpoints_orderSec. 5.3D≤z≤ 2D =⇒f 0(2−z) ≤f 0 ≤z≤f 0z (all 4 cleared-integer inequalities for
+f0 = 4z+D
+5D ).
+18stage4_final_contradiction_3000_vs_16384Thm. 5.5 214 = 16384 > 3000( − 1
+3000 <−2−14) and exact chain1
+5 < 1
+3 < 3393
+10000 < 3639
+10000 <
+3819
+10000 < 3−
+√
+5
+2 < 1
+2 (via5·10 8 <22362 2 and2 2 <5).
+Figure 1:(a)Exact- Q Stage 4 negativity margin
+−max c1,c2 H(z,c1,c2)across all13 3 = 2,197grid points
+on[1 /4,4]3 (log scale), uniformly exceeding1/3000(global
+tightest point−1/1280at(1 /4,1/4,1/4)) and separated
+by over an order of magnitude from the Volterra floor
+2−14.(b)Exact verification of the shifted-cubic drift bound
+Eq. (5.3) onf0 ∈[1,5/3].
+breakpoint orderf0(2−z) ≤f0 ≤z≤f 0z for z∈ [1,2],
+and Eq. (5.3) (Q(f0)<0) forf 0 ∈[1,5/3].
+• Mode 4 ( bimatrix_one_fifth_ne_cert):Given
+R,C∈ ([0,1] ∩Q )m×n,0 < ε≤1/5, x∈ ∆m,y∈ ∆n,
+verifies max(r1,r2) ≤ε≤ 1/5(and= 0for exact_ne)
+plus exact support sizes andlcmdenominator.
+5 Experiments, Certificate Atlas,
+and Red-Team Audit
+All experiments were executed locally on Windows 11
+(Python 3.12.6, Lean 4.35.0; 7-run means after warm-up).
+1. 3D Exact- Q Stage 4 Grid Sweep.Evaluating
+Eqs. (1)–(5) over the13 3 = 2 ,197-point exact rational
+Figure 2:(a)Two-decade progression of polynomial-time
+additive ε-NE guarantees culminating at1/5[ 6].(b)Exact
+Lem. 2.3(b) strict welfare cap2−s/(1 −s)forced upon
+escaping thes-kite, highlighting(1/5,7/4)and(1/4,5/3).
+grid z,c1,c2 ∈{1
+4 ,1
+2 ,3
+4 ,7
+8 ,1,9
+8 ,5
+4 ,3
+2 ,11
+6 ,2,5
+2 ,3,4}confirms
+H(z,c1,c2) ≤−1/1280 ≈−7.813 ×10−4 ≤−1/3000 <
+−2−14 at every single point (Fig. 1(a)), with the tight-
+est slice at z = 1 /4( −1/1280), followed by z = 9 /8
+(−481/307200 ≈−1.566 ×10−3) and deepening smoothly
+to −19583/153600 ≈−0.1275at z = 4. Every point also
+satisfiesH≤H up andJ≤J mid.
+2. Canonical 16-Certificate Atlas.Table 2 records all
+16canonicalwitnessesspanningModes1–4, verifiedin0 .104–
+2.564 ms (Fig. 3(a)). Mode 1 includes a zero-slack tight
+1/5-kite row mix (kite_row_mix_tight_1_5: r1 = 1 /4,
+r2 = 0,(4 /5)r1 = 1 /5, output regret1 /5) and escaped
+welfare-cap certificates ats = 1/5(3 /2 < 7/4, a = 3/2)
+and s = 1/4(6 /5 < 5/3, a = 5/3). Mode 2 covers both
+early_halt (max(vR,vC) ≤1/5, including exact boundary
+vR = vC = 1/5) and anchored_continue (Row-oriented
+vR ≥v C, guaranteed floors13 /32 > 1/20and43 /160 >
+1/20) alongside exact denominator-D simplex rounding
+3
+
+--- Page 4 ---
+Figure 3:(a)Mean exact- Q verification latency across all
+16 canonical certificates (0.104–2.564 ms).(b)Exact L1
+simplex rounding error∥ˆp−p∥1 vs. the Lean Theorem 9
+upper boundd/D(d= 5,D∈[10,1000]).
+Table 2: Canonical 16-certificateKITE-NASH-CERT-1.0 at-
+las (results/exp1_certificate_atlas.json; all 16 veri-
+fied).
+Certificate ID M Exact Certified Witness Summary ms
+kite_row_mix_tight_1_5M1s= 1
+5,r1=1
+4,r2=0, tight mixρ′=1
+5 0.128
+kite_col_mix_asymmetric_3x3M1s= 1
+5,r1= 1
+10,r2=11
+50, col mixρ′=1
+5 0.196
+kite_escape_welfare_7_4_capM1s= 1
+5,uR+uC=3
+2 <7
+4,λ∗=3
+5,a=3
+2 0.104
+kite_escape_general_s1_4M1s= 1
+4,uR+uC=6
+5 <5
+3,λ∗=5
+8,a=5
+3 0.104
+minimax_early_halt_diag_1_6M2v R=1
+6,vC=1
+5 ≤1
+5, haltρ=0,L1= 1
+28 0.228
+minimax_early_halt_boundary_1_5M2vR=vC=1
+5 ≤1
+5, haltρ=0,L1= 2
+165 0.151
+minimax_anchored_continue_rpsM2vR=vC=1
+2, floor13
+32 > 1
+20,L1=00.219
+minimax_anchored_4x4_tightM2v R=2
+5,vC= 3
+10, floor43
+160,L1= 7
+650 0.307
+stage4_low_gate_grid_z_le_1M3 12 ptsz≤1,maxH=−1
+1280≤− 1
+3000 2.128
+stage4_high_gate_mid_1_to_2M3 12 ptsz∈(1,2],maxH=−127
+25600 2.547
+stage4_high_gate_top_2_to_4M3 10 ptsz∈(2,4],maxH=−2229
+51200 1.799
+stage4_corners_and_kinks_fullM3 14 corner/kink pts,maxH=−983
+153600 2.564
+ne_one_fifth_kite_mix_3x3M43×3stage2_kite,ρ= 1
+5, supp(1,2)0.124
+ne_one_fifth_4x4_zero_slackM44×4zero-slackr1=r2=1
+5,lcm=50.171
+ne_one_fifth_5x5_anchored_lpM45×5stage3_anchored_lp,ρ=1
+50,lcm=600.243
+ne_exact_equilibrium_3x3_rpsM43×3exact_ne,ρ=0, supp(3,3)0.119
+(Fig. 3(b)). Mode 3 certifies 48 distinct exact rational
+probes across all three gate regimes plus adversarial corners.
+Mode 4 certifies end-to-end1/5-NE bimatrix profiles up to
+5×5, including a zero-slack4×4profile with r1 = r2 = 1/5
+and an exact Nash equilibrium (ρ= 0).
+3. Live Adversarial Forgery & Integrity Gate.
+tests/test_suite.py runs 64 pytest checks (all pass-
+ing in0 .11 s): all 16 canonical certificates, 3 raw-
+JSON IEEE-754/ NaN/duplicate-key parser rejections,
+and 60 live adversarial forgery mutations spanning
+schema/parser bypasses (10), Mode 1 kite/dual tam-
+pering (14), Mode 2 saddle/rounding/anchor tampering
+(14), Mode 3 domain/regime/duplicate/margin tampering
+(12), and Mode 4 regret/stage/support tampering (10).
+scripts/verify_all.py passes all 5 gates including a
+strict axiom whitelist and 40-file SHA-256 manifest.
+6 Conclusion
+We delivered an independent, zero-dependency, zero-
+floating-point verification stack for Google Research Cogen-
+tic’s exact polynomial-time1/5-approximate Nash equilib-
+rium algorithm [6], combining 18 constructive Lean 4.35.0
+theorems (zero sorry, zero Classical.choice), the 4-
+mode exact-Q auditor KITE-NASH-CERT-1.0, 16 canonical
+certificates, a2 ,197-point exact rational confirmation of
+H≤− 1/3000 <−2−14, and 60/60 live adversarial forgery
+rejections.
+References
+[1] Hartwig Bosse, Jaroslaw Byrka, and Evangelos
+Markakis. New algorithms for approximate Nash equi-
+libria in bimatrix games. InProceedings of the 3rd
+International Workshop on Internet and Network Eco-
+nomics (WINE), pages 17–29, 2007.
+[2] Constantinos Daskalakis, Aranyak Mehta, and Chris-
+tos H. Papadimitriou. A note on approximate Nash equi-
+libria. InProceedings of the 2nd International Workshop
+on Internet and Network Economics (WINE),pages297–
+306, 2006.
+[3] Constantinos Daskalakis, Aranyak Mehta, and Chris-
+tos H. Papadimitriou. Progress in approximate Nash
+equilibria. InProceedings of the 8th ACM Conference
+on Electronic Commerce (EC), pages 355–358, 2007.
+[4] Leonardo de Moura and Sebastian Ullrich. The Lean 4
+theorem prover and programming language. InAuto-
+mated Deduction – CADE 28, pages 625–635. Springer,
+2021.
+[5] Argyrios Deligkas, Michail Fasoulakis, and Evange-
+los Markakis. A polynomial-time algorithm for1 /3-
+approximate Nash equilibria in bimatrix games. In
+Proceedings of the 30th Annual European Symposium
+on Algorithms (ESA), pages 41:1–41:14, 2022.
+[6] Google Research Cogentic. An exact polynomial-time
+algorithm for1 /5-approximate Nash equilibria in bi-
+matrix games. Google Research Technical Preprint
+(cogentic_research_papers/bimatrix_nash_equil
+ibrium), November 2026.
+[7] Haralampos Tsaknakis and Paul G. Spirakis. An op-
+timization approach for approximate Nash equilibria.
+Internet Mathematics, 5(4):365–382, 2008.
+4

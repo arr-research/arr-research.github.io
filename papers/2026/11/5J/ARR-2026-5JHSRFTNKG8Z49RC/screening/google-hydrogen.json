@@ -1,0 +1,59 @@
+{
+  "assessed_at": "2026-11-25T20:29:58Z",
+  "canonical_sha256": "9c6960153b643975b9ee0b49aa6c0fc9b8d98bff74f0f624aaf4ed0f7ab47312",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All mathematical claims visible in the PDF check out: Prop. 3.1 no-wrap/squared-mismatch identities and 4x degree bound (2(g-h)=v-u gives |g-h|<=floor((M-1)/2)), Lem. 4.1 quotient identity u(vw)=v^2s+v(uw-vs) and block nonzero counts a(b+1), a(b-1), a-1, Lem. 4.2 sector counts 3ah and drop a(a-1), the Lem. 5.1 H_a recurrence and P(a,a)^3>=a^4 induction, the 3*alpha-1>=2*beta strictly concave rational family, and all minimal thresholds a*(t) (7, 30, 508, 2043, 32761).",
+      "stars": 5
+    },
+    "novelty": {
+      "basis": "Beyond standalone Lean 4 and pure-Fraction certification, the paper establishes a sharp 4x tightening of Prop. 3.1's degeneration degree from (M-1)^2 to floor((M-1)/2)^2 (degree 0 at M=2), explicit zero-slack and strictly concave rational spectral profile families (3*alpha-1>=2*beta), and exact minimal integer refutation thresholds a*(t) for supercritical t>3/4.",
+      "stars": 4
+    },
+    "reproducibility": {
+      "basis": "Table 1, Table 2, and Sections 2-4 specify Lean 4.35.0, Python 3.12.6, QRat design, exact schema/parser rules, all 16 canonical certificate parameters, and witness counts, enabling clear verification of reported formulas; however, the Lean source, Python modules, and JSON/test artifacts themselves reside in an external repository not included in the 4-page PDF.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "The manuscript enforces an explicit, honest two-layer verification scope (Sec. 1) distinguishing universal constructive Lean 4 proofs over QRat (zero Classical.choice, zero sorry) from finite-witness Fraction audits and unformalized topological/asymptotic pillars in [4]. For Prop. 3.1 and Lems. 4.1-4.2, Lean 4 mechanizes arithmetic cores while full matrix/monomial checks are finite-instance Python audits.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Provides an independent, zero-floating-point, constructive Lean 4 + exact-Q verification stack and adversarial audit for the combinatorial/spectral-profile core of OpenAI's omega <= 9/4 matrix multiplication bound [4], strengthening auditability and sharpening finite degeneration and refutation bounds.",
+      "stars": 4
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 4.25,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-5JHSRFTNKG8Z49RC",
+  "potential_errors": [
+    "In Section 4 item 3, the breakdown of '64 pytest checks' lists 'all 16 canonical certificates, 3 raw-JSON IEEE-754/NaN/duplicate-key parser rejections, and 60 live adversarial forgery attacks' (16 + 3 + 60 = 79, or 16 + 60 = 76), creating an unexplained count discrepancy between pytest check items and sub-cases.",
+    "In Table 2 (Mode 4), lem51_profile_tight_alpha1_3 lists 'amax=6, D6=58/3, refutes t=1 (a=8)' whereas a=8 > amax=6 and a*(1)=7 (while D_lb(2)=10/3 > 3 already exceeds 2a-1); the parenthetical '(a=8)' appears to be a chosen refutation parameter rather than a diagonal entry inside P[1..6][1..6], which is slightly ambiguous.",
+    "The Abstract states 'mechanizing Proposition 3.1, Lemmas 4.1-4.2, and the complete universal inductive proof of Lemma 5.1', whereas Table 1 shows Lean 4 mechanizes only elementary integer/polynomial identities for Prop. 3.1 and Lems. 4.1-4.2 rather than the full Fourier tensor degeneration or matrix filtration constructions (though Sec. 1 explicitly clarifies this scope)."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Complete, zero-dependency, Classical.choice-free Lean 4.35.0 mechanization (Theorems 10-17) of the universal inductive proof of Lemma 5.1 (P(a,a)^3 >= a^4 for all a >= 1) over an exact rational structure QRat, with every step of the increment antitonicity, tripling slope, H_a recurrence, and cubic inequality cleanly aligned.",
+    "Explicit and intellectually honest 'Honest Two-Layer Verification Scope' in Section 1 clearly delineating what is universally proved in Lean 4, what is replayed on finite exact-Q witnesses, and what asymptotic/topological pillars (detecting characters, Stirling limit, fractional powers, Bini interpolation) remain in [4].",
+    "Genuine mathematical sharpenings verified from first principles: the 4x degree reduction in Prop. 3.1 from (M-1)^2 to floor((M-1)/2)^2 (yielding exact degree-0 restriction at M=2), exact minimal refutation thresholds a*(t) across supercritical exponents, and the explicit strictly concave rational profile family parameterized by 3*alpha - 1 >= 2*beta.",
+    "High numerical and algebraic consistency across Tables 1-2 and Figures 1-3, including survivor counts for M=2,4,6,8 (4, 28, 92, 216), block nonzero counts a(b+1), a(b-1), a-1, sector counts 3ah and a(a-1) drops, and strict-concavity counts (105 for amax=6, 150 for amax=7)."
+  ],
+  "strong_novelty_candidates": [
+    "Sharp 4x tightening of Proposition 3.1's surviving degeneration degree from (M-1)^2 to floor((M-1)/2)^2 via 2(g-h)=v-u, giving exact degree-0 restriction at M=2.",
+    "Exact minimal integer refutation thresholds a*(t) for a^(4p) > (2a-1)^(3q) across supercritical omega = 3t > 9/4 (e.g., a*=7 at omega=3, 30 at 27/10, 508 at 5/2, 2043 at 27/11, 32761 at 12/5).",
+    "Explicit zero-slack tight rational profile P_{1/3} and strictly concave rational spectral-profile family a+b-1+alpha(a-1)(b-1)+beta(a-1)(b-1)/(a+b+c) satisfying shifted tripling whenever 3*alpha - 1 >= 2*beta."
+  ],
+  "summary": "The manuscript presents a two-layer, zero-floating-point verification stack for the finite/discrete core of OpenAI's omega <= 9/4 Strassen spectral profile proof [4]: (1) StrassenNineFourths.lean, 18 standalone Lean 4.35.0 theorems without Mathlib or Classical.choice, featuring a full universal inductive proof of Lemma 5.1 (P(a,a)^3 >= a^4) over an exact rational type QRat and arithmetic/algebraic cores of Proposition 3.1 and Lemmas 4.1-4.2; and (2) STRASSEN-94-CERT-1.0, a pure-stdlib Python Fraction auditor certifying 16 canonical witnesses across four modes alongside adversarial red-team checks. All mathematical derivations, inequalities, counts, and refutation thresholds visible in the PDF are sound and internally consistent, with only minor presentation and test-accounting ambiguities.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:75f60287-5a1d-4ffa-a95f-71b87d23d1bd",
+  "weaknesses": [
+    "For Proposition 3.1 and Lemmas 4.1-4.2, the Lean 4 formalization covers only isolated integer/polynomial arithmetic identities (e.g. 2(e+1)=(e+2)+e, 0+0+0=0, u(vw)=v^2s+v(uw-vs)) rather than formalizing the underlying tensors, Fourier transforms, or change-of-basis matrices; those structural claims rely on finite-instance Python audits.",
+    "The 4-page format omits explicit definitions of w_Y, w_Z (Theorem 7) and the exact basis matrices B_{b-1}, B_{a+b-2} (Mode 2), preventing complete standalone verification of those two definitions from the PDF alone without inspecting the external repository.",
+    "Minor accounting discrepancy in Section 4 item 3 ('64 pytest checks' vs. 16 canonical + 3 parser rejections + 60 adversarial attacks = 79 cases) and slight wording ambiguity in Table 2 Mode 4 ('amax=6 ... refutes t=1 (a=8)')."
+  ]
+}

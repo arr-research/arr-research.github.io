@@ -1,0 +1,392 @@
+# Constructive Lean 4 Formalization and Exact-Rational Certificates for Improved Downward-Closed Delegation Bounds
+
+**Author:** Lluis Eriksson  
+**AIRR Identifier:** `ARR-2026-33WRPE9H2N84PR9Q` (v1)  
+**License:** CC-BY-4.0 (manuscript), MIT (verification repository)  
+**Verification Repository:** https://github.com/lluiseriksson/delegation-downward-closed-certificates (`v2.0.0`)  
+**Canonical PDF SHA-256:** `2f811f6e4cf69e7c6bc906e65766326f7f2c5d661cfb641118cbf387efb805ca`
+
+## Abstract
+
+Hamed Abdi, Kiarash Banihashem, MohammadTaghi Hajiaghayi, and Danny Mittal (arXiv:2611.33095, Nov. 2026) improved the universal approximation bounds for delegated choice under arbitrary downward-closed feasibility constraints to 29/70 (with an analytic 3/10 single-threshold guarantee) and separated downward-closed delegation strictly from the matroid 1/2 barrier via 5-item knapsack upper bounds of 500/1011, 5011/10110, 30/61, and 0.48105. We present a standalone, zero-dependency Lean 4.35.0 formalization (DelegationBounds.lean) of 18 core algebraic, impossibility, single-threshold, Efron-Stein, Bernstein-positivity, seed-reserve, safe-singleton normalization, and profile-inequality theorems (0 sorry, 0 warnings, 0 Classical.choice), paired with a zero-floating-point exact-Q certificate auditor (DELEG-DC-CERT-1.0). Across 16 canonical certificates (0.254-2.272 ms), the auditor independently verifies the 5-item knapsack bounds, Algorithm 1 scores and clipped variances, degree-7 Bernstein positivity bases (447966/78125 and 6518/118125), and Algorithm 2 capped seed-reserve menus while rejecting 60/60 live adversarial forgeries.
+
+## Full Extracted Text
+
+--- Page 1 ---
+Constructive Lean 4 Formalization and Exact-Rational
+Certificates for Improved Downward-Closed Delegation
+Bounds
+Lluis Eriksson∗
+November 25, 2026
+Abstract
+Hamed Abdi, Kiarash Banihashem, MohammadTaghi Ha-
+jiaghayi, and Danny Mittal (arXiv:2611.33095, Nov.
+2026) dramatically improved the universal approximation
+bounds for delegated choice under arbitrary downward-
+closed feasibility constraints: they proved that a deter-
+ministic agent-oblivious menu guarantees strictly more
+than29 /70 ≈0.41429of the expected offline optimum
+(up from0 .1098), gave a self-contained analytic proof
+that a single total-value threshold guarantees3/10, and
+separated downward-closed delegation strictly from the
+matroid1 /2barrier via a 5-item knapsack instance proving
+upper bounds of500/1011(deterministic),5011 /10110and
+30/61(randomized), and0 .48105(computer-assisted). We
+present a standalone, zero-dependencyLean 4.35.0for-
+malization (DelegationBounds.lean) of 18 core algebraic,
+impossibility, single-threshold, Efron–Stein, Bernstein-
+positivity, seed-reserve, safe-singleton normalization,
+and profile-inequality theorems (0 sorry, 0 warnings,
+0 Classical.choice; 2 zero-axiom, 1 [propext], 15
+[propext, Quot.sound]), paired with a zero-floating-
+point exact-Q certificate auditor (DELEG-DC-CERT-1.0).
+Across 16 canonical certificates (0 .254–2.272 ms exact
+replay latency), the auditor independently recomputes
+the exact 5-item knapsack impossibility bounds, ex-
+act Algorithm 1 single-threshold scores and Efron–Stein
+clipped variances, exact degree-7 Bernstein positivity
+bases (447966/78125on[2 /13,2/5]and6518 /118125on
+[2/5,2/3]), and exact Algorithm 2 capped seed-reserve
+menu scores and Lemma 6.3 profile sandwiches, while re-
+jecting 60/60 live adversarial forgery attacks (plus 2 raw
+IEEE-754/NaNparser rejections).
+1 Introduction
+In combinatorial delegated choice [4, 2], an agent observes
+independent pairs( Xi,Yi)( Xi ≥0, Yi >0) and submits
+a feasible setS∈F (for a downward-closed familyF⊆
+∗Independent Researcher. Code, Lean 4 proofs, and certifi-
+cates: MIT License; manuscript and figures: CC-BY-4.0. Pre-
+pared with transparent AI coding, formalization, and drafting assis-
+tance via Google Antigravity; all Lean 4 theorems, exact rational
+verifiers, and adversarial tests were independently compiled and
+verified locally. Repository: https://github.com/lluiseriksson/
+delegation-downward-closed-certificates.
+2E) to a principal who committed to an acceptance rule
+q(S,XS)without seeing Y or unselected items. While
+matroid constraints achieve the tight1/2guarantee, Abdi,
+Banihashem, Hajiaghayi, and Mittal [1] established the
+strict sandwich
+0.1098< 3
+10 < 29
+70 <αD ≤αR
+<0.48105< 30
+61 < 500
+1011 < 5011
+10110 < 1
+2
+(1)
+via four exact mathematical pillars:
+1. Five-Item Knapsack Separation (Sec. 3,
+Prop. 3.1, Thm. 3.2, Prop. 3.3):A 5-item
+knapsack (A,B,E,C,J ; capacity 3; jackpot9 /ε
+w.p. ε, canonically ε = 1 /100) has offline optimum
+V(ε) = 9 + (1−ε)34
+3 (V(1/100) = 1011/50), determin-
+istic optimum10(ratio10 /V = 500 /1011), general
+randomized upper bound10 + 20
+9 (1 −ε)η (specializing
+at ε = 1/100to10 + 11
+5 η = 5011/500at η = 1/100,
+ratio5011 /10110), and universal limit30/61 <1/2as
+ε,η↓0.
+2. Single-Threshold3 /10& Efron–Stein Variance
+(Sec. 4, Thm. 4.1, Lem. 4.2–4.3):Every threshold
+menu satisfiesPz ≥z1{W≥z} + ∑
+i(Xi −z)+1{W−i<z},
+givingE[Pz] ≥B (z) := zP(W≥z )+e(z)P(W <z)and
+P(W≥x ) ≤1−e(x)
+x−e(x) ≤1
+x under normalizationB(z∗) =
+1, while clipping atc= 3/2givesVar(Z c)≤cE[Z c].
+3. Exact Degree-7 Bernstein Positivity (Lem. 4.4):
+Ruling out µ≥ 5via Cantelli’s bound µ2
+2µ+12 ≥
+25
+22 > 1, the remaining envelopeΓ( µ0,b) > 0fol-
+lows on(0,2/13]from the rational margin 168034
+70785 >0,
+and on[2 /13,2/3]from ∑7
+k=0(15/8)k/k! −13/2 =
+3772963
+234881024 > 0( log(13/2) < 15/8) together with strict
+positivity of Lemma 4.4’s explicit degree-7 polynomial
+P(b) = −72 + 1345b− 5459b2 + 7546b3 −2948b4 +
+1795b5 −3593b6 + 1242b7, whose exact values include
+P(1/4) = 249075
+8192 ≈30.40, P(2/5) = 447966
+78125 ≈5.734,
+minb∈[2/13,2/3] P(b) ≈ 2.66 > 1(near b≈ 0.46),
+P(1/2) = 141
+32 = 4.40625, andP(2/3) = 33250
+729 ≈45.61.
+Its exact rational Bernstein coefficients satisfyminβk =
+447966
+78125 on[2 /13,2/5]and minβk = 6518
+118125 on[2 /5,2/3]
+(and tighter subinterval floors129
+128 ≈1.0078on[1 /4,1/2]
+and 141
+32 = 4.40625on[1/2,2/3]).
+4. Capped Seed-Reserve Menus & Profile Relations
+(Sec. 5–6, Alg. 2, Lem. 6.3):Seeds P at level t
+1
+
+--- Page 2 ---
+satisfy w(P) ≥t and w(P) −wi <t∀i∈P , ensuring
+positive reserve gapbP := t+ mini∈P wi −w(P) >0;
+safe-singleton normalization usesR= 7000000/2900007
+(ρ0 = 29/70 + 10−6), and clipped profiles satisfy(y−
+x)Sc(y) ≤Dc(x) −Dc(y) ≤(y−x )Sc(x)and R−µ c ≤
+e(c).
+Contributions and Explicit Scope.We donotfor-
+malize measure-theoretic martingale/Harris–FKG proofs,
+the 96-interval LP infeasibility computer proof of Theo-
+rem 5.1, or Appendix A’s dynamic program inside Lean 4;
+all probabilistic and asymptotic theorems belong to [1]. In-
+stead, we constructively mechanize and exactly verify every
+deterministic algebraic, impossibility, Bernstein-positivity,
+seed-reserve, and finite-distribution pillar of [1]: (i) 18
+zero-sorry, zero-Classical.choice Lean 4.35.0[3] the-
+orems inDelegationBounds.lean; (ii) the pure-Q/Z ver-
+ifier DELEG-DC-CERT-1.0; (iii) 16 canonical certificates
+across all four modes; and (iv) a 60-attack live red-team
+suite (plus 2 raw JSON IEEE-754/NaN rejections) with
+39-file SHA-256 manifest enforcement.
+2 Constructive Lean 4.35.0 Kernel
+The standalone module lean/DelegationBounds.lean
+compiles cleanly under Lean 4.35.0 with zero external
+dependencies, zero warnings, and zero sorry. Run-
+ning lean/AuditAxioms.lean confirms 2 zero-axiom the-
+orems (none), 1 using [propext], 15 using [propext,
+Quot.sound], and0using Classical.choice or
+Lean.ofReduceBool(Table 1).
+Proposition 1(Constructive Delegation Kernel).The
+18 theorems in Table 1 constructively certify three layers
+over exact integers and inductive lists:
+1. Impossibility & Universal Sandwich (Thms. 1–6):Es-
+tablishes inclusion-maximality under positive agent val-
+ues, exact 5-item knapsack optimumV = 1011/50, all
+three deterministic menu branches (= 10), both ran-
+domized acceptance branches (≤10 + 11
+5 η), the30 /61
+limit, and the complete strict rational ordering(1).
+2. Single-Threshold3 /10& Bernstein Positivity (Thms. 7–
+13):Proves pointwise clipping-plus-excess decomposi-
+tion, tail monotonicity1−e
+x−e ≤1
+x, inductive Efron–Stein
+sum-of-squares ∑∆2
+i ≤c ∑∆i, Cantelli’s contradic-
+tion forµ≥ 5, Case 1 positivity168034
+70785 >0, the 8-term
+exponential Taylor proof oflog(13/2) <15/8, and ex-
+act evaluations of the degree-7 polynomialP(b)and
+Bernstein floors.
+3. Seeds, Normalization, & Profile Identities (Thms. 14–
+18):Certifies seed reserve gap0 < bP ≤w min, safe-
+singleton ratioρ0 = 2900007/7000000, stop-loss mono-
+tonicity sandwich, inductive clipping decomposition∑min(xi,c) + ∑(xi −c)+ = ∑xi, and scale homo-
+geneity.
+3 Exact-Rational Verifier Architec-
+ture
+The pure-stdlib verifier DELEG-DC-CERT-1.0
+(src/delegation_exact.py,
+src/delegation_certifier.py) uses Python int
+and fractions.Fraction exclusively (source-audited
+for zero float(, math., or numpy). It rejects IEEE-754
+JSON tokens and NaN/Infinity, non-ASCII/Unicode
+digits (isascii() and isdigit()), strings>2000chars,
+unreduced or leading-zero rationals,-0, booleans-as-ints,
+unknown keys, duplicate atoms/probes, and nesting depth
+>20across four modes:
+Definition 1(FourDELEG-DC-CERT-1.0Modes).
+1. Mode 1(knapsack_impossibility_cert): Indepen-
+dently constructs the 5-item knapsack family for(ε,η),
+enumerates the full product distribution to verifyV =
+9 + (1 −ε)34
+3 , deterministic ratio10 /V < 1/2, and
+general randomized Case 1 upper bound(10 +20
+9 (1 −
+ε)η)/V <1/2(and Case 2≤Case 1).
+2. Mode 2(single_threshold_guarantee_cert): Ver-
+ifies downward closure ofF, enumerates the full product
+distribution, recomputes exactV, B(z), exact inclusion-
+maximal menu scoreE[bM(X)] ≥B (z) ≥ 3
+10 V, and
+exact Efron–Stein boundVar(Zc)≤cE[Z c].
+3. Mode 3( bernstein_analytic_cert): Recomputes∑7
+k=0(15/8)k/k! −13/2 = 3772963
+234881024 , Case 1 gap
+168034
+70785 , and the exact degree-7 Bernstein transforma-
+tion βk = ∑k
+j=0
+(
+k
+j)
+(
+7
+j) pj of Lemma 4.4’s fixed polynomial
+P(b) = −72+1345b−5459b2+7546b3−2948b4+1795b5−
+3593b6 + 1242b7 over any rational[ℓ,r] ⊆[2/13,2/3],
+certifying minkβk >0and P(b) ≥min kβk at distinct
+probes.
+4.Mode 4(capped_menu_seed_profile_cert): Audits
+Algorithm 2 capped menus across all three body types
+(threshold, seeds_upper, seeds_reserve), checks
+Eq. (5.2)0 < bP ≤w min on every seed hit, verifies
+Lemma 6.3(b)–(c) profile inequalitiesV−µ c ≤e (c)
+and( y−x )Sc(y) ≤Dc(x) −Dc(y) ≤(y−x )Sc(x), and
+checksE[bM(X)]> 29
+70 V.
+4 Empirical Atlas and Red-Team
+Audit
+Running scripts/run_all_experiments.py determin-
+istically emits 16 canonical certificates (4 per mode)
+and 4 experiment JSONs, audited end-to-end by
+scripts/verify_all.py with SHA-256 verification
+across all 39 tracked repository files.
+1. Knapsack Separation & Degree-7 Bernstein
+Positivity (Figs. 1–2).Figure 1 displays the complete
+approximation sandwich(1) and tracks the 5-item knap-
+sack deterministic (10/V) and randomized (η = ε) up-
+per bounds crossing strictly below1/2at ε≤ 1/50and
+2
+
+--- Page 3 ---
+Table 1: All 18 Lean 4.35.0 theorems inDelegationBounds.lean (0 sorry, 0 warnings, 0Classical.choice), showing
+exact formalized statements, references to [1], and#print axiomsfootprints.
+# Lean 4 Theorem Identifier Exact Formalized Statement (Cleared Integer / Inductive Type) Ref. [1] Axioms
+1menu_score_lower_bounds_best_responseFiniteM:(∀p∈M,p2 ≤yS)∧(¬Max⇒∃p′∈M,p′2 >yS)∧(Max⇒bM≤xS)⇒Max∧bM≤xS Lem. 2.1[p, Q]
+2knapsack_5item_offline_optimumV= 1
+100(900) +99
+100(18+24+60
+9 ) =1011
+50 & 500
+1011<1
+2 Eq. (3.1)[p, Q]
+3knapsack_5item_deterministic_cases12 + 2·9 = 3·10∧18 + 8·9 = 9·10(all 3 det. branches= 10) Prop. 3.1none
+4knapsack_5item_randomized_case_boundsCase 110 +11
+5 η, Case 210 +77
+50η≤Case 1,5011
+10110<1
+2 Thm. 3.2[p, Q]
+5knapsack_universal_randomized_limit_30_613·9 + 34 = 61∧10·3 = 30∧30·2<61Prop. 3.3[p, Q]
+6delegation_universal_sandwich0.1098< 3
+10 <29
+70 <0.48105<30
+61 <500
+1011<5011
+10110<1
+2 Thms. 1.1–1.2[p, Q]
+7forced_item_pointwise_identity clipAtz x+excessAbovez x=x∧0≤exc∧clip≤zLem. 4.2[p, Q]
+8threshold_tail_bound_monotone0≤e∧D<x⇒x(D−e)≤D(x−e)(gives 1−e
+x−e≤1
+xforD>0,x>e) Eq. (4.3)[p, Q]
+9clipped_optimum_variance_step_bound∀ds:ListZ,AllBoundedcds⇒sumSqIntds≤c·sumIntdsLem. 4.3[p, Q]
+10cantelli_mu_less_than_five0<D∧5D≤µ⇒2µD+ 12D 2 <µ2 ( µ2
+2µ+12>1) Lem. 4.4[p, Q]
+11gamma_case1_exact_positivity 52
+3 + 1−50
+13−(80
+33)2 −40
+11−13
+5 = 168034
+70785>0Lem. 4.4[p, Q]
+12exp_15_8_taylor_beats_13_2 ∑7
+k=0
+(15/8)k
+k! −13
+2 = 3772963
+234881024>0(finite partial sum; tail>0external) Eq. (4.11)[p, Q]
+13degree7_poly_positivity_bernstein_evalP(b)>0at 5 nodes & exact deg-7 Bernstein transform: allβk>0,minβk∈{447966
+78125, 6518
+118125}Eq. (4.12)none
+14seed_reserve_gap_positivet≤w P∧wP−wmin<t⇒0<t+wmin−wP≤wmin Eqs. (5.1–5.2)[p, Q]
+15safe_singleton_normalization_ratioρ0 = 29
+70+ 10−6= 2900007
+7000000, 29
+70 <ρ0 <1
+2 Sec. 2.3, 5.1[p, Q]
+16profile_stoploss_monotone_sandwichx<y,0≤Sy≤Sx,(y−x)Sy≤Dx−Dy⇒(y−x)Sy≤(y−x)Sx∧Dy≤Dx Lem. 6.3(c)[p, Q]
+17profile_clipping_decomposition_sum∀xs:ListZ,sumClipcxs+sumExcesscxs=sumIntxsLem. 6.3(e)[p, Q]
+18scaled_menu_score_homogeneity∀λ,xs:ListZ,sumInt(scaleListλxs) =λ·sumIntxsSec. 2.3[p]
+Axiom key:none= zero axioms (2);[p]=[propext](1);[p, Q]=[propext, Quot.sound](15).
+Figure 1: (a) Universal downward-closed delegation ap-
+proximation sandwich from0.1098through3 /10and29 /70
+to the sub-1/2upper bounds (0.48105,30 /61,500 /1011).
+(b) Exact 5-item knapsack deterministic and randomized
+ratios converging strictly below1/2toward30 /61 ≈0.4918
+asε↓0.
+converging monotonically to30 /61 ≈ 0.491803(reach-
+ing5000 /10161 ≈0.492078at ε = 1 /1000). Figure 2
+plots Lemma 4.4’s exact degree-7 polynomialP(b)across
+[2/13,2/3](log y-axis: P(b) ≥ 2.66 > 1everywhere,
+with P(1/2) = 141
+32 = 4 .40625and P(2/3) = 33250
+729 ≈
+45.61) together with all 16 strictly positive exact ratio-
+nal Bernstein basis coefficients on[2/13,2/5]( minβk =
+447966/78125 ≈ 5.733965) and[2 /5,2/3]( minβk =
+6518/118125 ≈0.055179); on the narrower subintervals
+[1/4,1/2]and[1 /2,2/3]in Table 2, the Bernstein lower
+bounds tighten to129
+128 ≈1.0078and 141
+32 = 4.40625, respec-
+tively, remaining strictly belowP(b)throughout.
+2. 16-Certificate Atlas & 60/60 Red-Team Audit
+(Table 2, Fig. 3).All 16 canonical certificates replay
+in0 .254–2.272 ms with zero floats. On every non-matroid
+finite test family, Algorithm 2’s capped menus (threshold,
+seeds_upper, seeds_reserve) strictly improve over Al-
+gorithm 1’s single threshold (67/99 →13/18on 4-item
+knapsack,193 /263 →201/263on P4 independent sets,
+43/68 →49/68on the safe-singleton family) and match
+the exact deterministic optimum500/1011on Section 3’s
+Figure 2: (a) Exact degree-7 polynomial P(b)on
+[2/13,2/3]bounded strictly away from zero by its exact ra-
+tional Bernstein floors on[2/13,2/5]and[2 /5,2/3]. (b) All
+16 exact rational Bernstein coefficientsβk >0across both
+subintervals.
+5-item knapsack, exceeding29 /70on all four instances.
+In tests/test_suite.py, 60 live adversarial forgery at-
+tacks (16 AST/schema/Unicode-digit/depth-DoS + 11 per
+mode) plus 2 raw JSON IEEE-754/NaN file checks achieve
+60/60 (100%)red-team rejection (63/63pytestchecks
+passing).
+5 Conclusion
+We delivered a self-contained, zero-floating-point verifica-
+tion suite for Abdi, Banihashem, Hajiaghayi, and Mittal’s
+downward-closed delegation bounds [1], pairing 18 zero-
+sorry, zero-Classical.choice Lean 4.35.0 theorems with
+the exact-Q auditor DELEG-DC-CERT-1.0, 16 canonical cer-
+tificates, and 60/60 live adversarial forgery rejections.
+References
+[1] Hamed Abdi, Kiarash Banihashem, MohammadTaghi
+Hajiaghayi, and Danny Mittal. Improved downward-
+closed delegation bounds. arXiv:2611.33095 [cs.GT],
+November 2026.
+3
+
+--- Page 4 ---
+Figure 3: (a) Zero-float exact replay latency across
+all 16 canonicalDELEG-DC-CERT-1.0 certificates (0.254–
+2.272 ms). (b) 60/60 live adversarial forgery rejections
+across global AST/Unicode and Modes 1–4.
+Table 2: Summary of all 16 exact-QDELEG-DC-CERT-1.0
+certificates (zero IEEE-754 arithmetic; 20-run mean replay
+latency in ms).
+Certificate Stem Mode Exact Certified Witness ms
+knap5_sec3_canonical_eps100M1V=101150, det5001011, rand501110110 0.262knap5_sec3_eps50_eta100M1V=150875, det375754, rand2254945240 0.356knap5_sec3_eps200_eta200M1V=6083300, det30006083, rand22814620 0.254knap5_sec3_limit_eps1000M1V=10161500, det500010161, rand5001111016100 0.292thresh_knap4_z3M2V= 338, ratio6799,Var=135256 1.584thresh_sec3_z10M2V= 101150,B=10, ratio5001011 0.786thresh_p4_indset_z4M2V= 26348, ratio193263,Var=983576 1.302thresh_norm_safe_z2M2V= 176, ratio4368,Var=311576 0.751bernstein_left_2_13_to_2_5M3[213,25],minβk=44796678125 0.539bernstein_right_2_5_to_2_3M3[25,23],minβk=6518118125 0.498bernstein_mid_1_4_to_1_2M3[14,12],minβk=129128 0.543bernstein_upper_1_2_to_2_3M3[12,23],minβk=14132 0.490alg2_thresh_knap4M4 threshold, ratio1318>2970, 28 seeds 2.272alg2_seeds_upper_p4M4 seeds_upper, ratio201263>2970, 28 seeds 2.068alg2_seeds_reserve_normM4 seeds_reserve, ratio4968>2970, 14 seeds 1.410alg2_seeds_reserve_sec3M4 seeds_reserve, ratio5001011>2970, 6 seeds 1.148
+[2] Kiarash Banihashem, MohammadTaghi Hajiaghayi, Pi-
+otrKrysta, andSuhoShin. Delegatedchoiceundercom-
+binatorial constraints. InProceedings of the ACM Con-
+ference on Economics and Computation (EC), 2024.
+[3] Leonardo de Moura and Sebastian Ullrich. The Lean 4
+theorem prover and programming language. InAuto-
+mated Deduction – CADE 28, pages 625–635, 2021.
+[4] Jon Kleinberg and Robert Kleinberg. Delegated search
+approximates efficient search. InProceedings of the
+2018 ACM Conference on Economics and Computation
+(EC), pages 287–302, 2018.
+4

@@ -1,0 +1,56 @@
+{
+  "assessed_at": "2026-11-25T20:29:58Z",
+  "canonical_sha256": "ccf069bf8c995ea34a980e09d22c89822389e3b0b6883d52be271321473e7172",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All 18 Lean statements in Table 1, Mode 1 full-period soundness proof for z in Z, Mode 1 coefficients/periods (Table 2 Rows 1-4), Mode 2 sub-degree AND_4,5,6/2 and MAJ_3/2 witnesses (Rows 5-8), and Mode 4 perturbed error bound (355/113)^2*(1/16)^2 = 126025/3268864 verify cleanly; only Theorem 7's prose label conflates (-1)^z mod 8 with delta_2(z) mod 8.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "Companion verification stack for Osaki and Mori [5] rather than new complexity bounds; however, the p-adic full-period Mode 1 soundness reduction certifying Eq. (1) over all z in Z, explicit sub-degree AND_n/2 (n=4,5,6) witnesses beating 1/4, and zero-float NMQC_oplus audit architecture provide solid engineering and witness contributions.",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "Table 1 lists all 18 Lean theorem statements and axiom footprints verbatim, and Table 2 records exact parameters, Mode 1 coefficients/periods, and latencies (0.129-3.911 ms) for all 16 certificates; however, Mode 3, Row 8, and Mode 4 explicit polynomials are omitted from Table 2, and external code/artifacts cannot be run from the PDF alone.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Honest Scope Calibration cleanly separates Lean-proved universal lemmas, exact-Q finite/periodic audits, and unformalized analytic parts of [5]. Mode 1's p-adic period proof rigorously extends [0, P-1] checks to all z in Z. Slightly tempered by elementary arithmetic Lean items (#2, #8, #12, #14, #15, #17) and abstract P in #4-#5.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Provides zero-float, machine-checked and exact-rational assurance for the deterministic pillars of [5] (prime-power finite differences, Fourier rounding, CRT, and periodic-Fourier NMQC_oplus equivalence), aiding verification and reproducibility of algebraic ACC0 lower-bound tools, though impact remains scoped to [5] and small-n witnesses.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.85,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-35T3DP66VF8YK9DC",
+  "potential_errors": [
+    "Theorem 7 (`lemma9_binary_k3_exact_mod8`) proves sum_{j=0}^2 (-2)^j C(z,j) - (-1)^z = 0 (mod 8), which has degree 2 and certifies (-1)^z mod 8 (equivalently delta_2(z)/4 mod 1, i.e. q=2, k=2 in Eq. (1) via (-1)^z = 2 delta_2(z) - 1), whereas Eq. (1) at q=2, k=3 requires degree d=3 and coefficients a = [1, 7, 2, 4] (mod 8) to satisfy Q_{2,3}(z) = delta_2(z)/8 (mod 1). Labeling Theorem 7 as 'Lemma 9 (q=2, k=3)' conflates these two normalizations, though the Lean statement itself is mathematically true and Mode 1 in Table 2 Row 1 follows Eq. (1) consistently.",
+    "Table 2 Row 15 (`m4_nmqc_maj3_approx_perturbed`) writes `(+1/64 weight shift)` and `d_max = 1/16` without explicitly stating in the caption or row that MAJ_3's 4 non-constant parity terms each shift by 1/64, summing to 4/64 = 1/16 in the worst case."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Explicit, transparent scope calibration (§1-2) that cleanly separates what is universally proved in Lean 4 from what is verified on finite/periodic instances and what remains in Osaki and Mori [5] (arbitrary prime-power Lemma 9, Hoeffding/Chernoff concentration, ACC0 depth union bounds, and transcendental pi/sin).",
+    "Clean, mathematically sound Mode 1 p-adic periodicity proof (P = p^{max{e, k + v_p(d!)}}) rigorously bridging finite [0, P-1] exact-Q checks to all z in Z, with every coefficient vector a_j mod p^k, degree d, and period P in Table 2 Rows 1-4 checking out exactly.",
+    "Exact arithmetic and algebraic consistency across the manuscript: all 18 Lean statements in Table 1 are true, axiom counts (3 none, 1 propext, 14 propext+Quot.sound) match Table 1, Mode 2 sub-degree AND_{4,5,6}/2 witnesses (1/8, 1/5, 1/6 < 1/4) and MAJ_3/2 (err 0) are exact, Mode 4 perturbed bound (355/113)^2*(1/16)^2 = 126025/3268864 is exact, and Figures 1-3 align with Table 2 and text ranges (0.129-3.911 ms; 60/60 adversarial rejections)."
+  ],
+  "strong_novelty_candidates": [
+    "Exact p-adic full-period soundness reduction (Mode 1, P = p^{max{e, k + v_p(d!)}}) enabling finite [0, P-1] exact-Q audits to certify Lemma 9 prime-power congruences for all z in Z.",
+    "Explicit certified sub-degree symmetric multilinear torus witnesses for AND_n/2 (n=4,5,6) achieving exact worst-case torus errors 1/8, 1/5, and 1/6 strictly below the trivial 1/4 threshold."
+  ],
+  "summary": "This 4-page paper presents an explicitly scoped verification stack for the deterministic algebraic, finite-difference, Fourier-rounding, CRT, and periodic-Fourier NMQC_oplus conversion mechanisms of Osaki and Mori [5] (arXiv:2611.32163). It pairs an 18-theorem, zero-dependency Lean 4.35.0 kernel (`TorusACC0.lean`, 0 sorry, 0 Classical.choice) with a pure-stdlib exact-Q verifier (`TORUS-ACC0-CERT-1.0`) that certifies 16 canonical witnesses across four modes (0.129-3.911 ms)—including full-period [0, P-1] Lemma 9 certification proved sound for all z in Z—and rejects 60/60 live adversarial forgeries. All 18 Lean theorem statements, the Mode 1 soundness proof, Table 2 numerical witnesses (Mode 1 coefficients/periods, Mode 2 AND_{4,5,6}/2 and MAJ_3/2 errors, and Mode 4's perturbed rational square bound 126025/3268864), and Figures 1-3 are mathematically and numerically consistent, with only minor labeling and granularity caveats.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:9954cf2e-90b8-45b0-88ff-b922eac94ceb",
+  "weaknesses": [
+    "Theorem 7 (`lemma9_binary_k3_exact_mod8`) is described in the abstract, Prop. 1, Table 1, and conclusion as proving Lemma 9 for q=2, k=3, whereas it proves the degree-2 congruence for (-1)^z mod 8 rather than the degree-3 Eq. (1) congruence for delta_2(z)/8 (mod 1).",
+    "Several of the 18 Lean 4 theorems are elementary arithmetic, monotonicity, or ground constant checks (#2, #8, #10, #12, #14, #15, #17), and Theorems #4-#5 quantify over an abstract P >= 1 rather than formalizing the finite-difference vanishing proof of Appendix B for P = p^{e-1}.",
+    "Table 2 omits the explicit polynomial expressions for Mode 3 (Rows 9-12), Mode 2 Row 8, and Mode 4 (Rows 13-16), and the 60/60 red-team audit and 41-file SHA-256 verification are self-reported script outputs not independently verifiable from the PDF alone."
+  ]
+}
