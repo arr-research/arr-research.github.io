@@ -1,0 +1,649 @@
+--- Page 1 ---
+Universal Even–Odd Coherent-Error Parity
+Dichotomy, Swap-Point Criticality, and Exact-Q
+Decoding Certificates for CSS Quantum Codes
+Lluis Eriksson∗
+November 2026
+Abstract
+Uniform coherent Z-rotations U(θ) = ⨂n
+j=1 eiθZj induce non-Pauli logical channels
+whose optimal recovery and finite-size scaling differ sharply from Pauli-twirled stochastic
+phase-flip noise. Extending the recent surface-code parity analysis of Dai, Wan, Dai, and
+Zhu (arXiv:2611.13098, 2026), we establish three general structural theorems for arbi-
+trary[[ n,1,d]]Calderbank–Shor–Steane (CSS) codes, formalize their algebraic core in zero-
+dependency Lean 4 (v4.35.0, 18 theorems, 0sorry, 0Classical.choice), and construct an
+exact-Qcertificate verifier (COHERENT-CSS-CERT-1.0) free of floating-point trust.
+First, forevery[[ n,1,d]]CSS code whose Z-stabilizers have even Hamming weight, we
+prove aUniversal Even–Odd Parity Dichotomy: when|LZ|is odd, every syndrome
+Kraus operator is proportional to a pure logicalZL-rotation, so syndrome-conditioned unitary
+recovery achieves exact unit entanglement fidelityFCPTP
+e (θ) ≡1for all θ∈ [0,π/2]; when|LZ|
+is even, every syndrome Kraus operator is Hermitian up to phase, and the exact trace-norm
+identity( |a+ b|+ |a−b|)2 = 4 max(a2,b2)forces maximum-likelihood Pauli decoding to attain
+the exact global CPTP optimumFPauli
+e (θ) ≡F CPTP
+e (θ)over all quantum channels. Second,
+using exactF2 harmonic analysis on the self-orthogonal subcodeKZ = SZ ∩S⊥
+Z, we prove
+aComplete0–1Swap-Point Binary Law: at θ = π/4, FPauli
+e (π/4)can takeonlytwo
+values across the entire universe of[[n,1,d]]CSS codes— FPauli
+e (π/4) = 1 /2if and only if
+LZ ⊥KZ (equivalently( LX + SX) ∩SZ = ∅), andFPauli
+e (π/4) = 1if and only if there exists
+g∗∈KZ with |LZ∩g∗|≡ 1 ( mod 2). Third, as an immediate topological corollary, rotating an
+even-d rotated surface code patch by90◦(X-majority vs.Z-majority check orientation) flips
+its θ= π/4logical fidelity from complete collapse (1/2) to complete coherent immunity (1),
+witnessed explicitly by the left-boundary column stabilizerg∗= ∏d/2−1
+j=0 Z(2j,0)Z(2j+1,0) ∈KZ.
+Exact-Q polynomial evaluation across 9 certified benchmark codes and a 129-code census
+(matching complex2 ×2SVD to1 .45 ×10−14 and rejecting 37/37 adversarial forgery attacks)
+uncovers exact all-angle coherent–twirled cancellation onX-majority d = 2surface codes,
+113.26×coherent infidelity suppression on Shor[[9,1,3]]at p= sin2 θ= 1/5(reaching exact
+zero infidelityFPauli
+e (1/4) = 1at θ= π/6), and a strict coherentpenalty(FPauli
+e <F twirl
+e ) on
+doubly-even Quantum Reed–Muller[[15,1,3]].
+1 Introduction
+Coherent single-qubit over-rotationsU(θ) = ⨂n
+j=1 exp(iθZj)arise ubiquitously in trapped-ion,
+neutral-atom, and superconducting quantum processors from systematic control miscalibration
+and static crosstalk. Unlike stochastic Pauli-twirled dephasing, coherent rotations interfere across
+stabilizer-equivalent error cosets inside each syndrome sector [1,2,3,4,5]. While Majorana-fermion
+and statistical-mechanics mappings have illuminated the large-distance coherent threshold of planar
+∗Independent researcher (Sweden). Prepared with AI assistance (Google Antigravity). Code, Lean 4 proofs, and
+exact-Qcertificates:https://github.com/lluiseriksson/coherent-css-dichotomy(MIT license).
+1
+
+--- Page 2 ---
+surface codes [6, 7, 8], a striking recent advance by Dai, Wan, Dai, and Zhu [9] revealed that finite-
+size rotated surface codes exhibit a sharpeven–odd distance parity dichotomy: for odd distanced,
+non-Pauli syndrome-conditionedZL-rotations strictly outperform Pauli decoding (indeed achieving
+unit fidelity under pure uniformZ-rotations), whereas for even distanced, maximum-likelihood
+Pauli decoding is already optimal over all completely positive trace-preserving (CPTP) recovery
+channels.
+This discovery immediately raises four fundamental mathematical questions:
+1. Universality beyond surface codes:Is the even–odd CPTP-vs.-Pauli optimality dichotomy
+specific to planar geometry, or is it an exact algebraic consequence of binary weight parity in
+any[[n,1,d]]CSS code [10, 11]?
+2. Exact classification at maximal coherence (θ = π/4):At the swap point θ = π/4
+(p= sin 2 θ= 1/2), Pauli-twirled decoding collapses toFtwirl
+e (π/4) = 1/2. Can coherent Pauli
+decoding achieve intermediate values in(1/2,1), or is it rigidly quantized?
+3. Boundary orientation of even-d surface codes:For even distanced, rX + rZ = d2 −1is
+odd, breakingX↔Z self-duality. How does a90◦patch rotation (rX = d2/2vs. rZ = d2/2)
+affect coherent decoding?
+4. Exact machine-verified certification:Can coherent and CPTP entanglement fidelities
+be evaluated and audited in exact rational arithmeticQ with zero floating-point trust and a
+machine-checked Lean 4 proof kernel [12]?
+We resolve all four questions completely. Our main contributions are:
+• Theorem 2.1 (Universal Even–Odd Parity Dichotomy):Every[[n,1,d]]CSS code with
+even-weightZ-stabilizers satisfiesFCPTP
+e (θ) ≡1for all θ when |LZ|is odd, andFCPTP
+e (θ) ≡
+FPauli
+e (θ)for allθwhen|L Z|is even.
+• Theorem 2.2 (Exact0–1Swap-Point Binary Law):Via F2 harmonic analysis onKZ =
+SZ∩S⊥
+Z,every[[ n,1,d]]CSS code satisfiesFPauli
+e (π/4) ∈{1/2,1}with zero intermediate values
+possible, governed by the exact orthogonality criterionLZ ⊥KZ ⇐⇒(L X +SX)∩SZ =∅.
+• Corollary 2.3 (Even-d Surface-Code90 ◦ Orientation Phase Transition):On any
+even-d rotated surface code, rotating the patch by90◦ switches between X-majority col-
+lapse (FPauli
+e (π/4) = FCPTP
+e (π/4) = 1/2) andZ-majority coherent immunity (FPauli
+e (π/4) =
+FCPTP
+e (π/4) = 1), certified by an explicit weight-dleft-boundary column stabilizerg∗∈KZ.
+• Theorem 2.4, Proposition 2.5, and Formal Verification:For every rational p =
+sin2 θ∈Q∩ [0,1], all three fidelities lie inQ and are independently audited by our zero-float
+COHERENT-CSS-CERT-1.0 verifier alongside 18 zero-dependency Lean 4 theorems (0sorry,
+0 Classical.choice). Exact computation across 9 benchmark codes and 120 random even-
+SZ CSS codes confirms every law, uncovers exact all-angle coherent–twirled cancellation on
+X-majority d= 2surface codes, quantifies113 .26×coherent infidelity suppression on Shor
+[[9,1,3]]at p= 1/5, and reveals a strict coherentpenaltyon doubly-even Quantum Reed–Muller
+[[15,1,3]].
+2 Mathematical Framework and Main Theorems
+2.1 CSS Syndrome Kraus Decomposition
+Let C= [[n,1,d]]be a binary CSS quantum code defined by full-row-rank parity-check matrices
+HX ∈F rX×n
+2 and HZ ∈F rZ×n
+2 satisfying HXH⊤
+Z = 0 ( mod 2)and rX+ rZ = n−1, with stabilizer
+subgroups SX = rowspaceF2 (HX)and SZ = rowspaceF2 (HZ), and logical operatorsLX ∈S⊥
+Z \SX,
+LZ ∈S⊥
+X \SZ obeyingL X ·LZ ≡1 (mod 2).
+2
+
+--- Page 3 ---
+Under the uniform coherentZ-rotation
+U(θ) =
+n⨂
+j=1
+(
+cosθI+isinθZ j
+)
+=
+∑
+e∈Fn
+2
+(cosθ) n−|e|(isinθ) |e|Ze,(1)
+measuring allrX X-stabilizer generators yields a syndromes∈F rX
+2 with canonical minimum-
+integer representativees ∈F n
+2 (HXes = s). The syndrome fiber partitions into twoSZ-cosets
+C(0)
+s = es⊕SZ and C(1)
+s = es⊕LZ⊕SZ with weight enumeratorsAs(w) = |{e∈C (0)
+s : wt(e) = w}|
+and Bs(w) = |{e∈ C(1)
+s : wt(e) = w}|. Applying the pure-Z destabilizer Zes projects the
+post-measurement logical evolution onto the single-qubit Kraus operator
+Ks(θ) =αs(θ)IL +βs(θ)ZL, α s(θ) =
+n∑
+w=0
+As(w)cn−w(it)w, β s(θ) =
+n∑
+w=0
+Bs(w)cn−w(it)w,
+(2)
+wherec= cosθ,t= sinθ, and ∑
+s∈FrX
+2
+(|αs(θ)|2 +|βs(θ)|2) = 1.
+For any syndrome-conditioned recovery channelR= {Rs}s∈FrX
+2
+, the Schumacher entanglement
+fidelity [13, 14] of∑
+sRs(Ks ·K†
+s)decomposes additively over syndromes. Maximizing over Pauli
+recoveries{IL,ZL}yields
+FPauli
+e (θ) =
+∑
+s∈FrX
+2
+max
+(
+|αs(θ)|2,|β s(θ)|2)
+,(3)
+while maximizing overalltrace-preserving quantum channels Rs on a single logical qubit yields
+the exact trace-norm optimum (attained by the polar-decomposition unitaryV†
+s ofK s):
+FCPTP
+e (θ) = 1
+4
+∑
+s∈FrX
+2
+∥Ks(θ)∥2
+1 = 1
+4
+∑
+s∈FrX
+2
+(
+|αs(θ) +βs(θ)|+|α s(θ)−β s(θ)|
+)2
+.(4)
+For comparison, Pauli-twirlingU(θ)produces i.i.d. phase-flip noise at ratep= sin2 θ (q= 1 −p),
+with coset probabilitiesp(0),twirl
+s (p) = ∑
+wAs(w)qn−wpw, p(1),twirl
+s (p) = ∑
+wBs(w)qn−wpw, and
+optimal Pauli-twirled fidelityFtwirl
+e (p) = ∑
+smax(p(0),twirl
+s (p),p(1),twirl
+s (p)).
+2.2 Theorem 2.1: Universal Even–Odd Coherent-Error Parity Dichotomy
+Theorem 2.1(Universal Even–Odd Coherent-Error Parity Dichotomy).Let C= [[n,1,d]]be
+any CSS code such that every generator ofHZ (hence everyg∈S Z) has even Hamming weight.
+Under uniform coherentZ-rotations U(θ) = ⨂n
+j=1 eiθZj , for every syndromes∈F rX
+2 and every
+θ∈[0,π/2]:
+(a) Odd-|LZ|Unitary Branch:If wt(LZ) ≡1 ( mod 2), theni−|es|αs(θ) ∈R and i−|es|βs(θ) ∈
+iR. ConsequentlyKs(θ) = i|es|√
+ps(θ)eiϕs(θ)ZL is proportional to a pure logicalZL-rotation,
+so syndrome-conditioned unitary recovery achieves exact unit fidelity
+FCPTP
+e (θ) =F unitary
+e (θ)≡1∀θ∈[0,π/2],(5)
+while Pauli-only decoding suffers exact infidelity1−FPauli
+e (θ) = ∑
+smin(|αs|2,|βs|2).
+(b) Even-|LZ|Hermitian Branch:If wt(LZ) ≡0 ( mod 2), then both˜αs(θ) = i−|es|αs(θ) ∈R
+and ˜βs(θ) = i−|es|βs(θ) ∈R are real, soKs(θ) = i|es|(˜αsIL + ˜βsZL)is Hermitian up to scalar
+phase. Consequently maximum-likelihood Pauli decoding achieves the exact global CPTP
+optimum over all quantum channels:
+FPauli
+e (θ)≡F CPTP
+e (θ) =
+∑
+s∈FrX
+2
+max
+(
+|αs(θ)|2,|β s(θ)|2)
+∀θ∈[0,π/2].(6)
+3
+
+--- Page 4 ---
+Proof. By the exact Hamming-weight XOR identitywt(e⊕g)+2 wt(e∩g) = wt(e)+ wt(g)(Lean 4
+Theorem 1), wheneverwt(g) ≡0 ( mod 2)we have wt(e⊕g ) ≡wt (e) ( mod 2)(Lean Theorem 3).
+Thus everye∈C (0)
+s = es ⊕SZ has wt(e) −|es|∈ 2Z, soiwt(e)−|es|= (−1)(wt(e)−|es|)/2 ∈{±1}and
+˜αs(θ) =i−|es|αs(θ)∈R.
+In case (a), wt(LZ) ≡ 1 ( mod 2)implies wt(es ⊕LZ ⊕g ) ≡ |es|+ 1 ( mod 2)for every
+g∈ SZ (Lean Theorem 5), so ˜βs(θ) = ibs(θ)with bs(θ) ∈R . The two diagonal entries of
+i−|es|Ks(θ) = diag(˜αs + ibs,˜αs −ibs)have identical moduli
+√
+˜α2s +b2s =
+√
+|αs|2 +|βs|2 (Lean
+Theorem 7), whence1
+4 ∥Ks∥2
+1 = |αs|2 + |βs|2 = ps(θ)and summing over s gives FCPTP
+e (θ) = 1.
+The Pauli infidelity formula follows frommax(x,y) + min(x,y) =x+y(Lean Theorem 8).
+In case (b),wt(LZ) ≡0 ( mod 2)implies wt(es ⊕LZ ⊕g) ≡|es|(mod 2)(Lean Theorem 4),
+so botha= ˜αs ∈R and b= ˜βs ∈R are real. Expanding the four sign quadrants of(a+ b,a−b )
+gives the exact identity
+(|a+b|+|a−b|) 2 = 4 max(a2,b2)∀a,b∈R(7)
+(machine-checked overZ in Lean Theorem 6,hermitian_trace_norm_eq_max, and valid overR
+by homogeneity). Substituting(7) into (4) yields 1
+4 ∥Ks(θ)∥2
+1 = max(˜α2
+s,˜β2
+s) = max(|αs|2,|βs|2)
+on every syndromes, provingFCPTP
+e (θ) =F Pauli
+e (θ)identically.
+2.3 Theorem 2.2: Exact 0–1 Swap-Point Binary Law atθ=π/4
+Let KZ := SZ ∩S⊥
+Z = {g∈S Z : g·h≡ 0 ( mod 2) ∀h∈S Z}denote the self-orthogonal subcode
+ofSZ. Everyg∈K Z satisfieswt(g) =g·g≡0 (mod 2).
+Theorem 2.2(Complete0–1Swap-Point Binary Law at θ= π/4).Let C= [[n,1,d]]beanyCSS
+code (not necessarily even-weightSZ). At the maximal-coherence angleθ= π/4( p= 1/2), the
+optimal Pauli entanglement fidelityFPauli
+e (π/4)takesonlytwo possible values, {1/2,1}, with no
+intermediate values in(1/2,1):
+(a) Swap-Point Collapse (FPauli
+e (π/4) = 1/2):Holds if and only if LZ ⊥KZ (equivalently
+LZ ∈SZ + S⊥
+Z, equivalently( LX + SX) ∩SZ = ∅). In this regime,|αs(π/4)|2 = |βs(π/4)|2 on
+100% of syndromess∈F rX
+2 , forcingFPauli
+e (π/4) = 1/2(and if SZ is even-weight and|LZ|is
+even,F CPTP
+e (π/4) = 1/2).
+(b) Complete Coherent Immunity (FPauli
+e (π/4) = 1):Holds if and only if LZ ̸⊥KZ, i.e.,
+there exists a witnessg∗∈KZ with |LZ∩g∗|≡ 1 ( mod 2)(equivalently g∗∈(LX+ SX) ∩SZ).
+In this regime,αs(π/4) βs(π/4) = 0on 100% of syndromes s∈F rX
+2 , forcingFPauli
+e (π/4) =
+FCPTP
+e (π/4) = 1.
+Proof. At θ = π/4, αs(π/4) = 2−n/2 ∑
+e∈C(0)
+s
+iwt(e). Substituting e1 = e⊕g (g∈S Z) and using
+wt(e⊕g ) −wt (e) = wt(g) −2 wt(e∩g )(Lean Theorem 1) givesiwt(e⊕g)−wt(e) = iwt(g)(−1)wt(e∩g).
+Writinge=e s ⊕h(h∈S Z) yields
+2n|αs(π/4)|2 =
+∑
+g∈SZ
+iwt(g)(−1)wt(es∩g) ∑
+h∈SZ
+(−1)wt(h∩g) =|SZ|
+∑
+g∈KZ
+(−1)wt(g)/2+wt(es∩g),(8)
+because ∑
+h∈SZ (−1)h·g = |SZ|1g∈S⊥
+Z
+by F2-character orthogonality, andg∈K Z =⇒wt (g)is
+even soiwt(g) = (−1)wt(g)/2. Replacinges byes ⊕LZ yields identically
+2n|βs(π/4)|2 =|SZ|
+∑
+g∈KZ
+(−1)wt(g)/2+wt(es∩g)+wt(LZ∩g).(9)
+Now observe the key linearity lemma: for anyg1,g2 ∈KZ, wt(g1 ∩g2) ≡0 ( mod 2), sowt(g1 ⊕
+g2) ≡wt (g1) +wt(g2) ( mod 4)(Lean Theorem 10, self_orthog_wt_mod4_additive). Therefore
+χs(g) := (−1)wt(g)/2+wt(es∩g) and ψ(g) := (−1)wt(LZ∩g) are bothlinear F2-characters on the group
+KZ!
+4
+
+--- Page 5 ---
+If LZ ⊥KZ, then ψ≡ 1on KZ, so (8) and (9) coincide identically on every syndromes,
+and Lean Theorem 11 (equal_coset_gives_half_fidelity) forces2 FPauli
+e (π/4) = ∑
+s(|αs|2 +
+|βs|2) = 1, i.e.FPauli
+e (π/4) = 1/2.
+Conversely, if∃g∗∈KZ with |LZ ∩g∗|≡ 1 ( mod 2), thenψ is a non-trivial character onKZ.
+Consequently the two charactersχs and χs·ψ are distinct for every syndromes, so they cannever
+both be the trivial character onKZ. Since the sum of any non-trivial character overKZ vanishes
+identically, at least one of|αs(π/4)|2 and |βs(π/4)|2 is zero on every syndromes. Lean Theorem 12
+(vanishing_coset_gives_unit_fidelity) then forces FPauli
+e (π/4) = ∑
+s(|αs|2 + |βs|2) = 1,
+whence1 = FPauli
+e (π/4) ≤F CPTP
+e (π/4) ≤1. Finally, g∗ ∈KZ with g∗·LZ = 1means Xg∗
+commutes withSZ and anticommutes withLZ, sog∗∈(LX +SX)∩SZ, and conversely.
+2.4 Corollary 2.3: Even-d Rotated Surface Code90◦ Orientation Phase Transi-
+tion
+For an odd-distance rotated surface code[[d2,1,d]], rX = rZ = (d2 −1)/2and90 ◦patch rotation
+is anX↔Z symmetry; since|LZ|= d is odd andKZ = {0}(or LZ ⊥KZ), FCPTP
+e (θ) ≡1while
+FPauli
+e (π/4) = 1 /2. Forevendistance d≥ 2, however,rX + rZ = d2 −1isodd, splitting the
+rotated surface code into two dual orientations under pure coherentZ-rotations:
+•X -majority orientation(rX = d2/2, rZ = d2/2 −1): d/2 −1weight-2 Z-checks lie along
+each vertical boundary.
+•Z -majority orientation(rZ = d2/2, rX = d2/2 −1): d/2disjoint weight-2 Z-checks tile the
+entire left boundary column{(r,0) : 0 ≤r<d} (and right boundary column), obtained from
+theX-majority patch by a90 ◦rotation (swappingHX ↔HZ,L X ↔LZ).
+Corollary 2.3(Even-d Rotated Surface Code90◦Orientation Phase Transition).For every even
+d≥ 2, both orientations of the[[d2,1,d]]rotated surface code satisfyFCPTP
+e (θ) ≡F Pauli
+e (θ)for
+all θ (Theorem 2.1(b)). Atθ= π/4, however, rotating the patch by90◦ induces a sharp1/2 ↔1
+phase transition:
+(a) In theZ-majority orientation(rZ = d2/2), the product of thed/2disjoint left-boundary
+weight-2 Z-checks is the full left columng∗ = ∏d/2−1
+j=0 Z(2j,0)Z(2j+1,0) = Zsupp(XL) ∈(LX +
+SX) ∩SZ. Hence g∗ ∈KZ with |LZ ∩g∗|= |{(0,0)}|= 1, forcingcomplete coherent
+immunityF Pauli
+e (π/4) =F CPTP
+e (π/4) = 1.
+(b) In theX-majority orientation(rX = d2/2), everyZ-stabilizer generator has even inter-
+section with the left-column logical-Z string LZ = {(r,0) : 0 ≤r < d}, soLZ ⊥SZ (hence
+LZ ⊥KZ) and the code sufferscomplete logical collapseFPauli
+e (π/4) = FCPTP
+e (π/4) = 1/2.
+Proof. In theZ-majority orientation on thed×d grid (deven), the left boundary carries weight-2
+Z-stabilizers on pairs{(2j,0),(2j+ 1,0)}for j = 0,...,d/ 2 −1. Their product is the weight-d
+left columng∗= {(r,0) : 0 ≤r <d}∈S Z. Every bulkZ-plaquette meets column0in either0
+or2qubits, every left-boundary Z-check meets it in2qubits, and every right-boundaryZ-check
+meets it in0qubits; hence g∗ ∈S ⊥
+Z, so g∗ ∈KZ = SZ ∩S⊥
+Z. The top-row logical-Z string
+LZ = {(0,c) : 0 ≤c < d}intersects g∗ exclusively at corner(0 ,0), giving |LZ ∩g∗|= 1 ≡1
+(mod 2). Theorem 2.2(b) immediately yieldsFPauli
+e (π/4) =F CPTP
+e (π/4) = 1.
+Conversely, in theX-majority orientation (obtained by swappingHX ↔HZ and LX ↔LZ),
+LZ is the left column{(r,0) : 0 ≤r < d}, bulkZ-plaquettes sit on(r,c)with r+ c even, and
+top/bottom boundary weight-2Z-checks sit on{(0,c),(0,c + 1)}and {(d−1,c),(d−1,c + 1)}
+exclusively atoddcolumn indices c∈{ 1,3,...,d− 3}(since both−1 +cand( d−1) +care even
+iff c is odd for evend). Consequently, every top and bottom boundaryZ-check is disjoint from
+column0(0overlap), while every bulk Z-plaquette intersects column0in either2qubits ( c= 0) or
+0qubits (c≥ 1). Thus every generator ofHZ—and hence everyg∈S Z ⊇KZ—has even overlap
+with LZ, provingLZ ⊥KZ and forcingFPauli
+e (π/4) = FCPTP
+e (π/4) = 1/2by Theorem 2.2(a) for
+every evend≥2.
+5
+
+--- Page 6 ---
+2.5 Exact-QPolynomial Representation and Special Exact Phenomena
+Theorem 2.4(Exact- Q Polynomial Evaluation overQ[p]).Let C= [[n,1,d]]be any even-Z-
+stabilizer CSS code and letp = sin2 θ∈Q∩ [0,1], q = 1 −p∈Q . Then for every syndrome
+s∈F rX
+2 , all weights insupp(As)share the same parity (likewise forBs), and the squared coset
+amplitudes are exact rational polynomials in(p,q):
+|αs(p)|2 =
+∑
+w1,w2
+As(w1)As(w2) (−1)(w1−w2)/2 qn−(w1+w2)/2 p(w1+w2)/2 ∈Q,(10)
+with the analogous formula for|βs(p)|2 via Bs. ConsequentlyFPauli
+e (p), FCPTP
+e (p), andFtwirl
+e (p)
+are exact rational numbers computable without floating-point arithmetic, trigonometry, or square
+roots.
+Proof. Multiplying αs(θ) = ∑
+w1 As(w1)cn−w1 (it)w1 by αs(θ) = ∑
+w2 As(w2)cn−w2 (−it)w2 gives
+iw1 (−i)w2 = iw1−w2 = ( −1)(w1−w2)/2 and c2n−w1−w2 tw1+w2 = qn−(w1+w2)/2p(w1+w2)/2, where
+(w1 ±w2)/2 ∈Z because all weights inC(0)
+s share parity by Theorem 2.1. Rationality ofFPauli
+e (p)
+andF CPTP
+e (p)then follows from (3) and Theorem 2.1.
+Proposition 2.5(Doubly-Even Constructive Interference and Exactd= 2Cancellation).
+(a) Steane[[7 ,1,3]]Unit Trivial-Syndrome Law:Since SZ is doubly-even with weight enu-
+merator {01,47}and LZ⊕SZ has {37,71}, all cross-terms carry phase+1(Lean Theorem 14),
+giving p0(π/4) = 2−7((1 + 7)2 + (7 + 1)2) = 1identically (Lean Theorem 15; transversal logical
+S† gate).
+(b) Exact d = 2 X-Majority Coherent–Twirled Cancellation:For rotsurf_d2_Xmaj
+([[4,1,2]], HZ = [1111], HX = [1010,0101]), the four syndromes yield coherent vs. twirled
+winning probabilities( q2 + p2)2 vs. q4 + p4 (s = 00,+2 p2q2),2 pq(q−p )2 vs.2 pq(q2 + p2)
+(s∈{ 01,10}, −4p2q2), and4p2q2 vs.2 p2q2 (s= 11,+2 p2q2). The constructive and destructive
+interference terms cancel identically (+2−4 + 2 = 0, Lean Theorem 16), forcing
+FPauli
+e (p)≡F CPTP
+e (p)≡F twirl
+e (p) = 1−2p+ 2p 2 ∀p∈[0,1/2].(11)
+3 Formal Lean 4 Kernel and Zero-Float Exact-QVerifier
+3.1 Zero-Dependency Lean 4 Formalization (18 Theorems)
+The entire algebraic spine of Theorems 2.1–2.2 and Proposition 2.5 is machine-checked in
+lean/CoherentCSS.lean under leanprover/lean4:v4.35.0 with zero external libraries (no
+Mathlib). Every definition (iabs, imax, imin, hammingWt, bitXor, bitAnd) uses constructive
+decidable arithmetic so thatlake env lean AuditAxioms.lean confirms18/18 theorems, 0
+warnings, 0 sorry, 0 Classical.choice, and 0Lean.ofReduceBool (depending solely on
+Lean core propext and Quot.sound, or no axioms at all). The 18 declarations comprise core
+structural proofs (Theorems 1–6, 10–12, 14, 16, 18) together with auxiliary algebraic and numerical
+check lemmas (Theorems 7–9, 13, 15, 17); Table 1 catalogs the complete formal kernel.
+3.2 Zero-Floating-Point-Trust Certificate Schema (COHERENT-CSS-CERT-1.0)
+In src/coherent_certifier.py, we specify and implement an independent verifierverify_
+coherent_css_certificate_exact that audits self-contained JSON certificates with zero floating-
+point operations:
+1. Strict recursive type whitelisting and exact key sets:Rejects anyfloat, bool (checked
+strictly beforeint since isinstance(True, int) in Python),Decimal, tuple, or non-string
+dictionary key anywhere in the JSON tree; enforces exact key sets (zero missing or rogue keys)
+6
+
+--- Page 7 ---
+Table 1: Zero-dependency Lean 4 (v4.35.0) formal kernel inlean/CoherentCSS.lean (18/18
+theorems, 0 warnings, 0sorry, 0Classical.choice).
+# Lean 4 Theorem (CoherentCSS.*) Role in Paper
+1–3xor_weight_exact,xor_weight_mod2,even_stab_preserves_parityExactwt(e⊕g) + 2 wt(e∩g) = wt(e) + wt(g)& coset parity4–5coset_parity_same_for_even_lz,coset_parity_opposite_for_odd_lzTheorem 2.1(a,b) real vs. imaginary coset phases6–7hermitian_trace_norm_eq_max,unitary_rotation_exact_normExact(|a+b|+|a−b|)2= 4 max(a2,b2)& unitary norm8–9pauli_infidelity_min_form,pauli_max_abs_identityPauli infidelityminlaw &2 max(x,y) =x+y+|x−y|
+10self_orthog_wt_mod4_additiveTheorem 2.2: linearity of(−1) wt(g)/2onKZ
+11–12equal_coset_gives_half_fidelity,vanishing_coset_gives_unit_fidelityTheorem 2.2(a,b):FPaulie (π/4)∈{1/2,1}13odd_intersection_anticommWitness anticommutation certification14–15doubly_even_sign_positive,steane_trivial_syndrome_unit_probProposition 2.5(a): doubly-even phase & Steanep0(π/4) = 116rotsurf_d2_exact_cancellationProposition 2.5(b): 4-syndromed= 2exact cancellation17–18coherent_pauli_le_cptp,css_orthogonality_mod2_symmMonotonicitymax(a,b)≤a+b& CSS intersection symmetry
+Table 2: Experiment 1: Certified 9-code CSS atlas (exp1_certified_atlas.json). All distances
+(dX,dZ)and fidelities are exact, verified with zero floats, and cross-checked against complex2×2
+SVD (maxerr= 1.45×10 −14).
+Code[[n,1,d X/dZ]] (rX,rZ)|L Z|dimK Z SwapFPaulie (15)F CPTPe (15)F twirle (15)F Paulie (12)Verify
+steane_7_1_3[[7,1,3/3]] (3,3) 7(odd)3 1/2 0.823654 1 0.678502 1/2 2.96 ms
+shor_9_1_3[[9,1,3/3]] (2,6) 3(odd)0 1/2 0.996994 1 0.659481 1/2 2.53 ms
+qrm_15_1_3[[15,1,3/7]] (10,4) 15(odd)4 1/2 0.804231 1 0.825129 1/2 429 ms
+rotsurf_d2_Xmaj[[4,1,2/2]] (2,1) 2(even)1 1/2 17/25 17/25 17/25 1/2 1.00 ms
+rotsurf_d2_Zmaj[[4,1,2/2]] (1,2) 2(even)2 1 16/25 16/25 17/25 1 0.83 ms
+rotsurf_d3[[9,1,3/3]] (4,4) 3(odd)0 1/2 0.738749 1 0.691552 1/2 7.65 ms
+rotsurf_d4_Xmaj[[16,1,4/4]] (8,7) 4(even)3 1/2 0.719399 0.719399 0.647065 1/2 157 ms
+rotsurf_d4_Zmaj[[16,1,4/4]] (7,8) 4(even)4 1 0.684682 0.684682 0.643996 1 96.5 ms
+swap_immune_8_1_2_odd[[8,1,2/3]] (4,3) 3(odd)3 1 0.813468 1 0.758336 1 4.38 ms
+at all four dictionary levels and strictstr/int types on every metadata and enumerator entry
+(raisingValueError, neverTypeError).
+2. Strict canonical rational parsing:Every rational field must match the anchored\A...\Z
+canonical syntax ("0", "-?[1-9][0-9]*", or coprime "p/q" with q≥ 2, rejecting "2/4",
+"1/1","+1/2", leading/trailing spaces, and trailing newlines"1/2\n").
+3. Full independent replay:Re-validates allF2 CSS axioms (HXH⊤
+Z = 0, full ranks,rX+rZ =
+n− 1, logical anticommutation, even-weightHZ), recomputes KZ = SZ ∩S⊥
+Z and verifies
+exact subspace equality of the claimedK_Z_basis as well as any witnessg∗ ∈ KZ with
+|LZ ∩g∗|≡ 1 ( mod 2), replays all2rX coset weight enumerators (checking strictly ascending
+canonical weight order intrivial_syndrome_enumerator), and verifies(10) at every claimed
+rationalp(mandatingp= 1/2to audit Theorem 2.2).
+4 Exact Computational Experiments and Findings
+All four experiments are generated deterministically byscripts/run_all_experiments.py and
+verified end-to-end byscripts/verify_all.py.
+4.1 Experiment 1: Certified 9-Code CSS Atlas and Complex-SVD Cross-Check
+Table 2 summarizes all 9 certified CSS codes (with exact distances(dX,dZ)exhaustively ver-
+ified bycompute_exact_css_distances): Steane[[7 ,1,3]], Shor[[9 ,1,3]][ 15], Quantum Reed–
+Muller[[15 ,1,3]]( dX = 3,dZ = 7) [16], rotated surface codesd= 2,3,4(both X-majority and
+Z-majority orientations for evend= 2,4), and an explicit doubly-even odd-|LZ|swap-immune
+[[8,1,2]]witness (dX = 2,dZ = 3, rX = 4,rZ = 3, g∗= 11110000 ∈KZ). All 9 certificates pass
+verify_coherent_css_certificate_exact in0 .83–429 ms, and an independent complex2×2
+singular-value decomposition ofKs(θ)across all syndromes matches every exact-Q fidelity to a
+maximum absolute discrepancy of1.45×10 −14.
+7
+
+--- Page 8 ---
+Figure 1: Exact-Q entanglement fidelity sweeps acrossθ∈ [0,π/4]. (a) Odd-|LZ|codes satisfy
+FCPTP
+e (θ) ≡1identically, while Pauli decoding collapses to1/2when LZ ⊥KZ or rebounds to1
+on swap_immune_8_1_2_odd. (b) Even-|LZ|codes satisfyFCPTP
+e (θ) ≡F Pauli
+e (θ), and a90◦patch
+rotation on d = 2,4rotated surface codes flips the θ = π/4limit from1 /2( X-majority) to1
+(Z-majority).
+4.2 Experiment 2: Exact Angle Sweeps, Coherent Gains, and the QRM
+Coherent Penalty
+Sweeping all 9 codes over the 21-point exact rational gridp= k/40( k= 0,..., 20, θ∈ [0,π/4])
+exposes four sharp physical regimes (Figures 1 and 2):
+• Universal Parity Split (Figure 1):Every odd-|LZ|code maintainsFCPTP
+e (θ) ≡1across
+the entire interval, whereas every even-|LZ|code obeysFCPTP
+e (θ) ≡F Pauli
+e (θ)identically. On
+d= 2and d= 4rotated surface codes, the90 ◦orientation swap dramatically splits the curves
+above θ≈ 0.14π: the X-majority patches collapse monotonically to1/2, while theZ-majority
+patches rebound non-monotonically to exact unit fidelity1atθ=π/4.
+• Massive Coherent Suppression and Exact Zero-Infidelity Point in Shor[[9,1,3]]
+(Figure 2):At p = 1 /5, Shor achieves FPauli
+e (1/5) = 1947253 /1953125 ≈ 0.996994vs.
+Ftwirl
+e (1/5) = 1288048 /1953125 ≈0.659481—a113 .26×reduction in logical infidelity.
+Remarkably, atp = 1/4( θ = π/6), the even-weight amplitudec(c2 −3t2)of every 3-qubit
+phase-check block vanishes identically, forcingexact unit Pauli fidelityFPauli
+e (1/4) = 1
+(zero logical infidelity!).
+• Coherent Penalty in Doubly-Even QRM[[15,1,3]]:Although QRM has doubly-even
+Z-stabilizers (all weight 8), Pauli decoding suffers astrict coherent penaltyFPauli
+e (p) <F twirl
+e (p)
+at 9/21 grid points (e.g.,0.804231 <0.825129at p= 1/5and0 .967187 <0.975282at p= 1/10),
+proving that doubly-evenSZ alone doesnotguarantee coherent advantage for Pauli decoders.
+• Exact d= 2 X-Majority Cancellation:Across all 21 rational grid points,rotsurf_d2_Xmaj
+satisfies FPauli
+e (p) = FCPTP
+e (p) = Ftwirl
+e (p)identically as exact fractions, confirming Proposi-
+tion 2.5(b).
+4.3 Experiments 3 & 4: 129-Code Binary Swap-Point Census and Distance
+Sawtooth
+To stress-test Theorem 2.2 beyond structured families, Experiment 3 evaluates the exactθ= π/4
+Pauli fidelity across all 9 atlas codes plus 120 deterministically sampled even-SZ [[n,1,d]]CSS
+8
+
+--- Page 9 ---
+Figure 2: Coherent vs. Pauli-twirled decoding gap acrossp= sin2 θ∈ [0,1/2]. (a) Exact difference
+∆coh(p) = FPauli
+e (p)−Ftwirl
+e (p), revealingexactzerocancellationfor rotsurf_d2_Xmaj andnegative
+coherent-penalty regions for doubly-even QRM[[15,1,3]](and at small p for Steane/Shor/surface
+codes). (b) Log-scale coherent-to-twirled infidelity ratio highlighting Shor’s exact zero-infidelity
+singularityF Pauli
+e (1/4) = 1atθ=π/6.
+codes (n∈{ 4,..., 9}, seed20261124). Every single one of the129 codesmatches Theorem 2.2
+with0 intermediate valuesin(1 /2,1): 67 collapse to1 /2(40 odd- |LZ|, 27 even-|LZ) and
+62 attain exact unit immunity1(31 odd-|LZ|, 31 even-|LZ), populating all four parity-by-swap
+quadrants (Figure 3(a)).
+Experiment 4 compares rotated surface codes (d= 2,3,4, both orientations) against phase-flip
+repetition codes (d= 2,..., 9, HZ = ∅, |LZ|= d) atp∈{ 1/20,1/10,1/5,3/10,2/5,1/2}. Even
+without anyZ-stabilizers (whereFPauli
+e (p) ≡F twirl
+e (p)), phase-repetition codes display the exact
+odd–even CPTP sawtooth of Theorem 2.1:FCPTP
+e (1/5)oscillates between1(odd d= 3,5,7,9)
+andF Pauli
+e (1/5)(evend= 2,4,6,8; Figure 3(b)).
+4.4 Adversarial Security Audit
+In tests/test_suite.py, we attackverify_coherent_css_certificate_exact with37 live
+adversarial payloadscovering bad schema versions, missing or rogue keys at all four dictionary
+levels, float,bool, Decimal, tuple, non-string-key, and non-stringcode_name/family injections,
+unreduced or non-canonical rationals ("2/4", "1/1", "+1/2", leading whitespace, trailing newlines
+"1/2\n" and "1\n"), broken CSS commutativity, odd-weightHZ rows, trivial logicals, forged
+parity branches, forgedFCPTP
+e = 1on even- |LZ|rotsurf_d4_Xmaj ,10 −6-perturbed fidelities,
+missing/forged/dependent K_Z_basis, missing/forged/spurious swap-immunity witnesses, missing
+mandatory p= 1/2points, and tampered, reversed, non-integer, or duplicated coset enumerators.
+All37/37 attacks are rejectedwith explicitValueErrordiagnostics.
+5 Scope, Limitations, and Conclusion
+Our exact dichotomy and0–1binary law govern uniform coherentZ-rotations U(θ) = ⨂n
+j=1 eiθZj
+on k= 1CSS codes with even-weightZ-stabilizers (with Theorem 2.2 holding even without the
+even-weight hypothesis). Several natural extensions remain open: (i) multi-logical[[n,k,d ]]CSS
+codes (k≥ 2), whereKs(θ)acts on C2k
+and the trace-norm optimization becomes a2k-dimensional
+matrix problem; (ii) spatially inhomogeneous angles{θj}n
+j=1 or combined coherentZ-rotations
+plus stochastic depolarizing noise, where the exactFCPTP
+e ≡1ceiling softens into the finite-size
+9
+
+--- Page 10 ---
+Figure 3: (a) Experiment 3 census across 129 certified CSS codes atθ= π/4: all four quadrants
+of (odd/even|LZ|) ×(LZ ⊥KZ vs. LZ ̸⊥KZ) are populated with 129/129 exact Theorem 2.2
+matches and 0 intermediate values in(1/2,1). (b) Experiment 4 even–odd distance sawtooth
+dichotomy atp= 1/5for phase-repetition (d= 2,...,9) and rotated surface (d= 2,3,4) codes.
+crossover analyzed in [9]; and (iii) scaling exact rational coset evaluation beyondn = 18via
+tensor-network or Majorana-fermion contraction over exact number fields.
+Within the uniform coherent CSS setting, our results provide a complete, machine-checked
+algebraic classification: the even–odd CPTP optimality dichotomy holds universally across all
+even-SZ CSS codes, theθ= π/4Pauli fidelity is strictly quantized to{1/2,1}by LZ ⊥(SZ ∩S⊥
+Z),
+and a90 ◦ orientation rotation of any even-d rotated surface code flips its maximal-coherence
+logical survival from50%to100%. All Lean 4 proofs, Python verifiers, certificates, and SHA-256
+manifests are archived athttps://github.com/lluiseriksson/coherent-css-dichotomy.
+References
+[1] Sergey Bravyi, Matthias Englbrecht, Robert König, and Nolan Peard. Correcting coherent
+errors with surface codes.npj Quantum Information, 4(1):55, 2018.
+[2] Daniel Greenbaum and Zachary Dutton. Modeling coherent errors in quantum error correction.
+Quantum Science and Technology, 3(1):015007, 2018.
+[3] Stefanie J. Beale, Joel J. Wallman, Mauricio Gutiérrez, Kenneth R. Brown, and Raymond
+Laflamme. Quantum error correction decoheres noise.Physical Review Letters, 121(19):190501,
+2018.
+[4] Eric Huang, Andrew C. Doherty, and Steven Flammia. Performance of quantum error
+correction with coherent errors.Physical Review A, 99(2):022313, 2019.
+[5] Joseph K. Iverson and John Preskill. Coherence in logical quantum channels.New Journal
+of Physics, 22(7):073066, 2020.
+[6] Florian Venn and Benjamin Béri. Error-correction and noise-decoherence thresholds for
+coherent errors in planar-graph surface codes.Physical Review Research, 2(4):043412, 2020.
+[7] Florian Venn, Jan Behrends, and Benjamin Béri. Coherent-error threshold for surface codes
+from Majorana delocalization.Physical Review Letters, 131(6):060603, 2023.
+[8] Jan Behrends, Florian Venn, and Benjamin Béri. Surface codes, quantum circuits, and
+entanglement phases.Physical Review Research, 6(1):013137, 2024.
+10
+
+--- Page 11 ---
+[9] Xu-Dong Dai, Zhou-Quan Wan, Xi Dai, and Guo-Yi Zhu. Surface codes with coherent errors:
+optimal decoding and finite-size crossovers.arXiv preprint arXiv:2611.13098, November
+2026.
+[10] A. Robert Calderbank and Peter W. Shor. Good quantum error-correcting codes exist.
+Physical Review A, 54(2):1098–1105, 1996.
+[11] Andrew Steane. Multiple-particle interference and quantum error correction.Proceedings of
+the Royal Society of London. Series A, 452(1954):2551–2577, 1996.
+[12] Leonardo de Moura and Sebastian Ullrich. The Lean 4 theorem prover and programming
+language. InAutomated Deduction – CADE 28, volume 12699 ofLecture Notes in Computer
+Science, pages 625–635. Springer, 2021.
+[13] Benjamin Schumacher. Sending entanglement through noisy quantum channels.Physical
+Review A, 54(4):2614–2628, 1996.
+[14] Howard Barnum andEmanuel Knill. Reversing quantum dynamicswith near-optimalquantum
+and classical fidelity.Journal of Mathematical Physics, 43(5):2097–2106, 2002.
+[15] Peter W. Shor. Scheme for reducing decoherence in quantum computer memory.Physical
+Review A, 52(4):R2493–R2496, 1995.
+[16] Sergey Bravyi and Alexei Kitaev. Universal quantum computation with ideal Clifford gates
+and noisy ancillas.Physical Review A, 71(2):022316, 2005.
+11
