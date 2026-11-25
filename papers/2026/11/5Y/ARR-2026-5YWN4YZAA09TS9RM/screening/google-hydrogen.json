@@ -1,0 +1,56 @@
+{
+  "assessed_at": "2026-11-25T22:19:44Z",
+  "canonical_sha256": "517f5ade663b8f9141aea2d0ced3ecee39398b32016290aec851004d213a380e",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All 18 Lean theorem statements in Table 1 are mathematically true, the worked Section 5 witnesses (Z = -271/2 for path_d4_q2, Z = -67 for tree_L2_q2, Z = 2 for grid_2x2_q2, E = 24 and V = 15 for hier_barrier_n4) and Table 2 entry counts verify exactly by hand, and Figure 1(a) threshold calculations (log2 n approx 78.8 and 5909) are accurate.",
+      "stars": 5
+    },
+    "novelty": {
+      "basis": "Path ABP/bisection, binary-tree bottom-up DP, and grid transfer-matrix contractions are standard linear-algebraic algorithms; the 18 Lean theorems formalize fixed q=2 small-graph identities and elementary N/Z inequalities, while Mode 4 checks finite integer proxy chains rather than the transcendental lower bounds of [3, 4].",
+      "stars": 2
+    },
+    "reproducibility": {
+      "basis": "Complete specification of all four acceptance predicates (Definition 3.1), exact unrounded rational outputs for all 16 atlas certificates (Table 2), four full worked numerical witnesses in Section 5 enabling hand verification from the PDF alone, and an itemized 54-attack taxonomy.",
+      "stars": 5
+    },
+    "rigor": {
+      "basis": "Standalone Lean 4.35.0 kernel (0 sorry, 0 Classical.choice, 2 axiom-free theorems) paired with a zero-float Fraction auditor, explicit Scope Calibration and Non-Claims, and a 54-case adversarial taxonomy. Rigor is bounded because Lean proves only fixed q=2 small graphs while general evaluators are checked only via bounded Python tests.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Provides a clean, self-contained, zero-float verification kernel and exact-Q benchmark suite for bounded graph state sums (d <= 64, L <= 6, r x c <= 5 x 5), but does not formalize general-size contraction equivalence, algebraic complexity classes (VF, VBP, VP, VNP), or border-complexity separations.",
+      "stars": 2
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.4,
+  "model_id": "hydrogen",
+  "overall_stars": 3,
+  "paper_id": "ARR-2026-5YWN4YZAA09TS9RM",
+  "potential_errors": [
+    "Lean Theorem 3 (tree_state_sum_dp_factorization) formalizes a 3-edge 4-vertex degree-3 rooted tree (K_{1,3}), which models a single degree-3 internal tensor contraction rather than a complete binary tree T_L (whose root has degree 2, e.g., 3 vertices for T_2 or 7 vertices for T_3).",
+    "Section 1 states Z_{C_4,q} = Tr(ABCD) using cyclic edge ordering around C_4, whereas Section 5 (grid_2x2_q2) indexes vertex tables in cardinal order (up, left, down, right), requiring transposition at (1,1) relative to cyclic trace order; both conventions are internally consistent where used, though the convention shift is not explicitly noted.",
+    "Figure 2(b) reports slightly higher replay latencies for 2x2 (0.11 ms), 3x3 (0.41 ms), and 4x4 (1.51 ms) grids than Table 2 (0.104 ms, 0.374 ms, 1.420 ms), and the 5x5 grid run (4.806 ms over 2^{40} assignments) is plotted in Figure 2(b) rather than included in the 16-certificate atlas of Table 2."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Transparent and well-calibrated scope statement ('Honest Two-Layer Scope Calibration' and 'Explicit Non-Claims') that clearly distinguishes fixed q=2 Lean proofs from bounded Python Fraction evaluators and explicitly disclaims formalizing Valiant's classes or [3, 4].",
+    "Exact-Q zero-float design across all four evaluator modes (Definition 3.1) with exact unrounded rational outputs in Table 2 and four complete, hand-verifiable numerical witnesses in Section 5 that check out exactly.",
+    "Clean standalone Lean 4.35.0 kernel (18 theorems, 0 sorry, 0 Classical.choice, 2 axiom-free theorems) and thorough 54-attack red-team taxonomy covering schema, type, canonical-rational, shape, value, and barrier-chain forgeries.",
+    "Accurate numerical checks throughout the text, including 2^{40} = 1,099,511,627,776 edge assignments, DP vertex-table entry counts (4, 20, 171, 387), and the asymptotic curve thresholds in Figure 1(a)."
+  ],
+  "strong_novelty_candidates": [],
+  "summary": "This paper presents a self-contained, explicitly scoped two-layer verification artifact for graph state-sum polynomial contractions on paths, complete binary trees, and square grids, motivated by recent preprints on Valiant's hierarchy [3, 4]. Layer 1 is a standalone 18-theorem Lean 4.35.0 kernel proving fixed q=2 small-graph contraction identities (P_3, P_4 associativity, a 3-edge 4-vertex degree-3 rooted tree, and C_4) over Z alongside 14 elementary Z/N/List arithmetic lemmas. Layer 2 (VALIANT-HIER-CERT-1.0) is a zero-float Python Fraction auditor across four modes (d <= 64 paths, L <= 6 complete binary trees, r x c <= 5 x 5 square grids, and finite integer exponent-chain proxies), reporting 16/16 verified certificates, brute-force q^E cross-checks on small instances, and 54/54 rejected adversarial attacks. All mathematical statements, worked witnesses, counts, and numerical thresholds visible in the PDF are internally consistent and exact, though the mathematical novelty and complexity-theoretic significance are modest because the Lean proofs are restricted to tiny fixed q=2 instances and elementary arithmetic bounds while the general contraction evaluators implement standard linear-algebraic methods on bounded inputs.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:d9535c9f-71e7-49d8-ba8a-9f9fb718796e",
+  "weaknesses": [
+    "Formal gap between Layer 1 and Layer 2: the Lean 4 kernel covers only fixed q=2 graphs on 3-4 vertices and elementary N/Z inequalities, leaving general-d/L/n/q contraction equivalence with brute-force state sums unformalized and relying on Python tests up to 4096 states.",
+    "Mode 4 (hierarchy_separation_barrier_exact) verifies only a 2-bit selector identity, closed-form counts (2n(n-1) and 2^L - 1), and a bounded integer inequality chain b^k < b^{s_1} < b^{s_2} < b^{s_3} (s_3 <= 24), which is a synthetic proxy rather than a certification of the transcendental exponents ln ln n, sqrt(ln ln n), and (ln n)^{1/12} from [3].",
+    "The Lean kernel and Python evaluators are presented strictly via specifications, tables, and worked witnesses in the PDF; independent machine execution of the external repository was outside the scope of this assessment.",
+    "Citations [3, 4] are unrefereed preprints dated November 23-24, 2026, though the paper explicitly notes that its formal theorems and exact-Q algorithms are self-contained and do not depend on them."
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "assessed_at": "2026-11-25T22:19:44Z",
+  "canonical_sha256": "8b4069f5b7dcab9179f9b8316849ebe6eb7ffbb2195f6f2a96c0d41a7d02086d",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All visible rational inequalities (Table 1 #6, #8, #10, #16-#17), algebraic bounds (#2-#4, #7, #9, #11-#15, #18), Charlier margins (11/12 < 133/144, 0.83147 < 403/480), prime sums (0.69315 to 7.04814 < ln 32000), and worked witnesses C02, C05, C13, C14 check out accurately. Only the intermediate H_w operator in C11 is undefined in the text.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "Serves as a verification and certificate-auditing companion to Google Research Cogentic's monograph [2] rather than establishing new mathematical theorems or proof techniques; the primary contribution is the 4-mode zero-float certificate schema, constructive arithmetic kernel, and adversarial test suite.",
+      "stars": 2
+    },
+    "reproducibility": {
+      "basis": "Reports exact toolchain versions (Lean 4.35.0, Python 3.12.6), timing means, strict axiom audits, a 40-file SHA-256 manifest, and hand-verifiable worked witnesses (C02, C05, C11, C13, C14), though full Lean/Python source code and JSON certificates reside outside the 4-page PDF.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Transparently scopes non-claims (Sec. 1) and combines constructive Classical.choice-free Lean 4.35.0 proofs with a statically audited zero-float Python int/Fraction verifier and 62 adversarial forgery tests. However, Layer 1 formalizes isolated arithmetic/list/tree bounds rather than graph or polynomial types, leaving structural verification to Layer 2 Python code.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Provides a clean, independently auditable sanity and certificate layer covering Harary's m <= 3 boundary through n_0 = 2^1005 beyond Muller's bound, though its impact is bounded by reliance on unformalized analytic and global combinatorial pillars remaining in [2].",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.4,
+  "model_id": "hydrogen",
+  "overall_stars": 3,
+  "paper_id": "ARR-2026-01PYB3Q92196PV85",
+  "potential_errors": [
+    "In Proposition 1 (p. 2), Theorem 15 is described as proving (p-1) ord_p(R!) <= R for all p >= 2 and truncation depths s, whereas the sum sum_{j=1}^s floor(R/p^j) in Table 1 #15 equals ord_p(R!) only when p is prime and p^s > R (otherwise it is a truncated Legendre sum, though the stated inequality still holds for all integers p >= 2).",
+    "In Table 1 #18 (sec9_final_contradiction_closure), the inequality S_1, E_3, W_sum < m/10^34 omits the underlying numeric type (in Nat floor division with m = 4000, m/10^34 = 0 would make S_1 < 0 vacuously false, so rational or scaled arithmetic must be used in the Lean source); additionally, #18 uses 10^-34 rather than the 10^-59 budget stated in Section 1.",
+    "In Section 4.2 (C11, p. 4) and Definition 1 Mode 3 (p. 2), the operator H_w(P), exponent gamma_hi, and constant C_const = C(3,1)C(2,1)C(1,1) = 6 are used without defining H_w in the manuscript, preventing direct step-by-step verification of the reduction from V_4 to F_mid(y_1, y_2) = y_1 - y_2 from the PDF alone."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Explicitly and honestly delineates verification scope and non-claims in Section 1 (excluding Greenwell's theorem, Bessel/van der Corput estimates, Lie-bracket induction, twin-quotient chains, and probabilistic hub pruning).",
+    "All visible numerical identities, rational inequalities in Table 1 (#1-#18), crossover calculations (n_0 = 2001, d^* approx 7.32, d=8, n_0 = 2^1005), Charlier upper bounds 1 - 11d/(24r), and Lemma 5.1 prime sums (0.69315 and 7.04814 vs. ln 32000 = 10.37349) are numerically consistent and accurate.",
+    "Worked graph/group witnesses C02 (K_3 U K_1 vs. K_1,3), C05 (n=12, m=15, 3!*2! = 12 | 72 = |Aut(G)|), C13 (|S_2 wr S_3| = 48 <= 64^6), and C14 (2/4 >= 3/8 sampling, degree excess 8 = 2*|W_0|) check out exactly from first principles.",
+    "Strong zero-float software hygiene design in Layer 2 (static ast.walk checks, strict JSON float/NaN/duplicate-key rejection, and 62 parametrized adversarial forgery tests with exact error-branch assertions)."
+  ],
+  "strong_novelty_candidates": [],
+  "summary": "This 4-page manuscript presents a standalone, two-layer zero-floating-point verification stack supporting Google Research Cogentic's linear-density edge reconstruction theorem (m >= 1000 n_0) [2]. Layer 1 consists of 18 constructive Lean 4.35.0 theorems (zero sorry, zero Classical.choice) covering isolated arithmetic, rational, inductive-tree, list-partition, and contradiction-closure bounds. Layer 2 (EDGERECON-COGENTIC-CERT-1.0) is a pure-stdlib Python int/Fraction auditor across four modes (edge-deck/Kelly identities, multi-scale Kruskal MSTs, shift-invariant Charlier/band isolation, and bridge rigidity/Pillar III slices) evaluated over 16 canonical certificates (0.192-28.989 ms) and 62 adversarial forgeries. The paper is transparent about its non-claims, and all visible arithmetic, worked graph witnesses, tables, and figures are internally consistent, with only minor notational omissions (notably the undefined H_w operator in C11 and a slight terminological slip regarding ord_p(R!) in Proposition 1).",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:776a62fe-552b-4269-9c1f-f7c2907fb9db",
+  "weaknesses": [
+    "Layer 1 (CogenticEdgeRecon.lean) does not formalize graph-theoretic objects (graphs, Kruskal MSTs, automorphism groups, bridge restriction groups) or multivariate Charlier polynomials in Lean 4; the 18 Lean theorems formalize decoupled arithmetic, list, and abstract tree inequalities, leaving all structural graph and polynomial verification to the unverified Python Layer 2 auditor.",
+    "The manuscript depends on external artifacts (full Lean source, Python verifier, JSON certificates) and an external primary monograph [2] for definitions of H_w(P), gamma_hi, and the analytic/global combinatorial pillars not formalized here.",
+    "Minor notation inconsistency in C14 (p. 4), where the degree-excess sum indexes over H_5 (degree >= 5 at Delta = 5) whereas Definition 1 Mode 4 and Section 1 index over H_{k-1}."
+  ]
+}
