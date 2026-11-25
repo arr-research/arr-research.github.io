@@ -1,0 +1,58 @@
+{
+  "assessed_at": "2026-11-25T18:16:37Z",
+  "canonical_sha256": "7d8f53a08a575ab7832dc382e23dc6a893cd46033626b18ff59f100b92aa3f9d",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All algebraic identities in Table 1, Mercator brackets for log(2) (56/81 < log 2 < 23581/34020), parameter ratios (gamma=320nM^2, C*=200M^4), sharp boundary 1280^2=128*2^2*3200, and the 16-trigger Student-Professor gap (14 vs 20, gain 3T/2) verify cleanly from the PDF.",
+      "stars": 5
+    },
+    "novelty": {
+      "basis": "All core sub-sqrt(T) linear swap regret theorems, adjugate Perron monotonicity, and the Student-Professor separation come from Pollatos & Marchesi [5]; novelty lies in the zero-dependency Lean 4 algebraic kernel and 4-mode exact-Q certificate auditor.",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "Specifies Lean 4.35.0, exact theorem names, axiom footprints, pure-stdlib Python verifier modes, concrete test families (e.g., 4x4 lift rho(0)=554/125, 3x3 family B_tau, T in {64,125,1000,8000}), and GitHub repo; PDF-only review cannot execute external scripts.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Zero-dependency Lean 4.35.0 kernel (18 theorems, 0 sorry, 0 Classical.choice, audited #print axioms: 1 none, 3 propext, 14 propext+Quot.sound) paired with pure-stdlib exact-Q auditor rejecting 62/62 adversarial forgeries; scope exclusions are stated transparently.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Provides a clean, machine-checked algebraic core and fast (0.192-6.384 ms) zero-float certificate verifier for recent AGT results [5], though impact is bounded because general-m Perron theory, FTRL dynamics, and recursive treeplex induction remain outside Lean 4.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 4.0,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-5G4EGTRH2N9FGTXD",
+  "potential_errors": [
+    "Theorem 9 in Table 1 (log_barrier_g_threshold_1_16) only formalizes rational inequalities in Lean 4 rather than Real.log bounds, though the 2-term/3-term-plus-tail Mercator derivation stated in Proposition 1(2) is mathematically valid and matches the stated fractions.",
+    "Section 4 (p. 4) and Fig. 2(b) cite 'Page 3 Student-Professor separation' / '(p. 3)' referring to Pollatos & Marchesi [5], whereas the example appears on p. 2 of this manuscript; additionally, the PDF title differs from the submission metadata title.",
+    "Section 1 (p. 1) writes gamma = Theta(n sqrt(C_*)) = Theta(poly(D) lambda^{-1/2}), dropping the explicit n factor in the second expression (implicitly subsumed into poly(D))."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Mathematically sound and algebraically verified across all 18 Table 1 identities, Mercator rational brackets for log(2), RVU energy-cancellation parameter choices, and the exhaustive 16-trigger Student-Professor UTC separation (gain 3T/2).",
+    "Exceptionally transparent scoping: explicitly delineates what is formalized in zero-dependency Lean 4.35.0 (0 sorry, 0 warnings, 0 Classical.choice, explicit #print axioms inventory) versus what remains outside Lean 4 (general-m Perron theory, FTRL dynamics, continuous calculus, Legendre dual, recursive treeplex induction).",
+    "Well-structured pure-stdlib exact-Q verifier (SWAP-POLYHEDRAL-CERT-1.0) across four distinct verification modes, demonstrating fast replay (0.192-6.384 ms across 16 canonical certificates) and thorough red-team testing (62/62 adversarial forgeries rejected).",
+    "Internal consistency across text, tables, and figures: Table 1 axiom counts (1 + 3 + 14 = 18), Table 2 attack counts (12+12+12+14+12 = 62) and latencies, Fig. 1 stability ratios and Perron trace, and Fig. 2/3 numerical values all align."
+  ],
+  "strong_novelty_candidates": [
+    "Zero-dependency constructive Lean 4.35.0 algebraic kernel paired with exact-rational Mercator bracketing and a 4-mode zero-float certificate auditor (SWAP-POLYHEDRAL-CERT-1.0) for Pollatos & Marchesi's [5] sub-sqrt(T) linear swap regret framework."
+  ],
+  "summary": "This companion verification paper provides an 18-theorem zero-dependency Lean 4.35.0 algebraic kernel (LinearSwapRegretPolyhedral.lean) and a pure-stdlib exact-rational runtime certificate auditor (SWAP-POLYHEDRAL-CERT-1.0) targeting key algebraic and finite-instance components of Pollatos and Marchesi [5] (arXiv:2611.33081). All mathematical identities, rational Mercator brackets for log(2), RVU energy-cancellation constants, and the Student-Professor UTC-vs-trigger separation (14 vs. 20 per cycle, 3T/2 gain) presented in the PDF are internally consistent and correct. The manuscript is honest about leaving general-m Perron monotonicity, FTRL/RVU dynamics, continuous log-barrier calculus, Lemma 5's Legendre dual, and Lemma 7's recursive treeplex induction outside Lean 4. No unresolved material objections were found, though its scientific novelty and significance are bounded by its role as a finite/algebraic verification companion to [5].",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:ccacd03f-ebe0-4d29-9b43-1ab1e3efbc71",
+  "weaknesses": [
+    "The Lean 4 formalization is restricted to finite scalar and 2x2 algebraic invariants; the core analytic and inductive arguments of [5] (general-m adjugate Perron monotonicity, FTRL/RVU regret dynamics, continuous log-barrier calculus, Lemma 5 Legendre dual, and Lemma 7 recursive treeplex induction) remain unformalized in Lean 4.",
+    "Empirical evaluation in Modes 1-4 is limited to small-scale concrete instances (e.g., 3x3 and 4x4 matrices, small finite EFG trees), and Fig. 2(a) displays closed-form theoretical scaling curves rather than empirical FTRL play trajectories.",
+    "Table 1 omits implicit universal quantifiers and auxiliary matrix definitions in compact statement cells (e.g., Rows 11-13), requiring cross-reading with Proposition 1 and Section 3 for full context.",
+    "Minor presentation discrepancies between the PDF title and submission record title, and ambiguous 'Page 3' / '(p. 3)' cross-references to [5] on p. 4."
+  ]
+}

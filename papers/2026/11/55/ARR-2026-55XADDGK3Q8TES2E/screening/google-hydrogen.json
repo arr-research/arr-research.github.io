@@ -1,0 +1,59 @@
+{
+  "assessed_at": "2026-11-25T18:16:37Z",
+  "canonical_sha256": "bf6340cff6ab394fb863ef9af53cce9dfbe4d262d7a0f8c965cbe5e5ef69b8b0",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All 18 formalized statements in Table 1 (#1-#18) are algebraically and logically sound as stated, and Fig. 1 and Fig. 3 numerical counts (2^L, 3*2^{L-2}, (h+1)^2, 2h^2+2h, 65=13+12+12+15+13, ~1.64 ms total) match the text. However, because the PDF omits the underlying Lean definitions (e.g., buildPrefixProbe, Wrong, Miss, neg-corr, pos-uniq, DotClass) and Fig. 2(a) leaves |S|=5 for d=3, h=0 unexplained, full semantic correctness cannot be verified from the PDF alone.",
+      "stars": 3
+    },
+    "novelty": {
+      "basis": "The complexity-theoretic theorems, constructions, and collapses are explicitly credited to Hirsch [4] and prior literature [1,3,5-10]. The manuscript's contribution is a companion constructive Lean 4.35.0 formalization of 18 combinatorial/structural lemmas paired with a zero-floating-point discrete verifier (OUH-CERT-1.0) and a 65-attack red-team suite, representing solid formalization engineering rather than new complexity-theoretic results.",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "The manuscript specifies the Lean version (4.35.0), module and script names, parameter sets (L in {4,5,6,8}, d in {1,2,3}, h=0, |T|=3, |A|=2), a 40-artifact SHA-256 manifest, and a repository URL. However, the PDF includes no Lean source listings, no formal predicate definitions, no JSON schema specifications, and no hardware/OS details for the sub-millisecond timing measurements in Fig. 3(a).",
+      "stars": 3
+    },
+    "rigor": {
+      "basis": "Constructive Lean proofs without sorry, Classical.choice, or Lean.ofReduceBool (Table 1) and strict integer-only JSON verification (Sec. 3) are disciplined practices. However, omitting Turing-machine and polynomial-time semantics reduces several headline claims to elementary arithmetic (Thms. 9, 11), abstract predicates (Thms. 10, 15), or finite 4-element/8-node lookups (Thms. 14, 18), and Mode 3 tests only h=0 toy towers rather than general h>0 towers.",
+      "stars": 3
+    },
+    "significance": {
+      "basis": "This work provides a clean, axiom-minimal combinatorial kernel and a deterministic finite-instance certifier for input-oblivious unambiguous hierarchies [4], useful as a verification artifact and pedagogical/testing companion. Its broader complexity-theoretic significance is bounded by the absence of machine/oracle runtime formalization in Lean 4 and the small scale of the verified finite instances.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.35,
+  "model_id": "hydrogen",
+  "overall_stars": 3,
+  "paper_id": "ARR-2026-55XADDGK3Q8TES2E",
+  "potential_errors": [
+    "Figure 2(a) reports Final |S| witnesses = 5 for 'Depth 3 (Descent)' while the caption specifies single-length h = 0 towers where there are only d(h + 1) = 3 target (i, m) slots and the round cap is d = 3; the manuscript does not explain how |S| reaches 5 (e.g., whether two spurious out-of-promise witnesses remain in S alongside the three true witnesses, and why 'Depth 2 (Spurious)' remains at |S| = 2).",
+    "Proposition 1(1) claims that lexLt is 'irreflexive, asymmetric, and trichotomous', whereas Table 1 row 1 ('lex_lt_irrefl_and_asymm', described as 'exact formalized statements') states only irreflexivity and asymmetry, omitting trichotomy.",
+    "In Figure 2(b), bar 4 is labeled '32 entries (unique w)' for Prop. 6.6 (SOUP), whereas Section 3 (Mode 4) and Section 4 describe Prop. 6.6 as certifying a unique pair (b*, w*) = (0, 11) rather than a single w."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Constructive Lean 4.35.0 formalization of 18 structural and combinatorial lemmas with zero dependencies, zero sorry, zero Classical.choice, and explicit #print axioms auditing (8 zero-axiom, 4 [propext], 6 [propext, Quot.sound]).",
+    "Nontrivial constructive proofs of lexicographic maximality and prefix-search recovery (Thms. 1-4), Mahaney's census subset-forcing lemma via countPred indicator splitting (Thm. 5), Cantor pairing injectivity on N^2 (Thm. 6), oblivious witness bit extraction (Thms. 7-8), and tower disagreement descent (Thm. 10).",
+    "Strict zero-floating-point discrete verifier (OUH-CERT-1.0) enforcing exact integer/boolean JSON typing, nesting caps, and exhaustive Mode 1-4 replays, paired with a 65-case adversarial red-team suite (13 schema/type + 52 domain attacks) achieving 65/65 rejection.",
+    "Quantitative plots in Fig. 1 and Fig. 3 align cleanly with the analytical formulas (2^L, 3*2^{L-2}, (h+1)^2, 2h^2+2h) and reported counts/timing totals (16 certificates, 0.033-0.210 ms, 1.64 ms total; 13+12+12+15+13 = 65 attacks).",
+    "Transparent disclosure in Contributions and Scope (Sec. 1) and Table 1 footnote that polynomial-time Turing-machine semantics are not formalized in Lean 4."
+  ],
+  "strong_novelty_candidates": [
+    "Constructive, choice-free Lean 4.35.0 mechanization of the lexicographic-advice prefix-search/co-ONP singleton cycle, Mahaney countPred subset-forcing split, and inductive loose-tower disagreement descent skeleton (Thms. 1-8, 10, 12-17) paired with a zero-float exact discrete certifier and 65-attack adversarial test suite."
+  ],
+  "summary": "This 4-page manuscript presents a companion formalization and exact discrete verification framework for Edward A. Hirsch's paper on input-oblivious unambiguous complexity hierarchies (OUH and OUH•, [4]). It combines an 18-theorem standalone Lean 4.35.0 module (ObliviousUnambiguous.lean, audited with zero sorry and zero Classical.choice) with a pure-integer Python verifier (OUH-CERT-1.0) evaluated on 16 canonical certificates and 65 adversarial forgery tests. While the Lean proofs of lexicographic prefix recovery, Mahaney census subset forcing, Cantor pairing injectivity, and inductive tower descent are clean and constructive, the formalization omits Turing-machine and polynomial-time semantics entirely, includes several elementary or finite-enum theorems (Thms. 9, 11, 14, 18) in its headline count, omits underlying Lean predicate definitions from the PDF, and tests only small toy instances (including an unexplained |S|=5 bar in Fig. 2(a) for d=3, h=0). As a transparent structural-verification and testing companion, it is acceptable and substantive, though modest in theoretical depth and self-contained auditability.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:e86921d9-4e66-4623-bcac-fec6e86d62e3",
+  "weaknesses": [
+    "Absence of Turing-machine, oracle, and polynomial-time semantics in Lean 4: the complexity-class inclusions and collapses of [4] are not formally proved; instead, several theorems are elementary arithmetic (Thm. 9 is <=-transitivity; Thm. 11 is product monotonicity), abstract predicate skeletons (Thms. 10, 15), or finite lookup closures on 4-element (Thm. 14) and 8-node (Thm. 18) inductive types.",
+    "Insufficient self-contained formal detail in the PDF: key Lean definitions (e.g., buildPrefixProbe, Wrong, Miss, neg-corr, pos-uniq, Acc, DotClass) and Python verifier schemas are omitted, preventing a referee reading only the PDF from verifying that abstracted hypotheses are non-vacuous.",
+    "Limited empirical scale and specialization: Mode 1 tests only L in {4,5,6,8}, Mode 3 tests only d in {1,2,3} restricted to single-length h=0 towers (leaving the general h>0 regime unexercised by OUH-CERT-1.0), and Mode 4 tagging tests only |T|=3, |A|=2.",
+    "No hardware, CPU, or Python interpreter specifications are provided to contextualize the reported 0.033-0.210 ms replay latencies."
+  ]
+}
