@@ -62,6 +62,55 @@ class ExternalCitationTests(unittest.TestCase):
         self.assertIn(f'/preview/citations/#{item["id"]}', cited_by)
         self.assertEqual(build_site.paper_cited_by("ARR-0000-NOTCITED", "/preview"), "")
 
+    def test_numbered_statement_must_exist_in_the_cited_version(self):
+        # Theorem 2.2 and Proposition 3.2 belong to the second cited record; the first has no Proposition 3.2.
+        registry = copy.deepcopy(self.registry)
+        cites = registry["citations"][0]["cites"]
+        source = next(cited for cited in cites if cited.get("results_cited"))
+        other = next(cited for cited in cites if cited is not source)
+        other["results_cited"] = list(source["results_cited"])
+        errors = validate_external_citations(registry, self.versions)
+        self.assertTrue(any("is not a numbered statement of" in error and other["paper_id"] in error for error in errors))
+
+    def test_reference_record_and_check_are_required(self):
+        registry = copy.deepcopy(self.registry)
+        entry = registry["citations"][0]
+        entry["reference_record"]["id"] = "ARR-2026-NOTOURS"
+        entry["reference_record"]["versions"][0]["pdf_sha256"] = "abc"
+        del entry["cites"][0]["check"]
+        errors = validate_external_citations(registry, self.versions)
+        self.assertTrue(any("never ARR-" in error for error in errors))
+        self.assertTrue(any("pdf_sha256" in error for error in errors))
+        self.assertTrue(any("cites.check is required" in error for error in errors))
+        del entry["reference_record"]
+        self.assertTrue(any("reference_record is required" in error for error in validate_external_citations(registry, self.versions)))
+
+    def test_citing_documents_are_never_rated(self):
+        registry = copy.deepcopy(self.registry)
+        registry["citations"][0]["rating"] = 7
+        self.assertTrue(any("does not assess a citing document" in error for error in validate_external_citations(registry, self.versions)))
+
+    def test_pages_show_who_cites_the_use_and_the_reference_record(self):
+        item = self.registry["citations"][0]
+        reference = item["reference_record"]
+        with patch.object(build_site, "EXTERNAL_CITATIONS", self.registry["citations"]), patch.object(build_site, "EXTERNAL_CITED", {}):
+            home = build_site.external_citations_home("")
+            page = build_site.build_citations("", "")
+        self.assertIn("Tsinghua University", home)
+        self.assertEqual(home.count("Beijing Institute of Mathematical Sciences and Applications"), 1)
+        self.assertIn("Citation checked", home)
+        self.assertIn(reference["id"], home)
+        for cited in item["cites"]:
+            self.assertIn(build_site.esc(cited["use"]), home)
+            self.assertIn(build_site.esc(cited["check"]["detail"]), page)
+        self.assertIn(reference["versions"][0]["pdf_sha256"], page)
+        self.assertIn("not submitted to AIRR by its authors", page)
+        self.assertIn("AIRR hosts no copy", page)
+        self.assertIn("does not rate or review a citing paper", page)
+        differing = copy.deepcopy(item)
+        differing["cites"][0]["check"]["outcome"] = "discrepancy"
+        self.assertEqual(build_site.citation_check_stamp(differing), "")
+
     def test_nothing_is_shown_without_citations(self):
         with patch.object(build_site, "EXTERNAL_CITATIONS", []):
             self.assertEqual(build_site.external_citations_home(""), "")

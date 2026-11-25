@@ -787,21 +787,60 @@ def external_citation_card(item: dict, base: str) -> str:
     for cited in item["cites"]:
         title, page, _ = cited_record_links(cited, base)
         results = " · ".join(cited.get("results_cited", []))
-        records += f'<li><span>Cites</span> <a href="{esc(page)}">{esc(title)}</a> <small>{esc(cited["paper_id"])} · {esc(cited["version"])}{" · " + esc(results) if results else ""}</small></li>'
+        use = f'<em class="citing-use">{esc(cited["use"])}</em>' if cited.get("use") else ""
+        records += f'<li><span>Cites</span> <a href="{esc(page)}">{esc(title)}</a> <small>{esc(cited["paper_id"])} · {esc(cited["version"])}{" · " + esc(results) if results else ""}</small>{use}</li>'
+    # Affiliations are shown exactly as the citing paper prints them, each one once.
+    affiliations = " · ".join(dict.fromkeys(esc(author["affiliation"]) for author in item["authors"] if author.get("affiliation")))
+    checked = citation_check_stamp(item)
     return f"""
 <article class="paper-card citing-card">
   <div class="paper-card-header"><div class="paper-meta"><span class="badge citing-badge">Independent citation</span><span>{esc(item['identifier'])}</span></div><span class="paper-date">Posted {plain_day(item['date'])}</span></div>
   <h3><a href="{esc(item['url'])}" rel="external noopener">{esc(item['title'])}</a></h3>
   <div class="paper-byline"><p class="authors">{authors}</p><a class="paper-card-cite" href="{base}/citations/#{esc(item['id'])}">Citation details</a></div>
+  {f'<p class="citing-affiliations">{affiliations}</p>' if affiliations else ''}
   <ul class="citing-records">{records}</ul>
+  {f'<p class="citing-check">{checked}</p>' if checked else ''}
 </article>"""
+
+
+def citation_check_stamp(item: dict) -> str:
+    """One line saying which source version was compared with the cited AIRR versions, or '' if any check is missing or found a discrepancy."""
+    checks = [cited.get("check") for cited in item["cites"]]
+    reference = item.get("reference_record")
+    if not reference or not all(check and check.get("outcome") == "consistent" for check in checks):
+        return ""
+    latest = max(check["checked_on"] for check in checks)
+    return f'<strong>Citation checked</strong> against the cited AIRR {"versions" if len(checks) > 1 else "version"} on {plain_day(latest)} · reference record {esc(reference["id"])}'
+
+
+def external_reference_record(item: dict) -> str:
+    """The pinned outside document: what was read, where it lives and under which licence. AIRR hosts no copy."""
+    reference = item.get("reference_record")
+    if not reference:
+        return ""
+    rows = "".join(
+        f'<div><dt>{esc(item["identifier"])}{esc(version["version"])}</dt><dd><a href="{esc(version["url"])}" rel="external noopener">Posted {plain_day(version["date"])}</a> · retrieved {plain_day(version["retrieved_on"])} · {"cites AIRR" if version["cites_airr"] else "no longer cites AIRR"}'
+        f'<span class="reference-hash">PDF SHA-256 {esc(version["pdf_sha256"])} · {version["pdf_bytes"]:,} bytes</span></dd></div>'
+        for version in reference["versions"]
+    )
+    licence = reference["licence"]
+    corrections = "".join(f'<li>{plain_day(correction["date"])}: {esc(correction["note"])}</li>' for correction in item.get("corrections", []))
+    return f"""
+    <div class="citing-detail reference-record">
+      <h3>External reference record</h3>
+      <p class="citing-target">{esc(reference['id'])}</p>
+      <p class="reference-scope">Kept by AIRR to fix exactly which document was read. It was not submitted to AIRR by its authors and AIRR has not assessed it. AIRR hosts no copy: the document stays at its source under the <a href="{esc(licence['url'])}" rel="external noopener license">{esc(licence['name'])}</a>.</p>
+      <dl class="record">{rows}</dl>
+      <p class="citing-method">Each hash is of the PDF as the source served it on the retrieval date; a source may later regenerate a file without changing its text.</p>
+      {f'<h3>Corrections to this entry</h3><ul class="reference-corrections">{corrections}</ul>' if corrections else ''}
+    </div>"""
 
 
 def external_citations_home(base: str) -> str:
     if not EXTERNAL_CITATIONS:
         return ""
     cards = "".join(external_citation_card(item, base) for item in EXTERNAL_CITATIONS[:HOME_CITATION_LIMIT])
-    return f'<section class="recent cited-in-literature"><div class="section-heading"><div><span>Cited in the literature</span><h2>Recent papers citing AIRR records</h2></div><a href="{base}/citations/">All citations</a></div>{cards}<p class="citing-method">Listed only after the citing paper’s own reference list has been checked against the exact AIRR record. A citation is not an endorsement.</p></section>'
+    return f'<section class="recent cited-in-literature"><div class="section-heading"><div><span>Cited in the literature</span><h2>Recent papers citing AIRR records</h2></div><a href="{base}/citations/">All citations</a></div>{cards}<p class="citing-method">Listed only after the citing paper’s own reference list has been checked against the exact AIRR record. AIRR checks the citation, not the citing paper. A citation is not an endorsement.</p></section>'
 
 
 def paper_cited_by(paper_id: str, base: str) -> str:
@@ -830,6 +869,12 @@ def build_citations(base: str, canonical_url: str) -> str:
             title, page, pdf = cited_record_links(cited, base)
             results = "".join(f"<li>{esc(result)}</li>" for result in cited.get("results_cited", []))
             original = f'<a class="button secondary" href="{esc(page)}">AIRR record · {esc(cited["version"])}</a>' + (f'<a class="text-link" href="{esc(pdf)}">Original PDF of the cited version</a>' if pdf else "") + f'<a class="text-link" href="{esc(page)}#cite">How to cite it</a>'
+            check = cited.get("check")
+            compared = ""
+            if check:
+                verdict = "Consistent with the record." if check["outcome"] == "consistent" else "Differs from the record."
+                compared = f'<div><dt>Compared with the record</dt><dd><strong>{verdict}</strong> {esc(check["detail"])}<span class="reference-hash">{esc(item["identifier"])}{esc(check["source_version"])} against {esc(cited["paper_id"])} {esc(cited["version"])} · {plain_day(check["checked_on"])} · {esc(check["checked_by"])}</span></dd></div>'
+            number = f' {esc(cited["reference_number"])}' if cited.get("reference_number") else ""
             cited_blocks += f"""
     <div class="citing-detail">
       <h3>Cited AIRR record</h3>
@@ -838,7 +883,8 @@ def build_citations(base: str, canonical_url: str) -> str:
         <div><dt>Where it is cited</dt><dd>{esc(cited['location'])}</dd></div>
         {f'<div><dt>Results cited</dt><dd><ul class="citing-results">{results}</ul></dd></div>' if results else ''}
         <div><dt>What the citing paper uses</dt><dd>{esc(cited['summary'])}</dd></div>
-        <div><dt>Reference as printed</dt><dd>{esc(cited['reference'])}</dd></div>
+        {compared}
+        <div><dt>Reference{number} as printed</dt><dd>{esc(cited['reference'])}</dd></div>
       </dl>
       <div class="download-row">{original}</div>
     </div>"""
@@ -850,14 +896,15 @@ def build_citations(base: str, canonical_url: str) -> str:
   <p class="citing-venue">{esc(item['venue'])}</p>
   <div class="download-row">{source_links}</div>
   {cited_blocks}
-  <p class="citing-method">Reference list checked by the AIRR editor on {plain_day(item['verified_on'])}. None of the citing authors is an author of the cited record.</p>
+  {external_reference_record(item)}
+  <p class="citing-method">Reference list checked by the AIRR editor on {plain_day(item['verified_on'])}. None of the citing authors is an author of a cited record.</p>
 </article>"""
     if not entries:
         entries = '<section class="empty-state"><h2>No verified citation yet.</h2><p>Entries appear here once an outside document’s reference list has been checked against an AIRR record.</p></section>'
     content = f"""
 <section class="page-intro"><span>Cited in the literature</span><h1>Papers that cite AIRR records</h1><p>Research published elsewhere whose reference list names an AIRR record. Each entry links to the citing paper at its source, states which results it cites and where, and links to the exact AIRR version that was cited.</p></section>
 <section class="citing-list">{entries}</section>
-<section class="callout citing-policy"><h2>How this list is kept</h2><p>An entry is added by hand after the citing document itself has been read: the reference must name the AIRR identifier, and no citing author may be an author of the cited record, so self-citations are not listed. Nothing is harvested from citation indexes. A citation shows that a result was used or compared; it is not peer review of the AIRR record and not an endorsement of the archive. <a href="{base}/registry/external-citations.json">Machine-readable list</a> · <a href="{base}/contact/">Report a citation or a correction</a>.</p></section>
+<section class="callout citing-policy"><h2>How this list is kept</h2><p>An entry is added by hand after the citing document itself has been read: the reference must name the AIRR identifier, and no citing author may be an author of the cited record, so self-citations are not listed. Nothing is harvested from citation indexes. Each citation is then compared with the exact AIRR version it names: a numbered statement is listed only if that version contains it, and the entry says whether the citing paper’s use agrees with the record. The citing document is pinned in an external reference record (identifier, version, file hash, licence) that AIRR keeps without hosting a copy. AIRR does not rate or review a citing paper: only the citation is checked, and nothing more is assessed unless its authors ask by <a href="{base}/contact/">writing to the editor</a>. A citation shows that a result was used or compared; it is not peer review of the AIRR record and not an endorsement of the archive. <a href="{base}/registry/external-citations.json">Machine-readable list</a> · <a href="{base}/contact/">Report a citation or a correction</a>.</p></section>
 """
     canonical = f"{canonical_url}/citations/" if canonical_url else ""
     return page_shell(title="Papers citing AIRR records — AIRR.SCIENCE", description="Independent research papers whose reference lists cite AIRR records, with the results cited, the source and the exact AIRR version.", content=content, base=base, canonical=canonical, math=False)
