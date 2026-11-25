@@ -1,0 +1,56 @@
+{
+  "assessed_at": "2026-11-25T17:37:07Z",
+  "canonical_sha256": "863925798bc8b4ff4e8aceb583a28c7163d2e95709fc01343fe41b5aa59b3fac",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All visible Theorem 1/Corollaries 1(a)-(b)/2 statements, tie-preserving pickMax/pickMin rules, Table 1 axiom counts (8 none, 10 propext/Quot.sound), and numerical values across Figs. 1-3 (e.g. 362,880->9,335 = 38.873x, depth-4 16->7) are internally consistent; Lean/Python source code is outside the PDF.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "The monadic continuation alpha-beta algorithm, Lemma 2, Theorem 1, Corollaries 1-2, Section 5 tie-breaking, and Tic-Tac-Toe benchmark are due to Escardo and Oliva [5]; this work contributes a Lean 4.35.0 formalization of the first-order theory and an exact discrete certificate verifier.",
+      "stars": 2
+    },
+    "reproducibility": {
+      "basis": "Names concrete modules (AlphaBetaMonadic.lean, AuditAxioms.lean, run_all_experiments.py, verify_all.py), a 39-artifact SHA-256 manifest, and deterministic latencies (124.66 ms total), but the 3-page PDF omits formal Lean definitions/theorem code and non-Wikipedia tree specs.",
+      "stars": 3
+    },
+    "rigor": {
+      "basis": "Standalone Lean 4.35.0 proofs with zero sorry/Classical.choice and a pure-integer certifier rejecting 60/60 adversarial payloads show strong engineering rigor, tempered by proving Thm. 1 on first-order outAB while checking Reader/Cont monad laws separately without a formal CPS-to-outAB bridge.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Provides a clean, dependency-free Lean 4.35.0 kernel and deterministic integer audit pipeline for compositional game-tree pruning, offering solid assurance for [5] though limited by verifying only wikiTree inside Lean and lacking verified Lean-to-Python extraction.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.45,
+  "model_id": "hydrogen",
+  "overall_stars": 3,
+  "paper_id": "ARR-2026-79CS7K6ZE58JYRQ7",
+  "potential_errors": [
+    "The 3-page PDF summarizes theorem names and Proposition 1 prose rather than displaying the exact Lean 4 signatures/quantifiers for Lemma 2, Theorem 1, Corollaries 1(a)-(b), and Corollary 2, preventing direct line-by-line inspection of the formalized statements inside the manuscript.",
+    "In Sec. 4 / Fig. 1(a) / Fig. 2(b), Tic-Tac-Toe exhaustive counts equal (9 - ply)! (362,880 at ply 0; 40,320 at ply 1; ...; 6 at ply 6), indicating full 9-ply expansion rather than early win termination, yet the PDF does not state the payoff rule used when a board contains multiple completed lines after ply 5.",
+    "Proposition 1 notes that Lean Corollary 2 certifies a genuine leaf witness via isLeafOutcome and value equality with (out T).val, whereas full ply-by-ply Definition 2 optimality at every internal node is audited by the unverified Python Mode 3 checker rather than proven inside Lean 4."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Zero-dependency Lean 4.35.0 formalization of 18 theorems (Table 1) with zero sorry, zero warnings, zero Classical.choice, and zero Lean.ofReduceBool (8 axiom-free, 10 using only propext and Quot.sound).",
+    "Pure-integer, zero-floating-point discrete verifier (ALPHABETA-MONAD-CERT-1.0) with strict JSON schema/type/depth/bit-width validation across four complementary verification modes, replaying 16 canonical certificates deterministically in 124.66 ms total.",
+    "Exact numerical and mathematical consistency across Abstract, Table 1, Proposition 1, text, and Figures 1-3, including full Tic-Tac-Toe pruning (362,880 -> 9,335, 38.873x, draw line [0, 4, 1, 2, 6, 3, 5, 7, 8]), ply-by-ply prefix speedups (32.780x down to 1.5x), Wikipedia 36-leaf window sensitivity (18, 16, 12, fail-low 7, fail-high 15), and the Knuth-Moore lower bound (16 -> 7) for best-ordered depth-4 binary trees.",
+    "Thorough 60/60 live adversarial red-team test suite (12 global schema/typing attacks plus 12 domain attacks per mode) achieving 100% rejection."
+  ],
+  "strong_novelty_candidates": [],
+  "summary": "A concise, well-engineered formal-verification and exact-certification companion paper to Escardo and Oliva (arXiv:2611.32320) [5]. It pairs a zero-dependency Lean 4.35.0 development of 18 theorems (zero sorry, zero Classical.choice) with a pure-integer discrete certificate verifier (ALPHABETA-MONAD-CERT-1.0), 16 canonical certificates across four modes (including exact 362,880 -> 9,335 Tic-Tac-Toe replay), and a 60/60 adversarial rejection suite. All numerical figures, ratios, axiom counts, and mathematical invariants visible in the PDF are internally consistent. The main technical limitation is a formalization gap relative to the title's monadic-continuation framing: Lean soundness (Lemma 2, Theorem 1, Corollaries 1-2) is proved for a first-order takeUntil-pruned recursion (outAB) while Reader and Cont monad laws are verified separately without a machine-checked equivalence theorem connecting the CPS monadic definition to outAB or to the Python verifier.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:4bfe0b0a-988e-45bb-8fae-c4b6052f4b2e",
+  "weaknesses": [
+    "Formalization decoupling: Table 1 proves soundness (Thms. 10-17) for first-order takeUntil-pruned outAB/outABListMax/outABListMin and verifies Reader/Cont monad laws separately (Thms. 8-9), without a Lean theorem proving equivalence between the higher-order CPS Reader+Cont formulation of [5] and outAB.",
+    "No verified extraction or Lean-to-Python equivalence: Only the 36-leaf wikiTree is checked inside the Lean 4 kernel (#18); the remaining fixed trees, 17 window checks, ply-by-ply Definition 2 checks, and 362,880-play Tic-Tac-Toe replay rely on the unverified Python certifier.",
+    "Compact 3-page presentation omits formal Lean definitions/proofs and explicit specifications of the three non-Wikipedia fixed-tree benchmarks, leaving full verification dependent on external repository artifacts.",
+    "Incremental theoretical novelty: all core game-theoretic definitions, theorems, tie-breaking insights, and benchmarks originate in Escardo and Oliva [5]."
+  ]
+}

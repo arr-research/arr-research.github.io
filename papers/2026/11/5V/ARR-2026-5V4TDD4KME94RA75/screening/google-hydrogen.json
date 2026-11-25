@@ -1,0 +1,60 @@
+{
+  "assessed_at": "2026-11-25T17:37:07Z",
+  "canonical_sha256": "6913830de52e356bb5d1b2fd04b74874269c686fd1fc10473a99528e7d79bac1",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All algebraic identities in Proposition 1 (e.g., Abel summation, checkpoint halving 4C<=F & 2F'<=2C+F' => 2F'<=F, even-odd disjointness 4j<b => 2j!=2r+1) and all reported certificate metrics (e.g., Mode 3 shortfalls 0.0239-0.0686 yielding safety margins >=0.1314 against u1=1/5, Mode 1/2 slack Delta=n(1-lambda) in Fig. 2b, and 60=5x12 red-team rejections in Fig. 3b) are internally consistent. Only compressed summaries of Lean theorem hypotheses appear in the PDF.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "Presents a constructive Lean 4.35.0 formalization of 18 finite algebraic, duality, rounding, cyclic-compression, and eta-faithfulness invariants from Lin et al. (arXiv:2611.33052), paired with an exact rational/integer certificate verifier (MMS-ASYMP-CERT-1.0) and a 60-attack red-team suite. As a verification companion artifact, it contributes formalization and audit infrastructure rather than new fair-division theorems.",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "Specifies exact tooling (Lean 4.35.0, pure Python int/fractions.Fraction with strict JSON rational canonicalization and zero float/math/numpy), reports deterministic replay latencies (0.671-25.122 ms across 16 certificates, 64.84 ms total), and cites SHA-256 manifest enforcement across 39 artifacts. However, the 3-page PDF contains no formal Lean code listings, requiring external repository inspection to verify exact theorem signatures.",
+      "stars": 3
+    },
+    "rigor": {
+      "basis": "The constructive axiom audit (zero sorry, zero Classical.choice, zero Lean.ofReduceBool, solely [propext, Quot.sound] across all 18 theorems) and strict Q/Z verifier input validation are disciplined. However, Proposition 1 compresses theorem statements without explicit quantifiers or hypotheses (e.g., undefined p in Theorem 18, unindexed n*zeta<=n in Theorem 7, implicit boundary assumptions in Theorem 1) and does not compose the 18 lemmas end-to-end.",
+      "stars": 3
+    },
+    "significance": {
+      "basis": "Provides deterministic, floating-point-free verification and adversarial forgery resistance for core combinatorial and LP-duality gadgets underlying asymptotic (1-epsilon)-MMS allocations for goods and comparison queries. Impact is bounded by the omission of LP-solver complexity, end-to-end Theorem 3.1 assembly, and any verification modules for the chores counterpart (Theorem C.1) referenced in the abstract.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.45,
+  "model_id": "hydrogen",
+  "overall_stars": 3,
+  "paper_id": "ARR-2026-5V4TDD4KME94RA75",
+  "potential_errors": [
+    "Proposition 1 item 1 lists 'n\\zeta \\le n' for Theorem 7 without indexing \\zeta or stating its hypothesis, and omits the explicit zero-padding (s_{m+1}=0) and monotonicity preconditions required for the Abel summation identity and Dv(U) >= Nv(M) implication.",
+    "Proposition 1 item 2 states Theorem 18 (eta_faithful_auxiliary_bound) as 'p >= \\mu(w) - 2\\eta and w(S) >= p - 2\\eta' without defining p or showing the bridge to the full Lemma B.3 conclusion v_i(S) >= (1 - 8\\eta)\\mu_i quoted in Sections 1 and 3.",
+    "In Section 4, Mode 3 reports a cyclic compression certificate (10 -> 10) with max column value 0 and max rebalancing deficit 0, which appears to be a degenerate zero-valuation boundary case rather than a nontrivial compression instance.",
+    "In Figure 2(a), the Lemma B.2 weighted-median grouping test (m=14) attains an exact grouped MMS ratio of 1.00 across all k in {1,...,5} and reaches 14 singleton groups by k=4, so the benchmark does not stress-test the 1 - 1/k theoretical floor away from saturation."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Constructive Lean 4.35.0 kernel of 18 core algebraic, prefix-LP duality, checkpoint-rounding, cyclic-compression, and eta-faithfulness lemmas from Lin et al. [9] audited to use solely [propext, Quot.sound] with zero sorry, zero warnings, zero Classical.choice, and zero Lean.ofReduceBool (Table 1).",
+    "Zero-floating-point exact Q/Z verifier (MMS-ASYMP-CERT-1.0) enforcing strict JSON typing (rejecting floats, bool-as-int, int-as-bool), canonical reduced rationals, depth and integer-bit caps, and deterministic replay across 4 operational modes.",
+    "High numerical and internal consistency across Section 4 and Figures 1-3: all 16 canonical certificates replay in 0.671-25.122 ms (64.84 ms total), Mode 1/2 slack values satisfy Delta = n(1-lambda), Mode 3 safety margins satisfy u1 - shortfall >= 0.1314, and all 60/60 live adversarial forgery attacks (12 global + 12 per mode) are rejected.",
+    "Transparent scope statement in Section 1 explicitly clarifying that asymptotic O(.) LP-solver runtimes are outside the Lean formalization."
+  ],
+  "strong_novelty_candidates": [
+    "Constructive zero-Classical.choice Lean 4.35.0 formalization of 18 finite prefix-LP, Abel summation, cyclic compression, M2''-sharing, and eta-faithfulness invariants underlying asymptotic (1-epsilon)-MMS allocations.",
+    "Pure Q/Z multi-mode certificate verifier (MMS-ASYMP-CERT-1.0) with strict canonical rational parsing and 60/60 live red-team forgery rejection."
+  ],
+  "summary": "This 3-page verification paper constructs a standalone Lean 4.35.0 formalization of 18 finite algebraic, LP-duality, rounding, sharing, cyclic-compression, and eta-faithfulness lemmas from Lin et al. (arXiv:2611.33052), paired with an exact rational/integer Python certificate verifier (MMS-ASYMP-CERT-1.0), 16 canonical certificates across four modes, and a 60-attack adversarial test suite. Within its explicitly stated scope—verifying finite invariants and replaying concrete witnesses rather than proving end-to-end asymptotic Theorem 3.1 or LP-solver complexity—the mathematical claims and empirical figures in the PDF are internally consistent and constructively audited, though the compressed presentation omits full Lean theorem signatures/hypotheses and omits any verification of the chores result (Theorem C.1) mentioned in the abstract.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:7c68f610-6b76-474c-a4f9-f711807963ef",
+  "weaknesses": [
+    "Scope gap relative to the abstract and title: the paper formalizes finite helper invariants and replays concrete witness certificates for goods/comparison protocols, but does not formalize the end-to-end asymptotic (1-epsilon)-MMS convergence theorem (Thm. 3.1) or any part of the chores theorem (Thm. C.1).",
+    "Terse 3-page presentation omits full Lean 4 types, quantifiers, and hypotheses for the 18 theorems in Table 1 and Proposition 1, preventing independent verification from the PDF alone that no theorem relies on overly restrictive or vacuous hypotheses.",
+    "Empirical certificate suite relies on small synthetic instances (n <= 6, m <= 40; Mode 4 exhaustive audit covers 35-209 qualifying bundles) and includes degenerate/saturated cases (Mode 3 10->10 zero-value case; Fig. 2a hitting 1.00 retention and 14 singleton groups by k=4).",
+    "No comparative discussion of prior formal-verification efforts in algorithmic game theory or fair division, and no formal source excerpts are included in the manuscript."
+  ]
+}
