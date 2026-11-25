@@ -1,0 +1,377 @@
+# Machine-Checked Algebraic Kernel and Exact-Rational Certificates for Prime-Power Finite Differences, Fourier Rounding, CRT, and Periodic-Fourier NMQC_oplus Torus Approximations
+
+**Author:** Lluis Eriksson  
+**AIRR Identifier:** `ARR-2026-35T3DP66VF8YK9DC` (v1)  
+**License:** CC-BY-4.0 (manuscript), MIT (verification repository)  
+**Verification Repository:** https://github.com/lluiseriksson/torus-acc0-approximation-certificates (`v2.0.0`)  
+**Canonical PDF SHA-256:** `ccf069bf8c995ea34a980e09d22c89822389e3b0b6883d52be271321473e7172`
+
+## Abstract
+
+Shuhei Osaki and Ryuhei Mori (arXiv:2611.32163, November 24, 2026) resolved the optimal torus-polynomial degree of AND_n/2 at O(log(n/eps)) (improving O(log^2(n/eps))), sharpened depth-d, size-s AC^0[m] torus degree to C_m^d (log s)^(max{1,mu-1} d) log(1/eps), and proved equivalence between r-parity periodic Fourier representations (NMQC_oplus) and degree-O(log(r/eps)) torus polynomials. We deliver an explicitly scoped, zero-floating-point verification stack for the deterministic algebraic, finite-difference, Fourier-rounding, CRT, and periodic-Fourier conversion mechanisms of this result. First, an 18-theorem zero-dependency Lean 4.35.0 kernel (TorusACC0.lean; 0 sorry, 0 warnings, 0 Classical.choice; 3 zero-axiom, 1 [propext], 14 [propext, Quot.sound]) proves universal algebraic identities and inductive bounds—including universal mod-8 congruence for Lemma 9 (q=2, k=3) over all z in Nat, universal coprime CRT factorization delta_{q1*q2}(z) = delta_{q1}(z)*delta_{q2}(z) for all gcd(q1,q2)=1, Appendix B exact prime-power degree (p-1)p^{e-1}k + p^{e-1} - 1 <= (q-1)k, Beigel-Tarui degree domination, Lemma 11 composite degree recurrence, inductive Theorem 14 rounding-sum bounds, and exact integer-cleared rational square checks supporting Fact 19 under the external bracket 314/100 < pi < 355/113. Second, TORUS-ACC0-CERT-1.0 audits 16 canonical exact-Q witnesses (0.129-3.911 ms)—including full-period [0, P-1] Lemma 9 certification proving congruence for all z in Z—and rejects 60/60 live adversarial forgeries.
+
+## Full Extracted Text
+
+--- Page 1 ---
+Machine-Checked Algebraic Kernel and Exact-Rational
+Certificates for Prime-Power Finite Differences, Fourier
+Rounding, CRT, and Periodic-FourierNMQC⊕ Torus
+Approximations
+Lluis Eriksson∗
+November 25, 2026
+Abstract
+Shuhei Osaki and Ryuhei Mori ( arXiv:2611.32163,
+November 24, 2026) resolved the optimal torus-
+polynomial degree of ANDn/2at O(log(n/ε))(improv-
+ing O(log2(n/ε))), sharpened depth- d, size- sAC 0[m]
+torus degree toCd
+m(logs)max{1,µ−1}dlog(1/ε), and proved
+equivalence betweenr-parity periodic Fourier representa-
+tions (NMQC⊕) and degree-O(log(r/ε))torus polynomi-
+als. We deliver an explicitly scoped, zero-floating-point
+verification stack for the deterministic algebraic, finite-
+difference, Fourier-rounding, CRT, and periodic-Fourier
+conversion mechanisms of this result. First, an 18-theorem
+zero-dependency Lean 4.35.0 kernel ( TorusACC0.lean;
+0 sorry, 0 warnings, 0Classical.choice; 3 zero-axiom,
+1 [propext], 14[propext, Quot.sound]) proves univer-
+sal algebraic identities and inductive bounds—including
+universal mod-8congruence for Lemma 9 (q = 2,k = 3)
+over all z∈N , universal coprime CRT factorization
+δq1q2 (z) = δq1 (z)δq2 (z)for all gcd(q1,q2) = 1, Appendix B
+exact prime-power degree(p−1)pe−1k+pe−1 −1 ≤(q−1)k,
+Beigel–Tarui degree domination, Lemma 11 composite
+degree recurrence, inductive Theorem 14 rounding-sum
+bounds, and exact integer-cleared rational square checks
+supporting Fact 19 under the external bracket314/100 <
+π <355/113. Second, TORUS-ACC0-CERT-1.0 audits 16
+canonical exact-Q witnesses (0.129–3.911 ms)—including
+full-period[0 ,P− 1]Lemma 9 certification proving con-
+gruence forall z∈Z —and rejects 60/60 live adversarial
+forgeries.
+1 Introduction and Scope Calibra-
+tion
+Torus polynomialsP : {0,1}n →T = R/Z were introduced
+by Bhrushundi, Hosseini, Lovett, and Rao [2] as a frame-
+work forACC0 circuit lower bounds. Osaki and Mori [5]
+established sharp degree upper bounds and a quantum
+NMQC⊕equivalence via four exact rational pillars:
+∗Independent researcher; manuscript prepared with transparent
+AI assistance via Google Antigravity. Source code (MIT), Lean 4
+proofs (MIT), and manuscript/figures (CC-BY-4.0):https://github
+.com/lluiseriksson/torus-acc0-approximation-certificates.
+1. Prime-power finite-difference polynomials (Lemma 9 &
+Appendix B):For prime powerq = pe and k≥ 1, the
+rational binomial polynomial
+Qq,k(z) = 1
+pk
+d∑
+j=0
+aj
+(z
+j
+)
+,
+aj ≡(∆ jδq)(0) (modp k)
+(1)
+satisfies Qq,k(z) ≡δ q(z)/pk (mod 1)for every z∈Z ,
+with optimal Appendix B degreed = ( p− 1)pe−1k+
+pe−1 −1 ≤(q−1)k(strictly improving Beigel–Tarui’s [1]
+(q−1)(2k−1)for allk≥2).
+2. Fourier ℓ1 rounding & optimalANDn/2degree (The-
+orem 1, Theorem 14, Corollary 16):Using( −1)s =
+2δ2(s) −1and ∥\ANDn∥1 = 1[ 4], rounding r Fourier
+coefficients to multiples of2−k incurs error≤r2−(k+1)
+and compiles to degreeO(log(n/ε))forAND n/2.
+3. CRT composite-modulus induction (Lemma 11 & The-
+orem 2):Factoring δm(G(x)) = ∏µ
+i=1 δqi(G(x))and
+keeping torus error intact under Boolean indicators gives
+degree ≤(m−1)tµ(log(n+ 1))µ−1 log(µ/ε)and depth-
+linearAC 0[m]exponentmax{1,µ−1}d.
+4. Periodic Fourier↔torus equivalence (Section 7, Fact 19,
+Propositions 23–26):Every r-parity periodic Fourier
+polynomial Q(x)yields an r-qubit NMQC⊕ protocol
+with errorErr(f/2,Q) = sin2(π∥f/2−Q∥T) ≤π2∥f/2−
+Q∥2
+T, and compiles back to a torus polynomial of degree
+O(log(r/η))with error≤ √ε/2 +η.
+Honest Scope Calibration.We separate strictly what
+is proved universally in Lean 4 vs. verified exactly on fi-
+nite/periodic instances vs. left in [5]:
+1. Zero-dependency Lean 4 kernel (§2):18 con-
+structive theorems inTorusACC0.lean (Lean 4.35.0 [3]),
+0 sorry, 0 warnings, 0 Classical.choice. Table 1
+prints every exact theorem signature, hypothesis, and
+axiom footprint verbatim.
+2. Pure-stdlib exact- Q verifier (§3):
+TORUS-ACC0-CERT-1.0 certifies full-period[0 ,P− 1]
+Lemma 9 congruences (proving Eq.(1) forall z∈Z ), ex-
+haustive {0,1}n Fourier-rounding witnesses, composite
+1
+
+--- Page 2 ---
+CRT witnesses, and bidirectionalNMQC⊕conversions
+with zero floats.
+3. Explicit non-claims:Our Lean 4 kernel doesnot
+formalize general prime-power Lemma 9 for arbitrary
+(p,e,k ), probabilistic Fourier-sampling concentration
+(Hoeffding/Chernoff), ACC0 circuit-depth union bounds,
+or the transcendental constants/functions π and sin
+in Fact 19 (Theorem 17 verifies only the integer-
+cleared rational square inequalities under the exter-
+nal Archimedes/Zu Chongzhi bracket314/100 < π <
+355/113).
+2 Zero-Dependency Lean 4 Kernel
+lean/TorusACC0.lean compiles standalone in1.9 sunder
+Lean 4.35.0 with zero external dependencies and is au-
+dited by AuditAxioms.lean with 0 warnings, 0 sorry,
+0 Classical.choice, and 0Lean.ofReduceBool: 3 zero-
+axiom (none: #2, #3, #17), 1[propext] (#12), and 14
+[propext, Quot.sound].
+Proposition 1(Constructive Scope of TorusACC0.lean).
+All 18 statements in Table 1 hold constructively without
+external libraries orClassical.choice. In particular, The-
+orem 7 proves theq = 2,k = 3Lemma 9 congruence uni-
+versally for allz∈N via even/odd case analysis on2
+(z
+2
+)
+=
+z(z−1), Theorem 9 provesδq1q2 (z) = δq1 (z)δq2 (z)univer-
+sally for all coprimeq1,q2 and z∈N , Theorem 6 proves
+strict Beigel–Tarui domination(q−1)k <(q−1)(2k−1)
+for allq≥ 2,k≥ 2, and Theorem 18 proves2d −1 ≤n d
+inductively under the explicit hypothesisn≥2.
+3 Exact-QVerifier Architecture
+The pure-stdlib zero-float verifier
+src/torus_certifier.py (TORUS-ACC0-CERT-1.0)
+enforces strict JSON typing, canonical reduced rationals,
+and uniform 2048-bit / 1024-char DoS caps across four
+exact modes:
+1. Mode 1 (Lemma 9 Full-Period Soundness over all
+z∈Z ):Verifies primality of p, computes exact forward-
+difference coefficientsaj ≡(∆jδq)(0) ( modp k), checks
+exact Appendix B degreed = (p− 1)pe−1k+ pe−1 −
+1 ≤(q− 1)k, and verifies ∥Qq,k(z) −δq(z)/pk∥T = 0
+overone complete exact period z∈ [0,P− 1], where
+P := pmax{e,k+vp(d!)} (vp(d!) = ∑
+i≥1⌊d/pi⌋).Sound-
+ness proof for all z∈Z :For every0 ≤j≤d ,
+j! = pvp(j!)uj with gcd(uj,p) = 1and vp(j!) ≤v p(d!).
+Sincej!
+((z+P
+j
+)
+−
+(z
+j
+))
+= ∏j−1
+i=0 (z+P−i)−∏j−1
+i=0 (z−i) ≡0
+(modP )and P = pM with M≥k + vp(d!), coprimal-
+ity gcd(pM,uj) = 1forces pk |
+((z+P
+j
+)
+−
+(z
+j
+))
+for every
+z∈Z . Hence Qq,k(z+ P) −Qq,k(z) ∈Z , whileM≥e
+gives q|P and δq(z+ P) = δq(z). Therefore checking
+[0,P−1]certifies Eq. (1) foreveryz∈Z.
+2. Mode2(Theorem14Fourier-RoundingTorusAp-
+prox.):Independently computes the exact normalized
+Figure 1: (a) Lemma 9 exact Appendix B degree2k+ 1
+vs. simple bound3k vs. Beigel–Tarui6k−3for q= 22 = 4
+(k= 1 ... 8). (b) Unit-constant asymptotic degree scaling
+L vs. L2 for Theorem 1ANDn/2( O(log(n/ε))vs. prior
+O(log2(n/ε))) atε= 1/(20n).
+Fourier transformˆf and∥ˆf∥1 on{0,1}n, verifiesdegP≤
+k−1, and certifiesmaxx∈{0,1}n ∥P(x) −f(x)/2∥T ≤ε<
+1/4exhaustively over all2 n inputs.
+3. Mode3(Lemma11Composite-ModulusCRTAp-
+prox.):Verifies gcd(q1,q2) = 1, checks δq1q2 (G(x)) =
+δq1 (G(x))δq2 (G(x))on all2 n inputs, and certifies
+maxx∥R(x)−αδ m(G(x))∥T ≤ε.
+4. Mode 4 (Section 7 Periodic Fourier /NMQC⊕
+Equiv.):Evaluates Q(x) = α+ ∑
+SβS(−1)⟨S,x⟩on all
+2n inputs, certifies qubit countmax{1,r} and Err≤
+(355/113)2d2
+max ≤ε, compiles the Proposition 26 degree-
+(k−1)torus polynomial ˜Q, and verifies∥˜Q−f/ 2∥T ≤
+dmax +η <1/4.
+4 Empirical Atlas, Explicit Wit-
+nesses, and Red-Team Audit
+Running scripts/run_all_experiments.py generates all
+16 canonical certificates (Table 2) and four exact-Q datasets,
+audited end-to-end byscripts/verify_all.py with SHA-
+256 verification across all 41 tracked files.
+Prime-Power Degree Savings and ANDn/2Wit-
+nesses (Figs. 1–2).Mode 1 (0 .831–1.754 ms) certi-
+fies full-period[0 ,P− 1]Lemma 9 congruences across
+q∈{ 2,3,4,5}(P∈{ 128,243,128,125}), demonstrating
+strict Appendix B degree savings atq = 2 2 = 4 ,k = 3
+(exact degree7 < (4 −1) ·3 = 9, explicit coefficients
+[1,7,1,7,2,2,0,4] mod 8). Mode 2 (0.145–3.911 ms) cer-
+tifies explicit sub-degree symmetric multilinear torus wit-
+nesses beating1/4on every input:1
+8
+∑
+|S|=3 xS forAND4/2
+(err1 /8), 1
+20
+∑
+|S|=3 xS for AND5/2(err1 /5), 1
+30
+∑
+|S|=4 xS
+for AND6/2(err1 /6), and exact compiledMAJ3/2(deg2,
+err0).
+CRT Composite Moduli,NMQC⊕, and 60/60 Red-
+Team Audit (Fig. 3).Mode 3 (0 .129–0.872 ms) cer-
+tifies non-dyadic weighted CRT approximations form∈
+{6,10,12,15}with exact errors1 /80,1 /112,1 /96, and
+1/288. Mode 4 (0 .210–0.743 ms) certifies bidirectional
+2
+
+--- Page 3 ---
+Table 1: Complete inventory of all 18 Lean 4.35.0 theorems inlean/TorusACC0.lean with exact quantified statements,
+hypotheses, and audited axiom footprints (0sorry, 0 warnings, 0 Classical.choice; P,Q abbreviates [propext,
+Quot.sound]).
+# Lean 4 Theorem Identifier Exact Machine-Checked Statement & Hypotheses Axioms
+1torus_triangle_ineq_int∀a,b,c∈Z,|a−c|≤|a−b|+|b−c|(cleared torus-distance triangle step).P,Q
+2boolean_constant_quarter_error| 1 −0|= 1∧|1 −2|= 1(cleared denominator-4check that P≡ 1/4achieves error1 /4). none
+3parity_to_zero_test_identity∀z∈N,(−1) z = 2δ2(z)−1.none
+4lemma9_exact_degree_formula∀p≥2, P≥1, k≥1,(p−1)Pk+ (P−1) + (P−1)(k−1) = (pP−1)k.P,Q
+5lemma9_exact_degree_le_simple∀p≥2, P≥1, k≥1,(p−1)Pk+ (P−1)≤(pP−1)k(App. B≤simple bound).P,Q
+6beigel_tarui_degree_comparison∀q≥ 2, k≥ 1, (q−1)k≤ (q−1)(2k−1) < 2(q−1)k, and k≥ 2 ⇒ (q−1)k <
+(q−1)(2k−1).
+P,Q
+7lemma9_binary_k3_exact_mod8∀z∈N,
+(∑2
+j=0(−2)j
+(
+z
+j
+)
+−(−1) z
+)
+mod 8 = 0(universalq= 2,k= 3congruence).P,Q
+8lemma10_rounding_error_half_pk∀e n,pk,εn,εd ∈N, en ≤1∧ε d ≤2pkεn ⇒enεd ≤2pkεn.P,Q
+9lemma11_crt_coprime_exact∀q 1,q2,z∈N,gcd(q 1,q2) = 1⇒δq1q2 (z) =δq1 (z)·δ q2 (z)(universal CRT).P,Q
+10lemma11_boolean_factor_preserves_error∀b∈{0,1},∀e∈Z,|b·e|≤|e|(Boolean indicator preserves error).P,Q
+11lemma11_composite_degree_recurrence∀m ′,qµ,t,L≥ 1, d,λ∈N, (m′−1)qµ+ (qµ−1) =m′qµ−1and d+ t(qµ−1)(λ+ dL) ≤
+dtqµL+t(q µ−1)λ.
+P,Q
+12fourier_l1_norm_and_n_exact∀n∈N, 2n·1 = 2n∧0 <2n (cleared numerator/denominator identity for∥\ANDn∥1 =
+1).
+propext
+13theorem14_sparsity_rounding_sum∀B≥0,∀⃗ e∈Z r,(∀j,|e j|≤B)⇒|
+∑
+jej|≤rB(inductive sum bound).P,Q
+14theorem1_and_logarithmic_beats_quadratic∀L≥2, L<L 2 (asymptotic scaling comparisonLvs.L 2).P,Q
+15theorem2_linear_depth_beats_quadratic_depth∀d≥2, d<d 2 (asymptotic depth-exponent comparisondvs.d 2).P,Q
+16prop26_periodic_fourier_triangle_bound∀d 1,d2,sε,η,D∈N,2d 1 ≤sε∧d2 ≤η∧2s ε+ 4η <D⇒4(d1 +d2)<D.P,Q
+17fact19_jordan_sin_sandwich 4 ·104 <3142 ∧314 ·113 <355 ·100 ∧16 ·104 <2 ·3142 (integer check under external
+3.14<π <355/113).
+none
+18mori_exact_pfs_bounds∀n≥2,∀d∈N,2 d−1≤n d (inductive sparsity inequality; requiresn≥2).P,Q
+Figure 2: (a) Theorem 2 linear depth exponentmax{1,µ−
+1}d= d vs. [BHLR19] quadraticd2 for AC0[6]( µ= 2). (b)
+Certified exact sub-degree torus approximations ofANDn/2
+(n= 4,5,6) strictly below the constant-1/4threshold.
+NMQC⊕↔torus conversions onMAJ3, AND3, andOR4.
+Our red-team suite (tests/test_suite.py) executes 60
+live forgery attacks (12 global schema/type/rational + 12
+per mode—including float/None/bool injection, unreduced
+fractions, composite p, truncated period ranges, degree
+overflows > k−1, non-coprime CRT factors, exceeded
+error budgets, duplicate monomials/parities, and forged
+Prop. 26 conversions), achieving60/60 rejectionswith
+zero bypasses.
+5 Conclusion
+We delivered an explicitly scoped 18-theorem zero-
+dependency Lean 4.35.0 kernel (0 sorry, 0 warn-
+ings, 0 Classical.choice, including universal q =
+2,k = 3Lemma 9 congruence and universal coprime
+CRT factorization) paired with the exact- Q verifier
+TORUS-ACC0-CERT-1.0 providing full-period[0 ,P− 1]
+Lemma 9 soundness for allz∈Z , 16 explicit canonical wit-
+nesses (0.129–3.911 ms), and 60/60 live adversarial forgery
+Figure 3: (a) Exact zero-float replay latency across all 16
+canonical certificates (0.129–3.911 ms, including full-period
+[0,P− 1]Mode 1 audits). (b) Live adversarial red-team
+audit rejecting 60/60 forgeries across five attack classes.
+rejections.
+References
+[1] Richard Beigel and Jun Tarui. OnACC.Computational
+Complexity, 4(4):350–366, 1994.
+[2] Abhishek Bhrushundi, Kaave Hosseini, Shachar Lovett,
+and Sankeerth Rao. Torus polynomials: An algebraic
+approach to ACC0 lower bounds. InProceedings of
+the 10th Innovations in Theoretical Computer Science
+Conference (ITCS), pages 13:1–13:16, 2019.
+[3] Leonardo de Moura and Sebastian Ullrich. The Lean 4
+theorem prover and programming language. InAuto-
+mated Deduction – CADE 28, pages 625–635. Springer,
+2021.
+[4] Ryan O’Donnell.Analysis of Boolean Functions. Cam-
+bridge University Press, 2014.
+3
+
+--- Page 4 ---
+Table 2: Complete 16-certificate TORUS-ACC0-CERT-1.0 atlas with explicit exact parameters, Lemma 9 coefficients
+aj modpk, full-period verification ranges[0,P−1](proving Eq. (1) for allz∈Z ), explicit Mode 2 sub-degree witnesses,
+and median exact replay latencies.
+# Certificate ID Mode Explicit Certified Parameters, Coefficients, and Exact Witness Summary ms
+1m1_lemma9_q2_k4M1q= 21,k= 4: deg 4 ≤ 4, a = [1 ,15,2,12,8] (mod 16), full period[0 ,127]
+(P=24+3=128).
+1.183
+2m1_lemma9_q3_k3M1q= 31,k= 3: deg 6 ≤ 6, a = [1 ,26,1,0,24,9,9] (mod 27), full period[0 ,242]
+(P=33+2=243).
+1.754
+3m1_lemma9_q4_k3M1q= 22,k= 3: App. B deg 7 < 9, a = [1,7,1,7,2,2,0,4] (mod 8), period[0 ,127]
+(P=23+4=128).
+0.831
+4m1_lemma9_q5_k2M1q= 51,k= 2: deg 8 ≤ 8, a = [1,24,1,24,1,0,20,20,20] (mod 25), period[0 ,124]
+(P=52+1=125).
+0.967
+5m2_fourier_and4_deg3_err1_8M2AND 4/2(∥ ˆf∥1=1,r=16):P(x) = 1
+8
+∑
+|S|=3 xS (deg 3<4), exact err= 1/8<1/4. 0.351
+6m2_fourier_and5_deg3_err1_5M2AND 5/2( ∥ˆf∥1=1,r= 32): P(x) = 1
+20
+∑
+|S|=3 xS (deg 3 <5), exact err= 1/5 <1/4. 1.097
+7m2_fourier_and6_deg4_err1_6M2AND 6/2( ∥ˆf∥1=1,r= 64): P(x) = 1
+30
+∑
+|S|=4 xS (deg 4 <6), exact err= 1/6 <1/4. 3.911
+8m2_fourier_maj3_compiled_exactM2MAJ 3/2(∥ ˆf∥1=3/2,r=5,k=4): compiled deg2<3, exact err= 0on{0,1} 3. 0.145
+9m3_crt_mod6_n4_alpha_1_5M3m= 2·3=6,n= 4,α= 1/5, G(x)=x0+2x1+3x2+x3: deg 4, exact err= 1/80(16inputs). 0.321
+10m3_crt_mod10_n4_alpha_3_7M3m= 2·5=10,n= 4,α= 3/7, G(x)=1+2x0+3x1+5x2+x3: deg 4, exact err= 1/112(16
+inputs).
+0.129
+11m3_crt_mod12_n4_primepowerM3m= 4·3=12,n= 4,α= 1/3, G(x)=3x0+4x1+5x2+6x3: deg 3, exact err= 1/96(16in-
+puts).
+0.305
+12m3_crt_mod15_n5_alpha_2_9M3m= 3·5=15,n= 5,α= 2/9, G(x)=x0+2x1+4x2+5x3+3x4: deg 4, err= 1 /288(32in-
+puts).
+0.872
+13m4_nmqc_maj3_4qubits_deg2M4MAJ 3,4qubits (k=3):d max=0,Err=0, compiled Prop. 26deg 2, conv. err= 0. 0.426
+14m4_nmqc_and3_7qubits_deg3M4AND 3,7qubits (k=4):d max=0,Err=0, compiled Prop. 26deg 3, conv. err= 0. 0.405
+15m4_nmqc_maj3_approx_perturbedM4MAJ 3 (+1/64weight shift),4qubits ( k=4): dmax=1/16, Err≤ 126025
+3268864 , conv.deg 2,
+err0.
+0.210
+16m4_nmqc_or4_15qubits_deg4M4OR 4,15qubits (k=5):d max=0,Err=0, compiled Prop. 26deg 4, conv. err= 0. 0.743
+[5] Shuhei Osaki and Ryuhei Mori. Low-degree torus ap-
+proximations of the AND function andACC0 circuits.
+arXiv:2611.32163 [cs.CC], 2026.
+4

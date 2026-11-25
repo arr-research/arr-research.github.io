@@ -1,0 +1,59 @@
+{
+  "assessed_at": "2026-11-25T20:29:58Z",
+  "canonical_sha256": "2f811f6e4cf69e7c6bc906e65766326f7f2c5d661cfb641118cbf387efb805ca",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All explicit rational arithmetic, knapsack optima and ratios (V(1/100)=1011/50, 500/1011, 5011/10110, 30/61, and all 4 Mode 1 variants), Case 1 gap 168034/70785, degree-7 Taylor difference 3772963/234881024, polynomial evaluations P(1/4)=249075/8192, P(2/5)=447966/78125, P(1/2)=141/32, P(2/3)=33250/729, and Table 2 certificate witnesses verify exactly.",
+      "stars": 5
+    },
+    "novelty": {
+      "basis": "Provides the first constructive Lean 4.35.0 mechanization and exact-Q certificate suite (DELEG-DC-CERT-1.0) for the deterministic, impossibility, and degree-7 Bernstein positivity pillars of Abdi et al. [1] (arXiv:2611.33095), though it proves no new delegation bounds beyond [1].",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "All 18 Lean theorem names, axiom footprints (2 none, 1 [propext], 15 [propext, Quot.sound]), 16 certificate stems with exact rational witnesses and latencies (0.254-2.272 ms), and runner scripts are explicitly reported, though full Lean/Python source code resides in the linked repository outside the 4-page PDF.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Constructive zero-sorry, zero-Classical.choice formalization paired with pure int/Fraction verification, strict parser hardening, and 60/60 adversarial rejections; scope exclusions (measure theory, 96-interval LP, external Taylor tail) are transparently stated, with minor notational shortcuts in Definition 1 Mode 3 and Table 1.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Substantially strengthens confidence in the algebraic bottlenecks of [1]—especially Lemma 4.4's degree-7 Bernstein positivity and Section 3's knapsack separations—while leaving [1]'s probabilistic arguments and 96-interval LP infeasibility proof of the 29/70 bound unformalized.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.85,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-33WRPE9H2N84PR9Q",
+  "potential_errors": [
+    "Definition 1 Mode 3 (p. 2) writes beta_k = sum_{j=0}^k (C(k,j)/C(7,j)) p_j of Lemma 4.4's polynomial P(b) over [l, r], without explicitly stating that p_j are the power-basis coefficients of the interval-reparameterized polynomial t |-> P(l + (r-l)t) on [0, 1] rather than raw coefficients of P(b).",
+    "Table 1 row 8 (threshold_tail_bound_monotone) writes '(gives (1-e)/(x-e) <= 1/x for D>0, x>e)', whereas for general D>0 the inequality yields (D-e)/(x-e) <= D/x and specializes to (1-e)/(x-e) <= 1/x only at normalization D=1.",
+    "Table 1 row 9 (clipped_optimum_variance_step_bound) summarizes the precondition as 'AllBounded c ds' without displaying the lower bound 0 <= d_i required for d_i^2 <= c * d_i to hold.",
+    "Table 1 row 16 (profile_stoploss_monotone_sandwich) proves only (y-x)S_y <= (y-x)S_x and D_y <= D_x from (y-x)S_y <= D_x - D_y, rather than Lemma 6.3(c)'s full upper bound D_x - D_y <= (y-x)S_x from the profile definition."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Exact mathematical accuracy across all explicit formulas and numbers: V(1/100)=1011/50, all Mode 1 knapsack ratios (including non-trivial reduction 180199/(60*6083) = 2281/4620 at eps=eta=1/200), Case 1 gap 168034/70785, 8-term Taylor excess 3772963/234881024, and all P(b) evaluations match exact rational calculation.",
+    "Constructive zero-Classical.choice Lean 4.35.0 kernel with explicit per-theorem #print axioms accounting (2 zero-axiom, 1 [propext], 15 [propext, Quot.sound]) matching Table 1 and prose across the manuscript.",
+    "Clear, honest delineation of verified deterministic/finite-distribution pillars versus unformalized measure-theoretic, asymptotic, and 96-interval LP components of [1], including explicit disclosure that the infinite Taylor tail > 0 in theorem 12 is external.",
+    "Strict exact-Q certificate auditor architecture (pure int and fractions.Fraction, zero IEEE-754 tokens/NaN/Unicode digits) with 16 canonical certificates (0.254-2.272 ms) and 60/60 adversarial forgery rejections across AST/schema and Modes 1-4."
+  ],
+  "strong_novelty_candidates": [
+    "Exact rational Bernstein basis certification of Lemma 4.4's degree-7 polynomial P(b) across [2/13, 2/5] (min beta_k = 447966/78125) and [2/5, 2/3] (min beta_k = 6518/118125), plus tighter subinterval floors 129/128 on [1/4, 1/2] and 141/32 on [1/2, 2/3].",
+    "Four-mode pure-Q/Z certificate protocol (DELEG-DC-CERT-1.0) bridging finite-distribution Algorithm 1/2 score verification, Efron-Stein variance bounds, and Lemma 6.3 profile inequalities with strict adversarial parser defenses."
+  ],
+  "summary": "This 4-page companion paper presents a constructive Lean 4.35.0 formalization (DelegationBounds.lean, 18 theorems with 0 sorry and 0 Classical.choice) and a pure-rational certificate auditor (DELEG-DC-CERT-1.0) covering the deterministic algebraic, 5-item knapsack impossibility, single-threshold/Efron-Stein, degree-7 Bernstein positivity, and seed-reserve/profile pillars of Abdi, Banihashem, Hajiaghayi, and Mittal [1] (arXiv:2611.33095). Every explicit rational identity, polynomial evaluation, Taylor partial sum, and Table 2 certificate witness in the PDF checks out exactly, and the authors transparently delimit what is excluded from Lean (measure-theoretic martingale/Harris-FKG steps, the 96-interval LP infeasibility proof of Theorem 5.1, Appendix A's DP, and the infinite Taylor tail > 0 in Theorem 12). Only minor notational/summary imprecisions appear in Definition 1 Mode 3 and Table 1, with no material objections invalidating the paper's claims.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:6f8ec58e-36a3-4753-ba08-e0272ae2d40b",
+  "weaknesses": [
+    "The core probabilistic/measure-theoretic arguments and the 96-interval LP infeasibility computer proof of Theorem 5.1 (establishing the 29/70 lower bound in [1]) are not formalized in Lean 4; the Lean module verifies deterministic algebraic identities and finite-list/integer reductions.",
+    "As a 4-page summary referencing an external repository, full Lean 4 proof terms and Python verifier implementations cannot be audited directly from the PDF text alone (e.g., verifying that AllBounded enforces 0 <= d_i <= c or that Mode 3 reparameterizes P(b) to [l, r]).",
+    "Minor accounting detail: the text cites 60 live adversarial forgery attacks (16 global + 4x11 per-mode) plus 2 raw JSON IEEE-754/NaN checks alongside '63/63 pytest checks passing' without specifying the 63rd test case."
+  ]
+}

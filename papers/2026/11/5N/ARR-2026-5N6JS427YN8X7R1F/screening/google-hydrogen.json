@@ -1,0 +1,60 @@
+{
+  "assessed_at": "2026-11-25T20:29:58Z",
+  "canonical_sha256": "248768e1edf50cbcb6411eca724d4d65ab9443f3051ba805154c42d19b8fc22c",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All piecewise-rational formulas for H(z,c1,c2) in Eqs. (1)-(5), the J <= J_mid envelope inequality (with equality iff AB >= 0), and all 18 algebraic identities in Table 1 check out analytically, including H(1/4,1/4,1/4) = -1/1280. Only minor notational slips in Table 1 and omitted definitions of G_mid, h_comb, and Q(f0) prevent full 5-star self-containment.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "Presents a clean verification and exact-rational certification companion for Cogentic's MaximinKiteNE 1/5-NE algorithm [6]. While the target algorithm is new, the verification methods—cleared-integer Lean 4 lemmas and Python fractions.Fraction certificate auditing with JSON hardening—apply established formalization and auditing techniques.",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "Section 2 records Eqs. (1)-(5) verbatim, Table 1 lists all 18 Lean 4.35.0 theorem identifiers and statements, Table 2 summarizes all 16 canonical witnesses with exact rational metrics and latencies, and Python/Lean versions are stated. Omission of explicit formulas for G_mid, h_comb, and Q(f0) slightly reduces self-containedness from the PDF alone.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "The manuscript cleanly separates machine-checked theorems from unformalized analytical steps via an Explicit Non-Claims section, enforces strict Lean kernel axioms ([propext, Quot.sound]) and zero-float parsing, and evaluates 60 live forgery mutations. Rigor is bounded by the elementary scope of the 18 Lean lemmas and finite-grid (13^3) sampling of H.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Provides valuable, independent exact-rational witness checking and algebraic sanity verification for a claimed breakthrough 1/5-NE algorithm [6]. However, because LP duality, Volterra/Plancherel estimates, and the Stage 4 continuum cell-cover proof remain unformalized, the verification does not yet certify the main theorem of [6] end-to-end.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.6,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-5N6JS427YN8X7R1F",
+  "potential_errors": [
+    "Section 2 states it records all Stage 4 formulas to guarantee self-contained auditability solely from the manuscript, but G_mid(z, c2), h_comb(c1) (used in H_up, Mode 3, and Fig. 1(a)), and Q(f0) (used in Theorem 14, Mode 3, and Fig. 1(b)) are never explicitly defined in the PDF.",
+    "In Table 1, Theorem 15 ('stage4_subcase1b_discriminant_negative') states 'at 10/17 equals 2970/119 > 0' without specifying the normalized rational expression being evaluated (evaluating the cleared integer form at D=17, s=10 yields 100980, whereas (102/7)*(16*(1-10/17)^2 - 1) = 2970/119).",
+    "In Table 1, Theorem 17 ('stage4_high_gate_breakpoints_order') mixes scaled variables (D <= z <= 2D, f0 = (4z+D)/(5D)) with unscaled expressions (f0(2-z) <= f0 <= z <= f0 z instead of using 2D-z and z/D) and refers to 'all 4 cleared-integer inequalities' when only three <= relations are displayed.",
+    "In Table 2, 'minimax_anchored_4x4_tight' reports L1 = 7/650 without specifying D or d; if d=4, this requires D < 650 (e.g., D=325 with lcm(D, denom(p))=650) so that 7/650 <= d/D holds, which cannot be checked directly from the table alone.",
+    "Section 5.3 lists 16 canonical certificates + 3 raw-JSON rejections + 60 adversarial mutations (79 cases total) while reporting '64 pytest checks', leaving the grouping/parametrization mapping unexplained."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Explicit and honest 'Two-Layer Verification Scope' and 'Explicit Non-Claims' on page 1 that accurately delineate what is machine-checked in Lean 4 vs. what remains unformalized in [6] (strong LP duality, ellipsoid/IPM solvers, Volterra/Plancherel estimates, and continuum cell-cover proofs of Lemmas 5.2-5.4).",
+    "Zero-dependency constructive Lean 4.35.0 mechanization of 18 integer and inductive-list lemmas strictly audited to [propext, Quot.sound] with zero sorry, zero custom axioms, and zero Classical.choice.",
+    "All algebraic identities and inequalities visible in Eqs. (1)-(5) and Table 1 are mathematically sound: J <= J_mid with equality iff AB >= 0 holds without division by zero, H(1/4,1/4,1/4) = -1/1280 checks out exactly, and Theorems 13-18 identities (including 21(17(z-c2)^2+4c2^2) = (21c2-17z)^2+68z^2, 5*95 - 17*64 = -613, and 5*10^8 < 22362^2) are exact.",
+    "Well-engineered exact-rational Python fractions.Fraction auditor (KITE-NASH-CERT-1.0) featuring strict JSON parser hardening (rejecting floats, NaN/Infinity, duplicate keys, unreduced rationals, and deep nesting) and 60/60 live adversarial forgery tests across four certificate modes."
+  ],
+  "strong_novelty_candidates": [
+    "None; the paper contributes a clean formal-verification and exact-rational certification framework targeting Cogentic's 1/5-NE algorithm [6] rather than a new game-theoretic algorithm or new formal-methods paradigm."
+  ],
+  "summary": "The manuscript presents a two-layer verification and exact-rational certification framework for Google Research Cogentic's MaximinKiteNE 1/5-approximate Nash equilibrium algorithm [6]. Layer 1 consists of 18 standalone constructive Lean 4.35.0 theorems (using only [propext, Quot.sound]) covering cleared-integer algebraic and inductive-list lemmas for s-kite mixing, the 7/4 welfare cap, minimax regret screening, simplex rounding, and Stage 4 polynomial/rational identities. Layer 2 provides KITE-NASH-CERT-1.0, a pure-stdlib Python fractions.Fraction auditor across four certificate modes, certifying 16 canonical witnesses, checking H(z,c1,c2) <= -1/1280 <= -1/3000 on a 13^3 = 2,197-point rational grid, and rejecting 60 adversarial mutations. All Stage 4 formulas Eqs. (1)-(5), reported extremum H(1/4,1/4,1/4) = -1/1280, and Table 1 algebraic identities are mathematically sound, and the paper is candid in its Explicit Non-Claims about unformalized analytical steps. Main limitations are the elementary scope of the 18 Lean theorems relative to the full continuum proof of [6], finite-grid verification of Stage 4 rather than a global continuum bound, and omitted definitions of auxiliary functions G_mid, h_comb, and Q(f0) in Section 2. No unresolved material objections invalidate the manuscript's claims.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:5633c884-ebe9-4ba2-9959-31fcbfd3a8d8",
+  "weaknesses": [
+    "Most of the 18 Lean 4 theorems are elementary cleared-integer arithmetic or basic list-sum bounds (e.g., 3*256=768, 2^24=16777216, 2^14=16384>3000, linear rearrangements) rather than end-to-end formalizations of the bimatrix game-theoretic claims or the Stage 4 continuum negativity proof.",
+    "Stage 4 negativity H(z,c1,c2) <= -1/3000 is checked only on a finite 13^3 = 2,197-point grid plus 48 corner/kink probes in Python, which cannot establish the continuum inequality everywhere on [1/4, 4]^3 without an interval-arithmetic or cell-cover proof.",
+    "Auxiliary quantities G_mid(z, c2), h_comb(c1), and Q(f0) referenced in Section 2, Table 1, Mode 3, and Figure 1 are not defined in the manuscript, slightly undermining the claim of full self-contained auditability from the PDF alone.",
+    "From the PDF alone, independent execution of the Lean 4.35.0 build, Python tests, and SHA-256 manifest cannot be directly observed beyond the manuscript's reported results."
+  ]
+}
