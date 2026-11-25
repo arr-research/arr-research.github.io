@@ -1,0 +1,60 @@
+{
+  "assessed_at": "2026-11-25T19:36:25Z",
+  "canonical_sha256": "b75916c55f7af01e27d70f914528f51e5e6895ef7687de0ae60f00e501f4c67e",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "The analytical proofs of Theorems 2.1–2.2 (character orthogonality, Morgenstern determinant bound, rational bracket, Pythagorean parameterization) and all arithmetic values in Tables 1–2 verify cleanly. Only two minor slips appear: the example k=576 in Theorem 2.1(3) achieves equality b >= 12 = w rather than strict b > w, and the Mode 4 proof of Theorem 2.3 omits explicit q > 2 and k >= 1 hypotheses for the two-power-check order criterion.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "Synthesizing OpenAI's N(log N)^(1/2+eps) Fourier exponent with Morgenstern's 1973 volume bound to establish the complex scalar weight blow-up (3) and contrast it with bounded-exponent product-group NTTs over fixed prime fields F_q is a crisp, timely insight. However, the mathematical arguments themselves are direct corollaries of known bounds and elementary rational/Pythagorean algebra.",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "All theorems, certificate predicates, parameters, and numerical results (Tables 1–2, Figures 1–3) are specified explicitly enough to be re-checked analytically from the PDF, and exact Lean 4 lemma statements and timing summaries are tabulated. However, full computational reproducibility depends on external repository artifacts (Lean 4 and Python verifier code) not included verbatim in the PDF and not executed during this PDF-only assessment.",
+      "stars": 3
+    },
+    "rigor": {
+      "basis": "The manuscript clearly separates analytical proofs (Section 2) from the 18-lemma Lean 4 ledger (Section 3) and the Python verifier (Section 4), carefully states unscaled-readout hypotheses in Theorem 2.1(1), and verifies exact algebraic predicates. Rigor is tempered because Lean 4 covers only elementary cleared-denominator identities rather than circuit semantics or Morgenstern's theorem, and Theorem 2.3 relies on unprinted external Python code.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "The Gate-Bit Conservation Law L * b >= (1/2)JN log_2 N and the bounded-exponent F_q dichotomy clarify a key architectural consequence of the N(log N)^(1/2) barrier: sub-logarithmic gate counts cannot save total gate-times-dynamic-range cost in exact/fixed-point complex arithmetic, whereas bounded-exponent product groups over post-quantum primes escape at constant bit-width. Practical impact is tempered because Kyber/Dilithium use negacyclic rather than product groups.",
+      "stars": 4
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 4.25,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-4HWS8ZEJ0P9KJT7T",
+  "potential_errors": [
+    "Theorem 2.1(3) (p. 3) states that k = 576 with G = (Z/256Z)^72 for q = 3329 (w = 12) and c_0 = 1 satisfies s > 2 c_0 w and b > w; however, s = sqrt(576) = 24 = 2 c_0 w gives only equality b >= 12 = w rather than strict inequality (strict b > w requires k > 576, e.g., k = 584 or k = 784).",
+    "Proof of Theorem 2.3 Mode 4 (p. 5) states that omega^N == 1 and omega^(N/2) == -1 (mod q) for N = 2^k are necessary and sufficient for ord_{F_q^x}(omega) = N, omitting the hypotheses q > 2 (odd prime) and k >= 1; at q = 2, omega = 1 satisfies 1^(N/2) == 1 == q - 1 (mod 2) despite having order 1 != N (though Theorem 2.3's statement itself requires exact multiplicative order N = 2^k).",
+    "Table 2 reports 0.075 ms for ntt_F17_N4.cert.json while Figure 3(b) labels the corresponding bar 0.07 ms (truncation/round-to-even vs. standard half-up rounding to 0.08 ms)."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Clean, self-contained proof of Theorem 2.1 combining character orthogonality (|det(F_G^{+J})| = N^(JN/2)) with Morgenstern's 1973 determinant inequality to derive the exact Gate-Bit Conservation Law L * log_2 C >= (1/2)JN log_2 N and super-polynomial weight blow-up C(N) >= 2^((1/(2c_0))(log_2 N)^(1/2-eps)) over C.",
+    "Sharp architectural dichotomy in Theorem 2.1(3) proving that bounded-exponent abelian product groups G with exp(G) | (q - 1) over fixed prime fields F_q (such as ML-KEM q = 3329 and ML-DSA q = 8380417) escape the Archimedean determinant constraint at constant modulus width w, whereas cyclic NTTs force w >= k + 1 > k.",
+    "Exemplary scope transparency (Explicit Scope Separation, p. 2, and Section 5): clearly distinguishes what is proved analytically, what is machine-checked in Lean 4 (18 cleared-denominator lemmas), and what is checked in Python, while acknowledging that certified DAGs only reach N = 16 for classical N log_2 N circuits.",
+    "All checked arithmetic values across Table 1 (e.g., 17^128 == -1 mod 3329, 8380417 - 1 = 8192 * 1023) and Table 2 (including Kyber roots omega = 2580 for N=8 and omega = 2642 for N=16, rational Pythagorean gaps, and Morgenstern ratios) are numerically exact."
+  ],
+  "strong_novelty_candidates": [
+    "Gate-Bit Conservation Law and super-polynomial scalar dynamic-range blow-up C(N) >= 2^((1/(2c_0))(log_2 N)^(1/2-eps)) for any N(log_2 N)^(1/2+eps) linear DFT circuit over C (Theorem 2.1(1)-(2)).",
+    "Architectural precision dichotomy separating bounded-exponent product-group NTTs over fixed prime fields F_q (constant width w independent of N) from both complex sub-logarithmic FFTs and cyclic NTTs (Theorem 2.1(3)).",
+    "Zero-square-root rational bracket L^2/(2+L) < sqrt(1+L^2) - 1 < L^2/2 and Pythagorean parameterization for OpenAI's rectangular rank-support separation Delta_rect(L) (Theorem 2.2(1)-(2))."
+  ],
+  "summary": "This paper derives four quantitative, architectural, and certification consequences of OpenAI's November 24, 2026 N(log_2 N)^(1/2+o(1)) linear-gate upper bound for finite abelian DFTs. First, combining character orthogonality with Morgenstern's 1973 volume bound, Theorem 2.1 establishes the Gate-Bit Conservation Law L * log_2 C >= (1/2)JN log_2 N over C, showing that sub-logarithmic N(log_2 N)^(1/2+eps) circuits over C incur super-polynomial scalar weight blow-up C(N) >= 2^((1/(2c_0))(log_2 N)^(1/2-eps)), whereas bounded-exponent abelian product groups G with exp(G) | (q - 1) over fixed prime fields F_q (e.g., F_3329, F_8380417) evade this constraint at constant bit-width w (unlike cyclic NTTs, which force q > N and w >= k). Second, Theorem 2.2 establishes exact two-sided rational bounds and Pythagorean evaluations for OpenAI's rectangular rank-support gap sqrt(1+L^2) - 1, along with finite-N crossovers (k > c_0^2) and circulant/Toeplitz budgets. Third, Theorem 2.3 specifies FOURIER-GATE-CERT-1.0, a zero-float exact-Q / exact-F_q certificate verifier demonstrated on 16 certificates up to N = 16 and 50 adversarial test cases, complemented by 18 elementary cleared-denominator algebraic lemmas in Lean 4. The proofs are sound and clearly scoped, with only minor boundary/hypotheses slips and external-code verification caveats.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:69d76e65-9605-4d50-90bb-1519c2906647",
+  "weaknesses": [
+    "Mathematical arguments in Theorems 2.1–2.2 are relatively straightforward consequences of Morgenstern's 1973 determinant bound and elementary quadratic/Pythagorean algebra; similarly, many of the 18 Lean 4 lemmas (e.g., #1, #3, #11, #12, #13, #16, #17, #18) are trivial ring/arithmetic identities rather than formalizations of circuits, determinants, or Morgenstern's theorem.",
+    "While ML-KEM/Kyber (q = 3329) and ML-DSA/Dilithium (q = 8380417) are used as motivating moduli, real-world lattice cryptography relies on fixed-size negacyclic rings Z_q[X]/(X^n + 1) rather than growing-dimension product groups (Z/256Z)^m, limiting the direct cryptographic applicability of the unbounded-m dichotomy.",
+    "In Theorem 2.2(3), asserting a 3L_DFT + N cost for general bilinear cyclic convolution assumes F_N^(-1) has gate count L_DFT (folding the 1/N normalization into output gates relies on unrestricted scalar constants, which would alter bounded-weight accounting over C).",
+    "Certified DAGs in Modes 3–4 only instantiate classical N log_2 N circuits up to N = 16 rather than sub-logarithmic N(log_2 N)^(1/2+o(1)) circuits, and the external Lean 4 and Python verifier source files are not included in the PDF for standalone audit."
+  ]
+}

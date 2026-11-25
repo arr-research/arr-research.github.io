@@ -1,0 +1,54 @@
+{
+  "assessed_at": "2026-11-25T19:36:25Z",
+  "canonical_sha256": "c77bbcdc6216f6ef84bb03b777101d1582f3c83ce4fd466ea1d055b005eca61c",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All 18 formalized statements in Table 1 (over N and Z) are mathematically valid, axiom counts (2 none, 16 [propext, Quot.sound]) match Table 1, and all numerical sums/ratios in Table 2 (total 7.80 ms from exact sum 7.797 ms, C9-C12 stability/Lipschitz ratios, C16 envy 3/200 < 1/25) and Figures 1-3 are internally consistent. Only minor specification ambiguities exist in Definition 1 Mode 3 (maximality unstated) and the denominator >= 2 rational parsing rule.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "As explicitly acknowledged in Section 1 ('Contributions and Explicit Scope'), all existence, continuity, and O(log^3(1/eps)) query-complexity theorems belong to Filos-Ratsikas et al. [3]. The manuscript contributes a clean companion verification stack: 18 elementary cleared-integer Lean 4.35.0 lemmas and a finite exact-Q witness verifier (EF-CAKE5-CERT-1.0) with 16 canonical instances and 60 adversarial tests.",
+      "stars": 2
+    },
+    "reproducibility": {
+      "basis": "Table 1 lists exact theorem names, domains, and axiom footprints; Table 2 lists all 16 certificate IDs, parameter regimes, and replay times; and Section 3-4 specifies the Python 3.13 / Lean 4.35.0 setup, 41-artifact SHA-256 manifest, and public MIT/CC-BY-4.0 repository URL. However, the Lean source, Python verifier, and JSON certificates reside externally and cannot be executed from the 4-page PDF alone.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "The paper enforces strict scope separation (Section 1), zero-sorry and zero-Classical.choice proofs in Lean 4.35.0 (Section 2, Table 1), zero-float Python fractions.Fraction arithmetic with strict JSON validation (Section 3), and a 60/60 live adversarial forgery suite (Section 4, Fig. 3(b)). Rigor is bounded mainly by Lean 4 covering isolated arithmetic/counting inequalities rather than bipartite graphs, Hall's theorem, or Python verifier soundness.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Provides a concrete, machine-checked arithmetic supplement and an exact-rational witness testbed for the five-agent contiguous envy-free cake-cutting breakthrough of Filos-Ratsikas et al. [3], including non-zero stability/Lipschitz witnesses (C9-C12) and an approximate bisected 8-edge spanning-tree allocation (C16). Impact is limited by its companion verification scope rather than new theoretical results.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.4,
+  "model_id": "hydrogen",
+  "overall_stars": 3,
+  "paper_id": "ARR-2026-1MTAKEP0F086AS8D",
+  "potential_errors": [
+    "Definition 1 Mode 3 (p. 2) states that the verifier checks 0-robustness of l*(m), l*(m') and delta-robustness of l_delta(m) under gamma-strong hungriness, but omits stating explicitly whether maximal feasibility (|L|=0 or |R|=0) is also enforced in Mode 3 (unlike Mode 1); without maximality, a 0-robust tuple need not equal the unique maximal tuple l*(m).",
+    "Section 3 (p. 2) states that canonical rationals enforce 'reduced denominators >= 2', which is ambiguous for integer-valued parameters appearing in Table 2 (e.g., gamma=1, delta=0, exact envy 0, breakpoints 0 and 1) unless integers are parsed via a separate rule or the constraint applies strictly to fractional strings.",
+    "Figure 2(a) caption (p. 3) writes ||l*(m)-l*(m')||_inf / (13 gamma^-3 d), using 'd' instead of '|m-m'|' as used in Section 2, the Figure 2(a) legend, and Table 2."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Exemplary transparency on formalization scope (p. 1): explicitly clarifies that EnvyFreeCake5.lean proves only the 18 cleared-integer/natural-number algebraic, counting, pigeonhole, ceiling-margin, and triangle-inequality lemmas and does not formalize bipartite graphs, Hall's theorem, continuous valuations, spanning trees, or verifier soundness.",
+    "Exact mathematical and numerical consistency across the entire manuscript: all 18 statements in Table 1 hold over their stated domains (accounting properly for truncated subtraction on N in Lemmas #1, #2, and #9), axiom counts match Table 1 (2 none, 16 [propext, Quot.sound]), Table 2 latencies sum to 7.797 ms (reported 7.80 ms) with matching mode ranges, and all stability/Lipschitz ratios in C9-C12 and Fig. 1-2 values verify exactly.",
+    "Thoughtful exact-Q verifier design (EF-CAKE5-CERT-1.0) using Python fractions.Fraction exclusively without floats, testing all four algorithmic pillars across 16 canonical witnesses (including non-trivial non-zero stability/Lipschitz perturbations across gamma in {1, 1/2, 3/4} and an approximate bisected EF5 allocation C16) plus 60 adversarial forgery payloads."
+  ],
+  "strong_novelty_candidates": [],
+  "summary": "This 4-page companion verification paper presents a two-layer verification stack supporting Filos-Ratsikas et al. (arXiv:2611.33149) [3] on O(log^3(1/eps))-query five-agent contiguous epsilon-envy-free cake cutting: (i) a standalone Lean 4.35.0 module (EnvyFreeCake5.lean) proving 18 cleared-integer and natural-number algebraic, counting, pigeonhole, ceiling-margin, and triangle-inequality lemmas with zero sorry and zero Classical.choice (2 zero-axiom, 16 [propext, Quot.sound]); and (ii) a pure-stdlib exact-rational Python verifier (EF-CAKE5-CERT-1.0) checking finite piecewise-constant 1-Lipschitz rational instances across four modes (Hall robustness & connectivity, softmax weight balancing, stability & Lipschitz bounds, and complete 8-edge spanning-tree EF5 allocations). Across 16 canonical certificates (0.246-0.934 ms, total 7.80 ms) and 60 live adversarial forgery payloads (12 global + 12 per mode), all algebraic claims and numerical figures in the PDF are internally consistent, with only minor specification/notation notes and modest theoretical scope (isolated arithmetic lemmas rather than an end-to-end Lean formalization of [3]).",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:f2e61208-156a-4b07-8e57-eb33a74bf0a2",
+  "weaknesses": [
+    "Modest depth of the Lean 4 formalization: several of the 18 lemmas in Table 1 are elementary arithmetic identities or constants (e.g., #4 e+2e=3e, #6 5D and 4(5D)=5(4D), #14 d+2d=3d and 6*1=2*3, #15 3(3p)=9p, #16 13*12=156), and none of the core graph-theoretic, analytic, or algorithmic results of [3] are formally connected inside Lean 4.",
+    "All actual Lean 4 proofs, Python verifier code, JSON certificate payloads, and adversarial test cases reside in the external repository rather than the PDF, so external execution and source inspection are outside what can be directly audited from the manuscript alone.",
+    "Table 1 rows #8 and #16 omit the explicit domain tag (N) used in the other 16 rows (understandable as ground numerical statements, though inconsistent formatting), and Figure 2(a) rounds 0.0048 and 0.0162 to 3 decimal places (0.005 and 0.016) compared to 4 decimals in Section 4 text."
+  ]
+}
