@@ -1,0 +1,361 @@
+--- Page 1 ---
+Machine-Checked Exact-Rational Variance-Hull, Two-Cap
+Mask, and Factor-Two Certificates for Euclidean Diameter
+in Dynamic Streams
+Lluis Eriksson*
+November 25, 2026
+Abstract
+Jeff Giliberti and MohammadTaghi Hajiaghayi
+(arXiv:2611.33139, November 24, 2026) resolved
+the update-time bottleneck for dynamic-stream
+high-dimensional Euclidean diameter: for every
+fixedc >
+√
+3, their one-pass algorithm main-
+tains an explicit factor-cwitness pair in sublin-
+ear space ˜O(N1−ϵc poly(d)) and worst-case update
+time poly(d,logN), breaking theN 2/3 update-
+time barrier of direct asymmetric Gaussian em-
+beddings at factorc= 2 while matching
+polynomial space lower bounds. We present
+a machine-checked, zero-floating-point formaliza-
+tion and exact-Qcertificate auditor for the al-
+gebraic, variance-hull, two-cap mask, and Ap-
+pendix A.1 factor-two core of this construction.
+First, an 18-theorem zero-dependency Lean 4 ker-
+nel (EuclideanDiameterStream.lean, Lean 4.35.0;
+0sorry, 0 warnings, 0Classical.choice, 5 zero-
+axiom theorems) formalizes the cleared parallel-axis
+identity, Lemma 5.1’s
+√
+2a2 −1 variance-hull dilation
+bound and two-simplex tightness, Eq. (13) bounded
+witness radii, Section 8.2 Algorithm 4’s exact vari-
+ance incrementV ′ −V=γ(R 2 −V)−γ 2R2 >
+(θ2/64)Vand 8V 0 cap, Lemma 8.1’s candidate-score
+bound, the 3-4-5 spherical-cap containmentt≥
+3/5⇒(t−3/5) 2 +q≤16/25, the SOS potential
+margin (λ−t) 2 −q≥λ 2/2−1, Section 8.2 geo-
+metric shrinkage|P i+1|< 3
+5 |Pi|, and the complete
+Appendix A.1 factor-two rational parameter suite
+(2a2 −1 = 3.999122<4,ϵ 0 >1/6345504000>
+10−10). Second,EUCLIDEAN-DIAM-CERT-1.0audits
+four exact-Qmodes across 16 canonical certificates
+* Independent researcher; manuscript prepared with trans-
+parent AI assistance via Google Antigravity. Source code,
+Lean 4 proofs, and exact certificates:https://github.com/
+lluiseriksson/euclidean-diameter-stream-certificates.
+(0.181–8.834 ms) and rejects 62/62 live adversarial
+forgeries.
+1 Introduction
+Maintaining the Euclidean diameter diam(P) =
+maxx,y∈P ∥x−y∥of a point setP⊂R d under
+arbitrary insertions and deletions exhibits a sharp
+structural separation from insertion-only streams [1]:
+polynomial spaceN ˜Ω(1/c2) is unavoidable for any con-
+stant factorc[5, 6], and direct dynamic implementa-
+tions of Indyk’s asymmetric embedding [4] incurN2/3
+update time atc= 2. Giliberti and Hajiaghayi [3]
+separated update time from space by combining three
+exact rational pillars:
+1.Variance-hull geometry (Lemma 5.1):For any
+nonempty finite sampleS⊂R d anda >1, the
+farthest-distance hullH a(S) = T
+q B(q, aRS(q))
+admits the exact variance representationHa(S) =S
+λ B(µλ,
+p
+(a2 −1)V λ), yielding
+diam(Ha(S))≤
+p
+2a2 −1 diam(S),(1)
+attained by two orthogonal regular simplices and
+approaching the
+√
+3 barrier asa↓
+√
+2.
+2.Rational variance certificates (Algorithm 4, Sec-
+tion 8):Starting from a farthest pair (a 0, b) with
+V0 =∥a 0 −b∥ 2/4, transferring weightγ=θ/32
+(whereθ= (1 +η) 2 −1) to a farthest uncovered
+point strictly increases the variance by
+V ′ −V=γ(R 2 −V)−γ 2R2 > θ2
+64V(2)
+while staying capped byV≤8V 0, terminat-
+ing inO(η −2) exact rational iterations withS⊆
+B(c,(1 +η)
+√
+V).
+3.Two-stage 3-4-5 cap masks & Table 3 constants
+(Appendix A.1):Choosinga= 1581/1000,λ=
+1
+
+--- Page 2 ---
+79/50,η in = 1/100,κ= 109/100, andB κ =
+2000 forces the first-stage maskϕ≤21/20 in-
+side thet≥3/5 spherical cap contained in
+B( 3
+5 u, 4
+5 ), empties the second-stage mask via
+em >16133/24000>84/125, keeps all three
+squared factors below 4, and yields space expo-
+nent 1−10 −10.
+Contributions and Scope.We formally mecha-
+nize and audit the deterministic algebraic, geometric,
+variance-certificate, two-cap mask, and de-amortized
+shrinkage core of [3]. We explicitly scope our Lean 4
+kernel away from the continuous Gaussian-grid prob-
+ability couplings, Sion minimax invocation, and
+communication-complexity lower bound (Sections 6–
+7, 9–10):
+1.Zero-dependency Lean 4 ker-
+nel (§2):18 constructive theorems
+inEuclideanDiameterStream.lean
+(Lean 4.35.0 [2]), 0sorry, 0 warnings,
+0Classical.choice, and 5 zero-axiom the-
+orems.
+2.Pure-stdlib exact-Qverifier (§3):
+EUCLIDEAN-DIAM-CERT-1.0, auditing Algo-
+rithm 4 replay, Lemma 5.1 hulls and witness
+radii, the full Appendix A.1 factor-two suite,
+and dynamic insert/delete ball chains with zero
+floating-point arithmetic.
+3.Empirical atlas & red-team audit (§4):
+16 canonical certificates (0.181–8.834 ms), ex-
+act Algorithm 4 bit-length growth sweeps, two-
+tetrahedra rational hull realizations, exact Taylor
+mask thresholds, and 62/62 rejected live adversar-
+ial forgeries.
+2 Zero-Dependency Lean 4 Kernel
+We formalize 18 theorems in
+lean/EuclideanDiameterStream.lean
+(Lean 4.35.0, zero external libraries), audited via
+lean/AuditAxioms.leanwith 0 warnings, 0sorry,
+0Classical.choice, and 0Lean.ofReduceBool
+(Table 1). Five theorems depend on zero ax-
+ioms (none) and 13 depend solely on[propext,
+Quot.sound].
+Proposition 1(Constructive Dynamic-Diameter
+Kernel).
+1.Variance-hull algebra (Theorems 1–5):Inductive
+cleared-integer parallel-axis identityW 2 Pwi(ai−
+Table 1: Complete 18-theorem Lean 4.35.0 kernel in
+EuclideanDiameterStream.lean(0sorry, 0 warn-
+ings, 0Classical.choice, 5 zero-axiom theorems).
+# Lean 4 Theorem Identifier Axiom Footprint
+1parallelaxisclearedidentity [propext, Quot.sound]
+2hull diametercauchyschwarz [propext, Quot.sound]
+3hull sqrt3barrier [propext, Quot.sound]
+4two simplextightnessexact [propext, Quot.sound]
+5boundedwitnessradius [propext, Quot.sound]
+6algorithm4varianceupdateidentity [propext, Quot.sound]
+7algorithm4variancegrowthlb [propext, Quot.sound]
+8algorithm4variancecap8V0 [propext, Quot.sound]
+9candidatescorecauchyschwarz [propext, Quot.sound]
+10sphericalcap345containment [propext, Quot.sound]
+11potentialquadraticmarginsos [propext, Quot.sound]
+12potentialmonotoneeq29identity [propext, Quot.sound]
+13firstmaskendpointexact none
+14secondmaskemptyexact none
+15factortwotable3threecases none
+16appendixa1oracleandcouplingexact none
+17rebuildgeometricshrinkage [propext, Quot.sound]
+18appendixa1scalechainandexponents none
+y)2 = Pwi(W ai −S) 2 +W(S−W y) 2 over arbi-
+trary weighted lists; cleared Cauchy–Schwarz hull
+bound(h+s(u+w)) 2 ≤(2s 2 + 1)L2 via an
+explicit sum-of-squares decomposition; strict
+√
+3
+barrier interval(3, c 2); exact two-simplex tight-
+ness(h+ 2(A−1)h) 2 = (2A−1)S 2; and Eq. (13)
+witness radius bound(a−1)R < D univ.
+2.Algorithm 4 & candidate scores (Theorems 6–9):
+Cleared exact 1-step variance identity(2); multi-
+plicative growth lower boundV ′ −V >(θ 2/64)V;
+upper variance capV≤8V 0; and Lemma 8.1
+candidate-score bound(du+dt) 2 ≤(p 2 +d 2)H2.
+3.Two-cap masks, Appendix A.1, & shrinkage (The-
+orems 10–18):Exact 3-4-5 spherical-cap contain-
+ment(5t−3D) 2+25q≤16D 2; SOS potential mar-
+gin2((λ−t) 2−q)−(λ 2−2D2) = (λ−2t)2+2(D2−
+t2 −q)≥0; Eq. (29) identity; exact first- and
+second-mask rational Taylor bounds; all Table 3
+three-case strict margins; oracle and Eq. (32) cou-
+pling inequalities; Section 8.2 geometric shrinkage
+5|Pi+1|<3|P i|; and Section A.1.6 space-exponent
+suite (1/6345504000>10 −10,s(B κ + 1)−1 =
+−2/2003<0).
+3 Exact-QVerifier Architecture
+EUCLIDEAN-DIAM-CERT-1.0
+(src/diameter certifier.py) is a pure-stdlib
+zero-float verifier enforcing strict JSON types,
+reduced canonical rationals (with string-length and
+integer bit-length DoS caps), and exact squared
+2
+
+--- Page 3 ---
+Euclidean arithmetic across four modes:
+1.Mode 1 (variance certificate alg4):Re-
+plays Section 8.1.2 Algorithm 4 step-by-step in
+exactQ, auditing (2),V ′ ≤8V 0, containment
+R2 ≤(1 +η) 2V, and parallel-axis anchor score
+H2 ≥V+∥c−y∥ 2.
+2.Mode 2 (variance hull and tightness):Inde-
+pendently verifies Lemma 5.1 hull membership for
+two distributions (λ, γ), exact two-draw identity
+h2 +V λ +V γ ≤L 2
+S, hull dilation (1), and an exte-
+rior witness ball satisfying Eq. (13) (a−1)RS(q)<
+Duniv.
+3.Mode 3 (factor two two cap audit):Cer-
+tifies the full Appendix A.1 scale chain, all
+three squared approximation inequalities, first-
+maskg(t 0)<0 and TaylorF lb(t0)>1 +
+ηmask, spherical-cap points, second-mask empti-
+nesse lbm >(1+ηmask)r2
+2, oracle Chernoff margin,
+and Section A.1.6 space exponents.
+4.Mode 4 (dynamic stream chain replay):Re-
+plays arbitrary dynamicinsert/deletestreams
+inQ d, routing active points strictly through au-
+thenticated intact covering balls (disabled invali-
+dated balls cannot hide points from the residual)
+plus an exact leaf, verifying that the active wit-
+ness pair originates from an intact ball or leaf,
+attains the exact chain score, and satisfiesL 2 ≤
+diam(P)2 ≤((1 +η) 2 + 1)L2 at every checkpoint
+alongside Section 8.2 shrinkage|P i+1|< 3
+5 |Pi|.
+4 Empirical Atlas and Red-Team
+Audit
+Runningscripts/run all experiments.pypro-
+duces 16 canonical certificates (4 per mode)
+and four exact-Qstudies, audited end-to-end by
+scripts/verify all.pywith SHA-256 verification
+across all 41 tracked artifacts.
+Algorithm 4 Bit Growth and Hull
+Tightness (Fig. 1).Acrossη∈
+{1/4,1/5,1/6,1/8,1/10,1/12,1/16}on our
+8-pointR 3 benchmark, Algorithm 4 con-
+verges in 16,23,36,71,113,161,275 exact itera-
+tions—matchingO(η −2) scaling—with support
+size 3–4 andV/V 0 increasing smoothly from 1.506
+to 1.836 (far below the 8V 0 bound). Because
+each update multiplies denominators by the fixed
+rational 1/γ, maximum weight denominator bit-
+length scales linearly with iteration count from
+Figure 1: (a) Exact-QAlgorithm 4 convergence (16
+to 275 iterations) and maximum weight denominator
+bit-length (146 to 3577 bits) on an 8-pointR 3 cluster
+across 1/η∈ {4, . . . ,16}. (b) Lemma 5.1 hull dilation√
+2a2 −1 vs. exact rational two-tetrahedra witness in
+R7 (L2
+S = 40).
+Figure 2: (a) Exact longitudinal potentialF(t) at
+λ= 79/50 crossing below the first-mask threshold
+21/20 strictly after the 3-4-5 cap splitt= 3/5. (b)
+Second-mask global lower bounde lb(K)·(1241/5000)
+across Taylor degreesK= 1. . .10;K= 4 (65/24) is
+the minimal certifying degree.
+146 to 3577 bits (290 to 7152 bits for exact
+variance denominators), quantifying Section 8.2’s
+polynomial bit-length guarantee. On two orthog-
+onal regular tetrahedra inR 7 (L2
+S = 40,h= 4,
+V= 12), Mode 2 achieves exact rational hull
+dilation 1.973261 (∥y 1 −y 2∥2/L2
+S = 12168/3125)
+at Giliberti–Hajiaghayi’sa= 1581/1000 versus the
+Lemma 5.1 ceiling
+√
+3.999122 = 1.999780 (98.7% of
+the bound), and 1.736090 vs. 1.741494 near the
+√
+3
+barrier ata= 71/50.
+Two-Cap Potential and Exact Taylor Thresh-
+olds (Fig. 2).Mode 3 (0.181–0.207 ms) indepen-
+dently certifies all Appendix A.1 inequalities verba-
+tim, confirmingF(3/5)>79/75>21/20 and show-
+ing that Taylor degreeK= 4 (e >65/24) is the
+exact minimal degreecertifying second-mask empti-
+ness:K= 3 (8/3) yields 0.6618667<0.672, whereas
+K= 4 clears 84/125 = 0.672 with exact margin
+16133/24000−84/125 = 1/4800≈+0.0002083, and
+3
+
+--- Page 4 ---
+Figure 3: (a) Exact zero-float replay latency across
+all 16 canonicalEUCLIDEAN-DIAM-CERT-1.0certifi-
+cates (0.181–8.834 ms). (b) Red-team adversarial au-
+dit rejecting 62/62 live forgery attacks across five at-
+tack classes.
+Table 2: Summary of all 16 canonical
+EUCLIDEAN-DIAM-CERT-1.0certificates and 62/62
+live adversarial red-team audit.
+Verification Mode Certs Latency (ms) Attacks Rejected
+Mode 1: Alg. 4 Variance Certificate 4 0.263–8.834 12/12Mode 2: Lemma 5.1 Hull & Tightness 4 0.207–1.014 12/12Mode 3: App. A.1 Factor-Two Audit 4 0.181–0.207 12/12Mode 4: Dynamic Stream Chain Replay 4 0.482–1.240 14/14Global Schema / Type / Rational – – 12/12
+Total 16 0.181–8.834 62/62
+K= 10 amplifies the certified slack by 12.9×to
++0.0026775 while certifyingϵ 0 >1.5×10 −10.
+Replay Atlas and Red-Team Audit (Fig. 3,
+Table 2).All 16 canonical certificates replay in
+0.181–8.834 ms with zero floats (Mode 1’s 8.834 ms
+peak reflects 18 exact multi-hundred-bit rational
+iterations on a 6D simplex). Mode 4 (0.482–
+1.240 ms) replays dynamic insertion/deletion histo-
+ries including extreme-point deletion, sample in-
+validation in a 2-ball hierarchy, key re-insertion,
+and exact-leaf collapse. Our adversarial suite
+(tests/test suite.py) tests 62 live forgery at-
+tacks—including float/None/bool injection, unre-
+duced fractions, oversized rational-string and inte-
+ger bit-length DoS, tampered Algorithm 4 traces,
+hull-outside points, weak Taylor degrees, broken
+scale chains, stale deleted witnesses, unauthenti-
+cated invalidated-ball routing, non-chain witness
+pairs, uncovered residual points, and violated shrink-
+age—achieving62/62 rejectionswith zero by-
+passes.
+5 Conclusion
+We delivered an 18-theorem zero-dependency Lean 4
+kernel (5 zero-axiom theorems, 13[propext,
+Quot.sound], 0Classical.choice) and the
+exact-QverifierEUCLIDEAN-DIAM-CERT-1.0for the
+variance-hull, Algorithm 4, two-cap mask, dynamic-
+chain, and Appendix A.1 factor-two core of Giliberti
+and Hajiaghayi [3]. Mechanizing the Gaussian-grid
+probabilistic couplings of Sections 6–7 and the
+communication-complexity space lower bound of
+Section 10 remain open targets for future formalized
+streaming geometry.
+References
+[1] Pankaj K. Agarwal and R. Sharathkumar.
+Streaming algorithms for extent problems in high
+dimensions.Algorithmica, 72(1):83–98, 2015.
+[2] Leonardo de Moura and Sebastian Ullrich. The
+Lean 4 theorem prover and programming lan-
+guage. InAutomated Deduction – CADE 28,
+pages 625–635, 2021.
+[3] Jeff Giliberti and MohammadTaghi Hajiaghayi.
+On Euclidean diameter in dynamic streams.
+arXiv:2611.33139 [cs.DS], November 2026.
+[4] Piotr Indyk. Better algorithms for high-
+dimensional proximity problems via asymmetric
+embeddings. InProceedings of the 14th Annual
+ACM-SIAM Symposium on Discrete Algorithms
+(SODA), pages 539–545, 2003.
+[5] Sanjeev Khanna, Ashwin Padaki, Krish Sin-
+gal, and Erik Waingarten. A polynomial space
+lower bound for diameter estimation in dynamic
+streams. InProceedings of the 66th IEEE Annual
+Symposium on Foundations of Computer Science
+(FOCS), pages 119–148, 2025.
+[6] Ashwin Padaki, Krish Singal, and Erik Wain-
+garten. A near-optimal space lower bound for Eu-
+clidean diameter estimation in dynamic streams.
+arXiv:2609.19089 [cs.DS], 2026.
+4

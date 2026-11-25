@@ -1,0 +1,279 @@
+--- Page 1 ---
+Certified Verification of Polynomial Master Equations and
+Critical Solutions in Open Quantum Systems
+Lluis Eriksson∗
+November 25, 2026
+Abstract
+Miku Ishizaki and Jaeha Lee (arXiv:2611.33027, Nov.
+2026) developed a locally deterministic matrix-polynomial
+formulation of non-Markovian open quantum master equa-
+tions P(D)E(t) = 0derived from the Laplace identity
+P(s)(LE)(s) = Q(s), demonstrating exact order-5 differ-
+ential equations and critical-parameter order reductions
+for a coupled two-qubit model, a sharp three-tier sin-
+gularity/periodicity hierarchy governed by odd/odd ra-
+tional singular-value ratiosΩ−/Ω+, and order-3 polyno-
+mial equations exhibiting a non-diagonalizable Jordan
+exceptional point at λ = 2 γ0 in the unbounded multi-
+mode Jaynes–Cummings model. We construct a stan-
+dalone, zero-dependencyLean 4.35.0formalization of 18
+core spectral, singularity, parity-obstruction, factorization,
+and exceptional-point theorems (zerosorry, zero warn-
+ings, zeroClassical.choice) paired with a zero-floating-
+point exact-Q certificate verifier (POLY-MASTER-CERT-1.0)
+across four modes. Across 16 canonical certificates (0.046–
+0.648 ms, total3 .42 ms), all matrix-polynomial factoriza-
+tions, Frobenius companion actions, irrational boundary
+diagnostics, and Jordan nilpotency conditions replay ex-
+actly overQ while rejecting 60/60 live adversarial forgery
+attacks.
+1 Introduction
+Open quantum systems interacting with an environment
+typically depart from autonomous Gorini–Kossakowski–
+Sudarshan–Lindblad (GKSL) Markovian semigroups [2, 6],
+especially when the dynamical mapE(t)becomes singular
+(detE(t0) = 0) and globally defies first-order time-local
+generators. Rather than attributing memory solely to
+global history integrals via the Nakajima–Zwanzig formal-
+ism [7], Lee and Ishizaki [5, 3] formulate locally determinis-
+tic higher-order master equationsP(D)E(t) = 0associated
+with monic matrix polynomialsP(s)(LE)(s) =Q(s):
+1. Initial-Value Problem & Companion Lineariza-
+tion (Sec. III):The unique dynamical map is pinned
+down by E(k)(0) = ∑n
+j=1 ˜P(n−k)jQj−1 via ˜P =
+∗Independent Researcher. Code, Lean 4 proofs, and certificates:
+MIT License; manuscript and figures: CC-BY-4.0. Prepared with AI
+coding, formalization, and drafting assistance from Google Antigrav-
+ity; all proofs, exact-Q verifiers, and adversarial tests were indepen-
+dently compiled and verified locally. Repository:https://github.
+com/lluiseriksson/polynomial-master-equations-certificates
+∑n−1
+r=0 (−T)r (Eqs. 24–26) and linearized by the Frobe-
+nius companion matrixΘ(Eq. 29).
+2. Two-Qubit Critical Factorizations (Sec. IV.C–
+F):Under maximally mixed environmentρE = I2/2,
+the dynamical map decomposes asV0 ⊕V12 ⊕V3 with
+generic orders(1 ,4,5). At critical parameters (J = 0
+or ωSωE = 0), common monic matrix factors R(x)
+cancel (P = R˜P,Q = R˜Q), dropping order down to
+the unitary Liouville–von Neumann equation (4→1,
+5 →1) or simpler elliptic/harmonic modes (5 →3,
+5→2).
+3. Singularity & Periodicity Hierarchy (Sec. IV.G–
+I):Singularities require ∑
+±cos2 θ±≥1 ⇐⇒ |ω2
+S −
+ω2
+E|≤J 2 (Eq. 111). On the critical boundary|ω2
+S −
+ω2
+E|= J2, dynamics split into three tiers byΩ−/Ω+:
+periodic & singular iff irreducible odd/odd (Eq. 114),
+periodic & non-singular iff rational odd/even, and non-
+periodic & non-singular iff irrational.
+4. Multi-Mode Jaynes–Cummings Exceptional
+Point (Sec. V):Under global involution T2 = I4,
+T−1Eϵ(t)T = diag[1,fϵ,fϵ,f2
+ϵ]obeys order-2 and order-
+3 rational ODEsu(D)and v(D)whose discriminant
+4ϵ2 = λ(λ−2γ0)vanishes at λ= 2γ0, preserving ODE
+order while producing a non-diagonalizable order-3 Jor-
+dan exceptional point [4].
+Contributions and Scope.We do not re-formalize
+Laplace-transform contour integration or continuous
+ODE existence theorems inside Lean 4; instead, we
+machine-check every exact algebraic, spectral, parity-
+theoretic, and Jordan-block invariant of [3]: (i) 18 zero-
+sorry, zero-Classical.choice Lean 4.35.0[ 1] theo-
+rems in PolyMasterEq.lean; (ii) the exact- Q verifier
+POLY-MASTER-CERT-1.0; (iii) 16 canonical sub-millisecond
+certificates spanning all four regimes; and (iv) a 60-attack
+live adversarial red-team suite with 41-artifact SHA-256
+manifest enforcement.
+2 Constructive Lean 4.35.0 Kernel
+The standalone modulelean/PolyMasterEq.lean com-
+piles cleanly under Lean 4.35.0 with zero external de-
+pendencies, zero warnings, and zero sorry. Auditing
+all 18 theorems via#print axioms (AuditAxioms.lean)
+confirms 3 zero-axiom theorems (none), 1 using only
+[propext], 14 using[propext, Quot.sound], and0us-
+ing Classical.choice or Lean.ofReduceBool (Table 1).
+1
+
+--- Page 2 ---
+Table 1: All 18 machine-checked Lean 4.35.0 the-
+orems in PolyMasterEq.lean (zero sorry, zero
+Classical.choice).
+# Lean Theorem Identifier Paper Ref. Axioms
+1two_qubit_omega_sq_sum_and_diffSec. IV.Bp, Q
+2two_qubit_omega_sq_productEq. 45–46p, Q
+3two_qubit_eta_vieta_identitiesEq. 49p, Q
+4two_qubit_residue_weights_sum_oneEq. 51p, Q
+5two_qubit_poly_order_budgetEq. 61–64none
+6two_qubit_singularity_criterion_exactEq. 111p, Q
+7two_qubit_critical_boundary_sum_oneEq. 112p, Q
+8fig3a_periodic_singular_5_4_3Fig. 3(a)none
+9fig3b_periodic_nonsingular_5_3_4Fig. 3(b)none
+10odd_even_ratio_never_singularEq. 114p, Q
+11critical_zeta_minus_zero_iffEq. 81p, Q
+12trivial_interaction_order_dropEq. 86–88p
+13jc_similarity_involution_and_diagEq. 126–127p, Q
+14jc_poly_u_rational_expansionEq. 135p, Q
+15jc_poly_Q3_vieta_exactEq. 137p, Q
+16jc_exceptional_point_iffEq. 139–140p, Q
+17jc_nonmarkovian_singularity_regimeEq. 129p, Q
+18jc_exceptional_point_jordan3_nilpotentSec. V.Fp, Q
+Axiom key: none = zero axioms (3);p = [propext] (1); p, Q = [propext, Quot.sound] (14).
+Proposition 1(Machine-Checked Core Identities).The
+Lean 4.35.0 kernel establishes the following universal iden-
+tities overZ,Z[x], and finite matrix algebras:
+1. Polynomial Ring Factorizations & Singularity Par-
+ity (Thms. 5–12):Over explicit List Int polynomi-
+als (polyMul, polyDeg), the generic two-qubit charac-
+teristic polynomials satisfydegP0 = 1, degP12 = 4,
+degP3 = 5, and atJ = 0, R3(x) ·x = P3|J=0 drops or-
+der5 →1. WithD±= J2+(ωS±ωE)2, J2(D++D−)−
+D+D−= J4 −(ω2
+S −ω2
+E)2; hence∑
+±cos2 θ±= 1on
+|ω2
+S−ω2
+E|= J2, while odd/even ratios satisfy no integer
+singularity equation(2n−+ 1)(2k) = (2n+ + 1)q−.
+2. Jaynes–Cummings Matrix Algebra & Jordan Nilpo-
+tency (Thms. 13–18):Entrywise across all 16 indices of
+Fin 4 ×Fin 4, T2 = I4 and TEϵ(f)T = diag(1,f,f,f 2)
+universally for f∈Z . For4 ϵ2 = λ(λ−2γ0)and λ> 0,
+(2s+λ)2 −4ϵ2 = 4s2 +4λs+2λγ0, λ(λ−2γ0) = 0 ⇐⇒
+λ= 2γ0, and the exact3×3shifted companion matrix
+N = Θv + λI3 of v(s) = (s+ λ)3 satisfies( N2)0,2 = 1
+(N2 ̸= 0) and∀i,j∈Fin 3, (N3)i,j = 0for every λ∈Z .
+3 Exact-QVerifier
+The verifier POLY-MASTER-CERT-1.0
+(src/master_certifier.py, src/master_exact.py)
+uses Python fractions.Fraction exclusively (source-
+audited for zerofloat(, math., ornumpy). Every payload
+enforces strict JSON typing with nesting-depth cap32,
+anchored canonical rational parsing (\A...\Z, reduced
+denominators ≥2, no trailing newlines), exact key sets,
+and 2048-bit caps across four modes:
+1. Mode 1 (Sec. III IVP & Companion Matrix):
+Checks monicity ofP(x)and degree degQ < n, com-
+putes ˜P = ∑n−1
+r=0 (−T)r and E(k)(0)(Eq. 24), verifies
+E(0) = Id, and certifies exact Frobenius companion
+matrixΘshift and last-row ODE residual action on
+F(0).
+Figure 1: (a) Exact two-qubit singularity criterion∑
+±cos2 θ± vs. ωS (ωE = 3 ,J = 4), crossing1at the
+critical boundaryωS = 5. (b) Exact ODE order reduction
+degP→deg ˜P across all four Mode 2 critical-parameter
+factorizations.
+2. Mode 2 (Sec. IV.F Critical Factorization):In-
+dependently builds exact rational two-qubit blocks
+(P12,Q12)or( P3,Q3)and checks monic matrix-
+polynomial identities P(x) = R(x) ˜P(x)and Q(x) =
+R(x) ˜Q(x)with strict order dropdegR≥1.
+3. Mode 3 (Sec. IV.G–I Singularity Hierarchy):
+Checks( ωSωE)2 = ω2
+Sω2
+E, exact∑
+±cos2 θ±, necessary
+andcritical-boundaryflags, exactinteger-square-rootra-
+tionality ofD−/D+ = (Ω−/Ω+)2, irreducible( q−,q+),
+and exact tier label.
+4. Mode 4 (Sec. V Jaynes–Cummings & Jordan
+EP):Recomputes4 ϵ2 = λ(λ−2γ0)and( u,v,q u,qv),
+verifies f(0) = 1,f′(0) = 0via Eq. (24), classifies the
+dynamical regime, and atλ = 2 γ0 explicitly checks
+(Θv +λI) 2 ̸= 0and(Θ v +λI) 3 = 0overQ 3×3.
+4 Empirical Atlas and Red-Team
+Audit
+Running run_all_experiments.py produces 16 canoni-
+cal certificates (4 per mode) and four exact-Q datasets,
+audited end-to-end byverify_all.py with SHA-256 ver-
+ification across all 41 tracked artifacts.
+IVP Derivatives and Critical Order Drops (Fig. 1).
+Mode 1 (0.181–0.648 ms) replays exact Eqs. (74), (77)
+initial derivatives for V12 (order 4,2 ×2) and V3 (or-
+der 5,1 ×1) at(5 ,4,3), the minimal order-3 Eq. (63)V12
+system, and the order-3 Jaynes–Cummings exceptional-
+point ODE. Mode 2 (0.115–0.278 ms) certifies exact non-
+trivial polynomial factorizations across all four critical
+regimes: J = 0on V12 (4 → 1, recovering unitary
+Liouville–von Neumann evolution) andV3 (5 →1, factor-
+ing R3(x) = (x2 + ω2
++)(x2 + ω2
+−)), ωE = 0on V3 (5 →3),
+andω S =ωE = 0onV 3 (5→2).
+Singularity Hierarchy and Jordan Exceptional
+Points (Fig. 2).Mode 3 (0 .046–0.063 ms) certifies all
+three critical-boundary tiers plus the non-singular exte-
+rior: Tier 1 periodic & singular(5,4,3)( ∑ = 1,r2 = 1/9,
+odd/odd1 /3), Tier 2 periodic & non-singular(5 ,3,4)
+2
+
+--- Page 3 ---
+Figure 2: (a) Multi-mode Jaynes–Cummings discriminant
+4ϵ2 = λ(λ−2γ0)at γ0 = 2, crossing zero at the order-3
+Jordan exceptional pointλ/γ0 = 2. (b) Certified exact∑
+±cos2 θ±and squared singular-value ratior2 = D−/D+
+across all four Mode 3 regimes.
+Figure 3: (a) Exact zero-float replay latency (0 .046–
+0.648 ms) across all 16 canonicalPOLY-MASTER-CERT-1.0
+certificates. (b) Live adversarial red-team audit rejecting
+60/60 forged payloads across all five categories.
+(∑ = 1,r2 = 1/4, odd/even1 /2), Tier 3 non-periodic &
+non-singular boundary( ω2
+S,ω2
+E,ωSωE,J2) = (18,8,12,10)
+(∑ = 1 ,r2 = 1 /5 /∈Q2), and exterior(6 ,2,3)( ∑ =
+882/1825 < 1). Mode 4 (0.176–0.259 ms) certifies non-
+Markovian singular (γ0 = 4,λ = 2), overdamped (γ0 =
+1,λ = 6), and two exceptional-point witnesses (λ= 2γ0 ∈
+{3,4}) satisfying exact(Θ v +λI) 3 = 0,(Θ v +λI) 2 ̸= 0.
+Replay Latency and 60/60 Red-Team Audit
+(Fig. 3).All 16 canonical certificates replay in
+0.046–0.648 ms (total3 .42 ms). The live adversarial
+suite (tests/test_suite.py) tests 60 targeted forgery
+payloads—12 global schema/type/rational/newline/depth
+attacks plus 12 domain attacks per mode (non-monic
+P/Q/R/˜P, wrong companion traces, broken factor prod-
+ucts, inconsistentωSωE, misclassified tiers, non-positive
+γ0/λ, and false Jordan-nilpotency claims)—achieving
+60/60 (100%)rejection.
+5 Conclusion
+We delivered a self-contained, zero-floating-point verifica-
+tion framework for Ishizaki and Lee’s matrix-polynomial
+open quantum master equations [3], combining 18 zero-
+sorry, zero-Classical.choice Lean 4.35.0 theorems
+with the exact-Q verifier POLY-MASTER-CERT-1.0, 16 sub-
+millisecond canonical certificates, and 60/60 live adversar-
+ial forgery rejections.
+References
+[1] Leonardo de Moura and Sebastian Ullrich. The Lean 4
+theorem prover and programming language. InAuto-
+mated Deduction – CADE 28, pages 625–635. Springer,
+2021.
+[2] Vittorio Gorini, Andrzej Kossakowski, and
+E. C. George Sudarshan. Completely positive
+dynamical semigroups ofN-level systems.Journal of
+Mathematical Physics, 17(5):821–825, 1976.
+[3] Miku Ishizaki and Jaeha Lee. Polynomial master equa-
+tions of open quantum systems and an analysis on the
+critical solutions. arXiv:2611.33027 [quant-ph], 2026.
+[4] Tosio Kato.Perturbation Theory for Linear Operators.
+Springer, 1966.
+[5] Jaeha Lee and Miku Ishizaki. Local determinacy of
+quantum master equations and a mechanical interpreta-
+tion of the multi-mode Jaynes–Cummings and central
+spin models. arXiv:2607.09651 [quant-ph], 2026.
+[6] Göran Lindblad. On the generators of quantum dy-
+namical semigroups.Communications in Mathematical
+Physics, 48(2):119–130, 1976.
+[7] Sadao Nakajima. On quantum theory of transport
+phenomena: Steady diffusion.Progress of Theoretical
+Physics, 20(6):948–959, 1958.
+3
