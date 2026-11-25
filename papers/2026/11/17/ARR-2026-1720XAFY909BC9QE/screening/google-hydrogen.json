@@ -1,0 +1,58 @@
+{
+  "assessed_at": "2026-11-25T17:37:07Z",
+  "canonical_sha256": "e0ccfc13c33ac443b1046ab0df0a23c696a04af88bf480436c11349ee3914086",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All explicit algebraic identities, qubit Bloch commutator/purity formulas (M^2=2sM, |[w0,w1]_01|=r^2/2, 41/50), Lemma 14 cleared inequalities (b<=1/16, a^3>=3/4), and log-scale arithmetic (140*ln 2 > 97.04) check out, with only minor wording imprecision in Fig. 2(b) (crossing at k=10 vs k=11) and rational ln k idealization in Mode 4.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "Provides a dedicated constructive Lean 4.35.0 formalization (18 theorems) and exact-Q four-mode verifier for Polloreno (2026) [9], though all underlying quantum information theorems are due to [9] rather than novel mathematical results.",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "Reports exact Lean 4.35.0 axiom counts, module/script paths, 16 canonical certificate latency measurements (0.095-3.313 ms), 65/65 red-team attack breakdown, and 40-artifact SHA-256 manifest enforcement under an MIT/CC-BY-4.0 repository, though artifact execution is external to the PDF.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Constructive zero-sorry, zero-Classical.choice Lean 4 kernel paired with a float-free Python Fraction verifier using exact Schur-congruence PSD checks and 65 targeted adversarial rejections; tempered by honest omission of typicality, Fawzi-Renner recovery, and operator-logarithm calculus.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Substantive formal-verification and exact-arithmetic companion for visible quantum source compression [9], establishing machine-checked algebraic invariants and reproducible witnesses, with impact bounded by its algebraic-only scope.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.8,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-1720XAFY909BC9QE",
+  "potential_errors": [
+    "Fig. 2(b) caption states that (1/k)(1+10/k) crosses 2/k at k=11, whereas exact equality (1/k)(1+10/k)=2/k holds at k=10 and k=11 is the first integer strictly below 2/k (as correctly labeled in the plot legend).",
+    "Mode 4 asymptotic witness sets ln k = 96 * 2^140 and p ln k = 24 'exactly' over Q; for an integer ensemble size k >= 2, ln k cannot be a nonzero rational by Lindemann-Weierstrass, so strictly k = ceil(exp(96 * 2^140)) yields an inequality ln k >= 96 * 2^140 rather than an exact rational ln k.",
+    "In Section 2 item 2, the symbol a = 1 - 2p is referenced in b = 1 - a^2 prior to being defined in a^3 = (1 - 2p)^3 >= 3/4.",
+    "In Fig. 1(b), the fourth Mode 3 bar ('Prop. 9 additive') shows F(sigma)=1.0 while Section 4 reports F_12 = 8/5 without clarifying the single-factor vs. product-factor values plotted."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Zero-sorry, zero-Classical.choice, zero-ofReduceBool Lean 4.35.0 formalization of 18 core matrix-commutativity, purity, sector-splitting, distillation, and cleared-denominator nonadditivity theorems (Table 1).",
+    "Strict exact-Q verifier (KI-VISIBLE-CERT-1.0) using Python fractions.Fraction with symmetric diagonal-pivoted Schur congruence for PSD/PD checks and anchored rational parsing.",
+    "Clear, honest scoping in Section 1 explicitly separating the verified algebraic backbone from unformalized typicality, Fawzi-Renner recovery, and operator-logarithm calculus.",
+    "Comprehensive validation suite: 16 canonical certificates across 4 modes (total 9.95 ms) and 65/65 live adversarial forgery rejections across global schema and domain attacks."
+  ],
+  "strong_novelty_candidates": [
+    "Constructive zero-Classical.choice Lean 4.35.0 algebraic kernel paired with an exact-Q four-mode Schur-congruence verifier (KI-VISIBLE-CERT-1.0) for Polloreno's Koashi-Imoto visible compression criterion [9]."
+  ],
+  "summary": "This manuscript presents a constructive Lean 4.35.0 formalization (18 theorems, zero sorry, zero Classical.choice) and an exact-Q four-mode certificate verifier (KI-VISIBLE-CERT-1.0) checking the algebraic, matrix-commutativity, purity, sector-splitting, distillation-gap, and two-copy nonadditivity invariants of Polloreno's Koashi-Imoto criterion for Holevo-rate visible quantum source compression [9], supported by 16 canonical certificates and 65/65 live adversarial forgery rejections. The algebraic identities and scope disclaimers are sound and transparent; minor issues include a crossing-point slip in Fig. 2(b)'s caption (k=10 vs. k=11), treating ln k as an exact rational in the Mode 4 asymptotic witness, and the inherent restriction that Mode 3 checks linear identities among rational-valued entropic witnesses rather than computing operator logarithms.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:06993f91-9ee2-4961-baa4-609a0b355e6e",
+  "weaknesses": [
+    "Formalization scope excludes quantum channel typicality, Fawzi-Renner approximate recovery, and operator-logarithm calculus, so Mode 3 certificates validate algebraic consistency of rational-valued entropic witnesses rather than evaluating von Neumann entropies or distillation rates from quantum states.",
+    "Lean theorem two_copy_orth_invariance_2x2 covers only D=2 in Lean 4, whereas Mode 4 certificates also exercise D=4 orthogonal families in Python.",
+    "All core quantum information theorems originate in Polloreno [9]; the manuscript's contribution is formalization and exact-arithmetic verification engineering."
+  ]
+}

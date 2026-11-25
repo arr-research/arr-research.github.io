@@ -1,0 +1,55 @@
+{
+  "assessed_at": "2026-11-25T17:37:07Z",
+  "canonical_sha256": "a3fd4ef9371b2c19e5376b419437af30ff9d4323cb9497cc170f3095d739bbbb",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All explicit algebraic identities in Prop. 1 and Figs. 1-2 verify exactly: F''(1)=2(ab-c), t>=2B+2 non-vanishing, R_0(r,s) symmetries and 2/k! marginals for k=2,3, quotient L1 norms (2 at (2,2), 6 at (2,3), 300 at (5,6)), quotient degrees (4, 13), and cyclotomic norms (|Phi_12|_1=|Phi_24|_1=3). Confidence is capped at 4 because Lean/Python sources and the definitions of R_l and T_1..T_4 are external to the 3-page PDF.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "The underlying mathematics (Thms. 1.1-1.6, Prop. 3.7, cyclotomics) is due to Keevash and Lim [8]. The paper's original contribution is a standalone zero-axiom-choice Lean 4 kernel and exact Q/Z certificate format (POLY-DECOMP-CERT-1.0) with red-team testing, though the Lean formalization covers low-degree instances (k=2,3; m in {2,3,4,6}) and elementary algebraic lemmas rather than general-k proofs.",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "Specifies Lean 4.35.0, exact module and script paths, MIT/CC-BY-4.0 licensing, deterministic timing and 60-attack test breakdown, and a 39-artifact SHA-256 manifest at a public GitHub repository. Full independent reproduction still requires fetching external repository files since proof scripts and verifier code are not embedded in the PDF.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Constructive Lean 4.35.0 kernel reports 0 sorry, 0 warnings, and 0 Classical.choice/Lean.ofReduceBool across 18 theorems, paired with an exact Q/Z verifier enforcing canonical rationals and rejecting 60/60 adversarial attacks. However, calling R_l(r,s) a 'degree-(k-1)' polynomial omits 'in each variable' (total degree is 2(k-1)), and Prop. 1 omits explicit statements for Thms. 1-3, 10, 13, and 17.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Provides a fast (8.07 ms total across 16 certificates), deterministic, floating-point-free verification suite and machine-checked algebraic invariants supporting [8]. Its broader mathematical impact is bounded by the omission of asymptotic random-walk mixing bounds and general-k inductive proofs of Thms. 1.1-1.6 from Lean 4.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.4,
+  "model_id": "hydrogen",
+  "overall_stars": 3,
+  "paper_id": "ARR-2026-79HZHAG1VW8AKTS6",
+  "potential_errors": [
+    "The Abstract, Section 1, and Section 3 (Mode 1) describe R_l(r, s) as a 'degree-(k-1) polynomial' / 'degree bound <= k - 1' without specifying per-variable degree; for k=2, 2R_0 = 1 - rs has total degree 2, and for k=3, 16R_0 = 3 - r^2 - 4rs - s^2 + 3r^2 s^2 has total degree 4 = 2(k-1).",
+    "Section 4 describes the Dataset 1 sweep over all 14 pairs (k, l) for k in {2, 3, 4, 5} with '(up to 13 monomials, common denominator 3072, exact marginal 1/60, and 30 constraints vs. 5 DOF)', mixing upper-bound phrasing with k=5-specific values (2/5! = 1/60 and 30 vs. 5 DOF) without explicitly attributing them to k=5.",
+    "The symbol m is overloaded as both a tuple of weights (e.g., m = [2, 3], m = [1, 2, 3] in Mode 2) and a scalar integer (4m + 3 equations in Prop. 3.7, and x^m - 1 in Sec. 4.1)."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Every explicit algebraic identity, integral, L1 norm, polynomial degree, and numerical chart value in Proposition 1, Section 4, and Figures 1-3 is mathematically exact and internally consistent (e.g., F''(1) = 2(ab-c), t >= 2B+2 non-vanishing, R_0 symmetries and 2/k! marginals for k=2,3, quotient L1 norms 2 at (2,2) and 300 at (5,6), and |Phi_12|_1 = |Phi_24|_1 = 3).",
+    "Transparent scoping and axiom auditing: Section 1 explicitly states that asymptotic random-walk mixing bounds are excluded from Lean 4, and Table 1 reports #print axioms across all 18 theorems (0 sorry, 0 warnings, 0 Classical.choice, 0 Lean.ofReduceBool).",
+    "Well-structured zero-floating-point exact Q/Z verifier (POLY-DECOMP-CERT-1.0) enforcing strict JSON typing, canonical reduced rationals, nesting-depth and bit-width caps, paired with 16 fast canonical certificates (8.07 ms total) and a 60/60 live adversarial forgery test suite."
+  ],
+  "strong_novelty_candidates": [],
+  "summary": "A concise, well-engineered 3-page formal verification and exact-rational certification companion to Keevash and Lim (arXiv:2611.33120). It combines 18 constructive, zero-sorry, zero-Classical.choice Lean 4.35.0 theorems covering elementary algebraic invariants and low-degree cases (e.g., k=2,3 Legendre slice polynomials and m in {2,3,4,6} cyclotomic factorizations) with a pure-integer/rational verifier (POLY-DECOMP-CERT-1.0), 16 canonical certificates, and a 60/60 adversarial rejection suite. All explicit formulas, integrals, norms, and figures in the PDF check out accurately, with only minor presentation issues regarding bivariate degree phrasing, omitted definitions of R_l and T_1..T_4 in the compressed text, and some unstated auxiliary theorem statements in Proposition 1.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:4c8536fa-d9bc-49b2-a31a-52d428b71619",
+  "weaknesses": [
+    "The Lean 4 formalization proves only low-degree/small-parameter instances (Murphy/orthogonality up to L_3, Thm. 1.6 only for k in {2,3} and l=0, cyclotomics for m in {2,3,4,6}) and auxiliary lemmas (e.g., 4-term base-t inequality rather than full Cramer elimination for Prop. 3.7), which is narrower than the Abstract phrasing ('Proposition 3.7 Cramer-elimination, Legendre/Murphy, Theorem 1.6 global slice-integral') might initially suggest.",
+    "The 3-page PDF omits formal definitions of the cross-polytope slice integral R_l(r, s), the integrand decomposition T_1 + T_2 + T_3 + T_4, and Murphy's formula for L_{k-1}, making the manuscript non-self-contained without consulting [8] or the external repository.",
+    "Proposition 1 claims to summarize Thms. 1-3, 10-16 and Thms. 4-9, 17-18, yet omits the mathematical statements of Thms. 1-3 (tomography switches and determinant step identity), Thm. 10, Thm. 13 (cross_polytope_slice_vol_k2_k3), and the polynomial moment-vanishing step of Thm. 17.",
+    "The Lean 4 proofs and Python verifier source code reside in an external repository rather than inside the PDF, preventing direct inspection of the formalization and test implementation from the manuscript alone."
+  ]
+}

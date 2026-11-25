@@ -1,0 +1,56 @@
+{
+  "assessed_at": "2026-11-25T17:37:07Z",
+  "canonical_sha256": "03057b27b0b32bf035ef8d293d71c99b19e9b2b3e12a8c144392c80c55531fac",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All rational inequalities in Prop. 1(2) (0.1098 < 3/10 < 29/70 < 0.48105 < 30/61 < 500/1011 < 5011/10110 < 1/2), Cantelli algebra 22*mu^2 >= 25*s*(2*mu+12*s) for mu >= 5*s, the monomial-to-Bernstein conversion formula in Sec. 3 Mode 2, Mode 3 ratios (8/11, 9/11, 49/64, 8/9), and Mode 4 headroom (0.48105 - 0.481043999746 ~ 6.0e-6) are exact and consistent with Figs. 1-2, though external Lean/Python files cannot be audited from the PDF alone.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "The paper does not establish new delegation bounds; rather, it provides an independent Lean 4.35.0 and exact-Q certificate verification suite (DC-DELEG-CERT-1.0) for core algebraic, finite-knapsack, Bernstein, Algorithm 2, and Appendix A Taylor-bracket components of Abdi et al. (2026) [1].",
+      "stars": 2
+    },
+    "reproducibility": {
+      "basis": "Specifies Lean 4.35.0, script names, 40-artifact SHA-256 verification, canonical rational rules, and exact test values across 16 certificates, but the 3-page PDF omits Lean theorem signatures/hypotheses, JSON certificate schemas, and Mode 3 instance specifications, requiring external repository inspection.",
+      "stars": 3
+    },
+    "rigor": {
+      "basis": "Reporting #print axioms (8 none, 10 [propext, Quot.sound], 0 Classical.choice/ofReduceBool), zero-float source auditing, canonical rational parsing, and 60/60 adversarial rejections shows strong engineering discipline. However, Prop. 1 shows Lean proofs cover only elementary list inequalities and endpoint/rational arithmetic, leaving Bernstein positivity, Taylor brackets, and Efron-Stein/Cantelli probability foundations unproved in Lean, and Sec. 1 omits the 96-interval LP, Harris-FKG, and 1024-cell DP.",
+      "stars": 3
+    },
+    "significance": {
+      "basis": "Independently checking delicate computer-assisted constants (V=1011/50, Bernstein minima 447966/78125 and 6518/118125, and 12-decimal Taylor bracket [0.481043999745, 0.481043999746]) adds welcome assurance to [1], though omitting the 96-interval LP and 1024-cell DP prevents end-to-end certification of 29/70 < alpha_D <= alpha_R < 0.48105.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.4,
+  "model_id": "hydrogen",
+  "overall_stars": 3,
+  "paper_id": "ARR-2026-3H5P6W2XWQ98K81C",
+  "potential_errors": [
+    "Prop. 1(2) states the inequality 10 + (77/50)*eta <= 10 + (11/5)*eta without explicitly stating the hypothesis eta >= 0 in the proposition text (though eta > 0 is clear from context in Sec. 1).",
+    "Prop. 1(1) states 'any seed list satisfies b_P = t + min w_i - sum w_i > 0' without defining 'seed list' in the PDF, leaving unstated what hypothesis guarantees b_P > 0 in Lean theorem 15.",
+    "Fig. 2(b) sweeps odd degrees 7-21 while Sec. 4 states Mode 4 certificates cover odd degrees 11, 15, 19, 21; additionally, the plotted bracket-width curve drops to or below the 10^-12 bottom axis limit past degree 17, making values at degrees 19 and 21 visually unreadable."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Transparent, explicit scope disclaimer in Sec. 1 clearly identifying excluded components of Abdi et al. [1] (Harris-FKG integration, Sec. 10 96-interval LP, App. A.3-A.4 1024-cell Lagrangian DP).",
+    "Zero-dependency Lean 4.35.0 kernel with #print axioms audit confirming 0 sorry, 0 Classical.choice, and 0 Lean.ofReduceBool (8 zero-axiom theorems, 10 using only [propext, Quot.sound]).",
+    "Exact mathematical and numerical consistency across all checked rational bounds, the monomial-to-Bernstein basis conversion formula in Sec. 3 Mode 2, Mode 3 exact ratios (8/11, 9/11, 49/64, 8/9), Mode 2 minima (447966/78125, 6518/118125), and Mode 4 12-decimal interval [0.481043999745, 0.481043999746] with headroom ~6.0e-6 below 0.48105.",
+    "Disciplined zero-float exact-Q verification design (DC-DELEG-CERT-1.0) with canonical rational parsing, 40-artifact SHA-256 verification, and 60/60 live adversarial forgery rejections across global and per-mode attack suites."
+  ],
+  "strong_novelty_candidates": [],
+  "summary": "This 3-page verification companion to Abdi et al. (2026) [1] pairs a standalone zero-dependency Lean 4.35.0 module (18 theorems with zero sorry, zero Classical.choice, and zero Lean.ofReduceBool) with an exact-Q Python verifier (DC-DELEG-CERT-1.0), 16 canonical certificates across 4 modes, and a 60-attack red-team suite. All rational identities, Bernstein coefficient conversion formulas, and numerical values reported across the text, tables, and figures are internally consistent and mathematically sound, and Sec. 1 candidly disclaims the unformalized continuous Harris-FKG, 96-interval LP, and 1024-cell Lagrangian DP components of [1]. As a referee, the main limitations are that the Lean 4 proofs themselves cover only elementary deterministic list inequalities and endpoint/rational arithmetic checks (leaving probabilistic foundations, full-interval Bernstein positivity, and Taylor remainder bounds in prose or the unverified Python verifier) and that the brief 3-page PDF omits formal Lean theorem signatures and Mode 3 instance specifications. Because these scope limitations are explicitly acknowledged and no material mathematical errors invalidate the paper's claims, it merits acceptance as a solid, substantive verification artifact.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:6aa213da-7292-4d8c-adcb-502d99eec3e7",
+  "weaknesses": [
+    "Substantive formalization gap between theorem identifiers and Lean kernel content: Prop. 1 shows Lean proves elementary deterministic list lemmas (e.g., sum Delta_i^2 <= c sum Delta_i) and endpoint checks (P(b) > 0 only at {2/13, 2/5, 2/3} in Thm. 14), whereas Efron-Stein variance bounds, Cantelli's inequality, full-interval Bernstein coefficient positivity, and alternating-Taylor remainder correctness are either unproved in Lean or delegated to the unverified Python verifier.",
+    "Incomplete end-to-end certification of [1]'s headline bounds: omitting the 96-interval LP (Sec. 10), Harris-FKG integration, and 1024-cell Lagrangian DP (App. A.3-A.4) means Mode 3 only checks 4 small finite Algorithm 2 instances (ratios 8/11, 9/11, 49/64, 8/9) rather than the universal 29/70 guarantee, and Mode 4 is conditional on unverified DP inputs (v_lo).",
+    "Terse 3-page presentation omits formal Lean theorem statements/hypotheses, DC-DELEG-CERT-1.0 JSON schemas, the explicit definitions of P(b), v_lo, and Eq. (A.18), and the parameters of the 4 Mode 3 instances, making external code inspection necessary to audit theorem specifications.",
+    "Only 80% of the verification pipeline is inside a formal proof assistant: the four-mode exact-Q checker is written in Python (albeit source-audited for zero float/math/numpy) rather than extracted or verified inside Lean 4."
+  ]
+}

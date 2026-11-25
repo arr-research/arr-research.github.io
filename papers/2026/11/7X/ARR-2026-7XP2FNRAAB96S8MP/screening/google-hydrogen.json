@@ -1,0 +1,58 @@
+{
+  "assessed_at": "2026-11-25T17:37:07Z",
+  "canonical_sha256": "da33d47e20cb2055727350955a1400ce85be8b3b3eb71fcfd709da98187d865f",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "Every verifiable mathematical identity and numerical example in the PDF checks out exactly: Dirichlet bound lambda^4(1-lambda) <= lambda^2(1-lambda^2), K4+K4 ratio 4288/4099 (at d=4, t=3), Petersen tr(Q5)=120 and R5=1/4, K3,3 tr(Q4)=72 and R4=1/2, r3(14)=48 and r3(27)=32, farness algebra, and F2=1/2 with Delta F3=1/18. Minor prose omissions (e.g., B >= 0 in Prop. 1's uniform lower bound) do not invalidate the results.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "Provides a dedicated constructive (zero-Classical.choice) Lean 4.35.0 formalization and zero-floating-point Q/Z certificate verifier (EXP-RETPROB-CERT-1.0) targeting the core lemmas of Melissaris (2026) [9], though it certifies existing algebraic/spectral lemmas rather than establishing new theoretical bounds.",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "Reports exact Lean version (4.35.0), theorem identifiers with #print axioms counts, deterministic exact Q/Z replay timings (0.180-2.195 ms across 16 certificates), SHA-256 manifest enforcement across 39 artifacts, and a 60-case adversarial test suite, though the Lean source code itself is not printed in the 3-page PDF.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Strong engineering and formal-verification discipline: zero sorry, zero Classical.choice, zero Lean.ofReduceBool, pure int/Fraction verifier audited against floats, strict canonical rational checks, and 60/60 red-team rejections; limited mainly by the PDF omitting exact Lean theorem statements and excluding probabilistic concentration arguments.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Serves as a clean, trustworthy formal-verification companion for return-probability expansion testing, but broader impact is tempered by excluding the main randomized query-complexity proofs of [9] and restricting exact Mode 2-3 graph certification to tiny instances (n <= 12) due to exponential cut enumeration.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.6,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-7XP2FNRAAB96S8MP",
+  "potential_errors": [
+    "Proposition 1 item 1 writes '3B <= 4p_i => 9B^2 |S| <= 16 sum p_i^2' over Int and List Int without stating the nonnegativity hypothesis B >= 0 (if B < 0 and p_i < 0, e.g., B=-2, p_i=-1, then -6 <= -4 holds while 36 <= 16 fails).",
+    "Section 1 item 2 and Section 3 item 2 use the parameter tau in 4*tau/(3h)*|H| (and Proposition 1 uses tau and m) without defining tau (the external boundary ratio |E(H, V\\H)|/|H|) or m = |H| prior to use.",
+    "Section 4 reports A_s/B_s = 4288/4099 for disjoint K4 + K4 without noting that d = 4 (rather than K4's degree 3) is used in P = I - L_G/(2d)."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Constructive Lean 4.35.0 formalization of 18 core theorems across spectral bounds, Dirichlet energy, induced-expander trimming, balanced-cut farness, non-backtracking polynomials, and three-squares parity with zero external dependencies, zero sorry, and zero Classical.choice (Table 1).",
+    "All verifiable formulas, numerical ratios, and figure values in the PDF check out accurately, including K4+K4 return ratio 4288/4099 (d=4, t=3), Petersen tr(Q5)=120 (R5=1/4), K3,3 tr(Q4)=72 (R4=1/2), farness floors M_lb and eps_lb = M_lb/(2dn), r3(56)=r3(14)=48, r3(108)=r3(27)=32, and F2=1/2 with Delta F3=1/18.",
+    "Strict zero-floating-point Q/Z verifier (EXP-RETPROB-CERT-1.0) enforcing canonical reduced rationals, JSON type/depth/character hygiene, deterministic replay across 16 certificates, and 60/60 live adversarial forgery rejections.",
+    "Candid scope statement clearly delineating that randomized query-complexity concentration inequalities are not formalized in Lean 4."
+  ],
+  "strong_novelty_candidates": [
+    "Zero-Classical.choice constructive Lean 4.35.0 kernel covering 18 algebraic, spectral, cut-trimming, and number-theoretic lemmas underlying Melissaris's [9] return-probability expansion tester, paired with a four-mode exact Q/Z certificate checker (EXP-RETPROB-CERT-1.0)."
+  ],
+  "summary": "This 3-page manuscript presents a formal-verification and exact-arithmetic certification companion to Melissaris (2026) [9] on expansion testing without connectivity. It combines 18 constructive Lean 4.35.0 theorems (zero sorry, zero Classical.choice) covering finite Cauchy-Schwarz, lazy-walk Dirichlet energy and trace-gap bounds, induced-expander trimming, balanced-cut farness, non-backtracking polynomials, and three-squares scaling invariance with an exact Q/Z verifier (EXP-RETPROB-CERT-1.0) tested on 16 canonical small-graph certificates and 60 adversarial forgeries. All mathematical identities, rational ratios, and figure data visible in the PDF verify cleanly, with only minor prose omissions and inherent scope limits (probabilistic query-complexity bounds are excluded and exact cut-enumeration modes are restricted to small graphs).",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:759851c6-b883-4e0f-b2ea-c88b308d4ea4",
+  "weaknesses": [
+    "The Lean 4 formalization does not cover the randomized query-complexity concentration inequalities, sampling analysis, or full end-to-end tester/lower-bound proofs of [9], leaving the core algorithmic claims unformalized.",
+    "The actual Lean 4 theorem statements and proofs are not included in the PDF, so readers of the manuscript alone cannot verify the exact formal hypotheses corresponding to the prose summaries in Proposition 1.",
+    "Canonical certificates are limited to small graphs (n <= 12), and Modes 2-3 rely on exhaustive subset/cut enumeration that scales exponentially and is not benchmarked beyond toy instances.",
+    "Minor definitional omissions in the prose (omitted B >= 0 in Proposition 1's uniform floor implication, undefined tau and m in trimming bounds, and unstated d = 4 degree bound for K4 + K4)."
+  ]
+}

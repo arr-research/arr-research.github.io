@@ -1,0 +1,302 @@
+--- Page 1 ---
+Certified Verification of the Koashi–Imoto Criterion for
+Holevo-Rate Visible Compression
+Lluis Eriksson∗
+November 25, 2026
+Abstract
+Anthony M. Polloreno (arXiv:2611.33129, Nov. 2026)
+resolved the longstanding conjectures of Winter (2002)
+and Bennett et al. (2005) on visible quantum source com-
+pression with shared classical randomness: in the maxi-
+mal Koashi–Imoto decompositionωx = ⨁
+jp(j|x)ρjx ⊗ξj,
+the optimal rate Rcr equals the Holevo information χ
+if and only if every occupied core ρjx is pure, with
+an exact regularized formulaRcr = limn→∞F(σ⊗n)/n,
+complementary entanglement-distillation gapRcr −χ =
+DX→E(σXE) −DE→X(σXE), and strict two-copy nonad-
+ditivity F(σ⊗2) < 2F(σ). We build a standalone zero-
+dependencyLean 4.35.0formalization of 18 core matrix-
+commutativity, purity, sector-splitting, distillation, and
+nonadditivity theorems (zerosorry, zero warnings, zero
+Classical.choice) paired with an exact-Q four-mode
+certificate verifier (KI-VISIBLE-CERT-1.0). Across 16
+canonical certificates (0.095–3.313 ms, total9 .95 ms), all
+positive-semidefiniteness, block-tensor, Carathéodory, dis-
+tillation, and real-orthogonal two-copy invariants replay
+identically overQ while rejecting 65/65 live adversarial
+forgery attacks.
+1 Introduction
+In visible quantum source compression, Alice knows the
+classical labelxof each signalωx drawn from an ensemble
+σXW = ∑
+xpx|x⟩⟨x|⊗ωx and sends a compressed quantum
+register assisted by unlimited shared classical randomness
+(without shared entanglement) so Bob reconstructsωx
+with vanishing error. Winter [10] and Bennett et al. [2]
+conjectured that shared randomness achieves the Holevo
+lower bound χ = I(X : W)σ for every ensemble. Pol-
+loreno [9] settled this question sharply using the maximal
+Koashi–Imoto (KI) decomposition [8] W = ⨁
+jQj ⊗Nj,
+ωx = ⨁
+jp(j|x)ρjx ⊗ξj:
+1. Pure-Core Equality Criterion (Thm. 1):Rcr =
+χ⇐⇒ρ jx is pure whenever pxp(j|x) > 0, with
+χ≤R cr ≤χ + rmix (rmix = S(Q|XJ)), contrasting
+with blind compressionRblind −χ = H(J|X) +rmix [1].
+∗Independent Researcher. Code, Lean 4 proofs, and cer-
+tificates: MIT License; manuscript and figures: CC-BY-4.0.
+Prepared with AI coding, formalization, and drafting assis-
+tance from Google Antigravity; all proofs, exact- Q verifiers,
+and adversarial tests were independently compiled and veri-
+fied locally. Repository: https://github.com/lluiseriksson/
+koashi-imoto-visible-compression-certificates
+For qubits,Rcr = χ iff all signals are pure or pairwise
+commuting; any mixed occupied core induces a uniform
+local-error converse gap via Fawzi–Renner recovery [7].
+2. Pure-Atom Decomposition & Sector Splitting
+(Lem. 3, Prop. 9–10):The single-copy decomposition
+cost F(σ) = inf{I(X : U) + S(W|U)}is attained by
+pure atoms with|U|≤|X|d 2 + 1flags, splits cleanly
+across KI sectorsF(σ) −χ(σ) = ∑
+jqj(F(σj) −χ(σj)),
+and obeys partial additivityχ(σ1) + F(σ2) ≤F (σ1 ⊗
+σ2)≤F(σ 1) +F(σ2).
+3. Entanglement Distillation Asymmetry (Cor. 11):
+On any complementary purificationσXE, combining
+Devetak–Winter [6] and Coles [3] yieldsRcr = H(X) −
+DE→X(σXE), DX→E(σXE) = D↔(σXE) = H(X) −χ,
+andR cr −χ=D X→E −DE→X.
+4. Strict Two-Copy Nonadditivity (Thm. 13,
+Lem. 14):Using Collins’s random-unitary purity
+bound TrNU(ρ)2 ≤ 1
+k(1 + 10/k)[ 4] realified to or-
+thogonal Oi ∈O (D), isometries Vi,s = √1−p|0⟩⊗
+I + √p|1⟩⊗sO i (p = 24/lnk≤ 1/64), and the two-
+copy fixed point(Oi ⊗Oi)|Ω⟩= |Ω⟩, Polloreno proves
+F(σ⊗2)<2F(σ)andR cr(σ)<F(σ).
+Contributions and Scope.We do not formalize
+quantum channel typicality, Fawzi–Renner approxi-
+mate recovery, or operator-logarithm calculus inside
+Lean 4; rather, we machine-check every exact algebraic,
+matrix-commutativity, purity, sector-splitting, distilla-
+tion, and nonadditivity invariant of [ 9]: (i) 18 zero-
+sorry, zero-Classical.choice Lean 4.35.0[ 5] theo-
+rems inKoashiImotoVisible.lean; (ii) the exact-Q veri-
+fier KI-VISIBLE-CERT-1.0; (iii) 16 canonical certificates
+across all four regimes; and (iv) a 65-attack live red-team
+suite with 40-artifact SHA-256 manifest enforcement.
+2 Constructive Lean 4.35.0 Kernel
+The standalone modulelean/KoashiImotoVisible.lean
+compiles cleanly under Lean 4.35.0 with zero external
+dependencies, zero warnings, and zerosorry. Auditing
+all 18 theorems via#print axioms (AuditAxioms.lean)
+confirms 1 zero-axiom theorem ( none), 1 using only
+[propext], 16 using[propext, Quot.sound], and0us-
+ing Classical.choice or Lean.ofReduceBool (Table 1).
+Proposition 1(Machine-Checked Core Identities).The
+1
+
+--- Page 2 ---
+Table 1: All 18 machine-checked Lean 4.35.0 theo-
+rems in KoashiImotoVisible.lean (zero sorry, zero
+Classical.choice).
+# Lean Theorem Identifier Paper Ref. Axioms
+1ki_holevo_chain_ruleEq. 4p, Q
+2ki_pure_core_equality_iffThm. 1, Eq. 5p, Q
+3endpoint_simulation_excessSec. 1 p. 3p, Q
+4qubit_chord_bloch_commutator_iffFig. 2, Sec. 2p, Q
+5qubit_bloch_purity_iffSec. 1–2p, Q
+6fig2c_mixed_noncommuting_qubit_witnessFig. 2(c), p. 13none
+7qutrit_erasure_ki_block_diagonalSec. 2 p. 4p, Q
+8caratheodory_pure_atom_boundLem. 3p, Q
+9decomposition_cost_excess_identityEq. 12p, Q
+10partial_additivity_sandwichProp. 9, Eq. 18p, Q
+11sector_splitting_excess_listProp. 10, Eq. 19p, Q
+12entanglement_distillation_gap_exactCor. 11p, Q
+13converse_delta_gap_contradictionSec. 3.3, Eq. 9p, Q
+14collins_purity_bound_clearedThm. 13, Eq. 24p, Q
+15lemma14_param_bounds_clearedLem. 14, p. 14p, Q
+16two_copy_witness_block_weights_sum_oneThm. 13, p. 13p, Q
+17two_copy_orth_invariance_2x2Thm. 13, p. 13p
+18two_copy_nonadditivity_rate_gapThm. 5, 13p, Q
+Axiom key: none = zero axioms (1);p = [propext] (1); p, Q = [propext, Quot.sound] (16).
+Lean 4.35.0 kernel establishes the following universal iden-
+tities overZ, finite lists, and matrix algebras:
+1. Qubit & Qutrit KI Matrix Algebra (Thms. 4–7):Across
+all entries of Fin 2 ×Fin 2, scaled Bloch matrices
+M(s,x,z )satisfy[ M0,M1] = 0 ⇐⇒x 0z1 = x1z0
+and M2 = 2 sM⇐⇒x 2 + z2 = s2; the Fig. 2(c)
+witness(0 ,4)and(4 ,0)at s= 5is strictly mixed and
+noncommuting. OverFin 3 ×Fin 3, the qutrit erasure
+state 1
+2 |e⟩⟨e|⊕1
+2 |ψx⟩⟨ψx|commutes with orthogonal pro-
+jectorsP0 +P1 =I3 and has a pure quantum core.
+2. Sector Splitting, Lemma 14, & Two-Copy Invariance
+(Thms. 11, 15, 17):Over arbitrary finite sector lists,
+(IXJ + ∑
+jqjFj) −(IXJ + ∑
+jqjχj) = ∑
+jqj(Fj −χj).
+For every rationalp = n/d with0 < nand64 n≤d ,
+exact cleared arithmetic provesb= 1−a2, b≤ 1/16, and
+a3 = (1 −2p)3 ≥3/4. For every2 ×2real orthogonal
+matrix O (OOT = s2I2),( O⊗O )|Ω⟩= s2|Ω⟩holds
+across all four basis coordinates.
+3 Exact-QVerifier
+The verifier KI-VISIBLE-CERT-1.0
+(src/ki_certifier.py, src/ki_exact.py) uses Python
+fractions.Fraction exclusively (source-audited for zero
+float(, math., ornumpy). Positive semidefiniteness and
+strict positive definiteness are checked exactly over Q
+via symmetric diagonal-pivoted Schur congruence. Every
+payload enforces strict JSON typing, nesting-depth cap32,
+anchored canonical rational parsing (\A...\Z, forbidding
+"-0", reduced denominators ≥ 2, 2048-bit caps), and
+exact key sets across four modes:
+1. Mode 1 (Thm. 1 KI Block Purity):Checks density-
+matrix PSD/trace-1, exact orthogonality UUT =
+Id, complete orthogonal sector projectors commuting
+with everyωx, exact block-tensor equalityUTωxU =⨁
+jp(j|x)(ρjx⊗ξj), full-support maximality (¯ρj ≻0on
+every sector and no reducible commutingdQ ≥2core),
+Figure 1: (a) Exact rational qubit core purityTr(ρ2) =
+(1 +r2)/2and off-diagonal commutator|[ω0,ω1]01|= r2/2
+along the Fig. 2(c) Bloch family (⃗ r0 = rˆz,⃗ r1 = rˆx), high-
+lighting r = 4 /5( Tr(ρ2) = 41 /50 < 1). (b) Certified
+Mode 3 Holevo rateχ, single-copy costF(σ), and Corol-
+lary 11 distillation gapDX→E −DE→X.
+exact core puritiesTr(ρ2
+jx), and Theorem 1 visible/blind
+rate equality flags.
+2. Mode 2 (Def. 2 / Lem. 3 Pure-Atom Decomposi-
+tion):Verifies |U| ≤ |X|d2 + 1, exact rank-1 pure-
+projector reconstruction ∑
+up(u|x)|ϕxu⟩⟨ϕxu| = ωx
+from non-zero rational rays, and exact posterior flag
+puritiesTr( ¯ϕ2
+u).
+3. Mode 3 (Prop. 9–10 & Cor. 11 Distillation):Veri-
+fies sector-splitting identitiesF(σ)−χ(σ) = ∑
+jqj(Fj−
+χj), physical bounds χ≤R cr ≤F (σ) ≤H (X)and
+DE→X,DX→E ≥0, blind gapH(J|X) + rmix, Corol-
+lary 11 distillation equationsRcr−χ = DX→E−DE→X,
+and optional Proposition 9 partial-additivity equality.
+4. Mode4(Thm.13&Lem.14Two-CopyWitness):
+Verifies0 <p≤ 1/64, b= 1−a2 ≤1/16, a3 ≥3/4, four
+block weights summing to1, Collins bound1
+k(1+10 /k),
+pairwise-distinct real-orthogonal families (OiOT
+i =ID,
+(Oi ⊗Oi)|Ω⟩= |Ω⟩on QD2
+), and an exact log-scale
+asymptotic certificate (p = 1/(4m), m≥2E, plnk =
+24) using a 7-term rational lower bound on ln 2to
+prove lnm >96and2 + (1 −lnm/ 96) lnk <0 = ⇒
+2F(σ)−S(W 1W2)τ >2p/k>0.
+4 Empirical Atlas and Red-Team
+Audit
+Running run_all_experiments.py generates 16 canoni-
+cal certificates (4 per mode) and four exact-Q datasets,
+audited end-to-end byverify_all.py with SHA-256 ver-
+ification across all 40 tracked artifacts.
+KI Purity Criterion and Distillation Asymmetry
+(Fig. 1).Mode 1 (0 .473–1.376 ms) certifies all four canon-
+ical Theorem 1 cases: rational realizations of Fig. 2(a)
+commuting mixed qubits (t0 = 1 /6, two 1D sectors,
+Rcr = χ < Rblind) and Fig. 2(b) pure nonorthogonal
+qubits (|⟨u|v⟩|= 3/5, Rcr = Rblind = χ), Polloreno’s exact
+Fig. 2(c) mixed noncommuting pair (⃗ r0 = 4
+5 ˆz,⃗ r1 = 4
+5 ˆx
+from Sec. E p. 13, core purity41/50 <1 = ⇒R cr >χ),
+2
+
+--- Page 3 ---
+Figure 2: (a) Exact Lemma 14 rational curvesb= 4p(1 −
+p) ≤1/16and a3 = (1 −2p)3 ≥3/4across1 /p∈ [64,512].
+(b) Exact Collins channel-purity upper bound1
+k(1 + 10/k)
+versus uniform1/k, crossing2/katk= 11.
+Figure 3: (a) Exact zero-float replay latency (0 .095–
+3.313 ms) across all 16 canonicalKI-VISIBLE-CERT-1.0
+certificates. (b) Live adversarial red-team audit rejecting
+65/65 forged payloads across all five categories.
+and the Sec. 2 qutrit erasure source (d = 3, two pure
+sectors, Rcr = χ despite H(J|X) = 1). Mode 2 (0.301–
+0.577 ms) verifies four pure-atom decompositions obeying
+|U|≤|X|d 2 + 1 ∈{9,19}, including the spectral 2-flag
+decomposition of Fig. 2(c) with weighted average purity
+3/4. Mode 3 (0.095–0.144 ms) certifies zero distillation
+gap for pure-core erasure, positive gaps1/21and1 /16for
+mixed-core and 3-sector heterogeneous sources, and exact
+Proposition 9 additivity (F12 = 8/5) when paired with a
+pure-core factor.
+Lemma 14 Bounds and Two-Copy Nonadditivity
+(Fig. 2).Mode 4 (0 .250–3.313 ms) certifies three con-
+crete pairwise-distinct Pythagorean and signed-Hadamard
+real-orthogonal families (D∈ {2,4},k∈ { 3,4},p∈
+{1/64,1/128,1/256}) satisfying exact OiOT
+i = ID and
+(Oi ⊗Oi)|Ω⟩= |Ω⟩over QD2
+, plus an exact log-scale The-
+orem 13 asymptotic witness atE = 140, m= 2140, p=
+1/2142,lnk = 96 ·2140 (plnk = 24exactly) proving
+lnm> 97.04 >96and2 + (1 −lnm/ 96) lnk <0, which
+certifies2F(σ)−S(W 1W2)τ >2p/k>0.
+Replay Latency and 65/65 Red-Team Audit
+(Fig. 3).All 16 canonical certificates replay in0 .095–
+3.313 ms (total9 .95 ms). The live adversarial suite
+(tests/test_suite.py) tests 65 targeted forgeries—13
+global schema/type/rational/newline/"-0"/depth attacks
+plus 13 domain attacks per mode (non-PSD signals, rank-
+deficient dQ = 3cores, non-maximal commuting 2D cores,
+broken pure-atom reconstructions, negative DE→X or
+F(σ) > H(X), p >1/64, duplicate/non-orthogonal Oi,
+and brokenplnk = 24or lnm> 96bounds)—achieving
+65/65 (100%)rejection.
+5 Conclusion
+We delivered a self-contained, zero-floating-point verifi-
+cation framework for Polloreno’s Koashi–Imoto criterion
+for Holevo-rate visible compression [9], combining 18 zero-
+sorry, zero-Classical.choice Lean 4.35.0 theorems with
+the exact-Q verifier KI-VISIBLE-CERT-1.0, 16 canonical
+certificates, and 65/65 live adversarial forgery rejections.
+References
+[1] Zahra Baghali Khanian and Andreas Winter. Gen-
+eral mixed-state quantum data compression with and
+without entanglement assistance.IEEE Transactions
+on Information Theory, 68:3130–3138, 2022.
+[2] Charles H. Bennett, Patrick Hayden, Debbie W. Le-
+ung, Peter W. Shor, and Andreas Winter. Remote
+preparation of quantum states.IEEE Transactions
+on Information Theory, 51:56–74, 2005.
+[3] Patrick J. Coles. Collapse of the quantum correlation
+hierarchy links entropic uncertainty to entanglement
+creation.Physical Review A, 86:062334, 2012.
+[4] Benoît Collins. Haagerup’s inequality and additivity
+violation of the minimum output entropy.Houston
+Journal of Mathematics, 44(1):253–261, 2018.
+[5] Leonardo de Moura and Sebastian Ullrich. The Lean
+4 theorem prover and programming language. In
+Automated Deduction – CADE 28, volume 12699 of
+Lecture Notes in Computer Science, pages 625–635.
+Springer, 2021.
+[6] Igor Devetak and Andreas Winter. Distillation of
+secret key and entanglement from quantum states.
+Proceedings of the Royal Society A, 461:207–235, 2005.
+[7] Omar Fawzi and Renato Renner. Quantum condi-
+tional mutual information and approximate Markov
+chains.Communications in Mathematical Physics,
+340:575–611, 2015.
+[8] Masato Koashi and Nobuyuki Imoto. Operations
+that do not disturb partially known quantum states.
+Physical Review A, 66:022318, 2002.
+[9] Anthony M. Polloreno. A Koashi–Imoto criterion for
+Holevo-rate visible compression, November 2026.
+[10] Andreas Winter. Compression of sources of probabil-
+ity distributions and density operators, 2002.
+3
