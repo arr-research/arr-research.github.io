@@ -1,0 +1,62 @@
+{
+  "assessed_at": "2026-11-25T16:23:44Z",
+  "canonical_sha256": "1b547f50f4ed04755b6fec88fba52214cc19cdb0bb476833df0e294c81563679",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "Proofs of Theorems 3.1-3.3 are algebraically sound: the G_{eps,m} block-matrix spectrum and piecewise spectral gap (Eqs. 3-6), shear-pivoted Q-congruence, Dirichlet-Gram identity (Eq. 8), and rational bounds in Table 2 and Sec. 5.3 all verify exactly, conditional on Ercan [4] as explicitly stated in Remark 3.4.",
+      "stars": 5
+    },
+    "novelty": {
+      "basis": "Theorem 3.1 gives a clean, sharp explicit family G_{eps,m} exhibiting exact coincidence between Lorentzian failure and spectral-gap breakdown at eps_c(m)=(m-1)/m, while Theorems 3.2-3.3 operationalize Brändén-Huh [2] and Ercan [4] via classical symmetric congruence with shear pivots and rational Taylor bounds T_K(x).",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "Deterministic experiment descriptions, 16 Mode 1-4 certificate specs with exact rational claims and timings (Table 2), 48 adversarial checks, and 18 zero-dependency Lean 4 theorem identifiers (Table 1) are clearly documented; minor gap: 5 of the 11 pairs in Fig. 2 do not appear in Table 2.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Theorems 3.1-3.3 are proved rigorously over Q, and Table 1 transparently lists the exact scope of the 18 Lean-checked lemmas. Minor gaps: Def. 2.2/Thm. 3.2(2) omit the k>=2 (l>=1) edge condition, Thm. 3.3 restricts Hermitian observables to Q^{d x d} symmetric matrices, and Lean citations occasionally trail matrix-level claims.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Provides a clean zero-float certification framework (LORENTZ-MATROID-CERT-1.0) for Lorentzian inertia, dual up-down spectral gaps (reducing V_8 from 65x65 to 28x28), and matrix tail bounds across representable and non-representable (V_8) matroids, though O(k^3) exact arithmetic limits scale.",
+      "stars": 4
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 4.4,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-71T01WWJSY8DWTFN",
+  "potential_errors": [
+    "In Section 3.1 and 3.2, parenthetical references such as '(Lean 4 Theorems 1-3)' and '(Lean 4 Theorem 10)' appear at the end of sentences that include matrix block-diagonalization or Cauchy interlacing / Sylvester's law of inertia, whereas Table 1 shows those Lean theorems verify only the scalar/diagonal algebraic cores rather than matrix-level spectral theory.",
+    "Figure 2 legends and captions label all 11 (matroid, l) pairs as 'Exact-Q certified gap', whereas Table 2 contains Mode 2 exact-Q certificate files for only 6 of those 11 pairs (omitting U_{3,6} l=1, F_7 l=1, F_7^- l=1,2, and V_8 l=1).",
+    "Table 2's tail_V8_vamos_d2.cert.json reports rational tail bound 28350/771731 (corresponding to Taylor order K=10 at x=4), whereas Section 5.4 / Figure 3 describe a Taylor-8 envelope.",
+    "In Theorem 3.2(2), the eigenfunction is written as v = Q_{i,.} (row notation) while earlier vectors v are column vectors (the proof clarifies Q^T e_i)."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Exact, elementary, and complete derivation of the coincident Lorentzian / spectral-gap phase transition on G_{eps,m} = (K_m \\sqcup K_m) + eps K_{m,m} (Theorem 3.1), including exact piecewise gap law and unique peak m/(2m-1) at K_{2m}.",
+    "Sound zero-float exact-Q congruence algorithm (Theorem 3.2) handling zero-diagonal multiaffine Hessians via unimodular shears I + E_{kj}, plus dual up-down Dirichlet-Gram certification reducing V_8 dimension from 65x65 to 28x28 (exact gap 9/14 > 1/2) and exact rational nullvector extraction when d_i=0 and gamma < 1.",
+    "Clean separation between Ercan's analytical matrix entropy contraction [4] and finite-instance exact-Q verification via PSD congruences on c^2 I_d - (A_e - A_f)^2 and rational Taylor denominators T_K(x) (Theorem 3.3, Remark 3.4).",
+    "All checked numerical values across Table 2, Section 5.3 Mason ultra-log-concavity ratios (1.25, 1.207, 1.077), rational tail fractions (8960/89641, 28350/771731), and Figures 1-3 are internally consistent and exact.",
+    "Transparent reporting of the 18 zero-dependency Lean 4 theorem statements (Table 1) and explicit acknowledgment of open formalization directions (operator-convex trace inequalities, bit-length scaling) in Section 6."
+  ],
+  "strong_novelty_candidates": [
+    "Exact coincident Lorentzian inertia and down-up spectral-gap phase transition with piecewise closed-form gap law on the two-cluster weighted family G_{eps,m} (Theorem 3.1).",
+    "Zero-float exact-Q rational congruence pipeline combining shear-pivoted multiaffine Hessian inertia certificates, dual up-down Dirichlet-Gram spectral-gap certificates, and rational Taylor-envelope matrix concentration certificates across non-representable V_8 (Theorems 3.2-3.3)."
+  ],
+  "summary": "This manuscript operationalizes recent Lorentzian polynomial and matrix entropy contraction theory (Brändén-Huh 2020; Ercan, Nov 2026 [4]) into exact-Q algebraic certificates and a zero-float verification pipeline (LORENTZ-MATROID-CERT-1.0) backed by 18 zero-dependency Lean 4 algebraic lemmas. Theorem 3.1 establishes an exact coincident phase transition on G_{eps,m} = (K_m \\sqcup K_m) + eps K_{m,m} where Lorentzianity holds iff gamma(P_{2->1->2}) >= 1/2 iff eps >= (m-1)/m. Theorem 3.2 develops O(k^3) exact-Q congruence diagonalization with shear pivots to certify zero-diagonal matroid link Hessians and dual up-down Dirichlet-Gram spectral gaps across U_{3,6}, M(K_4), F_7, F_7^-, and non-representable V_8. Theorem 3.3 certifies finite-instance subgaussian matrix concentration tails purely over Q (conditional on Ercan [4]). All mathematical proofs and numerical quantities visible in the PDF are sound and consistent; limitations pertain to the modest theoretical depth beyond [2,4] and the fact that Lean 4 covers only the scalar/diagonal algebraic core rather than the full matrix-spectral or Python verification layers.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:78af944b-bb68-49e5-86b0-7742b138c4b1",
+  "weaknesses": [
+    "Analytical novelty is incremental relative to Brändén-Huh [2] and Ercan [4]: Theorem 3.1 is a clean block-matrix calculation on one explicit 2-homogeneous family (not a general converse), and Theorems 3.2-3.3 apply classical symmetric congruence and Taylor series truncation to wrap Ercan's theorem.",
+    "The Lean 4 formalization covers 18 scalar, integer-list, and rational algebraic lemmas (Table 1) rather than the 2m x 2m matrix spectrum of Theorem 3.1, the O(n^3) congruence algorithm or Cauchy interlacing in Theorem 3.2, operator norms over R^d in Theorem 3.3, or the Python verifier itself.",
+    "Definition 2.2 includes l=0 (where |I_0|=1 and Q_{0->r->0} is 1x1 so lambda_2 is undefined), and Theorem 3.2(2) implicitly requires k >= 2.",
+    "Theorem 3.3 restricts observables {A_e} to real symmetric rational matrices in Q^{d x d} rather than general complex Hermitian matrices (which would require 2d x 2d real embedding).",
+    "Exact rational congruence runs in O(k^3) field operations without bit-length bounds in Theorem 3.2, limiting scalability to moderate-sized matroids as acknowledged in Section 6."
+  ]
+}

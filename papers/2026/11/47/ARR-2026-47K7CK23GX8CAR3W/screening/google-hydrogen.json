@@ -1,0 +1,60 @@
+{
+  "assessed_at": "2026-11-25T16:23:44Z",
+  "canonical_sha256": "ebb29dfac930a790cb3ee46fe46e6b6f38eb2d71922908337b06febd764ebd2b",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All mathematical proofs (Thms. 2.1-2.2), edge counts (r(r-1), (r-1)^2+(r-2)/2), root bounds (2 < 6^{1/2} < 20^{1/3} < 79^{1/4}), and exact crossovers (k*(3,10)=12, (3,20)=25, (3,50)=65, (4,30)=25) verify cleanly; minor omissions include p >= 0, q > 0 in Thm. 2.1(1) and an overstated description of Lean Thm. 14.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "Theorem 2.1(1)-(3) builds directly on classical 1972 Abbott-Hanson-Sauer extremal results (2K_r, even-r bounds, M_3(3)>=20, M_3(4)>=79) and standard product supermultiplicativity; novelty lies mainly in the explicit circulant-plus-matching formulation, exact-Z/Q verifier architecture (Thm. 2.3), and big-integer crossover certification (Thm. 2.2).",
+      "stars": 2
+    },
+    "reproducibility": {
+      "basis": "All 16 certificate claims, 4 verifier modes (Thm. 2.3), 18 Lean 4 theorems (Table 1), deterministic script paths, and 53 adversarial test categories are documented in the PDF; minor gaps are that T_10's 10 triples are described structurally rather than enumerated in text, and external code was not executed.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Prose proofs of supermultiplicativity, odd-even k=2 constructions, F_20 sunflower-freeness, and persistence induction are sound. However, Lean 4 (Table 1) verifies only integer/algebraic proxies rather than formalizing sunflowers, graphs, or M_r(k), and Thm. 2.3 omits explicit distinctness/uniformity checks in Mode 1.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Provides clean quantitative companion benchmarks and float-free certificates comparing fixed-base bounds against Erdos-Rado's k!(r-1)^k (Thm. 2.2), though illustrative B in {10,20,30,50} values are far smaller than OpenAI's quasipolynomial-in-(log r) base B_r, limiting immediate monotone-circuit impact at realistic r.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.3,
+  "model_id": "hydrogen",
+  "overall_stars": 3,
+  "paper_id": "ARR-2026-47K7CK23GX8CAR3W",
+  "potential_errors": [
+    "Theorem 2.1(1) omits the positivity condition p >= 0, q > 0 in the parenthetical claim that p^k < m q^k in Z implies b_r > p/q (for odd k and q < 0, e.g., p=-10, q=-1, k=3, m=2, (-10)^3 < 2(-1)^3 holds yet p/q = 10 > b_r).",
+    "Abstract states all 16 certificates verify in <= 0.90 ms, whereas Table 2 (sf_r3_k3_hemi_icosa_size20.cert.json) and Section 4 report 0.902 ms.",
+    "Theorem 2.1(1) states that Lean 4 Theorem 14 verifies 'the k=2 rational-root soundness case p >= q > 0', whereas Table 1 shows Theorem 14 only proves p >= q > 0 /\\ p^2 < m q^2 ==> m >= 2 rather than b_r > p/q.",
+    "Figure 3(b) legend contains a typographical error: 'Fixed-bese' instead of 'Fixed-base' for B=10 and B=20.",
+    "Theorem 2.3's summary of Mode 1 omits verifying that the m input sets are distinct and k-uniform (and that p >= 0, q > 0), Mode 2 omits the simple-graph check, and Mode 4's uniqueness of k* implicitly relies on unimodality of (B/(r-1))^k / k! for B > r-1 without stating it."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Mathematically sound, concise proofs of Cartesian-product supermultiplicativity (Thm. 2.1(1)), the odd-even k=2 parity constructions with exact edge counts and asymptotic gains 1/2 vs. 1/4 (Thm. 2.1(2)), 3-sunflower-freeness of the 20-set double RP^2 hemi-icosahedron family (Thm. 2.1(3)), and crossover persistence beyond k*(r,B) (Thm. 2.2(1)).",
+    "Exact numerical and algebraic consistency across text, Tables 1-2, and Figures 1-3, including the tower 2 < 6^{1/2} < 20^{1/3} < 79^{1/4}, rational brackets (1357/500, 1581/500, 2981/1000), and exact integer crossovers k*(3,10)=12, k*(3,20)=25, k*(3,50)=65, and k*(4,30)=25.",
+    "Clean, transparent design of the four-mode exact-Z/Q certificate specification (Thm. 2.3) with component-wise matching bounds Sum_C floor(|C|/2) <= r-1 in Mode 2 and full disclosure in Table 1 of the exact integer statements checked in Lean 4."
+  ],
+  "strong_novelty_candidates": [
+    "Explicit circulant-plus-matching formulation for even-r 2-uniform extremal sunflower-free graphs achieving M_r(2) >= (r-1)^2 + (r-2)/2 and exact base gain -> 1/4.",
+    "Zero-float four-mode exact-Z/Q certification protocol (SUNFLOWER-BASE-CERT-1.0) bridging finite-k sunflower-free families, k=2 extremal graphs, supermultiplicative arithmetic towers, and big-integer Erdos-Rado crossovers."
+  ],
+  "summary": "The manuscript establishes and packages four exact-Z/Q companion results around the November 2026 fixed-petal sunflower theorem: (1) Cartesian-product supermultiplicativity M_r(k_1+k_2) >= M_r(k_1) M_r(k_2), (2) an explicit odd-even k=2 parity dichotomy via 2K_r (odd r) and circulant-plus-matching graphs on 2r-1 vertices (even r) giving asymptotic base gains 1/2 vs. 1/4 over the trivial r-1 bound, (3) an explicit 20-set 3-uniform 3-sunflower-free family from two disjoint RP^2 hemi-icosahedron triangulations certifying b_3 >= 20^{1/3} > 1357/500 inside 2 < 6^{1/2} < 20^{1/3} < 79^{1/4}, and (4) exact big-integer crossover thresholds k*(r,B) ~ e B/(r-1) where B^k permanently overtakes k!(r-1)^k, backed by a zero-float verifier and 18 Lean 4 theorems. All proofs and calculations in the PDF are mathematically sound, though the combinatorial results largely certify classical 1972 Abbott-Hanson-Sauer constructions and the Lean 4 formalization covers only arithmetic/algebraic proxies rather than the combinatorial definitions themselves.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:b854cea4-4b18-4d2c-8b7c-c1db89faa496",
+  "weaknesses": [
+    "Modest mathematical novelty: M_r(k_1+k_2) >= M_r(k_1)M_r(k_2), the k=2 extremal edge counts, and M_3(3) >= 20 (which is not explicitly attributed to [1] in Thm. 2.1(3)) are classical results dating back to Abbott-Hanson-Sauer (1972), and the crossover scaling k*(r,B) ~ e B/(r-1) is elementary Stirling asymptotics.",
+    "Gap between Lean 4 claims in the prose and actual formalized statements: Table 1 reveals that all 18 Lean theorems verify pure integer/natural arithmetic inequalities and algebraic identities (e.g., t+t=(2t+1)-1, M_1>=a_1 /\\ M_2>=a_2 ==> M_1 M_2 >= a_1 a_2, 6!=720), while none of the combinatorial definitions (sunflowers, M_r(k), graphs, nu, T_10) are formalized. Lean Theorems 10 and 17 are also not contextualized in the main text.",
+    "In the monotone circuit plucking discussion (Thm. 2.2(3)), the illustrative bases B in {10,20,30,50} are far smaller than OpenAI's quasipolynomial-in-(log r) upper bound B_r = 2^{O((log r)^4 (log log 2r)^{5/2})}, for which k*(r,B_r) grows superpolynomially in r; this limitation on practical crossover scale is not discussed.",
+    "The 10 triangles of the RP^2 triangulation T_10 are described structurally ('five triangles around vertex 0 plus five chord triangles') rather than listed explicitly in the PDF, reducing self-containment of the zero-search claim."
+  ]
+}

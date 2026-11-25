@@ -1,0 +1,60 @@
+{
+  "assessed_at": "2026-11-25T16:23:44Z",
+  "canonical_sha256": "78a880bd711c6dc2b9345f5aefeb530d2aae51b355c2425e1b901098b4048004",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All derivations in Theorems 2.1, 2.2, 3.1, 4.1, and 4.2, Table 2 spectral-gap times, and Figure 3(a) 2-tier sharpness values (T_SP=39.56, t_exact=34.54, T_gap=115.13) verify identically. Minor precision notes: Thm. 3.1(a)(i)-(ii) implicitly requires sigma=I/2^n and Thm. 4.2 omits the explicit formula for log_Q^{ub,exact}.",
+      "stars": 5
+    },
+    "novelty": {
+      "basis": "Introduces the basis-independent Quantum Christoffel Operator K_V (Def. 2.1), closed-form convex-hull mixing law with universal factor-of-2 sharpness on 2-tier semigroups (Thm. 2.2c), constant-free O(log^2 n) pure L^1->L^2 scaling (Thm. 3.1a), and global operator-order LDL^T gap/norm certification without L^dagger-invariance (Thm. 4.2).",
+      "stars": 4
+    },
+    "reproducibility": {
+      "basis": "Provides complete Hamiltonian parameters, Table 1 manifest of 16 Lean 4 symbols (v4.35.0, 0 sorry, 0 Classical.choice), 8 pytest suites with 15 adversarial tamper checks, and 6 exact-Q certificates (14 linked LDL^T witnesses). Slightly limited by float64 eigh(H) radius estimation in synthesis and unprinted log_Q^{ub,exact} formula.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Non-asymptotic proofs of Eqs. (1)-(9), Schur-complement gap characterization (Thm. 2.1b), and Weyl/LDL^T soundness (Thm. 4.2) are complete. Rigor is tempered by Lean 4 covering only 16 discrete/algebraic cores over OrdField K (excluding matrix Holder and ODE comparison) and synthesis estimating delta_*^Q via float64 eigh(H).",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Converts Chen-Ding's qualitative L^1->L^2 burn-in into an exact finite-size certification engine, yielding 1.26x-3.30x speedups on n<=4 TFIM/XXZ and 17.7x/20.7x on n=1000 depolarizing chains. Impact is bounded by O(d^6) dense LDL^T scaling for non-commuting chains and reliance on assumed linear lambda_k for O(log^2 n) scaling.",
+      "stars": 4
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 4.85,
+  "model_id": "hydrogen",
+  "overall_stars": 5,
+  "paper_id": "ARR-2026-3TFT8A9XE99YYV6W",
+  "potential_errors": [
+    "In Theorem 3.1(a)(i)-(ii), the explicit formula K_{V_k} = (\\sum_{j=0}^k \\binom{n}{j} 3^j) I and the Pauli-string KMS inner product identity require \\sigma = I/2^n, which is stated in Section 2.1 (p. 3) and reflected by y_0 = 2^n - 1 but omitted inside the statement of Theorem 3.1(a)(i)-(ii).",
+    "Theorem 4.2 invokes an unquantized rational logarithm upper bound \\log_\\mathbb{Q}^{ub,exact} (and Table 1 lists geometric_tail_term_le), but the explicit rational formula/series used for \\log_\\mathbb{Q}^{ub,exact} is not printed in the manuscript text.",
+    "In Theorem 3.1(b), the heading calls it the 'Two-Regime \\alpha-Super-Poincaré Phase Diagram' (referring to burn-in plus tail) while the text lists 'three exact non-vacuous regimes' (\\alpha \\in (0,1), \\alpha = 1, \\alpha > 1); additionally, the 5-qubit stabilizer code is written without double brackets as '5,1,3' (p. 5)."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Definition 2.1 and Theorem 2.1 establish a clean, basis-independent Quantum Christoffel Operator K_V and exact Quantum Super-Poincaré Inequality (Eq. 4) with a rigorous Schur-complement formula for \\lambda_{op}(V^\\perp) that coincides with \\mu_{r+1} on \\mathcal{L}^\\dagger-invariant eigenmode subspaces.",
+    "Theorem 2.2 gives a completely closed-form piecewise-logarithmic mixing time T_{SP}(\\varepsilon; y_0) across exact convex-hull knots y_j^* > C_{k_j}, proves strict speedup over T_{gap} for y_0 > y_1^*, and proves a sharp factor-of-2 plus O(1) optimality bound (Eq. 7) with T_{SP}/t_{exact} -> 1 in both \\varepsilon -> 0^+ and y_0 -> \\infty limits.",
+    "Theorem 3.1(a) proves an explicit, constant-free O(\\log^2 n) mixing bound (Eq. 8) from pure L^1 -> L^2 projection without hypercontractivity (with universal c=3 and product-state c=1, matching the 22.82 cap at n=1,000), and Theorem 3.1(b) gives exact closed-form decay across \\alpha \\in (0,1), \\alpha=1, and \\alpha > 1.",
+    "Theorems 4.1 and 4.2 lift the envelope to trace-norm and sandwiched Rényi-2/relative-entropy bounds (Eq. 9) and establish sound exact-\\mathbb{Q} LDL^\\top certification via penalty-shifted operator inequalities and Weyl bounds without requiring \\mathcal{L}^\\dagger-invariance.",
+    "All numerical values in Table 2, Figures 1-3, and Section 6 (including 2-tier sharpness ratios 1.045-1.145 and T_{gap} calculations) are internally consistent, and limitations (float64 eigh(H) radius estimation in synthesis, O(d^6) scaling, and eigenmode vs. Pauli filtrations) are transparently disclosed."
+  ],
+  "strong_novelty_candidates": [
+    "Basis-independent Quantum Christoffel Operator K_V = \\sum_{a=1}^D E_a^\\dagger E_a and its exact Quantum Spectral Christoffel-Super-Poincaré Inequality (Theorem 2.1).",
+    "Closed-form upper-convex-hull piecewise-logarithmic mixing law with universal factor-of-2 optimality on 2-tier semigroups (Theorem 2.2) and constant-free O(\\log^2 n) pure L^1 -> L^2 bound without hypercontractivity (Theorem 3.1a).",
+    "Penalty-shifted global operator-order exact-\\mathbb{Q} LDL^\\top certification of higher-tier subspace gaps and Christoffel norms (Theorem 4.2)."
+  ],
+  "summary": "The manuscript converts Chen and Ding's qualitative L^1 -> L^2 rapid-mixing mechanism into an exact, non-asymptotic mixing-time certification framework for KMS-symmetric quantum Markov semigroups. It introduces the basis-independent Quantum Christoffel Operator K_V, proves a Quantum Super-Poincaré Inequality with an exact Schur-complement subspace gap (Theorem 2.1), integrates the upper convex hull into a closed-form piecewise-logarithmic mixing time with factor-of-2 optimality on 2-tier semigroups (Theorem 2.2), derives a constant-free O(\\log^2 n) mixing bound without hypercontractivity alongside an \\alpha-Super-Poincaré phase diagram (Theorem 3.1), lifts convex-hull bounds to trace-norm and relative-entropy decay (Theorem 4.1), and constructs exact-\\mathbb{Q} LDL^\\top certificates on quantized operator bundles conditioned on perturbation radii \\delta_*^\\mathbb{Q} (Theorem 4.2), supported by 16 zero-dependency Lean 4 algebraic lemmas and benchmarks on 1D TFIM/XXZ (n<=4) and depolarizing chains (n<=1,000). All mathematical derivations, inequalities, and numerical tables checked in the PDF are sound and internally consistent, with limitations honestly disclosed.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:3ec50bd1-3b07-4a13-9e82-923602584ffb",
+  "weaknesses": [
+    "For non-commuting interacting spin chains, the paper does not prove analytical lower bounds on \\lambda_{op}(V_k^\\perp) for Pauli-weight subspaces as n -> \\infty; instead, Experiment 1 and the exact-\\mathbb{Q} LDL^\\top certificates use the exact \\mathcal{L}^\\dagger-invariant eigenmode filtration V_r, limiting dense LDL^\\top certification to n <= 4 due to O(d^6) = O(2^{6n}) complexity, while O(\\log^2 n) scaling is demonstrated only under assumed linear \\lambda_k on commuting depolarizing semigroups.",
+    "For the two interacting-chain LDL^\\top certificates (n=2 TFIM and XXZ), the synthesis script estimates the Frobenius perturbation radii \\delta_*^\\mathbb{Q} against float64 eigh(H) outputs rather than interval-certified eigensolvers, so end-to-end floating-point-free provenance from H is achieved only for the analytical depolarizing certificates (n=50, 100), not yet for interacting Hamiltonians.",
+    "The Lean 4 formalization over OrdField K covers 16 finite-dimensional algebraic and discrete-vector core lemmas (e.g., discrete probability vector trace_norm_sq_le_chi2 and quadratic form positivity ldlt_quad_nonneg), leaving the non-commutative matrix Hölder step (Eq. 3), continuous-time ODE comparison, and Theorem 3.1 integral comparisons unformalized in Lean."
+  ]
+}

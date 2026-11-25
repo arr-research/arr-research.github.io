@@ -1,0 +1,59 @@
+{
+  "assessed_at": "2026-11-25T16:23:44Z",
+  "canonical_sha256": "c1fbac8a0149cf005f9893aa3f48928f57ee458f8504731b8a5d697fdea132d4",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "Theorems 2.1, 2.2, and 2.3 have algebraically sound proofs over Q, and Table 2 values match Figures 1, 2(b), and 3 (16 certificates across 4 modes, staircase optima M^(n-1) up to 10^180 at n=16, M=10^12). Minor gaps are an unstated formal definition of circuit imbalance kappa(A_n(M)) and a 10x discrepancy between Figure 2(a)'s legend formula n^2 log_2 M (n=4) and its plotted curve (160 log_2 M).",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "The underlying LP duality, strict complementarity, KKT square-completion, and MPG potential-telescoping results are classical, as is the staircase construction conceptually. The contribution lies in packaging them into a unified 4-mode zero-float exact-Q certificate schema (LP-TRICHOTOMY-CERT-1.0), a zero-dependency Lean 4 core, and an adversarial red-team benchmark.",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "The manuscript provides exact Lean 4 version/axiom metadata (v4.35.0, 18 theorems, 0 sorry, 0 Classical.choice), explicit filenames for scripts, tests, and all 16 certificates with exact claims and timings (0.075-0.628 ms). Because only the PDF was inspected, actual code execution and repository artifacts remain unverified externally.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Theorem statements and proofs are clean and mathematically accurate, and Section 5 honestly discloses that matrix rank, pivoted LDL^T, and graph traversal live in Python (MAX_DIM = 64) rather than Lean 4. However, Lean Theorems 17-18 only formalize scalar inequalities (M^(n+1)>=2M^n and kL>L>C) rather than the staircase LP or complexity separation themselves.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "As a solver-independent exact-Q verification companion for strongly polynomial LP, convex QP, and mean-payoff game outputs, the framework is practical and well-targeted, though dense rational checks capped at MAX_DIM = 64 limit large-scale deployment and the work does not itself advance strongly polynomial algorithms.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.6,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-297ZKYBZJ79WXA18",
+  "potential_errors": [
+    "Figure 2(a) legend labels the black curve as 'Weakly poly bit bound n^2 log_2 M (n = 4)', which equals 16 log_2 M (e.g., 160 at log_2 M = 10), whereas the plotted curve lies at 160 log_2 M (e.g., ~1600 at log_2 M = 10, crossing C_4 = 16,384 just above log_2 M = 100).",
+    "Circuit imbalance kappa(A_n(M)) is cited in the Abstract, Theorem 2.2(2), and Figure 1(a) without a formal definition in the manuscript; Theorem 2.2(2) only defines the primal optimal ratio max_j x*_j / min_j x*_j = M^(n-1).",
+    "Theorem 2.3(2) certifies a uniform scalar value val(G) = nu at every vertex, which assumes the existence of a constant-nu potential certificate and therefore applies to uniform-value games rather than general MPGs with vertex-dependent values nu(v)."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Theorems 2.1, 2.2(1), and 2.3 are concise, self-contained, and algebraically sound across all four certificate modes (LP strict optimum, unbounded ray / Caratheodory-bounded Farkas witness, convex QP KKT with pivoted LDL^T PSD check, and deterministic MPG saddle certificates).",
+    "Internal consistency across Table 1 (18 Lean theorem identifiers), theorem cross-references in Section 2, Table 2 (16 instances: 6 Mode 1, 4 Mode 2, 3 Mode 3, 3 Mode 4), and Figure 3(a)-(b) is exact.",
+    "Section 5 clearly states the trust boundary: Lean 4 formalizes the 18 algebraic/list-vector and scalar lemmas, whereas exact-Q Gaussian rank, pivoted LDL^T, and graph sink/cycle checks are delegated to the pure-stdlib Python verifier (MAX_DIM = 64).",
+    "Adversarial red-teaming (52/52 rejected attacks) targets realistic exact-Q verifier failure modes including float/complex/tuple smuggling, non-canonical decimal strings, zero-pivot-inconsistent QP matrices, and tampered MPG sinks/potentials."
+  ],
+  "strong_novelty_candidates": [
+    "Unified zero-float exact-Q certificate schema (LP-TRICHOTOMY-CERT-1.0) covering strictly complementary LP optima, Caratheodory-bounded Farkas/ray witnesses, pivoted LDL^T convex QP KKT, and mean-payoff game saddle certificates.",
+    "Explicit 2n x n integer staircase LP family A_n(M) demonstrating exact M^(n-1) scaling up to 10^180 (n = 16, M = 10^12) with sub-2 ms exact-Q verification."
+  ],
+  "summary": "This manuscript presents a companion exact-rational (zero-float) certification framework, a 18-theorem zero-dependency Lean 4 algebraic kernel, and an explicit staircase LP benchmark family intended to independently verify the four output classes of OpenAI's November 2026 strongly polynomial LP/QP/MPG algorithms (strictly complementary LP optima, unbounded rays / Caratheodory-bounded Farkas witnesses, convex QP KKT with pivoted LDL^T PSD verification, and deterministic mean-payoff game saddle certificates). All stated mathematical proofs in Theorems 2.1-2.3 are valid, the 18-theorem ledger in Table 1 aligns with the text cross-references, and Table 2 and Figures 1, 2(b), and 3 are numerically consistent. The main limitations are modest mathematical novelty (classical duality/KKT/telescoping facts), a gap between the Lean 4 Z-list/scalar lemmas (notably Theorems 17-18) and the unverified Python linear-algebra/graph verifier (MAX_DIM = 64), an omitted formal definition of circuit imbalance kappa(A_n(M)), and a 10x formula-to-plot discrepancy in illustrative Figure 2(a). None of these rise to an unresolved material objection invalidating the paper's claims.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:811cb675-7c4f-496e-8c29-af04b6fcc4df",
+  "weaknesses": [
+    "The mathematical theorems in Section 2 are mathematically elementary/classical rather than deep new theory, and the Lean 4 formalization covers Z-list/scalar algebraic identities rather than verifying the Python Gaussian elimination, pivoted LDL^T, or graph traversal routines (or proving Theorem 2.2(1)).",
+    "Framing Lean 4 Theorem 17 (M^(n+1) >= 2M^n) and Theorem 18 (kL > L > C) in the Abstract as proving exact geometric imbalance growth and bit-length separation overstates what those two elementary scalar Lean lemmas actually mechanize.",
+    "The dense pure-stdlib verifier is bounded at MAX_DIM = 64 and lacks sparse exact-Q factorization support, limiting scalability beyond small/medium benchmark instances.",
+    "The manuscript relies on an external preprint [3] (OpenAI, November 2026) for motivation, though its own certification theorems and verifier stand independently of [3]."
+  ]
+}

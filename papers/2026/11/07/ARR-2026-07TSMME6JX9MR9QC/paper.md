@@ -1,0 +1,580 @@
+# Symplectic Clique-Cover Duality, Signed Frustration Atoms, and Zero-Enumeration Exact-Q Robustness-of-Magic Certificates for Multi-Qubit Quantum States
+
+**Author:** Lluis Eriksson  
+**AIRR Identifier:** `ARR-2026-07TSMME6JX9MR9QC` (v1)  
+**License:** CC-BY-4.0 (manuscript), MIT (verification repository)  
+**Verification Repository:** https://github.com/lluiseriksson/symplectic-magic-certificates (`v2.0.0`)  
+**Canonical PDF SHA-256:** `032e5764542fd4603923d3612ce53c2d49dfda93a767eeebbfda624436291efe`
+
+## Abstract
+
+Certifying non-stabilizerness (quantum magic) and bounding the Robustness of Magic R(rho) for multi-qubit mixed states is central to fault-tolerant quantum computation, yet exact linear-programming membership in the stabilizer polytope STAB_n encounters a 2^{Theta(n^2)} vertex wall beyond n ~ 5 qubits, while pure-state monotones such as Stabilizer Renyi Entropy fail for mixed states. Building on recent worst-case random access code (RAC) frameworks (Zamora, arXiv:2611.26705), we introduce a zero-enumeration, zero-floating-point-trust dual certification framework based on two elementary symplectic atoms over F_2^{2n}: anticommuting Pauli cliques (C in [-1, +1] on STAB_n) and signed frustrated commuting triples (F in [-3, +1] via F_2-subgroup closure, strictly below their unsigned independence number 3). First, we prove the Symplectic Atom-Cover and Chvatal-Gomory Rounding Theorem (Theorem 2.2): any conical decomposition W = sum_j y_j C_j + sum_l z_l F_l (y_j, z_l in Q_{>=0}) yields exact stabilizer bounds [-beta_-, +beta_+] (sharpened by integer floors whenever W has integer weights), certifying exact mixed-state Robustness of Magic R(rho) >= 1 + 2(Tr(W rho) - beta_+)/(beta_+ + beta_-) and depolarizing noise tolerance p_cert = 1 - beta_+/Tr(W rho) without enumerating STAB_n. Second, we establish exact worst-case RAC bounds (Theorem 2.3), including B_wc(sigma) <= 1/(2^n + 1) on all non-identity Paulis P_n \ {I}. Third, we prove an exponential separation over the standard Pauli l1-norm bound (Theorem 2.4): on the rank-2^{n-1} mixed Majorana-clique state rho_{K_{2n+1}} (purity 2^{1-n} -> 0), Pauli l1-norm decays as (1+sqrt(2n+1))/2^n -> 0 (blind for all n >= 2), whereas our (2n+1)-Pauli clique certificate proves R(rho_{K_{2n+1}}) >= sqrt(2n+1) (p_cert = 1 - 1/sqrt(2n+1)), reaching R >= 8.062 and p_cert = 87.6% at n = 32 qubits (bypassing |STAB_32| ~ 10^{168.95}) in under 2 ms. Fourth, we resolve the stabilizer-marginal problem for arbitrary n-qubit W-states (Theorem 2.5): every 2-qubit marginal of |W_n> lies inside STAB_2, yet the three weight-<=2 Paulis {Z_0, X_0 X_1, Y_0 Y_2} certify R(|W_n>) >= R(rho^(3)_{W_n}) >= 1 + 2/n for all n >= 3. Fifth, we prove a strict 3-tier hierarchy (Theorem 2.6) separating Signed Frustration Atoms > Chvatal-Gomory Clique Covers (C_5 pentagram) > Single Cliques (|CCZ>, K_{2n+1}) > Pauli l1-Norm. All 16 core theorems are mechanized in zero-dependency Lean 4 (v4.35.0, 0 sorry, 0 Classical.choice), and our exact-Q verifier validates 9/9 published certificates (n = 1..32) while rejecting 28/28 live adversarial forgery, canonical-parser, and type-injection attacks.
+
+## Full Extracted Text
+
+--- Page 1 ---
+Symplectic Clique-Cover Duality, Signed Frustration
+Atoms, and Zero-Enumeration Exact-Q
+Robustness-of-Magic Certificates for Multi-Qubit
+Quantum States
+Lluis Eriksson∗
+November 24, 2026
+Abstract
+Certifying non-stabilizerness (“quantum magic”) and bounding the Robustness of Magic
+R(ρ)for multi-qubit mixed states is central to fault-tolerant quantum computation, yet exact
+linear-programming membership in the stabilizer polytopeSTABn encounters a2 Θ(n2) vertex
+wall beyond n≈ 5qubits, while pure-state monotones such as Stabilizer Rényi Entropy
+fail for mixed states. Building on recent worst-case random access code (RAC) frameworks
+(Zamora, Nov 2026), we introduce a zero-enumeration, zero-floating-point-trust dual certifica-
+tion framework based on two elementary symplectic atoms overF2n
+2 :anticommuting Pauli
+cliques( C∈ [−1,+1]on STABn) andsigned frustrated commuting triples(F∈ [−3,+1]via
+F2-subgroup closure, strictly below their unsigned independence number3). First, we prove
+theSymplectic Atom-Cover and Chvátal–Gomory Rounding Theorem(Theorem 2.2):
+any conical decompositionW = ∑
+j yjCj + ∑
+ℓ zℓFℓ (yj,zℓ ∈Q ≥0) yields exact stabilizer
+bounds[ −ˆβ−,+ ˆβ+](sharpened by integer floors⌊β±⌋whenever W has integer weights), cer-
+tifying exact mixed-state Robustness of MagicR(ρ) ≥1 + 2(Tr(Wρ) −ˆβ+)/( ˆβ+ + ˆβ−)and
+depolarizing noise tolerancepcert = 1 −ˆβ+/Tr(Wρ)without enumerating STABn. Second, we
+establish exact worst-case RAC bounds (Theorem 2.3), includingBwc(σ)≤1/(2 n + 1)on all
+non-identity PaulisPn\{I}. Third, we prove anexponential separation over the standard
+Pauli ℓ1-norm bound(Theorem 2.4): on the rank-2n−1 mixed Majorana-clique stateρK2n+1
+(purity2 1−n →0), Pauliℓ1-norm decays as(1+√2n+ 1 )/2n →0(blind for alln≥ 2), whereas
+our(2 n+ 1)-Pauli clique certificate provesR(ρK2n+1 ) ≥√2n+ 1 (pcert = 1 −1/√2n+ 1 ),
+reaching R≥ 8.062and pcert = 87.6%at n= 32qubits (bypassing |STAB32|≈ 10168.95) in
+under2 ms. Fourth, we resolve the stabilizer-marginal problem for arbitraryn-qubit W-states
+(Theorem 2.5): every 2-qubit marginal of|Wn⟩lies insideSTAB2, yet the three weight-≤2
+Paulis {Z0,X0X1,Y0Y2}certify R(|Wn⟩) ≥ R(ρ(3)
+Wn) ≥1 + 2/n for all n≥ 3. Fifth, we
+prove astrict 3-tier hierarchyfor fixed-witness stabilizer ceiling certification (Theorem 2.6)
+separating Signed Frustration Atoms> Chvátal–Gomory Clique Covers (C5 pentagram) >
+Single Cliques (|CCZ⟩, K2n+1) > Pauli ℓ1-Norm, paired with an exactSubset-Dominance
+Dichotomy(Proposition 2.7) proving that because every frustrated commuting triple obeys
+Fℓ ⪯+I on all quantum states, Tiers 1–2 strictly dominate non-CG-rounded Tier 3 when-
+ever individual Pauli expectations can be re-weighted into sub-witnesses, whereas Tier 3
+strictly lowers the stabilizer ceilingˆβ+(W)of fixed signed witnesses below every unsigned
+graph invariant. All 16 core theorems are mechanized in zero-dependency Lean 4 (v4.35.0,
+0 sorry,0 Classical.choice), and our exact-Q verifier validates 9/9 published certificates
+(n= 1 ... 32) while rejecting 28/28 live adversarial forgery, canonical-parser, and type-injection
+attacks.
+∗Independent researcher (Sweden). Prepared with AI assistance (Google Antigravity). Code, Lean 4 proofs, and
+exact-Qcertificates:https://github.com/lluiseriksson/symplectic-magic-certificates(MIT license).
+1
+
+--- Page 2 ---
+1 Introduction
+By the Gottesman–Knill theorem [1], Clifford circuits acting on stabilizer states are efficiently
+classically simulable; universal fault-tolerant quantum computation requiresnon-stabilizerness
+(“magic”) [2, 11]. The canonical operational quantifier of mixed-state magic is theRobustness of
+Magic(RoM) [5],
+R(ρ) := min
+{∑
+i
+|xi|:ρ=
+∑
+i
+xi|ϕi⟩⟨ϕi|,|ϕ i⟩∈S n,
+∑
+i
+xi = 1
+}
+,(1)
+which directly governs quasiprobability simulation overhead and magic-state distillation thresholds
+[5, 10]. However, because the number of puren-qubit stabilizer states grows super-exponentially
+as
+|Sn|= 2 n
+n∏
+j=1
+(2j + 1) = 2 Θ(n2),(2)
+exact primal/dual linear programming over the stabilizer polytopeSTABn = conv{|ϕ⟩⟨ϕ|:|ϕ⟩∈
+Sn}becomes intractable beyond n = 5qubits even after exploiting Clifford symmetries [ 4].
+Conversely, scalable pure-state magic monotones such as Stabilizer Rényi Entropy (SRE) [8] are
+strictly inapplicable to certifying mixed-state non-stabilizerness (convex mixtures of stabilizer
+states have positive SRE), and the classic Pauliℓ1-norm lower boundR(ρ) ≥2−n∑
+P∈Pn |Tr(Pρ)|
+[5] requires measuring all4n −1non-identity Paulis and collapses exponentially on low-purity
+mixed states.
+In November 2026, Zamora [12] introduced a semi-device-independent framework certifying
+multi-qubit non-stabilizerness viaworst-case random access codes(RACs) with partially char-
+acterized Pauli measurements, proving astabilizer pigeonhole criterionfor pure states (applied
+to n-qubit W-states using 8 preparations and 3 measurement settings), constructing stabilizer-
+marginal paradoxes, and bounding worst-case biases for mixed stabilizer preparations. This work
+raises three sharp foundational questions:
+1. Zero-Enumeration Dual Certificates for Mixed-State RoM:Can we construct
+polynomial-size, exact-Q, machine-verifiable dual witnesses ofSTABn that certify quantitative
+Robustness of Magic lower boundsR(ρ) > 1and depolarizing noise thresholds formixed
+states up to dozens of qubits without enumeratingSTABn?
+2. Going Beyond Single Cliques and Unsigned Anticommutation Graphs:Can integer-
+programming cuts (Chvátal–Gomory rounding [9]) andsigned symplectic group closurestrictly
+beat both single-clique bounds (1/ω) andeveryunsigned graph-theoretic bound (αw(Ganti))?
+3. Formal Machine-Checked Soundness:Can the entire symplectic duality, integer-floor
+tightening, shifted robustness inequality, and noise-threshold chain be mechanized in Lean 4
+[3] and paired with a zero-floating-point-trust certificate verifier?
+We answer all three questions affirmatively via a unified three-tier hierarchy of symplectic
+dual atoms, 16 zero-dependency Lean 4 theorems, and 9 exact-Q certificates spanningn= 1to
+n= 32qubits.
+2 Symplectic Dual Atoms and Exact Robustness Bounds
+2.1 Symplectic Pauli Algebra overF 2n
+2
+Every n-qubit Hermitian Pauli operator P(u)( u = ( x,z) ∈F n
+2 ×F n
+2 ) is defined as
+P(x,z) = i|x∧z|XxZz, where |x∧z| = ∑n−1
+k=0 xkzk. Two PaulisP(u),P(v)satisfy P(u)P(v) =
+(−1)ω(u,v)P(v)P(u), where the binary symplectic inner product is
+ω
+(
+(x1,z1),(x 2,z2)
+)
+=
+n−1∑
+k=0
+(
+x1,kz2,k +z1,kx2,k
+)
+(mod 2).(3)
+2
+
+--- Page 3 ---
+We verify its alternating, symmetric, and bilinear properties directly in Lean 4 (symp_self_zero,
+symp_comm, symp_bilinear_left). When ω(u,v) = 0, the product is Hermitian up to a real sign:
+P(u)P(v) =σ(u,v)P(u⊕v)withσ(u,v)∈{−1,+1}.
+Every puren-qubit stabilizer state|ϕ⟩∈S n is uniquely specified by a maximal abelian (La-
+grangian) subgroupSϕ ⊂Pn of cardinality|Sϕ|= 2n (not containing−I), such that⟨ϕ|P(u)|ϕ⟩∈
+{−1,+1}for u∈S ϕ and0otherwise. Crucially, the support Sϕ satisfies two algebraic constraints
+simultaneously: (i)pairwise commutation( ω(u,v) = 0for all u,v∈S ϕ), and (ii)signed abelian
+group closure(ifu,v∈S ϕ, thenu⊕v∈S ϕ and⟨ϕ|P(u⊕v)|ϕ⟩=σ(u,v)⟨ϕ|P(u)|ϕ⟩⟨ϕ|P(v)|ϕ⟩).
+2.2 Two Elementary Dual Atoms and the Rounding Theorem
+Definition 2.1(Symplectic Stabilizer Dual Atoms).LetP ∗
+n =Pn \{I}.
+(a) AnAnticommuting Clique Atomis C = ∑
+P∈CsPP where C⊆P ∗
+n satisfies ω(P,Q) = 1
+for all distinctP,Q∈Cands P ∈{−1,+1}.
+(b) ASigned Frustrated Commuting-Triple AtomisF = sAA+sBB+sCC where A,B,C∈
+P∗
+n are distinct, pairwise commuting (ω = 0), group-closed (AB = σC with σ∈{− 1,+1}),
+and sign-frustrated:
+sAsBsC σ=−1.(4)
+Theorem 2.2(Symplectic Atom-Cover and Chvátal–Gomory Rounding Theorem).LetW =∑
+P∈P∗n wPPbe a traceless Hermitian Pauli witness admitting a conical decomposition
+W=
+K∑
+j=1
+yj Cj +
+L∑
+ℓ=1
+zℓFℓ, y j,zℓ ∈Q >0,(5)
+into anticommuting clique atomsCj and signed frustrated commuting-triple atomsFℓ. Define
+β+(W) :=
+K∑
+j=1
+yj +
+L∑
+ℓ=1
+zℓ, β −(W) :=
+K∑
+j=1
+yj + 3
+L∑
+ℓ=1
+zℓ.(6)
+Then:
+(a) Atom Bounds on Pure Stabilizer States:For every|ϕ⟩∈S n, Tr(Cj|ϕ⟩⟨ϕ|) ∈[−1,+1]
+and Tr(Fℓ|ϕ⟩⟨ϕ|) ∈[−3,+1]. Consequently, −β−(W) ≤Tr (Wσ) ≤β+(W)for every mixed
+stabilizer stateσ∈STAB n.
+(b) Chvátal–Gomory Integer-Floor Tightening:Whenever W has integer Pauli coefficients
+(wP ∈Zfor allP), everyσ∈STAB n satisfies the sharpened bounds
+−ˆβ−(W)≤Tr(Wσ)≤ ˆβ+(W), ˆβ±(W) :=⌊β ±(W)⌋.(7)
+(For non-integerwP, set ˆβ±(W) :=β ±(W).)
+(c) Zero-Enumeration Robustness of Magic & Depolarizing Noise Threshold:For
+everyn-qubit mixed stateρwithTr(Wρ)> ˆβ+(W),ρ /∈STABn and
+R(ρ)≥1 + 2 Tr(Wρ)− ˆβ+(W)
+ˆβ+(W) + ˆβ−(W)
+, p cert(ρ) := 1−
+ˆβ+(W)
+Tr(Wρ) >0,(8)
+meaning the globally depolarized state ρp = (1 −p )ρ + pI/2n is certified non-stabilizer
+(ρp /∈STABn) for everyp∈ [0,pcert(ρ)). When L= 0(pure clique cover, ˆβ+ = ˆβ−= ˆβ), (8)
+simplifies toR(ρ)≥Tr(Wρ)/ ˆβ.
+3
+
+--- Page 4 ---
+Proof. For (a), in any anticommuting cliqueC, pairwise anticommutation implies|Sϕ ∩C|≤ 1, so
+Tr(Cj|ϕ⟩⟨ϕ|) ∈{−1,0,+1}(Lean: anticomm_clique_at_most_one). For a frustrated commuting
+triple Fℓ = sAA+ sBB+ sCC, abelian subgroup closure ofSϕ precludes |Sϕ ∩{A,B,C}| = 2:
+if two elements lie inSϕ, their product lies inSϕ. Thus |Sϕ ∩{A,B,C}|∈{ 0,1,3}. For0or1
+elements, Tr(Fℓ|ϕ⟩⟨ϕ|) ∈{−1,0,+1}; for3elements, eAeBeC = σ implies( sAeA)(sBeB)(sCeC) =
+sAsBsCσ= −1, so the three±1summands cannot all equal+1, forcingTr(Fℓ|ϕ⟩⟨ϕ|) ∈{−3,+1}⊆
+[−3,+1](Lean: frustrated_triple_closure_bound). Summing with yj,zℓ ≥ 0gives −β− ≤
+Tr(W|ϕ⟩⟨ϕ|)≤β + (atom_cover_upper_bound,atom_cover_lower_bound).
+For (b), whenwP ∈Z , every pure stabilizer state satisfiesTr(W|ϕ⟩⟨ϕ|) ∈Z , soTr(W|ϕ⟩⟨ϕ|) ≤
+β+ implies Tr(W|ϕ⟩⟨ϕ|) ≤⌊β +⌋(and symmetrically≥−⌊β −⌋; Lean: chvatal_gomory_integer_
+floor). Convexity overSTABn preserves both bounds (convex_mixture_preserves_bounds).
+For (c), any optimal RoM decompositionρ = ∑
+ixi|ϕi⟩⟨ϕi|with ∑
+ixi = 1and ∑
+i|xi|=
+R(ρ) = 1 + 2 t (t≥ 0) separates into positive and negative partsρ = (1 + t)σ+ −tσ− with
+σ±∈STAB n. EvaluatingTr(Wρ)gives
+Tr(Wρ) = (1 +t) Tr(Wσ +)−tTr(Wσ −)≤(1 +t) ˆβ+ +t ˆβ− = ˆβ+ + R(ρ)−1
+2 ( ˆβ+ + ˆβ−),(9)
+which rearranges to(8) (Lean: shifted_robustness_lower_bound, symmetric_robustness_lower_
+bound). Finally, because W is traceless, Tr(Wρp) = (1 −p) Tr(Wρ) > ˆβ+ whenever p <1 −
+ˆβ+/Tr(Wρ)(depolarizing_noise_threshold).
+2.3 Worst-Case RAC Ceilings, Majorana Cliques,W-States, and Strict 3-Tier
+Separation
+Given a Pauli setM⊆P ∗
+n and target signss∈{± 1}M, the worst-case RAC bias [12] of a stateρ
+is Bwc(ρ; M,s) := minP∈MsP Tr(Pρ). Let Ganti(M)denote the anticommutation graph ofM
+and¯χf(Ganti)its fractional clique-cover number.
+Theorem 2.3(Worst-Case RAC Ceilings).For every mixed stabilizer stateσ∈STAB n:
+(a) For any M ⊆ P∗
+n and s∈ {±1}M, Bwc(σ; M,s) ≤ ˆβ+(WM,s)/|M| where WM,s =∑
+P∈MsPP; in particular, using a minimal fractional clique cover with Chvátal–Gomory
+rounding yieldsBwc(σ;M,s)≤⌊¯χ f(Ganti(M))⌋/|M|.
+(b) On the complete non-identity Pauli setM=P∗
+n (|M|= 4 n −1), everyσ∈STAB n satisfies
+Bwc(σ;P∗
+n, s)≤ 2n −1
+4n −1 = 1
+2n + 1,(10)
+while every quantum stateρobeysB wc(ρ;P∗
+n,s)≤1/ √2n + 1.
+Proof. Part (a) follows fromminP∈MsP Tr(Pσ) ≤|M|−1 Tr(WM,sσ)(Lean: worst_case_rac_
+min_le_avg) and Theorem 2.2. For (b), every|ϕ⟩∈S n has exactly2n−1nonzero non-identity Pauli
+expectations (±1), so(4 n −1)Bwc(σ) ≤2n −1, yielding(10) via4 n −1 = (2n −1)(2n + 1)(Lean:
+complete_pauli_rac_bound). For any quantum stateρ, ∑
+P∈P∗n Tr(Pρ)2 = 2nTr(ρ2) −1 ≤2n −1,
+so Cauchy–Schwarz givesBwc(ρ)≤
+√
+(2n −1)/(4 n −1) = 1/√2n + 1.
+Theorem 2.4(Exponential Separation Over Pauli ℓ1-Norm via Majorana Cliques K2n+1).
+For every n≥ 1, letΓ 1,..., Γ2n+1 ∈ P∗
+n be the canonical Jordan–Wigner Majorana clique
+(Γ2k+1 = Z0 ···Z k−1Xk,Γ 2k+2 = Z0 ···Z k−1Yk for0 ≤k < n, andΓ 2n+1 = Z0 ···Z n−1).
+Because( ∑2n+1
+j=1 Γj)2 = (2n+ 1)I, the operator
+ρK2n+1 := 1
+2n
+
+I+ 1√2n+ 1
+2n+1∑
+j=1
+Γj
+
+ (11)
+4
+
+--- Page 5 ---
+is a valid rank-2n−1 mixed quantum state of purityTr(ρ2
+K2n+1 ) = 21−n. Its single-clique witness
+WK2n+1 = ∑2n+1
+j=1 Γj (2n+ 1measurements) certifies
+R
+(
+ρK2n+1
+)
+≥
+√
+2n+ 1, p cert
+(
+ρK2n+1
+)
+= 1− 1√2n+ 1 ,(12)
+whereas the standard Pauliℓ1-norm bound yields1+√2n+1
+2n <1for every n≥ 2(decaying exponen-
+tially to0and failing completely to detect magic).
+Proof. Since ω(Γi,Γj) = 1for all i̸= j, the traceless Hermitian operatorS = ∑2n+1
+j=1 Γj satisfies
+S2 = (2n+ 1)I, so its spectrum is{+√2n+ 1,−√2n+ 1}, each with multiplicity2n−1. Hence
+ρK2n+1 has eigenvalues21−n (multiplicity2 n−1) and0(multiplicity2 n−1), confirmingρK2n+1 ⪰0,
+Tr(ρK2n+1 ) = 1, and Tr(ρ2
+K2n+1 ) = 2 1−n. Its nonzero Pauli expectations are Tr(Iρ) = 1and
+Tr(Γjρ) = 1/√2n+ 1 , soTr(WK2n+1 ρ) = √2n+ 1 , giving(12) by Theorem 2.2(c) withˆβ±= 1,
+while2 −n∑
+P∈Pn |Tr(Pρ)|= (1 + √2n+ 1)/2 n <1for alln≥2.
+Theorem 2.5(Three-Pauli Stabilizer-Marginal Magic Theorem for Arbitraryn-Qubit W-States).
+For everyn≥3, let|W n⟩=n −1/2 ∑n−1
+k=0 |ek⟩. Then:
+(a) Every 2-qubit reduced density matrix of|Wn⟩is an exact stabilizer mixture:
+ρ(2)
+Wn = 2
+n|Ψ+⟩⟨Ψ+|+ n−2
+n |00⟩⟨00| ∈STAB2.(13)
+(b) Yet the single 3-Pauli weight-≤2anticommuting clique CW = {Z0, X0X1, Y0Y2}(supported on
+qubits {0,1,2}) satisfiesTr((Z0 + X0X1 + Y0Y2)|Wn⟩⟨Wn|) = n−2
+n + 2
+n + 2
+n = 1 + 2
+n, certifying
+R(|Wn⟩)≥ R
+(
+ρ(3)
+Wn
+)
+≥1 + 2
+n >1, p cert(|Wn⟩) = 2
+n+ 2 (∀n≥3).(14)
+Proof. Splitting |Wn⟩=
+√
+2/n|Ψ+⟩|0n−2⟩+
+√
+(n−2)/n| 00⟩|Wn−2⟩and noting⟨0n−2|Wn−2⟩=
+0gives (13) directly, and both |Ψ+⟩ and |00⟩ are pure 2-qubit stabilizer states. For (b),
+Z0,X0X1,Y0Y2 pairwise anticommute on qubit0(and commute on qubits1 ,2), so CW is a
+3-clique (ˆβ± = 1). Direct evaluation gives ⟨Wn|Z0|Wn⟩= ( n− 2)/n and ⟨Wn|X0X1|Wn⟩=
+⟨Wn|Y0Y2|Wn⟩= 2/n; summing yields(n+ 2)/n> 1(Lean: w_state_three_clique_magic), prov-
+ing (14) by Theorem 2.2(c) and monotonicity ofRunder partial trace.
+Theorem 2.6(Strict Three-Tier Hierarchy Separation).The four certification tiers satisfy strict
+separations:
+(a) Tier 1 (Single Clique)> Pauli ℓ1-Norm:On ρK2n+1 (n≥ 2), Tier 1 certifiesR≥√2n+ 1 while Pauliℓ1-norm is<1; on the 3-qubit Toffoli state|CCZ⟩, the 4-Pauli anticom-
+muting cliqueWCCZ = XII + ZXI−ZZX + YXY certifies R≥ 2versus15 /8 = 1.875from
+all 63 Paulis.
+(b) Tier 2 (Chvátal–Gomory Clique Cover) > Tier 1 (Single Clique):On the 2-
+qubit KCBS C5 pentagram MC5 = {ZI,XI,ZZ,IX,XY} [7, 6], ω(C5) = 2limits every
+single-clique bound toBwc ≤1/2, whereas five half-weight edge cliques giveβ±= 5/2and
+Chvátal–Gomory rounding givesˆβ±= ⌊5/2⌋= 2(Lean: c5_pentagram_beats_clique_bound),
+certifying Bwc(σ) ≤2/5 = 0 .40. Since λmax(WC5 ) =
+√
+5 + 2
+√
+5≈ 3.0777, the depolarized
+C5 state with exact rational biasBwc = 9 /20 = 0 .45is certified with R≥ 9/8 = 1 .125
+(pcert = 1/9) where every single-clique bound fails.
+5
+
+--- Page 6 ---
+(c) Tier 3 (Signed Frustration Atoms)> All Unsigned Graph Boundsαw(Ganti)on
+Fixed Signed Witnesses:On the fixed 2-qubit witness operatorWFT6 = (XX+YY +ZZ)+
+(XI+YI +ZI), the commuting triple{XX,YY,ZZ} forcesαw(Ganti) = 3, so every unsigned
+graph-theoretic stabilizer ceiling (ω,¯χf,ϑ,α w) evaluated onWFT6 yields ˆβ+(WFT6) ≥3and
+fails to certify magic from the single scalar expectationTr(WFT6|H3⟩⟨H3|⊗2) = 1 +
+√
+3≈
+2.7321 < 3. Yet decomposingWFT6 = F0 + C3 (one frustrated triple(XX)(YY ) = −ZZ
+plus one 3-clique) tightens the stabilizer ceiling toˆβ+ = 2, ˆβ−= 4, certifyingR(|H3⟩⊗2) ≥
+(2 +
+√
+3)/3 ≈1.2440( pcert = 26 .79%) directly fromTr(WFT6ρ). Similarly, on the fixed
+witness WFT8 = F0 + K5 with K5 = {XI,YI,ZX,ZY,ZZ} (weight2on ZZ, so αw = 4),
+λmax(WFT8) = 1 +
+√
+5≈ 3.2361 <4defeats every unsigned graph ceiling onWFT8, yet Tier 3
+certifies ˆβ+ = 2,ˆβ−= 4andR≥(2 +
+√
+5)/3≈1.4120(p cert = 38.20%).
+Proposition 2.7(Quantum Subset-Dominance Dichotomy for Non-CG-Rounded Frustrated
+Triples).For every frustrated commuting triple Fℓ = sAA+ sBB + sCC (sAsBsCσ = −1),
+pairwise commutation and(sAA)(sBB)(sCC) = −I force spec(Fℓ) ⊆{−3,+1}, soTr(Fℓρ) ≤+1
+holds foreveryquantum state ρ⪰ 0(not only stabilizer states). Consequently, whenever a
+witness W = WC + WF (WC = ∑
+j yjCj, WF = ∑
+ℓzℓFℓ) has no Chvátal–Gomory floor gain
+(ˆβ±(W) = β±(W)) and individual Pauli expectations{Tr(Pρ)}P∈M are available separately,
+droppingWF strictly tightens the Robustness lower bound:
+Tr(Wρ)−β +(W) =
+(
+Tr(WCρ)−β +(WC)
+)
++
+∑
+ℓ
+zℓ
+(
+Tr(Fℓρ)−1
+)
+≤Tr(W Cρ)−β +(WC),
+while β+(WC) + β−(WC) = β+(W) + β−(W) −4 ∑
+ℓzℓ < β+(W) + β−(W). In particular,
+when individual Pauli expectations on the supports ofWFT6 and WFT8 are accessible, restricting
+to the embedded Tier 1 cliquesC3 = XI + YI + ZI and K5 yields strictly stronger bounds
+R(|H3⟩⊗2) ≥
+√
+3≈ 1.7321 > 1.2440and R(ρFT8) ≥
+√
+5≈ 2.2361 > 1.4120. Thus Tier 3
+strictly outperforms unsigned graph bounds for certifying stabilizer ceilingsˆβ+(W)offixed signed
+witnesses or Hamiltonians(where onlyTr(Wρ)is bounded), whereas forsubset-selectablePauli
+measurements without fractional CG rounding, pure clique covers (Tiers 1–2) strictly dominate.
+3 Lean 4 Mechanization and Zero-Float Exact-QVerifier
+3.1 Zero-Dependency Lean 4 Kernel (v4.35.0)
+We formalized all 16 core theorems inlean/SymplecticMagic.lean (366 lines, zero external libraries)
+on leanprover/lean4:v4.35.0 [3] and audited every theorem vialean/AuditAxioms.lean. All 16
+theorems compile cleanly with0 warnings,0sorry, and0Classical.choice(Table 1).
+3.2 Zero-Floating-Point-Trust Exact-QVerifier (SYMPLECTIC-MAGIC-CERT-1.0)
+Our pure-Python verifier verify_magic_certificate_exact (src/magic_certifier.py) enforces
+zero floating-point trust end to end:
+1. Recursive Type Sanitizer:Strictly whitelists exact JSON primitives (dict with string keys,
+list, str, strictint, None), rejectingfloat, bool, Decimal, sets, and tuples anywhere in the
+tree; enforces schema_version == "SYMPLECTIC-MAGIC-CERT-1.0"; and parses every rational
+strictly from strict integers or reduced canonical"p/q" strings (q >0, forbidding "2/4",
+leading zeros, decimals, and"NaN").
+2. Symplectic Atom Replay:Independently verifiesω(u,v) = 1on every pair in every clique
+atom; verifies ω = 0, uA ⊕uB = uC, and exact Hermitian phasesAsBsCσ(uA,uB) = −1
+on every frustrated-triple atom; rejects identity Paulis, duplicate Paulis, and non-positive
+weights; and confirms exactQ-equality∑
+j yjCj + ∑
+ℓzℓFℓ =W.
+6
+
+--- Page 7 ---
+Table 1: Complete audit of all 16 theorems inlean/SymplecticMagic.lean on Lean 4v4.35.0 via
+AuditAxioms.lean(0 warnings, 0sorry, 0Classical.choice).
+# Lean 4 Theorem Identifier Exact Mechanized Statement Kernel Axioms
+1symp_self_zeroAlternating formω(u,u) = 0overF 2n2 ∅
+2symp_commSymmetryω(u,v) =ω(v,u)∅
+3symp_bilinear_leftLeft bilinearityω(u⊕v,w) =ω(u,w)⊕ω(v,w)[propext]
+4anticomm_clique_at_most_oneAnticommuting clique atom∈[−1,+1]onSn(Thm 2.2a)[propext, Quot.sound]
+5frustrated_triple_closure_boundFrustrated commuting triple∈[−3,+1]via closure (Thm 2.2a)∅
+6atom_cover_upper_boundConical atom sum≤∑yj+∑zℓ [propext, Quot.sound]
+7atom_cover_lower_boundConical atom sum≥−(∑yj+ 3∑zℓ)[propext, Quot.sound]
+8chvatal_gomory_integer_floorqk≤p∧q >0⇒k≤⌊p/q⌋(Thm 2.2b)[propext]
+9convex_mixture_preserves_boundsMixed stabilizer convex hull preserves[−ˆβ−,+ˆβ+][propext, Quot.sound]
+10shifted_robustness_lower_boundAsymmetric RoM lower bound (8) (Thm 2.2c)[propext, Quot.sound]
+11symmetric_robustness_lower_boundSymmetric RoM lower boundR≥Tr(Wρ)/ˆβ[propext, Quot.sound]
+12depolarizing_noise_thresholdDepolarizing thresholdp<1−ˆβ+/Tr(Wρ)(Thm 2.2c)[propext, Quot.sound]
+13worst_case_rac_min_le_avgMinimax RAC inequalityminixi≤¯xw(Thm 2.3a)[propext, Quot.sound]
+14complete_pauli_rac_bound(4 n−1)N≤(2n−1)D⇒(2n+ 1)N≤D(Thm 2.3b)[propext, Quot.sound]
+15w_state_three_clique_magic(n−2) + 2 + 2 =n+ 2>nfor alln≥3(Thm 2.5b)[propext, Quot.sound]
+16c5_pentagram_beats_clique_bound⌊5/2⌋= 2and2/5<1/2onC5 (Thm 2.6b)∅
+Table 2: Exp 1: 9-certificate zero-floating-point-trust atlas (results/exp1_certified_atlas.json).
+All bounds are replayed strictly in exactQ arithmetic; decimals shown to 4 digits for readability.
+Certificate ID Tiern m[− ˆβ−,+ˆβ+]W lb Rcert pcert STABnCheck Time (ms)
+jw_k3_n1Tier 1 (K 3) 1 3[−1,+1] 1.7321 1.7321 42.3% 6/6 0.23
+jw_k5_n2Tier 1 (K 5) 2 5[−1,+1] 2.2361 2.2361 55.3% 60/60 0.95
+jw_k21_n10Tier 1 (K 21) 10 21[−1,+1] 4.5826 4.5826 78.2%—0.53
+jw_k65_n32Tier 1 (K 65) 32 65[−1,+1] 8.0622 8.0622 87.6%—1.88
+w_state_n3Tier 1 (|W 3⟩) 3 3[−1,+1] 5/3 5/3 40.0% 1080/1080 32.13
+w_state_n20Tier 1 (|W 20⟩) 20 3[−1,+1] 11/10 11/10 9.1%—0.10
+ccz_n3Tier 1 (|CCZ⟩) 3 4[−1,+1] 2 2 50.0% 1080/1080 33.12
+c5_pentagram_n2Tier 2 (CGC5) 2 5[−2,+2] 9/4 9/8 11.1% 60/60 0.96
+ft6_h3_tensor2_n2Tier 3 (FT+C3) 2 6[−4,+2] 2.7321 1.2440 26.8% 60/60 1.02
+3. Chvátal–Gomory & Radical-Enclosure Guards:Allows integer-floor rounding(7) only
+when every coefficientwP ∈Z . For irrational quantum expectations±
+√
+rn/rd, verifies exact
+integer square enclosureslo2rd ≤rn ≤hi 2rd strictly inQ, replaysTr(Wρ)lb, Rlb, andpcert in
+exact Fraction arithmetic, and optionally cross-checks every pure stabilizer state inSTABn
+for n≤ 3(6 ,60,1080states). As a dual stabilizer-polytope verifier, it certifies witness
+soundness and bound propagation conditioned on physical realizability (ρ⪰ 0) of the supplied
+state_expectations(established analytically or via tomography; see Section 5).
+4 Computational Experiments and Benchmarks
+All four experiments run deterministically in0.10 svia scripts/run_all_experiments.py and are
+audited end-to-end byscripts/verify_all.py.
+4.1 Experiment 1: 9-Certificate Zero-Float Atlas (n= 1. . .32Qubits)
+Table 2 summarizes all 9 publishedSYMPLECTIC-MAGIC-CERT-1.0 certificates spanningn = 1to
+n = 32qubits across all three tiers. Every certificate verifies strictly overQ with zero floats;
+the fiven≤ 3certificates additionally pass complete brute-force verification against every pure
+stabilizer state inSTABn (6,60,or1080states).
+7
+
+--- Page 8 ---
+Figure 1: (a) Exponential separation between our exact-QK2n+1 clique certificate (R≥ √2n+ 1 )
+and the standard Pauliℓ1-norm bound ((1 +√2n+ 1 )/2n, blind for alln≥ 2) on mixed Majorana
+states ρK2n+1 . (b) Certified depolarizing noise tolerance rising to87.6%at n= 32alongside the
+bypassed|STAB n|= 2 Θ(n2) vertex explosion (log10 |STAB32|= 168.95).
+4.2 Experiment 2: Exponential Separation on Majorana CliquesK2n+1 (n =
+1. . .32)
+Figure 1 plots our sweep acrossn∈{ 1,2,3,4,5,6,8,10,12,16,20,24,32}qubits onρK2n+1 . While
+the Pauliℓ1-norm collapses below1immediately at n = 2(0 .809) and plunges to2.11 ×10−9
+at n= 32(and |STAB32|≈ 10168.95 renders polytope enumeration impossible), our exact-QK 65
+certificate certifies R(ρK65 ) ≥8.0622and pcert = 87.6%using just65Pauli measurements in
+1.87 ms.
+4.3 Experiment 3: Arbitrary-n W-State Marginal Magic (n = 3. . .50) and
+|CCZ⟩
+Figure 2(a) verifies Theorem 2.5 fromn = 3( R≥ 5/3, pcert = 40.0%) through n = 50( R≥
+26/25 = 1.04, pcert = 3.85%), using the same three weight-≤2Paulis {Z0,X0X1,Y0Y2}at every
+n; direct density-matrix partial trace forn= 3,4,5confirms maxi,j |ρ(2)
+Wn −ρSTAB2 |< 10−15. On
+the 3-qubit Toffoli state|CCZ⟩, our 4-Pauli clique certifiesR≥ 2( pcert = 50.0%), strictly beating
+the 63-Pauliℓ1-norm bound (15/8 = 1.875,pcert = 46.7%) with15.75×fewer measurements.
+4.4 Experiment 4: Strict 3-Tier Separation and 28-Attack Adversarial Suite
+Figure 3(a) visualizes all six fixed-witness separation benchmarks recorded inresults/exp4_
+hierarchy_separation.json: (i) Tier 1 strictly beats Pauliℓ1-norm onK5 (2.236vs0 .809) and
+|CCZ⟩(2.000vs1 .875); (ii) Tier 2 Chvátal–Gomory rounding strictly beats Tier 1 on depolarized
+C5 (1.125vs1 .000blind) and boosts pureC5 by+25%(1 .539vs1 .231); and (iii) on thefixed signed
+witness operatorsWFT6 and WFT8, Tier 3 Signed Frustration strictly beatsallunsigned graph
+bounds evaluated on the fixed witness (1.244vs1 .000on WFT6;1 .412vs1 .000on WFT8), while
+illustrating Proposition 2.7: if individual Pauli expectations are instead subset-selected rather than
+summed into the fixed operatorW, the embedded Tier 1 sub-cliquesC3 and K5 attain
+√
+3≈ 1.732
+and
+√
+5≈ 2.236(plotted as hollow markers in Figure 3a). Note also that on the small 2-qubit
+benchmarks (C5, WFT6, WFT8), the gray Pauliℓ1-norm bar reflects full 15-Pauli tomography,
+whereas Pauliℓ1-norm collapses exponentially on mixed states such asρK2n+1 . Figure 3(b) displays
+exact-Q verification runtimes across all 9 certificates (all zero-enumeration checks complete in
+≤1.88 ms). Finally,tests/test_suite.py attacks verify_magic_certificate_exact with28 live
+adversarial forgeries(14 algebraic/symplectic forgeries plus 14 canonical-parser and strict
+8
+
+--- Page 9 ---
+Figure 2: (a) Exact 3-Pauli clique Robustness lower boundR(|Wn⟩) ≥1 + 2/nand noise tolerance
+2/(n+2)for n= 3 ... 50, despite every 2-qubit marginal lying insideSTAB2. (b) 2-qubit KCBSC5
+pentagram anticommutation graph with half-weight edge cliques (y= 1/2) whose Chvátal–Gomory
+floor ⌊5/2⌋= 2lowers the stabilizer RAC ceiling from1/2to2 /5, certifying magic onBwc = 9/20.
+type-injection attacks coveringfloat, bool, NaN, decimals, unreduced"2/4", leading-zero"001",
+non-string dict keys,Decimal, sets, and tuples), rejecting28/28 attacks.
+5 Limitations and Scope
+Four clear scope boundaries apply: (1) our dual verifier certifiesvalid lower boundson R(ρ)
+from a supplied atom decomposition and certified Pauli expectations—solving for the globally
+optimal atom decomposition on an arbitrary unknownn-qubit state still requires a classical
+primal/dual search heuristic (whose output is then audited with zero trust by our exact-Q verifier);
+(2) global PSD quantum-state realizability (ρ⪰ 0) of the suppliedstate_expectations is an
+external physical assumption (established analytically as in Theorems 2.4–2.6 or experimentally
+via tomography), not verified by the dual stabilizer-polytope checker; (3) higher-order signed
+atoms beyond commuting triples (e.g., Mermin–Peres 9-observable contextual grids or 4-generator
+frustrated subgroups) can tighten Tier 3 further and are natural extensions of Definition 2.1;
+and (4) in laboratory deployments, finite-shot statistical confidence intervals on measured Pauli
+expectations replace the exact rational/radical expectation entries via conservative Clopper–
+Pearson or Hoeffding rational lower/upper intervals[loP,hi P], which our interval engine already
+accepts natively.
+6 Conclusion
+We have introduced a zero-enumeration, exact-Q, Lean-4-mechanized hierarchy for certifying
+multi-qubit mixed-state non-stabilizerness and Robustness of Magic using anticommuting clique
+atoms, Chvátal–Gomory integer-floor cuts, and signed frustrated commuting triples. By bypassing
+the2 Θ(n2) stabilizer-polytope wall completely, our framework certifies mixed-state magic up
+to n = 32qubits in under2 ms, resolves the stabilizer-marginal problem for arbitraryn-qubit
+W-states using just three weight-≤2Paulis, and establishes strict separations across all three
+algebraic tiers.
+9
+
+--- Page 10 ---
+Figure 3: (a) Fixed-witness 3-tier ceiling separation across six multi-qubit magic benchmarks
+(Theorem 2.6): bars compare bounds on thefixed witness operatorW (where unsigned graph
+ceilings onWFT6/WFT8 are blind atRcert = 1), while diamond markers onWFT6/WFT8 show the
+strictly tighter subset-selectable Tier 1 sub-clique bounds (
+√
+3,
+√
+5) proved by Proposition 2.7.
+(b) Zero-float exact-Q verification runtimes for all 9 published certificates (including optional
+1080-stateSTAB 3 cross-checks onn= 3benchmarks).
+References
+[1] Scott Aaronson and Daniel Gottesman. Improved simulation of stabilizer circuits.Physical
+Review A, 70(5):052328, 2004.
+[2] Sergey Bravyi and Alexei Kitaev. Universal quantum computation with ideal Clifford gates
+and noisy ancillas.Physical Review A, 71(2):022316, 2005.
+[3] Leonardo de Moura and Sebastian Ullrich. The Lean 4 theorem prover and programming
+language. InAutomated Deduction – CADE 28, pages 625–635. Springer, 2021.
+[4] Markus Heinrich and David Gross. Robustness of magic and symmetries of the stabiliser
+polytope.Quantum, 3:132, 2019.
+[5] Mark Howard and Earl Campbell. Application of a resource theory for magic states to
+fault-tolerant quantum computing.Physical Review Letters, 118(9):090501, 2017.
+[6] Mark Howard, Joel Wallman, Victor Veitch, and Joseph Emerson. Contextuality supplies
+the ‘magic’ for quantum computation.Nature, 510:351–355, 2014.
+[7] Alexander A. Klyachko, M. Ali Can, Sinem Binicioğlu, and Alexander S. Shumovsky. Simple
+test for hidden variables in spin-1 systems.Physical Review Letters, 101(2):020403, 2008.
+[8] Lorenzo Leone, Salvatore F. E. Oliviero, and Alioscia Hamma. Stabilizer Rényi entropy.
+Physical Review Letters, 128(5):050402, 2022.
+[9] Alexander Schrijver.Theory of Linear and Integer Programming. John Wiley & Sons, 1986.
+[10] James R. Seddon and Earl T. Campbell. Quantifying magic for multi-qubit operations.
+Proceedings of the Royal Society A, 475(2227):20190251, 2019.
+[11] Victor Veitch, S. A. Hamed Mousavian, Daniel Gottesman, and Joseph Emerson. The resource
+theory of stabilizer quantum computation.New Journal of Physics, 16(1):013009, 2014.
+[12] Santiago Zamora. Certification of non-stabilizerness in multi-qubit systems via worst-case
+random access codes.arXiv preprint arXiv:2611.26705, November 2026.
+10

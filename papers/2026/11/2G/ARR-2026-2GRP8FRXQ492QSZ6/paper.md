@@ -1,0 +1,1013 @@
+# Exact-Q Sum-of-Squares Hierarchy on the Normal Cone of Q2222: Rational Extreme-Point Parameterization, Four-Tier NPA Separation, and Machine-Checked Visibility Optimality
+
+**Author:** Lluis Eriksson  
+**AIRR Identifier:** `ARR-2026-2GRP8FRXQ492QSZ6` (v1)  
+**License:** CC-BY-4.0 (manuscript), MIT (verification repository)  
+**Verification Repository:** https://github.com/lluiseriksson/normal-cone-sos-hierarchy (`v2.0.0`)  
+**Canonical PDF SHA-256:** `d1fadccf8d2be1d67387014d953a0e3ec5a5da4a6f7729059ac4edfb2ce99aab`
+
+## Abstract
+
+Wu, Xie, and Ramanathan (arXiv:2611.27413, 2026) recently constructed the full three-dimensional normal cone N_Q(p*) of Bell functionals uniquely maximized at every nonlocal extreme point p* in ext(Q_2222) of the minimal (2,2,2,2) quantum correlation set, enabling systematic optimization over all self-testing inequalities anchored to a fixed target behavior. We resolve the algebraic, polyhedral, semidefinite-hierarchy, and noise-robustness structure of N_Q(p*) in exact rational arithmetic over Q and formalize all 20 foundational algebraic and soundness theorems in zero-dependency Lean 4 (v4.35.0, zero sorry, zero Classical.choice, zero warnings). First, we introduce a dense rational parameterization k in Q cap (1, 1+sqrt(2)) via alpha(k) = 2(1+2k-k^2)/(k^2+2k-1) and beta(k) = 4(k^2+1)/(k^2+2k-1) satisfying beta^2 = 8 + 2 alpha^2 identically, rendering all eight coordinates of p*(k) in Q^8, the normal-cone basis {I_alpha, S_alpha, D_alpha}, and every extreme ray of N_Q(p*(k)) strictly rational, while compressing the five-square Bamps-Pironio tilted-CHSH decomposition to a universal two-square identity I_alpha^2 + Q_alpha^2 = (8+2 alpha^2)I. Second, we prove that the cross-sectional polygon P(k) of N_Q(p*(k)) undergoes an exact combinatorial octagon-to-hexagon phase transition governed by the cleared-denominator concurrency determinant 2(k^2+2k-1)^2(k^3-k^2-k-1), occurring precisely at the Tribonacci constant k_trib ~ 1.839287. Third, we uncover a sharp structural contrast inside the Navascues-Pironio-Acin (NPA) hierarchy on N_Q(p*(k)): restricting to the four-dimensional N3-free annihilator subspace S4 = span{N1, N2, N4, N5} collapses the sum-of-squares (SOS) cone onto the zero-area one-dimensional segment conv{I_alpha, B_Bob(alpha)} = [-8 alpha/beta^2, 0] x {0}, whereas restoring the fifth Level-(1+AB) annihilator N3 inflates N_SOS^(1+AB)(p*(2)) into a curved two-dimensional spectrahedron covering 80.0% of P(2), nested strictly inside the NPA-2 spectrahedron N_SOS^(2)(p*(2)) (97.9% area) and the true octagon P(2). Using exact rational LDL^T moment matrices and exact non-commutative SOS replays backed by weak SDP duality (Lean 4 Theorem 20), we establish the unconditional strict four-tier chain empty = N_SOS^(1)(p*(2)) < N_SOS^(1+AB)(p*(2)) < N_SOS^(2)(p*(2)) < N_Q(p*(2)) with zero floating-point trust on every inclusion. Fourth, we construct an explicit four-vertex rational linear-programming dual certificate proving that the canonical Alice-tilted CHSH functional I_alpha uniquely minimizes the white-noise visibility threshold v(B) = beta_loc(B)/beta_Q(B) >= (2+alpha)/beta across the entire three-dimensional normal cone N_Q(p*(k)). All results are backed by 13 standalone exact-Q JSON certificates, four reproducible benchmarks, and a 42-attack adversarial red-team test suite.
+
+## Full Extracted Text
+
+--- Page 1 ---
+Exact-QSum-of-Squares Hierarchy on the Normal
+Cone ofQ2222:
+Rational Extreme-Point Parameterization, Four-Tier
+NPA Separation,
+and Machine-Checked Visibility Optimality
+Lluis Eriksson∗
+November 2026
+Abstract
+Wu, Xie, and Ramanathan (arXiv:2611.27413, 2026) recently constructed the full three-
+dimensional normal coneNQ(p∗)of Bell functionals uniquely maximized at every nonlocal
+extreme point p∗ ∈ext (Q2222)of the minimal(2 ,2,2,2)quantum correlation set, enabling
+systematic optimization over all self-testing inequalities anchored to a fixed target behavior.
+We resolve the algebraic, polyhedral, semidefinite-hierarchy, and noise-robustness structure of
+NQ(p∗)in exact rational arithmetic overQ and formalize all 20 foundational algebraic and
+soundness theorems in zero-dependency Lean 4 (v4.35.0, zerosorry, zeroClassical.choice,
+zero warnings). First, we introduce a dense rational parameterizationk∈Q∩ (1,1 +
+√
+2)
+via α(k) = 2(1 + 2 k−k 2)/(k2 + 2k− 1)and β(k) = 4( k2 + 1)/(k2 + 2k− 1)satisfying
+β2 = 8 + 2 α2 identically, rendering all eight coordinates ofp∗(k) ∈Q 8, the normal-cone
+basis {Iα,Sα,Dα}, and every extreme ray ofNQ(p∗(k))strictly rational, while compressing
+the five-square Bamps–Pironio tilted-CHSH decomposition to a universal two-square identity
+I2
+α + Q2
+α ≡(8 + 2α2)I. Second, we prove that the cross-sectional polygonP(k)of NQ(p∗(k))
+undergoes an exact combinatorial octagon-to-hexagon phase transition governed by the cleared-
+denominator concurrency determinant2(k2 + 2k−1)2(k3 −k2 −k− 1), occurring precisely at
+the Tribonacci constantktrib ≈1.839287. Third, we uncover a sharp structural contrast inside
+the Navascués–Pironio–Acín (NPA) hierarchy onNQ(p∗(k)): restricting to the four-dimensional
+N3-free annihilator subspaceS4 = span{N1,N2,N4,N5}collapses the sum-of-squares (SOS)
+cone onto the zero-area one-dimensional segment conv{Iα,BBob(α)} = [ −8α/β2,0] ×{0},
+whereas restoring the fifth Level-(1 + AB)annihilator N3 inflates N(1+AB)
+SOS (p∗(2))into a
+curved two-dimensional spectrahedron covering80.0%of P(2), nested strictly inside the NPA-2
+spectrahedron N(2)
+SOS(p∗(2))(97 .9%area) and the true octagonP(2). Using an algebraic Level-1
+annihilator proof (N(1)
+SOS(p∗(k)) = ∅for allk) paired with exact rationalLDL⊤moment matrices
+and exact non-commutative SOS replays backed by weak SDP duality (Lean 4 Theorem 20),
+we establish the unconditional strict four-tier chain∅= N(1)
+SOS(p∗(2)) ⊊N (1+AB)
+SOS (p∗(2)) ⊊
+N(2)
+SOS(p∗(2)) ⊊NQ(p∗(2))with zero floating-point trust on every inclusion. Fourth, we construct
+an explicit four-vertex rational linear-programming dual certificate proving that the canonical
+Alice-tilted CHSH functionalIα uniquely minimizes the white-noise visibility thresholdv(B) =
+βloc(B)/βQ(B) ≥(2 + α)/β across the entire three-dimensional normal coneNQ(p∗(k)). All
+results are backed by 13 standalone exact-Q JSON certificates, four reproducible benchmarks,
+and a 42-attack adversarial red-team test suite.
+∗Independent researcher (Sweden). Prepared with AI assistance (Google Antigravity). Code, Lean 4 formalization,
+and exact-Qcertificates:https://github.com/lluiseriksson/normal-cone-sos-hierarchy(MIT license).
+1
+
+--- Page 2 ---
+1 Introduction
+The convex bodyQ2222 ⊂R 8 of quantum behaviors in the minimal bipartite Bell scenario—two
+parties, two binary-outcome measurements per party—is the foundational arena of Bell nonlocality,
+device-independent (DI) randomness certification, and self-testing [1, 2, 3, 4, 5, 6, 7]. Every
+nonlocal extreme pointp∗∈ext (Q2222) \L2222 can be realized by projective measurements on a
+two-qubit pure state|ψθ⟩= cosθ|00⟩+ sinθ|11⟩and is uniquely exposed by the one-parameter
+family of tilted-CHSH Bell inequalitiesIα (α∈ (0,2)) introduced by Acín, Massar, and Pironio [4]
+and endowed with five-square sum-of-squares (SOS) self-testing decompositions by Bamps and
+Pironio [8].
+A landmark recent advance by Wu, Xie, and Ramanathan [9] moved beyond single tilted-CHSH
+inequalities by explicitly characterizing the entire three-dimensional normal coneNQ(p∗)of Bell
+functionals uniquely maximized at each nonlocal extreme behaviorp∗∈ext (Q2222)and applying
+this cone to device-independent quantum information processing. This breakthrough immediately
+raises four sharp mathematical and computational questions that govern howNQ(p∗)behaves in
+practical DI certification and automated proof checking:
+1. Exact rational arithmetic and minimal SOS rank:Canext(Q2222), its normal-cone basis, and its
+minimal SOS decompositions be parameterized densely overQ without floating-point rounding
+or square-root irrationals, and can the Bamps–Pironio five-square SOS forIα be compressed?
+2. Exact polyhedral combinatorics ofNQ(p∗):How many extreme rays bound the two-dimensional
+cross-section P(k)of NQ(p∗(k))as the entanglement parameter varies across(0,2), and where
+do combinatorial facet transitions occur?
+3. Exact NPA hierarchy certification power onNQ(p∗):Which Bell functionals inside the full
+three-dimensional normal cone admit exact Level-(1 +AB)or Level-2 NPA [10, 11] sum-of-
+squares certificates ofβQ(B) = B·p ∗, what role does each exact annihilator play, and can every
+strict separation between Levels1,1 + AB,2, and NQ(p∗)be certified unconditionally overQ?
+4. Global white-noise robustness acrossNQ(p∗):Among all infinitely many Bell inequalities in
+NQ(p∗)sharing the exact same unique quantum maximizerp∗, can any nontrivial normal-cone
+perturbation( η,ζ) ̸= (0,0)beat the white-noise visibility thresholdv(Iα) = (2 + α)/
+√
+8 + 2α2
+of the canonical tilted-CHSH inequality?
+In this paper we answer all four questions completely, with exact closed-form rational proofs,
+zero-floating-point-trust certificates, and a machine-checked Lean 4 kernel:
+• Rational Extreme-Point Atlas & Universal 2-Square Identity (Theorem 3.1):
+Mapping α↦→α(k) = 2(1 + 2 k−k 2)/(k2 + 2k− 1)for k∈Q∩ (1,1 +
+√
+2)rationalizes
+β(k) =
+√
+8 + 2α2 = 4( k2 + 1)/(k2 + 2k− 1) ∈Q and places p∗(k), {Iα,Sα,Dα}, and all
+normal-cone vertices insideQ. In the universal involutive Bell algebra,I2
+α + Q2
+α ≡(8 + 2α2)I
+yields an exact two-square SOS certificate forIα overQ.
+• Tribonacci Octagon-to-Hexagon Phase Transition (Theorem 3.3):The cross-sectional
+polygon P(k)switches sharply from an 8-vertex octagon (k > ktrib) to a 6-vertex hexagon
+(k < ktrib) precisely at the Tribonacci constantktrib ≈1.839286755, the unique real root of
+k3 −k2 −k−1 = 0, proved via an exact3×3determinant factorization.
+•S4-Subspace Collapse vs. Exact-Q Four-Tier NPA Separation (Theorem 3.4):Omit-
+ting the fifth Level-(1 +AB)annihilator N3 collapses the SOS cone strictly onto the zero-area
+1D segment conv{Iα,BBob(α)}= [ −8α/β2,0] ×{0}(with exact 2-square rational SOS at
+both endpoints and closed-form Schur/diagonal obstructions outside). RestoringN3 inflates
+N(1+AB)
+SOS (p∗(2))to a 2D curved spectrahedron (80.0%of P(2)), nested strictly insideN(2)
+SOS(p∗(2))
+(97.9%) andP(2). Every inclusion in∅= N(1)
+SOS ⊊N(1+AB)
+SOS ⊊N(2)
+SOS ⊊NQ(p∗(2))is proved in
+exact Q via mutually exclusive SOS replays and strictly positive-definiteLDL⊤NPA moment
+matrices.
+2
+
+--- Page 3 ---
+• Unique Global White-Noise Visibility Optimality (Theorem 3.5):An explicit strictly
+positive four-vertex rational LP dual certificate provesv(B(η,ζ)) ≥(2 + α)/β throughout
+NQ(p∗(k)), with equality uniquely at(η,ζ) = (0,0).
+• Zero-Trust Formal Verification:All 20 core algebraic and weak-SDP-duality soundness
+theorems are machine-checked in Lean 4 (v4.35.0, zerosorry, zeroClassical.choice, zero
+warnings); 13 standalone exact-Q JSON certificates spanning all four weak-SDP-duality-sound
+modes are independently replayed in pure Python stdlib (fractions.Fraction); and a 42-
+attack adversarial red-team test suite validates certificate tamper resistance.
+2 Preliminaries and Exact Normal-Cone Coordinates
+We work in the standard eight-dimensional Collins–Gisin / correlator representation of no-signaling
+(2,2,2,2)behaviors:
+p=
+(
+⟨A0⟩,⟨A 1⟩,⟨B 0⟩,⟨B 1⟩,⟨A 0B0⟩,⟨A 0B1⟩,⟨A 1B0⟩,⟨A 1B1⟩
+)
+∈[−1,1] 8,(1)
+where Ax,By are Hermitian involutions (A2
+x = B2
+y = I) satisfying[ Ax,By] = 0for x,y∈{ 0,1}.
+The local polytopeL2222 = conv{v(a0,a1,b0,b1) : ax,by ∈{−1,+1}}has 16 deterministic extreme
+points v(a0,a1,b0,b1) = ( a0,a1,b0,b1,a0b0,a0b1,a1b0,a1b1). For any Bell functionalB∈R 8, its
+local bound isβloc(B) = maxv∈ext(L2222) B·v , its quantum bound isβQ(B) = supp∈Q2222 B·p , and
+for any Bell-violating functional (βQ(B)>β loc(B)>0) its white-noise visibility threshold is
+v(B) := inf
+{
+v∈[0,1] :vp ∗+ (1−v)p noise violatesB·p≤β loc(B)
+}
+= βloc(B)
+βQ(B) ,(2)
+since the isotropic white-noise behavior ispnoise = (0,0,0,0,0,0,0,0)∈R 8.
+Following Acín–Massar–Pironio [4] and Bamps–Pironio [8], the canonical tilted-CHSH operator
+forα∈(0,2)is
+Iα =αA0 +A0(B0 +B1) +A1(B0 −B1),(3)
+represented by the coordinate vectorIα = (α,0,0,0,1,1,1,−1) ∈R 8, with local boundβloc(Iα) =
+2 + α and quantum boundβ := βQ(Iα) =
+√
+8 + 2α2. Up to local symmetries, the unique quantum
+behavior achieving Iα ·p∗ = β is realized by the two-qubit state|ψθ⟩= cosθ|00⟩+ sinθ|11⟩
+with sin(2θ) =
+√
+(4−α 2)/(4 +α2) and projective measurements A0 = σz, A1 = σx, B0 =
+cosµσ z + sinµσ x, B1 = cosµσ z −sinµσ x where tanµ = sin(2θ)[ 8, 9]. Evaluating the eight
+correlators yields the exact algebraic form
+p∗(α) =
+(
+2α
+β ,0, α
+2 , α
+2 , β
+4 , β
+4 , 4−α 2
+2β ,− 4−α 2
+2β
+)
+,(4)
+which satisfiesIα ·p∗(α) = 2α2
+β + β
+2 + 4−α2
+β = 8+2α2
+2β + β
+2 =β.
+By the first-order stationarity construction of Wu, Xie, and Ramanathan [9], every Bell
+functional B∈R 8 that is stationary atp∗(α)on the smooth five-dimensional manifold of nonlocal
+extreme behaviorsext(Q2222)lies in a three-dimensional linear subspace spanned byIα together
+with two exact tangent-orthogonal generators:
+Sα =
+(
+β2
+8 ,0,− β
+4 ,− β
+4 , α
+2 , α
+2 ,0,0
+)
+,(5)
+Dα =
+(
+0,− β2
+8 , β
+4 ,− β
+4 ,0,0, α
+2 , α
+2
+)
+.(6)
+One checks directly from (4)–(6) that
+Sα ·p∗(α) = αβ
+4 , D α ·p∗(α) = 0.(7)
+3
+
+--- Page 4 ---
+Normalizing the coefficient of Iα to1, we parameterize the two-dimensional cross-section of
+NQ(p∗(α))by
+B(η,ζ) :=I α +ηSα +ζDα, β Q(B(η,ζ)) =β+ αβ
+4 η.(8)
+As proved in [9], for theQ2222 boundary the 16 local-vertex dominance inequalitiesB(η,ζ) ·v≤
+B(η,ζ) ·p∗(α)( v∈ext (L2222)) carve out the exact two-dimensional convex polygonP(α)of Bell
+functionals uniquely exposingp∗(α)(with strict interior βloc <βQ and boundary edgesβloc = βQ).
+3 Main Theorems
+3.1 Dense Rational Parameterization and Universal Two-Square SOS
+Theorem 3.1(Rational Extreme-Point Atlas and Universal 2-SquareZ[α]Identity).Let k∈
+Q∩(1,1 +
+√
+2)and defineD(k) :=k 2 + 2k−1>0,
+α(k) := 2(1 + 2k−k 2)
+k2 + 2k−1 , β(k) := 4(k2 + 1)
+k2 + 2k−1 .(9)
+Then:
+1.α (k) ∈Q∩ (0,2)is strictly decreasing and mapsQ∩(1,1 +
+√
+2)onto a dense subset of(0,2),
+whileβ(k) 2 = 8 + 2α(k)2 holds identically.
+2. All eight coordinates ofp∗(k) ∈ext (Q2222), all entries ofIα,Sα,Dα, and all extreme rays of
+the normal coneNQ(p∗(k))belong strictly toQ.
+3. In the involutive algebraA2
+x = B2
+y = I,[ Ax,By] = 0, definingQα := −αA1 + A1(B0 + B1) +
+A0(B0 −B1), the exact polynomial identity
+I2
+α +Q2
+α ≡(8 + 2α2)I(10)
+holds overZ[α]. Consequently, for everyk∈Q∩ (1,1 +
+√
+2), the shifted Bell operator admits
+an exact rank-2rational sum-of-squares certificate
+β(k)I−I α(k) = 1
+2β(k)
+(
+β(k)I−I α(k)
+)2 + 1
+2β(k) Q2
+α(k).(11)
+Proof.Direct algebraic expansion yields
+(
+4(k2 + 1)
+)2 = 16(k4 + 2k2 + 1) = 8(k2 + 2k−1) 2 + 2
+(
+2(1 + 2k−k 2)
+)2,(12)
+machine-checked overZ as NormalConeSOS.pythagorean_tilted_identity. On k∈ (1,1 +
+√
+2),
+both k2 +2k−1 >2and1+2 k−k2 = 2−(k−1)2 ∈(0,2)are strictly positive, and2(1+2 k−k2) <
+2(k2 + 2k−1) ⇐⇒k 2 >1, soα(k) ∈(0,2); rationality ofp∗(k), {Iα,Sα,Dα}, and all intersections
+of rational half-spaces follows immediately. For(10), writingC+ := B0 + B1 and C−:= B0 −B1,
+note thatC2
++ +C2
+−= 4IandC +C−+C−C+ = 0. ExpandingI 2
+α andQ 2
+α gives
+I2
+α =α2I+C 2
++ +C2
+−+ 2αC+ +α{A0,A1}C−+ [A0,A1]C+C−,(13)
+Q2
+α =α2I+C 2
++ +C2
+−−2αC+ −α{A0,A1}C−−[A0,A1]C+C−,(14)
+where C+C− = −C−C+ = [ B0,B1]. Every cross-term cancels identically, leavingI2
+α + Q2
+α =
+2α2I+ 2(C2
++ + C2
+−) = (8 + 2α2)I = β2I. Rearranging( βI−I α)2 + Q2
+α = 2β(βI−I α)gives (11)
+(Lean 4:two_square_sos_identity).
+Remark 3.2.Bamps and Pironio [8] construct a five-square SOS decomposition forβI−I α to
+extract algebraic self-testing relations directly. Theorem 3.1 shows that for certifying the exact
+quantum bound βQ(Iα) = β itself, onlytwosquares suffice, and both lie in the nine-operator
+Level-(1 +AB)basis with purely rational coefficients overQ.
+4
+
+--- Page 5 ---
+3.2 Exact Normal-Cone Polygon and Tribonacci Phase Transition
+Theorem 3.3(Tribonacci Octagon-to-Hexagon Phase Transition ofNQ(p∗(k))).Let k∈ (1,1+
+√
+2)
+withD=k 2 + 2k−1>0, and consider the 16 local-vertex half-spaces
+La0,a1,b0,b1(η,ζ) :=B(η,ζ)·v(a 0,a1,b0,b1)−B(η,ζ)·p ∗(k)≤0(15)
+defining the normal-cone cross-sectionP(k) ⊂R 2. After clearing strictly positive denominators,
+the three upper-half-plane facet linear formsL(−1,−1,−1,−1), L(1,1,1,−1), andL(1,−1,1,1) have exact
+integer coefficient matrix
+M(k) =
+
+
+−D k 2 −1 2k 2
+−(k−1)D k(k 2 + 1)k 2 + 1
+−D−2k(k+ 1) 2
+
+,(16)
+whose determinant factors identically overZ[k]as
+detM(k) = 2D 2(
+k3 −k2 −k−1
+)
+.(17)
+By ζ↦→−ζ symmetry, the reflected tripleL(−1,1,−1,−1), L(1,−1,−1,1), L(1,1,1,1) satisfies the identical
+factorization up to sign. Consequently,P(k)undergoes an exact combinatorial phase transition
+at the Tribonacci constantktrib ≈1.839286755214( αtrib ≈0.427480726), the unique real root of
+k3 −k2 −k−1 = 0:
+• For k∈ (ktrib,1 +
+√
+2)( α<α trib), P(k)is a strictly convex8-vertex octagonbounded by the
+four upper facetsF1 = L(1,1,1,−1), F2 = L(−1,−1,−1,−1), F3 = L(1,−1,1,1), F4 = L(−1,1,1,−1) and
+their fourζ↦→−ζreflections.
+• For k∈ (1,ktrib)( α>α trib), the antipodal facetsF2 = L(−1,−1,−1,−1) and F′
+2 = L(−1,1,−1,−1) be-
+come strictly redundant andP(k)is a strictly convex6-vertex hexagonbounded by{F1,F3,F4}
+and their reflections; at the exact transition pointk= ktrib, F2 and F′
+2 pass through the vertices
+F1 ∩F3 andF ′
+1 ∩F ′
+3 (triple concurrency), soP(ktrib)is also a 6-vertex hexagon.
+Proof. Substituting (9) intoLa0,a1,b0,b1(η,ζ) = c0 +c1η+c2ζ for the four upper-half-plane candidate
+facetsF 1 =L(1,1,1,−1),F 2 =L(−1,−1,−1,−1),F 3 =L(1,−1,1,1), andF4 =L(−1,1,1,−1) yields
+F1 = 4(k−1)
+D2
+(
+−(k−1)D+k(k 2 + 1)η+ (k2 + 1)ζ
+)
+,(18)
+F2 = 8
+D2
+(
+−D+ (k2 −1)η+ 2k 2ζ
+)
+,(19)
+F3 = 4(k−1) 2
+D2
+(
+−D−2kη+ (k+ 1) 2ζ
+)
+,(20)
+F4 = 4
+D2
+(
+−2D−(k+ 1)(k 2 + 1)η+ (k−1)(k 2 + 1)ζ
+)
+.(21)
+Factoring−Dfrom column1ofM(k)and subtracting row1from row3and(k−1)times row1
+from row2produces a2×2cofactor whose first column is(D,−D) ⊤, yielding
+detM(k) = (−D)·
+(
+−2D(k3 −k2 −k−1)
+)
+= 2D2(k3 −k2 −k−1),(22)
+formally proved in Lean 4 asNormalConeSOS.tribonacci_facet_concurrency_det. To verify
+completeness across all16local vertices over the entire rangek∈ (1,1 +
+√
+2), we solve the pairwise
+intersections of{F1,F2,F3,F4}and the symmetry axisζ= 0explicitly overQ(k):
+VR =
+((k−1)D
+k(k2 + 1),0
+)
+, V L =
+( −2D
+(k+ 1)(k2 + 1),0
+)
+,
+V12 =
+(
+D(2k3 −3k2 −1)
+(k2 + 1)Q1
+, D2
+(k2 + 1)Q1
+)
+, V 13 =
+(
+D(k3 −k−2)
+k(k2 + 1)Q2
+, D2
+(k2 + 1)Q2
+)
+,
+V23 =
+(
+−D(k2 −2k−1)
+Q3
+, D2
+Q3
+)
+, V 34 =
+(
+D(k3 −3k2 −3k−3)
+(k2 + 1)Q4
+, (k−1)D 2
+(k2 + 1)Q4
+)
+,
+5
+
+--- Page 6 ---
+where every denominator polynomialQ1 = 2k3 −k2 +1, Q2 = k2 +2k+3, Q3 = k4 +6k3 −2k−1 =
+(k4 −1)+2 k(3k2 −1), andQ4 = k3 +k2 +5k+1is strictly positive onk> 1. Evaluating all16linear
+forms La0,a1,b0,b1 at these six upper candidate vertices yields exact rational factorizations overQ(k):
+(i)all8non-facetlocalvertices {(−1,−1,1,±1),(−1,1,−1,1),(−1,1,1,1),(1,±1,−1,−1),(1,−1,1,−1),(1,1,−1,1)}
+evaluate strictly negatively at every point in{VR,V12,V13,V23,V34,VL}for allk> 1(every denom-
+inator is strictly positive and every numerator factors as a negative integer times positive factors in
+k,k−1,k+1,k2 +1,k2 +k+1); (ii) sincek< 1+
+√
+2< 3, k3 −3k2 −k−1 = k2(k−3)−(k+1) <0
+strictly, ensuringF2(V34) = 16(k3−3k2−k−1)
+(k2+1)Q4
+<0and F4(V23) = 8(k3−3k2−k−1)
+Q3
+<0, whileF4(VR) =
+−4/k < 0, F4(V12) = −8k(k−1)
+Q1
+< 0, F4(V13) = −8(k+1)
+kQ2
+< 0, F1(V34) = −8(k−1)(k+1)
+Q4
+< 0,
+F1(VL) = −4(k−1)
+k+1 < 0, F3(VR) = −4(k−1)2
+k2+1 < 0, and F3(VL) = − 4(k−1)3
+(k+1)(k2+1) < 0, proving that
+F1,F3,F4 (and their reflections) are active and unclipped on all of(1,1+
+√
+2); and (iii) the only sign-
+changing evaluations areF2(V13) = 16T(k)
+k(k2+1)Q2
+, F3(V12) = −8(k−1)2T(k)
+(k2+1)Q1
+, andF1(V23) = −8(k−1)T(k)
+Q3
+,
+where T(k) := k3 −k2 −k− 1. For k > ktrib (T(k) >0), V13 is cut off byF2 while V12,V23 are
+strictly feasible, yielding the strictly convex 8-vertex octagon{VR,V12,V23,V34,VL,V ′
+34,V ′
+23,V ′
+12};
+for k<k trib (T(k) <0), F2(V13) <0makes F2,F′
+2 strictly redundant, leaving the 6-vertex hexagon
+{VR,V13,V34,VL,V ′
+34,V ′
+13}; and at k = ktrib (T(k) = 0), V12 = V23 = V13 coalesce with triple
+concurrency, leaving the same 6-vertex hexagon. Byζ↦→−ζ symmetry, all16half-spaces are
+accounted for.
+3.3S 4-Subspace Collapse and Exact-QFour-Tier NPA Separation
+Consider the canonical nine-operator Level-(1 +AB)basis and thirteen-operator Level-2basis:
+O1+AB ={I,A 0,A1,B0,B1,A0B0,A0B1,A1B0,A1B1},(23)
+O2 =O1+AB ∪{A0A1,A1A0,B0B1,B1B0}.(24)
+BecauseO1+AB|ψθ⟩spans the full four-dimensional two-qubit Hilbert spaceC4, the exact annihilator
+subspace {P∈span (O1+AB) : P|ψθ⟩= 0}has exact dimension9 −4 = 5, spanned overQ by five
+explicit operators (implemented verbatim insrc/nc_sos.py):
+N1 =A0 −2
+β(B0 +B1), N 2 =I− 2
+βA0(B0 +B1),(25)
+N3 = 1
+2(B0 −B1)− 4−α 2
+2β A1 −α
+βA0(B0 −B1),(26)
+N4 =A1(B0 +B1)−αA 1 +A0(B0 −B1) =Qα, N 5 = β
+2 I−αA 0 −A1(B0 −B1).(27)
+At NPA Level-2, the exact annihilator space has dimension13−4 = 9, spanned by{N1,...,N 5}
+together with four rational degree-2annihilators:
+N6 =A0A1 + 2
+βA1(B0 +B1), N 7 =A0A1 +A1A0,(28)
+N8 =B0B1 −
+(β2
+8 −1
+)
+I− β
+4 A0(B0 −B1), N 9 =B0B1 +B1B0 −
+(β2
+4 −2
+)
+I.(29)
+Every one ofN1,...,N 9 annihilates |ψθ⟩identically (numerically verified to∥Ni|ψθ⟩∥2 ≤2.5×10−16
+across all testedkintests/test_suite.py).
+Theorem 3.4( S4-Subspace Collapse vs. Full Four-Tier NPA Hierarchy Separation).Letk∈
+Q∩(1,1 +
+√
+2)withα=α(k)∈(0,2)andβ=β(k) =
+√
+8 + 2α2.
+1. Exact 1D Collapse of the 4-OperatorN3-Free SubspaceS4 := span{N1,N2,N4,N5}:
+If a Level-(1 +AB)SOS decomposition βQ(B) I−B(η,ζ) =N ⊤
+S4GNS4 (G⪰ 0) is restricted to
+6
+
+--- Page 7 ---
+the four-dimensionalN3-free subspaceS4, the feasible region collapses strictly to the zero-area,
+one-sided one-dimensional segment
+N(S4)
+SOS (p∗(k)) =
+{
+(η,0) :− 8α
+β2 ≤η≤0
+}
+= conv
+{
+Iα,BBob(α)
+}
+.(30)
+Specifically, linear operator matching inS4 is algebraically inconsistent wheneverζ̸= 0; on
+ζ = 0(indexing the S4 Gram matrix entries on{N1,N2,N4,N5}as {0,1,3,4}), linear matching
+forcesG01 = 0together with
+G33 = 1
+2β + β
+16αη, G 44 = 1
+2β − β
+16αη, S:=G 00 +G11 = β
+8 − β3
+64αη,
+G04 =−β
+8 η, G 14 = 1
+4 + β2
+32αη.(31)
+BecauseG01 = 0, the3 ×3principal minor on{0,1,4}requiresG44 ≥G2
+04
+G00
++ G2
+14
+G11
+≥(|G04|+|G14|)2
+G00+G11
+by Titu’s lemma (Cauchy–Schwarz), which fails strictly for everyη > 0via the cleared-
+denominator inequality(8 α−β 2η)2 < (8α+ (β2 + 4αβ)η)2, while G33 < 0obstructs every
+η <−8α/β2. At the left endpointη = −8α/β2, the Alice-A0 marginal vanishes identically,
+yielding the Bob-tilted CHSH functional
+BBob(α) = 2α
+β (B0 +B1) + 8−2α 2
+β2 A0(B0 +B1) +A1(B0 −B1), β Q(BBob) = 8
+β,(32)
+certified by an exact rank-2rational SOS
+8
+βI−B Bob(α) = β
+4
+(
+N1 + 4α
+β2 N5
+)2
++ 8−2α 2
+β3 N2
+5 .(33)
+2.Algebraic Level-1 Emptiness,N3 Inflation, and Exact-QFour-Tier Strict Separa-
+tion:Forevery k∈ (1,1+
+√
+2), the Level-1SOS cone is unconditionally empty:N(1)
+SOS(p∗(k)) =
+∅. Restoring the fifth Level-(1 +AB)annihilator N3 (26) at k = 2( α= 2/7,β = 20/7) in-
+flates the feasible SOS cone from the 1D segment(30) into a full two-dimensional curved
+spectrahedronN(1+AB)
+SOS (p∗(2))strictly insideP(2), and every inclusion in the four-tier chain
+∅=N (1)
+SOS(p∗(2))⊊N (1+AB)
+SOS (p∗(2))⊊N (2)
+SOS(p∗(2))⊊N Q(p∗(2))(34)
+is strict and proved unconditionally with zero floating-point trust:
+•∅ = N(1)
+SOS(p∗(k)) ⊊N (1+AB)
+SOS (p∗(k)): Level-1 emptiness holds for all k∈ (1,1 +
+√
+2)
+by exact rank-nullity onO1 = {I,A0,A1,B0,B1}(proof below), while non-emptiness of
+N(1+AB)
+SOS is witnessed by exact 2-square SOS on(30) for all rationalk and by exact 5-square
+Level-(1 +AB)SOS certificates at(1/2,0),(0,1/2), and(1/5,1/5)fork= 2.
+•N (1+AB)
+SOS (p∗(2)) ⊊N(2)
+SOS(p∗(2)): dual-certified at(13/20,0),( −9/10,0), and(0 ,7/10), each
+carrying BOTH a strictly positive-definite9×9rational LDL⊤ NPA-(1 +AB)moment
+matrixΓ 1 ≻0with B·γ (Γ1) >βQ(B)AND an exact 9-square NPA-2 SOS decomposition∑9
+j=1 wjP†
+jPj ≡βQI−B.
+•N (2)
+SOS(p∗(2)) ⊊NQ(p∗(2)): witnessed at extreme octagon verticesV2 = (21 /65,49/65)
+and V5 = (−14/15,0)by strictly positive-definite13 ×13rational LDL⊤ NPA-2 moment
+matricesΓ 2 ≻0withB·γ(Γ 2)−β Q(B) = 5277/325000and91/12500respectively.
+Proof and Formal Verification.ForPart(1), expandingN ⊤
+S4GNS4 = βQI−B(η,ζ)intheinvolutive
+word basis ofQ⟨A0,A1,B0,B1⟩gives25linear equations whose non-Bell word coefficients vanish
+identically. Reading these directly: (i) the coefficient ofA0B0B1 is 4
+β2 G01 = 0, forcingG01 = 0;
+7
+
+--- Page 8 ---
+(ii) the coefficient ofA1B0B1 is −4
+βG03 = 0, forcing G03 = 0; (iii) the sum and difference of
+the A0A1B0B1 and A0A1B1B0 coefficients yield2 G13 −βG34 = 0and2 G14 = βG33, while the
+A0A1 coefficient (with G03 = 0) gives4 G13 + (2 −α2)βG34 = 0; substituting2 G13 = βG34
+yields(4 −α2)βG34 = 0, forcing G34 = G13 = 0since α∈ (0,2); (iv) the coefficient ofB0B1
+gives 4
+β2 (G00 + G11) −G44 = 0; (v) with G03 = G13 = G34 = 0, the coefficient of the Bell
+word A1 inN ⊤
+S4GNS4 vanishes identically, forcingζβ2
+8 = 0 = ⇒ζ = 0; and (vi) matching the
+remaining Bell wordsI, A0, B0 + B1, andA1(B0 −B1)uniquely determines (31) (independently
+cross-checked symbolically overQ(k)). All subsequent algebraic identities(33), the Titu/Schur
+inequality( G00 + G11)G44 ≥(|G04|+ |G14|)2 given G01 = 0, the strict positive-η gap(8 α−β 2η)2 <
+(8α+ (β2 + 4αβ)η)2, left-endpoint negativity8α+ β2η <0, nonnegativity of the Schur margin
+on[ −8α/β2,0], and convexity preservation of PSD certificates are formally machine-checked in
+Lean 4 (NormalConeSOS, Theorems 5–12).
+For Part (2), we first proveN(1)
+SOS(p∗(k)) = ∅forall k∈ (1,1 +
+√
+2). On the unique optimal
+two-qubit realization|ψθ⟩= cosθ|00⟩+ sinθ|11⟩(cos 2θ = 2α/β >0, sin 2θ =
+√
+8−2α 2/β >0,
+using β2 = 8 + 2α2) withA0 = ZA, A1 = XA, B0 = cosµZ B + sinµX B, B1 = cosµZ B −sinµX B
+(cosµ = β/4, sinµ =
+√
+4−α 2/(2
+√
+2) > 0, tanµ = sin 2θ matching Section 2), the Level-1
+operator set O1 = {I,A0,A1,B0,B1}spans all of C4 when applied to |ψθ⟩: {I|ψθ⟩,A0|ψθ⟩}
+spans span{|00⟩,|11⟩}(since cosθ,sinθ> 0), whileA1|ψθ⟩= cosθ|10⟩+ sinθ|01⟩and 1
+2 sinµ(B0 −
+B1)|ψθ⟩= sinθ|10⟩+ cosθ|01⟩span span{|10⟩,|01⟩}with determinantcos2 θ−sin 2 θ= cos 2θ> 0.
+By rank-nullity, the Level-1annihilator space {P∈span (O1) : P|ψθ⟩ = 0 }is strictly one-
+dimensional, spanned byN1 = A0 −2
+β(B0 +B1) (25). Consequently, any Level-1SOS decomposition
+βQ(B) I−B (η,ζ) = ∑
+j wjP†
+jPj (Pj ∈span (O1), wj ≥0) achieving equality atp∗(k)must satisfy
+Pj|ψθ⟩= 0for every j, forcing βQ(B) I−B (η,ζ) = wN2
+1 for some scalar w≥ 0. Expanding
+wN2
+1 = w
+(
+(1+ 8
+β2 )I+ 4
+β2 (B0B1 +B1B0)−4
+βA0(B0 +B1)
+)
+exhibits a non-Bell word coefficient4w
+β2 on
+B0B1+B1B0; becauseβQI−B(η,ζ)contains noB0B1 term, this forcesw= 0and βQI−B(η,ζ) = 0,
+contradicting the nonzero correlator terms ofB(η,ζ)(e.g. the A1(B0 −B1)coefficient is1 ̸= 0for
+all(η,ζ)). HenceN (1)
+SOS(p∗(k)) =∅identically.
+For the remaining inclusions in(34), weak SDP duality guarantees that for any NPA level
+ℓ∈{ 1 + AB,2}, any exact rationalLDL⊤ moment matrixΓ ℓ = LDL⊤ (Di > 0) satisfying all
+level-ℓmoment word-equivalences andΓ00 = 1, and any level-ℓSOS βQI−B = ∑
+j wjP†
+jPj (wj >0,
+Pj ∈span(Oℓ)), evaluating the moment functional yields
+βQ −B·γ(Γ ℓ) =
+∑
+j
+wj v⊤
+j Γℓvj =
+∑
+j
+wj
+∑
+i
+Di(L⊤vj)2
+i ≥0,(35)
+formally proved in Lean 4 asNormalConeSOS.weak_sdp_duality_soundness (Theorem 20). Con-
+sequently, exhibitingΓ ℓ = LDL⊤ ≻0over Q with B·γ (Γℓ) > βQ is an unconditional refu-
+tation of level-ℓ SOS existence, while replaying∑
+j wjP†
+jPj ≡β QI−B over Q is an uncondi-
+tional proof of level-ℓ tightness. All 13 witnesses establishing(34) are independently verified in
+results/certificates/.
+3.4 Unique Global White-Noise Visibility Optimality ofIα
+Theorem 3.5(UniqueGlobalVisibilityOptimalityAcross NQ(p∗(k))).For every k∈Q∩ (1,1+
+√
+2)
+(with α= α(k) ∈(0,2)and β = β(k) =
+√
+8 + 2α2) and every Bell functionalB(η,ζ) = Iα + ηSα +
+ζDα ∈NQ(p∗(k))withβ Q(B(η,ζ)) =β+ αβ
+4 η >0,
+v(B(η,ζ)) = βloc(B(η,ζ))
+βQ(B(η,ζ)) ≥v ∗(α) := 2 +α
+β = 2 +α√
+8 + 2α2 ,(36)
+with equalityif and only ifη=ζ= 0.
+8
+
+--- Page 9 ---
+Proof. Consider the four deterministic local verticesL1 = (+1,+1,+1,+1), L2 = (+1,−1,+1,+1),
+L3 = (+1,+1,+1,−1), andL 4 = (+1,−1,−1,+1), together with the explicit rational weights
+w1 =w2 := 2−α
+2(β−2α) , w 3 =w4 := β−2−α
+2(β−2α) .(37)
+Because0 < α <2, we have β2 −4α2 = 8 −2α2 > 0 = ⇒β > 2α and β2 −(2 + α)2 =
+(2 −α)2 > 0 = ⇒β > 2 + α, so all four weights are strictly positive and sum identically to
+w1 +w2 +w3 +w4 = 1. Evaluating the three basis functionals onL1,...,L 4 gives:
+Iα ·(L1,L2,L3,L4) = (2 +α,2 +α,2 +α,2 +α),(38)
+Sα ·(L1,L2,L3,L4) =
+(
+β2
+8 −β
+2 +α, β2
+8 −β
+2 +α, β2
+8 , β2
+8
+)
+,(39)
+Dα ·(L1,L2,L3,L4) =
+(
+−β2
+8 +α, β2
+8 −α,− β2
+8 + β
+2 , β2
+8 −β
+2
+)
+.(40)
+Taking the convex combination with weights (37) yields three exact algebraic identities:
+4∑
+j=1
+wj(Iα ·Lj) = 2 +α=v ∗(α)β,(41)
+4∑
+j=1
+wj(Sα ·Lj) = β2
+8 −(2−α)(β−2α)
+2(β−2α) = 8 + 2α2
+8 −2−α
+2 = α(2 +α)
+4 =v∗(α) αβ
+4 ,(42)
+4∑
+j=1
+wj(Dα ·Lj) = 0 =v∗(α)·0.(43)
+Therefore, forevery(η,ζ)∈R 2,
+βloc(B(η,ζ))≥max
+j∈{1,2,3,4}
+B(η,ζ)·L j ≥
+4∑
+j=1
+wj
+(
+B(η,ζ)·L j
+)
+=v∗(α)βQ(B(η,ζ)).(44)
+Dividing by βQ(B(η,ζ)) > 0proves (36). Because all four weights wj are strictly positive,
+equality in (44) forces B·L 1 = B·L 2 = B·L 3 = B·L 4. Subtracting L1 from L2 yields
+2(β2
+8 −α)ζ = 0 =⇒ζ = 0(since β2 −8α= 2(2 −α)2 >0), and subtractingL1 from L3 at ζ = 0
+yields( β
+2 −α)η = 0 = ⇒η = 0(since β >2α). All algebraic steps are formalized in Lean 4
+(Theorems 13–18 ofNormalConeSOS.lean).
+4 Lean 4 Formalization and Exact-QCertificate Architecture
+To eliminate floating-point trust across both symbolic theorems and concrete instances, we deploy
+a two-layer verification architecture:
+Layer 1: Zero-Dependency Lean 4 Kernel (lean/NormalConeSOS.lean).All 20 founda-
+tional algebraic and soundness theorems (Table 1) are formalized in pure Lean 4 (leanprover/
+lean4:v4.35.0) using only coreInt and List primitives without Mathlib or external libraries. The
+audit scriptlean/AuditAxioms.lean runs #print axioms on all 20 theorems, confirmingzero
+sorry,zero Classical.choice,zero Lean.ofReduceBool, andzero warnings. We note the ex-
+act formalization boundary transparently: Lean 4 Theorems 1–20 formally verify all integer-cleared
+algebraic identities,S4 Schur-complement bounds, the Tribonacci3×3determinant factorization,
+the 4-vertex visibility LP dual inequalities and uniqueness, and weak SDP duality soundness;
+non-commutative word reduction and explicit9×9and13 ×13rational LDL⊤matrix replays are
+independently verified overQin Layer 2.
+9
+
+--- Page 10 ---
+Table 1: Summary of the 20 machine-checked theorems inlean/NormalConeSOS.lean (v4.35.0,
+0sorry, 0Classical.choice, 0 warnings).
+Group Lean 4 Identifiers (NormalConeSOS.*) Paper Result
+Rational Atlas (1–4)pythagorean_tilted_identity,beta_sq_gt_four_alpha_sq, Theorem 3.1
+beta_sq_sub_local_sq,two_square_sos_identity
+Tribonacci (19)tribonacci_facet_concurrency_detTheorem 3.3
+S4 Collapse (5–12)bob_tilted_rank2_factorization,bob_tilted_second_weight_pos, Theorem 3.4(1)
+cauchy_schwarz_schur,schur_psd_implies_sum_bound,
+positive_eta_schur_obstruction,negative_eta_left_obstruction,
+negative_eta_schur_margin_nonneg,convex_comb_psd_preserved
+SDP Soundness (20)weak_sdp_duality_soundnessTheorem 3.4(2)
+Visibility (13–18)visibility_dual_weights_sum,visibility_dual_weights_pos, Theorem 3.5
+visibility_dual_S_exact_match,visibility_dual_D_cancels,
+visibility_global_lower_bound,visibility_uniqueness_at_origin
+Layer 2: Weak-SDP-Duality-Sound Exact-Q Certificates (NORMAL-CONE-SOS-CERT-1.0).
+The standalone verifiersrc/normal_cone_certifier.py importszerothird-party libraries (no
+NumPy, SciPy, or CVXPY), executing strictly in Python’s exact rationalfractions.Fraction
+arithmetic. Canonical rationals are validated by two anchored ASCII-only regular expressions,
+\A(?:0|-?[1-9][0-9]*)\Z for integers and\A-?[1-9][0-9]*/[1-9][0-9]*\Z (enforcing den≥ 2
+and gcd(|num|,den) = 1) for fractions, automatically rejecting "-0", "2/1", "2/4", trailing
+newlines, and Unicode digits. Exact key sets are enforced at every dictionary level, floats and
+booleans are rejected recursively via strict type(x) is ... checks, empty/zero squares are
+forbidden, and polynomial words are checked against the exact basis setsO1+AB (9 words) orO2
+(13 words). Four mathematically sound, mutually exclusive verification modes are supported:
+1.level_1ab_sos_exact : replays ∑
+j wjP†
+jPj ≡β QI−B in the exact involutive Bell algebra
+withw j >0and non-emptyP j ∈span(O1+AB).
+2.level_2_tight_1ab_gap : dual-certifies Tier 3 by replaying BOTH an exact9×9strictly
+positive-definite NPA-(1+AB)moment matrixΓ 1 = LDL⊤(unit lower-triangularL, Di >0, all
+81 word-equivalences,Γ00 = 1, B·γ(Γ1) >βQ) AND an exact NPA-2 SOS∑
+j wjP†
+jPj ≡βQI−B
+(wj >0,P j ∈span(O2)\{0}).
+3.level_1ab_moment_gap : replays an exact9×9PD NPA-(1+AB)moment matrixΓ 1 = LDL⊤
+provingβ (1+AB)
+NPA >βQ.
+4.level_2_moment_gap : replays an exact13×13PD NPA-2 moment matrixΓ2 = LDL⊤(all
+169 word-equivalences,Γ00 = 1,B·γ(Γ 2)>β Q) provingβ(2)
+NPA >βQ.
+In all four modes, the verifier additionally replays the Theorem 3.5 universal four-vertex visibility
+LP dual certificate (checking exact positivity, normalization, and all three basis sumsIα,Sα,Dα)
+and all 16 local-vertex normal-cone inequalities.
+5 Experiments and Quantitative Benchmarks
+All four experimental suites (scripts/run_all_experiments.py) execute deterministically in
+20.7s on a single CPU core, using Clarabel interior-point SDPs solely as an untrustedwitness
+generatorwhose rounded outputs are verified unconditionally by the zero-float exact-Q Layer-2
+checker, alongside independent two-qubit matrix checks and SciPy HiGHS linear programming.
+5.1 Experiment 1: Certified Exact-QFour-Tier Normal-Cone Atlas
+Table 2 summarizes the 13 standaloneNORMAL-CONE-SOS-CERT-1.0 certificates spanning all four
+sound modes and all four NPA tiers acrossk∈{ 2,3/2,5/4}. Every certificate replays independently
+10
+
+--- Page 11 ---
+Table 2: Experiment 1: Thirteen independently verified exact-Q normal-cone certificates spanning
+all four weak-SDP-duality-sound modes (results/exp1_certified_atlas.json). Maximum two-
+qubit cross-check error is1.78×10 −15.
+Certificate IDk(η,ζ)β Q v=β loc/βQ Mode Sq. Certified Gap∆ Q ms
+k2_alice_tilted2 (0,0) 20/7 4/5(0.8000)1ab_sos2—1.37
+k2_bob_tilted2 (−7/25,0) 14/5 29/35(0.8286)1ab_sos2—1.13
+k3_2_alice_tilted3/2 (0,0) 52/17 12/13(0.9231)1ab_sos2—1.29
+k5_4_alice_tilted5/4 (0,0) 164/49 40/41(0.9756)1ab_sos2—1.31
+k2_1ab_pos_eta2 (1/2,0) 145/49 137/145(0.9448)1ab_sos5—2.01
+k2_1ab_zeta_pos2 (0,1/2) 20/7 13/14(0.9286)1ab_sos5—2.63
+k2_1ab_diag2 (1/5,1/5) 142/49 63/71(0.8873)1ab_sos5—2.37
+k2_tier3_pos_eta2 (13/20,0) 293/98 289/293(0.9863)t3_dual9 23249/4900000(4.74e-3)6.60
+k2_tier3_neg_eta2 (−9/10,0) 131/49 129/131(0.9847)t3_dual9 9337/612500(1.52e-2)6.11
+k2_tier3_zeta_pos2 (0,7/10) 20/7 49/50(0.9800)t3_dual9 1/875(1.14e-3)6.39
+k2_tier3_vertex_V12 (7/10,0) 3 1(1.0000)1ab_gap—951/50000(1.90e-2)1.85
+k2_tier4_vertex_V22 (21/65,49/65) 38/13 1(1.0000)npa2_gap—5277/325000(1.62e-2)3.01
+k2_tier4_vertex_V52 (−14/15,0) 8/3 1(1.0000)npa2_gap—91/12500(7.28e-3)2.84
+Table 3: Experiment 2: Exact normal-cone polygon combinatorics across the Tribonacci transition
+ktrib ≈1.839287(results/exp2_octagon_geometry_and_collapse.json).
+k α(k)β(k)Vertices AreaP(k)η-span[η −
+loc,η+
+loc]S 4 core[η −
+S4
+,0]Full1 +ABfrac.v ∗(α)
+11/5 14/103 292/103 8(oct.)1.9114 [−515/584,618/803] [−721/5329,0](8.2%)85.5% 55/73
+2 2/7 20/7 8(oct.)1.8120 [−14/15,7/10] [−7/25,0](17.1%)85.7% 4/5
+7/4 46/89 260/89 6(hex.)1.5467 [−712/715,267/455] [−2047/4225,0](30.6%)86.4% 56/65
+3/2 14/17 52/17 6(hex.)1.1751 [−68/65,17/39] [−119/169,0](47.5%)88.0% 12/13
+5/4 62/49 164/49 6(hex.)0.7449 [−392/369,49/205] [−1519/1681,0](69.4%)91.3% 40/41
+in1 .1–6.6ms with zero floating-point operations, and independent numerical optimization of the two-
+qubit Bell operator agrees withβQ(B)to machine precision (max|∆|= 1.78×10−15). Crucially, the
+three Tier-3 certificates (k2_tier3_pos_eta, k2_tier3_neg_eta, k2_tier3_zeta_pos) provide
+simultaneous zero-float proofs of Level-(1 +AB)failure (∆ Q
+1+AB ∈[1.14 ×10−3,1.52 ×10−2]) and
+Level-2 exact tightness (9 rational squares), whilek2_tier4_vertex_V2 and k2_tier4_vertex_V5
+certify strict NPA-2 gaps (∆Q
+2 = 5277/325000 ≈1.624 ×10−2 and91 /12500 = 7.28 ×10−3) directly
+overQ.
+5.2 Experiment 2: Exact Polygon Geometry, Tribonacci Transition, andS4 vs.
+Full(1 +AB)Inflation
+Table 3 and Figure 1(b) report exact rational polygon combinatorics and symmetric-axis (ζ = 0)
+spans across five rational extreme points straddling the Tribonacci constantktrib ≈1.839287
+(αtrib ≈0.427481). Exactly as proved in Theorem 3.3,k∈{ 11/5,2}produce strictly convex
+8-vertex octagons, whereask∈{ 7/4,3/2,5/4}produce strictly convex 6-vertex hexagons. At
+k= 2, the 8 exact rational vertices(7/10,0),(21 /65,±49/65),(7 /59,±49/59),( −91/115,±49/115),
+(−14/15,0)enclose exact area4794797 /2646150 ≈1.8120. Along the symmetric lineζ = 0, the
+N3-free S4 subspace covers only8.19%–69.44%of the η-axis (strictly confined toη≤ 0), whereas
+restoring N3 expands the full Level-(1 +AB)span across both η <0and η >0to85 .5%–91.3%of
+theη-axis while remaining strictly bounded away from both apices.
+5.3 Experiment 3: Nested Spectrahedral Phase Map and 4-Tier NPA Separa-
+tion
+Experiment 3 maps both the 36-angle radial boundary contours ofN(1+AB)
+SOS (p∗(2))and N(2)
+SOS(p∗(2))
+(Figure 1(a)) and the exact Clarabel primal gaps∆1+AB = β(1+AB)
+NPA −βQ and∆ 2 = β(2)
+NPA −βQ
+across 18 probes (Figure 2):
+11
+
+--- Page 12 ---
+Figure 1: Nested spectrahedral geometry insideNQ(p∗(k)).(a)At k = 2( α = 2/7), the exact
+8-vertex octagonP(2)(blue, area1 .812) strictly encloses the curved NPA-2 spectrahedronN(2)
+SOS
+(green,97 .9%area), which strictly encloses the full 5-operator Level-(1 + AB)spectrahedron
+N(1+AB)
+SOS (orange,80 .0%area), containing the 1DS4-subspace core[ −7/25,0] ×{0}(red) from
+Iα to BBob, overlaid with exact-Q certified rays.(b)Symmetric η-axis spans acrossα(k) ∈(0,2)
+contrasting the 1DS4 collapse with full Level-(1 +AB)inflation and marking the Tribonacci
+transitionα trib ≈0.4275.
+• Area stratification:Out of the exact octagon area1.81199, theS4 subspace covers0.0%(1D
+segment), full Level-(1 +AB)covers1.45033(80.0%), and NPA-2 covers1.77359(97.9%).
+• Asymmetric apex behavior:Notably, at the right apexV1 = (7/10,0), Level-(1 +AB)exhibits
+a large gap∆1+AB = 1.941 ×10−2 (certified inQ by k2_tier3_vertex_V1) whereas NPA-2
+becomes numerically tight (∆2 < 10−9). By contrast, the boundary point(0 ,7/9)(∆ 2 =
+7.60 ×10−4) and all seven remaining verticesV2,...,V 8 exhibit strictly positive NPA-2 gaps up
+to∆ 2 = 1.659×10 −2 atV 2,V8 and7.628×10 −3 at the left apexV5 = (−14/15,0).
+5.4 Experiment 4: Global White-Noise Visibility Landscape and 42-Attack
+Red-Team Audit
+Experiment 4 confirms Theorem 3.5 independently across both LP solvers and exhaustive grids
+(Figure 3):
+1. Across all five rational extreme pointsk∈{ 11/5,2,7/4,3/2,5/4}, independent HiGHS LP
+minimization ofβloc/βQ over P(k)recovers( ηopt,ζopt) = (0,0)and matches v∗(α) = (2 +α)/β
+to machine precision (max|∆v|= 3.33×10 −16).
+2. Across 739 interior and boundary grid points ofP(2), exact rational evaluation findszero
+violationsof v(η,ζ) ≥4/5 = 0.80, while the Bob-tilted endpointBBob(α)is strictly suboptimal
+across allα∈(0,2)(e.g.,29/35≈0.8286vs.4/5 = 0.8000atk= 2).
+Finally,tests/test_suite.py executes 4 verification suites covering all 9 annihilator norms on
+two-qubit realizations, the Tribonacci vertex-count transition, all 13 shipped certificates, and42 live
+adversarial red-team attacks: schema/key-set tampering, float/bool/Decimal/tuple injection,
+non-canonical rational strings ("-0", "2/1", "4/14", "+2", "02", trailing newlines, Unicode digits),
+out-of-domain k, tampered p∗/βQ/βloc, zero-square empty-polynomial injection, degree-2 word
+escape into Level-(1+AB)SOS, degree-4 word escape into Level-2 SOS, negative/zeroLDL⊤pivots
+Di, non-unit or upper-triangularL corruption, broken NPA moment word-equivalence symmetry,
+12
+
+--- Page 13 ---
+Figure 2: Experiment 3: Strict four-tier NPA primal relaxation gaps acrossP(2)( results/
+exp3_npa_hierarchy_phase_map.json). Tier 2 interior points have zero gap at both(1 +AB)
+and NPA-2; Tier 3 points(13/20,0),( −9/10,0),(0 ,7/10), and right apexV1 show strict(1 + AB)
+gaps (1.35 ×10−3–1.94 ×10−2) resolved cleanly by NPA-2; Tier 4 edge(0,7/9)and vertices V5,V2
+retain strict gaps even at NPA-2.
+tampered npa_gap, forged universal visibility dual weights, and missing Tier-3 sub-payloads. All
+42 attacks are deterministically rejected.
+6 Discussion and Outlook
+Our findings clarify both the geometric richness and the exact semidefinite complexity of the Wu–
+Xie–Ramanathan normal coneNQ(p∗)[ 9]. First, the combinatorial boundary ofP(k)undergoes
+an unexpected algebraic transition from an octagon to a hexagon precisely at the Tribonacci
+constant ktrib ≈1.839287. Second, the exact annihilator N3 plays a dramatic structural role
+at NPA Level-(1 +AB): omitting N3 collapses the entire SOS cone to the 1D rank-2 segment
+conv{Iα,BBob(α)}, whereas including all five Level-(1 +AB)annihilators inflates it to80 .0%of
+the polygon area, leaving a17.9%collar certified at NPA-2 and a2.1%outer corner region around
+extreme verticesV2,...,V 8 requiring NPA-3 or higher. Third, our four-vertex LP dual theorem
+proves that no normal-cone deformation can improve isotropic white-noise visibility overIα; hence
+the practical device-independent gains of exploringNQ(p∗)[ 9] arise specifically for asymmetric
+operational metrics such as one-sided randomness certification [12], directional noise models, or
+marginal-free designs likeBBob.
+Reproducibility and Artifact Verification
+The complete codebase, Lean 4 formalization, 13 exact-Q certificates, experimental outputs,
+figures, and SHA-256 manifest are publicly archived under the MIT License athttps://github.
+com/lluiseriksson/normal-cone-sos-hierarchy . Running python scripts/verify_all.py
+independently replays: (1) the Lean 4v4.35.0 build and axiom audit (20/20 theorems, 0 warnings,
+0 sorry, 0Classical.choice); (2) zero-float exact-Q verification of all 13 certificates; (3) the full
+pytest suite including all 42 live adversarial attacks; and (4) SHA-256 integrity checks across all
+36 tracked repository artifacts.
+13
+
+--- Page 14 ---
+Figure 3: Experiment 4: Global white-noise visibility optimality ofIα across NQ(p∗(k))( results/
+exp4_visibility_optimality_landscape.json).(a)Exact visibility threshold v(η,ζ) =
+βloc/βQ across 739 grid points insideP(2), attaining its unique global minimumv∗= 4/5 = 0.80at
+(0,0)with zero violations.(b)Theorem 3.5 lower bound v∗(α) = (2 + α)/
+√
+8 + 2α2 versus HiGHS
+LP optima (red circles) and the strictly suboptimal Bob-tilted endpointBBob (orange triangles).
+References
+[1] John F. Clauser, Michael A. Horne, Abner Shimony, and Richard A. Holt. Proposed experiment
+to test local hidden-variable theories.Physical Review Letters, 23(15):880–884, 1969.
+[2] Boris S. Cirel’son. Quantum generalizations of Bell’s inequality.Letters in Mathematical
+Physics, 4(2):93–100, 1980.
+[3] Lluís Masanes. Asymptotic violation of Bell inequalities and distillability.Physical Review
+Letters, 97(5):050503, 2006.
+[4] Antonio Acín, Serge Massar, and Stefano Pironio. Randomness versus nonlocality and
+entanglement.Physical Review Letters, 108(10):100402, 2012.
+[5] Tzyh Haur Yang and Miguel Navascués. Robust self-testing of unknown quantum systems
+into any entangled two-qubit states.Physical Review A, 87(5):050102(R), 2013.
+[6] Koon Tong Goh, Jędrzej Kaniewski, Elie Wolfe, Tamás Vértesi, Xingyao Wu, Yu Cai, Yeong-
+Cherng Liang, and Valerio Scarani. Geometry of the set of quantum correlations.Physical
+Review A, 97(2):022104, 2018.
+[7] ThinhP.Le, ChiaraMeroni, BerndSturmfels, ReinhardF.Werner, andTimoZiegler. Quantum
+correlations in the minimal scenario.Quantum, 7:947, 2023.
+[8] Cédric Bamps and Stefano Pironio. Sum-of-squares decompositions for a family of Clauser-
+Horne-Shimony-Holt-like inequalities and their application to self-testing.Physical Review A,
+91(5):052111, 2015.
+[9] Yutian Wu, Sicheng Xie, and Ravishankar Ramanathan. Explicit construction of the normal
+cone at every nonlocal extreme behaviour ofQ2222 and device-independent applications.arXiv
+preprint arXiv:2611.27413, 2026.
+[10] Miguel Navascués, Stefano Pironio, and Antonio Acín. Bounding the set of quantum correla-
+tions.Physical Review Letters, 98(1):010401, 2007.
+14
+
+--- Page 15 ---
+[11] Miguel Navascués, Stefano Pironio, and Antonio Acín. A convergent hierarchy of semidefinite
+programs characterizing the set of quantum correlations.New Journal of Physics, 10(7):073013,
+2008.
+[12] Lewis Wooltorton, Peter Brown, and Roger Colbeck. Tight analytic bound on the trade-off be-
+tween device-independent randomness and nonlocality.Physical Review Letters, 129(15):150403,
+2022.
+15
