@@ -1,0 +1,234 @@
+--- Page 1 ---
+Exact-Z/QPairwise-Coprime CRT Multiplication,
+Walsh–Hadamard Transposition, and Unpaid-Entropy
+Tape-Barrier Certificates
+Lluis Eriksson∗
+November 2026
+Abstract
+On November 24, 2026, OpenAI (openai/math) resolved the exact logarithmic exponent ofn-bit
+integer multiplication on multitape Turing machines, proving matchingΘ(n√logn)upper and lower
+bounds by combining pairwise-coprime Chinese Remainder Theorem (CRT) cyclic-factor convolu-
+tion and Walsh–Hadamard spectral steps with a tape-epoch unpaid-entropy transposition barrier
+governed by the critical paid-wire densityρ< 1−1/
+√
+2 (Theorem 8.1). Here we formalize and oper-
+ationalize the core algebraic, reduction, spectral-transposition, and cleared-integer entropy-barrier
+laws in an18-theorem zero-dependency Lean 4 kernel (v4.35.0,0 sorry,0 Classical.choice,
+0warnings) paired with a pure-stdlib zero-float verifier (TAPE-MUL-CERT-1.0). First, we machine-
+check exact unsigned product bit-length bounds, Euclidean division and integer square-root
+uniqueness,3-square and4-product polarization identities, cleared-integer Newton–Raphson re-
+ciprocal quadratic error squaring, and Newton integer-
+√
+N monotonicity (Lean 4 Theorems 1–7).
+Second, we prove exact2- and4-point Walsh–Hadamard involution and Parseval energy conserva-
+tion, pairwise-coprime Bézout CRT uniqueness and modular reconstruction, and exactN×N
+row-major matrix transposition involution (Lean 4 Theorems 8–14). Third, we formalize the
+exact cleared-integer unpaid-entropy density condition2(q−p )2 > q2 =⇒ 10p <3q (strictly
+certifying ρ= p/q <3/10from the quadratic threshold alone), inductive list-epoch unpaid-demand
+accumulation, logarithmic-exponent-1/2separation n<ns<ns 2, and the epoch-vertex-to-step
+bound T≥ (2k−1)N2 (Lean 4 Theorems 15–18). Our pure-stdlib verifier replays16/16exact- Z/Q
+certificates across all four modes in0.024–0.875 ms (scaling to2048-bit CRT products with4188-bit
+modulus capacity in0.604 ms), cross-checks all engines against independent reference definitions,
+and rejects54/54live adversarial attacks in0.04 s.
+1 Introduction
+For over half a century, the multitape Turing-machine complexity ofn-bit integer multiplication
+was bracketed between Schönhage–Strassen’sO(nlognlog logn )[ 5] and Harvey–van der Hoeven’s
+O(nlogn )[ 2] upper bounds, alongside conditional network-coding lower bounds [1] and classical
+arithmetic reductions to squaring, division, and integer square roots [3]. On November 24, 2026,
+OpenAI [4] settled the exact logarithmic exponent on tapes at1/2: both integer multiplication and
+N×Nbit-matrix transposition (n=N 2) takeΘ(n√logn)steps on multitape Turing machines.
+Four elementary exact-Z/Q algebraic mechanisms underpin both sides of [4]: (i) pairwise-coprime
+CRT decomposition of big-integer convolution products, (ii) exact arithmetic reductions (polarization
+2ab= (a+ b)2 −a2 −b2, Euclidean division, Newton–Raphson reciprocal squaring, and exact integer
+square roots), (iii) dyadic Walsh–Hadamard Parseval transforms paired withN×N row-major
+bit-matrix transposition involutions, and (iv) OpenAI Theorem 8.1’s unpaid-entropy demand/supply
+barrier at critical densityρ∗= 1 −1/
+√
+2≈ 0.292893, converting epoch-level vertex countsV≥ 2Nk
+∗Independent researcher (Sweden). Manuscript licensed under CC-BY-4.0. Prepared with AI-assisted formal
+verification, code generation, and mathematical drafting (Google Antigravity). Code, zero-dependency Lean 4 proofs,
+and exact-Z/Q certificates (MIT license):https://github.com/lluiseriksson/tape-multiplication-certificates.
+1
+
+--- Page 2 ---
+into superlinear step lower boundsT≥ (2k− 1)N2. We mechanize all four algebraic pillars in
+zero-dependency Lean 4 (lean/TapeMultiplication.lean) and build a pure-stdlib zero-float verifier
+(TAPE-MUL-CERT-1.0, src/tape_mul_certifier.py) auditing explicit finite witnesses across all four
+modes.
+2 Main Exact-Z/QTheorems
+2.1 Arithmetic Reductions: Polarization, Euclidean Division, and Newton Itera-
+tion
+Theorem 2.1(Exact Arithmetic Reductions and Cleared-Integer Newton Convergence).For arbitrary
+integersa,b,S,d,x,s,r,N∈Zand natural numbersq 1,r1,q2,r2,s1,s2 ∈N:
+1. Bit-Length, Division, and Square-Root Uniqueness:If a,b < 2n then ab < 22n; if
+q1d+ r1 = q2d+ r2 with r1,r2 <d then( q1,r1) = (q2,r2); and ifs2
+i ≤N <(si+ 1)2 for i∈{ 1,2}
+thens 1 =s2 (Lean 4 Theorems 1–3).
+2. Exact Squaring Polarization:Both2 ab= (a+ b)2 −a2 −b2 and4 ab= (a+ b)2 −(a−b )2
+hold identically overZ(Lean 4 Theorems 4–5).
+3. Cleared-Integer Newton Reciprocal & Square-Root Monotonicity:Settinge= S−dx and
+x′= x(2S−dx )satisfies the exact quadratic residual identityS2 −dx′= e2 over Z; furthermore,
+wheneverr 2 ≤N,s 2 +N−2sr= (s−r) 2 + (N−r 2)≥0(Lean 4 Theorems 6–7).
+Proof. Uniqueness of(q,r)follows because q1 <q2 forces q2d+ r2 ≥(q1 + 1)d>q 1d+ r1, ands1 <s2
+forces( s1 + 1)2 ≤s2
+2 ≤N <(s1 + 1)2. Polarization andS2 −dx(2S−dx ) = (S−dx )2 expand directly
+in Z. Finally,( s−r )2 ≥0and N−r 2 ≥0imply s2 + N≥ 2sr, guaranteeing that integer Newton
+updates⌊(s+⌊N/s⌋)/2⌋never undershoot⌊
+√
+N⌋.
+2.2 Walsh–Hadamard Parseval Conservation, Pairwise-Coprime CRT, and Trans-
+position
+Theorem 2.2(Spectral Conservation, Bézout CRT Reconstruction, and Transposition Involution).
+1. Walsh–Hadamard Involution and Parseval Energy:Over Z, the2-point butterfly
+W2(x,y) = (x+y, x−y)satisfies W2(W2(x,y)) = (2x, 2y)and energy conservation∥W2(x,y)∥2
+2 =
+2(x2 + y2). Iterating two stages yields exact4-point Parseval energy∥W4x∥2
+2 = 4∥x∥2
+2 (Lean 4
+Theorems 8–10).
+2. Pairwise-Coprime Bézout CRT Soundness:Ifum1 + vm2 = 1, then anyd divisible by both
+m1 and m2 satisfies d= (uk2 + vk1)(m1m2), and the explicit reconstructorX = r1vm2 + r2um1
+satisfies X−r1 = (r2 −r1)um1 and X−r2 = (r1 −r2)vm2 identically overZ (Lean 4 Theorems 11–
+13).
+3.Row-Major Matrix Transposition Involution:For anyN≥1and0≤i,j <N, mapping
+idx = iN + j↦→tr = (idx modN )N + ⌊idx/N⌋satisfies tr modN = i and ⌊tr/N⌋= j (Lean 4
+Theorem 14).
+2.3 Unpaid-Entropy Threshold and Tape-Epoch Lower Bound
+Theorem 2.3(Cleared-Integer Unpaid-Entropy Barrier and Logarithmic Exponent1/2).
+1. Sharp Density Threshold (OpenAI Theorem 8.1):For any p,q∈Z with p < q, the
+exact cleared-integer unpaid-demand condition2(q−p )2 >q2 (for q >0, equivalentlyρ= p/q <
+1 −1/
+√
+2≈ 0.292893) algebraically implies10p< 3q, strictly certifyingρ< 3/10without square
+roots or floats (Lean 4 Theorem 15).
+2
+
+--- Page 3 ---
+Table 1: Zero-dependency Lean 4 theorem ledger (lean/TapeMultiplication.lean, v4.35.0:18 /18
+theorems,0sorry,0Classical.choice,0warnings).
+# Lean 4 Theorem Identifier Exact Integer/List Statement Verified Axioms
+1mul_bit_length_bounda<2 n ∧b<2 n =⇒ab<2 2n propext, Quot.sound
+2div_mod_unique_quotientq 1d+r 1 =q 2d+r 2 ∧r 1,r2 <d=⇒q 1 =q 2 ∧r 1 =r 2 propext, Quot.sound
+3isqrt_uniques 2
+1 ≤N <(s 1 + 1)2 ∧s 2
+2 ≤N <(s 2 + 1)2 =⇒s 1 =s 2 propext, Quot.sound
+4product_from_three_squares(a+b) 2 −a 2 −b 2 = 2aboverZpropext, Quot.sound
+5product_from_diff_squares(a+b) 2 −(a−b) 2 = 4aboverZpropext, Quot.sound
+6newton_div_quadratic_errorS 2 −d·x(2S−dx) = (S−dx) 2 overZpropext, Quot.sound
+7newton_isqrt_monotone_stepr 2 ≤N=⇒s 2 +N−2sr≥0overZpropext, Quot.sound
+8walsh2_involutionW 2(W2(x,y)) = (2x,2y)overZpropext, Quot.sound
+9walsh2_parseval_energy(x+y) 2 + (x−y) 2 = 2(x2 +y 2)overZpropext, Quot.sound
+10walsh4_parseval_energy2-stage4-point Parseval:∥W 4x∥2
+2 = 4∥x∥2
+2 propext, Quot.sound
+11crt_uniqueness_coprimeum 1 +vm 2 = 1∧m 1 |d∧m 2 |d=⇒m 1m2 |dpropext
+12crt_reconstruct_mod_m1(r 1vm2 +r 2um1)−r 1 = (r2 −r 1)um1 propext, Quot.sound
+13crt_reconstruct_mod_m2(r 1vm2 +r 2um1)−r 2 = (r1 −r 2)vm2 propext, Quot.sound
+14transpose_index_involutionRow-majorN×Ntranspose:tr modN=i∧⌊tr/N⌋=jpropext, Quot.sound
+15unpaid_entropy_thresholdp<q∧2(q−p) 2 >q 2 =⇒10p<3q(ρ<3/10)propext, Quot.sound
+16entropy_demand_exceeds_supplyInductiveList Int:d i ≥s i +g=⇒
+∑
+di ≥
+∑
+si +Kgpropext, Quot.sound
+17sqrt_log_beats_linear_and_logn≥1∧s≥2 =⇒n<ns∧ns<ns 2 propext, Quot.sound
+18tape_epoch_vertex_lower_boundV≥2Nk∧k≥1∧T+N 2 ≥VN=⇒T≥(2k−1)N 2 propext, Quot.sound
+2. Inductive Epoch Unpaid-Demand Accumulation:Given arbitrary lists of per-epoch bit
+demands( di)K
+i=1 and paid wire supplies(si)K
+i=1 satisfying di ≥si + g for everyi, summing across
+allKepochs yields ∑K
+i=1 di ≥∑K
+i=1 si +Kg(Lean 4 Theorem 16).
+3. Exponent-1/2Separation and Epoch-to-Step Lower Bound:Forn≥ 1and s= √logn≥ 2,
+n < ns < ns2 strictly separatesΘ( n√logn)from both linear O(n)and O(nlogn )(Lean 4
+Theorem 17). Whenever a tape computation withT steps over anN×N bit matrix satisfies
+the epoch boundT + N2 ≥VN and accumulatesV≥ 2Nk epoch vertices (k≥ 1), necessarily
+T≥(2k−1)N 2 (Lean 4 Theorem 18).
+Proof. For (1), assuming10 p≥ 3q gives7 q≥ 10(q−p )and7 q+ 10(q−p ) > 0, whence(7 q−
+10(q−p ))(7q+ 10(q−p )) = 49q2 −100(q−p )2 ≥0, contradicting2( q−p )2 > q2 (which implies
+100(q−p )2 > 50q2 ≥49q2). Part (2) follows by structural induction on the epoch lists. For (3),
+T+N 2 ≥VN≥2kN 2 = (2k−1)N 2 +N 2 cancelsN 2 directly.
+3 Zero-Dependency Lean 4 Kernel andTAPE-MUL-CERT-1.0
+All18arithmetic-reduction, Walsh–Hadamard, CRT, transposition, and unpaid-entropy the-
+orems compile in lean/TapeMultiplication.lean (v4.35.0) with0external dependen-
+cies,0 sorry,0 Classical.choice, and0warnings (Table 1). Our pure-stdlib verifier
+src/tape_mul_certifier.py (TAPE-MUL-CERT-1.0) executes zero-float integer replay across all four
+modes while recursively rejectingfloat, bool, Decimal, complex, tuple, non-str keys, malformed
+names, and non-canonical integer strings.
+4 Experiments, Certified Atlas, and Adversarial Red-Teaming
+All four deterministic experiments (scripts/run_all_experiments.py) reproduce end-to-end via
+python scripts/verify_all.py. Table 2 lists all16exact-Z/Q certificates verified with zero floats
+in0 .024–0.875 ms each. Figure 1 displays OpenAI Theorem 8.1’s exact normalized unpaid-entropy
+margin2(1 −ρ)2 −1crossing zero atρ∗= 1−1/
+√
+2≈ 0.292893(bounded strictly by Lean Theorem 15’s
+ρ <3/10) alongside the multiplicative per-bit overhead separationΘ(√logn)versus Harvey–van
+der Hoeven logn and Schönhage–Strassen lognlog logn . Figure 2 benchmarks exact pairwise-
+coprime CRT multiplication verification from64-bit operands (4moduli,6Bézout pairs,0 .063 ms)
+up to2048-bit operands (12moduli,66Bézout pairs,4188-bit total modulus capacity,0 .604 ms),
+3
+
+--- Page 4 ---
+Table 2: Atlas of16exact- Z/QTAPE-MUL-CERT-1.0 certificates verified with zero floats
+(results/exp1_certified_atlas.json).
+Certificate File Mode Certified Exact-Z/QClaim Time (ms)
+crt_mul_64b_k4.cert.jsonMode 164×64-bit CRT (k= 4moduli,164-bitM,6Bézout)0.0673
+crt_mul_128b_k5.cert.jsonMode 1128×128-bit CRT (k= 5moduli,300-bitM,10Bézout)0.0770
+crt_mul_256b_k6.cert.jsonMode 1256×256-bit CRT (k= 6moduli,564-bitM,15Bézout)0.0963
+crt_mul_512b_k8.cert.jsonMode 1512×512-bit CRT (k= 8moduli,1088-bitM,28Bézout)0.1590
+pol_newton_64b.cert.jsonMode 264-bit polarization, Euclidean div, Newton recip &64-bit isqrt0.0240
+pol_newton_128b.cert.jsonMode 2128-bit polarization, Euclidean div, Newton recip &128-bit isqrt0.0259
+pol_newton_256b.cert.jsonMode 2256-bit polarization, Euclidean div, Newton recip &256-bit isqrt0.0272
+pol_newton_512b.cert.jsonMode 2512-bit polarization, Euclidean div, Newton recip &512-bit isqrt0.0345
+walsh16_transpose_n4.cert.jsonMode 3L= 16Walsh Parseval (E= 562) +4×4transpose (16bits)0.0611
+walsh32_transpose_n8.cert.jsonMode 3L= 32Walsh Parseval (E= 876) +8×8transpose (64bits)0.1196
+walsh64_transpose_n16.cert.jsonMode 3L= 64Walsh Parseval (E= 1822) +16×16transpose (256bits)0.2974
+walsh128_transpose_n24.cert.jsonMode 3L= 128Walsh Parseval (E= 3930) +24×24transpose (576bits)0.8748
+entropy_barrier_rho1_4_n16.cert.jsonMode 4ρ= 1/4<ρ ∗,6epochs (31unpaid),N= 16,T≥3N 2 0.0277
+entropy_barrier_rho7_25_n32.cert.jsonMode 4ρ= 7/25<ρ ∗,8epochs (60unpaid),N= 32,T≥5N 2 0.0272
+entropy_barrier_rho29_100_n64.cert.jsonMode 4ρ= 29/100<ρ ∗,10epochs (93unpaid),N= 64,T≥7N 2 0.0261
+entropy_barrier_rho292_1000_n128.cert.jsonMode 4ρ= 292/1000<ρ∗,12epochs (138unpaid),N= 128,T≥11N 2 0.0275
+Figure 1: Unpaid-entropy threshold and tape complexity separation. (a) Exact normalized unpaid-
+entropy margin2(1 −ρ)2 −1crossing zero at ρ∗= 1 −1/
+√
+2≈ 0.2929(with Lean 4 Theorem 15’s
+strict algebraic boundρ< 3/10). (b) Per-bit multiplicative overheadΘ(√logn)versus Harvey–van
+der Hoevenlognand Schönhage–Strassenlognlog logn.
+paired with exact Walsh–Hadamard Parseval (L= 8 ... 256) andN×N bit-matrix transposition
+(16 ... 576bits, verified in0 .059–0.864 ms). Figure 3 summarizes per-certificate latencies across all
+four modes. Finally,tests/test_suite.py cross-checks our fast butterfly Walsh–Hadamard, CRT
+multiplication, Newton integer square root, and transposition engines against independentO(L2)
+and stdlib reference implementations, and rejects all54/54live adversarial attacks in0.04 s(covering
+float/bool/Decimal/complex/tuple/non-str-key injection, malformed names, non-canonical integers,
+tampered Bézout pairs, insufficient CRT capacity, invalid division remainders, forged Newton updates,
+off-by-one square roots, broken Parseval energies, non-bit matrix entries, density violationsρ= 3/10,
+and violated epoch step bounds).
+5 Scope Boundaries and Outlook
+This work mechanizes the exact algebraic, CRT, spectral-transposition, and cleared-integer entropy-
+threshold components of [4] and verifies explicit finite witnesses overZ/Q, rather than formalizing the
+full multitape Turing-machine simulator, multidimensional cyclic-factor FFT schedule, or information-
+theoretic wire-counting recursion of [4]. Extending TAPE-MUL-CERT-1.0 to audit full multitape
+head-trajectory traces and recursive block-transposition schedules is a natural next step.
+4
+
+--- Page 5 ---
+Figure 2: Exact-Z certificate replay scaling. (a) Pairwise-coprime CRT multiplication latency and
+total modulus capacity (64→2048-bit operands,164 →4188-bit M). (b) Walsh–Hadamard Parseval
+(L= 8...256) andN×Nbit-matrix transposition replay (16...576bits).
+Figure 3: Certified atlas performance. (a) Zero-float replay latencies across all16TAPE-MUL-CERT-1.0
+certificates (0.024–0.875 ms). (b) Balanced coverage (4instances per mode) across all four verification
+modes.
+References
+[1] Peyman Afshani, Casper Benjamin Freksen, Lior Kamma, and Kasper Green Larsen. Lower
+bounds for multiplication via network coding.Proceedings of the 46th International Colloquium
+on Automata, Languages, and Programming (ICALP), pages 10:1–10:12, 2019.
+[2] David Harvey and Joris van der Hoeven. Integer multiplication in timeO(nlogn ).Annals of
+Mathematics, 193(2):563–617, 2021.
+[3] Donald E. Knuth.The Art of Computer Programming, Volume 2: Seminumerical Algorithms.
+Addison-Wesley, 3rd edition, 1997.
+[4] OpenAI. The logarithmic exponent of integer multiplication on tapes. OpenAI Math Preprint
+(openai/math), November 24, 2026.
+[5] Arnold Schönhage and Volker Strassen. Schnelle multiplikation großer zahlen.Computing,
+7(3–4):281–292, 1971.
+5

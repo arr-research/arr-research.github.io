@@ -1,0 +1,402 @@
+--- Page 1 ---
+Machine-Checked Exact-Rational Anchor Robustness,
+Hall-Matching, and Contiguous Allocation Certificates for
+Five-Agent Envy-Free Cake Cutting
+Lluis Eriksson*
+November 25, 2026
+Abstract
+Filos-Ratsikas, Hollender, Latifian, and Tyrovolas
+(arXiv:2611.33149, November 24, 2026) resolved
+the longstanding five-agent contiguousε-envy-free
+cake-cutting problem inO(log 3(1/ε)) value queries
+using a four-piece anchor decomposition,δ-robust
+Hall matchings on the bipartite favourite graph
+Gδ(m, ℓ), spanning-tree bisection, and aγ-strongly-
+hungry valuation reduction. We present a machine-
+checked, zero-floating-point formalization and certifi-
+cate auditing architecture for the combinatorial, geo-
+metric, and algebraic core of this protocol. First, we
+build an 18-theorem zero-dependency Lean 4 kernel
+(EnvyFreeFiveAgents.lean, Lean 4.35.0; 0sorry,
+0 warnings, 0Classical.choice, 4 zero-axiom the-
+orems) certifying anchor length conservation and
+gap closure, Lemma 3.7/3.9 balanced weights and
+strict Hall-ceiling margins 9p−8>8(p−1) (p∈
+{1,2,3,4}), Lemma 3.5 connectivity contradiction,
+K5,4 spanning-tree count 53 ·44 = 32,000, Theorem 2
+γ-strong-hungriness perturbation and (δ+ 2γ) envy
+transfer, Lemma 4.2 3δ-robust maximality extension,
+Lemma 4.4 completeε-envy-freeness, five-agent pro-
+portionality, inductive list envy transfer, and the ex-
+act polylog separationb 3 <2 b for allb≥10. Sec-
+ond, we define theENVY-FREE-5-CERT-1.0exact-Q
+schema and a pure-stdlib zero-float verifier covering
+four audit modes: maximalδ-robust anchor + Hall
++ spanning-tree certificates, complete contiguous 5-
+agentε-EF divisions,γ-strongly-hungry transfers on
+non-hungry zero-density instances, and Lemma 3.9
+balanced-weight / query-barrier witnesses. Across
+16 canonical certificates spanning four heteroge-
+* Independent researcher; manuscript prepared with trans-
+parent AI assistance via Google Antigravity. Source code,
+Lean 4 proofs, and exact certificates:https://github.com/
+lluiseriksson/envy-free-five-agent-certificates.
+neous valuation benchmarks, zero-float replay runs
+in 0.115–1.020 ms, independently passes midpoint-
+integration and proportionality cross-checks, and re-
+jects 54/54 live adversarial forgeries.
+1 Introduction
+Fair division of a divisible, heterogeneous cake [0,1]
+intoncontiguousintervals—using onlyn−1 cuts—so
+that every agent prefers her own share to every other
+share is a classical benchmark in computational so-
+cial choice [4, 6]. Because Stromquist [5] proved
+that no finite Robertson–Webb protocol can find
+an exact contiguous envy-free allocation forn≥3
+agents, algorithmic research focuses onε-envy-free
+(ε-EF) divisions satisfyingv i(Ai) +ε≥v i(Aj) for
+alli, j∈[n] using poly(log(1/ε)) queries. Following
+the four-agent breakthrough of Hollender and Rubin-
+stein [3], Filos-Ratsikas, Hollender, Latifian, and Ty-
+rovolas [2] solved the five-agent case inO(log 3(1/ε))
+value queries, simultaneously yielding a new exis-
+tence proof requiring no fixed-point theorem be-
+yond the one-dimensional intermediate value theo-
+rem (IVT).
+Executing nested bisection and softmax weight
+balancing numerically over floating-point intervals
+introduces subtle verification hazards: a tiny round-
+ing drift in an anchor cutmor piece lengthℓ j
+can silently open an unallocated gap, break a Hall
+matching inG δ(m, ℓ) for one of the five depart-
+ing agents, leaveG δ disconnected, or violateε-EF
+on zero-density regions. By decoupling untrusted
+witness discovery from exact-rational verification, a
+compact certificate overQcan be independently re-
+played in sub-millisecond time with zero floating-
+point error.
+1
+
+--- Page 2 ---
+Contributions.We formalize and audit the ex-
+act finite combinatorial, geometric, and algebraic in-
+variants of [2] (explicitly scoping our claims to ex-
+act finite piecewise-constant rational instances, fi-
+nite Hall/spanning-tree combinatorics, and exact al-
+gebraic error budgets rather than continuous-limit
+compactness or general oracle-access IVT existence
+proofs):
+1.Zero-dependency Lean 4 kernel
+(§3):18 machine-checked theorems in
+EnvyFreeFiveAgents.lean(Lean 4.35.0 [1]),
+0sorry, 0 warnings, 0Classical.choice, 4
+zero-axiom theorems.
+2.Exact-Qverifier and schema (§4):
+ENVY-FREE-5-CERT-1.0, verified purely via
+Python’sfractions.Fractionand arbitrary-
+precisionint(zero floats) across four audit
+modes.
+3.Heterogeneous atlas, independent cross-
+checks, and red-team audit (§5):16 exact-Q
+certificates (including exact 0-EF contiguous solu-
+tions on asymmetric, bimodal-conflict, and zero-
+density non-hungry 5-agent benchmarks) replayed
+in 0.115–1.020 ms, plus 54/54 rejected adversarial
+forgeries.
+2 Anchor Geometry, Hall Robust-
+ness, and Strong Hungriness
+Let five agentsi∈[5] have 1-Lipschitz, mono-
+tone valuationsv i : [0,1] 2 →[0,1] over subintervals
+[a, b]⊆[0,1]. For an anchorm∈[0,1] and nonneg-
+ative length tupleℓ= (ℓ 1, ℓ2, ℓ3, ℓ4), define the four
+anchored pieces
+P1 = [0, ℓ1], P 2 = [m−ℓ 2, m],
+P3 = [m, m+ℓ3], P 4 = [1−ℓ 4,1], (1)
+together with the left and right gapsL= [ℓ 1, m−ℓ2]
+andR= [m+ℓ 3,1−ℓ 4]. Feasibility requiresℓ 1 +ℓ2 ≤
+mandℓ 3 +ℓ 4 ≤1−m;maximalityholds when at
+least one gap closes (ℓ 1 +ℓ 2 =morℓ 3 +ℓ 4 = 1−
+m), leaving at most one active fifth piece. For any
+δ≥0, theδ-favourite bipartite graphG δ(m, ℓ) on
+[5]⊔{P 1, . . . , P4}contains edge (i, Pj) iffv i(Pj)+δ≥
+maxk∈[4] vi(Pk).
+Proposition 1(Hall Robustness and Connectiv-
+ity [2]).A feasible tupleℓisδ-robust (for every de-
+parting agenti∈[5], the remaining four agents ad-
+mit aδ-EF matching onto{P 1, . . . , P4}) if and only if
+∀i∈[5],∀S⊆[5]\{i},|N Gδ (S)| ≥ |S|(Lemma 3.4).
+Consequently,G δ(m, ℓ)is connected (Lemma 3.5)
+and contains an 8-edge spanning treeT⊆G δ(m, ℓ)
+chosen from at most5 3 ·4 4 = 32,000spanning trees
+ofK 5,4.
+To ensure strict monotonicity on non-hungry val-
+uations (which may vanish identically on subinter-
+vals), Theorem 2 of [2] defines theγ-strongly-hungry
+transform
+v′
+i(a, b) = (1−γ)v i(a, b) +γmax(b−a,0),
+γ∈(0,1). (2)
+Becausev i(a, b),(b−a)∈[0,1], we have|v i(a, b)−
+v′
+i(a, b)| ≤γpointwise, so everyδ-EF allocation un-
+derv ′ transfers immediately to a (δ+ 2γ)-EF allo-
+cation underv(achievingε-EF atδ=γ=ε/3).
+Furthermore, in Lemma 3.9 of [2], balanced softmax
+weightsW j = P5
+i=1 wij = 5
+4 (P4
+j=1 wij = 1) guar-
+antee Hall’s condition because for every piece subset
+cardinalityp=|P| ∈ {1,2,3,4},
+5
+4p−1−4p·2 −5 = 9
+8p−1> p−1
+⇐⇒9p−8>8(p−1),
+(3)
+forcing the integer ceiling⌈ 9
+8p−1⌉ ≥pstrictly.
+3 Zero-Dependency Lean 4 Kernel
+We formalize 18 core theorems in
+lean/EnvyFreeFiveAgents.lean(206 lines,
+Lean 4.35.0, zero external libraries), audited
+vialean/AuditAxioms.lean. All 18 compile with
+0 warnings, 0sorry, 0Classical.choice, and
+0Lean.ofReduceBool. Table 1 lists all 18 identifiers
+and exact axiom footprints.
+Theorem 1(Constructive Five-Agent Cake-Cutting
+Kernel).
+1.Anchor geometry & gap closure:Theorems 1–3
+prove exact length conservation on scaled[0, D]
+and exact left/right gap closure underℓ 1 +ℓ2 =m
+orℓ 3 +ℓ 4 =D−m.
+2.Balanced weights, Hall ceiling, & spanning trees:
+Theorems 4–9 certify4·5 = 20(Lemma 3.7), strict
+cleared Lemma 3.9 inequality9p−8>8(p−1)and
+its exact numerators(1,10,19,28)>(0,8,16,24),
+Lemma 3.5 disconnected-component contradiction
+|N(S)|+|N(T)| ≥5>4,K 5,4 tree count5 3 ·4 4 =
+32,000, and 8-edge spanning trees.
+2
+
+--- Page 3 ---
+Table 1: Complete 18-theorem Lean 4.35.0 kernel
+inEnvyFreeFiveAgents.lean(0sorry, 0 warnings,
+0Classical.choice).
+# Lean 4 Theorem Identifier Axiom Footprint
+1anchorpartitionlengthconservation [propext, Quot.sound]
+2left maximalclosesleftgap [propext, Quot.sound]
+3rightmaximalclosesrightgap [propext, Quot.sound]
+4balancedweightsumfive none
+5lemma39hallceilingstrict [propext, Quot.sound]
+6lemma39exactthresholdvalues none
+7disconnectedhallcontradiction [propext, Quot.sound]
+8bipartitek54spanningtreecount none
+9bipartitek54treeedgecount none
+10gammahungryvalueperturbation [propext, Quot.sound]
+11gammahungryenvytransfer [propext, Quot.sound]
+12theorem2epsthirdbudget [propext, Quot.sound]
+13lipschitzperturbationenvyshift [propext, Quot.sound]
+14maximalityextension3deltarobust [propext, Quot.sound]
+15robustplusgapcompleteef [propext, Quot.sound]
+16envyfreeimpliesproportional5 [propext, Quot.sound]
+17listenvymaxmonotoneshift [propext, Quot.sound]
+18polylogqueriesbeatsbruteforce [propext, Quot.sound]
+3.Envy transfer, maximality, & proportional-
+ity:Theorems 10–17 formalize clearedγ-strong-
+hungriness perturbation−gS≤S(v ′ −v)≤gS,
+(δ+ 2γ)envy transfer,ε/3budget allocation, Lip-
+schitz perturbation shift, Lemma 4.23δ-robust ex-
+tension, Lemma 4.4 completeε-EF assembly, 5-
+agent proportionality5v 1 ≥ P5
+j=1 vj, and induc-
+tiveList (Int×Int)envy transfer across ar-
+bitrary piece counts.
+4.Query-complexity separation:Theorem 18
+(polylog queries beats bruteforce) proves
+by induction onbthatb 3 <2 b for ev-
+ery precision bit-widthb≥10(base case
+103 = 1000<1024 = 2 10).
+4 Exact-Rational Certificate Ar-
+chitecture
+We encode piecewise-constant 1-Lipschitz rational
+valuations on [0,1] via strictly increasing break-
+points 0 =t 0 <···< t K = 1 (K≤32)
+and five density rowsd i,k ∈Q∩[0,1], so ex-
+act integralsv i(a, b) =
+Rb
+a fi(x)dx∈Qrequire
+zero floating-point arithmetic. The pure-stdlib ver-
+ifiersrc/cake certifier.pyenforces strict JSON
+AST types (rejectingfloat,bool,Decimal,
+complex, tuples, non-string keys, unreduced frac-
+tions, denominator-1 fractions, and"-0") and audits
+four modes ofENVY-FREE-5-CERT-1.0:
+Definition 1(FourENVY-FREE-5-CERT-1.0Audit
+Modes).
+1.Mode 1(anchor delta robust hall exact):
+Checks anchor feasibility, maximality (ℓ1+ℓ2 =m
+orℓ 3 +ℓ 4 = 1−m), length conservation, exact
+Gδ(m, ℓ)overQ, five explicit departing-agent
+perfect matchingsπ 0, . . . , π4, exhaustive Hall’s
+condition∀i,∀S⊆[5]\ {i}, and acyclic-
+ity/connectivity of an explicit 8-edge spanning
+treeT⊆G δ.
+2.Mode 2(complete contiguous 5agent ef exact):
+Audits an underlying maximalδ-robust anchor tu-
+ple (0≤δ≤ε), exact agreement between the
+five contiguous cuts0 =c 0 ≤ ··· ≤c5 = 1and
+(P1, P2, P3, P4,active gap), assignment of the gap
+todeparting agent, and exact5×5pairwiseε-
+envy-freeness matchingclaimed max envy.
+3.Mode 3(gamma hungry envy transfer exact):
+Forγ∈Q∩(0,1),δ≥0, andε=δ+2γ, indepen-
+dently evaluates all 25 base andγ-hungry interval
+values(2), verifies pointwise|v i(Ij)−v ′
+i(Ij)| ≤γ,
+checksδ-EF underv ′, and certifies transferred
+(δ+ 2γ)-EF underv.
+4.Mode 4(lemma39 hall and query barrier
+exact): Audits a nonnegative rational5×4
+weight matrix with row sums1and balanced
+column sums5/4, checks all four Lemma 3.9
+Hall-ceiling margins(3), and certifiesb 3 <2 b for
+bit precisionb∈[10,256].
+5 Empirical Atlas and Red-Team
+Verification
+All 16 canonical certificates and four exper-
+iment logs are generated deterministically by
+scripts/run all experiments.py(using softmax
+weight balancing and anchor bisection purely as an
+untrusted witness finder) and independently audited
+end-to-end byscripts/verify all.py(Lean 4
+build + 18/18 axiom audit + 16/16 zero-float replay
++pytest+ 39/39 SHA-256 hashes).
+1. Anchor IVT zero crossing and dyadic pre-
+cision convergence.Figure 1(a) sweeps anchor
+m∈ {1/16, . . . ,15/16}across our six-band bimodal-
+conflict benchmark (bimodal conflict 6band,
+where three agents compete for [1/3,2/3] and
+two prefer opposing edges): the maximum gap
+advantage max i(vi(gap)−max k vi(Pk)) transi-
+tions continuously from +0.46123 (right gapRat
+3
+
+--- Page 4 ---
+Figure 1: (a) Anchor-msweep on
+bimodal conflict 6bandexhibiting the IVT
+zero crossing of gap advantage between right-gap
+(R) and left-gap (L) regimes. (b) Dyadic rational
+refinement onasym peaks 5bandconverging to
+exact 0-EF (symlog scale).
+Figure 2: (a) Exact Theorem 2 query complexity
+separationb 3 <2 b crossing atb= 10. (b) Exact
+Lemma 3.9 Hall-ceiling margins 9
+8|P| −1>|P| −1
+for|P| ∈ {1,2,3,4}.
+m= 1/16) across zero betweenm= 3/8 (+0.17390)
+andm= 7/16 (−0.04003), switches to left gap
+Latm= 1/2 (−0.05399), and crosses back to
++0.46123 atm= 15/16, pinpointing an exact
+dyadic rootm ∗ = 27/64 with exact zero envy
+(0-EF). Figure 1(b) tracks dyadic grid refinement
+D= 2 b ∈ {16, . . . ,1024}onasympeaks 5bandon a
+symlog scale: exact complete max envy drops from
+3/200 = 0.015 (D= 16) to 1/400 = 0.0025 (D= 32)
+and reaches exact zero (0) for allD≥64.
+2. Query complexity separation and
+Lemma 3.9 Hall margins.Figure 2(a) plots the
+exact Theorem 2 polylog scaleb 3 = log3
+2(1/ε) versus
+brute-force 2b = 1/εacrossb∈ {6, . . . ,32}: crossing
+at the Lean-verified thresholdb= 10 (1000<1024),
+the speedup ratio 2b/b3 expands from 2.37×(b= 12)
+to 16.0×(b= 16), 1,213.6×(b= 24), and 131,072×
+(b= 32). Figure 2(b) displays the exact Lemma 3.9
+rational Hall-ceiling margins 9
+8|P|−1∈ {1
+8, 10
+8 , 19
+8 , 28
+8 }
+strictly exceeding|P| −1∈ {0,1,2,3}.
+Figure 3: (a) Zero-float replay latency across
+all 16 canonicalENVY-FREE-5-CERT-1.0certificates
+(0.115–1.020 ms). (b) Balanced 4-per-mode coverage
+across all four verification modes.
+3. 16-certificate atlas, cross-checks, and
+54-attack red-team suite.Table 2 and
+Figure 3 summarize all 16 certified instances
+across four heterogeneous 5-agent benchmarks
+(asym peaks 5band,bimodal conflict 6band,
+skewed nonuniform 4band, and
+nonhungry zeros 5bandcontaining genuine
+zero-density intervals). Zero-float replay takes
+0.115–1.020 ms across all 16 certificates, achieving
+exact 0-EF on three benchmarks and exact max envy
+1/2560≈3.9×10 −4 onskewed nonuniform 4band,
+with exact 8-edge minimal spanning trees in every
+Mode 1 graph. Intests/test suite.py, indepen-
+dent midpoint integration over breakpoint-refined
+subintervals matcheseval piecewise exact
+bit-for-bit, verifies 5-agent proportionality
+5vi(Ai)≥v i([0,1]), confirms strict positivity of
+γ-hungry valuations on zero-density blocks, and ver-
+ifies that 54/54 live adversarial forgeries (including
+overlapping lengths, open dual gaps, cyclic spanning
+trees, flipped gap sides, broken permutations,
+non-balancedW j, andb= 9 barrier violations)
+raiseEnvyFreeCertificateError(3 passed in
+0.13s).
+6 Scope, Limitations, and Conclu-
+sion
+This work machine-checks the finite combinato-
+rial, geometric, and algebraic invariants underly-
+ing the five-agent contiguous cake-cutting break-
+through of [2] and delivers sub-millisecond exact-
+Qcertification over piecewise-constant rational val-
+uations. It doesnotformalize real-analytic IVT
+existence over arbitrary Lipschitz black-box valua-
+tion oracles or the full nested-bisection query ter-
+4
+
+--- Page 5 ---
+Table 2: Summary of all 16 exact-Q
+ENVY-FREE-5-CERT-1.0certificates (zero floating-
+point arithmetic; reference-machine replay latency
+in ms).
+Certificate File (stem) Mode Key Exact Witness ms
+anchorrobustasympeaks5bandM1m= 69/128, δ= 3/320,|E|= 8 0.498anchorrobustbimodalconflict6bandM1m= 27/64, δ= 9/1024,|E|= 8 0.535anchorrobustskewednonuniform4bandM1m= 117/256, δ= 17/2560,|E|= 8 0.527anchorrobustnonhungryzeros5bandM1m= 137/256, δ= 3/320,|E|= 8 0.476completeefasympeaks5bandM2ε= 3/320,envy = 0 (gapL) 0.736completeefbimodalconflict6bandM2ε= 9/1024,envy = 0 (gapR) 1.020completeefskewednonuniform4bandM2ε= 17/2560,envy = 1/2560 (gapR) 0.646completeefnonhungryzeros5bandM2ε= 3/320,envy = 0 (gapL) 0.857gammatransferg120M3γ= 1/20, ε= 1/10,envy = 0 0.781gammatransferg150M3γ= 1/50, ε= 1/25,envy = 0 0.782gammatransferg1100M3γ= 1/100, ε= 1/50,envy = 0 0.780gammatransferg1250M3γ= 1/250, ε= 1/125,envy = 0 0.801hallquerybarrierb12M4W j= 5/4,123= 1728<212 0.133hallquerybarrierb16M4W j= 5/4,163= 4096<216 0.116hallquerybarrierb24M4W j= 5/4,243= 13824<224 0.115hallquerybarrierb32M4W j= 5/4,323= 32768<232 0.115
+mination proof in Lean 4, which remain compelling
+Mathlib-level targets. Within its formally verified
+scope, the zero-dependency Lean 4 kernel and zero-
+floatENVY-FREE-5-CERT-1.0verifier provide cryp-
+tographically manifest-locked, exact auditability for
+five-agent envy-free cake-cutting witnesses.
+References
+[1] Leonardo de Moura and Sebastian Ullrich. The
+Lean 4 theorem prover and programming lan-
+guage. InAutomated Deduction – CADE 28,
+volume 12699 ofLNCS, pages 625–635. Springer,
+2021.
+[2] Aris Filos-Ratsikas, Alexandros Hollender, Mo-
+hamad Latifian, and Giannis Tyrovolas. Envy-
+free cake-cutting for five agents. arXiv preprint
+arXiv:2611.33149, November 2026. Imperial Col-
+lege London, Technical University of Munich,
+University of Edinburgh, and University of Ox-
+ford.
+[3] Alexandros Hollender and Aviad Rubinstein.
+Envy-free cake-cutting for four agents. InPro-
+ceedings of the 64th IEEE Annual Symposium on
+Foundations of Computer Science (FOCS), pages
+113–122, 2023.
+[4] Walter Stromquist. How to cut a cake fairly.
+American Mathematical Monthly, 87(8):640–644,
+1980.
+[5] Walter Stromquist. Envy-free cake divisions can-
+not be found by finite protocols.Electronic Jour-
+nal of Combinatorics, 15(1):R11, 2008.
+[6] Francis Edward Su. Rental harmony: Sperner’s
+lemma in fair division.American Mathematical
+Monthly, 106(10):930–942, 1999.
+5

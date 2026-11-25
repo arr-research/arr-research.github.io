@@ -1,0 +1,61 @@
+{
+  "assessed_at": "2026-11-25T16:45:54Z",
+  "canonical_sha256": "f5d9a5513086f78cac7c53d83525fe4392625f426cf7c157570d07abc1aa8883",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All algebraic identities in Theorem 1 (cleared Theorem 1.2 RHS, Lemma 3.4 disconnected/connected ratio bounds, quadratic equivalence (2p+q)^2 = 3q^2), continued-fraction convergents (alpha in {11/4, 41/15, 153/56, 571/209, 2131/780} and squared excesses), and all 16 Table 2 numerical witnesses check out exactly. Scope boundaries are honestly stated.",
+      "stars": 5
+    },
+    "novelty": {
+      "basis": "Builds directly on Danciu and Ibrahimpur (arXiv:2611.32924) rather than introducing a new algorithmic approximation factor, contributing a zero-dependency Lean 4 algebraic/telescoping kernel, a zero-float rational solver over continued-fraction convergents, and a 4-mode exact certificate auditor.",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "Provides deterministic generation/verification scripts, explicit Lean 4.35.0 theorem names and axiom footprints (Table 1), strict JSON AST rules (Definition 1), and 16 canonical certificate summaries (Table 2), though artifact execution and SHA-256 manifests lie outside the PDF itself.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Combines an 18-theorem zero-dependency Lean 4 kernel (0 sorry, 0 Classical.choice, 5 zero-axiom theorems) with exact Fraction arithmetic, brute-force 2^11 OPT validation on prism6_weighted, and 57 adversarial forgery checks; however, Theorem 1.2 for arbitrary forests and the Python solver are not formally verified in Lean.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Eliminates floating-point drift in non-uniform primal-dual 2ECSS solving and enables sub-millisecond (0.036-0.424 ms) exact-Q certificate auditing, though empirical benchmarks are restricted to small graphs (n in {6,7,8,9}) far from the worst-case ratio.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.8,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-1DYMX4K6TN9HQV9N",
+  "potential_errors": [
+    "In Theorem 1(4) (p. 2), the weak-duality expression uses l_e before defining l_e = sum_{S: e in delta(S)} y_S in Definition 1 Mode 1 (p. 3).",
+    "The transition from Proposition 1 (Eq. (1), stated for beta in [0, 1/2]) to the connected-tree bound b(2L - 2) <= aL in Theorem 1(2) omits explaining that the kappa = 1 step invokes Eq. (1) at beta = 0 because the spanning component dual does not grow.",
+    "In Figure 1(b) (p. 3), the x-axis tick labels read 'k=1/3, k=4/11, ...' (conflating index k with beta_k), and the text refers to {0, 1/3, 4/11, 15/41, 56/153, 209/571} as continued-fraction convergents without specifying they are the even-indexed (lower) convergents of (sqrt(3)-1)/2.",
+    "Theorem 1(3) (p. 2) and Table 1 (p. 3) omit beta = 4/11 (alpha = 41/15) from the Lean kernel evaluations, whereas Table 2 and Figure 1(b) include it."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Clean, zero-dependency 18-theorem Lean 4.35.0 kernel (PrimalDual2ECSS.lean) with 0 sorry, 0 Classical.choice, and 5 axiom-free arithmetic theorems certifying Lemma 3.1 potential descent, cleared Lemma 3.4 ratio bounds, quadratic optimality, rational convergents, and inductive weak duality/telescoping.",
+    "Exact-Q Python primal-dual solver paired with a strict 4-mode certificate auditor (PRIMAL-DUAL-2ECSS-CERT-1.0) enforcing AST-level rejection of floats/unreduced rationals and checking single-edge deletion inclusion-minimality.",
+    "All algebraic bounds, rational convergents (11/4, 41/15, 153/56, 571/209, 2131/780), squared excesses, and Table 2 Mode 1-4 witnesses are mathematically exact and internally consistent across text, tables, and figures.",
+    "Transparent statement of scope and limitations (Sections 1 and 6), explicitly noting that the general graph-theoretic induction for Theorem 1.2 and Theorem 3.5 lower bounds are not formalized in Lean 4.",
+    "Independent brute-force 2^11 subset OPT verification on prism6_weighted and 57/57 adversarial forgery rejection tests."
+  ],
+  "strong_novelty_candidates": [
+    "Cleared integer-arithmetic formulation of Danciu-Ibrahimpur's Lemma 3.4 disconnected-forest and connected-tree ratio inequalities verified in a zero-dependency Lean 4 kernel alongside exact rational continued-fraction convergents.",
+    "Four-mode zero-float certificate specification (PRIMAL-DUAL-2ECSS-CERT-1.0) jointly auditing 2ECSS solution minimality, Theorem 1.2 augmentation witnesses, rational beta-optimality, and step-by-step primal-dual trace telescoping."
+  ],
+  "summary": "The manuscript presents a machine-checked Lean 4 algebraic/telescoping kernel, an exact-rational (zero-float) Python solver, and a four-mode certificate auditor (PRIMAL-DUAL-2ECSS-CERT-1.0) for Danciu and Ibrahimpur's better-than-3 primal-dual 2ECSS algorithm (arXiv:2611.32924). All mathematical statements, cleared ratio inequalities, continued-fraction convergents, and numerical Table 2 witnesses visible in the PDF are exact and internally consistent, and the authors candidly scope the Lean 4 formalization away from the full graph-theoretic proof of Theorem 1.2. Remaining limitations are minor exposition gaps and small-scale empirical benchmarks (n <= 9).",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:6fa1c470-1594-4579-b484-305bb03fc96c",
+  "weaknesses": [
+    "The Lean 4 formalization does not prove the core combinatorial theorem (Theorem 1.2 minimal augmentation bound over arbitrary forests) or Theorem 3.5 tight-instance lower bounds, nor is the Python primal-dual solver itself formally verified in Lean; correctness of full execution relies on the external Python certifier.",
+    "Empirical evaluation is limited to four small benchmark multigraphs (6 to 9 vertices), three of which achieve exact ratio 1.000 and the fourth 22/18 = 1.222, leaving scalability and rational bit-length growth on larger or near-tight (ratio ~2.732) instances untested.",
+    "Lean 4 build logs, SHA-256 verification, and the 57-attack red-team suite are hosted externally and cannot be independently verified from the PDF alone.",
+    "Minor exposition slips: undefined symbol l_e in Theorem 1(4) prior to Mode 1, omitted explanation for beta=0 in the connected-tree step, x-axis tick formatting 'k=1/3' in Figure 1(b), and omission of beta=4/11 from the Lean kernel evaluations in Table 1."
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "assessed_at": "2026-11-25T16:45:54Z",
+  "canonical_sha256": "1a0fbd4df55f42a7b029b2097baecc25ce2b2bdc4b1329d77272fe54431f40fd",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "Core identities in Theorems 2.1–2.3 (polarization, Newton residual S^2 - dx' = (S - dx)^2, W_2/W_4 Parseval, Bezout CRT, row-major transpose involution, 2(q-p)^2 > q^2 => 10p < 3q, epoch sum, T >= (2k-1)N^2) and numeric values in Table 2 and Figures 1–3 are mathematically sound. Minor quantifier/notation slips appear in Theorem 2.1(1), Theorem 2.2(2), and Table 1 rows 12–13.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "The Theta(n sqrt(log n)) complexity bounds and unpaid-entropy barrier at rho^* = 1 - 1/sqrt(2) are explicitly attributed to OpenAI [4], and the 18 algebraic/CRT/Walsh identities are classical. Novelty is limited to packaging these building blocks into a zero-dependency Lean 4 kernel and a zero-float certificate verifier (TAPE-MUL-CERT-1.0).",
+      "stars": 2
+    },
+    "reproducibility": {
+      "basis": "Modes 1–4, 16 certificate filenames, exact parameters, timings (0.024–0.875 ms), scaling benchmarks, and 54 adversarial test categories are clearly reported in Table 2 and Section 4. However, neither the Lean 4 source nor the Python verifier code/schema appears in the PDF, so independent verification requires external repository files not present in the manuscript.",
+      "stars": 3
+    },
+    "rigor": {
+      "basis": "Claims an 18-theorem zero-dependency Lean 4 kernel (v4.35.0, 0 sorry, 0 Classical.choice) paired with pure-stdlib zero-float witness replay and explicit Section 5 scope boundaries. However, only elementary single-step or fixed-size primitives are mechanized (no k-way CRT, general 2^k-point WHT, Newton loop convergence, or Turing machine simulator), with minor quantifier slips in Theorems 2.1–2.3.",
+      "stars": 3
+    },
+    "significance": {
+      "basis": "Provides a clean, zero-float witness-certification harness and mechanized algebraic/threshold primitives supporting the arithmetic and entropy-barrier components of [4]. Overall significance is constrained because the core multitape Turing-machine upper-bound schedule and information-theoretic wire-counting lower-bound recursion of [4] remain out of scope.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.15,
+  "model_id": "hydrogen",
+  "overall_stars": 3,
+  "paper_id": "ARR-2026-6W84HHWBAA927T02",
+  "potential_errors": [
+    "Theorem 2.1(1) quantifies a, b in Z (and omits n from the quantifier list) while asserting a, b < 2^n => ab < 2^{2n}, which is false for negative integers (e.g., a = b = -2^n yields ab = 2^{2n}); the Abstract clarifies these are unsigned bounds (a, b, n in N).",
+    "Theorem 2.2(2) writes d = (uk_2 + vk_1)(m_1 m_2) without introducing or defining k_1 and k_2 (implicitly d = k_1 m_1 = k_2 m_2).",
+    "Table 1 rows 12 and 13 display (r_1 v m_2 + r_2 u m_1) - r_1 = (r_2 - r_1) u m_1 and the symmetric m_2 identity without the required Bezout hypothesis u m_1 + v m_2 = 1 (though Theorem 2.2(2) in the prose includes the condition).",
+    "Theorem 2.1's proof asserts that s^2 + N >= 2sr guarantees integer Newton updates floor((s + floor(N/s))/2) never undershoot floor(sqrt(N)), which additionally requires s > 0 and floor-division rounding steps not captured by Theorem 7 (newton_isqrt_monotone_step) alone.",
+    "Theorem 2.3(3) states that n < ns < ns^2 (for n >= 1 and s = sqrt(log n) >= 2) strictly separates Theta(n sqrt(log n)) from O(n) and O(n log n), overstating what a pointwise algebraic inequality proves without the asymptotic upper and lower bounds of [4]."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Clear, self-contained presentation of the 18 exact-Z/Q lemmas across arithmetic reductions, 2/4-point Walsh-Hadamard Parseval, pairwise-coprime Bezout CRT, row-major matrix transposition, and cleared-integer unpaid-entropy density thresholds.",
+    "Clever and completely airtight elementary cleared-integer proof of Theorem 2.3(1) showing 2(q-p)^2 > q^2 => 10p < 3q for p < q in Z without square roots or floating-point arithmetic.",
+    "Quantitative consistency across Table 2, Figures 1–3, and Section 4 prose (e.g., Bezout pair counts k(k-1)/2, modulus bit-widths M > 2^(2n), margin curve 2(1-rho)^2 - 1 crossing zero at rho^* = 1 - 1/sqrt(2), and replay latency ranges).",
+    "Candid, well-delineated Section 5 Scope Boundaries explicitly noting that the multitape Turing-machine simulator, multidimensional cyclic-factor FFT schedule, and wire-counting recursion of [4] are not formalized."
+  ],
+  "strong_novelty_candidates": [],
+  "summary": "This 5-page manuscript mechanizes 18 elementary exact-Z/Q algebraic, spectral-transposition, pairwise-coprime CRT, and cleared-integer entropy-threshold lemmas extracted from OpenAI's November 24, 2026 preprint [4] in a zero-dependency Lean 4 kernel, paired with a pure-stdlib zero-float certificate verifier (TAPE-MUL-CERT-1.0) tested on 16 certificates across four modes and 54 adversarial inputs. While the mathematical claims proved in the paper are sound (aside from minor quantifier and notation slips in Theorem 2.1(1), Theorem 2.2(2), and Table 1) and the figures/tables are internally consistent, the formalized lemmas are mathematically elementary and leave the full Turing-machine simulation, general k-modulus CRT/2^k-point WHT schedules, and wire-counting lower-bound recursion of [4] unformalized, as acknowledged in Section 5.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:7f83b056-e6af-4271-a83a-182c900534b8",
+  "weaknesses": [
+    "Mathematical depth of the 18 Lean 4 theorems is modest: they are elementary ring identities, 1-line inequalities, 2-modulus Bezout lemmas, fixed-size (L=2,4) Walsh-Hadamard checks, and simple list-sum induction, rather than general k-modulus CRT, general 2^k-point WHT, Newton loop termination, or multitape TM complexity proofs.",
+    "In Table 1 row 18 (tape_epoch_vertex_lower_bound), the stated implication V >= 2Nk /\\ k >= 1 /\\ T + N^2 >= VN => T >= (2k-1)N^2 requires N >= 0 (presumably enforced via Nat typing in Lean) which is not shown in the summary column.",
+    "Figure 1(b) plots exact curves for sqrt(log n), log n, and log n log log n labeled as per-bit overhead T(n)/n without explicit asymptotic constant factors, even though the multitape algorithms incur hidden constant factors.",
+    "No Lean 4 code excerpts, Python verifier schema definitions, or proof-checker transcripts appear in the PDF itself, making external repository inspection necessary to verify the claimed 0-sorry compilation and 54/54 adversarial test outcomes."
+  ]
+}
