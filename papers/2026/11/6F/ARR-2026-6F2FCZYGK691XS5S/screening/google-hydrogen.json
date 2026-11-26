@@ -1,0 +1,58 @@
+{
+  "assessed_at": "2026-11-26T08:14:45Z",
+  "canonical_sha256": "e776eecbc5bb1b0f1b034b6b5a2b16b2a83b615635a1cb94db7e53d4e5e93aff",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All 18 arithmetic/counting identities in Table 1, rational contraction bounds (663/2500 < 1, 62412/76523 < 1, 27/16, 5/27), matrix dimensions (48x1521 = 73,008 entries), vertex/facet counts (150 vertices, 50 facets), and recurrence values ([2,4,12,36,108], C_t in {18,162}) check out against Figs. 1-3 and Tables 1-2.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "The mathematical theorems, constructions (S, P, U_n, V_n, R_t), and contraction bounds belong to Liu [1]; the paper's contribution is the independent XC-NONADD-CERT-1.0 zero-float certification suite, 18-theorem Lean kernel, and forgery-resistant certificate architecture.",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "Specifies Lean 4.35.0 and Python >= 3.10 replay commands, lists all 16 canonical certificates (C01-C16) in Table 2, and references a tagged repository (v1.0.0) with MANIFEST.sha256, though full matrix and certificate payloads reside externally rather than in the 4-page PDF.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "The artifact separates a 0-sorry/0-axiom Lean 4.35.0 kernel for arithmetic/counting lemmas from an AST-audited zero-float Python verifier with 16 adversarial forgery checks, and explicitly delineates scope by leaving continuum lower-bound existence arguments to Liu [1]. However, heavy matrix and polyhedral checks are not verified inside Lean itself.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Provides fast (<0.2 s), deterministic, zero-float machine verification of the explicit witnesses, 73,008-entry 1-product factorization, 24D polytope lift, and unbounded deficit constructions refuting Grande-Padrol-Sanyal Conjecture 1.2.",
+      "stars": 4
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 4.0,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-6F2FCZYGK691XS5S",
+  "potential_errors": [
+    "Abstract reports '32 unit and forgery-rejection tests', whereas Section 4 reports '34 tests covering all 16 certificates, an AST zero-float audit, and 16 adversarial forgery checks... all 34 pass cleanly (34 passed)' (note also 16 + 1 + 16 = 33 != 34).",
+    "In Table 1 Row 4 (prop9_claim2_deficient_contradiction), the summarized inequality '12d + {3, 5, b} > 13d for all d in {1, 2}' omits the lower-bound hypothesis on b (Mode 2 tests 1 <= b <= 12d, where 12d + b > 13d fails for b <= d).",
+    "Mode 2 text (p. 2) states beta = 1/(L*tau) and epsilon = 1/L + 13*d*tau and evaluates 26*(tau + 2*beta) = 663/2500 and 26*6*epsilon/(1 - epsilon) = 62412/76523 at d = 2, L = 10^6 without specifying beta = 1/200 (or tau = 1/5000) in the body text; beta = 1/200 only appears in the Figure 2 caption.",
+    "Mode 4 text (p. 2) omits the explicit rational values of beta, tau, and epsilon used in Proposition 11 to obtain 2H max(10*beta, 10*epsilon/(1 - epsilon)) <= 20/89 < 1."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "All verified arithmetic identities, exact rational contraction bounds (663/2500 < 1, 62412/76523 < 1, 27/16, 5/27, 450+440-888 = 2), matrix dimensions (48 x 1521 = 73,008 entries), vertex/facet counts (150 vertices, 50 facets, dim = 24), and recurrence sequences ([2, 4, 12, 36, 108], C_t in {18, 162}) are algebraically exact and consistent across text, Table 1, Table 2, and Figures 1-3.",
+    "Honest and explicit scope boundary in Section 1: clearly distinguishes what is machine-checked in Lean 4 and exact rational Python from the continuum real-analysis existence proofs in Liu [1] (Lemma 5, Prop. 9, Prop. 11).",
+    "Strong verification engineering: zero-float int/Fraction arithmetic audited via AST, 0 sorry / 0 custom axioms / 0 Classical.choice in Lean 4.35.0, and 16 adversarial forgery-rejection tests covering schema, rank, bounds, type-coercion, and non-reduced rationals."
+  ],
+  "strong_novelty_candidates": [
+    "Zero-float rational certificate suite (XC-NONADD-CERT-1.0) paired with a constructive Lean 4.35.0 arithmetic/counting kernel and adversarial forgery tests auditing Liu's disproof of Grande-Padrol-Sanyal Conjecture 1.2 across four certification modes."
+  ],
+  "summary": "The manuscript presents XC-NONADD-CERT-1.0, an independent formal verification and zero-float rational certification suite auditing Minhao Liu's disproof (arXiv:2611.33631v1) of Grande, Padrol, and Sanyal's Conjecture 1.2 on additivity of polytope extension complexity under Cartesian products. It combines an 18-theorem constructive Lean 4.35.0 kernel (0 sorry, 0 custom axioms, 0 Classical.choice) for arithmetic and counting lemmas with an AST-audited zero-float Python verifier over Z and Q, 16 canonical JSON certificates (C01-C16), and adversarial forgery-rejection tests across four modes (six-cycle matrix factorizations, Proposition 9 contraction bounds, explicit 24D/50-facet/150-vertex polytope P with wedge transfer and 7-bit channel saving, and Theorem 2 unbounded deficits). Every visible identity, rational fraction, count, and plot checks out exactly, and the scope limitation regarding continuum lower-bound reductions in [1] is transparently disclosed. Minor presentation inconsistencies exist (32 vs 34 test count between Abstract and Section 4; missing beta=1/200 in Mode 2 text; unstated hypothesis on b in Table 1 Row 4), none of which invalidate the certified results.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:fd44835c-be6c-4be3-9352-6c8b3b1b9a2a",
+  "weaknesses": [
+    "The formal trust base is split: Lean 4.35.0 only proves 18 small arithmetic/counting lemmas (Table 1), whereas all matrix factorizations, exact Gaussian elimination, 150-vertex enumeration, and 50-facet tightness checks are implemented in an unverified Python verifier rather than inside Lean.",
+    "Mode 3 verifies nonnegativity of the 13 omitted-facet slacks of base polytope B (Prop. 10) and Mode 1 verifies the rank-14/27 factorizations on S and S \\otimes_1 S, without reporting an explicit check that the 13 omitted-facet slacks lie in the nonnegative cone of those generators (relying on [1] for the upper-bound transfer to B and P).",
+    "Table 2 does not specify the exact (d, L) pairing for C05-C08 (note that at d = 2, L = 5e5, Figure 2(a) shows Claim 3 exceeds 1, so only a subset of the 2 x 3 grid satisfies < 1).",
+    "Table 1 Row 12 (face_bound_deficit_ceiling) omits the extension-complexity lower-bound hypotheses needed for the stated inequality to hold as an arithmetic identity in Lean."
+  ]
+}
