@@ -1,0 +1,59 @@
+{
+  "prompt_version": "ARR-ASSESS-1.0",
+  "paper_id": "ARR-2026-1WPSHPZVX29N9SBD",
+  "version": "v1",
+  "version_id": "arr:version:1e439f76-1d9b-4c84-8af2-8b5c88a79160",
+  "canonical_sha256": "caf1de3e2ee15ab22ad09941b99464215b0e6f2ba7d9e99783524829e259acd2",
+  "provider": "Google",
+  "model_id": "hydrogen",
+  "independence": "not_involved_in_manuscript",
+  "assessed_at": "2026-11-26T16:56:00Z",
+  "recommendation": "accept",
+  "overall_stars": 6,
+  "millennium_score": 5.8,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 5,
+      "basis": "All three theorems, proofs, asymptotic expansions, counterexample construction, and numerical witnesses in Tables 1-2 and Figures 1-3 were independently verified from the manuscript and found mathematically sound."
+    },
+    "novelty": {
+      "stars": 4,
+      "basis": "Collapses the quadratic window [t, t^2] in lsernau/grh-lean to an explicit linear window [t, lambda*t], solves the two-barrier variational problems in closed form (including rho* = 3e), establishes the sharp phase boundary lambda_crit = max(1, (alpha+gamma)/delta_0), and sharpens the Main.lean prime-error exponent from 8*epsilon - 1/2 to (5+delta)*epsilon - 1/2."
+    },
+    "reproducibility": {
+      "stars": 4,
+      "basis": "All analytic proofs and rational parameter witnesses (Table 2) are self-contained in the PDF and check out directly. Full verification of the Lean 4.35.0 module, pytest suite, SHA-256 certificates, and exact lsernau/grh-lean line correspondence relies on external artifacts not embedded in the PDF."
+    },
+    "rigor": {
+      "stars": 5,
+      "basis": "Clean, completely rigorous arguments: the explicit finite threshold t_0 in Eq. (6) properly accounts for the ceiling k = ceil(kappa*t) and exponential envelope; the asymptotic analysis of (18)-(23) includes exact global series bounds; and the polar counterexample (22) strictly matches the upper bound."
+    },
+    "significance": {
+      "stars": 4,
+      "basis": "Substantial quantitative improvement to a contemporary Lean 4 GRH formalization—reducing the second scale x_1 from super-polynomial exp(10^12 (log x)^2) to polynomial x^(lambda*10^6) and rigorously diagnosing the divisor 51 bottleneck—though situated within a specialist formalization-optimization niche rather than advancing unconditional analytic number theory."
+    }
+  },
+  "summary": "The manuscript audits and sharply optimizes the quantitative endgame and scale calculus of the Lean 4.35.0 formalization lsernau/grh-lean. Theorem 1 proves that under identical IsPolar hypotheses, the quadratic one-sided window [t, t^2] collapses to an explicit linear window [t, lambda*t] with linear moment order k = ceil(kappa*t) and explicit finite threshold t_0, reducing the second scale x_1 from super-polynomial to polynomial. Theorem 2 solves the left- and right-barrier optimizations in closed form (yielding rho* = 3e at sigma = 3, alpha = gamma = 1) and proves that for functions analytic on {Re s > 1 - delta_0}, the achievable linear ratio converges as sigma -> infinity to the exact phase boundary lambda_crit = max(1, (alpha+gamma)/delta_0), matched by the elementary polar counterexample E = 0, E'(v) = -e^(-delta_0*v). Theorem 3 tightens star_inequality by a full factor of log b, improves the prime-error exponent in eventually_primeError_le_rpow from 8*epsilon - 1/2 to (5+delta)*epsilon - 1/2, and proves via a two-constraint integer characterization D*(M, c_rem) = max(floor(M/2) + 1, c_rem + 1) that the hardcoded divisor 51 in New.grh is strictly bottlenecked by the scale condition M = 100 rather than the prime-error exponent.",
+  "strengths": [
+    "Complete, self-contained, and elementary proofs of all three main theorems with explicit constants and no hidden asymptotic gaps.",
+    "Exact closed-form variational characterizations in Theorem 2(a)-(b), including the global quadratic lower bound on psi - (1-psi)*ln(1/(1-psi)) in the sigma -> infinity proof of Theorem 2(c).",
+    "Exact impossibility counterexample E(v) = 0, E'(v) = -e^(-delta_0*v) establishing unimprovability of lambda_crit = max(1, (alpha+gamma)/delta_0).",
+    "Clean diagnostic characterization D*(M, c_rem) = max(floor(M/2) + 1, c_rem + 1) in Theorem 3(c), explaining why improving c_rem from 8 to 6 leaves D = 51 unchanged unless M = 100 is also tightened.",
+    "Independent numerical checks of Table 2 rows (C02-C07, C11*, C11dagger) confirm all margins m_1, m_2, m_3 > 0 and thresholds t_0."
+  ],
+  "weaknesses": [
+    "The Lean 4.35.0 formalization covers the 13 core algebraic and rational-margin lemmas over Q rather than integrating directly into lsernau/grh-lean's Mathlib pipeline.",
+    "Claims regarding external Lean build results, pytest counts, and SHA-256 certificate digests cannot be independently checked from the manuscript PDF alone.",
+    "Minor editorial inconsistencies in cross-references (Section 5 citing Eqs. (12)-(14) instead of (13)-(15), and section headings using Theorem A/B/C vs. Theorem 1/2/3)."
+  ],
+  "strong_novelty_candidates": [
+    "Linear-window collapse [t, t^2] -> [t, lambda*t] under grh-lean's IsPolar hypotheses via decoupled barrier/analyticity parameters and linear moment scaling k = ceil(kappa*t).",
+    "Closed-form two-barrier saddle identities rho* ln(rho*/sigma) = rho* - sigma + 1 + S and H(beta*) = kappa/beta*, yielding the exact phase transition lambda_crit(alpha, gamma, delta_0) = max(1, (alpha+gamma)/delta_0).",
+    "Exact integer characterization D*(M, c_rem) = max(floor(M/2) + 1, c_rem + 1) proving that New.grh's divisor 51 is strictly scale-bottlenecked by M = 100 alongside the (3 - delta)*epsilon prime-error exponent improvement."
+  ],
+  "potential_errors": [
+    "Non-material typographical cross-reference in Section 5 (page 8): linear_window_three_margins cites 'Eqs. (12)-(14)' where the three margin bounds are Eqs. (13)-(15).",
+    "Non-material label discrepancy: Section headings read 'Theorem A/B/C' whereas formal environments use 'Theorem 1/2/3'."
+  ],
+  "unresolved_material_objections": []
+}
