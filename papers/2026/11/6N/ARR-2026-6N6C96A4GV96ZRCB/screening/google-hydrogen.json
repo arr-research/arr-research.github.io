@@ -1,0 +1,61 @@
+{
+  "assessed_at": "2026-11-26T12:11:20Z",
+  "canonical_sha256": "d0f95556f6fd9bda9eecaf0833579b8b70761ed9fdfbd3d0bc7ddbebfb63aa98",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All algebraic identities and quantifiers in Theorems A-F, Eqs. (1)-(5), Table 2 exact fractions (e.g., beta_a(11)=29/11, beta_a(59)=291/59, beta_a(123)=734/123), and Figures 1-3 check out, supported by 24 Lean 4.35.0 theorems using only [propext, Quot.sound].",
+      "stars": 5
+    },
+    "novelty": {
+      "basis": "Identifies three infinite-family doubling obstructions refuting Section 5 of Altay et al. [1] (sharp collision threshold 2^k-2^i-4, universal antipodal hit on n=4m, first-half neighbor collision) and proves universal Sub-case 5 rerouting (Thm D), a 2-adic boundary shift (Thm E), and gap-free MATBGs for 2^k-5 and 2^k-3 (Thm F).",
+      "stars": 4
+    },
+    "reproducibility": {
+      "basis": "Provides a zero-dependency Lean 4.35.0 kernel (24 theorems, 0 sorry, 0 Classical.choice) plus an AST-audited zero-float Python verifier checking 16 canonical certificates and 48 unit/forgery tests, though external code execution was not performed during review.",
+      "stars": 5
+    },
+    "rigor": {
+      "basis": "Proofs of Theorems A-F are precise and quantifier-accurate (excluding (k,i)=(4,2) in Thm A(2) and proving Labahn bound separation in Thm F). Thm F explicitly inherits k-round coverage from [2] and 0 not in I_{k-1} outside Sub-case 5 from Prop 3.7 of [1].",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Prevents a false resolution claim for the 1998 Liestman-Przulj MATBG open problem while constructively closing the upper-band families 2^k-5 and 2^k-3 for all k>=4; leaves the interior second-half band [3*2^{k-2}, 2^k-6] cleanly identified as open.",
+      "stars": 4
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 5.25,
+  "model_id": "hydrogen",
+  "overall_stars": 5,
+  "paper_id": "ARR-2026-6N6C96A4GV96ZRCB",
+  "potential_errors": [
+    "Theorem E proof (p. 4) writes 't 2^{s+1} = 2j + 2^{k-2}, which reduces mod 2^s to 0 \\equiv j (mod 2^s)' without explicitly stating the division by 2 to obtain t 2^s = j + 2^{k-3} first (reducing before dividing by 2 only yields 2j \\equiv 0 mod 2^s).",
+    "Table 1 row 24 (p. 5) contains a typesetting glitch '2^{i-1} \\in -/ A^{(k-i)}_{rev}(0)' instead of '2^{i-1} \\notin -A^{(k-i)}_{rev}(0)' or 'n - 2^{i-1} \\notin A^{(k-i)}_{rev}(0)'.",
+    "Theorem C statement (p. 3) omits the explicit '+ u (mod n)' shift when stating w = 2^{k-2}-1 belongs to B'^{(1)}_{rev,k-1}, though the proof clarifies 'shifted by u'.",
+    "Page 3 paragraph after Figure 1 introduces examples at n=24, 26 (k=5) and n=66 (k=7) immediately under 'Figure 1 illustrates Theorem A at k=6'."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Sharp, elementary, and completely verified refutation of Section 5's MATBG claim in [1] via three independent infinite-family obstructions (Theorems A, B, C), including exact deficit 2^{k-2}-2 = Theta(n/2) at n = 2^{k-1}+2.",
+    "Clean constructive single-edge shortcut rerouting in Theorem D repairing Sub-case 5 universally across the entire open second half n in [3*2^{k-2}, 2^k-2], and a 2-adic shift law (Theorem E) avoiding vertex 0 on the boundary u = 2^{k-2}.",
+    "Gap-free MATBG proof (Theorem F) for KG'(2^k-5) and KG'(2^k-3) for all k >= 4, rigorously matching the degree lower bound while showing Labahn's bound excludes 2^k-1.",
+    "High verification discipline: 24 Lean 4.35.0 theorems without Mathlib, sorry, or Classical.choice, paired with exact rational certificates C01-C16 and adversarial forgery checks."
+  ],
+  "strong_novelty_candidates": [
+    "Theorem A sharp shifted-scheme collision threshold n_max(k,i) = 2^k - 2^i - 4 and asymptotic Theta(n/2) half-loss at n = 2^{k-1}+2.",
+    "Theorem B universal antipodal dimensional obstruction for all n = 4m in (2^{k-1}, 2^k) across all 2(k-1) standard and reverse cyclic shifts.",
+    "Theorem D universal Sub-case 5 shortcut rerouting restoring exact doubling |I_t| = 2^t and b_a(T_u) = beta_a(n-1) across [3*2^{k-2}, 2^k-2].",
+    "Theorem F gap-free MATBG closure for KG'(2^k-5) and KG'(2^k-3) (k >= 4) combined with Labahn exclusion of 2^k-1."
+  ],
+  "summary": "The manuscript rigorously demonstrates that Altay, Fakharan, and Harutyunyan's recent claim [1] that deleted Knodel graphs KG'(n-1) yield minimum average time broadcast graphs (MATBGs) across (2^{k-1}, 2^k) fails as proved due to three infinite-family obstructions: modular collisions in shifted schemes up to 2^k - 2^i - 4 (Theorem A), universal hits on deleted vertex 0 from antipodal originators u = n/2 when 4 | n (Theorem B), and first-half neighbor shortcut collisions (Theorem C). Constructively, the paper repairs Sub-case 5 universally in the second half via single-edge shortcut rerouting (Theorem D), provides a 2-adic shift avoiding 0 at u = 2^{k-2} (Theorem E), and establishes a complete MATBG proof for KG'(2^k-5) and KG'(2^k-3) for all k >= 4 while excluding 2^k-1 via Labahn's bound (Theorem F). All 24 modular-arithmetic lemmas are formalized in zero-dependency Lean 4.35.0 and corroborated by exact rational certificates. Only minor expositional slips exist, with no unresolved material objections.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:c8507daa-ab6c-451e-af7b-7e0ad7e165ef",
+  "weaknesses": [
+    "Theorem F settles only the top two odd orders {2^k-5, 2^k-3} per dyadic band rather than the full second-half interval [3*2^{k-2}, 2^k-2], leaving [3*2^{k-2}, 2^k-6] open.",
+    "For non-neighbor originators outside Sub-case 5 in general k, Theorem F relies on Proposition 3.7 of [1] for 0 not in I_{k-1} (which is checked exhaustively by the Python verifier for k=4,5,6 but not among the 24 Lean-formalized theorems in Table 1).",
+    "Table 2 labels C13-C15 as '1 reroute' and C16 as '0 reroutes', counting only Sub-case 5 antipodal reroutes rather than the k-1 neighbor shortcut redirections also used in Theorem F(iii)."
+  ]
+}
