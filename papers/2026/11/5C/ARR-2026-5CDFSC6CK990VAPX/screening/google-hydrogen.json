@@ -1,0 +1,60 @@
+{
+  "assessed_at": "2026-11-26T14:14:10Z",
+  "canonical_sha256": "bbfe936512ee2b42a64934227e2a8daf87ae5a5cc8a04dec57182ecf336097c1",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "Every algebraic step in Theorems 1, 2, and 3—extrapolation formula (6), Lagrange sum (8), ratio bound T_j(w+1)/T_j(w) <= x, asymptotic inversion (5), monotonicity of g(m)-h(m) for m>=10, second-regime weights D_r^(2)(d), crossover identity (10), Table 1 denominators, and weighted Cauchy-Schwarz bound (11)-(12)—verifies cleanly. Only point-by-point feasibility ||G^(2)||_X <= 1 for Table 1's second-regime entries relies on external certificates C01-C13 rather than an in-text proof.",
+      "stars": 5
+    },
+    "novelty": {
+      "basis": "Generalizes Cao and Bai's [1] r<=2 step-point formulas to all r in N and d>0 (Theorem 1), discovers and proves the integer transition at r=9, d=10, derives the exact closed-form second-regime dual formula and crossover identity (Theorem 2), and sharpens the Blaschke-dual constant uniformly by >21.8% (Theorem 3). The work operates directly within the Wiener-interpolation and Blaschke framework of [1].",
+      "stars": 4
+    },
+    "reproducibility": {
+      "basis": "All proofs of Theorems 1-3, asymptotic derivations, and numerical comparisons are self-contained and transparent in the 9-page PDF, and the text cleanly separates in-text analytic proofs from external Lean 4.35.0 and Python certificate checks. However, verifying the specific second-regime feasibility ||G^(2)||_X <= 1 entries in Table 1 (C06-C13) and the Lean/pytest suite requires inspecting external repository artifacts outside the PDF.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Quantifiers (r>=0 vs r>=1 vs r>=2, real d>0, integer w>=r+2) and edge cases are handled accurately. Theorem 2 carefully avoids overclaiming a closed-form lower boundary for the second regime by conditioning equality on ||G^(2)||_X <= 1, and Section 5 explicitly notes that Lean Theorems 4-6 cover Nat while real d>0 is proved analytically in Sections 2-3.",
+      "stars": 5
+    },
+    "significance": {
+      "basis": "Completely resolves the exact consecutive-node phase boundary, explains the previously isolated qubit exceptions (gamma_2(2)=1/35, gamma_3(2)=4/427) alongside new exact qudit step points, and achieves a uniform >21.8% improvement in the asymptotic Blaschke-dual constant for local Haar-typical state certification. Significance is somewhat specialized to the certification framework of [1].",
+      "stars": 4
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 5.25,
+  "model_id": "hydrogen",
+  "overall_stars": 5,
+  "paper_id": "ARR-2026-5CDFSC6CK990VAPX",
+  "potential_errors": [
+    "In Theorem 1 Part 2 (Necessity, p. 3), the argument states that any H in V_r(d) with ||H||_X <= 1 achieving H(0) = (d+2)^{r+1}+d^{r+1}-1 must coincide with G; strictly speaking, ruling out equality in (3) for B_r(d) defined as a supremum relies on attainment/compactness of the unit ball in the finite-dimensional space V_r(d) (already noted via Theorem S5/Lemma S30 of [1] on p. 2, though helpful to mention explicitly in the Necessity paragraph).",
+    "Table 1's Regime column labels second-regime rows with intervals such as 'Second (d < 3.224)' and 'Second (d < 6.611)'; while d_crit(r) is the exact upper boundary of the second regime, the manuscript does not establish in closed form where a third bifurcation might occur at even smaller d > 0 (e.g. for r >= 3).",
+    "In Theorem 3, lambda* = (1-alpha^2)/(1+alpha^2) is described as optimizing the Cauchy-Schwarz balance weight for every s >= 1; strictly, lambda* minimizes the large-s sqrt(s) asymptotic constant from the integral comparison, whereas for finite s the +1 term in 1 + (pi*s)/(2*sqrt(lambda)) slightly shifts the exact finite-s minimizer (though lambda* still strictly dominates lambda=1 for every d > 0 and s >= 1)."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Theorem 1 provides an elementary, fully rigorous 4-line proof of the universal consecutive-node lower bound gamma_r(d) >= 2/((d+2)^{r+1}+d^{r+1}) and the exact necessary and sufficient phase boundary (d+2)^{r+1}-d^{r+1} <= 2(d+1)^{r+1} for all r >= 0 and real d > 0.",
+    "Exact asymptotic expansion d_crit(r) = (r+1)/arsinh(1) - 1 - 1/(2*sqrt(2)) + O(1/r) and elementary calculus proof of the monotonicity of g(m)-h(m) rigorously establish the delayed integer jump at r=9, d=10 and its persistence for all r >= 9.",
+    "Theorem 2 derives the exact closed-form second-regime dual formula gamma_r^(2)(d) on {1,...,r,r+2,infty} and the exact polynomial crossover identity (10), unifying previously isolated qubit values (1/35, 4/427) with new exact qudit step points.",
+    "Theorem 3 achieves a clean, uniform >21.8% sharpening of the Blaschke-dual asymptotic constant across all real d > 0 and s >= 1 by decoupling +2 from sqrt(s) and setting lambda* = (1-alpha^2)/(1+alpha^2).",
+    "Abstract, tables, figures, numerical values (including 12^{10}-10^{10} vs 2*11^{10} and Table 1 fractions), and the boundary between in-text proofs and external Lean/Python certificates are internally consistent and transparently reported."
+  ],
+  "strong_novelty_candidates": [
+    "Exact necessary and sufficient algebraic phase boundary (d+2)^{r+1}-d^{r+1} <= 2(d+1)^{r+1} for the consecutive-node regime across all r in N and d > 0, with the proved integer threshold jump at r=9, d=10.",
+    "Exact closed-form second-regime step-point formula gamma_r^(2)(d) for all r >= 2 and its algebraic crossover identity (10) at d = d_crit(r).",
+    "Uniform >21.8% improvement on the Blaschke-dual asymptotic constant in local state certification via weighted Cauchy-Schwarz optimization lambda* = (1-alpha^2)/(1+alpha^2)."
+  ],
+  "summary": "The manuscript resolves the exact phase structure of the local quantum state certification step points gamma_r(d) introduced by Cao and Bai [1], establishes the exact closed-form formula and crossover identity for the first post-bifurcation regime, and uniformly sharpens the Blaschke-dual asymptotic constant. All main mathematical derivations in Theorems 1, 2, and 3 are rigorous, algebraically verified from the PDF, and free of material errors; only the point-by-point feasibility verification ||G^(2)||_X <= 1 for specific second-regime entries in Table 1 relies on external machine-checked certificates (C01-C13) that are transparently separated from the in-text proofs.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:e9daed2f-f7f5-4e5c-8f90-313279e53f42",
+  "weaknesses": [
+    "The manuscript does not provide an analytic proof of tail feasibility ||G^(2)||_X <= 1 for the second-regime extremal interpolant G^(2) in general (unlike the 3-step tail proof in Theorem 1), leaving specific Table 1 second-regime exact values (e.g. gamma_3(3), gamma_4(3), gamma_6(6), gamma_9(10)) dependent on the external Python rational certificates C06-C13, which cannot be audited from the PDF alone.",
+    "The lower boundary of the second regime (where a third node bifurcation could occur at smaller d) is not characterized analytically in Theorem 2.",
+    "As a referee assessing only the canonical PDF, the claimed Lean 4.35.0 formalization and AST-audited zero-float verifier (47/47 pytest checks) cannot be independently executed or audited from the manuscript alone."
+  ]
+}
