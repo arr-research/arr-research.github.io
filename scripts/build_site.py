@@ -282,6 +282,7 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
   <meta property="og:site_name" content="{SITE_NAME}">
   {canonical_tag}
   <link rel="alternate" type="application/json" title="AIRR submission discovery" href="{base}/.well-known/airr-submission.json">
+  <link rel="alternate" type="application/atom+xml" title="AIRR.SCIENCE Latest Papers (Atom)" href="{base}/feed.xml">
   {share_tags}
   {head_extra}
   <link rel="icon" href="{base}/favicon.ico" sizes="16x16 32x32 48x48">
@@ -318,7 +319,7 @@ def page_shell(*, title: str, description: str, content: str, base: str, canonic
   <footer>
     {submission_invitation(base, PUBLIC_INTAKE_URL, compact=True)}
     <p><strong>AIRR.SCIENCE</strong> is an open research archive operated by Lluis Eriksson, an independent researcher in Sweden. Every version is preserved and citable. Before admission, a paper is checked by named AI models and approved by the editor; this screening is not peer review. <a href="{base}/governance/">Governance and conflicts</a>.</p>
-    <p><a href="{base}/catalog.json">Machine-readable catalogue (CC0)</a> · <a href="{base}/registry/model-assessments.json">Model assessments</a> · {f'<a href="{base}/citations/">Papers citing AIRR</a> · ' if EXTERNAL_CITATIONS else ''}<a href="{base}/authors/index.json">Author registry (CC0)</a> · <a href="{base}/metrics.json">Activity snapshot (CC0)</a> · <a href="{base}/registry/record-timestamps.json">Exact record timestamps (CC0)</a> · <a href="{base}/protocol/">Verification protocol</a> · <a href="{base}/licensing/">Licensing</a> · <a href="{base}/privacy/">Privacy</a> · <a href="{base}/terms/">Deposit terms</a> · <a href="{base}/contact/">Contact and complaints</a> · <a href="https://github.com/arr-research/arr-research.github.io">Source (AGPL)</a></p>
+    <p><a href="{base}/catalog.json">Machine-readable catalogue (CC0)</a> · <a href="{base}/feed.xml">Atom feed</a> · <a href="{base}/registry/model-assessments.json">Model assessments</a> · {f'<a href="{base}/citations/">Papers citing AIRR</a> · ' if EXTERNAL_CITATIONS else ''}<a href="{base}/authors/index.json">Author registry (CC0)</a> · <a href="{base}/metrics.json">Activity snapshot (CC0)</a> · <a href="{base}/registry/record-timestamps.json">Exact record timestamps (CC0)</a> · <a href="{base}/protocol/">Verification protocol</a> · <a href="{base}/licensing/">Licensing</a> · <a href="{base}/privacy/">Privacy</a> · <a href="{base}/terms/">Deposit terms</a> · <a href="{base}/contact/">Contact and complaints</a> · <a href="https://github.com/arr-research/arr-research.github.io">Source (AGPL)</a></p>
     <p class="brand-credit"><a href="https://erikssonai.se/" rel="noopener" aria-label="Eriksson Lärande &amp; AI"><img src="{base}/assets/eriksson-logo.svg" alt="Eriksson Lärande &amp; AI" width="107" height="27" loading="lazy"></a></p>
   </footer>
   {PAGE_COUNTER}
@@ -2063,6 +2064,59 @@ def write_sitemaps(papers: list, groups: dict, profiles: list[dict], canonical_u
     write(OUTPUT_DIR / "sitemap.xml", index)
 
 
+def write_atom_feed(papers: list, timestamps: dict, canonical_url: str, local_pdfs: set[tuple[str, str]], limit: int = 100) -> None:
+    if not canonical_url:
+        return
+    ordered = sorted(
+        papers,
+        key=lambda p: (chronology_time(timestamps[(p.id, p.version)]), p.id),
+        reverse=True,
+    )[:limit]
+    if ordered:
+        feed_updated = parse_exact_timestamp(chronology_time(timestamps[(ordered[0].id, ordered[0].version)])).strftime("%Y-%m-%dT%H:%M:%SZ")
+    else:
+        feed_updated = "2026-01-01T00:00:00Z"
+    lines = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<feed xmlns="http://www.w3.org/2005/Atom">',
+        f"  <id>{esc(canonical_url)}/feed.xml</id>",
+        f"  <title>{esc(SITE_NAME)} — {esc(SITE_FULL_NAME)}</title>",
+        "  <subtitle>Open-access, versioned research records with formal verification, exact provenance, and transparent AI screening.</subtitle>",
+        f'  <link rel="self" type="application/atom+xml" href="{esc(canonical_url)}/feed.xml"/>',
+        f'  <link rel="alternate" type="text/html" href="{esc(canonical_url)}/"/>',
+        f"  <updated>{esc(feed_updated)}</updated>",
+    ]
+    for paper in ordered:
+        route = record_route(paper.metadata)
+        url = f"{canonical_url}/{route}/{paper.id}/"
+        ts = timestamps[(paper.id, paper.version)]
+        updated = parse_exact_timestamp(chronology_time(ts)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        published = parse_exact_timestamp(ts["deposit_recorded_at"]).strftime("%Y-%m-%dT%H:%M:%SZ")
+        title = plain_text(paper.metadata["title"])
+        abstract = plain_text(paper.metadata["abstract"])
+        lines.extend([
+            "  <entry>",
+            f"    <id>{esc(url)}</id>",
+            f"    <title>{esc(title)}</title>",
+            f'    <link rel="alternate" type="text/html" href="{esc(url)}"/>',
+        ])
+        if (paper.id, paper.version) in local_pdfs:
+            pdf_url = f"{url}{paper.id}-{paper.version}.pdf"
+            lines.append(f'    <link rel="enclosure" type="application/pdf" href="{esc(pdf_url)}"/>')
+        lines.extend([
+            f"    <published>{esc(published)}</published>",
+            f"    <updated>{esc(updated)}</updated>",
+        ])
+        for author in paper.metadata["authors"]:
+            lines.append(f"    <author><name>{esc(author['name'])}</name></author>")
+        for subj in paper.metadata.get("subjects", []):
+            lines.append(f'    <category term="{esc(subj)}"/>')
+        lines.append(f'    <summary type="text">{esc(abstract)}</summary>')
+        lines.append("  </entry>")
+    lines.append("</feed>\n")
+    write(OUTPUT_DIR / "feed.xml", "\n".join(lines))
+
+
 def write_llm_guides(papers: list, canonical_url: str) -> None:
     if not canonical_url:
         return
@@ -2088,6 +2142,7 @@ def write_llm_guides(papers: list, canonical_url: str) -> None:
         f"- [Catalogue NDJSON]({canonical_url}/catalog.ndjson)",
         f"- [Partition index]({canonical_url}/catalog/index.json)",
         f"- [Sitemap]({canonical_url}/sitemap.xml)",
+        f"- [Atom feed]({canonical_url}/feed.xml)",
         f"- [Verification protocol]({canonical_url}/protocol/)",
         f"- [Model assessments]({canonical_url}/registry/model-assessments.json)",
         f"- [Verified external citations of AIRR records]({canonical_url}/registry/external-citations.json)",
@@ -2389,6 +2444,7 @@ def main() -> int:
         + (f"Sitemap: {canonical_url}/sitemap.xml\n" if canonical_url else ""),
     )
     write_sitemaps(papers, groups, profiles, canonical_url, timestamps, assessments)
+    write_atom_feed(papers, timestamps, canonical_url, local_pdfs)
     write_llm_guides(papers, canonical_url)
 
     analytics_pages = {}
