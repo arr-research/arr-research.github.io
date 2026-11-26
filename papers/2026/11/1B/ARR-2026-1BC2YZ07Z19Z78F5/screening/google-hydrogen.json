@@ -1,0 +1,56 @@
+{
+  "prompt_version": "ARR-ASSESS-1.0",
+  "paper_id": "ARR-2026-1BC2YZ07Z19Z78F5",
+  "version": "v1",
+  "version_id": "arr:version:2630cb75-e6c1-4c45-a5fb-5df79bff6a8a",
+  "canonical_sha256": "1796a6b26a64c002d705ac73fd16842990cda15f2f7c46f2e2c8df5d94be13bc",
+  "provider": "Google",
+  "model_id": "hydrogen",
+  "independence": "not_involved_in_manuscript",
+  "assessed_at": "2026-11-26T23:20:00Z",
+  "recommendation": "accept",
+  "millennium_score": 8.7,
+  "overall_stars": 9,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 5,
+      "basis": "All three main theorems are mathematically sound, all 20 Lean 4.35.0 core lemmas type-check with 0 sorry and only [propext, Quot.sound], and all 56 adversarial pytest checks pass."
+    },
+    "novelty": {
+      "stars": 4,
+      "basis": "Resolves Chen Open Problem 3 in the vertex-cover regime via symmetric cut partitioning, establishes tight signed-rectangle rank and (n-2)^2 oracle bounds for Appendix D, and tightens reduction weights and envelope trees."
+    },
+    "reproducibility": {
+      "stars": 5,
+      "basis": "Includes self-contained LaTeX/PDF matching the canonical SHA-256, zero-dependency Lean 4 proofs, an AST-audited zero-float verifier generating 16 SHA-256 certificates, and 56 deterministic pytest cases."
+    },
+    "rigor": {
+      "stars": 5,
+      "basis": "Carefully handles arbitrary base potentials in Wilber doubling phases, overlapping signed-rectangle cancellations, a=1 and negative-V ceiling recovery edges, and constructive axiom-free Lean proofs."
+    },
+    "significance": {
+      "stars": 4,
+      "basis": "Shaves Theta(log^3 n) off near-Monge 1D sequential DP when tau(C)=O(1), closes exact rank and query gaps for sparse Monge perturbations, and reduces hardness-reduction weight blowup by Theta(n^{1-alpha})."
+    }
+  },
+  "summary": "Paper 110 advances the theory of near-Monge matrices with sparse negative mixed differences, directly addressing Open Problem 3 and Appendix D of Chen (arXiv:2611.34733v1). First, a greedy 2-approximate vertex cover of the bipartite negative-support graph induces a symmetric cut partition into at most 2*tau(C)+1 intervals whose off-diagonal blocks and diagonal triangles are purely Monge, enabling SMAWK plus Wilber doubling-phase DP with arbitrary base potentials in deterministic O(s + n(tau(C)+1)) time with zero log factors. Second, a four-corner distinct-gap property yields the exact rank sandwich max(ceil(s/2), max_p s_row(p), max_q s_col(q)) <= r_min(C) <= s(C) (tight at both ends) and an (n-2)^2 deterministic / Omega(n^2) randomized entry-oracle lower bound for Monge testing. Third, replacing (j-k)^2 with binomial(j-k,2) compresses Chen hardness weights to Theta(n^{1+alpha}), and an O(r)-node elementary-block envelope tree accelerates static min-plus rectangle updates by Theta(log n / log(r+2)).",
+  "strengths": [
+    "Symmetric vertex-cover cut partition S = {0,n} U {p+1: p in R_cuts} U {q: q in C_cuts} enforces |I_u|=|J_u|, respects sequential prefix dependencies, and eliminates all logarithmic factors in O(s + n(tau(C)+1)) DP time (Theorem 2.3).",
+    "Exact four-corner distinct-gap analysis of signed rectangles (Lemma 3.1) separates r_min(C) from ceil(s(C)/2) via row/column gap maxima and achieves exact tightness at both s/2 and s (Theorem 3.2).",
+    "Clean (n-2)^2 deterministic and Omega(n^2) randomized entry-oracle lower bound via single interior +5 perturbations on 2(j-k)^2, directly answering Chen Appendix D.",
+    "Minimal unit-curvature integer background binomial(j-k,2) and tight multiplier lam_tri = max(2, (a-1)(n-1)+1) yield >8x weight compression for 2 <= a <= n/4 while preserving exact integer ceiling recovery for all V in Z (Theorem 4.2a).",
+    "Strong multi-layer verification: 20 constructive Lean 4.35.0 theorems (verified locally with 0 sorry and [propext, Quot.sound] only), 16 AST-audited zero-float SHA-256 certificates, and 56 passing adversarial pytest tests including executable SMAWK and Wilber routines."
+  ],
+  "weaknesses": [
+    "The vertex-cover DP speedup requires tau(C) = o(log^3 n) and assumes the negative-support list N_ut(C) and O(1) entry oracle are given; when negative cells form an induced matching of size Theta(n), the bound degrades to O(n^2).",
+    "Lean 4.35.0 formalizes the 20 core algebraic, cut-invariance, and combinatorial invariants rather than full imperative runtime complexity or pointer termination of SMAWK, Wilber, and the switch-column envelope tree (which are proved in prose and tested on finite instances).",
+    "In Theorem 4.2(b), the static tree bound writes log(r+2) in Eq. (19) (for r >= 1), whereas the proof notes L_r = O(min(log n, log(r+2))); for dense r > n this factor caps at log n and for r=0 the O(n T_M) SMAWK branch applies."
+  ],
+  "strong_novelty_candidates": [
+    "Symmetric vertex-cover cut partitioning with Wilber doubling-phase diagonal sweeps over arbitrary base potentials, resolving Chen Open Problem 3 in the vertex-cover regime with zero logarithmic factors.",
+    "Exact signed-rectangle rank sandwich max(ceil(s/2), s_row, s_col) <= r_min(C) <= s(C) separating r_min from ceil(s/2) by a factor of 2, paired with an exact (n-2)^2 entry-oracle Monge-testing lower bound.",
+    "Unit-curvature triangular background binomial(j-k,2) with tight O(n^{1+alpha}) multiplier compression and O(r)-node elementary-block static envelope tree with monotone leaf fingers."
+  ],
+  "potential_errors": [],
+  "unresolved_material_objections": []
+}
