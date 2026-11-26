@@ -1,0 +1,59 @@
+{
+  "prompt_version": "ARR-ASSESS-1.0",
+  "paper_id": "ARR-2026-26N7SQDMWP9A2T6C",
+  "version": "v1",
+  "version_id": "arr:version:bb1c2881-db1d-4d4e-b0dc-7f9671f5f3c6",
+  "canonical_sha256": "fc491c4174c8ae68c569d7b8a8833090655a0837108a6261a2fa4145c3d55d76",
+  "provider": "Google",
+  "model_id": "hydrogen",
+  "independence": "not_involved_in_manuscript",
+  "assessed_at": "2026-11-26T16:55:00Z",
+  "recommendation": "accept",
+  "overall_stars": 6,
+  "millennium_score": 5.9,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 5,
+      "basis": "Every theorem, proof, algebraic identity, explicit matrix, gate-level circuit (U_step3 and W_2), and table entry in the manuscript was audited directly and verified without gaps. The stabilizer-nullity calculations, four-term affine obstruction, discrete quadratic-derivative argument, symplectic-Gram mod-8 identity, unary-subspace phase checks, and closed-form QSD volume formulas are mathematically exact."
+    },
+    "novelty": {
+      "stars": 4,
+      "basis": "Introduces an original paired-toggle F_2 symplectic-Gram factorization (V V^T = H_m mod 2) achieving 4m+3 T-gates ancilla-free and measurement-free for the m-pair Wide Fredkin gate, together with a clean four-term affine-dependence obstruction characterizing X-stabilizers of affinely independent basis superpositions and resolving both open questions of Sun [1]."
+    },
+    "reproducibility": {
+      "stars": 5,
+      "basis": "Self-contained Appendix A provides explicit Gram matrices V_1, V_2, V_3, complete gate-by-gate sequences for U_step3 and W_2, full numerical scaling tables, and a SHA-256 certificate ledger, complemented by Lean 4.35.0 formalization of core universal algebraic/scaling lemmas and exact Q(zeta_8) arithmetic verification."
+    },
+    "rigor": {
+      "stars": 5,
+      "basis": "Lower bounds hold against arbitrary adaptive Clifford+T / diagonal R_z(theta) circuits with arbitrary clean ancillas, mid-circuit Pauli measurements, and reusable catalytic states. Scope limitations (exact implementations, computational-basis encodings, universal CNOT+X lookups) are clearly and honestly delineated."
+    },
+    "significance": {
+      "stars": 4,
+      "basis": "Definitively closes both open avenues from Sun [1] for reaching O~(2^n) T-count via computational-basis unary tracking, establishes sharp 1.75x-3.50x constructive T-count improvements with zero extra ancillas, and resolves exact constants and sawtooth artifacts in QSD-unary space-depth volume tradeoffs."
+    }
+  },
+  "summary": "The manuscript resolves both open questions posed by Sun [1] (arXiv:2611.34740v1) on unary-tracked unitary synthesis and sharpens the associated QSD-unary space-depth volume analysis. First (Theorem 6), it characterizes universal zero-T CNOT+X lookup encodings as affinely independent over F_2 (m >= 2^n - 1) and uses a four-term affine-dependence obstruction (Lemma 5) to prove exact stabilizer-nullity jumps Delta nu(K_j) = K_j (K_j >= 3; 3 at K_j = 2), ruling out poly(n)-T tracker updates for any mixing-dense CSD factor even with arbitrary clean ancillas, adaptive Pauli measurements, and catalysts. Second (Theorem 9), for the m-pair Wide Fredkin gate W_m, it proves a universal adaptive lower bound T(W_m) >= 2m + 1 via Clifford reduction to U_{CCZ,m} and a discrete derivative argument, and constructs an ancilla-free, measurement-free 4m + 3 T-gate (12m - 2 CNOT) circuit from a provably minimal k_min = 2m + 1 F_2 symplectic-Gram factorization V_m V_m^T = H_m. Third (Theorem 10), exploiting the unary invariant A_{z,0} A_{z,1} = 0 cuts per-factor tracker routing from 14K_j to 8K_j (measurement-free, 4-T S^dagger-corrected relative-phase router) and 4K_j (measurement-assisted 0-T Step 1) with zero extra ancillas. Fourth (Theorem 12), it derives exact closed-form QSD depth, strict volume monotonicity in power-of-two block size B, sawtooth elimination, and the leading-order B = N vs. sub-N gap.",
+  "strengths": [
+    "Complete, rigorous refutation of Open Question 1 across all universal zero-T CNOT+X computational-basis encodings, including adaptive measurements, arbitrary clean ancillas, and reusable catalytic states (Theorem 6, Remark 8).",
+    "Exact discrete-derivative proof that |Stab(U_{CCZ,m}|+>^{otimes(2m+1)})| = 1, establishing T(W_m) >= 2m + 1 for all m >= 1 and ruling out o(m) decompositions (Theorem 9(a)).",
+    "Original F_2 symplectic-Gram parity-toggle construction (V_m V_m^T = H_m mod 2) with provable column minimality k_min = 2m + 1 and an explicit O(m)-CNOT (12m - 2), 4m + 3 T-gate ancilla-free, measurement-free circuit for W_m (Theorem 9(b)).",
+    "Zero-extra-ancilla unary-subspace routing reducing Sun's 14K_j cost to 8K_j (measurement-free) and 4K_j (measurement-assisted, with 0-T Step 1 matching the sign asymmetry of stabilizer nullity) (Theorem 10, Remark 11).",
+    "Exact closed-form QSD-unary depth and space-depth volume laws proving strict monotonicity, explaining and eliminating the 2x budget-charged sawtooth penalty, and identifying the B = N/2 vs. B = N leading-order discontinuity (Theorem 12).",
+    "High auditability via explicit circuits and matrices in Appendix A, alongside Lean 4.35.0 formalization of core algebraic/scaling lemmas and exact Q(zeta_8) verification claims."
+  ],
+  "weaknesses": [
+    "A constant factor gap remains between the universal adaptive lower bounds and constructive upper bounds (4x for Open Question 1 with adaptive measurements, 8x measurement-free; ~2x for Open Question 2 ancilla-free).",
+    "Minor expository ambiguities on page 9 regarding the scoping of 'If z < m' in Step 3 and the reverse ladder CNOT loop order (both explicitly resolved in Appendix A.2).",
+    "As noted in Remark 8, the lower bounds apply strictly to exact implementations and computational-basis encodings; approximate synthesis or entangled/non-stabilizer tracker encodings are outside their scope."
+  ],
+  "strong_novelty_candidates": [
+    "Four-term affine-dependence obstruction (Lemma 5) showing G_X(S) = {0} for any affinely independent subset S subset F_2^q of size |S| >= 3, yielding exact K_j-only stabilizer-nullity formulas and the K_j = 2 spike (Delta nu = 3).",
+    "Paired-toggle mod-8 phase-polynomial reduction of multi-target CCZ (W_m) to the F_2 symplectic-Gram equation V V^T = H_m (mod 2) with k_min = 2m + 1 rank-1 factors and explicit O(m)-CNOT suffix-XOR ladder.",
+    "Zero-T measurement-assisted Step 1 un-routing on unary pairs (Theorem 10(b)) operationalizing the negative stabilizer-nullity direction (Delta nu = -K_j <= 0)."
+  ],
+  "potential_errors": [
+    "No mathematical or proof errors found. Minor expository ambiguities only: (1) scoping of 'If z < m' in Step 3 on page 9; (2) reverse ladder CNOT order on page 9 (explicit in Appendix A.2 item 4); (3) shorthand notation for |Psi_{notin M}> inside eq. (32)."
+  ],
+  "unresolved_material_objections": []
+}

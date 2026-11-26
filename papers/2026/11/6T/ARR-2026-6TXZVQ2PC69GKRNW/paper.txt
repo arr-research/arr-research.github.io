@@ -1,0 +1,848 @@
+--- Page 1 ---
+Minimax Constant Collapse, Centered Diagonal
+Sandwiches, and Sharp Binary Lind–Singmaster
+Counting for Repeated Entries in Pascal’s Triangle
+Lluis Eriksson∗
+November 26, 2026
+Abstract
+We sharpen all three main quantitative pillars of the recent analysis of repeated entries
+in Pascal’s triangle by Leshem and Sayag [1] (arXiv:2611.34736v1), whereEH = {a≥ 3 :
+N(a)>2H}andA H(x) = #(EH ∩[1,x]).
+First (Theorem 1), we collapse the exponent constant in Leshem and Sayag’s global bound
+AH(x) ≤A2(x) ≤exp (2 logx/(log logx)1/4)(Proposition 3.7 of [1]) uniformly forall x≥ 3
+and H≥ 2from2down to 113
+100 = 1.13, and asymptotically to(ln 5)1/4 = 1.1263375 ... (a
+43.68%reduction in the exponent), using only their own ingredients:J(2,3) = 3, J(2,4) = 1,
+Rémond’s5 s4−64 bound, and exact enumeration of E2 ∩[1,106]. Moreover, we prove
+the exact minimax theoremlimx→∞
+(log logx)1/4
+logx minD≥4 logURem(x; D) = (ln 5)1/4, showing
+that( ln 5)1/4 is the unimprovable limit of the Rémond-versus-diagonal trade-off (anyc<
+(ln 5)1/4 causes super-exponential blowup). Independently, excluding the four effectively
+solved collision pairs{(2,3),(2,4),(3,4),(2,5)}halves their effective Bombieri–Pila exponent
+(Proposition 3.3) forA2(x)from1/6to1/12(and improvesA 3(x)from1/12to1/15).
+Second (Theorem 2), we prove the universal Stirling-centered falling-factorial sandwich
+max
+(
+mk(1 −k(k2−1)
+24m2 ), (m−3(k2−1)
+64m )k)
+≤(n)k <mk (m= n−k−1
+2 ) for allk≥ 2and n≥ 2k.
+This yields the zero-unknown-constant counting bracket⌊Xk −3k−1
+2 ⌋≤ #(Tk ∩[1,x]) ≤
+⌊Xk−3k−1
+2 + 3(k2−1)
+64Xk
+⌋(Xk = (k!x)1/k) and eliminates the systematic−3
+4 (K−1)(K+ 2)bias
+from the expansion ofA1(x)in Theorem 1.2 of [1] (cuttingK = 4truncated-union errors
+from15 .33–17.91down to0 .16–0.41at the decades {103,104,105,106}, and keeping the
+full-interval error on[103,106]inside[ −1.44,+1.52], strictly within Theorem 2(c)’s envelope).
+Third (Theorem 3), for the Lind–Singmaster Fibonacci familyF= {bi}i≥1, we prove the
+exact Lucas identities5ni = L4i+5−1,5 ki = L4i+3−4,5( ni−ki) = L4i+4+3, collapse Leshem
+and Sayag’s entropy constantc= φ5
+5 h(φ−2)in Q(
+√
+5)to c= φ4
+√
+5 lnφ≈ 1.4750334, derive the
+three-term Robbins–Stirling lawlogbi = cφ4i −2ilnφ− 1
+2 ln 2πφ4
+5 + O(φ−4i), and sharpen
+PropositionA.1’sunspecified O(1)errortotheexactbinarylaw#( F∩[1,x])−⌊log logx−logc
+4 logφ ⌋∈
+{0,1}foreveryreal x≥ 3003, with100%asymptotic density of exact floor equality on the
+log logxscale. Core algebraic theorems are constructively formalized in Lean 4.35.0 (17/17
+theorems,0 sorry,0 Classical.choice,0warnings) and cross-checked by an AST-audited
+zero-float verifier (16/16SHA-256 certificates,56/56pytest tests).
+1 Introduction and Summary of Sharp Improvements
+Let N(a) = # {(n,k) ∈N 2 : 1 ≤k < n,
+(n
+k
+)
+= a}be the multiplicity of an integera >1in
+Pascal’s triangle, and letM(a) = #{(n,k) ∈N 2 : 2 ≤k≤n/ 2,
+(n
+k
+)
+= a}count its nontrivial
+∗Independent Researcher. Manuscript and figures licensed under CC-BY-4.0; Lean 4 formalization, exact
+zero-float rational verification scripts, and SHA-256 certificates licensed under MIT. Source repository:https:
+//github.com/lluiseriksson/pascal-repeated-entries-sharp-density.
+1
+
+--- Page 2 ---
+Table 1: Quantitative comparison between Leshem & Sayag [1] (arXiv:2611.34736v1) and our
+sharpened bounds. All rational certificates are verified with zero floating-point arithmetic under
+protocolPASCAL-SHARP-DENSITY-1.0.
+Target in [1] Leshem–Sayag Bound Our Sharpened Bound Ref. / Cert.
+Prop. 3.7 (A2,∀x≥3)exp(2 logx/(log logx) 1/4) exp( 113
+100 logx/(log logx) 1/4)(43.5%cut) Thm. 1(a),C02–C04
+Prop. 3.7 asymptotic Constant2Exact minimax(ln 5) 1/4 ≈1.1263(43.7%cut) Thm. 1(b),C05
+Prop. 3.3 (H= 2)A 2(x)≪ε x1/6+ε A2(x)≪ε x1/12+ε (2×sharper) Thm. 1(c),C06
+Prop. 3.3 (H= 3)A 3(x)≪ε x1/12+ε A3(x)≪ε x1/15+ε Thm. 1(c),C06
+Prop. 4.1 (#(Tk))(k!x) 1/k +Ok(1) [⌊X k −3k−1
+2 ⌋,⌊Xk −3k−1
+2 + 3(k2−1)
+64Xk
+⌋]Thm. 2(b),C07–C08
+Thm. 1.2 (K= 4union) Bias15.3–17.9on[10 3,10 6]Centered+∆ 4:[−1.44,+1.52](<0.42at10 k) Thm. 2(c),C09–C10
+Prop. A.1 constantc φ5
+5 h(φ−2) φ4
+√
+5 lnφ= ( 3
+2 + 7
+10
+√
+5) lnφThm. 3(b),C12
+Prop. A.1 (#(F)) log logx
+4 logφ +O(1)⌊ log logx−logc
+4 logφ ⌋+{0,1}(∀x≥3003) Thm. 3(c),C13–C15
+left-half representations. Singmaster’s conjecture [14, 2, 9, 11] asserts thatN(a) = O(1), while
+the largest known multiplicity isN(3003) = 8and the infinite Fibonacci family of Lind and
+Singmaster [10, 15] exhibits infinitely many values withN(a)≥6.
+Recently, Leshem and Sayag [1] studied the exceptional setsEH = {a≥ 3 : N(a) >2H},
+their counting functionsAH(x) = #(EH ∩[1,x]), and their Dirichlet seriesDH(s) = ∑
+a∈EH a−s,
+proving three flagship quantitative results:
+1. Higher exceptional sets (H≥ 2):Using Bombieri–Pila [5], they obtainAH(x) ≪H,ε
+x1/(H(H+1))+ε (Proposition 3.3), and using Rémond’s effective bound for rational points on
+curves of genus≥2[ 13, 4] with cutoffD = ⌊(log logx
+2 log 5 )1/4⌋, they proveAH(x) ≤A 2(x) ≤
+exp
+( 2 logx
+(log logx)1/4
+)
+for allx≥3(Proposition 3.7), establishingλ(E H) = 0.
+2. First exceptional set (H = 1):Using the crude diagonal enclosure(n−k+1)k/k! ≤
+(n
+k
+)
+≤
+nk/k!, they prove#(Tk ∩[1,x]) = (k!x)1/k + Ok(1)and deduce A1(x) = ∑K
+k=2(k!x)1/k +
+OK(x1/(K+1))for every fixedK≥2(Theorem 1.2 / Proposition 4.1).
+3. Lind–Singmaster lower bound:For F = {bi}i≥1 with bi =
+(F2i+2F2i+3
+F2iF2i+3
+)
+, they prove
+#(F∩ [1,x]) = log logx
+4 logφ + O(1)with constant c= φ5
+5 h(φ−2)(Appendix A, Proposition A.1).
+In this paper we sharpen every single one of these three pillars to its exact analytic or
+minimax limit, summarized in Table 1.
+2 Theorem 1: Global Constant Collapse and Minimax Optimal-
+ity forA H(x)
+Recall from [1] that for K≥ 2, PK(x) := # {(n,k) ∈N 2 : K≤k≤n/ 2,
+(n
+k
+)
+≤x} ≤
+∑⌊log2 x⌋
+k=K kx1/k, and for2 ≤r < s, J(r,s) := #{(u,v) ∈N 2 : u≥ 2r, v≥ 2s,
+(u
+r
+)
+=
+(v
+s
+)
+}. For
+(r,s) /∈{(2,3),(2,4)}, the curveFr,s(U,V ) = s!(U)r −r!(V)s = 0is absolutely irreducible of
+degree s and genus≥2with coefficients bounded byM = r!s![ 4, 1], so Rémond’s bound [13,
+Prop. 10.1] gives
+J(r,s)≤exp
+(
+5s4−64(logM) log(logM+ 2)
+)
+≤exp
+(
+4s3 5s4−64)
+(s≥4),(1)
+since logM <2 log(s!) ≤2slogs< 2s2 and log(logM + 2) ≤2 log(2s) ≤2s. In Proposition 3.7
+of [1], two sources of slack inflated the exponent constant from(ln 5)1/4 ≈1.1263to2: (i) dis-
+carding the factor5−64 ≈5.42 ×10−45 in (1), and (ii) forcing5D4
+≤√logx via D= ⌊( ℓ
+2 ln 5)1/4⌋,
+which sacrifices an entire factor of21/4 inside the exponent. Retaining both yields an all-x≥ 3
+constant within0.33%of the exact minimax limit.
+2
+
+--- Page 3 ---
+Theorem 1(Global constant collapse, minimax optimality, and Bombieri–Pila sharpening).
+(a)(Uniform all-x≥3constant collapse)For every integerH≥2and every realx≥3,
+AH(x)≤A 2(x)≤exp
+(113
+100
+logx
+(log logx)1/4
+)
+,(2)
+and asymptotically
+lim sup
+x→∞
+(log logx)1/4
+logx logA2(x)≤(ln 5) 1/4 = 1.1263375343...(3)
+(a43.68%reduction relative to the constant2of [1, Prop. 3.7]).
+(b) (Exact minimax optimality of(ln 5)1/4)Define the Rémond-versus-diagonal upper-bound
+functionalU Rem(x;D) := exp(5 D4−64) +x1/(D+1) (D∈Z ≥4). Then
+limx→∞
+(log logx)1/4
+logx min
+D≥4
+logURem(x;D) = (ln 5)1/4.(4)
+In particular, any cutoff sequenceD(x)achieving x1/(D(x)+1) ≤exp (clogx/ (log logx)1/4)
+with fixed c < (ln 5)1/4 forces logURem(x; D(x)) ≥ 5−64(logx)1+δ/2 ≫logx for δ =
+(ln 5)/c4 −1 >0(core algebraic scaling step in Lean 4:mi ni ma x_ re mo nd _e xc es s_ po s).
+(c) (Effective Bombieri–Pila exponent sharpening)Incorporating the four completely
+solved pairs(2,3),(2,4),(3,4),(2,5)[ 3, 7, 8, 12, 6] improves the effective Bombieri–Pila
+bound of [1, Prop. 3.3] (without Rémond’s theorem) to
+A2(x)≪ε x1/12+ε andA 3(x)≪ε x1/15+ε (5)
+(cutting the A2 exponent by a factor of2from1 /6to1 /12, and A3 from1 /12to1 /15;
+Lean 4: bo mb ie ri _p il a_ H2 _e xp on en t_ ha lv ed, bo mb ie ri _p il a_ H3 _e xp on en
+t_ im pr ov ed).
+Proof. WriteL:= logx, ℓ:= logL = log logx, andT := L/ℓ1/4. Since EH ⊆E2 for allH≥ 2,
+it suffices to boundA2(x)across three exhaustive regimes.
+Regime I (3≤x≤ 106).Direct exhaustive enumeration of all left-half binomial coefficients(n
+k
+)
+≤106 (2 ≤k≤n/ 2; CertificateC02, with the first five binomial identities also verified in
+Lean 4 byfirst_e2_collisions_exact) establishes
+E2 ∩[1,10 6] ={120,210,1540,3003,7140,11628,24310}.
+For3 ≤x < 120, A2(x) = 0so (2) is trivial. On[120 ,106], L≥ln 120 > 4.78, and L↦→
+(logL)1/4/Lis strictly decreasing on[e1/4,∞), whileA2(x)is piecewise constant with jumps only
+at elements ofE2. Hencemax120≤x≤106
+ℓ1/4 log max(1,A2(x))
+L is attained at one of the7jump points;
+CertificateC02verifies that its maximum is<0.238< 113
+100 (attained ata= 24310,A 2 = 7).
+Regime II (106 ≤x≤exp (e400), so ℓ∈ [ln ln106,400] ⊂[2.62,400]).Every a∈E 2 has
+M(a) ≥2. Either both smallest left-half indices lie in{2,3}(at most J(2,3) = 3values by
+Avanesov [3]), ora has an indexk≥ 4. Hence A2(x) ≤3 + P4(x). Separating k= 4from k≥ 5
+in Lemma 2.1 of [1] gives
+3 +P4(x)≤3 + 4x 1/4 + (log2 x)2x1/5 ≤
+(
+7 + (L/ln 2)2e−L/20
+)
+eL/4.
+Because L↦→L2e−L/20 attains its unique global maximum on(0,∞)at L = 40with value
+1600e−2, the prefactor is uniformly bounded by7 + (40/ln 2)2e−2 <460for all L> 0, and for
+ℓ≥ 10(L> 22026)by8(since( L/20)4/24 >(L/ln 2)2). Partitioning[2.62,400]into8contiguous
+3
+
+--- Page 4 ---
+subintervals[aj,bj]and boundingℓ 1/4 ≤b1/4
+j andL≥e aj on each subinterval (CertificateC03)
+proves ℓ1/4 log(3+P4(x))
+L < 113
+100 throughout[2 .62,400](reaching400 1/4/4+ o(1) ≈1.1180at ℓ= 400).
+Regime III (ℓ≥ 400).For any integer D≥ 4, usingJ(2,3) = 3, J(2,4) = 1, and(1) across
+the
+(D−1
+2
+)
+−2<D 2/2remaining pairs yieldsA 2(x)≤C D +PD+1(x)with
+CD ≤4 + D2
+2 exp
+(
+4D3 5D4−64)
+, P D+1(x)≤(log 2 x)2 exp
+( L
+D+ 1
+)
+.(6)
+For ℓ∈ [400,105400], CertificateC04 verifies12contiguous handoff intervals[ ℓD,ℓ′
+D]for D=
+4,5,..., 15. Because ℓ↦→ℓ−1
+4 lnℓ− 1
+2 and ℓ↦→ℓ1/4
+D+1 are both strictly increasing on[400,∞),
+certifying( D4−64) ln 5+ln(4D3) ≤ℓD−1
+4 lnℓD−1
+2 atthelowerendpoint ℓD (giving4 D3 5D4−64 ≤
+e−1/2T <0.61T) and (ℓ′
+D)1/4
+D+1 + 10−4 < 113
+100 at the upper endpointℓ′
+D (with ℓ1/4
+D
+D+1 >0.89 >e−1/2)
+certifies the entire interval[ℓD,ℓ′
+D]; sincelog(4 + D2/2 + (L/ln 2)2) <10−150T for ℓ≥ 400, we
+obtainA 2(x)≤exp( 113
+100 T).
+Forℓ≥105400, choose the optimal cutoff
+D(ℓ) :=
+⌊(ℓ−lnℓ+ 60 ln 5
+ln 5
+)1/4⌋
+≥16.(7)
+Since60 ln 5 < 97 < 105400 ≤ℓ , we have ℓ−lnℓ + 60 ln 5 < 2ℓ, so D4 < 2ℓ/ln 5and
+ln(4D3)<ln 4 + 3
+4 ln(2ℓ/ln 5). Combining withD4 ln 5≤ℓ−lnℓ+ 60 ln 5yields
+(D4 −64) ln 5 + ln(4D3)<ℓ− 1
+4 lnℓ+
+(
+ln 4−4 ln 5 + 3
+4 ln 2
+ln 5
+)
+<ℓ− 1
+4 lnℓ−4,(8)
+because ln 4−4 ln 5+ 3
+4 ln(2/ln 5) <−4.888 <−4(Certificate C04). Hence4 D3 5D4−64 <e−4T <
+0.02T <ℓ1/4
+D+1 T, whilelog(4+ D2/2+( L/ln 2)2) <10−150T. MeanwhileD+1 >
+(ℓ−lnℓ+60 ln 5
+ln 5
+)1/4,
+so
+ℓ1/4
+D+ 1 <(ln 5) 1/4
+( ℓ
+ℓ−lnℓ+ 60 ln 5
+)1/4
+.(9)
+For105400 ≤ℓ≤e 60 ln 5 we havelnℓ≤ 60 ln 5and hence ℓ1/4
+D+1 <(ln 5)1/4; forℓ>e 60 ln 5 >1041
+we havelnℓ/ℓ< 10−39, so ℓ1/4
+D+1 <(ln 5)1/4(1+10 −39) <1.12634 < 113
+100 . Asℓ→∞ the right-hand
+side converges to(ln 5)1/4, proving both (2) and (3).
+For (b), the upper boundlim sup≤(ln 5)1/4 follows from(7). Conversely, fix anyc< (ln 5)1/4
+and putδ := (ln 5)/c4 −1 >0. If D≥ 4satisfies log(x1/(D+1)) ≤cT , thenD+ 1 ≥ℓ1/4/c, so
+D≥ (ℓ1/4/c)(1 −cℓ−1/4). For all sufficiently largeℓ,(1 −cℓ−1/4)4(1 + δ) ≥1 + δ/2, whence
+D4 ln 5 ≥(1 + δ/2)ℓ (scaling algebra verified in Lean 4 byminimax_remond_excess_pos) and
+therefore logURem(x; D) ≥5D4−64 ≥5−64e(1+δ/2)ℓ = 5−64L1+δ/2 ≫T . Thuslim inf≥ (ln 5)1/4,
+proving (4).
+For (c), any a∈E H ∩[1,x]has H distinct left-half indices2 ≤k 1 <···< k H with
+kH−1 ≥H and kH ≥H + 1. Set D2 = 11for H = 2and D3 = 14for H = 3. If kH > DH,
+then a is counted byPDH+1(x) ≪x 1/(DH+1) (x1/12 for H = 2, x1/15 for H = 3). Otherwise
+(kH−1,kH)is a pair H≤r < s≤D H. Removing the four completely solved finite pairs
+{(2,3),(2,4),(3,4),(2,5)}(contributing O(1)elements in total), every remaining pair satisfies
+rs≥ 12for H = 2and rs≥ 15for H = 3(Lean 4: bombieri_pila_H2_exponent_halved ,
+bombieri_pila_H3_exponent_improved), so Proposition 3.2 of [1] yields (5).
+Figure 1 displays the global collapse2 →1.13across ℓ = log logx and the razor-sharp
+minimax cliff at(ln 5)1/4.
+4
+
+--- Page 5 ---
+Figure 1: Theorem 1. (a) Normalized exponent ℓ1/4 logU(x; D∗)/logx across ℓ = log logx:
+Leshem–Sayag’s constant2vs. our optimal cutoffD∗(ℓ), staying uniformly below1.13for all
+x≥ 3and converging to( ln 5)1/4 ≈1.1263(Certificates C02–C04). (b) Exact minimax phase
+cliff atc= (ln 5)1/4 for ℓ= 104: any c <(ln 5)1/4 triggers super-exponential blowup ofCRem
+D
+(CertificateC05).
+3 Theorem 2: Stirling-Centered Falling-Factorial Sandwich and
+Bias-FreeA 1(x)Expansion
+Leshem and Sayag’s Proposition 4.1 estimates#(Tk ∩[1,x]) = (k!x)1/k + Ok(1)via( n−k +
+1)k ≤(n)k ≤n k, which leaves anO(k)width per diagonal and accumulates an unmodeled
+−3
+4 (K−1)(K+ 2)systematic bias when summed over2≤k≤K . Centering the falling factorial
+(n)k = n(n−1) ···(n−k + 1)at its exact midpointm:= n−k−1
+2 collapses theO(k)uncertainty
+to an explicitO(k2/Xk)bracket valid forallk≥2andn≥2k.
+Theorem 2(Stirling-centered falling-factorial sandwich and bias-freeA1(x)expansion).Let
+k≥2be an integer, and forn≥2ksetm:=n− k−1
+2 ≥3k+1
+2 .
+(a)(Universal two-sided centered sandwich)For everyk≥2and every integern≥2k,
+max
+
+mk
+(
+1− k(k2 −1)
+24m2
+)
+,
+(
+m− 3(k2 −1)
+64m
+)k
+≤(n) k <mk.(10)
+(The strict upper bound is formalized constructively in Lean 4 asfa ll Fa ct _s tr ic t_ up pe
+r_ ce nt er ed, together with the variance identityth re e_ mu l_ su mC en te re dS q_ ex ac t
+and scaled Weierstrass boundwe ie rs tr as s_ pr od _l ow er _i nt.)
+(b) (Zero-unknown-constant diagonal counting bracket)For everyk≥ 2and every real
+x≥
+(2k
+k
+)
+, lettingXk := (k!x)1/k,
+⌊
+Xk −3k−1
+2
+⌋
+≤#(Tk ∩[1,x])≤
+⌊
+Xk −3k−1
+2 + 3(k2 −1)
+64Xk
+⌋
+.(11)
+(c) (Bias-free truncated expansion ofA1(x))For K≥ 2, let∆ K(x) := ∑
+a≤x(mK(a) −1)+
+be the exact multiplicity overcount amongT2,...,T K (where mK(a) = #{2 ≤k≤K : a∈
+Tk}), and set ˆA1,K(x) := ∑K
+k=2(k!x)1/k−3
+4 (K−1)(K+ 2)−∆K(x). Then for allx≥
+(2K
+K
+)
+,
+−K−1
+2 ≤#
+(K⋃
+k=2
+Tk ∩[1,x]
+)
+−ˆA1,K(x)≤ K−1
+2 +
+K∑
+k=2
+3(k2 −1)
+64(k!x)1/k,(12)
+5
+
+--- Page 6 ---
+and the remainderRK(x) := A1(x) −∑K
+k=2(k!x)1/k in [1, Thm. 1.2] satisfiesRK(x) =
+((K + 1)!x)1/(K+1) + OK(x1/(K+2))(so the exponent1 /(K + 1)and leading coefficient
+((K+ 1)!) 1/(K+1) are sharp).
+Proof. For (a), pair symmetric factors in(n)k around m = n− k−1
+2 : for each0 ≤j <⌊k/ 2⌋,
+putting δj := k−1
+2 −j >0, we have(n−j )(n−k + 1 +j) = (m+ δj)(m−δ j) = m2 −δ2
+j <m2
+(Lean 4:four_mul_lt_sq_sum), while ifkis odd the middle factor equalsm. Hence
+(n)k =mk
+⌊k/2⌋−1∏
+j=0
+(
+1− δ2
+j
+m2
+)
+<mk,(13)
+where the inequality is strict sincek≥ 2ensures at least one factor withδ0 = k−1
+2 >0(Lean 4:
+fallFact_strict_upper_centered). Next, summing squared offsets gives
+⌊k/2⌋−1∑
+j=0
+δ2
+j = 1
+2
+k−1∑
+j=0
+(k−1
+2 −j
+)2
+= k(k2 −1)
+24 (14)
+(Lean 4: three_mul_sumCenteredSq_exact ). Applying Weierstrass’s inequality∏(1 −uj) ≥
+1 −∑ uj for uj = δ2
+j/m2 ∈(0,1)(Lean 4: weierstrass_prod_lower_int) gives the first lower
+bound mk(1 −k(k2−1)
+24m2 ) ≤(n)k. For the universal1/k-th root lower bound, sincen≥ 2k implies
+2m = 2n−(k− 1) ≥3k+ 1 > 3(k− 1), everyuj satisfies0 < uj ≤(k−1
+2m )2 < 1
+9 . On[0 ,1/9),
+ln(1 −u) = −∑∞
+r=1
+ur
+r ≥− u
+1−u >−9
+8 u. Taking logarithms in(13), dividing byk, and using
+e−v ≥1−vyields
+((n)k)1/k
+m ≥exp
+
+− 9
+8km2
+⌊k/2⌋−1∑
+j=0
+δ2
+j
+
+= exp
+(
+−3(k2 −1)
+64m2
+)
+≥1− 3(k2 −1)
+64m2 ,
+and multiplying bymand raising to thek-th power proves (10).
+For (b), letnmax := max{n≥ 2k :
+(n
+k
+)
+≤x}, so#( Tk ∩[1,x]) = nmax −2k+ 1. If n∗ :=
+⌊Xk+ k−1
+2 ⌋≥ 2k, thenm∗= n∗−k−1
+2 ≤Xk, so(n∗)k <mk
+∗≤X k
+k = k!xby (a), givingnmax ≥n∗
+and hence#( Tk ∩[1,x]) ≥⌊Xk −3k−1
+2 ⌋. If n∗<2k, then⌊Xk −3k−1
+2 ⌋≤ 0 <1 ≤#(Tk ∩[1,x])
+since x≥
+(2k
+k
+)
+. For the upper bound,( nmax)k ≤X k
+k and (a) givemmax −3(k2−1)
+64mmax ≤X k. If
+mmax ≤Xk the upper bound in(11) is trivial; ifmmax >Xk, then1/mmax <1/Xk immediately
+givesmmax <Xk + 3(k2−1)
+64Xk
+, hencenmax ≤⌊Xk + k−1
+2 + 3(k2−1)
+64Xk
+⌋and (11) follows.
+For (c), write⌊y⌋= y− 1
+2 + θ(y)with θ(y) ∈(−1
+2 ,1
+2 ]. Then ⌊Xk −3k−1
+2 ⌋= Xk −3k
+2 + θk.
+Summing over2 ≤k≤K using ∑K
+k=2
+3k
+2 = 3
+4 (K− 1)(K + 2)(equivalently ∑K
+k=2(3k− 1) =
+1
+2 (K−1)(3K+4), Lean 4two_mul_sumOffsetNum) and subtracting the exact overcount∆K(x) =∑
+a≤x(mK(a) −1)+ yields (12). The leading asymptotic ofRK(x)follows by applying (11) at
+k=K+ 1together withP K+2(x)≪K x1/(K+2) and∆ K+1(x)≪K,ε xε.
+At K = 4, the exact finite collision set amongT2,T3,T4 is {120,210,1540,7140}(since
+J(2,3) = 3, J(2,4) = 1, J(3,4) = 0; Certificate C10), so∆ 4(x) = 4for all x≥ 7140. Cer-
+tificate C09 confirms that removing−27
+2 −∆4(x)cuts the truncated-union error from15 .33–
+17.91down to0 .16–0.41at the decade checkpoints{103,104,105,106}, while across all integers
+x∈ [103,106]the signed error ranges over[ −1.4375,+1.5150](extremized at x = 52325and
+x = 5995), strictly inside Theorem 2(c)’s envelope[−1.5, 1.5 + ∑4
+k=2
+3(k2−1)
+64Xk
+](which equals
++1.5487atx= 5995; Figure 2(b)).
+6
+
+--- Page 7 ---
+Figure 2: Theorem 2. (a) Exact centered ratio(n)k/(n−k−1
+2 )k vs. our strict upper bound1and
+universal lower bound(1 −3(k2−1)
+64m2 )k for k= 3,5,8(Certificate C07). (b) Truncated-union error
+#(⋃4
+k=2 Tk ∩[1,x]) −approx on[10 3,106]: Leshem–Sayag’s bare sum carries a persistent−17.5
+bias (forx≥ 7140), whereas our centered+∆4 expansion stays strictly within Theorem 2(c)’s
+envelope (shaded, extrema[−1.44,+1.52]; CertificateC09).
+4 Theorem 3: Exact Golden-Ratio Collapse and Sharp{0, 1}
+Lind–Singmaster Law
+Recall the Lind–Singmaster Fibonacci familyF = {bi : i≥ 1}⊆E 2 [10, 15], where bi :=(ni
+ki
+)
+=
+(ni−1
+ki+1
+)
+with ni := F2i+2F2i+3, ki := F2iF2i+3, and mi := ni −ki = F2i+1F2i+3. Let
+Lm =φm + (−φ)−m denote the Lucas numbers (L0 = 2,L1 = 1) andφ= (1 +
+√
+5)/2.
+Theorem 3(Exact Lucas identities, constant collapse, and sharp {0,1}Lind–Singmaster
+counting law).
+(a)(Exact Lucas identities and Cassini binomial equality)For every integeri≥1,
+5ni =L4i+5 −1,5k i =L4i+3 −4,5m i =L4i+4 + 3,(15)
+and ni(ki + 1) = mi(mi −1), certifying
+(ni
+ki
+)
+=
+(ni−1
+ki+1
+)
+(Lean 4:li nd _s in gm as te r_ th re
+e_ lu ca s_ id en ti ti es,li nd _s in gm as te r_ bi no mi al _r at io).
+(b) (Exact Q(
+√
+5)collapse of the entropy constant)Leshem and Sayag’s constantc=
+φ5
+5 h(φ−2)[1, Prop. A.1] (whereh(t) =−tlnt−(1−t) ln(1−t)) simplifies identically to
+c= φ4
+√
+5 lnφ=
+(3
+2 + 7
+10
+√
+5
+)
+lnφ= 1.4750333842...(16)
+(c) (Three-term Robbins–Stirling expansion and sharp{0,1}counting law)For every
+i≥1,
+logbi =cφ 4i −2ilnφ− 1
+2 ln
+(
+2πφ4
+5
+)
++O(φ−4i).(17)
+Define δi := 4 ilnφ + lnc−ln lnb i. Then0 < δi < 4 lnφ holds forevery i≥ 1, with
+δ1 ≈0.233166and δi = 2ilnφ
+cφ4i (1+ O(i−1)) →0+. Consequently, foreveryreal x≥b 1 = 3003,
+#(F∩[1,x])−
+⌊log logx−logc
+4 logφ
+⌋
+∈{0,1}(18)
+7
+
+--- Page 8 ---
+(Lean 4: bi na ry _c ou nt in g_ di sc re pa nc y_ ze ro _o ne). Moreover, the discrepancy
+equals1on a fraction µi := δi
+4 lnφ = i
+2cφ4i (1 + O(i−1))of the i-th log logx period, so exact
+floor equality#(F∩ [1,x]) = ⌊log logx−logc
+4 logφ ⌋holds with100%asymptotic density in log logx.
+Proof. For (a), by Binet’s formulaFa = (φa−(−φ)−a)/
+√
+5, multiplying5F2i+2F2i+3 = (φ2i+2 −
+φ−(2i+2))(φ2i+3+φ−(2i+3)) = φ4i+5−φ−(4i+5)−(φ−φ−1) = L4i+5−1since φ−φ−1 = 1. Similarly
+5F2iF2i+3 = L4i+3 −(φ3 −φ−3) = L4i+3 −4and5 F2i+1F2i+3 = L4i+4 + (φ2 + φ−2) = L4i+4 + 3
+(also proved purely inductively in Lean 4 viafive_fib_product_lucas_joint ). For the
+binomial equality,ni(ki + 1) −mi(mi −1) = F2
+2i+3(F2i+2F2i −F 2
+2i+1) + F2i+3(F2i+2 + F2i+1) =
+F2
+2i+3(−1) +F2
+2i+3 = 0by Cassini’s identity (Lean 4:cassini_even).
+For (b), sinceφ−2 +φ−1 = 1, we have1−φ −2 =φ−1, whence
+h(φ−2) =−φ−2 ln(φ−2)−φ −1 ln(φ−1) = (2φ−2 +φ−1) lnφ= (φ −2 + 1) lnφ=
+√
+5φ−1 lnφ,
+using φ−2 + 1 = 3 −φ = 5−
+√
+5
+2 =
+√
+5
+√
+5−1
+2 =
+√
+5φ−1. Multiplying byφ5/5gives c= φ4
+√
+5 lnφ =
+(3
+2 + 7
+10
+√
+5) lnφ(CertificateC12).
+For (c), letPi := φ4i+5
+5 , Qi := φ4i+3
+5 , Ri := φ4i+4
+5 , so Pi = Qi + Ri. By (15) and Lm =
+φm + (−1)mφ−m, we have exact shifts
+ni =Pi −1
+5 −φ−(4i+5)
+5 , k i =Qi −4
+5 −φ−(4i+3)
+5 , m i =Ri + 3
+5 + φ−(4i+4)
+5 .
+Applying Robbins’s two-sided Stirling inequality 1
+12m+1 <ln (m!) −(mlnm−m + 1
+2 ln(2πm)) <
+1
+12m tob i =ni!/(ki!mi!)and expandingn ilnni −kilnki −milnmi around(P i,Qi,Ri):
+•The leading term isPilnPi −QilnQi −RilnRi =Pih(φ−2) =cφ 4i.
+• TheO(1)linear shift term(∆n) lnPi−(∆k) lnQi−(∆m) lnRi has∆ n−∆k−∆m= −1
+5 + 4
+5 −
+3
+5 = 0(canceling all4 ilnφ and ln 5terms!) and leaves exact constant−5+12−12
+5 lnφ = −lnφ .
+• The Stirling square-root term−1
+2 ln 2πkimi
+ni
+= −1
+2 ln 2πφ4i+2
+5 +O(φ−4i) = −2ilnφ− 1
+2 ln 2πφ2
+5 +
+O(φ−4i).
+Combining−lnφ− 1
+2 ln 2πφ2
+5 = −1
+2 ln 2πφ4
+5 establishes (17)(with explicitO(φ−4i)residual verified
+to6digits fori= 1,...,5in CertificateC13).
+To verify0 < δi < 4 lnφ forall i≥ 1: first note that bi =
+(ki+mi
+ki
+)
+is strictly increasing
+for all i≥ 1since both ki = F2iF2i+3 and mi = F2i+1F2i+3 strictly increase with i. For
+1 ≤i≤ 5, Certificate C14 rigorously brackets δ1 ∈(0.2331,0.2332), δ2 ∈(0.0444,0.0445),
+δ3 ∈(0.00838,0.00839), δ4 ∈(0.00151,0.00152), andδ5 ∈(0.00026,0.00027), all strictly inside
+(0,4 lnφ≈ 1.9248). For every i≥ 6, ni ≥n 6 = F14F15 = 229970, ki ≥k 6 = 87840, mi ≥
+m6 = 142130, and|∆ni|,|∆ki|,|∆mi|< 1. By Taylor’s theorem with Lagrange remainder for
+the strictly convex functionf(t) = tlnt (f′′(t) = 1 /t >0) together with Robbins’s bounds,
+the magnitude of theO(φ−4i)residual in (17) is explicitly bounded for alli≥ 6by the sum
+of four terms: (i) the φ−4i linear-shift term ≤(lnφ)/φ29 < 4.2 ×10−7; (ii) the quadratic
+Taylor remainder ≤ 1
+2n6
++ 1
+2k6
++ 1
+2m6
+< 1.14 ×10−5; (iii) the Stirling square-root shift ≤
+1
+2 ( 1
+n6−1 + 1
+k6−1 + 1
+m6−1 ) <1.14 ×10−5; and (iv) the Robbins remainder≤ 1
+12n6
++ 1
+12k6
++ 1
+12m6
+<
+1.9×10−6, totaling<2.51×10−5 <10−4 (certified in exact rational arithmetic in CertificateC14).
+Consequently cφ4i −2ilnφ− 1.08 <logb i < cφ4i −2ilnφ− 1.07 < cφ4i for alli≥ 6. Since
+2ilnφ + 1.08 < 1
+2 cφ4i at i = 6(Certificate C14) and φ4 > 6, this holds for alli≥ 6, giving
+1
+2 cφ4i <logb i < cφ4i and hence0 < δi <ln 2 < 0.694 < 4 lnφ. Setting y := log logx−logc ,
+yi := log logbi −logc = 4ilnφ−δ i ∈((i− 1)P,iP )with P := 4 lnφ directly yields (18) via
+binary_counting_discrepancy_zero_one, andδi = −ln (1 −2ilnφ+O(1)
+cφ4i ) = 2ilnφ
+cφ4i (1 + O(i−1))
+yields the period-wise failure measureµi = δi
+4 lnφ →0.
+Figure 3 illustrates the exact {0,1}step-function law and the super-exponential decay
+µi ∼ i
+2cφ4i →0.
+8
+
+--- Page 9 ---
+Figure 3: Theorem 3. (a) Exact Lind–Singmaster count#(F∩ [1,x])vs. ⌊g(x)⌋where g(x) =
+(log logx−logc )/(4 logφ): discrepancy is strictly{0,1}-valued for allx≥ 3003(Certificate C14).
+(b) Super-exponential collapse of the period-wise failure measureµi = δi/(4 logφ)matching
+i
+2cφ4i (CertificateC15).
+5 Formal Verification and Reproducibility
+• Lean 4.35.0 formalization:lean/PascalSharpDensity.lean compiles cleanly vialake
+build in2 .0s with0errors,0warnings,0 sorry,0custom axioms, and0 Classical.choice
+across all17audited theorems: four_mul_eq_sq_sub_sq , four_mul_lt_sq_sum , fall
+Fact_add_two , fallFact_strict_upper_centered , three_mul_sumShiftSq , three_
+mul_sumCenteredSq_exact , weierstrass_prod_lower_int , two_mul_sumOffsetNum ,
+cassini_even , lind_singmaster_binomial_ratio , five_fib_product_lucas_joint ,
+lind_singmaster_three_lucas_identities , bombieri_pila_H2_exponent_halved ,
+bombieri_pila_H3_exponent_improved , first_e2_collisions_exact , minimax_remo
+nd_excess_pos, andbinary_counting_discrepancy_zero_one.
+• AST-audited zero-float rational verifier: verification/verify_paper101.py
+computes all logarithms, exponentials,k-th roots, π, φ, and Robbins–Stirling brackets
+in exactFraction arithmetic, passes a strict AST zero-float hygiene gate, and emits16
+SHA-256 certificates (C01–C16) under protocolPASCAL-SHARP-DENSITY-1.0.
+• Adversarial pytest suite:tests/test_verify_paper101.py passes56 /56tests in0 .19s,
+including30adversarial forgery/mutation checks (wrong Rémond cutoffs, sub-minimax
+constants c <(ln 5)1/4, excluded solved pairs, out-of-range diagonal thresholds, Cassini
+perturbation, SHA-256 tampering, and AST float-rejection tests) plus an on-disk certificate
+digest integrity check.
+AI Assistance Disclosure.In accordance with transparent scientific disclosure practices,
+Google Antigravity assisted with Lean 4 proof engineering, zero-float rational interval verification
+scripting, figure generation, and LaTeX typesetting. All mathematical definitions, theorems,
+proofs, formalization checks, and final manuscript claims were reviewed and validated by the
+sole author, Lluis Eriksson.
+9
+
+--- Page 10 ---
+A Self-Contained Verification Tables and Certificate Ledger
+To enable full verification directly from this manuscript without external files, Table 2 tabulates
+our zero-float Robbins–Stirling verification of Theorem 3 fori= 1,..., 5, and Table 3 lists all16
+SHA-256 certificate digests.
+Table 2: Zero-float Robbins–Stirling verification of Theorem 3 fori= 1,..., 5(Certificates C11,
+C13–C15). Exact constant shift−1
+2 ln(2πφ4/5) = −1.07664322 ... , period4 lnφ = 1.92484730 ... .
+i ni =F2i+2F2i+3 ki =F2iF2i+3 logbi ri = logbi −asympδ i µi =δi/(4 lnφ)
+1 15 5 8.007367−0.063595 0.233166 0.121135
+2 104 39 66.284242−0.009439 0.044423 0.023079
+3 714 272 470.990874−0.001381 0.008384 0.004356
+4 4895 1869 3250.471471−0.000202 0.001514 0.000787
+5 33552 12815 22306.941116−0.000029 0.000264 0.000137
+Table 3: Verified SHA-256 certificate ledger under protocolPASCAL-SHARP-DENSITY-1.0 (mani-
+fest hash16ea5a22fb4a...ed5).
+ID Verified Claim SHA-256 Prefix
+C01Zero-float rational brackets for(ln 5) 1/4,φ,lnφ,π,c LS a5cc0a5a5ba4e183
+C02ExhaustiveE 2 ∩[1,10 6](7elements, max ratio<0.24<1.13)a418e74ec1331ca7
+C03Thm. 1(a) medium rangeℓ∈[2.62,400]via3 +P 4(x)ff7e25ccb865142d
+C04Thm. 1(a) Rémond handoffsD= 4...15+ℓ≥105400lock16e1bc86ad54bffe
+C05Thm. 1(b) exact minimax blowup below(ln 5) 1/4 ≈1.12633752256472b42ab7bf4
+C06Thm. 1(c) Bombieri–Pila halvingH= 2(1/6→1/12),H= 3(1/12→1/15)34f38a64d13fdc31
+C07Thm. 2(a) centered falling-factorial sandwich (2≤k≤12)07db35ad195c45b4
+C08Thm. 2(b) non-asymptotic diagonal bracket (30 (k,x)pairs)64e4a8025c31b12e
+C09Thm. 2(c)K= 4union error:<0.42at10 k,[−1.44,+1.52]on[10 3,10 6]693449aca99f7b3c
+C10Exact finite collisionsJ(2,3) = 3,J(2,4) = 1,J(3,4) = 0,J(2,5) = 2,∆ 5(106) = 640ad7063d1f2fc7e
+C11Thm. 3(a) exact Lucas identities & binomial equality (i= 1...20)18199efc65b2b1bd
+C12Thm. 3(b) exactQ(
+√
+5)collapsec= ( 3
+2 + 7
+10
+√
+5) lnφef470372335e0c59
+C13Thm. 3(c) three-term Robbins–Stirling expansion (i= 1...5)5dba39ed2f6583fe
+C14Thm. 3(c) sharp{0,1}law (∀x≥3003, incl.i≥6bound)cc3ce46af2b5aef7
+C15Thm. 3(c) super-exponential decay of period failure measureµi →0644088d458d34e45
+C16Exact correspondence ledger to Leshem & Sayag (arXiv:2611.34736v1)5a155a2aad9d9a90
+References
+[1] A. Leshem and E. Sayag,On the density of repeated entries in Pascal’s triangle,
+arXiv:2611.34736v1, 25 November 2026.
+[2] H. L. Abbott, P. Erdős, and D. Hanson,On the number of times an integer occurs as a
+binomial coefficient, Amer. Math. Monthly81, 256–261, 1974.
+[3] E. T. Avanesov,Solution of a problem on figurate numbers, Acta Arith.12, 409–420,
+1966/67.
+[4] F. Beukers, T. N. Shorey, and R. Tijdeman,Irreducibility of polynomials and arithmetic
+progressions with equal products of terms, Number Theory in Progress, Vol. 1, de Gruyter,
+Berlin, 11–26, 1999.
+[5] E. Bombieri and J. Pila,The number of integral points on arcs and ovals, Duke Math. J.
+59, 337–357, 1989.
+[6] Y. Bugeaud, M. Mignotte, S. Siksek, M. Stoll, and Sz. Tengely,Integral points on hyperelliptic
+curves, Algebra Number Theory2, 859–885, 2008.
+10
+
+--- Page 11 ---
+[7] B. M. M. de Weger,A binomial Diophantine equation, Quart. J. Math. Oxford Ser. (2)47,
+221–231, 1996.
+[8] B. M. M. de Weger,Equal binomial coefficients: Some elementary considerations, J. Number
+Theory63, 373–386, 1997.
+[9] D. M. Kane,Improved bounds on the number of ways of expressingtas a binomial coefficient,
+Integers7, Paper A53, 2007.
+[10] D. A. Lind,The quadratic fieldQ(
+√
+5)and a certain Diophantine equation, Fibonacci Quart.
+6, 86–93, 1968.
+[11] K. Matomäki, M. Radziwiłł, X. Shao, T. Tao, and J. Teräväinen,Singmaster’s conjecture
+in the interior of Pascal’s triangle, Q. J. Math.73, 1137–1177, 2022.
+[12] Á. Pintér,A note on the Diophantine equation
+(x
+4
+)
+=
+(y
+2
+)
+, Publ. Math. Debrecen47, 411–415,
+1995.
+[13] G. Rémond,Nombre de points rationnels des courbes, Proc. London Math. Soc. (3)101,
+759–794, 2010.
+[14] D. Singmaster,How often does an integer occur as a binomial coefficient?, Amer. Math.
+Monthly78, 385–386, 1971.
+[15] D. Singmaster,Repeated binomial coefficients and Fibonacci numbers, Fibonacci Quart.13,
+295–298, 1975.
+11

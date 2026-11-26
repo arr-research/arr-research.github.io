@@ -1,0 +1,514 @@
+--- Page 1 ---
+Linear-Window Collapse, Exact Phase Transitions,
+and Scale-Exponent Sharpening for the Formalized
+Generalized Riemann Hypothesis (lsernau/grh-lean)
+Lluis Eriksson∗
+November 26, 2026
+Abstract
+We audit and mathematically sharpen the analytic endgame and logarithmic scale
+calculus of the compact Lean 4.35.0 formalization of the Generalized Riemann Hypothesis
+(lsernau/grh-lean[1], based on Alpöge’s proof).
+First (Theorem 1), we prove that the quadratic second-scale window[t,t2]in IsPola
+r.exists_window_sub_mul_le (New/Endgame/OneSidedCriterion.lean , lines 73–99)
+collapses under theidentical IsPolar hypotheses to an explicitlinearwindow[ t,λt]. By
+decoupling the left-barrier decay exponentρ>σ from the Cauchy analyticity radiusR>σ ,
+tightening the amplitude envelope frome2t to e(α+η)t, optimizing the right-barrier decay
+β∈ (0,σ− 1), and scaling the Laplace moment order linearly ask = ⌈κt⌉(instead of
+quadratically ask = ⌈t2/9⌉), we obtainE(u) −XE ′(u) ≤e −γt at someu∈ [t,λt]for all
+X∈ [0,eαt]and all t>t 0 (with explicit finitet0 depending on the polar threshold and kernel
+parameters). In New/Main.lean, this collapses the second scalex1 from super-polynomial
+x1 ≤exp (1012(logx)2)to strictly polynomial x1 ≤xλ·106
+(a >6 ×105×reduction inlogx1
+already atlogx= 10).
+Second (Theorem 2), we solve the two-barrier variational problem in closed form—
+proving exact saddle-point lawsρ∗ = κ∗
+left (which evaluates to the elementary constant
+ρ∗ = 3e≈ 8.1548at grh-lean’s σ = 3,α = γ = 1) and λ∗ = κ/β∗—and prove that for
+polar functions analytic on an open vertical half-planeRes > 1 −δ0 (δ0 > 0), taking
+R = σ+ δ0 −ε (ε∈ (0,δ0)) and lettingσ→∞ then ε→ 0+ achieves every linear ratio
+λ >max (1,(α+ γ)/δ0). Remarkably, the elementary polar counterexample E(v) ≡0,
+E′(v) = −e−δ0v satisfies E(u) −eαtE′(u) = eαt−δ0u > e−γt identically on[ t,λt]whenever
+λ< (α+ γ)/δ0, establishingλcrit(α,γ,δ 0) = max(1,(α+ γ)/δ0)as theexact, unimprovable
+phase transitionof the one-sided polar window problem (in particular,λcrit = 4for the GRH
+half-planeδ 0 = 1/2withα=γ= 1).
+Third (Theorem 3), auditingNew/Main.lean (lines 121–191), we tightenstar_inequ
+ality from( logb)2Bto25( logb)B(exact leading constant24, recovering a full factor of
+logb = xε), sharpeneventually_primeError_le_rpow from x8ε−1/2 to x(5+δ)ε−1/2 for any
+δ >0(recovering nearly3 ε), and prove an exact integer LP characterizationD∗(M,crem) =
+max(⌊M/2⌋+ 1, crem + 1)showing that the hardcoded divisor51in New.grh (line 176) is
+strictly bottlenecked by the scale constraint100log logb≤logx in AdmissibleData.lean,
+not by the prime-error exponent. Core algebraic theorems are constructively formalized in
+Lean 4.35.0 (13/13theorems,0 sorry,0 Classical.choice,0warnings) and cross-checked
+by an AST-audited zero-float rational interval verifier (16/16SHA-256 certificates,59 /59
+pytest tests).
+∗Independent Researcher. Manuscript and figures licensed under CC-BY-4.0; Lean 4 formalization, exact
+zero-float rational verification scripts, and SHA-256 certificates licensed under MIT. Source repository:https:
+//github.com/lluiseriksson/grh-lean-linear-window-sharp-bounds.
+1
+
+--- Page 2 ---
+1 Introduction and Audit oflsernau/grh-lean
+The recent compact Lean 4.35.0 repositorylsernau/grh-lean (grh-compact/, ≈76,000lines
+across150+modules) [ 1] formalizes a complete proof of the Generalized Riemann Hypothesis
+(GRH) for DirichletL-functions following Alpöge’s strategy. Its logical spine terminates in
+New/Main.leanvia three quantitative endgame pillars:
+1. One-sided polar window lemma(New/Endgame/OneSidedCriterion.lean , lines 73–
+99): Given two polar error functionsE,E′whose Laplace transforms continue analytically to
+{Res≥ 1}, IsPolar.exists_window_sub_mul_le extracts for all largetand allX∈ [0,et]
+a pointu∈ [t,t2]with E(u) −XE ′(u) ≤e−t, using a fixed Laplace shiftσ= 3, quadratic
+moment orderk= ⌈t2/9⌉, thresholdt≥max (9,99/ln (R/3)), and barrier exponents7t and
+2t−t 2.
+2. Inequality (⋆) and one-sided prime bound(New/Main.lean , lines 121–168): star
+_inequality bounds D.m·D.remainder≤ 4L+ 4x99 + 10log(1 + b2)B≤ (logb)2B(with
+L= (logb)Band B= fa(logb)3), after whicheventually_primeError_le_rpow chooses
+t= 10 6 logx, placeslogx 1 ∈[t,t 2], and concludesRN0 (x)≤x 8ε−1/2 for0<ε<1/100.
+3. Deduction of GRH(New/Main.lean, lines 174–190):New.grh sets ε= (min(Reρ, 1) −
+1/2)/51so that both ε< 1/100(required by100 log logb≤logx in AdmissibleData.lean,
+line 29) and8ε+ 1/2 <Reρ hold simultaneously, invoking Landau’s criterionentireL_ne
+_zero_of_primeError_le[2, 3].
+While these loose constants suffice for the qualitative deduction of GRH, they conceal sharp
+analytic phenomena closely tied to classical one-sided oscillation and localization problems
+for prime-number error terms [4, 5, 6]. In particular, the quadratic window u = logx1 ∈
+[t,t2]forces DataExist.lean (line 50) to accommodate super-polynomial second scalesx1 ≤
+exp(1012(logx)2), leaving open whether apolynomialsecond scale x1 ≤x O(1) (i.e., a linear
+window[t,λt]) already suffices—and, if so, what the sharpest possible linear ratioλis.
+In this work we resolve these questions completely:
+• Theorem 1 (Linear-window collapse):Undergrh-lean’s exactIsPolar hypotheses,
+[t,t2]collapses to an explicit linear window[t,λt]with k= ⌈κt⌉and explicit finite threshold
+t0.
+• Theorem 2 (Variational optima and sharp phase transition):We solve both barrier
+optimizations in closed form (obtainingρ∗= 3e at σ = 3,α = γ = 1) and prove that for
+analytic stripRes> 1 −δ0, the critical ratio isexactlyλcrit(α,γ,δ 0) = max(1,(α+ γ)/δ0),
+matching the polar counterexampleE≡0,E ′(v) =−e−δ0v.
+• Theorem 3 (Scale-exponent sharpening ofMain.lean):We tighten star_inequality
+by an entire factor oflogb (25(logb)Bvs.( logb)2B), tighteneventually_primeError_le
+_rpow from8 ε−1/2to(5 + δ)ε−1/2, and prove via exact integer LP characterization that
+the divisor51inNew.grhis strictly scale-bottlenecked.
+2 Theorem A: Linear-Window Collapse of the Polar Window
+Lemma
+We retain the exact polar hypothesis ofNew/Endgame/OneSidedCriterion.lean[1].
+Definition 1(Polar error function with shift σ and radius R).A measurable function E :
+[0,∞) →R ispolar( IsPolar) if there existsC >0such that |E(v)|≤Ce v for allv≥ 0and its
+2
+
+--- Page 3 ---
+Table 1: Quantitative comparison betweenlsernau/grh-lean [1] and our sharpened bounds.
+All rational certificates in column 3 are verified with zero floating-point arithmetic under protocol
+GRH-LINEAR-WINDOW-1.0.
+Target ingrh-lean grh-leanBound Our Sharpened Bound Ref. / Cert.
+OneSidedCriterionL73[t,t 2],k=⌈t 2/9⌉Linear[t,λt],k=⌈κt⌉Thm. 1,C02–C07
+Atσ= 3,R= 3.5(δ 0 = 1/2)[t,t 2](t 0 ≈642)[t,16.6t](t 0 = 381,k=⌈13.4t⌉) Thm. 1,C02
+Atσ= 3,R= 3.01(δ 0 = 10−2)[t,t 2](t 0 >29749)[t,678t](≈44×shorter atgrh’st 0) Thm. 1,C04
+Variableσ→∞,Res>1−δ 0 Quadratic[t,t 2]Sharp boundarymax(1, α+γ
+δ0
+)Thm. 2,C05–C11
+GRH stripδ0 = 1/2,α=γ= 1 [t,t 2]λ= 4.35(σ= 10 3,R=σ+ 0.499)↓4Thm. 2,C05,C10
+Main.leanL121 (star)m·rem≤(logb) 2Bm·rem≤25(logb)B(lead24) Thm. 3(a),C12
+Main.leanL149 (primeError)R N0 (x)≤x 8ε−1/2 RN0 (x)≤x (5+δ)ε−1/2 (∀δ >0) Thm. 3(b),C13
+Main.leanL176 (New.grh) HardcodedD= 51Exact LPmax(⌊M/2⌋+ 1,c rem + 1)Thm. 3(c),C14
+shifted Laplace transform
+Φ(s) :=
+∫∞
+0
+E(v)e(1−s)vdv(Res>2)(1)
+extends analytically to an open neighborhood of the closed half-plane{Res≥1}.
+For any shift parameterσ >1, the closed diskB(1 + σ,σ)lies entirely inside {Res≥ 1}
+(touching the boundary lineRes = 1only at s = 1). By compactness of B(1 + σ,σ), there
+exists R > σsuch thatΦis analytic on an open neighborhood ofB(1 + σ,R). Exactly as in
+IsPolar.eventually_moment_le (lines 41–67 ofOneSidedCriterion.lean, which specializes
+to σ = 3), differentiating under the integral sign ats = 1 + σ >2and applying the Cauchy
+Taylor-series bound onB(1 + σ,R)yields a constant Tpol(E,σ,R ) ≥1such that for allt≥T pol:
+|E(v)|≤te v (∀v≥0),
+⏐⏐⏐⏐
+∫∞
+0
+vke−σvE(v)dv
+⏐⏐⏐⏐≤k!t
+Rk (∀k∈N).(2)
+Theorem 1(Linear-window collapse with explicit finite threshold).LetE,E′be polar functions
+satisfying (2) for someσ >1and R >σ (for all t≥T pol). Let α,γ >0be weight and target
+exponents, and letη >0, ρ>σ , β∈ (0,σ− 1), κ> 0, andλ≥ 1be any parameters satisfying
+the three strict linear margins:
+m1 :=κln(R/σ)−(α+γ+η)>0,(3)
+m2 :=κln(ρ/σ)−(ρ−σ+ 1 +α+γ+η)>0,(4)
+m3 := (σ−1−β)λ−
+(
+α+γ+η+κln(σ/β)
+)
+>0.(5)
+Define the explicit finite threshold
+t0 := max
+(
+Tpol,2,
+√
+18
+η3 , ln(3σ)
+m1
+, ln 3
+m2
+, ln 3 + 2 ln(σ/β)
+m3
+)
+.(6)
+Then for everyt>t 0 and everyX∈ [0,eαt], there existsu in thelinearwindow[ t,λt]such that
+E(u)−XE ′(u)≤e −γt.(7)
+Proof. Fix t>t 0 and X∈ [0,eαt], and setk:= ⌈κt⌉∈ [κt, κt+ 1). Suppose for contradiction
+that E(u) −XE ′(u) > e−γt for all u∈ [t,λt]. First verify the tight amplitude envelope
+unconditionally for allα,γ > 0: since t >max(2,
+√
+18/η3), we haveeαt > 1, e−γt < 1, and
+(2t+ 1)<3t< η3t3
+6 <eηt, whence
+t+tX+e −γt ≤t+te αt + 1≤(2t+ 1)e αt <3te αt < η3t3
+6 eαt <e(α+η)t.(8)
+3
+
+--- Page 4 ---
+Define the barrier exponents
+A:=ρ−σ+ 1 +α+η, B:=α+η−(σ−1−β)λ,(9)
+and consider the auxiliary integrand on(0,∞):
+F(v) :=v k
+(
+e−ρv+At +e−βv+Bt +e−σv(
+E(v)−XE ′(v)−e −γt))
+.(10)
+We claimF(v)≥0for allv >0:
+• If v∈ [t,λt], the contradiction assumption makesE(v) −XE ′(v) −e−γt > 0, and both
+barrier terms are positive, soF(v)>0.
+•Ifv /∈[t,λt], then by (2) and (8), usinge−γt ≤ev forv≥0:
+e−σv(
+E(v)−XE ′(v)−e −γt)
+≥−e−σv(
+t+tX+e −γt)
+ev ≥−e(α+η)t−(σ−1)v.(11)
+If0 <v <t, sinceρ−σ+1 >1 >0, we have(α+η)t+(ρ−σ+1)v <(α+η+ρ−σ+1)t= At,
+so e−ρv+At > e(α+η)t−(σ−1)v and F(v) > 0. If v > λt, since σ− 1 −β > 0, we have
+(α+ η)t−(σ−1 −β)v <(α+ η−(σ−1 −β)λ)t= Bt, soe−βv+Bt >e(α+η)t−(σ−1)v and
+F(v)>0.
+Therefore0 ≤
+∫∞
+0 F(v) dv. Evaluating the elementary Gamma integrals
+∫∞
+0 vke−rv dv= k!/rk+1
+(r>0) and bounding the moment integral via (2) and (8) gives
+0≤ k!
+ρk+1 eAt + k!
+βk+1 eBt + k!
+Rke(α+η)t − k!
+σk+1 e−γt.(12)
+Dividing through by the positive quantityk!
+σk+1 e−γt yields1≤I 1 +I2 +I3, where:
+lnI1 = lnσ−kln(R/σ) + (α+γ+η)t≤lnσ−tm 1 <−ln 3,(13)
+lnI2 =−(k+ 1) ln(ρ/σ) + (A+γ)t≤−tm 2 <−ln 3,(14)
+lnI3 = (k+ 1) ln(σ/β) + (B+γ)t≤2 ln(σ/β)−tm 3 <−ln 3,(15)
+using κt≤k <κt + 1and t>t 0 from (6) (Lean 4: linear_window_three_margins ). Hence
+I1 +I2 +I3 < 1
+3 + 1
+3 + 1
+3 = 1, a contradiction!
+Remark1 (Collapse of the second scale x1 in lsernau/grh-lean).In New/Main.lean (line
+151) and New/Data/DataExist.lean (line 50), t = 10 6 logx and u = logx1. Replacing
+grh-lean’s quadratic window[t,t2]by our linear window[t,λt]collapses logx1 ≤1012(logx)2 to
+logx1 ≤λ· 106 logx, turningx1 from super-polynomialexp(1012(logx)2)to strictly polynomial
+xλ·106
+. Atσ= 3,R = 3.5, CertificateC02 certifies λ= 16.6with t0 = 381, reducing the worst-case
+logx1 by a factor of6.02 ×105 at logx = 10and6 .02 ×1010 at logx = 106 (Certificate C15).
+Figure 1(a) illustrates this collapse.
+3 Theorem B: Exact Variational Optima and Sharp Phase Tran-
+sition
+Holding σ >1, R>σ , andS := α+ γ >0fixed (taking η→ 0+), Theorem 1 permits any linear
+ratioλstrictly exceeding
+λinf(R,σ,S) := inf
+β∈(0,σ−1)
+S+κ ∗(R,σ,S) ln(σ/β)
+σ−1−β ,(16)
+4
+
+--- Page 5 ---
+Figure 1: Theorem 1 and Theorem 2. (a) Upper window endpointV(t)versus t: grh-lean’s
+quadratic V(t) = t2 versus our certified linear windows (678t at σ = 3 ,R = 3 .01;16 .6t at
+σ= 3,R = 3.5;4 .35t at σ= 1000,δ0 = 1/2). (b) Monotone convergence of the optimal linear
+ratio λ∗(σ,δ0)to the exact phase boundarymax(1,2/δ0)as the Laplace shiftσ increases beyond
+grh-lean’s fixedσ= 3.
+where the minimum feasible moment slopeκ∗(R,σ,S)is determined by (3) and (4):
+κ∗(R,σ,S) := max
+( S
+ln(R/σ) ,infρ>σ
+ρ−σ+ 1 +S
+ln(ρ/σ)
+)
+.(17)
+We now solve both variational problems in closed form and establish the exact global phase
+transition whenE,E ′are analytic on a uniform half-plane{Res>1−δ 0}.
+Theorem 2(Variational saddle laws and exact phase transitionλcrit = max(1,(α+ γ)/δ0)).
+LetS=α+γ >0.
+(a) (Exact left-barrier saddle)For everyσ >1, the functionf(ρ) = (ρ−σ + 1 +S)/ln (ρ/σ)
+on( σ,∞)is strictly unimodal with a unique global minimizerρ∗(σ,S) >σ characterized by
+ρ∗ln(ρ∗/σ) =ρ∗−σ+ 1 +S,inf ρ>σf(ρ) =f(ρ ∗) =ρ∗(σ,S).(18)
+In particular, whenever σ = 1 + S—which isprecisely grh-lean’s setting σ = 3with
+α=γ= 1(S= 2)—the optimum evaluates to the exact elementary constant
+ρ∗(1 +S,S) =e(1 +S) =⇒ρ ∗(3,2) = 3e≈8.154845485.(19)
+(b) (Exact right-barrier saddle)For every σ >1and κ >0, the functionH(β) = ( S+
+κln (σ/β))/(σ−1−β)on(0 ,σ−1)has a unique global minimizerβ∗∈(0,σ−1)characterized
+by
+β∗(
+S+κln(σ/β ∗)
+)
+=κ(σ−1−β ∗),inf
+β∈(0,σ−1)
+H(β) =H(β ∗) = κ
+β∗.(20)
+(In theκ→∞ regime,β∗(σ)solves β∗ln(σ/β∗) = σ−1−β∗, i.e.,β∗= (σ−1)/(−W−1(−(σ−
+1)/(eσ))); atσ= 3, β∗≈0.913728gives1 /β∗≈1.094417, strictly beatinggrh-lean’s β = 1
+factorln 3≈1.098612, and atσ= 10,0.170201vs.0.287823, a1.69×gain.)
+(c) (Exact sharp phase boundary for open vertical stripRes> 1 −δ0)Suppose E,E′
+are polar with Laplace transforms analytic on the open half-plane{Res> 1 −δ0}for some
+δ0 >0. For every insetε∈ (0,δ0)and envelope margin η >0, the closed diskB(1 + σ,R)
+5
+
+--- Page 6 ---
+with R:= σ+ δ0 −ε lies strictly inside{Res> 1 −δ0}(soΦ ,Φ′ are analytic on an open
+neighborhood ofB(1 +σ,R)and satisfy(2)), and lettingσ→∞yields
+limσ→∞λinf(σ+δ 0 −ε,σ,S+η) = max
+(
+1, S+η
+δ0 −ε
+)
+.(21)
+Since max(1,(S + η)/(δ0 −ε)) →max (1,(α+ γ)/δ0)as ε,η→ 0+, choosing ε,η > 0
+sufficiently small andκ>κ ∗ strictly in Theorem 1 achieves everyλ>max (1,(α+ γ)/δ0).
+Conversely, foreveryλ<(α+γ)/δ 0, the polar pair
+E(v)≡0, E ′(v) :=−e−δ0v
+(
+Φ(s)≡0,Φ ′(s) = −1
+s−(1−δ 0)
+)
+(22)
+is analytic on{Res> 1 −δ0}, satisfies|E(v)|,|E′(v)|≤e v, and obeysE(u) −eαtE′(u) =
+eαt−δ0u >e−γt atevery u∈ [t,λt]and every t> 0(Lean 4: sh ar p_ ph as e_ bo un da ry _i
+mp os si bi li ty). Thusλcrit(α,γ,δ 0) = max(1,(α+γ)/δ 0)is exact and unimprovable.
+Proof. For (a), differentiatingf(ρ)gives f′(ρ) = ln(ρ/σ)−(1−(σ−1−S)/ρ)
+ln2(ρ/σ) = g(ρ)
+ρln 2(ρ/σ) , whereg(ρ) :=
+ρln (ρ/σ)−ρ+σ−1−S. Sinceg(σ+) = −(1+S) <0, limρ→∞g(ρ) = +∞, andg′(ρ) = ln(ρ/σ) >0
+on( σ,∞), g has a unique root ρ∗ > σ where f achieves its global minimum f(ρ∗) = ρ∗.
+At σ = 1 + S, g(ρ) = ρ(ln(ρ/σ) −1)vanishes uniquely at ρ∗ = eσ = e(1 + S)(Lean 4:
+left_saddle_identity_Q).
+For (b), differentiatingH(β)gives H′(β) = h(β)
+β(σ−1−β)2 , whereh(β) := β(S+ κln (σ/β)) −
+κ(σ− 1 −β). Since h(0+) = −κ(σ− 1) < 0, h((σ− 1)−) = ( σ− 1)(S+ κln σ
+σ−1 ) > 0, and
+h′(β) = S+κln (σ/β) >0on(0 ,σ−1), hhas a unique rootβ∗∈(0,σ−1), at whichH(β∗) = κ/β∗
+(Lean 4:right_saddle_ratio_identity_Q).
+For (c), fixε∈ (0,δ0)and η >0, setδ:= δ0 −ε> 0, ˜S := S+ η, andR:= σ+ δ. Because
+min{Res : s∈ B(1 +σ,R)}= 1 −δ = 1 −δ0 + ε> 1 −δ0, the closed diskB(1 +σ,R)lies strictly
+inside {Res> 1−δ0}, so bothΦandΦ ′are analytic on an open neighborhood ofB(1+ σ,R)and
+satisfy (2) for allt≥T pol. Expanding asσ→∞ : first, ln(R/σ) = ln(1 +δ/σ) = δ
+σ + O(σ−2), so
+˜S
+ln(R/σ) = ˜S
+δσ+O(1). Second, writingρ∗= σ(1+ ϕ)( ϕ> 0) in(18) givesσ
+(
+(1+ ϕ) ln(1+ ϕ)−ϕ
+)
+=
+1 + ˜S. Since r(ϕ) := (1 + ϕ) ln(1 + ϕ) −ϕ is strictly increasing on(0,∞)with r(ϕ) →0as
+ϕ→ 0+, we haveϕ→ 0+ as σ→∞ , andr(ϕ) = 1
+2 ϕ2 + O(ϕ3)yields ϕ=
+√
+2(1 + ˜S)/σ+ O(σ−1),
+hence ρ∗(σ,˜S) = σ+
+√
+2(1 + ˜S)σ+ O(1)and κ∗(σ+ δ,σ, ˜S) = max(1, ˜S/δ) σ+ O(√σ). Third,
+writingβ ∗=σ(1−ψ)withψ∈(0,1)and dividing (20) byκ ∗σyields
+ψ−(1−ψ) ln
+( 1
+1−ψ
+)
+= 1
+σ +
+˜S
+κ∗(1−ψ).(23)
+Expanding globally onψ∈ (0,1)gives ψ−(1 −ψ) ln 1
+1−ψ = ∑∞
+n=2
+ψn
+n(n−1) ≥1
+2 ψ2, whileκ∗≥σ
+gives 1
+σ + ˜S
+κ∗(1 −ψ) ≤ 1+˜S
+σ . Hence ψ≤
+√
+2(1 + ˜S)/σ→ 0unconditionally, so β∗/σ = 1 −
+O(σ−1/2) → 1. Dividing κ∗/σ→max (1, ˜S/δ)by β∗/σ→ 1proves (21). For any fixed
+λ >max(1,S/δ0), pickε,η >0with max(1,(S+ η)/(δ0 −ε)) < λ, then pickσ large enough
+that λinf(σ+ δ0 −ε,σ,S + η) < λ, and perturb κ > κ∗ slightly to make all three margins
+m1,m2,m3 >0in Theorem 1.
+Finally, for the matching lower bound(22):
+∫∞
+0 (−e−δ0v)e(1−s)vdv = −1/(s−(1 −δ0))for
+Res> 1 −δ0, which extends meromorphically with a single pole ats= 1 −δ0, so it is analytic
+on {Res >1 −δ0}. At X = eαt ∈[0,eαt], for any0 < λ <(α+ γ)/δ0 and anyu∈ [t,λt], we
+have δ0u≤δ 0λt< (α+ γ)t, soαt−δ 0u>−γt and E(u) −XE ′(u) = eαt−δ0u >e−γt identically
+on[t,λt].
+Figure 2 displays the exact phase boundaryλcrit = max(1,2/δ0)alongside our certified
+finite-σ curves (CertificatesC05–C11) and the unimodal left-barrier saddleρ∗ = 3e at σ = 3
+(CertificateC08).
+6
+
+--- Page 7 ---
+Figure 2: Exact variational geometry (Theorem 2). (a) Exact two-parameter phase diagram in
+(δ0,λ)space for α= γ = 1: belowλcrit = max(1,2/δ0), the polar counterexampleE≡ 0,E′(v) =
+−e−δ0v proves impossibility; above it, lettingσ→∞ achieves everyλ>λ crit (highlighted at the
+GRH stripδ0 = 1/2,λcrit = 4). (b) Strict unimodality of the left-barrier slopef(ρ) = ρ/ln (ρ/3)
+atσ= 3, attaining its exact elementary minimumρ∗=f(ρ ∗) = 3e≈8.155(CertificateC08).
+4 Theorem C: Scale-Exponent Sharpening ofNew/Main.lean
+We now audit the final deduction chain inNew/Main.lean (lines 121–191) andNew/Data/Admis
+sibleData.lean (line 29). Recall fromMain.lean that for admissible dataD, B= D.budget =
+fa(logb) 3,L= (logb)B=fa(logb) 4, andMain.leanline 143 establishes
+D.m·D.remainder≤4L+ 4x 99 + 10 log(1 +b2)B.(24)
+Line 145 ofMain.lean then relaxes (24) to D.m·D.remainder≤ (logb)2B, losing an entire
+factor oflogb=x ε.
+Theorem 3(Sharp star_inequality, prime-error exponent, andNew.grh divisor LP).Let
+D be admissible data as in Ne w/ Da ta /A dm is si bl eD at a. le anwith logb > 25and
+4x99 + 10b−2B≤ (logb)B(automatic for all admissibleD since x106
+≤x 1, x106
+1 ≤b , a≥xb ,
+f≥1,P.c≥6, and10 12P.c≤log logb).
+(a) (Full logb recovery instar_inequality)Using log(1 + b2) = 2 logb + log(1 + b−2) ≤
+2 logb+b −2, the right-hand side of(24)satisfies
+D.m·D.remainder≤24(logb)B+ 4x 99 + 10b−2B≤25(logb)B<(logb) 2B(25)
+(Lean 4:st ar _i ne qu al it y_ sh ar p_ 25 _Q), with exact leading constant24and strict
+improvement factor(logb)/25 =x ε/25.
+(b) (Sharpened eventually_primeError_le_rpow :8 ε→ (5 + δ)ε)Substituting (25) into
+lines 161–167 ofMa in .l ea n(with m≥ √x, f = φ(N0) ·towerDeg (D.s),# D.thick≥
+towerDeg(D.s)/logb, andlogb=x ε) gives
+RN0 (x)≤ 25(logb)B
+m·a·#D.thick +x−106
+≤25φ(N0)(logb) 5
+√x +x−106
+= 25φ(N0)x5ε−1/2 +x−106
+.
+(26)
+Hence forevery δ >0and0 < ε <1/100, eventually RN0 (x) ≤x (5+δ)ε−1/2 (recovering
+(3 −δ)ε in the prime-error exponent relative togrh-lean’s8 ε−1/2; Lean 4:pr im e_ er
+ro r_ ex po ne nt _s av in g_ Q), and without any auxiliaryδ, eventuallyRN0 (x)≤x 6ε−1/2.
+7
+
+--- Page 8 ---
+Figure 3: Audit and sharpening ofNew/Main.lean (Theorem 3). (a) Prime-error exponentβ−1
+versus100 ε: grh-lean’s8 ε−1/2vs. our sharpened6 ε−1/2and5 .01ε−1/2(Certificates C12–
+C13). (b) Exact integer LP optimumD∗(M,crem) = max(⌊M/2⌋+ 1,crem + 1)proving that
+New.grh’s divisor51is strictly bottlenecked byM= 100rather thanc rem (CertificateC14).
+(c) (Exact LP characterization of the divisor51inNew.grh)Suppose Ad mi ss ib le Da ta
+.s ca lerequiresMlog logb≤logx (so ε< 1/M) andev en tu al ly _p ri me Er ro r_ le
+_r po wprovidesRN0 (x) ≤xcremε−1/2 (M,crem ∈Z ≥1). Choosingε= (min(Reρ, 1)−1/2)/D
+satisfies bothε<1/Mandc remε+ 1/2<Reρfor everyρwithReρ>1/2if and only if
+2D>MandD>c rem ⇐⇒D≥D ∗(M,crem) := max(⌊M/2⌋+ 1, crem + 1)
+(27)
+(Lean 4: gr h_ di vi so r_ lp _c ha ra ct er iz at io n). In particular, for grh-lean’s
+M = 100, D∗(100,8) = D∗(100,6) = 51( gr h_ le an _5 1_ is _s ca le _b ot tl en ec ke d),
+proving that the divisor51in Ma in .l ea nline 176 is strictly bottlenecked byM = 100,
+whereas tighteningM alongside crem = 6drops D∗ to7at M = 12( gr h_ di vi so r_ dr op
+s_ wi th _s ca le).
+Proof. Part (a) follows fromln(1 +u) ≤u at u= b−2:4 L+ 4x99 + 10log(1 +b2)B≤ 4(logb)B+
+4x99 + 10(2logb + b−2)B= 24(logb)B+ (4x99 + 10b−2B) ≤25(logb)B< (logb)2Bfor logb> 25.
+Part (b) cancelsa from B= fa(logb)3 and substitutesf/#D.thick≤φ (N0) logb and m≥x 1/2
+to yield25 φ(N0)x5ε−1/2 + x−106
+, which is strictly belowx(5+δ)ε−1/2 for all sufficiently largex
+whenever δ >0(since xδε →∞). Part (c) notes thatmin(Reρ, 1) −1/2 ∈(0,1/2], attaining
+1/2for all Reρ≥ 1, soε< 1/M holds uniformly iff1/(2D) <1/M⇐⇒ 2D >M⇐⇒D≥
+⌊M/2⌋+1, whilecremε<Reρ− 1/2holdsforall Reρ> 1/2iff crem/D< 1 ⇐⇒D≥c rem+1.
+Figure 3 plots the3εprime-error exponent improvement and the exactD∗(M,crem)bottleneck
+diagram.
+5 Formal Verification and Reproducibility
+• Lean 4.35.0 formalization: lean/GrhLinearWindow.lean builds via lake build in
+1.3s with0errors,0warnings,0 sorry,0custom axioms, and0 Classical.choice across
+all13audited theorems: Q.lt_of_lt_of_le , linear_window_three_margins (full
+ceiling-rounding derivation of Eqs. (12)–(14)),sharp_phase_boundary_impossibility ,
+linear_window_strictly_shorter_than_quadratic , pade_log_deriv_numerator_pos,
+hh_log_upper_deriv_numerator_pos , left_saddle_identity_Q , right_saddle_rat
+8
+
+--- Page 9 ---
+io_identity_Q , star_inequality_sharp_25_Q , prime_error_exponent_saving_Q ,
+grh_divisor_lp_characterization , grh_lean_51_is_scale_bottlenecked , and
+grh_divisor_drops_with_scale.
+• AST-audited zero-float rational interval verifier:verification/verify_paper100
+.py computes arbitrary-precision rigorous rational brackets[ln(x),ln(x)]via the strictly
+positive artanh seriesln(x) = 2 ∑M−1
+k=0
+y2k+1
+2k+1 (y= (x−1)/(x+ 1)) with explicit geometric
+tail bound, passes a strict AST zero-float hygiene gate, and emits16SHA-256 certificates
+(C01–C16) under protocolGRH-LINEAR-WINDOW-1.0.
+• Adversarial pytest suite:tests/test_verify_paper100.py passes59 /59tests in0 .29s,
+including31adversarial forgery/mutation checks (attempting to certifyλ< 4at δ0 = 1/2,
+λ< 20at δ0 = 1/10, κ< 3e at σ= 3, infeasible divisorD= 50via certify_grh_divisor,
+boundary failure logb = 25via certify_star_inequality , SHA-256 tampering, AST
+float-rejection tests) plus an on-disk certificate digest integrity test.
+AI Assistance Disclosure.In accordance with transparent scientific disclosure practices,
+Google Antigravity assisted with Lean 4 proof engineering, zero-float rational interval verification
+scripting, figure generation, and LaTeX typesetting. All mathematical definitions, theorems,
+proofs, formalization checks, and final manuscript claims were reviewed and validated by the
+sole author, Lluis Eriksson.
+A Self-Contained Rational Certificates and Audit Ledger
+To enable full verification directly from this manuscript without external files, Table 2 tabulates
+all explicit rational parameter witnesses certifying Theorems 1 and 2 (all verified via conservative
+rational ln-brackets with zero floating-point operations; rowsC05–C07 and C11 use inset radii
+R= σ+ δ0 −10−3 so B(1 +σ,R) ⊂{Res> 1 −δ0}strictly), and Table 3 records all16SHA-256
+certificate digests.
+Table 2: Zero-float certified linear-window witnesses(σ,R,ρ,β,κ,λ )at η = 1/20: C02–C07 at
+(α,γ) = (1,1); C11∗ at(2 ,1)(LB= 6); C11† at( 1
+2 ,3
+2 )(LB= 4). Decimal radii denote exact
+rationals R= σ+ δ0 −1/1000. Every row satisfiesm1,m2,m3 >0under conservative rational
+ln-brackets.
+Cert.δ 0 σ R ρ β κ λ m 1 m2 m3 t0
+C021/2 3 7/2 204/25 81/100 67/5 16.6 0.015619 5.198467 0.158933 381
+C031/10 3 31/10 204/25 89/100 63 71.0 0.015758 54.829808 0.205795 381
+C041/100 3 301/100 204/25 91/100 617 678.0 0.003246 609.179870 0.936528 677
+C051/2 10 10.499 19 28/5 85/2 7.90 0.019534 15.228790 0.167713 381
+C051/2 50 50.499 69 40 207 5.40 0.005619 44.621284 0.359284 892
+C051/2 200 200.499 237 180 824 4.68 0.003319 99.818046 0.052935 1928
+C051/2 1000 1000.499 1080 955 4112 4.35 0.001376 233.413801 0.017324 5818
+C061/10 50 50.099 69 403/10 1038 26.0 0.003207 312.272672 0.282945 1562
+C061/10 500 500.099 556 469 10360 22.2 0.001076 1040.769628 0.854781 6791
+C072 200 201.999 238 180 239 1.45 0.326945 0.524840 0.318836 381
+C072 1000 1001.999 1082 955 1085 1.20 0.116750 0.460130 0.792326 381
+C11∗ 1/2 200 200.499 246 180 1230 7.00 0.015027 204.577428 0.356565 426
+C11† 1/2 200 200.499 237 180 824 4.68 0.003319 99.818046 0.052935 1928
+References
+[1] L. Sernau et al.,grh-lean: A Compact Lean 4 Formalization of the Generalized Riemann
+Hypothesis, GitHub repositoryhttps://github.com/lsernau/grh-lean, 2026.
+9
+
+--- Page 10 ---
+Table 3: Verified SHA-256 certificate ledger under protocolGRH-LINEAR-WINDOW-1.0 (manifest
+hash843a0bbc7f1e...646).
+ID Verified Claim SHA-256 Prefix
+C01Zero-float rational brackets fore,3e,ln 2,ln 3and Padé/HH boundsec622a10e3ca5490
+C02Thm. 1 certified linear window[t,16.6t]atσ= 3,R= 3.5135636d5faa1a74f
+C03Thm. 1 certified linear window[t,71t]atσ= 3,R= 3.178ee3577f54f204f
+C04Thm. 1 certified linear window[t,678t]atσ= 3,R= 3.01(≈44×atgrht 0)3005707c2d232a62
+C05Thm. 2 open-strip collapse (δ0 = 1/2,R=σ+ 0.499):7.9→4.35(LB= 4)65c7547d841b5dbc
+C06Thm. 2 open-strip collapse (δ0 = 1/10,R=σ+ 0.099):26.0→22.2(LB= 20)ae87760066f31bf9
+C07Thm. 2 deep-strip collapse (δ0 = 2,R=σ+ 1.999):1.45→1.20(LB= 1)1c9f3f5c9f302865
+C08Thm. 2(a) exact left-barrier saddleρ ∗= 3eatσ= 3,S= 2dbd233b7b458acb5
+C09Thm. 2(b) exact right-barrier saddle brackets atσ= 3,4,10611a63068ffdb8c0
+C10Thm. 2(c) sharp phase-boundary counterexampleE≡0,E ′=−e−δ0v 9c79715c3bdd1354
+C11Thm. 2(c) non-unit(α,γ)open-strip achievability (LB= 6and4)285c8361590ba771
+C12Thm. 3(a) exactstar_inequalitysharpening25(logb)Bvs.(logb) 2Be2f59ae0ca021ce3
+C13Thm. 3(b) exactprimeErrorexponent sharpening8ε→(5 +δ)ε1d35b96a5717d89b
+C14Thm. 3(c) exactNew.grhdivisor LP (51scale-bottlenecked)d08b443febf238bb
+C15Second-scale collapse:logx 1 reduction6.02×10 5×to6.02×10 10×452bfe348f8fc996
+C16Exactlsernau/grh-leansource-line correspondence ledger5251b0e17c865dd1
+[2] E. Landau,Über einen Satz von Tschebyschef, Mathematische Annalen61, 527–550, 1905.
+[3] H. L. Montgomery and R. C. Vaughan,Multiplicative Number Theory I: Classical Theory,
+Cambridge University Press, 2007.
+[4] J. Pintz,On the sign changes ofπ(x)−li(x), Acta Arithmetica31, 53–60, 1976.
+[5] J. Kaczorowski,On sign-changes in the remainder-term of the prime-number formula, I,
+Acta Arithmetica44, 365–377, 1984.
+[6] M. Suzuki,On variants of Chebyshev’s conjecture, arXiv:2411.07436, 2024.
+10
