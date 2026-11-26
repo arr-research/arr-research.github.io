@@ -1,0 +1,57 @@
+{
+  "assessed_at": "2026-11-26T03:04:52Z",
+  "canonical_sha256": "fe636dd52462742bc0a1d721e4f25e52fe3745aae115c26ded15b454a1945e06",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All algebraic identities in Table 1 (#1-#18) and arithmetic in Worked Witnesses 1-4 (e.g., C05 CRT product 83,810,205; C09 D2=(9,1,8,1) mod 17; C11 r3=2^-32 and Brent sqrt recovery 4982; C15 LHS=18<=32, rho=1/5) verify exactly from the PDF; Lean/pytest execution is self-reported and Proposition 1 lacks a formal proof.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "Delivers a dedicated four-mode exact-arithmetic certificate suite (C01-C16) and constructive Lean kernel auditing finite mechanisms of OpenAI's preprint [8]; individual mathematical identities are elementary/standard, so novelty lies in the curated verification architecture.",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "Zero-floating-point rational/finite-field specification, four detailed hand-checkable Worked Witnesses, Table 2 parameters, 68 tests, and 37 SHA-256 hashes strongly aid reproduction, though Mode 3a (D1, D3, B, s-scaling) and Mode 4b (weights, C16 coordinates) require the external archive.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Explicit Honest Scope Boundary avoids overclaiming end-to-end TM, prime-gap, or CAT(0) proofs; zero-float/zero-division rules and constructive Lean 4.35.0 kernel (0 sorry, 0 Classical.choice) are disciplined, though Proposition 1 is stated without proof and Table 1 omits side conditions on #12-#14 and #18.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Provides deterministic auditability for finite algebraic, CRT, Benes, Bluestein, Newton/Brent, sunflower #SAT, and Euclidean wire-price building blocks of [8], while leaving the asymptotic multitape, prime-gap, and CAT(0) ultralimit arguments unverified.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.8,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-2YH6P5DK508SAASF",
+  "potential_errors": [
+    "Proposition 1 (Verifier Soundness) is stated as a formal proposition without a proof in the PDF and without a mechanized soundness link between src/tape_int_mult_verifier.py and TapeIntMultCert.lean.",
+    "Table 1 omits hypothesis side conditions in concise invariant summaries: #12 requires c in [1, 2], #13 requires 0 <= x*y^2 < B - y, #14 requires small t relative to B (e.g., B > 4*t^3), and #18 requires a >= 0, b > 0, q > p >= 0, 2*a^2 <= b^2.",
+    "Worked Witness 2 (C09) and Mode 3a omit the explicit formulas for D1, D3, the top-left block of B, and the s-scaling of the circulant C needed to reproduce (D1 oplus I) B^-1 (D2 oplus I) B (D3 oplus I) = U_a oplus I from the PDF alone.",
+    "Mode 4b and Worked Witness 4 / C16 do not define the Eq. (8.6) weights H_j, H_v, supply S, or C16 point coordinates inside the PDF, deferring them to [8] and the external repository."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Clear and candid Honest Scope Boundary (Sec. 1) that explicitly disclaims formalizing Turing-machine tape trajectories, Levin search, Baker-Harman-Pintz prime gaps, or infinite-dimensional CAT(0) ultralimits.",
+    "All finite algebraic identities in Table 1 (#1-#18) and all hand-checkable numbers across Worked Witnesses 1-4, Table 2 (C01-C16), and Figures 1-3 are mathematically sound and mutually consistent.",
+    "Strict zero-floating-point, zero-true-division, and constructive (0 sorry, 0 custom axioms, 0 Classical.choice) Lean 4.35.0 verification design paired with 50 adversarial forgery tests."
+  ],
+  "strong_novelty_candidates": [
+    "Integrated four-mode zero-floating-point certificate schema (TAPE-INT-MULT-CERT-1.0) bridging constructive Lean 4 lemmas with exact Z/Q/F_p witness auditing for finite components of [8]."
+  ],
+  "summary": "A well-scoped, mathematically clean 4-page companion verification artifact (TAPE-INT-MULT-CERT-1.0) presenting 18 constructive Lean 4.35.0 theorems and a zero-floating-point Python verifier over Z, Q, and F_p across 16 canonical certificates (C01-C16) auditing finite-dimensional algebraic, CRT, Benes, Bluestein chirp, Newton/Brent, sunflower #SAT, and Euclidean wire-price building blocks of OpenAI's unrefereed preprint [8]. All identities and worked numerical witnesses visible in the PDF check out exactly, and the manuscript maintains an honest scope boundary. Its main limitations are that Proposition 1 (Verifier Soundness) is asserted without proof, some parameter side conditions and Mode 3a/4b definitions are omitted from the concise PDF text, and the core asymptotic arguments of [8] lie outside scope.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:4098dc6c-adf4-409f-9674-39afc222d985",
+  "weaknesses": [
+    "Proposition 1 is presented as a mathematical proposition without proof; verifier correctness is supported only by self-reported AST checks and 50 adversarial forgery tests rather than formal verification.",
+    "Lean compilation, pytest execution, and external repository artifacts cannot be independently verified from the PDF alone, and some Mode 3a/4b definitions needed for full self-contained reproduction are omitted from the 4-page text.",
+    "The scientific contribution is bounded to finite-dimensional algebraic and combinatorial checks of elementary building blocks rather than validating the asymptotic complexity bounds of [8]."
+  ]
+}

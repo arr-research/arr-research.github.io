@@ -1,0 +1,59 @@
+{
+  "assessed_at": "2026-11-26T03:04:52Z",
+  "canonical_sha256": "81d891ae0edb7ec51ee4625b61098c2991b9a69deafc0e14bc3f84abf82cb8a6",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "Explicit calculations in Worked Witnesses 1-4 (C01 g(3)=2, C03 |1-root|=sqrt(7), C05 M(g)^2=8100 and ||g||_2^2=10800, C09 |g(90+i)|^2/A_R^2~0.9860, C16 coefficients and roots) and C07/C08 denominators (31752, 379080) verify exactly against Tables 1-2 and Figs 1-3, with minor notation omissions in Table 1 Row 10.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "First constructive Lean 4 kernel and zero-float certificate verifier auditing finite-dimensional mechanisms of Feng and Nir (arXiv:2611.04730v1). Contributes verification infrastructure and concrete witnesses (C01-C16), but introduces no new mathematical theorems or root-finding algorithms beyond [4].",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "Four worked witnesses (C01/C03, C05, C09, C16) are algebraically self-contained and hand-verifiable from the PDF; Lean 4.35.0 build flags, 60 pytest checks, 37-file MANIFEST.sha256, and licensed repository are documented, though external execution was not performed.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Constructive Lean 4.35.0 kernel (18 theorems, 0 sorry, 0 axioms, 0 Classical.choice) paired with an AST-audited zero-float Python verifier, 42 adversarial forgery tests, and an explicit Honest Scope Boundary. Weakened by Proposition 1 lacking a formal proof bridging Python code to Lean and Lean Theorem 13 covering only degree-2 Graeffe.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Provides an independently checkable companion audit for an unrefereed 2026 integer root-finding preprint, validating concrete truncation, Mahler, Gaussian-shift, Pellet-Graeffe, and block-multipoint invariants, though limited to small instances (n <= 20, d <= 6) and excluding Pan's factorization and asymptotic complexity.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.85,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-06KPNWVHZG9PVRQA",
+  "potential_errors": [
+    "Table 1 Row 10 ('thm11b_candidate_radius_margin') summarizes the implication as '8|r - z_i| <= 21 => |r - z_i| <= 2' without stating that r and z_i (or r - z_i) are integers; for general real/complex z_i this implication is false (e.g., |r - z_i| = 2.5 gives 20 <= 21 yet 2.5 > 2).",
+    "Definition 1 Mode 4a checks strict inequality 't\\tau < 2S', whereas Section 2 and Table 1 Row 17 ('lemma35_bucket_bit_budget') state non-strict 't\\tau <= 2S'; additionally, symbols t, L (Mode 4a) and t_j (Section 1) are not explicitly defined in the manuscript.",
+    "Definition 1 Mode 2b uses the reciprocal pullback notation '\\hat{g}(x) = \\hat{H}^*(x)' without explicitly defining the (\\cdot)^* operator in the text, and Table 2 omits the '|\\alpha - \\beta| < 1/8' summary check on row C08 despite C07 and C08 sharing Mode 2b.",
+    "Table 1 omits side conditions in several one-line summaries (Row 3 requires R > 0; Row 8 '3|g(q)| >= 2A_R > A_R' requires A_R > 0 and omits the derivative bound 3M_deriv <= A_R; Row 15 requires h >= 1).",
+    "Worked Witness 4 and Table 2 (C16) describe the integer roots {-3, 0, 2} as '(multiplicity 4)' / '(mult 4)' when 4 is the sum of multiplicities (total multiplicity of x(x-2)^2(x+3)), not the multiplicity of each root."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Clear and honest scope boundary explicitly excluding Pan's approximate complex factorization (Theorem 3.1) and asymptotic FFT/Kronecker bit-complexity bounds while focusing on finite-dimensional exact verification.",
+    "Constructive Lean 4.35.0 formalization (18 theorems in IntRootsNearoptCert.lean) reported with zero sorry, zero custom axioms, zero Classical.choice, and zero compiler warnings.",
+    "Strict zero-floating-point Python verifier design (AST-enforced ban on float literals, float(), true division /, math/numpy, plus JSON size/depth/duplicate-key caps and lowest-terms rationals) paired with 42 adversarial forgery tests.",
+    "All explicitly presented arithmetic in Worked Witnesses 1-4 (C01, C03, C05, C09, C16) and C07/C08 error denominators (31752 and 379080) are algebraically consistent with Tables 1-2 and Figures 1-3 upon hand calculation."
+  ],
+  "strong_novelty_candidates": [
+    "Constructive Lean 4.35.0 kernel and zero-floating-point four-mode exact verifier (Z, Q, Z[i], Q[i]) specifically auditing the truncation, Landau-Mahler, Gaussian-shift, Pellet-Graeffe, and block-multipoint invariants of Feng and Nir (arXiv:2611.04730v1)."
+  ],
+  "summary": "This 4-page companion artifact paper presents INT-ROOTS-NEAROPT-CERT-1.0, a constructive Lean 4.35.0 kernel (18 theorems) and zero-floating-point Python verifier auditing finite-dimensional mechanisms of Feng and Nir's November 2026 preprint (arXiv:2611.04730v1) across 16 canonical certificates (C01-C16) and 60 pytest checks. The arithmetic in all four worked witnesses, Table 2, and Figures 1-3 is internally consistent and verifies cleanly by hand, and the manuscript sets an honest scope boundary. Because it is a verification companion without new mathematical theorems or a formal proof bridging the Python verifier to the Lean kernel, and contains minor notation shorthands in Table 1 and Definition 1, it merits acceptance as a solid, substantive companion artifact.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:27eeca62-4aaf-4dca-a7bf-e488c4c3b240",
+  "weaknesses": [
+    "Proposition 1 (Verifier Soundness) is stated without a proof or formal refinement linking the Python verifier's implementation to the 18 Lean theorems; moreover, some Lean theorems cover only restricted cases (e.g., Theorem 13 handles degree-2 Graeffe squaring while certificates C04, C11, C12, C16 run Graeffe on degrees 3-6).",
+    "Mode 1a checks Lemma 2.2 proximity via a rational sign-change or exact-root witness in (r-2, r+2), which suffices for C01-C02 where g has a real root near r, but would not witness non-real complex roots of g within distance 2 of r.",
+    "The canonical certificate corpus is limited to small-parameter instances (n <= 20, d <= 6, b <= 12) and introduces no new algorithmic or complexity-theoretic results beyond [4]."
+  ]
+}

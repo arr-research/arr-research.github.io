@@ -1,0 +1,447 @@
+# Constructive Graph State-Sum, Isoperimetric, and Dyadic-Placement Certificates for Separating Valiant's Algebraic Hierarchy
+
+**Author:** Lluis Eriksson  
+**AIRR Identifier:** `ARR-2026-0RD4KBMT418VAS9J` (v1)  
+**License:** CC-BY-4.0 (manuscript), MIT (verification repository)  
+**Verification Repository:** https://github.com/lluiseriksson/openai-valiant-hierarchy-grids-certificates (`v1.0.0`)  
+**Canonical PDF SHA-256:** `4c69ec0061a8472e9fa013e84c102767c11ddb86ac3821724458639c4997ea04`
+
+## Abstract
+
+We present VALIANT-HIER-CERT-1.0, an independently reproducible, zero-floating-point verification framework and constructive Lean 4.35.0 kernel auditing the core finite-dimensional algebraic, isoperimetric, tensor-rank, dyadic-placement, determinant-cofactor, and graph-minor mechanisms underlying OpenAI's November 24, 2026 unrefereed preprint 'Paths, trees and grids separate Valiant's hierarchy' (Theorems 1.1, 4.1, 5.1, 6.1, and 7.1). Without claiming to formalize Zariski-closed Euclidean spectral price sublevels, Gaussian mean-width tail bounds, or the excluded-grid minor theorem end-to-end, we construct a four-mode exact verifier over Z, Q, and F_p paired with 18 constructive Lean 4 theorems (0 sorry, 0 custom axioms, 0 Classical.choice, 0 warnings). Across 16 canonical certificates (C01-C16), we certify (i) Eq. (1.1) graph state sums Z_{G,q}(X), Section 2 subgraph projections, exact cut flattening ranks q^{|dC|}, opposite-axis terminal norms ||a_C||^2=|dC|, and Lemma 3.2 movable supply-site savings, (ii) Theorem 4.1 balanced-cut grid isoperimetry (exhaustively over all 336 balanced cuts of G_3 and witnesses on G_4) plus Section 4 characteristic-free VNP_F Boolean-indicator sums over F_7 and F_2, (iii) Eq. (5.1) binary-tree telescoping identities, exact Bharadwaj-Chandran boundary profiles on T_3 and T_5 (k*=11, min|dU|=3), and Lemma 5.2 ABP prefix-rank decompositions, and (iv) Lemma 6.3 dyadic scale clustering on P_4, P_8, Section 6.3 strictly upper-triangular cofactor determinant embeddings, and Lemma 7.2 weighted-centroid minor projections (C_5 >= K_3 and degree-4 tuple-packed T_6 >= K_{1,4}, pw=1 <= cw=2 <= 6). All 16 certificates, 69 unit/forgery tests, and 37 SHA-256 hashes verify deterministically.
+
+## Full Extracted Text
+
+--- Page 1 ---
+Constructive Graph State-Sum, Isoperimetric, and
+Dyadic-Placement Certificates for Separating Valiant’s
+Algebraic Hierarchy
+Lluis Eriksson
+Independent Researcher (lluis@airr.science)
+Companion Verification Artifact to OpenAI Math Release (November 24, 2026)
+November 26, 2026
+Abstract
+We presentVALIANT-HIER-CERT-1.0, an independently re-
+producible, zero-floating-point verification framework and
+constructive Lean 4.35.0 kernel auditing the core finite-
+dimensional algebraic, isoperimetric, tensor-rank, dyadic-
+placement, determinant-cofactor, and graph-minor mecha-
+nisms underlying OpenAI’s November 24, 2026 unrefereed
+preprint“Paths, trees and grids separate Valiant’s hier-
+archy”(Theorems 1.1, 4.1, 5.1, 6.1, and 7.1). Without
+claiming to formalize Zariski-closed Euclidean spectral
+price sublevels, Gaussian mean-width tail bounds, or the
+excluded-grid minor theorem end-to-end, we construct a
+four-mode exact verifier over Z, Q, and Fp paired with
+18 constructive Lean 4 theorems (0 sorry, 0 custom ax-
+ioms, 0 Classical.choice, 0 warnings). Across 16 canon-
+ical certificates (C01–C16), we certify (i) Eq. (1.1) graph
+state sums ZG,q(X), Section 2 subgraph projections, exact
+cut flattening ranks q|∂C|, opposite-axis terminal norms
+∥aC∥2 = |∂C|, and Lemma 3.2 movable supply-site sav-
+ings, (ii) Theorem 4.1 balanced-cut grid isoperimetry (ex-
+haustively over all 336 balanced cuts of G3 and witnesses
+on G4) plus Section 4 characteristic-free VNPF Boolean-
+indicator sums over F7 and F2, (iii) Eq. (5.1) binary-
+tree telescoping identities, exact Bharadwaj–Chandran
+boundary profiles on T3 and T5 (k∗ = 11, min|∂U| = 3),
+and Lemma 5.2 ABP prefix-rank decompositions, and
+(iv) Lemma 6.3 dyadic scale clustering on P4, P8, Sec-
+tion 6.3 strictly upper-triangular cofactor determinant em-
+beddings, and Lemma 7.2 weighted-centroid minor pro-
+jections (C5 ⪰K 3 and degree-4 tuple-packed T6 ⪰K 1,4).
+All 16 certificates, 69 unit/forgery tests, and 37 SHA-256
+hashes verify deterministically.
+1 Introduction and Scope
+Valiant’s algebraic complexity hierarchy VFF ⊆VBP F ⊆
+VPF ⊆VNP F classifies polynomial families computed
+by polynomial-size arithmetic formulas, algebraic branch-
+ing programs (ABPs), general circuits, and exponential
+Boolean sums [ 8, 4]. In its November 24, 2026 unrefer-
+eed preprint [6], OpenAI proves all three strict inclusions
+simultaneously over every field F in degree-component bor-
+der complexity (Theorem 1.1), witnessed by graph state
+sums ZG,q(X) = P
+a∈[q]E
+Q
+v∈V Xv,a|E(v) on n×n grids
+(VNPF \VPF ), complete binary trees (VPF \VBPF ), and
+n-vertex paths ( VBPF \VF F , transferring to the order-
+n determinant), and classifies polynomial-size state-sum
+graph classes by (m(G), ∆(G)), cw(G), and (tw(G), ∆(G))
+(Theorem 7.1).
+All three lower bounds share one opposite-axis Eu-
+clidean placement of the 2 e edge-end terminals (Section 3,
+via Strassen’s spectrum [ 7, 5]), where ∥aC∥2 = |∂C|
+(Eq. 3.3) and moving a supply site yields Lemma 3.2’s
+saving wb/(16e): circuits supply balanced cuts via gate
+decomposition [ 9] (Lemma 4.2) and grid isoperimetry
+|∂U| ≥ ⌈r/3⌉ (Theorem 4.1); ABPs permit prescribed-
+size prefixes (Lemma 5.2) meeting Bharadwaj–Chandran
+tree boundaries [ 1] (Eq. 5.1, Theorem 5.1); formulas in-
+duce dyadic multi-scale leaf placements (Lemmas 6.2–6.3)
+balanced via Brent’s theorem [ 2] (Theorem 6.1); and
+weighted-centroid branch sets transfer bounds through
+minors (Lemma 7.2, [3]).
+Honest Scope Boundary.This companion artifact cer-
+tifies finite-dimensional state-sum evaluations, projections,
+flattening ranks, rational supply-site savings, grid and tree
+isoperimetric profiles, ABP prefix decompositions, dyadic
+placements, cofactor determinants, and weighted-centroid
+minor projections from [ 6]. It doesnotformalize Strassen
+spectral sublevel Zariski closure (Theorem 3.1), Gaussian
+mean-width concentration (Eq. 3.2), or the Robertson–
+Seymour / Chekuri–Chuzhoy excluded-grid theorem (Sec-
+tion 7.3).
+2 Constructive Lean 4.35.0 Kernel
+The formal kernel ValiantHierCert.lean compiles
+cleanly under Lean 4.35.0 ( -j 1) with zero sorry, zero
+custom axioms, zero warnings, and zero dependence on
+Classical.choice. Table 1 summarizes all 18 machine-
+1
+
+--- Page 2 ---
+Table 1: The 18 constructive Lean 4.35.0 theorems
+in ValiantHierCert.lean (0 sorry, 0 custom axioms,
+0Classical.choice).
+# Theorem Identifier Paper Reference / Invariant
+1edge cut vector norm sqEq. (3.3) inductive∥a C∥2 =|∂C|
+2euclidean distance first order boundEq. (3.4) cleared∥u−z∥ 2 shortening
+3lemma32 supply site savingLem. 3.2 clearedwb/(16e) saving
+4lemma21 homogenization mul costLem. 2.1 2 PD
+k=0(k+1) = (D+1)(D+2)
+5lemma42 balanced product childLem. 4.2 product child max(d 1, d2)> d/3
+6lemma42 balanced window complementLem. 4.2 complement window [d/3,2d/3)
+7grid edge count boundSec. 4e= 2r(r−1)≤2r 2
+8grid row column isoperimetryThm. 4.1 3m < r⇒r red, rblue ≥1
+9tree vertex count formulaSec. 5 1 + 2(2 h −1) = 2 h+1 −1
+10tree telescoping size identityEq. (5.1) inductiveColorTreetelescoping
+11lemma52 abp cut rank subadditiveLem. 5.2 inductive rank-1 sum≤s
+12sec6 det upper triangular unitSec. 6.3 det(I−A) = 1 & cofactor
+13lemma62 leaf depth budgetLem. 6.2 inductive split depth≤h
+14lemma63 dyadic cluster sumLem. 6.3 scale-kshortening 2k P∥aC∥ ≥d
+15sec63 formula balancing splitSec. 6.3 inductive Brent tree balancing
+16sec71 degree cutwidth boundSec. 7.1 ∆(G)≤2 cw(G)
+17lemma72 centroid step decreaseLem. 7.2 heavy component strict drop
+18sec73 pathwidth cutwidth sandwichSec. 7.3 inductive bag cw≤∆(pw+1)
+checked theorems. Highlights include Theorem 1 (inductive
+proof of Eq. (3.3) ∥aC∥2 = |∂C| over arbitrary edge lists),
+Theorem 2 (exact cleared-denominator proof of Eq. (3.4)
+with nonnegative square gap (2 ⟨z, u⟩ − ∥z∥2)2), Theo-
+rem 8 (complete row/column dichotomy of Theorem 4.1’s
+grid isoperimetry), Theorem 10 (structural induction over
+ColorTree proving Eq. (5.1)’s exact tree-telescoping iden-
+tity), and Theorem 12 (exact 3×3 strictly upper-triangular
+determinant unit and path-sum cofactor).
+3 The VALIANT-HIER-CERT-1.0 Pro-
+tocol
+Our Python verifier (src/valiant hier verifier.py)
+enforces zero floating-point literals, zerofloat()calls,
+zero true-division operators (/,/=), zeromath/numpy
+imports,MAX JSON BYTES = 1 000 000, duplicate-key
+rejection viaobject pairs hook, non-finite and
+floating-point JSON token rejection viaparse constant
+andparse float, recursion-depth and oversized-integer
+protection, pre-allocation table caps, deterministic
+Lemma 7.2 projection reconstruction, and lowest-terms
+rationals [p, q] (|p|, q≤1018, gcd(|p|, q) = 1).
+Definition 1(VALIANT-HIER-CERT-1.0Modes).Each
+certificate invokes one of four exact verification modes:
+1.state sum and euclidean price(Eq. 1.1, Sec. 2–3,
+Lem. 3.2): (a)state sum projection and cut
+evaluatesZ H,q′ and the Section 2 projected host state
+sumZ G,q overF p, confirming equality and exact
+flattening rankrank C|V\C A(ZG,q) =q |∂C|;
+(b)movable supply site savingcomputesa C ∈Z e,
+verifies Eq. (3.3)∥a C∥2 =|∂C|, and certifies
+Lemma 3.2’s rationalized saving≥wb/(16e)at
+λ=
+√
+b/(4e).
+2.grid balanced cut and isoperimetry(Thm. 4.1,
+Lem. 4.2, Sec. 4): (a)grid isoperimetry audit
+checksr 2/3<|U| ≤2r 2/3, verifies the row/column
+dichotomy and|∂U| ≥ ⌈r/3⌉exhaustively (forr= 3)
+or on witness cuts; (b)vnp boolean indicator sum
+C01 (2×2 grid)
+7, q = 2
+C02 (K4−e)
+2, q = 2
+0
+2
+4
+6
+8
+10Exact integer count / rank
+2
+3
+4
+8
+(a) Sec. 3 Exact Cut Flattening Rank
+Cut edges |∂C|
+Flattening rank q|∂C|
+C03 (4×4 grid)
+e = 24, b = 4
+C04 (Path Fig. 2)
+e = 2, b = 1
+0
+1
+2
+3
+4Euclidean price saving
+1.46
+3.00
+1.04
+2.00
+(b) Lemma 3.2 Movable-Site Savings
+Certified saving
+Lemma 3.2 floor wb
+16e
+Figure 1: Mode 1 verification: (a) exact cut flattening
+ranks q|∂C| (C01–C02); (b) Lemma 3.2 movable supply-site
+price savings vs. floorwb/(16e) (C03–C04).
+evaluates the Section 4 characteristic-freeVNP F
+Boolean-indicator sum overF p, certifying that all
+unused bit encodings contribute0and the sum equals
+ZGr,q identically.
+3.binary tree telescoping and abp(Thm. 5.1,
+Lem. 5.2, Eq. 5.1): (a)tree telescoping boundary
+executes exact tree DP on Th for all k∈ {1, . . . ,2h −2}
+to certifymax k min|U|=k |∂U|and verifies Eq. (5.1)
+|U|=b(2 h −1) + Pcj(2j −1)with P|cj| ≤ |∂U|;
+(b)abp prefix rank decompositioncomputes exact
+forward/backward DAG DP tensors over Fp, certifying
+A(f) = P
+|U|=k TU andrank(T U )≤s.
+4.path multiscale det and minors(Thm. 6.1,
+Lem. 6.3, Thm. 7.1, Lem. 7.2):
+(a)dyadic scale placement and detexecutes
+Lemma 6.3’s dyadic clustering across scales
+k= 2 j ≤d/2verifying P⟨av, zv⟩ ≥1
+2 log2 d, and
+verifiesdet(I−A) = 1with signed minor of order
+(d−1)q+ 1equal toZ Pd,q overF p;
+(b)minor centroid and cutwidthverifies disjoint
+connected branch sets, weighted centroid balance
+2wcomp ≤deg H(v),q b ≤n, exact minor projection
+ZG,n =Z H,q, and Sec. 7.3’spw≤cw≤∆(pw + 1)
+sandwich.
+Proposition 1(Verifier Soundness).Whenever
+verify fileoutputsVERIFIEDon aVALIANT-
+HIER-CERT-1.0certificate, all checked state sums,
+projections, cut ranks, savings, grid/tree boundaries, ABP
+decompositions, cofactor determinants, and
+weighted-centroid minors hold identically overZ,Q, or
+Fp.
+4 Certified Corpus and Worked
+Witnesses
+We generated and verified 16 canonical certificates ( C01–
+C16, Table 2). Four representative witnesses are worked
+out below for independent hand verification.
+Worked Witness 1 (C03: Lemma 3.2 Movable Site).
+On the 4 × 4 grid (d = 16, e= 24), splitting the top two
+2
+
+--- Page 3 ---
+C05 (3×3 grid)
+All 336 cuts
+C06 (4×4 grid)
+Witness suite
+0
+1
+2
+3
+4
+5Edge boundary size
+3
+4
+1
+2
+(a) Thm. 4.1 Grid Balanced-Cut Floor
+Verified min|∂U|
+Thm. 4.1 floor ⌈r/3⌉
+1 5 11 15 20 25 30
+Prescribed subset size k = |U| in T5
+0.0
+0.5
+1.0
+1.5
+2.0
+2.5
+3.0
+3.5
+4.0
+Exact min|U|=k
+|∂U|
+Hardest k * = 11: min|∂U| = 3
+(b) Thm. 5.1 Tree T5 Profile (C10)
+Figure 2: Mode 2–3 isoperimetry: (a) Theorem 4.1
+balanced-cut grid boundary floor ⌈r/3⌉ (C05–C06); (b) ex-
+act Bharadwaj–Chandran profile on T5 (d = 31, C10),
+peaking atk ∗ ∈ {5,11,20,26}with min|∂U|= 3.
+C13 (P4, 7×7 det)
+log2 d = 2
+C14 (P8, 15×15 det)
+log2 d = 3
+0
+1
+2
+3
+4
+5
+6Multi-scale shortening bound
+2.00
+4.50
+1.00
+1.50
+(a) Lemma 6.3 Dyadic Placement & Det
+Verified ∑⟨av, zv⟩ LB
+Lemma 6.3 floor 1
+2log2 d
+C15 (C5 ≽ K3)
+q = 2, n = 2
+C16 (T6 ≽ K1, 4)
+q = 2, b = 2, n = 4
+0
+2
+4
+6
+8
+10Graph decomposition parameter
+2
+1
+2 2
+6 6
+(b) Sec. 7.3 pw ≤ cw ≤ Δ(pw + 1)
+Pathwidth pw
+Cutwidth cw
+Δ(pw + 1)
+Figure 3: Mode 4 verification: (a) Lemma 6.3 multi-scale
+shortening lower bound vs. 1
+2 log2 d alongside 7 ×7 and
+15×15 cofactor determinants (C13–C14); (b) Sec. 7.3 pw≤
+cw≤∆(pw + 1) sandwich on minor hosts (C15–C16).
+rows from the bottom two gives |∂C| = 4 = ∥aC∥2, so
+s =
+√
+b = 2. With w = 100 and logR = 80 < 1
+2 ws = 100,
+choosing λ = s/(4e) = 2 /96 = 1 /48 yields price saving
+λ(ws−logR ) −ewλ 2 = 1
+48 (120) −24(100) 1
+2304 = 5
+2 − 25
+24 =
+35
+24 > 25
+24 = wb
+16e.
+Worked Witness 2 ( C10: Eq. (5.1) Binary Tree
+T5).In T5 (h = 5 , d = 31), subtree sizes are
+{1, 3, 7, 15, 31}. Exact DP over all k∈ {1, . . . ,30} confirms
+maxk min|U|=k |∂U| = 3, attained at k∗ ∈ {5, 11, 20, 26}.
+For the 11-vertex witness {4, 8, 9, 10, 16, . . . ,22} (b = 0),
+three edges change color at subtree heights (3 , 2, 1) with
+(c3, c2, c1) = (1, 1, 1), giving 7 + 3 + 1 = 11 and P|cj| =
+3 =|∂U|.
+Worked Witness 3 ( C13: Lemma 6.3 & Cofactor
+Det).On P4 with leaf order (0 , 2, 1, 3), scale k = 1 has
+four singleton clusters with P⌊∥aC∥⌋ = 1 + 1 + 1 + 1 = 4
+(weight 1/4 = ⇒ 1) and scale k = 2 has clusters {0, 2}
+(∥aC∥2 = 3, floor 1) and {1, 3} (∥aC∥2 = 3, floor 1) (weight
+1/2 = ⇒ 1), giving shortening bound 2 ≥ 1
+2 log2 4 = 1.
+Over F11 (q = 2), the 8 × 8 strictly upper-triangular ABP
+matrix I−A has det(I−A ) = 1 and its 7 × 7 signed
+(7,0)-cofactor equalsZ P4,2 = 3 (mod 11).
+Worked Witness 4 (C16: Lemma 7.2 Tuple-Packed
+Minor).Host tree T6 has internal edge (0, 1) and four
+leaves (1, 2), (1, 3), (0, 4), (0, 5), containing star minor H =
+Table 2: Summary of the 16 canonical VALIANT-
+HIER-CERT-1.0 certificates ( C01–C16); all 16 verify de-
+terministically.
+ID Mode Target Result Certified Exact Invariant
+C011a Eq. (1.1), Sec. 3G 2 →P 3 overF 7:Z=5,|∂C|=2, rk=4
+C021a Eq. (1.1), Sec. 3K 4−e→C 3 overF 2:Z=1,|∂C|=3, rk=8
+C031b Lem. 3.2 (G 4)∥a C∥2=4, saving 35/24≥25/24
+C041b Fig. 2, Lem. 3.2 PathA−B−D,∥a C∥2=2, saving 3≥2
+C052a Thm. 4.1 (G 3) Exhaustive 336 cuts: min|∂U|=3≥1
+C062a Thm. 4.1 (G 4) Balanced cuts: min|∂U|=4≥2
+C072b Sec. 4 VNP F7 ZG2,3=2, 175/256 unused codes zeroed
+C082b Sec. 4 VNP F2 ZG2,3=1, 175/256 unused codes zeroed
+C093a Eq. (5.1) (T 3) Exact DP: max k min|∂U|=2 atk ∗=2
+C103a Eq. (5.1) (T 5) Exact DP: max k min|∂U|=3 atk ∗=11
+C113b Lem. 5.2 ABPd=3, k=1,F 7: 8 monoms, max rk=2≤7
+C123b Lem. 5.2 ABPd=4, k=2,F 5: 16 monoms, max rk=1≤8
+C134a Lem. 6.3, Sec. 6.3P 4: LB=2≥1; 7×7 cofactor = 3 (mod 11)
+C144a Fig. 3, Sec. 6.3P 8: LB=9/2≥3/2; 15×15 cofactor = 7 (mod 13)
+C154b Lem. 7.2, Sec. 7.3C 5 ⪰K 3 (q=n=2):Z=6, pw=cw=2
+C164b Lem. 7.2, Sec. 7.3T 6 ⪰K 1,4 (q=2, n=4):Z=5, pw=1,cw=2
+K1,4 (∆(H) = 4, b = ⌊4/2⌋ = 2, q = 2, n = q2 = 4).
+Branch set B0 = {0, 1} has centroid 0: node 0 carries
+weight 2 and child component {1} carries weight 2 ≤ 4/2,
+so edge (0, 1) packs the two binary labels entering {1} into
+n = 4 states, yielding ZT6,4 = ZK1,4,2 = 5 ( mod 11) with
+optimal order [2 , 1, 3, 0, 4, 5] giving pw = 1 ≤cw = 2 ≤
+3(1 + 1) = 6.
+5 Testing, Integrity, and Reproduc-
+tion
+Our pytest suite (tests/test verifier.py) executes 69
+deterministic checks (1 AST zero-float/zero-division/zero-
+math audit, 16 canonical certificates, 1 corpus-count
+check, and 51 adversarial forgery tests covering dupli-
+cate keys, NaN/Infinity, JSON floats, oversized/deeply
+nested/huge-integer JSON, unreduced rationals, self-loops,
+composite fields, pre-allocation DoS caps, short tables,
+zero-crossing cuts, Lemma 3.2 rank violations, unbal-
+anced or duplicate grid cuts, wrong tree DP optima,
+cyclic ABPs, invalid leaf orders, qb > n , overlap-
+ping/disconnected/duplicate branch sets, unbalanced cen-
+troids, and forged scalar-matching minor projections). All
+69 tests pass in < 1 s, Lean 4.35.0 builds cleanly with 0
+warnings, and MANIFEST.sha256 pins all 37 tracked arti-
+facts.
+Disclosure and Licensing.Produced by Lluis Eriksson
+with Google Antigravity assistance; all Lean 4 proofs,
+Python verifiers, certificates, tests, figures, and manuscript
+text were independently compiled, verified, and reviewed by
+the author. Manuscript and figures are licensed CC-BY-4.0;
+code, Lean 4 kernel, and certificates are licensed MIT. Full
+source archive: https://github.com/lluiseriksson/o
+penai-valiant-hierarchy-grids-certificates.
+References
+[1] B. V. Subramanya Bharadwaj and L. Sunil Chandran.
+Bounds on isoperimetric values of trees.Discrete Math-
+3
+
+--- Page 4 ---
+ematics, 309:834–842, 2009.
+[2] Richard P. Brent. The parallel evaluation of general
+arithmetic expressions.Journal of the ACM, 21(2):201–
+206, 1974.
+[3] Chandra Chekuri and Julia Chuzhoy. Polynomial
+bounds for the grid-minor theorem.Journal of the
+ACM, 63(5):40:1–40:65, 2016.
+[4] Guillaume Malod and Natacha Portier. Characteriz-
+ing Valiant’s algebraic complexity classes.Journal of
+Complexity, 24(1):16–38, 2008.
+[5] OpenAI. Euclidean geometry in the asymptotic spec-
+trum of tensors. OpenAI Math Release preprint
+OAI:Euclidean-geometry-in-the-asymptotic-s
+pectrum-of-tensors-November-24-2026 (unrefer-
+eed), November 2026.
+[6] OpenAI. Paths, trees and grids separate Valiant’s
+hierarchy. OpenAI Math Release preprint OAI:Path
+s-trees-and-grids-separate-Valiants-hierarc
+hy-November-24-2026(unrefereed), November 2026.
+[7] Volker Strassen. The asymptotic spectrum of ten-
+sors.Journal f¨ ur die reine und angewandte Mathematik,
+384:102–152, 1988.
+[8] Leslie G. Valiant. Completeness classes in algebra. In
+Proceedings of the 11th Annual ACM Symposium on
+Theory of Computing (STOC), pages 249–261, 1979.
+[9] Leslie G. Valiant, Sven Skyum, Stuart Berkowitz, and
+Charles Rackoff. Fast parallel computation of polynomi-
+als using few processors.SIAM Journal on Computing,
+12(4):641–644, 1983.
+4

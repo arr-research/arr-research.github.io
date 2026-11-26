@@ -1,0 +1,58 @@
+{
+  "assessed_at": "2026-11-26T03:04:52Z",
+  "canonical_sha256": "4c69ec0061a8472e9fa013e84c102767c11ddb86ac3821724458639c4997ea04",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All worked witnesses (C03, C10, C13, C16), Table 1 identities (#4, #9, #16, #18), cut counts (336 on G3, 175/256 unused codes on G2), and DP/minor numbers in Figures 1-3 verify by hand, except for a Table 2 vs. Fig. 1(b) conflict on C04 (||a_C||^2=2 vs. b=1) and unproved Python soundness in Proposition 1.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "The underlying separation theory and lemmas derive from OpenAI's unrefereed preprint [6] and prior literature [1-3,7-9]; the original contribution is packaging finite-dimensional checks into a four-mode zero-float certificate protocol (VALIANT-HIER-CERT-1.0) and 18 constructive Lean 4 lemmas.",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "Worked Witnesses 1-4 give complete, hand-verifiable numbers, and the 37-file SHA-256 manifest, deterministic 69-check pytest suite, and Lean 4.35.0 build recipe support full replication, though the verifier source and Lean scripts reside in the external repository rather than the 4-page PDF.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Zero-floating-point, AST-enforced exact arithmetic over Z, Q, and F_p paired with 18 constructive Lean 4.35.0 lemmas (0 sorry, 0 Classical.choice) and 51 adversarial forgery tests is disciplined, though Proposition 1 is stated without formal proof and Theorem 12 only covers 3x3 upper-triangular determinants.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Provides a useful, honest-scope finite-dimensional audit for [6] without overclaiming end-to-end separation, as Zariski spectral closure (Thm. 3.1), Gaussian mean-width bounds (Eq. 3.2), and the excluded-grid theorem (Sec. 7.3) remain unformalized and tested graphs are small (r<=4, d<=31).",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.8,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-0RD4KBMT418VAS9J",
+  "potential_errors": [
+    "Table 2 (C04) vs. Figure 1(b) inconsistency: Table 2 reports '||a_C||^2=2, saving 3 >= 2' for C04 (Path A-B-D), whereas Figure 1(b) reports 'e=2, b=1' with saving 3.00 and floor 2.00. Because Lemma 3.2 uses b = |∂C| = ||a_C||^2 and rational lambda = sqrt(b)/(4e), b=1 (e.g., w=64, log R=24) matches saving 3 and floor 2 in exact rationals, whereas ||a_C||^2=2 conflicts with b=1 and makes sqrt(b) irrational.",
+    "Proposition 1 (Verifier Soundness) is stated as a universal soundness theorem for the Python function verify_file over Z, Q, and F_p without a formal proof or mechanized verification of the Python implementation; its justification in the PDF rests on AST restrictions and 69 pytest checks.",
+    "Minor cross-paper reference ambiguity in Table 2: C04 cites 'Fig. 2, Lem. 3.2' and C14 cites 'Fig. 3, Sec. 6.3', referring to figures in the companion preprint [6] rather than Figures 2 and 3 of the present manuscript."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Explicit and honest scope boundary in Section 1 clearly delineating which finite-dimensional mechanisms are certified versus which deep theorems of [6] (Strassen Zariski closure, Gaussian mean-width concentration, Robertson-Seymour/Chekuri-Chuzhoy excluded-grid theorem) are not formalized.",
+    "Hand-verifiable Worked Witnesses 1-4 (C03, C10, C13, C16) check out exactly: e.g., C03 saving 35/24 > 25/24, C10 T_5 tree-DP peak min|∂U|=3 at k* in {5,11,20,26} with 11-vertex telescoping 7+3+1=11, C13 P_4 dyadic bound 2 >= 1 and 7x7 signed cofactor = 3 (mod 11), and C16 T_6 >= K_{1,4} centroid balance 2*2 <= 4 with pw=1 <= cw=2 <= 6.",
+    "Exact combinatorial and arithmetic counts align across text, tables, and figures: 336 balanced cuts on G_3 (sum_{k=4}^6 C(9,k) = 126+126+84 = 336), 175/256 unused 2-bit-per-edge encodings on G_2 with q=3 (256 - 3^4 = 175), and 9/2 >= 3/2 on P_8 via dyadic weights k/d.",
+    "Zero-floating-point verification architecture with AST enforcement, duplicate-key/non-finite JSON rejection, lowest-terms rational bounds (|p|, q <= 10^18), and 51 adversarial forgery tests paired with 18 constructive Lean 4.35.0 lemmas (0 sorry, 0 custom axioms, 0 Classical.choice)."
+  ],
+  "strong_novelty_candidates": [
+    "Four-mode zero-floating-point certificate protocol (VALIANT-HIER-CERT-1.0) combining exact F_p state-sum/ABP-cofactor/minor audits with rationalized Euclidean price-saving and integer floor-norm dyadic shortening checks."
+  ],
+  "summary": "This 4-page companion verification paper presents VALIANT-HIER-CERT-1.0, a zero-floating-point Python certificate verifier paired with 18 constructive Lean 4.35.0 lemmas and 16 canonical certificates (C01-C16) auditing the finite-dimensional algebraic, isoperimetric, dyadic-placement, cofactor-determinant, and weighted-centroid minor mechanisms of OpenAI's November 24, 2026 unrefereed preprint [6] on separating Valiant's algebraic complexity hierarchy. The manuscript maintains a transparent scope boundary, explicitly acknowledging that Strassen spectral Zariski closure, Gaussian mean-width concentration, and the excluded-grid minor theorem are outside its formalization. Every hand-checkable identity in Table 1, Worked Witnesses 1-4, and Figures 1-3 verifies cleanly, with one localized discrepancy in Table 2 row C04 (reporting ||a_C||^2=2 where Figure 1(b) reports b=1) and the caveat that Proposition 1 (Python verifier soundness) is asserted rather than formally proven.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:d301f197-fdbc-4ede-94ce-e51e690a5a78",
+  "weaknesses": [
+    "Only small finite instances are certified (G_2-G_4, T_3-T_6, P_4, P_8, C_5), and several Lean 4 theorems in Table 1 prove elementary algebraic prerequisites (e.g., #4 homogenization sum, #9 tree vertex count) or fixed small-dimension cases (Theorem 12 covers 3x3 upper-triangular determinants rather than general n x n).",
+    "Proposition 1 claims universal soundness for the Python verifier without a formal proof of the Python code, and the PDF relies on an external repository for the Lean proofs, verifier code, and test suite.",
+    "Table 2 contains a parameter mismatch on C04 (||a_C||^2=2 vs. b=1 in Fig. 1(b)) and unprefixed figure citations ('Fig. 2', 'Fig. 3') referring to [6].",
+    "Notation such as n, d, and b varies slightly across sections (e.g., n-vertex paths in Sec. 1 vs. P_d in Mode 4a and host state count n=q^b in Mode 4b), and Mode 4a's link between floor(||a_C||) in Worked Witness 3 and sum <a_v, z_v> in Fig. 3(a) is compressed."
+  ]
+}

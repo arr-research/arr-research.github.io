@@ -1,0 +1,459 @@
+--- Page 1 ---
+Constructive Algebraic, Guarded-Shift, and
+Newton-Reduction Certificates for the1/2Logarithmic
+Exponent of Integer Multiplication on Tapes
+Lluis Eriksson
+Independent Researcher (lluis@airr.science)
+Companion Verification Artifact to OpenAI Math Release (November 24, 2026)
+November 26, 2026
+Abstract
+We present TAPE-INT-MULT-CERT-1.0, an independently
+reproducible, zero-floating-point verification engine and
+constructive Lean 4.35.0 kernel auditing the finite-
+dimensional algebraic, bit-packing, triangular Chinese-
+remainder, borrowed-workspace chirp, Newton/Brent arith-
+metic, sunflower 3-SAT, and wire-price mechanisms of
+OpenAI’s November 24, 2026 unrefereed preprint“The
+logarithmic exponent of integer multiplication on tapes”
+(Theorems 1.1, 1.2, 5.1, 7.1, and 8.1). Without claiming to
+formalize Turing-machine tape-parking schedules, Baker–
+Harman–Pintz prime-gap selection, or infinite-dimensional
+CAT(0) ultralimits end-to-end, we construct a four-mode
+exact verifier over Z, Q, and Fp backed by 18 con-
+structive Lean 4 theorems (0 sorry, 0 custom axioms,
+0 Classical.choice, 0 warnings). Across 16 canonical
+certificates ( C01–C16), we audit (i) Lemma 3.1’s eight-
+shift guarded low-bit XOR bijection on 2 2G address pairs
+(G∈ {6, 7}), Sec. 2.4 odd-characteristic spectral swap
+diagonalization, and Cor. 3.2 two-involution cycle decom-
+positions, (ii) Sec. 5.2 Eq. (5.3) triangular scaled-residue
+CRT bijections with exact cyclic-convolution integer prod-
+ucts and Lemma 3.3 (2 d− 1)-stage Beneˇ s bit-flip sched-
+ules, (iii) Lemma 5.2 exact borrowed-workspace chirp
+conjugation ( D1 ⊕I )B−1(D2 ⊕I )B(D3 ⊕I ) = Ua ⊕I
+and Cor. 6.1–6.2 exact Newton reciprocal/square-root
+and Brent division/floor-sqrt multiplication reductions,
+and (iv) Theorem 7.1 sunflower 3-SAT branching equiv-
+alence with exact #SAT contractions and Lemmas 8.2–
+8.3/Theorem 8.1 Euclidean barycenter wire-price bounds
+with rationalized gap 1 −ρ > 1/
+√
+2. All 16 certificates,
+68 unit/forgery tests, and 37 SHA-256 hashes verify deter-
+ministically.
+1 Introduction and Scope
+Following Harvey and van der Hoeven’s O(nlogn ) integer
+multiplication algorithm [4] and their reduction showing
+multiplication is at least as hard as matrix transposition [5],
+determining the optimal logarithmic exponent on deter-
+ministic multitape Turing machines has remained central
+to computational complexity. In its November 24, 2026
+unrefereed preprint [8], OpenAI establishes that this ex-
+ponent is 1/2: a single fixed multitape machine multiplies
+n-bit integers (and computes exact quotients and integer
+square roots, Cor. 6.1) in n(1 + logn )1/2+o(1) steps and
+O(n) visited cells (Theorems 1.1 and 5.1), while under
+variable-count Weak ETH any fixed deterministic multi-
+tape multiplier, divider, or integer square-root machine
+requires Ω(m√logm ) time (Theorem 1.2, Cor. 6.2, Theo-
+rem 8.1).
+The upper bound combines odd-characteristic spectral
+swap diagonalization (Sec. 2.4), Lemma 3.1’s guarded eight-
+shift bulk XOR, Cor. 3.2’s two-involution position permu-
+tations, Lemma 3.3’s (2 d− 1)-stage Beneˇ s [1] block rout-
+ing, Eq. (5.3)’s triangular scaled-residue CRT layout, and
+Lemma 5.2’s Bluestein [ 2] chirp conjugation on borrowed
+coordinates without exponential padding. The conditional
+lower bound rules out characteristic-zero ports via sun-
+flower 3-SAT sparsification [6] (Theorem 7.1) and prices
+N×N partial transposition in CAT(0) spectral spaces [9, 7]
+via barycentric variance and entropy-wire extraction (Lem-
+mas 8.2–8.3, Theorem 8.1), then transfers the bound to
+division and floor square roots via exact Brent-style reduc-
+tions [3] (Cor. 6.2).
+Honest Scope Boundary.This companion artifact
+machine-checks finite algebraic identities, exact bijections,
+matrix conjugations, rational arithmetic inequalities, and
+finite CNF/metric witnesses extracted from [ 8]. It does
+notformalize multitape head trajectories, Levin universal
+search scheduling (Sec. 6.3), Baker–Harman–Pintz prime
+gaps (Sec. 5.1), or asymptotic CAT(0) Poincar´ e obstruc-
+tions (Secs. 7–8).
+2 Constructive Lean 4.35.0 Kernel
+The formal kernel TapeIntMultCert.lean compiles
+cleanly under Lean 4.35.0 ( -j 1) with zero sorry, zero
+custom axioms, zero warnings, and zero dependence on
+1
+
+--- Page 2 ---
+Table 1: The 18 constructive Lean 4.35.0 theorems
+in TapeIntMultCert.lean (0 sorry, 0 custom axioms,
+0Classical.choice).
+# Theorem Identifier Paper Reference / Invariant
+1spectral swap eigenvaluesSec. 2.4±1 sum/diff basis for swapQ
+2eight shift low bit xorLem. 3.1 exact 8-shift XOR on{0,1} 3
+3eight shift guard displacementLem. 3.1 guard band|∆| ≤8 non-overflow
+4cycle reflection two involutionsCor. 3.2r 2
+1 =r 2
+2 = id,r 2 ◦r 1 = (+1)
+5crt triangular residue congruenceEq. (5.3)µt≡µt lo +t hi (moda)
+6chirp exponent identityLem. 5.2 odd/evena-periodic chirp 2jh
+7borrowed block conjugation identityLem. 5.2 (D 1⊕I)B−1(D2⊕I)B(D3⊕I)
+8reflection pair angle doublingLem. 5.2 (c 2−s2)2 + (2cs)2 = (c2+s2)2
+9three walsh H cubeLem. 5.2 exact 2×2H 3
+2 = 2H2
+10newton reciprocal residual squaringCor. 6.1 1−c(x(2−cx)) = (1−cx) 2
+11newton sqrt error identityCor. 6.1 (x 2 +r 2)−2xr= (x−r) 2
+12newton seed reciprocal boundCor. 6.1x= 5/8⇒ |1−cx| ≤3/8
+13brent division mult reductionCor. 6.2⌊xB 2/(B−y)⌋=xB+xy
+14brent sqrt mult reductionCor. 6.2⌊
+q
+B4 + 4tB3⌋=W
+15three squares product recoveryCor. 6.2 (x+y) 2 −x 2 −y 2 = 2xy
+16sunflower clause branch equivThm. 7.1 inductive petal branching equiv.
+17cat0 barycenter half varianceLem. 8.2 inductive pairwise variance law
+18partial transposition gap rationalizedThm. 8.1 2(q−p) 2 > q2 ⇒a/b <1−ρ
+Classical.choice. Table 1 catalogs all 18 machine-
+checked theorems. Highlights include Theorem 2 (ex-
+haustive zero-axiom verification of Lemma 3.1’s exact
+eight-shift low-bit XOR across all ( c, a, b) ∈ {0, 1}3), The-
+orem 4 (arbitrary-L cycle shift as product of two involu-
+tions r2 ◦r 1), Theorem 6 (universal odd/even a-periodic
+Bluestein chirp exponent identity), Theorem 14 (exact in-
+teger verification of Cor. 6.2’s floor square-root reduction
+⌊
+√
+B4 + 4tB3⌋ = B2 + 2Bt− 2t2), Theorem 17 (induc-
+tive Euclidean pairwise-vs-barycenter variance identity
+over List Int), and Theorem 18 (rationalized strict gap
+a/b <1−p/qfor all 2a 2 ≤b 2 whenever 2(q−p) 2 > q2).
+3 The TAPE-INT-MULT-CERT-1.0 Pro-
+tocol
+Our Python verifier (src/tape int mult verifier.py)
+enforces zero floating-point literals, zerofloat()calls,
+zero true-division operators (/,/=), zeromath/numpy
+imports,MAX JSON BYTES = 1 000 000, duplicate-key
+rejection viaobject pairs hook, non-finite and
+floating-point JSON token rejection viaparse constant
+andparse float, recursion-depth protection, and
+lowest-terms rationals [p, q] (|p|, q≤1018, gcd(|p|, q) = 1).
+Definition 1(TAPE-INT-MULT-CERT-1.0Modes).Each
+certificate invokes one of four exact verification modes:
+1.guarded xor and radix swap(Sec. 2.4, Lem. 3.1,
+Cor. 3.2): (a)eight shift guarded xorexhaustively
+evaluates the eight shifts modulo2 G on all2 2G pairs
+(u, w)forc∈ {0,1}, verifying exact agreement with
+(u⊕c, w)on every non-exceptional pair, bijectivity and
+preservation of the exceptional setB, and
+|B|/22G ≤80/2 G;
+(b)spectral swap and involutionverifies
+odd-prime diagonalizationC −1QC= diag(1,−1)over
+Fp,2 m sign patterns, and exact non-identity
+factorizationπ=τ 2 ◦τ 1 into involutions.
+2.crt triangular and benes(Sec. 5.1–5.2, Lem. 3.3):
+(a)crt triangular residueverifies pairwise
+coprimality of(a 1, . . . , ad), checks Eq. (5.3)
+yi =t i +µ i
+P
+j<i Pjtj ≡µ it(moda i)across all
+t∈[0, S), verifiesS≥2h−1, and recoversX·Yvia
+exact cyclic convolution and carry propagation;
+(b)benes stage routingverifies a non-identity
+permutation on{0, . . . ,2d −1}via(2d−1)bijective
+single-bit conditional-flip stages.
+3.chirp amplification and newton(Lem. 5.2,
+Cor. 6.1–6.2): (a)chirp basis conjugationverifies
+primitive2a-th rootζ∈F p,s 2a≡1, non-identity
+invertible borrowed blockB ′,a-periodic chirp
+χ(t) =ζ t2+(amod 2)t, diagonalD 2 =U aCU −1
+a , exact
+restoration(D 1 ⊕I)B −1(D2 ⊕I)B(D 3 ⊕I) =U a ⊕I,
+and three-Walsh middle conjugationH 2DmidH2;
+(b) newton div sqrt and brent verifies exact rational
+residual squaring from seed5/8, Newton square-root
+quadratic error from seed3/2, and Cor. 6.2’s exact
+integer division and three-squares floor-sqrt reductions.
+4.sunflower sat and wire price(Thm. 7.1,
+Lem. 8.2–8.3, Thm. 8.1):
+(a)sunflower 3sat branchingchecks
+pairwise-disjoint nonempty petals around centerC,
+exhaustive equivalenceΦ⇐⇒(Φ∧C)∨(Φ∧ V
+j Pj)
+over all2 v assignments, and inclusion-exclusion #SAT
+contraction; (b)transposition wire price gap
+enforces exact Euclidean distancesD 2
+ij =∥p i −p j∥2
+including barycentero, verifies
+2E[d(xU , o)2] =E[d(x U , xV )2], triangle inequalities,
+Eq. (8.6) P
+j Hjd(aj, tj)≤S+ P
+v Hvd(o, v), and
+rationalized gap2(1−ρ) 2 >1.
+Proposition 1(Verifier Soundness).Whenever
+verify fileoutputsVERIFIEDon aTAPE-INT-
+MULT-CERT-1.0certificate, all checked shift bijections,
+CRT/Beneˇ s maps, chirp conjugations, Newton/Brent
+reductions, sunflower #SAT counts, and Euclidean
+wire-price bounds hold identically overZ,Q, orF p.
+4 Certified Corpus and Worked
+Witnesses
+We generated and verified 16 canonical certificates ( C01–
+C16, Table 2). Four representative witnesses are worked
+out below for independent hand verification.
+Worked Witness 1 (C05: Eq. (5.3) Triangular CRT).
+With pairwise coprime moduli (a 1, a2, a3) = (3,5,7),S=
+105, prefix products ( P1, P2, P3) = (1, 3, 15), and inverses
+(µ1, µ2, µ3) = (1, 2, 1) since 2 ·3 ≡ 1 ( mod 5) and 1 ·15 ≡ 1
+(mod 7). For t = t1 + 3t2 + 15t3 ∈ [0, 105), Eq. (5.3) yields
+y1 = t1, y2 = (t2 + 2t1) mod 5, y3 = (t3 + t1 + 3t2) mod 7,
+matching µitmoda i on all 105 values. In base 2 4 = 16,
+X = 12345 and Y = 6789 have h = 4 digits (2 h− 1 =
+7 ≤ 105), and carry propagation on their length-105 cyclic
+convolution recovers 83 810 205 exactly.
+2
+
+--- Page 3 ---
+C01 (G = 6)
+212 = 4096 pairs
+C02 (G = 7)
+214 = 16384 pairs
+0
+20
+40
+60
+80
+100Share of 22G address pairs (%)
+14.1%
+47.3%
+85.9%
+52.7%
+(a) Lemma 3.1 8-Shift Guard Coverage
+Exact 8-shift interior
+Exceptional set B
+1 2 3 4 5 6
+Block width d (bits)
+0
+2
+4
+6
+8
+10
+12
+Bit-flip stages 2d −1
+CRT C05: S = 105
+CRT C06: S = 385
+(100% Eq. (5.3) exact)
+(b) Lemma 3.3 Beneš Depth & CRT Bijection
+Beneš stages 2d −1
+Certified C07, C08
+Figure 1: Mode 1–2 verification: (a) exact 8-shift inte-
+rior vs. exceptional set B across all 22G pairs (C01–C02);
+(b) Beneˇ s bit-flip stage depth 2d−1 (C07–C08) and Eq. (5.3)
+CRT products (C05–C06).
+0 1 2 3
+Newton iteration t
+−35
+−30
+−25
+−20
+−15
+−10
+−5
+0
+log2 |1 −cxt| (bits of precision)
+(a) Cor. 6.1 Exact Quadratic Residual Decay
+C11 (c = 3/2, seed 5/8)
+C12 (c = 7/4, seed 5/8)
+C09
+ξ = 0
+C09
+ξ = 1
+C09
+ξ = 2
+C09
+ξ = 3
+C10
+ξ = 0
+C10
+ξ = 1
+C10
+ξ = 2
+0
+2
+4
+6
+8
+10
+12
+Diagonal D2(ξ) mod p
+9
+1
+8
+1
+7 7
+8
+(b) Lemma 5.2 Exact D2 ((B0)−1B0 = I)
+Figure 2: Mode 3 verification: (a) Cor. 6.1 exact
+quadratic decay of log2 |1 −cx t| from seed 5/8 (C11–C12);
+(b) Lemma 5.2 exact diagonal spectrum D2(ξ) modp with
+exact borrowed-block restoration (B′)−1B′ = I (C09–C10).
+Worked Witness 2 ( C09: Lemma 5.2 Borrowed
+Chirp).Over F17 with a = 4, ζ = 2 has exact or-
+der 2 a = 8 ( ω = ζ2 = 4, s = 9 with 9 2 · 4 ≡ 1
+(mod 17)). The 4-periodic chirp χ(t) = ζt2
+gives χ =
+(1, 2, 16, 2) and diagonal D2 = diag(9, 1, 8, 1). With
+nontrivial B′ =
+ 2 1
+1 3
+
+(detB ′ = 5 ̸≡ 0), the identity
+(D1 ⊕I 2)B−1(D2 ⊕I 2)B(D3 ⊕I 2) = U4 ⊕I 2 holds identi-
+cally, restoring both borrowed coordinates.
+Worked Witness 3 ( C11: Cor. 6.1–6.2 Newton
+& Brent).For c = 3 /2 and seed x0 = 5 /8, the ini-
+tial residual is r0 = 1 − 15/16 = 1 /16; three exact
+iterations xt+1 = xt(2 −cx t) square the residual to
+r3 = (1 /16)8 = 2 −32. With k = 6, x = 47, y = 53,
+and B = 225, ⌊xB2/(B−y )⌋ = xB + 2491 with remain-
+der xy2 = 132 023 < B−y , and the three floor square
+roots ⌊
+√
+B4 + 4tB3⌋ = B2 +2Bt− 2t2 for t∈ {47, 53, 100}
+recover 2xy= 100 2 −47 2 −53 2 = 4982.
+Worked Witness 4 ( C15: Lemmas 8.2–8.3 Wire
+Price).Place A0 = (0 , 0), A1 = (3 , 0), B0 = (0 , 4),
+B1 = (3 , 4) with barycenter o = (3 /2, 2). All pairwise
+Euclidean distances (3, 4, 5) and barycenter distances (5/2)
+are exact rationals, satisfying 2 E[d(xU , o)2] = 2 · (25/4) =
+25/2 = E[d(xU , xV )2]. The four terminal pairs have wire
+demand LHS = 4 + 5 + 5 + 4 = 18, while edge supply S =
+2(4) + 2(4) + 3 + 3 = 22 plus pin cost 2(5/2) + 2(5/2) = 10
+gives 32 ≥ 18, and ρ = 1/5 satisfies 2(1 −ρ )2 = 32/25 > 1
+(margin 7/25).
+C13 (v = 5)
+Rule 1
+C14 (v = 7)
+Rule 3
+0
+20
+40
+60
+80Satisfying assignments (#SAT)
+9
+63
+8
+42
+2
+32
+(a) Thm. 7.1 Sunflower Branching #SAT
+Parent #SAT
+Center branch
+Petals branch
+C15 (N = 2)
+3-4-5 rect (ρ = 1
+5)
+C16 (N = 3)
+6-pt line (ρ = 1
+4)
+0
+20
+40
+60
+80Exact Euclidean wire price
+18
+54
+32
+81
+(b) Lemma 8.3 Eq. (8.6) Price Balance
+Wire LHS (Eq. 8.6)
+Supply S + Pins
+Figure 3: Mode 4 verification: (a) Theorem 7.1 sunflower
+Rule 1 ( C13) and Rule 3 ( C14) branching #SAT counts;
+(b) Lemma 8.3 Eq. (8.6) wire demand vs. supply plus pin
+cost on exact Euclidean metrics (C15–C16).
+Table 2: Summary of the 16 canonical TAPE-INT-
+MULT-CERT-1.0 certificates ( C01–C16); all 16 verify de-
+terministically.
+ID Mode Target Result Certified Exact Invariant
+C011a Lem. 3.1 (G= 6) 576/4096 interior exact,|B|= 3520≤5120
+C021a Lem. 3.1 (G= 7) 7744/16384 interior exact,|B|= 8640≤10240
+C031b Sec. 2.4, Cor. 3.2F 7 swap (23 = 8), 5-cycle =τ 2 ◦τ 1
+C041b Sec. 2.4, Cor. 3.2F 11 swap (24 = 16), (3+4)-cycle =τ 2 ◦τ 1
+C052a Eq. (5.3) CRT (3,5,7), S= 105,µ= (1,2,1), 12345·6789
+C062a Eq. (5.3) CRT (5,7,11), S= 385,µ= (1,3,6), 987654·321098
+C072b Lem. 3.3 Beneˇ sd= 2, 3 stages, exact perm [2,0,3,1]
+C082b Lem. 3.3 Beneˇ sd= 3, 5 stages, exact shift +3 mod 8
+C093a Lem. 5.2 Chirpa= 4,F 17,D 2 = (9,1,8,1),U 4 ⊕I 2
+C103a Lem. 5.2 Chirpa= 3,F 13,D 2 = (7,7,8),U 3 ⊕I 3
+C113b Cor. 6.1–6.2c=3/2⇒r 3=2−32; 47·53=2491
+C123b Cor. 6.1–6.2c=7/4⇒r 3=382−40; 197·211=41567
+C134a Thm. 7.1 Rule 1v= 5, 3 petals, #SAT = 9 = 8 + 2−1
+C144a Thm. 7.1 Rule 3v= 7, 3 petals, #SAT = 63 = 42 + 32−11
+C154b Lem. 8.2–8.3N= 2 3-4-5 rect, LHS = 18≤32,ρ= 1/5
+C164b Lem. 8.2–8.3N= 3 6-pt line, LHS = 54≤81,ρ= 1/4
+5 Testing, Integrity, and Reproduc-
+tion
+Our pytest suite (tests/test verifier.py) executes 68
+deterministic checks (1 AST zero-float/zero-division/zero-
+math audit, 16 canonical certificates, 1 corpus-count
+check, and 50 adversarial forgery tests covering duplicate
+keys, NaN/Infinity, JSON float tokens, oversized/deeply
+nested JSON, unreduced rationals, bad guards, non-
+involutions, non-coprime moduli, cyclic wrap-around, non-
+canonical or corrupted Beneˇ s flips, singular/identityB′,
+negative/vacuous Newton roots, overlapping or single-
+branch sunflower splits, duplicate terminal pairs, inflated
+pin entropies, forged non-Euclidean distances, Eq. (8.6)
+violations, and ρ≥ 1 − 1/
+√
+2). All 68 tests pass in
+< 1 s, Lean 4.35.0 builds cleanly with 0 warnings, and
+MANIFEST.sha256pins all 37 tracked artifacts.
+Disclosure and Licensing.Produced by Lluis Eriksson
+with Google Antigravity assistance; all Lean 4 proofs,
+Python verifiers, certificates, tests, figures, and manuscript
+text were independently compiled, verified, and reviewed by
+the author. Manuscript and figures are licensed CC-BY-4.0;
+code, Lean 4 kernel, and certificates are licensed MIT. Full
+source archive: https://github.com/lluiseriksson/o
+penai-tape-int-mult-certificates.
+3
+
+--- Page 4 ---
+References
+[1] V. E. Beneˇ s. Optimal rearrangeable multistage con-
+necting networks.Bell System Technical Journal,
+43(4):1641–1656, 1964.
+[2] L. I. Bluestein. A linear filtering approach to the com-
+putation of discrete Fourier transform.IEEE Trans-
+actions on Audio and Electroacoustics, 18(4):451–455,
+1970.
+[3] Richard P. Brent. Fast multiple-precision evaluation of
+elementary functions.Journal of the ACM, 23(2):242–
+251, 1976.
+[4] David Harvey and Joris van der Hoeven. Integer mul-
+tiplication in time O(nlogn ).Annals of Mathematics,
+193(2):563–617, 2021.
+[5] David Harvey and Joris van der Hoeven. Integer mul-
+tiplication is at least as hard as matrix transposition.
+In66th Annual IEEE Symposium on Foundations of
+Computer Science (FOCS), pages 1366–1381, 2025.
+[6] Russell Impagliazzo, Ramamohan Paturi, and Francis
+Zane. Which problems have strongly exponential com-
+plexity?Journal of Computer and System Sciences,
+63(4):512–530, 2001.
+[7] OpenAI. Euclidean geometry in the asymptotic spec-
+trum of tensors. OpenAI Math Release preprint
+OAI:Euclidean-geometry-in-the-asymptotic-s
+pectrum-of-tensors-November-24-2026 (unrefer-
+eed), November 2026.
+[8] OpenAI. The logarithmic exponent of integer multi-
+plication on tapes. OpenAI Math Release preprint
+OAI:The-logarithmic-exponent-of-integer-mul
+tiplication-on-tapes-November-24-2026 (unref-
+ereed), November 2026.
+[9] Volker Strassen. The asymptotic spectrum of ten-
+sors.Journal f¨ ur die reine und angewandte Mathematik,
+384:102–152, 1988.
+4
