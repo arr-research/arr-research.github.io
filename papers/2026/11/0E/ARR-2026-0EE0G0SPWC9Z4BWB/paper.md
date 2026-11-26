@@ -1,0 +1,498 @@
+# Sharp Stage Compression, Universal 5-Prime Witness Optimality, and Exact Per-Job Cut Thresholds for Pinwheel Scheduling PSPACE-Completeness
+
+**Author:** Lluis Eriksson  
+**AIRR Identifier:** `ARR-2026-0EE0G0SPWC9Z4BWB` (v1)  
+**License:** CC-BY-4.0 (manuscript), MIT (verification repository)  
+**Verification Repository:** https://github.com/lluiseriksson/pinwheel-pspace-sharp-gadgets-and-slack (`v1.0.0`)  
+**Canonical PDF SHA-256:** `2a22d43153372b29f53968e798c920eca59df72300760f0a04a35e8afff9cbda`
+
+## Abstract
+
+Fotakis, Kanellopoulos, Mitropoulos, Pagourtzis, Papadimitriou, Pergaminelis, and Tolias (arXiv:2611.34869v1) recently settled the 37-year-old open problem of Holte, Mok, Rosier, Tulchinsky, and Varvel (1989) by proving that Pinwheel Scheduling with binary deadlines is PSPACE-complete via a three-stage reduction: Periodic 3-SAT -> Daily Scheduling with Breaks (Stage 1) -> Daily Scheduling (Stage 2) -> Pinwheel Scheduling (Stage 3). We establish sharp structural optimality and quantitative compression across all three stages. First (Theorem 1), in Stage 1 we prove that strip high hour H = 5 and inter-region gap g = 3 are exact minimums (with executable counterexamples at H = 4 and g = 2), compressing daily width from w = 72N + 15 to w = 60N + 13 (a 16.7% linear reduction cascading as (5/6)^4 = 625/1296 approx 0.482 into the Stage-2 O((Mw)^4 log^2(Mw)) job count), and construct an optimal 4-day (1-neutral-block) write phase offering relative offsets ({1,2}, {2,4}, {0,3}, {0,4}) between boundary ordinary days {0,5}, cutting write-phase overhead by 75% (M = 8m + 32 -> 8m + 8) and proving the unconditional lower bound L >= 4 days across all write calendars at H = 5. Second (Theorem 2), in Stage 2 we prove a universal combinatorial number-theoretic lower bound: any pairwise-coprimality two-hour witness gadget (c_1,...,c_r) of arbitrary size r (even allowing arbitrary prime powers) whose coprimality graph satisfies chi(G) >= 3 and omega(G) <= 2 contains an induced odd cycle C_{2s+1} (s >= 2) whose (2s+1)(s-1) non-edges require at least ceil((2s+1)(s-1)/C(s,2)) = 5 distinct primes, proving K = lcm(c_v) >= 2*3*5*7*11 = 2310 unconditionally; moreover, solving the exact filler-minimization problem at K = 2310 proves that (6, 10, 55, 77, 21) (in complement-cycle C_5-bar order) with CRT phases (4, 5, 11, 56, 15) is the unique global optimum (798/2310 witness density, 3822 rigid fillers versus Fotakis et al.'s rank-9/12 tuple (14, 33, 10, 21, 55) with 4002 fillers, saving 180 rigid jobs per two-hour test). Third (Theorem 3), in Stage 3 we sharpen the density-slack and expected-deviation bounds from n*Delta to the moving-job weighted rate S_2 = sum_{delta_i > 0} delta_i / b_i^2 (since rigid jobs contribute identically zero) and prove an exact per-job total-variation cut theorem reducing the soundness day-length threshold from T > n(2E + 3) to the single-slot-tight bound T >= E + 1 (saving > 2n in the cut step alone and Omega(n^2 / w_mov) overall). All 18 core algebraic theorems are formally verified in constructive Lean 4.35.0 (0 sorry, 0 Classical.choice, 0 custom axioms), backed by 16 AST-audited zero-float SHA-256 certificates and 56 adversarial tests.
+
+## Full Extracted Text
+
+--- Page 1 ---
+Sharp Stage Compression, Universal 5-Prime Witness
+Optimality, and Exact Per-Job Cut Thresholds for
+Pinwheel Scheduling PSPACE-Completeness
+Lluis Eriksson∗
+November 26, 2026
+Abstract
+Fotakis, Kanellopoulos, Mitropoulos, Pagourtzis, Papadimitriou, Pergaminelis, and Tolias
+(arXiv:2611.34869v1) recently settled the 37-year-old open problem of Holte, Mok, Rosier,
+Tulchinsky, and Varvel (1989) by proving that Pinwheel Scheduling with binary deadlines
+isPSPACE-complete via a three-stage reduction: Periodic 3-SAT→Daily Scheduling with
+Breaks (Stage 1)→Daily Scheduling (Stage 2)→Pinwheel Scheduling (Stage 3). We estab-
+lish sharp structural optimality and quantitative compression across all three stages. First,
+in Stage 1 we prove that strip high hourH= 5and inter-region gapg= 3are exact mini-
+mums (with executable counterexamples atH= 4andg= 2), compressing daily width from
+w= 72N+ 15tow= 60N+ 13(a16.7%linear reduction cascading as(5/6) 4 = 625/1296≈
+0.482into the Stage-2O((Mw) 4 log2(Mw))job count), and construct an optimal 4-day (1-
+neutral-block) write phase offering relative offsets({1,2},{2,4},{0,3},{0,4})between bound-
+ary ordinary days{0,5}, cutting write-phase overhead by75%(M= 8m+ 32→8m+ 8)
+and proving the unconditional lower boundL≥4days across all write calendars atH= 5.
+Second, in Stage 2 we prove a universal combinatorial number-theoretic lower bound:any
+pairwise-coprimality two-hour witness gadget(c1,...,c r)of arbitrary sizer(even allowing
+arbitrary prime powers) whose coprimality graph satisfiesχ(G)≥3andω(G)≤2con-
+tains an induced odd cycleC2s+1 (s≥2) whose(2s+ 1)(s−1)non-edges require at least
+⌈(2s+ 1)(s−1)/
+(s
+2
+)
+⌉= 5distinct primes, provingK= lcm(c v)≥2·3·5·7·11 = 2310
+unconditionally; moreover, solving the exact filler-minimization problem atK= 2310proves
+that(6,10,55,77,21)(in complement-cycle C5 order) with CRT phases(4,5,11,56,15)is the
+unique global optimum (798/2310witness density,3822rigid fillers versus Fotakis et al.’s
+rank-9/12 tuple(14,33,10,21,55)with4002fillers, saving180rigid jobs per two-hour test).
+Third, in Stage 3 we sharpen the density-slack and expected-deviation bounds fromn∆to
+the moving-job weighted rateS2 = ∑
+i:δi>0 δi/b2
+i (since rigid jobs contribute identically zero)
+and prove an exact per-job total-variation cut theorem reducing the soundness day-length
+threshold fromT > n(2E+ 3)to the single-slot-tight boundT≥E+ 1(saving>2nin the
+cut step alone andΩ(n2/wmov)overall). All 18 core algebraic theorems are formally verified
+in constructive Lean 4.35.0 (0sorry, 0Classical.choice, 0 custom axioms), backed by 16
+AST-audited zero-float SHA-256 certificates and 56 adversarial tests.
+1 Introduction and Main Results
+InPinwheel Scheduling, introducedbyHolte, Mok, Rosier, Tulchinsky, andVarvel[2], wearegiven
+npositive integer deadlinesd1,...,d n in binary and ask whether there exists an infinite schedule
+S:Z→[n]∪{⊥}such that every jobioccurs in every window ofd i consecutive time slots. While
+∗Independent Researcher, AIRR Frontier Lab (h t t p s : / / a i r r . s c i e n ce). Developed under the
+AIRR-FOUNDER-1.0open-science standard with transparent Google Antigravity assistance; all mathematical proofs,
+Lean 4.35.0 formalizations, and zero-float exact rational certificates are machine-checked and publicly archived at
+https://github.com/lluiseriksson/pinwheel-pspace-sharp-gadgets-and-slack.
+1
+
+--- Page 2 ---
+Kawamura [3] proved the long-standing5/6density threshold conjecture and dense instances (ρ=
+1)wererecentlyshowntobe stronglyNP-complete[4, 5], the exactcomplexityof generalPinwheel
+Scheduling remained open for 37 years until Fotakis, Kanellopoulos, Mitropoulos, Pagourtzis,
+Papadimitriou, Pergaminelis, and Tolias [1] provedPSPACE-completeness for binary deadlines at
+arbitrary density1−ε<ρ<1.
+The reduction of Fotakis et al. [1] proceeds in three modular stages from Orlin’sPSPACE-
+complete Periodic 3-SAT [6]:
+1.Stage 1 (Section 3 of [1]):Periodic 3-SAT (Nvariables per copy,mclauses)→saturated
+Daily Scheduling with Breaks of widthw= 72N+15and calendar periodM= 4(2m+8) =
+8m+32, using strip high hourH= 6, inter-region gapg= 4, and a 16-day write waveform.
+2.Stage 2 (Section 4 of [1]):Saturated Daily Scheduling with Breaks→saturated Daily
+Scheduling without breaks, via5-witness two-hour tests with multipliers(14,33,10,21,55)
+(lcmK= 2310,4002rigid fillers per test) andO((Mw) 4 log2(Mw))total jobs.
+3.Stage 3 (Section 5 of [1]):Saturated Daily Scheduling (njobs, widthw, periodsb i, ascent
+boundsδi ≤∆)→Pinwheel Scheduling with dyadic clock of day lengthT=w2 k, requiring
+T >n(2E+ 3)withE= Ω(∆ + 1)(n(b ∗+ 1) +w)and density slack1−ρ≤n∆/T 2.
+Every stage leaves natural optimality questions open: Can the Stage-1 strip height, gap, and
+16-day write phase be compressed further, and what are their exact minimums? Is theK= 2310
+five-prime witness period unavoidable acrossallpossible two-hour witness graphs (not justC5
+and even with prime powers), and what is the minimum possible filler count atK= 2310? And
+can the quadratic blowup in the Stage-3 day lengthT(and dyadic clock heightk) be eliminated by
+exploiting rigid-job inactivity and per-job drift variation? We answer all three questions sharply.
+1.1 Statement of Main Theorems
+Theorem 1(Optimal Stage-1 Compression and Minimal 4-Day Write Phase).Given a Periodic
+3-SAT formulaF(X,Y)withNvariables per copy andmclauses, there is a polynomial-time
+reduction to a saturated Daily Scheduling with Breaks instance with periods in{1,2},4N+ 3
+available hours per day, width
+w= 60N+ 13 (vs.72N+ 15in [1]),(1)
+and calendar period
+M= 8m+ 8 (vs.8m+ 32in [1]),(2)
+realized by strip high hourH= 5, inter-region gapg= 3, middle spanW= 20N+ 2, guard offset
+G=W+ 3, and a single4-day neutral block per write phase offering active-strip offsets
+W4 =
+(
+{1,2},{2,4},{0,3},{0,4}
+)
+(3)
+aboveo σ on write daysf= 0,1,2,3(flanked by ordinary days{o σ,oσ + 5}on days−1and
+4). The instance is feasible if and only ifFis satisfiable. Moreover, all three parameters are
+unconditionally exact minimums within this framework:
+(a)Any inter-region gapg≤2permits a Type-II bank job (ascent bound2) to escape its strip,
+breaking Lemma 3.3 of [1].
+(b)Any strip high hourH≤4permits a Type-II job at a low porto σ to climboσ →oσ + 2→
+oσ + 4across rows0→1→2of a clause block, swapping the encoded bit and breaking
+Lemma 3.6(b) of [1].
+(c)Any write phase ofLdays flanked by ordinary hours{o σ,oσ + 5}that rewrites both bit
+transitions0↔1withH= 5requiresL≥4days (hence at least1neutral block), since a
+Type-I job flipping1→0must ascend by+5acrossL+ 1transitions, forcingL+ 1≥5.
+2
+
+--- Page 3 ---
+Theorem 2(Universal 5-Prime Witness Bound and Optimal Fillers).Letc 1,...,c r ∈Z ≥1 be
+any witness multipliers (r≥1, allowing arbitrary prime powers) withK:= lcm(c 1,...,c r), and
+letG= ([r],E)be their coprimality graph, whereuv∈Eiffgcd(c u,cv) = 1.
+(a) Universal 5-prime lower bound.IfGsatisfies adversarial-phase soundness (χ(G)≥3) and
+two-hour completeness (ω(G)≤2), thenKis divisible by at leastfive distinct primes,
+and hence
+K≥2·3·5·7·11 = 2310unconditionally.(4)
+(b) Unique global filler optimum atK= 2310.ForG ∼= C5 andK= 2310, every valid
+multiplier tuple is dominated by one of the12cyclic orderings of{2,3,5,7,11}along the
+complement5-cycle C5. Over all12orderings, the unique minimum rigid filler count
+2K− ∑4
+v=0 K/cv is achieved by the prime cycle(3,2,5,11,7)(equivalently(2,3,7,11,5)
+in reversed orientation), yielding inC5 vertex order
+(c0,...,c 4) = (6,10,55,77,21),(β 0,...,β 4) = (4,5,11,56,15),(5)
+with witness density798/2310 = 19/55and exactly3822rigid fillers per two-hour test
+(beating the runner-up at3838and Fotakis et al.’s rank-9/12tuple(14,33,10,21,55)at
+4002, saving180rigid jobs per test).
+Theorem 3(Moving-Rate Density Slack and Exact Per-Job Cut ThresholdT≥E+1).Consider
+any saturated Daily Scheduling instance of widthwwithnjobs(b i,δi)n
+i=1 (∑n
+i=1 1/bi =w,b ∗=
+maxibi,∆ = max iδi >0,L= lcm ibi). Define the moving-job weighted rates
+S1 :=
+∑
+i:δi>0
+δi
+bi
+, S 2 :=
+∑
+i:δi>0
+δi
+b2
+i
+≤wmov∆,(6)
+wherewmov := ∑
+i:δi>0 1/bi ≤w. For any dyadic day lengthT=w2 k >∆, letd i :=Tb i +δi and
+Ω :=Lwn + 6L+ 10. Then:
+(a) Sharp density slack and expected deviation.The output Pinwheel densityρsatisfies
+0<1−ρ=
+∑
+i:δi>0
+δi
+Tbi(Tbi +δi) < S2
+T2 ,(7)
+and every periodic feasible Pinwheel schedule admits a window ofΩTconsecutive slots whose
+total forward-gap deviation∑n
+i=1 Ei is at most
+Esharp :=
+⌊
+Ω
+(
+(b∗+ 1)S2 +S1 + ∆S2
+T
+)⌋
+≤
+⌊
+Ω
+(
+(b∗+ 2)S2 +S1
+)⌋
+.(8)
+(b) Exact per-job total-variation cut theorem.ForanyT≥E+ 1(where ∑n
+i=1 Ei ≤E), there
+exists a cut residueγ∈{0,...,T−1}such that consecutive occurrences of every payload job
+iin the window lie exactlybi days apart under the day partition{γ+tT,...,γ+(t+1)T−1}.
+Consequently, Stage-3 soundness holds for the leastk≥1withT=w2 k >max(∆,E sharp),
+improving Fotakis et al.’s thresholdT > n(2E+ 3)by a factor strictly exceeding2nin the
+cut step andΩ(n2/wmov)overall.
+(c) Single-slot tightness.The thresholdT≥E+ 1is exact: for everyT≥2, there exists a drift
+trajectory with total deviationE=Tthat forbids allTcut residues moduloT.
+3
+
+--- Page 4 ---
+2 Proof of Theorem 1: Optimal Stage-1 Compression
+Proof of Theorem 1.Letv= 2N,W= 10v+ 2 = 20N+ 2,G=W+ 3 = 20N+ 5,o=G+ 1 =
+20N+6, andoσ =o+10σforσ∈{0,...,v−1}. StripσownsR σ ={oσ,...,o σ+7}, with ordinary
+hourso σ (low) andoσ + 5(high); parking hours arep 1 =o+ 10v,p 2 =p 1 + 1,p 3 =p 1 + 2;
+lower and upper guard bands are{1,...,W+ 1}and{o+G,...,o+W+G}. The width is
+w=o+W+G= 3W+ 7 = 60N+ 13(Lean Theorem 1; Figure 1(b)), saving12N+ 2hours
+compared to72N+ 15and reducing the Stage-2 quartic factorw 4 by(5/6) 4 = 625/1296<1/2
+(Lean Theorem 10). Every consecutive pair of regions is separated by an exact gap of3(Lean
+Theorem 2):
+oσ+1 −(oσ+ 7) = 3, p 1 −(ov−1 + 7) = 3, o−(o+W−G) = 3,(o+G)−(o+W) = 3.
+Clause blocks retain the4-row structure of [1, Table 2] (row 0: lower guards; row 1: literal
+offersu r + 2; row 2: upper guards; row 3: parking). Each write phase uses asingleneutral
+block (4days,f= 0,1,2,3) offering{o σ +af,oσ +bf}fromW 4 = ({1,2},{2,4},{0,3},{0,4})
+on every active-bank strip, ordinary hours{oσ,oσ + 5}on every inactive-bank strip, and neutral
+parking/guard ports (Figure 1(a)). ThusM= 4m+ 4 + 4m+ 4 = 8m+ 8(Lean Theorem 4), and
+every day has2v+ 3 = 4N+ 3available hours, preserving exact saturation. Note that both day
+−1(row 3 of the last clause block, or day 3 of the other bank’s write ifm= 0) and day4(row 0
+of the next read phase, or day 0 of the other bank’s write) offer ordinary hours{oσ,oσ + 5}on
+the active bank.
+Completeness:Clause blocks schedule identically to [1, Lemma 3.2]: at the true literal port
+u∗∈{oσ∗ ,oσ∗ + 5}, the Type-II job movesu∗→u∗+ 2∈R σ∗ on row 1 (+2≤2) and descends
+tou∗on row 2. During a 4-day write of bankP, write(tII,tI)for the relative offsets aboveoσ on
+days−1,0,1,2,3,4. Every bit transition is realized legally with ascent bounds(2,1):
+0→0 : (0,5)→(2,1)→(4,2)→(0,3)→(0,4)→(0,5),
+0→1 : (0,5)→(2,1)→(4,2)→(3,0)→(4,0)→(5,0),
+1→0 : (5,0)→(2,1)→(4,2)→(0,3)→(0,4)→(0,5),
+1→1 : (5,0)→(2,1)→(4,2)→(3,0)→(4,0)→(5,0).
+Every step is verified directly in Lean Theorem 5 and CertificateC03, with a full end-to-end
+periodic simulation certified inC04.
+Soundness:Because every upward inter-region move costs at least3>2and every write-
+phase offer lies inside{oσ,...,o σ + 4}⊂R σ, Lemma 3.3 of [1] holds unchanged: every bank job
+remains forever in one strip, with exactly two bank jobs per strip. For Lemma 3.4, a filler on
+the even phase moving from lower guardu−Gto upper guardu ′+G(u,u ′ ∈[o,o+W]) has
+ascentu ′−u+ 2G≥2G−W=W+ 6> W(Lean Theorem 2), forcing both even period-2
+jobs to be companions and giving the exact checker/companion matching of Lemma 3.5. For
+Lemma 3.6(a), at portua =oσ the job atoσ on row 0 cannot reachoσ + 5(gap5>2) and must
+ascendo σ →o σ + 2(Type-II); atu a =o σ + 5the job ato σ cannot reachoσ + 7(gap7>2),
+forcing the job atoσ+ 5to ascend tooσ+ 7(Type-II). For Lemma 3.6(b), on row 1 the low-hour
+job is at most atoσ+2; on row 2 the strip offers{oσ,oσ+5}, and since(oσ+5)−(oσ+2) = 3>2,
+that job cannot reachoσ+ 5and returns tooσ, preserving the bit across every consecutive clause
+block of a read phase (and across the inactive bank’s write phase, where inactive strips offer
+ordinary hours on all4days). For Lemma 3.7(b), on day 0 of a write phase an active strip offers
+{oσ + 1,oσ + 2}, and on day 1 it offers{oσ + 2,oσ + 4}. Two Type-I jobs (ascent bound1) at
+{oσ + 1,oσ + 2}can reach at mostoσ + 3<o σ + 4, so neither can occupyoσ + 4on day 1 (Lean
+Theorem 5; CertificateC03). Hence every active strip contains a Type-II job, so every strip holds
+one Type-I and one Type-II job, and soundness follows identically to [1, Lemma 3.8].
+Minimality (a)–(c):(a) Ifg≤2, theno σ+1 −(oσ+ 7)≤2, permitting a Type-II job atoσ+ 7
+to enter stripσ+ 1. (b) IfH≤4, then on a clause block with low portua =oσ, a Type-II job at
+4
+
+--- Page 5 ---
+Figure 1: Optimal Stage-1 compression (Theorem 1). (a) The unconditionally minimal 4-day
+(1-neutral-block) write phaseW4 = ({1,2},{2,4},{0,3},{0,4})certifies Type-II presence on
+Day0→1while cutting write overhead by75%. (b) Daily width drops from72N+ 15to
+60N+ 13, reducing the Stage-2 quartic factorw4 by(5/6) 4 = 625/1296≈0.482.
+oσ on row 0 can move tooσ + 2on row 1 and then tooσ +H≤o σ + 4on row 2 (each step≤2,
+while Type-I stays atoσ + 4and descends too σ), flipping the stored bit without a write phase
+(Lean Theorem 3; CertificateC02). (c) To rewrite1→0across anL-day write phase flanked by
+ordinary hours{oσ,oσ + 5}on days−1andL, the Type-I job starts ato σ on day−1and must
+reachoσ+ 5on dayLinL+ 1transitions of ascent at most1each, forcingL+ 1≥5⇐⇒L≥4
+unconditionally (Lean Theorem 4; CertificateC03).
+3 Proof of Theorem 2: Universal 5-Prime Witness Optimality
+Proof of Theorem 2.Part (a).BecauseG= ([r],E)hasχ(G)≥3andω(G)≤2,Gis non-
+bipartite and triangle-free. LetC⊆Gbe a shortest odd cycle ofG; by minimality of length and
+triangle-freeness,C ∼= C2s+1 is aninducedsubgraph ofGfor some integers≥2. Its number of
+non-edges is (
+2s+ 1
+2
+)
+−(2s+ 1) = (2s+ 1)(s−1).
+For every primep|K, letS p :={v∈V(C) :p|c v}. Because every edgeuv∈E(C)satisfies
+gcd(cu,cv) = 1, no primepcan divide bothc u andc v for an edgeuv∈E(C). HenceS p is an
+independent setofC 2s+1, so|S p|≤α(C 2s+1) =s(independently of the exponent ofpinK).
+Consequently, each primep|Kcan dividegcd(c u,cv)for at most
+(|Sp|
+2
+)
+≤
+(s
+2
+)
+= s(s−1)
+2 non-edges
+ofC.
+By definition ofG, every non-edgeuv /∈E(C)satisfiesgcd(c u,cv)>1, hence is covered
+by at least one primep|K. Letω prime(K)be the number of distinct prime divisors ofK.
+Double-counting non-edges gives
+ωprime(K)· s(s−1)
+2 ≥(2s+ 1)(s−1).
+For everys≥2,4· s(s−1)
+2 = 2s(s−1)<(2s+ 1)(s−1)strictly (Lean Theorem 6; Figure 2(a);
+CertificateC05). Thereforeω prime(K)≥5. Since any five strictly increasing primes satisfy
+p1 ≥2,p 2 ≥3,p 3 ≥5,p 4 ≥7,p 5 ≥11, we obtainK≥2·3·5·7·11 = 2310(Lean Theorem 7).
+5
+
+--- Page 6 ---
+Table 1: Top, Fotakis et al., and worst cyclic prime assignments of{2,3,5,7,11}along C5
+(canonicalized withp 0 = 2; complete 12-row ranking in CertificateC06). Note that reversing
+(2,3,7,11,5)and shifting gives(3,2,5,11,7)↦→(6,10,55,77,21)in (5), and(10,55,33,21,14)is
+Fotakis et al.’s(14,33,10,21,55)re-indexed along C5.
+Rank Cyclic Prime Order ( C5) Multipliers(c 0, . . . , c4)Uses/2310Rigid Fillers vs. Baseline
+1(2,3,7,11,5) (6,21,77,55,10)798 3822−180
+2(2,3,11,7,5) (6,33,77,35,10)782 3838−164
+3(2,3,5,11,7) (6,15,55,77,14)776 3844−158
+9(2,5,11,3,7)[Fotakis et al.](10,55,33,21,14)618 40020
+12(2,7,5,3,11) (14,35,15,33,22)560 4060+58
+Part (b).FixG ∼= C5 (s= 2) andK= 2310 = 2·3·5·7·11. By Part (a), each of the
+five primesp∈{2,3,5,7,11}has|S p|≤α(C 5) = 2and therefore covers at most1of the5non-
+edges ofC5. Exhaustively enumerating all independent sets ofC5 and all5 5 = 3125assignments
+of the five primes confirms that covering all5non-edges forces a bijection (5! = 120covering
+assignments) onto the5edges of the complementC5 ∼= C5 (CertificateC08). Thus every vertex
+vmust be divisible by the product of the two primes assigned to its two incident non-edges;
+multiplying anycv by an additional prime or higher power strictly decreasesK/cv and increases
+the filler count2K− ∑
+vK/cv. Up to dihedral symmetry of C5, there are4!/2 = 12distinct
+cyclic orderings of{2,3,5,7,11}(Table 1; Figure 2(b)). Exhaustive evaluation (Lean Theorem 8;
+CertificateC06) proves that the cyclic order(3,2,5,11,7)(equivalently(2,3,7,11,5)in Table 1’s
+canonicalp 0 = 2orientation) uniquely maximizes ∑
+vK/cv at
+2310
+6 + 2310
+10 + 2310
+55 + 2310
+77 + 2310
+21 = 385 + 231 + 42 + 30 + 110 = 798,
+requiring2(2310)−798 = 3822rigid fillers versus4002for Fotakis et al.’s tuple(14,33,10,21,55)
+(listed inC5 order in [1], corresponding to(10,55,33,21,14)in C5 order, rank 9 of 12). Choosing
+distinct residues(0,1)modulo each shared prime and solving CRT for each vertex inC5 order
+(6,10,55,77,21)givesβ= (4,5,11,56,15): all5edges(0,2),(0,3),(1,3),(1,4),(2,4)ofC 5 are
+pairwise coprime with products dividing2310(exhaustively verified across all2927adversarial
+residue pairs(b u,bv)via CRT in CertificateC09), while all5non-edges are separated modulo
+2,5,11,7,3respectively (Lean Theorem 9; full 2310-day verification in CertificateC07).
+4 Proof of Theorem 3: Moving-Rate Slack and Exact Per-Job
+Cut Theorem
+Proof of Theorem 3.Part (a).By saturation (∑n
+i=1 1/bi =w) and clock density1−w/T,
+1−ρ= w
+T −
+n∑
+i=1
+1
+Tbi +δi
+=
+n∑
+i=1
+δi
+Tbi(Tbi +δi) =
+∑
+i:δi>0
+δi
+Tbi(Tbi +δi),
+since rigid jobs (δi = 0) contribute identically zero (Lean Theorem 12). Becauseδ i >0im-
+pliesTb i(Tbi +δi)> T 2b2
+i (Lean Theorem 11), summing over moving jobs yields (7) (Certifi-
+catesC10,C16).
+Now fix a periodic feasible Pinwheel schedule with periodΠand payload frequenciesfi ≥1/di
+satisfying ∑
+ifi ≤w/T[1, Lemma 5.4]. Then ∑n
+i=1(fi −1/di)≤1−ρ < S 2/T2. As in [1,
+Lemma 5.5], every forward gapg≤d i =Tb i +δi satisfies|g−Tb i| ≤(di −g) +δ i (Lean
+Theorem 13). Choosing a uniform random start among theΠslots of a period, the expected
+6
+
+--- Page 7 ---
+Figure 2: Universal witness optimality (Theorem 2). (a) For every induced odd cycleC 2s+1
+(s≥2),4primes cover at most2s(s−1)non-edges, strictly below(2s+ 1)(s−1), forcing
+K≥2310unconditionally. (b) Exact filler counts across all12cyclic orders of{2,3,5,7,11}at
+K= 2310.
+total deviation in a window ofΩTslots is bounded by
+ΩT
+n∑
+i=1
+(
+fidi −1 +f iδi
+)
+= ΩT
+
+
+n∑
+i=1
+di
+(
+fi −1
+di
+)
++
+∑
+i:δi>0
+δi
+di
++
+∑
+i:δi>0
+δi
+(
+fi −1
+di
+)
+.
+SinceT >∆givesmax idi ≤T(b ∗+ 1)and1/d i <1/(Tb i), the three terms are bounded
+respectively byΩT·T(b ∗+ 1)(S2/T2) = Ω(b∗+ 1)S2,ΩT·(S 1/T) = ΩS1, andΩT·∆(S 2/T2) =
+Ω∆S2/T <ΩS 2. Because total deviation is an integer, someΩT-slot window attains total
+deviation at mostEsharp in (8) (CertificateC11).
+Part (b).Fix anΩT-slot window with total deviation ∑n
+i=1 Ei ≤E < T, whereEi is the
+total deviation of payload jobiin the window. For each jobiwith occurrencesxi(0)<x i(1)<
+···<x i(mi)in the window, define its cumulative signed drift
+Di(ι) :=xi(ι)−
+(
+xi(0) +ιTbi
+)
+,0≤ι≤m i,
+soD i(0) = 0andTV(D i) = ∑mi−1
+ι=0 |Di(ι+ 1)−D i(ι)|=E i. Letm −
+i := minιDi(ι)≤0and
+m+
+i := maxιDi(ι)≥0, attained at indicesι −andι +. Applying the triangle inequality along the
+sub-walk betweenι−andι + (Lean Theorems 14–15; CertificateC15) yields
+span(Di) :=m+
+i −m−
+i =|Di(ι+)−D i(ι−)|≤TV(D i) =Ei.
+PutLi :=xi(0) +m−
+i andRi :=xi(0) +m+
+i , soRi−Li ≤Ei ≤E <T. Define the forbidden cut
+set for jobias
+Fi :=
+{
+(Li +s) modT: 1≤s≤R i −Li
+}
+⊆{0,...,T−1},
+which has cardinality|Fi|=R i−Li ≤Ei (noteFi =∅wheneverE i = 0). Taking the union over
+allnjobs gives ⏐⏐⏐⏐⏐
+n⋃
+i=1
+Fi
+⏐⏐⏐⏐⏐≤
+n∑
+i=1
+|Fi|≤
+n∑
+i=1
+Ei ≤E <T.
+By pigeonhole (Lean Theorem 16), there exists a residueγ∈{0,...,T−1}\ ⋃n
+i=1 Fi. Write
+Li −γ=q iT+r i withq i ∈Zand0≤r i < T. Becauseγ /∈F i, none ofL i + 1,...,R i
+is congruent toγ(modT), which impliesr i + (Ri −Li)< T. Hence for every0≤ι≤m i,
+7
+
+--- Page 8 ---
+Figure 3: Stage-3 soundness compression (Theorem 3). (a) Day-length reduction factor
+TFotakis/Tsharp from the exact per-job cut theorem alone (>2n) and combined with moving-
+rate slackS2 (illustrated atwmov = 20). (b) Conservative dyadic clock-level savings using the
+surrogate lower boundnc = (M1w1)2 across compiled instances (CertificateC14).
+Table 2: Summary of the 16 AST-audited zero-float cryptographic certificates (C01–C16) and
+Lean 4.35.0 formalization coverage.
+Certificates Verification Scope Lean 4
+C01–C04Stage-1 compression (w= 60N+ 13,M= 8m+ 8), sharpness, simulation Thms. 1–5, 10
+C05–C09Universal 5-primeK≥2310bound, 12-order ranking,C 5 2310-day & CRT checks Thms. 6–9
+C10–C11Stage-3 moving-rate slackS 2/T2 and sharpened Lemma 5.5 bound Thms. 11–13
+C12–C15Per-job cutT=E+ 1check,T=Etightness,span≤TV, clock savings Thms. 14–18
+C16Dyadic clock schedule (w= 2, T= 16): exact slack1/1056<1/1024<3/256Thms. 11–12
+writingoff :=D i(ι)−m −
+i ∈[0,R i −Li], we havex i(ι)−γ= (q i +ιbi)T+r i + off, whose
+exact Euclidean quotient moduloToverZisq i +ιbi (Lean Theorem 17; exhaustive verification
+in CertificateC12). Thus consecutive occurrences of every jobiin the window lie exactlyb i
+days apart, and Lemmas 5.7–5.9 of [1] complete Stage-3 soundness unchanged. Finally, for every
+n≥2,2n(E+ 1)<n(2E+ 3) + 1(Lean Theorem 18; Figure 3).
+Part (c).Fix anyT≥2and consider a single job withx(0) = 0,b 1 = 1, and occurrences
+x(ι) =ι(T+ 1)forι= 0,1,...,T, whose cumulative drift isD(ι) =x(ι)−ιT=ιwith total
+variationE=T. Its forbidden cut set isF 1 ={1,2,...,T}modT={0,...,T−1}of sizeT;
+indeed, for every cutγ∈{0,...,T−1}, the projected drift positionsx(ι)−ιT∈{0,...,T}span
+at least two distinct days, forcing some consecutive pair of occurrencesx(ι),x(ι+ 1)to fall2̸=b1
+days apart (CertificateC13). ThusT≥E+ 1is sharp to the single slot.
+5 Formal Verification and Exact Cryptographic Certificates
+All 18 core algebraic and combinatorial theorems of this work are formally verified in constructive
+Lean 4.35.0 (lean/PinwheelSharpReduction.lean, zerosorry, zeroClassical.choice, zero
+custom axioms, zero warnings, zero external dependencies) and backed by an AST-audited zero-
+float Python verifier (verification/verify_paper107.py) generating 16 SHA-256 certificates
+(C01–C16) and 56 adversarialpytestchecks (Table 2). The canonicalcertificates/MANIFES
+T.jsonSHA-256 digest is
+77d75d25e0e47b80c40539f796191ee85174c8a56fd52d75ba295e8a24f8f422.
+8
+
+--- Page 9 ---
+Reproducibility and Governance
+All Lean 4 proofs, zero-float verification scripts, cryptographic certificates, figure scripts, and the
+manuscript source are publicly released under dual licensing (MIT for code/Lean/certificates;
+CC-BY-4.0 for manuscript and figures) athttps://github.com/lluiseriksson/pinwheel-p
+space-sharp-gadgets-and-slack(v1.0.0). Full replay requires only Lean 4.35.0 (cd lean &&
+lake build) and Python 3.10+ (python verification/verify_paper107.py && pytest -q).
+References
+[1] D. Fotakis, S. Kanellopoulos, G. Mitropoulos, A. Pagourtzis, C. Papadimitriou,
+C. Pergaminelis, and T. Tolias,Pinwheel scheduling is PSPACE-complete, preprint (2026),
+https://arxiv.org/abs/2611.34869.
+[2] R. Holte, A. Mok, L. E. Rosier, I. Tulchinsky, and D. A. Varvel,The pinwheel: A real-time
+scheduling problem, Proc. 22nd Annual Hawaii Int. Conf. on System Sciences, Vol. II (1989),
+693–702.
+[3] A. Kawamura,Proof of the density threshold conjecture for pinwheel scheduling, Proc. 56th
+ACM STOC (2024), 1816–1819; journal version, Proc. Natl. Acad. Sci. USA123(2026),
+e2530214123.
+[4] R. Kleinberg and A. Mishra,NP-hardness and a PTAS for the pinwheel problem, Proc. 67th
+IEEE FOCS (2026),https://arxiv.org/abs/2604.13974.
+[5] Y. Kobayashi, B. Lin, and J. Swernofsky,Dense pinwheel packing is strongly NP-complete,
+preprint (2026),https://arxiv.org/abs/2609.20075.
+[6] J. B. Orlin,The complexity of dynamic languages and dynamic optimization problems, Proc.
+13th ACM STOC (1981), 218–227.
+9

@@ -1,0 +1,648 @@
+# Complete Classification of Positive-Slope Relative-Bound Equiangular Line Families, Exact Fixed-Angle Thresholds, and Consecutive-Dimension Extensions
+
+**Author:** Lluis Eriksson  
+**AIRR Identifier:** `ARR-2026-58TN0DDHG58SC8QX` (v1)  
+**License:** CC-BY-4.0 (manuscript), MIT (verification repository)  
+**Verification Repository:** https://github.com/lluiseriksson/equiangular-lines-sharp-fixed-angle-families (`v1.0.0`)  
+**Canonical PDF SHA-256:** `ee0d9795f301d26b58d842ea9c78ea570b08e9c6a1b77fc0e8c6c74222770ae4`
+
+## Abstract
+
+Djaljapayan, Liao, and Yu (arXiv:2611.34855v1, Section 5) combine repeated-Seidel-block constructions with the Bukh-Cox coherence bound to establish exact fixed-angle values N_{1/q}(d) = d + k on linearly growing intervals of consecutive dimensions for k = 7 (all odd q >= 319) and k = 23 (all odd q >= 5599), together with a single-dimension quadratic-irrational family from symmetric conference matrices (Theorem 5.2) and two isolated values at cosine 1/7 (Proposition 5.3). We systematically complete and sharpen every component of that program. First (Theorem 1), we prove an exact linear-in-a classification theorem showing that among all nontrivial relative-bound two-eigenvalue equiangular seeds (k, M, a) (2 <= k <= a^2 - 2, M <= k(k+1)/2), positive Bukh-Cox interval slope L_k > M/b holds if and only if k in {3, 5, 6, 7} for a = 3 and exclusively k in {a^2 - 3, a^2 - 2} for every odd a >= 5; moreover, the submaximal branch k = a^2 - 3 always yields an exact rational Bukh-Cox constant L_{a^2-3} = (a^2-2)(a+1)/((a-1)(a+2)) and exact rational slope a(a+1)/((a-1)(a+2)(a^2+a-3)). Second (Theorem 2), by proving the exact alternating-character eigenvalue range lambda_alt(A) in {-3, -2, -1, 0, 1} for every even-order circulant A (sharpening Q - 2r to Q - 6), replacing the crude r < t bound with r <= b - 1, and constructing explicit {+-1}^M seed eigenvectors S v = -a v that enable odd-t block repetitions with constant Schur ratio rho = k/a, we obtain four new infinite fixed-angle families missed in arXiv:2611.34855v1 -- Tetrahedron k = 3 (q >= 7), Petersen k = 5 (q >= 155; q >= 11 for q = 3 mod 4), Clebsch k = 6 (q >= 161; q >= 89 for q = 1 mod 4), and Higman-Sims k = 22 (q >= 8643) -- while sharpening both existing thresholds (k = 7: 319 -> 245, and 125 for q = 1 mod 4; k = 23: 5599 -> 5267) and uncovering exact zero-gap adjacent-dimension contact d_+^(6) + 1 = d_-^(7) (10 | Q) and d_+^(22) + 1 = d_-^(23) (112 | Q, with single-point +2 jump for all 56 | Q). Third (Theorem 3), we upgrade Theorem 5.2 from a single dimension d = mt - m/2 to an entire consecutive interval of length (sqrt(m^2 + 2m) - m)t + O(1) for every even t >= 2, generalize Proposition 5.3 to infinite s in {2, 3} relative-bound block windows for every odd q >= 5 (catching exact Pell jumps at (q, d) = (15, 25) and (35, 49)), and prove an exact s >= 4 impossibility barrier for all nontrivial (s >= 2) block constructions. All 18 core algebraic theorems are formally verified in constructive Lean 4.35.0 (0 sorry, 0 Classical.choice, 0 custom axioms) and backed by 16 AST-audited zero-float SHA-256 certificates and 56 adversarial tests.
+
+## Full Extracted Text
+
+--- Page 1 ---
+Complete Classification of Positive-Slope
+Relative-Bound Equiangular Line Families, Exact
+Fixed-Angle Thresholds, and Consecutive-Dimension
+Extensions
+Lluis Eriksson∗
+November 26, 2026
+Abstract
+Djaljapayan, Liao, and Yu (arXiv:2611.34855v1, Section 5) combine repeated-Seidel-
+block constructions with the Bukh–Cox coherence bound to establish exact fixed-angle values
+N1/q(d) =d+kon linearly growing intervals of consecutive dimensions fork= 7(all odd
+q≥319) andk= 23(all oddq≥5599), together with a single-dimension quadratic-irrational
+familyfromsymmetricconferencematrices(Theorem5.2)andtwoisolatedvaluesatcosine1/7
+(Proposition 5.3). We systematically complete and sharpen every component of that program.
+First, we prove an exact linear-in-aclassification theorem showing that among all nontrivial
+relative-bound two-eigenvalue equiangular seeds(k,M,a)(2≤k≤a 2 −2,M≤
+(k+1
+2
+)
+),
+positive Bukh–Cox interval slopeLk >M/bholds if and only ifk∈{3,5,6,7}fora= 3and
+exclusivelyk∈{a 2−3,a2−2}foreveryodda≥5; moreover, thesubmaximalbranchk=a 2−3
+always yields an exact rational Bukh–Cox constantLa2−3 = (a2−2)(a+1)
+(a−1)(a+2) and exact rational
+slope a(a+1)
+(a−1)(a+2)(a2+a−3) . Second, by proving the exact alternating-character eigenvalue range
+λalt(A)∈{−3,−2,−1,0,1}for every even-order circulantA(sharpeningQ−2rtoQ−6),
+replacing the cruder < tbound withr≤b−1, and constructing explicit{±1} M seed
+eigenvectorsSv=−avthat enable odd-tblock repetitions with constant Schur ratioρ=k/a,
+we obtain four new infinite fixed-angle families missed inarXiv:2611.34855v1—Tetrahedron
+k= 3(q≥7), Petersenk= 5(q≥155;q≥11forq≡3 (mod 4)), Clebschk= 6(q≥161;
+q≥89forq≡1 (mod 4)), and Higman–Simsk= 22(q≥8643)—while sharpening both
+existing thresholds (k= 7:319→245, and125forq≡1 (mod 4);k= 23:5599→5267)
+and uncovering an exact zero-gap adjacent-dimension contactd(6)
++ + 1 =d(7)
+− (10|Q) and
+d(22)
++ + 1 =d(23)
+− (112|Q, with single-point+2jump for all56|Q). Third, we upgrade
+Theorem 5.2 from a single dimensiond=mt−m/2to an entire consecutive interval of length
+(
+√
+m2 + 2m−m)t+O(1)for every event≥2, generalize Proposition 5.3 to infinites∈{2,3}
+relative-bound block windows for every oddq≥5(identifying exact Pell-equation boundary
+jumps such as(q,d) = (15,25)and(35,49)), and prove an exacts≥4impossibility barrier
+for all nontrivial (s≥2) block constructions. Every algebraic theorem is formally proved in
+constructive Lean 4.35.0 (18 theorems, 0sorry, 0Classical.choice, 0 custom axioms) and
+backed by 16 AST-audited zero-float SHA-256 certificates and 56 adversarial tests.
+1 Introduction and Main Results
+LetN α(d)denote the maximum cardinality of a system of real equiangular lines inR d with
+prescribed common cosineα∈(0,1), where the lines are permitted to span a proper subspace of
+∗Independent Researcher, AIRR Frontier Lab (h t t p s : / / a i r r . s c i e n ce). Developed under the
+AIRR-FOUNDER-1.0open-science standard with transparent Google Antigravity assistance; all mathematical proofs,
+Lean 4.35.0 formalizations, and zero-float exact rational certificates are machine-checked and publicly archived at
+https://github.com/lluiseriksson/equiangular-lines-sharp-fixed-angle-families.
+1
+
+--- Page 2 ---
+Rd. While Jiang, Tidor, Yao, Zhang, and Zhao [4] determinedNα(d)for every fixedαoncedis
+sufficiently large, the linear-scaling regime in whichdgrows proportionally toq= 1/αexhibits
+rich extremal geometry governed by finite two-eigenvalue Seidel matrices [5, 3, 1].
+In Section 5 of their recent breakthrough resolvingN(18) = 57,N(19) = 72, andN(20) = 90,
+Djaljapayan, Liao, and Yu [2] (hereafter DLY) introduced a repeated-Seidel-block construction
+paired with the real coherence bound of Bukh and Cox [1] to prove three fixed-angle results:
+1.DLY Theorem 5.1:N 1/q(d) =d+ 7on an explicit interval[d−,d+]for every oddq≥319,
+andN 1/q(d) =d+ 23on[d −,d+]for every oddq≥5599, built from the28-lineE 7/T(8)
+seed inR7 and the276-line Leech seed inR23.
+2.DLY Theorem 5.2:For any real symmetric conference matrix of ordermwithm−1non-
+square and any integert≥2, atq=t(1 + √m−1)−1one hasN 1/q(mt−m/2) =mtat
+the single dimensiond=mt−m/2.
+3.DLY Proposition 5.3:At cosine1/7,N 1/7(10) = 12andN1/7(11) = 13, via three blocks of
+J4 and one optional singleton.
+A natural structural question arises immediately:Which relative-bound equiangular seeds can
+generate positive-slope fixed-angle intervals under Bukh–Cox, how sharp can the odd-denominator
+thresholds be made, and do the conference-matrix and block-diagonal constructions also yield
+linearly growing intervals of consecutive dimensions?We give complete, exact answers to all
+three questions.
+1.1 Statement of Main Theorems
+Recall that a real equiangular line system ofMlines inRk with common cosine1/a(a≥3odd,
+k<a 2) attains the van Lint–Seidel relative bound [6] precisely when
+M= k(a2 −1)
+a2 −k , b:= a(k−1)
+a2 −k + 1,(1)
+in which case its Seidel matrixS∈{0,±1} M×M has exactly two eigenvalues:b−1with multi-
+plicitykand−awith multiplicityM−k. For excessh=k+ 1, the Bukh–Cox real coherence
+constant [1, Theorem 2(a)] is
+βk+1 = k
+√
+k+ 3 + 2
+(k+ 1)(k+ 2), L k := 1
+βk+1
+= (k+ 1)(k+ 2)
+k
+√
+k+ 3 + 2.(2)
+Any system ofn=d+k+ 1lines of cosine1/qinR d satisfiesn≥L kQ, whereQ:=q+ 1;
+thusd+k+ 1< L kQimpliesN 1/q(d)≤d+k. On the other hand, repeating anM-line seed
+t≈Q/btimes yieldsMt≈(M/b)Qlines in dimensionMt−k, so a linearly growing interval of
+consecutive dimensions exists precisely whenLk >M/b.
+Theorem 1(Complete Classification of Positive-Slope Relative-Bound Seeds).Leta≥3be an
+odd integer and letk∈Zsatisfy1≤k<a 2. DefineMandbby(1). Then:
+(a)The ratioM/bsimplifies identically toM/b= k(a+1)
+k+a . Moreover, for every integerk≥3
+and every reala≥3, settings:=
+√
+k+ 3,
+Lk > k(a+ 1)
+k+a ⇐⇒a<a crit(k) :=s+ s(s+ 1)
+k2 −s−1 .(3)
+(b)Among all nontrivial integer parameter triples(k,M,b)with2≤k≤a 2 −1satisfying the
+Gerzon boundM≤
+(k+1
+2
+)
+, positive slopeLk >M/bholdsif and only if:
+{
+k∈{3,5,6,7}whena= 3,
+k∈{a 2 −3, a2 −2}whena≥5is odd.
+2
+
+--- Page 3 ---
+In particular,k= 2always fails integrality ofM(2(a2−1)≡2 (moda 2−2)), andk=a 2−1
+always violates the Gerzon bound (M= (a2 −1) 2 >
+(a2
+2
+)
+).
+(c)For every odda≥3, the submaximal branchk=a 2 −3yields anexact rationalBukh–Cox
+constant and anexact rationalpositive interval slope:
+La2−3 = (a2 −2)(a+ 1)
+(a−1)(a+ 2) , L a2−3 −M
+b = a(a+ 1)
+(a−1)(a+ 2)(a 2 +a−3) >0.(4)
+All six parameter sets witha∈{3,5}in Theorem 1(b) are realized by classical two-eigenvalue
+equiangular line systems: the regular tetrahedron (k= 3,M= 4), the Petersen conference config-
+uration (k= 5,M= 10), the Clebsch configuration (k= 6,M= 16), theE7/T(8)configuration
+(k= 7,M= 28), the Higman–Sims configuration (k= 22,M= 176), and the Leech/Co 3 con-
+figuration (k= 23,M= 276). Our second theorem unlocks all six simultaneously and sharpens
+every threshold.
+Theorem 2(Exact Alternating Bound, Seed-Eigenvector Extension, and Six Sharp Families).
+LetS∈{0,±1} M×M be the Seidel matrix of a relative-bound seed(k,M,a,b)withbeven, let
+q≥3be odd,Q:=q+ 1, and for an integert≥⌈Q/b⌉setr:= (bt−Q)/2.
+(a) Exact alternating-character eigenvalue.For every event≥2and every0≤r < t, the
+r-regular circulantA= Circ(t;±1,...,±⌊r/2⌋,[t/2])satisfies
+λalt(A) =
+{
+−2⌊r/2⌋odd
+0⌊r/2⌋even +
+{
+(−1)t/2 rodd
+0reven ∈{−3,−2,−1,0,1}.(5)
+Hencez alt =1 M ⊗(1,−1,...,1,−1) T satisfiesGz alt =λz alt withλ≥Q−6, andG=
+QIMt −(S+I M)⊗Jt+ 2IM ⊗Ais positive semidefinite of rankMt−kwhenever0≤r<t
+andQ>2r. In particular, whenevertis chosen as the minimal even integer≥⌈Q/b⌉, we
+haver≤b−1, so the conditionQ>2rholds automatically for allt≥4even whenb≤4
+(with0≤r<tremaining as an explicit condition).
+(b) Seed-eigenvector odd-textension.WheneverSadmits a vectorv∈{±1} M withSv=−av,
+then foreveryr-regular graphAontvertices (even or oddt, requiring only0≤r<tand
+rteven),z v :=v⊗1 t ∈{±1}Mt satisfies
+Gzv =λvzv, λ v = aM
+k t, ρ v := zT
+v zv
+λv
+= k
+a,(6)
+completely independent oft,r, andA. Explicit{±1} M eigenvectors exist for all foura= 3
+seeds (k∈{3,5,6,7}).
+(c) Six exact infinite fixed-angle families.Defined−:=Mt−kandd + :=⌈LkQ⌉−k−2(so
+d+ +k+ 1<L kQstrictly, handling rationalL k without divisibility exceptions). Taking the
+smallestt≥⌈Q/b⌉with0≤r<tandrteven (eventfork∈{22,23}), we have
+N1/q(d) =d+kfor alld∈[d −,d+]
+for every oddq≥q 0(k)in Table 1, with interval length(Lk −M/b)Q+O(1).
+(d) Zero-gapadjacentcontact.Whenever10|Q(q≡9 (mod 10)),d (6)
++ +1 =d(7)
+− = 28(Q/10)−
+7; whenever112|Q(q≡111 (mod 112)),d (22)
++ + 1 =d(23)
+− = 276(Q/56)−23(and even for
+Q≡56 (mod 112), the unborderedr= 0,u= 0Gram matrix at oddt=Q/56yields the
+single-point+2jumpN 1/q(d(22)
++ + 1) = (d(22)
++ + 1) + 23). Thus, for all sufficiently largeqin
+these progressions,N1/q(d)undergoes an exact+2jump across adjacent dimensions from
+d+a 2 −3to(d+ 1) +a 2 −2.
+3
+
+--- Page 4 ---
+Table 1: Complete catalogue of all six realized relative-bound positive-slope fixed-angle families
+(a∈{3,5}). Bold entries denote new families or strictly sharpened odd-denominator thresholds
+relative to DLY [2, Theorem 5.1].
+kSeed (a)M b L k M/bSlope DLYq 0 All oddEven-tBest mod4
+3Tetrahedron (3) 4 2 20
+3
+√
+6+2 2 +0.1394—7357(3mod4)
+5Petersen (3) 10 4 21
+5
+√
+2+1 5/2 +0.1019—15515511(3mod4)
+6Clebsch (3) 16 614/58/3 +2/15—16120789(1mod4)
+7E 7/T(8)(3) 28 10 72
+7
+√
+10+2 14/5 +0.1831319245 263 125(1mod4)
+22Higman–Sims (5) 176 3669/1444/9 +5/126—864386438359(3mod4)
+23 Leech/Co3 (5) 276 56 600
+23
+√
+26+2 69/14 +0.101755995267 5267 5159(3mod4)
+Our third theorem upgrades the remaining two fixed-angle results of DLY [2, Sections 5.2–5.3].
+Theorem 3(Consecutive-Dimension Extensions Beyond Bukh–Cox).
+(a) Quadratic-irrational consecutive intervals (upgrading DLY Theorem 5.2).LetCbe a real
+symmetric conference matrix of orderm≥6such thatm−1is not a square. For every
+evenintegert≥2, setq:=t(1 + √m−1)−1and
+umax(m,t) := max
+{
+u∈Z ≥0 : (mt+u+ 1)2 <m2t2 + 2mt2}
+=
+⌈
+t
+√
+m2 + 2m
+⌉
+−mt−2.(7)
+Then
+N1/q(d) =d+ m
+2 for everyd∈
+[
+mt− m
+2 , mt−m
+2 +umax(m,t)
+]
+.
+In particular, the interval has length(
+√
+m2 + 2m−m)t+O(1)(and length at leastt−1
+whenevert≤2m), strictly generalizing DLY Theorem 5.2 (u= 0) for all event≥4.
+(b) Infinite relative-bound block windows ands≥4barrier (generalizing DLY Proposition 5.3).
+For every odd integerq≥5:
+N1/q(d) =d+ 1for alld∈Zwithq≤dandd(d+ 1)<2q 2,(8)
+N1/q(d) =d+ 2for alld∈Zwith 3q−1
+2 ≤dand(d+ 1) 2 <3q2 + 1.(9)
+The strict inequalities in(8)–(9)are sharp: whenever Pell equalityd(d+ 1) = 2q2 (first odd
+instanceq= 35,d= 49) or(d+ 1) 2 = 3q2 + 1(first odd instanceq= 15,d= 25) occurs, the
+relative bound jumps strictly tod+s. Conversely, for everys≥4and every oddq≥3, the
+s-block lower endpointd= s(q−1)
+2 + 1satisfiesd 2 + (s−1)d>sq 2, so wheneverd<q 2 the
+relative bound strictly exceedsd+s−1; thus nontrivial (s≥2) block-diagonal constructions
+meet the relative boundif and only ifs∈{2,3}.
+2 Proof of Theorem 1: Positive-Slope Classification
+Proof of Theorem 1.Part (a).Clearing denominators in (1),M(a2 −k) =k(a2 −1)andb(a 2 −
+k) =a(k−1) + (a2 −k) = (a−1)(k+a). Sincea 2 −1 = (a−1)(a+ 1)anda>1,
+M
+b = k(a−1)(a+ 1)
+(a−1)(k+a) = k(a+ 1)
+k+a .
+Using (2),Lk >M/bis equivalent to(k+ 1)(k+ 2)(k+a)>k(a+ 1)(k
+√
+k+ 3 + 2). Expanding
+the left side gives the exact algebraic identity (Lean Theorem 6)
+(k+ 1)(k+ 2)(k+a)−2k(a+ 1) =k 2(k+ 3) +a(k2 +k+ 2).(10)
+4
+
+--- Page 5 ---
+Lets:=
+√
+k+ 3, sok+ 3 =s2 andk 2 +k+ 2 =k2 +s2 −1. Subtractingk 2(a+ 1)sfrom (10),
+Lk > M
+b ⇐⇒k 2s(s−1)>a
+(
+k2(s−1)−(s 2 −1)
+)
+=a(s−1)(k 2 −s−1).
+Fork≥3we haves=
+√
+k+ 3≥
+√
+6>1andk 2 −s−1≥9−
+√
+6−1>5>0. Dividing both
+sides by(s−1)(k 2 −s−1)>0gives
+a< k2s
+k2 −s−1 =s+ s(s+ 1)
+k2 −s−1 =acrit(k),
+establishing (3).
+Part (b).First handle the boundary cases. Atk= 2,2(a 2 −1) = 2(a2 −2) + 2, and
+a2 −2≥7>2for alla≥3, soM= 2(a 2 −1)/(a2 −2)/∈Z(Lean Theorem 3). Atk=a 2 −1,
+M= (a2 −1) 2, whereas
+(k+1
+2
+)
+= 1
+2 a2(a2 −1)<(a 2 −1) 2 for alla≥2sincea 2 <2(a2 −1)(Lean
+Theorem 2), violating the Gerzon bound.
+Now consider3≤k≤a 2 −2. Ifk∈{a 2 −3,a 2 −2}, thens=
+√
+k+ 3≥a, and since
+s(s+ 1)/(k2 −s−1)>0, (3) givesa<a crit(k), henceLk >M/bunconditionally. Moreover, for
+every odda≥5, both branches yield integer Gerzon-valid parameters: atk=a 2 −2,a 2 −k= 2
+divides botha 2 −1andk−1 =a 2 −3(sinceais odd), givingM=
+(a2−1
+2
+)
+=
+(k+1
+2
+)
+and
+b= a(a2−3)
+2 + 1∈Z; atk=a 2 −3,a 2 −k= 3dividesa 2 −1whenever3∤a, and when3|a
+it dividesk=a 2 −3andadirectly, soM= (a2−3)(a2−1)
+3 ∈Zandb= a(a2−4)
+3 + 1∈Z, with
+M≤
+(k+1
+2
+)
+⇐⇒2(a 2 −1)≤3(a 2 −2)⇐⇒a 2 ≥4. Whena= 3, the remaining integers
+in[3,7]arek∈{3,4,5,6,7}; herek= 4fails integrality (M= 32/5), whereask∈{3,5,6,7}
+all yield integer(M,b)satisfyingM≤
+(k+1
+2
+)
+anda crit(k)>3(Lean Theorems 9–10; explicitly
+acrit ≈3.972,3.340,3.375,3.456).
+Suppose finally thata≥5is odd and3≤k≤a 2 −4. We provea>a crit(k)in two regimes:
+•Low regime3≤k≤21:Sincea≥5, it suffices thata crit(k)<5, equivalently(k 2(k+ 3) +
+5(k2 +k+ 2)) 2 <36k 4(k+ 3). This holds for all19integers3≤k≤21, with maximum
+acrit(21)≈4.9654<5(Lean Theorem 8; CertificateC01).
+•High regimek≥22:Heres=
+√
+k+ 3≥5andk≤a 2 −4impliesa≥
+√
+k+ 4 =
+√
+s2 + 1.
+For every reals>0,
+(
+s+ 1
+2s+ 1
+)2
+=s2 + 2s
+2s+ 1 + 1
+(2s+ 1)2 =s2 + 4s2 + 2s+ 1
+4s2 + 4s+ 1<s2 + 1,
+soa>s+ 1
+2s+1 . Meanwhile, sincek=s 2 −3,
+(k2 −s−1)−s(s+ 1)(2s+ 1) =s 4 −2s3 −9s2 −2s+ 8 =s2(s2 −2s−9)−2s+ 8.
+Foreveryreals≥5,s 2−2s−9 = (s−1)2−10≥6, sotheexpressionisatleast6s 2−2s+8>0
+(Lean Theorem 7 for integers). Therefore s(s+1)
+k2−s−1 < 1
+2s+1 , givingacrit(k)< s+ 1
+2s+1 < a,
+and henceLk <M/b.
+Part (c).Atk=a 2 −3, we have
+√
+k+ 3 =a∈Z, and the denominator factors identically
+as(a2 −3)a+ 2 = (a−1)2(a+ 2)(Lean Theorem 4). Since(k+ 1)(k+ 2) = (a2 −2)(a−1)(a+ 1),
+cancelling(a−1)yieldsL a2−3 = (a2−2)(a+1)
+(a−1)(a+2) . SubtractingM/b= (a2−3)(a+1)
+a2+a−3 and applying the
+exact identity(a2 −2)(a2 +a−3) = (a2 −3)(a−1)(a+ 2) +a(Lean Theorem 5) immediately
+gives (4).
+5
+
+--- Page 6 ---
+Figure 1: Complete classification of positive-slope relative-bound equiangular seeds (Theorem 1).
+(a) The exact linear-in-acurveacrit(k)lies strictly below
+√
+k+ 4for allk≥13and below5for
+all3≤k≤21, isolatingk∈{3,5,6,7}ata= 3and exclusivelyk∈{a 2 −3,a2 −2}for every odd
+a≥5. (b) Exact rational interval slopes atk=a 2 −3versus their maximal partnersk=a 2 −2.
+3 Proof of Theorem 2: Sharp Alternating Bounds, Seed Eigen-
+vectors, and Six Infinite Families
+3.1 Explicit Realizations of All Six Seeds and{±1}M Eigenvectors
+We recall the six realized relative-bound seeds fora∈{3,5}and exhibit exact{±1}M eigenvectors
+Sv=−avfor all foura= 3seeds (certified inC03–C04):
+•Tetrahedron (k= 3,M= 4,a= 3,b= 2):S 4 =I 4 −J4 has eigenvalues1 3,(−3) 1, and
+v4 =1 4 satisfiesS 4v4 =−3v4.
+•Petersen (k= 5,M= 10,a= 3,b= 4):S 10 =J 10 −I10 −2A(Pet)is a symmetric
+conference matrix of order10withS 2
+10 = 9I10 (eigenvalues3 5,(−3) 5). Splitting the10
+vertices into the outer5-cycle (+1) and inner5-star (−1) givesv 10 = (15,(−1) 5)with
+S10v10 =−3v10.
+•Clebsch (k= 6,M= 16,a= 3,b= 6):Take the16vectorsu∈{±1} 6 withu 0 = +1and
+even number of−1entries; pairwise inner products are±2, givingS 16 = 1
+2 (UUT −6I16)
+with eigenvalues56,(−3) 10. The characterv16(u) :=u1u2 ∈{±1}satisfies ∑
+uv16(u)u= 0
+inR 6, henceS16v16 =−3v16.
+•E 7/T(8)(k= 7,M= 28,a= 3,b= 10):Take the28centered edge indicatorsw e =
+41e−1 8 ∈1 ⊥
+8 ∼= R7 fore∈
+([8]
+2
+)
+, givingS28 with eigenvalues97,(−3) 21. LetH⊂K 8 be the
+3-regular cube graphQ3 (12edges) and setv 28(e) = +1fore∈E(Q 3)and−1otherwise.
+At every vertexx∈[8], ∑
+ev28(e)(41e(x)−1) = 4(3−4)−(12−16) = 0, soS28v28 =−3v28.
+•Higman–Sims (k= 22,M= 176,a= 5,b= 36) and Leech/Co 3 (k= 23,M=
+276,a= 5,b= 56):From the extended binary Golay codeG 24 (weight enumerator
+1 + 759y8 + 2576y12 + 759y16 +y24), puncturing at coordinate0yields the253heptads of
+S(4,7,23), which together with the23point vectors form the276-line Leech Seidel matrix
+S276 satisfying(S276 −55I)(S276 + 5I) = 0. Restricting to the176heptads avoiding a fixed
+coordinatex∈{1,...,23}yields the regular Higman–Sims Seidel matrixS 176 satisfying
+(S176 −35I)(S176 + 5I) = 0andS1761176 = 351176.
+6
+
+--- Page 7 ---
+3.2 Proof of Theorem 2
+Proof of Theorem 2.Part (a).Fix event≥2and0≤r < t, and letAbe ther-regular
+circulantCirc(t;±1,...,±⌊r/2⌋,[t/2]). Evaluating the alternating characterχ(j) = (−1) j on its
+generating set gives
+λalt(A) = 2
+⌊r/2⌋∑
+d=1
+(−1)d + (rmod 2)(−1)t/2.
+The first sum equals−2when⌊r/2⌋is odd and0when it is even, while the second term lies
+in{−1,0,1}, proving (5) (Lean Theorem 11; CertificateC05). On block-constant vectors,G=
+QIMt −(S+I M)⊗J t + 2IM ⊗Aacts as(Q+ 2r)I M −t(S+I M) =t((b−1)I M −S)⪰0with
+k-dimensional kernel. On block-sum-zero vectors,Gacts asQIMt + 2IM ⊗A, whose eigenvalues
+are at leastQ−2rsince∥A∥≤r. HenceG⪰0of rankMt−kwhenever0≤r<tandQ>2r.
+Becausez alt is block-sum-zero,Gzalt = (Q+ 2λalt(A))zalt with eigenvalueλ≥Q−6. Finally,
+sincetis chosen within2ofQ/b, we haver= (bt−Q)/2≤b−1(a constant independent oft),
+soQ−2r=bt−4r≥bt−4(b−1)>0for allt≥4even whenb∈{2,4}.
+Part (b).SupposeSv=−avwithv∈{±1} M, and letAbe anyr-regular graph ontvertices
+(existing iff0≤r < tandrtis even, e.g.,Circ(t;±1,...,±r/2)whentis odd andris even).
+Thenz v =v⊗1 t ∈{±1}Mt is block-constant, so
+Gzv =t
+(
+(b−1)I M −S
+)
+v⊗1 t =t(b−1 +a)z v.
+From (1),(b−1)k=a(M−k), hence(b−1 +a)k=aM(Lean Theorem 12). Thusλ v =
+(aM/k)t>0andρ v =Mt/λ v =k/a, proving (6).
+Part (c).Upper bound:By Bukh–Cox [1, Theorem 2(a)], anyn=d+k+ 1unit vectors in
+Rd with coherence1/qsatisfyn≥L kQ. Becaused+ =⌈LkQ⌉−k−2satisfiesd + +k+ 1<L kQ
+strictly (even whenLkQ∈Zfork∈{6,22}), no system ofd+k+ 1lines of cosine1/qexists for
+d≤d +, soN1/q(d)≤d+k.
+Lower bound:Foru=d−d −∈{0,...,d + −d−}, form the bordered matrix
+ˆG=
+(
+G z1 T
+u
+1uzT (q−1)I u +Ju
+)
+,
+wherez=z v fork∈{3,5,6,7}andz=z alt fork∈{22,23}. SinceGz=λzwithλ >0,
+congruence bydiag(IMt,Iu)minus the rank-1block eliminates the off-diagonal terms and yields
+ˆG∼= G⊕
+(
+(q−1)I u + (1−ρ)Ju
+)
+withρ=Mt/λ. Thus ˆG⪰0of rankMt−k+u=dwhenever
+q−1>(ρ−1)u(vacuous atu= 0).
+Analytic thresholds and exact finite sweeps:Writeδ:=bt−Qfor the minimal validt≥⌈Q/b⌉
+withrteven (andteven fork∈{22,23}). Checking all residuesQmod 2bgives the exact periodic
+maximaδ max ∈{0,6,8,16,70,110}fork∈{3,5,6,7,22,23}respectively:
+•Fork= 3(b= 2):Q=q+ 1is always even, sot=Q/2,r= 0,δ max = 0,ρv = 3/3 = 1,
+and(q−1)>0 = (ρ v −1)uholds unconditionally! Moreoverd − ≤d + ⇐⇒2Q+ 1<
+L3Q⇐⇒54(2Q+ 1) 2 <(16Q−2) 2, proved for everyQ≥8(q≥7) in Lean Theorem 13.
+•Fork∈{5,6,7}:ρ v −1 = (k−3)/3∈{ 2
+3 ,1, 4
+3 }andu < LkQ−Mt≤(L k −M/b)Q, so
+(ρv −1)u≤ 4
+3 (0.1832)Q <0.25Q < Q−2 =q−1for allQ≥4. FurthermoreMt+ 1 =
+(M/b)(Q+δ) + 1<LkQholds analytically for allQ≥Q suf whereQsuf = 160(k= 5),170
+(k= 6, Lean Theorem 14), and253(k= 7), and in each caser=δ/2<min(t,Q/2).
+•Fork∈{22,23}: using eventandλ≥Q−6, we haveρ=Mt/(Q−6)≤ M
+b
+Q+δmax
+Q−6 . For
+Q≥200,ρ−1<6.2(k= 22) andρ−1<6.9(k= 23, since 69
+14 ·310
+194 −1 = 9337
+1358 <6.88), so
+(ρ−1)u <6.9(0.102)Q <0.71Q < Q−2 =q−1. AndMt+ 1< L kQholds analytically
+for allQ≥8652(k= 22, Lean Theorem 15) andQ≥5342(k= 23), withr≤δ max/2<
+min(t,Q/2).
+7
+
+--- Page 8 ---
+Figure 2: Thresholds and adjacent contact across the six realized families (Theorem 2). (a) Exact
+odd-denominator thresholdsq 0(k)for all oddqand optimal residue classes mod4, compared
+against DLY [2, Theorem 5.1]. (b) Zero-gap adjacent contactd(6)
++ = 552,d(7)
+− = 553atq= 199
+(Q= 200), forcing an exact+2jumpN 1/199(552) = 558→N1/199(553) = 560.
+Exact zero-float integer sweeps over all oddq < Qsuf + 100(CertificatesC06–C11, plus direct
+rationalLDLT certification of explicit odd-tandr>0bordered Gram matrices inC12) determine
+the exact last failing odd denominators and yield every entry in Table 1.
+Part (d).Atk= 6,L 6 = 14/5andM 7 = 28,b7 = 10, so whenever10|Qwe havet 7 =Q/10
+(valid for both even and oddt7 via theE7 seed eigenvector) andL6Q= 28(Q/10) =M7t7 ∈Z.
+Henced(6)
++ =⌈L6Q⌉−8 =M7t7 −8 = (M7t7 −7)−1 =d (7)
+− −1. Likewise, atk= 22,L 22 = 69/14
+andM 23 = 276,b23 = 56, so56|QgivesL 22Q= 276(Q/56)∈Z. Whenever112|Q,t 23 =Q/56
+is even, so Theorem 2(c) givesd(22)
++ = 276t23 −24 =d(23)
+− −1; whenQ≡56 (mod 112),t=Q/56
+is odd andr= 0, so the unbordered Gram matrixG=QI 276t −(S276 +I276)⊗J t still realizes
+276t= (d(22)
++ + 1) + 23lines at the single dimensiond=d(22)
++ + 1(CertificateC16).
+4 Proof of Theorem 3: Quadratic-Irrational Intervals and Block
+Barriers
+Proof of Theorem 3.Part (a).LetC∈{0,±1} m×m be a real symmetric conference matrix
+(C2 = (m−1)Im,m≥6,m−1non-square), lett≥2be even, and sets:= √m−1>2and
+q:=t(1 +s)−1.
+Upper bound:Fix0≤u≤u max(m,t)andd:=mt−m/2 +u. Supposen:=d+m/2 + 1 =
+mt+u+ 1equiangular lines of cosine1/qexist inR d, with Seidel matrixS′. Then−qis an
+eigenvalue ofS′ of multiplicity at leastn−d=m/2 + 1. BecauseS ′ has integer entries and
+m−1is not a square, the algebraic conjugate−q ′ =t(s−1) + 1is also an eigenvalue ofS ′
+of multiplicity at leastm/2 + 1. ForS ′−In (whose entries all lie in{±1}), these conjugate
+eigenvalues are−t(1±s), whose squares sum to2t2(1 +s2) = 2mt2. Hence
+(mt+u+ 1) 2 = tr
+(
+(S′−In)2)
+≥
+(m
+2 + 1
+)
+·2mt2 =m2t2 + 2mt2,
+contradictingthedefinition (7)ofu max(m,t)(LeanTheorem16proves(mt+u+1) 2 <m2t2+2mt2
+whenever(u+ 1) 2 <2mt(t−u−1), which holds foru=t−2whenevert≤2m). Thus
+N1/q(d)≤d+m/2.
+8
+
+--- Page 9 ---
+Lower bound:As in [2, Theorem 5.2],Smt :=Imt+ (C−Im)⊗Jt has eigenvalues1 +t(±s−1)
+(each with multiplicitym/2on block-constant vectors) and1(multiplicitym(t−1)on block-
+sum-zero vectors). ThusG:=qI mt+Smt ⪰0has rankmt−m/2and eigenvalueq+ 1 =t(1 +s)
+on every block-sum-zero vector. Sincetis even,z:=1 m⊗(1,−1,...,1,−1) T ∈{±1}mt is block-
+sum-zero, soGz= (q+1)zandρ:=mt/(q+1) =m/(1+s). BorderingGbyz1 T
+u as in Theorem 2
+yields a positive semidefinite Gram matrix of sizemt+uand rankmt−m/2 +u=dprovided
+q−1>(ρ−1)u. Note that(mt+u max + 1)2 < m2t2 + 2mt2 <(mt+t) 2 impliesu max < t.
+Multiplying(q−1)−(ρ−1)uby1 +s>0and usingu<tandm=s 2 + 1,
+(1 +s)
+(
+(q−1)−(ρ−1)u
+)
+>(1 +s)
+(
+t(1 +s)−2
+)
+−(m−1−s)t
+=t(s2 + 2s+ 1−s2 +s)−2(1 +s) =t(1 + 3s)−2(1 +s)>0,
+sincet≥2ands >2(Lean Theorem 17). Hence the Schur complement is unconditionally
+positive definite for everym≥6, every event≥2, and every0≤u≤u max(m,t)(directly
+verified via exactQ(√p)LDL T in CertificateC13).
+Part (b).Fix oddq≥5ands∈{2,3}, and putB s := diag(J⊕s
+(q+1)/2,Iu)foru≥0, of total
+sizen=s(q+ 1)/2 +u. ThenG s := (q+ 1)In−2Bs+Jn has diagonalqand off-diagonal entries
+±1. Its(q+ 1)In −2Bs part is positive semidefinite withs-dimensional kernel spanned by thes
+block-indicator vectors; addingJn cuts the kernel to the(s−1)-dimensional subspace of block
+indicators summing to zero, soGs ⪰0has exact rankd=n−(s−1) = s(q−1)
+2 +1+uand realizes
+n=d+s−1equiangular lines of cosine1/q.
+By the van Lint–Seidel relative bound [6, Lemma 6.1], ford<q2,
+N1/q(d)≤
+⌊
+d(q2 −1)
+q2 −d
+⌋
+≤d+s−1⇐⇒d(q 2 −1)<(d+s)(q 2 −d)⇐⇒d 2 + (s−1)d<sq 2.
+Fors= 2,d 2 +d <2q 2 gives (8) (nonempty sinceq(q+ 1)<2q 2 for allq≥2); fors= 3,
+d2 + 2d <3q2 ⇐⇒(d+ 1) 2 <3q 2 + 1gives (9) (nonempty since((3q+ 1)/2)2 <3q 2 + 1⇐⇒
+3q2 −6q+ 3>0for allq≥5). Whenever Pell equalityd(d+ 1) = 2q 2 or(d+ 1) 2 = 3q2 + 1
+holds,d(q 2 −1)/(q2 −d) =d+sis an exact integer, so the relative bound jumps tod+s(e.g.
+q= 35,d= 49fors= 2andq= 15,d= 25fors= 3; CertificateC14).
+Finally, for anys≥4and any oddq≥3, the minimal block dimensiond= s(q−1)
+2 + 1satisfies
+2d=sq−s+ 2, and hence
+4
+(
+d2 + (s−1)d
+)
+−4sq2 = (sq−s+ 2)(sq+s)−4sq 2 =s
+(
+(s−4)q 2 + 2q−s+ 2
+)
+>0
+(Lean Theorem 18; CertificateC15). Thusd2 + (s−1)d > sq2, so wheneverd < q2 the relative
+bound is strictly at leastd+s(and ford≥q 2 no finite relative bound applies) at every dimension
+reachable bys≥4blocks.
+5 Formal Verification and Exact Cryptographic Certificates
+All core algebraic theorems of this paper are formally verified in constructive Lean 4.35.0 (le
+an/EquiangularFixedAngleSharp.lean, 18 theorems, zerosorry, zeroClassical.choice,
+zero custom axioms, zero warnings, zero external dependencies) and complemented by an AST-
+audited zero-float Python verification suite (verification/verify_paper106.py) producing
+16 SHA-256 certificates (C01–C16) and 56 adversarialpytestchecks (Table 2). The canonical
+certificates/MANIFEST.jsonSHA-256 digest is
+93038294e7f4888f57b2b86fe3fbb23c9863f1d4b3233609b3a167c434668763.
+9
+
+--- Page 10 ---
+Figure 3: Consecutive-dimension extensions beyond Bukh–Cox (Theorem 3). (a) Linear growth
+of the sharp interval lengthumax(m,t) + 1in Theorem 3(a) versus the length-1point of DLY [2,
+Theorem 5.2]. (b) Infinites∈{2,3}relative-bound block windows across oddq≥5, highlighting
+DLY Proposition 5.3 (q= 7), exact Pell jumps at(15,25)and(35,49), and thes≥4impossibility
+barrier.
+Table 2: Summary of the 16 AST-audited zero-float cryptographic certificates (C01–C16) and
+Lean 4.35.0 formalization coverage.
+Certificates Verification Scope Lean 4
+C01–C02Classification (a≤31), low-k(3≤k≤21), rationalk=a 2 −3Thms. 1–10
+C03–C05Exact Seidel matrices (4,10,16,28,176,276),{±1} M eigvecs,λalt ∈[−3,1]Thms. 10–12
+C06–C11Exact odd-qsweeps for all 6 families (k∈{3,5,6,7,22,23}) Thms. 13–15
+C12Exact rationalLDL T PSD/rank of 6 explicit bordered Gram matrices Thm. 12
+C13ExactQ( √p)LDL T (n≤30) & exact Schur/trace checks (p= 5,13,17) Thms. 16–17
+C14–C16Infinites∈{2,3}windows, Pell jumps,s≥4barrier, zero-gap contacts Thm. 18
+Reproducibility and Governance
+All Lean 4 proofs, zero-float verification scripts, cryptographic certificates, figure scripts, and the
+manuscriptsourcearepubliclyreleasedunderduallicensing(MITforcode/Lean/certificates; CC-
+BY-4.0 for manuscript and figures) athttps://github.com/lluiseriksson/equiangular-lin
+es-sharp-fixed-angle-families(v1.0.0). Full replay requires only Lean 4.35.0 (cd lean &&
+lake build) and Python 3.10+ (python verification/verify_paper106.py && pytest -q).
+References
+[1] B. Bukh and C. Cox,Nearly orthogonal vectors and small antipodal spherical codes, Israel J.
+Math.238(2020), 359–388,https://doi.org/10.1007/s11856-020-2027-7.
+[2] V. Djaljapayan, Z.-Q. Liao, and W.-H. Yu,Real equiangular lines in dimensions 18–20 and
+sharp fixed-angle bounds, preprint (2026),https://arxiv.org/abs/2611.34855.
+[3] G. R. W. Greaves, J. H. Koolen, A. Munemasa, and F. Szőllősi,Equiangular lines in Euclidean
+spaces, J. Combin. Theory Ser. A138(2016), 208–235.
+[4] Z. Jiang, J. Tidor, Y. Yao, S. Zhang, and Y. Zhao,Equiangular lines with a fixed angle, Ann.
+of Math. (2)194(2021), 729–743.
+[5] P. W. H. Lemmens and J. J. Seidel,Equiangular lines, J. Algebra24(1973), 494–512.
+10
+
+--- Page 11 ---
+[6] J. H. van Lint and J. J. Seidel,Equilateral point sets in elliptic geometry, Proc. Koninkl.
+Nederl. Akad. Wetensch. Ser. A69(1966), 335–348.
+11
