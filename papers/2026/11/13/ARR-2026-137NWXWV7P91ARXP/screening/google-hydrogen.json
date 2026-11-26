@@ -1,0 +1,58 @@
+{
+  "assessed_at": "2026-11-26T14:14:10Z",
+  "canonical_sha256": "7964b6fcd3c36166583745126114dfaa5925e31109fa2f694569fbb5ef7b0af7",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All algebraic identities, SOS certificates (27-16(1-s)(1+s)^3 = (2s-1)^2(4s^2+12s+11)), 27-corner dual witness checks for W on CCZ, Chebyshev prefix/denominator bounds, minimax optimization, and numerical comparisons (111, 64.9x, 78.2x/78.3x, M(H_10000)=7438) verified directly from the PDF text without error.",
+      "stars": 5
+    },
+    "novelty": {
+      "basis": "Proves the exact optimal 3^k single-layer generalized-Toffoli product-projection weight with a matching CCZ^k dual witness (Theorem 1), removes ln N from Chebyshev filter degree via 1/r! and 1/(R-r) retention (Theorem 3), and identifies the unique minimax bias and clause-vs-literal conflation on H_n (Theorem 4), though within the architecture of [5].",
+      "stars": 4
+    },
+    "reproducibility": {
+      "basis": "All proofs are explicit and self-contained in the 9-page PDF, with exact Lean 4.35.0 theorem mappings (20 theorems) and rational matrix/certificate specifications (C01-C16) clearly documented, though external execution of the repository code and verification of [5] lie outside this PDF-only audit.",
+      "stars": 5
+    },
+    "rigor": {
+      "basis": "Quantifiers, real-vs-complex coefficient domains, and formalization boundaries between constructive Lean 4.35.0 theorems and analytic Hilbert-space tensor lifting are stated transparently and proved carefully; Theorem 4(2) cleanly derives M(H_n) <= n from the stated disjoint-block specification of [5].",
+      "stars": 5
+    },
+    "significance": {
+      "basis": "Cuts the backward peeling exponent from <4 to <2.1, removes a 64.9x-78.3x polylog overhead at N=10^9, and boosts the classical-advice advantage on H_n by >3x (~4x asymptotically). Because the asymptotic separation AC0 not subset BQAC0/qpoly already follows from [5], impact is primarily quantitative and structural.",
+      "stars": 4
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 5.35,
+  "model_id": "hydrogen",
+  "overall_stars": 5,
+  "paper_id": "ARR-2026-137NWXWV7P91ARXP",
+  "potential_errors": [
+    "Theorem numbering skips Theorem 2 because Remark 2 shares the LaTeX theorem counter between Theorem 1 (Theorem A), Theorem 3 (Theorem B), and Theorem 4 (Theorem C).",
+    "In the Abstract, the summary phrase 'linear ln(R/r) ln(N/R)' omits the sqrt(Rr) factor and the additive constant inside ln(7 + 8N/R) that appear correctly in Theorem 3 Eq. (8) and Table 1.",
+    "Exact attribution of Lemma 3.3, Lemma 3.4, Section 1.2, Section 3.4, Section 4.2, and Eq. (19) in Sun and Wang [5] (arXiv:2611.34803v1), as well as independent execution of the Lean 4.35.0 and Python verifier artifacts, cannot be verified from this single-PDF inspection."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Theorem 1 (Theorem A) proves an exact optimal 3^k single-layer generalized-Toffoli product-projection weight via disjoint-gate factorization, exact 2x2 diagonal cancellation for m=1, and a real XY-parity expansion with a sharp sum-of-squares bound for m>=3, matched by an explicit multiplicative dual witness W^otimes k on CCZ^otimes k valid over all real and complex product-projection decompositions.",
+    "Theorem 3 (Theorem B) completely removes circuit width N from the Chebyshev integer-spectrum filter degree (e.g., constant deg q = 111 vs 7209 at N=10^9, R=100, r=10) and reduces ln mu_N(q) from quadratic ln^2 Lambda_0 to O(sqrt(Rr) ln(R/r) ln(7 + 8N/R)) with transparent, elementary proofs.",
+    "Theorem 4 (Theorem C) determines the unique minimax-optimal classical advice bias a* = M/(2M-1) strictly dominating 1/2 + 1/(4M) for all M >= 1 and establishes M(H_n) = n - sum m_w <= n (strictly < n for n >= 6), improving the classical-advice advantage on H_n from 1/(12n) to >= 1/(4n-2).",
+    "Exemplary formalization boundary hygiene in Section 5, explicitly separating the 20 constructively Lean-4-checked algebraic/combinatorial statements from the analytic Hilbert-space and integral arguments proved in the text."
+  ],
+  "strong_novelty_candidates": [
+    "Exact 3^k optimality theorem for generalized-Toffoli product-projection expansions via real XY-parity decomposition and the 27-corner Bloch-projection dual witness W = diag_B(0, 1, 1, -1, 0, 0, -1, 1) on CCZ^otimes k.",
+    "N-independent Chebyshev integer-spectrum filter degree and linear-in-ln(N/R) weighted log-norm bound obtained by retaining 1/r! and 1/(R-r)."
+  ],
+  "summary": "This paper presents three sharp, elementary, and quantitatively substantial improvements to the proof of AC0 not subset BQAC0/qpoly by Sun and Wang [5]: (A) reducing the single-layer generalized-Toffoli product-projection l1 weight from 18^k to the exact optimal constant 3^k with a matching dual lower bound on CCZ^otimes k (Theorem 1), (B) eliminating the spurious ln N dependence from the Chebyshev integer-spectrum filter degree and collapsing its weighted log-norm from quadratic to linear in ln(N/R) (Theorem 3), and (C) finding the unique minimax classical-advice bias M/(2M-1) and correcting a clause-vs-literal bound on H_n from 3n to <= n (Theorem 4). Every algebraic identity, asymptotic estimate, and numerical figure in the manuscript checks out cleanly, with clear transparency regarding what is machine-checked in Lean 4.35.0 versus proved analytically in the text. While the asymptotic complexity separation itself is unchanged and external artifacts ([5], Lean/Python code) were not inspected in this PDF-only review, the mathematical results are solid, novel, and cleanly executed.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:5ac0308b-5d80-4f4c-8589-f24adde1a8b3",
+  "weaknesses": [
+    "The asymptotic separation AC0 not subset BQAC0/qpoly itself is already established by [5]; the contributions here sharpen constants, polylog factors, and the classical-advice comparison rather than proving a new complexity separation.",
+    "Minor presentation inconsistencies: Theorem 2 is skipped in numbering due to Remark 2 sharing the theorem counter, and the Abstract summarizes ln mu_N(q) as 'linear ln(R/r) ln(N/R)' without mentioning the sqrt(Rr) factor shown in Eq. (8) and Table 1.",
+    "Theorem 4(2) depends on the block-allocation formula of H_n from Section 4.2 and Eq. (19) of the external preprint [5], which is accurately summarized in the proof but could not be cross-checked against [5] within this PDF-only assessment."
+  ]
+}
