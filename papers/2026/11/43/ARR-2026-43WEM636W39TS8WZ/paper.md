@@ -1,0 +1,402 @@
+# Constructive Lean 4 Kernel and Exact Zero-Float Certificates for OpenAI's Strongly Polynomial Linear Programming
+
+**Author:** Lluis Eriksson  
+**AIRR Identifier:** `ARR-2026-43WEM636W39TS8WZ` (v1)  
+**License:** CC-BY-4.0 (manuscript), MIT (verification repository)  
+**Verification Repository:** https://github.com/lluiseriksson/openai-strongly-polynomial-lp-certificates (`v2.0.0`)  
+**Canonical PDF SHA-256:** `186fe69fbb53f8dd5510ac2f7cbce9649224f71d0b2c8f70472583bc64ce35bf`
+
+## Abstract
+
+A November 24, 2026 companion preprint from OpenAI proposes a deterministic strongly polynomial-time algorithm for general linear programming (Smale's 9th problem), extending to monotone linear complementarity problems, convex quadratic programming, max-norm contraction fixed points, and turn-based discounted and priority mean-payoff games. Rather than assuming peer-reviewed endorsement of its online logarithmic compression, recursive extremal-price search, or dissociated-minor counting pillars, we deliver an independent, explicitly scoped, zero-floating-point verification companion for its discrete LP trichotomy certificates (strict complementarity, improving rays, minimal-support Farkas), paired-subspace reciprocal diagonal scaling and division-free Newton's identities determinant, monotone LCP and convex QP KKT gap decomposition, and Bellman / clipped-update max-norm contraction mechanisms. Layer 1 (OpenAIStronglyPolyLP.lean) proves 18 standalone constructive Lean 4.35.0 algebraic and duality sub-lemmas (zero sorry, zero axiom, zero Classical.choice, zero warnings; 1 [propext] and 17 [propext, Quot.sound]). Layer 2 (SPLP-SMALE9-CERT-1.0) is a pure-stdlib Python int/Fraction 4-mode auditor certifying 16 canonical finite witnesses in 0.049-0.485 ms and rejecting 73/73 live adversarial forgeries with exact branch assertions (80/80 pytest checks).
+
+## Full Extracted Text
+
+--- Page 1 ---
+Constructive Lean 4 Kernel and Exact Zero-Float Certificates
+for OpenAI’s Strongly Polynomial Linear Programming
+Lluis Eriksson∗
+November 25, 2026
+Abstract
+A November 24, 2026 companion preprint from Ope-
+nAI [7] proposes a deterministic strongly polynomial-time
+algorithm for general linear programming (Smale’s 9th
+problem [9]), extending to monotone linear complemen-
+tarity problems, convex quadratic programming, max-
+norm contraction fixed points, and turn-based discounted
+and priority mean-payoff games. Rather than assuming
+peer-reviewed endorsement of its online logarithmic com-
+pression, recursive extremal-price search, or dissociated-
+minor counting pillars, we deliver an independent, ex-
+plicitly scoped, zero-floating-point verification companion
+for its discrete LP trichotomy certificates (strict com-
+plementarity, improving rays, minimal-support Farkas),
+paired-subspace reciprocal diagonal scaling and division-
+free Newton’s identities determinant, monotone LCP and
+convex QP KKT gap decomposition, and Bellman /
+clipped-update max-norm contraction mechanisms. Layer 1
+(OpenAIStronglyPolyLP.lean) proves 18 standalone con-
+structive Lean 4.35.0 algebraic and duality sub-lemmas
+(zero sorry, zero axiom, zero Classical.choice, zero
+warnings; 1[propext] and 17[propext, Quot.sound]).
+Layer 2 (SPLP-SMALE9-CERT-1.0) is a pure-stdlib Python
+int/Fraction 4-mode auditor certifying 16 canonical finite
+witnesses in0 .049–0.485 ms and rejecting 73/73 live adver-
+sarial forgeries with exact branch assertions (80/80 pytest
+checks).
+1 Introduction and Scope Calibra-
+tion
+Khachiyan [5] and Karmarkar [4] established weakly polyno-
+mial algorithms for linear programming, while Tardos [10]
+and Frank–Tardos [2] achieved strong polynomiality when
+constraint coefficients have bounded bit lengths. Whether
+a strongly polynomial algorithm exists for arbitrary real lin-
+ear programs is Smale’s 9th problem [9]. OpenAI’s Novem-
+ber 24, 2026 companion preprint [7] proposes a deterministic
+strongly polynomial algorithm (Theorem 1) and extensions
+to monotone LCP (Theorem 5), convex QP (Corollary 6),
+∗Independent Researcher. Code, Lean 4 proofs, and certifi-
+cates: MIT License; manuscript and figures: CC-BY-4.0. Prepared
+with transparent AI coding, formalization, and drafting assistance
+via Google Antigravity; all Lean 4 theorems, exact zero-float veri-
+fiers, and adversarial tests were independently compiled and verified
+locally. Repository: github.com/lluiseriksson/openai-strongly-
+polynomial-lp-certificates.
+max-norm contractions (Theorem 8), and turn-based games
+(Theorem 11), resting on four exact discrete-algebraic mech-
+anisms:
+1. Theorem 1 LP Trichotomy Certificates (Secs. 1,
+3.3):Every real LP admits either a strictly comple-
+mentary optimal pair (Ax≤b,y≥ 0,A⊤y = c,b⊤y =
+c⊤x,b−Ax+y >0[3]), an improving recession ray (Ax≤
+b,Ar≤ 0,c⊤r> 0), or a minimal-support Farkas certifi-
+cate (y≥ 0,A⊤y= 0,b⊤y <0,|supp (y)|≤ 1 + rank(A)).
+2. Reciprocal Diagonal Scaling & Division-Free New-
+ton Determinant (Secs. 1.2, 3.1–3.4, Thm. 3):Em-
+bedding orthogonal subspacesW = C×C ⊥and scaling
+Di+ = 2−pi,Di−= 2pi preserves Q(y) = ∑
+iyi+yi−= 0
+identically; Section 3.4 computes k! det(M)purely in
+the integer ring via Newton’s trace recurrence without
+intermediate divisions.
+3. Monotone LCP & Convex QP KKT Gap De-
+composition (Secs. 7.2–7.3, Thm. 5, Cor. 6):For
+monotone M (M + M⊤⪰0) and solution(z∗,w∗), any
+feasible( z′,w′)obeys z′⊤w′ = z′⊤w∗+ z∗⊤w′+ (z′−
+z∗)⊤M(z′−z∗)[ 6], while Corollary 6’s skew-symmetric
+KKT block
+(R⊤GR R⊤A⊤
+−AR0
+)
+stays monotone identically.
+4. Max-Norm Contractions & Clipped Bellman
+Halving (Secs. 8, 9.1, 9.3, Thms. 8, 11):At
+any x̸= v, aγ-contraction moves every extremal-error
+coordinate strictly towardv [8]; Section 9.3’s clipped
+update ui = [ exta(ra + Bay−y i + Pau)]H
+−H halves
+∥v− (y + u)∥∞ ≤H and, when y < v, certifies the
+exact policy guaranteez=y+u−H1≤T(z).
+Honest Two-Layer Verification Scope.
+1. Layer 1 (Lean 4.35.0 Kernel, Standalone Sub-
+Lemmas): lean/OpenAIStronglyPolyLP.lean proves
+18 standalone constructive algebraic and duality sub-
+lemmas (Table 1) extracted from Sections 1, 1.2, 2.3, 3,
+3.1–3.4, 4.2, 5.1, 7.2–7.3, 8, and 9.1–9.3 of [7].
+2. Layer 2 (Exact Zero-Float Auditor):SPLP-SMALE9-
+CERT-1.0 audits 16 canonical finite witnesses across all
+three Theorem 1 LP branches, reciprocal scaling + New-
+ton’s identities (k≤ 5), monotone LCP / convex QP
+KKT systems (d≤ 5), and Bellman / clipped-update
+games (n≤4, including Fig. 5’s exact two-state game).
+3. Explicit Non-Claims:We donotformalize in Lean 4
+the online logarithmic compression procedure (Theo-
+rem 4, Section 5), recursive extremal-price search (Theo-
+1
+
+--- Page 2 ---
+rem 2, Section 6), LLL simultaneous Diophantine approx-
+imation, Blackwell vanishing-discount transfer, or the
+global strongly polynomial step-count bounds of Theo-
+rems 1, 5, 8, and 11; those algorithmic complexity pillars
+remain unverified outside [7].
+2 Constructive Lean 4.35.0 Kernel
+lean/OpenAIStronglyPolyLP.lean compiles standalone
+under Lean 4.35.0 [1] with zero external imports, zero warn-
+ings, zero sorry, and zeroClassical.choice. Auditing
+via AuditAxioms.lean confirms 1[propext] theorem (P:
+#5) and 17[propext, Quot.sound] theorems (P,Q; Ta-
+ble 1).
+Proposition 1(Constructive Lean 4 Kernel Scope).
+All 18 scalar sub-lemmas in Table 1 compile construc-
+tively under Lean 4.35.0 without external libraries or
+Classical.choice. Theorems 1–4 formalize zero duality
+gap, strict complementarity positivity, circuit-imbalance
+growth u2 −1 ≥3, and the scalar positivity obstruction
+viwi + r> 0; Theorems 5–9 prove reciprocal-scaling prod-
+uct invariance (dr = 1), the cleared rational Lemma 3.1
+lower bound (0 ≤e n/ed ≤1/20) and visibility margin,
+codimension support arithmetic, and the2×2division-free
+Newton determinant identity; Theorems 10–12 formalize
+positive scale invariance, geometric doubling dominance,
+and surplus-feedback monotonicity; Theorems 13–14 prove
+the scalar monotone LCP gap split and skew KKT block can-
+cellation; and Theorems 15–18 formalize the cleared7δ con-
+traction movement lower bound, triangle-plus-contraction
+residual-to-distance derivation (γD≤e ), strict discount
+contraction gap, and policy-width halving.
+3 Exact Zero-Float Certificate Au-
+ditor
+The modulessplp_exact.pyandsplp_certifier.py
+(undersrc/) use exclusively Pythonintandfractions.
+Fraction(statically audited viaast.walkfor zero
+float/complex literals,/,/=, ormathimports). Strict
+JSON parsing enforcesMAX_JSON_BYTES= 106, rejects
+floats,NaN/Infinity, and duplicate keys viaobject_
+pairs_hook, and requires canonical lowest-terms rationals
+(gcd(p,q) = 1,0<q≤10 12,|p|≤10 12).
+Definition 1(SPLP-SMALE9-CERT-1.0Predicates).A
+certificate withprotocol="SPLP-SMALE9-CERT-1.0"is
+accepted iff every field passes strict schema checks and its
+mode predicate holds:
+•Mode 1 (lp_trichotomy_certificate_cert):
+Audits exact Theorem 1 rational witnesses foroptimal
+(Ax≤b,y≥0,A ⊤y=c,c ⊤x=b ⊤y, strict
+complementarityb−Ax+y >0),unbounded
+(Ax≤b,Ar≤0,c ⊤r>0), orinfeasible
+(y≥0,A ⊤y= 0,b ⊤y <0,|supp(y)|≤1 + rank(A)).
+•Mode 2 (reciprocal_scaling_and_newton_det_
+cert):Checks JSON row counts|C|+ |C⊥|= N before
+Figure 1:(a)Exact Section 1.2 circuit-imbalance minor
+|det ([[1,u],[u,1]])|= u2 −1via division-free Newton’s iden-
+tities acrossu= 21 ... 212.(b)Exact rational Section 9.3
+Figure 5 clipped-update trajectory converging monotoni-
+cally to exact0att= 3.
+Figure 2:(a)Exact Section 7.2 monotone LCP gap split
+z′⊤w′ = (z′⊤w∗+ z∗⊤w′) + (z′−z∗)⊤M(z′−z∗)across
+4 canonical LCP/QP-KKT witnesses.(b)Certified exact
+|det (M)|vs. division-free Newton ring-scaled|k! det(M)|
+acrossC05–C08(k∈{2,3,4,5}).
+rational matrix parsing, audits orthogonal
+complementary basesC,C ⊥⊂Q N, checks nonzero
+reciprocal scalingDi+ = 2−pi,Di−= 2pi preserving
+Q(yD) = 0across all basis pairs, and verifies exact
+agreement between Section 3.4’s division-free Newton’s
+identitiesk! det(M)and Gaussian elimination
+(2≤k≤5).
+•Mode 3 (monotone_lcp_and_qp_kkt_cert):Rejects
+identically zeroM, verifiesM+M ⊤⪰0via exact
+rational symmetric pivoted congruence elimination,
+certifies exact LCP solution
+(z∗,w∗≥0,w ∗=Mz ∗+q,z ∗⊤w∗= 0), and audits
+Section 7.2’s gap split
+z′⊤w′=z′⊤w∗+z∗⊤w′+ (z′−z∗)⊤M(z′−z∗)on a
+distinct feasible probe
+(z′̸=z∗,z′≥0,w ′=Mz ′+q≥0).
+•Mode 4 (max_norm_contraction_and_game_cert):
+Verifies exact Bellman fixed pointT(v) = v, Theorem 8
+contraction ∥T(x) −v∥∞≤(1 −γ)∥x−v∥∞with strict
+extremal-coordinate sign agreement (x̸=v), and
+Section 9.3’s clipped fixed-point Eq. (9.3)–(9.5) (y̸=v,
+ui = [exta(ra + Bay−y i + Pau)]H
+−H usingundiscounted
+transition rowPa,∥v−(y+u)∥ ∞≤H, and
+z=y+u−H1≤T(z)wheny <v).
+2
+
+--- Page 3 ---
+Table 1: Complete inventory of all 18 constructive Lean 4.35.0 sub-lemmas inlean/OpenAIStronglyPolyLP.lean (zero
+sorry, zeroaxiom, zeroClassical.choice, zero warnings;[propext] (P) for #5;[propext, Quot.sound] (P,Q) for
+the remaining 17).
+# Theorem Identifier Ref. [7] Exact Machine-Checked Statement & Hypotheses Ax.
+1sec1_strong_duality_gap_zeroThm. 1∀b y,cx ∈Z, by =cx =⇒b y −cx = 0.P,Q
+2sec1_strict_complementarity_posThm. 1∀s,y∈Z,0≤s∧0≤y∧(0<s∨0<y) =⇒0<s+y.P,Q
+3sec12_circuit_imbalance_detSec. 1.2∀u∈N,2≤u=⇒4≤u 2 ∧3≤u 2 −1(cleared|det|).P,Q
+4sec3_orthogonality_excludes_both_sidesSec. 3∀v i,wi,r∈Z,0<v i ∧0<w i ∧0≤r=⇒0<v iwi +r.P,Q
+5sec31_reciprocal_scaling_preserves_productSec. 3.1∀y p,ym,d,r∈Z, dr= 1 =⇒(y pd)(ymr) =ypym (Q(yD) =Q(y)).P
+6lem31_midpoint_quadratic_lower_boundLem. 3.1∀e n,ed ∈Z, 0 ≤en∧0 <ed∧20en ≤ed =⇒ 0 <20ed ≤25ed−100en ≤25ed. P,Q
+7sec32_visibility_slack_thresholdSec. 3.2∀e 12 ∈Z, e12 ≤1 =⇒3≤4−e 12 (cleared1/3−err≥1/4).P,Q
+8sec33_farkas_support_boundSec. 3.3∀r,s y ∈N, sy + 1≤(1 +r) + 1 =⇒sy ≤1 +r(support arithmetic).P,Q
+9sec34_newton_identity_det2Sec. 3.4∀a,b,c,d∈Z,(a+d) 2 −(a2 + 2bc+d2) = 2(ad−bc)(2! detM).P,Q
+10sec42_linear_type_scale_invariantLem. 4.1∀s,x,y∈Z,0<s∧x<y=⇒sx<sy(sign preservation).P,Q
+11lem51_dissociated_geometric_dominanceLem. 5.1∀k∈N,2 k −1<2 k (doubling sequence subset-sum dominance).P,Q
+12sec23_surplus_feedback_monotoneSec. 2.3∀a,h x,hy,t∈Z, a−h x ≤t∧t≤a−h y =⇒h y ≤hx.P,Q
+13sec72_monotone_lcp_gap_splitSec. 7.2∀m,q,z,z 0 ∈Z, z0(mz0 + q) = 0 =⇒z (mz+ q) =z(mz0 + q) +z0(mz+ q) +
+(z−z 0)(m(z−z 0)).
+P,Q
+14sec73_qp_skew_block_monotoneCor. 6∀u,µ,a∈Z, u(aµ) +µ(−(au)) = 0(skew KKT block).P,Q
+15thm8_contraction_movement_lbThm. 8∀g n,gd,u,d∈Z, 0 ≤gn,d∧ 8gdd≤g nu =⇒ 7gdd≤g du−(gd −gn)(u+ d). P,Q
+16thm8_residual_to_distance_clearedThm. 8∀g n,gd,D,T,e∈Z, g d(D−T)≤g de∧g dT≤(g d −gn)D=⇒g nD≤g de.P,Q
+17sec91_bellman_contraction_gapSec. 9.1∀den,gap,D∈Z,0<gap∧0<D=⇒(den−gap)D<den·D.P,Q
+18sec93_clipped_update_halving_boundSec. 9.3∀W,e L,eU ∈N,4e L ≤W∧4e U ≤W=⇒2(e L +eU)≤W.P,Q
+Figure 3:(a)Mean exact zero-float verification latency
+across all 16 canonical certificates (0.049–0.485 ms, log
+scale).(b)Live adversarial red-team audit rejecting 73/73
+forgeries across five attack classes with exact error-branch
+assertions.
+4 Exact Findings, Worked Wit-
+nesses, and Audit
+All experiments ran locally on Windows 11 (Python 3.12.6,
+Lean 4.35.0; 7-run means after warm-up).
+1. Exact Circuit Imbalance, Gap Splits & Clipped
+Halving (Figs. 1–2).Across u∈ {21,..., 212}, Sec-
+tion 3.4’s division-free Newton recurrence matches ex-
+act Gaussian determinants identically on every minor
+(|det| = u2 −1from3to16 ,777,215). On Section 9.3
+Figure 5’s two-state game starting from y(0) = (0 ,2)
+with Ht = 2 −t (Pa undiscounted in Eq. (9.3)), exact
+clipped updates produce u(0) = (1 ,−1) ⇒y (1) = (1 ,1)
+(err 1
+2 ), u(1) = ( 1
+2 ,−1
+4 ) ⇒y (2) = ( 3
+2 ,3
+4 )(err 1
+4 ), and
+u(2) = (0,−1
+4 ) ⇒y (3) = ( 3
+2 ,1
+2 ) = v (exact err0at t= 3).
+On all four Mode 3 monotone LCP and QP-KKT witnesses,
+the quadratic term(z′−z∗)⊤M(z′−z∗)is strictly nonnega-
+tive (8/3,7,1,1/2) and sums with the cross terms identically
+toz ′⊤w′(6,14,4,9/2).
+2. Hand-Verifiable Worked Exact Witnesses (One
+per Mode).
+Table 2: Canonical 16-certificateSPLP-SMALE9-CERT-1.0
+atlas (exp1_certificate_atlas.json; all 16 verified).
+ID Certificate Name M Exact Certified Witness Summary ms
+C01m1_lp_optimal_2d_strict_compM14×2opt= 10, 4/4 strict comp. rows 0.077
+C02m1_lp_optimal_3d_strict_compM16×3opt= 30, 6/6 strict comp. rows 0.115
+C03m1_lp_unbounded_recession_rayM13×2unbounded, ray gainc⊤r= 80.049
+C04m1_lp_infeasible_farkas_minsuppM14×2infeasible,rank = 2,|supp|= 30.062
+C05m2_recip_circuit_u10_newton2M2N=4,u=10:Q(yD)=0,2! det =−1980.142
+C06m2_recip_circuit_u1000_newton3M2N=4,u=103:Q(yD)=0,3! det =−3240.135
+C07m2_recip_n5_ortho_newton4M2N=5:2 + 3ortho,4! det =38880.224
+C08m2_recip_n6_ortho_newton5M2N=6:3 + 3ortho,5! det =−46800.373
+C09m3_lcp_2d_sym_pdM3 2D sym. PD LCP: gap6, quad8/30.080
+C10m3_lcp_3d_asym_monotoneM3 3D asym. monotone: gap14, quad70.117
+C11m3_qp_kkt_4d_skew_blockM3 4D Cor. 6 QP-KKT: gap4, quad10.158
+C12m3_qp_kkt_5d_psd_degenerateM3 5D PSD deg. KKT: gap9/2, quad1/20.222
+C13m4_game_fig5_low_centerM4 Fig. 5 lowy: err 3
+2 →1
+2,z≤T(z)0.185
+C14m4_game_fig5_neutral_centerM4 Fig. 5 neutraly: err3
+2 →1
+2 0.168
+C15m4_game_3state_stochasticM4 3-state stoch.: err1→1
+2,z≤T(z)0.316
+C16m4_game_4state_gamma_quarterM4 4-stateγ=1
+4: err1→0,z≤T(z)0.485
+• Mode 1 (C01,4 ×2optimal LP): max 3x1 + 2x2 s.t.
+x1 + x2 ≤4,2x1 + x2 ≤6,x≥ 0attains x∗= (2,2),y∗=
+(1,1,0,0)with c⊤x∗= b⊤y∗= 10, slacks(0 ,0,2,2), and
+b−Ax ∗+y∗= (1,1,2,2)>0strictly complementary.
+• Mode 2 ( C05, Sec. 1.2 u=10circuit): C
+and C⊥ spanned by rows[[1 ,0,1,10],[0,1,10,1]]and
+[[−1,−10,1,0],[−10,−1,0,1]]preserve Q(yD) = 0un-
+der p= (3,−2,5,−4), while Newton’s recurrence yields
+2! det([[1,10],[10,1]]) =−198.
+• Mode 3 (C11, 4D Cor. 6 QP-KKT):With G =
+2I2, A =
+(1 1
+1 0
+)
+, q = ( −3,−3,2,2), solution z∗ =
+(1,1,1,0),w∗ = (0 ,0,0,1)and probe z′ = ( 1
+2 ,1
+2 ,2,1)
+satisfyw ′= (1,0,1, 3
+2 )andz ′⊤w′= 4 = 3 + 1.
+• Mode 4 (C13, Sec. 9.3 Fig. 5 low center):For
+TA(x) = max{3
+4 + xA
+2 ,xB
+2 }, TB(x) = min{1 + xB
+2 ,−1
+4 +
+xA
+2 }(Pa deterministic, Ba = 1
+2 Pa, v = ( 3
+2 ,1
+2 )), low
+center y = (0 ,1
+4 )and H = 1give Eq. (9.3) scores
+ΦA(u) = max{3
+4 + uA,1
+8 + uB},Φ B(u) = min{7
+8 +
+uB,−1
+2 +uA}; atu= (1,1
+2 ),[ max(7
+4 ,5
+8 )]1
+−1 = 1 = uA and
+[min(11
+8 ,1
+2 )]1
+−1 = 1
+2 = uB, giving error1
+2 ≤1and lower
+guaranteez=y+u−H1= (0,− 1
+4 )≤T(z) = ( 3
+4 ,−1
+4 ).
+3
+
+--- Page 4 ---
+3. 16-Certificate Atlas & 80-Test Red-Team Audit
+(Table 2, Fig. 3).Table 2 lists all 16 canonical cer-
+tificates verified in0.049–0.485 ms. tests/test_suite.py
+runs 80 pytest checks: 1 full 16-certificate replay, 4 raw-
+JSON parser guards (float,NaN, duplicate keys, oversized
+payload), 2 exact regressions (Newton4!det vs. Gaussian
+elimination and exact indefinite matrix rejection), and 73
+parametrized live adversarial forgeries (12 schema/parser,
+15 Mode 1, 16 Mode 2, 15 Mode 3, 15 Mode 4), each as-
+serting an exact regex on its intendedCertificateError
+branch. scripts/verify_all.py enforces all 5 gates and
+a 41-file SHA-256 manifest.
+5 Conclusion
+We built an independent, explicitly scoped, zero-floating-
+point verification companion for the discrete LP trichotomy,
+reciprocal diagonal scaling, division-free Newton determi-
+nant, monotone LCP / convex QP KKT, and max-norm
+contraction / clipped-Bellman game mechanisms of Ope-
+nAI’s strongly polynomial linear programming preprint [7],
+pairing 18 constructive Lean 4.35.0 sub-lemmas (zerosorry,
+zero Classical.choice) with the pure-int/Fraction 4-
+mode auditorSPLP-SMALE9-CERT-1.0, 16 canonical exact
+finite witnesses, and 73/73 live adversarial forgery rejec-
+tions.
+References
+[1] Leonardo de Moura and Sebastian Ullrich. The Lean 4 theorem
+prover and programming language. InAutomated Deduction –
+CADE 28, volume 12699 ofLecture Notes in Computer Science,
+pages 625–635. Springer, 2021.
+[2] András Frank and Éva Tardos. An application of simultaneous
+Diophantine approximation in combinatorial optimization.
+Combinatorica, 7:49–65, 1987.
+[3] Alan J. Goldman and Albert W. Tucker. Theory of linear
+programming. In H. W. Kuhn and A. W. Tucker, editors,
+Linear Inequalities and Related Systems, volume 38 ofAnnals of
+Mathematics Studies. Princeton University Press, 1956.
+[4] Narendra Karmarkar. A new polynomial-time algorithm for
+linear programming.Combinatorica, 4:373–395, 1984.
+[5] Leonid G. Khachiyan. A polynomial algorithm in linear
+programming.Doklady Akademii Nauk SSSR, 244:1093–1096,
+1979.
+[6] Olvi L. Mangasarian. A simple characterization of solution sets
+of convex programs.Operations Research Letters, 7:21–26, 1988.
+[7] OpenAI. Strongly polynomial linear programming. OpenAI
+Math Release PreprintOAI:Strongly-polynomial-
+linear-programming-November-24-2026, November 2026.
+Companion unrefereed preprint.
+[8] Lloyd S. Shapley. Stochastic games.Proceedings of the National
+Academy of Sciences of the USA, 39:1095–1100, 1953.
+[9] Stephen Smale. Mathematical problems for the next century.
+The Mathematical Intelligencer, 20(2):7–15, 1998.
+[10] Éva Tardos. A strongly polynomial algorithm to solve
+combinatorial linear programs.Operations Research, 34:250–256,
+1986.
+4

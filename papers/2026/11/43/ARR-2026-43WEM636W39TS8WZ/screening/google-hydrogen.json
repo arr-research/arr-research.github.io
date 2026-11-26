@@ -1,0 +1,58 @@
+{
+  "assessed_at": "2026-11-26T01:42:04Z",
+  "canonical_sha256": "186fe69fbb53f8dd5510ac2f7cbce9649224f71d0b2c8f70472583bc64ce35bf",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All 18 Table 1 Lean scalar statements are mathematically sound, and all 4 worked witnesses (C01, C05, C11, C13), Fig. 1(b)'s clipped trajectory to v=(3/2,1/2), and cross-table values verify exactly from the PDF; external Lean/Python execution was not performed.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "Combines a zero-float Python rational auditor (SPLP-SMALE9-CERT-1.0) with elementary Lean 4 scalar checks tailored to [7]'s discrete mechanisms; the underlying mathematics is classical or from [7], and the 18 Lean lemmas are trivial scalar identities.",
+      "stars": 2
+    },
+    "reproducibility": {
+      "basis": "Table 1 states all 18 Lean lemma signatures verbatim, Section 4.2 supplies full rational data for four hand-verifiable witnesses (C01, C05, C11, C13), and Section 4.3 details the 80-test suite and SHA-256 manifest, though full code resides in an external repo.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Explicit Non-Claims clearly bound scope; Layer 2 enforces AST float bans, strict JSON parsing, and 73/73 branch-asserted forgery rejections. However, Layer 1 proves only 1D scalar integer proxies rather than matrix/rational theorems, and Layer 2 covers 16 small finite witnesses.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Provides a clean, auditable finite-witness certificate format and adversarial test suite for four algebraic building blocks of [7], but leaves all algorithmic and strongly polynomial complexity pillars (compression, extremal-price search, LLL, Blackwell transfer) unverified.",
+      "stars": 2
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.35,
+  "model_id": "hydrogen",
+  "overall_stars": 3,
+  "paper_id": "ARR-2026-43WEM636W39TS8WZ",
+  "potential_errors": [
+    "Table 1 #5 (sec31_reciprocal_scaling_preserves_product) quantifies dr = 1 over Z, which restricts d, r to +/-1 rather than the dyadic rationals D_{i+} = 2^{-p_i}, D_{i-} = 2^{p_i} in Q used in Mode 2.",
+    "Section 1 item 1 and Definition 1 Mode 1 omit explicitly writing 'max c^T x' inside the optimal-LP formula (Ax <= b, y >= 0, A^T y = c, b^T y = c^T x, b - Ax + y > 0), only making the maximization sign explicit in the C01 worked example.",
+    "Section 3 Mode 3 specifies checking M + M^T >= 0 via 'exact rational symmetric pivoted congruence elimination' without stating how zero diagonal pivots with nonzero off-diagonal entries (indefinite 2x2 blocks) are handled in the PDF text itself."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Transparent scope calibration: Section 1 ('Explicit Non-Claims'), Proposition 1, and Table 1 explicitly state what is and is not verified, avoiding false claims about formalizing strongly polynomial runtime bounds or algorithmic pillars.",
+    "Every verifiable mathematical claim in the PDF checks out cleanly: all 18 Table 1 Lean theorem statements are sound, all four worked examples in Section 4.2 (C01, C05, C11, C13) and the Fig. 1(b) clipped-update trajectory (err 3/2 -> 1/2 -> 1/4 -> 0 at t=3) verify exactly by hand, and Table 2 values agree with Figures 1-3.",
+    "Sound zero-float engineering in Layer 2 (SPLP-SMALE9-CERT-1.0), combining AST checks against float/complex/division/math imports, strict JSON rational canonicalization, and 73/73 branch-specific adversarial forgery tests across all four modes.",
+    "Constructive Lean 4.35.0 kernel hygiene (zero sorry, zero external imports, zero Classical.choice, with exact axiom audit counts 1 [propext] and 17 [propext, Quot.sound] matching Table 1)."
+  ],
+  "strong_novelty_candidates": [
+    "Exact zero-float four-mode rational certificate schema (SPLP-SMALE9-CERT-1.0) covering LP strict-complementarity/recession/minimal-support Farkas trichotomy, reciprocal scaling with division-free Newton k! det(M), monotone LCP/QP-KKT gap split, and clipped-Bellman policy guarantees with adversarial branch testing."
+  ],
+  "summary": "This 4-page manuscript presents a two-layer, zero-floating-point verification companion for four discrete-algebraic mechanisms from a companion November 24, 2026 OpenAI preprint [7] on strongly polynomial linear programming: (Layer 1) 18 standalone constructive Lean 4.35.0 scalar integer/natural sub-lemmas without Classical.choice or external imports, and (Layer 2) a pure-int/Fraction Python 4-mode certificate auditor (SPLP-SMALE9-CERT-1.0) evaluated on 16 canonical finite witnesses (0.049-0.485 ms) and 73 adversarial forgeries. All 18 Table 1 theorem statements, all four hand-verifiable worked witnesses (C01, C05, C11, C13), the Section 9.3 Fig. 5 clipped-update trajectory, and cross-references among text, tables, and figures are internally consistent and mathematically exact as printed. While the Lean 4 layer only formalizes elementary 1D scalar arithmetic proxies (and none of the core algorithmic or strongly polynomial complexity pillars of [7] are verified), the manuscript explicitly and honestly discloses these boundaries.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:fd24b1c1-97b1-462c-9a19-36f38e73139c",
+  "weaknesses": [
+    "Mathematical triviality of the Lean 4 kernel: all 18 theorems in Table 1 are 1-to-3-line scalar arithmetic or ring identities over Z or N (e.g., by = cx => by - cx = 0, 2^k - 1 < 2^k, u(a*mu) + mu(-a*u) = 0). No matrices, vectors, rationals, LP duality, general-k Newton identities, or contraction fixed-point theorems are formalized in Lean.",
+    "Proxy mismatch in Lean scalarizations: sec72_monotone_lcp_gap_split and sec73_qp_skew_block_monotone reduce d-dimensional non-symmetric monotone/skew matrices to 1D scalars where non-symmetry vanishes, and sec31_reciprocal_scaling_preserves_product proves dr = 1 over Z rather than dyadic rationals 2^{+/-p_i}.",
+    "Limited scope and empirical scale of Layer 2: the substantive mathematical checks (matrix rank, orthogonal complements, Newton determinants for k <= 5, PSD congruence for d <= 5, clipped Bellman updates for n <= 4) reside in an unverified Python script tested on only 16 small handcrafted certificates.",
+    "Title/abstract framing ('Constructive Lean 4 Kernel ... for OpenAI's Strongly Polynomial Linear Programming' and 'algebraic and duality sub-lemmas') slightly overstates what Lean actually proves, even though Proposition 1 and Explicit Non-Claims clarify the scalar scope."
+  ]
+}
