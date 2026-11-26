@@ -1,0 +1,57 @@
+{
+  "assessed_at": "2026-11-26T10:02:31Z",
+  "canonical_sha256": "7a589e1bc49060c3810c7bf2a1392ffe4a58d7881ec0556e076bef801cf18fd1",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All 18 Lean theorem statements in Table 1, exact cardinality 43589145600, binary-box invariants (Z+S+D=3^n, S+2D=M*2^n) across C03-C08 in Table 2, and q=40 log-enclosure widths (2.19e-39, 2.28e-93) in Fig. 3 check out exactly on direct verification.",
+      "stars": 5
+    },
+    "novelty": {
+      "basis": "Independent machine-checked constructive audit (Fin 3 tetracode/AGL(1,9), zero-float binomial inversion, rational ln enclosures) of Bhandari-Khetan's Nov. 2026 trifferent code bounds [1], though all underlying asymptotic theorems belong to [1]-[3].",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "Provides explicit Lean 4.35.0 and Python 3.10+ reproduction commands, SHA-256 manifest, and 37 self-checks, though external artifact execution and verbatim cross-checking against [1]'s equations cannot be performed from the 3-page PDF alone.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Constructive Lean 4.35.0 kernel (0 sorry, 0 Classical.choice) plus an AST-audited zero-float Z/Q verifier and 20 forgery tests; slightly bounded because Theorems 7-12 verify decoupled scaling identities and Appendix A.3's 11,713-leaf check is excluded.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Establishes high-confidence exact rational and constructive verification for core algebraic, binary-box, and log-enclosure pillars of [1], while the main lower-bound bottleneck (Appendix A.3) and general-n reductions remain outside formal scope.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.6,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-2CVQQQDQ0N9S3TDX",
+  "potential_errors": [
+    "Table 1 Row 16 (double_box_density_96) omits the implicit natural-number domain n, D, A, Z in N in its abbreviated statement, whereas the implication 6(M-1)A <= 18(M-3)A for M >= 4 requires A >= 0 (and nD <= 96Z uses M - 3 > 0).",
+    "Table 1 Row 4 (agl19_bijective_on_f9) states injectivity on F_3^2 while the text describes bijectivity; although injectivity implies bijectivity on a finite 9-element set, the stated Lean signature only records injectivity.",
+    "Eq. (2) uses L_q(chi) without printing its explicit finite partial-sum formula 2 * sum_{k=0}^{q-1} chi^{2k+1}/(2k+1) in the paper, deferring the definition to Appendix A.4 of [1]."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Clean constructive Lean 4.35.0 formalization (18 theorems, 0 sorry, 0 Classical.choice, 0 warnings) covering finite-field tetracode properties (constant distance 3, rainbow-iff-distinct on all 729 triples), AGL(1,9) determinant non-vanishing and injectivity over F_3[i]/(i^2+1), exact |Q| = 43,589,145,600, and Section 3.6 algebraic inequalities.",
+    "Mathematically sound zero-float Python verification over Z and Q covering sharp 2-transitivity of AGL(1,9), exact binomial-inversion pair counts H_0,...,H_{14} with E[J] = 14/9, first-principles 48-case verification of Lemma 3.2's core contradiction on Eq. (25), exact 3^n binary-box enumeration for n <= 5, and ultra-tight Appendix A.4 rational ln enclosures.",
+    "Strong internal quantitative consistency across text, tables, and plots: Table 2 binary-box counts satisfy Z+S+D = 3^n and S+2D = M*2^n for C03-C08, and Figure 3 log-enclosure widths at q=40 match 2.19e-39 (for ln|Q|) and 2.28e-93 (for ln 1.162579) to three significant figures.",
+    "Explicit, honest scope disclosure clearly stating that the 11,713-leaf external triple-subdivision file of Appendix A.3 is not replayed, backed by 20 adversarial forgery-rejection tests and a SHA-256 manifest."
+  ],
+  "strong_novelty_candidates": [
+    "Constructive Fin 3 Lean 4.35.0 formalization of tetracode rainbow-iff-distinct equivalence and AGL(1,9) invertibility/injectivity paired with AST-audited zero-float exact rational certificate verification (TRIFF-CERT-1.0) for [1]."
+  ],
+  "summary": "This 3-page report presents TRIFF-CERT-1.0, a constructive Lean 4.35.0 kernel (18 theorems, zero Classical.choice) and AST-audited zero-float Python verifier over Z and Q (16 certificates, 37 total tests) auditing core algebraic, coding-theoretic, binary-box, and exact-logarithm pillars of Bhandari and Khetan's improved trifferent code bounds [1]. Every theorem statement in Table 1, arithmetic scaling identity, exact pair-count summary, finite binary-box invariant in Table 2, and rational logarithm-enclosure bound in Figure 3 checks out accurately by direct inspection. The manuscript is scrupulously honest about its scope boundaries—notably excluding the 11,713-leaf Appendix A.3 triple-subdivision file and general-n combinatorial reductions—so no unresolved material objections invalidate its claims, though its contribution is a substantive formal verification audit of selected pillars rather than a full mechanization of [1]'s asymptotic bounds.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:476fe31b-8a38-45e6-aed7-1e76ced1cd38",
+  "weaknesses": [
+    "Substantial gap remains between the audited pillars and the full asymptotic bounds of [1]: the critical 11,713-leaf triple-subdivision check in Appendix A.3 (which actually determines g = 1.162579, whereas N_bar^{1/n} ~ 1.27922 is much looser), the general-n reduction to Lemma 3.2's core, and the Turan derivation of n(M-3)D <= 6(M-1)A are not formalized.",
+    "Several Lean theorems (e.g., Theorems 7-12) certify standalone integer arithmetic identities decoupled from formal definitions of the graph wiring, port probabilities h_i, h_A, or minimum-distance code parameters in [1].",
+    "From the PDF alone, external artifacts (Lean files, Python code, JSON witnesses for C03-C08) cannot be executed, and cross-references to [1]'s numbered equations and appendices cannot be independently checked against [1]."
+  ]
+}

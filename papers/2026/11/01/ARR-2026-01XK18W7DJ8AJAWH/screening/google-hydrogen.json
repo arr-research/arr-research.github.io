@@ -1,0 +1,53 @@
+{
+  "assessed_at": "2026-11-26T10:02:31Z",
+  "canonical_sha256": "3ae5897d130b5fb20ac4870843533be88d583fb69843bd9c6a1678c3d3b2e2a3",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All 18 Lean scalar/Nat identities (modulo minor Table 1 notation omissions in Rows 12, 15, 16) and all numerical invariants across certificates C01–C16 and Figures 1–3 (vertex cover counts, GL dimensions, XOR/CNOT gate counts, and parity-rounded budgets) check out mathematically; however, correctness of the Python verifier and Lean build is reported rather than externally executed from the PDF.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "This 3-page note introduces no new mathematical theorems or complexity results, serving strictly as an independent audit and finite-witness certification suite for Pavlogiannis (2026); its contribution lies in packaging constructive scalar Lean checks with an AST-audited zero-float bitmask verifier and adversarial forgery tests.",
+      "stars": 2
+    },
+    "reproducibility": {
+      "basis": "Section 5 specifies exact versions (Lean 4.35.0, Python 3.10+), build/execution commands, a SHA-256 manifest, and 16 deterministic certificates (C01–C16) with 36 tests, though independent verification requires running the external repository not inspectable inside the PDF.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Constructive Lean discipline (0 sorry, 0 Classical.choice, 9 zero-axiom lemmas) and explicit scope disclosure in Section 2 are commendable, but rigor is limited because graphs, F2 matrices, circuit semantics, general lower bounds, and NP-completeness are omitted from Lean and only checked on 16 small instances in unverified Python.",
+      "stars": 3
+    },
+    "significance": {
+      "basis": "Provides a clean, well-documented sanity-check and witness suite for Pavlogiannis (2026), yet its broader impact is modest because the core combinatorial, algebraic, and complexity-theoretic arguments remain unformalized in Lean.",
+      "stars": 2
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.4,
+  "model_id": "hydrogen",
+  "overall_stars": 3,
+  "paper_id": "ARR-2026-01XK18W7DJ8AJAWH",
+  "potential_errors": [
+    "Table 1 Row 12 (lemma4_cnot_wire_invariant) displays 'y2a=y⊕z⊕xsi⊕xu ∧ y2b=y⊕z⊕xsi⊕xsi+1 ∧ z2=z⊕xsi+1' with unbound variables y2a, y2b, z2 and no let-bindings or implication conclusion, making the abbreviated formula syntactically incomplete as printed.",
+    "Table 1 Rows 15 and 16 reference k' without quantifying or defining k' = 2*floor(k/2) inside the row statement, and Row 14 uses k for tau(G) while Rows 15–16 use k for the vertex-cover budget."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Transparent and honest scope split in Section 2 distinguishing what the Lean kernel proves (18 algebraic/arithmetic identities) from what the Python verifier checks (finite instances C01–C16).",
+    "Constructive Lean 4.35.0 discipline using zero Classical.choice, zero sorry, and 9 zero-axiom lemmas, plus an AST zero-float audit and 18 adversarial forgery-rejection tests.",
+    "Exact numerical and algebraic consistency across all 18 Lemma/Theorem formulas, Table 2 certificates (e.g., G(K2) with n=8, m=24, tau=6, GL(33,2), 55-gate CNOT simulation, and parity-rounded K=53 < 54), and Figures 1–3."
+  ],
+  "strong_novelty_candidates": [],
+  "summary": "The manuscript presents CNOT-HARD-CERT-1.0, a 3-page independent audit of Pavlogiannis's proof (arXiv:2611.34138v1) of the NP-completeness of optimal CNOT synthesis on involutive linear oracles, combining 18 constructive Lean 4.35.0 Boolean/Nat theorems with a zero-float F2 Python bitmask verifier over 16 canonical certificates (C01–C16) and 36 tests. All mathematical identities, graph parameters, GL dimensions, gate counts, and parity-rounding thresholds in the text, tables, and figures are internally consistent and accurately verified by hand, and the authors honestly disclose the division between Lean and Python. However, the formalization depth is quite limited—graphs, F2 matrices, circuit semantics, general lower bounds, and NP-completeness itself are not formalized in Lean, and no verified bridge connects the Lean lemmas to the Python verifier—while Table 1 contains minor notation omissions (notably unbound y2a, y2b, z2 in Row 12).",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:dd884872-72ed-4789-b37f-31facf969781",
+  "weaknesses": [
+    "The title and framing ('Formal Algebraic and F2-Circuit Certification for the NP-Completeness...') overstate the Lean formalization depth: Table 1 shows that Lean only proves 18 scalar Bool and Nat identities (such as 1-bit involution and arithmetic telescoping) rather than formalizing graphs, F2 matrices, XOR/CNOT circuit syntax and semantics, Boyar-Matthews-Peralta's lower bound, or NP-completeness reductions.",
+    "No formal bridge (such as extracted Lean code or proof-producing certificate checking inside Lean) connects the 18 Lean lemmas to the Python verifier, so global soundness of Modes 1–4 rests on trusting unverified Python code tested on 16 small instances (up to GL(33,2)).",
+    "Minor presentation defects in Table 1: Row 12 omits the let-bindings or conclusion for y2a, y2b, z2; Rows 15–16 omit the definition of k'; and variable k changes meaning between Row 14 and Rows 15–16."
+  ]
+}
