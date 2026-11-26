@@ -1,0 +1,57 @@
+{
+  "assessed_at": "2026-11-26T05:42:39Z",
+  "canonical_sha256": "6eadc94aced81f34af94b00fade069e5fe3270198ec1e68899799720640c9435",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All algebraic formulas, block multiplicities (4096 = 56+1008+1680+176+1176), traces (e.g., Tr(40Q)=2081776, B1/B3/B6/B22 traces in Table 3), eigenvalues (-1045*275^(n-1)), and worked witnesses (13/43, 241/400, 281/480) verify exactly against the PDF. Minor notation omissions in Table 2 #10 and Table 3 C14 do not affect validity.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "Explicitly a companion verification artifact to Faisal [3]; primary mathematical discoveries belong to [3]. Original contributions here are the exact rational block LDL^T certification, discovery of exact full-space ranks (4096, 4032, 4096) proving zero spurious null directions in J-Q, and constructive algebraic Lean 4 mechanization.",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "Manuscript provides complete input definitions (rho, L, M, all 24 m_pi integers), symmetry block dimensions/multiplicities, concrete witness coordinates (C03, C15, C16), and a 3-command reproduction workflow with repository/manifest references, though exact rational min pivots for C05-C12 are rounded in Table 3.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Combines zero-floating-point exact-Q pivoted LDL^T block certification with an exhaustive 4096x64 integer check of Eq. (2d) and axiom-free Lean 4.35.0 proofs. Tempered because the Lean theorems formalize scalar Z/N algebraic skeletons rather than matrix Loewner order, and the 15-block reduction relies on symmetry outside Lean.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Independently audits the sole computational bottleneck (Lemma 3/Appendix A) of a preprint [3] purporting to settle the 28-year-old NPT bound entanglement problem, establishing strict positive definiteness of J+Q and Q^{Gamma_in} and exact kernel equality for J-Q. Overall impact remains conditional on the rest of [3].",
+      "stars": 4
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 4.0,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-55WWN4JTQF9MX972",
+  "potential_errors": [
+    "Section 2 states that J and Q commute with Ubar x U x Ubar x Ubar for all U in U(8) and immediately concludes the 5 block types B1, B3, B6, B22, B42 of sizes 1, 3, 6, 22, 42; in fact those computational-basis blocks arise from the diagonal-torus subgroup U(1)^8 (monomial phase conservation e_j - e_i - e_k - e_l = const), whereas full U(8) irreps have dimensions 28, 36, 420, 924, 1280 with multiplicities 3, 3, 1, 1, 2.",
+    "Table 2 theorem #10 (lemma5_step4_population_domination) omits the connecting hypothesis p_ij = a_ij + b_ij and non-negativity a_ij, b_ij >= 0 from the displayed statement, without which the quadratic inequalities do not follow from a_1j <= a_0j and b_0j <= b_1j over Z.",
+    "Table 3 row C14 reports J_+ = 17/5, J_- = 9/7, and J^6 - Q^6 = 551206299456/52521875 = (164/35)^6 - (74/35)^6, which implicitly defines J_+ = (J+Q)/2 and J_- = (J-Q)/2 (i.e., P and M) rather than J +- Q, without defining J_+- in the text or table."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Exact, internally verified mathematical definitions and arithmetic across Eq. (1), Worked Witnesses 1 and 2, Table 1, Table 3, and Figures 1-3, including exact match of Tr(40Q) = 2,081,776 and all block traces on B1, B3, B6, and B22.",
+    "Substantive exact full-space rank characterization (4096, 4032, 4096) for (J+Q, J-Q, Q^{Gamma_in}) combined with exhaustive 262,144-entry verification of (J-Q)(|u> x I) = 0, eliminating the possibility of spurious null directions in J-Q.",
+    "Clear, transparent scope and attribution in Section 1, explicitly crediting Faisal [3] for all primary discoveries and delineating which functional-calculus steps lie outside the finite algebraic Lean 4 kernel.",
+    "Clever radical-free algebraic reformulation of the Bell-fidelity ceiling in Theorem 16 ((4F-N)^2 = (2s-N+2u)^2 <= 2N^2) and inductive positivity identity in Theorem 7."
+  ],
+  "strong_novelty_candidates": [
+    "Exact rational full-space rank certification (4096, 4032, 4096) establishing strict positive definiteness of J+Q and Q^{Gamma_in} and exact equality ker(J-Q) = im(|u> x I) for the 4096-dimensional Choi construction of [3]."
+  ],
+  "summary": "This companion verification preprint presents an independent, zero-floating-point computational and formal-algebraic audit of the key 4096-dimensional Choi matrix construction in Faisal (arXiv:2611.34921v1) on C^8 x C^8. Using exact rational pivoted LDL^T factorizations across all 15 symmetry-orbit blocks (sizes 1, 3, 6, 22, 42) alongside an exhaustive 4096 x 64 integer kernel check, the manuscript establishes strict positive definiteness (rank 4096) for J+Q and Q^{Gamma_in} and exact rank 4032 with ker(J-Q) = im(|u> x I) for J-Q. It additionally reports 18 constructive Lean 4.35.0 theorems (no Mathlib, no sorry, no Classical.choice) capturing scalar algebraic and combinatorial pillars of Lemmas 1-6 and Corollary 2, plus 16 JSON certificates and worked witnesses. All visible formulas, traces, eigenvalues, and witness arithmetic verify consistently, with only minor presentational gaps regarding the scalar scope of the Lean statements, the diagonal-torus origin of the 15 blocks, and compressed notation in Tables 2-3.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:726edd34-033c-4e95-a7f2-ecbd8ee7e82e",
+  "weaknesses": [
+    "The 18 Lean 4 theorems formalize scalar Z/N algebraic identities and inequalities (e.g., #7 for integers P, M >= 0 rather than PSD tensor powers (P+M)^{x n} -+ (P-M)^{x n} >= 0, #18 as a trivial inequality from assumed positivity) rather than the matrix Loewner-order or 4096-dimensional Choi certifications themselves, which reside in the external Python verifier.",
+    "Table 3 displays rounded decimal approximations (e.g., ~2172.42) for minimum positive LDL^T pivots of blocks B6, B22, and B42 instead of exact rational fractions, and full matrix entries of the 15 blocks are external to the PDF.",
+    "As a companion verification artifact, scientific impact is tied to the external correctness of the unverified functional-calculus and n-copy separable-operation arguments in the unrefereed target preprint [3]."
+  ]
+}

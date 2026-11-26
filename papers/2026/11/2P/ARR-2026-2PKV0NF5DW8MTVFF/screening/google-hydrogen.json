@@ -1,0 +1,54 @@
+{
+  "assessed_at": "2026-11-26T05:42:39Z",
+  "canonical_sha256": "b145c79273c3c153478e6b7400a43ab3787e7c902174330293e13a069c7a3541",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All 18 Lean statements in Table 1, Golay weight counts, Steiner S(4,7,23) parameters, nested Leech sizes, exact Gram traces (C01), Paley trace gaps (C13-C14), cosine-1/7 spectra (C15-C16), and asymptotic slopes in Fig. 2 are algebraically exact. Full code/Lean execution and [2] are unverified from the PDF alone.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "Explicitly an unrefereed companion verification artifact to Djaljapayan-Liao-Yu [2], attributing all primary mathematical discoveries to [2]. Contribution is solely zero-float exact-Q LDL^T Gram certification, squared-radical binary search, and 18 Lean 4.35.0 arithmetic lemmas without Mathlib.",
+      "stars": 2
+    },
+    "reproducibility": {
+      "basis": "Documents 16 canonical JSON certificates (C01-C16), 27 unit/forgery/AST tests, SHA-256 manifest, MIT/CC-BY-4.0 licenses, and a three-command reproduction workflow. Exact coordinate tables for some witnesses (e.g., C01, C11-C14) are deferred to the repository rather than printed in full.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Enforces a strict zero-float AST invariant and exact rational pivoted LDL^T checks in Python alongside axiom-minimal Lean 4.35.0 lemmas (propext, Quot.sound only). However, Lean only proves scalar arithmetic cores while matrix/code verification rests on an unverified Python implementation.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Provides an independent exact-arithmetic audit of key closed-form constructions and sharp fixed-angle bounds from [2], notably 57 lines in R^18, 90 lines in R^20, and Theorem 5.1/5.2/Prop. 5.3 instances, though it omits the 23-Niemeier branch searches and any 72-line R^19 construction.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.6,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-2PKV0NF5DW8MTVFF",
+  "potential_errors": [
+    "Worked Witness 2 writes 'pairs in [8]', which uses standard combinatorics notation [8]={1,...,8} (28 pairs) that collides visually with bibliography reference [8] (Wei, 1991).",
+    "Worked Witness 2 writes G = 20 I_56 - (S + I_28) tensor J_2 without specifying the sign convention on the Seidel matrix S of T(8) (namely S = 2A - J + I rather than J - I - 2A, which is required for S + I_28 to have eigenvalue +10 of multiplicity 7 and yield exact rank 49).",
+    "Parenthetical glosses in Table 1 (e.g., '(\\lambda_max(F) < 26 < x^T F x)' in row 4, '(average square 16/3 < 20/3)' in row 12) describe the mathematical context from [2] rather than objects actually formalized in the corresponding scalar Lean 4 statements."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Transparent scope and attribution: explicitly credits all primary mathematical discoveries to Djaljapayan, Liao, and Yu [2] and clearly states that large-scale root-type branch searches across all 23 rooted Niemeier lattices lie outside its scope.",
+    "Every numerical identity, inequality, and spectral check reported in the PDF is internally consistent and mathematically exact: all 18 statements in Table 1 hold, C01 traces (285 and 4617) and C03 Golay/Steiner numbers check out, C15-C16 block-diagonal Gram matrices have exact rank 10 and 11, Paley trace gaps 4(p+1)-1 match Fig. 3(b), and the Fig. 2 asymptotic slopes 0.1831 = 72/(2+7*sqrt(10)) - 2.8 and 0.1017 = 600/(2+23*sqrt(26)) - 276/56 match to four decimal places.",
+    "Strong engineering discipline for computational certification: strict zero-float AST invariant, exact rational pivoted LDL^T over Q, squared-radical integer binary search avoiding floating-point rounding, and Mathlib-free Lean 4.35.0 proofs audited to depend only on propext and Quot.sound."
+  ],
+  "strong_novelty_candidates": [],
+  "summary": "This 4-page unrefereed companion preprint presents EQUIANGULAR-18-20-CERT-1.0, a zero-floating-point Python and Lean 4.35.0 certification suite auditing selected constructions and algebraic bounds from Djaljapayan, Liao, and Yu (arXiv:2611.34855v1) on real equiangular lines in dimensions 18-20 and sharp fixed-angle intervals. All algebraic identities, Golay/Leech counts, exact Gram traces and ranks, Paley trace surpluses, and asymptotic interval slopes visible in the PDF verify cleanly with no unresolved material objections. Its main limitations are that the Lean 4 theorems formalize only scalar arithmetic cores rather than matrix/spectral theory, the 72-line R^19 configuration and Niemeier root-type branch searches are not certified, and execution of the external repository was not performed.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:adb9efdd-2464-4792-aab8-5be54cf4bf80",
+  "weaknesses": [
+    "Gap in dimension 19 coverage: despite the title ('in Dimensions 18-20') and Section 1's claim to certify 'the closed-form lower-bound constructions', neither Table 1 nor Table 2 certifies a 72-line configuration in R^19 (only B(19)=76 and 19+1+1=21 appear).",
+    "Limited mathematical depth in Lean 4: all 18 formalized statements in Table 1 are elementary scalar identities or integer inequalities over N or Z (e.g., 4*5 - 4 = 16 < 20, floor evaluations, and polynomial expansions), while the non-trivial linear algebra, Golay/Leech constructions, and exact-Q LDL^T checks reside in an unverified Python script.",
+    "Incomplete self-contained detail for some witnesses: the explicit Gram extensions for u=1, 2 in Worked Witness 2 (C12) and the matching mt-line Gram constructions for Paley conference matrices (C13-C14) are not written out explicitly in the PDF, and Theorem 5.1 Gram matrices are certified only at q=19 (C11-C12), not at q=111, 321, or 5601."
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "assessed_at": "2026-11-26T05:42:39Z",
+  "canonical_sha256": "259c00fbb8f5dc1df24a0f99e9307f1d061fcc95c8b75adc8d7d8664ea983657",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All 18 Lean theorem statements in Table 1, the Section 6 inequality (b/a)a^omega <= (ab)^(omega/2), and worked witnesses C06, C08, C09, and C15 are algebraically verified; C16 omits the definition of J, creating a sign ambiguity under standard symplectic J.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "Explicitly a companion verification preprint attributing all primary theorems to Chen [4]. Original value lies in the zero-float dual-ring/Bini certification suite and documenting the Section 6 reversed d<=c vs d>=c labels with a constructive aspect-ratio proof.",
+      "stars": 2
+    },
+    "reproducibility": {
+      "basis": "Reports exact Lean 4.35.0 #print axioms status, zero-float AST rules, 16 certificate summaries (Table 2), SHA-256 manifest, and three-command build instructions. However, Lean proofs and Python verifier sources are external and unverified from the PDF alone.",
+      "stars": 3
+    },
+    "rigor": {
+      "basis": "Scope boundaries explicitly exclude Sections 4.1-4.3 real-analytic/semialgebraic pillars, and Lean statements in Table 1 are exact. However, several lemmas (Thms 12, 14, 15, 16, 18) formalize trivial arithmetic or 2D proxies rather than the full reductions.",
+      "stars": 3
+    },
+    "significance": {
+      "basis": "Provides an independent finite-algebraic audit and clarifies the Section 6 dense-quadratic block bound (dc)^(omega_C/2+o(1)) for Chen [4]. Impact is auxiliary because primary complexity-theoretic breakthroughs belong exclusively to [4] and [7].",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.4,
+  "model_id": "hydrogen",
+  "overall_stars": 3,
+  "paper_id": "ARR-2026-1QZ9F8TJE880DVZW",
+  "potential_errors": [
+    "In Worked Witness 2 (C16, p. 2), the 4x4 skew-symmetric matrix J is not defined; under standard choices such as diag(J_2, J_2) or [[0, I_2], [-I_2, 0]], columns (e_1, e_2, e_2, -e_1) yield R J R^T = 2(e_1 e_2^T - e_2 e_1^T) != 0 and HJH != 0, whereas the displayed cancellation e_1 e_2^T - e_2 e_1^T + e_2 e_1^T - e_1 e_2^T = 0 requires either J = diag(J_2, -J_2) or fourth column +e_1.",
+    "Table 1 Theorem 15 (sec6_openai_9_4_separation_exponents) includes the inequalities 3^5 = 243, 4^5 = 1024, and 4*243 < 1024 without prose explanation connecting them to the omega_C = 9/4 separation.",
+    "Table 2 entry C11 reports c_3 = 42 without specifying the input polynomial/tensor instance in the PDF."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Clear, honest attribution and scope delineation: explicitly credits Chen Xiangle [4] for all primary theorems and states that real-analytic/semialgebraic steps (Hardt decomposition, Tarski-Seidenberg, Sard, Fubini, implicit function theorem) lie outside its finite algebraic scope.",
+    "Accurate algebraic audit of Section 6 of [4], identifying the reversed d<=c vs d>=c regime labels and proving (b/a)a^omega <= (ab)^(omega/2) via the squared integer identity (b*a^(k+1))^2 <= (ab)^(k+2) (Theorem 17) and cleared 8th-power bound b^8 a^10 <= (ab)^9 at omega_C = 9/4.",
+    "Exact algebraic verification of all 18 Lean 4.35.0 statements printed in Table 1 (including dual-ring product/reciprocal identities mod (alpha^2, beta^2), rank-2 border degeneration, Baur-Strassen gate budget chain, and midpoint convexity bounds).",
+    "Internally consistent exact rational calculations across Worked Witnesses C06, C08, C09, C12, C15 and Figures 1-3 (e.g., dual-ring inverse coeff -1/27 in C06, cubic gradient coeff 3 in C08, border-rank error 191t + 110t^2 with max 101/5 in C09, and cleared bounds in C15-C16)."
+  ],
+  "strong_novelty_candidates": [
+    "Constructive proof and cleared-power verification of the Section 6 dense-quadratic aspect-ratio bound (b/a)a^omega <= (ab)^(omega/2) correcting the d<=c vs d>=c label reversal in Chen [4]."
+  ],
+  "summary": "This 4-page companion verification preprint provides an independent finite-algebraic audit of Chen Xiangle's deterministic real matrix-product verification paper (arXiv:2611.34814v1), combining 18 Lean 4.35.0 lemmas (reported axiom-clean without Mathlib), a zero-float exact rational and dual-ring Python verifier across 16 certificates, and a constructive clarification of Section 6's dense-quadratic block inequality. All 18 Lean statements in Table 1, the Section 6 aspect-ratio proof, and the worked witnesses (except for an unstated matrix J convention in C16) are algebraically sound, though several Lean theorems formalize elementary arithmetic proxies rather than full general-dimension theorems and external code cannot be executed from the PDF alone.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:0e4161eb-9b0e-4600-9b03-dce67f3eec91",
+  "weaknesses": [
+    "Several of the 18 Lean theorems presented as 'core algebraic pillars' (Table 1) are elementary arithmetic identities or fixed-dimension proxies—specifically Thm 12 (2*(5*(3s)) = 30s), Thm 14 (r^k <= (kD+1)r^k rather than Lagrange interpolation), Thm 16 (2(n-1) = 2n-2 rather than univariate PIT), and Thm 18 (2-variable integer sum-of-squares rather than general-dimension ker(R^T R) = ker R over R).",
+    "Because the Lean files, Python verifier, and test suite reside in an external repository not embedded in the PDF, the claimed 0-sorry build, #print axioms audit, and 29 pytest checks cannot be independently verified from the manuscript alone.",
+    "Worked Witness 2 (C16) omits the explicit definition of the skew-symmetric matrix J, leaving the claimed RJR^T = 0 and HJH = 0 cancellation under-specified and false under the standard block-symplectic convention diag(J_2, J_2)."
+  ]
+}
