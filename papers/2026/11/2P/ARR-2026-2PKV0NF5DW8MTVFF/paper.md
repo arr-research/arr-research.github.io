@@ -1,0 +1,225 @@
+# Exact Rational LDL^T Gram Certification and Constructive Lean 4 Formalization of Real Equiangular Lines in Dimensions 18-20 and Sharp Fixed-Angle Bounds
+
+**Author:** Lluis Eriksson  
+**AIRR Identifier:** `ARR-2026-2PKV0NF5DW8MTVFF` (v1)  
+**License:** CC-BY-4.0 (manuscript), MIT (verification repository)  
+**Verification Repository:** https://github.com/lluiseriksson/real-equiangular-lines-18-20-certificates (`v1.0.0`)  
+**Canonical PDF SHA-256:** `b145c79273c3c153478e6b7400a43ab3787e7c902174330293e13a069c7a3541`
+
+## Abstract
+
+Djaljapayan, Liao, and Yu (arXiv:2611.34855v1, Nov. 2026) determine the last three open maximum real equiangular line counts through dimension 41, proving N(18)=57, N(19)=72, and N(20)=90, together with explicit sharp fixed-angle intervals N_{1/q}(d)=d+7 (q>=319) and N_{1/q}(d)=d+23 (q>=5599), a quadratic-irrational conference-matrix family, and N_{1/7}(10)=12, N_{1/7}(11)=13. We provide an independent, unrefereed companion certification suite (EQUIANGULAR-18-20-CERT-1.0) comprising: (i) 18 constructive Lean 4.35.0 theorems (0 sorry, 0 custom axioms, 0 Classical.choice); (ii) exact rational pivoted LDL^T Gram certifications of the 57-line R^18 configuration, the binary [23,12,7] Golay code and nested Leech-lattice sections 276 -> 176 -> 126 -> 90 from R^23 into R^22, R^21, R^20, explicit q=19 Seidel systems in R^49-R^51, Paley conference matrices, and cosine-1/7 systems; and (iii) 16 canonical JSON certificates and 27 unit/forgery/AST tests.
+
+## Full Extracted Text
+
+--- Page 1 ---
+Exact RationalLDL T Gram Certification and Constructive
+Lean 4 Formalization of Real Equiangular Lines in Dimensions
+18–20 and Sharp Fixed-Angle Bounds
+Lluis Eriksson
+Independent Researcher (https://github.com/lluiseriksson)
+Companion Preprint to Djaljapayan–Liao–Yu (arXiv:2611.34855v1) — Unrefereed Formal-Verification Artifact
+November 26, 2026
+Abstract
+Djaljapayan, Liao, and Yu ( arXiv:2611.34855v1,
+Nov. 2026) determine the last three open maximum
+real equiangular line counts through dimension 41, proving
+N(18) = 57, N(19) = 72, and N(20) = 90, together with
+explicit sharp fixed-angle intervals N1/q(d) = d + 7 (q≥ 319)
+and N1/q(d) = d + 23 ( q≥ 5599), a quadratic-irrational
+conference-matrix family, and N1/7(10) = 12, N1/7(11) = 13.
+We provide an independent, zero-floating-point companion
+certification suite (EQUIANGULAR-18-20-CERT-1.0) compris-
+ing: (i) 18 constructive theorems in Lean 4.35.0 (0 sorry,
+0 custom axioms, 0 Classical.choice); (ii) exact rational
+pivoted LDLT Gram certifications of the 57-line R18
+configuration (Prop. 2.3), the binary [23 , 12, 7] Golay code
+and nested Leech-lattice sections 276 → 176 → 126 → 90
+from R23 into R22,R21,R20 (Sec. 4.5–4.6), the explicit q = 19
+circulant/Seidel systems of 56 , 57, 58 lines in R49,R50,R51
+(Thm. 5.1), Paley conference matrices (Thm. 5.2), and the
+cosine-1/7 systems (Prop. 5.3); and (iii) 16 canonical JSON
+certificates and 27 unit/forgery/AST tests.
+1 Introduction and Scope
+Since Lemmens and Seidel [ 5] initiated the systematic classi-
+fication of real equiangular lines N(d), dimensions 18, 19, 20
+remained the sole undetermined entries for d≤ 41, with
+prior upper bounds 59 , 74, 94 [3]. In [ 2], Djaljapayan, Liao,
+and Yu close all three dimensions ( N(18) = 57 , N(19) =
+72, N(20) = 90) via paired sections in rank-24 even uni-
+modular lattices, root-system exclusions, and generalized
+Hamming weights [8] of the binary [276 , 23, 100] Leech evalu-
+ation code, while also establishing sharp fixed-angle intervals
+N1/q(d) = d + k (k∈ {7, 23}) combining repeated Seidel
+blocks with the Bukh–Cox coherence bound [1, 4].
+Scope and attribution.This note is anunrefereed com-
+panion verification preprintto [ 2]. All primary mathemat-
+ical discoveries, Niemeier exclusions, and fixed-angle theo-
+rems belong exclusively to Djaljapayan, Liao, and Yu [ 2].
+Our contribution is an independent, zero-floating-point audit
+layer: we certify the core algebraic inequalities, Golay-code
+weight enumerator, exact Gram matrices via exact- QLDL T ,
+and integer-squaring fixed-angle bounds in Lean 4.35.0 and
+Python. Large-scale root-type branch searches across all
+23 rooted Niemeier lattices (Sections 2.4, 3.4, 4.3 of [ 2]) lie
+outside our lightweight companion scope; we independently
+certify the closed-form lower-bound constructions, the analyt-
+ical Leech/Golay obstruction, the Frobenius/orthogonal-root
+bounds, and all Section 5 sharp fixed-angle results.
+2 Constructive Lean 4.35.0 Formal-
+ization
+We formalize 18 core algebraic, lattice, Golay-code,
+generalized-Hamming-weight, Seidel-circulant, and
+conference-matrix lemmas in lean/Equiangular1820Cert.l
+ean under Lean 4.35.0 without Mathlib, audited via #print
+axioms to depend strictly on propext and Quot.sound
+(0 sorry, 0 custom axioms, 0 Classical.choice, 0 warn-
+ings). Table 1 records all 18 theorem statements.
+3 Zero-Float Verifier, Exact Gram
+Audits, and Worked Witnesses
+Our standalone verifier src/equiangular_18_20_verifi
+er.py enforces a strict zero-float invariant audited by AST
+inspection (zero float literals, zero float() calls, zero / or
+/=, zero math/numpy imports). Every Gram matrix PSD and
+rank check uses exact rational pivoted LDLT over Q, and
+every irrational threshold ⌊LkQ⌋ in Theorem 5.1 is computed
+via exact integer binary search with squared-radical compar-
+isons (72 Q− 2n)2 ≥ 490n2 (k = 7) and (600 Q− 2n)2 ≥
+13754n2 (k = 23). All 16 canonical certificates ( C01–
+C16) pass python -m src.equiangular_18_20_verifier
+certificates, and all 27 unit/forgery/AST tests pass under
+pytest -qin under 2 s (Table 2).
+Worked Witness 1 (57 Lines in R18 and 90 Leech
+Axes in R20, C01 & C06).In C01, the 45 matched-edge
+vectors (p({i}), p(e)) ( i∈Z/ 9Z, e∈E i of K10) plus the
+12 arc blocks ( p(Bu→v), 0) of K4 [6] yield an exact integer
+57 × 57 Gram matrix with diagonal 5 and off-diagonal ±1;
+exact-QLDL T certifies PSD and exact rank 18 ( trG = 285,
+trG 2 = 4617). In C03–C06, generating all 2 12 = 4096 words
+of the binary [23 , 12, 7] Golay code via g(x) = 1 + x + x5 +
+x6 + x7 + x9 + x11 yields exact weight distribution {0 : 1, 7 :
+1
+
+--- Page 2 ---
+Table 1: All 18 constructive Lean 4.35.0 theorems in Equiangular1820Cert.lean (0 sorry, 0 Classical.choice), with
+exact statements.
+# Lean Theorem Identifier Exact Formalized Statement (overNorZ)
+1lemma13 paired lattice norms2(5−2) = 6,5−1 = 4,5−2 = 3,18 + 1 + 2 = 19 + 1 + 1 = 20 + 1 + 0 = 21 (q= 5 norms/ranks)
+2lemma22 dim18 angle and rankr≤18∧57q 2 ≤r(q 2 + 56) =⇒13q 2 ≤336∧(q= 5→18≤r)
+3sec22 dim18 58 frobenius identity58·5 = 290,58·82 = 4756,4756 + 18·256−32·290 = 84,18·4756−290 2 = 1508
+4lemma25 norm1 exclusion84<10 2 ∧16 + 10 = 26<58 (λ max(F)<26< x T Fx)
+5sec222 gram trace bound bn≥1∧25n 2 ≤d(n 2 + 24n) =⇒n(25−d)≤24d;B(18) = 61, B(19) = 76, B(20) = 96
+6sec23 orthogonal root identity(t−16) 2 + 4t−4b= (t−14) 2 + 60−4b
+7sec23 clique degree cap58·4 = 232∧4·232<60·18−84 (928<996, Prop. 2.8 atr= 18)
+8sec45 golay perfect covering1 + 23 + 253 + 1771 = 2048, 4096·2048 = 2 23, 23 + 253 = 276
+9lemma48 dual min norm five thirdsy 2 ≥1∧60y 2N≤36y 2
+2 =⇒5N≤3y 2 (y2 ≥5/3)
+10lemma48 weight100 five lifts27k−(k−2t) 2 = 180 for all 5 pairs (k, t)∈ {(7,2),(8,1),(12,0),(15,0),(23,1)}
+11prop49 min word count ge 4k≤7∧s≤185∧100k+ 112(7−k)≤4s=⇒k≥4
+12prop49 avg square contradiction4·5−4 = 16<20 (average square 16/3<20/3)
+13sec46 nested leech sections253−77 = 176, 168−42 = 126, 168−84 + 6 = 90; 276− {100,150,186}={176,126,90}
+14thm51 seed parameters and radicals7·9 = 3·28−21,23·55 = 5·276−115; 3162 2 <10 7 <3163 2,5099 2 <26·10 6 <5100 2
+15thm51 circulant eigenvalue positivityb≥5∧t≥1∧r < t∧Q+ 2r=bt=⇒(b−4)t < Q−2r∧0<(b−4)t
+16thm51 extension pd marginsb≥10∧r+ 1≤t=⇒(b−2)t≤bt−2r−2
+17thm52 conference trace contradictionh≥1∧t≥2 =⇒(2ht+ 1) 2 <(h+ 1)(4ht 2) (gap 4ht(t−1)−1>0)
+18prop53 cosine one seventh relative bound⌊48·10/39⌋= 12∧ ⌊48·11/38⌋= 13
+Table 2: Summary of all 16 verified EQUIANGULAR-18-20-CERT-1.0 canonical certificates (C01–C16), with live outputs from
+verify file.
+ID Mode / Submode Verified Instance Exact Certified Metrics
+C01M1a Prop. 2.3 57 lines inR 18 (45K 10 + 12K 4) 57×57 Gram (diag = 5,off =±1), PSD, exact rank 18, nullity 39
+C02M1b Dim-18 Exc. 58-line Frobenius trF= 290, trF 2 = 4756,∥F−16I∥ 2
+F = 84,B≤232 (Prop. 2.8)
+C03M2a GolayG 23 Cyclicg(x) = 0xAE3 4096 words, 253 heptads,λ= (253,77,21,5,1), 5/5 weight-100 lifts
+C04M2b LeechV 22 Heptads avoidinga176×176 Gram (|H 1 ∩H 2| −2∈ {±1}), PSD, exact rank 22
+C05M2b LeechV 21 |H∩O|= 2, a /∈H126×126 Gram, PSD, exact rank 21,d 2(C) = 150
+C06M2b LeechV 20 |H∩O|= 2, a, b /∈H90×90 Gram, PSD, exact rank 20, nullity 70,d 3(C) = 186
+C07M3a Thm. 5.1q= 19, k= 7t= 2, r= 0,[d −, d+] = [49,51] (len 3,N 1/19(d) =d+ 7)
+C08M3a Thm. 5.1q= 111, k= 23t= 2, r= 0,[d −, d+] = [529,539] (len 11,N 1/111(d) =d+ 23)
+C09M3a Thm. 5.1q= 321, k= 7t= 34, r= 9,[d −, d+] = [945,952] (len 8)
+C10M3a Thm. 5.1q= 5601, k= 23t= 102, r= 55,[d −, d+] = [28129,28155] (len 27)
+C11M3b Thm. 5.1 Gramq= 19, u= 0 (56 lines) 56×56 Gram (diag = 19,off =±1), PSD, exact rank 49
+C12M3b Thm. 5.1 Gramq= 19, u= 2 (58 lines) 58×58 Gram (diag = 19,off =±1), PSD, exact rank 51
+C13M4a Thm. 5.2 Paleyp= 5 (m= 6), t= 2 SymmetricC 2 = 5I6,N 1/(1+2
+√
+5)(9) = 12, trace gap +23
+C14M4a Thm. 5.2 Paleyp= 13 (m= 14), t= 2 SymmetricC 2 = 13I14,N 1/(1+2
+√
+13)(21) = 28, trace gap +55
+C15M4b Prop. 5.3q= 7, d= 10, n= 12 8I 12 −2 diag(J4, J4, J4) +J 12: PSD, exact rank 10, rel. cap 12
+C16M4b Prop. 5.3q= 7, d= 11, n= 13 8I 13 −2 diag(J4, J4, J4, J1) +J 13: PSD, exact rank 11, rel. cap 13
+253, 8 : 506, 11 : 1288, 12 : 1288, 15 : 506, 16 : 253, 23 : 1} and
+Steiner S(4, 7, 23) counts (253, 77, 21, 5, 1). Distinct heptads
+H1, H2 satisfy |H1 ∩H 2| ∈ {1, 3}, giving exact Leech-axis
+inner product ( qH1 , qH2 ) = |H1 ∩H 2| −2 ∈ {−1, +1} (and
+5 on the diagonal). Filtering by a /∈H, |H∩O| = 2, and
+b /∈Hyields exact nested Gram matrices of sizes 176 , 126, 90
+with exact-QLDL T ranks 22,21,20 (Fig. 1b).
+Worked Witness 2 (q = 19Sharp Interval and Paley
+Conference Family, C11–C14).At q = 19, k= 7 ( Q =
+20, b= 10, t= 2, r= 0, so the circulant adjacency A = 0),
+the 28 × 28 seed Seidel matrix S of pairs in [8] yields G =
+20I56 − (S + I28) ⊗J 2 of exact rank 49 ( C11), and adjoining
+u = 1, 2 lines via the alternating eigenvectorz = (+1,−1, . . .)
+gives 57 lines in R50 (u = 1 certified in tests/test_ver
+ifier.py ) and 58 lines in R51 (u = 2 in C12, Fig. 3a).
+For p∈ {5, 13, 17, 29} [7], the Paley symmetric conference
+matrix C of order m = p + 1 satisfies C2 = pIm and trace
+contradiction gap 4(p + 1) − 1 ∈ {23, 55, 71, 119} (C13–C14,
+Fig. 3b).
+4 Reproducibility and Availability
+All source code, Lean 4 proofs, certificates, figure scripts,
+and SHA-256 manifest ( MANIFEST.sha256) are archived
+at https://github.com/lluiseriksson/real- equ
+iangular- lines- 18- 20- certificates under MIT
+(code/Lean/data) and CC-BY-4.0 (manuscript/figures) li-
+censes. Reproduction requires three commands: (cd lean
+&& lake build), python -m src.equiangular_18_20_ve
+rifier certificates, andpytest -q.
+AI Assistance Disclosure.Google Antigravity assisted
+with Lean 4 proof engineering, zero-float verifier implemen-
+tation, test/figure automation, and LaTeX drafting. The
+author verified every mathematical derivation, Lean axiom
+audit, certificate check, and visual figure inspection, and
+takes full responsibility for all contents.
+References
+[1] Boris Bukh and Christopher Cox. Nearly orthogonal vec-
+tors and small antipodal spherical codes.Israel Journal
+of Mathematics, 238:359–388, 2020.
+2
+
+--- Page 3 ---
+Figure 1:Closing Dimensions 18–20 and Nested Leech Sections.(a) Exact maxima N(18) = 57, N(19) = 72, N(20) =
+90 versus prior upper bounds (59 , 74, 94) and the Gram trace bound. (b) Exact partition |V23−j| + dj(C) = 276 verified via
+exact-QLDL T onC04–C06.
+Figure 2:Theorem 5.1 Sharp Fixed-Angle Intervals.Exact consecutive-dimension interval lengthsd + −d − + 1 over
+odd q computed with zero-float squared-radical binary search for (a) k = 7 ( q≥ 319, slope ≈ 0.1831) and (b) k = 23
+(q≥5599, slope≈0.1017), with live witnessesC09andC10.
+[2] Valjakas Djaljapayan, Zhen-Qi Liao, and Wei-Hsuan Yu.
+Real equiangular lines in dimensions 18–20 and sharp
+fixed-angle bounds, November 2026. arXiv:2611.34855v1,
+25 Nov 2026.
+[3] Gary R. W. Greaves and Jeven Syatriadi. Real equian-
+gular lines in dimension 18 and the Jacobi identity for
+complementary subgraphs.Journal of Combinatorial
+Theory, Series A, 201:105812, 2024.
+[4] Zilin Jiang, Jonathan Tidor, Yuan Yao, Shengtong Zhang,
+and Yufei Zhao. Equiangular lines with a fixed angle.
+Annals of Mathematics, 194(3):729–743, 2021.
+[5] P. W. H. Lemmens and J. J. Seidel. Equiangular lines.
+Journal of Algebra, 24(3):494–512, 1973.
+[6] Yen-chi Roger Lin, Akihiro Munemasa, Tetsuji Taniguchi,
+and Kiyoto Yoshino. Sets of equiangular lines in dimen-
+sion 18 constructed from A9 ⊕A 9 ⊕A 1.Linear Algebra
+and its Applications, 724:257–279, 2025.
+[7] Raymond E. A. C. Paley. On orthogonal matrices.Jour-
+nal of Mathematics and Physics, 12:311–320, 1933.
+[8] Victor K. Wei. Generalized Hamming weights for lin-
+ear codes.IEEE Transactions on Information Theory,
+37(5):1412–1418, 1991.
+3
+
+--- Page 4 ---
+Figure 3:Exact- LDLT Certified Gram Systems and Paley Conference Gaps.(a) Live certified exact ranks and line
+counts across Modes 1–4. (b) Exact trace surplus ( h + 1)(4ht2) − (mt + 1)2 = 4(p + 1) − 1 > 0 forbidding mt + 1 lines at
+quadratic-irrational cosines 1/(1 + 2√p) (Thm. 5.2).
+4
