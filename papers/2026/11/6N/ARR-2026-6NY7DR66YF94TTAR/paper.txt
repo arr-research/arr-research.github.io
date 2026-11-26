@@ -1,0 +1,722 @@
+--- Page 1 ---
+Analytical Néel Optimality, Zero-Float Thermal PPT-Bound
+Entanglement Proofs, and Constructive Lean 4.35.0
+Formalization for Symmetric XY-Chain Covariance Criteria
+Lluis Eriksson∗
+November 26, 2026
+Abstract
+Mathé, Usui, Gühne, and Vitagliano (arXiv:2611.332
+84v1) derive optimal covariance-matrix-criterion (CMC)
+structure-factor witnesses for thermal spin-1/2XY chains,
+lower-bound the geometric measure of entanglementEG(ϱ)
+via a numerical semidefinite relaxation of a product-state
+maximization conjecture, and report thermal PPT-bound
+entanglement in theN = 4periodic XX chain via floating-
+point diagonalization. We advance their program on
+three fronts. First (Theorem A), we build a stan-
+dalone constructive Lean 4.35.0 kernel formalizing Ob-
+servation 1 (arbitrary-N Bloch-sphere spin-squeezing and
+finite-mixture variance concavity), Theorem 1 (exact 3-
+variable CMC polyhedron LP optimality and 4-corner
+attainability), Corollary 1 (exact primal–dual separabil-
+ity equivalence with constructive local-noise decomposi-
+tion), and Proposition 1 (best-separable-approximation
+bound). Second (Theorem B), weanalytically resolve
+their Section H Néel-state optimality conjecture atN = 4:
+proving the exact 4-qubit Bloch-vector singlet identity
+p0 = (3 −S2 + Q)/24 ≤1/3(attained iff Néel), the spin-
+sector bound2 p2 ≥p 0, and global secular dominance
+fϕ(µ) ≤fN´ eel(µ)for all µ>−λ> 0. Thus the maximum
+over product states ofλmax(λW′+ |ϕ⟩⟨ϕ|)is exactly the
+largest rootµN´ eel(λ)of µ3 −(λ+1)µ2 +(λ−2λ2)µ+λ2 = 0,
+yielding SDP-free certified analyticalEG(ϱ)lower bounds.
+Third (Theorem C), we derive the exact algebraic thermo-
+dynamics of the 4-qubit periodic ferromagnetic XX chain
+via H5−12H3+32H = 0, prove identicale+2β cancellation
+in the 3-term CMC threshold, and deliver azero-float exact
+rational proof(via LDL⊤Cholesky and Gershgorin enclo-
+sures of radius<10−29, and<10−43 at M = 22) that all
+seven partial transposes ofϱβ are strictly positive definite
+while ωCMC(ϱβ) <1across β∈{ 289/500,72/125,23/40}.
+All 20 Lean 4.35.0 theorems verify with zerosorry, zero
+custom axioms, and zeroClassical.choice, paired with
+an AST-audited zero-float verifier, 16 JSON certificates,
+and 61 unit and forgery-rejection tests.
+∗Independent researcher. Research, formalization, and verification
+conducted with Google Antigravity assistance. Code, Lean 4 proofs,
+and certificates: MIT license; manuscript and figures: CC-BY-4.0.
+Repository: github.com/lluiseriksson/xy-chain-cmc-neel-cer
+tificates(v1.0.0).
+1 Introduction
+Detecting and quantifying multipartite thermal entangle-
+ment in quantum spin chains from experimentally accessi-
+ble two-point correlations (structure factors) is a central
+problem in quantum many-body physics [2, 1, 6, 7]. In a
+recent work, Mathé, Usui, Gühne, and Vitagliano [5] solved
+the exact optimal covariance matrix criterion (CMC) for
+symmetric spin-1/2XY chains [4], reducing the full many-
+body separability test to a closed-form piecewise-linear
+witness ωCMC(ϱ)in three normalized structure-factor vari-
+ances( sx,sy,sz)and linking ωCMC to both the best sepa-
+rable approximation (BSA) [3] and the geometric measure
+of entanglementEG(ϱ)[8].
+Two analytical and certification gaps remain open in [5]:
+1. Product-state maximization forEG(ϱ):Evalu-
+ating the Legendre-transform lower boundEG(ϱ) ≥
+1 + λ⟨W′⟩ϱ −sup |ϕ⟩prod λmax(λW′+ |ϕ⟩⟨ϕ|)requires
+optimizing over allN-qubit product states|ϕ⟩. Sec-
+tion H of [5] observes numerically that the Néel state
+appears to maximize the largest eigenvalue and resorts
+to a PPT-relaxation semidefinite program (SDP) to
+obtain safe bounds.
+2. Floating-point sensitivity of narrow thermal
+PPT-bound entanglement:For the N = 4peri-
+odic XX chain, thermal PPT-bound entanglement (all
+seven nontrivial partial transposes positive semidef-
+inite while ωCMC < 1) exists only inside a narrow
+temperature windowT∈ (1.7280,1.7402)where the
+minimum partial-transpose eigenvalue is of order10−4
+to10 −3, making floating-point eigensolver claims vul-
+nerable to rounding artifacts.
+We close both gaps rigorously and package the
+entire theoretical hierarchy into a machine-verified
+framework (XY-CMC-NEEL-CERT-1.0) combining 20 con-
+structive Lean 4.35.0 theorems (zero sorry, zero
+Classical.choice, zero Mathlib dependencies) with an
+AST-audited zero-float exact rational Python verifier over
+Q.
+1
+
+--- Page 2 ---
+2 Constructive Structural Formal-
+ization of CMC Duality and BSA
+Let ϱ be anN-qubit state with spin-α structure factors
+Sα(q) = 1
+N
+∑N
+j,l=1 eiq(j−l) ⟨σα
+j σα
+l ⟩(α∈{x,y,z} ). For a
+translation-invariant state with vanishing odd moments,
+the diagonalized covariance blocks yield normalized vari-
+ances sα ≥0, and the symmetric CMC linear program
+minimizes ∑
+αkαsα subject tokα ≥0and pairwise bounds
+kα +kβ ≥1(α̸=β).
+Theorem A(Constructive Structural Kernel for CMC
+Duality and BSA).Every statement below holds univer-
+sally over integers (representing exact cleared-denominator
+rationals) and is formally verified inlean/XyChainCmcC
+ert.leanusing only[propext, Quot.sound]:
+1. Arbitrary-N Spin-Squeezing and Mixture Con-
+cavity (Obs. 1):For any finite list ofNBloch vec-
+torsr j ∈R 3 with ∥rj∥2 ≤ 1, ∑N
+j=1(3 −∥rj∥2) ≥
+2N. For any finite convex mixture with nonnega-
+tive weightswi ≥0and observables ai,( ∑
+iwiai)2 ≤
+(∑
+iwi)(∑
+iwia2
+i), proving variance concavity under
+mixing.
+2. Exact 4-Corner CMC Polyhedron Optimality
+(Thm. 1):For all sx,sy,sz ≥ 0and all feasible
+kx,ky,kz ≥0withk α +kβ ≥1,
+ωCMC(s) = min
+{
+sx+sy+sz
+2 , sx +sy, sy +sz, sz +sx
+}
+(1)
+is attained at one of the four extreme vertices(1
+2 ,1
+2 ,1
+2 ),
+(1,1,0),(0 ,1,1),(1 ,0,1). Under XXU(1)symmetry
+(sx = sy), ωCMC = min(sx+ sz/2,2sx); under planar
+anisotropy sy >sx+ sz, they-sector strictly decouples
+andω CMC =sx +sz.
+3. Exact Primal–Dual Equivalence and Construc-
+tive Noise Vector (Cor. 1):ωCMC(s) ≥1if and
+only if ∑
+α∈{x,y,z}max(0,1 −s α) ≤ 1. Whenever
+ωCMC(s) ≥ 1, the explicit local-noise vectorxx =
+max(0,1 −sx), xy = max(0,1 −sy), xz = 1 −xx−xy
+satisfies xα ≥0, ∑
+αxα = 1, andsα ≥1 −xα for all
+α.
+4. BSA Lower Bound (Prop. 1):For any decom-
+position ϱ = (1 −t )ϱsep + tϱent with t∈ [0,1],
+ωCMC(ϱsep) ≥ 1, and ωCMC(ϱent) ≥ 0, one has
+t≥max(0,1−ω CMC(ϱ)).
+Proof sketch.Part 1 uses the exact 3D Lagrange iden-
+tity for Cauchy–Schwarz, induction over arbitrary fi-
+nite lists List Vec3 under the constructive predicate
+AllInBlochBall, and an exact cleared-denominator
+weighted Cauchy–Schwarz induction step avoiding division.
+Part 2 splits on the three triangle-inequality comparisons
+sα ≤sβ+ sγ; in the interior cone,2(kxsx+ kysy+ kzsz) =
+(kx + ky)(sx + sy −sz) + (ky + kz)(sy + sz −sx) + (kz +
+Figure 1: Theorem A: (a) Normalized simplex slice
+2sα/(sx + sy + sz)partitioning the 3-variable CMC linear
+program into its four extreme-vertex regimes, with certi-
+fied pointsC01–C03; (b) Planar mode-switching transition
+along sy at fixed( sx,sz) = (0.111,0.667)showing the ex-
+act drop of they-axis abovesy = sx + sz = 0.778and the
+certified BSA margin1−ω CMC.
+kx)(sz + sx −sy) ≥s x + sy + sz. Parts 3 and 4 follow
+by exact case splits onmax(0,1 −sα)and linearity. Fig-
+ure 1 illustrates the 4-corner simplex geometry and planar
+mode-switching certified byC01–C04.
+3 Analytical Resolution of the 4-
+Qubit Néel Optimality Conjec-
+ture
+Consider the symmetric collective spin-squeezing witness
+on N = 4qubits with total spin operatorJ= 1
+2
+∑4
+i=1 σi
+and CasimirJ2 = ∑
+J∈{0,1,2}J(J+1)ΠJ, whereΠ0,Π1,Π2
+are the orthogonal projectors onto the total-spinJ = 0
+(2D singlet),J = 1(9D triplet), and J = 2(5D quintet)
+subspaces. Defining the normalized witness
+W′:= 1
+2J2 −I=−Π 0 + 0·Π 1 + 2Π2,(2)
+its expectation value on any state withsx + sy + sz =
+2ωCMC satisfies Tr(W′ϱ) = ωCMC(ϱ) −1. By Legendre
+duality [5, 8], for everyλ <0, the geometric measure of
+entanglementEG(ϱ) = 1−max |ϕ⟩prod ⟨ϕ|ϱ|ϕ⟩obeys
+EG(ϱ)≥1+λ
+(
+ωCMC(ϱ)−1
+)
+−sup
+|ϕ⟩prod
+λmax
+(
+λW′+|ϕ⟩⟨ϕ|
+)
+.
+(3)
+We now prove analytically—without any SDP relax-
+ation—that the supremum over all 4-qubit product states is
+attainedexactlyatthecollinearNéelstate |ϕN´ eel⟩= |↑↑↓↓⟩
+(and its localSU(2)-rotated and permuted equivalents).
+Lemma 3.1(Exact 4-Qubit Bloch-Vector Spin Weights
+and Sharp1/3Singlet Bound).Let |ϕ⟩= ⨂4
+i=1 |ϕi⟩be any
+4-qubit product state with unit Bloch vectorsr1,r2,r3,r4 ∈
+S2, and let pJ := ⟨ϕ|ΠJ|ϕ⟩(J∈{ 0,1,2}). Set S2 :=∑
+1≤i<j≤4 ri ·rj and Q:= (r1 ·r2)(r3 ·r4) + (r1 ·r3)(r2 ·
+2
+
+--- Page 3 ---
+r4) + (r1 ·r 4)(r2 ·r 3). Then:
+p0 = 3−S 2 +Q
+24 ≤1
+3,(4)
+p2 = 15 + 5S2 +Q
+48 = p0
+2 + 1
+16
+
+4∑
+i=1
+ri
+
+2
+≥p0
+2 .(5)
+Equality p0 = 1/3holds if and only if the four Bloch vectors
+form a Néel configuration (two equal unit vectorsuand
+two antipodal vectors−u), giving(p0,p1,p2) = (1
+3 ,1
+2 ,1
+6 ).
+Proof. SinceJ 2 has eigenvalues {0,2,6}onΠ 0,Π1,Π2,
+Lagrange interpolation yields the exact Casimir projectors
+Π0 = (J2 −2I)(J 2 −6I)
+12 ,Π 2 = J2(J2 −2I)
+24 .
+WritingJ 2 = 3 I + 1
+2
+∑
+i<jσi ·σ j, we have⟨ϕ|J2|ϕ⟩=
+3 + 1
+2 S2. Expanding( ∑
+i<jσi ·σ j)2 on a product state
+|ϕ⟩splits the36ordered pair products into three classes:
+• 6identical pairs:( σi·σj)2 = 3I−2σi·σj, contributing
+18−2S 2;
+• 24pairs sharing one indexi: for each unordered triple
+{i,j,k},( σi·σ j)(σi·σ k) + (σi·σ k)(σi·σ j) = 2(σj·
+σk), and each pair{j,k} arises from two choices ofi,
+contributing+4S2;
+•6ordered disjoint pairs, contributing+2Q.
+Thus⟨ϕ|(J2)2|ϕ⟩= 9+3 S2 + 1
+4 (18+2 S2 +2Q) = 27
+2 + 7
+2 S2 +
+1
+2 Q. Substituting intoΠ0 andΠ 2 givesp0 = (3−S2+Q)/24
+and p2 = (15 + 5S2 + Q)/48. Subtracting 1
+2 p0 cancels Q
+identically:
+p2 −p0
+2 = 12 + 6S2
+48 = 4 + 2S2
+16 = 1
+16
+
+4∑
+i=1
+ri
+
+2
+≥0.
+To provep0 ≤1/3, writedij =r i ·rj ∈[−1,1]and note
+thatS 2 = 1
+2 ∥∑4
+i=1 ri∥2 −2≥−2. Moreover,
+5 +S2 −Q= 1
+2
+
+4∑
+i=1
+ri
+
+2
++ (3−Q)
+≥(1−d 12d34) + (1−d 13d24)
++ (1−d 14d23)≥0,
+since |dij|≤ 1by Cauchy–Schwarz. Therefore3 −S2 +Q=
+8 −(5 + S2 −Q) ≤8, i.e., p0 ≤1/3. Equality holds iff∑4
+i=1 ri =0and d12d34 = d13d24 = d14d23 = 1, which
+forces everydij ∈{±1}with two vectors equal to some
+u∈S 2 and two equal to−u.
+Theorem B(Analytical Resolution of the 4-Qubit Néel
+Optimality Conjecture).For everyλ< 0and every 4-qubit
+product state|ϕ⟩= ⨂4
+i=1 |ϕi⟩,
+λmax
+(
+λW′+|ϕ⟩⟨ϕ|
+)
+≤µN´ eel(λ),(6)
+Figure 2: Theorem B: (a) Secular functions fϕ(µ)at
+λ= −1for four certified product states (C05–C08), illus-
+trating global dominancefϕ(µ)≤f N´ eel(µ)for allµ>−λ
+and exact rootµN´ eel(−1) ≈1.5321; (b) SDP-free analyt-
+ical EG(ϱ)lower bound (8) maximized overλ <0, with
+certified fixed-λ rational tangentsC05 (EG ≥0.4026) and
+C08(E G ≥0.0845).
+with equality attained by the Néel state| ↑↑↓↓⟩, where
+µN´ eel(λ)is the unique real root in(−λ,+∞)of the monic
+cubic
+Pλ(µ) :=µ3 −(λ+ 1)µ 2 + (λ−2λ 2)µ+λ 2 = 0.(7)
+Consequently, for any 4-qubit stateϱ satisfying Tr(W′ϱ) ≤
+ωCMC(ϱ) −1up to local unitaries (in particular, any 3-
+mode state with vanishing first moments and LU-compatible
+wavevectors) and anyλ<0,
+EG(ϱ)≥1 +λ
+(
+ωCMC(ϱ)−1
+)
+−µN´ eel(λ).(8)
+Proof. Set L := −λ > 0. The unperturbed operator
+λW′= LΠ0 + 0·Π1 −2LΠ2 has spectral decomposition on
+three eigenvaluesL> 0 >−2L. By the rank-1 Weinstein–
+Aronszajn secular equation, every eigenvalueµ > Lof
+λW′+|ϕ⟩⟨ϕ|satisfiesf ϕ(µ) = 1, where
+fϕ(µ) := p0
+µ−L + p1
+µ + p2
+µ+ 2L.(9)
+On( L,+∞), fN´ eel(µ)strictly decreases from+ ∞to0,
+so µN´ eel(λ) > Lis the unique root offN´ eel(µ) = 1. For
+any product state|ϕ⟩, eitherλmax(λW′+ |ϕ⟩⟨ϕ|) ≤L <
+µN´ eel(λ)(already satisfying (6)), or µϕ := λmax(λW′+
+|ϕ⟩⟨ϕ|)>Lsatisfiesf ϕ(µϕ) = 1.
+Substituting p1 = 1 −p 0 −p 2 and compar-
+ing fN´ eel(µ) −f ϕ(µ)for any µ > L yields
+the exact identity (machine-checked in Lean 4 as
+thm2_secular_function_neel_dominance):
+fN´ eel(µ)−f ϕ(µ) =L
+(1
+3 −p0
+) 3L
+µ(µ−L)(µ+ 2L)
++ 2L(2p2 −p0)
+2µ(µ+ 2L) ≥0,(10)
+where we used 1
+µ−L−1
+µ−1
+2
+(1
+µ− 1
+µ+2L
+)
+= 3L2
+µ(µ−L)(µ+2L) >0
+together with p0 ≤ 1
+3 and2 p2 ≥p 0 from Lemma 3.1.
+BecausefN´ eel(µ)is strictly decreasing on(L,+∞), fϕ(µ) ≤
+3
+
+--- Page 4 ---
+fN´ eel(µ)for allµ>L forcesλmax(λW′+|ϕ⟩⟨ϕ|) ≤µN´ eel(λ).
+Finally, clearing denominators in1 −fN´ eel(µ) = 0with
+(p0,p1,p2) = (1
+3 ,1
+2 ,1
+6 )yields
+µ(µ+λ)(µ−2λ)
+(
+1−f N´ eel(µ)
+)
+=Pλ(µ) = 0,
+and substituting into (3) gives (8).
+As shown in Figure 2 and certificates C05–C08, ex-
+act rational bisection ofPλ(µ)certifies µN´ eel(λ)to width
+<6 ×10−11 in milliseconds without any SDP solver, yield-
+ing rigorous analytical bounds EG ≥ 0.4026(certified
+≥399/1000in C05) at the XX point andEG ≥0.0845
+(certified≥21/250inC08) at the Ising point.
+4 Exact 4-Qubit Periodic XX
+Thermodynamics and Zero-Float
+Proof of Thermal PPT-Bound
+Entanglement
+For the 4-qubit periodic ferromagnetic XX chain (matching
+the sign convention of [5]),
+H=− 1
+2
+3∑
+j=0
+(
+σx
+jσx
+j+1 +σy
+jσy
+j+1
+)
+(σα
+4 ≡σα
+0 ),(11)
+all matrix entries of H in the computational basis are
+exact integers in{0,−1}. (The antiferromagnetic Hamil-
+tonian −H is locally unitarily equivalent viaU = σz
+1σz
+3,
+which swapsSx(π) ↔S x(0)while preserving Sz(0)and
+all seven partial-transpose spectra.) Direct integer matrix
+arithmetic certifies the degree-5 minimal polynomial
+H5 −12H3 + 32H= 0,(12)
+whose distinct eigenvalues{0,±2,±2
+√
+2}have multiplici-
+ties(10,2,2,1,1). Define the four hyperbolic coordinates
+a(β) = cosh(2β), b(β) = sinh(2β),
+c(β) = cosh(2
+√
+2β), d(β) =
+√
+2 sinh(2
+√
+2β).(13)
+Crucially, every one ofa,b,c,d is aneven or odd entire
+function of
+√
+2 whose Taylor series inβ∈Q has purely
+rational coefficients(e.g., c(β) = ∑∞
+m=0
+8mβ2m
+(2m)! and d(β) =
+∑∞
+m=0
+4·8mβ2m+1
+(2m+1)! ).
+Theorem C(Exact Algebraic XX4 Thermodynamics and
+Zero-Float PPT-Bound Entanglement).For every inverse
+temperatureβ >0:
+1. Exact Rational-in-(a,b,c,d )Gibbs Expansion:
+The unnormalized thermal matrixG(β) := e−βH sat-
+isfies the exact polynomial identity
+G(β) =I+
+(
+−b+ d
+4
+)
+H+
+(
+−3
+8 + a
+2 −c
+8
+)
+H2
++
+(b
+8 − d
+16
+)
+H3 +
+(1
+32 − a
+16 + c
+32
+)
+H4.(14)
+Figure 3: Theorem C: (a) Global thermal profile of the
+N = 4periodic XX chain showingωCMC(T)crossing1at
+TCMC ≈1.7402and minAλmin(ϱTA
+β )crossing0at TPPT ≈
+1.7280; (b) Zoom into the narrow PPT-bound entangled
+window T∈ (1.7280,1.7402)highlighting our three zero-
+float certified rational pointsC14 (β = 289/500), C13/C16
+(β= 72/125), andC15(β= 23/40).
+2. Exact 3-Term CMC Threshold withe+2β Can-
+cellation:The partition function Z(β) = TrG(β) =
+10 + 4a+ 2c and the staggered-planar / uniform-z
+structure-factor witnessωCMC(β) = Sx(π) + 1
+2 Sz(0)
+obey
+Z(β)
+(
+1−ω CMC(β)
+)
+=−3−4a+ 4b−c+ 2d
+= 2
+√
+2−1
+2 e2
+√
+2β −2
+√
+2+1
+2 e−2
+√
+2β
+−4e−2β −3,(15)
+in which thee+2β mode cancels identically.
+3. Zero-Float Proof of Thermal PPT-Bound
+Entanglement:At each certified rational in-
+verse temperature β∈ { 289
+500 , 72
+125 ,23
+40 } (T∈
+{1.7301,1.7361,1.7391}), the exact 4-qubit thermal
+stateϱ β =G(β)/Z(β)is simultaneously:
+• strictly entangled, withωCMC(ϱβ) < 1certified
+overQ; and
+• strictly PPT across all seven nontrivial bi-
+partitions A∈{{ 0},{1},{2},{3},{0,1},{0,2},
+{0,3}}, certified overQ via exact rationalLDL⊤
+Cholesky factorization ofMTA−δAI16 with exact
+Gershgorin error radiusδA <1.3 ×10−29 (and
+<10 −43 atM= 22).
+Proof. Part 1 follows from evaluating the right-
+hand side of (14) on the five distinct roots λ∈
+{0,±2,±2
+√
+2} of (12) (machine-checked over Z as
+thm3_xx4_vandermonde_exact). For Part 2, exact in-
+teger traces of Hm, HmSx(π), and HmSz(0)( m =
+0,..., 4) yield ZSx(π) = 7 + 6 a− 4b + 3c− 2d and
+ZSz(0) = 12 + 4 a, whence Z(1 −ω CMC) = Z−
+ZSx(π) −1
+2 ZSz(0) = −3 −4a + 4b−c + 2d. Using
+a−b = e−2β kills e+2β identically (machine-checked
+in Lean 4 as thm3_xx4_closed_form_cmc_margin and
+thm3_xx4_exp_cancellation).
+For Part 3, truncating the nonnegative rational Taylor
+series ofa,b,c,d at orderM with exact geometric-series
+4
+
+--- Page 5 ---
+Table 1: All 20 constructive Lean 4.35.0 theorems inle
+an/XyChainCmcCert.lean. Every theorem compiles with
+zero sorry, zero custom axioms, zeroClassical.choice
+(axioms strictly[propext, Quot.sound]), and zero warn-
+ings.
+# Theorem identifier Content
+1vec3_cauchy_schwarz3D Lagrange CS
+2obs1_single_site_bloch_varianceSingle-site Bloch
+3obs1_nsite_collective_variance_boundN-site Obs. 1
+4obs1_finite_mixture_variance_concavityMixture concavity
+5thm1_cmc_polyhedron_lower_boundCMC LP bound
+6thm1_cmc_four_corners_feasible4 corners attain
+7thm1_xx_u1_simplificationXXU(1)case
+8thm1_planar_anisotropy_transitionPlanarydrop
+9cor1_separable_iff_omega_ge_oneCor. 1 dual iff
+10cor1_explicit_noise_vectorNoise vector
+11prop1_bsa_lower_boundBSAt≥1−ω
+12unit_vec3_dot_le_one|u·v|≤D 2
+13thm2_four_qubit_singlet_le_one_thirdp 0 ≤1/3
+14thm2_neel_state_attains_one_thirdNéelp 0 = 1/3
+15thm2_four_qubit_spin_sector_ineq2p 2 ≥p0
+16thm2_secular_function_neel_dominancef ϕ ≤fN´ eel
+17thm2_neel_secular_cubic_equivalenceCubicP λ = 0
+18thm3_xx4_vandermonde_exacte −βH Vanderm.
+19thm3_xx4_closed_form_cmc_marginZ(1−ω CMC)
+20thm3_xx4_exp_cancellatione +2β cancels
+remainder upper bounds yields exact rational intervals
+[G−
+ij,G+
+ij]foreveryentryof G(β). Foreachofthesevennon-
+trivial bipartitionsA, letMTA be the exact rational mid-
+point matrix of(GTA)±and δA := maxi
+∑15
+j=0
+1
+2 (GTA,+
+ij −
+GTA,−
+ij )its exact Gershgorin operator-norm error bound.
+By Weyl’s inequality, ifMTA −δAI16 admits an exact ra-
+tional LDL⊤Cholesky factorization with strictly positive
+diagonal pivotsdk >0( k = 0,..., 15), thenG(β)TA ≻0
+strictly! Executing this exact rational procedure overQ
+in C13–C16 certifies all seven partial transposes strictly
+positive definite with normalized minimum pivot≥1/4000
+(C14), ≥1/1000( C13, C16), and ≥3/2000( C15) while
+ωCMC ≤0.9998<1(Figure 3).
+5 Formal Verification Architecture
+and Certificate Audit
+Lean 4.35.0 Constructive Kernel.The standalone
+module lean/XyChainCmcCert.lean proves all 20 theo-
+rems listed in Table 1 without Mathlib. Using explicit in-
+ductive predicates (AllInBlochBall, AllNonnegWeights)
+and constructive integer order lemmas (Int.le_total,
+Int.lt_trichotomy), every theorem passes #print
+axioms strictly within [propext, Quot.sound]—zero
+sorry, zero custom axioms, zeroClassical.choice, and
+zero compiler warnings.
+Zero-Float Verifier and Adversarial Test Suite.
+The engine src/xy_chain_cmc_verifier.py enforces
+strict integer and lowest-termsfractions.Fraction arith-
+metic via an AST audit banning float/complex liter-
+als, float(), complex(), eval(), exec(), from_float,
+from_decimal, true division (/, /=), exponentiation (**,
+Table 2: Summary of all 16 verified JSON certificates
+(C01–C16) checked by the AST-audited zero-float verifier
+src/xy_chain_cmc_verifier.py across Modes 1–4. In
+Mode 4,piv denotes the normalized minimumLDL⊤pivot
+of(M TA −δAI16)/Z+.
+ID M Target instance Certified outcome
+C011 XXN= 10,T= 0.1ω= 307
+2000 , BSA≥ 1693
+2000
+C021 IsingN= 10,T= 0.1ω= 583
+1000 , BSA≥ 417
+1000
+C031(γ,h) = (0.5,0.5)ω= 389
+500 , planarzx
+C041 Separable ferroω= 209
+200 ≥1, Cor. 1 vec
+C052 Néel(+z,+z,−z,−z)p 0 = 1
+3 ,E G ≥ 399
+1000
+C062 Square(±z,±x)p 0 = 1
+4 , dom. (λ=−1)
+C072 Pythagorean spherep 0 = 43
+169 , dom. (λ=−2)
+C082(↑↑↑↓) (0, 3
+4 ,1
+4 ),E G ≥ 21
+250
+C093 XX 4,β= 2ω∈[ 181
+500 , 363
+1000 ]<1
+C103 XX 4,β= 100
+147 ω∈[ 461
+500 , 923
+1000 ]<1
+C113 XX 4,β= 72
+125 ω∈[ 9989
+10000 , 9991
+10000 ]<1
+C123 XX 4,β= 200
+349 ω∈[ 1001
+1000 ,501
+500 ]>1
+C134 XX 4,β= 72
+125 7 PD (piv≥10 −3),ω <0.999
+C144 XX 4,β= 289
+500 7 PD (piv≥ 1
+4000 ),ω <0.9975
+C154 XX 4,β= 23
+40 7 PD (piv≥ 3
+2000 ),ω <0.9998
+C164 XX 4,β= 72
+125 ,M= 22Rad<10 −43, all 7 PT PD
+**=), and floating-point libraries. Across Modes 1–4 (Ta-
+ble 2), it checks all 16 certificates (C01–C16), SHA-256 man-
+ifest hashes, and direct16×16matrix traces Tr(GivSx(π))
+and Tr(GivSz(0))against the closed forms of Theorem C.
+The pytest suitetests/test_verifier.pyruns 61 tests,
+verifying exactH5 −12H3 +32H = 0, exact trace moments
+Tr(HmSx(π))and Tr(HmSz(0)), negative-pivot NPT de-
+tection at T = 0 .5and T = 1 .47, and 26 adversarial
+forgery-rejection attacks (rejectingbool-as-int, unreduced
+fractions, forged witnesses, non-unit Bloch vectors, invalid
+ωCMC ≥1in Mode 2, wrong cubic root brackets, inflated
+EG or LDL⊤pivot bounds, and false PPT-bound entan-
+glement claims on NPT or above-TCMC states).
+6 Scope, Open Directions, and Re-
+producibility
+Scope and Open Directions.Theorem B resolves
+the Section H Néel-state optimality conjecture of [5] com-
+pletely for N = 4qubits, where the total-spin Casimir
+spectrum has exactly three sectors (J∈{ 0,1,2}). Ex-
+tending the Bloch-vector secular-dominance technique to
+arbitrary evenN≥ 6(whereJ 2 spans N/2 + 1spin sec-
+tors) is a concrete open problem: our proof shows that
+the key obstruction is controlling higher-order symmetric
+invariants of the pairwise dot-product matrix(dij)in the
+J = 0singlet projector. Theorem C establishes the first
+zero-float rational proof of thermal PPT-bound entangle-
+ment in theN = 4periodic ferromagnetic XX chain across
+β∈{289/500,72/125,23/40}.
+Reproducibility.All Lean 4 proofs, Python verification
+code, 16 JSON certificates withMANIFEST.sha256, 61 unit
+and forgery tests, and figure scripts are archived under
+MIT license at github.com/lluiseriksson/xy-cha
+in-cmc-neel-certificates (v1.0.0) and reproduce
+5
+
+--- Page 6 ---
+via lake build, python src/xy_chain_cmc_verifier.
+py certificates, andpytest -q under Lean 4.35.0 and
+Python 3.12+.
+References
+[1] Otfried Gittsovich, Otfried Gühne, Philipp Hyllus, and
+Jens Eisert. Unifying several separability conditions
+using the covariance matrix criterion.Physical Review
+A, 78(5):052319, 2008.
+[2] Otfried Gühne, Philipp Hyllus, Otfried Gittsovich, and
+Jens Eisert. Covariance matrices and the separability
+problem.Physical Review Letters, 99(13):130504, 2007.
+[3] Maciej Lewenstein and Anna Sanpera. Separability and
+entanglement of composite quantum systems.Physical
+Review Letters, 80(11):2261–2264, 1998.
+[4] Elliott Lieb, Theodore Schultz, and Daniel Mattis. Two
+soluble models of an antiferromagnetic chain.Annals
+of Physics, 16(3):407–466, 1961.
+[5] MátéMathé, AyakaUsui, OtfriedGühne, andGiuseppe
+Vitagliano. Structure-factor witnesses of thermal en-
+tanglement: exact optimal covariance criteria for the
+XY chain, 2026. arXiv:2611.33284v1, November 2026.
+[6] Géza Tóth, Christian Knapp, Otfried Gühne, and
+Hans J. Briegel. Optimal spin squeezing inequalities
+detect bound entanglement in spin models.Physical
+Review Letters, 99(25):250405, 2007.
+[7] Géza Tóth, Christian Knapp, Otfried Gühne, and
+Hans J. Briegel. Spin squeezing and entanglement.
+Physical Review A, 79(4):042334, 2009.
+[8] Tzu-Chieh Wei and Paul M. Goldbart. Geometric
+measure of entanglement and applications to bipartite
+and multipartite quantum states.Physical Review A,
+68(4):042307, 2003.
+6

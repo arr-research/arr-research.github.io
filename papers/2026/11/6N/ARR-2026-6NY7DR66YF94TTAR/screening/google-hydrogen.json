@@ -1,0 +1,57 @@
+{
+  "assessed_at": "2026-11-26T12:11:20Z",
+  "canonical_sha256": "aad25bd2867a1cd08e5efed7a0bbdb5c4ab2240dba5b9efb59e2e282c61aa997",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "Verified all algebraic identities in Theorems A, B, and C, Lemma 3.1 (Eqs. 4-5), secular dominance (Eq. 10), cubic P_lambda (Eq. 7), Vandermonde Gibbs expansion (Eq. 14), and e^{+2\\beta} cancellation (Eq. 15), plus spot-checked numerical bounds in Table 2 (C05, C08, C09-C15). Only a minor plotting bug was found in Fig. 1(b) for s_y < 0.556.",
+      "stars": 5
+    },
+    "novelty": {
+      "basis": "Resolves the N=4 Neel-state product maximization conjecture of Mathé et al. [5] analytically via Bloch-vector invariants (S_2, Q) and rank-1 Weinstein-Aronszajn secular dominance, and provides the first zero-float rational proof of narrow thermal PPT-bound entanglement in the 4-qubit periodic XX chain.",
+      "stars": 4
+    },
+    "reproducibility": {
+      "basis": "All closed-form equations, rational test points (beta in {289/500, 72/125, 23/40}), Lean theorem identifiers (Table 1), and certificate outcomes (Table 2) are transparently documented in the PDF; external Lean 4.35.0 and Python artifacts were not executed in this PDF-only review.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Proofs of Lemma 3.1, Theorem B, and Theorem C Parts 1-2 are self-contained and exact; Theorem C Part 3 rigorously combines exact rational Taylor remainder bounds, Gershgorin error radii, Weyl's inequality, and exact rational LDL^T Cholesky factorization to avoid floating-point sensitivity.",
+      "stars": 5
+    },
+    "significance": {
+      "basis": "Eliminates SDP relaxation overhead for N=4 geometric measure of entanglement lower bounds and removes floating-point eigensolver fragility in a narrow thermal PPT-bound window (T in (1.7280, 1.7402)). Impact is bounded by restriction of Theorems B and C to N=4 qubits.",
+      "stars": 4
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 5.2,
+  "model_id": "hydrogen",
+  "overall_stars": 5,
+  "paper_id": "ARR-2026-6NY7DR66YF94TTAR",
+  "potential_errors": [
+    "Figure 1(b) left-tail discrepancy: at fixed (s_x, s_z) = (0.111, 0.667), when s_y < s_z - s_x = 0.556 the true minimum of Eq. (1) is the 2-axis branch s_x + s_y (e.g., 0.311 at s_y = 0.2), whereas the green curve labeled 'Optimal \\omega_{CMC} (Thm. 1)' follows the 3-axis branch (s_x+s_y+s_z)/2 (~0.489 at s_y = 0.2) down to s_y = 0.2, omitting the s_x + s_y regime. This is purely a plotting artifact and does not affect Theorem A Eq. (1) or certificate C03 at s_y = 0.797.",
+    "Table 2 certificate C08 compression: Table 2 lists C08 as state '(\\uparrow\\uparrow\\uparrow\\downarrow)' with weights (0, 3/4, 1/4) and 'E_G >= 21/250', whereas Section 3 text and Fig. 2(b) clarify that E_G >= 0.0845 (>= 21/250) pertains to the Ising point (omega_{CMC} ~ 0.488) while |\\uparrow\\uparrow\\uparrow\\downarrow> is the product state plotted in Fig. 2(a)."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Exact, self-contained analytical resolution of the 4-qubit Neel optimality conjecture (Lemma 3.1 and Theorem B): the exact Casimir identities p_0 = (3 - S_2 + Q)/24 <= 1/3 and 2p_2 >= p_0 combine cleanly with Eq. (10) to prove global secular dominance f_\\phi(\\mu) <= f_{Neel}(\\mu) and reduce the product-state supremum to the largest root of a single monic cubic P_\\lambda(\\mu) = 0.",
+    "Exact algebraic thermodynamics of the 4-qubit periodic ferromagnetic XX chain (Theorem C Parts 1-2): minimal polynomial H^5 - 12H^3 + 32H = 0 yields the 5-term Vandermonde Gibbs expansion (14), exact integer traces Z S_z(0) = 12 + 4a and Z S_x(\\pi) = 7 + 6a - 4b + 3c - 2d, and identical e^{+2\\beta} cancellation in Eq. (15).",
+    "Rigorous zero-float certification of narrow thermal PPT-bound entanglement (Theorem C Part 3): using exact rational Taylor bounds for a, b, c, d, Gershgorin operator-norm radii \\delta_A, Weyl's inequality, and exact rational LDL^T Cholesky factorization of M^{T_A} - \\delta_A I_{16} rigorously certifies strict positive definiteness across all 7 nontrivial bipartitions while \\omega_{CMC} < 1.",
+    "High-assurance constructive formalization architecture: 20 Lean 4.35.0 theorems reported with zero sorry, zero Mathlib dependencies, and axioms strictly within [propext, Quot.sound], paired with an AST-audited rational Python verifier and adversarial forgery tests."
+  ],
+  "strong_novelty_candidates": [
+    "Exact 4-qubit Bloch-vector singlet identity p_0 = (3 - S_2 + Q)/24 <= 1/3, spin-sector bound 2p_2 >= p_0, and algebraic secular-dominance identity (10) proving Neel optimality for all \\lambda < 0 without SDP relaxations.",
+    "Exact Vandermonde Gibbs polynomial (14), identical e^{+2\\beta} cancellation in the 3-term CMC margin (15), and zero-float rational LDL^T + Gershgorin proof of thermal PPT-bound entanglement in the N = 4 periodic XX chain."
+  ],
+  "summary": "The manuscript advances the symmetric XY-chain covariance-matrix-criterion (CMC) program of Mathé, Usui, Gühne, and Vitagliano [5] on three fronts: (1) Theorem A packages Observation 1, Theorem 1, Corollary 1, and Proposition 1 of [5] into a standalone constructive Lean 4.35.0 kernel (20 theorems, zero Mathlib, zero Classical.choice); (2) Lemma 3.1 and Theorem B analytically resolve the N = 4 Neel-state product-maximization conjecture of [5] via exact Bloch-vector Casimir weights and Weinstein-Aronszajn secular dominance, reducing geometric-measure lower bounds to a cubic root without SDPs; and (3) Theorem C derives the exact algebraic thermodynamics of the N = 4 periodic ferromagnetic XX chain and certifies thermal PPT-bound entanglement at three rational inverse temperatures over Q via Taylor intervals, Gershgorin error bounds, and rational LDL^T Cholesky factorization. All core theorems and equations check out mathematically and numerically, with only a minor plotting omission in Fig. 1(b) on the left tail s_y < 0.556 and inherent N = 4 scope limitations for Theorems B and C.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:3a8e283c-211d-453a-8daa-86e51907ffac",
+  "weaknesses": [
+    "The analytical resolution of the Neel-state optimality conjecture (Theorem B) applies only to N = 4 qubits (where J^2 has three sectors J in {0, 1, 2}); extending the technique to arbitrary even N >= 6 remains an open problem (acknowledged in Section 6).",
+    "Theorem C establishes thermal PPT-bound entanglement only for the N = 4 periodic XX chain at three discrete rational temperatures, and relies on external Lean/Python verification for the 16x16 trace moments Tr(H^m S_x(\\pi)) beyond the leading orders checked manually.",
+    "Figure 1(b) omits the s_x + s_y branch for s_y < s_z - s_x = 0.556 in the plotted 'Optimal \\omega_{CMC}' curve."
+  ]
+}

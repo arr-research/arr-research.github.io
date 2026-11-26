@@ -1,0 +1,822 @@
+--- Page 1 ---
+Sharp Non-Commuting Operator Constants, Quantitative
+One-Shot Converse Sharpenings, and Constructive
+Lean 4.35.0 Formalization for Universal Quantum
+Randomness Extraction
+Lluis Eriksson∗
+November 26, 2026
+Abstract
+Regula and Cheng (arXiv:2611.33270v1 ) establish
+tight one-shot bounds and optimal asymptotic error and
+strong-converse exponents for quantum privacy amplifi-
+cation under universal hash families by introducing half-
+quadratic (errhq) and fully-quadratic (errsq) binary quan-
+tum hypothesis-testing errors. We sharpen their quan-
+titative one-shot theory in three directions and provide
+a complete machine-checked constructive formalization
+(UNIV-EXTRACT-CERT-1.0). First (Theorem A), we
+prove that errsq(A∥B) ≤err hq(A∥B) ≤ 25
+16 errsq(A∥B)
+holds forall(possibly non-commuting) positive semidef-
+inite operators A,B≥ 0on any Hilbert space via the
+explicit spectral-clipping POVM φ(M0) = min(I, 5
+4 M0)
+and the Loewner perfect-square identity25
+16 (I−M 0)2 −
+(I− 5
+4 M0) = 1
+16 (5M0 −3I)2 ≥0. This tightens the factor
+2implied by errhq ≤err≤ 2 errsq and is globally sharp at
+A/B = 3/2, completing the exact sharp constant triangle
+(25
+16 ,4
+3 ,2). Second (Theorem B), we exploit the sign flip
+1 −6p(1 −p) ≤0for |Z|∈{ 2,3,4}and exact truncation
+norm A(p) = (1 −2p)2 + 1−p
+2 in the non-commutative
+fourth-moment Khintchine estimate to sharpen their4∗-
+universal one-shot leftover-hash converse constant from
+1/3to Csharp(p) = 1−p
+2 max(A(p),
+√
+B(p))
+> 1
+3 for every finite
+|Z|= 1/p≥ 2, featuring an exact rational regime tran-
+sition at p∗ = 1/8( A(1/8) = B(1/8) = 1) and peaking
+at Csharp(1/4) = Csharp(1/5) = 1 /2(+50% over1 /3).
+Third (Theorem C), we retain the dropped|Z|−1factor
+in their strong-converse achievability proof (Lemma 19)
+and repair a factor-of-2 scaling typo on p. 40, strengthen-
+ing the2-universal prefactor from1/4to|Z|/(4(|Z|−1))
+(doubling to1 /2at |Z| = 2). All 22 Lean 4.35.0 theo-
+rems compile with zerosorry, zero custom axioms, and
+zero Classical.choice, accompanied by an AST-audited
+zero-float verifier, 16 JSON certificates (including explicit
+Fq degree-34 ∗-universal hash families), and 59 unit and
+∗Independent researcher. Research, formalization, and verification
+conducted with Google Antigravity assistance. Code, Lean 4 proofs,
+and certificates: MIT license; manuscript and figures: CC-BY-4.0.
+Repository: github.com/lluiseriksson/universal-extraction-s
+harp-constants(v1.0.0).
+forgery-rejection tests.
+1 Introduction
+Privacy amplification against quantum side information
+converts a classical–quantum sourceρXE = ∑
+x∈X|x⟩⟨x|⊗
+ρE,x into nearly uniform secret randomnessρf
+ZE via a hash
+function f : X →Z drawn from a universal family [2,
+8, 5, 3]. In a landmark preprint, Regula and Cheng [6]
+connect one-shot trace-distance security directly to three
+binary quantum hypothesis-testing errors between positive
+semidefinite operatorsA,B≥0:
+err(A∥B) := inf
+0≤M≤I
+[
+Tr(I−M)A+ TrMB
+]
+,(1)
+errhq(A∥B) := inf
+0≤M≤I
+[
+Tr(I−M)A+ TrM 2B
+]
+,(2)
+errsq(A∥B) := inf
+0≤M≤I
+[
+Tr(I−M) 2A+ TrM 2B
+]
+.(3)
+Using the Bures superoperatorJY(X) := 1
+2 (YX + XY),
+the unique optimizer oferrsq(A∥B)is the Bures pretty
+good measurement M0 = J−1
+A+B(A)[ 1, 6], yielding
+errsq(A∥B) = TrAJ−1
+A+B(B) =⟨A,B⟩ A+B.
+Through this variational framework and a non-
+commutative Haagerup–Musat operator truncation [4],
+Regula and Cheng prove: (i) a universal one-shot con-
+verse Ef1
+2 ∥ρf
+ZE −1Z
+|Z| ⊗ρE∥1 ≥1
+3 π|Z|/4(X|E)ρ for all4 ∗-
+universal families matching the measured-smooth leftover
+hash lemma [7] up to factor1/3; and (ii) strong-converse
+achievability bounds with prefactors1/2(2 ∗-universal) and
+1/4(2-universal).
+A fine-grained audit of [6] reveals three sharp quantita-
+tive improvements and one scaling typo in the one-shot
+constants—each provable by exact polynomial identities,
+machine-checkable in constructive Lean 4.35.0, and directly
+testable on explicit finite-field hash families overQ.
+1
+
+--- Page 2 ---
+Figure 1: Theorem A: (a) Exact error ratios across density
+ratio t = a/b illustrating global sharpness of25
+16 at t =
+3
+2 (C01) and 4
+3 ,2at t = 1( C02); (b) Spectral-clipping
+functional calculus proofφ(M0) = min(I, 5
+4 M0)showing
+the exact tangent touch atu= 3
+5 with nonnegative slack
+(5u−3) 2/16.
+2 Exact Sharp Constant Triangle
+for Non-Commuting Hypothesis
+Testing
+Regula and Cheng establisherrhq(A∥B) ≤err (A∥B) ≤
+4
+3 errhq(A∥B)(Lemma 18, via M′= M2(M2 −M + I)−1)
+and errsq(A∥B) ≤err (A∥B) ≤2 errsq(A∥B)(Lemma 20),
+which immediately yields errsq(A∥B) ≤err hq(A∥B) ≤
+2 errsq(A∥B). We prove that the true universal constant re-
+lating errhq and errsq forarbitrary non-commutingpositive
+operators is strictly smaller—25
+16 = 1.5625—and globally
+sharp.
+Theorem A(Exact Non-Commuting Sharp Constant
+Triangle( 25
+16 ,4
+3 ,2)).For all positive semidefinite (not nec-
+essarily commuting) operators A,B≥ 0on any finite-
+dimensional Hilbert space:
+errsq(A∥B)≤err hq(A∥B)≤ 25
+16 errsq(A∥B),(4)
+errhq(A∥B)≤err(A∥B)≤ 4
+3 errhq(A∥B),(5)
+errsq(A∥B)≤err(A∥B)≤2 err sq(A∥B).(6)
+Moreover, all three constants are globally sharp: for
+A,B≥ 0with errsq(A∥B) >0, equality inerrhq(A∥B) ≤
+25
+16 errsq(A∥B)holds if and only ifA and B commute and
+A= 3
+2 Bon supp(A)∩supp(B)(in particular, forA,B >0,
+iff A = 3
+2 B; on scalars,errhq(3∥2)/errsq(3∥2) = 15/8
+6/5 =
+25
+16 ), while 4
+3 and2are attained atA=B.
+Proof. Let M0 = J−1
+A+B(A)be the optimal Bures pretty
+good measurement forerrsq(A∥B)(restricting to supp(A+
+B)without loss of generality), so0 ≤M 0 ≤I and
+Tr(I−M0)2A+TrM2
+0 B = errsq(A∥B). Define the spectral-
+clipping operator via functional calculus on the Hermitian
+operatorM 0:
+M:=φ(M 0), φ(u) := min
+(
+1, 5
+4u
+)
+(u∈[0,1]).(7)
+Clearly0 ≤φ(u) ≤1on[0 ,1], so0 ≤M≤I is a feasible
+POVM element forerrhq(A∥B). We check two pointwise
+scalar inequalities on allu∈[0,1]:
+1. Since0≤φ(u)≤ 5
+4 u, squaring yieldsφ(u)2 ≤25
+16 u2.
+2. For u∈ [4
+5 ,1],1 −φ (u) = 0 ≤ 25
+16 (1 −
+u)2. For u∈ [0,4
+5 ], the exact perfect-
+square identity (machine-checked in Lean 4 as
+thmA_spectral_clipping_perfect_square) gives
+25
+16(1−u) 2 −
+(
+1− 5
+4u
+)
+= (5u−3) 2
+16 ≥0.(8)
+By spectral functional calculus,(8) and φ(u)2 ≤25
+16 u2 lift
+to exact Loewner operator inequalitiesI−M≤ 25
+16 (I−
+M0)2 and M2 ≤25
+16 M2
+0 . Taking traces against any (not
+necessarily commuting)A,B≥0gives
+errhq(A∥B)≤Tr(I−M)A+ TrM 2B
+≤25
+16
+[
+Tr(I−M 0)2A+ TrM 2
+0 B
+]
+= 25
+16 errsq(A∥B).
+For sharpness and equality when errsq(A∥B) > 0, let
+V = supp(A+ B). Equality in both trace bounds forces
+Tr[25
+16 (I−M0)2 −(I−M )]A= 0and Tr[25
+16 M2
+0 −M2]B = 0.
+Since 25
+16 (1 −u)2 −(1 −φ(u)) >0for u∈ [0,1] \{3
+5 ,1}and
+25
+16 u2 −φ(u)2 >0for u∈ (4
+5 ,1], any eigenvector|v⟩∈V
+of M0 with eigenvalue u /∈ {0,3
+5 ,1}satisfies A|v⟩ = 0
+(and alsoB|v⟩= 0if u >4
+5 ); thenJA+B(M0) = A gives
+u⟨v|B|v⟩ = ⟨v|A|v⟩ = 0, so |v⟩ ∈ker(A+ B), contra-
+dicting |v⟩∈V . Hence spec(M0|V) ⊆{0,3
+5 ,1}, splitting
+V = V0 ⊕V3/5 ⊕V1 with A|V0 = 0and B|V1 = 0. Eval-
+uating 1
+2 (uv + uw)⟨v|(A+ B)|w⟩ = ⟨v|A|w⟩ across dis-
+tinct eigenspaces shows all off-diagonal blocks ofA and
+B vanish, while onV3/5 we get 3
+5 (A+ B)|V3/5 = A|V3/5 ,
+i.e., A|V3/5 = 3
+2 B|V3/5 . Thus[ A,B] = 0and A = 3
+2 B
+on supp(A) ∩supp (B) = V3/5. Conversely, on scalars
+a,b >0exact Lagrange duality (Lean Theorems 10–11)
+gives errhq(a∥b) = a− a2
+4b (a≤ 2b) anderrsq(a∥b) = ab
+a+b,
+with 25
+16 errsq(a∥b) −err hq(a∥b) = a(2a−3b)2
+16b(a+b) vanishing at
+a/b = 3/2; similarly err(1∥1) = 1, errhq(1∥1) = 3
+4 , and
+errsq(1∥1) = 1
+2 attain 4
+3 and2identically (Figure 1).
+3 Strict Quantitative Sharpening
+of the4 ∗-Universal One-Shot
+Converse
+Let f : X→Z be drawn from a4∗-universal hash family
+with |Z|≥ 2and p:= 1/|Z|∈ (0,1
+2 ]. Let π|Z|/4(X|E)ρ :=
+sup{∑
+xTrME,xρE,x : ∥ME,x∥∞ ≤1,∥ ∑
+xM2
+E,x∥∞ ≤
+1
+4p}denote the half-quadratic leftover hash lemma (LHL)
+upper bound [6, Lemma 8]. Regula and Cheng’s Theo-
+rem 11 establishesEf1
+2 ∥ρf
+ZE−1Z
+|Z|⊗ρE∥1 ≥1
+3 π|Z|/4(X|E)ρ
+by bounding two intermediate quantities conservatively:
+2
+
+--- Page 3 ---
+1. In Lemma 13 (Eq. (105) →Eq. (107) of [6]), the
+exact fourth-moment estimate forM = ∑
+xBxMx
+(four-wise independent centeredBernoulli(p)variables
+Bx =δf(x),u −p) is
+EM4 ≤p(1−p)
+[(
+1−6p(1−p)
+)∑
+x
+M4
+x
++ 3p(1−p)
+
+∑
+x
+M2
+x
+
+∞
+∑
+x
+M2
+x
+]
+.(9)
+Regula and Cheng replace1−6p(1 −p)by the looser
+(1 −2p)2 and further drop−1
+4 pin Eq. (107) to obtain
+7
+4 p(1−p)3. Crucially, however,1−6p(1−p) ≤0for all
+p∈ [3−
+√
+3
+6 ,1
+2 ]—in particular for all three small alpha-
+bets |Z|∈{ 2,3,4}(1 −6p(1 −p) ∈{−1
+2 ,−1
+3 ,−1
+8 })!
+Since M4
+x ≥0, the first term isnonpositiveand can
+be dropped with coefficient0.
+2. In Lemma 14 (Eq. (118) of [6]), the exact truncation
+norm bound is∥Hx∥∞≤p(1−p)
+4c A(p), where
+A(p) := (1−2p) 2 + 1−p
+2 = 3−9p+ 8p 2
+2 ,(10)
+which Regula and Cheng weaken to3
+2 (1 −p), losing a
+strictly positive slackp(3−4p)for everyp∈(0, 1
+2 ].
+Defining the exact fourth-moment coefficient
+B(p) := max
+(
+0,1−6p(1−p)
+)
++ 3
+4(1−p),(11)
+and the exact bottleneckM(p) := max
+(
+A(p),
+√
+B(p)
+)
+, we
+obtain the following universal finite-alphabet sharpening.
+Theorem B(Sharp4 ∗-Universal One-Shot Converse Con-
+stant Csharp(p) > 1
+3 ).For every classical–quantum state
+ρXE and every4 ∗-universal hash familyf : X→Z with
+|Z|= 1/p≥2,
+Ef
+1
+2
+ρf
+ZE −1Z
+|Z|⊗ρE
+
+1
+≥C sharp(p)π|Z|/4(X|E)ρ,(12)
+where
+Csharp(p) := 1−p
+2 max
+(
+A(p),
+√
+B(p)
+)> 1
+3 ∀p∈
+(
+0,1
+2
+]
+.
+(13)
+Furthermore:
+1. Exact rational regime transition at p∗ = 1
+8
+(|Z|= 8): A(1
+8 ) = B(1
+8 ) = 1. For all |Z|≥ 8(0 <
+p≤ 1
+8 ), A(p) ≥
+√
+B(p) and Csharp(p) = 1−p
+3−9p+8p2
+is purely rational (e.g., Csharp(1
+8 ) = 7
+16 = 0 .4375,
++31.25%over 1
+3 ); for |Z| ∈ {2,..., 7},
+√
+B(p)>
+A(p).
+2.Exact integer maximum1/2(+50% over1/3):
+Across all integer alphabet sizes|Z|≥ 2, Csharp(1/|Z|)
+achieves its exact maximum 1
+2 at two consecutive
+orders |Z| = 4( B(1
+4 ) = ( 3
+4 )2) and |Z| = 5
+(B(1
+5 ) = ( 4
+5 )2), whileCsharp(1
+2 ) = 1√
+6 ≈0.40825and
+Csharp(1
+3 ) =
+√
+2
+3 ≈0.47140.
+Figure 2: Theorem B: (a) Exact sharpened one-shot
+converse constant Csharp(p) > 1/3across p = 1 /|Z| ∈
+(0,1/2], showing the exact rational regime transition at
+p∗ = 1 /8( C08) and integer peak1 /2at |Z| ∈ {4,5}
+(C06, C07); (b) Direct zero-float enumeration of explicitFq
+degree-34 ∗-universal hash families (C10–C12) confirming
+Csharpπ|Z|/4 ≤E f∆f ≤π|Z|/4.
+Proof. Let( ME,x)x be feasible forπ|Z|/4 (∥ME,x∥∞≤1
+and ∥∑
+xM2
+E,x∥∞≤ 1
+4p). Using0 ≤M 4
+E,x ≤M 2
+E,x in (9)
+yields EM4 ≤p(1 −p)B(p) ∑
+xM2
+E,x (keeping coefficient
+0whenever1 −6p(1 −p) ≤0). For a truncation levelc> 0
+and scaling parameterθ∈ (0,1), defineHx := E[Bxh(M)]
+with h(t) = sgn(t)(|t|−c )+ and Kx := 1
+θp(1−p) Hx. By [6,
+Eqs. (118), (121)]:
+∥Kx∥∞≤A(p)
+4θc ,
+
+∑
+x
+K2
+x
+
+∞
+≤ B(p)
+16θ2c2 · 1
+4p.
+Both feasibility constraints ( ∥Kx∥∞ ≤ 1and
+∥∑
+xK2
+x∥∞≤ 1
+4p) hold simultaneously iffc≥ M(p)
+4θ . Set-
+tingc= M(p)
+4θ in [6, Eq. (125)] gives
+Ef
+1
+2
+ρf
+ZE −1Z
+|Z|⊗ρE
+
+1
+≥1−p
+2c (1−θ)π |Z|/4
+= 2(1−p)θ(1−θ)
+M(p) π|Z|/4.
+Maximizing θ(1−θ)over θ∈ (0,1)uniquely chooses θ∗= 1
+2
+(soc ∗= 1
+2 M(p)), yielding (13).
+Strict dominance Csharp(p) > 1
+3 for all p∈
+(0,1
+2 ]is equivalent to A(p) < 3
+2 (1 −p )and
+B(p) < 9
+4 (1 −p )2, both proved universally in Lean 4
+(thmB_universal_strict_beat_one_third) via the posi-
+tive identities
+3
+2(1−p)−A(p) =p(3−4p)>0,
+9
+4(1−p) 2 −Bpos(p) = 2 + 3p(3−5p)
+4 >0,
+9
+4(1−p) 2 −3
+4(1−p) = 3
+4(1−p)(2−3p)>0.
+Finally, for0 ≤p≤ 1
+8 (where1 −6p(1 −p ) >
+0), the exact quartic factorization (Lean Theorem 18,
+thmB_regime_A_dominates_for_z_ge_8)
+A(p)2 −Bpos(p) = 1
+4(1−8p)
+[
+(2−11p) +p 2(17−8p)
+]
+≥0
+3
+
+--- Page 4 ---
+provesp∗= 1
+8 istheexacttransitionand A(p) ≥
+√
+B(p) for
+all |Z|≥ 8. Direct rational evaluation at|Z|∈{ 2,..., 7}
+verifiesCsharp(1
+4 ) =Csharp(1
+5 ) = 1
+2 (Figure 2).
+4 Strong-Converse Achievability
+Sharpening and Typo Repair
+In Section V.1 (Lemma 19, Eqs. (170)–(177) of [6]), Reg-
+ula and Cheng prove strong-converse achievability lower
+bounds onEf err(ρf
+ZE∥1Z
+|Z|⊗ρE)using the dual oferrhq and
+the Bures second-moment hash identity. For2∗-universal
+hash families, combining Eqs. (170)–(172) of [6] (imme-
+diately before the relaxation|Z|− 1 ≤|Z| in Eq. (173))
+yields
+Ef err
+(
+ρf
+ZE
+1Z
+|Z| ⊗ρE
+)
+≥3
+4 TrRXE
+−|Z|−1
+4 ∥RXE∥2
+1X⊗ρE ,(14)
+while for2-universal hash families, substituting the second-
+moment bound Eq. (176) into Eqs. (170) and (172) (before
+Eq. (177) relaxes|Z|−1to|Z|) yields
+Ef err
+(
+ρf
+ZE
+1Z
+|Z| ⊗ρE
+)
+≥3
+4 TrRXE
+−|Z|−1
+2 ∥RXE∥2
+1X⊗ρE ,(15)
+valid for any optimizer RXE = 2 Jk1X⊗ρE (MXE)of
+errhq(ρXE∥k1X ⊗ρ E)( k > 0). In both cases, [ 6] re-
+laxes |Z|− 1to |Z|, and on p. 40 stateschoosingRXE
+as an optimiser oferrhq(ρXE∥1
+4
+1X
+|Z| ⊗ρE)(a factor-of-2
+scaling typo: matching3
+4 TrR− |Z|
+2 ∥R∥2 with Eq. (175)’s
+3
+2 TrR− 1
+2k∥R∥2 requires k = 1
+2|Z|, not 1
+4|Z|). Retaining
+|Z|−1yields strictly sharper finite-alphabet bounds.
+Theorem C(Sharpened Strong-Converse Achievability for
+2∗- and2-Universal Hashing).For every classical–quantum
+stateρ XE and alphabet size|Z|≥2:
+1. For any2∗-universal hash family,
+Ef err
+(
+ρf
+ZE
+1Z
+|Z| ⊗ρE
+)
+≥1
+2 err
+(
+ρXE
+ 1X
+|Z|−1 ⊗ρE
+)
+.
+(16)
+2. For any2-universal hash family,
+Ef err
+(
+ρf
+ZE
+1Z
+|Z| ⊗ρE
+)
+≥1
+2 err
+(
+ρXE
+ 1X
+2(|Z|−1) ⊗ρE
+)
+(17)
+≥ |Z|
+4(|Z|−1) err
+(
+ρXE
+1X
+|Z| ⊗ρE
+)
+.(18)
+In particular,(18) strictly improves Regula and Cheng’s1
+4
+for every finite|Z|≥2, doubling it to 1
+2 at|Z|= 2.
+Figure3: TheoremC:(a)Exact2-universalstrong-converse
+prefactor |Z|
+4(|Z|−1) vs. Regula–Cheng’s 1
+4 , doubling to1
+2 at
+|Z|= 2( C15); (b) Certified exact gains across explicit2∗-
+and2-universal hash families (C13–C16).
+Proof. By complementary slackness oferrhq(ρXE∥k1X ⊗
+ρE)[ 6, Eq. (175)], any optimizerRXE = 2Jk1X⊗ρE (MXE)
+satisfies
+err
+(
+ρXE
+k1X ⊗ρE
+)
+≤3
+2 TrRXE − 1
+2k∥RXE∥2
+1X⊗ρE .
+Setting k = 1
+|Z|−1 matches twice the right-hand side
+of (14), proving (16). Setting k = 1
+2(|Z|−1) matches
+twice the right-hand side of(15), proving (17) (and re-
+pairing the 1
+4|Z| typo; machine-checked in Lean 4 as
+thmC_strong_converse_kkt_matching). Finally, since
+err(A∥λB) ≥λerr (A∥B)for anyλ∈ (0,1](as infM[Tr(I−
+M)A+λTrMB ] ≥λinf M[Tr(I−M )A+TrMB]), taking
+λ = |Z|
+2(|Z|−1) ∈(1
+2 ,1]in (17) yields (18), which strictly
+exceeds 1
+4 for all|Z|≥ 2(Lean Theorem 22, Figure 3).
+5 Formal Verification Architecture
+and Certificate Audit
+Lean 4.35.0 Constructive Kernel.The standalone
+module lean/UnivExtractCert.lean proves all 22
+theorems listed in Table 1 without Mathlib or external
+dependencies. Using exact polynomial normalizations
+(ac_rfl and omega) and constructive integer order lem-
+mas, every theorem passes#print axioms strictly within
+[propext, Quot.sound]—zero sorry, zero custom ax-
+ioms, zero Classical.choice, and zero compiler warn-
+ings.
+Zero-Float Verifier and Adversarial Test Suite.
+The engine src/univ_extract_verifier.py enforces
+strict integer and lowest-termsfractions.Fraction arith-
+metic via an AST audit banning float/complex liter-
+als, float(), complex(), eval(), exec(), from_float,
+from_decimal, true division (/, /=), exponentiation (**,
+**=), and floating-point libraries. Across Modes 1–4 (Ta-
+ble 2), it solves the exact2 ×2Bures Lyapunov equa-
+tion JA+B(M0) = A over Q, checks the non-commuting
+Loewner identity 25
+16 (I−M 0)2 −(I− 5
+4 M0) = 1
+16 (5M0 −
+3I)2 ≥0, exhaustively verifies4∗-universality of all degree-
+4
+
+--- Page 5 ---
+Table 1: All 22 constructive Lean 4.35.0 theorems inlean
+/UnivExtractCert.lean . Every theorem compiles with
+zero sorry, zero custom axioms, zeroClassical.choice
+(axioms strictly within [propext, Quot.sound]), and
+zero warnings.
+# Theorem identifier Content
+1thmA_spectral_clipping_perfect_square(5u−3D) 2 ≥0
+2thmA_hq_le_25_16_sq_low16err hq ≤25err sq
+3thmA_hq_le_25_16_sq_higha≥2bbranch
+4thmA_25_16_sharp_at_3_2Sharp at(3,2)
+5thmA_four_thirds_denominator_lb4(m 2−mD+D2)
+6thmA_err_le_four_thirds_hq_low3err≤4err hq
+7thmA_four_thirds_sharp_at_1_1Sharp at(1,1)
+8thmA_err_le_two_sqerr≤2err sq
+9thmA_two_sharp_at_1_1Sharp at(1,1)
+10thmA_hq_lagrange_duality_lowDualr ∗=a
+11thmA_hq_lagrange_duality_highDualr ∗= 2b
+12thmB_bernoulli_fourth_moment_identity1−6p(1−p)id.
+13thmB_fourth_moment_nonpos_z234Flip|Z|≤4
+14thmB_truncation_A_strict_improvementA< 3
+2 (1−p)
+15thmB_fourth_moment_B_strict_improvement_posB pos bound
+16thmB_fourth_moment_B_strict_improvement_negB neg bound
+17thmB_exact_transition_p_one_eighthA( 1
+8 ) =B( 1
+8 )
+18thmB_regime_A_dominates_for_z_ge_8A 2 ≥Bpos
+19thmB_sharp_one_half_at_z4_z5C= 1
+2 at4,5
+20thmB_universal_strict_beat_one_thirdC sharp > 1
+3
+21thmC_strong_converse_kkt_matchingExactkmatch
+22thmC_2univ_factor_strictly_beats_quarter |Z|
+4(|Z|−1) > 1
+4
+3 polynomial families overF3,F4,F5, evaluates exact ex-
+pected trace distances and KKT water-fillingπ|Z|/4, and
+audits all 16 certificates (C01–C16) and SHA-256 hashes.
+The pytest suitetests/test_verifier.py executes 59
+tests, including 13 AST rejection checks,F4 field-axiom
+and 50-point 25
+16 sweep checks, and 25 adversarial forgery-
+rejection attacks.
+6 Scope, Open Directions, and Re-
+producibility
+Scope and Open Directions.Theorem A settles the
+exact universal constants linking err, errhq, and errsq
+for arbitrary non-commuting operators. Theorems B
+and C sharpen Regula and Cheng’s finite-alphabet one-shot
+privacy-amplification constants while preserving the exact
+asymptotic error and strong-converse exponents of [6] as
+|Z|→∞ . Determining the optimal asymptoticp→ 0one-
+shot converse constant beyond1
+3 (which is bottlenecked by
+the quadratic tail bound|(|t|−c )+|≤ 1
+4ct2 in Haagerup–
+Musat truncation) remains an intriguing open problem.
+Reproducibility.All Lean 4 proofs, Python verification
+code, 16 JSON certificates withMANIFEST.sha256, 59 unit
+and forgery tests, and figure scripts are archived under
+MIT license atgithub.com/lluiseriksson/universal
+-extraction-sharp-constants (v1.0.0) and reproduce
+via lake build, python src/univ_extract_verifier.
+py certificates, andpytest -q under Lean 4.35.0 and
+Python 3.12+.
+Table 2: Summary of all 16 verified JSON certificates
+(C01–C16) checked by the AST-audited zero-float verifier
+src/univ_extract_verifier.pyacross Modes 1–4.
+ID M Target instance Certified outcome
+C011 Discretea/b= 3/2 err hq/errsq = 25
+16 (sharp)
+C021 Discretep=qerr/err hq = 4
+3 ,err/err sq = 2
+C031 Mixed 3-outcomeerr = 7
+10 ,err hq = 337
+560 ,err sq = 115
+266
+C041 Non-comm.2×2PSD Exact Bures PGM + Loewner id.
+C052|Z|= 2(p= 1/2) Sign flip− 1
+2 ,C= 1/
+√
+6
+C062|Z|= 4(p= 1/4) Sign flip− 1
+8 ,C= 1
+2 (+50%)
+C072|Z|= 5(p= 1/5)B raw = 1
+25 ,C= 1
+2 (+50%)
+C082|Z|= 8(p ∗= 1/8) TransitionA=B= 1,C= 7
+16
+C092|Z|= 16(p= 1/16)A-dominant,C= 30
+79 > 1
+3
+C103F 3 deg-3 (81hashes)E f∆f = 56
+135 ∈[Cπ,π]
+C113F 4 deg-3 (256hashes)E f∆f = 27
+64 ∈[ 1
+2 π,π]
+C123F 5 deg-3 (625hashes)E f∆f = 256
+625 ∈[ 1
+2 π,π]
+C134F 3 2∗-univ (9hashes) Thm. C 9
+20 >RC 11
+30 (E= 3
+5 )
+C144F 4 2∗-univ (16hashes) Thm. C 5
+12 >RC 3
+8 (E= 5
+8 )
+C1542-univ|Z|= 2Thm. C 1
+2 = 2×RC 1
+4 (E= 5
+6 )
+C1642-univ|Z|= 3Thm. C 2
+5 >RC 7
+30 (E= 143
+180 )
+References
+[1] Howard Barnum and Emanuel Knill. Reversing quan-
+tum dynamics with near-optimal quantum and classical
+fidelity.Journal of Mathematical Physics, 43(5):2097–
+2106, 2002.
+[2] J. Lawrence Carter and Mark N. Wegman. Universal
+classes of hash functions.Journal of Computer and
+System Sciences, 18(2):143–154, 1979.
+[3] Frédéric Dupuis. Privacy amplification and decoupling
+without smoothing.IEEE Transactions on Information
+Theory, 69(12):7784–7792, 2023.
+[4] Uffe Haagerup and Magdalena Musat. On the best con-
+stants in noncommutative Khintchine-type inequalities.
+Journal of Functional Analysis, 250(2):588–624, 2007.
+[5] Masahito Hayashi. Tight exponential analysis of uni-
+versally composable privacy amplification and its ap-
+plications.IEEE Transactions on Information Theory,
+59(11):7728–7746, 2013.
+[6] Bartosz Regula and Hao-Chung Cheng. Sharp one-shot
+bounds and optimal exponents of universal randomness
+extraction, 2026. arXiv:2611.33270v1, November 2026.
+[7] Bartosz Regula and Marco Tomamichel. Rethinking
+quantum smooth entropies: Tight one-shot analysis of
+quantum privacyamplification, 2026. arXiv:2603.04493,
+2026.
+[8] Mark N. Wegman and J. Lawrence Carter. New
+hash functions and their use in authentication and set
+equality.Journal of Computer and System Sciences,
+22(3):265–279, 1981.
+5
