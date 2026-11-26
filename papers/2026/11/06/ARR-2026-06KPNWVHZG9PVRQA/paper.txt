@@ -1,0 +1,441 @@
+--- Page 1 ---
+Constructive Truncation, Pellet–Graeffe, and
+Block-Multipoint Certificates for Nearly Optimal
+Deterministic Integer Root Finding
+Lluis Eriksson
+Independent Researcher (lluis@airr.science)
+Companion Verification Artifact toarXiv:2611.04730(November 3, 2026)
+November 26, 2026
+Abstract
+We present INT-ROOTS-NEAROPT-CERT-1.0, an indepen-
+dently reproducible, zero-floating-point verification en-
+gine and constructive Lean 4.35.0 kernel auditing the
+finite-dimensional algebraic, leading-truncation, Landau–
+Mahler, Gaussian-shift, Pellet–Graeffe bisection, and
+bucketed block-multipoint mechanisms of Yansong Feng
+and Itamar Nir’s November 3, 2026 unrefereed preprint
+“Finding Integer Roots of Polynomials in Nearly Opti-
+mal Time”( arXiv:2611.04730v1, Theorems 1.1(a) and
+1.1(b)). Without claiming to formalize Pan’s approxi-
+mate complex factorization algorithm (Theorem 3.1) or
+Harvey–van der Hoeven asymptotic bit-complexity bounds
+end-to-end, we build a four-mode exact verifier over Z,
+Q, Z[i], and Q[i] paired with 18 constructive Lean 4 the-
+orems (0 sorry, 0 custom axioms, 0 Classical.choice,
+0 warnings). Across 16 canonical certificates ( C01–C16),
+we certify (i) Lemma 2.2 leading-truncation root prox-
+imity ( |g(r)|< 2d) in the d = min(n, b) < n regime
+plus Section 2’s exact r = ±1 sharpness counterexam-
+ples ( x5 + 3x4 + 3x3 − 3x2 − 3x− 1 and degree-7 cu-
+bic truncation), (ii) Lemma 2.1 exact Landau–Mahler
+chains M(g)2 ≤ ∥g∥2
+2 < (d + 1)22b and Proposition 3.4
+reciprocal pullbacks H(w) = wdg(q + 1/w) over Q[i],
+(iii) Lemma 3.3 exact Gaussian-integer zero-free disk cer-
+tifications (9|g(q)|2 ≥ 4A2
+R, 3Mderiv ≤A R) and full Ap-
+pendix A Pellet–Graeffe bisection searches ( h = 2b → 1),
+and (iv) Lemma 3.5 multi-bucket block multipoint evalu-
+ation and complete Theorem 1.1(a) end-to-end root find-
+ing with exact synthetic deflation. All 16 certificates, 60
+unit/forgery tests, and 37 SHA-256 hashes verify deter-
+ministically.
+1 Introduction and Scope
+Given f(x) = Pn
+i=0 aixi ∈Z [x] of degree n with |ai|< 2b,
+computing all integer roots deterministically in time nearly
+linear in the input bit size nb has been a long-standing
+problem since Cucker–Koiran–Smale [2]. In their Novem-
+ber 3, 2026 unrefereed preprint [ 4], Feng and Nir achieve
+eO(nb + d3b2) time via an elementary Pellet–Graeffe bi-
+section search (Theorem 1.1(a), Appendix A, [ 1]) and
+eO(nb) time via Pan’s approximate factorization [ 7] (Theo-
+rem 1.1(b)), whered= min(n, b).
+The algorithm rests on four exact algebraic pillars:
+(1) Lemma 2.2’s leading truncationg(x) = anxd+··· +an−d
+forces every integer root r with |r| ≥2 within distance
+< 2 of a complex root of g (while failing sharply at
+r = ±1); (2) Landau’s inequality M(g) ≤ ∥g∥2 [6]
+(Lemma 2.1) and Ostrowski-style perturbation bounds
+(Lemma 2.3, Prop. 3.4) bound the total candidate bit
+length S = P
+c∈C⌈log2(2 + |c|)⌉ = O(b); (3) Lemma 3.3’s
+Gaussian-integer shift q (R = 10d2) ensures |g(q)| ≥2
+3 AR
+and zero roots in |z−q| ≤1, while Appendix A’s Pellet–
+Graeffe test bisects [−2b, 2b] keeping ≤ 7d centers per scale;
+and (4) Lemma 3.5’s power-of-two bit-length bucketing
+and block split f(x) = P
+j xtjFj(x) evaluates f on C in
+eO(nb+nS) = eO(nb) time [5].
+Honest Scope Boundary.This companion artifact
+certifies finite-dimensional truncation identities, sharpness
+counterexamples, Landau–Mahler chains, Q[i] reciprocal
+pullbacks, Lemma 3.3 zero-free disk bounds, complete
+Appendix A Pellet–Graeffe bisection runs, Lemma 3.5
+bucketed block evaluations, and end-to-end Theorem 1.1(a)
+root deflation from [4]. It doesnotformalize Pan’s complex
+approximate factorization (Theorem 3.1) or asymptotic
+FFT/Kronecker bit-complexity bounds.
+2 Constructive Lean 4.35.0 Kernel
+The formal kernel IntRootsNearoptCert.lean compiles
+cleanly under Lean 4.35.0 ( -j 1) [ 3] with zero sorry,
+zero custom axioms, zero warnings, and zero dependence
+on Classical.choice. Table 1 catalogs all 18 machine-
+checked theorems. Highlights include Theorem 2 (inductive
+geometric tail identity (R− 1) Pk−1
+j=0 Rj + 1 = Rk), Theo-
+rem 4 (inductive pigeonhole product-to-minimum radius
+principle for Lemma 2.2), Theorem 7 (inductive Parseval
+pigeonhole maximum for Lemma 3.3), Theorem 13 (ex-
+1
+
+--- Page 2 ---
+Table 1: The 18 constructive Lean 4.35.0 theorems in
+IntRootsNearoptCert.lean (0 sorry, 0 custom axioms,
+0Classical.choice).
+# Theorem Identifier Paper Reference / Invariant
+1lemma22 truncation root identityLem. 2.2r n−dg(r) +h(r) = 0
+2lemma22 geometric tail sumLem. 2.2 inductive (R−1) PRj+1 =Rk
+3lemma22 truncation value boundLem. 2.2R kG < RkB⇒G < B
+4lemma22 product ge pow2 of all ge2Lem. 2.2 inductive Qdj ≥2 d
+5cauchy root upper boundProp. A.3 Cauchy bound|z|<1 + 2 b
+6lemma21 l2 norm sq boundLem. 2.1 inductive∥g∥ 2
+2 ≤(d+1)M 2
+7lemma33 parseval pigeonhole maxLem. 3.3 inductive max|g(Rζ k)|2 ≥A 2
+R
+8lemma33 zero free disk exclusionLem. 3.3 3|g(q)| ≥2A R > AR
+9prop34 reciprocal exponent splitProp. 3.4 inductiveu aub =u a+b
+10thm11b candidate radius marginThm. 1.1(b) 8|r−z i| ≤21⇒ |r−zi| ≤2
+11thm11b candidate count boundThm. 1.1(b) inductive|C| ≤7d+ 3
+12lemmaA1 pellet unit disk exclusionLem. A.1(a)|q 0|> P
+k≥1 |qk|
+13graeffe root squaring deg2App. A exact deg-2p(x)p(−x) squaring
+14propA3 bisection interval coverProp. A.3 [m−2s, m+2s] half-cover
+15propA3 max seven centers per rootProp. A.3 4(h+ 2)≤6(2h) (≤7 ctrs)
+16propA3 candidate set sizeProp. A.3|C ′| ≤21d,|C| ≤21d+ 3
+17lemma35 bucket bit budgetLem. 3.5 inductivetτ≤2S
+18lemma35 block evaluation hornerLem. 3.5 exact block Horner recomb.
+act symbolic degree-2 Graeffe root-squaring identity over
+Z), and Theorem 17 (inductive bucket bit-length budget
+tτ≤2SoverList Nat).
+3 The INT-ROOTS-NEAROPT-CERT-1.0
+Engine
+Our Python verifier
+(src/int roots nearopt verifier.py) enforces zero
+floating-point literals, zerofloat()calls, zero
+true-division operators (/,/=), zeromath/numpyimports,
+pre-read st size and MAX JSON BYTES = 1 000 000 caps,
+duplicate-key rejection via object pairs hook, non-finite
+and floating-point JSON token rejection via
+parse constantandparse float, recursion-depth and
+oversized-integer protection, and lowest-terms rationals
+[p, q] (gcd(|p|, q) = 1).
+Definition 1(INT-ROOTS-NEAROPT-CERT-1.0Modes).
+Each certificate invokes one of four exact verification
+modes:
+1.truncation and sharpness(Lem. 2.2, Sec. 2):
+(a)leading truncation radiuschecks|a i|<2 b,
+d= min(n, b)< n,|r| ≥2,f(r) = 0,
+rn−dg(r) +h(r) = 0,|g(r)|<2 d, and a strict rational
+sign-change or exact-root witness in(r−2, r+ 2);
+(b)unit root sharpness witnessverifiesf(±1) = 0
+and runs exact Pellet–Graeffe exclusion certifying all
+complex roots ofglie strictly outside|z∓1| ≤R ex.
+2.mahler landau and perturbation(Lem. 2.1, 2.3,
+Prop. 3.4): (a)landau mahler and bit budget
+expands g(x) = ad
+Q(x−α j)over Z[i][x], verifies Z[x]
+integrality, certifiesM(g) 2 ≤ ∥g∥2
+2 <(d+ 1)2 2b, and
+checks Step 3’s candidate bit budget
+2S≤14b+ 56d+ 7⌈log 2(d+ 1)⌉+ 40;
+(b)ostrowski perturbation and reversebuilds
+H(w) =w dg(q+ 1/w), ˆH(w) =H d
+Q(w−w i), and
+pullbackˆg(x) = ˆH∗(x)overQ[i], verifying
+∥ˆg−g∥1 <[8·9 d(2b(d+ 1) + 1)]−1 and
+C01 (n = 10, d = 4)
+root r = 3
+C02 (n = 12, d = 5)
+root r = −5
+0
+5
+10
+15
+20
+25
+30
+35Exact integer magnitude2 1
+16
+32
+(a) Lemma 2.2 Truncation |g(r)| < 2d
+Exact |g(r)|
+Lemma 2.2 cap 2d
+C03 (Sec. 2 ex.)
+r = +1, n = 5, d = 2
+C04 (Deg-7 ex.)
+r = −1, n = 7, d = 3
+0
+1
+2
+3
+4
+5Radius / Graeffe step count
+2 22
+4
+(b) r = ±1 Sharpness Exclusion
+Pellet excl. radius Rex
+Graeffe steps N
+Figure 1: Mode 1 verification: (a) Lemma 2.2 strict bound
+|g(r)|< 2d in the d = min(n, b) < n regime (C01–C02);
+(b) exact Pellet–Graeffe zero-free radius Rex = 2 around
+r=±1 (C03–C04).
+|αi −(q+ 1/w j)|<1/8.
+3.gaussian shift and pellet graeffe(Lem. 3.3,
+App. A): (a)gaussian shift zero free disk
+computes exactA 2
+R = Pg2
+mR2m (R= 10d 2) and
+g(q)∈Z[i], checking|q| ≤R+ 1,9|g(q)| 2 ≥4A 2
+R, and
+9(P
+m≥1 m|gm|(R+ 2) m−1)2 ≤A 2
+R;
+(b)pellet graeffe bisection searchexecutes
+Appendix A’s exact Taylor-shift +N-step Graeffe +
+Pellet bisection tree ( h = 2b → 1), certifying ≤ 7d kept
+centers per scale,|C ′| ≤21d, Prop. A.3’s bit budget,
+and containment of every|r| ≥2root.
+4.block multipoint and root verify(Lem. 3.5,
+Thm. 1.1(a)): (a)bucketed block multipoint eval
+partitions points into dyadic buckets τ, checks tτ <2S,
+verifies block bounds|F j(c)|<2 L−1, and confirms
+block Horner recombination equals directf(c);
+(b) end to end integer root cert executes Steps 1–4
+in strict n > bregime (truncation → Pellet–Graeffe →
+Lemma 3.5→exact synthetic deflation).
+Proposition 1(Verifier Soundness).Whenever
+verify fileoutputsVERIFIEDon anINT-ROOTS-
+NEAROPT-CERT-1.0certificate, all checked truncation
+bounds, Pellet–Graeffe exclusions, Landau–Mahler
+inequalities, Q[i]pullbacks, zero-free disks, bisection trees,
+block evaluations, and root deflations hold identically over
+Z,Q,Z[i], orQ[i].
+4 Certified Corpus and Worked
+Witnesses
+We generated and verified 16 canonical certificates ( C01–
+C16, Table 2). Four representative witnesses are worked
+out below for independent hand verification.
+Worked Witness 1 (C01 & C03: Lemma 2.2 vs. r = 1
+Sharpness).In C01 (n = 10, b= d = 4), f(x) = (x−
+3)(x9 + 2x8 + ··· + 2x + 1) has |ai| ≤5 < 16 and f(3) = 0.
+Its leading truncation g(x) = x4 −x3 −4x2 −4x−4 satisfies
+g(3) = 2 (|g(3)|< 24 = 16), g(2) = −20 < 0, certifying a
+real root in (2, 3) ⊂ (1, 5). By contrast, in C03 (Section 2’s
+2
+
+--- Page 3 ---
+C05 (d = 4, b = 7)
+Complex roots
+C06 (d = 6, b = 12)
+Mixed roots
+0.0
+2.5
+5.0
+7.5
+10.0
+12.5
+15.0
+17.5
+Bit scale (log2 )
+6.5
+8.6
+6.7
+9.4
+8.2
+13.4
+(a) Lemma 2.1 Landau–Mahler Chain
+log2 M(g)
+log2 ‖g‖2
+b + 1
+2log2 (d + 1)
+C11 (d = 3, b = 8)
+3 real roots
+C12 (d = 4, b = 7)
+2 real + 2 complex
+0
+20
+40
+60
+80
+100Exact integer count
+9 8
+21 17
+63
+84
+(b) Prop. A.3 Bisection Center Bounds
+Max kept / scale
+|C0| output
+Prop. A.3 cap 21d
+Figure 2: Mode 2a & 3b verification: (a) Lemma 2.1
+Landau–Mahler chain log2 M(g) ≤log 2 ∥g∥2 < b +
+1
+2 log2(d + 1) ( C05–C06); (b) Appendix A Prop. A.3 bi-
+section center and|C ′| ≤21dcounts (C11–C12).
+C09 (d = 3, R = 90)
+q = 90 + i
+C10 (d = 5, R = 250)
+q = 250
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+1.2
+1.4
+Squared ratio |g(q)|2/A2
+R
+0.986 1.020
+(a) Lemma 3.3 Zero-Free Disk Margin
+Lemma 3.3 floor 4/9
+Verified |g(q)|2/A2
+R
+C15 (n = 10, b = 5)
+Roots {−2, 1, 3}
+C16 (n = 12, b = 6)
+Mult 4: {−3, 0, 2}
+0
+10
+20
+30
+40
+50Exact pipeline count
+13 13
+33 33
+23
+27
+(b) Thm. 1.1(a) End-to-End Pipeline
+Candidates |C|
+Total bits S
+Pellet tests
+Figure 3: Mode 3a & 4b verification: (a) Lemma 3.3
+squared ratio |g(q)|2/A2
+R > 4/9 certifying zero-free unit
+disks (C09–C10); (b) complete Theorem 1.1(a) end-to-end
+pipeline counts (C15–C16).
+exact example f(x) = x5 + 3x4 + 3x3 − 3x2 − 3x− 1,
+b = d = 2), f(1) = 0 while g(x) = x2 + 3x + 3 has roots
+(−3±i
+√
+3)/2 at distance
+√
+7> 2 from 1: 2 Graeffe steps on
+g(1 + 2x) pass Pellet’s test, proving |z− 1| ≤2 is root-free.
+Worked Witness 2 ( C05: Lemma 2.1 Landau–
+Mahler Chain).For g(x) = 3(x−2)(x+3)(x−1−2i)(x−
+1+2i) = 3x4 −3x3 −9x2 +51x−90 (b = 7, |ai| ≤90 < 128),
+exact squared Mahler measure is M(g)2 = 32 ·22 ·32 ·5·5 =
+8100 ≤ ∥g∥2
+2 = 32 +32 +92 +512 +902 = 10800 < 5·1282 =
+81920, and the 12-point candidate set satisfies S = 30
+(2S= 60≤383).
+Worked Witness 3 ( C09: Lemma 3.3 Zero-Free
+Disk).For g(x) = 3x3 − 2x2 + 5x− 12 (d = 3, b= 5),
+R = 10d2 = 90 gives A2
+R = 9 · 906 + 4· 904 + 25· 902 + 144.
+At q = 90 + i (|q|2 = 8101 ≤ 912), exact Z[i] evaluation
+yields |g(q)|2/A2
+R ≈ 0.9860 > 4/9 while 9 M2
+deriv ≤A 2
+R,
+constructively excluding all roots from|z−(90 +i)| ≤1.
+Worked Witness 4 ( C16: Theorem 1.1(a) End-to-
+End Deflation).For f(x) = x(x−2)2(x+3)(x8 +x4 +1)
+(n = 12, b= d = 6, |ai| ≤12 < 64), truncating to degree 6,
+running Appendix A’s Pellet–Graeffe bisection (27 tests,
+≤ 6 centers/scale), adjoining {0,±1} (|C| = 13, S = 33, 3
+buckets), evaluating f via Lemma 3.5 blocks, and deflating
+by x(x− 2)2(x + 3) certifies all integer roots {−3, 0, 2}
+(multiplicity 4) with non-vanishing quotient onC.
+Table 2: Summary of the 16 canonical INT-ROOTS-
+NEAROPT-CERT-1.0 certificates ( C01–C16); all 16 verify
+deterministically.
+ID Mode Target Result Certified Exact Invariant
+C011a Lem. 2.2 (r=3)n=10, b=d=4:|g(3)|=2<16, root∈(2,3)
+C021a Lem. 2.2 (r=−5)n=12, b=d=5:|g(−5)|=1<32, root∈(−5,−4)
+C031b Sec. 2 (r=1)x 5+3x4+3x3−3x2−3x−1:|z−1| ≤2 empty
+C041b Sec. 2 (r=−1)n=7, b=d=3:g= (x−2)(x 2−x+3),|z+1| ≤2 empty
+C052a Lem. 2.1 (d=4)M 2=8100≤ ∥g∥2
+2=10800<81920,S=30
+C062a Lem. 2.1 (d=6)M 2=160000≤476776<117440512,S=45
+C072b Prop. 3.4 (d=2)q=40:∥ˆg−g∥ 1 <1/31752,|α−β|<1/8
+C082b Prop. 3.4 (d=3)q=90+3i:∥ˆg−g∥ 1 <1/379080
+C093a Lem. 3.3 (d=3)R=90, q=90+i:|g(q)| 2/A2
+R ≈0.986>4/9
+C103a Lem. 3.3 (d=5)R=250, q=250:|g(q)| 2/A2
+R ≈1.020>4/9
+C113b Prop. A.3 (d=3)b=8: 45 tests, max kept=9≤21,|C ′|=21
+C123b Prop. A.3 (d=4)b=7: 31 tests, max kept=8≤28,|C ′|=17
+C134a Lem. 3.5 (n=10) 12 pts, 4 buckets,S=47, exact Horner match
+C144a Lem. 3.5 (n=20) 16 pts, 4 buckets,S=60, exact Horner match
+C154b Thm. 1.1(a)n=10, b=d=5:|C|=13, roots{−2,1,3}
+C164b Thm. 1.1(a)n=12, b=d=6:|C|=13,{−3,0,2}(mult 4)
+5 Testing, Integrity, and Reproduc-
+tion
+Our pytest suite (tests/test verifier.py) executes 60
+deterministic checks (1 AST zero-float/zero-division/zero-
+math audit, 16 canonical certificates, 1 corpus-count
+check, and 42 adversarial forgery tests covering duplicate
+keys, NaN/Infinity, JSON float literals, oversized/deeply
+nested/huge-integer JSON, nonexistent paths, unreduced
+rationals, non-roots, |r|< 2 in Lemma 2.2, coefficient bit
+overflows, radius-1 and overclaimed sharpness radii, non-
+conjugate roots, duplicate/boundary Prop. 3.4 roots and
+perturbations, bad Gaussian shifts, omitted/duplicate bi-
+section roots, duplicate evaluation points, n≤b , and
+vacuous zero-root polynomials). All 60 tests pass in
+< 0.2 s, Lean 4.35.0 builds cleanly with 0 warnings, and
+MANIFEST.sha256pins all 37 tracked artifacts.
+Disclosure and Licensing.Produced by Lluis Eriksson
+with Google Antigravity assistance; all Lean 4 proofs,
+Python verifiers, certificates, tests, figures, and manuscript
+text were independently compiled, verified, and reviewed by
+the author. Manuscript and figures are licensed CC-BY-4.0;
+code, Lean 4 kernel, and certificates are licensed MIT. Full
+source archive: https://github.com/lluiseriksson/n
+early-optimal-integer-roots-certificates.
+References
+[1] Ruben Becker, Michael Sagraloff, Vikram Sharma,
+and Chee Yap. A near-optimal subdivision algorithm
+for complex root isolation based on the Pellet test and
+Newton iteration.Journal of Symbolic Computation,
+86:51–96, 2018.
+[2] Felipe Cucker, Pascal Koiran, and Steve Smale. A
+polynomial time algorithm for Diophantine equations
+in one variable.Journal of Symbolic Computation,
+27(1):21–29, 1999.
+[3] Leonardo de Moura and Sebastian Ullrich. The Lean 4
+theorem prover and programming language. In
+3
+
+--- Page 4 ---
+Automated Deduction – CADE 28, volume 12699 of
+LNCS, pages 625–635. Springer, 2021.
+[4] Yansong Feng and Itamar Nir. Finding integer roots
+of polynomials in nearly optimal time. arXiv preprint
+arXiv:2611.04730v1, November 2026. Unrefereed
+preprint, November 3, 2026.
+[5] David Harvey and Joris van der Hoeven. Integer
+multiplication in timeO(nlogn).Annals of
+Mathematics, 193(2):563–617, 2021.
+[6] Edmund Landau. Sur quelques th´ eor` emes de
+M. Petrovitch relatifs aux z´ eros des fonctions
+analytiques.Bulletin de la Soci´ et´ e Math´ ematique de
+France, 33:251–261, 1905.
+[7] Victor Y. Pan. Univariate polynomials: nearly
+optimal algorithms for numerical factorization and
+root-finding.Journal of Symbolic Computation,
+33(5):701–733, 2002.
+4

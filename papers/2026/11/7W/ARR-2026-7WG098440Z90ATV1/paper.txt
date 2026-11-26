@@ -1,0 +1,440 @@
+--- Page 1 ---
+Constructive Algebraic, Synchronization, and Pure-Integer
+Perron Certificates for theΛ>2.229206Ternary Cap-Set
+Growth Lower Bound
+Lluis Eriksson
+Independent Researcher (lluis@airr.science)
+Companion Verification Artifact toarXiv:2611.30110(November 23, 2026)
+November 26, 2026
+Abstract
+We present CAPSET-F3-GROWTH-CERT-1.0, an indepen-
+dently reproducible, zero-floating-point verification en-
+gine and constructive Lean 4.35.0 kernel auditing the
+finite-dimensional algebraic, combinatorial, rational-price,
+and pure-integer spectral mechanisms underlying Ze-
+Hua Lu’s November 23, 2026 unrefereed preprint“A
+Constructive Lower Bound for the Growth Constant of
+Ternary Cap Sets”( arXiv:2611.30110, Theorem 1.1:
+Λ > 2.229206468135675727981404). Without claiming
+to formalize the randomized GL(b, 2) binary-flag pivot
+tables of Appendix C or full 14-step outer dynamic pro-
+gramming over all 352 rows end-to-end, we build a four-
+mode exact verifier over Z, Q, and F3 backed by 18 con-
+structive Lean 4 theorems (0 sorry, 0 custom axioms,
+0 Classical.choice, 0 warnings). Across 16 canoni-
+cal certificates ( C01–C16), we certify (i) exact cap-set
+seeds in F3
+3 (9-point paraboloid) and F4
+3 (20-point Q−(3, 3)
+ovoid) plus Prop. 2.3 two-color slot axioms and scalar
+deletion lifting, (ii) Lemma 3.1 3-sunflower-free port-state
+conservation, Eq. (3.1)–(3.2) score synchronization, and
+Prop. 3.2/Example 3.3 parity companion-path exclusion,
+(iii) Sec. 5.1–5.2 zero-fiber pooling, exact 6-spoke and
+11-spoke stars in F4
+3,F5
+3 (zero cross-lines), and all four
+Eq. (A.1) rational filling-price checks against Table 2’s
+floored lower bounds at Round 0 ( z = 2) and Round 9,
+and (iv) Theorem 4.1 tilted-cone domination and Ap-
+pendix A.4’s verbatim 28-digit Round 9 matricesP0, P1, P2,
+exact Perron floor J0 = 10029057595358243801843755621,
+strict tail dominance, and exact 1000th-power Eq. (A.6)
+integer bracket proving Λ > 2.229206468135675727981404.
+All 16 certificates, 63 unit/forgery tests, and 37 SHA-256
+hashes verify deterministically.
+1 Introduction and Scope
+Acap setin Fd
+3 is a subset containing no three distinct
+collinear points ( a + b + c = 0). By supermultiplicativ-
+ity, the cap-set growth constant Λ = limd→∞ r3(d)1/d
+exists, with upper bound Λ ≤ 2.7551 . . .[3] and succes-
+sive constructive lower bounds by Edel (2 .217389) [ 2],
+Tyrrell (2.2180) [ 7], and FunSearch [ 6]. In his Novem-
+ber 23, 2026 unrefereed preprint [ 4], ZeHua Lu establishes
+Λ > 2.229206468135675727981404 (Theorem 1.1) via a
+1000-dimension single-slot closed-walk recursion on two-
+color slots in F7
+3, synchronized by port states (Lemma 3.1),
+score intervals (Eqs. 3.1–3.2), and companion-path ex-
+clusion (Prop. 3.2), filled by fixed-sum grouped nodes
+(Lemma 5.1, Prop. 5.2), and certified via a tilted transfer-
+matrix cone subtraction (Theorem 4.1) reduced to exact 28-
+digit integer 2×2 Perron-root comparisons (Appendix A.4,
+Eq. A.6).
+Honest Scope Boundary.This companion artifact
+independently machine-checks the finite algebraic seeds,
+two-color slot axioms, port/score synchronization and
+companion-path exclusion mechanics, zero-fiber pooling
+and spoke-star geometry, exact rational Eq. (A.1) filling-
+price inequalities against Table 2’s floored bounds, The-
+orem 4.1 tilted-cone subtractions, and Appendix A.4’s
+verbatim Round 9 28-digit integer matrices and 1000th-
+power Eq. (A.6) bracket from [ 4]. It doesnotreplay the
+external supplement appendix c data.zip pivot tables
+or the full 352-row 14-step dynamic program producing
+P0, P1, P2.
+2 Constructive Lean 4.35.0 Kernel
+The formal kernel CapsetGrowthCert.lean compiles
+cleanly under Lean 4.35.0 ( -j 1) [ 1] with zero sorry,
+zero custom axioms, zero warnings, and zero dependence
+on Classical.choice. Table 1 catalogs all 18 machine-
+checked theorems. Highlights include Theorem 2 (exhaus-
+tive zero-axiom verification of Appendix A.1’s 9-point
+paraboloid cap set in F3
+3), Theorem 9 (Prop. 3.2 single-
+exceeder companion-path forcing), Theorem 14 (exact
+integer Perron-root strict upper bound J > ρ(Q) via
+(2J−u−x )2 − (u−x )2 = 4( J−u )(J−x ) > 4vw),
+Theorem 15 (exact integer Perron floor J≤ρ (P0)), and
+Theorem 17 (inductive strict monotonicity of integer pow-
+1
+
+--- Page 2 ---
+Table 1: The 18 constructive Lean 4.35.0 theorems
+in CapsetGrowthCert.lean (0 sorry, 0 custom axioms,
+0Classical.choice).
+# Theorem Identifier Paper Reference / Invariant
+1f3 scalar two color axiomsSec. 2 1D slotT={0}, O={1,2}
+2f3 paraboloid 9 point capsetApp. A.1 exhaustive 9-cap inF 3
+3
+3paraboloid seed gt twoApp. A.1 2 3 <9⇒Λ>2
+4prop23 scalar deletion liftingProp. 2.3 universalF 3 scalar lift
+5lemma22 triple self zero mod3Lem. 2.2 3v≡0 (mod 3)
+6lemma31 port witness dichotomyLem. 3.1a+b+c= 2⇒ P(1−x) = 1
+7lemma31 port state propagationLem. 3.1 constant cycle port state
+8score interval synchronization exclusionEqs. (3.1)–(3.2)D 1 = 48, D2 = 24
+9prop32 companion single exceederProp. 3.2 unique exceeding walk
+10single slot dimension 1000Sec. 4.1 14(10·7 + 2)−7−1 = 1000
+11seven dim alphabet fiber countsTable 1|U|= 200,|M|= 182 fibers
+12theorem41 cone tilt exponentsThm. 4.1 outside-cone positive tilt
+13eqA1 char poly negative at witnessEq. (A.1)h(h−βηu)< β 2ηB
+14perron root strict upper boundApp. A.4 exactJ > ρ(Q) overZ
+15perron root floor lower boundApp. A.4 exactJ≤ρ(P 0) overZ
+16mat2 entrywise nonneg monotoneEq. (A.5) 2×2 char.-poly monotonicity
+17natPow strict monoEq. (A.6) inductivex < y⇒x k < yk
+18zero fiber pooling rate factorEq. (5.2) (4 + 4z) d = 4d(1 +z) d
+ers justifying Eq. (A.6)’s 1000th-power bracket).
+3 The CAPSET-F3-GROWTH-CERT-1.0
+Engine
+Our Python verifier (src/capset growth verifier.py)
+enforces zero floating-point literals, zerofloat()calls,
+zero true-division operators (/,/=), zeromath/numpy
+imports, pure-integer Newton isqrt, pre-readst size
+andMAX JSON BYTES = 1 000 000caps, duplicate-key
+rejection viaobject pairs hook, non-finite and
+floating-point JSON token rejection viaparse constant
+andparse float, recursion-depth and oversized-integer
+protection, and lowest-terms rationals [p, q]
+(gcd(|p|, q) = 1).
+Definition 1(CAPSET-F3-GROWTH-CERT-1.0Modes).
+Each certificate invokes one of four exact verification
+modes:
+1.paraboloid and twocolor slots(Sec. 2, Prop. 2.3,
+App. A.1): (a)f3 capset and paraboloid
+exhaustively checks all unordered pairs(a, b)for
+−a−b /∈SinF d
+3 and verifiesr d
+num <|S| ·rd
+den;
+(b)twocolor slot gluing deletionverifies distinct
+physical vectors, Axioms 1–2 on(O, T), the Prop. 2.3
+Part 2 lifted recovery check inF d+1
+3 (Olift ={(v,0)},
+Tlift ={(v,±1)}), and14(10·7 + 2)−7−1 = 1000.
+2.closed walk sync and companion(Sec. 3, Lem. 3.1,
+Prop. 3.2, Ex. 3.3):
+(a)port conservation and scoreschecks
+3-sunflower-freeness of row masks, Lemma 3.1 port
+conservation across all compatible triples in states
+s∈ {1, 2}, and Eqs. (3.1)–(3.2) score conservation and
+head-bound strict inequalities;
+(b)companion path exclusioncomputes exact
+12-step set-convolutionB(P) =B 1 ∗ ··· ∗B12 over
+{0, . . . ,24}withlh ≤u h and strictly sorted expected
+sets, verifies non-empty port entries exclude all( w, w′)
+with w + w′ = Ds −G obeying both bounds, and checks
+non-vacuousI s single-occurrence multiplicity.
+C01
+91/3
+C02
+201/4
+FunSearch
+(2024)
+C14
+Rnd 0
+C13
+Rnd 9
+2.05
+2.10
+2.15
+2.20
+2.25
+Growth lower bound Λ
+2.0801
+2.1147
+2.2202 2.2289 2.2292
+(a) Certified Ternary Cap-Set Bounds
+7.5 10.0 12.5 15.0 17.5 20.0 22.5 25.0
+First-companion suffix score w
+0 → 0
+0 → 1
+1 → 0
+1 → 1
+(b) Example 3.3 Parity Exclusion (C07)
+Achievable B1(P)ab Required Eq. (3.3)
+Figure 1: Mode 1–2 verification: (a) exact Fd
+3 seed capaci-
+ties (C01: 9-cap, C02: 20-cap) vs. Round 0/Round 9 certi-
+fied bounds (C13–C14); (b) Example 3.3 parity companion-
+path exclusion across all four port transitions (C07).
+3.grouped nodes and filling prices(Sec. 5, Table 2,
+Prop. 5.2, App. A.2): (a)fiber and star capacity
+verifies Eq. (5.2) binomial zero-fiber poolingPd
+k=0
+ d
+k
+
+4d−k(4z)k = (4 + 4z)d and exact zero-sum
+m-spoke star geometry with zero extra cross-lines;
+(b)eqA1 exact filling witnesschecks all four
+Eq. (A.1) exact rational spectral-radius tests
+(b∈ {252,641,144,182}) with no floating-point
+arithmetic and outputs certified pricesX=Npand
+Y= 128q.
+4.transfer matrix and perron cert(Thm. 1.1,
+Thm. 4.1, App. A.4–A.5):
+(a)perron tail dominance and power1000computes
+exact integer Perron floors
+Jk =⌊(a+d+⌊
+p
+(a−d) 2 + 4bc⌋)/2⌋forP 0, P1, P2,
+checks strict tail dominanceJ 0 >max(u, x)and
+(J0 −u)(J 0 −x)> vw, and verifies Eq. (A.6)’s exact
+1000th-power integer bracket
+S(fdenu)D < J0(fnumG)D < S(fden(u+ 1)) D;
+(b)tilted cone weight boundverifies Theorem 4.1
+outside-cone tilt dominance (9B >718Aor
+6A >137B) and exact rational matrix power positivity
+(Kn
+0 −K n
+− −K n
++)00 >0.
+Proposition 1(Verifier Soundness).Whenever
+verify fileoutputsVERIFIEDon aCAPSET-
+F3-GROWTH-CERT-1.0certificate, all checkedF 3 cap sets,
+two-color slot axioms, port/score synchronizations,
+companion-path exclusions, spoke stars, Eq. (A.1) rational
+price bounds, integer Perron floors, tail exclusions, and
+1000th-power Eq. (A.6) brackets hold identically overZ,
+Q, orF 3.
+4 Certified Corpus and Worked
+Witnesses
+We generated and verified 16 canonical certificates ( C01–
+C16, Table 2). Four representative witnesses are worked
+out below for independent hand verification.
+Worked Witness 1 (C02: 20-Point Ovoid Cap Set
+in F4
+3).The elliptic quadric Q−(3, 3) = {x0x1 + x2
+2 +
+2
+
+--- Page 3 ---
+Ordinary U
+(|U| = 200)
+Marked M
+(|M| = 182)
+0
+50
+100
+150
+200
+Points in 7
+3
+64 iso
+136 active
+(64, 8, 64)
+16
+83 + 83
+11-spoke
+(a) Table 1 7D Alphabet Geometry
+Isolated / Zero fiber
+Active / Nonzero fibers
+C12 (Rnd 0)
+Seed z = 2
+C11 (Rnd 9)
+z = 2.229206…
+0
+50
+100
+150
+200Exact certified filling weight
+161.37 161.64
+128.62 128.69
+(b) Prop. 5.2 Exact Eq. (A.1) Prices
+Marked price X = Np
+Ordinary price Y = 128q
+Figure 2: Mode 3 verification: (a) Table 1 7D alphabet
+fiber decomposition ( |U| = 200, |M| = 182 with 11-spoke
+stars); (b) certified filling prices X = Np and Y = 128q
+from all four Eq. (A.1) rational checks at Round 0 ( C12)
+and Round 9 (C11).
+P0 (Main) P1 (K−  tail) P2 (K+  tail)
+0.92
+0.94
+0.96
+0.98
+1.00
+1.02Normalized Perron root ⌊ρ(Pi)⌋/1028
+1.00291
+0.94863
+0.99779
+(a) Round 9 Spectral Dominance (C13)
+C15 (n = 50) C16 (n = 200)
+0
+20
+40
+60
+80
+100
+Share of (Pn
+0)00 (%)
+16.4%
+64.0%
+83.6%
+36.0%
+(b) Round 9 Tilted Tail Decay
+Cone weight retained
+Tilted tail sum
+Figure 3: Mode 4 verification: (a) Appendix A.4 exact
+normalized Perron radii J0/S >max(J1, J2)/S for verba-
+tim Round 9 matrices (C13); (b) Theorem 4.1 conservative
+retained fraction (Pn
+0 −P n
+1 −P n
+2 )00/(Pn
+0 )00 on verbatim
+Round 9 matrices at t = 1 + 10 −6, rising from 16 .4%
+(n= 50,C15) to 64.0% (n= 200,C16).
+x2
+3 = 0} ⊂PG(3, 3) contains 10 projective points with no
+three collinear [5]. Taking both nonzero scalar multiples
+{v, 2v} produces 20 affine points in F4
+3: exhaustive pair
+testing confirms no three distinct points sum to 0, and
+211474 = 199983912708880881 < 20 · 100004, certifying
+Λ>2.1147.
+Worked Witness 2 (C07: Example 3.3 Parity Com-
+panion Exclusion).In state s = 1 ( D1 = 48) with
+G = 16 > uh = 15, the 12-step convolution of 7 even-
+offset steps, 4 +2 diagonal steps, and 1 final parity
+step yields B1(P)00 = {10, 12, . . . ,24} (all even) and
+B1(P)01 = {9, 11, . . . ,23} (all odd). Any companion pair
+with w + w′ = 48 − 16 = 32 and w≤ 15, w′ ≤ 17
+forces w = 15 (odd), absent from B1(P)00; symmetri-
+cally w≤ 16, w′ ≤ 16 forces w = 16 (even), absent from
+B1(P)01, excluding all four port pairs.
+Worked Witness 3 (C11: Round 9 Eq. (A.1) Filling
+Prices).At Round 9 seed
+z= 2.229206468135675727981404 (β=z/3), using
+Table 2’s conservative 12-digit floored node lower bounds
+(ηb = 313436531305/1012), exact rational witnesses
+(s, v, p, q) agreeing with Appendix A.2 to 11+ decimal
+digits for s, vand 8+ decimal digits for p, qstrictly satisfy
+all four Eq. (A.1) inequalitiesh(h−βη bu)< β2ηbBb
+Table 2: Summary of the 16 canonical CAPSET-
+F3-GROWTH-CERT-1.0 certificates ( C01–C16); all 16 ver-
+ify deterministically.
+ID Mode Target Result Certified Exact Invariant
+C011a App. A.1 (F 3
+3) 9-pt paraboloid cap set, 2 3 <9
+C021a Pellegrino (F 4
+3) 20-ptQ −(3,3) ovoid, (2.1147) 4 <20
+C031b Sec. 2, Prop. 2.3 3D two-color slot (|O|=6,|T|=1), dim 1000
+C041b Prop. 2.3 (F 4
+3) Line-bearingT(|T|=3), deletion lifts
+C052a Lem. 3.1, Eq. (3.1) 5-bit 4-row 3-SF-free port & score check
+C062a Lem. 3.1, Eq. (3.2) 6-bit 5-row port & head-interval sync
+C072b Ex. 3.3, Prop. 3.2 State-1 parity exclusion (G=16, D 1=48)
+C082b Sec. 3.3 Eq. (3.4) State-2 parity exclusion (G=7, D 2=24)
+C093a Eq. (5.2), Sec. 5.2z=2 rate 12, 6-spoke star (13 pts, 0 cross)
+C103a Table 1, Sec. 5.2z=11/5 rate 64/5, 11-spoke star (23 pts)
+C113b Prop. 5.2, Table 2 Round 9 Eq. (A.1):X≈161.638,Y≈128.693
+C123b Prop. 5.2 (z=2) Round 0 Eq. (A.1):X≈161.375,Y≈128.616
+C134a Thm. 1.1, App. A.4 Round 9P 0, P1, P2: Λ>2.229206468135. . .
+C144a Table 3, Eq. (A.6) Round 0J 0 realization: Λ>2.228868987790. . .
+C154b Thm. 4.1, Eq. (A.5) Round 9P 0, P1, P2,n=50: retained≥16.36%
+C164b Thm. 4.1, Eq. (A.5) Round 9P 0, P1, P2,n=200: retained≥64.02%
+(b∈ {252,641,144,182}), certifying
+X=Np >161.638256 andY= 128q >128.692706.
+Worked Witness 4 (C13: Exact Round 9 Perron &
+Eq. (A.6) Bracket).For Appendix A.4’s verbatim
+28-digit integer matricesP 0, P1, P2, pure-integer Newton
+isqrtrecovers
+J0 = ⌊ρ(P0)⌋ = 10029057595358243801843755621, strictly
+exceedingJ 1 = 9486260500781793939302943942 and
+J2 = 9977922637375534216990157351 via exact integer
+testsJ 0 >max(u, x) and (J0 −u)(J 0 −x)> vw.
+Evaluating Eq. (A.6) withS= 10 28,G= 10 24,
+f= 5573/2500, andu= 2229206468135675727981404
+confirms
+S(2500u)1000 < J0(5573G)1000 < S(2500(u+ 1))1000
+exactly overZ, certifying
+Λ>2.229206468135675727981404.
+5 Testing, Integrity, and Reproduc-
+tion
+Our pytest suite (tests/test verifier.py) executes 63
+deterministic checks (1 AST zero-float/zero-division/zero-
+math audit, 16 canonical certificates, 1 corpus-count
+check, and 45 adversarial forgery tests covering duplicate
+keys, NaN/Infinity, JSON float literals, oversized/deeply
+nested/huge-integer JSON, unreduced rationals, collinear
+triples, duplicate realizations, Axiom 1/2 violations, 3-
+sunflower rows, score-conservation/head-bound failures,
+truncated 12-step matrices, inverted head intervals, un-
+sorted expected sets, vacuous/duplicate Is, failed compan-
+ion exclusion, cross-line stars, inflated Eq. (A.1) witnesses,
+wrong J0, non-dominated tails, overclaimed Eq. (A.6) u+1,
+duplicate/inside-cone pairs, and high-power negative cone
+subtractions). All 63 tests pass in < 0.2 s, Lean 4.35.0
+builds cleanly with 0 warnings, and MANIFEST.sha256
+pins all 37 tracked artifacts.
+Disclosure and Licensing.Produced by Lluis Eriksson
+with Google Antigravity assistance; all Lean 4 proofs,
+Python verifiers, certificates, tests, figures, and manuscript
+3
+
+--- Page 4 ---
+text were independently compiled, verified, and reviewed by
+the author. Manuscript and figures are licensed CC-BY-4.0;
+code, Lean 4 kernel, and certificates are licensed MIT. Full
+source archive: https://github.com/lluiseriksson/t
+ernary-cap-set-growth-certificates.
+References
+[1] Leonardo de Moura and Sebastian Ullrich. The Lean 4
+theorem prover and programming language. In
+Automated Deduction – CADE 28, volume 12699 of
+LNCS, pages 625–635. Springer, 2021.
+[2] Yves Edel. Extensions of generalized product caps.
+Designs, Codes and Cryptography, 31(1):5–14, 2004.
+[3] Jordan S. Ellenberg and Dion Gijswijt. On large
+subsets ofF n
+q with no three-term arithmetic
+progression.Annals of Mathematics, 185(1):339–343,
+2017.
+[4] ZeHua Lu. A constructive lower bound for the growth
+constant of ternary cap sets. arXiv preprint
+arXiv:2611.30110v1, November 2026. Unrefereed
+preprint, November 23, 2026.
+[5] Giuseppe Pellegrino. Sul massimo ordine delle calotte
+ins 4,3.Le Matematiche, 25:149–157, 1971.
+[6] Bernardino Romera-Paredes, Mohammadamin
+Barekatain, Alexander Novikov, Matej Balog,
+M. Pawan Kumar, Emilien Dupont, Francisco J. R.
+Ruiz, Jordan S. Ellenberg, Pengming Wang, Omar
+Fawzi, Pushmeet Kohli, and Alhussein Fawzi.
+Mathematical discoveries from program search with
+large language models.Nature, 625:468–475, 2024.
+[7] Fred Tyrrell. New lower bounds for cap sets.Discrete
+Analysis, pages Paper No. 20, 18 pp., 2023.
+4
