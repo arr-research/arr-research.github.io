@@ -1,0 +1,58 @@
+{
+  "assessed_at": "2026-11-26T09:20:57Z",
+  "canonical_sha256": "3bea002fcd54e92df9ac8bdc1a3f6ad4ae614bcbbcb9030c49519d580815a8a3",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All 18 Lean statements in Table 1, algebraic identities (Eqs. 1-3), and exact rational calculations across C01-C16 and Figs. 1-3 (including |Ind(Ico_bar)|=63, face counts in Delta_a(I(C5)^q), and the Takayama lower bound reg_Q I(Ico_bar)^2 >= 5) verify cleanly by direct check.",
+      "stars": 5
+    },
+    "novelty": {
+      "basis": "First machine-checked certification and zero-float rational certificate suite (C01-C16) auditing Dupont Garcia's proof [1], paired with a non-circular Takayama-formula witness on Ico_bar demonstrating the non-linear square regime reg I(Ico_bar)^2 >= 5 > 4.",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "Provides explicit reproduction commands, exact Lean 4.35.0 and Python 3.10+ requirements, SHA-256 manifest, and 16 deterministic JSON certificates (C01-C16) with 37 tests, though execution of the external repository was not performed from the PDF alone.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Clean separation between the 0-sorry, 0-Classical.choice Lean 4.35.0 kernel and the AST-audited zero-float Python verifier, with sound dimension pruning in Mode 4 and 19 forgery-rejection tests; minor gap in that Lean does not formalize finite-graph complexes or Takayama's theorem.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Strengthens confidence in the combinatorics of [1] (Lemma 2/3, Theorem 11 parity vanishing, Proposition 13, and Theorem 1) via reproducible certificates, though formalization of the general graph-theoretic and homological proofs and positive-characteristic checks remain open.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.6,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-2JG3PCPJ9X8Y9A8P",
+  "potential_errors": [
+    "In Section 1, Eq. (1) and its linear-resolution threshold q >= reg I(G) - 1 implicitly assume G has at least one edge (so I(G) is equigenerated in degree 2 and reg I(G) >= 2), whereas Table 1 explicitly restricts R >= 2; stating E != empty set in Section 1 would make the quantifier exact.",
+    "In Section 2 (Eq. 3) and Table 1 (#6), the 6-Boolean vertex-wise inequality with hypothesis (indep. X, Y) is formalized without Lean-level finite-graph or neighborhood definitions, so the correspondence between the 6-Boolean predicates and actual set operations X /\\ Y and X \\/ Y rests on external inspection and Python Mode 1 rather than a Lean bridge theorem."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Complete transparency on formalization boundaries: Section 2 explicitly notes that Lean proves the 18 arithmetic, parity, and Boolean sub-lemmas without overclaiming general graph-theoretic or homological proofs.",
+    "All 18 Lean theorem statements in Table 1 are mathematically valid, and the arithmetic recurrence, stabilization index, ABBHJS bound, residual-mass parity invariance, and cone submodular extension steps check out exactly.",
+    "All concrete invariants across Table 2 (C01-C16) and Figures 1-3 verify by independent hand calculation, including |Ind(Ico_bar)| = 63, |Ind(C5)| = 11, |Ind(C6)| = 18, exact Hall filtration face counts and Betti numbers on Ico_bar and C5, and all 10 Proposition 13 face counts in Fig. 2.",
+    "The non-circular Takayama-formula witness on Ico_bar (q = 2, a = e_0) is mathematically sound: Delta_{e_0}(I(Ico_bar)^2) = Ind(Ico_bar) ~= S^2 has beta_tilde_2 = 1, directly certifying reg_Q I(Ico_bar)^2 >= |e_0| + 2 + 2 = 5 > 4 independently of Theorem 1.",
+    "Sound dimension-based pruning max_{F in Ind(G[W])} |F| + 1 <= r_max in Hochster regularity Mode 4 avoids heuristic n > 8 shortcuts while remaining exact."
+  ],
+  "strong_novelty_candidates": [
+    "Non-circular Takayama-formula certificate on the 12-vertex icosahedron complement proving reg_Q I(Ico_bar)^2 >= 5 > 4 via exact rational simplicial homology and independent edge-cover backtracking.",
+    "Zero-float exact rational simplicial homology and degree-complex auditing pipeline (NEVO-PEEVA-CERT-1.0) paired with AST-enforced float rejection and adversarial forgery-rejection tests."
+  ],
+  "summary": "This paper presents NEVO-PEEVA-CERT-1.0, a verification suite auditing Dupont Garcia's proof [1] of the Nevo-Peeva conjecture for powers of edge ideals of gap-free graphs. It combines an 18-theorem constructive Lean 4.35.0 kernel (covering the arithmetic regularity recurrence, stabilization threshold, ABBHJS upper bound, 64-case vertex sign inequality for Lemma 2, Lemma 3 pigeonhole step, parity invariance, and 2K2/C4 equivalence) with an AST-audited zero-float Python verifier computing exact rational reduced simplicial homology over Q across 16 canonical certificates (C01-C16) on benchmark graphs up to n = 12 (including C5, C5 cone, Split 6, K5, K9, Ico_bar, and non-gap-free control C6), plus a non-circular Takayama witness proving reg_Q I(Ico_bar)^2 >= 5 > 4. All theorem statements, identities, Betti numbers, face counts, and plots visible in the manuscript are mathematically accurate and internally consistent, with an honest delineation of what is proven in general in Lean versus audited on finite instances in Python.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:86f9d7aa-5aa2-408a-8d49-3342f824861f",
+  "weaknesses": [
+    "The title ('Formal Certification of the Nevo-Peeva Gap-Free Regularity Theorem and Hall Filtration Homology') reads more broadly than the actual scope of the Lean 4 kernel, which formalizes 18 elementary arithmetic, parity, and Boolean sub-lemmas rather than a general proof of Theorem 1, Theorem 11, or Proposition 13 over arbitrary finite graphs.",
+    "Homology, Hochster regularity, and Takayama-witness checks in Modes 2-4 are executed strictly over Q on small benchmark graphs (n <= 12) and do not rule out potential positive-characteristic phenomena over fields of finite characteristic.",
+    "Runtime metrics, Lean 0-sorry/axiom status, and adversarial test results refer to an external GitHub archive and SHA-256 manifest that cannot be executed from the PDF alone."
+  ]
+}

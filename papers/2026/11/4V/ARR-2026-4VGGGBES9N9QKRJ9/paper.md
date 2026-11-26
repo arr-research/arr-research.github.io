@@ -1,0 +1,290 @@
+# Formal Verification of Algebraic, Spectral, and One-Loop Entropy Bounds in Null-Cone Algebraic Quantum Gravity
+
+**Author:** Lluis Eriksson  
+**AIRR Identifier:** `ARR-2026-4VGGGBES9N9QKRJ9` (v1)  
+**License:** CC-BY-4.0 (manuscript), MIT (verification repository)  
+**Verification Repository:** https://github.com/lluiseriksson/null-cone-quantum-gravity-certificates (`v1.0.1`)  
+**Canonical PDF SHA-256:** `92e429605b26cf5789bdb3cd4b7cd87e97d2ab051e1cc5d432f368fe613a5b8c`
+
+## Abstract
+
+We present a machine-checked arithmetic kernel and zero-float rational certificate suite (NULLCONE-QG-CERT-1.0) auditing the finite algebraic, rational-interval, and spectral-counting inequalities in Chandrasekaran's null-cone quantization of four-dimensional vacuum general relativity (arXiv:2611.34924v1). Our artifact comprises an 18-theorem constructive Lean 4.35.0 kernel over N, Z, and constructive rationals Q (0 sorry, 0 custom axioms, 0 Classical.choice, 0 warnings), an AST-audited zero-float Python verifier over Z and Q, 16 canonical JSON certificates (C01-C16), and 38 unit and forgery-rejection tests. Explicitly separating finite machine-checked identities from infinite-dimensional operator and continuum QFT steps, we audit four quantitative modes: rational partial-sum and 1/N tail enclosures for graviton pair creation versus O(G_N^3) harmonic divergence, causal diamond focusing and corner-boost suppression inequalities, marginally trapped surface clock ratios and exact Gauss-Bonnet arithmetic yielding q=257/302 and Sen's fixed-mass 106/45 coefficient, and ground-shifted reflecting AdS energy-band bounds (Z_beta = Tr(exp(-beta*(H-E_0)))) with finite rational Gram-matrix null superpositions.
+
+## Full Extracted Text
+
+--- Page 1 ---
+Formal Verification of Algebraic, Spectral, and One-Loop
+Entropy Bounds in Null-Cone Algebraic Quantum Gravity
+Lluis Eriksson
+Independent Researcher, AIRR Frontier Verification Lab
+https://airr.science
+November 26, 2026
+Abstract
+We present a machine-checked arithmetic kernel and zero-
+float rational certificate suite (NULLCONE-QG-CERT-1.0) au-
+diting the finite algebraic, rational-interval, and spectral-
+counting inequalities in Chandrasekaran’s null-cone quan-
+tization of four-dimensional vacuum general relativity
+(arXiv:2611.34924v1). Our artifact comprises an 18-
+theorem constructive Lean 4.35.0 kernel over N, Z, and
+constructive rationals Q (0 sorry, 0 custom axioms, 0
+Classical.choice, 0 warnings), an AST-audited zero-
+float Python verifier over Z and Q, 16 canonical JSON
+certificates (C01–C16), and 38 unit and forgery-rejection
+tests. Explicitly separating finite machine-checked iden-
+tities from infinite-dimensional operator and continuum
+QFT steps in [ 1], we audit four quantitative modes: (i)
+rigorous rational partial-sum and 1 /N tail enclosures for
+the pair-creation series P
+k≥1 e−2ik/s/(2s2k2) versus the
+O(G3
+N ) harmonic coefficient HN /s3 and finite Cauchy–
+Schwarz bounds; (ii) rational enclosures for the focusing
+ceiling s∗ = πℓ(D)2/((1 −ϵ )2ℓ2
+P ), the corner-boost identity
+4eη/(1 +eη)2 = 1 −tanh 2(η/2), and the cycle-permutation
+sign inequalities; (iii) marginally trapped surface clock-ratio
+inequalities, the exact Footnote 23 identityq = 2x2/(1+x2),
+and the exact rational Gauss–Bonnet arithmetic yielding
+q = 257/302 and Sen’s fixed-mass Schwarzschild coefficient
+106/45; and (iv) ground-shifted reflecting AdS energy-band
+counting bounds (Zβ = Tr(e−β( ˆH−E0))) and finite rational
+Gram-matrix null superpositions.
+1 Introduction
+In arXiv:2611.34924v1, Chandrasekaran [1] formulates a
+nonperturbative, background-independent quantization of
+four-dimensional Lorentzian vacuum general relativity by
+solving the first-order gravitational constraints on intersect-
+ing null cones of a finite bulk subregion, promoting the re-
+duced phase space with corner edge modes to an observable
+algebra generating a Type I factor on a Gaussian Hilbert
+space, and composing null-cone transition amplitudes into
+an absolutely convergent Lorentzian path integral.
+Four quantitative pillars carry the physical weight of the
+construction: (1) nonperturbative UV finiteness of graviton
+pair creation at finite GN contrasted with perturbative log-
+arithmic divergence in GN (Section 4.4, Eqs. (4.30)–(4.34));
+(2) finite dimensionality of the causal diamond Hilbert
+space HD and discreteness of the corner area operator via
+Raychaudhuri focusing and relative corner-boost cycle per-
+mutations (Section 5.2, Eqs. (5.21d)–(5.38)); (3) recovery of
+the Bekenstein–Hawking entropy [3, 4] and Sen’s one-loop
+logarithmic correction [ 2] 106/45 for large Schwarzschild
+black holes directly from the Lorentzian trace clock ratio
+q = 257/302 (Section 5.3, Eqs. (5.50)–(5.69)); and (4) com-
+pactness of reflecting AdS thermal cylinders together with
+null-state linear dependence among excess spatial-topology
+handle fillings (Sections 5.2 and 5.4, Eqs. (5.44)–(5.46),
+(5.70)).
+Because these arguments combine infinite polylogarith-
+mic sums, exponential/trigonometric bounds, exact rational
+cancellations of π2 in four-dimensional Gauss–Bonnet in-
+tegrals, and linear-algebraic rank bounds, they are ideally
+suited for an independent, zero-float formal audit. We ex-
+plicitly distinguish between what is formally certified here—
+all finite algebraic, combinatorial, spectral, rational-interval,
+and constructive kernel lemmas underlying Eqs. (4.30)–
+(5.70)—and the infinite-dimensional functional-analytic and
+field-theoretic continuum steps of [ 1] (such as Weyl star-
+product convergence and continuum gauge-fixing), which
+remain outside the scope of finite certificates.
+2 Constructive Lean 4.35.0 Kernel
+The file lean/NullConeQGCert.lean defines a constructive
+rational structure Q (num : Int , den : Nat , den pos :
+0 <den ) in Lean 4 [ 5] and proves 18 theorems with zero
+sorry, zero custom axioms, and zero Classical.choice
+(verified directly via #print axioms on all 18 declarations).
+Table 1 summarizes the kernel architecture.
+Of particular methodological interest is the constructive
+proof of Theorems 2–5 without Classical.choice: every
+order step uses decidable integer multiplication and exact
+rational transitivity, while Theorems 13–15 certify the exact
+arithmetic chain connecting the one-loop four-dimensional
+Gauss–Bonnet anomaly coefficient 53/(45(4π)2) [2], the two-
+sphere Euler integral
+R
+S R[q] dA = 8π, the Gaussian area-
+measure shift +1/2 in Eq. (5.66), the Lorentzian clock ratio
+1
+
+--- Page 2 ---
+Table 1: All 18 constructive Lean 4.35.0 arithmetic and inequality theorems in NullConeQGCert.lean over N,Z,Q (0
+sorry, 0 Classical.choice, 0 warnings). Infinite-dimensional Hilbert-space and continuum QFT steps remain in [ 1].
+# Theorem Identifier Ref. [1] Exact Formalized Statement (Hypotheses⇒Conclusion)
+1telescoping step inv sq(4.33)∀k≥2,1/k 2 ≤1/(k(k−1)) inQ
+2pair creation tail bound(4.33)∀N >0, m∈N, Pm
+j=1 1/(N+j) 2 ≤m/(N(N+m))
+3pair creation tail le inv N(4.33)∀N >0, m∈N, m/(N(N+m))≤1/N
+4perturbative harmonic dyadic lower(4.34)∀B >0, j≤B, j/(2B)≤ Pj
+i=1 1/(B+i)
+5perturbative harmonic block ge half(4.34)∀B >0,1/2≤ PB
+i=1 1/(B+i)
+6cauchy schwarz two(4.30)∀a 1, a2, b1, b2 ∈Z,(a 1b1 +a 2b2)2 ≤(a 2
+1 +a 2
+2)(b2
+1 +b 2
+2)
+7boost suppression identity(5.29)∀E∈Z,4E+ (E−1) 2 = (E+ 1) 2
+8boost suppression strict(5.29)∀E∈Z, E̸= 1⇒4E <(E+ 1) 2
+9focusing area ceiling monotone(5.21d)∀¯u, ℓ, c ϵ, A∈Z,0≤¯u≤ℓ∧c ϵA≤¯u2 ⇒c ϵA≤ℓ 2
+10cycle permutation contradiction(5.38)∀T, O, h, Z∈Z, T > 0∧O≤h∧Z > 0 ⇒T (O−h ) ≤ 0 < Z
+11mts clock ratio window(5.54)∀p, d∈N,0< p < d⇒p 2/d2 < p/d <1 inQ
+12footnote23 clock entropy identity(5.61)∀p, d∈Z,2p 2(d2 −p 2) = 2(d2 +p 2 −2p 2)p2
+13one loop gauss bonnet sen coeff(5.67c) 53·64·45 = 106·(45·16·2) ( 53
+720 ·64· 1
+2 = 106
+45 )
+14lorentzian trace clock ratio exact(5.68) 257·90 = 257·2(302−257)∧106·2 + 45 = 257
+15fixed mass sen recovery(5.69) (257−45)·45 = 106·90 (257/90−1/2 = 106/45)
+16ads energy band multiplicity bound(5.46)∀d E, w, Z, e, s∈N, s >0∧dEw≤Zs∧s 2 ≤ew⇒d Es≤eZ
+17spatial topology null superposition(5.70)∀m, d D, rG ∈N, dD < m∧rG ≤d D ⇒1≤m−r G
+18gram null vector zero norm(5.70)∀g 11, g12, g22, c1, c2 ∈Z, Gc= 0⇒c ⊤Gc= 0 (2×2)
+q = 257/302, and Sen’s fixed-mass logarithmic coefficient
+106/45.
+3 Zero-Float Verifier and Four Cer-
+tification Modes
+The companion verifier src/null cone qg verifier.py
+operates strictly over Python arbitrary-precision
+int and fractions.Fraction; an AST audit in
+tests/test verifier.py enforces the complete absence
+of float literals, float() calls, and math/numpy imports.
+All rational fields must be supplied as lowest-terms pairs
+[p, q] with q >0 and gcd(|p|, q) = 1, and all integer/boolean
+fields undergo strict non-coercing type checks.
+Mode 1: Graviton Pair Creation (C01–C04).For
+dimensionless corner area s = A/(4GN ℏ) > 0, Chan-
+drasekaran’s Eq. (4.33) evaluates the connected two-point
+overlap of quadratic graviton insertions on a null cone as
+lim
+N→∞
+1
+2s2
+NX
+k=1
+e−2ik/s
+k2 = Li2(e−2i/s)
+2s2 ,(1)
+whereas differentiating three times at GN = 0 before taking
+N→ ∞produces the logarithmically divergent perturba-
+tive coefficient −iHN /s3 (Eq. (4.34), HN = PN
+k=1 1/k).
+Our verifier computes rigorous rational enclosures of
+cos(2k/s) and sin(2k/s) via range-halved alternating Taylor
+series propagated by exact double-angle interval arithmetic,
+adds the constructive tail bound 1/(2s2N) certified by Lean
+Theorems 2–3, checks enclosure of both Re and Im parts,
+matches HN /s3 exactly in Q, and verifies Cauchy–Schwarz
+composition Eq. (4.30) on rational state vectors (Fig. 1).
+Mode 2: Causal Diamond Finiteness (C05–C08).For
+a causal diamond with clock cutoff ℓ(D)/ℓP and inner reg-
+ulator ϵ∈ (0, 1), Mode 2 certifies the Raychaudhuri focus-
+ing area ceiling s∗ = π(ℓ(D)/ℓP )2/(1 −ϵ )2 (Eq. (5.30a))
+using a 15-digit rational bracket for π, encloses the rel-
+ative corner-boost factor 4 eη/(1 + eη)2 and suppression
+tanh2(η/2) (Eq. (5.29)) via range-halved rational exp(|η|)
+brackets, and verifies the squared boost-variance bound
+(|η|/πlo)2∥ ˆO∥2 VarρP (ˆs) ≤ (δη/2)2 (Eq. (5.32)) enforcing
+the cycle-permutation sign contradiction ZP [X] ≤ 0 <
+Z[X] (Eq. (5.38); Fig. 2).
+Mode 3: Marginally Trapped Surfaces & One-Loop
+Sen Entropy (C09–C12).Submode one loop sen (C09)
+independently verifies the exact rational cancellation of
+π2 in Eq. (5.67c) yielding 106 /45, adds the dsb/(4πsb)1/2
+measure shift +1 /2 to solve q/(2(1 −q )) = 257/90 ⇐⇒
+q = 257/302 (Eq. (5.68)), and subtracts 1/2 under the fixed-
+mass change of variables dsb/s1/2
+b ∝dM to recover Sen’s
+106/45 (Eq. (5.69)). Submode footnote23 clock (C10–
+C12) verifies the exact rational identityq = 2x2/(1+x2) and
+q/(2(1−q)) = x2/(1−x2) inside the windowx2 ≤q≤x < 1
+(Fig. 3).
+Mode 4: AdS Thermal Trace & Spatial-Topology
+Null States (C13–C16).Following Eqs. (5.43)–(5.46)
+of [1], energies are measured from the lower bound E0 of the
+boundary Hamiltonian ˆH so that C†C = e−β( ˆH−E0) ≤ 1
+and Zβ = Tr(e−β( ˆH−E0)). Submode ads energy band
+(C13–C14) certifies both the joint-cut diamond centeringP
+a va(1I(Aa) −p ) = 0 (Eq. (5.44)) and the ground-shifted
+energy-band dimension ceiling dim(1[E0,E0+Λ]( ˆH)H) ≤
+eβΛZβ (Eq. (5.46), matching Lean Theorem 16 dE ·s≤e·Z
+with e/s≥e βΛ) via exact rational exponential brackets.
+Submode topology null states (C15–C16) constructs the
+exact m×m rational Gram matrix Gij = ⟨vi|vj⟩ for m > dD
+handle-filling vectors in QdD , computes rankQ(G) ≤d D via
+exact rational Gaussian elimination, and certifies a nonzero
+kernel superpositionGc= 0 withc ⊤Gc= 0 (Eq. (5.70)).
+2
+
+--- Page 3 ---
+Figure 1: Mode 1 certification of Section 4.4 [ 1]: (a) absolute convergence of the nonperturbative pair-creation partial
+sum at s = 5 versus logarithmic divergence of the perturbative O(G3
+N ) harmonic coefficient HN /s3; (b) certified
+zero-float enclosuresC01–C04lying strictly beneath the analytic envelopeπ 2/(12s2).
+Figure 2: Mode 2 certification of Section 5.2 [ 1]: (a) exact relative corner-boost ratio 4 eη/(1 + eη)2 and suppression
+tanh2(η/2) across certified rapidities C05–C08; (b) Raychaudhuri focusing area ceiling s∗ as a function of ℓ(D)/ℓP and
+regulatorϵ.
+4 Verification Results and Forgery
+Resistance
+All 16 canonical certificates pass verification in < 0.7 s
+(Table 2). The test suite tests/test verifier.py exe-
+cutes 38 tests covering all 16 canonical certificates, an AST
+zero-float audit, tight exp/cos/sin bracket checks, and 19
+adversarial forgery attacks (wrong schema, understated and
+inflated tail bounds, altered harmonic sum, zero boost ra-
+pidity, unphysical δη > 2∥ ˆO∥, Popoviciu variance overflow,
+non-reduced rationals, forged Sen 107 /45 or q = 256/302,
+violated boost-variance inequality, non-kernel superposition,
+AdS weight overflow, inflated dimension bound, wrong band
+probability p, and boolean-as-integer injection); all 38 pass
+cleanly (38 passed).
+5 Reproducibility and Trans-
+parency
+All source code, Lean 4.35.0 proofs, JSON certificates,
+figures, and SHA-256 checksums ( MANIFEST.sha256)
+are archived at https://github.com/lluiseriksson/
+null-cone-quantum-gravity-certificates (tag
+v1.0.1). Independent verification requires only Lean 4.35.0
+and standard-library Python≥3.10:
+(cd lean && lake build)
+3
+
+--- Page 4 ---
+Figure 3: Mode 3 certification of Section 5.3 [ 1]: (a) marginally trapped surface clock-ratio curve q = 2x2/(1 + x2)
+inside the Eq. (5.54) focusing/concavity window x2 ≤q≤x with certified instances C10–C12 and the one-loop trace
+value q = 257/302; (b) exact rational decomposition recovering Sen’s fixed-mass logarithmic entropy coefficient 106 /45.
+Table 2: Summary of all 16 canonical certificates (C01–C16) verified underNULLCONE-QG-CERT-1.0.
+ID Mode / Submode Key Parameters Certified Output / Witness
+C01–C04 graviton pair creations∈ {2,5,10,20},N∈ {40,60,80,100}Exact Li 2(e−2i/s)/(2s2) enclosure +H N /s3 + CS
+C05–C08 causal diamond finitenessℓ/ℓ P ∈ {10,25,50,100},η∈ {1,2, 1
+2 ,−1}Exacts ∗, 4eη/(1 +e η)2,Z P [X]≤0< Z[X]
+C09 mts sen entropy(one loop sen) 53/720,
+R
+R dA= 8π, shift +1/2q= 257/302, fixed-mass Sen = 106/45
+C10–C12 mts sen entropy(footnote23)x∈ {1/2,3/5,4/5}q∈ {2/5,9/17,32/41},c log ∈ {1/3,9/16,16/9}
+C13–C14 ads trace and topology(ads) (β,Λ)∈ {(1,2),(2,1)},p= 1/2 Centering Eq. (5.44) = 0, tight dim≤ {18,29}
+C15–C16 ads trace and topology(null) (d D, m)∈ {(3,4),(4,6)}Exact rank Q(G) = 3≤d D,c ⊤Gc= 0
+python -m src.null_cone_qg_verifier
+certificates
+pytest -q
+AI Assistance Disclosure:Formalization, proof engineer-
+ing, zero-float verifier design, and manuscript preparation
+were conducted by Lluis Eriksson using Google Antigravity;
+every theorem and certificate was independently machine-
+checked by Lean 4.35.0 and the deterministic verifier. Code
+and certificates are released under MIT; manuscript and
+figures under CC-BY-4.0.
+References
+[1] V. Chandrasekaran, “An algebraic quantization of grav-
+ity from the null cone,” arXiv:2611.34924v1 [hep-th],
+25 Nov 2026.
+[2] A. Sen, “Logarithmic corrections to Schwarzschild and
+other non-extremal black hole entropy in different di-
+mensions,”JHEP04(2013) 156.
+[3] J. D. Bekenstein, “Black holes and entropy,”Phys. Rev.
+D7(1973) 2333–2346.
+[4] S. W. Hawking, “Particle creation by black holes,”Com-
+mun. Math. Phys.43(1975) 199–220.
+[5] L. de Moura and S. Ullrich, “The Lean 4 theorem prover
+and programming language,”Proc. CADE-28, LNCS
+12699 (2021) 625–635.
+4

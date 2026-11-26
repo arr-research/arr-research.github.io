@@ -1,0 +1,56 @@
+{
+  "assessed_at": "2026-11-26T09:20:57Z",
+  "canonical_sha256": "d22f4ba1956592b734b1426324f2f016490d878425f037ee7e082c54edc4d674",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All arithmetic, rank, trace, and eigenvalue claims in Tables 1-2 and Sections 2-4 check out (e.g., Row 5 ||F-16I||_F^2 = 84, Row 6 Golay packing, Prop. 5.3 Gram ranks 10 and 11, Thm. 5.2 trace inequality), except an undocumented (k,M,b,a) tuple order in Table 1 Row 13; Lean code is external to the PDF.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "Applies standard Lean 4 constructive formalization and exact rational LDL^T verification to independently audit the algebraic, coding-theoretic, and Gram-matrix cores of Djaljapayan, Liao, and Yu (arXiv:2611.34855v1), without establishing new mathematical theorems beyond [1].",
+      "stars": 3
+    },
+    "reproducibility": {
+      "basis": "Section 5 specifies exact Lean 4.35.0 and standard-library Python >= 3.10 replay commands, GitHub tag v1.0.1, MANIFEST.sha256, and 32 unit/forgery-rejection tests, though the Lean source and JSON certificates are external to this 4-page PDF.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Uses zero-float integer/Fraction arithmetic with pivoted LDL^T elimination, 18 Lean 4.35.0 theorems with 0 sorry/axioms/Classical.choice, and candidly delineates scope by excluding unformalized upper-bound enumerations and analytic derivations in [1].",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Provides independent machine-checked and zero-float rational certification for the constructive lower bounds N(18)>=57, N(19)>=72, N(20)>=90, Leech evaluation-code cores (d3(C)=186), and sharp fixed-angle intervals of a major combinatorics preprint [1].",
+      "stars": 4
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 4.25,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-22YKWXF9C494X8VP",
+  "potential_errors": [
+    "Table 1 Row 13 (thm51_seed_identities) writes 'b - 1 = aM/k - a for (7, 28, 10, 3) and (23, 276, 56, 5)' without defining tuple parameter order; under alphabetical (k, M, a, b) order it evaluates to 2 = 30 and 4 = 616 (false), whereas under (k, M, b, a) order it evaluates to 9 = 9 and 55 = 55 (true).",
+    "Table 1 summarizes several integer theorems without explicit domain quantifiers (e.g., integer q in Row 1, integer r in Row 2, integer m, t in Row 17).",
+    "Table 1 Row 11 (prop49_four_lift_contradiction) states the averaged 4-lift squared norm bound 16/3 < 20/3 without displaying the derivation of 16/3 in the PDF."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Clear, honest scope delineation in Section 1 explicitly separating certified constructive, lattice-embedding, Golay/Leech incidence, and fixed-angle algebraic cores from unformalized analytic derivations and exhaustive Niemeier/Golay upper-bound exclusions in [1].",
+    "All verifiable mathematical identities, bounds, Gram matrix ranks, and figure values in the PDF are internally consistent and arithmetically sound (including Eq. (1) Frobenius bound 84 < 100, G23 sphere-packing and S(4,7,23) parameters, L7 and L23 surd brackets, Theorem 5.2 trace inequality, and Proposition 5.3 rank-10/11 Gram matrices).",
+    "Strong verification hygiene combining a 0-sorry, 0-custom-axiom, 0-Classical.choice Lean 4.35.0 kernel with an AST-audited zero-float Python verifier, pivoted rational LDL^T PSD certification up to 176x176, and 11 targeted forgery-rejection tests."
+  ],
+  "strong_novelty_candidates": [
+    "Independent formal certification of the constructive lower-bound witnesses and coding/lattice algebraic cores for N(18)=57, N(19)=72, N(20)=90 and sharp fixed-angle intervals N_{1/q}(d)=d+k (k in {7,23}) immediately following arXiv:2611.34855v1."
+  ],
+  "summary": "This 4-page manuscript presents EQUIANGULAR-D18-20-CERT-1.0, a Lean 4.35.0 formalization (18 theorems) and zero-float rational Python certification suite (16 JSON certificates C01-C16, 32 tests) auditing the constructive, lattice-embedding, Golay/Leech coding-theoretic, and fixed-angle algebraic cores of Djaljapayan, Liao, and Yu (arXiv:2611.34855v1). All mathematical identities, rational bounds, Gram matrix eigenvalue/rank properties, and plot values visible in the PDF verify cleanly, and the authors honestly delineate the unformalized upper-bound enumerations and analytic steps remaining in [1]. Only minor presentation issues are present (notably an undocumented tuple ordering in Table 1 Row 13 and externalized proof/certificate code), with no unresolved material objections.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:bc0a01b9-8347-4f80-afa0-a3c819910734",
+  "weaknesses": [
+    "The 4-page PDF serves as an overview of an external repository; the Lean 4.35.0 proof terms, Python verifier source, and JSON certificates cannot be directly audited from the PDF alone.",
+    "Certification covers constructive lower bounds and algebraic/incidence cores rather than an end-to-end formal proof of the upper bounds N(18)<=57, N(19)<=72, N(20)<=90 (which rely on [1] and its unverified computational supplement).",
+    "Minor terse phrasing in Mode 1 ('12 directed-arc 5-subsets across the 6 Hamilton cycles of K4') and missing parameter legend in Table 1 Row 13."
+  ]
+}
