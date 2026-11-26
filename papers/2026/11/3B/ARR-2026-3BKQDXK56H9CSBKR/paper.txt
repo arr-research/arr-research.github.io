@@ -1,0 +1,609 @@
+--- Page 1 ---
+Exact Dimension Threshold, All-d≥8Rational
+Witness Family,
+and Sharp Negativity Bounds for Walled-Brauer
+NPT Bound Entanglement
+Lluis Eriksson∗
+November 26, 2026
+Abstract
+In a landmark preprint resolving a 28-year-old open problem of Horodecki, Horodecki,
+and Horodecki, Faisal (arXiv:2611.34921v1 ) proved that the Werner stateρ = (23 I−
+3 SWAP)/1448on C8 ⊗C 8 (A/B = 23/3 ≈7.6667) is bound entangled with negative partial
+transpose (NPT) by exhibiting a single 24-coefficient Hermitian witnessQ= 1
+40
+∑
+π∈S4
+mπBπ
+in the walled Brauer algebraB3,1(8). We establish three sharp structural and quantitative
+advances over this framework. First (Theorem 2), we prove that underU(d)phase symmetry,
+Sd−1/Sd−2 permutation symmetry, andZ2 index swap, every d4 ×d4 operator in B3,1(d)
+collapsesviaanunnormalizedintegerorthogonalcongruenceinto9fixed-sizeblocksofdimension
+at most6 ×6with entries quadratic inZ[d](zero square roots), while thed2-column kernel
+equation( J−Q )(|ud⟩⊗I ) = 0reduces to6disjoint4-term linear equations. Using this
+exact reduction we independently certify Faisal’sd= 8witness via zero-float rationalLDLT
+elimination and construct sharper exact rationald= 8witnesses lowering A/B from23 /3 ≈
+7.6667to4717 /625 = 7.5472(within0 .0054of the global SDP optimum7.5418, expanding
+the NPT margin8 −A/B by+35 .84%). Second (Theorem 4), we prove via U(d)Haar
+twirling that restrictingQ to the17-dimensional Hermitian subspace ofB3,1(d)is completely
+without loss of generality, and we establish unconditionally thatdmin = 8is the exact
+sharp integer dimension thresholdof Faisal’sU(d)-covariant local-CP framework: across
+every d∈{ 3,4,5,6,7},19exact zero-float rational McCormick dual SDP certificates (12
+intervals ford= 7, minimum dual lower bound7.017037 >7) prove that noU(d)-covariant
+local CP pair(L,M)and no d4 ×d4 Hermitian matrixQ can certify an NPT Werner state.
+Third (Theorem 5), we upgrade Faisal’s isolatedd= 8example to a single explicit universal
+rational witness family proving thatρd = ((5d+ 7)I− 6 SWAP)/(d(5d2 + 7d−6))is NPT
+bound entangled forevery integerd≥ 8simultaneously, certified symbolically by102/102
+Bareiss Sylvester leading principal minors having strictly positive coefficients int= d−8 ≥0.
+Furthermore, exact rational witnesses atd∈{ 16,25,36,64,100}demonstrate sublinear scaling
+A/B(d) = O(
+√
+d) ≪d (A/B = 24 .65at d = 100, a4 .057×relative NPT depth beyond
+the PPT boundary). All algebraic and combinatorial cores are formalized constructively in
+zero-dependency Lean 4.35.0 (18theorems,0 sorry,0 Classical.choice) and accompanied
+by an AST-audited zero-float Python verifier issuing16SHA-256 certificates and passing56/56
+adversarial tests.
+1 Introduction
+A central question in quantum information theory, posed by Horodecki, Horodecki, and Horodecki
+in 1998 [2] and conjectured in the affirmative for Werner states [3] by DiVincenzo, Shor, Smolin,
+∗Independent researcher. Authored by Lluis Eriksson with AI-assisted formal verification, exact-arithmetic
+software generation, and mathematical drafting (Google Antigravity). Manuscript and figures licensed CC-
+BY-4.0; verification repository, Lean 4 formalization, and exact rational certificates licensed MIT athttps:
+//github.com/lluiseriksson/npt-bound-entanglement-sharp-dimension-family.
+1
+
+--- Page 2 ---
+Terhal, and Thapliyal [4] and Dür, Cirac, Lewenstein, and Bruß [5], asks whether bound entangled
+states with negative partial transpose (NPT) exist (Problem 4 of [6]). Recently, Faisal [1] settled
+this question by proving that the single Werner state
+ρFaisal = 23I−3 SWAP
+1448 onC 8 ⊗C 8 (1)
+is NPT (ρΓ
+Faisal|u8⟩= − 1
+1448 |u8⟩) yet has zero distillable entanglement under two-way LOCC
+(ED(ρFaisal) = 0); indeed, every two-qubit state produced fromρ⊗n
+Faisal by any separable operation
+has Bell-state fidelity at most(1 +
+√
+2)/4.
+Faisal’s engine consists of writingρ⊗n ∝C ⊗n(|ud⟩⟨ud|⊗n)for a product C = L⊗M of two
+completely positive (CP) local maps
+L(X) =aTr(X)I−bX T, M(X) =cTr(X)I+eX,(2)
+and constructing a single-copy Hermitian Choi matrixQ= JS on( Cd)⊗4 [7] satisfying the four
+linear matrix / kernel conditions
+J+Q⪰0, J−Q⪰0, Q Γin ⪰0,(J−Q)(|u d⟩⊗I) = 0,(3)
+where J = JC = W(JL ⊗JM)W† (ordered as Alice’s input, Bob’s input, Alice’s output, Bob’s
+output), |ud⟩= ∑d−1
+i=0 |i,i⟩, andΓ in denotes partial transposition on the two input systems.
+Once (3) holds for any local CP pair(L,M), Faisal’s Lemmas 4–6 prove unconditionally—for
+every dimensiond≥ 2and every copy numbern≥ 1—that C⊗n enforces the coherence bound
+K≤(p 00p01p10p11)1/4 and hence Bell fidelity≤(1 +
+√
+2)/4andE D(ρ) = 0.
+Faisal’s remarkable result immediately raises four fundamental mathematical questions:
+1. Exactindependentverificationand d= 8sharpness:CanFaisal’s4096 ×4096condition
+(3) be reduced to fixed-sizeZ[d]-polynomial blocks and audited completely without floating-
+point arithmetic, and how far can thed = 8NPT ratio A/B be pushed below Faisal’s
+23/3≈7.6667?
+2. Exact minimum dimensiondmin:Was d= 8merely an artifact of numerical search, or is
+d≤ 7provably impossiblefor every U(d)-covariant local CP pair(L,M)and every d4 ×d4
+Hermitian matrixQ?
+3. Universal existence across all dimensionsd≥ 8:Does a single closed-form rational
+witness Q(d)certify NPT bound entanglement simultaneously foreveryintegerd≥ 8, rather
+than only at isolated numerically searched dimensions?
+4. Large-d NPT depth scaling:How deep into the NPT cone (A/B <d) can the walled-
+Brauer mechanism penetrate asd→∞ ? Does A/B(d)stay linear in d, or can it achieve
+sublinearO(
+√
+d)scaling so that the relative NPT depthd/(A/B)diverges unboundedly?
+We resolve all four questions completely and with exact zero-float rational and Lean 4.35.0
+verification. Table 1 summarizes our main advances over [1].
+2 ExactZ[d]Isotypic Reduction and Sharpd= 8Witnesses
+Let S4 be ordered lexicographically asπ0,...,π 23, whereπ0 = (0,1,2,3)is the identity. For each
+π∈S 4, letUπ act on( Cd)⊗4 by( Uπ)r,c = ∏3
+s=0 δrs,cπ(s) and letBπ := UT1
+π be its partial transpose
+on system1(Bob’s input):
+(Bπ)(r0,r1,r2,r3),(c0,c1,c2,c3) =
+3∏
+s=0
+δr′s,c′
+π(s)
+, r ′= (r0,c1,r2,r3), c′= (c0,r1,c2,c3).(4)
+2
+
+--- Page 3 ---
+Table 1: Comparison of [1] and the sharp structural and quantitative advances established in this
+work.
+Quantity / Result Faisal (arXiv:2611.34921v1) This Work (Theorems 2–5)
+Block reduction size Growing blocks (3d−2,6 d−6;42 ×42at
+d=8)
+Fixed ≤6×6in Z[d]for all d≥ 4(9
+blocks)
+d= 8Werner ratioA/B23/3≈7.6667(margin0.3333) 4717/625 = 7.5472(+35 .84%NPT mar-
+gin)
+Dimensionsd∈{3,4,5,6,7}Open / not ruled out Unconditionally impossible(19exact
+Qduals)
+All dimensionsd≥8Single pointd= 8only Universal rational familyρd (∀d≥ 8)
+Large-ddepthd/(A/B) 24/23≈1.043atd= 8 Sublinear O(
+√
+d):4 .057×at d = 100
+(∼
+√
+d/2.292)
+Machine verification Integer elimination sketch Lean 4.35.0 (18thms) +16 Q SHA-
+256 certs
+Under partial transposition on both input systems (Γin = T0 ◦T1), theT1 cancels so( BΓin
+π )r,c =
+(UT0
+π )r,c. The operators {Bπ : π∈S 4}span the24-dimensional walled Brauer algebra B3,1(d)
+(the commutant of¯U⊗U⊗ ¯U⊗ ¯U for U∈U (d), which is faithful for alld≥ 4and has a single
+antisymmetrizer syzygy atd= 3).
+Direct entrywise inspection of (4) shows that the Choi matrix J = W(JL ⊗JM)W† of
+L(X) = aTr(X)I−bX T and M(X) = cTr(X)I + eX (normalized by b = e = 1, a≥ 1,
+c≥ 0, which is lossless forb,e> 0up to positive scaling) lies insideB3,1(d)as the exact4-term
+combination
+J(a,c) =acB 0 +aB 5 −cB 14 −B16,(5)
+where π0 = (0 ,1,2,3), π5 = (0 ,3,2,1), π14 = (2 ,1,0,3), and π16 = (2 ,3,0,1). Moreover,
+C(|ud⟩⟨ud|) =AI−BSWAPwith
+A=acd+ae−bc, B=be, A
+B =a+ (ad−1)c(forb=e= 1).(6)
+Since( AI−BSWAP )Γ = AI−B|u d⟩⟨ud|has eigenvaluesA (multiplicity d2 −1) andA−Bd on
+|ud⟩,ρis NPT if and only ifA/B <d.
+Lemma 1(Opposite-signCPbranch).If instead L(X) = aTr(X)I+bXT and M(X) = cTr(X)I−
+eX with b,e> 0, complete positivity requiresa≥b and c≥ed . Then C(|ud⟩⟨ud|) = (acd−ae +
+bc)I−beSWAP satisfies A−Bd = a(cd−e ) + b(c−ed ) ≥ae(d2 −1) >0for every d≥ 2, so the
+output state is always PPT.
+Proof. Immediate fromJL = aI+ bSWAP⪰ 0 ⇐⇒a≥|b| and JM = cI−e|u d⟩⟨ud|⪰ 0 ⇐⇒
+c≥ed (since |ud⟩⟨ud|has top eigenvalued). This is formalized in Lean 4 asopposite_sign_cp
+_branch_always_ppt.
+Next, computing the transpose involutionBT
+π = Badj(π) yields exactly10self-adjoint basis
+elements
+Ssa ={0,1,2,5,6,7,14,16,21,23}
+and7mutually adjoint pairs
+Padj ={(3,4),(8,12),(9,18),(10,13),(11,19),(15,20),(17,22)}.(7)
+Hence a real combinationQ= ∑23
+k=0 mkBk is Hermitian if and only ifmi = mj for all(i,j) ∈Padj,
+giving a17-dimensional real space.
+Theorem 2(Exact Z[d]isotypic reduction, Faisal audit, and sharpd = 8improvement).Let
+d≥ 4(for d= 3, omit the three blocks requiring four distinct indices) and letQ= ∑23
+k=0 mkBk be
+Hermitian.
+3
+
+--- Page 4 ---
+(a) Fixed-size Z[d]-congruent reduction:Under diagonal U(d)phase symmetry, Sd−1/Sd−2
+permutation symmetry on cancelled indices, and theZ2 index swap0 ↔1, everyd4 ×d4
+operatorM∈span R{Bπ}decomposes orthogonally into9isotypic block types of fixed sizes
+independent ofd:
+b1(1×1),b3(3×3),b6(6×6),eq_triv4(4×4),eq_std3(3×3),
+diff_sym6(6×6),diff_anti6(6×6),diff_std_sym3(3×3),diff_std_anti3(3×3),
+satisfying the exactd4 dimension decompositiond(d−1) + 3d(d−1)(d−2) + d(d−1)(d−
+2)(d−3) + d(4 + 3(d−2)) +
+(d
+2
+)
+(6 + 6 + 6(d−3)) = d4. Using unnormalized integer-valued
+orthogonal basis matricesWb (with diagonal Gram matricesWT
+b Wb ≻0) for the¯U⊗U⊗ ¯U⊗¯U
+commutant and the input-swapped bases˜Wb := SWAP01Wb for theU⊗¯U⊗¯U⊗¯U commutant,
+every reduced blockWT
+b BπWb and ˜WT
+b BΓin
+π ˜Wb has entries inZ[d]of degree at most2, with
+zero square roots.
+(b) Exact6-equation kernel reduction:The d2-column condition(J(a,c) −Q)(|ud⟩⊗I ) = 0
+holds if and only ifm0,...,m 23 satisfy the6disjoint4-term linear equations
+m0 +dm6 +m8 +m11 =ac, m 1 +dm7 +m9 +m10 = 0,
+m2 +dm12 +m14 +m17 =−c, m 4 +dm18 +m20 +m23 = 0,
+m3 +dm13 +m15 +m16 =−1, m 5 +dm19 +m21 +m22 =a.
+(8)
+When (8) holds, the blockseq_triv4, diff_sym6, anddiff_anti6 of J−Q possess exact
+1-dimensional kernels spanned by veq = (1 ,1,0,0)T, v+ = (1 ,1,0,1,0,0)T, and v− =
+(1,−1,0,1,0,0)T respectively, so each is positive semidefinite if and only if the principal
+submatrix obtained by deleting row/column0(sizes3 ×3,5 ×5,5 ×5) is positive semidefinite.
+(c) Independent verification of Faisal and sharperd = 8records:Exact zero-float
+rational LDLT elimination over all27reduced block-mode matrices certifies Faisal’sd= 8
+witness (1) (A/B = 23/3 ≈7.666667, certificateC02, minimum pivot0.147836). Moreover,
+two explicit exact rationald= 8witnesses (certificates C03–C04) certify strictly deeper NPT
+bound entangled Werner states onC8 ⊗C 8:
+Sharp #1:a= 8
+5 , c= 63
+125 =⇒ A
+B = 4717
+625 = 7.5472 (margin0.4528,+35.84%),
+Sharp #2:a= 8
+5 , c= 101
+200 =⇒ A
+B = 7559
+1000 = 7.5590 (margin0.4410,+32.30%).
+Both states are NPT bound entangled withED(ρ) = 0and two-qubit separable Bell fidelity
+at most(1 +
+√
+2)/4.
+Proof. For (a), diagonal unitariesU = diag(eiθ0,...,e iθd−1)act on basis kets |i,j,k,l⟩ by the
+phase factorexp(i(θj −θi−θk−θl)), partitioning thed4 computational basis into five phase-block
+families of sizes1,3,6,3 d− 2( blk_eq), and6 d− 6( blk_diff), with multiplicitiesd(d− 1),
+d(d−1)(d−2),
+(d−1
+3
+)
+d, d, and
+(d
+2
+)
+respectively. On the canonical representative ofblk_eq (fixed
+index0), Sd−1 permutes {1,...,d− 1}and decomposes the(3d−2)-dimensional space into one
+4-dimensional trivial representation spanned by
+w0 =|0,0,0,0⟩, w 1 =
+d−1∑
+j=1
+|j,j,0,0⟩, w 2 =
+d−1∑
+j=1
+|0,j,j,0⟩, w 3 =
+d−1∑
+j=1
+|0,j,0,j⟩,
+plus d−2isomorphic copies of the3-dimensional standard representation spanned by|1,1,0,0⟩−
+|2,2,0,0⟩, |0,1,1,0⟩−|0,2,2,0⟩, |0,1,0,1⟩−|0,2,0,2⟩. Similarly, on the canonical representative
+of blk_diff (fixed pair{0,1}), Sd−2 permutes {2,...,d− 1}and splits the6d−6states into
+a12-dimensional trivial subspace (six fixed tuples withj∈{ 0,1}plus six uniform sums over
+j∈{ 2,...,d− 1}) andd−3copies of a6-dimensional standard subspace; the involution swapping
+4
+
+--- Page 5 ---
+0 ↔1commutes with every Bπ and bisects these into6×6( diff_sym6, diff_anti6) and3 ×3
+(diff_std_sym3, diff_std_anti3) blocks. SinceBΓin
+π = UT0
+π lies in theU⊗¯U⊗¯U⊗¯U commutant
+obtained by swapping tensor slots0↔1, the input-swapped orthogonal bases˜Wb := SWAP01Wb
+strictly block-diagonalize all24operators BΓin
+π with the same Gram diagonals. Since each
+unnormalized basis vector sums over at mostd−1tuples with coefficients in{−1,0,1}, every
+bilinear contractionwT
+r Bπwc and ˜wT
+r BΓin
+π ˜wc counts tuple coincidences with at most two free indices
+in {1,...,d− 1}or {2,...,d− 1}, hence is a quadratic polynomial inZ[d]; exact interpolation
+fromd∈{4,5,6}and independent check atd∈{7,8}is certified inC01.
+For (b), expanding(J−Q )(|ud⟩⊗|c 2,c3⟩) = 0on the two orbitsc2 = c3 = 0and c2 = 0,c3 = 1
+gives16scalar linear equations across the unnormalized rows ofeq_triv4 and diff_triv12; the
+6rows associated with the six j∈{ 2,...,d− 1}orbit families ofblk_diff are precisely the
+6disjoint4-term equations (8), while row0of eq_triv4 (w0 = |0,0,0,0⟩) is the sum of all6
+equations and the remaining9rows are pairwise sums (scaled byd−1on w1,w2,w3). In the
+unnormalized bases,|ud⟩⊗|0,0⟩= w0 + w1 gives veq = (1,1,0,0)T, while|ud⟩⊗(|0,1⟩±|1,0⟩)
+yields v±= (1,±1,0,1,0,0)T. For any symmetric matrixM with Mv = 0and v0 = 1, writing
+v= (1,u T)T givesM=
+(
+−uT
+I
+)
+M1:,1:( −u I), soM⪰0⇐⇒M 1:,1: ⪰0.
+For (c), exact zero-floatLDLT elimination verifies all27block-mode matrices of Faisal’s
+witness (C02) and our two sharp witnesses (C03–C04), whose NPT ratios satisfy4717/625 = 7.5472
+and7559 /1000 = 7.559, beating23 /3with NPT margin ratios(8 −7.5472)/(1/3) = 1.3584and
+(8−7.559)/(1/3) = 1.3230.
+3 Unconditional Sharp Dimension Thresholdd min = 8
+We now prove thatd= 8is not merely a convenient dimension where numerical search succeeded:
+it is theexact sharp minimum dimensionof Faisal’s entireU(d)-covariant local-CP method over
+alld 4 ×d4 Hermitian matricesQ.
+Lemma 3(U(d)Haar twirling without loss of generality).Letd≥ 2and let J = J(a,c)be given
+by(5). If there existsanyHermitian matrixQon(C d)⊗4 satisfying(3), then its Haar twirl
+¯Q:=
+∫
+U(d)
+( ¯U⊗U⊗ ¯U⊗ ¯U)Q( ¯U⊗U⊗ ¯U⊗ ¯U)†dU
+also satisfies(3) and belongs to the17-dimensional real Hermitian subspace of the walled Brauer
+algebraB3,1(d) = spanC{Bπ :π∈S 4}.
+Proof. Let GU := ¯U⊗U⊗ ¯U⊗ ¯U. By (5), GUJG†
+U = J for everyU∈U (d), so convexity of the
+PSD cone preservesJ± ¯Q⪰ 0. Since partial transposition on inputs(0,1)conjugates ¯U⊗U to
+U⊗ ¯U, we have(GUQG†
+U)Γin = (U⊗ ¯U⊗ ¯U⊗ ¯U) QΓin (U⊗ ¯U⊗ ¯U⊗ ¯U)†⪰0, whence ¯QΓin ⪰0.
+Moreover,( ¯U⊗U)|u d⟩=|u d⟩, so
+(J−G UQG†
+U)(|ud⟩⊗I) =G U(J−Q)(|u d⟩⊗( ¯U⊗ ¯U)†) = 0,
+and integrating overU(d)preserves( J− ¯Q)(|ud⟩⊗I ) = 0. By Schur–Weyl duality for the walled
+Brauer algebra (partially transposing system1of theU⊗4 commutant C[S4]), the commutant of
+{GU : U∈U (d)}is preciselyspanC{Bπ : π∈S 4}; taking real part1
+2 ( ¯Q+ ¯QT)preserves all four
+conditions sinceJand|u d⟩are real, yielding real coefficients satisfying (7).
+To rule out every nonlinear pair(a,c) ∈[1,∞) ×[0,∞)simultaneously, observe first that if
+a≥d and c≥ 0, thenA/B = a+ (ad−1)c≥d immediately (PPT). On any rational subinterval
+a∈ [aL,aU] ⊆[1,d], introducing the auxiliary bilinear variablex:= aclinearizes both the objective
+A/B = a+ dx−c and the Choi matrixJ = xB0 + aB5 −cB14 −B16, while the exact McCormick
+envelope inequalities
+aL ≤a≤a U, c≥0, a Lc≤x≤a Uc(9)
+5
+
+--- Page 6 ---
+hold for every(a,c) ∈[aL,aU] ×[0,∞)(formalized in Lean 4 asmccormick_and_large_a_soundn
+ess). Minimizinga+ dx−c subject to(9), (8), and the reduced PSD block inequalitiesJ±Q⪰ 0,
+QΓin ⪰0is a pure linear semidefinite program in(a,c,x,θ∈R 17). Its conic dual seeks PSD
+matrices Y+
+b ,Y −
+b ,Y Γ
+b ⪰0(matching the unnormalized Z[d]blocks), equality multipliers yeq ∈R 6,
+and nonnegative multiplierss= (saL,saU,sc,sxL,sxU) ≥0satisfying exact linear stationarity in
+(a,c,x,θ 0,...,θ 16)so that
+a+dx−c≥LB dual :=saLaL −saUaU −yeq,4 +
+∑
+b
+⟨Y+
+b +Y −
+b ,B16,b⟩(10)
+for every feasible primal tuple.
+Theorem 4(Unconditional sharp dimension threshold dmin = 8).For every dimension d∈
+{3,4,5,6,7}, there existsno U(d)-covariant local CP pair(L,M)andnoHermitian matrix Q on
+(Cd)⊗4 satisfying (3) whose output Werner stateρ∝ (L⊗M )(|ud⟩⟨ud|)is NPT. Specifically, the
+exact zero-float rational dual certificatesC09–C14 (19intervals in total, summarized in Table 3)
+prove
+inf
+feasible(a,c,Q)
+A
+B ≥
+
+
+
+3.613060>3 (d= 3,1interval),
+4.174322>4 (d= 4,1interval),
+5.287810>5 (d= 5,2intervals),
+6.015096>6 (d= 6,3intervals),
+7.017037>7 (d= 7,12intervals).
+Consequently, dmin = 8is the exact minimum integer dimension of the walled-Brauer local-CP
+mechanism (with continuous algebraic crossoverdcrit ≈7.239∈(7,8)).
+Proof. For anyU(d)-covariant local CP pair(L,M), if be≤ 0then B = be≤ 0and( AI−
+BSWAP)Γ = AI−B|u d⟩⟨ud|⪰ 0(PPT since A≥|B|≥ 0), while swappingL↔M preserves
+(L⊗M )(|ud⟩⟨ud|)and (3). By Lemma 1, any NPT Werner output therefore requires the sign
+branch L = aTr−T , M = cTr +id (a≥ 1,c≥ 0), and a≥d is trivially PPT. By Lemma 3
+and Theorem 2(a)–(b), any feasibled4 ×d4 Hermitian Q induces a feasible primal point of the
+17-variable reduced McCormick SDP on the subinterval[aL,aU]containing a. CertificatesC09–C14
+provide explicit exact rational tuples(Y+
+b ,Y −
+b ,Y Γ
+b ,yeq,s)covering[1 ,d]contiguously for each
+d∈{ 3,4,5,6,7}(illustrated in Figures 1 and 2), verified in zero-floatQ-arithmetic to have: (i)
+s≥ 0; (ii) every dual matrixY+
+b ,Y −
+b ,Y Γ
+b symmetric and PSD via exact rationalLDLT elimination
+(504dual PSD blocks in total); (iii) all20dual stationarity equations identically zero inQ; and
+(iv) exact dual lower boundLBdual >d on every interval. By weak conic duality(10), A/B >d
+everywhere on[1,d], ruling out every NPT solution.
+4 Universal All-d≥8Rational Family andΘ(
+√
+d)NPT Depth
+Faisal’sd= 8witness uses fixed numerical coefficientsmπ ∈ 1
+40 Z that violate(8) and QΓin ⪰0for
+every d̸= 8. Remarkably, the exact polynomial structure of(8) admits a single degree-2rational
+witnessQ(d)in1/dthat works simultaneously forallintegersd≥8.
+Theorem 5(Universal all-d≥8NPT bound-entangled Werner family andΘ(
+√
+d)scaling).
+(a) Universal closed-form family for alld≥ 8:Consider the fixed dimension-independent
+completely positive local maps
+L(X) = 5 Tr(X)I−3X T, M(X) = Tr(X)I+ 2X
+(
+a= 5
+3 , c= 1
+2
+)
+,
+and the resulting explicit Werner state onCd ⊗C d,
+ρd = (5d+ 7)I−6 SWAP
+d(5d2 + 7d−6) (∀d≥8).(11)
+6
+
+--- Page 7 ---
+Figure 1:Dimension phase boundary and global scaling.(a) Primal SDP optimumA/B∗(d)
+vs. PPT boundaryA/B = d, showing exact rational dual impossibility lower bounds>d for all
+d∈{ 3,4,5,6,7}(red triangles), continuous critical dimensiondcrit ≈7.239, Faisal’sd= 8witness
+(23/3), and our sharpd= 8witness (7.5472). (b) Comparison of the PPT boundary, our universal
+all-d≥ 8family(5 d+ 7)/6, and exactQ sublinear O(
+√
+d)witnesses up to d= 100( A/B = 24.65,
+4.057×past PPT).
+For every integerd≥ 8, ρd is a valid NPT quantum state (ρΓ
+d|ud⟩= − d−7
+d(5d2+7d−6) |ud⟩< 0)
+with zero distillable entanglement (ED(ρd) = 0) and two-qubit separable Bell fidelity at
+most(1 +
+√
+2)/4. This is certified simultaneously for alld≥ 8by the single closed-form
+walled-Brauer witness
+Q(d) = 1
+60
+23∑
+k=0
+(
+C0,k + C1,k
+d + C2,k
+d2
+)
+Bk (12)
+with integer coefficients(C0,k,C1,k,C2,k)∈Z 3 tabulated in Table 2 (Appendix A):
+•Q (d)satisfies the Hermitian pairings(7) and the6kernel equations (8) identically in
+Q(d);
+• Every one of the102exact Bareiss Sylvester leading principal minors across all27
+polynomial block matricesd2(J±Q (d))(with row/column0deleted on the three kernel
+blocks ofJ−Q ) andd2Q(d)Γin expands int:= d−8withstrictly positive constant
+term and100%nonnegative higher coefficients(certificatesC05–C08).
+(b) UnboundedΩ(
+√
+d)relative NPT depth:While the fixed-map family (11) saturates at
+relative NPT depthd/(A/B) = 6d/(5d+7) →1.20, allowingc= Θ(d−1/2)achieves sublinear
+scaling A/B∗(d) = O(
+√
+d) ≪d (asymptotically ≈2.292
+√
+d as d→∞ ). Exact zero-float
+rational witnesses (certificatesC15–C16, Table 4) certify NPT bound entanglement at
+d= 16 ( A
+B = 10.21), d= 25 (12.52), d= 36 (15.184), d= 64 (20.866), d= 100 (24.65),
+achieving relative NPT depthd/(A/B) = 2000 /493 ≈4.057at d = 100(3 .42×deeper
+than(11)atd= 100and3.89×deeper than Faisal’s24/23atd= 8).
+Proof. For (a), direct expansion gives( L⊗M )(|ud⟩⟨ud|) = (5 d+ 7)I− 6 SWAP with trace
+d(5d2 + 7d−6) >0and NPT eigenvalue−(d−7)/(d(5d2 + 7d−6)) <0for all d≥ 8(formalized in
+Lean 4 asall_d_ge_8_family_npt_universal). For the witness(12), matching powersd0, d−1,
+7
+
+--- Page 8 ---
+Figure 2:Exact dual impossibility atd= 7and sharp improvement atd= 8.(a) The
+12-interval exactQ McCormick dual cover atd = 7(red step curve, minimum7 .017037 > 7
+on[8 /5,33/20]) strictly separates the primal SDP optimum from the NPT thresholdA/B = 7.
+(b) Thed = 8NPT window A/B∗(a) < 8, showing Faisal’s point (a = 5/3,A/B = 23/3), our
+universal family atd= 8(47 /6), and our two sharp exact witnesses ata= 8/5(7 .5590and7 .5472,
+expanding the NPT margin by+32.3%and+35.8%).
+d−2 in (8) yields18integer identities verified bydecide in Lean 4 (kernel_six_eqs_all_d_polyn
+omial_identity) and Hermitian pairing across all7pairs (all_d_witness_hermitian_pairs).
+Multiplying the9unnormalized Z[d]-congruent blocks byd2 >0yields27symmetric polynomial
+matrices overQ[d]of size at most6 ×6(deleting row/column0on the3exact-kernel blocks of
+J−Q by Theorem 2(b)). Exact fraction-free Bareiss elimination inQ[d]computes all102leading
+principal minors∆ b,m,r(d) ∈Q [d](maximum degree16). Shifting every minor to t = d− 8
+reveals strictly positive constant terms∆b,m,r(8) >0and strictly nonnegative coefficients on every
+power tj (j≥ 1) across all102minors (C05–C08). By Sylvester’s criterion and our constructive
+Lean 4 positivity lemma (positive_coeff_poly_pos_all_d_ge_8 ), every reduced matrix is
+strictly positive definite for every reald≥ 8. Applying Faisal’s Lemmas 4–6 [1] (whose algebraic
+tensor-power and Bell-fidelity cores are formalized in Lean 4 astensor_power_monotonicity and
+bell_fidelity_exact_sos) provesED(ρd) = 0and Bell fidelity≤(1 +
+√
+2)/4for everyd≥8.
+For (b), exact zero-floatLDLT verification of the explicit rational witnesses indata/witne
+sses_exact.json across all27block-mode matrices certifies every entry of Table 4 (C15–C16,
+illustrated in Figure 3).
+5 Formal Verification Architecture and Scope
+To guarantee zero-trust reproducibility, our results are verified across two independent formal
+layers:
+1. Constructive Lean 4.35.0 Formalization (lean/NptBoundEntanglementSharp.lean):
+18zero-dependency theorems building cleanly in1 .7s with0 sorry,0custom axioms,0
+Classical.choice, and0warnings. These cover the Werner spectrum/NPT criterion,
+local-map identity, Faisal and sharpd= 8comparisons, universal d≥ 8NPT certification,
+opposite-sign PPT impossibility, the exactd4 phase-block and isotypic dimension sums, the
+scalar/spectral core of multi-copy tensor monotonicity (J⊗n −Q⊗n ⪰0), the exact rational
+SOS proof of the(1 +
+√
+2)/4Bell-fidelity ceiling, all7Hermitian pairs and18polynomial
+8
+
+--- Page 9 ---
+Figure 3:Universal all-d≥ 8spectral margins and unbounded relative NPT depth.
+(a) Orthonormal minimum eigenvalues ofJ+ Q(d),( J−Q (d))|ker⊥, andQ(d)Γin for our single
+exact D = 60witness (12), staying strictly above+0.0109across d∈ [8,104]and confirmed
+symbolically for alld≥ 8by102 /102positive Sylvester minors int= d−8. (b) Relative NPT
+depthd/(A/B)comparing Faisal’sd= 8point (1.043), the universal fixed-map family (→1.20),
+our exactQwitnesses up tod= 100(4.057×), and the asymptotic SDP ceiling
+√
+d/2.292.
+kernel equations of(12), the constructive shifted-polynomial positivity lemma, explicitb1
+minor positivity for alld≥ 8, McCormick bilinear envelope soundness, and thed = 100
+depth bound.
+2. AST-Audited Zero-Float Rational Verifier (verification/verify_paper102.p
+y):Pure Python standard-library verifier ( fractions.Fraction, int) audited by its
+own AST walker (C16) to forbid all floating-point/complex literals,/, **, float, pow,
+getattr, and numerical libraries. It verifies all16SHA-256 certificates under protocol
+NPT-WALLED-BRAUER-1.0 (MANIFEST.json SHA-256: 9d3b5debf9c01c18...8b72cc86 )
+and passes56 /56pytest checks in1 .61s, including32live adversarial mutations targeting
+primal CP/NPT/Hermitian/kernel/PSD violations, symbolicd= 7falsification, dual cover
+gaps, stationarity perturbations, and non-PSD dual blocks.
+Delineation of scope.The analytical reduction from(3) to ED(ρ) = 0(Faisal’s Lemmas 4–6
+via complete positivity/copositivity and the trace-norm block inequality) and the Haar-twirling
+compactness step (Lemma 3) are standard finite-dimensional operator proofs presented in full in
+Sections 2–4, whereas every matrix inequality, polynomial Sylvester minor, dual SDP certificate,
+and algebraic identity is machine-checked in exactQ and/or Lean 4.35.0. Our impossibility
+theorem (Theorem 4) rules out allU(d)-covariant local CP pairs(L,M)for d≤ 7; whether
+non-Werner (e.g., non-covariant or multi-copy) CP pairs can achieve NPT bound entanglement in
+d∈{3,...,7}remains an intriguing open question.
+9
+
+--- Page 10 ---
+Table 2: Exact integer coefficients(C0,k,C1,k,C2,k)of the universal all-d≥ 8witness (12) (Q(d) =
+1
+60
+∑
+k(C0,k + C1,k/d+ C2,k/d2)Bk) forL(X) = 5 Tr(X)I−3XT, M(X) = Tr(X)I+ 2X. Adjoint
+pairs (7) match identically across all three columns.
+k π k C0,k C1,k C2,k k π k C0,k C1,k C2,k
+0(0,1,2,3) 16−141 14912(2,0,1,3) 0−30−14
+1(0,1,3,2) 0 16−12813(2,0,3,1) 0−60 25
+2(0,2,1,3) 0−10 8014(2,1,0,3) 0 100 6
+3(0,2,3,1) 0 20−16015(2,1,3,0) 0−132 357
+4(0,3,1,2) 0 20−16016(2,3,0,1) 0 87−197
+5(0,3,2,1) 0−8 6717(2,3,1,0) 0−76−86
+6(1,0,2,3) 0 34 7118(3,0,1,2) 0 0 103
+7(1,0,3,2) 0 0 4419(3,0,2,1) 0 100−135
+8(1,2,0,3) 0−30−1420(3,1,0,2) 0−132 357
+9(1,2,3,0) 0 0 10321(3,1,2,0) 0 219 19
+10(1,3,0,2) 0−60 2522(3,2,0,1) 0−76−86
+11(1,3,2,0) 0 100−13523(3,2,1,0) 0 9−197
+Table 3: Exact zero-float rational McCormick dual SDP lower bounds provingA/B >duncondi-
+tionally across all19intervals coveringa∈[1,d]ford∈{3,4,5,6,7}(certificatesC09–C14).
+dInterval[a L,aU]Exact Dual LB CertdInterval[a L,aU]Exact Dual LB Cert
+3[1,3] 3.613060>3C097[31/20,8/5] 7.021904>7C13
+4[1,4] 4.174322>4C107[8/5,33/20]7.017037>7C13
+5[1,2] 5.287810>5C117[33/20,17/10] 7.024779>7C14
+5[2,5] 5.771981>5C117[17/10,7/4] 7.042419>7C14
+6[1,3/2] 6.450012>6C127[7/4,9/5] 7.068125>7C14
+6[3/2,2] 6.015096>6C127[9/5,19/10] 7.077297>7C14
+6[2,6] 6.540012>6C127[19/10,11/5] 7.151665>7C14
+7[1,13/10] 8.356292>7C137[11/5,7] 7.551816>7C14
+7[13/10,29/20] 7.212277>7C13
+7[29/20,3/2] 7.105615>7C13
+7[3/2,31/20] 7.047385>7C13
+Table 4: Exact zero-float rational primal witnesses demonstrating sharpd= 8improvements and
+sublinearO(
+√
+d)scaling up tod= 100(certificatesC02–C04,C15–C16).
+Witness / Certd a cExactA/B(A/B)/
+√
+dDepthd/(A/B)MinLDL T Pivot
+Faisal [1] (C02)8 5/3 18/37 23/3≈7.6667 2.7106 1.0435 0.147836
+Sharp #2 (C04)8 8/5 101/200 7559/1000 = 7.5590 2.6725 1.0583 0.000651
+Sharp #1 (C03)8 8/5 63/125 4717/625 = 7.5472 2.6683 1.0600 0.000112
+Sublinear (C15)16 8/5 7/20 1021/100 = 10.2100 2.5525 1.5671 0.001548
+Sublinear (C15)25 8/5 7/25 313/25 = 12.5200 2.5040 1.9968 0.001966
+Sublinear (C15)36 8/5 6/25 1898/125 = 15.1840 2.5307 2.3709 0.005819
+Sublinear (C16)64 8/5 19/100 10433/500 = 20.8660 2.6083 3.0672 0.010306
+Sublinear (C16)100 31/20 3/20 493/20 = 24.6500 2.46504.05680.003552
+10
+
+--- Page 11 ---
+Table 5: Cryptographic SHA-256 certificate ledger for protocol NPT-WALLED-BRAUER-1.0
+(MANIFEST.json SHA-256: 9d3b5debf9c01c18d89823898836a4b596b0641f9e2abecc0be7
+79898b72cc86).
+ID SHA-256 Prefix (16 hex) Scope Certified in Zero-Float ExactQ
+C01 48544301275d2738ExactZ[d]interpolation of9isotypic blocks &d 4 accounting
+C02 77c540f906431406Independent exactLDL T audit of Faisald= 8(23/3)
+C03 9400a7c11f82b958Sharpd= 8witness #1 (a= 8/5,c= 63/125⇒A/B= 7.5472)
+C04 7453ff74c6e93499Sharpd= 8witness #2 (a= 8/5,c= 101/200⇒A/B= 7.5590)
+C05 d0d8e8b69a3b93d4All-d≥8Sylvester minors:b1,b3,b6(30/30>0int=d−8)
+C06 afa5ca54fab4261cAll-d≥8Sylvester minors:eq_triv4,eq_std3(20/20>0)
+C07 827677e95c2a08f4All-d≥8Sylvester minors:diff_sym6,diff_anti6(34/34>0)
+C08 c1d1c8d3f1eea4e3All-d≥8Sylvester minors:diff_std_sym3/anti3(18/18>0)
+C09 25ad5a1592a1b2c7Unconditional dual SDP impossibility atd= 3(LB3.613060>3)
+C10 aae3d2e1a4bfab19Unconditional dual SDP impossibility atd= 4(LB4.174322>4)
+C11 a29078e560eb0366Unconditional dual SDP impossibility atd= 5(LB5.287810>5)
+C12 08df2dd821b2bb42Unconditional dual SDP impossibility atd= 6(LB6.015096>6)
+C13 d512f24aa2d02bfcUnconditional dual SDP impossibility atd= 7,[1,33/20](LB7.017037)
+C14 927123b440260345Unconditional dual SDP impossibility atd= 7,[33/20,7](LB7.024779)
+C15 c136b8024d5609cbExactQsublinearO(
+√
+d)witnesses atd∈{16,25,36}
+C16 007c0da905c6389bExactQsublinear witnesses atd∈{64,100}& AST zero-float audit
+A Standalone Tables of Exact Witnesses, Dual Bounds, and
+Certificates
+References
+[1] I. Faisal,Bound Entanglement with Negative Partial Transpose Exists, arXiv:2611.34921v1
+[quant-ph], November 25, 2026.
+[2] M. Horodecki, P. Horodecki, and R. Horodecki,Mixed-state entanglement and distillation: Is
+there a “bound” entanglement in nature?, Phys. Rev. Lett.80, 5239–5242 (1998).
+[3] R. F. Werner,Quantum states with Einstein–Podolsky–Rosen correlations admitting a hidden-
+variable model, Phys. Rev. A40, 4277–4281 (1989).
+[4] D. P. DiVincenzo, P. W. Shor, J. A. Smolin, B. M. Terhal, and A. V. Thapliyal,Evidence for
+bound entangled states with negative partial transpose, Phys. Rev. A61, 062312 (2000).
+[5] W. Dür, J. I. Cirac, M. Lewenstein, and D. Bruß,Distillability and partial transposition in
+bipartite systems, Phys. Rev. A61, 062313 (2000).
+[6] P. Horodecki, Ł. Rudnicki, and K. Życzkowski,Five open problems in quantum information
+theory, PRX Quantum3, 010101 (2022).
+[7] J. Watrous,The Theory of Quantum Information, Cambridge University Press (2018).
+11
