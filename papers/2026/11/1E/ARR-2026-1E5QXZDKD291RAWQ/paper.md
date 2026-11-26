@@ -1,0 +1,360 @@
+# Constructive Lean 4 Kernel and Exact Zero-Float Certificates for OpenAI's VP != VNP Separation Preprint
+
+**Author:** Lluis Eriksson  
+**AIRR Identifier:** `ARR-2026-1E5QXZDKD291RAWQ` (v1)  
+**License:** CC-BY-4.0 (manuscript), MIT (verification repository)  
+**Verification Repository:** https://github.com/lluiseriksson/openai-vp-vnp-separation-certificates (`v1.0.0`)  
+**Canonical PDF SHA-256:** `6b1d326fc6d342dbca7050a8f975fac48fd94a518cbe062b5140a38bce8a28b5`
+
+## Abstract
+
+A November 23, 2026 companion preprint from OpenAI proposes a superpolynomial border arithmetic circuit lower bound exp(Omega((log n)^(5/4))) separating Valiant's classes VP and VNP over every field (and excluding padded permanents from determinant orbit closures outside characteristic two). Rather than assuming peer-reviewed endorsement of its algebraic-curve normalization, RAM transcript compilation, or iterated Euclidean packing proofs, we deliver an independent, explicitly scoped, zero-floating-point verification companion for its discrete algebraic, strict wire-shortening hinge, replay-boundary contradiction, characteristic-p Cartier extraction, signed-permutation Clifford involution, Gray-code windowed host, and integral exterior-algebra Lambda(Z^4) 11/12 packet-crossing mechanisms. Layer 1 (OpenAIVpVnpSeparation.lean) proves 18 standalone constructive Lean 4.35.0 algebraic and combinatorial sub-lemmas (zero sorry, zero axiom, zero Classical.choice, zero warnings; 2 none, 2 [propext], and 14 [propext, Quot.sound]). Layer 2 (VPVNP-CERT-1.0) is a pure-stdlib Python int/Fraction 4-mode auditor certifying 16 canonical finite witnesses in 0.023-5.445 ms—including exhaustive 4096-quadruple verification of the integral Lambda(Z^4) crossing factorization over Z—and rejecting 74/74 live adversarial forgeries with exact branch assertions (80/80 pytest checks).
+
+## Full Extracted Text
+
+--- Page 1 ---
+Constructive Lean 4 Kernel and Exact Zero-Float Certificates
+for OpenAI’sVP̸=VNPSeparation Preprint
+Lluis Eriksson∗
+November 25, 2026
+Abstract
+A November 23, 2026 companion preprint from Ope-
+nAI [7] proposes anexp(Ω((logn)5/4))border arithmetic
+circuit lower bound separating Valiant’s algebraic com-
+plexity classes VP and VNP over every field, exclud-
+ing padded permanents from determinant orbit closures
+outside characteristic two. Rather than assuming peer-
+reviewed endorsement of its algebraic-curve normalization,
+RAM transcript compilation, or iterated Euclidean pack-
+ing proofs, we deliver an independent, explicitly scoped,
+zero-floating-point verification companion for its discrete
+algebraic, strict wire-shortening hinge, replay–boundary
+contradiction, characteristic-p Cartier extraction, signed-
+permutation Clifford involution, Gray-code windowed host,
+and integral exterior-algebra⋀Z4 11/12packet-crossing
+mechanisms. Layer 1 ( OpenAIVpVnpSeparation.le
+an) proves 18 standalone constructive Lean 4.35.0 alge-
+braic and combinatorial sub-lemmas (zero sorry, zero
+axiom, zero Classical.choice, zero warnings; 2 none,
+2 [propext], and 14[propext, Quot.sound]). Layer 2
+(VPVNP-CERT-1.0) is a pure-stdlib Pythonint/Fraction
+4-mode auditor certifying 16 canonical finite witnesses in
+0.023–5.445 ms—including exhaustive 4,096-quadruple veri-
+fication of the integral⋀Z4 crossing identity overZ—and
+rejecting 74/74 live adversarial forgeries with exact branch
+assertions (80/80 pytest checks).
+1 Introduction and Scope Calibra-
+tion
+Valiant’s completeness theory [9] framedVP̸= VNP (and
+its border strengthening VNP̸⊆ VP [1]) as the flagship
+problem of algebraic complexity. Previous unconditional de-
+terminantal lower bounds progressed from quadratic [5, 2]
+to a September 2026 cubic border bound [6]. OpenAI’s
+November 23, 2026 companion preprint [7] proposes a su-
+perpolynomial exp(Ω((logn)5/4))border separation over
+every field via four discrete-algebraic pillars:
+1. Wire-Shortening Hinge & Replay Contradiction
+(Def. 2.1, Sec. 2.1, Thm. 3.1):Either no strict
+∗Independent Researcher. Code, Lean 4 proofs, and certificates:
+MIT License; manuscript and figures: CC-BY-4.0. Prepared with
+transparent AI coding, formalization, and drafting assistance via
+Google Antigravity; all Lean 4 theorems, exact zero-float verifiers,
+and adversarial tests were independently compiled and verified locally.
+Repository: github.com/lluiseriksson/openai-vp-vnp-separatio
+n-certificates.
+shortening w+ 2Dlog 2 A <2Dm exists (yielding hub-
+displacement savings −mu√γd + Dmu2 + hu < 0),
+or a stretch theorem combines a replay law F(c) =
+e∗+ ∑
+µ([Xµ]F(Y))Wµ with a boundary eigenvector
+Ω(Ω ∗̸= 0) to forcee∗Ω = 0.
+2. Characteristic-p Cartier Residue Extraction
+(Secs. 5.1–5.2, Lems. 5.1–5.2):Using Cartier op-
+erators [3, 8]Λ q(∑ vjZj) = ∑ v1/q
+qi+(q−1)1Zi on f∏ gq−1
+i
+keeps support inside boxB = {0 ≤αi ≤H,−H≤j≤
+H}for H = 4(L+S+2), with cyclic-group orthogonality
+reading coefficients without pole blowup.
+3. Signed-Permutation Clifford Involutions & Gray-
+Code Host (Sec. 7):On {0,1}D, Ajex =
+(−1)x1+···+xj−1 ex(j) defines D anticommuting symmet-
+ric involutions yielding pairwise orthogonal directions
+Ajv, routed across a windowed host of volumeVa =
+ℓ2D22D(ℓ−1−2a) via binary-reflected Gray codes.
+4. Integral ⋀Z4 Packet Identity &11 /12Squeeze
+(Sec. 8):Wedge/contraction operators Px,Qy on ⋀Z4
+obey QyPx + PxQy = δxyI, giving a characteristic-free
+integral crossing factorization of1x=y1i=j through 8 odd
+states and cutting exterior link width to≤(4 + 7)/12 =
+11/12.
+Honest Two-Layer Verification Scope.
+1. Layer 1 (Lean 4.35.0 Kernel, Standalone
+Sub-Lemmas): lean/OpenAIVpVnpSeparation.lean
+proves 18 standalone constructive algebraic and combina-
+torial sub-lemmas (Table 1) extracted from Definition 2.1,
+Theorem 3.1, and Sections 2.1, 3, 4.2, 5.1–5.2, 7, and 8
+of [7].
+2. Layer 2 (Exact Zero-Float Auditor):
+VPVNP-CERT-1.0 audits 16 canonical finite wit-
+nesses across strict shortening / hub displacement /
+Fp replay contradictions, live characteristic-p Cartier
+extractionΛ q (p∈ {5,7,11,13}) with box closure
+and cyclic orthogonality, exhaustive D∈ {2,3,4,5}
+Clifford involutions and Gray codes, and all84 = 4,096
+quadruples of the integral⋀Z4 crossing identity.
+3. Explicit Non-Claims:We donotformalize in Lean 4
+the projective graph-closure Bézout degree bounds
+(Lemma 4.1, Proposition 4.2), formal implicit-function
+curve Cartier change of coordinates (Lemma 5.2), RAM-
+to-bit-network transcript compilation (Section 6.1), iter-
+ated conditional-expectation epoch packing (Lemma 7.1),
+1
+
+--- Page 2 ---
+or the end-to-endVP̸= VNP separation (Theorem 1.1);
+those algebraic-geometric and algorithmic pillars remain
+unverified outside the companion preprint [7].
+2 Constructive Lean 4.35.0 Kernel
+lean/OpenAIVpVnpSeparation.lean compiles standalone
+in2 .3 sunderLean4.35.0[ 4]withzeroexternalimports, zero
+warnings, zerosorry, and zeroClassical.choice. Audit-
+ing viaAuditAxioms.lean confirms 2 zero-axiom theorems
+(none: #12, #17), 2[propext] theorems (P: #14, #16),
+and 14[propext, Quot.sound]theorems (P,Q; Table 1).
+Proposition 1(Constructive Lean 4 Kernel Scope).
+All 18 sub-lemmas in Table 1 compile construc-
+tively under Lean 4.35.0 without external libraries or
+Classical.choice. Notably, Theorems 1–5 formalize
+cleared-denominator strict shortening amplification, hub-
+displacement net wire savings, the Theorem 3.1 replay–
+boundary cancellation, and the parse-tree parameter de-
+gree step; Theorems 6–11 prove base-B monomial pack-
+ing/injectivity, Section 5.2’s Cartier box stability forH =
+4(L+ S+ 2), and cyclic-group uniqueness; Theorems 12–15
+formalize the signed-permutation involution orthogonality,
+4-bit Gray-code Hamming-1 adjacency, and22q windowed-
+host volume scaling; and Theorems 16–18 prove the integral
+exterior-algebra Clifford anticommutator and11/12squeeze
+inequality.
+3 Exact Zero-Float Certificate Au-
+ditor
+The modules vpvnp_exact.py and vpvnp_certifier.py
+(under src/) use exclusively Pythonint and fractions.
+Fraction (statically audited via ast.walk for zero
+float/complex literals,/, /=, ormath imports). Strict JSON
+parsing rejects floats,NaN/Infinity, and duplicate keys via
+parse_float,parse_constant, andobject_pairs_hook.
+Definition 1(VPVNP-CERT-1.0 Predicates).A certificate
+with protocol="VPVNP-CERT-1.0" is accepted iff every
+field passes strict schema checks and its mode predicate
+holds:
+• Mode 1 (hinge_stretch_and_replay_cert):Audits
+cleared Definition 2.1 strict shortening2wA2D <22Dm,
+exact rational Section 2.1 hub-displacement saving
+−muG + Dmu2 + hu < 0, and an explicit Fp (p∈
+[3,1009]) Theorem 3.1 replay–boundary witness verifying
+F(c) ·Ω = (∑
+µcµWµ) ·Ω ( modp )while e∗·Ω = Ω∗̸= 0
+(modp).
+• Mode 2 (cartier_residue_box_cert):Evaluates live
+characteristic-p Cartier extraction XµΛq(fgq−1)over
+Fp[X,t,t −1]( p∈ [5,19], q= pr), verifies support closure
+in boxB(H = 4(L+S+2)), checksΛq(DqV) = DΛq(V),
+and replays Section 5.2’s cyclic-group orthogonality sum
+over(F ×
+p)2 with span<p−1.
+Figure 1:(a)Illustrative Theorem 1.1 superpolynomial
+scaling( log2 n)5/4 (c = 1) overtaking quadratic [ 5] at
+log2 n = 16and cubic [ 6] at log2 n = 81.(b)Section 8
+exact rational packet-squeeze ratio peaking at11/12when
+p0 = 1/2and dropping to2/3atp 0 ∈{0,1}.
+Figure 2:(a)Exact Section 7 signed-permutation involution
+ambient dimension2D and pairwise orthogonal pairsD(D−
+1)/2verified across D∈{ 2,3,4,5}.(b)Exact integral ⋀Z4
+4,096-quadruple packet census (3,936both-zero,32Term-1-
+only,32Term-2-only,96exact±1cancellations).
+• Mode 3 ( clifford_signed_perm_and_gray_cert):
+Builds all D∈ [2,5]signed-permutation involutions
+A1,...,A D on Z2D
+, exhaustively verifiesAT
+j = Aj, A2
+j =
+I, AiAj + AjAi = 0, exact orthogonality⟨Aiv,Ajv⟩= 0,
+windowed host volumesVa = Va+1 ·22q, and bijective
+Hamming-1 Gray codes (2b states,b≤8).
+• Mode 4 ( exterior_packet_11_12_squeeze_cert):
+Constructs Section 8’s 8 wedge/contraction operators
+Px,Qy on ⋀Z4, exhaustively checksQyPx + PxQy =
+δxyI16 across all 64 pairs and all84 = 4 ,096quadru-
+ples of1 x=y1i=j = ∑ 7
+z=0(AxizByjz + CyizD′
+xjz)over
+Z, checks explicit sample quadruples, and audits exact
+min(4n0 + 7n1,7n0 + 4n1)/(6(n0 +n1))≤11/12.
+4 Exact Findings, Worked Wit-
+nesses, and Audit
+All experiments ran locally on Windows 11 (Python 3.12.6,
+Lean 4.35.0; 7-run means after warm-up).
+1. Exact ⋀Z4 Census, Clifford Dimensions &
+11/12Squeeze (Figs. 1–2).Exhaustively evaluating
+Section 8’s integral ⋀Z4 crossing factorization over all
+84 = 4,096quadruples( x,y,i,j ) ∈{0,..., 7}4 in Z reveals
+an exact partition:3,936quadruples have both sums equal
+2
+
+--- Page 3 ---
+Table 1: Complete inventory of all 18 constructive Lean 4.35.0 sub-lemmas inlean/OpenAIVpVnpSeparation.lean (zero
+sorry, zeroaxiom, zeroClassical.choice, zero warnings;none for #12, #17;[propext] (P) for #14, #16;[propext,
+Quot.sound](P,Q) for the remaining 14).
+# Theorem Identifier Ref. [7] Exact Machine-Checked Statement & Hypotheses Ax.
+1def21_strict_shortening_power_amplificationDef. 2.1∀D,m,w,A,t∈N,1≤t∧2 wA2D <2 2Dm =⇒(2 wA2D)t <(2 2Dm)t.P,Q
+2sec21_sqrt_linearization_clearedSec. 2.1∀x∈Z,4(1 +x)≤(2 +x) 2 (cleared √1 +x≤1 +x/2).P,Q
+3sec21_hub_displacement_net_savingSec. 2.1∀m,u,G,D,h∈Z, m,u≥ 0 ∧2h≤mG∧ 2Du≤G =⇒ −muG+ Dmu2 +
+hu≤0.
+P,Q
+4thm31_replay_boundary_contradictionThm. 3.1∀f c,q∗ ∈Z, fc =q∗ +fc =⇒q ∗ = 0(q ∗ =e∗Ω, contradictsΩ ∗ ̸= 0).P,Q
+5sec3_parse_tree_parameter_degreeSec. 3∀n∈N,1≤n=⇒2(n+ 1)−1 = (2n−1) + 2.P,Q
+6sec42_base_exponent_pack_boundSec. 4.2∀B,a,b∈Z,0<B∧a<B∧b<B=⇒a+Bb<B 2.P,Q
+7sec42_base_exponent_injectiveSec. 4.2∀B,a 1,b1,a2,b2 ∈Z, 0 <B, 0 ≤a1,a2 <B, a1 + Bb1 = a2 + Bb2 =⇒a 1 =
+a2 ∧b1 =b2.
+P,Q
+8sec52_cartier_box_upper_stabilitySec. 5.2∀L,S,q∈N,2≤q=⇒H+q(S+L)≤qHwithH= 4(L+S+ 2).P,Q
+9sec52_cartier_box_lower_stabilitySec. 5.2∀L,S,q∈N,2≤q=⇒H+q≤qHwithH= 4(L+S+ 2).P,Q
+10sec51_cartier_index_injectiveSec. 5.1∀q,i 1,i2 ∈Z,1≤q∧qi 1 + (q−1) =qi 2 + (q−1) =⇒i 1 =i2.P,Q
+11sec52_cyclic_orthogonality_mod_windowSec. 5.2∀N,j 1,j2,k∈Z,0≤j 1,j2 <N∧j 1 −j2 =kN=⇒j 1 =j2.P,Q
+12sec7_anticommute_sign_flipSec. 7∀b∈Bool,(ifbthen−1else1) + (if!bthen−1else1) = 0inZ.none
+13sec7_d2_involution_orthogonalitySec. 7∀v 0,v1,v2,v3 ∈Z, v1v2 +v0(−v3) +v3v0 +v2(−v1) = 0(⟨A 1v,A2v⟩= 0).P,Q
+14sec7_gray_code_4bit_adjacent_oneSec. 7∀k∈Fin 15, g(k)⊕g(k+ 1)∈{1,2,4,8}whereg(k) =k⊕⌊k/2⌋.P
+15sec7_windowed_host_volume_ratioSec. 7∀ℓ,q,a∈N,2a+3≤ℓ=⇒ℓ q2q(ℓ−1−2a) =ℓq2q(ℓ−1−2(a+1)) ·2 2q.P,Q
+16sec8_clifford_wedge_contraction_identitySec. 8∀v∈Z 2,(QP+PQ)(v) =v∧P 2(v) = 0∧Q 2(v) = 0on
+⋀
+Z1.P
+17sec8_packet_eleven_twelfths_savingSec. 8(4 + 7 = 11)∧(6 + 6 = 12)∧(11<12)(Sec. 811/12packet squeeze).none
+18sec8_histogram_min_le_averageSec. 8∀c 1,c2 ∈N,2 min(c 1,c2)≤c 1 +c2 (optimal grouping≤11/12).P,Q
+Figure 3:(a)Mean exact zero-float verification latency
+across all 16 canonical certificates (0.023–5.445 ms, log
+scale).(b)Live adversarial red-team audit rejecting 74/74
+forgeries across five attack classes with exact error-branch
+assertions.
+to0;32diagonal hits have Term 1= 1, Term 2= 0;32
+diagonal hits have Term 1= 0, Term 2= 1(totaling all64
+diagonal entriesx= y,i = j); and exactly96off-diagonal
+quadruples exhibit nontrivial exact integer cancellation
+(±1) + (∓1) = 0. Across selector fractionp0 ∈[0,1], the op-
+timal grouping ratiomin(4p0 + 7(1−p0),7p0 + 4(1−p0))/6
+peaks strictly at11/12( p0 = 1/2) and reaches2/3at pure
+histograms (p0 ∈{0,1}).
+2. Hand-Verifiable Worked Exact Witnesses (One
+per Mode).
+• Mode 1 (C01, D= 2,m = 4,w = 11,A = 2):2 11 ·24 =
+215 < 216 = 2 2Dm; hub parameters( m,u,G,D,h ) =
+(10, 1
+10 ,8,2,15)yield∆ = −8+ 1
+5 + 3
+2 = −63
+10 <0; overF7
+(dim = 3,Ω = [3 ,2,5], ∗= 0), F(c) ·Ω ≡S· Ω ( mod 7)
+whilee ∗·Ω = 3̸≡0 (mod 7).
+• Mode 2 (C06, F7, q = 7, L = 3 ,S = 2 ,H =
+28,µx = 2):With g(X,t) = 1 + 3 X + 2t+ 5Xt and
+f(X,t) = 3 t−1 + 5X3t+ 6X2t−2, exact computation
+gives X2Λ7(fg6) = 6X2 (mod 7)(strictly inside boxB),
+Λ7(D7V) = DΛ7(V)holds identically, and the 36-term
+Table 2: Canonical 16-certificate VPVNP-CERT-1.0 atlas
+(exp1_certificate_atlas.json; all 16 verified).
+ID Certificate Name M Exact Certified Witness Summary ms
+C01m1_hinge_d2_f7_replayM1D=2,∆=−63/10,F 7 Ω∗=30.029
+C02m1_hinge_d3_f101_replayM1D=3,∆=−197/20,F 101Ω∗=130.042
+C03m1_hinge_d4_f257_replayM1D=4,∆=−1976/125,F 257Ω∗=370.026
+C04m1_hinge_d6_f1009_replayM1D=6,∆=−112/5,F 1009Ω∗=710.031
+C05m2_cartier_f5_q5_boxM2F 5,Λ5,H=24, 2 terms, ortho10.125
+C06m2_cartier_f7_q7_boxM2F 7,Λ7,H=28, 1 term, ortho60.190
+C07m2_cartier_f11_q11_boxM2F 11,Λ11,H=28, 2 terms, ortho50.560
+C08m2_cartier_f13_q13_boxM2F 13,Λ13,H=32, 2 terms, ortho60.841
+C09m3_clifford_d2_l6_gray4M3D=2, 1 pair,∥v∥2=204, 16 Gray 0.023
+C10m3_clifford_d3_l8_gray5M3D=3, 3 pairs,∥v∥2=204, 32 Gray 0.030
+C11m3_clifford_d4_l10_gray6M3D=4, 6 pairs,∥v∥2=11896, 64 Gray 0.058
+C12m3_clifford_d5_l12_gray8M3D=5, 10 pairs,∥v∥2=270448, 256 Gray 0.150
+C13m4_packet_4096_balanced_11_12M4 4096 quads, 100 pkts, ratio11/125.427
+C14m4_packet_4096_skewed_3_4M4 4096 quads, 130 pkts, ratio61/785.401
+C15m4_packet_4096_pure_term0_2_3M4 4096 quads, 100 pkts, ratio2/35.445
+C16m4_packet_4096_mixed_multi_rectM4 4096 quads, 150 pkts, ratio133/1505.410
+cyclic-group sum over(F×
+7 )2 extracts[X 2t0] = 6.
+• Mode 3 (C10, D = 3 ,ℓ = 8 ,a = 2):All 3 oper-
+ators A1,A2,A3 on Z8 satisfy AT
+j = Aj, A2
+j = I8,
+AiAj + AjAi = 0, and ⟨Aiv,Ajv⟩ = 0on v =
+[1,−2,3,−4,5,6,−7,8]( ∥v∥2 = 204); V2/V3 = 2 12 =
+4,096; all 32 states of the 5-bit Gray code transition with
+Hamming weight 1.
+• Mode 4 (C13, ⋀Z4, 100 balanced packets):All 64
+Clifford pairsQyPx + PxQy = δxyI16 and all 4,096 inte-
+gral quadruples hold identically overZ (e.g.(0 ,0,0,0) ↦→
+1 + 0 = 1,(3 ,3,5,5) ↦→0 + 1 = 1); on balanced his-
+tograms[[10 ,10],[25,25],[15,15]], both groupings cost
+550bits vs.600unaltered bits, certifying exact ratio
+550/600 = 11/12.
+3. 16-Certificate Atlas & 80-Test Red-Team Audit
+(Table 2, Fig. 3).Table 2 lists all 16 canonical certificates
+verified in0.023–5.445 ms. tests/test_suite.py runs 80
+pytest checks: 1 full 16-certificate replay, 3 raw-JSON parser
+guards (float,NaN, duplicate keys), 2 exact regressions (ex-
+haustive 4,096-quadruple⋀Z4 packet identity andD= 4
+Clifford involution orthogonality), and 74 parametrized live
+3
+
+--- Page 4 ---
+adversarial forgeries (12 schema/parser, 16 Mode 1 includ-
+ing all-zero and tautological replay witnesses, 17 Mode 2
+including zero-coefficient smuggling and constantD-test, 14
+Mode 3, and 15 Mode 4 including unreduced fractions), each
+asserting an exact regex on its intendedCertificateError
+branch. scripts/verify_all.py enforces all 5 gates in-
+cluding strict axiom whitelisting and a 41-file SHA-256
+manifest.
+5 Conclusion
+We built an independent, explicitly scoped, zero-floating-
+point verification companion for the discrete algebraic,
+wire-shortening hinge, replay–boundary contradiction,
+characteristic-pCartier extraction, signed-permutation Clif-
+ford involution, Gray-code windowed host, and integral⋀Z4 11/12packet-crossing mechanisms of OpenAI’sVP̸=
+VNP preprint [7], pairing 18 constructive Lean 4.35.0 sub-
+lemmas (zero sorry, zero Classical.choice) with the
+pure-int/Fraction 4-mode auditor VPVNP-CERT-1.0, 16
+canonical exact finite witnesses, and 74/74 live adversarial
+forgery rejections.
+References
+[1] Peter Bürgisser. The complexity of factors of multivariate polyno-
+mials.Foundations of Computational Mathematics, 4(4):369–396,
+2004.
+[2] Jin-Yi Cai, Xi Chen, and Dong Li. Quadratic lower bound for
+permanent vs. determinant in any characteristic.Computational
+Complexity, 19:37–56, 2010.
+[3] Pierre Cartier. Une nouvelle opération sur les formes différentielles.
+Comptes rendus de l’Académie des sciences de Paris, 244:426–428,
+1957.
+[4] Leonardo de Moura and Sebastian Ullrich. The Lean 4 theorem
+prover and programming language. InAutomated Deduction –
+CADE 28, volume 12699 ofLNCS, pages 625–635. Springer, 2021.
+[5] Thierry Mignon and Nicolas Ressayre. A quadratic bound for the
+determinant and permanent problem.International Mathematics
+Research Notices, 2004(79):4241–4253, 2004.
+[6] OpenAI. A cubic lower bound for border determinantal complexity
+of the permanent. OpenAI Math Release Preprint (September 24,
+2026), September 2026.
+[7] OpenAI. VP and VNP are different. Unrefereed Companion
+Preprint (OpenAI Math Release, https://github.com/opena
+i/math/blob/main/preprints/VP-and-VNP-are-different-N
+ovember-23-2026/paper.pdf ), November 2026. Proposes an
+exp(Ω((logn )5/4))border arithmetic circuit lower bound separat-
+ingVPfromVNPover every field.
+[8] Karl-Otto Stöhr and José Felipe Voloch. A formula for the Cartier
+operator on plane algebraic curves.Journal für die reine und
+angewandte Mathematik, 377:49–64, 1987.
+[9] Leslie G. Valiant. Completeness classes in algebra. InProceedings
+of the Eleventh Annual ACM Symposium on Theory of Computing
+(STOC), pages 249–261. ACM, 1979.
+4

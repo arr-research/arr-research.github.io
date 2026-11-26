@@ -1,0 +1,359 @@
+# Constructive Lean 4 Kernel and Exact Zero-Float Certificates for OpenAI's Superpolynomial Simple Polytope Diameter
+
+**Author:** Lluis Eriksson  
+**AIRR Identifier:** `ARR-2026-3YQHMT7VSV82FRE5` (v1)  
+**License:** CC-BY-4.0 (manuscript), MIT (verification repository)  
+**Verification Repository:** https://github.com/lluiseriksson/openai-simple-polytope-diameter-certificates (`v1.0.0`)  
+**Canonical PDF SHA-256:** `050d81aa01a437e400fcefcbed8332edfd06f0a8163626c219741fa12392327d`
+
+## Abstract
+
+A November 24, 2026 companion preprint from OpenAI proposes a disproof of the polynomial Hirsch conjecture by constructing rational simple d-polytopes with n facets whose graph diameter (and even subpolynomial s(d)-dimensional face-move distance) exceeds every polynomial in n, alongside corollaries for complementary 2d-facet polytopes, Minkowski sums of two simplices, Schlegel regular triangulations, and symmetric positive doubly-stochastic packing linear programs. Rather than assuming peer-reviewed endorsement of its hierarchical scheduler, blocking-module, or recursive substitution machinery, we deliver an independent, explicitly scoped, zero-floating-point verification companion for its discrete convex-corner bend, prescribed dimension/facet product padding, Klee-Walkup wedge complementary-tip lifting, Schlegel projective prismatoid and middle-section lifting, and two-stage symmetric doubly-stochastic packing mechanisms. Layer 1 (OpenAIHirschDiameter.lean) proves 18 standalone constructive Lean 4.35.0 geometric and algebraic sub-lemmas (zero sorry, zero axiom, zero Classical.choice, zero warnings; 1 none, 1 [propext], and 16 [propext, Quot.sound]). Layer 2 (HIRSCH-DIAM-CERT-1.0) is a pure-stdlib Python int/Fraction 4-mode auditor certifying 16 canonical finite witnesses in 0.092-19.354 ms and rejecting 76/76 live adversarial forgeries with exact branch assertions (82/82 pytest checks).
+
+## Full Extracted Text
+
+--- Page 1 ---
+Constructive Lean 4 Kernel and Exact Zero-Float Certificates
+for OpenAI’s Superpolynomial Simple Polytope Diameter
+Lluis Eriksson∗
+November 25, 2026
+Abstract
+A November 24, 2026 companion preprint from Ope-
+nAI [5] proposes a disproof of the polynomial Hirsch con-
+jecture by constructing rational simpled-polytopes withn
+facets whose graph diameter (and even subpolynomials(d)-
+dimensional face-move distance) exceeds every polynomial
+in n, alongside corollaries for complementary2d-facet poly-
+topes, Minkowski sums of two simplices, Schlegel regular
+triangulations, and symmetric positive doubly-stochastic
+packing linear programs. Rather than assuming peer-
+reviewed endorsement of its hierarchical scheduler, blocking-
+module, or recursive substitution machinery, we deliver an
+independent, explicitly scoped, zero-floating-point verifica-
+tion companion for its discrete convex-corner bend, pre-
+scribed dimension/facet product padding, Klee–Walkup
+wedge complementary-tip lifting, Schlegel projective pris-
+matoid and middle-section lifting, and two-stage symmetric
+doubly-stochastic packing mechanisms. Layer 1 (OpenAI
+HirschDiameter.lean) proves 18 standalone constructive
+Lean 4.35.0 geometric and algebraic sub-lemmas (zero
+sorry, zeroaxiom, zeroClassical.choice, zero warnings;
+1 none, 1 [propext], and 16 [propext, Quot.sound]).
+Layer 2 (HIRSCH-DIAM-CERT-1.0) is a pure-stdlib Python
+int/Fraction 4-mode auditor certifying 16 canonical finite
+witnesses in0 .092–19.354 ms and rejecting 76/76 live adver-
+sarial forgeries with exact branch assertions (82/82 pytest
+checks).
+1 Introduction and Scope Calibra-
+tion
+The Hirsch conjecture (1957; see [1, 4]) predicted that
+every d-polytope with n facets has edge-graph diame-
+ter at most n−d . Santos [6] refuted the linear bound
+via a 43-dimensional, 86-facet polytope of diameter at
+least44 > 86 −43, while Kalai–Kleitman [3], Todd [8],
+and Sukegawa [7] proved quasi-polynomial upper bounds
+nlog2 d+O(1). Whether apolynomialdiameter bound
+poly(n,d)holds remained open. OpenAI’s November 24,
+2026 companion preprint [5] proposes a disproof of the
+∗Independent Researcher. Code, Lean 4 proofs, and certificates:
+MIT License; manuscript and figures: CC-BY-4.0. Prepared with
+transparent AI coding, formalization, and drafting assistance via
+Google Antigravity; all Lean 4 theorems, exact zero-float verifiers,
+and adversarial tests were independently compiled and verified locally.
+Repository: github.com/lluiseriksson/openai-simple-polytop
+e-diameter-certificates.
+polynomial Hirsch conjecture (Theorems 1.1–1.2) together
+with three explicit geometric/LP corollaries built from four
+verifiable discrete-algebraic mechanisms:
+1. Convex Corner Bends, Crossing Bounds &
+Product Padding (Secs. 1.2, 2.1–2.2, Lem. 2.2,
+Thm. 1.2):An affine segment cannot cross a V-corner
+z≥ |x−a| with z(a) = 0without bending (slope
+jump ≥ 2); Lemma 2.2 gives exact crossing bounds
+RNK and RNK−1 max(0,Ng− 8), while Theorem 1.2
+pads any( d0,f0)seed with a( d−d 0 −2)-simplex and
+(E+d 0 −f0 + 1)-gon to hit exact(d,d+E).
+2. Klee–Walkup Wedge to Complementary2d-Facet
+Polytopes (Sec. 14, Cor. 14.1):Applying m− 2p
+Klee–Walkup wedges [4] on facets uncovered by disjoint
+tips v,w yields a rational simple(m−p )-polytope with
+exactly2(m−p)facets and complementary lifted tips.
+3. Schlegel Projective Lifting & Prismatoid Middle
+Section (Sec. 14.1, Cor. 14.2):Slicing a simplicial
+prismatoid conv((U,0) ∪(V,1))at height1 /2yields( U+
+V)/2with ≤d2 pairwise vertex sums and facet distance
+Ds −2, while( X,Z) = (x
+1+z , −z
+1+z )transforms every non-
+base faceta·x+bz≤c (b+c> 0) toa·X−(b+c)Z≤c [9],
+yielding Schlegel triangulation depthDs −1.
+4. Two-Stage Symmetric Positive Doubly-Stochastic
+Packing LP (Sec. 14.2, Cor. 14.3):Starting from an
+invertible nonnegativek×k packing Ax≤ 1( A1=1),
+Stage 1 formsB0 = (A+1 c⊤)/h with exact projective
+bijection y = hx
+1+c⊤x preserving slack1 −B0y = 1−Ax
+1+c⊤x,
+and Stage 2 forms symmetric doubly-stochasticB =
+(H+t11 ⊤)/(1 +dt)withmax i,j |Bij −1/d|<ϵ.
+Honest Two-Layer Verification Scope.
+1. Layer 1 (Lean 4.35.0 Kernel, Standalone Sub-
+Lemmas): lean/OpenAIHirschDiameter.lean proves
+18 standalone constructive geometric and algebraic sub-
+lemmas (Table 1) extracted from Sections 1, 1.2, 2.1, 2.2,
+13.5, 14, 14.1, and 14.2 of [5].
+2. Layer 2 (Exact Zero-Float Auditor):HIRSCH-DIAM-
+CERT-1.0 audits 16 canonical finite witnesses across V-
+corner zigzag paths, Lemma 2.2 / Theorem 1.2 account-
+ing, exact bounded irredundant Klee–Walkup wedges
+with full vertex-lattice enumeration (d≤ 5), exact com-
+plete Schlegel projective prismatoids with exact dual-
+graph BFS width (d≤ 5, D1 ∈{2,3,4,5}), and exact
+two-stage symmetric doubly-stochastic packings (d≤ 9).
+1
+
+--- Page 2 ---
+3. Explicit Non-Claims:We donotformalize in Lean 4
+the hierarchical scheduler (Sections 3–13), blocking-
+module tournament constructions, generic perturbation
+openness arguments, or the fullnω(1) asymptotic diam-
+eter lower bound of Theorems 1.1–1.2; those recursive
+construction pillars remain unverified outside the com-
+panion preprint [5].
+2 Constructive Lean 4.35.0 Kernel
+lean/OpenAIHirschDiameter.lean compiles standalone
+under Lean 4.35.0 [2] with zero external imports, zero warn-
+ings, zerosorry, andzeroClassical.choice. Auditingvia
+AuditAxioms.lean confirms 1 zero-axiom theorem (none:
+#3), 1 [propext] theorem (P: #18), and 16 [propext,
+Quot.sound]theorems (P,Q; Table 1).
+Proposition 1(Constructive Lean 4 Kernel Scope).
+All 18 sub-lemmas in Table 1 compile construc-
+tively under Lean 4.35.0 without external libraries or
+Classical.choice. Theorems 1–5 formalize convex V-
+corner slope contradictions, Santos’s44>86−43arithmetic
+violation, and Lemma 2.2 crossing monotonicity; Theo-
+rems 6–8 prove exact Theorem 1.2 dimension/facet product
+sums and Section 13.5 support closure; Theorems 9–11 for-
+malize Klee–Walkup uncovered-facet decrement, terminal
+(m−p, 2(m−p))complementary counts, and cube padding;
+Theorems 12–13 prove depth-offset arithmetic identities
+and the cleared Schlegel projective facet identity; and The-
+orems 14–18 formalize the cleared algebraic identities and
+inductive coordinate-sum bound of Corollary 14.3’s two-
+stage doubly-stochastic packing construction.
+3 Exact Zero-Float Certificate Au-
+ditor
+The moduleshirsch_exact.pyandhirsch_
+certifier.py(undersrc/) use exclusively Pythonint
+andfractions.Fraction(statically audited via
+ast.walkfor zero float/complex literals,/,/=, ormath
+imports). Strict JSON parsing rejects floats,
+NaN/Infinity, and duplicate keys viaparse_float,
+parse_constant, andobject_pairs_hook, and enforces
+reduced lowest-terms rationals (gcd(p,q) = 1,q >0)
+everywhere.
+Definition 1(HIRSCH-DIAM-CERT-1.0Predicates).A
+certificate withprotocol="HIRSCH-DIAM-CERT-1.0"is
+accepted iff every field passes strict schema checks and its
+mode predicate holds:
+•Mode 1 (convex_corner_bend_and_crossing_cert):
+Audits exact rational zigzag paths spanning prescribed
+V-cornersz≥min k |x−a k|(certifyingz(a k) = 0, left
+slope≤−1, right slope≥+1, and exact interior break
+count), verifies Lemma 2.2 boundsRNK and
+RNK−1 max(0,Ng−8), and checks Theorem 1.2’s
+exact(d,d+E)product padding.
+Figure 1:(a)Exact certified Mode 1 Lemma 2.2 full dis-
+tance LBRNK vs. gap distance LBRNK−1(Ng−8)across
+C01–C04.(b)Exact rational Corollary 14.3 Stage-2 smooth-
+ing deviationmaxi,j |Bij −1/6|across t∈ [1/4,128]( d= 6).
+•Mode 2 (klee_walkup_wedge_and_complement_
+cert):Rejects zero normals, replaysm−2pexact
+rational Klee–Walkup wedges
+W = {(x,t) :x∈F, 0 ≤t≤a (x)}on strictly uncovered
+facets, verifies exact boundedness (every 1-skeleton
+ridge shared by exactly 2 vertices) and facet
+irredundancy (exact affine rankd−1) on both base and
+final polytopes, and certifies complementary lifted tips
+across all2(m−p)facets.
+•Mode 3 (schlegel_projective_and_prismatoid_
+cert):Verifies affine independence of rational
+(d−1)-simplicesU,Vwith0∈int(conv(U)), counts
+exact pairwise middle-section sums(U + V)/2, audits a
+complete duplicate-free set of non-base supporting facets
+(a̸= 0,b+ c> 0, exact affine rankd−1, exact Schlegel
+half-slack identity on everyT1 image), and computes
+the exact dual-graph ridge-adjacency BFS widthDs
+betweenT0 andT 1, certifyingDs −2andD s −1.
+•Mode 4 (symmetric_doubly_stochastic_packing_
+cert):Starting from invertible nonnegativeA≥0
+(A1=1), constructs Stage-1 positive doubly-stochastic
+B0 = (A+1 c⊤)/h, verifies the exact projective bijection
+y=hx/(1 +c ⊤x), inversex=y/(h−c ⊤y), and slack
+identity1 −B0y= (1−Ax)/(1 +c⊤x)on test_x, then
+builds Stage-2 symmetric invertible
+B= (H+t11 ⊤)/(1 +dt)certifying exact
+maxi,j |Bij −1/d|<ϵ.
+4 Exact Findings, Worked Wit-
+nesses, and Audit
+All experiments ran locally on Windows 11 (Python 3.12.6,
+Lean 4.35.0; 7-run means after warm-up).
+1. Exact Wedge Lattices, Antiprism Widths &
+Smoothing (Figs. 1–2).Exact rational Klee–Walkup
+wedging lifts a 2D pentagon (5 facets, 1 wedge), hexagon
+(6 facets, 2 wedges), heptagon (7 facets, 3 wedges), and 3D
+pentagonal prism (7 facets, 1 wedge) to bounded simple
+complementary polytopes with (dimension, facet) pairs
+(3,6),(4 ,8),(5 ,10), and(4 ,8)and exactly8 ,17,34, and16
+2
+
+--- Page 3 ---
+Table 1: Complete inventory of all 18 constructive Lean 4.35.0 sub-lemmas inlean/OpenAIHirschDiameter.lean (zero
+sorry, zeroaxiom, zeroClassical.choice, zero warnings;none for #3;[propext] (P) for #18;[propext, Quot.sound]
+(P,Q) for the remaining 16).
+# Theorem Identifier Ref. [5] Exact Machine-Checked Statement & Hypotheses Ax.
+1sec12_affine_cannot_cross_cornerSec. 1.2∀m, d∈Z,0< d∧d≤−(md)∧d≤md=⇒False.P,Q
+2sec12_corner_slope_contradictionSec. 1.2∀m∈Z, m≤−1∧1≤m=⇒False.P,Q
+3sec1_santos_2012_hirsch_violationSec. 186−43 = 43∧43<44(Santos 2012 violation [6]).none
+4sec12_recursive_crossing_stepSec. 1.2∀N, q, D∈N,4≤NqD=⇒1≤⌊NqD/4⌋.P,Q
+5lem22_cell_distance_lower_boundLem. 2.2∀c, N g, R, P∈N,8 +c≤N g ∧1≤RP=⇒c≤RP(N g −8).P,Q
+6thm12_product_dimension_exactThm. 1.2∀d, d 0 ∈N, d 0 + 2≤d=⇒d 0 + (d−d0 −2) + 2 =d.P,Q
+7thm12_product_facets_exactThm. 1.2∀d, d 0, E, f∈N, d0 +2 ≤d∧f≤E +d0 =⇒f +(d−d0 −1)+(E+d0 −f +1) =
+d+E.
+P,Q
+8sec135_simultaneous_substitution_boundSec. 13.5∀s, e∈N, e≤s=⇒3s+ 2e≤5s(support closure).P,Q
+9cor141_wedge_uncovered_decreasesCor. 14.1∀m, p∈N,2p+ 1≤m=⇒(m+ 1)−2(p+ 1) + 1 =m−2p.P,Q
+10cor141_wedge_complementary_facetsCor. 14.1∀m, p∈N,2p≤m=⇒p+ (m−2p) =m−p∧m+ (m−2p) = 2(m−p).P,Q
+11cor141_cube_padding_2dCor. 14.1∀d, d 0 ∈N, d 0 ≤d=⇒d 0 + (d−d0) =d∧2d 0 + 2(d−d0) = 2d.P,Q
+12cor142_prismatoid_section_and_schlegel_depthCor. 14.2∀D s ∈N,2≤D s =⇒(D s −2) + 2 =Ds ∧(D s −1) + 1 =Ds.P,Q
+13sec141_schlegel_projective_identitySec. 14.1∀a x, b, c, z∈Z, ax −(b+c)(−z)−c(1 +z) = (a x +bz)−c.P,Q
+14cor143_stage1_projective_slack_identityCor. 14.3∀a x, cx ∈Z,(1 +c x)−(a x +c x) = 1−ax (cleared slack).P,Q
+15cor143_stage1_projective_inverse_denomCor. 14.3∀h, c x ∈Z, h(1 +cx)−hc x =h(cleared inverse denom.).P,Q
+16cor143_stage1_row_sum_stochasticCor. 14.3∀h∈Z,1 + (h−1) =h(doubly-stochastic row sum).P,Q
+17cor143_stage2_smoothing_deviation_clearedCor. 14.3∀d, h ij, t∈Z, d(hij +t)−(1 +dt) =dh ij −1.P,Q
+18cor143_packing_sum_bound_tightCor. 14.3∀xs: ListZ,(∀x∈xs, x≤1) =⇒intListSum(xs)≤|xs|.P
+Figure 2:(a)Exact Corollary 14.1 Klee–Walkup wedge
+progression to complementary(d,2d)polytopes across pen-
+tagon (1 wedge), hexagon (2 wedges), heptagon (3 wedges),
+and 3D pentagonal prism (1 wedge).(b)Exact enumerated
+simple vertex counts after wedging (8,17,34,16).
+enumerated simple vertices respectively. For Mode 3, exact
+dual-graphridge-adjacencyBFScertifiestruewidths D1 = 2
+(3D prism, 3 lateral facets) andD1 = d∈{ 3,4,5}across
+our 3D, 4D, and 5D simplicial antiprisms (6,14,30lateral
+facets). For Corollary 14.3’s Stage-2 smoothing atd= 6,
+maxi,j |Bij −1/6|decays monotonically from233/2700at
+t= 1/4to233/830520att= 128.
+2. Hand-Verifiable Worked Exact Witnesses (One
+per Mode).
+• Mode 1 ( C01, 3 V-corners at x∈ { 1,3,5},
+N=16,K= 2,R= 1,g= 3/4):The 7-waypoint rational
+zigzag satisfiesz≥min k |x−a k|everywhere and attains
+z = 0at all 3 corners with slopes±2(5 exact interior
+bends), certifyingRNK = 256, gapbound1·16·(12−8) =
+64, and Theorem 1.2 padding(d0,f0) = (4,8) →(20,40).
+• Mode 2 (C05, 2D pentagon→3D wedge):Starting
+from x≥ 0,y≥ 0,x≤ 2,y≤ 2,x + y≤ 3with disjoint
+tips(0 ,0)and(2 ,1), wedging the sole uncovered facet
+y≤ 2produces a bounded 3D simple 6-facet polytope
+with 8 enumerated vertices and complementary lifted
+tips(0,0,0)and(2,1,1).
+• Mode 3 (C09, Fig. 7 triangular antiprism):With
+Figure 3:(a)Mean exact zero-float verification latency
+across all 16 canonical certificates (0.092–19.354 ms, log
+scale).(b)Live adversarial red-team audit rejecting 76/76
+forgeries across five attack classes with exact error-branch
+assertions.
+U = {(1,0),(0,1),(−1,−1)}(0 ∈int (conv(U))) andV =
+−1
+2 U,( U+V)/2yields 9 exact pairwise sums, all 6 lateral
+facets have rank2and b+ c∈{ 1,7/2}> 0, and exact
+dual BFS certifies true widthD1 = 3(section distance1,
+Schlegel depth2).
+• Mode 4 (C13, k=2 →d= 4, M=2,t= 5):From nonneg-
+ative A=
+( 3/4 1/4
+1/5 4/5
+)
+, Stage 1 yieldsc= (61
+40 ,59
+40 ), h= 4,
+doubly-stochastic B0 verified onx= (1
+2 ,1
+3 ), and Stage 2
+yields4 ×4symmetric invertible doubly-stochastic B
+with exactmax|B ij −1/4|= 17/1120<1/20.
+3. 16-Certificate Atlas & 82-Test Red-Team Audit
+(Table 2, Fig. 3).Table 2 lists all 16 canonical certifi-
+cates verified in0 .092–19.354 ms. tests/test_suite.py
+runs 82 pytest checks: 1 full 16-certificate replay, 3 raw-
+JSON parser guards (float,NaN, duplicate keys), 2 exact
+regressions (Corollary 14.3 Stage-2 symmetry/invertibility
+and 4D hexagon wedge counts), and 76 parametrized live ad-
+versarial forgeries (12 schema/parser, 15 Mode 1, 16 Mode 2,
+18 Mode 3, 15 Mode 4), each asserting an exact regex on
+its intendedCertificateError branch. scripts/verify_
+all.py enforces all 5 gates including strict axiom whitelist-
+3
+
+--- Page 4 ---
+Table 2: Canonical 16-certificateHIRSCH-DIAM-CERT-1.0
+atlas (exp1_certificate_atlas.json; all 16 verified).
+ID Certificate Name M Exact Certified Witness Summary ms
+C01m1_corners_3_n16_k2M1 3 corners (5 breaks),NK=256, gap640.092
+C02m1_corners_5_n32_k3M1 5 corners (9 breaks),2NK=65536, gap163840.159
+C03m1_corners_7_n64_k4M1 7 corners (13 breaks),3NK=5.03×107 0.239
+C04m1_corners_9_n128_k5M1 9 corners (17 breaks),4NK=1.37×1011 0.355
+C05m2_wedge_pentagon_2d_to_3dM2 2D/5f1w−−→3D/6f, 8 simple verts 1.091
+C06m2_wedge_hexagon_2d_to_4dM2 2D/6f2w−−→4D/8f, 17 simple verts 4.404
+C07m2_wedge_heptagon_2d_to_5dM2 2D/7f3w−−→5D/10f, 34 simple verts 19.354
+C08m2_wedge_prism_3d_to_4dM2 3D/7f1w−−→4D/8f, 16 simple verts 4.341
+C09m3_schlegel_antiprism_3d_fig7M3 3D antiprism (6f), 9 sums,D1=3→(1,2)0.660
+C10m3_schlegel_prism_3dM3 3D prism (3f), 6 sums,D1=2→(0,1)0.430
+C11m3_schlegel_antiprism_4dM3 4D antiprism (14f), 16 sums,D1=4→(2,3)2.407
+C12m3_schlegel_antiprism_5dM3 5D antiprism (30f), 25 sums,D1=5→(3,4)8.263
+C13m4_packing_k2_even_d4M4k=2→d=4:max|B ij−14|=17/11200.239
+C14m4_packing_k2_odd_d5M4k=2→d=5:max|B ij−15|=4/2550.295
+C15m4_packing_k3_even_d6M4k=3→d=6:max|B ij−16|=233/1306800.471
+C16m4_packing_k4_odd_d9M4k=4→d=9:max|B ij−19|=8/40590.905
+ing and a 41-file SHA-256 manifest.
+5 Conclusion
+We built an independent, explicitly scoped, zero-floating-
+point verification companion for the discrete convex-corner,
+product-padding, bounded Klee–Walkup wedge, complete
+Schlegel prismatoid/middle-section, and two-stage sym-
+metric doubly-stochastic packing mechanisms of OpenAI’s
+superpolynomial polytope diameter preprint [5], pairing
+18 constructive Lean 4.35.0 sub-lemmas (zerosorry, zero
+Classical.choice) with the pure-int/Fraction 4-mode
+auditor HIRSCH-DIAM-CERT-1.0, 16 canonical exact finite
+witnesses, and 76/76 live adversarial forgery rejections.
+References
+[1] George B. Dantzig.Linear Programming and Extensions. Prince-
+ton University Press, Princeton, NJ, 1963.
+[2] Leonardo de Moura and Sebastian Ullrich. The Lean 4 theorem
+prover and programming language. InAutomated Deduction –
+CADE 28, volume 12699 ofLecture Notes in Computer Science,
+pages 625–635. Springer, 2021.
+[3] Gil Kalai and Daniel J. Kleitman. A quasi-polynomial bound for
+the diameter of graphs of polyhedra.Bulletin of the American
+Mathematical Society (N.S.), 26:315–316, 1992.
+[4] Victor Klee and David W. Walkup. Thed-step conjecture for
+polyhedra of dimension d < 6.Acta Mathematica, 117:53–78,
+1967.
+[5] OpenAI. Superpolynomial graph diameter of simple polytopes.
+OpenAI Math Release PreprintOAI:Superpolynomial-graph-d
+iameter-of-simple-polytopes-November-24-2026 , November
+2026. Companion unrefereed preprint.
+[6] Francisco Santos. A counterexample to the Hirsch conjecture.
+Annals of Mathematics (2), 176:383–412, 2012.
+[7] Noriyoshi Sukegawa. An asymptotically improved upper bound on
+the diameter of polyhedra.Discrete & Computational Geometry,
+62:690–699, 2019.
+[8] Michael J. Todd. An improved Kalai–Kleitman bound for the
+diameter of a polyhedron.SIAM Journal on Discrete Mathematics,
+28:1944–1947, 2014.
+[9] Günter M. Ziegler.Lectures on Polytopes, volume 152 ofGraduate
+Texts in Mathematics. Springer-Verlag, New York, 1995.
+4

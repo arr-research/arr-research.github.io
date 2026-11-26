@@ -1,0 +1,56 @@
+{
+  "assessed_at": "2026-11-26T00:21:04Z",
+  "canonical_sha256": "050d81aa01a437e400fcefcbed8332edfd06f0a8163626c219741fa12392327d",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All 18 Lean 4 identities in Table 1, the four worked witnesses (C01, C05, C09, C13), Table 2 counts/bounds, and Fig. 1-3 summaries are mathematically sound and numerically consistent across the PDF, though external repository execution was not performed.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "Applies constructive Lean 4 checks and exact rational Python auditing to auxiliary mechanisms of companion preprint [5] and classical Klee-Walkup/Ziegler constructions; the 18 Lean lemmas are elementary N/Z arithmetic/algebraic identities with limited standalone mathematical novelty.",
+      "stars": 2
+    },
+    "reproducibility": {
+      "basis": "Table 1 gives all 18 Lean statements verbatim and Section 4.2 supplies exact hand-checkable parameters for one witness per mode (C01, C05, C09, C13), while full certificate and adversarial suite replay relies on an external repository not embedded in the PDF.",
+      "stars": 3
+    },
+    "rigor": {
+      "basis": "Scope and non-claims are clearly delimited, zero-float Fraction auditing and JSON guards are well structured, and 76 adversarial cases are tested; however, Lean 4 only checks cleared N/Z identities without geometric definitions, and Mode 2 misnames 1-skeleton edges as ridges.",
+      "stars": 3
+    },
+    "significance": {
+      "basis": "Provides independent finite-witness sanity checks for auxiliary mechanisms (padding, Klee-Walkup wedging, Schlegel lifting, doubly-stochastic packing) of [5], while explicitly leaving the core superpolynomial diameter construction of [5] unverified.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.4,
+  "model_id": "hydrogen",
+  "overall_stars": 3,
+  "paper_id": "ARR-2026-3YQHMT7VSV82FRE5",
+  "potential_errors": [
+    "Mode 2 (Def. 1, p. 2) refers to checking that 'every 1-skeleton ridge [is] shared by exactly 2 vertices'; in polytope terminology, 1-dimensional faces in the 1-skeleton are edges, whereas ridges are (d-2)-faces (used correctly in Mode 3's dual-graph ridge-adjacency BFS).",
+    "Section 1 item 3 (p. 1) states that slicing the prismatoid conv((U,0) U (V,1)) at height 1/2 yields '(U+V)/2 with <= d^2 pairwise vertex sums', conflating the convex polytope slice conv((U+V)/2) with its generating point set (U+V)/2; also, the projective map (X,Z) = (x/(1+z), -z/(1+z)) omits noting 1+z > 0 on z in [0,1].",
+    "Table 2 C10 (p. 4) reports '6 sums' for the 3D prism whereas Mode 3 Def. 1 describes (U+V)/2 for (d-1)-simplices (which gives d^2 = 9 sums in general, as in C09); the deduplication to 6 distinct points when V = U is not explicitly explained in the text."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Transparent, explicitly scoped verification architecture with clear separation between verified sub-lemmas/witnesses and unverified core claims of the companion preprint [5] (Section 1 Explicit Non-Claims).",
+    "All 18 Lean 4 identities in Table 1 are mathematically valid, zero-sorry, free of Classical.choice, and accurately summarized in Proposition 1.",
+    "Exact hand-verifiable worked witnesses (C01, C05, C09, C13 in Section 4.2) check out exactly against the stated formulas, including 8 vertices and complementary tips for the wedged pentagon (C05), b+c in {1, 7/2} and D_1 = 3 for the 3D antiprism (C09), and max |B_ij - 1/4| = 17/1120 for C13.",
+    "Strong internal numerical consistency across Abstract, Table 1, Table 2, and Figures 1-3 (e.g., 16 certificates, 0.092-19.354 ms range, 76 adversarial forgeries across 5 classes, 82 total pytest checks, and exact C15 smoothing ratio 233/2700 to 233/830520)."
+  ],
+  "strong_novelty_candidates": [],
+  "summary": "The manuscript presents an explicitly scoped two-layer verification companion for four discrete-algebraic mechanisms appearing in OpenAI's companion preprint [5] on superpolynomial simple polytope diameter: (1) 18 standalone constructive Lean 4.35.0 lemmas (`OpenAIHirschDiameter.lean`) without external imports or `Classical.choice`, and (2) a pure-`int`/`Fraction` Python auditor (`HIRSCH-DIAM-CERT-1.0`) certifying 16 finite witnesses across convex V-corner zigzags, Klee-Walkup wedging, Schlegel projective prismatoids, and two-stage symmetric doubly-stochastic packing LPs, alongside 76 adversarial forgery tests. Every Lean identity in Table 1, worked witness in Section 4.2, and numerical summary across tables and figures is mathematically sound and internally consistent. While the Lean 4 layer proves only elementary cleared arithmetic/algebraic identities over N and Z (leaving all polytope, matrix, and graph-BFS geometry in the Python layer) and does not verify the core superpolynomial construction of [5], the manuscript is forthright about these non-claims and meets the standard for an acceptable, substantive verification companion.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:b126fe59-d542-4b92-91a2-9805eadee71a",
+  "weaknesses": [
+    "The 18 Lean 4 theorems in Table 1 are elementary N/Z arithmetic tautologies and cleared polynomial identities (e.g., 86-43=43 /\\ 43<44, 1+(h-1)=h, d0+(d-d0-2)+2=d); none formalize actual polyhedral geometry, rational linear algebra, convexity, or graph diameter inside Lean 4.",
+    "All nontrivial geometric and algebraic checks (boundedness, facet irredundancy, vertex enumeration, dual-graph BFS, matrix invertibility, projective bijection) reside in the Layer 2 Python auditor on small finite instances (d <= 5 for wedges/Schlegel, d <= 9 for packing), not in a formal proof assistant.",
+    "Does not verify the central superpolynomial diameter lower bound or hierarchical scheduler/blocking-module/perturbation arguments of the unrefereed companion preprint [5].",
+    "Full code and certificate artifacts reside in an external repository rather than being embedded in the PDF, so complete replay cannot be audited solely from the manuscript."
+  ]
+}
