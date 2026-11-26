@@ -1,0 +1,795 @@
+--- Page 1 ---
+Complete Scalar Resolvent Characterization,
+Closed-Form Qutrit Boundaries, and
+Quantum-Coherence Advantage Beyond Blackwell
+Majorization in Quantum-State Texture
+Lluis Eriksson*
+November 26, 2026
+Abstract
+In the resource theory of quantum-state texture (QST), the unique free state is the flat
+pure state f1 = |f1⟩⟨f1| and free operations are CPTP maps satisfying Λ( f1) = f1. Recently,
+de Le´ on (arXiv:2611.34865v1) derived a normal form for QST free operations (Theorem 1),
+reduced deterministic convertibility ρ−→σ in arbitrary dimension D to a (D− 1)2-variable
+complex semidefinite program (Theorem 2 and Corollary 4), and demonstrated in Section V.D
+that the two qubit scalar monotones—geometric texture Tg and texture weight Tw—fail
+to characterize convertibility for D≥ 3, leaving higher-dimensional reachability governed
+numerically by SDPs.
+We show that no matrix SDP is needed in any finite dimension D≥ 2: deterministic QST
+convertibility iscompletely characterizedby a single smooth one-parameter family of scalar
+resolvent monotones. Writing ρ =
+
+p x†
+x R
+
+in an adapted basis {|f1⟩,|e 1⟩, . . . ,|eD−1⟩}, define
+cλ(ρ) :=p−x †(R+λI D−1)−1x= 1
+⟨f1|(ρ+λI D)−1|f1⟩ −λ(λ∈(0,∞)),
+which interpolates smoothly and concavely between the maximal free fractionc0(ρ) = 1−Tw(ρ)
+(λ→ 0+) and the normalized grand sum c∞(ρ) = Σ( ρ)/D = 1 − Tg(ρ) (λ→ ∞). First
+(Theorem 1), we give a self-contained linear-algebraic proof via simultaneous congruence
+diagonalization of the Slater-regular Sylvester Lagrangian that forallD≥2,
+ρ−→σ⇐⇒ ∀λ >0, c λ(σ)≥c λ(ρ)⇐⇒ ∀t≥0,∥σ−tf 1∥1 ≤ ∥ρ−tf1∥1,
+with every strictly separating witness admitting a positive perturbation that decomposes
+into a free-population term plus at most D− 1 finite resolvent evaluations, and reducing
+convertibility to nonnegativity of a single univariate polynomial of degree at most 2 D− 2
+on (0,∞) (zero SDPs). Second (Theorem 2), for any rank-1-coherence source and target
+in arbitrary D≥ 2, we solve infλ≥0(s0 + λ)(q−c λ(ρ)) in closed form, obtaining an exact
+C1-matched two-regime square-root boundary achieved explicitly by a rank-1 contraction T∗.
+This yields an instant single-parameter scalar obstruction c3/20(σ) −c 3/20(ρ) = −3/50 < 0
+on de Le´ on’s Section V.D counterexample (Eq. (64)) and replaces de Le´ on’s entire Fig. 3
+numerical SDP reachability curves for σε(q, r) with an exact algebraic formula (matching
+CLARABEL SDPs to < 5 × 10−9). Third (Theorem 3), we prove that quantum coherence
+strictly enlarges QST convertibility beyond classical spectral-measure Blackwell (convex-
+decreasing) dominance by constructing a full-rank, purely rational qutrit pair ( ρ, σ) with an
+explicit 4-Kraus QST channel ( T = diag(1, 0), strictly positive remainder) whose spectral-
+measure Blackwell test is violated by +21 /1250; we further establish the exact Kraus rank
+* Independent researcher; AIRR Frontier Verification Lab ( https://airr.science). Code and Lean 4.35.0
+proofs: MIT; manuscript and figures: CC-BY-4.0. Authored and verified with transparent Google Antigravity
+assistance under AIRR-FOUNDER-1.0 governance.
+1
+
+--- Page 2 ---
+Table 1: Comparison between de Le´ on (arXiv:2611.34865v1) and the exact resolvent charac-
+terization established in this work.
+Aspect / Problem de Le´ on [1] This Work (Exact Analytic)
+Arbitrary-Ddecision (D−1) 2-var. SDP (Cor. 4) Scalarc λ(σ)≥c λ(ρ) (λ >0); deg≤2D−2 poly
+Dual witness complexity General matrix certificatec ∞ term +≤D−1 finite resolventsc λj (ρ) (Thm. 1)
+Counterexample Eq. (64) Matrix entry proof (t 11 = 2) Single rational scalar:c 3/20(σ)−c 3/20(ρ) =− 3
+50 <0
+Fig. 3σ ε(q, r) Pointwise numerical SDP Closed-form two-regime curve (Thm. 2,<5×10 −9)
+Blackwell comparison Not analyzed Strict quantum gain:D= 3 channel vs + 21
+1250 viol.
+Boundary Kraus rank 1 +D(D−1) (Cor. 3) 1 +r T max(1, r∆);≤Donr ∆ ≤1 (saves (D−1) 2)
+1 + rT max(1, r∆) with sharp ceiling D on rank-1-remainder boundaries (saving ( D− 1)2
+operators over de Le´ on’s Corollary 3 bound 1 +D(D− 1)) and an exact resolvent scaling law
+for free-state dilution. All 18 core algebraic theorems are formally verified in constructive
+Lean 4.35.0 (0 sorry, 0 Classical.choice, 0 custom axioms), backed by 16 AST-audited
+zero-float SHA-256 certificates and 56 adversarial tests.
+1 Introduction and Setting
+In the resource theory of quantum-state texture (QST) [ 2, 4, 1], the sole free state on a
+D-dimensional Hilbert space CD is the pure uniform superposition f1 = |f1⟩⟨f1|, |f1⟩ =
+1√
+D
+PD−1
+k=0 |k⟩, and the free operations are all completely positive trace-preserving (CPTP) maps
+Λ satisfying Λ(f1) = f1. Writing any density operator ρ∈ D(CD) in an adapted orthonormal
+basis {|f1⟩,|e 1⟩, . . . ,|eD−1⟩} separates its free-state population p = ⟨f1|ρ|f1⟩ = Σ(ρ)/D∈ [0, 1],
+its coherence vector x∈C D−1, and its maximally textured block R∈M D−1(C) ( R⪰ 0,
+TrR= 1−p):
+ρ=
+p x †
+x R
+
+, σ=
+q y †
+y S
+
+.(1)
+Recently, de Le´ on [1] derived the normal form Λ( X) = AXA† + Φ(f⊥
+1 Xf ⊥
+1 ) with A = 1 ⊕T ,
+T†T⪯I D−1 (Theorem 1), bounded Kraus ranks by 1 + D(D− 1) (Corollary 3), and proved
+(Theorem 2 and Corollary 4 of [ 1]) that deterministic convertibility ρ−→σ holds if and only
+if there exists a contraction T∈M D−1(C) (∥T∥∞ ≤ 1) satisfying the positive semidefinite
+remainder condition
+∆T :=σ−(1⊕T)ρ(1⊕T) † =
+ q−p(y−T x) †
+y−T x S−T RT †
+
+⪰0.(2)
+For qubits ( D = 2), the two endpoint scalar monotones—geometric texture Tg(ρ) = 1 −p
+and texture weight Tw(ρ) = 1 −c 0(ρ), where c0(ρ) = p−x †R+x is the maximal free-state
+fraction—are necessary and sufficient [ 3, 4]. In Section V.D of [ 1], however, de Le´ on exhibited
+an explicit qutrit pair ( ρ, σ) obeying both Σ( σ) > Σ(ρ) and c0(σ) = c0(ρ) yet failing (2), and
+traced the reachability boundary of the qutrit family σε(q, r) numerically by solving the complex
+SDP (2) at each grid point.
+In this paper we completely resolve the higher-dimensional scalar-monotone structure of
+QST. Table 1 summarizes our three main results relative to [1].
+2 Theorem 1: Complete Scalar Resolvent Characterization in
+Arbitrary DimensionD≥2
+Definition 1(QST Resolvent Monotones).For any state ρ∈ D(CD) with adapted block
+form (1) and anyλ∈(0,∞), define theresolvent monotone
+cλ(ρ) :=p−x †(R+λI D−1)−1x.(3)
+2
+
+--- Page 3 ---
+Because R⪰ 0 and λ >0, R+λID−1 ≻ 0 is always strictly invertible even when R is singular.
+Diagonalizing R = PD−1
+j=1 rj|vj⟩⟨vj| gives cλ(ρ) = p− PD−1
+j=1
+|⟨vj|x⟩|2
+rj+λ , which is immediately seen
+to be smooth, nondecreasing (strictly increasing whenever x̸ = 0), and concave on (0 ,∞), with
+exact boundary limits
+lim
+λ→0+
+cλ(ρ) =p−x †R+x= 1− Tw(ρ),lim
+λ→∞
+cλ(ρ) =p= Σ(ρ)
+D = 1− Tg(ρ).
+Furthermore, applying the Schur complement identity to the (0 , 0) entry of (ρ + λID)−1 yields
+the exact spectral representation
+gρ(λ) :=⟨f 1|(ρ+λI D)−1|f1⟩=
+DX
+k=1
+wk
+µk +λ = 1
+λ+c λ(ρ),(4)
+whereρ= PD
+k=1 µk|ψk⟩⟨ψk|is a spectral decomposition ofρandw k :=|⟨ψ k|f1⟩|2.
+Theorem 2(Complete Resolvent Characterization of QST Convertibility).Let D≥ 2and let
+ρ, σ∈ D(CD)have block forms(1). The following four conditions are equivalent:
+(i)ρ−→σ under QST free operations (i.e. ∃T∈M D−1(C)with ∥T∥∞ ≤ 1and σ⪰
+(1⊕T)ρ(1⊕T) †);
+(ii)c λ(σ)≥c λ(ρ)for allλ∈(0,∞);
+(iii)g σ(λ)≤g ρ(λ)for allλ∈(0,∞);
+(iv)∥σ−tf 1∥1 ≤ ∥ρ−tf1∥1 for allt≥0.
+Moreover, for every strictly separating Hermitian witness H, any sufficiently small positive
+perturbation Hδ = H + δID ≻ 0(still separating σ from R(ρ)) decomposes into∆ 0,δf1 (testing
+c∞) plus at most D− 1finite resolvent evaluations cλj+δ(ρ)( λj + δ >0), and deciding ρ−→σ
+reduces to testing nonnegativity on(0 ,∞)of a single univariate polynomial Pρ,σ(λ)of degree at
+most2D−2.
+Proof. (ii)⇔(iii).Immediate from (4), sinceλ+c λ(ρ)>0 for allλ >0.
+(ii) ⇔ (iv).Since f1 = |f1⟩⟨f1| has rank 1 and ρ⪰ 0, Cauchy’s eigenvalue interlacing
+theorem implies that for every t≥ 0 the Hermitian matrix ρ−tf 1 has at most one negative
+eigenvalue −λρ(t) ≤ 0, so ∥ρ−tf 1∥1 = Tr(ρ−tf 1) + 2λρ(t) = 1 −t + 2λρ(t). For t≤c 0(ρ),
+ρ−tf 1 ⪰ 0 and λρ(t) = 0; for t > c0(ρ), λ = λρ(t) > 0 is the unique positive root of
+det(ρ + λID −tf 1) = 0 ⇐⇒ 1 −tg ρ(λ) = 0 ⇐⇒λ + cλ(ρ) = t. Because λ7→λ + cλ(ρ) is
+strictly increasing on (0 ,∞) (derivative ≥ 1), λσ(t) ≤λ ρ(t) for all t≥ 0 holds iff cλ(σ) ≥c λ(ρ)
+for allλ >0.
+(i) ⇒ (ii) (Necessity).Suppose ∥T∥∞ ≤ 1 (so T T† ⪯I D−1) and σ⪰ (1 ⊕T )ρ(1 ⊕T )†. For
+anyλ >0, addingλ(0⊕I D−1)⪰λ(0⊕T T †) yields
+q y †
+y S+λI D−1
+
+⪰
+1 0
+0T
+ p x †
+x R+λI D−1
+1 0
+0T †
+
+.
+Multiplying on the left by v† =
+ 
+1,−y †(S + λID−1)−1
+and on the right by v, the left-hand side
+equalsc λ(σ) while the right-hand side equals
+ 
+1z †p x †
+x R+λI D−1
+1
+z
+
+≥min
+u∈CD−1
+ 
+p+ 2 Re(u†x) +u †(R+λI D−1)u
+
+=c λ(ρ),
+wherez=−T †(S+λI D−1)−1y. Thusc λ(σ)≥c λ(ρ) for allλ >0.
+(ii) ⇒ (i) (Self-contained Sufficiency via Simultaneous Congruence Diagonalization).Let
+R(ρ) := {τ∈ D(CD) : ∃∥T∥ ∞ ≤ 1, τ⪰ (1 ⊕T )ρ(1 ⊕T )†} be the reachable set from ρ. By (2)
+and De Le´ on’s Theorem 2,R(ρ) is a compact convex subset of D(CD) (being the image of the
+3
+
+--- Page 4 ---
+compact convex set of QST channels). By the hyperplane separation theorem, σ∈ R(ρ) iff
+Tr(Hσ)≥min τ∈R(ρ) Tr(Hτ) for every HermitianH∈M D(C).
+Fix any Hermitian H, and shift H←H−λ min(H)ID so that H⪰ 0 and λmin(H) = 0 with
+a unit nullvector |v0⟩ (H|v0⟩ = 0). For any contraction T, setting τ = (1 ⊕T )ρ(1 ⊕T )† +
+ 
+1 −
+Tr[(1 ⊕T )ρ(1 ⊕T )†]
+
+|v0⟩⟨v0| ∈ R(ρ) attains Tr(Hτ ) = Tr
+ 
+(1 ⊕T †)H(1 ⊕T )ρ
+
+; conversely, every
+τ∈ R(ρ) has ∆T ⪰0 and Tr(H∆ T )≥0, so
+min
+τ∈R(ρ)
+Tr(Hτ) = min
+T T†⪯ID−1
+h
+h0p+ 2 Re(w†T x) + Tr(T†H1T R)
+i
+,(5)
+where H =
+
+h0 w†
+w H1
+
+⪰ 0. Fix an arbitrary perturbation δ >0, and replace H by Hδ := H+δID ≻
+0 (so H1,δ := H1 + δID−1 ≻ 0) and R by Rδ := R + δID−1 ≻ 0, with ρδ :=
+
+p+δ x†
+x R δ
+
+≻ 0.
+Consider the strictly convex primal problem
+vδ := min
+T T†⪯ID−1
+fδ(T), f δ(T) := (h0 +δ)(p+δ) + 2 Re(w †T x) + Tr(T†H1,δT Rδ).
+Its Lagrangian with dual multiplierM⪰0 forT T † ⪯I D−1 is
+Lδ(T, M) = (h 0 +δ)(p+δ) + 2 Re(w †T x) + Tr(T†H1,δT Rδ) + Tr
+ 
+M(T T† −I D−1)
+
+.
+Because T = 0 satisfies I−T T † = ID−1 ≻ 0 (strict Slater feasibility), strong duality holds:
+vδ = maxM⪰0 minT Lδ(T, M). Fix an optimal M⪰ 0. Since H1,δ ≻ 0 and M⪰ 0, simultaneous
+congruence diagonalization yields an invertible matrixP∈GL D−1(C) such that
+P†H1,δP=I D−1, P †MP= Λ := diag(λ 1, . . . , λD−1) (λ j ≥0).
+Set Q := P−1 (with rows q†
+1, . . . , q†
+D−1, so H1,δ = Q†Q = PD−1
+j=1 qjq†
+j and M = Q†ΛQ =PD−1
+j=1 λjqjq†
+j), ˜w:= P†w (so w = Q† ˜w= PD−1
+j=1 ˜wjqj), and ˜T := QT (with rows ˜t†
+j). Substituting
+into Lδ(T, M) decouples the matrix optimization into D− 1 independent unconstrained vector
+quadratics:
+Lδ(T, M) = (h0 +δ)(p+δ)−
+D−1X
+j=1
+λj∥qj∥2
+2 +
+D−1X
+j=1
+
+˜t†
+j(Rδ +λ jID−1)˜tj + 2 Re( ˜w∗
+j ˜t†
+jx)
+
+.
+Because Rδ + λjID−1 ≻ 0, the unique stationary point is ˜tj = −˜w∗
+j (Rδ + λjID−1)−1x (so
+˜t†
+j = −˜wjx†(Rδ +λjID−1)−1, solving the rank-1-RHS Sylvester equation H1,δT Rδ +MT = −wx†),
+yielding the exact dual value
+vδ = ∆ 0,δ(p+δ) +
+D−1X
+j=1
+
+|˜wj|2 
+p+δ−x †(Rδ +λ jID−1)−1x
+
+−λ j∥qj∥2
+2
+
+,(6)
+where ∆0,δ := (h0 +δ)−w †H−1
+1,δ w= (h 0 +δ)− PD−1
+j=1 |˜wj|2 >0 becauseH δ ≻0.
+Now observe thatH δ decomposes identically as
+Hδ = ∆ 0,δ
+1 0
+0 0
+
++
+D−1X
+j=1
+ ˜w∗
+j
+qj
+
+˜wj q†
+j
+
+.
+By hypothesis (ii), for every λj ≥ 0 we have cλj+δ(σ) ≥c λj+δ(ρ) = p−x †(Rδ + λjID−1)−1x,
+which by Schur complement is equivalent to
+q−c λj+δ(ρ)y †
+y S+ (λ j +δ)I D−1
+
+⪰0.
+4
+
+--- Page 5 ---
+Contracting this positive semidefinite matrix with ( ˜w∗
+j , qj)T gives
+
+˜wj q†
+j
+
+(σ+δI D)
+ ˜w∗
+j
+qj
+
+≥ |˜wj|2 
+cλj+δ(ρ) +δ
+
+−λ j∥qj∥2
+2.
+Also q + δ≥p + δ (since q = c∞(σ) ≥c ∞(ρ) = p). Summing ∆ 0,δ(q + δ) and the D− 1
+inequalities above yields Tr
+ 
+Hδ(σ + δID)
+
+≥v δ; in particular, whenever H strictly separates σ
+from R(ρ), taking δ >0 small enough that Hδ still separates σ from R(ρ) explicitly exhibits the
+decomposition of Hδ into ∆0,δf1 (c∞) plus at most D− 1 finite resolvent evaluations cλj+δ(ρ).
+Letting δ→ 0+ (note vδ →min τ∈R(ρ) Tr(Hτ ) by compactness of {T : ∥T∥∞ ≤ 1}) gives
+Tr(Hσ)≥min τ∈R(ρ) Tr(Hτ) for every HermitianH, henceσ∈ R(ρ).
+Finally, clearing the common positive denominatorQD−1
+i=1 (ri+λ) QD−1
+j=1 (sj +λ) of cλ(σ)−cλ(ρ)
+produces a univariate polynomial Pρ,σ(λ) of degree at most 2 D− 2 whose nonnegativity on
+(0,∞) is equivalent toρ−→σ.
+Remark3 (Relation to pure-reference quantum dichotomies).Because QST free convertibility
+ρ−→σ is the quantum dichotomy problem ( ρ, f1) −→(σ, f1) with apurereference state f1,
+the equivalence (i)⇔(iv) aligns with pure-reference dichotomy characterizations in quantum
+statistical comparison [ 5, 6, 7]. Theorem 2 provides a completely self-contained, elementary
+linear-algebraic proof directly from de Le´ on’s contraction criterion(2) while uncovering both
+the explicit resolvent formc λ(ρ) and the sharpD−1 dual-parameter bound.
+3 Theorem 2: Exact Closed-Form Qutrit Boundaries (Zero
+SDPs)
+We say a state ρ hasrank-1coherenceif x∈ker (R−r 0ID−1) for some eigenvalue r0 > 0 (i.e. x
+lies in a single eigenspace of R; this covers every qubit state, de Le´ on’s counterexample, and
+de Le´ on’s entire two-parameter qutrit familyσε(q, r) of Section V.D). Then cλ(ρ) = p− x2
+0
+r0+λ
+wherex 0 =∥x∥ 2.
+Theorem 4(Closed-Form Two-Regime Boundary and Analytic Solution of de Le´ on’s Fig. 3).
+Let D≥ 2, and suppose ρ has rank-1coherence( p, x0, r0)with x0 > 0, r0 > 0, while σ has rank-1
+coherence(q, y0, s0)withy 0 ≥0, s0 >0.
+(a) Exact two-regime characterization.Letting∆ q := q−p , deterministic conversion
+ρ−→σholds if and only if∆ q ≥0and
+y0 ≤y max(q, s0) :=
+
+
+
+q
+s0
+ 
+∆q +x 2
+0/r0
+
+, s 0 ≤r 0 + r2
+0∆q
+x2
+0
+(texture-weight),
+x0 +
+p
+∆q(s0 −r 0), s 0 > r0 + r2
+0∆q
+x2
+0
+(resolvent-interior).
+(7)
+The two branches meet with C1 tangency at s∗
+0 = r0 + r2
+0∆q
+x2
+0
+. Moreover, the exact boundary
+is achieved by the explicit rank-1contraction T∗ = t∗|ˆy⟩⟨ˆx|with contractive scalar t∗ =
+x0ymax
+r0∆q+x2
+0
+=
+q s0
+r0+r2
+0∆q/x2
+0
+≤ 1(strictly < 1for s0 < s∗
+0,= 1at s0 = s∗
+0) in the texture-weight
+regime, and norm-saturating t∗ = 1( ∥T∗∥∞ = 1, with unique finite resolvent contact
+λ∗ = x0
+q
+s0−r0
+∆q −r 0 > 0when∆ q > 0, and asymptotic contact λ→ ∞when∆ q = 0) in
+the resolvent-interior regime.
+(b) Instant scalar obstruction on de Le´ on’s Section V.D counterexample.For ρ
+(p = 3
+10, x2
+0 = 1
+50, r0 = 1
+10) and σ (q = 4
+10, y2
+0 = 9
+50, s0 = 3
+5) of Eq. (64) in [ 1], cλ(σ)−cλ(ρ) =
+5
+
+--- Page 6 ---
+λ(10λ−9)
+(10λ+1)(10λ+6) is strictly negative on the entire open interval λ∈ (0, 9/10), yielding the
+explicit rational scalar obstruction
+c3/20(ρ) = 11
+50, c 3/20(σ) = 4
+25, c 3/20(σ)−c 3/20(ρ) =− 3
+50 <0,
+and exact maximum reachable coherencey max =
+√
+2+
+√
+5
+10 ≈0.365028< 3
+√
+2
+10 ≈0.424264.
+(c) Exact analytic formula for de Le´ on’s Fig. 3 family σε(q, r).For σε(q, r) = (1 −
+ε)
+q r0
+r1−q0
+0 0 0
+
++ ε
+3I3 with qε = (1 −ε )q + ε
+3, sε = (1 −ε )(1 −q ) + ε
+3, and qε ≥ 3
+10, the exact
+reachability boundary is
+rmax(ε, q) = min
+p
+q(1−q), ymax(qε, sε)
+1−ε
+
+,
+ymax(qε, sε) =
+
+
+
+q
+sε(qε − 1
+10), s ε ≤ 1
+10 +
+qε− 3
+10
+2 ,
+q
+1
+50 +
+q
+(qε − 3
+10)(sε − 1
+10), s ε > 1
+10 +
+qε− 3
+10
+2 ,
+(8)
+with exact critical transitionq ∗(ε) = 63−50ε
+90(1−ε) forε∈[0,1)(in particularq ∗(0) = 7/10).
+Proof. By Theorem 2, ρ−→σ holds iff ∆q = q−p≥ 0 and q− y2
+0
+s0+λ ≥p− x2
+0
+r0+λ for all λ >0,
+i.e.
+y2
+0 ≤inf
+λ≥0
+φ(λ), φ(λ) := (s 0 +λ)
+
+∆q + x2
+0
+r0 +λ
+
+.
+Set u := r0+λ≥r 0 and ∆s := s0−r0, so φ(λ) = (u+∆s)(∆q +x2
+0/u) = (∆q∆s+x2
+0)+∆qu+ x2
+0∆s
+u .
+Case 1 (∆ qr2
+0 ≥x 2
+0∆s, i.e.s 0 ≤s ∗
+0 :=r 0 +r 2
+0∆q/x2
+0):For everyλ≥0,
+φ(λ)−φ(0) = λ
+
+∆qr0(r0 +λ)−x 2
+0∆s
+
+r0(r0 +λ) ≥0,
+so the unique minimum is φ(0) = s0(∆q + x2
+0/r0). Taking T∗ = t∗|ˆy⟩⟨ˆx|with t∗ = x0ymax
+r0∆q+x2
+0
+=
+p
+s0/s∗
+0 ≤ 1 satisfies t∗x0ymax = s0x2
+0/r0 and (t∗)2(r0∆q + x2
+0) = s0x2
+0/r0, whence ∆ q(s0 −
+(t∗)2r0) −(ymax −t ∗x0)2 = 0 identically (when ∆q = 0, t∗ =
+p
+s0/r0 ≤ 1 gives ymax −t ∗x0 = 0
+and s0 − (t∗)2r0 = 0), certifying exact reachability. (Note that in D = 2, r0 = 1 −p and
+s0 = 1−q, so ∆ q ≥0 =⇒∆ s =−∆ q ≤0, which is why Case 1 always holds for qubits!)
+ Case 2 ( s0 > r0 + r2
+0∆q/x2
+0, so∆ s > 0):For ∆ q = 0, infu≥r0 φ = x2
+0 (attained as u→ ∞),
+matching y0 ≤x 0 and achieved by T∗ = |ˆy⟩⟨ˆx|since y0 = x0 gives y−T ∗x = 0 and
+S−T ∗R(T∗)† ⪰ 0. For ∆q > 0, writing a =
+p
+∆q and b = √∆s gives the exact square identity
+(u+b 2)(a2u+x 2
+0)−u(x 0 +ab) 2 = (au−x 0b)2 ≥0,
+with unique zero at u∗ = x0b/a = x0
+p
+∆s/∆q > r0 (i.e. λ∗ = u∗ −r0 > 0). Taking T∗ = |ˆy⟩⟨ˆx|
+(∥T∗∥∞ = 1) gives (QT∗)ˆyˆy= ∆s − (y0 −x 0)2/∆q ≥ 0 ⇐⇒ |y0 −x 0| ≤
+p
+∆q∆s, achieving
+ymax =x 0 +
+p
+∆q∆s identically.
+Parts (b) and (c) follow immediately by substituting ( p, x2
+0, r0) = ( 3
+10, 1
+50, 1
+10) into (7), where
+r2
+0/x2
+0 = 1/2.
+Figure 1 illustrates Theorem 4: panel (a) displays the scalar obstruction curve cλ(σ) −c λ(ρ)
+on de Le´ on’s counterexample, and panel (b) plots the closed-form two-regime boundary(8) for
+ε∈ {0,0.03,0.15}.
+6
+
+--- Page 7 ---
+Figure 1:Scalar resolvent obstruction and closed-form qutrit reachability (Theorem 4).
+(a) Resolvent curves cλ(ρ) vs. cλ(σ) on de Le´ on’s Eq. (64), exposing the obstruction interval
+λ∈ (0, 9/10) and rational witness c3/20(σ)−c3/20(ρ) = −3/50. (b) Exact closed-form two-regime
+reachability boundaries rmax(ε, q) from Eq. (8) for de Le´ on’s Fig. 3 family (matching numerical
+CLARABEL SDPs to<5×10 −9), with exactC 1 transitionq ∗(0) = 7/10.
+4 Theorem 3: Quantum-Coherence Advantage Beyond Black-
+well Majorization, Kraus Rank, and Dilution
+By (4), cλ(ρ) depends solely on the eigenbasis spectral measure νρ = PD
+k=1 wkδµk (wk =
+|⟨ψk|f1⟩|2). If the pair ( νρ, νσ) satisfies classical spectral-measure Blackwell (convex-decreasing)
+dominance,
+Bσ(t) :=
+DX
+k=1
+vk(t−ν k)+ ≤
+DX
+j=1
+wj(t−µ j)+ =:B ρ(t) (∀t≥0),
+then integrating against the convex decreasing kernel x7→ (x + λ)−1 immediately implies
+gσ(λ) ≤g ρ(λ) for all λ >0, hence ρ−→σ by Theorem 2. Does the converse hold? Theorem 5(a)
+proves that in dimension D≥ 3 the answer isstrictly no: quantum coherence genuinely enlarges
+QST convertibility beyond classical spectral-measure Blackwell dominance.
+Theorem 5(Quantum Advantage Beyond Spectral-Measure Blackwell Dominance, Kraus Rank,
+and Dilution).
+(a) Exact rational qutrit separation from spectral-measure Blackwell dominance.
+Consider the full-rank rational qutrit states (in the adapted basis{|f 1⟩,|e 1⟩,|e 2⟩})
+ρ=
+
+
+29
+125
+12
+125 0
+12
+125
+11
+125 0
+0 0 17
+25
+
+, σ=
+
+
+397
+1250
+102
+625 0
+102
+625
+139
+625 0
+0 0 23
+50
+
+,(9)
+whose eigenvalues and f1-weights are µ = ( 1
+25, 7
+25, 17
+25), w = ( 1
+5, 4
+5, 0)and ν = ( 1
+10, 11
+25, 23
+50),
+v= ( 9
+25, 16
+25,0). Then:
+g ρ(λ) −g σ(λ) = 66875λ2+7150λ+1079
+5(10λ+1)(25λ+1)(25λ+7)(25λ+11) > 0for all λ≥ 0, and T = diag(1, 0)yields
+a strictly positive-definite remainder∆ T = σ− (1 ⊕T )ρ(1 ⊕T )† ≻ 0( det2×2 = 546
+78125 > 0)
+and a4-Kraus QST channel realizingρ−→σ;
+yet spectral-measure Blackwell (convex-decreasing) dominancefails strictlyatt= 7/25:
+Bσ(7/25) = 81
+1250 = 0.0648> 6
+125 = 0.0480 =B ρ(7/25)
+
+violation+ 21
+1250
+
+.
+7
+
+--- Page 8 ---
+(b) Sharp boundary Kraus-rank reduction.For any convertible pair ρ−→σ in dimension
+D≥ 2with optimal contraction T and remainder∆ T = σ− (1 ⊕T )ρ(1 ⊕T )†, the normal-
+form channel of de Le´ on’s Theorem 2 has minimal Kraus rank1 + rT max(1, r∆)(i.e.
+1 + rT r∆ when∆ T ̸= 0, and1 + rT via any pure completion state ω when∆ T = 0), where
+rT = rank(ID−1 −T †T) ≤D− 1and r∆ = rank(∆T ) ≤D . On any sharp boundary
+conversion with rank-≤ 1remainder ( r∆ ≤ 1, including all pure-target conversions and the
+exact ε = 0( S⊥ = 0) boundary of Theorem 4(c)), the Kraus rank is at most D, saving
+(D−1) 2 Kraus operators over de Le´ on’s Corollary 3 bound1 +D(D−1)(and reaching2
+wheneverr T = 1andr ∆ ≤1).
+(c) Exact free-state mixing scaling.Mixing any target σ with the free state f1 via σα :=
+(1−α)σ+αf 1 (α∈[0,1)) obeys the exact resolvent scaling law
+cλ(σα) =α+ (1−α)c λ/(1−α)(σ) (∀λ >0).(10)
+In particular, the exact minimal free-state dilution threshold αmin(ρ→σ ) := inf{α∈ [0, 1] :
+ρ−→σ α} is characterized purely by α+(1−α)cλ/(1−α)(σ) ≥c λ(ρ)for all λ >0; on de Le´ on’s
+counterexample [1], Theorem 4(a) yields the exact algebraic root αmin = 8−
+√
+46
+18 ≈ 0.06765
+(from18α 2 −16α+ 1 = 0).
+Proof. Part (a).Direct trace and determinant checks verify ρ, σ≻0, Trρ = Trσ = 1, and that
+the 2 × 2 top-left blocks have characteristic polynomials ( µ− 1
+25)(µ− 7
+25) and (ν− 1
+10)(ν− 11
+25)
+with exact weights w = (1/5, 4/5, 0) and v = (9/25, 16/25, 0). Partial-fraction combination gives
+gρ(λ)−g σ(λ) = 66875λ2+7150λ+1079
+5(10λ+1)(25λ+1)(25λ+7)(25λ+11) >0 on [0,∞). WithT= diag(1,0),
+∆T =σ−(1⊕T)ρ(1⊕T) † =
+
+
+107
+1250
+42
+625 0
+42
+625
+84
+625 0
+0 0 23
+50
+
+ ≻0,
+since 107
+1250 · 84
+625 − ( 42
+625)2 = 546
+78125 > 0 and Tr(∆T ) = 17
+25 = Tr[(I2 −T †T)R]. Writing ω =
+∆T /Tr(∆T ) = P3
+a=1 ωa|χa⟩⟨χa|, the 4 Kraus operators K0 = diag(1, 1, 0) and Ka = √ωa|χa⟩⟨e2|
+(a = 1, 2, 3) satisfy P3
+i=0 K†
+i Ki = I3, Λ(f1) = f1, and Λ( ρ) = σ. At t = 7/25, Bσ(7/25) =
+9
+25( 7
+25 − 1
+10) = 81
+1250 whileB ρ(7/25) = 1
+5( 7
+25 − 1
+25) = 6
+125 = 60
+1250.
+Part (b).Writing ID−1 −T †T = PrT
+b=1 γb|ξb⟩⟨ξb| (γb > 0), when ∆ T ̸= 0 we set ω =
+∆T /Tr(∆T ) = Pr∆
+a=1 ωa|χa⟩⟨χa| (ωa > 0), so Φ(Z) = Tr[(ID−1 −T †T)Z] ω has minimal Kraus
+representation Ka,b = √ωaγb|χa⟩⟨ξb| of rank rT r∆, giving total Kraus rank 1 + rT r∆. When
+∆T = 0 (possible if ID−1 −T †T is supported on kerR ), CPTP completion requires choosing
+any density state ω (rankω≥ 1), minimized at a pure state ω = |χ⟩⟨χ| with Kraus operators
+Kb = √γb|χ⟩⟨ξb|, yielding total Kraus rank 1 + rT = 1 + rT max(1, r∆). For r∆ ≤ 1, 1 + rT ≤
+1 + (D−1) =D, saving 1 +D(D−1)−D= (D−1) 2.
+Part (c).The block form ofσ α is
+ 
+(1−α)q+α,(1−α)y,(1−α)S
+
+, whence
+cλ(σα) =α+ (1−α)q−(1−α) 2y† 
+(1−α)S+λI D−1
+−1y=α+ (1−α)c λ/(1−α)(σ).
+Figure 2 visualizes Theorem 5, highlighting the strict spectral-measure Blackwell violation
+interval of the convertible rational qutrit pair (9) and the (D− 1)2 Kraus-rank saving across
+D= 2, . . . ,10.
+5 Formal Verification in Lean 4.35.0 and Zero-Float Certification
+Every algebraic identity, boundary inequality, and separation certificate in Sections 2–4 is verified
+through two independent machine-checked layers:
+8
+
+--- Page 9 ---
+Figure 2:Strict quantum advantage beyond spectral-measure Blackwell dominance
+and boundary Kraus-rank reduction (Theorem 5).(a) Spectral-measure Blackwell convex
+tests Bρ(t) vs. Bσ(t) on the rational qutrit pair (9): classical convex-decreasing dominance fails
+by +21/1250 at t = 7/25, yet ρ−→σ holds via an explicit 4-Kraus QST channel. (b) Sharp
+rank-≤ 1-remainder Kraus-rank ceiling D vs. de Le´ on’s Corollary 3 ceilings 1 +D(D− 1) and
+1 + (D−1) 2.
+1. Constructive Lean 4.35.0 suite ( lean/QstResolventComplete.lean):Contains 18 for-
+mally proved theorems covering resolvent monotonicity and concavity in λ, endpoint sand-
+wiching, the Sherman–Morrison spectral identity, the rational scalar obstruction c3/20(σ) −
+c3/20(ρ) = −3/50 and exact rmax gap on de Le´ on’s counterexample (Eq. (64)), the ex-
+act AM-GM interior identity ( u + b2)(a2u + x2
+0) −u (x0 + ab)2 = ( au−x 0b)2 ≥ 0, the
+texture-weight boundary regime, C1 value and slope tangency, unit-norm contraction T∗,
+all three parts of the exact rational qutrit separation witness (positive resolvent numerator
+66875a2 + 7150ab + 1079b2 > 0, strictly PSD remainder ∆ T , and spectral-measure Blackwell
+violation +21/1250), dual parameter/degree bounds, free-state mixing scaling, pure-target
+resolvent reduction, Kraus-rank saving (D− 1)2, and the exact Fig. 3 transition q∗(0) = 7/10.
+Auditing #print axioms confirms 0 sorry, 0 Classical.choice, 0 custom axioms (only
+[propext, Quot.sound]), and0 warnings.
+2. AST-audited zero-float verifier and 56 adversarial tests:The script verify all.py
+(under verification/) uses exclusively integer and fractions.Fraction arithmetic to
+emit 16 SHA-256-hashed JSON certificates ( certificates/MANIFEST.json). A compan-
+ion suite of 56 adversarial pytest tests independently cross-checks the AST zero-float in-
+variant, CLARABEL SDP agreement across 75 random mixed-state pairs in D = 3, 4, 5,
+support-function equality minR(ρ) Tr(Hτ ) = minC(ρ) Tr(Hτ ), the non-commuting Sylvester
+simultaneous-diagonalization identity in D = 4, all 10 Fig. 3 boundary points to < 10−7,
+non-degenerate r0 ̸= x0 texture-weight contraction t∗, and explicit CPTP verification of the
+4-Kraus separation channel.
+6 Conclusion
+We have established that deterministic convertibility in the resource theory of quantum-state
+texture never requires a ( D− 1)2-variable complex SDP in any finite dimension D≥ 2: it is
+completely decided by the one-parameter scalar resolvent family cλ(ρ) = p−x †(R + λID−1)−1x,
+proved directly via simultaneous congruence diagonalization of the Sylvester Lagrangian dual.
+This collapses de Le´ on’s Fig. 3 qutrit reachability curves to exact closed-form two-regime
+square-root formulas, exposes a purely rational qutrit witness proving strict quantum-coherence
+advantage over classical spectral-measure Blackwell dominance, and tightens rank-≤ 1-remainder
+9
+
+--- Page 10 ---
+boundary Kraus ranks by ( D− 1)2. Extending this resolvent-duality technique to multi-copy
+catalytic QST convertibility and approximate trace-distance conversion errors is a natural next
+step.
+References
+[1] J. A. de Le´ on,State convertibility in quantum-state texture from a general form of free
+operations, arXiv:2611.34865v1 (2026).
+[2] F. Parisio,Quantum-state texture, Phys. Rev. A109, 022437 (2024).
+[3] Z. Lin et al.,Quantum-state texture of single-qubit states, Phys. Rev. A (2026).
+[4] J. A. de Le´ on,Reachability and monotones in single-qubit quantum-state texture, arXiv
+preprint (2026).
+[5] K. Matsumoto,Reverse test and characterization of quantum relative entropy, arXiv:1010.1030
+(2010).
+[6] F. Buscemi and G. Gour,Quantum relative Lorenz curves, Phys. Rev. A95, 012110 (2017).
+[7] G. Gour, D. Jennings, F. Buscemi, R. Duan, and I. Marvian,Quantum majorization and a
+complete set of entropic conditions for quantum thermodynamics, Nat. Commun.9, 5352
+(2018).
+10
