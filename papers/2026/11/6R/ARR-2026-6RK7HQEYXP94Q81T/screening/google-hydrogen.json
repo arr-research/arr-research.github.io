@@ -1,0 +1,59 @@
+{
+  "assessed_at": "2026-11-26T01:42:04Z",
+  "canonical_sha256": "912a98dff46c407a289b5f65e4c9ecc3563c738211dbb38ad58ded88c45c2627",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All explicitly worked witnesses (C01, C05, C07, C11, C12, C15, C16), stated algebraic identities (Theorems 6, 7, 10, 13-15), and numeric figures in the PDF check out exactly by hand calculation. Full confidence is moderated because the Lean 4 theorem types and Python verifier source are external to the 4-page PDF.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "The paper provides a companion formalization and exact-arithmetic certificate protocol for finite algebraic, exterior, CAT(0), mean-width, and routing/diagonalization lemmas from an external preprint [4]. It proves no new asymptotic tensor-spectrum theorems itself, representing a modest, well-scoped verification contribution.",
+      "stars": 2
+    },
+    "reproducibility": {
+      "basis": "The manuscript specifies exact rational bounds, AST zero-float/zero-division constraints, SHA-256 manifest gates, and 7 fully worked hand-verifiable certificates (C01, C05, C07, C11, C12, C15, C16) whose numbers match Tables 1-2 and Figures 1-3, though the code and JSON corpus themselves are not embedded in the PDF.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Scope boundaries in Section 1 honestly exclude infinite-dimensional ultrafilters and Gaussian concentration, and zero-float arithmetic is enforced cleanly. Minor rigor gaps in the PDF include missing formal Lean type signatures for 12 of 19 theorems, no proof text for Proposition 1, and an incomplete prose spec of Mode 1 vs. C04 and C03.",
+      "stars": 3
+    },
+    "significance": {
+      "basis": "As a companion artifact auditing finite-dimensional witnesses of an unrefereed 86-page preprint, it offers useful sanity checks and reusable exact-arithmetic tooling for tensor-spectrum and CAT(0) invariants, though its standalone mathematical impact is limited by the elementary finite nature of the certified claims.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.35,
+  "model_id": "hydrogen",
+  "overall_stars": 3,
+  "paper_id": "ARR-2026-6RK7HQEYXP94Q81T",
+  "potential_errors": [
+    "Definition 1(1) states that for k=2, Mode 1 certifies strict geometric-mean non-additivity (P_oplus - P_U - P_V)^2 > 4 P_U P_V with P_oplus > P_U + P_V, yet Table 2 reports C04 (Mode 1, 2-cut over F_5) as 'Proportional additive control | PASS', which satisfies equality rather than strict inequality.",
+    "Table 2 summarizes C02 as 'Char-2 invariance; 2 > 1' without defining the '2 > 1' inequality, whereas the Abstract and Witness C01 state C02 reproduces the 3 > 2*sqrt(2) (i.e., 9 > 8) obstruction over F_2.",
+    "Definition 1(1) for k >= 3 writes only '(u_hi + v_hi)^k < P_oplus', omitting the required upper-bracket checks P_U <= u_hi^k and P_V <= v_hi^k needed to conclude G(U) + G(V) < G(U + V).",
+    "Witness C15 on page 3-4 evaluates (s/2) D_f(x', x) - P = (1/4)*1 - 1/8 = 1/8 > 0 without explicitly specifying P = 1/8 in the preceding parameter list."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Transparent 'Honest Scope Boundary' in Section 1 clearly delineates certified finite-dimensional algebraic/metric invariants from unformalized infinite-dimensional ultrafilter, concentration, and simulation parts of [4].",
+    "Exact hand-verifiable arithmetic in Section 4.1 across seven representative certificates (C01, C05, C07, C11, C12, C15, C16) checks out completely, including the 4x4 compound minor matrix P^[2] and signed Cauchy-Binet determinant det(C^[2]) = -1 in C07, the KKT/Bregman check in C15, and the Eq. (16.1) diagonalization gap in C16.",
+    "Consistent numerical cross-alignment across prose, Table 2, and Figures 1-3 (including the 0.50 ratio in Fig. 1(b) matching the cleared-denominator 4 < 12 midpoint inequality in C10 on the unit-arm tripod).",
+    "Clean zero-floating-point verification design (AST checks prohibiting floats, true division, and math imports, plus bounded JSON with duplicate-key rejection)."
+  ],
+  "strong_novelty_candidates": [
+    "None; the manuscript is a companion formalization and exact-certificate verification artifact for finite-dimensional components of [4] rather than an independent mathematical breakthrough."
+  ],
+  "summary": "This 4-page manuscript introduces TENSOR-SPEC-CERT-1.0, a zero-floating-point exact-arithmetic certificate verifier over Z, Q, and F_p paired with 19 constructive Lean 4.35.0 theorems auditing finite-dimensional algebraic, exterior-algebra, CAT(0), planar mean-width, and routing/diagonalization invariants from OpenAI's November 24, 2026 preprint [4]. The scope is honestly bounded, and all explicitly presented identities, worked witnesses, and figures in the PDF are mathematically consistent and verified by hand calculation, though full auditability of the Lean kernel and Python verifier requires inspecting external files not included in the PDF, and minor specification discrepancies appear in Definition 1(1) and Table 2.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:6b982f08-b923-4200-896f-3acf870a38a9",
+  "weaknesses": [
+    "The PDF does not include the actual Lean 4 theorem type signatures or proofs (only informal summaries in Table 1 for most of the 19 declarations, with Theorem 7 explicitly scoped only to /\\^1 Z^2), preventing standalone verification from the PDF that all 19 Lean statements capture non-trivial hypotheses.",
+    "Proposition 1 (Verifier Soundness) is stated without a proof in the PDF, and the Python verifier implementation and remaining 9 JSON certificates (outside Section 4.1) are external to the paper.",
+    "Minor inconsistencies exist between prose definitions and Table 2 entries (C04 additive control vs. strict inequality in Def. 1(1), unexplained '2 > 1' in C02, and omitted lower/upper bracket clauses for k >= 3 in Def. 1(1)).",
+    "Table 1 counts 19 constructive theorems while its footnote designates #13 as a helper lemma supporting #14-#15."
+  ]
+}

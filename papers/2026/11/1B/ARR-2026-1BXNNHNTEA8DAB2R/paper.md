@@ -1,0 +1,512 @@
+# Constructive Algebraic and Spectral-Repair Certificates for the 1/2 Logarithmic Exponent of Finite Fourier Transforms
+
+**Author:** Lluis Eriksson  
+**AIRR Identifier:** `ARR-2026-1BXNNHNTEA8DAB2R` (v1)  
+**License:** CC-BY-4.0 (manuscript), MIT (verification repository)  
+**Verification Repository:** https://github.com/lluiseriksson/openai-fft-logarithmic-exponent-certificates (`v1.0.0`)  
+**Canonical PDF SHA-256:** `93b8db374425c7aaa113fc25db4ed76562dcde96414a6e15439734a5e17cc2a0`
+
+## Abstract
+
+We present FFT-EXP-HALF-CERT-1.0, an independently reproducible, zero-floating-point verification suite and constructive Lean 4.35.0 kernel auditing the finite-dimensional algebraic, geometric, nilpotent time-expansion, Hermite spectral-repair, and Bluestein chirp-specialization mechanisms of OpenAI's November 24, 2026 unrefereed preprint 'The logarithmic exponent of finite Fourier transforms' (Theorems 1.1, 1.2, 2.2, 4.1, and Corollary 8.2). Without claiming to formalize the preprint's Zariski-closure Grassmannian compactness or asymptotic recursion over arbitrary fields, we build a four-mode exact verifier over Z, Q, and F_p backed by 18 constructive Lean 4 theorems (0 sorry, 0 custom axioms, 0 Classical.choice, 0 warnings). Across 16 canonical certificates (C01-C16), we audit Lemma 2.3 two-phase controlled-addition swaps, Theorem 2.2 Pythagorean rectangle price excesses, and Proposition 2.4 force-disk midpoint rigidity, Lemma 3.3 nilpotent time-expansion rank/support decompositions of feedback linear systems and Lemma 3.2 block-echelon row quotients, Section 4.1/Lemma 4.2 integral parity-sign count predictors, Lemma 4.3 Potter/Clifford matrix linearizations L^b = pI, and Lemma 4.4 full-rate Hermite spectral repair for ell in {2,3}, and Section 5.1-5.2 Fourier query-product kernels, Hamming-distance Gram ranks over F_ell, and Corollary 8.2 Bluestein chirp convolution specialization. All 16 certificates, 70 unit/forgery tests, and 37 SHA-256 hashes verify deterministically.
+
+## Full Extracted Text
+
+--- Page 1 ---
+Constructive Algebraic and Spectral-Repair Certificates for
+the1/2Logarithmic Exponent of Finite Fourier Transforms
+Lluis Eriksson
+Independent Researcher (lluis@airr.science)
+Companion Verification Artifact to OpenAI Math Release (November 24, 2026)
+November 26, 2026
+Abstract
+We present FFT-EXP-HALF-CERT-1.0, an independently
+reproducible, zero-floating-point verification suite and con-
+structive Lean 4.35.0 kernel auditing the finite-dimensional
+algebraic, geometric, nilpotent time-expansion, Hermite
+spectral-repair, and Bluestein chirp-specialization mecha-
+nisms of OpenAI’s November 24, 2026 unrefereed preprint
+“The logarithmic exponent of finite Fourier transforms”
+(Theorems 1.1, 1.2, 2.2, 4.1, and Corollary 8.2). With-
+out claiming to formalize the preprint’s Zariski-closure
+Grassmannian compactness or asymptotic recursion over
+arbitrary fields, we build a four-mode exact verifier over
+Z, Q, and Fp backed by 18 constructive Lean 4 theorems
+(0 sorry, 0 custom axioms, 0 Classical.choice, 0 warn-
+ings). Across 16 canonical certificates ( C01–C16), we au-
+dit (i) Lemma 2.3 two-phase controlled-addition swaps,
+Theorem 2.2 Pythagorean rectangle price excesses, and
+Proposition 2.4 force-disk midpoint rigidity, (ii) Lemma 3.3
+nilpotent time-expansion rank/support decompositions of
+feedback linear systems and Lemma 3.2 block-echelon row
+quotients, (iii) Section 4.1/Lemma 4.2 integral parity-sign
+count predictors, Lemma 4.3 Potter/Clifford matrix lin-
+earizations Lb = pI, and Lemma 4.4 full-rate Hermite
+spectral repair for ℓ∈ {2, 3}, and (iv) Section 5.1–5.2
+Fourier query-product kernels, Hamming-distance Gram
+ranks over Fℓ, and Corollary 8.2 Bluestein chirp convo-
+lution specialization. All 16 certificates, 70 unit/forgery
+tests, and SHA-256 manifests pass deterministically.
+1 Introduction and Scope
+Since Cooley and Tukey’s O(NlogN ) fast Fourier trans-
+form [3], determining the intrinsic logarithmic cost of com-
+puting a finite abelian Fourier transform over binary lin-
+ear circuits with arbitrary scalars has remained a founda-
+tional question [4, 1]. In its November 24, 2026 unrefereed
+preprint [6], OpenAI establishes that the optimal logarith-
+mic exponent is exactly 1 /2: J independent transforms of
+order N require Ω(JN √logN ) gates even with feedback
+states, low-rank errors, and sparse errors (Theorems 1.1–
+1.2), and admit Oϵ(JN (1 + logN )1/2+ϵ) circuits (Theo-
+rems 4.1, 5.1, 8.1), with identical 1 /2 exponent for formal
+polynomial convolution (Corollary 8.2).
+The lower bound builds on planar spectral prices [ 5],
+placing row and column labels on a rectangle where a
+character table beats a permutation matrix by L2/(1 +√
+1 +L 2) log2 N (Theorem 2.2) via a two-phase swap
+(Lemma 2.3) and force-disk rigidity (Proposition 2.4),
+combined with upper-triangular echelon row quotients
+(Lemma 3.2) and nilpotent time expansion of feedback
+circuits (Lemma 3.3). The upper bound expresses a large
+transform as a product of commuting queries, approximates
+its parity/character sign by a low-degree integral polyno-
+mial on a central binomial window (Lemma 4.2), linearizes
+the polynomial via Potter’s identity [ 7] (Lemma 4.3), re-
+pairs exceptional rows exactly using Vandermonde Reed–
+Solomon checks [ 8] and a double-root Hermite polyno-
+mial (Lemma 4.4), routes shared queries via Hamming-
+intersection matrices (Sec. 5.2), and connects convolution
+to cyclic DFT via Bluestein’s chirp identity [ 2] (Corol-
+lary 8.2).
+Honest Scope Boundary.This companion artifact
+verifies finite algebraic identities, exact finite-field ma-
+trix equations, and rational geometric witnesses extracted
+from [6]. It doesnotformalize projective Grassmannian
+closure arguments (Sec. 3.2), Hoeffding tail asymptotics
+(Sec. 4.1), prime-number-theorem length selection (Sec. 8),
+or the full multi-level recursion establishing Theorem 1.1
+end-to-end.
+2 Constructive Lean 4.35.0 Kernel
+The formal kernel FftExpHalfCert.lean compiles cleanly
+under Lean 4.35.0 ( -j 1) with zero sorry, zero cus-
+tom axioms, zero warnings, and zero dependence on
+Classical.choice. Table 1 summarizes all 18 machine-
+checked theorems. Highlights include Theorem 4 (exact
+integer parallelogram proof of Proposition 2.4 force-disk
+midpoint rigidity a = b = (p + r)/2), Theorem 7 (exact
+feedback time-expansion difference identity), Theorem 11
+(exhaustive constructive verification of the 3-query binary
+parity predictor across all 26 = 64 pairs (k, β)), Theorem 13
+1
+
+--- Page 2 ---
+Table 1: The 18 constructive Lean 4.35.0 theorems
+in FftExpHalfCert.lean (0 sorry, 0 custom axioms,
+0Classical.choice).
+# Theorem Identifier Paper Reference / Invariant
+1rectangle excess rationalizedThm. 2.2 (D−W)(D+W) =L 2
+2character table strict excessThm. 2.2L+W < L+DforL >0
+3two phase controlled swapLem. 2.3 (x, y)7→(y, x+y)
+4force disk midpoint rigidityProp. 2.4 disk forcesa=b= p+r
+2
+5projected list lower boundLem. 3.1 100V −(QU)≥181N
+6block echelon rank budgetLem. 3.2 list P(ni−rkQ i)≤r
+7time expansion difference identityLem. 3.3 (I−Z RC′)(VR−V0)
+8binary unrolling support boundLem. 3.3BinTreed·leaves≤d2 d−1
+9markov surviving blocksSec. 3.4 199/200 blocks survive
+10small order vandermonde boundSec. 3.4 small-orders≥h/12
+11binary three query predictor exactSec. 4.1m=3 window [1,2] exact
+12potter mat2 square identityLem. 4.3 2×2 (U+V) 2 =U 2+V 2
+13hermite double root l2Lem. 4.4g(y)−z= (y−z) 2Dz(y)
+14hermite repair exact zeroLem. 4.4 full repairg(P) ˆX−P ˆZ+z ˆZ=z ˆX
+15query product quadratic phase identitySec. 5.1 Fourier inversion phase
+16hamming routing poly rootSec. 5.2 inductivep(ℓh) = 0
+17bluestein chirp exponent identityCor. 8.2b 2(i)+b2(−j)−b2(i−j) = 2ij
+18product gate linear partCor. 8.2 linear partu 0v1+v0u1
+(exact double-root factorization (2y−y (y2 −1))−2z = (y−
+z)2(−y− 2z) whenever z2 = 1), and Theorem 17 (universal
+Bluestein chirp identityb 2(i) +b 2(−j)−b 2(i−j) = 2ij).
+3 The FFT-EXP-HALF-CERT-1.0 Pro-
+tocol
+Our Python verifier (src/fft exp verifier.py) enforces
+zero floating-point literals, zerofloat()calls, zero
+true-division operators (/,/=), zeromathimports,
+MAX JSON BYTES = 1 000 000, duplicate-key rejection via
+object pairs hook, and lowest-terms rationals [p, q]
+(|p|, q≤1012, gcd(|p|, q) = 1).
+Definition 1(FFT-EXP-HALF-CERT-1.0Modes).Each
+certificate invokes one of four exact verification modes:
+1.rectangle price and two phase swap(Thm. 2.2,
+Lem. 2.3, Prop. 2.4): (a)two phase swap character
+verifies primitiveN-th rootω∈F ×
+p , constructs
+Q=F CN , checksQ T Q=NP neg, verifies that the
+two-phase controlled map equals UPswap, and confirms
+(I⊗Q −1)U(I⊗Q)is strictly diagonal with exact
+character weightsω −xk;
+(b)rectangle excess and force diskchecks
+D2 =L 2 +W 2, exact rational excess
+(D−W)m=L 2m/(W+D), unit vectors
+|p|2 =|r| 2 = 1, zero-suma+b=p+r, disk
+containment |a−p/ 2|2,|b−p/ 2|2 ≤ 1/4, and midpoint
+rigiditya=b= (p+r)/2.
+2.time expansion and row quotient(Lem. 3.2, 3.3):
+(a)time expansion feedbackrequires nonzeroC, A,
+fan-in≤2, anddet(I−C)̸= 0overF p, builds
+R=I d +Dand nilpotentR 0, verifiesR d
+0 = 0,
+rank(R−R 0) = 1, the exact difference equation
+(I−Z RC′)(VR −V R0 ) = (ZR −Z R0 )(C′VR0 +A ′),
+rank(VR −V R0 )≤s, row support ofV R0 ≤d2 d−1, and
+lower-triangular time structure ofV R with diagonal
+blocksM= (I−C) −1A; (b)row quotient echelon
+checks1≤rank(B)≤r,QB= 0, upper triangularity
+ofQ, and diagonal-block rank conservationP
+i(ni −rankQ ii)≤r.
+3.prediction and hermite repair(Sec. 4.1,
+Lem. 4.2–4.4): (a)binary parity predictor
+evaluates the exact integral binomial polynomialP β
+over all4 m pairs(k, β)and confirms exact parity
+match on[u, v]plus uniform in-window and
+exceptional counts; (b)potter matrix powerrequires
+≥2nonzero monomials modp, constructs
+L= P
+i Z⊗i ⊗S i ⊗I ⊗(h−1−i) overF p, checks
+ZSi =ξS iZandV U=ξUV, and verifies
+Lb =p(λ)I bh; (c)hermite spectral repairverifies
+zℓ = 1, recovers nonzero eJ from Vandermonde checks
+H dP X−zH ˆX, divides g(y) −z by( y−z )2 in Fp[y]to
+obtainD z(y), solvesH T
+J a=D z(pJ)eJ, lifts nonzero
+ˆZ=H T a, and checksg(P) ˆX−P ˆZ+z ˆZ=z ˆXon all
+Wrows.
+4.query product and bluestein chirp(Sec. 5.1–5.2,
+Cor. 8.2): (a)query kernel and hamming gram
+verifies
+ℓ−2 P
+X,Z ζ(x−s)X+(y−t′)Z+XZ = ℓ−1ζ(x−s)(t′−y) on all
+ℓ4 tuples, computes exactF ℓ-rank of
+Γ(v, w) = 1−∆(v, w)ℓ−1 on power-of-two alphabet
+q∈ {2,4}, and verifiesp(k)∈Z[1/ℓ]for all0≤k≤L
+withp(0) = 1andp(ℓh) = 0;
+(b)bluestein chirp convolutionchecks
+b(i) +b(−j) −b (i−j ) = ij on all m2 pairs and verifies
+exact polynomial multiplication
+qb(i)[Xm−1+i](H(X)Y(X))matches the directC m
+DFT overF p.
+Proposition 1(Verifier Soundness).Whenever
+verify fileoutputsVERIFIEDon an
+FFT-EXP-HALF-CERT-1.0certificate, all checked matrix
+factorizations, rank/support bounds, polynomial divisions,
+spectral repairs, and Bluestein convolutions hold
+identically overZ,Q, orF p.
+4 Certified Corpus and Worked
+Witnesses
+We generated and verified 16 canonical certificates ( C01–
+C16, Table 2). Four representative witnesses are worked
+out explicitly below for hand verification.
+4.1 Worked Hand-Verifiable Arithmetic
+Witness C03 (Theorem 2.2 & Proposition 2.4).
+For ( L, W, D) = ( 3
+4 , 1, 5
+4 ) ( D2 = 25
+16 = 9
+16 + 1) and
+m = log2 N = 16, the character-table rectangle price
+is ( L + D)m = 2 · 16 = 32 vs. permutation price
+(L + W)m = 7
+4 · 16 = 28, giving exact excess 32 − 28 =
+4 = (3/4)2
+1+5/4 · 16 = 9/16
+9/4 · 16 (Fig. 1a). For unit vectors
+p = (3
+5 , 4
+5 ) and r = (1, 0), the disk of diameter [0, p] has cen-
+ter p
+2 = ( 3
+10 , 2
+5 ) and radius 1
+2 . Setting a = b = p+r
+2 = (4
+5 , 2
+5 )
+2
+
+--- Page 3 ---
+0.0 0.2 0.4 0.6 0.8 1.0
+Rectangle height L (width W = 1)
+0.0
+0.1
+0.2
+0.3
+0.4
+0.5
+Excess per log2 N
+C04: L = 5
+12
+Δ = 1
+12
+C03: L = 3
+4
+Δ = 1
+4
+(a) Thm. 2.2 Character-Table Excess
+L2
+1 + √1 + L2
+Quadratic 1
+2L2
+−0.25 0.00 0.25 0.50 0.75 1.00 1.25
+x1
+−0.2
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+x2
+0
+p/2
+p = (3
+5, 4
+5)
+r/2
+(b) Prop. 2.4 Force-Disk Rigidity (C03)
+Disk diam [0, p]
+a = b = (4
+5, 2
+5)
+Tangent x1 = 4
+5
+Figure 1: (a) Theorem 2.2 normalized character-table
+excess L2/(1 +
+√
+1 +L 2) highlighting exact Pythagorean
+certificates C04 (L = 5
+12 , ∆ = 1
+12 ) and C03 (L = 3
+4 , ∆ = 1
+4 ).
+(b) Proposition 2.4 force-disk midpoint rigidity in C03: p =
+(3
+5 , 4
+5 ), r = (1, 0) place a = b = ( 4
+5 , 2
+5 ) on the supporting
+tangentx 1 = 4
+5 of the diameter-[0, p] disk.
+C05 (s = 2)
+Verified
+C05 cap
+d2d −1
+C06 (s = 5)
+Verified
+C06 cap
+d2d −1
+C06 cols
+hd = 15
+0.0
+2.5
+5.0
+7.5
+10.0
+12.5
+15.0
+17.5Row support (nonzeros)
+6
+12
+6
+12
+15
+(a) Lemma 3.3 Binding Support Bounds
+0 1 2 3 4 5
+Shifted Hamming weight c = |k ⊕β|
+0
+2
+4
+6
+8
+10
+12
+14Shift count (out of 25 = 32)
+1
+5
+10 10
+5
+1
+Window [1, 4]: 30/32 exact
+(D = 3 integral predictor)
+(b) Lemma 4.2 Central-Window Coverage (C10)
+Figure 2: (a) Lemma 3.3 nilpotent time expansion ( C05–
+C06): verified row supports stay strictly within d2d−1 = 12,
+even inC06where total columnshd= 15>12 makes the
+bound genuinely binding. (b) Lemma 4.2 central-window
+binomial mass for m = 5 ( C10): window [1 , 4] captures
+30/32 shifts with a degree-3 integral predictor.
+gives a− p
+2 = (1
+2 , 0) = r
+2 , hitting the boundary |a− p
+2 |2 = 1
+4
+with supporting tangentx 1 = 4
+5 (Fig. 1b).
+Witness C05 & C07 (Time Expansion & Row Quo-
+tient).In C05 over F7 (s = 2, h= 2, d= 3), C =
+ 0 2
+3 0
+
+and A = I2 have fan-in 2 and det(I−C ) = 1 − 6 = 2 ̸≡ 0
+(mod 7), giving M = (I−C )−1A =
+ 4 1
+5 4
+
+(mod 7). Ex-
+panding on d = 3 time coordinates produces R3
+0 = 0,
+rank(R−R 0) = 1, rank(VR −V R0 ) = 2 ≤s , maximum
+nilpotent row support 6 ≤ 3 · 22 = 12, and exact diagonal
+blocks M (Fig. 2a). In C07 over F7 (3 blocks of size 2,
+rank-1 B =1 6(1, 2)), the upper-triangular bidiagonal Q
+with rows ei −e i+1 (0 ≤i≤ 4) and zero row 5 satisfies
+QB = 0 and yields diagonal block ranks (2 , 2, 1) with total
+deficit 0 + 0 + 1 = 1≤r.
+Witness C11 & C12 (Potter Linearization & Hermite
+Repair).In C11 over F7 (b = 3, primitive cube root
+ξ = 2), monomial factors (2 , 3, 5) and (4, 1, 6) evaluate to
+2·3·5+4 ·1·6 = 30+24 = 54 ≡ 5 ( mod 7); the 9×9 pencil
+L = S0 ⊗I 3 + Z⊗S 1 satisfies V U= 2UV and L3 = 5I9.
+In C12 over F11 (ℓ = 2 , W = 8 , s= 2 , z= 10 ≡ −1,
+nodes 1, . . . ,8, errors at J = {1, 6} with p1 = 3, p6 = 7
+and pi = 10 off J), g(y) = y− 6y(y2 − 1) ≡ 5y3 + 7y
+(mod 11) satisfies g(10) = 10, g′(10) = 0, and g(y) − 10 =
+C12 (ℓ = 2, 11)
+J = {1, 6}
+C13 (ℓ = 3, 13)
+J = {0, 4, 7}
+0
+2
+4
+6
+8
+10
+12Row count
+8
+9
+4
+6
+(a) Lemma 4.4 Hermite Spectral Table
+Batch width W
+Spectral checks 2s
+i = 0 i = 1 i = 2 i = 3 i = 4
+0
+2
+4
+6
+8
+10
+12Output coefficient mod 11
+3
+7
+3
+1 1
+(b) Cor. 8.2 Bluestein Chirp Match (C16)
+Direct C5 DFT
+Bluestein chirp
+Figure 3: (a) Lemma 4.4 Hermite spectral repair ( C12,
+C13): repairing W = 8, 9 rows using only 2s = 4, 6 spectral
+rows. (b) Corollary 8.2 Bluestein chirp exact agreement
+with directC 5 DFT overF 11 (C16).
+Table 2: Canonical verified certificate corpus (C01–C16).
+ID Mode / Submode Key Verified Invariant Status
+C01 M1 / swap (F 7)C 3 2-phase swap; 9 diag weights PASS
+C02 M1 / swap (F 5)C 4 2-phase swap; 16 diag weights PASS
+C03 M1 / rect+disk (3/4,1,5/4), exc 4;a=b=( 4
+5 , 2
+5 ) PASS
+C04 M1 / rect+disk (5/12,1,13/12), exc 3;a=b=(0, 12
+13 ) PASS
+C05 M2 / time exp.s=2, d=3 (F 7): rk≤2, supp 6≤12 PASS
+C06 M2 / time exp.s=5, h=5, d=3 (F 11): supp≤12<15 PASS
+C07 M2 / quotient [2,2,2],r=1: diag rks [2,2,1] PASS
+C08 M2 / quotient [2,3,2],r=2: diag rks [2,3,0] PASS
+C09 M3 / predictorm=3,[1,2], D=1: 6/8 exact PASS
+C10 M3 / predictorm=5,[1,4], D=3: 30/32 exact PASS
+C11 M3 / Potter 9×9 (F 7, b=3):L3 = 5I9 PASS
+C12 M3 / Hermiteℓ=2, W=8 (F 11): 2 errors fixed PASS
+C13 M3 / Hermiteℓ=3, W=9 (F 13): 3 errors fixed PASS
+C14 M4 / kernel+Gramℓ=2 (F 5),{0,1} 4: Gram rk 2 PASS
+C15 M4 / kernel+Gramℓ=3 (F 7),{0,1} 3: Gram rk 4 PASS
+C16 M4 / BluesteinC 5 (F11, q=4): DFT (3,7,3,1,1) PASS
+(y− 10)2(5y + 1) (mod 11) (D10(y) = 5y + 1). Solving the
+2 × 2 Vandermonde system on 2 s = 4 spectral check rows
+recovers eJ and a, and the lifted repair g(P) ˆX−P ˆZ +10 ˆZ
+equals 10 ˆXon all 8 rows (Fig. 3a).
+Witness C16 (Corollary 8.2 Bluestein Chirp Convo-
+lution).Over F11 with m = 5 and primitive 5-th root
+q = 4 (45 ≡ 1 ( mod 11)), the chirp polynomial H(X) of
+length 2 m− 1 = 9 has coefficients H4+d = 4 −d(d−1)/2
+(mod 11) = (1 , 3, 5, 3, 1, 1, 3, 5, 3). Multiplying H(X) by
+Y (X) = P4
+j=0 4j(j+1)/2 xjXj for x = (3 , 1, 4, 1, 5) and
+scaling [ X4+i] by 4 i(i−1)/2 yields (3 , 7, 3, 1, 1) ( mod 11),
+matching the directC 5 DFT identically (Fig. 3b).
+5 Verification Gates and Repro-
+ducibility
+All artifacts pass five independent gates: (1) Lean 4.35.0
+compilation with 18 constructive theorems, zero warnings,
+zero custom axioms, and zeroClassical.choice;
+(2) AST zero-float / zero-division check; (3) 16/16
+canonical certificates verified; (4) 52 adversarial forgeries
+and edge-case checks (70/70 pytest checks total, covering
+duplicate keys, oversized and deeply nested JSON,
+NaN/Infinityrejection, non-lowest-terms rationals,
+non-primitive roots, off-midpoint force splits, vacuous zero
+3
+
+--- Page 4 ---
+feedback/perturbation/Potter/Hermite inputs, singular
+feedback systems, fan-in>2, non-upper-triangular
+quotients, vacuous windows, non-root-of-unity Hermite
+targets, unlisted errors outsideJ, non-power-of-two
+alphabets, spoofed Gram ranks, CLI exit codes, and
+mismatched Bluestein DFTs); and (5) complete SHA-256
+manifest (MANIFEST.sha256).
+AI Assistance Disclosure.This work was produced by
+Lluis Eriksson using Google Antigravity for Lean 4 theorem
+drafting, Python exact-verifier engineering, test generation,
+and LATEX preparation; all mathematical claims, code,
+proofs, and verification logs were independently compiled,
+tested, and reviewed by the author.
+Licensing.Manuscript and figures are released under
+CC-BY-4.0; Lean 4 proofs, Python code, and JSON cer-
+tificates are released under theMITLicense.
+References
+[1] Josh Alman and Kevin Rao. Faster Walsh–Hadamard and
+discrete Fourier transforms from matrix non-rigidity. In
+Proceedings of the 55th Annual ACM Symposium on Theory of
+Computing (STOC), pages 455–462, 2023.
+[2] L. I. Bluestein. A linear filtering approach to the computation of
+discrete Fourier transform.IEEE Transactions on Audio and
+Electroacoustics, 18(4):451–455, 1970.
+[3] James W. Cooley and John W. Tukey. An algorithm for the
+machine calculation of complex Fourier series.Mathematics of
+Computation, 19(90):297–301, 1965.
+[4] Jacques Morgenstern. Note on a lower bound on the linear
+complexity of the fast Fourier transform.Journal of the ACM,
+20(2):305–306, 1973.
+[5] OpenAI. Euclidean geometry in the asymptotic spectrum of
+tensors. OpenAI Math Release preprint
+OAI:Euclidean-geometry-in-the-asymptotic-spectrum-of-t
+ensors-November-24-2026, November 2026. Unrefereed
+preprint, November 24, 2026.
+[6] OpenAI. The logarithmic exponent of finite fourier transforms.
+OpenAI Math Release preprintOAI:The-logarithmic-exponen
+t-of-finite-Fourier-transforms-November-24-2026,
+November 2026. Unrefereed preprint, November 24, 2026.
+[7] H. S. A. Potter. On the latent roots of quasi-commutative
+matrices.American Mathematical Monthly, 57(5):321–322, 1950.
+[8] I. S. Reed and G. Solomon. Polynomial codes over certain finite
+fields.Journal of the Society for Industrial and Applied
+Mathematics, 8(2):300–304, 1960.
+4

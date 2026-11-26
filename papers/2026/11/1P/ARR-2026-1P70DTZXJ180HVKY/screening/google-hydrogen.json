@@ -1,0 +1,56 @@
+{
+  "assessed_at": "2026-11-26T01:42:04Z",
+  "canonical_sha256": "7733d020207ca70d9e8a9d43aefc335d356eff0efaebacd66b10ba7c743e29af",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All worked arithmetic witnesses in Sec. 4.1 (C01, C03, C05, C07, C09, C11, C13, C15), Table 2 entries, and Figs. 1-3 verify exactly by hand (e.g., per(A)=1, Per5=13/Det5=3/HC5=2, rank (5,5,8), C6 beta=11/6, C09 sum 25/8, Plucker 0 mod 7, C13 residue 3, C15 Sec. 19 gap 3 mod 7). Only minor indexing/symbol slips appear.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "The manuscript explicitly positions itself as a companion verification artifact auditing finite-dimensional mechanisms from OpenAI's Nov 24, 2026 unrefereed preprint [4], rather than proving new circuit lower bounds. Its contribution lies in packaging an exact zero-float verifier, adversarial forgery suite, and 18-theorem Lean 4 kernel.",
+      "stars": 2
+    },
+    "reproducibility": {
+      "basis": "All eight worked witnesses in Sec. 4.1 are self-contained and hand-verifiable directly from the PDF, and Sec. 5 specifies deterministic Lean, AST, pytest, and SHA-256 gates. However, the PDF does not include the Lean 4 source, Python verifier code, or JSON certificates themselves, so external code execution cannot be verified from the PDF alone.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "The zero-floating-point rational/finite-field specification (Def. 1) and Honest Scope Boundary (Sec. 1) are clear and disciplined. However, Proposition 1 (Verifier Soundness) is stated without proof and the Python verifier is not formally verified in Lean; several Lean theorems in Table 1 (e.g., #1, #11, #13) cover only base/special cases, and Def. 1 leaves u_g and c_0, c_1 undefined.",
+      "stars": 3
+    },
+    "significance": {
+      "basis": "Provides a clean, independently structured sanity check on concrete algebraic gadgets, Poincaré ratios, cone savings, exterior minors, Cartier residues, and diagonalization contradictions from [4]. Because infinite-dimensional ultralimits, reservoir coding, Harder-Narasimhan packings, and RAM simulation are outside scope, it does not establish the main lower bounds.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.35,
+  "model_id": "hydrogen",
+  "overall_stars": 3,
+  "paper_id": "ARR-2026-1P70DTZXJ180HVKY",
+  "potential_errors": [
+    "Mixed 0-based and 1-based indexing in Sec. 3 Mode 1(a) and Sec. 4.1 Witness C01: sub-permanents delete (r,c) in {0,1}^2 (0-based), whereas the bottom-right entry is written A_{33} = 1 (1-based; should be A_{22} = 1 in 0-based indexing). Similarly, Sec. 2 Theorem 14 uses 1-based Plucker indices (p_{12}p_{34}-p_{13}p_{24}+p_{14}p_{23}=0) while Sec. 4.1 Witness C11 uses 0-based indices (p_{01}p_{23}-p_{02}p_{13}+p_{03}p_{12}=0).",
+    "Undefined symbols in Definition 1: Mode 2(b) cites Eq. (4.1) min_{g<t/2}(u_g + t E_P(x^{(g)})) <= 16 E_S(x) without defining u_g or E_S(x) in the manuscript; Mode 3(a) uses c_0, c_1 >= d/3 and parameter tau without explicitly defining c_0, c_1 or the choice of tau.",
+    "Proposition 1 (Verifier Soundness) asserts universal soundness of verify_file across Z, Q, and F_p without a formal proof in the manuscript or machine-checked verification of the Python implementation.",
+    "In Sec. 3 Mode 4(a), the Cartier operator C(f(t) dt) relies on Frobenius inverse c^{1/p} = c holding over prime fields F_p (as verified here), which is unstated in the summary formula and would require explicit p-th roots over non-prime extensions."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Explicit and transparent Honest Scope Boundary (Abstract and Sec. 1) clearly delineating audited finite-dimensional mechanisms from unformalized asymptotic, information-theoretic, and simulation components of [4].",
+    "Every hand-verifiable witness in Sec. 4.1 (C01, C03, C05, C07, C09, C11, C13, C15) and corresponding values in Table 2 and Figs. 1-3 are arithmetically exact and mutually consistent.",
+    "Well-designed zero-floating-point verification specification (Def. 1) enforcing lowest-terms rationals, duplicate-key rejection, prior prime-divisibility checks before modular reduction (blocking 1/p pole cancellation), and adversarial forgery checks (Sec. 5)."
+  ],
+  "strong_novelty_candidates": [],
+  "summary": "This 4-page companion artifact presents PERM-HC-LB-CERT-1.0, a zero-floating-point Python verifier (four exact modes over Z, Q, and F_p) and an 18-theorem Lean 4.35.0 kernel auditing finite-dimensional algebraic, balanced-cut, Poincaré, Hadamard-cone, exterior-minor, Cartier-residue, and finite-field diagonalization mechanisms extracted from OpenAI's November 24, 2026 unrefereed preprint [4]. The manuscript maintains an explicit Honest Scope Boundary, making clear it does not formalize infinite-dimensional ultralimits, reservoir coding, Harder-Narasimhan packings, or RAM simulation. All hand-verifiable arithmetic in the worked witnesses (C01, C03, C05, C07, C09, C11, C13, C15), Table 2, and Figures 1-3 checks out exactly. Minor weaknesses include an unproved Proposition 1 for Python verifier soundness, mixed 0/1-based matrix indexing, a few undefined symbols in Definition 1, and the elementary/base-case scope of several Lean theorems in Table 1; no unresolved material objections invalidate the stated claims.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:ca526f46-ec96-4fa2-a157-006f5f73f92d",
+  "weaknesses": [
+    "Several Lean 4 theorems in Table 1 formalize only base or toy algebraic cases relative to their section references (e.g., #1 checks Per_2 - Det_2 = 2bc = 0 mod 2 rather than general N; #11 proves 2(n-1) >= n rather than the full Theorem 4.2 graph Poincaré inequality; #13 checks alternating 2x2 determinants rather than general k x k S_k-alternation), and exact Lean type signatures are not shown in the PDF.",
+    "Proposition 1 (Verifier Soundness) is presented as a mathematical proposition about the Python program verify_file without a proof or formal link to the Lean 4 kernel.",
+    "The manuscript relies heavily on external numbering and terminology from an unrefereed preprint [4] (e.g., Eq. (2.2), Eq. (3.4), Eq. (4.1), Eq. (5.3)) without restating all underlying definitions (such as u_g, E_S, c_0, c_1) in full.",
+    "Neither the Lean 4 source file nor the Python verifier code appears in the PDF, limiting what can be verified solely from the manuscript to the four worked pairs of witnesses in Sec. 4.1 and summary tables/figures."
+  ]
+}
