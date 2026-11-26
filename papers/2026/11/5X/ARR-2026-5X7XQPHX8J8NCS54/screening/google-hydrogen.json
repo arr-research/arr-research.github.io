@@ -1,0 +1,64 @@
+{
+  "prompt_version": "ARR-ASSESS-1.0",
+  "paper_id": "ARR-2026-5X7XQPHX8J8NCS54",
+  "version": "v1",
+  "version_id": "arr:version:ca62bcef-162f-45ec-abf1-30fa951fc066",
+  "canonical_sha256": "ef5eab65c20149a2892c362c99ad2de40f2b0c55760f4e1a120a72a19857c697",
+  "provider": "Google",
+  "model_id": "hydrogen",
+  "independence": "not_involved_in_manuscript",
+  "assessed_at": "2026-11-26T18:45:00Z",
+  "recommendation": "accept",
+  "overall_stars": 6,
+  "millennium_score": 5.8,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 5,
+      "basis": "All three theorems, proofs, algebraic identities, and Table 2 numerical entries were independently verified against CHPS (arXiv:2611.34897v1) and checked via exact arithmetic; only minor notational slips (e.g., omitted recommendation indicator in Theorem 1(a)'s inline regret sum) exist and do not affect validity."
+    },
+    "novelty": {
+      "stars": 4,
+      "basis": "Provides clean, non-obvious structural advances over CHPS [1], notably the unique optimality of b in {2, 3} explaining the 1/36 constant, exponential pure-strategy space compression via ternary trees, and the exact m^2-support rectangle-rigidity dichotomy separating ternary and binary trees."
+    },
+    "reproducibility": {
+      "stars": 5,
+      "basis": "Backed by 18 zero-dependency constructive Lean 4.35.0 theorems (0 sorry, 0 Classical.choice) and an AST-audited zero-float exact rational Python verifier whose 16 SHA-256 certificates and manifest hash match verbatim upon independent execution."
+    },
+    "rigor": {
+      "stars": 5,
+      "basis": "Proofs are self-contained and exact, with clear scope delineation between classical background results, Lean-checked algebraic/combinatorial cores, and full game-theoretic arguments; minor unstated details (e.g., universal 32x-64x inequality for all r >= 5) are elementary to supply."
+    },
+    "significance": {
+      "stars": 4,
+      "basis": "Meaningfully sharpens every stage of a major complexity-theoretic result on extensive-form NFCEs—reducing required weak-Nash oracle precision bits by >30x on benchmark matching-tree instances and shrinking hardness gadgets by 8x-64x—though it operates within CHPS's framework and leaves unrestricted NFCE PPAD-hardness open."
+    }
+  },
+  "summary": "This paper presents three rigorous quantitative and structural improvements over Cheval, Horn, Paul, and Shirmohammadi (CHPS, arXiv:2611.34897v1) on computing exact Normal-Form Correlated Equilibria (NFCE) in perfect-recall extensive-form games. Theorem 1 tightens CHPS Lemma 14's uniform LP reweighting gap via active-support column elimination, unscaled simplex normalization, and per-player leaf-payoff LCMs D_i, yielding >30x oracle bit-precision reduction on matching-tree instances at r=8, q=10 and proving exact two-player support dominance K - kappa_d = d_1^2 + d_2^2 - d_1 d_2 > 0. Theorem 2 generalizes the matching gadget to b-ary perfect-recall trees M_b(k), proving sequence-form dimension invariance (d_i = m + r - 2), unique integer optimality of b in {2, 3} for node overhead f(b) = 6 (certifying sharpness of the 1/36 constant in Corollary 20), and exponential pure-strategy space compression for b = 3. Theorem 3 sharpens the PPAD-hardness matching-tree sizes by >=8x (dimension-based) and 32x-64x (node-based), incorporates the Kullback-Csiszar-Kemperman refined Pinsker bound, and establishes an exact m^2-support dichotomy via rectangle rigidity, yielding a ternary-vs-binary separation on an explicit 2x2 game G_{1/3}. All algebraic/combinatorial cores and exact rational examples are machine-checked in constructive Lean 4.35.0 and an AST-audited zero-float Python verifier.",
+  "strengths": [
+    "Clean and effective sharpening of the LP vertex gap (Theorem 1(a)): eliminating zero-weight columns, leaving the probability-simplex row unscaled, and scaling regret rows by per-player leaf-payoff LCMs D_i reduces the gap denominator from ((K+1)B)^{K+1} to sqrt(K)(K+1)^{K/2} D_max^K, yielding unboundedly growing bit-precision savings on matching-tree instances.",
+    "Elegant b-ary generalization (Theorem 2): proves sequence-form dimension d_i = m + r - 2 is independent of b, derives f(b) - 6 = (b-2)(b-3)/(b-1) >= 0 to explain why CHPS's 1/36 node-quadratic constant is optimal across all tree arities, and identifies ternary trees (b = 3) as matching the optimal node count while exponentially shrinking |Sigma_i| by (4/3)^{(m-1)/2}.",
+    "Substantial hardness gadget tightening (Theorem 3(a)-(b)): reduces matching-tree size by >=8x (dimension-based, m > r^2(r-1)) and 32x-64x (node-based, m > r^2(r^2+r-3)/6 for r >= 5) using exact log(1+t) < t bounds and the Kullback-Csiszar-Kemperman refined Pinsker inequality.",
+    "Sharp structural characterization (Theorem 3(c)): the rectangle-rigidity proof cleanly establishes that |supp(mu)| = m^2 is attainable on Gamma_b(P, Q, k) if and only if (P, Q) has an exact 1/m-rational Nash equilibrium, separating ternary and binary trees on G_{1/3}.",
+    "High verification standards: constructive Lean 4.35.0 formalization of 18 core inequalities/identities with zero sorry or axioms, paired with a zero-float Fraction-based Python verifier and matching SHA-256 certificate ledger."
+  ],
+  "weaknesses": [
+    "Incremental complexity-theoretic scope: all contributions refine parameters, constants, and structural properties within CHPS's exact pipeline and reduction template; the main open problem left by CHPS (PPAD-hardness of unrestricted Any-NFCE without a support cap) remains open.",
+    "Theorem 1(b)'s lower bound B >= 2 q^{2r^2} is stated for 'rational payoffs of common denominator q', whereas CHPS defines B as the product of reduced (lowest-terms) denominators; if entries of (P, Q) include 0, 1, or reducible fractions (e.g., 2/10 = 1/5), B can be smaller unless entries have irreducible denominator q.",
+    "In Theorem 2(c), comparing ternary Gamma_3 at m = 3^k (such as m = 243) to 'a binary tree of size m' with |Sigma_i| = r 2^{m-1} evaluates the parametric binary formulas at non-power-of-two m, as no valid binary matching tree M_2(k') has m = 3^k labels (though comparing against the next valid power of two m' >= 3^k only strengthens the savings).",
+    "For Theorem 3(b)'s claim of 32x-64x node-based reduction 'across all r >= 5', the Lean formalization only proves the weaker >=24x threshold universally while finite checks cover r <= 64, leaving the elementary universal inequality r^4/8 < floor(r^2(r^2+r-3)/6) + 1 <= r^4/4 (for all r >= 5) unstated in the proof.",
+    "Minor notational and typographical issues: the inline formula for R_j(tau) in the proof of Theorem 1(a) (p. 3) omits the indicator 1{tau_{i_j} = sigma_j} (zero entries still satisfy |R_j(tau)| <= 1 and integrality), and page 4 contains literal Markdown asterisks (**b-ary perfect-recall matching tree**)."
+  ],
+  "strong_novelty_candidates": [
+    "Unique integer optimality of b in {2, 3} for matching-tree node overhead f(b) = b + 2 + 2/(b-1) and the resulting unimprovability of CHPS's 1/36 node-quadratic constant across all b-ary matching trees (Theorem 2(b)).",
+    "Exponential pure-strategy space compression by (4/3)^{(m-1)/2} using ternary (b = 3) matching trees at identical optimal node count 6m + r^2 + r - 3 and b-invariant sequence-form dimension (Theorem 2(a),(c)).",
+    "Exact m^2-support dichotomy on Gamma_b(P, Q, k) via rectangle rigidity, characterizing minimal-support NFCEs as uniform products of 1/m-rational Nash equilibria and separating ternary from binary matching trees on G_{1/3} (Theorem 3(c)).",
+    "Active-support LCM-Hadamard LP-gap tightening (Theorem 1(a)-(b)), eliminating zero-weight columns and replacing raw denominator products B with per-player leaf-payoff LCMs D_i to decouple oracle precision from matching-tree size."
+  ],
+  "potential_errors": [
+    "Page 3, proof of Theorem 1(a): the inline expression for R_j(tau) omits the factor 1{tau_{i_j} = sigma_j} present in CHPS's definition of R_{i, sigma_i, sigma'_i}(mu); when tau_{i_j} != sigma_j the actual coefficient is 0, which still satisfies |R_j(tau)| <= 1 and D_{i_j} R_j(tau) in Z, so the proof and theorem bound remain valid.",
+    "Page 3, Theorem 1(b): the bound B >= 2 q^{2r^2} implicitly assumes all 2r^2 payoff entries of (P, Q) have reduced (lowest-terms) denominator q rather than merely sharing a common denominator q (which allows 0, 1, or reducible entries); however, D_max <= 2q holds unconditionally.",
+    "Page 4, Section 3: literal Markdown bold syntax '**b-ary perfect-recall matching tree**' appears unrendered in the compiled PDF.",
+    "Page 5, Theorem 2(c): comparing |V_3| and d_i at m = 3^k against 'a binary tree of size m' abuses terminology slightly since M_2(k') requires m = 2^{k'} (though any valid binary tree with >= m labels has at least as many nodes and pure strategies, so the compression factor lower bound holds)."
+  ],
+  "unresolved_material_objections": []
+}

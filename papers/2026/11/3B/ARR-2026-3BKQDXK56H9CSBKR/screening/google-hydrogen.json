@@ -1,0 +1,60 @@
+{
+  "prompt_version": "ARR-ASSESS-1.0",
+  "paper_id": "ARR-2026-3BKQDXK56H9CSBKR",
+  "version": "v1",
+  "version_id": "arr:version:cc3aaf74-d7a6-4c29-8647-a25118944404",
+  "canonical_sha256": "5ca6c51a2c1519ca43b7a242bffeaa4818236cc8ad5b3082ac7d6648c13e6591",
+  "provider": "Google",
+  "model_id": "hydrogen",
+  "independence": "not_involved_in_manuscript",
+  "assessed_at": "2026-11-26T18:45:00Z",
+  "recommendation": "accept",
+  "overall_stars": 6,
+  "millennium_score": 6.4,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 5,
+      "basis": "Independent from-scratch audit verified S_4 transpose pairings (S_sa, P_adj), exact d^4 dimension accounting, exact invariance of all 9 (d>=4) and 6 (d=3) unnormalized orthogonal blocks under all 24 B_pi and B_pi^{Gamma_in}, exact Z[d] quadratic polynomial interpolation from d in {4,5,6} to d=7, all 18 integer kernel identities and 102/102 Bareiss Sylvester minors of the explicit Table 2 universal witness Q(d) in t=d-8 >= 0, all Table 4 parameter arithmetic, and independent SDP optima matching d_crit ~ 7.239, d=8 optimum 7.5418, and all d in {3..7} > d impossibility thresholds."
+    },
+    "novelty": {
+      "stars": 4,
+      "basis": "Substantive and sharp structural follow-up to Faisal's breakthrough (arXiv:2611.34921v1): collapses growing blocks to fixed <= 6x6 blocks over Z[d], proves d_min = 8 unconditionally via Haar twirling and McCormick dual SDP certificates, constructs a single closed-form universal all-d>=8 witness family, and demonstrates sublinear O(sqrt(d)) NPT depth scaling up to d=100."
+    },
+    "reproducibility": {
+      "stars": 4,
+      "basis": "Table 2 supplies the complete universal all-d>=8 witness self-containedly, enabling direct independent verification of Theorem 5(a), and the paper provides SHA-256 certificate manifests plus a tagged MIT repository (v1.0.0). One star is withheld because the Lean 4.35.0 source, Python verifier, and exact rational witness/dual JSON artifacts (C01-C16) are hosted externally rather than bundled inside the local AIRR archive src/ directory."
+    },
+    "rigor": {
+      "stars": 5,
+      "basis": "Uses exact zero-float Q arithmetic and constructive Lean 4.35.0 formalization for algebraic cores, rigorously handles the d=3 antisymmetrizer syzygy and the opposite-sign CP branch (Lemma 1), proves WLOG reduction to the 17D Hermitian walled-Brauer subspace via U(d) Haar twirling (Lemma 3), and clearly scopes Theorem 4 to U(d)-covariant local CP pairs."
+    },
+    "significance": {
+      "stars": 4,
+      "basis": "Definitively characterizes the exact dimensional threshold (d_min = 8), universal applicability (all d >= 8), and asymptotic NPT depth potential (Omega(sqrt(d)) relative depth) of the walled-Brauer local-CP mechanism for NPT bound entanglement."
+    }
+  },
+  "summary": "This manuscript establishes four sharp advances over Faisal's walled-Brauer proof of NPT bound entangled Werner states. First (Theorem 2), diagonal U(d) phase, S_{d-1}/S_{d-2} permutation, and Z_2 swap symmetries reduce every B_{3,1}(d) operator via integer orthogonal congruence into 9 fixed-size blocks (<=6x6, quadratic in Z[d]) and collapse the d^2-column kernel equation into 6 disjoint 4-term linear equations, certifying Faisal's d=8 witness (23/3) and sharper rational d=8 witnesses down to 4717/625 = 7.5472. Second (Lemma 3, Theorem 4), U(d) Haar twirling proves WLOG restriction to the 17D Hermitian subspace of B_{3,1}(d), and 19 exact rational McCormick dual SDP certificates prove unconditionally that no U(d)-covariant local CP pair (L, M) and no Hermitian Q certifies an NPT Werner state for d in {3,4,5,6,7} (minimum dual bound 7.017037 > 7 at d=7). Third (Theorem 5a), an explicit closed-form witness Q(d) in Table 2 certifies rho_d = ((5d+7)I - 6 SWAP)/(d(5d^2+7d-6)) as NPT bound entangled for all integers d >= 8 simultaneously via 102/102 Bareiss Sylvester minors having positive constant terms and nonnegative higher coefficients in t = d - 8. Fourth (Theorem 5b), exact witnesses up to d=100 (A/B = 24.65, 4.057x NPT depth) demonstrate O(sqrt(d)) scaling. Independent from-scratch verification confirms the algebraic reductions, all 102 Bareiss minors of Table 2, and all SDP bounds.",
+  "strengths": [
+    "Complete fixed-size Z[d] isotypic reduction (9 blocks <= 6x6, degree <= 2 polynomials, zero square roots) and 6-equation kernel collapse that cleanly eliminates growing d-dependent matrix sizes.",
+    "Unconditional impossibility proof for d in {3,4,5,6,7} combining Haar-twirling WLOG (Lemma 3), opposite-sign CP elimination (Lemma 1), and 19 contiguous McCormick bilinear dual SDP lower bounds strictly exceeding d.",
+    "Explicit, self-contained closed-form universal witness Q(d) in Table 2 certified across all integers d >= 8 simultaneously by 102/102 positive Bareiss Sylvester minors in t = d - 8.",
+    "Sharp quantitative improvements at d=8 (4717/625 = 7.5472, within 0.0054 of the global SDP optimum 7.5418) and exact rational witnesses demonstrating sublinear O(sqrt(d)) scaling up to d=100.",
+    "Careful delineation of scope separating U(d)-covariant local-CP impossibility from non-covariant or multi-copy extensions."
+  ],
+  "weaknesses": [
+    "In Theorem 5(b), the asymptotic scaling statement A/B*(d) = O(sqrt(d)) (~ 2.292 sqrt(d) as d -> infinity) is supported by numerical SDP solutions and exact rational witnesses at finite dimensions up to d=100, rather than a formal symbolic proof for all sufficiently large d.",
+    "The external Lean 4.35.0 source file, AST-audited Python verifier, and exact rational witness/dual JSON certificates (C01-C16) are hosted in an external GitHub repository rather than bundled directly inside the local AIRR archive src/ directory (which contains only placeholder READMEs), preventing offline auditing of Sharp #1/#2, C09-C14, and C15-C16 solely from the archive bundle.",
+    "Theorem 4 establishes d_min = 8 specifically for single-copy U(d)-covariant local CP pairs (L, M) producing Werner states, leaving non-covariant or multi-copy constructions in d <= 7 open (appropriately acknowledged in Section 5)."
+  ],
+  "strong_novelty_candidates": [
+    "Exact fixed-size (<= 6x6) quadratic Z[d] isotypic block congruence for B_{3,1}(d) and 6-equation kernel reduction of (J - Q)(|u_d> tensor I) = 0.",
+    "Unconditional sharp dimension threshold d_min = 8 proved via U(d) Haar-twirling reduction and rational McCormick dual SDP certificates over d in {3,4,5,6,7}.",
+    "Closed-form degree-2 rational witness family Q(d) certifying NPT bound entanglement simultaneously for all integers d >= 8 via shifted Bareiss Sylvester positivity in t = d - 8.",
+    "Exact rational sublinear O(sqrt(d)) NPT bound entanglement witnesses achieving 4.057x relative NPT depth beyond the PPT boundary at d=100."
+  ],
+  "potential_errors": [
+    "Minor terminology/presentation note: Theorem 5(b) states A/B*(d) = O(sqrt(d)) (~ 2.292 sqrt(d) as d -> infinity) inside a theorem environment, whereas the rigorously verified artifacts cover d in {16, 25, 36, 64, 100} and the 2.292 coefficient is an empirical SDP asymptote rather than a proved symbolic d -> infinity theorem (our independent SDP check at d=400 gives (A/B)/sqrt(d) ~ 2.3263, consistent with the claim).",
+    "Minor rounding/formatting notes: in Table 4 at d=64, (20.8660)/8 = 2.60825 is rounded half-up to 2.6083; in Theorem 5(b), the depth improvement ratio at d=100 over the universal family is (2000/493)/(600/507) = 3.428x (conservatively printed as 3.42x); neither affects any theorem or exact rational result."
+  ],
+  "unresolved_material_objections": []
+}
