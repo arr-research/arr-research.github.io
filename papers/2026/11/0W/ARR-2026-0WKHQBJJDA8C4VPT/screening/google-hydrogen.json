@@ -1,0 +1,55 @@
+{
+  "assessed_at": "2026-11-26T04:27:17Z",
+  "canonical_sha256": "3fb72685cfeec56e8be6c3e0e16ce6b060625ca15cfd15ff6af1ee3390d1be00",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "All visible rational bounds (663/2500, 62412/76523, 1053/10000), Prop. 11 combinations (27(r2+r3-r_joint)>=5n, max d(3/4)^(d-1)=27/16), 13-wedge counts (3*2+36*4=150 vertices, 24+26=50 facets), Lemma 12-13 identities, and channel bit-widths (129->128, 257->256) verify arithmetically. Full confidence is bounded because Lean theorem types and verifier source are external to the PDF.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "Section 1 explicitly attributes all mathematical theorems, polytope constructions, and proof techniques to Minhao Liu [6] (arXiv:2611.33631v1). Contribution is limited to an independent zero-float Python verifier, 16 JSON certificates, and 18 no-Mathlib Lean 4 mechanizations of finite algebraic and quantitative pillars.",
+      "stars": 2
+    },
+    "reproducibility": {
+      "basis": "Specifies public repository URL, MIT/CC-BY-4.0 licenses, MANIFEST.sha256, 16 canonical certificates (C01-C16), 43 unit/forgery tests, and a three-command reproduction workflow, though the PDF omits code listings and contains a minor missing-space typesetting error in the Python CLI invocation in Sections 4 and 5.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Enforces zero-float AST rules, exact Q pairs, JSON safety guards, and constructive Lean 4.35.0 proofs using only propext and Quot.sound (no Mathlib, no Classical.choice, no sorry), with transparent scope attribution to [6]. Deducted for omitting explicit Lean theorem signatures in the PDF and leaving real-valued conic lower bounds unmechanized.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Provides a timely, deterministic audit layer for Liu's claimed counterexamples to Grande-Padrol-Sanyal Conjecture 1.2, guarding high-dimensional slack matrices, facet-witness checks, and tight rational thresholds against floating-point or counting errors, though it is a companion artifact rather than a standalone mathematical advance.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.4,
+  "model_id": "hydrogen",
+  "overall_stars": 3,
+  "paper_id": "ARR-2026-0WKHQBJJDA8C4VPT",
+  "potential_errors": [
+    "In Sections 4 and 5, the Python CLI command is typeset without spaces as 'python-msrc.ext_complexity_verifiercertificates' instead of 'python -m src.ext_complexity_verifier certificates'.",
+    "In Table 2 (C15, C16), the notation '(8 -> 7 bits saved!)' and '(9 -> 8 bits saved!)' conflates bit-width reduction (8 -> 7 bits, i.e., 1 bit saved) with the number of bits saved; Figure 3b correctly writes '(8 -> 7 bits)' and '(9 -> 8 bits)'.",
+    "In Figure 1a, the 'Rect. cover' bars (24 vs. 24) are plotted with caption attribution '(C03, C05)' and legend 'S \\otimes_1 S / P \\times P', even though neither Table 2 nor Modes 1-2 describe verifying rectangle cover numbers, and the value 24 for ordinary rank and rectangle cover pertains to S rather than P (since dim P = 24 implies rank(S_P) = 25).",
+    "In Figure 3 caption, 'Canonical doubling sequence j_1 = 2, j_i = 2 \\sum_{h<i} j_h ... (live witnesses C13-C14)' groups C14 (j = [2, 5]) under the canonical doubling sequence, whereas j_2 = 5 > 2 j_1 = 4 is a non-tight step in Lemma 12 rather than the canonical doubling sequence [2, 4, 12, 36]."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Explicit and honest scope and attribution (Section 1): clearly credits all mathematical theorems, constructions, and proof techniques to Minhao Liu [6] while defining the paper's contribution as an independent formal-verification and exact-rational audit layer.",
+    "All visible rational arithmetic, algebraic combinations, and polyhedral counts in the PDF are exact and internally consistent across text, Tables 1-2, and Figures 1-3 (e.g., 26(1/5000 + 2/200) = 663/2500, 26*6*(5201/10^6)/(1-5201/10^6) = 62412/76523, 27(r2+r3-r_joint) >= 5n, max d(3/4)^(d-1) = 27/16 at d in {3,4}, 13-wedge lift counts 150 vertices and 50 facets, and channel message drops 129->128 and 257->256).",
+    "Strong engineering hygiene described for the audit stack: Lean 4.35.0 mechanization without Mathlib restricted to propext and Quot.sound, AST-enforced zero-floating-point Python verification over Z and Q, and 16 certificates paired with 43 unit/forgery tests."
+  ],
+  "strong_novelty_candidates": [],
+  "summary": "This 4-page manuscript is a companion formal-verification and exact-rational audit note supporting Minhao Liu's preprint [6] (arXiv:2611.33631v1), which disproves Grande-Padrol-Sanyal Conjecture 1.2 on additivity of extension complexity under Cartesian products. The paper claims no original mathematical theorems; instead, it reports EXT-COMPLEXITY-PROD-CERT-1.0, comprising 18 constructive Lean 4.35.0 theorems (without Mathlib or Classical.choice), a zero-floating-point Python verifier over exact Z and Q covering four verification modes, 16 JSON certificates (C01-C16), and 43 tests. All arithmetic identities, rational bounds, wedge-lift vertex/facet counts, linear-fraction deficits, unbounded-square formulas, and bit-width reductions visible in the manuscript check out cleanly, with only minor presentation and typesetting flaws. Its primary limitations are that the Lean theorem statements and verifier code are not exhibited in the PDF itself, and general real-valued conic/nonnegative factorization lower bounds remain unmechanized in [6].",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:c7bf1adb-21d6-465b-86c1-0b782cbcf80b",
+  "weaknesses": [
+    "The 4-page PDF contains no Lean 4 theorem statements, definitions, or proof excerpts, nor the explicit matrices R, S, or inequalities of B; thus, a reader of the PDF alone cannot audit whether the Lean formalizations faithfully capture the intended mathematical predicates without trivializing hypotheses.",
+    "As acknowledged in Section 1, general real-valued conic and nonnegative factorization lower bounds (such as proving xc(P) = 40 and xc(P x P) = 79 from the real-valued definition of extension complexity and Yannakakis' theorem) remain in [6] and are not end-to-end formalized in Lean 4.",
+    "Minor formatting and labeling blemishes: missing spaces in the Python reproduction command in Sections 4-5, ambiguous 'bits saved' wording in Table 2 (C15-C16), uncertified 'Rect. cover' bars in Figure 1a alongside a mixed legend, and grouping C14 (j=[2,5]) under the canonical doubling sequence in Figure 3's caption."
+  ]
+}

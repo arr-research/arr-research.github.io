@@ -1,0 +1,291 @@
+# Exact Rational and Constructive Lean 4 Certificates for Non-Additivity of Extension Complexity Under Cartesian Products
+
+**Author:** Lluis Eriksson  
+**AIRR Identifier:** `ARR-2026-0WKHQBJJDA8C4VPT` (v1)  
+**License:** CC-BY-4.0 (manuscript), MIT (verification repository)  
+**Verification Repository:** https://github.com/lluiseriksson/extension-complexity-cartesian-certificates (`v1.0.0`)  
+**Canonical PDF SHA-256:** `3fb72685cfeec56e8be6c3e0e16ce6b060625ca15cfd15ff6af1ee3390d1be00`
+
+## Abstract
+
+Minhao Liu (arXiv:2611.33631v1, Nov. 2026) disproves Conjecture 1.2 of Grande, Padrol, and Sanyal by proving that linear extension complexity is not additive under Cartesian products: an explicit 24-dimensional rational polytope P with 50 facets and 150 vertices satisfies xc(P) = 40 and xc(P x P) = 79, while infinite families achieve linear-fraction deficits delta(U_n, V_n) >= ceil(5n/27) and unbounded Cartesian-square deficits delta(R_t, R_t) >= t. We present an independent, unrefereed companion verification suite (EXT-COMPLEXITY-PROD-CERT-1.0) comprising 18 constructive Lean 4.35.0 theorems (0 sorry, 0 custom axioms, 0 Classical.choice), a strictly zero-floating-point Python verifier over exact Z and Q checking four verification modes (eight submodes), 16 canonical JSON certificates (C01-C16), and 43 unit and adversarial forgery tests.
+
+## Full Extracted Text
+
+--- Page 1 ---
+Exact Rational and Constructive Lean 4 Certificates for
+Non-Additivity of Extension Complexity Under Cartesian
+Products
+Lluis Eriksson
+Independent Researcher (https://github.com/lluiseriksson)
+Companion Preprint to Minhao Liu (arXiv:2611.33631v1) — Unrefereed Formal-Verification Artifact
+November 26, 2026
+Abstract
+Minhao Liu ( arXiv:2611.33631v1, Nov. 2026) disproves
+Conjecture 1.2 of Grande, Padrol, and Sanyal by proving
+that linear extension complexity is not additive under Carte-
+sian products: an explicit 24-dimensional rational polytope
+P with 50 facets and 150 vertices satisfies xc(P) = 40 and
+xc(P×P ) = 79, while infinite families (Un, Vn) and Cartesian
+squares Rt ×R t achieve linear-fraction deficits δ(Un, Vn) ≥
+⌈5n/27⌉ and unbounded square deficits δ(Rt, Rt) ≥t . Be-
+cause neither ordinary rank nor rectangle covering detects
+the subadditivity gap—requiring exact facet-wedge lifting,
+magnitude-sensitive probe/alternating-sum inequalities, con-
+ditional label-profile counting, and alphabet-separated cover
+numbers—we present an independent companion verifica-
+tion artifact (EXT-COMPLEXITY-PROD-CERT-1.0) containing:
+(i) 18 constructive theorems in Lean 4.35.0 (zero sorry,
+zero custom axioms, zero Classical.choice); (ii) a zero-
+floating-point Python verifier over exact Z and Q checking
+four verification modes (eight submodes); and (iii) 16 canon-
+ical JSON certificates ( C01–C16) and 43 unit/forgery tests
+auditing every exact matrix factorization, facet/vertex count,
+and quantitative threshold.
+1 Introduction and Scope
+By Yannakakis’ factorization theorem [9], the linear extension
+complexity xc(Q) of a polytope Q equals the nonnegative
+rank rank+SQ of its slack matrix, and the slack matrix of a
+Cartesian product Q×Q ′ is the 1-product SQ ⊗1 SQ′ [1, 3].
+While xc(Q×Q ′) ≤xc (Q)+ xc(Q′) is immediate and equality
+holds when one factor is a simplex [ 5] or a pyramid [ 8],
+whether additivity holds in general (Conjecture 1.2 of [ 5])
+remained open since the 2013 Dagstuhl seminar. In [ 6],
+Minhao Liu resolves the question negatively, echoing strict
+subadditivity of tensor rank [ 7] and positive semidefinite
+rank [4].
+Scope and attribution.This paper is anunrefereed com-
+panion verification preprintto [ 6]. All mathematical theo-
+rems, polytope constructions, and proof techniques belong
+exclusively to Minhao Liu [6]. Our contribution is an indepen-
+dent, deterministic, zero-floating-point audit layer checking
+the finite algebraic, polyhedral, and quantitative pillars of [6]
+Table 1: Constructive Lean 4.35.0 theorems in
+ExtensionComplexityCert.lean (18/18 built, 0 sorry,
+0Classical.choice).
+# Lean Theorem Group Paper Pillar [6]
+1–2thm3 wedge *,lemma5 wedge *Sec. 2 Thm. 3 & Lem. 5
+3thm1 polytope P exact countsThm. 1 (dim 24,50,150,40,79)
+4–7prop9 claim2 *,claim3 *,claim4 *Sec. 4 Prop. 9 Claims 1–4
+8prop10 base B facet and vertex *Sec. 5 Prop. 10 (37,39,13)
+9–11prop11 incidence *,discrete *Sec. 6.2 Prop. 11 (c 2, c3)
+12–13thm2 linear *,sec62 frac *Sec. 6.2–6.3 (δ≥ 5n
+27 )
+14–16lemma12 *,lemma13 *,square *Sec. 6.4 Lem. 12–13 (δ≥t)
+17–18sec7 corollaries *,sec72 *Sec. 7 Cor. 14–15 & 8→7b
+in Lean 4.35.0 and exact rational Python. General real-valued
+conic factorizations are treated in [ 6] via the quantitative
+probe and counting inequalities that we mechanize and verify
+here.
+2 Constructive Lean 4 Formaliza-
+tion
+We formalize 18 core theorems of [ 6] in lean/Extension
+ComplexityCert.lean under Lean 4.35.0 without Math-
+lib. Every theorem is audited via #print axioms to depend
+exclusively on propext and Quot.sound (zero sorry, zero
+custom axioms, zero Classical.choice, zero compiler warn-
+ings). Table 1 summarizes the 18 theorems.
+Three constructive highlights anchor the mechanization.
+First, Theorems 4–6 certify Liu’s exact rational Proposition 9
+bounds with zero floating-point rounding: 26( τ + 2β) =
+663
+2500 < 1 (Claim 2) and 26 max(6β, 6ε
+1−ε ) = 62412
+76523 < 1
+(Claim 3, via 13 · 62412 = 811356 < 994799 = 13 · 76523),
+while Theorem 5 proves universally over N that deficient-
+node budgets exceed 13 d for d∈ {1, 2}. Second, Theo-
+rems 9–12 mechanize Proposition 11’s incidence-and-good-
+block combination at N = 6, proving 27(r2 +r3 −rjoint) ≥ 5n
+from r2 ≥ (p + 3)n, 27 r3 ≥ (27p + 32)n, and rjoint ≤
+(2p + 4)n, together with the discrete ratio test establish-
+ing maxd≥1 d(3/4)d−1 = 27/16 at d∈ {3, 4}. Third, Theo-
+rems 14–16 formalize all three cases of Lemma 12’s cover
+additivity Ct = C + j (j≥ 2C), Lemma 13’s N⋆ = D + q
+budget cancellation, and an inductive proof over arbitrary
+lists [j1, . . . , jt] (ji ≥1) that 2 Pji − P(2ji −1) =t.
+1
+
+--- Page 2 ---
+3 Zero-Float Verifier Architecture
+Our verifier src/ext_complexity_verifier.py is audited
+by AST inspection for zero float literals, zero float() calls,
+zero true-division operators (/, /=), and zero math/numpy im-
+ports. Rationals are encoded as lowest-terms pairs [ a, b] with
+pre-read is file()/st size≤ 106-byte guards, duplicate-
+key rejection, non-finite constant rejection, and recursion
+trapping. Four verification modes cover all sections of [6]:
+1. Mode 1 ( wedge_transfer_and_slack_polytope ):
+Submode 1a checks Lemma 5’s zero-pattern condition
+(∀ nonzero row g, ∃i : Mgi = 0 < σi) and verifies that
+a nonnegative factorization M = UV of rank r lifts
+identically to Mσ = UσVσ of rank r + 2. Submode 1b
+builds the twin-hexagon graph G, checks rankQ(R) = 11
+and Rκ = 0, verifies Xt = X0 + Rbt, validates all
+37 facets of B via explicit single-tight-facet witnesses,
+checks rank-11 tight subsystems for all 39 vertices of B,
+and verifies the 13-wedge lift P = ˆB has dimP = 24, 50
+facets, and 3·2 + 36·4 = 150 vertices.
+2. Mode 2 ( six_cycle_subadditivity_and_bounds ):
+Submode 2a constructs the 24 × 39 matrix S, veri-
+fies rankQ(S) = 12 (Remark 8), certifies Lemma 7’s
+14-generator nonnegative factorization of S and 27-
+generator nonnegative factorization of S⊗ 1 S across
+all 392 = 1,521 pairs (73,008 exact integer entries), and
+verifies Eq. (4.1) ( D(Rv) = 0, D(As) = D(Xt) = 1)
+across all 26 = 64 six-cycles of G. Submode 2b checks
+Proposition 9’s exact rational Claim 2 and Claim 3
+bounds.
+3. Mode 3 ( linear_fraction_deficit_Un_Vn ):Sub-
+mode 3a constructs Γ2 and Γ3, verifies T∩U̸ = ∅ across
+all 24 pairs in T2 ×T3, checks Eq. (6.1) for all (T, s), and
+computes exact Q-ranks before and after deleting I(f)
+for every coarse node f (Sec. 6.3), proving every coordi-
+nate inequality is a distinct facet. Submode 3b checks
+Proposition 11’s scale parameters, discrete maxima (1
+and 27/16), 3-block fractional relaxation (64/18 = 32/9),
+and exact deficitδ(U n, Vn)≥ ⌈5n/27⌉.
+4. Mode 4 ( unbounded_square_and_corollaries ):
+Submode 4a verifies Lemma 12’s growth condition ji ≥
+2 P
+h<i jh, pairwise intersection of Fji, Lemma 13’s ex-
+act parameters (D, q, s⋆, N⋆, p⋆, H) and perfect-square
+scale Λ = (
+√
+Λ)2, and square deficit t. Submode 4b
+checks Corollaries 14–15, the Sec. 7.1 face bound 0≤δ≤
+16, and Sec. 7.2’s zero-error channel bit-width drop [2].
+4 Canonical Certificates and
+Worked Witnesses
+All 16 canonical certificates ( C01–C16) verify deterministi-
+cally via python-msrc.ext_complexity_verifiercerti
+ficates, and all 43 tests in tests/test_verifier.py pass
+in 0.95 s. Table 2 summarizes the live outputs.
+Worked Witness 1 (Polytope P and Twin-Hexagon
+Matrix S, C03, C05, C07).At L = 10 6, the 12-node
+twin-hexagon incidence matrix R has exact Q-rank 11 and
+nullspace span(κ). Evaluating all 37 inequalities of Eq. (5.2)
+of [6] confirms 37 distinct facets and 39 vertices of B⊂R 11:
+each of the 3 verticesXt has 1 positive omitted slack (the sum
+inequality, lifting to 2 vertices) while each of the 36 vertices
+Xt + LRv has 2 positive opposite-pair slacks (lifting to 4
+vertices), yielding 3·2+36 ·4 = 150 vertices and 24+26 = 50
+facets in dimension 11 + 13 = 24 ( C03). Meanwhile, C05
+certifies rankQ(S) = 12, verifies all 1 ,521 columns of S⊗ 1 S
+against the 27-generator dictionary ( Rv, 0), (0, Rv), (As, As),
+and checks D(Rv) = 0 , D(As) = D(Xt) = 1 on all 64 six-
+cycles, while C07 certifies τ = 1 /5000 = ⇒β = 1 /200,
+ε = 5201/106, Claim 2 probe bound 663 /2500, and Claim 3
+alternating bound 62412/76523 (Fig. 1).
+Worked Witness 2 (First Linear-Fraction Saving at
+n = 6, C09 & C11).For N = 6 (p = 72 stars), Mode 3a
+(C09) confirms 1,080 retained rows for Γ 2 (rankE 2 = 9) and
+1,728 for Γ3 (rankE 3 = 7), with exact rank drop 1 upon delet-
+ing every coarse node’s incident edges. At n = 6, Mode 3b
+(C11) verifies rank+M2,6 = 75 · 6 = 450, rank+M3,6 ≥
+⌈(72+ 32
+27 )·6⌉ = 440, and joint upper bound (144+4) ·6 = 888,
+certifying δ(U6, V6) ≥ 450+440 −888 = 2 = ⌈30/27⌉ (Fig. 2).
+Worked Witness 3 (Unbounded Square t = 2and
+Zero-Error Channel Bit Saving, C13 & C15).For j =
+[2, 4] (C13), Mode 4a verifies 4 ≥ 2 · 2, all 1 ,234 pairwise
+intersections in F2 and F4, C2 = 6, N⋆ = 20 + 4 = 24,
+p⋆ = 24(6 + 140) = 3,504, and Lemma 13 scale
+√
+Λ = 1010,
+giving δ(R2, R2) ≥ 2. In C15, pairing Q = P (xc = 40) with
+Q′ =P×∆ 48 (xc = 89) reduces label-determined messages
+from 40 + 89 = 129 (8 bits) to xc(P×P× ∆48) = 79 + 49 =
+128 = 27 (7 bits; Fig. 3b).
+5 Reproducibility and Availability
+All Lean 4 proofs, Python verifiers, certificates, figure scripts,
+and SHA-256 manifest ( MANIFEST.sha256) are archived
+at https://github.com/lluiseriksson/extension
+- complexity- cartesian- certificates under MIT
+(code/Lean/data) and CC-BY-4.0 (manuscript/figures) li-
+censes. Reproduction requires three commands: cd lean
+&& lake build, python-msrc.ext_complexity_verifie
+rcertificates, andpytest -q.
+AI Assistance Disclosure.Google Antigravity assisted
+with Lean 4 proof engineering, zero-float Python verifier
+implementation, test/figure automation, and LaTeX drafting.
+The author verified every mathematical derivation, Lean
+axiom audit, certificate check, and visual figure inspection,
+and takes full responsibility for all contents.
+2
+
+--- Page 3 ---
+Table 2: Summary of all 16 verified EXT-COMPLEXITY-PROD-CERT-1.0 canonical certificates (C01–C16), with exact outputs
+fromverify file.
+ID Mode / Submode Input Instance Exact Certified Metrics
+C01M1a Wedge Lift PentagonM 4×5, omittedσLemma 5 holds on 4/4 rows; liftedM σ is 6×10, rank 4→6
+C02M1a Wedge Lift PrismM 4×6, scaledU, VLemma 5 holds on 4/4 rows; liftedM σ is 6×12, rank 4→6
+C03M1b PolytopePCanonicalL= 10 6 rank(R) = 11,B: 37 facets/39 verts;P: dim 24,50,150
+C04M1b PolytopePScaledL= 10 7 Exact scale invariance:B(37,39)→P(dim 24,50,150)
+C05M2a Twin-HexSCanonicalL= 10 6 rank(S) = 12, rank+ ≤14, rank +(S⊗ 1 S)≤27, 1521 pairs, 64 cycles
+C06M2a Twin-HexSScaledL= 5·10 6 Exact 14/27 nonnegative factorizations across 73,008 entries
+C07M2b Prop. 9L= 10 6,τ= 1
+5000 Claim 2 UB 663
+2500 ≈0.2652<1; Claim 3 UB 62412
+76523 ≈0.8156<1
+C08M2b Prop. 9L= 10 7,τ= 1
+20000 Claim 2 UB 1053
+10000 = 0.1053<1; Claim 3 UB≈0.3120<1
+C09M3a Dict./Facets Γ 2,Γ 3,N= 6p= 72, rows 1080/1728, rank(E 2) = 9, rank(E3) = 7, all drops = 1
+C10M3a Dict./Facets Γ 2,Γ 3,N= 8p= 96, rows 2432/4096, exact Sec. 6.3 node-deletion rank drop
+C11M3b Prop. 11n= 6, N= 6 (Sec. 6.2) rank +M2,6 = 450, rank+M3,6 ≥440, joint≤888,δ≥2
+C12M3b Prop. 11n= 27, N= 6 rank +M2,27 = 2025, rank+M3,27 ≥1976, joint≤3996,δ≥5
+C13M4a Squarest= 2,j= [2,4],
+√
+Λ = 1010 C2 = 6,N ⋆ = 24,p ⋆ = 3504, 1234 pair checks,δ(R 2, R2)≥2
+C14M4a Squarest= 2,j= [2,5],
+√
+Λ = 1014 C2 = 7,N ⋆ = 75,p ⋆ = 47700,δ≥2, Lemma 13 bounds<1
+C15M4b Cor./Channeld chan = 48 (∆48) Cor. 14–15 exact; 129→128 messages (8→7 bits saved!)
+C16M4b Cor./Channeld chan = 176 (∆176) Cor. 14–15 exact; 257→256 messages (9→8 bits saved!)
+Figure 1:Theorem 1 Subadditivity Gap and Proposition 9 Margins.(a) Ordinary rank and rectangle cover cap at
+24 for both 2 × single and joint products, whereas exact rank+ drops from 28 to 27 and polytope xc drops from 80 to 79
+(C03,C05). (b) Certified rational Proposition 9 upper bounds strictly below 1 (C07,C08).
+References
+[1] Manuel Aprile, Michele Conforti, Samuel Fiorini, Yuri
+Faenza, Tony Huynh, and Marco Macchia. Slack matri-
+ces, k-products, and 2-level polytopes.Discrete Applied
+Mathematics, 354:199–213, 2024.
+[2] Joel E. Cohen and Uriel G. Rothblum. Nonnegative
+ranks, decompositions, and factorizations of nonnegative
+matrices.Linear Algebra and its Applications, 190:149–
+168, 1993.
+[3] Michele Conforti, G´ erard Cornu´ ejols, and Giacomo Zam-
+belli. Extended formulations in combinatorial optimiza-
+tion.Annals of Operations Research, 204:97–143, 2013.
+[4] Jo˜ ao Gouveia, Richard Z. Robinson, and Rekha R.
+Thomas. Polytopes of minimum positive semidefinite
+rank.Discrete & Computational Geometry, 50:679–699,
+2013.
+[5] Francesco Grande, Arnau Padrol, and Raman Sanyal.
+Extension complexity and realization spaces of hypersim-
+plices.Discrete & Computational Geometry, 59:621–642,
+2018.
+[6] Minhao Liu. Extension complexity is not additive
+under Cartesian products, November 2026. Preprint,
+arXiv:2611.33631v1.
+[7] Yaroslav Shitov. Counterexamples to Strassen’s direct
+sum conjecture.Acta Mathematica, 222(2):363–379, 2019.
+[8] Hans Raj Tiwary, Stefan Weltge, and Rico Zenklusen.
+Extension complexities of Cartesian products involving
+a pyramid.Information Processing Letters, 128:11–13,
+2017.
+[9] Mihalis Yannakakis. Expressing combinatorial optimiza-
+tion problems by linear programs.Journal of Computer
+and System Sciences, 43(3):441–466, 1991.
+3
+
+--- Page 4 ---
+Figure 2:Linear-Fraction Deficit Construction (Sec. 6.1–6.3).(a) Exact discrete maxima of dρd−1 at ρ = 1/2 (max
+1) and ρ = 3/4 (max 27/16 at d∈ {3, 4}). (b) Guaranteed integer deficit δ(Un, Vn) ≥ ⌈5n/27⌉ with live certified instances
+C11(n= 6, δ≥2) andC12(n= 27, δ≥5).
+Figure 3:Unbounded Cartesian Squares and Channel Simulation.(a) Canonical doubling sequence j1 = 2, ji =
+2 P
+h<i jh yields exact saving 2Ct − P(2ji − 1) = t (Lemmas 12–13; live witnesses C13–C14). (b) Zero-error slack-channel
+simulation achieves strict fixed-length bit-width drops inC15(129→128, 8→7 bits) andC16(257→256, 9→8 bits).
+4

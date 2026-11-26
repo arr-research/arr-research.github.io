@@ -1,0 +1,55 @@
+{
+  "assessed_at": "2026-11-26T04:27:17Z",
+  "canonical_sha256": "2e696e6c18c125c6c94d27f09b554233cfc7684aa70b74931d37c7a1ff970082",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "Checked Sec. 2 inequalities (Thms. 6, 9-11, 15), Worked Witnesses 1-3 (Octahedron kappa=1, K4 v K8_bar kappa_SI=5/11, C07/C08 defects, C11/C12 D_max=414/18492, C13 Ramsey 4000>3000>2660 and |W|=16590420), Table 2, and Figs. 1-3: all visible calculations match, though Lean/Python sources lie outside the PDF and Thm. 10 prose omits the t-c constraint.",
+      "stars": 4
+    },
+    "novelty": {
+      "basis": "Scope and Attribution (Sec. 1) explicitly credits all mathematical theorems, join constructions, and asymptotic bounds to Linyuan Lu [5]. The paper's contribution is purely an independent verification suite (18 Lean 4 theorems, zero-float Python verifier, 16 JSON certificates), yielding modest methodological novelty.",
+      "stars": 2
+    },
+    "reproducibility": {
+      "basis": "Specifies exact Lean 4.35.0 toolchain, zero-float AST guards, MANIFEST.sha256, three-command reproduction steps, and exact rational metrics for C01-C16 in Table 2 and Worked Witnesses 1-3. Full end-to-end inspection still requires external repository artifacts not embedded in the 4-page PDF.",
+      "stars": 4
+    },
+    "rigor": {
+      "basis": "Employs constructive Lean 4.35.0 without Mathlib or Classical.choice, AST-audited zero-float rational arithmetic, and primal-dual Kantorovich strong duality at alpha=1/2 forcing exact kappa(x,y) equality. Rigor in the PDF is limited by omitting exact Lean theorem statements, the t-c hypothesis in Sec. 2 Thm. 10, and definitions for E (Table 2 C13-C14) and s (Worked Witness 3).",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Delivers deterministic Lean 4 and zero-float certification for Lu [5]'s resolution of Song's Problem 4.1 across all four proof pillars and sharp join constructions. Significance is bounded because external density theorems [1,2,3,8] and Song's 2t*Delta^6 [7] remain unformalized hypotheses and the PDF summarizes rather than proves the full graph-theoretic reductions.",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.7,
+  "model_id": "hydrogen",
+  "overall_stars": 4,
+  "paper_id": "ARR-2026-3NGWG4AB1Y9WNB4P",
+  "potential_errors": [
+    "Section 2 (Theorem 10) writes 'for every c >= 3 and D >= 25c^3 ... Theorem 10 verifies binom(t-2, 2) + 2t <= 5c^2' without stating the required upper bound relating t to c (such as t <= c + 2, which appears later in Fig. 2b).",
+    "Table 2 lists 'Song order 17 digits' (C11) and 'Song order 27 digits' (C12) without specifying that these digit counts evaluate 2t*Delta^6 at the derived contradiction bound D_max (414 and 18,492, yielding ~5.04e16 and ~7.98e26) rather than at the input D (700 and 45,000, which would give 19 and 30 digits).",
+    "In Table 2 (C13-C14) and Worked Witness 3 (C13), the parameters E (10 and 20, presumably 1/epsilon) and s (appearing in 1/2*(s^2/D - s) = 4000, implicitly s = h*epsilon*D = 8000) are used without explicit definitions in the PDF."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Clear and honest attribution: Sec. 1 explicitly assigns all mathematical theorems, constructions, and asymptotic bounds to Lu [5] and frames the manuscript strictly as an independent formal-verification companion artifact.",
+    "Sound primal-dual LLY curvature certification at alpha = 1/2: matching an explicit transport coupling pi with a 1-Lipschitz dual potential f (f(y) - f(x) = 1) forces equality across the monotonicity chain 2(1 - cost(pi)) <= kappa <= Delta f(x) - Delta f(y), verified exactly on K_{2,2,2}, K_6, and K_{t-1} v K_{n-t+1}_bar.",
+    "Exact algebraic and numerical consistency across all worked witnesses, Table 2 entries, and Figs. 1-3: e.g., Sec. 2 doubling proof for Lemma 3.3, cubic algebra for Prop. 4.2 (D_max = 414 for C11 and 18,492 for C12), Lemma 5.1 threshold (t^2+t-4)/2 < binom(t+1, 2), and C13 double-counting/Ramsey numbers (4000 >= 4000 > 3000 > 2660, |U| < 1540, |W| <= 16590420).",
+    "Constructive Lean 4.35.0 formalization without Mathlib, sorry, custom axioms, or Classical.choice, paired with an AST-audited zero-float Python rational verifier."
+  ],
+  "strong_novelty_candidates": [],
+  "summary": "This 4-page companion preprint to Linyuan Lu (arXiv:2611.33694v1) presents a constructive Lean 4.35.0 formalization (18 theorems, no Mathlib, no Classical.choice) and an AST-audited zero-floating-point Python certification suite (16 canonical JSON certificates C01-C16 and 36 tests) covering the finite primal-dual LLY curvature witnesses, algebraic inequalities, Hall-matching witnesses, and quantitative parameter regimes of Lu's resolution of Song's Problem 4.1. All visible algebraic derivations, primal-dual calculations (including Octahedron, K_6, and sharp join K_{t-1} v K_{n-t+1}_bar curvatures and K_t^{(2)}-freeness), Table 2 metrics, and Figures 1-3 check out accurately. Main limitations are inherent to the terse companion-note format: external density theorems [1,2,3,8] and Song's 2t*Delta^6 [7] are treated as unformalized hypotheses, the Lean/Python source artifacts reside externally rather than in the PDF, and a few prose summaries omit explicit parameter definitions or quantifier hypotheses (notably the t-vs-c relation in Theorem 10, E and s in Mode 4a, and which Delta enters Song's digit count in Table 2).",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:bd9df602-d8e3-4807-b6ea-5e6671f6e1c1",
+  "weaknesses": [
+    "The 4-page PDF does not include the formal Lean 4 theorem statements from PosCurvCliqueCert.lean or the Python verifier/JSON certificate source, so a referee reading only the PDF cannot audit whether the Lean formalizations match Lu [5]'s exact hypotheses without vacuity.",
+    "Deep graph-theoretic components—the external density theorems [1,2,3,8], Song's global order estimate |V(G)| <= 2t*Delta^6 [7], and full graph-theoretic reductions of [5]—are treated as external hypotheses rather than formalized end-to-end in Lean.",
+    "Several terse summaries omit defining formulas needed for self-contained reading in the PDF, such as the Lemma 3.1 lower-bound formula producing d(y) > 7680000/1009 in C08 and the explicit pigeonhole inequality binom(b_I, 2) + b_I*(t - b_I) > b_I - 1 underlying the Mode 1b K_t^{(2)}-freeness split."
+  ]
+}
