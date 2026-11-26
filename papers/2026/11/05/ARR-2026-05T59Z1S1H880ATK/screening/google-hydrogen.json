@@ -1,0 +1,54 @@
+{
+  "assessed_at": "2026-11-26T10:02:31Z",
+  "canonical_sha256": "53ebeb4c8df3c0affc3f22242564394ba4b35a912f28a00e25e998c947821453",
+  "criteria": {
+    "correctness_confidence": {
+      "basis": "Independent hand-verification confirms all 18 Lean N-arithmetic identities in Table 1, Eq. (2) closed forms for L(4k,2k), and exact rational values in Table 2 including HT(K6)=75, HT(P6)=223, HT(L(6,4))=224, HT(L(7,4))=933/2, HT(K4+2 pend.)=188, HT(K5,5)=425, HT(2K5+e)=5497/5, and HT(2K7+e)=26641/7.",
+      "stars": 5
+    },
+    "novelty": {
+      "basis": "Verification companion auditing results from Palacios et al. (arXiv:2611.34295v1) rather than proving new theorems; Lean lemmas are elementary decoupled N-identities, while the AST-audited zero-float Q-certificate pipeline and forgery tests offer solid engineering value.",
+      "stars": 2
+    },
+    "reproducibility": {
+      "basis": "Specifies exact toolchains (Lean 4.35.0, Python 3.10+), four-line reproduction commands, SHA-256 manifest, 16 JSON certificates (C01-C16), and 39 pytest checks running in under 0.6 s, though artifact execution itself is not verified from the PDF alone.",
+      "stars": 5
+    },
+    "rigor": {
+      "basis": "Clearly separates Lean's decoupled N-arithmetic proofs (0 sorry, 0 Classical.choice) from the zero-float Q linear-system solver and includes 22 adversarial forgery-rejection tests; limited only because graphs, Markov chains, and effective resistance are not formalized in Lean.",
+      "stars": 4
+    },
+    "significance": {
+      "basis": "Provides an exact-rational, floating-point-free audit of key witnesses for the hitting time index, including the minimal P6 vs L(6,4) counterexample, Prop. 8 sharp threshold witnesses, and Table 1 lollipop values of [1].",
+      "stars": 3
+    }
+  },
+  "independence": "not_involved_in_manuscript",
+  "millennium_score": 3.4,
+  "model_id": "hydrogen",
+  "overall_stars": 3,
+  "paper_id": "ARR-2026-05T59Z1S1H880ATK",
+  "potential_errors": [
+    "Counting terminology ambiguity: the abstract and Section 2 state that C01-C16 cover 15 finite benchmark graphs plus one closed-form point, whereas certificates C05-C09 each solve a pair (L(n,k*), P_n) over Q, yielding 19 distinct finite graphs solved across the 15 finite-witness certificates (even accounting for P6 overlapping C02), alongside additional finite solves plotted in Figures 2 and 3.",
+    "Lean Theorem 6 (prop5_balanced_step_derivative_neg) references Proposition 5 of [1], but Proposition 5 is neither stated in the text nor included in Mode 1, leaving its role unexplained within the self-contained note."
+  ],
+  "prompt_version": "ARR-ASSESS-1.0",
+  "provider": "Google",
+  "recommendation": "accept",
+  "strengths": [
+    "Mathematical accuracy: every checked exact rational witness in Table 2 (K6, P6-P10, C8, K4+2 pendants, L(6,4), L(7,4), L(4k,2k) closed forms for k=1..4,10, K5,5, 2K5+e, and 2K7+e) and all 18 N-arithmetic statements in Table 1 are exact.",
+    "Transparent scope discipline: Sections 1, 2, and 5 explicitly state that Lean 4.35.0 formalizes only decoupled N-arithmetic identities and integer inequalities without defining graphs, Markov chains, or effective resistance inside Lean.",
+    "Zero-float exact rational discipline: enforcing Fractions over Q with AST auditing against float literals/imports and bool-as-int coercion prevents numerical rounding errors in tight comparisons such as HT(P6)=223 < 224=HT(L(6,4)) and 2531.6 < 7595/3 < 2531.7.",
+    "Adversarial robustness design: 22 dedicated forgery-rejection tests target schema tampering, unreduced fractions, invalid graphs, and swapped Prop. 8 regimes."
+  ],
+  "strong_novelty_candidates": [],
+  "summary": "This 4-page verification note presents HT-INDEX-CERT-1.0, an independent audit package combining 18 constructive Lean 4.35.0 natural-number arithmetic/comparison theorems (0 sorry, 0 Classical.choice) and an AST-audited zero-float Python exact-rational linear-system verifier over Q across 16 JSON certificates (C01-C16) and 39 pytest checks for results in Palacios et al. (arXiv:2611.34295v1). Independent verification of the manuscript confirms that all algebraic identities, closed-form formulas, and exact rational witness values in Tables 1 and 2 and Figures 1-3 are mathematically sound, and the authors honestly disclose the exact scope boundary between Lean's decoupled N-arithmetic lemmas and the finite-witness rational solver. While the mathematical depth and novelty are bounded because graph theory and Markov chains are not formalized in Lean and general theorems of [1] are audited only on finite witnesses, there are no material objections and the note is a clean, substantive, and transparent certification artifact.",
+  "unresolved_material_objections": [],
+  "version": "v1",
+  "version_id": "arr:version:72d5d3c1-a7d1-47ee-b06a-debd89f7f478",
+  "weaknesses": [
+    "Decoupled formalization: Lean 4.35.0 only proves elementary N-arithmetic identities and integer comparisons (with hypotheses like 2m <= n(n-1) and n^2 <= 8R passed as raw numerical assumptions) rather than formalizing graphs, random walks, effective resistance, or Q-linear algebra end-to-end.",
+    "Finite-witness scope: universal claims from [1] (such as Kn minimality for all n or Proposition 8 for all graphs) are not formally proved in general; the exact-rational verifier audits only specific finite benchmark witnesses and one closed-form point.",
+    "Minor presentation omissions: Proposition 5 appears in Table 1 row 6 without explanation in the text or Mode 1, and the phrase '15 finite benchmark graphs' slightly conflates the 15 finite-witness certificates with the 19 distinct finite graphs solved in C01-C12 and C14-C16."
+  ]
+}

@@ -1,0 +1,249 @@
+# Formal Algebraic and F2-Circuit Certification for the NP-Completeness of Optimal CNOT Synthesis on Linear Oracles
+
+**Author:** Lluis Eriksson  
+**AIRR Identifier:** `ARR-2026-01XK18W7DJ8AJAWH` (v1)  
+**License:** CC-BY-4.0 (manuscript), MIT (verification repository)  
+**Verification Repository:** https://github.com/lluiseriksson/optimal-cnot-hardness-certificates (`v1.0.0`)  
+**Canonical PDF SHA-256:** `3ae5897d130b5fb20ac4870843533be88d583fb69843bd9c6a1678c3d3b2e2a3`
+
+## Abstract
+
+We present a machine-checked constructive Lean 4.35.0 kernel and zero-float F_2 circuit verification suite (CNOT-HARD-CERT-1.0) auditing Andreas Pavlogiannis's proof that optimal CNOT synthesis is NP-complete even for involutive linear oracles B_G and even with free SWAP gates or ancillas (arXiv:2611.34138v1). Our artifact combines 18 constructive Lean 4.35.0 theorems (0 sorry, 0 custom axioms, 0 Classical.choice, 0 warnings), an AST-audited zero-float Python F_2 bitmask verifier, 16 canonical JSON certificates (C01-C16), and 36 unit and forgery-rejection tests. In Lean we formalize linear-oracle involution, 3-CNOT SWAP equivalence, free-ancilla reduction rules, Lemma 2 clique-cover dominance and evenness, Lemma 3 gate-elimination Case (a)/(b) projections and telescoping step, Lemma 4 Hamiltonian-path CNOT wire invariants, z-wire restoration, and exact gate count 2m + tau(G) + 1, and Theorem 5 parity-rounding reduction soundness. In Python we execute the Lemma 2 H -> H_1 U H_2 U K_{2n} reduction with independent exact branch-and-bound vertex covers, step-by-step Lemma 3 gate elimination verifying both invariants on optimal and Case-(b) circuits, full F_2 matrix simulation of synthesized Lemma 4 CNOT circuits up to GL(33, 2) with B_G^2 = I, and syntactic free-SWAP/clean-ancilla to XOR translation.
+
+## Full Extracted Text
+
+--- Page 1 ---
+Formal Algebraic andF 2-Circuit Certification for the
+NP-Completeness of Optimal CNOT Synthesis on Linear
+Oracles
+Lluis Eriksson
+Independent Researcher·CNOT-HARD-CERT-1.0
+https://github.com/lluiseriksson/optimal-cnot-hardness-certificates
+November 26, 2026
+Abstract
+We present a machine-checked constructive Lean 4.35.0
+kernel and zero-float F2 circuit verification suite
+(CNOT-HARD-CERT-1.0) auditing Andreas Pavlogiannis’s
+proof that optimal CNOT synthesis is NP-complete even
+for involutive linear oraclesBG ∈GL (n+1+m, 2) and even
+with free SWAP gates or ancillas ( arXiv:2611.34138v1,
+Nov. 2026). Our artifact combines 18 constructive
+Lean 4.35.0 theorems ( 0 sorry, 0 custom axioms, 0
+Classical.choice, 0 warnings), an AST-audited zero-
+float Python F2 bitmask verifier, 16 canonical JSON certifi-
+cates (C01–C16), and 36 unit and forgery-rejection tests. In
+Lean we formalize linear-oracle involution, 3-CNOT SWAP
+equivalence, free-ancilla reduction rules, Lemma 2 clique-
+cover dominance and evenness, Lemma 3 gate-elimination
+Case (a)/(b) projections and telescoping step, Lemma 4
+Hamiltonian-path CNOT wire invariants, z-wire restora-
+tion, and exact gate count 2 m + τ(G) + 1, and Theorem 5
+parity-rounding reduction soundness. In Python we exe-
+cute the Lemma 2 reductionH7→H 1∪H2∪K2n with exact
+branch-and-bound vertex covers, step-by-step Lemma 3
+gate elimination on optimal and Case-(b) XOR circuits,
+full F2 matrix simulation of synthesized Lemma 4 CNOT
+circuits up to GL(33, 2) with B2
+G = I, and syntactic free-
+SWAP/clean-ancilla to XOR translation.
+1 Introduction and Audited Scope
+Given an invertible binary matrix A∈GL (d, 2) and a gate
+budget K∈N , theoptimal CNOT synthesisproblem asks
+whether A can be implemented using at most K in-place
+CNOT gates xj ←x j ⊕x k. Building on the XOR-circuit
+edge-form lower bound of Boyar, Matthews, and Peralta [2]
+(DXOR(FG) = m + τ(G) for FG = {z⊕x u ⊕x v}{u,v}∈E,
+where τ(G) is the minimum vertex cover size of G =
+(V, E) with |V| = n,|E| = m), Pavlogiannis [ 1] proves
+NP-completeness directly onlinear oracles
+BG =
+In+1 0
+FG Im
+
+∈GL(n+ 1 +m,2), B 2
+G =I,(1)
+via four modular pillars: (i) Lemma 2 reduces general
+Vertex Cover on H to G = H1 ∪H 2 ∪K 2n with τ(G) =
+2τ(H) + 2n even and a minimum vertex cover inducing
+a Hamiltonian path; (ii) Lemma 3 proves DXOR(FG) =
+m + τ(G) by localized gate elimination; (iii) Lemma 4
+proves DXOR(BG) = 2m+τ(G) and DCNOT(BG) ∈ {2m+
+τ(G), 2m + τ(G) + 1} via an explicit Hamiltonian-path
+CNOT synthesis; and (iv) Theorem 5 reduces τ(G) ≤k
+to DCNOT(BG) ≤ 2m + k′ + 1 (k′ rounded down to even),
+persisting under free SWAPs and free ancillas.
+This note provides an independent machine-checked
+audit (CNOT-HARD-CERT-1.0) with an explicit scope split:
+1. Constructive Lean 4.35.0 kernel( lean/Cno
+tHardnessCert.lean ): 18 universally quantified
+Boolean/F2 and N-arithmetic theorems (0 sorry, 0
+Classical.choice, audited via #print axioms) for-
+malizing all algebraic, wire-update, gate-count, tele-
+scoping, and parity-reduction steps.
+2. AST-audited zero-float F2 verifier( src/cnot
+_hardness_verifier.py ): executes the finite-
+graph constructions, gate-elimination sequences, full
+F2 CNOT matrix simulations, and free-resource syn-
+tactic translations across 16 certificates.
+2 Constructive Lean 4.35.0 Kernel
+All 18 theorems in CnotHardnessCert.lean build in
+0.93 s under Lean 4.35.0 with zero warnings and depend
+exclusively on at most propext and Quot.sound (zero
+Classical.choice, with 9 theorems depending on zero
+axioms). Table 1 summarizes all 18 quantified Lean state-
+ments in abbreviated mathematical syntax. Note honestly
+that Lean certifies the Boolean wire/gate identities, tele-
+scoping step, exact gate counts, and Theorem 5 parity-
+rounding soundness, while finite-graph vertex-cover branch-
+and-bound, explicit circuit execution, and gate-elimination
+replays are certified by our zero-float F2 Python verifier in
+Section 3.
+1
+
+--- Page 2 ---
+Table 1: Summary of all 18 constructive theorems in CnotHardnessCert.lean (Lean 4.35.0, 0 sorry, 0
+Classical.choice,0warnings).
+# Lean Theorem Name Quantified Lean Statement (abbreviated mathematical syntax)
+1linear oracle involution∀y, f∈B,(y⊕f)⊕f=y(0 axioms)
+2reversible edge form involution∀y, z, xu, xv ∈B,(y⊕(z⊕(x u ⊕x v)))⊕(z⊕(x u ⊕x v)) =y(0 axioms)
+3three cnot swap exact∀a, b∈B, a 1 =a⊕b, b 1 =b⊕a 1, a2 =a 1 ⊕b 1 =⇒(a 2, b1) = (b, a) (0 axioms)
+4ancilla zero control and target∀c, t∈B,(t⊕ ⊥=t)∧(⊥ ⊕c=c) (0 axioms)
+5lemma2 clique cover dominance∀n≥1, τ H ≤n−1,2τ H + 2n <4n−1
+6lemma2 even and threshold iff∀n, τ H, k,(2τH + 2n) mod 2 = 0∧(τ H ≤k⇐⇒2τ H + 2n≤2k+ 2n)
+7lemma2 hamiltonian interleaving∀n≥1, τ H ≤n−1,2τ H <2n∧2τ H + (2n−2τ H) + 2τH = 2τH + 2n
+8gate elim case a projection∀z, x v ∈B,(z⊕z=⊥)∧(z⊕(z⊕x v) =x v) (0 axioms)
+9gate elim case b projection∀z, x u, xw, xv, xu=xw →x u⊕xw=⊥ ∧z⊕(xu⊕xw)=z∧z⊕(x u⊕xv)=z⊕(xw⊕xv) (0 ax.)
+10gate elim telescoping step∀c 1 ≤c 0, e1 ≤e 0, t1 ≤t 0,(e 0 −e 1) + (t0 −t 1)≤c 0 −c 1 ∧e 1 +t 1 ≤c 1 →e 0 +t 0 ≤c 0
+11lemma4 xor lower bound lift∀c, c ′, m, τ, c′ +m≤c∧m+τ≤c ′ →2m+τ≤c
+12lemma4 cnot wire invariant∀z, y, x si, xsi+1 , xu, y2a=y⊕z⊕xsi⊕xu ∧y 2b=y⊕z⊕xsi⊕xsi+1 ∧z 2=z⊕xsi+1 (0 ax.)
+13lemma4 z wire restored∀z, x sk ∈B,(z⊕x sk )⊕x sk =z(0 axioms)
+14lemma4 cnot gate count exact∀k≥1, k−1≤m,2 + 3(k−1) + 2(m−(k−1)) = 2m+k+ 1
+15theorem5 even budget rounding∀τ, k, τmod 2 = 0→k ′ mod 2 = 0∧(τ≤k⇐⇒τ≤k ′)
+16theorem5 reduction iff∀m, τ, k, d cnot, τmod 2 = 0∧2m+τ≤d cnot ≤2m+τ+ 1→(τ≤k⇐⇒d cnot ≤2m+k ′ + 1)
+17free resource sandwich∀m, τ, d free, dcnot,2m+τ≤d free ≤d cnot ≤2m+τ+ 1→d free ∈ {2m+τ,2m+τ+ 1}
+18xor transitive cancellation∀a, b, c∈B,(a⊕b)⊕(b⊕c) =a⊕c(0 axioms)
+Figure 1: Lemma 2 promise vertex-cover reduction on
+H∈ {K2, P3, K3, K1,3, C4} confirming strict clique-cover
+dominance 2τ(H) + 2n <4n−1.
+3 Zero-Float F2 Verification Modes
+The verifier src/cnot_hardness_verifier.py is stati-
+cally AST-audited by pytest for zero floating-point oper-
+ations, representing every F2 linear expression and matrix
+row as an exact Pythonintbitmask.
+Mode 1 ( promise vc reduction lemma2, C01–C04).
+Given a source graph H (n vertices), computes exact τ(H)
+via branch-and-bound, builds G = H1 ∪H 2 ∪K 2n (with
+complete bipartite edges between K2n and H1 ∪H 2), veri-
+fies τ(G) = 2τ(H)+2n independently by exact branch-and-
+bound on G (up to nG = 16, C03–C04), and checks that
+the alternating sequence s1, u1, . . . , st, ut, ut+1, . . . , u2n is
+a valid vertex cover inducing a Hamiltonian path inG[S]
+(Fig. 1).
+Mode 2 ( gate elimination lemma3, C05–C08).Given
+G and a supplied XOR circuit C over {z, x0, . . . , xn−1},
+verifies that C computes every edge form z⊕x u ⊕xv, then
+executesPavlogiannis’s localized gate-elimination sequence
+⟨C0, G0⟩ → ··· → ⟨Cq, Gq⟩: locating the first two-input
+Figure 2: Exact XOR distance DXOR(FG) = m + τ(G),
+reversible XOR distance DXOR(BG) = 2 m + τ(G), and
+synthesized Lemma 4 CNOT gate count 2 m + τ(G) + 1
+acrossC09–C12.
+gate g←a⊕b , projecting xu 7→z (Case a, deleting u)
+or xu 7→x w (Case b, merging u into w), removing all
+redundant gates, and verifying both invariant (1) ( Ci+1
+implements FGi+1 ) and invariant (3) (|Ci|−|Ci+1| ≥(|Ei|−
+|Ei+1|) + (τ(Gi) −τ (Gi+1))) at every step, plus verifying
+that the extracted vertices cover G and that the optimal
+(m + τ(G))-gate upper-bound circuit succeeds. Certificate
+C06 explicitly exercises Case (b) vertex merges on a non-
+optimal 6-gate circuit forP 4.
+Mode 3 (linear oracle cnot lemma4, C09–C12).Con-
+structs BG ∈GL (n + 1 + m, 2), verifies exact F2 matrix
+involution B2
+G = I, validates the supplied Hamiltonian min-
+imum vertex cover s1, . . . , sτ , synthesizes Pavlogiannis’s
+exact (2m + τ(G) + 1)-gate CNOT circuit (Steps (1)–(3)),
+and simulates every CNOT gate in-place overF2 to confirm
+exact matrix equality with BG (Fig. 2). Certificate C12
+runs the full pipeline end-to-end on the Lemma 2 image
+G(K2) (n = 8, m= 24, τ= 6), simulating a 55-gate CNOT
+circuit in GL(33,2).
+2
+
+--- Page 3 ---
+Figure 3: Theorem 5 parity-rounding decision budget
+K(k) = 2m + k′ + 1 on G(K2) (m = 24, τ= 6), cleanly
+separating YES (k≥ 6) and NO ( k≤ 5) instances around
+the Lemma 4 band [54,55].
+Mode 4 ( free resources and parity thm5, C13–C16).
+Verifies Theorem 5’s even-τ parity-rounding decision equiv-
+alence (τ(G) ≤k⇐⇒D CNOT(BG) ≤ 2m+k′ + 1, Fig. 3)
+on YES and NO instances, and executes Pavlogiannis’s
+syntactic translation from CNOT circuits augmented with
+free SWAP gates and clean ancillas (0-control no-op, 0-
+target copy, SWAP wire relabeling) to an XOR circuit of at
+most #CNOT gates, confirming exact wire-by-wire output
+agreement over F2 and compliance with the 2 m + τ(G)
+lower bound.
+4 Certificate Suite and Adversarial
+Testing
+Table 2 summarizes all 16 canonical certificates ( C01–
+C16). Our test suite ( tests/test_verifier.py ) ex-
+ecutes 36 tests in under 0 .25 s: all 16 certificates, the
+AST zero-float audit, a C13 zero-control/zero-target re-
+duction test (11 CNOTs translating to 9 XOR gates
+≤K = 9), and 18 adversarial forgery-rejection tests cover-
+ing schema/mode tampering, bool/float coercion, forged
+τ(H)/τ(G)/DXOR/CNOT counts, incomplete or out-of-
+range XOR circuits, non-Hamiltonian and non-covering
+vertex sets in Mode 3, empty/incomplete circuits, odd- τ
+rejection, and flipped decisions in Mode 4, unknown gate
+ops, self-loops, and duplicate edges.
+5 Reproducibility and Disclosure
+All files are SHA-256 hashed in MANIFEST.sha256 and
+archived at https://github.com/lluiseriksson/o
+ptimal-cnot-hardness-certificates (v1.0.0). In-
+dependent reproduction requires only Lean 4.35.0 and
+Python 3.10+:
+cd lean && lake build && cd ..
+python scripts/generate certificates.py
+python -m src.cnot hardness verifier
+certificates/
+Table 2: Certificate inventory ( CNOT-HARD-CERT-1.0,
+16/16 verified).
+ID M Graph / Instance Exact Certified Witness
+C01 1H=P 3 →G(12)τ(H) = 1, τ(G) = 8 even, Ham path
+C02 1H=K 3 →G(12)τ(H) = 2, τ(G) = 10 even, Ham path
+C03 1H=C 4 →G(16)τ(H) = 2, τ(G) = 12 (exact B&B)
+C04 1H=K 1,3 →G(16)τ(H) = 1, τ(G) = 10 (exact B&B)
+C05 2P 4, 5-gate XOR Optimal Case (a) elimination,D= 5
+C06 2P 4, 6-gate XOR Case (b) merge elimination,D= 5
+C07 2C 5, 8-gate XOR Full telescoping elimination,D= 8
+C08 2K 4, 9-gate XOR Full telescoping elimination,D= 9
+C09 3P 4, GL(8,2)B 2
+G =I, exact 9-gate CNOT sim.
+C10 3C 4 +e, GL(10,2)B 2
+G =I, exact 13-gate CNOT sim.
+C11 3K 4, GL(11,2)B 2
+G =I, exact 16-gate CNOT sim.
+C12 3G(K 2), GL(33,2)B 2
+G =I, exact 55-gate CNOT sim.
+C13 4P 4,k= 2, anc+SWAP YES (K= 9), XOR trans. exact
+C14 4P 4,k= 1→k ′ = 0 NO (K= 7<8), parity rounded
+C15 4C 4 +e,k= 3, SWAP YES (K= 13), XOR trans. exact
+C16 4G(K 2),k= 5→k ′ = 4 NO (K= 53<54), full pipeline
+pytest -q
+AI-Assisted Formalization Disclosure.This verifica-
+tion artifact was authored by Lluis Eriksson using Google
+Antigravity for Lean 4 proof engineering, zero-float F2
+Python verification scripting, test design, and manuscript
+preparation. Every verified claim is scoped strictly to
+the 18 Lean 4.35.0 theorems and 16 exact F2 certificates
+(C01–C16).
+References
+[1] A. Pavlogiannis,On the Hardness of Optimal CNOT
+Circuits, arXiv:2611.34138v1, November 2026.
+[2] J. Boyar, P. Matthews, and R. Peralta,Logic Mini-
+mization Techniques with Applications to Cryptology,
+Journal of Cryptology26(2013), 280–312.
+3
