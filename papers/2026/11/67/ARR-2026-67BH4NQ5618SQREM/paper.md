@@ -1,0 +1,941 @@
+# Transcendental-Free Rational Cauchy-Schwarz Decoding, Inverse-Polynomial Approximate NFCE PPAD-Completeness, Exponential Support-Reweighting Barriers, and Subquadratic-Slack Support Thresholds in Extensive-Form Games
+
+**Author:** Lluis Eriksson  
+**AIRR Identifier:** `ARR-2026-67BH4NQ5618SQREM` (v1)  
+**License:** CC-BY-4.0 (manuscript), MIT (verification repository)  
+**Verification Repository:** https://github.com/lluiseriksson/paper139-nfce-ppad-barriers (`v1.0.0`)  
+**Canonical PDF SHA-256:** `6b74aac69c85673c4b4b5914b9fec80f78d3fe6fd905f18fca693017558e6915`
+
+## Abstract
+
+Cheval, Horn, Paul, and Shirmohammadi (2026, arXiv:2611.34897v1) resolved a major open problem in algorithmic game theory by placing the computation of a normal-form correlated equilibrium (NFCE) in imperfect-information extensive-form games with perfect recall in PPAD for an arbitrary number of players (outputting a rational NFCE of support size at most K = 1 + sum_{i=1}^n d_i(d_i+1) <= 1 + N(N-1)), and by proving PPAD-completeness of exact two-player NFCE under the quadratic support bounds kappa_d = (d_1+1)(d_2+1) and kappa_+ = max{kappa_d, floor(|V|^2/36)}. We establish four sharp, transcendental-free structural refinements and impossibility barriers directly extending their framework, backed by 20 constructive Lean 4.36.0 theorems (0 sorry, 0 Classical.choice, 0 warnings), 16 AST-audited zero-float SHA-256 certificates, and 56 adversarial tests: (1) Rational Cauchy-Schwarz decoding and 8x/64x gadget sharpening: replacing Shannon entropy, ln, D_KL, and Pinsker's inequality in Lemmas 18-19 with a purely algebraic two-bin Cauchy-Schwarz partition over Q proves TV(pi, x otimes y)^2 <= TV(mu, mu_1 otimes mu_2)^2 <= (1/4)(kappa/m^2 - 1) (asymptotically tight as m -> infinity for every fixed ratio kappa/m^2 in (1, 2)), which is sqrt(2)x sharper than Pinsker's sqrt((1/2) ln(kappa/m^2)) on (1, 3.51286...) and reduces Theorem 3's gadget parameter m by an exact factor of 8x (r^3 vs 8r^3; r^4 vs 8r^4), cutting |V| by asymptotically 8x and kappa_d by asymptotically 64x; (2) Robust inverse-polynomial delta-NFCE PPAD-completeness: extending Theorem 3 beyond exact (delta = 0) NFCE via reweighted Cauchy-Schwarz proves that any delta-NFCE on support <= kappa decodes to a weak zeta(kappa, m, delta)-Nash equilibrium with zeta = 2(m^2+1)*delta + (1/2)*sqrt(kappa/m^2 - (1 - 2*m^2*delta)^2), proving PPAD-completeness for delta-NFCE at delta = (2048*r^8)^(-1) = Theta(|V|^(-8/3)) under kappa_d and delta = (2048*r^10)^(-1) = Theta(|V|^(-5/2)) under kappa_+; (3) Sharpened Hadamard LP gap and exact exponential necessity family: replacing B = prod_{r in R} den(r) with the leaf-product lcm L_Gamma and keeping the simplex row unscaled halves Lemma 14's exponent to eta_sharp = (sqrt(K)*(K+1)^(K/2)*L_Gamma^K)^(-1), while an explicit {0,1}-payoff two-player bimatrix family (P_m, Q_m) in {0,1}^((2m+3) x (4m+2)) (B = L_Gamma = 1) with support |S_m| = 6m+2 achieves exact minimum regret t*(S_m) = (2^(m+5) - 14m - 30)^(-1) = 2^(-Omega(|S_m|)) > 0 certified by closed-form rational primal and Farkas-dual witnesses; and (4) Universal floor(|V|^2/4) totality, infinite kappa_V-failure, 1/36 b-ary optimality, and subquadratic-slack PPAD-completeness: we prove universal two-player totality at kappa_d <= floor((|V|-1)^2/4) <= floor(|V|^2/4), exhibit an infinite failure family Gamma_match(k) (|V| = 6m-5, m = 2^k) where kappa_V = floor(|V|^2/36) < m^2 is infeasible for all k >= 1, prove (b^2+b)/(b-1) >= 6 (equality iff b in {2,3}) makes 1/36 uniquely optimal over b-ary prefix-matching trees, and resolve Section 5's open problem for every subquadratic additive slack exponent gamma in (0, 2] by proving PPAD-completeness under kappa_d + floor(C*(d_1+d_2)^(2-gamma)) and max{kappa_d, floor(|V|^2/36 + C*|V|^(2-gamma))}, pinpointing gamma = 0 (constant multiplicative slack) as an exact decoding barrier.
+
+## Full Extracted Text
+
+--- Page 1 ---
+Transcendental-Free Rational Cauchy–Schwarz
+Decoding, Inverse-Polynomial Approximate NFCE
+PPAD-Completeness, Exponential
+Support-Reweighting Barriers, and
+Subquadratic-Slack Support Thresholds in
+Extensive-Form Games
+Lluis Eriksson
+Independent Researcher
+ORCID: 0009-0006-7494-9040
+November 27, 2026
+Abstract
+Cheval, Horn, Paul, and Shirmohammadi (2026, arXiv:2611.34897v1) resolved a major
+open problem in algorithmic game theory by placing the computation of a normal-form
+correlated equilibrium (NFCE) in imperfect-information extensive-form games with perfect
+recall in PPAD for an arbitrary number of players (outputting a rational NFCE of support
+size at most K = 1+ ∑ n
+i=1 di(di +1) ≤ 1+ N(N − 1)), and by proving PPAD-completeness of
+exact two-player NFCE under the quadratic support bounds κd = ( d1 +1)(d2 +1) and κ+ =
+max{κd, ⌊|V |2/36⌋}. We establish four sharp, transcendental-free structural reﬁnements and
+impossibility barriers directly extending their framework:
+1. Rational Cauchy–Schwarz Decoding & 8×/64× Gadget Sharpening: Replac-
+ing Shannon entropy, ln, DKL, and Pinsker’s inequality in their Lemmas 18–19 with a
+purely algebraic two-bin Cauchy–Schwarz partition over Q, we prove TV(π, x ⊗ y)2 ≤
+TV(µ, µ1 ⊗ µ2)2 ≤ 1
+4 ( κ
+m2 − 1) (asymptotically tight as m → ∞ for every ﬁxed ratio
+κ/m2 ∈ (1, 2)). This is
+√
+2× sharper than Pinsker’s
+√
+1
+2 ln(κ/m2) on (1, 3.51286 . . . ) and
+reduces Theorem 3’s gadget parameter m by an exact factor of 8× (r3 vs. 8r3; r4 vs.
+8r4), reducing |V |by asymptotically 8× and κd by asymptotically 64×.
+2. Robust Inverse-Polynomial δ-NFCE PPAD-Completeness: Extending Theorem 3
+beyond exact ( δ = 0 ) NFCE, we prove via reweighted Cauchy–Schwarz that any δ-NFCE
+on support ≤ κ decodes to a weak ζ(κ, m, δ)-Nash equilibrium with ζ = 2( m2 + 1) δ +
+1
+2
+√
+κ/m2 − (1 − 2m2δ)2, proving PPAD-completeness for δ-NFCE at δ = (2048 r8)− 1 =
+Θ(|V |− 8/3) under κd and δ = (2048 r10)− 1 = Θ( |V |− 5/2) under κ+.
+3. Sharpened Hadamard LP Gap & Exact Exponential Necessity Family: Re-
+placing B = ∏
+r∈R den(r) with the leaf-product lcm LΓ and keeping the simplex
+row unscaled halves the exponent in Lemma 14 from ((K + 1) B)− (K+1) to ηsharp =
+(
+√
+K(K + 1)K/2LK
+Γ )− 1. Conversely, we construct an explicit {0, 1}-payoﬀ two-player bi-
+matrix family (Pm, Qm) ∈ {0, 1}(2m+3)× (4m+2) (B = LΓ = 1 ) with support |Sm|= 6 m+2
+whose exact minimum regret is t⋆(Sm) = (2 m+5 − 14m − 30)− 1 = 2 − Ω(|Sm|) > 0, certiﬁed
+by closed-form rational primal and Farkas-dual witnesses.
+4. Universal ⌊|V |2/4⌋ Totality, Inﬁnite κV -Failure, 1/36 b-ary Optimality, &
+Subquadratic-Slack PPAD-Completeness: We prove universal two-player totality at
+κd ≤ ⌊(|V |−1)2/4⌋ ≤ ⌊|V |2/4⌋; exhibit an inﬁnite failure family Γmatch(k) (|V |= 6 m− 5,
+m = 2 k) where κV = ⌊|V |2/36⌋< m2 is infeasible for all k ≥ 1; prove b2+b
+b− 1 ≥ 6 (equality
+iﬀ b ∈ {2, 3}) makes 1/36 uniquely optimal over b-ary preﬁx-matching trees; and resolve
+1
+AIRR:ARR-2026-67BH4NQ5618SQREM v1  [Game theory]  27 Nov 2026  ·  AIRR.SCIENCE
+
+--- Page 2 ---
+Section 5’s open problem for every subquadratic additive slack exponent γ ∈ (0, 2] by prov-
+ing PPAD-completeness under κd + ⌊C(d1 + d2)2− γ⌋and max{κd, ⌊|V |2/36 + C|V |2− γ⌋},
+while pinpointing γ = 0 (constant multiplicative slack) as an exact decoding barrier.
+All core algebraic inequalities, gadget parameter bounds, primal/dual identities, totality
+theorems, and slack barriers are machine-checked in constructive Lean 4.36.0 (20 theorems,
+zero external imports, zero sorry, zero Classical.choice) and accompanied by a zero-ﬂoat
+AST-audited exact-rational Python certiﬁcate suite (16 SHA-256 certiﬁcates; 56 adversarial
+tests).
+AI Assistance Disclosure. This research manuscript, its constructive Lean 4.36.0 formal-
+ization, and its exact-rational Python veriﬁcation suite were developed by Lluis Eriksson with
+interactive assistance from Google Antigravity for proof exploration, formal veriﬁcation, and
+typesetting. All mathematical proofs, formal Lean theorems, and exact-rational certiﬁcates
+were mechanically veriﬁed; the author takes full responsibility for all claims.
+1 Introduction
+The computational complexity of ﬁnding an arbitrary normal-form correlated equilibrium
+(NFCE) in imperfect-information extensive-form games with perfect recall has stood for nearly
+two decades as a central open problem in algorithmic game theory [ 14, 17, 10, 8, 15, 6, 5, 1].
+Unlike extensive-form correlated equilibria (EFCE), which are polynomial-time computable [ 10],
+an NFCE requires a mediator to commit before play to a full pure-plan proﬁle σ ∈ Σ = ∏ n
+i=1 Σi,
+where |Σi|is exponential in the game tree. While threshold/optimal NFCE problems were
+recently shown to be PSPACE-hard [ 5] and even EXPTIME-complete with chance [ 9], the com-
+plexity of computing any NFCE was resolved in a landmark paper by Cheval, Horn, Paul, and
+Shirmohammadi [ 4]:
+• Theorem 1 & Corollary 2 of [ 4]: Computing an exact rational NFCE of a perfect-recall
+extensive-form game lies in PPAD for an arbitrary number of players n (part of the input),
+via Etessami’s weak ϵ-Nash PPAD oracle [7], iterative Carathéodory compression (Theorem 7
+/ Algorithm 1) to support size at most K := 1 + ∑ n
+i=1 di(di + 1) ≤ 1 + N(N − 1), and exact
+rational LP reweighting (Theorem 6, Lemmas 13–14) at threshold ϵΓ := 1
+2((K+1)B)K+1 .
+• Theorem 3 of [ 4]: Computing an exact two-player NFCE under either quadratic support
+bound κd := ( d1 + 1)(d2 + 1) or κ+ := max {κd, κV }with κV := ⌊|V |2/36⌋is PPAD-complete,
+proved by reducing from weak 1/r-Nash in r × r bimatrix games [ 3] using a public-coin
+gadget Γ = 1
+2 G + 1
+2 M with binary preﬁx-matching branch M (m = 2 k labels) and decoding
+via conditional uniformity (Lemma 17), mutual information, and Pinsker’s inequality [ 16]
+(Lemmas 18–19, 21).
+1.1 Questions Left Open and Summary of Contributions
+Close inspection of [ 4] reveals four fundamental quantitative and structural questions:
+1. Are transcendental information-theoretic tools (Shannon entropy, ln, DKL, Pinsker) nec-
+essary to decode approximate Nash equilibria from small-support NFCEs, and is the m =
+2⌈log2(8r3)⌉ / 2⌈log2(8r4)⌉ gadget overhead optimal?
+2. Theorem 3 of [ 4] requires exact (δ = 0 ) NFCE because Lemma 17 collapses when conditional
+uniformity fails. Does PPAD-completeness persist for inverse-polynomial δ-approximate
+NFCEs?
+3. Lemma 14 of [ 4] bounds the minimum nonzero LP regret t⋆(S) from below by ((K +
+1)B)− (K+1). Can the exponent and denominator dependence be tightened, and is exponential
+decay 2− Ω(|S|) genuinely unavoidable even for {0, 1}-payoﬀ normal-form games ( B = 1 )?
+4. Section 5 of [ 4] explicitly asks whether PPAD-hardness holds under more permissive support
+bounds, and Corollary 20 notes via matching pennies ( |V |= 7 ) that κV = ⌊|V |2/36⌋ fails
+2
+
+--- Page 3 ---
+Table 1: Quantitative and structural comparison between Cheval et al. [ 4] and the present work.
+Aspect Cheval et al. [ 4] This Paper (Exact Reﬁnements)
+Decoding ( δ = 0 )
+√
+1
+2 ln(κ/m2) (Pinsker) 1
+2
+√
+κ/m2 − 1 (rational CS,
+√
+2× sharper
+near 1+, Thm. 3.1)
+Thm. 3 gadget size m = 2 ⌈log2(8r3)⌉, 2⌈log2(8r4)⌉ m = 2 ⌈log2(r3)⌉, 2⌈log2(r4)⌉ (8× smaller m;
+asymp. 8 × |V |, 64 × κd)
+Approx. δ-NFCE Open (exact δ = 0 only) PPAD-complete for δ = Θ( |V |− 8/3) (κd)
+and Θ(|V |− 5/2) (κ+, Thm. 4.1)
+Uniform LP gap η ((K +1)B)− (K+1) (Lem. 14) (
+√
+K(K + 1)K/2LK
+Γ )− 1 (halved exponent +
+lcm LΓ |B, Thm. 5.1A)
+LP gap necessity No lower bound {0, 1} bimatrix (Pm, Qm) (B = LΓ =
+1): exact t⋆(Sm) = (2 m+5 − 14m − 30)− 1
+(Thm. 5.1B)
+Node totality κV = ⌊|V |2/36⌋ fails at
+|V |= 7
+Universal totality at ⌊|V |2/4⌋; inﬁnite κV -
+failure Γmatch(k); unique 1/36 over b-ary
+trees (Thm. 6.1)
+Permissive slack Open (Section 5) PPAD-complete for all γ ∈ (0, 2] (κd +
+⌊C(d1 + d2)2− γ⌋, κ(C,γ)
++ ); barrier at γ = 0
+totality. What is the universal node-based totality threshold, is 1/36 uniquely optimal across
+b-ary matching trees, and where is the exact boundary between permissive support bounds
+that remain PPAD-complete and those where matching-tree decoding fails?
+Table 1 summarizes how our four main theorems resolve each of these questions.
+2 Preliminaries and Notation
+We adopt the exact notation of [ 4]. A ﬁnite imperfect-information extensive-form game with
+perfect recall Γ is a ﬁnite rooted directed tree with node set V , terminal nodes Z ⊆ V (N := |Z|),
+and n players. Each player i ∈ [n] partitions its decision nodes into information sets Ii with
+action sets A(I), and its realization polytope has aﬃne dimension di := ∑
+I∈Ii(|A(I)| − 1).
+Full pure plans are σi ∈ Σi = ∏
+I∈Ii A(I), with joint space Σ = ∏ n
+i=1 Σi. By Kuhn’s theorem
+[13] and the sequence-form sparsiﬁcation of [ 11, 12], any rational behavioral strategy admits a
+polynomial-time computable realization-equivalent mixed strategy of support at most di + 1.
+A correlation plan µ ∈ ∆(Σ) has unnormalized deviation gains
+Ri,σi,σ′
+i
+(µ) :=
+∑
+τ∈Σ: τi=σi
+µ(τ)
+[
+Ui(σ′
+i, τ− i) − Ui(τ)
+]
+.
+It is an unnormalized ϵ-NFCE if Ri,σi,σ′
+i
+(µ) ≤ ϵ for all i, σi, σ′
+i, and an exact NFCE if ϵ = 0 . In
+the deterministic deviation-rule formulation of [ 2, 4], µ is a δ-NFCE if for every player i and
+every deterministic deviation rule ϕi : Σ i → Σi,
+Eσ∼ µ
+[
+Ui(ϕi(σi), σ− i) − Ui(σ)
+]
+=
+∑
+σi∈Σi
+Ri,σi,ϕi(σi)(µ) ≤ δ. (1)
+Notice that at δ = 0 , ( 1) coincides with exact NFCE, while for δ > 0 it is the standard
+total-deviation (swap-regret) approximation notion (stronger than unnormalized δ-NFCE, since
+summing over σi aggregates regrets across all recommendations).
+In Section 4 of [ 4], given an r × r rational bimatrix game (P, Q) ∈ [0, 1]r× r and m = 2 k
+(k ≥ 1), the public-coin gadget Γ = 1
+2 G + 1
+2 M ﬂips a fair root coin between the source bimatrix
+game G and the k-round binary preﬁx-matching game M (payoﬀ (1, 0) on exact match of k-bit
+strings X1 = X2 ∈ [m], (0, 1) on ﬁrst mismatch). By Lemma 16 of [ 4], Γ has perfect recall,
+|V |= 6 m + r2 + r − 3, N = 3 m − 2 + r2, d 1 = d2 = m + r − 2, κ d = ( m + r − 1)2,
+3
+
+--- Page 4 ---
+and admits an exact rational NFCE of support at most κd. For any correlation plan µ ∈ ∆(Σ)
+with marginals µ1, µ2, let Yi ∈ [r] be player i’s Branch- G action, Xi ∈ [m] be the unique label
+of [m] consistent with player i’s Branch- M plan, π ∈ ∆([r] × [r]) be the joint law of (Y1, Y2),
+and x, y ∈ ∆([r]) be its marginals.
+3 Transcendental-Free Rational Cauchy–Schwarz Decoding
+In [ 4], Lemmas 18–19 bound TV(π, x ⊗ y) via mutual information I(τ1; τ2) ≤ ln(κ/m2) and
+Pinsker’s inequality TV(π, x ⊗ y) ≤
+√
+1
+2 ln(κ/m2). We prove that the exact same conditional
+uniformity hypothesis of Lemma 17 implies a strictly sharper, purely rational quadratic bound
+over Q without any logarithms, entropy, or Pinsker’s inequality.
+Theorem 3.1 (Transcendental-Free Rational Cauchy–Schwarz Decoding). Let µ ∈ ∆(S) (|S| ≤
+κ) be any correlation plan of Γ = 1
+2 G + 1
+2 M satisfying Lemma 17’s conditional uniformity
+Pr(X2 = j |τ1 = σ1) = 1 /m and Pr(X1 = j |τ2 = σ2) = 1 /m for all positive-probability
+recommendations (m ≥ 1). Then:
+1. (Support Lower Bound & Rational TV2 Bound) κ ≥ m2 and
+TV(π, x ⊗ y)2 ≤ TV(µ, µ1 ⊗ µ2)2 ≤ 1
+4
+( κ
+m2 − 1
+)
+. (2)
+Consequently, (x, y) is a weak ζCS-Nash equilibrium of (P, Q) with ζCS := 1
+2
+√
+κ/m2 − 1.
+2. (Asymptotic Tightness on κ/m2 ∈ (1, 2)) For any ﬁxed excess ratio ε := κ/m2 − 1 ∈ (0, 1),
+over all discrete distributions p ∈ ∆(S) (|S| ≤ κ) satisfying ∑
+e∈S m2p2
+e ≤ 1, the supremum
+of ∑
+e∈S(pe − m2p2
+e)+ equals 1
+2
+√ ε − Oε(m− 2) as m → ∞ (with exact equality 1
+2
+√ ε whenever
+2m2a2 and 2m2(1 − a)2 are integers for a = 1
+2 (1 + √ ε)).
+3. (Strict Superiority over Pinsker) For every u = κ/m2 ∈ (1, 3), the rational Padé lower bound
+ln u ≥ 2(u− 1)
+u+1 certiﬁes 1
+4 (u− 1) < u− 1
+u+1 ≤ 1
+2 ln u purely over Q (and numerically ζCS <
+√
+1
+2 ln u
+on the entire interval u ∈ (1, 3.51286 . . . ), with
+√
+2× sharper leading constant as u → 1+).
+4. (8×/64× Sharper Theorem 3 Gadget Parameters) Decoding a weak 1/r-Nash equilibrium
+(ζCS < 1/r ⇐ ⇒ r2(κ − m2) < 4m2) holds already for:
+• m = 2 ⌈log2(r3)⌉ under κd (r ≥ 2), reducing m by an exact factor of 8× (and asymptoti-
+cally reducing |V |by 8× and κd by 64×) relative to [ 4]’s m = 2 ⌈log2(8r3)⌉;
+• m = 2 ⌈log2(r4)⌉ under κ+ (r ≥ 5), reducing m by an exact factor of 8× (and |V |by
+asymptotically 8×) relative to [ 4]’s m = 2 ⌈log2(8r4)⌉.
+Proof. For each e = ( σ1, σ2) ∈ S, write pe := µ(e) > 0 and qe := µ1(σ1)µ2(σ2). Since Xi is a
+deterministic function of σi, conditional uniformity gives
+pe ≤ Pr(X2 = X2(σ2), τ1 = σ1) = 1
+mµ1(σ1), p e ≤ Pr(X1 = X1(σ1), τ2 = σ2) = 1
+mµ2(σ2).
+Multiplying these two inequalities yields the pointwise quadratic domination
+qe = µ1(σ1)µ2(σ2) ≥ m2p2
+e (∀e ∈ S). (3)
+Summing ( 3) over e ∈ S gives ∑
+e∈S m2p2
+e ≤ ∑
+e∈S qe ≤ 1, and Cauchy–Schwarz (∑
+e∈S pe)2 ≤
+|S|∑
+e∈S p2
+e immediately gives κ ≥ |S| ≥m2.
+To prove ( 2), partition S = S1 ⊔ S2 where S1 := {e ∈ S : m2pe ≤ 1} and S2 := {e ∈ S :
+m2pe > 1}. Set ki := |Si|(k1 + k2 = |S| ≤ κ), a := ∑
+e∈S1 pe ∈ [0, 1], and t := ∑
+e∈S1 m2p2
+e ∈
+[0, 1]. On S2, pe − qe ≤ pe − m2p2
+e < 0, so every positive term of pe − qe lies in S1:
+TV(µ, µ1 ⊗ µ2) =
+∑
+e∈S
+(pe − qe)+ ≤
+∑
+e∈S1
+(pe − m2p2
+e) = a − t. (4)
+4
+
+--- Page 5 ---
+If S1 = ∅ then a = t = 0 and TV = 0 ; if S2 = ∅ then a = 1 and k1t ≥ m2 gives t ≥ m2/κ, so
+setting x := κ/m2−1 ≥ 0 yields (1−t)2 ≤ (1− 1
+1+x )2 = x2
+(1+x)2 ≤ x
+4 (since (1+x)2−4x = (1 −x)2 ≥
+0). Now suppose both S1, S2 are nonempty (so t > 0 and 1 − t ≥ ∑
+e∈S2 m2p2
+e > 0). Applying
+Cauchy–Schwarz separately on S1 and S2 gives k1t ≥ m2a2 and k2(1 − t) ≥ m2(1 − a)2. Using
+the exact rational algebraic identity (cleared over Z in Lean 4, thm01_two_bin_cs_identity):
+a2
+t + (1 − a)2
+1 − t = 1 + (a − t)2
+t(1 − t) , (5)
+we obtain
+κ
+m2 ≥ k1 + k2
+m2 ≥ a2
+t + (1 − a)2
+1 − t = 1 + (a − t)2
+t(1 − t) .
+Rearranging and using 4t(1 − t) = 1 − (2t − 1)2 ≤ 1 yields (a − t)2 ≤ t(1 − t)( κ
+m2 − 1) ≤ 1
+4 ( κ
+m2 −
+1) (thm02_rational_tv_quadratic_bound). Data processing for the deterministic projection
+(τ1, τ2) ↦→(Y1, Y2) gives TV(π, x ⊗ y) ≤ TV(µ, µ1 ⊗ µ2), proving ( 2). By the exact same Branch-
+G deviation calculation as Lemma 19 of [ 4], e⊤
+a Py − x⊤ Py ≤ TV(π, x ⊗ y) and x⊤ Qeb − x⊤ Qy ≤
+TV(π, x ⊗ y), so (x, y) is weak ζCS-Nash.
+For Part 2 (tightness), ﬁx ε = κ/m2 − 1 ∈ (0, 1) and take m large enough that ε′ :=
+ε − 2/m2 > 0. Set a′ := 1+
+√
+ε′
+2 ∈ (1
+2 , 1), k1 := ⌈2m2a′2⌉, and k2 := ⌈2m2(1 − a′)2⌉, assigning
+uniform weight a′/k1 on S1 and (1 − a′)/k2 on S2. Since 2a′2 + 2(1 − a′)2 = 1 + ε′, we have
+k1 + k2 < m 2(1 + ε′) + 2 = κ, so |S|= k1 + k2 ≤ κ; furthermore m2a′2/k1 ≤ 1
+2 and m2(1 −
+a′)2/k2 ≤ 1
+2 , so ∑
+e∈S m2p2
+e ≤ 1 and m2(a′/k1) ≤ 1
+2a′ < 1 (conﬁrming S1 ⊆ {m2pe ≤ 1}). Hence∑
+e∈S(pe − m2p2
+e)+ ≥ a′− m2a′2/k1 ≥ a′− 1
+2 = 1
+2
+√
+ε − 2/m2 = 1
+2
+√ ε − Oε(m− 2). Moreover,
+whenever 2m2a2 and 2m2(1 − a)2 are integers at a = 1+√ ε
+2 (e.g., m = 256 , ε = 1 /16, a = 5 /8,
+giving k1 = 51200 , k2 = 18432 , k1 + k2 = κ = 69632 ), exact equality (a − t)2 = 1
+64 = 1
+4 ε is
+attained.
+For Part 3, for x = u − 1 ∈ (0, 2), 1
+4 x < x
+2+x ⇐ ⇒ x(2 + x) < 4x ⇐ ⇒ x < 2
+(thm03_cs_beats_pinsker_small_eps), while ln(1 + x) ≥ 2x
+2+x is elementary (their diﬀerence
+vanishes at 0 and has derivative x2
+(1+x)(2+x)2 > 0).
+For Part 4, under κd = ( m + r − 1)2 with r ≥ 2 and m ≥ r3:
+r2(κd − m2) = 2 mr2(r − 1) + r2(r − 1)2 < 2m2 + 2m2 = 4 m2
+(thm04_gadget_8x_sharpening_kappa_d). Under κV = ⌊|V |2/36⌋ with |V |= 6 m + A, A =
+r2 + r − 3, r ≥ 5, and m ≥ r4: ﬁrst |V | −6(m + r − 1) = r2 − 5r + 3 > 0, ensuring κd ≤ κV
+(nonvacuity); second A < 2r2 gives 36r2(κV − m2) ≤ r2(12mA + A2) < 28m2 < 144m2, so
+r2(κV − m2) < 4m2 and ζCS < 1/r (thm05_gadget_8x_sharpening_kappa_V).
+Figure 1 illustrates both the rational Cauchy–Schwarz vs. Pinsker decoding curve and the
+resulting 8×/64× reduction in gadget size and support bound.
+4 Robust Inverse-Polynomial δ-NFCE PPAD-Completeness
+Cheval et al. [ 4] restrict their hardness theorem (Theorem 3) to exact (δ = 0 ) NFCE be-
+cause Lemma 17 requires exact conditional uniformity on [m]. Using a reweighted variant of
+our rational Cauchy–Schwarz argument, we show that PPAD-completeness is robust to inverse-
+polynomial approximation error δ > 0.
+Theorem 4.1 (Robust δ-NFCE Decoding & Inverse-Polynomial PPAD-Completeness). Let
+µ ∈ ∆(S) (|S| ≤κ) be any δ-NFCE (1) of Γ = 1
+2 G + 1
+2 M with 0 ≤ 2m2δ < 1.
+5
+
+--- Page 6 ---
+Figure 1: (a) Transcendental-free rational Cauchy–Schwarz bound ζCS = 1
+2
+√
+κ/m2 − 1 (Theo-
+rem 3.1) vs. Pinsker’s
+√
+1
+2 ln(κ/m2) [4] and the rational Padé lower bound
+√
+(u − 1)/(u + 1) on
+(1, 3). (b) Resulting 8× reduction in m (asymptotically 8× in |V |and 64× in κd) across source
+dimension r ∈ [2, 30].
+1. (Reweighted Rational Decoding) The Branch- G marginals (x, y) satisfy
+TV(π, x ⊗ y) ≤ TV(µ, µ1 ⊗ µ2) ≤ 2m2δ + 1
+2
+√ κ
+m2 − (1 − 2m2δ)2, (6)
+and (x, y) is a weak ζ(κ, m, δ)-Nash equilibrium of (P, Q) with
+ζ(κ, m, δ) := 2( m2 + 1)δ + 1
+2
+√ κ
+m2 − (1 − 2m2δ)2.
+2. (Inverse-Polynomial PPAD-Completeness) Computing a δ-NFCE of a two-player perfect-
+recall extensive-form game with rational payoﬀs in [0, 1] is PPAD-complete under:
+• support bound κd and δ = Θ( |V |− 8/3) (speciﬁcally m = 2 ⌈log2(4r3)⌉ and δ = (2048 r8)− 1
+for r ≥ 2);
+• support bound κ+ and δ = Θ( |V |− 5/2) (speciﬁcally m = 2 ⌈log2(4r4)⌉ and δ = (2048 r10)− 1
+for r ≥ 5).
+Proof. For each positive-probability recommendation, set M(σ1) := max j∈[m] Pr(X2 = j |τ1 =
+σ1) and L(σ2) := min j∈[m] Pr(X1 = j |τ2 = σ2), and deﬁne p := Pr( X1 = X2). In Γ = 1
+2 G+ 1
+2 M,
+replacing player 1’s Branch- M plan by a best-response label attaining M(σ1) (leaving Branch G
+unchanged) yields deviation gain 1
+2 (E[M(τ1)] − p) ≤ δ; symmetrically, player 2’s best-response
+label attaining L(σ2) yields 1
+2 (p − E[L(τ2)]) ≤ δ. Since L(τ2) ≤ 1
+m ≤ M(τ1) pointwise,
+E
+[
+M(τ1) − 1
+m
+]
+≤ E[M(τ1)] − E[L(τ2)] ≤ 4δ, E
+[ 1
+m − L(τ2)
+]
+≤ 4δ.
+Deﬁne nonnegative deviations ∆1(σ1) := M(σ1) − 1
+m and ∆2(σ2) := ( m − 1)( 1
+m − L(σ2)).
+Because ∑ m
+j=1 Pr(X1 = j |τ2 = σ2) = 1 , every j ∈ [m] satisﬁes Pr(X1 = j |τ2 = σ2) ≤
+1 − (m − 1)L(σ2) = 1
+m + ∆2(σ2), while Pr(X2 = j |τ1 = σ1) ≤ 1
+m + ∆1(σ1). Hence for every
+e = ( σ1, σ2) ∈ S:
+µ(e)2 ≤ µ1(σ1)µ2(σ2)
+( 1
+m + ∆1(σ1)
+) ( 1
+m + ∆2(σ2)
+)
+= qe
+m2
+(
+1 + m∆1(σ1)
+)(
+1 + m∆2(σ2)
+)
+.
+By the AM–GM inequality 4(1 + D1)(1 + D2) ≤ (2 + D1 + D2)2
+(thm07_delta_nfce_am_gm_weight), setting we := 1 + m
+2 (∆1(σ1) + ∆ 2(σ2)) ≥ 1 gives
+6
+
+--- Page 7 ---
+µ(e) ≤ we
+m
+√ qe. Now deﬁne the rescaled weights ˜pe := µ(e)/we ∈ (0, µ(e)]. Then qe ≥ m2 ˜p2
+e
+pointwise, and using 1 − 1
+we = we− 1
+we ≤ we − 1:
+1 − ˜a :=
+∑
+e∈S
+(µ(e) − ˜pe) ≤
+∑
+e∈S
+µ(e)(we − 1) = m
+2
+(
+E[∆1] + E[∆2]
+)
+≤ m
+2
+(
+4δ + 4(m − 1)δ
+)
+= 2 m2δ.
+Hence ˜a := ∑
+e∈S ˜pe ∈ [1 − 2m2δ, 1]. Partition S = S1 ⊔ S2 with S1 := {e ∈ S : m2 ˜pe ≤ 1} and
+S2 := {e ∈ S : m2 ˜pe > 1}, setting ki := |Si|, a1 := ∑
+e∈S1 ˜pe, and t1 := ∑
+e∈S1 m2 ˜p2
+e ∈ [0, 1]. On
+S2, ˜pe − qe ≤ ˜pe − m2 ˜p2
+e < 0, so every positive term of ˜pe − qe lies in S1:
+∑
+e∈S
+(˜pe − qe)+ ≤
+∑
+e∈S1
+(˜pe − m2 ˜p2
+e) = a1 − t1 ≤ a1 − ˜at1,
+since ˜a ≤ 1 and t1 ≥ 0. If S1 = ∅, then a1 = t1 = 0 and the sum is 0. If S2 = ∅, then a1 = ˜a
+and k1t1 ≥ m2˜a2 gives t1 ≥ m2˜a2/κ, whence
+(a1 − ˜at1)2 ≤ ˜a2
+(
+1 − m2˜a2
+κ
+) 2
+≤ 1
+4
+( κ
+m2 − ˜a2
+)
+,
+because multiplying by 4κ2m2 yields 4m2˜a2(κ − m2˜a2)2 ≤ κ2(κ − m2˜a2) ⇐ ⇒ (κ − 2m2˜a2)2 ≥
+0 (using κ ≥ m2˜a2 from k1 ·1 ≥ m2˜a2). When both S1 and S2 are nonempty, Cauchy–
+Schwarz on S1 and S2 (k1t1 ≥ m2a2
+1, k2(1 − t1) ≥ m2(˜a − a1)2) and the sub-probability identity
+(thm06_reweighted_two_bin_cs_bound)
+a2
+1
+t1
++ (˜a − a1)2
+1 − t1
+= ˜a2 + (a1 − ˜at1)2
+t1(1 − t1)
+yield (a1 − ˜at1)2 ≤ t1(1− t1)( κ
+m2 − ˜a2) ≤ 1
+4 ( κ
+m2 − (1− 2m2δ)2). Finally, by the triangle inequality,
+TV(µ, µ1⊗µ2) =
+∑
+e∈S
+(µ(e)−qe)+ ≤
+∑
+e∈S
+(µ(e)− ˜pe)+
+∑
+e∈S
+(˜pe−qe)+ ≤ 2m2δ+1
+2
+√ κ
+m2 − (1 − 2m2δ)2.
+On Branch G (probability 1/2), δ-obedience gives 1
+2 (e⊤
+a Py − Eπ[PY1Y2]) ≤ δ, i.e., e⊤
+a Py − x⊤ Py ≤
+2δ + TV(π, x ⊗ y) (and symmetrically for player 2), establishing Part 1.
+For Part 2, membership in PPAD follows because exact NFCEs produced by Theorem 1 of [ 4]
+are δ-NFCEs, and condition ( 1) is polynomial-time veriﬁable for any rational candidate µ of poly-
+nomial support via Lemma 13’s sequence-form dynamic program (computing maxσ′
+i
+Ri,σi,σ′
+i
+(µ)
+for each supported σi and summing over σi). For PPAD-hardness, using (1− 2m2δ)2 ≥ 1− 4m2δ,
+it suﬃces that 2(m2 + 1)δ < 1
+2r and κ
+m2 − 1 + 4 m2δ < 1
+r2 (implying ζ < 1
+2r + 1
+2r = 1
+r ):
+• Under κd (r ≥ 2): take m = 2 ⌈log2(4r3)⌉ ∈ [4r3, 8r3) and δ = (2048 r8)− 1. Then 4r(m2 + 1) ≤
+4r(64r6) = 256 r7 < 2048r8, while 4r2(κd − m2) < 3m2 and 16r2m2 < 1024r8 < 2048r8,
+veriﬁed constructively in thm08_delta_nfce_kappa_d_params. Since |V | = Θ( r3), δ =
+Θ(|V |− 8/3).
+• Under κ+ (r ≥ 5): take m = 2 ⌈log2(4r4)⌉ ∈ [4r4, 8r4) and δ = (2048 r10)− 1. Then κd ≤ κV ,
+4r(m2 + 1) < 2048r10, 4r2(κV − m2) < 3m2, and 16r2m2 < 2048r10, veriﬁed constructively
+in thm09_delta_nfce_kappa_V_params. Since |V |= Θ( r4), δ = Θ( |V |− 5/2).
+5 Sharpened Hadamard LP Gap and Exact Exponential Neces-
+sity
+In the PPAD algorithm of [ 4], Theorem 6 converts an unnormalized ϵΓ-NFCE on a compressed
+support S (|S| ≤K) into an exact NFCE on S by invoking Lemma 14, which shows t⋆(S) = 0 or
+t⋆(S) ≥ η := (( K + 1)B)− (K+1) where B = ∏
+r∈R den(r). We both sharpen the upper bound on
+log2(1/η) by more than a factor of 2 (and exponentially in B vs. lcm) and prove that exponential
+decay 2− Ω(|S|) is unavoidable even for {0, 1}-payoﬀ bimatrix games.
+7
+
+--- Page 8 ---
+Theorem 5.1 (Sharpened Hadamard Gap & Exact Exponential Necessity) .
+1. (Part A: Strict Uniform Gap Sharpening) For a normalized game Γ with terminal payoﬀs in
+[0, 1], deﬁne the leaf-product least common multiple
+LΓ := lcm z∈Z, i∈[n] den
+(
+pc(z)ui(z)
+) ⏐⏐⏐B.
+Then for every nonempty support S ⊆ Σ with |S|= k ≤ K, either t⋆(S) = 0 or
+t⋆(S) ≥ ηsharp(k) := 1√
+k (k + 1)k/2 Lk
+Γ
+≥ 1√
+K (K + 1)K/2 LK
+Γ
+. (7)
+In particular, ηsharp(K) > η = (( K + 1)B)− (K+1) strictly for every K ≥ 1 and 1 ≤ LΓ ≤ B.
+2. (Part B: Exact Exponential Necessity Family at B = LΓ = 1 ) For every integer m ≥ 1,
+deﬁne the {0, 1}-payoﬀ two-player bimatrix game (Pm, Qm) ∈ {0, 1}(2m+3)× (4m+2) with rows
+{Ri,r : 0 ≤ i ≤ m, r ∈ {0, 1}} ∪ {R− 1} and columns {Ci,c : 0 ≤ i ≤ m, c ∈ {0, 1}} ∪ {di,r :
+1 ≤ i ≤ m, r ∈ {0, 1}}:
+• Pm[Rj,s, Ci,c] = 1 iﬀ j = i − 1 (with R− 1 serving as level j = −1 for i = 0 ), and 0
+otherwise;
+• Qm[Ri,c, Ci,c] = 1 for 0 ≤ i ≤ m, Qm[Ri− 1,r, di,r] = 1 for 1 ≤ i ≤ m, and 0 otherwise.
+On the explicit support Sm of size |Sm|= 6 m + 2,
+Sm :=
+{
+(Ri,c, Ci,c) : 0 ≤ i ≤ m, c ∈ {0, 1}
+}
+∪
+{
+(Ri,r, Ci+1,c) : 0 ≤ i ≤ m − 1, r, c ∈ {0, 1}
+}
+,
+the exact minimum LP regret is
+t⋆(Sm) = 1
+Dm
+= 1
+2m+5 − 14m − 30 = 2 − Ω(|Sm|) > 0. (8)
+Proof. Part A. Let x⋆ = ( µ⋆, t⋆) be an optimal vertex of LP (11) of [ 4] with 0 < t ⋆ < 1 (if
+t⋆ = 1 , ( 7) holds trivially). Since t⋆ ∈ (0, 1), neither t ≥ 0 nor t ≤ 1 is active. Suppose s ≥ 0
+nonnegativity constraints µ(τ) = 0 are active in the chosen k + 1 linearly independent active
+constraints; deleting those s variables and rows leaves a nonsingular (k′+ 1) × (k′+ 1) system
+M′y⋆ = r′(1 ≤ k′= k − s ≤ K) whose rows consist of the simplex row (1, . . . , 1, 0) (RHS 1) and
+k′ regret constraints (ca,1, . . . , ca,k′ , −1) (RHS 0), where every payoﬀ diﬀerence ca,j ∈ L− 1
+Γ Z ∩
+[−1, 1]. Multiply only the k′ regret rows by LΓ—leaving the simplex row unscaled!—to obtain
+an integer system ˜Ay⋆ = e1 where Row 1 has Euclidean norm
+√
+k′ and each of the k′ scaled
+regret rows has entries in [−LΓ, LΓ] and Euclidean norm at most LΓ
+√
+k′+ 1. By Cramer’s rule,
+t⋆ = det( ˜At)/ det( ˜A) with det( ˜At) ∈ Z \ {0}, so |det( ˜At)| ≥ 1, while Hadamard’s inequality
+gives
+|det( ˜A)| ≤
+√
+k′(
+LΓ
+√
+k′+ 1
+) k′
+=
+√
+k′(k′+ 1)k′/2Lk′
+Γ ≤
+√
+k(k + 1)k/2Lk
+Γ,
+proving ( 7). Strict improvement over ((K + 1) B)− (K+1) is veriﬁed in
+thm10_hadamard_gap_strict_improvement.
+Part B. Set Dm := 2 m+5 − 14m − 30. For the primal upper bound t⋆(Sm) ≤ 1/Dm, assign
+positive probabilities on Sm:
+µ(Ri,c, Ci,c) := 2m− i+2 − 3
+Dm
+(0 ≤ i ≤ m), µ (Ri,r, Ci+1,c) := 2m− i+1 − 2
+Dm
+(0 ≤ i ≤ m − 1).
+By thm11_exp_family_denominator_closed_form, ∑
+e∈Sm µ(e) = 1
+Dm [∑ m
+i=0 2(2m− i+2 − 3) +∑ m− 1
+i=0 4(2m− i+1 − 2)] = 1 . Let xi := 2 m− i+2 − 3 and pi := 2 m− i+1 − 2. For player 1 recommended
+Ri,r:
+• For 0 ≤ i ≤ m − 1, the current payoﬀ under µ is 2pi/Dm (gained on Ci+1,0, Ci+1,1).
+Deviating to Ri− 1,s (s ∈ {0, 1}, or R− 1 if i = 0 ) gains xi/Dm on Ci,r and loses 2pi/Dm,
+giving regret (xi − 2pi)/Dm = 1 /Dm (thm12_exp_family_primal_obedience). Any row
+Rj,s with j ̸= i − 1 scores 0 on Ci,r and at most 2pi/Dm on Ci+1,·, giving regret ≤ 0.
+8
+
+--- Page 9 ---
+Figure 2: (a) Decoded weak-Nash regret bound ζ(κ, m, δ) of Theorem 4.1 strictly below the
+PPAD-hard threshold 1/r for inverse-polynomial δ = (2048 r8)− 1 (κd) and (2048r10)− 1 (κ+).
+(b) LP gap precision bit-length log2(1/t) at B = LΓ = 1 comparing Lemma 14 [ 4], Theo-
+rem 5.1A ( 2× fewer bits), and our exact {0, 1}-payoﬀ family t⋆(Sm) = (2 m+5 − 14m − 30)− 1
+(Theorem 5.1B).
+• For i = m, current payoﬀ is 0 and deviating to Rm− 1,s (s ∈ {0, 1}) gives xm/Dm = 1 /Dm;
+all other deviations give 0.
+For player 2 recommended Ci,c:
+• For i = 0 , current payoﬀ is x0/Dm (gained on R0,c), the unique row paired with C0,c in
+Sm; every column has payoﬀ ≤ 1 on R0,c, so regret is ≤ 0.
+• For 1 ≤ i ≤ m, current payoﬀ is xi/Dm (on Ri,c). Deviating to di,r or Ci− 1,r (r ∈ {0, 1})
+earns pi− 1/Dm (on Ri− 1,r), giving regret (pi− 1 − xi)/Dm = 1 /Dm (thm12); every other
+column earns 0 on all rows paired with Ci,c in Sm.
+Hence t⋆(Sm) ≤ 1/Dm.
+For the matching lower bound t⋆(Sm) ≥ 1/Dm, let (µ, t) be any feasible solution of LP (11)
+on Sm. Form the nonnegative Farkas linear combination of the 2(m + 1) row constraints
+Ri,r → Ri− 1,0 (with R− 1 at i = 0 ) weighted by ui := 2 i+2 − 3 > 0 (0 ≤ i ≤ m) and the
+4m column constraints Ci,c → di,r weighted by vi := 2 i+1 − 2 > 0 (1 ≤ i ≤ m). In the resulting
+inequality ∑
+e∈Sm αeµ(e) ≤ (∑ m
+i=0 2ui + ∑ m
+i=1 4vi)t:
+• At e = ( R0,r, C0,r): αe = u0 = 1 .
+• At e = ( Ri,r, Ci,r) (1 ≤ i ≤ m): αe = ui − 2vi = (2 i+2 − 3) − 2(2i+1 − 2) = 1 .
+• At e = ( Ri,r, Ci+1,c) (0 ≤ i ≤ m − 1): αe = −ui + vi+1 = −(2i+2 − 3) + (2 i+2 − 2) = 1 .
+By thm13_exp_family_farkas_dual_certificate and thm11, every variable in Sm has exact
+coeﬃcient 1 and the RHS weight sum is Dm, giving 1 = ∑
+e∈Sm µ(e) ≤ Dmt, i.e., t ≥ 1/Dm.
+Figure 2 shows both the inverse-polynomial δ-NFCE decoding margin (Theorem 4.1) and
+the bit-length gap between Lemma 14, Theorem 5.1A, and the exact exponential family of
+Theorem 5.1B.
+6 Universal Totality, 1/36 Optimality, and Subquadratic-Slack
+Completeness
+Corollary 20 of [ 4] observes via matching pennies ( |V |= 7 , κV = 1 ) that κV = ⌊|V |2/36⌋alone is
+not total, and Section 5 asks whether PPAD-hardness survives more permissive support bounds.
+We resolve the full landscape of node-based totality, b-ary matching-tree density, and permissive
+9
+
+--- Page 10 ---
+subquadratic slack (writing γ ∈ (0, 2] for the slack exponent to distinguish it from Section 4’s
+equilibrium error δ).
+Theorem 6.1 (Totality Threshold, Inﬁnite Failure, 1/36 Optimality, & Subquadratic-Slack
+Completeness).
+1. (Universal Sharp Node-Based Totality at ⌊|V |2/4⌋) Every two-player perfect-recall extensive-
+form game with |V | ≥ 2 admits an exact rational NFCE of support size at most ⌊|V |2/4⌋
+(indeed, at most κd ≤ ⌊(|V | −1)2/4⌋ whenever d1, d2 ≥ 1, with the dimension bound κd =
+⌊(|V | −1)2/4⌋attained whenever |V |= 2 d + 3 and d1 = d2 = d).
+2. (Inﬁnite κV -Failure Family & Exact κd Tightness) For every integer k ≥ 1 (m = 2 k), the pure
+binary preﬁx-matching game Γmatch(k) (Branch M alone) has |V |= 6 m− 5, d1 = d2 = m− 1,
+κd = m2, and
+κV =
+⌊
+(6m − 5)2
+36
+⌋
+= m2 −
+⌈5m
+3 − 25
+36
+⌉
+< m2,
+yet every exact NFCE of Γmatch(k) has support size at least m2 (with equality attained by the
+uniform product). Thus κV fails totality for arbitrarily large trees while κd is tight.
+3. (Unique Optimality of 1/36 Across Uniform b-ary Matching Trees) Generalizing Branch M
+to any integer branching radix b ≥ 2 (m = bk labels) yields exact tree size
+|VM (b, m)|= b2 + b
+b − 1 m − b2 + 1
+b − 1 .
+Because b2+b
+b− 1 − 6 = (b− 2)(b− 3)
+b− 1 ≥ 0 for all integers b ≥ 2 with equality iﬀ b ∈ {2, 3}, the
+asymptotic support-density constant 1/36 = 1 /62 is uniquely optimal over all uniform b-ary
+preﬁx-matching trees.
+4. (Permissive Subquadratic-Slack PPAD-Completeness & Exact γ = 0 Barrier) For every ﬁxed
+γ ∈ (0, 2] and constant C ≥ 0, computing an exact two-player NFCE remains PPAD-complete
+under both strictly more permissive bounds
+κ(C,γ)
+d := κd +
+⌊
+C(d1 + d2)2− γ⌋
+, κ (C,γ)
++ := max
+{
+κd,
+⌊
+|V |2/36 + C|V |2− γ⌋}
+.
+Conversely, at γ = 0 (any constant multiplicative slack κ ≥ (1 + c)m2 with c > 0), ζCS ≥
+1
+2
+√ c ≥ 1/r for all r ≥ 2/√ c regardless of m, pinpointing γ = 0 as the exact barrier of
+matching-tree decoding.
+Proof. Part 1. If d1 = 0 or d2 = 0 , the inactive player has a unique pure strategy and a pure
+best response by the other player forms an exact NFCE of support 1 ≤ ⌊|V |2/4⌋(for |V | ≥ 2).
+If d1 ≥ 1 and d2 ≥ 1, then I1 and I2 each contain at least one nonterminal node, so the tree has
+|V \Z| ≥2. In any rooted tree, |V | −1 = ∑
+v∈V \ Z deg+(v) = |V \Z|+ ∑
+v∈V \ Z(deg+(v) − 1) ≥
+2 + d1 + d2, i.e., d1 + d2 + 3 ≤ |V |. By AM–GM ( thm15_universal_V2_over_4_totality),
+4κd = 4( d1 + 1)(d2 + 1) ≤ (d1 + d2 + 2)2 ≤ (|V | −1)2 =⇒ κd ≤
+⌊
+(|V | −1)2
+4
+⌋
+≤
+⌊
+|V |2
+4
+⌋
+.
+Since two-player perfect-recall games always admit a rational Nash equilibrium whose product
+has support at most κd [12, 4], totality at ⌊|V |2/4⌋follows.
+Part 2. For Γmatch(k) (m = 2 k), summing across depths t = 0 , . . . , k − 1 gives 2t player-
+1 nodes, 2t+1 player-2 nodes, and 2t+1 mismatch leaves, plus 2k match leaves, totaling (m −
+1) + 2( m − 1) + 2( m − 1) + m = 6 m − 5. Player 1 has m − 1 binary information sets and
+player 2 has m − 1 binary information sets, so d1 = d2 = m − 1 and κd = m2. By Lemma 17
+of [ 4] and Theorem 3.1, every exact NFCE has support ≥ m2, whereas (6m − 5)2 < 36m2
+(thm16_infinite_kappa_V_failure_family) forces κV < m2 for every k ≥ 1.
+10
+
+--- Page 11 ---
+Figure 3: (a) Unique optimality of the 1/36 asymptotic support density at b ∈ {2, 3} across
+uniform b-ary preﬁx-matching trees (Theorem 6.1, Part 3). (b) Totality gap on Γmatch(k)
+(|V | = 6 m − 5): universal totality ⌊|V |2/4⌋, exact minimum support κd = m2, infeasible
+κV = ⌊|V |2/36⌋< m2, and growing infeasibility deﬁcit ⌈5m
+3 − 25
+36 ⌉.
+Part 3. In the b-ary preﬁx-matching tree of depth k (m = bk), level t ∈ {0, . . . , k − 1} has
+bt player-1 nodes, bt+1 player-2 nodes, and bt+1(b − 1) mismatch leaves, plus bk match leaves at
+depth k:
+|VM (b, m)|= (1 + b + b(b − 1))m − 1
+b − 1 + m = (b2 + 1)(m − 1) + ( b − 1)m
+b − 1 = b2 + b
+b − 1 m − b2 + 1
+b − 1 .
+The identity (b2 + b) − 6(b − 1) = ( b − 2)(b − 3) (thm17_optimal_b_ary_density_1_over_36)
+proves b2+b
+b− 1 ≥ 6 with equality iﬀ b ∈ {2, 3}.
+Part 4. Both problems lie in PPAD because κ(C,γ)
+d ≥ κd and κ(C,γ)
++ ≥ κd are total by
+Theorem 1 of [ 4] and veriﬁable in polynomial time. For PPAD-hardness, ﬁx γ ∈ (0, 2] and
+C ≥ 0. On the gadget Γ, d1 + d2 = 2 m + 2r − 4 < 3m and |V |= 6 m + r2 + r − 3 ≤ 7m (for
+m ≥ r2).
+• Under κ(C,γ)
+d (r ≥ 2), set Sslack := ⌊C(d1+d2)2− γ⌋and choose m to be the smallest power of
+2 with m ≥ 2r3 and r2C(3m)2− γ ≤ 2m2 (i.e., m ≥ max{2r3, (1
+2 32− γCr2)1/γ}, polynomial
+in r for ﬁxed γ > 0). Then r2Sslack ≤ 2m2, and thm18_subquadratic_slack_kappa_d
+gives r2(κ(C,γ)
+d − m2) < 4m2.
+• Under κ(C,γ)
++ (r ≥ 5), note ⌊|V |2/36 + C|V |2− γ⌋ ≤ ⌊|V |2/36⌋+ Sslack where Sslack :=
+⌊C|V |2− γ⌋+1 accounts for ﬂoor rounding ( ⌊x+y⌋ ≤ ⌊x⌋+⌊y⌋+1). Choosing m to be the
+smallest power of 2 with m ≥ 2r4 and r2(C(7m)2− γ + 1) ≤ 2m2 (e.g., r2C(7m)2− γ ≤
+m2, since r2 ≤ m2 for m ≥ 2r4, still polynomial in r) ensures r2Sslack ≤ 2m2, so
+thm19_subquadratic_slack_kappa_plus gives r2(κ(C,γ)
++ − m2) < 4m2.
+In both cases Theorem 3.1 decodes a weak 1/r-Nash equilibrium. Finally, at γ = 0 ,
+any bound κ ≥ (1 + cnum/cden)m2 satisﬁes r2(κ − m2) ≥ 4m2 whenever r2cnum ≥ 4cden
+(thm20_multiplicative_slack_barrier), blocking decoding for all m ≥ 1.
+Figure 3 displays the unique 1/36 optimality across b-ary trees and the totality gap between
+⌊|V |2/4⌋, κd = m2, and the infeasible κV on Γmatch(k).
+11
+
+--- Page 12 ---
+Table 2: Summary of the 20 constructive Lean 4.36.0 theorems in NFCEPPADBarriers.lean (0
+sorry, 0 Classical.choice).
+Section / Paper Result Lean 4.36.0 Theorems Machine-Checked Kernel Content
+Sec. 3 (Thm. 3.1) thm01–thm05 Two-bin CS identity, TV2 bound, Padé vs.
+Pinsker, 8×/64× gadget bounds
+Sec. 4 (Thm. 4.1) thm06–thm09 Sub-probability CS, AM–GM weight we, δ =
+(2048r8)− 1, (2048r10)− 1 checks
+Sec. 5 (Thm. 5.1) thm10–thm14 ηsharp > η , closed form Dm = 2 m+5− 14m− 30,
+primal & Farkas-dual algebra
+Sec. 6 (Thm. 6.1) thm15–thm20 ⌊|V |2/4⌋totality, Γmatch failure, b ∈ {2, 3} op-
+timality, γ > 0 vs. γ = 0 barrier
+7 Formal Veriﬁcation in Lean 4.36.0 and Exact-Rational Cer-
+tiﬁcates
+We provide two independent machine-checkable veriﬁcation layers in the companion repository
+(https://github.com/lluiseriksson/paper139-nfce-ppad-barriers ):
+1. Constructive Lean 4.36.0 Kernel ( lean/NFCEPPADBarriers.lean): Contains 20
+machine-checked theorems with zero external imports, zero sorry, zero grind, zero
+Classical.choice (conﬁrmed by #print axioms), and zero compiler warnings. Table 2
+maps every Lean theorem to its exact mathematical role; note carefully that the Lean kernel
+formalizes the exact cleared-denominator algebraic identities, AM–GM/Cauchy–Schwarz in-
+equalities, parameter bounds, closed-form primal/Farkas-dual arithmetic, and totality/slack
+inequalities, while game-tree expectation semantics, Cramer’s rule/Hadamard’s determinant
+inequality, and PPAD-reduction composition are proved in Sections 3–6.
+2. Zero-Float Exact-Rational Veriﬁer ( verification/verify_nfce_barriers.py) &
+Adversarial Suite ( tests/test_adversarial.py): Statically AST-audited for 0 ﬂoat
+literals, 0 float() calls, 0 true-division ( ast.Div) operators, and 0 ﬂoating-point library
+imports. All 16 SHA-256 certiﬁcates across 4 modes pass (deterministic manifest SHA-
+256: 79e08d8b349b9f8ea34c07889728612527d52dd589afab40a76f0c59c5259626), includ-
+ing exhaustive row/column deviation checks on (Pm, Qm) for m = 1 , . . . , 10, exact Farkas-
+dual weight summation for m = 1 , . . . , 12, exact rational Gaussian elimination of the
+(6m + 3) × (6m + 3) optimal basis for m = 1 , 2, 3, and 56 adversarial pytest checks.
+8 Conclusion
+By replacing information-theoretic decoding with a purely rational two-bin Cauchy–Schwarz
+identity, we sharpened the quantitative foundation of [ 4]’s PPAD-completeness theorem by 8× in
+m (asymptotically 8× in |V |and 64× in κd), extended hardness from exact to inverse-polynomial
+δ-NFCE, tightened the uniform rational LP gap while exhibiting a {0, 1}-payoﬀ family proving
+2− Ω(|S|) precision is genuinely unavoidable, and mapped the exact support-threshold landscape
+from universal ⌊|V |2/4⌋totality down to ⌊|V |2/36⌋with arbitrary subquadratic additive slack.
+Closing the remaining gap between constant multiplicative slack γ = 0 (e.g., κ = (1+ c)|V |2/36)
+and unrestricted polynomial support bounds remains a compelling challenge requiring tech-
+niques beyond preﬁx-matching trees.
+References
+[1] Ioannis Anagnostides, Constantinos Daskalakis, Gabriele Farina, Noah Golowich, Tuomas
+Sandholm, and Brian Hu Zhang. On the complexity of correlated equilibria beyond normal-
+12
+
+--- Page 13 ---
+form games. arXiv:2605.17665v2, 2026.
+[2] Robert J. Aumann. Subjectivity and correlation in randomized strategies. Journal of
+Mathematical Economics, 1(1):67–96, 1974.
+[3] Xi Chen, Xiaotie Deng, and Shang-Hua Teng. Settling the complexity of computing two-
+player Nash equilibria. Journal of the ACM , 56(3):14:1–14:57, 2009.
+[4] Vincent Cheval, Florian Horn, Soumyajit Paul, and Mahsa Shirmohammadi. Computing
+normal-form correlated equilibria in extensive-form games is in PPAD. arXiv:2611.34897v1
+[cs.GT], November 2026.
+[5] Vincent Cheval, Florian Horn, Soumyajit Paul, and Mahsa Shirmohammadi. On the com-
+plexity of the optimal correlated equilibria in extensive-form games. arXiv:2507.11509v2,
+2026.
+[6] Constantinos Daskalakis, Gabriele Farina, Maxwell Fishelson, Charilaos Pipis, and Jon
+Schneider. Eﬃcient learning and computation of linear correlated equilibrium in general
+convex games. In Proceedings of the ACM Symposium on Theory of Computing (STOC) ,
+2025.
+[7] Kousha Etessami. The complexity of computing a (quasi-)perfect equilibrium for an n-
+player extensive form game. Games and Economic Behavior , 125:107–140, 2021.
+[8] Gabriele Farina and Charilaos Pipis. Polynomial-time linear-swap regret minimization in
+imperfect-information sequential games. In Advances in Neural Information Processing
+Systems, 2023.
+[9] Florian Horn. The threshold problem for NFCE in extensive-form games with chance is
+ExpTime-complete. HAL Open Science, hal-05760836v1, 2026.
+[10] Wan Huang and Bernhard von Stengel. Computing an extensive-form correlated equilib-
+rium in polynomial time. In International Workshop on Internet and Network Economics
+(WINE), pages 506–513, 2008.
+[11] Daphne Koller and Nimrod Megiddo. Finding mixed strategies with small supports in
+extensive form games. International Journal of Game Theory , 25(1):73–92, 1996.
+[12] Daphne Koller, Nimrod Megiddo, and Bernhard von Stengel. Eﬃcient computation of
+equilibria for extensive two-person games. Games and Economic Behavior , 14(2):247–259,
+1996.
+[13] Harold W. Kuhn. Extensive games and the problem of information. In Harold W. Kuhn
+and Albert W. Tucker, editors, Contributions to the Theory of Games II , volume 28 of
+Annals of Mathematics Studies , pages 193–216. Princeton University Press, 1953.
+[14] Christos H. Papadimitriou and Tim Roughgarden. Computing correlated equilibria in
+multi-player games. Journal of the ACM , 55(3):14:1–14:29, 2008.
+[15] Binghui Peng and Aviad Rubinstein. Fast swap regret minimization and applications to
+approximate correlated equilibria. In Proceedings of the ACM Symposium on Theory of
+Computing (STOC) , 2024.
+[16] Mark S. Pinsker. Information and Information Stability of Random Variables and Processes .
+Holden-Day, 1964.
+[17] Bernhard von Stengel and Françoise Forges. Extensive-form correlated equilibrium: Deﬁni-
+tion and computational complexity. Mathematics of Operations Research , 33(4):1002–1022,
+2008.
+13
