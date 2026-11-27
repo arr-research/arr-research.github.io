@@ -1,0 +1,58 @@
+{
+  "prompt_version": "ARR-ASSESS-1.0",
+  "paper_id": "ARR-2026-0HEDT32KXD9S3S0N",
+  "version": "v1",
+  "version_id": "arr:version:6d6bdab3-5533-41bb-ba50-d894502c6060",
+  "canonical_sha256": "5ca4e3a021c9ce60c6da878e8e751106252920addccd5cdc28f0b0bd949c2f96",
+  "provider": "Google",
+  "model_id": "hydrogen",
+  "independence": "not_involved_in_manuscript",
+  "assessed_at": "2026-11-27T08:30:00Z",
+  "recommendation": "accept",
+  "millennium_score": 7.7,
+  "overall_stars": 8,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 5,
+      "basis": "All proofs were checked line-by-line and verified sound. Lean 4.36.0 (lean -DwarningAsError=true) typechecks all 20 theorems with zero sorry, zero Classical.choice, and zero custom axioms, using only [propext, Quot.sound] or no axioms. All 16 SHA-256 certificates match MANIFEST.json (2afa9455...) and paper.pdf (5ca4e3a0...). Zero-float Q and multi-prime F_q rank certificates rigorously establish all stated bounds."
+    },
+    "novelty": {
+      "stars": 4,
+      "basis": "Uniformly resolves rank (2D-2) and border rank (D+1) for spin factors J_D (D>=3) via a rational (D+1)-cube degeneration and recursive (3/5,4/5) Pythagorean splitting. Proves a universal Strassen ceiling for commutative trace algebras, saturates it on Sym_n (n=2..7) with diagonal slices, breaks it on Sym_3 via Koszul p=2, and gives multi-degree Koszul staircases on so_5 and sl_3 plus a 25-product sl_3 algorithm. Tools are classical and literature review is sparse."
+    },
+    "reproducibility": {
+      "stars": 5,
+      "basis": "Exemplary two-layer verification stack: dependency-free Lean 4.36.0 formalization (20 constructive theorems) plus an AST-audited pure-stdlib Python verifier (int/Fraction only, zero floats, zero / and **) generating 16 deterministic SHA-256 certificates cross-checked by 56 adversarial pytest checks. Both paper.pdf and MANIFEST.json digests match exactly."
+    },
+    "rigor": {
+      "stars": 5,
+      "basis": "Proofs are concise, elementary, and complete: exact nullity-1 analysis of K_1(T_{J_D}), 5-line substitution lower bound over char!=2, skew-adjoint parity argument for Strassen's ceiling, Zariski semicontinuity for A=I_n on Sym_n, and explicit Chevalley/Hodge decompositions. The manuscript accurately distinguishes paper proofs, Lean-checked identities, and exact rational/modular certificates without overclaiming."
+    },
+    "significance": {
+      "stars": 4,
+      "basis": "Establishes sharp structural phenomena for non-associative complexity: unbounded rank/border-rank separation approaching factor 2 on J_D, an intrinsic ceiling on Strassen's commutator method for commutative trace algebras, and strict multi-degree Koszul escalation where Strassen's method is capped or universally blind. Open gaps remain on Sym_3 [9,14], so_4 [8,10], and sl_3 [13,25]."
+    }
+  },
+  "summary": "This paper determines exact and improved bilinear rank and border-rank bounds across three non-associative algebra families. Theorem 1 completely resolves spin-factor Jordan algebras J_D (D>=3): Koszul p=1 gives R_under(J_D)>=D+1, matched by an explicit rational (D+1)-cube degeneration over Q(eps), while substitution and recursive (3/5,4/5) Pythagorean splitting give R(J_D)=2D-2 over Q, R, C, yielding separation D-3->inf and ratio ->2. Theorem 2 proves a universal Strassen commutator ceiling d+floor((d-1)/2) for any d-dimensional commutative algebra (char!=2) with a non-degenerate symmetric invariant bilinear form; on Sym_n, A=I_n saturates at d-ceil(n/2) while A=diag(1..n) attains the ceiling for n=2..7, and Koszul p=2 (rank 84/10) breaks Sym_3's ceiling 8 to prove R_under(Sym_3)>=9 alongside a 14-cube rational Waring identity for 4*tr(X^3). Theorem 3 notes Lie slices ad_X are always singular, resolves so_3 at 5 via a {0,+-1} algorithm, escalates so_4 (>=8, <=10), so_5 (12->13), and sl_3 (10->11->13), and gives a 25-product sl_3 decomposition. Lean 4.36.0 (20 theorems) and 16 zero-float certificates rigorously back the results. Minor caveats are sparse literature comparison (7 refs) and unweighted vs. weighted Q-Waring terminology.",
+  "strengths": [
+    "Complete, self-contained resolution of exact rank (2D-2) and border rank (D+1) for spin-factor Jordan algebras J_D across all D>=3 over Q, R, and C, with zero irrational roots.",
+    "Clean, general proof of the universal Strassen commutator ceiling for any commutative algebra (char!=2) with a non-degenerate symmetric invariant bilinear form, explaining why A=I_n on Sym_n falls short for n>=5 while A=diag(1,...,n) saturates the ceiling.",
+    "Explicit Koszul p=2 breakthrough on Sym_3 (rank 84/10 => border rank >=9 > Strassen wall 8) paired with an exact zero-denominator 14-cube rational identity for 4*tr(X^3).",
+    "Multi-degree Koszul lower-bound escalations on classical Lie algebras where Strassen equations are universally blind (so_5: 12->13; sl_3: 10->11->13) and an explicit 25-product rational sl_3 algorithm.",
+    "Two-layer formal and exact computational verification: 20 axiom-clean Lean 4.36.0 theorems (0 sorry, 0 Classical.choice) and 16 zero-float SHA-256 certificates verified by 56 adversarial tests."
+  ],
+  "weaknesses": [
+    "Sparse bibliography (only 7 classic references, newest from 2015) omits prior specialized literature on Lie algebra and Jordan algebra bilinear complexity, leaving exact novelty attribution for small cases (e.g., so_3) insufficiently contextualized.",
+    "Terminological nuance over Q: Eq. (6) writes R_under_Q^sym(J_D) = D+1, yet Eq. (7) uses scalar weights in Q(eps) that are not rational cubes; thus over Q(eps) it certifies weighted symmetric rank / ordinary tensor border rank D+1 (and unweighted symmetric border rank over R and C).",
+    "Exact values remain open with nontrivial gaps for Sym_3 ([9, 14]), so_4 ([8, 10]), and sl_3 ([13, 25]), and Sym_n Strassen ceiling attainment is only certified for n<=7.",
+    "Lean 4 formalizes polynomial/coefficient identities, inequalities, and the abstract commutative kernel identity (thm20), while general-D Koszul nullity/rank and skew-adjoint parity arguments remain paper-only or Python-certified."
+  ],
+  "strong_novelty_candidates": [
+    "Purely rational (D+1)-cube border-rank degeneration F_{D,eps} over Q(eps) combined with recursive (3/5,4/5) Pythagorean splitting to prove exact separation R_Q(J_D) - R_under_C(J_D) = D-3 -> inf and ratio -> 2.",
+    "Universal commutative-trace Strassen ceiling theorem (commutator rank <= d-1 for odd d, d-2 for even d) and diagonal symmetry-breaking A=diag(1..n) strictly beating A=I_n on Sym_n for n>=5.",
+    "Koszul p=2 rank-84 certificate breaking Strassen's ceiling on Sym_3 alongside the 14-cube integral Waring identity for 4*tr(X^3).",
+    "Three-tier Koszul staircase on sl_3 (p=1,2,3 giving 10->11->13) paired with a 25-product decomposition into three sl_2 triples and two root cross-products."
+  ],
+  "potential_errors": [],
+  "unresolved_material_objections": []
+}

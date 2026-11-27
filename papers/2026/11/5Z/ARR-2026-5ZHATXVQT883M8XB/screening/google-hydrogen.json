@@ -1,0 +1,57 @@
+{
+  "prompt_version": "ARR-ASSESS-1.0",
+  "paper_id": "ARR-2026-5ZHATXVQT883M8XB",
+  "version": "v1",
+  "version_id": "arr:version:e38b256e-01e8-4cf9-b916-2affe7170f99",
+  "canonical_sha256": "f3f17a126f254e4c565884394b02a07112d862c23d39d000b4422cf425bb69e3",
+  "provider": "Google",
+  "model_id": "hydrogen",
+  "independence": "not_involved_in_manuscript",
+  "assessed_at": "2026-11-27T08:30:00Z",
+  "recommendation": "accept",
+  "millennium_score": 7.4,
+  "overall_stars": 7,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 5,
+      "basis": "All proofs in Theorems 1-3 were audited line-by-line and verified sound. Lean 4.36.0 compiles all 20 constructive theorems cleanly with -DwarningAsError=true, 0 sorry, and 0 Classical.choice. All 16 SHA-256 certificates match MANIFEST.json and use AST-audited pure int/Fraction/Q(omega) arithmetic. Minor unstated step: Theorem 2(b)'s upper bracket relies on Loewner monotonicity of M_S(a) for a >= 1 (which holds for n=2 since DAG 1D fibers have size <= 2)."
+    },
+    "novelty": {
+      "stars": 4,
+      "basis": "Introduces three complementary original mechanisms: (1) all-n partial-transpose indecomposability across all 2^n patterns via Z_3 cyclic swap parity (Thm 1); (2) a topological amplitude scaling on directed-torus DAGs G_{3,n} that eliminates arbitrary b-shifts and proves coordinate 2 beats the Boolean subcube barrier a_*(Q_n)=1 up to 1.997061 at n=4 (Thm 2); and (3) an exact n-copy Eisenstein Fourier collapse law resolving the entire c=0 indecomposable face (Thm 3)."
+    },
+    "reproducibility": {
+      "stars": 5,
+      "basis": "Exceptional two-layer verification artifact: a standalone 429-line Lean 4.36.0 file with zero external dependencies, plus an AST-audited zero-float Python suite generating 16 deterministic SHA-256 certificates (verified matching MANIFEST.json) and 56 adversarial pytest checks. Figures and LaTeX source are included in full."
+    },
+    "rigor": {
+      "stars": 4,
+      "basis": "Mathematically crisp with explicit rational/Eisenstein witnesses and constructive Bernoulli bounds. Slight rigor caveats: Lean 4 formalizes the 20 core polynomial, root-bracket, and acyclicity lemmas rather than general operator-algebraic tensor-power definitions; Theorem 2(b) omits an explicit proof of Loewner monotonicity above a=1.71298488; and the search method yielding S_3 and S_4 is not detailed."
+    },
+    "significance": {
+      "stars": 4,
+      "basis": "Completely closes the c=0 indecomposable boundary face of the canonical Cho-Kye-Lee generalized Choi family for the Muller-Hermes-Reeb-Wolf tensor-stable positivity problem, refuting naive large-b stabilization heuristics and penetrating the c>0 interior at n=2. Full closure of the strictly positive interior 0 < 4bc < (2-a)^2 remains open."
+    }
+  },
+  "summary": "This paper resolves the c=0 indecomposable face of the three-parameter Cho-Kye-Lee generalized Choi family Phi[a,b,c] for the tensor-stable positivity (TSP) problem and establishes finite-copy obstructions into the c>0 interior. Theorem 1 gives a b-independent rank-2 non-2-positivity witness for a<2, b>0 and proves Phi[a,b,0]^{otimes n} is strictly partial-transpose indecomposable across all 2^n partial-transpose patterns for all n>=1. Theorem 2 establishes a directed-torus DAG limit law on G_{3,n}: topological amplitude scaling extinguishes b-shifts as eps->0+, giving an exhaustive 512-subset n=2 classification (sharp threshold a_*(2)~1.71298487), 8- and 16-vertex bounds reaching 1.997061 at n=4, and a Boolean subcube barrier a_*(Q_n)=1. Theorem 3 derives a 3-parameter n-copy Fourier inequality over Z[omega], proving total 2-copy collapse for a<=1, exact boundary b_F(a), unconditional TSP non-existence on the entire c=0 face with linear asymptotic slope, and exact 9x9 Eisenstein LDL* refutations in the c>0 interior. Twenty Lean 4.36.0 theorems (0 sorry, 0 Classical.choice) and 16 zero-float SHA-256 certificates verify the algebraic and combinatorial cores, though full interior c>0 TSP closure remains open.",
+  "strengths": [
+    "Complete, unconditional proof of non-existence of tensor-stable positive maps across the entire c=0 indecomposable face of the Cho-Kye-Lee generalized Choi family, with explicit finite-copy Bernoulli bounds and exact linear asymptotic slope.",
+    "Remarkably strong all-n partial-transpose indecomposability (Theorem 1(b)) ruling out every convex combination over all 2^n partial-transpose patterns simultaneously for every n>=1 and b>0 via a clean Z_3 cyclic swap parity argument.",
+    "Original directed-torus DAG limit law on G_{3,n} (Theorem 2) showing that topological amplitude scaling eliminates arbitrarily large b-shifts and achieves a_*(4) > 1.997061 (99.853% of the CP boundary a=2), sharply separating Z_3 from the Boolean subcube Q_n.",
+    "Genuine complementarity between the DAG obstruction (large-b regime) and the Eisenstein Fourier family (near-CP small-b regime and c>0 interior), verified end-to-end against full 9x9 and 27x27 matrices.",
+    "High-integrity verification stack: Lean 4.36.0 compiles 20 constructive theorems with zero axioms beyond [propext, Quot.sound], backed by 16 AST-audited zero-float SHA-256 certificates and 56 adversarial tests."
+  ],
+  "weaknesses": [
+    "Both core asymptotic mechanisms depend heavily on c=0 (vanishing of the reverse-shift Choi block in Theorem 1(b) and suppression of forward-shift terms in Theorem 2), leaving the general interior 0 < 4bc < (2-a)^2 open for TSP existence.",
+    "Lean 4 formalization covers the 20 algebraic, root-bracketing, and finite DAG acyclicity cores rather than a full operator-theoretic formalization of positive linear maps and tensor products; S_4 acyclicity and all matrix LDL* checks reside in Python rather than Lean.",
+    "In Theorem 2(b), concluding a_*(2) <= 1.71298488 from positive definiteness of all 184 DAGs at a single rational point implicitly requires Loewner monotonicity of M_S(a) for a >= 1 (true for n=2 since 1D fibers have size <= 2, but not explicitly stated in the proof).",
+    "The paper does not document the search algorithm used to discover the 8-vertex S_3 and 16-vertex S_4 supports, and the bibliography is quite brief (5 references)."
+  ],
+  "strong_novelty_candidates": [
+    "Directed-torus DAG limit law on G_{3,n} with topological amplitude scaling x_u = eps^{|S|-1-top(u)} decoupling shift parameter b -> infinity and proving a_*(Q_n)=1 vs a_*(4) > 1.997061.",
+    "All-n partial-transpose indecomposability across all 2^n partial-transpose sectors for Phi[a,b,0]^{otimes n} via Z_3 swap parity on S x B^{n-1}.",
+    "Exact 3-parameter Eisenstein Z[omega] n-copy Fourier collapse inequality, closed-form 2-copy curve b_F(a), and linear asymptotic law b_F^(n)(a) = 3(2-a)/(2 ln a) (n-1) + (2-a)/2 + O(n^-1)."
+  ],
+  "potential_errors": [],
+  "unresolved_material_objections": []
+}

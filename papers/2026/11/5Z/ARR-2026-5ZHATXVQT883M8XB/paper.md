@@ -1,0 +1,735 @@
+# Exact Directed-Torus DAG Obstructions, Universal All-n Partial-Transpose Indecomposability, and Fourier Collapse Thresholds for Tensor Powers of Generalized Choi Maps
+
+**Author:** Lluis Eriksson  
+**AIRR Identifier:** `ARR-2026-5ZHATXVQT883M8XB` (v1)  
+**License:** CC-BY-4.0 (manuscript), MIT (verification repository)  
+**Verification Repository:** https://github.com/lluiseriksson/choi-tensor-power-positivity-and-indecomposability (`v1.0.0`)  
+**Canonical PDF SHA-256:** `f3f17a126f254e4c565884394b02a07112d862c23d39d000b4422cf425bb69e3`
+
+## Abstract
+
+Whether non-trivial tensor-stable positive (TSP) maps exist is a central open problem in quantum information theory closely connected to the existence of NPT bound entanglement. We establish three exact algebraic and combinatorial theorems governing arbitrary tensor powers Phi[a,b,c]^{otimes n} of the three-parameter generalized Choi family on M_3(C). First, we prove that for every a < 2 and b > 0, Phi[a,b,0] is never 2-positive (via an explicit rank-2 witness eliminating all b-dependence) and Phi[a,b,0]^{otimes n} is strictly partial-transpose indecomposable for every n >= 1 (cannot be written as sum_{S subset [n]} C_S o T_S with all C_S completely positive). Second, we prove a directed-torus DAG limit law on G_{3,n}: any acyclic support S subset Z_3^n isolates the b-independent principal submatrix M_S(a)_{uv} = (-1)^{d_H(u,v)} a^{n - d_H(u,v)} as b-shifts vanish along a topological scaling. An exhaustive 512-subset classification of G_{3,2} fixes the sharp 2-copy b -> +infty threshold at a_*(2) = 1.71298487..., the unique positive root of a^4 - 2a^3 + 2a^2 - 2a - 1 = 0, while explicit 8-vertex and 16-vertex DAGs push a_*(3) > 1.950079 and a_*(4) > 1.997061 (99.853% of the completely positive boundary a = 2); by contrast, the Boolean subcube Q_n reaches only a_*(Q_n) = 1. Third, an explicit rank-2 Fourier test family yields an exact 3-parameter n-copy necessary condition proving total 2-copy collapse for all a <= 1 and b > 0, a closed-form 2-copy threshold b_F(a), unconditional non-existence of TSP maps across the entire c = 0 indecomposable face with linear asymptotic slope 3(2-a)/(2 ln a), and exact 9x9 Eisenstein Q(omega) Hermitian LDL* refutations of 2-copy positivity for strictly interior (c > 0) indecomposable maps. All core identities are formally verified in Lean 4.36.0 (20 theorems, 0 sorry, 0 Classical.choice) alongside 16 zero-float SHA-256 certificates and 56 adversarial pytest checks.
+
+## Full Extracted Text
+
+--- Page 1 ---
+Exact Directed-Torus DAG Obstructions, Universal
+All-nPartial-Transpose Indecomposability, and
+Fourier Collapse Thresholds for Tensor Powers of
+Generalized Choi Maps
+Lluis Eriksson∗
+November 27, 2026
+Abstract
+Whether non-trivial tensor-stable positive (TSP) maps—linear mapsΦ : Md(C) →Md(C)
+that are positive, neither completely positive nor completely copositive, yet satisfyΦ⊗n ≥0
+for alln≥ 1—exist is a landmark open problem in quantum information theory introduced
+by Müller-Hermes, Reeb, and Wolf (2016) and directly linked to the existence of NPT bound
+entanglement. We resolve the entirec = 0indecomposable face of the three-parameter
+generalized Choi familyΦ[a,b,c ] : M3(C) →M3(C)(Cho–Kye–Lee 1992) and establish sharp
+finite-copy obstructions extending into the strictly positive interiorc>0.
+First (Theorem 1), we prove that for everya< 2and b> 0,Φ[ a,b, 0]is never2-positive
+via an explicit rank-2Choi-matrix witness whose quadratic form3(a− 2) < 0is strictly
+independent ofb, and thatΦ[a,b,0] ⊗n is strictlypartial-transpose indecomposablefor every
+n≥ 1: it admits no decomposition∑
+S⊆[n] CS ◦TS with allCS completely positive. Second
+(Theorem 2), we establish adirected-torus DAG limit lawon ⃗G3,n = ( Zn
+3 ,{u→u + e :
+e∈ {0,1}n \{0}}): any acyclic vertex support S⊂ ⃗G3,n scaled by xu = ε|S|−1−top(u)
+eliminates allb-shifts asε→ 0+ and isolates the exactb-independent principal submatrix
+MS(a)uv = (−1)dH(u,v)an−dH(u,v). Anexhaustive2 9 = 512-subsetclassificationof ⃗G3,2 proves
+exact DAG counts(1,9,36,75,63,0,0,0,0,0)by size and establishes the sharp2-copyb→ +∞
+threshold a∗(2) ≈1.71298487, the unique positive root ofQ4(a) = a4 −2a3 +2a2 −2a−1 = 0,
+attained byS2 = {(0,2),(2,0),(0,0),(1,1)}with detMS2 (a) = (a2 −1)(a+1)2Q4(a). Explicit
+8-vertex and16-vertex DAGsS3 ⊂⃗G3,3 and S4 ⊂⃗G3,4 push theb-independent threshold to
+a∗(3) >1.950079and a∗(4) >1.997061(99 .853%of the CP boundary a= 2), whereas the
+Boolean subcubeQn = {0,1}n reaches onlya∗(Qn) = 1, proving coordinate2is indispensable.
+Third (Theorem 3), a rank-2Fourier test family|Ψn(t)⟩= |0⟩⊗|χ0⟩⊗(n−1) +t|1⟩⊗|χ1⟩⊗(n−1)
+yields the exact3-parametern-copy necessary condition
+[
+a(a+b+c−2) n−1 +
+√
+bc(a+b+c+ 1) n−1]2
+≥|(a−2) +bω+c¯ω| 2(n−1).
+On thec= 0face, this proves (i) total2-copy collapse for all0≤a≤ 1and b> 0, (ii) the exact
+closed-form2-copy curve bF(a) =
+(2−a)(2a2+1+
+√
+3(4a2−1))
+2(a2−1) , (iii) unconditional non-existence
+of TSP maps across the entire indecomposable facea< 2,b> 0with an explicit Bernoulli
+finite-copy upper bound and linear asymptotic lawb(n)
+F (a) = 3(2−a)
+2 lna (n−1) + 2−a
+2 + O(n−1),
+and (iv) exact9 ×9Eisenstein Q(ω)Hermitian LDL∗refutations of2-copy positivity for
+strictly interior (c >0) positive indecomposable maps. All core identities are formally
+verified in Lean 4.36.0 (20constructive theorems,0sorry,0 Classical.choice) alongside
+16zero-float SHA-256 certificates and56adversarial pytest checks.
+∗Independent Researcher. Lean 4.36.0 proofs, zero-float verification certificates, and code:
+github.com/lluiseriksson/choi-tensor-power-positivity-and-indecomposability.
+1
+
+--- Page 2 ---
+1 Introduction
+A linear mapΦ : Md(C) →Md(C)ispositive(Φ ≥0) ifΦ( X) ≥0for every positive semidefinite
+matrix X∈M d(C)+, k-positiveif idk⊗Φis positive,completely positive( CP) ifΦis k-positive for
+all k≥ 1, andcompletely copositive(coCP) ifΦ ◦T is CP, whereT denotes matrix transposition.
+A positive map isdecomposableifΦ = C1 +C2 ◦T with C1,C2 ∈CP , andindecomposableotherwise.
+Choi [1] gave the first explicit indecomposable positive map onM3(C), and Cho, Kye, and
+Lee [2] embedded it into the three-parameter familyΦ[a,b,c] :M3(C)→M 3(C)defined by
+(
+Φ[a,b,c](X)
+)
+ii =aXii +bXi+2,i+2 +cXi+1,i+1 ,
+(
+Φ[a,b,c](X)
+)
+ij =−Xij (i̸=j),(1)
+with indices taken modulo3. By Cho, Kye, and Lee [2], fora,b,c≥ 0,Φ[ a,b,c ]is positive if and
+only if
+a+b+c≥2and
+(
+a≤1 =⇒bc≥(1−a) 2)
+,(2)
+completely positive if and only ifa≥ 2, completely copositive if and only ifbc≥ 1, and
+decomposable if and only ifa≥ 2or4 bc≥ (2 −a)2. In particular, on the boundary facec= 0,
+Φ[a,b, 0]is positive if and only ifa≥ 1and a+ b≥ 2, and is strictly indecomposable throughout
+the entire strip1≤a< 2, b≥ 2−a (and in fact non-CP and non-decomposable for all0≤a< 2,
+b>0).
+In a landmark paper, Müller-Hermes, Reeb, and Wolf [3] introducedtensor-stable positive
+(TSP) maps: linear mapsΦsuch thatΦ ⊗n is positive for everyn≥ 1. Clearly everyCP and
+every coCP map isTSP, and Müller-Hermes, Reeb, and Wolf proved that the existence of any
+non-trivial TSP map (neither CP nor coCP) is tightly connected to the long-standing open
+problem of whether non-positive-partial-transpose (NPT) bound entangled states exist. Indeed,
+ifΦis a non-trivial TSP map that is not2-positive (and whose composition with transpose is not
+2-positive), then its tensor powers generate high-dimensional positive maps resisting entanglement
+distillation. Subsequent work by Müller-Hermes [4] and recent progress onk-positivity under
+orthogonal symmetries [5] showed that tensor-power positivity is remarkably fragile, yet explicit
+exact characterizations ofn-copy positivity for the canonical Cho–Kye–Lee Choi familyΦ[a,b,c ]
+have remained open.
+Main Contributions.In this paper we give a complete, exact algebraic and combinatorial
+analysis of the tensor powersΦ[a,b,c ]⊗n, combining three complementary mechanisms that
+together close the entirec= 0indecomposable face and penetrate the strictly positive interior
+c>0:
+1. All-n Partial-Transpose Indecomposability and Non-2-Positivity (Theorem 1).
+We prove that for everya <2and every b >0,Φ[ a,b, 0]is never2-positive via a single
+rank-2matrix Athat decouplesbcompletely, and thatΦ[a,b, 0]⊗n is strictlypartial-transpose
+indecomposableforevery n≥ 1: it cannot be expressed as∑
+S⊆[n] CS ◦TS with all CS ∈
+CP. Thus any n-copy positivity ofΦ[ a,b, 0]⊗n (if it occurs at finiten) is genuinely non-
+decomposable across all2n partial-transpose sectors.
+2. Directed-Torus DAG Limit Law (Theorem 2).We reduce theb→ +∞positivity
+ofΦ[ a,b, 0]⊗n to an exact combinatorial-spectral problem on the directed3-torus ⃗G3,n.
+Any acyclic subsetS⊂ ⃗G3,n eliminates allb-shifts under a topological amplitude scaling
+xu = ε|S|−1−top(u) and yields the exact b-independent principal submatrix MS(a)uv =
+(−1)dH(u,v)an−dH(u,v). Exhaustive enumeration over all29 = 512subsets of ⃗G3,2 fixes the sharp
+2-copy thresholda∗(2) ≈1.71298487(unique positive root ofQ4(a) = a4 −2a3 +2a2 −2a−1 =
+0), while explicit8- and16-vertex DAGs push a∗(3) > 1.950079and a∗(4) > 1.997061
+(99.853%of the CP threshold a = 2). By contrast, the Boolean subcube Qn = {0,1}n
+saturates ata∗(Qn) = 1, proving that all three cyclic residues inZ3 are strictly necessary to
+approacha= 2.
+2
+
+--- Page 3 ---
+3. Exact n-Copy Fourier Collapse Law (Theorem 3).Using the rank-2Fourier family
+|Ψn(t)⟩=|0⟩⊗|χ 0⟩⊗(n−1) +t|1⟩⊗|χ 1⟩⊗(n−1) over the Eisenstein integersZ[ω](ω=e 2πi/3),
+we derive an exact3-parameter necessary condition forΦ[a,b,c ]⊗n ≥0. At c= 0this yields
+total2-copy collapse for alla≤ 1and all b> 0(refuting naive numerical heuristics such as
+Φ[1,6,0]⊗2 ≥0), an exact closed-form2-copy boundarybF(a),unconditional non-existence
+of TSP maps across the entirec= 0indecomposable face a< 2,b> 0with a constructive
+Bernoulli finite-copy bound and linear asymptotic lawb(n)
+F (a) = 3(2−a)
+2 lna (n−1) +2−a
+2 +O(n−1),
+and exact9 ×9Eisenstein Hermitian LDL∗refutations of2-copy positivity in the strictly
+positive interiorc>0.
+2 Universal Non-2-Positivity and All-n Partial-Transpose Inde-
+composability
+LetCΦ = ∑2
+p,q=0 |p⟩⟨q|⊗Φ(|p⟩⟨q|) ∈M9(C)denotetheunnormalizedChoimatrixofΦ = Φ[ a,b,c ].
+From (1), CΦ[a,b,c] decomposes into a direct sum of six1-dimensional blocks and one3×3block:
+• On the diagonal sectorS = {(0,0),(1,1),(2,2)}, the3 ×3principal block is( a+ 1)I3 −J3,
+with eigenvaluesa−2(eigenvector(1,1,1) ⊤) anda+ 1(multiplicity2).
+• On the forward-shift sectorB = {(0,1),(1,2),(2,0)}(pairs( p,i)with i≡p + 1 (mod 3), i.e.,
+(i+ 2)≡p(mod 3)),C Φ is diagonal with entries(b,b,b).
+• On the reverse-shift sectorCset = {(0,2),(1,0),(2,1)}(pairs( p,i)with i≡p + 2 (mod 3)),
+CΦ is diagonal with entries(c,c,c).
+Forn≥ 1, the Choi matrix ofΦ⊗n is then-fold Kronecker productC⊗n
+Φ on( C3 ⊗C 3)⊗n. For
+any subsetI⊆[n] :={1,...,n}, letT I denote partial transposition on the subsystems inI.
+Theorem 1(Universal Non-2-Positivity and All-nPT-Indecomposability).Let0≤a<2and
+b>0, and considerΦ = Φ[a,b,0]onM 3(C).
+(a) Universal non-2-positivity:Φ[ a,b, 0]is not2-positive for any b >0. Specifically, the
+rank-2matrix
+A=
+
+
+1 0−1
+1 1 0
+0 1 1
+
+
+satisfiesdetA= 0,rank(A) = 2, zero weight on theb-shift sectorB, and
+⟨vec(A)|C Φ[a,b,0] |vec(A)⟩= 3(a−2)<0,(3)
+strictly independent ofb.
+(b) All-n partial-transpose indecomposability:For every integer n≥ 1,Φ[ a,b, 0]⊗n :
+M3n(C)→M 3n(C)cannot be written in the form
+Φ[a,b,0] ⊗n =
+∑
+I⊆[n]
+CI ◦TI (4)
+with everyCI : M3n(C) →M3n(C)completely positive. In particular,Φ[ a,b, 0]⊗n is indecom-
+posable for everyn≥1.
+Proof. (a)Direct evaluation gives detA = 1(1 −0) −0 + (−1)(1 −0) = 0, while the leading
+2 ×2minor equals1, so rank(A) = 2. Writing v = vec(A)with vp,i = Ap,i, the entries on
+B = {(0,1),(1,2),(2,0)}are( A0,1,A1,2,A2,0) = (0,0,0), so theb-term vanishes identically. On
+3
+
+--- Page 4 ---
+Cset, c= 0. On S = {(0,0),(1,1),(2,2)},( A0,0,A1,1,A2,2) = (1,1,1), yielding⟨v|CΦ[a,b,0]|v⟩=
+(1,1,1)((a+ 1)I3 −J3)(1,1,1)⊤= 3(a−2) <0. Because rank(A) = 2, the Schmidt rank of|v⟩
+is2, proving(id 2 ⊗Φ[a,b,0])̸≥0.
+(b)Suppose for contradiction that(4) holds with everyCI ∈CP . Taking Choi matrices gives
+C⊗n
+Φ =
+∑
+I⊆[n]
+DTI
+I , D I :=CCI ≥0.(5)
+Notice that partial transpositionTI preserves all diagonal entries of any matrix:(DTI
+I )α,α =
+(DI)α,α ≥0for every basis indexα= ((p1,i1),..., (pn,in)) ∈(Z2
+3)n. Because c= 0, every basis
+index α that has at least one coordinate(pr,ir) ∈Cset has diagonal entry(C⊗n
+Φ )α,α = 0. Since
+each summand(DI)α,α ≥0, it follows that
+(DI)α,α = 0∀I⊆[n],∀αwith∃r∈[n]such that(p r,ir)∈C set.(6)
+BecauseD I ≥0, every row and column ofDI indexed by such anαvanishes identically!
+Now examine the cyclic swap mapσ(p,i) = ( i,p)induced by transposition on a single
+factor: for every p̸= i in Z3,( p,i) ∈B⇐⇒ (i,p) ∈C set (formally certified in Lean as
+thm03_z3_cyclic_swap_links_B_and_C). Fix any coordinatek∈ [n]and restrict (5) to the
+3-dimensional subspace
+Wk :=Sk ⊗
+⨂
+r̸=k
+span{e(0,1)}⊂(C 3 ⊗C 3)⊗n,
+where βr = (0,1) ∈B on every factorr̸= k. Under partial transposition on subsystemr, the
+Choi matrix entry transforms as⟨pr,ir|DTr
+I |qr,jr⟩= ⟨qr,ir|DI|pr,jr⟩. On every factorr̸= k of
+Wk, we havepr = qr = 0and ir = jr = 1, which is fixed by swappingpr ↔qr. On factork, we
+haveik =pandj k =q, so:
+•Ifk /∈I, then(D TI
+I )|Wk =DI|Wk ≥0directly becauseW k is fixed indexwise byTI.
+•Ifk∈I, then for everyp̸=qinZ 3,
+⟨
+(p,p),β
+⏐⏐DTI
+I
+⏐⏐(q,q),β
+⟩
+=
+⟨
+(q,p),β
+⏐⏐DI
+⏐⏐(p,q),β
+⟩
+= 0,
+because among the distinct pair{(q,p),(p,q)}, exactly one belongs toCset, so by(6) and
+DI ≥0that entire row or column ofDI is identically zero. Hence(DTI
+I )|Wk is adiagonal
+matrix with non-negative diagonal entries(DI)((p,p),β),((p,p),β) ≥0, and is therefore positive
+semidefinite.
+Summing over all2n subsets I⊆ [n], every summand(DTI
+I )|Wk is positive semidefinite, which
+forces(C ⊗n
+Φ )|Wk ≥0. However, by direct Kronecker evaluation,
+(C⊗n
+Φ )|Wk =bn−1(
+(a+ 1)I3 −J3
+)
+,
+whose eigenvalue on(1,1,1) ⊤isb n−1(a−2)<0(sinceb>0anda<2), a contradiction.
+Remark 1.Theorem 1(b) is remarkably strong: it rules out not merely standard decomposability
+(C0+C[n]◦T[n]), buteveryconvexcombinationoverall2 n partial-transposepatternssimultaneously,
+for alln≥ 1and all b> 0(even b→ +∞). Notice also that the proof uses onlyc= 0, b> 0,
+anda<2; it holds identically for all0≤a<2regardless of whetherΦ[a,b,0] ⊗n is positive.
+4
+
+--- Page 5 ---
+3 The Directed-Torus DAG Limit Law and Sharpb→ +∞
+Obstructions
+A striking subtlety of the Choi familyΦ[a,b, 0]is that increasing b adds positive diagonal shifts
+toΦ[ a,b, 0]⊗n(ρ), which naively suggests that sufficiently largeb might stabilize tensor-power
+positivity for fixeda∈ (1,2). We now prove that this intuition fails dramatically: even in
+the limitb→ +∞, topological scalings supported on acyclic subgraphs of a directed3-torus
+completely extinguish everyb-shift and drive the obstruction threshold arbitrarily close to the
+CPboundarya= 2.
+Definition 1(Directed3-Torus ⃗G3,n and DAG Limit Matrix).Let ⃗G3,n be the directed graph
+on vertex setZn
+3 with directed edges
+u−→v⇐⇒v−u∈{0,1} n \{0}(mod 3).
+A vertex subsetS⊆Z n
+3 is adirected acyclic support (DAG)if the induced subgraph⃗G3,n[S]
+containsnodirectedcycle; inthatcase Sadmitsatopologicalordering top : S→{ 0,1,...,|S|− 1}
+such thatu→v in ⃗G3,n[S]implies top(u) <top (v). For anyS⊆Z n
+3 and a∈R , define the
+|S|×|S|real symmetric matrix
+(
+MS(a)
+)
+u,v := (−1)dH(u,v)an−dH(u,v) =
+[(
+(a+ 1)I3 −J3
+)⊗n]
+u,v
+,(7)
+whered H(u,v) =|{k∈[n] :u k ̸=vk}|is the Hamming distance onZn
+3 .
+Theorem 2(Directed-Torus DAG Limit Law and Sharpb→ +∞Thresholds).Let n≥ 1and
+a∈R.
+(a) Universal DAG limit law:IfS⊆ ⃗G3,n is acyclic andλmin(MS(a)) <0, then forevery
+b> 0, the tensor powerΦ[a,b, 0]⊗n isnotpositive. Consequently, defining the n-copy DAG
+threshold
+a∗(n) := sup
+{
+a≥0 :∃acyclicS⊆ ⃗G3,n withλ min(MS(a))<0
+}
+,
+Φ[a,b,0] ⊗n fails positivity for everya<a ∗(n)and everyb>0.
+(b) Exhaustive2-copy classification:Among all2 9 = 512subsets of ⃗G3,2, exactly184are
+acyclic, with exact cardinalities(1,9,36,75,63,0,0,0,0,0)for |S|= 0,1,..., 9; in particular,
+every subset of size≥5contains a directed cycle. The unique global2-copy DAG threshold is
+a∗(2)≈1.7129848701,(8)
+the unique positive root of the irreducible quarticQ4(a) := a4 −2a3 + 2a2 −2a− 1 = 0,
+attained by the4-vertex DAGS2 ={(0,2),(2,0),(0,0),(1,1)}with exact determinant
+detMS2 (a) = (a2 −1)(a+ 1) 2(
+a4 −2a3 + 2a2 −2a−1
+)
+.(9)
+(By comparison, the maximum3-vertex DAG threshold isa∗(2; 3) ≈1.54368901, the unique
+real root ofa3 −2a2 + 2a− 2 = 0, attained by {(0,1),(0,2),(1,0)}with detM = a(a+
+1)2(a3 −2a2 + 2a−2).)
+(c) Rapid convergence atn = 3 ,4:Explicit acyclic supports S3 ⊂ ⃗G3,3 (|S3|= 8) and
+S4 ⊂⃗G3,4 (|S4|= 16) have individual thresholdsa∗(S3) ∈(1.950079,1.950080)and a∗(S4) ∈
+(1.997061,1.997062), establishing the global lower bounds
+a∗(3)>1.950079, a ∗(4)>1.997061 (99.853%ofa= 2).(10)
+5
+
+--- Page 6 ---
+(d) Boolean subcube barrier:For everyn≥ 1, the Boolean subcubeQn = {0,1}n ⊂⃗G3,n
+is acyclic of size2 n with minimum eigenvalueλmin(MQn(a)) = ( a− 1)n for a≥ 1and
+λmin(MQn(a)) = (a−1)(a+1)n−1 <0for a∈ [0,1)(having exactly2 n−1 negative eigenvalues
+for a∈ (−1,1)), givinga∗(Qn) = 1. Thus using the third residue2∈Z 3 is strictly necessary
+to exceeda= 1.
+Proof. (a)Fix an acyclic supportS⊂ ⃗G3,n with topological orderingtop : S→{ 0,...,|S|− 1},
+and let b > 0be arbitrary. For ε∈ (0,1), define the unnormalized pure state |x(ε)⟩ =∑
+u∈Sxu(ε)|u⟩∈(C 3)⊗n with strictly positive amplitudes
+xu(ε) :=ε |S|−1−top(u) (u∈S), x u(ε) := 0 (u /∈S).
+ApplyΦ[ a,b, 0]⊗n to the rank-1positive matrix ρ(ε) = |x(ε)⟩⟨x(ε)|. For any pair u,v∈S ,
+let E(u,v) = {k∈ [n] : uk = vk}be the set of agreeing coordinates. By (1), on each
+coordinate k /∈E(u,v),Φ[ a,b, 0]multiplies the off-diagonal entry by−1, while on each coordinate
+k∈E (u,v),Φ[ a,b, 0]maps the( uk,uk)block entry to a·(·)uk,uk + b·(·)uk+2,uk+2. Expanding
+over all subsetsF⊆E (u,v)of coordinates taking theb-shift yields the exact entry formula for
+allu,v∈S:
+(
+Φ[a,b,0] ⊗n(ρ(ε))
+)
+u,v =
+∑
+F⊆E(u,v)
+(−1)dH(u,v)a|E(u,v)|−|F|b|F|xu−eF (ε)xv−eF (ε),(11)
+where eF ∈{0,1}n is the indicator vector ofF (since uk + 2 ≡uk −1 ( mod 3)). Now conjugate
+the |S|×|S| principal submatrix onS by the positive diagonal matrixD(ε) = diag(xu(ε)−1)u∈S:
+(
+D(ε) Φ[a,b,0] ⊗n(ρ(ε))|S×S D(ε)
+)
+u,v
+=
+(
+MS(a)
+)
+u,v +
+∑
+∅̸=F⊆E(u,v)
+(−1)dH(u,v)a|E(u,v)|−|F|b|F|xu−eF (ε)
+xu(ε)
+xv−eF (ε)
+xv(ε) . (12)
+For every nonemptyF⊆E (u,v), letu′:= u−e F and v′:= v−e F. If u′ /∈Sor v′ /∈S, then
+xu′ (ε)xv′ (ε) = 0identically. If instead u′∈S and v′∈S , thenu= u′+ eF and v= v′+ eF with
+eF ∈{0,1}n \{0}, so bothu′→u and v′→v are directed edges in⃗G3,n[S]. By the topological
+ordering property,top(u′)≤top(u)−1andtop(v ′)≤top(v)−1, whence
+xu′ (ε)
+xu(ε) =ε top(u)−top(u′) ≤ε, xv′ (ε)
+xv(ε) =ε top(v)−top(v′) ≤ε.
+Consequently, everyb-dependent term in(12) is O(ε2)uniformly for fixed b> 0. Takingε→ 0+
+yields
+lim
+ε→0+
+D(ε) Φ[a,b,0] ⊗n(ρ(ε))|S×S D(ε) =MS(a).
+By continuity of eigenvalues, ifλmin(MS(a)) <0, then for all sufficiently smallε> 0the principal
+submatrixΦ[ a,b, 0]⊗n(ρ(ε))|S×S has a strictly negative eigenvalue, provingΦ[a,b, 0]⊗n(ρ(ε)) ̸≥0.
+For the monotonicity conclusion, supposea < a∗(n)and b >0. If a <0, the output
+Φ[a,b, 0]⊗n(|0⟩⟨0|⊗n)is diagonal with entry abn−1 < 0at(0 ,1,..., 1), soΦ[ a,b, 0]⊗n ̸≥0. If
+0 ≤a<a ∗(n), by definition of the supremum there exista′∈(a,a∗(n))and an acyclic S⊆ ⃗G3,n
+with λmin(MS(a′)) <0, soΦ[ a′,b, 0]⊗n ̸≥0. Let D(X) := ∑2
+i=0 Xii|i⟩⟨i|denote the completely
+positive diagonal pinching, so thatΦ[a′,b, 0] = Φ[a,b, 0]+( a′−a)D. IfΦ[ a,b, 0]⊗n ≥0, evaluating
+on product inputs givesΦ[a,b, 0]⊗k ≥0for every0 ≤k≤n ; sinceDis entanglement-breaking
+(diagonal pinching with rank-1Kraus operators |i⟩⟨i|), each termΦ[ a,b, 0]⊗k ⊗D⊗(n−k) is
+positive, so the binomial expansion of(Φ[a,b, 0] + (a′−a)D)⊗n would forceΦ[ a′,b, 0]⊗n ≥0, a
+contradiction.
+(b)Exhaustive computer-checked enumeration over all2 9 = 512subsets of ⃗G3,2 (exact
+certificate cert03) certifies exact DAG counts(1,9,36,75,63,0,0,0,0,0)and verifies via exact
+6
+
+--- Page 7 ---
+pure-FractionLDLT that every4-vertex DAG is positive definite ata= 171298488/108 while
+S2 = {(0,2),(2,0),(0,0),(1,1)}(topological order verified in Leanthm10) has a strictly negative
+eigenvalue ata= 171298487/10 8. In the basis((0,2),(2,0),(0,0),(1,1)),
+MS2 (a) =
+
+
+a2 1−a1
+1a 2 −a1
+−a−a a 2 1
+1 1 1a 2
+
+.
+The involution swapping(0,2) ↔(2,0)splits MS2 (a)into the1 ×1antisymmetric block( a2 −1)
+and the3×3symmetric quotient block
+N3(a) =
+
+
+a2 + 1−
+√
+2a
+√
+2
+−
+√
+2a a 2 1√
+2 1a 2
+
+,detN 3(a) = (a2 +1)(a4 −1)−2a4 −2a2 −4a= (a+1) 2Q4(a),
+formally proved in Lean (thm06). MoreoverQ4(a) <0on[0 ,1]( thm09), Q′
+4(a)/2 = (a−1)(2(a−
+1)2 + 3(a−1) + 2) >0on(1 ,∞)( thm07), andQ4(171298487/108) <0 <Q4(171298488/108)
+(thm08), uniquely bracketinga∗(2)∈(1.71298487,1.71298488).
+(c)The explicit8-vertex support
+S3 =
+{
+(2,0,2),(0,0,0),(2,1,0),(0,2,1),(0,0,1),(0,1,2),(1,1,1),(1,2,0)
+}
+⊂⃗G3,3
+(acyclicity formally verified in Leanthm11) and the16-vertex supportS4 ⊂⃗G3,4 (listed incert06)
+have exact pure-FractionLDLT negative pivots ata= 1950079/106 and a= 1997061/106 and
+positive definiteness at1950080/106 and1997062 /106, respectively (cert05–cert06). Direct
+27×27evaluation ata= 195/100,b= 10,ε= 10 −4 confirms finite-bfailure explicitly.
+(d)On Qn = {0,1}n, every edgeu→u + e strictly increases Hamming weight∑
+kuk, so
+Qn is acyclic. Since MQn(a) =
+(a−1
+−1a
+)⊗n, its exact eigenvalues are(a− 1)k(a+ 1)n−k with
+multiplicity
+(n
+k
+)
+(0 ≤k≤n ). Fora≥ 1,0 ≤a− 1 <a + 1, so the minimum eigenvalue is(a−1)n
+(attained atk= n by the all-ones vector). Fora∈ [0,1), a−1 <0 <a + 1and |a−1|<a + 1,
+so the minimum eigenvalue is(a−1)(a+ 1)n−1 <0(attained at k= 1); acrossa∈ (−1,1), every
+oddkyields a negative eigenvalue (total ∑
+kodd
+(n
+k
+)
+= 2n−1 negative eigenvalues).
+4 Exact n-Copy Fourier Collapse Law and Non-Existence of
+TSP Maps
+While Theorem 2 eliminates the entire stripa<a ∗(n)uniformly in b> 0, it leaves open for each
+fixed n the narrow slivera∈ [a∗(n),2)at finite b. We now construct an explicit rank-2Fourier
+test family over the Eisenstein integersZ[ω]( ω= e2πi/3, ω2 + ω+ 1 = 0) that resolves theentire
+c = 0indecomposable face unconditionally for all0 ≤a < 2and b >0, and simultaneously
+certifies2-copy failure inside the strictly positive interiorc>0.
+Define the two orthogonal Fourier basis vectors inC3:
+|χ0⟩:= (1,1,1) ⊤,|χ 1⟩:= (1,ω,ω 2)⊤,
+so⟨χ 0|χ0⟩=⟨χ 1|χ1⟩= 3and⟨χ 0|χ1⟩= 0.
+Lemma 1(Exact Single-Copy Fourier Action ofΦ[a,b,c ]).For every a,b,c∈R , the generalized
+Choi mapΦ = Φ[a,b,c]satisfies:
+⟨χ0|Φ(|χ0⟩⟨χ0|)|χ0⟩=⟨χ 1|Φ(|χ1⟩⟨χ1|)|χ1⟩= 3(a+b+c−2),(13)
+⟨χ0|Φ(|χ1⟩⟨χ1|)|χ0⟩=⟨χ 1|Φ(|χ0⟩⟨χ0|)|χ1⟩= 3(a+b+c+ 1),(14)
+⟨χ0|Φ(|χ0⟩⟨χ1|)|χ1⟩= 3
+(
+(a−2) +bω+c¯ω
+)
+.(15)
+7
+
+--- Page 8 ---
+Figure 1:(a)Optimal4-vertex acyclic support S2 = {(0,2),(2,0),(0,0),(1,1)}⊂ ⃗G3,2 with
+topological ranksr∈{ 0,1,2,3}; all three induced directed shift edges strictly increaser.(b)
+Exponentially rapid decay of the explicitb→ +∞DAG gap2 −a∗(Sn)(an upper bound on
+2 −a∗(n)for n= 3,4) acrossn= 1,2,3,4, shrinking from1.0000to <0.0030(99 .853%of the
+CPthresholda= 2), in contrast to the flat Boolean subcube barrier2−a ∗(Qn) = 1.
+Moreover, |(a− 2) + bω+ c¯ω|2 = |(a− 2) + b¯ω+ cω|2 = u2 + b2 + c2 −ub−uc−bc , where
+u:=a−2.
+Proof. Since |χ0⟩⟨χ0|= J3, (1) givesΦ( J3) = (a+b+c+1)I3 −J3, whose eigenvalues on|χ0⟩and
+|χ1⟩are a+ b+ c−2and a+ b+ c+ 1, proving the first halves of(13)–(14). Similarly,|χ1⟩⟨χ1|
+has entriesωi−j, soΦ(|χ1⟩⟨χ1|) = (a+ b+ c+ 1)I3 −|χ1⟩⟨χ1|, giving the second halves. For(15),
+(|χ0⟩⟨χ1|)ij = ¯ωj. On the diagonal(i,i), (1) yields a¯ωi+ b¯ωi+2 + c¯ωi+1 = (a+ bω+ c¯ω)¯ωi (since
+¯ω2 = ω); off the diagonal(i̸= j)it yields −¯ωj. Contracting with⟨χ0|on the left and|χ1⟩on
+the right gives
+2∑
+i=0
+(a+bω+c¯ω)¯ωiωi −
+∑
+i̸=j
+¯ωjωj = 3(a+bω+c¯ω)−6 = 3
+(
+(a−2) +bω+c¯ω
+)
+.
+The squared-modulus identity follows from4 |u+ bω + c¯ω|2 = (2 u−b−c )2 + 3(c−b )2 =
+4(u2 +b2 +c2 −ub−uc−bc)(formally certified in Leanthm19).
+Theorem 3(Exact n-Copy Fourier Collapse Law and Non-Existence ofTSP Maps onc= 0).
+Letn≥2anda,b,c≥0witha+b+c≥2.
+(a) Exact3-parameter n-copy necessary condition:TestingΦ[ a,b,c ]⊗n on the rank-1
+density matrix|Ψ n(t)⟩⟨Ψn(t)|with
+|Ψn(t)⟩:=|0⟩⊗|χ 0⟩⊗(n−1) +t|1⟩⊗|χ 1⟩⊗(n−1) (t>0)
+and compressing tospan{|0⟩⊗|χ0⟩⊗(n−1),|1⟩⊗|χ1⟩⊗(n−1)}yields thatΦ[a,b,c ]⊗n ≥0implies
+[
+a(a+b+c−2) n−1 +
+√
+bc(a+b+c+ 1) n−1]2 ≥
+⏐⏐(a−2) +bω+c¯ω
+⏐⏐2(n−1).(16)
+(b) Total2-copy collapse for a≤ 1and exact2-copy boundary on c= 0:Setting c= 0
+andn= 2,(16)becomesP 2(a,b)≥0, where
+P2(a,b) := (a2 −1)b2 + (2a2 + 1)(a−2)b+ (a 2 −1)(a−2) 2.(17)
+Consequently:
+8
+
+--- Page 9 ---
+•For every0≤a≤1andeveryb>0,P 2(a,b)<0, soΦ[a,b,0] ⊗2 isneverpositive.
+•For everya∈(1,2),Φ[a,b,0] ⊗2 fails positivity whenever
+b<b F(a) := (2−a)
+(
+2a2 + 1 +
+√
+3(4a2 −1)
+)
+2(a2 −1) .(18)
+In particular,bF(5/4) = 11+4
+√
+7
+4 ≈5.39575, bF(3/2) = 11+4
+√
+6
+10 ≈2.07980, andbF(7/4) =
+19+4
+√
+15
+44 ≈0.78391.
+(c) Unconditional non-existence ofTSP maps across the entirec= 0indecomposable
+face:Forevery a∈ [1,2)andevery b> 0with a+ b≥ 2,Φ[ a,b, 0]isnevertensor-stable
+positive. Explicitly, defining the strict excess ratio
+R(a,b) := b2 + (2−a)b+ (2−a) 2
+(a+b−2) 2 = 1 + 3b(2−a)
+(a+b−2) 2 >1,
+Φ[a,b,0] ⊗n fails positivity for every integer
+n>1 + 2 lna
+lnR(a,b) ,and unconditionally forn≥
+⌊
+(a2 −1)(a+b−2) 2
+3b(2−a)
+⌋
++ 2.(19)
+Moreover, for fixeda∈(1,2), then-copy Fourier thresholdb (n)
+F (a)grows linearly inn:
+b(n)
+F (a) = 3(2−a)
+2 lna (n−1) + 2−a
+2 +O(n−1) (n→∞).(20)
+(d) Strictly interior (c> 0) indecomposable failures:Inequality(16) is violated atn= 2
+on an open neighborhood of thec= 0face inside the strictly positive, strictly indecomposable
+region (a+ b+ c≥ 2,4 bc< (2 −a)2, c> 0). In particular, exact9×9Hermitian LDL∗over
+Q(ω)certifies thatΦ[1 ,1, 1
+10 ]⊗2,Φ[1 ,2, 1
+20 ]⊗2,Φ[ 3
+2 ,1, 1
+50 ]⊗2,Φ[1 ,3, 1
+100 ]⊗2, andΦ[ 6
+5 ,1, 1
+25 ]⊗2
+are all strictly non-positive.
+Proof. (a)Set |v0⟩:= |0⟩⊗|χ 0⟩⊗(n−1) and |v1⟩:= |1⟩⊗|χ 1⟩⊗(n−1), so that|Ψn(t)⟩= |v0⟩+ t|v1⟩,
+and write M := Φ[ a,b,c ]⊗n(|Ψn(t)⟩⟨Ψn(t)|). On the first qutrit register,Φ( |0⟩⟨0|)00 = a,
+Φ(|0⟩⟨0|)11 = b,Φ( |1⟩⟨1|)00 = c,Φ( |1⟩⟨1|)11 = a, andΦ( |0⟩⟨1|)01 = −1. Combining these with
+Lemma 1 on then−1Fourier registers yields the exact2×2Gram compression Grs := ⟨vr|M|vs⟩:
+G00 = 3n−1[
+a(a+b+c−2) n−1 +t2c(a+b+c+ 1) n−1]
+,
+G11 = 3n−1[
+b(a+b+c+ 1) n−1 +t2a(a+b+c−2) n−1]
+,
+G01 =−t·3 n−1(
+(a−2) +bω+c¯ω
+)n−1, G 10 = G01.
+If M≥ 0, thenG00G11 ≥|G 01|2 for everyt >0. Writing An := a(a+ b+ c−2)n−1 ≥0and
+Bn := (a+b+c+ 1) n−1 >0, we have
+G00G11
+9n−1t2 =A2
+n +bcB2
+n +AnBn
+(b
+t2 +ct2
+)
+.
+For b,c >0, minimizing overt >0at t2
+∗ =
+√
+b/c (AM–GM) givesinft>0 G00G11/(9n−1t2) =
+(An +
+√
+bcBn)2. Forc= 0(letting t→ +∞) orb= 0(letting t→ 0+), we obtain the identical
+infimum A2
+n. Requiring this infimum to be at least|G01|2/(9n−1t2) = |(a−2) + bω+ c¯ω|2(n−1)
+yields (16).
+(b)At c= 0, n= 2, (16) reads a2(a+ b−2)2 ≥(a−2)2 −b(a−2) + b2. Expanding both
+sides gives a2(a+ b− 2)2 −((a− 2)2 −b(a− 2) + b2) = P2(a,b)(formally certified in Lean
+thm14). When0 ≤a≤ 1and b >0, a2 −1 ≤0and(2 a2 + 1)(a− 2)b <0, so P2(a,b) < 0
+9
+
+--- Page 10 ---
+Figure 2: Exact2-copy positivity obstruction diagram on thec= 0face ofΦ[ a,b, 0]. Theorem 2
+(DAG obstruction, red/purple) rules out the entire vertical half-strip1≤a<a ∗(2) ≈1.7130
+uniformly inb> 0; Theorem 3 (Fourier obstruction, blue/purple) rules outb<b F(a)across all
+a∈ [1,2)(including bF(1) = +∞, refutingΦ[1 ,6,0]⊗2 ≥0). The narrow wedge unrefuted at
+n= 2(yellow) is progressively swept out by higher-copy curvesb(3)
+F ,b(4)
+F (dotted/dash-dotted)
+and collapses completely at finitenby Theorem 3(c).
+strictly (thm16). When1 < a <2, the quadraticP2(a,b)in b has positive leading coefficient
+a2 −1and exact discriminant(2a 2 + 1)2(2−a) 2 −4(a2 −1) 2(2−a) 2 = 3(4a2 −1)(2−a) 2 >0
+(thm15), yielding the larger rootbF(a)in (18); sinceP2(a,2 −a) = −3(2 −a)2 <0, P2(a,b) <0
+throughout[2−a,b F(a)). Concrete brackets are proved in Lean (thm20).
+(c)At c = 0, a∈ [1,2), b >0, ifa+ b = 2then (16) gives0 ≥3(2 −a)2 > 0, immediate
+failure atn= 2. Ifa+b>2, dividing (16) by(a+b−2) 2(n−1) yieldsa 2 ≥R(a,b) n−1, where
+(
+b2 + (2−a)b+ (2−a) 2)
+−(a+b−2) 2 = 3b(2−a)>0
+(Lean thm17). Hence R(a,b) = 1 + q/p >1, so taking logarithms gives the exact threshold
+n> 1 + 2lna/lnR (a,b). Applying Bernoulli’s inequality(1 +q/p)n−1 ≥1 + (n−1)q/p (Lean
+thm18) immediately yields the constructive integer upper bound in(19). For largen and fixed
+a∈(1,2), solvingR(a,b) n−1 =a2 expands as
+2 lna
+n−1 = ln
+(
+1 + 3(2−a)
+b + 6(2−a) 2
+b2 +O(b−3)
+)
+= 3(2−a)
+b + 3(2−a) 2
+2b2 +O(b−3),
+whose inversion yieldsb(n)
+F (a) = 3(2−a)
+2 lna (n−1) + 2−a
+2 + O(n−1)(certified at n= 101in cert15).
+(d)For any a∈ [1,2)and b<b F(a), both sides of(16) at n= 2are continuous inc≥ 0with
+strict inequality atc= 0, so failure persists on a nonempty intervalc∈ (0,cmax(a,b))inside the
+indecomposable cone4 bc< (2 −a)2. Explicit9 ×9Eisenstein Q(ω)Hermitian LDL∗certificates
+for all five benchmark triples are verified incert12.
+10
+
+--- Page 11 ---
+Figure 3:(a)Exact minimal Fourier collapse copy numbernF(a,b)versus b on thec= 0face
+(plotted on a logarithmic vertical axis), displaying the linear asymptotic growthnF(a,b) ∼ 2 lna
+3(2−a) b.
+(b)Cross-section a= 1in the( b,c)-plane showing the strictly positive, strictly indecomposable
+band0 <bc< 1/4( b+ c≥ 1) and the certified2-copy Fourier failure region extending strictly
+intoc>0, marked with three exact9×9EisensteinLDL ∗benchmark points.
+Table 1: Exact certified thresholds, DAG obstructions, andn-copy Fourier collapse benchmarks
+across Theorems 1–3 (all values certified in Lean 4.36.0 and zero-float rational/Eisenstein
+arithmetic).
+Regime / Parameter Exact Witness / Polynomial Certified Value / Bracket Source
+Non-2-positivity (a<2,∀b>0) Rank-2matrixA,detA= 0⟨vec(A)|C|vec(A)⟩= 3(a−2)<0Thm. 1(a),cert01
+All-nPT-indecomp. (n≥1)Wk=Sk⊗B⊗(n−1) λmin=bn−1(a−2)<0Thm. 1(b),cert02
+2-copy DAG max (|S|= 3)a3−2a2+ 2a−2 = 0a ∗(2; 3)∈(1.543689,1.543690)Thm. 2(b),cert03
+2-copy DAG global (|S|= 4)Q4(a) =a4−2a3+ 2a2−2a−1a ∗(2)∈(1.71298487,1.71298488)Thm. 2(b),cert04
+3-copy DAG (|S3|= 8)8×8rationalLDL TonS3 a∗(S3)∈(1.950079,1.950080)Thm. 2(c),cert05
+4-copy DAG (|S4|= 16)16×16rationalLDL TonS4 a∗(S4)∈(1.997061,1.997062)Thm. 2(c),cert06
+Boolean subcubeQn(∀n)(a−1) n(a≥1),(a−1)(a+ 1)n−1(a<1)a∗(Qn) = 1(2n−1neg. eigs) Thm. 2(d),cert07
+2-copy Fourier (a≤1,∀b>0)P2(a,b)<0Total collapse (∀b>0) Thm. 3(b),cert08
+2-copy Fourier (a= 5/4,3/2,7/4)bF(a)closed form5.39575,2.07980,0.78391Thm. 3(b),cert09
+n-copy Fourier (a= 3/2,b= 3,10)a2(a+b−2)2(n−1)<|·|2(n−1) nF= 3,nF= 7Thm. 3(c),cert10
+Interiorc>0indecomposable9×9EisensteinQ(ω)LDL∗ (1,1,110),(1,2,120),(32,1,150)fail Thm. 3(d),cert12
+5 Complementarity of DAG and Fourier Obstructions and Sum-
+mary Table
+Theorems 2 and 3 play genuinely complementary roles at every finite copy numbern≥ 2
+(certified incert13):
+• Large-b regime (DAG beats Fourier):For fixed n and a∈ (1,a∗(n)), the Fourier
+condition (16) is satisfied onceb≥b (n)
+F (a), yet Theorem 2 still certifies failure forarbitrarily
+large b> 0(e.g.,( a,b) = (3/2,10)at n= 2;(19 /10,100)at n= 3;(199 /100,1000)at n= 4).
+• Near-CP small-b regime (Fourier beats DAG):For a∈ [a∗(n),2)and moderate
+b < b(n)
+F (a), the DAG matrixMS(a)is positive definite on our constructed supports, yet
+Theorem 3 certifiesn-copy failure directly (e.g.,(7/4,1/2)at n= 2;(49 /25,1/10)at n= 3)
+and guarantees eventual finite-ncollapse foreverypoint in thec= 0face.
+11
+
+--- Page 12 ---
+6 Formal Verification, Reproducibility, and Open Problems
+Every algebraic identity, combinatorial acyclicity proof, and numerical threshold in this paper is
+backed by a two-layer zero-trust verification stack in the accompanying repository:
+1. Lean 4.36.0 Formalization (lean/ChoiTensorPowerPositivity.lean):20self-contained
+constructive theorems (thm01–thm20) compiled underlean -DwarningAsError=true with
+zero external dependencies, zerosorry, zeroClassical.choice, and zero custom axioms,
+formalizing the rank-2non-2-positivity witness, Z3 cyclic swap parity, all-n S×B n−1
+negativity, Choi’s 1-copy determinant, theS2 quartic factorization and strict monotonicity,
+topological acyclicity ofS2 and S3, the3-vertex cubic, the2-copy Fourier determinant and
+discriminant identities, total collapse fora≤ 1, the all-nstrict ratio gap3b(2−a), constructive
+Bernoulli induction, and the3-parameter Eisenstein modulus identity.
+2. Zero-Float Exact Python Verifier (verification/verify_choi_tensor_power.py):
+Pure Python standard library (int/Fraction) with an exact Eisenstein fieldQ(ω)Hermitian
+LDL∗engine, AST-audited for zero floating-point literals, zero true-division (/), zero power
+(**), and zerolimit_denominator. It outputs16deterministic SHA-256 certificates with
+MANIFEST.jsonSHA-256 digest
+8886df3f2804427ac293e1060904b7aa02b958b7a42ca36b4344102f14381b75
+cross-checked by56adversarial unit tests (tests/test_adversarial.py).
+Open Questions.Two natural open problems emerge immediately from our work:
+1. Asymptotics of a∗(n)and maximum DAG size in ⃗G3,n:Our exact search yields
+|S2|= 4 = 2 2, |S3|= 8 = 2 3, |S4|= 16 = 2 4 with explicit DAG gaps2 −a∗(Sn) ≈
+1,0.287,0.0499,0.00294. Does the maximum acyclic subset of⃗G3,n have exact cardinality
+2n for alln≥ 1, and does2 −a∗(n)decay exponentially (or super-exponentially) to0as
+n→∞?
+2. Full interiorc> 0closure ofΦ[ a,b,c ]:For strictly positive c> 0and b> 0, asn→∞
+the dominant left-hand term in(16) is
+√
+bc(a+ b+ c+ 1)n−1, whereas the right-hand side is
+|(a−2) +bω+c¯ω|n−1 <(a+b+c+ 1)n−1 (since a+b+c+ 1 >|a− 2|+b+cwhenever a≥ 1).
+Hence the rank-2Fourier family(16) refutesΦ[ a,b,c ]⊗n only at finiten for sufficiently small
+c> 0, and higher-rank or genuinely multipartite witnesses will be required to decide whether
+any strictly interior indecomposable Choi map (0< 4bc <(2 −a)2) can be tensor-stable
+positive.
+AI Assistance Disclosure.In accordance with transparent research reporting standards,
+manuscript drafting, symbolic exploration, Lean 4 formalization, zero-float Python verification
+scripting, and adversarial test construction were carried out by the author using Google Anti-
+gravity. Every mathematical claim is independently verified by the Lean 4.36.0 kernel and exact
+rational/Eisenstein certificates.
+References
+[1] M.-D. Choi,Positive semidefinite biquadratic forms, Linear Algebra Appl.12(1975), 95–100.
+[2] S. J. Cho, S.-H. Kye, and S. G. Lee,Generalized Choi maps in three-dimensional matrix
+algebra, Linear Algebra Appl.171(1992), 213–224.
+12
+
+--- Page 13 ---
+[3] A. Müller-Hermes, D. Reeb, and M. M. Wolf,Positivity of linear maps under tensor powers,
+J. Math. Phys.57(2016), 015202.
+[4] A. Müller-Hermes,Decomposability of linear maps under tensor powers, J. Math. Phys.59
+(2018), 102203.
+[5] S.-J. Park and S.-G. Youn,k-positivity and Schmidt number under orthogonal group symme-
+tries, Quantum Inf. Process.23(2024), 162,arXiv:2306.00654.
+13
