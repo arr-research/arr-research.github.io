@@ -1,0 +1,503 @@
+# Sub-Unit Uniform Gate Lifting, the 1493/1680 PSPACE-Completeness Density Threshold, Kawamura-Dual Barriers, and C5 Prime-Assignment Optimality for Pinwheel Scheduling
+
+**Author:** Lluis Eriksson  
+**AIRR Identifier:** `ARR-2026-0TQG72VXJ39KWVNJ` (v1)  
+**License:** CC-BY-4.0 (manuscript), MIT (verification repository)  
+**Verification Repository:** https://github.com/lluiseriksson/paper138-pinwheel-pspace-density-gate-lifting (`v1.0.0`)  
+**Canonical PDF SHA-256:** `39e1c035adc10a9328a06b6b300809a3a6a985781fd3b915bc9cd59bab959e2f`
+
+## Abstract
+
+Following Fotakis, Kanellopoulos, Mitropoulos, Pagourtzis, Papadimitriou, Pergaminelis, and Tolias (arXiv:2611.34869v1), who proved binary Pinwheel Scheduling is PSPACE-complete for densities 1 - eps < rho < 1 while Kawamura settled rho <= 5/6 as always feasible, we establish four machine-checked structural advances (20 constructive Lean 4.36.0 theorems with 0 sorry / 0 Classical.choice, 16 AST-audited zero-float SHA-256 certificates, 56 adversarial tests): (1) Sub-unit uniform gate lifting: introducing uniform c-gates and certifying the complete 840-state age automaton (98-state bi-infinite core, unique idle source) of G_4 = (3, 4, 7, 10) (c = 16, rho = 347/420 < 5/6) directly inside the Lean 4 kernel, we prove Pinwheel Scheduling is PSPACE-complete for every eps > 0 on instances of density 1493/1680 - eps < rho < 1493/1680 (~0.88869), closing 187/280 (~66.79%) of the open (5/6, 1) Fotakis-Kawamura density gap (with ladders G_2=(2,5) at 19/20 and G_4'=(3,5,6,7) at 389/420); (2) Kawamura-dual barrier rho(B) + lambda_max(B) >= 5/6 for every feasible base B and exact closed-form (2, 2m+1) forced-occupancy excess Phi(2, 2m+1) = 1/(2m(2m+1)) with 2m-window uniformity; (3) unique minimality of C_5 and K = 2310 at width 2 plus exhaustive audit of all 5! = 120 prime bijections uncovering filler-optimal (6,21,77,55,10) (3822 vs 4002 fillers, -180/test) and period-optimal (10,35,21,33,22) (max c_v = 35 vs 55); and (4) exact Stage 1/2 conservation, two-sided slack bounds, and minimal 5-slot local infeasibility of (3, 4, 4, d) -> 5/6+ for every d >= 1.
+
+## Full Extracted Text
+
+--- Page 1 ---
+Sub-Unit Uniform Gate Lifting, the 1493
+1680
+PSP ACE-Completeness
+Density Threshold, Kawamura-Dual Barriers, and C5
+Prime-Assignment
+Optimality for Pinwheel Scheduling
+Lluis Eriksson
+Independent Researcher
+github.com/lluiseriksson/paper138-pinwheel-pspace-density-gate-lifting
+November 27, 2026
+Abstract
+In a landmark breakthrough settling a 37-year-old open problem of Holte, Mok, Rosier,
+T ulchinsky , and V arvel [2], F otakis, Kanellopoulos, Mitropoulos, Pagourtzis, Papadimitriou,
+Pergaminelis, and T olias [ 1] proved that binary-encoded Pinwheel Scheduling is PSPACE-
+complete, even when the instance density ρ = ∑
+i 1/di lies arbitrarily close to 1 (1−ε < ρ < 1).
+Combined with Kawamura’s resolution of the 5/6 density conjecture [ 3] ( ρ ≤ 5/6 is always
+schedulable), this left the entire density interval (5/6, 1 − ε) open.
+W e establish four sharp, machine-checked structural advances, backed by 20 constructive
+Lean 4.36.0 theorems (zero sorry, zero Classical.choice, zero external imports) and an
+AST-audited zero-float exact-rational verifier generating 16 SHA-256 certificates and passing
+56 adversarial tests:
+1. Sub-Unit Uniform Gate Lifting & PSPACE-Completeness Down to 1493
+1680 (≈ 0.88869).
+W e introduce uniform c-gates—Pinwheel bases admitting a c-periodic schedule with one
+idle slot per c slots while enforcing idle-slot separation ξj+1 − ξj ≥ c across every bi-
+infinite feasible schedule—and prove a general Gate-Lifting Theorem lifting any satu-
+rated break-free Daily Scheduling instance D to Pinwheel instances with exact density
+ρ(PG(D)) = ρ(G) + 1
+c − ∑
+i
+cδi
+T bi(T bi+cδi) . Certifying the full 840-state age automaton (98-
+state bi-infinite core, unique idle source) of G4 = (3 , 4, 7, 10) (c = 16 , ρ(G4) = 347
+420 < 5
+6 )
+directly inside the Lean 4 kernel ( thm14), we prove that Pinwheel Scheduling is PSPACE-
+complete for every ε > 0 on instances satisfying 1493
+1680 −ε < ρ < 1493
+1680 —closing 187
+280 ≈ 66.79%
+of the open (5/6, 1) F otakis–Kawamura density gap (with intermediate laddersG2 = (2 , 5)
+at 19
+20 and G′
+4 = (3 , 5, 6, 7) at 389
+420 ).
+2. Kawamura-Dual Gate Barrier & Exact (2, 2m + 1) F orced-Occupancy Law. W e
+prove that every feasible Pinwheel base B with asymptotic idle frequency λmax(B) obeys
+ρ(B) + λmax(B) ≥ 5
+6 (ruling out any gate lifting below 5/6), and derive the exact closed-
+form (2, 2m + 1) forced-occupancy excess Φ(2, 2m + 1) = 1
+2m(2m+1) with constructive
+2m-window uniformity (attaining 5
+6 at m = 1 and 19
+20 at m = 2 , contrasting with zero
+excess on (2, 2m)).
+3. Uniqueness of C5 and Pareto-Optimal Prime Assignments. W e prove thatC5 and
+K = 2310 are minimal for width-2 rigid-vs-moving separation in Stage 2 of [1], and exhaus-
+tively audit all 5! = 120 bijections of {2, 3, 5, 7, 11} onto the non-edges of C5, uncovering
+a strictly filler-optimal assignment (6, 21, 77, 55, 10) (3822 vs. 4002 fillers, saving 180 jobs
+per two-hour test) and a period-optimal assignment (10, 35, 21, 33, 22) (max cv = 35 vs.
+55).
+1
+AIRR:ARR-2026-0TQG72VXJ39KWVNJ v1  [Mathematical physics]  27 Nov 2026  ·  AIRR.SCIENCE
+
+--- Page 2 ---
+4. Exact Slack Conservation and Minimal 5-Slot Obstruction for (3, 4, 4, d) → 5
+6
++
+.
+W e prove exact two-sided slack identities for gate-lifted reductions and certify via exhaus-
+tive kernel verification that (3, 4, 4, d) (all deadlines ≥ 3, density 5
+6 + 1
+d → 5
+6
++
+) is infeasible
+for every d ≥ 1 on a minimal 5-slot local window {−2, −1, 0, 1, 2}.
+1 Introduction
+In Pinwheel Scheduling [2], we are given positive integer deadlines (d1, . . . , dn) and must decide
+whether there exists an infinite schedule S : N → { 0, 1, . . . , n} (one job per slot, or idle 0)
+such that every job i appears at least once in every di consecutive slots. Because the age vector
+(a1, . . . , an) ∈ ∏
+i{0, . . . , di −1} takes finitely many states, feasibility is equivalent to the existence
+of a bi-infinite periodic feasible schedule S : Z → {0, 1, . . . , n} [2, 1].
+T wo landmark theorems frame the modern complexity landscape of Pinwheel Scheduling as
+a function of the total density ρ := ∑n
+i=1
+1
+di
+:
+• Low-density tractability (Kawamura [ 3]): Every instance with ρ ≤ 5
+6 is feasible (decid-
+able in O(1) time), matching the classic infeasible family (2, 3, d) at ρ = 5
+6 + 1
+d → 5
+6
++.
+• High-density PSPACE-completeness (F otakis et al. [1]): Binary-encoded Pinwheel Schedul-
+ing is PSPACE-complete via a three-stage reduction from Periodic 3-SA T [ 6] through Daily
+Scheduling with Breaks and break-free Daily Scheduling, yielding hard instances with density
+1 − ε < ρ < 1 (whereas ρ = 1 is NP-complete [2, 4, 5]).
+This leaves an immediate, sharply defined structural question: how far into the open density
+interval (5
+6 , 1) does PSPACE-completeness penetrate, what fundamental barrier governs sub-unit
+density lifting, and are the core combinatorial gadgets of [ 1] optimal? W e answer all three
+questions with fully machine-checked proofs.
+2 Sub-Unit Uniform Gate Lifting and PSPACE-Completeness at
+1493
+1680
+In Stage 3 of [1], a saturated break-free Daily Scheduling instanceD = ( w, {(bi, δi)}n
+i=1) (∑n
+i=1 1/bi =
+w, ∆ = max i δi, b∗ = max i bi, L = lcm i bi) is embedded into Pinwheel Scheduling using wk dyadic
+clock jobs of deadlines w2h (h = 1 , . . . , k), whose combined density 1 − w/T forces total density
+ρ → 1−. W e break this unit-density barrier by replacing the implicit 1-slot carrier with a rigid
+uniform c-gate whose forced occupancy strictly exceeds its own density .
+Definition 2.1 (Uniform c-Gate). A Pinwheel tuple G = ( g1, . . . , gr) is a uniform c-gate (c ≥ 2)
+if:
+1. (c-periodic template) G admits a c-periodic feasible schedule leaving exactly one idle slot per
+c slots (placed on cZ); and
+2. (Bi-infinite c-window capacity) In every feasible bi-infinite schedule of G (with all non-G jobs
+treated as idle), any two idle slots ξj < ξj+1 satisfy ξj+1 − ξj ≥ c.
+Theorem 2.2 (Sub-Unit Uniform Gate-Lifting Theorem) . Let G = ( g1, . . . , gr) be a uniform c-
+gate, and let D = ( w, {(bi, δi)}n
+i=1) be a saturated break-free Daily Scheduling instance (∑n
+i=1 1/bi =
+w, ∆ = max i δi, b∗ = max i bi, L = lcm i bi). Set Ω := Lwn+6L+10, E′ := Ω( c∆+1)(n(b∗+1)+w),
+and choose k ∈ N so that T := cw2k > max(c∆, n (2E′+3)) (noting log Ω = poly(log L, n, log w) so
+k and al l deadline bit-lengths remain polynomial). Define the Pinwheel instance PG(D) consisting
+of:
+• the r gate jobs G = ( g1, . . . , gr),
+2
+
+--- Page 3 ---
+• wk dyadic clock jobs ( w copies of deadline cw2h for each h = 1 , . . . , k), and
+• n payload jobs of deadline di := Tbi + cδi (i = 1 , . . . , n).
+Then D is feasible if and only if PG(D) is feasible, and its exact density satisfies (arithmetic cores
+in Lean thm03–thm04, thm08–thm10, Cert. C08):
+ρ(PG(D)) = ρ(G) + 1
+c −
+n∑
+i=1
+cδi
+Tbi(Tbi + cδi) ∈
+[
+ρ(G) + 1
+c − nc∆
+T2 , ρ (G) + 1
+c
+)
+. (1)
+Proof. Density identity: The wk clock jobs have combined density∑k
+h=1
+w
+cw2h = 1
+c − 1
+c2k = 1
+c −w
+T .
+Since ∑n
+i=1
+1
+bi
+= w, we have w
+T = ∑n
+i=1
+1
+T bi
+, and 1
+T bi
+− 1
+T bi+cδi
+= cδi
+T bi(T bi+cδi) (Lean thm03),
+yielding ( 1) directly; since bi ≥ 1 and 0 ≤ δi ≤ ∆, each term is bounded above by cδi
+T 2b2
+i
+≤ c∆
+T 2
+(Lean thm04).
+Completeness ( D =⇒ PG(D)): Place the c-periodic template of G on Z \ cZ, leaving the
+subgrid cZ completely free. Partition cZ into blocks of w consecutive slots of span cw indexed
+by z ∈ Z (each block holds slots {cwz + cy : 0 ≤ y < w }). F or each level h ∈ { 1, . . . , k},
+assign the w clock jobs of deadline cw2h to the blocks z ≡ 2h−1 (mod 2 h), achieving exact gap
+cw2h. The remaining blocks z ≡ 0 (mod 2 k) lie at positions Tt + cy (t ∈ Z, 0 ≤ y < w ).
+Place each Daily Scheduling job i scheduled on day t at hour yi(t) ∈ { 0, . . . , w − 1} into slot
+Tt + cyi(t). Whenever job i runs on days t and t + bi with yi(t + bi) −yi(t) ≤ δi, its Pinwheel gap
+is (T(t + bi) + cyi(t + bi)) − (Tt + cyi(t)) ≤ Tbi + cδi = di (Lean thm08).
+Soundness (PG(D) = ⇒ D ): If PG(D) is feasible, by finite-state pigeonhole on the combined
+age vector it admits a bi-infinite periodic feasible scheduleS : Z → {0, 1, . . . , r +wk+n}. T reating
+all non-G jobs as idle gives a bi-infinite feasible schedule ofG, so by Definition 2.1(2) the surviving
+non-G slots ξ(0)
+j satisfy ξ(0)
+j+1 −ξ(0)
+j ≥ c, hence ξ(0)
+j+w −ξ(0)
+j ≥ cw (Lean thm09). Inductively deleting
+the w level-h clock jobs (h = 1 , . . . , k) exactly as in Lemma 5.3 of [1] doubles the w-step spacing at
+each level (Lean thm09), proving that the remaining payload slotsxj satisfy xj+w−xj ≥ cw2k = T.
+Now apply Lemmas 5.5–5.8 of [1] verbatim with scaled ascent budget∆′ = c∆: averaging forward-
+gap deviations over ΩT slots bounds total deviation by E′; pigeonhole selects a day-cut γ mod T
+avoiding n cyclic intervals of radius E′ (n(2E′ + 1) < T ); saturation forces exactly w payload
+slots per retained day with monotone within-day offsets ηt+1,y ≥ ηt,y; and because consecutive
+surviving slots satisfy ηt,y+1 − ηt,y ≥ c, any upward shift of a hours costs ηt,y+a − ηt,y ≥ ca
+(Lean thm09–thm10), so ca ≤ cδi forces a ≤ δi, reconstructing a valid schedule for D.
+Theorem 2.3 (Machine-Checked Sub-Unit Uniform Gates & PSPACE-Completeness at 1493
+1680 ).
+The fol lowing three Pinwheel tuples are certified uniformc-gates (Lean thm11–thm14, Certs. C01–
+C04):
+1. G2 = (2 , 5) is a uniform 4-gate (bi-infinite core: 7 of 10 states; cycle _121; ρ = 7
+10 ; lifted
+ceiling 19
+20 = 0 .95).
+2. G′
+4 = (3 , 5, 6, 7) is a uniform 12-gate (core: 76 of 630 states; cycle _31241231421; ρ = 59
+70 ;
+lifted ceiling 389
+420 ≈ 0.92619).
+3. G4 = (3 , 4, 7, 10) is a uniform 16-gate (core: 98 of 840 states; unique idle source in core; cycle
+_123142131241321; ρ = 347
+420 < 5
+6 ; lifted ceiling 1493
+1680 ≈ 0.88869).
+Consequently, for every ε > 0, binary-encoded Pinwheel Scheduling restricted to instances of
+density 1493
+1680 − ε < ρ < 1493
+1680 is PSPACE-complete, closing 187
+280 > 2
+3 (66.79%) of the open (5
+6 , 1) gap
+between Kawamura [3] and F otakis et al. [1].
+Proof. F or each gateG = ( g1, . . . , gr), consider its finite age-state automaton onQ = ∏r
+j=1{0, . . . , gj−
+1}. T o certify Property (2) of Definition 2.1 unconditionally in the Lean 4 kernel, we assign each
+state u ∈ Q an integer tag tag(u) encoding three disjoint regions:
+3
+
+--- Page 4 ---
+Figure 1: (a) Pinwheel Scheduling density phase diagram showing Kawamura’s ρ ≤ 5/6 always-
+YES region, F otakis et al. ’s 1− hardness, and our gate-lifted PSPACE-completeness thresholds
+19/20, 389/420, and 1493/1680, closing 66.8% of the open (5/6, 1) gap. (b) Exact 16-slot periodic
+schedule of the champion uniform 16-gate G4 = (3 , 4, 7, 10) (core = 98 states, ρ = 347 /420 < 5/6).
+T able 1: Machine-checked uniform c-gate hierarchy for Pinwheel Scheduling (Lean thm12–thm14,
+thm20, Certs. C01–C04).
+Gate T upleG Period c Core / States Base ρ(G) Lifted ρ(G) +1
+c Decimal Gap Closed
+Empty (∅, [1]) 1 1/1 0 1 1.00000 0 .0%
+G2 = (2, 5) 4 7/10 7/10 19/20 0.95000 30 .0%
+G′
+4 = (3, 5, 6, 7) 12 76/630 59/70 389/420 0 .92619 44 .3%
+G4 = (3, 4, 7, 10) 16 98/840 347 /420 1493/1680 0 .88869 66 .8%
+• tag(u) < 1000: finite forward-extinction rank ( tag(v) < tag(u) on every valid outgoing edge
+u → v), so by well-founded descent (Lean thm11) no infinite forward walk can touch u;
+• 1000 ≤ tag(u) < 2000: finite backward-extinction rank within forward-alive states (every
+predecessor w → u satisfies tag(w) < 1000 or tag(w) < tag(u)), so no bi-infinite valid walk
+can touch u;
+• tag(u) ≥ 2000: state lies in the bi-infinite recurrent core with idle-distance potential pot(u) :=
+tag(u)−2000, satisfying (a) for every idle transitions 0− →t in core, pot(s) = 0 and pot(t) ≥ c−1;
+and (b) for every non-idle transition u → v in core, pot(u) ≤ pot(v) + 1 .
+By induction on path length (Lean thm11), any non-idle path of length L starting at t ends at a
+state w with pot(w) + L ≥ pot(t) ≥ c − 1; reaching any idle source ( pot = 0 ) therefore requires
+L ≥ c − 1, proving ξj+1 − ξj ≥ 1 + ( c − 1) = c on every bi-infinite feasible schedule. All state
+tags and c-periodic cycles for G2, G′
+4, and G4 are checked exhaustively by kernel reduction in
+Lean thm12–thm14 and Certs. C01–C03. Combining Theorem 2.2 for G4 with Stages 1–2 of [ 1]
+(increasing k by O(log(nc∆/ε)) so nc∆/T2 < ε ) yields PSPACE-completeness in (1493
+1680 − ε, 1493
+1680 ),
+with gap closure (1 − 1493
+1680 )/(1 − 5
+6 ) = 187
+280 > 2
+3 (Lean thm20).
+3 Kawamura-Dual Gate Barrier and the Exact (2, 2m+ 1)F orced-
+Occupancy Law
+Can sub-unit uniform gate lifting push below 5
+6 ? And what exact excess Φ(B) := (1 −λmax(B))−
+ρ(B) drives sub-unit ceilings? W e establish a universal dual barrier and a closed-form law for all
+two-job instances (2, d).
+4
+
+--- Page 5 ---
+Theorem 3.1 (Kawamura-Dual Gate Barrier and Exact (2, d) F orced-Occupancy Law). Let
+λmax(B) denote the supremum asymptotic frequency of idle slots across al l feasible schedules of
+a Pinwheel base B.
+1. Universal Dual Barrier (arithmetic core in Lean thm20, Cert. C07): Every feasible
+Pinwheel base B satisfies ρ(B) + λmax(B) ≥ 5
+6 . In particular, no uniform c-gate can achieve
+ρ(G) + 1
+c < 5
+6 .
+2. Exact (2, 2m + 1) F orced-Occupancy Law (Leanthm05–thm07, Certs. C05–C06): F or
+every integer m ≥ 1, the even family (2, 2m) has λmax(2, 2m) = m−1
+2m with zero excess ( ρ +
+λmax = 1 ), whereas the odd family (2, 2m + 1) satisfies
+λmax(2, 2m + 1) = m − 1
+2m , Φ(2, 2m + 1) = 1
+2m(2m + 1) ,
+ρ(2, 2m + 1) + λmax(2, 2m + 1) = 1 − 1
+2m(2m + 1) , (2)
+with constructive 2m-window uniformity: every 2m consecutive slots of any feasible bi-infinite
+schedule of (2, 2m + 1) contain at most m − 1 idle slots, attained by the 2m-periodic schedule
+(1, _)m−1, (1, 2).
+Proof. (1) Suppose for contradiction that some feasible base B had ρ(B) + λmax(B) < 5
+6 . W riting
+rational approximations r/Q ≥ ρ(B) and ℓ/Q ≥ λmax(B) with 6(r + ℓ) < 5Q (or exact rationals
+since λmax(B) is achieved by a maximum-mean cycle of B’s finite automaton), set D := 6 Q and
+k := 6 ℓ + 1 (Lean thm20). Then k
+D > ℓ
+Q ≥ λmax(B) while ρ(B) + k
+D ≤ r
+Q + 6ℓ+1
+6Q ≤ 5
+6 . Appending
+k external jobs of deadline D yields a Pinwheel instance of total density ≤ 5
+6 —hence feasible by
+Kawamura’s theorem [3]—yet in any feasible schedule the k external jobs must occupy a limiting
+fraction ≥ k
+D > λmax(B) of slots unused by B, a contradiction.
+(2) F or(2, 2m), the 2m-periodic schedule (1, _)m−1, (1, 2) achieves λ = m−1
+2m = 1 −ρ(2, 2m), so
+excess is 0. F or(2, 2m+1), let f : Z → {0, 1, 2} be any bi-infinite feasible schedule. Because job 1
+has deadline 2, every adjacent pair {t, t + 1} contains job 1, so by induction on m (Lean thm05)
+any 2m-window [a, a + 2m) contains at most m non-1 slots. Suppose [a, a + 2m) contained ≥ m
+idle (0) slots. Then it must contain exactly m idle slots and m copies of job 1 (hence zero copies
+of job 2). Moreover, the 2m −2 interior slots {a + 1, . . . , a + 2m −2} partition into m −1 disjoint
+adjacent pairs, each containing at least one copy of job 1, so the interior holds at most m −1 idle
+slots (Lean thm05 at m−1). Therefore at least one boundary slot of [a, a + 2m) must be idle: if a
+is idle, job 1’s deadline 2 forces a −1 to be job 1, so the (2m + 1)-window [a −1, a + 2m) contains
+zero copies of job 2; if a+2m−1 is idle, slot a+2m is forced to be job 1, so [a, a+2m+1) contains
+zero copies of job 2. Either way , job 2’s deadline 2m + 1 is violated. Thus every 2m-window has
+≤ m−1 idle slots, proving λmax(2, 2m+1) ≤ m−1
+2m . Achievability by (1, _)m−1, (1, 2) (Lean thm07)
+and the exact rational identity (1 − m−1
+2m ) − (1
+2 + 1
+2m+1 ) = 1
+2m(2m+1) (Lean thm06) complete the
+proof.
+4 Minimality of C5 and Pareto-Optimal Prime Assignments
+Stage 2 of [ 1] eliminates breaks by encoding two-hour tests via five witness jobs of periods dgcv
+with (c0, . . . , c4) = (14 , 33, 10, 21, 55) (equivalently (10, 55, 33, 21, 14) in non-edge cycle order) and
+K = 2 · 3 · 5 · 7 · 11 = 2310 , padded by 2K − ∑
+v K/cv = 4002 rigid fillers. W e prove this graph
+and modulus are provably minimal and uncover strictly sharper prime assignments.
+Theorem 4.1 (C5 Minimality and Exact Pareto F rontier Across All 5! = 120 Prime Bijections).
+Consider width-2 rigid-vs-moving separation gadgets formed by assigning primes pe to non-edges
+of a graph G = ( V, E) with cv = ∏
+e∋v pe and K = ∏
+e pe:
+5
+
+--- Page 6 ---
+Figure 2: (a) Exact lifted density ceiling ρ+λmax = 1 − 1
+2m(2m+1) for (2, 2m+1) versus zero-excess
+(2, 2m) and the Kawamura-dual barrier 5/6 (Theorem 3.1). (b) Exact forced-occupancy excess
+Φ(2, 2m + 1) = 1
+2m(2m+1) .
+1. Unique Minimality of C5 and K = 2310 (Lean thm15, Cert. C10): Any graph with
+ω(G) ≤ 2 < χ (G) has |V | ≥ 5, with unique 5-vertex minimizer G ∼= C5 (5 non-edges). Since
+every prime p must label an independent set of size ≤ α(C5) = 2 (at most one non-edge), at
+least 5 distinct primes are required, so K ≥ 2 · 3 · 5 · 7 · 11 = 2310 is sharp.
+2. Exact Pareto F rontier Over Al l120 Bijections (Lean thm16–thm17, Certs. C09, C11):
+Across al l 5! = 120 assignments (p0, . . . , p4) of {2, 3, 5, 7, 11} to the non-edge 5-cycle of C5
+(with cv = pvpv+1, indices mod 5):
+• F otakis et al. [1]: non-edge primes [2, 5, 11, 3, 7] = ⇒ cv = (10 , 55, 33, 21, 14), ∑1/cv = 103
+385 ,
+4002 fil lers, max cv = 55 .
+• Filler-optimal: non-edge primes [2, 3, 7, 11, 5] = ⇒ cv = (6 , 21, 77, 55, 10), ∑1/cv = 19
+55 ,
+3822 fil lers (saving 180 jobs per two-hour test), CR T phases (4, 15, 56, 11, 5).
+• Period-optimal: non-edge primes [2, 5, 7, 3, 11] = ⇒ cv = (10 , 35, 21, 33, 22), ∑1/cv = 97
+385 ,
+4038 fil lers, max cv = 35 (−20 vs. 55), CR T phases (6, 15, 7, 12, 11).
+Proof. (1) Exhaustive check over all graphs on ≤ 4 vertices confirms every triangle-free graph
+on ≤ 4 vertices is bipartite (Cert. C10), whereas C5 is triangle-free ( ω = 2 ) and non-2-colorable
+(Lean thm15, χ = 3 ). Because α(C5) = 2 , no three vertices are mutually non-adjacent, so any
+prime factor shared by three vertices would suppress a colliding edge pair; thus distinct primes
+are required for all 5 non-edges, forcing K ≥ 2 · 3 · 5 · 7 · 11 = 2310 .
+(2) F or any bijection (p0, . . . , p4) of {2, 3, 5, 7, 11} onto the 5-cycle of non-edges of C5 with
+cv = pvpv+1 (indices modulo 5), choosing phases βv ≡ 0 (mod pv) and βv ≡ 1 (mod pv+1) via
+the Chinese Remainder Theorem ensures βv ≡ 1 ̸≡ 0 ≡ βv+1 (mod pv+1) on the shared prime
+pv+1 of every non-edge {v, v + 1 }, so no non-adjacent vertices ever coincide on any day t ∈
+Z/2310Z, capping daily collisions at ω(C5) = 2 (verified exhaustively across all t ∈ {0, . . . , 2309}
+in Lean thm16). Exhaustive evaluation of ‘fillersOf‘ and ‘maxCvOf‘ across all 120 permutations
+in Lean thm17 certifies exact minima 3822 and 35.
+5 Exact Slack Conservation and the Minimal 5-Slot (3, 4, 4, d) Ob-
+struction
+Finally , we record the exact Stage 1/2 saturation and width identities alongside a sharp local
+infeasibility witness approaching 5
+6
++ with all deadlines ≥ 3.
+6
+
+--- Page 7 ---
+Figure 3: (a) Exact Pareto frontier across all 5! = 120 bijections of {2, 3, 5, 7, 11} onto the non-
+edges of C5, showing our filler-optimal ( 3822 vs. 4002) and period-optimal ( max cv = 35 vs. 55)
+assignments (Theorem 4.1). (b) Infeasible family (3, 4, 4, d) with all deadlines ≥ 3 and density
+5
+6 + 1
+d → 5
+6
++ (Theorem 5.1).
+Theorem 5.1 (Exact Reduction Identities and Minimal 5-Slot Obstruction for (3, 4, 4, d)). 1. Stage 1/2
+Conservation & Two-Sided Slack (Lean thm01–thm04, Certs. C12, C15): In Stage 1
+of [ 1] ( N variables, m clauses), the 4N + 5 jobs achieve exact saturation |St| = 4 N + 3 with
+break ratio 4N+3
+72N+15 ∈ ( 1
+18 , 7
+87 ], and Stage 2 yields exact break-free widthw′ = (32 m+128)(72N +
+15) + 24 m + 95. In any c-gate lifting (Theorem 2.2), the slack σ := ( ρ(G) + 1
+c ) − ρ(PG(D))
+satisfies
+c ∑n
+i=1 δi/b2
+i
+T(T + c∆) ≤ σ =
+n∑
+i=1
+cδi
+Tbi(Tbi + cδi) ≤ c ∑n
+i=1 δi/b2
+i
+T2 ≤ nc∆
+T2 . (3)
+2. Minimal 5-Slot Obstruction for (3, 4, 4, d) → 5
+6
++ (Lean thm18–thm19, Certs. C13–C14):
+While (3, 4, 4) has density 5
+6 and period-3 schedule1,2,3, the family (3, 4, 4, d) (ρ = 5
+6 +1
+d → 5
+6
++,
+al l deadlines ≥ 3) is infeasible for every d ≥ 1. Moreover, infeasibility is witnessed local ly on
+the 5-slot window {−2, −1, 0, 1, 2} (minimal: every 4-slot subwindow containing 0 is satisfiable,
+e.g. (2, 4, 1, 3) on {−1, 0, 1, 2} and (3, 1, 4, 2) on {−2, −1, 0, 1}), contrasting with the 3-slot
+window {−1, 0, 1} for (2, 3, d).
+Proof. Part (1) follows immediately from w = 72 N +15, M = 8 m+32, w′ = 4 Mw +3M −1, and
+Tbi ≤ Tbi + cδi ≤ bi(T + c∆) (Lean thm01–thm04). F or Part (2), in any bi-infinite schedule of
+(3, 4, 4, d), job 4 must appear at some slot (shifted to0). On the four remaining slots {−2, −1, 1, 2}
+of the 5-slot window {−2, −1, 0, 1, 2}, job 1 (deadline 3) must hit all three 3-windows {−2, −1, 0},
+{−1, 0, 1}, {0, 1, 2}, while jobs 2 and 3 (deadline 4) must each hit both 4-windows {−2, −1, 0, 1}
+and {−1, 0, 1, 2}. Exhaustive verification over all 44 = 256 assignments in Lean thm19 (and
+Cert. C13) proves zero valid assignments exist, whereas on every 4-slot window containing0 a valid
+assignment exists—specifically (−1, 0, 1, 2) = (2 , 4, 1, 3) hits both 3-windows {−1, 0, 1}, {0, 1, 2}
+with job 1 and the 4-window with jobs2, 3 (and symmetrically (−2, −1, 0, 1) = (3 , 1, 4, 2)), proving
+5 slots is minimal.
+6 F ormal V erification Architecture and Reproducibility
+All results are independently verified across three layers:
+1. Constructive Lean 4.36.0 F ormalization:20 theorems (thm01–thm20) in lean/PinwheelGateLifting.
+lean compiling under lean -DwarningAsError=true with zero external imports, zero sorry,
+7
+
+--- Page 8 ---
+zero grind, and zero Classical.choice, including full kernel verification of the 840-state
+automaton for G4 = (3 , 4, 7, 10), all 120 C5 prime bijections, Z/2310Z phase disjointness, and
+the 256-case 5-slot (3, 4, 4, d) obstruction.
+2. AST-Audited Zero-Float Python V erifier: Pure standard-library code ( int, Fraction)
+in verification/verify_pinwheel_gates.py, self-auditing its AST and emitting 16 canoni-
+cal SHA-256 certificates (C01–C16) across four modes (manifest digeste24fa9a1dc7a7ce7...).
+3. Adversarial T est Suite:56 pytest checks intests/test_adversarial.py covering positive
+verification and live adversarial tampering across all four modes.
+AI Assistance Disclosure. Portions of the finite-state gate discovery , Lean 4 formalization,
+zero-float verification tooling, and manuscript preparation were developed using Google Anti-
+gravity . All theorems, formal proofs, exact rational certificates, and adversarial tests were in-
+dependently audited and verified, and the author takes full responsibility for all mathematical
+content.
+References
+[1] Dimitris F otakis, Sotiris Kanellopoulos, Giorgos Mitropoulos, Aris Pagourtzis, Christos Pa-
+padimitriou, Christos Pergaminelis, and Thanos T olias. Pinwheel scheduling is PSP ACE-
+complete. arXiv preprint arXiv:2611.34869v1 , November 2026.
+[2] Robert Holte, Aloysius Mok, Louis Rosier, Igor T ulchinsky , and Donald V arvel. The pinwheel:
+A real-time scheduling problem. In Proceedings of the 22nd Annual Hawaii International
+Conference on System Sciences (HICSS) , volume 2, pages 693–702, 1989.
+[3] Akitoshi Kawamura. Proof of the density threshold conjecture for pinwheel scheduling. In
+Proceedings of the 56th Annual ACM Symposium on Theory of Computing (STOC) , pages
+1816–1819, 2024.
+[4] Robert Kleinberg and Ahan Mishra. NP-hardness and a PT AS for the pinwheel problem.
+In Proceedings of the 67th Annual IEEE Symposium on F oundations of Computer Science
+(FOCS), 2026. arXiv:2604.13974.
+[5] Y usuke Kobayashi, Bingkai Lin, and Joseph Swernofsky . Dense pinwheel packing is strongly
+NP-complete. arXiv preprint arXiv:2609.20075 , 2026.
+[6] James B. Orlin. The complexity of dynamic languages and dynamic optimization problems.
+In Proceedings of the 13th Annual ACM Symposium on Theory of Computing (STOC) , pages
+218–227, 1981.
+8
