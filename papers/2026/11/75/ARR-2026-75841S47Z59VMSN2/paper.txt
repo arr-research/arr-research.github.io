@@ -1,0 +1,412 @@
+Subwavelength Confinement Horizons for 71-THz
+Mito-Polaritons: Exact Lyddane–Sachs–Teller
+Oscillator-Strength Bounds, Lamellar Transfer-Matrix
+Dispersion, and Water-Loss Q-Factor Ceilings
+Lluis Eriksson
+Independent Researcher (https://github.com/lluiseriksson)
+Electrodynamic Audit Continuing ARR-2025-2AQXS44H6Z8GQAG2 and ARR-2026-1E91AXEJYT890TQC
+November 27, 2026
+Abstract
+In our companion record ARR-2026-1E91AXEJYT890TQC
+(Nov. 26, 2026), we audited the 71.0-THz mitochon-
+drial cristae polariton hypothesis of Yang, Gu, and Song
+(bioRxiv:10.64898/2026.09.10.750628v1, Sep. 2026, un-
+refereed) under our operational coherence-maintenance
+framework (ARR-2025-2AQXS44H6Z8GQAG2), showing that
+at resonance (ωc = ω0 = 87 THz, ν− = 71 THz) coupling
+reaches the ultrastrong regime (η = g/ω0 = 1264/6177 ≈
+0.2046 > 0.1) with a +3.61 THz Hopfield A2 blue-shift
+(νHop + = 7569/71 ≈ 106.61 THz). Here we audit the central
+open electrodynamic obstruction: how a 15–40 nm aqueous-
+lipid crista (∼ λ0/100 at λ0 ≈ 3.446 µm) without metallic
+mirrors can confine a mid-infrared mode strongly enough
+to sustain η > 0.20. Backed by a zero-floating-point verifi-
+cation suite (MITO-CRISTAE-CONFINEMENT-CERT-1.0) com-
+prising 18 constructive Lean 4.36.0 integer/rational theo-
+rems (0 sorry, 0 custom axioms, 0 Classical.choice,
+-DwarningAsError=true), 16 canonical exact-Q certificates
+(C01--C16), and 28 unit/forgery/AST tests, we prove
+five sharp results: (i) by the exact Lyddane–Sachs–Teller
+(LST) sum rule fosc = 4η2 in the resonant homogeneous
+benchmark (ωc = ω0, lipid mode fill ΓL = 1), achiev-
+ing η = 1264/6177 requires effective oscillator strength
+f req osc = 6390784/38155329 ≈ 0.1675 > 4/25 and ωLO ∈
+(94.00, 94.01) THz, yielding an enhancement deficit Fenh >
+16.749× over fluid-bilayer CH2 bulk strength (fbulk = 0.01,
+and > 4.187× at fbulk = 0.04); with realistic partial lipid
+fill ΓL = 1−ΓW = 1/6, this deficit deepens sixfold (> 100×
+at fbulk = 0.01); (ii) the fundamental dielectric Fabry–
+Pérot half-wave thickness dFP = λ0/(2nL) > 1188 nm
+exceeds a 30 nm crista by > 39×, forbidding any trans-
+verse single-crista dielectric cavity mode; (iii) exact uniax-
+ial effective-medium theory (EMT) for lamellar cristae (ϕ =
+dL/(dL + dW ) < 1/2) paired with an exact zero-calculus
+AM–GM damped Lorentz minimum minω Re εL(ω) = ε∞ −
+∆ε ω2 0 /[γm(2ω0 + γm)] proves that fluid bilayers (fosc <
+175/7569 ≈ 0.0231 at γm = 1 THz) have Re εL > 0 ev-
+erywhere and that no passive Lorentz lipid oscillator can
+produce negative permittivity or hyperbolic confinement
+below resonance at 71 THz < 87 THz; (iv) exact unimodu-
+lar SL(2, Q) transfer-matrix audits and a constructive Pell–
+Chebyshev induction proof (|US−1(x)| ≤ S for all |x| ≤ 1)
+confirm that 30-nm crista stacks (S = 5–12) sit deep inside
+the acoustic passband (RS < 0.5%, zero Bragg gap); and
+(v) aqueous dielectric loss at ΓW = 5/6 (using H2O opti-
+cal constants ε′ eﬀ = 1.78, 1.75 and D2O ε′ eﬀ = 1.76) fixes
+exact ceilings Qloss(71 THz) = 106.8 (quiet window, γc ≈
+0.665 THz ≪ ΩR ≈ 35.61 THz) vs. Qloss(106.6 THz) = 3
+in H2O (γc + γm = 2594/71 ≈ 36.54 THz > ΩR = 2g,
+violating the strict strong-coupling non-overlapping-wings
+criterion even though real pole splitting 4g > γc + γm per-
+sists), whereas D2O lifts Qloss(106.6 THz) by 35.2× (35× at
+fixed ε′) to 105.6 while simultaneously introducing strong
+O–D stretch absorption/dispersion near ∼ 75 THz over-
+lapping MP−, motivating isotopic H2O/D2O titration as a
+dual-branch diagnostic.
+1 Introduction and Epistemic
+Scope
+In ARR-2025-2AQXS44H6Z8GQAG2 [3], we developed an op-
+erational resource-boundary framework modeling biological
+membranes as geometric interfaces implementing decoher-
+ence suppression under finite metabolic budgets. Following
+the September 2026 bioRxiv preprint of Yang, Gu, and
+Song [8] reporting a 71.0-THz (2368 cm−1) mid-infrared
+feature in intact living mitochondria and modeling it as
+a lipid CH2 vibrational polariton, our companion paper
+ARR-2026-1E91AXEJYT890TQC [4] established exact reso-
+nant Hopfield A2 Thomas–Reiche–Kuhn (TRK) invariants
+(νHop + = 7569/71 ≈ 106.61 THz, η = 1264/6177 ≈ 0.2046),
+the bioenergetic ATP maintenance horizon, the ω = 0
+Davies floor, and bosonic dark-mode scattering.
+That audit treated η = 1264/6177 as an empirical in-
+put extracted from (ω0, ν−) = (87, 71) THz. Yet the sin-
+gle sharpest physical objection raised against mid-infrared
+polaritonics in organelles is subwavelength confinement:
+the free-space wavelength at 87 THz is λ0 ≈ 3.446 µm,
+whereas individual mitochondrial cristae have lumen widths
+1
+
+
+
+dW ≈ 15–40 nm (∼ λ0/100) and lack metallic mirrors.
+Here we derive exact, machine-checked necessary conditions
+and no-go bounds governing dielectric, lamellar hyperbolic,
+Bragg-stack, and loss-limited confinement in mitochondrial
+cristae.
+Scope and epistemic hygiene. As in [4], [8] is an un-
+refereed preprint whose experimental claims await indepen-
+dent replication; we neither endorse nor refute its empirical
+observations, but extract exact electrodynamic constraints
+that any valid microscopic mechanism must satisfy.
+2 Five Exact Electrodynamic Theo-
+rems
+2.1 LST Oscillator-Strength Deficit, Fill-
+ing Factor, and Fabry–Pérot Cutoff
+In a homogeneous dielectric medium (ΓL = 1) with back-
+ground permittivity ε∞ and collective vibrational Lorentz
+response ε(ω) = ε∞ +∆ε ω2 0 /(ω2 0 −ω2) (fosc := ∆ε/ε∞), the
+longitudinal optical zero ε(ωLO) = 0 obeys the Lyddane–
+Sachs–Teller (LST) relation [6, 5] ω2 LO/ω2 0 = 1 + fosc. Iden-
+tifying the resonant (ωc = ω0) gauge-invariant Hopfield A2
+diamagnetic shift ω2 LO = ω2 0 + 4g2 yields the exact bench-
+mark invariant (Lean Thm. 1):
+fosc = 4η2, η := g ω0 , ω2 LO = ω2 0 (1 + 4η2). (1)
+At resonant ωc = ω0 = 87 THz and ν− = 71 THz (η =
+1264/6177 from [4]), Eq. (1) forces (Lean Thm. 2; C01--C02,
+Fig. 1a):
+f req osc = 6 390 784 38 155 329 ≈ 0.167494 > 4 25 (ΓL = 1), (2)
+ω2 LO = 44 546 113 5041 THz2 =⇒ ωLO ∈ (94.00, 94.01) THz.
+(3)
+Because bulk phospholipid CH2 stretching oscillator
+strengths lie in fbulk ∈ [0.005, 0.04] (typically ∼ 0.01 in
+fluid bilayers), achieving f eﬀ osc = Fenhfbulk ≥ f req osc in the
+optimistic homogeneous limit (ΓL = 1) already demands
+a strict local-field or subwavelength mode-volume enhance-
+ment factor (Thm. 3):
+Fenh > 16.749 (fbulk = 0.01), (4)
+Fenh > 4.187 (fbulk = 0.04). (5)
+Filling-factor tightening and detuning trade-off. For
+a realistic crista mode whose electric intensity fraction in
+the aqueous lumen is ΓW = 5/6 (Sec. 2.4), only ΓL =
+1 − ΓW = 1/6 overlaps the lipid bilayer, scaling f req osc (ΓL) =
+f req osc (1)/ΓL upward by 6× to Fenh > 100× at fbulk = 0.01
+(Thm. 3). Conversely, red cavity detuning (ωc < ω0) re-
+duces the g needed to reach ν− = 71 THz, but only by
+requiring a bare cavity resonance already below 87 THz,
+which deepens the diffraction cutoff below.
+By exact SI-2019 c = 299 792 458 m/s, λ0 =
+c/(87 THz) ∈ (3445, 3446) nm. With lipid refractive in-
+dex nL = 29/20 = 1.45 (ε∞ = 1.452 = 2.1025), the fun-
+damental Fabry–Pérot half-wave cutoff dFP = λ0/(2nL) >
+1188 nm exceeds a 30 nm crista unit cell by > 39.6× and
+a 40 nm lumen by > 29.7× (Thm. 4; C04, Fig. 1b). Hence
+no single-crista transverse dielectric Fabry–Pérot mode ex-
+ists at 87 THz: any dielectric cavity resonance must span
+the full mitochondrion (L ∼ 1.2–2.5 µm), or else rely on
+non-diffraction-limited subwavelength confinement.
+2.2 Lamellar EMT Phase Diagram and Ex-
+act Damped Lorentz Threshold
+For a subwavelength lamellar crista stack (a = dL + dW ≈
+30 nm ≪ λ0) with lipid filling fraction ϕ = dL/(dL + dW )
+(ϕ = 1/6 < 1/2 for dL = 5 nm, dW = 25 nm), lossless
+uniaxial effective-medium theory [7] gives
+ε∥ = ϕεL + (1 − ϕ)εW , ε⊥ = εLεW (1 − ϕ)εL + ϕεW . (6)
+Clearing denominators proves the exact Wiener anisotropy
+identity (Thm. 5):
+ε∥ − ε⊥ = ϕ(1 − ϕ)(εL − εW )2 (1 − ϕ)εL + ϕεW , (7)
+which is strictly positive whenever εL, εW > 0 and εL ̸= εW .
+When εW > 0 and ϕ < 1/2, negative real permittivity εL <
+0 (neglecting resonant Im εL damping in the idealized phase
+classification) partitions the axis into three exact regimes
+(Thms. 6–7; C05--C08, Fig. 2a):
+• Type-I Hyperbolic (ε∥ > 0, ε⊥ < 0): − ϕ 1−ϕ εW <
+εL < 0;
+• Elliptic Re-Entry (ε∥ > 0, ε⊥ > 0): − 1−ϕ ϕ εW <
+εL < − ϕ 1−ϕ εW ;
+• Type-II Hyperbolic (ε∥ < 0, ε⊥ > 0): εL <
+− 1−ϕ ϕ εW .
+Could lipid CH2 oscillators themselves generate
+Re εL(ω) < 0 to enable high-k hyperbolic subwave-
+length confinement? For a damped Lorentz bilayer
+εL(ω) = ε∞ + ∆ε ω2 0 ω2 0 −ω2 −iγm ω (ε∞ = 2.1025), let
+x = ω2 − ω2 0 > 0. By the exact square identity
+(Thm. 8):
+x2 + γ2 m(ω2 0 + x) − γm(2ω0 + γm)x = (x − γmω0)2 ≥ 0, (8)
+the global minimum of Re εL(ω) over all ω > 0 is attained
+exactly at ω2 ∗ = ω2 0 + γmω0 with closed-form value
+min
+ω>0
+Re εL(ω) = ε∞ − ∆ε ω2 0 γm(2ω0 + γm) . (9)
+Consequently, Re εL(ω) < 0 occurs if and only if fosc >
+2/Qm + 1/Q2 m (Qm = ω0/γm, Thm. 9). At ω0 = 87 THz
+and fluid-bilayer linewidth γm = 1 THz (Qm = 87), the
+2
+
+
+
+threshold is 175/7569 ≈ 0.02312 > 0.01, so typical fluid
+bilayers remain strictly positive everywhere (C09). More
+decisively, at ν− = 71 THz < 87 THz, ω2 0 − ν2 − = 2528 > 0,
+forcing Re εL(71 THz) > ε∞ > 0 for every passive Lorentz
+oscillator regardless of Qm (Thm. 10; C10, Fig. 2b). Thus
+lipid CH2 oscillators cannot generate hyperbolic confine-
+ment at 71 THz.
+2.3 Unimodular SL(2, Q) Transfer-Matrix
+Stack Audit
+To audit whether S periodic lossless normal-incidence
+cristae form a dielectric Bragg mirror [9], we parameter-
+ize bilayer and lumen optical phases on the rational unit
+circle (cj , sj ) = (
+1−t2 j
+1+t2 j , 2tj 1+t2 j ) (c2 j + s2 j = 1), constructing real
+unimodular transfer matrices Mj ∈ SL(2, Q) (det Mj = 1,
+Thm. 11). The unit-cell matrix Mcell = MLMW has half-
+trace x = 1 2 Tr(Mcell) = cLcW − 1 2 ( nL nW + nW nL )sLsW , and
+M S cell = US−1(x)Mcell − US−2(x)I obeys the Cassini invari-
+ant U 2 k − Uk−1Uk+1 = 1 at every step (Thm. 12).
+Inside the acoustic passband (|x| ≤ 1), our construc-
+tive Pell–Chebyshev induction proof in Lean 4 (T 2 n + (1 −
+x2)U 2 n−1 = 1 =⇒ |Tn| ≤ 1 =⇒ |US−1(x)| ≤ S for ev-
+ery S ≥ 1 and every rational x ∈ [−1, 1], Thm. 13) proves
+rigorously that RS /TS = US−1(x)2(R1/T1) ≤ S2(R1/T1)
+grows at most quadratically with S, never exponentially.
+For realistic 30 nm cristae (nL = 1.45, nW = 1.33, am-
+bient index n0 = nW ), exact rational powering gives
+x ≈ 0.998 (passband) and R5 < 10−3 at 71 THz (C11)
+and R12 < 5 × 10−3 at 87 THz (C12), in stark contrast
+to a quarter-wave Bragg control (n1 = 2, n2 = n0 = 1,
+x = −5/4, R6 = 16769025/16785409 > 0.999, C13, Fig. 3a).
+Pure dielectric Bragg reflection of a crista stack cannot trap
+71–87 THz light.
+2.4 Aqueous Dielectric-Loss Q-Ceiling and
+H2O/D2O Dual-Branch Audit
+In an aqueous crista with complex water permittivity
+εW (ω) = ε′ W + iε′′ W [2, 1] and |E|2-intensity lumen fraction
+ΓW ∈ (0, 1] (approximated in the subwavelength limit by
+geometric fill dW /(dL + dW ) = 5/6 for dW = 25 nm, dL =
+5 nm), material absorption imposes an unconditional ceil-
+ing on cavity quality factor and floor on cavity damping
+(Thm. 14):
+Qloss(ω) ≤ ε′ eﬀ ΓW ε′′ W (ω) , (10)
+γc(ω) = ω Qloss(ω) ≥ ω ΓW ε′′ W (ω) ε′ eﬀ . (11)
+Using dispersive optical constants from Bertie and Lan [2]
+for H2O (ε′ eﬀ = 1.78 at 71 THz; 1.75 at 106.61 THz)
+and Bertie, Ahmed, and Eysel [1] for D2O (ε′ eﬀ = 1.76 at
+106.61 THz), Lean Thm. 15 certifies both the pure-water
+limit (ΓW = 1: QW = 89, 5/2, 88) and the crista lumen fill
+(ΓW = 5/6, C14--C16, Fig. 3b):
+• H2O @ 71 THz (quiet window, C14): ε′ eﬀ =
+1.78, ε′′ W = 0.02 =⇒ Qloss = 534/5 = 106.8,
+γc = 355/534 ≈ 0.665 THz ≪ ΩR = 2g = 2528/71 ≈
+35.61 THz. Water absorption does not forbid 71 THz
+visibility.
+• H2O @ 106.61 THz (O–H wing, C15): ε′ eﬀ =
+1.75, ε′′ W = 0.70 =⇒ Qloss = 3 exact and γc =
+2523/71 ≈ 35.54 THz. While the weaker Rayleigh
+pole-splitting threshold 4g = 5056/71 > γc + γm =
+2594/71 still holds (Thm. 16), total linewidth γc +
+γm ≈ 36.54 THz exceeds the strict strong-coupling non-
+overlapping-wings threshold ΩR = 2g ≈ 35.61 THz
+(Thm. 16), quantitatively explaining why MP+ suffers
+severe aqueous broadening on the 102 THz O–H wing
+in H2O [8, 4].
+• D2O @ 106.61 THz and 75 THz O–D trade-off
+(C16): ε′ eﬀ = 1.76, ε′′ W = 0.02 lifts the 106.61 THz
+ceiling by 528/15 = 35.2× to 105.6 (35× even at fixed
+ε′ eﬀ = 1.75, Thm. 15) and drops γc + γm to 2.01 THz
+(ΩR/(γc + γm) > 17×, Thm. 16). Crucially, however,
+D2O introduces an intense O–D stretching band cen-
+tered near ∼ 75 THz (∼ 2500 cm−1) [1] that over-
+laps MP− at 71 THz and perturbs lower-branch dis-
+persion and damping. Consequently, H2O/D2O iso-
+topic titration acts as a dual-branch diagnostic: clear-
+ing the 106.6 THz window while simultaneously prob-
+ing whether the 71 THz mode couples strongly to aque-
+ous lumen dispersion.
+3 Formal Certification Scope and
+Reproducibility
+Exact verification boundary. Layer 1
+(src/lean/MitoCristaeConfinementCert.lean, 18
+constructive integer/rational theorems compiled un-
+der Lean 4.36.0 -DwarningAsError=true without
+Mathlib, audited via #print axioms to depend
+strictly on propext and Quot.sound: 0 sorry, 0
+custom axioms, 0 Classical.choice, Table 1) certi-
+fies every algebraic, LST, Wiener, AM–GM Lorentz
+minimum, unimodular SL(2), Pell–Chebyshev pass-
+band (|US−1(x)| ≤ S), aqueous Q-factor, and
+strong-coupling visibility inequality over Z. Layer 2
+(src/python/mito_cristae_confinement_verifier.py,
+AST-audited zero-float, zero /, zero **, zero
+limit_denominator) verifies all 16 canonical certificates
+(C01--C16, Table 2, archived in data/certificates/)
+and passes all 28 unit/forgery/AST tests under pytest -q.
+Continuum Maxwell derivations (LST from macroscopic
+Lorentz dispersion, lossless normal-incidence transfer ma-
+trices, perturbative Qloss formula, and unrefereed empirical
+parameters from [8]) reside in prose and Table 3 rather
+than inside the Lean kernel.
+3
+
+
+
+4 Confinement Mechanism Dis-
+criminator Matrix
+Table 3 upgrades the experimental program of [4] with
+four tests discriminating competing confinement hypothe-
+ses (M0: non-polaritonic artifact; M1: whole-organelle
+dielectric cavity L ∼ 1.5 µm; M2: subwavelength
+interfacial/Debye-layer mode; M3: collective high-density
+cardiolipin microdomain, Thms. 17–18).
+5 Reproducibility and Availability
+All Lean 4 proofs (src/lean/), zero-float
+verifier (src/python/), 16 JSON certificates
+(data/certificates/), and MANIFEST.sha256 are
+archived directly in this public AIRR record pack-
+age under MIT (code/Lean/data) and CC-BY-4.0
+(manuscript/figures).
+AI Assistance Disclosure. Google Antigravity as-
+sisted with Lean 4 proof engineering, zero-float verifier im-
+plementation, test/figure automation, and LaTeX drafting.
+The author verified every derivation, Lean axiom audit, cer-
+tificate output, and figure, and takes full responsibility for
+all contents.
+References
+[1] John E. Bertie, M. Khalique Ahmed, and Hans H. Eysel. Infrared
+intensities of liquids. 5. optical and dielectric constants, integrated
+intensities, and dipole moment derivatives of H2O and D2O at
+22 ◦C. Journal of Physical Chemistry, 93(6):2210–2218, 1989.
+[2] John E. Bertie and Zhida Lan. Infrared intensities of liquids XX:
+The intensity of the OH stretching band of liquid water revisited,
+and the best current values of the optical constants of H2O(l)
+at 25 ◦C between 15,000 and 1 cm−1. Applied Spectroscopy,
+50(8):1047–1057, 1996.
+[3] Lluis Eriksson. Geometry, membranes, and life as a resource
+boundary: A correct-by-construction operational pipeline from
+static suppression to maintenance costs. 2025. AIRR.SCIENCE
+record ARR-2025-2AQXS44H6Z8GQAG2 (ai.viXra:2512.0085, v1
+Dec 2025; v2 Jul 2026).
+[4] Lluis Eriksson. Mito-polaritons meet the resource boundary: Ex-
+act Hopfield A2 invariants, thermodynamic maintenance horizons,
+and constructive Lean 4 certificates for the 71-THz mitochon-
+drial quantum state. 2026. AIRR.SCIENCE record ARR-2026-
+1E91AXEJYT890TQC (accepted Nov 26, 2026).
+[5] John J. Hopfield. Theory of the contribution of excitons to
+the complex dielectric constant of crystals. Physical Review,
+112(5):1555–1567, 1958.
+[6] R. H. Lyddane, R. G. Sachs, and E. Teller. On the polar vibrations
+of alkali halides. Physical Review, 59(8):673–676, 1941.
+[7] Alexander Poddubny, Ivan Iorsh, Pavel Belov, and Yuri Kivshar.
+Hyperbolic metamaterials. Nature Photonics, 7:948–957, 2013.
+[8] Yu Yang, Zhenglong Gu, and Bo Song. A quantum state
+of mitochondria in the living cell. 2026. bioRxiv preprint
+10.64898/2026.09.10.750628v1, 15 September 2026 (unrefereed).
+[9] Pochi Yeh. Optical Waves in Layered Media. Wiley-Interscience,
+2005.
+4
+
+
+
+Table 1: All 18 constructive Lean 4.36.0 theorems in src/lean/MitoCristaeConfinementCert.lean (0 sorry, 0
+Classical.choice, -DwarningAsError=true).
+# Lean Theorem Identifier Exact Formalized Statement (over Z)
+1 lst_hopfield_oscillator_strength_identity ω2 LO = ω2 0 + 4g2 ∧ fn ω2 0 = fd (4g2 ) =⇒ fd ω2 LO = (fd + fn )ω2 0
+2 mito_71_87_lst_oscillator_floor_and_wlo_bracket freq = 6390784/38155329 > 4/25; ω2 LO = 44546113/5041 ∈ (942 , 94.012 )
+3 oscillator_enhancement_deficit_bound Fenh > 4.187 (fb = 0.04), > 16.749 (0.01, ΓL = 1); > 100× (ΓL = 1/6)
+4 fabry_perot_crista_cutoff_nogo λ0 ∈ (3445, 3446) nm; dFP > 1188 nm > 39 · 30 nm, 29 · 40 nm
+5 lamellar_wiener_anisotropy_identity (pεL + qεW )(qεL + pεW ) − (p + q)2 εL εW = pq(εL − εW )2 ≥ 0
+6 lamellar_type1_hyperbolic_criterion 0 < p < q ∧ εL < 0 < εW ∧ qεL + pεW > 0 =⇒ ε∥ > 0 ∧ ε⊥ < 0
+7 lamellar_elliptic_and_type2_boundaries 0 < p < q ∧ εL < 0 < εW ∧ pεL + qεW < 0 =⇒ qεL + pεW < 0 (Type-II)
+8 damped_lorentz_exact_minimum_amgm x2 + γ2 m (ω2 0 + x) − γm (2ω0 + γm )x = (x − γm ω0 )2 ≥ 0
+9 reststrahlen_damping_threshold_positive_everywhere ∆εω2 0 < ε∞ γm (2ω0 + γm ) =⇒ Re εL (ω) > 0 ∀ω; 175/7569 > 1/100
+10 no_lipid_hyperbolicity_below_resonance 0 < ν− < ω0 =⇒ ω2 0 − ν2 − > 0 ∧ Re εL (ν− ) ≥ ε∞ > 0; 872 − 712 = 2528
+11 unimodular_transfer_matrix_mul_det det(M1 ) = 1 ∧ det(M2 ) = 1 =⇒ det(M1 M2 ) = 1 (cleared SL(2, Q) entries)
+12 chebyshev_cassini_invariant_step U 2 k − Uk−1 Uk+1 = 1 =⇒ U 2 k+1 − Uk Uk+2 = 1 under Un+1 = 2xUn − Un−1
+13 passband_quadratic_reflectance_ceiling Constructive Pell–Chebyshev induction: |x| ≤ D =⇒ |Un−1 (x/D)| ≤ n ∀n ∈ N
+14 water_loss_q_ceiling_and_damping_floor Qloss ΓW ε′′ W ≤ ε′ eff ∧ γc Qloss = ω =⇒ ωΓW ε′′ W ≤ γc ε′ eff
+15 h2o_vs_d2o_q_factor_recovery ΓW = 1 (89, 5/2, 88) & ΓW = 5/6 (106.8, 3, 105.6); D2 O gain 35.2× (35× fixed ε′ )
+16 damped_strong_coupling_visibility_criterion 4g > γc +γm =⇒ (γc −γm )2 < 16g2 ; H2 O: 2528 < 2594 < 5056; D2 O: > 17×
+17 collective_density_dilution_shift c, ρ > 0 ∧ k ≥ 2 =⇒ 4(cρ) < 4(kcρ) (lipid dilution shrinks LO–TO gap)
+18 confinement_discriminator_decidability Joint numerical check: freq > 4/25 ∧ dFP > 39 · 30 ∧ 712 < 872 ∧ QD2 O /QH2 O > 35
+Table 2: Summary of all 16 verified MITO-CRISTAE-CONFINEMENT-CERT-1.0 canonical certificates (C01--C16, archived in
+data/certificates/).
+ID Mode / Submode Verified Instance Exact Certified Metrics
+C01 M1a LST Deficit 71/87 THz (ωc = ω0 , ΓL = 1), fb = 0.01 freq = 6390784/38155329 ≈ 0.1675, ωLO ∈ (94.00, 94.01), Fenh > 16.7×
+C02 M1a LST Deficit 71/87 THz (ωc = ω0 , ΓL = 1), fb = 0.04 Same freq > 4/25, Fenh > 4.18× (and 6× deeper at ΓL = 1/6)
+C03 M1a LST Baseline 79/87 THz, fbulk = 0.01 freq ≈ 0.0373, ωLO ∈ (88.6, 88.7) THz, Fenh > 3.7×
+C04 M1b FP Cutoff 87 THz, nL = 1.45, d = 30 nm λ0 ≈ 3445.9 nm, dFP ≈ 1188.2 nm, ratio = 39.61 > 39 (FP forbidden)
+C05 M2a Lamellar EMT ϕ = 1/6, εL = 2.2, εW = 1.78 ε∥ = 1.85, ε⊥ ≈ 1.838, Wiener gap > 0 (Elliptic Positive @ 71 THz)
+C06 M2a Lamellar EMT ϕ = 1/6, εL = −0.2, εW = 1.78 ε∥ = 1.45 > 0, ε⊥ ≈ −2.74 < 0 (Type-I Hyperbolic)
+C07 M2a Lamellar EMT ϕ = 1/6, εL = −1.0, εW = 1.78 ε∥ = 1.317 > 0, ε⊥ ≈ +3.32 > 0 (Elliptic Re-Entry despite εL < 0)
+C08 M2a Lamellar EMT ϕ = 1/6, εL = −10, εW = 1.78 ε∥ = −0.183 < 0, ε⊥ ≈ +2.21 > 0 (Type-II Hyperbolic)
+C09 M2b Lorentz Min Fluid: ε∞ = 2.1025, f = 0.01, γm = 1 Threshold 175/7569 ≈ 0.0231 > 0.01 =⇒ min Re εL ≈ +1.19 > 0
+C10 M2b Lorentz Min Ordered: ε∞ = 2.1025, f = 0.04, γm = 0.5 Negative band opens > 87 THz (min ≈ −5.19), yet Re εL (71) ≈ +2.35 > 0
+C11 M3 Transfer Matrix S = 5, 30 nm @ 71 THz x ∈ (−1, 1) passband, det M 5 = 1, R5 < 10−3 (no Bragg mirror)
+C12 M3 Transfer Matrix S = 12, 30 nm @ 87 THz x ∈ (−1, 1) passband, det M 12 = 1, R12 < 5 × 10−3 (no Bragg mirror)
+C13 M3 Bragg Control S = 6, λ/4 (n = 2, 1) x = −5/4 stopband, U5 = −1365/32, R6 = 16769025/16785409 > 0.999
+C14 M4 Water Q-Ceil. H2 O @ 71 THz (ε′ = 1.78, ε′′ = 0.02) ΓW = 5/6 =⇒ Qloss = 106.8, γc = 355/534 ≈ 0.665 THz ≪ ΩR
+C15 M4 Water Q-Ceil. H2 O @ 106.6 THz (ε′ = 1.75, ε′′ = 0.70) Qloss = 3, γc = 2523/71 ≈ 35.54 THz; γc + γm > 2g (strict SC violated)
+C16 M4 D2 O Recov. D2 O @ 106.6 THz (ε′ = 1.76, ε′′ = 0.02) Qloss = 105.6 (35.2× vs C15; 35× at fixed ε′ ), γc ≈ 1.01 THz (resolved)
+Table 3: Four-protocol experimental discriminator separating competing electromagnetic confinement hypotheses for the
+71-THz mode.
+Experimental Protocol M0 (Artifact) M1 (Whole-Mito Cavity) M2 (Interfacial / Debye) M3 (Cardiolipin Microdomain)
+H2 O/D2 O titration No MP+ peak Clears 106.6; O–D perturbs 71 Clears 106.6; strong O–D shift Clears 106.6; O–D perturbs 71
+Osmotic swelling (∆L/L) Unchanged Shifts ∆ωc /ωc ≈ −∆L/L Unchanged (set by dW , λD ) Unchanged (set by ρCH2 )
+Lumen ionic strength / ∆Ψm Unchanged Weak dielectric shift Strong shift (∝ λ−1 D ) Weak unless phase separates
+Cardiolipin / CH2 dilution Linear ampl. Smooth η ∝ √ρCH2 Smooth η ∝ √ρCH2 Abrupt melting ν− → 87
+5
+
+
+
+Figure 1: Exact LST Oscillator-Strength Deficit and Fabry–Pérot Cutoff. (a) Exact resonant homogeneous
+(ωc = ω0, ΓL = 1) LST floor fosc = 4η2 vs. bulk lipid CH2 strengths (0.005–0.04), showing the > 16.7× enhancement
+deficit at 71/87 THz (C01–C02; deepened 6× at ΓL = 1/6). (b) Crista dimensions (5–30 nm) vs. 87 THz Fabry–Pérot
+cutoff (dFP > 1188 nm, C04).
+Figure 2: Lamellar EMT Phase Diagram and Damped Lorentz No-Hyperbolicity. (a) Lossless uniaxial EMT
+phase diagram for ϕ = 1/6, εW = 1.78 (C05–C08). (b) Damped Lorentz dispersion Re εL(ω) (ε∞ = 2.1025) showing fluid
+positivity (C09) and universal positivity at 71 THz even when an ordered negative band opens > 87 THz (C10).
+Figure 3: SL(2, Q) Transfer-Matrix Passband and Aqueous Q-Factor Ceiling. (a) Stack reflectance RS vs. S for
+30-nm crista stacks (C11–C12, passband RS < 0.5%) vs. quarter-wave Bragg control (C13, R6 > 99.9%). (b) Aqueous
+Q-ceilings (ΓW = 5/6) and damping floors: 71 THz clear (γc ≈ 0.665 THz, C14), 106.6 THz violating ΩR > γc + γm in
+H2O (C15), and 35.2× recovery in D2O (C16).
+6
