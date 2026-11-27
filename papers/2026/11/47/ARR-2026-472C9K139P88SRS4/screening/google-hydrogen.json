@@ -1,0 +1,59 @@
+{
+  "paper_id": "ARR-2026-472C9K139P88SRS4",
+  "version": "v1",
+  "version_id": "arr:version:d027e999-7f95-46ea-8c77-2ff934858ed4",
+  "canonical_sha256": "58c5806fd29e4d72578894ab7d1c0277fff685d021341bd1b541602d4c1b792d",
+  "provider": "Google",
+  "model_id": "hydrogen",
+  "assessed_at": "2026-11-27T18:17:00Z",
+  "prompt_version": "ARR-ASSESS-1.0",
+  "independence": "not_involved_in_manuscript",
+  "recommendation": "minor_revision",
+  "millennium_score": 7.8,
+  "overall_stars": 8,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 5,
+      "basis": "Independent recalculation confirms the CODATA 2018 constants at 71 THz and 310 K (beta*h*nu = 10.9918, N_B = 1.684e-5, h*nu*ln(2) = 32.609 zJ, k_B*T*ln(2) = 2.967 zJ), the exact concavity tangent floor Eq. (3) (> 2.790/eta zJ for eta <= 1/2), the antidegradability wall Q = 0 for eta <= 1/2, the finite-bandwidth eta = 1 bound (> 1.77 zJ/bit at 0.1 pW), and all signaling horizons L_max in C09-C16, with only a negligible 0.02 zJ rounding-direction slip in Table 1 C05."
+    },
+    "rigor": {
+      "stars": 5,
+      "basis": "Cleanly separates three receiver architectures (Holevo/sparse photon counting, homodyne, and heterodyne/excess-noise) and distinguishes unassisted Q from two-way PLOB Q2, while explicitly stating the single-mode Gaussian thermal-loss boundary and backing claims with 20 constructive Lean 4.36.0 theorems and 16 exact-Q certificates."
+    },
+    "novelty": {
+      "stars": 3,
+      "basis": "The underlying capacity formulas (Giovannetti-Garcia-Patron-Cerf-Holevo, Wolf et al., PLOB, and Landauer) are established; the original contribution lies in deriving clean closed-form tangent floors, quantifying the 10.99x decoding penalty at 71 THz / 310 K, and mapping bioenergetic intracellular signaling phase boundaries across P1-P6."
+    },
+    "significance": {
+      "stars": 4,
+      "basis": "Establishes decisive thermodynamic and information-theoretic limits on the 71 THz mito-polariton signaling hypothesis: unconditionally excluding Q > 0 beyond 3 dB loss, >= 10 Mbit/s heterodyne, and 1 Gbit/s signaling at 0.1 pW, while precisely delineating the open ~1 kbit/s classical regime."
+    },
+    "reproducibility": {
+      "stars": 4,
+      "basis": "Provides exact parameters, CODATA 2018 inputs, SHA-256 certificate tables (C01-C16), and named verification artifacts (MitoPolaritonChannelCapacityCert.lean and AST-audited Python verifier), though the external code and certificates must be retrieved separately from the 7-page PDF to run full verification."
+    }
+  },
+  "summary": "This manuscript completes a six-paper audit (P1-P6) of the 71 THz mitochondrial cristae polariton hypothesis by establishing exact bosonic thermal-loss channel-capacity ceilings, receiver-tier energy-per-bit floors, and bioenergetic signaling horizons at T = 310 K. Using the Giovannetti-Holevo capacity, concavity tangent bounds, antidegradability, PLOB bounds, and Landauer erasure limits, the author separates three physical regimes: unassisted quantum capacity Q vanishes identically for eta <= 1/2 (L >= L_att * ln 2); high-rate classical signaling (>= 10 Mbit/s heterodyne and 1 Gbit/s Holevo at 0.1 pW, or 1 Gbit/s heterodyne even at 10 pW) is unconditionally excluded even at zero propagation loss; and low-rate classical signaling (~1 kbit/s) remains thermodynamically open up to 8.03-10.49 attenuation lengths conditioned on physical waveguide existence. The mathematics and numerical benchmarks check out cleanly, with only minor precision and wording items recommended for revision.",
+  "strengths": [
+    "Exact closed-form concavity tangent lower bound Eq. (3) on the lossy Holevo energy per bit for 0 < eta < 1, yielding a sharp uniform > 2.790/eta zJ floor for all eta <= 1/2 and cleanly explaining the lossless eta = 1 divergence vs. finite-bandwidth (B <= 71 THz) and Landauer floors.",
+    "Rigorous separation of coherent Holevo/sparse photon counting, single-quadrature homodyne (5.50x deep-loss penalty), and heterodyne / N_dark >= 1 absorption (exact beta*h*nu in (10.99, 11.00)x penalty at 71 THz, 310 K), preventing conflation of distinct physical detectors.",
+    "Consistent quantitative alignment across text, Theorem 1-2, Table 1 (C01-C16), and Figures 1-2, verified independently from first principles.",
+    "Transparent disclosure of operator conflict, AI assistance, unrefereed status of Ref. [13], and the single-mode Gaussian thermal-loss verification boundary."
+  ],
+  "weaknesses": [
+    "The pure-loss PLOB expression -log2(1 - eta) is presented in Theorem 1(3) as the two-way PLOB bound for E_{eta, N_B}; while valid as an upper bound, the tight thermal-loss PLOB bound includes thermal-bath corrections (important in general, though negligible at N_B = 1.684e-5 except at extreme loss and relevant to C07).",
+    "Table 1 entry C07 (10 THz far-IR) omits the signal photon number N_S used to obtain C_Hol in (0.0063, 0.0065) b (consistent with N_S = 1e-2 as in C04/C08).",
+    "The Verification Boundary states that spatial multiplexing over M parallel channels leaves energy-per-bit floors invariant; while strictly true when power scales as M (fixed N_S per mode) and always true for the Landauer erasure and lossy tangent floors, for the lossless (eta = 1) finite-bandwidth Holevo bound at fixed total power P_sig, splitting across M spatial/polarization modes lowers energy per bit logarithmically in M.",
+    "Figure 3 reports a 610.0x Dressed KMS factor for P2 whereas Section 4 text for P2 cites > 5,180x bare-basis master-equation artifacts and Table 2 cites > 470-610x dressed KMS, without briefly clarifying the distinction between the two P2 metrics."
+  ],
+  "potential_errors": [
+    "In Table 1 row C05 (eta = 1e-2, N_S = 1e-3, N_B = 1.684e-5), the exact value of E_Hol is 303.38 zJ (with C_nat = 1.0749e-4 nats), which is slightly below 303.4 zJ; writing 'E_Hol >= 303.4 zJ' appears to be a rounding-direction slip from 303.38 zJ and should be written '>= 303.3 zJ' or '~ 303.4 zJ'.",
+    "On page 4, E_bit^{Hol,1/2} = 2.790 zJ is called 'the uniform eta <= 1/2 Holevo channel floor'; strictly, 2.790 zJ is the zero-loss-normalized prefactor E_bit^{(0)} in the floor E_bit^{Hol}(eta) > E_bit^{(0)}/eta (the floor at eta = 1/2 itself is > 5.580 zJ).",
+    "In Figure 1(b), the dashed curve labeled 'Landauer-Holevo k_B*T*ln(2)/eta (2.97/eta zJ)' is drawn down to 0 dB (eta = 1), whereas Theorem 1(1) notes that the channel-only Holevo floor vanishes at eta = 1 unless receiver Landauer erasure is invoked."
+  ],
+  "strong_novelty_candidates": [
+    "Closed-form proof of the exact 10.99x-11.00x (beta*h*nu) energy-per-bit gap between coherent deep-loss Holevo decoding and heterodyne or excess-noise (N_dark >= 1) reception at 71 THz, 310 K.",
+    "Bioenergetic signaling-horizon phase diagram separating the < 3 dB quantum-capacity window (L < L_att * ln 2), the 1 kbit/s classical reach (8.03-10.49 L_att at 0.1 pW), the 10 Mbit/s coherent-decoding-only gap, and the 1 Gbit/s Landauer + finite-bandwidth exclusion wall."
+  ],
+  "unresolved_material_objections": []
+}
