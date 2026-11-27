@@ -1,0 +1,55 @@
+{
+  "prompt_version": "ARR-ASSESS-1.0",
+  "paper_id": "ARR-2026-2W2SW9PSE996XVPC",
+  "version": "v1",
+  "version_id": "arr:version:64b25ed4-4e62-4511-9bd8-910b594206c8",
+  "canonical_sha256": "dc04b7492bbbaa224cd8d25da71a9c7b4e921a3972ea682089381f7f0ee1fd90",
+  "provider": "Google",
+  "model_id": "hydrogen",
+  "independence": "not_involved_in_manuscript",
+  "assessed_at": "2026-11-27T04:05:00Z",
+  "recommendation": "accept",
+  "millennium_score": 7.8,
+  "overall_stars": 8,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 5,
+      "basis": "All three main theorems and their proofs were audited line by line and hold without gaps. Independent execution confirmed Lean 4.36.0 compiles lean/TensorSpectrumSharpBounds.lean with -DwarningAsError=true (zero sorry, zero Classical.choice, zero external imports, only standard [propext, Quot.sound] axioms), all 56 tests in tests/test_adversarial.py pass, and all 16 zero-float certificates match their SHA-256 digests in certificates/manifest.json."
+    },
+    "novelty": {
+      "stars": 4,
+      "basis": "Provides clean, sharp improvements over Vrana and Zuiddam (arXiv:2611.34664v1): an exact constructive SL_2(F_p) matrix-unit extraction extending polynomial multiplication log-star-convexity to positive characteristic p > max_j(m_j+n_j-2), a tight Diophantine impossibility proof showing p > m+n-2 is exact even for GL_2(F_bar), an S_{d+1}-invariant 5-tensor family yielding unbounded non-crossing B-goodness violations for all interior weights t in (0,1), and exact greedy-floor spanning bounds."
+    },
+    "reproducibility": {
+      "stars": 5,
+      "basis": "Exemplary reproducibility artifacts: an AST-audited pure int/Fraction verifier (verification/verify_tensor_spectrum.py) using outward-rounded rational atanh bounds, 16 byte-exact JSON certificates with verified SHA-256 hashes, 56 passing adversarial tests, and a self-contained Lean 4.36.0 formalization."
+    },
+    "rigor": {
+      "stars": 5,
+      "basis": "Hypotheses are stated precisely and checked at edge cases (such as m=1 allowing Steinberg representations like k=3 over F_4 while P_{2,3} fails at k=2, char(F) not dividing d+1 for S_{d+1} conciseness/irreducibility, and |F| >= m+n-2 for Lagrange interpolation). Numerical bounds use rigorous interval arithmetic in Q."
+    },
+    "significance": {
+      "stars": 4,
+      "basis": "Resolves three concrete quantitative and algebraic gaps exposed by Vrana and Zuiddam's connectivity proof for asymptotic tensor spectra, characterizing the exact positive-characteristic boundary for polynomial multiplication spectra and ruling out any non-degenerate geometric average on non-crossing bipartitions from being B-good."
+    }
+  },
+  "summary": "This manuscript establishes three sharp quantitative and structural strengthenings of Vrana and Zuiddam's asymptotic-spectrum connectivity framework (arXiv:2611.34664v1): (1) replacing their continuous subspace-intersection bound with the exact integer-floor greedy recurrence u_{j+1} = floor((w/d) u_j), eliminating the ln(d) overhead at codimension 1 (where q_exact(d,d-1) = d is optimal by submodularity) and tightening finite-copy reverse monotonicity; (2) extending log-star-convexity of polynomial multiplication tensors to every field of characteristic p > max_j(m_j+n_j-2) via constructive Vandermonde matrix-unit extraction in SL_2(F_p), proving via Lucas's theorem and a Diophantine impossibility argument that p > m+n-2 is sharp even for GL_2(F_bar) whenever m,n >= 2, and determining the exact closed interval Delta_F(P_{m,n}) = [min(m,n), m+n-1]; and (3) generalizing Vrana-Zuiddam's single d=2 counterexample to an S_{d+1}-invariant 5-tensor family over any field with char(F) not dividing d+1 that violates non-crossing B-goodness by (d+1)/(d^t + d^{1-t}) -> infinity for every interior weight t in (0,1), alongside convex difference-quotient Lipschitz bounds on log F_t(s) illustrated by the W-state. Independent verification confirms all proofs, Lean 4.36.0 theorems, 16 zero-float SHA-256 certificates, and 56 adversarial tests.",
+  "strengths": [
+    "Theorem 2(a)-(b) gives both a completely elementary, constructive proof of absolute irreducibility for Sym^k(F^2) under SL_2(F_p) when k < p (via Vandermonde extraction and B_1^{k-i}(A_k B_k)A_1^{k-j}) and a tight converse via Lucas's theorem and Diophantine impossibility showing the threshold p > m+n-2 cannot be improved even under GL_2(F_bar).",
+    "Theorem 3(a) cleanly resolves the non-crossing B-goodness failure across all dimensions d >= 2, all interior weights t in (0,1) via (d+1) - (d^t + d^{1-t}) = (d^t - 1)(d^{1-t} - 1) > 0, and all fields with char(F) not dividing d+1.",
+    "Theorem 1 completely removes the spurious Theta(ln d) factor at codimension 1 (saving 7.93x at d=1024) and strictly improves Vrana-Zuiddam's Lemma 3.7 for every d >= 2 and 1 <= w <= d-1.",
+    "Full computational and formal verification passes cleanly: 20+ Lean 4.36.0 theorems with zero sorry and zero Classical.choice, 16 AST-audited zero-float SHA-256 certificates, and 56 passing tests."
+  ],
+  "weaknesses": [
+    "Several Lean 4 theorems (e.g., Theorems 7, 8, 11, 12, and 13) formalize only the reduced scalar/arithmetic core (such as 1 - (-d) = d + 1 or 2 < p + 1) rather than the underlying vector spaces, group actions, or matrix determinants, which are instead proved in the manuscript text and verified on finite instances in the Python certificates.",
+    "Lean Theorem 6 (greedy_floor_two_phase_sum) assumes u_t <= floor(d * w^t / d^t) as a hypothesis and bounds the remaining steps from u_t, rather than formalizing the induction linking greedySteps from d to t + greedySteps from u_t inside Lean.",
+    "Minor docstring mismatch in verification/verify_tensor_spectrum.py: gen_cert03's docstring says 'for n = 1..5' while the loop runs range(1, 5) (n = 1..4); the manuscript itself does not claim n = 5."
+  ],
+  "strong_novelty_candidates": [
+    "Constructive finite-group SL_2(F_p) Vandermonde matrix-unit extraction for polynomial multiplication log-star-convexity in positive characteristic p > max_j(m_j+n_j-2).",
+    "Exact Diophantine characterization showing all three legs of P_{m,n} (m,n >= 2) are GL_2(F_bar)-irreducible if and only if p > m+n-2.",
+    "S_{d+1}-invariant 5-tensor family demonstrating unbounded non-crossing B-goodness gaps (d+1)/(d^t + d^{1-t}) for every interior weight t in (0,1) and characteristic not dividing d+1."
+  ],
+  "potential_errors": [],
+  "unresolved_material_objections": []
+}
