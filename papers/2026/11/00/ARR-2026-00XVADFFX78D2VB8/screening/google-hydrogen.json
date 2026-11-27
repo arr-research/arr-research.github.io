@@ -1,0 +1,55 @@
+{
+  "paper_id": "ARR-2026-00XVADFFX78D2VB8",
+  "version": "v1",
+  "version_id": "arr:version:5f946a09-f09b-47a4-b015-8f1610edf58f",
+  "canonical_sha256": "2c40d0a667ce6e75f9d9ddf47de9aab42a1b9020cdd62de1516ef030c925bf07",
+  "provider": "Google",
+  "model_id": "hydrogen",
+  "assessed_at": "2026-11-27T22:15:00Z",
+  "prompt_version": "ARR-ASSESS-1.0",
+  "independence": "not_involved_in_manuscript",
+  "recommendation": "accept",
+  "millennium_score": 4.6,
+  "overall_stars": 5,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 5,
+      "basis": "Line-by-line inspection of all proofs in Sections 2-5 confirms complete mathematical soundness: unified-cut block-Monge telescoping, SMAWK plus online 1D Monge DP composition, 4-type boundary-flux inequalities, Bm rank construction, convex split-off monotonicity with backward accumulators, propagation, R(k,j) bounds, exact lambda_min, and preprocessing exponent transfer."
+    },
+    "rigor": {
+      "stars": 5,
+      "basis": "All theorems are proved with crisp boundary conditions and explicit tightness witnesses, including matching witnesses for tau_sym on both sides, r_min(B_m)=m(m+1)/2, the weighted cluster editing suffix window, s(A*B)=(n-1)c, R(k,j) at n=2 and 4, and lambda=(n-1)^2. Limitations and Lean kernel scoping are disclosed transparently."
+    },
+    "novelty": {
+      "stars": 4,
+      "basis": "Resolves two explicit open problems (Open Problem 3 and Appendix D Q2) and the batch/budget half of Appendix D Q4 from Chen (2026) via original unified-cut projection, 4-type boundary-flux classification, general convex split-off pruning, and sharpened scaling and propagation bounds."
+    },
+    "significance": {
+      "stars": 4,
+      "basis": "Removes all log^3(n) and O(sL) space factors from sequential triangular DP with negative-support vertex cover tau(C) and from LambdaCC, establishes exact signed-rectangle compression limits, halves R(k,j) and lambda_min constants, and extends conditional APSP query lower bounds to O(n^p) preprocessing."
+    },
+    "reproducibility": {
+      "stars": 5,
+      "basis": "Every algorithm, conservation law, and counterexample is completely specified in the manuscript, and Section 6 documents a companion repository with 20 zero-sorry constructive Lean 4.36.0 theorems and an AST-audited rational Python test suite, though only paper.pdf was inspected under isolation."
+    }
+  },
+  "summary": "This manuscript resolves two open problems (Section 6 Open Problem 3 and Appendix D Question 2) and the larger-preprocessing / n^delta-batch half of Appendix D Question 4 from Chen (2026) on min-plus products and sequential DP with adjacent Monge violations. By projecting bipartite negative-support vertex covers into unified cuts and combining SMAWK with online 1D Monge DP, the paper eliminates all L^3 time and O(sL) persistent-tree space overheads, achieving O(n(tau(C)+1)) time and O(n) extra space. It further establishes a sharp boundary-flux lower bound with an exact m(m+1)/2 signed-rectangle decomposition on B_m, generalizes split-off suffix pruning to arbitrary convex loads to yield strictly linear-time LambdaCC, and tightens several structural, scaling, and conditional lower bounds.",
+  "strengths": [
+    "Complete, elementary, and airtight resolution of Open Problem 3 via unified vertex-cover cuts, an exact dimension-sum conservation law, and tight two-sided bounds between tau_sym and tau.",
+    "Elegant 4-type boundary-flux classification proving r_min(C) >= max{Delta^-(C), ceil((s(C) + max{m_R^-(C), m_C^-(C)})/2)} together with an explicit matching decomposition of B_m of size m(m+1)/2.",
+    "Clean convex split-off monotonicity theorem eliminating all logarithmic overheads in LambdaCC (O(n + m/lambda)) and providing exact bounds for Weighted Cluster Editing and HyperLam with a tight clique-plus-vertex witness.",
+    "Exact structural improvements across the board: output negative-support propagation, halved R(k,j) bound (2n^2 - 4n + 4)U, exact threshold lambda_min = (n-1)^2 + 1 with balanced padding to O(n^{1+alpha}), and generalized O(n^p) preprocessing lower bounds."
+  ],
+  "weaknesses": [
+    "Theorem 2.1's O(n(tau(C)+1)) bound assumes the negative-cell list N(C) is provided as input (matching Chen's Corollary 3.7), which could be noted more explicitly alongside the word 'unconditionally'.",
+    "The paper resolves the larger-budget and batch-query part of Appendix D Question 4 while leaving prescribed relations between successive query vectors open, and relies on an external companion repository for the Lean 4.36.0 and Python artifacts (unverified under review isolation)."
+  ],
+  "potential_errors": [],
+  "strong_novelty_candidates": [
+    "Unified-cut projection of bipartite negative-support vertex covers onto [0, n] with exact dimension-sum conservation and tight [ceil(tau/2), tau] symmetrized-cut characterization.",
+    "Boundary-flux conservation law for 4-type signed rectangles and exact r_min(B_m) = m(m+1)/2 decomposition separating Lemma 3.1 and Lemma 4.1.",
+    "General convex-load split-off suffix monotonicity yielding strictly linear-time O(n + m/lambda) LambdaCC.",
+    "Exact necessary and sufficient scaling threshold formula in Algorithm 13 enabling O(n^{1+alpha}) balanced padding."
+  ],
+  "unresolved_material_objections": []
+}

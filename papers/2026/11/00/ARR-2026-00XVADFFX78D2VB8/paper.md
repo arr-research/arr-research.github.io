@@ -1,0 +1,796 @@
+# Vertex-Cover Triangular Monge Decomposition, Boundary-Flux Signed-Rectangle Rank, Convex Split-Off Linear-Time Partitioning, and Optimal Min-Plus Scaling Thresholds
+
+**Author:** Lluis Eriksson  
+**AIRR Identifier:** `ARR-2026-00XVADFFX78D2VB8` (v1)  
+**License:** CC-BY-4.0 (manuscript), MIT (verification repository)  
+**Verification Repository:** https://github.com/lluiseriksson/paper140-monge-violations-barriers (`v1.0.0`)  
+**Canonical PDF SHA-256:** `2c40d0a667ce6e75f9d9ddf47de9aab42a1b9020cdd62de1516ef030c925bf07`
+
+## Abstract
+
+Chen (2026, arXiv:2611.34733v1) developed a unified column-sweep framework for min-plus matrix multiplication and sequential dynamic programming with s(B) violations of the adjacent Monge inequalities, achieving O(n^2 L + n s(B) L^3) time for explicit A otimes B (L = ceil(log_2(n+1))), O((n+r)L^3) time for sequential partitioning with r signed rectangles (and O((n+s)L^3) time, O(n+sL) space from a list of s negative cells), and conditional gamma-APSP lower bounds beta >= c_APSP - 1 + alpha via a squared-distance reduction using scaling multiplier lambda = 2n^2 + 1. We resolve two of Chen's explicit open questions completely (Section 6 Open Problem 3 and Appendix D Question 2), resolve the preprocessing-budget / batch-query half of Appendix D Question 4, and strictly sharpen four core algorithmic and structural bounds, backed by 20 constructive Lean 4.36.0 theorems (0 sorry, 0 Classical.choice, 0 warnings), 16 AST-audited zero-float SHA-256 certificates, and 56 adversarial tests: (1) Solving Open Problem 3 (Unified-Cut Triangular Monge Decomposition in O(n(tau(C)+1)) time): given any vertex cover (S_R, S_C) of the bipartite negative-support graph G^-(C) on T_n, the unified cut set S_cut = {0, n} union {p+1 : p in S_R} union S_C partitions T_n into Monge off-diagonal rectangles R_{a,b} and Monge diagonal triangles T^(b) obeying the exact dimension-sum conservation law sum_{a<b}(n_a + n_b) + sum_b n_b = r*n <= (|S_R| + |S_C| + 1)*n; block-sequential SMAWK + Wilber/Larmore-Schieber DP solves recurrence (4) in O(n(tau(C)+1)) time and O(n) extra space, completely eliminating all three L factors from Corollary 3.7 and all O(sL) persistent-tree space, with tight symmetrized-cut bounds ceil(tau(C)/2) <= tau_sym(C) <= tau(C); (2) Solving Appendix D Question 2 (Minimal Signed-Rectangle Rank and Boundary-Flux Conservation Law): classifying signed rectangles by boundary support yields the unconditional lower bound r_min(C) >= max{Delta^-(C), ceil((s(C) + max{m_R^-(C), m_C^-(C)})/2)} (implying zero compression r_min = s on stars) and exact tightness r_min(B_m) = C(m+1, 2) on the m x m negative-difference block B_m(k, j) = min(k, m)*min(j, m) via an explicit decomposition, beating Lemma 3.1's m^2 by C(m, 2) and sharpening Lemma 4.1's ceil(m^2/2) by floor(m/2); (3) General Convex-Load Split-Off Suffix Theorem and Linear-Time Weighted Cluster Editing / LambdaCC: proving monotonicity of the convex split-off penalty Psi_j(k) forces Psi_j(k*) <= W_j^-, yielding O(n + m + W/eta) exact Weighted Cluster Editing (tight via an explicit clique-plus-vertex witness), strictly linear O(n + m/lambda) LambdaCC (removing all L^3 factors from Chen's Table 3 for constant lambda > 0), and O(N + n + h/(lambda*mu_min^2)) HyperLam; and (4) Transpose Duality, Output Propagation, Half-Size R(k, j) Bound, Exact Optimal lambda_min = (n-1)^2 + 1, and Generalized O(n^p)-Preprocessing Lower Bound: we prove c_col(A otimes B) <= c_col(B) and exact tight s(A otimes B) <= (n-1)*c_col(B) for Monge A, halve Theorem 3.5's background bound 4(n-1)^2 U to min{4*s(B)*U, (2n^2 - 4n + 4)U} (exact at n = 2, 4), prove the exact necessary and sufficient scaling condition lambda >= max{2(a-1)(n-1)+1, floor(2(n-1)^2/(Delta_H+1))+1} in Theorem 5.1 (cutting lambda = 2n^2+1 to exact lambda_min = (n-1)^2+1 with an explicit failure witness at (n-1)^2, and down to O(n^(1+alpha)) via balanced padding), and extend Corollary 5.6 to every preprocessing exponent p < c_APSP - 1 + alpha and n^delta-batches.
+
+## Full Extracted Text
+
+--- Page 1 ---
+Vertex-Cover Triangular Monge Decomposition,
+Boundary-Flux Signed-Rectangle Rank, Convex
+Split-Oﬀ Linear-Time Partitioning, and Optimal
+Min-Plus Scaling Thresholds
+Lluis Eriksson
+Independent Researcher
+ORCID: 0009-0006-7494-9040
+November 27, 2026
+Abstract
+Chen (2026, arXiv:2611.34733v1) developed a uniﬁed column-sweep framework for min-
+plus matrix multiplication and sequential dynamic programming with s(B) violations of the
+adjacent Monge inequalities, achieving O(n2L + ns(B)L3) time for explicit A ⊗B (L =
+⌈log2(n + 1)⌉), O((n + r)L3) time for sequential partitioning with r signed rectangles (and
+O((n + s)L3) time, O(n + sL) space from a list of s negative cells), and conditional γ-APSP
+lower bounds β ≥cAPSP −1 + α via a squared-distance reduction using scaling multiplier
+λ = 2 n2 + 1. We resolve two of Chen’s explicit open questions completely (Section 6 Open
+Problem 3 and Appendix D Question 2), resolve the preprocessing-budget / batch-query
+half of Appendix D Question 4, and strictly sharpen four core algorithmic and structural
+bounds:
+1. Solving Open Problem 3 (Uniﬁed-Cut Triangular Monge Decomposition in
+O(n(τ(C)+1)) Time): Given any vertex cover (SR, SC) of the bipartite negative-support
+graph G−(C) on Tn, the uniﬁed cut set Scut = {0, n}∪{p+1 : p ∈SR}∪SC partitions Tn
+into Monge oﬀ-diagonal rectangles Ra,b and Monge diagonal triangles T(b) obeying the
+exact dimension-sum conservation law ∑
+a<b(na +nb)+ ∑
+b nb = r·n ≤(|SR|+|SC|+1)n.
+Block-sequential SMAWK + Wilber/Larmore–Schieber DP solves recurrence (4) in
+O(n(τ(C) + 1)) time and O(n) extra space—completely eliminating all three L fac-
+tors from Corollary 3.7 and all O(sL) persistent-tree space—with tight symmetrized-cut
+bounds ⌈τ(C)/2⌉≤ τsym(C) ≤τ(C).
+2. Solving Appendix D Question 2 (Minimal Signed-Rectangle Rank &
+Boundary-Flux Conservation Law): Classifying signed rectangles by boundary
+support (|supp(∂I)|, |supp(∂J)|) ∈ {0, 1, 2}2, we prove the unconditional lower bound
+rmin(C) ≥max{∆−(C), ⌈(s(C)+max {m−
+R(C), m−
+C(C)})/2⌉}(implying zero compression
+rmin = s on stars) and prove exact tightness rmin(Bm) =
+(m+1
+2
+)
+on the m ×m negative-
+diﬀerence block Bm(k, j) = min( k, m) min(j, m) via an explicit decomposition, strictly
+beating Lemma 3.1’s m2 by
+(m
+2
+)
+and sharpening Lemma 4.1’s ⌈m2/2⌉by ⌊m/2⌋.
+3. General Convex-Load Split-Oﬀ Suﬃx Theorem & Linear-Time Weighted
+Cluster Editing / LambdaCC: Proving monotonicity of the convex split-oﬀ penalty
+Ψj(k) := ϕ(Sj−1 −Sk + aj) −ϕ(Sj−1 −Sk) −ϕ(aj) forces Ψj(k⋆) ≤ W−
+j , yielding
+O(n + m + W/η) exact Weighted Cluster Editing (tight via an explicit clique-plus-vertex
+witness), strictly linear O(n + m/λ) LambdaCC (removing all L3 factors from Chen’s
+Table 3 for constant λ > 0), and O(N + n + h/(λµ2
+min)) HyperLam.
+4. Transpose Duality, Output Propagation, Half-Size R(k, j) Bound, Exact Opti-
+mal λmin = ( n −1)2 + 1, & Generalized O(np)-Preprocessing Lower Bound: We
+prove ccol(A ⊗B) ≤ccol(B) and exact tight s(A ⊗B) ≤(n −1)ccol(B) for Monge A;
+halve Theorem 3.5’s background bound 4(n −1)2U to min{4s(B)U, (2n2 −4n + 4) U}
+(exact at n = 2 , 4); prove the exact necessary and suﬃcient scaling condition λ ≥
+1
+AIRR:ARR-2026-00XVADFFX78D2VB8 v1  [Algorithms and complexity]  27 Nov 2026  ·  AIRR.SCIENCE
+
+--- Page 2 ---
+max{2(a −1)(n −1) + 1, ⌊2(n −1)2/(∆H + 1)⌋+ 1}in Theorem 5.1 (cutting λ = 2 n2 + 1
+to exact λmin = ( n −1)2 + 1 with an explicit failure witness at (n −1)2, and down to
+O(n1+α) via balanced padding); and extend Corollary 5.6 (Appendix D Q4) to every
+preprocessing exponent p < c APSP −1 + α and nδ-batches.
+All core identities, bounds, decompositions, and counterexamples are machine-checked
+in constructive Lean 4.36.0 (20 theorems, zero external imports, zero sorry, zero
+Classical.choice) and veriﬁed by a zero-ﬂoat AST-audited Python suite (16 SHA-256
+certiﬁcates; 56 adversarial tests).
+AI Assistance Disclosure. This research manuscript, its constructive Lean 4.36.0 formal-
+ization, and its exact-rational Python veriﬁcation suite were developed by Lluis Eriksson with
+interactive assistance from Google Antigravity for proof exploration, formal veriﬁcation, and
+typesetting. All mathematical proofs, formal Lean theorems, and exact-rational certiﬁcates
+were mechanically veriﬁed; the author takes full responsibility for all claims.
+1 Introduction
+Monge arrays (also called quadrangle-inequality arrays) underpin classic linear-time algorithms
+for matrix searching (SMAWK [ 1]) and online one-dimensional dynamic programming [ 22, 11, 7],
+as well as subcubic distance multiplication [ 15, 16, 18, 9, 8]. In many combinatorial clustering
+and sequence-alignment objectives—including ordered graph modularity [ 13, 14], contiguous
+cluster editing [ 3, 12, 20], HyperLam [ 21], strict hypergraph modularity [ 10], FENNEL [ 19],
+and alignment with bridges [ 4, 5]—local edge or hyperedge rewards introduce negative adjacent
+mixed diﬀerences into an otherwise convex (Monge) block cost.
+Chen [ 6] introduced a clean signed-rectangle column-sweep framework parameterized by the
+number s(C) := |N(C)|of negative adjacent mixed diﬀerences ∆Cp,q := C(p+1, q)+C(p, q+1)−
+C(p, q)−C(p+1, q+1) < 0 (and by the vertex cover number τ(C), maximum degree ∆−(C), and
+treewidth t(C) of the bipartite negative-support graph G−(C)). Writing L := ⌈log2(n+ 1)⌉and
+letting cAPSP ∈[2, 2.9964] [23, 2, 17] denote the deterministic APSP exponent for polynomially
+bounded integer weights, Chen proved:
+• Explicit n ×n min-plus product A ⊗B in O(n2L + ns(B)L3) time and O(n2) space (Theo-
+rem 3.5), or O(n2(τ(B) + 1)) time via SMAWK on vertex-cover blocks (Theorem 5.4(1));
+• Sequential partitioning D[j] = min 0≤k<j{D[k] + C(k, j)}on Tn = {(k, j) : 0 ≤k < j ≤n}in
+O((n + r)L2(L + TM )) time with r signed rectangles (Theorem 3.6) and O((n + s)L3) time,
+O(n + sL) extra space from a list of s negative cells (Corollary 3.7), yielding O((n + m)L3)
+for weighted cluster editing / LambdaCC and O(N +(n+h)L3) for HyperLam (Theorem 4.4,
+Table 3), while proving O(n + m) only for unweighted cluster editing (Theorem B.1);
+• Conditional lower bounds β ≥cAPSP −1 + α for 3 −cAPSP < α ≤1 under s(B) ≤n1+α
+(Theorem 5.1 with λ = 2 n2 + 1, H = 2 U + 1) or τ(B), ∆−(B), t(B) ≤nα (Theorem 5.4(2)),
+plus amortized query exponent η ≥cAPSP −2 + α under O(n2) preprocessing and n vector
+queries (Corollary 5.6).
+In this paper, we resolve Chen’s Section 6 Open Problem 3 and Appendix D Question 2
+completely, resolve the larger-preprocessing-budget and nδ-batch half of Appendix D Question 4
+(leaving prescribed relations between successive query vectors open), and sharpen the weighted
+cluster editing / LambdaCC / HyperLam algorithms, the background bound R(k, j), output-
+support propagation, and Algorithm 13’s scaling threshold λ (Table 1).
+2 Solving Open Problem 3: Uniﬁed-Cut Triangular Monge De-
+composition
+On the triangular domain Tn := {(k, j) : 0 ≤k < j ≤n}, a legal cell (p, q) satisﬁes p ≥0,
+p+ 1 < q , and q + 1 ≤n; thus the bipartite negative-support graph G−(C) has row-gap vertices
+2
+
+--- Page 3 ---
+Table 1: Summary of improvements over Chen [ 6].
+Problem /
+Bound
+Chen [ 6] This Paper
+Triangular DP vs.
+τ(C)
+Open Problem 3; Cor. 3.7
+O((n + s)L3) time,
+O(n + sL) space
+O(n(τ(C) + 1)) time, O(n) extra space;
+exact ∑(na + nb) + ∑ nb = r ·n;
+⌈τ/2⌉≤ τsym ≤τ (Thm. 2.1)
+Minimal rectangle
+rank
+Appendix D Q2;
+⌈s/2⌉≤ rmin ≤s
+rmin(C) ≥
+max{∆−, ⌈(s + max{m−
+R, m−
+C})/2⌉};
+rmin = s on stars; exact
+rmin(Bm) =
+(m+1
+2
+)
+(Thm. 3.1)
+Weighted CE /
+LambdaCC
+Table 3: O((n + m)L3)
+(O(n + m) unweighted only,
+Thm. B.1)
+O(n + m + W/η) Weighted CE (tight
+witness), strictly linear O(n + m/λ)
+LambdaCC, O(N + n + h/(λµ2
+min))
+HyperLam (Thm. 4.1)
+Background bound
+R(k, j)
+0 ≤R(k, j) ≤4(n −1)2U
+(Thm. 3.5)
+0 ≤R(k, j) ≤
+min{4s(B)U, (2n2 −4n + 4)U}; exact at
+n = 2 , 4 (Thm. 5.1B)
+Algorithm 13
+scaling λ
+λ = 2 n2 + 1 at H = 2 U + 1
+(Thm. 5.1)
+Exact λmin = ( n −1)2 + 1 (fails at
+(n −1)2); balanced padding
+λ = 2( a −1)(n −1) + 1 = O(n1+α)
+(Thm. 5.1C)
+Preprocessing /
+batches
+Cor. 5.6: O(n2) preproc., n
+queries
+Any O(np) preproc. ( p < c APSP −1 + α)
+and nδ-batches force η ≥cAPSP −2 + α
+(Thm. 5.1D)
+[0, n −3], column-gap vertices [2, n −1], and edges N(C) = {(p, q) : ∆ Cp,q < 0}. Unlike explicit
+matrix multiplication (Theorem 5.4(1) of [ 6]), sequential recurrence (4) of [ 6] must evaluate
+D[k] strictly before using row k to update D[j] (j > k ). We resolve Section 6 Open Problem 3
+by projecting any bipartite vertex cover (SR, SC) onto a single uniﬁed sequence of cuts on [0, n].
+Theorem 2.1 (Uniﬁed-Cut Triangular Monge Decomposition & O(n(τ(C) + 1)) Sequential
+DP). Let C : Tn →Q be a triangular cost oracle ( O(1) query time) with negative-support graph
+G−(C) and vertex cover number τ(C) = vc( G−(C)).
+1. (Block-Monge Partition) Given any vertex cover (SR, SC) of G−(C), deﬁne the uniﬁed cut
+set
+Scut := {0, n}∪{p + 1 : p ∈SR}∪SC,
+sorted as 0 = c0 < c1 < ··· < cr = n with r ≤|SR|+|SC|+1 and block widths na := ca −ca−1
+(∑r
+a=1 na = n). Then every oﬀ-diagonal rectangle Ra,b := [ ca−1, ca −1] ×[cb−1 + 1 , cb]
+(1 ≤a < b ≤r) lies strictly in Tn and is Monge, and every diagonal triangle T(b) := {(k, j) :
+cb−1 ≤k < j ≤cb}(1 ≤b ≤r) is completely Monge.
+2. (Exact Dimension-Sum Conservation Law & O(n(τ(C) + 1)) DP) For every partition 0 =
+c0 < ··· < cr = n with widths na = ca −ca−1,
+∑
+1≤a<b≤r
+(na + nb) +
+r∑
+b=1
+nb = r ·n ≤ (|SR|+ |SC|+ 1) n. (1)
+Processing blocks b = 1 , . . . , r sequentially—computing external column baselines Dext[j] :=
+mina<b mink∈[ca−1,ca−1]{D[k]+C(k, j)}via SMAWK on each Monge rectangle Ra,b (O(na+nb)
+time), then running online 1D Monge DP [ 22, 11] with external column oﬀsets Dext[j] on
+T(b) (O(nb) time)—computes the exact array D[0..n] in O(rn) time and O(n) extra working
+space. Given N(C), a greedy maximal matching yields |SR|+ |SC|≤ 2τ(C) in O(n+ s) time;
+since s(C) ≤(n−2)τ(C) in any bipartite graph on 2(n−2) vertices, n+ s = O(n(τ(C) + 1)),
+3
+
+--- Page 4 ---
+solving recurrence (4) of [ 6] in O(n(τ(C) + 1)) time unconditionally and eliminating all L3
+factors and all O(sL) space of Corollary 3.7.
+3. (Exact Symmetrized-Cut Characterization & Treewidth Remark) A cut set 0 = c0 < ··· <
+cr = n makes all Ra,b and T(b) Monge iﬀ S := {c1, . . . , cr−1}hits every (p, q) ∈N(C) via
+(p + 1 ∈S) ∨(q ∈S). The minimum size τsym(C) of such a cut set obeys the tight two-sided
+bound ⌈τ(C)
+2
+⌉
+≤ τsym(C) ≤ τ(C), (2)
+with equality attained on both sides for arbitrarily large τ(C). Moreover, for treewidth t(C) =
+tw(G−(C)), t-degeneracy gives s(C) ≤2(n−2)t(C), so Corollary 3.7 yields O(n(t(C)+1) L3)
+time.
+Proof. Part 1. Any legal adjacent cell (p, q) internal to Ra,b has ca−1 ≤p < p + 1 ≤ca −1 (so
+p + 1 /∈Scut, hence p /∈SR) and cb−1 + 1 ≤q < q + 1 ≤cb (so q /∈Scut, hence q /∈SC). Similarly,
+any legal cell (p, q) internal to T(b) satisﬁes cb−1 ≤p < p + 1 < q < q + 1 ≤cb, so neither p + 1
+nor q lies in Scut, hence p /∈SR and q /∈SC. Because (SR, SC) covers every edge of G−(C), no
+internal cell of any Ra,b or T(b) belongs to N(C), so ∆Cp,q ≥0 everywhere inside every block; by
+telescoping 2D adjacent sums ( thm04_monge_telescoping_2x2), every Ra,b and T(b) is Monge.
+Part 2. We prove (1) by induction on r (thm01_dimension_sum_conservation): each block
+width na appears once in ∑
+b nb and once in each of the r−1 pairs {a, b}(b ̸= a), hence r times in
+total, summing to r ∑r
+a=1 na = r·n. When block b is processed, D[k] is already ﬁnalized for every
+k < c b−1, so Dext[j] = min 0≤k<cb−1 {D[k] + C(k, j)}for every j ∈[cb−1 + 1, cb]. Because Wilber
+/ Larmore–Schieber maintains the lower envelope for Dint[j] := min cb−1≤k<j{D[k] + C(k, j)}
+using only the Monge property of C on T(b) for arbitrary ﬁnalized preﬁx values D[k], taking
+D[j] ← min(Dext[j], Dint[j]) externally at step j before activating row j computes D[j] =
+min0≤k<j{D[k] + C(k, j)}identically for all j ∈[cb−1 + 1, cb]. Summing O(na + nb) over a < b
+and O(nb) over b gives O(rn) time and O(n) space ( thm02_unified_cut_block_count_bound).
+Part 3. Necessity/suﬃciency of (p + 1 ∈S) ∨(q ∈S) follows immediately from Part 1: an
+uncovered (p, q) lies strictly inside a single Ra,b (if p+1 ≤ca−1 and q ≥cb−1+1) or T(b), violating
+Monge there. Every minimum bipartite cover (SR, SC) gives S = {p + 1 : p ∈SR}∪SC of size
+≤|SR|+|SC|= τ(C), so τsym ≤τ. Conversely, every symmetrized cut set S induces the bipartite
+cover SR = {c −1 : c ∈S}and SC = S of size ≤2|S|, forcing τ ≤2τsym, i.e., ⌈τ/2⌉≤ τsym
+(thm03_symmetrized_cut_two_sided_bound). Equality τsym = τ = k holds on the matching
+E = {(2i, 2i + 2) : 0 ≤i < k }(all 2k labels p + 1, q are distinct), while equality τsym = τ/2 = m
+holds on the matching E = {(ci −2, ci), (ci −1, ci + 2) : ci = 4 i + 2 , 0 ≤i < m }of size 2m
+(vertex-disjoint in G−, yet all covered by {c0, . . . , cm−1}). Finally, t-degeneracy of a bipartite
+graph on 2(n−2) vertices gives s ≤2(n−2)t (thm05_treewidth_degeneracy_edge_bound).
+3 Solving Appendix D Q2: Minimal Signed-Rectangle Rank &
+Boundary Flux
+For an n ×n matrix C, let rmin(C) be the minimum integer r such that C(k, j) = M(k, j) +∑r
+ℓ=1 αℓ1{k ∈Iℓ}1{j ∈Jℓ}with M Monge, intervals Iℓ, Jℓ ⊆[0, n −1], and αℓ ∈Q. Lemma 3.1
+of [6] gives rmin(C) ≤s(C) and Lemma 4.1 implies rmin(C) ≥⌈s(C)/2⌉; Appendix D Question 2
+asks for sharper characterizations accounting for overlapping cancellation.
+Theorem 3.1 (Matching Lower Bound, Boundary-Flux Conservation Law, & Exact
+(m+1
+2
+)
+Tightness). For any ﬁnite n ×n matrix C, deﬁne the negative-ﬂux row and column counts of
+∆C:
+m−
+R(C) :=
+⏐⏐⏐
+{
+p ∈[0, n −2] :
+n−2∑
+q=0
+∆Cp,q < 0
+}⏐⏐⏐, m −
+C(C) :=
+⏐⏐⏐
+{
+q ∈[0, n −2] :
+n−2∑
+p=0
+∆Cp,q < 0
+}⏐⏐⏐.
+4
+
+--- Page 5 ---
+1. (Universal Matching Lower Bound & Star Optimality) For every C,
+rmin(C) ≥ max
+{⌈s(C)
+2
+⌉
+, ∆−(C)
+}
+.
+In particular, whenever G−(C) is a star ( ∆−(C) = s(C)), Lemma 3.1 is exact: rmin(C) =
+s(C) (zero compression is possible).
+2. (Unconditional Boundary-Flux Conservation Lower Bound) For every matrix C (with no
+sign restriction on ∆C),
+rmin(C) ≥
+⌈
+s(C) + max {m−
+R(C), m −
+C(C)}
+2
+⌉
+. (3)
+3. (Exact
+(m+1
+2
+)
+Tightness on the m ×m Negative Block) For any m ≥1 and n ≥m + 1 ,
+the matrix Bm(k, j) := min( k, m) min(j, m) satisﬁes ∆(Bm)p,q = −1{p < m ∧q < m },
+s(Bm) = m2, m−
+R(Bm) = m−
+C(Bm) = m, and
+rmin(Bm) =
+(
+m + 1
+2
+)
+= m(m + 1)
+2 , (4)
+attained explicitly (modulo row/column potentials, i.e., a zero-diﬀerence Monge array) by
+Rm(k, j) =
+m−1∑
+i=0
+m ·1[0,i]×[0,i](k, j) −
+∑
+0≤i<j′≤m−1
+1[i+1,j′]×[i+1,j′](k, j).
+This strictly beats Lemma 3.1’s m2 by
+(m
+2
+)
+and strictly sharpens Lemma 4.1’s ⌈m2/2⌉by
+⌊m/2⌋for every m ≥2.
+Proof. For any interval I ⊆[0, n −1], deﬁne its discrete boundary ∂I ∈ {−1, 0, +1}n−1 by
+(∂I)p := 1p+1∈I −1p∈I. If I = [ a, b], then (∂I)p = +1 only at p = a −1 (if a > 0) and
+−1 only at p = b (if b < n −1); hence |supp(∂I)| ∈ {0, 1, 2}, and when |supp(∂I)| = 2 ,∑
+p(∂I)p = (+1) + ( −1) = 0 . For a single signed rectangle Rℓ(k, j) = αℓ1Iℓ (k)1Jℓ (j), direct
+expansion gives ∆(Rℓ)p,q = −αℓ(∂Iℓ )p(∂Jℓ )q.
+Part 1. Because ∂Iℓ has at most one +1 entry and at most one −1 entry (and likewise ∂Jℓ ),
+the rank-1 matrix −αℓ∂Iℓ ⊗∂Jℓ has at most 2 negative entries, and they lie in distinct rows and
+distinct columns (forming a matching in G−(C)). Since ∆M ≥0 forces N(C) ⊆⋃r
+ℓ=1 N(Rℓ),
+every row gap and every column gap receives at most one negative cell from each rectangle,
+yielding r ≥∆−(C) and 2r ≥s(C) (thm06_signed_rect_matching_lower_bound).
+Part 2. Partition the r rectangles by boundary type (|supp(∂Iℓ )|, |supp(∂Jℓ )|) ∈{1, 2}2 (type
+0 rectangles have ∆Rℓ ≡0 and can be discarded), with counts r2,2, r2,1, r1,2, r1,1 summing to r:
+• Type (2, 2): contributes ≤2 negative entries, and since ∑
+p(∂Iℓ )p = ∑
+q(∂Jℓ )q = 0 , every
+row sum and every column sum of ∆Rℓ is identically 0.
+• Type (2, 1): contributes ≤1 negative entry, all column sums are 0, and at most 1 row has
+a negative sum.
+• Type (1, 2): contributes ≤1 negative entry, all row sums are 0, and at most 1 column has
+a negative sum.
+• Type (1, 1): contributes ≤1 negative entry, at most 1 row has a negative sum, and at
+most 1 column has a negative sum.
+Writing R = ∑r
+ℓ=1 Rℓ, ∆M ≥0 implies ∑
+q(∆R)p,q ≤∑
+q ∆Cp,q < 0 for every negative-ﬂux row
+p (and symmetrically for columns), forcing
+2r2,2 + r2,1 + r1,2 + r1,1 ≥s(C), r 2,1 + r1,1 ≥m−
+R(C), r 1,2 + r1,1 ≥m−
+C(C).
+5
+
+--- Page 6 ---
+Figure 1: (a) Sequential DP operation count at τ(C) = 8 , s = τn: Theorem 2.1’s uniﬁed-cut
+decomposition eliminates the L3 factor of Corollary 3.7 [ 6]. (b) Exact minimal signed-rectangle
+rank rmin(Bm) =
+(m+1
+2
+)
+(Theorem 3.1) strictly separating Lemma 3.1 ( m2) and Lemma 4.1
+(⌈m2/2⌉).
+Adding the ﬁrst inequality to the second (and to the third) gives 2r ≥s(C) + m−
+R(C) and
+2r ≥s(C) + m−
+C(C), proving ( 3) ( thm07_boundary_flux_conservation_bound).
+Part 3. For Bm(k, j) = min( k, m) min(j, m), direct computation gives ∆(Bm)p,q = −1 for
+0 ≤p, q < m and 0 otherwise, so Part 2 yields rmin(Bm) ≥ ⌈(m2 + m)/2⌉=
+(m+1
+2
+)
+. For
+the upper bound, in Rm, each corner rectangle m ·1[0,i]×[0,i] contributes −m exclusively to
+diagonal cell (i, i), while each interior rectangle −1[i+1,j′]×[i+1,j′] (0 ≤i < j ′ ≤m −1) has
+∂[i+1,j′] = ei −ej′ and thus contributes +1(i,i) + 1(j′,j′) −1(i,j′) −1(j′,i) to ∆Rm. Summing over
+all 0 ≤i < j ′ ≤m −1: every oﬀ-diagonal cell (i, j′) or (j′, i) receives exactly −1, while every
+diagonal cell (i, i) receives −m + (m −1) = −1! Thus ∆(Bm −Rm) ≡0, so M := Bm −Rm is
+Monge and rmin(Bm) ≤m +
+(m
+2
+)
+=
+(m+1
+2
+)
+(thm08–thm10).
+Figure 1 visualizes both the elimination of L3 overhead by Theorem 2.1 and the exact
+(m+1
+2
+)
+signed-rectangle rank separation of Theorem 3.1.
+4 General Convex-Load Split-Oﬀ Suﬃx Theorem & Linear-
+Time DP
+Chen’s Table 3 gives O((n + m)L3) time for Weighted Cluster Editing and LambdaCC, and
+O(N + (n + h)L3) for All-or-Nothing HyperLam, achieving linear O(n + m) time only in the
+unweighted case η = be = 1 (Theorem B.1). We generalize the split-oﬀ pruning mechanism to
+every convex block-cost objective (9) of [ 6].
+Theorem 4.1 (Convex-Load Split-Oﬀ Suﬃx Theorem & Linear-Time Partitioning) . Consider
+the contiguous block cost C(k, j) = ϕ(Sj −Sk) −∑
+e⊆(k,j] we where ϕ : R≥0 →R is convex with
+ϕ(0) = 0 , vertex masses ai ≥0 have preﬁx sums Sj = ∑j
+i=1 ai, and interaction rewards we ≥0
+(e ⊆[1, n]).
+1. (Monotone Split-Oﬀ Suﬃx Pruning) Deﬁne the split-oﬀ superadditivity penalty
+Ψj(k) := ϕ(Sj−1 −Sk + aj) −ϕ(Sj−1 −Sk) −ϕ(aj) ≥0 (0 ≤k < j ).
+By convexity of ϕ, Ψj(k) is nonincreasing in k, and every optimal predecessor k⋆ < j for
+6
+
+--- Page 7 ---
+D[j] in recurrence (4) must satisfy
+Ψj(k⋆) ≤
+∑
+e⊆(k⋆,j]: j∈e
+we ≤ W−
+j :=
+∑
+e∈E: maxe=j
+we. (5)
+Hence k⋆ always lies in the contiguous suﬃx [kmin(j), j −1], where kmin(j) := min {k ∈
+[0, j −1] : Ψ j(k) ≤W−
+j }.
+2. (Weighted Cluster Editing & Strictly Linear-Time LambdaCC) For weighted cluster editing
+(ai = 1 , ϕ(x) = η
+(x
+2
+)
+, we = η + be with η > 0, be ≥0), Ψj(k) = η(j −k −1), forcing
+j −k⋆ ≤ 1 +
+⌊
+d−
+j +
+w−
+j
+η
+⌋
+, w −
+j :=
+∑
+u<j, uj∈E
+buj, (6)
+where d−
+j is the backward degree of vertex j. Backward scan solves Weighted Cluster Editing
+in O(n + m + W/η) time ( W = ∑
+e be) and O(n) working space (beyond the bucketed edges).
+In particular, for LambdaCC (η = λ ∈(0, 1], be = 1 −λ), d−
+j + w−
+j /η = d−
+j /λ, solving
+LambdaCC in O(n + m/λ) time and O(n) working space—strictly O(n + m) linear time for
+any constant λ > 0, removing all L3 factors from Table 3.
+3. (HyperLam & Exact Window Tightness) For All-or-Nothing HyperLam ( ϕ(x) = λ
+2 x2 with
+λ > 0, ai = µi > 0, we = 1 ), Ψj(k) = λµj(Sj−1 −Sk), forcing Sj−1 −Sk⋆ ≤d−
+H(j)/(λµj)
+and yielding O(N + n + h/(λµ2
+min)) time when µi ≥µmin > 0. Moreover, bound (6) is
+provably exact for every η ∈Q>0, integer d ≥1, and b ∈Q≥0: on the ordered graph of
+ℓ = 1 + ⌊d + bd/η⌋vertices consisting of a heavily weighted clique Kℓ−1 plus vertex ℓ joined
+to d vertices of weight b, the single block [1, ℓ] is optimal with split-oﬀ slack ∈[0, η).
+Proof. Part 1. Since ϕ is convex with ϕ(0) = 0 , for any 0 ≤x ≤y and a ≥0, ϕ(x + a) −ϕ(x) ≤
+ϕ(y + a) −ϕ(y) (discrete version formalized in thm11_convex_split_off_monotonicity), so
+Ψj(k) ≥Ψj(j −1) = 0 and Ψj(k) is nonincreasing in k. If k < j −1, splitting the block (k, j]
+into (k, j −1] and (j −1, j] changes the total cost from D[k] + C(k, j) to at most D[k] + C(k, j −
+1) + C(j −1, j) (since D[j −1] ≤D[k] + C(k, j −1)). By optimality of k⋆ for D[j],
+0 ≤
+(
+D[k⋆] + C(k⋆, j −1) + C(j −1, j)
+)
+−
+(
+D[k⋆] + C(k⋆, j)
+)
+=
+∑
+e⊆(k⋆,j]: j∈e
+we −Ψj(k⋆),
+because any interaction e ⊆(k⋆, j −1] cancels and no interaction lies in (j −1, j] unless |e|= 1
+(which also cancels between C(j −1, j) and C(k⋆, j)!). Thus Ψj(k⋆) ≤W−
+j .
+Part 2. For ϕ(x) = η
+(x
+2
+)
+, ϕ(ℓ) − ϕ(ℓ − 1) − ϕ(1) = η(ℓ − 1)
+(thm12_weighted_cluster_editing_suffix_bound), and W−
+j = ηd−
+j + w−
+j , so
+η(j −k⋆ −1) ≤ ηd−
+j + w−
+j yields ( 6). Summing window widths over j = 1 , . . . , n
+gives at most n + m + W/η inner iterations in O(n) space using the same backward-
+running accumulator as Algorithm 10 of [ 6]. For LambdaCC, λd−
+j + (1 −λ)d−
+j = d−
+j
+(thm13_lambdacc_exact_window_bound), giving window 1+ ⌊d−
+j /λ⌋and total time O(n+m/λ).
+Part 3. For ϕ(x) = λ
+2 x2, (S + a)2 − S2 − a2 = 2 aS
+(thm14_hyperlam_split_off_quadratic_identity) gives Ψj(k) = λµj(Sj−1 −Sk) ≤d−
+H(j).
+When µi ≥ µmin, each backward step increases Sj−1 −Sk by at least µmin, bounding the
+window length by 1 + ⌊d−
+H(j)/(λµ2
+min)⌋. For tightness of ( 6), take ℓ = 1 + ⌊d + bd/η⌋
+and weight M > η
+(ℓ
+2
+)
+on every edge of Kℓ−1, plus d edges of weight b incident to ver-
+tex ℓ. Any optimal partition keeps Kℓ−1 intact; comparing the single block [1, ℓ] against
+[1, ℓ −1] ∪{ℓ} gives cost diﬀerence costsplit −costsingle = ηd + bd −η(ℓ −1) ∈ [0, η)
+(thm15_weighted_cluster_editing_tightness_witness).
+Figure 2 shows the linear-time LambdaCC speedup over Chen’s Table 3 and the exact tight
+suﬃx window for weighted cluster editing.
+7
+
+--- Page 8 ---
+Figure 2: (a) Strictly linear-time O(n + m/λ) LambdaCC (Theorem 4.1) vs. Chen’s Table 3
+O((n+m)L3) bound on sparse graphs ( m = 4 n). (b) Exact tight suﬃx window 1+ ⌊d−
+j +w−
+j /η⌋
+generalizing Theorem B.1’s 1 + 2 d−
+j .
+5 Propagation, Half-Size R(k, j ) Bound, Optimal λmin, & Pre-
+processing
+We now sharpen four structural and complexity results from Sections 3 and 5 and Appendix D
+of [ 6].
+Theorem 5.1 (Transpose Duality, Propagation, Half-Size R(k, j), Exact λmin, & Generalized
+Preprocessing).
+1. (Part A: Transpose Duality & Output Negative-Support Propagation) Since (A ⊗B)⊤ =
+B⊤ ⊗A⊤ and ∆(M⊤)q,p = ∆ Mp,q, Theorem 3.5 and Theorem 5.4(1) of [ 6] strengthen
+symmetrically to O(n2L + n min{s(A), s(B)}L3) and O(n2(min{τ(A), τ(B)}+ 1)) . Let
+crow(M) := |{p : ∃q, ∆Mp,q < 0}|and ccol(M) := |{q : ∃p, ∆Mp,q < 0}|. If A has bad
+row gaps RA (|RA|= crow(A)) and B has bad column gaps CB (|CB|= ccol(B)), then every
+negative cell (p, q) of A ⊗B satisﬁes p ∈RA or q ∈CB, whence
+τ(A ⊗B) ≤crow(A) + ccol(B), s (A ⊗B) ≤(n −1)
+(
+crow(A) + ccol(B)
+)
+−crow(A)ccol(B).
+In particular, when A is Monge ( s(A) = 0 ), ccol(A ⊗B) ≤ccol(B) and s(A ⊗B) ≤(n −
+1)ccol(B), attained with exact equality s(A ⊗B) = ( n −1)c for every 0 ≤c ≤⌊n/2⌋by
+Aik = ( i −k)2 and Bkj = −M ·1{k = 0 ∧j ∈{1, 3, . . . , 2c −1}}(M > n 2).
+2. (Part B: Sharp Half-Size Background Bound on R(k, j)) For any n ×n matrix B with
+|Bkj|≤ U (n ≥2), Lemma 3.1’s preﬁx-rectangle sum R(k, j) = ∑
+(p,q)∈N(B), k≤p, j>q (−∆Bp,q)
+obeys
+0 ≤ R(k, j) ≤ min
+{
+4s(B)U, (2n2 −4n + 4)U
+}
+, (7)
+cutting Theorem 3.5’s 4(n −1)2U nearly in half and attaining exact equality (2n2 −4n + 4)U
+at n = 2 (4U) and n = 4 (20U, via the checkerboard Bkj = ( −1)k+jU).
+3. (Part C: Exact Optimal Scaling λmin = ( n −1)2 + 1 & Balanced Padding in Theorem 5.1)
+In Algorithm 13 of [ 6] with group size a ≥1 and padding H = 2 U + ∆ H (∆H ≥1), the
+upper bound ˜Sij ≤λT⋆
+ij holds for every λ ≥1, while the exact ceiling recovery condition
+˜Sij > λ(T⋆
+ij −1) holds for all A, B ∈[−U, U]n×n if and only if
+λ ≥ max
+{
+2(a −1)(n −1) + 1 ,
+⌊
+2(n −1)2
+∆H + 1
+⌋
++ 1
+}
+. (8)
+8
+
+--- Page 9 ---
+Consequently, at Chen’s H = 2 U + 1 (∆H = 1 , a−1 ≤(n−1)/2), the exact tight threshold is
+λmin = ( n−1)2+1 (strictly failing at λ = ( n−1)2 where ⌈˜Sij/λ⌉= T⋆
+ij −1), cutting λ = 2 n2+1
+by more than 2×. Choosing balanced padding ∆H = max {1, ⌈n−1
+a−1 ⌉−1}(2 ≤a ≤n) reduces
+the scaling multiplier all the way to λ = 2( a−1)(n−1)+1 = O(n1+α), shrinking all discount
+and diﬀerence-array weights by a factor of Θ(n1−α).
+4. (Part D: Generalized O(np)-Preprocessing / nδ-Batch Query Lower Bound — Larger-Budget
+Half of Appendix D Q4) Fix 3 −cAPSP < α ≤1, any batch exponent δ ∈(0, 1], and any
+preprocessing exponent p < c APSP −1 + α. Any deterministic data structure that prepro-
+cesses an n ×n matrix B satisfying any of Theorem 5.4’s promises ( s(B) ≤ n1+α, or
+τ(B), ∆−(B), t(B) ≤nα) in O(np) time and answers any batch of h = nδ vector queries
+x ⊗B in O(hnη) total time (amortized O(nη) per query) must satisfy η ≥cAPSP −2 + α.
+Proof. Part A. Transpose symmetry ∆(M⊤)q,p = ∆ Mp,q is immediate
+(thm16_transpose_symmetry_and_propagation). If p /∈RA and q /∈CB, let k1, k2 ∈[0, n −1]
+minimize (A ⊗B)p,q+1 = Ap,k1 + Bk1,q+1 and (A ⊗B)p+1,q = Ap+1,k2 + Bk2,q. Write
+k− = min( k1, k2) and k+ = max( k1, k2). If k1 ≤k2, then (A ⊗B)p,q + ( A ⊗B)p+1,q+1 ≤
+(Ap,k1 + Bk1,q) + ( Ap+1,k2 + Bk2,q+1), and subtracting this from (A ⊗B)p+1,q + ( A ⊗B)p,q+1
+yields Bk2,q + Bk1,q+1 −Bk1,q −Bk2,q+1 = ∑k2−1
+r=k1 ∆Br,q ≥0 because q /∈CB! Symmetrically, if
+k2 < k 1, pairing (Ap,k2 + Bk2,q) + ( Ap+1,k1 + Bk1,q+1) gives ∑k1−1
+r=k2 ∆Ap,r ≥0 because p /∈RA!
+Hence every negative cell (p, q) of A ⊗B lies in (RA ×[0, n −2]) ∪([0, n −2] ×CB), which has
+size (n −1)(|RA|+ |CB|) −|RA||CB|(thm16) and vertex cover (RA, CB) of size |RA|+ |CB|.
+For tightness when Aik = ( i −k)2 and Bkj = −M1{k = 0 , j ∈{1, 3, . . . , 2c −1}}(M > n 2):
+s(A) = 0 , N(B) = {(0, 2t) : 0 ≤t < c }so s(B) = ccol(B) = c, and (A ⊗B)i,2t+1 = i2 −M while
+(A ⊗B)i,2t = 0 , yielding ∆(A ⊗B)i,2t = −(2i + 1) < 0 for all 0 ≤i ≤n −2 and 0 ≤t < c , i.e.,
+s(A ⊗B) = ( n −1)c exactly.
+Part B. Write R(k, j) = ∑
+(p,q)∈S(−∆Bp,q) = ∑n−1
+u,v=0 cu,v(S)Bu,v where S = N(B) ∩([k, n −
+2] ×[0, j −1]). Each cell (p, q) ∈S contributes +1 to cp,q and cp+1,q+1, and −1 to cp+1,q and
+cp,q+1. Hence:
+• Every corner (u, v) ∈{0, n −1}2 belongs to at most 1 cell of S, so |cu,v(S)|≤ 1;
+• Every non-corner boundary entry (e.g., u = 0 , 1 ≤v ≤n −2) belongs to at most 2 cells
+with opposite signs ( +1 from (0, v), −1 from (0, v −1)), so cu,v(S) ∈{−1, 0, +1}, i.e.,
+|cu,v(S)|≤ 1;
+• Every interior entry ( 1 ≤u, v ≤n −2) belongs to at most 2 positive cells and 2 negative
+cells, so cu,v(S) ∈[−2, 2], i.e., |cu,v(S)|≤ 2.
+Summing over all 4 corners, 4(n −2) non-corner boundary entries, and (n −2)2 in-
+terior entries gives ∑
+u,v |cu,v(S)| ≤ 4 + 4( n − 2) + 2( n − 2)2 = 2 n2 − 4n + 4
+(thm17_half_size_R_bound_exact_coefficients), proving ( 7). On Bkj = ( −1)k+jU at n = 2
+and n = 4 , R(0, n −1) attains 4U and 20U identically.
+Part C. In Algorithm 13 of [ 6], ˜Sij = min 0≤k<n{λ(A(g)
+ik +B(g)
+kj )−2kj}, where A(g)
+ik +B(g)
+kj ≥T⋆
+ij
+for all k < a (attained at k⋆ < a, so ˜Sij ≤λT⋆
+ij −2k⋆j ≤λT⋆
+ij for all λ ≥1) and A(g)
+ik + B(g)
+kj =
+H = 2 U + ∆H ≥T⋆
+ij + ∆H for all k ≥a. Thus ˜Sij > λ(T⋆
+ij −1) holds universally iﬀ 2kj < λ for
+all k < a, j < n (equivalent to λ ≥2(a−1)(n−1)+1 ) AND 2kj < (∆H +1)λ for all k < n, j < n
+(equivalent to (∆H +1)λ > 2(n−1)2), proving ( 8) (thm18_exact_optimal_lambda_threshold).
+At ∆H = 1 and λ = ( n −1)2, setting T⋆
+ij = 2 U, k⋆ = 0 , j = n −1, and padded k = n −1
+yields ˜Sij = λ(2U + 1) −2(n −1)2 = λ(2U −1), so ⌈˜Sij/λ⌉= 2 U −1 ̸= T⋆
+ij; whereas λmin =
+(n −1)2 + 1 succeeds universally ( thm19_lambda_counterexample_and_balanced_padding).
+Setting ∆H + 1 = ⌈n−1
+a−1 ⌉(a ≥2) and λ = 2( a −1)(n −1) + 1 satisﬁes (∆H + 1)λ > 2(n −1)2
+(thm19), dropping λ from 2n2 + 1 to O(n1+α).
+Part D. In Theorem 5.1’s reduction (for s, τ, t) and Theorem 5.4’s cyclic-block reduction
+(for ∆−(B) ≤nα), general integer min-plus multiplication reduces in O(n3−α) preparation time
+to Q = O(n1−α) structured instances B(g); for each instance, preprocess B(g) in O(np) time
+9
+
+--- Page 10 ---
+Figure 3: (a) Sharp half-size background bound (2n2 −4n + 4) U (Theorem 5.1B) vs. Theo-
+rem 3.5’s 4(n −1)2U, with exact attainment at n = 2 , 4. (b) Algorithm 13 scaling multiplier
+λ reduction from 2n2 + 1 to exact λmin = ( n −1)2 + 1 and balanced-padding O(n1+α) (Theo-
+rem 5.1C).
+and partition the n rows of A(g) into ⌈n/nδ⌉= O(n1−δ) batches of size h = nδ, answering each
+batch in O(hnη) time. Total time is O(n1−α+p + n2−α+η + n3−α). Since 1 −α + p < c APSP
+and 3 −α < c APSP, the deﬁnition of cAPSP forces 2 −α + η ≥cAPSP, i.e., η ≥cAPSP −2 + α
+(thm20_generalized_preprocessing_exponent_bound).
+Figure 3 illustrates both the half-size R(k, j) bound and the order-of-magnitude reduction
+in Algorithm 13’s scaling multiplier λ.
+6 Formal Veriﬁcation in Lean 4.36.0 and Exact-Rational Cer-
+tiﬁcates
+All core algebraic identities, decompositions, inequalities, and counterexamples are in-
+dependently veriﬁed in the companion repository ( https://github.com/lluiseriksson/
+paper140-monge-violations-barriers ):
+1. Constructive Lean 4.36.0 Kernel ( lean/MongeViolationsBarriers.lean): 20
+machine-checked theorems compiling under lean -DwarningAsError=true with zero exter-
+nal imports, zero sorry, zero grind, zero Classical.choice, and zero warnings (Table 2).
+As in standard formal-veriﬁcation scoping, the Lean kernel proves all discrete algebraic conser-
+vation laws, boundary-ﬂux inequalities, explicit Bm decompositions ( m = 1 ..5), discrete con-
+vexity/window bounds, transpose/propagation/half-size R identities, exact λmin/balanced-
+padding inequalities, and exponent transfer arithmetic, while SMAWK/Wilber algorithmic
+execution and asymptotic APSP reduction complexity are proved in Sections 2–5.
+2. Zero-Float Exact-Rational Veriﬁer ( verification/verify_monge_barriers.py) &
+Adversarial Suite ( tests/test_adversarial.py): Statically AST-audited for 0 ﬂoat
+literals, 0 float() calls, 0 true-division ( ast.Div) operators, and 0 ﬂoating-point library
+imports. All 16 SHA-256 certiﬁcates across 4 modes pass (deterministic manifest SHA-256:
+9345b7caf1494d46297fa5675a95ffe0470f4e7fd37310044d549055c70e8e3e), alongside 56
+adversarial pytest checks covering exact DP equivalence, all 4095 compositions of n ≤12,
+exhaustive 4-type rectangle classiﬁcation ( n = 6 ), Bm decompositions ( m = 1 ..8), Lamb-
+daCC/WCE/HyperLam exact equivalence, tight witnesses, and Algorithm 13 counterexam-
+ples.
+10
+
+--- Page 11 ---
+Table 2: Summary of the 20 constructive Lean 4.36.0 theorems in
+MongeViolationsBarriers.lean (0 sorry, 0 Classical.choice).
+Section / Paper Result Lean 4.36.0 Theorems Machine-Checked Kernel Content
+Sec. 2 (Thm. 2.1) thm01–thm05 Exact ∑(na + nb) + ∑ nb = r ·n, cover
+bound, ⌈τ/2⌉≤ τsym ≤τ, 2 ×2 telescoping,
+treewidth bound
+Sec. 3 (Thm. 3.1) thm06–thm10 Matching/star LB, 4-type boundary-ﬂux LB,
+exact
+(m+1
+2
+)
+count & separation, decidable
+Bm decomp. ( m = 1 ..5)
+Sec. 4 (Thm. 4.1) thm11–thm15 Discrete convex monotonicity,
+WCE/LambdaCC/HyperLam suﬃx bounds,
+exact clique-plus-vertex tightness witness
+Sec. 5 (Thm. 5.1) thm16–thm20 Transpose symmetry & propagation,
+2n2 −4n + 4 coeﬃcient sum, exact
+λmin/balanced padding, O(np) exponent
+bound
+7 Conclusion
+By combining uniﬁed vertex-cover cuts with SMAWK and online 1D Monge DP, boundary-
+ﬂux conservation for signed rectangles, general convex split-oﬀ pruning, and exact scal-
+ing/propagation analysis, we resolved Chen’s Section 6 Open Problem 3 and Appendix D Ques-
+tion 2 completely, resolved the larger-preprocessing-budget and nδ-batch half of Appendix D
+Question 4, removed logarithmic overheads in sequential partitioning and LambdaCC, and cut
+Algorithm 13’s scaling factor from 2n2 + 1 to (n−1)2 + 1 (and O(n1+α) with balanced padding).
+Determining whether single-recurrence sequential partitioning admits a superlinear conditional
+lower bound in (n, r) (Open Problem 2 of [ 6]), or whether prescribed relations between succes-
+sive query vectors allow faster amortized queries (the remaining half of Appendix D Q4), remain
+intriguing open questions.
+References
+[1] Alok Aggarwal, Maria M. Klawe, Shlomo Moran, Peter W. Shor, and Robert E. Wilber.
+Geometric applications of a matrix-searching algorithm. Algorithmica, 2:195–208, 1987.
+[2] Josh Alman and Virginia Vassilevska Williams. Truly subquadratic 3SUM and truly sub-
+cubic APSP via triangles in sparse lopsided graphs. arXiv:2610.06783, October 2026.
+[3] Thomas Bellitto, Tobias Marschall, Alexander Schönhuth, and Gunnar W. Klau. Next
+generation cluster editing. PeerJ Preprints, 3:e1301, 2015.
+[4] Amir Carmel, Dekel Tsur, and Michal Ziv-Ukelson. On almost Monge all scores matrices.
+In 27th Annual Symposium on Combinatorial Pattern Matching (CPM 2016) , volume 54
+of LIPIcs, pages 17:1–17:12, 2016.
+[5] Amir Carmel, Dekel Tsur, and Michal Ziv-Ukelson. On almost Monge all scores matrices.
+Algorithmica, 81:47–68, 2019.
+[6] Yanqiao Chen. Min-plus products and dynamic programming with few violations of the
+adjacent Monge inequalities. arXiv:2611.34733v1 [cs.DS], November 2026.
+[7] David Eppstein. Sequence comparison with mixed convex and concave costs. Journal of
+Algorithms, 11(1):85–101, 1990.
+11
+
+--- Page 12 ---
+[8] Paweł Gawrychowski, Egor Gorbachev, and Tomasz Kociumaka. Core-sparse Monge matrix
+multiplication: Improved algorithm and applications. In 33rd Annual European Symposium
+on Algorithms (ESA 2025) , volume 351 of LIPIcs, pages 74:1–74:17, 2025.
+[9] Paweł Gawrychowski and Adam Karczmarz. Improved bounds for shortest paths in dense
+distance graphs. In 45th International Colloquium on Automata, Languages, and Program-
+ming (ICALP 2018) , volume 107 of LIPIcs, pages 61:1–61:15, 2018.
+[10] Bogumił Kamiński, Valérie Poulin, Paweł Prałat, Przemysław Szufel, and François
+Théberge. Clustering via hypergraph modularity. PLOS ONE , 14(11):e0224307, 2019.
+[11] Lawrence L. Larmore and Baruch Schieber. On-line dynamic programming with applica-
+tions to the prediction of RNA secondary structure. Journal of Algorithms , 12(3):490–515,
+1991.
+[12] Min Chih Lin, Francisco J. Soulignac, and Jayme L. Szwarcﬁter. A faster algorithm for
+the cluster editing problem on proper interval graphs. Information Processing Letters ,
+115(11):913–916, 2015.
+[13] M. E. J. Newman and M. Girvan. Finding and evaluating community structure in networks.
+Physical Review E , 69:026113, 2004.
+[14] Alice Patania, Antoine Allard, and Jean-Gabriel Young. Exact and rapid linear clustering
+of networks with dynamic programming. Proceedings of the Royal Society A , 479:20230159,
+2023.
+[15] Luís M. S. Russo. Multiplication algorithms for Monge matrices. In String Processing and
+Information Retrieval (SPIRE 2010) , volume 6393 of LNCS, pages 94–105. Springer, 2010.
+[16] Luís M. S. Russo. Monge properties of sequence alignment. Theoretical Computer Science ,
+423:30–49, 2012.
+[17] Barna Saha and Christopher Ye. Simple, faster (min, +) matrix multiplication and APSP.
+arXiv:2610.20297, October 2026.
+[18] Alexander Tiskin. Fast distance multiplication of unit-Monge matrices. Algorithmica,
+71(4):859–888, 2015.
+[19] Charalampos E. Tsourakakis, Christos Gkantsidis, Bozidar Radunovic, and Milan Vojnovic.
+FENNEL: Streaming graph partitioning for massive scale graphs. In Proceedings of the 7th
+ACM International Conference on Web Search and Data Mining (WSDM 2014) , pages
+333–342, 2014.
+[20] Nate Veldt, David F. Gleich, and Anthony Wirth. A correlation clustering framework for
+community detection. In Proceedings of the 2018 World Wide Web Conference (WWW
+2018), pages 439–448, 2018.
+[21] Nate Veldt, Anthony Wirth, and David F. Gleich. Parameterized correlation clustering in
+hypergraphs and bipartite graphs. In Proceedings of the 26th ACM SIGKDD International
+Conference on Knowledge Discovery and Data Mining (KDD 2020) , pages 1868–1876, 2020.
+[22] Robert E. Wilber. The concave least-weight subsequence problem revisited. Journal of
+Algorithms, 9(3):418–425, 1988.
+[23] Virginia Vassilevska Williams and R. Ryan Williams. Subcubic equivalences between path,
+matrix, and triangle problems. Journal of the ACM , 65(5):27:1–27:38, 2018.
+12

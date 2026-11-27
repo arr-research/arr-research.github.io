@@ -1,0 +1,56 @@
+{
+  "paper_id": "ARR-2026-67BH4NQ5618SQREM",
+  "version": "v1",
+  "version_id": "arr:version:6c37a7ee-44bf-4fa9-be1c-a62f5681ff88",
+  "canonical_sha256": "6b74aac69c85673c4b4b5914b9fec80f78d3fe6fd905f18fca693017558e6915",
+  "provider": "Google",
+  "model_id": "hydrogen",
+  "assessed_at": "2026-11-27T22:15:00Z",
+  "prompt_version": "ARR-ASSESS-1.0",
+  "independence": "not_involved_in_manuscript",
+  "recommendation": "accept",
+  "millennium_score": 4.3,
+  "overall_stars": 4,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 5,
+      "basis": "Every step of Theorems 3.1, 4.1, 5.1, and 6.1 checks out cleanly: the two-bin rational Cauchy-Schwarz identity, reweighted sub-probability extension for delta-NFCE, unscaled-simplex Hadamard bound, primal and Farkas-dual certificates for (Pm, Qm), and all b-ary tree and slack-exponent inequalities are exact."
+    },
+    "rigor": {
+      "stars": 5,
+      "basis": "Proofs are complete, self-contained relative to Cheval et al. (2026), and carefully distinguish between what is formalized in Lean (algebraic identities, AM-GM/Cauchy-Schwarz bounds, primal/dual arithmetic, parameter inequalities) and what is proved in prose (game-tree semantics, Cramer/Hadamard, PPAD reductions)."
+    },
+    "novelty": {
+      "stars": 4,
+      "basis": "Replacing Shannon entropy and Pinsker's inequality with an elementary rational two-bin Cauchy-Schwarz partition yields strictly sharper bounds, enables inverse-polynomial delta-NFCE PPAD-completeness via AM-GM reweighting, and pairs a tightened Hadamard LP gap with an explicit {0,1}-bimatrix exponential necessity family."
+    },
+    "significance": {
+      "stars": 4,
+      "basis": "Directly resolves four quantitative and structural open questions from Cheval et al. (2026): shrinking the PPAD-completeness gadget by 8x/64x, extending hardness to inverse-polynomial approximate NFCEs, proving 2^(-Omega(|S|)) LP precision is unavoidable even for {0,1} games, and characterizing subquadratic slack thresholds."
+    },
+    "reproducibility": {
+      "stars": 4,
+      "basis": "All mathematical constructions, parameter choices, explicit bimatrix entries, and primal/Farkas-dual witnesses are given in full closed form in the manuscript, alongside explicit Lean theorem identifiers and SHA-256 verification manifests; under isolation, external repository files were not inspected directly."
+    }
+  },
+  "summary": "This paper establishes four sharp, transcendental-free refinements to the PPAD-completeness and support-bound framework of Cheval et al. (2026) for normal-form correlated equilibria (NFCE) in extensive-form games. First, a purely rational two-bin Cauchy-Schwarz bound replaces mutual information and Pinsker's inequality, yielding a sqrt(2)x sharper decoding constant near 1+ and an 8x/64x reduction in gadget size and support bound; a reweighted AM-GM extension then establishes PPAD-completeness for inverse-polynomial delta-NFCEs. Second, the paper halves the exponent in the uniform Hadamard LP gap (and replaces B with the leaf-product lcm) while constructing an explicit {0,1}-payoff bimatrix family proving 2^(-Omega(|S|)) minimum nonzero regret is unavoidable, certified by closed-form primal and Farkas-dual witnesses. Finally, it proves universal two-player totality at floor(|V|^2/4), exhibits an infinite failure family for floor(|V|^2/36), proves 1/36 is uniquely optimal over b-ary prefix-matching trees (attained iff b in {2,3}), and proves PPAD-completeness under any subquadratic additive slack gamma in (0,2] while pinpointing gamma = 0 as a matching-tree barrier.",
+  "strengths": [
+    "Elementary two-bin rational Cauchy-Schwarz argument over Q that strictly beats Pinsker's inequality on (1, 3.51286...) and shrinks Cheval et al.'s gadget parameter m by 8x and kappa_d by 64x.",
+    "Clean reweighted sub-probability Cauchy-Schwarz and AM-GM extension proving PPAD-completeness for inverse-polynomial delta-NFCEs at Theta(|V|^(-8/3)) and Theta(|V|^(-5/2)).",
+    "Sharp LP gap improvement (halved exponent and leaf-product lcm) paired with an explicit {0,1}-payoff bimatrix family (Pm, Qm) having closed-form primal and Farkas-dual certificates for exact regret (2^(m+5) - 14m - 30)^(-1).",
+    "Complete characterization of node-based totality (floor(|V|^2/4)), infinite failure of floor(|V|^2/36), unique 1/36 optimality at b in {2,3}, and PPAD-completeness for all subquadratic slack exponents gamma in (0,2].",
+    "Transparent delineation of what is machine-checked in constructive Lean 4 vs. proved in prose."
+  ],
+  "weaknesses": [
+    "Builds directly on the public-coin prefix-matching gadget of Cheval et al. (2026) rather than introducing a new reduction architecture, leaving the constant multiplicative slack regime (gamma = 0) and unrestricted polynomial support bounds open.",
+    "In Theorem 4.1(2), the complexity statement specifies delta = Theta(|V|^(-8/3)) and Theta(|V|^(-5/2)) via reduction-specific formulas in r without explicitly formalizing the functional dependence delta(|V|) for arbitrary instances.",
+    "In Theorem 6.1(4), polynomial-time verification of the floor bounds for PPAD membership implicitly assumes C and gamma are rational or efficiently computable constants, and the external Lean/Python verification artifacts could not be audited under PDF-only isolation."
+  ],
+  "potential_errors": [],
+  "strong_novelty_candidates": [
+    "Transcendental-free two-bin rational Cauchy-Schwarz decoding bound TV(mu, mu1 x mu2)^2 <= (1/4)(kappa/m^2 - 1) and its reweighted sub-probability extension for delta-NFCE.",
+    "Explicit {0,1}-payoff bimatrix family (Pm, Qm) with closed-form primal and Farkas-dual proof of exact exponentially small nonzero LP regret (2^(m+5) - 14m - 30)^(-1).",
+    "Uniqueness proof that 1/36 is optimal across all uniform b-ary prefix-matching trees iff b in {2,3} via (b^2+b)/(b-1) - 6 = (b-2)(b-3)/(b-1), plus subquadratic-slack PPAD-completeness down to the gamma = 0 barrier."
+  ],
+  "unresolved_material_objections": []
+}
