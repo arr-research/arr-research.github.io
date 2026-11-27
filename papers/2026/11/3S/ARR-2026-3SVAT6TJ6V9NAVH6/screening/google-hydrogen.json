@@ -1,0 +1,58 @@
+{
+  "prompt_version": "ARR-ASSESS-1.0",
+  "paper_id": "ARR-2026-3SVAT6TJ6V9NAVH6",
+  "version": "v1",
+  "version_id": "arr:version:2c15da84-2fb9-4b91-8217-9033ef20bbf7",
+  "canonical_sha256": "d3ed06864b5dc72a33ad447665ddf3d95444cc3a0cca590ff83a44e6392c3b97",
+  "provider": "Google",
+  "model_id": "hydrogen",
+  "independence": "not_involved_in_manuscript",
+  "assessed_at": "2026-11-27T16:28:00Z",
+  "recommendation": "accept",
+  "millennium_score": 7.6,
+  "overall_stars": 8,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 5,
+      "basis": "All three main theorems, algebraic derivations, edge cases (including k > q in Theorem 1(b), non-abelian/general finite abelian groups in Theorem 2(b), and reducible Gram matrices in Theorem 3(a)), asymptotic constants (c_2 > 0.428, c_3 > 0.341, c_4 > 0.299 and their large-q limits 0.514, 0.408, 0.357), and all 10 rows of Table 1 and Theorem 3(c) crossovers were independently verified directly from the PDF."
+    },
+    "novelty": {
+      "stars": 4,
+      "basis": "While the asymptotic Omega(n^(k/(k+1))) lower bounds for k-Sum/ED and the positive-weight certificate barrier are known, the exact minimax ramp law (Theorem 1(a)), the Stirling-number spectral multiplicity law for H_S P_{E_S} H_S^T (Theorem 1(b)), the hyperplane scaled-isometry identity (Theorem 1(c)), exact q-cancellation yielding zero-O(.) finite-n bounds (Theorem 2), and exact finite crossovers piercing sqrt(kn) (Theorem 3(c)) are genuine, sharp contributions."
+    },
+    "reproducibility": {
+      "stars": 4,
+      "basis": "All mathematical proofs, closed-form rational formulas, and numerical table bounds are completely explicit and reproducible from the PDF alone. External Lean 4.36.0 and Python verification artifacts are described in detail and cleanly scoped, though not directly inspected under the PDF-only referee constraint."
+    },
+    "rigor": {
+      "stars": 5,
+      "basis": "Arguments are non-asymptotic and free of hidden constants; operator-norm orthogonality across Fourier subspaces in Theorem 2(a) and Bonferroni intersection counts |E_S cap E_{S'}| = q^(n-2) over arbitrary finite abelian groups in Theorem 2(b) hold strictly; all numerical lower bounds and ratios are conservatively rounded down while sqrt(kn) ceilings are rounded up; and the boundary between machine-checked identities and prose proofs is explicitly stated."
+    },
+    "significance": {
+      "stars": 4,
+      "basis": "Establishes the first explicit non-asymptotic constants and exact finite dimensions n* where negative-weight adversary bounds surpass the positive-weight barrier for k-Sum and Element Distinctness, while isolating reusable spectral-algebraic identities for Hamming-weight tensor projectors."
+    }
+  },
+  "summary": "The manuscript establishes exact, non-asymptotic ('zero-O(.)') quantum query lower bounds for k-Sum (k >= 2) and Element Distinctness (k = 2) over any finite abelian group G of order q >= (4k+1)*binom(n,k). Theorem 1 characterizes the exact query-difference operator norm of arbitrary Hamming-weight tensor projectors H_S(alpha), proves that H_S P_{E_S} H_S^T has rank q^(k-1) with nonzero eigenvalues m/q and exact Stirling multiplicities S_2(k,m) * prod_{j=1}^{m-1} (q-j), and establishes an exact scaled-isometry identity for the linear ramp on the solution hyperplane. Theorem 2 combines the truncated-ramp block adversary with Bonferroni unique-solution counting to cancel q identically and obtain an explicit rational lower bound on ADV^+- valid for all n >= k+1 and 1 <= d <= n-k, certifying explicit leading constants c_2 > 0.428, c_3 > 0.341, and c_4 > 0.299. Theorem 3 gives a concise self-contained proof of ADV^+(f) <= sqrt(C_0(f)*C_1(f)) <= sqrt(C_1(f)*n) for total Boolean functions, proves exact tightness on k-Threshold, and certifies exact finite crossovers n* = 1,290 (k=2), 668 (k=3), and 571 (k=4) where Theorem 2 strictly pierces sqrt(kn). Independent verification confirms all proofs, edge cases, constants, and Table 1 bounds directly from the PDF.",
+  "strengths": [
+    "Complete elimination of asymptotic O(.) notation in Theorem 2, yielding a closed-form rational lower bound (Eq. 10) via exact q-cancellation between numerator and denominator.",
+    "Elegant and exact Fourier shift-class spectral decomposition in Theorem 1(b), yielding eigenvalues m/q with Stirling-number multiplicities S_2(k,m) * prod_{j=1}^{m-1}(q-j), exact trace (q^k - (q-1)^k)/q, and exact operator norm min(k,q)/q uniformly for both k-Sum and Element Distinctness across all k >= 1 and q >= 2.",
+    "Rigorous and clean block-diagonal orthogonality argument in Theorem 2(a): even though P_{E_S} mixes weights within S, the complement projectors E_W on [n]\\S ensure pairwise orthogonality across distinct subspaces R = (S\\{i}) union W.",
+    "Exact verification of all Table 1 entries and Theorem 3(c) crossovers: e.g., at n=1,290 (k=2, d=149, sqrt(2/79)<0.1592) ADV^+- >= 50.8001 > 50.7937 = sqrt(2n); at n=668 (k=3, d=131, sqrt(3/119)<0.1588) ADV^+- >= 44.7767 > 44.7661 = sqrt(3n); and at n=571 (k=4, d=147, sqrt(4/159)<0.1587) ADV^+- >= 47.8009 > 47.7912 = sqrt(4n).",
+    "Transparent architectural separation in Section 5 between machine-checked Lean 4.36.0 identities (thm01-thm20) and prose spectral/Perron-Frobenius proofs."
+  ],
+  "weaknesses": [
+    "Theorem 2 requires group size q >= (4k+1)*binom(n,k) = Omega(n^k); while natural for k-Sum in the low-collision regime, for Element Distinctness it does not cover smaller alphabet regimes (such as q = Theta(n)) where Omega(n^(2/3)) still holds.",
+    "In the proof of Theorem 2(b), E_S is slightly overloaded to denote both the k-coordinate hyperplane in G^S (size q^(k-1)) and its n-coordinate cylinder in G^n (when writing |E_S cap E_{S'}| = q^(n-2)).",
+    "In the proof of Theorem 3(a), invoking Perron-Frobenius on Gamma^T Gamma to obtain unit nonnegative principal singular vectors u, v omits noting that Gamma^T Gamma may be reducible (weak Perron-Frobenius / absolute-value Rayleigh quotient still guarantees existence, so the step is valid).",
+    "In Theorem 2(c), the asymptotic choice d = ceil((2/(k-1))^(1/(k+1)) * n^(k/(k+1))) requires n sufficiently large so that d <= n - k (satisfied at all crossovers and Table 1 inputs, though not for the smallest n >= k+1).",
+    "For k = 2, the stated crossover n* = 1,290 is conditional on the conservative four-digit bound sqrt(2/79) < 0.1592 (as accurately noted in Theorem 3(c)); under exact sqrt(2/79) ~= 0.159111, Eq. (10) already exceeds sqrt(2n) at n = 1,289 (50.7793 > 50.7740)."
+  ],
+  "strong_novelty_candidates": [
+    "Theorem 1(b): Exact rank q^(k-1), eigenvalues m/q, and Stirling multiplicities S_2(k,m) * prod_{j=1}^{m-1}(q-j) of the hyperplane-restricted tensor projector Gram matrix H_S P_{E_S} H_S^T for both k-Sum and Element Distinctness.",
+    "Theorem 1(a) & 1(c): Exact minimax query-difference norm law for Hamming-weight tensor projectors (uniquely attained by the linear ramp) and the exact scaled-isometry identity ((H_S(lin) o Delta_i) Pi_{E_S})^T ((H_S(lin) o Delta_i) Pi_{E_S}) = ((q-1)/(q^2 k^2)) * I_{q^(k-1)}.",
+    "Theorem 2(c) & Theorem 3(c): Exact q-cancelled non-asymptotic adversary lower bound delivering explicit leading constants c_2 > 0.428, c_3 > 0.341, c_4 > 0.299 and sharp certified finite-n crossovers n* = 1,290, 668, 571 beyond the positive-weight barrier."
+  ],
+  "potential_errors": [],
+  "unresolved_material_objections": []
+}
