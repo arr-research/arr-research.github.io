@@ -1,0 +1,587 @@
+--- Page 1 ---
+Exact Analytic, Geometric, Partition, and Slice Rank
+Separations over Finite Fields
+Lluis Eriksson∗
+November 27, 2026
+Abstract
+We establish three exact, closed-form separation theorems linking analytic rank (ar),
+geometric rank (gr), partition rank (pr), and slice rank (sr) of structured multilinear tensors
+over finite fieldsFp. First, on the complete3-uniform hypergraph tensor K(3)
+n (x,y,z ) =∑
+i,j,kdistinct xiyjzk, we prove an unbounded characteristic-2versus odd-characteristic phase
+transition: over F2, srF2 (K(3)
+n ) = 3for every n≥ 3, and every contraction matrixMx
+has rank in the exact three-value set{0,2,2⌊(n− 1)/2⌋}, yielding the exact closed-form
+bias biasF2 (K(3)
+n ) = 1
+8 + 7 ·2−(2⌊(n−1)/2⌋+3) and arF2 (K(3)
+n ) <3uniformly; over every odd
+prime p≥ 3, by contrast,srFp(K(3)
+n ) ∈[n−3,n]grows linearly, with exactbiasF3 (K(3)
+6 ) =
+8821/531441( arF3 ≈3.7306 > 3). Second, we derive universal closed-form bias formulas
+for the3 ×3determinant tensor ( biasFp(det3) = p−2 + p−3 −p−5, certifying the strict
+three-way separationarF2 (det3) = log2(32/11) <2 = gr(det3) <3 = sr(det3)via a four-line
+cross-product proof over every field) and for generaln×n matrix multiplicationMn via
+q-binomial rank counts (explicitlybiasFp(M2) = ( p4 + 3p3 −2p2 −2p+ 1)/p7, certifying
+the strict finite-field deficitarFp(Mn) <gr (Mn) = ⌈3n2/4⌉for every primep and n≥ 2
+with limp→∞arFp(Mn) = ⌈3n2/4⌉), accompanied by an exact zero-float contraction-rank
+atlas of alternating3-forms inΛ 3(Fn
+2 )separating the G2 Fano3-form (bias = 29/512) from
+the rank-2-free maximal7-dimensional3-form ( bias = 95/2048). Third, on the balanced
+2m-tensor T(2m)
+d = ∏m
+j=1⟨x(j),y(j)⟩, we prove over every field and everyd≥ 2, m≥ 2the
+exact unbounded separationarFp(T(2m)
+d ) <1 = pr(T(2m)
+d ) <d = sr(T(2m)
+d )via a three-line
+Idm-flattening bound and exact closed-form bias1−((p−1)/p)m−1(1 −p−d)m. A two-layer
+verification artifact accompanies the paper: Layer 1 formalizes the cleared-denominator
+bias identities,q-binomial exponent completion, and flattening-rank arithmetic bounds in
+20constructive, axiom-free Lean 4.36.0 theorems (0sorry,0 Classical.choice); Layer 2
+verifies all exhaustive finite-field histograms, hyperplane cross-product checks, and brute-force
+4-tensor character sums in16zero-float Python certificates and56adversarial tests.
+1 Introduction
+Higher-order Fourier analysis and the polynomial method rely on four tensor rank invariants
+governing the “structure versus randomness” dichotomy for multilinear formsT:V 1×···×V k →F
+over a finite fieldF=F p:
+• Analytic rank[ 6, 9]: biasFp (T) := Ex(1),...,x(k) [ωT(x(1),...,x(k))
+p ] > 0( ωp = e2πi/p), and
+arFp (T) := −log pbiasFp (T). For3-tensors T(x,y,z ) = y⊤Mxz, orthogonality of characters
+yields the exact contraction formula
+biasFp (T) =p −dimV 1
+∑
+x∈V1
+p−rankFp (Mx).(1)
+∗Independent Researcher. Code, Lean 4.36.0 proofs, and zero-float certificates archived athttps://github.com
+/lluiseriksson/analytic-slice-partition-rank-separations-finite-fields (v1.0.0, MIT / CC-BY-4.0,
+AIRR-FOUNDER-1.0). Manuscript and verification artifacts prepared with Google Antigravity assistance.
+1
+
+--- Page 2 ---
+• Partition rank[ 11]: prF(T)is the minimum number of summands g(xS)h(x¯S)with
+nontrivial bipartition∅̸=S⊊[k].
+• Slice rank[ 13, 12, 5, 1]: srF(T)restricts partition rank to1-vs-( k− 1)bipartitions
+(|S|= 1). Fork= 3,pr F(T) = srF(T), while fork≥4,pr F(T)≤sr F(T).
+• Geometric rank[8]: for a3-tensor T:F n1 ×F n2 ×F n3 →F , gr(T) := codimF{(x,y) :
+T(x,y,·)≡0}.
+A remarkable body of work established universal inequalities among these parameters:
+arFp (T) ≤pr Fp (T) ≤sr Fp (T)[ 9], polynomial upper bounds onpr in terms ofar [10, 7], linear
+equivalence ofar,gr,sr for3-tensors [ 3], and equivalence ofpr and ar over sufficiently large
+fields [4]. Despite these asymptotic equivalences,exactclosed-form evaluations of biasFp (T)
+across infinite tensor families—quantifying characteristic phase transitions, finite-field deficits
+gr−ar Fp , and unbounded order-2mgaps betweenprandsr—remain surprisingly scarce.
+In this paper we prove three exact, non-asymptotic theorems closing these gaps:
+1. Theorem 1 (Characteristic-2vs. Odd-Prime Phase Transition onK(3)
+n ):Exact
+three-value contraction-rank classification and closed-formF2 bias for alln≥ 3( srF2 = 3,
+arF2 <3), contrasting with linear explosionsrFp ≥n− 3over every odd primep≥ 3and
+explicitar F3 (K(3)
+6 ) = log3(531441/8821)≈3.7306>3.
+2. Theorem 2 (Universal Closed Forms fordet3 and Mn, plusΛ 3(Fn
+2 )Atlas):Exact
+rational bias formulas over all primesp for det3 and n×n matrix multiplicationMn via
+q-binomial rank counts, recoveringlimp→∞arFp (Mn) = ⌈3n2/4⌉= gr(Mn)while proving
+strict finite-field deficitarFp (Mn) <gr (Mn)for all p and n≥ 2, paired with an exact
+alternating3-form atlas inΛ 3(Fn
+2 )[2].
+3. Theorem 3 (Unbounded2 m-Tensor Separationar<pr = 1 < d= sr):Exact
+closed-form bias and three-lineIdm -flattening proof onT(2m)
+d = ∏m
+j=1⟨x(j),y(j)⟩for all
+d≥2,m≥2, and every fieldF.
+2 Characteristic Phase Transition on Complete3-Hypergraphs
+K(3)
+n
+Let K(3)
+n :F n ×F n ×F n →F be the trilinear form of the complete3-uniform hypergraph onn
+vertices:
+K(3)
+n (x,y,z) :=
+∑
+1≤i,j,k≤n
+i,j,kdistinct
+xiyjzk.(2)
+WritingS(u) := ∑n
+i=1 ui and⟨u,v⟩:= ∑n
+i=1 uivi, inclusion-exclusion givesthe universalZ-identity
+K(3)
+n (x,y,z) =S(x)S(y)S(z)−S(x)⟨y,z⟩−S(y)⟨x,z⟩−S(z)⟨x,y⟩+ 2
+n∑
+i=1
+xiyizi.(3)
+The single factor2in front of the diagonal unit tensor⟨n⟩:= ∑n
+i=1 xiyizi triggers an unbounded
+phase transition between characteristic2and every odd characteristic.
+Theorem 1(Complete K(3)
+n Characteristic-2vs. Odd-Prime Phase Transition).Let n≥ 3be
+an integer.
+(a) Characteristic-2collapse and exact closed-form bias:Over F2, srF2 (K(3)
+n ) = 3for every
+n≥ 3. Moreover, the contraction matrixMx ∈F n×n
+2 (y⊤Mxz= K(3)
+n (x,y,z )) takes rank
+strictly in{0,2,2⌊(n−1)/2⌋}with exact counts:
+2
+
+--- Page 3 ---
+• if n= 2m is even: rank(Mx) = 0for x∈{ 0,1}(2vectors), rank(Mx) = 2for the
+remaining2 n−1 −2even-weight vectors, andrank(Mx) = n−2for all2 n−1 odd-weight
+vectors;
+• if n = 2m+ 1is odd: rank(Mx) = 0for x = 0(1vector), rank(Mx) = 2for the
+2n−1 −1nonzero even-weight vectors, andrank(Mx) = n−1for all2 n−1 odd-weight
+vectors.
+Consequently, both parities unify into the exact closed form
+biasF2 (K(3)
+n ) = 1
+8 + 7
+22⌊(n−1)/2⌋+3 > 1
+8,ar F2 (K(3)
+n )<3∀n≥3,(4)
+withlim n→∞arF2 (K(3)
+n ) = 3.
+(b) Odd-characteristic linear explosion:Over every odd primep≥3,
+max(3, n−3)≤sr Fp (K(3)
+n )≤n∀n≥3.(5)
+Over F3, exhaustive certification givesbiasF3 (K(3)
+3 ) = 89/729, biasF3 (K(3)
+4 ) = 127/2187,
+biasF3 (K(3)
+5 ) = 127/2187, andbiasF3 (K(3)
+6 ) = 8821/531441 <1/27, witnessing the strict
+crossingar F3 (K(3)
+6 )≈3.7306>3 = sr F2 (K(3)
+6 ).
+Proof. Proof of(a).OverF 2,2 = 0, so (3) collapses to
+K(3)
+n (x,y,z) =S(x)
+(
+S(y)S(z) +⟨y,z⟩
+)
++S(y)⟨x,z⟩+S(z)⟨x,y⟩,(6)
+which displays3slices, provingsr F2 (K(3)
+n )≤3. For the lower boundsr F2 (K(3)
+n )≥3, restricting
+to coordinates{1,2,3}yields K(3)
+3 , which overF2 coincides withdet3(x,y,z ) = ⟨x×y,z⟩ . By
+monotonicity of slice rank under coordinate restriction, it suffices to showsrF(det3) = 3over any
+field F. Suppose det3 had slice rank≤2. By S3-symmetry across modes, either (i) both slices
+are in the first mode—impossible since the matricesMe1 ,Me2 ,Me3 are linearly independent
+(dim span{Mx}= 3 > 2)—or (ii) det3(x,y,z ) = ℓ(x)B(y,z) + m(y)C(x,z). In case (ii), let
+U = ker(ℓ)and V = ker(m); both have dimension≥2in F3. Pick any nonzerou∈U . Since
+dimV≥ 2 >1 = dim span(u), there existsv∈V linearly independent ofu, whenceu×v̸ = 0
+and det3(u,v,·) ̸≡0, contradictingℓ(u) = m(v) = 0. Thus srF(det3) = 3over every field F, and
+hencesr F2 (K(3)
+n ) = 3for alln≥3.
+Next, for anyx∈F n
+2 , the contraction matrix is
+Mx =S(x)(J n +In) +1x⊤+x1 ⊤∈F n×n
+2 .(7)
+Note thatMx is alternating (symmetric with zero diagonal since(Mx)ii =xi +xi = 0inF 2).
+• If S(x) = 0: Mx =1 x⊤+ x1⊤. This vanishes iffx∈{ 0,1}(note S(1) = 0iff n is even),
+and otherwisex,1are linearly independent sorank(M x) = 2.
+• If S(x) = 1: Mxv = 0 ⇐⇒v = (S(v) + ⟨x,v⟩)1+ S(v)x. If x=1(which occurs with
+S(1) = 1iff n = 2m+ 1is odd), then M1 = Jn + In, so M1v = 0 ⇐⇒v = S(v)1,
+giving ker(M1) = span{1}, dim ker(M1) = 1, and rank(M1) = n− 1 = 2m. Otherwise
+x̸=1(which is automatic for even n since S(1) = 0 ̸= 1), so x and1are linearly
+independent. Writing v = α1+ βx (α,β∈F 2), we haveS(v) = α(nmod 2) + β and
+⟨x,v⟩= αS(x) +β⟨x,x⟩= α+ β (since ⟨x,x⟩= S(x) = 1over F2). Equating coefficients of
+the linearly independent vectors1andxin the kernel equation givesα(nmod 2) = 0. When
+n= 2mis even, bothαandβare free, sodim ker(Mx) = 2and rank(Mx) = n−2 = 2(m−1).
+When n = 2 m+ 1is odd and x̸=1, α = 0and β is free, so dim ker(Mx) = 1and
+rank(Mx) =n−1 = 2m.
+3
+
+--- Page 4 ---
+Figure 1:Characteristic-2collapse vs. odd-prime explosion on K(3)
+n .(a) Exact
+arF2 (K(3)
+n ) < 3 = srF2 (K(3)
+n )vs. arF3 (K(3)
+n )crossing3at n = 6(3 .7306) and the universal
+odd-plower boundsrFp (K(3)
+n ) ≥max (3,n− 3). (b) Exact three-value contraction-rank spectrum
+ofK (3)
+8 overF 2 ({0 : 2,2 : 126,6 : 128}).
+Substituting these exact rank counts into (1): for evenn= 2m,
+biasF2 (K(3)
+2m) = 2−2m
+(
+2 + (22m−1 −2)2 −2 + 22m−12−(2m−2)
+)
+= 1
+8 + 7
+22m+1 ;(8)
+for oddn= 2m+ 1,
+biasF2 (K(3)
+2m+1) = 2−(2m+1)
+(
+1 + (22m −1)2 −2 + 22m2−2m
+)
+= 1
+8 + 7
+22m+3 .(9)
+Since2⌊(n−1)/2⌋+ 3equals2m+ 1forn= 2mand2m+ 3forn= 2m+ 1, (4) follows.
+Proof of(b).Over any odd prime p≥ 3,2 ∈F ×
+p is invertible. By Tao’s diagonal slice-rank
+lemma [13], srFp
+(
+2 ∑n
+i=1 xiyizi
+)
+= n. Rearranging (3) expresses2 ∑n
+i=1 xiyizi as K(3)
+n (x,y,z )
+minus a sum of3slices S(x)(S(y)S(z) −⟨y,z⟩) −S(y)⟨x,z⟩−S (z)⟨x,y⟩. Subadditivity of slice
+rank yields n≤sr Fp (K(3)
+n ) + 3, while expandingK(3)
+n along x1,...,x n gives srFp (K(3)
+n ) ≤n .
+To establish the uniform floorsrFp (K(3)
+n ) ≥3for n≥ 3, restrict to coordinates{1,2,3}to
+obtain K(3)
+3 , whose contraction matrix Mu at u = ( u1,u2,u3)has entries( Mu)ij = uk for
+{i,j,k} = {1,2,3}and zero diagonal. If K(3)
+3 had slice rank ≤ 2, then by S3-symmetry
+either both slices lie in one mode (impossible sinceMe1 ,Me2 ,Me3 are linearly independent)
+or K(3)
+3 (x,y,z ) = ℓ(x)B(y,z) + m(y)C(x,z). In the latter case, the2-dimensional subspace
+U = ker(ℓ) ⊂F 3
+p contains a vectoru with at least two nonzero coordinates; any suchu has
+rank(Mu) ≥2(if u3 = 0and u1,u2 ̸= 0, rows1and3are independent; if u1u2u3 ̸= 0, the top-left
+2 ×2minor is −u2
+3 ̸= 0). Hence dim ker(Mu) ≤1 <2 ≤dim ker (m), so somev∈ker (m)satisfies
+Muv̸= 0, contradictingK(3)
+3 (u,v,·) ≡0. Thus srFp (K(3)
+n ) ≥max (3,n− 3). The exactF3 biases
+for n∈{ 3,4,5,6}are certified by exhaustive rank evaluation overFn
+3 (Certificate cert02).
+3 Universal Bias Formulas fordet3 and Mn, and theΛ3(Fn
+2 )Atlas
+We next evaluate the exact analytic rank of the two canonical benchmark3-tensors in alge-
+braic complexity—the3 ×3determinant det3 and n×n matrix multiplicationMn(X,Y,Z ) =
+tr(XYZ )—across all prime fieldsFp, alongside a zero-float classification of alternating3-forms
+overF 2.
+4
+
+--- Page 5 ---
+Theorem 2(Universaldet 3 andM n Biases, Finite-Field Deficits, andΛ3(Fn
+2 )Atlas).
+(a) Universaldet 3 three-way separation:For every primep≥2,
+biasFp (det
+3
+) = 1
+p2 + 1
+p3 − 1
+p5 > 1
+p2 ,(10)
+certifying the strict three-way hierarchyarFp (det3) < 2 = gr(det3) < 3 = srFp (det3)for
+every primep(atp= 2:ar F2 (det3) = log2(32/11)≈1.5406, ratiosr/ar≈1.9473).
+(b) Universal q-binomial bias forMn and finite-field deficit:For every n≥ 1and every prime
+p≥ 2, let Np(n,r) := ∏r−1
+i=0
+(pn−pi)2
+pr−pi be the number ofn×n matrices overFp of rankr.
+Then
+biasFp (Mn) =p −n2
+n∑
+r=0
+Np(n,r)p −nr.(11)
+Forn= 2, this simplifies to the exact rational function
+biasFp (M2) = p4 + 3p3 −2p2 −2p+ 1
+p7 > 1
+p3 ∀p≥2(12)
+(at p = 2: biasF2 (M2) = 29 /128, giving arF2 (M2) = log2(128/29) ≈ 2.1420 < 3 =
+gr(M2) < 4 = sr(M2), wheresr(Mn) = n2 by [1, 8]). For everyn≥ 2and every prime
+p≥2,ar Fp (Mn)<⌈3n 2/4⌉= gr(Mn)strictly, while
+limp→∞arFp (Mn) =
+⌈
+3n2
+4
+⌉
+= gr(Mn).(13)
+(c) ExactΛ 3(Fn
+2 )alternating3-form atlas:Exhaustive rank verification inΛ 3(F7
+2)[ 2] certifies
+that the G2 Fano3-form ωFano (sum over the7lines of PG(2,2)) has histogram{0 :
+1, 2 : 7, 4 : 56, 6 : 64}and biasF2 (ωFano) = 29/512( ar≈ 4.1420). By contrast, the form
+ωmax = e012+e345+e036+e146+e256+e013 is rank-2-free with histogram{0 : 1, 4 : 63, 6 : 64}
+and strictly lower biasbiasF2 (ωmax) = 95/2048<29/512(ar≈4.4301).
+Proof. Proof of(a).For det3(x,y,z ) = ⟨x×y,z⟩ , the contraction matrixMx is the3 ×3
+skew-symmetric cross-product operatory↦→x×y , which has rank0for x= 0(1vector) and
+rank2for all p3 −1nonzero vectors x∈F 3
+p. Formula (1) immediately yieldsbiasFp (det3) =
+p−3(1 + (p3 −1)p−2) = p−2 + p−3 −p−5 > p−2, so arFp (det3) < 2. Over F, the zero locus
+{(x,y) : x×y = 0}is the union of{x = 0}(dim 3), {y = 0}(dim 3), and {y = λx}(dim 4),
+hence has dimension4and codimension gr(det3) = 6 −4 = 2. We already provedsrF(det3) = 3
+over every field in Theorem 1(a).
+Proof of(b).For Mn(X,Y,Z ) = tr(XYZ )on Fn×n
+p , fixing X produces the bilinear form
+BX(Y,Z) = tr((XY)Z). Because left multiplicationY↦→XY on Fn×n
+p acts independently on
+each of then columns ofY, its matrix rank is exactlyn·rank (X), and since(A,Z) ↦→tr(AZ)
+is non-degenerate,rank(BX) = n·rank (X). Summing (1) over the rank stratar= 0,...,n of
+Fn×n
+p yields (11).
+Forn= 2,N p(2,0) = 1,N p(2,1) = (p2 −1)(p+ 1), andN p(2,2) = (p2 −1)(p2 −p), giving
+biasFp (M2) =p−4
+(
+1+(p2 −1)(p+1)p −2 +(p2 −1)(p2 −p)p−4
+)
+= p4 + 3p3 −2p2 −2p+ 1
+p7 ,(14)
+which strictly exceedsp−3 because3 p3 −2p2 −2p+ 1 >0for all p≥ 2. For generaln≥ 2, the
+degree inp of Np(n,r)is ∑r−1
+i=0 (2n−r ) = 2nr−r 2 with leading coefficient1. Thus the r-th
+term of (11) scales asp−n2+nr−r2
+. Completing the square yields
+4(n2 −nr+r 2) = 3n2 + (2r−n) 2 ≥3n2,(15)
+5
+
+--- Page 6 ---
+Figure 2:Universal finite-field deficits andΛ 3(F7
+2)contraction spectra.(a) Exact
+finite-field deficitgr(T) −ar Fp (T) >0for det3 and M2,M3,M4 across p∈{ 2,3,5,7,11}via (11).
+(b) Exact contraction-rank spectra inΛ3(F7
+2)separating the G2 Fano3-form (7rank-2points of
+PG(2,2),bias = 29/512) from the rank-2-free maximal3-formω max (bias = 95/2048).
+whose minimum over integersr∈{ 0,...,n} is attained atr∗= ⌊n/2⌋(and also⌈n/2⌉when nis
+odd), giving minimum exponente(n) = n2 −nr∗+ (r∗)2 = ⌈3n2/4⌉= gr(Mn)[ 8]. Because r∗=
+⌊n/2⌋≥ 1satisfies n−r ∗≥r∗≥1, every index0 ≤i≤r ∗−1obeys v:= pi−n ≤p−r∗
+u≤u/ 2,
+whereu:=p i−r∗
+∈(0,1/p]. Hence(1−v) 2 = 1−2v+v 2 >1−2v≥1−u, so every factor in
+Np(n,r∗)
+p2nr∗−(r∗)2 =
+r∗−1∏
+i=0
+(1−p i−n)2
+1−p i−r∗ (16)
+strictly exceeds1. Consequently Np(n,r∗) > p2nr∗−(r∗)2
+, and since all remaining summands
+in (11) are strictly positive,
+biasFp (Mn)> p −n2
+Np(n,r∗)p−nr∗
+> p−(n2−nr∗+(r∗)2) =p −⌈3n2/4⌉ (17)
+holds unconditionally for everyn≥ 2and every prime p≥ 2, proving arFp (Mn) <gr (Mn).
+Meanwhile,limp→∞pe(n)biasFp (Mn)equals1for even nand2for odd n(from the two minimizing
+stratar=⌊n/2⌋,⌈n/2⌉), so taking−log p giveslim p→∞arFp (Mn) =e(n) =⌈3n 2/4⌉.
+Proof of(c).Direct exact Gaussian-elimination rank census over all128vectors x∈F 7
+2
+(Certificatescert08 andcert09) certifies the two histograms and rational biases:biasF2 (ωFano) =
+(1+7/4+56/16+64/64)/128 = 29/512, andbiasF2 (ωmax) = (1+63 /16+64/64)/128 = 95/2048 <
+29/512.
+4 Unbounded2 m-Tensor Separation Between Analytic, Parti-
+tion, and Slice Rank
+For tensors of orderk≥ 4, partition rank and slice rank diverge dramatically. Consider the
+balanced order-2mtensorT (2m)
+d : (Fd)2m →Fdefined by
+T(2m)
+d
+(
+x(1),y(1),...,x (m),y(m))
+:=
+m∏
+j=1
+⟨x(j),y(j)⟩.(18)
+Theorem 3(Exact Unbounded2 m-Tensor Separationar<pr = 1 <d = sr).Let d≥ 2and
+m≥2be integers.
+6
+
+--- Page 7 ---
+(a) Universal field-independent partition vs. slice rank gap:Over every fieldF,
+prF
+(
+T(2m)
+d
+)
+= 1andsr F
+(
+T(2m)
+d
+)
+=d.(19)
+(b) Exact closed-form analytic rank over every finite fieldFp:For every primep≥2,
+biasFp
+(
+T(2m)
+d
+)
+= 1−
+(p−1
+p
+)m−1 (
+1−p −d)m > 1
+p,(20)
+so arFp (T(2m)
+d ) < 1 = prFp (T(2m)
+d ) < d= srFp (T(2m)
+d )strictly for all d≥ 2, m≥ 2, and
+p≥ 2, with asymptotic ceilinglimd→∞arFp (T(2m)
+d ) = −log p
+(
+1 −((p−1)/p)m−1)
+(which
+equals1atm= 2and decays exponentially inmform≥3).
+Proof. Proof of(a).Since m≥ 2, T(2m)
+d is a single product of the2-tensor⟨x(1),y(1)⟩and the
+(2m−2)-tensor ∏m
+j=2⟨x(j),y(j)⟩, soprF(T(2m)
+d ) = 1. Expanding⟨x(1),y(1)⟩= ∑d
+i=1 x(1)
+i y(1)
+i writes
+T(2m)
+d as a sum ofdslices, givingsr F(T(2m)
+d )≤d.
+For the matching lower bound, flattenT(2m)
+d across the bipartitionA := (x(1),...,x (m))
+versus B := (y(1),...,y (m))into a dm×dm matrix overF. Its flattening matrix is the Kronecker
+product I⊗m
+d = Idm , which has rankdm over every fieldF. By contrast, consider any slice
+f(x(r))g separating x(r) from the other2m−1modes (the case f(y(r))g is symmetric). Up to
+permuting factors inA, itsA-vs-Bflattening is the Kronecker product off∈F d with adm−1 ×dm
+flattening ofg, whose matrix rank is at mostdm−1. Therefore every slice hasA-vs-B flattening
+rank at mostdm−1. By rank subadditivity,dm ≤sr F(T(2m)
+d )·d m−1, yieldingsr F(T(2m)
+d )≥d.
+Proof of(b).Let Zj := ⟨x(j),y(j)⟩∈F p for independent uniform(x(j),y(j)) ∈F d
+p×Fd
+p. Ifx(j) = 0
+(probabilityp−d), thenZj = 0; ifx(j) ̸= 0(probability1 −p−d), thenZj is uniform overFp. Hence
+Zj is nonzero with probabilityqnz := p−1
+p (1 −p−d), and conditioned onZj ̸= 0, Zj is uniform on
+F×
+p . By independence, the productZ := ∏m
+j=1 Zj is nonzero with probabilityqm
+nz, and conditioned
+on Z̸= 0, Z is uniform onF×
+p (whose additive character average is 1
+p−1
+∑
+a∈F×
+p
+ωa
+p = − 1
+p−1 ).
+Evaluatingbias Fp (T(2m)
+d ) =E[ωZ
+p ]gives
+biasFp
+(
+T(2m)
+d
+)
+= (1−qm
+nz)·1+q m
+nz
+(
+− 1
+p−1
+)
+= 1− p
+p−1 qm
+nz = 1−
+(p−1
+p
+)m−1
+(1−p−d)m.(21)
+Since m≥ 2and d≥ 1, both(( p−1)/p)m−1 ≤(p−1)/pand(1 −p−d)m <1, sobiasFp (T(2m)
+d ) >
+1− p−1
+p = 1
+p strictly, provingarFp (T(2m)
+d )<1.
+5 Formal Verification Architecture and Scope
+Our verification artifact cleanly separates machine-checked algebraic identities from exact zero-
+float finite-field computations:
+• Layer 1 — Constructive Lean 4.36.0 Kernel(lean/AnalyticSlicePartitio
+nRank.lean ): Twenty theorems compiled underlean-DwarningAsError=true with
+zero external dependencies, zerosorry, and zeroClassical.choice (audited via#print
+axioms). Layer 1 machine-checks the cleared K(3)
+n F2 bias numerator identities and
+strict bias> 1/8bound (thm01–thm04), the char-2vs. odd-p phase-transition separation
+(thm05), the universaldet3 and M2 rank-partition and closed-form bias identities with
+strict finite-field deficits for allp≥ 2( thm06–thm12), the exact Mn exponent square-
+completion4( n2 −nr + r2) = 3n2 + (2r−n )2 (thm13), the2m-tensor flattening implication
+7
+
+--- Page 8 ---
+Figure 3:Unbounded2 m-tensor separation ar<pr = 1 < d = sr.(a) Exact rank
+hierarchy on T(4)
+d = ⟨x,y⟩⟨z,w⟩: sr = d grows linearly over every field whilepr = 1and
+arFp <1. (b) Exponential decay of the asymptotic analytic-rank ceilinglimd→∞arFp (T(2m)
+d ) =
+−log p(1−((p−1)/p) m−1)with factor countm.
+Table 1: Exact zero-float bias and rank-hierarchy census verified across Certificatescert01–
+cert16.
+Tensor family Field Exact biasbias Fp arFp gr/pr sr
+K(3)
+n (n= 3,4)F 2 11/32 1.5406 gr = 2(n= 3)3
+K(3)
+n (n= 5,6)F 2 23/128 2.4764≤3 3
+K(3)
+n (n= 7,8)F 2 71/512 2.8503≤3 3
+K(3)
+6 F3 8821/531441 3.7306 pr≥4∈[4,6]
+det3 Fp p−2 +p−3 −p−5 <2(1.5406atp= 2)gr = 2 3
+M2 Fp (p4 + 3p3 −2p2 −2p+ 1)/p 7 <3(2.1420atp= 2)gr = 3 4
+G2 FanoωFano F2 29/512 4.1420—∈[5,7]
+Rank-2-freeω max F2 95/2048 4.4301—∈[5,7]
+T(4)
+d (d≥2)F p 1− p−1
+p (1−p −d)2 <1 pr = 1d
+T(2m)
+d (d,m≥2)F p 1−( p−1
+p )m−1(1−p −d)m <1 pr = 1d
+dm ≤sd m−1 ⇒d≤s and strictar< 1inequalities (thm14–thm17), and exact rational
+checks for ωFano, ωmax, and K(3)
+6 over F3 (thm18–thm20). The linear-algebraic kernel
+dimensions, character-orthogonality sums, and Kronecker-flattening constructions are
+proved in full detail in Sections 2–4.
+• Layer 2 — Zero-Float Exact Python Verifier(verification/verify_tensor_ran
+ks_fp.py): An AST-audited pure standard-library verifier using strictlyint and fracti
+ons.Fraction (zero floating-point operations, zero numeric division or exponentiation,
+zero limit_denominator ), emitting16SHA-256 certificates under certificates/M
+ANIFEST.json and validated by56adversarial pytest checks. Layer 2 independently
+executes exact Gaussian elimination overFp across all slice vectors forK(3)
+n (F2 n≤ 9,
+F3 n≤ 6, F5 n≤ 4), det3 (p∈{ 2,3,5,7}), M2 (p∈{ 2,3,5}), Mn q-binomial tables
+(n≤ 5,p≤ 11), alternating3-forms inΛ 3(Fn
+2 )( n≤ 7), cyclic group tensorsC3,...,C 7,
+exhaustive hyperplane cross-product checks forsr(det3) = 3, and brute-force4-tensor
+character sums matching (20).
+8
+
+--- Page 9 ---
+References
+[1] J. Blasiak, T. Church, H. Cohn, J. A. Grochow, E. Naslund, W. F. Sawin, and C. Umans,
+On cap sets and the group-theoretic approach to matrix multiplication, Discrete Anal.2017:3,
+27 pp.
+[2] A. M. Cohen and A. G. Helminck,Trilinear alternating forms on a vector space of dimension
+7, Comm. Algebra16(1988), 1–25.
+[3] A. Cohen and G. Moshkovitz,Structure vs. randomness for bilinear maps, Discrete Anal.
+2022:12, 21 pp.
+[4] A. Cohen and G. Moshkovitz,Partition and analytic rank are equivalent over large fields,
+Duke Math. J.172(2023), 2433–2470.
+[5] J. S. Ellenberg and D. Gijswijt,On large subsets of Fn
+q with no three-term arithmetic
+progression, Ann. of Math.185(2017), 339–343.
+[6] W. T. Gowers and J. Wolf,Linear forms and higher-degree uniformity for functions onFn
+p,
+Geom. Funct. Anal.21(2011), 36–69.
+[7] O. Janzer,Polynomial bound for the partition rank vs the analytic rank of tensors, Discrete
+Anal.2020:7, 18 pp.
+[8] S. Kopparty, G. Moshkovitz, and J. Zuiddam,Geometric rank of tensors and subrank of
+matrix multiplication, Discrete Anal.2023:1, 25 pp.
+[9] S. Lovett,The analytic rank of tensors and its applications, Discrete Anal.2019:7, 10 pp.
+[10] L. Milićević,Polynomial bound for partition rank in terms of analytic rank, Geom. Funct.
+Anal.29(2019), 1503–1530.
+[11] E. Naslund,The partition rank of a tensor andk-right corners inFn
+q, J. Combin. Theory
+Ser. A174(2020), 105190.
+[12] W. Sawin and T. Tao,Notes on the slice rank of tensors, blog post, August 2016.
+[13] T. Tao,A symmetric formulation of the Croot–Lev–Pach–Ellenberg–Gijswijt capset bound,
+blog post, May 2016.
+9

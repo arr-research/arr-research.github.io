@@ -1,0 +1,56 @@
+{
+  "prompt_version": "ARR-ASSESS-1.0",
+  "paper_id": "ARR-2026-70GZWAHVTB8FKB8C",
+  "version": "v1",
+  "version_id": "arr:version:478f4851-693d-4de4-959f-038e2284f582",
+  "canonical_sha256": "1f3d224b6162d99b993a999e6dc3c44e954606f72cae3080b617d877b075cdf4",
+  "provider": "Google",
+  "model_id": "hydrogen",
+  "independence": "not_involved_in_manuscript",
+  "assessed_at": "2026-11-27T14:12:00Z",
+  "recommendation": "accept",
+  "millennium_score": 7.5,
+  "overall_stars": 8,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 5,
+      "basis": "All three theorems, proofs, closed-form bias expressions, inequality bounds, and Table 1 exact rational values (including K_n^(3) over F_2 and F_3 for n=3..6, det_3, M_2, M_n finite-field deficits, G_2 Fano vs. rank-2-free 3-forms in Lambda^3(F_2^7), and T_d^(2m)) were independently verified from first principles with no errors or gaps found."
+    },
+    "novelty": {
+      "stars": 4,
+      "basis": "While asymptotic equivalences among ar, gr, pr, and sr are known, deriving exact closed-form bias formulas across infinite tensor families—capturing the K_n^(3) char-2 three-value rank spectrum, the unconditional q-binomial finite-field deficit ar < gr for M_n, the exact Lambda^3(F_2^7) contraction-rank separation, and the exact T_d^(2m) formula—provides concrete non-asymptotic results."
+    },
+    "reproducibility": {
+      "stars": 5,
+      "basis": "All proofs are self-contained and elementary in the 9-page manuscript, every rational value and algebraic identity is explicitly stated, and Section 5 transparently specifies the separation between machine-checked Lean 4.36.0 algebraic identities and zero-float Python exhaustive rank certificates."
+    },
+    "rigor": {
+      "stars": 5,
+      "basis": "Definitions, inclusion-exclusion identities, kernel-dimension classifications, q-binomial factor bounds, Kronecker-flattening subadditivity, and probability arguments are completely rigorous, with honest scoping of what Layer 1 (Lean) verifies versus pen-and-paper linear algebra."
+    },
+    "significance": {
+      "stars": 4,
+      "basis": "Establishes clean, canonical benchmark families quantifying characteristic phase transitions, exact finite-field deficits gr - ar, and unbounded pr vs. sr separations of direct utility to higher-order Fourier analysis and algebraic complexity."
+    }
+  },
+  "summary": "This manuscript proves three exact, non-asymptotic separation and closed-form bias theorems relating analytic rank (ar), geometric rank (gr), partition rank (pr), and slice rank (sr) over finite fields F_p. Theorem 1 proves an unbounded characteristic-2 vs. odd-prime phase transition on the complete 3-uniform hypergraph tensor K_n^(3): over F_2, sr = 3 and contraction matrices take ranks strictly in {0, 2, 2*floor((n-1)/2)}, yielding bias = 1/8 + 7*2^(-(2*floor((n-1)/2)+3)) > 1/8 (ar < 3), whereas over odd primes p >= 3, sr >= max(3, n-3) grows linearly (with exact F_3 biases up to n=6 crossing ar > 3 at n=6). Theorem 2 derives universal rational bias formulas over all primes p for det_3 (showing ar < 2 = gr < 3 = sr) and n x n matrix multiplication M_n via q-binomial rank counts, proving strict finite-field deficit ar_{F_p}(M_n) < ceil(3n^2/4) = gr(M_n) for all n >= 2, p >= 2 with limit ceil(3n^2/4), alongside an exact Lambda^3(F_2^7) census separating the G_2 Fano 3-form (29/512) from the rank-2-free maximal 3-form (95/2048). Theorem 3 establishes ar < 1 = pr < d = sr on T_d^(2m) for all d, m >= 2 via an I_{d^m}-flattening bound and exact bias 1 - ((p-1)/p)^(m-1)*(1 - p^(-d))^m > 1/p.",
+  "strengths": [
+    "Complete, elementary, and airtight proofs of all three main theorems (Sections 2-4), including an exact three-value contraction-rank classification for K_n^(3) over F_2 and a clean four-line cross-product proof that sr_F(det_3) = 3 over every field.",
+    "Unconditional proof in Theorem 2(b) via factorwise bounds on N_p(n, floor(n/2))/p^(2nr*-r*^2) that ar_{F_p}(M_n) < gr(M_n) = ceil(3n^2/4) strictly for every n >= 2 and every prime p >= 2, together with the exact rational formula for M_2.",
+    "Elegant three-line Kronecker-flattening proof in Theorem 3(a) showing sr_F(T_d^(2m)) = d over every field F, paired with an exact probabilistic derivation of bias_{F_p}(T_d^(2m)) in Theorem 3(b).",
+    "Transparent verification reporting in Section 5 that clearly distinguishes cleared-denominator Lean 4.36.0 algebraic theorems from exhaustive zero-float finite-field computations and linear-algebraic pen-and-paper proofs."
+  ],
+  "weaknesses": [
+    "For odd primes p >= 3, Theorem 1(b) establishes the linear slice-rank lower bound sr_{F_p}(K_n^(3)) >= n - 3 and provides exact F_3 biases only for n in {3, 4, 5, 6}, leaving a general closed-form bias formula or direct elementary lower bound on ar_{F_p}(K_n^(3)) for all n open.",
+    "Theorem 2(c) relies on exhaustive computational rank census (Certificates cert08 and cert09) for the Lambda^3(F_2^7) contraction histograms rather than including a self-contained orbit-by-orbit proof in the manuscript.",
+    "Minor notational and expository points: angle brackets are used both for the inner product <u,v> and the unit tensor <n> in Section 2, and the proof of sr_{F_p}(K_n^(3)) >= 3 on page 4 writes 'if u_3 = 0 and u_1, u_2 != 0' without explicitly noting 'without loss of generality by S_3-symmetry'."
+  ],
+  "strong_novelty_candidates": [
+    "Exact three-value contraction-rank spectrum {0, 2, 2*floor((n-1)/2)} and closed-form F_2 bias 1/8 + 7*2^(-(2*floor((n-1)/2)+3)) for K_n^(3) for all n >= 3, revealing an unbounded char-2 vs. odd-prime phase transition.",
+    "Unconditional finite-field deficit theorem ar_{F_p}(M_n) < ceil(3n^2/4) = gr(M_n) for all n >= 2 and all primes p >= 2 via q-binomial rank counts, plus exact rational bias formula (p^4 + 3p^3 - 2p^2 - 2p + 1)/p^7 for M_2.",
+    "Exact contraction-rank bias separation in Lambda^3(F_2^7) between the G_2 Fano 3-form (29/512) and the rank-2-free maximal 3-form (95/2048).",
+    "Closed-form bias 1 - ((p-1)/p)^(m-1)*(1 - p^(-d))^m > 1/p and I_{d^m}-flattening separation ar < pr = 1 < d = sr on T_d^(2m) for all d, m >= 2."
+  ],
+  "potential_errors": [],
+  "unresolved_material_objections": []
+}
