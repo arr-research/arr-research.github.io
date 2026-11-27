@@ -1,0 +1,613 @@
+--- Page 1 ---
+Sharp Normalization Exponents, a19×
+Rescaled-Vandermonde Contraction, Linear-Exponent
+Bounded-ω(n)Factoring, and Resolution of thec= 1
+Endpoint for Abundance-Oracle Factorization
+Lluis Eriksson
+Independent Researcher·AIRR.SCIENCE
+https://github.com/lluiseriksson/abundant-factoring-sharp-exponents-and-endpoint
+November 2026
+Abstract
+Shunia (arXiv:2611.34242v1) proved that deciding abundanceA= {z≥ 1 : σ(z) >2z}
+is equivalent to complete integer factorization under deterministic polynomial-time Turing
+reductions, using a normalization exponentJ≥ 16⌈log2 n⌉(Lemma 3.2), a Hankel reconstruction
+exponent J = 48(1 + ⌈log2 n⌉)2 (Theorem 3.1), a sieve bound U = 2 H2 = O((logx)16)
+(Theorem 1.2), and an abundance-query roughness boundP−(z) ≥c√logz for everyc∈ (0,1)
+with only finitely many abundant integers forc> 1(Theorem 5.2), explicitly leaving the critical
+endpointc= 1open.
+We establish three sharp quantitative and analytic improvements with constructive formal
+verification. First, via an elementary telescoping odd-square tail bound3−(J+1) + 1
+6 5−(J−1) <
+2−(J+1) (J≥ 2), we slash Shunia’s Lemma 3.2 threshold by16×to J≥max (2,⌈log 2 w⌉)
+and prove sharpness within2on w = 2 p; furthermore, by rescaling the Hankel system to
+µi = B/qi ∈[1,3], exploiting exact integer factorial Vandermonde cancellation to collapse the
+perturbation exponent fromn12 to n4 with universal constantK3(ℓ) <253, and partitioning
+[log2 q1,log 2(3q1)]into at most r≤M := ⌈log2 n⌉logarithmic subintervals (log2 3 > 19/12
+via3 12 = 531441 > 524288 = 2 19), we contract Theorem 3.1’s exponent by19×to J =
+⌈(48M2 + 636M)/19⌉+ 1(and J = 4M2 + 31M + 1on[ q1,2q1]), shrinking abundance query
+bit-length by361×. Second, for integers with boundedω(n) ≤k distinct prime factors (arbitrary
+multiplicities), the exponent collapses from quadratic to linearJ = ⌈(48kM + 636k)/19⌉+ 1
+with only2 k nonadaptive divisor sums (fork= 2, J = 4M + 10with4samples, even for twin
+primes), reducing abundance queries fromO((logn)4)toO(k 2(logn) 2); in parallel, tightening
+Baker–Harman–Pintz (0.475 = 19 /40) compresses Algorithm 1’s deterministic sieve from
+U = O((logx)16)to O((logx)17/2)(or O((logx)10)with integer power H≥ (⌈log2 x⌉+ 2)5).
+Third, we resolve the behavior at the open endpointc = 1: under smooth prime density,
+the optimal prime-power allocation (exponent2on[ y,
+√
+2y], exponent1on(
+√
+2y,w]) yields
+the strict second-order deficitIsmooth(z) = 2 − 4(
+√
+2−1)√
+logzlog logz
++ o(... ) <2, whereas under any
+quasi-Riemann HypothesisΘ = sup{Reρ : ζ(ρ) = 0}< 1(combining Diamond–Pintz oscillation
+atΘ = 1 /2with a Landau–Mellin theorem forΘ ∈(1/2,1)overcoming both the+ 1√ylogy
+Chebyshev bias and theO(y2(Θ−1)+2ε)upper-cutoff error), prime oscillations produce infinitely
+many squarefree abundant integers withP−(z) > √logz. Twenty constructive Lean 4.35.0
+theorems (0sorry,0 Classical.choice),16zero-float SHA-256 certificates, and56adversarial
+tests verify every bound.
+Keywords:Abundant numbers, integer factorization, divisor sums, Vandermonde matrices,
+Mertens’ theorem, Landau oscillation, formal verification, Lean 4.
+MSC 2020:Primary 11Y05; Secondary 11A25, 11N05, 68Q15.
+1
+
+--- Page 2 ---
+1 Introduction
+A positive integern isabundantif its divisor-sum function σ(n) = ∑
+d|nd satisfies σ(n) > 2n,
+equivalently if its abundancy indexI(n) = σ(n)/n exceeds2. Let A= {n≥ 1 : σ(n) >2n}. In a
+recent breakthrough [3], Shunia proved that membership inAand complete integer factorization
+are equivalent under deterministic polynomial-time Turing reductions ([3, Theorem 1.1]), combining
+two deterministic ingredients:
+1. Abundance-to-comparison reduction ([3, Theorem 1.2, Algorithm 1]):Sieving primes up
+to U = 2H2 with H≥ (⌈log2 x⌉+ 2)8 (hence U = O((logx)16)) and reserving primes via
+Baker–Harman–Pintz [1] constructs a coprime multiplierm deciding σ(x) ≥h via a single
+abundance queryz= mx0 with logz = O((logx)2)and least prime factorP−(z) ≥c√logz
+for any fixedc∈(0,1)([3, Theorem 5.2]).
+2. Nonadaptive power-sum reconstruction ([3, Theorem 3.1, Algorithm 2]):Setting M =
+⌈log2 n⌉and J = 48(1 + M)2, the2 M divisor sumsσ(nJ+s)(0 ≤s< 2M) recoverφ(w) =
+⌊wJ+1 /σ(wJ)⌋([3, Lemma 3.2], proved forJ≥ 16M) and isolate a cluster of full prime
+powers via a gap in[q1,2q1]([3, Lemma 3.3]) and anℓ×ℓHankel system ([3, Lemma 3.4]).
+For c >1, Shunia showed ([3, Theorem 5.2]) that only finitely many abundant integers satisfy
+P−(z) ≥c√logz, and explicitly left the critical endpointc= 1open:“The endpoint c= 1is not
+settled by the preceding arguments”[3, Section 5.2].
+Main Results
+Throughout, M := ⌈log2 n⌉for an integern≥ 2, andω(n)denotes the number of distinct prime
+divisors ofn.
+Theorem 1(16×Normalization Threshold and19×Rescaled-Vandermonde Contraction).Let
+n≥ 2, M = ⌈log2 n⌉, and letw≥ 2be any residual unitary divisor ofn with full prime powers
+q1 <···<q r (qi =pai
+i ).
+(a) Sharp Lemma 3.2 threshold:For every integerJ≥max(2,⌈log 2 w⌉),
+φ(w) =
+⌊
+wJ+1
+σ(wJ)
+⌋
+,(1)
+improving [3, Lemma 3.2] (J≥ 16M) by16 ×. Moreover,(1) is sharp to within2: for every
+w= 2pwith odd primepand anyJ≥ 1satisfying2 J+1 ≤p−1(in particular J = ⌊log2 w⌋−2
+wheneverp−1≥2 ⌊log2 w⌋−1),⌊w J+1 /σ(wJ)⌋>φ(w).
+(b) 19×contraction of Theorem 3.1:Rescaling Shunia’sℓ×ℓ Hankel system [3, Eq. (3.7)] toµi =
+B/qi and partitioning[log2 q1,log 2(3q1)]into at most r≤M subintervals yields deterministic
+nonadaptive complete factorization ofnfrom the2Mvaluesσ(n J+s)(0≤s<2M) with
+J=
+⌈
+48M2 + 636M
+19
+⌉
++ 1(orJ= 4M 2 + 31M+ 1on[q 1,2q1]),(2)
+reducing Shunia’s leading constant48in [3, Theorem 3.1] by an exact factor of19×, total
+abundance queries by19×, and abundance query bit-length (∝J2) by361×.
+Theorem 2(Bounded-ω(n)Linear-JCollapse and7.5-Degree Sieve Compression).
+(a) Linear exponent andO(1)divisor sums for ω(n) ≤k:If n≥ 2satisfies ω(n) ≤k, then2 k
+nonadaptive divisor sumsσ(nJ+s)(0≤s<2k) at thelinearexponent
+J=
+⌈48kM+ 636k
+19
+⌉
++ 1 =O(klogn)(3)
+2
+
+--- Page 3 ---
+determine the complete prime-power factorization ofn in deterministic polynomial time.
+In particular, for any two-prime-power integern= pa1
+1 pa2
+2 (k = 2, arbitrary multiplicities,
+including twin primes),4consecutive divisor sums atJ = 4M + 10suffice unconditionally.
+Combining with [3, Theorem 1.2] reduces the abundance reduction fromO((logn)4)queries
+ofO((logn) 6)bits toO(k 2(logn) 2)queries ofO(k 2(logn) 4)bits.
+(b) Sieve-exponent compression for Theorem 1.2:ReplacingH≥ (⌈log2 x⌉+ 2)8 in [3, Eq. (2.7)]
+with H≥ (⌈log2 x⌉+ 2)17/4 (exact Baker–Harman–Pintz exponent check17
+4 ·19
+40 = 323
+160 >2)
+or the integer powerH≥ (⌈log2 x⌉+ 2)5 (5 ·19
+40 = 19
+8 >2) preserves every hypothesis of [3,
+Lemma 2.3 and Theorem 1.2] while compressing the deterministic sieve boundU = 2H2 from
+O((logx)16)to O((logx)17/2)(a7 .5-degree polynomial speedup) orO((logx)10)(a6-degree
+integer-exponent speedup).
+Theorem 3(Smooth-PNT Deficit and Oscillation-Driven Existence at the Endpointc = 1).
+Consider integersz >1satisfying the critical roughness boundaryP−(z) ≥√logz left open in [3,
+Theorem 5.2].
+(a) Exact optimal prime-power rule and smooth-PNT deficit:Under the smooth prime model
+(θ(t) = t, M(t) = eγ logt, ∑
+p>T p−2 = (TlogT )−1), maximizing I(z)over all integers z
+with P−(z) ≥y := √logz assigns exponent2to all primes p∈ [y,
+√
+2y], exponent1to
+p∈ (
+√
+2y,w]with w= y2 + (2 −
+√
+2)y, and never uses exponent≥3for y≥ 3, yielding the
+exact strict deficit
+Ismooth(z) = 2− 4(
+√
+2−1)√logzlog logz +o
+( 1√logzlog logz
+)
+<2,(4)
+where4(
+√
+2−1) ∈(1.656,1.657). Thus smooth prime density alone cannot produce abundant
+integers atc= 1.
+(b) Infinitely many squarefree abundant integers atc = 1underΘ < 1:LetΘ := sup{Reρ :
+ζ(ρ) = 0}and supposeΘ <1(in particular, assume the Riemann HypothesisΘ = 1/2). For
+y >2, define the squarefree productz(y) := ∏
+y<p≤w(y) p with θ(w(y)) −θ(y) ≤y2 maximal,
+soP −(z(y))>y≥
+√
+logz(y)unconditionally.
+• IfΘ = 1 /2(RH), then log(I(z(y))/2) = −R(y) + O((logy)/y), and Diamond–Pintz
+[2, Theorem 1.1] yieldsR(y) = Ω−
+(log log logy√ylogy
+)
+, overcoming both the built-in+ 1√ylogy
+Chebyshev bias and theO((logy)/y)upper-cutoff remainder to produce infinitely many
+squarefree abundant integers withP−(z)≥ √logz+c 0
+(logz) 1/4 log log log logz
+log logz (c0 >0).
+• IfΘ ∈(1/2,1), thenlog(I(z(y))/2) = −g0(lny) + O
+( 1√ylogy + y2(Θ−1)+2ε)
+for g0(x) =
+h(x) −
+∫∞
+x h(t) dt, whose Laplace–Mellin transformL[g0](s) = log(sζ(s+1))+E(s)−H(0)
+s is
+holomorphic on( −1,∞)with uncanceled logarithmic branch points ats= ρ−1; since
+both −1
+2 <Θ−1and2(Θ −1) <Θ−1, Landau’s theorem forces−g0(lny) = Ω+(yσ∗)for
+every σ∗∈(max(−1
+2 ,2(Θ −1) + 2ε),Θ −1), again yieldinglog(I(z(y))/2) >0infinitely
+often.
+2 Sharp Normalization and19×Rescaled-Vandermonde Contrac-
+tion
+2.1 Proof of Theorem 1(a):16×Sharpening of Shunia Lemma 3.2
+Proof of Theorem 1(a).Let w = ∏r
+i=1 qi with qi = pai
+i distinct full prime powers and P :=∏r
+i=1(1−p−1
+i q−J
+i ). FromShunia’sEuleridentity φ(w)σ(wJ)/wJ+1 = P <1, wehavewJ+1 /σ(wJ) =
+3
+
+--- Page 4 ---
+φ(w)/P >φ(w), and its integer part equalsφ(w)if and only ifφ(w)/P <φ(w) + 1, equivalently
+(φ(w) + 1)(1−P)<1(Lean 4 Theorem 4). Sincew≥2,φ(w)≤w−1, soφ(w) + 1≤w.
+By Bernoulli’s union bound,1 −P≤ ∑r
+i=1 p−1
+i q−J
+i . Because the prime basesp1,...,p r are
+pairwise distinct and qi ≥p i, at most one term has pi = 2, at most one has pi = 3, and
+every remaining pi is an odd integerm≥ 5. For every J≥ 2and every odd integer m≥ 5,
+5J−1 (m−2)m≤m J+1 (Lean 4 Theorem 2), so
+1−P≤2 −(J+1) + 3−(J+1) + 5−(J−1)
+∞∑
+k=2
+1
+(2k−1)(2k+ 1) .
+The telescoping series equals∑∞
+k=2
+1
+2
+( 1
+2k−1 − 1
+2k+1
+)
+= 1
+6 (Lean 4 Theorem 3). By induction on
+J≥2,
+3−(J+1) + 1
+6 5−(J−1) <2 −(J+1)
+(atJ = 2, 1
+27 + 1
+30 = 19
+270 < 1
+8 , and each stepJ↦→J+1shrinks the left-hand side by at least a factor of
+1/3versus1 /2on the right; Lean 4 Theorem 1,cert01). Hence1 −P <2−(J+1) +2−(J+1) = 2−J for
+every w≥ 2and J≥ 2, regardless ofω(w). WhenJ≥max (2,⌈log 2 w⌉), we have2J ≥w≥φ (w)+1,
+giving(φ(w) + 1)(1−P)<w·2 −J ≤1, which proves (1) (cert02).
+For sharpness, takew= 2pwith odd primep, soφ(w) = p−1and σ(wJ) = (2J+1 −1)(pJ+1 −
+1)/(p−1). Whenever2 J+1 ≤p− 1 = φ(w), Lean 4 Theorem 5 proves(φ(w) + 1)(2J+1 −1) <
+φ(w)2J+1 , and multiplying by(pJ+1 −1)/(p−1) <pJ+1 /(p−1)gives( φ(w)+1)σ(wJ) <2J+1 pJ+1 =
+wJ+1 , so⌊wJ+1 /σ(wJ)⌋≥φ(w) + 1>φ(w)(Lean 4 Theorem 6,cert03).
+2.2 Proof of Theorem 1(b): Rescaled Factorial Vandermonde and[q1,3q 1]Gap
+Lemma 2.1(Logarithmic Gap on[ q1,3q1)).Let w = ∏r
+i=1 qi (2 ≤q1 <···< q r) be a residual
+divisor ofn≥ 2. There exist an index1≤ℓ≤r , B = qℓ ∈[q1,3q1), andρ> 1satisfying ρr ≥3
+(hence log2 ρ≥ log2 3
+r > 19
+12M) such that the nontrivial unitary divisors ofw at mostB are precisely
+q1,...,q ℓ, while every other nontrivial unitary divisor ofwis at leastρB.
+Proof. Let q1 <···< q m < 3q1 be all full prime powers ofw strictly below3 q1 (1 ≤m≤r ).
+Set xi = log2 qi for1 ≤i≤m and xm+1 = log2(3q1). The m intervals[ xi,xi+1]partition
+[log2 q1,log 2(3q1)]of length log2 3, so by pigeonhole some indexℓ∈{ 1,...,m} satisfies xℓ+1 −xℓ ≥
+log2 3
+m ≥ log2 3
+r . Put B = qℓ < 3q1 and ρ = 2 xℓ+1/B≤ 3q1/B. Since any composite unitary
+divisor of w is at leastq1q2 ≥3q1 > B, every nontrivial unitary divisor≤B is an individual
+component q1,...,q ℓ (even whenq1 = 2,q2 = 3and q1q2 = 6 = 3 q1, because B <3q1 strictly!).
+Every remaining individual component qj (j > ℓ) and every composite unitary divisor is at
+least min(qℓ+1,3q1) = ρB. Finally,3 12 = 531441 > 524288 = 2 19 (Lean 4 Theorem 12) gives
+log2 3>19/12, andr≤log 2 n≤M(cert07).
+Proof of Theorem 1(b).Adopt the notation of [3, Lemma 3.4], withB = qℓ < 3q1 and ρ from
+Lemma 2.1. Multiply rows (0 ≤s<ℓ ) of Shunia’s exact linear system∑ℓ
+k=1 ˆckξJ+s+k = −ξJ+s
+by BJ+s and introduce the rescaled unknowns˜ck = ck/Bk (so ˆ˜ck = ˆck/Bk). The unperturbed
+rescaled Hankel matrix is
+(Ares)s,k−1 =B J+s+kmJ+s+k =
+ℓ∑
+i=1
+p−1
+i µJ+1
+i µs
+iµk−1
+i , µ i := B
+qi
+∈[1,3),
+factoring asAres =V(µ)DV(µ) T withV(µ) s,i =µs
+i andD= diag(p −1
+i µJ+1
+i ).
+Exact factorial Vandermonde cancellation.Row i of V(µ)−1 holds the coefficients of the
+Lagrange polynomial Li(t) = ∏
+j̸=i(t−µ j)/(µi −µj). Its numerator has absolute coefficient
+sum ∏
+j̸=i(1 + µj) ≤4ℓ−1. Because q1 <···<q ℓ ≤B are distinct integers,|qj −qi|≥|j−i| , so
+4
+
+--- Page 5 ---
+Table 1: Concrete comparison of the required exponentJ across input bit-lengthsM = ⌈log2 n⌉
+(cert06).
+M(bits) Shunia Thm 3.1 This work ([q 1,2q 1]) This work ([q1,3q 1]) FactorJ Sh/J3q1 Boundedω(n) = 2
+64 202,800 18,369 12,492 16.23×266
+128 798,768 69,505 45,677 17.49×522
+256 3,170,352 270,081 174,135 18.21×1,034
+512 12,632,112 1,064,449 679,399 18.59×2,058
+1024 50,430,000 4,226,049 2,683,313 18.79×4,106
+2048 201,523,248 16,840,705 10,664,692 18.90×8,202
+∏
+j̸=i |qj−qi|≥ (i−1)!(ℓ−i)! ≥midFact (ℓ) := ⌊(ℓ−1)/2⌋! ⌈(ℓ−1)/2⌉!. Expanding the denominator
+produces an exact cancellation ofBℓ−2:
+∏
+j̸=i
+|µi −µj|=
+∏
+j̸=i
+B|qj −qi|
+qiqj
+= Bℓ−1 ∏
+j̸=i |qj −qi|
+qℓ−2
+i
+∏ℓ
+j=1 qj
+≥ B·midFact(ℓ)
+n ,
+usingq i ≤Band ∏ℓ
+j=1 qj ≤w≤n. Thus
+∥V(µ) −1∥∞ ≤ 4ℓ−1
+midFact(ℓ) ·n
+B
+(cert08). Since µi ≥1and pi ≤q i ≤B , we have∥D−1∥∞ = maxi(piµ−(J+1)
+i ) ≤B . Using
+∥V(µ) −T∥∞≤ℓ∥V(µ) −1∥∞,
+∥A−1
+res∥∞ ≤ℓ∥V(µ) −1∥2
+∞B≤ℓ
+(
+4ℓ−1
+midFact(ℓ)
+)2
+n2
+B.
+Perturbation and universal constant.By [3, Lemma 3.2], every entry of˜Ares−Ares andvres−v0,res
+has magnitude at mostBJ+s+k ·n(ρB)−(J+s+k) ≤nρ −J =: Eres. Moreover, sinceqi > B/3, we
+have Bℓ ≤3ℓ∏ℓ
+i=1 qi ≤3ℓn and1 + ∑ℓ
+k=1 |˜ck|= ∏ℓ
+i=1(1 + qi/B) ≤2ℓ, givingBℓ(1 + ∑ |˜ck|) ≤6ℓn.
+Thus, providedℓ∥A−1
+res∥∞Eres <1/2, we have∥˜A−1
+res∥∞≤2∥A−1
+res∥∞and
+∥ˆc−c∥∞ ≤B ℓ∥ˆ˜c−˜c∥∞ ≤2B ℓ∥A−1
+res∥∞Eres
+(
+1 +
+ℓ∑
+k=1
+|˜ck|
+)
+≤K 3(ℓ) n4
+B ρ−J,
+where K3(ℓ) := 2ℓ·42(ℓ−1) ·6ℓ/midFact(ℓ)2. By Lean 4 Theorems 7, 9, and 11 (cert05), midFact(ℓ+
+1) = ⌊(ℓ+ 1)/2⌋midFact(ℓ), so K3(ℓ)decreases strictly for all ℓ≥ 22(peaking at ℓ = 21) and
+satisfies K3(ℓ) < 253 forevery ℓ≥ 1. Since B≥ 2, K3(ℓ)/B <252. Notice thatℓ≤ 2Bℓ for all
+ℓ≥ 1and B≥ 2(Lean 4 Theorem 20), so the rounding inequality252n4ρ−J <1/2automatically
+implies the invertibility conditionℓ∥A−1
+res∥∞Eres <1/2. Taking base-2logarithms and usingn≤ 2M
+and log2 ρ >19/(12M)yields the sufficient condition19 J >12M(4M + 53) = 48 M2 + 636M
+(Lean 4 Theorem 13), i.e.,J=⌈(48M 2 + 636M)/19⌉+ 1.
+Repeating the identical argument on[q1,2q1]replaces(4 ,6,log 2 3)by(3 ,4,1)and K3(ℓ)by
+K2(ℓ) = 2 ℓ· 32(ℓ−1) ·4ℓ/midFact(ℓ)2 < 231 for allℓ≥ 1(peaking at ℓ = 13, strictly decreasing
+for ℓ≥ 14; Lean 4 Theorems 8 and 10,cert04), yieldingJ = 4M2 + 31M + 1. Since J≥M≥
+max(2,⌈log 2 w⌉)for M≥ 1, Theorem 1(a) applies at every residual stage, completing the proof
+(cert06,cert09).
+3 Bounded-ω(n)Linear-JCollapse and Sieve Compression
+Proof of Theorem 2.Part(a).When ω(n) ≤k, every residual divisorw|n has r≤k distinct full
+prime powers. In Lemma 2.1, the logarithmic gap therefore satisfieslog2 ρ≥ log2 3
+r ≥log2 3
+k > 19
+12k
+5
+
+--- Page 6 ---
+Figure 1: (a) Required exponentJ versus bit-lengthM = ⌈log2 n⌉: our19 ×general contraction
+(361×query bit-length reduction) and linear-J collapse forω(n) = 2. (b) Super-exponential decay
+of the universal rescaled factorial Vandermonde factorsK2(ℓ) <231 and K3(ℓ) <253 formalized in
+Lean 4 for allℓ≥1.
+independently of M. Substituting into Jlog 2 ρ > 4M + 53yields19 J > 12k(4M + 53) =
+48kM + 636k (Lean 4 Theorem 14), giving(3). Only orders1 ≤ℓ≤k need be tested, requiring
+2k consecutive sumsσ(nJ+s). Each queried integerx= nJ+s has logx = O(k(logn)2), so binary
+search takesO(k(logn)2)comparisons per sum—yielding O(k2(logn)2)abundance queries total,
+each ofO((logx) 2) =O(k 2(logn) 4)binary digits.
+For the sharp casek= 2(n=q 1q2 with2≤q 1 <q2), we split into two exhaustive cases:
+• If q2 >2q1, then orderℓ= 1with B = q1 separates q1 from bothq2 and q1q2 with gap ratio
+ρ=q 2/q1 >2and constantK 2(1) = 8<2 10.
+• If q2 ≤2q1, then orderℓ= 2with B = q2 has rescaled nodesµ1 = q2/q1 ∈(1,2]and µ2 = 1,
+and theonlyunwanted term in ξj is the single cross-term−p−1
+1 p−1
+2 (q1q2)−j, giving exact gap
+ratio ρ= (q1q2)/q2 = q1 ≥2regardless of how smallq2 −q1 is (Lean 4 Theorem 15), with
+constantK2(2) = 576<2 10 (Lean 4 Theorem 14).
+In both caseslog2 ρ≥1andK 2(ℓ)/B <29, soJ= 4M+ 10ensuresK 2(ℓ)n4B−1ρ−J <2 9 ·2 4M ·
+2−(4M+10) = 1/2, recoveringq1 (andq 2 =n/q1) deterministically from4sums (cert10).
+Part(b).In [ 3, Lemma 2.3], Baker–Harman–Pintz [1] guarantees≫X 0.475/kdistinct primes in
+[X,X(1+ 1
+16k)]where X = d−1/k ∈[S,S2). For fine levelsd< 1/H, S = H and k= ⌊logH(1/d)⌋=
+O(logx/logH ), while there areO(logx)levels in total. Thus the supply exceeds the total number
+of levels wheneverH19/40/(logx/logH ) ≫logx , which holds strictly forH≥ (⌈log2 x⌉+ 2)17/4
+since 17
+4 ·19
+40 = 323
+160 = 2 + 3
+160 > 2, and with an integer power forH≥ (⌈log2 x⌉+ 2)5 since
+5 ·19
+40 = 19
+8 = 2 + 3
+8 > 2(Lean 4 Theorem 16, cert11). Moreover, T = O(logx)still satisfies
+2T2 <H and u= (1 + 1/(2H2))⌈log2 x⌉= 1 + O(logx/H2)with O(logx/H2) = o(1/T), preserving
+every estimate in [3, Section 2] while loweringU = 2H2 from O((logx)16)to O((logx)17/2)or
+O((logx) 10).
+4 Resolution of Shunia’s Open Endpointc= 1
+Proof of Theorem 3.Part(a)(Optimal prime-power allocation and smooth-PNT deficit).Let y=√logz be large and writez= ∏
+p≥ypep with ∑
+peplogp = y2. Incrementing an exponentep = a↦→
+a+1costs logp in logz and multipliesI(z)by(1 −p−(a+2))/(1−p−(a+1)) = 1+ p−(a+1)(1+ O(p−1)),
+giving marginal return per unitlogz equal tog(p,a) =
+(
+1 + O(p−1)
+)
+/(pa+1 logp). At the upper
+6
+
+--- Page 7 ---
+prime cutoffw∼y 2, adding a new prime (a = 0) returns g(w,0) ∼1/(wlogw ) = 1/(2y2 logy).
+Forp∈[y,w]:
+• Incrementing a= 1 ↦→2returns g(p,1) ∼1/(p2 logp) ∼1/(p2 logy), which exceedsg(w,0)
+precisely whenp2 ≤2y2, i.e.,p≤
+√
+2y.
+• Incrementing a = 2 ↦→3returns g(p,2) ∼1/(p3 logy) ≤1/(y3 logy) ≪1/(2y2 logy), so
+exponent≥3is strictly suboptimal for ally≥3.
+For any thresholdαy(α≥ 1) assigning exponent2on[ y,αy]and exponent1on( αy,w], the budget
+logz = (θ(w) −θ(y)) + (θ(αy) −θ(y)) = y2 gives w= y2 + (2 −α)y under θ(t) = t, solog logw
+logy =
+log 2 + 1−α/2
+ylogy + O(y−2), while the squarefree deficiency on(αy,w]is ∑
+αy<p≤w p−2 ∼ 1
+αylogy (with
+O(y−2/logy )deficiency on[ y,αy]). Thus the leading coefficient of(ylogy )−1 in log(Ismooth(z)/2)
+is F(α) := 1 −α
+2 −1
+α. By constructive AM–GM (Lean 4 Theorem 17:(α
+2 + 1
+α)2 ≥2for every
+positive rationalα=a/b),F(α)attains its unique global maximum1−
+√
+2atα=
+√
+2, yielding
+log Ismooth(z)
+2 =−
+√
+2−1
+ylogy +o
+( 1
+ylogy
+)
+.
+Multiplying by2and substituting y = √logz (logy = 1
+2 log logz) yields(4), with4(
+√
+2− 1) ∈
+(1.656,1.657)(Lean 4 Theorem 18,cert12–cert13).
+Part(b)(Existence of squarefree abundant integers at c = 1underΘ < 1).For y > 2,
+define the squarefree productz(y) := ∏
+y<p≤w(y) p where w = w(y)is the largest prime with
+θ(w) −θ(y) ≤y 2. Because the lower inequalityy < pis strict,logz(y) = θ(w) −θ(y) ≤y 2 and
+P−(z(y))>y≥
+√
+logz(y)holdunconditionallyfor everyy >2, and
+I(z(y)) = M(w)
+M(y)
+∏
+y<p≤w
+(1−p −2), M(x) :=
+∏
+p≤x
+(
+1− 1
+p
+)−1
+.
+WritelogM(x) = log logx+γ+R(x). Since ∑
+y<p≤w log(1−p −2) =O
+( 1
+ylogy
+)
+,
+log I(z(y))
+2 =−R(y) +R(w) +
+(
+log logw−log logy−log 2
+)
++O
+( 1
+ylogy
+)
+.(5)
+We treat the two regimes ofΘ<1separately.
+Case 1:Θ = 1 /2(Riemann Hypothesis).Under RH, θ(t) = t+ O(
+√
+t(logt)2), so θ(w) =
+y2 + θ(y) +O(logw)gives w= y2 + O(y(logy)2), whencelog logw−log logy−log 2 = O((logy)/y).
+SimilarlyR(w) =O((logw)/ √w) =O((logy)/y), so (5) collapses to
+log I(z(y))
+2 =−R(y) +O
+(logy
+y
+)
+.
+By Diamond–Pintz [2, Theorem 1.1],M(y) −eγ logy = Ω±
+(log log logy√y
+)
+, i.e.,R(y) = Ω−
+(log log logy√ylogy
+)
+(already overcoming the+ 1√ylogy Chebyshev bias inside R(y)). Hence log(I(z(y))/2) =
+Ω+
+(log log logy√ylogy
+)
+≫logy
+y , giving infinitely many squarefree abundantz(y)with P−(z(y)) >
+√
+logz(y) ;
+reducingwslightly strengthens this toP −(z)≥ √logz+c 0
+(logz) 1/4 log log log logz
+log logz (c0 >0).
+Case 2:Θ ∈(1/2,1).Fix any ε> 0small enough that2(Θ −1) + 2ε< Θ −1. Because θ(t) =
+t+O(tΘ+ε), we havew= y2(1+O(y2(Θ−1)+2ε)), solog logw−log logy−log 2 = O(y2(Θ−1)+2ε/logy )
+and R(w) = O(wΘ−1+ε) = O(y2(Θ−1)+2ε). At the lower cutoffy, writingΠ( t) := ∑
+pk≤t1/k and
+u(t) := (Π( t) −li (t))/t, Stieltjes integration oflogM(y) −
+∫y
+2− t−1dΠ(t) = ∑
+p≤y<pk,k≥2
+1
+kpk =
+1√ylogy +O
+( 1√y(logy) 2
+)
+yields the exact Mertens remainder decomposition
+R(y) =u(y)−
+∫∞
+y
+u(t)
+t dt+ 1√ylogy +O
+(
+1√y(logy) 2
+)
+,
+7
+
+--- Page 8 ---
+Figure 2: (a)16×reduction of Shunia’s Lemma 3.2 threshold toJ = max(2,⌈log 2 w⌉)alongside
+the exact failure boundary⌊log2 w⌋−2on w= 2p. (b) Scale separation at the critical endpoint
+c= 1: RH Mertens oscillations2/( √ylny)dominate both the upper-cutoff errorO((lny)/y)and
+the smooth-PNT deficit2(
+√
+2−1)/(ylny).
+and therefore (5) becomes
+log I(z(y))
+2 =−g 0(lny) +O
+(
+1√ylogy +y2(Θ−1)+2ε
+)
+, g 0(x) :=h(x)−H(x),
+where h(x) := u(ex)and H(x) :=
+∫∞
+x h(t) dt (so H′(x) = −h(x)). For Res > 0, integrating∫∞
+1 t−s−2(Π(t) −li (t)) dt by parts givesL[h](s) = log(sζ(s+1))+E(s)
+s+1 , whereE(s) := γ+ log log2 −
+∫slog 2
+0
+1−e−v
+v dv is entire. SinceL[H](s) = (H(0) −L[h](s))/swith H(0) = lims→0+ L[h](s) = E(0),
+we obtain the exact identity
+L[g0](s) = (s+ 1)L[h](s)−H(0)
+s = log(sζ(s+ 1)) +E(s)−H(0)
+s .
+Because sζ(s+ 1) > 0for all real s >−1and the numerator vanishes at s = 0, L[g0](s)is
+holomorphic on a neighborhood of the real ray(−1,∞)while possessing an isolated, uncanceled
+logarithmic branch point ats= ρ−1for every nontrivial zeroρ= β+ iγ of ζ. SinceΘ ∈(1/2,1),
+both −1
+2 <Θ −1and2(Θ −1) <Θ −1hold strictly (Lean 4 Theorem 19,cert14). Choosing
+σ∗∈(max(−1
+2 ,2(Θ−1)+2ε), Θ−1)and a zeroρwith β−1 >σ∗, Landau’s theorem on nonnegative
+Laplace integrands rules outg0(x) ≥−Ce σ∗x for x≥x 0, forcing−g0(lny) = Ω+(yσ∗) ≫ 1√ylogy +
+y2(Θ−1)+2ε. Thuslog(I(z(y))/2) >0for arbitrarily large y, producing infinitely many squarefree
+abundant integers withP−(z)> √logz.
+5 Formal Verification and Reproducibility
+All twenty algebraic, inductive, and rational-bracket lemmas underlying Theorems 1–3 are for-
+malized in constructive Lean 4.35.0 (lean/AbundantFactoring.lean,20theorems, zero external
+dependencies, compiled with-DwarningAsError=true, verified via#print axioms to use at most
+[propext, Quot.sound]with zerosorryand zeroClassical.choice).
+All exact numerical sweeps, rescaled Vandermonde inversions, end-to-end zero-float divisor-sum
+factorizations (including twin primes and clustered prime powers), BHP sieve-exponent margins,
+and exact prime-product evaluations are verified by the AST-audited zero-floating-point Python
+verifier verify_abundant_factoring.py (in verification/), generating16SHA-256 certificates
+with deterministic manifest hash
+8
+
+--- Page 9 ---
+09315cd7335d505f489587296ea44ccb817f31288ace6e0ebaa76325abc044be,
+accompanied by56passing adversarial tests intests/test_adversarial.py.
+AI Assistance Disclosure.In accordance with transparent scholarly practice, the author
+discloses that Google Antigravity assisted with rescaled Vandermonde constant optimization,
+Lean 4 proof engineering, zero-float Python verification scripts, and manuscript typesetting. All
+mathematical proofs and formal artifacts were mechanically verified and reviewed by the author,
+who retains sole responsibility.
+References
+[1] R. C. Baker, G. Harman, and J. Pintz,The difference between consecutive primes, II, Proc.
+London Math. Soc. (3)83(2001), no. 3, 532–562.
+[2] H. G. Diamond and J. Pintz,Oscillation of Mertens’ product formula, J. Théor. Nombres
+Bordeaux21(2009), no. 3, 523–533.
+[3] J. M. Shunia,Deterministic integer factorization from abundance decisions,
+arXiv:2611.34242v1, November 2026.
+9

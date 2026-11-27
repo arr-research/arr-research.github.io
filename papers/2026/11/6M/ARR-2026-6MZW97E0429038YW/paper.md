@@ -1,0 +1,517 @@
+# Representation-Independent Galois Barriers for Rank-1-Hessian Lorentz Systems, Optimal (k+2)-Site Turnpike Rulers, Sharp Mixed-Radix Freiman Compression, and Rational SDP Witnesses
+
+**Author:** Lluis Eriksson  
+**AIRR Identifier:** `ARR-2026-6MZW97E0429038YW` (v1)  
+**License:** CC-BY-4.0 (manuscript), MIT (verification repository)  
+**Verification Repository:** https://github.com/lluiseriksson/radical-turnpike-galois-barriers-and-sdp (`v1.0.0`)  
+**Canonical PDF SHA-256:** `0a5eb95b6529a9cc10acc68338c9509efc4a5f82a0f0659459079722d49910cc`
+
+## Abstract
+
+Given positive integers a_1,...,a_k and K, let S = sum_{i=1}^k sqrt(a_i) and Delta = S - K. Elder (arXiv:2611.34535v1) built a (k+3)-site Turnpike ruler with sep(Y) <= |Delta| and gap_*(Y) <= |Delta| (Proposition 1), reduced radical-sum Turnpike to integer Turnpike via a uniform base-(2M+1) Freiman isomorphism (Theorem 4), gave order-(2k+1) rational affine PSD pencils L_{a_i}, U_{a_i} (Proposition 5), and checked that for these specific encodings the Lorentz squared-residual Hessians span a k-dimensional space outside OpenAI's Corollary 7 whenever k > 1. We sharpen and generalize every pillar of Elder's framework in three constructively verified theorems. First, we establish a representation-independent Galois-theoretic classification: any rational affine Lorentz system of arbitrary dimension whose squared-residual Hessians span a subspace of dimension <= 1 linearizes onto a single rational quadric t = x^T Q x, forcing every attained rational-linear extreme value to have algebraic degree <= 2 over Q (even for indefinite or singular Hessians); by Kummer theory and Besicovitch's theorem, [Q(S):Q] = 2^rho where rho = dim_{F_2} span_{F_2}{[tilde d_j]} <= r_irr is the multiplicative Kummer F_2-rank of the r_irr distinct non-square square-free classes, and since rho <= 1 iff r_irr <= 1, S admits an attained rank-1-Hessian-span Lorentz formulation of any size if and only if r_irr <= 1 (ruling out all rational reformulations for r_irr >= 2). Second, we eliminate the auxiliary gap B from Proposition 1 to obtain a strictly minimal (k+2)-site ruler saving k+2 distances for all k >= 1, and replace Elder's uniform radix 2M+1 in Theorem 4 with per-coordinate mixed radices beta_j = 2M_j + 1, compressing bit-lengths from r log_2(2M+1) to sum_j log_2(2M_j+1) while proving beta_j = 2M_j + 1 (1 <= j <= r-1) is strictly necessary and sufficient for carry-free Freiman preservation. Third, via the exact field Galois norm N_{E/Q}(S-K) in Z\{0} and a {0,1}-gap-indicator envelope, we prove constant-free lower bounds |Delta| >= (K+S)^{-(2^rho - 1)}, sep(Y) >= (K+S)^{-(2^rho - 1)}, and gap_*(Y) >= (2K+2S)^{-(2^rho - 1)}, and construct explicit dyadic rational SDP witnesses of bit-length O(2^rho L) certifying L_{a_i} > 0 (S < K) or U_{a_i} > 0 (S > K), contrasted with irrationality of equality witnesses when any a_i is non-square. All 20 theorems are formalized in constructive Lean 4.35.0 (0 sorry, 0 Classical.choice) alongside 16 zero-float SHA-256 certificates and 56 adversarial tests.
+
+## Full Extracted Text
+
+--- Page 1 ---
+Representation-Independent Galois Barriers for
+Rank-1-Hessian Lorentz Systems, Optimal(k+ 2)-Site
+Turnpike Rulers, Sharp Mixed-Radix Freiman
+Compression, and Rational SDP Witnesses
+Lluis Eriksson
+Independent Researcher·AIRR.SCIENCE
+https://github.com/lluiseriksson/radical-turnpike-galois-barriers-and-sdp
+November 2026
+Abstract
+Given positive integers a1,...,a k and K, let S = ∑k
+i=1
+√ai and∆ = S−K . Elder
+(arXiv:2611.34535v1)constructeda( k+3)-siterealizableTurnpikerulerwithminimumspacing
+sep(Y) ≤|∆|and addition residualgap⋆(Y) ≤|∆|(Proposition 1), reduced unordered radical-
+sum Turnpike to integer Turnpike via a uniform base-β (β = 2M + 1) Freiman isomorphism
+(Theorem 4), gave rational affine PSD pencilsLai,Uai of order2 k+ 1for both threshold
+directions (Proposition 5), and checked that for these specific encodings the Lorentz squared-
+residual Hessians span ak-dimensional space, falling outside OpenAI’s strongly polynomial
+Corollary 7 (Hessian span dimension≤1) wheneverk >1.
+We sharpen and generalize every pillar of Elder’s framework in three constructively verified
+theorems. First, we upgrade Elder’s encoding-specific Hessian-span check into a complete
+representation-independentGalois-theoretic classification: any rational affine Lorentz system
+of arbitrary dimension whose squared-residual Hessians span a space of dimension at most1
+linearizes onto a single rational quadrict= xTQx, forcing every attained rational-linear extreme
+value to have algebraic degree at most2overQ; by Kummer theory and Besicovitch’s linear
+independence of distinct square-free radicals,[Q(S) : Q] = 2ρ where ρ:= dimF2 spanF2 {[ ˜dj]}≤
+rirr is the multiplicative KummerF2-rank of therirr distinct non-square square-free classes
+among {ai}, and sinceρ≤ 1 ⇐⇒r irr ≤1, S admits an attained rank-1-Hessian-span Lorentz
+formulation ofanysize if and only ifrirr ≤1(ruling out all rational reformulations forrirr ≥2).
+Second, we eliminate the auxiliary gapB from Elder’s Proposition 1 to obtain a strictly minimal
+(k + 2)-site ruler achieving sep(Y) ≤ |∆|and gap⋆(Y) ≤ |∆|for all k≥ 1(saving k + 2
+pairwise distances), and we replace Elder’s uniform radixβ = 2M + 1in Theorem 4 with
+per-coordinate mixed radicesβj = 2Mj+1, compressing encoded bit-lengths fromrlog 2(2M+1)
+to ∑r
+j=1 log2(2Mj+ 1)while proving thatβj = 2Mj+ 1(1 ≤j≤r− 1) is strictly necessary and
+sufficient for carry-free Freiman preservation on∏
+j[0,Mj]. Third, via the exact integer Galois
+norm NE/Q(S−K ) ∈Z\{ 0}over Gal(E/Q) ∼= {±1}ρ and a{0,1}-gap-indicator envelope, we
+establish explicit constant-free lower bounds|∆|≥ (K+ S)−(2ρ−1), sep(Y) ≥(K+ S)−(2ρ−1),
+and gap⋆(Y) ≥(2K+ 2S)−(2ρ−1) depending only onρ≤r irr, and translate strict feasibility in
+Elder’s Proposition 5 into constructive dyadic rational SDP witnessesx∈Q k of explicit bit-
+length O(2ρL)certifying Lai(xi) ≻0(when S <K) orUai(xi) ≻0(when S >K), contrasted
+with irrationality of equality witnesses whenever anyai is non-square. Twenty constructive
+Lean 4.35.0 theorems (0sorry,0 Classical.choice),16zero-float SHA-256 certificates, and
+56adversarial tests verify all results.
+Keywords:Sum-of-square-roots problem, Turnpike problem, semidefinite programming, Lorentz
+cone, Freiman isomorphism, Galois norm, formal verification, Lean 4.
+MSC 2020:Primary 90C22; Secondary 11Y16, 12F10, 68Q15.
+1
+
+--- Page 2 ---
+1 Introduction
+Deciding whetherS = ∑k
+i=1
+√ai ≤K for positive binary integersa1,...,a k,K in time polynomial
+in the binary input lengthL is a notorious open problem linking computational geometry, number
+theory, and semidefinite programming [3]. In a recent note [2], Elder connected this threshold
+problem to the exact Turnpike problem (reconstructingx1 <···<x n from the distance multiset
+Y= dist(X)) and to exact semidefinite feasibility, establishing four main results:
+1. Planted ruler margins ([ 2, Proposition 1, Corollary 2]):Using consecutive gaps
+(√a1,..., √ak,K,B )with B = 2(1 + K+ ∑
+iai), a( k+ 3)-site ruler satisfiessep(Y) ≤|∆|
+andgap ⋆(Y)≤|∆|when∆ :=S−K̸= 0.
+2. Uniform base-β Freiman recoding ([2, Theorem 4]):Unordered radical-sum Turnpike is
+polynomial-time many-one equivalent to integer Turnpike viaf(u) = ∑r
+j=1 wj(u)βj−1 with
+uniform radixβ= 2M+ 1, whereM= max u,j wj(u)(giving output bound(2M+ 1) r).
+3. Exact PSD pencils ([2, Proposition 5]):Both S≤K and S≥K reduce to feasibility of
+order-(2k+ 1)rational affine matrix pencilsL ai(xi)⪰0andU ai(xi)⪰0.
+4. Lorentz Hessian span ([2, Section 3.1, Eq. (5)]):For the specific blocksUai and Lai, the
+squared-residual Hessians8eieT
+i and −8aieieT
+i (verified constructively in Lean 4 Theorems 17–
+18, cert11) span a k-dimensional space, so OpenAI’s strongly polynomial Lorentz-cone
+algorithm [4, Corollary 7] (requiring Hessian span dimension≤1) does not apply directly
+when k> 1. Elder explicitly noted that“reformulation can change the span:
+√
+2 +
+√
+8 = 3
+√
+2
+needs only one block”[2, Section 3.1].
+Main Results
+Write each radicand uniquely as ai = dim2
+i with di square-free and mi ∈Z >0. Let r :=
+|{d1,...,d k}|≤k bethetotalnumberofdistinctsquare-freeclasses, let rirr := |{di >1}|∈{r− 1,r}
+be the number of distinctnon-squaresquare-free classes, and let
+ρ:= dim F2 spanF2
+{
+[ ˜d1],...,[ ˜drirr]
+}
+⊆Q ×/(Q×)2 (ρ≤r irr)
+be their multiplicative KummerF2-rank, writing S = α0 + ∑rirr
+j=1 αj
+√
+˜dj (α0 ∈Z ≥0, αj ∈Z >0,
+distinct square-free ˜dj >1).
+Theorem 1(Representation-Independent Galois Barrier for OpenAI Corollary 7).Let S =
+∑k
+i=1 ci
+√ai with ci ∈Q >0 and ai ∈Z >0, grouped asS = α0 + ∑rirr
+j=1 αj
+√
+˜dj (α0 ∈Q ≥0, αj ∈Q >0,
+distinct square-free˜dj >1) with KummerF 2-rankρ.
+(a) Quadratic algebraic-degree cap for rank-1Hessian spans:Suppose F= {x∈R N : ∥Ajx+
+fj∥2 ≤g T
+j x+ ηj, j= 1,...,m} isanyrational affine Lorentz system of arbitrary ambient
+dimension N and constraint countm (Aj ∈Q mj×N, fj ∈Q mj, gj ∈Q N, ηj ∈Q ) whose
+squared-residual HessiansHj = 2(AT
+j Aj −gjgT
+j )span a subspace of dimension at most1.
+Then every finite extreme valueminx∈FwTxor maxx∈FwTxof any rational linear functional
+w∈Q N attained onFis algebraic overQof degree at most2.
+(b) Exact Galois degree:By Kummer theory and Besicovitch’s theorem,[ Q(S) : Q] = 2 ρ.
+Moreover,ρ≤1⇐⇒r irr ≤1.
+(c) Exact representation-independent dichotomy:The threshold value S is representable as
+anattainedextreme value of a rational rank-1-Hessian-span Lorentz system of arbitrary
+dimension if and only ifrirr ≤1(equivalently ρ≤ 1). In particular, for everyrirr ≥2(e.g.,√
+2 +
+√
+3, irreducible minimal polynomialx4 −10x2 + 1; or
+√
+2 +
+√
+3 +
+√
+6, whererirr = 3
+and ρ= 2, minimal polynomialx4 −22x2 −48x−23),2 ρ ≥4 >2rules outeveryrational
+reformulation into OpenAI’s Corollary 7.
+2
+
+--- Page 3 ---
+Theorem 2(Optimal(k+ 2)-Site Ruler and Sharp Mixed-Radix Freiman Encoding).
+(a) Minimal( k+ 2)-site planted ruler:For everyk≥ 1and K >0, the( k+ 2)-site ruler with
+consecutive gaps(√a1,..., √ak,K)(eliminating Elder’s auxiliary gap B entirely and saving
+k+ 2pairwise distances) satisfiessep(Y) ≤|∆|and gap⋆(Y) ≤|∆|whenever∆ = S−K̸ = 0.
+Moreover,k+ 2sites is strictly minimal among rulers realizing thekconsecutive summand
+gaps andK.
+(b) Sharp per-coordinate mixed-radix Freiman compression:In [ 2, Theorem 4], let Mj :=
+maxuwj(u)be the per-coordinate maximum and setβj := 2Mj + 1. The mixed-radix map
+fmix(u) =
+r∑
+j=1
+wj(u)
+j−1∏
+i=1
+βi (1)
+induces an exact polynomial-time bijection between normalized radical rulers and normalized
+integer rulers with output bound∏r
+j=1(2Mj + 1) ≤(2M+ 1)r (achieving exponential compres-
+sion(2 M1 + 1) ·3r−1 versus(2 M1 + 1)r when M1 = M≥ 2and Mj>1 = 1). Furthermore,
+for every coordinate1 ≤j≤r− 1, βj = 2Mj + 1isstrictly necessaryfor carry-free Freiman
+preservation on∏r
+j=1[0,Mj]: for every1 ≤β1 ≤2M1, explicit vectorsu,v,w∈ [0,M1]×[0,1]
+(strictly positive whenβ1 ≥2) satisfyu+v̸=wyetf mix(u) +fmix(v) =fmix(w).
+Theorem 3(Explicit Galois-Norm Margin Bounds and Constructive Rational SDP Witnesses).
+Let S = ∑k
+i=1
+√ai = α0 + ∑rirr
+j=1 αj
+√
+˜dj (α0 ∈Z ≥0, αj ∈Z >0, distinct square-free˜dj > 1) with
+KummerF 2-rankρ≤r irr,E:=Q(
+√
+˜d1,...,
+√
+˜drirr), andK∈Z >0.
+(a) Explicit universal margin lower bounds:Whenever∆ =S−K̸= 0, the exact field Galois norm
+NE/Q(S−K ) = ∏
+σ∈Gal(E/Q) σ(S−K )is a nonzero rational integer (|NE/Q(S−K )|≥ 1),
+yielding
+|∆| ≥(K+S) −(2ρ−1),(2)
+and on the(k+ 2)-site ruler of Theorem 2(a), the margins satisfysep(Y) ≥(K+ S)−(2ρ−1)
+andgap ⋆(Y)≥(2K+ 2S) −(2ρ−1), depending only on the Kummer rankρ≤rirr ≤k.
+(b) ConstructiverationalSDPwitnessesandequalitydichotomy:Let Sup := α0+∑rirr
+j=1 αj(⌊
+√
+˜dj⌋+
+1)≥Sand setq:= (2 ρ −1)⌈log 2(K+S up)⌉+⌈log 2 k⌉+ 1 =O(2 ρL),D:= 2 q.
+• If S <K, thenxi = pi/D with pi := ⌊D√ai⌋+ 1satisfies Lai(xi) ≻0strictly for all i
+and ∑k
+i=1 xi <K, giving an explicit rational witness for [2, Eq. (3)].
+• If S >K, thenxi = pi/D with pi := ⌈D√ai⌉−1satisfies Uai(xi) ≻0strictly for all i
+and ∑k
+i=1 xi >K, giving an explicit rational witness for [2, Eq. (4)].
+• If S = K, the unique real feasible pointxi = √ai of [2, Eqs. (3)–(4)] is rational if and
+only if everyai is a perfect square (rirr =ρ= 0).
+2 Representation-Independent Galois Barrier
+Proof of Theorem 1.Part(a).For each Lorentz constraint ∥Ajx+ fj∥2 ≤gT
+j x+ ηj (j = 1,...,m ),
+its squared residualqj(x) := ∥Ajx+ fj∥2
+2 −(gT
+j x+ ηj)2 is a quadratic polynomial overQ with
+constant HessianHj = 2(AT
+j Aj −gjgT
+j ). By hypothesis,dim span{H1,...,H m}≤ 1, so there exist
+a single symmetric rational matrixQ∈Q N×N and scalarsλj ∈Q such thatHj = 2λjQ for allj,
+whenceq j(x) =λj(xTQx) +bT
+j x+c j withb j ∈Q N,cj ∈Q.
+Introducing one scalar variablet∈R constrained by the single rational quadrict = xTQx,
+every squared-residual inequalityqj(x) ≤0becomes purely linear in( x,t): λjt+ bT
+j x+ cj ≤0
+(Lean 4 Theorem 3), alongside the linear nonnegativity cutsgT
+j x+ ηj ≥0. ThusFis the projection
+3
+
+--- Page 4 ---
+onto xof P∩Q, whereP⊂R N+1 is a rational polyhedron andQ= {(x,t) : xTQx= t}is a single
+rational quadric.
+Let v∗= min(x,t)∈P∩QwTx(the max case follows by negatingw) be attained at a point(x∗,t∗),
+and letF⊆P be the unique face ofPwith( x∗,t∗) ∈relint (F), of dimensiond≥ 0, parameterized
+affinely overQ as( x(u),t(u)) = (x0 + Au,t0 + aTu)for u∈R d. Writeg(u) := x(u)TQx(u) −t(u) =
+uTMu+ pTu+ γ = 0with M∈Q d×d symmetric, p∈Q d, γ∈Q , and objectivewTx(u) = w0 + cTu
+(c∈Q d).
+• If d= 0, c= 0, orM = 0, then eitherwTx is constant onF or g(u) = pTu+ γ = 0is affine
+so F∩Q is a rational polyhedron. Every finite attained extreme value of a rational linear
+functional on a rational polyhedron is rational, sov∗∈Q(degree1≤2).
+• Suppose now d≥ 1, c̸= 0, and M̸ = 0. Decompose Rd = R⊕K orthogonally over Q,
+where K := ker(M)and R := K⊥ (so M|R is invertible overQ), and splitu = uR + uK,
+p= pR + pK, c= cR + cK. At any singular point ofg(u) = 0( ∇g(u∗) = 2Mu∗+ p= 0), we
+have pK = 0and u∗
+R = −1
+2 (M|R)−1pR ∈Q d; moreovercK must vanish (otherwise moving
+along v∈K with cT
+Kv <0preserves g(u∗+ τv) = g(u∗) = 0while strictly decreasing cTu
+inside relint(F)), so v∗ = w0 + cT
+Ru∗
+R ∈Q . At a smooth stationary pointu∗ ∈relint (F)
+(∇g(u∗) ̸= 0) of cTu subject to g(u) = 0, the Lagrange condition givesc = λ∇g(u∗)for
+some λ∈R\{ 0}(since c̸= 0). Setting µ := 1 /λ̸= 0yields2 Mu∗
+R + pR = µcR and
+pK = µcK. If pK ̸= 0, then cK is a nonzero rational multiple ofpK, fixing µ = µ0 ∈Q
+uniquely; henceu∗
+R = 1
+2 (M|R)−1(µ0cR−pR) ∈Q d, andg(u∗) = 0fixes pT
+Ku∗
+K = µ0cT
+Ku∗
+K ∈Q ,
+giving v∗ ∈Q . If pK = 0, then µcK = 0with µ̸= 0immediately forces cK = 0, and
+u∗
+R(µ) = 1
+2 (M|R)−1(µcR −pR)yields
+v∗ =
+(
+w0 −1
+2 cT
+R(M|R)−1pR
+)
++ 2αµ, g(u ∗
+R(µ)) =αµ 2 +δ= 0,
+where α := 1
+4 cT
+R(M|R)−1cR ∈Q and δ := γ− 1
+4 pT
+R(M|R)−1pR ∈Q . Even when M|R is
+indefinite andα= 0, the term2αµvanishes identically, givingv∗= w0 −1
+2 cT
+R(M|R)−1pR ∈Q
+directly! When α̸= 0, completing the square (Lean 4 Theorem 4,cert15) gives(2αµ)2 =
+−4αδ∈Q, sov ∗∈Q(
+√
+−4αδ)has algebraic degree at most2overQ.
+Parts(b)–(c).By Kummer theory, E = Q(
+√
+˜d1,...,
+√
+˜drirr)has degree[ E : Q] = 2 ρ and
+Galois group Gal(E/Q) ∼= {±1}ρ, acting on each
+√
+˜dj by a characterχj : Gal(E/Q) →{±1}.
+Any two distinct automorphismsσ̸= σ′ ∈Gal (E/Q)disagree on at least one generator
+√
+˜dj,
+so σ(S) −σ ′(S) = ∑rirr
+j=1(χj(σ) −χj(σ′))αj
+√
+˜dj is a nonzero Q-linear combination of distinct
+square-free radicals (αj >0), hence nonzero by Besicovitch’s theorem [1]. ThusS has2 ρ distinct
+Galois conjugates and[Q(S) :Q] = 2 ρ.
+Moreover, ρ≤ 1 ⇐⇒r irr ≤1: if rirr ≥2, then the subgroupG:= spanF2{[ ˜d1],..., [ ˜drirr]}⊆
+Q×/(Q×)2 contains the three distinct elements{1,[ ˜d1],[ ˜d2]}, forcing |G|= 2 ρ ≥4and hence
+ρ≥ 2and[ Q(S) : Q] = 2ρ ≥4 > 2(Lean 4 Theorem 1; concretely for
+√
+2 +
+√
+3, x4 −10x2 + 1
+is constructively irreducible overQ, Lean 4 Theorem 2,cert01). Conversely, when rirr ≤1,
+S = α0 + α1
+√
+˜d1 requires at most one2×2block L˜d1(x)together with the linear shiftα0 (Lean 4
+Theorem 5, cert02), whose Hessian span has dimension≤1and attains S as min(α0 + α1x)
+subject toL ˜d1(x)⪰0.
+Remark2.1 (Multiplicative dependencies and rational summands).Perfect-square radicands (di = 1)
+contribute only a rational shiftα0 without changingQ(S). Multiplicatively dependent square-free
+radicands strictly lower the Kummer rankρ<r irr: forS =
+√
+2+
+√
+3+
+√
+6, rirr = 3yet
+√
+6 =
+√
+2
+√
+3
+gives ρ = 2and[ Q(S) : Q] = 4 < 8(exact minimal polynomial x4 −22x2 −48x−23, cert10).
+Because ρ≥ 2 ⇐⇒r irr ≥2, the representation barrier in Theorem 1(c) still holds for every
+rirr ≥2, while the margin and SDP witness exponents in Theorem 3 sharpen exponentially from
+2rirr −1to2 ρ −1.
+4
+
+--- Page 5 ---
+Figure 1: (a) Representation-independent Galois barrier for OpenAI Corollary 7: every rank-1-
+Hessian-span Lorentz system has boundary algebraic degree≤2, whereas Kummer rankρ≥ 2
+( ⇐⇒r irr ≥2) enforces[ Q(S) : Q] = 2ρ ≥4. (b) Per-coordinate mixed-radix Freiman bit-length
+upper boundlog 2(∏r
+j=1 βj)(β j = 2Mj + 1) versus Elder’s uniform base(2M+ 1)r.
+3 Optimal( k + 2)-Site Ruler and Sharp Mixed-Radix Compression
+Proof of Theorem 2.Part(a).Constructthe( k+2)-siteruler X = (0,√a1,√a1+√a2,...,S,S +K)
+with consecutive gaps( √a1,..., √ak,K)and distance multiset Y = dist(X)of size
+(k+2
+2
+)
+=(k+3
+2
+)
+−(k + 2)(Lean 4 Theorem 7, cert04). Both S and K occur as intervals inY; when
+∆ =S−K̸= 0, they are distinct labels, givingsep(Y)≤|S−K|=|∆|. Forgap ⋆(Y):
+• If k= 1, Y = {√a1,K, √a1 +K}. Using the repeated-label triple(K,K, √a1 +K)(explicitly
+permitted in [2, Eq. (1)], in contrast to Elder’s(k+ 3)-site ruler which exhibits a three-
+distinct-label triple( S,B,K + B)even at k= 1), |K+ K− (√a1 + K)|= |K− √a1|= |∆|
+(Lean 4 Theorem 6).
+• If k≥ 2, the intervals√a1, Srest := ∑k
+i=2
+√ai, andK all lie inY, giving|√a1 + Srest −K| =
+|S−K|=|∆|(Lean 4 Theorem 6,cert12).
+Finally, any ruler withk consecutive positive gaps√a1,..., √ak uses at leastk+ 1sites, and its
+pairwise distances are independent ofK; exposing an independent gapK (and, fork= 1, ensuring
+|Y|≥2sosep(Y)is defined) therefore requires at leastk+ 2sites, proving strict minimality.
+Part(b).Given normalized integer coordinate vectors w(u) ∈∏r
+j=1[0,Mj]on the square-free
+basis as in [2, Theorem 4], setβj = 2Mj+1and define fmix(u)by (1). By structural induction onr,
+fmix is unconditionally additive on coordinate-wise sums (Lean 4 Theorem 8):fmix(w(u) +w(v)) =
+fmix(u) + fmix(v). Since0 ≤w j(u) + wj(v) ≤2Mj < βj and0 ≤w j(w) ≤M j < βj at every
+coordinate j, carry-free uniqueness of mixed-radix digits (Lean 4 Theorem 9) proves injectivity
+and the exact Freiman equivalenceu+ v = w⇐⇒f mix(u) + fmix(v) = fmix(w)( cert05). The
+identical argument as in [2, Theorem 4] induces a bijection between normalized realizations, with
+every encoded label bounded strictly by∏r
+j=1(2Mj + 1)(exponentially smaller than(2 M + 1)r
+wheneverM1 =M≥2andM j>1 = 1; Lean 4 Theorem 11,cert16).
+For sharp necessity ofβj = 2Mj + 1at any lower coordinate1 ≤j≤r− 1(without loss of
+generality j = 1on[0 ,M1]×[0,1]with β2 = 3; noteβr does not enter(1)), let1 ≤β1 ≤2M1 be any
+smaller radix. Ifβ1 = 1, injectivity already fails on(1,0) ̸= (0,1)( fmix = 1). If2 ≤β1 ≤M1, take
+strictly positive labelsu= (β1 −1,0), v= (1,0), w= (0,1); ifM1 <β1 ≤2M1, takeu= (M1,0),
+v= (β1 −M1,0), w= (0,1). In all casesu,v,w∈ [0,M1] ×[0,1]and u+ v̸= w (second coordinate
+0̸= 1), yetf mix(u) +fmix(v) =β1 =fmix(w)(Lean 4 Theorem 10,cert06).
+5
+
+--- Page 6 ---
+4 Galois-Norm Margin Lower Bounds and Rational SDP Wit-
+nesses
+Proof of Theorem 3.Part(a).Write S−K = α0 −K + ∑rirr
+j=1 αj
+√
+˜dj ∈Z [
+√
+˜d1,...,
+√
+˜drirr], which
+is an algebraic integer in the Kummer extensionE = Q(
+√
+˜d1,...,
+√
+˜drirr)of degree2 ρ. The exact
+field Galois norm
+NE/Q(S−K) =
+∏
+σ∈Gal(E/Q)
+σ(S−K)
+is Gal(E/Q)-invariant and an algebraic integer, henceNE/Q(S−K ) ∈Z (for ρ = rirr = 2,
+NE/Q(√a+
+√
+b−K) = (K2 −a−b)2 −4ab; Lean 4 Theorem 13,cert03). When∆ = S−K̸ = 0, no
+Galois conjugate vanishes (sinceσ(S−K ) = 0 =⇒S−K = σ−1(0) = 0), so|NE/Q(S−K )|≥ 1.
+Because every σ∈Gal (E/Q)changes only the signs of
+√
+˜dj, each of the2 ρ −1non-identity
+conjugates satisfies |σ(S−K )|≤K + S, whence |∆|≥ (K + S)−(2ρ−1) (Lean 4 Theorem 12,
+cert07).
+On the( k+ 2)-site ruler of Theorem 2(a), every distanceu∈Y is a contiguous subsum of the
+k+ 1consecutive gaps g= (√a1,..., √ak,K)with indicator vector ϵu ∈{0,1}k+1. Consequently,
+for any u,v,w∈Y , each gap gℓ appears in u−v with coefficient ϵu,ℓ −ϵv,ℓ ∈{−1,0,1}and
+in u+ v−w with coefficient ϵu,ℓ + ϵv,ℓ −ϵw,ℓ ∈{−1,0,1,2}(Lean 4 Theorem 19). Applying
+any σ∈Gal (E/Q)term-by-term and using |σ(gℓ)|= gℓ gives |σ(u−v )|≤ ∑
+ℓgℓ = K+ S and
+|σ(u+ v−w )|≤ 2 ∑
+ℓgℓ = 2(K + S). Since u−v and u+ v−w are algebraic integers inE,
+every nonzero difference or triangle residual has|NE/Q|≥ 1, yieldingsep(Y) ≥(K+ S)−(2ρ−1) and
+gap⋆(Y)≥(2K+ 2S) −(2ρ−1).
+Part(b).Let D= 2q withq= (2ρ−1)⌈log2(K+Sup)⌉+⌈log2 k⌉+1. ThenD>k (K+Sup)2ρ−1 ≥
+k/|∆|, sok<D|∆|.
+• If S <K(|∆|= K−S ), setpi := ⌊D√ai⌋+ 1and xi := pi/D. Thenpi >D√ai >0, sop2
+i >
+aiD2 and by Sylvester’s criterion (Lean 4 Theorem 14),det(DLai(xi)) = ai(p2
+i −aiD2) >0,
+giving Lai(xi) ≻0strictly for every i. Moreover, pi ≤D √ai + 1, so∑k
+i=1 pi ≤DS + k <
+D(S+|∆|) =DK, i.e., ∑k
+i=1 xi <Kstrictly (Lean 4 Theorem 15,cert08,cert10).
+• If S > K(|∆|= S−K ), set pi := ⌈D√ai⌉− 1and xi := pi/D. Then0 ≤p i < D√ai,
+so p2
+i < aiD2 and det(DUai(xi)) = aiD2 −p2
+i > 0, giving Uai(xi) ≻0strictly for every i.
+Moreover, pi ≥D √ai −1, so ∑k
+i=1 pi ≥DS−k > D (S−| ∆|) = DK, i.e., ∑k
+i=1 xi > K
+strictly (Lean 4 Theorem 16,cert09,cert10,cert14).
+• If S = K, every feasible point of [2, Eq. (3) or Eq. (4)] is forced to the endpointxi = √ai; a
+rational coordinatexi = pi/D satisfies p2
+i = aiD2 (Lean 4 Theorem 20) if and only ifai is a
+perfect square (cert13).
+5 Formal Verification and Reproducibility
+All twenty algebraic, structural, and Sylvester-criterion theorems underlying Theorems 1–3 are for-
+malized in constructive Lean 4.35.0 (lean/RadicalTurnpikeSDP.lean,20theorems, zero external
+dependencies, compiled with-DwarningAsError=true, verified via#print axioms to use at most
+[propext, Quot.sound]with zerosorryand zeroClassical.choice).
+All symbolic Galois norms inE = Q(
+√
+˜d1,...,
+√
+˜drirr)over an exactF2-Kummer basis, minimal
+polynomial irreducibility checks, mixed-radix Freiman bijections and carry-collision witnesses,
+(k+ 2)-site ruler margins, and exact dyadic rational SDP strict-feasibility certificates are repro-
+duced by the AST-audited zero-floating-point Python verifierverify_radical_turnpike.py (in
+verification/), generating16SHA-256 certificates with deterministic manifest hash
+6
+
+--- Page 7 ---
+Figure 2: (a) Pairwise distance count of our minimal(k+2)-site ruler versus Elder’s(k+3)-site ruler
+in [2, Proposition 1], savingk+ 2distances and eliminating B. (b) Minimal dyadic precisionqmin
+of exact rational SDP witnesses versus the constructive Galois-norm guaranteeqGalois = O(2ρL)
+(Theorem 3(b), loaded directly fromcert10).
+Table 1: Exact symbolic Galois normsNE/Q(S−K ), minimal dyadic precisionqmin (D= 2qmin),
+and Theorem 3(b) guaranteeqGalois certifying strict rational SDP feasibility in [2, Proposition 5]
+(cert03,cert08–cert10,cert14).
+Instancer irr ρExactN E/Q(S−K)Directionq min qGalois
+√
+4 +
+√
+2vs4 1 1 2S <K(L a)2 5√
+2 +
+√
+3vs3 2 2−8S >K(U a)4 11√
+10 +
+√
+11vs6 2 2−215S >K(U a)2 14√
+19 +
+√
+32vs10 2 2−31S >K(U a)7 17√
+2 +
+√
+5vs4 2 2 41S <K(L a)2 14√
+2 +
+√
+3 +
+√
+6vs5 3 2−188S >K(U a)3 15√
+2 +
+√
+5 +
+√
+6vs6 3 3−35199S >K(U a)5 31√
+2 +
+√
+3 +
+√
+5vs5 3 3−37799S >K(U a)3 31
+7
+
+--- Page 8 ---
+7def50637082a141fe521bc20f0210b445acd3b93b6419e477d281f7cf37397c,
+paired with56passing adversarial tests intests/test_adversarial.py.
+AI Assistance Disclosure.In accordance with transparent scholarly practice, the author
+discloses that Google Antigravity assisted with Galois-norm certificate construction, Lean 4 proof
+engineering, zero-float Python verification scripts, and manuscript typesetting. All mathematical
+proofs and formal artifacts were mechanically verified and reviewed by the author, who retains sole
+responsibility.
+References
+[1] A. S. Besicovitch,On the linear independence of fractional powers of integers, J. London
+Math. Soc.15(1940), 3–6.
+[2] C. S. Elder,Square-root comparison, Turnpike, and exact semidefinite feasibility,
+arXiv:2611.34535v1, November 2026.
+[3] M. X. Goemans,Semidefinite programming and combinatorial optimization, Documenta
+Mathematica, Extra Vol. ICM 1998, III, 657–666.
+[4] OpenAI,Strongly polynomial linear programming, Preprint, November 24, 2026 edition,
+Corollaries 6–7, pp. 36–37.
+8
