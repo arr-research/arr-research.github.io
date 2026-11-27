@@ -1,0 +1,364 @@
+# Gauge-Invariant Dressed Thermodynamics of Ultrastrong-Coupling Mito-Polaritons: Virtual-Photon Passivity, Positive Zero-Point Energy Shifts, and Dipole-vs-Coulomb Dark-Mode Invariance
+
+> Machine-readable rendition extracted from the hash-identified canonical PDF. Mathematical typography may be degraded; cite and verify against `paper.pdf`.
+
+## Page 1
+
+```text
+Gauge-Invariant Dressed Thermodynamics of
+Ultrastrong-Coupling Mito-Polaritons: Virtual-Photon
+Passivity, Positive Zero-Point Energy Shifts, and
+Dipole-vs-Coulomb Dark-Mode Invariance
+Lluis Eriksson
+Independent Researcher (https://github.com/lluiseriksson)
+Dressed-USC Audit Continuing ARR-2025-2AQXS44H6Z8GQAG2 and ARR-2026-1E91AXEJYT890TQC
+November 27, 2026
+Abstract
+In ARR-2026-1E91AXEJYT890TQC (Nov. 26, 2026),
+we showed that the 71.0-THz mitochondrial
+cristae polariton model of Yang, Gu, and Song
+(bioRxiv:10.64898/2026.09.10.750628v1, Sep. 2026,
+unrefereed) operates at resonance (ωc = ω0 = 87 THz)
+in the ultrastrong-coupling (USC) regime (η = g/ω0 =
+1264/6177 ≈ 0.2046 > 0.1) with a +3.61 THz Hopfield
+A2 shift (νHop + = 7569/71 ≈ 106.61 THz). In USC,
+bare-basis open-system equations break gauge invariance
+and predict unphysical vacuum heating or perpetual work
+extraction from virtual excitations. Here we derive the
+exact gauge-invariant dressed quantum thermodynamics
+of USC mito-polaritons, backed by a zero-floating-point
+verification suite (MITO-USC-DRESSED-THERMO-CERT-1.0)
+with 18 constructive Lean 4.36.0 integer/rational theo-
+rems (0 sorry, 0 custom axioms, 0 Classical.choice,
+-DwarningAsError=true), 16 canonical exact-Q certificates
+(C01--C16), and 26 unit/forgery/AST tests: (i) for every
+detuning (ωc, ω0, g), the Hopfield A2 normal frequencies
+obey (ν+ + ν−)2 = (ωc + ω0)2 + 4g2, enforcing a strictly pos-
+itive zero-point energy (ZPE) shift; at resonant 71/87 THz,
+∆EZPE = 128 71 h · THz ≈ 7.456 meV ≈ 0.279 kB T per cou-
+pled mode, reaching the order-of-magnitude Helfrich bilayer
+bending rigidity scale (κbend ≈ 15 kB T ) at M = 54 coupled
+modes (before geometric curvature factors); (ii) exact
+resonant 4 × 4 symplectic diagonalization yields identical
+ground-state bare photon and CH2 phonon occupations
+in both Coulomb (p · A) and Dipole (PZW, d · E) gauges,
+nvirt = (ω0 − ν−)2/(4ω0ν−) = 64/6177 ≈ 0.01036, exceed-
+ing bare 87-THz thermal occupation (¯nth(ω0) < 2 × 10−6
+at 310 K) by > 5180×, with exact position squeez-
+ing 6177/6305, marginal vacuum entanglement
+det(2Va) = 1 + 4g2/(ν+ + ν−)2 > 1, and exact interaction–
+diamagnetic cancellation ⟨G|Hint + HA2 |G⟩ = 0; (iii) by
+exact thermodynamic passivity (Werg(|G⟩, HC ) = 0) and
+dressed energy pinching (C∆D (|G⟩) = 0), virtual photons
+cannot drive ATP synthesis or incur holding power,
+whereas naive bare-basis master equations predict spurious
+excitation exceeding the true dressed lower-polariton KMS
+upward rate γ↑(ν−) = e−βhν− γ↓ at 310 K by > 610×
+(≈ 615× at 71 THz, ≈ 477× at 79 THz, ≈ 502× at 65 THz);
+(iv) under PZW transformation, canonical matter weights
+swap (wCoul mat = 7569/12610 ↔ wDip mat = 5041/12610),
+while the physical single-branch dipole transition element
+|⟨G|√2ω0qb|MP−⟩|2 = ω0ν−/(ω2 0 + ν2 −) = 6177/12610 ≈
+0.4899 (half the two-branch quadrature sum 6177/6305)
+and the (N − 1)-dimensional dark manifold remain strictly
+gauge-invariant; and (v) single-mode ∆EZPE ≈ 7.456 meV
+exceeds the 2.546 meV (kB T ln 1.1) barrier shift for +10%
+enzymatic turnover by > 2.9× as a collective energetic ceil-
+ing, while 1/N dilution across N = 106–108 uncorrelated
+dipoles restricts passive Regime I catalysis to coherent col-
+lective reaction-coordinate coupling or localized few-dipole
+microdomains.
+1 Introduction and Epistemic
+Scope
+In ARR-2025-2AQXS44H6Z8GQAG2 [3], we formulated an op-
+erational resource-boundary pipeline bounding the con-
+tinuous power required to sustain quantum coherence
+across biological membranes. Applying that framework in
+ARR-2026-1E91AXEJYT890TQC [4] to the unrefereed Septem-
+ber 2026 preprint of Yang, Gu, and Song [9] revealed that
+resonant ν− = 71 THz and ω0 = 87 THz place the proposed
+cristae polariton squarely in the ultrastrong-coupling (USC)
+regime (η = 1264/6177 ≈ 0.2046) [7].
+In USC, standard bare-basis approximations fail catas-
+trophically [2, 8]: the true ground state |G⟩ is a two-mode
+squeezed vacuum populated with virtual bare photons and
+phonons, so naive bare-basis master equations predict spu-
+rious zero-temperature heating and perpetual work extrac-
+tion. Throughout, we use ordinary frequencies ωc, ω0, ν± in
+THz (with quantum energy hν, setting h = 1 in dimension-
+less canonical coordinates). As in [4], we neither endorse
+nor refute the unrefereed empirical claims of [9], but de-
+rive exact thermodynamic constraints governing any USC
+vibrational polariton at 310 K.
+1
+```
+
+---
+
+## Page 2
+
+```text
+2 Five Exact Dressed-USC Results
+2.1 Universal Positive ZPE Shift and Hel-
+frich Scale Benchmark
+The gauge-invariant Hopfield A2 Hamiltonian [6] in di-
+mensionless canonical coordinates (qa, pa, qb, pb) takes the
+minimal-coupling Coulomb form
+HC = 1 2 p2 a + 1 2 (pb + 2gqa)2 + 1 2 ω2 c q2 a + 1 2 ω2 0 q2 b . (1)
+Its normal frequencies satisfy ν2 + + ν2 − = ω2 c + ω2 0 + 4g2 and
+ν+ν− = ωcω0. Adding 2ν+ν− proves a detuning-universal
+identity (Lean Thms. 1–2):
+(ν+ + ν−)2 = (ωc + ω0)2 + 4g2 =⇒ ν+ + ν− > ωc + ω0. (2)
+Thus forming a Hopfield polariton always raises the ground-
+state zero-point energy ∆EZPE = 1 2 h(ν+ +ν− −ωc −ω0) > 0.
+At resonance (ωc = ω0, ν+ν− = ω2 0 ), clearing ν− gives the
+exact square identity (Thm. 3; C01, Fig. 1a):
+ν+ + ν− − 2ω0 = (ω0 − ν−)2 ν− = 256 71 THz, (3)
+yielding ∆EZPE = 128 71 h · THz ≈ 7.456 meV ≈ 0.279 kB T
+per coupled mode at T = 310 K. Benchmarked against
+the bare Helfrich lipid bilayer bending modulus κbend ≈
+15 kB T ≈ 400.7 meV [5], M = 53 modes remain below
+κbend (395.2 meV, C02) whereas M ≥ 54 modes exceed it
+(402.6 meV, Thm. 4; C03, Fig. 1b). (Full mechanical defor-
+mation thresholds scale further by dimensionless curvature
+geometry, e.g. 8πκbend for closed spherical folds, so M = 54
+provides a conservative order-of-magnitude benchmark.)
+2.2 Exact Virtual Occupation, Squeezing,
+Entanglement, and Cancellation
+Setting S := ν+ +ν−, exact 4×4 symplectic diagonalization
+of (1) at resonance (ωc = ω0) gives ground-state covariances
+⟨q2 a⟩G = ⟨q2 b ⟩G = 1 S , ⟨p2 a⟩G = ⟨p2 b ⟩G = ν2 + + ν2 − 2S . (4)
+Substituting (4) into na = 1 2 (ω0⟨q2 a⟩G + ⟨p2 a⟩G/ω0 − 1) and
+using 2ω2 0 = 2ν+ν− collapses the numerator into S(S −2ω0)
+(Thm. 5):
+nvirt = ⟨G|a†a|G⟩ = ⟨G|b†b|G⟩
+= (ω0 − ν−)2
+4ω0ν−
+= 64 6177 ≈ 0.01036. (5)
+At 310 K, bare 87-THz thermal occupation obeys ¯nth(ω0) <
+2 × 10−6 [4], so virtual bare excitations outnumber bare
+thermal quanta by > 5180× (Thm. 6; C05--C08, Fig. 2a).
+Simultaneously, bare coordinates undergo exact position
+squeezing ⟨q2⟩G/⟨q2⟩0 = 2ω0ν−/(ω2 0 +ν2 −) = 6177/6305 < 1
+(Thm. 7), while the marginal symplectic purity invariant
+satisfies (Thm. 8; Fig. 2b)
+det(2Va) = 2(ν2 + + ν2 −) (ν+ + ν−)2 = 1 + 4g2 (ν+ + ν−)2 > 1, (6)
+certifying strict light–matter entanglement in |G⟩. More-
+over, ⟨G|H0|G⟩ = hω0(1 + 2nvirt) = 1 2 h(ν+ + ν−) =
+⟨G|HC |G⟩, proving exact cancellation of attractive p·A and
+repulsive A2 ground-state energies: ⟨G|Hint + HA2 |G⟩ = 0
+identically (Thms. 9, 17).
+2.3 Thermodynamic Passivity and Dressed
+KMS vs. Spurious Bare Heating
+Under the Power–Zienau–Woolley (PZW) unitary UPZW =
+e−2igqa qb , HD = U † PZWHC UPZW = 1 2 (pa − 2gqb)2 + 1 2 p2 b + 1
+2 ω2 0 (q2 a + q2 b ) preserves the spectrum, resonant covari-
+ances (4), and nvirt = 64/6177 identically (Thm. 10). Be-
+cause |G⟩ is the unique lowest eigenstate of HC , any uni-
+tary or passive evolution obeys Tr(HC ρ) ≥ E0, yielding
+identically zero ergotropy [1] Werg(|G⟩, HC ) = 0 (Thm. 11;
+C09--C11) and zero dressed energy-pinching coherence
+C∆D (|G⟩) = 0 (Thm. 12). Hence virtual photons cannot
+power ATP synthesis or incur holding power.
+Conversely, a naive bare-basis Lindblad dissipator γ0D[a]
+applied to |G⟩ excites polaritons at rate ∝ nvirtγ0 =
+(64/6177)γ0, violating the Second Law against the true
+dressed lower-polariton KMS upward rate [2] γ↑(ν−) =
+e−βhν− γ↓. Crucially, γ↑ is governed by the dressed fre-
+quency ν− rather than bare ω0 = 87 THz: at 310 K
+(kB T = 26.713 meV), e−βhν− ≈ 1.683 × 10−5 < 1/59,000
+at 71 THz, 4.879 × 10−6 < 1/204,000 at 79 THz, and
+4.262 × 10−5 < 1/23,400 at 65 THz. Thus under a flat-
+bath benchmark (γ0 = γ↓, with branch splitting and spec-
+tral density ratios J(ν−)/J(ω0) introducing O(1) prefac-
+tors), naive bare-basis heating still exceeds true dressed
+KMS excitation by > 610× (≈ 615×) at 71 THz (C14),
+> 470× (≈ 477×) at 79 THz (C15), and > 500× (≈ 502×)
+at 65 THz (C16; Thm. 14, Fig. 3b)—exhibiting a non-
+monotonic competition between growing nvirt and growing
+thermal factor e−βhν− as ν− softens.
+2.4 PZW Gauge Swap and Invariant Dark-
+Mode Scattering
+In Coulomb gauge, the lower-polariton canonical matter
+weight is wCoul mat = ω2 0 /(ω2 0 + ν2 −) = 7569/12610 > 1/2 [4];
+under PZW transformation into Dipole gauge, canonical
+weights swap to wDip mat = ν2 −/(ω2 0 + ν2 −) = 5041/12610 < 1/2
+with exact complementarity wCoul mat + wDip mat = 1 (Thm. 13;
+C12--C13, Fig. 3a). Crucially, for a physical vibrational
+bath coupled to the gauge-invariant dipole coordinate qb,
+exact diagonalization gives the single-branch transition ma-
+trix element
+|⟨G|
+√
+2ω0 qb|MP−⟩|2 = ω0ν− ω2 0 + ν2 − = 6177 12610 ≈ 0.48985, (7)
+correctly approaching 1/2 as g → 0 (whereas the two-
+branch sum 2ω0⟨G|q2 b |G⟩ = 2ω0ν−/(ω2 0 + ν2 −) = 6177/6305
+approaches 1). Because UPZW acts exclusively on the bright
+collective coordinate QB , the (N −1)-dimensional dark man-
+ifold remains strictly invariant with zero 1/N protection in
+every gauge (Thm. 15).
+2
+```
+
+---
+
+## Page 3
+
+```text
+2.5 Collective Catalysis Ceiling and 1/N
+Dilution
+Although virtual photons yield zero cyclic work (Werg = 0),
+a +10% enzymatic turnover enhancement requires a bar-
+rier shift of |∆Ea| = kB T ln(11/10) ≈ 2.546 meV at
+310 K. Single-mode ZPE shifting (∆EZPE ≈ 7.456 meV)
+exceeds |∆Ea| by > 2.9× (Thms. 16, 18; C14). How-
+ever, across an ensemble of N = 106–108 uncorrelated lipid
+dipoles (Sec. 2.4), the per-molecule vacuum shift dilutes as
+O(∆EZPE/N ): thus 7.456 meV acts as a collective single-
+mode ceiling, and realizing a +10% catalytic shift requires
+either coherent reaction-coordinate coupling to the collec-
+tive bright mode or localized few-dipole microdomains (plus
+resonant IR driving for irradiance-triggered gains over dark
+controls).
+3 Formal Certification Scope and
+Reproducibility
+Exact verification boundary. Layer 1
+(src/lean/MitoUscDressedThermoCert.lean, 18 con-
+structive integer/rational theorems compiled under
+Lean 4.36.0 -DwarningAsError=true without Math-
+lib, audited via #print axioms to depend strictly on
+propext and Quot.sound: 0 sorry, 0 custom axioms,
+0 Classical.choice, Table 1) certifies the exact al-
+gebraic, sum-square, squeezing, entanglement-purity,
+finite-level passivity, PZW-swap, dressed-KMS, and
+catalytic-margin inequalities over Z and N. Layer 2
+(src/python/mito_usc_dressed_thermo_verifier.py,
+AST-audited zero-float) verifies all 16 canonical
+exact-Q certificates (C01--C16, Table 2, archived in
+data/certificates/) and passes all 26 unit/forgery tests
+under pytest -q. Infinite-dimensional Hilbert-space op-
+erator diagonalization, unitary PZW conjugation, bosonic
+ergotropy, and KMS master-equation derivations reside in
+Section 2 prose rather than inside the Lean kernel.
+All Lean 4 proofs (src/lean/), zero-float
+verifier (src/python/), 16 JSON certificates
+(data/certificates/), and MANIFEST.sha256 are
+archived directly in this public AIRR record under MIT
+(code/Lean/data) and CC-BY-4.0 (manuscript/figures).
+AI Assistance Disclosure. Google Antigravity as-
+sisted with Lean 4 proof engineering, zero-float verifier im-
+plementation, figure/test automation, and LaTeX drafting.
+The author verified every derivation, Lean axiom audit, cer-
+tificate check, and figure, and takes full responsibility for
+all contents.
+References
+[1] Armen E. Allahverdyan, Roger Balian, and Theo M. Nieuwen-
+huizen. Maximal work extraction from finite quantum systems.
+Europhysics Letters, 67(4):565–571, 2004.
+[2] Félix Beaudoin, Jay M. Gambetta, and Alexandre Blais. Dissipa-
+tion and ultrastrong coupling in circuit QED. Physical Review A,
+84:043832, 2011.
+[3] Lluis Eriksson. Geometry, membranes, and life as a resource
+boundary: A correct-by-construction operational pipeline from
+static suppression to maintenance costs. 2025. AIRR.SCIENCE
+record ARR-2025-2AQXS44H6Z8GQAG2 (ai.viXra:2512.0085, v1
+Dec 2025; v2 Jul 2026).
+[4] Lluis Eriksson. Mito-polaritons meet the resource boundary: Ex-
+act Hopfield A2 invariants, thermodynamic maintenance horizons,
+and constructive Lean 4 certificates for the 71-THz mitochon-
+drial quantum state. 2026. AIRR.SCIENCE record ARR-2026-
+1E91AXEJYT890TQC (accepted Nov 26, 2026).
+[5] Wolfgang Helfrich. Elastic properties of lipid bilayers: Theory and
+possible experiments. Zeitschrift für Naturforschung C, 28:693–
+703, 1973.
+[6] John J. Hopfield. Theory of the contribution of excitons to
+the complex dielectric constant of crystals. Physical Review,
+112(5):1555–1567, 1958.
+[7] Anton Frisk Kockum, Adam Miranowicz, Simone De Liberato, Sal-
+vatore Savasta, and Franco Nori. Ultrastrong coupling between
+light and matter. Nature Reviews Physics, 1:19–40, 2019.
+[8] Omar Di Stefano, Alessio Settineri, Vincenzo Macrì, Luigi
+Garziano, Roberto Stassi, Salvatore Savasta, and Franco Nori.
+Resolution of gauge ambiguities in ultrastrong-coupling cavity
+quantum electrodynamics. Nature Physics, 15:803–808, 2019.
+[9] Yu Yang, Zhenglong Gu, and Bo Song. A quantum state
+of mitochondria in the living cell. 2026. bioRxiv preprint
+10.64898/2026.09.10.750628v1, 15 September 2026 (unrefereed).
+3
+```
+
+---
+
+## Page 4
+
+```text
+Table 1: All 18 constructive Lean 4.36.0 theorems in src/lean/MitoUscDressedThermoCert.lean (0 sorry, 0
+Classical.choice, -DwarningAsError=true).
+# Lean Theorem Identifier Exact Formalized Algebraic/Arithmetic Statement (over Z or N)
+1 detuned_zpe_sum_square_identity ν2 + + ν2 − = ω2 c + ω2 0 + 4g2 ∧ ν+ ν− = ωc ω0 =⇒ (ν+ + ν− )2 = (ωc + ω0 )2 + 4g2
+2 strict_positive_zpe_shift_all_detunings S, U ≥ 0 ∧ g > 0 ∧ S2 = U 2 + 4g2 =⇒ U < S (universal positive ZPE)
+3 resonant_zpe_exact_rational_shift ν+ ν− = ω2 0 =⇒ ν− (ν+ + ν− − 2ω0 ) = (ω0 − ν− )2 ≥ 0; ∆EZPE ∈ (7.45, 7.46) meV
+4 helfrich_bending_mode_count_horizon 53 · 7456 < 400700 < 54 · 7456 ≤ M · 7456 (M ≥ 54 crosses 15 kB T benchmark)
+5 exact_resonant_virtual_occupation_identity Q + 2ω2 0 = S2 =⇒ 2ω2 0 + Q − 2ω0 S = S(S − 2ω0 ); nvirt = 64/6177
+6 virtual_exceeds_thermal_5000x 64/6177 > 1/100; 64 · 500000 > 5180 · 6177 (> 5180× bare 87-THz thermal)
+7 ground_state_quadrature_squeezing_ratio ν− < ω0 =⇒ 2ω0 ν− < ω2 0 + ν2 − ; 12354/12610 = 6177/6305 < 1
+8 marginal_vacuum_entanglement_purity_invariant ν− < ν+ =⇒ 2(ν2 + + ν2 − ) − (ν+ + ν− )2 = (ν+ − ν− )2 > 0 (det(2Va ) > 1)
+9 exact_interaction_diamagnetic_cancellation (ν+ + ν− ) − (2ω0 + (ν+ + ν− − 2ω0 )) = 0 (cleared ⟨Hint + HA2 ⟩G = 0)
+10 coulomb_dipole_pzw_spectral_invariance Identical secular trace 2ω2 0 + 4g2 and determinant ω4 0 in Coulomb and Dipole gauges
+11 thermodynamic_passivity_zero_ergotropy E0 ≤ E1 ≤ E2 ∧ p1 , p2 ≥ 0 =⇒ E0 (p0 + p1 + p2 ) ≤ E0 p0 + E1 p1 + E2 p2
+12 dressed_vs_bare_coherence_separation kB T (κ0 · 0) = 0 (dressed) while ω0 (2nvirt ) > 0 (spurious bare energy)
+13 coulomb_vs_dipole_matter_weight_swap 0 < ν− < ω0 =⇒ 2ν2 − < ω2 0 + ν2 − < 2ω2 0 (wDip < 1/2 < wCoul )
+14 dressed_kms_vs_spurious_bare_heating 59000 γ↑ ≤ γ↓ =⇒ 610(6177γ↑ ) < 64γ↓ (> 610× @ 71; > 470× @ 79; > 500× @ 65)
+15 n_dipole_pzw_dark_manifold_invariance N ≥ 2 =⇒ 1 + (N − 1) = N ∧ N ≤ 2(N − 1) (dark-subspace dimension count)
+16 zpe_exceeds_catalytic_10pct_barrier 2546 · 29 < 7456 · 10 (collective ∆EZPE > 2.9 × |∆Ea | for +10% turnover)
+17 bare_virtual_energy_equals_zpe_shift Cleared resonant partition 2ω0 (na + nb ) = S − 2ω0 = 2∆νZPE
+18 dressed_usc_falsification_decidability Joint check: ∆νZPE > 3.5/2 THz, > 5180× bare thermal, M = 54, > 2.9× ceiling
+Table 2: Summary of all 16 verified MITO-USC-DRESSED-THERMO-CERT-1.0 canonical certificates (C01--C16, archived in
+data/certificates/).
+ID Mode / Submode Verified Instance Exact Certified Metrics
+C01 M1a Resonant ZPE 71/87 THz, M = 1 ∆νZPE = 128/71 ≈ 1.803 THz, ∆EZPE ≈ 7.456 meV < κbend
+C02 M1a Helfrich 71/87 THz, M = 53 Cumulative ZPE ≈ 395.2 meV < 400.7 meV (15 kB T , below benchmark)
+C03 M1a Helfrich 71/87 THz, M = 54 Cumulative ZPE ≈ 402.6 meV > 400.7 meV (crosses 15 kB T scale)
+C04 M1b Detuned ZPE ωc = 90, ω0 = 87, g = 18 (ν+ + ν− )2 = 32625 ∈ (180.62 , 180.72 ), ∆νZPE ∈ (1.80, 1.85) THz > 0
+C05 M2 Virtual/Ent. 71/87 THz, 310 K nvirt = 64/6177 ≈ 0.01036, > 5180 × ¯nth (87), σ2 q /σ2 q0 = 6177/6305, det(2Va ) > 1
+C06 M2 Virtual/Ent. 79/87 THz, 310 K nvirt = 16/6873 ≈ 0.00233, > 1160 × ¯nth (87), ⟨Hint + HA2 ⟩ = 0
+C07 M2 Deep USC 65/87 THz, 310 K nvirt = 121/5655 ≈ 0.02140, > 10698 × ¯nth (87), strong vacuum entanglement
+C08 M2 CD2 Isotope 56/61.5 THz, 310 K Deuterated lipid virtual dominance > 20× against 10−4 bare thermal ceiling
+C09 M3a Passivity |G⟩ (p0 = 1) Werg = 0 exact (passive: virtual photons yield zero cyclic work)
+C10 M3a Passivity Gibbs thermal (310 K) Werg = 0 exact (passive thermal equilibrium)
+C11 M3a Active Ctrl Inverted (p = ( 1 4 , 1 2 , 1 4 )) Werg > 0 (active non-passive control)
+C12 M3b PZW Swap 71/87 THz, N = 106 wCoul = 7569/12610, wDip = 5041/12610, single-branch norm = 6177/12610
+C13 M3b PZW Swap 79/87 THz, N = 108 wCoul = 7569/13810, wDip = 6241/13810, dark frac = (N − 1)/N
+C14 M4 KMS/Cat. 71/87 THz, 310 K Dressed KMS e−βh·71 < 1/59000 =⇒ > 610× (≈ 615×); ZPE/|∆Ea | ≈ 2.93
+C15 M4 KMS/Cat. 79/87 THz, 310 K Dressed KMS e−βh·79 < 1/204000 =⇒ > 470× (≈ 477×); ZPE/|∆Ea | ≈ 0.66
+C16 M4 KMS/Cat. 65/87 THz, 310 K Dressed KMS e−βh·65 < 1/23400 =⇒ > 500× (≈ 502×); ZPE/|∆Ea | ≈ 6.05
+Table 3: Operational separation of bare-basis artifacts, passive dark Regime I, driven Regime I catalysis, and active
+Regime II coherence in USC mito-polaritons.
+Physical Mechanism Virtual nvirt Ergotropy Werg Dressed C∆D Allowed Biological Effect at 310 K
+Naive bare-basis Lindblad (unphysical) 64/6177 Spurious > 0 Miscomputed Violates 2nd Law (> 610× fake KMS heating)
+Dressed Regime I vacuum (|G⟩, dark) 64/6177 0 (exact) 0 (exact) Zero ATP work; collective ZPE ceiling ≤ 7.46 meV
+Driven Regime I (71-THz resonant IR) 64/6177 0 (weak-drive) ≈ 0 Catalytic shift (requires collective/local coupling)
+Active Regime II coherence (C∆ > 0) 64/6177 > 0 > 0 Requires κ↓ ≲ 2 × 106 s−1 ([4])
+4
+```
+
+---
+
+## Page 5
+
+```text
+Figure 1: Positive Hopfield ZPE Shift and Helfrich Scale Benchmark. (a) Exact single-mode ZPE shift ∆EZPE =
+hω0(
+√
+1 + η2 − 1) vs. η, showing ∆EZPE ≈ 7.46 meV > 2.9× the 2.55 meV barrier scale (C01). (b) Cumulative ZPE
+across M coupled crista modes crossing κbend = 15 kB T between M = 53 (C02) and M = 54 (C03).
+Figure 2: Virtual Vacuum Dominance and Symplectic Entanglement. (a) Exact bare virtual occupation nvirt =
+(ω0 − ν−)2/(4ω0ν−) vs. bare 87-THz thermal ceiling ¯nth(ω0) < 2 × 10−6 (> 5180× at 71/87 THz, C05). (b) Position
+squeezing (6177/6305), momentum anti-squeezing, and marginal vacuum entanglement witness det(2Va) > 1.
+Figure 3: PZW Gauge-Weight Swap and Naive Bare-Basis Second-Law Violation. (a) Coulomb vs. Dipole
+canonical matter weights (wCoul + wDip = 1, C12--C13) alongside the gauge-invariant single-branch dipole transition
+element ω0ν−/(ω2 0 + ν2 −) = 6177/12610 → 1/2. (b) Spurious bare-basis excitation multiplier over true dressed lower-
+polariton KMS heating e−βhν− at 310 K under γ0 = γ↓ (C14--C16: > 610×, > 470×, > 500×; rounded conservative
+ratios 611×, 475×, 501×).
+5
+```
