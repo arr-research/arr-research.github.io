@@ -1,0 +1,639 @@
+--- Page 1 ---
+Sharp Spanning Multiplicity, Exact Characteristic
+Threshold for Polynomial Multiplication
+Log-Star-Convexity, and Unbounded Non-Crossing
+Subadditivity Gaps in the Asymptotic Spectrum of
+Tensors
+Lluis Eriksson
+Independent Researcher
+https://github.com/lluiseriksson/asymptotic-spectrum-sharp-spanning-and-poly-mult
+November 27, 2026
+Abstract
+Vrana and Zuiddam (arXiv:2611.34664v1, 2026) recently proved that the asymptotic
+spectrum ∆ of complex k-tensors is path-connected and contractible, established log-star-
+convexity for polynomial multiplication tensors πPm,n over C via compact SU(2) Haar
+averaging, extended log-star-convexity for matrix multiplication and graph tensors to arbitrary
+fields via finite spanning groups, and exhibited a single 5-tensor counterexample onC2 showing
+that geometric averages of non-crossing bipartition flattening ranks need not be B-good. We
+establish three sharp quantitative and structural strengthenings of their framework. First
+(Theorem 1), we replace their real-valued subspace-intersection bound qVZ(d, w) = d
+d−w (1 +
+lnd ) (Lemma 3.7) with the exact integer-floor greedy recurrence uj+1 = ⌊w
+d uj⌋, proving the
+universal bound qexact(d, w) ≤min 0≤t≤d(t + ⌊d(w/d)t⌋) ≤d that strictly beats qVZ(d, w) for
+every d≥ 2 and 1 ≤w≤d− 1, eliminates the unbounded lnd blowup at codimension r = 1
+(where qexact(d, d−1) = d is unconditionally optimal by codimension submodularity, saving
+7.93× at d = 1024), and tightens finite-copy reverse monotonicity (Lemma 3.8). Second
+(Theorem 2), we extend polynomial-multiplication log-star-convexity (Theorem 3.12) to
+everyfield F of positive characteristicp >maxj(mj+nj−2) using only the finite groupSL2(Fp)
+via an elementary Vandermonde matrix-unit extraction Bk−i
+1 (AkBk)Ak−j
+1 = k!
+i! (k−j )!Ei,j
+paired with Corollary 4.7; conversely, we prove via a constructive Diophantine impossibility
+theorem that for every nontrivialP m,n (m, n≥ 2), all three legs are GL2(F)-irreducible
+if and only if p > m+ n− 2, showing that the characteristic threshold is exact even
+for the full algebraic group GL2(F) and yielding the exact closed spectrum ∆ F(Pm,n) =
+[min(m, n), m+ n− 1] whenever |F| ≥m+ n− 2 and char(F) /∈ {2, . . . , m+ n− 2}. Third
+(Theorem 3), we generalize Example 6.2 ( d = 2,S3, ratio 3/(2
+√
+2)) to an explicit Sd+1-
+invariant 5-tensor family a(d) = a(d)
+1 + a(d)
+2 ∈ Bfor every d≥ 2 with exact flattening ranks
+(1, d), (d, 1), (d+1, d+1), proving wθ(a(d))/(wθ(a(d)
+1 )+ wθ(a(d)
+2 )) = (d+1)/(dt +d1−t) > 1 for
+everystrictly interior weight t∈ (0, 1) and unbounded growth ∼ 1
+2
+√
+d→ ∞(valid over every
+field with char(F) ∤ (d + 1)); and we upgrade qualitative path continuity (Theorem 2.10(v))
+to sharp quantitative directional Lipschitz regularity of t7→logF t(s) on [δ, 1 −δ ], illustrated
+by the exact W-state strict Jensen defect 5
+3 ln 2 −ln 3 (33 = 27 < 32 = 25). All results are
+backed by 20 constructive Lean 4.36.0 theorems (zero sorry, zero Classical.choice), 16
+AST-audited zero-float SHA-256 certificates, and 56 adversarial tests.
+AI Disclosure.Google Antigravity assisted with finite-field representation checks, exact rational
+matrix-rank verification, Lean 4 formalization, and manuscript drafting. All mathematical proofs,
+exact certificates, Lean proofs, and final claims were audited and verified by the author, who
+takes full responsibility for this work.
+1
+
+--- Page 2 ---
+1 Introduction
+Strassen’s asymptotic spectrum ∆( S) of tensors [ 2] organizes asymptotic tensor rank, subrank,
+and algebraic complexity via the compact Hausdorff space of monotone semiring homomorphisms
+f : S →R≥0, within which quantum functionals [ 4] provide a rich continuous family of spectral
+points. In a breakthrough preprint, Vrana and Zuiddam [1] introduced A-decomposable semirings
+and A-good functions (Section 2), proving that for any two spectral points f0, f1 ∈ ∆ with the
+A-cover property, the geometric-average envelope Ft = Ff1−t
+0 ft
+1
+defines a continuous path in ∆
+(Theorem 2.10), establishing path-connectedness and contractibility of the asymptotic spectrum
+of complexk-tensors (Theorem 1.1, Theorem 3.1).
+Three sharp quantitative and algebraic gaps remain directly exposed by [1]:
+1. Spanning multiplicity and finite-copy reverse monotonicity:To construct g1, . . . , gq ∈G
+with g1W∩ ··· ∩gqW = 0 for a proper subspace W⊊V of an irreducible d-dimensional
+representation, Lemma 3.7 of [ 1] bounds dimU j ≤d (w/d)j continuously and relaxes
+ln(d/w) ≥ 1 −w/d , yielding q≤ d
+d−w (1 + lnd ). At codimension r = d−w = 1, this
+grows as d(1 + lnd ) even though d hyperplanes suffice! How tightly can the integer-floor
+greedy recurrence uj+1 = ⌊w
+d uj⌋ sharpen Lemma 3.7 and finite-copy reverse monotonicity
+(Lemma 3.8)?
+2. Polynomial multiplication over positive-characteristic fields:In Section 3.7 (Theorem 3.12
+and Lemma 3.16), Vrana and Zuiddam prove log-star-convexity of polynomial multipli-
+cation tensors πPm,n only over C, relying on the compact Lie group SU(2) and Haar
+measure (Lemma 3.13). In Section 4, they extend matrix multiplication (Theorem 4.8)
+and graph/hypergraph tensors (Theorem 4.12, Corollary 4.15) to arbitrary fields using
+finite spanning groups (Corollary 4.7, Lemma 4.9), leaving polynomial multiplication in
+characteristic p > 0 open. Over which positive-characteristic fields does πPm,n admit
+finite-group absolute irreducibility, and what is theexactcharacteristic threshold?
+3. Non-crossing B-goodness failure and quantitative path regularity:Example 6.2 of [ 1]
+constructs a single 5-tensor a = a1 + a2 on C2 using S3 and equal weights θ = ( 1
+2 , 1
+2 ),
+obtaining a modest 6 .07% violation wθ(a)/(wθ(a1) + wθ(a2)) = 3/(2
+√
+2) ≈ 1.0607. Can
+this violation be made arbitrarily large, does it persist foreverystrictly interior weight
+(t, 1 −t ) (t∈ (0, 1)) and over finite fields, and can the qualitative continuity of t7→F t in
+Theorem 2.10(v) be upgraded to explicit quantitative Lipschitz bounds?
+Table 1 summarizes our complete resolution of all three problems.
+2 Main Theorems
+We adopt the exact notation of [1]: SF is the semiring of k-tensors over a field F, Ri(a) is the i-th
+flattening rank, eQ(s) and eR(s) are the asymptotic subrank and asymptotic rank, ∆ F = ∆(SF)
+is the asymptotic spectrum,P m,n = Pm
+u=1
+Pn
+v=1 eu ⊗e v ⊗e u+v−1 ∈F m ⊗F n ⊗F m+n−1 is the
+polynomial multiplication tensor, and Ai,Ac
+i ,B are the i-irreducible, compactly i-irreducible,
+and jointly irreducible concise tensor classes.
+Theorem 1(Exact Greedy-Floor Subspace Intersection and Finite-Copy Reverse Monotonicity).
+Let F be any field, let a finite group G (or a compact group K acting continuously over C) act
+irreducibly on a d-dimensional F-vector space V (d≥ 1), and let W⊊V be a proper subspace of
+dimension w = dimW < dand codimension r = d−w≥ 1. Define the exact integer-floor greedy
+sequenceu 0 :=d,u j+1 :=⌊ w
+d uj⌋, and hitting timeq exact(d, w) := min{j≥0 :u j = 0}. Then:
+(a) Existence and universal sharp bound qexact(d, w) ≤d .There exist g1, . . . , gq ∈G (or
+K) with q = qexact(d, w)such that g1W∩ ··· ∩gqW = 0. Moreover, uj+1 ≤u j − 1
+2
+
+--- Page 3 ---
+Table 1: Quantitative and structural sharpenings over Vrana and Zuiddam [ 1]
+(arXiv:2611.34664v1). All results are verified by 20 Lean 4.36.0 theorems and 16 zero-float
+certificates.
+Result / Property Vrana–Zuiddam [1] Present Work
+Subspace translate count
+q(d, w)
+d
+d−w (1 + lnd) (Lem. 3.7)q exact(d, w) ≤min t(t + ⌊d(w/d)t⌋) ≤d (Thm. 1)
+Codimension-1 translates
+(r= 1)
+d(1 + lnd) (Θ(lnd) excess) Exactq exact(d, d−1) =d(7.93×less at
+d= 1024)
+Half-dim translates
+(w=d/2)
+2(1 + lnd) Exact log 2 d+ 1 (2 ln 2≈1.39×savings)
+Pm,n log-star-convexityF=Cvia SU(2) (Thm. 3.12) EveryFof charp >max j(mj +n j −2) via
+SL2(Fp) (Thm. 2)
+Sharpness of char
+threshold
+Not analyzed All 3 legs GL 2(F)-irred⇐⇒p > m+n−2
+(m, n≥2)
+Spectrum ∆F(Pm,n) Connected overCExact [min(m, n), m+n−1] (|F| ≥m+n−2,
+p /∈[2, m+n−2])
+Non-crossingB-goodness
+gap
+Single d = 2 ex., 3
+2
+√
+2 (Ex. 6.2) Sd+1 family∀d≥2, t∈(0,1): d+1
+dt+d1−t → ∞
+(Thm. 3)
+Interpolation continuity Qualitative (Thm. 2.10(v)) Quantitative directional Lipschitz on [δ,1−δ]
+(W-state exact)
+whenever uj ≥ 1, so1 ≤q exact(d, w) ≤d (Lean Theorems 1–2; with qexact(d, 0) = 1),
+and qexact(d, w) < d
+d−w (1 + lnd )strictly for every d≥ 2and every1 ≤w≤d− 1
+(cert01–cert02, with ther= 1case formalized in Lean Theorem 19).
+(b) Two-phase closed form and exact sharpness at r = 1 and w = d/2.For every0 ≤t≤d ,
+ut ≤ ⌊d(w/d)t⌋, giving the two-phase upper bound (for1≤w≤d−1)
+qexact(d, w)≤q2ph(d, w) := min
+0≤t≤d
+
+t+
+
+d
+w
+d
+t
+≤min
+
+d,
+ lnd
+ln(d/w)
+
++ 1
+
+(1)
+(Lean Theorem 6). At codimension r = 1( w = d− 1), qexact(d, d−1) = d identically
+(Lean Theorems 3–4), which is unconditionally optimal foreveryhyperplane W⊊V
+by codimension submodularity (Lean Theorem 7), eliminating theΘ( lnd )blowup of [ 1,
+Lemma 3.7] (7.93× fewer translates at d = 1024). At half-dimension w = d/2( d = 2m), the
+recurrence reduces to uj+1 = ⌊uj/2⌋ (Lean Theorem 5), yielding qexact(2m, 2m−1) = m + 1
+identically and improving [1, Lemma 3.7] by an asymptotic factor2 ln 2≈1.386×.
+(c) Sharper finite-copy reverse monotonicity.Let a∈ Ai over any field F (or a∈ Ac
+i over
+C) and let b = (π⊗Id )a be a leg-i restriction with d = Ri(a)and r = Ri(b) ≥ 1. Then
+a≤ ⟨qexact(d, d−r)⟩ ⊗b(yielding a≤ ⟨d⟩ ⊗bat r = 1instead of ⟨⌊d(1 + lnd )⌋⟩ ⊗b).
+Furthermore, for every n≥ 1such that a⊗n is i-irreducible—which holds automatically for
+all n≥ 1over C (for Ai,Ac
+i , by Burnside’s theorem; [ 1, Lemma 3.8]) and over arbitrary F
+whenever a isabsolutely i-irreducible ([1, Lemma 4.6(iii)]) or a⊗n ∈ Ai is assumed ([1,
+Lemma 4.3])—we have a⊗n ≤ ⟨qexact(dn, dn −r n)⟩ ⊗b⊗n (cert03), strictly improving the
+finite-copy prefactor of [1, Lemmas 3.8 and 4.3].
+Theorem 2(Exact Characteristic Threshold for Polynomial Multiplication Log-Star-Convexity).
+Let F be any field of positive characteristic p >0, and for k≥ 0let ρk : SL2(Fp) →GL (F[x, y]k)
+be the action of the finite group SL2(Fp)(of order p(p2 − 1); Lean Theorem 8) on homogeneous
+degree-kpolynomials by(g·h)(w) =h(g −1w). Then:
+(a) Constructive SL2(Fp) spanning and positive-characteristic log-star-convexity.For every
+0 ≤k≤p− 1, spanF ρk(SL2(Fp)) = EndF(F[x, y]k), proved constructively by Vandermonde
+3
+
+--- Page 4 ---
+extraction of A1, Ak = Ek,0 and B1, Bk = E0,k from the upper and lower unipotent subgroups
+ofSL 2(Fp)and the matrix-unit identity
+Bk−i
+1 (AkBk)A k−j
+1 = k!
+i! (k−j)!E i,j (0≤i, j≤k),(2)
+whose scalar is nonzero in F×
+p (Lean Theorem 9,cert04). Consequently, πPm,n is absolutely
+i-irreducible for all i∈ [3]and π∈S 3 whenever p > m+ n− 2( cert05). By [ 1,
+Corollary 4.7], for any b1, . . . , br of the form πjPmj,nj overanyfield F of characteristic
+p >maxj(mj + nj − 2), log ∆F(b1, . . . , br)is star-convex with respect to every point of
+Γr := conv{(log Ri(bj))j∈[r] :i∈[3]}.
+(b) Exact sharp threshold and GL2(F) impossibility barrier.Conversely, for every nontrivial
+polynomial multiplication tensorP m,n (m≥ 2, n≥ 2) and every prime p≤m + n− 2,
+at least one of the three leg degrees k∈ {m− 1, n−1, m+ n− 2} admits an index
+j∈ {0, . . . , k}with p|
+ k
+j
+
+(Lean Theorem 10, cert08), so the nonzero GL2(F)-invariant
+subspace Sk := spanF{(αx + βy)k : α, β∈F} ⊆span{xk−ryr : p∤
+ k
+r
+
+}⊊ F[x, y]k is strictly
+proper; at k = p, Wp = spanF{xp, yp} is explicitly2-dimensional and GL2(F)-invariant
+(Lean Theorem 11, cert06–cert07). Thus all three legs ofP m,n (m, n≥2) are GL2(F)-
+irreducibleif and only if p > m+ n− 2, even though single legs such as k = 3, p= 2can be
+SL2(F4)-irreducible (cert09).
+(c) Exact single-tensor spectrum and ADE contrast over C.Whenever |F| ≥m + n− 2
+and char(F) /∈ {2, . . . , m+ n− 2} (covering every characteristic-0field and every field
+of characteristic p > m+ n− 2), Lagrange interpolation at min(m, n)points and at
+m + n− 2points plus ∞ combined with Part (a), Strassen’s field-extension invariance [ 2,
+Theorem 3.10], and Strassen duality [2, Theorem 3.8] yields the exact closed interval
+∆F(Pm,n) =
+
+min(m, n), m+n−1
+
+(3)
+(with interval endpoint ordering min(m, n) ≤m + n− 1formalized in Lean Theorem 12;
+cert10). In sharp contrast to characteristic p, the ADE classification of finite subgroups
+of SL2(C)bounds every finite-subgroup irrep dimension by6(binary icosahedral2 I, order
+120; cert16), explaining why [ 1] required compact SU(2)over C for m + n− 2 ≥ 6whereas
+finiteSL 2(Fp)reaches arbitrarily high degreek=p−1in characteristicp.
+Theorem 3(Unbounded Non-Crossing B-Goodness Violation and Quantitative Path Regularity).
+The following sharp negative and positive quantitative bounds hold for non-crossing geometric
+averages and Vrana–Zuiddam interpolation paths:
+(a) Unbounded Sd+1-invariant 5-tensor violation across all interior weights and fields.For
+every integer d≥ 2and every field F with char(F) ∤ (d + 1), let Vd = Fd carry the standard
+irreducible representation of Sd+1 permuting f1 = e1, . . . , fd = ed and fd+1 = −Pd
+j=1 ej.
+Setu:= Pd+1
+i=1 f⊗2
+i ∈V ⊗2
+d ,v:= Pd+1
+i=1 f⊗3
+i ∈V ⊗3
+d , and onk= 5legs define
+a(d)
+1 :=u 12 ⊗v 345, a (d)
+2 :=v 125 ⊗u 34, a (d) :=a (d)
+1 +a (d)
+2 .
+Then a(d)
+1 , a(d)
+2 , a(d) ∈ Bare concise and Sd+1-invariant with a(d) ≤a (d)
+1 ⊕a (d)
+2 , and for the
+non-crossing bipartitions B = {{1, 2}|{3, 4, 5},{3, 4}|{1, 2, 5}} their exact flattening-rank
+pairs are(1 , d),( d, 1), and( d + 1, d+ 1)(Lean Theorem 13, cert11–cert12). Hence for
+everystrictly interior weightθ= (t,1−t)witht∈(0,1)andeveryd≥2,
+wθ
+ 
+a(d)
+=d+ 1> d t +d 1−t =w θ
+ 
+a(d)
+1
+
++w θ
+ 
+a(d)
+2
+
+,(4)
+4
+
+--- Page 5 ---
+Figure 1:Greedy-floor spanning multiplicity and exact SL2(Fp)characteristic threshold.
+(a) Exact greedy-floor translate count qexact(d, w) vs. Vrana–Zuiddam’s bound d
+d−w (1 + lnd )
+([1, Lemma 3.7]) for codimension r = 1 and half-dimension w = d/2 (cert01), eliminating
+the lnd blowup at r = 1 (7 .93× savings at d = 1024). (b) Normalized Fp-span dimension
+dim spanρk(SL2(Fp))/(k + 1)2 across p∈ {2, 3, 5, 7} (cert06), exhibiting the sharp phase
+transition from full End(V) (0≤k≤p−1) to strict Frobenius obstruction (k≥p).
+with unbounded violation ratio d+1
+dt+d1−t ≥ d+1
+2dmax(t,1−t) → ∞as d→ ∞(Lean Theorems 14–16,
+cert13). At d = 2, t= 1
+2 , this recovers [ 1, Example 6.2] with ratio 3
+2
+√
+2 ; at d = 104, t= 1
+2 ,
+the violation exceeds50 ×. Thusnonon-degenerate geometric average w(t,1−t) (t∈ (0, 1))
+onBisB-good.
+(b) Quantitative directional Lipschitz regularity of interpolation paths.In the setting of [ 1,
+Theorem 2.10], let s∈ Shave eQ(s) > 0and set gs(t) := logF t(s)for t∈ [0, 1]. Then gs is
+convex on[0 , 1]with log eQ(s) ≤g s(t) ≤ (1 −t ) logf 0(s) + tlogf 1(s), and on every interior
+interval[ δ, 1 −δ ](0 < δ <1
+2 ), every pair δ≤t 1 < t2 ≤ 1 −δ satisfies the sharp directional
+Lipschitz bounds
+−log
+ 
+f0(s)/eQ(s)
+
+δ ≤ logF t2 (s)−logF t1 (s)
+t2 −t 1
+≤ log
+ 
+f1(s)/eQ(s)
+
+δ (5)
+(base-invariant in log, formalized in Lean Theorem 17; taking t1, t2 → 1
+2 yields the
+same bound for one-sided derivatives at δ = 1
+2 ), with endpoint slope bounds ∂+gs(0) ≤
+log(f1(s)/f0(s)) ≤∂ −gs(1). On the W-state W = e1 ⊗e 1 ⊗e 2 + e1 ⊗e 2 ⊗e 1 + e2 ⊗
+e1 ⊗e 1 ∈ (C2)⊗3, where eR(W) = R i(W) = 2(so fj(W) ≤ 2forevery f0, f1 ∈ ∆C)
+and eQ(W) = 2h(1/3) = 3 · 2−2/3 < 2(certified by3 3 = 27 < 32 = 25; Lean Theorem 18,
+cert14), the natural-logarithm symmetric Lipschitz constant is uniformly bounded by
+(5
+3 ln 2−ln 3)/δ≈0.056633/δ.
+3 Proof of Theorem 1: Exact Greedy-Floor Spanning
+Proof of Theorem 1. Part (a).Set U0 := V , so dimU 0 = d = u0. Given Uj with dimU j ≤u j,
+applying [1, Lemma 3.6] (for finite G over any field F) or [1, Lemma 3.13] (for compact K over
+C) yields gj+1 such that dim(Uj ∩g j+1W) ≤ w
+d dimU j ≤ w
+d uj. Because dim(Uj ∩g j+1W) is an
+integer, setting Uj+1 := Uj ∩g j+1W yields dimU j+1 ≤ ⌊w
+d uj⌋ = uj+1. For any uj ≥ 1, since
+w < dwe have wuj < duj and thus uj+1 = ⌊wuj/d⌋ ≤uj − 1 (Lean Theorem 1). By induction
+on u0 = d, uj hits 0 in qexact(d, w) ≤d steps (Lean Theorem 2), giving Uq = g1W∩···∩g qW = 0.
+5
+
+--- Page 6 ---
+Table 2: Selected exact zero-float benchmark checkpoints from cert01, cert06, cert11, and
+cert13–cert14.
+Benchmark / Construction Vrana–Zuiddam [1] Present Work Improvement / Ratio Cert
+Spanning (d= 64, r= 1) 330.17q exact = 64 5.16×fewercert01
+Spanning (d= 1024, r= 1) 8121.83q exact = 1024 7.93×fewercert01
+Spanning (d= 1024, w= 512) 15.86q exact = 11 1.44×fewercert01
+SL2(F5) (k= 4 vs. 5)Conly (SU(2)) 25/25 vs. 28/36 Sharp atk=pcert06
+SL2(F7) (k= 6 vs. 7)Conly (SU(2)) 49/49 vs. 52/64 Sharp atk=pcert06
+Non-crossingS 3 (d= 2) 3/(2
+√
+2)≈1.061 3/(2
+√
+2) (exact)r(a) = 3cert11
+Non-crossingS 7 (d= 6) — 7/(2
+√
+6)≈1.429r(a) = 7cert11
+Non-crossingS 10001 (d= 10 4) — 10001/200 = 50.005>50×gapcert13
+To see that qexact(d, w) < d
+d−w (1 + lnd ) for every d≥ 2 and 1 ≤w≤d− 1: if w≤d− 2, then
+d
+d−w (1 + lnd ) > d
+r lnd while uj ≤d (w/d)j already forces qexact(d, w) ≤ ⌊lnd/ln(d/w)⌋ + 1 ≤
+lnd
+1−w/d + 1 < d
+d−w (1 + lnd ) (strict because d
+d−w > 1); if w = d− 1, then qexact(d, d−1) = d <
+d(1 + ln 2)≤d(1 + lnd) (Lean Theorem 19,cert02).
+Part (b).By induction on t, ut ≤d (w/d)t and since ut ∈Z , ut ≤ ⌊d(w/d)t⌋. From step
+t onward, strict descent uj+1 ≤u j − 1 guarantees termination in at most ut additional steps,
+yielding qexact(d, w) ≤t + ⌊d(w/d)t⌋ for every 0 ≤t≤d (Lean Theorem 6). Taking t = 0
+gives d; for 1 ≤w≤d− 1, whenever t∗ := ⌊lnd/ln (d/w)⌋ + 1 ≤d , taking t = t∗ gives
+d(w/d)t∗
+< 1 (and when t∗ > d, d≤t ∗ already holds), proving (1). At w = d− 1, for every
+1 ≤u≤d , d(u− 1) = du−d≤du−u = (d− 1)u < du, so ⌊(d− 1)u/d⌋ = u− 1 (Lean
+Theorem 3), hence uj = d−j and qexact(d, d−1) = d (Lean Theorem 4). Conversely, by
+submodularity of codimension, intersecting with q hyperplanes lowers dimension by at most
+q, so dim(g1W∩ ··· ∩gqW) ≥d−q , forcing q≥d unconditionally (Lean Theorem 7). At
+d = 2k, w= k, ⌊ku/(2k)⌋ = ⌊u/2⌋ (Lean Theorem 5), so uj = 2m−j for 0 ≤j≤m and um+1 = 0,
+givingq exact(2m,2 m−1) =m+ 1 vs.q VZ(2m,2 m−1) = 2(1 +mln 2)∼(2 ln 2)(m+ 1).
+Part (c).Replacing Lemma 3.7 by Part (a) verbatim in the proof of [ 1, Lemmas 3.8 and 4.3]
+yields a≤ ⟨qexact(d, d−r)⟩ ⊗b. Whenever a⊗n is i-irreducible—which holds automatically for
+all n≥ 1 over C by Burnside’s theorem ([1, Lemma 3.8]) and over arbitrary fields F whenever
+a is absolutely i-irreducible ([1, Lemma 4.6(iii)]) or assumed directly as in [ 1, Lemma 4.3]—
+applying Part (a) to the i-th leg of a⊗n (of dimension dn and kernel dimension dn −r n) yields
+a⊗n ≤ ⟨qexact(dn, dn −r n)⟩ ⊗b⊗n (cert03).
+4 Proof of Theorem 2: Exact Characteristic Threshold via
+SL2(Fp)
+Proof of Theorem 2. Part (a).Fix a prime p and 0 ≤k≤p− 1. Because F has characteristic
+p, its prime subfield is Fp, and the finite group SL2(Fp) ⊆SL 2(F) has order p(p2 − 1) (Lean
+Theorem 8). In the monomial basis ej := xk−jyj (0 ≤j≤k ) of Fp[x, y]k, let Ut ∈SL 2(Fp)
+(t∈F p) induce the substitution x7→x + ty, y7→y (i.e., U−1
+t =
+ 1 0
+t1
+T), and let Lt ∈SL 2(Fp)
+inducex7→x, y7→y+tx. By the binomial theorem,
+ρk(Ut)e j = (x+ty) k−jyj =
+k−jX
+r=0
+k−j
+r
+
+trej+r =
+kX
+r=0
+trArej,
+where (Ar)j+r,j =
+ k−j
+r
+
+for 0 ≤j≤k−r and 0 otherwise. Because k≤p− 1, the k + 1 elements
+t = 0, 1, . . . , k∈Fp are pairwise distinct, so the (k + 1)×(k + 1) Vandermonde matrix (tr)0≤t,r≤k
+is invertible over Fp. Hence every Ar (0 ≤r≤k ) lies in the Fp-algebra A := spanFp ρk(SL2(Fp));
+6
+
+--- Page 7 ---
+in particular A1 (with A1ej = (k−j )ej+1) and Ak = Ek,0 lie in A. Symmetrically, Vandermonde
+inversion onρ k(Lt) placesB 1 (withB 1ej =je j−1) andB k =E 0,k inA.
+Since A is closed under matrix multiplication, Ek,k = AkBk ∈ A. Now for any 0 ≤i, j≤k ,
+we compute directly on basis vectors: Ak−j
+1 sends ej to (k−j )!ek and maps every er (r̸ = j)
+into span{es :s̸=k}, whileB k−i
+1 sendse k to k!
+i! ei. Therefore
+Bk−i
+1 Ek,k Ak−j
+1 = k!
+i! (k−j)!E i,j ∈ A.
+Because 0 ≤i, j≤k < p, neither k!/i! nor (k−j )! is divisible by p (Lean Theorem 9), so their
+product is invertible in F×
+p , proving Ei,j ∈ Afor all i, j(cert04). Extending scalars from Fp to F
+yields spanF ρk(SL2(Fp)) = EndF(F[x, y]k), i.e., ρk is absolutely irreducible. By [1, Lemma 4.6(ii)],
+the dual representation g7→ρ k(g−1)T is also absolutely irreducible. Since substitution commutes
+with polynomial multiplication, ( ρm−1(g−1)T ⊗ρ n−1(g−1)T ⊗ρ m+n−2(g))Pm,n =P m,n for every
+g∈SL 2(Fp) (cert05). Whenever p > m+n−2, all three leg degrees satisfym−1, n−1, m+n−2 ≤
+p− 1, so every πPm,n is absolutely i-irreducible for all i∈ [3]. Applying [ 1, Corollary 4.7]
+immediately yields the claimed log-star-convexity overF.
+Part (b).For any k≥ 0 over F (charF = p), consider Sk := spanF{(αx + βy)k : α, β∈F} ⊆
+F[x, y]k. Clearly Sk ̸= 0 (since xk ∈S k) and Sk is GL2(F)-invariant. By the binomial expansion
+(αx + βy)k = Pk
+r=0
+ k
+r
+
+αk−rβrxk−ryr, Sk lies inside span{xk−ryr : p∤
+ k
+r
+
+}. Thus, if F[x, y]k is
+GL2(F)-irreducible, we must have p∤
+ k
+r
+
+for every 0 ≤r≤k . By Lucas’s theorem, this holds if
+and only if every base- p digit of k below its leading digit equals p− 1, i.e., k + 1 = c pe for some
+e≥0 and 1≤c≤p−1.
+Now suppose m≥ 2, n≥ 2 and all three legs k1 = m− 1, k2 = n− 1, k3 = m + n− 2
+satisfy kℓ + 1 = cℓpeℓ with 1 ≤c ℓ ≤p− 1. Then c1pe1 = m≥ 2, c2pe2 = n≥ 2, and
+c1pe1 + c2pe2 = c3pe3 + 1. We claim c3pe3 ≤p (equivalently m + n− 2 < p). If e3 = 0, then
+c3pe3 =c 3 < p. Ife3 ≥1, thenp|c 3pe3 , soc 1pe1 +c 2pe2 ≡1 (modp):
+Ife 1 ≥1 ande 2 ≥1, then 0≡1 (modp), impossible.
+ If e1 = 0 and e2 ≥ 1 (or symmetrically e1 ≥ 1, e2 = 0), then c1 ≡ 1 ( modp ) contradicts
+2≤c 1 < p.
+ If e1 = e2 = 0, then c3pe3 = c1 + c2 −1 ≤ (p− 1) + (p− 1) −1 = 2p− 3 < 2p; since p|c 3pe3 ,
+this forcesc 3pe3 ≤p.
+This Diophantine impossibility is formalized constructively in Lean Theorem 10 (and swept
+exhaustively in cert08). At the boundary k = p, ( ax + by)p = apxp + bpyp shows Wp =
+spanF{xp, yp}is a 2-dimensional GL 2(F)-invariant proper subspace ofF[x, y]p (2< p+ 1; Lean
+Theorem 11,cert07).
+Part (c).Let s := min(m, n) and R := m+n−1. Since |F| ≥m+n−2, choose m+n−2 distinct
+points α1, . . . , αm+n−2 ∈F . Evaluating f∈F [x]<m, g∈F[x]<n at α1, . . . , αm+n−2 together with
+the leading-coefficient product fm−1gn−1 (evaluation at ∞) determines fg∈F [x]<m+n−1 by an
+invertible (m + n− 1) × (m + n− 1) generalized Vandermonde matrix, proving eRF(Pm,n) ≤
+RF(Pm,n) ≤m + n− 1 (cert10); since R 3(Pm,n) = m + n− 1, equality holds. Conversely,
+restricting to the first s Lagrange basis polynomials on α1, . . . , αs diagonalizesP m,n onto ⟨s⟩,
+so ⟨s⟩ ≤Pm,n and s≤ eQF(Pm,n) ≤min (R1, R2) = s. For char(F) = p > m+ n− 2, Part (a)
+shows that log ∆F(Pm,n) is star-convex (hence connected); for char(F) = 0, becauseP m,n has 0/1
+entries in Q⊆F and Q⊆C , Strassen’s field-extension invariance theorem [2, Theorem 3.10] gives
+∆F(Pm,n) = ∆Q(Pm,n) = ∆C(Pm,n), whose log-image is star-convex (hence connected) by [ 1,
+Theorem 3.12]. Since ∆ F is compact, the continuous image ∆ F(Pm,n) is a compact connected
+subset of R≥0—i.e., a closed interval—whose endpoints are min ∆F(Pm,n) = eQF(Pm,n) = s and
+max ∆F(Pm,n) = eRF(Pm,n) = m + n− 1 by Strassen duality [2, Theorem 3.8] (cf. [ 1, Section 2.5],
+7
+
+--- Page 8 ---
+Figure 2:Unbounded non-crossing B-goodness violation and quantitative path reg-
+ularity.(a) Exact violation ratio wθ(a(d))/(wθ(a(d)
+1 ) + wθ(a(d)
+2 )) = (d + 1)/(dt + d1−t) for our
+Sd+1-invariant 5-tensor family across d∈ [2, 100] and t∈ {1
+2 , 1
+3 , 1
+4 }, recovering Vrana–Zuiddam’s
+Example 6.2 atd= 2, t= 1
+2 and growing without bound asd→ ∞(cert11,cert13). (b) Cer-
+tified interior Lipschitz constant Ls(δ) of t7→logF t(s) on [ δ, 1 −δ ], comparing a generic ln 2
+spectral gap against the exactW-state bound ( 5
+3 ln 2−ln 3)/δ≈0.0566/δ(cert14).
+or Corollary 2.14 applied to N[Pm,n] via Proposition 2.15 of [1]), proving (3). Over C, every finite
+subgroup of SL2(C) is cyclic, binary dihedral, 2 T (order 24), 2O (order 48), or 2 I (order 120),
+whose maximum irreducible representation dimension is 6 ( cert16), capping finite-subgroup
+irreducibility ofC[x, y]k atk≤5.
+5 Proof of Theorem 3: Non-Crossing Gaps and Lipschitz Paths
+Proof of Theorem 3. Part (a).Fix d≥ 2 and a field F with char(F) ∤ (d + 1). The standard
+d-dimensional representation Vd = {(x1, . . . , xd+1) ∈F d+1 : P
+i xi = 0}∗ of Sd+1 is irreducible
+whenever char(F) ∤ (d + 1) (indeed, f1, . . . , fd form a basis with fd+1 = −Pd
+j=1 fj, and any
+nonzero invariant subspace contains a vector with two unequal coordinates, whose transpositions
+generate all fi −fj). Since Sd+1 permutes {f1, . . . , fd+1}, both u = Pd+1
+i=1 f⊗2
+i and v = Pd+1
+i=1 f⊗3
+i
+are Sd+1-invariant, so a(d)
+1 , a(d)
+2 , a(d) are simultaneously Sd+1-invariant on all five legs ( cert11).
+Each 1-leg flattening is nonzero and Sd+1-equivariant, hence has full rank d by irreducibility,
+placinga (d)
+1 , a(d)
+2 , a(d) ∈ B, witha(d) ≤a (d)
+1 ⊕a (d)
+2 .
+Across bipartition b1 = {1, 2}|{3, 4, 5}, a(d)
+1 = u12 ⊗v 345 clearly has rank 1. The d slices of v
+along its third leg are
+Mj :=
+d+1X
+i=1
+(fi)j (fi ⊗f i) =e j ⊗e j −f d+1 ⊗f d+1 (1≤j≤d),
+while u = Pd
+j=1 ej ⊗e j + fd+1 ⊗f d+1. Because d≥ 2, the matrix Dd+1 := fd+1 ⊗f d+1 =Pd
+r,s=1 er ⊗e s has off-diagonal entry 1 at (1 , 2) whereas Dj := ej ⊗e j (1 ≤j≤d ) are purely
+diagonal; hence {D1, . . . , Dd, Dd+1} are linearly independent in V ⊗2
+d . In this basis, the transition
+matrix expressing ( M1, . . . , Md, u) is
+  Id 1d
+−1T
+d 1
+
+, whose Schur-complement determinant is 1 −
+(−1T
+d )Id1d = d + 1 ̸= 0 in F (Lean Theorem 13, cert11–cert12). Consequently {M1, . . . , Md, u}
+are linearly independent! Therefore: (i) the b1-flattening of a(d)
+2 = Pd
+j=1(Mj)12 ⊗ (u34 ⊗e j)345
+8
+
+--- Page 9 ---
+has exact rank d; and (ii) on legs {3, 4, 5}, v345 = Pd
+j=1(Mj)34 ⊗ej /∈span{u34 ⊗e1, . . . , u34 ⊗ed}
+(since u /∈span{Mj} and u̸ = 0), so the b1-flattening of a(d) = a(d)
+1 + a(d)
+2 has exact rank d + 1.
+By leg symmetry{1,2} ↔ {3,4}, theb2-flattening ranks ofa (d)
+1 , a(d)
+2 , a(d) ared,1, d+ 1.
+Finally, for anyt∈(0,1) andd≥2, the identity
+(d+ 1)−(d t +d 1−t) = (dt −1)(d 1−t −1)>0
+proves (4) unconditionally (formalized over all rational weights in Lean Theorem 16, with
+equal-weight growth (d+1)2 −4d = (d− 1)2 and unboundedness (d+1)/(2
+√
+d) > Mfor d≥ 4M2
+in Lean Theorems 14–15,cert13).
+Part (b).By [ 1, Definition 2.3 and Section 2.5], gs(t) = logF t(s) is a supremum of affine
+functions of t, hence convex on [0 , 1], with gs(0) = logf 0(s), gs(1) = logf 1(s), and gs(t) ≥
+log eQ(s) =: m everywhere. By monotonicity of difference quotients of a convex function, for
+everyδ≤t 1 < t2 ≤1−δ,
+m−g s(0)
+δ ≤ gs(t1)−g s(0)
+t1
+≤ gs(t2)−g s(t1)
+t2 −t 1
+≤ gs(1)−g s(t2)
+1−t 2
+≤ gs(1)−m
+δ ,
+yielding (5) (formalized constructively in Lean Theorem 17). Taking t1 ↓ 0 and t2 ↑ 1 in
+gs(t1)−gs(0)
+t1
+≤g s(1) −g s(0) ≤ gs(1)−gs(t2)
+1−t2
+gives ∂+gs(0) ≤log (f1(s)/f0(s)) ≤∂ −gs(1). For the
+W-state, border rank 2 implies eR(W) = Ri(W) = 2 for i∈ [3] (so every spectral point satisfies
+f(W) ≤ 2), while eQ(W) = 2h(1/3) = 3 · 2−2/3 [3, 4]; since 33 = 27 < 32 = 25 (Lean Theorem 18,
+cert14), evaluating (5) in natural logarithms yields ln(2/eQ(W)) = 5
+3 ln 2 −ln 3 > 0 and the
+stated uniform Lipschitz bound.
+6 Formal Verification and Reproducibility
+All Lean 4 proofs, zero-float verifiers, certificates, tests, and manuscript sources are publicly
+available at https://github.com/lluiseriksson/asymptotic-spectrum-sharp-spannin
+g-and-poly-mult under MIT (code, Lean proofs, certificates) and CC-BY-4.0 (manuscript,
+figures):
+1. Constructive Lean 4.36.0( lean/TensorSpectrumSharpBounds.lean ): 20 theorems
+compiled with -DwarningAsError=true, zero sorry, zero Classical.choice, zero custom
+axioms, and zero external dependencies.
+2. AST-Audited Zero-Float Verifier( verification/verify_tensor_spectrum.py ):
+Pure int/Fraction verifier emitting 16 SHA-256 certificates (certificates/manifest.js
+on), including exhaustive spanning sweeps (2016 pairs), constructive SL2(Fp) Vandermonde
+matrix-unit extraction, GL2(Fp) Frobenius invariance, SL2(F4) Steinberg verification, exact
+Lagrange spectrum endpoints, exact Q-rank verification of a(d) for d = 2..6, and exact
+rational bounds on theW-state Jensen defect.
+3. Adversarial Test Suite( tests/test_adversarial.py): 56 passing tests verifying AST
+zero-float compliance, SHA-256 integrity, Lean soundness, finite-field homomorphisms,
+exact mod-pdivisibility dichotomies, and Lipschitz envelopes.
+7 Conclusion
+We have sharpened Vrana and Zuiddam’s asymptotic-spectrum framework [ 1] along three
+complementary fronts: replacing continuous spanning bounds with exact greedy-floor multi-
+plicities that eliminate the lnd blowup at codimension 1; establishing the exact characteristic
+9
+
+--- Page 10 ---
+threshold p > m+ n− 2 for polynomial multiplication log-star-convexity over arbitrary positive-
+characteristic fields via finite SL2(Fp) and proving its unimprovability even under GL2(F); and
+resolving the non-crossing B-goodness gap across all dimensions d≥ 2 and interior weights
+t∈(0,1) while quantifying the interior Lipschitz regularity of interpolation paths.
+References
+[1] P. Vrana and J. Zuiddam,The asymptotic spectrum of tensors is connected,
+arXiv:2611.34664v1 (Nov. 2026).
+[2] V. Strassen,The asymptotic spectrum of tensors, J. Reine Angew. Math.384, 102–152
+(1988).
+[3] V. Strassen,Degeneration and complexity of bilinear maps: some asymptotic spectra, J.
+Reine Angew. Math.413, 127–180 (1991).
+[4] M. Christandl, P. Vrana, and J. Zuiddam,Universal points in the asymptotic spectrum of
+tensors, J. Amer. Math. Soc.36(1), 31–79 (2023).
+10

@@ -1,0 +1,57 @@
+{
+  "prompt_version": "ARR-ASSESS-1.0",
+  "paper_id": "ARR-2026-6WVCZF6C6291YANZ",
+  "version": "v1",
+  "version_id": "arr:version:904b7396-5262-4a36-8f6b-6bba04f262d9",
+  "canonical_sha256": "2791cc1d350f0bc492eceef5b5e0d66625f15deebf9b6e6bb90a102b169efc34",
+  "provider": "Google",
+  "model_id": "hydrogen",
+  "independence": "not_involved_in_manuscript",
+  "assessed_at": "2026-11-27T04:05:00Z",
+  "recommendation": "accept",
+  "millennium_score": 7.8,
+  "overall_stars": 8,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 5,
+      "basis": "All proofs in paper/main.tex (Theorems 1-3) were independently checked and are mathematically sound. Lean 4.36.0 (`lean -DwarningAsError=true lean/NFCESharpGapAndSupport.lean`) compiled all 20 theorems cleanly using only standard axioms [propext, Quot.sound] with zero sorry and zero Classical.choice. All 56 tests in tests/test_adversarial.py passed (0.17s), verifying AST zero-float compliance of verification/verify_nfce_sharp_gap.py and SHA-256 integrity of all 16 certificates in certificates/manifest.json."
+    },
+    "novelty": {
+      "stars": 4,
+      "basis": "Substantively advances the Cheval, Horn, Paul, and Shirmohammadi (arXiv:2611.34897v1) framework along every axis: replacing tree-wide denominator products with path-LCMs and halving the Cramer-Hadamard dimension exponent via an unscaled simplex row; introducing polynomial-time effective payoff-deviation rank compression K_eff; proving exact b-ary matching-tree optimality (node slope 6 iff b in {2,3} with ternary halving of information sets, unique leaf slope 3 at b=2); establishing leaf-count PPAD-completeness for all r >= 3; and exhibiting explicit."
+    },
+    "reproducibility": {
+      "stars": 5,
+      "basis": "Complete artifact bundle with Lean 4.36.0 formalization, pure int/Fraction AST-audited zero-float verifier, 16 SHA-256-hashed JSON certificates, and 56 adversarial pytest checks, all independently executed and verified."
+    },
+    "rigor": {
+      "stars": 5,
+      "basis": "Exact algebraic and combinatorial proofs with clean handling of vertex linear independence in Theorem 1(b), explicit sequence-form compatibility in Theorem 2(a), and exact integer bounds in Theorem 3."
+    },
+    "significance": {
+      "stars": 4,
+      "basis": "Eliminates major exponential and polynomial blowups in the oracle precision (up to 26.96x total bit-budget reduction at depth 6; 632x-884x denominator bit reduction at depth 10) and hardness tree sizes (8.4x-86.5x smaller |V|), while pinpointing why matching-tree gadgets cannot push PPAD-hardness beyond quadratic support."
+    }
+  },
+  "summary": "This paper systematically sharpens the recent PPAD-completeness framework for exact normal-form correlated equilibrium (NFCE) in extensive-form games by Cheval, Horn, Paul, and Shirmohammadi (2026). Theorem 1 replaces the tree-wide denominator product B with the path-LCM L = lcm_{z,i} den(p_c(z) u_i(z)) and applies Cramer's rule with an unscaled simplex row and column-norm Hadamard estimation on the active support, halving the dimension exponent in the uniform LP gap and cutting oracle precision bit-budgets by 4.91x-26.96x on depth-2 to depth-6 benchmarks (with O(|Z|/h) asymptotic savings), alongside an exact 4L determinant bound and 1/(2L) realization at r=2. Theorem 2 proves the exact two-player collapse 2(K - kappa_d) = d_1^2 + d_2^2 + (d_1 - d_2)^2 and introduces the polynomial-time computable effective payoff-deviation rank r_i <= d_i, compressing the general n-player support bound to K_eff = min(prod_i(d_i+1), 1 + sum_i(d_i+1)r_i). Theorem 3 removes the power-of-two restriction on matching trees, shrinks PPAD-hardness tree sizes by 8.4x-15.9x (kappa_d) and 43.8x-86.5x (kappa_+), proves exact b-ary optimality (node slope 6 iff b in {2,3}, leaf slope 3 uniquely at b=2), establishes leaf-count PPAD-completeness under kappa_N = floor(N^2/9) for all r >= 3, and exhibits two explicit barriers showing why matching-tree decoders fail past support 2m^2 (c=1/18 > 1/36, constant Nash regret 1/12) and why chance-selected parallel matching branches stall at support m^2.",
+  "strengths": [
+    "Clean and exact unscaled-simplex column-Hadamard argument in Theorem 1(b) that simultaneously eliminates tree-wide denominator multiplication (via path-LCM L) and halves the exponent of K relative to Cheval et al.",
+    "Polynomial-time effective payoff-deviation rank compression K_eff in Theorem 2(a) fits seamlessly into Algorithm 1's sequential prefix-expansion and Caratheodory BFS, collapsing quadratic support to linear whenever payoff rank r_i = O(1).",
+    "Complete characterization of b-ary matching trees in Theorem 3(b), discovering that ternary trees (b=3) match the optimal node slope 6 while halving the number of matching information sets, whereas binary trees (b=2) uniquely minimize leaf count and yield kappa_N totality for all r >= 3.",
+    "Insightful structural barriers in Theorem 3(d): the Battle of the Sexes correlated NFCE at support 2m^2 (c = 1/18) and the 2q-player synchronized matching NFCE at support m^2 sharply explain the limits of matching-tree hardness reductions.",
+    "Exceptional verification hygiene: 20 constructive Lean 4.36.0 theorems with zero sorry and zero Classical.choice, AST-audited zero-float verifier, 16 SHA-256 certificates, and 56 passing adversarial tests."
+  ],
+  "weaknesses": [
+    "The Lean 4 formalization proves the algebraic, combinatorial, and inequality cores of the theorems rather than formalizing full extensive-form game trees, sequence-form Gaussian elimination, LP duality, or Pinsker's inequality inside Lean; those algorithmic and game-theoretic components rest on the prose proofs and zero-float concrete instances (cert03, cert04, cert16).",
+    "In Theorem 2(a), the polynomial-time extraction of a basis for V_i^{dir} delegates sequence-form details to Koller-Megiddo / Cheval et al. Section 3.2 rather than explicitly writing out the reachability pruning and leaf-incidence mapping M_i(ker E_i), and cert04 computes r_1, r_2 by enumerating pure plans on a small tree rather than exercising the polynomial-time.",
+    "Tightness of the general-r Hadamard bound in Theorem 1(b) remains open beyond r = 2 (where Theorem 1(c) gives exact 4L determinant tightness and 1/(2L) gap realization)."
+  ],
+  "strong_novelty_candidates": [
+    "Unscaled-simplex + L-scaled regret Cramer-Hadamard bound eta_sharp(r,L) = (sqrt(r)(1 + r L^2)^{r/2} L)^{-1} with path-LCM denominator L.",
+    "Effective payoff-deviation rank r_i and compressed n-player NFCE support bound K_eff = min(prod_i(d_i+1), 1 + sum_i(d_i+1)r_i) compatible with polynomial-time prefix compression.",
+    "Exact b-ary matching-tree optimality (node slope 6 iff b in {2,3} with ternary information-set halving; unique leaf slope 3 at b=2) and leaf-count PPAD-completeness under kappa_N = floor(N^2/9) for all r >= 3.",
+    "Explicit 2m^2 correlated barrier (c = 1/18 > 1/36 with constant 1/12 Nash regret) and 2q-player m^2 parallel chance-branch synchronization barrier."
+  ],
+  "potential_errors": [],
+  "unresolved_material_objections": []
+}

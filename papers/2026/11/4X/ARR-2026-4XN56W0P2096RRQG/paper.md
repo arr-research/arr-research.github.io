@@ -1,0 +1,783 @@
+# Exact 1/2 Bell-Fidelity Bound, +34.18% Sharpened d=8 Margin, and Universal d >= 9 Rational Duals for NPT Bound Entanglement
+
+**Author:** Lluis Eriksson  
+**AIRR Identifier:** `ARR-2026-4XN56W0P2096RRQG` (v1)  
+**License:** CC-BY-4.0 (manuscript), MIT (verification repository)  
+**Verification Repository:** https://github.com/lluiseriksson/npt-bound-entanglement-sharp-fidelity-and-threshold (`v1.0.0`)  
+**Canonical PDF SHA-256:** `afe766544ce503f127d1bdded03cb43ff60ba6aaf426cadcd5b10121fae9b3e9`
+
+## Abstract
+
+Faisal (arXiv:2611.34921v1, 2026) resolved the longstanding NPT bound entanglement conjecture for all local dimensions d >= 8 by constructing an explicit S3 x S4-invariant positive-partial-transpose-violating operator Q_d that rules out 1-copy distillation below the exact fidelity threshold for d = 8 and asymptotically for large d. We establish three sharp quantitative and universal strengthenings of Faisal's construction. First (Theorem 1), we prove that for every d >= 3, every separable and LOCC-1-copy distillable state satisfies a sharp Bell-fidelity bound of exactly 1/2 on the antisymmetric Werner subspace, closing the finite-dimensional gap in Faisal's 1-copy analysis. Second (Theorem 2), we construct an explicit rational-coefficient S3 x S4-invariant operator Q_8* in dimension d = 8 that increases Faisal's 1-copy separation margin by +34.18% while preserving exact positivity across all 12 active irreducible blocks (24 strictly positive Sylvester minors), and supply 23 explicit continuum McCormick rational dual certificates ruling out the remaining low-dimensional regimes d in {3, 4, 5, 6, 7}. Third (Theorem 3), we construct an explicit universal rational polynomial family in Q[s] (s = d - 9 >= 0) whose 24 shifted Sylvester minor polynomials have strictly positive rational coefficients, certifying NPT bound entanglement simultaneously for ALL local dimensions d >= 9 without asymptotic error terms (verified at square-dimension checkpoints through d = 10^4). All results are backed by 20 constructive Lean 4.36.0 theorems (0 sorry, 0 Classical.choice), 16 AST-audited zero-float SHA-256 certificates, and 56 adversarial tests.
+
+## Full Extracted Text
+
+--- Page 1 ---
+Sharp Bell-State Fidelity Ceiling, Exact Dimensional
+Thresholdd min = 8, and UniversalΘ(1/
+√
+d)Families of
+NPT Bound Entangled Werner States
+Lluis Eriksson
+Independent Researcher
+https://github.com/lluiseriksson/npt-bound-entanglement-sharp-fidelity-and-threshold
+November 27, 2026
+Abstract
+Faisal (arXiv:2611.34921v1, 2026) recently settled the long-standing problem of the
+existence of negative-partial-transpose (NPT) bound entanglement by constructing a single
+Werner state ρ(8,−3/23) = (23I− 3SWAP)/1448 on C8 ⊗C8 whose two-qubit outputs under
+arbitrary separable operations achieve Bell-state fidelity at most (1 +
+√
+2)/4 ≈ 0.6036, via
+a 4096 × 4096 single-copy matrix certificate Q decomposed into 42 × 42 diagonal-unitary
+blocks. We resolve three fundamental questions left open by Faisal’s breakthrough. First
+(Theorem 1), we prove that every two-qubit output of any separable operation on any
+number of copies of a coherence-bounded state is necessarily PPT and separable, sharpening
+Faisal’s Bell-state fidelity ceiling from (1 +
+√
+2)/4 to the exact optimal separable ceiling 1/2
+(saturated by |00⟩⟨00|), and we lift every single certified endpoint ρ(d, α0) via an explicit
+local depolarizing channel to the entire continuous NPT interval α∈ [α0,−1/d). Second
+(Theorem 2), by U(d) Haar twirling and a zero-square-root pure-integer Gram representation
+of the 24-dimensional walled Brauer algebra B3,1(d) ∼= C⊕C⊕M 2(C) ⊕M 3(C) ⊕M 3(C),
+we collapse Faisal’s d4 ×d 4 feasibility problem to pure-integer matrices of size at most
+3 × 3 (and 2 × 2 on J−Q ) and prove—via 23 exact rational piecewise-McCormick SDP-
+dual certificates over Q—that Faisal’s covariant local-map certificate mechanism isstrictly
+impossible across the entire continuum of parametersfor every dimension d∈ {3, 4, 5, 6, 7},
+establishing dmin = 8 as the exact sharp dimensional threshold (continuous critical threshold
+dcrit ≈ 7.2384). Third (Theorem 3), we provide the first zero-float rational verification of
+Faisal’s d = 8 matrix Q, construct a 6-entry-sparse all-integer sharpened d = 8 certificate Q∗
+8
+expanding the certified NPT excess |8α| −1 by +34.18% to α∗
+8 = −1000/7559, and exhibit a
+single explicit closed-form algebraic family Q(d) whose 24 nontrivial leading Sylvester minors
+have strictly positive shifted polynomial coefficients in t =
+√
+d− 3 ≥ 0, certifying continuous
+intervals of NPT bound entangled Werner states of width Θ(1/
+√
+d) (expanding past the PPT
+boundary 1/d by Θ(
+√
+d)) forevery integer dimension d≥ 9simultaneously. All proofs are
+backed by 20 constructive Lean 4.36.0 theorems (zero sorry, zero Classical.choice), 16
+AST-audited zero-float SHA-256 rational certificates, and 56 adversarial unit tests including
+direct Hilbert-space cross-checks.
+AI Disclosure.Google Antigravity assisted with symbolic Artin–Wedderburn algebra compu-
+tations, rational McCormick dual rounding, Lean 4 formalization, and manuscript drafting. All
+mathematical proofs, exact rational certificates, Lean proofs, and final claims were audited and
+verified by the author, who takes full responsibility for this work.
+1 Introduction
+Whether every bipartite quantum state with a negative partial transpose (NPT) can be distilled
+into Bell states by local operations and classical communication (LOCC) was posed by Horodecki,
+1
+
+--- Page 2 ---
+Horodecki, and Horodecki [ 2] and conjectured in the negative for certain NPT Werner states [ 6]
+by DiVincenzo et al. [ 7] and D¨ ur et al. [8]; it remained open as Problem 4 in the review of
+Horodecki, Rudnicki, and ˙Zyczkowski [9]. In a landmark breakthrough, Faisal [ 1] resolved this
+problem in the affirmative by exhibiting an explicit NPT Werner state onC 8 ⊗C 8,
+ρF =ρ
+
+8,− 3
+23
+
+= 23I−3SWAP
+1448 ,(1)
+together with two completely positive (CP) local maps L(X) = 5 Tr(X)I− 3XT and M(X) =
+18 Tr(X)I + 37X satisfying (L⊗M )(|u⟩⟨u|) = 37 · 1448 ρF (Lemma 2 and Eq. (1) of [ 1]), and a
+single-copy Hermitian 4096 × 4096 Choi matrix Q = JS (Lemma 3 and Eqs. (2a)–(2d) of [ 1])
+obeying
+J+Q⪰0, J−Q⪰0, Q Γin ⪰0,(J−Q)(|u⟩ ⊗I) = 0,(2)
+where J = JL⊗M is the Choi matrix of C = L⊗M on (Cd)⊗4 (ordered as Alice’s input, Bob’s
+input, Alice’s output, Bob’s output), Γ in denotes the partial transpose on the two input systems,
+and |u⟩ = Pd
+i=1|i, i⟩. From (2), Faisal’s Lemma 4 proves a reverse-block positivity inequality
+Ωv,w ⪰ 0 for every copy number n≥ 1 and every splitting |v⟩ + |w⟩ = |u⟩⊗n; Lemma 5 deduces
+the universal coherence bound
+K:=
+p
+D00 ρ⊗np
+D11
+
+1 ≤(p 00p01p10p11)1/4 (3)
+for all Dij = Xi ⊗Y j ⪰ 0 with pij = Tr(Dijρ⊗n); and Lemma 6 concludes that every two-qubit
+stateτproduced fromρ ⊗n
+F by any separable operation satisfies
+⟨Φ|τ|Φ⟩ ≤1 +
+√
+2
+4 ≈0.60355,(4)
+yielding ED(ρF ) = 0 (Theorem 1 of [ 1]) and proving that distillable entanglement is neither
+additive nor convex (Corollary 2 of [1]).
+Faisal’s remarkable construction immediately raises three sharp structural and quantitative
+questions:
+1. Is the fidelity ceiling(1 +
+√
+2)/4sharp, and does the proof certify isolated points
+or continuous intervals?Any separable two-qubit state has Bell-state fidelity at most
+1/2. Can a separable operation on ρ⊗n
+F ever exceed 1/2 and enter the gap (1/2, (1+
+√
+2)/4]?
+2. Why dimension d = 8?Does Faisal’s covariant CP-map framework ( L, M, Q) admit any
+NPT certificate in dimensions d∈ {3, 4, 5, 6, 7}, or is d = 8 an intrinsic algebraic threshold?
+3. What happens at d = 8and for all higher dimensions d≥ 9?Can Faisal’s d = 8
+certificate be verified purely in zero-float exact rational arithmetic, sharpened to a strictly
+larger NPT excess, and lifted to an explicit closed-form family certifying NPT bound
+entanglement ineverydimensiond≥9 with optimal asymptotic width?
+We answer all three questions completely and constructively.
+2 Main Theorems
+For any integerd≥2 and real parameterα∈[−1,1], define the Werner state onC d ⊗C d by
+ρ(d, α) :=I+αSWAP
+d(d+α) ,(5)
+which is a valid density matrix for all α∈ [−1, 1] (eigenvalues 1±α
+d(d+α) ≥ 0, trace 1) and is NPT if
+and only ifα <−1/d, since SWAP Γ =|u⟩⟨u|givesρ(d, α) Γ|u⟩= 1+dα
+d(d+α)|u⟩.
+2
+
+--- Page 3 ---
+Table 1: Summary of improvements over Faisal (arXiv:2611.34921v1) [1]. All numerical claims
+are backed by exact rational certificates (cert01–cert16) and constructive Lean 4.36.0 proofs.
+Property Faisal [1] Present Work
+2-qubit separable fidelity ceil-
+ing
+(1 +
+√
+2)/4≈0.60361/2(exact sharp ceiling; Thm. 1)
+2-qubit outputs of separable
+ops
+Fidelity<0.61 Always PPT & separable (Thm. 1)
+Certified Werner parameter
+set
+Single point α = −3/23 (d =
+8)
+Continuous intervals [α0,−1/d), alld≥8
+Smallest feasible dimension
+dmin
+Open (d= 8 exhibited)d min =8 proved (23 duals, d = 3..7; Thm. 2)
+Max SDP / verification block
+size
+42×42 (Table I of [1])3×3(2×2 onJ−Q; 14×compression)
+Best certified d = 8 endpoint αF =−3/23 (|8α F | −1 =1
+23 )α ∗
+8 = −1000
+7559 (+34.18% NPT excess; Thm. 3)
+Higher dimensionsd≥9 Not addressed Closed-form Q(d) for all d≥ 9, |α| =
+Θ(1/
+√
+d)
+Formal verification Integer pivots described; no
+code/certs in v1
+20 Lean 4 thms + 16 zero-float certs + 56
+tests
+Theorem 1(Sharp Bell-Fidelity Ceiling 1 /2, Separability of Outputs, and Continuous Werner
+Intervals).Let ρ be any bipartite quantum state on Cd ⊗C d satisfying the universal coherence
+inequality (3) for every n≥ 1and all X0, X1, Y0, Y1 ⪰ 0(in particular, any state admitting CP
+local mapsL, Mand a Hermitian certificateQobeying(2)). Then:
+(a) PPT and separability of every two-qubit output.For every n≥ 1and every separable
+operationΛ( ·) = P
+k(Ak ⊗B k)(·)(Ak ⊗B k)† mapping( Cd ⊗C d)⊗n to C2 ⊗C 2 with
+TrΛ(ρ⊗n) > 0, every individual Kraus output τk = (Ak ⊗B k)ρ⊗n(Ak ⊗B k)† is PPT, and
+hence the normalized outputτ= Λ(ρ ⊗n)/Tr Λ(ρ⊗n)is both PPT and separable.
+(b)Exact sharp Bell-state fidelity ceiling.For every Bell state|Φ⟩and every such outputτ,
+⟨Φ|τ|Φ⟩ ≤1
+2.(6)
+This bound is sharp: a product-Kraus separable operation outputting τ0 = |00⟩⟨00| achieves
+⟨Φ|τ0|Φ⟩= 1/2for|Φ⟩= (|00⟩+|11⟩)/
+√
+2.
+(c) Continuous NPT Werner intervals.Let ρ(d, α0)be a Werner state with α0 <− 1/d. For
+everyα∈[α 0,−1/d), the local depolarizing channel
+Λt(σ) :=t σ+ (1−t) I
+d2 , t:= α(d+α 0)
+α0(d+α) ∈(0,1],(7)
+is an LOCC (hence separable) map satisfyingΛ t(ρ(d, α0)) = ρ(d, α). Consequently: if
+ρ(d, α0)is bound entangled, then every Werner state in the continuous NPT interval
+α∈ [α0,−1/d)is NPT bound entangled; and if ρ(d, α0)additionally satisfies (3) for all
+n≥ 1, then every ρ(d, α)( α∈ [α0,−1/d)) also satisfies parts (a)–(b) and the sharp
+separable-operation ceiling(6).
+Remark 1.Faisal’s single-step bound (1 +
+√
+2)/4 in Lemma 6 of [ 1] is actuallytightfor the
+coherence inequality (3) alone: taking s = cos2(π/8) = (2 +
+√
+2)/4, r = 1 −s , p00 = p11 = s/2,
+p01 = p10 = r/2, and ⟨00|τ|11⟩ = 1
+2
+√sr yields a valid density matrix attaining equality in (3)
+and Bell fidelity (1 +
+√
+2)/4, yet this matrix is strictly NPT ( λmin(τΓ) <− 0.05; verified in
+test 51). Closing the gap from (1 +
+√
+2)/4 to 1/2 therefore genuinely requires bootstrapping (4)
+across multiple copies via the two-qubit distillability theorem of Horodecki, Horodecki, and
+Horodecki [3], just as Faisal noted for rank-2 projectors after Theorem 1 of [ 1], extended here to
+arbitrary product Kraus operatorsA k ⊗B k and summed over separable operations.
+3
+
+--- Page 4 ---
+We next analyze the complete covariant CP-map certificate class underlying Faisal’s Lemma 2
+and Lemma 3. Any U( d)-covariant local CP pair ( L, M) producing a Werner state ρ(d, α) ∝
+(L⊗M )(|u⟩⟨u|) with α <0 (note that pairing two covariant or two conjugate-covariant maps
+produces an isotropic state rather than a Werner state) has, up to positive scalar rescaling and
+exchanging (L, M), one of two sign patterns:
+(Type I)L(X) =a L Tr(X)I−X T (aL ≥1), M(X) =a M Tr(X)I+X(a M ≥0),(8)
+(Type II)L(X) =a L Tr(X)I+X T (aL ≥1), M(X) =a M Tr(X)I−X(a M ≥d).(9)
+Computing (L⊗M)(|u⟩⟨u|) yieldsw dI−SWAP with
+wI
+d(aL, aM ) =d aLaM +a L −a M , w II
+d (aL, aM ) =d aLaM −a L +a M ,(10)
+soα=−1/w d, andρ(d, α) is NPT if and only ifw d < d.
+Theorem 2(Artin–Wedderburn Collapse and Exact Sharp Dimensional Threshold dmin = 8).
+For every integerd≥3and every covariant CP local pair(L, M)of Type I or Type II:
+(a) Haar-twirling Artin–Wedderburn reduction.A Hermitian d4 ×d4 matrix Q satisfies Faisal’s
+four conditions (2) if and only if itsU( d)-Haar twirl Q =
+R
+U(d) W(U)QW(U)† dU (with
+W(U) = ¯U⊗U⊗ ¯U⊗ ¯U) lies in the24-dimensional walled Brauer algebra B3,1(d) =
+span{Bπ : π∈S 4} and satisfies (2). Over Q, B3,1(d)admits a pure-integer Gram-twisted
+Artin–Wedderburn decomposition into five irreducible blocks of dimensions(1 , 1, 2, 3, 3)for
+d≥ 4(1 2+12+22+32+32 = 24) and four active blocks(1 , 2, 3, 3)for d = 3(23-dimensional
+quotient), with strictly positive definite integer Gram matrices G2 =
+  2−1
+−1 2
+
+, G+(d) =
+(d− 1)I3 + J3, and G−(d) = (d + 1)I3 −J 3. Under this decomposition, Condition (2d)
+(J−Q )(|u⟩ ⊗I) = 0is equivalent to the vanishing of column0on the two3 × 3blocks
+(sym3andasym3), collapsingJ−Qto active blocks of size at most2×2.
+(b) Boundary and Type II eliminations.Every Type II pair satisfies wII
+d ≥d 2 + d− 1 > dfor
+alld≥2, and every Type I pair witha L ≥dsatisfiesw I
+d ≥d.
+(c) Exact continuum impossibility for d∈ {3, 4, 5, 6, 7}.For every d∈ {3, 4, 5, 6, 7}, there
+existsnopair( aL, aM ) ∈ [1, d] × [0,∞)andnoHermitian matrix Q on( Cd)⊗4 simultane-
+ously satisfying (2) and wI
+d(aL, aM ) < d. Specifically, partitioning[1 , d]into1 , 2, 3, 4, 13
+contiguous subintervals for d = 3, 4, 5, 6, 7respectively (23intervals total) and linearizing
+(x, y, z) = (aLaM , aM , aL)via the McCormick envelope Ly≤x≤Uy on each subinterval
+[L, U], we construct23exact rational strictly-positive-definite SDP-dual certificates with
+exact zero stationarity residual proving
+w3 ≥4.21953, w 4 ≥5.28161, w 5 ≥5.44609, w 6 ≥6.27070, w 7 ≥7.00987>7.
+(11)
+Hence dmin = 8is the exact sharp dimensional threshold of Faisal’s covariant certificate
+method (with continuous SDP thresholdd crit ≈7.2384∈(7,8)).
+Theorem 3(Sharpened d = 8 Witness and Universal Θ(1/
+√
+d) Family for d≥ 9).The following
+explicit exact rational and symbolic algebraic constructions hold:
+(a) Zero-float verification of Faisal’s d = 8 certificate.Faisal’s24-integer matrix Q =
+1
+40
+P
+π mπBπ of [1, Appendix A] satisfies (2) with exact zero Condition (2d) residual and
+strictly positive rational Sylvester minors on all five Artin–Wedderburn blocks (cert03).
+(b) Sharpened 6-entry-sparse integer certificate at d = 8.Taking L∗
+8(X) = 8 Tr(X)I− 5XT
+(aL = 8/5) and M∗
+8 (X) = 101 Tr(X)I + 200X (aM = 101/200), the explicit24-integer
+4
+
+--- Page 5 ---
+matrixQ ∗
+8 = 1
+64
+P
+π∈S4 m∗
+πBπ withm ∗
+0 =···=m ∗
+5 = 0and remaining18integers
+(m∗
+6, . . . , m∗
+11) =
+ 
+5669,731,−4288,1816,−7664,10648
+
+,
+(m∗
+12, . . . , m∗
+17) =
+ 
+−4288,−7664,13504,−11584,8896,−11520
+
+,
+(m∗
+18, . . . , m∗
+23) =
+ 
+1816,10648,−11584,28736,−11520,−2944
+ (12)
+satisfies (2) with exact zero Condition (2d) residual, exact zero blocks on the S3-quotient
+of( Q∗
+8)Γin, and strictly positive rational Sylvester minors on all12remaining active
+blocks (24nontrivial leading Sylvester minors; cert04). It certifies the continuous NPT
+bound-entangled Werner interval
+α∈
+
+−1000
+7559,− 1
+8
+
+, ρ ∗
+8 = 7559I−1000SWAP
+475776 ,(13)
+increasing the certified NPT excess |8α| −1from Faisal’s1 /23 ≈ 0.04348to441 /7559 ≈
+0.05834, an exact ratio of10143/7559>1.3418(+34.18%expansion).
+(c) Universal closed-form algebraic family for all d≥ 9.For every integer d≥ 9, set s :=√
+d = t + 3 ≥ 3, aL := 8/5, aM := 8/(5s), and define Q(d) := P
+π∈S4 mπ(s) Bπ ∈ B3,1(d)
+bym 0 =···=m 5 = 0, the six free coordinates
+m14 = 57
+100s, m 15 =m 20 =− 57
+100s, m 21 = 13
+10s,
+m16 = 13
+10s2 , m 17 =m 22 =− 21
+20s2 , m 23 =− 4
+3s3 ,
+(14)
+and the six dependent Hermitian coordinates solved uniquely by Condition (2d):
+m6 = 64
+25s3 − 8
+5s4 + 347
+100s5 − 21
+10s6 , m 7 = 1
+s4 − 57
+50s5 + 13
+10s6 − 4
+3s7 ,
+m8 =m 12 =− 217
+100s3 + 21
+20s4 , m 9 =m 18 = 57
+100s3 + 4
+3s5 ,
+m10 =m 13 =− 1
+s2 + 57
+100s3 − 13
+10s4 , m 11 =m 19 = 8
+5s2 − 13
+10s3 + 21
+20s4 .
+(15)
+Then foreveryreal s≥ 3(hence every integer d≥ 9): (i) Q(d)is Hermitian and satisfies
+(J−Q (d))(|u⟩⊗I ) = 0identically; (ii) Q(d)Γin vanishes identically on the S3-quotient irreps
+and every one of the24nontrivial leading Sylvester minors ofs 7(J+Q),s 7(J−Q) active,
+and s7QΓin expands in t = s− 3 ≥ 0withevery single rational coefficient strictly positive
+(cert10–cert12); and (iii) the exact NPT margin satisfies
+25s
+ 
+d−w d
+
+= 25s3 −(64s 2 + 40s−40) = 25t 3 + 161t2 + 251t+ 19≥19>0.(16)
+Consequently, foreveryinteger d≥ 9, every Werner state in the continuous NPT interval
+α∈
+"
+− 1
+64
+25
+√
+d+ 8
+5 − 8
+5
+√
+d
+,− 1
+d
+!
+(17)
+is NPT bound entangled, with |α(d)|> 1/(3
+√
+d), asymptotic scaling |α(d)|
+√
+d→ 25/64 =
+0.390625, and NPT expansion ratiod|α(d)|= Θ(
+√
+d)beyond the PPT boundary1/d.
+5
+
+--- Page 6 ---
+Figure 1:Dimension phase diagram and universalΘ(1 /
+√
+d)NPT bound-entangled
+band.(a) For d∈ {3, 4, 5, 6, 7}, 23 exact rational McCormick SDP-dual certificates rule out
+any covariant certificate across the continuum of parameters ( dcrit ≈ 7.238, exact sharp integer
+threshold dmin = 8). At d = 8, our sharpened certificate Q∗
+8 expands the NPT excess |8α| −1 by
++34.18% over Faisal’s state [1]. For all d≥ 9, our closed-form family Q(d) certifies the shaded
+continuous band (17). (b) Log-log scaling of the NPT expansion ratio d|α(d)|, approaching
+(25/64)
+√
+dwith zero-float checkpoints verified throughd= 10 4 (cert13).
+3 Proof of Theorem 1: Sharp Fidelity Ceiling1/2and Continuous
+Intervals
+Proof of Theorem 1. Part (a).Let Λ( ·) = Pr
+k=1(Ak ⊗B k)(·)(Ak ⊗B k)† be any separable
+operation mapping ( Cd ⊗C d)⊗n to C2 ⊗C 2 with TrΛ(ρ⊗n) > 0. Fix any Kraus index k
+with Tr(τk) > 0, where τk = (Ak ⊗B k)ρ⊗n(Ak ⊗B k)†, and set ˆτk := τk/Tr(τk). Suppose for
+contradiction that ˆτk is NPT. By the Peres–Horodecki criterion [ 5, 4], every NPT two-qubit
+state is entangled, and by the two-qubit distillability theorem of Horodecki, Horodecki, and
+Horodecki [3], every entangled two-qubit state is distillable by two-way LOCC to arbitrarily high
+Bell-state fidelity. In particular, there exists an integerm≥ 1 and an LOCC (hence separable [10])
+trace-nonincreasing protocol D mapping (C2 ⊗C 2)⊗m to C2 ⊗C 2 with TrD(ˆτ⊗m
+k ) > 0 and Bell
+fidelity
+⟨Φ|D(ˆτ⊗m
+k )|Φ⟩
+TrD(ˆτ⊗m
+k ) > 1 +
+√
+2
+4 .
+Define the composed map eΛ(ω) := D
+ 
+(Ak ⊗B k)⊗mω(A†
+k ⊗B †
+k)⊗m
+on (Cd ⊗C d)⊗nm. Because
+every Kraus operator of D has product form Cℓ ⊗D ℓ and (Cℓ ⊗D ℓ)(A⊗m
+k ⊗B ⊗m
+k ) = (CℓA⊗m
+k ) ⊗
+(DℓB⊗m
+k ), the composition eΛ is a valid separable operation on ρ⊗nm outputting a two-qubit state
+of Bell fidelity strictly greater than (1 +
+√
+2)/4. This contradicts Faisal’s Lemma 6 [ 1], which
+holds for every state obeying (3) for all copy numbers. Hence every nonzero τk is PPT (and
+τk = 0 is trivially PPT). Because the PPT cone is closed under addition and positive scaling,
+τ = P
+k τk/Tr Λ(ρ⊗n) is PPT, and since τ acts on C2 ⊗C 2, the Horodecki theorem [ 4] implies
+thatτis separable.
+Part (b).Without loss of generality, apply a local unitary mapping |Φ⟩ to |Φ+⟩ = (|00⟩ +
+|11⟩)/
+√
+2 (preserving separability and PPT). Write pij = ⟨ij|τ|ij⟩ ≥ 0 ( P
+i,j pij = 1) and
+c = Re⟨00|τ|11⟩. In the computational basis {|00⟩,|01⟩,|10⟩,|11⟩}, the partial transpose τΓ
+swaps the off-diagonal entries ⟨00|τ|11⟩ and ⟨01|τ|10⟩, so the 2 × 2 principal submatrix of τΓ on
+6
+
+--- Page 7 ---
+{|01⟩,|10⟩}is  p01 ⟨00|τ|11⟩
+⟨11|τ|00⟩p 10
+
+⪰0,
+yielding c2 ≤ |⟨00|τ|11⟩|2 ≤p 01p10. By AM–GM (formalized constructively over Z in Lean
+Theorem 8,sharp bell fidelity from ppt),
+(p01 +p 10)2 −(2c) 2 = (p01 −p 10)2 + 4(p01p10 −c 2)≥0 =⇒2c≤p 01 +p 10,
+and therefore
+⟨Φ+|τ|Φ+⟩= p00 +p 11 + 2c
+2 ≤ p00 +p 01 +p 10 +p 11
+2 = 1
+2.
+Taking the single product Kraus operator A⊗B = |0⟩⟨ψ|⊗| 0⟩⟨ϕ| with ⟨ψ, ϕ|ρ|ψ, ϕ⟩>0 produces
+τ=|00⟩⟨00|with⟨Φ +|τ|Φ+⟩= 1/2, proving sharpness.
+Part (c).If α = α0, then t = 1 and Λ1 = id trivially satisfies Λ1(ρ(d, α0)) = ρ(d, α0). Now
+let α0 < α <−1/d (so d + α0 > d−1 ≥ 1 > 0 and d + α > d+ α0 > 0). Define t = α(d+α0)
+α0(d+α).
+Since 0 > α > α0, we have α/α0 ∈ (0, 1) and ( d + α0)/(d + α) ∈ (0, 1), hence t∈ (0, 1)
+(Lean Theorem 10) with 1 −t = d(α0−α)
+α0(d+α) > 0. Computing the channel action directly (Lean
+Theorem 11):
+tρ(d, α0) + (1−t) I
+d2 =
+ α
+α0 d(d+α) + α0 −α
+α0 d(d+α)
+
+I+ α
+d(d+α) SWAP
+= I+αSWAP
+d(d+α) =ρ(d, α).
+Because Λt can be realized by flipping a public coin with bias t and either keeping the state or
+replacing both subsystems by the maximally mixed state I/d via local Haar-random unitaries,
+Λt is a trace-preserving LOCC (and hence separable) channel. Any LOCC protocol on ρ(d, α)⊗n
+composes with Λ ⊗n
+t to give an LOCC protocol on ρ(d, α0)⊗n, so ED(ρ(d, α0)) = 0 implies
+ED(ρ(d, α)) = 0; similarly, if ρ(d, α0) satisfies (3), any separable operation Λ on ρ(d, α)⊗n
+composes with Λ⊗n
+t to give a separable operation Λ ◦Λ⊗n
+t on ρ(d, α0)⊗n, preserving parts (a)–(b)
+and (6).
+4 Proof of Theorem 2: Walled Brauer Collapse and Exact
+Thresholdd min = 8
+4.1 Haar-Twirling Reduction and Pure-Integer Artin–Wedderburn Blocks
+For any covariant CP pair ( L, M) of Type I (8) or Type II (9), the Choi matrices are JL =
+aLI02 ∓SWAP02 and JM = aM I13 ±|u⟩⟨u|13, where the four tensor factors of (Cd)⊗4 are indexed
+(0, 1, 2, 3) = (Alice in,Bob in,Alice out,Bob out ). Both J = JL ⊗J M and the vector |u⟩ ⊗Iare
+invariant under the diagonal unitary action W(U) := ¯U⊗U⊗ ¯U⊗ ¯U for all U∈ U(d): indeed
+W(U)(|u⟩01 ⊗I23) = ( ¯U⊗U )|u⟩01 ⊗( ¯U⊗ ¯U) = |u⟩01 ⊗( ¯U⊗ ¯U) since ( ¯U⊗U )|u⟩ = |u⟩. Moreover,
+for any HermitianQobeying (2), the Haar twirl
+Q:=
+Z
+U(d)
+W(U)Q W(U) † dU
+preserves Hermiticity,J± Q⪰ 0, Condition (2d) (J− Q)(|u⟩⊗I ) = 0, and input partial-transpose
+positivity Q
+Γin
+⪰ 0, because ( W(U)QW(U)†)Γin = (U⊗ ¯U⊗ ¯U⊗ ¯U)QΓin(U⊗ ¯U⊗ ¯U⊗ ¯U)† ⪰ 0.
+By Schur–Weyl duality for mixed tensors [ 11, 12], the commutant of {W(U) : U∈ U(d)}
+on (Cd)⊗4 is spanned by the 24 walled Brauer operators Bπ := UΓ1
+π (π∈S 4), where (Uπ)r,c =
+7
+
+--- Page 8 ---
+Figure 2:Sharp Bell-state fidelity ceiling and exact rational impossibility profile at
+d = 7.(a) Faisal’s single-step coherence bound 1
+2(s +
+p
+s(1−s) ) reaches (1 +
+√
+2)/4 ≈ 0.6036
+at an NPT two-qubit state; our Horodecki–PPT bootstrap (Theorem 1) eliminates the entire
+shaded yellow region and lowers the ceiling to the exact separable optimum 1 /2. (b) Exact
+piecewise-McCormick SDP-dual lower bounds on w7 = 7aLaM +aL −aM across all 13 contiguous
+subintervals partitioning aL ∈ [1, 7] (cert09); every interval strictly exceeds 7, with global
+minimumw 7 ≥7.009875>7.
+Q3
+t=0 δrt,cπ(t) and Γ 1 is the partial transpose on system 1. The basis {Bπ} is closed under
+multiplication (BiBj = dloops(i,j)Bi◦j), adjoint ( B†
+i = Badj(i), splitting the 24 elements into
+10 self-adjoint elements and 7 conjugate pairs, i.e., 17 Hermitian orbits), and input partial
+transposition up to a fixed unitary swap SWAP 01:
+BΓin
+π = (UΓ1
+π )Γ01 =U Γ0
+π = SWAP01 Bσπσ SWAP01, σ= (0↔1).
+HenceQ Γin ⪰0 is unitarily equivalent to P
+π mσπσ Bπ ⪰0, staying completely insideB 3,1(d)!
+To eliminate all square roots from the block diagonalization, we represent each irreducible
+module Vλ of B3,1(d) in a pure-integer basis{va} with exact integer Gram matrix (Gλ)ab = ⟨va, vb⟩,
+and store the Gram-twisted matrix Mλ(X) := Gλρλ(X). Because Gλ ≻ 0, a Hermitian element
+X∈ B3,1(d) acts as a PSD operator on Vλ if and only if the symmetric rational matrix Mλ(X)
+is PSD, and the homomorphism law reads Mλ(Bi)G−1
+λ Mλ(Bj) = dloops(i,j)Mλ(Bi◦j). Explicitly:
+ Three S3-quotient irreps(annihilated by all 18 diagrams with π(1) ̸= 1, acting via
+S3 on {0, 2, 3}): triv1 (1 × 1, G = 1), sign1 (1 × 1, G = 1; absent in ( C3)⊗4 since
+Λ3C3 ⊗C 3 has no traceless (1 , 1, 1; 1) component), and std2 (2 × 2 with E =
+  1 0
+−1 1
+0−1
+T
+givingG 2 =EE T =
+  2−1
+−1 2
+
+≻0, Lean Theorem 15).
+ Two3 × 3ideal irreps( sym3 with ε = +1 and asym3 with ε = −1): spanned by
+the three cyclic rank-1 cup-cap basis elements e(ε)
+a = D(a,x,y) + εD(a,y,x) for (a, x, y) ∈
+{(0, 2, 3), (2, 3, 0), (3, 0, 2)}, where D(a,x,y) pairs top wall (1, a) and bottom wall (1 , 0) while
+wiring x→ 2, y→ 3. Their exact integer Gram matrices are G+(d) = (d−1)I3 +J3 (minors
+d, d2 − 1, (d− 1)2(d + 2) > 0 for d≥ 2; Lean Theorem 16) and G−(d) = (d + 1)I3 −J 3
+(minorsd, d2 −1,(d+ 1) 2(d−2)>0 ford≥3; Lean Theorem 17).
+All 243 = 13824 associativity triples and all 24 2 × 5 = 2880 exact Gram-twisted homomorphism
+pairs are verified in zero-float arithmetic in cert01 and cert02. Because the a = 0 basis vectors
+e(±)
+0 project directly onto |u⟩01 ⊗I 23, Condition (2d) ( J−Q )(|u⟩ ⊗I) = 0 is equivalent to
+the vanishing of column 0 (and by symmetry row 0) of Msym3(J−Q ) and Masym3(J−Q ),
+compressingJ−Qon the two 3×3 blocks to their lower-right 2×2 principal submatrices.
+8
+
+--- Page 9 ---
+Table 2: Exact zero-float continuum impossibility certificates for d = 3, . . . ,7 (cert05–cert09).
+Every interval satisfies all 20 stationarity equations with exact zero residual and strictly positive
+rational Sylvester minors on every dual PSD block.
+dIrreps Intervals Vars Exact min DualObj lower bound Margin> d
+3 4 1 53 94939549003/22500000000≈4.219536 +1.219536
+4 5 2 56 2640808321/500000000≈5.281617 +1.281617
+5 5 3 56 2723048305849/500000000000≈5.446097 +0.446097
+6 5 4 56 2257453381873/360000000000≈6.270704 +0.270704
+7 5 13 56 34348389075493/4900000000000≈7.009875 +0.009875
+4.2 Boundary Eliminations and Exact Rational McCormick Dual Certificates
+For Type II (9), JL = aLI + SWAP⪰ 0 ⇐⇒a L ≥ 1 and JM = aM I−|u⟩⟨u| ⪰0 ⇐⇒a M ≥d ,
+so
+wII
+d −d= (a L −1)(da M −1) + (d+ 1)a M −d−1≥d 2 −1>0
+for all d≥ 2 (Lean Theorem 13, cert16), ruling out NPT for Type II in every dimension. For
+Type I (8), if aL ≥d and aM ≥ 0, then wI
+d −d = (daL −1)aM + (aL −d ) ≥ 0 (Lean Theorem 12,
+cert16). Thus any NPT Type I certificate must havea L ∈[1, d] anda M ≥0.
+Fix d∈ {3, 4, 5, 6, 7} and a rational subinterval [ L, U] ⊆ [1, d]. Introduce the linearized
+variables x := aLaM , y := aM , z := aL, together with the 17 Hermitian orbit coordinates
+q1, . . . , q17 of Q∈ B3,1(d). Since z∈ [L, U] and y≥ 0, the exact McCormick inequalities
+Ly≤x≤Uy hold (Lean Theorem 14), and J = xB(0,1,2,3) −yB (2,1,0,3) + zB(0,3,2,1) −B (2,3,0,1)
+is affine in ( x, y, z). The resulting relaxation minimizing wd = dx−y + z subject to z≥L ,
+z≤U , x−Ly≥ 0, Uy−x≥ 0, y≥ 0, and the 4 (for d = 3) or 5 (for d≥ 4) Artin–Wedderburn
+PSD/zero-column constraints is a linear SDP of dimension 20 primal variables (3 + 17).
+Its Lagrangian dual has 5 nonnegative scalars ( s0, . . . , s4) ∈R 5
+>0, symmetric PSD dual
+matrices Pk, Nk, Rk ≻ 0 on each irrep k (with Nk of size 2 × 2 on sym3/asym3), and unrestricted
+multipliers Uk ∈R 3 for the zero-column constraints (totaling 53 dual variables at d = 3 and
+56 at d≥ 4), subject to 20 exact linear stationarity equations ensuring that for every feasible
+primal (x, y, z, q),
+wd =dx−y+z≥Ls 0 −Us 1 +
+X
+k
+D
+Pk + eNk + eUk, Mk
+ 
+B(2,3,0,1)
+E
+=: DualObj(d;L, U),
+where eNk denotes Nk embedded into the lower-right 2 × 2 submatrix on sym3/asym3 (and Nk
+itself on the S3-quotient blocks) and eUk places Uk into column 0 on sym3/asym3 (and 0 otherwise).
+For each of the 23 intervals covering [1 , d] across d = 3, 4, 5, 6, 7, we compute exact rational
+dual vectors v∈Q 53 (or Q56) stored in verification/witness data.json. Our zero-float
+verifier (cert05–cert09) checks in pure Fraction arithmetic: (i) contiguous coverage of [1 , d]
+with no gaps; (ii) exact zero residual on all 20 stationarity equations; (iii) strict positivity
+s0, . . . , s4 > 0 and strictly positive Sylvester leading principal minors for every dual matrix
+block Pk, Nk, Rk; and (iv) exact rational DualObj(d; L, U) > d. Table 2 summarizes the certified
+global lower bounds. Since min[L,U] DualObj(d; L, U) > dfor all d∈ {3, 4, 5, 6, 7}, no covariant
+NPT certificate exists ford≤7, establishingd min = 8.
+5 Proof of Theorem 3: Sharpened d = 8Witness and Universal
+d≥9Family
+5.1 Zero-Float Verification of Faisal’sQand the Sharpened WitnessQ ∗
+8
+For Faisal’s matrix Q = 1
+40
+P
+π mπBπ of [1, Appendix A] with L(X) = 5 Tr(X)I− 3XT and
+M(X) = 18 Tr(X)I + 37X (aL = 5/3, aM = 18/37, scale 3 · 37 = 111), evaluating the five
+9
+
+--- Page 10 ---
+Artin–Wedderburn blocks in pure Fraction arithmetic (cert03) yields exact Hermiticity, exact
+zero column 0 on sym3 and asym3 of J−Q (matching column 0 of J, (740,−268, 628)T and
+(962, 638,−2512)T, entry-for-entry), and strictly positive rational Sylvester minors on every
+active block ofJ+Q, (J−Q) active, andQ Γin.
+Setting m0 = ··· = m5 = 0 automatically annihilates the three S3-quotient blocks of QΓin
+(since σπσ maps {π : π(1) = 1} bijectively onto {π : π(0) = 0} = {0, . . . ,5}), reducing the search
+space while keeping QΓin ⪰ 0 trivially on triv1, sign1, and std2. Solving the 5-block SDP
+at d = 8 near ( aL, aM ) = (8/5, 101/200), rounding the free coordinates to denominator 64 at
+integer map scale 5 · 200 = 1000, and solving the six Condition (2d) equations exactly yields
+the 18-nonzero-entry integer vector (12). Direct rational evaluation ( cert04) confirms exact
+Condition (2d) and strict positivity of all 24 nontrivial leading Sylvester minors (10 for J + Q, 8
+for (J−Q )active, 6 for QΓin on sym3/asym3). Since w8 = 8(8/5)(101/200) + 8/5 − 101/200 =
+7559/1000 < 8, we obtain ρ∗
+8 = (7559I− 1000SWAP)/475776 (Lean Theorems 5–6) with NPT
+excess |8α∗
+8| −1 = 441/7559, exceeding Faisal’s 1/23 by the exact ratio 10143 /7559 > 1.3418
+(Lean Theorem 7). As an independent cross-check, test 17 and test 18 also verify Q∗
+8 directly
+on Faisal’s five original 4096 × 4096 diagonal-U(8) blocks of sizes 1 , 3, 6, 22, 42 from Table I of [1].
+5.2 Symbolic Positivity of the Universal FamilyQ(d)for Alld≥9
+To cover all dimensions d≥ 9 simultaneously, write s :=
+√
+d≥ 3 (so d = s2) and observe that
+the unweighted 6 × 6 Condition (2d) linear system for the six dependent Hermitian coordinates
+(u0, . . . , u5) = ( m6, m7, m8 = m12, m9 = m18, m10 = m13, m11 = m19) decouples into three
+explicit 2×2 blocks:
+d(u2 +u 3) =R +,1, d(−u 2 +u 3) =R −,1,
+d(u4 +u 5) =R +,2, d(u 4 −u 5) =R −,2,
+d(u0 +u 1) =R +,0 − R+,1 +R +,2
+d , d(u 0 −u 1) =R −,0 + R−,1 +R −,2
+d ,
+where R±,i are the unweighted column-0 entries of J−Q free on sym3 (+) and asym3 (−).
+Substituting aL = 8/5, aM = 8/(5s), and the six free rational functions (14) yields the exact
+closed-form coordinates (15) inQ[s −1] with maximum denominators 7.
+Multiplying J and Q(d) by s7 > 0, every entry of every Artin–Wedderburn block is a pure
+univariate polynomial in Q[s]. Our pure-Fraction symbolic polynomial verifier (cert10–cert12)
+computes all 24 nontrivial leading Sylvester minors ∆k(s) ∈Q [s] (10 on J +Q, 8 on (J−Q )active,
+6 on QΓin) and performs the exact shift s = t + 3. Remarkably,every single coefficient of every
+single one of the24shifted polynomials∆ k(t + 3) ∈Q [t]is strictly positive(all constant terms
+at t = 0, i.e. d = 9, are strictly positive, and all higher-degree coefficients in t are strictly
+positive). Because t =
+√
+d− 3 ≥ 0 for every real d≥ 9, this constitutes a finite, exact, zero-float
+algebraic proof that J + Q(d) ≻ 0, (J−Q (d))active ≻ 0, and Q(d)Γin ⪰ 0 forallintegers d≥ 9
+simultaneously. Finally, the exact polynomial identity (16) (Lean Theorems 18–19) proves
+wd < d and wd < 3
+√
+d for all d≥ 9, certifying the entire continuous NPT interval (17) by
+Theorem 1(c). Concrete zero-float evaluations at d = 9, 16, 25, 36, 100, 10000 are recorded in
+Table 3 andcert13.
+6 Formal Verification and Reproducibility
+All artifacts are publicly released under MIT (code, Lean proofs, certificates) and CC-BY-4.0
+(manuscript, figures) at https://github.com/lluiseriksson/npt-bound-entanglement-s
+harp-fidelity-and-threshold:
+1. Constructive Lean 4.36.0( lean/NPTBoundEntanglement.lean): 20 theorems compiled
+with -DwarningAsError=true, zero sorry, zero Classical.choice, zero custom axioms,
+10
+
+--- Page 11 ---
+Table 3: Zero-float exact rational evaluations of our universal family Q(d) at square dimensions
+d=s 2 (cert13), alongside Faisal’sd= 8 state and our sharpenedQ ∗
+8.
+dCertificate Exactw d Endpointα 0 d|α0|
+√
+d|α 0|
+8 Faisal [1] 23/3≈7.67−3/23≈ −0.1304 24/23≈1.0435 0.3689
+8Q ∗
+8 (Thm. 3b) 7559/1000 = 7.559−1000/7559≈ −0.1323 8000/7559≈1.0583 0.3742
+9Q(9) (Thm. 3c) 656/75≈8.75−75/656≈ −0.1143 675/656≈1.0290 0.3430
+16Q(16) (Thm. 3c) 286/25 = 11.44−25/286≈ −0.0874 200/143≈1.3986 0.3497
+25Q(25) (Thm. 3c) 352/25 = 14.08−25/352≈ −0.0710 625/352≈1.7756 0.3551
+36Q(36) (Thm. 3c) 1252/75≈16.69−75/1252≈ −0.0599 675/313≈2.1565 0.3594
+100Q(100) (Thm. 3c) 676/25 = 27.04−25/676≈ −0.0370 625/169≈3.6982 0.3698
+10000Q(10000) (Thm. 3c) 32198/125 = 257.58−125/32198≈ −0.0039 625000/16099≈38.822 0.3882
+and zero external dependencies, mechanizing the Artin–Wedderburn dimension sum,
+Faisal’s and our d = 8 Werner traces/eigenvalues/negativity boost, the sharp Bell-fidelity
+1/2 proof from the PPT minor, local-depolarizing convexity and identity, boundary and
+Type II eliminations, McCormick envelope soundness, strict positive definiteness of all
+three pure-integer Gram matrices, and the universal d≥ 9 polynomial NPT margin and
+Θ(1/
+√
+d) expansion rate.
+2. AST-Audited Zero-Float Verifier( verification/verify_npt_bound_entangleme
+nt.py): Uses strictly int and fractions.Fraction (audited via Python’s ast module
+for zero floats and zero numerical libraries) to verify and emit 16 SHA-256 certificates
+(certificates/manifest.json), including all 23 rational continuum impossibility duals
+(cert05–cert09) and all 24 shifted symbolic Sylvester polynomials (cert10–cert12).
+3. Adversarial Test Suite( tests/test_adversarial.py ): 56 passing tests covering
+AST zero-float compliance, SHA-256 manifest integrity, direct 81 × 81 (d = 3) Hilbert-
+space verification of the walled Brauer algebra, direct 4096 × 4096 Faisal Table I block
+verification of Q∗
+8, adversarial dual/primal corruption rejection, non-square dimensions
+(d = 10, 11, 13, 17, 50, 1000), and the tightness witness for Faisal’s single-step fidelity bound.
+7 Conclusion
+We have sharpened Faisal’s landmark proof of NPT bound entanglement [1] along three orthogonal
+axes: lowering the separable-operation Bell-state fidelity ceiling to the exact optimal value 1/2
+while proving PPT/separability of all two-qubit outputs and lifting isolated points to continuous
+Werner intervals; proving via walled Brauer Artin–Wedderburn collapse and 23 exact rational
+McCormick SDP-dual certificates that dmin = 8 is the exact sharp dimensional threshold of
+covariant CP-map certificates; and exhibiting both a +34 .18% sharpened d = 8 integer witness
+and a single closed-form algebraic family certifying Θ(1/
+√
+d)-wide bands of NPT bound entangled
+Werner states for every dimension d≥ 9. An intriguing open question is whether non-covariant
+or multi-copy reverse-block certificates can push below dmin = 8 toward the long-standing
+DiVincenzo–D¨ ur conjecture ind= 3 andd= 4 [7, 8].
+References
+[1] I. Faisal,Bound Entanglement with Negative Partial Transpose Exists, arXiv:2611.34921v1
+(Nov. 24, 2026).
+[2] M. Horodecki, P. Horodecki, and R. Horodecki,Mixed-State Entanglement and Distillation:
+Is there a “Bound” Entanglement in Nature?, Phys. Rev. Lett.80, 5239–5242 (1998).
+11
+
+--- Page 12 ---
+[3] M. Horodecki, P. Horodecki, and R. Horodecki,Inseparable Two Spin- 1
+2 Density Matrices
+Can Be Distilled to a Singlet Form, Phys. Rev. Lett.78, 574–577 (1997).
+[4] M. Horodecki, P. Horodecki, and R. Horodecki,Separability of mixed states: necessary and
+sufficient conditions, Phys. Lett. A223, 1–8 (1996).
+[5] A. Peres,Separability Criterion for Density Matrices, Phys. Rev. Lett.77, 1413–1415
+(1996).
+[6] R. F. Werner,Quantum states with Einstein–Podolsky–Rosen correlations admitting a
+hidden-variable model, Phys. Rev. A40, 4277–4281 (1989).
+[7] D. P. DiVincenzo, P. W. Shor, J. A. Smolin, B. M. Terhal, and A. V. Thapliyal,Evidence
+for bound entangled states with negative partial transpose, Phys. Rev. A61, 062312 (2000).
+[8] W. D¨ ur, J. I. Cirac, M. Lewenstein, and D. Bruß,Distillability and partial transposition in
+bipartite systems, Phys. Rev. A61, 062313 (2000).
+[9] P. Horodecki,  L. Rudnicki, and K. ˙Zyczkowski,Five Open Problems in Quantum Information
+Theory, PRX Quantum3, 010101 (2022).
+[10] E. M. Rains,Entanglement purification via separable superoperators, arXiv:quant-
+ph/9707002 (1997).
+[11] K. Koike,On the decomposition of tensor products of the representations of the classical
+groups: By means of the universal characters, Adv. Math.74, 57–86 (1989).
+[12] J. Brundan and C. Stroppel,Gradings on walled Brauer algebras and Khovanov’s arc algebra,
+Adv. Math.231, 709–773 (2012).
+12
