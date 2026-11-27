@@ -1,0 +1,883 @@
+--- Page 1 ---
+Sharp Non-Asymptotic Quantum Query Lower
+Bounds for k-Sum
+and Element Distinctness via Exact Tensor-Projector
+Adversary Duals
+and Stirling Spectral Multiplicities
+Lluis Eriksson∗
+November 27, 2026
+Abstract
+Quantum query lower bounds for k-Sum (Ω(nk/(k+1))) and Element Distinctness ( Ω(n2/3))
+are landmark separations beyond the positive-weight adversary barrier ADV+ ≤ O(√n),
+originally proved via polynomial methods [ 1, 4] and negative-weight adversary duals [ 6], and
+recently revisited via elementary state-diﬀerence arguments [ 5]. Yet standard proofs suppress
+explicit leading constants inside asymptotic O(·) notation and rarely determine the ﬁnite
+dimension n∗ at which negative-weight bounds overtake the positive-weight barrier. We es-
+tablish three exact, zero- O(·) structural theorems backed by constructive Lean 4.36.0 proofs
+and zero-ﬂoat rational LDLT certiﬁcates. First, for every k ≥ 1 and ﬁnite abelian group G
+of order q ≥ 2, we prove that the single-subset tensor projector HS(α) = ∑
+T⊆S α|T|ET
+(α0 = 1 , αk = 0 ) satisﬁes the exact minimax query-diﬀerence law ∥HS(α) ◦ ∆i∥op =
+q−1
+q max0≤j≤k−1 |αj−αj+1| ≥ q−1
+qk (uniquely attained by the linear ramp αj = 1 −j/k), while
+the binary cutoﬀ HS = Iqk −E⊗k
+1 restricted via column inclusion ΠES (PES := ΠES ΠT
+ES ) to
+the solution hyperplane ES = {y ∈ Gk : ∑
+j∈S yj = 0} (and identically for Element Distinct-
+ness y1 = y2 at k = 2) yields a Gram operator HSPES HT
+S = (HSΠES )(HSΠES )T with exact
+nonzero eigenvalues m/q (1 ≤ m ≤ min(k, q)) and Stirling multiplicities S2(k, m) ∏m−1
+j=1 (q −
+j), implying ∥HSPES HT
+S ∥op = min( k, q)/q identically (equaling k/q whenever q ≥ k). Sec-
+ond, combining the truncated-ramp block adversary ΓS = (HS ⊗ B(d)
+S )(ΠES ⊗ IG[n]\S ) with
+Bonferroni unique-solution counting ( q ≥ (4k + 1)
+( n
+k
+)
+, ρ =
+( n
+k
+)
+/q) cancels q completely and
+delivers an explicit non-asymptotic bound ADV± ≥ (1 − ρ − √kρ)
+[
+(1 − ρ)
+(( d+k−2
+k−1
+)
+/
+( n
+k
+)
++
+k(n−k)
+nd2
+)] −1/2
+valid for all n ≥ k + 1 and 1 ≤ d ≤ n − k, certifying explicit constants
+c2 > 0.428 (n2/3, large- q limit 0.514), c3 > 0.341 (n3/4, limit 0.408), and c4 > 0.299 (n4/5,
+limit 0.357). Third, for every total Boolean function f : Gn → {0, 1}, we give a self-contained
+4-line proof of the positive-weight certiﬁcate barrier ADV+(f) ≤
+√
+C0(f)C1(f) ≤
+√
+C1(f)n,
+prove exact tightness ADV+(THn
+k ) =
+√
+k(n − k + 1) on k-Threshold, and certify exact ﬁnite
+crossovers (under four-digit rational square-root bounds) where Theorem 2 strictly pierces√
+kn: n∗ = 1 ,290 (k = 2 ), n∗ = 668 (k = 3 ), and n∗ = 571 (k = 4 ). Twenty constructive
+Lean 4.36.0 theorems ( 0 sorry, 0 Classical.choice), 16 zero-ﬂoat Python certiﬁcates, and
+56 adversarial tests accompany the paper.
+∗Independent Researcher. Research, formal veriﬁcation in Lean 4.36.0, zero-ﬂoat exact rational LDLT and
+Stirling certiﬁcate veriﬁcation, adversarial testing, and manuscript typesetting were conducted with transparent
+assistance from Google Antigravity. Code is released under MIT; manuscript and ﬁgures under CC-BY-4.0. Repos-
+itory: https://github.com/lluiseriksson/quantum-query-exact-adversary-and-collision-sharp-bounds
+(v1.0.0).
+1
+AIRR:ARR-2026-3SVAT6TJ6V9NAVH6 v1  [Quantum Information & C...]  27 Nov 2026  ·  AIRR.SCIENCE
+
+--- Page 2 ---
+1 Introduction
+Given oracle access to an input x = ( x1, . . . , xn) ∈ Gn over a ﬁnite abelian group G of order
+q = |G|, the k-Sum problem (k-SUMn,G, k ≥ 2) asks whether there exists a k-element subset
+S ⊆ [n] satisfying ∑
+j∈S xj = 0 , while Element Distinctness (EDn,G) asks whether there exist
+distinct indices i ̸= j with xi − xj = 0 . In the bounded-error quantum query model (two-sided
+error ε ∈ [0, 1/2)), the optimal query complexity is Θ(n2/3) for Element Distinctness [ 3, 1, 4]
+and Θ(nk/(k+1)) for k-Sum over suﬃciently large groups [ 6, 5], sharply surpassing the Θ(√n)
+ceiling imposed on all positive-weight adversary bounds by the certiﬁcate-size barrier [ 2, 9].
+By the generalized (negative-weight) adversary theorem of Høyer, Lee, and Špalek [ 7] (proven
+tight up to constants by Reichardt [ 8]), for any Boolean function f : D → {0, 1} (D = X0 ⊔X1 ⊆
+Gn) and any nonzero real matrix Γ ∈ RX0×X1 ,
+Qε(f) ≥ 1 − 2
+√
+ε(1 − ε)
+2 ADV±(f), ADV±(f) := sup
+Γ̸=0
+∥Γ∥op
+maxi∈[n] ∥Γ ◦ ∆i∥op
+, (1)
+where (∆i)x,y = 1[xi ̸= yi] is the i-th coordinate-diﬀerence indicator and ◦ denotes the Hadamard
+product. Motivated by Belovs–Špalek’s adversary construction [ 6] and the recent elementary
+state-diﬀerence proof of Ambainis and Kokainis [ 5], we isolate the exact ﬁnite-dimensional spec-
+tral algebra behind ( 1) and obtain three completely explicit, zero- O(·) results:
+1. Exact Tensor-Projector Minimax Law and Stirling Spectral Multiplicities (The-
+orem 1). We determine the exact query-diﬀerence operator norm of any Hamming-weight
+tensor projector HS(α) on Gk, prove that HSPES HT
+S (PES := ΠES ΠT
+ES ) splits into rank- 1
+shift-equivalence classes with exact nonzero eigenvalues m/q (1 ≤ m ≤ min(k, q)) and
+Stirling multiplicities S2(k, m) ∏m−1
+j=1 (q − j) (equally valid for k-Sum and Element Dis-
+tinctness), and prove that (HS(lin) ◦ ∆i)ΠES is an exact scaled isometry.
+2. Zero-O(·) Non-Asymptotic Ω(nk/(k+1)) Lower Bounds with Exact q-Cancellation
+(Theorem 2). Combining the truncated-ramp block adversary ΓS = (HS ⊗ B(d)
+S )(ΠES ⊗
+IG[n]\S ) with exact Bonferroni unique-solution counting ( q ≥ (4k + 1)
+( n
+k
+)
+) cancels q iden-
+tically between numerator and denominator, yielding closed-form rational lower bounds
+valid for every ﬁnite n ≥ k + 1 and explicit leading constants ck.
+3. Positive-Weight Certiﬁcate Barrier, k-Threshold Tightness, and Crossovers
+(Theorem 3). We give a self-contained proof of ADV+(f) ≤
+√
+C0(f)C1(f) ≤
+√
+C1(f)n
+for every total Boolean function f : Gn → { 0, 1}, certify exact equality on k-Threshold
+THn
+k, and pinpoint the exact ﬁnite dimensions n∗ where Theorem 2 strictly pierces
+√
+kn
+(n∗ = 1,290 for k = 2, 668 for k = 3, 571 for k = 4).
+2 Exact Tensor-Projector Spectrum and Stirling Multiplicity
+Law
+Let G be any ﬁnite abelian group of order q ≥ 2. On CG (identiﬁed with Cq), deﬁne the
+orthogonal projectors E0 := 1
+q Jq (onto C1q) and E1 := Iq − E0 (onto 1⊥
+q ), and let ∆ := Jq − Iq
+be the single-coordinate diﬀerence matrix. For any k-element subset S ⊆ [n] and any subset
+T ⊆ S, write ET :=
+( ⨂
+j∈T E1
+)
+⊗
+( ⨂
+j∈S\T E0
+)
+on CGS
+, so ∑
+T⊆S ET = Iqk . Given a weight
+vector α = (α0, . . . , αk) ∈ Rk+1, deﬁne HS(α) := ∑
+T⊆S α|T|ET , and denote by HS := Iqk −E⊗k
+1
+the binary cutoﬀ ( α0 = · · · = αk−1 = 1, αk = 0) and by HS(lin) the linear ramp ( αj = 1 − j/k).
+Let ΠES ∈ { 0, 1}qk×qk−1
+denote the column inclusion isometry for the solution hyperplane
+ES := {y ∈ GS : ∑
+j∈S yj = 0 } (size |ES| = qk−1), or at k = 2 for the Element Distinctness
+2
+
+--- Page 3 ---
+hyperplane EED
+S := {y ∈ G2 : y1 − y2 = 0 }, and let PES := Π ES ΠT
+ES ∈ { 0, 1}qk×qk
+be the
+corresponding diagonal orthogonal projector onto CES .
+Theorem 1 (Tensor-Projector Minimax Law, Stirling Spectrum, and Hyperplane Isometry) .
+For every ﬁnite abelian group G of order q ≥ 2 and every k ≥ 1:
+(a) Single-coordinate cancellation and minimax ramp law: On Cq, (E0 + E1) ◦ ∆ = 0 and
+E0 ◦ ∆ = q−1
+q E0 − 1
+q E1. Hence for every α ∈ Rk+1 with α0 = 1, αk = 0 and every i ∈ S,
+∥HS(α) ◦ ∆i∥op = q − 1
+q max
+0≤j≤k−1
+|αj − αj+1| ≥ q − 1
+qk , (2)
+with equality if and only if αj = 1 − j/k is the linear ramp HS(lin).
+(b) Exact witness annihilation and Stirling spectral multiplicities: For both k-Sum ( ES) and
+Element Distinctness ( EED
+S , k = 2 ), HS|1ES ⟩ = 1
+q |1Gk ⟩ identically. Moreover, the qk ×
+qk Gram operator HSPES HT
+S = ( HSΠES )(HSΠES )T has rank qk−1 and exact nonzero
+eigenvalues m/q (1 ≤ m ≤ min(k, q)) with multiplicities
+mult
+( m
+q
+)
+= S2(k, m)
+m−1∏
+j=1
+(q − j)
+(
+1 ≤ m ≤ min(k, q)
+)
+, (3)
+where S2(k, m) denotes the Stirling number of the second kind (and ∏m−1
+j=1 (q − j) = 0 for
+m > q ). In particular,
+min(k,q)∑
+m=1
+mult
+( m
+q
+)
+= qk−1, tr
+(
+HSPES HT
+S
+)
+= qk − (q − 1)k
+q , ∥HSPES HT
+S ∥op = min(k, q)
+q
+(4)
+(equaling k/q whenever q ≥ k).
+(c) Exact hyperplane query-diﬀerence Gram identities: For every i ∈ S, the linear ramp
+satisﬁes the exact scaled-isometry identity
+(
+(HS(lin) ◦ ∆i)ΠES
+) T (
+(HS(lin) ◦ ∆i)ΠES
+)
+= q − 1
+q2k2 Iqk−1 , (5)
+while the binary cutoﬀ HS = Iqk − E⊗k
+1 gives Gbin
+i := (( HS ◦ ∆i)ΠES )T ((HS ◦ ∆i)ΠES )
+with exact trace tr(Gbin
+i ) = (q−1)k
+q2 and exact operator-norm bound
+(HS ◦ ∆i)ΠES
+2
+op ≤ q − 1
+q2 . (6)
+Proof. Proof of (a). Since E0 + E1 = Iq and ∆ has zero diagonal, (E0 + E1) ◦ ∆ = 0 , while
+E0 ◦ ∆ = 1
+q (Jq − Iq) = E0 − 1
+q (E0 + E1) = q−1
+q E0 − 1
+q E1 (Lean thm01–thm02). Pairing each
+R ⊆ S \ {i} with R ∪ {i} in HS(α) yields
+HS(α) ◦ ∆i =
+∑
+R⊆S\{i}
+(α|R| − α|R|+1)
+(
+(E0 ◦ ∆)i ⊗ ER
+)
+.
+Because the projectors ER are mutually orthogonal and ∥E0 ◦ ∆∥op = max( q−1
+q , 1
+q ) = q−1
+q ,
+the exact norm equality in ( 2) follows; telescoping ∑k−1
+j=0 (αj − αj+1) = α0 − αk = 1 gives
+maxj |αj − αj+1| ≥ 1/k with equality iﬀ αj − αj+1 = 1/k (Lean thm03–thm04).
+Proof of (b). Let {χs : s ∈ ˆGk} be the orthonormal Fourier character basis of CGk
+(since
+G is ﬁnite abelian, ˆG ∼= G). On the subgroup hyperplane ES = {y ∈ Gk : ∑k
+j=1 yj = 0 },
+3
+
+--- Page 4 ---
+Figure 1: Exact Stirling spectral multiplicities and two-part cutoﬀ trade-oﬀ. (a) Nor-
+malized eigenvalue multiplicities mult(m/q)/qk−1 = S2(k, m) ∏m−1
+j=1 (q − j)/qk−1 of HSPES HT
+S
+at q = 5 for k = 3 (1, 12, 12) and k = 4 (1, 28, 72, 24) (Theorem 1(b), Certiﬁcate cert04). (b)
+Two-part query-diﬀerence trade-oﬀ at n = 5 ,000, k = 2 : balancing Part 1 (
+( d
+1
+)
+/
+( n
+2
+)
+) against
+Part 2 ( 2(n−2)
+nd2 ) isolates the sharp minimum at d∗ = 368 ≍ n2/3.
+the restriction χs|ES equals χs′|ES if and only if s′ − s = a1k for some a ∈ ˆG. Thus PES =
+ΠES ΠT
+ES (as an operator on CGk
+) is block-diagonal across the qk−1 shift-equivalence classes
+[s] = {s + a1k : a ∈ ˆG}, acting on each class as 1
+q |u[s]⟩⟨u[s]| where |u[s]⟩ = ∑
+a∈ˆG |χs+a1k ⟩.
+In Fourier space, HS = Iqk − E⊗k
+1 is the diagonal projector retaining precisely those s ∈ ˆGk
+with at least one zero coordinate. Inside the shift class [s], an element s + a1k has a zero
+coordinate iﬀ −a ∈ { s1, . . . , sk}; hence the number of surviving basis states in [s] is exactly
+m(s) := |{s1, . . . , sk}| ∈ { 1, . . . , min(k, q)}. Therefore HS|u[s]⟩ has squared norm m(s), making
+HSPES HT
+S = ∑
+[s]
+1
+q (HS|u[s]⟩)(HS|u[s]⟩)∗ an orthogonal sum of rank- 1 operators with eigenvalues
+m(s)/q. The number of tuples s ∈ ˆGk with m distinct coordinates is S2(k, m) ∏m−1
+j=0 (q − j),
+and dividing by the shift-class size q yields ( 3). For EED
+S = {y1 − y2 = 0 }, the shift classes
+are {(s1 + a, s2 − a)}, which have the identical count m(s) = |{s1, −s2}| ∈ { 1, 2}, so the
+spectrum is identical. In particular, the unique m = 1 class [0] corresponds to |1ES ⟩, giving
+HS|1ES ⟩ = 1
+q |1Gk ⟩.
+Proof of (c). Fixing i ∈ S, every y ∈ ES is uniquely determined by yS\{i} ∈ Gk−1 via yi =
+− ∑
+r∈S\{i} yr (or y1 = y2 for ED). For HS(lin), (HS(lin) ◦ ∆i) = 1
+k (E0 ◦ ∆)i ⊗ IGS\{i}. For
+any y, y′ ∈ ES, the (y, y′)-entry of ((HS(lin) ◦ ∆i)ΠES )T ((HS(lin) ◦ ∆i)ΠES ) vanishes whenever
+yS\{i} ̸= y′
+S\{i}, and for y = y′ equals 1
+k2
+∑
+xi̸=yi
+1
+q2 = q−1
+q2k2 , proving ( 5). For HS = Iqk − E⊗k
+1 ,
+(HS ◦ ∆i) = ( E0 ◦ ∆)i ⊗ E⊗(S\{i})
+1 , so
+(HS ◦ ∆i)ΠES
+2
+op ≤
+(
+(E0 ◦ ∆)i ⊗ IGS\{i}
+)
+ΠES
+2
+op = q − 1
+q2 ,
+since E⊗(S\{i})
+1 is a contraction (and direct diagonal summation over y ∈ ES yields trace
+q−1
+q2 tr(E⊗(k−1)
+1 ) = (q−1)k
+q2 ; Lean thm05 and Certiﬁcate cert06).
+4
+
+--- Page 5 ---
+3 Explicit Zero- O(·) Non-Asymptotic Ω(nk/(k+1)) Bounds
+Let k ≥ 2, n ≥ k + 1, and d ∈ {1, . . . , n − k}. For each k-subset S ⊆ [n], deﬁne the truncated
+linear-ramp operator on the complement [n] \ S:
+B(d)
+S :=
+∑
+W⊆[n]\S
+|W|<d
+(
+1 − |W|
+d
+)
+EW , ΓS :=
+(
+HS ⊗ B(d)
+S
+) ˜ΠES , (7)
+where ˜ΠES := Π ES ⊗ IG[n]\S restricts columns to {y ∈ Gn : ∑
+j∈S yj = 0 } (or yu = yv for
+EDn,G at k = 2 ). Let X0 ⊆ Gn be the set of zero-instances (no k-subset sums to 0, resp. all
+coordinates distinct), and let Xuniq
+1 ⊆ Gn be the set of unique-solution one-instances (precisely
+one k-subset S(y) satisﬁes the equation). Since every y ∈ Xuniq
+1 belongs to a unique ES(y),
+the horizontal block concatenation Γ := [Γ S]|S|=k restricts cleanly to a valid adversary matrix
+Γres := ΠX0 ΓΠXuniq
+1
+∈ RX0×Xuniq
+1 .
+Theorem 2 (Zero-O(·) Non-Asymptotic Quantum Query Lower Bound for k-Sum and Element
+Distinctness). Let k ≥ 2, n ≥ k + 1, d ∈ {1, . . . , n − k}, and let G be any ﬁnite abelian group of
+order q ≥ (4k + 1)
+( n
+k
+)
+, setting ρ :=
+( n
+k
+)
+/q ∈
+(
+0, 1
+4k+1
+]
+. Then for both k-SUMn,G (all k ≥ 2) and
+EDn,G (k = 2):
+(a) Exact two-part query-diﬀerence upper bound: For every coordinate i ∈ [n],
+∥Γres ◦ ∆i∥2
+op ≤ ∥ Γ ◦ ∆i∥2
+op ≤ q − 1
+q2
+(
+d + k − 2
+k − 1
+)
++ k
+q
+(
+n − 1
+k
+) ( q − 1
+q
+) 2 1
+d2 . (8)
+(b) Exact Bonferroni–Cauchy–Schwarz norm lower bound:
+∥Γres∥op ≥
+√( n
+k
+)
+q
+1 − ρ − √kρ√1 − ρ > 0. (9)
+(c) Exact q-cancelled non-asymptotic adversary bound: Combining (8) and (9) cancels q
+identically (since q−1
+q < 1 and
+( n−1
+k
+)
+/
+( n
+k
+)
+= n−k
+n ), giving
+ADV± ≥ 1 − ρ − √kρ√(1 − ρ)
+( ( d+k−2
+k−1
+)
+( n
+k
+) + k(n − k)
+n d2
+) , (10)
+and hence Qε ≥ 1−2
+√
+ε(1−ε)
+2 ADV±. Choosing d =
+⌈( 2
+k−1
+) 1/(k+1)nk/(k+1)⌉
+gives ADV± ≥
+(ck − o(1))nk/(k+1) with certiﬁed constants (Certiﬁcate cert14): c2 > 0.428 at ρ = 1 /79
+(large-q limit 2−1/6/
+√
+3 ≈ 0.514), c3 > 0.341 at ρ = 1 /119 (limit 1/
+√
+6 ≈ 0.408), and
+c4 > 0.299 at ρ = 1/159 (limit 0.357).
+Proof. Proof of (a). Since ΠX0 and ΠXuniq
+1
+are orthogonal projections, ∥Γres ◦ ∆i∥2
+op ≤ ∥ Γ ◦
+∆i∥2
+op =
+∑
+|S|=k(ΓS ◦ ∆i)(ΓS ◦ ∆i)T 
+op. Split the sum over S into Part 1 ( i ∈ S) and Part 2
+(i /∈ S). For Part 1 ( i ∈ S), B(d)
+S does not touch coordinate i, so
+ΓS ◦ ∆i =
+(
+(HS ◦ ∆i) ⊗ B(d)
+S
+) ˜ΠES .
+By Theorem 1(c), ∥(HS ◦ ∆i)ΠES ∥2
+op ≤ q−1
+q2 , and because HS ◦ ∆i = (E0 ◦ ∆)i ⊗ E⊗(S\{i})
+1 acts
+strictly on the weight- (k −1) subspace E⊗(S\{i})
+1 outside i, the row-space of (ΓS ◦∆i)(ΓS ◦∆i)T
+5
+
+--- Page 6 ---
+is supported strictly on Fourier subspaces ET whose projection R := T \{i} satisﬁes S \{i} ⊆ R
+and |R \(S \ {i})| ≤ d −1 (hence |R| ≤ d + k −2). Fixing any R ⊆ [n] \ {i} of size r ≤ d + k −2,
+at most
+( r
+k−1
+)
+≤
+( d+k−2
+k−1
+)
+subsets S ∋ i satisfy S \ {i} ⊆ R, and each contributes operator norm
+at most q−1
+q2 (since 0 ≤ 1 − |W|/d ≤ 1). Because distinct subspaces ER ⊗ CG(i)
+are pairwise
+orthogonal, the Part 1 sum has operator norm at most q−1
+q2
+( d+k−2
+k−1
+)
+.
+For Part 2 ( i /∈ S), HS does not touch coordinate i, so ΓS ◦ ∆i = ( HSΠES ) ⊗ (B(d)
+S ◦ ∆i).
+By Theorem 1(a), ∥B(d)
+S ◦ ∆i∥op = q−1
+qd , and since q ≥ (4k + 1)
+( n
+k
+)
+> k , Theorem 1(b) gives
+∥HSΠES ∥2
+op = ∥HSPES HT
+S ∥op = k
+q . Summing the operator norms over all
+( n−1
+k
+)
+subsets S ̸∋ i
+via the triangle inequality gives the Part 2 term k
+q
+( n−1
+k
+)( q−1
+q
+) 2 1
+d2 , proving ( 8).
+Proof of (b). By the union bound, |Gn \ X0| ≤
+( n
+k
+)
+qn−1 = ρqn, so |X0| ≥ (1 − ρ)qn. For any
+two distinct k-subsets S ̸= S′, the deﬁning linear equations ∑
+j∈S yj = 0 and ∑
+j∈S′ yj = 0
+(and likewise yu = yv vs. yu′ = yv′ for {u, v} ̸ = {u′, v′}) are linearly independent over G since
+S′ \ S ̸= ∅; thus |ES ∩ ES′| = qn−2 identically. By Bonferroni’s union bound over the
+( n
+k
+)
+− 1
+subsets S′ ̸= S,
+|Xuniq
+1 | =
+∑
+|S|=k
+|Xuniq
+1 ∩ES| ≥
+(
+n
+k
+) (
+qn−1 −
+(( n
+k
+)
+−1
+)
+qn−2
+)
+≥ (1−ρ)
+(
+n
+k
+)
+qn−1 = (1 −ρ)ρqn.
+For every y ∈ Xuniq
+1 with unique witness S, because HT
+S |1Gk ⟩ = |1Gk ⟩ and (B(d)
+S )T |1Gn−k ⟩ =
+|1Gn−k ⟩ (as α0 = β0 = 1 and E1|1q⟩ = 0 ), we obtain ⟨1Gn|Γ|y⟩ = ⟨1Gn|HS ⊗ B(d)
+S |y⟩ = 1 .
+Hence ⟨1Gn|Γ|1Xuniq
+1
+⟩ = |Xuniq
+1 |. Moreover, by Theorem 1(b) and ∥B(d)
+S ∥op ≤ 1, ∥Γ∥2
+op =
+∑
+|S|=k(HSPES HT
+S ) ⊗ (B(d)
+S )2
+op ≤
+( n
+k
+) k
+q = kρ. Writing 1X0 = 1Gn − 1Gn\X0 and applying
+Cauchy–Schwarz yields
+∥Γres∥op ≥
+⟨1X0 |Γ|1Xuniq
+1
+⟩
+√
+|X0| |Xuniq
+1 |
+≥
+|Xuniq
+1 | −
+√
+|Gn \ X0| ∥Γ∥op
+√
+|Xuniq
+1 |
+√
+|X0| |Xuniq
+1 |
+≥
+√|Xuniq
+1 |
+|X0| −
+√
+|Gn \ X0|
+|X0|
+√
+kρ ≥
+√
+(1 − ρ)ρ − ρ
+√
+k
+1 − ρ = √ρ 1 − ρ − √kρ√1 − ρ .
+Since ρ ≤ 1
+4k+1 , Lean thm11 proves (1 − ρ)2 > 3kρ > kρ , ensuring 1 − ρ − √kρ > 0.
+Proof of (c). Dividing ( 9) by the square root of ( 8) cancels
+√
+1/q identically, and bounding
+q−1
+q < 1 with
+( n−1
+k
+)
+/
+( n
+k
+)
+= n−k
+n yields ( 10). Setting d = x nk/(k+1) gives
+( d+k−2
+k−1
+)
+/
+( n
+k
+)
++ k(n−k)
+nd2 ∼
+k
+n2k/(k+1) (xk−1 +x−2), minimized uniquely at xopt = ( 2
+k−1 )1/(k+1), yielding the certiﬁed constants
+in Certiﬁcate cert14.
+4 Positive-Weight Certiﬁcate Barrier, k-Threshold Tightness,
+and Finite- n Separation
+For a total Boolean function f : Gn → {0, 1}, let C0(f) and C1(f) denote its 0- and 1-certiﬁcate
+complexities, and let ADV+(f) := sup Γ≥0, Γ̸=0 ∥Γ∥op/ maxi ∥Γ ◦ ∆i∥op be the positive-weight
+adversary bound [ 2, 9].
+Theorem 3 (Positive-Weight Certiﬁcate Barrier, Exact k-Threshold Tightness, and Certiﬁed
+Crossovers).
+(a) Exact positive-weight certiﬁcate barrier: For every total Boolean function f : Gn → {0, 1},
+ADV+(f) ≤
+√
+C0(f) C1(f) ≤
+√
+C1(f) n. (11)
+6
+
+--- Page 7 ---
+(b) Exact tightness on k-Threshold: For every 1 ≤ k ≤ n, the total Boolean threshold function
+THn
+k : {0, 1}n → { 0, 1} deﬁned by THn
+k(x) = 1[|x| ≥ k] has C1(THn
+k) = k, C0(THn
+k) =
+n − k + 1 , and its Hamming- 1 positive-weight adversary on {|x| = k − 1} × {| y| = k}
+achieves exact equality ADV+(THn
+k) =
+√
+k(n − k + 1) =
+√
+C0(THn
+k) C1(THn
+k).
+(c) Certiﬁed ﬁnite- n separation beyond
+√
+kn: Since k-SUMn,G and EDn,G are total Boolean
+functions on Gn with C1(k-SUMn,G) = k and C1(EDn,G) = 2 , part (a) yields ADV+ ≤√
+kn unconditionally, whereas Theorem 2 strictly pierces
+√
+kn at the certiﬁed zero-ﬂoat
+crossovers (Certiﬁcate cert13, under four-digit rational square-root bounds
+√
+2/79 <
+0.1592,
+√
+3/119 < 0.1588,
+√
+4/159 < 0.1587; non-crossover checks in Certiﬁcates cert10–
+cert12 and Lean thm17–thm19 use √kρ < 0.16; all lower bounds below are strictly rounded
+down and upper bounds strictly rounded up):
+• k = 2 (2-Sum / Element Distinctness, ρ = 1 /79): n∗ = 1 ,290 (d∗ = 149 , ADV± ≥
+50.800 > 50.794 >
+√
+2n∗); at n = 5 ,000, ADV± ≥ 125.227 > 100.000 =
+√
+2n
+(Lean thm17).
+• k = 3 (3-Sum, ρ = 1/119): n∗ = 668 (d∗ = 131, ADV± ≥ 44.776 > 44.767 >
+√
+3n∗);
+at n = 1,000, ADV± ≥ 60.541 > 54.773 >
+√
+3n (Lean thm18).
+• k = 4 (4-Sum, ρ = 1/159): n∗ = 571 (d∗ = 147, ADV± ≥ 47.800 > 47.792 >
+√
+4n∗);
+at n = 1,000, ADV± ≥ 74.828 > 63.246 >
+√
+4n (Lean thm19).
+Proof. Proof of (a). Let Γ ∈ RX0×X1
+≥0 be any nonzero nonnegative matrix, and let u ∈ RX0
+≥0,
+v ∈ RX1
+≥0 be unit nonnegative principal singular vectors (existing by Perron–Frobenius on ΓT Γ),
+so ∥Γ∥op = uT Γv. For each x ∈ X0 choose a 0-certiﬁcate C0(x) ⊆ [n] with |C0(x)| ≤ C0(f),
+and for each y ∈ X1 choose a 1-certiﬁcate C1(y) ⊆ [n] with |C1(y)| ≤ C1(f). Because f is total
+on Gn, x and y must disagree on at least one coordinate i ∈ C0(x) ∩ C1(y) (otherwise a well-
+deﬁned input z ∈ Gn agreeing with x on C0(x) and with y on C1(y) would force 0 = f(z) = 1 ,
+a contradiction); hence Γxy ≤ ∑
+i∈C0(x)∩C1(y)(Γ ◦ ∆i)xy. Deﬁning u(i)
+x := ux1[i ∈ C0(x)] and
+v(i)
+y := vy1[i ∈ C1(y)] and applying Cauchy–Schwarz gives
+∥Γ∥op ≤
+n∑
+i=1
+(u(i))T (Γ ◦ ∆i)v(i) ≤
+(
+max
+i∈[n]
+∥Γ ◦ ∆i∥op
+) n∑
+i=1
+∥u(i)∥2∥v(i)∥2
+≤
+(
+max
+i∈[n]
+∥Γ ◦ ∆i∥op
+)
+√
+n∑
+i=1
+∥u(i)∥2
+2
+√
+n∑
+i=1
+∥v(i)∥2
+2 ≤
+(
+max
+i∈[n]
+∥Γ ◦ ∆i∥op
+) √
+C0(f)C1(f),
+since ∑n
+i=1 ∥u(i)∥2
+2 = ∑
+x |C0(x)|u2
+x ≤ C0(f)∥u∥2
+2 = C0(f) and likewise for v. (Note that totality
+is essential: on a partial domain D ⊊ Gn, disjoint certiﬁcates C0(x) ∩ C1(y) = ∅ can occur and
+ADV+(f) can exceed
+√
+C0(f)C1(f).)
+Proof of (b) and (c). On THn
+k, the Hamming- 1 bipartite adjacency matrix B between X0 =
+{|x| = k − 1} and X1 = {|y| = k} is biregular with degrees d0 = n − k + 1 and d1 = k,
+so ∥B∥op =
+√
+k(n − k + 1), while each B ◦ ∆i is a partial matching of norm 1 (Lean thm16,
+Certiﬁcate cert09). Part (c) follows directly from cross-multiplied integer evaluation of ( 10) in
+Lean thm17–thm19 and Certiﬁcates cert10–cert13.
+5 Formal Veriﬁcation Architecture and Scope
+Our veriﬁcation artifact transparently delineates machine-checked algebraic identities from prose
+spectral proofs and exact rational matrix certiﬁcates:
+7
+
+--- Page 8 ---
+Table 1: Zero-ﬂoat non-asymptotic Theorem 2 lower bounds vs. the positive-weight barrier
+√
+kn
+(Certiﬁcates cert10–cert12 with √kρ < 0.16; crossover rows marked ∗ from Certiﬁcate cert13
+with four-digit bounds
+√
+2/79 < 0.1592,
+√
+3/119 < 0.1588,
+√
+4/159 < 0.1587). All lower bounds
+and ratios are strictly rounded down; all
+√
+kn ceilings are strictly rounded up.
+Problem n Cutoﬀ d ρ =
+( n
+k
+)
+/q ADV±
+Thm 2 (lb) ADV+ ≤
+√
+kn Ratio (lb)
+2-Sum / ED (k = 2) 1,000 126 1/79 42.827 44.722 0.957
+2-Sum / ED (k = 2) 1,290∗ 149 1/79 50.800 50.794 1.0001
+2-Sum / ED (k = 2) 5,000 368 1/79 125.227 100.000 1.252
+2-Sum / ED (k = 2) 100,000 2 ,714 1 /79 922.682 447.214 2.063
+3-Sum ( k = 3) 668∗ 131 1 /119 44.776 44.767 1.0002
+3-Sum ( k = 3) 1,000 178 1 /119 60.541 54.773 1.105
+3-Sum ( k = 3) 10,000 1 ,000 1 /119 340.848 173.206 1.967
+4-Sum ( k = 4) 571∗ 147 1 /159 47.800 47.792 1.0002
+4-Sum ( k = 4) 1,000 232 1 /159 74.828 63.246 1.183
+4-Sum ( k = 4) 10,000 1 ,460 1 /159 473.188 200.000 2.365
+Figure 2: Certiﬁed non-asymptotic Ω(nk/(k+1)) bounds vs. positive-weight barriers√
+kn. (a) Explicit zero- O(·) Theorem 2 curves across n ∈ [102, 105] for k = 2 , 3, 4 plotted
+against the dotted positive-weight ceilings
+√
+kn. (b) Separation ratio ADV±
+Thm 2/
+√
+kn piercing
+unity at exact crossovers n∗ = 1,290 (k = 2), 668 (k = 3), and 571 (k = 4).
+• Layer 1 — Constructive Lean 4.36.0 Kernel (lean/QuantumQueryAdversaryKSum.
+lean): Twenty theorems compiled with lean-DwarningAsError=true, zero external de-
+pendencies, zero sorry, zero grind, zero Classical.choice, and no custom axioms be-
+yond standard constructive propext/Quot.sound (audited via #print axioms). Layer 1
+formalizes the single-coordinate Hadamard cancellation, ramp minimax bounds, and hy-
+perplane Gram norm decomposition ( thm01–thm05), Stirling multiplicity sum and trace
+identities for k = 2 , 3, 4 (thm06–thm10), the Bonferroni positivity inequality 3kCq <
+(q − C)2 for q ≥ (4k + 1)C (thm11), exact binomial and cutoﬀ balance identities ( thm12–
+thm14), the Cauchy–Schwarz kernel and k-Threshold biregularity ( thm15–thm16), cross-
+multiplied integer certiﬁcations of ﬁnite- n separation at n = 5 ,000 (k = 2 ), n = 1 ,000
+(k = 3 ), and n = 1 ,000 (k = 4 ) ( thm17–thm19), and exact error-ampliﬁcation bounds
+(thm20). The operator-norm shift-class spectral decomposition (Theorem 1(b)), general- n
+block-adversary norm bounds (Theorem 2), and Perron–Frobenius barrier proof (Theo-
+rem 3(a)) are proved in full mathematical detail in Sections 2–4.
+• Layer 2 — Zero-Float Python Veriﬁer (verification/verify_quantum_query_
+adversary.py): An AST-audited pure standard-library veriﬁer using strictly int and
+8
+
+--- Page 9 ---
+Figure 3: Exact k-Threshold tightness and explicit asymptotic constants ck. (a) Exact
+attainment ADV+(THn
+k)/√n =
+√
+k(n − k + 1)/n across n = 6 , 12, 20 (Theorem 3(b)). (b)
+Explicit leading constants ck in ADV± ≥ cknk/(k+1) for k = 2 , . . . , 8 at ﬁxed ρ = 1 /(40k − 1)
+(Certiﬁcate cert14) and in the large- q limit ρ → 0+.
+Fraction (zero ﬂoats, zero numeric /, zero **, zero limit_denominator), emitting 16
+SHA-256 certiﬁcates in certificates/MANIFEST.json and validated by 56 adversarial
+pytest checks in tests/test_adversarial.py. Layer 2 independently builds exact
+rational matrices over Q for ﬁnite groups (including non-cyclic Z2 × Z2), certiﬁes ex-
+act operator-norm upper bounds via zero-ﬂoat rational LDLT Cholesky factorizations
+(cert02, cert04–cert07), veriﬁes exact Stirling power-trace moments tr(Gr), veriﬁes ex-
+act k-Threshold biregular matchings ( cert09), and computes exact rational crossovers
+and constants ( cert10–cert15).
+References
+[1] S. Aaronson and Y. Shi, Quantum lower bounds for the collision and the element distinct-
+ness problems , J. ACM 51 (2004), no. 4, 595–605.
+[2] A. Ambainis, Quantum lower bounds by quantum arguments , J. Comput. System Sci. 64
+(2002), no. 4, 750–767.
+[3] A. Ambainis, Quantum walk algorithm for element distinctness , SIAM J. Comput. 37
+(2007), no. 1, 210–239 (FOCS 2004).
+[4] A. Ambainis, Polynomial degree and lower bounds in quantum complexity: Collision and
+element distinctness with small range , Theory Comput. 1 (2005), 37–46.
+[5] A. Ambainis and M. Kokainis, Elementary proofs of quantum lower bounds for element
+distinctness and k-sum, preprint arXiv:2610.32693, October 2026.
+[6] A. Belovs and R. Špalek, Adversary lower bound for the k-sum problem , in Proc. 4th
+Innovations in Theoretical Computer Science (ITCS 2013) , ACM, pp. 323–328.
+[7] P. Høyer, T. Lee, and R. Špalek, Negative weights make adversaries stronger , in Proc. 39th
+Annual ACM Symposium on Theory of Computing (STOC 2007) , pp. 526–535.
+[8] B. W. Reichardt, Reﬂections for quantum query algorithms , in Proc. 22nd Annual ACM-
+SIAM Symposium on Discrete Algorithms (SODA 2011) , pp. 560–569.
+9
+
+--- Page 10 ---
+[9] R. Špalek and M. Szegedy, All quantum adversary methods are equivalent , Theory Comput.
+2 (2006), 1–18 (ICALP 2005).
+10
