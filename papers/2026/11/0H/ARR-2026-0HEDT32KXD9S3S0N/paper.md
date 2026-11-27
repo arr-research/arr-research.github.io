@@ -1,0 +1,591 @@
+# Exact Border-Rank and Rank Separations for Spin-Factor Jordan Algebras, Matrix Jordan Algebras, and Classical Lie Algebras via Koszul Flattenings and Diagonal-Slice Strassen Commutators
+
+**Author:** Lluis Eriksson  
+**AIRR Identifier:** `ARR-2026-0HEDT32KXD9S3S0N` (v1)  
+**License:** CC-BY-4.0 (manuscript), MIT (verification repository)  
+**Verification Repository:** https://github.com/lluiseriksson/jordan-spin-factor-and-lie-border-rank (`v1.0.0`)  
+**Canonical PDF SHA-256:** `5ca4e3a021c9ce60c6da878e8e751106252920addccd5cdc28f0b0bd949c2f96`
+
+## Abstract
+
+We determine exact multiplicative border-rank and tensor-rank separations across three canonical families of non-associative algebras: spin-factor Jordan algebras J_D, matrix Jordan algebras Sym_n, and classical Lie algebras so_n and sl_3. First, we completely resolve the spin-factor family for every dimension D >= 3: we prove exact border rank underline_R_C(J_D) = underline_R_Q(J_D) = D + 1 (matching the Koszul p=1 flattening rank D^2 - 1 via an explicit purely rational (D+1)-cube symmetric degeneration over Q(eps)) and exact tensor rank R_Q(J_D) = R_C(J_D) = 2D - 2 (via a 5-line substitution proof and a recursive Pythagorean (3/5, 4/5) symmetric algorithm), yielding an unbounded exact gap R(J_D) - underline_R(J_D) = D - 3 and ratio 2 - 4/(D+1) -> 2. Second, for any d-dimensional commutative algebra over a field K (char K != 2, including R and C) with a non-degenerate symmetric invariant bilinear form, we prove the universal kernel identity [L_A^{-1} L_B, L_A^{-1} L_C](A) = 0 and skew-symmetry of L_A[L_A^{-1} L_B, L_A^{-1} L_C] = L_B L_A^{-1} L_C - L_C L_A^{-1} L_B for every invertible slice L_A, unconditionally capping Strassen's commutator rank at d-1 (d odd) or d-2 (d even). On Sym_n, the identity slice A = I_n reduces to (1/4) ad_{[B,C]} of rank at most d - ceil(n/2), whereas breaking symmetry with A = diag(1,...,n) attains the universal Strassen ceiling for all n = 2..7; at Sym_3 (d = 6, ceiling 8), an exact Q-rank Koszul p=2 certificate (84/10) breaks Strassen's wall to prove underline_R_C(Sym_3) >= 9, paired with an exact 14-cube rational Waring identity for tr(X^3). Third, while Strassen's equations are universally blind to every Lie algebra (ad_X(X) = 0), exact Koszul flattenings establish tight underline_R_C(so_3) = R_Q(so_3) = 5 (with an explicit {0, +-1} 5-product cross-product algorithm), underline_R_C(so_4) >= 8 (R_Q <= 10), underline_R_C(so_5) >= 13 (449/36 at p=2), and a three-tier escalation on sl_3 reaching underline_R_C(sl_3) >= 13 (440/35 at p=3), paired with a 25-product rational 5-cross-product algorithm. All core identities are formally verified in Lean 4.36.0 (20 constructive theorems, 0 sorry, 0 Classical.choice) alongside 16 zero-float SHA-256 certificates and 56 adversarial pytest checks.
+
+## Full Extracted Text
+
+--- Page 1 ---
+Exact Border-Rank and Rank Separations for
+Spin-Factor Jordan Algebras, Matrix Jordan
+Algebras, and Classical Lie Algebras via Koszul
+Flattenings and Diagonal-Slice Strassen Commutators
+Lluis Eriksson∗
+November 27, 2026
+Abstract
+We determine exact multiplicative border-rank and tensor-rank separations across three
+canonical families of non-associative algebras: spin-factor Jordan algebrasJD, matrix Jordan
+algebrasSym n, and classical Lie algebrasson andsl 3.
+First (Theorem 1), we completely resolve the spin-factor Jordan algebraJD forevery
+dimension D≥ 3. We prove that its exact border rank satisfiesRC(JD) = RQ(JD) = D+ 1,
+matching the exact Koszulp = 1flattening rank D2 −1via an explicitpurely rational
+(D+ 1)-cube symmetric degeneration overQ(ε)requiring zero irrational roots. In sharp
+contrast, we prove that its exact tensor rank overQ, R, and C is RQ(JD) = RR(JD) =
+RC(JD) = 2D−2, combining a five-line substitution lower bound with an explicit symmetric
+(2D−2)-product rational algorithm built by recursive Pythagorean splitting(3
+5 ,4
+5 ). This
+yields an unbounded exact separationRQ(JD) −RC(JD) = D− 3 →∞ and exact ratio
+RQ(JD)/RC(JD) = 2− 4
+D+1 →2.
+Second(Theorem2), forany d-dimensionalcommutativealgebraoverafield K (charK̸= 2,
+in particularR and C) equipped with a non-degenerate symmetric invariant bilinear form,
+we prove the universal kernel identity[L−1
+A LB,L−1
+A LC](A) = 0and skew-symmetry of
+LA[L−1
+A LB,L−1
+A LC] = LBL−1
+A LC −LCL−1
+A LB foreveryinvertible slice LA. This uncondi-
+tionally caps Strassen’s commutator rank atd− 1( d odd) and d− 2( d even), and caps
+Strassen’s border-rank lower bound at3
+2 d− 1
+2 (d odd) and 3
+2 d− 1( d even). On Symn
+(d=
+(n+1
+2
+)
+), the identity sliceA= In reduces to1
+4 ad[B,C] of rank at mostd−⌈n/2⌉, whereas
+breaking symmetry withA = diag(1,...,n )attains the universal Strassen ceiling for all
+n∈{ 2,..., 7}(RC(Symn) ≥4,8,14,22,31,41). AtSym3 (d= 6, Strassen ceiling8), an exact
+Q-rank Koszulp= 2flattening certificate (rank = 84, divisor
+(5
+2
+)
+= 10) breaks Strassen’s
+wall to proveRC(Sym3) ≥9, paired with an explicit14-cube rational Waring identity for
+tr(X3).
+Third (Theorem 3), while every Lie algebra sliceadX is singular (adX(X) = 0) and
+thus universally invisible to Strassen’s equations, exact multi-degree Koszul flattenings
+establish the sharp identityRC(so3) = RQ(so3) = 5(via a {0,±1}five-product cross-product
+algorithm), RC(so4) ≥8with RQ(so4) ≤10via so4 ∼= so3 ⊕so 3, RC(so5) ≥13(449 /36at
+p= 2, improvingp= 1’s12), and a three-tier escalation onsl3:10( p= 1) →11( p= 2)
+→13(440 /35at p = 3), paired with a25-product rational decomposition into threesl2
+triples and two root cross-products. All core identities are formally verified in Lean 4.36.0
+(20constructive theorems,0 sorry,0 Classical.choice) alongside16zero-float SHA-256
+certificates and56adversarial pytest checks.
+∗Independent Researcher. Lean 4.36.0 proofs, verification scripts, and certificates are archived at
+github.com/lluiseriksson/jordan-spin-factor-and-lie-border-rank.
+1
+
+--- Page 2 ---
+1 Introduction
+Determining the multiplicative tensor rankRK(A)and border rankRK(A)of structure tensors of
+finite-dimensional algebrasAis a central problem of algebraic complexity theory [1, 3]. Whereas
+associative matrix multiplicationMn has been studied intensively since Strassen [6, 7] and
+Landsberg–Ottaviani [4], the exact bilinear complexity ofnon-associativeclassical algebras—
+Jordan algebras and Lie algebras—exhibits remarkably rich phenomena: exact separations
+between rank and border rank, sharp algebraic ceilings on Strassen’s commutator equations, and
+complete blindness of Strassen’s method on antisymmetric brackets.
+Recall that for ad-dimensional algebra( A,◦)over a field K with structure tensorTA ∈
+A∗⊗A∗⊗A, thetensor rank RK(A)is the minimum r such thatTA= ∑r
+s=1 us ⊗vs ⊗ws, and
+theborder rank RK(A)is the minimum r such thatTA lies in the Zariski closure of the set
+of tensors of rank≤r (equivalently,TA = limε→0 Tε with RK(ε)(Tε) ≤r ). Two fundamental
+polynomial-equation methods give lower bounds onRC(A):
+1. Strassen’s commutator equations [7]:If LA : A→A (LA(Y) = A◦Y ) is invertible,
+then for anyB,C∈A,
+RC(A)≥d+
+⌈1
+2 rank
+(
+[L−1
+A LB, L−1
+A LC]
+)⌉
+.(1)
+2. Landsberg–Ottaviani Koszul flattenings [4]:For each exterior degree1 ≤p≤d− 2,
+the linear mapKp(TA) : Λp(Cd)⊗C d →Λ p+1(Cd)⊗C d defined on basis elements by
+Kp(TA)
+(
+(ei1 ∧···∧e ip)⊗e j
+)
+:=
+d∑
+a=1
+(ea ∧ei1 ∧···∧e ip)⊗(e a ◦ej)(2)
+satisfies rank(Kp(u⊗v⊗w )) ≤
+(d−1
+p
+)
+on every rank-1tensor, yielding the unconditional
+lower bound
+RC(A)≥
+
+
+rankC
+(
+Kp(TA)
+)
+(d−1
+p
+)
+
+
+.(3)
+Crucially, wheneverTAhas integer structure constants,rankC(Kp(TA)) = rankQ(Kp(TA)) ≥
+rankFq (Kp(TA))for every prime q, enabling completely rigorous zero-float rank certification.
+In this work we establish three self-contained theorems resolving the exact rank and border-
+rank architecture of spin-factor Jordan algebrasJD (Theorem 1), matrix Jordan algebrasSymn
+(Theorem 2), and classical Lie algebrasson,sl 3 (Theorem 3).
+2 Complete Resolution of Spin-Factor Jordan AlgebrasJD
+For D≥ 3, thespin-factor Jordan algebra JD = Ke0 ⊕K D−1 is the canonical formally real
+simple Jordan algebra of degree2and dimensionD, with commutative bilinear product
+(x0,x)◦(y 0,y) =
+(
+x0y0 +x·y, x 0y+y 0x
+)
+,(4)
+wherex ·y= ∑D−1
+i=1 xiyi. Its structure tensorTJD is totally symmetric: it is the polarization of
+the cubic polynomial
+FD(x0,x1,...,x D−1) :=x3
+0 + 3x0
+D−1∑
+i=1
+x2
+i.(5)
+Note thatJ3 ∼= Sym2 via(x 0,x1,x2)↦→
+(x0+x1 x2
+x2 x0−x1
+)
+.
+Theorem 1(Exact Border Rank and Exact Tensor Rank of Spin FactorsJD).LetD≥3.
+2
+
+--- Page 3 ---
+(a) Exact border rankR= D+ 1:Over Q, R, andC, the spin-factor Jordan algebraJD has
+exact border rank and symmetric border rank
+RC(JD) =RR(JD) =Rsym
+Q (JD) =D+ 1.(6)
+Specifically, rankC(K1(TJD )) = D2 −1 = ( D+ 1)(D− 1), giving RC(JD) ≥D + 1, and
+writingS:= ∑D−1
+i=1 xi, the purely rational(D+ 1)-cube family overQ(ε)
+FD,ε(x) := 1
+ε2
+[D−1∑
+i=1
+(x0 +εxi)3 − (D−ε 2)2
+D+ 1−ε 2
+(
+x0 + ε
+D−ε 2 S
+)3
++ 1
+D+ 1−ε 2 (x0 −εS) 3
+]
+(7)
+satisfieslim ε→0 FD,ε(x) =FD(x)identically, withO(ε)remainder.
+(b) Exact tensor rankR= 2D−2:Over every field K with charK̸= 2, RK(JD) ≥2D−2.
+Moreover, over every fieldK admitting nonzero elementsα1,...,α D−1 ∈K ×with ∑D−1
+i=1 α2
+i =
+1—in particularK∈{Q,R,C}—we have the exact equality
+RQ(JD) =RR(JD) =RC(JD) = 2D−2.(8)
+(c) Unbounded factor-2separation:For all D≥ 3, RQ(JD) −RC(JD) = D− 3(tight at
+D= 3, strictly positive for allD≥4) and
+RQ(JD)
+RC(JD) = 2D−2
+D+ 1 = 2− 4
+D+ 1
+D→∞−−−−→2.
+Proof. (a) Lower bound.Consider the Koszul p = 1flattening K1(TJD ) : CD ⊗C D →
+Λ2(CD) ⊗C D. Its domain has dimension D2. We show that dim kerK1(TJD ) = 1. Let
+Z = ∑D−1
+r,s=0 crser ⊗es ∈kerK 1(TJD ). Expanding (2) for p= 1, the coefficient of(ea ∧eb) ⊗ek
+(0≤a<b≤D−1) inK 1(TJD )(Z)is
+D−1∑
+s=0
+(
+cbsTa,s,k −casTb,s,k
+)
+= 0.(9)
+Takea= 0,b=i≥1in (9):
+•Fork=j /∈{0,i}:T 0,s,j =δs,j andT i,s,j = 0, givingcij = 0for all distincti,j≥1.
+•Fork=i:T 0,s,i =δs,i andT i,s,i =δs,0, givingcii −c00 = 0, i.e.,cii =c00 for alli≥1.
+•Fork= 0:T 0,s,0 =δs,0 andT i,s,0 =δs,i, givingci0 −c0i = 0, i.e.,ci0 =c0i for alli≥1.
+Now take1 ≤a<b≤D− 1and k= bin (9): Ta,s,b = 0and Tb,s,b = δs,0, giving−ca0 = 0for all
+a≥ 1(and symmetrically takingk= agivescb0 = 0for all b≥ 1). Thusci0 = c0i = 0for all i≥ 1,
+cij = 0for all i̸= j, andc00 = c11 = ··· = cD−1,D−1. Conversely, substitutingcrs = δrs into (9)
+yields Ta,b,k −Tb,a,k = 0by commutativity of JD. Hence kerK1(TJD ) = span{∑D−1
+r=0 er ⊗er}
+is1-dimensional for every D≥ 3. By rank-nullity,rankC(K1(TJD )) = D2 −1, and(3) yields
+RC(JD)≥⌈(D 2 −1)/(D−1)⌉=D+ 1.
+(a) Upper bound.Let m := D−ε 2,∆ := D+ 1 −ε2, b := 1/m, w1 := −m2/∆, and
+w2 := 1/∆. Expanding each cube in (7) in powers ofεgives:
+• Coefficient ofx3
+0 inside the bracket:(D−1) + w1 + w2 = (D−1)∆−m2+1
+∆ = ε2∆
+∆ = ε2 (Lean
+thm02).
+•Coefficient of3εx 2
+0S:1 +w 1b−w 2 = ∆−m−1
+∆ = 0(Leanthm03).
+3
+
+--- Page 4 ---
+•Coefficient of3ε 2x0S2:w 1b2 +w2 = −1+1
+∆ = 0(Leanthm04).
+•Coefficient of3ε 2x0
+∑D−1
+i=1 x2
+i:1.
+Dividing byε2 yields FD,ε(x) = x3
+0 +3x0
+∑D−1
+i=1 x2
+i+ε
+(∑D−1
+i=1 x3
+i+(w1b3 −w2)S3)
+, which converges
+to FD(x)as ε→ 0using exactly D+ 1cubes over Q(ε). PolarizingFD,ε gives a(D+ 1)-term
+symmetric border-rank decomposition ofTJD .
+(b) Lower bound.Let TJD = ∑r
+s=1 ℓs⊗us⊗vs be any exact rank-r decomposition overK.
+In matrix-pencil form,
+M(x0,x) :=L (x0,x) =
+(
+x0 x⊤
+xx 0ID−1
+)
+=
+r∑
+s=1
+ℓs(x0,x)u sv⊤
+s .
+Restrict the linear formsℓ1,...,ℓ r to the( D−1)-dimensional hyperplaneH = {x0 = 0}. Their
+restrictions must spanH∗: otherwise there existsa ∈K D−1 \{0}with ℓs(0,a) = 0for all s,
+forcing M(0,a) = e0a⊤+a e⊤
+0 = 0, impossible. Relabeling so thatℓ1|H,...,ℓ D−1|H form a basis
+of H∗, the( D−1) ×(D−1)linear system ℓs(1,c1,...,c D−1) = 0(1 ≤s≤D− 1) has a unique
+solutionc∈K D−1. Evaluating the pencil at(1,c)eliminates the firstD−1rank-1terms:
+M(1,c) =
+(
+1c ⊤
+cI D−1
+)
+=
+r∑
+s=D
+ℓs(1,c)u sv⊤
+s .
+Because the trailing( D− 1) ×(D− 1)principal submatrix of M(1,c)is ID−1, we have
+rank(M(1,c)) ≥D− 1for everyc ∈K D−1. By subadditivity of matrix rank,r−(D−1) ≥D− 1,
+hencer≥2D−2.
+(b) Upper bound overQ.Starting from the Pythagorean base( 3
+5 )2 + (4
+5 )2 = 1for D= 3,
+recursively replacing the last coordinateαk by( 3
+5 αk,4
+5 αk)(Lean thm06–thm07) yields explicit
+nonzero rationals α1,...,α D−1 ∈Q × with ∑D−1
+i=1 α2
+i = 1for every D≥ 3. Computing the
+2(D−1)symmetric products
+Pi,±:= (αix0 ±xi)(αiy0 ±yi) (i= 1,...,D−1)
+recoversz0 = 1
+2
+∑D−1
+i=1 (Pi,++Pi,−) = (∑ α2
+i)x0y0+∑ xiyi = x0y0+x·yand zi = 1
+2αi
+(Pi,+−Pi,−) =
+x0yi+ xiy0 identically overQ (Lean thm08, cert03). Part(c)follows immediately (Lean thm09–
+thm10).
+3 Matrix Jordan AlgebrasSymn: Universal Strassen Ceiling and
+Koszul Breakthrough
+Let Symn denote thed-dimensional Jordan algebra ofn×n symmetric matrices (d=
+(n+1
+2
+)
+) under
+X◦Y := 1
+2 (XY +YX), equipped with the positive-definite trace inner product⟨X,Y⟩ = tr(XY)
+for which every multiplication operatorLX(Y) = X◦Y is self-adjoint:⟨LX(Y),Z⟩ = tr((X◦
+Y)Z) =⟨Y,L X(Z)⟩.
+Theorem 2(Strassen Ceiling onSym n andSym 3 Koszul Breakthrough).
+(a) Universal commutative-trace Strassen ceiling:Let(A,◦)be any d-dimensional (d≥ 1)
+commutative algebra over a fieldK with charK̸= 2(in particular K∈{R,C} ) equipped with
+a non-degenerate symmetric invariant bilinear form⟨·,·⟩ (so ⟨X◦Y,Z⟩ = ⟨Y,X◦Z⟩ for all
+X,Y,Z∈A). ForeveryA∈AwithL A invertible (henceA̸= 0) and allB,C∈A,
+[
+L−1
+A LB, L−1
+A LC
+]
+(A) = 0,(10)
+4
+
+--- Page 5 ---
+Figure 1:(a)Exact rank RQ(JD) = 2D−2versus exact border rankRC(JD) = D+ 1across
+spin-factor dimensionsD= 3,..., 12, showing exact tightness atD= 3( J3 ∼= Sym2) and linear
+gap D−3for D≥ 4.(b)Exact ratio RQ(JD)/RC(JD) = 2 − 4
+D+1 converging monotonically to
+the factor-2barrier.
+and the operatorK := LA[L−1
+A LB,L−1
+A LC] = LBL−1
+A LC −LCL−1
+A LB is skew-adjoint with
+respect to⟨·,·⟩. Consequently, the commutator rankrank([L−1
+A LB,L−1
+A LC]) = rank(K)is
+unconditionally even and satisfies
+rank
+(
+[L−1
+A LB, L−1
+A LC]
+)
+≤
+{
+d−1ifdis odd,
+d−2ifdis even, (11)
+which unconditionally caps Strassen’s bound(1) over C at d+ ⌊(d−1)/2⌋(namely 3
+2 d− 1
+2
+for oddd, and 3
+2 d−1for evend).
+(b) Identity-slice spectrum vs. broken-symmetry attainment onSymn:On Symn (n≥ 2,
+d=
+(n+1
+2
+)
+):
+• At the identity sliceA = In,[ LB,LC](X) = 1
+4 [[B,C],X] = 1
+4 ad[B,C] (X), whose rank
+over allB,C∈Sym n(C)is at mostd−⌈n/2⌉(attained forn= 2,...,7incert07).
+• Breaking theIn-symmetry via the explicit rational diagonal sliceA= diag(1,2,...,n ),
+tridiagonal Bij =1 |i−j|=1, and Cij = ij + (i−j )2 for1 ≤i,j≤n (equivalently
+(i0 + 1)(j0 + 1) + (i0 −j0)2 in0-based indexing) attains the exact universal Strassen
+ceiling (11) for every n∈{ 2,3,4,5,6,7}(commutator ranks2 ,4,8,14,20,26, strictly
+beatingA=I n for alln≥5), certifyingR C(Symn)≥4,8,14,22,31,41(cert08).
+(c) Breaking Strassen’s ceiling atSym3 via Koszul p = 2:For Sym3 (d = 6, even),
+Strassen’s universal ceiling(11) is6 + 4 /2 = 8. Exact rational Gaussian elimination overQ
+certifiesrank Q(K2(TSym3 )) = 84with rank-1divisor
+(5
+2
+)
+= 10(cert09), proving
+9≤R C(Sym3)≤R Q(Sym3)≤14,(12)
+where the upper bound14is certified by the explicit zero-denominator14-cube rational Waring
+identity for4 tr(X3)(Leanthm14,cert10).
+Proof. (a)Because Ais commutative,LC(A) = C◦A = A◦C = LA(C), soL−1
+A LC(A) = C,
+and likewiseL−1
+A LB(A) =B. Therefore
+[
+L−1
+A LB, L−1
+A LC
+]
+(A) =L−1
+A LB(C)−L −1
+A LC(B) =L −1
+A (B◦C−C◦B) = 0
+5
+
+--- Page 6 ---
+(abstractly formalized in Leanthm20). Moreover, denoting the adjoint with respect to the
+non-degenerate symmetric form⟨·,·⟩by( ·)⊤, invariance givesL⊤
+X = LX for allX∈A and hence
+(L−1
+A )⊤=L−1
+A . SettingK:=L A[L−1
+A LB,L−1
+A LC] =LBL−1
+A LC −LCL−1
+A LB, we obtain
+K⊤=L⊤
+C(L−1
+A )⊤L⊤
+B −L⊤
+B(L−1
+A )⊤L⊤
+C =LCL−1
+A LB −LBL−1
+A LC =−K.
+Thus the bilinear form(U,V ) ↦→⟨U,KV⟩is alternating (sincecharK̸= 2), so its rankrank(K)
+is unconditionally even. BecauseLA is invertible,rank([L−1
+A LB,L−1
+A LC]) = rank(K)is even,
+and sinceA̸= 0lies in its kernel, its nullity is at least1(and by parity at least2wheneverd is
+even), proving (11) for all invertible slices overK.
+(b)AtA=I n,L A = id, and direct matrix expansion yields
+[LB,LC](X) = 1
+4
+(
+B(CX+XC)+(CX+XC)B−C(BX+XB)−(BX+XB)C
+)
+= 1
+4
+[
+[B,C],X
+]
+.
+Let K := [B,C] ∈so n(C). On the Zariski-dense open locus of regular semisimple elements
+in son(C), K is diagonalizable over C with eigenvalues consisting of ⌊n/2⌋opposite pairs
+{±λr}plus a single0when n is odd. On Symn(C) ∼= S2(Cn), the eigenvalues ofadK are
+µp + µq (1 ≤p≤q≤n ). Each opposite pair contributes a zero eigenvalueλr + (−λr) = 0,
+and an oddn contributes0 + 0 = 0, giving dim ker(adK) ≥⌊n/ 2⌋+ (nmod 2) = ⌈n/2⌉, so
+rank(adK) ≤d−⌈n/ 2⌉on this dense open set and hence for allK∈so n(C)by Zariski lower
+semicontinuity of matrix rank. Exact pure-Fraction Gaussian elimination (cert07–cert08)
+verifies attainment ofd−⌈n/ 2⌉at A = In and attainment of the universal ceiling(11) at
+A= diag(1,...,n)forn= 2,...,7(with strict improvement for alln≥5, Leanthm12).
+(c)Pure-Fraction Gaussian elimination over Q on the120 ×90integer Koszul matrix
+K2(TSym3 )gives rankQ(K2(TSym3 )) = 84, confirmed independently modulo primes1000003and
+1000033( cert09); henceRC(Sym3) ≥⌈84/10⌉= 9(Lean thm13). ForX =
+(a d e
+d b f
+e f c
+)
+, the exact
+polynomial identity
+4 tr(X3) = 2
+[
+(a+b+d) 3 + (a+b−d) 3 + (a+c+e) 3 + (a+c−e) 3]
++ 2
+[
+(b+c+f) 3 + (b+c−f) 3]
++ (d+e+f) 3 + (d−e−f) 3 + (−d+e−f) 3 + (−d−e+f) 3
+−3(a+b+c) 3 + (a−b−c) 3 + (−a+b−c) 3 + (−a−b+c) 3
+is formally proved overZ in Lean (thm14) and certified on20rational matrices ( cert10),
+establishingR Q(Sym3)≤14upon polarization.
+Remark 1.While Theorem 2(c) establishes the exact rational Waring boundRQ(Sym3) ≤14,
+numerical BFGS optimization finds a10-cube real Waring approximation oftr(X3)to residual
+2.4 ×10−14 (with9of10matrices of rank2), suggesting that Rsym
+R (Sym3)may be as low as
+10. Narrowing (12) to determine exactRC(Sym3) ∈{9,..., 14}(conjecturally9or10) and
+RQ(Sym3)remains an intriguing open question.
+4 Classical Lie Algebras son and sl3: Strassen Blindness and
+Multi-Degree Koszul Escalation
+For any Lie algebra(g,[·,·])of dimension dimg≥ 1, every left-multiplication sliceLX = adX
+satisfies adX(X) = [X,X] = 0, sonoleft or right slice is invertible and Strassen’s commutator
+bound (1) is universally inapplicable in the first two tensor modes. (Moreover, on any semisimple
+or metric Lie algebra such asson or sln, every third-mode sliceα([·,·]) = κ(adZ(·),·)is likewise
+singular via the Killing formκ, whereas non-semisimple Frobenius Lie algebras can admit
+invertible third-mode slices.) Koszul flattenings(3) require no invertible slice and yield sharp
+multi-degree escalations.
+6
+
+--- Page 7 ---
+Figure 2:(a)Exact Strassen commutator rank onSymn (n= 2,..., 7): the identity sliceA= In
+saturates atd−⌈n/2⌉, whereas the broken-symmetry diagonal sliceA= diag(1,...,n)attains
+the universal commutative-trace even ceiling (d−1for odd d, d−2for even d).(b)Resulting
+border-rank lower bounds onSymn and the Koszulp= 2breakthrough RC(Sym3) ≥9strictly
+exceeding Strassen’s universal wall8.
+Theorem 3(Koszul Bounds and Algorithms for Classical Lie Algebras).
+(a) Universal Strassen blindness:For every finite-dimensional Lie algebrag with dimg≥ 1
+and everyX∈g,det(ad X) = 0(cert15).
+(b) Tight resolution ofso3:The3-dimensional Lie algebra so3 (cross productu×v ) satisfies
+the exact equality
+RC(so3) =RQ(so3) = 5.(13)
+The lower bound follows fromrankQ(K1(Tso3 )) = 9(divisor2, cert11); the upper bound is
+attained overZby the five{0,±1}bilinear products
+P1 =u1v2, P 2 =u2v1, P 3 =u3(v1 +v2 +v3),
+P4 = (u1 +u2 +u3)v3, P 5 = (u2 +u3)(v1 +v3),
+recoveringu×v= (P 5 −P2 −P3, P5 −P2 −P4, P1 −P2)identically (Leanthm15).
+(c) Exact Koszul escalation onso4,so 5,sl 3:Exact zero-float rank certification (overQ and
+modulo independent primes1000003and1000033,cert12–cert14,cert16) establishes:
+•so 4 (dim = 6): rankQ(K1) = 36(divisor5) and rank(K2) = 78(divisor10) yield
+8 ≤RC(so4) ≤RQ(so4) ≤10, where10is attained via the self-dual/anti-self-dual split
+so4 ∼= so3 ⊕so 3.
+•so 5 (dim = 10): K1 yields rank = 100(divisor9 = ⇒≥ 12), whereasK2 escalates to
+rank = 449(divisor36), provingR C(so5)≥13.
+•sl 3 (dim = 8):Koszul flattenings exhibit a strict three-tier staircase:
+p= 1 : 64
+7 =⇒R ≥10, p= 2 : 223
+21 =⇒R ≥11, p= 3 : 440
+35 =⇒R C(sl3)≥13,
+paired with an explicit25-product rational algorithm decomposing[·,·]sl3 into three root
+sl2 triples (3×5 = 15products) plus two3-dimensional root cross-products (2×5 = 10
+products).
+7
+
+--- Page 8 ---
+Figure 3:(a)Multi-degree Koszul border-rank escalation on classical Lie algebrasso3,so 4,so 5,sl 3,
+where Strassen’s equations are universally blind.(b)Complete3 ×3matrix algebra complexity
+landscape comparingso3, Sym3, sl3, and associativeM3 (Koszul lower bound15[ 5], Laderman
+upper bound23[2]).
+Table 1: Summary of certified border-rank lower bounds, exact rational rank upper bounds, and
+verification artifacts across Theorems 1–3.
+Algebra DimdStrassen Ceiling Best Koszul LB Certified RankR Q Certificate
+Spin factorJD(D≥3)D—R =D+ 1(K1:D2−1)R Q= 2D−2(exact!)cert01–cert05
+Sym2 ∼=J3 3 4(rk2)R = 4(K1:8/2)R Q= 4(exact!)cert01,cert08
+Sym3 6 8(rk4)R ≥9(K2:84/10)R Q≤14(14-cube)cert08–cert10
+Sym4,Sym5,Sym6,Sym7 10,15,21,28 14,22,31,41— —cert07–cert08
+so3 3Blind (ad Xsing.)R = 5(K1:9/2)R Q= 5(exact!)cert11,cert15
+so4 ∼=so3⊕so3 6Blind (ad Xsing.)R≥8(K1:36/5,K2:78/10)R Q≤10(split)cert12,cert15
+so5 10Blind (ad Xsing.)R ≥13(K2:449/36) —cert13,cert15
+sl3 8Blind (ad Xsing.)R ≥13(K3:440/35)R Q≤25(5-cross)cert14–cert16
+Proof. Part(a)follows from[ X,X] = 0. For(b), expandingP5 −P2 −P3 = (u2v1 +u2v3 +u3v1 +
+u3v3) −u2v1 −(u3v1 + u3v2 + u3v3) = u2v3 −u3v2, and similarlyP5 −P2 −P4 = u3v1 −u1v3
+and P1 −P2 = u1v2 −u2v1, verifies the5-product algorithm identically overZ (Lean thm15),
+matchingrank Q(K1(Tso3 )) = 9(Leanthm16).
+For(c), the integer structure tensors ofso4, so5, and sl3 (in Chevalley basis) give exact
+Koszul matrices whose ranks modulo distinct primes1000003and1000033(and over Q for
+K1(so4)) certifyrankC ≥rank Fq unconditionally (cert12–cert14, Leanthm17–thm19). Forso4,
+letting Eij := eij −eji denote the standard skew-symmetric basis matrices (0≤i<j≤ 3), the
+self-dual basisP1 = 1
+2 (E01 + E23), P2 = 1
+2 (E12 + E03), P3 = 1
+2 (E02 −E13)and anti-self-dual
+basis Q1 = 1
+2 (E01 −E23), Q2 = 1
+2 (E12 −E03), Q3 = 1
+2 (E02 + E13)satisfy[ Pi,Qj] = 0and
+two independent cross-product laws, giving5 + 5 = 10rational products (cert12). For sl3,
+writing Cartan eigenvaluesα1(h) = 2h1 −h2, α2(h) = −h1 + 2h2, α3(h) = h1 + h2, each root
+sl2 triple( αk(h),e+k,e−k)reduces under( h,e,−f )to a3D cross-product (5products each,
+15total), and the six remaining off-diagonal root-root brackets partition cleanly into two3D
+cross-products( e01,e12,e20) ×(f01,f12,f20)and( e10,e02,e21) ×(f10,f02,f21)(5products each,
+10total), recovering[X,Y]identically in25rational products (cert16).
+8
+
+--- Page 9 ---
+5 Formal Verification and Reproducibility
+All algebraic identities and rank bounds are verified by a two-layer zero-trust stack:
+1. Lean 4.36.0 (lean/JordanSpinFactorLieBorderRank.lean):20constructive theorems
+(thm01–thm20) compiled underlean -DwarningAsError=true with zero external dependen-
+cies, zerosorry, zeroClassical.choice, and zero custom axioms, certifying the rational
+(D+ 1)-cube border-rank cancellations, recursive Pythagorean splitting, substitution arith-
+metic, the Symn Strassen ceiling andn≥ 5diagonal-slice superiority, the14-cube Sym3
+Waring identity, the{0,±1}5-product so3 algorithm, all Koszul ceiling inequalities, and the
+abstract commutative Strassen kernel theorem.
+2. Zero-Float Python Verifier:The pure standard-library verifierverification/verify_
+jordan_lie_border_rank.py (int/Fraction, AST-audited for zero floating-point literals,
+zero/, zero**, and zerolimit_denominator) generates16deterministic SHA-256 certificates
+withMANIFEST.jsonSHA-256 digest
+2afa9455de5696c8e19f6ded85d021fe7c1386a8778594807bcf81e526cf1589
+cross-checked by56adversarial unit tests (tests/test_adversarial.py).
+AI Assistance Disclosure.Manuscript drafting, symbolic exploration, Lean 4 formalization,
+zero-float verification scripting, and adversarial test construction were carried out by the author
+using Google Antigravity, with every mathematical result independently verified by Lean 4.36.0
+and exact rational/modular certificates.
+References
+[1] P. Bürgisser, M. Clausen, and M. A. Shokrollahi,Algebraic Complexity Theory, Grundlehren
+der mathematischen Wissenschaften315, Springer, Berlin, 1997.
+[2] J. D. Laderman,A noncommutative algorithm for multiplying3 ×3matrices using23
+multiplications, Bull. Amer. Math. Soc.82(1976), 126–128.
+[3] J. M. Landsberg,Tensors: Geometry and Applications, Graduate Studies in Mathematics128,
+American Mathematical Society, Providence, RI, 2012.
+[4] J. M. Landsberg and G. Ottaviani,Equations for secant varieties of Veronese and other
+varieties, Ann. Mat. Pura Appl.192(2013), 569–606.
+[5] J. M. Landsberg and G. Ottaviani,New lower bounds for the border rank of matrix multipli-
+cation, Theory Comput.11(2015), 285–298.
+[6] V. Strassen,Gaussian elimination is not optimal, Numer. Math.13(1969), 354–356.
+[7] V. Strassen,Rank and optimal computation of generic tensors, Linear Algebra Appl.52–53
+(1983), 645–685.
+9
