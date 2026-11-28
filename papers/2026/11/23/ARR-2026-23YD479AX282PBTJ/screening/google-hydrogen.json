@@ -1,0 +1,55 @@
+{
+  "paper_id": "ARR-2026-23YD479AX282PBTJ",
+  "version": "v1",
+  "version_id": "arr:version:5b6a2de4-66f1-4531-8a81-8d3f211c6853",
+  "canonical_sha256": "c9d3ce92100b88567b4e1e636c153830f1b71d4924ed6275b166e3e569a5a5c4",
+  "provider": "Google",
+  "model_id": "hydrogen",
+  "assessed_at": "2026-11-28T02:28:25Z",
+  "prompt_version": "ARR-ASSESS-1.0",
+  "independence": "not_involved_in_manuscript",
+  "recommendation": "accept",
+  "millennium_score": 6.20,
+  "overall_stars": 6,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 5,
+      "basis": "All four theorems, Lemma 1, Eqs. (2)-(6), and numerical thresholds in Table 1 were independently verified. Theorem 1's diagonal and adjacent-swap deduplication, Lemma 1's three-case bad-subarray run bound, and Theorem 2's three-tier packing inequality are mathematically sound, with no errors found."
+    },
+    "rigor": {
+      "stars": 4,
+      "basis": "Proofs are concise and valid across all cases, carefully evaluating run counts on deleted slices X^(-j) and X^(-i) to avoid projection run-collapse. Minor proof compression occurs in Theorem 1 (injectivity of swap pairs is implicit), and Lean 4 formalizes supporting lemmas T01-T20 while Lemma 1 and Eqs. (3)-(4) remain paper proofs."
+    },
+    "novelty": {
+      "stars": 3,
+      "basis": "Genuinely proves strictly sharper non-asymptotic bounds beyond Li-Sun-Ge (arXiv:2611.34447v1): exact indel-pair deduplication (up to 4x in binary) and a three-tier deleted-slice run decomposition lowering strict binary thresholds from n>=27 to n>=18. However, leading asymptotics are unchanged and Theorems 3-4 are elementary."
+    },
+    "significance": {
+      "stars": 3,
+      "basis": "Strictly closes a sizable finite-length gap (n in [18, 26] for q=2, plus reductions for q=3,4,5) and extends the sphere-packing converse to rectangular m x n arrays. Practical impact is moderate since the asymptotic redundancy rate is unchanged, n in [3, 17] remains open, and no new code constructions are given."
+    },
+    "reproducibility": {
+      "stars": 5,
+      "basis": "Provides exact rational formulas, explicit parameter choices (s values and threshold pairs), SHA-256 artifact digests, Lean 4.36.0 theorem inventory (T01-T20), and exact-Q certificate summaries (C01-C16) matching independent recalculation."
+    }
+  },
+  "summary": "This manuscript strictly sharpens the non-asymptotic sphere-packing converse of Li, Sun, and Ge (arXiv:2611.34447v1) for q-ary (1,1)-criss-cross deletion-correcting codes. By deduplicating diagonal and adjacent-transposition collisions in single-insertion balls (Theorem 1) and refining the bad-subarray lemma across all three deletion-collision cases onto deleted slices to enable a three-tier packing decomposition (Lemma 1 and Theorem 2), the author reduces the overhead term epsilon by 53.3x-90.2x in binary and lowers the strict finite-length redundancy threshold r_C > 2n + 2 log_q n - 2 from n >= 27 to n >= 18 (q=2), 15 to 11 (q=3), 11 to 9 (q=4), and 9 to 8 (q=5), while extending the converse to rectangular m x n arrays (Theorem 3) and computing exact binary capacities for 2x2 and 2x3 arrays (Theorem 4).",
+  "strengths": [
+    "Theorem 1 provides a clean, exact algebraic improvement over Li-Sun-Ge Lemma 6 by factor q^2/(q-1)^2 (4x in binary) with exact equality at L=2.",
+    "Lemma 1 cleanly refines Case 3 of Li-Sun-Ge Lemma 5 to show that every bad codeword contributes at least rho_row(X^(-j)) - 2 or rho_col(X^(-i)) - 2 bad subarrays, while correctly evaluating run counts on deleted slices to prevent projection run-collapse.",
+    "Theorem 2's s-parameterized three-tier packing bound yields large verified finite-length threshold improvements across q in {2, 3, 4, 5} and generalizes cleanly to rectangular m x n arrays.",
+    "Transparent verification boundary separating Lean 4.36.0 formalized lemmas (T01-T20), exact-Q rational computations (C01-C16), and out-of-scope directions."
+  ],
+  "weaknesses": [
+    "Leading asymptotic redundancy 2n - 1 + 2 log_q n - o_q(1) is unchanged from Li-Sun-Ge [3], the small binary regime n in [3, 17] remains open, and no new code constructions are provided.",
+    "Theorem 3 Part 1 merely restates Theorem 2 for rectangular dimensions, while Theorem 3 Part 2 is an elementary fixed-position 2D parity-check bijection (which solves erasures at known (r,c) rather than unknown criss-cross deletions).",
+    "Theorem 4 is a tiny exact calculation (64 arrays on 2x3, where |C*(2,2,3)|=2 also follows from a two-line pigeonhole argument on length-3 binary words) that adds limited mathematical depth.",
+    "Lean 4 formalization covers 20 structural list/algebraic lemmas and finite rational checks (T01-T20) rather than an end-to-end formalization of Lemma 1's 2D subarray case analysis or the counting bounds (3)-(4), though Section 3 transparently discloses this."
+  ],
+  "potential_errors": [],
+  "strong_novelty_candidates": [
+    "Exact Levenshtein diagonal-and-swap deduplicated single-indel confusable pair bound P_indel(q, L) <= q^(L-1)(L^2(q-1)^2 + 2q - 1) (Theorem 1).",
+    "Deleted-slice bad-ball lower bound (Lemma 1) and three-tier run-decomposed sphere-packing converse (Theorem 2), lowering strict finite-length redundancy thresholds from n >= 27 to n >= 18 for q=2 and improving q=3,4,5 and rectangular m x n regimes."
+  ],
+  "unresolved_material_objections": []
+}

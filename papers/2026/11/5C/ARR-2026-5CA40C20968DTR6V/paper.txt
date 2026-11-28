@@ -1,0 +1,370 @@
+AIRR:ARR-2026-5CA40C20968DTR6V | v1 | 2026-11-27
+Quantitative Higher-Order Hankel–SOS Magic
+Lower Bounds, Infinite-Family Odd-Dimension
+Blind-Spot Separation, and Reverse-Monotonicity of
+Even-Moment Mana
+Lluis Eriksson
+Independent Researcher (lluiseriksson@gmail.com)
+Public Repository: https://github.com/arr-research/arr-research.github.io
+November 27, 2026
+Abstract
+Sharma, Chakrabarty, Mukherjee, Mallick, and Maity (arXiv:2611.34668v1) intro-
+duced an infinite Hankel-matrix hierarchy {Hm} for qualitatively detecting discrete Wigner
+negativity in odd-dimensional qudit systems, alongside two quantitative magic lower bounds
+from low-order moments: the third-moment bound B3 (Theorem 4) and the fourth-moment
+mana bound B4 (Theorem 5). However, higher Hankel levels m ≥ 2 remained purely qual-
+itative, leaving wide quantitative blind zones even on canonical ququint noisy magic states
+such as ρ2(p) for p ∈ (1/
+√
+5, 0.5806). We prove four original structural theorems that re-
+solve these open problems: (1) a Universal Level-m Hankel–SOS Quantitative Negativity
+Theorem converting every negative Hankel witness v ∈ Rm+1 with Mv > 0 into an explicit
+certified lower bound N (ρ) ≥ (−v⊤Hmv)/Mv , recovering B3 identically as its unique opti-
+mal m = 1 dual (λ∗ = (P + b)/(1 + P )), providing deterministic exact-Q Schur-complement
+witnesses throughout the (H1-blind,H2-detected) regime (det(H1) > 0 > det(H2)), closing
+the blind zone of ρ2(p) down to p = 0.45, and beating B3 by 2.11× at p = 0.59 and 1.26×
+at p = 0.60; (2) a Signed-Decomposition Cubic Saturation Inequality unconditionally deriv-
+ing (P − N )2 ≤ (1 + N )(b + N ) (even when P < N ) and proving both directions of exact
+extremal saturation; (3) an Infinite-Family Odd-Dimension (H1,B4)-Blind-Spot Separation
+Theorem constructing an explicit closed-form exact-Q Wigner-negative quasiprobability for
+every odd dimension D ≥ 3 satisfying det(H1) > 0 (B3 = 0), P 3 <c (B4 = 0), and certified
+N (2) SOS(D) = 729(D−1)/(204800D) > 0; and (4) a Higher-Even-Moment Multiplicative Mana
+Family Λ2k = (m2k−1 2 /m2k)1/(2k−2) (k ≥ 2) together with a sharp Reverse-Monotonicity
+Theorem proving Λ4 ≥ Λ6 ≥ Λ8 ≥ · · · (strictly decreasing whenever |W | is non-constant on
+its support, so B2k and N2k are strictly decreasing on their positive support and k = 2 is
+uniquely optimal). All 22 core theorems are verified in Lean 4.36.0 (0 sorry, 0 grind, 0
+custom axioms), paired with a zero-float exact-Q verifier, 16 canonical SHA-256 certificates,
+and 65 passing tests.
+1 Introduction
+In odd-dimensional discrete phase space Z2 D (D ≥ 3 odd), the Gross discrete Wigner quasiprob-
+ability distribution Wρ : Z2 D → R satisfies ∑ u∈Z2 D Wρ(u) = 1 and |Wρ(u)| ≤ 1/D for every
+quantum state ρ [1, 5, 2]. Non-stabilizerness (“magic”) is quantified by the sum negativity
+N (ρ) := ∑ u:Wρ(u)<0 |Wρ(u)| = (∥Wρ∥1 − 1)/2 and the additive mana M(ρ) := log2 ∥Wρ∥1 =
+log2(1 + 2N (ρ)) [5]. Rescaling xu := DWρ(u) ∈ [−1, 1] yields the rescaled Wigner moments
+mk := 1 D ∑
+u∈Z2 D
+xk u = Dk−1 ∑
+u∈Z2 D
+Wρ(u)k (k ≥ 1), (1)
+1
+
+
+
+so that m1 = 1, m2 = P := Tr(ρ2) ∈ [1/D, 1], m3 = b, and m4 = c.
+Sharma et al. [4] introduced an infinite Stieltjes–Hankel hierarchy [3] (Hm)i,j = mi+j+1
+(0 ≤ i,j ≤ m) that qualitatively detects Wigner negativity whenever Hm ̸⪰ 0, and proved two
+quantitative lower bounds from low-order moments:
+B3(P,b) := max
+(
+0, P 2 − b 1 + 2P + b ) ≤ N (ρ), B4(P,c) := max ( 0, 1 2 log2 P 3 c ) ≤ M(ρ). (2)
+Crucially, Sharma et al. [4] left three problems open:
+1. Quantitative Upgrade of Higher Hankel Levels: Levels m ≥ 2 (H2,H3,H4,... ) were purely
+qualitative; no closed-form method existed to extract certified lower bounds on N (ρ) or
+M(ρ) from Hm ̸⪰ 0. On the physical depolarized ququint magic state ρ2(p) = p|ψ2⟩⟨ψ2| +
+(1 − p)I5/5 of [4]—whose 25 rescaled discrete Wigner values xu = 5Wρ2(p)(u) take the five
+exact Q(
+√
+5) levels
+xu ∈
+
+
+
+4p + 1
+5| {z }
+mult. 1
+, 1 5|{z}
+mult. 4
+, 1 − p 5|{z}
+mult. 4
+, 1 + p
+√
+5
+5| {z }
+mult. 8
+, 1 − p
+√
+5
+5| {z }
+mult. 8
+
+
+ , (3)
+so that ρ2(p) is Wigner-negative iff p> 1/
+√
+5 ≈ 0.44721 (with exact N (ρ2(p)) = 8 25 (p √ 5−
+1) and rational moments mk ∈ Q for all k ≥ 1 by Q(
+√
+5) Galois conjugation)—BOTH
+B3 = 0 and B4 = 0 across the entire blind zone p ∈ (1/
+√
+5, 0.5806).
+2. All-Odd-Dimension Separation Between (H1,B4) and H2: Does there exist an explicit
+infinite family of Wigner-negative quasiprobabilities across every odd dimension D ≥ 3
+that simultaneously evades BOTH B3 (det(H1) > 0) and B4 (P 3 <c) while admitting an
+exact closed-form H2-SOS lower bound?
+3. Higher Even Moments m2k for Mana: Does generalizing the Hölder bound B4 to higher
+even moments m2k (k ≥ 3) sharpen the quantitative mana bound, or is k = 2 uniquely
+optimal?
+We resolve all three questions completely via four theorems, backed by 22 mechanized
+Lean 4.36.0 proofs and a zero-float exact-Q verification suite.
+2 Main Original Theorems
+2.1 Theorem 1: Universal Level-m Hankel–SOS Quantitative Negativity
+Bound
+For any coeﬀicient vector v = (v0,...,vm)⊤ ∈ Rm+1, define qv(x) := ∑m j=0 vj xj . For any Wigner
+distribution xu = DWρ(u) ∈ [−1, 1] with ∑ u xu = D, direct expansion yields
+v⊤Hmv =
+m∑
+i,j=0
+vivj mi+j+1 = 1 D ∑
+u∈Z2 D
+xu qv(xu)2. (4)
+Theorem 1 (Universal Level-m Hankel–SOS Quantitative Negativity Bound). Let v =
+(v0,...,vm)⊤ ∈ Rm+1 be any nonzero witness vector and let Mv > 0 satisfy Mv ≥
+supx∈[−1,0] qv(x)2 (for example, M tri v := (∑m j=0 |vj |)2 > 0, or the exact maximum of q2 v
+on [−1, 0]). Then every odd-dimensional quantum state ρ satisfies
+N (ρ) ≥ max(0, −v⊤Hmv) Mv , M(ρ) ≥ log2 ( 1 + 2 max(0, −v⊤Hmv) Mv ) . (5)
+Moreover:
+2
+
+
+
+1. (Exact m = 1 Duality with Sharma et al. Theorem 4.) For m = 1 with qλ(x) = x − λ
+(λ ≥ 0), supx∈[−1,0](x − λ)2 = (1 + λ)2 > 0 and −v⊤H1v = 2λP − λ2 − b. Maximizing
+over λ ≥ 0 when P 2 > b yields the unique closed-form maximizer λ∗ = (P + b)/(1 + P ),
+at which (5) recovers B3(P,b) = (P 2 − b)/(1 + 2P + b) identically.
+2. (Deterministic Schur-Complement H2-SOS Witnesses.) Whenever det(H1) = b − P 2 > 0
+and det(H2) < 0, the exact rational Schur-complement vector
+vSchur :=
+(Pc − b2
+b − P 2 , Pb − c b − P 2 , 1 )⊤ ∈ Q3 (6)
+satisfies v⊤ SchurH2vSchur = det(H2)/ det(H1) < 0 identically, certifying strictly positive
+N (ρ) > 0 throughout the entire (H1-blind,H2-detected) region det(H1) > 0 > det(H2).
+Proof. Splitting (4) into xu ≥ 0 and xu < 0: every xu ≥ 0 contributes xuqv(xu)2 ≥ 0, while
+every xu < 0 satisfies xu ∈ [−1, 0) so qv(xu)2 ≤ Mv and hence xuqv(xu)2 ≥ −Mv|xu|. Summing
+over Z2 D gives v⊤Hmv ≥ −MvN (ρ) (Lean T03), yielding (5) since Mv > 0. For m = 1 and
+qλ(x) = x−λ (λ ≥ 0), max[−1,0] q2 λ = (1+λ)2 (Lean T04–T05). Substituting λ∗ = (P +b)/(1+P )
+yields
+2λ∗P − (λ∗)2 − b = (P 2 − b)(1 + 2P + b) (1 + P )2 , (1 + λ∗)2 = (1 + 2P + b)2 (1 + P )2 ,
+whose quotient simplifies identically to (P 2 − b)/(1 + 2P + b) = B3(P,b) (Lean T06). For (6),
+block Gaussian elimination on H2 =
+(H1 w
+w⊤ m5
+)
+with w = (b,c)⊤ gives vSchur = (−H −1 1 w, 1)⊤,
+whence v⊤ SchurH2vSchur = m5 − w⊤H −1 1 w = det(H2)/ det(H1) < 0.
+Applied to the physical ququint state ρ2(p) of (3), Theorem 1 closes the entire (H1,B4)-
+blind zone sequentially: H2-Schur certifies strictly positive magic across p ∈ (0.4868, 0.5806]
+(C04–C06, Figure 1), explicit rational H2 witnesses beat B3 by 2.11× at p = 0.59 and
+1.26× at p = 0.60 (C07), H3-SOS descends to p = 0.4525, and at p = 9/20 = 0.45 (where
+det(H1), det(H2), det(H3) > 0 are all blind, C08) the explicit degree-4 root-interpolating
+polynomial q4(x) = (x − 14 25 )(x − 2 5 )(x − 1 5 )(x − 11 100 ) certifies N (4) SOS = 12393/2072994560000 > 0
+(Figure 3).
+2.2 Theorem 2: Exact Positive-Part Signed-Decomposition Saturation
+Decompose xu = x+ u − x− u with x+ u = max(xu, 0) ∈ [0, 1], x− u = max(−xu, 0) ∈ [0, 1], N =
+N (ρ) = 1 D ∑x− u , 1 D ∑x+ u = 1 + N , u := 1 D ∑(x− u )2, and v := 1 D ∑(x− u )3.
+Theorem 2 (Unconditional Positive-Part Signed-Decomposition Saturation). For every dis-
+crete Wigner distribution x ∈ [−1, 1]D2 with ∑ u xu = D, one has 0 ≤ v ≤ u ≤ min(N,P ),
+(P − u)2 ≤ (1 + N )(b + v) ≤ (1 + N )(b + u), (7)
+and UNCONDITIONALLY (even when P <N , such as |S⟩⊗3 where P = 1 <N = 49/27),
+(P − N )2 ≤ (1 + N )(b + N ) ⇐⇒ P 2 − b ≤ N (1 + 2P + b). (8)
+Equality (P − N )2 = (1 + N )(b + N ) holds if and only if x+ u ∈ {0,α} for a constant α> 0 and
+x− u ∈ {0, 1} (achieved by the pure qutrit strange state |S⟩ with α = 1/2, N = B3 = 1/3, C01).
+Proof. Since 1 D ∑(x+ u )2 = P − u and 1 D ∑(x+ u )3 = b + v, Cauchy–Schwarz on √ x+u and (x+ u )3/2
+yields (P − u)2 ≤ (1 + N )(b + v) (Lean T07–T10). Because x− u ∈ [0, 1], 0 ≤ (x− u )3 ≤ (x− u )2 ≤ x− u ,
+3
+
+
+
+Figure 1: Left: Closing the blind zone on the physical ququint state ρ2(p) (3) (p∗ = 1/ √ 5 ≈
+0.4472): certified sum-negativity lower bounds from Theorem 1 using minimum-eigenvalue
+witnesses for H2-SOS (moments up to m5) and H3-SOS (up to m7) vs. Sharma et al.’s B3
+(p> 0.5806) and B4 (p> 0.6224) (C04–C07). Right: Exact rational (H1,B4)-blind-spot separa-
+tion benchmarks on D ∈ {3, 5, 7} (C09–C11), where max(B3,B4) = 0 yet Theorem 1 (H2-SOS)
+certifies strictly positive negativity.
+so 0 ≤ v ≤ u ≤ N ; also P = 1 D ∑(x+ u )2 + u ≥ u, giving u ≤ P . Direct algebraic expansion gives
+the exact identity
+[
+(1 + N )(b + N ) − (P − N )2] − [ (1 + N )(b + u) − (P − u)2] = (N − u)(1 + 2P − u) ≥ 0,
+since N − u ≥ 0 and 1 + 2P − u ≥ 1 + P > 0 (constructively proved in Lean 4.36.0 T22!). This
+yields (8) unconditionally. For the equality characterization: if x+ u ∈ {0,α} and x− u ∈ {0, 1},
+then v = u = N and Cauchy–Schwarz holds with equality, giving (P − N )2 = (1 + N )(b + N ).
+Conversely, equality in (8) forces (N − u)(1 + 2P − u) = 0; since 1 + 2P − u ≥ 1 > 0, this forces
+u = N , hence ∑(x− u − (x− u )2) = 0 so x− u ∈ {0, 1} (and thus v = u = N ), and simultaneously
+forces equality in Cauchy–Schwarz on
+√
+x+u and (x+ u )3/2, so x+ u is constant on its support
+(x+ u ∈ {0,α}).
+2.3 Theorem 3: Infinite-Family Odd-Dimension (H1, B4)-Blind-Spot Separa-
+tion
+Theorem 3 (All-Odd-Dimension (H1,B4)-Blind-Spot Separation). For every odd integer D ≥
+3, define k := (D+1)/2 ≥ 2 and the explicit exact-Q quasiprobability vector x(D) ∈ ([−1, 1]∩Q)D2
+having
+k entries 1, 5(k − 1) entries 1 4 , 2(k − 1) entries − 1 8 , (D − 1)(D − 3) entries 0.
+Then x(D) is normalized (∑ u x(D) u = D), strictly Wigner-negative (N (x(D)) = D−1 8D > 0), and
+satisfies ALL THREE conditions simultaneously for every odd D ≥ 3:
+1. det(H1) = b(D) − P (D)2 > 0 (so Sharma et al. Theorem 2 at m = 1 and Theorem 4 yield
+B3 = 0),
+2. P (D)3 <c(D) (so Sharma et al. Theorem 5 yields B4 = 0),
+3. with witness q(x) = (x−1)(x− 1 4 ) (v = ( 1 4 , − 5 4 , 1)⊤, Mv = sup[−1,0] q(x)2 = 25 4 ), Theorem 1
+at m = 2 certifies
+v⊤H2(D)v = − 729(D − 1) 32768D < 0, N (2) SOS(D) = 729(D − 1) 204800D > 0.
+4
+
+
+
+Proof. Total entries count k+5(k−1)+2(k−1)+(D−1)(D−3) = (4D−3)+(D2 −4D+3) = D2,
+with sum k + 5 4 (k − 1) − 2 8 (k − 1) = 2k − 1 = D and N = 2(k−1) 8D = D−1 8D > 0. Direct evaluation
+of (1) gives closed-form rational moments for every odd D ≥ 3:
+P (D) = 43D + 21 64D , b(D) = 275D + 237 512D , c(D) = 2089D + 2007 4096D .
+Both det(H1) > 0 ⇐⇒ (43D + 21)2 < (275D + 237)(8D) and P (D)3 < c(D) ⇐⇒ (43D +
+21)3 < (2089D + 2007)(64D2) hold for ALL integers D ≥ 3 (constructively proved for all D ≥ 3
+in Lean 4.36.0 T21 via 43D + 21 ≤ 46D for D ≥ 7 and exact verification for D ∈ {3, 4, 5, 6}).
+Finally, q(x) = (x − 1)(x − 1 4 ) vanishes on every nonzero positive entry (x ∈ {1, 1 4 }), while x = 0
+contributes 0 and x = − 1 8 gives q(− 1 8 ) = (− 9 8 )(− 3 8 ) = 27 64 , so xq(x)2 = − 729 32768 . Multiplying by
+2(k − 1)/D = (D − 1)/D yields v⊤H2(D)v = − 729(D−1) 32768D , and dividing by Mv = q(−1)2 = 25 4
+certifies N (2) SOS(D) = 729(D−1) 204800D > 0 for every odd D ≥ 3 (evaluating to 243/102400 at D = 3 and
+729/256000 at D = 5, matching C09 and C10 identically).
+2.4 Theorem 4: Higher-Even-Moment Multiplicative Mana Family and
+Reverse-Monotonicity
+Generalizing Sharma et al.’s fourth-moment bound B4 to arbitrary even moments m2k =
+1
+D
+∑
+u |xu|2k (k ≥ 2), define the multiplicative L1-norm lower bound Λ2k, mana bound B2k,
+and sum-negativity bound N2k:
+Λ2k(ρ) :=
+(
+m2k−1 2
+m2k
+) 1
+2k−2
+, B2k(ρ) := max
+(
+0, log2 Λ2k(ρ)
+)
+, N2k(ρ) := max
+(
+0, Λ2k(ρ) − 1 2 ) .
+(9)
+Theorem 4 (Higher-Even-Moment Mana Bounds and Reverse-Monotonicity Uniqueness of
+k = 2). For every odd-dimensional quantum state ρ and every integer k ≥ 2:
+1. (Universal Multiplicative Lower Bound.) ∥Wρ∥1 ≥ Λ2k(ρ), hence M(ρ) ≥ B2k(ρ) and
+N (ρ) ≥ N2k(ρ), with exact multiplicativity Λ2k(ρ⊗n) = Λ2k(ρ)n (overcoming the global
+ceiling B3(ρ⊗n) ≤ 1, Lean T15, C16).
+2. (Reverse-Monotonicity — Uniqueness of k = 2.) The sequence {Λ2k(ρ)}k≥2 is monotoni-
+cally non-increasing:
+Λ4(ρ) ≥ Λ6(ρ) ≥ Λ8(ρ) ≥ · · · ≥ Λ2k(ρ) ≥ Λ2k+2(ρ) ≥ · · · (10)
+Equivalently, in exact integer-exponent form without roots, mk 2k ≤ m2 mk−1 2k+2. Equality
+Λ2k = Λ2k+2 holds if and only if |xu| is constant on its support (e.g., pure stabilizer states,
+C15). Whenever |xu| takes at least two distinct nonzero magnitudes, Λ4(ρ) > Λ6(ρ) >
+Λ8(ρ) > · · · strictly, and consequently B2k(ρ) and N2k(ρ) are non-increasing for all k ≥ 2
+and strictly decreasing on their positive support {k ≥ 2 : Λ2k(ρ) > 1}!
+Proof. Set au := |xu| ≥ 0 so 1 D ∑au = ∥Wρ∥1 and 1 D ∑a2r u = m2r. Applying Hölder’s inequality
+with conjugate exponents p = 2k − 1 and q = (2k − 1)/(2k − 2) to a2 u = a
+2k−2
+2k−1
+u · a
+2k
+2k−1
+u gives
+m2 ≤ ∥Wρ∥
+2k−2
+2k−1
+1 m
+1
+2k−1
+2k , i.e., ∥Wρ∥1 ≥ Λ2k(ρ) (proved for k = 2 over arbitrary finite lists in
+Lean T12). For (10), writing 2k = 1 k · 2 + k−1 k · (2k + 2) and applying Hölder’s inequality with
+exponents k and k/(k−1) gives m2k ≤ m1/k 2 m(k−1)/k 2k+2 ⇐⇒ mk 2k ≤ m2mk−1 2k+2, which is equivalent
+to Λ2k(ρ) ≥ Λ2k+2(ρ) (proved for k = 2, i.e., m2 4 ≤ m2m6, in Lean T13–T14). Equality holds iff
+a2 u and a2k+2 u are proportional on supp(a), i.e., au is constant on its support; strict inequality
+Λ2k > Λ2k+2 transfers directly to B2k and N2k wherever Λ2k > 1.
+5
+
+
+
+Figure 2: Left: Theorem 4 reverse-monotonicity of the even-moment negativity bound N2k =
+max(0, 1 2 (Λ2k − 1)) vs. moment order 2k on the pure strange state |S⟩ (C12) and noisy ρ1(0.6)
+(C13), confirming k = 2 is uniquely optimal. Right: Global B3 = 1/3 ceiling (T15) vs. expo-
+nential growth of N4(|S⟩⊗m) = 1 2 (2m/2 − 1) and exact N (|S⟩⊗m) across m = 1..6 tensor copies
+(C16).
+3 Exact-Q Verification, Lean 4.36.0 Formalization, and Verifica-
+tion Boundary
+Cert ID Mode / Target Sharma B3, B4 Our Theorem Certified Result
+C01 Pure strange |S⟩ (D = 3) B3 = 1/3 m = 1 dual exact saturation N (1) SOS = 1/3
+C02–C03 Noisy ρ1(1/2), ρ1(4/5) B3 > 0 Exact λ∗ = (P + b)/(1 + P ): N (1) SOS = B3
+C04–C06 Ququint ρ2(p), p ∈ {0.50, 0.55, 0.58} B3 = B4 = 0 H2-Schur certifies N (2) SOS > 0 (blind zone closed)
+C07 Ququint ρ2(0.60) crossover B3 = 2 959 , B4 = 0 H2-SOS = 8156423/3094140625 (1.264 × B3)
+C08 Ququint ρ2(0.45) deep blind zone H1, H2, H3 ≻ 0 H4-SOS = 12393/2072994560000 > 0
+C09–C11 Blind spots D ∈ {3, 5, 7} (Thm. 3) B3 = B4 = 0 H2-SOS: 243/102400, 729/256000, 7/1024
+C12–C14 Higher-even Hölder (k = 2, 3, 4) B4 only Strict Λ4 > Λ6 > Λ8 reverse-monotonicity
+C15 Pure stabilizer state (D = 3) B3 = B4 = 0 Saturation m1 = · · · = m6 = 1, Λ4 = Λ6 = Λ8 = 1
+C16 Tensor copies |S⟩⊗m (m = 1..4) B3 ≡ 1/3 cap Global B3 stagnates; Λ2 4 = 2m scales exponentially
+Table 1: Summary of the 16 canonical exact-Q certificates (WIGNER-MOMENT-MAGIC-CERT-1.0).
+Verification Boundary.
+1. Formally Proved in Lean 4.36.0 (lean/WignerMomentMagicCert.lean, 22 theorems
+T01–T22, compiled with -DwarningAsError=true and lake build, 0 sorry, 0 grind, 0
+custom axioms; T01–T06, T11, T15–T22 depend on zero Classical.choice, while T07–
+T10 and T12–T14 use only standard Lean core axioms [propext, Classical.choice,
+Quot.sound]): Universal list Hankel–SOS negativity bound (T01–T05), exact m = 1
+dual recovery of B3 (T06), list Cauchy–Schwarz and unconditional signed-decomposition
+monotonicity (T07–T10, T22), degree-2 Hankel expansion (T11), universal k = 2 Hölder
+and B4 ≥ B6 reverse-monotonicity (T12–T14), global B3 ≤ 1 ceiling (T15), finite witnesses
+(T16–T20), and the infinite-family odd-dimension blind-spot proof for ALL D ≥ 3 (T21).
+2. Verified by Zero-Float Exact-Q Computation (src/wigner_moment_magic_verifier.py,
+65 passing pytest tests including AST audit forbidding float, /, and **): Exact Q(
+√
+5)
+moments and Hankel determinants for ρ2(p) across p ∈ [0.10, 0.60], deterministic Schur
+6
+
+
+
+Figure 3: Left: Exact H2-Schur SOS kernel xq2(x)2 on ρ2(0.55) (C05), staying nonnegative on
+all four positive Wigner levels of (3) while isolating the negative level x− = (1 − 0.55
+√
+5)/5 < 0.
+Right: Quantitative negativity thresholds p∗ on ρ2(p) descending monotonically from Sharma’s
+B4 (0.6224) and B3/H1 (0.5806) through our H2-SOS (0.4868), H3-SOS (0.4525), and H4-SOS
+(0.4472), converging to the exact physical threshold 1/
+√
+5 ≈ 0.4472.
+witnesses, degree-4 polynomial witness at p = 0.45, and all 16 canonical SHA-256 certifi-
+cates.
+3. Outside Scope: Experimental tomography noise estimation, continuous-variable Wigner
+functions, and physical density-matrix realization of the general quasiprobabilities x(D)
+in Theorem 3 (whereas ρ2(p) in (3) and C04–C08 is a genuine physical ququint density
+matrix ρ2(p) ⪰ 0, Tr ρ2(p) = 1).
+Artifact Provenance and Cryptographic Digests. All source code, Lean 4.36.0
+proofs, certificates, and tests are archived in the public AIRR repository https://github.
+com/arr-research/arr-research.github.io under MIT (code/data) and CC-BY-4.0
+(manuscript) licenses:
+• lean/WignerMomentMagicCert.lean
+SHA-256: 0a5040016b94f3c1c0efd8fb99c64f1d9852fa572a5abe375e079aaf6b741f52
+• src/wigner_moment_magic_verifier.py
+SHA-256: 1ca192730d7222fa27bc0e0efdc8776aad94170ac387fcf50c730efe8f40b57e
+• certificates/MANIFEST.json
+SHA-256: c0e5a21761409b996b77df2508111330d138eb7ac1ca871cd08277885220c592
+AI Disclosure and Conflict Statement. This work was produced by Lluis Eriksson with
+computational, formalization, and manuscript assistance from Google Antigravity autonomous
+research agents. As founder/operator of AIRR.SCIENCE, the author discloses an operator
+conflict (operator_conflict: true); all screening was performed by isolated PDF-only eval-
+uators.
+References
+[1] David Gross. Hudson’s theorem for finite-dimensional quantum systems. Journal of Math-
+ematical Physics, 47(12):122107, 2006.
+7
+
+
+
+[2] Hakop Pashayan, Joel J. Wallman, and Stephen D. Bartlett. Estimating outcome probabil-
+ities of quantum circuits using quasiprobabilities. Physical Review Letters, 115(7):070501,
+2015.
+[3] Konrad Schmüdgen. The Moment Problem. Springer, 2017.
+[4] Kunal Sharma, Sudip Chakrabarty, Saheli Mukherjee, Bivas Mallick, and Ananda G. Maity.
+Magic moments: An operational approach of certifying nonstabilizerness from few copies,
+November 2026. arXiv:2611.34668v1.
+[5] Victor Veitch, Seyed Ali Hamed Mousavian, Daniel Gottesman, and Joseph Emerson. The
+resource theory of stabilizer quantum computation. New Journal of Physics, 16(1):013009,
+2014.
+8
