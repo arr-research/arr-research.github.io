@@ -1,0 +1,62 @@
+{
+  "paper_id": "ARR-2026-5ZCXQCYSPF9PYRY3",
+  "version": "v1",
+  "version_id": "arr:version:b9b364e0-b11f-4547-917d-b1a546b635eb",
+  "canonical_sha256": "a790769151c96460fb0c94fef7aac9d8ed84c20ffa65dc7757b0ea33d2a31a98",
+  "provider": "Google",
+  "model_id": "hydrogen",
+  "assessed_at": "2026-11-28T02:42:00Z",
+  "prompt_version": "ARR-ASSESS-1.0",
+  "independence": "not_involved_in_manuscript",
+  "recommendation": "minor_revision",
+  "millennium_score": 6.8,
+  "overall_stars": 7,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 4,
+      "basis": "Main theorems and Lemma 1 are mathematically sound on independent checking, aside from a false alpha(C_ell^r) remark for ell <= r and a minor index slip in Thm. 2(1)."
+    },
+    "rigor": {
+      "stars": 4,
+      "basis": "Proofs are concise and verifiable, with explicit verification boundaries separating Lean-proved reductions from cited topological results, marred only by minor slips."
+    },
+    "novelty": {
+      "stars": 3,
+      "basis": "Lemma 1 and Thm. 2 strictly beat Haxell's 4r bound for all r >= 2 and Thm. 1(2)/Thm. 3 advance beyond [6], though Thm. 4(2) mechanizes [6] and Thm. 4(1) is small."
+    },
+    "significance": {
+      "stars": 3,
+      "basis": "Halves Haxell's bound asymptotically to 2r+2 for uniform cycle-power factors and narrows n_min(C_4) to [12, 36], though the [r+2, M(ell,r)] gap remains open."
+    },
+    "reproducibility": {
+      "stars": 4,
+      "basis": "Explicit constructions, orbit counts, SHA-256 digests, and a clear Lean/exact-Z verification boundary are given in the PDF, though artifacts were not audited."
+    }
+  },
+  "summary": "The manuscript proves four results extending Bai, Gao, Li, and Zhang [6] on cooperative colorings of cycle-power factors and small-order C_4-factor obstructions. Its main mathematical contribution is Lemma 1 and Theorem 2, which combine Meshulam domination on unit-interval path-power subgraphs, shift-averaged r-block deletion on C_ell^r, Kunneth join superadditivity, and Meshulam's Homological Hall Theorem to prove chi_cp(C_ell^r) <= M(ell, r) = min(3r+1, 2r+1 + ceil(r(2r+1)/(ell-r))) for all r >= 1 and ell >= 2r+2, strictly beating Haxell's 2*Delta = 4r bound for all r >= 2 and dropping to 2r+2 for ell >= 2r^2+2r. Theorem 1 determines the clique-power regime 3 <= ell <= 2r+1 and generalizes [6]'s lower bound to all r >= 1 via a Block-0 cyclic shift; Theorem 3 establishes 12 <= n_min(C_4) <= 36 via exhaustive n=4 and orbit-reduced n=8 checks; and Theorem 4 classifies n=4 minimal triangle-free 2-obstructions and mechanizes UNSAT lifts of [6] including a 70-vertex 10C_7-factor. The main proofs hold under adversarial checking, with minor errors/slips in preliminaries and exposition.",
+  "strengths": [
+    "Lemma 1 gives a clean, exact induction on |V(F)| showing eta_H(I(F)) >= ceil(|V(F)|/(2r+1)) for every induced subgraph F of P_t^r, exploiting the fact that N_F(u_1) is a clique and |N_F[w]| <= 2r+1.",
+    "Theorem 2 strictly improves Haxell's 4r upper bound to <= 3r+1 for all r >= 2, ell >= 2r+2 and to 2r+2 for ell >= 2r^2+2r via shift-averaged r-block deletion and exact isomorphisms C_ell^r - B_0 ~= P_{ell-r}^r and C_ell^r - N[w] ~= P_{ell-2r-1}^r.",
+    "Theorem 1(2) cleanly generalizes the 3-cycle-factor obstruction of [6] to an explicit (r+1)-tuple of C_ell^r copies for all r >= 1 and (r+1) | ell (ell >= 2r+2).",
+    "Theorem 4(2) gives an explicit, independently verifiable 7-triple partition of 3C_7 with zero independent transversals and an explicit 70-vertex 10C_7-factor triple.",
+    "The Verification Boundary transparently distinguishes what is formalized in Lean 4.36.0 from what relies on Python exact-Z computation (e.g., n=8 orbit search) and cited topological/graph-theoretic theorems ([2, 9, 10])."
+  ],
+  "weaknesses": [
+    "Theorem 4(2) is primarily a formalization/mechanization of the 7v, 18v, 36v, and 70v UNSAT constructions from [6] rather than new mathematics, and Theorem 4(1) is a very small finite classification on n=4 vertices.",
+    "In Theorem 3, the n=8 case (5,040 orbit-reduced triples) relies on an external Python bitmask verifier not proved end-to-end inside Lean, and n_min(C_4) remains open over {12, 16, 20, 24, 28, 32, 36}.",
+    "A substantial gap [r+2, M(ell, r)] remains between the lower bound (Theorem 1) and upper bound (Theorem 2) for chi_cp(C_ell^r) when r >= 2 and ell >= 2r+2.",
+    "The topological steps in Theorem 2 (reduced homology, Mayer-Vietoris, Kunneth join superadditivity, and Meshulam's Homological Hall Theorem) and Aharoni-Berger-Ziv [2] in Theorem 1(1) are paper proofs outside the Lean verification boundary."
+  ],
+  "potential_errors": [
+    "False preliminary identity (Section 2.1, p. 2): The paper states 'alpha(C_ell^r) = floor(ell/(r+1))' for arbitrary r >= 1 and ell >= 3. When 3 <= ell <= r, floor(ell/(r+1)) = 0 whereas C_ell^r ~= K_ell has alpha(K_ell) = 1. It should read max(1, floor(ell/(r+1))). (Theorem 1(1) uses alpha(K_ell)=1 directly and Theorem 1(2) has ell >= r+2, so the theorem statements are unaffected.)",
+    "Expositional gap in Theorem 2, Part 1 proof (p. 4): At the end of the proof, s is defined as max(1, ceil((k-t)/(2r+1))) using t = |I intersect B_0| <= floor(rk/ell), and it is claimed that k <= (3r+1)s and (ell-r)k <= ell(2r+1)s yield the second inequality of (5). Because t <= floor(rk/ell) implies s >= max(1, ceil((k - floor(rk/ell))/(2r+1))), the deduction should define s using floor(rk/ell) rather than t (though the inequality itself holds since floor(rk/ell) <= r for k <= ell).",
+    "Figure 2 (left) title typo (p. 7): The plot title reads 'Thm. 1: Contradictory 2-SAT Cycle in I(P_4, Q_4)', whereas (P_4, Q_4) and 2-SAT belong to Theorem 4; moreover, I(P_4, Q_4) for the implication graph clashes in notation with the independence complex I(G) in Section 2.2."
+  ],
+  "strong_novelty_candidates": [
+    "Lemma 1 (Unit-Interval Path-Power Homological Connectedness): exact lower bound eta_H(I(F)) >= ceil(|V(F)|/(2r+1)) for every induced subgraph F of P_t^r.",
+    "Theorem 2 (Sub-Haxell Topological Upper Bound for Uniform Cycle-Power Factors): chi_cp(C_ell^r) <= M(ell, r) <= 3r+1 < 4r for all r >= 2, ell >= 2r+2, collapsing to 2r+2 for all ell >= 2r^2+2r.",
+    "Theorem 1(2) (Universal Cycle-Power Factor Lower Bound): Block-0 Cyclic Shift construction yielding chi_cp({C_ell^r}) >= max(r+2, ceil(ell/floor(ell/(r+1)))) for all r >= 1, ell >= r+2.",
+    "Theorem 3 (Small-Order C_4-Factor Colorability Threshold): proving all triples at n=4 and n=8 are 3-cooperatively colorable, establishing 12 <= n_min(C_4) <= 36."
+  ],
+  "unresolved_material_objections": []
+}

@@ -1,0 +1,330 @@
+# Sharp Cooperative Chromatic Bounds for Cycle Powers, Small-Order C_4-Factor Thresholds, and Modular Formalization of Uniform Cycle-Factor Obstructions
+
+> Machine-readable rendition extracted from the hash-identified canonical PDF. Mathematical typography may be degraded; cite and verify against `paper.pdf`.
+
+## Page 1
+
+```text
+AIRR:ARR-2026-5ZCXQCYSPF9PYRY3 | v1 | 2026-11-27
+Sharp Cooperative Chromatic Bounds for Cycle
+Powers, Small-Order C4-Factor Thresholds, and
+Modular Formalization of Uniform Cycle-Factor
+Obstructions
+Lluis Eriksson
+Independent Researcher (lluiseriksson@gmail.com)
+Public Repository: https://github.com/arr-research/arr-research.github.io
+November 27, 2026
+Abstract
+Bai, Gao, Li, and Zhang (arXiv:2611.34299v1) recently determined the cooperative
+chromatic number χcp(Cℓ) for uniform cycle factors (r = 1, ∆ = 2), showing χcp(Cℓ) = 4
+when ℓ ≡ 1 (mod 3) and 3 otherwise via explicit 3-factor obstructions of order 36 (ℓ = 4) and
+ℓ(ℓ + 3) (ℓ ≥ 7). We prove four new structural, extremal, and computational theorems ad-
+vancing their framework across arbitrary cycle powers C r ℓ , small-order C4-factor thresholds,
+and minimal 2-obstructions: (1) a Universal Cycle-Power Factor Lower Bound and Exact
+Clique-Power Theorem proving χcp(Cr ℓ ) = ℓ for all 3 ≤ ℓ ≤ 2r + 1 (combining pigeonhole
+with chordality of Kℓ-factors via Aharoni–Berger–Ziv) and max(r + 2, ⌈ℓ/⌊ℓ/(r + 1)⌋⌉) ≤
+χcp(Cr ℓ ) ≤ 4r for all r ≥ 1, ℓ ≥ 2r + 2, established via an explicit Block-0 Cyclic Shift
+Permutation π that breaks every residue-class independent set simultaneously; (2) a Sharp
+Connected Cycle-Power Upper Bound proving χcp({C r ℓ }) ≤ min(ℓ, 2r + 2) for ALL r ≥ 1
+and ℓ ≥ 3 via constructive interval/chordal elimination of path powers P r ℓ−1 and Aharoni–
+Berger–Ziv, slashing Haxell’s 4r upper bound nearly in half (e.g., χcp({C 2 ℓ }) ∈ {4, 5, 6}
+vs. Haxell’s 8); (3) an Exhaustive Orbit-Reduced C4-Factor Colorability Threshold Theorem
+proving that EVERY triple of C4-factors on n = 4 (27/27, constructively proved in Lean 4)
+and on n = 8 (all 3152 = 99,225 triples reduced via Aut(2C4) = D4 ≀ S2 of order 128 to
+16 × 315 = 5,040 canonical orbits, zero UNSAT) admits a 3-cooperative coloring, strictly
+narrowing the minimum C4-factor obstruction order to 12 ≤ nmin(C4) ≤ 36; and (4) a
+Complete n = 4 Minimal Triangle-Free 2-Obstruction Classification and Modular Construc-
+tive Lean 4.36.0 UNSAT Lifts, classifying all 18 minimal triangle-free UNSAT pairs among
+412 = 1,681 pairs on n = 4 into exactly two 6-edge classes ((P4, Q4) and (C4, 2K diag 2 )) via
+the Aspvall–Plass–Tarjan 2-SAT reduction, and constructively mechanizing the 7v, 18v, 36v
+C4-factor (336 space), and explicit 70v C7-factor (370 space, via a newly constructed 21v
+3C7 no-IT partition) UNSAT proofs. All 22 core theorems are verified in Lean 4.36.0 (0
+sorry, 0 grind, 0 Classical.choice), paired with a zero-float exact-Z verifier, 16 canon-
+ical SHA-256 certificates, and 65 passing tests.
+1 Introduction
+Given graphs G1, . . . , Gm on a common vertex set V , a cooperative coloring [3] is a map ϕ :
+V → {1, . . . , m} such that each color class ϕ−1(i) is independent in Gi, i.e., uv ∈ E(Gi) =⇒
+(ϕ(u), ϕ(v)) ̸= (i, i). For a graph class G, the cooperative chromatic number χcp(G) is the least
+positive integer m such that every m graphs from G on a common vertex set admit a cooperative
+coloring. Haxell’sindependenttransversaltheorem[6]yields χcp(G∆) ≤ 2∆ formaximumdegree
+∆, while Aharoni, Berger, and Ziv [2] proved the sharp bound χcp(Gchordal,∆) ≤ ∆+1 for chordal
+graphs of maximum degree at most ∆ (see also [7, 1]).
+1
+```
+
+---
+
+## Page 2
+
+```text
+Bai, Gao, Li, and Zhang [5] settled two questions of Aharoni et al. [3] for connected cycles
+and uniform cycle factors Cℓ (disjoint unions of ℓ-cycles, r = 1, ∆ = 2), proving χcp({Cℓ}) = 3
+and χcp(Cℓ) = 4 when ℓ ≡ 1 (mod 3) and 3 otherwise. Extending [5], we resolve four structural
+questions:
+1. What exact lower and upper bounds govern uniform r-th cycle-power factors Cr ℓ (∆ =
+min(2r, ℓ − 1)) for arbitrary r ≥ 1 and ℓ ≥ 3?
+2. For single connected cycle powers {Cr ℓ }, can Haxell’s 4r upper bound be slashed by a
+factor of 2 across all r ≥ 1?
+3. What is the minimum vertex order nmin(C4) ≡ 0 (mod 4) at which a 3-graph C4-factor
+obstruction can exist (narrowing nmin(C4) ≤ 36)?
+4. What are all minimal triangle-free 2-cooperative obstructions on n = 4, and can both the
+36v C4-factor (336) and an explicit 70v C7-factor (370) UNSAT proof be constructively
+mechanized without classical axioms?
+2 Main Results
+2.1 Theorem 1: Universal Cycle-Power Factor Bounds and Exact Clique-
+Power Regime
+For integers r ≥ 1 and ℓ ≥ 3, let Cr ℓ denote the r-th power of the ℓ-cycle on Zℓ (uv ∈ E(Cr ℓ ) ⇐⇒
+1 ≤ min((u − v) mod ℓ, (v − u) mod ℓ) ≤ r), and let Cr ℓ denote the class of uniform Cr ℓ -factors
+(arbitrary vertex-disjoint unions of t ≥ 1 copies of Cr ℓ ). Note that C1 ℓ = Cℓ, ∆(Cr ℓ ) = min(2r, ℓ −
+1), and α(Cr ℓ ) = ⌊ℓ/(r + 1)⌋.
+Theorem 1 (Universal Cycle-Power Factor Lower Bound and Exact Clique-Power Regime).
+For every integer r ≥ 1 and every integer ℓ ≥ 3:
+1. (Exact Clique-Power Regime for Arbitrary Multi-Component Factors.) Whenever 3 ≤
+ℓ ≤ 2r + 1, every uniform Cr ℓ -factor is a disjoint union of ℓ-cliques Kℓ, and
+χcp(Cr ℓ ) = ℓ.
+2. (Universal Factor Sandwich for ℓ ≥ 2r + 2.) For EVERY r ≥ 1 and EVERY ℓ ≥ 2r + 2
+(and in fact the lower bound holds for ALL ℓ ≥ r + 2),
+max
+(
+r + 2,
+⌈ ℓ
+⌊ℓ/(r + 1)⌋
+⌉)
+≤ χcp(Cr ℓ ) ≤ 4r. (1)
+In particular, whenever ℓ = (r + 1)k with k ≥ 2 (where pigeonhole stalls at r + 1), taking r
+identical copies of Cr ℓ together with a single relabeled copy π(Cr ℓ ) under the Block-0 Cyclic
+Shift
+π(x) :=
+{
+(x + 1) mod (r + 1), 0 ≤ x ≤ r,
+x, x ≥ r + 1, (2)
+produces an explicit (r + 1)-tuple of Cr ℓ -factors with NO (r + 1)-cooperative coloring.
+Proof. Part 1 (3 ≤ ℓ ≤ 2r + 1): Every connected component of a Cr ℓ -factor is isomorphic to
+Kℓ, so every G ∈ Cr ℓ is a chordal graph of maximum degree ∆ = ℓ − 1 (for any number t ≥ 1
+of disjoint components!). By the Aharoni–Berger–Ziv theorem [2], every ∆ + 1 = ℓ chordal
+graphs of maximum degree at most ℓ − 1 admit a cooperative coloring, proving χcp(Cr ℓ ) ≤ ℓ.
+Conversely, since α(Kℓ) = 1 (Lean T06), covering a single Kℓ with identical copies requires at
+least ℓ independent sets (Lean T05), giving χcp(Cr ℓ ) = ℓ.
+2
+```
+
+---
+
+## Page 3
+
+```text
+Part 2 (ℓ ≥ r + 2): For ℓ ≥ 2r + 2, ∆(Cr ℓ ) = 2r, so Haxell’s theorem [6] gives χcp(Cr ℓ ) ≤
+2∆ = 4r. For the lower bound, identical copies of Cr ℓ force m ≥ ⌈ℓ/⌊ℓ/(r + 1)⌋⌉ (Lean T05),
+which already gives m ≥ r + 2 whenever ℓ = (r + 1)k + d with 1 ≤ d ≤ r (Lean T07).
+When ℓ = (r + 1)k with k ≥ 2, every independent set of Cr ℓ has size at most k, and the
+unique independent sets of size k are the r + 1 residue classes Rj := {j + t(r + 1) : 0 ≤ t ≤ k − 1}
+(0 ≤ j ≤ r). Suppose G1 = · · · = Gr = Cr ℓ and Gr+1 = π(Cr ℓ ) had an (r + 1)-cooperative
+coloring (I1, . . . , Ir+1). Since ∑r+1 i=1 |Ii| ≥ (r + 1)k and each |Ii| ≤ k, every Ii has size exactly k
+and the sets are pairwise disjoint. Hence I1, . . . , Ir must be r distinct residue classes Rj1 , . . . , Rjr ,
+forcing the uncovered complement Ir+1 = Rj∗ for the single remaining residue j∗. However, the
+size-k independent sets of Gr+1 = π(Cr ℓ ) are precisely {π(Rt) : 0 ≤ t ≤ r}, yet for EVERY
+0 ≤ t ≤ r, (2) maps t ∈ Rt to (t + 1) mod (r + 1) while fixing t + (r + 1) ∈ Rt (valid since k ≥ 2).
+Thus π(t) ̸≡ π(t + r + 1) (mod r + 1) (proved universally for all r ≥ 1 in Lean 4.36.0 T08–T09),
+so NO π(Rt) equals any Rj∗ , contradiction! At r = 1 this gives a 5-line proof of [5, Lemma 3.4]
+while generalizing it uniformly to every r ≥ 1 (certified on C1 4 , C 1 6 , C 2 6 , C 2 9 , C 3 8 , C 4 10 in C04–C10
+and Lean T10).
+2.2 Theorem 2: Sharp Connected Cycle-Power Upper Bound χcp({C r ℓ }) ≤
+2r + 2
+For the class {Cr ℓ } of single connected r-th cycle powers on ℓ vertices, we slash Haxell’s 4r upper
+bound nearly in half across every r ≥ 1:
+Theorem 2 (Sharp Connected Cycle-Power Upper Bound). For EVERY integer r ≥ 1 and
+EVERY integer ℓ ≥ 3, every m = min(ℓ, 2r + 2) connected copies of Cr ℓ on a common ℓ-vertex
+set admit a cooperative coloring:
+max
+(
+r + 2,
+⌈ ℓ
+⌊ℓ/(r + 1)⌋
+⌉)
+≤ χcp({Cr ℓ }) ≤ min(ℓ, 2r + 2). (3)
+In particular, for square cycles r = 2 (∆ = 4), χcp({C2 ℓ }) ∈ {4, 5, 6} for all ℓ ≥ 6 (slashing
+Haxell’s 4r = 8 to 6).
+Proof. If ℓ ≤ 2r + 2, assigning one distinct color per vertex yields a valid ℓ-cooperative coloring
+on ℓ vertices. Now assume ℓ ≥ 2r + 3, and let G1, . . . , G2r+2 be 2r + 2 copies of Cr ℓ on V .
+Pick any vertex v ∈ V and set ϕ(v) = 1. Delete v from each Gi (i ≥ 2) and delete the closed
+neighborhood NG1 [v] (size 2r + 1) from G1, forming the disjoint union
+H :=
+(
+G1 − NG1 [v]
+)
+⊔
+2r+2⊔
+i=2
+(Gi − v).
+Deleting one vertex from Cr ℓ yields the path power P r ℓ−1, and deleting 2r + 1 consecutive cyclic
+vertices yields P r ℓ−2r−1. Every path power P r k is an interval graph (representing vertex u ∈
+{0, . . . , k − 1} by [u, u + r]) with universal perfect elimination ordering k − 1, k − 2, . . . , 0: for
+any vertex u and any two left-neighbors i < j < u satisfying u − i ≤ r, we have 0 < j − i ≤ r
+(constructively proved for all r, i, j, u in Lean 4.36.0 T21!). Hence H is a chordal graph of
+maximum degree ∆(H) ≤ 2r.
+For every x ∈ V \ {v}, define its part Bx := {(x, i) ∈ V (H)}. Every x ∈ NG1 (v) has |Bx| =
+2r + 1 = ∆(H) + 1, and every x ∈ V \ NG1 [v] has |Bx| = 2r + 2 > ∆(H) + 1 (Lean T22). By the
+Aharoni–Berger–Ziv independent transversal theorem for chordal graphs [2], {Bx : x ∈ V \ {v}}
+admits an independent transversal S in H. Setting ϕ(x) = i for the unique (x, i) ∈ S ∩ Bx yields
+a valid (2r + 2)-cooperative coloring of G1, . . . , G2r+2, since no neighbor of v in G1 receives color
+1 and S is independent in H.
+3
+```
+
+---
+
+## Page 4
+
+```text
+Figure 1: Left: Theorem 1 certified lower bound on χcp(Cr ℓ ) across r ∈ {1, 2, 3, 4} and ℓ ∈ [3, 14]
+(* denotes exact χcp: r = 1 by [5], and ℓ ≤ 2r + 1 by Theorem 1(1) chordality). Right: Exact
+admissible bands for square cycles (r = 2, ∆ = 4), comparing multi-component factors C2 ℓ
+(Haxell 4r = 8) against our Theorem 2 connected upper bound (2r + 2 = 6) and Block-0 shift
+lift 3 → 4 at ℓ = 6, 9, 12, 15 (C06–C09).
+2.3 Theorem 3: Universal 3-Cooperative Colorability of C4-Factors at n = 4
+and n = 8
+Let nmin(C4) denote the minimum vertex order (n ≡ 0 (mod 4)) of a triple of C4-factors with
+no 3-cooperative coloring. Bai et al. [5] established nmin(C4) ≤ 36.
+Theorem 3 (Small-Order C4-Factor Colorability Threshold). Every triple of C4-factors on
+n = 4 vertices (33 = 27 triples) and every triple of 2C4-factors on n = 8 vertices (3152 = 99,225
+triples with fixed G1) admits a 3-cooperative coloring. Consequently,
+12 ≤ nmin(C4) ≤ 36, nmin(C4) ∈ {12, 16, 20, 24, 28, 32, 36}. (4)
+Proof. For n = 4, each C4 on {0, 1, 2, 3} is uniquely determined by the vertex opposite to 0;
+assigning color 1 to {0, oppG1 (0)} and colors 2, 3 to the remaining two vertices respectively
+yields a valid 3-cooperative coloring for ALL 27 triples (constructively proved in Lean 4.36.0
+T11, contrasting with the exact 2-colorability dichotomy (Ca 4 , C b 4) SAT ⇐⇒ a = b in T12).
+For n = 8, a 2C4-factor partitions {0, . . . , 7} into two unordered 4-sets (
+(8
+4
+)
+/2 = 35 ways)
+and picks one of 3 distinct C4’s on each 4-set, yielding exactly 35 · 3 · 3 = 315 distinct 2C4-factors
+(Lean T13). Fixing G1 = (0, 1, 2, 3) ∪ (4, 5, 6, 7), its automorphism group Aut(G1) ∼= D4 ≀ S2 has
+exact order 8 · 8 · 2 = 128 and decomposes the 315 choices of G2 into exactly 16 orbits (whose
+sizes sum to 315). Every 2C4-factor has 4 maximal independent sets of size 4 (represented
+as 8-bit integer masks). Exhaustive zero-float bitmask evaluation across all 16 × 315 = 5,040
+canonical orbit-reduced triples (covering all 99,225 triples by symmetry) certifies UNSAT = 0
+(C12; Figure 2, right).
+2.4 Theorem 4: Complete n = 4 Minimal 2-Obstruction Classification and
+Modular UNSAT Lifts
+Applying the classic Aspvall–Plass–Tarjan 2-SAT implication-graph reduction [4] to 2-
+cooperative coloring (ϕ(v) = 1 ⇐⇒ xv = true, mapping uv ∈ E(G1) to xu →
+¯xv, xv → ¯xu and uv ∈ E(G2) to ¯xu → xv, ¯xv → xu) decides 2-cooperative colorability in
+O(|V | + |E(G1)| + |E(G2)|) time (and, for any contradictory vertex v0 in the same Tarjan SCC
+as ¯xv0 , extracts a shortest contradictory cycle through v0 via BFS in O(|V | + |E(G1)| + |E(G2)|)
+time; constructive path soundness is proved in Lean 4.36.0 T01–T04).
+4
+```
+
+---
+
+## Page 5
+
+```text
+Figure 2: Left: Explicit contradictory directed 2-SAT implication cycle x1 → ¯x0 → x2 → ¯x1 →
+x3 → ¯x2 → x1 in I(P4, Q4) (Lean T04, C01). Right: Theorem 3 exhaustive C4-factor colorability
+audit at n = 4 (27/27 SAT) and n = 8 (99,225/99,225 SAT via 5,040 orbits), narrowing the
+open obstruction window to 12 ≤ nmin(C4) ≤ 36 (C11–C12).
+Theorem 4 (Complete n = 4 Minimal 2-Obstruction Classification and Modular UNSAT Lifts).
+1. (Complete Classification of Minimal Triangle-Free 2-Obstructions on n = 4.) Across all
+412 = 1,681 ordered pairs of triangle-free simple graphs on 4 vertices, there are exactly
+18 edge-minimal UNSAT pairs, partitioning into precisely two 6-edge isomorphism classes
+(up to vertex relabeling and swapping G1, G2):
+• Class 1: (P4, Q4) with E(P4) = {01, 12, 23}, E(Q4) = {02, 12, 13} (12 labeled pairs,
+degree sequences [1, 1, 2, 2] and [1, 1, 2, 2]) — the unique minimal acyclic/forest 2-
+obstruction on n = 4;
+• Class 2: {C4, 2Kdiag 2 } with E(C4) = {01, 12, 23, 03}, E(2Kdiag 2 ) = {02, 13} (6 ordered
+labeled pairs: 3 with degree sequences ([2, 2, 2, 2], [1, 1, 1, 1]) and 3 swapped, C02).
+2. (Modular Constructive UNSAT Lifts of [5].) Every maximal bipartition cover (J1, J2, J3)
+of Bai et al.’s 18-vertex Table 1 gadget avoiding {1, 2} in J1 fails to cover all 18 ver-
+tices (Lean 4.36.0 T16); bridging two copies eliminates all 336 colorings (T17, verified in
+1,178,429 MRV nodes in C14). Furthermore, on 3C7 with cycles (0..6), (7..13), (14..20),
+the explicit 7-triple partition
+{0, 5, 16}, {1, 3, 6}, {2, 4, 18}, {8, 15, 20}, {10, 12, 17}, {7, 9, 11}, {13, 14, 19}
+admits zero independent transversals across all 37 = 2,187 selections (Lean T18–T19, C15),
+yielding an explicit 70-vertex 10C7-factor triple whose UNSAT proof over 370 colorings is
+constructively mechanized in Lean 4.36.0 (T15, T20, C16, Figure 3).
+3 Exact-Z Verification, Lean 4.36.0 Formalization, and Verifica-
+tion Boundary
+Verification Boundary.
+1. Formally Proved in Lean 4.36.0 (lean/CooperativeCycleFactorsCert.lean, 22 the-
+orems T01–T22, compiled with -DwarningAsError=true and lake build, 0 sorry, 0
+5
+```
+
+---
+
+## Page 6
+
+```text
+Figure 3: Left: Exponential collapse from naive 3n coloring spaces (336 ≈ 1017.2, 370 ≈ 1033.4) to
+our modular constructive Lean 4.36.0 proofs (T15–T20). Right: Constructive 3-factor UNSAT
+vertex orders n(ℓ) across ℓ ≡ 1 (mod 3), highlighting our explicitly verified 36-vertex C4 (C14)
+and 70-vertex C7 (C16) instances.
+Cert ID Theorem / Scope Combinatorial Space Certified Result
+C01–C03 Thm. 4(1): 2-SAT & n = 4 412 = 1,681 tri-free pairs Exact 2 classes: 12 (P4, Q4), 6 {C4, 2K2}
+C04–C08 Thm. 1(2): Block-0 UNSAT C1 4 , C1 6 , C2 6 , C2 9 , C3 8 (r + 1)-factor UNSAT ⇒ χcp ≥ r + 2
+C09–C10 Thms. 1–2: Bands & cliques r ∈ [1, 4], ℓ ∈ [3, 15] Exact ℓ (ℓ ≤ 2r + 1); fac. ≤ 4r, conn. ≤ 2r + 2
+C11–C12 Thm. 3: n = 4, 8 C4-factors 27 (n = 4); 99,225 (n = 8) 5,040 orbits, UNSAT = 0 ⇒ nmin ≥ 12
+C13–C14 Thm. 4(2): Lem. 3.2 & 36v 37 = 2,187; 336 space Valid 9C4 factors; UNSAT (1.18 × 106 nodes)
+C15–C16 Thm. 4(2): 3C7 & 70v 37 = 2,187; 370 space Valid 10C7 factors; modular UNSAT lift
+Table 1: Summary of the 16 canonical exact-Z certificates
+(COOPERATIVE-CYCLE-FACTORS-CERT-1.0).
+grind, 0 Classical.choice): Inductive 2-SAT implication-path soundness and (P4, Q4)
+UNSAT (T01–T04), universal pigeonhole and Block-0 shift residue-class disjointness for
+ALL r ≥ 1, k ≥ 2 plus C2 6 UNSAT (T05–T10), universal n = 4 three-C4 colorability,
+two-C4 dichotomy, and n = 8 orbit-stabilizer identities (T11–T14), modular constructive
+UNSAT lifts of Lemma 3.2 (7v), Lemma 3.3 (18v), 36v C4-factors, 21v 3C7 no-IT, and
+70v C7-factors (T15–T20), and universal simplicial-elimination chordality of path powers
+P r k plus part-size bounds for Theorem 2 (T21–T22).
+2. Verified by Zero-Float Exact-Z Computation (src/cooperative_cycle_factors_
+verifier.py, 65 passing pytest checks with AST audit forbidding float, /, and
+**): Linear-time Tarjan SCC solver, exhaustive 1,681-pair n = 4 classification, exhaustive
+5,040-orbit (99,225-triple) n = 8 bitmask proof, MRV verification of the 36v C4-factor
+triple, and cycle-factor structural validation of the 36v and 70v triples.
+3. Outside Scope: Mechanizing the topological proof of the Aharoni–Berger–Ziv theorem
+itself [2] in Lean, determining exact χcp(Cr ℓ ) inside [r +2, 4r] or χcp({Cr ℓ }) inside [r +2, 2r +
+2] for r ≥ 2, ℓ ≥ 2r + 2, and resolving whether nmin(C4) < 36 inside {12, 16, 20, 24, 28, 32}.
+Artifact Provenance and Cryptographic Digests. All source code, Lean 4.36.0
+proofs, certificates, and tests are archived in the public AIRR repository https://github.
+com/arr-research/arr-research.github.io under MIT (code/data) and CC-BY-4.0
+(manuscript) licenses:
+6
+```
+
+---
+
+## Page 7
+
+```text
+• lean/CooperativeCycleFactorsCert.lean
+SHA-256: b9838cb316d392740df88058cafad1e9267bd40fc64b2cf28f88c2c53f53dc6d
+• src/cooperative_cycle_factors_verifier.py
+SHA-256: 2dcea8c445087660ef2a97d37d7dda91eb0f11c5e6b93e8a32ed55c19729a8ad
+• certificates/MANIFEST.json
+SHA-256: 7ad6ea65d39f735906905d8515e736d8669d55222e9cfa1f9be442edb4e0760a
+AI Disclosure and Conflict Statement. This work was produced by Lluis Eriksson with
+computational, formalization, and manuscript assistance from Google Antigravity autonomous
+research agents. As founder/operator of AIRR.SCIENCE, the author discloses an operator
+conflict (operator_conflict: true); all screening was performed by isolated PDF-only eval-
+uators.
+References
+[1] Ron Aharoni, Eli Berger, Maria Chudnovsky, Frédéric Havet, and Zilin Jiang. Cooperative
+colorings of trees and of bipartite graphs. Electronic Journal of Combinatorics, 27(1):P1.41,
+2020.
+[2] Ron Aharoni, Eli Berger, and Ran Ziv. Independent systems of representatives in weighted
+graphs. Combinatorica, 27(3):253–267, 2007.
+[3] RonAharoni, RonHolzman, DavidHoward, andPhilippSprüssel. Cooperativecoloringsand
+independent systems of representatives. Electronic Journal of Combinatorics, 22(2):P2.27,
+2015.
+[4] Bengt Aspvall, Michael F. Plass, and Robert Endre Tarjan. A linear-time algorithm for
+testing the truth of certain quantified boolean formulas. Information Processing Letters,
+8(3):121–123, 1979.
+[5] XuqingBai, ZhipengGao, BiLi, andXinZhang. Cooperativecolorings ofcyclesanduniform
+cycle factors, 2026.
+[6] Penny E. Haxell. A note on vertex list colouring. Combinatorics, Probability and Computing,
+10(4):345–347, 2001.
+[7] Po-Shen Loh and Benny Sudakov. Independent transversals in locally sparse graphs. Journal
+of Combinatorial Theory, Series B, 97(6):904–918, 2007.
+7
+```
