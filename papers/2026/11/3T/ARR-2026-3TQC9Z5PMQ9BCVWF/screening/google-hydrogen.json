@@ -1,0 +1,60 @@
+{
+  "paper_id": "ARR-2026-3TQC9Z5PMQ9BCVWF",
+  "version": "v1",
+  "version_id": "arr:version:740b838a-81c4-4321-8d87-50dde9d7f991",
+  "canonical_sha256": "c5df0644d35ad8474dd5607f0706b3576e14213d1efb9667a8062f3b9e533037",
+  "provider": "Google",
+  "model_id": "hydrogen",
+  "assessed_at": "2026-11-28T02:42:00Z",
+  "prompt_version": "ARR-ASSESS-1.0",
+  "independence": "not_involved_in_manuscript",
+  "recommendation": "minor_revision",
+  "millennium_score": 4.8,
+  "overall_stars": 5,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 4,
+      "basis": "All four theorems are mathematically sound; key algebraic balances, staircase and grid injections, (P_alpha, omega_alpha) counts, and unit-disk root checks verify cleanly. Minor non-fatal slips appear in Thm 1(b) Case 1 (strict floor inequality), Case 2 (asymp vs Omega_d), and Thm 2(b) (parenthetical conflation of empty word epsilon with null symbol in 0d not in L_d), plus dependence on cited results of Bal [1]."
+    },
+    "rigor": {
+      "stars": 4,
+      "basis": "Proofs are concise and well-structured, and Section 6 transparently separates machine-checked Lean 4 finite/inductive cores from analytic manuscript arguments. Rigor is slightly reduced by omitting self-contained upfront definitions for objects imported from [1] (Base1 state space, SIDE transitions, F(X;q), T(alpha;q), T_phi) and by three minor proof-text slips in Theorems 1(b) and 2(b)."
+    },
+    "novelty": {
+      "stars": 4,
+      "basis": "Theorem 1 delivers a genuinely original two-sided resolution of Bal's open question on Algorithm R, pinning the optimal log factor to (log N)^(2/(d(d+1))) via asymmetric log-tilts and matching staircase/grid-injection lower bounds; Theorem 4(a)'s lexicographic (P_alpha, omega_alpha) bijection is also neat. Parts of Theorems 2-4 rely on standard or elementary techniques (pumping lemma, 0.24% AM-GM tweak, small-degree roots, classical Newton inversion)."
+    },
+    "significance": {
+      "stars": 3,
+      "basis": "Cleanly settles all four structural axes raised by Bal [1] and clarifies why Algorithm D outperforms row-only conditioning. Impact remains specialized: Algorithm D already beats the improved Algorithm R bound, Theorem 1(b)'s barrier targets static schedules within Algorithm R rather than arbitrary row-only algorithms, and the work is closely tethered to a single companion preprint [1]."
+    },
+    "reproducibility": {
+      "stars": 4,
+      "basis": "Strong verification discipline: 20 zero-import constructive Lean 4.36.0 theorems, an AST-audited zero-float Python verifier emitting 16 SHA-256 certificates with a published manifest hash, 61 adversarial tests, a tagged GitHub release, and an honest scope audit. Full independent reproducibility of the manuscript alone is slightly tempered by reliance on [1] for base definitions and the PDF-only audit scope."
+    }
+  },
+  "summary": "This manuscript resolves four structural questions stemming from Bal's recursive word-conditioning framework [1] for higher-dimensional partitions. Its centerpiece (Theorem 1) tightly pins down the optimal polylogarithmic overhead of Bal's row-conditioning Algorithm R across all admissible static schedules, strictly reducing the exponent of log N from 1 to gamma_d = 2/(d(d+1)) via asymmetric log-tilted depths and proving a matching unconditional state-space lower bound via downward threshold analysis, staircase perturbations, and a base-H grid injection. Theorems 2-4 establish prefix closure, non-context-freeness, and an exact Myhill-Nerode DFA lower bound for the recursive word language L_d; distance-sensitive diagonal weight bounds, sharp residual-floor cardinality, reachable-vs-ambient state separation, and a strict monotone DAG potential for Algorithm D; and Stanley (P, omega)-partition numerator positivity, unit-disk Euler-product obstructions, and embedding-dimension Newton inversion. All four theorems are mathematically sound, supported by a transparently scoped Lean 4 and exact-arithmetic verification suite, though several minor proof-text slips and missing self-contained definitions from [1] warrant minor revision.",
+  "strengths": [
+    "Theorem 1 solves an explicit open question from Bal [1] in both directions with a non-obvious tight exponent gamma_d = 2/(d(d+1)), combining exact multi-level telescoping tilts with matching lower-bound constructions (staircase perturbations in Case 2 and base-H grid injection in Case 3).",
+    "Theorem 4(a) gives a clean, illuminating combinatorial proof of (q;q)_m T(alpha;q) in Z_>=0[q] with constant term 1 via a cycle-free lexicographic (P_alpha, omega_alpha) labeling for coupled interlacing continuations, paired with crisp explicit unit-disk root obstructions (P, Q, R) in Theorem 4(b).",
+    "Theorem 2(b) yields an exact Myhill-Nerode state-space lower bound 1 + sum_{m=1}^{floor(n/2)} p_{d-1}(m) = exp(Omega_d(n^{(d-1)/d})) cleanly separating sequential prefix parsing from Algorithm D's exp(O_d(n^{(d-1)/(d+1)})) complexity.",
+    "Section 6 is admirably disciplined and transparent in separating what is constructively machine-checked in Lean 4 from what is proved analytically in the paper, avoiding overclaiming formalization scope."
+  ],
+  "weaknesses": [
+    "The paper is heavily dependent on a single companion preprint [1] and omits self-contained upfront definitions for several central objects before their theorems (Algorithm R's Base1 state space and feasibility predicate, Algorithm D's SIDE transition rules, and the series F(X;q), T(alpha;q), T_phi(0,alpha;q), L(0,alpha), and Cont(0,alpha) in Theorem 4).",
+    "Significance is specialized: Theorem 1(a)-(b) does not beat Bal's Algorithm D and only rules out eliminating (log N)^{gamma_d} for static schedules within Algorithm R (not arbitrary or adaptive row-only algorithms).",
+    "Several sub-results in Theorems 2-4 are quite elementary or classical in technique (e.g., standard pumping lemma in Thm 2(a), optimizing t by AM-GM for a 0.24% constant improvement 3.3152 -> 3.3074 in Thm 3(a), 4-line counting in Thm 3(b), and classical finite-difference Newton inversion in Thm 4(c)).",
+    "The proof of Theorem 1(a) checks N >= N_0(d) without explicitly noting that 1 <= N < N_0(d) is absorbed into the implicit O_d constant."
+  ],
+  "potential_errors": [
+    "Theorem 1(b), Case 1 (p. 4): writes W_d := floor(N/K) > N^{d/(d+1)} L^{-alpha_d}, which can fail by up to 1 when N/K exceeds N^{d/(d+1)} L^{-alpha_d} by less than 1 across an integer boundary; should be written W_d >= (1/2) N^{d/(d+1)} L^{-alpha_d} as done in Case 2 (non-fatal).",
+    "Theorem 1(b), Case 2 (p. 4): writes m asymp N^{1/(d+1)} L^{-mu_{k-1}/k} >> D'_k + 1, whereas S_k < N^{1/(d+1)} L^{alpha_k} only gives a lower bound W_k >= (1/2) N^{d/(d+1)} L^{-alpha_k} (for example, S_k = 2 gives W_k = Theta(N)), so m = Omega_d(N^{1/(d+1)} L^{-mu_{k-1}/k}) rather than asymp (non-fatal; larger m only strengthens the bound).",
+    "Theorem 2(b) proof (p. 6): the parenthetical justification for y_dead := 0d not in L_d says '(since a leading 0 forces an empty initial (d-1)-block empty-set < d)', inaccurately conflating the empty word epsilon in L_{d-1} (encoding the 1-cell partition of weight 1) with the excluded null symbol empty-set (weight 0), and writing d instead of d-1 = iota^{-1}(d). The claim 0d not in L_d is true because 0d = iota(epsilon) 0 iota(d-1) has initial block weight |epsilon| = 1 < 2 = |d-1|."
+  ],
+  "strong_novelty_candidates": [
+    "Sharp asymmetric log-tilted schedule achieving exp(O_d(N^{(d-1)/(d+1)} (log(N+2))^{2/(d(d+1))})) for Algorithm R together with the matching unconditional state-space lower bound exp(Omega_d(N^{(d-1)/(d+1)} (log N)^{2/(d(d+1))})) over all schedules in {2,...,N}^{d-1} (Theorem 1).",
+    "Lexicographic (P_alpha, omega_alpha) poset-partition characterization proving (q;q)_m T(alpha;q) in Z_>=0[q] with constant term 1 for floor-free coupled families, combined with explicit unit-disk root obstructions to Euler-product factorization (Theorem 4(a)-(b)).",
+    "Exact Myhill-Nerode lower bound M_DFA(L_d^{<= n-1}) >= 1 + sum_{m=1}^{floor(n/2)} p_{d-1}(m) = exp(Omega_d(n^{(d-1)/d})) separating prefix-DFA parsing of recursive partition words from Algorithm D (Theorem 2(b))."
+  ],
+  "unresolved_material_objections": []
+}
