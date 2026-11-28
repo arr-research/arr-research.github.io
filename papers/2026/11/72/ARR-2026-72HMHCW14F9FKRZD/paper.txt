@@ -1,0 +1,721 @@
+AIRR:ARR-2026-72HMHCW14F9FKRZD | v1 | 2026-11-28
+Exact Quantitative Laws for the Spectral Braess
+Paradox: Multiplicative Weyl Bounds, Degeneracy
+Immunity, and the Asymmetric Cheeger–Spectral
+Rift
+Lluis Eriksson∗
+November 28, 2026
+Abstract
+Adding edges to a connected graph G always increases every eigenvalue of the combina-
+torial Laplacian LG = DG − AG, yet it can paradoxically decrease the spectral gap λ2(G)
+of the normalized Laplacian LG = I − D−1/2 G AGD−1/2 G , slowing down the relaxation of
+the simple random walk. While Eldan, Rácz, and Schramm established the prevalence of
+this spectral Braess paradox in random graphs, the exact extremal limits governing how
+severely a subgraph addition G ↦→ G + H can degrade λ2(G) and the absolute spectral gap
+γ∗(G) = min(λ2(G), 2 − λn(G)) have remained open. We establish four sharp quantitative
+laws:
+1. Universal Multiplicative Weyl Inequality and Optimal Budget-k Saboteurs:
+For every connected non-complete graph G with minimum degree δ(G) ≥ r ≥ 1 and
+every edge-disjoint added graph H on V (G),
+λj (G + H)
+λj (G) ≥ 1 1 + ρ ( D−1/2 G AH D−1/2 G ) ≥ r r + ρ(AH )
+for every j ≥ 2 with λj (G) ≤ 1, and identically for both 2 − λn(G + H) and γ∗(G +
+H)/γ∗(G). Coupled with Stanley’s and Nosal–Nikiforov’s spectral radius bounds, this
+identifies cliques Kt ( r r+t−1 sharp on Kr,m + Kt) as globally optimal k-edge Braess
+saboteurs, and balanced bicliques Ka,a ( r r+a sharp on Kr,m + Ka,a) as optimal triangle-
+free saboteurs.
+2. Exact Degeneracy Immunity: In sharp contrast to the Θ(k−1/2) clique collapse,
+adding any d-degenerate graph H of arbitrarily large size and maximum degree obeys
+the globally sharp, size-independent immunity floor
+λj (G + H)
+λj (G) ≥ 1 −
+√
+d
+d + r = r r + d + √ d(d + r)
+(together with a tighter λ-dependent refinement approaching r r+2d as λ → 0+), achieved
+asymptotically by Kr,m + Kd,k (1 ≪ k ≪ m) for every (d, r) ∈ N2 ≥1. In particular,
+adding any forest (d = 1) to any connected graph never cuts λ2 below 1 − 1√ 2 ≈ 0.2929,
+and adding any planar graph (d ≤ 5) never cuts it below 1 −
+√
+5
+6 ≈ 0.0871.
+3. Asymmetric Single-Edge Law and the Cheeger–Spectral Rift: Adding a single
+edge e = {u, v} with degrees dG(u) = r and dG(v) = s obeys the Cheeger conduc-
+tance floor ϕ(G + e)/ϕ(G) ≥ r+s r+s+2 and the tighter 2 × 2 spectral floor λ2(G + e) ≥
+∗Independent researcher, AIRR.SCIENCE (editor@airr.science). Founder verification: AIRR-FOUNDER-1.0.
+Manuscript licensed under CC-BY-4.0; code and formal proofs licensed under MIT.
+1
+
+
+
+Ψ(r, s; λ2(G)). Whenever r ⁄= s, we prove the strict four-level hierarchy min(r,s) min(r,s)+1 < √rs√rs+1 < Ψ(r, s; 1) = 1− 1√ (r+1)(s+1) < r+s r+s+2 and construct clique-attachment witnesses
+Gr,s,M demonstrating that λ2 can drop strictly further than the Cheeger conductance
+floor permits, while reconciling at r+s r+s+2 as λ2(G) → 0+.
+4. Regular-Graph Localization Obstruction and Complete Equipartite Classifi-
+cation: For connected r-regular graphs (r ≥ 2) with λ2(G) = λ ∈ (0, 1), local neighbor
+energy enforces a localization barrier λ2(G + e)/λ2(G) ≥ Φreg(r, λ) > r r+1 (lifting the
+asymptotic 3-regular floor via Alon–Boppana from 0.75 to ≈ 0.8368). At λ2(G) = 1, we
+classify all connected non-complete r-regular graphs as the complete equipartite graphs
+Km,...,m (k ≥ 2, m ≥ 2, r = (k − 1)m) and prove that Kr,r + e strictly minimizes
+λ2(G + e) among all of them for every r ≥ 3, attaining its unique global minimum at
+K4,4 + e with exact value 14−
+√
+26
+10 ≈ 0.8901.
+The algebraic and inequality core (15 theorems) is formally certified in Lean 4.36.0 with zero
+sorry and zero custom axioms.
+1 Introduction
+Let G = (V, E) be a simple, undirected, connected graph on n ≥ 3 vertices with adjacency
+matrix AG, diagonal degree matrix DG = diag(dG(v))v∈V (where dG(v) ≥ δ(G) ≥ 1), and
+combinatorial Laplacian LG = DG − AG. The simple random walk on G has transition ma-
+trix PG = D−1 G AG, which is reversible with respect to the stationary distribution πG(v) =
+dG(v)/ volG(V ), where volG(S) := ∑ v∈S dG(v). Its spectrum is governed by the symmetric
+normalized Laplacian [4]
+LG := I − D−1/2 G AGD−1/2 G = D−1/2 G LGD−1/2 G , (1)
+whose eigenvalues satisfy 0 = λ1(G) < λ2(G) ≤ · · · ≤ λn(G) ≤ 2. The spectral gap λ2(G)
+controls the relaxation time trel(G) = 1/λ2(G) of the lazy random walk, while the absolute
+spectral gap
+γ∗(G) := min
+(
+λ2(G), 2 − λn(G)
+)
+(2)
+controls the mixing rate of the non-lazy random walk [7], with 2 − λn(G) measuring distance
+from bipartiteness.
+Whereas Weyl’s monotonicity theorem guarantees that adding an edge e /∈ E(G) strictly or
+weakly increases every eigenvalue of the combinatorial Laplacian LG, the normalized Laplacian
+exhibits a striking non-monotonicity: adding an edge can decrease λ2(G), a spectral analogue of
+Braess’s paradox [1]. Classic interlacing results by Chen et al. [3] and Butler [2] give λj−1(G) ≤
+λj (G + e) ≤ λj+1(G), which for j = 2 reduces to the vacuous bound λ2(G + e) ≥ 0. Eldan, Rácz,
+and Schramm [5] proved that in Erdős–Rényi graphs G(n, p), a constant fraction of non-edges
+decrease λ2, and Kirkland–Zeng [6] analyzed analogous paradoxes for Kemeny’s constant. Yet
+the fundamental quantitative question has remained open:
+Given a connected graph G and an edge-disjoint added subgraph H, what is the exact
+worst-case degradation λ2(G + H)/λ2(G) as a function of the degrees of G, the edge
+budget |E(H)|, or the structural sparsity (degeneracy) of H?
+We resolve this question across four distinct regimes, summarized in Table 1. Throughout,
+for any f ∈ RV we write the Dirichlet energy EG(f ) := f ⊤LGf = ∑ uv∈E(G)(fu − fv)2, the
+signless energy E + G (f ) := f ⊤QGf = ∑ uv∈E(G)(fu + fv)2 (where QG = DG + AG), and the
+DG-weighted quadratic form ‖f ‖2 DG := f ⊤DGf = ∑ v∈V dG(v)f 2 v .
+2
+
+
+
+Perturbation Regime Universal Lower Bound on λ2(G + H)/λ2(G) Sharp Extremal Family Reference
+General H, δ(G) ≥ r
+(
+1 + ρ(D−1/2 G AH D−1/2 G ) )−1 ≥ r r+ρ(AH ) Kr,m + Kt (m → ∞) Thm. 2.1
+Budget k = |E(H)| (general) 2r 2r−1+√1+8k (Θ(k−1/2) collapse) Kr,m + Kt (k = (t 2 ) ) Cor. 2.2
+Budget k, H triangle-free r r+ √ k ( √ 2 better than cliques) Kr,m + Ka,a (k = a2) Cor. 2.2
+Arbitrary d-degenerate H 1 −
+√
+d
+d+r (size-independent immunity!) Kr,m + Kd,k (1 ≪ k ≪ m) Thm. 3.1
+Single edge e = {u, v} (r, s) Ψ(r, s; λ2)/λ2; at λ2 = 1: 1 − 1√ (r+1)(s+1) Gr,s,M (M → ∞); breaks Cheeger Thm. 4.1
+r-regular G + single edge Φreg (r, λ2) > r r+1 (λ2 < 1); ≥ 14−
+√
+26
+10 (λ2 = 1) K4,4 + e (λ2 = 1); Alon–Boppana Thm. 5.1
+Table 1: Summary of the exact quantitative laws for the spectral Braess paradox proved in this
+paper. Theorems 2.1 and 3.1 also hold identically for all λj (G) ≤ 1, for 2 − λn(G), and for the
+absolute spectral gap γ∗(G).
+2 Universal Multiplicative Weyl Bounds and Optimal Budget-k
+Saboteurs
+Recall two elementary spectral facts for every simple connected non-complete graph G on n ≥ 3
+vertices:
+(i) λ2(G) ≤ 1: picking any non-edge {u, v} /∈ E(G), the test vector f = dG(v)eu − dG(u)ev
+satisfies f ⊥ DG1 and EG(f )/‖f ‖2 DG = ( dG(u)dG(v)2 + dG(v)dG(u)2) / ( dG(u)dG(v)2 +
+dG(v)dG(u)2) = 1.
+(ii) 0 ≤ 2 − λn(G) < 1: since Tr(LG) = n and λ1(G) = 0, the average of λ2(G), . . . , λn(G) is
+n
+n−1 > 1, so λn(G) ≥ n n−1 > 1.
+For any simple graph H = (V, EH ) on the same vertex set with E(G) ∩ EH = ∅, let G + H :=
+(V, E(G) ∪ EH ) and write ρ(M ) for the spectral radius of a symmetric matrix M .
+Theorem 2.1 (Universal Multiplicative Weyl Inequality for Normalized Laplacians). Let G =
+(V, E) be a connected non-complete graph with minimum degree δ(G) ≥ r ≥ 1, and let H =
+(V, EH ) be any simple graph on V edge-disjoint from G. Put ˜ρG(H) := ρ
+(
+D−1/2 G AH D−1/2 G ) .
+Then:
+(a) For every index j ∈ {2, . . . , n} such that λj (G) ≤ 1 (in particular, always for j = 2),
+λj (G + H)
+λj (G) ≥ 1 1 + ˜ρG(H) ≥ r r + ρ(AH ) . (3)
+(b) For the bipartiteness gap 2 − λn and the absolute spectral gap γ∗ = min(λ2, 2 − λn),
+2 − λn(G + H)
+2 − λn(G) ≥ 1 1 + ˜ρG(H) ≥ r r + ρ(AH ) ,
+γ∗(G + H)
+γ∗(G) ≥ 1 1 + ˜ρG(H) ≥ r r + ρ(AH ) (4)
+(whenever the denominators are positive; if 2 − λn(G) = 0, trivially 2 − λn(G + H) ≥ 0).
+Proof. First observe that for every x ∈ RV , setting y := D−1/2 G x gives
+⏐⏐x⊤D−1/2 G AH D−1/2 G x ⏐⏐ = |y⊤AH y| ≤ ρ(AH )‖y‖2 2 ≤ ρ(AH ) r ‖x‖2 2,
+because dG(v) ≥ r for all v ∈ V . Hence ˜ρG(H) ≤ ρ(AH )/r, yielding the second inequality in
+both (3) and (4).
+3
+
+
+
+Proof of (a). By the Courant–Fischer min-max theorem for the generalized Rayleigh quotient
+f ⊤Lf /f ⊤Df , let U ⊂ RV be the j-dimensional span of the first j generalized eigenvectors of
+(LG+H , DG+H ), so that f ⊤LG+H f ≤ λj (G + H) f ⊤DG+H f for all f ∈ U . Let W ⊂ RV be
+the (j − 1)-dimensional span of the first j − 1 generalized eigenvectors of (LG, DG). Since
+dim U = j > j − 1 = dim W , there exists a nonzero vector f ∈ U that is DG-orthogonal to W ;
+hence f ⊤LGf ≥ λ f ⊤DGf , where λ := λj (G) ∈ (0, 1].
+Because LH = DH − AH ≽ 0 and 0 < λ ≤ 1, we have f ⊤LH f ≥ λ f ⊤LH f , and therefore
+f ⊤LG+H f = f ⊤LGf + f ⊤LH f ≥ λ f ⊤DGf + λ f ⊤LH f
+= λ f ⊤(DG + DH )f − λ f ⊤AH f. (5)
+Now f ⊤AH f = (D1/2 G f )⊤(D−1/2 G AH D−1/2 G )(D1/2 G f ) ≤ ˜ρG(H) f ⊤DGf . On the other hand, since
+f ⊤LH f ≥ 0, we also have λ f ⊤DGf ≤ f ⊤LGf ≤ f ⊤LG+H f . Substituting both into (5) gives
+f ⊤LG+H f ≥ λ f ⊤DG+H f − ˜ρG(H) f ⊤LG+H f,
+and dividing by (1 + ˜ρG(H)) f ⊤DG+H f yields λj (G + H) ≥ f ⊤LG+H f f ⊤DG+H f ≥ λ 1+˜ρG(H) .
+Proof of (b). For any graph, 2 − λn(G) = minf ̸=0 f ⊤QGf f ⊤DGf where QG = DG + AG ≽ 0. Assume
+β := 2 − λn(G) ∈ (0, 1) (as shown in (ii) above, β < 1 always). Let f ⁄= 0 be a minimizer for
+2 − λn(G + H) = f ⊤QG+H f f ⊤DG+H f . Since QH = DH + AH ≽ 0 and β < 1,
+f ⊤QG+H f = f ⊤QGf + f ⊤QH f ≥ β f ⊤DGf + β f ⊤QH f
+= β f ⊤DG+H f + β f ⊤AH f
+≥ β f ⊤DG+H f − ˜ρG(H) β f ⊤DGf.
+Using β f ⊤DGf ≤ f ⊤QGf ≤ f ⊤QG+H f again yields (1 + ˜ρG(H)) f ⊤QG+H f ≥ β f ⊤DG+H f ,
+proving the first inequality in (4). Combining (a) for j = 2 with the bipartiteness bound yields
+the absolute spectral gap bound immediately.
+Pairing Theorem 2.1 with classical extremal bounds on the adjacency spectral radius com-
+pletely determines the worst-case Braess degradation for a fixed edge budget k = |E(H)|.
+Corollary 2.2 (Optimal Budget-k Braess Saboteurs: Cliques vs. Triangle-Free Graphs). Let
+G be a connected non-complete graph with δ(G) ≥ r ≥ 1, and let H be any simple edge-disjoint
+added graph with k = |E(H)| ≥ 1 edges.
+(a) General budget-k floor:
+λ2(G + H)
+λ2(G) ≥ 2r 2r − 1 + √ 1 + 8k . (6)
+For every r ≥ 1, every k =
+(t
+2
+)
+(t ≥ 2), and every m ≥ max(r, t + 1) (so δ(Kr,m) = r), (6)
+is asymptotically sharp: adding a t-clique Kt inside the m-vertex part of Kr,m yields the
+exact closed-form spectral gap
+λ2(Kr,m + Kt) = m(3r + 2t − 2) −
+√
+m2(r + 2t − 2)2 − 4m(r + t − 1)t(t − 1)
+2m(r + t − 1)
+m→∞−−−−→ r r + t − 1 , (7)
+whereas λ2(Kr,m) = 1 identically for all r ≥ 1 and m ≥ 2.
+4
+
+
+
+(b) Triangle-free budget-k floor: If H is triangle-free (in particular, bipartite), then
+λ2(G + H)
+λ2(G) ≥ r r + √ k . (8)
+For every r ≥ 1 and every k = a2 (a ≥ 1), (8) is asymptotically sharp, achieved by
+Kr,m + Ka,a as m → ∞ (limit r r+a ).
+Proof. By Stanley’s theorem [12], every simple graph H with k edges obeys ρ(AH ) ≤ (−1 +√
+1 + 8k)/2; substituting into (3) gives (6). By the Nosal–Nikiforov theorem [11, 9], every
+triangle-free graph H with k edges satisfies ρ(AH ) ≤
+√
+k, yielding (8).
+For (7), let Kr,m + Kt (m > t ≥ 2, r ≥ 1) have bipartition (L, R) with |L| = r, |R| = m,
+and a t-clique C ⊊ R so that R \ C ⁄= ∅. By symmetry, every eigenvector orthogonal to the
+3-dimensional block-constant subspace V3 spanned by 1C , 1L, and 1R\C is supported within a
+single block and has sum zero on that block: on L or R \ C it has eigenvalue 1, and on C it has
+eigenvalue 1 + 1 r+t−1 > 1. Testing f ∈ V3 with f |C = 1, f |L = 0, and f |R\C = − t(r+t−1) (m−t)r shows
+λ2(Kr,m + Kt) < 1 strictly, so λ2(Kr,m + Kt) is realized on V3 and satisfies 1 − λ > 0. Writing
+f |C = 1, f |L = a, f |R\C = b and setting q := r + t − 1, the eigenvalue equations on C and R \ C
+give (1 − λ) = t−1+ra q =⇒ ra = r − qλ and (1 − λ)b = a. Substituting into the orthogonality
+condition tq + rma + (m − t)rb = 0 and multiplying by 1 − λ > 0 yields (certified in Lean 4 as
+krm_plus_kt_quadratic):
+mqλ2 − m(r + 2q)λ + ( 2mr + t(t − 1) ) = 0,
+whose smaller root is (7) and converges to r q = r r+t−1 as m → ∞.
+For sharpness of (8), take Kr,m + Ka,a (m > 2a) with Ka,a placed on 2a vertices of R.
+Choosing the test vector f ≡ 1 on V (Ka,a), f ≡ 0 on L, and f ≡ z := − 2a(r+a) r(m−2a) = O(m−1) on
+R \ V (Ka,a) ensures f ⊥ DG+H 1 and yields
+λ2(Kr,m + Ka,a) ≤ 2ar + (m − 2a)rz2 2a(r + a) + (m − 2a)rz2 = r r + a + O(m−1) m→∞−−−−→ r r + a .
+3 The Degeneracy Immunity Theorem
+Corollary 2.2 shows that adding a dense subgraph of k edges (a clique Kt or biclique Ka,a)
+drives λ2(G + H)/λ2(G) = Θ(k−1/2) → 0. One might suspect that adding a high-degree
+star K1,k (which has ∆(K1,k) = k and ρ(AK1,k ) =
+√
+k) should also drive the spectral gap to
+zero. Surprisingly, the exact opposite occurs: every sparse family of bounded degeneracy [8] is
+completely immune to Braess collapse, regardless of the number of edges or maximum degree.
+Recall that a simple graph H is d-degenerate if every nonempty subgraph of H contains
+a vertex of degree at most d; equivalently, H admits an acyclic orientation ⃗H in which every
+vertex has out-degree d+ ⃗H (u) ≤ d. In particular, every forest is 1-degenerate, every outerplanar graph is 2-degenerate, and every planar graph is 5-degenerate.
+Theorem 3.1 (Exact Degeneracy Immunity Theorem). Let G be a connected non-complete
+graph with minimum degree δ(G) ≥ r ≥ 1, and let H be any edge-disjoint d-degenerate graph on
+V (G) (d ≥ 1) of arbitrary size and maximum degree. Define the λ-refined immunity denominator
+C(r, d; λ) := 1 2
+(
+1 + λ + 2d r +
+√(
+1 − λ + 2d r )2 + 4dλ r ) (λ ∈ (0, 1]). (9)
+Then for every j ∈ {2, . . . , n} with λj (G) ≤ 1,
+λj (G + H)
+λj (G) ≥ 1 C ( r, d; λj (G) ) ≥ 1 −
+√
+d
+d + r = r r + d + √ d(d + r) , (10)
+5
+
+
+
+and the same bounds hold identically for 2−λn(G+H) 2−λn(G) and γ∗(G+H) γ∗(G) (whenever the denominators
+are positive; if 2 − λn(G) = 0, trivially 2 − λn(G + H) ≥ 0). Moreover, for every (d, r) ∈ N2 ≥1,
+the uniform immunity floor 1−
+√
+d
+d+r is globally sharp, achieved asymptotically by Kr,m +Kd,k
+(m ≥ max(r, d + k + 1) so δ(Kr,m) = r) as 1 ≪ k ≪ m:
+lim
+k→∞
+lim
+m→∞
+λ2(Kr,m + Kd,k)
+λ2(Kr,m) = 1 −
+√
+d
+d + r . (11)
+Proof. Let ⃗H be an acyclic orientation of H with d+ ⃗H (u) ≤ d for all u ∈ V . For any parameter
+α > 0 and any x, y ∈ R, we have the exact square identity (certified in Lean 4 as young_
+laplacian_square_identity):
+(1 + α)(x − y)2 + (2 + α−1)x2 − (x2 + y2) =
+(
+(1 + α)x − αy
+)2
+α ≥ 0. (12)
+Summing (12) over all oriented edges u → v ∈ ⃗H for any f ∈ RV yields
+f ⊤DH f = ∑
+u→v∈ ⃗H
+(
+f 2 u + f 2 v ) ≤ (1 + α) f ⊤LH f + ∑
+u∈V
+d+ ⃗H (u)(2 + α−1)f 2 u
+≤ (1 + α) f ⊤LH f + d(2 + α−1) r f ⊤DGf,
+using d+ ⃗H (u) ≤ d and dG(u) ≥ r. Now let f ⁄= 0 be the Courant–Fischer test vector from
+the proof of Theorem 2.1(a), satisfying f ⊤LGf ≥ λ f ⊤DGf (with λ = λj (G) ∈ (0, 1]) and
+f ⊤LG+H f ≤ λj (G+H) f ⊤DG+H f . Multiplying the above inequality by λ and adding λ f ⊤DGf
+gives
+λ f ⊤DG+H f ≤
+(
+1 + d(2 + α−1) r )( λ f ⊤DGf ) + λ(1 + α) f ⊤LH f. (13)
+Choose α > 0 to equate the two coeﬀicients on the right-hand side of (13):
+C := λ(1 + α) = 1 + d(2 + α−1) r .
+Substituting α = C/λ − 1 > 0 yields the quadratic (C − 1 − 2d r )(C − λ) = d r λ, whose unique
+root exceeding max(λ, 1 + 2d r ) is precisely C = C(r, d; λ) in (9). With this choice, (13) gives
+λ f ⊤DG+H f ≤ C(r, d; λ) ( λ f ⊤DGf + f ⊤LH f ) ≤ C(r, d; λ) f ⊤LG+H f,
+proving the first inequality in (10). Moreover, by the identity (rC − r − 2d)(C − λ) − dλ =(
+(rC − r − 2d)(C − 1) − d
+)
++ (1 − λ)(rC − r − d) (certified in Lean 4 as degeneracy_lambda_
+refinement_identity), evaluating at C1 := C(r, d; 1) = 1 + d r +
+√
+d2
+r2 + d r > 1 + 2d r yields a
+nonnegative value for all λ ∈ (0, 1]. Since C1 > 1 + 2d r ≥ 1 2 (λ + 1 + 2d r ) lies strictly above
+the midpoint of the upward-opening quadratic (rC − r − 2d)(C − λ) − dλ = 0, it follows that
+C(r, d; λ) ≤ C1. Rationalizing 1/C(r, d; 1) = r r+d+ √ d(d+r) = 1− √ d d+r (certified as degeneracy_
+constant_rationalization) completes (10).
+For 2 − λn(G + H), replace (12) by its signless counterpart (1 + α)(x + y)2 + (2 + α−1)x2 −
+(x2 + y2) = ((1+α)x+αy)2 α ≥ 0 (certified as young_signless_square_identity) and apply the
+exact same calculation to QG+H = QG + QH . To transfer the λ-refined bound to γ∗(G) =
+min(λ2(G), 2 − λn(G)), note that the map λ ↦→ λ/C(r, d; λ) is strictly increasing on (0, 1]:
+setting u := C(r, d; λ)/λ > 1, the defining quadratic rearranges to 1 λ = ru(u−1) (r+2d)(u−1)+d , whose
+6
+
+
+
+derivative with respect to u is r[(r+2d)(u−1)2+d(2u−1)] [(r+2d)(u−1)+d]2 > 0; thus u is strictly decreasing in λ, so
+λ/C(r, d; λ) = 1/u is strictly increasing. Consequently, both λ2(G + H) and 2 − λn(G + H) are
+at least γ∗(G)/C(r, d; γ∗(G)), proving the γ∗ bound in (10).
+Finally, to prove sharpness (11), note that Kd,k is d-degenerate for all k ≥ d. Place Kd,k
+inside the m-vertex part R of Kr,m (m > d + k), with d centers U and k leaves W , and define
+a test vector f taking value x > 0 on U , value y > 0 on W , value 0 on the r-vertex part L, and
+constant value z := − d(r+k)x+k(r+d)y r(m−d−k) = Or,d,k(m−1) on R \ (U ∪ W ), so that f ⊥ DG+H 1. Then
+λ2(Kr,m + Kd,k) ≤ EG+H (f ) ‖f ‖2 DG+H = drx2 + kry2 + dk(x − y)2 + O(m−1) d(r + k)x2 + k(r + d)y2 + O(m−1) .
+Setting x =
+√
+k(r+d)
+d(r+k) y (the minimum generalized eigenvector of the 2 × 2 block on (U, W )) gives
+lim supm→∞ λ2(Kr,m +Kd,k) ≤ 1−
+√
+dk
+(r+k)(r+d) . In fact, the inner limit limm→∞ λ2(Kr,m +Kd,k)
+exists and equals this exact value: by block symmetry of (U, W, L, R\(U ∪W )), every eigenvector
+orthogonal to the 4-dimensional block-constant subspace V4 is zero-sum inside a single block and
+has eigenvalue 1 (since each block is an independent set). On V4, the symmetrized normalized
+Laplacian I − Mm is a 4 × 4 symmetric matrix whose off-diagonal entries connecting (U, W ) to
+(L, R\(U ∪W )) are O(m−1/2) while the entry between L and R\(U ∪W ) is − √ 1 − (d + k)/m →
+−1. Thus I − Mm converges as m → ∞ to a block-diagonal limit I − M∞ consisting of the 2 × 2
+block
+( 1 −1
+−1 1
+)
+on (L, R \ (U ∪ W )) (eigenvalues 0 and 2) and the 2 × 2 block on (U, W ) with
+diagonal entries 1 and off-diagonal entry −
+√
+dk
+(r+k)(r+d) (eigenvalues 1 ±
+√
+dk
+(r+k)(r+d) ). Since
+0 < 1 −
+√
+dk
+(r+k)(r+d) < 1 < 1 +
+√
+dk
+(r+k)(r+d) < 2, continuity of eigenvalues of fixed-size matrices
+yields
+lim
+m→∞
+λ2(Kr,m + Kd,k) = 1 −
+√
+dk
+(r + k)(r + d) .
+Letting k → ∞ gives (11) directly (matching the universal lower bound (10)).
+Corollary 3.2 (Forest, Outerplanar, and Planar Braess Immunity). For every connected non-
+complete graph G (δ(G) ≥ 1) and every edge-disjoint added graph H of arbitrary size and
+maximum degree:
+• If H is a forest (d = 1), then λ2(G + H)/λ2(G) ≥ 1 − 1√ 2 ≈ 0.2929 (sharp in K1,m + K1,k),
+and as λ2(G) → 0+ the λ-refined lower bound 1/C(1, 1; λ2(G)) increases to 1 3 .
+• If H is outerplanar (d ≤ 2), then λ2(G + H)/λ2(G) ≥ 1 −
+√
+2
+3 ≈ 0.1835 (whereas 1 −
+√
+2
+3 is
+sharp over all 2-degenerate graphs via K1,m + K2,k, K2,3 is forbidden in outerplanar graphs).
+• If H is planar (d ≤ 5), then λ2(G + H)/λ2(G) ≥ 1 −
+√
+5
+6 ≈ 0.0871.
+4 Asymmetric Single-Edge Law and the Cheeger–Spectral Rift
+For a single added edge e = {u, v} whose endpoints have different degrees dG(u) = r and
+dG(v) = s (1 ≤ r ≤ s), Theorem 2.1 gives the geometric-mean bound
+√rs√rs+1 (since ˜ρG({e}) =
+1/√rs). We now derive the exact 2 × 2 spectral bound Ψ(r, s; λ) and compare it with the
+Cheeger conductance
+ϕ(G) := min
+∅̸=S⊊V
+eG(S, ¯S)
+min
+(
+volG(S), volG( ¯S) ) ,
+uncovering a strict separation between spectral and isoperimetric Braess floors whenever r ⁄= s.
+7
+
+
+
+Figure 1: (a) Sharp worst-case Braess ratios vs. added edge count k = |E(H)| (δ(G) = 1):
+general cliques Kt ( 1 t , red) and triangle-free bicliques Ka,a ( 1 a+1 , blue) collapse to 0 as Θ(k−1/2),
+whereas stars K1,k and arbitrary forests stay strictly above the sharp immunity floor 1 − 1√ 2 ≈
+0.2929 (green). (b) The exact degeneracy immunity floor 1 −
+√
+d/(d + r) of Theorem 3.1 across
+degeneracy d and minimum degree r.
+Theorem 4.1 (Asymmetric Single-Edge Law and Strict Cheeger–Spectral Rift). Let G be a
+connected non-complete graph and let e = {u, v} /∈ E(G) have endpoint degrees dG(u) = r ≥ 1
+and dG(v) = s ≥ 1.
+(a) Universal Cheeger conductance floor:
+ϕ(G + e)
+ϕ(G) ≥ r + s r + s + 2 . (14)
+(b) Exact 2×2 spectral floor: For every λ ∈ (0, 2], define Ψ(r, s; λ) as the smaller eigenvalue
+of the symmetric 2 × 2 matrix
+M (r, s; λ) :=
+
+
+λr + 1
+r + 1 − 1√ (r + 1)(s + 1)
+− 1√
+(r + 1)(s + 1)
+λs + 1
+s + 1
+
+ . (15)
+Then λ2(G + e) ≥ Ψ
+(
+r, s; λ2(G)
+)
+. Specifically:
+• If r = s, then Ψ(r, r; λ) = r r+1 λ for all λ.
+• At λ = 1, Ψ(r, s; 1) = 1 − 1√ (r+1)(s+1) , yielding the strict four-level hierarchy for all
+1 ≤ r < s:
+r
+r + 1 <
+√rs√rs + 1 < Ψ(r, s; 1) = 1 − 1√ (r + 1)(s + 1) < r + s r + s + 2 . (16)
+• As λ → 0+, Ψ(r,s;λ) λ → r+s r+s+2 , reconciling with the Cheeger floor (14).
+(c) Sharpness and the Cheeger–Spectral Rift: For every 1 ≤ r ≤ s and M > r + s, let
+Gr,s,M be the graph formed by taking a clique KM and attaching two external vertices u, v
+to disjoint subsets of KM of sizes r and s, respectively. Then as M → ∞,
+λ2(Gr,s,M ) = 1 − O(M −1/2) → 1, λ2(Gr,s,M + {u, v}) → 1 − 1√ (r + 1)(s + 1) . (17)
+8
+
+
+
+In particular, for every r ⁄= s, there exist graphs whose spectral gap ratio λ2(G + e)/λ2(G)
+drops strictly below the universal Cheeger conductance floor r+s r+s+2 .
+Proof. Proof of (a). Let ∅ ⁄= S ⊊ V realize ϕ(G + e) with volG+e(S) ≤ volG+e( ¯S). There are
+three cases for the placement of e = {u, v}:
+• e crosses (S, ¯S): Then eG+e(S, ¯S) = eG(S, ¯S)+1, volG+e(S) = volG(S)+1, and volG+e( ¯S) =
+volG( ¯S) + 1, so volG(S) ≤ volG( ¯S). Because eG(S, ¯S) ≤ volG(S), we have ϕ(G + e) =
+eG(S, ¯S)+1
+volG(S)+1 ≥ eG(S, ¯S) volG(S) ≥ ϕ(G) ≥ r+s r+s+2 ϕ(G).
+• u, v ∈ S: Then volG(S) + 2 = volG+e(S) ≤ volG( ¯S) and volG(S) ≥ r + s, so ϕ(G + e) =
+eG(S, ¯S)
+volG(S)+2 ≥ volG(S) volG(S)+2 ϕ(G) ≥ r+s r+s+2 ϕ(G).
+• u, v ∈ ¯S: Then eG+e(S, ¯S) = eG(S, ¯S), volG+e(S) = volG(S) ≤ volG( ¯S) + 2, and volG( ¯S) ≥
+r+s. If volG(S) ≤ volG( ¯S) then ϕ(G+e) ≥ ϕ(G); if instead volG( ¯S) < volG(S) ≤ volG( ¯S)+2,
+then ϕ(G) ≤ eG(S, ¯S) volG( ¯S) gives ϕ(G + e) = eG(S, ¯S) volG(S) ≥ volG( ¯S) volG( ¯S)+2 ϕ(G) ≥ r+s r+s+2 ϕ(G).
+Proof of (b). Let g ⊥ DG+e1 be a Fiedler eigenvector of G + e, and shift by c :=
+∑
+w dG(w)gw
+volG(V )
+so that f := g − c1 satisfies f ⊥ DG1. Since shifting by a constant leaves Dirichlet energies
+unchanged while g ⊥ DG+e1 minimizes ∑ w dG+e(w)(gw − c′)2 over c′ ∈ R, we obtain
+λ2(G + e) = EG+e(f ) ‖g‖2 DG+e ≥ EG(f ) + (fu − fv)2 ‖f ‖2 DG+e ≥ λ(rx2 + sy2 + W ) + (x − y)2 (r + 1)x2 + (s + 1)y2 + W ,
+where λ := λ2(G), x := fu, y := fv, and W := ∑ w /∈{u,v} dG(w)f 2 w ≥ 0. Testing (x, y) = (1, 1)
+in the W = 0 quotient yields r+s r+s+2 λ < λ, so the minimum eigenvalue Ψ(r, s; λ) of M (r, s; λ)
+satisfies Ψ(r, s; λ) < λ. Consequently, adding W ≥ 0 (which contributes λ to the numerator and
+1 to the denominator) can only increase the quotient, so the infimum over (x, y, W ) is attained
+at W = 0 and equals Ψ(r, s; λ).
+In Lean 4, psi_symmetric_factorization certifies Ψ(r, r; λ) = r r+1 λ. At λ = 1, M (r, s; 1)
+has diagonal entries 1 and off-diagonal entry −1/
+√
+(r + 1)(s + 1), giving Ψ(r, s; 1) = 1 −
+1/
+√
+(r + 1)(s + 1). The strict inequalities in (16) for r < s reduce to (√s − √r)2 > 0 and
+(s − r)2 > 0 (certified in Lean 4 as asymmetric_cheeger_spectral_rift). Clearing denomina-
+tors in det
+(
+M (r, s; λ) − θI
+)
+= 0 yields
+(r + 1)(s + 1)θ2 − [ (λr + 1)(s + 1) + (λs + 1)(r + 1) ] θ + λ(λrs + r + s) = 0
+(constant term certified as psi_constant_term_factorization); dividing by λ and taking
+λ → 0+ yields limλ→0+ Ψ(r, s; λ)/λ = r+s r+s+2 .
+Proof of (c). Let G = Gr,s,M with N (u), N (v) ⊂ V (KM ) disjoint of sizes r, s. For
+any f = (x, y, h) ⊥ DG1 normalized by ‖f ‖2 DG = rx2 + sy2 + ∑ w∈KM dG(w)h2 w = 1, write ¯h := 1 M ∑ w∈KM hw. Since dG(w) ∈ {M − 1, M } on KM , we have ∑ w∈KM h2 w ≤ 1 M −1 . The
+orthogonality condition rx + sy + (M − 1)M ¯h + ∑ w∈N (u)∪N (v) hw = 0 gives |M (M − 1)¯h| ≤√r + s + √ (r + s)/(M − 1) = O(1), so ¯h = O(M −2) and M 2¯h2 = O(M −2). Using the clique
+identity EKM (h) = M ∑ w∈KM (hw − ¯h)2 = M ∑ w∈KM h2 w − M 2¯h2, we obtain
+∑
+w∈KM
+dG(w)h2 w ≤ M ∑
+w∈KM
+h2 w = EKM (h) + O(M −2).
+Moreover, by Cauchy–Schwarz, ∑ w∈N (u)(x − hw)2 ≥ rx2 − 2|x|√r √∑ w∈N (u) h2w ≥ rx2 −
+O(M −1/2) (since |x| ≤ 1/√r), and similarly ∑ w∈N (v)(y − hw)2 ≥ sy2 − O(M −1/2). Sum-
+ming yields EG(f ) ≥
+(∑
+w∈KM dG(w)h2 w + rx2 + sy2) − O(M −1/2) = 1 − O(M −1/2), proving
+λ2(Gr,s,M ) ≥ 1 − O(M −1/2).
+9
+
+
+
+Figure 2: The Asymmetric Cheeger–Spectral Rift (Theorem 4.1). (a) For r = 1 and s =
+1, . . . , 20, the exact spectral floor Ψ(1, s; 1) = 1 − 1√ 2(s+1) (red curve, matched by G1,s,105 ) sits
+strictly below the universal Cheeger conductance floor 1+s 3+s (green dashed), creating a shaded rift
+whenever r ⁄= s. (b) As λ2(G) → 0+, the normalized spectral floor Ψ(1, s; λ)/λ rises smoothly
+to meet the Cheeger conductance floor 1+s 3+s .
+For Gr,s,M + {u, v}, choose the test vector fu = x, fv = y, and f |KM ≡ z, where z =
+− (r+1)x+(s+1)y vol(KM ) = O(M −2) ensures f ⊥ DG+e1. Evaluating the Rayleigh quotient at the
+minimum generalized eigenvector (x, y) of M (r, s; 1) gives λ2(Gr,s,M + e) ≤ 1 − 1√ (r+1)(s+1) +
+O(M −2). Combined with the lower bound Ψ(r, s; λ2(Gr,s,M )) = 1 − 1√ (r+1)(s+1) − O(M −1/2),
+this proves (17).
+5 Regular-Graph Localization Obstruction and Kr,r + e
+The extremal families Kr,m + e achieving r r+1 are severely irregular: the endpoints u, v have
+degree r, while their common neighbors have degree m → ∞. When G is constrained to be
+r-regular, can adding a single edge still drive λ2(G + e)/λ2(G) down to r r+1 ? We prove that
+regularity imposes a strict localization obstruction: because every neighbor of u and v also
+has bounded degree r, concentrating mass on {u, v} creates excessive local Dirichlet energy
+whenever λ2(G) < 1.
+Theorem 5.1 (Regular-Graph Localization Obstruction and Exact Kr,r + e Minimum). Let G
+be a connected non-complete r-regular graph (r ≥ 2) and let e = {u, v} /∈ E(G).
+(a) Localization obstruction for λ2(G) < 1: Set λ := λ2(G) ∈ (0, 1), and let t∗ = t∗(r, λ) ∈
+(0, 1) be the unique root in (0, 1) of
+(
+1 − rλ 2 ) t2 − 2t + (1 − λ) = 0. (18)
+Then
+λ2(G + e)
+λ2(G) ≥ Φreg(r, λ) := 2r + r2t2 ∗ 2r + 2 + r2t2∗ > r r + 1 . (19)
+In particular, by the Alon–Boppana theorem (λ2(G) ≤ λAB(r) + on(1) where λAB(r) :=
+1 − 2√r−1 r [10]), every suﬀiciently large connected r-regular graph (r ≥ 3) satisfies λ2(G +
+e)/λ2(G) ≥ Φreg(r, λAB(r)) − on(1) > r r+1 (e.g., Φreg(3, λAB(3)) ≈ 0.83677 > 0.8367 vs.
+10
+
+
+
+0.75 for large 3-regular graphs; for r = 2, continuous extension to λAB(2) = 0+ yields
+t∗ → 1 and Φreg(2, 0+) = 4 5 = 0.80 vs. 2 3 ).
+(b) Complete classification at λ2(G) = 1 and strict optimality of Kr,r + e: A connected
+non-complete r-regular graph G (r ≥ 2) satisfies λ2(G) = 1 if and only if G ∼= Km,...,m is a
+complete equipartite graph with k ≥ 2 parts of equal size m ≥ 2 and r = (k − 1)m (so Kr,r
+is unique when r = 2 or r is prime, while composite r ≥ 4 also admit k ≥ 3 solutions such
+as the octahedron K2,2,2 at r = 4). For any non-edge e:
+• If m = 2, then λ2(K2,...,2 + e) = 1 (zero Braess degradation).
+• If m ≥ 3 and k ≥ 3, then λ2(Km,...,m + e) > λ2(Kr,r + e) strictly.
+• Consequently, among all connected non-complete r-regular graphs with λ2(G) = 1, Kr,r +
+e uniquely minimizes λ2(G + e) for every r ≥ 3, with exact spectral gap
+λ2(Kr,r + e) = 3r2 + 2r − √ r(r3 + 4r2 − 4r − 8) 2r(r + 1) ≥ 14 − √ 26 10 ≈ 0.89010 (∀ r ≥ 2),
+(20)
+attaining its unique global minimum over all (r, G) with λ2(G) = 1 at K4,4 + e.
+Proof. Proof of (a). Let g ⊥ DG+e1 be a Fiedler eigenvector of G + e and let f = g − c1 ⊥ DG1
+as in Theorem 4.1(b). Put x := fu, y := fv, S := x2 + y2, and W := ∑ w /∈{u,v} rf 2 w ≥ 0. If S = 0
+then λ2(G + e) ≥ λ, so assume S > 0. Since e /∈ E(G), the neighborhoods NG(u) and NG(v)
+lie in V \ {u, v} and each has size r. Concatenating the values of f over NG(u) and NG(v) into
+a vector v ∈ R2r (where each vertex w ∈ V \ {u, v} appears at most twice, once in NG(u) and
+once in NG(v)), we have ‖v‖2 2 ≤ 2 ∑ w /∈{u,v} f 2 w = 2 r W . By the reverse triangle inequality in R2r,
+EG(f ) ≥
+∑
+w∈NG(u)
+(x − fw)2 + ∑
+z∈NG(v)
+(y − fz )2 = ‖‖(x1r, y1r) − v ‖‖2 2 ≥ (√ rS − √ 2 r W )2 + .
+Combining this local energy bound with the global Fiedler bound EG(f ) ≥ λ(rS + W ) and
+writing W = r2 2 St2 with t ≥ 0 (so √ 2 r W = √ rS t) cancels S completely:
+λ2(G + e) ≥
+max
+(
+λ(rS + W ), (
+√
+rS −
+√
+2
+r W )2 + )
+(r + 1)S + W = max
+(
+λ(2r + r2t2), 2r(1 − t)2 + )
+2r + 2 + r2t2 . (21)
+Define P (t) := (1 − rλ 2 )t2 − 2t + (1 − λ) = (1 − t)2 − λ(1 + r 2 t2). Since P (0) = 1 − λ > 0
+and P (1) = − λ(r+2) 2 < 0 (certified in Lean 4 as localization_root_bracketing) and P is
+quadratic, P has a unique root t∗ ∈ (0, 1), with P (t) > 0 on [0, t∗) and P (t) < 0 on (t∗, 1].
+On [0, t∗], the second branch 2r(1−t)2 2r+2+r2t2 dominates and is strictly decreasing in t. On [t∗, 1],
+P (t) ≤ 0 so the first branch dominates; on [1, ∞), (1 − t)2 + = 0 < λ(1 + r 2 t2) so the first branch
+again dominates. Hence on all of [t∗, ∞) the first branch λ 2r+r2t2 2r+2+r2t2 dominates and is strictly
+increasing in t. Thus the right-hand side of (21) attains its unique global minimum at t = t∗,
+yielding (19). Because t∗ > 0, Φreg(r, λ) > r r+1 strictly (certified as regular_localization_
+strict_improvement). Finally, Φreg(r, λ) is decreasing in λ (as t∗ decreases when λ increases),
+so Alon–Boppana yields the asymptotic barrier immediately.
+Proof of (b). First suppose G is connected, non-complete, and λ2(G) = 1. For any non-edge
+{u, v} /∈ E(G), the test vector f = dG(v)eu − dG(u)ev from Section 2 satisfies f ⊥ DG1 and
+f ⊤LGf = f ⊤DGf = λ2(G) f ⊤DGf , so f must be a generalized eigenvector with eigenvalue
+1, i.e., AGf = 0. For every w ∈ V \ {u, v}, (AGf )w = dG(v)1w∼u − dG(u)1w∼v = 0, forcing
+NG(u) = NG(v). Thus non-adjacency is an equivalence relation on V (G), so G is complete
+k-partite (k ≥ 2 since G is connected). If G is r-regular, every part Pi has size |Pi| = |V | − r =:
+11
+
+
+
+Figure 3: Regular-graph localization obstruction (Theorem 5.1). (a) Comparison of the unre-
+stricted floor r/(r + 1) (gray dashed), the exact Kr,r + e spectrum (red, uniquely minimized
+at r = 4 with 14−
+√
+26
+10 ≈ 0.8901), and the Alon–Boppana localization barrier Φreg(r, λAB) (blue,
+which actually surpasses Kr,r + e for all r ≥ 7). (b) Φreg(r, λ) across λ ∈ (0, 1), with dots
+marking the Alon–Boppana threshold λAB(r).
+m ≥ 2 (as G is non-complete), giving G ∼= Km,...,m with r = (k − 1)m. Conversely, Km,...,m
+has normalized Laplacian eigenvalues 0 (mult. 1), 1 (mult. k(m − 1) ≥ 2), and 1 + 1 k−1 > 1
+(mult. k − 1), so λ2(Km,...,m) = 1.
+Now add a non-edge e = {u, v} inside part P1 of G = Km,...,m, putting C := {u, v} and
+L := V \ P1 (|L| = r). Every eigenvector orthogonal to span(1C , 1P1\C , 1L) lies in one of four
+eigenspaces: zero-sum on C (eigenvalue 1 + 1 r+1 > 1), zero-sum on P1 \ C or on Pj for j ≥ 2
+(eigenvalue 1), or block-constant on P2, . . . , Pk summing to zero on L (eigenvalue 1 + 1 k−1 > 1).
+When m = 2, P1 \ C = ∅, so span(1C , 1L) has a single non-constant eigenvector f |C = 1,
+f |L = − 2(r+1) r2 with eigenvalue 1 + r+2 r(r+1) > 1; hence λ2(K2,...,2 + e) = 1. When m ≥ 3, setting
+f |C = 1, f |L = a, f |P1\C = b, the same block-constant equations ra = r − (r + 1)λ, (1 − λ)b = a,
+and DG+e-orthogonality 2(r + 1) + r2a + (m − 2)rb = 0 reduce upon multiplying by 1 − λ > 0
+to Qr,m(λ) = 0, where (certified in Lean 4 as equipartite_quadratic_and_monotonicity)
+Qr,m(λ) := r(r + 1)λ2 − [ r2 + 2(r + 1) + (r + 1)(r + m − 2) ] λ + [ 2(r + 1) + r(r + m − 2) ]
+obeys the exact difference identity Qr,m(λ) − Qr,r(λ) = (r − m)
+(
+(r + 1)λ − r
+)
+. For k = 2
+(m = r), Qr,r(λ) = r(r + 1)λ2 − (3r2 + 2r)λ + (2r2 + 2) has smaller root λ∗ := λ2(Kr,r + e) given
+by (20). For r ≥ 3, Qr,r(1) = 2 − r < 0 and Theorem 2.1 (or Qr,r( r r+1 ) > 0) gives r r+1 < λ∗ < 1.
+Whenever k ≥ 3 and m ≥ 3, we have r = (k −1)m > m, so Qr,m(λ∗) = (r −m)((r +1)λ∗ −r) > 0
+while Qr,m(1) = 2 − m < 0 and the axis of symmetry 2r2+mr+m+r 2r(r+1) > 1 > λ∗; thus the smaller
+root λ2(Km,...,m + e) lies strictly in (λ∗, 1), proving λ2(Km,...,m + e) > λ2(Kr,r + e) strictly.
+Finally, for (20), at r = 4, Q4,4(λ) = 2(10λ2 − 28λ + 17) = 0 has smaller root L4 = 14−
+√
+26
+10 ∈
+(0.890, 0.891). For r = 2, L2 = 1 > 0.891; for r = 3, Q3,3(0.891) > 0; and for every r ≥ 5,
+evaluating 106Qr,r(0.891) = 120881r2 −988119r +2000000 = 81430+220691(r −5)+120881(r −
+5)2 > 0 while the axis of symmetry 3r+2 2(r+1) > 1 > 0.891 implies both roots exceed 0.891 > L4
+(all integer checks and the universal r ≥ 5 tail are formally certified in Lean 4 as krr_global_
+minimum_at_r4_exact_checks and krr_universal_tail_ge_5).
+12
+
+
+
+Artifact Scope / Verification SHA-256 Digest (full)
+lean/SpectralBraessCore.lean 15 kernel-verified Lean 4.36.0 thms (0 sorry) 6d0869b9b02ca5522cbf914bbbf96097
+(LEAN_EXIT=0, LAKE_EXIT=0, 17,994 B) 3e337fc4481b017f64250c44cbb807ed
+src/verify_spectral_braess.py 2,500 random graphs, exact quotients, Km,...,m + e, 3 figs 512585dfb321eec74d156836803c1325
+(VERIFY_EXIT=0, 21,361 B) 0a35086928d86ed88cbf63821ea3f6bc
+data/verification_summary.json Exact tables (Kr,m + Kt, rift, degen., Φreg , Km,...,m) 7878823b6da510392f1ead5ceab44855
+(10,819 B) b97cec18dbb9a15c520734455af611be
+Table 2: Cryptographic SHA-256 verification ledger for Frontier F3 artifacts.
+6 Lean 4.36.0 Formal Certification, Reproducibility, and Open
+Problems
+The exact algebraic identities, Young square decompositions (Laplacian and signless), rational-
+ization and λ-refinement identities, four-level Cheeger–spectral inequalities, closed-form Kr,m +
+Kt and equipartite Km,...,m + e quadratics, global r = 4 minimum of Kr,r + e across all r ≥ 2,
+and regular-graph localization bounds are formally certified in Lean 4.36.0 in the standalone
+file SpectralBraessCore.lean (15 kernel-verified theorems: 13 public theorems and 2 private
+helpers, zero external dependencies, -DwarningAsError=true, zero sorry, zero grind, zero
+custom axioms, passing both lean and lake build). Table 2 records the SHA-256 verification
+ledger. All source code, Lean proofs, numerical verification suites, and figure scripts are publicly
+archived at https://github.com/arr-research/arr-research.github.io.
+Open Problems. Two natural extremal questions remain open:
+1. Exact r-regular single-edge infimum: Define breg(r) := inf λ2(G+e) λ2(G) over all connected
+non-complete r-regular graphs G and non-edges e. Theorem 5.1 shows breg(r) ≤ λ2(Kr,r +e)
+(which is uniquely extremal at λ2 = 1) and establishes the asymptotic barrier Φreg(r, λAB(r))
+for large r-regular graphs (which already exceeds λ2(Kr,r + e) for all r ≥ 7!). Is breg(r) =
+λ2(Kr,r + e) for all r ≥ 3?
+2. Sharp outerplanar and planar immunity constants: Corollary 3.2 guarantees λ2(G+H) λ2(G) ≥
+1 −
+√
+2
+3 ≈ 0.1835 for outerplanar H (d ≤ 2) and ≥ 1 −
+√
+5
+6 ≈ 0.0871 for planar H (d ≤ 5).
+However, K2,3 is forbidden in outerplanar graphs and K3,3 is forbidden in planar graphs
+(whereas K1,k is outerplanar, achieving 1− 1√ 2 , and K2,k is planar, achieving 1− √ 2 3 ). What
+are the exact Braess immunity infima over all outerplanar and all planar subgraphs H?
+AI Assistance Disclosure. This research was directed, authored, and verified by Lluis Eriks-
+son (editor@airr.science) with autonomous mathematical exploration, Lean 4 formalization,
+numerical verification, and LaTeX typesetting assistance from Google Antigravity. All theo-
+rems, proofs, Lean 4 kernel builds, and exact computational checks were independently verified
+prior to release.
+References
+[1] D. Braess. Über ein Paradoxon aus der Verkehrsplanung. Unternehmensforschung, 12:258–
+268, 1968.
+[2] S. Butler. Interlacing for weighted graphs using the normalized Laplacian. Electronic
+Journal of Linear Algebra, 16:90–98, 2007.
+13
+
+
+
+[3] G. Chen, G. Davis, F. Hall, Z. Li, K. Patel, and M. Stewart. An interlacing result on
+normalized Laplacians. SIAM Journal on Discrete Mathematics, 18(2):353–361, 2004.
+[4] F. R. K. Chung. Spectral Graph Theory, volume 92 of CBMS Regional Conference Series
+in Mathematics. American Mathematical Society, 1997.
+[5] R. Eldan, M. Z. Rácz, and T. Schramm. Braess’s paradox for the spectral gap in random
+graphs and delocalization of eigenvectors. Random Structures & Algorithms, 50(4):584–611,
+2017.
+[6] S. Kirkland and Z. Zeng. Kemeny’s constant and an analogue of Braess’ paradox for trees.
+Electronic Journal of Linear Algebra, 31:444–464, 2016.
+[7] D. A. Levin and Y. Peres. Markov Chains and Mixing Times. American Mathematical
+Society, 2nd edition, 2017.
+[8] D. R. Lick and A. T. White. k-degenerate graphs. Canadian Journal of Mathematics,
+22(5):1082–1096, 1970.
+[9] V. Nikiforov. Some inequalities for the largest eigenvalue of a graph. Combinatorics,
+Probability and Computing, 11(2):179–189, 2002.
+[10] A. Nilli. On the second eigenvalue of a graph. Discrete Mathematics, 91(2):207–210, 1991.
+[11] E. Nosal. Eigenvalues of graphs. Master’s thesis, University of Calgary, 1970.
+[12] R. P. Stanley. A bound on the spectral radius of graphs with e edges. Linear Algebra and
+its Applications, 87:267–269, 1987.
+14
