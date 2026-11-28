@@ -1,0 +1,220 @@
+# Exact-Rational Multimode Gaussian Steering Monogamy, Harmonic Tight-Frame Saturation, and Remote Wigner-Negativity Certificates
+
+> Machine-readable rendition extracted from the hash-identified canonical PDF. Mathematical typography may be degraded; cite and verify against `paper.pdf`.
+
+## Page 1
+
+```text
+AIRR:ARR-2026-4A8FSJ64DF9SNABH | v1 | 2026-11-27
+Exact-Rational Multimode Gaussian Steering
+Monogamy, Harmonic Tight-Frame Saturation, and
+Remote Wigner-Negativity Certificates
+Lluis Eriksson
+Independent Researcher, AIRR.SCIENCE (lluiseriksson@gmail.com)
+November 27, 2026
+Abstract
+Motivated by Sudip Chakrabarty’s exact resolution (arXiv:2611.34874v1) of multimode
+Gaussian steering monogamy and remote Wigner negativity—proving that a k-mode Gaussian
+node can be steered by at most 2k − 1 neighbors via Gaussian measurements and at most nk − 1
+neighbors via n-setting arbitrary measurements—we construct a fully machine-checked, zero-float
+algebraic verification suite (GAUSS-STEER-MONO-CERT-1.0). All 20 core theorems are formalized
+constructively in Lean 4.36.0 (zero sorry, zero Classical.choice, -DwarningAsError=true)
+and paired with an AST-audited pure-Q Python verifier emitting 16 SHA-256-indexed rational
+certificates (C01–C16) checked by 62 adversarial tests. Specifically, we prove and certify: (i)
+the exact share-budget pigeonhole ceilings M ≤ 2k − 1 (Gaussian) and M ≤ nk − 1 (n-setting
+steering/Bell), plus the necessary condition n ≥ 3 for any network exceeding 2k − 1 neighbors;
+(ii) exact equal-share harmonic tight-frame saturation sj = k/(2k − 1) = 1 2 + 1 2(2k−1) > 1 2 across
+k ∈ {1, 2, 3, 4, 8}, together with a constructive exact-Q rank-2 orthogonal projection matrix
+P = I3 − 1 3 J3 realizing k = 2, M = 3; (iii) an exact squeezing-invariant symplectic Schur-
+complement factorization νA|B − 1 = (a − 1)(1 − 2η)/(η(a − 1) + 1), proving constructively
+that Gaussian steering (νA|B < 1) holds iff η > 1/2 for every finite squeezing a > 1 and
+vanishes identically at η = 1/2 even at a = 1000; and (iv) exact remote Wigner-origin certificates
+πWout(0) = 1−2η(1−ε) for heralded single-photon non-Gaussian states, pinning the exact tight-
+frame heralding-error tolerance to ε < 1/(2k) (ε = 1/4 at k = 2).
+1 Introduction
+Quantum steering [6, 2] enables one-sided device-independent quantum cryptography and remote
+preparation of non-Gaussian Wigner-negative states over optical quantum networks [4, 5]. While
+a single Gaussian mode (k = 1) obeys strict monogamy—at most one neighbor can steer it with
+Gaussian measurements [3]—the exact maximum number of neighbors capable of simultaneously
+steering a k-mode Gaussian node remained open until Chakrabarty [1] proved the sharp bound
+2k − 1.
+Chakrabarty’s argument assigns each neighbor j ∈ {1, . . . , M } a covariance-matrix share sj ≥ 0
+summing to at most k regardless of squeezing, amplification, or noise; neighbor j steers the node by
+Gaussian measurements iff sj > 1/2, and a harmonic tight-frame network saturates M = 2k−1. The
+identical limit 2k − 1 bounds how many neighbors can be made simultaneously Wigner-negative by
+a heralded non-Gaussian operation at the central node, whereas n-setting arbitrary measurements
+yield M ≤ nk − 1, proving that surpassing 2k − 1 requires non-Gaussian measurements with at least
+three settings. Here we formalize the exact rational share-budget, tight-frame projector, symplectic
+Schur-complement, and remote Wigner-negativity algebra in Lean 4.36.0 and pure-Q certificates
+(GAUSS-STEER-MONO-CERT-1.0).
+1
+```
+
+---
+
+## Page 2
+
+```text
+Figure 1: Left: Exact multimode monogamy ceilings 2k − 1 (Gaussian steering and remote Wigner
+negativity), 3k − 1 (n = 3), and 4k − 1 (n = 4), highlighting C02/C06 and C16. Right: Harmonic
+tight-frame equal shares k/(2k − 1) converging strictly from above to the 1/2 steering cutoff (C01–
+C05).
+2 Share-Budget Monogamy and Harmonic Tight-Frame Satura-
+tion
+Theorem 2.1 (Multimode Share-Budget Monogamy and n ≥ 3 Separation; Lean T01–T06,
+T16–T20). Let k, M ∈ Z≥1 and n ∈ Z≥2, and let a k-mode Gaussian node distribute nonnegative
+rational shares s1, . . . , sM ∈ Q≥0 satisfying the total budget ∑M j=1 sj ≤ k.
+1. If all M neighbors satisfy sj > 1/2 (Gaussian steering), then M/2 < ∑ j sj ≤ k, hence
+M ≤ 2k − 1 (Lean T01; C01–C05).
+2. For n-setting measurements (n ∈ Z≥2) requiring sj > 1/n, M/n < ∑ j sj ≤ k, hence M ≤
+nk − 1 (Lean T02; C15). Consequently, any configuration with M > 2k − 1 and M ≤ nk − 1
+strictly forces n ≥ 3 (Lean T17; C16 for k = 3, n = 4, M = 11).
+3. At M = 2k − 1, the equal-share harmonic tight-frame distribution sj = k/(2k − 1) = 1 2 +
+1
+2(2k−1) > 1 2 saturates ∑2k−1 j=1 sj = k identically (Lean T03, T20), whereas M = 2k forces equal
+share 1/2, failing strict > 1/2 (Lean T06).
+For k = 2, M = 3, certificate C06 and Lean T07 verify the explicit rational rank-2 orthogonal
+projection matrix
+P = I3 − 1 3 J3 = 1 3
+
+
+2 −1 −1
+−1 2 −1
+−1 −1 2
+
+ ∈ Q3×3, (1)
+which satisfies P ⊤ = P , P 2 = P , Tr(P ) = 2, and constant diagonal share Pjj = 2/3 > 1/2 for all
+three neighbors (Figure 1). For general k ≥ 1 and M = 2k − 1, projecting onto any k rows of the
+M × M unitary DFT matrix FM yields P = F † S FS with P 2 = P , rank(P ) = k, and purely rational
+diagonal Pjj = k/(2k − 1) > 1/2.
+3 Squeezing-Invariant Symplectic Schur-Complement Factoriza-
+tion
+Consider a two-mode squeezed vacuum (TMSV) state with rational squeezing variance a =
+cosh(2r) > 1 and correlation c =
+√
+a2 − 1 (in vacuum = I units, V + iΩ ⪰ 0) coupled through a
+2
+```
+
+---
+
+## Page 3
+
+```text
+Figure 2: Left: Conditional Schur-complement variance νA|B (η) from (2) across weak (a = 5/4),
+strong (a = 101/20), and high (a = 50) squeezing, demonstrating the invariant pivot (η, ν) = (1/2, 1)
+(C07–C09). Right: Strict steering margin 1 − νA|B > 0 for tight-frame shares k/(2k − 1) versus zero
+margin at η = 1/2.
+beam-splitter fan-out of share η ∈ (0, 1] to neighbor B. The reduced covariance blocks are VA = aI2,
+VB = (η(a − 1) + 1)I2, and C = √ηcZ2, so the Schur complement VA|B = VA − CV −1 B C⊤ = νA|B I2
+is purely rational in (a, η) with zero square roots.
+Theorem 3.1 (Squeezing-Invariant Schur Factorization; Lean T08–T11, C07–C10). For every a ∈
+Q>1 and η ∈ Q ∩ (0, 1], the conditional variance νA|B := a − η(a2−1) η(a−1)+1 satisfies the exact rational
+identity
+νA|B − 1 = (a − 1)(1 − 2η) η(a − 1) + 1 . (2)
+Consequently, Gaussian steering (νA|B < 1) holds if and only if η > 1/2, completely independent of
+the squeezing amplitude a > 1.
+Proof. Writing a = A/D (A > D > 0) and η = p/q (0 < p ≤ q), exact polynomial algebra (Lean
+T08) gives (A − D)(p(A − D) + qD) − p(A2 − D2) = (A − D)(q − 2p)D. Since A − D > 0, D > 0,
+and p(A − D) + qD > 0, νA|B − 1 < 0 ⇐⇒ q < 2p ⇐⇒ η > 1/2 (Lean T09).
+Certificates C07–C10 verify this squeezing invariance explicitly (Figure 2): even weak squeezing
+a = 5/4 achieves steering at the k = 2 tight-frame share η = 2/3 (νA|B = 13/14 < 1, C07, T10),
+whereas extreme squeezing a = 1000 at the M = 2k boundary η = 1/2 yields νA|B = 1 identically
+(C09, T11), blocking steering completely.
+4 Exact Remote Wigner-Negativity Thresholds and Loss Toler-
+ance
+When a heralded single-photon Fock state ρprep = (1 − ε)|1⟩⟨1| + ε|0⟩⟨0| (preparation vacuum
+error ε ∈ [0, 1)) is remotely routed with effective transmissivity share η ∈ (0, 1], the attenuated
+output state is ρout = η(1 − ε)|1⟩⟨1| + (1 − η(1 − ε))|0⟩⟨0|. Switching from Section 3’s vacuum-unit
+covariance scaling (Vvac = I2, ℏ = 2) to the standard ℏ = 1 phase-space Wigner normalization
+(πWρ(0) = Tr(Πρ) ∈ [−1, 1], which is invariant under quadrature rescaling), the Fock-state origins
+satisfy πW|0⟩(0) = +1 and πW|1⟩(0) = −1, giving the exact rational origin value:
+Theorem 4.1 (Remote Wigner-Negativity Cutoff and Heralding-Error Tolerance; Lean T12–T15,
+C11–C14). For η ∈ (0, 1] and ε ∈ [0, 1),
+πWout(0) = 1 − 2η(1 − ε) < 0 ⇐⇒ η(1 − ε) > 1 2 . (3)
+3
+```
+
+---
+
+## Page 4
+
+```text
+Figure 3: Left: Normalized remote Wigner origin πWout(0) = 1−2η(1−ε) marking ideal tight-frame
+certificates C11–C13 and the exact noisy cutoff C14 (η = 2/3, ε = 1/4 ⇒ W (0) = 0). Right: Exact
+critical heralding-error ceiling εmax(k) = 1/(2k) across tight-frame network sizes.
+In the ideal limit (ε = 0), remote Wigner negativity requires η > 1/2, reproducing the identical 2k −1
+monogamy bound (C11: −1/3 at k = 2; C12: −1/5 at k = 3; C13: 0 at η = 1/2). At the k-mode
+tight-frame share η = k/(2k − 1), remote Wigner negativity survives if and only if ε < 1/(2k) (C14,
+T14: exact cutoff ε = 1/4 at k = 2, η = 2/3; Figure 3).
+5 Certificate Suite, Scope, and Verification Boundary
+Table 1 summarizes all 16 SHA-256-indexed rational certificates (C01–C16) produced by
+GAUSS-STEER-MONO-CERT-1.0 and checked by 62 adversarial pytest checks and 20 constructive
+Lean 4.36.0 theorems.
+Verification Boundary and Attribution.
+• Machine-checked in Lean 4.36.0 (T01–T20) and exact Q (C01–C16): All pigeonhole
+share-budget bounds (2k − 1 and nk − 1), the n ≥ 3 necessity theorem, equal-share saturation,
+exact idempotency of P = I3 − J3/3, the squeezing-invariant Schur-complement factorization
+(2), and the ideal/noisy remote Wigner-origin thresholds. Every Lean theorem depends solely
+on [propext, Quot.sound] or zero axioms (zero Classical.choice, zero sorry).
+• Imported from cited literature (not re-proved inside Lean): Chakrabarty’s general
+multimode covariance-matrix construction of neighbor shares proving ∑M j=1 sj ≤ k for arbi-
+trary Gaussian states with arbitrary squeezing, amplification, and noise, and the multimode
+heralded non-Gaussian remote Wigner-negativity theorem in [1].
+Reproducibility, Archived Artifact Hashes, and Disclosures. All verification ar-
+tifacts are archived directly inside this AIRR record at https://airr.science/papers/
+ARR-2026-4A8FSJ64DF9SNABH/ under MIT (manuscript CC-BY-4.0):
+• src/lean/GaussianSteeringMonogamyCert.lean (SHA-256 08af42d57b33acdc51934ebfcc774a795289870b914d924cdcf644730ff1af31):
+20 constructive Lean 4.36.0 theorems covering share-budget ceilings (T01–T02), tight-frame
+saturation and M = 2k failure (T03–T06, T20), exact rank-2 projector P = I3 − J3/3 (T07),
+squeezing-invariant Schur factorization and benchmarks (T08–T11), remote Wigner negativity
+and ε < 1/(2k) cutoff (T12–T15), and n ≥ 3 separation (T16–T19).
+4
+```
+
+---
+
+## Page 5
+
+```text
+Table 1: Complete summary of all 16 exact-Q certificates (C01–C16) and matching Lean 4.36.0
+theorems.
+ID Regime / Network Exact Rational / Certified Output Lean Ref.
+C01 k = 1, Gaussian (n = 2) Max M = 1, share 1/1 > 1/2, margin +1/2 T01, T05
+C02 k = 2, Gaussian (n = 2) Max M = 3, share 2/3 > 1/2, margin +1/6 T01, T03
+C03 k = 3, Gaussian (n = 2) Max M = 5, share 3/5 > 1/2, margin +1/10 T01, T05
+C04 k = 4, Gaussian (n = 2) Max M = 7, share 4/7 > 1/2, margin +1/14 T01, T05
+C05 k = 8, Gaussian (n = 2) Max M = 15, share 8/15 > 1/2, margin +1/30 T01, T05
+C06 Exact-Q projector (k = 2, M = 3) P = I3 − J3/3: P 2 = P , Tr = 2, Pjj = 2/3 T07
+C07 Weak TMSV a = 5/4, η = 2/3 Exact Schur νA|B = 13/14 < 1 (steering) T08--T10
+C08 Strong TMSV a = 101/20, η = 3/5 Exact Schur νA|B = 262/343 < 1 (steering) T08, T09
+C09 Extreme TMSV a = 1000, η = 1/2 Exact Schur νA|B = 1 identically (no steering) T08, T11
+C10 k = 4 tight frame a = 17/8, η = 4/7 Exact Schur νA|B = 83/92 < 1 (7 neighbors) T08, T09
+C11 Ideal heralded |1⟩, η = 2/3 Exact πWout(0) = −1/3 < 0 T12, T13
+C12 Ideal heralded |1⟩, η = 3/5 Exact πWout(0) = −1/5 < 0 T12, T13
+C13 Ideal heralded |1⟩, η = 1/2 Exact πWout(0) = 0 (negativity vanishes) T12, T13
+C14 Noisy heralded ε = 1/4, η = 2/3 Exact πWout(0) = 0 (tolerance cutoff 1/(2k)) T14, T15
+C15 k = 2, n = 3 settings Max M = 5 > 3, share 2/5 > 1/3 T02, T16
+C16 k = 3, n = 4, M = 11 separation 5 < 11 ≤ 11: requires non-Gaussian n ≥ 3 T17--T19
+• src/python/gaussian_steering_monogamy_verifier.py (SHA-256 1e58a98e13ce4847c845c7be2b38dcbd210b564a3df3eddcf42cc5c95495c6b0)
+and data/certificates/MANIFEST.json (SHA-256 eea871b23dac254188e07bcddd893b26887c5a3f872fefff5d147e44ec26edca),
+indexing all 16 JSON certificates C01–C16.
+AI-assisted research tooling (Google Antigravity) supported drafting and formalization under human
+authorship and oversight by Lluis Eriksson; every formal claim is independently checked by the
+Lean 4.36.0 kernel and zero-float pytest suite.
+References
+[1] Sudip Chakrabarty. Exact monogamy of steering and remote Wigner negativity for multimode
+Gaussian nodes. arXiv preprint arXiv:2611.34874v1, November 2026.
+[2] Ioannis Kogias, Antony R. Lee, Sammy Ragy, and Gerardo Adesso. Quantification of Gaussian
+quantum steering. Physical Review Letters, 114(6):060403, 2015.
+[3] M. D. Reid. Monogamy inequalities for the Einstein-Podolsky-Rosen paradox and quantum
+steering. Physical Review A, 88(6):062108, 2013.
+[4] Mattia Walschaers, Valentina Parigi, and Nicolas Treps. Practical framework for conditional
+non-Gaussian quantum state preparation. PRX Quantum, 1(2):020305, 2020.
+[5] Christian Weedbrook, Stefano Pirandola, Raúl García-Patrón, Nicolas J. Cerf, Timothy C.
+Ralph, Jeffrey H. Shapiro, and Seth Lloyd. Gaussian quantum information. Reviews of Modern
+Physics, 84(2):621–669, 2012.
+[6] H. M. Wiseman, S. J. Jones, and A. C. Doherty. Steering, entanglement, nonlocality, and the
+Einstein-Podolsky-Rosen paradox. Physical Review Letters, 98(14):140402, 2007.
+5
+```

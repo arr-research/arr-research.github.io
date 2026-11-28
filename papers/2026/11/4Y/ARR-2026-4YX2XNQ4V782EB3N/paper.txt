@@ -1,0 +1,211 @@
+AIRR:ARR-2026-4YX2XNQ4V782EB3N | v1 | 2026-11-27
+Exact Finite-Field Overbeck Frobenius-Shift
+Distinguishers, Skew-Polynomial Norm Identities, and
+Structure-Recovery Certificates for Linearized
+Reed–Solomon Codes
+Lluis Eriksson
+Independent Researcher, AIRR.SCIENCE (lluiseriksson@gmail.com)
+November 27, 2026
+Abstract
+Motivated by the recent polynomial-time full structure recovery attack on Linearized Reed–
+Solomon (LRS) codes from an arbitrary generator matrix by Astore, Borello, and Couvreur
+(arXiv:2611.34835v1), we construct a machine-checked, zero-float finite-field verification and
+algebraic cryptanalysis suite (LRS-STRUCT-RECOV-CERT-1.0). All 20 core theorems are proved
+constructively in Lean 4.36.0 (zero sorry, zero Classical.choice, -DwarningAsError=true)
+and paired with an AST-audited pure-integer finite-field Fpm = Fp[x]/(f (x)) engine (with Rabin
+irreducibility verification and exact Gaussian elimination) emitting 16 SHA-256-indexed certifi-
+cates (C01–C16) audited by 93 adversarial tests across F26 , F35 , F36 , F54 , F55 . Specifically, we
+prove and certify: (i) the universal skew-norm cocycle Ni+j (a) = Ni(a)σi(Nj (a)) and Frobenius
+shift identity a σ(Ni(a)) = Ni+1(a) (T01–T02, C14–C16); (ii) the exact closed-form Overbeck–
+LRS Frobenius-sum bound dim Λt(C) ≤ min(n, ℓk + ℓ(t − ℓ + 1)) (t ≥ ℓ, k ≥ ℓ) and exact rank-
+defect factorization ∆LRS(ℓ, k, t) = (t + 1 − ℓ)(k − ℓ) (T03–T08, C01–C09), proving onset strictly
+at t = ℓ whenever k > ℓ and ℓ(k + 1) < n; (iii) exact invariance of every Frobenius-shift rank
+profile under public-key scrambling Gpub = SGLRSP (S ∈ GLk(Fpm ), P ∈ ∏ r GLnr (Fp)); and
+(iv) exact shortening-induced block collapse dim Λ1(Csh) ≤ k′ + 1 + δ < 2k′ whenever δ + 1 < k′,
+triggering single-step distinguishers even for high-rate 2-block and 3-block LRS codes (T09–T10,
+T18, T20, C10–C13).
+1 Introduction
+Linearized Reed–Solomon (LRS) codes [3] are optimal Maximum Sum-Rank Distance (MSRD)
+codes attaining the sum-rank Singleton bound dsr = n − k + 1 (Lean T11), unifying classical Reed–
+Solomon codes (ℓ = n, m = 1) and Gabidulin rank-metric codes (ℓ = 1, m ≥ n) [2]. Because
+multi-block LRS codes (ℓ ≥ 2) initially resisted the classical single-step Overbeck structural attack
+on Gabidulin codes [4], they were studied as post-quantum McEliece-type candidates until Astore,
+Borello, and Couvreur [1] presented a general polynomial-time full structure recovery procedure from
+an arbitrary generator matrix using Overbeck-type Frobenius-shift methods, matrix manipulations,
+and shortening.
+Here we construct LRS-STRUCT-RECOV-CERT-1.0 to formalize the algebraic backbone of
+Overbeck–LRS distinguishers, shortening block collapse, and public-key scrambling invariance in
+Lean 4.36.0 alongside an exact pure-integer Fpm linear-algebra certification engine.
+2 Skew-Polynomial Norm Cocycle and Overbeck–LRS Defect The-
+orem
+Let Fqm /Fq be a degree-m extension with Frobenius automorphism σ(u) = uq (order m) and
+truncated norm Ni(a) := ∏i−1 j=0 σj (a) (N0(a) = 1). An ℓ-block LRS code C = LRSa,β (n, k) ⊆ Fn qm of
+1
+
+
+
+block sizes n1, . . . , nℓ ≤ m (∑ℓ r=1 nr = n) uses pairwise non-σ-conjugate anchors a1, . . . , aℓ ∈ F× qm —
+equivalently pairwise distinct full norms Nm(ar) ∈ F× q , enforcing ℓ ≤ q − 1 (Lean T12)—and Fq-
+linearly independent evaluation points βr,1, . . . , βr,nr per block, with generator rows
+Gi,(r,j) = Ni(ar) σi(βr,j ), 0 ≤ i ≤ k − 1. (1)
+For any multiplicative endomorphism σ with σ(1) = 1, constructive induction proves the exact
+cocycle identity Ni+j (a) = Ni(a) σi(Nj (a)) (Lean T01) and the Frobenius shift law a σ(Ni(a)) =
+Ni+1(a) (Lean T02, C14–C16). Applying σs componentwise to row i of (1) therefore yields
+σs(Gi) = Gi+s · Ds, Ds := diag ( Ns(a1)−1In1 , . . . , Ns(aℓ)−1Inℓ ) ∈ Aℓ, (2)
+where Aℓ ∼= Fℓ qm is the ℓ-dimensional algebra of block-constant diagonal matrices.
+Theorem 2.1 (Overbeck–LRS Frobenius-Sum Bound and Exact Rank Defect; Lean T03–T08, T19).
+Let Λt(C) := C + C[1] + · · · + C[t] for t ∈ Z≥0, where C[s] = {σs(v) : v ∈ C}. For any [n, k] ℓ-block
+LRS code with k, t ∈ Z≥1:
+1. Every generator G[s] i = Gi+sDs (0 ≤ i < k, 0 ≤ s ≤ t) spans at most min(ℓ, #{s ∈ [0, t] : 0 ≤
+j − s < k}) independent block-scaled copies of Gj for each j ∈ {0, . . . , k + t − 1}. When t ≥ ℓ
+and k ≥ ℓ, summing across j gives
+dim Λt(C) ≤ min
+(
+n, ℓk + ℓ(t − ℓ + 1)
+)
+. (3)
+2. Comparing (3) against a generic random [n, k] code of expected dim Λt(Crand) = min(n, (t +
+1)k), the unsaturated rank defect factorizes identically as (Lean T03–T04):
+∆LRS(ℓ, k, t) := (t + 1)k −
+(
+ℓk + ℓ(t − ℓ + 1)
+)
+= (t + 1 − ℓ)(k − ℓ). (4)
+3. Within the regime t ≥ ℓ and k ≥ ℓ where (3) applies, ∆LRS(ℓ, k, t) > 0 if and only if t ≥ ℓ and
+k > ℓ (whereas for t < ℓ or k ≤ ℓ, the unsaturated bound is (t + 1)k and the defect vanishes).
+This specializes at ℓ = 1 to Overbeck’s classical Gabidulin defect t(k − 1) (Lean T05–T06),
+vanishes identically at k = ℓ (Lean T07, C08), and direct onset at t = ℓ avoids ambient
+saturation iff ℓ(k + 1) < n (Lean T08).
+4. For any secret scrambler S ∈ GLk(Fqm ) and blockwise Fq-isometry P ∈ ∏ℓ r=1 GLnr (Fq),
+σ(P ) = P identically, hence Λt(SCP ) = Λt(C)P and dim Λt(Gpub) = dim Λt(GLRS) for every
+t ≥ 0.
+Figure 1 displays exact finite-field Gaussian elimination profiles verifying Theorem 2.1 across
+F26 (ℓ = 1, C01–C02) and F36 (ℓ = 2, C05–C06): at ℓ = 2, n = 12, k = 3, dim Λt matches random
+[3, 6] for t = 0, 1 and drops strictly to [8, 10] vs. random [9, 12] at t = 2, 3 (defects 1, 2; Lean T15); at
+k = 4, t = 2 drops directly from 12 to 10 (defect 2; Lean T16). Conversely, at ℓ = 3, n = 15, k = 4
+over F55 (C09, Lean T17), ℓ(k + 1) = 15 = n saturates the ambient space right at onset t = 3.
+3 Shortening-Induced Block Collapse and Rate-Regime Coverage
+When high code rate (k ≥ n/ℓ − 1) causes untwisted Λℓ(C) to saturate at n (as in C09), shortening
+s columns with 1 ≤ s < k < n strictly reduces the code rate (k − s)/(n − s) < k/n (Lean T10) and
+collapses off-primary blocks to force a single-step (t = 1) Overbeck distinguisher:
+Theorem 3.1 (Shortening Block-Collapse Criterion; Lean T09–T10, T18, T20). Suppose shortening
+a set S of s coordinates (1 ≤ s < k < n) of an [n, k] ℓ-block LRS code leaves an [n′, k′] code
+(n′ = n − s, k′ = k − s) with largest residual block B1 of size n′ 1 and remaining off-primary
+coordinate count δ := ∑ℓ r=2 n′ r = n′ − n′ 1. Then
+dim Λ1(Csh) ≤ min(n′ 1, k′ + 1) + δ ≤ k′ + 1 + δ, (5)
+2
+
+
+
+Figure 1: Exact Fpm Frobenius-shift rank profiles dim Λt(C) vs. generic random codes min(n, (t +
+1)k), all verified invariant under Gpub = SGLRSP . Left: Classical Gabidulin (ℓ = 1, F26 , C01)
+separates immediately at t = 1. Right: 2-block LRS (ℓ = 2, F36 , C05–C06) matches random at t = 1
+and separates strictly at onset t = ℓ = 2 (∆2 = k − 2).
+which strictly separates Csh from a random [n′, k′] code (dim Λ1 = min(n′, 2k′)) in a single Frobenius
+step whenever δ + 1 < k′ and k′ + 1 < n′ 1 (Lean T09). In particular, shortening all n − n1 off-block
+coordinates (when k > n − n1) collapses the code to a pure single-block [n1, k − (n − n1)] Gabidulin
+code (Lean T20).
+Proof. Because LRS evaluation on any s < k coordinates is surjective [3], every codeword c ∈ Csh
+arises from a skew polynomial f = h ·σ MS ∈ Fqm [x; σ] of degree < k, where MS is the unique
+monic minimal skew polynomial of degree s vanishing on S and deg h < k − s = k′. On the primary
+block B1 (anchor a1, operator Da1 (u) = a1σ(u)), skew multiplication acts by operator composition:
+(h ·σ MS )(Da1 )(β(1)) = h(Da1 )( ˜β(1)), where ˜β(1) := MS (Da1 )(β(1)) ∈ Fn′ 1 qm . Hence the restriction
+Csh|B1 is a single-block Gabidulin-type code generated by Di a1 ( ˜β(1)) (0 ≤ i < k′). Since σ = a−1 1 Da1
+shifts skew degree by +1 up to the single block-1 scalar a−1 1 , Λ1(Csh|B1 ) = Csh|B1 + (Csh|B1 )[1] has
+dimension at most min(n′ 1, k′ +1). Projecting Λ1(Csh) ⊆ Fn′ 1 qm ⊕Fδ qm onto B1 has image Λ1(Csh|B1 ) and
+kernel supported on the δ off-primary coordinates (dimension ≤ δ), giving (5) by rank–nullity.
+Certificates C10–C13 verify Theorem 3.1 by exact finite-field shortening and Gaussian elimination
+(Figure 2): shortening 4 coordinates of block 2 in F35 [10, 7] yields [6, 3] with δ = 1 < 2, dropping
+dim Λ1 from 6 to 5 (C10); shortening all 5 coordinates of block 2 yields pure Gabidulin [5, 2] with
+dim Λ1 = 3 < 4 (C11); shortening 4 coordinates in F36 [12, 8] yields [8, 4] with dim Λ1 = 7 < 8 (C12);
+and shortening 9 coordinates across blocks 2–3 in a 3-block F55 [15, 12] LRS code yields [6, 3] with
+residual blocks (5, 0, 1), dropping dim Λ1 from 6 to 5 (C13). Figure 3 maps the full rate coverage
+combining direct primal Overbeck (R < 1/ℓ), dual Overbeck (R > 1 − 1/ℓ; Lean T13), and mid-rate
+shortening.
+4 Certificate Suite, Scope, and Verification Boundary
+Table 1 lists all 16 SHA-256-indexed finite-field certificates (C01–C16) produced by LRS-STRUCT-
+RECOV-CERT-1.0, audited by 93 adversarial pytest checks (including Rabin irreducibility rejection
+of reducible moduli [5]) and 20 constructive Lean 4.36.0 theorems.
+Verification Boundary and Attribution.
+3
+
+
+
+Figure 2: Left: Single-step dim Λ1(Csh) vs. shortened block-2 coordinates s for F35 [10, 7] LRS,
+crossing the collapse threshold at s = 4 (C10: 5 < 6) and reaching pure Gabidulin at s = 5 (C11:
+3 < 4). Right: Certified single-step (t = 1) shortening defects across C10–C12 and F36 s = 5.
+Figure 3: Left: Exact onset Overbeck–LRS rank defect ∆ℓ = k − ℓ at t = ℓ across block counts
+ℓ ∈ {1, 2, 3, 4} (Theorem 2.1). Right: Asymptotic rate-regime coverage separating direct primal
+Overbeck (R < 1/ℓ), dual Overbeck (R > 1 − 1/ℓ), and the mid-rate shortening gap requiring block
+collapse for ℓ ≥ 3.
+• Proved universally in Lean 4.36.0 (T01–T20): The skew-norm cocycle Ni+j (a) =
+Ni(a)σi(Nj (a)) and Frobenius shift law aσ(Ni(a)) = Ni+1(a) over arbitrary multiplicative en-
+domorphisms (T01–T02); the exact Overbeck–LRS defect factorization ∆LRS = (t+1−ℓ)(k−ℓ),
+strict positivity for t ≥ ℓ, k > ℓ, Gabidulin specialization, k = ℓ blindness, and low-rate non-
+saturation ℓ(k +1) < n (T03–T08, T19); the shortening t = 1 collapse criterion δ +1 < k′, strict
+rate drop for 1 ≤ s < k < n, and off-block reduction to Gabidulin (T09–T10, T20); sum-rank
+Singleton, conjugacy-class, and primal-dual ceilings (T11–T13); and exact benchmark arith-
+metic checks (T14–T18). Every Lean theorem depends solely on [propext, Quot.sound] or
+zero axioms (zero Classical.choice, zero sorry).
+• Verified over explicit finite fields in the AST-audited zero-float Python engine
+(C01–C16, 93 pytest checks): Rabin irreducibility checks, distinct conjugacy-class norm
+verification, exact Fpm Gaussian-elimination ranks of Λt(C) across F26 , F35 , F36 , F54 , F55 , exact
+invariance under public-key scrambling Gpub = SGLRSP , and exact finite-field matrix short-
+ening. (General arbitrary-field matrix-rank proofs of (3) and (5) are proved mathematically
+4
+
+
+
+Table 1: Complete summary of all 16 exact Fpm certificates (C01–C16) and matching Lean 4.36.0
+theorems.
+ID Field / Code Parameters Exact Finite-Field Certified Output (Zero Float) Lean Ref.
+C01 F26 , ℓ = 1 Gabidulin [6, 2] Λ0..3 = [2, 3, 4, 5] vs. rand [2, 4, 6, 6]; defects [0, 1, 2, 1]; scramble-inv. T05--T06, T14
+C02 F26 , ℓ = 1 Gabidulin [6, 3] Λ0..3 = [3, 4, 5, 6] vs. rand [3, 6, 6, 6]; defects [0, 2, 1, 0]; scramble-inv. T06, T14
+C03 F36 , ℓ = 1 Gabidulin [6, 3] Λ0..2 = [3, 4, 5] vs. rand [3, 6, 6]; defects [0, 2, 1]; scramble-inv. T06
+C04 F35 , ℓ = 2 LRS [10, 3] Λ0..2 = [3, 6, 8] vs. rand [3, 6, 9]; exact t = 2 defect 1 T03--T04, T08
+C05 F36 , ℓ = 2 LRS [12, 3] Λ0..3 = [3, 6, 8, 10] vs. rand [3, 6, 9, 12]; defects [0, 0, 1, 2] T03, T15, T19
+C06 F36 , ℓ = 2 LRS [12, 4] Λ0..3 = [4, 8, 10, 12] vs. rand [4, 8, 12, 12]; exact t = 2 defect 2 T03, T16
+C07 F55 , ℓ = 2 LRS [10, 3] Λ0..3 = [3, 6, 8, 10] vs. rand [3, 6, 9, 10]; exact t = 2 defect 1 T03--T04
+C08 F36 , ℓ = 2 LRS [12, 2] (k = ℓ) Λ0..3 = [2, 4, 6, 8] = rand; exact zero defect (k − ℓ = 0) T07
+C09 F55 , ℓ = 3 LRS [15, 4] Λ0..3 = [4, 8, 12, 15] = rand; ambient saturation ℓ(k + 1) = 15 = n T08, T17
+C10 F35 , [10, 7] s=4−−→ [6, 3] Residual blocks (5, 1), δ = 1: dim Λ1 = 5 < 6 (t = 1 defect 1) T09--T10, T18
+C11 F35 , [10, 7] s=5−−→ [5, 2] Residual pure Gabidulin (5, 0), δ = 0: dim Λ1 = 3 < 4 T18, T20
+C12 F36 , [12, 8] s=4−−→ [8, 4] Residual blocks (6, 2), δ = 2: dim Λ1 = 7 < 8 (t = 1 defect 1) T09, T18
+C13 F55 , ℓ = 3 [15, 12] s=9−−→ [6, 3] Residual blocks (5, 0, 1), δ = 1: dim Λ1 = 5 < 6 (t = 1 defect 1) T09--T10
+C14 F26 (x6 + x + 1) norm cocycle Exact N2+3(a) = N2(a)σ2(N3(a)), aσ(N2) = N3, σ6 = id T01--T02
+C15 F36 Conway norm cocycle Exact N3+2(a) = N3(a)σ3(N2(a)), aσ(N3) = N4, σ6 = id T01--T02
+C16 F54 (x4 + 2) norm cocycle Exact N2+2(a) = N2(a)σ2(N2(a)), aσ(N2) = N3, σ4 = id T01--T02
+in Sections 2–3 rather than formalized as abstract vector-space linear algebra inside Lean.)
+• Imported from cited literature (not re-proved inside Lean): The complete end-to-
+end polynomial-time parameter-recovery algorithm across all parameter regimes (including
+unknown block partitions and evaluation-vector extraction) of Astore, Borello, and Couvreur
+[1], and the general skew-polynomial divisibility and MSRD duality theory of Martínez-Peñas
+[3].
+Reproducibility, Archived Artifact Hashes, and Disclosures. All verification artifacts are
+archived directly inside this AIRR record under MIT (manuscript CC-BY-4.0):
+• src/lean/LrsStructureRecoveryCert.lean (20 constructive Lean 4.36.0 theorems T01–
+T20):
+SHA-256: 3eb9fbdb3a72a37bc7a70536e1def4418957e43cab1163861ae39fc4375bf75a
+• src/python/lrs_structure_recovery_verifier.py (exact Fpm zero-float engine):
+SHA-256: 32443ea753c6b46f5a7a3a6f75f00b55ccaecf55f6b2b7695ffc1552b075b8c7
+• data/certificates/MANIFEST.json (indexing all 16 finite-field JSON certificates C01–C16):
+SHA-256: ce6c9e853ba4aef64a28407d0b883d192504c929cd3bcf2e00287bce58476587
+AI-assisted research tooling (Google Antigravity) supported drafting and formalization under human
+authorship and oversight by Lluis Eriksson; every formal claim is independently checked by the
+Lean 4.36.0 kernel and zero-float pytest suite.
+References
+[1] Valentina Astore, Martino Borello, and Alain Couvreur. Full structure recovery of linearized
+Reed–Solomon codes. arXiv:2611.34835v1 [math.CO / cs.IT / cs.CR], 2026.
+[2] Ernst M. Gabidulin. Theory of codes with maximum rank distance. Problems of Information
+Transmission, 21(1):1–12, 1985.
+[3] Umberto Martínez-Peñas. Skew and linearized Reed–Solomon codes and maximum sum rank
+distance codes over any division ring. Journal of Algebra, 504:587–612, 2018.
+5
+
+
+
+[4] Raphael Overbeck. Structural attacks for public key cryptosystems based on Gabidulin codes.
+Journal of Cryptology, 21(2):280–301, 2008.
+[5] Michael O. Rabin. Probabilistic algorithms in finite fields. SIAM Journal on Computing,
+9(2):273–280, 1980.
+6

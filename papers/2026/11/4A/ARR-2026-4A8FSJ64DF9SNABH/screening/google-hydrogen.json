@@ -1,0 +1,56 @@
+{
+  "paper_id": "ARR-2026-4A8FSJ64DF9SNABH",
+  "version": "v1",
+  "version_id": "arr:version:fd240d68-cc05-4571-bc09-47a0b0bc1184",
+  "canonical_sha256": "c636cb4f177bc1ef7c2b1260e210f8193962a72b453cc0bfde3e2e80c7f6f732",
+  "provider": "Google",
+  "model_id": "hydrogen",
+  "assessed_at": "2026-11-27T23:51:00Z",
+  "prompt_version": "ARR-ASSESS-1.0",
+  "independence": "not_involved_in_manuscript",
+  "recommendation": "accept",
+  "millennium_score": 5.65,
+  "overall_stars": 6,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 5,
+      "basis": "All algebraic identities, rational arithmetic across certificates C01-C16, and plot values in Figures 1-3 were independently verified from the manuscript. In particular, the Schur-complement identity (2), the k=2 projector I3-J3/3, and the noisy Wigner-origin cutoff 1-2*eta*(1-eps) are exact."
+    },
+    "rigor": {
+      "stars": 4,
+      "basis": "Proofs of Theorems 2.1, 3.1, and 4.1 are exact and self-contained over Q, and Section 5 honestly delineates the verification boundary between machine-checked Lean 4.36.0 claims and imported covariance-matrix results from Chakrabarty [1]. General-k DFT projectors remain unformalized in Lean."
+    },
+    "novelty": {
+      "stars": 3,
+      "basis": "The core monogamy bounds (2k-1, nk-1) and tight-frame saturation originate in Chakrabarty [1]. Original contributions are the zero-axiom Lean 4.36.0/pure-Q formalization, the explicit rational Schur factorization (2), and the tight-frame heralding-error tolerance cutoff eps < 1/(2k)."
+    },
+    "significance": {
+      "stars": 3,
+      "basis": "Provides a clean, machine-checked rational certification suite and exact analytical benchmarks for multimode Gaussian steering monogamy and remote non-Gaussian state preparation, though the formalized slice covers elementary algebraic cores rather than the full multimode Gaussian reduction."
+    },
+    "reproducibility": {
+      "stars": 4,
+      "basis": "Manuscript specifies exact Lean 4.36.0 flags, SHA-256 hashes for the Lean file, pure-Q Python verifier, and certificate manifest, plus the full rational values of C01-C16. Under strict single-PDF isolation, external artifacts and [1] could not be independently executed or inspected."
+    }
+  },
+  "summary": "This manuscript presents GAUSS-STEER-MONO-CERT-1.0, a zero-float rational algebraic verification and Lean 4.36.0 formalization suite accompanying Sudip Chakrabarty's resolution of multimode Gaussian steering monogamy and remote Wigner negativity (arXiv:2611.34874v1). Auditing the PDF shows complete mathematical consistency: Theorem 2.1 proves the share-budget ceilings M <= 2k-1 and M <= nk-1 (forcing n >= 3 above 2k-1), tight-frame saturation, and the rational projector P = I3 - J3/3; Theorem 3.1 derives the exact rational Schur factorization nu_{A|B}-1 = (a-1)(1-2*eta)/(eta*(a-1)+1), proving squeezing invariance at eta = 1/2; and Theorem 4.1 gives pi*W_out(0) = 1 - 2*eta*(1-eps), pinning the tight-frame heralding-error tolerance to eps < 1/(2k). All 16 certificates (C01-C16) in Table 1 and all plots in Figures 1-3 match exact rational evaluations. Section 5 transparently states that Chakrabarty's general multimode covariance-matrix reduction is imported from [1] rather than proved in Lean. Although the formalized slice is elementary and general-k DFT projectors lie outside exact-Q, the paper is a sound, rigorously verified contribution.",
+  "strengths": [
+    "Complete mathematical accuracy across all three theorems, polynomial proofs, Table 1 rational certificates (C01-C16), and Figures 1-3 with zero arithmetic discrepancies.",
+    "Clean elimination of square roots in Theorem 3.1 via the exact rational Schur-complement identity (2), making squeezing invariance of the eta = 1/2 steering threshold transparent.",
+    "Transparent verification-boundary attribution in Section 5 clearly separating constructive Lean 4.36.0 theorems (no sorry, no Classical.choice) from imported multimode results in [1].",
+    "Explicit closed-form noisy heralding-error tolerance eps < 1/(2k) at the harmonic tight-frame share, providing sharp rational loss benchmarks such as C14 (k=2, eta=2/3, eps=1/4)."
+  ],
+  "weaknesses": [
+    "The hardest analytical step—proving sum_j s_j <= k for arbitrary multimode Gaussian states with arbitrary squeezing, amplification, and noise—is imported from [1] and not formalized in Lean.",
+    "The Lean formalization and exact-Q projector certificate (T07, C06) cover only k=2, M=3 (I3 - J3/3), whereas the general-k DFT projector P = F_S^dagger F_S involves irrational/complex entries and is left unformalized.",
+    "Theorem 4.1 explicitly analyzes only the phase-space origin W_out(0) < 0 without noting why off-origin Wigner negativity cannot persist for |0>/|1> mixtures once W_out(0) >= 0.",
+    "Individual formalized theorems (T01-T20) represent elementary finite rational algebra and pigeonhole inequalities, limiting standalone mathematical depth beyond Chakrabarty [1]."
+  ],
+  "potential_errors": [],
+  "strong_novelty_candidates": [
+    "Exact rational Schur-complement factorization nu_{A|B}-1 = (a-1)(1-2*eta)/(eta*(a-1)+1) eliminating square roots from TMSV beam-splitter steering and certifying squeezing invariance at eta = 1/2.",
+    "Exact tight-frame heralding-error ceiling eps < 1/(2k) for remote single-photon Wigner negativity at the origin, verified constructively with zero-float certificates such as C14.",
+    "Constructive zero-axiom Lean 4.36.0 and SHA-256 pure-Q verification suite (GAUSS-STEER-MONO-CERT-1.0) covering multimode share-budget monogamy and n >= 3 separation."
+  ],
+  "unresolved_material_objections": []
+}
