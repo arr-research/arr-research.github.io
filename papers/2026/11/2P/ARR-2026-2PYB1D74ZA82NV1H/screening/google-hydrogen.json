@@ -1,0 +1,40 @@
+{
+  "paper_id": "ARR-2026-2PYB1D74ZA82NV1H",
+  "version": "v1",
+  "version_id": "arr:version:dd54d722-c823-4e6d-b973-01a6d3c8cc0a",
+  "canonical_sha256": "a6770067d7a62caf10d853a9315ba7f3650913344793e8b7e3e189ab340cad8e",
+  "provider": "Google",
+  "model_id": "hydrogen",
+  "assessed_at": "2026-11-27T23:20:00Z",
+  "prompt_version": "ARR-ASSESS-1.0",
+  "independence": "not_involved_in_manuscript",
+  "recommendation": "accept",
+  "millennium_score": 7.75,
+  "overall_stars": 8,
+  "criteria": {
+    "correctness_confidence": {"stars": 5, "basis": "All analytical formulas (Pauli layer counts, symplectic Z-twirling, Eq. 2 CNF Fourier weights, Eq. 3 norm bound, Eq. 4 Taylor bound, Eq. 5 advantage transfer) and all 16 rational certificates C01-C16 check out exactly against independent calculation."},
+    "rigor": {"stars": 5, "basis": "Proofs of the twirling projection, disjoint-clause Parseval identity, operator-norm Fourier tail bound, and positive Taylor denominator bound are complete, and Section 5 explicitly separates machine-checked lemmas from imported circuit-level results."},
+    "novelty": {"stars": 3, "basis": "The separation itself and proof architecture belong to Sun and Wang [7]; this paper contributes a constructive zero-float Lean 4.36.0 formalization and exact closed-form finite rational certificates (C01-C16) for the supporting spectral and Taylor bounds."},
+    "significance": {"stars": 3, "basis": "Provides exact, floating-point-free rational benchmarks and machine-checked algebraic identities backing recent BQAC0/qpoly lower bounds, 2-design ceilings, and NLTS weight bounds, though the core circuit localization theorem remains unformalized."},
+    "reproducibility": {"stars": 4, "basis": "All mathematical formulas, parameters (n, d, m, w, K), and rational outputs for C01-C16 are fully specified in the PDF for independent verification, though the external Lean proofs, pytest suite, and SHA-256 hashes cannot be audited in PDF-only mode."}
+  },
+  "summary": "This manuscript presents PAULI-AC0-BQAC0-CERT-1.0, a constructive Lean 4.36.0 and exact-rational verification suite formalizing the supporting Pauli-spectrum, Boolean Fourier, Z-twirling, stretched-exponential, and advantage-transfer inequalities underlying Sun and Wang's recent proof that AC0 is not contained in BQAC0/qpoly. Independent checking confirms that every formula and numerical bound in the paper is mathematically exact: the sublinear Pauli subspace counts (C01-C03), symplectic Z-twirling projection and Frobenius contraction (Theorem 2.1, C04-C05), exact generating-function Fourier weights for disjoint monotone depth-2 CNFs and squared operator-norm lower bounds (Eq. 2, Theorem 3.1, C06-C10), zero-float Taylor upper bounds for stretched exponentials (Theorem 4.1, C11-C14), and Holder/triangle advantage transfer (Proposition 4.2, C15-C16). Crucially, Section 5 transparently delineates the verification boundary, acknowledging that Sun and Wang's circuit-level product-projection localization theorem, asymptotic worst-case hardness, and NLTS Hamiltonian construction are imported rather than proved in Lean. No mathematical errors or unresolved objections remain.",
+  "strengths": [
+    "Every mathematical identity and numerical certificate C01-C16 is exact, including closed-form CNF Fourier weights W_k(f_{m,w}) in Eq. 2 and variance tails up to n = 44 (C06-C10).",
+    "Zero-float stretched-exponential certificates (Theorem 4.1) rigorously replace floating-point exponentials with exact positive rational Taylor bounds using factorial denominators.",
+    "Section 5 states the verification boundary honestly, clearly distinguishing the 20 machine-checked Lean theorems from the imported circuit-level localization theorem of Sun and Wang [7].",
+    "Figures 1-3 and Table 1 accurately match the exact analytical formulas across all parameter regimes, including the non-monotonic jumps in ceiling(sqrt(n)) Pauli fractions."
+  ],
+  "weaknesses": [
+    "The central circuit-level product-projection localization theorem of Sun and Wang [7] and the NLTS Hamiltonian construction [2] are imported from literature and not formalized in Lean.",
+    "Exhaustive twirling certificates cover only n = 2, 3 (C04-C05) and advantage-transfer certificates C15-C16 test illustrative rational parameters rather than circuit-derived epsilon.",
+    "Minor editorial imprecisions: page 2 describes the 4^{-n} sum_{k<=ceil(sqrt(n))} C(n,k) 3^k collapse as super-exponential (true in d, exponential in n) and writes PAULI-ACO-BQACO-CERT-1.0 with letter O.",
+    "Theorem 2.1 lists the operator-norm non-expansiveness bound alongside Lean T06 without stating in-theorem that T06 only formalizes Frobenius contraction (clarified later in Section 5)."
+  ],
+  "potential_errors": [],
+  "strong_novelty_candidates": [
+    "Exact closed-form generating-function expression for degree-k Fourier weight W_k(f_{m,w}) of disjoint monotone depth-2 CNFs (Eq. 2) paired with exact-Q tail certificates up to n = 44.",
+    "Constructive zero-float rational Taylor certification scheme (Theorem 4.1) for stretched-exponential 2-design and NLTS spectral ceilings without Classical.choice or floating-point arithmetic."
+  ],
+  "unresolved_material_objections": []
+}
