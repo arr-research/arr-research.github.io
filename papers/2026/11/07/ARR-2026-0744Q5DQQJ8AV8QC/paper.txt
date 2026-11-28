@@ -1,0 +1,1108 @@
+--- Page 1 ---
+THE 2-PEBBLING PROPERTY, SHARPt-PEBBLING BOUNDS, AND GRAHAM’S
+CONJECTURE FOR SPLIT GRAPHS
+LLUIS ERIKSSON
+Abstract. A connected graph G satisfies Chung’s 2-pebbling property ( 2PP) if, for every target vertex r∈V (G)
+and every pebble configuration D satisfying p(D) + q(D) > 2π(G) (where p(D) is the total number of pebbles and
+q(D) is the number of occupied vertices), two pebbles can be moved to r. Despite the structural simplicity of split
+graphs—chordal graphs of diameter at most 3 whose pebbling numbers were characterized by Alc´ on, Gutierrez, and
+Hurlbert (2014)—the validity of 2PP, the tight behavior of the t-pebbling number πt(G), and Graham’s product
+conjectureπ(G□H)≤π(G)π(H) for split graphs have remained open.
+We resolve all three questions completely. Our central structural tool is anIntra-Clique Move Elimination Lemma:
+any minimum-length pebbling sequence delivering t pebbles to a target r in a split graph G = (C∪I, E ) avoids all
+moves entering I\ {r}, all moves inside C\ {r}when r∈C , and all moves C1 →C and C0 →C 0 when r∈I , thereby
+compressing optimal pebbling into a layered directed acyclic graph of path length at most 3 (and at most 2 when r∈C ).
+Combining this compression with causal binary-tree extraction yields the sharp bound πt(G) ≤π (G) + 2diam(G)(t− 1)
+for all connected split graphs and all t≥ 1, attained across every diameter d∈ {0, 1, 2, 3} in both non-Class-0 ( δ = 1)
+and Class-0 (δ = 3) regimes, while exhibiting a strict sub-maximal frontier πt(G4,4) = 8t < π1(G4,4)+8( t− 1) for t≥ 2.
+Coupling the same DAG compression with an upward even-to-odd parity boost on I\ {r}, a conservation identity, and
+an optimal parity-absorption routing analysis proves that every connected split graph satisfies 2PP (and hence O2PP; in
+particular, no split graph is a Lemke graph). Finally, we establish Graham’s conjecture whenever G is a connected split
+graph and H is any tree, complete graph, hypercube Qd, complete bipartite graph, or complete multipartite graph,
+including a self-contained lifting lemma for the odd 2-pebbling property that bypasses strict product drops such as
+π((K3 + leaf)□K 2) = 9<10 = 2π(K 3 + leaf).
+1.Introduction
+Graph pebbling, introduced by Fan Chung [ 2] following a number-theoretic question of Lagarias and Saks (see also
+Lemke and Kleitman [9]), models resource transport across a connected finite simple graph G = (V, E). Given an
+initial pebble configuration D:V→Z ≥0, apebbling move( u→v ) along an edge uv∈E removes two pebbles from
+u and places one pebble on v. For a target vertex r∈V and integer t≥ 1, a configuration D is t-solvable for r if
+there exists a finite sequence of valid pebbling moves transforming D into a configuration D′ with D′(r) ≥t . The
+t-pebbling number πt(G, r) is the smallest integer m such that every configuration D of size p(D) := P
+v∈V D(v) ≥m
+is t-solvable for r, and πt(G) := maxr∈V πt(G, r). When t = 1, we write π(G) = π1(G) for the classical pebbling
+number. Clearly π(G) ≥max{n, 2diam(G)} for every connected graph on n = |V| vertices; graphs satisfying π(G) = n
+are calledClass0.
+To attack product bounds via induction, Chung [ 2] introduced a fundamental strengthening of π(G) based on the
+support size q(D) := |{v∈V : D(v) ≥ 1}|. A connected graph G satisfies the 2-pebbling property( 2PP) if, for every
+targetr∈Vand every configurationDsatisfying
+p(D) +q(D)>2π(G),(1)
+D is 2-solvable for r. Graphs that fail (1) are known asLemke graphs. A closely related weakening tracks the number
+of vertices with an odd number of pebbles, o(D) := |{v∈V : D(v) ≡ 1 ( mod 2)}|: a graph satisfies theodd2-pebbling
+property( O2PP) if p(D) +o(D) > 2π(G) guarantees 2-solvability for every target r∈V . Since o(D) ≤q (D) pointwise,
+2PP implies O2PP. Both properties lie at the heart ofGraham’s pebbling conjecture[ 2], which asserts that for all
+connected graphsGandH,
+π(G□H)≤π(G)π(H),(2)
+where G□H denotes the Cartesian product. Over the past three decades, 2PP has been proved to force (2) whenever
+H is a complete graph or hypercube under tight lifting [ 2], a tree [10, 11], a complete bipartite graph [4], or a complete
+multipartite graph [12]; see also the surveys of Hurlbert [7, 8].
+2020Mathematics Subject Classification.Primary 05C57; Secondary 05C35, 05C76.
+Key words and phrases.Graph pebbling, split graphs, 2-pebbling property, odd 2-pebbling property, t-pebbling, Graham’s conjecture,
+Lemke graphs.
+ORCID: 0009-0006-7494-9040. Manuscript licensed under CC-BY-4.0. Deterministic verification software and figure scripts (MIT
+license) are available athttps://github.com/lluiseriksson/split-graph-2pebbling(release tagv1.0.2).
+1
+AIRR.SCIENCE  ·  ARR-2026-0744Q5DQQJ8AV8QC v1  [Combinatorics]  28 Nov 2026
+
+--- Page 2 ---
+2 LLUIS ERIKSSON
+A graph G is asplit graphif V (G) admits a partition V (G) = C⊔I into a clique C and an independent set I.
+Split graphs form a central subclass of chordal graphs, are recognizable in linear time from their degree sequences [ 5],
+and satisfy diam(G) ≤ 3. In a landmark paper, Alc´ on, Gutierrez, and Hurlbert [1] derived a closed-form formula and
+an O(nβ) algorithm (β <1.41) for π(G) on split graphs, and proved that every connected split graph with minimum
+degree δ(G) ≥ 3 is Class 0. Nevertheless, three natural questions left open since [ 1] and the product literature [ 2, 12]
+remained unresolved: whether split graphs can ever produce Lemke graphs (i.e., fail 2PP), whether their t-pebbling
+numbers obey the sharp diameter scaling πt(G) ≤π (G) + 2diam(G)(t− 1), and whether split graphs satisfy Graham’s
+conjecture against the standard2PPproduct families.
+In this paper, we answer all three questions affirmatively with completely self-contained combinatorial proofs.
+Theorem 1.1(Full 2-Pebbling Property for Split Graphs).Every connected split graph G satisfies the2-pebbling
+property ( 2PP): for every target r∈V (G)and every configuration D with p(D) + q(D) > 2π(G), two pebbles can be
+moved to r. Consequently, no split graph is a Lemke graph, and every connected split graph satisfies the odd2-pebbling
+property (O2PP).
+Theorem 1.2(Sharp t-Pebbling Bound for Split Graphs).For every connected split graph G and every integer t≥ 1,
+πt(G)≤π(G) + 2 diam(G)(t−1).(3)
+Moreover, equality holds for every diameter d∈ {0, 1, 2, 3} and every t≥ 1; in diameter3, equality is attained both
+by the infinite non-Class-0( δ = 1) family Km + {r, u}(m≥ 2, πt = n + 8t− 4) and by the Class-0( δ = 3) graph
+G8 (πt(G8) = 8t). By contrast, the Class-0( δ = 4) diameter-3split graph G4,4 exhibits a strict sub-maximal jump
+π1(G4,4) = 10whileπ t(G4,4) = 8t < π1(G4,4) + 8(t−1)for allt≥2.
+Theorem 1.3(Graham’s Pebbling Conjecture for Split Graphs).Let G be any connected split graph, and let H be
+any tree, complete graphK m, hypercubeQ d, complete bipartite graph, or complete multipartite graph. Then
+π(G□H)≤π(G)π(H).
+A subtle point arises in the hypercube case H = Qd (d≥ 2) of Theorem 1.3. Chung’s classical K2-product
+theorem [2, Theorem 5] asserts that if G satisfies 2PP, then π(G□K 2) ≤ 2π(G), andif equality π(G□K 2) = 2π(G)
+holds, thenG□K 2 again satisfies2PP. However, strict dropsπ(G□K 2)<2π(G) genuinely occur among connected
+split graphs: as we prove and verify computationally in Section 5, the diameter-2 split graph K3 + leaf has π = 5
+yet π((K3 + leaf) □K 2) = 9 < 10. To keep Theorem 1.3 completely rigorous for all Qd (d≥ 1), we prove a clean
+Cube Lifting Lemma(Lemma 5.1) showing that the relaxed threshold property O2PP relative to an upper bound
+M≥max{π (G),|V (G)|} propagates unconditionally to ( G□K 2, 2M) because removing pairs from vertices preserves
+their pebble parity.
+The remainder of the paper is organized as follows. Section 2 establishes the Intra-Clique Move Elimination Lemma,
+the upward even-to-odd boost on I\{r} , and our two structural lower bounds (Lemmas 2.3 and 2.4). Section 3 proves
+Theorem 1.2 via causal binary-tree extraction and establishes the exact extremal and frontier properties of Km +{r, u},
+G8, and G4,4. Section 4 presents the complete proof of Theorem 1.1 via conservation identities and parity-absorption
+routing. Section 5 proves Lemma 5.1 and Theorem 1.3. Section 6 summarizes independent exhaustive computational
+checks across all 164 connected split graphs onn≤7 vertices and closes with open problems.
+2.Structural Compression and Lower-Bound Lemmas
+Throughout, G = (V, E) denotes a connected split graph on n = |V| vertices with split partition V = C⊔I , where
+C is a clique and I is an independent set. Whenever G is non-complete (G̸ ∼= Kn), we choose C to be amaximal
+clique; then k := |C| ≥2, I̸ = ∅, and every u∈I satisfies 1 ≤ |N(u)| ≤k−1 (since G is connected and C∪ {u}is
+not a clique). Whenr∈I, we partitionCinto
+C1 :=N(r)⊆CandC 0 :=C\C 1,
+soC 1 ̸=∅, and we partitionI\ {r}according to distance tor:
+I2 :={w∈I\ {r}:N(w)∩C 1 ̸=∅}, I 3 :={u∈I\ {r}:N(u)⊆C 0}.
+Clearly dist(w, r) = 2 forw∈I 2 and dist(u, r) = 3 foru∈I 3.
+2.1.Intra-Clique Move Elimination.A cornerstone of our analysis is that minimum-length pebbling sequences
+on split graphs admit a rigid layered DAG compression.
+Lemma 2.1(Intra-Clique Move Elimination Lemma).Let G = (C⊔I, E )be a connected split graph, let r∈V (G),
+let t≥ 1, and let σ = (m1, . . . , mℓ)be a minimum-length valid pebbling sequence from a configuration D that places at
+leasttpebbles onr. Then:
+
+--- Page 3 ---
+2-PEBBLING,t-PEBBLING, AND GRAHAM’S CONJECTURE FOR SPLIT GRAPHS 3
+(0)No move ofσleavesr.
+(1)No move ofσentersI\ {r}.
+(2)Ifr∈C, no move ofσhas both endpoints inC\ {r}; ifr∈I, no move ofσgoes fromC 1 toC.
+(3)Ifr∈I, no move ofσhas both endpoints inC 0.
+Consequently, σ uses only edges of a layered directed acyclic graph ⃗H(G, r)whose directed paths have length at most2
+when r∈C (with layers I\ {r} →C\ {r} →r, plus direct edges I∩N (r) →r ) and length at most3when r∈I
+(with layersI 3 ∪I 2 →C 0 →C 1 →r, plus direct edgesI 2 →C 1).
+Proof. Let D0 := D and let Ds denote the configuration immediately after move ms (1 ≤s≤ℓ ). Notice that if r and
+D allow a valid sequence of length ℓ achieving Dℓ(r) ≥t , no proper shorter sequence achieves at least t pebbles on r.
+Proof of (0).Suppose for contradiction that some move mi = (r→w ) leaves r. Delete mi from the sequence.
+Immediately after index i, relative to Di, vertex r has discrepancy +2, vertex w̸ = r has discrepancy −1, and every
+other vertex has discrepancy 0. We scan indices s = i + 1, . . . , ℓin order while maintaining the invariant that after
+steps, either:
+(I) everyv̸=rhas discrepancy≥0 andrhas discrepancy at least +1 (zero remaining deficit), or
+(II) there is a unique deficit vertex xs ̸= r with discrepancy −1, vertex r has discrepancy +2, and every v /∈ {r, xs}
+has discrepancy≥0.
+At step s > i: if (I) holds after step s− 1, or (II) holds and ms does not leave xs−1, then every vertex involved in
+ms holds at least as many pebbles as before ms in σ, so ms remains legal and preserves (I) or (II) (with xs = xs−1).
+Suppose (II) holds and ms = (xs−1 →y ) leaves xs−1. If Ds−1(xs−1) ≥ 3, then with discrepancy −1 vertex xs−1 still
+holds at least 2 pebbles, som s remains legal and (II) persists withx s =x s−1. If insteadD s−1(xs−1) = 2, we delete
+ms; thenx s−1 moves from discrepancy−1 to−1 + 2 = +1≥0, whiley’s discrepancy changes by−1:
+• if y = r, the +2 surplus at r absorbs −1 to leave discrepancy +1 at r and discrepancy ≥ 0 on every v̸ = r,
+entering (I);
+• if y̸ = r and y had discrepancy 0 before step s, then y’s discrepancy becomes −1, preserving (II) with xs = y
+and surplus +2 onr;
+• if y̸ = r and y already had discrepancy ≥ +1 before step s (from an earlier deleted move out of y), then y’s
+discrepancy becomes ≥ 0, so every v̸ = r has discrepancy ≥ 0 and r retains discrepancy +2 ≥ +1, entering (I).
+At the end of the scan, the resulting sequence has length at most ℓ− 1, remains valid at every step, and ends with at
+leastD ℓ(r) + 1≥t+ 1 pebbles onr, contradicting the minimality ofℓ.
+Proof of (1).Suppose some move enters I\ {r}, and let mi = (c→u ) be thelastmove in σ with u∈I\ {r}. Since
+Iis independent,c∈C. After stepi, no move entersu.
+• If no move after mi leaves u, deleting mi leaves u with Di−1(u) ≥ 0 pebbles for all s≥i and gives c two
+extra pebbles from step i onward, yielding a valid sequence of length ℓ− 1 with at least t pebbles on r, a
+contradiction.
+• Otherwise, let mj = (u→c ′) (j > i) be thefirstmove after mi leaving u; necessarily c′ ∈C . For all i≤s < j,
+no move touches u, so Ds(u) = Di(u) = Di−1(u) + 1 ≥ 1, and Dj−1(u) ≥ 2 implies Di−1(u) ≥ 1. If c′ = c,
+delete both mi and mj: then u holds Di−1(u) ≥ 1 on [i, j−1] and Ds(u) + 1 for s≥j , while c gains +2 on
+[i, j−1] and +1 for s≥j , giving a valid sequence of length ℓ− 2. If c′ ̸= c, then cc′ ∈E because C is a
+clique. Replace mi = (c→u ) by m′
+i = (c→c ′) and delete mj. At every step s, c has the exact pebble count
+Ds(c); u holds Di−1(u) ≥ 1 on [i, j−1] and Ds(u) + 1 for s≥j ; and c′ gains +1 on [ i, j−1] and matches
+Ds(c′) for s≥j . All other vertices (including r̸ = u) are unchanged, giving a valid sequence of length ℓ− 1,
+contradiction.
+Proof of (2).First assume r∈C , and suppose some move has both endpoints in C\ {r}. Let mi = (c→c ′) be the
+lastsuch move. Then Di(c′) = Di−1(c′) + 1 ≥ 1, and if any move leaves c′ after mi, let mj = (c′ →z ) (j > i) be
+the first such move. By (0), c′ ̸= r; by (1), z /∈I\ {r}; and by the choice of mi as the last move inside C\ {r}, we
+cannot have z∈C\ {r}. Hence z = r, i.e., mj = (c′ →r ). Replacing mi by m′
+i = (c→r ) (valid since c, r∈C ) and
+deleting mj keeps c identical, keeps c′ at Ds(c′) − 1 ≥D i(c′) − 1 ≥ 0 on [i, j−1] (as no move leaves c′ in (i, j)) and
+Ds(c′) + 1 for s≥j , and gives r a +1 surplus on [ i, j−1] and exact count Ds(r) for s≥j . If no move leaves c′ after
+mi, deletingm i suffices. Either case yields a shorter valid sequence, contradiction.
+Next assume r∈I , and suppose some move mi = (c1 →c ′) has c1 ∈C 1 and c′ ∈C . If no move leaves c′ after mi,
+deleting mi contradicts minimality. Otherwise let mj = (c′ →z ) (j > i) be the first move after mi leaving c′. For
+i≤s < j, no move leaves c′, so Ds(c′) ≥D i(c′) ≥ 1. By (1), z∈C∪ {r} . If z = r, replace mi by (c1 →r ) (valid
+since c1 ∈C 1 = N(r)) and delete mj. If z = c1, delete both mi and mj. If z∈C\ {c 1}, replace mi by (c1 →z )
+(valid since C is a clique) and delete mj. In all three cases, pebble counts remain nonnegative everywhere and r ends
+with at leastD ℓ(r)≥tpebbles in fewer thanℓmoves, contradiction.
+
+--- Page 4 ---
+4 LLUIS ERIKSSON
+A2 = I ∖ N(r)
+I1 = I \ N(r)
+A1 = C ∖
+©
+r
+ª
+£
+£ no C ! I ∖
+©
+r
+ª
+Max directed path length L ∙ 2 (D(v) ∙ 1 on A1 [ I1)
+(a) Target r 2 C: depth- ∙ 2 DAG compression
+w1
+w2
+y
+c1
+c2
+c3
+r
+I3 (dist = 3)
+I2 (dist = 2)
+C0 = C ∖ N(r)
+C1 = N(r)
+f 2 F (odd y)
+c ¤ ∉ F (even y)
+£
+£
+£ no C1 ! C0
+Optimal routing maximizes k0: forbidden C0 ! C0, C1 ! C, and C ! I ∖
+©
+r
+ª
+ (L ∙ 3)
+(b) Target r 2 I: depth- ∙ 3 DAG and parity-absorption routing
+u1
+u2
+w
+f
+c ¤
+c1
+c 0
+1
+r
+Figure 1.Layered DAG compression from the Intra-Clique Move Elimination Lemma (Lemma 2.1).
+(a) For r∈C , optimal sequences compress to depth ≤ 2 (I→C\{r} →r and I1 →r ). (b) For r∈I ,
+optimal sequences compress to depth ≤ 3 ((I2 ∪I 3) →C 0 →C 1 →r and I2 →C 1); all intra-clique
+moves insideC 0 orC 1 and reverse movesC 1 →C 0 orC→I\ {r}are eliminated.
+Proof of (3).Assume r∈I , and suppose some move mi = (c0 →c ′
+0) has c0, c′
+0 ∈C 0. Since c′
+0 /∈N(r) and no move
+enters I\ {r}by (1), the first move mj = (c′
+0 →z ) leaving c′
+0 after mi (which must exist, else deleting mi shortens σ)
+satisfies z∈C . Deleting mi and mj if z = c0, or replacing mi by (c0 →z ) and deleting mj if z̸ = c0, again produces
+a valid shorter sequence, contradiction.
+Finally, checking the surviving edge directions in (0)–(3) confirms that ⃗H(G, r) is acyclic with maximum directed
+path length at most 2 forr∈Cand at most 3 forr∈I.□
+Figure 1 illustrates the compressed DAGs ⃗H(G, r) for both target locations. Lemma 2.1 immediately implies a
+parity normalization on the independent setI\ {r}.
+Lemma 2.2(Upward Even-to-Odd Boost on I\ {r}).Let G = (C⊔I, E )be a connected split graph with target
+r∈V (G), and let D be a configuration on V (G). Suppose u∈I\ {r} satisfies D(u) = 2m≥ 2, and define D′ by
+setting D′(u) := 2m + 1and D′(v) := D(v)for all v̸ = u. Then for every t≥ 1, D′ is t-solvable for r if and only if D
+ist-solvable forr.
+Proof. Since D≤D ′ pointwise, t-solvability of D implies t-solvability of D′. Conversely, suppose D′ is t-solvable for
+r, and choose a minimum-length valid sequence σ′ from D′ delivering at least t pebbles to r. By Lemma 2.1(1), no
+move of σ′ enters u. Consequently, σ′ executes at most ⌊D′(u)/2⌋ = ⌊(2m + 1)/2⌋ = m = ⌊D(u)/2⌋ moves out of u,
+consuming at most 2 m pebbles from u. Because D(v) = D′(v) for all v̸ = u, the exact same sequence σ′ is valid from
+Dand delivers the same number of pebbles tor.□
+2.2.Lower-Bound Configurations.We next record two elementary lower-bound constructions for π(G) that
+interact directly with our conservation bounds in Section 4.
+Lemma 2.3(Unit-Degree Lower Bound).Let G = (C⊔I, E )be a non-complete connected split graph with maximal
+cliqueCof sizek≥2. If there exists a vertexw∈Iwithdeg(w) = 1, thenπ(G)≥n+ 1.
+Proof. Let N(w) = {c} ⊆C. Since k≥ 2, there exists r∈C\ {c}. Place 3 pebbles on w, 0 pebbles on c and r, and
+1 pebble on each of the n− 3 vertices in V\ {w, c, r}, for a total of n pebbles. By Lemma 2.1, any valid sequence
+reaching r cannot enter I\ {r}and cannot use edges inside C\ {r}. Every vertex in I\ {r, w}holds 1 pebble and
+never moves, w can move at most ⌊3/2⌋ = 1 pebble to c, and every vertex in C\ {c, r}holds 1 pebble and receives 0
+pebbles. Thuscends with at most 1 pebble, sorcannot be reached.□
+Lemma 2.4(Disjoint-Neighborhood Lower Bound).Let G = (C⊔I, E )be a connected split graph, let r∈I with
+C1 =N(r)⊆C, and supposeu∈I 3 (soN(u)⊆C 0 =C\C 1). Then
+π(G)≥n+ 6− |N(u)| − |C1|.
+Proof. Set Nu := N(u) ⊆C 0. Since {r}, {u}, Nu, and C1 are pairwise disjoint, their union has size 2 + |Nu| + |C1|.
+Define a configuration D by placing 7 pebbles on u, 0 pebbles on every vertex in {r} ∪Nu ∪C 1, and 1 pebble on
+
+--- Page 5 ---
+2-PEBBLING,t-PEBBLING, AND GRAHAM’S CONJECTURE FOR SPLIT GRAPHS 5
+every remaining vertex inV\({r, u} ∪Nu ∪C 1), so
+p(D) = 7 +
+ 
+n−2− |Nu| − |C1|
+
+=n+ 5− |Nu| − |C1|.
+Suppose D could deliver 1 pebble to r, and take a minimum-length sequence σ doing so. By Lemma 2.1, no move
+enters I\ {r}and no move goes inside C0 or C1. Every vertex in I\ {r, u}has 1 pebble and cannot move, and every
+vertex in C0 \N u starts with 1 pebble and receives 0 pebbles, so C0 \N u sends 0 pebbles to C1. Vertex u executes at
+most ⌊7/2⌋ = 3 moves into Nu; because no move occurs within C0, if u sends ac pebbles to c∈N u (P
+c∈Nu ac ≤ 3),
+then Nu sends at most P
+c∈Nu⌊ac/2⌋ ≤ ⌊3/2⌋ = 1 pebble into C1. As C1 starts with 0 pebbles and receives at most 1
+pebble in total, no vertex inC 1 ever holds 2 pebbles, sorcannot be reached.□
+3.Sharpt-Pebbling Bounds and the2t-Pebbling Frontier
+To convert the bounded-depth DAG compression of Lemma 2.1 into an inductive bound on πt(G), we extract a
+bounded-weight causal sub-configuration for each delivered pebble.
+Lemma 3.1(Causal Sub-Configuration Extraction).Let ⃗H = (V, ⃗E)be a directed acyclic graph with target r∈V
+such that every directed path in ⃗H ending at r has length at most L. If a pebbling sequence σ = (m1, . . . , mℓ)on ⃗H
+from configuration D places at least1pebble on r, then there exists a sub-configuration Dused ≤D (pointwise) with
+p(Dused)≤2 L that alone moves1pebble tor.
+Proof. Treat the initial p(D) pebbles as distinct physical tokens on their starting vertices. Whenever move ms =
+(x→y ) executes, it consumes two distinct tokens currently at x and creates one new token at y whose two children
+in an ancestry tree are the two consumed tokens. At termination, choose one token located at r and let T be its
+causal binary ancestry tree.
+Because ⃗H is a DAG and time s strictly increases along moves toward the root of T, every token produced by a
+movem s can appear at most once inT, and every root-to-leaf path inTtraces a directed path in ⃗Hending atrin
+reverse. Hence T is a binary tree of depth at most L whose leaves are pairwise distinct initial tokens of D. Since
+a binary tree of depth at most L has at most 2 L leaves, letting Dused(v) count the leaves of T starting at v∈V
+gives Dused ≤D with p(Dused) ≤ 2L. Executing the moves corresponding to the internal nodes of T in their exact
+chronological order fromσconsumes only the leaves ofTand places the root token onr.□
+Proof of Theorem 1.2. Let d := diam(G) ∈ {0, 1, 2, 3}. We first prove the upper bound πt(G) ≤π (G) + 2d(t− 1) for
+allt≥1 by analyzing each diameter:
+•Cased= 0.HereG ∼= K1, soπ t(K1) =t= 1 + 2 0(t−1).
+• Case d = 1.Here G ∼= Kn (n≥ 2), with π(Kn) = n. We verify πt(Kn) = n + 2t− 2 = π(Kn) + 21(t− 1)
+directly. For the upper bound, let p(D) = n + 2t− 2 and fix r∈V . Set s := D(r); if s≥t we are done, so
+assume 0 ≤s≤t− 1. The n− 1 vertices in V\{r} hold n + 2t− 2 −s pebbles, of which at most n− 1 are odd
+remainders, so they deliver P
+v̸=r⌊D(v)/2⌋ ≥ ⌈(n + 2t− 2 −s− (n− 1))/2⌉ = ⌈t− (s + 1)/2⌉ = t− ⌊(s + 1)/2⌋
+pebbles directly tor. Sinces− ⌊(s+ 1)/2⌋=⌊s/2⌋ ≥0,rreceives at leasts+t− ⌊(s+ 1)/2⌋ ≥tpebbles.
+• Case d = 2.By Herscovici, Hester, and Hurlbert [ 6, Theorem 2.7], every connected graph of diameter 2
+satisfies πt(G) ≤π (G) + 4(t− 1) = π(G) + 22(t− 1). (Note that direct application of Lemma 3.1 in diameter 2
+would yield 8(t−1) whenr∈IandC 0 ̸=∅, because ⃗H(G, r) still has paths of length 3.)
+• Case d = 3.We induct on t≥ 1. The base case t = 1 holds identically. For t≥ 2, let p(D) = π(G) + 8(t− 1)
+and fix r∈V . Since p(D) ≥π (G), there exists a minimum-length sequence σ from D placing at least 1 pebble
+on r. By Lemma 2.1, σ runs on the DAG ⃗H(G, r) of maximum directed path length L≤ 3. By Lemma 3.1,
+there exists Dused ≤D with p(Dused) ≤ 23 = 8 that moves 1 pebble to r. The residual configuration
+D′ := D−D used satisfies p(D′) ≥π (G) + 8(t− 1) − 8 = π(G) + 8(t− 2), so by the induction hypothesis D′
+movest−1 pebbles tor. Concatenating the two sequences placestpebbles onr.
+Sharpness across all diameters d∈ {0, 1, 2, 3}.For d = 0, K1 attains t = 1 + 20(t− 1). For d = 1 (n≥ 2), placing
+2t− 1 pebbles on one vertex u̸ = r, 1 pebble on each of the n− 2 vertices in V\ {r, u}, and 0 on r gives n + 2t− 3
+pebbles incapable of deliveringtpebbles tor, soπ t(Kn) =n+ 2t−2.
+For d = 2, let m≥ 2 and let G = Km + {u} consist of a clique C = {c1, . . . , cm} and one pendant vertex u adjacent
+only to c1, so n = m + 1 and diam(G) = 2. By Lemma 2.3 (for m≥ 2, noting K2 + {u} ∼= P3), π(G) ≥n + 1 = m + 2,
+and since every connected diameter-2 graph has π(G) ≤n + 1 [3], we have π(G) = m + 2. Placing 4 t− 1 pebbles on
+u, 1 pebble on each of c2, . . . , cm−1 (empty if m = 2), and 0 on c1, cm yields m + 4t− 3 = π(G) + 4(t− 1) − 1 pebbles;
+by Lemma 2.1 for target r = cm, u sends at most ⌊(4t− 1)/2⌋ = 2t− 1 to c1, which sends at most t− 1 to cm, while
+c2, . . . , cm−1 cannot move. Thusπ t(G) =π(G) + 4(t−1) for allm≥2, t≥1.
+
+--- Page 6 ---
+6 LLUIS ERIKSSON
+For d = 3 with δ(G) = 1, let m≥ 2 and let G = Km + {r, u}consist of a clique C = {c0, c1, . . . , cm−1} together
+with pendant leaves u adjacent to c0 and r adjacent to c1, so n = m + 2 ≥ 4. By Lemma 2.4 with |N(u)| = |C1| = 1,
+π(G) ≥n + 6 − 1 − 1 = n + 4. Conversely, we show every configuration D of m + 6 = n + 4 pebbles reaches every
+target. For any target c∈C , if D(c) = 0 and D(c′) ≤ 1 for all c′ ∈C\{c} , then D(u) +D(r) ≥ (m+ 6)−(m− 1) = 7,
+so max{D(u), D(r)} ≥4; hence either u sends ≥ 2 pebbles to c0 or r sends ≥ 2 pebbles to c1, delivering at least
+1 pebble to c (directly if c∈ {c0, c1}, or in one clique step otherwise). By symmetry between r and u, it remains
+to consider target r, assuming D(r) = 0 and D(c1) ≤ 1. If D(c1) = 1, u and C0 = C\ {c1} hold m + 5 pebbles
+on m vertices; if D(u) ≤ 1, D(C0) ≥m + 4 on m− 1 vertices so some c∈C 0 has ≥ 2 and reaches c1 (giving 2
+at c1 → 1 at r), while if D(u) ≥ 2, u sends ≥ 1 to c0, so C0 receives ≥m + 5 − ⌈D(u)/2⌉ ≥m pebbles (when
+D(u) ≤ 10, whereas D(u) ≥ 11 sends ≥ 5 to c0), reaching c1. If D(c1) = 0, u and C0 hold m + 6 pebbles; C0 receives
+D(C0) + ⌊D(u)/2⌋ = m + 6 − ⌈D(u)/2⌉ pebbles, which fails to send 2 pebbles to c1 only if at most m + 1 pebbles
+reside on C0, forcing ⌈D(u)/2⌉ ≥5, i.e., D(u) ≥ 9; but then u sends ≥ 4 pebbles directly to c0, which sends ≥ 2 to
+c1 and 1 to r. Thus π(Km + {r, u}) = n + 4. Now for any t≥ 1, place 8 t− 1 pebbles on u, 1 pebble on each of
+c2, . . . , cm−1 (n− 4 vertices), and 0 on c0, c1, r, giving n + 8t− 5 pebbles. By Lemma 2.1, u sends at most 4 t− 1
+to c0, which sends at most 2 t− 1 to c1, which sends at most t− 1 to r, while c2, . . . , cm−1 cannot move. Hence
+πt(Km +{r, u}) =n+ 8t−4 =π(G) + 8(t−1) for everym≥2 andt≥1.
+For d = 3 with δ(G) = 3 (Class 0), consider the family Ga,b (a, b≥ 3) consisting of a clique C = C0 ⊔C 1
+with |C0| = a,|C 1| = b and two independent vertices u, rwith N(u) = C0 and N(r) = C1, so n = a + b + 2 and
+δ(Ga,b) = min{a, b} ≥3. By Alc´ on, Gutierrez, and Hurlbert [1] (every connected split graph with δ(G) ≥ 3 is Class 0),
+Ga,b has π(Ga,b) = a + b + 2. For completeness, we verify this directly: given p(D) = a + b + 2, for any target c∗ ∈C 1
+(symmetrically C0) assume D(c∗) = 0 and D(c) ≤ 1 on C\ {c∗}; if neither C0 nor C′
+1 := C1 \ {c∗} moves a pebble to
+c∗, then either ⌊D(u)/2⌋ = 0 (D(u) + D(C0) ≤a + 1) or ⌊D(u)/2⌋ = 1 with D(C0) = 0 (D(u) + D(C0) ≤ 3 < a+ 1),
+and identically D(r) + D(C′
+1) ≤max{b, 3} = b, yielding p(D) ≤a + b + 1, contradiction. For target r∈I
+(symmetrically u∈I ), assume D(r) = 0 and D(c) ≤ 1 on C1, set s1 := D(C1) ≤b , write D(u) = 2 ku + ϵ
+(ϵ∈ {0, 1}), and let o0 := o(C0) ≤a and g(C0) := P
+c∈C0 ⌊D(c)/2⌋. The number of pebbles sent from C0 to C1 is
+k0 = g(C0) +min(ku, o0) +⌊max(0, ku −o 0)/2⌋: if ku < o0, then 2(g(C0) +ku) = D(u) +D(C0) −o 0 −ϵ≥b + 1−s 1
+(giving k0 ≥ 2 when s1 = 0 and k0 ≥ 1 when 1 ≤s 1 ≤b− 1; when s1 = b, D(u) + D(C0) = a + 2 ≥ 5 forces ku ≥ 1
+or g(C0) ≥ 1, so k0 ≥min (ku, o0) + g(C0) ≥ 1); if ku ≥o 0, then ku + ϵ = ⌈D(u)/2⌉ ≤ ⌈(a + b + 2 −s 1)/2⌉ gives
+D(C0) +ku = (a + b + 2−s 1) − (ku + ϵ) ≥ ⌊(a + b + 2−s 1)/2⌋, which is at least 4 ( k0 ≥ 2) when s1 = 0 and at least
+2 (k0 ≥ 1) when 1 ≤s 1 ≤b , reaching r. In particular, G8 := G3,3 has π(G8) = 8. Since dist(u, r) = 3, placing 8t− 1
+pebbles on u fails to deliver t pebbles to r, so πt(G8) ≥ 8t; combined with (3), πt(G8) = 8t = π(G8) + 8(t− 1) for all
+t≥1.
+The2 t-pebbling frontier on G4,4.Consider G4,4 (n = 10, δ = 4, diam = 3), which is Class 0 so π1(G4,4) = 10.
+Putting 8t− 1 pebbles on u yields πt(G4,4) ≥ 8t for all t≥ 1. We prove that π2(G4,4) = 16 < 18 = π1(G4,4) + 8. Let
+p(D) = 16.
+(1) If the target is c∗ ∈C 1 (and symmetrically c∗ ∈C 0), note first D(c∗) = 0 (else D(c∗) ≥ 1 leaves 15 ≥ 10 =
+π1(G4,4) pebbles for a second pebble) and D(c) ≤ 1 for every c∈C\ {c ∗} (if D(c) ≥ 2, moving ( c→c ∗)
+leaves 14 ≥ 10 = π1(G4,4) pebbles for a second pebble). Let ku := ⌊D(u)/2⌋ and kr := ⌊D(r)/2⌋. Then C0
+(4 vertices) sends s0 = min(ku, D(C0)) + ⌊max(0, ku −D (C0))/2⌋ pebbles to c∗, while C′
+1 := C1 \ {c∗} (3
+vertices) sends s′
+1 = min(kr, D(C′
+1)) + ⌊max(0, kr −D (C′
+1))/2⌋ pebbles to c∗. Suppose for contradiction that
+s0 +s ′
+1 ≤1, sos 0 ≤1 ands ′
+1 ≤1. Observe thatk u ≥4 forcess 0 ≥2 (ifD(C 0) = 0 thens 0 =⌊k u/2⌋ ≥2; if
+D(C0) = 1 thens 0 ≥1 +⌊(k u −1)/2⌋ ≥2; ifD(C 0)≥2 thens 0 ≥2). Hences 0 ≤1 =⇒k u ≤3:
+•ifk u ≤1, thenD(u)≤3 andD(C 0)≤ |C0|= 4, soD(u) +D(C 0)≤7;
+• if ku = 2, s0 ≤ 1 forces D(C0) ≤ 1 (since D≤ 1 on C0, two occupied vertices in C0 yield 2 pebbles at
+c∗), soD(u)≤5 andD(C 0)≤1, givingD(u) +D(C 0)≤6;
+•ifk u = 3,s 0 ≤1 forcesD(C 0) = 0, soD(u)≤7 andD(u) +D(C 0)≤7.
+Identically on C′
+1 (|C′
+1| = 3): kr ≥ 4 forces s′
+1 ≥ 2, so s′
+1 ≤ 1 = ⇒k r ≤ 3: if kr ≤ 1 then D(r) + D(C′
+1) ≤
+3 + 3 = 6; if kr = 2 then D(r) + D(C′
+1) ≤ 5 + 1 = 6; and if kr = 3 then D(r) + D(C′
+1) ≤ 7 + 0 = 7.
+Consequently, s0 + s′
+1 ≤ 1 =⇒p (D) = (D(u) +D(C0)) + (D(r) +D(C′
+1)) ≤ 7 + 7 = 14< 16, a contradiction.
+(2) If the target is r∈I (and symmetrically u∈I ), assume D(r) = 0 (since D(r) ≥ 1 leaves 15 ≥ 10 = π1(G4,4)
+for a second pebble) and D(c) ≤ 1 on C1 (since D(c) ≥ 2 gives 1 on r and leaves 14 ≥ 10 elsewhere). Let
+s1 := D(C1) ∈ {0, 1, 2, 3, 4}, write D(u) = 2ku + ϵ (ϵ∈ {0, 1}), and let o0 := |{c∈C 0 : D(c) odd}| ≤4. Note
+that k0 = D(C0)−o0
+2 +min(ku, o0)+⌊max(0, ku−o0)/2⌋ pebbles arrive in C1, which suffices to deliver 2 pebbles to
+r whenever k0 ≥max (2, 4−s1). If ku < o0, then ku ≤ 3 and k0 = 16−s1−ϵ−o0
+2 ≥ ⌈(11−s1)/2⌉ ≥max(2, 4−s1)
+for every s1 ∈ {0, 1, 2, 3, 4}. If ku ≥o 0, then k0 = ⌊(D(C0) + ku)/2⌋ = ⌊(16 −s 1 −k u −ϵ )/2⌋. Since
+
+--- Page 7 ---
+2-PEBBLING,t-PEBBLING, AND GRAHAM’S CONJECTURE FOR SPLIT GRAPHS 7
+Non-Class-0 (± = 1): Km +
+©
+r; u
+ª
+ (¼t = n + 8t ¡ 4)
+Clique Km (m ¸ 2)
+8t ¡ 1 0 0 0
+Class 0 (± = a ¸ 3): Ga; a (G8 = G3; 3 vs. G4; 4)
+Clique K2a = C0 t C1
+C0 (a) C1 (a)deg = a deg = a
+(a) Sharp diam = 3 extremal families (± = 1 vs. Class 0)
+u c0
+1
+1
+c1 r
+u r
+1 2 3 4
+Target multiplicity t
+10
+15
+20
+25
+30
+35
+t-pebbling number ¼t(G)
+Frontier gap ¢t = 2
+(¼2 = 16 < 18)
+(b) Sharpness vs. sub-maximal jump in G4; 4
+K5 +
+©
+r; u
+ª
+ (± = 1: ¼t = n + 8t ¡ 4)
+Theorem 1.2 bound for G4; 4: ¼1(G4; 4) + 8(t ¡ 1)
+Exact ¼t(G4; 4) (¼1 = 10, ¼t = 8t for t ¸ 2)
+Exact ¼t(G8) = 8t = ¼1(G8) + 8(t ¡ 1)
+Figure 2.Diameter-3 extremal split graphs and the 2 t-pebbling frontier. (a) Non-Class-0 ( δ = 1)
+family Km + {r, u}attaining πt = n + 8t− 4, versus Class-0 ( δ = a≥ 3) family Ga,a. (b) Exact
+t-pebbling numbers for K5 + {r, u}(n = 7), G8 = G3,3 (n = 8, saturating 8t = π1 + 8(t− 1)), and
+G4,4 (n= 10, whereπ 1 = 10 jumps sub-maximally toπ t = 8tfor allt≥2).
+2ku + ϵ + s1 ≤ 16, we have ku + ϵ≤ 8 for s1 ∈ {0, 1} (giving k0 ≥ 4 when s1 = 0 and k0 ≥ 3 when s1 = 1),
+ku +ϵ≤7 fors 1 ∈ {2,3}, andku +ϵ≤6 fors 1 = 4 (givingk 0 ≥3≥2 in all cases withs 1 ≥2).
+Hence π2(G4,4) = 16. Now by induction on t≥ 2 using Lemmas 2.1 and 3.1 (extracting Dused of size ≤ 8 from 8t
+pebbles leaves at least 8(t− 1) pebbles, since 8t≥ 10 = π1(G4,4)), πt(G4,4) ≤ 8t, so πt(G4,4) = 8t < π1(G4,4) + 8(t− 1)
+for allt≥2 (see Figure 2). □
+4.The Full 2-Pebbling Property for Split Graphs
+In this section we prove Theorem 1.1. Note first that if G ∼= Kn (n≥ 1), then π(Kn) = n and 2PP holds directly: for
+n = 1, p(D) + q(D) > 2 implies p(D) ≥ 2; for n≥ 2, suppose p(D) + q(D) > 2n and r∈V . If D(r) ≥ 2 we are done;
+if D(r) = 1, q(D) ≤n gives p(D) − 1 ≥ 2n−q (D) ≥n = π(Kn), yielding a second pebble at r; and if D(r) = 0, then
+q(D) ≤n− 1 forces p(D) ≥ 2n+1 −(n−1) = n+2, so P
+v̸=r⌊D(v)/2⌋ ≥(p(D)−q(D))/2 ≥ ((n+2) −(n−1))/2 = 3/2,
+delivering at least 2 pebbles tor.
+Assume henceforth that G = (C⊔I, E ) is a non-complete connected split graph on n≥ 3 vertices with maximal
+cliqueCof sizek≥2, and suppose for contradiction that there exist a targetr∈Vand a configurationDwith
+p(D) +q(D)≥2π(G) + 1 (4)
+that isnot2-solvable forr.
+We first apply standard structural reductions toD:
+(1)D (r) = 0.Certainly D(r) ≤ 1. If D(r) = 1, since p(D) ≥q (D), (4) gives 2 p(D) ≥ 2π(G) + 1, so
+p(D) ≥π (G) + 1. Removing the single pebble at r leaves p(D) − 1 ≥π (G) pebbles, which delivers a second
+pebble tor, contradiction. HenceD(r) = 0.
+(2)D (v) ∈ {0, 1} for all v∈N (r).Since D(r) = 0, every occupied vertex lies inV\{r} , so q(D) ≤n− 1 ≤π (G)−1.
+By (4),
+p(D)≥2π(G) + 1−q(D)≥2π(G) + 1−(π(G)−1) =π(G) + 2.
+If some v∈N (r) held D(v) ≥ 2, moving (v→r ) would place 1 pebble at r while leaving p(D) − 2 ≥π (G)
+pebbles onV\ {r}, delivering a second pebble tor, contradiction.
+(3) Odd values on I\ {r}.Applying Lemma 2.2 repeatedly to every u∈I\ {r} with D(u) ≥ 2 even increases
+p(D) without decreasing q(D) (so (4) persists) while keeping D not 2-solvable for r. Thus we may assume
+that for everyu∈I\ {r}, eitherD(u)∈ {0,1}orD(u)≥3 is odd.
+We split the remainder of the proof into Case A (r∈C) and Case B (r∈I).
+4.1.Case A: r∈C .Let A1 := C\ {r} ⊆N(r) (|A1| = k− 1 ≥ 1), I1 := I∩N (r), and A2 := I\N (r). Because
+A1 ∪I 1 ⊆N (r), every v∈A 1 ∪I 1 satisfies D(v) ∈ {0, 1}. Partition A1 = A1
+1 ⊔A 0
+1 where A1
+1 := {c∈A 1 : D(c) = 1}
+andA 0
+1 :={c∈A 1 :D(c) = 0}. Note thatN(w)⊆A 1 for everyw∈A 2.
+Claim4.0.1.For everyw∈A 2,D(w)≤3.
+
+--- Page 8 ---
+8 LLUIS ERIKSSON
+Proof. Suppose some w∈A 2 has D(w) ≥ 5; since D(w) is odd, D(w) = 2j + 1 with j≥ 2. Pick c∈N (w) ⊆A 1. If
+j≥4 (D(w)≥9),wsends 4 pebbles toc, which sends 2 pebbles tor, contradiction. ThusD(w)∈ {5,7}.
+Subcase D(w) = 7.Then w sends 3 pebbles to any c∈N (w). If any c∈N (w) lies in A1
+1, c reaches 4 and
+sends 2 to r, contradiction. Hence N(w) ⊆A 0
+1. Notice w alone delivers 1 pebble to r via c∈N (w). Set
+S3 := {u∈A 2 \ {w}: D(u) = 3}. Every u∈A 2 \ {w}must have D(u) ≤ 3 (if D(u) ≥ 5, u sends ≥ 2 to c′ ∈N (u);
+if c′ = c then c receives 5 → 2 at r, and if c′ ̸= c then c and c′ each send 1 to r). Moreover, for every u∈S 3,
+we must have N(u) ⊆A 0
+1 (if c′ ∈N (u) ∩A 1
+1, then c′ ̸= c and u→c ′ →r gives a second pebble at r), and the
+sets {N(u) : u∈S 3} ∪ {N(w)} must be pairwise disjoint: if u1, u2 ∈S 3 shared c′ ∈A 0
+1, then sending u1, u2 →c ′
+(or w, u1 →c ′ if c′ ∈N (w)) delivers 2 pebbles to r. Since all |S3| + 1 sets are non-empty subsets of A0
+1, we have
+|A0
+1| ≥ |S3| + 1. Counting p(D) + q(D) over V = {r, w} ⊔S3 ⊔ (A2 \ (S3 ∪ {w})) ⊔I 1 ⊔A 1
+1 ⊔A 0
+1 (where w contributes
+8, S3 contributes 4|S3|, (A2 \ (S3 ∪ {w})) ∪I 1 ∪A 1
+1 contributes at most 2(n− 2 − |A0
+1| − |S3|), and r, A0
+1 contribute 0)
+gives
+p(D) +q(D)≤8 + 4|S 3|+ 2(n−2− |A0
+1| − |S3|) = 2n+ 4−2
+ 
+|A0
+1| − |S3|
+
+≤2n+ 2.
+Since p(D) + q(D) ≥ 2π(G) + 1 ≥ 2n + 1, we must have |A0
+1| = |S3| + 1, which forces all |S3| + 1 disjoint non-empty
+subsets inside A0
+1 to be singletons; in particular |N(w)| = 1 ( deg(w) = 1). By Lemma 2.3, π(G) ≥n + 1, so
+2π(G)≥2n+ 2≥p(D) +q(D), contradiction.
+Subcase D(w) = 5.Here w sends 2 pebbles to any c∈N (w), delivering 1 pebble to r. By the same reasoning, every
+u∈A 2 \ {w}satisfies D(u) ≤ 3; let S3 := {u∈A 2 \ {w}: D(u) = 3}. No u∈S 3 can have a neighbor c′ ∈A 1
+1 (since
+w→c and u→c ′ gives 2 at r whether c = c′ or c̸ = c′), so N(u) ⊆A 0
+1 for all u∈S 3. Furthermore, no two distinct
+u1, u2 ∈S 3 share a neighbor c′ ∈A 0
+1 (since u1, u2 →c ′ together with w→c gives 4 at c if c′ = c, or 1 each from c and
+c′ if c′ ̸= c). Thus {N(u) : u∈S 3} are pairwise disjoint non-empty subsets of A0
+1, so |A0
+1| ≥ |S3|. Since w contributes
+6 top(D) +q(D),
+p(D) +q(D)≤6 + 4|S 3|+ 2(n−2− |A0
+1| − |S3|) = 2n+ 2−2
+ 
+|A0
+1| − |S3|
+
+.
+If |A0
+1| ≥ |S3| + 1, then p(D) + q(D) ≤ 2n≤ 2π(G), contradiction. Thus |A0
+1| = |S3| and p(D) + q(D) ≤ 2n + 2.
+If |S3| ≥1, every u∈S 3 has |N(u)| = 1, so Lemma 2.3 gives π(G) ≥n + 1 and 2 π(G) ≥ 2n + 2 ≥p (D) + q(D),
+contradiction. If instead |S3| = |A0
+1| = 0, then A1 = A1
+1; if |N(w)| ≥2, choosing distinct c1, c2 ∈N (w) ⊆A 1
+1 and
+sending 1 pebble from w to c1 and 1 to c2 produces 2 pebbles on r, whereas if |N(w)| = 1 (deg(w) = 1), Lemma 2.3
+again forces 2π(G)≥2n+ 2≥p(D) +q(D), contradiction.□
+By Claim 4.0.1, every w∈A 2 has D(w) ∈ {0, 1, 3}. Let A(3)
+2 := {w∈A 2 : D(w) = 3 } and set m := |A(3)
+2 |.
+Countingp(D) +q(D) gives
+p(D) +q(D)≤4m+ 2
+ 
+n−1− |A0
+1| −m
+
+= 2n−2 + 2
+ 
+m− |A0
+1|
+
+.
+Becausep(D) +q(D)≥2π(G) + 1≥2n+ 1, we must have 2(m− |A 0
+1|)≥3, hence
+m≥ |A0
+1|+ 2.(5)
+Let T := {w∈A (3)
+2 : N(w) ∩A 1
+1 ̸= ∅} and S := A(3)
+2 \T (so N(u) ⊆A 0
+1 for every u∈S ). Observe that |T| ≤2: if
+three vertices of T existed, either two have distinct neighbors c1 ̸= c2 in A1
+1 (yielding 2 pebbles at r), or all three
+share a single neighbor c∗ ∈A 1
+1 (placing 1 + 3 = 4 pebbles on c∗ → 2 on r). Moreover, if |T| = 2, say T = {w1, w2},
+thenN(w 1)∩A 1
+1 =N(w 2)∩A 1
+1 ={c ∗}for a uniquec ∗ ∈A 1
+1.
+• Subcase |T| = 2.Here w1, w2 →c ∗ already delivers 1 pebble to r, so no two distinct u1, u2 ∈S can share a
+neighbor c∈A 0
+1 (otherwise u1, u2 →c→r delivers a second pebble to r). Hence |S| ≤ |A0
+1|, which with (5)
+forces |S| = |A0
+1|, m = |A0
+1| + 2, and p(D) + q(D) ≤ 2n + 2. If |S| = |A0
+1| ≥1, every u∈S has deg(u) = 1; if
+|S| = |A0
+1| = 0, then A0
+1 = ∅ forces N(w1) = N(w2) = {c∗}, so deg(w1) = 1. In either event Lemma 2.3 gives
+2π(G)≥2n+ 2≥p(D) +q(D), contradiction.
+• Subcase |T| = 1.Write T = {w1}; then w1 delivers 1 pebble to r via A1
+1, so again no two vertices in S can
+share a neighbor inA 0
+1, yielding|S| ≤ |A0
+1|andm=|S|+ 1≤ |A 0
+1|+ 1, contradicting (5).
+• Subcase |T| = 0.Here S = A(3)
+2 has size m≥ |A0
+1| + 2, and N(u) ⊆A 0
+1 for all u∈S . Choose a map
+ϕ:S→A 0
+1 withϕ(u)∈N(u) for everyu∈Smaximizing P
+c∈A0
+1
+⌊|ϕ−1(c)|/2⌋. Since 2 pebbles cannot reach
+r, this maximum is at most 1. If the maximum were 0, then |ϕ−1(c)| ≤1 for all c∈A 0
+1, forcing m≤ |A0
+1|,
+contradicting (5). Hence the maximum is 1, so there is a unique vertex c0 ∈A 0
+1 with |ϕ−1(c0)| ∈ {2, 3} and
+|ϕ−1(c)| ≤1 for all c∈A 0
+1 \{c 0}. If |ϕ−1(c0)| = 2, then m≤ 2 + (|A0
+1|− 1) = |A0
+1|+ 1, contradicting (5). Thus
+|ϕ−1(c0)| = 3, which forces m = |A0
+1| + 2, p(D) + q(D) ≤ 2n + 2, and |ϕ−1(c)| = 1 for every c∈A 0
+1 \ {c0}.
+For any u∈ϕ −1(c0), if u had a neighbor c′ ∈A 0
+1 \ {c0}, re-assigning ϕ(u) := c′ would yield |ϕ−1(c0)| = 2 and
+|ϕ−1(c′)| = 2, raising the sum to 2 and delivering 2 pebbles to r. Therefore N(u) = {c0} (deg(u) = 1) for
+eachu∈ϕ −1(c0), and Lemma 2.3 gives 2π(G)≥2n+ 2≥p(D) +q(D), contradiction.
+
+--- Page 9 ---
+2-PEBBLING,t-PEBBLING, AND GRAHAM’S CONJECTURE FOR SPLIT GRAPHS 9
+This completes Case A.
+4.2.Case B: r∈I .Let C1 = N(r) ⊆C (|C1| ≥1), C0 = C\C 1, I2 = {w∈I\ {r} : N(w) ∩C 1 ̸= ∅}, and
+I3 = {u∈I\ {r} : N(u) ⊆C 0}. Set C+
+1 := {c∈C 1 : D(c) = 1 }, C0
+1 := C1 \C +
+1 , and z1 := |C0
+1 |. Also define
+C+
+0 :={c∈C 0 :D(c)≥1}andz 0 :=|C 0 \C +
+0 |.
+Claim4.0.2.For everyw∈I 2,D(w)≤3.
+Proof. Suppose some w∈I 2 has D(w) ≥ 5; since D(w) is odd, D(w) ∈ {5, 7} (if D(w) ≥ 9, w sends ≥ 4 pebbles
+to some c∈N (w) ∩C 1, delivering 2 to r). Pick c∈N (w) ∩C 1. Set SI2 := {y∈I 2 \ {w}: D(y) = 3 } and
+SI3 :={u∈I 3 :D(u) = 3}.
+Subcase D(w) = 7.Then w sends 3 pebbles to c∈N (w) ∩C 1, delivering 1 pebble to r. Every c′ ∈N (w) ∩C 1 must lie
+in C0
+1 (otherwise 1 + 3 = 4 → 2 at r). Furthermore, every v∈C 0 satisfies D(v) ≤ 1 (else v→c makes 3 + 1 = 4 → 2
+at r); every y∈I 2 \ {w}satisfies D(y) ≤ 3 (else y sends ≥ 2 to C1); and every u∈I 3 satisfies D(u) ≤ 3 (else u
+sends ≥ 2 to c0 ∈C 0 →c ). Every y∈S I2 must have N(y) ∩C 1 ⊆C 0
+1 \ {c}(since hitting C+
+1 or c gives 2 at r), and
+no two vertices in SI2 can share a neighbor in C0
+1 \ {c}; hence |SI2 | ≤z1 − 1. Likewise, every u∈S I3 must have
+N(u) ⊆C 0
+0 := C0 \C +
+0 , and no two vertices in SI3 share a neighbor in C0
+0 (else 2 pebbles from SI3 enter c0 →c );
+hence|S I3 | ≤z0. Countingp(D) +q(D) gives
+p(D) +q(D)≤8 + 4|S I2 |+ 4|S I3 |+ 2
+ 
+n−2−z 1 −z 0 − |SI2 | − |SI3 |
+
+= 2n+ 4−2(z 1 − |SI2 |)−2(z 0 − |SI3 |)≤2n+ 2.
+For p(D) + q(D) ≥ 2n + 1, we must have z1 − |SI2 | = 1 and z0 = |SI3 |. If |C1| = 1, Lemma 2.3 applied to deg(r) = 1
+gives 2π(G) ≥ 2n+2 ≥p (D)+ q(D). Suppose |C1| ≥2, and choose c′ ∈C 1 \{c}. Because z1 −|SI2 | = 1, either c′ ∈C +
+1
+(holding 1 pebble) or c′ ∈C 0
+1 \ {c}receives 1 pebble from its matched y∈S I2 . Similarly, because z0 = |SI3 |, every
+c0 ∈C 0 either holds 1 pebble or receives 1 pebble from its matched u∈S I3 . If N(w) ∩C 0 ̸= ∅ (pick c0 ∈N (w) ∩C 0),
+w sends 2 pebbles to c (1 to r) and 1 to c0 (which sends 1 to c′, combining with the 1 on c′ to send 1 to r). If
+N(w) ∩C 0 = ∅ and |N(w) ∩C 1| ≥2 (pick c′ ∈ (N(w) ∩C 1) \ {c}), w sends 2 to c and 1 to c′. Otherwise N(w) = {c},
+so deg(w) = 1, and Lemma 2.3 gives 2π(G)≥2n+ 2≥p(D) +q(D), contradiction.
+Subcase D(w) = 5.Here w sends 2 pebbles to c∈N (w) ∩C 1, delivering 1 pebble to r. Again no y∈I 2 \ {w}can
+have D(y) ≥ 5 (otherwise y sends ≥ 2 pebbles to C1, combining with the 2 pebbles from w to deliver 2 pebbles to r).
+Letk ∗
+0 be the maximum number of pebbles thatC 0 ∪I 3 can deliver toC 1 (via ⃗H(G, r)).
+• If C+
+1 ̸= ∅:Pick c+
+1 ∈C +
+1 . We must have k∗
+0 = 0 (if k∗
+0 ≥ 1, sending 1 pebble from C0 to c+
+1 yields
+1 + 1 = 2→ 1 at r if c+
+1 ̸= c, or 1 + 2 + 1 = 4→ 2 at r if c+
+1 = c). Also every y∈S I2 satisfies N(y) ∩C 1 ⊆C 0
+1
+(if c+
+1 ∈N (y), sending y→c +
+1 and w→c yields 2 at r) and no two y1, y2 ∈S I2 share a neighbor in C0
+1 \ {c},
+while at most one y∈S I2 hits c (so |SI2 | ≤z1). Since k∗
+0 = 0, every v∈C 0 has D(v) ≤ 1, and every u∈S I3
+hasN(u)⊆C 0
+0 with pairwise disjoint neighborhoods, so|S I3 | ≤z0. Hence
+p(D) +q(D)≤6 + 4|S I2 |+ 4|S I3 |+ 2(n−2−z 1 −z 0 − |SI2 | − |SI3 |)
+= 2n+ 2−2(z 1 − |SI2 |)−2(z 0 − |SI3 |)≤2n+ 2.
+For p(D) + q(D) ≥ 2n + 1, equality holds: |SI2 | = z1 and |SI3 | = z0. If |C1| = 1, Lemma 2.3 gives
+2π(G) ≥ 2n + 2. Otherwise pick c′ ∈C 1 \ {c}: if c′ ∈C +
+1 , c′ already holds 1 pebble; if c′ ∈C 0
+1 , c′ receives
+1 from its matched y∈S I2 . Moreover, if c∈C 0
+1 , c also has a matched yc ∈S I2 sending 1 to c. Therefore:
+if N(w) ∩C 0 ̸= ∅ (pick c0 ∈N (w) ∩C 0, which either has 1 pebble or receives 1 from SI3 ), sending 1 from
+w to c (giving 1 + 1 = 2 → 1 at r, whether c∈C +
+1 or c∈C 0
+1 via yc) and 1 from w to c0 (sending 1 to
+c′, giving 1 + 1 = 2 → 1 at r) places 2 pebbles on r; if N(w) ∩C 0 = ∅ and |N(w) ∩C 1| ≥2, choosing
+c′ ∈ (N(w) ∩C 1) \ {c}and sending 1 to c and 1 to c′ places 2 pebbles on r; otherwise N(w) = {c}, so
+deg(w) = 1, and Lemma 2.3 yields a contradiction.
+• If C+
+1 = ∅:Here z1 = |C1| ≥1. Note that k∗
+0 ≤ 1 (if k∗
+0 ≥ 2, C0 sends 2 pebbles to c∈C 1 if w sends 2 to c,
+giving 4 → 2 at r). Let h0 := P
+v∈C0 ⌊D(v)/2⌋, e0 := |{v∈C 0 : D(v) ≥ 2 even}|, a := P
+u∈I3 ⌊D(u)/2⌋, and
+fix a routing of a units from I3 to C0 realizing k∗
+0 with odd set F⊆C 0. Using only the C0 ∪I 3 counting
+calculation of (7)–(8) and Lemma 4.2(i) proved independently below (without invoking Claim 4.0.2; noting w
+contributes 6 instead of 2 andS I2 contributes 2|SI2 |),
+p(D) +q(D)≤2n−2 + 4 + 2(|S I2 |+k ∗
+0 −z 1) + 2(k∗
+0 − |C0 \F|)−(2h 0 −e 0),
+and (2h0 −e 0) +a = z0 + 2k∗
+0 − |C0 \F| . If k∗
+0 = 1, we must have |SI2 | = 0 (any y∈S I2 puts 1 on c′ ∈C 1; C0
+puts 1 on c′, giving 2 at c′ and 2 at c if c′ ̸= c, or 2+1+1 = 4 at c if c′ = c), so |SI2 |+k∗
+0 −z1 = 1−z1. If z1 = 1,
+p(D) + q(D) ≤ 2n + 4 − 2|C0 \F| −(2h0 −e 0); Lemma 2.3 on deg(r) = 1 rules out ≤ 2n + 2, so |C0 \F| = 0
+(F = C0) and 2h0 −e 0 ≤ 1, forcing a≥ 1; any u∈I 3 sending to F = C0 has |N(u)| = 1 (by Lemma 4.2(i),
+
+--- Page 10 ---
+10 LLUIS ERIKSSON
+which depends only on the maximality of k∗
+0), so Lemma 2.4 gives π(G) ≥n +4 = ⇒ 2π(G) ≥ 2n+8 > 2n+4.
+If z1 ≥ 2, then 1 −z 1 ≤ −1, giving p(D) + q(D) ≤ 2n + 2 − 2|C0 \F| −(2h0 −e 0), so for ≥ 2n + 1 we again
+need |C0 \F| = 0 and 2h0 −e 0 ≤ 1, forcing a≥ 1 and |N(u)| = 1; Lemma 2.4 gives π(G) ≥n + 5−z 1 ≥n + 3
+for z1 = 2 (and p(D) + q(D) ≤ 2n for z1 ≥ 3), contradiction. Finally, if k∗
+0 = 0, then |SI2 | ≤z1 (at most one
+y∈S I2 hits c, else w, y1, y2 →c gives 4 → 2 at r, and no two share a neighbor in C0
+1 \ {c}), 2h0 −e 0 = 0,
+and a = z0 − |C0 \F| , giving p(D) + q(D) ≤ 2n + 2 − 2(z1 − |SI2 |) − 2|C0 \F| . Thus p(D) + q(D) ≥ 2n + 1
+forces |SI2 | = z1 and |C0 \F| = 0 (F = C0). If z1 = 1, Lemma 2.3 on deg(r) = 1 rules out 2 n + 2; if z1 ≥ 2,
+every c′ ∈C 1 has a matched y∈S I2 and every c0 ∈C 0 holds post-routing count 1, so either N(w) ∩C 0 ̸= ∅
+(sending w→c and w→c 0 →c ′), |N(w) ∩C 1| ≥2 (sending w→c and w→c ′), both giving 2 at r, or
+N(w) ={c}(deg(w) = 1), contradicting Lemma 2.3.□
+By Claim 4.0.2 and the odd reduction on I\ {r}, every w∈I 2 satisfies D(w) ∈ {0, 1, 3}, and every u∈I 3 has
+D(u)∈ {0,1}orD(u)≥3 odd. Let
+I(3)
+2 :={w∈I 2 :D(w) = 3}, b:=|I (3)
+2 |, a:=
+X
+u∈I3
+D(u)
+2
+
+.
+Setz I2 :=|{w∈I 2 :D(w) = 0}|andz I3 :=|{u∈I 3 :D(u) = 0}|. Forc∈C 0, define
+h0 :=
+X
+c∈C0
+D(c)
+2
+
+, e 0 :=
+{c∈C 0 :D(c)≥2 is even}
+.
+Notice the pointwise identity D(c) − 1D(c)≥1 = 2⌊D(c)/2⌋ −1D(c)≥2 even for every integer D(c) ≥ 0. Summing over
+c∈C 0 yields X
+c∈C0
+D(c) =|C +
+0 |+ (2h 0 −e 0),where 2h 0 −e 0 =
+X
+c∈C0
+ 
+D(c)−1 D(c)≥1
+
+≥0.(6)
+Fix any routing r0 :E (I3, C0) →Z ≥0 satisfying P
+c∈N(u) r0(u, c) = ⌊D(u)/2⌋ for all u∈I 3 (with empty sums 0 if
+C0 =∅orI 3 =∅). Define post-routing counts onC 0 by
+y(c) :=D(c) +
+X
+u∈I3
+r0(u, c) (c∈C 0), k 0 :=
+X
+c∈C0
+y(c)
+2
+
+, F:={c∈C 0 :y(c) is odd}.
+Summing y(c) over c∈C 0 gives 2k0 + |F| = P
+c∈C0 D(c) +a. Substituting P
+c∈C0 D(c) = |C0|−z 0 + 2h0 −e 0 from (6)
+and|F|=|C 0| − |C0 \F|produces the auxiliary identity
+(2h0 −e 0) +a=z 0 + 2k0 − |C0 \F|.(7)
+We now compute p(D) + q(D) − (2n− 2) = P
+v∈V\{r} (D(v) +1 D(v)≥1 − 2) by summing across the four blocks
+C1, I2, I3, C0:
+•OnC 1: eachc∈C +
+1 contributes 0, and eachc∈C 0
+1 contributes−2, totaling−2z 1.
+• On I2: each w∈I (3)
+2 contributes +2, each w with D(w) = 1 contributes 0, and each w with D(w) = 0
+contributes−2, totaling +2b−2z I2 .
+• On I3: each u∈I 3 with D(u) = 2ku + 1 ≥ 3 contributes 2ku, each u with D(u) = 1 contributes 0, and each u
+withD(u) = 0 contributes−2, totaling +2a−2z I3 .
+•OnC 0: using (6) and (7),
+X
+c∈C0
+ 
+D(c) +1 D(c)≥1 −2
+
++ 2a=
+ 
+2|C+
+0 |+ 2h 0 −e 0 −2|C 0|
+
++ 2a
+=−2z 0 −(2h 0 −e 0) + 2
+ 
+(2h0 −e 0) +a
+
+= 2k0 + 2
+ 
+k0 − |C0 \F|
+
+−(2h 0 −e 0).
+Combining all four contributions yields theMaster Conservation Identity:
+p(D) +q(D) = 2n−2 + 2(b+k 0 −z 1) + 2
+ 
+k0 − |C0 \F|
+
+−(2h 0 −e 0)−2z I2 −2z I3 .(8)
+Notice immediately that k0 ≤ 3: since C0 ∪C 1 is a clique, C0 can deliver k0 generic pebbles to any chosen vertices
+ofC 1, sok 0 ≥4 places≥4 pebbles on a singlec∈C 1 and delivers≥2 pebbles tor. Hencek 0 ∈ {0,1,2,3}.
+Next, choose a routing r0 maximizing k0, and independently analyze the I(3)
+2 →C 1 interface. Let ψ:I (3)
+2 →C 1 be
+any map with ψ(w) ∈N (w)∩C1 for all w∈I (3)
+2 . Define y1(c) := D(c)+ |ψ−1(c)| for c∈C 1, g1(ψ) := P
+c∈C1 ⌊y1(c)/2⌋,
+
+--- Page 11 ---
+2-PEBBLING,t-PEBBLING, AND GRAHAM’S CONJECTURE FOR SPLIT GRAPHS 11
+and o1(ψ) := |{c∈C 1 : y1(c) is odd}|. Because k0 pebbles from C0 can be directed first to odd vertices of C1 and
+then paired on any single vertex ofC 1, the configuration delivers
+R(ψ) :=g 1(ψ) + min
+ 
+k0, o1(ψ)
+
++
+$
+max
+ 
+0, k0 −o 1(ψ)
+
+2
+%
+pebbles to r. Choose ψ to maximize R(ψ), and among such maps to maximize g1(ψ). Since D is not 2-solvable for r,
+we haveR(ψ)≤1, henceg 1 :=g 1(ψ)∈ {0,1}.
+Lemma 4.1(C 1-Defect Bound).Writeo 1 :=o 1(ψ). Then:
+(a)Fork 0 = 3,b= 0,z 1 =|C 1|, andb+k 0 −z 1 = 3− |C1| ≤2(with equality only if|C 1|= 1).
+(b)Fork 0 = 2,g 1 = 0,o 1 ≤1, andb+k 0 −z 1 = 2 +o 1 − |C1| ≤3− |C1| ≤2(with equality only if|C 1|= 1).
+(c) For k0 ∈ {0, 1}, either b + k0 −z 1 ≤ 1, or b + k0 −z 1 = 2, which occurs only if either |C1| = 1, or |C1| ≥2,
+k0 = 0,g 1 = 1, ando 1 =|C 1|.
+Proof.Observe that P
+c∈C1
+y1(c) = 2g1 +o 1 =|C +
+1 |+b=|C 1| −z1 +b, so
+b+k 0 −z 1 = 2g1 +o 1 +k 0 − |C1|.(9)
+If k0 = 3, R(ψ) ≤ 1 forces g1 = 0 and o1 = 0, so b = |C+
+1 | = 0, z1 = |C1|, and (9) gives (a). If k0 = 2, R(ψ) ≤ 1
+forces g1 = 0 and o1 ∈ {0, 1}, so (9) gives b + k0 −z 1 = 2 + o1 − |C1| ≤3 − |C1|, proving (b). For k0 ∈ {0, 1}: if
+g1 = 0, then o1 ≤ |C1| =⇒b + k0 −z 1 = o1 + k0 − |C1| ≤k0 ≤ 1. If g1 = 1 and k0 = 1, then R(ψ) ≤ 1 forces o1 = 0,
+so (9) gives b + 1 −z 1 = 3 − |C1| ≤1 when |C1| ≥2, and = 2 when |C1| = 1. Finally, if g1 = 1 and k0 = 0, (9) gives
+b−z 1 = 2 +o 1 − |C1|, which is≤1 whenevero 1 ≤ |C1| −1 and equals 2 only wheno1 =|C 1|.□
+We also record the local structure forced by choosingr 0 :E(I 3, C0)→Z ≥0 to maximizek 0.
+Lemma 4.2(OptimalI 3 →C 0 Routing Properties).For any routingr 0 maximizingk 0:
+(i)Ifr 0(u, c)≥1withc∈F, thenN(u)∩F={c}.
+(ii)Ifr 0(u, c∗)≥2withc ∗ ∈C 0 \F, then|N(u)∩F| ≤1.
+(iii) If r0(u1, c∗) ≥ 1and r0(u2, c∗) ≥ 1for distinct u1, u2 ∈I 3 and c∗ ∈C 0 \F , then there do not exist distinct
+f1 ∈N(u 1)∩Fandf 2 ∈N(u 2)∩F; consequently, at least one ofu 1, u2 satisfies|N(u i)∩F| ≤1.
+Proof. In (i), if c′ ∈ (N(u) ∩F ) \ {c}, shifting 1 unit of r0 from (u, c) to (u, c′) changes (y(c), y(c′)) from (odd,odd )
+to (even,even), keeping ⌊y(c)/2⌋ unchanged and increasing ⌊y(c′)/2⌋ by 1, contradicting maximality of k0. In (ii),
+note y(c∗) ≥ 2 is even; if distinct f1, f2 ∈N (u) ∩F existed, shifting 1 unit from ( u, c∗) to ( u, f1) and 1 unit to
+(u, f2) decreases⌊y(c ∗)/2⌋by 1 and increases both⌊y(f 1)/2⌋and⌊y(f 2)/2⌋by 1, raisingk 0 by 1. In (iii), if distinct
+f1 ∈N (u1) ∩F and f2 ∈N (u2) ∩F existed, shifting ( u1, c∗) → (u1, f1) and ( u2, c∗) → (u2, f2) decreases y(c∗) by
+2 (−1 in k0) and increases y(f1), y(f2) by 1 each (+2 in k0), again raising k0 by 1. If both |N(u1) ∩F| ≥2 and
+|N(u2) ∩F| ≥1, picking f2 ∈N (u2) ∩F and f1 ∈ (N(u1) ∩F ) \ {f2} yields a contradiction; hence |N(u1) ∩F| ≤1
+orN(u 2)∩F=∅. □
+We now close Case B by checkinga= 0 anda≥1 (k 0 ∈ {0,1,2,3}).
+Closure for a = 0(including C0 = ∅).When a = 0, y(c) = D(c) for every c∈C 0, so k0 = h0 and |C0 \F| = z0 + e0.
+Thus
+2
+ 
+k0 − |C0 \F|
+
+−(2h 0 −e 0) = 2(h0 −z 0 −e 0)−(2h 0 −e 0) =−e 0 −2z 0 ≤0,
+so (8) gives p(D)+q(D) ≤ 2n−2+2(b+k0−z1)−e0−2z0−2zI2 −2zI3 . If b+k0−z1 ≤ 1, then p(D)+q(D) ≤ 2n≤ 2π(G),
+contradicting (4). If b + k0 −z 1 = 2, then p(D) + q(D) ≤ 2n + 2, and by Lemma 4.1, either |C1| = 1 (so deg(r) = 1
+and Lemma 2.3 gives 2 π(G) ≥ 2n + 2 ≥p (D) + q(D)), or |C1| ≥2, k0 = 0, g1 = 1, and o1 = |C1| (handled uniformly
+below for alla≥0).
+Closure of the exceptional boundary b + k0 −z 1 = 2with |C1| ≥2, k0 = 0, g1 = 1, o1 = |C1|.Note this closure
+applies for both a = 0 and a≥ 1. Since k0 = 0, we have 2h0 −e 0 = 0 and (8) gives p(D) +q(D) ≤ 2n + 2− 2|C0 \F| .
+For p(D) + q(D) ≥ 2n + 1, we must have |C0 \F| = 0 ( F = C0), meaning every c0 ∈C 0 holds y(c0) = 1. Since
+g1 = 1 and o1 = |C1|, there is a unique c∗ ∈C 1 with y1(c∗) = 3 (so |ψ−1(c∗)| ∈ {2, 3}), and every c′ ∈C 1 \ {c∗} has
+y1(c′) = 1. By maximality of R(ψ), no w∈ψ −1(c∗) has any neighbor in C1 \{c∗}. If some w∈ψ −1(c∗) had a neighbor
+c0 ∈C 0, picking c′ ∈C 1 \ {c∗} and redirecting w→c 0 (using y(c0) = 1 to send 1 pebble from c0 to c′, combining
+with y1(c′) = 1 to send 1 to r) while keeping the remaining |ψ−1(c∗)| −1 units on c∗ (leaving y1(c∗) − 1 = 2 → 1 at r)
+delivers 2 pebbles to r, contradiction. Hence N(w) = {c∗} (deg(w) = 1) for every w∈ψ −1(c∗), and Lemma 2.3 gives
+2π(G)≥2n+ 2≥p(D) +q(D), contradiction.
+Closure fora≥1(k 0 ∈ {0,1,2,3}).Notea≥1 impliesI 3 ̸=∅andC 0 ̸=∅. We examine eachk 0:
+
+--- Page 12 ---
+12 LLUIS ERIKSSON
+•k 0 = 0.Here 2 h0 −e 0 = 0. By Lemma 4.1(c), either b + k0 −z 1 ≤ 1 (giving p(D) + q(D) ≤ 2n− 2|C0 \F| ≤
+2n≤ 2π(G)), or |C1| ≥2, g1 = 1, o1 = |C1| (closed above), or |C1| = 1 and b+ k0 −z1 = 2. In the last case, (8)
+gives p(D) + q(D) ≤ 2n + 2 − 2|C0 \F| ; since Lemma 2.3 ( deg(r) = 1) gives 2π(G) ≥ 2n + 2 ≥p (D) + q(D),
+this already contradicts (4).
+•k 0 = 1.By Lemma 4.1(c):
+– If |C1| ≥2, then b + 1 −z 1 ≤ 1, so (8) gives p(D) + q(D) ≤ 2n + 2 − 2|C0 \F| −(2h0 −e 0). For
+p(D) + q(D) ≥ 2n + 1, we must have |C0 \F| = 0 (F = C0). Since a≥ 1, some u∈I 3 sends at least
+1 unit to F = C0; by Lemma 4.2(i), |N(u)| = 1, so Lemma 2.3 yields 2 π(G) ≥ 2n + 2 ≥p (D) + q(D),
+contradiction.
+– If |C1| = 1, then b + 1 −z 1 ≤ 2, so (8) gives p(D) + q(D) ≤ 2n + 4 − 2|C0 \F| −(2h0 −e 0). Since
+deg(r) = 1, Lemma 2.3 gives 2 π(G) ≥ 2n + 2, forcing |C0 \F| = 0 (F = C0) for p(D) + q(D) ≥ 2n + 3.
+Then any u∈I 3 sending ≥ 1 unit to F = C0 has |N(u)| = 1 by Lemma 4.2(i), and Lemma 2.4 gives
+π(G)≥n+ 6−1−1 =n+ 4, so 2π(G)≥2n+ 8>2n+ 4≥p(D) +q(D), contradiction.
+•k 0 = 2.By Lemma 4.1(b),b+ 2−z 1 ≤3− |C1|, so (8) gives
+p(D) +q(D)≤2n+ 8−2|C 1| −2|C0 \F| −(2h0 −e 0).
+If |C0 \F| ≥2, then p(D)+ q(D) ≤ 2n+4 −2|C1|, which is ≤ 2n≤ 2π(G) when |C1| ≥2 and ≤ 2n+2 ≤ 2π(G)
+when |C1| = 1 (by Lemma 2.3). If |C0 \F| = 0 (F = C0), Lemma 4.2(i) gives u∈I 3 with |N(u)| = 1, so
+Lemma 2.4 gives 2π(G) ≥ 2n+10 −2|C1|> 2n+8 −2|C1| ≥p(D)+ q(D). If |C0 \F| = 1 (write C0 \F = {c∗}),
+then p(D) + q(D) ≤ 2n + 6 − 2|C1| −(2h0 −e 0). Whenever 2 h0 −e 0 ≥ 2, this is at most 2 n + 4 − 2|C1|
+(contradiction as above). Otherwise 2 h0 −e 0 ≤ 1, so (7) gives a = z0 + 4 − 1 − (2h0 −e 0) ≥ 2. Either some
+u∈I 3 sends at least 1 unit to F (giving |N(u) ∩F| = 1 by Lemma 4.2(i)), or all a≥ 2 units land on c∗ (so
+either one u sends ≥ 2 units to c∗ or two distinct u1, u2 each send ≥ 1 unit to c∗; by Lemma 4.2(ii)–(iii), at
+least one such u satisfies |N(u) ∩F| ≤1). In all cases there exists u∈I 3 with |N(u)| ≤1 + |C0 \F| = 2, and
+Lemma 2.4 gives 2π(G)≥2n+ 8−2|C 1|>2n+ 6−2|C 1| ≥p(D) +q(D), contradiction.
+•k 0 = 3.By Lemma 4.1(a),b+ 3−z 1 = 3− |C1|, so (8) gives
+p(D) +q(D)≤2n+ 10−2|C 1| −2|C0 \F| −(2h0 −e 0).
+If |C0 \F| ≥3, then p(D)+ q(D) ≤ 2n+4 −2|C1| ≤2π(G) (using Lemma 2.3 if |C1| = 1). If |C0 \F| = 0 (F =
+C0), Lemma 4.2(i) gives u∈I 3 with |N(u)| = 1, and Lemma 2.4 gives 2π(G) ≥ 2n+ 10−2|C1| ≥p(D) +q(D),
+contradicting (4). If |C0 \F| = 1, then p(D) + q(D) ≤ 2n + 8 − 2|C1| −(2h0 −e 0); if 2h0 −e 0 ≥ 4, this is
+≤ 2n + 4 − 2|C1| ≤2π(G), while if 2 h0 −e 0 ≤ 3, (7) gives a = z0 + 6 − 1 − (2h0 −e 0) ≥ 2, and the identical
+Lemma 4.2 check produces u∈I 3 with |N(u)| ≤2, so Lemma 2.4 yields 2π(G) ≥ 2n+8 −2|C1| ≥p(D)+ q(D),
+contradiction. Finally, if |C0 \F| = 2 (write C0 \F = {c∗
+1, c∗
+2}), then p(D) +q(D) ≤ 2n+ 6−2|C1|− (2h0 −e0).
+If 2h0 −e 0 ≥ 2, this is ≤ 2n + 4 − 2|C1| ≤2π(G). If 2 h0 −e 0 ≤ 1, (7) gives a = z0 + 6 − 2 − (2h0 −e 0) ≥ 3.
+Either some u∈I 3 sends at least 1 unit to F (giving |N(u) ∩F| = 1 by Lemma 4.2(i)), or all a≥ 3
+units land on {c∗
+1, c∗
+2}. By the pigeonhole principle, at least one c∗ ∈ {c∗
+1, c∗
+2} receives at least 2 units:
+either a single u∈I 3 sends ≥ 2 units to c∗, or two distinct u1, u2 ∈I 3 each send ≥ 1 unit to c∗. By
+Lemma 4.2(ii)–(iii), there exists u∈I 3 with |N(u) ∩F| ≤1, hence |N(u)| ≤1 + |C0 \F| = 3. Lemma 2.4
+givesπ(G)≥n+ 6−3− |C 1|=n+ 3− |C 1|, so 2π(G)≥2n+ 6−2|C 1| ≥p(D) +q(D), contradicting (4).
+This exhausts all possibilities and completes the proof of Theorem 1.1.
+5.Graham’s Pebbling Conjecture for Split Graphs
+By Theorem 1.1, every connected split graph G satisfies both 2PP and O2PP. Combining Theorem 1.1 with the
+classical2PPproduct theorems already resolves four of the five target families in Theorem 1.3:
+•IfH ∼= Km is a complete graph,π(G□K m)≤mπ(G) =π(G)π(K m) by [2, Theorem 5(i)].
+•IfH=Tis a tree,π(G□T)≤π(G)π(T) by Moews [10] and Snevily–Foster [11].
+•IfHis a complete bipartite graph,π(G□H)≤π(G)π(H) by Feng–Kim [4].
+•IfHis a complete multipartite graph,π(G□H)≤π(G)π(H) by Wang [12].
+For hypercubes H = Qd (d≥ 1), caution is required when invoking [ 2, Theorem 5(ii)], which states that G□K 2
+inherits 2PP provided π(G□K 2) = 2π(G). As verified in Section 6 (and shown in Figure 3(b)), connected split graphs
+can exhibit a strict product drop π(G□K 2) < 2π(G), such as G = K3 + leaf (π(G) = 5 yet π(G□K 2) = 9 < 10). To
+establish π(G□Q d) ≤ 2dπ(G) without assuming equality at intermediate steps, we lift O2PP relative to an explicit
+budgetM.
+Lemma 5.1(Cube Lifting of O2PP).Let G be a connected graph and let M be an integer satisfying M≥
+max{π(G),|V (G)|} such that( G, M)has the M-odd 2-pebbling property: every configuration D on G with
+
+--- Page 13 ---
+2-PEBBLING,t-PEBBLING, AND GRAHAM’S CONJECTURE FOR SPLIT GRAPHS 13
+Table 1.Exhaustive census of all 164 connected split graphs on n≤ 7 vertices by diameter d,
+showing 2PP compliance, Class 0 counts, and exact attainment of the Theorem 1.2 bound at t∈ {2, 3}.
+DiameterdTotal connected splits Satisfying2PPClass 0 (π(G) =n) Sharp Eq. (3) (t= 2,3)
+0 1 1 1 1
+1 6 6 6 6
+2 92 92 52 74
+3 65 65 0 65
+Total 164 164 59 146
+p(D) + o(D) > 2M is2-solvable for every target in V (G). Then( G□K 2, 2M)has the(2 M)-odd2-pebbling
+property andπ(G□K 2)≤2M.
+Proof. Write V (G□K 2) = G0 ⊔G 1 for the two vertex-disjoint copies of G joined by matching edges ( v, 1)(v, 0), and
+fix any target r0 = (r,0) ∈G 0 with twin r1 = (r,1) ∈G 1. For any configuration D = (D0, D1), write pi := p(Di) and
+oi :=o(D i)≤ |V(G)| ≤M.
+First suppose p0 +p1 = 2M. If p0 ≥M≥π (G), G0 alone delivers 1 pebble to r0. If p0 < M, consider the maximum
+number (p1 −o 1)/2 of pebbles transferable from G1 to G0 across matching edges. If ( p1 −o 1)/2 ≥M−p 0, moving
+M−p 0 pebbles from G1 to G0 yields M pebbles on G0, hence 1 pebble on r0. Otherwise ( p1 −o1)/2 ≤M−p 0 −1, i.e.,
+p1 −o 1 ≤ 2M− 2p0 −2; subtracting from p1 = 2M−p 0 gives o1 ≥p 0 + 2, so p1 + o1 = 2M−p 0 + o1 ≥ 2M + 2 > 2M.
+By hypothesis on (G 1, M),G1 moves 2 pebbles tor 1, whence 1 move puts 1 pebble onr 0. Thusπ(G□K 2)≤2M.
+Next supposep 0 +o 0 +p 1 +o 1 ≥4M+ 1.
+•Ifp 0 +o 0 >2M, then (G 0, M) moves 2 pebbles tor 0.
+• If p0 ≥M and p0 + o0 ≤ 2M, then p1 + o1 ≥ 2M + 1 > 2M. Thus G0 moves 1 pebble to r0 and G1 moves 2
+pebbles tor 1 (hence 1 tor 0), giving 2 pebbles onr 0.
+•Ifp 0 < M, then sinceo 0 ≤p 0 ando 1 ≤ |V(G)| ≤M,
+p1 −o 1 = (p0 +o 0 +p 1 +o 1)−p 0 −o 0 −2o 1 ≥4M+ 1−2p 0 −2M= 2M+ 1−2p 0.
+Because p1 −o 1 is even, (p1 −o 1)/2 ≥M−p 0 + 1 > M−p 0. Move M−p 0 pebbles from G1 to G0 across
+matching edges (consuming 2(M−p 0) pebbles in G1). Then G0 receives p′
+0 = p0 + (M−p 0) = M≥π (G)
+pebbles and delivers 1 pebble to r0. Crucially, removing an even number of pebbles from any vertex of G1
+leaves the parity of every vertex in G1 unchanged, so the residual configuration D′
+1 on G1 satisfies o(D′
+1) = o1
+and
+p(D′
+1) +o(D ′
+1) =p 1 −2(M−p 0) +o 1 ≥(4M+ 1−p 0 −o 0)−2M+ 2p 0 = 2M+ 1 + (p 0 −o 0)>2M.
+By hypothesis on ( G1, M), G1 moves 2 pebbles to r1 and hence 1 additional pebble to r0, placing 2 pebbles
+onr 0 in total. □
+Proof of Theorem 1.3. For trees, complete graphs, complete bipartite graphs, and complete multipartite graphs,
+the bound π(G□H ) ≤π (G)π(H) follows directly by combining Theorem 1.1 with [ 2, 10, 11, 4, 12]. For H = Qd
+(d≥ 0), let M0 := π(G) ≥ |V(G)|. By Theorem 1.1, ( G, M0) satisfies O2PP. Writing Qd = Qd−1 □K 2 and setting
+Md := 2 dπ(G), we have Md ≥ 2d|V (G)| = |V (G□Q d)| at every step, so induction on d via Lemma 5.1 gives
+π(G□Q d)≤2 dπ(G) =π(G)π(Q d) (sinceπ(Q d) = 2d [2]).□
+6.Exhaustive Computational Checks and Open Directions
+Although Theorems 1.1–1.3 are proved purely mathematically without computer assistance, we implemented
+an independent deterministic verification suite ( code/verify split pebbling.py) to stress-test Lemma 2.1, Theo-
+rems 1.1–1.2, and our extremal constructions across all small connected split graphs.
+(1) Cross-check of Lemma 2.1.Across all 34 non-complete connected split graphs on n = 6 vertices and all 6 target
+choices (204 graph-target pairs, 3 adversarial/random configurations each, 612 instances total), the maximum
+number of deliverable pebbles computed by an unrestricted bidirectional-edge MILP (enforcing acyclicity
+via topological potentials) matched both the restricted depth- ≤ 3 DAG MILP and an exact parity-bitmask
+dynamic program in 100% of cases.
+(2) Exhaustive census on n≤ 7.Enumerating all 164 connected split graphs on 1 ≤n≤ 7 vertices (1, 1, 2, 5, 12,
+35, 108 graphs for n = 1, . . . ,7), we computed exact π1(G) and checked 2PP (p(D) + q(D) = 2π(G) + 1) and
+Theorem 1.2 for t∈ {2, 3} exhaustively across all automorphism orbits. Table 1 summarizes the diameter
+distribution. Notably,zeroof the 65 diameter-3 split graphs on n≤ 7 are Class 0 (making G8 at n = 8 the
+
+--- Page 14 ---
+14 LLUIS ERIKSSON
+smallest Class-0 diameter-3 split graph), andall65 diameter-3 split graphs on n≤ 7 attain exact equality
+πt(G) =π(G) + 8(t−1) fort∈ {2,3}.
+(3) Extremal families and product drop.Exact symmetry-reduced verification confirms πt(Km + {u}) = m + 4t− 2
+(2 ≤m≤ 5), πt(Km + {r, u}) = n + 8t− 4 (2 ≤m≤ 5), πt(G8) = 8t (t∈ {1, 2, 3}), and π1(G4,4) = 10 with
+π2(G4,4) = 16 and π3(G4,4) = 24. Moreover, labeling the paw graph K3 + leaf with clique {0, 2, 3}, degree-3
+hub 0, and pendant leaf 1 adjacent only to 0, we verify π((K3 + leaf) □K 2) = 9 < 10: the 8-pebble witness
+D((1, 1)) = 7, D((2, 1)) = 1 fails target r = (3, 0) (whereas every 9-pebble configuration succeeds across all
+targets).
+d = 0 d = 1 d = 2 d = 3
+0
+20
+40
+60
+80
+100Number of graphs
+1
+6
+92
+65
+1
+6
+74
+65
+1
+6
+52
+0
+First Class-0 diam = 3 split
+occurs at n = 8 (G8)
+(a) Exhaustive census of all 164 split graphs (n ∙ 7)
+Total connected splits (all 2PP)
+Exact Theorem 1.2 equality (t = 2; 3)
+Class 0 (¼(G) = n)
+Layer G1
+Layer G0
+1 (leaf) 0 (hub)
+2
+3
+1 (leaf) 0 (hub)
+2
+3
+8 pebbles (D(1; 1) = 7; D(2; 1) = 1) fail target r = (3; 0); every 9 pebbles succeed
+(b) Strict drop ¼((K3 + leaf)□K2) = 9 < 2¼(K3 + leaf)
+0
+0
+7
+0
+1
+0
+0
+r
+Figure 3.(a) Diameter breakdown of all 164 connected split graphs on n≤ 7 vertices (Table 1):
+every graph satisfies 2PP, all 65 diameter-3 graphs saturate Theorem 1.2, and none is Class 0 until
+n = 8 ( G8). (b) Strict product drop on ( K3 + leaf) □K 2 (clique {0, 2, 3} with hub 0 and leaf 1
+adjacent to 0): the 8-pebble configuration D((1, 1)) = 7, D((2, 1)) = 1 fails target r = (3, 0), whereas
+every 9-pebble configuration succeeds, givingπ((K 3 + leaf)□K 2) = 9<2π(K 3 + leaf) = 10.
+Three natural open directions remain. First, split graphs are a proper subclass of chordal graphs, and it remains open
+whether all connected chordal graphs satisfy 2PP (or whether a chordal Lemke graph exists). Second, characterizing
+precisely which Class-0 diameter-3 split graphs satisfy πt(G) = 8 t for all t≥ 2 versus πt(G) = n + 8(t− 1) (or
+intermediate regimes like G4,4) would illuminate the full t-pebbling spectrum of dense diameter-3 graphs. Third,
+verifying Graham’s conjecture π(G□H ) ≤π (G)π(H) whenboth G and H are arbitrary connected split graphs
+remains an inviting next step now that every split graph is known to satisfy2PP.
+References
+1. Liliana Alc´ on, Marisa Gutierrez, and Glenn H. Hurlbert,Pebbling in split graphs, SIAM Journal on Discrete Mathematics28(2014),
+no. 3, 1449–1466.
+2. Fan R. K. Chung,Pebbling in hypercubes, SIAM Journal on Discrete Mathematics2(1989), no. 4, 467–472.
+3. Theodore A. Clarke, Robert A. Hochberg, and Glenn H. Hurlbert,Pebbling in diameter two graphs and products of paths, Journal of
+Graph Theory25(1997), no. 2, 119–128.
+4. Rongquan Feng and Ju Young Kim,Graham’s pebbling conjecture on product of complete bipartite graphs, Science in China Series A:
+Mathematics44(2001), no. 7, 817–822.
+5. Peter L. Hammer and Bruno Simeone,The splittance of a graph, Combinatorica1(1981), no. 3, 275–284.
+6. David S. Herscovici, Benjamin D. Hester, and Glenn H. Hurlbert, t-pebbling and extensions, Graphs and Combinatorics29(2013),
+no. 4, 955–975.
+7. Glenn H. Hurlbert,A survey of graph pebbling, Congressus Numerantium139(1999), 41–64.
+8. ,General graph pebbling, Discrete Applied Mathematics161(2013), no. 9, 1221–1231.
+9. Paul Lemke and Daniel J. Kleitman,An addition theorem on the integers modulo n, Journal of Number Theory31(1989), no. 3,
+335–345.
+10. David Moews,Pebbling graphs, Journal of Combinatorial Theory, Series B55(1992), no. 2, 244–252.
+11. Hunter S. Snevily and James A. Foster,The 2-pebbling property and a conjecture of Graham’s, Graphs and Combinatorics16(2000),
+no. 2, 231–244.
+12. Stephen S. Wang,Pebbling and Graham’s conjecture, Discrete Mathematics226(2001), no. 1–3, 431–438.
+Independent Researcher
+Email address:editor@airr.science
