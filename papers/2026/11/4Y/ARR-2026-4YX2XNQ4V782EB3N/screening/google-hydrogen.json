@@ -1,0 +1,54 @@
+{
+  "paper_id": "ARR-2026-4YX2XNQ4V782EB3N",
+  "version": "v1",
+  "version_id": "arr:version:2f611486-7442-4f6e-9ae8-e8cfa46e6e9e",
+  "canonical_sha256": "7f09985d098fb94a67a4734514452dab561ee15ee367b6462b4886c822fdc14b",
+  "provider": "Google",
+  "model_id": "hydrogen",
+  "assessed_at": "2026-11-28T00:15:00Z",
+  "prompt_version": "ARR-ASSESS-1.0",
+  "independence": "not_involved_in_manuscript",
+  "recommendation": "accept",
+  "millennium_score": 6.85,
+  "overall_stars": 7,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 5,
+      "basis": "All equations, cocycle identities, defect factorizations, shortening bounds via skew-polynomial divisibility and rank-nullity, and all 16 explicit finite-field benchmark values (C01-C16) including irreducibility of x^6+x+1 over F2 and x^4+2 over F5 verify accurately."
+    },
+    "rigor": {
+      "stars": 4,
+      "basis": "Proofs of Theorems 2.1 and 3.1 are mathematically sound, and the manuscript states a transparent verification boundary separating Lean 4 constructive proofs from paper-only matrix-rank proofs and imported literature; general rank proofs of (3) and (5) remain unformalized in Lean."
+    },
+    "novelty": {
+      "stars": 3,
+      "basis": "Builds directly on the polynomial-time LRS attack of Astore, Borello, and Couvreur [1] and skew-polynomial theory of Martinez-Penas [3], contributing a clean closed-form defect factorization, explicit shortening collapse bound, Lean 4 formalization, and exact finite-field certification."
+    },
+    "significance": {
+      "stars": 4,
+      "basis": "Establishes a machine-checked algebraic backbone and zero-float certification suite clarifying exactly when direct primal Overbeck, dual Overbeck, and shortening-induced block collapse distinguish multi-block LRS codes from random linear codes across all asymptotic rate regimes."
+    },
+    "reproducibility": {
+      "stars": 5,
+      "basis": "Provides SHA-256 digests for the Lean 4.36.0 source, AST-audited pure-integer Python engine, and JSON certificate manifest (C01-C16), alongside explicit finite-field parameters, axiom footprint ([propext, Quot.sound], zero sorry), and pytest audit counts."
+    }
+  },
+  "summary": "The manuscript presents LRS-STRUCT-RECOV-CERT-1.0, a hybrid Lean 4.36.0 formalization and zero-float finite-field certification suite for Overbeck Frobenius-shift distinguishers on multi-block Linearized Reed-Solomon (LRS) codes, motivated by Astore, Borello, and Couvreur [1]. Mathematically, it establishes: (i) the skew-norm cocycle and Frobenius shift identities for truncated norms; (ii) the Overbeck-LRS Frobenius-sum upper bound dim Lambda_t(C) <= min(n, l*k + l*(t - l + 1)) for t >= l and k >= l, yielding the exact rank-defect factorization Delta_LRS(l,k,t) = (t + 1 - l)*(k - l) with onset at t = l when k > l and l*(k+1) < n; (iii) invariance of every Frobenius-shift rank profile under public-key scrambling G_pub = S * G_LRS * P; and (iv) a single-step shortening block-collapse bound dim Lambda_1(C_sh) <= min(n'_1, k'+1) + delta via minimal skew-polynomial factorization and rank-nullity, strictly separating shortened high-rate codes whenever delta + 1 < k' and k' + 1 < n'_1. All algebraic identities, arithmetic regimes, and 16 explicit finite-field certificates across F_{2^6}, F_{3^5}, F_{3^6}, F_{5^4}, and F_{5^5} check out cleanly, and the paper accurately delineates what is proved inside Lean 4 versus on paper or imported from prior literature.",
+  "strengths": [
+    "Exact closed-form defect factorization Delta_LRS(l,k,t) = (t+1-l)(k-l) cleanly captures Gabidulin specialization (l=1), k=l blindness, and non-saturation threshold l(k+1) < n.",
+    "Theorem 3.1 gives a concise, rigorous proof of shortening block collapse using minimal skew-polynomial divisibility, operator composition D_{a_1}, and projection rank-nullity.",
+    "Exemplary verification boundary disclosure explicitly separates constructive Lean 4.36.0 theorems from paper-only matrix-rank proofs and external results imported from [1] and [3].",
+    "All 16 certified finite-field instances (C01-C16), irreducible polynomial choices, rate-regime boundaries, and figure data points are internally consistent and mathematically accurate."
+  ],
+  "weaknesses": [
+    "General arbitrary-field vector-space rank proofs for inequalities (3) and (5) are proved mathematically on paper rather than formalized inside Lean 4, leaving a formalization gap for linear-algebra ranks.",
+    "The paper establishes upper bounds on dim Lambda_t(C) and dim Lambda_1(C_sh) without proving matching general lower bounds for arbitrary LRS parameters, relying on C01-C13 for tightness evidence.",
+    "Minor phrasing ambiguity in Theorem 2.1(1) states that every generator G_i^{[s]} spans at most min(l, ...) copies for each j, whereas it means the set of generators with i+s=j spans at most that dimension."
+  ],
+  "potential_errors": [],
+  "strong_novelty_candidates": [
+    "Closed-form Overbeck-LRS rank-defect factorization (t+1-l)(k-l) coupled with the exact shortening block-collapse threshold delta+1 < k' and k'+1 < n'_1 unifying all rate regimes.",
+    "Constructive, choice-free Lean 4.36.0 formalization paired with an exact zero-float finite-field certification suite (C01-C16) for LRS Frobenius-shift cryptanalysis."
+  ],
+  "unresolved_material_objections": []
+}
