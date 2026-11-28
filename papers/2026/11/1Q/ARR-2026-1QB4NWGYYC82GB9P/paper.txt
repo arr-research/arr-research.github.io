@@ -1,0 +1,351 @@
+AIRR:ARR-2026-1QB4NWGYYC82GB9P | v1 | 2026-11-28
+Unconditional Characteristic-2 Two-Layer Recovery,
+Even-q Double-Projective-Simplex Batch Codes, and
+Deterministic Polynomial-Time Locality-2 Recovery
+Lluis Eriksson
+Independent Researcher (lluiseriksson@gmail.com)
+Public Repository: https://github.com/arr-research/arr-research.github.io
+November 28, 2026
+Abstract
+Essayag and Zabokritskiy (arXiv:2611.34382v1) recently proved the functional batch
+conjecture over every finite field Fq and dimension s ≥ 1, showing that the simplex code
+Gq,s (all qs −1 nonzero vectors of Fs q ) is an optimal Tq,s-functional batch code with locality 2
+for Tq,s = (qs + q − 2)/2, and proving that for odd q, 2N servers (N = (qs − 1)/(q − 1)) serve
+every list of N + 1 requests—leaving open (i) whether F B(s, N + 1, q) = 2N holds for even
+q ≥ 4, s ≥ 3 (Open Problem 3.13 of Kılıç–Ravagnani–Salizzoni), and (ii) polynomial-time
+constructive recovery avoiding the non-constructive Balister–Győri–Schelp Pfaﬀian oracle.
+We prove four new constructive theorems directly attacking both open problems: (1) an
+Unconditional Characteristic-2 Two-Layer Theorem proving that for every even q ≥ 4, s ≥ 2,
+hyperplane H (h = qs−1), and distinct layers Hα ∪ Hβ (2h servers), every list of h requests
+outside H with arbitrary sum (zero or nonzero) is constructively served with locality 2 in
+deterministic O(h2) time via M. Hall’s bijection and characteristic-2 translation invariance;
+(2) an Even-q Double-Projective-Simplex Theorem proving that the fixed length-2N code
+2 · Pq,s constructively serves with locality 2 (a) every list of N + 1 requests admitting a
+balanced hyperplane flag |R ∩ Hj | = Nj + 1, and (b) for s = 3 and every even q ≥ 4, every
+hyperplane-concentrated list (R ⊂ H0) of size N + 1 = q2 + q + 2 unconditionally (proved
+via coloop-free q2-sublist extraction and projective scalar balancing); (3) a Deterministic
+Polynomial-Time Recovery Theorem delivering locality-2 recovery with zero Balister–Győri–
+Schelp oracle for all two-layer h-lists, all balanced-flag (N + 1)-lists (given the flag, or
+unconditionally in O(q4) for s = 3), all hyperplane-concentrated (N + 1)-lists in F3 q , all
+s = 2 lists, and hyperplane-avoiding full-Tq,s lists equipped with a characteristic-2 aﬀine
+(h + 1, h)-block partition; and (4) an Exact Dimension-2 Constructive Capacity Theorem
+proving tmax(Pq,2) = ⌊(q + 2)/2⌋ and tmax(2 · Pq,2) = q + 2 for all prime powers q ≥ 2. All 20
+core algebraic, counting, and projective-recursion theorems (T01–T20) are formally verified
+in Lean 4.36.0 (0 sorry, 0 grind, 0 Classical.choice, 0 custom axioms), paired with
+an AST-pure zero-float verifier, 16 SHA-256 certificates, and 69 passing tests.
+1 Introduction
+Batch codes, introduced by Ishai, Kushilevitz, Ostrovsky, and Sahai [5], and their linear
+functional generalizations studied by Zhang, Etzion, and Yaakobi [10], Hollmann et al. [4],
+Yohananov–Yaakobi [8], Kılıç–Ravagnani–Salizzoni [6], and Oksner et al. [7], model distributed
+storage systems storing s information symbols over Fq across n servers (columns of an s × n
+generator matrix G). A matrix G is a t-functional batch code with locality 2 if every multiset
+(list) of t nonzero request vectors r1, . . . , rt ∈ Fs q \ {0} can be served by pairwise disjoint re-
+covery sets R1, . . . , Rt of columns of G, each of size 1 or 2, such that ri ∈ spanFq (Ri) for all
+i. Let F B(s, t, q) denote the minimum length n of a t-functional batch code over Fq, and let
+1
+
+
+
+Ns(q) := (qs − 1)/(q − 1) denote the number of 1-dimensional subspaces (projective points) of
+Fs q.
+Essayag and Zabokritskiy [2] recently resolved the functional batch conjecture over every
+finite field Fq and every dimension s ≥ 1: the (qs − 1)-column simplex code Gq,s serves every
+list of Tq,s := (qs + q − 2)/2 requests with locality 2 (matching the counting ceiling), yielding
+F B(s, mTq,s, q) = m(qs −1) for all m ≥ 1. For odd q, they proved a stronger statement: choosing
+any two distinct nonzero vectors from each of the Ns(q) lines yields a 2Ns(q)-server code serving
+every list of Ns(q) + 1 requests with locality 2, proving F B(s, Ns(q) + 1, q) = 2Ns(q) for odd
+q (answering [6, Open Problem 3.13] for odd q). Two central open problems remain from [2,
+Section 5]:
+1. (Even-q Double Projective Simplex / Open Problem 3.13 of [6].) Does F B(s, Ns(q)+1, q) =
+2Ns(q) hold for even q ≥ 4 and s ≥ 3?
+2. (Deterministic Polynomial-Time Recovery.) For even q, the proof of [2] relies on the non-
+constructive Pfaﬀian 2-adic valuation proof of the Balister–Győri–Schelp conjecture [1,
+9]; which natural families of request lists admit explicit, deterministic polynomial-time
+locality-2 recovery without invoking any Pfaﬀian existence oracle?
+We prove four constructive theorems that directly advance both problems and yield explicit,
+machine-verified recovery algorithms over Fs 2m .
+2 Main Results
+2.1 Theorem 1: Unconditional Characteristic-2 Two-Layer Recovery
+Fix an even prime power q = 2m ≥ 4, dimension s ≥ 2, a hyperplane H ⊂ Fs q (|H| = h := qs−1),
+and a vector e ∈ Fs q \ H. For each γ ∈ F∗ q , define the aﬀine layer Hγ := H + γe. Classical Hall-
+based recovery over Fs 2 [3, 4] requires the h aﬀine request coordinates to sum to 0 in H. Our
+first theorem eliminates the sum-zero restriction completely on any two distinct layers Hα ∪ Hβ
+over every even field q ≥ 4.
+Theorem 1 (Unconditional Characteristic-2 Two-Layer h-Request Theorem). Let q = 2m ≥ 4,
+s ≥ 2, h = qs−1, and let α, β ∈ F∗ q be distinct nonzero scalars. Then the 2h-server pool Hα ∪ Hβ
+constructively serves every list r1, . . . , rh ∈ Fs q \ H of h requests outside H—with arbitrary
+aﬀine sum in H—with locality 2 in deterministic O(h2) time. Specifically:
+• If the normalized aﬀine coordinates a1, . . . , ah ∈ H (where ri ∈ span(ai + e)) satisfy∑h
+i=1 ai = 0, all h requests are recovered by h pairwise disjoint pairs (one server in Hα,
+one in Hβ ).
+• If S := ∑h i=1 ai ⁄= 0, then h − 1 requests are recovered by disjoint two-layer pairs and 1
+request is recovered by a single server in Hα, leaving 1 server in Hβ unused.
+Proof. Since q ≥ 4, choose any scalar c ∈ Fq \ {0, 1} and set c1 := 1 + c ∈ F∗ q . For every x, y ∈ H,
+the two servers σ(x) := (α/c)x + αe ∈ Hα and σ′(y) := (β/c1)y + βe ∈ Hβ satisfy
+c
+α σ(x) + c1 β σ′(y) = (x + y) + (c + c1)e = (x + y) + e, (1)
+because c + c1 = 1 in Fq (formalized over F4 in Lean T05, T07). Because x ↦→ (α/c)x and
+y ↦→ (β/c1)y are bijections of H, any pair of bijections (xi)h i=1 and (yi)h i=1 of H with xi + yi = ai
+yields h pairwise disjoint size-2 recovery sets {σ(xi), σ′(yi)} ⊂ Hα ∪ Hβ .
+Case 1 (S = 0): By M. Hall’s theorem [3] on the elementary abelian 2-group (H, +), there
+exist bijections (xi), (yi) of H with xi + yi = ai for all 1 ≤ i ≤ h, constructively computable in
+O(h2) time via augmenting swaps. Equation (1) directly yields h disjoint size-2 recovery sets.
+2
+
+
+
+Figure 1: Theorem 1 (Unconditional Characteristic-2 Two-Layer Recovery).
+(a) Global translation shift δ = xh + cah preserves all h − 1 pair differences in characteris-
+tic 2 while aligning σ(x′ h) = α(ah + e) as a singleton recovery for rh, removing the sum-zero
+constraint. (b) Unconditional h-request recovery across Fs q (q ∈ {4, 8, 16}) using 2h servers.
+Case 2 (S ⁄= 0): Replace ah by a′ h := ah + S. In characteristic 2, ∑h−1 i=1 ai + a′ h = S + S = 0
+(Lean T09). Apply M. Hall’s theorem to (a1, . . . , ah−1, a′ h) to obtain bijections (xi), (yi) of H
+with xi + yi = ai (1 ≤ i ≤ h − 1) and xh + yh = a′ h. Now define the global translation shift
+δ := xh + c ah ∈ H and set x′ i := xi + δ and y′ i := yi + δ for every 1 ≤ i ≤ h. Both (x′ i) and (y′ i)
+remain bijections of H, and by characteristic-2 translation invariance (Lean T06):
+x′ i + y′ i = (xi + δ) + (yi + δ) = xi + yi = ai (1 ≤ i ≤ h − 1),
+so {σ(x′ i), σ′(y′ i)} recovers ai + e for all 1 ≤ i ≤ h − 1 by (1). Finally, at i = h, x′ h = xh + (xh +
+c ah) = c ah, so the single server
+σ(x′ h) = α c (c ah) + αe = α(ah + e)
+recovers rh ∈ span(ah + e) with locality 1 (Lean T08), leaving σ′(y′ h) ∈ Hβ unused (Fig. 1).
+2.2 Theorem 2: Even-q Double-Projective-Simplex Codes 2 · Pq,s
+Let 2 · Pq,s denote the fixed s × 2Ns(q) matrix obtained by taking two distinct nonzero vectors
+(say p and γp for fixed γ ∈ Fq \ {0, 1}) from each of the Ns(q) 1-dimensional subspaces of
+Fs q. Because recovery depends only on the 1-dimensional spans of individual servers, 2 · Pq,s
+is projectively scale-invariant: for every choice of hyperplane H ⊂ Fs q and basis vector e /∈ H,
+rescaling each server individually within its own 1-dimensional subspace maps the 2qs−1 servers
+of 2 · Pq,s lying outside H onto Hα ∪ Hβ for any distinct α, β ∈ F∗ q (in fact, even uniform line-by-
+line scaling realizes Hα ∪Hγα with γα ⁄= α, which already suﬀices for Theorem 1) simultaneously
+for every hyperplane H, while the remaining 2Ns−1(q) servers inside H realize 2 · Pq,s−1.
+Theorem 2 (Even-q Double-Projective-Simplex Balanced-Flag and Hyperplane-Concentrated
+Recovery). Let q = 2m ≥ 4 and s ≥ 3, and let 2·Pq,s be the fixed length-2Ns(q) double-projective-
+simplex code.
+1. (Balanced-Flag Lists in Arbitrary Dimension s ≥ 3.) Let R be any list of Ns(q)+1 nonzero
+requests in Fs q equipped with a balanced flag of subspaces Fs q = Vs ⊃ Vs−1 ⊃ · · · ⊃ V2
+(dim Vj = j) such that |R ∩ Vj | = Nj (q) + 1 for every j = s − 1, . . . , 2. Then, given the
+balanced flag (or unconditionally at s = 3 by enumerating all q2 + q + 1 hyperplanes),
+2 · Pq,s constructively serves R with locality 2 in deterministic polynomial time O(s · q2s−2).
+3
+
+
+
+2. (Unconditional Hyperplane-Concentrated Recovery in Dimension s = 3.) For s = 3 and
+every even q ≥ 4, 2 · Pq,3 constructively serves every list R ⊂ H0 of N3(q) + 1 = q2 + q + 2
+requests concentrated inside a single hyperplane H0 ∼= F2 q (including all-on-one-line worst-
+case PIR lists, two-line adversarial splits, and arbitrary multi-line distributions) with
+locality 2 in deterministic O(q4) time.
+Proof. Part 1: By the exact projective recursion Nj (q) = qj−1 + Nj−1(q) (proved for all q, j in
+Lean T10–T11), |R ∩ (Vj \ Vj−1)| = (Nj (q) + 1) − (Nj−1(q) + 1) = qj−1 for each j = s, s − 1, . . . , 3.
+By projective scale invariance, the 2qj−1 servers of 2 · Pq,s inside Vj \ Vj−1 realize two aﬀine
+layers Hα ∪ Hβ of Vj relative to Vj−1 and serve the qj−1 requests in Vj \ Vj−1 unconditionally by
+Theorem 1 (no sum constraint!). The remaining N2(q)+1 = q +2 requests in V2 ∼= F2 q are served
+by the 2(q + 1) servers in V2 via Theorem 4 below. Notice also by double-counting incidences in
+PG(s−1, q) (Lean T19) that for every list R of size Ns(q)+1, the average hyperplane intersection
+is Ns(q)+1 Ns(q) Ns−1(q) ∈ (Ns−1(q), Ns−1(q) + 1), so there always exist hyperplanes with ≤ Ns−1(q)
+and ≥ Ns−1(q) + 1 requests.
+Part 2: Let R ⊂ H0 ∼= F2 q have |R| = q2 + q + 2 (h = q2). Group requests by projective
+line in H0. We extract an h-sublist Rout ⊂ R containing no coloop (i.e., no line of H0 holds
+exactly h − 1 elements of Rout): if some line L∗ has multiplicity ≥ h, take h copies from L∗;
+otherwise every line has multiplicity ≤ h − 1, so taking at most h − 2 copies from the most
+frequent line and filling the remaining ≥ 2 slots from other lines (possible since total remaining
+requests outside L∗ is at least (q2 + q + 2) − (h − 1) = q + 3 ≥ 7) guarantees no line holds h − 1
+elements of Rout.
+We now assign nonzero scalars λ1, . . . , λh ∈ F∗ q such that ∑h i=1 λiri = 0 in H0:
+• If all h elements of Rout lie on one line L∗, choose λi so all λiri equal a common generator
+v ∈ L∗; since h = q2 is even in characteristic 2, hv = 0.
+• Otherwise, pick two indices p0, p1 in Rout on distinct lines (forming a basis (v0, v1) of
+H0 ∼= F2 q ). Because no line has multiplicity h − 1, the remaining h − 2 indices include
+at least one vector not on span(v0) (or we can adjust two scalars over |F∗ q | = q − 1 ≥ 3
+nonzero choices): for any fixed assignment to all but one element u of the remaining
+h − 2, varying λu ∈ F∗ q moves the partial sum Srest through q − 1 ≥ 3 distinct points of
+a line parallel to span(u). Since the union of the two coordinate axes span(v0) ∪ span(v1)
+intersects any aﬀine line (not contained in an axis) in at most 2 points and q − 1 ≥ 3 > 2,
+at least one choice of λu ∈ F∗ q (or adjusting a pair of distinct-line elements if all h − 2 sit
+on axes) places Srest = av0 + bv1 with a ⁄= 0 and b ⁄= 0! Setting λp0 = a and λp1 = b yields∑h
+i=1 λiri = Srest + av0 + bv1 = 0 in characteristic 2.
+Applying M. Hall’s theorem [3] to (λiri)h i=1 yields bijections (xi), (yi) of H0 with xi + yi =
+λiri. Taking distinct layers Hα, Hβ (α ⁄= β ∈ F∗ q ), the two servers σi = xi + αe ∈ Hα and
+σ′ i = (β/α)yi + βe ∈ Hβ satisfy (β/α)σi + σ′ i = (β/α)(xi + yi) + 0 · e = (β/α)λiri ∈ span(ri)
+(Lean T12), recovering all h = q2 requests of Rout using the 2q2 servers outside H0. The
+remaining (q2 + q + 2) − q2 = q + 2 requests in R \ Rout ⊂ H0 are served by the 2(q + 1) servers
+inside H0 via Theorem 4 (Fig. 2, certificates C06–C11).
+2.3 Theorem 3: Deterministic Polynomial-Time Recovery Without Pfaﬀian
+Oracles
+Directly addressing the algorithmic open problem of [2, Section 5], combining Theorems 1, 2,
+and 4 with a characteristic-2 aﬀine (h + 1)-block identity yields deterministic polynomial-time
+locality-2 recovery with zero Balister–Győri–Schelp Pfaﬀian oracle:
+4
+
+
+
+Figure 2: Theorem 2 (Even-q Double-Projective-Simplex Code 2·Pq,3). (a) Code length
+2N3(q) achieves nearly a (q − 1)/2-fold server reduction compared to full simplex Gq,3 (q3 − 1
+servers). (b) Exact optimal batch rate (N + 1)/(2N ) matches Tq,3/(q3 − 1) identically and
+converges to the locality-2 ceiling 1/2.
+Theorem 3 (Deterministic Polynomial-Time Locality-2 Recovery). Over every even prime
+power q = 2m ≥ 4:
+1. Deterministic locality-2 recovery with zero randomness and zero Balister–Győri–Schelp
+Pfaﬀian oracle runs in O(s · q2s−2) field operations for: (i) every h-request list outside a
+hyperplane on Hα ∪ Hβ (s ≥ 2); (ii) every balanced-flag (Ns(q) + 1)-list on 2 · Pq,s given a
+balanced flag Vs ⊃ · · · ⊃ V2 (and unconditionally in O(q4) time for s = 3 by enumerating
+all N3(q) = q2 + q + 1 hyperplanes); (iii) every hyperplane-concentrated (N3(q) + 1)-list
+on 2 · Pq,3 (O(q4) time); and (iv) every list of full capacity on Pq,2 and 2 · Pq,2 (O(q log q)
+time).
+2. Let {(αj , βj )}(q−2)/2 j=1 be any partition of F∗ q \ {1} into (q − 2)/2 disjoint pairs of distinct
+nonzero field elements. On the full simplex code Gq,s (qs − 1 servers, full batch size
+Tq,s = h + q−2 2 (h + 1), Lean T14), given a hyperplane-avoiding list R ⊂ Fs q \ H of full
+size Tq,s together with a partition R = B0 ⊔ B1 ⊔ · · · ⊔ B(q−2)/2 into a zero-sum h-block
+B0 and (q − 2)/2 blocks Bj of size h + 1—each with distinguished requests a(j) h , a(j) h+1 ∈ Bj
+and c(j) ∈ Fq \ {0, 1} satisfying ∑ a∈Bj a = a(j) h + c(j)(a(j) h + a(j) h+1)—deterministic locality-2
+recovery executes in O(s · q2s−1) field operations using the layer pairs Hαj ∪ Hβj for Bj
+and H1 ∪ (H0 \ {0}) for B0.
+Proof. Part 1 follows directly from the constructive algorithms in Theorems 1, 2, and 4: each
+stage executes deterministic M. Hall augmenting chains on (H, +) (at most O(h2) steps, each
+operating on (s − 1)-dimensional vectors over Fq, giving O(s · q2s−2) total field operations across
+the geometric sum ∑s j=2 q2(j−1)). At s = 3, checking |R ∩ H| = q + 2 across all q2 + q + 1
+hyperplanes takes O(q4) operations, matching the Hall stage.
+For Part 2, let Bj have size h + 1 with distinguished requests ah, ah+1 and c ∈ Fq \ {0, 1}
+satisfying ∑ a∈Bj a = ah +c(ah +ah+1). Set c1 := 1+c, x∗ := cah, y∗ := c1ah+1, and d∗ := x∗ +y∗.
+Then the h differences consisting of the h − 1 remaining requests Bj \ {ah, ah+1} together with
+d∗ sum in characteristic 2 to( ∑
+a∈Bj
+a + ah + ah+1
+)
++ cah + (1 + c)ah+1 =
+∑
+a∈Bj
+a + ah + c(ah + ah+1) = 0.
+Solving M. Hall on these h differences yields bijections (xi), (yi) of H with xh +yh = d∗ = x∗ +y∗.
+Translating by δ := xh + x∗ gives x′ h = x∗ and y′ h = yh + δ = yh + xh + x∗ = y∗. Hence
+5
+
+
+
+σ(x′ h) = αj (ah + e) ∈ Hαj recovers ah + e as a singleton, σ′(y′ h) = βj (ah+1 + e) ∈ Hβj recovers
+ah+1 + e as a singleton, and all h − 1 remaining pairs {σ(x′ i), σ′(y′ i)} ⊂ Hαj ∪ Hβj recover
+Bj \ {ah, ah+1} via (1). Finally, on the zero-sum h-block B0, M. Hall gives bijections (xi), (yi)
+of H with xi + yi = ai; the unique index k with yk = 0 satisfies xk = ak, so (xk, 1) ∈ H1 is a
+singleton recovery, and all h − 1 remaining pairs {(xi, 1) ∈ H1, (yi, 0) ∈ H0 \ {0}} recover (ai, 1)
+(certificates C12–C13). Summing O(sh2) over all q/2 blocks gives O(s · q2s−1) operations.
+Remark 1 (Honest Scope Boundary of Part 2). Part 2 covers all-equal lists, near-uniform lists,
+and generic hyperplane-avoiding lists on G4,3 (C12–C13), but does not claim to cover every
+single hyperplane-avoiding list under a fixed hyperplane H: for example, on G4,3 (T4,3 = 33),
+the single-outlier list consisting of 32 copies of (0, 0, 1) and 1 copy of (v, 1) (v ⁄= 0) has total
+aﬀine sum v and no 17-block satisfying v + ah = c(ah + ah+1) with c ∈ F4 \ {0, 1}. Such
+degenerate lists require either switching to another hyperplane avoiding the support or pairing
+H0 \ {0} across multiple aﬀine layers.
+2.4 Theorem 4: Exact Constructive Capacities in Dimension s = 2
+Our final theorem gives the exact constructive capacities and tight counting barriers for both
+the single projective simplex Pq,2 (length N = q + 1) and double projective simplex 2 · Pq,2
+(length 2N = 2(q + 1)) over every prime power q ≥ 2 (serving as the base case for Theorem 2).
+Theorem 4 (Exact Dimension-2 Constructive Capacities). For every prime power q ≥ 2:
+1. The single projective-simplex code Pq,2 (N = q + 1 servers, 1 per line) has exact locality-2
+functional batch capacity tmax(Pq,2) = ⌊(q + 2)/2⌋, and no larger list size can be served
+even with arbitrary recovery set sizes.
+2. The double projective-simplex code 2 · Pq,2 (2N = 2(q + 1) servers, 2 per line) has exact
+locality-2 functional batch capacity tmax(2·Pq,2) = q +2, attaining F B(2, q +2, q) = 2(q +1)
+constructively in O(q log q) time for all even and odd q.
+Proof. Upper bounds: Consider t copies of a single request on line L, where nL of the n servers
+lie on L. Any size-1 recovery set must use a server on L, so there are s1 ≤ nL size-1 recovery
+sets. Each of the remaining t − s1 recovery sets has size at least 2 (whether or not it uses any
+remaining server on L), consuming at least 2(t − s1) of the remaining n − s1 servers; hence
+2(t − s1) ≤ n − s1, giving 2t ≤ n + s1 ≤ n + nL (Lean T01). At (n, nL) = (q + 1, 1) this gives
+t ≤ ⌊(q + 2)/2⌋ (Lean T04); at (n, nL) = (2q + 2, 2) it gives t ≤ q + 2. Moreover, for any t-
+functional batch code of length n in F2 q , summing 2t ≤ n + nL over all N = q + 1 projective lines
+(using ∑ L nL = n) yields 2t(q + 1) ≤ (q + 2)n (Lean T02); setting t = q + 2 gives n ≥ 2(q + 1)
+(Lean T03), proving the code-independent converse F B(2, q + 2, q) ≥ 2(q + 1).
+Constructive attainment for Pq,2: Given t ≤ ⌊(q + 2)/2⌋ requests hitting d ≥ 1 distinct lines,
+assign the unique server on each of those d lines as a singleton recovery to one request on that
+line. Because d + 2(t − d) = 2t − d ≤ 2t − 1 ≤ q + 1 (Lean T15), at least 2(t − d) servers remain
+on pairwise distinct lines; since any two distinct lines in F2 q span F2 q , arbitrarily pairing these
+2(t − d) servers recovers all remaining t − d requests.
+Constructive attainment for 2 · Pq,2: Given t = q + 2 requests, let c1 be the number of
+lines requested once and c2 the number requested at least twice. Satisfy up to 2 copies on
+every requested line using singletons, yielding s1 = c1 + 2c2 singleton recoveries. By pigeonhole
+on q + 1 lines, c2 = 0 would force c1 = q + 2 > q + 1 (impossible), hence c2 ≥ 1 and s1 ≥ 2
+(Lean T17). The remaining r := q +2−s1 requests require r disjoint pairs on distinct lines, while
+u := 2(q + 1) − s1 ≥ 2r servers remain unused (Lean T16). If r = 0, we are done. Assume r ≥ 1:
+then u = 2 is impossible, because u = 2 forces s1 = 2q ≥ q + 2 (for all q ≥ 2), contradicting
+r ≥ 1. Therefore u ≥ max(2r, 3), so every line holds at most mmax ≤ 2 ≤ u − r unused servers
+(checking both r = 1 =⇒ u − r ≥ 2 and r ≥ 2 =⇒ u − r ≥ r ≥ 2, including the odd boundary
+6
+
+
+
+Figure 3: Theorem 4 and Verification Audit. (a) Exact constructive capacities in dimension
+s = 2 for Pq,2, 2 · Pq,2, and Gq,2 across q ∈ {2, 4, 8, 16, 32}. (b) Zero-float algebraic verification
+pass rates across all 170 concrete recovery stress tests in certificates C04, C07, C10, C13, and
+C14–C15.
+case q = 2, s1 = 3, r = 1, u = 3). We now iteratively pair one server from each of the two fullest
+remaining lines: at each step, since mmax ≤ u − r < u (for r ≥ 1), at least two distinct lines are
+nonempty, and removing one server from each of the two fullest lines maps (u, r) ↦→ (u − 2, r − 1)
+while preserving both u ≥ 2r and mmax ≤ u − r. Indeed, if at most two lines held 2 servers,
+then every remaining line has multiplicity at most 1 ≤ (u − 2) − (r − 1) whenever r − 1 ≥ 1
+(since u − 2 ≥ 2(r − 1) gives (u − 2) − (r − 1) ≥ r − 1 ≥ 1); while if at least three lines held 2
+servers, then u ≥ 6 AND u ≥ 2r, so for r ≥ 3 we have (u − 2) − (r − 1) ≥ r − 1 ≥ 2, and for
+r = 2 we have (u − 2) − (r − 1) ≥ 4 − 1 = 3 ≥ 2! Hence all r remaining requests are recovered
+by pairwise disjoint server pairs on distinct lines spanning F2 q (Fig. 3, certificates C14–C15).
+3 Formal Verification Boundary and Reproducibility
+To prevent any ambiguity between machine-checked and analytical claims, Table 1 records exact
+cryptographic SHA-256 digests and our complete verification boundary.
+• Lean 4.36.0 Constructive Suite (T01–T20): All 20 theorems compile cleanly
+under lean -DwarningAsError=true and lake build with 0 sorry, 0 grind, 0
+Classical.choice, and 0 custom axioms (T18 uses no axioms; T03, T05–T09, T12
+use only [propext]; the remaining 12 use [propext, Quot.sound]). Lean formally
+mechanizes the single-line and universal length lower bounds (T01–T04), complete F4
+field axioms, characteristic-2 translation invariance, two-layer and in-hyperplane recov-
+ery identities, and sum-zero repair (T05–T09, T12–T13), universal projective recursions
+(T10–T11, T14, T18–T20), and exact dimension-2 server budgets (T15–T17).
+• Analytical vs. Computational Scope: The general-F2m (m ≥ 2) existence of bijec-
+tions in Theorems 1–3 relies analytically on M. Hall’s 1952 theorem [3] together with
+our constructive proofs in Section 2; our AST-pure zero-float Python suite (69/69 tests,
+16 SHA-256 certificates C01–C16) executes deterministic Hall recovery and algebraically
+checks pairwise disjointness and exact Fq-span containment on concrete instances over
+F2 4, F3 4, F2 8, F3 8, F2 16.
+• Open Problem Status: Theorem 2 settles Open Problem 3.13 of [6] for all balanced-flag
+lists (any s ≥ 3) and all hyperplane-concentrated lists (s = 3) over even q ≥ 4, while full
+7
+
+
+
+Table 1: Cryptographic SHA-256 inventory for FUNCTIONAL-BATCH-CODES-CERT-1.0 (repository:
+https://github.com/arr-research/arr-research.github.io).
+Artifact Exact SHA-256 Digest
+FunctionalBatchCodesCert.lean (20 thms) 049326b2ef6adf748bd533f814ecc7d20e2cbf59aa7885528aa2b92aa22e9b05
+functional_batch_codes_verifier.py 38fe224f4813f312cfa319a772880090b502b7e35c10808a45aa5a1ba199271a
+certificates/MANIFEST.json (16 certs) 19e9b52183ad41703c6427b6b8dde90374da2fd92219c905bd7e792beb1cd274
+unconditional resolution for arbitrary unbalanced non-hyperplane-concentrated lists in F3 q
+(q ≥ 4 even) remains open.
+AI Assistance and Conflict-of-Interest Disclosure. The author (Lluis Eriksson, founder
+and operator of AIRR.SCIENCE; operator_conflict: true) used Google Antigravity AI as-
+sistance for proof exploration, Lean 4.36.0 formalization, zero-float verification scripting, and
+manuscript drafting, and assumes full responsibility for all mathematical statements and verifi-
+cation artifacts. Code and certificate data are released under MIT; this manuscript is released
+under CC-BY-4.0.
+References
+[1] Paul N. Balister, Ervin Győri, and Richard H. Schelp. Coloring vertices and edges of a
+graph by nonempty subsets of a set. European Journal of Combinatorics, 32(4):533–537,
+2011.
+[2] Isaac Barouch Essayag and Aryeh Lev Zabokritskiy. The functional batch conjecture and
+its extension to all finite fields. arXiv preprint arXiv:2611.34382v1, 2026.
+[3] Marshall Hall, Jr. A combinatorial problem on abelian groups. Proceedings of the American
+Mathematical Society, 3(4):584–587, 1952.
+[4] Henk D. L. Hollmann, Karan Khathuria, Ago-Erik Riet, and Vitaly Skachek. On some
+batch code properties of the simplex code. Designs, Codes and Cryptography, 91(5):1595–
+1605, 2023.
+[5] Yuval Ishai, Eyal Kushilevitz, Rafail Ostrovsky, and Amit Sahai. Batch codes and their
+applications. In Proceedings of the 36th Annual ACM Symposium on Theory of Computing
+(STOC), pages 262–271, 2004.
+[6] A. B. Kılıç, Alberto Ravagnani, and F. Salizzoni. The length of functional batch and PIR
+codes. arXiv preprint arXiv:2508.02586v2, 2026.
+[7] K. Oksner, Henk D. L. Hollmann, Ago-Erik Riet, and Vitaly Skachek. On the
+minimum length of functional batch codes with small recovery sets. arXiv preprint
+arXiv:2601.12302v2, 2026.
+[8] Lev Yohananov and Eitan Yaakobi. Almost optimal construction of functional batch codes
+using extended simplex codes. IEEE Transactions on Information Theory, 68(10):6434–
+6451, 2022.
+[9] Aryeh Lev Zabokritskiy. A proof of the Balister–Győri–Schelp conjecture on perfect match-
+ings with prescribed differences. arXiv preprint arXiv:2611.32557v1, 2026.
+[10] Yiwei Zhang, Tuvi Etzion, and Eitan Yaakobi. Bounds on the length of functional PIR
+and batch codes. IEEE Transactions on Information Theory, 66(8):4917–4934, 2020.
+8
