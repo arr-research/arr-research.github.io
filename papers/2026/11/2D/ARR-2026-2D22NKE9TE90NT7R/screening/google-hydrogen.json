@@ -1,0 +1,63 @@
+{
+  "paper_id": "ARR-2026-2D22NKE9TE90NT7R",
+  "version": "v1",
+  "version_id": "arr:version:46dfeb2c-6bcf-4167-ba98-80fa846b6f0a",
+  "canonical_sha256": "709eec1ae569222c389a86686dbfbfaf9db0cfab44d2104ab2af573c9bb783be",
+  "provider": "Google",
+  "model_id": "hydrogen",
+  "assessed_at": "2026-11-28T04:00:00Z",
+  "prompt_version": "ARR-ASSESS-1.0",
+  "independence": "not_involved_in_manuscript",
+  "recommendation": "accept",
+  "millennium_score": 6.40,
+  "overall_stars": 6,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 5,
+      "basis": "Line-by-line audit of Theorems 1-4 confirms every inequality, recurrence step, case split, witness coloring, and asymptotic squeeze is mathematically sound, relying only on the standard flow-existence reduction cited from Adak et al. [1, Claim 8 & Eq. (10)]."
+    },
+    "rigor": {
+      "stars": 5,
+      "basis": "Exact cleared-integer formulations, careful handling of boundary cases (j=1 with C_0, m <= k-|S|-M, d >= 4 in Theorem 4(2)), explicit 1-request witness coloring for G_d, and transparent scoping of analytical versus mechanized claims."
+    },
+    "novelty": {
+      "stars": 3,
+      "basis": "Provides genuine quantitative and structural advances over Adak et al. (arXiv:2611.34348v1) via Theorem 1's indicator sharpening, Theorem 2's (s, chi(H_r)) parameterization, Theorem 3's all-d family G_d, and Theorem 4(2)'s (2-1/e)d barrier, while leaving the main asymptotic and unconditional open problems unresolved."
+    },
+    "significance": {
+      "stars": 3,
+      "basis": "Lowers the sub-2d crossover from d=9 to d=8, saves 1 color on 50/93 integers in [8,100], breaks 1/d^3 to Omega(1/d^2) for bounded-conflict requests, and proves Claim 9's criterion cannot beat (2-1/e)d, though the forest d=1 bound is standard."
+    },
+    "reproducibility": {
+      "stars": 5,
+      "basis": "Supplies explicit constructive witnesses, exact cleared-integer criteria, SHA-256 hashes for Lean 4.36.0 and zero-float Python artifacts, and clearly delineates what is proved analytically versus checked formally or computationally."
+    }
+  },
+  "summary": "This manuscript rigorously extends Adak et al. (arXiv:2611.34348v1) on weighted flexible list coloring of d-degenerate graphs through four cleanly proved results: (1) an exact discrete min-cut recurrence eliminating double-counting in Claim 9 via p - 1/M <= (1-1/M)p and tightening the log conversion via a Pade shift, which lowers the sub-2d crossover at epsilon = 1/(d+1) from d=9 to d=8 (k=15) and improves min(2d, floor((d+2)(2-1/e))) by 1 color on 50/93 values of d in [8,100]; (2) a generalized global random palette-order theorem parameterized by list surplus s >= 1 and monochromatic conflict chromatic number chi(H_r), yielding weighted Omega(1/d^2)-flexibility at k=d+2 whenever chi(H_r)=O(1); (3) an explicit (2d+3)-vertex d-degenerate family G_d for all d >= 2 proving (d+1, epsilon)-flexibility fails for all epsilon > 1/4 while candidly noting that epsilon = 1/(d+1) remains open for d >= 3; and (4) a constructive weighted (2, 1/2)-flexibility proof for forests together with an exact (2-1/e)d + O(1) asymptotic barrier theorem for the Claim 9 min-cut criterion. All analytical proofs check out line by line, with solid incremental-to-moderate mathematical novelty beyond the cited preprint.",
+  "strengths": [
+    "Theorem 1's indicator identity p - 1/M <= (1-1/M)p cleanly sharpens Adak et al.'s Claim 9 recurrence, and the exact derivative g'(x) = x^2(9-12x-x^2)/(36(1-x)(1-x/2-x^2/6)^2) > 0 on (0,1/2] rigorously establishes the Pade denominator shift.",
+    "Theorem 1 lowers the sub-2d crossover at optimal ratio 1/(d+1) from d=9 to d=8 (verified at M=3, k=15) and strictly saves 1 color across 50/93 integers in [8,100], while extending verbatim to weighted requests.",
+    "Theorem 2 cleanly unifies list surplus s >= 1 and conflict chromatic number chi(H_r), using subset rank-preservation on W_v (|W_v| <= 1+d(d+s)) to break the 1/d^3 barrier to Omega(1/d^2) for all bounded-conflict request assignments.",
+    "Theorem 3 lifts Adak et al.'s 7-vertex d=2 gadget uniformly to a (2d+3)-vertex d-degenerate family G_d for every d >= 2, ruling out all 6 request pairs cleanly and giving an explicit 1-request proper L-coloring witness.",
+    "Theorem 4(2) rigorously squeezes k*(d) between Adak et al.'s upper bound and a delicate concave-minimum lower bound for d >= 4, proving the Claim 9 criterion itself has exact asymptotic limit (2-1/e)d.",
+    "Remark 1 and Section 3 are refreshingly honest about open boundaries (k=d+1 for d >= 3; analytical flow reduction [1, Claim 8] remaining outside Lean)."
+  ],
+  "weaknesses": [
+    "As Theorem 4(2) itself establishes, Theorem 1 improves the list-size ceiling only by at most an additive 1 color on ~54% of degeneracies in [8,100] and cannot improve the asymptotic leading constant 2-1/e.",
+    "Theorem 2 achieves Omega(1/d^2)-flexibility at k=d+2 only when chi(H_r)=O(1); the unconditional question of whether (d+2, Omega(1/d^2))-flexibility holds for arbitrary requests (where chi(H_r) can be Theta(d)) remains open.",
+    "Theorem 3 establishes an upper bound epsilon <= 1/4 at k=d+1 for all d >= 2, which only refutes (d+1, 1/(d+1))-flexibility at d=2 and leaves k=d+1, epsilon = 1/(d+1) open for all d >= 3.",
+    "Theorem 4(1) on weighted (2, 1/2)-flexibility of forests via a pair of disjoint proper L-colorings is elementary and essentially folklore in the flexible list coloring and list-packing literature."
+  ],
+  "potential_errors": [
+    "Theorem 1 proof (p. 4): when m - j_0 < l, applying (4) 'at most l times' gives the bound at l because M(1-1/M)^t - ((M-1)/(d+1))(1-(1-1/M)^t) is decreasing in t; this monotonicity step is valid but left implicit.",
+    "Theorem 2 statement (p. 5): omits local restatement that r(v) in L(v) and V_hat is nonempty, relying on Section 1's standing definitions; also |L(u) \\ {r(v)}| = d+s assumes exact (d+1+s)-lists (easily recovered by trimming).",
+    "Theorem 4(2) upper bound (p. 8): cites Adak et al. [1, Theorem 3] directly for k*(d) <= floor((d+2)(2-1/e)) without explicitly verifying inside the proof that [1]'s choice of M satisfies M >= 2 and k >= d+M for small d (holds with M=2 for d=1,2)."
+  ],
+  "strong_novelty_candidates": [
+    "Sharpened Claim 9 recurrence (4) via p - 1/M <= (1-1/M)p and exact discrete min-cut criterion (2) yielding sub-2d crossover at d=8 (k=15 < 16).",
+    "Conflict-chromatic weighted flexibility theorem (Theorem 2) showing epsilon >= s / (chi(H_r)(1+d(d+s))), giving Omega(1/d^2) at k=d+2 for bounded chi(H_r).",
+    "Universal (2d+3)-vertex d-degenerate 4-request mutual-exclusion family G_d for all d >= 2 (Theorem 3).",
+    "Exact asymptotic barrier k*(d) = (2-1/e)d + O(1) for the Claim 9 min-cut criterion (Theorem 4(2))."
+  ],
+  "unresolved_material_objections": []
+}
