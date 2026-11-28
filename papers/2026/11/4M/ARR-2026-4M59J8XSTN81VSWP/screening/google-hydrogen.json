@@ -1,0 +1,55 @@
+{
+  "paper_id": "ARR-2026-4M59J8XSTN81VSWP",
+  "version": "v1",
+  "version_id": "arr:version:b16e7596-8941-42d9-a032-a956b295593e",
+  "canonical_sha256": "9f9ae0c0a728c2cb44aa08abaf8450dfbbcbbda48850dd2effa4650b7d000085",
+  "provider": "Google",
+  "model_id": "hydrogen",
+  "assessed_at": "2026-11-27T23:20:00Z",
+  "prompt_version": "ARR-ASSESS-1.0",
+  "independence": "not_involved_in_manuscript",
+  "recommendation": "accept",
+  "millennium_score": 6.75,
+  "overall_stars": 7,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 5,
+      "basis": "All explicit integer inequalities (7^100 < 2^281, Schönhage m=3,4 tau-bounds), Z[eps] polynomial cancellations, Strassen operation counts, Freivalds bounds (k(6n^2-2n), 2^-30, 16^-10), dyadic ratios n^(9/4)/n^2 = 2^k, and Vandermonde alternating-binomial kernel proofs are mathematically valid and verified."
+    },
+    "rigor": {
+      "stars": 4,
+      "basis": "The zero-float exact-Z/Q certification approach avoids numerical epsilon-cancellation pitfalls, and Section 4 explicitly separates mechanized claims from imported literature theorems. Minor gaps include omitted index bounds in Theorems 2.1(2) and 3.1 and unproved exact-rank lower bounds (R=3, 13, 25) in the text."
+    },
+    "novelty": {
+      "stars": 3,
+      "basis": "The mathematical components—Strassen (1969), Schönhage (1981), Freivalds (1979), Vandermonde nullspaces, and Chen's decision-tree reduction (2026)—are known; the contribution lies in packaging them into a unified float-free Lean 4.36.0 and exact-Z/Q certificate suite rather than proving new theorems."
+    },
+    "significance": {
+      "stars": 3,
+      "basis": "Provides a clean, auditable verification baseline that prevents floating-point artifacts in border-rank tau-theorem bounds and clearly separates unconditional omega_ver = omega_C from the conditional omega_C = 9/4 assumption, though impact is bounded because the deep reductions remain external."
+    },
+    "reproducibility": {
+      "stars": 5,
+      "basis": "All numerical witnesses, integer power inequalities, polynomial identities, and Vandermonde kernel vectors are explicitly stated in the PDF and independently hand-checkable without external artifacts, backed by stated Lean 4.36.0 theorem mappings (T01-T20) and SHA-256 certificate IDs (C01-C16)."
+    }
+  },
+  "summary": "This manuscript presents MATVER-BORDERRANK-CERT-1.0, a float-free exact-Z/Q and Lean 4.36.0 certification suite inspired by Xiangle Chen's proof (arXiv:2611.34814v1) equating deterministic matrix-product verification with omega_C. Section 4 transparently discloses that Chen's decision-tree reduction and Schönhage's tau-theorem are imported rather than re-proved in Lean; the paper certifies the exact algebraic machinery across 20 Lean theorems and 16 certificates (C01-C16). All explicit calculations in the PDF are sound: Strassen's 64-entry identity and 7^100 < 2^281 (omega < 2.81); Z[eps] border-rank witnesses for T_dual (R_under <= 2) and Schönhage's family T_{m,n} (R_under <= mn+1) with pure-integer proofs of omega < 2.70 and omega < 2.55; decision-tree ceiling algebra and exact n^(9/4)/n^2 = 2^k separation ratios; Freivalds costs k(6n^2-2n) and error bounds (2^-30 < 10^-9, 16^-10 < 10^-12); and constructive rational Vandermonde nullspace witnesses blocking low-rank linear probes. Minor notational omissions aside, no mathematical errors were found.",
+  "strengths": [
+    "Exact float-free integer power certificates (7^100 < 2^281; m=3 and m=4 Schönhage tau-bounds) eliminate floating-point logarithm approximations rigorously.",
+    "All explicit Z[eps] polynomial cancellations in Theorem 2.1, Freivalds operation counts k(6n^2 - 2n), and Vandermonde kernel witnesses in Theorem 3.1 are algebraically exact.",
+    "Section 4 maintains a clear, honest verification boundary separating Lean-checked algebraic identities from imported literature theorems ([3], [6]) and the unrefereed omega_C = 9/4 assumption."
+  ],
+  "weaknesses": [
+    "The deep complexity-theoretic results (Chen's decision-tree border-rank reduction and Schönhage's asymptotic sum inequality) are imported externally rather than formalized in Lean.",
+    "Theorem 2.1(1) omits writing out the output-vector combination M_1 e_2 + M_2(eps e_1 - e_2) = eps T_dual + O(eps^2) and does not prove the lower bounds R_under >= 2 or R = 3.",
+    "Theorem 2.1(2) omits explicit index ranges for R_i and C_j (0 <= i < m-1, 0 <= j < n-1) and omits proofs for the exact-rank lower bounds R >= 13 and R >= 25.",
+    "Theorem 3.1 omits explicit 0-based index bounds (0 <= i < n, 0 <= j < n-1, n >= 2) for R_{i,j} = (i+1)^j, and Section 3.1 omits the trivial upper bound omega_ver <= omega_C in the sandwich.",
+    "The paper's title sounds broader than its actual contribution, which is formalizing elementary algebraic witnesses and corollaries rather than proving verification-vs-computation equivalence."
+  ],
+  "potential_errors": [],
+  "strong_novelty_candidates": [
+    "Integer-power zero-float certification of Schönhage tau-theorem exponent ceilings (omega < 2.70 and omega < 2.55) paired with exact Z[eps] direct-sum witnesses in Lean 4.36.0.",
+    "Constructive rational Vandermonde alternating-binomial nullspace witnesses explicitly demonstrating the oblivious low-rank linear-probe derandomization barrier."
+  ],
+  "unresolved_material_objections": []
+}
