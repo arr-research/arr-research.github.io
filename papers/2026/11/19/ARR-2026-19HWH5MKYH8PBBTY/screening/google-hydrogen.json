@@ -1,0 +1,53 @@
+{
+  "paper_id": "ARR-2026-19HWH5MKYH8PBBTY",
+  "version": "v1",
+  "version_id": "arr:version:48c07d51-743c-468c-9479-62a9b4dc0948",
+  "canonical_sha256": "ca873e56dd63003294f3aed89a4a1383837d4df7cc6e82f1434d506a87965f7a",
+  "provider": "Google",
+  "model_id": "hydrogen",
+  "assessed_at": "2026-11-28T01:00:00Z",
+  "prompt_version": "ARR-ASSESS-1.0",
+  "independence": "not_involved_in_manuscript",
+  "recommendation": "accept",
+  "millennium_score": 5.75,
+  "overall_stars": 6,
+  "criteria": {
+    "correctness_confidence": {
+      "stars": 5,
+      "basis": "All proofs in Theorems 2.1 and 2.3, Remark 2.2, and Section 3 are mathematically sound: (2^k)^2 + 3*1^2 rules out cubic residuacity via Gauss-Euler, 7|M_{3t+1}, 13|M_{6t+5}, and 19|M_{9t+2} propagate cleanly, and the 53/90 mod-90 elimination matches {18,48,78} mod 90."
+    },
+    "rigor": {
+      "stars": 5,
+      "basis": "Rigor is very high: 20 theorems are machine-checked in Lean 4.36.0 (0 sorry, 0 Classical.choice, warnings-as-errors), finite claims are audited by a zero-float Python verifier, and Section 5 explicitly isolates Layer 3 dependencies on Fu-Li-Zuo's Main Theorem A."
+    },
+    "novelty": {
+      "stars": 3,
+      "basis": "While the arithmetic proofs in Section 2 and Remark 2.2 use classical quadratic/cubic reciprocity and modular covering arguments, the paper contributes new unconditional composite families, exact covering-sieve densities up to 53/90, direct F2[X] verification of the kernel-orbit partition for T_4 and T_5, and a machine-checked Lean/zero-float certificate suite."
+    },
+    "significance": {
+      "stars": 3,
+      "basis": "The work delivers a clean formalization of elementary invariants behind Fu-Li-Zuo's criterion, eliminates 53/90 of indices k >= 4 from primality search, and certifies irreducible binary trinomials up to degree 357,913,942 (conditional on [1]). However, it neither formalizes [1]'s elliptic-curve theorem nor resolves whether infinitely many M_k are prime."
+    },
+    "reproducibility": {
+      "stars": 4,
+      "basis": "Reproducibility is strong via explicit SHA-256 digests for BinaryTrinomialsCert.lean, binary_trinomial_verifier.py, and MANIFEST.json, plus 16 certificate summaries (C01-C16) and 71 pytest checks. A minor gap within the PDF itself is that explicit prime factorizations of M_k - 1 for C06-C10 are deferred to external certificate artifacts."
+    }
+  },
+  "summary": "This paper extends Fu, Li, and Zuo's elliptic-curve irreducibility criterion for T_k(X) = X^((4^k+2)/3) + X + 1 with Lean 4.36.0 proofs, infinite modular obstruction sieves, direct F2[X] factorizations, and deterministic Lucas certificates. Twenty Lean theorems unconditionally establish the k=1 vs k>=2 congruence split, Eisenstein norm identity, and covering densities up to 5/9, while a zero-float Python verifier issues 16 SHA-256 certificates covering exact DDF of T_4 and T_5, mod-90 sieving (53/90), Lucas primality up to m_15 = 357,913,942, and Rabin-certified towers.",
+  "strengths": [
+    "Explicit three-layer verification boundary in Section 5 cleanly isolates 20 unconditional Lean 4.36.0 theorems (0 sorry, 0 Classical.choice) from finite AST-audited zero-float Python certificates and external literature dependencies.",
+    "Exact F2[X] distinct-degree factorizations of composite T_4 (2+12+72=86) and T_5 (4+26+312=342) independently corroborate the kernel-orbit partition prediction without elliptic-curve machinery, and Figures 1-3 clearly present all quantitative results.",
+    "Constructive covering sieves in Theorem 2.3 cleanly account for residue overlaps (such as 37's residue mod 18 being covered by 7 and 19's residue 11 by 13) to reach exact densities 1/2, 5/9, and 53/90."
+  ],
+  "weaknesses": [
+    "High-degree irreducibility claims for T_6 through T_15 (C06-C10, up to m_15 = 357,913,942) remain conditional on the unformalized Main Theorem A of the recent preprint [1], rather than direct polynomial-ring verification.",
+    "The PDF omits an explicit table of the prime factorizations of M_k - 1 (q_i) used in the deterministic Lucas primitive-root certificates C06-C10, requiring inspection of the external MANIFEST.json artifact to audit those inputs."
+  ],
+  "potential_errors": [],
+  "strong_novelty_candidates": [
+    "Unconditional Lean 4.36.0 proof of the k=1 vs k>=2 reciprocity boundary via M_k ≡ 3 (mod 16) and the Eisenstein norm identity M_k = (2^k)^2 + 3*1^2 ruling out cubic residuacity of 2.",
+    "Infinite modular obstruction sieves (7|M_{3t+1}, 13|M_{6t+5}, 19|M_{9t+2}) achieving exact rational covering densities of 1/2, 5/9, and 53/90 for k >= 4 while accounting for residue overlaps.",
+    "Direct bit-packed F2[X] distinct-degree factorizations of composite T_4 (2+12+72=86) and T_5 (4+26+312=342) matching the kernel-orbit partition without elliptic-curve machinery."
+  ],
+  "unresolved_material_objections": []
+}
