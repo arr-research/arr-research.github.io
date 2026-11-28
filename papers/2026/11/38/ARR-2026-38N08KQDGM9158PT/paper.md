@@ -1,0 +1,812 @@
+# The Log-Concave and kappa-Concave Steinhaus-Trybula Barriers: Tangent Stochastic Dominance, Quantile Phase Transitions, and Convolution Transitivity
+
+> Machine-readable rendition extracted from the hash-identified canonical PDF. Mathematical typography may be degraded; cite and verify against `paper.pdf`.
+
+## Page 1
+
+```text
+AIRR:ARR-2026-38N08KQDGM9158PT | v1 | 2026-11-28
+The Log-Concave and κ-Concave Steinhaus–Trybuła
+Barriers: Tangent Stochastic Dominance, Quantile
+Phase Transitions, and Convolution Transitivity
+Lluis Eriksson∗
+November 28, 2026
+Abstract
+In the classical Steinhaus–Trybuła paradox, n independent real random variables can
+form a non-transitive cycle X1 ≻ · · · ≻ Xn ≻ X1 with mini P(Xi > Xi+1) approaching
+Usiskin’s sharp spectrum 1−[4 cos2(π/(n+2))]−1, rising from the golden ratio
+√
+5−1
+2 ≈ 0.6180
+at n = 3 to 3 4 as n → ∞. We uncover a sharp structural dichotomy between unimodality
+and convexity across Borell’s continuum of κ-concave probability measures (κ ∈ [−∞, 1]):
+1. Tangent Stochastic Dominance and Exact κ-Concave Barriers: Every non-
+degenerate κ-concave random variable X is pointwise first-order stochastically domi-
+nated (X ≼st X ∗) by the extremal shifted power, exponential, or Pareto law tangent to
+its survival function Sκ X (or log SX ) at any quantile. For any two independent κ-concave
+variables with med(X) ≤ med(Y ), and consequently for every non-acyclic oriented graph
+or tournament T of arbitrary size n ≥ 3, we prove the exact sharp median-crossing ceil-
+ings:
+τκ(T ) ≤ M (κ) =
+
+
+
+1
+2 , κ = 1 (uniforms: transitive),
+13−8
+√
+2
+3 ≈ 0.56210, κ = 1 2 (2D convex bodies),
+1+2 ln 2
+4 ≈ 0.59657, κ = 0 (all log-concave),
+1
+2 + ln 3 8 ≈ 0.63733, κ = −1 (Pareto, S−1 convex),
+bridging 1 2 to 3 4 as κ → −∞ and crossing the golden ratio at κ∗ ≈ −0.4508. In particular,
+log-concave random variables can never reach even the 3-variable golden ratio
+√
+5−1
+2 (nor
+Grünbaum’s 1 − e−1 ≈ 0.6321), regardless of n.
+2. Exact Quantile-Crossing Phase Transition: For log-concave (X,Y ) with FX (0) ≥
+q and SY (0) ≥ q (λ := − ln(1 − q)), sup P(X > Y ) undergoes a sharp transition at
+λ∗ ≈ 1.25643 ((1 + 2λ∗)e−λ∗ = 1, q∗ ≈ 0.71533) from the equal-scale branch (1 −
+q)2(1 − 2 ln(1 − q)) to scale collapse 1 − q. As an immediate corollary, whenever one
+variable is deterministic, mini P(Xi > Xi+1) ≤ 1 − e−λ3 ≈ 0.54009 (attained uniquely
+by (0, Exp(1) − λ3,λ3 − Exp(1))).
+3. 1D Localization Reduction and Exponential Chain Spectrum: Via coordinate-
+wise 1D log-concave localization, τLC(Cn) reduces exactly to truncated exponentials.
+Optimal scale-ratio chains yield strictly increasing lower bounds 0.54009 (n = 3), 0.54382
+(n = 4), 0.54691 (n = 5), converging to p∗ Exp ≈ 0.54912 (root of (1 + (e + 2)c)e−2c = 1),
+while one-sided chains converge to p+ Exp ≈ 0.51955 (ep2(− ln p) = 1 − p).
+4. Unimodal Zero-Penalty vs. Odd-Cumulant Convolution Transitivity: Uni-
+modal (even C ∞) random variables suffer zero Steinhaus–Trybuła penalty, achieving
+the full Usiskin spectrum 1 − 1 4 cos2 (π/(n+2)) → 3 4 for every n ≥ 3. Conversely, under
+∗Independent researcher, AIRR.SCIENCE (editor@airr.science). Founder verification: AIRR-FOUNDER-1.0.
+Manuscript licensed under CC-BY-4.0; code and formal proofs licensed under MIT.
+1
+```
+
+---
+
+## Page 2
+
+```text
+k-fold i.i.d. convolution S(k) i = X (1) i + · · · + X (k) i , every finite log-concave family col-
+lapses asymptotically to the transitive lexicographic weak order of its alternating odd
+cumulants (κ1, −κ3, +κ5,... ), with zero even-cumulant cross-terms at leading order
+k−(m−1/2).
+The core algebraic factorizations, rational hierarchy inequalities, inductive convex-body mar-
+gins, and Edgeworth parity lemma (10 theorems) are formally certified in Lean 4.36.0 with
+zero sorry.
+1 Introduction
+Let X1,...,Xn be independent real-valued random variables. Under the stochastic precedence
+relation Xi ≻ Xj ⇐⇒ P(Xi >Xj ) > 1 2 , Steinhaus and Trybuła [7, 8] discovered that pairwise
+comparisons can form strict cycles X1 ≻ X2 ≻ · · · ≻ Xn ≻ X1. For any oriented graph or
+tournament T = (V,A) on n vertices and any class F of probability distributions on R, define
+its Steinhaus–Trybuła capacity
+τF (T ) := sup
+X1,...,Xn∈F
+independent
+min
+(i→j)∈A
+P(Xi >Xj ). (1)
+For the directed n-cycle Cn over unrestricted distributions Fall, Trybuła [8] and Usiskin [9]
+determined the exact spectrum
+τall(Cn) = 1 − 1 4 cos2( π n+2 ) , (2)
+which equals ϕ−1 =
+√
+5−1
+2 ≈ 0.61803 at n = 3, 2 3 at n = 4, and increases strictly to 3 4 as n → ∞.
+Inspecting the extremal distributions achieving (2) reveals a striking structural feature: ev-
+ery variable in Trybuła’s and Usiskin’s constructions is a bimodal two-point distribution placing
+separated atoms on opposite sides of its competitors. Meanwhile, symmetric distributions (in-
+cluding Gaussians and uniforms) are trivially transitive (τsym(T ) = 1 2 for every non-acyclic T ).
+Between unimodal distributions and symmetric distributions lies Borell’s classical continuum
+of κ-concave probability measures [2, 6] (κ ∈ [−∞, 1]), anchored at κ = 0 by log-concave distri-
+butions (exponential, Gamma(α ≥ 1), Weibull(α ≥ 1), Beta(α,β ≥ 1), Gaussian, and all 1D
+marginals of uniform measures on convex bodies).
+A remarkably simple observation already separates log-concave distributions from 3 4 : in any
+directed cycle Cn, ∑n i=1 E[Xi − Xi+1] = 0 forces at least one arc with E[Xi − Xi+1] ≤ 0. By
+the Prékopa–Leindler theorem [6], Z = Xi − Xi+1 is log-concave, so Grünbaum’s inequality [4]
+yields P(Xi > Xi+1) ≤ 1 − e−1 ≈ 0.63212. Yet Grünbaum’s bound still exceeds the 3-variable
+golden ratio ϕ−1 ≈ 0.61803 and leaves open both the sharp barrier for log-concave measures
+and the behavior across the entire κ-concave and unimodal hierarchy.
+In this paper we resolve these questions across four interlocking regimes, summarized in
+Table 1. Rather than bounding means via Grünbaum’s theorem, we work directly with medi-
+ans and quantiles via a five-line Tangent Stochastic Dominance Lemma for κ-concave survival
+functions, establishing exact sharp ceilings across κ ∈ [−∞, 1], an exact quantile phase transi-
+tion for log-concave laws, a 1D localization reduction with explicit exponential-chain limits, a
+zero-penalty unimodal Usiskin theorem, and a universal odd-cumulant convolution transitivity
+law.
+2
+```
+
+---
+
+## Page 3
+
+```text
+Distribution Class (κ) Sharp Median-Crossing Ceiling M (κ) Extremal Pair (med = 0) Reference
+Uniforms / 1D intervals (κ = 1) 1 2 = 0.50000 (strict transitivity) Unif[−1, 1] Thm. 2.2
+2D convex bodies / concave f (κ = 1 2 ) 13 − 8
+√
+2
+3 ≈ 0.56210 ±
+( 1√
+2 − Beta(2, 1)
+)
+Thm. 2.2
+All log-concave laws (κ = 0) 1 + 2 ln 2 4 ≈ 0.59657 < ϕ−1 ± ( Exp(1) − ln 2 ) Thm. 2.2
+Golden-ratio threshold (κ∗ ≈ −0.4508, u = 1) M (κ∗; 1) =
+√
+5 − 1
+2 ≈ 0.61803 ±
+(
+Pareto(γ∗) − 21/γ∗ ) Rem. 2.3
+Cauchy-tail Pareto (κ = −1) 1 2 + ln 3 8 ≈ 0.63733 ± ( Pareto(1) − 2 ) Thm. 2.2
+Unimodal / general (κ → −∞) 3 4 = 0.75000 (zero penalty on Cn!) Spike + flat tail Thm. 5.1
+Table 1: Exact median-crossing barriers M (κ) and universal tournament ceilings τκ(T ) ≤ M (κ)
+across Borell’s κ-concave continuum. Equal-scale optimality M (κ) = M (κ; 1) is proved analyt-
+ically at κ ∈ {1, 1 2 , 0, −1} (satisfying the Lean-certified strict chain 1 2 <M ( 1 2 ) <M (0) <ϕ−1 <
+1−e−1 <M (−1) < 3 4 ); for intermediate κ (such as κ∗ ≈ −0.4508), the equal-scale value M (κ; 1)
+is reported (see Open Problem 2).
+2 Tangent Stochastic Dominance and Exact κ-Concave Barriers
+Recall Borell’s definition [2]: a Borel probability measure µ on R is κ-concave (κ ∈ (−∞, 1]) if
+for all Borel sets A,B ⊂ R with µ(A)µ(B) > 0 and every t ∈ (0, 1),
+µ
+(
+tA + (1 − t)B
+)
+≥
+{(
+tµ(A)κ + (1 − t) µ(B)κ)1/κ, κ ⁄= 0,
+µ(A)t µ(B)1−t, κ = 0.
+By Borell’s characterization [2], every non-degenerate κ-concave probability measure on R is
+absolutely continuous with respect to Lebesgue measure with an interval support (and every
+Dirac mass δc is degenerate κ-concave for all κ). For κ = 0 these are precisely the log-concave
+distributions; for κ = 1/k (k ∈ N≥2), by Brunn–Minkowski they include all 1D linear marginals
+of uniform measures on k-dimensional convex bodies K ⊂ Rk (in particular, κ = 1 2 corresponds
+to concave densities on intervals); and for κ = −1/γ < 0 they capture heavy-tailed Pareto-type
+densities with f κ/(1−κ) = f −1/(γ+1) convex on their support.
+For any random variable X with law µ, write its CDF FX (x) := P(X ≤ x) and survival
+function SX (x) := P(X >x). Taking half-lines A = (x, ∞) and B = (y, ∞) in Borell’s definition
+immediately yields tA + (1 − t)B = (tx + (1 − t)y, ∞), whence directly:
+• for κ> 0, Sκ X is concave on {SX > 0} (and F κ X is concave on {FX > 0});
+• for κ = 0, log SX is concave on {SX > 0} (and log FX is concave on {FX > 0});
+• for κ = −1/γ < 0 (γ > 0), Sκ X = S−1/γ X is convex on {SX > 0} (and F κ X = F −1/γ X is convex
+on {FX > 0}).
+This one-line observation drives our foundational comparison principle.
+Lemma 2.1 (κ-Concave Tangent Stochastic Dominance Lemma). Let X be a non-degenerate
+κ-concave random variable on R (κ ∈ (−∞, 1]), and fix any x0 ∈ R with q := FX (x0) ∈ (0, 1)
+(so SX (x0) = 1 − q ∈ (0, 1)). Then there exists a scale parameter α> 0 such that X is pointwise
+first-order stochastically dominated (X ≼st X ∗, i.e., SX (x) ≤ SX ∗ (x) for all x ∈ R) by the
+extremal shifted κ-concave law X ∗ with survival function:
+(i) (κ ∈ (0, 1], writing real k := 1/κ ∈ [1, ∞)): SX ∗ (x) = min
+(
+1,
+(
+(1 − q)1/k − α(x − x0) )k + ) ,
+i.e., X ∗ = x0 + α−1( (1 − q)1/k − B ) with B ∼ Beta(k, 1) (density kyk−1 on [0, 1]);
+(ii) (κ = 0, log-concave): SX ∗ (x) = min ( 1, (1 − q)e−α(x−x0)) , i.e., X ∗ = x0 + α−1( E − λ ) with
+E ∼ Exp(1) and λ := − ln(1 − q) > 0;
+3
+```
+
+---
+
+## Page 4
+
+```text
+(iii) (κ = −1/γ < 0): SX ∗ (x) =
+(
+max
+(
+1, (1 − q)−1/γ + α(x − x0) ))−γ , i.e., X ∗ = x0 + α−1( P −
+(1 − q)−1/γ ) with P ∼ Pareto(γ) (SP (y) = y−γ on [1, ∞)).
+Proof. Because X is non-degenerate κ-concave, its law has a density supported on an open
+interval (a,b) ⊆ R, and SX (x0) = 1 − q ∈ (0, 1) implies x0 ∈ (a,b), which lies in the open
+interior of {SX > 0}. In case (ii), log SX is finite and concave on (−∞,b), so it admits a finite
+supergradient −α at x0: log SX (x) ≤ ln(1 − q) − α(x − x0) for all x<b (and trivially SX (x) = 0
+for x ≥ b). Since SX is non-increasing, α ≥ 0; if α = 0, then SX (x) ≤ 1 − q < 1 for all x ∈ R,
+contradicting limx→−∞ SX (x) = 1. Thus α> 0, and SX (x) ≤ min
+(
+1, (1−q)e−α(x−x0)) = SX ∗ (x)
+for all x ∈ R. In case (i), S1/k X is concave on (−∞,b) with a supergradient −α< 0 at x0 (again
+α > 0 since SX (−∞) = 1 > 1 − q), yielding SX (x) ≤ min
+(
+1, ((1 − q)1/k − α(x − x0))k + ) . In
+case (iii), S−1/γ X is convex on (−∞,b) with a subgradient +α> 0 at x0 (if α = 0, SX (x) ≤ 1 − q
+everywhere, contradiction), yielding S−1/γ X (x) ≥ (1 − q)−1/γ + α(x − x0) for all x<b. Whenever
+(1 − q)−1/γ + α(x − x0) ≤ 1 we trivially have SX (x) ≤ 1 = SX ∗ (x), while whenever (1 − q)−1/γ +
+α(x − x0) > 1 raising to the −γ power gives SX (x) ≤
+(
+(1 − q)−1/γ + α(x − x0) )−γ = SX ∗ (x).
+Applying Lemma 2.1 simultaneously to X and −Y yields exact sharp median-crossing
+barriers—and hence universal Steinhaus–Trybuła ceilings for every non-acyclic tournament of
+any size.
+Theorem 2.2 (Exact κ-Concave Median-Crossing and Universal Tournament Barriers). Let
+X,Y be independent κ-concave random variables on R satisfying med(X) ≤ med(Y ).
+(a) Uniforms (κ = 1): P(X > Y ) ≤ M (1) := 1 2 (every 1-concave variable is uniform on an
+interval or a point mass, hence symmetric; τ1(T ) = 1 2 for every non-acyclic T ).
+(b) 2D convex bodies / concave densities (κ = 1 2 ):
+P(X >Y ) ≤ M
+( 1
+2
+)
+:= 13 − 8
+√
+2
+3 ≈ 0.56209717. (3)
+(c) All log-concave distributions (κ = 0):
+P(X >Y ) ≤ M (0) := 1 + 2 ln 2 4 ≈ 0.59657359. (4)
+(d) Cauchy-tail Pareto distributions (κ = −1, S−1 convex):
+P(X >Y ) ≤ M (−1) := 1 2 + ln 3 8 ≈ 0.63732654. (5)
+Each bound (a)–(d) is exact and attained by the symmetric extremal pair (X ∗, −Y ∗) of
+Lemma 2.1 at q = 1 2 with equal scales (α = β = 1). Consequently, for every n ≥ 3, every
+non-acyclic oriented graph or tournament T on n vertices, and each κ ∈ {1, 1 2 , 0, −1},
+τκ(T ) ≤ M (κ). (6)
+In particular, τLC(T ) ≤ 1+2 ln 2 4 <
+√
+5−1
+2 < 1 − e−1 < 3 4 for every non-acyclic T of arbitrary size.
+Proof. First note how (6) follows in two lines from (a)–(d): every non-acyclic directed graph T
+contains a directed cycle v1 → v2 → · · · → vℓ → v1. Since med(Xv1 ),..., med(Xvℓ ) cannot de-
+crease strictly around a closed loop, there exists an arc (vi → vi+1) with med(Xvi ) ≤ med(Xvi+1 ),
+whence mine∈A(T ) P(Xu >Xv) ≤ P(Xvi >Xvi+1 ) ≤ M (κ).
+Now let X,Y be independent κ-concave variables with med(X) ≤ med(Y ), and pick x0 ∈
+[med(X), med(Y )]; shifting by −x0, assume x0 = 0. Then qX := FX (0) ≥ 1 2 and q−Y :=
+4
+```
+
+---
+
+## Page 5
+
+```text
+F−Y (0) = P(Y ≥ 0) ≥ 1 2 . If qX = 1 (including any point mass δc with c ≤ 0), then X ≤ 0 a.s.
+and P(X > Y ) ≤ P(Y < 0) = 1 − q−Y ≤ 1 2 ≤ M (κ); symmetrically, if q−Y = 1 (including any
+point mass δc with c ≥ 0), then Y ≥ 0 a.s. and P(X >Y ) ≤ P(X > 0) = 1 − qX ≤ 1 2 ≤ M (κ).
+Thus we may assume qX ,q−Y ∈ [ 1 2 , 1) strictly, so both X and −Y are non-degenerate κ-concave
+variables with qX ,q−Y ∈ (0, 1). Note that −Y is also κ-concave. Applying Lemma 2.1 at
+x0 = 0 (and using monotonicity in q ≥ 1 2 ) yields scales α,β > 0 such that X ≼st α−1W1 and
+−Y ≼st β−1W2, where W1,W2 are i.i.d. copies of the unit-scale extremal κ-concave variable
+at q = 1 2 . By independence and monotonicity of first-order stochastic dominance, setting
+θ := β α+β ∈ (0, 1),
+P(X >Y ) = P
+(
+X + (−Y ) > 0
+)
+≤ P
+(
+θW1 + (1 − θ)W2 > 0
+)
+=: Mκ(θ). (7)
+By symmetry Mκ(θ) = Mκ(1 − θ), it suﬀices to prove Mκ(θ) ≤ Mκ( 1 2 ) for all θ ∈ (0, 1 2 ].
+Proof of (a) (κ = 1). Since FX and SX are both concave on their positive sets and FX =
+1−SX on the open support (a,b), FX is aﬀine on (a,b), so X is uniform (hence symmetric around
+med(X)). Thus X − Y is symmetric around med(X) − med(Y ) ≤ 0, giving P(X >Y ) ≤ 1 2 .
+Proof of (b) (κ = 1 2 ). Here Wi = a − Bi with a := 2−1/2 and B1,B2 iid∼ Beta(2, 1) (density 2y
+on [0, 1]), so M1/2(θ) = P(θB1 + (1 − θ)B2 <a). For θ ∈ (0, 1 2 ], there are two regimes according
+to whether 1 − θ ≥ a:
+• Regime I (θ ∈ (0, 1 − a]): For every y ∈ [0, 1], a−θy 1−θ ∈ [0, 1], so M1/2(θ) = ∫ 1 0 2y ( a−θy 1−θ )2dy.
+Differentiating gives
+M ′ 1/2(θ) = 4 (1 − θ)3
+∫ 1
+0
+y(a − y)(a − θy) dy.
+Since both y ↦→ a − y and y ↦→ a − θy are strictly decreasing on [0, 1] and a − θy >
+0, Chebyshev’s integral inequality with respect to the probability measure 2ydy yields∫ 1
+0 2y(a − y)(a − θy) dy >
+(∫ 1
+0 2y(a − y) dy
+)(∫ 1
+0 2y(a − θy) dy
+)
+= (a − 2 3 )(a − 2θ 3 ) > 0,
+because a = 2−1/2 > 2 3 (more generally, 2−1/k > k k+1 ⇐⇒ (k + 1)k > 2kk for all k ≥ 2,
+formally certified in Lean 4 as convex_body_chebyshev_margin_all_k).
+• Regime II (θ ∈ (1 − a, 1 2 )): Putting y∗ := a−1+θ θ ∈ (0, 1), we have M1/2(θ) = y2 ∗ +∫ 1
+y∗ 2y
+( a−θy
+1−θ
+)2dy. The boundary terms at y = y∗ cancel upon differentiation since a−θy∗ 1−θ = 1,
+leaving M ′ 1/2(θ) = 4 (1−θ)3 ∫ 1 y∗ y(a − y)(a − θy) dy. Changing variable to t := a−y 1−θ (so
+y = a − (1 − θ)t, a − y = (1 − θ)t, a − θy = (1 − θ)(a + θt), dy = −(1 − θ) dt, cancelling
+(1 − θ)3 identically, while t runs from t1 := − 1−a 1−θ to t2 := 1−a θ ) gives
+M ′ 1/2(θ) = 4
+∫ t2
+t1
+t
+(
+a2 − a(1 − 2θ)t − wt2) dt, w := θ(1 − θ).
+Evaluating the elementary polynomial integral and factoring via the identities (1−θ)2 −θ2 =
+1 − 2θ, (1 − θ)3 + θ3 = 1 − 3w, and (1 − θ)4 − θ4 = (1 − 2θ)(1 − 2w) (certified in Lean 4 as
+kappa_half_power_identities and kappa_half_linear_factor_exact) yields the exact
+closed form
+M ′ 1/2(θ) = (1 − a)2(1 − 2θ) 3w3 ( 6w − 5 2 + √ 2 ) .
+On θ ∈ (1−a, 1 2 ), w = θ(1−θ) >a(1−a) =
+√
+2−1
+2 , whence 6w− 5 2 + √ 2 > 3( √ 2−1)− 5 2 + √ 2 =
+8
+√
+2−11
+2 > 0 since 128 > 121 (certified as kappa_half_value_and_positivity).
+Thus M1/2(θ) is strictly increasing on (0, 1 2 ], attaining its unique maximum at θ = 1 2 : setting
+t =
+√
+2 − 1,
+M1/2
+( 1
+2
+)
+= t2 +
+∫ 1
+t
+2y(
+√
+2 − y)2 dy = 13 − 8
+√
+2
+3
+5
+```
+
+---
+
+## Page 6
+
+```text
+(algebraic evaluation certified in Z[
+√
+2] by kappa_half_value_and_positivity).
+Proof of (c) (κ = 0). This is the special case q = 1 2 (λ = ln 2 <λ∗ ≈ 1.2564) of Theorem 3.1
+below, which proves M0(θ) ≤ M0( 1 2 ) = (1 + 2 ln 2)e−2 ln 2 = 1+2 ln 2 4 .
+Proof of (d) (κ = −1). Here Wi = Pi − 2 with P1,P2 iid∼ Pareto(1) (SP (y) = 1/y on [1, ∞)),
+so M−1(θ) = P(θP1 + (1 − θ)P2 > 2). Splitting at y∗ := 1+θ θ > 1 (above which 2−θy 1−θ ≤ 1,
+contributing 1/y∗ = θ 1+θ ) and using the partial fraction identity 1 y2(2−θy) = 1 2y2 + θ 4y + θ2 4(2−θy)
+together with (1 + θ)(2 − θ) = 2 + θ(1 − θ) (both certified in Lean 4 as pareto_kappa_neg1_
+identities) gives
+M−1(θ) = θ 1 + θ + (1 − θ) ∫ (1+θ)/θ 1 dy y2(2 − θy)
+= θ 1 + θ + 1 − θ 2(1 + θ) + θ(1 − θ) 4 ln (1 + θ)(2 − θ) θ(1 − θ) = 1 2 + w 4 ln ( 1 + 2 w ) ,
+where w := θ(1 − θ) ∈ (0, 1 4 ]. Because d dw [ w ln(1 + 2 w ) ] = ln(1 + 2 w ) − 2 w+2 > 0 for all w> 0 (as
+ln(1 + x) > x 1+x for x = 2 w > 0), M−1(θ) is strictly increasing in w, attaining its unique global
+maximum at w = 1 4 (θ = 1 2 ) with value 1 2 + 1 16 ln 9 = 1 2 + ln 3 8 .
+Finally, the strict separation hierarchy 1 2 <M ( 1 2 ) <M (0) <
+√
+5−1
+2 < 1 − e−1 <M (−1) < 3 4
+is certified in Lean 4 as exact_kappa_hierarchy_cert.
+Remark 2.3 (Full Continuum M (1/k) and M (−1/γ)). For general k-dimensional convex body
+projections (κ = 1/k, k ∈ N≥1), the equal-scale extremal pair (W1, −W2) with a = 2−1/k and
+t = 2a − 1 evaluates in closed form to
+M
+( 1
+k ; 1
+)
+= tk +
+k∑
+j=0
+(k
+j
+)
+(2a)k−j (−1)j k k + j ( 1 − tk+j ) ,
+converging smoothly from 1 2 (k = 1) and 13−8
+√
+2
+3 (k = 2) to M (0) = 1+2 ln 2 4 as k → ∞ (since
+(2−1/k − x/k)k + → 1 2 e−x). For heavy-tailed Pareto laws (κ = −1/γ, γ > 0), writing W1 = P1 − a
+with a = 21/γ and substituting w = (a + W1)−γ = P −γ 1 ∈ (0, 1] (with wb := (2a − 1)−γ ) gives
+M
+(
+− 1 γ ; 1 ) = wb + ∫ 1 wb ( 2a − w−1/γ )−γ dw.
+As γ → 0+, wb = 2−γ−1(1 − 1 2a )−γ → 1 2 and for every w ∈ ( 1 2 , 1], (2a − w−1/γ )−γ = 2−γ−1( 1 −
+1
+2 (2w)−1/γ )−γ → 1 2 ; hence by bounded convergence M (−1/γ; 1) → 1 2 + ∫ 1 1/2 1 2 dw = 3 4 ! It crosses
+the golden ratio
+√
+5−1
+2 at γ∗ ≈ 2.21831 (κ∗ ≈ −0.45079, just above the finite-variance threshold
+γ = 2; Figure 1(a)).
+3 Exact Quantile-Crossing Phase Transition for Log-Concave
+Laws
+Theorem 2.2(c) evaluated the log-concave crossing supremum at the median q = 1 2 . What
+happens at an arbitrary quantile level q ∈ (0, 1)? Remarkably, the optimal scale ratio undergoes
+a sharp symmetry-breaking transition.
+Theorem 3.1 (Exact Log-Concave Quantile-Crossing Phase Transition). Fix q ∈ (0, 1) and set
+λ := − ln(1 − q) > 0. Let λ∗ ≈ 1.25643121 be the unique positive root of (1 + 2λ)e−λ = 1, and
+6
+```
+
+---
+
+## Page 7
+
+```text
+Figure 1: (a) The equal-scale median-crossing barrier curve M (κ; 1) across Borell’s κ-concave
+continuum (Theorem 2.2 and Remark 2.3), coinciding analytically with the global supremum
+M (κ) at all four exact milestones κ ∈ {1, 1 2 , 0, −1} (red circles), crossing the golden ratio at
+κ∗ ≈ −0.4508 (green diamond), and approaching 3 4 as κ → −∞. (b) Steinhaus–Trybuła cycle
+margin τ (Cn) vs. n: unimodal laws achieve the full Usiskin curve up to 3 4 (red), whereas log-
+concave laws sit strictly below 1+2 ln 2 4 ≈ 0.5966 (blue dashed) for all n, with two-sided and
+one-sided exponential chains achieving 0.5401 → 0.5491 (green) and 0.5195 (orange).
+put q∗ := 1 − e−λ∗ ≈ 0.71533186. Over all independent log-concave random variables (X,Y )
+satisfying FX (0) ≥ q and SY (0) ≥ q,
+sup
+X,Y indep. LC
+FX (0)≥q, SY (0)≥q
+P(X >Y ) =
+
+
+
+(1 − q)2( 1 − 2 ln(1 − q) ) , 0 <q ≤ q∗ (unique u = 1),
+1 − q, q∗ <q < 1 (collapse u → 0+, ∞).
+(8)
+Proof. If FX (0) = 1 (so X ≤ 0 a.s.), then P(X > Y ) ≤ P(Y < 0) ≤ 1 − SY (0) ≤ 1 − q;
+symmetrically, if F−Y (0) = P(Y ≥ 0) = 1, then P(X > Y ) ≤ P(X > 0) = 1 − FX (0) ≤ 1 − q.
+Since sup P(X >Y ) ≥ 1−q (attained in the limit below), we may assume FX (0),F−Y (0) ∈ [q, 1)
+strictly, so both X and −Y are non-degenerate log-concave variables. By Lemma 2.1(ii) applied
+to X and −Y at x0 = 0, we have X ≼st α−1(E1 − λ) and −Y ≼st β−1(E2 − λ) for i.i.d.
+E1,E2 ∼ Exp(1) and scales α,β > 0. Setting θ := β α+β = 1 2 − t with t ∈ [0, 1 2 ) (by symmetry
+θ ↔ 1 − θ),
+P(X >Y ) ≤ P
+(
+θE1 + (1 − θ)E2 >λ
+)
+= ψλ( 1 2 + t) − ψλ( 1 2 − t) 2t =: hλ(t),
+where ψλ(s) := se−λ/s for s > 0, with endpoint values hλ(0) = ψ′ λ( 1 2 ) = (1 + 2λ)e−2λ =
+(1 − q)2(1 − 2 ln(1 − q)) and limt→1/2− hλ(t) = ψλ(1) = e−λ = 1 − q.
+Differentiating hλ(t) yields 2t2h′ λ(t) = Nλ(t) := t ( ψ′ λ( 1 2 + t) + ψ′ λ( 1 2 − t) ) − ( ψλ( 1 2 + t) −
+ψλ( 1 2 − t) ) , with Nλ(0) = 0 and
+N ′ λ(t) = t ( ψ′′ λ( 1 2 + t) − ψ′′ λ( 1 2 − t) ) , where ψ′′ λ(s) = λ2 s3 e−λ/s > 0.
+To determine the sign of N ′ λ(t) on (0, 1 2 ), consider the log-ratio
+Rλ(t) := ln ψ′′ λ( 1 2 − t) ψ′′ λ( 1 2 + t) = 3 ln 1 + 2t 1 − 2t − 8λt 1 − 4t2 ,
+7
+```
+
+---
+
+## Page 8
+
+```text
+which satisfies Rλ(0) = 0 and limt→1/2− Rλ(t) = −∞. Differentiating and factoring the numer-
+ator (certified in Lean 4 as logconcave_derivative_numerator_identity) yields
+R′ λ(t) = 12(1 − 4t2) − 8λ(1 + 4t2) (1 − 4t2)2 = 4 [ (3 − 2λ) − (12 + 8λ)t2] (1 − 4t2)2 .
+• If λ ≥ 3 2 , then R′ λ(t) < 0 on all of (0, 1 2 ), so Rλ(t) < 0, N ′ λ(t) > 0, Nλ(t) > 0, and hλ is
+strictly increasing on [0, 1 2 ), attaining its supremum e−λ as t → 1 2 −.
+• If 0 < λ < 3 2 , then R′ λ(t) starts positive at t = 0 and crosses zero at most once on (0, 1 2 );
+hence Rλ(t) increases from 0 to a positive peak and decreases strictly to −∞, crossing zero
+at a unique point t0 ∈ (0, 1 2 ). Consequently N ′ λ(t) < 0 on (0,t0) and N ′ λ(t) > 0 on (t0, 1 2 ),
+so Nλ(t) decreases from 0 on (0,t0) and increases on (t0, 1 2 ), changing sign from negative to
+positive at most once. Thus hλ(t) is unimodal-downward on [0, 1 2 ), so its global supremum
+is attained at one of its two endpoints:
+sup
+t∈[0,1/2)
+hλ(t) = max
+(
+(1 + 2λ)e−2λ, e−λ
+)
+.
+Because ϕ(λ) := (1 + 2λ)e−λ satisfies ϕ(0) = 1, ϕ′(λ) = (1 − 2λ)e−λ (strictly increasing on (0, 1 2 ),
+strictly decreasing on ( 1 2 , ∞)), and limλ→∞ ϕ(λ) = 0, there is a unique positive root λ∗ ∈ ( 1 2 , 3 2 )
+of ϕ(λ) = 1, with ϕ(λ) ≥ 1 on (0,λ∗] and ϕ(λ) < 1 on (λ∗, ∞). Finally, the u = 1 branch is
+attained by (E1 − λ, λ − E2), while the 1 − q = e−λ branch is approached by the admissible
+family (E1 − λ, β−1(λ − E2)) as β → ∞ (where FX (0) = SY (0) = 1 − e−λ = q for every β > 0
+and θ = β 1+β → 1−; symmetrically (α−1(E1 − λ), λ − E2) as α → ∞, θ → 0+), proving (8).
+Corollary 3.2 (Exact Point-Mass + Two-Log-Concave Cycle Capacity). Let X1,X2,X3 be
+independent random variables with X2,X3 log-concave, and set p := min
+(
+P(X1 >X2), P(X2 >
+X3), P(X3 > X1)
+)
+. Suppose either X1 = c is deterministic, or more generally there exists a
+point x∗ ∈ R such that F2(x∗) ≥ p and S3(x∗) ≥ p. Then
+p ≤ 1 − e−λ3 ≈ 0.54009345, (9)
+where λ3 ≈ 0.77673197 is the unique positive root of 1 − e−λ = (1 + 2λ)e−2λ. When X1 = c
+is deterministic, equality in (9) is attained uniquely (up to common aﬀine transformation) by
+(0, Exp(1) − λ3, λ3 − Exp(1)).
+Proof. If X1 = c is deterministic, then F2(c) ≥ P(c > X2) ≥ p and S3(c) = P(X3 > c) ≥ p,
+so x∗ := c satisfies the hypothesis. Shifting x∗ to 0, we have F2(0) ≥ p and S3(0) ≥ p. If
+p = 0 then (9) is trivial; if p > q∗ ≈ 0.7153, then Theorem 3.1 (applied at q = p) yields
+p ≤ P(X2 >X3) ≤ 1 − p, giving p ≤ 1 2 <q∗, a contradiction. Thus 0 <p ≤ q∗, and Theorem 3.1
+gives p ≤ P(X2 > X3) ≤ (1 + 2λ)e−2λ where λ := − ln(1 − p) > 0. Since 1 − e−λ is strictly
+increasing and (1 + 2λ)e−2λ is strictly decreasing in λ> 0, this forces λ ≤ λ3 and p ≤ 1 − e−λ3 .
+For uniqueness when X1 = 0 achieves equality p = 1 − e−λ3 ∈ ( 1 2 ,q∗): neither X2 nor X3
+can satisfy F2(0) = 1 or S3(0) = 1 (which would force P(X2 > X3) ≤ 1 − p < p). Hence
+Lemma 2.1(ii) yields tangent upper bounds X2 ≼st X ∗ 2 and −X3 ≼st −X ∗ 3 . Equality P(X2 >
+X3) = (1 + 2λ3)e−2λ3 forces F2(0) = S3(0) = p, equal tangent scales α = β (as hλ3 (t) <hλ3 (0)
+for all t ∈ (0, 1 2 )), and P(X2 > X3) = P(X2 > X ∗ 3 ) = P(X ∗ 2 > X ∗ 3 ). Since X ∗ 3 has a strictly
+positive density on (−∞,α−1λ3) and SX2 ≤ SX ∗ 2 are continuous, equality ∫ SX2 (y) dµX ∗ 3 (y) =∫
+SX ∗ 2 (y) dµX ∗ 3 (y) forces SX2 (x) = SX ∗ 2 (x) for all x ≤ α−1λ3. In particular, on (−α−1λ3,α−1λ3)
+the density of X2 coincides with fX ∗ 2 (x) = αe−αx−λ3 , so log fX2 (x) = ln α−λ3 −αx is aﬀine there.
+By concavity of log fX2 , we have fX2 (x) ≤ αe−αx−λ3 = fX ∗ 2 (x) for all x > α−1λ3; since both
+densities integrate to the same tail mass SX2 (α−1λ3) = SX ∗ 2 (α−1λ3) = e−2λ3 on (α−1λ3, ∞), it
+follows that fX2 ≡ fX ∗ 2 a.e. on R, hence X2 d= X ∗ 2 and symmetrically X3 d= X ∗ 3 .
+8
+```
+
+---
+
+## Page 9
+
+```text
+Figure 2: Exact quantile-crossing phase transition for log-concave random variables (The-
+orem 3.1). (a) Sharp supremum sup P(X > Y ) vs. quantile level q: equal-scale branch
+(1 − q)2(1 − 2 ln(1 − q)) dominates for q ≤ q∗ ≈ 0.7153, switching continuously with a slope
+kink to scale collapse 1 − q for q > q∗. (b) Normalized crossing profile G(λ,λ; u)/e−λ, where
+G(λ,λ; u) := P(E1 + uE2 > (1 + u)λ) = hλ
+(
+| 1 2 − 1 1+u | ) for u = α/β, illustrating the transition
+from a unique central peak at u = 1 (λ<λ∗) to a central well (λ>λ∗).
+4 1D Localization and Exact Exponential-Chain Spectrum
+How close can log-concave n-cycles come to the universal ceiling M (0) = 1+2 ln 2 4 ≈ 0.59657? We
+first reduce the infinite-dimensional variational problem for τLC(Cn) to a 3n-dimensional family
+via 1D localization, and then solve the exact recurrence governing shifted-exponential cycles.
+Theorem 4.1 (Localization and Exponential-Chain Limits). (a) Localization Reduction: For
+every n ≥ 3,
+τLC(Cn) = sup
+X1,...,Xn indep.
+truncated exponentials
+min
+1≤i≤n
+P(Xi >Xi+1), (10)
+where a truncated exponential has density f (x) ∝ eαx1[a,b](x) with α ∈ R and −∞ ≤ a <
+b ≤ ∞ (including uniforms α = 0 and half-line exponentials).
+(b) Two-Sided Exponential Chain Spectrum: For every m ≥ 1, the odd cycle C2m+1
+admits independent shifted exponentials X0 = 0, Xj = sj (Ej − cj ) (1 ≤ j ≤ m), and
+X2m+1−j = sj (cj − E2m+1−j ) (1 ≤ j ≤ m) governed by the optimal scale-ratio recurrence
+rj := sj /sj+1 = 1 cj − 1 and
+c1 = − ln(1 − p), cj+1 = Tp(cj ) := 1 − cj + ln cj − ln(1 − p), (11)
+yielding strictly increasing lower bounds τLC(C2m+1) ≥ p2m+1 (p3 ≈ 0.540093, p5 ≈
+0.546913, p7 ≈ 0.548487, p9 ≈ 0.548926, and even-cycle bounds p4 ≈ 0.543821, p6 ≈
+0.547726), converging monotonically as m → ∞ to
+p∗ Exp = (1 + 2c∗)e−2c∗ ≈ 0.5491157531, (12)
+where c∗ ≈ 0.7630687272 is the unique root in ( 1 2 , 1) of ( 1 + (e + 2)c ) e−2c = 1.
+(c) One-Sided (All Right-Skewed) Exponential Limit: Even when every variable is
+restricted to be right-skewed (Xj = sj (Ej −cj ) with sj > 0, plus X0 = 0), the recurrence (11)
+achieves non-transitivity for all n ≥ 3 and converges as n → ∞ to p+ Exp ≈ 0.5195465381,
+the unique root in ( 1 2 ,e−1/2) of ep2(− ln p) = 1 − p.
+9
+```
+
+---
+
+## Page 10
+
+```text
+Proof. Proof of (a). Let X1,...,Xn be independent log-concave variables satisfying mini P(Xi >
+Xi+1) >t ≥ 1 2 . Convolving each Xi with ϵZi (Zi iid∼ N (0, 1)) preserves log-concavity by Prékopa–
+Leindler and yields smooth C∞ densities; since no adjacent pair can be identical point masses
+(which would yield P(Xi >Xi+1) = 0 <t), dominated convergence gives mini P(X (ϵ) i >X (ϵ) i+1) >
+t for small ϵ> 0. Next, conditioning each X (ϵ) i on a large compact interval [−M,M ] preserves
+log-concavity, continuous CDFs, and strict inequalities minj P(Xj >Xj+1) >t+δ for some δ > 0
+when M > 0 is suﬀiciently large. Set strictly decreasing thresholds ti := t + δ
+(
+1 − i n+1 ) > t
+(i = 0, 1,...,n, so t0 = t + δ and tn > t). Inductively for i = 1,...,n, assuming minj P(Xj >
+Xj+1) >ti−1 with all CDFs continuous, hold (Xj )j̸=i fixed and define the continuous functions
+gi(x) := Fi+1(x) − ti−1 and hi(x) := 1 − Fi−1(x) − ti−1 on [−M,M ]. Since
+∫ M
+−M gi dµi > 0
+and
+∫ M
+−M hi dµi > 0, the 1D log-concave localization theorem of Fradelizi–Guédon [3, Thm. 1]
+(extending [5, Lemma 2.5] to log-concave measures on compact intervals) yields a log-aﬀine
+needle νi(dx) ∝ eαix1[ai,bi](x) dx on [ai,bi] ⊆ [−M,M ] satisfying ∫ gi dνi ≥ 0 and ∫ hi dνi ≥ 0, so
+both adjacent win probabilities are at least ti−1 >ti. If ai = bi, replacing δai by Unif[ai−η,ai+η]
+with η > 0 suﬀiciently small preserves continuous CDFs and keeps both probabilities strictly
+above ti (by continuity of Fi+1, 1 − Fi−1 and the strict gap ti−1 − ti = δ n+1 > 0). Thus after step
+i we have minj P(Xj >Xj+1) >ti with continuous CDFs; after n steps every Xi is a truncated
+exponential with minj P(Xj >Xj+1) >tn >t, proving (10).
+Proof of (b) and (c). For two right-skewed exponentials Xj = sj (Ej − cj ) and Xj+1 =
+sj+1(Ej+1 − cj+1) with rj := sj /sj+1 > 0 and sj+1cj+1 ≥ sj cj , direct integration gives
+P(Xj >Xj+1) = 1 − 1 1 + rj exp ( −(cj+1 − rj cj ) ) .
+Setting this equal to p ∈ ( 1 2 , 1 − e−1) yields cj+1 = rj cj − ln(1 − p) − ln(1 + rj ). Minimizing
+over rj > 0 when cj ∈ (0, 1) gives the unique minimizer rj = 1 cj − 1 > 0, producing (11) (and
+checking cj+1 − rj cj = − ln(1 − p) + ln cj = ln cj 1−p > 0 whenever cj > 1 − p, which holds since
+cj > 1 2 > 1 − p). Notice T ′ p(c) = 1 c − 1 > 0 on (0, 1), and Tp(c) − c = 1 − 2c + ln c − ln(1 − p) has
+maximum − ln(2(1 − p)) > 0 at c = 1 2 and strictly negative value Tp(c1) − c1 = 1 − c1 + ln c1 < 0
+at c1 = − ln(1 − p) ∈ (ln 2, 1) (since ln c < c − 1 for all c ⁄= 1). Hence Tp has a unique fixed
+point c∗(p) ∈ ( 1 2 ,c1), and the iterates cj decrease strictly and monotonically to c∗(p) as j → ∞.
+In the two-sided odd chain C2m+1, we have P(X0 > X1) = P(X2m > X0) = 1 − e−c1 =
+p, P(Xj > Xj+1) = P(X2m−j > X2m+1−j ) = p for 1 ≤ j ≤ m − 1, and at the central
+crossing Xm ≻ Xm+1, P(Xm > Xm+1) = (1 + 2cm)e−2cm . Equating (1 + 2cm)e−2cm = p
+defines p2m+1 uniquely; as m → ∞, cm ↓ c∗(p) satisfies simultaneously 1 − p = c∗e1−2c∗ and
+p = (1 + 2c∗)e−2c∗ . Summing gives 1 = (1 + (e + 2)c∗)e−2c∗ , proving (b). For even cycles
+C2m (m ≥ 2), the asymmetric chain consisting of X0 = 0, m right-skewed exponentials with
+parameters c1,...,cm, and m − 1 left-skewed exponentials with parameters c1,...,cm−1 closes
+at the central crossing via maxu>0 P(E1 + uE2 >cm + ucm−1) = p, yielding p4 ≈ 0.543821 and
+p6 ≈ 0.547726 (and the same limit p∗ Exp). For (c), closing a one-sided right-skewed chain directly
+with P(Xm > X0) = e−cm = p requires c∗(p) ≤ − ln p, which at equality c∗ = − ln p ∈ ( 1 2 , ln 2)
+becomes 1 + 2 ln p + ln(− ln p) = ln(1 − p), i.e., ep2(− ln p) = 1 − p.
+5 Unimodal Zero-Penalty vs. Odd-Cumulant Convolution Tran-
+sitivity
+Having established the strict log-concave rigidity ceiling 1+2 ln 2 4 <
+√
+5−1
+2 , we contrast it with two
+opposite phenomena: (a) dropping log-concavity to mere unimodality completely destroys the
+barrier, restoring the full Usiskin spectrum up to 3 4 ; and (b) repeatedly convolving any finite
+10
+```
+
+---
+
+## Page 11
+
+```text
+log-concave family destroys non-transitivity completely at a sharp odd-cumulant Edgeworth
+rate.
+Theorem 5.1 (Unimodal Zero-Penalty and Convolution Transitivity). (a) Unimodal Zero-
+Penalty: Let F ∞ uni denote the class of probability distributions on R admitting a strictly
+positive C∞ unimodal density. For every n ≥ 3,
+τF ∞ uni (Cn) = τall(Cn) = 1 − 1 4 cos2( π n+2 ) n→∞−−−→ 3 4 . (13)
+(b) Odd-Cumulant Lexicographic Convolution Transitivity: Let X1,...,Xn be indepen-
+dent log-concave random variables on R, and let S(k) i := X (1) i + · · · + X (k) i be the k-fold
+i.i.d. sum of Xi. Write κr(Xi) for the r-th cumulant of Xi and σ2 i := κ2(Xi). For any pair
+(Xi,Xj ):
+• If κ2m+1(Xi) = κ2m+1(Xj ) for all m ≥ 0, then Xi − Xj is symmetric about 0 and
+P(S(k) i >S(k) j ) = P(S(k) j >S(k) i ) for every k ≥ 1.
+• If κ1(Xi) ⁄= κ1(Xj ), then P(S(k) i >S(k) j ) → 1κ1(Xi)>κ1(Xj ) exponentially fast in k.
+• Otherwise, let m ≥ 1 be the smallest integer with κ2m+1(Xi) ⁄= κ2m+1(Xj ) (so at least
+one of Xi,Xj is non-degenerate and σ2 i + σ2 j > 0). Then as k → ∞,
+P
+(
+S(k) i >S(k) j ) − 1 2 = (−1)m(2m − 1)!! (2m + 1)! √ 2π · κ2m+1(Xi) − κ2m+1(Xj ) (σ2 i + σ2 j )m+1/2 km−1/2 + O ( k−(m+1/2) ) .
+(14)
+Consequently, there exists k0 < ∞ such that for all k ≥ k0, stochastic precedence on
+(S(k) 1 ,...,S(k) n ) coincides exactly with the transitive lexicographic weak order induced by
+the alternating odd-cumulant sequence
+(
+κ1(Xi), −κ3(Xi), +κ5(Xi), −κ7(Xi), ...
+)
+.
+Proof. Proof of (a). The upper bound τF ∞ uni (Cn) ≤ τall(Cn) is immediate. For sharpness, fix
+p := 1 − 1 4 cos2(π/(n+2)) and define q2 := 1 − p and qj+1 := 1−p 1−qj for j = 2,...,n − 1. By Usiskin’s
+Möbius recurrence [9] (explicitly p2 + p − 1 = 0 at n = 3 and p = 2 3 at n = 4, certified in Lean 4
+as usiskin_unimodal_n4_exact), 0 <q2 <q3 < · · · <qn = p< 1. Fix small ϵ> 0 and rapidly
+separated scales 1 ≪ Mn ≪ Mn−1 ≪ · · · ≪ M2 (e.g., Mj = Rn−j+1 with R → ∞), and define
+Lj := −(j − 1) for j = 2,...,n (so Ln < · · · < L2 < 0). Set X1 ∼ Unif[0,ϵ] and, for each
+j ∈ {2,...,n},
+Xj ∼ (1 − qj ) Unif[Lj , Lj + ϵ] + qj Unif[Lj , Mj ].
+Every Xj has a piecewise-constant density that is non-increasing on [Lj ,Mj ] and zero outside,
+hence is unimodal with mode Lj . Evaluating the pairwise win probabilities as ϵ → 0+ and
+R → ∞:
+• P(X1 >X2) → 1 − q2 = p (since L2 < 0 and the [0,M2] tail has mass q2(1 − O(R−1)) above
+ϵ);
+• for 2 ≤ j ≤ n − 1, Xj beats Xj+1 with probability 1 − O(R−1) when Xj ∈ [Mj+1,Mj ] (prob.
+qj ), and beats Xj+1 when Xj ∈ [Lj ,Lj +ϵ] and Xj+1 ∈ [Lj+1,Lj+1+ϵ] (prob. (1−qj )(1−qj+1),
+since Lj >Lj+1); thus P(Xj >Xj+1) → qj + (1 − qj )(1 − qj+1) = 1 − (1 − qj )qj+1 = p;
+• P(Xn >X1) → qn = p.
+Finally, convolving each Xj with a tiny Gaussian N (0,δ2) (δ → 0+) yields a strictly positive
+C∞ density that remains unimodal (since Gaussian kernels are strongly unimodal / log-concave,
+preserving unimodality under convolution!) while perturbing every win probability by o(1).
+11
+```
+
+---
+
+## Page 12
+
+```text
+Proof of (b). Every log-concave random variable Xi has exponentially decaying tails [2], so
+its moment generating function Mi(t) = E[etXi ] is analytic in a neighborhood of 0, all cumulants
+κr(Xi) exist, and the distribution is uniquely determined by its cumulant sequence. For any
+pair (Xi,Xj ), put W := Xi − Xj , so κr(W ) = κr(Xi) + (−1)rκr(Xj ); in particular, for all odd
+r = 2m + 1, κ2m+1(W ) = κ2m+1(Xi) − κ2m+1(Xj ).
+• If all odd cumulants match, then KW (t) = log E[etW ] is an even analytic function near 0, so
+E[etW ] = E[e−tW ] and W d= −W is symmetric about 0, giving P(S(k) i > S(k) j ) = P(S(k) j >
+S(k) i ) for all k ≥ 1.
+• If κ1(W ) = E[W ] ⁄= 0, Cramér’s large-deviation bound immediately gives exponential con-
+vergence of P(S(k) i >S(k) j ) to 1κ1(Xi)>κ1(Xj ).
+• Otherwise E[W ] = 0 and there is a smallest m ≥ 1 with κ2m+1(W ) ⁄= 0, which forces
+W to be non-degenerate log-concave (hence absolutely continuous with an L1 density,
+so its characteristic function satisfies Cramér’s condition lim sup|t|→∞ |φW (t)| < 1 by the
+Riemann–Lebesgue lemma). Let σ2 := σ2 i + σ2 j > 0, standardize ~W := W/σ with cumu-
+lants λr := κr(W )/σr, and apply the Bhattacharya–Ranga Rao Edgeworth expansion [1,
+Thm. 19.2] to Zk := 1√ k ∑k t=1 ~Wt at x = 0:
+P(Zk > 0) − 1 2 = ϕ(0) 2m∑ s=1 k−s/2 ∑ r1+2r2+···=s
+rℓ≥0
+Hs+2R−1(0)
+∏
+ℓ≥1
+1
+rℓ!
+( λℓ+2
+(ℓ + 2)!
+)rℓ
++ O(k−(m+1/2)),
+where R := ∑ ℓ≥1 rℓ, ϕ(0) = (2π)−1/2, and Hd is the d-th probabilists’ Hermite polynomial.
+Because Hd(0) = 0 for all odd d and H2q(0) = (−1)q(2q − 1)!!, only odd values of s can
+contribute at x = 0. By the odd-sum parity lemma (certified in Lean 4 as edgeworth_
+odd_sum_has_odd_term), any partition ∑ ℓrℓ = s with s odd must contain at least one
+odd index ℓ with rℓ ≥ 1, corresponding to an odd cumulant λℓ+2. Since λ3 = λ5 = · · · =
+λ2m−1 = 0, every odd s< 2m−1 vanishes identically, and at s = 2m−1 the unique surviving
+partition is r2m−1 = 1 (with all other rℓ = 0, zero even-cumulant cross-terms!), contributing
+ϕ(0)k−(m−1/2)H2m(0) λ2m+1 (2m+1)! —which is precisely (14).
+Because there are finitely many pairs (i,j), for all k ≥ k0 the sign of P(S(k) i >S(k) j ) − 1 2 matches
+the sign of the first nonzero coordinate of
+(
+κ1(Xi) − κ1(Xj ), −(κ3(Xi) − κ3(Xj )), +(κ5(Xi) −
+κ5(Xj )), ...
+)
+, which is a transitive weak order.
+6 Lean 4.36.0 Formal Certification, Verification Ledger, and
+Open Problems
+The exact algebraic factorizations for κ = 1 2 and κ = −1, the inductive proof of (k+1)k > 2kk for
+all k ≥ 2, the log-concave quantile derivative numerator identity, the complete strict rational-
+bracket hierarchy 1 2 < M ( 1 2 ) < M (0) < ϕ−1 < 1 − e−1 < M (−1) < 3 4 , the Usiskin n = 4
+closure identity, and the Edgeworth odd-sum parity lemma are formally certified in Lean 4.36.0
+in the standalone file LogConcaveBarriersCore.lean (10 kernel-verified theorems: 9 public
+theorems and 1 private inductive helper, zero external dependencies, -DwarningAsError=true,
+zero sorry, zero grind, zero custom axioms, passing both lean and lake build). Table 2
+records the SHA-256 verification ledger; all source files are archived at https://github.com/
+arr-research/arr-research.github.io.
+12
+```
+
+---
+
+## Page 13
+
+```text
+Figure 3: Convolution transitivity collapse (Theorem 5.1(b)). (a) The extremal log-concave
+triple (0,E − λ3,λ3 − E) is non-transitive at k = 1 (p ≈ 0.5401) and collapses immediately to
+strict transitivity at k = 2 (X2 ≻ X1 ≻ X3, driven by κ1). (b) Log-log verification of exact odd-
+cumulant Edgeworth decay (14): m = 1 (κ3 ⁄= 0, Gamma(2k) > 2k, blue) decays as 1 6√π k−1/2,
+while m = 2 (κ1 = κ3 = 0, κ5 ⁄= 0, centered log-concave E1 +E2 −21/3E3 −(2−21/3) vs. N (0, 1),
+red, exact Gil–Pelaez inversion) decays as c5k−3/2 with zero even-cumulant contamination.
+Artifact Scope / Verification SHA-256 Digest (full)
+lean/LogConcaveBarriersCore.lean 10 kernel-verified Lean 4.36.0 thms (0 sorry) fe2d28a1cbb01f87f1641117839f02f7
+(LEAN_EXIT=0, LAKE_EXIT=0, 11,510 B) 1c06a98734c568b644b784c45aa5be4f
+src/verify_logconcave_barriers.py Exact κ-barriers, chains, Edgeworth, 1,900 LC trials, 3 figs efbb11c9ec0e058cc44a7da8b293b069
+(VERIFY_EXIT=0, 25,984 B) c4ab275f570f8f32c21e8b050a9b8550
+data/verification_summary.json Exact tables (M (κ), q∗, chains, unimodal, Edgeworth) f2272513e9510bee5f77a47d2c929c90
+(9,773 B) cadbbdb714afddf63ce374a6a8603c31
+Table 2: Cryptographic SHA-256 verification ledger for Frontier F4 artifacts.
+Open Problems. Two sharp extremal questions remain open:
+1. Exact log-concave cycle capacity τLC(Cn): Theorems 2.2 and 4.1 sandwich τLC(Cn)
+tightly between pExp,n (0.54009 → 0.54912) and 1+2 ln 2 4 ≈ 0.59657, and global numerical
+optimization over truncated exponentials (exact by Theorem 4.1(a)) has never exceeded
+1 − e−λ3 ≈ 0.54009 at n = 3 nor pExp,5 ≈ 0.54691 at n = 5. Does τLC(C3) = 1 − e−λ3 and
+limn→∞ τLC(Cn) = p∗ Exp ≈ 0.54912 hold globally?
+2. Universal equal-scale optimality across all κ ∈ (−∞, 1): Theorem 2.2 proves ana-
+lytically that equal scales (θ = 1 2 ) maximize Mκ(θ) at κ ∈ {1, 1 2 , 0, −1}, and numerical
+evaluation confirms this across all κ ∈ [−200, 1]. Does a unified Schur-concavity proof cover
+all κ ∈ (−∞, 1) simultaneously?
+AI Assistance Disclosure. This research was directed, authored, and verified by Lluis Eriks-
+son (editor@airr.science) with autonomous mathematical exploration, Lean 4 formalization,
+numerical verification, and LaTeX typesetting assistance from Google Antigravity. All theo-
+rems, proofs, Lean 4 kernel builds, and exact computational checks were independently verified
+prior to release.
+13
+```
+
+---
+
+## Page 14
+
+```text
+References
+[1] Rabi N. Bhattacharya and R. Ranga Rao. Normal Approximation and Asymptotic Expan-
+sions. John Wiley & Sons, New York, 1976.
+[2] Christer Borell. Convex set functions in d-space. Periodica Mathematica Hungarica,
+6(2):111–136, 1975.
+[3] Matthieu Fradelizi and Olivier Guédon. The extreme points of subsets of s-concave probabil-
+ities and a geometric localization theorem. Discrete & Computational Geometry, 31(2):327–
+335, 2004.
+[4] Branko Grünbaum. Partitions of mass-distributions and of convex bodies by hyperplanes.
+Pacific Journal of Mathematics, 10(4):1257–1261, 1960.
+[5] László Lovász and Miklós Simonovits. Random walks in a convex body and an improved
+volume algorithm. Random Structures & Algorithms, 4(4):359–412, 1993.
+[6] András Prékopa. On logarithmic concave measures and functions. Acta Scientiarum Math-
+ematicarum (Szeged), 34:335–343, 1973.
+[7] Hugo Steinhaus and Stanisław Trybuła. On a paradox in applied probabilities. Bulletin
+de l’Académie Polonaise des Sciences, Série des Sciences Mathématiques, Astronomiques et
+Physiques, 7:67–69, 1959.
+[8] Stanisław Trybuła. On the paradox of three random variables. Zastosowania Matematyki,
+5:321–332, 1961.
+[9] Zalman Usiskin. Max-min probabilities in the voting paradox. The Annals of Mathematical
+Statistics, 35(2):857–862, 1964.
+14
+```
