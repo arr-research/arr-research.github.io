@@ -1,0 +1,1044 @@
+# Finite Free Root-Gap Dynamics: Universal Marcel Riesz Monotonicity, Sharp Degree-3-to-4 Euclidean and Hyperbolic Pythagorean Transitions, and Exact Heat-Flow Compression
+
+> Machine-readable rendition extracted from the hash-identified canonical PDF. Mathematical typography may be degraded; cite and verify against `paper.pdf`.
+
+## Page 1
+
+```text
+AIRR.SCIENCE · ARR-2026-05GATB396D94PAR7 v1 [Mathematics] 28 Nov 2026
+Finite Free Root-Gap Dynamics: Universal Marcel
+Riesz Monotonicity, Sharp Degree-3-to-4 Euclidean
+and Hyperbolic Pythagorean Transitions, and Exact
+Heat-Flow Compression
+Lluis Eriksson∗
+November 28, 2026
+Abstract
+We investigate the evolution of the minimum root spacing gap(p) = min1≤i<d(λi+1(p) −
+λi(p)) and the minimum root ratio rat(p) = min1≤i<d(λi+1(p)/λi(p)) of real-rooted degree-
+d polynomials under the finite free additive convolution ⊞d and finite free multiplicative
+convolution ⊠d of Marcus, Spielman, and Srivastava. While the finite free entropy power
+inequality controls the geometric mean of all pairwise gaps and holds superadditively in every
+degree, we show that the minimum gap exhibits a sharp low-degree-to-high-degree phase
+transition at d = 3 → 4 in both the additive (Euclidean) and multiplicative (hyperbolic)
+worlds:
+1. Universal Finite Free Marcel Riesz Monotonicity: For all d ≥ 2, gap(p ⊞d q) ≥
+max(gap(p), gap(q)) on P R d and rat(p ⊠d q) ≥ max(rat(p), rat(q)) on P R>0 d , yielding a
+universal 1 2 -Pythagorean floor.
+2. Exact Degree-2, 3 Euclidean and Hyperbolic Laws: For d = 2, 3, additive convo-
+lution obeys exact Pythagorean superadditivity gap(p ⊞3 q)2 ≥ gap(p)2 + gap(q)2 (with
+equality if and only if both factors are symmetric or one is a point mass). Multiplica-
+tively, d = 2 obeys the exact hyperbolic Pythagorean identity cosh( 1 2 log rat(p ⊠2 q)) =
+cosh( 1 2 log rat p) cosh( 1 2 log rat q), and d = 3 obeys the strictly stronger exact super-
+multiplicative law 1 3 µ(p ⊠3 q) ≥ 1 3 µ(p) · 1 3 µ(q) for µ(p) = rat(p) + 1 + rat(p)−1 =
+4 cosh2( 1 2 log rat p) − 1, proved via a deformed cubic discriminant factorization and a
+three-term semigroup potential Φ(α, β) on (0, 1)2.
+3. Exact Heat-Flow Expansion and Universal d ≥ 4 Failure: For the finite free heat
+flow pT = p ⊞d He(T ) d driven by deterministic Dyson dynamics, we prove the globally
+optimal bound gap(pT )2 ≥ gap(p)2 + κd gap(He(T ) d )2 for all d ≥ 2 and T ≥ 0, where
+κd = cheat d / gap(Hed)2 with cheat d = 8/d (d even) or 8d/(d2 − 1) (d odd), satisfying
+κ2 = κ3 = 1, κ4 = 3+
+√
+6
+6 , κ5 = 5+
+√
+10
+9 , and κd → 8 π2 ≈ 0.8106. Sturm–Liouville
+comparison proves κd < 1 for every d ≥ 4, establishing universal failure of both additive
+and (via an infinitesimal limit lemma) multiplicative Pythagorean superadditivity for
+all d ≥ 4, complemented by closed-form self-convolution counterexamples 5 − 7√ 3 (d = 4)
+and 10−
+√
+38
+4 (d = 5).
+4. Voiculescu R-Transform and the Basel Constant π2/12: For the k-fold free ad-
+ditive convolution U ⊞k of the uniform measure U = Unif[−1/2, 1/2], we prove via
+global analytic continuation and the holomorphic inverse function theorem that U ⊞k
+is real-analytic near 0 with exact central density ρk(0) = 2uk π , where uk ∈ (0, π/2)
+solves uk cot uk = k−1 k . Its inverse-density-squared ratio Rk := 1 kρk (0)2 = π2 4ku2 k descends
+∗Independent researcher, AIRR.SCIENCE (editor@airr.science). Founder verification: AIRR-FOUNDER-1.0.
+Manuscript licensed under CC-BY-4.0; code and formal proofs licensed under MIT.
+1
+```
+
+---
+
+## Page 2
+
+```text
+strictly from π2 8u2 2 ≈ 0.9081 (k = 2) to the free-CLT Basel limit π2 12 ≈ 0.8225 (k → ∞),
+matching numerical high-degree self-convolution gap scaling.
+The exact algebraic identities, cubic semigroup contraction, Dyson telescoping bounds, coun-
+terexamples, and universal Sturm inequalities are formally certified in Lean 4.36.0 (16 kernel-
+verified theorems, zero sorry, zero custom axioms).
+1 Introduction
+Let P R d denote the set of monic real-rooted polynomials of degree d ≥ 2, and let P R>0 d ⊂ P R d
+denote those whose roots are all strictly positive. Writing the ordered roots of p ∈ P R d as
+λ1(p) ≤ λ2(p) ≤ · · · ≤ λd(p), we study the two most fundamental hard-core spectral separation
+invariants:
+gap(p) := min
+1≤i<d
+(
+λi+1(p) − λi(p)
+)
+≥ 0, rat(p) := min
+1≤i<d
+λi+1(p)
+λi(p) ≥ 1 (p ∈ P R>0 d ). (1)
+For p(x) = ∑d k=0(−1)kakxd−k and q(x) = ∑d k=0(−1)kbkxd−k (with a0 = b0 = 1), the finite
+free additive convolution ⊞d and finite free multiplicative convolution ⊠d, introduced classically
+by Walsh [14] and Szegő [10] and revitalized as finite-dimensional models of Voiculescu’s free
+probability by Marcus, Spielman, and Srivastava [7, 6, 1], are defined by
+(p ⊞d q)(x) :=
+d∑
+k=0
+(−1)k
+
+ ∑
+i+j=k
+(d − i)!(d − j)!
+d! (d − k)! aibj
+
+ xd−k, (2)
+(p ⊠d q)(x) :=
+d∑
+k=0
+(−1)k akbk(d
+k
+) xd−k. (3)
+By [7], P R d is closed under ⊞d and P R>0 d is closed under ⊠d; moreover, for diagonal matrices
+A = diag(λ1(p), . . . , λd(p)) and B = diag(λ1(q), . . . , λd(q)) and Haar-random Q ∈ O(d),
+(p ⊞d q)(x) = EQ det(xI − A − QBQ⊤), (p ⊠d q)(x) = EQ det(xI − AQBQ⊤). (4)
+Recent work by Gribinski [4] and Garza-Vargas, Srivastava, and Stier [3] established finite
+free analogues of Stam’s inequality and the Shannon–Voiculescu entropy power inequality: the
+finite free entropy power Nd(p) := | disc(p)|
+2
+d(d−1) = (∏ i<j (λj − λi)2) 2 d(d−1) satisfies
+Nd(p ⊞d q) ≥ Nd(p) + Nd(q) ∀ d ≥ 2, ∀ p, q ∈ P R d .
+That inequality governs the geometric mean of all
+(d
+2
+)
+pairwise squared root gaps. It is natural
+to ask whether the worst-case nearest-neighbor separation gap(p)2 enjoys the same Euclidean
+superadditivity gap(p ⊞d q)2 ≥ gap(p)2 + gap(q)2, and what geometric law governs the multi-
+plicative ratio rat(p ⊠d q) on P R>0 d .
+We answer both questions completely. Contrary to what the universal discriminant inequal-
+ity might suggest, the minimum root gap obeys a sharp structural dichotomy between d ≤ 3
+and d ≥ 4, summarized in Table 1.
+Organization. Section 2 proves universal Marcel Riesz monotonicity for both ⊞d and ⊠d.
+Section 3 establishes the exact low-degree Euclidean and hyperbolic laws for d = 2, 3 and char-
+acterizes all equality cases. Section 4 proves the sharp finite free heat-flow expansion theorem
+via deterministic Dyson dynamics and derives universal d ≥ 4 failure in both convolutions via
+Sturm–Liouville comparison and an infinitesimal multiplicative-to-additive limit lemma. Sec-
+tion 5 derives the exact macroscopic R-transform compression law and the Basel limit π2/12.
+Section 6 summarizes the Lean 4.36.0 formal certification, reproducibility digests, and open
+extremal problems.
+2
+```
+
+---
+
+## Page 3
+
+```text
+Regime Additive ⊞d (Euclidean) Multiplicative ⊠d (Hyperbolic) Sharpness / Mechanism
+All d ≥ 2 gap(p ⊞d q) ≥ max(gap p, gap q) rat(p ⊠d q) ≥ max(rat p, rat q) Obreschkoff + Walsh/Szegő (Thm. 2.1)
+d = 2 gap2(p ⊞2 q) = gap2 p + gap2 q cosh c = cosh a cosh b Exact identities (Thms. 3.1, 3.2)
+d = 3 gap2(p ⊞3 q) ≥ gap2 p + gap2 q 1 3 µ(p ⊠3 q) ≥ 1 3 µ(p) 1 3 µ(q) Viète / Semigroup Φ (Thms. 3.1, 3.2)
+Heat flow ∀d gap2(pT ) ≥ gap2 p + κd gap2(He(T ) d ) Fixed-d limit ⊠d → ⊞d (ε → 0+) Dyson telescoping; κd → 8 π2 (Thm. 4.1, Lem. 4.2)
+All d ≥ 4 gap2 superadditivity fails cosh c, µ/3, (log rat)2 fail Sturm κd < 1; 5 − 7√ 3 (Thm. 4.3)
+Free limit (U ⊞k ) Exact ρk (0) = 2uk π , Rk = π2 4ku2 k → π2 12 Heuristic d → ∞ gap scaling (Conj. 6.1) Voiculescu R-transform (Thm. 5.1)
+Table 1: Summary of the main results. Here a = 1 2 log rat(p), b = 1 2 log rat(q), c = 1 2 log rat(p ⊠d
+q), and µ(p) = rat(p) + 1 + rat(p)−1 = 4 cosh2 a − 1.
+2 Universal Finite Free Marcel Riesz Monotonicity
+A classical theorem of Marcel Riesz [9] states that differentiation never decreases the minimum
+root gap of a real-rooted polynomial: gap(p′) ≥ gap(p). Because finite free convolution with any
+q ∈ P R d acts as a finite-order differential operator preserving real-rootedness, it obeys an exact
+finite free generalization of Riesz’s theorem in both the additive and multiplicative settings.
+Theorem 2.1 (Universal Finite Free Marcel Riesz Monotonicity). Let d ≥ 2.
+(a) Additive monotonicity: For all p, q ∈ P R d ,
+gap(p ⊞d q) ≥ max
+(
+gap(p), gap(q)
+)
+. (5)
+In particular, gap(p ⊞d q)2 ≥ 1 2 ( gap(p)2 + gap(q)2) universally for all d ≥ 2.
+(b) Multiplicative monotonicity: For all p, q ∈ P R>0 d ,
+rat(p ⊠d q) ≥ max
+(
+rat(p), rat(q)
+)
+. (6)
+Proof. We recall Obreschkoff’s Theorem [8]: two real polynomials f, g of degrees d with real
+roots have weakly interlacing roots (every closed interval between consecutive roots of one
+contains at least one root of the other, counting multiplicities) if and only if every nontrivial
+real linear combination αf + βg (α, β ∈ R) has only real roots.
+Proof of (a). By commutativity of ⊞d, it suﬀices to prove gap(p ⊞d q) ≥ δ := gap(p). The
+case δ = 0 is trivial, so assume δ > 0. Then the ordered roots of p satisfy λ1 < λ1 + δ ≤ λ2 <
+λ2 + δ ≤ · · · ≤ λd < λd + δ, meaning that p(x) and p(x − δ) weakly interlace. By Obreschkoff’s
+Theorem, fα,β (x) := αp(x) + βp(x − δ) has only real roots for every (α, β) ∈ R2 \ {(0, 0)}.
+Extend Tq(f ) := f ⊞d q linearly to the space R≤d[x] of polynomials of degree at most d via
+the differential representation of (2):
+(Tqf )(x) =
+d∑
+j=0
+(−1)j (d − j)!
+d! bj f (j)(x), (7)
+where q(x) = ∑d j=0(−1)j bj xd−j . Because Tq is a constant-coeﬀicient polynomial in d dx , it
+commutes with the shift operator Sδ f (x) := f (x − δ), so
+Tq(fα,β )(x) = α(p ⊞d q)(x) + β(p ⊞d q)(x − δ).
+Whenever α + β ⁄= 0, the polynomial fα,β has exact degree d and all real roots; by the Walsh–
+Marcus–Spielman–Srivastava theorem [14, 7] (scaling by (α + β)−1), Tq(fα,β ) has degree d and
+all real roots. For the degree-dropping hyperplane α + β = 0 (β = −α ⁄= 0), we write
+Tq
+(
+p(x) − p(x − δ)
+)
+= lim
+ε→0+
+Tq
+(
+(1 + ε)p(x) − p(x − δ)
+)
+,
+3
+```
+
+---
+
+## Page 4
+
+```text
+a limit of real-rooted degree-d polynomials whose leading coeﬀicient vanishes as ε → 0+ while the
+degree-(d−1) coeﬀicient equals dδ ⁄= 0. By Hurwitz’s theorem, all d−1 roots of Tq(p(x)−p(x−δ))
+are real. Thus every nontrivial real linear combination of (p ⊞d q)(x) and (p ⊞d q)(x − δ) is real-
+rooted. By the converse of Obreschkoff’s Theorem, the ordered roots µ1 ≤ · · · ≤ µd of p ⊞d q
+weakly interlace with µ1 + δ ≤ · · · ≤ µd + δ. Since µd < µd + δ, the interlacing must have
+orientation µ1 < µ1 + δ ≤ µ2 < · · · ≤ µd < µd + δ, giving µi+1 − µi ≥ δ for all 1 ≤ i < d. The
+1
+2 -Pythagorean floor follows immediately from max(x, y)2 ≥ 1 2 (x2 + y2).
+Proof of (b). Again by commutativity, assume ρ := rat(p) > 1. The positive roots of
+p satisfy 0 < λ1 < ρλ1 ≤ λ2 < · · · ≤ λd < ρλd, so p(x) and p(x/ρ) weakly interlace, and
+gα,β (x) := αp(x) + βp(x/ρ) has only real roots (possibly of mixed sign) for all (α, β) ⁄= (0, 0).
+Define the linear operator Mq : R≤d[x] → R≤d[x] by
+Mq(xm) := bd−m( d
+m
+) xm (0 ≤ m ≤ d),
+so that Mq((−1)kakxd−k) = (−1)k ak bk (d k) xd−k, i.e., Mq(p) = p ⊠d q, and Mq commutes with every
+dilation Dρf (x) := f (x/ρ). Because q ∈ P R>0 d has all positive roots, the associated polynomial
+Q(x) := ∑d k=0 bkxd−k = (−1)dq(−x) has all negative (hence same-sign) roots. Therefore Szegő’s
+Composition Theorem [10] (see also [2, 7]) guarantees that Mq(f ) has all real roots for every
+degree-d polynomial f whose roots are all real (regardless of sign). Hence for all α + βρ−d ⁄= 0,
+Mq(gα,β )(x) = α(p ⊠d q)(x) + β(p ⊠d q)(x/ρ) has degree d and all real roots. For α + βρ−d = 0,
+the coeﬀicient of xd−1 in Mq(p(x) − ρdp(x/ρ)) = (p ⊠d q)(x) − ρd(p ⊠d q)(x/ρ) is − a1b1 d (1 − ρ) ⁄= 0
+(since a1, b1 > 0 and ρ > 1), so Hurwitz’s theorem again yields real-rootedness of Mq(gα,β ). By
+Obreschkoff’s Theorem, the positive roots 0 < µ1 ≤ · · · ≤ µd of p ⊠d q weakly interlace with
+ρµ1 ≤ · · · ≤ ρµd; since µd < ρµd, we obtain ρµi ≤ µi+1 for all 1 ≤ i < d, i.e., rat(p⊠d q) ≥ ρ.
+3 Exact Low-Degree Laws: Euclidean and Hyperbolic Superad-
+ditivity (d ≤ 3)
+For degrees d = 2 and d = 3, the minimum root separation satisfies sharp superadditive laws
+far stronger than Theorem 2.1. In the additive setting, the geometry is Euclidean; in the
+multiplicative setting, it is hyperbolic.
+Theorem 3.1 (Exact Additive Pythagorean Laws for d = 2, 3).
+(a) Degree 2: For all p, q ∈ P R 2 , gap(p ⊞2 q)2 = gap(p)2 + gap(q)2.
+(b) Degree 3: For all p, q ∈ P R 3 ,
+gap(p ⊞3 q)2 ≥ gap(p)2 + gap(q)2. (8)
+Equality holds in (8) if and only if either (i) both p and q are symmetric (i.e., aﬀine images
+of He3(x) = x3 − 3x, equivalently arithmetic progressions), or (ii) at least one of p, q is a
+point mass (x − c)3.
+Proof. Part (a) is immediate: writing p(x) = x2 − e1x + e2 and q(x) = x2 − f1x + f2, we have
+(p⊞2q)(x) = x2−(e1+f1)x+(e2+f2+ 1 2 e1f1), whose discriminant is (e1+f1)2−4(e2+f2+ 1 2 e1f1) =
+(e2 1 − 4e2) + (f 2 1 − 4f2) = gap(p)2 + gap(q)2.
+For part (b), since gap is translation-invariant and ⊞3 is translation-equivariant, we center
+both cubics to have root sum zero:
+p(x) = x3 − 3A1x + 2B1, q(x) = x3 − 3A2x + 2B2,
+4
+```
+
+---
+
+## Page 5
+
+```text
+with Ai ≥ 0 and B2 i ≤ A3 i (real-rootedness). By (2), centered cubic convolution is exact vector
+addition:
+(p ⊞3 q)(x) = x3 − 3(A1 + A2)x + 2(B1 + B2).
+We claim that for any centered r(x) = x3 − 3Ax + 2B ∈ P R 3 and any g ≥ 0,
+gap(r) ≥ g ⇐⇒ A ≥ g2
+3 and B2 ≤ ( A − g2 3 )2( A − g2 12 ) . (9)
+Indeed, if A = 0 then B = 0 and both sides are equivalent to g = 0. If A > 0, Viète’s
+trigonometric representation gives the ordered roots of r as λk = 2
+√
+A cos
+(
+θ + 2πk 3 ) for a unique
+θ ∈ [0, π/3] satisfying cos(3θ) = −B/A3/2: explicitly,
+λ1 = −2
+√
+A cos
+( π
+3 − θ
+)
+, λ2 = −2
+√
+A cos
+( π
+3 + θ
+)
+, λ3 = 2
+√
+A cos θ.
+The two adjacent gaps are 2
+√
+3A sin( π 3 − θ) and 2 √ 3A sin θ, so setting ϕ := min(θ, π 3 − θ) ∈
+[0, π/6] we have gap(r) = 2
+√
+3A sin ϕ and | cos(3θ)| = cos(3ϕ) =
+√
+1 − sin2(3ϕ). Putting
+s := sin ϕ ∈ [0, 1/2], we have sin(3ϕ) = s(3 − 4s2) and the exact algebraic factorization (certified
+in Lean 4 as cubic_viete_factorization):
+1 − s2(3 − 4s2)2 = (1 − s2)(1 − 4s2)2.
+Hence B2/A3 = cos2(3ϕ) = (1 − s2)(1 − 4s2)2, which is strictly decreasing in s ∈ [0, 1/2] (as
+both 1 − s2 and (1 − 4s2)2 decrease). Thus gap(r) ≥ g ⇐⇒ s ≥ g 2 √ 3A (requiring g 2 √ 3A ≤ 1 2 ,
+i.e., A ≥ g2/3), which is equivalent to
+B2
+A3 ≤
+(
+1 − g2
+12A
+)(
+1 − g2
+3A
+)2
+⇐⇒ B2 ≤ ( A − g2
+3
+)2(
+A − g2
+12
+)
+,
+proving (9).
+Now let g1 := gap(p), g2 := gap(q), ui := Ai −g2 i /3 ≥ 0, and vi := Ai −g2 i /12 = ui +g2 i /4 ≥ 0.
+By (9), |Bi| ≤ ui
+√vi. Set g∗ := √ g2 1 + g2 2 , so A1 +A2 −g2 ∗ /3 = u1 +u2 ≥ 0 and A1 +A2 −g2 ∗ /12 =
+v1 + v2 ≥ 0. Then
+(u1 + u2)2(v1 + v2) − (B1 + B2)2 ≥ (u1 + u2)2(v1 + v2) − (u1 √v1 + u2 √v2)2
+= u2 1v2 + u2 2v1 + 2u1u2 ( v1 + v2 − √v1v2 ) ≥ 0, (10)
+since v1 + v2 ≥ 2√v1v2 ≥ √v1v2. By (9), gap(p ⊞3 q) ≥ g∗ = √ g2 1 + g2 2 .
+For equality: if g1 > 0 and g2 > 0, then v1, v2 > 0, so (10) vanishes if and only if u1 = u2 = 0,
+i.e., B1 = B2 = 0 (both cubics are symmetric). If g1 = 0 and g2 > 0, then v2 > 0 and
+u1 = v1 = A1, so (10) vanishes if and only if A1 = 0 (so p(x) = x3, a point mass); symmetrically,
+if g1 > 0 and g2 = 0, then (10) vanishes if and only if A2 = 0 (so q(x) = x3). If g1 = g2 = 0,
+then ui = vi = Ai and v1 + v2 − √v1v2 > 0 whenever A1, A2 > 0, so (10) vanishes if and
+only if A1 = 0 or A2 = 0 (a point mass). Conversely, in both cases (i) and (ii), equality holds
+directly.
+We now turn to the multiplicative convolution ⊠d on P R>0 d . Defining the half-log-ratio
+a(p) := 1 2 log rat(p) ≥ 0 and the cubic ratio invariant
+µ(p) := rat(p) + 1 + rat(p)−1 = 4 cosh2( a(p) ) − 1 ≥ 3, (11)
+we discover an exact hyperbolic Pythagorean identity at d = 2 and an even stronger supermul-
+tiplicative law at d = 3.
+Theorem 3.2 (Exact Multiplicative Hyperbolic and Cubic µ-Laws for d = 2, 3).
+5
+```
+
+---
+
+## Page 6
+
+```text
+(a) Degree 2 (Hyperbolic Pythagorean Identity): For all p, q ∈ P R>0 2 ,
+cosh
+(
+1
+2 log rat(p ⊠2 q)
+)
+= cosh
+(
+1
+2 log rat(p)
+)
+cosh
+(
+1
+2 log rat(q)
+)
+. (12)
+In particular, (log rat(p ⊠2 q))2 ≥ (log rat(p))2 + (log rat(q))2, with equality if and only if
+rat(p) = 1 or rat(q) = 1.
+(b) Degree 3 (Cubic µ-Supermultiplicativity and Hyperbolic Pythagoras): For all
+p, q ∈ P R>0 3 ,
+µ(p ⊠3 q)
+3 ≥ µ(p) 3 · µ(q) 3 . (13)
+Equality holds in (13) if and only if either (i) both p and q are geometric progressions (i.e.,
+monic cubics of the form (x − cρ−1)(x − c)(x − cρ) with c > 0 and ρ ≥ 1), or (ii) at least
+one of p, q is a point mass (x − c)3. Furthermore, (13) strictly implies the cubic hyperbolic
+Pythagorean inequality
+cosh
+(
+1
+2 log rat(p ⊠3 q)
+)
+≥ cosh
+(
+1
+2 log rat(p)
+)
+cosh
+(
+1
+2 log rat(q)
+)
+, (14)
+as well as (log rat(p ⊠3 q))2 ≥ (log rat(p))2 + (log rat(q))2.
+Proof. Proof of (a). By dilation invariance of rat, normalize p(x) = (x − 1)(x − α) and q(x) =
+(x − 1)(x − β) with α = rat(p) ≥ 1 and β = rat(q) ≥ 1. Then (p ⊠2 q)(x) = x2 − (1+α)(1+β) 2 x + αβ
+has positive roots 0 < γ1 ≤ γ2 with γ1γ2 = αβ and γ1 + γ2 = 1 2 (1 + α)(1 + β). Setting
+γ := γ2/γ1 = rat(p ⊠2 q), we obtain
+2 cosh
+(
+1
+2 log γ
+)
+= √γ + 1√γ = γ1 + γ2 √γ1γ2 = (1 + α)(1 + β) 2√αβ = 2 cosh ( 1 2 log α ) cosh ( 1 2 log β ) ,
+proving (12). To deduce (log γ)2 ≥ (log α)2 + (log β)2, note that for a, b ≥ 0, comparing Tay-
+lor series yields cosh(
+√
+a2 + b2) = ∑∞ n=0 (a2+b2)n (2n)! ≤ ∑∞ n=0 ∑n k=0 a2k (2k)! b2(n−k) (2n−2k)! = cosh(a) cosh(b),
+because
+(2n
+2k
+)
+≥
+(n
+k
+)
+for all 0 ≤ k ≤ n (strictly for n ≥ 2 and 1 ≤ k ≤ n − 1).
+Proof of (b). First verify that (13) implies (14): writing A = cosh2 a(p) ≥ 1, B =
+cosh2 a(q) ≥ 1, and C = cosh2 a(p ⊠3 q) ≥ 1, (13) reads 4C − 1 ≥ 1 3 (4A − 1)(4B − 1) =
+4AB − 1 + 4 3 (A − 1)(B − 1) ≥ 4AB − 1, hence C ≥ AB, which is (14) (and implies Euclidean
+log-ratio superadditivity as in part (a)).
+Now we prove (13) in four elementary steps. By dilation invariance, normalize every p ∈
+P R>0 3 so that its root product is 1:
+pu,v(x) := x3 − 3ux2 + 3vx − 1, u, v ≥ 1.
+Under this normalization, (3) becomes exact componentwise multiplication:
+pu1,v1 ⊠3 pu2,v2 = pu1u2, v1v2 . (15)
+Step 1 (Deformed cubic discriminant). Fix ρ ≥ 1 and µ := ρ+1+ρ−1 ≥ 3. A cubic pu,v
+has a pair of positive roots (s, ρs) with ratio ρ if and only if pu,v(s) = 0 and pu,v(ρs) = 0 share a
+common root s > 0. For ρ > 1, eliminating the constant term via (pu,v(ρs)−pu,v(s))/(s(ρ−1)) =
+0 and eliminating the cubic term via (pu,v(ρs) − ρ3pu,v(s))/(ρ − 1) = 0 yields two quadratics in
+s:
+(ρ2 + ρ + 1)s2 − 3u(ρ + 1)s + 3v = 0, 3uρ2s2 − 3vρ(ρ + 1)s + (ρ2 + ρ + 1) = 0.
+Their Sylvester resultant in s equals −ρ4µ Dµ(u, v), where the deformed cubic discriminant is
+defined by
+Dµ(u, v) := 81u2v2 + 9µ(µ + 3)uv − 27(µ + 1)(u3 + v3) − µ3. (16)
+6
+```
+
+---
+
+## Page 7
+
+```text
+Notice that at µ = 3 (ρ = 1), D3(u, v) = 81u2v2 +162uv−108(u3 +v3)−27 = ∆(pu,v) is precisely
+the ordinary cubic discriminant. Introducing the µ-normalized coordinates ˜u := 3u/µ and ˜v :=
+3v/µ, direct algebra (certified in Lean 4 as deformed_cubic_discriminant_factorization)
+gives the fundamental factorization:
+Dµ(u, v) = µ3
+[
+µ
+(
+˜u2 − ˜v )( ˜v2 − ˜u ) − ( ˜u3 + ˜v3 + 1 − 3˜u˜v )] . (17)
+Step 2 (Exact domain characterization). We claim that for every ρ ≥ 1 (µ = ρ + 1 +
+ρ−1),
+rat(pu,v) ≥ ρ ⇐⇒ ˜u ≥ 1, ˜v ≥ 1, ˜u2 ≥ ˜v, ˜v2 ≥ ˜u, and Dµ(u, v) ≥ 0. (18)
+Denote the right-hand set in (˜u, ˜v) by Kµ. First, suppose rat(pu,v) ≥ ρ. Write the ordered roots
+as r1 = x−2/3y−1/3, r2 = x1/3y−1/3, r3 = x1/3y2/3 with x = r2/r1 ≥ ρ and y = r3/r2 ≥ ρ. As
+x, y ≥ ρ ≥ 1, the function 3u(x, y) = x1/3y2/3 + x1/3y−1/3 + x−2/3y−1/3 is strictly increasing in
+both x and y on [ρ, ∞)2 (indeed, ∂(3u) ∂x = 1 3 x−2/3y−1/3(y + 1 − 2/x) ≥ 1 3 x−2/3y−1/3(2 − 2/x) ≥ 0,
+and ∂(3u) ∂y = 1 3 x−2/3y−4/3(2xy − x − 1) > 0 for xy > 1). Hence 3u(x, y) ≥ 3u(ρ, ρ) = µ, giving
+˜u ≥ 1, and by symmetry v(x, y) = u(y, x), giving ˜v ≥ 1. Moreover, Dµ(u, v) vanishes only
+when some root ratio equals ρ (on the boundary x = ρ or y = ρ, since r3/r1 = xy ≥ ρ2 > ρ
+for ρ > 1), and Dµ(u, v) > 0 as x = y → ∞ (where ˜u = ˜v → ∞ and Dµ/µ3 ∼ µ˜u4 > 0). By
+connectedness of (ρ, ∞)2, Dµ(u, v) > 0 whenever x, y > ρ, and Dµ(u, v) ≥ 0 for x, y ≥ ρ. Since
+˜u3 + ˜v3 +1−3˜u˜v = 1 2 (˜u+ ˜v +1) ( (˜u− ˜v)2 +(˜u−1)2 +(˜v −1)2) ≥ 0 (strictly unless ˜u = ˜v = 1), (17)
+forces (˜u2 − ˜v)(˜v2 − ˜u) ≥ 0. Because ˜u, ˜v ≥ 1 cannot simultaneously satisfy ˜u2 < ˜v and ˜v2 < ˜u
+(which would give ˜u4 < ˜u), we have ˜u2 ≥ ˜v and ˜v2 ≥ ˜u, with both inequalities strict whenever
+(˜u, ˜v) ⁄= (1, 1).
+Conversely, suppose (˜u, ˜v) ∈ Kµ. If (˜u, ˜v) = (1, 1), then pu,v(x) = (x − ρ−1)(x − 1)(x − ρ)
+has rat = ρ. Otherwise ˜u2 > ˜v and ˜v2 > ˜u, so the auxiliary variables
+α := ˜v ˜u2 ∈ (0, 1), β := ˜u ˜v2 ∈ (0, 1) (19)
+are well defined and satisfy ˜u = (α2β)−1/3, ˜v = (αβ2)−1/3. Substituting (19) into (17) trans-
+forms Dµ(u, v) ≥ 0 into Φ(α, β) ≤ µ, where
+Φ(α, β) := ˜u3 + ˜v3 + 1 − 3˜u˜v (˜u2 − ˜v)(˜v2 − ˜u) = (α − β)2 (1 − α)(1 − β) + α + β + αβ. (20)
+(Verification of (20): setting r = 1/α = ˜u2/˜v and s = 1/β = ˜v2/˜u, we have ˜u3 = r2s, ˜v3 = rs2,
+˜u˜v = rs, and (˜u2 −˜v)(˜v2 − ˜u) = rs(r−1)(s−1), giving Φ = r+s+(rs)−1−3 (r−1)(s−1) = β(1−α) 1−β + α(1−β) 1−α +αβ =
+(α−β)2
+(1−α)(1−β) + α + β + αβ.)
+Furthermore, for all µ ≥ 3 and u, v ≥ µ/3, setting a = 3u − µ ≥ 0 and b = 3v − µ ≥ 0 yields
+the exact identity (certified in Lean 4 as discriminant_dominates_deformed):
+∆(pu,v) − Dµ(u, v) ≥ (µ − 3)3(µ + 1) ≥ 0. (21)
+Hence if µ > 3 and (˜u, ˜v) ∈ Kµ, then ∆(pu,v) > 0, so pu,v has three distinct real roots (all
+positive by Descartes’ rule of signs, since u, v > 0). Moreover, for any (α, β) ∈ (0, 1)2 with
+Φ(α, β) < µ (the interior K◦ µ), the radial ray τ ↦→ (τ α, τ β) for τ ∈ (0, 1] satisfies
+Φ(τ α, τ β) = τ 1 − τ α · τ 1 − τ β (α − β)2 + τ α + τ β + τ 2αβ,
+which is strictly increasing in τ ! Thus K◦ µ is star-shaped toward (0, 0) (see Figure 1), hence
+connected. Along the ray as τ → 0+, ˜u, ˜v → ∞ with α/β = const, whence the root ratios
+r2/r1, r3/r2 → ∞ exceed ρ. Since Dµ > 0 on K◦ µ, no root ratio can cross ρ along the ray; by
+7
+```
+
+---
+
+## Page 8
+
+```text
+continuity, rat(pu,v) > ρ on K◦ µ and rat(pu,v) ≥ ρ on its closure Kµ. (For µ = 3, D3 = ∆ ≥ 0
+directly characterizes P R>0 3 .) This proves (18).
+Step 3 (Semigroup closure of Φ). We prove that for all α1, β1, α2, β2 ∈ (0, 1),
+Φ(α1α2, β1β2) < max
+(
+Φ(α1, β1), Φ(α2, β2)
+)
+. (22)
+Decompose Φ(α, β) = Q(α, β) + L(α, β), where Q(α, β) := (α−β)2 (1−α)(1−β) = R + R−1 − 2 with
+R(α, β) := 1−α 1−β > 0, and L(α, β) := α+β+αβ. Clearly L(α1α2, β1β2) < min(L(α1, β1), L(α2, β2)).
+For R12 := R(α1α2, β1β2), let M := max(1, R1, R2) where Ri = R(αi, βi). We claim that
+R12 ≤ M (verified in Lean 4 by ratio_contraction_upper_int):
+• If α1 ≤ β1, then 1 − α1α2 = (1 − α1) + α1(1 − α2) ≤ M (1 − β1) + β1M (1 − β2) = M (1 − β1β2).
+• If α2 ≤ β2, the same estimate holds symmetrically with indices 1 ↔ 2.
+• If α1 > β1 and α2 > β2, then α1α2 > β1β2, so R12 < 1 ≤ M .
+Swapping α ↔ β yields R−1 12 ≤ max(1, R−1 1 , R−1 2 ). Since x ↦→ x + x−1 − 2 is increasing on [1, ∞)
+and symmetric under x ↔ x−1, we deduce Q(α1α2, β1β2) ≤ max(Q(α1, β1), Q(α2, β2)). Adding
+L(α1α2, β1β2) < min(L1, L2) gives
+Φ(α1α2, β1β2) < max(Q1, Q2) + min(L1, L2) ≤ max(Q1 + L1, Q2 + L2),
+proving (22).
+Step 4 (Conclusion and equality characterization). Let p = pu1,v1 and q = pu2,v2
+have µ1 = µ(p) ≥ 3 and µ2 = µ(q) ≥ 3, and set µ∗ := 1 3 µ1µ2 ≥ max(µ1, µ2) ≥ 3. Under the
+scaling ˜ui = 3ui/µi, ˜vi = 3vi/µi, the product polynomial p ⊠3 q = pu1u2,v1v2 has µ∗-normalized
+coordinates
+˜u∗ = 3u1u2 µ∗ = 3u1 µ1 · 3u2 µ2 = ˜u1 ˜u2, ˜v∗ = ˜v1 ˜v2,
+and hence α∗ = α1α2 and β∗ = β1β2!
+• If (˜u1, ˜v1) = (1, 1) and (˜u2, ˜v2) = (1, 1) (both are geometric progressions), then (˜u∗, ˜v∗) =
+(1, 1) ∈ Kµ∗ , giving exact equality µ(p ⊠3 q) = µ∗.
+• If one factor is a point mass (say p(x) = (x−1)3, so µ1 = 3 and ˜u1 = ˜v1 = 1), then p⊠3 q = q,
+giving equality µ(p ⊠3 q) = µ2 = µ∗.
+• If one factor is a non-degenerate geometric progression (say ˜u2 = ˜v2 = 1, µ2 > 3) and the
+other is not ((˜u1, ˜v1) ⁄= (1, 1)), then (˜u∗, ˜v∗) = (˜u1, ˜v1) satisfies Φ(α1, β1) ≤ µ1 < 1 3 µ1µ2 = µ∗
+(strictly, even if µ1 = 3), so (˜u∗, ˜v∗) ∈ K◦ µ∗ and µ(p ⊠3 q) > µ∗ strictly.
+• If neither factor is a geometric progression ((˜ui, ˜vi) ⁄= (1, 1) for i = 1, 2), then αi, βi ∈ (0, 1),
+so (22) gives Φ(α1α2, β1β2) < max(Φ1, Φ2) ≤ max(µ1, µ2) ≤ µ∗, placing (˜u∗, ˜v∗) ∈ K◦ µ∗ and
+yielding µ(p ⊠3 q) > µ∗ strictly.
+This completes the proof of Theorem 3.2.
+4 Exact Finite Free Heat-Flow Expansion and Universal d ≥ 4
+Failure
+Why does Euclidean Pythagorean superadditivity break abruptly at d = 4? The deepest ex-
+planation comes from the finite free heat flow. Let Hed(x) := ∑⌊d/2⌋ k=0 (−1)k d! (d−2k)! k! 2k xd−2k
+be the monic probabilists’ Hermite polynomial of degree d, and for T > 0 let He(T ) d (x) :=
+8
+```
+
+---
+
+## Page 9
+
+```text
+Figure 1: Level sets of the cubic multiplicative semigroup potential Φ(α, β) = (α−β)2 (1−α)(1−β) + α +
+β + αβ on (0, 1)2. Every sublevel set Kµ = {Φ ≤ µ} (µ ≥ 3) is star-shaped toward (0, 0) and
+strictly closed under componentwise multiplication (α1, β1) ⊙ (α2, β2) = (α1α2, β1β2).
+T d/2Hed(x/ √ T ) (with He(0) d (x) = xd). By (7), convolution with He(T ) d solves the backward heat
+equation [12, 5]:
+pT (x) :=
+(
+p ⊞d He(T ) d ) (x) = exp ( − T 2 ∂2 x ) p(x), ∂T pT = − 1 2 ∂2 xpT . (23)
+Whenever pt has simple roots λ1(t) < · · · < λd(t), differentiating pt(λi(t)) = 0 yields ∂tpt(λi) =
+− ˙λip′ t(λi) while p′′ t (λi)/p′ t(λi) = 2 ∑ j̸=i(λi − λj )−1, giving the exact deterministic Dyson (1D
+Coulomb) flow:
+˙λi(t) = ∑
+j̸=i
+1
+λi(t) − λj (t) (1 ≤ i ≤ d). (24)
+Theorem 4.1 (Sharp Finite Free Heat-Flow Gap Expansion). For every d ≥ 2, define the exact
+Dyson expansion rate and sharp heat-flow constant
+cheat d :=
+
+
+
+8
+d , d even,
+8d
+d2 − 1 , d odd,
+κd := cheat d gap(Hed)2 . (25)
+Then for every p ∈ P R d and every T ≥ 0,
+gap
+(
+p ⊞d He(T ) d )2 ≥ gap(p)2 + cheat d T = gap(p)2 + κd gap ( He(T ) d )2. (26)
+Moreover, the constant κd is sharp for every d ≥ 2: it is achieved asymptotically as T → 0+
+when p = p(d) AP has equally spaced roots. Explicitly,
+κ2 = κ3 = 1, κ4 = 3 +
+√
+6
+6 ≈ 0.90825, κ5 = 5 +
+√
+10
+9 ≈ 0.90692,
+lim
+d→∞
+κd = 8 π2 ≈ 0.81057.
+9
+```
+
+---
+
+## Page 10
+
+```text
+Proof. First suppose gap(p) > 0. By Theorem 2.1(a), gap(pt) ≥ gap(p) > 0 for all t ≥ 0, so
+the roots λ1(t) < · · · < λd(t) are C∞ functions on [0, ∞) satisfying (24). Consider any index
+i ∈ {1, . . . , d − 1} that attains the minimum gap at time t: λi+1(t) − λi(t) = g := gap(pt) > 0.
+Writing L := i − 1 (roots strictly to the left of λi) and R := d − i − 1 (roots strictly to the right
+of λi+1, so L + R = d − 2), we compute from (24):
+˙λi+1(t) − ˙λi(t) = 2 g − ∑ j<i g (λi+1 − λj )(λi − λj ) − ∑ j>i+1 g (λj − λi+1)(λj − λi) . (27)
+Because every adjacent gap is at least g, we have λi − λi−k ≥ kg and λi+1 − λi−k ≥ (k + 1)g for
+1 ≤ k ≤ L, and similarly λi+1+k − λi+1 ≥ kg and λi+1+k − λi ≥ (k + 1)g for 1 ≤ k ≤ R. Every
+term in both sums of (27) is bounded above by the exact telescoping Coulomb series (certified
+in Lean 4 as coulombSum_closed_form):
+L∑
+k=1
+1
+k(k + 1) = 1 − 1 L + 1 , R∑ k=1 1 k(k + 1) = 1 − 1 R + 1 .
+Substituting these into (27) yields
+˙λi+1(t) − ˙λi(t) ≥ 1 g ( 2 − ( 1 − 1 L + 1 ) − ( 1 − 1 R + 1 )) = 1 g ( 1 L + 1 + 1 R + 1 ) . (28)
+Since (L+1)+(R+1) = d, we have 4(L+1)(R+1) = d2 −(L−R)2 ≤ d2 for even d, and |L−R| ≥
+1 =⇒ 4(L+1)(R+1) ≤ d2 −1 for odd d (certified in Lean 4 as dyson_rate_lower_bound_even
+and dyson_rate_lower_bound_odd). Hence 1 L+1 + 1 R+1 = d (L+1)(R+1) ≥ 1 2 cheat d , and multiply-
+ing (28) by 2g cancels g completely:
+d
+dt
+(
+λi+1(t) − λi(t)
+)2
+≥ cheat d ∀ i ∈ I(t) := arg min 1≤j<d ( λj+1(t) − λj (t) ) .
+Since F (t) := gap(pt)2 = min1≤j<d(λj+1(t) − λj (t))2 is the minimum of finitely many C∞
+functions on [0, T ], its right derivative exists everywhere on [0, T ) and satisfies
+D+F (t) = min i∈I(t)
+d
+dt
+(
+λi+1(t) − λi(t)
+)2 ≥ cheat d .
+Therefore G(t) := F (t) − cheat d t is continuous on [0, T ] with D+G(t) ≥ 0 on [0, T ), whence
+G(T ) ≥ G(0), establishing (26) whenever gap(p) > 0.
+If gap(p) = 0 (multiple roots at t = 0), Theorem 2.1(a) ensures gap(pε) ≥ √ε gap(Hed) > 0
+for every ε ∈ (0, T ). Applying the semigroup property pT = pε ⊞d He(T −ε) d gives gap(pT )2 ≥
+gap(pε)2 + cheat d (T − ε) ≥ cheat d (T − ε); letting ε → 0+ yields (26) for all p ∈ P R d .
+For sharpness: take p = p(d) AP with roots spaced by 1. Every inequality in (28) becomes an
+exact equality at the central index i = ⌊d/2⌋ (where L + 1 = ⌊d/2⌋, R + 1 = ⌈d/2⌉), while
+outer gaps have strictly larger velocities. Thus D+ gap(p(d) AP ⊞d He(t) d )2⏐⏐ t=0+ = cheat d , proving
+that limT →0+
+gap(pT )2−gap(p)2
+gap(He(T ) d )2 = cheat d gap(Hed)2 = κd. Explicit values: He2(x) = x2 − 1 (gap2 = 4,
+κ2 = 1), He3(x) = x3 − 3x (gap2 = 3, κ3 = 1), He4(x) = x4 − 6x2 + 3 (gap2 = 12 − 4 √ 6,
+κ4 = 2 12−4 √ 6 = 3+
+√
+6
+6 ), and He5(x) = x5 − 10x3 + 15x (gap2 = 5 − √ 10, κ5 = 5/3 5− √ 10 = 5+ √ 10 9 ).
+The asymptotic limit κd → 8 π2 follows from the Sturm–Liouville bounds in Theorem 4.3 below
+(specifically, gap(Hed)2 = π2 d (1 + O(d−1)), which is classical [11]).
+10
+```
+
+---
+
+## Page 11
+
+```text
+Lemma 4.2 (Multiplicative-to-Additive Infinitesimal Limit). Let d ≥ 2 and let p(x) = ∏d i=1(x−
+ai), q(x) = ∏d j=1(x − bj ) ∈ P R d . For ε > 0, define pε(x) := ∏d i=1(x − eεai ) and qε(x) :=∏d
+j=1(x − eεbj ) ∈ P R>0 d . Then
+lim
+ε→0+
+ε−d(pε⊠dqε)(1+εy) = (p⊞dq)(y) and lim ε→0+ log rat(pε ⊠d qε) ε = gap(p⊞dq). (29)
+Proof. Set A = diag(a1, . . . , ad) and B = diag(b1, . . . , bd). Since eεA = I + εA + O(ε2) and
+eεB = I + εB + O(ε2) uniformly over the compact orthogonal group O(d), we have
+(1 + εy)I − eεAQeεB Q⊤ = ε ( yI − A − QBQ⊤) + O(ε2)
+uniformly for Q ∈ O(d). Taking determinants, dividing by εd, and integrating over Haar
+measure on O(d) via (4) yields the coeﬀicientwise limit ε−d(pε ⊠d qε)(1 + εy) → (p ⊞d q)(y) as
+ε → 0+. Writing the ordered roots of pε ⊠d qε as 1 + εyk(ε), continuity of polynomial roots gives
+yk(ε) → γk, the ordered roots of p ⊞d q. Hence
+log rat(pε ⊠d qε)
+ε = min 1≤k<d
+1
+ε log 1 + εyk+1(ε) 1 + εyk(ε) −→ min 1≤k<d (γk+1 − γk) = gap(p ⊞d q).
+Theorem 4.3 (Universal d ≥ 4 Failure and Exact Closed-Form Counterexamples).
+(a) Universal Sturm–Liouville violation for all d ≥ 4: For every d ≥ 2, gap(Hed)2 >
+π2
+d+1/2 . Consequently, κd < 1 for every d ≥ 4, and therefore:
+• Euclidean Pythagorean superadditivity gap(p⊞d q)2 ≥ gap(p)2 +gap(q)2 fails for every
+d ≥ 4 (already for p(d) AP ⊞d He(T ) d at small T > 0).
+• Multiplicative hyperbolic superadditivity (14), cubic µ-supermultiplicativity (13), and log-
+ratio superadditivity (log rat(p ⊠d q))2 ≥ (log rat p)2 + (log rat q)2 all fail for every
+d ≥ 4.
+(b) Exact self-convolution counterexamples (d = 4, 5): For unit-spaced arithmetic pro-
+gressions p(4) AP(x) = x4 − 5 2 x2 + 9 16 and p(5) AP(x) = x5 − 5x3 + 4x (gap = 1), writing
+rd := p(d) AP ⊞d p(d) AP,
+r4(x) = x4 − 5x2 + 13 6 =⇒ gap(r4)2 2 = 5 − 7√ 3 ≈ 0.958548 < 1, (30)
+r5(x) = x5 − 10x3 + 31 2 x =⇒ gap(r5)2 2 = 10 − √ 38 4 ≈ 0.958897 < 1. (31)
+Proof. Proof of (a). The probabilists’ Hermite polynomial y = Hed satisfies y′′ − xy′ + dy =
+0. The Liouville transformation u(x) := e−x2/4Hed(x) preserves all real zeros and solves the
+harmonic oscillator equation
+u′′(x) + ( d + 1 2 − x2 4 ) u(x) = 0.
+Comparing with the constant-frequency oscillator v′′ + (d + 1 2 )v = 0, whose consecutive zeros
+are spaced by π/
+√
+d + 1/2, Sturm’s comparison theorem [11] implies strictly that every adja-
+cent root gap of Hed exceeds π/
+√
+d + 1/2 (since d + 1 2 − x2 4 < d + 1 2 on R \ {0}). Squaring
+gives gap(Hed)2 > π2 d+1/2 . Using π > 3.14 (π2 > 9.8596), we verify (certified in Lean 4 as
+sturm_universal_failure_even and sturm_universal_failure_odd):
+• For even d ≥ 4: 8 d < 9.8596 d+1/2 ⇐⇒ 4 < 1.8596 d, which holds for all d ≥ 3.
+11
+```
+
+---
+
+## Page 12
+
+```text
+• For odd d ≥ 5: 8d d2−1 < 9.8596 d+1/2 ⇐⇒ 4d + 9.8596 < 1.8596 d2, which holds for all d ≥ 5 (at
+d = 5: 29.8596 < 46.49).
+Thus κd = cheat d / gap(Hed)2 < 1 for every d ≥ 4. By Theorem 4.1, at p = p(d) AP we have
+gap(p ⊞d He(T ) d )2 = 1 + cheat d T + o(T ) < 1 + gap(Hed)2T = gap(p)2 + gap(He(T ) d )2 for suﬀiciently
+small T > 0, breaking additive Pythagorean superadditivity for every d ≥ 4.
+For the multiplicative convolution ⊠d (d ≥ 4), take any additive counterexample pair (p, q)
+with gap(p ⊞d q)2 < gap(p)2 + gap(q)2, and form (pε, qε) as in Lemma 4.2. Since log rat(pε) =
+ε gap(p) and log rat(qε) = ε gap(q) identically, Lemma 4.2 yields
+lim
+ε→0+
+(log rat(pε ⊠d qε))2
+(log rat pε)2 + (log rat qε)2 = gap(p ⊞d q)2 gap(p)2 + gap(q)2 < 1.
+Since cosh( 1 2 log ρ) = 1+ 1 8 (log ρ)2 +O((log ρ)4) and 1 3 µ(ρ) = 1+ 1 3 (log ρ)2 +O((log ρ)4), subtract-
+ing 1 and dividing by ε2 shows that both cosh c ≥ cosh a cosh b and 1 3 µ(pε ⊠d qε) ≥ 1 3 µ(pε)· 1 3 µ(qε)
+also fail for all suﬀiciently small ε > 0 in every degree d ≥ 4.
+To establish the asymptotic limit limd→∞ κd = 8 π2 stated in Theorem 4.1, let qd(x) := d+ 1 2 −
+x2
+4 . Because qd(x) is even and strictly decreasing in |x|, Sturm’s comparison theorem implies
+that consecutive root gaps of Hed increase monotonically with distance from the origin [11,
+Section 6.31]; hence gap(Hed) is always attained on the central adjacent-zero interval: [−r1, r1]
+with gap(Hed) = 2r1 when d is even (since Hed is even and Hed(0) ⁄= 0), and [0, r1] with
+gap(Hed) = r1 when d is odd (since Hed is odd and Hed(0) = 0), where r1 > 0 denotes
+the smallest positive root of Hed. To bound r1 from above, fix d ≥ 5 and L := 2π/
+√
+d.
+For all x ∈ [−L, L], x2/4 ≤ π2/d < d/2 (as d2 ≥ 25 > 2π2), so qd(x) > d/2. Comparing
+u′′ + qd(x)u = 0 against the constant-frequency oscillator w′′ + d 2 w = 0 on [−L, L]: for odd
+d ≥ 5, w(x) = sin(
+√
+d/2 x) vanishes at 0 and
+√
+2π/
+√
+d < L, so Sturm comparison forces
+r1 <
+√
+2π/
+√
+d; for even d ≥ 6, w(x) = cos(
+√
+d/2 x) has consecutive zeros at ±π/
+√
+2d ∈ (−L, L),
+so Sturm comparison guarantees a zero of the even function u inside (−π/
+√
+2d, π/
+√
+2d), giving
+r1 < π/
+√
+2d <
+√
+2π/
+√
+d. Thus r2 1 /4 < π2/(2d) for every d ≥ 5. Now set ω− :=
+√
+d + 1 2 − π2 2d and
+ω+ :=
+√
+d + 1 2 , so that ω2 − < qd(x) ≤ ω2 + throughout the single central adjacent-zero interval
+([−r1, r1] for even d, [0, r1] for odd d). Applying Sturm’s comparison theorem on that single
+interval yields π/ω+ < gap(Hed) < π/ω− in both parities, i.e.,
+π2
+d + 1/2 < gap(Hed)2 < π2 d + 1/2 − π2/(2d) (∀ d ≥ 5).
+Hence gap(Hed)2 = π2 d (1 + O(d−1)), and since cheat d = 8 d (1 + O(d−2)), we obtain limd→∞ κd = 8 π2 .
+Proof of (b). Direct evaluation of (2) gives:
+• For d = 4: a2 = − 5 2 , a4 = 9 16 , so c2 = −5 and c4 = 2 · 9 16 + 2!2! 4!0! ( − 5 2 )2 = 9 8 + 25 24 = 13 6 . Solving
+x4 − 5x2 + 13 6 = 0 gives x2 = 1 2 ( 5 ± √ 25 − 26 3 ) = 1 2 ( 5 ± 7√ 3 ) . The inner gap is 2 √ 1 2 (5 − 7√ 3 ),
+which is smaller than the outer gap
+√
+1
+2 (5 + 7√ 3 ) − √ 1 2 (5 − 7√ 3 ) (indeed, the inner gap
+squared is 10 − 14√ 3 ≈ 1.9171 < 2, whereas the outer gap squared is 5 − √ 26 3 ≈ 2.0561 > 2).
+Since 82 · 3 = 192 < 196 = 142, we have 10 − 14√ 3 < 2.
+• For d = 5: a2 = −5, a4 = 4, so c2 = −10 and c4 = 2 · 4 + 3!3! 5!1! (−5)2 = 8 + 15 2 = 31 2 . Factoring
+x(x4 − 10x2 + 31 2 ) = 0 yields x = 0 and x2 = 5 ± √ 25 − 31 2 = 5 ± √ 19 2 . The inner gap
+is
+√
+5 −
+√
+19/2 (smaller than the outer gap ≈ 1.4581), and 1 2 (5 − √ 19/2) = 10− √ 38 4 < 1
+because 36 < 38.
+12
+```
+
+---
+
+## Page 13
+
+```text
+Figure 2: The sharp d = 3 → 4 phase transition in finite free root-gap dynamics. (a) Self-
+convolution of unit-spaced arithmetic progressions p(d) AP ⊞d p(d) AP, dropping from 1.0 (d ≤ 3) to
+5 − 7√ 3 ≈ 0.9585 (d = 4) and numerically tracking the free inverse-density-squared reference
+R2 = π2 8u2 2 ≈ 0.9081 (Conjecture 6.1(c)). (b) The sharp heat-flow constant κd of Theorem 4.1,
+dropping from κ2 = κ3 = 1 to κ4 = 3+
+√
+6
+6 ≈ 0.9082 and approaching 8 π2 ≈ 0.8106.
+5 Macroscopic Asymptotics: Voiculescu R-Transform and the
+Basel Constant π2/12
+Let ~p(d) AP(x) := d−dp(d) AP(dx) denote the rescaled arithmetic progression whose roots lie on [− d−1 2d , d−1 2d ] ⊂
+[−1/2, 1/2] with spacing 1/d (distinct from the unit-spaced polynomial p(d) AP of Section 4). As
+d → ∞, the empirical root distribution of ~p(d) AP converges weakly to the uniform distribution
+U := Unif[−1/2, 1/2], and the empirical root distribution of the k-fold finite free convolution
+(~p(d) AP)⊞dk converges weakly to Voiculescu’s k-fold free additive convolution U ⊞k [6, 13].
+Weak convergence of empirical root measures does not by itself imply O(1/d) nearest-
+neighbor minimum-gap convergence, nor does it establish that the density ρk(x) of U ⊞k attains
+its global maximum at x = 0. Nonetheless, if the microscopic spacing near the origin of (~p(d) AP)⊞dk
+tracks (dρk(0))−1 and ρk is unimodal around 0, then the finite-degree ratio
+gap
+(
+(p(d) AP)⊞dk)2
+k = d2 gap ( (~p(d) AP)⊞dk)2 k
+is predicted to approach the free inverse-density-squared ratio Rk := 1 kρk (0)2 (framed explicitly
+as a numerical/heuristic scaling conjecture in Conjecture 6.1(c), illustrated in Figure 2(a) and
+tested numerically in verification_summary.json). Remarkably, ρk(0) and Rk admit an
+exact closed-form transcendental characterization for every k ≥ 2, terminating at the Basel
+constant π2 12 .
+Theorem 5.1 (Voiculescu R-Transform Law and the Basel Limit). For every integer k ≥ 2, let
+uk ∈ (0, π/2) be the unique root of the transcendental equation
+uk cot(uk) = k − 1 k . (32)
+Then the k-fold free additive convolution µk := U ⊞k of U = Unif[−1/2, 1/2] has no singular or
+atomic part on an open neighborhood of 0, admits a real-analytic Lebesgue density ρk near 0
+13
+```
+
+---
+
+## Page 14
+
+```text
+with exact central value ρk(0) = 2uk π , and satisfies
+Rk := 1 k ρk(0)2 = π2 4ku2 k . (33)
+In particular:
+(a) At k = 2, u2 ≈ 1.1655611852 solves 2u2 cot(u2) = 1, giving R2 = π2 8u2 2 ≈ 0.90811240.
+(b) As k → ∞, uk =
+√
+3
+k
+(
+1 − 1 10k + O(k−2) ) , and Rk decreases strictly monotonically to the
+Basel constant
+lim
+k→∞
+Rk = π2 12 ≈ 0.82246703, (34)
+matching the free Central Limit Theorem (Wigner semicircle of variance σ2 = 1 12 ).
+Proof. For z ∈ C+ = {Im z > 0}, the Cauchy transform of U = Unif[−1/2, 1/2] is
+GU (z) =
+∫ 1/2
+−1/2
+dt
+z − t = log z + 1/2 z − 1/2 ,
+with Im GU (z) < 0. Inverting w = GU (z) gives G−1 U (w) = 1 2 coth(w/2), so Voiculescu’s R-
+transform is RU (w) = G−1 U (w) − 1 w = 1 2 coth(w/2) − 1 w . Define the meromorphic candidate
+inverse
+Kk(w) := 1 w + kRU (w) = k 2 coth ( w 2 ) − k − 1 w ,
+which is holomorphic on the punctured strip {w ∈ C : | Im w| < 2π} \ {0} with a simple pole
+of residue 1 at w = 0. By additivity of Voiculescu’s R-transform under ⊞ [13], there exists
+δ0 > 0 such that on the punctured lower-half neighborhood W0 := {w ∈ C− : 0 < |w| < δ0},
+Kk(w) ∈ C+ and Gµk (Kk(w)) = w.
+To analytically continue this relation globally along −iR>0 up to the real axis, substitute w =
+−2iu with u ∈ (0, π/2). Using coth(−iu) = i cot(u) and (−2iu)−1 = i 2u , we find Kk(−2iu) =
+i y(u), where
+y(u) := k 2 cot(u) − k − 1 2u = k u cot u − (k − 1) 2u .
+On (0, π/2), the function h(u) := u cot u decreases strictly from limu→0+ h(u) = 1 to h(π/2) = 0
+(since h′(u) = sin u cos u−u sin2 u < 0). Hence for every k ≥ 2, (32) has a unique solution uk ∈ (0, π/2).
+Moreover, for every u ∈ (0, π/2) (including u = uk),
+y′(u) = (k − 1) sin2 u − ku2
+2u2 sin2 u < 0
+because 0 < sin u < u implies (k − 1) sin2 u < ku2. Thus y(u) maps (0, uk) strictly decreas-
+ingly and bijectively onto (0, ∞) with y(uk) = 0 and limu→0+ y(u) = +∞. In particular,
+iy(u) ∈ C+ for every u ∈ (0, uk). Because Gµk is globally holomorphic on C+, the compo-
+sition ϕ(u) := Gµk (iy(u)) + 2iu is real-analytic on the entire connected interval (0, uk). For
+u ∈ (0, min(uk, δ0/2)), we have −2iu ∈ W0, whence Gµk (iy(u)) = Gµk (Kk(−2iu)) = −2iu,
+i.e., ϕ(u) ≡ 0 on (0, min(uk, δ0/2)). By the identity theorem for real-analytic functions on the
+connected interval (0, uk), we conclude globally that
+Gµk
+(
+iy(u)
+)
+= −2iu ∀ u ∈ (0, uk). (35)
+Next, we prove holomorphic extension across z = 0 and absence of any singular part at
+0. Set wk := −2iuk. Since 0 < 2uk < π < 2π, Kk is holomorphic in a neighborhood of
+14
+```
+
+---
+
+## Page 15
+
+```text
+wk with Kk(wk) = iy(uk) = 0. Differentiating Kk(−2iu) = iy(u) with respect to u yields
+−2iK′ k(wk) = iy′(uk), so
+K′ k(wk) = − 1 2 y′(uk) = ku2 k − (k − 1) sin2 uk 4u2 k sin2 uk > 0.
+Since K′ k(wk) ⁄= 0, the holomorphic inverse function theorem provides open neighborhoods V0 of
+wk and D(0, r) ⊂ C of 0 (r > 0) such that Kk : V0 → D(0, r) is biholomorphic with holomorphic
+inverse ~G : D(0, r) → V0 satisfying ~G(0) = wk = −2iuk. For u < uk suﬀiciently close to uk,
+iy(u) ∈ D(0, r)∩iR>0 and −2iu ∈ V0, so ~G(iy(u)) = −2iu = Gµk (iy(u)) by (35). Since the upper
+half-disk D(0, r) ∩ C+ is connected and contains this open imaginary segment, the holomorphic
+identity theorem gives Gµk (z) = ~G(z) on all of D(0, r)∩C+. Hence Gµk extends holomorphically
+across the real interval (−r, r) with continuous boundary value Gµk (x + i0+) = ~G(x). By
+Stieltjes–Perron inversion, µk has no atomic or singular continuous part on (−r, r) and possesses
+a real-analytic Lebesgue density ρk(x) = − 1 π Im ~G(x) there; evaluating at x = 0 yields
+ρk(0) = − 1 π Im ~G(0) = − 1 π Im(−2iuk) = 2uk π ,
+establishing (33). For k → ∞, expanding u cot u = 1 − u2 3 − u4 45 + O(u6) = 1 − 1 k yields u2 k =
+3
+k
+(
+1 − 1 5k + O(k−2) ) , whence Rk = π2 12 ( 1 + 1 5k + O(k−2) ) → π2 12 . Equivalently, Var(U ) = 1 12 , so by
+the Free Central Limit Theorem k−1/2U ⊞k converges to the Wigner semicircle of variance 1 12 and
+radius R = 2
+√
+1/12 = 1√ 3 , whose peak density at 0 is ρsc(0) = 2 πR = 2
+√
+3
+π , giving ρsc(0)−2 = π2 12 .
+Finally, Rk is strictly decreasing in k: setting f (u) := u2 1−u cot u on (0, π/2) so that Rk = π2 4f (uk )
+(using 1/k = 1−uk cot uk), the classical Bernoulli series 1−u cot u = ∑∞ m=1 22m|B2m| (2m)! u2m on (0, π)
+gives 1/f (u) = ∑∞ m=1 22m|B2m| (2m)! u2m−2, which has all strictly positive coeﬀicients (m ≥ 1) and is
+therefore strictly increasing in u ∈ (0, π/2). Since uk decreases strictly with k, Rk = π2 4 · 1 f (uk )
+is strictly decreasing in k.
+Remark 5.2 (Hierarchy of the three asymptotic constants). Notice the remarkable ordering of
+the three exact compression constants discovered in this paper:
+1
+2|{z}
+Riesz floor (Thm. 2.1)
+< 8 π2 ≈ 0.8106 | {z }
+Heat flow κ∞ (Thm. 4.1)
+< π2
+12 ≈ 0.8225 | {z }
+Free CLT (Thm. 5.1)
+< π2
+8u2 2 ≈ 0.9081 | {z }
+k=2 (Thm. 5.1)
+< 1.
+The heat-flow constant 8 π2 is strictly smaller than the free-CLT limit π2 12 because κd measures the
+instantaneous T → 0+ slope of gap(p(d) AP ⊞d He(T ) d )2 relative to gap(He(T ) d )2, before the uniform
+measure relaxes into a semicircle.
+6 Formal Verification in Lean 4.36.0, Reproducibility, and Open
+Problems
+To ensure complete reliability of every algebraic identity, cubic contraction inequality, tele-
+scoping Dyson sum, counterexample calculation, and universal Sturm comparison bound in
+Sections 3–4, we formalized the algebraic core in Lean 4.36.0 in the standalone file FiniteFree
+RootGapsCore.lean, with zero external library dependencies, -DwarningAsError=true, zero
+sorry, zero grind, and zero custom axioms (13 public theorems and 3 private helpers, build-
+ing cleanly under both lean and lake build). Table 2 records the verified artifact inventory
+and cryptographic SHA-256 digests. All code, formal proofs, numerical verification scripts, and
+figure generators are publicly archived at https://github.com/arr-research/arr-research.
+github.io.
+15
+```
+
+---
+
+## Page 16
+
+```text
+Figure 3: (a) The exact Voiculescu R-transform inverse-density-squared curve Rk = 1 kρk (0)2 =
+π2
+4ku2 k for U ⊞k (Theorem 5.1), descending monotonically from R2 ≈ 0.9081 to the free-CLT Basel
+limit π2 12 ≈ 0.8225 (slightly above the heat-flow limit 8 π2 ≈ 0.8106). (b) Multiplicative self-
+convolution of geometric progressions pε ⊠d pε: superadditivity holds for all ε > 0 at d = 2, 3
+(Theorem 3.2), whereas at d = 4 it breaks for small ε and converges to 5 − 7√ 3 ≈ 0.9585 as
+ε → 0+ (Lemma 4.2).
+Artifact Scope / Verification SHA-256 Digest (full)
+lean/FiniteFreeRootGapsCore.lean 16 kernel-verified Lean 4.36.0 thms (0 sorry) ff74b174c643d9ba8a81826eeb296c59
+(LEAN_EXIT=0, LAKE_EXIT=0, 32,276 B) 48245ef7082a25d42a512203782ccfcd
+src/verify_root_gaps.py Exact Q checks, 12,500 random trials, 3 figs d97d0675d0dc7bac4fe5da9dae418503
+(VERIFY_EXIT=0, 19,233 B) 135fdfc88098e6af77ee25dbdfd75edc
+data/verification_summary.json Exact tables (κd, uk , Rk , ⊠4 limit) ddd8f97f6a665b35b9666f33ec18fc01
+(11,121 B) f062ee3efeb8015bcf89288faaf91ec6
+Table 2: Cryptographic SHA-256 verification ledger for Frontier F2 artifacts.
+Open Problems. For each d ≥ 2, define the global Pythagorean constant
+cd := inf
+p,q∈P R d
+gap(p)2+gap(q)2>0
+gap(p ⊞d q)2
+gap(p)2 + gap(q)2 .
+Theorems 2.1, 3.1, and 4.3 prove c2 = c3 = 1 and 1 2 ≤ cd < 1 for all d ≥ 4, with c4 ≤ 5 −
+7√
+3 ≈ 0.958548 and c5 ≤ 10−
+√
+38
+4 ≈ 0.958897. Multi-start coordinate-descent optimization over
+asymmetric quartics consistently converges to p(4) AP ⊞4 p(4) AP (to 12 significant digits), motivating
+three sharp open problems:
+Conjecture 6.1 (Degree-4 Extremality, High-Degree Bounds, and Finite-to-Free Gap Scaling).
+(a) At d = 4, the global infimum is attained by equal-scale arithmetic progressions: c4 = 5− 7√ 3 .
+(b) Do lim inf d→∞ cd and lim supd→∞ cd remain strictly above 1 2 (e.g., converging to π2 8u2 2 ≈
+0.9081 or 8 π2 ≈ 0.8106), or can asymmetric high-degree measures drive lim inf d→∞ cd down
+to the Marcel Riesz floor 1 2 ?
+(c) For every integer k ≥ 2, the free density ρk of U ⊞k attains its global maximum at x = 0, and
+the finite-degree self-convolution minimum gap satisfies limd→∞ gap((p(d) AP)⊞dk )2 k = Rk = π2 4ku2 k .
+16
+```
+
+---
+
+## Page 17
+
+```text
+AI Assistance Disclosure. This research was directed, authored, and verified by Lluis Eriks-
+son (editor@airr.science) with autonomous mathematical exploration, Lean 4 formalization,
+numerical verification, and LaTeX typesetting assistance from Google Antigravity. All theo-
+rems, proofs, Lean 4 kernel builds, and exact computational checks were independently verified
+prior to release.
+References
+[1] O. Arizmendi and D. Perales. Cumulants for finite free convolution. Journal of Combina-
+torial Theory, Series A, 155:244–266, 2018.
+[2] J. Borcea and P. Brändén. The Lee–Yang and Pólya–Schur programs. I. Linear operators
+preserving stability. Inventiones Mathematicae, 177(3):541–569, 2009.
+[3] J. Garza-Vargas, N. Srivastava, and Z. Stier. Finite free Fisher information and the finite
+free entropy power inequality. arXiv preprint arXiv:2505.00679, 2025.
+[4] A. Gribinski. The Stam inequality for finite free convolutions. arXiv preprint
+arXiv:2203.00534, 2022.
+[5] B. C. Hall and C.-W. Ho. The heat flow conjecture for random matrices. Journal of
+Theoretical Probability, 35:1819–1860, 2022.
+[6] A. W. Marcus. Polynomial convolutions and (finite) free probability. arXiv preprint
+arXiv:2108.07054, 2021.
+[7] A. W. Marcus, D. A. Spielman, and N. Srivastava. Finite free convolutions of polynomials.
+Probability Theory and Related Fields, 182:807–848, 2022.
+[8] N. Obreschkoff. Verteilung und Berechnung der Nullstellen reeller Polynome. VEB
+Deutscher Verlag der Wissenschaften, Berlin, 1963.
+[9] M. Riesz. Eine trigonometrische Interpolationsformel und einige Ungleichungen für Poly-
+nome. Jahresbericht der Deutschen Mathematiker-Vereinigung, 23:354–368, 1914.
+[10] G. Szegő. Bemerkungen zu einem Satz von J. H. Grace über die Wurzeln algebraischer
+Gleichungen. Mathematische Zeitschrift, 13:28–55, 1922.
+[11] G. Szegő. Orthogonal Polynomials, volume 23 of AMS Colloquium Publications. American
+Mathematical Society, 4th edition, 1975.
+[12] T. Tao. Heat flow and zeroes of polynomials. What’s New (research blog), 2017.
+[13] D. V. Voiculescu, K. J. Dykema, and A. Nica. Free Random Variables, volume 1 of CRM
+Monograph Series. American Mathematical Society, 1992.
+[14] J. L. Walsh. On the location of the roots of certain types of polynomials. Transactions of
+the American Mathematical Society, 24(3):163–180, 1922.
+17
+```
