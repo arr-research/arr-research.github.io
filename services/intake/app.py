@@ -279,7 +279,7 @@ def create_app(test_config: dict | None = None) -> Flask:
         SESSION_COOKIE_SAMESITE="Strict",
         SESSION_COOKIE_SECURE=os.environ.get("ARR_COOKIE_SECURE", "1") != "0",
         PERMANENT_SESSION_LIFETIME=timedelta(hours=8),
-        OPERATOR_EMAIL=os.environ.get("ARR_OPERATOR_EMAIL", "editor@airr.science").lower(),
+        OPERATOR_EMAIL=os.environ.get("ARR_OPERATOR_EMAIL", "lluiseriksson@gmail.com").lower(),
         PUBLIC_ORIGIN=os.environ.get("ARR_INTAKE_ORIGIN", "http://127.0.0.1:5000").rstrip("/"),
         SCANNER=os.environ.get("ARR_SCANNER", ""),
         SMTP_HOST=os.environ.get("ARR_SMTP_HOST", ""),
@@ -1063,7 +1063,7 @@ def register_commands(app: Flask) -> None:
         click.echo("Private intake database initialized.")
 
     @app.cli.command("create-operator")
-    @click.option("--email", prompt=True, default="editor@airr.science")
+    @click.option("--email", prompt=True, default="lluiseriksson@gmail.com")
     @click.option("--name", prompt=True, default="Lluis Eriksson")
     def create_operator(email: str, name: str):
         if get_db().execute('SELECT 1 FROM users WHERE email=?', (email.strip().lower(),)).fetchone():
