@@ -98,9 +98,9 @@ class IndexingTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "SHA-256"):
             site_pdfs.published_pdf(self.paper, self.timestamp, cache_dir=self.cache)
 
-    def test_pending_and_withdrawn_do_not_publish_local_pdf(self):
+    def test_pending_publishes_verified_local_pdf_and_withdrawn_does_not(self):
         (self.paper.path / "paper.pdf").write_bytes(PDF)
-        self.assertIsNone(site_pdfs.published_pdf(self.paper, {"publication_state": "pending"}, cache_dir=self.cache))
+        self.assertEqual(site_pdfs.published_pdf(self.paper, {"publication_state": "pending"}, cache_dir=self.cache), PDF)
         self.paper.metadata["status"] = "withdrawn"
         self.assertIsNone(site_pdfs.published_pdf(self.paper, self.timestamp, cache_dir=self.cache))
 

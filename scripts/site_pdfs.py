@@ -20,16 +20,16 @@ def verify_pdf(data: bytes, *, sha256: str | None = None, size: int | None = Non
 
 
 def published_pdf(paper, timestamp: dict, *, cache_dir: Path, fetch_remote: bool = False) -> bytes | None:
-    """Return validated bytes, or None for pending/withdrawn records or offline misses.
+    """Return validated bytes, or None for withdrawn records or offline misses.
 
-    Historical imports already have an author-authorized public bulk release even
-    though their individual timestamp-registry entries are marked pending.
+    Any non-withdrawn record committed on main with a SHA-256-verified local
+    ``paper.pdf`` publishes its same-directory PDF immediately (even while
+    ``publication_state`` is ``pending`` awaiting its GitHub Release tag),
+    so live pages on airr.science never appear without a readable PDF.
     """
     metadata = paper.metadata
     archival = metadata.get("archival_source")
     if metadata["status"] == "withdrawn":
-        return None
-    if not archival and timestamp.get("publication_state") != "published":
         return None
     integrity = metadata["integrity"]
     if metadata["source_of_truth"] in {"paper.pdf", "external_pdf"}:
